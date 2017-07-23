@@ -285,4 +285,3 @@ function ManageSpawnedUnits:get_unit(unit_id)
 	return entry.unit
 end
 
-return

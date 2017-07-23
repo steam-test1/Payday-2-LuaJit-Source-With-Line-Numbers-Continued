@@ -465,4 +465,3 @@ function MenuInput:any_keyboard_used()
 	end
 end
 
-return

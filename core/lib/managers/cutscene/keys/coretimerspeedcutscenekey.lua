@@ -60,4 +60,3 @@ function CoreTimerSpeedCutsceneKey:is_valid_duration(duration)
 	return duration ~= nil and duration >= 0
 end
 
-return

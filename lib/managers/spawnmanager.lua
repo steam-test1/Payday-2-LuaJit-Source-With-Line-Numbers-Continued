@@ -166,4 +166,3 @@ function SpawnManager:_spawn_units()
 	end
 end
 
-return

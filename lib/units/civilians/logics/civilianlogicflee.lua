@@ -1076,4 +1076,3 @@ function CivilianLogicFlee.on_police_call_success(data)
 	data.internal_data.called_the_police = true
 end
 
-return

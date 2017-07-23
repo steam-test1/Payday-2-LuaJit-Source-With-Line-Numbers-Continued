@@ -1152,4 +1152,3 @@ function CustomSafehouseGuiProgressItem:set_w(w)
 	end
 end
 
-return

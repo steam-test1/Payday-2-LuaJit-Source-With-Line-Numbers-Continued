@@ -23,4 +23,3 @@ function ElementMandatoryBags:on_executed(instigator)
 	ElementMandatoryBags.super.on_executed(self, instigator)
 end
 
-return

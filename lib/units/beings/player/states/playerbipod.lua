@@ -435,4 +435,3 @@ end
 function PlayerBipod:destroy()
 end
 
-return

@@ -2450,7 +2450,8 @@ function HuskPlayerMovement:_determine_node_action(idx, node)
 				for _, action in ipairs(last_node.action) do
 					if table.contains(action_data.not_last_action, action) then
 						pass_not_last_action = false
-						goto label_0
+
+						break
 					end
 				end
 			else
@@ -2458,7 +2459,6 @@ function HuskPlayerMovement:_determine_node_action(idx, node)
 			end
 		end
 
-		::label_0::
 		if pass_current_type and pass_last_type and pass_not_last_type and pass_last_action and pass_not_last_action then
 			action = action_data.target_action or action_name
 
@@ -4783,4 +4783,3 @@ function HuskPlayerMovement:anim_clbk_flush_wanted_items()
 	self:_destroy_items()
 end
 
-return

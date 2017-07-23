@@ -270,4 +270,3 @@ function ElementLootPile:on_pickup_SO_administered(loot_index, thief)
 	end
 end
 
-return

@@ -168,4 +168,3 @@ function CoreCutsceneFootage:prime_cast(cast)
 	cast:prime(self._cutscene)
 end
 
-return

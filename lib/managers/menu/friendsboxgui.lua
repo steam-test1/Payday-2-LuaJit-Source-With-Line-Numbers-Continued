@@ -722,4 +722,3 @@ function FriendsBoxGui:close()
 	end
 end
 
-return

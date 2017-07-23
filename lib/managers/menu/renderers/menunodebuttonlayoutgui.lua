@@ -163,4 +163,3 @@ function MenuNodeButtonLayoutGui:close(...)
 	MenuNodeButtonLayoutGui.super.close(self, ...)
 end
 
-return

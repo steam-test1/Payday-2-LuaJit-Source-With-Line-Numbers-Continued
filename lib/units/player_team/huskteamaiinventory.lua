@@ -44,4 +44,3 @@ function HuskTeamAIInventory:equip_selection(selection_index, instant)
 	return res
 end
 
-return

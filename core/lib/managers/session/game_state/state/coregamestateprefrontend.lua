@@ -30,4 +30,3 @@ function PreFrontEnd:transition()
 	end
 end
 
-return

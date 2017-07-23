@@ -385,4 +385,3 @@ function NetworkVoiceChatPSN:is_muted(peer)
 	return self._muted_players[peer:name()] or false
 end
 
-return

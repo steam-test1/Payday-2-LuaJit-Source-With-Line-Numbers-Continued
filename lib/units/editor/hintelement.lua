@@ -48,4 +48,3 @@ function HintUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(text_sizer, 1, 0, "EXPAND")
 end
 
-return

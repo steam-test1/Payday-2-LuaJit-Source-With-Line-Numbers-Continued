@@ -26,4 +26,3 @@ setup = setup or LightLoadingSetup:new()
 
 setup:make_entrypoint()
 
-return

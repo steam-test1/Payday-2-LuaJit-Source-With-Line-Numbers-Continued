@@ -16,4 +16,3 @@ function Simulation:transition()
 	end
 end
 
-return

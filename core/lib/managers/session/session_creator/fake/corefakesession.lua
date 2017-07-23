@@ -32,4 +32,3 @@ function Session:join_remote_user(remote_user)
 	cat_print("debug", "FakeSession: Remote user:'" .. remote_user:gamer_name() .. "' joined!")
 end
 
-return

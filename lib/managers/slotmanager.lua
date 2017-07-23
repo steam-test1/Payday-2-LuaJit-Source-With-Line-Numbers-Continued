@@ -92,4 +92,3 @@ end
 
 CoreClass.override_class(CoreSlotManager.SlotManager, SlotManager)
 
-return

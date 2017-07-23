@@ -83,4 +83,3 @@ function MedicActionHeal:save(save_data)
 	end
 end
 
-return

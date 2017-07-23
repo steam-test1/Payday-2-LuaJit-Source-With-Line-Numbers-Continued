@@ -462,14 +462,14 @@ function CopMovement:_upd_actions(t)
 				for _, action in ipairs(a_actions) do
 					if action then
 						has_no_action = nil
-						goto label_0
+
+						break
 					end
 				end
 			else
 				has_no_action = nil
 			end
 		end
-		::label_0::
 	end
 
 	if has_no_action and (not self._queued_actions or not next(self._queued_actions)) then
@@ -1908,13 +1908,13 @@ function CopMovement:drop_held_items()
 							table.remove(item_list, i_item)
 
 							wanted_item_key = nil
-							goto label_1
+
+							break
 						end
 					end
 				else
 					break
 				end
-				::label_1::
 			end
 
 			drop_item_unit:unlink()
@@ -2363,12 +2363,12 @@ function CopMovement:sync_action_walk_nav_link(pos, rot, anim_index, from_idle)
 	if is_queued then
 
 		-- Lines: 2488 to 2489
-		nav_link.function element.value(element, name)
+		nav_link.element.value = function (element, name)
 			return element[name]
 		end
 
 		-- Lines: 2489 to 2490
-		nav_link.function element.nav_link_wants_align_pos(element)
+		nav_link.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle
 		end
 
@@ -3182,4 +3182,3 @@ function CopMovement:_play_weapon_reload_animation_sfx(unit, event)
 	end
 end
 
-return

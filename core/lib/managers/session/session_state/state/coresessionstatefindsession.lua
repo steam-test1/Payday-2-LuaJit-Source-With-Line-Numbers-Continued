@@ -31,4 +31,3 @@ function FindSession:transition()
 	end
 end
 
-return

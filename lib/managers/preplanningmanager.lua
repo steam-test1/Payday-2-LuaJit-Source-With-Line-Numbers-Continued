@@ -1360,4 +1360,3 @@ function PrePlanningManager:sync_load(data)
 	end
 end
 
-return

@@ -112,4 +112,3 @@ function VehicleSpotlightExt:find_new_target()
 	return best_target[1]
 end
 
-return

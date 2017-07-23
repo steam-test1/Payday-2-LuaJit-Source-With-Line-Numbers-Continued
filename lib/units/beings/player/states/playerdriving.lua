@@ -739,4 +739,3 @@ function PlayerDriving:smoothstep(a, b, step, n)
 	return x
 end
 
-return

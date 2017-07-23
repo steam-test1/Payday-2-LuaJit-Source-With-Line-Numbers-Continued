@@ -109,4 +109,3 @@ function string:left(n)
 	return self .. " ":rep(n - self:len())
 end
 
-return

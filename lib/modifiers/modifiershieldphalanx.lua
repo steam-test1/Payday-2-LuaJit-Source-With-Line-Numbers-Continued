@@ -11,4 +11,3 @@ function ModifierShieldPhalanx:init(data)
 	tweak_data.group_ai.unit_categories.FBI_shield = tweak_data.group_ai.unit_categories.Phalanx_minion
 end
 
-return

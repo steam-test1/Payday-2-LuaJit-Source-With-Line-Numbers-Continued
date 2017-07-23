@@ -19,4 +19,3 @@ function ElementPhysicsPush:on_executed(instigator)
 	ElementPhysicsPush.super.on_executed(self, instigator)
 end
 
-return

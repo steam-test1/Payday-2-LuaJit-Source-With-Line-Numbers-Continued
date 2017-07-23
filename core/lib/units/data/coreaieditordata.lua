@@ -9,4 +9,3 @@ function CoreAiEditorData:init(unit)
 	self.detection_mul = 1
 end
 
-return

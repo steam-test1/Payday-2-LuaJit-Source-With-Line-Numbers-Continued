@@ -59,4 +59,3 @@ function ElementSpawnUnit:delete_units()
 	self._units = {}
 end
 
-return

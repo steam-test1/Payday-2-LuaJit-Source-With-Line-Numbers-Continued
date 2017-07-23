@@ -295,4 +295,3 @@ function HubTimeline:zoom_around(time, offset_in_window, delta)
 	self._scrolled_area:thaw()
 end
 
-return

@@ -69,4 +69,3 @@ function ElementPlayerStateTrigger:on_executed(instigator)
 	ElementPlayerStateTrigger.super.on_executed(self, self._unit or instigator)
 end
 
-return

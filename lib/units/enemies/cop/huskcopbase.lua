@@ -32,4 +32,3 @@ function HuskCopBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
-return

@@ -498,4 +498,3 @@ end
 function ViewCharacterProfileBoxGui:_add_statistics()
 end
 
-return

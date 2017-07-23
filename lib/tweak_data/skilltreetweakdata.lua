@@ -4056,4 +4056,3 @@ function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	}
 end
 
-return

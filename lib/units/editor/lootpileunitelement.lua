@@ -29,4 +29,3 @@ function LootPileUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_number(panel, panel_sizer, "reissue_delay", {min = 1}, "The time in seconds after sending the SO to grab a bag that the system will reissue the SO.")
 end
 
-return

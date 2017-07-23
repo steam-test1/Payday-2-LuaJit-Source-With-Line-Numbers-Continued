@@ -344,4 +344,3 @@ function AccessCameraTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element is a trigger to point_access_camera element.")
 end
 
-return

@@ -80,4 +80,3 @@ function ProjectileWeaponBase:_get_spawn_offset()
 	return 0
 end
 
-return

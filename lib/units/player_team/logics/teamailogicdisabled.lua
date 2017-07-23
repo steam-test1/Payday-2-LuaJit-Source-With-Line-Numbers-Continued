@@ -336,4 +336,3 @@ function TeamAILogicDisabled.on_new_objective(data, old_objective)
 	end
 end
 
-return

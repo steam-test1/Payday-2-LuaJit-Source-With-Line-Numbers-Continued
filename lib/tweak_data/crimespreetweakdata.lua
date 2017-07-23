@@ -1009,4 +1009,3 @@ function CrimeSpreeTweakData:init_gui(tweak_data)
 	}
 end
 
-return

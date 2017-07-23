@@ -15,4 +15,3 @@ function TextureDependencyNode:_parse()
 	return {}
 end
 
-return

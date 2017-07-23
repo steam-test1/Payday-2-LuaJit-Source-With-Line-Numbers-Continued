@@ -26,4 +26,3 @@ function ElementAIForceAttentionOperator:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
-return

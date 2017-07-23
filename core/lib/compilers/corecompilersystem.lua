@@ -2,7 +2,7 @@ if Application == nil then
 	Application = setmetatable({}, {})
 
 	-- Lines: 6 to 7
-function 	Application:ews_enabled()
+	function Application:ews_enabled()
 		return false
 	end
 end
@@ -41,4 +41,3 @@ core:import("CoreDatabaseManager")
 
 managers.database = managers.database or CoreDatabaseManager.DatabaseManager:new()
 
-return

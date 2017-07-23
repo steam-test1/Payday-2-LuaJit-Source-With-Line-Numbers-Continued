@@ -14,4 +14,3 @@ function Bitwise:rshift(x, by)
 	return math.floor(x / 2 ^ by)
 end
 
-return

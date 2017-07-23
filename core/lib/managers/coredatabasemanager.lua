@@ -289,4 +289,3 @@ function DatabaseManager:_parse_entries_in_index(index)
 	end
 end
 
-return

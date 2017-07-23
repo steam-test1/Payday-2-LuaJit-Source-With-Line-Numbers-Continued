@@ -896,4 +896,3 @@ function AttentionTweakData:_post_init()
 	end
 end
 
-return

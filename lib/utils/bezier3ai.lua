@@ -164,4 +164,3 @@ function recursive_bezier(write, x1, y1, x2, y2, x3, y3, x4, y4, level, m_distan
 	recursive_bezier(write, x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
 end
 
-return

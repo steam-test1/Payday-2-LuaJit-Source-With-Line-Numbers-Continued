@@ -36,4 +36,3 @@ function InteractionEditorPropUI:rebuild(desc, node)
 	self._current_panel:set_visible(true, desc, node)
 end
 
-return

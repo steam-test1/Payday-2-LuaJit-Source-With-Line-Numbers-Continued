@@ -291,4 +291,3 @@ function SawHit:play_impact_sound_and_effects(col_ray)
 	})
 end
 
-return

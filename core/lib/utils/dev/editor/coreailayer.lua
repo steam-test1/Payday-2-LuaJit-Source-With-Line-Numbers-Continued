@@ -1192,4 +1192,3 @@ function AiLayer:_set_detection_mul()
 	managers.navigation:set_detection_multiplier(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.detection_multiplier.value)
 end
 
-return

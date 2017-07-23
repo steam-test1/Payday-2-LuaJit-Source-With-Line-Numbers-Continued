@@ -245,4 +245,3 @@ function KeywordArguments:optional_object(...)
 	return unpack(ret_list)
 end
 
-return

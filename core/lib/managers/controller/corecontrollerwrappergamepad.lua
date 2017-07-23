@@ -179,4 +179,3 @@ function ControllerWrapperGamepad:get_input_axis(connection_name)
 	return cache
 end
 
-return

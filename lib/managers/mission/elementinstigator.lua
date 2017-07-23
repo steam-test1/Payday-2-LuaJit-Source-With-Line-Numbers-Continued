@@ -262,4 +262,3 @@ function ElementInstigatorTrigger:on_executed(instigator)
 	ElementInstigatorTrigger.super.on_executed(self, instigator)
 end
 
-return

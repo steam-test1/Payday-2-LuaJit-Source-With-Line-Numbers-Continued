@@ -120,12 +120,12 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 		local nav_link = unit:movement()._actions.walk.synthesize_nav_link(first_nav_point, nav_link_rot, unit:movement()._actions.act:_get_act_name_from_index(nav_link_act_index), from_idle)
 
 		-- Lines: 129 to 130
-		nav_link.function element.value(element, name)
+		nav_link.element.value = function (element, name)
 			return element[name]
 		end
 
 		-- Lines: 130 to 131
-		nav_link.function element.nav_link_wants_align_pos(element)
+		nav_link.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle
 		end
 
@@ -4153,4 +4153,3 @@ function UnitNetworkHandler:sync_shotgun_push(unit, hit_pos, dir, distance, atta
 	managers.game_play_central:_do_shotgun_push(unit, hit_pos, dir, distance, attacker, sender)
 end
 
-return

@@ -22,4 +22,3 @@ function ElementBainState:on_executed(instigator)
 	ElementBainState.super.on_executed(self, instigator)
 end
 
-return

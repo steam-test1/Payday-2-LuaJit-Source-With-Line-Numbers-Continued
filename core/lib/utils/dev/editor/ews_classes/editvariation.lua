@@ -157,4 +157,3 @@ function EditUnitVariation:get_material_configs_from_meta(unit_name)
 	return available_groups
 end
 
-return

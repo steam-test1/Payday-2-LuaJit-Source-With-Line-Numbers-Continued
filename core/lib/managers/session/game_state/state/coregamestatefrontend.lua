@@ -24,4 +24,3 @@ function FrontEnd:transition()
 	end
 end
 
-return

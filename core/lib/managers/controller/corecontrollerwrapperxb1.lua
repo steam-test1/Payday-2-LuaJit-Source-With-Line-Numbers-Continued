@@ -25,4 +25,3 @@ function ControllerWrapperXB1:virtual_connect_cancel(controller_id, controller, 
 	self:virtual_connect2(controller_id, controller, "b", connection_name, connection)
 end
 
-return

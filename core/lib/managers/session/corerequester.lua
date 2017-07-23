@@ -41,4 +41,3 @@ function Requester:force_task_completed()
 	self._requested = nil
 end
 
-return

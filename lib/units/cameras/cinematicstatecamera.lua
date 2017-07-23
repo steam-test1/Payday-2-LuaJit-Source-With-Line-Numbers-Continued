@@ -385,4 +385,3 @@ function CinematicStateCamera:destroy()
 	self:close_ews()
 end
 
-return

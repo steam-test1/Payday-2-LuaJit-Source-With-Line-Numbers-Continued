@@ -23,4 +23,3 @@ function GageModifierLifeSteal:OnPlayerManagerKillshot(player_unit, unit_tweak, 
 	end
 end
 
-return

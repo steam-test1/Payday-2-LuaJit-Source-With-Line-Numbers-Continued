@@ -71,4 +71,3 @@ function SpawnGrenadeUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Spawns a grenade.")
 end
 
-return

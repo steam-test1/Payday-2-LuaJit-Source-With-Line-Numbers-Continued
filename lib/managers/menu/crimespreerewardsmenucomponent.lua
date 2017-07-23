@@ -1497,4 +1497,3 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	self:next_state(0)
 end
 
-return

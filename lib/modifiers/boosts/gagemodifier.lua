@@ -22,4 +22,3 @@ function GageModifier:is_active()
 	return false
 end
 
-return

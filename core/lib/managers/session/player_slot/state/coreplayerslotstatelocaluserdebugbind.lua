@@ -13,4 +13,3 @@ function LocalUserDebugBind:transition()
 	return CorePlayerSlotStateLocalUserBound.LocalUserBound, self.player_slot:assigned_user()
 end
 
-return

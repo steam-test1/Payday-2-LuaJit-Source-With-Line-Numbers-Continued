@@ -381,4 +381,3 @@ function HUDTemp:_animate_low_stamina(input_panel)
 	end
 end
 
-return

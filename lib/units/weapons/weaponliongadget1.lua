@@ -359,4 +359,3 @@ function WeaponLionGadget1:destroy(unit)
 	managers.player:unregister_message(Message.OnCashInspectWeapon, self)
 end
 
-return

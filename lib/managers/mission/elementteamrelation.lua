@@ -17,4 +17,3 @@ function ElementTeamRelation:on_executed(instigator)
 	ElementTeamRelation.super.on_executed(self, instigator)
 end
 
-return

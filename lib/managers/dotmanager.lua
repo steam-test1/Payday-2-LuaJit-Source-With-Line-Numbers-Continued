@@ -153,4 +153,3 @@ function DOTManager:on_simulation_ended()
 	self._doted_enemies = {}
 end
 
-return

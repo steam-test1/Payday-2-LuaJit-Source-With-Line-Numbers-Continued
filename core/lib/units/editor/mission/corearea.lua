@@ -614,4 +614,3 @@ end
 function CoreAreaUnitElement:destroy()
 end
 
-return

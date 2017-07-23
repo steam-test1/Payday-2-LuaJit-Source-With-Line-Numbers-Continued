@@ -80,4 +80,3 @@ function CopActionCrouch:type()
 	return "crouch"
 end
 
-return

@@ -9,4 +9,3 @@ function StartSimulation:transition()
 	return CoregameStateInEditorSimulation.Simulation
 end
 
-return

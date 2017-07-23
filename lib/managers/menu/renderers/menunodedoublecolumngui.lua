@@ -523,4 +523,3 @@ function MenuNodeDoubleColumnGui:get_item_index(item)
 	Application:error("[MenuNodeDoubleColumnGui:get_item_index] Item index could not be found!")
 end
 
-return

@@ -392,4 +392,3 @@ function MenuGuiButtonItem:trigger()
 	self._callback()
 end
 
-return

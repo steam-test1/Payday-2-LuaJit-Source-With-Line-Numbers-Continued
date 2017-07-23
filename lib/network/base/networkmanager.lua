@@ -683,4 +683,3 @@ function NetworkManager:on_peer_added(peer, peer_id)
 	end
 end
 
-return

@@ -236,4 +236,3 @@ function WeaponFlashLight:update_frozen(t, dt)
 	end
 end
 
-return

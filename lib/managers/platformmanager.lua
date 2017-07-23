@@ -369,4 +369,3 @@ function WinPlatformManager:set_rich_presence(name)
 	end
 end
 
-return

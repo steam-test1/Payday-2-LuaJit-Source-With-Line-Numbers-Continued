@@ -734,4 +734,3 @@ function MoneyTweakData:init(tweak_data)
 	self.unlock_new_weapon_slot_value = self.biggest_cashout
 end
 
-return

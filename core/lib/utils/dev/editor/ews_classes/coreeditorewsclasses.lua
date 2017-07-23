@@ -2830,4 +2830,3 @@ function BrushLayerDebug:thaw()
 	self._unit_list:thaw()
 end
 
-return

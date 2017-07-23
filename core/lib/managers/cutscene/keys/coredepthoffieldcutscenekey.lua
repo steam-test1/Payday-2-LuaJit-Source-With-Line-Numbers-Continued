@@ -341,4 +341,3 @@ function CoreDepthOfFieldCutsceneKey:_calc_interpolation(t)
 	return 3 * t ^ 2 - 2 * t ^ 3
 end
 
-return

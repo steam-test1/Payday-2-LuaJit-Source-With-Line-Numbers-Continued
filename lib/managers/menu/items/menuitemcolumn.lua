@@ -19,4 +19,3 @@ function ItemServerColumn:init(data_node, parameters)
 	self._type = ItemServerColumn.TYPE
 end
 
-return

@@ -98,4 +98,3 @@ function CopActionWarp:chk_block(action_type, t)
 	return true
 end
 
-return

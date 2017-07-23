@@ -871,4 +871,3 @@ function MutatorItem:get_link(position)
 	return self._links[position]
 end
 
-return

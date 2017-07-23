@@ -306,4 +306,3 @@ function CopActionIdle:save(save_data)
 	end
 end
 
-return

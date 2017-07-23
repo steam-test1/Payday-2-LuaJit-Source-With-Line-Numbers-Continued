@@ -26,4 +26,3 @@ function InEditor:transition()
 	end
 end
 
-return

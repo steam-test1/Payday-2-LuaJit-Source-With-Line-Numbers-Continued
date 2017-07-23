@@ -1342,4 +1342,3 @@ function InventoryIconCreator:close_ews()
 	end
 end
 
-return

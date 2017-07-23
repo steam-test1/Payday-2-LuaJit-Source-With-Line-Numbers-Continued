@@ -86,4 +86,3 @@ function TeamAILogicBase._chk_reaction_to_attention_object(data, attention_data,
 	end
 end
 
-return

@@ -80,4 +80,3 @@ ElementRandomInstanceInputEvent._type = "input"
 ElementRandomInstanceOutputEvent = ElementRandomInstanceOutputEvent or class(ElementRandomInstance)
 ElementRandomInstanceOutputEvent._type = "output"
 
-return

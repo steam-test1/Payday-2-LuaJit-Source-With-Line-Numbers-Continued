@@ -52,4 +52,3 @@ function VehicleStateBlocked:is_vulnerable()
 	return false
 end
 
-return

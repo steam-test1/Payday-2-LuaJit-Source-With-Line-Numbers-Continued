@@ -93,4 +93,3 @@ function CoreCutsceneInputParam:validate_boolean(boolean)
 	end
 end
 
-return

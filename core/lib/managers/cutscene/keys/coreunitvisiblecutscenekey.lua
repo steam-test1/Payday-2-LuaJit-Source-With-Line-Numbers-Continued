@@ -55,4 +55,3 @@ function CoreUnitVisibleCutsceneKey:evaluate(player, fast_forward, visible)
 	end
 end
 
-return

@@ -239,4 +239,3 @@ function CrossbowWeaponBase:add_damage_result(unit, attacker, is_dead, damage_pe
 	})
 end
 
-return

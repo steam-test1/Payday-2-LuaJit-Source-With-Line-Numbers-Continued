@@ -117,4 +117,3 @@ end
 function ActionMessagingManager:load(data)
 end
 
-return

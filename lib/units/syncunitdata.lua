@@ -40,4 +40,3 @@ function SyncUnitData:load(data)
 	managers.worlddefinition:setup_projection_light(self._unit, state)
 end
 
-return

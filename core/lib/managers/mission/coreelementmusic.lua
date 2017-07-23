@@ -30,4 +30,3 @@ function ElementMusic:on_executed(instigator)
 	ElementMusic.super.on_executed(self, instigator)
 end
 
-return

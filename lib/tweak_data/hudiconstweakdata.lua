@@ -2898,4 +2898,3 @@ function HudIconsTweakData:get_texture(texture_path)
 	return icon_data.texture, icon_data.texture_rect
 end
 
-return

@@ -777,4 +777,3 @@ function ShapeCylinderMiddle:draw(t, dt, r, g, b)
 	Application:draw_cylinder(from, to, self._properties.radius, r, g, b)
 end
 
-return

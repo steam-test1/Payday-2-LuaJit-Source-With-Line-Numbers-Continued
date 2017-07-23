@@ -52,4 +52,3 @@ function DisconnectedState:_load_start_menu()
 	end
 end
 
-return

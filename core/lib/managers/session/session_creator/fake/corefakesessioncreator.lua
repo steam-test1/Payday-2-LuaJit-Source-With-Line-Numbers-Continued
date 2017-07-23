@@ -35,4 +35,3 @@ function Creator:find_session(session_info, callback)
 	callback(fake_sessions)
 end
 
-return

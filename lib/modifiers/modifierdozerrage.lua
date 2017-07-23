@@ -8,4 +8,3 @@ function ModifierDozerRage:OnTankVisorShatter(unit, damage_info)
 	unit:base():add_buff("base_damage", self:value("damage") * 0.01)
 end
 
-return

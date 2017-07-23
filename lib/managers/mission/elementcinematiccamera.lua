@@ -63,4 +63,3 @@ function ElementCinematicCamera:pre_destroy(...)
 	self:_delete_camera_unit()
 end
 
-return

@@ -776,4 +776,3 @@ function NetworkGroupLobbyPSN:leaving_game()
 	end
 end
 
-return

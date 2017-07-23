@@ -123,4 +123,3 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	})
 end
 
-return

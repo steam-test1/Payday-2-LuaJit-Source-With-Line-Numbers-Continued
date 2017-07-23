@@ -28,4 +28,3 @@ end
 function CoreSetupCutsceneKeyBase:play(player, undo, fast_forward)
 end
 
-return

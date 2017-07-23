@@ -1992,4 +1992,3 @@ function CrimeNetContractGui:close()
 	managers.menu:active_menu().input:set_force_input(false)
 end
 
-return

@@ -18,4 +18,3 @@ function StopSimulation:transition()
 	return CoreGameStateInEditor.InEditor
 end
 
-return

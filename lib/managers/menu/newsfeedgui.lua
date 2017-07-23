@@ -222,4 +222,3 @@ function NewsFeedGui:close()
 	end
 end
 
-return

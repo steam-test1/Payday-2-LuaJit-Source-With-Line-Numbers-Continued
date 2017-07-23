@@ -388,4 +388,3 @@ TestAPIHelper.register_API_function("load_weapon", "ingame", "weapon_id", functi
 	end)
 end, "Loads the given weapon while in a job and equips it.", true)
 
-return

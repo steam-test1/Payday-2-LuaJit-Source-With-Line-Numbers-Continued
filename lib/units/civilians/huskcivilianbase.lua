@@ -41,4 +41,3 @@ function HuskCivilianBase:sync_net_event(event_id)
 	end
 end
 
-return

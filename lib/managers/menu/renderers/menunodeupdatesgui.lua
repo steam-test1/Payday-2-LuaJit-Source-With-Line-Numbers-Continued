@@ -963,4 +963,3 @@ function MenuNodeUpdatesGui:_setup_panels(node)
 	MenuNodeUpdatesGui.super._setup_panels(self, node)
 end
 
-return

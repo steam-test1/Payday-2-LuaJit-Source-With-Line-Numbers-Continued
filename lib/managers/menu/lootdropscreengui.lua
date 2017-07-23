@@ -620,4 +620,3 @@ function CasinoLootDropScreenGui:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
-return

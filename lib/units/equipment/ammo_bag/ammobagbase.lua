@@ -301,4 +301,3 @@ function CustomAmmoBagBase:_set_empty()
 	end
 end
 
-return

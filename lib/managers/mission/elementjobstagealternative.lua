@@ -29,4 +29,3 @@ function ElementJobStageAlternative:on_executed(instigator)
 	ElementJobStageAlternative.super.on_executed(self, self._unit or instigator)
 end
 
-return

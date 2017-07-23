@@ -25,4 +25,3 @@ function SpawnDeployableUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select a deployable_id to be spawned.")
 end
 
-return

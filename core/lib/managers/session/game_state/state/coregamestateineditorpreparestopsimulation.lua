@@ -24,4 +24,3 @@ function PrepareStopSimulation:transition()
 	end
 end
 
-return

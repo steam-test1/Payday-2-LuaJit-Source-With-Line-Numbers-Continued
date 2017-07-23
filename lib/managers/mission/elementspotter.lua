@@ -99,4 +99,3 @@ function ElementSpotter:update_spotter()
 	end
 end
 
-return

@@ -437,12 +437,12 @@ function CopActionWalk:_init()
 			if not nav_point.x then
 
 				-- Lines: 336 to 337
-				nav_point.function element.value(element, name)
+				nav_point.element.value = function (element, name)
 					return element[name]
 				end
 
 				-- Lines: 337 to 338
-				nav_point.function element.nav_link_wants_align_pos(element)
+				nav_point.element.nav_link_wants_align_pos = function (element)
 					return element.from_idle
 				end
 			end
@@ -2027,7 +2027,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 		if self._stop_anim_side == "fwd" then
 
 			-- Lines: 1908 to 1910
-function 			self._stop_anim_displacement_f(p1, p2, t)
+			function self._stop_anim_displacement_f(p1, p2, t)
 				local t_clamp = (math.clamp(t, 0, 0.6) / 0.6) ^ 0.8
 
 				return math.lerp(p1, p2, t_clamp)
@@ -2035,7 +2035,7 @@ function 			self._stop_anim_displacement_f(p1, p2, t)
 		elseif self._stop_anim_side == "bwd" then
 
 			-- Lines: 1913 to 1922
-function 			self._stop_anim_displacement_f(p1, p2, t)
+			function self._stop_anim_displacement_f(p1, p2, t)
 				local low = 0.97
 				local p_1_5 = 0.9
 				local t_clamp = math.clamp(t, 0, 0.8) / 0.8
@@ -2046,7 +2046,7 @@ function 			self._stop_anim_displacement_f(p1, p2, t)
 		elseif self._stop_anim_side == "l" then
 
 			-- Lines: 1925 to 1934
-function 			self._stop_anim_displacement_f(p1, p2, t)
+			function self._stop_anim_displacement_f(p1, p2, t)
 				local p_1_5 = 0.6
 				local low = 0.8
 				local t_clamp = math.clamp(t, 0, 0.75) / 0.75
@@ -2057,7 +2057,7 @@ function 			self._stop_anim_displacement_f(p1, p2, t)
 		else
 
 			-- Lines: 1937 to 1946
-function 			self._stop_anim_displacement_f(p1, p2, t)
+			function self._stop_anim_displacement_f(p1, p2, t)
 				local low = 0.9
 				local p_1_5 = 0.85
 				local t_clamp = math.clamp(t, 0, 0.8) / 0.8
@@ -2069,7 +2069,7 @@ function 			self._stop_anim_displacement_f(p1, p2, t)
 	elseif self._stop_anim_side == "fwd" or self._stop_anim_side == "bwd" then
 
 		-- Lines: 1951 to 1954
-function 		self._stop_anim_displacement_f(p1, p2, t)
+		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.4) / 0.4
 			t_clamp = t_clamp ^ 0.85
 
@@ -2078,7 +2078,7 @@ function 		self._stop_anim_displacement_f(p1, p2, t)
 	elseif self._stop_anim_side == "l" then
 
 		-- Lines: 1957 to 1960
-function 		self._stop_anim_displacement_f(p1, p2, t)
+		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.3) / 0.3
 			t_clamp = t_clamp ^ 0.85
 
@@ -2087,7 +2087,7 @@ function 		self._stop_anim_displacement_f(p1, p2, t)
 	else
 
 		-- Lines: 1963 to 1966
-function 		self._stop_anim_displacement_f(p1, p2, t)
+		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.6) / 0.6
 			t_clamp = t_clamp ^ 0.85
 
@@ -2210,12 +2210,12 @@ function CopActionWalk:append_nav_point(nav_point)
 	if not nav_point.x then
 
 		-- Lines: 2100 to 2101
-		nav_point.function element.value(element, name)
+		nav_point.element.value = function (element, name)
 			return element[name]
 		end
 
 		-- Lines: 2101 to 2102
-		nav_point.function element.nav_link_wants_align_pos(element)
+		nav_point.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle
 		end
 	end
@@ -2721,4 +2721,3 @@ function CopActionWalk:stopping()
 	return self._stop_anim_init_pos and true or nil
 end
 
-return

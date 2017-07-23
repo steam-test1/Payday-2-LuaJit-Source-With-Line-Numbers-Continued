@@ -53,4 +53,3 @@ slave_setup = slave_setup or SetupSlaveSetup:new()
 
 slave_setup:make_entrypoint()
 
-return

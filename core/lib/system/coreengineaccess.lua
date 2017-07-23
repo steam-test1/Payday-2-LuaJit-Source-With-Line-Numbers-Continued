@@ -88,4 +88,3 @@ if not __required then
 	_editor_unit_data = hide_static_engine_method("PackageManager", "editor_unit_data")
 end
 
-return

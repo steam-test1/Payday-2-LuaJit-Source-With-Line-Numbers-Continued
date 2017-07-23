@@ -193,4 +193,3 @@ function NewsReportManager:get_old_news(category)
 	return self:check_news(category, true)
 end
 
-return

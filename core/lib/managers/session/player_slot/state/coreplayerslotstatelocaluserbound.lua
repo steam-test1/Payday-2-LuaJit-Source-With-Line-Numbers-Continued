@@ -19,4 +19,3 @@ function LocalUserBound:transition()
 	end
 end
 
-return

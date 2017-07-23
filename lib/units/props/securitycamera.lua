@@ -1154,4 +1154,3 @@ function SecurityCamera:destroy(unit)
 	end
 end
 
-return

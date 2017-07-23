@@ -21,4 +21,3 @@ function ElementDifficulty:on_executed(instigator)
 	ElementDifficulty.super.on_executed(self, instigator)
 end
 
-return

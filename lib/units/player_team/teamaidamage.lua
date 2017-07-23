@@ -1165,4 +1165,3 @@ function TeamAIDamage:save(data)
 	end
 end
 
-return

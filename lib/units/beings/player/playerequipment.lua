@@ -590,4 +590,3 @@ function PlayerEquipment:destroy()
 	end
 end
 
-return

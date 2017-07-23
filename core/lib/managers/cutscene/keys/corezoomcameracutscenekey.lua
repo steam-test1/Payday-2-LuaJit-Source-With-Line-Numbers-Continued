@@ -108,4 +108,3 @@ function CoreZoomCameraCutsceneKey:_calc_interpolation(t)
 	return interpolation_func(t, math.clamp(self:interpolation_bias(), 0, 1))
 end
 
-return

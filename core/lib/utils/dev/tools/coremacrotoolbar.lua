@@ -59,4 +59,3 @@ function CoreMacroToolbar:trigger_event(event_name)
 	end
 end
 
-return

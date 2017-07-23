@@ -4,4 +4,3 @@ GamemodeCrimeSpree._NAME = "Crime Spree Gamemode"
 
 Gamemode.register(GamemodeCrimeSpree.id, GamemodeCrimeSpree)
 
-return

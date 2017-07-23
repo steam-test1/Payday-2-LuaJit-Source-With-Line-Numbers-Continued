@@ -623,4 +623,3 @@ function VoteManager:option_host_restart()
 	return (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 1
 end
 
-return

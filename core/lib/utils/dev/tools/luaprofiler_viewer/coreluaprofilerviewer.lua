@@ -300,4 +300,3 @@ function LuaProfilerViewer:_on_capture()
 	self._capturecounter = 6
 end
 
-return

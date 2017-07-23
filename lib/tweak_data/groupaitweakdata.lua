@@ -3745,4 +3745,3 @@ function GroupAITweakData:_create_table_structure()
 	}
 end
 
-return

@@ -79,4 +79,3 @@ function InputManager:_destroy_input_provider(input_provider)
 	self._feeders[feeder] = nil
 end
 
-return

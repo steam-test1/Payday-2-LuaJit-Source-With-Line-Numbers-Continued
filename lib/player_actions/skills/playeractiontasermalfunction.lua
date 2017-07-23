@@ -2,7 +2,7 @@ PlayerAction.TaserMalfunction = {}
 PlayerAction.TaserMalfunction.Priority = 1
 
 -- Lines: 6 to 20
-PlayerAction.function TaserMalfunction.Function(player_manager, interval, chance_to_trigger)
+PlayerAction.TaserMalfunction.Function = function (player_manager, interval, chance_to_trigger)
 	local co = coroutine.running()
 	local elapsed = 0
 	local target_elapsed = Application:time() + interval
@@ -22,4 +22,3 @@ PlayerAction.function TaserMalfunction.Function(player_manager, interval, chance
 	end
 end
 
-return

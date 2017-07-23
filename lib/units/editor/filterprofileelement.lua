@@ -40,4 +40,3 @@ function FilterProfileUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "achievement", table.list_add({"none"}, table.map_keys(managers.achievment.achievments)), "Select an achievement to filter on")
 end
 
-return

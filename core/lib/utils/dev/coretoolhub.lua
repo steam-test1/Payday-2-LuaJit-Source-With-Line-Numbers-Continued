@@ -480,4 +480,3 @@ function ToolHub:getscreenpos(screen)
 	end
 end
 
-return

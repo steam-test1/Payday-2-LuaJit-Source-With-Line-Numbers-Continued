@@ -156,4 +156,3 @@ function MenuPauseRenderer:close(...)
 	MenuPauseRenderer.super.close(self, ...)
 end
 
-return

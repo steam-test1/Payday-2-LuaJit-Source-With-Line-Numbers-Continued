@@ -144,4 +144,3 @@ function ElementFilter:_check_mode()
 	return false
 end
 
-return

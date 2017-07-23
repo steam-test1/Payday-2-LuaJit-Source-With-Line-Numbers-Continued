@@ -25,4 +25,3 @@ function MenuHiddenRenderer:hide()
 	self._main_panel:root():hide()
 end
 
-return

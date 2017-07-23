@@ -1005,4 +1005,3 @@ function MenuInput:input_crime_spree_item(item, controller, mouse_click)
 	end
 end
 
-return

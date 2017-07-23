@@ -4759,4 +4759,3 @@ function InteractionTweakData:init(tweak_data)
 	}
 end
 
-return

@@ -60,4 +60,3 @@ function HUDHeistTimer:reset()
 	self._last_time = 0
 end
 
-return

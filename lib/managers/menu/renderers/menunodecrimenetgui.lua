@@ -5194,4 +5194,3 @@ function MenuNodeContainerPreviewGui:close(...)
 	managers.menu_component:show_blackmarket_gui()
 end
 
-return

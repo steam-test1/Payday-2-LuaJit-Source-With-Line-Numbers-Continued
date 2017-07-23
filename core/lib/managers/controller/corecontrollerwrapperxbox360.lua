@@ -25,4 +25,3 @@ function ControllerWrapperXbox360:virtual_connect_cancel(controller_id, controll
 	self:virtual_connect2(controller_id, controller, "b", connection_name, connection)
 end
 
-return

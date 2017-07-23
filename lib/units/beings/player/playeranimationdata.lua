@@ -54,4 +54,3 @@ function PlayerAnimationData:anim_clbk_death_exit(unit)
 	end
 end
 
-return

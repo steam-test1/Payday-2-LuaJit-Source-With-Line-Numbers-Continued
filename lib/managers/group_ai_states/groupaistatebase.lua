@@ -2867,14 +2867,14 @@ function GroupAIStateBase:remove_one_teamAI(name_to_remove, replace_with_player)
 			if managers.criminals:character_name_by_unit(ud.unit) == name_to_remove then
 				u_data = ud
 				u_key = uk
-				goto label_0
+
+				break
 			end
 		end
 	else
 		u_key, u_data = next(self._ai_criminals)
 	end
 
-	::label_0::
 	local name, unit = nil
 
 	if u_key then
@@ -6199,4 +6199,3 @@ function GroupAIStateBase:get_AI_attention_object_by_unit(unit)
 	end
 end
 
-return

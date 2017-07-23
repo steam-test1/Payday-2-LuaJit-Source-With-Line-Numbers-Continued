@@ -6,4 +6,3 @@ else
 	require("lib/Entry")
 end
 
-return

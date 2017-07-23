@@ -231,4 +231,3 @@ function NpcVehicleStatePursuit:_choose_recovery_maneuver()
 	return recovery_maneuver
 end
 
-return

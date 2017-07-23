@@ -83,4 +83,3 @@ function SentryGunContour:_remove_contour()
 	end
 end
 
-return

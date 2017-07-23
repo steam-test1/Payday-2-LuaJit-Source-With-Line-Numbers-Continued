@@ -43,4 +43,3 @@ function ElementInvulnerable:make_unit_invulnerable(unit)
 	end
 end
 
-return

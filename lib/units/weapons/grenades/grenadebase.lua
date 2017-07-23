@@ -206,4 +206,3 @@ function GrenadeBase:load(data)
 	self._timer = state.timer
 end
 
-return

@@ -346,4 +346,3 @@ end
 function SpecialObjectiveGroupElement:add_to_mission_package()
 end
 
-return

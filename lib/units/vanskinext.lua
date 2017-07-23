@@ -19,4 +19,3 @@ function VanSkinExt:init(unit)
 	end
 end
 
-return

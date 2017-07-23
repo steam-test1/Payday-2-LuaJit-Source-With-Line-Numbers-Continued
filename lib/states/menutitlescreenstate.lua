@@ -427,4 +427,3 @@ function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	end
 end
 
-return

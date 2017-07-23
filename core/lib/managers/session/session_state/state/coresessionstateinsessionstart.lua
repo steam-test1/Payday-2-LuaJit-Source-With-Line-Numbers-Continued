@@ -19,4 +19,3 @@ function InSessionStart:transition()
 	return CoreSessionStateInSessionStarted.Started, self._session
 end
 
-return

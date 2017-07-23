@@ -335,4 +335,3 @@ function WorldEditor:on_enable_revision_number(changed, value)
 	end
 end
 
-return

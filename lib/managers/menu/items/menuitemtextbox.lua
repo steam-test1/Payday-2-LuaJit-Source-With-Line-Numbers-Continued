@@ -560,7 +560,8 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 					local new_index = math.min((prev_line_end + e) - line_end, line_end)
 
 					text:set_selection(new_index, new_index)
-					goto label_0
+
+					break
 				end
 			end
 		end
@@ -582,7 +583,8 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 					local new_index = math.min(e - prev_line_end + line_end, next_line_end)
 
 					text:set_selection(new_index, new_index)
-					goto label_0
+
+					break
 				end
 			end
 		end
@@ -630,7 +632,6 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 		self:set_input_text(text:text())
 	end
 
-	::label_0::
 	if not self:is_line_visible(row_item, self:_get_current_line(text)) then
 		self:scroll_to_line(row_item, self:_get_current_line(text))
 	end
@@ -711,4 +712,3 @@ function MenuItemTextBox:set_scroll_pos(row_item, pos)
 	self:_layout(row_item)
 end
 
-return

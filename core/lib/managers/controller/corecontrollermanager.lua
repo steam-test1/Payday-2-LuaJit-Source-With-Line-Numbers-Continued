@@ -763,4 +763,3 @@ function ControllerManager:verify_parsed_controller_setup_map(parsed_controller_
 	return result
 end
 
-return

@@ -796,4 +796,3 @@ function HUDMissionBriefing:reload()
 	HUDMissionBriefing.init(self, self._hud, self._workspace)
 end
 
-return

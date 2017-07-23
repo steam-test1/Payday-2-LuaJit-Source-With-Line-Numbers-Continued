@@ -5054,4 +5054,3 @@ function MenuComponentManager:close_crew_management_gui()
 	end
 end
 
-return

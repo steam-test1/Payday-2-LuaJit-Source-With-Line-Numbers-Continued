@@ -18,4 +18,3 @@ function SpawnGageAssignmentElement:destroy(...)
 	SpawnGageAssignmentElement.super.destroy(self, ...)
 end
 
-return

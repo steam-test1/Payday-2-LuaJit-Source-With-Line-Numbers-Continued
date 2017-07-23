@@ -136,4 +136,3 @@ function QuickCsGrenade:destroy()
 	managers.environment_controller:set_blurzone(self._unit:key(), 0)
 end
 
-return

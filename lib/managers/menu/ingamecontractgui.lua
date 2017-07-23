@@ -625,4 +625,3 @@ function IngameContractGui:close()
 	end
 end
 
-return

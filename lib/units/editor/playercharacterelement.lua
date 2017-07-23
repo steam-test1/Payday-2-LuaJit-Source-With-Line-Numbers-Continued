@@ -74,4 +74,3 @@ function PlayerCharacterFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Will only execute if the character is/is not in the game.")
 end
 
-return

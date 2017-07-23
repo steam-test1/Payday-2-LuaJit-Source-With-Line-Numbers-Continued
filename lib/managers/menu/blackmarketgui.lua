@@ -13639,7 +13639,7 @@ function BlackMarketGui:choose_mask_buy_callback(data)
 						table.insert(global_values, global_value)
 
 						if mask.global_value then
-							goto label_0
+							break
 						end
 					end
 				end
@@ -15147,4 +15147,3 @@ function BlackMarketGui:_confirm_buy_crew_item_callback(data)
 	self:reload()
 end
 
-return

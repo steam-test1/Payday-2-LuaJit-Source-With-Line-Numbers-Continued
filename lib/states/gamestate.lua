@@ -37,4 +37,3 @@ end
 
 CoreClass.override_class(CoreInternalGameState.GameState, GameState)
 
-return

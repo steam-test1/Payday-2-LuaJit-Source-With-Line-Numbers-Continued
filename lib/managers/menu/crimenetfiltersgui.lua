@@ -41,4 +41,3 @@ function CrimeNetFiltersGui:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
-return

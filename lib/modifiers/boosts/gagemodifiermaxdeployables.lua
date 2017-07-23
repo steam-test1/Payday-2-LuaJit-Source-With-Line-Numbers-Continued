@@ -19,4 +19,3 @@ function GageModifierMaxDeployables:modify_value(id, value)
 	return value
 end
 
-return

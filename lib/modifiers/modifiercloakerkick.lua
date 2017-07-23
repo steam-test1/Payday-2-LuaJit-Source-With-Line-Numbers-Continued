@@ -13,4 +13,3 @@ function ModifierCloakerKick:OnPlayerCloakerKicked(cloaker_unit)
 	end
 end
 
-return

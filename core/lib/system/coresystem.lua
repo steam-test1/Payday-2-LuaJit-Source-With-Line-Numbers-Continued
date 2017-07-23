@@ -23,4 +23,3 @@ core:_copy_module_to_global("CoreXml")
 core:_copy_module_to_global("CoreApp")
 core:_close_pristine_namespace()
 
-return

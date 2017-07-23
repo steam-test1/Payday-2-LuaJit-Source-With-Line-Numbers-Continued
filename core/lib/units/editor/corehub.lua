@@ -747,4 +747,3 @@ function CoreHub:destroy()
 	HubElement.destroy(self)
 end
 
-return

@@ -1901,4 +1901,3 @@ function LevelsTweakData:get_ai_group_type()
 	return self.ai_groups.default
 end
 
-return

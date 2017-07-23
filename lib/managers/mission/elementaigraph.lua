@@ -29,4 +29,3 @@ function ElementAIGraph:on_executed(instigator)
 	ElementAIGraph.super.on_executed(self, instigator)
 end
 
-return

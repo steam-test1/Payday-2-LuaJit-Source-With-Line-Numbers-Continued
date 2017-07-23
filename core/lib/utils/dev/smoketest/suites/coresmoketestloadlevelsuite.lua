@@ -20,4 +20,3 @@ function LoadLevelSuite:load_level()
 	self._session_state:join_standard_session()
 end
 
-return

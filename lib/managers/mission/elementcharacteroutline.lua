@@ -31,4 +31,3 @@ function ElementCharacterOutline:on_executed(instigator)
 	ElementCharacterOutline.super.on_executed(self, instigator)
 end
 
-return

@@ -114,14 +114,14 @@ function Manager:close_menu(menu_name)
 		for _, open_menu in ipairs(self._open_menus) do
 			if open_menu.name == menu_name then
 				menu = open_menu
-				goto label_0
+
+				break
 			end
 		end
 	else
 		menu = self._open_menus[#self._open_menus]
 	end
 
-	::label_0::
 	if menu then
 		menu.logic:close(true)
 		menu.input:close()
@@ -178,4 +178,3 @@ function Manager:update(t, dt)
 	end
 end
 
-return

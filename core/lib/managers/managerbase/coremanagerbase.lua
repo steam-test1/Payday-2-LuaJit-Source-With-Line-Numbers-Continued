@@ -139,4 +139,3 @@ function ManagerBase:end_update(t, dt)
 	end
 end
 
-return

@@ -123,4 +123,3 @@ function CoreMaterialEditorTexture:_on_browse()
 	end
 end
 
-return CoreMaterialEditorTexture

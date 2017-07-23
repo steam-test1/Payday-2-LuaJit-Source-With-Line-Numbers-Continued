@@ -259,4 +259,3 @@ function MenuItemUpgrade:_layout(node, row_item)
 	end
 end
 
-return

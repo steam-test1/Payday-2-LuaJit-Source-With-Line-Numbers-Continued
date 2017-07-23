@@ -29,4 +29,3 @@ function PointerDraw:set_position(position)
 	self.__position = position
 end
 
-return

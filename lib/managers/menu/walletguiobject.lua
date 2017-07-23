@@ -236,4 +236,3 @@ function WalletGuiObject.close_wallet(panel)
 	Global.wallet_panel = nil
 end
 
-return

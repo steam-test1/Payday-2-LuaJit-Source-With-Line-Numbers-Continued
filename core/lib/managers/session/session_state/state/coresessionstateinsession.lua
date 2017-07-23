@@ -35,4 +35,3 @@ function InSession:start_session()
 	self._start_session = true
 end
 
-return

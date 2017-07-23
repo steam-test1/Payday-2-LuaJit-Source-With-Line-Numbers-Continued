@@ -155,4 +155,3 @@ function TangoFilterElement:set_element_data(data)
 	end
 end
 
-return

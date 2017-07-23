@@ -16,4 +16,3 @@ end
 function None:transition()
 end
 
-return

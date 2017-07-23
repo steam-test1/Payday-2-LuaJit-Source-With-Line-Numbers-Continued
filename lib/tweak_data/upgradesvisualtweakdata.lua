@@ -399,4 +399,3 @@ function UpgradesVisualTweakData:init()
 	}
 end
 
-return

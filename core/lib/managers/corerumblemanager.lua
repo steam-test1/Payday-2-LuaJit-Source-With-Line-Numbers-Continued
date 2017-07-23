@@ -227,4 +227,3 @@ function RumbleManager:mult_distance_lerp(pos_func_list, params)
 	return 0
 end
 
-return

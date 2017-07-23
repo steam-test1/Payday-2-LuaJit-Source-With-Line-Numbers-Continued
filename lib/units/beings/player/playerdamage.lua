@@ -112,7 +112,7 @@ function PlayerDamage:init(unit)
 	if self:_init_armor_grinding_data() then
 
 		-- Lines: 111 to 112
-function 		self._on_damage_callback_func()
+		function self._on_damage_callback_func()
 			return callback(self, self, "_on_damage_armor_grinding")
 		end
 
@@ -172,7 +172,7 @@ end
 function PlayerDamage:_init_standard_listeners()
 
 	-- Lines: 153 to 154
-function 	self._on_damage_callback_func()
+	function self._on_damage_callback_func()
 		return callback(self, self, "_on_damage_event")
 	end
 
@@ -2528,4 +2528,3 @@ function PlayerBodyDamage:damage_fire(attack_unit, normal, position, direction, 
 	self._unit_extension:damage_killzone(attack_data)
 end
 
-return

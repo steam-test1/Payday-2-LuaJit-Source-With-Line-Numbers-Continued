@@ -118,4 +118,3 @@ function ConcussionGrenade:bullet_hit()
 	self:_detonate()
 end
 
-return

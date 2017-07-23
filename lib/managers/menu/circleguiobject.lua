@@ -186,4 +186,3 @@ function CircleBitmapGuiObject:remove()
 	self._panel = nil
 end
 
-return

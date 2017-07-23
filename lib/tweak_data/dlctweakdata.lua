@@ -5924,4 +5924,3 @@ function DLCTweakData:init(tweak_data)
 	}}
 end
 
-return

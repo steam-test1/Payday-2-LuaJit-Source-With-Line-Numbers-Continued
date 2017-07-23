@@ -77,4 +77,3 @@ function InteractionEditorSystemEvents:on_disconnect_node(data, event)
 	event:skip()
 end
 
-return

@@ -115,4 +115,3 @@ function UnitDamage:set_update_callback(func_name, ...)
 	UnitDamage.super.set_update_callback(self, func_name, ...)
 end
 
-return

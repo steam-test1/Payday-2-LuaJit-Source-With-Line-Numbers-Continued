@@ -21,4 +21,3 @@ function PreFrontEndOnce:transition()
 	end
 end
 
-return

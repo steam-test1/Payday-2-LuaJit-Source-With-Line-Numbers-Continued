@@ -53,4 +53,3 @@ function UnitBase:set_slot(unit, slot)
 	unit:set_slot(slot)
 end
 
-return

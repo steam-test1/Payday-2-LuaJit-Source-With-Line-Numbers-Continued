@@ -346,4 +346,3 @@ function MenuNodeBaseGui:close()
 	MenuNodeBaseGui.super.close(self)
 end
 
-return

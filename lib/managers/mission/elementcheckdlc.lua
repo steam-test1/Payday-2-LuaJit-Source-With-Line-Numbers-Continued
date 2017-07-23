@@ -51,4 +51,3 @@ function ElementCheckDLC:check_all_dlcs_owned(dlc_list)
 	return true
 end
 
-return

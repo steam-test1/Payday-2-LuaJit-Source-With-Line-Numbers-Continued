@@ -11,4 +11,3 @@ function NPCGrenadeLauncherBase:fire_blank(direction, impact)
 	self:_sound_singleshot()
 end
 
-return

@@ -343,4 +343,3 @@ function BoxSelectionTrackBehaviour:on_mouse_left_up(sender, track, event)
 	end
 end
 
-return

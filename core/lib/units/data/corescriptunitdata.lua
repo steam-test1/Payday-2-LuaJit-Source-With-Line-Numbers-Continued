@@ -30,14 +30,13 @@ CoreScriptUnitData.disable_on_ai_graph = nil
 if Application:editor() then
 
 	-- Lines: 26 to 28
-function 	CoreScriptUnitData:init()
+	function CoreScriptUnitData:init()
 		self.unit_groups = {}
 	end
 else
 
 	-- Lines: 30 to 31
-function 	CoreScriptUnitData:init()
+	function CoreScriptUnitData:init()
 	end
 end
 
-return

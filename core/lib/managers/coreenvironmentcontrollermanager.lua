@@ -1098,4 +1098,3 @@ end
 function CoreEnvironmentControllerManager:set_global_param(param_name, param_value)
 end
 
-return

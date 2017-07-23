@@ -184,7 +184,8 @@ function LootManager:_count_achievement_secured(achievement, secured_data)
 				if id == data.carry_id then
 					found = true
 					carry_id = id
-					goto label_0
+
+					break
 				end
 			end
 		elseif data.carry_id == secured_data.carry_id then
@@ -192,7 +193,6 @@ function LootManager:_count_achievement_secured(achievement, secured_data)
 			carry_id = data.carry_id
 		end
 
-		::label_0::
 		if found then
 			if not data[achievement] then
 				amount = amount + 1
@@ -242,7 +242,7 @@ function LootManager:check_achievements(carry_id, multiplier)
 					secured_pass = self:_check_secured(achievement, secured_data)
 
 					if not secured_pass then
-						goto label_1
+						break
 					end
 				end
 			else
@@ -250,7 +250,6 @@ function LootManager:check_achievements(carry_id, multiplier)
 			end
 		end
 
-		::label_1::
 		if not achievement_data.timer then
 			total_value_pass = not achievement_data.total_value or achievement_data.total_value <= real_total_value
 		else
@@ -645,4 +644,3 @@ function LootManager:sync_load(data)
 	end
 end
 
-return

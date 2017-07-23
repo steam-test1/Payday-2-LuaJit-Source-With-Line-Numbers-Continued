@@ -518,4 +518,3 @@ function MultiProfileItemGui:handle_key(k, pressed)
 	end
 end
 
-return

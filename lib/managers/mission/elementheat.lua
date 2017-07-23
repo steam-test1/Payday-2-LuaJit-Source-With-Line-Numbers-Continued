@@ -69,4 +69,3 @@ function ElementHeatTrigger:on_executed(instigator)
 	end
 end
 
-return

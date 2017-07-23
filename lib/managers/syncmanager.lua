@@ -176,4 +176,3 @@ function SyncManager:handle_synced_vault_cash(unit_id, data_string)
 	end
 end
 
-return

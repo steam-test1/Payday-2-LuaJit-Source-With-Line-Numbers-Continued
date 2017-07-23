@@ -384,4 +384,3 @@ function CoreHubElement:destroy()
 	end
 end
 
-return

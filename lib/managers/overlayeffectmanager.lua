@@ -13,4 +13,3 @@ end
 
 CoreClass.override_class(CoreOverlayEffectManager.OverlayEffectManager, OverlayEffectManager)
 
-return

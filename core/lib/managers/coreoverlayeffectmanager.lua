@@ -307,4 +307,3 @@ function OverlayEffectManager:change_resolution()
 	end
 end
 
-return

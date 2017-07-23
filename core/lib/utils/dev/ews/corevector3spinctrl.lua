@@ -78,4 +78,3 @@ function Vector3SpinCtrl:_enter()
 	self:_send_event("EVT_VECTOR3_SPIN_CTRL_ENTER", self:get_value())
 end
 
-return

@@ -329,4 +329,3 @@ function RotationWidget:calculate(unit, widget_rot, widget_pos, widget_screen_po
 	return result_rot
 end
 
-return

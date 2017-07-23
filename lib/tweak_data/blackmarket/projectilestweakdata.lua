@@ -518,4 +518,3 @@ function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end
 
-return

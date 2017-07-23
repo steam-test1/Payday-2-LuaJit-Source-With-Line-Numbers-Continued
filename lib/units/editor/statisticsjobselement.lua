@@ -62,4 +62,3 @@ function StatisticsJobsElement:_build_panel(panel, panel_sizer)
 	}, "Type the required amount that is needed.")
 end
 
-return

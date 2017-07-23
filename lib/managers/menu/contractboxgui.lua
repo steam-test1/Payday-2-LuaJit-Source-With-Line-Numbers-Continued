@@ -599,20 +599,21 @@ function ContractBoxGui:check_update_mutators_tooltip()
 					for key, value in pairs(mutator_data) do
 						if self._mutators_data[mutator_id][key] ~= value then
 							refresh_tooltip = true
-							goto label_0
+
+							break
 						end
 					end
 				else
 					refresh_tooltip = true
 				end
-				::label_0::
 			end
 
 			if not refresh_tooltip then
 				for mutator_id, mutator_data in pairs(self._mutators_data) do
 					if not lobby_data[mutator_id] then
 						refresh_tooltip = true
-						goto label_1
+
+						break
 					else
 						for key, value in pairs(mutator_data) do
 							if lobby_data[mutator_id][key] ~= value then
@@ -632,7 +633,6 @@ function ContractBoxGui:check_update_mutators_tooltip()
 		end
 	end
 
-	::label_1::
 	if refresh_contract then
 		self:create_contract_box()
 	end
@@ -981,4 +981,3 @@ function ContractBoxGui:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
-return

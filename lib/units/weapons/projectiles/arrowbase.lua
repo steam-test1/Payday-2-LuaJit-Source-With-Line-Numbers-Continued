@@ -698,4 +698,3 @@ function ArrowBase:reload_contour()
 	end
 end
 
-return

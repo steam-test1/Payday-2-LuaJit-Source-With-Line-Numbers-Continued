@@ -89,4 +89,3 @@ function CopActionHealed:save(save_data)
 	end
 end
 
-return

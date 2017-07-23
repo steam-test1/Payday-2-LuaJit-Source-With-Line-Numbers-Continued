@@ -4699,4 +4699,3 @@ function CrimeNetGui:close()
 	managers.custom_safehouse:on_exit_crimenet()
 end
 
-return

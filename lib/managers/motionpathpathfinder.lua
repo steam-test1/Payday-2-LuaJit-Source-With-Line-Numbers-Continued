@@ -242,4 +242,3 @@ function MotionPathPathFinder:_get_best_node(open_nodes)
 	return best_node
 end
 
-return

@@ -1767,4 +1767,3 @@ function VehicleDrivingExt:destroy()
 	managers.hud:_remove_name_label(self._unit:unit_data().name_label_id)
 end
 
-return

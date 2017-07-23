@@ -205,4 +205,3 @@ function MenuItemCrimeNetServer:on_delete_row_item(row_item, ...)
 	MenuItemCrimeNetServer.super.on_delete_row_item(self, row_item, ...)
 end
 
-return

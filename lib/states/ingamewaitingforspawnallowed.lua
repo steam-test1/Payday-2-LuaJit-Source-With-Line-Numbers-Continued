@@ -150,4 +150,3 @@ add_prints("IngameWaitingForSpawnAllowed", {
 	"_refresh_teammate_list"
 })
 
-return

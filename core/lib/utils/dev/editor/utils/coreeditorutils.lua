@@ -373,4 +373,3 @@ function dump_all(units, name, get_objects_string)
 	cat_print("editor", "  .. dumping done.")
 end
 
-return

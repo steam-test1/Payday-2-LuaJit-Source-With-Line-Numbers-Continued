@@ -944,4 +944,3 @@ function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end
 
-return

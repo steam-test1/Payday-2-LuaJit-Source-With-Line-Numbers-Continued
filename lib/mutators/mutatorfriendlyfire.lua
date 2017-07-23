@@ -111,4 +111,3 @@ function MutatorFriendlyFire:options_fill()
 	return self:_get_percentage_fill(self:_min_damage(), self:_max_damage(), self:get_friendly_fire_damage_multiplier())
 end
 
-return

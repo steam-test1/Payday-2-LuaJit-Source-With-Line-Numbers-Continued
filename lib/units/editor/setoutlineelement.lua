@@ -85,4 +85,3 @@ function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
-return

@@ -752,4 +752,3 @@ function ZipLine:load(data)
 	managers.worlddefinition:use_me(self._unit)
 end
 
-return

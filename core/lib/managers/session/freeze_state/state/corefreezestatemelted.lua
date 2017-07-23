@@ -16,4 +16,3 @@ end
 function Melted:transition()
 end
 
-return

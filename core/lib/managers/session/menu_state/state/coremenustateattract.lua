@@ -24,4 +24,3 @@ function Attract:transition()
 	end
 end
 
-return

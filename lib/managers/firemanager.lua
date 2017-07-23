@@ -678,4 +678,3 @@ function FireManager:on_simulation_ended()
 	self._dozers_on_fire = {}
 end
 
-return

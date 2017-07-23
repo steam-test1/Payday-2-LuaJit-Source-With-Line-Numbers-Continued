@@ -139,4 +139,3 @@ function CorePuppeteer:_on_selected_unit_changed(selected_unit)
 	end
 end
 
-return

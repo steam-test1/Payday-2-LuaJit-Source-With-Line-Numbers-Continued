@@ -134,4 +134,3 @@ function ElementSpawnCivilianGroup:units()
 	return all_units
 end
 
-return

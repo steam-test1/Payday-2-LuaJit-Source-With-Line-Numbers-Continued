@@ -707,4 +707,3 @@ function PortalUnitGroupShape:draw(t, dt, r, g, b)
 	end
 end
 
-return

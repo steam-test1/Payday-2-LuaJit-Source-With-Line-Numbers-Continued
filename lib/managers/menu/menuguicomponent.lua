@@ -96,4 +96,3 @@ end
 function MenuGuiComponent:mouse_moved(o, x, y)
 end
 
-return

@@ -21,4 +21,3 @@ function InSessionEnd:transition()
 	return CoreSessionStateInit
 end
 
-return

@@ -230,4 +230,3 @@ function ChangeVanSkinUnitElement:remove_unit_list_btn()
 	end
 end
 
-return

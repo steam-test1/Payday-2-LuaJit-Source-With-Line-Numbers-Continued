@@ -140,4 +140,3 @@ function SettingsReader:_read_bind(node, context_description, device_layout_desc
 	end
 end
 
-return

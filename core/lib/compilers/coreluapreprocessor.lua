@@ -358,4 +358,3 @@ function CoreLuaPreprocessor:print_error(text)
 	print("\n[ERROR] " .. text .. "\n")
 end
 
-return

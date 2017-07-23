@@ -31,4 +31,3 @@ function Start:transition()
 	end
 end
 
-return

@@ -39,4 +39,3 @@ function PacketNetworkHandler:message_ack(target_peer, cb_id, sender)
 	self:_do_cb(cb_id)
 end
 
-return

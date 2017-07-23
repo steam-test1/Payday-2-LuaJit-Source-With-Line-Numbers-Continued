@@ -559,4 +559,3 @@ function EditUnitLight:_draw_light(light, t, dt)
 	self._pen:circle(light:position() + Vector3(0, 0, clipping_values.y), light:far_range())
 end
 
-return

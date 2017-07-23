@@ -1527,4 +1527,3 @@ function CopLogicTravel._chk_stop_for_follow_unit(data, my_data)
 	end
 end
 
-return

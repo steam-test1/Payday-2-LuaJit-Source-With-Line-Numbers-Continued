@@ -954,4 +954,3 @@ function GamePlayCentralManager:debug_weapon()
 	gui:set_color(1, 1, 1, 1)
 end
 
-return

@@ -12,4 +12,3 @@ function ModifierExplosionImmunity:modify_value(id, value, unit_tweak)
 	return value
 end
 
-return

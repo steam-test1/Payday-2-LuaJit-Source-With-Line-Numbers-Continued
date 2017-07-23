@@ -281,4 +281,3 @@ core:register_module("core/lib/utils/dev/smoketest/suites/CoreSmoketestEditorSui
 core:register_module("core/lib/utils/dev/smoketest/suites/CoreSmoketestLoadLevelSuite")
 core:register_module("core/lib/setups/CoreSetup")
 
-return

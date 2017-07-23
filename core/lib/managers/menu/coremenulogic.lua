@@ -369,4 +369,3 @@ function Logic:close(closing_menu)
 	self:_call_callback("menu_manager_select_node", false)
 end
 
-return

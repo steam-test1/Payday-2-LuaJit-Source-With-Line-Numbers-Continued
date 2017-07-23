@@ -55,4 +55,3 @@ function RepelRopeBase:retract()
 	end
 end
 
-return

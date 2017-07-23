@@ -149,4 +149,3 @@ function CoreUnitReloader:reload_units(unit_name)
 	self:log(num_reloads .. " " .. unit_name .. " reloaded.")
 end
 
-return

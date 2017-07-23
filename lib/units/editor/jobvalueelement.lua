@@ -211,4 +211,3 @@ function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(save, 0, 0, "EXPAND")
 end
 
-return

@@ -272,4 +272,3 @@ function TankCopLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.chase_path = verified_paths.chase_path
 end
 
-return

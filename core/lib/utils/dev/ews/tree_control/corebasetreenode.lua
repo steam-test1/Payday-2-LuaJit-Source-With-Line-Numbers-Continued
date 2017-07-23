@@ -85,4 +85,3 @@ function CoreBaseTreeNode:remove_children()
 	end
 end
 
-return

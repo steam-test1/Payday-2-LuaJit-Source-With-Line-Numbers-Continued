@@ -81,4 +81,3 @@ function ElementObjective:load(data)
 	self:set_enabled(data.enabled)
 end
 
-return

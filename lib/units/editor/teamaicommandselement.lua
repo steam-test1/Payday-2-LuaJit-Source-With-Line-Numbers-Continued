@@ -27,4 +27,3 @@ function TeamAICommandsElement:_build_panel(panel, panel_sizer)
 	}, "Select an team AI command")
 end
 
-return

@@ -630,4 +630,3 @@ function MenuRenderer:ws_test()
 	})
 end
 
-return

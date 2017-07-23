@@ -84,4 +84,3 @@ function CoreSequenceCutsceneKey:_run_sequence_if_exists(sequence_name)
 	end
 end
 
-return

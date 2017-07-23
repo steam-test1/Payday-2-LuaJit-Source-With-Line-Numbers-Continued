@@ -1665,4 +1665,3 @@ function CopLogicAttack._chk_exit_non_walkable_area(data)
 	end
 end
 
-return

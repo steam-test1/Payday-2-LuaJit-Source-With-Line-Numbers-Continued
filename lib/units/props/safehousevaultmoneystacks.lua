@@ -99,4 +99,3 @@ function SafehouseVaultMoneyStacks:perform_sync()
 	end
 end
 
-return

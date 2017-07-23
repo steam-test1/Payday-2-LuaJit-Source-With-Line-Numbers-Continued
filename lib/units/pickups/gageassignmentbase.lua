@@ -87,4 +87,3 @@ function GageAssignmentBase:interact_blocked()
 	return false
 end
 
-return

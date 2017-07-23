@@ -2054,4 +2054,3 @@ end
 
 require("lib/managers/HUDManagerPD2")
 
-return

@@ -229,4 +229,3 @@ function CrimeSpreeRewardsDetailsPage:_create_card(panel, icon, scale, layer, ro
 	return upcard
 end
 
-return

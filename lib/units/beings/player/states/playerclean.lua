@@ -139,4 +139,3 @@ function PlayerClean:clbk_enemy_weapons_hot()
 	managers.player:set_player_state("standard")
 end
 
-return

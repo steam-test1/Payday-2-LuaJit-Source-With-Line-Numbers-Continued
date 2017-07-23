@@ -102,4 +102,3 @@ function MutatorEnemyDamage:options_fill()
 	return self:_get_percentage_fill(self:_min_damage(), self:_max_damage(), self:get_damage_multiplier())
 end
 
-return

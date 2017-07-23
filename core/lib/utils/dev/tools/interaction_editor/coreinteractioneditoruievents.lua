@@ -73,4 +73,3 @@ end
 function InteractionEditorUIEvents:on_redo()
 end
 
-return

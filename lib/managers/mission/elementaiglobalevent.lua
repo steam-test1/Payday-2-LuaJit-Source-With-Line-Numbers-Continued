@@ -88,4 +88,3 @@ function ElementAiGlobalEvent:on_executed(instigator)
 	ElementAiGlobalEvent.super.on_executed(self, instigator)
 end
 
-return

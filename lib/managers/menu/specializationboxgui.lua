@@ -248,4 +248,3 @@ function SpecializationBoxGui._update(o, self)
 	self._anim_data.conversion_ended = true
 end
 
-return

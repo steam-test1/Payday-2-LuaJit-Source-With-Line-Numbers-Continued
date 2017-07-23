@@ -266,4 +266,3 @@ function CrimeSpreeMissionEndOptions:_move_selection(dir)
 	end
 end
 
-return

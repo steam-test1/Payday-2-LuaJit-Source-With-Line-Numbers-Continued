@@ -2582,4 +2582,3 @@ function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end
 
-return

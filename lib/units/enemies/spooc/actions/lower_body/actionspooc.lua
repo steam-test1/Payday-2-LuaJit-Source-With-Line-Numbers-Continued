@@ -1438,4 +1438,3 @@ function ActionSpooc:_use_christmas_sounds()
 	return tweak and tweak.is_christmas_heist
 end
 
-return

@@ -308,4 +308,3 @@ function SelectWorkView:recreate()
 	self._panel:layout()
 end
 
-return

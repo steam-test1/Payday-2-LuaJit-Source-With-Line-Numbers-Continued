@@ -34,4 +34,3 @@ function TeamRelationElement:_build_panel(panel, panel_sizer)
 	}, "Select the new relation.")
 end
 
-return

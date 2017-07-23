@@ -57,4 +57,3 @@ function CoreChangeCameraAttributeCutsceneKey:is_valid_far_range(value)
 	return value == nil or (self:near_range() or 0) < value
 end
 
-return

@@ -283,4 +283,3 @@ function CivilianLogicTravel.is_available_for_assignment(data, objective)
 	return not data.is_tied
 end
 
-return

@@ -65,4 +65,3 @@ function TimeSpeedEffectTweakData:_init_mission_effects()
 	}
 end
 
-return

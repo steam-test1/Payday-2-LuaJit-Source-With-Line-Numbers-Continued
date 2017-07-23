@@ -172,4 +172,3 @@ function CopSound:anim_clbk_stop_sound(unit, source_name)
 	self:stop(source_name)
 end
 
-return

@@ -881,4 +881,3 @@ function AboutDialog:show()
 	self._frame:show_modal()
 end
 
-return

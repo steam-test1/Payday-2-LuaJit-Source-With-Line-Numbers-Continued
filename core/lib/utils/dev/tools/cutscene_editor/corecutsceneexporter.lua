@@ -374,4 +374,3 @@ function CoreCutsceneExporter:_assert_is_valid()
 	end
 end
 
-return

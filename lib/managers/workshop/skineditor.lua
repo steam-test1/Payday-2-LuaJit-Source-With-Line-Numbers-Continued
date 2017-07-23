@@ -865,4 +865,3 @@ function SkinEditor:get_excluded_type_categories()
 	}
 end
 
-return

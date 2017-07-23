@@ -350,4 +350,3 @@ function CorePostEffect:value(processor, modifier, key)
 	end
 end
 
-return

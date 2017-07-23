@@ -344,4 +344,3 @@ function CoreMaterialEditor:_create_parameter_panel()
 	end
 end
 
-return

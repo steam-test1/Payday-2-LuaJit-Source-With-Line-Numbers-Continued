@@ -515,7 +515,7 @@ function profile(s)
 		t.f = rawget(_G, t.class)[t.name]
 
 		-- Lines: 449 to 450
-function 		t.patch(f)
+		function t.patch(f)
 			_G[t.class][t.name] = f
 		end
 	else
@@ -523,7 +523,7 @@ function 		t.patch(f)
 		t.f = rawget(_G, t.name)
 
 		-- Lines: 453 to 454
-function 		t.patch(f)
+		function t.patch(f)
 			_G[t.name] = f
 		end
 	end
@@ -536,7 +536,7 @@ function 		t.patch(f)
 
 
 	-- Lines: 462 to 466
-function 	t.instrumented(...)
+	function t.instrumented(...)
 		local id = Profiler:start(t.s)
 		res = t.f(...)
 
@@ -576,4 +576,3 @@ function reprofile()
 	__old_profiled = {}
 end
 
-return

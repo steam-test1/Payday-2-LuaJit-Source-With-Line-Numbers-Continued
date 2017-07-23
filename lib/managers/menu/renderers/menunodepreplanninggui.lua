@@ -646,4 +646,3 @@ function MenuNodePrePlanningGui:close()
 	MenuNodePrePlanningGui.super.close(self)
 end
 
-return

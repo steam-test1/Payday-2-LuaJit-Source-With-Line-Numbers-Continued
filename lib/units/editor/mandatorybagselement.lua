@@ -28,4 +28,3 @@ function MandatoryBagsUnitElement:_build_panel(panel, panel_sizer)
 	}, "Amount of mandatory bags.")
 end
 
-return

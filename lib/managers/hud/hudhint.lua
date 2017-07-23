@@ -146,4 +146,3 @@ end
 function HUDHint:show_done()
 end
 
-return

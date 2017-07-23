@@ -238,4 +238,3 @@ function HUDAccessCamera:max_markers(amount)
 	end
 end
 
-return

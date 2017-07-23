@@ -1447,4 +1447,3 @@ function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, 
 	bottom_panel:set_y(bottom_panel:parent():h())
 end
 
-return

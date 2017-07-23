@@ -233,4 +233,3 @@ function CoreMaterialEditorCompileWarningDialog:end_modal(data)
 	self._dialog:end_modal(data)
 end
 
-return

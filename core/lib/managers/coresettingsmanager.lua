@@ -80,4 +80,3 @@ function SettingsManager:_inspect(value)
 	end
 end
 
-return

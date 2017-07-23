@@ -101,4 +101,3 @@ end
 function SafehouseMoneyStack:destroy()
 end
 
-return

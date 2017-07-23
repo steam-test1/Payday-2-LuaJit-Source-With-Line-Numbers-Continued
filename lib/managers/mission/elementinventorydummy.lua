@@ -157,4 +157,3 @@ function ElementInventoryDummy:_destroy_mask()
 	end
 end
 
-return

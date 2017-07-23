@@ -2377,4 +2377,3 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 	self:_add_desc_from_name_macro(self.melee_weapons)
 end
 
-return

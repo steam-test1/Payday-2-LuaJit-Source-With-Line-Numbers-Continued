@@ -123,4 +123,3 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Use 'Amount' only to specify an exact amount of elements to execute. Use 'Amount Random' to add a random amount to 'Amount' ('Amount' + random('Amount Random').")
 end
 
-return

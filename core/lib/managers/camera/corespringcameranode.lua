@@ -297,4 +297,3 @@ function SpringCameraAcceleration:reset()
 	self._previous_parent_position = Vector3(0, 0, 0)
 end
 
-return

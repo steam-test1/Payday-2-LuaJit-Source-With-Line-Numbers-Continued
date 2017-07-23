@@ -122,4 +122,3 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "event", options)
 end
 
-return

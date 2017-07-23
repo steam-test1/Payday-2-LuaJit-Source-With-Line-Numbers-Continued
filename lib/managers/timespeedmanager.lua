@@ -209,4 +209,3 @@ function TimeSpeedManager:destroy()
 	SoundDevice:set_rtpc("game_speed", 1)
 end
 
-return

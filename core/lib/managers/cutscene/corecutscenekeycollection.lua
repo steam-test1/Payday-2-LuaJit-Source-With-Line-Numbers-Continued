@@ -94,4 +94,3 @@ function CoreCutsceneKeyCollection:last_key_before(time, element_name, propertie
 	return last_key
 end
 
-return

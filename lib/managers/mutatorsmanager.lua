@@ -777,4 +777,3 @@ function MutatorsManager:on_lobby_left()
 	Global.mutators._peers_ready = nil
 end
 
-return

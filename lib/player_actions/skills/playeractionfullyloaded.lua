@@ -23,7 +23,7 @@ PlayerAction.FullyLoaded = {}
 PlayerAction.FullyLoaded.Priority = 1
 
 -- Lines: 23 to 40
-PlayerAction.function FullyLoaded.Function(player_manager, pickup_chance, increase)
+PlayerAction.FullyLoaded.Function = function (player_manager, pickup_chance, increase)
 	local co = coroutine.running()
 	local gained_throwable = false
 	local chance = pickup_chance
@@ -44,4 +44,3 @@ PlayerAction.function FullyLoaded.Function(player_manager, pickup_chance, increa
 	player_manager:unregister_message(Message.OnAmmoPickup, co)
 end
 
-return

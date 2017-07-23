@@ -13,4 +13,3 @@ elseif SystemInfo:platform() == Idstring("PS4") then
 	Creator = CoreFakeSessionCreator.Creator
 end
 
-return

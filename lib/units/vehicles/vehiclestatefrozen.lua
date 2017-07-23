@@ -33,4 +33,3 @@ function VehicleStateFrozen:is_vulnerable()
 	return false
 end
 
-return

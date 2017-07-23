@@ -380,4 +380,3 @@ function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user
 	return defense_data
 end
 
-return

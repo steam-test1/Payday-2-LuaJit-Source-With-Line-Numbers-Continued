@@ -17,4 +17,3 @@ function ElementConsoleCommand:on_executed(instigator)
 	ElementConsoleCommand.super.on_executed(self, instigator)
 end
 
-return

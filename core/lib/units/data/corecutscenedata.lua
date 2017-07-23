@@ -39,7 +39,7 @@ function CoreCutsceneData:cutscene_player(__skip_stall_warning, __skip_priming)
 		local actual_destroy_func = self.__cutscene_player.destroy
 
 		-- Lines: 33 to 37
-		self.function __cutscene_player.destroy(instance)
+		self.__cutscene_player.destroy = function (instance)
 			assert(instance == self.__cutscene_player)
 
 			self.__cutscene_player = nil
@@ -70,4 +70,3 @@ function CoreCutsceneData:_cutscene_name(unit_type_name)
 	return string.match(unit_type_name, "cutscene_(.+)")
 end
 
-return

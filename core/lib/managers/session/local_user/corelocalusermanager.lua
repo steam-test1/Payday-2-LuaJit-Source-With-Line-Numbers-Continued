@@ -117,4 +117,3 @@ function Manager:leave_level_handler(level_handler)
 	end
 end
 
-return

@@ -269,4 +269,3 @@ function Ladder:load(data)
 	self:set_config()
 end
 
-return

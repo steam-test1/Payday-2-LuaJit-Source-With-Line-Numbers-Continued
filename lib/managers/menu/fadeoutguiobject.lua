@@ -72,4 +72,3 @@ function FadeoutGuiObject:fade_out(duration)
 	self._fade_out_duration = duration
 end
 
-return

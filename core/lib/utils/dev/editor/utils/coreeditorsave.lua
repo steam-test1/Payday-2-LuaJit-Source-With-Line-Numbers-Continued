@@ -231,4 +231,3 @@ function load_layout(params)
 	end
 end
 
-return

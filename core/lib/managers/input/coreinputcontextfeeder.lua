@@ -56,4 +56,3 @@ function Feeder:update(t, dt)
 	end
 end
 
-return

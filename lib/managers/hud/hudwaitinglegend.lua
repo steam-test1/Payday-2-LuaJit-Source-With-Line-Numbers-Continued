@@ -182,4 +182,3 @@ function HUDWaitingLegend:kick()
 	end
 end
 
-return

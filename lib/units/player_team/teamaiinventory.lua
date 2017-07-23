@@ -117,4 +117,3 @@ function TeamAIInventory:pre_destroy(unit)
 	self:_unload_mask()
 end
 
-return

@@ -528,4 +528,3 @@ function CameraTemplateManager:update(t, dt)
 	end
 end
 
-return

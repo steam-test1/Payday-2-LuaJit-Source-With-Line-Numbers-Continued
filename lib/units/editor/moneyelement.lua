@@ -92,4 +92,3 @@ function FilterMoneyUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Checks that the player has the required amount of cash in their spending or offshore accounts.")
 end
 
-return

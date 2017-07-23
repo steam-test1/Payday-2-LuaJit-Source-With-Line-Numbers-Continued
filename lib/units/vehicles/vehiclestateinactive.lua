@@ -60,4 +60,3 @@ function VehicleStateInactive:exit()
 	end
 end
 
-return

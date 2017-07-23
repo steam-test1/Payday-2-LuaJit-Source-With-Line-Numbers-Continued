@@ -373,4 +373,3 @@ function VehicleManager:update(t, dt)
 	end
 end
 
-return

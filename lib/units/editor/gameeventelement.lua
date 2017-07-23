@@ -57,4 +57,3 @@ function GameEventElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(text_sizer_event, 0, 0, "EXPAND")
 end
 
-return

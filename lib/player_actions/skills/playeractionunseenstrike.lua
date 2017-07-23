@@ -2,7 +2,7 @@ PlayerAction.UnseenStrike = {}
 PlayerAction.UnseenStrike.Priority = 1
 
 -- Lines: 8 to 31
-PlayerAction.function UnseenStrike.Function(player_manager, min_time, max_duration, crit_chance)
+PlayerAction.UnseenStrike.Function = function (player_manager, min_time, max_duration, crit_chance)
 	local co = coroutine.running()
 	local current_time = Application:time()
 	local target_time = Application:time() + min_time
@@ -35,7 +35,7 @@ PlayerAction.UnseenStrikeStart = {}
 PlayerAction.UnseenStrikeStart.Priority = 1
 
 -- Lines: 35 to 55
-PlayerAction.function UnseenStrikeStart.Function(player_manager, max_duration, crit_chance)
+PlayerAction.UnseenStrikeStart.Function = function (player_manager, max_duration, crit_chance)
 	local co = coroutine.running()
 	local quit = false
 	local current_time = Application:time()
@@ -60,4 +60,3 @@ PlayerAction.function UnseenStrikeStart.Function(player_manager, max_duration, c
 	player_manager:unregister_message(Message.OnPlayerDamage, co)
 end
 
-return

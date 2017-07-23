@@ -472,4 +472,3 @@ function HuskTeamAIDamage:load(data)
 	end
 end
 
-return

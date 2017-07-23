@@ -28,4 +28,3 @@ function ElementSmokeGrenade:on_executed(instigator)
 	ElementSmokeGrenade.super.on_executed(self, instigator)
 end
 
-return

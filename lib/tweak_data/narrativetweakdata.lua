@@ -4765,4 +4765,3 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
-return

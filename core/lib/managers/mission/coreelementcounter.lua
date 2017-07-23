@@ -360,4 +360,3 @@ function ElementCounterFilter:_check_type(element)
 	end
 end
 
-return

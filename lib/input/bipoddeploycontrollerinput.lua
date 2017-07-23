@@ -23,4 +23,3 @@ function BipodDeployControllerInput:update(t, dt, controller, input)
 	end
 end
 
-return

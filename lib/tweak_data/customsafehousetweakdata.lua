@@ -1593,4 +1593,3 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 	}
 end
 
-return

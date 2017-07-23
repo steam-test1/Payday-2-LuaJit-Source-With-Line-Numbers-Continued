@@ -22,4 +22,3 @@ function PlayerDialog:to_string()
 	return string.format("%s, Player id: %s", tostring(BaseDialog.to_string(self)), tostring(self._data.player_id))
 end
 
-return

@@ -122,4 +122,3 @@ function OffshoreGui:perform_sync()
 	end
 end
 
-return

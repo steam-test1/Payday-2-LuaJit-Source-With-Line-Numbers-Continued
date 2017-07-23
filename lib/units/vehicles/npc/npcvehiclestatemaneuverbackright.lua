@@ -73,4 +73,3 @@ function NpcVehicleStateManeuverBackRight:is_maneuvering()
 	return true
 end
 
-return

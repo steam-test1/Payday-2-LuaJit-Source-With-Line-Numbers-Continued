@@ -508,7 +508,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 					end
 
 					if break_outer then
-						goto label_0
+						break
 					end
 				end
 			else
@@ -518,7 +518,6 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 					end
 				end
 			end
-			::label_0::
 		end
 
 		if table.size(available_jobs) == 0 then
@@ -587,4 +586,3 @@ function AchievmentManager:_award_achievement(achievement_data, achievement_name
 	end
 end
 
-return

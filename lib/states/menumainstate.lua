@@ -186,4 +186,3 @@ end
 function MenuMainState:on_disconnected()
 end
 
-return

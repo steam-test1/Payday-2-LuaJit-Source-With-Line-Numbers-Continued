@@ -13,4 +13,3 @@ function GrenadeLauncherContinousReloadBase:shotgun_shell_data()
 	return nil
 end
 
-return

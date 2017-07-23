@@ -1635,4 +1635,3 @@ function MoneyManager:load(data)
 	end
 end
 
-return

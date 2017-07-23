@@ -1697,4 +1697,3 @@ function CopActionHurt:on_destroy()
 	end
 end
 
-return

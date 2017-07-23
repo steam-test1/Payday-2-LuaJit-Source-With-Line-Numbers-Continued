@@ -28,4 +28,3 @@ function ModifierHeavies:init(data)
 	end
 end
 
-return

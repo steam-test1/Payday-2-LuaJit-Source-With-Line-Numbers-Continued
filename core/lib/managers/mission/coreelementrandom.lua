@@ -63,4 +63,3 @@ function ElementRandom:_get_random_elements()
 	return table.remove(self._unused_randoms, rand)
 end
 
-return

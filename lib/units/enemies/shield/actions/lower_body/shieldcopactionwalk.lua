@@ -76,4 +76,3 @@ ShieldCopActionWalk._walk_anim_lengths.stand.hos = ShieldCopActionWalk._walk_ani
 ShieldCopActionWalk._walk_anim_lengths.stand.wnd = ShieldCopActionWalk._walk_anim_lengths.stand.cbt
 ShieldCopActionWalk._walk_anim_lengths.crouch = ShieldCopActionWalk._walk_anim_lengths.stand
 
-return

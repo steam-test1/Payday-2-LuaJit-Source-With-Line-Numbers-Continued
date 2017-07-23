@@ -50,4 +50,3 @@ function ElementMissionFilter:_check_mission_filters()
 	return false
 end
 
-return

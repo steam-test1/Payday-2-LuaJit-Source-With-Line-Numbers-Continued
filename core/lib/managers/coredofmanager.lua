@@ -428,4 +428,3 @@ function DOFManager:set_effect_parameters(id, params, clamp)
 	end
 end
 
-return

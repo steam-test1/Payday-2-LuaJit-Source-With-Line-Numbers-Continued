@@ -213,4 +213,3 @@ function MenuKitRenderer:close(...)
 	MenuKitRenderer.super.close(self, ...)
 end
 
-return

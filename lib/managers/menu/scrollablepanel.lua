@@ -480,4 +480,3 @@ function ScrollablePanel:mouse_released(button, x, y)
 	return self:release_scroll_bar()
 end
 
-return

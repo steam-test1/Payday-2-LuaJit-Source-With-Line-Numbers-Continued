@@ -838,4 +838,3 @@ function PlayerInventory:set_weapon_enabled(state)
 	end
 end
 
-return

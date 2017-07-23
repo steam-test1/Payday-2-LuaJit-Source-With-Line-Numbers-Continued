@@ -1936,4 +1936,3 @@ function Layer:alt()
 	return CoreInput.alt()
 end
 
-return

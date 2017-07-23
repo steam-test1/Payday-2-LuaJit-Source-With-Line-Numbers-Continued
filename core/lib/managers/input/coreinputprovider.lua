@@ -49,4 +49,3 @@ function Provider:_layer_destroyed(layer)
 	self._prioritizer:remove_layer_description(layer_description)
 end
 
-return

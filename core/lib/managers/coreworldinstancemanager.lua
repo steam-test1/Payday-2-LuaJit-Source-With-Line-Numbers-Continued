@@ -607,4 +607,3 @@ function CoreWorldInstanceManager:clear()
 	self._instance_data = {}
 end
 
-return

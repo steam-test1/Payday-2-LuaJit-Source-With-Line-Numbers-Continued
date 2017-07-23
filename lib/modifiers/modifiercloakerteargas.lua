@@ -21,4 +21,3 @@ function ModifierCloakerTearGas:OnEnemyDied(unit, damage_info)
 	end
 end
 
-return

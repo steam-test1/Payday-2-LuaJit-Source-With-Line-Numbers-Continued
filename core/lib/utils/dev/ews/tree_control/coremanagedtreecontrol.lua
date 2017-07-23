@@ -231,12 +231,12 @@ function CoreManagedTreeControl:connect(event_type, script_callback, script_data
 			local old_item_id = event:get_old_item()
 
 			-- Lines: 200 to 201
-function 			wrapped_event.get_item()
+			function wrapped_event.get_item()
 				return item_id ~= -1 and CoreEWSTreeCtrlTreeNode:new(self._tree_ctrl, item_id, self._checkbox_style) or nil
 			end
 
 			-- Lines: 201 to 202
-function 			wrapped_event.get_old_item()
+			function wrapped_event.get_old_item()
 				return old_item_id ~= -1 and CoreEWSTreeCtrlTreeNode:new(self._tree_ctrl, old_item_id, self._checkbox_style) or nil
 			end
 
@@ -270,4 +270,3 @@ function CoreManagedTreeControl:disconnect(event_type, script_callback)
 	end
 end
 
-return

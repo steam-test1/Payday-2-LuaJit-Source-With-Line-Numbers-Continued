@@ -218,4 +218,3 @@ function LobbyCharacterData:make_fine_text(text)
 	return x, y, w, h
 end
 
-return

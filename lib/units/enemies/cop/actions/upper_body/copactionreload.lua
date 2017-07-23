@@ -138,4 +138,3 @@ function CopActionReload:need_upd()
 	return true
 end
 
-return

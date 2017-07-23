@@ -49,4 +49,3 @@ function ObjectDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	end
 end
 
-return

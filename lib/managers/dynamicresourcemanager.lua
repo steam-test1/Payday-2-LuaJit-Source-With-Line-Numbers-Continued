@@ -289,4 +289,3 @@ end
 function DynamicResourceManager:preload_units()
 end
 
-return

@@ -22,4 +22,3 @@ function ElementWhisperState:on_executed(instigator)
 	ElementWhisperState.super.on_executed(self, instigator)
 end
 
-return

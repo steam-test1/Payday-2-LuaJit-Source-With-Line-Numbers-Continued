@@ -261,4 +261,3 @@ end
 function CrimeSpreeStartButton:update(t, dt)
 end
 
-return

@@ -389,4 +389,3 @@ function generate_FAITH_report(filepath)
 	generate_report(filepath, prot, dp)
 end
 
-return

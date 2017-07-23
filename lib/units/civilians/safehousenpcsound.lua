@@ -120,4 +120,3 @@ function SafehouseNPCSound:_sound_start_muttering()
 	self:say(string.format("Play_%s_idle", self.character), false, true)
 end
 
-return

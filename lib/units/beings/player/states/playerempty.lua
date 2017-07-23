@@ -24,4 +24,3 @@ end
 function PlayerEmpty:destroy()
 end
 
-return

@@ -59,4 +59,3 @@ function ElementUnitSequenceTrigger:load(data)
 	end
 end
 
-return

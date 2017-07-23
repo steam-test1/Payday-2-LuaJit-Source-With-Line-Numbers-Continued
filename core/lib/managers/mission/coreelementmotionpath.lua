@@ -74,4 +74,3 @@ function ElementMotionPathTrigger:on_executed(instigator)
 	ElementMotionPathTrigger.super.on_executed(self, instigator)
 end
 
-return

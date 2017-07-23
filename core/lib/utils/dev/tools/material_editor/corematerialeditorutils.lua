@@ -366,4 +366,3 @@ function CoreMaterialEditor:_set_channels_default_texture(node)
 	end
 end
 
-return

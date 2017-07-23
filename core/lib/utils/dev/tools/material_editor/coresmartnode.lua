@@ -124,4 +124,3 @@ function CoreSmartNode:to_xml()
 	return self:to_real_node():to_xml()
 end
 
-return

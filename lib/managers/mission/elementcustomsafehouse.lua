@@ -139,4 +139,3 @@ function ElementCustomSafehouseAwardTrophy:on_executed(instigator)
 	ElementCustomSafehouseAwardTrophy.super.on_executed(self, self._unit or instigator)
 end
 
-return

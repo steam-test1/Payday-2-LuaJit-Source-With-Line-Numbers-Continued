@@ -31,4 +31,3 @@ function LootSecuredTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "report_only")
 end
 
-return

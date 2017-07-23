@@ -119,4 +119,3 @@ function CoreFilteredTreeControl:thaw(already_refreshed)
 	end
 end
 
-return

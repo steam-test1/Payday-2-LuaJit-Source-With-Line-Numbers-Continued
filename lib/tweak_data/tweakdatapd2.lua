@@ -668,4 +668,3 @@ function TweakData:_init_pd2()
 	}
 end
 
-return

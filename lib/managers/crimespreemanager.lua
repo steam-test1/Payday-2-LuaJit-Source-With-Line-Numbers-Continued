@@ -1672,4 +1672,3 @@ function CrimeSpreeManager:consumable_value(name)
 	end
 end
 
-return

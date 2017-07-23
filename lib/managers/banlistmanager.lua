@@ -64,4 +64,3 @@ function BanListManager:load(data)
 	end
 end
 
-return

@@ -370,4 +370,3 @@ function CoreEWS:_remove_self(...)
 	return unpack(params)
 end
 
-return

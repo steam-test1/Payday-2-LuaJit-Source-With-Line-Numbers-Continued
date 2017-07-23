@@ -43,4 +43,3 @@ function MenuNodeSkinEditorGui:mouse_pressed(button, x, y)
 	end
 end
 
-return

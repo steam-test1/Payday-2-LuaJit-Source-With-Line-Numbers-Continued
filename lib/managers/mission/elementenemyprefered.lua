@@ -91,4 +91,3 @@ function ElementEnemyPreferedRemove:on_executed(instigator)
 	ElementEnemyPreferedRemove.super.on_executed(self, instigator)
 end
 
-return

@@ -224,4 +224,3 @@ end
 function SimpleVehicle:destroy()
 end
 
-return

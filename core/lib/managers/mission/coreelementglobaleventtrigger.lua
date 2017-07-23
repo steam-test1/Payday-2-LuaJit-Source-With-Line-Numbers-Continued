@@ -30,4 +30,3 @@ function ElementGlobalEventTrigger:on_executed(instigator)
 	ElementGlobalEventTrigger.super.on_executed(self, instigator)
 end
 
-return

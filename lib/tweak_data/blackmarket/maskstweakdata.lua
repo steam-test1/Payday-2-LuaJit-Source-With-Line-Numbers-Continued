@@ -4527,4 +4527,3 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self:_add_desc_from_name_macro(self.masks)
 end
 
-return

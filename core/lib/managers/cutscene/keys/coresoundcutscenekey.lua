@@ -183,7 +183,7 @@ function CoreSoundCutsceneKey:_trigger_sound(offset)
 	if alive(instance) then
 
 		-- Lines: 149 to 153
-function 		self._sound_abort_func()
+		function self._sound_abort_func()
 			if alive(instance) and instance:is_playing() then
 				instance:stop()
 			end
@@ -191,4 +191,3 @@ function 		self._sound_abort_func()
 	end
 end
 
-return

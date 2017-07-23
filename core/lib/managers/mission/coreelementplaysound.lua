@@ -122,4 +122,3 @@ function ElementPlaySound:destroy()
 	end
 end
 
-return

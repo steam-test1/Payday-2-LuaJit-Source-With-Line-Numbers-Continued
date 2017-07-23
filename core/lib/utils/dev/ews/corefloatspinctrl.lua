@@ -143,4 +143,3 @@ function FloatSpinCtrl:_add_style(style)
 	self._sp_style = self._sp_style and self._sp_style .. "," .. style or style
 end
 
-return

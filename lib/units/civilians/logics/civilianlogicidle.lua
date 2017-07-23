@@ -549,4 +549,3 @@ function CivilianLogicIdle._set_attention_obj(data, new_att_obj, new_reaction)
 	end
 end
 
-return

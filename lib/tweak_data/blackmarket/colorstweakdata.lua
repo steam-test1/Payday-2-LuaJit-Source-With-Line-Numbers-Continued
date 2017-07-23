@@ -2089,4 +2089,3 @@ function BlackMarketTweakData:_init_colors(tweak_data)
 	end
 end
 
-return

@@ -24,4 +24,3 @@ end
 function SpawnPlayerElement:add_to_mission_package()
 end
 
-return

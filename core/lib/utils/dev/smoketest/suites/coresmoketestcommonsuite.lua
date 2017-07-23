@@ -207,4 +207,3 @@ function CommonSuite:get_argument(name)
 	return self._suite_arguments[name]
 end
 
-return

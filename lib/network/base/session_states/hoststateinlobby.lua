@@ -174,4 +174,3 @@ function HostStateInLobby:is_joinable(data)
 	return not data.wants_to_load_level
 end
 
-return

@@ -6,4 +6,3 @@ function CoreEditorSoundData:init()
 	self.environment_area = nil
 end
 
-return

@@ -344,4 +344,3 @@ function CoreUnitSequenceTriggerUnitElement:set_sequence_data(guis_id)
 	end
 end
 
-return

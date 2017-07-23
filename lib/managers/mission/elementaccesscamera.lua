@@ -243,4 +243,3 @@ function ElementAccessCameraTrigger:on_executed(instigator)
 	ElementAccessCameraTrigger.super.on_executed(self, instigator)
 end
 
-return

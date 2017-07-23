@@ -159,4 +159,3 @@ function _Deps:get_pairs()
 	return ipairs(self._dnlist)
 end
 
-return

@@ -165,4 +165,3 @@ function AiDataManager:load_units(units)
 	end
 end
 
-return

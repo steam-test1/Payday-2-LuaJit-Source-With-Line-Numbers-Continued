@@ -136,4 +136,3 @@ function EndscreenVariantElement:_get_params(panel, panel_sizer)
 	return bscreen_params
 end
 
-return

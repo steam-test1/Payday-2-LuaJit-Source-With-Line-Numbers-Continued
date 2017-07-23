@@ -84,4 +84,3 @@ function ElementPlayerCharacterFilter:is_character_taken(instigator)
 	end
 end
 
-return

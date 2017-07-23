@@ -317,4 +317,3 @@ function ItemToggle:fade_row_item(node, row_item)
 	return true
 end
 
-return

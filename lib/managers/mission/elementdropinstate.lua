@@ -22,4 +22,3 @@ function ElementDropinState:on_executed(instigator)
 	ElementDropinState.super.on_executed(self, instigator)
 end
 
-return

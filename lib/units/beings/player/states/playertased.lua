@@ -565,4 +565,3 @@ function PlayerTased:_on_malfunction_to_taser_event()
 	self._taser_unit:character_damage():damage_melee(action_data)
 end
 
-return

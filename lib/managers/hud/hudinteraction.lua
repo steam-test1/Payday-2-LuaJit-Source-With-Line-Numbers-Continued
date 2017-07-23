@@ -186,4 +186,3 @@ function HUDInteraction:_animate_interaction_complete(bitmap, circle)
 	circle:remove()
 end
 
-return

@@ -157,4 +157,3 @@ function InteractionEditor:redo(sys)
 	end
 end
 
-return

@@ -569,4 +569,3 @@ function CoreSetup:make_entrypoint()
 	rawset(_G, "load", callback(self, self, "__load"))
 end
 
-return

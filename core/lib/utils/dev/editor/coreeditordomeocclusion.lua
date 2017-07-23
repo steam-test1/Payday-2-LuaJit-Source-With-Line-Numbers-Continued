@@ -212,4 +212,3 @@ function CoreEditor:dome_occlusion_done()
 	self._dome_occlusion_params = nil
 end
 
-return

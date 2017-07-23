@@ -359,4 +359,3 @@ function CivilianLogicEscort._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end
 
-return

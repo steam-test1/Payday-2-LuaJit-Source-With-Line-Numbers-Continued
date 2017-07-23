@@ -4026,4 +4026,3 @@ function GroupAIStateBesiege:get_assault_number()
 	return self._assault_number
 end
 
-return

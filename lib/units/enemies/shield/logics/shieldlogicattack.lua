@@ -624,4 +624,3 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	end
 end
 
-return

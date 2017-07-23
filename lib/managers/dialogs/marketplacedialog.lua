@@ -27,4 +27,3 @@ function MarketplaceDialog:to_string()
 	return string.format("%s, Item type: %s, Item id: %s", tostring(BaseDialog.to_string(self)), tostring(self._data.item_type), tostring(self._data.item_id))
 end
 
-return

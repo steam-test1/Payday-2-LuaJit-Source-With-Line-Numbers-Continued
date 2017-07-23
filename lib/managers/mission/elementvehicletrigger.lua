@@ -43,4 +43,3 @@ function ElementVehicleTrigger:on_executed(instigator)
 	ElementVehicleTrigger.super.on_executed(self, self._unit or instigator)
 end
 
-return

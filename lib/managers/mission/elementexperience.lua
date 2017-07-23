@@ -22,4 +22,3 @@ function ElementExperience:client_on_executed(...)
 	self:on_executed(...)
 end
 
-return

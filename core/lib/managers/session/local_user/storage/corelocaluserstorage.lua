@@ -125,4 +125,3 @@ function Storage:profile_progress()
 	return self._profile_data.progress.title_data
 end
 
-return

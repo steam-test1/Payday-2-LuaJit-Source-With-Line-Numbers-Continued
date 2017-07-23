@@ -542,4 +542,3 @@ function HUDObjectives:_animate_icon_objectivebox(icon_objectivebox)
 	icon_objectivebox:set_y(0)
 end
 
-return

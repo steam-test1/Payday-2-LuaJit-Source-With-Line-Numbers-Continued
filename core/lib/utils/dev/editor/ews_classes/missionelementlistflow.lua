@@ -324,4 +324,3 @@ function MissionElementListFlow:recreate()
 	self._panel:layout()
 end
 
-return

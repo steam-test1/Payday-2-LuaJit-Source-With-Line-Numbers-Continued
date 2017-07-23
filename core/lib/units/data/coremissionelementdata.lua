@@ -10,4 +10,3 @@ end
 function CoreMissionElementData:init(unit)
 end
 
-return

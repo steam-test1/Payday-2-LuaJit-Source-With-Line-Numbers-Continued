@@ -280,4 +280,3 @@ function EnvironmentArea:is_higher_prio(min_prio)
 	end
 end
 
-return

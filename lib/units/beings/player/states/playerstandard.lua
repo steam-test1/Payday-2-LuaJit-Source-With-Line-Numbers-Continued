@@ -4762,4 +4762,3 @@ function PlayerStandard:tweak_data_clbk_reload()
 	self._tweak_data = tweak_data.player.movement_state.standard
 end
 
-return

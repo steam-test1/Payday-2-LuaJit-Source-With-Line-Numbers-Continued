@@ -23,4 +23,3 @@ function InventoryList:close()
 	self._ws:panel():remove(self._panel)
 end
 
-return

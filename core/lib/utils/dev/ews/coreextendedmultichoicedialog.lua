@@ -113,4 +113,3 @@ function CoreExtendedMultiChoiceDialog:get_value()
 	return self._value_map
 end
 
-return

@@ -32,4 +32,3 @@ function GameInstallingGui:close()
 	end
 end
 
-return

@@ -27,4 +27,3 @@ function SecondDeployableControllerInput:update(t, dt, controller, input, curren
 	end
 end
 
-return

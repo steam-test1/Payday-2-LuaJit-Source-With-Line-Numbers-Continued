@@ -67,4 +67,3 @@ end
 function Pickup:destroy(unit)
 end
 
-return

@@ -340,4 +340,3 @@ function QuickFlashGrenade:on_network_event(event_id)
 	end
 end
 
-return

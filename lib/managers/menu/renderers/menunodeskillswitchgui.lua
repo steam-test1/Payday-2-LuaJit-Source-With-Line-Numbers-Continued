@@ -424,4 +424,3 @@ function MenuNodeSkillSwitchGui:mouse_moved(o, x, y)
 	return used, icon
 end
 
-return

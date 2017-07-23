@@ -37,7 +37,7 @@ function CoreLuaProfiler:create_main_frame()
 	self._main_frame = EWS:Frame("LUA Profiler", Vector3(-1, -1, 0), Vector3(1000, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
 	-- Lines: 41 to 42
-function 	self._resource_sort_func(a, b)
+	function self._resource_sort_func(a, b)
 		return a._name:s() < b._name:s()
 	end
 	local sort_by_name = self._resource_sort_func
@@ -546,7 +546,7 @@ function CoreLuaProfiler:add_profiler(name)
 		self._profilers[func_table._source]._old_func = f
 
 		-- Lines: 523 to 527
-		rawget(_G, self.function _class_name)[func_table._name](...)
+		rawget(_G, self._class_name)[func_table._name] = function (...)
 			local profiler_id = Profiler:start(func_table._source)
 			local ret_list = {f(...)}
 
@@ -857,4 +857,3 @@ function CoreLuaProfilerSampleRateDialog:get_value()
 	return math.max(1, tonumber(self._key))
 end
 
-return

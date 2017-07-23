@@ -359,4 +359,3 @@ function GuiDataManager:resolution_changed()
 	self:_setup_workspace_data()
 end
 
-return

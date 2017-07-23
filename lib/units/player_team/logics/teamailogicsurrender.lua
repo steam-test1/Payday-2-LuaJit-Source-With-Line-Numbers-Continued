@@ -90,4 +90,3 @@ end
 function TeamAILogicSurrender.is_available_for_assignment(data)
 end
 
-return

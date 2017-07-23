@@ -667,4 +667,3 @@ function AreaReportTriggerUnitElement:_build_panel(panel, panel_sizer)
 	AreaReportTriggerUnitElement.super._build_panel(self, panel, panel_sizer, {trigger_type = true})
 end
 
-return

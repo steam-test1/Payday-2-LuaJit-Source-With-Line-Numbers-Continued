@@ -137,4 +137,3 @@ function NetworkVoiceChatSTEAM:is_muted(peer)
 	return self.handler:is_voice_receiver_muted(peer:id())
 end
 
-return

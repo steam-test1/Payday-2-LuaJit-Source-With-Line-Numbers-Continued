@@ -89,4 +89,3 @@ function ElementTangoFilter:on_executed(instigator)
 	end
 end
 
-return

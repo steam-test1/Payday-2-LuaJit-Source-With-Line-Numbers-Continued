@@ -94,4 +94,3 @@ function NewUnlockDialog:update(t, dt)
 	end
 end
 
-return

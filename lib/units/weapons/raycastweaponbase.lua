@@ -2443,4 +2443,3 @@ function ProjectilesPoisonBulletBase:on_collision(col_ray, weapon_unit, user_uni
 	return result
 end
 
-return

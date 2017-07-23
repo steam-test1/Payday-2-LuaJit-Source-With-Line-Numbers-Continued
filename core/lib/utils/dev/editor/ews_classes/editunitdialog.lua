@@ -108,4 +108,3 @@ function EditUnitBase:update_debug(ctrlr)
 	self._debug = ctrlr:get_value()
 end
 
-return

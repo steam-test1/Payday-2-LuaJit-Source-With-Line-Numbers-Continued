@@ -30,4 +30,3 @@ function SessionDebug:_parse_standard_arguments()
 	end
 end
 
-return

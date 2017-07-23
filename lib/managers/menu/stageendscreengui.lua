@@ -1230,4 +1230,3 @@ function StageEndScreenGui:reload()
 	StageEndScreenGui.init(self, self._safe_workspace, self._full_workspace, self._data)
 end
 
-return

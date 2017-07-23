@@ -37,4 +37,3 @@ function PunchingBagDamage:dead()
 	return false
 end
 
-return

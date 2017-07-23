@@ -276,4 +276,3 @@ function CivilianBrain:save(save_data)
 	end
 end
 
-return

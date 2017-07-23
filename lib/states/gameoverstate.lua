@@ -87,4 +87,3 @@ function GameOverState:continue()
 	end
 end
 
-return

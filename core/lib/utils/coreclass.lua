@@ -26,7 +26,7 @@ function class(...)
 
 
 	-- Lines: 31 to 37
-function 	class_table.new(klass, ...)
+	function class_table.new(klass, ...)
 		local object = {}
 
 		setmetatable(object, __overrides[class_table] or class_table)
@@ -191,7 +191,7 @@ function frozen_class(...)
 	local new = class_table.new
 
 	-- Lines: 162 to 164
-function 	class_table.new(klass, ...)
+	function class_table.new(klass, ...)
 		local instance, ret = new(klass, ...)
 
 		return freeze(instance), ret
@@ -259,4 +259,3 @@ function GetSet:init(t)
 	end
 end
 
-return

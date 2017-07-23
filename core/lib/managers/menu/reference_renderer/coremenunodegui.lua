@@ -371,7 +371,8 @@ function NodeGui:_reposition_items(highlighted_row_item)
 
 						if row_item.type ~= "divider" and not row_item.item:parameters().back and not row_item.item:parameters().pd2_corner then
 							next_item = row_item
-							goto label_0
+
+							break
 						end
 					end
 				end
@@ -380,7 +381,6 @@ function NodeGui:_reposition_items(highlighted_row_item)
 			end
 		end
 
-		::label_0::
 		local h = highlighted_row_item.item:get_h(highlighted_row_item, self) or highlighted_row_item.gui_panel:h()
 		local offset = first and h * num_dividers_top or last and h * num_dividers_bottom or h
 		offset = offset + self.height_padding
@@ -721,4 +721,3 @@ function NodeGui:mouse_pressed(button, x, y)
 	end
 end
 
-return

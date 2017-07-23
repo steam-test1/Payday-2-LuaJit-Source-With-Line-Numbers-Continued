@@ -83,4 +83,3 @@ function ElementFeedback:_calc_multiplier(player)
 	return mul
 end
 
-return

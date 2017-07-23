@@ -67,4 +67,3 @@ function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "can_not_be_muted", "This dialogue will play regardless of if the player has disabled contractor VO")
 end
 
-return

@@ -230,4 +230,3 @@ function MutatorCloakerEffect:cloaker_fire_small()
 	return params
 end
 
-return

@@ -1727,4 +1727,3 @@ function CopLogicBase._chk_alert_obstructed(my_listen_pos, alert_data)
 	end
 end
 
-return

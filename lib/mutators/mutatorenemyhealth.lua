@@ -115,4 +115,3 @@ function MutatorEnemyHealth:options_fill()
 	return self:_get_percentage_fill(self:_min_health(), self:_max_health(), self:get_health_multiplier())
 end
 
-return

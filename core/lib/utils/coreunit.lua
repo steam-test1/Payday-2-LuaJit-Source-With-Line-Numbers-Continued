@@ -118,4 +118,3 @@ function safe_spawn_unit_without_extensions(unit_name, ...)
 	return World:spawn_unit_without_extensions(unit_name:id(), ...)
 end
 
-return

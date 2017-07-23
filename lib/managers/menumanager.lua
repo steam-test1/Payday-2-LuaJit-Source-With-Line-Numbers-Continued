@@ -3670,7 +3670,7 @@ function MenuCallbackHandler:become_infamous(params)
 	if infamous_cost <= managers.money:offshore() and managers.experience:current_level() >= 100 then
 
 		-- Lines: 3886 to 3891
-function 		params.yes_func()
+		function params.yes_func()
 			local rank = managers.experience:current_rank() + 1
 
 			managers.menu:open_node("blackmarket_preview_node", {{back_callback = callback(MenuCallbackHandler, MenuCallbackHandler, "_increase_infamous", yes_clbk)}})
@@ -3681,7 +3681,7 @@ function 		params.yes_func()
 
 
 	-- Lines: 3893 to 3897
-function 	params.no_func()
+	function params.no_func()
 		if no_clbk then
 			no_clbk()
 		end
@@ -4345,7 +4345,7 @@ end
 
 -- Lines: 4522 to 4531
 function MenuCallbackHandler:restart_game(item)
-function 	managers.menu:show_restart_game_dialog({yes_func()
+	managers.menu:show_restart_game_dialog({yes_func = function ()
 		if managers.job:stage_success() then
 			print("No restart after stage success")
 
@@ -11315,4 +11315,3 @@ function MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_va
 	end
 end
 
-return

@@ -1777,4 +1777,3 @@ function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_spe
 	self:send_to_peers("sync_statistics_result", best_killer.peer_id, best_killer.score, best_special_killer.peer_id, best_special_killer.score, best_accuracy.peer_id, best_accuracy.score, most_downs.peer_id, most_downs.score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 end
 
-return

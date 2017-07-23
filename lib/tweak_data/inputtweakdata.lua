@@ -67,4 +67,3 @@ function InputTweakData:init(tweak_data)
 	print("[InputTweakData] Init")
 end
 
-return

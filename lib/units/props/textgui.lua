@@ -412,4 +412,3 @@ function TextGui:load(data)
 	end
 end
 
-return

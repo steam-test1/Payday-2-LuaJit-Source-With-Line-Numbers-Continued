@@ -141,4 +141,3 @@ function LocalizationManager:_text_format(text, X, Y, func)
 	end)
 end
 
-return

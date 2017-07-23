@@ -175,7 +175,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		info_button._normal_col = Color.white
 
 		-- Lines: 153 to 155
-function 		info_button:_selected_changed(state)
+		function info_button:_selected_changed(state)
 			info_icon:set_color(state and self._select_col or self._normal_col)
 		end
 	end
@@ -285,7 +285,7 @@ function 		info_button:_selected_changed(state)
 	local char_panel_size = {char_images[1]:size()}
 
 	-- Lines: 235 to 240
-function 	char_btn:_selected_changed(state, instant)
+	function char_btn:_selected_changed(state, instant)
 		CrewManagementGuiButton._selected_changed(self, state, instant)
 
 		for _, img in pairs(char_images) do
@@ -938,7 +938,7 @@ function CrewManagementGui:open_custom_menu(params, category, custom_w, custom_h
 	}
 
 	-- Lines: 781 to 789
-function 	new_node_data.custom_update_text_info(data, updated_texts, gui)
+	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
 		updated_texts[2].text = managers.localization:text(data.name_id .. "_desc", tweak_data.upgrades.crew_descs[data.name]) or ""
 
@@ -980,7 +980,7 @@ function CrewManagementGui:open_character_menu(henchman_index)
 	}
 
 	-- Lines: 821 to 827
-function 	new_node_data.custom_update_text_info(data, updated_texts, gui)
+	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
 		updated_texts[4].text = managers.localization:text(data.name .. "_desc")
 
@@ -1287,4 +1287,3 @@ function CrewManagementGui:clear_character_order(data, gui)
 	gui:reload()
 end
 
-return

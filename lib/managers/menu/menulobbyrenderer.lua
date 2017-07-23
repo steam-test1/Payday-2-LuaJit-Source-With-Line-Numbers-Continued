@@ -742,4 +742,3 @@ function MenuLobbyRenderer:mouse_double_click(...)
 	return MenuRenderer.mouse_double_click(self, ...)
 end
 
-return

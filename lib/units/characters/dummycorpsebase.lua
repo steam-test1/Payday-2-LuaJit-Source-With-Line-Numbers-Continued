@@ -13,4 +13,3 @@ function DummyCorpseBase:init(unit)
 	self._is_in_original_material = true
 end
 
-return

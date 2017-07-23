@@ -948,4 +948,3 @@ function Drill:compare_skill_upgrades(skill_upgrades)
 	return self._skill_upgrades.auto_repair_level_1 < skill_upgrades.auto_repair_level_1 or self._skill_upgrades.auto_repair_level_2 < skill_upgrades.auto_repair_level_2 or self._skill_upgrades.speed_upgrade_level < skill_upgrades.speed_upgrade_level or skill_upgrades.silent_drill and not self._skill_upgrades.silent_drill or skill_upgrades.reduced_alert and not self._skill_upgrades.reduced_alert
 end
 
-return

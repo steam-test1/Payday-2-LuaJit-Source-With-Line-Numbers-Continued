@@ -299,4 +299,3 @@ function IngameLobbyMenuState:on_disconnected()
 	managers.menu_component:set_lootdrop_state("on_disconnected")
 end
 
-return

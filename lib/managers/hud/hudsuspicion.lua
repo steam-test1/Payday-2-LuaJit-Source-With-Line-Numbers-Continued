@@ -343,4 +343,3 @@ function HUDSuspicion:discovered()
 	self._discovered = true
 end
 
-return

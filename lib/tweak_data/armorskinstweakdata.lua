@@ -651,4 +651,3 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 	}
 end
 
-return

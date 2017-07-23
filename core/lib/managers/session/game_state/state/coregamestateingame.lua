@@ -32,4 +32,3 @@ function InGame:end_update(t, dt)
 	self._level_handler:end_update(t, dt)
 end
 
-return

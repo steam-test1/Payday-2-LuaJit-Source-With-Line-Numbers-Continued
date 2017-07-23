@@ -506,4 +506,3 @@ function BootupState:at_exit()
 	end
 end
 
-return

@@ -482,4 +482,3 @@ function CommunityChallengesGui:consume_community_challenges_data(data)
 	self:layout()
 end
 
-return

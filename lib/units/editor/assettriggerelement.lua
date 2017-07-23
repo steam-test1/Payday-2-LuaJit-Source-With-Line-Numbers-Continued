@@ -23,4 +23,3 @@ function AssetTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Set the asset that the element should trigger on.")
 end
 
-return

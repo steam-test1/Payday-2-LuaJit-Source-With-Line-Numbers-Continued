@@ -6,4 +6,3 @@ Melting = Melting or class()
 function Melting:transition()
 end
 
-return

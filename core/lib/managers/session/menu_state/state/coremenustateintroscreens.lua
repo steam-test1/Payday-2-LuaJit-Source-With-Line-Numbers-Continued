@@ -24,4 +24,3 @@ function IntroScreens:transition()
 	end
 end
 
-return

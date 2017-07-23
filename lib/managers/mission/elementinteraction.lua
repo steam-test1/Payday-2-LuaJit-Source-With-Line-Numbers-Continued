@@ -77,4 +77,3 @@ function ElementInteraction:stop_simulation(...)
 	end
 end
 
-return

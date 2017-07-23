@@ -55,4 +55,3 @@ function EditGui:get_panel()
 	return self._panel
 end
 
-return

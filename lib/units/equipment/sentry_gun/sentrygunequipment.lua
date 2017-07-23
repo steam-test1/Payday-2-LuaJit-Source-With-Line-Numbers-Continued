@@ -50,4 +50,3 @@ function SentryGunEquipment:_check_sound()
 	end
 end
 
-return

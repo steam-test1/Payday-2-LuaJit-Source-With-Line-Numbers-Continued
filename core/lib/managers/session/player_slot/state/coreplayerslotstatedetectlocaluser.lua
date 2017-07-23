@@ -33,4 +33,3 @@ function DetectLocalUser:transition()
 	end
 end
 
-return

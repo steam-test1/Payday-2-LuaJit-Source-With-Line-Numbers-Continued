@@ -919,4 +919,3 @@ function ConnectDialog:get_port()
 	return tonumber(self._port_text_ctrl:get_value())
 end
 
-return

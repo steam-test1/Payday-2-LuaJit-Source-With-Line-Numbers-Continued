@@ -15784,4 +15784,3 @@ function WeaponTweakData:_precalculate_values()
 	self.g26_crew.AMMO_MAX = 150
 end
 
-return

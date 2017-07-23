@@ -18,4 +18,3 @@ function HuskMedicDamage:heal_unit(...)
 	return MedicDamage.heal_unit(self, ...)
 end
 
-return

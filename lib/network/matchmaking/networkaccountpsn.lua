@@ -116,4 +116,3 @@ function NetworkAccountPSN:experience_loaded()
 	self._experience_loaded = true
 end
 
-return

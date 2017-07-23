@@ -240,4 +240,3 @@ function CoreCutscene:_debug_persistent_keys()
 	return persistent_keys
 end
 
-return

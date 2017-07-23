@@ -39,4 +39,3 @@ function SpecialEquipmentPickup:destroy(...)
 	SpecialEquipmentPickup.super.destroy(self, ...)
 end
 
-return

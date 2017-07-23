@@ -263,4 +263,3 @@ function CoreSpawnUnitCutsceneKey:_on_database_browser_entry_selected()
 	end
 end
 
-return

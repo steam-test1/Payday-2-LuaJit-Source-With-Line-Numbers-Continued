@@ -640,4 +640,3 @@ function ElementAreaReportTrigger:sync_rule_failed(unit)
 	self:_rule_failed(unit)
 end
 
-return

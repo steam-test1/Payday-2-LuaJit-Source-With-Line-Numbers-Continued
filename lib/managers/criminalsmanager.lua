@@ -862,4 +862,3 @@ function CriminalsManager:get_loadout_for(char_name)
 	return managers.blackmarket:henchman_loadout(index, true)
 end
 
-return

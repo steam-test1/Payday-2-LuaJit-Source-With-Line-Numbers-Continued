@@ -256,4 +256,3 @@ function MutatorExplodingEnemies:_detonate(cop_damage, attack_data)
 	end
 end
 
-return

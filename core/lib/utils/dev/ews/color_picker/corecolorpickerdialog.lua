@@ -81,4 +81,3 @@ function ColorPickerDialog:_on_close()
 	managers.toolhub:close(ColorPickerDialog.EDITOR_TITLE)
 end
 
-return

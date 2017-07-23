@@ -31,4 +31,3 @@ end
 function ChristmasPresentBase:destroy()
 end
 
-return

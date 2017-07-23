@@ -275,4 +275,3 @@ function MenuNodeCreditsGui:close(...)
 	managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
 end
 
-return

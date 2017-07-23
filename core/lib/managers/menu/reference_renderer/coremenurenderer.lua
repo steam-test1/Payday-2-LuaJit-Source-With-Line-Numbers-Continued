@@ -262,4 +262,3 @@ function Renderer:selected_node()
 	return stack[#stack]
 end
 
-return

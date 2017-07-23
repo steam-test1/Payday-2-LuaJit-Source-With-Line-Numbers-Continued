@@ -148,4 +148,3 @@ end
 function TeamAIBase:chk_freeze_anims()
 end
 
-return

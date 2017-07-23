@@ -131,7 +131,7 @@ function CoreCutsceneOptimizer:_add_unit_visibility_keys(keys_node)
 					local visibility_key = CoreCutsceneKey:create(CoreUnitVisibleCutsceneKey.ELEMENT_NAME)
 
 					-- Lines: 105 to 106
-function 					visibility_key.is_valid_unit_name()
+					function visibility_key.is_valid_unit_name()
 						return true
 					end
 
@@ -294,4 +294,3 @@ function CoreCutsceneOptimizer:_problem_map()
 	return problem_map
 end
 
-return

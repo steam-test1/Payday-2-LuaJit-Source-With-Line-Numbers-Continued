@@ -196,4 +196,3 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	managers.editor:layer("Mission"):do_layout()
 end
 
-return

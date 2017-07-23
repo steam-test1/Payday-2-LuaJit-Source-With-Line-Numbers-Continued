@@ -268,4 +268,3 @@ function ElementSpawnEnemyDummy:accessibility()
 	return self.ACCESSIBILITIES[self._values.accessibility]
 end
 
-return

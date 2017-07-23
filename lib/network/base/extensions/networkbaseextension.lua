@@ -37,4 +37,3 @@ function NetworkBaseExtension:peer()
 	end
 end
 
-return

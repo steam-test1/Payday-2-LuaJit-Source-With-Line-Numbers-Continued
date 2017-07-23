@@ -642,4 +642,3 @@ function StopwatchFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element is a filter to logic_stopwatch element.")
 end
 
-return

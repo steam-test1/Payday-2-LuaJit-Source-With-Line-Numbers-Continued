@@ -75,4 +75,3 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 	})
 end
 
-return

@@ -66,4 +66,3 @@ function CoreObjectVisibleCutsceneKey:is_valid_object_name(object_name)
 	end
 end
 
-return

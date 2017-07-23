@@ -18,7 +18,8 @@ function MenuItemKitSlot:init(data_node, parameters)
 		for i, option in ipairs(self._options) do
 			if option == selected_weapon then
 				self._current_index = i
-				goto label_0
+
+				break
 			end
 		end
 	elseif self._parameters.category == "equipment" then
@@ -33,7 +34,6 @@ function MenuItemKitSlot:init(data_node, parameters)
 			end
 		end
 	end
-	::label_0::
 end
 
 -- Lines: 36 to 67
@@ -505,4 +505,3 @@ function MenuItemKitSlot:_layout(node, row_item)
 	row_item.progress_text:set_position(row_item.progress_bg:x(), row_item.progress_bg:y())
 end
 
-return

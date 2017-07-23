@@ -31,4 +31,3 @@ function FineText:text()
 	self._gui_obj:text()
 end
 
-return

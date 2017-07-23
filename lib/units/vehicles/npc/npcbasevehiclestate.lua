@@ -62,4 +62,3 @@ function NpcBaseVehicleState:is_maneuvering()
 	return false
 end
 
-return

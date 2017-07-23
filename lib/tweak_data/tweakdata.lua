@@ -3702,4 +3702,3 @@ function TweakData:get_controller_help_coords()
 	return coords
 end
 
-return

@@ -56,4 +56,3 @@ function Stack:stack_table()
 	return self._table
 end
 
-return

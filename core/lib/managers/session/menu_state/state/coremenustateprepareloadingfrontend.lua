@@ -25,4 +25,3 @@ function PrepareLoadingFrontEnd:transition()
 	end
 end
 
-return

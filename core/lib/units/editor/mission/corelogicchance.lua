@@ -215,4 +215,3 @@ function CoreLogicChanceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element is a trigger to logic_chance element.")
 end
 
-return

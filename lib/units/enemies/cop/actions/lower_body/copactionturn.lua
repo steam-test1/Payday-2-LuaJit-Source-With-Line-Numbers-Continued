@@ -114,4 +114,3 @@ function CopActionTurn:need_upd()
 	return true
 end
 
-return

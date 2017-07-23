@@ -126,4 +126,3 @@ function ElementSpawnCivilian:execute_on_all_units(func)
 	ElementSpawnEnemyDummy.execute_on_all_units(self, func)
 end
 
-return

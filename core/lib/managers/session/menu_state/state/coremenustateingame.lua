@@ -12,4 +12,3 @@ function InGame:transition()
 	end
 end
 
-return

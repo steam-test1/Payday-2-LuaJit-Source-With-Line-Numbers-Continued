@@ -196,4 +196,3 @@ function CustomSafehouseAwardTrophyUnitElement:set_element_data(data)
 	end
 end
 
-return

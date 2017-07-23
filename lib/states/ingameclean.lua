@@ -62,4 +62,3 @@ function IngameCleanState:on_disconnected()
 	game_state_machine:change_state_by_name("disconnected")
 end
 
-return

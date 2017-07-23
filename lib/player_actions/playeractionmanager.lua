@@ -48,4 +48,3 @@ function PlayerActionManager:is_running(name)
 	return self._actions[name]
 end
 
-return

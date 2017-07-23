@@ -764,4 +764,3 @@ function CarryTweakData:get_zipline_offset(carry_id)
 	return Vector3(15, 0, -8)
 end
 
-return

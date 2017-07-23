@@ -311,4 +311,3 @@ function NewRaycastWeaponBase:_set_material_textures()
 	end
 end
 
-return

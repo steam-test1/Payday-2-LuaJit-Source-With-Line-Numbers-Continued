@@ -34,4 +34,3 @@ function SpawnVehicleElement:add_to_mission_package()
 	Application:trace("SpawnVehicleElement:add_to_mission_package")
 end
 
-return

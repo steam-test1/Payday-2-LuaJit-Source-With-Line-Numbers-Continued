@@ -82,7 +82,8 @@ function CharacterAttentionObject:set_settings_set(settings_set)
 				for id, settings in pairs(settings_set) do
 					if not attention_data[id] then
 						changed = true
-						goto label_0
+
+						break
 					end
 				end
 			end
@@ -91,7 +92,6 @@ function CharacterAttentionObject:set_settings_set(settings_set)
 		register = true
 	end
 
-	::label_0::
 	if self._overrides then
 		if settings_set then
 			for id, overrride_setting in pairs(self._overrides) do
@@ -151,4 +151,3 @@ function CharacterAttentionObject:_register()
 	managers.groupai:state():register_AI_attention_object(self._parent_unit or self._unit, self, self._unit:movement() and self._unit:movement():nav_tracker())
 end
 
-return

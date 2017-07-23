@@ -22,4 +22,3 @@ function ElementFadeToBlack:on_executed(instigator)
 	ElementFadeToBlack.super.on_executed(self, instigator)
 end
 
-return

@@ -432,4 +432,3 @@ function DigitalGui:load(data)
 	end
 end
 
-return

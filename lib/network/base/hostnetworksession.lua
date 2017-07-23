@@ -1001,4 +1001,3 @@ function HostNetworkSession:_inc_load_counter()
 	end
 end
 
-return

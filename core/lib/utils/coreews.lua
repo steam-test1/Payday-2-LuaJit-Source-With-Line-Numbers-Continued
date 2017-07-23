@@ -769,4 +769,3 @@ function get_notebook_current_page_index(notebook)
 	return nil
 end
 
-return

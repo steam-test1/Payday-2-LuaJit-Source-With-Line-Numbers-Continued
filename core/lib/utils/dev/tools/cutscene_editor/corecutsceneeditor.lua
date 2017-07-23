@@ -2309,4 +2309,3 @@ function CoreCutsceneEditor:_debug_dump_hierarchy(object, indent)
 	end
 end
 
-return

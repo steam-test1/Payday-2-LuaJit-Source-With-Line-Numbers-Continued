@@ -138,4 +138,3 @@ function ControllerWrapperPC:virtual_connect2(controller_id, controller, input_n
 	end
 end
 
-return

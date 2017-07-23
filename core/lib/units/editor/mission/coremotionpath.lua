@@ -247,4 +247,3 @@ function CoreMotionPathTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element is a trigger on motion path marker element.")
 end
 
-return

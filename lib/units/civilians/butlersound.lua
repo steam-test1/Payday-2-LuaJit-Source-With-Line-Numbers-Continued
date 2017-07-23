@@ -60,4 +60,3 @@ function ButlerSound:_sound_start_mirroring()
 	end
 end
 
-return

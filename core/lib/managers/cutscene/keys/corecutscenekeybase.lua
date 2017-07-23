@@ -665,4 +665,3 @@ end
 
 CoreCutsceneKeyBase:attribute_affects("unit_name", "object_name")
 
-return

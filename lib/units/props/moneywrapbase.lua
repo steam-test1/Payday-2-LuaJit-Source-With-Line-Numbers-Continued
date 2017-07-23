@@ -122,4 +122,3 @@ end
 function MoneyWrapBase:destroy()
 end
 
-return

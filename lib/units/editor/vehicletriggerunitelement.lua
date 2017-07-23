@@ -31,4 +31,3 @@ function VehicleTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Set the vehicle event the element should trigger on.")
 end
 
-return

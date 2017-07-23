@@ -422,4 +422,3 @@ function ViewportManager:set_aspect_ratio2(aspect_ratio)
 	self._aspect_ratio = aspect_ratio
 end
 
-return

@@ -404,4 +404,3 @@ function EnvironmentManager:_load_env_data(data_path, env_data, raw_data)
 	end
 end
 
-return

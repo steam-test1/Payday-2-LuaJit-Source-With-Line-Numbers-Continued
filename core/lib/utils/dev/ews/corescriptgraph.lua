@@ -377,4 +377,3 @@ function ScriptGraph:_write_slots(cfg_node, node, id_map)
 	end
 end
 
-return

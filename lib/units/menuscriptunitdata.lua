@@ -15,4 +15,3 @@ function UnitBase:pre_destroy(unit)
 	self._destroying = true
 end
 
-return

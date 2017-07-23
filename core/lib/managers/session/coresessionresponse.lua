@@ -45,4 +45,3 @@ function DoneOrFinished:is_finished()
 	return self:_is_response_value(DoneOrFinished.FINISHED)
 end
 
-return

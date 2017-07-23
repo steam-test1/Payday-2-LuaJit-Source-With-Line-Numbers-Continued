@@ -104,4 +104,3 @@ function CoreCutsceneProjectMappingPanel:_refresh_buttons_panel()
 	self.__add_button:set_enabled(not table.empty(self:projects()))
 end
 
-return

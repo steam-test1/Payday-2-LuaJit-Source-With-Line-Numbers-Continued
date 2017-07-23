@@ -2150,4 +2150,3 @@ function CustomSafehouseGuiRaidButton:set_selected(selected, play_sound)
 	end
 end
 
-return

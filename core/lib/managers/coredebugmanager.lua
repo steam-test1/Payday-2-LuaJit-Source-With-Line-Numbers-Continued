@@ -573,7 +573,7 @@ function DebugProfilerCounter:set_enabled(enabled)
 			self._old_func = self._old_func or old_func
 
 			-- Lines: 512 to 516
-function 			self._new_func(...)
+			function self._new_func(...)
 				local id = Profiler:start(name)
 				local return_list = {old_func(...)}
 
@@ -4280,4 +4280,3 @@ function MenuDebug:update(t, dt)
 	end
 end
 
-return

@@ -367,4 +367,3 @@ function FeatureManager:tango_weapon_unlocked()
 	return true
 end
 
-return

@@ -370,4 +370,3 @@ function GUIObjectWrapper:outside(...)
 	return self._gui_obj:outside(...)
 end
 
-return

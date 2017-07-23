@@ -686,4 +686,3 @@ UnderlayPathFeeder.AFFECTED_LIST = {
 	UnderlaySkyBottomColorScaleFeeder
 }
 
-return

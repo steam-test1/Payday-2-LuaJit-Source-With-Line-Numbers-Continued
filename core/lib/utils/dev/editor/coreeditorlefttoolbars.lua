@@ -156,4 +156,3 @@ function CoreEditor:_interupt_frustum_freeze()
 	self._camera_controller:frustum_unfreeze(self:camera())
 end
 
-return

@@ -946,4 +946,3 @@ function StatisticsTweakData:mission_statistics_table()
 	return {"labrat"}
 end
 
-return

@@ -169,4 +169,3 @@ function VehicleCamera:destroy()
 	end
 end
 
-return

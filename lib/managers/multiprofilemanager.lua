@@ -238,4 +238,3 @@ function MultiProfileManager:_check_amount()
 	end
 end
 
-return

@@ -41,4 +41,3 @@ function _OcclusionManager:add_occlusion(unit)
 	self._skip_occlusion[unit:key()] = nil
 end
 
-return

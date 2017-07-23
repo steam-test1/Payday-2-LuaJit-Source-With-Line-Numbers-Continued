@@ -119,4 +119,3 @@ function CoreCutsceneMayaExporterCurveSet:write(file)
 	end
 end
 
-return

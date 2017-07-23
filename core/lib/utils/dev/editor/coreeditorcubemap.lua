@@ -268,4 +268,3 @@ function CoreEditor:cube_map_done()
 	assert(self._vp:pop_ref_fov())
 end
 
-return

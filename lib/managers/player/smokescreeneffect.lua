@@ -87,4 +87,3 @@ function SmokeScreenEffect:destroy()
 	end
 end
 
-return

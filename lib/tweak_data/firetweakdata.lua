@@ -71,4 +71,3 @@ function FireTweakData:init(tweak_data)
 	}
 end
 
-return

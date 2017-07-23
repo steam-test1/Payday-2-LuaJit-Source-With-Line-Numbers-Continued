@@ -86,4 +86,3 @@ function CoreVolumeSetCutsceneKey:refresh_control_for_name(control)
 	control:thaw()
 end
 
-return

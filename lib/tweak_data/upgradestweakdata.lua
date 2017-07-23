@@ -12893,4 +12893,3 @@ function UpgradesTweakData:_x_chinchilla_weapon_definitions()
 	}
 end
 
-return

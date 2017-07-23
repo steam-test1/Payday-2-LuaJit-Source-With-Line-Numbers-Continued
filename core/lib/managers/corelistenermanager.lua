@@ -465,4 +465,3 @@ function ListenerManager:debug_print()
 	end
 end
 
-return

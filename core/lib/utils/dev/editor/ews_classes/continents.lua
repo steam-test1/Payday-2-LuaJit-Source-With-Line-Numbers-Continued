@@ -282,4 +282,3 @@ function ContinentPanel:set_world_setting_path(path)
 	self._panel:layout()
 end
 
-return

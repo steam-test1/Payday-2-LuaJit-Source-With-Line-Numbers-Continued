@@ -48,4 +48,3 @@ function CoreMaterialEditorColor3:_on_color(sender, color)
 	self:update_live()
 end
 
-return CoreMaterialEditorColor3

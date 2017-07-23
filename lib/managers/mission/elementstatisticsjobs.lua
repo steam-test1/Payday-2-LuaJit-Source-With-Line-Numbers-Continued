@@ -82,4 +82,3 @@ function ElementStatisticsJobs:_completed_job_data(job_id, state, difficulty, pr
 	return count
 end
 
-return

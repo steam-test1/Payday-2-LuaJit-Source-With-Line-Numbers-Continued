@@ -376,4 +376,3 @@ function PlayerMaskOff:_get_walk_headbob()
 	return 0.0125
 end
 
-return

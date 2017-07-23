@@ -25,4 +25,3 @@ function QuitSession:transition()
 	return CoreSessionStateInit.Init, self._session
 end
 
-return

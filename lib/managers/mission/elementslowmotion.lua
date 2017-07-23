@@ -22,4 +22,3 @@ function ElementSlowMotion:on_executed(instigator)
 	ElementSlowMotion.super.on_executed(self, instigator)
 end
 
-return

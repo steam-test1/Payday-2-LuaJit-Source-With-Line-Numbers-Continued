@@ -3753,4 +3753,3 @@ function PrePlanningMapGui:close()
 	end
 end
 
-return

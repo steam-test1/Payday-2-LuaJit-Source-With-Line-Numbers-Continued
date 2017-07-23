@@ -176,4 +176,3 @@ function PlayerIncapacitated:destroy(unit)
 	managers.environment_controller:set_taser_value(1)
 end
 
-return

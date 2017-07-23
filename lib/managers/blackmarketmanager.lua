@@ -4090,14 +4090,14 @@ function BlackMarketManager:crafted_mask_unlocked(slot)
 				locked_parts[type] = part.global_value
 				is_locked = true
 				locked_global_value = part.global_value or locked_global_value
-				goto label_0
+
+				break
 			end
 		end
 	else
 		locked_global_value = crafted.global_value
 	end
 
-	::label_0::
 	return not is_locked, locked_global_value
 end
 
@@ -4791,7 +4791,7 @@ function BlackMarketManager:view_weapon_platform(weapon_id, open_node_cb)
 	self._last_viewed_cosmetic_id = nil
 
 	self:preload_weapon_blueprint("preview", factory_id, blueprint)
-	table.function insert(self._preloading_list, {done_cb()
+	table.insert(self._preloading_list, {done_cb = function ()
 		managers.menu_scene:spawn_item_weapon(factory_id, blueprint)
 	end})
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
@@ -4812,12 +4812,12 @@ function BlackMarketManager:view_weapon(category, slot, open_node_cb, spawn_work
 	self:preload_weapon_blueprint("preview", weapon.factory_id, weapon.blueprint, spawn_workbench)
 
 	if spawn_workbench then
-		table.function insert(self._preloading_list, {done_cb()
+		table.insert(self._preloading_list, {done_cb = function ()
 			managers.menu_scene:spawn_workbench_room()
 		end})
 	end
 
-	table.function insert(self._preloading_list, {done_cb()
+	table.insert(self._preloading_list, {done_cb = function ()
 		managers.menu_scene:spawn_item_weapon(weapon.factory_id, weapon.blueprint, weapon.cosmetics, texture_switches, custom_data)
 	end})
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
@@ -4840,12 +4840,12 @@ function BlackMarketManager:view_weapon_with_mod(category, slot, part_id, open_n
 	self:preload_weapon_blueprint("preview", weapon.factory_id, blueprint, spawn_workbench)
 
 	if spawn_workbench then
-		table.function insert(self._preloading_list, {done_cb()
+		table.insert(self._preloading_list, {done_cb = function ()
 			managers.menu_scene:spawn_workbench_room()
 		end})
 	end
 
-	table.function insert(self._preloading_list, {done_cb()
+	table.insert(self._preloading_list, {done_cb = function ()
 		managers.menu_scene:spawn_item_weapon(weapon.factory_id, blueprint, self:get_preview_cosmetics(category, slot), texture_switches, custom_data)
 	end})
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
@@ -4868,12 +4868,12 @@ function BlackMarketManager:view_weapon_without_mod(category, slot, part_id, ope
 	self:preload_weapon_blueprint("preview", weapon.factory_id, blueprint, spawn_workbench)
 
 	if spawn_workbench then
-		table.function insert(self._preloading_list, {done_cb()
+		table.insert(self._preloading_list, {done_cb = function ()
 			managers.menu_scene:spawn_workbench_room()
 		end})
 	end
 
-	table.function insert(self._preloading_list, {done_cb()
+	table.insert(self._preloading_list, {done_cb = function ()
 		managers.menu_scene:spawn_item_weapon(weapon.factory_id, blueprint, self:get_preview_cosmetics(category, slot), texture_switches, custom_data)
 	end})
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
@@ -4911,12 +4911,12 @@ function BlackMarketManager:view_weapon_with_cosmetics(category, slot, cosmetics
 	self:preload_weapon_blueprint("preview", weapon.factory_id, blueprint, spawn_workbench)
 
 	if spawn_workbench then
-		table.function insert(self._preloading_list, {done_cb()
+		table.insert(self._preloading_list, {done_cb = function ()
 			managers.menu_scene:spawn_workbench_room()
 		end})
 	end
 
-	table.function insert(self._preloading_list, {done_cb()
+	table.insert(self._preloading_list, {done_cb = function ()
 		managers.menu_scene:spawn_item_weapon(weapon.factory_id, blueprint, cosmetics, texture_switches, custom_data)
 	end})
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
@@ -4940,12 +4940,12 @@ function BlackMarketManager:view_weapon_platform_with_cosmetics(weapon_id, cosme
 	self:preload_weapon_blueprint("preview", factory_id, blueprint, spawn_workbench)
 
 	if spawn_workbench then
-		table.function insert(self._preloading_list, {done_cb()
+		table.insert(self._preloading_list, {done_cb = function ()
 			managers.menu_scene:spawn_workbench_room()
 		end})
 	end
 
-	table.function insert(self._preloading_list, {done_cb()
+	table.insert(self._preloading_list, {done_cb = function ()
 		managers.menu_scene:spawn_item_weapon(factory_id, blueprint, cosmetics, texture_switches, custom_data)
 	end})
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
@@ -9092,4 +9092,3 @@ function BlackMarketManager:has_unlocked_arbiter()
 	return managers.tango:has_unlocked_arbiter()
 end
 
-return

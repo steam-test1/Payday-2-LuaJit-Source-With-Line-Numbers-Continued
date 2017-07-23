@@ -301,4 +301,3 @@ function PlayerCamera:shaker()
 	return self._shaker
 end
 
-return

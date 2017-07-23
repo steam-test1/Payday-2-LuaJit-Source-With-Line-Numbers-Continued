@@ -154,4 +154,3 @@ function SpawnCivilianUnitElement:destroy(...)
 	self:stop_test_element()
 end
 
-return

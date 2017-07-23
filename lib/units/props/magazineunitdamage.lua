@@ -42,4 +42,3 @@ function MagazineUnitDamage:material_name(idstring)
 	return material
 end
 
-return

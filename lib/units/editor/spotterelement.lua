@@ -29,4 +29,3 @@ function SpotterUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 end
 
-return

@@ -403,4 +403,3 @@ end
 function CrimeSpreeDetailsPage:perform_update()
 end
 
-return

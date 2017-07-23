@@ -1181,4 +1181,3 @@ function TradeManager:get_guard_hostage_time()
 	end
 end
 
-return

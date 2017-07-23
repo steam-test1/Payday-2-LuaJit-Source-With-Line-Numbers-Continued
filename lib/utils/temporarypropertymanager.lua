@@ -76,4 +76,3 @@ function TemporaryPropertyManager:remove_property(prop)
 	end
 end
 
-return

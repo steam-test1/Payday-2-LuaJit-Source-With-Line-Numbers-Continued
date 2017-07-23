@@ -74,4 +74,3 @@ function HuskTeamAIBase:unregister()
 	TeamAIBase.unregister(self)
 end
 
-return

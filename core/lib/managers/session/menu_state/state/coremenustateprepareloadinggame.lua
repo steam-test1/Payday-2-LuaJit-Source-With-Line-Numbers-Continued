@@ -25,4 +25,3 @@ function PrepareLoadingGame:transition()
 	end
 end
 
-return

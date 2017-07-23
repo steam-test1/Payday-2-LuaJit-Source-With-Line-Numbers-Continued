@@ -1553,7 +1553,7 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 
 		managers.network:start_client()
 		managers.network.voice_chat:open_session(self._room_id)
-function 		managers.menu:show_waiting_for_server_response({cancel_func()
+		managers.menu:show_waiting_for_server_response({cancel_func = function ()
 			if managers.network:session() then
 				managers.network:session():on_join_request_cancelled()
 			end
@@ -1865,4 +1865,3 @@ function NetworkMatchMakingPSN:is_server_joinable()
 	return self._server_joinable
 end
 
-return

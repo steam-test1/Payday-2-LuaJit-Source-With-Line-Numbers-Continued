@@ -300,4 +300,3 @@ function CrimeSpreeModifierDetailsPage:add_modifiers_panel(parent, modifiers, is
 	return next_y
 end
 
-return

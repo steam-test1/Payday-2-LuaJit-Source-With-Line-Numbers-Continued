@@ -91,4 +91,3 @@ function CoreCutsceneCompiler:_create_clip(clip_descriptor)
 	return clip
 end
 
-return

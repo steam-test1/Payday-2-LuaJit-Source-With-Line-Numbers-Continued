@@ -1460,4 +1460,3 @@ function WorldDefinition:get_mission_element_unit(id)
 	return self._mission_element_units[id]
 end
 
-return

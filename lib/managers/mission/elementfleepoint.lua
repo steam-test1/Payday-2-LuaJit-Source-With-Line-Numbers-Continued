@@ -35,4 +35,3 @@ function ElementFleePoint:operation_remove()
 	end
 end
 
-return

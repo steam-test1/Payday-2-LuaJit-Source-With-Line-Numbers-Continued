@@ -31,4 +31,3 @@ function InventoryDummyUnitElement:_build_panel(panel, panel_sizer)
 	}, "Set inventory slot to spawn")
 end
 
-return

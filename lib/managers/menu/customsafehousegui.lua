@@ -59,4 +59,3 @@ function CustomSafehouseGui:populate_tabs_data(tabs_data)
 	})
 end
 
-return

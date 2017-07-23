@@ -136,4 +136,3 @@ function EnableSoundEnvironmentElement:_add_or_remove_graph(id)
 	end
 end
 
-return

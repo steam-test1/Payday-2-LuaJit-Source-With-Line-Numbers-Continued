@@ -979,4 +979,3 @@ function CoreUndoStack:redo()
 	return self._stack[self._ptr]
 end
 
-return

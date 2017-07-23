@@ -115,4 +115,3 @@ function ElementMoneyFilter:_check_value(account_amt)
 	return false
 end
 
-return

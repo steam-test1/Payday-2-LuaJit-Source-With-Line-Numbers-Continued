@@ -162,4 +162,3 @@ function MenuNodeMutatorOptionsGui:close()
 	MenuNodeMutatorOptionsGui.super.close(self)
 end
 
-return

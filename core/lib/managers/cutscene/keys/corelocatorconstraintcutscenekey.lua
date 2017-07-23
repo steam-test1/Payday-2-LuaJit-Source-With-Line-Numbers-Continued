@@ -164,4 +164,3 @@ function CoreLocatorConstraintCutsceneKey:_constrain_locator_to_object(parent_ob
 	end
 end
 
-return

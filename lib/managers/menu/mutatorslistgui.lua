@@ -42,4 +42,3 @@ function MutatorsListGui:refresh()
 	self._selected_page:refresh()
 end
 
-return

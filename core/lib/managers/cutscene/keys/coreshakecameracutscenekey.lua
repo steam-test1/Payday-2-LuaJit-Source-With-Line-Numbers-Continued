@@ -35,4 +35,3 @@ function CoreShakeCameraCutsceneKey:stop()
 	end
 end
 
-return

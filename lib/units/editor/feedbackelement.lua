@@ -166,4 +166,3 @@ function FeedbackUnitElement:add_to_mission_package()
 	end
 end
 
-return

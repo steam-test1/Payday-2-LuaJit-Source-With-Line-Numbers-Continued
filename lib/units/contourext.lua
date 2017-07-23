@@ -595,4 +595,3 @@ function ContourExt:load(data)
 	end
 end
 
-return

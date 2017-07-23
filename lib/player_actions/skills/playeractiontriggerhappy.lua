@@ -2,7 +2,7 @@ PlayerAction.TriggerHappy = {}
 PlayerAction.TriggerHappy.Priority = 1
 
 -- Lines: 6 to 34
-PlayerAction.function TriggerHappy.Function(player_manager, damage_bonus, max_stacks, max_time)
+PlayerAction.TriggerHappy.Function = function (player_manager, damage_bonus, max_stacks, max_time)
 	local co = coroutine.running()
 	local current_time = Application:time()
 	local current_stacks = 1
@@ -36,4 +36,3 @@ PlayerAction.function TriggerHappy.Function(player_manager, damage_bonus, max_st
 	player_manager:unregister_message(Message.OnEnemyShot, co)
 end
 
-return

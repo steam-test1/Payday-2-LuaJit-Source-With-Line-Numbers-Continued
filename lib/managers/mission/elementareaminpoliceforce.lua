@@ -29,4 +29,3 @@ function ElementAreaMinPoliceForce:operation_remove()
 	managers.groupai:state():set_area_min_police_force(self._id)
 end
 
-return

@@ -71,4 +71,3 @@ function SlotManager:get_mask_map()
 	return self._masks
 end
 
-return

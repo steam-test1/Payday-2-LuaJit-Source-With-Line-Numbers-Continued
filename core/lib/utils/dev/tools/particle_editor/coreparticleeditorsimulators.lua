@@ -518,4 +518,3 @@ function CoreParticleEditorSimulators:create_worldtransform()
 	return simulator
 end
 
-return

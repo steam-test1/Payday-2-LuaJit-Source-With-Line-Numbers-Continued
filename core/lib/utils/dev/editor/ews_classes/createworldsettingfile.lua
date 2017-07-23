@@ -132,4 +132,3 @@ function CreateWorldSettingFile:on_cancel()
 	self:end_modal()
 end
 
-return

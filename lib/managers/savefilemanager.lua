@@ -746,20 +746,20 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 				if is_setting_slot then
 
 					-- Lines: 762 to 763
-function 					yes_button.callback_func()
+					function yes_button.callback_func()
 						self:load_settings()
 					end
 				elseif is_progress_slot then
 
 					-- Lines: 764 to 765
-function 					yes_button.callback_func()
+					function yes_button.callback_func()
 						self:load_progress()
 					end
 				end
 
 
 				-- Lines: 768 to 782
-function 				no_button.callback_func()
+				function no_button.callback_func()
 					if is_progress_slot and self._backup_data then
 						self:_ask_load_backup("progress_" .. (req_version == nil and "corrupt" or "wrong_version"), false)
 
@@ -793,7 +793,7 @@ function 				no_button.callback_func()
 					dialog_data.id = "savefile_new_safefile"
 
 					-- Lines: 794 to 795
-function 					ok_button.callback_func()
+					function ok_button.callback_func()
 						self:_remove(slot)
 					end
 				end
@@ -1096,7 +1096,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 	}
 
 	-- Lines: 1146 to 1151
-function 	yes_button.callback_func()
+	function yes_button.callback_func()
 		self._save_slots_to_load[self.PROGRESS_SLOT] = nil
 
 		self:_set_cache(self.PROGRESS_SLOT, self._backup_data.save_data.data)
@@ -1107,7 +1107,7 @@ function 	yes_button.callback_func()
 	end
 
 	-- Lines: 1153 to 1156
-function 	no_button.callback_func()
+	function no_button.callback_func()
 		self._backup_data = nil
 		self._save_slots_to_load[self.PROGRESS_SLOT] = nil
 	end
@@ -1118,7 +1118,7 @@ function 	no_button.callback_func()
 		if reason == "low_progress" then
 
 			-- Lines: 1161 to 1164
-function 			no_button.callback_func()
+			function no_button.callback_func()
 				self._backup_data = nil
 
 				self:_load_done(self.PROGRESS_SLOT, unpack(load_params))
@@ -1128,7 +1128,7 @@ function 			no_button.callback_func()
 		dialog_data.text = managers.localization:text("dialog_ask_load_progress_backup_" .. (reason == "progress_corrupt" and "corrupt" or "wrong_version"))
 
 		-- Lines: 1168 to 1171
-function 		no_button.callback_func()
+		function no_button.callback_func()
 			self._backup_data = nil
 
 			self:_remove(self.PROGRESS_SLOT)
@@ -1353,4 +1353,3 @@ function SavefileInfo:text()
 	return self._text
 end
 
-return

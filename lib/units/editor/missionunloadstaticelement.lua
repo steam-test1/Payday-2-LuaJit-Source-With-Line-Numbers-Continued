@@ -201,4 +201,3 @@ function MissionUnloadStaticElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
 
-return

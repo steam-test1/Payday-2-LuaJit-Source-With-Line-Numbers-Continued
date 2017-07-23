@@ -505,4 +505,3 @@ function MenuModInfoGui:update(t, dt)
 	end
 end
 
-return

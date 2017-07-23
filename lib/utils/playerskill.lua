@@ -27,4 +27,3 @@ function PlayerSkill.skill_level(category, skill, default, player)
 	end
 end
 
-return

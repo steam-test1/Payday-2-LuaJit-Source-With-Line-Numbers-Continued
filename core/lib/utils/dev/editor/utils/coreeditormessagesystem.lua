@@ -156,4 +156,3 @@ function EditorMessageSystem:_unregister(message, uid)
 	end
 end
 
-return

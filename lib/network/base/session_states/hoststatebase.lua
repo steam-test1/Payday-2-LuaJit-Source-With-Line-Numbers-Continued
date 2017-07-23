@@ -192,4 +192,3 @@ function HostStateBase:is_joinable(data)
 	return false
 end
 
-return

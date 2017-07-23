@@ -4619,4 +4619,3 @@ function JukeboxItem:set_enabled(state)
 	end
 end
 
-return

@@ -5,4 +5,3 @@ function VehicleStateInvalid:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
-return

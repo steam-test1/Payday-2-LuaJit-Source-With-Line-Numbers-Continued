@@ -24,4 +24,3 @@ function TankCopDamage:seq_clbk_vizor_shatter()
 	end
 end
 
-return

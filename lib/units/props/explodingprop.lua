@@ -100,4 +100,3 @@ function ExplodingProp:_check_detonation_ready()
 	end
 end
 
-return

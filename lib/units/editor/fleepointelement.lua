@@ -23,4 +23,3 @@ function FleePointElement:_build_panel(panel, panel_sizer)
 	}, "Select the functionality of the point")
 end
 
-return

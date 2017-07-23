@@ -91,4 +91,3 @@ function CheckDLCUnitElement:_build_panel(panel, panel_sizer)
 	end
 end
 
-return

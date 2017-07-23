@@ -326,4 +326,3 @@ function TeamAILogicAssault._chk_exit_attack_logic(data, new_reaction)
 	end
 end
 
-return

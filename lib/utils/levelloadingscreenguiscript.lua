@@ -371,4 +371,3 @@ function LevelLoadingScreenGuiScript:set_visible(visible)
 	end
 end
 
-return

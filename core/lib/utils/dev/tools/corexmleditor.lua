@@ -338,4 +338,3 @@ function CoreXMLEditorNewDialog:get_value()
 	return self._type, self._name
 end
 
-return

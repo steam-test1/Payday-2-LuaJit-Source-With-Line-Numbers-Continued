@@ -965,4 +965,3 @@ function CoreCutscenePlayer:_camera_has_cut()
 	return position_threshold_reached or rotation_threshold_reached
 end
 
-return

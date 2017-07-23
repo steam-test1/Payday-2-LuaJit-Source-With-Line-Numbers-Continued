@@ -27,4 +27,3 @@ function AkimboShotgunBase:_update_stats_values()
 end
 NPCAkimboShotgunBase = NPCAkimboShotgunBase or class(NPCAkimboWeaponBase)
 
-return

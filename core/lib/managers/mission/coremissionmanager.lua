@@ -719,4 +719,3 @@ function MissionScript:destroy(...)
 	MissionScript.super.clear(self)
 end
 
-return

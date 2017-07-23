@@ -72,4 +72,3 @@ function PrevisCamera:destroy()
 	end
 end
 
-return

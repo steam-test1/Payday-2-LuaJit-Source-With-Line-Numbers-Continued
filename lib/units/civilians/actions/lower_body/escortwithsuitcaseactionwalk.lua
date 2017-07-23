@@ -46,4 +46,3 @@ for pose, stances in pairs(EscortPrisonerActionWalk._walk_anim_lengths) do
 	end
 end
 
-return

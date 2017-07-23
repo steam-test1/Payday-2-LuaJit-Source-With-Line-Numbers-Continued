@@ -24,4 +24,3 @@ function NPCSniperRifleBase:_spawn_trail_effect(direction, col_ray)
 	end
 end
 
-return

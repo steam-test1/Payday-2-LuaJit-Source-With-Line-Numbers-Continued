@@ -806,4 +806,3 @@ function CoreMaterialEditor:_load_parent_dropdown()
 	self:_unfreeze_frame()
 end
 
-return

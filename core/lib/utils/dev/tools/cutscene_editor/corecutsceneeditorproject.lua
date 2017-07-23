@@ -216,4 +216,3 @@ function CoreCutsceneEditorProject:child_node(child_name, parent_node, child_pro
 	end
 end
 
-return

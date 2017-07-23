@@ -56,4 +56,3 @@ function WeaponSecondSight:destroy(unit)
 	WeaponSecondSight.super.destroy(self, unit)
 end
 
-return

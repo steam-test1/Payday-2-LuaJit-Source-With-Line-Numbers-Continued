@@ -3269,4 +3269,3 @@ function CopDamage:can_kill()
 	return not self._char_tweak.permanently_invulnerable and not self.immortal or not self._invulnerable
 end
 
-return

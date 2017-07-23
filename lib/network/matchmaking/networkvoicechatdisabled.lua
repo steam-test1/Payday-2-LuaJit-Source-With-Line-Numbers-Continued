@@ -138,4 +138,3 @@ function NetworkVoiceChatDisabled:psn_session_destroyed()
 	end
 end
 
-return

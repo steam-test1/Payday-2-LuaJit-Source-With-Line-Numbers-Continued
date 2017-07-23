@@ -561,4 +561,3 @@ function MissionElementRemoveLinkElementCommand:__tostring()
 	return string.format("[Command RemoveLinkElement [%s %s]]", tostring(self:value("link_name")), tostring(self:value("unit_id")))
 end
 
-return

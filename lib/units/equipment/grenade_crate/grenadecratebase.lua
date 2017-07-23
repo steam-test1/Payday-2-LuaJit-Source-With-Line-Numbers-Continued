@@ -281,4 +281,3 @@ function GrenadeCrateSync:_clbk_validate()
 	end
 end
 
-return

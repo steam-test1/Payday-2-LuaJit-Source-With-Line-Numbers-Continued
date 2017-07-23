@@ -321,4 +321,3 @@ function CoreCutsceneBatchOptimizerDialog:_verify_user_intent(operation)
 	return true
 end
 
-return

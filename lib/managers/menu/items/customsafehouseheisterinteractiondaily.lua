@@ -718,4 +718,3 @@ end
 function InGameHeisterInteractionGui:_update_buttons()
 end
 
-return

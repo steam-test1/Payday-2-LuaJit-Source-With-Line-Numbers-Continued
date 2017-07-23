@@ -579,4 +579,3 @@ function CoreCutsceneSequencerPanel:change_track_behaviour(new_behaviour)
 	self._track_behaviour = new_behaviour
 end
 
-return

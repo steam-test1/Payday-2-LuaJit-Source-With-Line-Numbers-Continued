@@ -126,4 +126,3 @@ function ElementSecurityCamera:load(data)
 	self._values.destroyed = data.destroyed
 end
 
-return

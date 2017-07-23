@@ -98,4 +98,3 @@ function DramaExt:_length_from_tweak(id)
 	return nil
 end
 
-return

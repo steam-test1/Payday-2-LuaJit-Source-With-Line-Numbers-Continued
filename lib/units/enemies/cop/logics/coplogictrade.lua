@@ -265,4 +265,3 @@ function CopLogicTrade.pre_destroy(data)
 	managers.trade:change_hostage()
 end
 
-return

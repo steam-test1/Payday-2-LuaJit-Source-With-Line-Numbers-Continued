@@ -188,4 +188,3 @@ function AmmoClip:sync_net_event(event, peer)
 	end
 end
 
-return

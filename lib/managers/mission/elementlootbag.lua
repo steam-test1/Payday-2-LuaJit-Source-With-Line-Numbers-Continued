@@ -103,4 +103,3 @@ function ElementLootBagTrigger:on_executed(instigator)
 	ElementLootBagTrigger.super.on_executed(self, instigator)
 end
 
-return

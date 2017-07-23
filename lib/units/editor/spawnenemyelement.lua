@@ -206,4 +206,3 @@ function SpawnEnemyUnitElement:destroy(...)
 	self:stop_test_element()
 end
 
-return

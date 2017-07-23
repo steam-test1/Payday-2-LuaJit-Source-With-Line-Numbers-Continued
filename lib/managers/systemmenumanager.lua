@@ -736,4 +736,3 @@ function PS4SystemMenuManager:is_active()
 	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box() or self._is_ps_button_menu_visible
 end
 
-return

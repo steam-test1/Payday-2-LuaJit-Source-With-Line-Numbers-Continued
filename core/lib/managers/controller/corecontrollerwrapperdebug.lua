@@ -277,4 +277,3 @@ function ControllerWrapperDebug:set_connection_enabled(...)
 	end
 end
 
-return

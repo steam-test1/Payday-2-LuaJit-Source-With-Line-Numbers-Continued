@@ -41,4 +41,3 @@ function SubtitleSequencePlayer:evaluate_at_time(time)
 	end
 end
 
-return

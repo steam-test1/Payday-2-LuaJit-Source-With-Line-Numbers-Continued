@@ -773,4 +773,3 @@ function CrimeSpreeMissionButton:mission_id()
 	return (self._mission_data or {}).id
 end
 
-return

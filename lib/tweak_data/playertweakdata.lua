@@ -3578,7 +3578,7 @@ function PlayerTweakData:_init_desertfox()
 	self.stances.desertfox.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 
 	-- Lines: 4862 to 4896
-function 	PlayerTweakData:_init_x_packrat()
+	function PlayerTweakData:_init_x_packrat()
 		self.stances.x_packrat = deep_clone(self.stances.default)
 		local pivot_shoulder_translation = Vector3(11.4939, 42.8789, -1.11447)
 		local pivot_shoulder_rotation = Rotation(-0.347954, 0.253161, 0.281029)
@@ -3954,4 +3954,3 @@ function PlayerTweakData:_init_x_chinchilla()
 	self.stances.x_chinchilla.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
-return

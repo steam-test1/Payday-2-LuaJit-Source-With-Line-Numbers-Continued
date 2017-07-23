@@ -446,4 +446,3 @@ function EnvironmentHandler:_add_apply_feeder(feeder)
 	end
 end
 
-return

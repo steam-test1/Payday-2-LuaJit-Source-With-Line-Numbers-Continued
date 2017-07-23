@@ -289,4 +289,3 @@ function CoreEditor:_unit_materials(unit)
 	return names
 end
 
-return

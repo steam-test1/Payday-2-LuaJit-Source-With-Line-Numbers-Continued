@@ -53,7 +53,7 @@ function CoreVisualFXCutsceneKey:play(player, undo, fast_forward)
 		})
 
 		-- Lines: 45 to 46
-function 		self._effect_abort_func()
+		function self._effect_abort_func()
 			effect_manager:kill(effect_id)
 		end
 	end
@@ -151,4 +151,3 @@ function CoreVisualFXCutsceneKey:stop()
 	end
 end
 
-return

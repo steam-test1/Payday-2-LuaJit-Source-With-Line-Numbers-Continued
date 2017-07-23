@@ -67,4 +67,3 @@ function PrePlanningUnitElement:_build_panel(panel, panel_sizer)
 	CoreEws.list_selector(disables_params)
 end
 
-return

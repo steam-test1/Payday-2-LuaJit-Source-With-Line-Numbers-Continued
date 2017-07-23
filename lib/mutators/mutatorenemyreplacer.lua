@@ -376,4 +376,3 @@ function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_inde
 	end
 end
 
-return

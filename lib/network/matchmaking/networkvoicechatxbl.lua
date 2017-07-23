@@ -499,4 +499,3 @@ function NetworkVoiceChatXBL:info_engine()
 	end
 end
 
-return

@@ -265,4 +265,3 @@ function CoreEditor:on_configuration_apply()
 	end
 end
 
-return

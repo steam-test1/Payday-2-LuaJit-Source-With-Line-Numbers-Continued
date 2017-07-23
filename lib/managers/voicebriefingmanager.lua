@@ -191,4 +191,3 @@ function VoiceBriefingManager:add_listener(listener)
 	table.insert(self._listeners, listener)
 end
 
-return

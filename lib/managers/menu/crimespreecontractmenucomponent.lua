@@ -799,4 +799,3 @@ function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data
 	return node
 end
 
-return

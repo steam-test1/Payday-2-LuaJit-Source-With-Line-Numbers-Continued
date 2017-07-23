@@ -318,4 +318,3 @@ function GageAssignmentTweakData:get_num_assignment_units()
 	return num_assignment_units[difficulty] or 1
 end
 
-return

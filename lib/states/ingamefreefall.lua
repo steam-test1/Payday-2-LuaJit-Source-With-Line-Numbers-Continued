@@ -59,4 +59,3 @@ function IngameFreefall:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
-return

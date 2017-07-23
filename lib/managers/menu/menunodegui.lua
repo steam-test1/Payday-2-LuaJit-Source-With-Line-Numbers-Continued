@@ -1812,14 +1812,14 @@ function MenuNodeGui:set_visible(visible)
 			for _, row_item in ipairs(self.row_items) do
 				if row_item.highlighted then
 					active_menu.renderer:set_bottom_text(row_item.item:parameters().help_id, row_item.item:parameters().localize_help ~= false)
-					goto label_0
+
+					break
 				end
 			end
 		else
 			active_menu.renderer:set_bottom_text(nil)
 		end
 	end
-	::label_0::
 end
 
 -- Lines: 1751 to 1764
@@ -1901,4 +1901,3 @@ function MenuNodeMainGui:_add_version_string()
 	end
 end
 
-return

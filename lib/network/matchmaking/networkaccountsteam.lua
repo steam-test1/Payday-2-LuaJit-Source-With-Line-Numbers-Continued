@@ -823,4 +823,3 @@ function NetworkAccountSTEAM.output_global_stats(file)
 	end
 end
 
-return

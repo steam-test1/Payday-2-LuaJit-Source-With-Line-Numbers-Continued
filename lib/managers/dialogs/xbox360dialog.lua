@@ -33,4 +33,3 @@ function Xbox360Dialog:blocks_exec()
 	return false
 end
 
-return

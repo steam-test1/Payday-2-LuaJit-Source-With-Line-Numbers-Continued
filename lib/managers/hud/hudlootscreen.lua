@@ -1448,4 +1448,3 @@ function HUDLootScreen:close()
 	self._backdrop = nil
 end
 
-return

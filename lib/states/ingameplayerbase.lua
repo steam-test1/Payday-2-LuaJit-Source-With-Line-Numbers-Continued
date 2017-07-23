@@ -31,4 +31,3 @@ function IngamePlayerBaseState:set_controller_enabled(enabled)
 	end
 end
 
-return

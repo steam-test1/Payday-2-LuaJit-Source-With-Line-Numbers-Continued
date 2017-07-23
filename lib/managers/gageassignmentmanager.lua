@@ -707,4 +707,3 @@ end
 function GageAssignmentManager:debug_show_units(persistance)
 end
 
-return

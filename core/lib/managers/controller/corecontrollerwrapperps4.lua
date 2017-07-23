@@ -35,4 +35,3 @@ function ControllerWrapperPS4:is_confirm_cancel_inverted()
 	return is_PS4 and PS3:pad_cross_circle_inverted()
 end
 
-return

@@ -33,4 +33,3 @@ function TeamAILogicInactive.is_available_for_assignment(data)
 	return false
 end
 
-return

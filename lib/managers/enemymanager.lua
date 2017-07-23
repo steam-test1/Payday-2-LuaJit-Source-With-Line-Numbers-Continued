@@ -1211,4 +1211,3 @@ function EnemyManager:cleanup_magazines()
 	end
 end
 
-return

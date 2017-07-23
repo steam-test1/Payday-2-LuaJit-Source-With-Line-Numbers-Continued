@@ -268,4 +268,3 @@ function ImageBoxGui:close()
 	ImageBoxGui.super.close(self)
 end
 
-return

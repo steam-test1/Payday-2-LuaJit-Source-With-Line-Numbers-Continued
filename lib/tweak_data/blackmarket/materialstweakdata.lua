@@ -1550,4 +1550,3 @@ function BlackMarketTweakData:_init_materials(tweak_data)
 	end
 end
 
-return

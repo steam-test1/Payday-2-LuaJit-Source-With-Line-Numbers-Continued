@@ -164,4 +164,3 @@ function SelectNameModal:_selected_item_assets()
 	return assets
 end
 
-return

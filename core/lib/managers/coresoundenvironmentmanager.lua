@@ -1382,4 +1382,3 @@ function SoundEnvironmentAreaEmitter:destroy()
 	self._soundsource = nil
 end
 
-return

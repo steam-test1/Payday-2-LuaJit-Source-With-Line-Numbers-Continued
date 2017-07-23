@@ -23,4 +23,3 @@ function ModifyPlayerElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Modifies player properties. The changes are only applied to a player as instigator and cannot be used as a global state")
 end
 
-return

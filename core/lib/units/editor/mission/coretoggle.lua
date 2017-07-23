@@ -95,4 +95,3 @@ function CoreToggleUnitElement:_build_panel(panel, panel_sizer)
 	}, "Sets the elements trigger times when toggle on (-1 means do not use)")
 end
 
-return

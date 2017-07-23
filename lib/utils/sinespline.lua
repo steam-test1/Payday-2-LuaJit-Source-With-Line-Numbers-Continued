@@ -219,4 +219,3 @@ function SineSpline:_extract_control_points_at_index(index)
 	self._control_points[index] = segment_control_points
 end
 
-return

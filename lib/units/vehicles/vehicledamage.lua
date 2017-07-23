@@ -737,4 +737,3 @@ function VehicleDamage:_health_recap()
 	end
 end
 
-return

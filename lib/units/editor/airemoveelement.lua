@@ -134,4 +134,3 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(force_ragdoll, 0, 0, "EXPAND")
 end
 
-return

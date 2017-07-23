@@ -224,4 +224,3 @@ function PrefHud:destroy()
 	end
 end
 
-return

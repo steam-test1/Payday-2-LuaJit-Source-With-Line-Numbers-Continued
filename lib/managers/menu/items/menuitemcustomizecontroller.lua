@@ -74,4 +74,3 @@ function MenuItemCustomizeController:_layout(node, row_item)
 	row_item.controller_binding:set_left(node:_right_align())
 end
 
-return

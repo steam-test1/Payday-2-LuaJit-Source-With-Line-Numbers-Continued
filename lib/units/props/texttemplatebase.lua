@@ -298,4 +298,3 @@ function TextTemplateBase:load(data)
 	end
 end
 
-return

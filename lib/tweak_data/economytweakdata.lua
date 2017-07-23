@@ -1322,4 +1322,3 @@ function EconomyTweakData:get_bonuses_by_safe(safe)
 	return bonuses
 end
 
-return

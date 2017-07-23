@@ -1496,4 +1496,3 @@ function TipsTweakData:get_a_tip()
 	}
 end
 
-return

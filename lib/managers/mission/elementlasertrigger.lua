@@ -282,7 +282,7 @@ function ElementLaserTrigger:_check_state(unit)
 					inside = mover:line_intersection(connection.from.pos, connection.to.pos)
 
 					if inside then
-						goto label_0
+						break
 					end
 				end
 			end
@@ -304,7 +304,6 @@ function ElementLaserTrigger:_check_state(unit)
 			end
 		end
 
-		::label_0::
 		if (not table.contains(self._inside, unit) or not inside or not rule_ok) and inside and rule_ok then
 			self:_add_inside(unit)
 		end
@@ -457,4 +456,3 @@ function ElementLaserTrigger:load(data)
 	self:_set_dummies_visible(data.dummies_visible)
 end
 
-return

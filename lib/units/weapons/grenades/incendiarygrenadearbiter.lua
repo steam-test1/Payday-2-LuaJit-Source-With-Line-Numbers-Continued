@@ -16,4 +16,3 @@ function IncendiaryGrenadeArbiter:_spawn_environment_fire(normal)
 	self._unit:set_slot(0)
 end
 
-return

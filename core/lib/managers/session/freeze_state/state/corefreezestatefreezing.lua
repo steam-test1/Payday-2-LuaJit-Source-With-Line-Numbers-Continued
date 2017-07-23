@@ -6,4 +6,3 @@ Freezing = Freezing or class()
 function Freezing:transition()
 end
 
-return

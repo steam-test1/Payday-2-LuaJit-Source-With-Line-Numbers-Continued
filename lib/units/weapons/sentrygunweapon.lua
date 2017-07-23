@@ -656,4 +656,3 @@ function SentryGunWeapon:_sync_virtual_ammo()
 	end
 end
 
-return

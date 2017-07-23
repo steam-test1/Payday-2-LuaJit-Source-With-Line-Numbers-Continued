@@ -32,4 +32,3 @@ function ElementPressure:on_executed(instigator)
 	ElementPressure.super.on_executed(self, instigator)
 end
 
-return

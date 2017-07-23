@@ -306,4 +306,3 @@ function MenuArmourBase:use_cc()
 	return true
 end
 
-return

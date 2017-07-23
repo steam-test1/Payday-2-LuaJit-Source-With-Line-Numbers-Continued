@@ -149,4 +149,3 @@ function DebugDrawFonts:close()
 	self._panel:parent():remove(self._panel)
 end
 
-return

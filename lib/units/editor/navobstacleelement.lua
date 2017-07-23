@@ -376,4 +376,3 @@ function NavObstacleElement._get_indented_obj_name(obj, parent, obj_name)
 	return obj_name
 end
 
-return

@@ -242,4 +242,3 @@ function MutatorShotgunTweak:options_fill()
 	return self:_get_percentage_fill(self:_min_strength(), self:_max_strength(), self:get_pull_strength())
 end
 
-return

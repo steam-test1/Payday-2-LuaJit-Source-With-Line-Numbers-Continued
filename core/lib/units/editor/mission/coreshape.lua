@@ -239,4 +239,3 @@ function CoreShapeUnitElement:size_release(params)
 	params.ctrlr:set_value(100)
 end
 
-return

@@ -446,4 +446,3 @@ function CoreEditor:build_widgets_icons(panel, sizer, icons_path)
 	sizer:add(rotate:button(), 0, 5, "EXPAND,LEFT")
 end
 
-return

@@ -315,4 +315,3 @@ function ArmorSkinExt:use_cc()
 	return true
 end
 
-return

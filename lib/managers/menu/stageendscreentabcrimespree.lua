@@ -751,4 +751,3 @@ function CrimeSpreeResultTabItem:_update_reward_gain(t, dt)
 	self:_advance_stage()
 end
 
-return

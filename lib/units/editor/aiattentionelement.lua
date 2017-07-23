@@ -372,4 +372,3 @@ function AIAttentionElement:_chk_set_link_values()
 	end
 end
 
-return

@@ -751,4 +751,3 @@ function ChallengeManager:check_equipped(achievement_data)
 	return true
 end
 
-return

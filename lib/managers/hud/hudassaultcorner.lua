@@ -1229,4 +1229,3 @@ function HUDAssaultCorner:get_completed_waves_string()
 	return managers.localization:to_upper_text("hud_assault_waves", macro)
 end
 
-return

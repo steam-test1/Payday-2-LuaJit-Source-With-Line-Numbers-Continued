@@ -510,4 +510,3 @@ function MenuItemExpandAction:_repair_circle_color(...)
 	return self:parameters().parent_item:_repair_circle_color(...)
 end
 
-return

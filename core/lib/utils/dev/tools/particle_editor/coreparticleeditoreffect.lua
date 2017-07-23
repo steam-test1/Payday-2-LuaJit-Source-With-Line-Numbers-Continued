@@ -882,4 +882,3 @@ function CoreEffectDefinition:load(n)
 	end
 end
 
-return

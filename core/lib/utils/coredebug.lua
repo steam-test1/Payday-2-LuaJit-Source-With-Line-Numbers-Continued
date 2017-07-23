@@ -406,4 +406,3 @@ end
 function debug_pause_unit(unit, ...)
 end
 
-return

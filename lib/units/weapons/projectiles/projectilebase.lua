@@ -393,4 +393,3 @@ function ProjectileBase._play_sound_and_effects(position, normal, range, custom_
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end
 
-return

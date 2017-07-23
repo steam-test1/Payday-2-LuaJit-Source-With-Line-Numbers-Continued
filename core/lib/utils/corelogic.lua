@@ -20,4 +20,3 @@ function iff(t, a, b)
 	end
 end
 
-return

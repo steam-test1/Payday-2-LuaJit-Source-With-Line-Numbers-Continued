@@ -105,4 +105,3 @@ function MenuSceneGui:close()
 	end
 end
 
-return

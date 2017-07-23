@@ -26,4 +26,3 @@ function CoreDeprecatedHubElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(deprecated_sizer, 0, 0, "EXPAND")
 end
 
-return

@@ -148,4 +148,3 @@ function MessageSystem:_unregister(message, uid)
 	end
 end
 
-return

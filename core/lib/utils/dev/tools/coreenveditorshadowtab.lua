@@ -177,4 +177,3 @@ function CoreEnvEditor:create_shadow_tab()
 	self._main_notebook:add_page(panel, "Shadow slices", false)
 end
 
-return

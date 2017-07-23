@@ -1111,4 +1111,3 @@ function MissionLayer:break_links()
 	managers.editor:thaw_gui_lists()
 end
 
-return

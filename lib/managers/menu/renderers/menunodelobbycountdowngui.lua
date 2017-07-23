@@ -368,4 +368,3 @@ function MenuNodeLobbyCountdownGui.animate_flash_text(text)
 	end
 end
 
-return

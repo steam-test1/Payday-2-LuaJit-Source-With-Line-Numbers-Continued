@@ -109,4 +109,3 @@ function CoreChangeShadowCutsceneKey:_reset_interface()
 	end
 end
 
-return

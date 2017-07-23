@@ -1072,4 +1072,3 @@ function InstanceSetParamsUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_set_instance_by_raycast"))
 end
 
-return

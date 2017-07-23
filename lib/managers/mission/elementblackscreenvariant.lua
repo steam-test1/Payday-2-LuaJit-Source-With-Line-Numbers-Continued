@@ -43,4 +43,3 @@ function ElementEndscreenVariant:on_executed(instigator)
 	ElementEndscreenVariant.super.on_executed(self, instigator)
 end
 
-return

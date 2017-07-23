@@ -73,4 +73,3 @@ function MenuItemDivider:on_delete_row_item(row_item, ...)
 	MenuItemDivider.super.on_delete_row_item(self, row_item, ...)
 end
 
-return

@@ -148,4 +148,3 @@ function CoreCameraDistancePicker:_exit_pick_mode()
 	self.__is_picking = nil
 end
 
-return

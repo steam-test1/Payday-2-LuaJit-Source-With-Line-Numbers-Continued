@@ -856,4 +856,3 @@ function CopLogicArrest._say_call_the_police(data, my_data)
 	data.unit:sound():say(blame_list[my_data.call_in_event] or "a23", true)
 end
 
-return

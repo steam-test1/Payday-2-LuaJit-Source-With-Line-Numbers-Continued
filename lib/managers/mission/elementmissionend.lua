@@ -44,4 +44,3 @@ function ElementMissionEnd:on_executed(instigator)
 	ElementMissionEnd.super.on_executed(self, instigator)
 end
 
-return

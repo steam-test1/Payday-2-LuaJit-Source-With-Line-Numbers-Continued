@@ -14,4 +14,3 @@ function ModifierDozerMinigun:init(data)
 	table.insert(unit_types.russia, unit_name)
 end
 
-return

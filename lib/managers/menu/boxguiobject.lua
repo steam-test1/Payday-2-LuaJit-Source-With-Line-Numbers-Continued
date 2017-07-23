@@ -284,4 +284,3 @@ function BoxGuiObject:close()
 	end
 end
 
-return

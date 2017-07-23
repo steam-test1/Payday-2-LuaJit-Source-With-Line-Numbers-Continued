@@ -20,4 +20,3 @@ function MenuNodeJukeboxGui:close()
 	MenuNodeJukeboxGui.super.close(self)
 end
 
-return

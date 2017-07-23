@@ -411,4 +411,3 @@ function math.within(x, min, max)
 	return min <= x and x <= max
 end
 
-return

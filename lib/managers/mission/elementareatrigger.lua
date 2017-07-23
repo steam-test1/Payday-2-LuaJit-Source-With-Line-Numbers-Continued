@@ -343,4 +343,3 @@ end
 
 CoreClass.override_class(CoreElementArea.ElementAreaTrigger, ElementAreaTrigger)
 
-return

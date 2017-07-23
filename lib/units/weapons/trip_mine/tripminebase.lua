@@ -661,4 +661,3 @@ function TripMineBase:destroy()
 	end
 end
 
-return

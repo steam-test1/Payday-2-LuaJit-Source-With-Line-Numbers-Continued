@@ -30,4 +30,3 @@ function FreezeState:transition()
 	self._state:transition()
 end
 
-return

@@ -61,4 +61,3 @@ function FreeFlightActionToggle:name()
 	end
 end
 
-return

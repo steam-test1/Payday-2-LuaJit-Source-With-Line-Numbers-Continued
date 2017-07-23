@@ -45,4 +45,3 @@ function Header2Row:to_xml(f)
 	f:write(string.format(EMPTY_HEADER2_ROW_XML, self:_to_cells_xml()))
 end
 
-return

@@ -13,4 +13,3 @@ function NetworkGroupLobby:is_invite_changing_control()
 	return self._invite_changing_control
 end
 
-return

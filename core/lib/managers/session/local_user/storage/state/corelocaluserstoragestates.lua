@@ -74,4 +74,3 @@ LoadError = LoadError or class()
 function LoadError:transition()
 end
 
-return

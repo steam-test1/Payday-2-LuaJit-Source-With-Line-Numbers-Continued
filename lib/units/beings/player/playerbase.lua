@@ -373,4 +373,3 @@ function PlayerBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
-return

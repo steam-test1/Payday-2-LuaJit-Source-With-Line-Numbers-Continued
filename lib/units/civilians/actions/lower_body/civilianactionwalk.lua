@@ -39,4 +39,3 @@ CivilianActionWalk._anim_movement = {stand = {
 	run_start_turn_r = {ds = Vector3(240, 68, 0)}
 }}
 
-return

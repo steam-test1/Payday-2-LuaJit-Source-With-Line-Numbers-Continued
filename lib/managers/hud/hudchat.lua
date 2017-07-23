@@ -707,4 +707,3 @@ function HUDChat:remove()
 	managers.chat:unregister_receiver(self._channel_id, self)
 end
 
-return

@@ -69,4 +69,3 @@ end
 
 CoreClass.override_class(CoreMissionScriptElement.MissionScriptElement, MissionScriptElement)
 
-return

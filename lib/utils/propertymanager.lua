@@ -53,4 +53,3 @@ function PropertyManager:remove_property(prop)
 	end
 end
 
-return

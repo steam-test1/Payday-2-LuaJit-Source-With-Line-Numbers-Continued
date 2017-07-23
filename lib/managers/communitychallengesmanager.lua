@@ -116,4 +116,3 @@ function CommunityChallengesManager:remove_event_listener(message, uid)
 	self._message_system:unregister(message, uid)
 end
 
-return

@@ -124,4 +124,3 @@ function ElementApplyJobValue:on_executed(instigator)
 	ElementApplyJobValue.super.on_executed(self, instigator)
 end
 
-return

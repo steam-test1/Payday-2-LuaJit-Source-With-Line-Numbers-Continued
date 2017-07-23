@@ -50,4 +50,3 @@ function FrameCallback:reset_counter(key)
 	end
 end
 
-return

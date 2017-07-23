@@ -372,4 +372,3 @@ end
 function GenericDialog:resolution_changed_callback()
 end
 
-return

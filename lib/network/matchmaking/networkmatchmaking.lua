@@ -569,7 +569,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 
 			self.lobby_handler:setup_callbacks(NetworkMatchMaking._on_memberstatus_change, NetworkMatchMaking._on_data_update, NetworkMatchMaking._on_chat_message)
 			managers.network:start_client()
-function 			managers.menu:show_waiting_for_server_response({cancel_func()
+			managers.menu:show_waiting_for_server_response({cancel_func = function ()
 				managers.network:session():on_join_request_cancelled()
 			end})
 
@@ -830,4 +830,3 @@ function NetworkMatchMaking:from_host_lobby_re_opened(status)
 	end
 end
 
-return

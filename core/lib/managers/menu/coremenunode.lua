@@ -291,4 +291,3 @@ function MenuNode:legends()
 	return self._legends
 end
 
-return

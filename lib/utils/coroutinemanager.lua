@@ -112,4 +112,3 @@ function CoroutineManager:remove_coroutine(name)
 	end
 end
 
-return

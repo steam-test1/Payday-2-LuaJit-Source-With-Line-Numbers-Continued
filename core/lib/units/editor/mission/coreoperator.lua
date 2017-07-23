@@ -95,4 +95,3 @@ function CoreOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Choose an operation to perform on the selected elements. An element might not have the selected operation implemented and will then generate error when executed.")
 end
 
-return

@@ -3457,4 +3457,3 @@ function HUDStageEndScreen:reload()
 	HUDStageEndScreen.init(self, self._hud, self._workspace)
 end
 
-return

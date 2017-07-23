@@ -181,4 +181,3 @@ else
 	_G.core:_prepare_reload()
 end
 
-return

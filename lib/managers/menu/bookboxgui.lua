@@ -382,4 +382,3 @@ function BookBoxGui:_mouse_over_page_panel(x, y)
 	return nil
 end
 
-return

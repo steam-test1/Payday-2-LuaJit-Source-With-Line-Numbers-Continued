@@ -1551,4 +1551,3 @@ function TextBoxGui:close()
 	end
 end
 
-return

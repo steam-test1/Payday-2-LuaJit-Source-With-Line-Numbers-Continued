@@ -25,4 +25,3 @@ function EquipmentUnitElement:_build_panel(panel, panel_sizer)
 	}, "Specifies how many of this equipment to recieve (only work on those who has a max_amount set in their tweak data).")
 end
 
-return

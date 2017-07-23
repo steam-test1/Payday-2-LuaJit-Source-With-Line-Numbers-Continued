@@ -231,4 +231,3 @@ CrimeSpreeForcedModifiersMenuComponent.move_down = CrimeSpreeForcedModifiersMenu
 CrimeSpreeForcedModifiersMenuComponent.move_left = CrimeSpreeForcedModifiersMenuComponent._select_back_btn
 CrimeSpreeForcedModifiersMenuComponent.move_right = CrimeSpreeForcedModifiersMenuComponent._select_back_btn
 
-return

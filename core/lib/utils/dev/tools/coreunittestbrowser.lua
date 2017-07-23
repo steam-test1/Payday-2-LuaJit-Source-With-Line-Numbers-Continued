@@ -587,4 +587,3 @@ function CoreUnitTestBrowserInputDialog:get_value()
 	return self._key
 end
 
-return

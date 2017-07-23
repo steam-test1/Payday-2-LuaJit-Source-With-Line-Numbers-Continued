@@ -278,4 +278,3 @@ function LuaProfilerGridBox:_on_column(id, f)
 	self:_redraw()
 end
 
-return

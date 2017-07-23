@@ -164,4 +164,3 @@ end
 CoreLightGroupCutsceneKey.control_for_group = CoreCutsceneKeyBase.standard_combo_box_control
 CoreLightGroupCutsceneKey.control_for_enable = CoreLightGroupCutsceneKey.check_box_control
 
-return

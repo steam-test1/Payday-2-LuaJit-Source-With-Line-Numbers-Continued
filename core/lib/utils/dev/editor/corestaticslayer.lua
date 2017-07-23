@@ -65,4 +65,3 @@ function StaticsLayer:set_enabled(enabled)
 	return false
 end
 
-return

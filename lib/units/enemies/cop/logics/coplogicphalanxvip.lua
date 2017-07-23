@@ -270,4 +270,3 @@ function CopLogicPhalanxVip.on_criminal_neutralized(data, criminal_key)
 	end
 end
 
-return

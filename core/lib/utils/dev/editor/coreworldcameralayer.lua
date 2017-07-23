@@ -1380,4 +1380,3 @@ function WorldCameraLayer:get_help(text)
 	return text
 end
 
-return

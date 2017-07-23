@@ -304,4 +304,3 @@ RandomInstanceElementInputEvent._type = "input"
 RandomInstanceElementOutputEvent = RandomInstanceElementOutputEvent or class(RandomInstanceElement)
 RandomInstanceElementOutputEvent._type = "output"
 
-return

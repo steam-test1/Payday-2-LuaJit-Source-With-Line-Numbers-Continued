@@ -299,4 +299,3 @@ function SecurityLockGui:load(data)
 	self:set_visible(state.visible)
 end
 
-return

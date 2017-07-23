@@ -324,4 +324,3 @@ function ItemSlider:_layout(node, row_item)
 	row_item.gui_text:set_height(h)
 end
 
-return

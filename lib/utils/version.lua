@@ -6,4 +6,3 @@ function pd2_version()
 	return VERSION
 end
 
-return

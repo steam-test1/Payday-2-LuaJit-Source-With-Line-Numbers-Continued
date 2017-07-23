@@ -214,4 +214,3 @@ function ElementInstanceSetParams:on_executed(instigator)
 	ElementInstanceSetParams.super.on_executed(self, instigator)
 end
 
-return

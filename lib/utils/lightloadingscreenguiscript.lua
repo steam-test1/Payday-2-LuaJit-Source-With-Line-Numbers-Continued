@@ -191,4 +191,3 @@ function LightLoadingScreenGuiScript:set_visible(visible, res)
 	end
 end
 
-return

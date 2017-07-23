@@ -13,4 +13,3 @@ require("lib/player_actions/skills/PlayerActionTaserMalfunction")
 require("lib/player_actions/skills/PlayerActionTriggerHappy")
 require("lib/player_actions/skills/PlayerActionStockholmSyndromeTrade")
 
-return

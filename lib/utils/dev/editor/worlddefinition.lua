@@ -24,4 +24,3 @@ end
 
 CoreClass.override_class(CoreWorldDefinition.WorldDefinition, WorldDefinition)
 
-return

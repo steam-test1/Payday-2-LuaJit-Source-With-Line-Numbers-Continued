@@ -122,4 +122,3 @@ function MissionAccessCamera:destroy()
 	end
 end
 
-return

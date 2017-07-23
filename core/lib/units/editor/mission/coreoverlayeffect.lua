@@ -170,4 +170,3 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:changed_effect()
 end
 
-return

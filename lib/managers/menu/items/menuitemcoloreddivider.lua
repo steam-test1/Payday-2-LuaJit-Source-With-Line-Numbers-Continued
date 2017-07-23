@@ -32,4 +32,3 @@ function MenuItemColoredDivider:set_color(color)
 	end
 end
 
-return

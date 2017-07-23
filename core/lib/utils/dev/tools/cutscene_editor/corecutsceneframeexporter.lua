@@ -82,4 +82,3 @@ function CoreCutsceneFrameExporter:_disable_visual_aids()
 	end
 end
 
-return

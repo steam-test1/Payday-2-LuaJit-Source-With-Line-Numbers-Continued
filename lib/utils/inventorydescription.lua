@@ -1008,4 +1008,3 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 	return mod_stats
 end
 
-return

@@ -124,4 +124,3 @@ function PointPickerPanel:_on_finished_picking(sender, raycast)
 	end
 end
 
-return

@@ -114,4 +114,3 @@ function HUDHitDirection:_remove(indicator, data)
 	self._hit_direction_panel:remove(indicator)
 end
 
-return

@@ -1119,4 +1119,3 @@ function PlayerMovement:zipline_unit()
 	return self._zipline_unit
 end
 
-return

@@ -804,4 +804,3 @@ function SoundLayer:set_unit_name(units)
 	end
 end
 
-return

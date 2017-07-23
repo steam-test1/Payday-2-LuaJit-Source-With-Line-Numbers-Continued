@@ -338,7 +338,8 @@ function UnhideByName:unit_name_changed(unit)
 					if self._units[self._list:get_item_data(i)] == unit then
 						self._list:set_item_selected(i, true)
 						self._list:ensure_visible(i)
-						goto label_0
+
+						break
 					end
 				end
 			end
@@ -346,7 +347,6 @@ function UnhideByName:unit_name_changed(unit)
 			break
 		end
 	end
-	::label_0::
 end
 
 -- Lines: 342 to 344
@@ -455,4 +455,3 @@ function HideByName:deleted_unit(unit)
 	self:_remove_unit_from_list(unit)
 end
 
-return

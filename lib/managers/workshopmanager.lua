@@ -135,4 +135,3 @@ function WorkshopManager:_init_items()
 	end
 end
 
-return

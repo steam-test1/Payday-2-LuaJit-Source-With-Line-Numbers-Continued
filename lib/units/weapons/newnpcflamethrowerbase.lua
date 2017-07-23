@@ -66,4 +66,3 @@ function NewNPCFlamethrowerBase:third_person_important()
 	return NewFlamethrowerBase.third_person_important(self)
 end
 
-return

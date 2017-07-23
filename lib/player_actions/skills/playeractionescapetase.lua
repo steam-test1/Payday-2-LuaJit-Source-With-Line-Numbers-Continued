@@ -2,7 +2,7 @@ PlayerAction.EscapeTase = {}
 PlayerAction.EscapeTase.Priority = 1
 
 -- Lines: 6 to 19
-PlayerAction.function EscapeTase.Function(player_manager, target_time)
+PlayerAction.EscapeTase.Function = function (player_manager, target_time)
 	local time = Application:time()
 	local controller = player_manager:player_unit():base():controller()
 	local co = coroutine.running()
@@ -20,4 +20,3 @@ PlayerAction.function EscapeTase.Function(player_manager, target_time)
 	end
 end
 
-return

@@ -2172,4 +2172,3 @@ function NetworkPeer:is_dropin()
 	return self._is_dropin
 end
 
-return

@@ -23,4 +23,3 @@ function Init:transition()
 	end
 end
 
-return

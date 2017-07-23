@@ -22,4 +22,3 @@ function ElementPlayerStyle:on_executed(instigator)
 	ElementPlayerStyle.super.on_executed(self, instigator)
 end
 
-return

@@ -4910,4 +4910,3 @@ function SkillTreeGui:key_press(o, k)
 	end
 end
 
-return

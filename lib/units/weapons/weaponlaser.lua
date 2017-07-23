@@ -196,4 +196,3 @@ function WeaponLaser:add_ray_ignore_unit(unit)
 	table.insert(self._ray_ignore_units, unit)
 end
 
-return

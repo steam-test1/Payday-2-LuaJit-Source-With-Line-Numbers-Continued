@@ -138,4 +138,3 @@ function ElementLogicChanceTrigger:on_executed(instigator)
 	ElementLogicChanceTrigger.super.on_executed(self, instigator)
 end
 
-return

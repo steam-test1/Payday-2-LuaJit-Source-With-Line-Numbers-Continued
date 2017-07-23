@@ -83,4 +83,3 @@ function MenuItemDummy:menu_unselected_visible()
 	return false
 end
 
-return

@@ -872,4 +872,3 @@ function BrushHeader:spawn_brush(position, rotation)
 	return position
 end
 
-return

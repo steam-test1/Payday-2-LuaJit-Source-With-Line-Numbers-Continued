@@ -46,4 +46,3 @@ function IncendiaryBurstGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
-return

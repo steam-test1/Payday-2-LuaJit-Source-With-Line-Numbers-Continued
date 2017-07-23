@@ -154,4 +154,3 @@ function TangoTweakData:init(tweak_data)
 	})
 end
 
-return

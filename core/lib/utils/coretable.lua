@@ -748,4 +748,3 @@ function _G.unpack(t, i, n)
 	return default_unpack(t, i, n)
 end
 
-return

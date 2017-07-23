@@ -158,4 +158,3 @@ end
 function GroupAIStateEmpty:load()
 end
 
-return

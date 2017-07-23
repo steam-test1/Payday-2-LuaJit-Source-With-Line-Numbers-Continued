@@ -26,4 +26,3 @@ function State:transition()
 	assert(false, "you must override transition()")
 end
 
-return

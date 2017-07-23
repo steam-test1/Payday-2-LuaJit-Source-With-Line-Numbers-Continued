@@ -374,4 +374,3 @@ end
 function MissionScriptElement:destroy()
 end
 
-return

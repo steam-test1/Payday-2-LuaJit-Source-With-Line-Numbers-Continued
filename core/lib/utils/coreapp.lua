@@ -31,4 +31,3 @@ end
 function min_exe_version(version, system_name)
 end
 
-return

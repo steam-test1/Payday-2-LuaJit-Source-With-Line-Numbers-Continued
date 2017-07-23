@@ -121,4 +121,3 @@ CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreZoomCameraCu
 CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreChangeShadowCutsceneKey")
 CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreLightGroupCutsceneKey")
 
-return

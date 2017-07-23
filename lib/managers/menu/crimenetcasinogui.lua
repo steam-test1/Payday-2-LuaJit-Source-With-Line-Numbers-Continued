@@ -254,4 +254,3 @@ function CrimeNetCasinoGui:_crimenet_casino_lootdrop_back()
 	return not done
 end
 
-return

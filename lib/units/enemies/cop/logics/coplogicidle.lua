@@ -1512,4 +1512,3 @@ function CopLogicIdle._start_idle_action_from_act(data)
 	})
 end
 
-return

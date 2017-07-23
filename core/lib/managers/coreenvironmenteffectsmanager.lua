@@ -239,4 +239,3 @@ function EnvironmentEffect:default()
 	return self._default
 end
 
-return

@@ -862,4 +862,3 @@ function ElementSpecialObjective:_check_new_stealth_idle()
 	return self._values.so_action
 end
 
-return

@@ -234,4 +234,3 @@ function MenuItemChallenge:_layout(node, row_item)
 	row_item.description_text:set_top(row_item.reward_panel:bottom() + tweak_data.menu.info_padding)
 end
 
-return

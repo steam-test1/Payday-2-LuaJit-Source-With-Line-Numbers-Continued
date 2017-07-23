@@ -608,4 +608,3 @@ function PlayerBleedOut:destroy()
 	end
 end
 
-return

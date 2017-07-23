@@ -2823,4 +2823,3 @@ function NavigationManager:destroy()
 	self._quad_field:clear_all()
 end
 
-return

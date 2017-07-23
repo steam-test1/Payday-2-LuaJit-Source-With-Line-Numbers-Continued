@@ -366,4 +366,3 @@ function UnitBreakdownView:on_export_clicked()
 	Application:set_clipboard(export_text)
 end
 
-return

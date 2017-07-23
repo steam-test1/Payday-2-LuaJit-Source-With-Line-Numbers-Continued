@@ -25,4 +25,3 @@ function ExperienceUnitElement:_build_panel(panel, panel_sizer)
 	}, "Specify the amount of experience given.")
 end
 
-return

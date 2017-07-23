@@ -579,4 +579,3 @@ function CivilianLogicSurrender.is_available_for_assignment(data, objective)
 	return not data.unit:anim_data().tied and (objective and objective.type == "revive" or data.t - data.internal_data.state_enter_t > 5 and data.internal_data.submission_meter / data.internal_data.submission_max < 0.95)
 end
 
-return

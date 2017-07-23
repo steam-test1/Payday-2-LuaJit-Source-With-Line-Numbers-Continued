@@ -141,4 +141,3 @@ function CoreOverlayFXCutsceneKey:_top_level_window(window)
 	return (type_name(window) == "EWSFrame" or type_name(window) == "EWSDialog") and window or self:_top_level_window(assert(window:parent()))
 end
 
-return

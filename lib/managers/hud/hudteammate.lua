@@ -2256,4 +2256,3 @@ function HUDTeammate:set_info_meter(data)
 	end)
 end
 
-return

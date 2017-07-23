@@ -230,4 +230,3 @@ function HeatmapLayer:clear()
 	self:_clr_data()
 end
 
-return

@@ -899,7 +899,8 @@ function CustomSafehouseManager:generate_daily(id, tag)
 				for _, contractor_data in pairs(tweak_data.safehouse.contractors) do
 					if table.contains(contractor_data.dailies, daily_data.id) then
 						contractor = contractor_data
-						goto label_0
+
+						break
 					end
 				end
 
@@ -908,7 +909,6 @@ function CustomSafehouseManager:generate_daily(id, tag)
 		end
 	end
 
-	::label_0::
 	Global.custom_safehouse_manager.daily = {
 		reward_id = "menu_challenge_safehouse_daily_reward",
 		state = "unstarted",
@@ -1135,4 +1135,3 @@ function CustomSafehouseManager:is_new_player()
 	return self._global._new_player
 end
 
-return

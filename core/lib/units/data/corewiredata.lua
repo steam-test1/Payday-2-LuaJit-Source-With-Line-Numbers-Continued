@@ -6,4 +6,3 @@ function CoreWireData:init()
 	self.target_rot = 0
 end
 
-return

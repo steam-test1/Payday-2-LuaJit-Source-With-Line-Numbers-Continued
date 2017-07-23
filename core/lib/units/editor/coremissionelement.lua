@@ -1775,4 +1775,3 @@ function CoreMissionElement:_get_links_of_type_from_elements(elements, type, to_
 	end
 end
 
-return

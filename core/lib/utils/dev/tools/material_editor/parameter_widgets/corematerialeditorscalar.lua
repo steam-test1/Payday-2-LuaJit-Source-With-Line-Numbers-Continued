@@ -61,4 +61,3 @@ function CoreMaterialEditorScalar:_on_text_ctrl()
 	self:update_live()
 end
 
-return CoreMaterialEditorScalar

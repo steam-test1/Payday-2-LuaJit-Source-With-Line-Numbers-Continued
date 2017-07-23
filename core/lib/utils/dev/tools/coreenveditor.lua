@@ -1118,4 +1118,3 @@ function CoreEnvEditor:value_database_lookup(str)
 	return value
 end
 
-return

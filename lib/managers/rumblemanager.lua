@@ -87,4 +87,3 @@ end
 
 CoreClass.override_class(CoreRumbleManager.RumbleManager, RumbleManager)
 
-return

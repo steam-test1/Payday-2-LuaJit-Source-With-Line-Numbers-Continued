@@ -75,4 +75,3 @@ function CivilianHeisterSound:sound_callback(instance, event_type, unit, sound_s
 	end
 end
 
-return

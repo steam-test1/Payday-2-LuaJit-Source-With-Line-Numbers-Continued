@@ -16,4 +16,3 @@ function ModifierMoreSpecials:init(data)
 	end
 end
 
-return

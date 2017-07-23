@@ -711,4 +711,3 @@ function MenuGuiComponentGeneric:update_pages_hover(button, x, y)
 	end
 end
 
-return

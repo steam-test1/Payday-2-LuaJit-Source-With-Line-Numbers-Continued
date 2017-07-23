@@ -162,4 +162,3 @@ function MenuInitiatorBase:add_back_button(node)
 	return new_item
 end
 
-return

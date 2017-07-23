@@ -703,4 +703,3 @@ function ObjectivesManager:is_read(id)
 	return self._read_objectives[id]
 end
 
-return

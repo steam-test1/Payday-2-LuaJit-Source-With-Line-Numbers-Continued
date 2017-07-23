@@ -52,4 +52,3 @@ end
 function SmallLootBase:destroy()
 end
 
-return

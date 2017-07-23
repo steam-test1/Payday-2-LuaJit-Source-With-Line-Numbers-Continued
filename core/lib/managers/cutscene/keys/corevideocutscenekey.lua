@@ -150,4 +150,3 @@ function CoreVideoCutsceneKey:resume()
 	end
 end
 
-return

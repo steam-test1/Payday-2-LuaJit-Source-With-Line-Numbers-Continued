@@ -381,4 +381,3 @@ function InteractionEditorGenericPanel:on_list_box_update(data, event)
 	data.remove_btn:set_enabled(true)
 end
 
-return

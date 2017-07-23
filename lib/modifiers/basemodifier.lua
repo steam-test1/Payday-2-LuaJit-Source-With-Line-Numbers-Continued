@@ -55,4 +55,3 @@ function BaseModifier:is_active()
 	return false
 end
 
-return

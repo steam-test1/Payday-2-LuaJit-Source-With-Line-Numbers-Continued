@@ -708,4 +708,3 @@ function MenuBackdropGUI:destroy()
 	end
 end
 
-return

@@ -265,4 +265,3 @@ function PlayerArrested:destroy()
 	PlayerBleedOut._unregister_revive_SO(self)
 end
 
-return

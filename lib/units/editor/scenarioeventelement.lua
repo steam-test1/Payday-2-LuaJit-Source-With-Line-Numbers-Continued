@@ -109,4 +109,3 @@ function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 	})
 end
 
-return

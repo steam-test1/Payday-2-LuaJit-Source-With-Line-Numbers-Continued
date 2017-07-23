@@ -662,4 +662,3 @@ function NpcVehicleDrivingExt:set_state(new_state)
 	end
 end
 
-return

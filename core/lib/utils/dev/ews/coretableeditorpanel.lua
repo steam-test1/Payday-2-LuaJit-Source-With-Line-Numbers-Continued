@@ -278,4 +278,3 @@ function CoreTableEditorPanel:_on_control_edited(control, column_name, value_met
 	self:set_selected_item_value(column_name, value)
 end
 
-return

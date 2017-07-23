@@ -90,4 +90,3 @@ function ElementLookAtTrigger:update_lookat()
 	end
 end
 
-return

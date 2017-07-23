@@ -331,4 +331,3 @@ function LuaProfilerTreeBox:_on_select()
 	end
 end
 
-return

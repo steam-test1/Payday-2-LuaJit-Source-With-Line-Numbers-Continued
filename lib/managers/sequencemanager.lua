@@ -34,4 +34,3 @@ end
 
 CoreClass.override_class(CoreSequenceManager.SequenceManager, SequenceManager)
 
-return

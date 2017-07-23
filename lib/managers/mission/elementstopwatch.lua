@@ -408,4 +408,3 @@ function ElementStopwatchFilter:_check_time(element, value)
 	return false
 end
 
-return

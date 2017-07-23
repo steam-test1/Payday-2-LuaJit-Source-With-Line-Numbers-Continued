@@ -48,4 +48,3 @@ function DummyCivilianBase:destroy(unit)
 	self:_unspawn_spear()
 end
 
-return

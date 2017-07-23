@@ -3361,4 +3361,3 @@ function AccessCrimeNetInteractionExt:update(unit, t, dt)
 	end
 end
 
-return

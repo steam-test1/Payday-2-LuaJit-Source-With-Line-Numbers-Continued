@@ -6,7 +6,7 @@ CallbackHandler = CallbackHandler or class()
 function CallbackHandler:init()
 
 	-- Lines: 7 to 12
-function 	getmetatable(self).__index(t, key)
+	getmetatable(self).__index = function (t, key)
 		local value = rawget(getmetatable(t), key)
 
 		if value then
@@ -15,4 +15,3 @@ function 	getmetatable(self).__index(t, key)
 	end
 end
 
-return

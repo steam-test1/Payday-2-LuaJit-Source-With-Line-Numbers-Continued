@@ -92,4 +92,3 @@ function CoreFilteredTreePanel:_on_filter_enter_pressed()
 	self:_tree_control():expand(true)
 end
 
-return

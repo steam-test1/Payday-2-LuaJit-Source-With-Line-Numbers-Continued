@@ -1807,4 +1807,3 @@ function ChatGui:close(...)
 	managers.chat:unregister_receiver(self._channel_id, self)
 end
 
-return

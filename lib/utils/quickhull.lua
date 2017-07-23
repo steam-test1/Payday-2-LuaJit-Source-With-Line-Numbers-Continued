@@ -293,4 +293,3 @@ function Quickhull.test()
 	brush:line(final_points[1], final_points[#final_points], 8)
 end
 
-return

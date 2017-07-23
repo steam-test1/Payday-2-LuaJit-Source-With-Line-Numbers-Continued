@@ -160,4 +160,3 @@ function MasterUpdator:slaveupdators_ready_to_send()
 	self._ready_to_send = true
 end
 
-return

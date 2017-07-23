@@ -54,4 +54,3 @@ function PointPicker:_mouse_left_down(raycast)
 	self:stop_picking()
 end
 
-return

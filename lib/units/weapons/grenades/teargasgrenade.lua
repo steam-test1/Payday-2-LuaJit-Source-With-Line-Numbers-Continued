@@ -77,4 +77,3 @@ function TearGasGrenade:detonate()
 	end
 end
 
-return

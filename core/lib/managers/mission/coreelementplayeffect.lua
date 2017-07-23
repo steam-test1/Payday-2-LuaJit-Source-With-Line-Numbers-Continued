@@ -92,4 +92,3 @@ function ElementStopEffect:on_executed(instigator)
 	ElementStopEffect.super.on_executed(self, instigator)
 end
 
-return

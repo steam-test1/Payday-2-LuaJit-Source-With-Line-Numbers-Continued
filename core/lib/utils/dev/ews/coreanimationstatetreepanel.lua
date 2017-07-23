@@ -42,4 +42,3 @@ function CoreAnimationStateTreePanel:_refresh_tree()
 	self:_tree_control():thaw()
 end
 
-return

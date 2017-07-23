@@ -484,4 +484,3 @@ function NPCRaycastWeaponBase:set_laser_enabled(state)
 	end
 end
 
-return

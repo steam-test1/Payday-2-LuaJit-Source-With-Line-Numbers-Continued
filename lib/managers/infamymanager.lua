@@ -245,4 +245,3 @@ function InfamyManager:reset()
 	self:_setup()
 end
 
-return

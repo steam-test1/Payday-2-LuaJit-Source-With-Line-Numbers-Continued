@@ -402,4 +402,3 @@ function NpcVehicleDamage:_health_recap()
 	end
 end
 
-return

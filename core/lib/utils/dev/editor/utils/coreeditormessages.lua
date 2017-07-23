@@ -12,4 +12,3 @@ EditorMessage = {}
 EditorMessage.OnUnitRemoved = set_enum()
 EditorMessage.OnUnitRestored = set_enum()
 
-return

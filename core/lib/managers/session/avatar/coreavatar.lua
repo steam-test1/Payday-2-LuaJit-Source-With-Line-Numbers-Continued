@@ -35,4 +35,3 @@ function Avatar:avatar_handler()
 	return self._avatar_handler
 end
 
-return

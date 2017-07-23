@@ -179,4 +179,3 @@ function CoreMusicManager:load(data)
 	Global.music_manager.synced_track = state.track
 end
 
-return

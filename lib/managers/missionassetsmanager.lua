@@ -665,4 +665,3 @@ function MissionAssetsManager:is_all_textures_loaded()
 	return table.size(self._asset_textures_in_loading) == 0 and table.size(self._asset_textures_loaded) ~= 0
 end
 
-return

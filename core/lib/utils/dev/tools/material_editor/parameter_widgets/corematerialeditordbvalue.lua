@@ -51,4 +51,3 @@ function CoreMaterialEditorDBValue:_fill_combobox()
 	end
 end
 
-return CoreMaterialEditorDBValue

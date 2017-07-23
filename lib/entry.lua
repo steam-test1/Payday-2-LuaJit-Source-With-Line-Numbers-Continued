@@ -6,4 +6,3 @@ setup = setup or selected_setup:new()
 
 setup:make_entrypoint()
 
-return

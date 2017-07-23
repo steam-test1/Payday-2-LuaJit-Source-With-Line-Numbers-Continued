@@ -1637,4 +1637,3 @@ function CopActionAct:anim_act_clbk(trigger)
 end
 CopActionAct._apply_freefall = CopActionWalk._apply_freefall
 
-return

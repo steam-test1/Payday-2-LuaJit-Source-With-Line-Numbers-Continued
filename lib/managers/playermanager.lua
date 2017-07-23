@@ -5688,4 +5688,3 @@ function PlayerManager:crew_add_concealment(new_value)
 	end
 end
 
-return

@@ -28,4 +28,3 @@ end
 
 CoreClass.override_class(CoreDebugManager.DebugManager, DebugManager)
 
-return

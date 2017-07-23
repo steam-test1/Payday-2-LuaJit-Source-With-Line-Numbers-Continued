@@ -119,4 +119,3 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
-return

@@ -61,4 +61,3 @@ function Info:should_load_level()
 	return self._should_load_level
 end
 
-return

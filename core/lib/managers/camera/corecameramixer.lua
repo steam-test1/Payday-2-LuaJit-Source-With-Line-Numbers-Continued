@@ -140,4 +140,3 @@ function CameraMixer:cameras()
 	return cameras
 end
 
-return

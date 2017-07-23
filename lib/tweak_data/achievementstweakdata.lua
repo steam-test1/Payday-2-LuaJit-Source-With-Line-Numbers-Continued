@@ -3499,4 +3499,3 @@ function AchievementsTweakData:init(tweak_data)
 	end
 end
 
-return

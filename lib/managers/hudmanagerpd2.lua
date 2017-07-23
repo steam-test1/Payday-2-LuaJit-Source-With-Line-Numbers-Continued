@@ -2243,4 +2243,3 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 	end
 end
 
-return

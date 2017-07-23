@@ -151,4 +151,3 @@ function LinkedStackMap:to_string()
 	return string
 end
 
-return

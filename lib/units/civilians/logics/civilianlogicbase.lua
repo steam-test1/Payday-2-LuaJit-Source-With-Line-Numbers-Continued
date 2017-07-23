@@ -16,4 +16,3 @@ function CivilianLogicBase.on_objective_unit_destroyed(data, unit)
 	data.objective_failed_clbk(data.unit, data.objective)
 end
 
-return

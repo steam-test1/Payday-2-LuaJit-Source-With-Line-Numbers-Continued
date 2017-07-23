@@ -36,4 +36,3 @@ function DeviceLayoutDescription:binds()
 	return self._binds
 end
 
-return

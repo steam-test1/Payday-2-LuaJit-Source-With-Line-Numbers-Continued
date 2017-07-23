@@ -1615,4 +1615,3 @@ function CustomSafehouseGuiRewardItem:set_selected(selected, ...)
 	end
 end
 
-return

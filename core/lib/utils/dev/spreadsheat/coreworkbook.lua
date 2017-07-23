@@ -47,4 +47,3 @@ function Workbook:to_xml(f)
 	f:write(EMPTY_WORKBOOK_XML2)
 end
 
-return

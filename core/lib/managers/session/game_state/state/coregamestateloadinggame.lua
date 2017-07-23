@@ -44,4 +44,3 @@ function LoadingGame:transition()
 	end
 end
 
-return

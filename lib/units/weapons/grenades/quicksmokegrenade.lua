@@ -106,4 +106,3 @@ function QuickSmokeGrenade:destroy()
 	end
 end
 
-return

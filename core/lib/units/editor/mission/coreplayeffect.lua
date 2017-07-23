@@ -196,4 +196,3 @@ function CoreStopEffectUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select a kind of operation to perform on the added effects")
 end
 
-return

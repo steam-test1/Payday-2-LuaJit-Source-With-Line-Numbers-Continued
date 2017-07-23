@@ -1177,14 +1177,14 @@ function JobManager:activate_job(job_id, current_stage)
 
 				if roll <= 0 then
 					wrapped_job_id = job_id
-					goto label_0
+
+					break
 				end
 			end
 		else
 			wrapped_job_id = job.job_wrapper[math.random(#job.job_wrapper)]
 		end
 
-		::label_0::
 		return self:activate_job(wrapped_job_id, current_stage)
 	end
 
@@ -1731,4 +1731,3 @@ function JobManager:sync_load(data)
 	self._global.next_interupt_stage = state.next_interupt_stage
 end
 
-return

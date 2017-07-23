@@ -94,4 +94,3 @@ function CoreCollapseBox:_cb()
 	self._parent:refresh()
 end
 
-return

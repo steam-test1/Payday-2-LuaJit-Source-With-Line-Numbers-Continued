@@ -21,4 +21,3 @@ end
 function DramaTweakData:_create_table_structure()
 end
 
-return

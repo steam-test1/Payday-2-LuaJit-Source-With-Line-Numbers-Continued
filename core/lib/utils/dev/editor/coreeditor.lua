@@ -5143,4 +5143,3 @@ function CoreEditor:_print_undo_stacks()
 	print("[Undo] ------")
 end
 
-return

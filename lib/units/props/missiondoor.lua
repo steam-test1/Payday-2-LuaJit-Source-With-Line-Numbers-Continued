@@ -415,4 +415,3 @@ end
 function MissionDoorDevice:destroy()
 end
 
-return

@@ -179,4 +179,3 @@ function ElementSpecialObjectiveGroup:clbk_objective_failed(group)
 	self:event("fail", group)
 end
 
-return

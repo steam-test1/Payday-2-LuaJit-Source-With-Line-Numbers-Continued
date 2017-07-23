@@ -58,4 +58,3 @@ function AIForceAttentionOperatorElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Controls an 'ai_force_attention' unit.")
 end
 
-return

@@ -1052,4 +1052,3 @@ function TeamAILogicIdle.mark_sneak_char(data, criminal, to_mark, play_sound, pl
 	to_mark:contour():add("mark_enemy", true)
 end
 
-return

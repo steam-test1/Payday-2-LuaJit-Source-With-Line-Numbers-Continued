@@ -118,4 +118,3 @@ function EnvEffectTweakData:incendiary_fire_arbiter()
 	return params
 end
 
-return

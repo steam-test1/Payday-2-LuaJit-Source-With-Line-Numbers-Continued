@@ -250,4 +250,3 @@ function FirstAidKitBase:destroy()
 	end
 end
 
-return

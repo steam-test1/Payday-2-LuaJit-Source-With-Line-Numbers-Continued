@@ -254,4 +254,3 @@ function ButlerMirroringManager:_on_level_up()
 	end
 end
 
-return

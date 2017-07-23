@@ -1936,4 +1936,3 @@ function FPCameraPlayerBase:smoothstep(a, b, step, n)
 	return x
 end
 
-return

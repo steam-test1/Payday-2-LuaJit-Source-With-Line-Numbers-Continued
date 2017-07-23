@@ -32,4 +32,3 @@ function EditorSuite:environment_editor()
 	managers.toolhub:close("Environment Editor")
 end
 
-return

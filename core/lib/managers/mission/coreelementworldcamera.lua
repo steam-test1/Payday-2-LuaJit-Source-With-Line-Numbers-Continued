@@ -55,4 +55,3 @@ function ElementWorldCameraTrigger:on_executed(instigator)
 	ElementWorldCameraTrigger.super.on_executed(self, instigator)
 end
 
-return

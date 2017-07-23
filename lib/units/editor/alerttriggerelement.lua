@@ -168,4 +168,3 @@ function AlertTriggerElement:on_alert_type_checkbox_changed(params)
 	end
 end
 
-return

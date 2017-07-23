@@ -326,4 +326,3 @@ function EnvironmentFire:load(data)
 	self:on_spawn(data, normal, self._user_unit, added_time, range_multiplier)
 end
 
-return

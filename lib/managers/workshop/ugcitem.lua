@@ -566,4 +566,3 @@ function UGCItem:_save_info()
 	end
 end
 
-return

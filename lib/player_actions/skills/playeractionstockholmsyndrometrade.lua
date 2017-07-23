@@ -2,7 +2,7 @@ PlayerAction.StockholmSyndromeTrade = {}
 PlayerAction.StockholmSyndromeTrade.Priority = 1
 
 -- Lines: 6 to 37
-PlayerAction.function StockholmSyndromeTrade.Function(pos, peer_id)
+PlayerAction.StockholmSyndromeTrade.Function = function (pos, peer_id)
 	managers.hint:show_hint("skill_stockholm_syndrome_trade")
 
 	local controller = managers.controller:create_controller("player_custody", nil, false)
@@ -165,4 +165,3 @@ function StockholmSyndromeTradeAction.on_failure(feedback_idx)
 	managers.hint:show_hint(hint_feedback[feedback_idx])
 end
 
-return

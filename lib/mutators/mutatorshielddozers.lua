@@ -36,4 +36,3 @@ function MutatorShieldDozers:modify_value(id, value)
 	end
 end
 
-return

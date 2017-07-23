@@ -5,4 +5,3 @@ function DLCFlaggedUnit:init(unit, update_enabled)
 	self._unit = unit
 end
 
-return

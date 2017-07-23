@@ -425,4 +425,3 @@ end
 
 CoreClass.override_class(CoreMissionManager.MissionScript, MissionScript)
 
-return

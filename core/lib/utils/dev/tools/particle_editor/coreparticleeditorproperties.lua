@@ -1161,4 +1161,3 @@ function CoreEffectProperty:value()
 	return self._value
 end
 
-return

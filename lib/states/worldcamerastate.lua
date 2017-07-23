@@ -15,4 +15,3 @@ end
 function WorldCameraState:at_exit()
 end
 
-return

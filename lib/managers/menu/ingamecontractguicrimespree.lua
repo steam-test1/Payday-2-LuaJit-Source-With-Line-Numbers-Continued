@@ -211,4 +211,3 @@ function IngameContractGuiCrimeSpree:close()
 	end
 end
 
-return

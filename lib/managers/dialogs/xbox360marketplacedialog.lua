@@ -37,4 +37,3 @@ function Xbox360MarketplaceDialog:done_callback()
 	MarketplaceDialog.done_callback(self)
 end
 
-return

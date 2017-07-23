@@ -154,4 +154,3 @@ function SubtitleTweakData:_init_moon()
 	}
 end
 
-return

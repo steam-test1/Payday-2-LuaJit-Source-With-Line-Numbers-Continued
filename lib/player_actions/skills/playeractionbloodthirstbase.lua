@@ -2,7 +2,7 @@ PlayerAction.BloodthirstBase = {}
 PlayerAction.BloodthirstBase.Priority = 1
 
 -- Lines: 6 to 31
-PlayerAction.function BloodthirstBase.Function(player_manager, melee_multiplier, max_multiplier)
+PlayerAction.BloodthirstBase.Function = function (player_manager, melee_multiplier, max_multiplier)
 	local co = coroutine.running()
 	local multiplier = 1
 	local quit = false
@@ -37,4 +37,3 @@ PlayerAction.function BloodthirstBase.Function(player_manager, melee_multiplier,
 	player_manager:unregister_message(Message.OnEnemyKilled, co)
 end
 
-return

@@ -89,4 +89,3 @@ end
 function CharacterSequenceElement:update_editing()
 end
 
-return

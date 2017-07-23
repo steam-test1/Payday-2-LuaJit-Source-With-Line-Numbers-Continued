@@ -681,4 +681,3 @@ function CoreCutsceneManager:evaluate_current_frame()
 	error("CoreCutsceneManager:evaluate_current_frame() is deprecated. The playhead state is kept in CoreCutscenePlayer, but is not exposed here.")
 end
 
-return

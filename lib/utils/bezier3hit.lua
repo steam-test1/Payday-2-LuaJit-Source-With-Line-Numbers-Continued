@@ -218,4 +218,3 @@ function bezier5_xintercept(x1, y1, x6, y6)
 	return X
 end
 
-return

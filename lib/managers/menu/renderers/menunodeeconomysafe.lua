@@ -725,4 +725,3 @@ function MenuNodeEconomySafe:_test_textures()
 	return t
 end
 
-return

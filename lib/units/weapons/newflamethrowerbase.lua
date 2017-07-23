@@ -147,4 +147,3 @@ function NewFlamethrowerBase:third_person_important()
 	return true
 end
 
-return

@@ -763,4 +763,3 @@ function DrillTimerGui:post_event(event)
 	end
 end
 
-return

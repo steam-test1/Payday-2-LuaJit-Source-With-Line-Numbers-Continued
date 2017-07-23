@@ -208,4 +208,3 @@ function ParseAllDramas:marker_callback(instance, sound_source, event_type, cook
 	self._parsed_sound_events[cookie] = label
 end
 
-return

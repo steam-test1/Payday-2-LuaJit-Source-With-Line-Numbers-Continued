@@ -16,4 +16,3 @@ function ModifierCivilianAlarm:OnCivilianKilled()
 	end
 end
 
-return

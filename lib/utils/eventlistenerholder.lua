@@ -166,4 +166,3 @@ function EventListenerHolder:has_listeners_for_event(event)
 	return self._listeners and self._listeners[event]
 end
 
-return

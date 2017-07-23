@@ -453,14 +453,14 @@ function CopActionShoot:update(t)
 						for i_mode, mode_chance in ipairs(falloff.mode) do
 							if random_mode <= mode_chance then
 								firemode = i_mode
-								goto label_0
+
+								break
 							end
 						end
 					else
 						firemode = 1
 					end
 
-					::label_0::
 					if firemode > 1 then
 						self._weapon_base:start_autofire(firemode < 4 and firemode)
 
@@ -962,4 +962,3 @@ function CopActionShoot:anim_clbk_melee_strike()
 	end
 end
 
-return

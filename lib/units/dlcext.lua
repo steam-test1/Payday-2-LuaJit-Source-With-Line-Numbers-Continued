@@ -14,4 +14,3 @@ function DLCExt:init(unit)
 	end
 end
 
-return

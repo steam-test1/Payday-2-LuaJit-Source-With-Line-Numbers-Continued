@@ -46,4 +46,3 @@ function ElementPlayerSpawner:execute_on_all_units(func)
 	end
 end
 
-return

@@ -73,4 +73,3 @@ function ElementProfileFilter:_check_achievement()
 	return pass
 end
 
-return

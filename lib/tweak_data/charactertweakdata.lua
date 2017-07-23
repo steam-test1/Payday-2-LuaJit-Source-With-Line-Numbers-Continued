@@ -14135,4 +14135,3 @@ function CharacterTweakData:character_map()
 	return char_map
 end
 
-return

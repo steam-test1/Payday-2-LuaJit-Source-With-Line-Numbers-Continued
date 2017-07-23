@@ -666,4 +666,3 @@ function MenuCallbackHandler:debug_crime_spree_reset()
 	MenuCallbackHandler:save_progress()
 end
 
-return

@@ -323,4 +323,3 @@ function ColorPickerFields:_mirroring_fields(field)
 	return table.exclude(my_group, field)
 end
 
-return

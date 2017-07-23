@@ -649,4 +649,3 @@ function SentryGunDamage:set_parent_unit(unit)
 	self._parent_unit = unit
 end
 
-return

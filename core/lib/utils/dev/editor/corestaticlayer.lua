@@ -628,4 +628,3 @@ function StaticLayer:add_triggers()
 	end
 end
 
-return

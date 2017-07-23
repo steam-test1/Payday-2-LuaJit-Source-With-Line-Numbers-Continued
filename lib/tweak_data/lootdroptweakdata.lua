@@ -148,7 +148,7 @@ function LootDropTweakData:init(tweak_data)
 
 	self.DEFAULT_WEIGHT = 1
 	self.got_item_weight_mod = 0.5
-function 	self.type_weight_mod_funcs = {weapon_mods(global_value, category, id)
+	self.type_weight_mod_funcs = {weapon_mods = function (global_value, category, id)
 		local weapons = managers.weapon_factory:get_weapons_uses_part(id) or {}
 		local primaries = managers.blackmarket:get_crafted_category("primaries") or {}
 		local secondaries = managers.blackmarket:get_crafted_category("secondaries") or {}
@@ -1552,4 +1552,3 @@ function LootDropTweakData:_create_global_value_list_map()
 	end
 end
 
-return

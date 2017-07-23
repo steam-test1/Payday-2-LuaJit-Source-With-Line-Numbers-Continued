@@ -204,4 +204,3 @@ function SpawnEnemyGroupUnitElement:on_preferred_spawn_groups_checkbox_changed(p
 	end
 end
 
-return

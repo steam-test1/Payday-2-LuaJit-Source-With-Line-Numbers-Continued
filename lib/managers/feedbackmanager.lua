@@ -468,4 +468,3 @@ function FeedBackAboveCameraEffect:stop()
 	end
 end
 
-return

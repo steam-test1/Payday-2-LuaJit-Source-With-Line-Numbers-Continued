@@ -156,4 +156,3 @@ function ElementSpawnEnemyGroup:spawn_groups()
 	return self._values.preferred_spawn_groups
 end
 
-return

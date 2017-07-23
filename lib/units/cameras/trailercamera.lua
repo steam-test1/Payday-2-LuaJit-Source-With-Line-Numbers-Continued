@@ -293,4 +293,3 @@ function TrailerCameraElementAction:execute()
 	managers.mission:debug_execute_mission_element_by_name(self._name)
 end
 
-return

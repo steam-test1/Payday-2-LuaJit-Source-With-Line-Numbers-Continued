@@ -293,4 +293,3 @@ function ObjectInteractionManager:on_interaction_released(data)
 	end
 end
 
-return

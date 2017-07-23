@@ -357,4 +357,3 @@ function AIAttentionObject:destroy()
 	end
 end
 
-return

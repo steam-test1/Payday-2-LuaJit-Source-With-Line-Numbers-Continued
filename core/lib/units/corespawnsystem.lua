@@ -366,4 +366,3 @@ function CoreSpawnSystem:get_socket_nodes(socket_name, unit_name)
 	end
 end
 
-return

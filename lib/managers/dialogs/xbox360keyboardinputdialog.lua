@@ -21,4 +21,3 @@ function Xbox360KeyboardInputDialog:done_callback(input_text)
 	KeyboardInputDialog.done_callback(self, true, input_text)
 end
 
-return

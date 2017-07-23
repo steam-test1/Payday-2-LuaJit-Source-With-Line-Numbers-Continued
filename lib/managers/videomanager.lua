@@ -26,4 +26,3 @@ function VideoManager:volume_changed(volume)
 	end
 end
 
-return

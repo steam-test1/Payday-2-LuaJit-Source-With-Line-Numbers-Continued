@@ -230,4 +230,3 @@ function CoreUnderlayEffect:value(material, key)
 	end
 end
 
-return

@@ -77,4 +77,3 @@ function CoreTreeNode:remove()
 	self._children = {}
 end
 
-return

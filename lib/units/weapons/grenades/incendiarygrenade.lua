@@ -77,4 +77,3 @@ function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 	end
 end
 
-return

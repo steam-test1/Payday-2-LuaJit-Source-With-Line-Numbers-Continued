@@ -157,4 +157,3 @@ function HintManager:load(data)
 	Global.hint_manager.hints = deep_clone(state.hints)
 end
 
-return

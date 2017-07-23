@@ -63,4 +63,3 @@ function ElementVehicleSpawner:stop_simulation(...)
 	self:unspawn_all_units()
 end
 
-return

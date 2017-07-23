@@ -1287,7 +1287,8 @@ function WeaponFactoryManager:get_replaces_parts(factory_id, part_id, blueprint,
 			for _, rep_id in ipairs(blueprint) do
 				if factory.parts[rep_id].type == type then
 					table.insert(replaces, rep_id)
-					goto label_0
+
+					break
 				end
 			end
 		else
@@ -1297,7 +1298,6 @@ function WeaponFactoryManager:get_replaces_parts(factory_id, part_id, blueprint,
 		Application:error("WeaponFactoryManager:check_replaces_part Part", part_id, "not allowed for weapon", factory_id, "!")
 	end
 
-	::label_0::
 	return replaces
 end
 
@@ -1669,4 +1669,3 @@ function WeaponFactoryManager:debug_get_stats(factory_id, blueprint)
 	return stats
 end
 
-return

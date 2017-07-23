@@ -28,4 +28,3 @@ function Storage:_close_load_task()
 	self._load_started_time = nil
 end
 
-return

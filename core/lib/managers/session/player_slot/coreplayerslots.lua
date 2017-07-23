@@ -126,4 +126,3 @@ function PlayerSlots:leave_level_handler(level_handler)
 	end
 end
 
-return

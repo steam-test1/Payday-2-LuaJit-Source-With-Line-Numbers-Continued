@@ -258,4 +258,3 @@ function TeamAILogicTravel.is_available_for_assignment(data, new_objective)
 	end
 end
 
-return

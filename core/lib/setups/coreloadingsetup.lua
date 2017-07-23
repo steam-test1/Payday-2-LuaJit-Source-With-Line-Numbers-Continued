@@ -16,7 +16,7 @@ function class(...)
 
 
 	-- Lines: 27 to 33
-function 	class_table.new(klass, ...)
+	function class_table.new(klass, ...)
 		local object = {}
 
 		setmetatable(object, class_table)
@@ -115,4 +115,3 @@ function CoreLoadingSetup:make_entrypoint()
 	rawset(_G, "destroy", callback(self, self, "__destroy"))
 end
 
-return

@@ -284,4 +284,3 @@ function MenuSetup:destroy()
 	managers.menu_scene:destroy()
 end
 
-return MenuSetup

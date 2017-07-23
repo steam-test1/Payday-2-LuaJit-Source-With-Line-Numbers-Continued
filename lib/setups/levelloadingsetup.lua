@@ -50,4 +50,3 @@ setup = setup or LevelLoadingSetup:new()
 
 setup:make_entrypoint()
 
-return

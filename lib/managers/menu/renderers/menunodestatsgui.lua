@@ -215,4 +215,3 @@ function MenuNodeStatsGui:resolution_changed()
 	MenuNodeStatsGui.super.resolution_changed(self)
 end
 
-return

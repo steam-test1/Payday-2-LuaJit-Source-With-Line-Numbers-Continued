@@ -330,7 +330,8 @@ function UnitByName:unit_name_changed(unit)
 					if self._units[self._list:get_item_data(i)] == unit then
 						self._list:set_item_selected(i, true)
 						self._list:ensure_visible(i)
-						goto label_0
+
+						break
 					end
 				end
 			end
@@ -338,7 +339,6 @@ function UnitByName:unit_name_changed(unit)
 			break
 		end
 	end
-	::label_0::
 end
 
 -- Lines: 300 to 302
@@ -432,4 +432,3 @@ function UnitByName:thaw()
 	self._list:thaw()
 end
 
-return

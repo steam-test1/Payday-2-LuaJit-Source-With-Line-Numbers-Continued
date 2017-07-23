@@ -15,4 +15,3 @@ function ModelDependencyNode:_parse()
 	return {}
 end
 
-return

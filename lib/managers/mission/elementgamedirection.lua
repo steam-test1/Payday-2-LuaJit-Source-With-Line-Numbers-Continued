@@ -17,4 +17,3 @@ function ElementGameDirection:on_executed(instigator)
 	ElementGameDirection.super.on_executed(self, instigator)
 end
 
-return

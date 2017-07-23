@@ -987,4 +987,3 @@ function PortalLayer:add_triggers()
 	vc:add_trigger(Idstring("enter"), callback(self, self, "insert"))
 end
 
-return

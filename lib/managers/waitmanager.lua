@@ -119,4 +119,3 @@ function WaitManager:list_of_waiting()
 	return rtn
 end
 
-return

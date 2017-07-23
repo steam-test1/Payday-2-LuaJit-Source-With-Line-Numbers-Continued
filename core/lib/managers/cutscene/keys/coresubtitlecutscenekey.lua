@@ -135,4 +135,3 @@ function CoreSubtitleCutsceneKey:validate_control_for_attribute(attribute_name)
 	return true
 end
 
-return

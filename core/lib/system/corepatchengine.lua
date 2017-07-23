@@ -32,22 +32,22 @@ end
 if Vector3 then
 
 	-- Lines: 41 to 42
-function 	Vector3.__concat(o1, o2)
+	function Vector3.__concat(o1, o2)
 		return tostring(o1) .. tostring(o2)
 	end
 
 	-- Lines: 44 to 45
-function 	Vector3:flat(v)
+	function Vector3:flat(v)
 		return math.cross(math.cross(v, self), v)
 	end
 
 	-- Lines: 48 to 49
-function 	Vector3:orthogonal(ratio)
+	function Vector3:orthogonal(ratio)
 		return self:orthogonal_func()(ratio)
 	end
 
 	-- Lines: 52 to 54
-function 	Vector3:orthogonal_func(start_dir)
+	function Vector3:orthogonal_func(start_dir)
 		local rot = Rotation(self, start_dir or Vector3(0, 0, -1))
 
 		return function (ratio)
@@ -56,7 +56,7 @@ function 	Vector3:orthogonal_func(start_dir)
 	end
 
 	-- Lines: 57 to 58
-function 	Vector3:unpack()
+	function Vector3:unpack()
 		return self.x, self.y, self.z
 	end
 end
@@ -64,7 +64,7 @@ end
 if Color then
 
 	-- Lines: 63 to 64
-function 	Color:unpack()
+	function Color:unpack()
 		return self.r, self.g, self.b
 	end
 end
@@ -74,7 +74,7 @@ local AppClass = getmetatable(Application)
 if AppClass then
 
 	-- Lines: 70 to 85
-function 	AppClass:draw_box(s_pos, e_pos, r, g, b)
+	function AppClass:draw_box(s_pos, e_pos, r, g, b)
 		Application:draw_line(s_pos, Vector3(e_pos.x, s_pos.y, s_pos.z), r, g, b)
 		Application:draw_line(s_pos, Vector3(s_pos.x, e_pos.y, s_pos.z), r, g, b)
 		Application:draw_line(Vector3(e_pos.x, e_pos.y, s_pos.z), Vector3(s_pos.x, e_pos.y, s_pos.z), r, g, b)
@@ -90,7 +90,7 @@ function 	AppClass:draw_box(s_pos, e_pos, r, g, b)
 	end
 
 	-- Lines: 88 to 112
-function 	AppClass:draw_box_rotation(pos, rot, width, depth, height, r, g, b)
+	function AppClass:draw_box_rotation(pos, rot, width, depth, height, r, g, b)
 		local c1 = pos
 		local c2 = pos + rot:x() * width
 		local c3 = pos + rot:y() * depth
@@ -115,14 +115,14 @@ function 	AppClass:draw_box_rotation(pos, rot, width, depth, height, r, g, b)
 	end
 
 	-- Lines: 114 to 118
-function 	AppClass:draw_rotation_size(pos, rot, size)
+	function AppClass:draw_rotation_size(pos, rot, size)
 		Application:draw_line(pos, pos + rot:x() * size, 1, 0, 0)
 		Application:draw_line(pos, pos + rot:y() * size, 0, 1, 0)
 		Application:draw_line(pos, pos + rot:z() * size, 0, 0, 1)
 	end
 
 	-- Lines: 120 to 127
-function 	AppClass:draw_arrow(from, to, r, g, b, scale)
+	function AppClass:draw_arrow(from, to, r, g, b, scale)
 		scale = scale or 1
 		local len = to - from:length()
 		local dir = to - from:normalized()
@@ -133,7 +133,7 @@ function 	AppClass:draw_arrow(from, to, r, g, b, scale)
 	end
 
 	-- Lines: 129 to 132
-function 	AppClass:stack_dump_error(...)
+	function AppClass:stack_dump_error(...)
 		Application:error(...)
 		Application:stack_dump()
 	end
@@ -144,7 +144,7 @@ if Draw then
 
 
 	-- Lines: 230 to 237
-function 	Pen:arrow(from, to, scale)
+	function Pen:arrow(from, to, scale)
 		scale = scale or 1
 		local len = to - from:length()
 		local dir = to - from:normalized()
@@ -189,7 +189,7 @@ if SteamClass then
 
 
 	-- Lines: 271 to 288
-function 	SteamClass:http_request(path, clbk, id_key)
+	function SteamClass:http_request(path, clbk, id_key)
 		if id_key then
 			if current_request and current_request[3] and current_request[3] == id_key then
 				return
@@ -219,4 +219,3 @@ function 	SteamClass:http_request(path, clbk, id_key)
 	end
 end
 
-return

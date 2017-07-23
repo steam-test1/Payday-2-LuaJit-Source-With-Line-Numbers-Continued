@@ -238,7 +238,8 @@ function GenericDLCManager:give_missing_package()
 								for slot, crafted in pairs(Global.blackmarket_manager.crafted_items.masks) do
 									if slot ~= 1 and crafted.mask_id == loot_drop.item_entry and crafted.global_value == global_value then
 										has_item = true
-										goto label_0
+
+										break
 									end
 								end
 							elseif loot_drop.type_items == "materials" or loot_drop.type_items == "textures" or loot_drop.type_items == "colors" then
@@ -255,7 +256,6 @@ function GenericDLCManager:give_missing_package()
 								end
 							end
 
-							::label_0::
 							passed = not has_item
 						end
 					end
@@ -1831,4 +1831,3 @@ function WINDLCManager:chk_content_updated()
 	end
 end
 
-return

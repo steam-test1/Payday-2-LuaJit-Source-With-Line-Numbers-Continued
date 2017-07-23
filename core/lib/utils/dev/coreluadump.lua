@@ -160,4 +160,3 @@ function core_lua_dump(file_name, root, max_level, no_bin)
 	cat_print("debug", "LUA dump done!")
 end
 
-return

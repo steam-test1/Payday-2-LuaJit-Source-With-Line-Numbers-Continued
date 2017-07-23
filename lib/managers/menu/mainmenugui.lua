@@ -1202,4 +1202,3 @@ function MainMenuGui:reload()
 	self:init(self._ws, self._fullscreen_ws, self._node)
 end
 
-return

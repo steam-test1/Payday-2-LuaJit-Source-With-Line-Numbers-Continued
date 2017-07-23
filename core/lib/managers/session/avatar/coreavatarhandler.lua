@@ -10,4 +10,3 @@ end
 function Avatar:disable_input()
 end
 
-return

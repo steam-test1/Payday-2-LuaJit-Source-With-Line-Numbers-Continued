@@ -58,4 +58,3 @@ function Context:_construct_input_data(input_context_description)
 	end
 end
 
-return

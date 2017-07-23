@@ -46,4 +46,3 @@ function VanSkinsTweakData:init(tweak_data)
 	}
 end
 
-return

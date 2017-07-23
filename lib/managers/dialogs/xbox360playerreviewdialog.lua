@@ -39,4 +39,3 @@ function Xbox360PlayerReviewDialog:done_callback()
 	PlayerReviewDialog.done_callback(self)
 end
 
-return

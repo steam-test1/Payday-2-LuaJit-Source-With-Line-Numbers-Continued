@@ -252,4 +252,3 @@ function MenuNodeReticleSwitchGui:close()
 	MenuNodeReticleSwitchGui.super.close(self)
 end
 
-return

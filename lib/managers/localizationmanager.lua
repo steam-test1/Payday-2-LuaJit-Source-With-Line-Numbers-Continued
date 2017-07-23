@@ -269,4 +269,3 @@ end
 
 CoreClass.override_class(CoreLocalizationManager.LocalizationManager, LocalizationManager)
 
-return

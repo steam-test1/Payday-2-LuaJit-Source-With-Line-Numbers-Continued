@@ -171,4 +171,3 @@ function CivilianDamage:damage_tase(attack_data)
 	return CopDamage.damage_tase(self, attack_data)
 end
 
-return

@@ -1835,4 +1835,3 @@ function NewRaycastWeaponBase:gadget_function_override(func, ...)
 	end
 end
 
-return

@@ -33,4 +33,3 @@ function InSessionStarted:end_session()
 	self._end_session = true
 end
 
-return

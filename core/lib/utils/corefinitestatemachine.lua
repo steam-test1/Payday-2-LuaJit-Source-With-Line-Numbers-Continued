@@ -81,7 +81,7 @@ function FiniteStateMachine:_set_state(new_state_class, ...)
 	local init_function = new_state_class.init
 
 	-- Lines: 68 to 69
-function 	new_state_class.init()
+	function new_state_class.init()
 	end
 	self._state = new_state_class:new()
 
@@ -96,4 +96,3 @@ function 	new_state_class.init()
 	end
 end
 
-return

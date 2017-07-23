@@ -549,4 +549,3 @@ function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end
 
-return

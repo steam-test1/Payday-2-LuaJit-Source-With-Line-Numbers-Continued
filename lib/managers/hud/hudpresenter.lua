@@ -204,4 +204,3 @@ function HUDPresenter:_animate_hide_text(title, text)
 	text:set_visible(false)
 end
 
-return

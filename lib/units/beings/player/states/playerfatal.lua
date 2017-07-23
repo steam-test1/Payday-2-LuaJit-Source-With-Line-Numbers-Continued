@@ -172,4 +172,3 @@ function PlayerFatal:destroy()
 	end
 end
 
-return

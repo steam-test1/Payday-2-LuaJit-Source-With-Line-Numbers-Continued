@@ -1500,4 +1500,3 @@ function Instance:rotation()
 	return self._data.rotation or Rotation()
 end
 
-return

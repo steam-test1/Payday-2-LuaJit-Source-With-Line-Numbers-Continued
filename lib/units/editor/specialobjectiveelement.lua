@@ -116,32 +116,38 @@ function SpecialObjectiveUnitElement:test_element()
 		for _, access_category in ipairs(SO_access_strings) do
 			if access_category == "civ_male" then
 				spawn_unit_name = Idstring("units/payday2/characters/civ_male_casual_1/civ_male_casual_1")
-				goto label_0
+
+				break
 			elseif access_category == "civ_female" then
 				spawn_unit_name = Idstring("units/payday2/characters/civ_female_casual_1/civ_female_casual_1")
-				goto label_0
+
+				break
 			elseif access_category == "spooc" then
 				spawn_unit_name = Idstring("units/payday2/characters/ene_spook_1/ene_spook_1")
-				goto label_0
+
+				break
 			elseif access_category == "shield" then
 				spawn_unit_name = Idstring("units/payday2/characters/ene_shield_2/ene_shield_2")
-				goto label_0
+
+				break
 			elseif access_category == "tank" then
 				spawn_unit_name = Idstring("units/payday2/characters/ene_bulldozer_1/ene_bulldozer_1")
-				goto label_0
+
+				break
 			elseif access_category == "taser" then
 				spawn_unit_name = Idstring("units/payday2/characters/ene_tazer_1/ene_tazer_1")
-				goto label_0
+
+				break
 			else
 				spawn_unit_name = Idstring("units/payday2/characters/ene_swat_1/ene_swat_1")
-				goto label_0
+
+				break
 			end
 		end
 	else
 		spawn_unit_name = self._hed.test_unit
 	end
 
-	::label_0::
 	spawn_unit_name = spawn_unit_name or Idstring("units/payday2/characters/ene_swat_1/ene_swat_1")
 	local enemy = safe_spawn_unit(spawn_unit_name, self._unit:position(), self._unit:rotation())
 
@@ -646,4 +652,3 @@ end
 function SpecialObjectiveUnitElement:add_to_mission_package()
 end
 
-return

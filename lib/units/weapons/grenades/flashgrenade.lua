@@ -37,4 +37,3 @@ end
 function FlashGrenade:_give_flash_damage(col_ray, unit, damage)
 end
 
-return

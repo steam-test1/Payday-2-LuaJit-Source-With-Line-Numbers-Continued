@@ -128,4 +128,3 @@ function CollisionCameraNode:debug_render(t, dt)
 	brush2:sphere(self._position, 1)
 end
 
-return

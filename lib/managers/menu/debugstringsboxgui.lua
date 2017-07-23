@@ -162,4 +162,3 @@ function DebugStringsBoxGui:close()
 	DebugStringsBoxGui.super.close(self)
 end
 
-return

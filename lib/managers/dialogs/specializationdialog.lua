@@ -102,4 +102,3 @@ function SpecializationDialog:remove_mouse()
 	end
 end
 
-return

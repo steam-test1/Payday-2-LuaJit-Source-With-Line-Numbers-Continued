@@ -25,4 +25,3 @@ function MenuNodeKitGui:resolution_changed()
 	MenuNodeKitGui.super.resolution_changed(self)
 end
 
-return

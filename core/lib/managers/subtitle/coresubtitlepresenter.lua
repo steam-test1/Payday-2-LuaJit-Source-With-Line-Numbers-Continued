@@ -323,4 +323,3 @@ function OverlayPresenter:_default_font_size()
 	return 22
 end
 
-return

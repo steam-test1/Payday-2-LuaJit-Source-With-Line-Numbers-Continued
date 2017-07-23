@@ -223,4 +223,3 @@ function SelectGroupByName:thaw()
 	self._list:thaw()
 end
 
-return

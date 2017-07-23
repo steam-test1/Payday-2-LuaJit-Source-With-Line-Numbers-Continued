@@ -608,4 +608,3 @@ function GroupAIStateStreet:_upd_assault_tasks()
 	end
 end
 
-return

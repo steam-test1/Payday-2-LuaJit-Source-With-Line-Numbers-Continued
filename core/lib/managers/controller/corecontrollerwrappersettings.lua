@@ -976,4 +976,3 @@ function ControllerWrapperUnselectable:__tostring(additional_info)
 	return string.format("[Unselectable input name: \"%s\"]", tostring(self._input_name))
 end
 
-return

@@ -219,4 +219,3 @@ function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, uni
 	return true
 end
 
-return

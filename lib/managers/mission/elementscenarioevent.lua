@@ -42,4 +42,3 @@ function ElementScenarioEvent:operation_remove()
 	managers.groupai:state():remove_spawn_event(self._id)
 end
 
-return

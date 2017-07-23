@@ -16,4 +16,3 @@ function ModifierEnemyHealth:get_health_multiplier()
 	return 1 + self:value() / 100
 end
 
-return

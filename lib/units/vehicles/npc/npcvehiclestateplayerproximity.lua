@@ -47,4 +47,3 @@ function NpcVehicleStatePlayerProximity:change_state(npc_driving_ext)
 	end
 end
 
-return

@@ -240,4 +240,3 @@ function CoreShaderLibCompiler:get_make_params()
 	return make_params
 end
 
-return

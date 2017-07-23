@@ -1101,4 +1101,3 @@ Copyright 2007-~ GRiN, Inc.
 http://ganon/ or http://www.grin.se]], "About...", "OK,ICON_INFORMATION"):show_modal()
 end
 
-return

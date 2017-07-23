@@ -396,4 +396,3 @@ function CoreParticleEditorInitializers:create_lightcone()
 	return initializer
 end
 
-return

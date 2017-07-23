@@ -38,4 +38,3 @@ function FreeFlightModifier:value()
 	return self._values[self._index]
 end
 
-return

@@ -36,4 +36,3 @@ function SmokeGrenadeElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Spawns a smoke grenade.")
 end
 
-return

@@ -305,4 +305,3 @@ function InteractionEditorSystem:_load_patterns(desc, pattern_data, cfg_node)
 	end
 end
 
-return

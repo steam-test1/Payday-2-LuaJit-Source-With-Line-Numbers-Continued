@@ -249,4 +249,3 @@ function EditUnitTriggable:dialog_closed()
 	self:add_unit_btn()
 end
 
-return

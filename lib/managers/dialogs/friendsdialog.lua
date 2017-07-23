@@ -12,4 +12,3 @@ function FriendsDialog:done_callback()
 	self:fade_out_close()
 end
 
-return

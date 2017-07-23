@@ -114,4 +114,3 @@ end
 function HUDStageEndCrimeSpreeScreen:send_xp_data(data, done_clbk)
 end
 
-return

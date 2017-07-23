@@ -2,7 +2,7 @@ PlayerAction.MessiahGetUp = {}
 PlayerAction.MessiahGetUp.Priority = 1
 
 -- Lines: 6 to 18
-PlayerAction.function MessiahGetUp.Function(player_manager)
+PlayerAction.MessiahGetUp.Function = function (player_manager)
 	managers.hint:show_hint("skill_messiah_get_up")
 
 	local controller = player_manager:player_unit():base():controller()
@@ -20,4 +20,3 @@ PlayerAction.function MessiahGetUp.Function(player_manager)
 	end
 end
 
-return

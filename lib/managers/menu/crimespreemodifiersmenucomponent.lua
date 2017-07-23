@@ -594,4 +594,3 @@ function CrimeSpreeButton:shrink_wrap_button(w_padding, h_padding)
 	self._panel:set_size(w + (w_padding or 0), h + (h_padding or 0))
 end
 
-return

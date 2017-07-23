@@ -806,4 +806,3 @@ function CoreParticleEditor:on_save_as()
 	end
 end
 
-return

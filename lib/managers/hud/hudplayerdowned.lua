@@ -101,4 +101,3 @@ function HUDPlayerDowned:hide_arrest_finished()
 	self._hud.arrest_finished_text:set_visible(false)
 end
 
-return

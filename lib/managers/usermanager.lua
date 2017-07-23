@@ -1617,4 +1617,3 @@ function XB1UserManager:set_index(user_index)
 	XB1UserManager.super.set_index(self, user_index_str)
 end
 
-return

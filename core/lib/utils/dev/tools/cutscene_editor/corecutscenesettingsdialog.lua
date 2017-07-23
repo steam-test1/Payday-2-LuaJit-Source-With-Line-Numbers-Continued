@@ -119,4 +119,3 @@ function CoreCutsceneSettingsDialog:_on_close()
 	self.__window:end_modal("CANCEL")
 end
 
-return

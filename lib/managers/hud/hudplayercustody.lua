@@ -216,4 +216,3 @@ function HUDPlayerCustody:set_respawn_type(is_ai_trade)
 	end
 end
 
-return

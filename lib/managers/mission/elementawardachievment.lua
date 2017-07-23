@@ -50,4 +50,3 @@ function ElementAwardAchievment:on_executed(instigator)
 	ElementAwardAchievment.super.on_executed(self, instigator)
 end
 
-return

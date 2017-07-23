@@ -509,4 +509,3 @@ function HUDBlackScreen:_animate_fade_out(mid_text)
 	self._blackscreen_panel:set_alpha(0)
 end
 
-return

@@ -2,7 +2,7 @@ PlayerAction.DireNeed = {}
 PlayerAction.DireNeed.Priority = 1
 
 -- Lines: 6 to 24
-PlayerAction.function DireNeed.Function(is_armor_regenerating_func, target_duration)
+PlayerAction.DireNeed.Function = function (is_armor_regenerating_func, target_duration)
 	local co = coroutine.running()
 	local quit = false
 
@@ -25,4 +25,3 @@ PlayerAction.function DireNeed.Function(is_armor_regenerating_func, target_durat
 	managers.player:send_message(Message.ResetStagger, nil)
 end
 
-return

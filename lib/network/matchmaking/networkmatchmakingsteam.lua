@@ -712,7 +712,7 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 
 			self.lobby_handler:setup_callbacks(NetworkMatchMakingSTEAM._on_memberstatus_change, NetworkMatchMakingSTEAM._on_data_update, NetworkMatchMakingSTEAM._on_chat_message)
 			managers.network:start_client()
-function 			managers.menu:show_waiting_for_server_response({cancel_func()
+			managers.menu:show_waiting_for_server_response({cancel_func = function ()
 				managers.network:session():on_join_request_cancelled()
 			end})
 
@@ -999,4 +999,3 @@ function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	end
 end
 
-return

@@ -51,4 +51,3 @@ function VehicleStateParked:stop_vehicle()
 	return true
 end
 
-return

@@ -36,4 +36,3 @@ function SoundTweakData:_init_criminals_sound()
 	}
 end
 
-return

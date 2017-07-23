@@ -66,4 +66,3 @@ function SmokeGrenade:destroy()
 	SmokeGrenade.super.destroy(self)
 end
 
-return

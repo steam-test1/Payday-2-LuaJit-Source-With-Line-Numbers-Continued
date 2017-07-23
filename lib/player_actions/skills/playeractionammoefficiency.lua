@@ -2,7 +2,7 @@ PlayerAction.AmmoEfficiency = {}
 PlayerAction.AmmoEfficiency.Priority = 1
 
 -- Lines: 7 to 34
-PlayerAction.function AmmoEfficiency.Function(player_manager, target_headshots, bullet_refund, target_time)
+PlayerAction.AmmoEfficiency.Function = function (player_manager, target_headshots, bullet_refund, target_time)
 	local co = coroutine.running()
 	local time = Application:time()
 	local headshots = 1
@@ -35,4 +35,3 @@ PlayerAction.function AmmoEfficiency.Function(player_manager, target_headshots, 
 	player_manager:unregister_message(Message.OnHeadShot, co)
 end
 
-return

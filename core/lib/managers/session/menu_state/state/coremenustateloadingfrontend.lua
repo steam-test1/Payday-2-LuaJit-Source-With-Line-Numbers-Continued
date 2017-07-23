@@ -27,4 +27,3 @@ function LoadingFrontEnd:transition()
 	end
 end
 
-return

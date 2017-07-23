@@ -196,4 +196,3 @@ function CorePlaySoundUnitElement:destroy()
 	CorePlaySoundUnitElement.super.destroy(self)
 end
 
-return

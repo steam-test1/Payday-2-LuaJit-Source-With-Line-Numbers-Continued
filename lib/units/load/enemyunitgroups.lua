@@ -1,7 +1,7 @@
 EnemyUnitGroups = {}
 
 -- Lines: 5 to 47
-EnemyUnitGroups[LevelsTweakData.function LevelType.America]()
+EnemyUnitGroups[LevelsTweakData.LevelType.America] = function ()
 	local group = {
 		Idstring("units/payday2/characters/ene_spook_1/ene_spook_1"),
 		Idstring("units/payday2/characters/ene_swat_1/ene_swat_1"),
@@ -46,7 +46,7 @@ EnemyUnitGroups[LevelsTweakData.function LevelType.America]()
 end
 
 -- Lines: 50 to 84
-EnemyUnitGroups[LevelsTweakData.function LevelType.Russia]()
+EnemyUnitGroups[LevelsTweakData.LevelType.Russia] = function ()
 	local group = {
 		Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_cop_ak47_ass/ene_akan_cs_cop_ak47_ass"),
 		Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_cop_akmsu_smg/ene_akan_cs_cop_akmsu_smg"),
@@ -81,4 +81,3 @@ EnemyUnitGroups[LevelsTweakData.function LevelType.Russia]()
 	return group
 end
 
-return

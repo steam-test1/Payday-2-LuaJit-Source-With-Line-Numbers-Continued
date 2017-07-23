@@ -69,4 +69,3 @@ function CoreMaterialEditor:_on_edit_global_popup(event)
 	self._tree_ctrl:popup_menu(popup, Vector3(-1, -1, 0))
 end
 
-return

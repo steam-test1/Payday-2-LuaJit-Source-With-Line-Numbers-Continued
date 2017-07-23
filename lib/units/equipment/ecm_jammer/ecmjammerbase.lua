@@ -664,4 +664,3 @@ function ECMJammerBase:destroy()
 	self:_set_feedback_active(false)
 end
 
-return

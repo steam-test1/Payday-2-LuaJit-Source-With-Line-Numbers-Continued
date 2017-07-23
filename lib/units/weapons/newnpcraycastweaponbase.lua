@@ -699,4 +699,3 @@ function NewNPCRaycastWeaponBase:set_underbarrel(underbarrel_id, enabled)
 	end
 end
 
-return

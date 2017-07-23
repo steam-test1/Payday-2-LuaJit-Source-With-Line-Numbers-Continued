@@ -725,4 +725,3 @@ function GageAssetsItem:_unlock_asset(i, asset_data)
 	end
 end
 
-return

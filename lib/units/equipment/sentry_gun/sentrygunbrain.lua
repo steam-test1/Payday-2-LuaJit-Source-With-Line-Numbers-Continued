@@ -827,4 +827,3 @@ end
 function SentryGunBrain:on_intimidated(amount, aggressor_unit)
 end
 
-return

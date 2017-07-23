@@ -83,4 +83,3 @@ function WaitingForPlayersCamera:destroy()
 	end
 end
 
-return

@@ -223,4 +223,3 @@ end
 
 CoreClass.override_class(CoreControllerManager.ControllerManager, ControllerManager)
 
-return

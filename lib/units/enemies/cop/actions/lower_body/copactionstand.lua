@@ -82,4 +82,3 @@ function CopActionStand:type()
 	return "stand"
 end
 
-return

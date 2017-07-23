@@ -355,4 +355,3 @@ function _ScriptViewport:set_active(state)
 	end
 end
 
-return

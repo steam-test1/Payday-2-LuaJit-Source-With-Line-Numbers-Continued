@@ -5489,4 +5489,3 @@ function PlayerInventoryGui:_get_armor_stats(name)
 	return base_stats, mods_stats, skill_stats
 end
 
-return

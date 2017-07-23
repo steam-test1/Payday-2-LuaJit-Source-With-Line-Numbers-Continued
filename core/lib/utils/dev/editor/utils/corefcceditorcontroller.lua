@@ -423,4 +423,3 @@ function FFCEditorController:toggle_orthographic(use)
 	end
 end
 
-return

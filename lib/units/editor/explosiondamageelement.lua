@@ -41,4 +41,3 @@ function ExplosionDamageUnitElement:_build_panel(panel, panel_sizer)
 	}, "The damage from the explosion")
 end
 
-return

@@ -1989,7 +1989,7 @@ function BaseElement:init(node, unit_element)
 	if __filter_name ~= nil and unit_element then
 
 		-- Lines: 1807 to 1816
-function 		self:_is_allowed_func(env)
+		function self:_is_allowed_func(env)
 			local filter_name = self:run_parsed_func(env, __filter_name)
 			local filter = filter_name and unit_element:get_filter(filter_name)
 
@@ -2004,7 +2004,7 @@ function 		self:_is_allowed_func(env)
 	if __delayed_filter_name ~= nil and unit_element then
 
 		-- Lines: 1820 to 1829
-function 		self:_delayed_is_allowed_func(env)
+		function self:_delayed_is_allowed_func(env)
 			local filter_name = self:run_parsed_func(env, __delayed_filter_name)
 			local filter = unit_element:get_filter(filter_name)
 
@@ -6706,4 +6706,3 @@ function TriggerElement:activate_callback(env)
 	end
 end
 
-return

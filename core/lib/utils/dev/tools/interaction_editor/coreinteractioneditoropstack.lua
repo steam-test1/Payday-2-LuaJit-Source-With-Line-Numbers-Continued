@@ -78,4 +78,3 @@ function InteractionEditorOpStack:redo()
 	end
 end
 
-return

@@ -1251,4 +1251,3 @@ function EnvironmentLayer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end
 
-return

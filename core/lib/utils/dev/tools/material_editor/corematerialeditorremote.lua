@@ -29,4 +29,3 @@ function CoreMaterialEditorRemote:reload_shader_libs()
 	end
 end
 
-return

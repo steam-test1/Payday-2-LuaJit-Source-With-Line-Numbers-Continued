@@ -39,4 +39,3 @@ Message.OnDailyGenerated = set_enum()
 Message.OnDailyCompleted = set_enum()
 Message.OnDailyRewardCollected = set_enum()
 
-return

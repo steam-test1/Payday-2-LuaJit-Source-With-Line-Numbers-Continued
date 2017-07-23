@@ -199,4 +199,3 @@ function Vector3SliderBox:init(parent_frame, title, min, max, step)
 	self.__slider_z, self.__slider_z_textctrl = self:_create_sizer()
 end
 
-return

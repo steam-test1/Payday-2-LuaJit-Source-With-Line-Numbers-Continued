@@ -49,4 +49,3 @@ function AccessObjectBase:_really_deactivate()
 	self.__really_activated = false
 end
 
-return

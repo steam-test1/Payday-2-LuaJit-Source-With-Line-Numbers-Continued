@@ -552,4 +552,3 @@ function InfamyTweakData:init()
 	}}
 end
 
-return

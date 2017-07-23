@@ -18,4 +18,3 @@ function Legal:transition()
 	end
 end
 
-return

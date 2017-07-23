@@ -5170,4 +5170,3 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
-return

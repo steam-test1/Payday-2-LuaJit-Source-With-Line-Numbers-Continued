@@ -366,4 +366,3 @@ end
 
 CoreClass.override_class(CoreEnvironmentEffectsManager.EnvironmentEffectsManager, EnvironmentEffectsManager)
 
-return

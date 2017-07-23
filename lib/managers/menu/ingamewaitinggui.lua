@@ -884,4 +884,3 @@ function IngameWaitingButton:trigger()
 	end
 end
 
-return

@@ -1984,4 +1984,3 @@ function Generic:parse_editable_gui(node)
 	}
 end
 
-return

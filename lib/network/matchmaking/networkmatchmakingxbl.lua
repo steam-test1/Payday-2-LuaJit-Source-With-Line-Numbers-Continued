@@ -849,7 +849,7 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 	self:_is_client(true)
 	managers.network.voice_chat:open_session()
 	managers.network:start_client()
-function 	managers.menu:show_waiting_for_server_response({cancel_func()
+	managers.menu:show_waiting_for_server_response({cancel_func = function ()
 		managers.network:session():on_join_request_cancelled()
 	end})
 
@@ -1542,7 +1542,7 @@ function NetworkMatchMakingXBL:_test_join(xs_info, skip_showing_dialog)
 		end
 
 		managers.network:start_client()
-function 		managers.menu:show_waiting_for_server_response({cancel_func()
+		managers.menu:show_waiting_for_server_response({cancel_func = function ()
 			managers.network:session():on_join_request_cancelled()
 		end})
 
@@ -1701,4 +1701,3 @@ function NetworkMatchMakingXBL:_is_client(set)
 	end
 end
 
-return

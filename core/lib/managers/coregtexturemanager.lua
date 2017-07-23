@@ -64,4 +64,3 @@ function GTextureManager:destroy()
 	self._preloaded = nil
 end
 
-return

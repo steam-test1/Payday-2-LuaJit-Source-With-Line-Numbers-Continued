@@ -613,4 +613,3 @@ function EquipmentsTweakData:init()
 	}
 end
 
-return

@@ -13,4 +13,3 @@ function _InitState:at_enter()
 	error("[GameStateMachine] ERROR, you are not allowed to enter the init state")
 end
 
-return

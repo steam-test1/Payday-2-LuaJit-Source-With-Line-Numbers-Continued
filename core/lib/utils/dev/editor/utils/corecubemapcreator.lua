@@ -70,4 +70,3 @@ function CubeMapCreator:create_cube_map()
 	Application:render("World", self._vp, zneg)
 end
 
-return

@@ -2,7 +2,7 @@ PlayerAction.ExpertHandling = {}
 PlayerAction.ExpertHandling.Priority = 1
 
 -- Lines: 6 to 32
-PlayerAction.function ExpertHandling.Function(player_manager, accuracy_bonus, max_stacks, max_time)
+PlayerAction.ExpertHandling.Function = function (player_manager, accuracy_bonus, max_stacks, max_time)
 	local co = coroutine.running()
 	local current_time = Application:time()
 	local current_stacks = 0
@@ -34,4 +34,3 @@ PlayerAction.function ExpertHandling.Function(player_manager, accuracy_bonus, ma
 	player_manager:unregister_message(Message.OnEnemyShot, co)
 end
 
-return

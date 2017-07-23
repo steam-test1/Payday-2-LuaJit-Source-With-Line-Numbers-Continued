@@ -1341,7 +1341,8 @@ function MissionEndState:chk_complete_heist_achievements()
 							for stage, passed in pairs(memory) do
 								if not passed then
 									all_pass = false
-									goto label_0
+
+									break
 								end
 							end
 						else
@@ -1351,7 +1352,8 @@ function MissionEndState:chk_complete_heist_achievements()
 						for stage, passed in pairs(memory or {}) do
 							if not passed then
 								all_pass = false
-								goto label_0
+
+								break
 							end
 						end
 					else
@@ -1359,7 +1361,6 @@ function MissionEndState:chk_complete_heist_achievements()
 					end
 				end
 
-				::label_0::
 				if achievement_data.need_full_stealth then
 					local stealth_memory = managers.job:get_memory("stealth")
 					local in_stealth = managers.groupai and managers.groupai:state():whisper_mode()
@@ -1440,4 +1441,3 @@ function MissionEndState:chk_complete_heist_achievements()
 	managers.achievment:clear_heist_success_awards()
 end
 
-return

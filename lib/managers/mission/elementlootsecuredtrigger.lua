@@ -29,4 +29,3 @@ function ElementLootSecuredTrigger:on_executed(instigator)
 	ElementLootSecuredTrigger.super.on_executed(self, instigator)
 end
 
-return

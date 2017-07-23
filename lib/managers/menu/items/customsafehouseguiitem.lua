@@ -507,4 +507,3 @@ function CustomSafehouseGuiButtonItemWithIcon:set_selected(selected, play_sound)
 	end
 end
 
-return

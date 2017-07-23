@@ -220,4 +220,3 @@ function DialogManager:_load_dialog_data(name)
 	end
 end
 
-return

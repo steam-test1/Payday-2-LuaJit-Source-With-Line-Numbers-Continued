@@ -41,4 +41,3 @@ function ElementUnloadStatic:on_executed(instigator)
 	ElementUnloadStatic.super.on_executed(self, instigator)
 end
 
-return

@@ -80,4 +80,3 @@ function ElementAIForceAttention:_register_force_attention_unit(unit)
 	})
 end
 
-return

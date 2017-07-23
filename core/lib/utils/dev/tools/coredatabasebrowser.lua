@@ -1739,4 +1739,3 @@ function CoreDatabaseBrowserRenameDialog:set_value(str)
 	self._key_text_ctrl:set_value(str)
 end
 
-return

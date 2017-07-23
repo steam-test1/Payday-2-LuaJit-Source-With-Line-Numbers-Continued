@@ -414,4 +414,3 @@ function CopLogicPhalanxMinion.calc_initial_phalanx_pos(own_pos, objective)
 	return objective.pos
 end
 
-return

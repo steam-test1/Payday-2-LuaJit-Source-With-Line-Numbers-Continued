@@ -29,4 +29,3 @@ NODE_TYPES = {
 	"vector"
 }
 
-return

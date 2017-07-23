@@ -170,4 +170,3 @@ function CoreCutsceneFrameExporterDialog:_start_end_frame_input()
 	return start_frame, end_frame
 end
 
-return

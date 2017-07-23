@@ -614,4 +614,3 @@ end
 function CoreAreaHubElement:destroy()
 end
 
-return

@@ -82,4 +82,3 @@ function NetworkGenericPSN:psn_session_destroyed(info)
 	managers.network.group:_session_destroyed_cb(info.room_id)
 end
 
-return

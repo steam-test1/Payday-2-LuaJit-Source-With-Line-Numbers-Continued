@@ -713,4 +713,3 @@ function MotionpathMarkerUnitElement:bez_draw(id, b, t)
 	return n1
 end
 
-return

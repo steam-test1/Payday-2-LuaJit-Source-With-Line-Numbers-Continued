@@ -98,4 +98,3 @@ function TeammateCommentUnitElement:destroy()
 	TeammateCommentUnitElement.super.destroy(self)
 end
 
-return

@@ -4036,4 +4036,3 @@ function MenuSceneManager:destroy()
 	end
 end
 
-return

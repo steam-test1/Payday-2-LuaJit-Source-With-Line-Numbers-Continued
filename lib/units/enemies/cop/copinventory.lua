@@ -152,4 +152,3 @@ function CopInventory:destroy_all_items()
 	end
 end
 
-return

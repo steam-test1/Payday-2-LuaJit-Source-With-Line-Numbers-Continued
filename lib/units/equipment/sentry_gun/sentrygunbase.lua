@@ -756,4 +756,3 @@ function SentryGunBase:pre_destroy()
 	self._unit:event_listener():call("on_destroy_unit")
 end
 
-return

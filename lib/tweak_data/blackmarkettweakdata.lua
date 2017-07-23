@@ -603,4 +603,3 @@ function BlackMarketTweakData:get_character_icon(character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/characters/" .. character_name
 end
 
-return

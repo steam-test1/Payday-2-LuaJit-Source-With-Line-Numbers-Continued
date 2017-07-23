@@ -56,4 +56,3 @@ function ControllerWrapperSteam.change_mode(controller, mode)
 	end
 end
 
-return

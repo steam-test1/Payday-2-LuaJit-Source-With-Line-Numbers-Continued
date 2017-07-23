@@ -87,4 +87,3 @@ function ElementNavObstacle:load(data)
 	end
 end
 
-return

@@ -24,4 +24,3 @@ function CivilianLogicInactive._set_interaction(data, my_data)
 	end
 end
 
-return

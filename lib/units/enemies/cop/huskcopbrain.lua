@@ -218,4 +218,3 @@ function HuskCopBrain:pre_destroy()
 	end
 end
 
-return

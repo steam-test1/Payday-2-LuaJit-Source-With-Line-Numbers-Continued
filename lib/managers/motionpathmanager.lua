@@ -1018,4 +1018,3 @@ function MotionPathManager:dump_player_proximity_distance()
 	end
 end
 
-return

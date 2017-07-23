@@ -288,4 +288,3 @@ function CustomDoctorBagBase:_set_empty()
 	end
 end
 
-return

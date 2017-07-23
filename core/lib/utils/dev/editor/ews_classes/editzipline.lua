@@ -186,4 +186,3 @@ function EditZipLine:is_editable(unit, units)
 	return false
 end
 
-return

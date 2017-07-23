@@ -1054,4 +1054,3 @@ function UpgradesManager:reset()
 	self:_setup()
 end
 
-return

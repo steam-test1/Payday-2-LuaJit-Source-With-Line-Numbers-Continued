@@ -142,4 +142,3 @@ function KillzoneManager:_remove_unit(unit)
 	self._units[unit:key()] = nil
 end
 
-return

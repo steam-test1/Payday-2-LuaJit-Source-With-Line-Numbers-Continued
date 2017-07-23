@@ -944,4 +944,3 @@ function ExperienceManager:chk_ask_use_backup(savegame_data, backup_savegame_dat
 	end
 end
 
-return

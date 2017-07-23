@@ -123,4 +123,3 @@ function CopLogicGuard.on_area_safety(data, nav_seg, safe, event)
 	end
 end
 
-return

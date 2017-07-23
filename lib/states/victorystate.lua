@@ -93,4 +93,3 @@ function VictoryState:continue()
 	end
 end
 
-return

@@ -97,4 +97,3 @@ function NPCSawWeaponBase:destroy(...)
 	SawWeaponBase._stop_sawing_effect(self)
 end
 
-return

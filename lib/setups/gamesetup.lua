@@ -664,4 +664,3 @@ end
 function GameSetup:_update_debug_input()
 end
 
-return GameSetup

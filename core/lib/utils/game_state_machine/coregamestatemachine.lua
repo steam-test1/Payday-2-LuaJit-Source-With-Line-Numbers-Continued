@@ -145,4 +145,3 @@ function GameStateMachine:last_queued_state_name()
 	end
 end
 
-return

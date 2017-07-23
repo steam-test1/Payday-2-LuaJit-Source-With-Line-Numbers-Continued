@@ -123,4 +123,3 @@ function CoreSpawnUnitUnitElement:add_to_mission_package()
 	})
 end
 
-return

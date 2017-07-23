@@ -253,4 +253,3 @@ function Item:icon_visible()
 	return true
 end
 
-return

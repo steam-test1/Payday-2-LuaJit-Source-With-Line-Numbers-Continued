@@ -503,4 +503,3 @@ function MousePointerManager:modified_fullscreen_16_9_mouse_pos(x, y)
 	return self:convert_fullscreen_16_9_mouse_pos(x, y)
 end
 
-return

@@ -280,4 +280,3 @@ function PlayerProfileGuiObject:close()
 	end
 end
 
-return

@@ -368,4 +368,3 @@ function AnimatedVehicleBase:sync_stored_pos(sync, pos, rot)
 	self._stored_rot = rot
 end
 
-return

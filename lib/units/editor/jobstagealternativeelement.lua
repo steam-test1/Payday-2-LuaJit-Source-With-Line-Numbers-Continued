@@ -27,4 +27,3 @@ function JobStageAlternativeUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "interupt", table.list_add({"none"}, tweak_data.levels.escape_levels), "Select an escape level to be loaded between stages")
 end
 
-return

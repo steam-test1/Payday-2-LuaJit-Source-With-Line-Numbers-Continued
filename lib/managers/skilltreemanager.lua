@@ -2128,4 +2128,3 @@ function SkillTreeManager:reset()
 	end
 end
 
-return

@@ -25,4 +25,3 @@ function ElementAssetTrigger:on_executed(instigator)
 	ElementAssetTrigger.super.on_executed(self, instigator)
 end
 
-return

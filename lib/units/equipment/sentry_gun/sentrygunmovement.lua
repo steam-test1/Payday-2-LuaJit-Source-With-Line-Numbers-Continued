@@ -854,4 +854,3 @@ function SentryGunMovement:pre_destroy()
 	end
 end
 
-return

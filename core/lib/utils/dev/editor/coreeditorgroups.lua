@@ -564,4 +564,3 @@ function GroupPresetsDialog:hide_on_create(hide)
 	self._hide_on_create = hide:get_value()
 end
 
-return

@@ -333,13 +333,12 @@ function ControllerWrapper:setup_connection(connection_name, connection, control
 					end
 
 					if can_delay then
-						goto label_0
+						break
 					end
 				end
 			else
 				Application:error(self:to_string() .. " Unable to setup delay on non-existing connection \"" .. tostring(delay_connection_name) .. "\" in the \"" .. tostring(connection_name) .. "\" connection.")
 			end
-			::label_0::
 		end
 
 		self._delay_map[connection_name] = delay_data
@@ -1183,4 +1182,3 @@ function ControllerWrapper.change_mode(controller, mode)
 	return nil
 end
 
-return

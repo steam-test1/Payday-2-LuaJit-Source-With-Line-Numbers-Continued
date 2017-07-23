@@ -248,4 +248,3 @@ function AIForceAttentionElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Select a unit to force the AI's attention to. The 'Affected Units' panel allows you to control which units are affected by this and their behaviour.")
 end
 
-return

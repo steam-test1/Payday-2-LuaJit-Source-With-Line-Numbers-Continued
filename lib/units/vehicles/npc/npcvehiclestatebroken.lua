@@ -23,4 +23,3 @@ function NpcVehicleStateBroken:on_enter()
 	end
 end
 
-return

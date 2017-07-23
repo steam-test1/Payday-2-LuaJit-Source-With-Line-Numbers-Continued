@@ -568,4 +568,3 @@ function VehicleTweakData:_init_data_bike_2()
 	}
 end
 
-return

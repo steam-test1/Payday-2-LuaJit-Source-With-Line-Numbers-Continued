@@ -451,4 +451,3 @@ function TeamAIMovement:update(...)
 	end
 end
 
-return

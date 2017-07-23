@@ -59,4 +59,3 @@ function SlaveManager:peer()
 	return self._updator and self._updator:peer() or nil
 end
 
-return

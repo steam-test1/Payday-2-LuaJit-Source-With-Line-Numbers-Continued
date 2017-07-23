@@ -83,4 +83,3 @@ end
 function HUDHitConfirm:show_done()
 end
 
-return

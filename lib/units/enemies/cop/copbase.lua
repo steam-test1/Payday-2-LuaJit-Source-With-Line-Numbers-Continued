@@ -387,4 +387,3 @@ function CopBase:get_total_buff(name)
 	return 0
 end
 
-return

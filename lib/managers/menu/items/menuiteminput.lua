@@ -582,4 +582,3 @@ function MenuItemInput:key_press(row_item, o, k)
 	self:_layout(row_item)
 end
 
-return

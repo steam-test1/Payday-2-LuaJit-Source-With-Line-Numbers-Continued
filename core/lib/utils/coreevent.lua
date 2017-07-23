@@ -301,4 +301,3 @@ function wait(seconds, fixed_dt)
 	end
 end
 
-return

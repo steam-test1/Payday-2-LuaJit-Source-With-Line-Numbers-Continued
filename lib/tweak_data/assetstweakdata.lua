@@ -1279,4 +1279,3 @@ function AssetsTweakData:debug_assets()
 	print(inspect(asset_levels))
 end
 
-return

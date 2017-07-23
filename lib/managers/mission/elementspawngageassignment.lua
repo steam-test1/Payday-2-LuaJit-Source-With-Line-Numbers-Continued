@@ -26,4 +26,3 @@ function ElementSpawnGageAssignment:on_executed(instigator)
 	ElementSpawnGageAssignment.super.on_executed(self, instigator)
 end
 
-return

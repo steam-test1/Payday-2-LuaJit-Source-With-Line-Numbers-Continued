@@ -27,4 +27,3 @@ function StopLoadingFrontEnd:transition()
 	return CoreMenuStatePreFrontEnd.PreFrontEnd
 end
 
-return

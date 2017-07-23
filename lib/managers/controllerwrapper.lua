@@ -48,4 +48,3 @@ end
 
 CoreClass.override_class(CoreControllerWrapper.ControllerWrapper, ControllerWrapper)
 
-return

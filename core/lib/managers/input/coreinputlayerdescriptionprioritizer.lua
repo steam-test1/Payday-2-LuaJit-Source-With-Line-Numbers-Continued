@@ -39,4 +39,3 @@ function Prioritizer:active_layer_description()
 	return self._layer_description
 end
 
-return

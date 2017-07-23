@@ -36,4 +36,3 @@ function WeightedSelector:clear()
 	self._total_weight = 0
 end
 
-return

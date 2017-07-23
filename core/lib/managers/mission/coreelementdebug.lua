@@ -32,4 +32,3 @@ function ElementDebug:on_executed(instigator)
 	ElementDebug.super.on_executed(self, instigator)
 end
 
-return

@@ -971,4 +971,3 @@ function CarryData:is_linked_to_unit()
 	return self._linked_to or false
 end
 
-return

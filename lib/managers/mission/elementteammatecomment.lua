@@ -36,4 +36,3 @@ function ElementTeammateComment:on_executed(instigator)
 	ElementTeammateComment.super.on_executed(self, instigator)
 end
 
-return

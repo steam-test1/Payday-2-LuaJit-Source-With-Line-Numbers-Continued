@@ -277,4 +277,3 @@ end
 function PlayerCarry:destroy()
 end
 
-return

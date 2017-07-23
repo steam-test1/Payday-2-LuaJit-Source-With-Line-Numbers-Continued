@@ -21,4 +21,3 @@ function HuskTankCopDamage:seq_clbk_vizor_shatter()
 	TankCopDamage.seq_clbk_vizor_shatter(self)
 end
 
-return

@@ -153,4 +153,3 @@ function NetworkAccount:is_ready_to_close()
 	return true
 end
 
-return

@@ -290,4 +290,3 @@ function ElementTimerTrigger:set_enabled(enabled)
 	end
 end
 
-return

@@ -36,4 +36,3 @@ function ScriptUnitData:remove_destroy_listener(key)
 	end
 end
 
-return

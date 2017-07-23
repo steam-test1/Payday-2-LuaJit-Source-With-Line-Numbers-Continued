@@ -180,4 +180,3 @@ function TeamAIBrain:_chk_enable_bodybag_interaction()
 	self._unit:interaction():set_tweak_data("dead")
 end
 
-return

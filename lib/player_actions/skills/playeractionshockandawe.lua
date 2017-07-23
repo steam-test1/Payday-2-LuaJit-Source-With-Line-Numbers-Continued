@@ -2,7 +2,7 @@ PlayerAction.ShockAndAwe = {}
 PlayerAction.ShockAndAwe.Priority = 1
 
 -- Lines: 14 to 55
-PlayerAction.function ShockAndAwe.Function(player_manager, target_enemies, max_reload_increase, min_reload_increase, penalty, min_bullets, weapon_unit)
+PlayerAction.ShockAndAwe.Function = function (player_manager, target_enemies, max_reload_increase, min_reload_increase, penalty, min_bullets, weapon_unit)
 	local co = coroutine.running()
 	local running = true
 
@@ -48,4 +48,3 @@ PlayerAction.function ShockAndAwe.Function(player_manager, target_enemies, max_r
 	player_manager:unregister_message(Message.OnPlayerReload, co)
 end
 
-return

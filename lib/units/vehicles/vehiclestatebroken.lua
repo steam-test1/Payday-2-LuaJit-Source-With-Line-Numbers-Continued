@@ -79,4 +79,3 @@ function VehicleStateBroken:exit(state_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 end
 
-return

@@ -140,4 +140,3 @@ function WeaponUnderbarrel:toggle_requires_stance_update()
 	return true
 end
 
-return

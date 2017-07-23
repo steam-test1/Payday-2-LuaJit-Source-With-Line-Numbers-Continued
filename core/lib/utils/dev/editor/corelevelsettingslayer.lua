@@ -208,4 +208,3 @@ function LevelSettingsLayer:clear()
 	self._settings = {}
 end
 
-return

@@ -1115,4 +1115,3 @@ function SimpleGUIEffectSpewer.claim_daily_reward(x, y, panel)
 	end
 end
 
-return

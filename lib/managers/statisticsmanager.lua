@@ -2552,4 +2552,3 @@ function StatisticsManager:load(data)
 	end
 end
 
-return

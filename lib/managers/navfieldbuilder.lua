@@ -2228,7 +2228,8 @@ function NavFieldBuilder:_append_seg_to_seg_list(seg_list, seg, seg_dim)
 				seg_list[i_app_seg][1] = test_seg[1]
 
 				table.remove(seg_list, i_test_seg)
-				goto label_0
+
+				break
 			end
 		end
 	elseif appended == 2 then
@@ -2244,7 +2245,6 @@ function NavFieldBuilder:_append_seg_to_seg_list(seg_list, seg, seg_dim)
 			end
 		end
 	end
-	::label_0::
 end
 
 -- Lines: 2232 to 2266
@@ -2910,7 +2910,8 @@ function NavFieldBuilder:_create_room_to_room_visibility_data(build_data)
 				end
 
 				build_data.new_pair = true
-				goto label_1
+
+				break
 			until i_room_a == nr_rooms
 		else
 			old_rays.x_a = rays_x_a
@@ -3223,4 +3224,3 @@ function NavFieldBuilder:set_nav_seg_metadata(nav_seg_id, param_name, param_valu
 	nav_seg[param_name] = param_value
 end
 
-return

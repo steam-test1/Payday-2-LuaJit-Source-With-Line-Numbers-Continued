@@ -39,4 +39,3 @@ function MenuNodeServerList:_setup_columns()
 	})
 end
 
-return

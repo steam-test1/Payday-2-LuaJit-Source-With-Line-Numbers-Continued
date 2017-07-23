@@ -1348,7 +1348,7 @@ function CoreWorldCamera:debug_draw_editor()
 
 				for seg_i, seg_pos in ipairs(positions) do
 					if seg_i == #positions then
-						goto label_0
+						break
 					end
 
 					local seg_p1 = metadata.ctrl_points[seg_i + 1].p1
@@ -1789,4 +1789,3 @@ function CoreWorldCamera:playing()
 	return self._playing
 end
 
-return

@@ -532,4 +532,3 @@ function MutatorHydra:options_fill()
 	return self:_get_percentage_fill(1, self:_max_splits(), self:get_max_unit_depth())
 end
 
-return

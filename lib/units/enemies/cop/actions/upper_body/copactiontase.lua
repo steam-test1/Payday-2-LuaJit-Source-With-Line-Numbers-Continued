@@ -388,4 +388,3 @@ function CopActionTase:clbk_malfunction()
 	self._unit:character_damage():damage_melee(action_data)
 end
 
-return

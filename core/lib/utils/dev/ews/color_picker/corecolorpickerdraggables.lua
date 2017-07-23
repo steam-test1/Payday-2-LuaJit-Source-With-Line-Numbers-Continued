@@ -159,4 +159,3 @@ function ColorPickerDraggables:_on_drag_stop(sender, event)
 	self._dragged_control = nil
 end
 
-return

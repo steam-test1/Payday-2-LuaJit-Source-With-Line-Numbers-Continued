@@ -26,4 +26,3 @@ function ElementModifyPlayer:on_executed(instigator)
 	ElementModifyPlayer.super.on_executed(self, instigator)
 end
 
-return

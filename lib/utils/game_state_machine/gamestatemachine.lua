@@ -160,4 +160,3 @@ function GameStateMachine:change_state_by_name(state_name, params)
 	self:change_state(state, params)
 end
 
-return

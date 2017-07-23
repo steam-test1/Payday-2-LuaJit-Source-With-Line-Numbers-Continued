@@ -36,4 +36,3 @@ function ElementEquipment:on_executed(instigator)
 	ElementEquipment.super.on_executed(self, instigator)
 end
 
-return
