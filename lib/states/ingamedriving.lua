@@ -67,19 +67,17 @@ function IngameDriving:at_enter(old_state, ...)
 	local vehicle_ext = managers.player:get_vehicle().vehicle_unit:vehicle_driving()
 	local seat = vehicle_ext:find_seat_for_player(player)
 
-	goto label_0
-	if not managers.hud:exists(IngameDriving.DRIVING_GUI_SAFERECT) then
-		print("Loading HUD...")
-		managers.hud:load_hud(IngameDriving.DRIVING_GUI_FULLSCREEN, false, true, false, {})
-		managers.hud:load_hud(IngameDriving.DRIVING_GUI_SAFERECT, false, true, true, {})
-	end
-
-	managers.hud:show(IngameDriving.DRIVING_GUI_SAFERECT)
-	managers.hud:show(IngameDriving.DRIVING_GUI_FULLSCREEN)
-	managers.hud:start_driving()
-
 	if false then
-		::label_0::
+		if not managers.hud:exists(IngameDriving.DRIVING_GUI_SAFERECT) then
+			print("Loading HUD...")
+			managers.hud:load_hud(IngameDriving.DRIVING_GUI_FULLSCREEN, false, true, false, {})
+			managers.hud:load_hud(IngameDriving.DRIVING_GUI_SAFERECT, false, true, true, {})
+		end
+
+		managers.hud:show(IngameDriving.DRIVING_GUI_SAFERECT)
+		managers.hud:show(IngameDriving.DRIVING_GUI_FULLSCREEN)
+		managers.hud:start_driving()
+	else
 		managers.hud:show(PlayerBase.PLAYER_HUD)
 		managers.hud:show(PlayerBase.PLAYER_INFO_HUD)
 		managers.hud:show(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)

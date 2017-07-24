@@ -496,9 +496,7 @@ function SkillTreePage:init(tree, data, parent_panel, fullscreen_panel, tree_tab
 
 		rect:set_bottom(tree_panel:h() - (i - CONSOLE_PAGE_ADJUSTMENT) * h)
 
-		goto label_0
-		if i == 1 then
-			::label_0::
+		if true or i == 1 then
 			rect:set_alpha(0)
 			rect:hide()
 		end
