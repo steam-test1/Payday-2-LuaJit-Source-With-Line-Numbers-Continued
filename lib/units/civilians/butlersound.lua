@@ -15,16 +15,17 @@ local _butler_idle_anims = {
 	Idstring("so_butler_watch_look_calm")
 }
 
--- Lines: 26 to 36
+-- Lines: 26 to 49
 function ButlerSound:init(unit)
 	ButlerSound.super.init(self, unit)
 	self._unit:set_extension_update_enabled(Idstring("sound"), false)
 	managers.enemy:add_delayed_clbk("ButlerSound", callback(self, self, "_mirroring_clbk"), TimerManager:game():time() + 2)
 
 	self.character = "btl"
+	self._raid_idle_count = 0
 end
 
--- Lines: 38 to 53
+-- Lines: 51 to 66
 function ButlerSound:_mirroring_clbk()
 	if not alive(self._unit) then
 		return
@@ -43,7 +44,7 @@ function ButlerSound:_mirroring_clbk()
 	end
 end
 
--- Lines: 55 to 59
+-- Lines: 68 to 72
 function ButlerSound:_mirroring_sound_callback()
 	local count = #_butler_idle_anims
 	local rnd_idx = math.random(1, count)
@@ -51,12 +52,24 @@ function ButlerSound:_mirroring_sound_callback()
 	self._unit:play_redirect(_butler_idle_anims[rnd_idx])
 end
 
--- Lines: 61 to 71
+-- Lines: 74 to 84
 function ButlerSound:_sound_start_mirroring()
 	local snd_event, debug = managers.butler_mirroring:get_sound_event()
 
 	if snd_event then
 		self:say(snd_event, false, true)
 	end
+end
+
+-- Lines: 87 to 116
+function ButlerSound:_sound_start_muttering()
+	local override_sound = nil
+
+	if not override_sound and (self._raid_idle_count < 5 and math.random() < 0.8 or math.random() < 0.4) then
+		override_sound = "Play_btl_raid_rem_01"
+		self._raid_idle_count = self._raid_idle_count + 1
+	end
+
+	ButlerSound.super._sound_start_muttering(self, override_sound)
 end
 

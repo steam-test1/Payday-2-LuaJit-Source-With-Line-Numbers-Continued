@@ -77,7 +77,7 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_list()
 	end
 end
 
--- Lines: 80 to 289
+-- Lines: 80 to 326
 function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 	local buttons_panel = self:info_panel():panel({name = "buttons_panel"})
 	local trophy_panel = self:info_panel():panel({name = "trophy_panel"})
@@ -298,6 +298,44 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 	objective_text:set_top(unlock_text:bottom())
 	self:make_fine_text(objective_text)
 
+	local reward_header = scroll:canvas():text({
+		name = "RewardHeader",
+		blend_mode = "add",
+		vertical = "top",
+		align = "left",
+		valign = "top",
+		halign = "left",
+		layer = 1,
+		font_size = small_font_size,
+		font = small_font,
+		color = tweak_data.screen_colors.challenge_title,
+		text = managers.localization:to_upper_text("menu_reward"),
+		w = scroll:canvas():w()
+	})
+
+	self:make_fine_text(reward_header)
+	reward_header:set_top(objective_text:bottom() + PANEL_PADDING)
+
+	local reward_text = scroll:canvas():text({
+		name = "RewardText",
+		blend_mode = "add",
+		wrap = true,
+		align = "left",
+		word_wrap = true,
+		vertical = "top",
+		valign = "top",
+		halign = "left",
+		layer = 1,
+		font_size = small_font_size,
+		font = small_font,
+		color = tweak_data.screen_colors.title,
+		text = managers.localization:text("bm_cs_continental_coin_cost", {cost = tweak_data.safehouse.rewards.challenge}),
+		w = scroll:canvas():w()
+	})
+
+	reward_text:set_top(reward_header:bottom())
+	self:make_fine_text(reward_text)
+
 	local progress_header = scroll:canvas():text({
 		name = "ProgressHeader",
 		blend_mode = "add",
@@ -319,7 +357,7 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 	scroll:update_canvas_size()
 end
 
--- Lines: 291 to 315
+-- Lines: 328 to 352
 function CustomSafehouseGuiPageTrophies:_setup_trophies_counter()
 	local total = 0
 	local completed = 0
@@ -350,22 +388,24 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_counter()
 	self._trophy_counter:set_right(self._gui._panel:w())
 end
 
--- Lines: 317 to 319
+-- Lines: 354 to 356
 function CustomSafehouseGuiPageTrophies:set_active(active)
 	self._trophy_counter:set_visible(active)
 
 	return CustomSafehouseGuiPageTrophies.super.set_active(self, active)
 end
 
--- Lines: 323 to 349
+-- Lines: 360 to 388
 function CustomSafehouseGuiPageTrophies:update_info_panel_width(new_width)
 	local info_panel = self._info_scroll:canvas()
 	local desc_text = info_panel:child("DescText")
 	local objective_text = info_panel:child("ObjectiveText")
+	local reward_text = info_panel:child("RewardText")
 	local image_panel = info_panel:child("TrophyImagePanel")
 
 	desc_text:set_w(new_width)
 	objective_text:set_w(new_width)
+	reward_text:set_w(new_width)
 	image_panel:set_w(new_width)
 	image_panel:set_h(new_width / 2)
 	self._image_outline:close()
@@ -391,7 +431,7 @@ function CustomSafehouseGuiPageTrophies:update_info_panel_width(new_width)
 	end
 end
 
--- Lines: 352 to 450
+-- Lines: 391 to 495
 function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 	local info_panel = self._info_scroll:canvas()
 	local title_text = info_panel:child("TitleText")
@@ -403,6 +443,8 @@ function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 	local desc_text = info_panel:child("DescText")
 	local objective_header = info_panel:child("ObjectiveHeader")
 	local objective_text = info_panel:child("ObjectiveText")
+	local reward_header = info_panel:child("RewardHeader")
+	local reward_text = info_panel:child("RewardText")
 	local progress_header = info_panel:child("ProgressHeader")
 	local data = trophy:trophy_data()
 
@@ -433,6 +475,10 @@ function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 	desc_text:set_h(h)
 	objective_header:set_top(desc_text:bottom() + PANEL_PADDING)
 	objective_text:set_top(objective_header:bottom())
+	reward_header:set_top(objective_text:bottom() + PANEL_PADDING)
+	reward_text:set_top(reward_header:bottom())
+	reward_header:set_visible(data.gives_reward ~= false)
+	reward_text:set_visible(data.gives_reward ~= false)
 
 	local macros = {}
 
@@ -462,7 +508,7 @@ function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 
 	if data.show_progress then
 		progress_header:set_visible(true)
-		progress_header:set_top(objective_text:bottom() + PANEL_PADDING)
+		progress_header:set_top(reward_text:bottom() + PANEL_PADDING)
 
 		self._progress_items = {}
 
@@ -489,7 +535,7 @@ function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 	end
 end
 
--- Lines: 452 to 458
+-- Lines: 497 to 503
 function CustomSafehouseGuiPageTrophies:_show_all_trophies()
 	for i, trophy in ipairs(self._trophies) do
 		managers.custom_safehouse:set_trophy_displayed(trophy:trophy_data().id, true)
@@ -499,7 +545,7 @@ function CustomSafehouseGuiPageTrophies:_show_all_trophies()
 	self:refresh()
 end
 
--- Lines: 460 to 466
+-- Lines: 505 to 511
 function CustomSafehouseGuiPageTrophies:_hide_all_trophies()
 	for i, trophy in ipairs(self._trophies) do
 		managers.custom_safehouse:set_trophy_displayed(trophy:trophy_data().id, false)
@@ -509,7 +555,7 @@ function CustomSafehouseGuiPageTrophies:_hide_all_trophies()
 	self:refresh()
 end
 
--- Lines: 469 to 509
+-- Lines: 514 to 554
 function CustomSafehouseGuiPageTrophies:_set_selected(trophy, skip_sound)
 	if not trophy then
 		return false
@@ -552,13 +598,13 @@ function CustomSafehouseGuiPageTrophies:_set_selected(trophy, skip_sound)
 	end
 end
 
--- Lines: 511 to 514
+-- Lines: 556 to 559
 function CustomSafehouseGuiPageTrophies:refresh()
 	CustomSafehouseGuiPageTrophies.super.refresh(self)
 	self:_set_selected(self._selected_trophy, true)
 end
 
--- Lines: 517 to 557
+-- Lines: 562 to 602
 function CustomSafehouseGuiPageTrophies:update_info_panel_size()
 	local active_buttons = 0
 	local button_panel_h = 0
@@ -614,7 +660,7 @@ function CustomSafehouseGuiPageTrophies:update_info_panel_size()
 	}})
 end
 
--- Lines: 562 to 576
+-- Lines: 607 to 621
 function CustomSafehouseGuiPageTrophies:update(t, dt)
 	local cx, cy = managers.menu_component:get_right_controller_axis()
 
@@ -633,7 +679,7 @@ function CustomSafehouseGuiPageTrophies:update(t, dt)
 	end
 end
 
--- Lines: 579 to 616
+-- Lines: 624 to 661
 function CustomSafehouseGuiPageTrophies:mouse_moved(button, x, y)
 	if not self._active then
 		return
@@ -677,7 +723,7 @@ function CustomSafehouseGuiPageTrophies:mouse_moved(button, x, y)
 	return used, pointer
 end
 
--- Lines: 622 to 642
+-- Lines: 667 to 687
 function CustomSafehouseGuiPageTrophies:confirm_pressed()
 	if Global.game_settings.is_playing then
 		return
@@ -698,7 +744,7 @@ function CustomSafehouseGuiPageTrophies:confirm_pressed()
 	end
 end
 
--- Lines: 645 to 675
+-- Lines: 690 to 720
 function CustomSafehouseGuiPageTrophies:mouse_pressed(button, x, y)
 	if not self._active then
 		return
@@ -733,7 +779,7 @@ function CustomSafehouseGuiPageTrophies:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 678 to 693
+-- Lines: 723 to 738
 function CustomSafehouseGuiPageTrophies:mouse_released(button, x, y)
 	if not self._active then
 		return
@@ -752,7 +798,7 @@ function CustomSafehouseGuiPageTrophies:mouse_released(button, x, y)
 	end
 end
 
--- Lines: 696 to 710
+-- Lines: 741 to 755
 function CustomSafehouseGuiPageTrophies:mouse_wheel_up(x, y)
 	if not self._active then
 		return
@@ -769,7 +815,7 @@ function CustomSafehouseGuiPageTrophies:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines: 713 to 727
+-- Lines: 758 to 772
 function CustomSafehouseGuiPageTrophies:mouse_wheel_down(x, y)
 	if not self._active then
 		return
@@ -786,7 +832,7 @@ function CustomSafehouseGuiPageTrophies:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines: 729 to 734
+-- Lines: 774 to 779
 function CustomSafehouseGuiPageTrophies:move_up()
 	if self._selected_trophy then
 		self:_set_selected(self._selected_trophy:get_linked("up"))
@@ -794,7 +840,7 @@ function CustomSafehouseGuiPageTrophies:move_up()
 	end
 end
 
--- Lines: 736 to 741
+-- Lines: 781 to 786
 function CustomSafehouseGuiPageTrophies:move_down()
 	if self._selected_trophy then
 		self:_set_selected(self._selected_trophy:get_linked("down"))
@@ -802,7 +848,7 @@ function CustomSafehouseGuiPageTrophies:move_down()
 	end
 end
 
--- Lines: 743 to 750
+-- Lines: 788 to 795
 function CustomSafehouseGuiPageTrophies:get_legend()
 	local legend = {}
 
@@ -818,7 +864,7 @@ function CustomSafehouseGuiPageTrophies:get_legend()
 end
 CustomSafehouseGuiTrophyItem = CustomSafehouseGuiTrophyItem or class(CustomSafehouseGuiItem)
 
--- Lines: 758 to 820
+-- Lines: 803 to 865
 function CustomSafehouseGuiTrophyItem:init(panel, data, x, priority)
 	CustomSafehouseGuiTrophyItem.super.init(self, panel, data)
 
@@ -884,12 +930,12 @@ function CustomSafehouseGuiTrophyItem:init(panel, data, x, priority)
 	self:refresh()
 end
 
--- Lines: 822 to 823
+-- Lines: 867 to 868
 function CustomSafehouseGuiTrophyItem:trophy_data()
 	return self._data
 end
 
--- Lines: 826 to 832
+-- Lines: 871 to 877
 function CustomSafehouseGuiTrophyItem:set_text(text)
 	self._btn_text:set_text(utf8.to_upper(text))
 
@@ -900,12 +946,12 @@ function CustomSafehouseGuiTrophyItem:set_text(text)
 	self._btn_text:set_top(10)
 end
 
--- Lines: 834 to 835
+-- Lines: 879 to 880
 function CustomSafehouseGuiTrophyItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 839 to 850
+-- Lines: 884 to 895
 function CustomSafehouseGuiTrophyItem:show()
 	self._select_rect:set_visible(true)
 	self._complete_checkbox_highlight:set_visible(true)
@@ -918,7 +964,7 @@ function CustomSafehouseGuiTrophyItem:show()
 	end
 end
 
--- Lines: 853 to 865
+-- Lines: 898 to 910
 function CustomSafehouseGuiTrophyItem:hide()
 	self._select_rect:set_visible(false)
 	self._complete_checkbox_highlight:set_visible(false)
@@ -932,22 +978,22 @@ function CustomSafehouseGuiTrophyItem:hide()
 	end
 end
 
--- Lines: 867 to 868
+-- Lines: 912 to 913
 function CustomSafehouseGuiTrophyItem:top()
 	return self._panel:top()
 end
 
--- Lines: 871 to 872
+-- Lines: 916 to 917
 function CustomSafehouseGuiTrophyItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines: 875 to 876
+-- Lines: 920 to 921
 function CustomSafehouseGuiTrophyItem:visible()
 	return self._select_rect:visible()
 end
 
--- Lines: 879 to 885
+-- Lines: 924 to 930
 function CustomSafehouseGuiTrophyItem:refresh()
 	if self._selected then
 		self:show()
@@ -956,31 +1002,31 @@ function CustomSafehouseGuiTrophyItem:refresh()
 	end
 end
 
--- Lines: 887 to 889
+-- Lines: 932 to 934
 function CustomSafehouseGuiTrophyItem:_update_position()
 	self._panel:set_y((self._scroll_offset or 0) + (self._priority - 1) * large_font_size + self._priority)
 end
 
--- Lines: 891 to 894
+-- Lines: 936 to 939
 function CustomSafehouseGuiTrophyItem:set_position(i)
 	self._priority = i
 
 	self:_update_position()
 end
 
--- Lines: 896 to 899
+-- Lines: 941 to 944
 function CustomSafehouseGuiTrophyItem:set_scroll_offset(offset)
 	self._scroll_offset = offset
 
 	self:_update_position()
 end
 
--- Lines: 901 to 902
+-- Lines: 946 to 947
 function CustomSafehouseGuiTrophyItem:priority()
 	return self._priority
 end
 
--- Lines: 905 to 917
+-- Lines: 950 to 962
 function CustomSafehouseGuiTrophyItem:complete()
 	if not self._is_complete then
 		self._is_complete = true
@@ -991,12 +1037,12 @@ function CustomSafehouseGuiTrophyItem:complete()
 	end
 end
 
--- Lines: 919 to 920
+-- Lines: 964 to 965
 function CustomSafehouseGuiTrophyItem:is_complete()
 	return self._is_complete
 end
 
--- Lines: 923 to 928
+-- Lines: 968 to 973
 function CustomSafehouseGuiTrophyItem:link(up, down)
 	self._links = {
 		up = up,
@@ -1004,12 +1050,12 @@ function CustomSafehouseGuiTrophyItem:link(up, down)
 	}
 end
 
--- Lines: 930 to 931
+-- Lines: 975 to 976
 function CustomSafehouseGuiTrophyItem:get_linked(link)
 	return self._links and self._links[link]
 end
 
--- Lines: 934 to 942
+-- Lines: 979 to 987
 function CustomSafehouseGuiTrophyItem:trigger(parent)
 	if not Global.game_settings.is_playing then
 		managers.custom_safehouse:set_trophy_displayed(self:trophy_data().id, not self:trophy_data().displayed)
@@ -1023,7 +1069,7 @@ end
 CustomSafehouseGuiProgressItem = CustomSafehouseGuiProgressItem or class(CustomSafehouseGuiItem)
 CustomSafehouseGuiProgressItem.h = small_font_size * 1.3
 
--- Lines: 950 to 1027
+-- Lines: 995 to 1072
 function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 	self._parent = parent_panel
 	self._objective = trophy_objective
@@ -1104,32 +1150,32 @@ function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 	end
 end
 
--- Lines: 1029 to 1031
+-- Lines: 1074 to 1076
 function CustomSafehouseGuiProgressItem:destroy()
 	self._parent:remove(self._panel)
 end
 
--- Lines: 1033 to 1034
+-- Lines: 1078 to 1079
 function CustomSafehouseGuiProgressItem:top()
 	return self._panel:top()
 end
 
--- Lines: 1037 to 1038
+-- Lines: 1082 to 1083
 function CustomSafehouseGuiProgressItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines: 1041 to 1042
+-- Lines: 1086 to 1087
 function CustomSafehouseGuiProgressItem:set_top(y)
 	return self._panel:set_top(y)
 end
 
--- Lines: 1045 to 1046
+-- Lines: 1090 to 1091
 function CustomSafehouseGuiProgressItem:set_bottom(y)
 	return self._panel:set_bottom(y)
 end
 
--- Lines: 1050 to 1065
+-- Lines: 1095 to 1110
 function CustomSafehouseGuiProgressItem:set_w(w)
 	self._panel:set_w(w)
 

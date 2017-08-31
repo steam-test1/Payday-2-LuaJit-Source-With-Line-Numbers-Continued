@@ -666,3 +666,37 @@ function MenuCallbackHandler:debug_crime_spree_reset()
 	MenuCallbackHandler:save_progress()
 end
 
+-- Lines: 686 to 705
+function MenuCallbackHandler:clear_crime_spree_record()
+	local dialog_data = {
+		title = managers.localization:text("dialog_warning_title"),
+		text = managers.localization:text("dialog_clear_crime_spree_record_confirmation_text")
+	}
+	local yes_button = {
+		text = managers.localization:text("dialog_yes"),
+		callback_func = callback(self, self, "_dialog_clear_crime_spree_record_yes")
+	}
+	local no_button = {
+		cancel_button = true,
+		text = managers.localization:text("dialog_no"),
+		callback_func = callback(self, self, "_dialog_clear_crime_spree_record_no")
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines: 707 to 710
+function MenuCallbackHandler:_dialog_clear_crime_spree_record_yes()
+	Global.crime_spree.highest_level = nil
+
+	managers.savefile:save_progress()
+end
+
+-- Lines: 712 to 713
+function MenuCallbackHandler:_dialog_clear_crime_spree_record_no()
+end
+

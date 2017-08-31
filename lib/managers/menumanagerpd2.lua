@@ -2354,7 +2354,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines: 2088 to 2093
+-- Lines: 2090 to 2095
 function MenuCallbackHandler:convert_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 	local skin = skin_editor:get_current_skin()
@@ -2363,7 +2363,7 @@ function MenuCallbackHandler:convert_skin(item)
 	item:set_enabled(false)
 end
 
--- Lines: 2095 to 2098
+-- Lines: 2097 to 2100
 function MenuCallbackHandler:need_convert_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 	local skin = skin_editor:get_current_skin()
@@ -2371,12 +2371,12 @@ function MenuCallbackHandler:need_convert_skin(item)
 	return skin and not skin_editor:has_texture_folders(skin)
 end
 
--- Lines: 2101 to 2102
+-- Lines: 2103 to 2104
 function MenuCallbackHandler:should_add_changelog(item)
 	return managers.blackmarket:skin_editor():get_current_skin():item_exists()
 end
 
--- Lines: 2105 to 2109
+-- Lines: 2107 to 2111
 function MenuCallbackHandler:browse_skin(item)
 	local skin = managers.blackmarket:skin_editor():get_current_skin()
 	local path = Application:nice_path(skin:path(), false)
@@ -2384,13 +2384,13 @@ function MenuCallbackHandler:browse_skin(item)
 	Application:shell_explore_to_folder(path)
 end
 
--- Lines: 2111 to 2114
+-- Lines: 2113 to 2116
 function MenuCallbackHandler:screenshot_chosen(item)
 	local skin = managers.blackmarket:skin_editor():get_current_skin()
 	skin:config().screenshot = item:value()
 end
 
--- Lines: 2116 to 2122
+-- Lines: 2118 to 2124
 function MenuCallbackHandler:wear_and_tear_changed(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 	local wear_and_tear = item:value()
@@ -2400,7 +2400,7 @@ function MenuCallbackHandler:wear_and_tear_changed(item)
 	skin_editor:apply_changes(skin_data)
 end
 
--- Lines: 2124 to 2145
+-- Lines: 2126 to 2147
 function MenuCallbackHandler:screenshot_color_changed(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2425,7 +2425,7 @@ function MenuCallbackHandler:screenshot_color_changed(item)
 	end
 end
 
--- Lines: 2147 to 2154
+-- Lines: 2149 to 2156
 function MenuCallbackHandler:leave_screenshot_menu(item)
 	managers.blackmarket:skin_editor():leave_screenshot_mode()
 	managers.blackmarket:skin_editor():reload_current_skin()
@@ -2437,7 +2437,7 @@ function MenuCallbackHandler:leave_screenshot_menu(item)
 	end
 end
 
--- Lines: 2156 to 2196
+-- Lines: 2158 to 2198
 function MenuCallbackHandler:on_exit_skin_editor(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2455,14 +2455,14 @@ function MenuCallbackHandler:on_exit_skin_editor(item)
 	end
 
 
-	-- Lines: 2167 to 2170
+	-- Lines: 2169 to 2172
 	local function on_yes()
 		managers.blackmarket:skin_editor():save_current_skin()
 		managers.menu:back(true)
 	end
 
 
-	-- Lines: 2172 to 2175
+	-- Lines: 2174 to 2177
 	local function on_no()
 		managers.blackmarket:skin_editor():set_ignore_unsaved(true)
 		managers.menu:back(true)
@@ -2495,12 +2495,12 @@ function MenuCallbackHandler:on_exit_skin_editor(item)
 	return true
 end
 
--- Lines: 2199 to 2201
+-- Lines: 2201 to 2203
 function MenuCallbackHandler:clear_weapon_skin()
 	managers.blackmarket:skin_editor():clear_current_skin()
 end
 
--- Lines: 2203 to 2220
+-- Lines: 2205 to 2222
 function MenuCallbackHandler:save_weapon_skin(item)
 	local crafted_item = managers.blackmarket:get_crafted_category_slot(managers.blackmarket:skin_editor():category_slot())
 	local name = managers.menu:active_menu().logic:selected_node():item("name_input"):input_text()
@@ -2519,7 +2519,7 @@ function MenuCallbackHandler:save_weapon_skin(item)
 	managers.blackmarket:skin_editor():save_current_skin(name, copy_data)
 end
 
--- Lines: 2222 to 2250
+-- Lines: 2224 to 2252
 function MenuCallbackHandler:publish_weapon_skin(item)
 	local title = managers.menu:active_menu().logic:selected_node():item("title_input"):input_text()
 	local desc = managers.menu:active_menu().logic:selected_node():item("desc_input"):input_text()
@@ -2555,14 +2555,14 @@ function MenuCallbackHandler:publish_weapon_skin(item)
 	skin_editor:publish_skin(skin, title, desc, changelog)
 end
 
--- Lines: 2252 to 2253
+-- Lines: 2254 to 2255
 function MenuCallbackHandler:_dialog_ok()
 end
 
--- Lines: 2260 to 2280
+-- Lines: 2262 to 2282
 function MenuCallbackHandler:take_screenshot_skin(item)
 
-	-- Lines: 2256 to 2261
+	-- Lines: 2258 to 2263
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
 		managers.menu:active_menu().renderer:show()
@@ -2580,7 +2580,7 @@ function MenuCallbackHandler:take_screenshot_skin(item)
 	item:set_enabled(false)
 
 
-	-- Lines: 2272 to 2277
+	-- Lines: 2274 to 2279
 	local function co_screenshot(o)
 		for i = 0, 5, 1 do
 			coroutine.yield()
@@ -2592,7 +2592,7 @@ function MenuCallbackHandler:take_screenshot_skin(item)
 	managers.menu:active_menu().renderer.ws:panel():animate(co_screenshot)
 end
 
--- Lines: 2282 to 2292
+-- Lines: 2284 to 2294
 function MenuCallbackHandler:new_weapon_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2605,7 +2605,7 @@ function MenuCallbackHandler:new_weapon_skin(item)
 	skin_editor:select_skin(skin_editor:create_new_skin(data))
 end
 
--- Lines: 2294 to 2315
+-- Lines: 2296 to 2317
 function MenuCallbackHandler:delete_weapon_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2634,16 +2634,16 @@ function MenuCallbackHandler:delete_weapon_skin(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 2318 to 2319
+-- Lines: 2320 to 2321
 function MenuCallbackHandler:_dialog_delete_no()
 end
 
--- Lines: 2321 to 2323
+-- Lines: 2323 to 2325
 function MenuCallbackHandler:_dialog_delete_yes()
 	managers.blackmarket:skin_editor():delete_current()
 end
 
--- Lines: 2325 to 2332
+-- Lines: 2327 to 2334
 function MenuCallbackHandler:select_weapon_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2654,10 +2654,10 @@ function MenuCallbackHandler:select_weapon_skin(item)
 	skin_editor:select_skin(item:parameters().skin_id)
 end
 
--- Lines: 2364 to 2413
+-- Lines: 2366 to 2415
 function MenuCallbackHandler:cleanup_weapon_skin_data(copy_data, skip_base)
 
-	-- Lines: 2335 to 2365
+	-- Lines: 2337 to 2367
 	local function remove_empty_func(data)
 		local remove = {}
 
@@ -2751,7 +2751,7 @@ function MenuCallbackHandler:cleanup_weapon_skin_data(copy_data, skip_base)
 	end
 end
 
--- Lines: 2415 to 2542
+-- Lines: 2417 to 2544
 function MenuCallbackHandler:weapon_skin_changed(item)
 	local key = item:parameters().key or item:name()
 	local part_id = item:parameters().part_id
@@ -2900,12 +2900,12 @@ function MenuCallbackHandler:weapon_skin_changed(item)
 	skin_editor:apply_changes(skin:config().data)
 end
 
--- Lines: 2604 to 2606
+-- Lines: 2606 to 2608
 function MenuCallbackHandler:toggle_controller_hint(item)
 	managers.user:set_setting("loading_screen_show_controller", item:value() == "on")
 end
 
--- Lines: 2608 to 2610
+-- Lines: 2610 to 2612
 function MenuCallbackHandler:toggle_loading_hints(item)
 	managers.user:set_setting("loading_screen_show_hints", item:value() == "on")
 end

@@ -38,17 +38,22 @@ function IncendiaryGrenade:_detonate_on_client(normal)
 	end
 end
 
--- Lines: 36 to 44
+-- Lines: 36 to 49
 function IncendiaryGrenade:_spawn_environment_fire(normal)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
 	local data = tweak_data.env_effect:incendiary_fire()
+	local tweak = tweak_data.projectiles[self._tweak_projectile_entry] or {}
+	data.burn_duration = tweak.burn_duration or data.burn_duration or 10
+	data.sound_event_impact_duration = tweak.sound_event_impact_duration or data.sound_event_impact_duration or 1
 
 	EnvironmentFire.spawn(position, rotation, data, normal, self._thrower_unit, 0, 1)
-	self._unit:set_slot(0)
+	self._unit:set_visible(false)
+
+	self.burn_stop_time = TimerManager:game():time() + data.fire_dot_data.dot_length + 1
 end
 
--- Lines: 46 to 52
+-- Lines: 51 to 57
 function IncendiaryGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -57,7 +62,7 @@ function IncendiaryGrenade:bullet_hit()
 	self:_detonate()
 end
 
--- Lines: 58 to 75
+-- Lines: 63 to 80
 function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return
@@ -74,6 +79,20 @@ function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 
 	if is_dead then
 		self:_check_achievements(unit, is_dead, damage_percent, 1, 1)
+	end
+end
+
+-- Lines: 83 to 92
+function IncendiaryGrenade:update(unit, t, dt)
+	GrenadeBase.update(self, unit, t, dt)
+
+	local is_burn_finish = self.burn_stop_time and self.burn_stop_time < t
+
+	if is_burn_finish then
+		local LOG = "[Lua_CriticalHit]"
+
+		print(LOG, "BURN FINISH")
+		self._unit:set_slot(0)
 	end
 end
 

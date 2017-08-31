@@ -1820,14 +1820,25 @@ function FPCameraPlayerBase:_unspawn_shotgun_shell()
 	self._shell = nil
 end
 
--- Lines: 1971 to 1975
+-- Lines: 1969 to 1976
+function FPCameraPlayerBase:anim_clbk_stop_weapon_magazine_empty()
+	if alive(self._parent_unit) then
+		local weapon = self._parent_unit:inventory():equipped_unit()
+
+		if alive(weapon) then
+			weapon:base():tweak_data_anim_stop("magazine_empty")
+		end
+	end
+end
+
+-- Lines: 1980 to 1984
 function FPCameraPlayerBase:load_fps_mask_units()
 	if not self._mask_backface_loaded then
 		self._mask_backface_loaded = true
 	end
 end
 
--- Lines: 1979 to 1999
+-- Lines: 1988 to 2008
 function FPCameraPlayerBase:destroy()
 	if self._parent_unit then
 		self._parent_unit:base():remove_destroy_listener("FPCameraPlayerBase")
@@ -1854,22 +1865,22 @@ function FPCameraPlayerBase:destroy()
 	end
 end
 
--- Lines: 2003 to 2005
+-- Lines: 2012 to 2014
 function FPCameraPlayerBase:set_spin(_spin)
 	self._camera_properties.spin = _spin
 end
 
--- Lines: 2009 to 2011
+-- Lines: 2018 to 2020
 function FPCameraPlayerBase:set_pitch(_pitch)
 	self._camera_properties.pitch = _pitch
 end
 
--- Lines: 2015 to 2016
+-- Lines: 2024 to 2025
 function FPCameraPlayerBase:current_tilt()
 	return self._camera_properties.current_tilt
 end
 
--- Lines: 2021 to 2027
+-- Lines: 2030 to 2036
 function FPCameraPlayerBase:animate_pitch(start_t, start_pitch, end_pitch, total_duration)
 	self._animate_pitch = {
 		start_t = start_t,
@@ -1879,7 +1890,7 @@ function FPCameraPlayerBase:animate_pitch(start_t, start_pitch, end_pitch, total
 	}
 end
 
--- Lines: 2031 to 2045
+-- Lines: 2040 to 2054
 function FPCameraPlayerBase:animate_pitch_upd()
 	local t = Application:time()
 	local elapsed_t = t - self._animate_pitch.start_t
@@ -1893,7 +1904,7 @@ function FPCameraPlayerBase:animate_pitch_upd()
 	end
 end
 
--- Lines: 2049 to 2070
+-- Lines: 2058 to 2079
 function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, dt)
 	self._tilt_dt = self._tilt_dt or 0
 
@@ -1922,12 +1933,12 @@ function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, 
 	end
 end
 
--- Lines: 2075 to 2080
+-- Lines: 2084 to 2089
 function FPCameraPlayerBase:catmullrom(t, p0, p1, p2, p3)
 	return 0.5 * (2 * p1 + (-p0 + p2) * t + ((2 * p0 - 5 * p1 + 4 * p2) - p3) * t * t + ((-p0 + 3 * p1) - 3 * p2 + p3) * t * t * t)
 end
 
--- Lines: 2085 to 2093
+-- Lines: 2094 to 2102
 function FPCameraPlayerBase:smoothstep(a, b, step, n)
 	local v = step / n
 	v = 1 - (1 - v) * (1 - v)

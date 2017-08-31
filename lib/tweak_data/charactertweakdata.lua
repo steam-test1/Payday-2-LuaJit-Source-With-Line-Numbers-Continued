@@ -1,6 +1,6 @@
 CharacterTweakData = CharacterTweakData or class()
 
--- Lines: 3 to 158
+-- Lines: 3 to 162
 function CharacterTweakData:init(tweak_data)
 	self:_create_table_structure()
 
@@ -141,7 +141,7 @@ function CharacterTweakData:init(tweak_data)
 	self:_process_weapon_usage_table()
 end
 
--- Lines: 168 to 209
+-- Lines: 172 to 213
 function CharacterTweakData:_init_security(presets)
 	self.security = deep_clone(presets.base)
 	self.security.experience = {}
@@ -187,7 +187,7 @@ function CharacterTweakData:_init_security(presets)
 	table.insert(self._enemy_list, "security_undominatable")
 end
 
--- Lines: 215 to 249
+-- Lines: 219 to 253
 function CharacterTweakData:_init_gensec(presets)
 	self.gensec = deep_clone(presets.base)
 	self.gensec.experience = {}
@@ -227,7 +227,7 @@ function CharacterTweakData:_init_gensec(presets)
 	table.insert(self._enemy_list, "gensec")
 end
 
--- Lines: 255 to 298
+-- Lines: 259 to 302
 function CharacterTweakData:_init_cop(presets)
 	self.cop = deep_clone(presets.base)
 	self.cop.experience = {}
@@ -276,7 +276,7 @@ function CharacterTweakData:_init_cop(presets)
 	table.insert(self._enemy_list, "cop_female")
 end
 
--- Lines: 305 to 335
+-- Lines: 309 to 339
 function CharacterTweakData:_init_fbi(presets)
 	self.fbi = deep_clone(presets.base)
 	self.fbi.experience = {}
@@ -312,7 +312,7 @@ function CharacterTweakData:_init_fbi(presets)
 	table.insert(self._enemy_list, "fbi")
 end
 
--- Lines: 338 to 372
+-- Lines: 342 to 377
 function CharacterTweakData:_init_medic(presets)
 	self.medic = deep_clone(presets.base)
 	self.medic.tags = {"medic"}
@@ -351,11 +351,12 @@ function CharacterTweakData:_init_medic(presets)
 	self.medic.steal_loot = false
 	self.medic.priority_shout = "f47"
 	self.medic.priority_shout_max_dis = 700
+	self.medic.die_sound_event = "mdc_x02a_any_3p"
 
 	table.insert(self._enemy_list, "medic")
 end
 
--- Lines: 380 to 410
+-- Lines: 385 to 415
 function CharacterTweakData:_init_swat(presets)
 	self.swat = deep_clone(presets.base)
 	self.swat.experience = {}
@@ -391,7 +392,7 @@ function CharacterTweakData:_init_swat(presets)
 	table.insert(self._enemy_list, "swat")
 end
 
--- Lines: 417 to 453
+-- Lines: 422 to 458
 function CharacterTweakData:_init_heavy_swat(presets)
 	self.heavy_swat = deep_clone(presets.base)
 	self.heavy_swat.experience = {}
@@ -429,7 +430,7 @@ function CharacterTweakData:_init_heavy_swat(presets)
 	table.insert(self._enemy_list, "heavy_swat_sniper")
 end
 
--- Lines: 459 to 488
+-- Lines: 464 to 493
 function CharacterTweakData:_init_fbi_swat(presets)
 	self.fbi_swat = deep_clone(presets.base)
 	self.fbi_swat.experience = {}
@@ -464,7 +465,7 @@ function CharacterTweakData:_init_fbi_swat(presets)
 	table.insert(self._enemy_list, "fbi_swat")
 end
 
--- Lines: 493 to 521
+-- Lines: 498 to 526
 function CharacterTweakData:_init_fbi_heavy_swat(presets)
 	self.fbi_heavy_swat = deep_clone(presets.base)
 	self.fbi_heavy_swat.experience = {}
@@ -499,7 +500,7 @@ function CharacterTweakData:_init_fbi_heavy_swat(presets)
 	table.insert(self._enemy_list, "fbi_heavy_swat")
 end
 
--- Lines: 526 to 557
+-- Lines: 531 to 562
 function CharacterTweakData:_init_city_swat(presets)
 	self.city_swat = deep_clone(presets.base)
 	self.city_swat.experience = {}
@@ -535,7 +536,7 @@ function CharacterTweakData:_init_city_swat(presets)
 	table.insert(self._enemy_list, "city_swat")
 end
 
--- Lines: 563 to 597
+-- Lines: 568 to 602
 function CharacterTweakData:_init_sniper(presets)
 	self.sniper = deep_clone(presets.base)
 	self.sniper.tags = {"sniper"}
@@ -570,7 +571,7 @@ function CharacterTweakData:_init_sniper(presets)
 	table.insert(self._enemy_list, "sniper")
 end
 
--- Lines: 607 to 641
+-- Lines: 612 to 646
 function CharacterTweakData:_init_gangster(presets)
 	self.gangster = deep_clone(presets.base)
 	self.gangster.experience = {}
@@ -607,7 +608,7 @@ function CharacterTweakData:_init_gangster(presets)
 	table.insert(self._enemy_list, "gangster")
 end
 
--- Lines: 643 to 648
+-- Lines: 648 to 653
 function CharacterTweakData:_init_biker(presets)
 	self.biker = deep_clone(self.gangster)
 	self.biker.calls_in = true
@@ -615,7 +616,7 @@ function CharacterTweakData:_init_biker(presets)
 	table.insert(self._enemy_list, "biker")
 end
 
--- Lines: 650 to 658
+-- Lines: 655 to 663
 function CharacterTweakData:_init_biker_escape(presets)
 	self.biker_escape = deep_clone(self.gangster)
 	self.biker_escape.melee_weapon = "knife_1"
@@ -626,7 +627,7 @@ function CharacterTweakData:_init_biker_escape(presets)
 	table.insert(self._enemy_list, "biker_escape")
 end
 
--- Lines: 661 to 666
+-- Lines: 666 to 671
 function CharacterTweakData:_init_mobster(presets)
 	self.mobster = deep_clone(self.gangster)
 	self.mobster.calls_in = nil
@@ -634,7 +635,7 @@ function CharacterTweakData:_init_mobster(presets)
 	table.insert(self._enemy_list, "mobster")
 end
 
--- Lines: 669 to 726
+-- Lines: 674 to 731
 function CharacterTweakData:_init_mobster_boss(presets)
 	self.mobster_boss = deep_clone(presets.base)
 	self.mobster_boss.experience = {}
@@ -791,7 +792,7 @@ function CharacterTweakData:_init_mobster_boss(presets)
 	table.insert(self._enemy_list, "mobster_boss")
 end
 
--- Lines: 729 to 794
+-- Lines: 734 to 799
 function CharacterTweakData:_init_biker_boss(presets)
 	self.biker_boss = deep_clone(presets.base)
 	self.biker_boss.experience = {}
@@ -954,7 +955,7 @@ function CharacterTweakData:_init_biker_boss(presets)
 	table.insert(self._enemy_list, "biker_boss")
 end
 
--- Lines: 798 to 862
+-- Lines: 803 to 867
 function CharacterTweakData:_init_chavez_boss(presets)
 	self.chavez_boss = deep_clone(presets.base)
 	self.chavez_boss.experience = {}
@@ -1116,7 +1117,7 @@ function CharacterTweakData:_init_chavez_boss(presets)
 	table.insert(self._enemy_list, "chavez_boss")
 end
 
--- Lines: 866 to 897
+-- Lines: 871 to 902
 function CharacterTweakData:_init_hector_boss(presets)
 	self.hector_boss = deep_clone(self.mobster_boss)
 	self.hector_boss.DAMAGE_CLAMP_BULLET = 320
@@ -1243,7 +1244,7 @@ function CharacterTweakData:_init_hector_boss(presets)
 	table.insert(self._enemy_list, "hector_boss")
 end
 
--- Lines: 899 to 916
+-- Lines: 904 to 921
 function CharacterTweakData:_init_hector_boss_no_armor(presets)
 	self.hector_boss_no_armor = deep_clone(self.fbi)
 	self.hector_boss_no_armor.damage.hurt_severity = presets.hurt_severities.base_no_poison
@@ -1262,7 +1263,7 @@ function CharacterTweakData:_init_hector_boss_no_armor(presets)
 	table.insert(self._enemy_list, "hector_boss_no_armor")
 end
 
--- Lines: 925 to 940
+-- Lines: 930 to 945
 function CharacterTweakData:_init_bolivians(presets)
 	self.bolivian = deep_clone(self.gangster)
 	self.bolivian.detection = presets.detection.guard
@@ -1285,7 +1286,7 @@ function CharacterTweakData:_init_bolivians(presets)
 	table.insert(self._enemy_list, "bolivian_indoors")
 end
 
--- Lines: 942 to 1007
+-- Lines: 947 to 1012
 function CharacterTweakData:_init_drug_lord_boss(presets)
 	self.drug_lord_boss = deep_clone(presets.base)
 	self.drug_lord_boss.experience = {}
@@ -1448,7 +1449,7 @@ function CharacterTweakData:_init_drug_lord_boss(presets)
 	table.insert(self._enemy_list, "drug_lord_boss")
 end
 
--- Lines: 1009 to 1074
+-- Lines: 1014 to 1079
 function CharacterTweakData:_init_drug_lord_boss_stealth(presets)
 	self.drug_lord_boss_stealth = deep_clone(presets.base)
 	self.drug_lord_boss_stealth.experience = {}
@@ -1611,7 +1612,7 @@ function CharacterTweakData:_init_drug_lord_boss_stealth(presets)
 	table.insert(self._enemy_list, "drug_lord_boss_stealth")
 end
 
--- Lines: 1085 to 1260
+-- Lines: 1090 to 1267
 function CharacterTweakData:_init_tank(presets)
 	self.tank = deep_clone(presets.base)
 	self.tank.tags = {"tank"}
@@ -1895,6 +1896,7 @@ function CharacterTweakData:_init_tank(presets)
 	self.tank.melee_weapon_dmg_multiplier = 2.5
 	self.tank.melee_anims = {"cbt_std_melee"}
 	self.tank.critical_hits = {damage_mul = self.tank.headshot_dmg_mul * 1}
+	self.tank.die_sound_event = "bdz_x02a_any_3p"
 	self.tank.damage.hurt_severity = presets.hurt_severities.no_hurts
 	self.tank.chatter = {
 		retreat = true,
@@ -1970,7 +1972,8 @@ function CharacterTweakData:_init_tank(presets)
 		}
 	}
 	self.tank_hw.HEALTH_INIT = 200
-	self.tank_hw.headshot_dmg_mul = 2
+	self.tank_hw.headshot_dmg_mul = 1
+	self.tank_hw.ignore_headshot = true
 	self.tank_hw.damage.explosion_damage_mul = 1
 	self.tank_hw.use_animation_on_fire_damage = false
 	self.tank_hw.flammable = true
@@ -2048,7 +2051,7 @@ function CharacterTweakData:_init_tank(presets)
 	self.tank_mini.weapon.mini.focus_dis = 800
 	self.tank_mini.weapon.mini.spread = 20
 	self.tank_mini.weapon.mini.miss_dis = 40
-	self.tank_mini.weapon.mini.RELOAD_SPEED = 0
+	self.tank_mini.weapon.mini.RELOAD_SPEED = 1
 	self.tank_mini.weapon.mini.melee_speed = 1
 	self.tank_mini.weapon.mini.melee_dmg = 25
 	self.tank_mini.weapon.mini.melee_retry_delay = {
@@ -2083,8 +2086,8 @@ function CharacterTweakData:_init_tank(presets)
 				1
 			},
 			autofire_rounds = {
-				150,
-				200
+				500,
+				700
 			}
 		},
 		{
@@ -2105,8 +2108,8 @@ function CharacterTweakData:_init_tank(presets)
 				1
 			},
 			autofire_rounds = {
-				120,
-				160
+				500,
+				500
 			}
 		},
 		{
@@ -2127,8 +2130,8 @@ function CharacterTweakData:_init_tank(presets)
 				1
 			},
 			autofire_rounds = {
-				100,
-				140
+				300,
+				500
 			}
 		},
 		{
@@ -2149,8 +2152,8 @@ function CharacterTweakData:_init_tank(presets)
 				1
 			},
 			autofire_rounds = {
-				60,
-				100
+				100,
+				300
 			}
 		},
 		{
@@ -2172,7 +2175,7 @@ function CharacterTweakData:_init_tank(presets)
 			},
 			autofire_rounds = {
 				40,
-				80
+				100
 			}
 		}
 	}
@@ -2183,7 +2186,7 @@ function CharacterTweakData:_init_tank(presets)
 	table.insert(self._enemy_list, "tank_mini")
 end
 
--- Lines: 1287 to 1350
+-- Lines: 1294 to 1357
 function CharacterTweakData:_init_spooc(presets)
 	self.spooc = deep_clone(presets.base)
 	self.spooc.tags = {"spooc"}
@@ -2246,7 +2249,7 @@ function CharacterTweakData:_init_spooc(presets)
 	table.insert(self._enemy_list, "spooc")
 end
 
--- Lines: 1356 to 1446
+-- Lines: 1363 to 1455
 function CharacterTweakData:_init_shield(presets)
 	self.shield = deep_clone(presets.base)
 	self.shield.tags = {"shield"}
@@ -2514,11 +2517,12 @@ function CharacterTweakData:_init_shield(presets)
 	self.shield.announce_incomming = "incomming_shield"
 	self.shield.steal_loot = nil
 	self.shield.use_animation_on_fire_damage = false
+	self.shield.die_sound_event = "shd_x02a_any_3p_01"
 
 	table.insert(self._enemy_list, "shield")
 end
 
--- Lines: 1452 to 1481
+-- Lines: 1461 to 1490
 function CharacterTweakData:_init_phalanx_minion(presets)
 	self.phalanx_minion = deep_clone(self.shield)
 	self.phalanx_minion.experience = {}
@@ -2545,7 +2549,7 @@ function CharacterTweakData:_init_phalanx_minion(presets)
 	table.insert(self._enemy_list, "phalanx_minion")
 end
 
--- Lines: 1487 to 1503
+-- Lines: 1496 to 1512
 function CharacterTweakData:_init_phalanx_vip(presets)
 	self.phalanx_vip = deep_clone(self.phalanx_minion)
 	self.phalanx_vip.LOWER_HEALTH_PERCENTAGE_LIMIT = 1
@@ -2560,7 +2564,7 @@ function CharacterTweakData:_init_phalanx_vip(presets)
 	table.insert(self._enemy_list, "phalanx_vip")
 end
 
--- Lines: 1510 to 1578
+-- Lines: 1519 to 1588
 function CharacterTweakData:_init_taser(presets)
 	self.taser = deep_clone(presets.base)
 	self.taser.tags = {"taser"}
@@ -2720,6 +2724,7 @@ function CharacterTweakData:_init_taser(presets)
 	}
 	self.taser.announce_incomming = "incomming_taser"
 	self.taser.steal_loot = nil
+	self.taser.die_sound_event = "tsr_x02a_any_3p"
 	self.taser.special_deaths = {bullet = {["head":id():key()] = {
 		sequence = "kill_tazer_headshot",
 		special_comment = "x01",
@@ -2730,7 +2735,7 @@ function CharacterTweakData:_init_taser(presets)
 	table.insert(self._enemy_list, "taser")
 end
 
--- Lines: 1580 to 1609
+-- Lines: 1590 to 1619
 function CharacterTweakData:_init_inside_man(presets)
 	self.inside_man = deep_clone(presets.base)
 	self.inside_man.experience = {}
@@ -2762,7 +2767,7 @@ function CharacterTweakData:_init_inside_man(presets)
 	self.inside_man.calls_in = nil
 end
 
--- Lines: 1619 to 1661
+-- Lines: 1629 to 1671
 function CharacterTweakData:_init_civilian(presets)
 	self.civilian = {
 		experience = {},
@@ -2814,7 +2819,7 @@ function CharacterTweakData:_init_civilian(presets)
 	self.robbers_safehouse.ignores_contours = true
 end
 
--- Lines: 1667 to 1676
+-- Lines: 1677 to 1686
 function CharacterTweakData:_init_melee_box(presets)
 	self.melee_box = deep_clone(self.civilian)
 	self.melee_box.move_speed = presets.move_speed.civ_fast
@@ -2826,7 +2831,7 @@ function CharacterTweakData:_init_melee_box(presets)
 	self.melee_box.ignores_aggression = true
 end
 
--- Lines: 1682 to 1709
+-- Lines: 1692 to 1719
 function CharacterTweakData:_init_bank_manager(presets)
 	self.bank_manager = {
 		experience = {},
@@ -2863,7 +2868,7 @@ function CharacterTweakData:_init_bank_manager(presets)
 	self.bank_manager.calls_in = true
 end
 
--- Lines: 1715 to 1725
+-- Lines: 1725 to 1735
 function CharacterTweakData:_init_drunk_pilot(presets)
 	self.drunk_pilot = deep_clone(self.civilian)
 	self.drunk_pilot.move_speed = presets.move_speed.civ_fast
@@ -2875,7 +2880,7 @@ function CharacterTweakData:_init_drunk_pilot(presets)
 	self.drunk_pilot.ignores_aggression = true
 end
 
--- Lines: 1731 to 1741
+-- Lines: 1741 to 1751
 function CharacterTweakData:_init_boris(presets)
 	self.boris = deep_clone(self.civilian)
 	self.boris.flee_type = "hide"
@@ -2886,7 +2891,7 @@ function CharacterTweakData:_init_boris(presets)
 	self.boris.ignores_aggression = true
 end
 
--- Lines: 1747 to 1777
+-- Lines: 1757 to 1787
 function CharacterTweakData:_init_escort(presets)
 	self.escort = {
 		experience = {},
@@ -2926,7 +2931,7 @@ function CharacterTweakData:_init_escort(presets)
 	self.escort.escort_scared_dist = 600
 end
 
--- Lines: 1780 to 1803
+-- Lines: 1790 to 1813
 function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_undercover = deep_clone(self.civilian)
 	self.escort_undercover.move_speed = presets.move_speed.slow
@@ -2950,7 +2955,7 @@ function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_chinese_prisoner.no_run_stop = false
 end
 
--- Lines: 1814 to 1840
+-- Lines: 1824 to 1850
 function CharacterTweakData:_init_old_hoxton_mission(presets)
 	self.old_hoxton_mission = deep_clone(presets.base)
 	self.old_hoxton_mission.experience = {}
@@ -2978,7 +2983,7 @@ function CharacterTweakData:_init_old_hoxton_mission(presets)
 	self.old_hoxton_mission.rescue_hostages = false
 end
 
--- Lines: 1844 to 1852
+-- Lines: 1854 to 1862
 function CharacterTweakData:_init_spa_vip(presets)
 	self.spa_vip = deep_clone(self.old_hoxton_mission)
 	self.spa_vip.spotlight_important = 100
@@ -2988,7 +2993,7 @@ function CharacterTweakData:_init_spa_vip(presets)
 	self.spa_vip.suppression.panic_chance_mul = 0
 end
 
--- Lines: 1853 to 1863
+-- Lines: 1863 to 1873
 function CharacterTweakData:_init_spa_vip_hurt(presets)
 	self.spa_vip_hurt = deep_clone(self.civilian)
 	self.spa_vip_hurt.move_speed = presets.move_speed.slow
@@ -3000,7 +3005,7 @@ function CharacterTweakData:_init_spa_vip_hurt(presets)
 	self.spa_vip_hurt.ignores_aggression = true
 end
 
--- Lines: 1870 to 1895
+-- Lines: 1880 to 1905
 function CharacterTweakData:_init_russian(presets)
 	self.russian = {
 		damage = presets.gang_member_damage,
@@ -3023,7 +3028,7 @@ function CharacterTweakData:_init_russian(presets)
 	}
 end
 
--- Lines: 1901 to 1927
+-- Lines: 1911 to 1937
 function CharacterTweakData:_init_german(presets)
 	self.german = {
 		damage = presets.gang_member_damage,
@@ -3046,7 +3051,7 @@ function CharacterTweakData:_init_german(presets)
 	}
 end
 
--- Lines: 1933 to 1959
+-- Lines: 1943 to 1969
 function CharacterTweakData:_init_spanish(presets)
 	self.spanish = {
 		damage = presets.gang_member_damage,
@@ -3069,7 +3074,7 @@ function CharacterTweakData:_init_spanish(presets)
 	}
 end
 
--- Lines: 1965 to 1990
+-- Lines: 1975 to 2000
 function CharacterTweakData:_init_american(presets)
 	self.american = {
 		damage = presets.gang_member_damage,
@@ -3092,7 +3097,7 @@ function CharacterTweakData:_init_american(presets)
 	}
 end
 
--- Lines: 1996 to 2021
+-- Lines: 2006 to 2031
 function CharacterTweakData:_init_jowi(presets)
 	self.jowi = {
 		damage = presets.gang_member_damage,
@@ -3115,7 +3120,7 @@ function CharacterTweakData:_init_jowi(presets)
 	}
 end
 
--- Lines: 2027 to 2053
+-- Lines: 2037 to 2063
 function CharacterTweakData:_init_old_hoxton(presets)
 	self.old_hoxton = {
 		damage = presets.gang_member_damage,
@@ -3138,7 +3143,7 @@ function CharacterTweakData:_init_old_hoxton(presets)
 	}
 end
 
--- Lines: 2059 to 2083
+-- Lines: 2069 to 2093
 function CharacterTweakData:_init_clover(presets)
 	self.female_1 = {
 		damage = presets.gang_member_damage,
@@ -3161,7 +3166,7 @@ function CharacterTweakData:_init_clover(presets)
 	}
 end
 
--- Lines: 2089 to 2113
+-- Lines: 2099 to 2123
 function CharacterTweakData:_init_dragan(presets)
 	self.dragan = {
 		damage = presets.gang_member_damage,
@@ -3184,7 +3189,7 @@ function CharacterTweakData:_init_dragan(presets)
 	}
 end
 
--- Lines: 2120 to 2144
+-- Lines: 2130 to 2154
 function CharacterTweakData:_init_jacket(presets)
 	self.jacket = {
 		damage = presets.gang_member_damage,
@@ -3207,7 +3212,7 @@ function CharacterTweakData:_init_jacket(presets)
 	}
 end
 
--- Lines: 2146 to 2170
+-- Lines: 2156 to 2180
 function CharacterTweakData:_init_bonnie(presets)
 	self.bonnie = {
 		damage = presets.gang_member_damage,
@@ -3230,7 +3235,7 @@ function CharacterTweakData:_init_bonnie(presets)
 	}
 end
 
--- Lines: 2172 to 2196
+-- Lines: 2182 to 2206
 function CharacterTweakData:_init_sokol(presets)
 	self.sokol = {
 		damage = presets.gang_member_damage,
@@ -3253,7 +3258,7 @@ function CharacterTweakData:_init_sokol(presets)
 	}
 end
 
--- Lines: 2198 to 2222
+-- Lines: 2208 to 2232
 function CharacterTweakData:_init_dragon(presets)
 	self.dragon = {
 		damage = presets.gang_member_damage,
@@ -3276,7 +3281,7 @@ function CharacterTweakData:_init_dragon(presets)
 	}
 end
 
--- Lines: 2224 to 2248
+-- Lines: 2234 to 2258
 function CharacterTweakData:_init_bodhi(presets)
 	self.bodhi = {
 		damage = presets.gang_member_damage,
@@ -3299,7 +3304,7 @@ function CharacterTweakData:_init_bodhi(presets)
 	}
 end
 
--- Lines: 2251 to 2275
+-- Lines: 2261 to 2285
 function CharacterTweakData:_init_jimmy(presets)
 	self.jimmy = {
 		damage = presets.gang_member_damage,
@@ -3322,7 +3327,7 @@ function CharacterTweakData:_init_jimmy(presets)
 	}
 end
 
--- Lines: 2279 to 2303
+-- Lines: 2289 to 2313
 function CharacterTweakData:_init_sydney(presets)
 	self.sydney = {
 		damage = presets.gang_member_damage,
@@ -3345,7 +3350,7 @@ function CharacterTweakData:_init_sydney(presets)
 	}
 end
 
--- Lines: 2307 to 2331
+-- Lines: 2317 to 2341
 function CharacterTweakData:_init_wild(presets)
 	self.wild = {
 		damage = presets.gang_member_damage,
@@ -3368,7 +3373,7 @@ function CharacterTweakData:_init_wild(presets)
 	}
 end
 
--- Lines: 2335 to 2359
+-- Lines: 2345 to 2369
 function CharacterTweakData:_init_chico(presets)
 	self.chico = {
 		damage = presets.gang_member_damage,
@@ -3391,7 +3396,7 @@ function CharacterTweakData:_init_chico(presets)
 	}
 end
 
--- Lines: 2363 to 2387
+-- Lines: 2373 to 2397
 function CharacterTweakData:_init_max(presets)
 	self.max = {
 		damage = presets.gang_member_damage,
@@ -3414,7 +3419,7 @@ function CharacterTweakData:_init_max(presets)
 	}
 end
 
--- Lines: 2410 to 4236
+-- Lines: 2446 to 4291
 function CharacterTweakData:_presets(tweak_data)
 	local presets = {hurt_severities = {}}
 	presets.hurt_severities.no_hurts = {
@@ -8381,7 +8386,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member = {is_pistol = {}}
 	presets.weapon.gang_member.is_pistol.aim_delay = {
 		0,
-		1
+		0.5
 	}
 	presets.weapon.gang_member.is_pistol.focus_delay = 1
 	presets.weapon.gang_member.is_pistol.focus_dis = 2000
@@ -8433,7 +8438,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.is_rifle = {
 		aim_delay = {
 			0,
-			1
+			0.5
 		},
 		focus_delay = 1,
 		focus_dis = 3000,
@@ -8488,10 +8493,121 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		}
 	}
+	presets.weapon.gang_member.is_sniper = {
+		aim_delay = {
+			0.25,
+			1
+		},
+		focus_delay = 1,
+		focus_dis = 3000,
+		spread = 25,
+		miss_dis = 10,
+		RELOAD_SPEED = 1,
+		melee_speed = 2,
+		melee_dmg = 3,
+		melee_retry_delay = presets.weapon.normal.is_rifle.melee_retry_delay,
+		range = {
+			optimal = 4000,
+			far = 6000,
+			close = 2000
+		},
+		FALLOFF = {
+			{
+				dmg_mul = 10,
+				r = 500,
+				acc = {
+					1,
+					1
+				},
+				recoil = {
+					1,
+					1
+				},
+				mode = {
+					1,
+					0,
+					0,
+					0
+				}
+			},
+			{
+				dmg_mul = 10,
+				r = 1000,
+				acc = {
+					1,
+					1
+				},
+				recoil = {
+					1,
+					1
+				},
+				mode = {
+					1,
+					0,
+					0,
+					0
+				}
+			},
+			{
+				dmg_mul = 10,
+				r = 2500,
+				acc = {
+					0.95,
+					1
+				},
+				recoil = {
+					1,
+					1
+				},
+				mode = {
+					1,
+					0,
+					0,
+					0
+				}
+			},
+			{
+				dmg_mul = 5,
+				r = 4000,
+				acc = {
+					0.9,
+					0.95
+				},
+				recoil = {
+					1,
+					1
+				},
+				mode = {
+					1,
+					0,
+					0,
+					0
+				}
+			},
+			{
+				dmg_mul = 5,
+				r = 10000,
+				acc = {
+					0.85,
+					0.9
+				},
+				recoil = {
+					1,
+					1
+				},
+				mode = {
+					1,
+					0,
+					0,
+					0
+				}
+			}
+		}
+	}
 	presets.weapon.gang_member.is_lmg = {
 		aim_delay = {
 			0,
-			1
+			0.5
 		},
 		focus_delay = 1,
 		focus_dis = 3000,
@@ -8621,7 +8737,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.is_shotgun_pump = {
 		aim_delay = {
 			0,
-			0.02
+			0.25
 		},
 		focus_delay = 1,
 		focus_dis = 2000,
@@ -8674,7 +8790,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.is_shotgun_mag = {
 		aim_delay = {
 			0,
-			0.02
+			0.25
 		},
 		focus_delay = 1,
 		focus_dis = 2000,
@@ -9962,7 +10078,7 @@ function CharacterTweakData:_presets(tweak_data)
 	return presets
 end
 
--- Lines: 4243 to 4304
+-- Lines: 4298 to 4361
 function CharacterTweakData:_create_table_structure()
 	self.weap_ids = {
 		"beretta92",
@@ -9992,7 +10108,8 @@ function CharacterTweakData:_create_table_structure()
 		"x_c45",
 		"sg417",
 		"svdsil_snp",
-		"mini"
+		"mini",
+		"heavy_zeal_sniper"
 	}
 	self.weap_unit_names = {
 		Idstring("units/payday2/weapons/wpn_npc_beretta92/wpn_npc_beretta92"),
@@ -10022,11 +10139,12 @@ function CharacterTweakData:_create_table_structure()
 		Idstring("units/payday2/weapons/wpn_npc_c45/wpn_npc_x_c45"),
 		Idstring("units/pd2_dlc_chico/weapons/wpn_npc_sg417/wpn_npc_sg417"),
 		Idstring("units/pd2_dlc_spa/weapons/wpn_npc_svd_silenced/wpn_npc_svd_silenced"),
-		Idstring("units/pd2_dlc_drm/weapons/wpn_npc_mini/wpn_npc_mini")
+		Idstring("units/pd2_dlc_drm/weapons/wpn_npc_mini/wpn_npc_mini"),
+		Idstring("units/pd2_dlc_drm/weapons/wpn_npc_heavy_zeal_sniper/wpn_npc_heavy_zeal_sniper")
 	}
 end
 
--- Lines: 4309 to 4335
+-- Lines: 4366 to 4392
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for id, unit_data in pairs(self) do
 		if type(unit_data) == "table" and unit_data.weapon then
@@ -10055,12 +10173,12 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
--- Lines: 4339 to 4340
+-- Lines: 4396 to 4397
 function CharacterTweakData:enemy_list()
 	return self._enemy_list
 end
 
--- Lines: 4345 to 4363
+-- Lines: 4402 to 4420
 function CharacterTweakData:_set_easy()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -10078,7 +10196,7 @@ function CharacterTweakData:_set_easy()
 	self.flashbang_multiplier = 1
 end
 
--- Lines: 4367 to 4465
+-- Lines: 4424 to 4548
 function CharacterTweakData:_set_normal()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(1.05, 1.1)
@@ -10634,6 +10752,208 @@ function CharacterTweakData:_set_normal()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_sniper.FALLOFF = {
+		{
+			dmg_mul = 4,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 4,
+			r = 1000,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 4,
+			r = 2500,
+			acc = {
+				0.95,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 4000,
+			acc = {
+				0.9,
+				0.95
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 10000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
+		{
+			dmg_mul = 2,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 1.5,
+			r = 1000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				0.4,
+				0.65
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 2000,
+			acc = {
+				0.6,
+				0.8
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.5,
+			r = 3000,
+			acc = {
+				0.5,
+				0.7
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.3,
+			r = 4000,
+			acc = {
+				0.02,
+				0.25
+			},
+			recoil = {
+				1,
+				2
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.1,
+			r = 10000,
+			acc = {
+				0.01,
+				0.1
+			},
+			recoil = {
+				2,
+				3
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
 			dmg_mul = 2,
@@ -10672,6 +10992,116 @@ function CharacterTweakData:_set_normal()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
+		{
+			dmg_mul = 2,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				6
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				5
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 1000,
+			acc = {
+				0.85,
+				0.95
+			},
+			recoil = {
+				0.1,
+				0.15
+			},
+			mode = {
+				1,
+				2,
+				4,
+				4
+			}
+		},
+		{
+			dmg_mul = 0.75,
+			r = 2000,
+			acc = {
+				0.75,
+				0.9
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				1,
+				4,
+				4,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.25,
+			r = 3000,
+			acc = {
+				0.4,
+				0.7
+			},
+			recoil = {
+				0.4,
+				0.5
+			},
+			mode = {
+				4,
+				2,
+				1,
+				0
+			}
+		},
+		{
+			dmg_mul = 0.1,
+			r = 10000,
+			acc = {
+				0.05,
+				0.2
+			},
+			recoil = {
+				0.5,
+				1
+			},
+			mode = {
+				2,
+				1,
+				0,
+				0
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_smg = self.presets.weapon.gang_member.is_rifle
 	self.presets.weapon.gang_member.is_pistol = self.presets.weapon.gang_member.is_pistol
 	self.presets.weapon.gang_member.is_revolver = self.presets.weapon.gang_member.is_pistol
@@ -10686,7 +11116,7 @@ function CharacterTweakData:_set_normal()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4469 to 4544
+-- Lines: 4552 to 4653
 function CharacterTweakData:_set_hard()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -10874,6 +11304,208 @@ function CharacterTweakData:_set_hard()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_sniper.FALLOFF = {
+		{
+			dmg_mul = 4,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 4,
+			r = 1000,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 4,
+			r = 2500,
+			acc = {
+				0.95,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 4000,
+			acc = {
+				0.9,
+				0.95
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 10000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
+		{
+			dmg_mul = 2,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 1.5,
+			r = 1000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				0.4,
+				0.65
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 2000,
+			acc = {
+				0.6,
+				0.8
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.5,
+			r = 3000,
+			acc = {
+				0.5,
+				0.7
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.3,
+			r = 4000,
+			acc = {
+				0.02,
+				0.25
+			},
+			recoil = {
+				1,
+				2
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.1,
+			r = 10000,
+			acc = {
+				0.01,
+				0.1
+			},
+			recoil = {
+				2,
+				3
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
 			dmg_mul = 2,
@@ -10909,6 +11541,116 @@ function CharacterTweakData:_set_hard()
 				0.3,
 				4,
 				7
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
+		{
+			dmg_mul = 2,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				6
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				5
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 1000,
+			acc = {
+				0.85,
+				0.95
+			},
+			recoil = {
+				0.1,
+				0.15
+			},
+			mode = {
+				1,
+				2,
+				4,
+				4
+			}
+		},
+		{
+			dmg_mul = 0.75,
+			r = 2000,
+			acc = {
+				0.75,
+				0.9
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				1,
+				4,
+				4,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.25,
+			r = 3000,
+			acc = {
+				0.4,
+				0.7
+			},
+			recoil = {
+				0.4,
+				0.5
+			},
+			mode = {
+				4,
+				2,
+				1,
+				0
+			}
+		},
+		{
+			dmg_mul = 0.1,
+			r = 10000,
+			acc = {
+				0.05,
+				0.2
+			},
+			recoil = {
+				0.5,
+				1
+			},
+			mode = {
+				2,
+				1,
+				0,
+				0
 			}
 		}
 	}
@@ -10986,7 +11728,7 @@ function CharacterTweakData:_set_hard()
 	}
 end
 
--- Lines: 4548 to 4636
+-- Lines: 4657 to 4771
 function CharacterTweakData:_set_overkill()
 	self:_multiply_all_hp(2, 2)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -11177,6 +11919,208 @@ function CharacterTweakData:_set_overkill()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_sniper.FALLOFF = {
+		{
+			dmg_mul = 7,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 7,
+			r = 1000,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 7,
+			r = 2500,
+			acc = {
+				0.95,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 3.5,
+			r = 4000,
+			acc = {
+				0.9,
+				0.95
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 3.5,
+			r = 10000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
+		{
+			dmg_mul = 3,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 1000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				0.4,
+				0.65
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 1.5,
+			r = 2000,
+			acc = {
+				0.6,
+				0.8
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 3000,
+			acc = {
+				0.5,
+				0.7
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.66,
+			r = 4000,
+			acc = {
+				0.02,
+				0.25
+			},
+			recoil = {
+				1,
+				2
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.2,
+			r = 10000,
+			acc = {
+				0.01,
+				0.1
+			},
+			recoil = {
+				2,
+				3
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
 			dmg_mul = 3.5,
@@ -11212,6 +12156,116 @@ function CharacterTweakData:_set_overkill()
 				0.3,
 				4,
 				7
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
+		{
+			dmg_mul = 3.5,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				6
+			}
+		},
+		{
+			dmg_mul = 3.5,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				5
+			}
+		},
+		{
+			dmg_mul = 1.5,
+			r = 1000,
+			acc = {
+				0.85,
+				0.95
+			},
+			recoil = {
+				0.1,
+				0.15
+			},
+			mode = {
+				1,
+				2,
+				4,
+				4
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 2000,
+			acc = {
+				0.75,
+				0.9
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				1,
+				4,
+				4,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.5,
+			r = 3000,
+			acc = {
+				0.4,
+				0.7
+			},
+			recoil = {
+				0.4,
+				0.5
+			},
+			mode = {
+				4,
+				2,
+				1,
+				0
+			}
+		},
+		{
+			dmg_mul = 0.2,
+			r = 10000,
+			acc = {
+				0.05,
+				0.2
+			},
+			recoil = {
+				0.5,
+				1
+			},
+			mode = {
+				2,
+				1,
+				0,
+				0
 			}
 		}
 	}
@@ -11292,7 +12346,7 @@ function CharacterTweakData:_set_overkill()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4640 to 4707
+-- Lines: 4775 to 4842
 function CharacterTweakData:_set_overkill_145()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(3, 3)
@@ -11482,7 +12536,7 @@ function CharacterTweakData:_set_overkill_145()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4712 to 4829
+-- Lines: 4847 to 4990
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -11581,6 +12635,208 @@ function CharacterTweakData:_set_easy_wish()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_sniper.FALLOFF = {
+		{
+			dmg_mul = 20,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 20,
+			r = 1000,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 20,
+			r = 2500,
+			acc = {
+				0.95,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 4000,
+			acc = {
+				0.9,
+				0.95
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 10000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
+		{
+			dmg_mul = 10,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 7.5,
+			r = 1000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				0.4,
+				0.65
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 5,
+			r = 2000,
+			acc = {
+				0.6,
+				0.8
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 3,
+			r = 3000,
+			acc = {
+				0.5,
+				0.7
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 4000,
+			acc = {
+				0.02,
+				0.25
+			},
+			recoil = {
+				1,
+				2
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 0.5,
+			r = 10000,
+			acc = {
+				0.01,
+				0.1
+			},
+			recoil = {
+				2,
+				3
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
 			dmg_mul = 10,
@@ -11616,6 +12872,116 @@ function CharacterTweakData:_set_easy_wish()
 				0.3,
 				4,
 				7
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
+		{
+			dmg_mul = 10,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				6
+			}
+		},
+		{
+			dmg_mul = 8,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				5
+			}
+		},
+		{
+			dmg_mul = 7,
+			r = 1000,
+			acc = {
+				0.85,
+				0.95
+			},
+			recoil = {
+				0.1,
+				0.15
+			},
+			mode = {
+				1,
+				2,
+				4,
+				4
+			}
+		},
+		{
+			dmg_mul = 5,
+			r = 2000,
+			acc = {
+				0.75,
+				0.9
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				1,
+				4,
+				4,
+				1
+			}
+		},
+		{
+			dmg_mul = 2,
+			r = 3000,
+			acc = {
+				0.4,
+				0.7
+			},
+			recoil = {
+				0.4,
+				0.5
+			},
+			mode = {
+				4,
+				2,
+				1,
+				0
+			}
+		},
+		{
+			dmg_mul = 0.2,
+			r = 10000,
+			acc = {
+				0.05,
+				0.2
+			},
+			recoil = {
+				0.5,
+				1
+			},
+			mode = {
+				2,
+				1,
+				0,
+				0
 			}
 		}
 	}
@@ -11725,7 +13091,7 @@ function CharacterTweakData:_set_easy_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4832 to 5006
+-- Lines: 4993 to 5195
 function CharacterTweakData:_set_overkill_290()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -11916,6 +13282,208 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_sniper.FALLOFF = {
+		{
+			dmg_mul = 20,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 20,
+			r = 1000,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 20,
+			r = 2500,
+			acc = {
+				0.95,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 4000,
+			acc = {
+				0.9,
+				0.95
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 10000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
+		{
+			dmg_mul = 15,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 12,
+			r = 1000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				0.4,
+				0.65
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 2000,
+			acc = {
+				0.6,
+				0.8
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 3000,
+			acc = {
+				0.5,
+				0.7
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 8,
+			r = 4000,
+			acc = {
+				0.02,
+				0.25
+			},
+			recoil = {
+				1,
+				2
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 5,
+			r = 10000,
+			acc = {
+				0.01,
+				0.1
+			},
+			recoil = {
+				2,
+				3
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
 			dmg_mul = 15,
@@ -11951,6 +13519,116 @@ function CharacterTweakData:_set_overkill_290()
 				0,
 				0,
 				1
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
+		{
+			dmg_mul = 15,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				6
+			}
+		},
+		{
+			dmg_mul = 15,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				5
+			}
+		},
+		{
+			dmg_mul = 12,
+			r = 1000,
+			acc = {
+				0.85,
+				0.95
+			},
+			recoil = {
+				0.1,
+				0.15
+			},
+			mode = {
+				1,
+				2,
+				4,
+				4
+			}
+		},
+		{
+			dmg_mul = 8,
+			r = 2000,
+			acc = {
+				0.75,
+				0.9
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				1,
+				4,
+				4,
+				1
+			}
+		},
+		{
+			dmg_mul = 5,
+			r = 3000,
+			acc = {
+				0.4,
+				0.7
+			},
+			recoil = {
+				0.4,
+				0.5
+			},
+			mode = {
+				4,
+				2,
+				1,
+				0
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 10000,
+			acc = {
+				0.05,
+				0.2
+			},
+			recoil = {
+				0.5,
+				1
+			},
+			mode = {
+				2,
+				1,
+				0,
+				0
 			}
 		}
 	}
@@ -12622,7 +14300,7 @@ function CharacterTweakData:_set_overkill_290()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5009 to 5183
+-- Lines: 5198 to 5400
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(9, 1.5)
@@ -12813,6 +14491,208 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		}
 	}
+	self.presets.weapon.gang_member.is_sniper.FALLOFF = {
+		{
+			dmg_mul = 20,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 20,
+			r = 1000,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 20,
+			r = 2500,
+			acc = {
+				0.95,
+				1
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 4000,
+			acc = {
+				0.9,
+				0.95
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 10000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				1,
+				1
+			},
+			mode = {
+				1,
+				0,
+				0,
+				0
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
+		{
+			dmg_mul = 15,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 12,
+			r = 1000,
+			acc = {
+				0.85,
+				0.9
+			},
+			recoil = {
+				0.4,
+				0.65
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 2000,
+			acc = {
+				0.6,
+				0.8
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 10,
+			r = 3000,
+			acc = {
+				0.5,
+				0.7
+			},
+			recoil = {
+				0.8,
+				1.25
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 8,
+			r = 4000,
+			acc = {
+				0.02,
+				0.25
+			},
+			recoil = {
+				1,
+				2
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		},
+		{
+			dmg_mul = 5,
+			r = 10000,
+			acc = {
+				0.01,
+				0.1
+			},
+			recoil = {
+				2,
+				3
+			},
+			mode = {
+				0,
+				0,
+				0,
+				1
+			}
+		}
+	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
 			dmg_mul = 15,
@@ -12848,6 +14728,116 @@ function CharacterTweakData:_set_sm_wish()
 				0.3,
 				4,
 				7
+			}
+		}
+	}
+	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
+		{
+			dmg_mul = 15,
+			r = 100,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				6
+			}
+		},
+		{
+			dmg_mul = 15,
+			r = 500,
+			acc = {
+				1,
+				1
+			},
+			recoil = {
+				0.1,
+				0.1
+			},
+			mode = {
+				1,
+				1,
+				4,
+				5
+			}
+		},
+		{
+			dmg_mul = 12,
+			r = 1000,
+			acc = {
+				0.85,
+				0.95
+			},
+			recoil = {
+				0.1,
+				0.15
+			},
+			mode = {
+				1,
+				2,
+				4,
+				4
+			}
+		},
+		{
+			dmg_mul = 8,
+			r = 2000,
+			acc = {
+				0.75,
+				0.9
+			},
+			recoil = {
+				0.25,
+				0.45
+			},
+			mode = {
+				1,
+				4,
+				4,
+				1
+			}
+		},
+		{
+			dmg_mul = 5,
+			r = 3000,
+			acc = {
+				0.4,
+				0.7
+			},
+			recoil = {
+				0.4,
+				0.5
+			},
+			mode = {
+				4,
+				2,
+				1,
+				0
+			}
+		},
+		{
+			dmg_mul = 1,
+			r = 10000,
+			acc = {
+				0.05,
+				0.2
+			},
+			recoil = {
+				0.5,
+				1
+			},
+			mode = {
+				2,
+				1,
+				0,
+				0
 			}
 		}
 	}
@@ -13519,7 +15509,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5187 to 5194
+-- Lines: 5404 to 5411
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -13530,7 +15520,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines: 5199 to 5306
+-- Lines: 5416 to 5523
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -13648,7 +15638,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines: 5310 to 5338
+-- Lines: 5527 to 5555
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -13693,7 +15683,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines: 5341 to 5346
+-- Lines: 5558 to 5563
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -13710,7 +15700,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5350 to 5766
+-- Lines: 5567 to 5991
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

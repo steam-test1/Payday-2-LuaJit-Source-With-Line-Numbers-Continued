@@ -330,10 +330,14 @@ function TeamAIMovement:load(load_data)
 	end
 end
 
--- Lines: 341 to 351
+-- Lines: 341 to 354
 function TeamAIMovement:set_should_stay(should_stay)
 	if self._should_stay ~= should_stay then
-		managers.hud:set_ai_stopped(managers.criminals:character_data_by_unit(self._unit).panel_id, should_stay)
+		local panel = managers.criminals:character_data_by_unit(self._unit)
+
+		if panel then
+			managers.hud:set_ai_stopped(panel.panel_id, should_stay)
+		end
 
 		self._should_stay = should_stay
 
@@ -345,7 +349,7 @@ function TeamAIMovement:set_should_stay(should_stay)
 	end
 end
 
--- Lines: 355 to 366
+-- Lines: 358 to 369
 function TeamAIMovement:chk_action_forbidden(action_type)
 	if action_type == "walk" and self._should_stay then
 		if Network:is_server() and self._unit:brain():objective() and (self._unit:brain():objective().type == "revive" or self._unit:brain():objective().forced) then
@@ -358,38 +362,42 @@ function TeamAIMovement:chk_action_forbidden(action_type)
 	return TeamAIMovement.super.chk_action_forbidden(self, action_type)
 end
 
--- Lines: 373 to 374
+-- Lines: 376 to 377
 function TeamAIMovement:carrying_bag()
 	return self._carry_unit and true or false
 end
 
--- Lines: 377 to 379
+-- Lines: 380 to 382
 function TeamAIMovement:set_carrying_bag(unit)
 	self._carry_unit = unit
 end
 
--- Lines: 381 to 382
+-- Lines: 384 to 385
 function TeamAIMovement:carry_id()
 	return self._carry_unit and self._carry_unit:carry_data():carry_id()
 end
 
--- Lines: 385 to 386
+-- Lines: 388 to 389
 function TeamAIMovement:carry_data()
 	return self._carry_unit and self._carry_unit:carry_data()
 end
 
--- Lines: 389 to 390
+-- Lines: 392 to 393
 function TeamAIMovement:carry_tweak()
 	return self:carry_id() and tweak_data.carry.types[tweak_data.carry[self:carry_id()].type]
 end
 
--- Lines: 393 to 406
-function TeamAIMovement:throw_bag(target_unit)
+-- Lines: 396 to 411
+function TeamAIMovement:throw_bag(target_unit, reason)
 	if not self:carrying_bag() then
 		return
 	end
 
 	local carry_unit = self._carry_unit
+	self._was_carrying = {
+		unit = carry_unit,
+		reason = reason
+	}
 
 	carry_unit:carry_data():unlink()
 
@@ -399,7 +407,12 @@ function TeamAIMovement:throw_bag(target_unit)
 	end
 end
 
--- Lines: 409 to 418
+-- Lines: 414 to 415
+function TeamAIMovement:was_carrying_bag()
+	return self._was_carrying
+end
+
+-- Lines: 420 to 429
 function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	if alive(target_unit) then
 		local dir = target_unit:position() - self._unit:position()
@@ -412,26 +425,13 @@ function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	end
 end
 
--- Lines: 421 to 470
+-- Lines: 432 to 485
 function TeamAIMovement:update(...)
 	TeamAIMovement.super.update(self, ...)
 
 	if self._pre_destroyed then
 		return
 	end
-
-	if self._last_position then
-		local ray = World:raycast("ray", self._last_position, self:m_detect_pos(), "ignore_unit", self._unit, "ray_type", "throw bag body")
-
-		if ray and not ray.unit:visible() and self:carry_data() then
-			print("[CarryData:link_to] this is not a valid place for a bag, dropping it", self:carry_data()._unit, ray.unit)
-			self:carry_data():unlink()
-		end
-	else
-		self._last_position = Vector3()
-	end
-
-	mvector3.set(self._last_position, self:m_detect_pos())
 
 	if self._ext_anim and self._ext_anim.reload and alive(self._left_hand_obj) then
 		if self._left_hand_pos then

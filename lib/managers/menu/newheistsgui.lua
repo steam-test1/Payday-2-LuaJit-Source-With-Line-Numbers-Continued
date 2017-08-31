@@ -133,20 +133,22 @@ function NewHeistsGui:init(ws, fullscreen_ws)
 	self:try_get_dummy()
 end
 
--- Lines: 130 to 136
+-- Lines: 130 to 138
 function NewHeistsGui:try_get_dummy()
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
 	if active_node_gui then
 		self._dummy_item = active_node_gui:row_item_by_name("ad_dummy")
 
-		self._dummy_item.item:set_actual_item(self)
+		if self._dummy_item and self._dummy_item.item then
+			self._dummy_item.item:set_actual_item(self)
+		end
 	end
 
 	return self._dummy_item
 end
 
--- Lines: 139 to 163
+-- Lines: 141 to 165
 function NewHeistsGui:set_bar_width(w, random)
 	w = w or BAR_W
 	self._bar_width = w
@@ -171,7 +173,7 @@ function NewHeistsGui:set_bar_width(w, random)
 end
 local animating = nil
 
--- Lines: 166 to 200
+-- Lines: 168 to 202
 function NewHeistsGui:update(t, dt)
 	if not self._dummy_item then
 		self:try_get_dummy()
@@ -209,14 +211,14 @@ function NewHeistsGui:update(t, dt)
 	end
 end
 
--- Lines: 203 to 214
+-- Lines: 205 to 216
 function NewHeistsGui:_set_text(text)
 	self._text:set_text(text)
 	self:make_fine_text(self._text)
 	self._text:set_right(self._internal_content_panel:w())
 end
 
--- Lines: 216 to 283
+-- Lines: 218 to 285
 function NewHeistsGui:_move_pages(pages)
 	local target_page = ((self._current_page + pages) - 1) % self._page_count + 1
 
@@ -227,7 +229,7 @@ function NewHeistsGui:_move_pages(pages)
 	end
 
 
-	-- Lines: 224 to 262
+	-- Lines: 226 to 264
 	local function swipe_func(o, other_object, swipe_distance, time, end_pos)
 		time = math.max(0.0001, time or 1)
 		local fade_text_t = time / 2
@@ -297,7 +299,7 @@ function NewHeistsGui:_move_pages(pages)
 	self._current_page = target_page
 end
 
--- Lines: 285 to 290
+-- Lines: 287 to 292
 function NewHeistsGui:dummy_set_highlight(highlight, node, row_item, mouse_over)
 	self._select_rect:set_visible(highlight)
 
@@ -308,17 +310,17 @@ function NewHeistsGui:dummy_set_highlight(highlight, node, row_item, mouse_over)
 	self._block_change = highlight
 end
 
--- Lines: 292 to 294
+-- Lines: 294 to 296
 function NewHeistsGui:dummy_trigger()
 	Steam:overlay_activate("url", tweak_data.gui.new_heists[self._current_page].url)
 end
 
--- Lines: 296 to 298
+-- Lines: 298 to 300
 function NewHeistsGui:_next_page()
 	self:_move_pages(1)
 end
 
--- Lines: 300 to 311
+-- Lines: 302 to 313
 function NewHeistsGui:_move_to_page(page)
 	if animating then
 		self._queued_page = page
@@ -339,23 +341,23 @@ function NewHeistsGui:_move_to_page(page)
 	self._next_time = Application:time() + TIME_PER_PAGE
 end
 
--- Lines: 313 to 316
+-- Lines: 315 to 318
 function NewHeistsGui:close()
 	self._panel:remove(self._content_panel)
 	self._full_panel:remove(self._content_panel)
 end
 
--- Lines: 318 to 320
+-- Lines: 320 to 322
 function NewHeistsGui:move_left()
 	self:_move_pages(-1)
 end
 
--- Lines: 322 to 324
+-- Lines: 324 to 326
 function NewHeistsGui:move_right()
 	self:_move_pages(1)
 end
 
--- Lines: 326 to 348
+-- Lines: 328 to 350
 function NewHeistsGui:mouse_pressed(button, x, y)
 	if not self._enabled or button ~= Idstring("0") then
 		return
@@ -382,7 +384,7 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 350 to 372
+-- Lines: 352 to 374
 function NewHeistsGui:mouse_moved(o, x, y)
 	if not self._enabled then
 		return
@@ -407,7 +409,7 @@ function NewHeistsGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines: 374 to 377
+-- Lines: 376 to 379
 function NewHeistsGui:set_enabled(enabled)
 	self._enabled = enabled
 

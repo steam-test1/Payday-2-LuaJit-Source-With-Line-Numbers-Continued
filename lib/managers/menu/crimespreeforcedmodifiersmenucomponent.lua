@@ -93,9 +93,9 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 		end
 
 		table.insert(self._modifiers, btn)
-		managers.crime_spree:select_modifier(modifier.id)
 	end
 
+	self:add_modifiers_to_spree(modifiers)
 	self._modifiers_scroll:update_canvas_size()
 
 	self._back_btn = CrimeSpreeButton:new(self._button_panel)
@@ -153,24 +153,37 @@ function CrimeSpreeForcedModifiersMenuComponent:get_modifers()
 	end
 end
 
--- Lines: 168 to 170
+-- Lines: 166 to 179
+function CrimeSpreeForcedModifiersMenuComponent:add_modifiers_to_spree(modifiers)
+	if Network:is_server() then
+		for _, modifier in ipairs(modifiers) do
+			managers.crime_spree:select_modifier(modifier.id)
+		end
+	else
+		for _, modifier in ipairs(modifiers) do
+			managers.crime_spree:set_server_modifier(modifier.id, managers.crime_spree:server_spree_level())
+		end
+	end
+end
+
+-- Lines: 183 to 185
 function CrimeSpreeForcedModifiersMenuComponent:_on_back()
 	managers.menu:back(true)
 end
 
--- Lines: 174 to 176
+-- Lines: 189 to 191
 function CrimeSpreeForcedModifiersMenuComponent:update(t, dt)
 	self._back_btn:update(t, dt)
 end
 
--- Lines: 178 to 182
+-- Lines: 193 to 197
 function CrimeSpreeForcedModifiersMenuComponent:confirm_pressed()
 	if self._selected_item and self._selected_item:callback() then
 		self._selected_item:callback()()
 	end
 end
 
--- Lines: 185 to 201
+-- Lines: 200 to 216
 function CrimeSpreeForcedModifiersMenuComponent:mouse_moved(o, x, y)
 	if not managers.menu:is_pc_controller() then
 		return
@@ -192,7 +205,7 @@ function CrimeSpreeForcedModifiersMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 204 to 210
+-- Lines: 219 to 225
 function CrimeSpreeForcedModifiersMenuComponent:mouse_pressed(button, x, y)
 	if self._back_btn:is_selected() and self._back_btn:callback() then
 		self._back_btn:callback()()
@@ -203,22 +216,22 @@ function CrimeSpreeForcedModifiersMenuComponent:mouse_pressed(button, x, y)
 	return self._modifiers_scroll:mouse_pressed(button, x, y)
 end
 
--- Lines: 213 to 214
+-- Lines: 228 to 229
 function CrimeSpreeForcedModifiersMenuComponent:mouse_released(button, x, y)
 	return self._modifiers_scroll:mouse_released(button, x, y)
 end
 
--- Lines: 217 to 218
+-- Lines: 232 to 233
 function CrimeSpreeForcedModifiersMenuComponent:mouse_wheel_up(x, y)
 	return self._modifiers_scroll:scroll(x, y, 1)
 end
 
--- Lines: 221 to 222
+-- Lines: 236 to 237
 function CrimeSpreeForcedModifiersMenuComponent:mouse_wheel_down(x, y)
 	return self._modifiers_scroll:scroll(x, y, -1)
 end
 
--- Lines: 225 to 228
+-- Lines: 240 to 243
 function CrimeSpreeForcedModifiersMenuComponent:_select_back_btn()
 	self._back_btn:set_selected(true)
 

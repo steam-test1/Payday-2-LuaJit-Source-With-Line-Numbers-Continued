@@ -173,9 +173,14 @@ function CoreEditorGroups:load_group()
 	end
 end
 
--- Lines: 155 to 200
+-- Lines: 155 to 203
 function CoreEditorGroups:load_group_file(path)
 	local name = self:group_name()
+
+	if not name then
+		return
+	end
+
 	local node = SystemFS:parse_xml(path)
 	local layer_name = "Statics"
 
@@ -224,7 +229,7 @@ function CoreEditorGroups:load_group_file(path)
 	end
 end
 
--- Lines: 203 to 218
+-- Lines: 206 to 221
 function CoreEditorGroups:parse_light(unit, node)
 	local light = unit:get_object(Idstring(node:parameter("name")))
 
@@ -244,7 +249,7 @@ function CoreEditorGroups:parse_light(unit, node)
 	end
 end
 
--- Lines: 221 to 227
+-- Lines: 224 to 230
 function CoreEditorGroups:parse_variation(unit, node)
 	local variation = node:parameter("value")
 
@@ -255,7 +260,7 @@ function CoreEditorGroups:parse_variation(unit, node)
 	end
 end
 
--- Lines: 230 to 236
+-- Lines: 233 to 239
 function CoreEditorGroups:parse_material_variation(unit, node)
 	local material_variation = node:parameter("value")
 
@@ -266,7 +271,7 @@ function CoreEditorGroups:parse_material_variation(unit, node)
 	end
 end
 
--- Lines: 239 to 252
+-- Lines: 242 to 255
 function CoreEditorGroups:parse_editable_gui(unit, node)
 	unit:editable_gui():set_text(node:parameter("text"))
 	unit:editable_gui():set_font_color(math.string_to_vector(node:parameter("font_color")))
@@ -283,7 +288,7 @@ function CoreEditorGroups:parse_editable_gui(unit, node)
 end
 CoreEditorGroup = CoreEditorGroup or class()
 
--- Lines: 256 to 266
+-- Lines: 259 to 269
 function CoreEditorGroup:init(name, reference, units)
 	self._name = name
 	self._reference = reference
@@ -297,46 +302,46 @@ function CoreEditorGroup:init(name, reference, units)
 	self._closed = true
 end
 
--- Lines: 268 to 269
+-- Lines: 271 to 272
 function CoreEditorGroup:closed()
 	return self._closed
 end
 
--- Lines: 272 to 274
+-- Lines: 275 to 277
 function CoreEditorGroup:set_closed(closed)
 	self._closed = closed
 end
 
--- Lines: 276 to 277
+-- Lines: 279 to 280
 function CoreEditorGroup:name()
 	return self._name
 end
 
--- Lines: 280 to 281
+-- Lines: 283 to 284
 function CoreEditorGroup:units()
 	return self._units
 end
 
--- Lines: 284 to 285
+-- Lines: 287 to 288
 function CoreEditorGroup:continent()
 	return self._continent
 end
 
--- Lines: 288 to 290
+-- Lines: 291 to 293
 function CoreEditorGroup:set_continent(continent)
 	self._continent = continent
 end
 
--- Lines: 292 to 293
+-- Lines: 295 to 296
 function CoreEditorGroup:continent_name()
 	return tostring(self._continent and self._continent:name())
 end
 
--- Lines: 297 to 298
+-- Lines: 300 to 301
 function CoreEditorGroup:add(units)
 end
 
--- Lines: 300 to 307
+-- Lines: 303 to 310
 function CoreEditorGroup:add_unit(unit)
 	if not unit then
 		return
@@ -349,7 +354,7 @@ function CoreEditorGroup:add_unit(unit)
 	table.insert(unit:unit_data().editor_groups, self)
 end
 
--- Lines: 309 to 319
+-- Lines: 312 to 322
 function CoreEditorGroup:remove_unit(unit)
 	table.delete(self._units, unit)
 	table.delete(unit:unit_data().editor_groups, self)
@@ -363,24 +368,24 @@ function CoreEditorGroup:remove_unit(unit)
 	end
 end
 
--- Lines: 321 to 326
+-- Lines: 324 to 329
 function CoreEditorGroup:remove()
 	for _, unit in ipairs(self._units) do
 		table.delete(unit:unit_data().editor_groups, self)
 	end
 end
 
--- Lines: 328 to 329
+-- Lines: 331 to 332
 function CoreEditorGroup:reference()
 	return self._reference
 end
 
--- Lines: 332 to 334
+-- Lines: 335 to 337
 function CoreEditorGroup:set_reference(reference)
 	self._reference = reference
 end
 
--- Lines: 345 to 378
+-- Lines: 348 to 381
 function CoreEditorGroup:save_to_file()
 	local path = managers.database:save_file_dialog(Global.frame, true, "XML-file (*.xml)|*.xml", self:name())
 
@@ -417,14 +422,14 @@ function CoreEditorGroup:save_to_file()
 	end
 end
 
--- Lines: 380 to 384
+-- Lines: 383 to 387
 function CoreEditorGroup:save_edited_settings(...)
 	self:save_lights(...)
 	self:save_variation(...)
 	self:save_editable_gui(...)
 end
 
--- Lines: 386 to 399
+-- Lines: 389 to 402
 function CoreEditorGroup:save_lights(file, t, unit, data_table)
 	local lights = CoreEditorUtils.get_editable_lights(unit) or {}
 
@@ -439,7 +444,7 @@ function CoreEditorGroup:save_lights(file, t, unit, data_table)
 	end
 end
 
--- Lines: 401 to 410
+-- Lines: 404 to 413
 function CoreEditorGroup:save_variation(file, t, unit, data_table)
 	if unit:unit_data().mesh_variation and #managers.sequence:get_editable_state_sequence_list(unit:name()) > 0 then
 		file:puts(t .. "<variation value=\"" .. unit:unit_data().mesh_variation .. "\"/>")
@@ -450,7 +455,7 @@ function CoreEditorGroup:save_variation(file, t, unit, data_table)
 	end
 end
 
--- Lines: 412 to 430
+-- Lines: 415 to 433
 function CoreEditorGroup:save_editable_gui(file, t, unit, data_table)
 	if unit:editable_gui() then
 		local text = unit:editable_gui():text()
@@ -470,7 +475,7 @@ function CoreEditorGroup:save_editable_gui(file, t, unit, data_table)
 	end
 end
 
--- Lines: 432 to 448
+-- Lines: 435 to 451
 function CoreEditorGroup:draw(t, dt)
 	local i = 0.25
 
@@ -492,7 +497,7 @@ function CoreEditorGroup:draw(t, dt)
 end
 GroupPresetsDialog = GroupPresetsDialog or class(CoreEditorEwsDialog)
 
--- Lines: 454 to 496
+-- Lines: 457 to 499
 function GroupPresetsDialog:init(files, path)
 	self._path = path
 
@@ -538,7 +543,7 @@ function GroupPresetsDialog:init(files, path)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 498 to 504
+-- Lines: 501 to 507
 function GroupPresetsDialog:select_group()
 	local i = self._list:selected_index()
 
@@ -548,7 +553,7 @@ function GroupPresetsDialog:select_group()
 	end
 end
 
--- Lines: 505 to 512
+-- Lines: 508 to 515
 function GroupPresetsDialog:create_group()
 	if self._file then
 		if self._hide_on_create then
@@ -559,7 +564,7 @@ function GroupPresetsDialog:create_group()
 	end
 end
 
--- Lines: 513 to 515
+-- Lines: 516 to 518
 function GroupPresetsDialog:hide_on_create(hide)
 	self._hide_on_create = hide:get_value()
 end

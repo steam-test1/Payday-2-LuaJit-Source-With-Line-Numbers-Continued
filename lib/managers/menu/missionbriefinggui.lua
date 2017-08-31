@@ -3736,7 +3736,7 @@ end
 
 -- Lines: 3014 to 3016
 function MissionBriefingGui:_buy_asset_callback(asset_id)
-	managers.assets:unlock_asset(asset_id)
+	managers.assets:unlock_asset(asset_id, true)
 end
 
 -- Lines: 3018 to 3020

@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 875
+-- Lines: 4 to 974
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -717,7 +717,7 @@ function GuiTweakData:init()
 	}
 	self.rename_max_letters = 20
 	self.rename_skill_set_max_letters = 15
-	self.mod_preview_min_fov = -20
+	self.mod_preview_min_fov = -19
 	self.mod_preview_max_fov = 3
 	self.stats_present_multiplier = 10
 	self.armor_damage_shake_base = 1.1
@@ -1745,6 +1745,7 @@ function GuiTweakData:init()
 			id = "crime_spree",
 			icon = "guis/textures/pd2/crimenet_marker_crimespree",
 			x = 675,
+			no_session_only = true,
 			pulse_color = Color(255, 255, 255, 0) / 255
 		},
 		{
@@ -4856,8 +4857,28 @@ function GuiTweakData:init()
 		"category",
 		"bonus"
 	}
-	self.new_heists = {limit = 4}
+	self.new_heists = {limit = 5}
 
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_aldstone_room",
+		texture_path = "guis/textures/pd2/new_heists/aldstone_room",
+		url = "http://www.overkillsoftware.com/games/aldstonesheritage/"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_golden_chains",
+		texture_path = "guis/textures/pd2/new_heists/golden_chains",
+		url = "http://steamcommunity.com/games/218620/announcements/detail/1444947199697735668"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_community_safe_4",
+		texture_path = "guis/textures/pd2/new_heists/community_safe_4",
+		url = "http://www.overkillsoftware.com/games/communitysafe4/"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_dsync_beta_is_live",
+		texture_path = "guis/textures/pd2/new_heists/desync_beta_is_live",
+		url = "http://steamcommunity.com/games/218620/announcements/detail/1342486185513464930"
+	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_crime_spree_update",
 		texture_path = "guis/textures/pd2/new_heists/crime_spree_update",
@@ -4873,14 +4894,9 @@ function GuiTweakData:init()
 		texture_path = "guis/textures/pd2/new_heists/russian_national_day",
 		url = "http://store.steampowered.com/news/?appids=218620"
 	})
-	table.insert(self.new_heists, {
-		name_id = "menu_nh_dsync_beta",
-		texture_path = "guis/textures/pd2/new_heists/desync_beta",
-		url = "http://steamcommunity.com/app/218620/discussions/29/"
-	})
 end
 
--- Lines: 877 to 896
+-- Lines: 976 to 995
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -4908,7 +4924,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 898 to 966
+-- Lines: 997 to 1065
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -4984,15 +5000,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 969 to 970
+-- Lines: 1068 to 1069
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 980 to 981
+-- Lines: 1079 to 1080
 function GuiTweakData:print_locations()
 end
 
--- Lines: 983 to 1016
+-- Lines: 1082 to 1115
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5031,7 +5047,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1019 to 1143
+-- Lines: 1118 to 1242
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5154,12 +5170,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1146 to 1147
+-- Lines: 1245 to 1246
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1150 to 1156
+-- Lines: 1249 to 1255
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

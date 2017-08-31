@@ -25,7 +25,7 @@ function EnvironmentFire:get_name_id()
 	return "environment_fire"
 end
 
--- Lines: 30 to 191
+-- Lines: 30 to 192
 function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_multiplier)
 	local custom_params = {
 		camera_shake_max_mul = 4,
@@ -34,7 +34,8 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_mul
 		sound_event = data.sound_event,
 		feedback_range = data.range * 2,
 		sound_event_burning = data.sound_event_burning,
-		sound_event_impact_duration = data.sound_event_impact_duration
+		sound_event_impact_duration = data.sound_event_impact_duration,
+		sound_event_duration = data.burn_duration + added_time
 	}
 	self._data = data
 	self._normal = normal
@@ -173,7 +174,7 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_mul
 	self._unit:set_visible(false)
 end
 
--- Lines: 193 to 218
+-- Lines: 194 to 219
 function EnvironmentFire:update(unit, t, dt)
 	if self._burn_duration <= 0 then
 		self._unit:set_slot(0)
@@ -205,7 +206,7 @@ function EnvironmentFire:update(unit, t, dt)
 	end
 end
 
--- Lines: 221 to 290
+-- Lines: 222 to 292
 function EnvironmentFire:_do_damage()
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -255,6 +256,7 @@ function EnvironmentFire:_do_damage()
 						damage = self._damage,
 						ignore_unit = self._unit,
 						user = self._user_unit,
+						owner = self._unit,
 						alert_radius = self._fire_alert_radius,
 						fire_dot_data = self._fire_dot_data,
 						is_molotov = self._is_molotov
@@ -271,14 +273,14 @@ function EnvironmentFire:_do_damage()
 	self._burn_tick_counter = 0
 end
 
--- Lines: 292 to 296
+-- Lines: 294 to 298
 function EnvironmentFire:destroy(unit)
 	for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 		World:effect_manager():fade_kill(damage_effect_entry.effect_id)
 	end
 end
 
--- Lines: 298 to 319
+-- Lines: 300 to 321
 function EnvironmentFire:save(data)
 	local state = {
 		burn_duration = self._burn_duration,
@@ -302,7 +304,7 @@ function EnvironmentFire:save(data)
 	data.EnvironmentFire = state
 end
 
--- Lines: 321 to 342
+-- Lines: 323 to 344
 function EnvironmentFire:load(data)
 	local state = data.EnvironmentFire
 	self._burn_duration = state.burn_duration

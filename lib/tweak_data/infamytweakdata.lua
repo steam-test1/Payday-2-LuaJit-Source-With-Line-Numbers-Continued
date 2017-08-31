@@ -1,6 +1,6 @@
 InfamyTweakData = InfamyTweakData or class()
 
--- Lines: 3 to 334
+-- Lines: 3 to 337
 function InfamyTweakData:init()
 
 	-- Lines: 3 to 4

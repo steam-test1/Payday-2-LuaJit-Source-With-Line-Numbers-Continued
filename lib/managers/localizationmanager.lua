@@ -13,7 +13,7 @@ function LocalizationManager:init()
 	Application:set_default_letter(95)
 end
 
--- Lines: 33 to 285
+-- Lines: 33 to 286
 function LocalizationManager:_setup_macros()
 	local btn_a = utf8.char(57344)
 	local btn_b = utf8.char(57345)
@@ -142,10 +142,10 @@ function LocalizationManager:_setup_macros()
 		start = btn_start,
 		left = stick_l,
 		right = stick_r,
-		left_shoulder = btn_top_l,
-		right_shoulder = btn_top_r,
-		left_trigger = btn_bottom_l,
-		right_trigger = btn_bottom_r,
+		left_shoulder = btn_bottom_l,
+		right_shoulder = btn_bottom_r,
+		left_trigger = btn_top_l,
+		right_trigger = btn_top_r,
 		left_thumb = btn_stick_l,
 		right_thumb = btn_stick_r,
 		d_up = btn_dpad_u,
@@ -157,7 +157,7 @@ function LocalizationManager:_setup_macros()
 end
 local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
--- Lines: 288 to 313
+-- Lines: 289 to 314
 function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	if not button then
 		return
@@ -185,22 +185,22 @@ function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines: 316 to 317
+-- Lines: 317 to 318
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines: 320 to 321
+-- Lines: 321 to 322
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines: 336 to 337
+-- Lines: 337 to 338
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines: 341 to 350
+-- Lines: 342 to 351
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -214,7 +214,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines: 353 to 399
+-- Lines: 354 to 400
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -262,7 +262,7 @@ function LocalizationManager:check_translation()
 	end
 end
 
--- Lines: 402 to 404
+-- Lines: 403 to 405
 function LocalizationManager:set_input_translation(button_name, translation)
 	self._input_translations[button_name] = translation
 end

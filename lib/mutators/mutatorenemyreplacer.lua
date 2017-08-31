@@ -200,7 +200,7 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	return self._groups.tank
 end
 
--- Lines: 193 to 236
+-- Lines: 193 to 234
 function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	if not self._groups.shield then
 		if difficulty_index <= 7 then
@@ -219,17 +219,11 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 				access = access_type_all
 			}
 		else
-			self._groups.FBI_shield = {
+			self._groups.shield = {
 				special_type = "shield",
 				unit_types = {
-					america = {
-						Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_swat_shield/ene_zeal_swat_shield"),
-						Idstring("units/payday2/characters/ene_shield_2/ene_shield_2")
-					},
-					russia = {
-						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_dw_sr2_smg/ene_akan_fbi_shield_dw_sr2_smg"),
-						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_sr2_smg/ene_akan_fbi_shield_sr2_smg")
-					}
+					america = {Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_swat_shield/ene_zeal_swat_shield")},
+					russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_dw_sr2_smg/ene_akan_fbi_shield_dw_sr2_smg")}
 				},
 				access = access_type_all
 			}
@@ -239,7 +233,7 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	return self._groups.shield
 end
 
--- Lines: 239 to 257
+-- Lines: 237 to 255
 function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	if not self._groups.taser then
 		self._groups.taser = {
@@ -255,7 +249,7 @@ function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	return self._groups.taser
 end
 
--- Lines: 260 to 298
+-- Lines: 258 to 296
 function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	if not self._groups.spooc then
 		if difficulty_index <= 7 then
@@ -282,7 +276,7 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	return self._groups.spooc
 end
 
--- Lines: 302 to 322
+-- Lines: 300 to 320
 function MutatorEnemyReplacer:_get_unit_group_medic(difficulty_index)
 	if not self._groups.medic then
 		self._groups.medic = {
@@ -318,7 +312,7 @@ MutatorMediDozer.icon_coords = {
 	1
 }
 
--- Lines: 342 to 349
+-- Lines: 340 to 347
 function MutatorMediDozer:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -327,7 +321,7 @@ function MutatorMediDozer:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines: 355 to 416
+-- Lines: 353 to 414
 function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits = {
 		shield = 0,

@@ -358,7 +358,7 @@ function help(o)
 end
 
 
--- Lines: 339 to 355
+-- Lines: 339 to 356
 function ascii_table(t, raw)
 	local out = ""
 	local klen = 20
@@ -389,7 +389,7 @@ function ascii_table(t, raw)
 end
 
 
--- Lines: 361 to 421
+-- Lines: 362 to 422
 function memory_report(limit)
 	local seen = {}
 	local count = {}
@@ -402,7 +402,7 @@ function memory_report(limit)
 	end
 
 
-	-- Lines: 372 to 376
+	-- Lines: 373 to 377
 	local function simple(item)
 		local t = type(item)
 
@@ -418,7 +418,7 @@ function memory_report(limit)
 	end
 
 
-	-- Lines: 379 to 401
+	-- Lines: 380 to 402
 	local function recurse(item, parent, key)
 		local index = type(item) == "userdata" and item:key() or item
 
@@ -493,7 +493,7 @@ end
 __profiled = {}
 
 
--- Lines: 436 to 472
+-- Lines: 437 to 473
 function profile(s)
 	if __profiled[s] then
 		return
@@ -514,7 +514,7 @@ function profile(s)
 
 		t.f = rawget(_G, t.class)[t.name]
 
-		-- Lines: 449 to 450
+		-- Lines: 450 to 451
 		function t.patch(f)
 			_G[t.class][t.name] = f
 		end
@@ -522,7 +522,7 @@ function profile(s)
 		t.name = s
 		t.f = rawget(_G, t.name)
 
-		-- Lines: 453 to 454
+		-- Lines: 454 to 455
 		function t.patch(f)
 			_G[t.name] = f
 		end
@@ -535,7 +535,7 @@ function profile(s)
 	end
 
 
-	-- Lines: 462 to 466
+	-- Lines: 463 to 467
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
 		res = t.f(...)
@@ -553,7 +553,7 @@ function profile(s)
 end
 
 
--- Lines: 474 to 481
+-- Lines: 475 to 482
 function unprofile(s)
 	local t = __profiled[s]
 
@@ -567,7 +567,7 @@ function unprofile(s)
 end
 
 
--- Lines: 483 to 488
+-- Lines: 484 to 489
 function reprofile()
 	for k, v in pairs(__old_profiled) do
 		profile(k)

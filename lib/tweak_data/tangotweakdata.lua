@@ -1,6 +1,6 @@
 TangoTweakData = TangoTweakData or class()
 
--- Lines: 6 to 134
+-- Lines: 6 to 136
 function TangoTweakData:init(tweak_data)
 	self.arbiter_data = {
 		weapon_id = "arbiter",

@@ -58,7 +58,7 @@ function MenuNodeEconomySafe:_test_safe_result_recieved(request_id, ...)
 	self:_safe_result_recieved(...)
 end
 
--- Lines: 54 to 100
+-- Lines: 54 to 104
 function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_removed)
 	if error then
 		managers.menu:set_cash_safe_scene_done(true)
@@ -88,10 +88,11 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 		managers.menu:set_cash_safe_scene_done(true, true)
 	end
 
+	managers.mission:call_global_event(Message.OnSafeOpened, result)
 	print("B: RESULT RECIEVED", result.weapon_skin, Application:time())
 
 
-	-- Lines: 72 to 97
+	-- Lines: 76 to 101
 	local function ready_clbk()
 		if not alive(self._raffle_panel) then
 			return
@@ -100,7 +101,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 		print("READY CALLBACK")
 
 
-		-- Lines: 78 to 83
+		-- Lines: 82 to 87
 		local function stopped_clbk()
 			print("stopped_clbk")
 
@@ -122,7 +123,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 	managers.menu_scene:load_safe_result_content(result, ready_clbk)
 end
 
--- Lines: 102 to 125
+-- Lines: 106 to 129
 function MenuNodeEconomySafe:_find_replace_raffle_panel()
 	local i, _ = self:_current_raffle_panel()
 	local max_steps = 7 + math.random(5)
@@ -154,7 +155,7 @@ function MenuNodeEconomySafe:_find_replace_raffle_panel()
 	end
 end
 
--- Lines: 127 to 175
+-- Lines: 131 to 179
 function MenuNodeEconomySafe._item_probability_list(item_list)
 	local rarity_list = {}
 
@@ -233,7 +234,7 @@ function MenuNodeEconomySafe._item_probability_list(item_list)
 	return probability_list
 end
 
--- Lines: 179 to 235
+-- Lines: 183 to 239
 function MenuNodeEconomySafe:_build_raffle_panel(safe_entry)
 	local safe_data = tweak_data.economy.safes[safe_entry]
 	local drill_data = tweak_data.economy.drills[safe_data.drill]
@@ -326,7 +327,7 @@ function MenuNodeEconomySafe:_build_raffle_panel(safe_entry)
 	end
 end
 
--- Lines: 238 to 254
+-- Lines: 242 to 258
 function MenuNodeEconomySafe:_create_random_item_list(item_list)
 	local list = {}
 
@@ -343,7 +344,7 @@ function MenuNodeEconomySafe:_create_random_item_list(item_list)
 	return list
 end
 
--- Lines: 257 to 327
+-- Lines: 261 to 331
 function MenuNodeEconomySafe:_create_raffle_panel(x, data, index)
 	local p = self._raffle_panel:panel({
 		h = 108,
@@ -459,7 +460,7 @@ function MenuNodeEconomySafe:_create_raffle_panel(x, data, index)
 	self:request_texture(texture_name, image_panel, true)
 end
 
--- Lines: 329 to 334
+-- Lines: 333 to 338
 function MenuNodeEconomySafe:_replace_raffle_panel_at(index, data)
 	local removed = table.remove(self._raffle_panels, index)
 	local x = removed:x()
@@ -468,12 +469,12 @@ function MenuNodeEconomySafe:_replace_raffle_panel_at(index, data)
 	removed:parent():remove(removed)
 end
 
--- Lines: 336 to 338
+-- Lines: 340 to 342
 function MenuNodeEconomySafe:set_raffle_speed(speed)
 	self._raffle_speed = speed
 end
 
--- Lines: 340 to 363
+-- Lines: 344 to 367
 function MenuNodeEconomySafe:stop_at(at, offset, stopped_clbk)
 	self._stop_data = {
 		max_speed = self._raffle_speed,
@@ -499,7 +500,7 @@ function MenuNodeEconomySafe:stop_at(at, offset, stopped_clbk)
 	self._raffle_panels[at]:child("number"):set_color(Color.green)
 end
 
--- Lines: 365 to 372
+-- Lines: 369 to 376
 function MenuNodeEconomySafe:_current_raffle_panel()
 	local needle_x = self._needle_panel:center_x()
 
@@ -510,7 +511,7 @@ function MenuNodeEconomySafe:_current_raffle_panel()
 	end
 end
 
--- Lines: 374 to 478
+-- Lines: 378 to 482
 function MenuNodeEconomySafe:update(t, dt)
 	MenuNodeEconomySafe.super.update(self, t, dt)
 
@@ -593,7 +594,7 @@ function MenuNodeEconomySafe:update(t, dt)
 	end
 end
 
--- Lines: 480 to 538
+-- Lines: 484 to 542
 function MenuNodeEconomySafe:_build_result_panel()
 	if not alive(self._raffle_panel) then
 		return
@@ -690,17 +691,17 @@ function MenuNodeEconomySafe:_build_result_panel()
 	end
 end
 
--- Lines: 540 to 542
+-- Lines: 544 to 546
 function MenuNodeEconomySafe:_setup_panels(node)
 	MenuNodeEconomySafe.super._setup_panels(self, node)
 end
 
--- Lines: 544 to 546
+-- Lines: 548 to 550
 function MenuNodeEconomySafe:set_visible(visible)
 	MenuNodeEconomySafe.super.set_visible(self, visible)
 end
 
--- Lines: 548 to 553
+-- Lines: 552 to 557
 function MenuNodeEconomySafe:close(...)
 	MenuNodeEconomySafe.super.close(self, ...)
 	managers.environment_controller:set_dof_distance(10, false)
@@ -708,7 +709,7 @@ function MenuNodeEconomySafe:close(...)
 	managers.menu_component:set_blackmarket_disable_fetching(false)
 end
 
--- Lines: 555 to 565
+-- Lines: 559 to 569
 function MenuNodeEconomySafe:_test_textures()
 	local t = {}
 

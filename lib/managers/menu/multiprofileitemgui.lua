@@ -1,7 +1,7 @@
 MultiProfileItemGui = MultiProfileItemGui or class()
 MultiProfileItemGui.quick_panel_h = 24
 
--- Lines: 5 to 44
+-- Lines: 5 to 48
 function MultiProfileItemGui:init(ws, panel)
 	self._ws = ws
 	self._panel = self._panel or panel:panel({
@@ -33,57 +33,73 @@ function MultiProfileItemGui:init(ws, panel)
 	}})
 
 	if managers.menu:is_pc_controller() then
-		self._quick_panel = self._quick_panel or self._panel:panel({h = self.quick_panel_h})
-		self._quick_select_panel = self._quick_select_panel or self._quick_panel:panel({
-			w = self.quick_panel_h,
-			h = self.quick_panel_h
+		self._panel:set_w(self._panel:w() + self._profile_panel:h())
+
+		self._quick_select_panel = self._quick_select_panel or self._panel:panel({
+			w = self._profile_panel:h(),
+			h = self._profile_panel:h()
 		})
 
-		self._quick_select_panel:set_right(self._quick_panel:right())
+		self._quick_select_panel:set_left(self._profile_panel:right())
+		self._quick_select_panel:set_top(self._profile_panel:top())
 
 		if not self._quick_select_panel_elements then
 			self._quick_select_panel_elements = {}
 
 			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 				h = 3,
-				y = 5,
-				w = 3,
-				x = 4,
+				y = 7,
+				w = 5,
+				x = 5,
 				color = tweak_data.screen_colors.button_stage_3
 			}))
 			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 				h = 3,
-				y = 5,
-				w = 11,
-				x = 9,
+				y = 7,
+				w = 16,
+				x = 12,
 				color = tweak_data.screen_colors.button_stage_3
 			}))
 			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 				h = 3,
-				y = 11,
-				w = 3,
-				x = 4,
+				y = 13,
+				w = 5,
+				x = 5,
 				color = tweak_data.screen_colors.button_stage_3
 			}))
 			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 				h = 3,
-				y = 11,
-				w = 11,
-				x = 9,
+				y = 13,
+				w = 16,
+				x = 12,
 				color = tweak_data.screen_colors.button_stage_3
 			}))
 			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 				h = 3,
-				y = 17,
-				w = 3,
-				x = 4,
+				y = 19,
+				w = 5,
+				x = 5,
 				color = tweak_data.screen_colors.button_stage_3
 			}))
 			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 				h = 3,
-				y = 17,
-				w = 11,
-				x = 9,
+				y = 19,
+				w = 16,
+				x = 12,
+				color = tweak_data.screen_colors.button_stage_3
+			}))
+			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
+				h = 3,
+				y = 25,
+				w = 5,
+				x = 5,
+				color = tweak_data.screen_colors.button_stage_3
+			}))
+			table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
+				h = 3,
+				y = 25,
+				w = 16,
+				x = 12,
 				color = tweak_data.screen_colors.button_stage_3
 			}))
 		end
@@ -94,10 +110,10 @@ function MultiProfileItemGui:init(ws, panel)
 			color = Color.black
 		})
 		BoxGuiObject:new(self._quick_select_panel:panel(), {sides = {
-			3,
-			3,
+			0,
 			1,
-			0
+			4,
+			4
 		}})
 	end
 
@@ -116,22 +132,22 @@ function MultiProfileItemGui:init(ws, panel)
 	self:update()
 end
 
--- Lines: 46 to 47
+-- Lines: 50 to 51
 function MultiProfileItemGui:panel()
 	return self._panel
 end
 
--- Lines: 50 to 51
+-- Lines: 54 to 55
 function MultiProfileItemGui:profile_panel()
 	return self._profile_panel
 end
 
--- Lines: 54 to 56
+-- Lines: 58 to 60
 function MultiProfileItemGui:set_name_editing_enabled(enabled)
 	self._name_editing_enabled = enabled
 end
 
--- Lines: 58 to 86
+-- Lines: 62 to 90
 function MultiProfileItemGui:update()
 	local mult = managers.multi_profile
 	local name = mult:current_profile_name()
@@ -190,10 +206,10 @@ function MultiProfileItemGui:update()
 	self:_update_caret()
 end
 
--- Lines: 97 to 171
+-- Lines: 101 to 175
 function MultiProfileItemGui:mouse_moved(x, y)
 
-	-- Lines: 89 to 98
+	-- Lines: 93 to 102
 	local function anim_func(o, large)
 		local current_width = o:w()
 		local current_height = o:h()
@@ -289,7 +305,7 @@ function MultiProfileItemGui:mouse_moved(x, y)
 	return used, pointer
 end
 
--- Lines: 174 to 191
+-- Lines: 178 to 195
 function MultiProfileItemGui:mouse_pressed(button, x, y)
 	if button == Idstring("0") then
 		if self:arrow_selection() == "left" then
@@ -309,12 +325,12 @@ function MultiProfileItemGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 193 to 194
+-- Lines: 197 to 198
 function MultiProfileItemGui:arrow_selection()
 	return self._arrow_selection
 end
 
--- Lines: 199 to 231
+-- Lines: 203 to 235
 function MultiProfileItemGui:set_editing(editing)
 	if not self._name_editing_enabled then
 		return
@@ -346,7 +362,7 @@ function MultiProfileItemGui:set_editing(editing)
 	end
 end
 
--- Lines: 233 to 240
+-- Lines: 237 to 244
 function MultiProfileItemGui.blink(o)
 	while true do
 		o:set_color(Color(0.05, 1, 1, 1))
@@ -356,7 +372,7 @@ function MultiProfileItemGui.blink(o)
 	end
 end
 
--- Lines: 242 to 249
+-- Lines: 246 to 253
 function MultiProfileItemGui:set_blinking(b)
 	local caret = self._caret
 
@@ -377,7 +393,7 @@ function MultiProfileItemGui:set_blinking(b)
 	end
 end
 
--- Lines: 251 to 268
+-- Lines: 255 to 272
 function MultiProfileItemGui:_update_caret()
 	local text = self._name_text
 	local caret = self._caret
@@ -404,7 +420,7 @@ function MultiProfileItemGui:_update_caret()
 	self:set_blinking(s == e and self._editing)
 end
 
--- Lines: 270 to 277
+-- Lines: 274 to 281
 function MultiProfileItemGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -415,7 +431,7 @@ function MultiProfileItemGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 279 to 292
+-- Lines: 283 to 296
 function MultiProfileItemGui:key_press(o, k)
 	if not self._editing then
 		return
@@ -430,7 +446,7 @@ function MultiProfileItemGui:key_press(o, k)
 	self:_update_caret()
 end
 
--- Lines: 294 to 305
+-- Lines: 298 to 309
 function MultiProfileItemGui:key_release(o, k)
 	if not self._editing then
 		return
@@ -444,7 +460,7 @@ function MultiProfileItemGui:key_release(o, k)
 	self:_update_caret()
 end
 
--- Lines: 307 to 319
+-- Lines: 311 to 323
 function MultiProfileItemGui:trigger()
 	if not self._editing then
 		self:set_editing(true)
@@ -461,7 +477,7 @@ function MultiProfileItemGui:trigger()
 	self:_update_caret()
 end
 
--- Lines: 321 to 330
+-- Lines: 325 to 334
 function MultiProfileItemGui:enter_text(o, s)
 	if not self._editing then
 		return
@@ -473,7 +489,7 @@ function MultiProfileItemGui:enter_text(o, s)
 	self._name_text:replace_text(s)
 end
 
--- Lines: 332 to 375
+-- Lines: 336 to 379
 function MultiProfileItemGui:handle_key(k, pressed)
 	local text = self._name_text
 	local s, e = text:selection()

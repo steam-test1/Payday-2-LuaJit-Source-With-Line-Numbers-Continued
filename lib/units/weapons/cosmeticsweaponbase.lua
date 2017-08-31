@@ -9,10 +9,8 @@ function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	end)
 end
 
--- Lines: 29 to 45
+-- Lines: 31 to 45
 function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
-	print("NewRaycastWeaponBase:set_cosmetics_data", "cosmetics_id", cosmetics and cosmetics.id or "NONE")
-
 	if not cosmetics then
 		self._cosmetics_id = nil
 		self._cosmetics_quality = nil

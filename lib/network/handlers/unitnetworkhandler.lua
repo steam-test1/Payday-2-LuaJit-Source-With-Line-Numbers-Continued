@@ -2628,25 +2628,25 @@ function UnitNetworkHandler:sync_small_loot_taken(unit, multiplier_level, sender
 end
 
 -- Lines: 2550 to 2557
-function UnitNetworkHandler:server_unlock_asset(asset_id, sender)
+function UnitNetworkHandler:server_unlock_asset(asset_id, is_show_chat_message, sender)
 	local peer = self._verify_sender(sender)
 
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	managers.assets:server_unlock_asset(asset_id, peer)
+	managers.assets:server_unlock_asset(asset_id, is_show_chat_message, peer)
 end
 
 -- Lines: 2559 to 2566
-function UnitNetworkHandler:sync_unlock_asset(asset_id, unlocker_peer_id, sender)
+function UnitNetworkHandler:sync_unlock_asset(asset_id, is_show_chat_message, unlocker_peer_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
 	end
 
 	local peer = managers.network:session():peer(unlocker_peer_id)
 
-	managers.assets:sync_unlock_asset(asset_id, peer)
+	managers.assets:sync_unlock_asset(asset_id, is_show_chat_message, peer)
 end
 
 -- Lines: 2570 to 2576
@@ -4151,5 +4151,18 @@ function UnitNetworkHandler:sync_shotgun_push(unit, hit_pos, dir, distance, atta
 	end
 
 	managers.game_play_central:_do_shotgun_push(unit, hit_pos, dir, distance, attacker, sender)
+end
+
+-- Lines: 4053 to 4061
+function UnitNetworkHandler:sync_carry_set_position_and_throw(unit, destination, direction, force, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
+		return
+	end
+
+	if not alive(unit) then
+		return
+	end
+
+	unit:carry_data():set_position_and_throw(destination, direction, force)
 end
 

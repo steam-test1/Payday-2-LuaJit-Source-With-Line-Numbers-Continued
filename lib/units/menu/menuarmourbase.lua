@@ -23,6 +23,7 @@ local material_variables = {
 -- Lines: 33 to 36
 function MenuArmourBase:init(unit, update_enabled)
 	MenuArmourBase.super.init(self, unit, true)
+	self:set_armor_id("level_1")
 end
 
 -- Lines: 38 to 43
@@ -34,7 +35,29 @@ function MenuArmourBase:update(unit, t, dt)
 	end
 end
 
--- Lines: 46 to 62
+-- Lines: 45 to 52
+function MenuArmourBase:set_armor_id(armor_id)
+	local data = tweak_data.blackmarket.armors[armor_id]
+
+	if data then
+		self._level = data.upgrade_level
+	else
+		self._level = 1
+	end
+end
+
+-- Lines: 54 to 61
+function MenuArmourBase:armor_level()
+	if self._level then
+		return self._level
+	else
+		local armor = tweak_data.blackmarket.armors[managers.blackmarket:equipped_armor()]
+
+		return armor and armor.upgrade_level or 1
+	end
+end
+
+-- Lines: 64 to 80
 function MenuArmourBase:set_cosmetics_data(cosmetics_id, request_update)
 	if not cosmetics_id then
 		self._cosmetics_id = nil
@@ -53,27 +76,27 @@ function MenuArmourBase:set_cosmetics_data(cosmetics_id, request_update)
 	self._request_update = request_update
 end
 
--- Lines: 64 to 65
+-- Lines: 82 to 83
 function MenuArmourBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines: 68 to 69
+-- Lines: 86 to 87
 function MenuArmourBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines: 72 to 73
+-- Lines: 90 to 91
 function MenuArmourBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines: 76 to 77
+-- Lines: 94 to 95
 function MenuArmourBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines: 81 to 160
+-- Lines: 99 to 181
 function MenuArmourBase:_apply_cosmetics(clbks)
 	self:_update_materials()
 
@@ -101,7 +124,7 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 			base_variable = cosmetics_data[key]
 
 			if base_variable then
-				material:set_variable(Idstring(variable), base_variable)
+				material:set_variable(Idstring(variable), tweak_data.economy:get_armor_based_value(base_variable, self:armor_level()))
 			end
 		end
 
@@ -109,15 +132,19 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 			base_texture = cosmetics_data[key]
 
 			if base_texture then
+				base_texture = tweak_data.economy:get_armor_based_value(base_texture, self:armor_level())
 				texture_key = base_texture and base_texture:key()
-				textures[texture_key] = textures[texture_key] or {
-					applied = false,
-					ready = false,
-					name = base_texture
-				}
 
-				if type(textures[texture_key].name) == "string" then
-					textures[texture_key].name = Idstring(textures[texture_key].name)
+				if texture_key then
+					textures[texture_key] = textures[texture_key] or {
+						applied = false,
+						ready = false,
+						name = base_texture
+					}
+
+					if type(textures[texture_key].name) == "string" then
+						textures[texture_key].name = Idstring(textures[texture_key].name)
+					end
 				end
 			end
 		end
@@ -162,7 +189,7 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 	self:_chk_load_complete(clbks.done)
 end
 
--- Lines: 163 to 178
+-- Lines: 184 to 199
 function MenuArmourBase:clbk_texture_loaded(clbks, tex_name)
 	if not alive(self._unit) then
 		return
@@ -182,7 +209,7 @@ function MenuArmourBase:clbk_texture_loaded(clbks, tex_name)
 	end)
 end
 
--- Lines: 181 to 201
+-- Lines: 202 to 222
 function MenuArmourBase:_chk_load_complete(async_clbk)
 	print("[MenuArmourBase] _chk_load_complete")
 
@@ -205,7 +232,7 @@ function MenuArmourBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines: 204 to 241
+-- Lines: 225 to 262
 function MenuArmourBase:_set_material_textures()
 	print("[MenuArmourBase] _set_material_textures")
 
@@ -225,7 +252,7 @@ function MenuArmourBase:_set_material_textures()
 
 	for _, material in pairs(self._materials) do
 		for key, material_texture in pairs(material_textures) do
-			base_texture = cosmetics_data[key]
+			base_texture = tweak_data.economy:get_armor_based_value(cosmetics_data[key], self:armor_level())
 			new_texture = base_texture or material_defaults[material_texture]
 
 			if type(new_texture) == "string" then
@@ -249,7 +276,7 @@ function MenuArmourBase:_set_material_textures()
 	end
 end
 
--- Lines: 243 to 250
+-- Lines: 264 to 271
 function MenuArmourBase:_get_cc_material_config()
 	local ids_config_key = self._unit:material_config():key()
 
@@ -260,7 +287,7 @@ function MenuArmourBase:_get_cc_material_config()
 	end
 end
 
--- Lines: 252 to 259
+-- Lines: 273 to 280
 function MenuArmourBase:_get_original_material_config()
 	local ids_config_key = self._unit:material_config():key()
 
@@ -271,7 +298,7 @@ function MenuArmourBase:_get_original_material_config()
 	end
 end
 
--- Lines: 262 to 294
+-- Lines: 283 to 315
 function MenuArmourBase:_update_materials()
 	local use = self:use_cc()
 	local use_cc_material_config = use and self._cosmetics_data and not self._cosmetics_data.ignore_cc and true or false
@@ -301,7 +328,7 @@ function MenuArmourBase:_update_materials()
 	end
 end
 
--- Lines: 299 to 300
+-- Lines: 320 to 321
 function MenuArmourBase:use_cc()
 	return true
 end

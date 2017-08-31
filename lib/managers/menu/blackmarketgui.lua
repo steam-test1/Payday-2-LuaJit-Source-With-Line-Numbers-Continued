@@ -2229,7 +2229,7 @@ function BlackMarketGui:in_setup()
 	return not not self._in_setup
 end
 
--- Lines: 1845 to 2945
+-- Lines: 1845 to 2953
 function BlackMarketGui:_setup(is_start_page, component_data)
 	self._in_setup = true
 
@@ -4459,7 +4459,7 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 	self._in_setup = nil
 end
 
--- Lines: 2947 to 2987
+-- Lines: 2955 to 2995
 function BlackMarketGui:_update_borders()
 	local wh = self._weapon_info_panel:h()
 	local dy = self._detection_panel:visible() and self._detection_panel:y()
@@ -4518,7 +4518,7 @@ function BlackMarketGui:_update_borders()
 	end
 end
 
--- Lines: 2990 to 3016
+-- Lines: 2998 to 3024
 function BlackMarketGui:_set_detection(value, maxed_reached, min_reached)
 	local detection_value = self._detection_panel:child("detection_value")
 
@@ -4548,7 +4548,7 @@ function BlackMarketGui:_set_detection(value, maxed_reached, min_reached)
 	end
 end
 
--- Lines: 3018 to 3132
+-- Lines: 3026 to 3140
 function BlackMarketGui:_get_melee_weapon_stats(name)
 	local base_stats = {}
 	local mods_stats = {}
@@ -4684,7 +4684,7 @@ function BlackMarketGui:_get_melee_weapon_stats(name)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines: 3135 to 3215
+-- Lines: 3143 to 3223
 function BlackMarketGui:_get_armor_stats(name)
 	local base_stats = {}
 	local mods_stats = {}
@@ -4755,7 +4755,7 @@ function BlackMarketGui:_get_armor_stats(name)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines: 3218 to 3227
+-- Lines: 3226 to 3235
 function BlackMarketGui:hide_melee_weapon_stats()
 	for _, stat in ipairs(self._mweapon_stats_shown) do
 		self._mweapon_stats_texts[stat.name].name:set_text("")
@@ -4766,7 +4766,7 @@ function BlackMarketGui:hide_melee_weapon_stats()
 	end
 end
 
--- Lines: 3230 to 3239
+-- Lines: 3238 to 3247
 function BlackMarketGui:hide_armor_stats()
 	for _, stat in ipairs(self._armor_stats_shown) do
 		self._armor_stats_texts[stat.name].name:set_text("")
@@ -4777,7 +4777,7 @@ function BlackMarketGui:hide_armor_stats()
 	end
 end
 
--- Lines: 3241 to 3250
+-- Lines: 3249 to 3258
 function BlackMarketGui:hide_weapon_stats()
 	for _, stat in ipairs(self._stats_shown) do
 		self._stats_texts[stat.name].name:set_text("")
@@ -4789,7 +4789,7 @@ function BlackMarketGui:hide_weapon_stats()
 	end
 end
 
--- Lines: 3252 to 3283
+-- Lines: 3260 to 3291
 function BlackMarketGui:set_stats_titles(...)
 	local stat_title_changes = {...}
 
@@ -4828,7 +4828,7 @@ function BlackMarketGui:set_stats_titles(...)
 	end
 end
 
--- Lines: 3285 to 3304
+-- Lines: 3293 to 3312
 function BlackMarketGui:set_weapons_stats_columns()
 	local x = 0
 	local text_panel = nil
@@ -4892,7 +4892,7 @@ function BlackMarketGui:set_weapons_stats_columns()
 	end
 end
 
--- Lines: 3306 to 3325
+-- Lines: 3314 to 3333
 function BlackMarketGui:set_weapon_mods_stats_columns()
 	local x = 0
 	local text_panel = nil
@@ -4956,7 +4956,7 @@ function BlackMarketGui:set_weapon_mods_stats_columns()
 	end
 end
 
--- Lines: 3327 to 4045
+-- Lines: 3335 to 4053
 function BlackMarketGui:show_stats()
 	if not self._stats_panel or not self._rweapon_stats_panel or not self._armor_stats_panel or not self._mweapon_stats_panel then
 		return
@@ -5735,7 +5735,7 @@ function BlackMarketGui:show_stats()
 	end
 end
 
--- Lines: 4047 to 4064
+-- Lines: 4055 to 4072
 function BlackMarketGui:_start_rename_item(category, slot)
 	if not self._renaming_item then
 		local custom_name = managers.blackmarket:get_crafted_custom_name(category, slot) or ""
@@ -5768,7 +5768,7 @@ function BlackMarketGui:_start_rename_item(category, slot)
 	end
 end
 
--- Lines: 4066 to 4087
+-- Lines: 4074 to 4095
 function BlackMarketGui:_stop_rename_item()
 	if alive(self._panel) and self._renaming_item then
 		managers.blackmarket:set_crafted_custom_name(self._renaming_item.category, self._renaming_item.slot, self._renaming_item.custom_name)
@@ -5795,7 +5795,7 @@ function BlackMarketGui:_stop_rename_item()
 	end
 end
 
--- Lines: 4089 to 4109
+-- Lines: 4097 to 4117
 function BlackMarketGui:_cancel_rename_item()
 	if self._renaming_item then
 		self._renaming_item = nil
@@ -5819,19 +5819,19 @@ function BlackMarketGui:_cancel_rename_item()
 	end
 end
 
--- Lines: 4111 to 4113
+-- Lines: 4119 to 4121
 function BlackMarketGui:_set_rename_info_text(info_text)
 	self._rename_info_text = info_text
 end
 
--- Lines: 4116 to 4118
+-- Lines: 4124 to 4126
 function BlackMarketGui:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines: 4121 to 4128
+-- Lines: 4129 to 4136
 function BlackMarketGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -5841,7 +5841,7 @@ function BlackMarketGui.blink(o)
 	end
 end
 
--- Lines: 4130 to 4141
+-- Lines: 4138 to 4149
 function BlackMarketGui:enter_text(o, s)
 	if self._renaming_item then
 		local m = tweak_data:get_raw_value("gui", "rename_max_letters") or 20
@@ -5853,7 +5853,7 @@ function BlackMarketGui:enter_text(o, s)
 	end
 end
 
--- Lines: 4143 to 4170
+-- Lines: 4151 to 4178
 function BlackMarketGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -5887,7 +5887,7 @@ function BlackMarketGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 4172 to 4179
+-- Lines: 4180 to 4187
 function BlackMarketGui:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -5898,7 +5898,7 @@ function BlackMarketGui:key_release(o, k)
 	end
 end
 
--- Lines: 4181 to 4212
+-- Lines: 4189 to 4220
 function BlackMarketGui:key_press(o, k)
 	local text = self._renaming_item.custom_name
 	local n = utf8.len(text)
@@ -5938,7 +5938,7 @@ function BlackMarketGui:key_press(o, k)
 	end
 end
 
--- Lines: 4220 to 5295
+-- Lines: 4228 to 5303
 function BlackMarketGui:update_info_text()
 	local slot_data = self._slot_data
 	local tab_data = self._tabs[self._selected]._data
@@ -6426,7 +6426,7 @@ function BlackMarketGui:update_info_text()
 		local weapon_id = managers.weapon_factory:get_factory_id_by_weapon_id(prev_data.name)
 
 
-		-- Lines: 4736 to 4781
+		-- Lines: 4744 to 4789
 		local function get_forbids(weapon_id, part_id)
 			local weapon_data = tweak_data.weapon.factory[weapon_id]
 
@@ -7023,7 +7023,7 @@ function BlackMarketGui:update_info_text()
 	end
 end
 
--- Lines: 5297 to 5348
+-- Lines: 5305 to 5356
 function BlackMarketGui.create_safe_content_text(safe_entry)
 	local safe_td = tweak_data.economy.safes[safe_entry]
 
@@ -7053,7 +7053,7 @@ function BlackMarketGui.create_safe_content_text(safe_entry)
 	local x_td, y_td, xr_td, yr_td = nil
 
 
-	-- Lines: 5319 to 5329
+	-- Lines: 5327 to 5337
 	local function sort_func(x, y)
 		x_td = (tweak_data.economy[x.category] or tweak_data.blackmarket[x.category])[x.entry]
 		y_td = (tweak_data.economy[y.category] or tweak_data.blackmarket[y.category])[y.entry]
@@ -7085,7 +7085,7 @@ function BlackMarketGui.create_safe_content_text(safe_entry)
 	return text, color_ranges
 end
 
--- Lines: 5351 to 5366
+-- Lines: 5359 to 5374
 function BlackMarketGui:animate_text_bounce(bounce_panel)
 	local dt = 0
 	local bounce_dir_up = true
@@ -7103,7 +7103,7 @@ function BlackMarketGui:animate_text_bounce(bounce_panel)
 	end
 end
 
--- Lines: 5369 to 5428
+-- Lines: 5377 to 5436
 function BlackMarketGui:set_info_text(id, new_string, resource_color)
 	local info_text = self._info_texts[id]
 	local text = new_string
@@ -7166,7 +7166,7 @@ function BlackMarketGui:set_info_text(id, new_string, resource_color)
 	end
 end
 
--- Lines: 5430 to 5442
+-- Lines: 5438 to 5450
 function BlackMarketGui:_round_everything()
 	if alive(self._panel) then
 		for i, d in ipairs(self._panel:children()) do
@@ -7181,7 +7181,7 @@ function BlackMarketGui:_round_everything()
 	end
 end
 
--- Lines: 5444 to 5453
+-- Lines: 5452 to 5461
 function BlackMarketGui:_rec_round_object(object)
 	local x, y, w, h = object:shape()
 
@@ -7194,7 +7194,7 @@ function BlackMarketGui:_rec_round_object(object)
 	end
 end
 
--- Lines: 5455 to 5759
+-- Lines: 5463 to 5767
 function BlackMarketGui:mouse_moved(o, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -7508,7 +7508,7 @@ function BlackMarketGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 5762 to 5994
+-- Lines: 5770 to 6002
 function BlackMarketGui:mouse_pressed(button, x, y)
 	if button == Idstring("1") and managers.player:has_category_upgrade("player", "second_deployable") and self._data[1].category == "deployables" then
 		self:mouse_pressed(Idstring("0"), x, y)
@@ -7760,7 +7760,7 @@ function BlackMarketGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 5996 to 6003
+-- Lines: 6004 to 6011
 function BlackMarketGui:mouse_released(o, button, x, y)
 	if not self._enabled then
 		return
@@ -7771,7 +7771,7 @@ function BlackMarketGui:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines: 6005 to 6017
+-- Lines: 6013 to 6025
 function BlackMarketGui:mouse_clicked(o, button, x, y)
 	if not self._enabled then
 		return
@@ -7787,7 +7787,7 @@ function BlackMarketGui:mouse_clicked(o, button, x, y)
 	}
 end
 
--- Lines: 6019 to 6052
+-- Lines: 6027 to 6060
 function BlackMarketGui:mouse_double_click(o, button, x, y)
 	if not self._enabled then
 		return
@@ -7824,7 +7824,7 @@ function BlackMarketGui:mouse_double_click(o, button, x, y)
 	end
 end
 
--- Lines: 6054 to 6092
+-- Lines: 6062 to 6100
 function BlackMarketGui:update(t, dt)
 	if self._input_wait_t then
 		self._input_wait_t = self._input_wait_t - dt
@@ -7868,7 +7868,7 @@ function BlackMarketGui:update(t, dt)
 	end
 end
 
--- Lines: 6094 to 6138
+-- Lines: 6102 to 6146
 function BlackMarketGui:press_first_btn(button)
 	local first_btn_callback = nil
 	local first_btn_prio = 999
@@ -7921,7 +7921,7 @@ function BlackMarketGui:press_first_btn(button)
 	return false
 end
 
--- Lines: 6141 to 6185
+-- Lines: 6149 to 6193
 function BlackMarketGui:press_second_btn(button)
 	local second_btn_callback = nil
 	local second_btn_prio = 999
@@ -7971,7 +7971,7 @@ function BlackMarketGui:press_second_btn(button)
 	return false
 end
 
--- Lines: 6189 to 6260
+-- Lines: 6197 to 6268
 function BlackMarketGui:set_selected_tab(tab, no_sound)
 	local selected_slot = nil
 
@@ -8056,7 +8056,7 @@ function BlackMarketGui:set_selected_tab(tab, no_sound)
 	end
 end
 
--- Lines: 6262 to 6308
+-- Lines: 6270 to 6316
 function BlackMarketGui:set_tab_positions()
 	local first_x = self._tab_scroll_table[1]:left()
 	local diff_x = self._tab_scroll_table[self._selected]:left()
@@ -8114,7 +8114,7 @@ function BlackMarketGui:set_tab_positions()
 	end
 end
 
--- Lines: 6310 to 6345
+-- Lines: 6318 to 6353
 function BlackMarketGui:on_slot_selected(selected_slot)
 	if selected_slot then
 		local x, y = self._tabs[self._selected]:selected_slot_center()
@@ -8155,7 +8155,7 @@ function BlackMarketGui:on_slot_selected(selected_slot)
 	end
 end
 
--- Lines: 6347 to 6377
+-- Lines: 6355 to 6385
 function BlackMarketGui:move(mx, my)
 	if not self._tabs[self._selected] then
 		return
@@ -8188,7 +8188,7 @@ function BlackMarketGui:move(mx, my)
 	end
 end
 
--- Lines: 6379 to 6387
+-- Lines: 6387 to 6395
 function BlackMarketGui:move_up()
 	if not self._enabled then
 		return
@@ -8201,7 +8201,7 @@ function BlackMarketGui:move_up()
 	self:move(0, -1)
 end
 
--- Lines: 6389 to 6397
+-- Lines: 6397 to 6405
 function BlackMarketGui:move_down()
 	if not self._enabled then
 		return
@@ -8214,7 +8214,7 @@ function BlackMarketGui:move_down()
 	self:move(0, 1)
 end
 
--- Lines: 6399 to 6407
+-- Lines: 6407 to 6415
 function BlackMarketGui:move_left()
 	if not self._enabled then
 		return
@@ -8227,7 +8227,7 @@ function BlackMarketGui:move_left()
 	self:move(-1, 0)
 end
 
--- Lines: 6409 to 6417
+-- Lines: 6417 to 6425
 function BlackMarketGui:move_right()
 	if not self._enabled then
 		return
@@ -8240,7 +8240,7 @@ function BlackMarketGui:move_right()
 	self:move(1, 0)
 end
 
--- Lines: 6419 to 6437
+-- Lines: 6427 to 6445
 function BlackMarketGui:next_page(no_sound)
 	if not self._enabled then
 		return
@@ -8264,7 +8264,7 @@ function BlackMarketGui:next_page(no_sound)
 	end
 end
 
--- Lines: 6439 to 6457
+-- Lines: 6447 to 6465
 function BlackMarketGui:previous_page(no_sound)
 	if not self._enabled then
 		return
@@ -8288,7 +8288,7 @@ function BlackMarketGui:previous_page(no_sound)
 	end
 end
 
--- Lines: 6459 to 6472
+-- Lines: 6467 to 6480
 function BlackMarketGui:press_pc_button(button)
 	if not self._enabled then
 		return
@@ -8308,7 +8308,7 @@ function BlackMarketGui:press_pc_button(button)
 	return false
 end
 
--- Lines: 6475 to 6495
+-- Lines: 6483 to 6503
 function BlackMarketGui:press_button(button)
 	if not self._enabled then
 		return
@@ -8327,12 +8327,12 @@ function BlackMarketGui:press_button(button)
 	return false
 end
 
--- Lines: 6498 to 6513
+-- Lines: 6506 to 6521
 function BlackMarketGui:flash()
 	local box = self._select_rect_box
 
 
-	-- Lines: 6501 to 6509
+	-- Lines: 6509 to 6517
 	local function flash_anim(panel)
 		local b_color = Color.white
 		local s = 0
@@ -8349,7 +8349,7 @@ function BlackMarketGui:flash()
 	self._select_rect:animate(flash_anim)
 end
 
--- Lines: 6515 to 6528
+-- Lines: 6523 to 6536
 function BlackMarketGui:confirm_pressed()
 	if not self._enabled then
 		return
@@ -8368,7 +8368,7 @@ function BlackMarketGui:confirm_pressed()
 	end
 end
 
--- Lines: 6530 to 6595
+-- Lines: 6538 to 6603
 function BlackMarketGui:special_btn_pressed(button)
 	if not self._enabled then
 		return
@@ -8445,7 +8445,7 @@ function BlackMarketGui:special_btn_pressed(button)
 	return self:press_pc_button(button)
 end
 
--- Lines: 6598 to 6636
+-- Lines: 6606 to 6644
 function BlackMarketGui:input_focus()
 	if self._one_frame_input_delay then
 		self._one_frame_input_delay = nil
@@ -8488,12 +8488,12 @@ function BlackMarketGui:input_focus()
 	return self._renaming_item and true or not self._no_input and self._enabled and (#self._data > -1 and 1 or true) or 2
 end
 
--- Lines: 6639 to 6640
+-- Lines: 6647 to 6648
 function BlackMarketGui:visible()
 	return self._visible
 end
 
--- Lines: 6643 to 6706
+-- Lines: 6651 to 6714
 function BlackMarketGui:show_btns(slot)
 	local data = slot._data
 	local btn_show_funcs = data.btn_show_funcs or {}
@@ -8566,7 +8566,7 @@ function BlackMarketGui:show_btns(slot)
 	self:_update_borders()
 end
 
--- Lines: 6708 to 6731
+-- Lines: 6716 to 6739
 function BlackMarketGui:get_lock_icon(data, default)
 	local category = data.category
 	local global_value = data.global_value
@@ -8599,13 +8599,14 @@ function BlackMarketGui:get_lock_icon(data, default)
 	return default or "guis/textures/pd2/lock_level"
 end
 
--- Lines: 6734 to 6735
+-- Lines: 6742 to 6743
 function BlackMarketGui.get_func_based(func_based)
 	return managers.blackmarket[func_based](managers.blackmarket)
 end
 
--- Lines: 6744 to 6951
+-- Lines: 6752 to 6960
 function BlackMarketGui:populate_weapon_category(category, data)
+	managers.blackmarket:clear_temporary()
 	managers.blackmarket:clear_preview_blueprint()
 
 	local crafted_category = managers.blackmarket:get_crafted_category(category) or {}
@@ -8859,17 +8860,17 @@ function BlackMarketGui:populate_weapon_category(category, data)
 	end
 end
 
--- Lines: 6953 to 6955
+-- Lines: 6962 to 6964
 function BlackMarketGui:populate_primaries(data)
 	self:populate_weapon_category("primaries", data)
 end
 
--- Lines: 6957 to 6959
+-- Lines: 6966 to 6968
 function BlackMarketGui:populate_secondaries(data)
 	self:populate_weapon_category("secondaries", data)
 end
 
--- Lines: 6961 to 7060
+-- Lines: 6970 to 7069
 function BlackMarketGui:populate_characters(data)
 	local new_data = {}
 	local max_items = math.ceil(CriminalsManager.get_num_characters() / (data.override_slots[1] or 3)) * (data.override_slots[1] or 3)
@@ -8960,7 +8961,7 @@ function BlackMarketGui:populate_characters(data)
 	end
 end
 
--- Lines: 7062 to 7201
+-- Lines: 7071 to 7210
 function BlackMarketGui:populate_preferred_character_options(panel)
 	local list = managers.blackmarket:get_preferred_characters_list()
 	local data = {}
@@ -9141,7 +9142,7 @@ function BlackMarketGui:populate_preferred_character_options(panel)
 	return data
 end
 
--- Lines: 7204 to 7302
+-- Lines: 7213 to 7311
 function BlackMarketGui:populate_grenades(data)
 	local new_data = {}
 	local sort_data = managers.blackmarket:get_sorted_grenades()
@@ -9245,7 +9246,7 @@ function BlackMarketGui:populate_grenades(data)
 	end
 end
 
--- Lines: 7304 to 7444
+-- Lines: 7313 to 7460
 function BlackMarketGui:populate_melee_weapons(data)
 	local new_data = {}
 	local sort_data = {}
@@ -9335,16 +9336,22 @@ function BlackMarketGui:populate_melee_weapons(data)
 		new_data.global_value = tweak_data.lootdrop.global_values[m_tweak_data.dlc] and m_tweak_data.dlc or "normal"
 		new_data.skill_based = melee_weapon_data[2].skill_based
 		new_data.skill_name = "bm_menu_skill_locked_" .. new_data.name
+		new_data.func_based = melee_weapon_data[2].func_based
 
 		if m_tweak_data and m_tweak_data.locks then
 			local dlc = m_tweak_data.locks.dlc
 			local achievement = m_tweak_data.locks.achievement
 			local saved_job_value = m_tweak_data.locks.saved_job_value
 			local level = m_tweak_data.locks.level
+			local func = m_tweak_data.locks.func
 			new_data.dlc_based = true
 			new_data.lock_texture = self:get_lock_icon(new_data, "guis/textures/pd2/lock_community")
 
-			if achievement and managers.achievment:get_info(achievement) and not managers.achievment:get_info(achievement).awarded then
+			if func and not BlackMarketGui.get_func_based(func) then
+				local _, name, icon = BlackMarketGui.get_func_based(func)
+				new_data.lock_texture = icon or new_data.lock_texture
+				new_data.dlc_locked = name
+			elseif achievement and managers.achievment:get_info(achievement) and not managers.achievment:get_info(achievement).awarded then
 				new_data.dlc_locked = "menu_bm_achievement_locked_" .. tostring(achievement)
 			elseif dlc and not managers.dlc:is_dlc_unlocked(dlc) then
 				new_data.dlc_locked = tweak_data.lootdrop.global_values[dlc] and tweak_data.lootdrop.global_values[dlc].unlock_id or "bm_menu_dlc_locked"
@@ -9408,7 +9415,7 @@ function BlackMarketGui:populate_melee_weapons(data)
 	end
 end
 
--- Lines: 7446 to 7525
+-- Lines: 7462 to 7541
 function BlackMarketGui:populate_deployables(data)
 	local new_data = {}
 	local sort_data = managers.blackmarket:get_sorted_deployables()
@@ -9504,7 +9511,7 @@ function BlackMarketGui:populate_deployables(data)
 	end
 end
 
--- Lines: 7527 to 7800
+-- Lines: 7543 to 7816
 function BlackMarketGui:populate_masks(data)
 	local new_data = {}
 	local crafted_category = managers.blackmarket:get_crafted_category("masks") or {}
@@ -9879,7 +9886,7 @@ function BlackMarketGui:populate_masks(data)
 	end
 end
 
--- Lines: 7802 to 7868
+-- Lines: 7818 to 7884
 function BlackMarketGui:populate_armors(data)
 	local new_data = {}
 	local sort_data, armor_level_data = managers.blackmarket:get_sorted_armors()
@@ -9961,7 +9968,7 @@ function BlackMarketGui:populate_armors(data)
 	end
 end
 
--- Lines: 7872 to 7969
+-- Lines: 7888 to 7993
 function BlackMarketGui:populate_armor_skins(data)
 	local new_data = {}
 	local sort_data = {}
@@ -10073,7 +10080,7 @@ function BlackMarketGui:populate_armor_skins(data)
 	end
 end
 
--- Lines: 7972 to 8250
+-- Lines: 7996 to 8274
 function BlackMarketGui:populate_masks_new(data)
 	local new_data = {}
 	local crafted_category = managers.blackmarket:get_crafted_category("masks") or {}
@@ -10461,8 +10468,11 @@ function BlackMarketGui:populate_masks_new(data)
 	end
 end
 
--- Lines: 8252 to 8534
+-- Lines: 8277 to 8562
 function BlackMarketGui:populate_weapon_category_new(data)
+	managers.blackmarket:clear_temporary()
+	managers.blackmarket:clear_preview_blueprint()
+
 	local category = data.category
 	local crafted_category = managers.blackmarket:get_crafted_category(category) or {}
 	local last_weapon = table.size(crafted_category) == 1
@@ -10773,7 +10783,7 @@ function BlackMarketGui:populate_weapon_category_new(data)
 	end
 end
 
--- Lines: 8536 to 8634
+-- Lines: 8564 to 8670
 function BlackMarketGui:populate_melee_weapons_new(data)
 	local max_items = math.ceil(#data.on_create_data / (data.override_slots[1] or 3)) * (data.override_slots[1] or 3)
 	local new_data = {}
@@ -10806,16 +10816,23 @@ function BlackMarketGui:populate_melee_weapons_new(data)
 		new_data.global_value = tweak_data.lootdrop.global_values[m_tweak_data.dlc] and m_tweak_data.dlc or "normal"
 		new_data.skill_based = melee_weapon_data[2].skill_based
 		new_data.skill_name = "bm_menu_skill_locked_" .. new_data.name
+		new_data.func_based = melee_weapon_data[2].func_based
 
 		if m_tweak_data and m_tweak_data.locks then
 			local dlc = m_tweak_data.locks.dlc
 			local achievement = m_tweak_data.locks.achievement
 			local saved_job_value = m_tweak_data.locks.saved_job_value
 			local level = m_tweak_data.locks.level
+			local func = m_tweak_data.locks.func
 			new_data.dlc_based = true
 			new_data.lock_texture = self:get_lock_icon(new_data, "guis/textures/pd2/lock_community")
 
-			if achievement and managers.achievment:get_info(achievement) and not managers.achievment:get_info(achievement).awarded then
+			if func and not BlackMarketGui.get_func_based(func) then
+				local _, name, icon = BlackMarketGui.get_func_based(func)
+				new_data.lock_texture = icon or "guis/textures/pd2/lock_community"
+				new_data.dlc_locked = name
+				new_data.unlocked = false
+			elseif achievement and managers.achievment:get_info(achievement) and not managers.achievment:get_info(achievement).awarded then
 				new_data.dlc_locked = "menu_bm_achievement_locked_" .. tostring(achievement)
 			elseif dlc and not managers.dlc:is_dlc_unlocked(dlc) then
 				new_data.dlc_locked = tweak_data.lootdrop.global_values[dlc] and tweak_data.lootdrop.global_values[dlc].unlock_id or "bm_menu_dlc_locked"
@@ -10876,7 +10893,7 @@ function BlackMarketGui:populate_melee_weapons_new(data)
 	end
 end
 
--- Lines: 8636 to 8669
+-- Lines: 8672 to 8705
 function BlackMarketGui:populate_mod_types(data)
 	local new_data = {}
 	local index = 1
@@ -10915,7 +10932,7 @@ function BlackMarketGui:populate_mod_types(data)
 	end
 end
 
--- Lines: 8672 to 8868
+-- Lines: 8708 to 8904
 function BlackMarketGui:populate_weapon_cosmetics(data)
 	local cosmetics_data = tweak_data.blackmarket.weapon_skins
 	local my_cd, new_data, bitmap_texture, bg_texture = nil
@@ -11092,7 +11109,7 @@ function BlackMarketGui:populate_weapon_cosmetics(data)
 	end
 end
 
--- Lines: 8870 to 9303
+-- Lines: 8906 to 9341
 function BlackMarketGui:populate_mods(data)
 	local new_data = {}
 	local default_mod = data.on_create_data.default_mod
@@ -11381,13 +11398,15 @@ function BlackMarketGui:populate_mods(data)
 			table.insert(data[equipped], "wm_remove_buy")
 
 			if not data[equipped].is_internal then
+				local preview_forbidden = managers.blackmarket:is_previewing_legendary_skin() or managers.blackmarket:preview_mod_forbidden(data[equipped].category, data[equipped].slot, data[equipped].name)
+
 				if managers.blackmarket:is_previewing_any_mod() then
 					table.insert(data[equipped], "wm_clear_mod_preview")
 				end
 
 				if managers.blackmarket:is_previewing_mod(data[equipped].name) then
 					table.insert(data[equipped], "wm_remove_preview")
-				else
+				elseif not preview_forbidden then
 					table.insert(data[equipped], "wm_preview_mod")
 				end
 			else
@@ -11425,14 +11444,14 @@ function BlackMarketGui:populate_mods(data)
 	end
 end
 
--- Lines: 9305 to 9315
+-- Lines: 9343 to 9353
 function BlackMarketGui:set_equipped_comparision(data)
 	local category = data.category
 	local slot = data.slot
 	self._equipped_comparision_data = {[category] = managers.blackmarket:get_weapon_stats(category, slot) or {}}
 end
 
--- Lines: 9318 to 9423
+-- Lines: 9356 to 9461
 function BlackMarketGui:populate_buy_weapon(data)
 	managers.blackmarket:clear_temporary()
 	managers.blackmarket:clear_preview_blueprint()
@@ -11534,7 +11553,7 @@ function BlackMarketGui:populate_buy_weapon(data)
 	end
 end
 
--- Lines: 9426 to 9464
+-- Lines: 9464 to 9502
 function BlackMarketGui:populate_mask_global_value(data)
 	local new_data = {}
 
@@ -11579,7 +11598,7 @@ function BlackMarketGui:populate_mask_global_value(data)
 	end
 end
 
--- Lines: 9466 to 9568
+-- Lines: 9504 to 9606
 function BlackMarketGui:populate_buy_mask(data)
 	local new_data = {}
 	local guis_catalog = "guis/"
@@ -11687,7 +11706,7 @@ function BlackMarketGui:populate_buy_mask(data)
 	end
 end
 
--- Lines: 9570 to 9694
+-- Lines: 9608 to 9732
 function BlackMarketGui:populate_mask_mod_types(data)
 	local new_data = {}
 	local max_page = data.override_slots[1] * data.override_slots[2]
@@ -11839,7 +11858,7 @@ function BlackMarketGui:populate_mask_mod_types(data)
 	end
 end
 
--- Lines: 9696 to 9825
+-- Lines: 9734 to 9863
 function BlackMarketGui:populate_choose_mask_mod(data)
 	local new_data = {}
 	local index = 1
@@ -11970,7 +11989,7 @@ function BlackMarketGui:populate_choose_mask_mod(data)
 	end
 end
 
--- Lines: 9828 to 9850
+-- Lines: 9866 to 9888
 function BlackMarketGui:_cleanup_blackmarket()
 	local blackmarket_tweak_data = tweak_data.blackmarket
 	local blackmarket_inventory = Global.blackmarket_manager.inventory
@@ -11994,7 +12013,7 @@ function BlackMarketGui:_cleanup_blackmarket()
 	end
 end
 
--- Lines: 9858 to 9932
+-- Lines: 9896 to 9970
 function BlackMarketGui:create_steam_inventory(data)
 	local inventory_categories = managers.blackmarket:get_inventory_tradable_by_category()
 	local sort_categories = {}
@@ -12081,7 +12100,7 @@ function BlackMarketGui:create_steam_inventory(data)
 	end
 end
 
--- Lines: 9935 to 9945
+-- Lines: 9973 to 9983
 function BlackMarketGui:_start_page_data()
 	local data = {
 		topic_id = "menu_steam_inventory",
@@ -12095,7 +12114,7 @@ function BlackMarketGui:_start_page_data()
 	return data
 end
 
--- Lines: 9948 to 10105
+-- Lines: 9986 to 10143
 function BlackMarketGui:populate_inventory_tradable(data)
 	local inventory_tradable = managers.blackmarket:get_inventory_tradable()
 	local inventory_categories = managers.blackmarket:get_inventory_tradable_by_category() or {}
@@ -12268,13 +12287,13 @@ function BlackMarketGui:populate_inventory_tradable(data)
 	end
 end
 
--- Lines: 10108 to 10111
+-- Lines: 10146 to 10149
 function BlackMarketGui:preview_weapon_mods_callback(data)
 	managers.blackmarket:craft_temporary(data.category, data.name, data.slot)
 	self:choose_weapon_mods_callback(data)
 end
 
--- Lines: 10115 to 10277
+-- Lines: 10153 to 10315
 function BlackMarketGui:choose_weapon_mods_callback(data)
 	local dropable_mods = managers.blackmarket:get_dropable_mods_by_weapon_id(data.name, {
 		category = data.category,
@@ -12293,7 +12312,7 @@ function BlackMarketGui:choose_weapon_mods_callback(data)
 		local x_td, y_td, x_rar, y_rar, x_quality, y_quality = nil
 
 
-		-- Lines: 10136 to 10158
+		-- Lines: 10174 to 10196
 		local function sort_func(x, y)
 			x_td = td[inventory_tradable[x].entry]
 			y_td = td[inventory_tradable[y].entry]
@@ -12458,10 +12477,10 @@ function BlackMarketGui:choose_weapon_mods_callback(data)
 	self:_start_crafting_weapon(data, new_node_data)
 end
 
--- Lines: 10282 to 10287
+-- Lines: 10320 to 10325
 function BlackMarketGui:edit_weapon_skin_callback(data)
 
-	-- Lines: 10281 to 10283
+	-- Lines: 10319 to 10321
 	local function cb()
 		managers.menu:open_node("skin_editor", {data})
 	end
@@ -12471,7 +12490,7 @@ function BlackMarketGui:edit_weapon_skin_callback(data)
 	managers.blackmarket:view_weapon(data.category, data.slot, cb, true, BlackMarketGui.get_crafting_custom_data())
 end
 
--- Lines: 10290 to 10313
+-- Lines: 10328 to 10351
 function BlackMarketGui:choose_mod_type_callback(data)
 	local mods = managers.blackmarket:get_dropable_mods_by_weapon_id(data.name)
 	local new_node_data = {}
@@ -12508,13 +12527,13 @@ function BlackMarketGui:choose_mod_type_callback(data)
 	managers.menu:open_node(self._inception_node_name, {new_node_data})
 end
 
--- Lines: 10315 to 10318
+-- Lines: 10353 to 10356
 function BlackMarketGui:set_preferred_character_callback(data)
 	managers.blackmarket:set_preferred_character(data.name)
 	self:reload()
 end
 
--- Lines: 10320 to 10362
+-- Lines: 10358 to 10400
 function BlackMarketGui:extra_option_key_press(panel, s)
 	if not self._extra_options_data then
 		return
@@ -12558,7 +12577,7 @@ function BlackMarketGui:extra_option_key_press(panel, s)
 	end
 end
 
--- Lines: 10364 to 10375
+-- Lines: 10402 to 10413
 function BlackMarketGui:can_swap_character(data)
 	local index = nil
 	local preferred_characters = managers.blackmarket:get_preferred_characters_list()
@@ -12576,7 +12595,7 @@ function BlackMarketGui:can_swap_character(data)
 	return index and self._extra_options_data and (#preferred_characters == CriminalsManager.MAX_NR_CRIMINALS or selected ~= self._extra_options_data.num_panels)
 end
 
--- Lines: 10378 to 10393
+-- Lines: 10416 to 10431
 function BlackMarketGui:swap_preferred_character_to_slot_callback(data)
 	local index = nil
 	local preferred_characters = managers.blackmarket:get_preferred_characters_list()
@@ -12597,47 +12616,47 @@ function BlackMarketGui:swap_preferred_character_to_slot_callback(data)
 	end
 end
 
--- Lines: 10395 to 10398
+-- Lines: 10433 to 10436
 function BlackMarketGui:set_preferred_character_to_slot_callback(data)
 	managers.blackmarket:set_preferred_character(data.name, self._extra_options_data and self._extra_options_data.selected or 1)
 	self:reload()
 end
 
--- Lines: 10400 to 10403
+-- Lines: 10438 to 10441
 function BlackMarketGui:clear_preferred_characters_callback(data)
 	managers.blackmarket:clear_preferred_characters()
 	self:reload()
 end
 
--- Lines: 10405 to 10406
+-- Lines: 10443 to 10444
 function BlackMarketGui.get_crafting_custom_data()
 	return managers.menu_scene:get_crafting_custom_data()
 end
 
--- Lines: 10409 to 10410
+-- Lines: 10447 to 10448
 function BlackMarketGui.get_screenshot_custom_data()
 	return managers.menu_scene:get_screenshot_custom_data()
 end
 
--- Lines: 10414 to 10417
+-- Lines: 10452 to 10455
 function BlackMarketGui:pickup_crafted_item_callback(data)
 	managers.blackmarket:pickup_crafted_item(data.category, data.slot)
 	self:reload()
 end
 
--- Lines: 10419 to 10422
+-- Lines: 10457 to 10460
 function BlackMarketGui:place_crafted_item_callback(data)
 	managers.blackmarket:place_crafted_item(data.category, data.slot)
 	self:reload()
 end
 
--- Lines: 10424 to 10427
+-- Lines: 10462 to 10465
 function BlackMarketGui:drop_hold_crafted_item_callback(data)
 	managers.blackmarket:drop_hold_crafted_item()
 	self:reload()
 end
 
--- Lines: 10429 to 10448
+-- Lines: 10467 to 10486
 function BlackMarketGui:rename_item_with_gamepad_callback(data)
 	print("[BlackMarketGui:rename_item_with_gamepad_callback]", inspect(data))
 
@@ -12671,7 +12690,7 @@ function BlackMarketGui:rename_item_with_gamepad_callback(data)
 	end
 end
 
--- Lines: 10450 to 10459
+-- Lines: 10488 to 10497
 function BlackMarketGui:_rename_gamepad_callback(submitted, submitted_text)
 	print("BlackMarketGui:_rename_gamepad_callback", "submitted", submitted, "submitted_text", submitted_text)
 
@@ -12686,7 +12705,7 @@ function BlackMarketGui:_rename_gamepad_callback(submitted, submitted_text)
 	end
 end
 
--- Lines: 10467 to 10482
+-- Lines: 10505 to 10520
 function BlackMarketGui:equip_weapon_callback(data)
 	if managers.job and managers.job:current_real_job_id() == "chill" and (not managers.menu:active_menu() or managers.menu:active_menu().id ~= "kit_menu") then
 		managers.custom_safehouse:register_equipped_weapon(data)
@@ -12698,7 +12717,7 @@ function BlackMarketGui:equip_weapon_callback(data)
 	end
 end
 
--- Lines: 10484 to 10491
+-- Lines: 10522 to 10529
 function BlackMarketGui:overridable_callback(original, data)
 	local func = self._data.custom_callback and self._data.custom_callback[original.button] or data.custom_callback and data.custom_callback[original.button]
 
@@ -12709,13 +12728,13 @@ function BlackMarketGui:overridable_callback(original, data)
 	end
 end
 
--- Lines: 10493 to 10496
+-- Lines: 10531 to 10534
 function BlackMarketGui:equip_armor_callback(data)
 	managers.blackmarket:equip_armor(data.name)
 	self:reload()
 end
 
--- Lines: 10499 to 10514
+-- Lines: 10537 to 10552
 function BlackMarketGui:open_armor_skins_menu_callback(data)
 	local new_node_data = {}
 
@@ -12739,13 +12758,13 @@ function BlackMarketGui:open_armor_skins_menu_callback(data)
 	managers.menu:open_node("blackmarket_armor_node", {new_node_data})
 end
 
--- Lines: 10516 to 10519
+-- Lines: 10554 to 10557
 function BlackMarketGui:equip_armor_skin_callback(data)
 	managers.blackmarket:set_equipped_armor_skin(data.name)
 	self:reload()
 end
 
--- Lines: 10521 to 10528
+-- Lines: 10559 to 10566
 function BlackMarketGui:preview_armor_skin_callback(data)
 	local skin = tweak_data.economy:get_armor_skin_id(data.name)
 
@@ -12756,7 +12775,7 @@ function BlackMarketGui:preview_armor_skin_callback(data)
 	})
 end
 
--- Lines: 10531 to 10537
+-- Lines: 10592 to 10598
 function BlackMarketGui:_open_character_preview_node()
 	if self._preload_ws then
 		managers.gui_data:destroy_workspace(self._preload_ws)
@@ -12765,7 +12784,7 @@ function BlackMarketGui:_open_character_preview_node()
 	end
 end
 
--- Lines: 10539 to 10544
+-- Lines: 10600 to 10605
 function BlackMarketGui:_character_preview_textures_retrieved(textures)
 	self._preloading_list = {}
 
@@ -12774,39 +12793,39 @@ function BlackMarketGui:_character_preview_textures_retrieved(textures)
 	end
 end
 
--- Lines: 10546 to 10548
+-- Lines: 10607 to 10609
 function BlackMarketGui:_character_preview_texture_loaded(tex_name)
 	table.remove(self._preloading_list, 1)
 end
 
--- Lines: 10550 to 10553
+-- Lines: 10611 to 10614
 function MenuCallbackHandler:_reset_character_armor_skin()
 	managers.menu_scene:set_character_armor(managers.blackmarket:equipped_armor())
 	managers.menu_scene:set_character_armor_skin(managers.blackmarket:equipped_armor_skin())
 end
 
--- Lines: 10556 to 10559
+-- Lines: 10617 to 10620
 function BlackMarketGui:equip_mask_callback(data)
 	managers.blackmarket:equip_mask(data.slot)
 	self:reload()
 end
 
--- Lines: 10561 to 10563
+-- Lines: 10622 to 10624
 function BlackMarketGui:open_inventory_list_node()
 	managers.menu:open_node("inventory_list_node", {})
 end
 
--- Lines: 10564 to 10566
+-- Lines: 10625 to 10627
 function BlackMarketGui:_open_preview_node()
 	managers.menu:open_node(self._preview_node_name, {})
 end
 
--- Lines: 10567 to 10569
+-- Lines: 10628 to 10630
 function BlackMarketGui:_open_crafting_node(data)
 	managers.menu:open_node(self._crafting_node_name, data)
 end
 
--- Lines: 10570 to 10573
+-- Lines: 10631 to 10634
 function BlackMarketGui:_open_preview_weapon_cosmetics_node()
 	managers.menu:open_node("inventory_tradable_container_preview_node", {{
 		id = self._slot_data.cosmetic_id,
@@ -12816,39 +12835,39 @@ function BlackMarketGui:_open_preview_weapon_cosmetics_node()
 	managers.menu_component:hide_blackmarket_gui()
 end
 
--- Lines: 10574 to 10575
+-- Lines: 10635 to 10636
 function BlackMarketGui:_update_crafting_node(data)
 end
 
--- Lines: 10577 to 10579
+-- Lines: 10638 to 10640
 function BlackMarketGui:_preview_weapon(data)
 	managers.blackmarket:view_weapon(data.category, data.slot, callback(self, self, "_open_preview_node"))
 end
 
--- Lines: 10581 to 10584
+-- Lines: 10642 to 10645
 function BlackMarketGui:_start_crafting_weapon(data, new_node_data)
 	self:set_enabled(false)
 	managers.blackmarket:view_weapon(data.category, data.slot, callback(self, self, "_open_crafting_node", {new_node_data}), true, BlackMarketGui.get_crafting_custom_data())
 end
 
--- Lines: 10587 to 10590
+-- Lines: 10648 to 10651
 function BlackMarketGui:preview_weapon_callback(data)
 	self:_preview_weapon(data)
 end
 
--- Lines: 10593 to 10595
+-- Lines: 10654 to 10656
 function BlackMarketGui:preview_weapon_mod_callback(data)
 	managers.blackmarket:view_weapon(data.category, data.slot, callback(self, self, "_update_crafting_node"), nil, BlackMarketGui.get_crafting_custom_data())
 end
 
--- Lines: 10598 to 10602
+-- Lines: 10659 to 10663
 function BlackMarketGui:clear_weapon_mod_preview_callback(data)
 	managers.blackmarket:view_weapon(data.category, data.slot, callback(self, self, "_update_crafting_node"), nil, BlackMarketGui.get_crafting_custom_data())
 	managers.blackmarket:clear_preview_blueprint()
 	self:reload()
 end
 
--- Lines: 10605 to 10611
+-- Lines: 10666 to 10672
 function BlackMarketGui:start_open_tradable_container_callback(data)
 	if data.category == "drills" and not managers.blackmarket:have_inventory_tradable_item("safes", data.container.safe) then
 		managers.menu:show_no_safe_for_this_drill(data)
@@ -12857,7 +12876,7 @@ function BlackMarketGui:start_open_tradable_container_callback(data)
 	end
 end
 
--- Lines: 10613 to 10669
+-- Lines: 10674 to 10730
 function BlackMarketGui:choose_equip_weapon_cosmetics_callback(data)
 	local weapon_id = data.weapon_id
 
@@ -12940,12 +12959,12 @@ function BlackMarketGui:choose_equip_weapon_cosmetics_callback(data)
 	managers.menu:open_node("blackmarket_node", {new_node_data})
 end
 
--- Lines: 10671 to 10673
+-- Lines: 10732 to 10734
 function BlackMarketGui:sell_tradable_item(data)
 	MenuCallbackHandler:steam_sell_item(data)
 end
 
--- Lines: 10675 to 10677
+-- Lines: 10736 to 10738
 function BlackMarketGui:preview_weapon_cosmetics_callback(data)
 	managers.blackmarket:view_weapon_platform_with_cosmetics(data.weapon_id, {
 		id = data.cosmetic_id,
@@ -12953,7 +12972,7 @@ function BlackMarketGui:preview_weapon_cosmetics_callback(data)
 	}, callback(self, self, "_open_preview_weapon_cosmetics_node"))
 end
 
--- Lines: 10679 to 10682
+-- Lines: 10740 to 10743
 function BlackMarketGui:preview_cosmetic_on_weapon_callback(data)
 	managers.blackmarket:view_weapon_with_cosmetics(data.category, data.slot, {
 		id = data.cosmetic_id,
@@ -12962,14 +12981,14 @@ function BlackMarketGui:preview_cosmetic_on_weapon_callback(data)
 	self:reload()
 end
 
--- Lines: 10685 to 10688
+-- Lines: 10746 to 10749
 function BlackMarketGui:cancel_preview_cosmetic_on_weapon_callback(data)
 	managers.blackmarket:view_weapon(data.category, data.slot, function ()
 	end, nil, BlackMarketGui.get_crafting_custom_data())
 	self:reload()
 end
 
--- Lines: 10690 to 10697
+-- Lines: 10751 to 10758
 function BlackMarketGui:purchase_market_cosmetic_on_weapon_callback(data)
 	if not MenuCallbackHandler:is_overlay_enabled() then
 		managers.menu:show_enable_steam_overlay_tradable_item()
@@ -12980,12 +12999,12 @@ function BlackMarketGui:purchase_market_cosmetic_on_weapon_callback(data)
 	end
 end
 
--- Lines: 10700 to 10702
+-- Lines: 10761 to 10763
 function BlackMarketGui:choose_weapon_cosmetics_callback(data)
 	managers.menu:open_node("choose_weapon_cosmetic", {data})
 end
 
--- Lines: 10704 to 10710
+-- Lines: 10765 to 10771
 function BlackMarketGui:remove_weapon_cosmetics_callback(data)
 	if self._item_bought then
 		return
@@ -12994,7 +13013,7 @@ function BlackMarketGui:remove_weapon_cosmetics_callback(data)
 	self:_weapon_cosmetics_callback(data, false, callback(self, self, "_remove_weapon_cosmetics_callback", data))
 end
 
--- Lines: 10712 to 10727
+-- Lines: 10773 to 10788
 function BlackMarketGui:buy_equip_weapon_cosmetics_callback(data)
 	if self._item_bought then
 		return
@@ -13013,13 +13032,13 @@ function BlackMarketGui:buy_equip_weapon_cosmetics_callback(data)
 	managers.menu:show_confirm_blackmarket_buy(params)
 end
 
--- Lines: 10729 to 10732
+-- Lines: 10790 to 10793
 function BlackMarketGui:_buy_equip_weapon_cosmetics_callback(data)
 	managers.blackmarket:on_buy_weapon_platform(data.category, data.equip_weapon_cosmetics.weapon_id, data.slot)
 	self:_equip_weapon_cosmetics_callback(data)
 end
 
--- Lines: 10735 to 10742
+-- Lines: 10796 to 10803
 function BlackMarketGui:equip_weapon_cosmetics_callback(data)
 	if self._item_bought then
 		return
@@ -13028,7 +13047,7 @@ function BlackMarketGui:equip_weapon_cosmetics_callback(data)
 	self:_weapon_cosmetics_callback(data, true, callback(self, self, "_equip_weapon_cosmetics_callback", data))
 end
 
--- Lines: 10744 to 10776
+-- Lines: 10805 to 10837
 function BlackMarketGui:_weapon_cosmetics_callback(data, add, yes_clbk)
 	local cosmetic_id = data.equip_weapon_cosmetics and data.equip_weapon_cosmetics.entry
 	local cosmetic_name_id = cosmetic_id and tweak_data.blackmarket.weapon_skins[cosmetic_id].name_id
@@ -13058,7 +13077,7 @@ function BlackMarketGui:_weapon_cosmetics_callback(data, add, yes_clbk)
 	managers.menu:show_confirm_weapon_cosmetics(params)
 end
 
--- Lines: 10778 to 10784
+-- Lines: 10839 to 10845
 function BlackMarketGui:_remove_weapon_cosmetics_callback(data)
 	self._item_bought = true
 
@@ -13067,7 +13086,7 @@ function BlackMarketGui:_remove_weapon_cosmetics_callback(data)
 	self:reload()
 end
 
--- Lines: 10786 to 10796
+-- Lines: 10847 to 10857
 function BlackMarketGui:_equip_weapon_cosmetics_callback(data)
 	self._item_bought = true
 	local instance_id = data.name
@@ -13081,7 +13100,7 @@ function BlackMarketGui:_equip_weapon_cosmetics_callback(data)
 	self:reload()
 end
 
--- Lines: 10798 to 10805
+-- Lines: 10859 to 10866
 function BlackMarketGui:_preview_character_mask(data)
 	local mask_id = tweak_data:get_raw_value("blackmarket", "masks", "character_locked", CriminalsManager.convert_old_to_new_character_workname(data.name))
 
@@ -13091,23 +13110,23 @@ function BlackMarketGui:_preview_character_mask(data)
 	end
 end
 
--- Lines: 10807 to 10809
+-- Lines: 10868 to 10870
 function BlackMarketGui:preview_character_mask_callback(data)
 	self:_preview_character_mask(data)
 end
 
--- Lines: 10811 to 10814
+-- Lines: 10872 to 10875
 function BlackMarketGui:_preview_mask(data)
 	managers.blackmarket:view_mask(data.slot)
 	managers.menu:open_node("blackmarket_preview_mask_node", {})
 end
 
--- Lines: 10817 to 10820
+-- Lines: 10878 to 10881
 function BlackMarketGui:preview_mask_callback(data)
 	self:_preview_mask(data)
 end
 
--- Lines: 10822 to 10833
+-- Lines: 10883 to 10894
 function BlackMarketGui:sell_item_callback(data)
 	print("sell_item_callback", inspect(data))
 
@@ -13123,7 +13142,7 @@ function BlackMarketGui:sell_item_callback(data)
 	managers.menu:show_confirm_blackmarket_sell(params)
 end
 
--- Lines: 10835 to 10851
+-- Lines: 10896 to 10912
 function BlackMarketGui:sell_stashed_mask_callback(data)
 	local blueprint = {
 		color = {
@@ -13150,7 +13169,7 @@ function BlackMarketGui:sell_stashed_mask_callback(data)
 	managers.menu:show_confirm_blackmarket_sell_no_slot(params)
 end
 
--- Lines: 10853 to 10860
+-- Lines: 10914 to 10921
 function BlackMarketGui:_sell_inventory_mask_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:on_sell_inventory_mask(data.name, data.global_value)
@@ -13160,7 +13179,7 @@ function BlackMarketGui:_sell_inventory_mask_callback(data)
 	self:reload()
 end
 
--- Lines: 10862 to 10891
+-- Lines: 10923 to 10952
 function BlackMarketGui:remove_mask_callback(data)
 	local value = managers.money:get_mask_slot_sell_value(data.slot)
 	local crafted = managers.blackmarket:get_crafted_category_slot("masks", data.slot)
@@ -13194,7 +13213,7 @@ function BlackMarketGui:remove_mask_callback(data)
 	managers.menu:show_confirm_blackmarket_mask_remove(params)
 end
 
--- Lines: 10893 to 10922
+-- Lines: 10954 to 10983
 function BlackMarketGui:sell_mask_callback(data)
 	local value = managers.money:get_mask_slot_sell_value(data.slot)
 	local crafted = managers.blackmarket:get_crafted_category_slot("masks", data.slot)
@@ -13228,33 +13247,33 @@ function BlackMarketGui:sell_mask_callback(data)
 	managers.menu:show_confirm_blackmarket_mask_sell(params)
 end
 
--- Lines: 10924 to 10929
+-- Lines: 10985 to 10990
 function BlackMarketGui:_sell_weapon_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:on_sell_weapon(data.category, data.slot)
 	self:reload()
 end
 
--- Lines: 10931 to 10935
+-- Lines: 10992 to 10996
 function BlackMarketGui:_remove_mask_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:on_sell_mask(data.slot)
 	self:reload()
 end
 
--- Lines: 10937 to 10942
+-- Lines: 10998 to 11003
 function BlackMarketGui:_sell_mask_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:on_sell_mask(data.slot)
 	self:reload()
 end
 
--- Lines: 10944 to 10946
+-- Lines: 11005 to 11007
 function BlackMarketGui:open_reticle_switch_menu(data)
 	managers.menu:open_node("blackmarket_reticle_switch", {data})
 end
 
--- Lines: 10954 to 10965
+-- Lines: 11015 to 11026
 function BlackMarketGui:sell_weapon_mods_callback(data)
 	local params = {
 		name = data.name_localized or data.name,
@@ -13268,14 +13287,14 @@ function BlackMarketGui:sell_weapon_mods_callback(data)
 	managers.menu:show_confirm_blackmarket_sell(params)
 end
 
--- Lines: 10967 to 10971
+-- Lines: 11028 to 11032
 function BlackMarketGui:_sell_weapon_mod_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:on_sell_weapon_part(data.name, data.global_value)
 	self:reload()
 end
 
--- Lines: 10975 to 11001
+-- Lines: 11036 to 11062
 function BlackMarketGui:purchase_weapon_mod_callback(data)
 	local params = {
 		name = data.name_localized or data.name,
@@ -13301,7 +13320,7 @@ function BlackMarketGui:purchase_weapon_mod_callback(data)
 	end
 end
 
--- Lines: 11003 to 11008
+-- Lines: 11064 to 11069
 function BlackMarketGui:_confirm_purchase_weapon_mod_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:add_to_inventory(data.global_value, "weapon_mods", data.name, true)
@@ -13309,12 +13328,12 @@ function BlackMarketGui:_confirm_purchase_weapon_mod_callback(data)
 	self:reload()
 end
 
--- Lines: 11012 to 11014
+-- Lines: 11073 to 11075
 function BlackMarketGui:choose_weapon_buy_callback(data)
 	self:open_weapon_buy_menu(data)
 end
 
--- Lines: 11017 to 11107
+-- Lines: 11078 to 11168
 function BlackMarketGui:open_weapon_buy_menu(data, check_allowed_item_func)
 	local blackmarket_items = managers.blackmarket:get_weapon_category(data.category) or {}
 	local new_node_data = {}
@@ -13409,7 +13428,7 @@ function BlackMarketGui:open_weapon_buy_menu(data, check_allowed_item_func)
 	managers.menu:open_node(self._inception_node_name, {new_node_data})
 end
 
--- Lines: 11109 to 11172
+-- Lines: 11170 to 11233
 function BlackMarketGui:choose_weapon_buy_callback2(data)
 	local items = managers.blackmarket:get_weapon_category(data.category) or {}
 	local new_node_data = {}
@@ -13480,7 +13499,7 @@ function BlackMarketGui:choose_weapon_buy_callback2(data)
 	managers.menu:open_node(self._inception_node_name, {new_node_data})
 end
 
--- Lines: 11176 to 11214
+-- Lines: 11237 to 11275
 function BlackMarketGui:choose_mask_global_value_callback(data)
 	local masks = managers.blackmarket:get_inventory_masks() or {}
 	local new_node_data = {}
@@ -13540,7 +13559,7 @@ function BlackMarketGui:choose_mask_global_value_callback(data)
 	managers.menu:open_node(self._inception_node_name, {new_node_data})
 end
 
--- Lines: 11217 to 11224
+-- Lines: 11278 to 11285
 function BlackMarketGui:choose_weapon_slot_unlock_callback(data)
 	local params = {
 		money = managers.experience:cash_string(managers.money:get_buy_weapon_slot_price()),
@@ -13551,7 +13570,7 @@ function BlackMarketGui:choose_weapon_slot_unlock_callback(data)
 	managers.menu:show_confirm_blackmarket_buy_weapon_slot(params)
 end
 
--- Lines: 11226 to 11233
+-- Lines: 11287 to 11294
 function BlackMarketGui:choose_mask_slot_unlock_callback(data)
 	local params = {
 		money = managers.experience:cash_string(managers.money:get_buy_mask_slot_price()),
@@ -13562,7 +13581,7 @@ function BlackMarketGui:choose_mask_slot_unlock_callback(data)
 	managers.menu:show_confirm_blackmarket_buy_mask_slot(params)
 end
 
--- Lines: 11235 to 11386
+-- Lines: 11296 to 11447
 function BlackMarketGui:choose_mask_buy_callback(data)
 	local masks_data = tweak_data.blackmarket.masks
 	local masks = managers.blackmarket:get_inventory_masks() or {}
@@ -13571,7 +13590,7 @@ function BlackMarketGui:choose_mask_buy_callback(data)
 	local itemids = {}
 
 
-	-- Lines: 11242 to 11258
+	-- Lines: 11303 to 11319
 	local function func_add_item(global_value, item_id, item)
 		if not masks_data[item_id] or masks_data[item_id].inaccessible or not tweak_data.lootdrop.global_values[global_value] then
 			return
@@ -13652,7 +13671,7 @@ function BlackMarketGui:choose_mask_buy_callback(data)
 	local saved_locs = {}
 
 
-	-- Lines: 11318 to 11353
+	-- Lines: 11379 to 11414
 	local function sort_func(x, y)
 		x_td = sort_td[x.mask_id]
 		y_td = sort_td[y.mask_id]
@@ -13736,7 +13755,7 @@ function BlackMarketGui:choose_mask_buy_callback(data)
 	managers.menu:open_node(self._inception_node_name, {new_node_data})
 end
 
--- Lines: 11389 to 11402
+-- Lines: 11450 to 11463
 function BlackMarketGui:buy_mask_callback(data)
 	if self._item_bought then
 		return
@@ -13754,7 +13773,7 @@ function BlackMarketGui:buy_mask_callback(data)
 	managers.menu:show_confirm_blackmarket_assemble(params)
 end
 
--- Lines: 11408 to 11524
+-- Lines: 11469 to 11585
 function BlackMarketGui:mask_mods_callback(data)
 	local all_mods_by_type = {
 		materials = managers.blackmarket:get_inventory_category("materials"),
@@ -13894,7 +13913,7 @@ function BlackMarketGui:mask_mods_callback(data)
 	managers.menu:open_node("blackmarket_mask_node", {new_node_data})
 end
 
--- Lines: 11527 to 11564
+-- Lines: 11588 to 11625
 function BlackMarketGui:mask_mods_callback2(data)
 	local mods = {
 		materials = managers.blackmarket:get_inventory_category("materials"),
@@ -13951,17 +13970,17 @@ function BlackMarketGui:mask_mods_callback2(data)
 	managers.menu:open_node("blackmarket_mask_node", {new_node_data})
 end
 
--- Lines: 11566 to 11568
+-- Lines: 11627 to 11629
 function BlackMarketGui:start_customize_mask(params)
 	managers.blackmarket:start_customize_mask(params.slot)
 end
 
--- Lines: 11570 to 11572
+-- Lines: 11631 to 11633
 function BlackMarketGui:choose_mask_mod_callback(type_category, data, prev_node_params)
 	self:choose_mask_type_callback(data, prev_node_params, type_category)
 end
 
--- Lines: 11574 to 11672
+-- Lines: 11635 to 11733
 function BlackMarketGui:choose_mask_type_callback(data, prev_node_params, type_category)
 	if not managers.blackmarket:currently_customizing_mask() then
 		return
@@ -14079,7 +14098,7 @@ function BlackMarketGui:choose_mask_type_callback(data, prev_node_params, type_c
 	managers.menu:open_node("blackmarket_mask_node", {new_node_data})
 end
 
--- Lines: 11674 to 11680
+-- Lines: 11735 to 11741
 function BlackMarketGui:preview_customized_mask_callback(data)
 	if not managers.blackmarket:can_view_customized_mask() then
 		-- Nothing
@@ -14089,7 +14108,7 @@ function BlackMarketGui:preview_customized_mask_callback(data)
 	managers.blackmarket:view_customized_mask()
 end
 
--- Lines: 11682 to 11688
+-- Lines: 11743 to 11749
 function BlackMarketGui:preview_customized_mask_with_mod_callback(data)
 	if not managers.blackmarket:can_view_customized_mask_with_mod(data.category, data.name, data.global_value) then
 		return
@@ -14099,18 +14118,18 @@ function BlackMarketGui:preview_customized_mask_with_mod_callback(data)
 	managers.blackmarket:view_customized_mask_with_mod(data.category, data.name)
 end
 
--- Lines: 11690 to 11691
+-- Lines: 11751 to 11752
 function BlackMarketGui:_warn_abort_customized_mask_callback(params)
 	return managers.blackmarket:warn_abort_customize_mask(params)
 end
 
--- Lines: 11694 to 11697
+-- Lines: 11755 to 11758
 function BlackMarketGui:_abort_customized_mask_callback()
 	managers.blackmarket:abort_customize_mask()
 	managers.menu:back(true)
 end
 
--- Lines: 11699 to 11712
+-- Lines: 11760 to 11773
 function BlackMarketGui:buy_customized_mask_callback(data)
 	if self._item_bought then
 		return
@@ -14128,7 +14147,7 @@ function BlackMarketGui:buy_customized_mask_callback(data)
 	managers.menu:show_confirm_blackmarket_finalize(params)
 end
 
--- Lines: 11714 to 11719
+-- Lines: 11775 to 11780
 function BlackMarketGui:_buy_customized_mask_callback(data)
 	self._item_bought = true
 
@@ -14137,14 +14156,14 @@ function BlackMarketGui:_buy_customized_mask_callback(data)
 	managers.menu:back(true)
 end
 
--- Lines: 11721 to 11725
+-- Lines: 11782 to 11786
 function BlackMarketGui:choose_mask_part_callback(data)
 	if managers.blackmarket:select_customize_mask(data.category, data.name, data.global_value) then
 		self:reload()
 	end
 end
 
--- Lines: 11728 to 11742
+-- Lines: 11789 to 11803
 function BlackMarketGui:buy_weapon_callback(data)
 	if self._item_bought then
 		return
@@ -14163,7 +14182,7 @@ function BlackMarketGui:buy_weapon_callback(data)
 	managers.menu:show_confirm_blackmarket_buy(params)
 end
 
--- Lines: 11744 to 11844
+-- Lines: 11805 to 11905
 function BlackMarketGui:show_available_mask_mods_callback(data)
 	local mask_components = {}
 	local masks = deep_clone(managers.blackmarket:get_inventory_masks() or {})
@@ -14275,7 +14294,7 @@ function BlackMarketGui:show_available_mask_mods_callback(data)
 	end
 end
 
--- Lines: 11846 to 11853
+-- Lines: 11907 to 11914
 function BlackMarketGui:show_buy_dlc_callback(data)
 	local dlc_data = Global.dlc_manager.all_dlc_data[data.global_value]
 	local app_id = dlc_data and dlc_data.app_id
@@ -14285,7 +14304,7 @@ function BlackMarketGui:show_buy_dlc_callback(data)
 	end
 end
 
--- Lines: 11855 to 11940
+-- Lines: 11916 to 12001
 function BlackMarketGui:show_available_mods_callback(data)
 	local dropable_mods = managers.blackmarket:get_dropable_mods_by_weapon_id(data.name)
 	local text_block = ""
@@ -14305,7 +14324,7 @@ function BlackMarketGui:show_available_mods_callback(data)
 	local x_td, y_td, x_pc, y_pc = nil
 
 
-	-- Lines: 11872 to 11886
+	-- Lines: 11933 to 11947
 	local function sort_func(x, y)
 		x_td = sort_td[x[1]]
 		y_td = sort_td[y[1]]
@@ -14379,7 +14398,7 @@ function BlackMarketGui:show_available_mods_callback(data)
 	end
 end
 
--- Lines: 11943 to 11948
+-- Lines: 12004 to 12009
 function BlackMarketGui:_buy_mask_slot_callback(data)
 	self._item_bought = true
 
@@ -14388,7 +14407,7 @@ function BlackMarketGui:_buy_mask_slot_callback(data)
 	self:reload()
 end
 
--- Lines: 11950 to 11955
+-- Lines: 12011 to 12016
 function BlackMarketGui:_buy_weapon_slot_callback(data)
 	self._item_bought = true
 
@@ -14397,7 +14416,7 @@ function BlackMarketGui:_buy_weapon_slot_callback(data)
 	self:reload()
 end
 
--- Lines: 11957 to 11962
+-- Lines: 12018 to 12023
 function BlackMarketGui:_buy_mask_callback(data)
 	self._item_bought = true
 
@@ -14406,7 +14425,7 @@ function BlackMarketGui:_buy_mask_callback(data)
 	managers.menu:back(true, math.max(data.num_backs - 1, 0))
 end
 
--- Lines: 11965 to 11971
+-- Lines: 12026 to 12032
 function BlackMarketGui:_buy_weapon_callback(data)
 	self._item_bought = true
 
@@ -14416,18 +14435,18 @@ function BlackMarketGui:_buy_weapon_callback(data)
 	managers.mission:call_global_event(Message.OnWeaponBought)
 end
 
--- Lines: 11974 to 11976
+-- Lines: 12035 to 12037
 function BlackMarketGui:preview_buy_weapon_callback(data)
 	managers.blackmarket:view_weapon_platform(data.name, callback(self, self, "_open_preview_node"))
 end
 
--- Lines: 11978 to 11981
+-- Lines: 12039 to 12042
 function BlackMarketGui:preview_buy_mask_callback(data)
 	managers.menu:open_node("blackmarket_preview_mask_node", {})
 	managers.blackmarket:view_mask_with_mask_id(data.name)
 end
 
--- Lines: 11985 to 12005
+-- Lines: 12046 to 12066
 function BlackMarketGui:choose_mod_callback(data, prev_node_params)
 	local mods = deep_clone(data.mods) or {}
 	local new_node_data = {}
@@ -14462,7 +14481,7 @@ function BlackMarketGui:choose_mod_callback(data, prev_node_params)
 	managers.menu:open_node(self._inception_node_name, {new_node_data})
 end
 
--- Lines: 12009 to 12036
+-- Lines: 12070 to 12097
 function BlackMarketGui:buy_mod_callback(data)
 	if self._item_bought then
 		return
@@ -14493,7 +14512,7 @@ function BlackMarketGui:buy_mod_callback(data)
 	managers.menu:show_confirm_blackmarket_mod(params)
 end
 
--- Lines: 12038 to 12055
+-- Lines: 12099 to 12116
 function BlackMarketGui:_buy_mod_callback(data)
 	self._item_bought = true
 
@@ -14515,13 +14534,13 @@ function BlackMarketGui:_buy_mod_callback(data)
 	self:reload()
 end
 
--- Lines: 12058 to 12061
+-- Lines: 12119 to 12122
 function BlackMarketGui:preview_weapon_with_mod_callback(data)
 	managers.blackmarket:view_weapon_with_mod(data.category, data.slot, data.name, callback(self, self, "_update_crafting_node"), nil, BlackMarketGui.get_crafting_custom_data())
 	self:reload()
 end
 
--- Lines: 12063 to 12084
+-- Lines: 12124 to 12145
 function BlackMarketGui:remove_mod_callback(data)
 	local params = {
 		name = managers.localization:text(tweak_data.weapon.factory.parts[data.name].name_id),
@@ -14548,7 +14567,7 @@ function BlackMarketGui:remove_mod_callback(data)
 	managers.menu:show_confirm_blackmarket_mod(params)
 end
 
--- Lines: 12086 to 12105
+-- Lines: 12147 to 12166
 function BlackMarketGui:_remove_mod_callback(data)
 	managers.menu_component:post_event("item_sell")
 
@@ -14573,7 +14592,7 @@ function BlackMarketGui:_remove_mod_callback(data)
 	self:reload()
 end
 
--- Lines: 12108 to 12115
+-- Lines: 12169 to 12176
 function BlackMarketGui:preview_weapon_without_mod_callback(data)
 	if data.default_mod then
 		managers.blackmarket:view_weapon_with_mod(data.category, data.slot, data.default_mod, callback(self, self, "_update_crafting_node"), nil, BlackMarketGui.get_crafting_custom_data())
@@ -14584,7 +14603,7 @@ function BlackMarketGui:preview_weapon_without_mod_callback(data)
 	self:reload()
 end
 
--- Lines: 12119 to 12123
+-- Lines: 12180 to 12184
 function BlackMarketGui:lo_equip_deployable_callback(data)
 	data.target_slot = 1
 
@@ -14592,7 +14611,7 @@ function BlackMarketGui:lo_equip_deployable_callback(data)
 	self:reload()
 end
 
--- Lines: 12125 to 12129
+-- Lines: 12186 to 12190
 function BlackMarketGui:lo_equip_deployable_callback_secondary(data)
 	data.target_slot = 2
 
@@ -14600,7 +14619,7 @@ function BlackMarketGui:lo_equip_deployable_callback_secondary(data)
 	self:reload()
 end
 
--- Lines: 12131 to 12152
+-- Lines: 12192 to 12213
 function BlackMarketGui:lo_unequip_deployable_callback(data)
 	data.target_slot = managers.blackmarket:equipped_deployable_slot(data.name)
 
@@ -14625,41 +14644,41 @@ function BlackMarketGui:lo_unequip_deployable_callback(data)
 	self:reload()
 end
 
--- Lines: 12154 to 12157
+-- Lines: 12215 to 12218
 function BlackMarketGui:lo_equip_grenade_callback(data)
 	managers.blackmarket:equip_grenade(data.name)
 	self:reload()
 end
 
--- Lines: 12158 to 12161
+-- Lines: 12219 to 12222
 function BlackMarketGui:preview_grenade_callback(data)
 	managers.menu:open_node(self._preview_node_name, {})
 	managers.blackmarket:preview_grenade(data.name)
 end
 
--- Lines: 12164 to 12167
+-- Lines: 12225 to 12228
 function BlackMarketGui:lo_equip_melee_weapon_callback(data)
 	managers.blackmarket:equip_melee_weapon(data.name)
 	self:reload()
 end
 
--- Lines: 12168 to 12171
+-- Lines: 12229 to 12232
 function BlackMarketGui:preview_melee_weapon_callback(data)
 	managers.menu:open_node(self._preview_node_name, {})
 	managers.blackmarket:preview_melee_weapon(data.name)
 end
 
--- Lines: 12173 to 12175
+-- Lines: 12234 to 12236
 function BlackMarketGui:add_melee_weapon_favorite(data)
 	self:_set_melee_weapon_favorite(data.name, true, data)
 end
 
--- Lines: 12176 to 12178
+-- Lines: 12237 to 12239
 function BlackMarketGui:remove_melee_weapon_favorite(data)
 	self:_set_melee_weapon_favorite(data.name, false, data)
 end
 
--- Lines: 12179 to 12198
+-- Lines: 12240 to 12259
 function BlackMarketGui:_set_melee_weapon_favorite(melee_weapon_id, favorite, data)
 	managers.blackmarket:set_melee_weapon_favorite(melee_weapon_id, favorite)
 	self:reload()
@@ -14684,7 +14703,7 @@ function BlackMarketGui:_set_melee_weapon_favorite(melee_weapon_id, favorite, da
 	end
 end
 
--- Lines: 12200 to 12206
+-- Lines: 12261 to 12267
 function BlackMarketGui:update_mod_mask()
 	if not managers.blackmarket:currently_customizing_mask() then
 		managers.menu:back(true)
@@ -14693,21 +14712,21 @@ function BlackMarketGui:update_mod_mask()
 	end
 end
 
--- Lines: 12392 to 12396
+-- Lines: 12453 to 12457
 function BlackMarketGui:_dialog_yes(clbk)
 	if clbk and type(clbk) == "function" then
 		clbk()
 	end
 end
 
--- Lines: 12398 to 12402
+-- Lines: 12459 to 12463
 function BlackMarketGui:_dialog_no(clbk)
 	if clbk and type(clbk) == "function" then
 		clbk()
 	end
 end
 
--- Lines: 12412 to 12419
+-- Lines: 12473 to 12480
 function BlackMarketGui:request_texture(texture_path, panel, keep_aspect_ratio, blend_mode)
 	if not managers.menu_component then
 		return
@@ -14725,7 +14744,7 @@ function BlackMarketGui:request_texture(texture_path, panel, keep_aspect_ratio, 
 	})
 end
 
--- Lines: 12421 to 12429
+-- Lines: 12482 to 12490
 function BlackMarketGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -14736,7 +14755,7 @@ function BlackMarketGui:unretrieve_textures()
 	self._requested_textures = {}
 end
 
--- Lines: 12431 to 12469
+-- Lines: 12492 to 12530
 function BlackMarketGui:texture_done_clbk(params, texture_ids)
 	params = params or {}
 	local panel = params.panel or params[1]
@@ -14783,7 +14802,7 @@ function BlackMarketGui:texture_done_clbk(params, texture_ids)
 	end
 end
 
--- Lines: 12472 to 12487
+-- Lines: 12533 to 12548
 function BlackMarketGui:set_tradable_loaded(error)
 	MenuCallbackHandler:refresh_node()
 
@@ -14802,7 +14821,7 @@ function BlackMarketGui:set_tradable_loaded(error)
 	end
 end
 
--- Lines: 12489 to 12495
+-- Lines: 12550 to 12556
 function BlackMarketGui:hide()
 	self._old_enabled = self._enabled
 	self._enabled = false
@@ -14811,7 +14830,7 @@ function BlackMarketGui:hide()
 	self._fullscreen_ws:panel():hide()
 end
 
--- Lines: 12497 to 12503
+-- Lines: 12558 to 12564
 function BlackMarketGui:show()
 	self._enabled = self._old_enabled
 	self._old_enabled = nil
@@ -14820,7 +14839,7 @@ function BlackMarketGui:show()
 	self._fullscreen_ws:panel():show()
 end
 
--- Lines: 12506 to 12511
+-- Lines: 12567 to 12572
 function BlackMarketGui:destroy()
 	self:unretrieve_textures()
 
@@ -14829,7 +14848,7 @@ function BlackMarketGui:destroy()
 	end
 end
 
--- Lines: 12513 to 12541
+-- Lines: 12574 to 12602
 function BlackMarketGui:close()
 	if self._rename_clbk_id then
 		managers.network.account:remove_gamepad_text_listener(self._rename_clbk_id)
@@ -14857,7 +14876,7 @@ function BlackMarketGui:close()
 	managers.blackmarket:verfify_crew_loadout()
 end
 
--- Lines: 12543 to 12564
+-- Lines: 12604 to 12625
 function BlackMarketGui:_pre_reload()
 	self._temp_panel = self._panel
 	self._temp_fullscreen_panel = self._fullscreen_panel
@@ -14877,7 +14896,7 @@ function BlackMarketGui:_pre_reload()
 	end
 end
 
--- Lines: 12566 to 12572
+-- Lines: 12627 to 12633
 function BlackMarketGui:_post_reload()
 	self._ws:panel():remove(self._temp_panel)
 	self._fullscreen_ws:panel():remove(self._temp_fullscreen_panel)
@@ -14886,7 +14905,7 @@ function BlackMarketGui:_post_reload()
 	self._temp_fullscreen_panel = nil
 end
 
--- Lines: 12574 to 12593
+-- Lines: 12635 to 12654
 function BlackMarketGui:reload()
 	if self._rename_clbk_id then
 		managers.network.account:remove_gamepad_text_listener(self._rename_clbk_id)
@@ -14911,10 +14930,10 @@ function BlackMarketGui:reload()
 	self:_post_reload()
 end
 
--- Lines: 12607 to 12616
+-- Lines: 12668 to 12677
 function BlackMarketGui:get_safe_for_economy_item(id)
 
-	-- Lines: 12598 to 12608
+	-- Lines: 12659 to 12669
 	local function find_safe_name(id)
 		for safe_id, safe_data in pairs(tweak_data.economy.contents) do
 			for category, tbl in pairs(safe_data.contains) do
@@ -14938,7 +14957,7 @@ function BlackMarketGui:get_safe_for_economy_item(id)
 	return tweak_data.economy.safes[safe_id], safe_id
 end
 
--- Lines: 12622 to 12709
+-- Lines: 12683 to 12770
 function BlackMarketGui:create_preload_ws()
 	if self._preload_ws then
 		return
@@ -14956,7 +14975,7 @@ function BlackMarketGui:create_preload_ws()
 		end
 	}
 
-	-- Lines: 12635 to 12649
+	-- Lines: 12696 to 12710
 	function new_script.set_progress(progress)
 		new_script.progress = progress
 		local square_panel = panel:child("square_panel")
@@ -15051,7 +15070,7 @@ function BlackMarketGui:create_preload_ws()
 	panel:script().set_progress(1)
 
 
-	-- Lines: 12703 to 12707
+	-- Lines: 12764 to 12768
 	local function fade_in_animation(panel)
 		panel:hide()
 		coroutine.yield()
@@ -15061,7 +15080,7 @@ function BlackMarketGui:create_preload_ws()
 	panel:animate(fade_in_animation)
 end
 
--- Lines: 12712 to 12730
+-- Lines: 12773 to 12791
 function BlackMarketGui.blur_panel(panel)
 	panel:bitmap({
 		texture = "guis/textures/test_blur_df",
@@ -15081,7 +15100,7 @@ function BlackMarketGui.blur_panel(panel)
 	})
 end
 
--- Lines: 12734 to 12770
+-- Lines: 12795 to 12831
 function BlackMarketGui:buy_crew_item_callback(data)
 	local cost = managers.blackmarket:crew_item_cost(data.name)
 	local macros = {
@@ -15126,7 +15145,7 @@ function BlackMarketGui:buy_crew_item_callback(data)
 	end
 end
 
--- Lines: 12772 to 12776
+-- Lines: 12833 to 12837
 function BlackMarketGui:_confirm_buy_crew_item_callback(data)
 	managers.menu_component:post_event("item_sell")
 	managers.blackmarket:buy_crew_item(data.name)

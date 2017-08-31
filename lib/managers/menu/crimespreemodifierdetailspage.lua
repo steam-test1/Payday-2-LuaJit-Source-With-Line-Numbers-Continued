@@ -1,7 +1,7 @@
 CrimeSpreeModifierDetailsPage = CrimeSpreeModifierDetailsPage or class(CrimeSpreeDetailsPage)
 local padding = 10
 
--- Lines: 7 to 165
+-- Lines: 7 to 147
 function CrimeSpreeModifierDetailsPage:init(...)
 	CrimeSpreeModifierDetailsPage.super.init(self, ...)
 
@@ -75,29 +75,12 @@ function CrimeSpreeModifierDetailsPage:init(...)
 
 	self._next_panel = self:panel():panel({h = next_modifiers_h})
 	local name_color = managers.crime_spree:in_progress() and tweak_data.screen_colors.text or tweak_data.screen_colors.important_1
-	local upcoming_modifiers_text = ""
-
-	for i, category in ipairs({
-		"forced",
-		"loud",
-		"stealth"
-	}) do
-		local next_level = managers.crime_spree:next_modifier_level(category)
-
-		if next_level then
-			local text_id = "menu_cs_next_modifier_" .. category
-			local padding = i > 1 and "  " or ""
-			local localized = managers.localization:to_upper_text(text_id, {next = next_level})
-			upcoming_modifiers_text = upcoming_modifiers_text .. padding .. localized
-		end
-	end
-
 	self._next_text = self._next_panel:text({
 		vertical = "center",
 		align = "left",
 		halign = "left",
 		layer = 1,
-		text = upcoming_modifiers_text,
+		text = self:upcoming_modifiers_text(),
 		x = padding,
 		color = name_color,
 		font = tweak_data.menu.pd2_tiny_font,
@@ -147,7 +130,29 @@ function CrimeSpreeModifierDetailsPage:init(...)
 	}})
 end
 
--- Lines: 167 to 171
+-- Lines: 150 to 169
+function CrimeSpreeModifierDetailsPage:upcoming_modifiers_text()
+	local upcoming_modifiers_text = ""
+
+	for i, category in ipairs({
+		"forced",
+		"loud",
+		"stealth"
+	}) do
+		local next_level = managers.crime_spree:next_modifier_level(category)
+
+		if next_level then
+			local text_id = "menu_cs_next_modifier_" .. category
+			local padding = i > 1 and "  " or ""
+			local localized = managers.localization:to_upper_text(text_id, {next = next_level - managers.crime_spree:server_spree_level()})
+			upcoming_modifiers_text = upcoming_modifiers_text .. padding .. localized
+		end
+	end
+
+	return upcoming_modifiers_text
+end
+
+-- Lines: 172 to 176
 function CrimeSpreeModifierDetailsPage:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -157,17 +162,17 @@ function CrimeSpreeModifierDetailsPage:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 174 to 176
+-- Lines: 179 to 181
 function CrimeSpreeModifierDetailsPage:mouse_wheel_up(x, y)
 	self._scroll:scroll(x, y, 1)
 end
 
--- Lines: 178 to 180
+-- Lines: 183 to 185
 function CrimeSpreeModifierDetailsPage:mouse_wheel_down(x, y)
 	self._scroll:scroll(x, y, -1)
 end
 
--- Lines: 184 to 210
+-- Lines: 189 to 204
 function CrimeSpreeModifierDetailsPage:update(t, dt)
 	if not managers.menu:is_pc_controller() and self._gui and self._gui._right_axis_vector and not mvector3.is_zero(self._gui._right_axis_vector) then
 		local x = mvector3.x(self._gui._right_axis_vector)
@@ -177,19 +182,13 @@ function CrimeSpreeModifierDetailsPage:update(t, dt)
 	end
 
 	if self._cached_server_level ~= managers.crime_spree:server_spree_level() then
-		local params = {
-			forced = managers.crime_spree:next_modifier_level("forced") - managers.crime_spree:server_spree_level(),
-			loud = managers.crime_spree:next_modifier_level("loud") - managers.crime_spree:server_spree_level(),
-			stealth = managers.crime_spree:next_modifier_level("stealth") - managers.crime_spree:server_spree_level()
-		}
-
-		self._next_text:set_text(managers.localization:text("menu_cs_next_modifiers_drm", params))
+		self._next_text:set_text(self:upcoming_modifiers_text())
 
 		self._cached_server_level = managers.crime_spree:server_spree_level()
 	end
 end
 
--- Lines: 213 to 334
+-- Lines: 207 to 328
 function CrimeSpreeModifierDetailsPage:add_modifiers_panel(parent, modifiers, is_tab)
 	modifiers = modifiers or managers.crime_spree:server_active_modifiers()
 	local left_scroll, ignore_up_indicator, extra_padding_right = nil

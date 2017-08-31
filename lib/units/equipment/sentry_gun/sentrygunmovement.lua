@@ -630,17 +630,17 @@ end
 
 -- Lines: 712 to 713
 function SentryGunMovement:is_activating()
-	return self._activating
+	return self._updator_name == "_update_activating"
 end
 
 -- Lines: 718 to 719
 function SentryGunMovement:is_inactivating()
-	return self._inactivating
+	return self._updator_name == "_update_inactivating"
 end
 
 -- Lines: 724 to 725
 function SentryGunMovement:is_inactivated()
-	return self._inactivated
+	return self._updator_name == "_update_inactive"
 end
 
 -- Lines: 730 to 733

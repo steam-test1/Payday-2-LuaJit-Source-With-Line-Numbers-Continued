@@ -1,6 +1,6 @@
 LootDropTweakData = LootDropTweakData or class()
 
--- Lines: 4 to 1732
+-- Lines: 4 to 1793
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1456,6 +1456,37 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 301,
 		category = "dlc"
 	}
+	self.global_values.raidww2_clan = {
+		name_id = "bm_global_value_raidww2_clan",
+		desc_id = "menu_l_global_value_raidww2_clan",
+		unlock_id = "bm_global_value_raidww2_clan_unlock",
+		color = Color(255, 59, 174, 254) / 255,
+		dlc = true,
+		chance = 1,
+		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "pd2_clan"),
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = -100,
+		unique_lock_icon = "guis/textures/pd2/lock_community",
+		ignore_ulti = true
+	}
+	self.global_values.fdm = {
+		name_id = "bm_global_value_fdm",
+		desc_id = "menu_l_global_value_fdm",
+		unlock_id = "bm_global_value_fdm_unlock",
+		color = Color(255, 255, 145, 0) / 255,
+		dlc = true,
+		chance = 1,
+		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "fdm"),
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 86,
+		hide_unavailable = true,
+		category = "global_event",
+		ignore_ulti = true
+	}
 
 	if SystemInfo:platform() == Idstring("PS3") then
 		self.global_values.sweettooth = {
@@ -1537,13 +1568,14 @@ function LootDropTweakData:init(tweak_data)
 		"ant_free",
 		"pn2",
 		"max",
-		"dgm"
+		"dgm",
+		"fdm"
 	}
 
 	self:_create_global_value_list_map()
 end
 
--- Lines: 1734 to 1739
+-- Lines: 1795 to 1800
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

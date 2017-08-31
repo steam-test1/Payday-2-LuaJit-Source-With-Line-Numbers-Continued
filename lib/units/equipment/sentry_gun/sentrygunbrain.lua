@@ -1,12 +1,19 @@
 local mvec3_dir = mvector3.direction
+local mvec3_dist_sq = mvector3.distance_sq
 local mvec3_dot = mvector3.dot
+local mvec3_cross = mvector3.cross
+local mvec3_sub = mvector3.subtract
+local mvec3_add = mvector3.add
+local mvec3_mul = mvector3.multiply
 local math_max = math.max
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
 SentryGunBrain = SentryGunBrain or class()
 SentryGunBrain._create_attention_setting_from_descriptor = PlayerMovement._create_attention_setting_from_descriptor
+SentryGunBrain.attention_target_offset_hor = 75
+SentryGunBrain.attention_target_offset_ver = 75
 
--- Lines: 14 to 34
+-- Lines: 24 to 44
 function SentryGunBrain:init(unit)
 	self._unit = unit
 	self._active = false
@@ -25,17 +32,17 @@ function SentryGunBrain:init(unit)
 	unit:event_listener():add("Brain_on_switch_fire_mode_event", {"on_switch_fire_mode"}, callback(self, self, "_on_switch_fire_mode_event"))
 end
 
--- Lines: 36 to 38
+-- Lines: 46 to 48
 function SentryGunBrain:_on_switch_fire_mode_event(ap_bullets)
 	self._ap_bullets = ap_bullets
 end
 
--- Lines: 42 to 44
+-- Lines: 52 to 54
 function SentryGunBrain:post_init()
 	self._ext_movement = self._unit:movement()
 end
 
--- Lines: 48 to 57
+-- Lines: 58 to 67
 function SentryGunBrain:update(unit, t, dt)
 	if Network:is_server() then
 		self:_upd_detection(t)
@@ -47,7 +54,7 @@ function SentryGunBrain:update(unit, t, dt)
 	self:_upd_fire(t)
 end
 
--- Lines: 61 to 67
+-- Lines: 71 to 77
 function SentryGunBrain:setup(shaprness_mul)
 	self._shaprness_mul = shaprness_mul
 
@@ -56,14 +63,14 @@ function SentryGunBrain:setup(shaprness_mul)
 	end
 end
 
--- Lines: 71 to 74
+-- Lines: 81 to 84
 function SentryGunBrain:on_activated(tweak_table_id)
 	self._tweak_data = tweak_data.weapon[tweak_table_id]
 
 	self:_update_SO_access()
 end
 
--- Lines: 78 to 93
+-- Lines: 88 to 103
 function SentryGunBrain:_update_SO_access()
 	local team_data = self._unit:movement():team()
 
@@ -82,12 +89,12 @@ function SentryGunBrain:_update_SO_access()
 	self._SO_access = managers.navigation:convert_access_flag(self._SO_access_str)
 end
 
--- Lines: 97 to 98
+-- Lines: 107 to 108
 function SentryGunBrain:is_active()
 	return self._active
 end
 
--- Lines: 103 to 121
+-- Lines: 113 to 131
 function SentryGunBrain:set_active(state)
 	state = state and true or false
 
@@ -110,7 +117,7 @@ function SentryGunBrain:set_active(state)
 	end
 end
 
--- Lines: 125 to 355
+-- Lines: 135 to 370
 function SentryGunBrain:_upd_detection(t)
 	if self._ext_movement:is_activating() or self._ext_movement:is_inactivating() then
 		return
@@ -135,10 +142,10 @@ function SentryGunBrain:_upd_detection(t)
 	local all_attention_objects = managers.groupai:state():get_AI_attention_objects_by_filter(my_SO_access_str, my_team)
 
 
-	-- Lines: 154 to 165
+	-- Lines: 164 to 175
 	local function _distance_chk(handler, settings, attention_pos)
 		attention_pos = attention_pos or handler:get_detection_m_pos()
-		local dis_sq = mvector3.distance_sq(my_pos, attention_pos)
+		local dis_sq = mvec3_dist_sq(my_pos, attention_pos)
 		local max_dis = math.min(max_detection_range, settings.max_range or max_detection_range)
 
 		if settings.detection and settings.detection.range_mul then
@@ -153,7 +160,7 @@ function SentryGunBrain:_upd_detection(t)
 	local ignore_units = {self._unit}
 
 
-	-- Lines: 170 to 198
+	-- Lines: 180 to 208
 	local function _nearly_visible_chk(attention_info, detect_pos)
 		local near_pos = tmp_vec1
 
@@ -167,17 +174,17 @@ function SentryGunBrain:_upd_detection(t)
 				local side_vec = tmp_vec1
 
 				mvector3.set(side_vec, detect_pos)
-				mvector3.subtract(side_vec, my_pos)
-				mvector3.cross(side_vec, side_vec, math.UP)
+				mvec3_sub(side_vec, my_pos)
+				mvec3_cross(side_vec, side_vec, math.UP)
 				mvector3.set_length(side_vec, 150)
 				mvector3.set(near_pos, detect_pos)
-				mvector3.add(near_pos, side_vec)
+				mvec3_add(near_pos, side_vec)
 
 				local near_vis_ray = World:raycast("ray", my_pos, near_pos, "ignore_unit", ignore_units, "slot_mask", self._visibility_slotmask, "ray_type", "ai_vision", "report")
 
 				if near_vis_ray then
-					mvector3.multiply(side_vec, -2)
-					mvector3.add(near_pos, side_vec)
+					mvec3_mul(side_vec, -2)
+					mvec3_add(near_pos, side_vec)
 
 					near_vis_ray = World:raycast("ray", my_pos, near_pos, "ignore_unit", ignore_units, "slot_mask", self._visibility_slotmask, "ray_type", "ai_vision", "report")
 				end
@@ -292,7 +299,7 @@ function SentryGunBrain:_upd_detection(t)
 						detect_pos = tmp_vec1
 
 						mvector3.set(detect_pos, attention_info.m_pos)
-						mvector3.add(detect_pos, tweak_data.player.stances.default.crouched.head.translation)
+						mvec3_add(detect_pos, tweak_data.player.stances.default.crouched.head.translation)
 					else
 						detect_pos = attention_pos
 					end
@@ -308,10 +315,17 @@ function SentryGunBrain:_upd_detection(t)
 
 				attention_info.dis = dis
 				attention_info.vis_ray = vis_ray and vis_ray.dis or nil
+				local is_downed = false
 
-				if self:_attention_health_ratio(attention_info) <= 0 or self:_attention_objective(attention_info) == "surrender" then
+				if attention_info.unit:movement() and attention_info.unit:movement().downed then
+					is_downed = attention_info.unit:movement():downed()
+				end
+
+				local is_ignored_target = self:_attention_health_ratio(attention_info) <= 0 or self:_attention_objective(attention_info) == "surrender" or is_downed
+
+				if is_ignored_target then
 					self:_destroy_detected_attention_object_data(attention_info)
-				elseif verified then
+				elseif verified and dis < self._tweak_data.FIRE_RANGE then
 					attention_info.release_t = nil
 					attention_info.verified_t = t
 
@@ -349,7 +363,7 @@ function SentryGunBrain:_upd_detection(t)
 	self._next_detection_upd_t = t + update_delay
 end
 
--- Lines: 361 to 439
+-- Lines: 376 to 454
 function SentryGunBrain:_select_focus_attention(t)
 	local current_focus = self._attention_obj
 	local current_pos = self._ext_movement:m_head_pos()
@@ -366,7 +380,7 @@ function SentryGunBrain:_select_focus_attention(t)
 	local max_dis = self._tweak_data.DETECTION_RANGE
 
 
-	-- Lines: 374 to 406
+	-- Lines: 389 to 421
 	local function _get_weight(attention_info)
 		if not attention_info.identified then
 			return
@@ -433,7 +447,7 @@ function SentryGunBrain:_select_focus_attention(t)
 	end
 end
 
--- Lines: 444 to 459
+-- Lines: 459 to 474
 function SentryGunBrain:_destroy_detected_attention_object_data(attention_info)
 	attention_info.handler:remove_listener("detect_" .. tostring(self._unit:key()))
 
@@ -452,13 +466,11 @@ function SentryGunBrain:_destroy_detected_attention_object_data(attention_info)
 	self._detected_attention_objects[attention_info.u_key] = nil
 end
 
--- Lines: 463 to 513
+-- Lines: 478 to 532
 function SentryGunBrain:_upd_fire(t)
 	if self._ext_movement:is_activating() or self._ext_movement:is_inactivating() or self._idle then
 		if self._firing then
-			self._unit:weapon():stop_autofire()
-
-			self._firing = false
+			self:stop_autofire()
 		end
 
 		return
@@ -472,20 +484,28 @@ function SentryGunBrain:_upd_fire(t)
 		elseif attention and attention.reaction and AIAttentionObject.REACT_SHOOT <= attention.reaction and not self._ext_movement:warming_up(t) and not self:_ignore_shield({self._unit}, self._ext_movement:m_head_pos(), self._attention_obj) then
 			local expend_ammo = Network:is_server()
 			local damage_player = attention.unit:base() and attention.unit:base().is_local_player
+			local my_pos = self._ext_movement:m_head_pos()
+			local target_pos = self:get_target_base_pos(attention)
+
+			if not target_pos then
+				self:stop_autofire()
+
+				return
+			end
+
+			if not self:is_target_on_sight(my_pos, target_pos) then
+				self:stop_autofire()
+
+				return
+			end
 
 			if self._firing then
 				self._unit:weapon():trigger_held(false, expend_ammo, damage_player, attention.unit)
 			else
-				if attention.pos then
-					mvec3_dir(tmp_vec1, self._ext_movement:m_head_pos(), attention.pos)
-				elseif attention.unit:movement() then
-					mvec3_dir(tmp_vec1, self._ext_movement:m_head_pos(), attention.unit:movement():m_com())
-				else
-					mvec3_dir(tmp_vec1, self._ext_movement:m_head_pos(), attention.handler:get_detection_m_pos())
-				end
+				mvec3_dir(tmp_vec1, my_pos, target_pos)
 
 				local max_dot = self._tweak_data.KEEP_FIRE_ANGLE
-				max_dot = math.min(0.99, 1 - (1 - max_dot) * self._shaprness_mul)
+				max_dot = math.min(0.99, 1 - (1 - max_dot) * (self._shaprness_mul or 1))
 
 				if max_dot < mvec3_dot(tmp_vec1, self._ext_movement:m_head_fwd()) then
 					self._unit:weapon():start_autofire()
@@ -495,14 +515,86 @@ function SentryGunBrain:_upd_fire(t)
 				end
 			end
 		elseif self._firing then
-			self._unit:weapon():stop_autofire()
-
-			self._firing = false
+			self:stop_autofire()
 		end
 	end
 end
 
--- Lines: 517 to 560
+-- Lines: 537 to 540
+function SentryGunBrain:stop_autofire()
+	self._unit:weapon():stop_autofire()
+
+	self._firing = false
+end
+
+-- Lines: 544 to 552
+function SentryGunBrain:get_target_base_pos(attention)
+	local target_base_pos = attention.pos
+
+	if not target_base_pos and attention.unit:movement() then
+		target_base_pos = attention.unit:movement():m_com()
+	end
+
+	target_base_pos = target_base_pos or attention.handler:get_detection_m_pos()
+
+	return target_base_pos
+end
+
+-- Lines: 557 to 600
+function SentryGunBrain:is_target_on_sight(my_pos, target_base_pos)
+	if not target_base_pos then
+		return false
+	end
+
+	local fire_range_sq = self._tweak_data.FIRE_RANGE * self._tweak_data.FIRE_RANGE
+
+	if fire_range_sq < mvec3_dist_sq(my_pos, target_base_pos) then
+		return false
+	end
+
+	local target_pos_same_height = mvector3.copy(target_base_pos)
+
+	mvector3.set_z(target_pos_same_height, mvector3.z(my_pos))
+
+	local dir_to_target = mvector3.copy(my_pos)
+
+	mvec3_sub(dir_to_target, target_pos_same_height)
+	mvector3.normalize(dir_to_target)
+
+	local right_offset = Vector3()
+
+	mvec3_cross(right_offset, dir_to_target, math.UP)
+
+	local left_offset = mvector3.copy(right_offset)
+
+	mvec3_mul(right_offset, self.attention_target_offset_hor)
+	mvec3_mul(left_offset, -self.attention_target_offset_hor)
+	mvector3.set_z(right_offset, mvector3.z(right_offset) + self.attention_target_offset_ver)
+	mvector3.set_z(left_offset, mvector3.z(left_offset) + self.attention_target_offset_ver)
+
+	local ignore_units = {self._unit}
+	local offsets = {
+		Vector3(0, 0, 0),
+		right_offset,
+		left_offset
+	}
+
+	for i, offset in ipairs(offsets) do
+		local target_pos = mvector3.copy(target_base_pos)
+
+		mvec3_add(target_pos, offset)
+
+		local vis_ray = World:raycast("ray", my_pos, target_pos, "ignore_unit", ignore_units, "slot_mask", self._visibility_slotmask, "ray_type", "ai_vision")
+
+		if not vis_ray then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- Lines: 605 to 648
 function SentryGunBrain:_upd_flash_grenade(t)
 	if not self._tweak_data.FLASH_GRENADE then
 		return
@@ -538,7 +630,7 @@ function SentryGunBrain:_upd_flash_grenade(t)
 		mvector3.set_z(self._grenade_m_pos, self._grenade_m_pos.z + 3)
 
 		for u_key, attention_info in pairs(self._detected_attention_objects) do
-			if attention_info.identified and attention_info.last_verified_pos and mvector3.distance_sq(self._grenade_m_pos, attention_info.last_verified_pos) < max_range * max_range then
+			if attention_info.identified and attention_info.last_verified_pos and mvec3_dist_sq(self._grenade_m_pos, attention_info.last_verified_pos) < max_range * max_range then
 				managers.groupai:state():detonate_cs_grenade(self._grenade_m_pos, m_pos, grenade_tweak.effect_duration)
 
 				self._next_flash_grenade_chk_t = check_t + math.lerp(grenade_tweak.quiet_time[1], grenade_tweak.quiet_time[2], math.random())
@@ -549,7 +641,7 @@ function SentryGunBrain:_upd_flash_grenade(t)
 	end
 end
 
--- Lines: 564 to 610
+-- Lines: 652 to 698
 function SentryGunBrain:_upd_go_idle(t)
 	if not Network:is_server() or not self._tweak_data.CAN_GO_IDLE then
 		return
@@ -582,7 +674,7 @@ function SentryGunBrain:_upd_go_idle(t)
 	end
 end
 
--- Lines: 614 to 644
+-- Lines: 702 to 732
 function SentryGunBrain:on_detected_attention_obj_modified(modified_u_key)
 	local attention_info = self._detected_attention_objects[modified_u_key]
 
@@ -616,7 +708,7 @@ function SentryGunBrain:on_detected_attention_obj_modified(modified_u_key)
 	end
 end
 
--- Lines: 648 to 659
+-- Lines: 736 to 747
 function SentryGunBrain:on_damage_received(attacker_unit)
 	if not Network:is_server() or not attacker_unit then
 		return
@@ -632,7 +724,7 @@ function SentryGunBrain:on_damage_received(attacker_unit)
 	attention_info.dmg_t = TimerManager:game():time()
 end
 
--- Lines: 663 to 678
+-- Lines: 751 to 766
 function SentryGunBrain:on_team_set(team_data)
 	if self._attention_handler then
 		self._attention_handler:set_team(team_data)
@@ -651,7 +743,7 @@ function SentryGunBrain:on_team_set(team_data)
 	self:_update_SO_access()
 end
 
--- Lines: 682 to 689
+-- Lines: 770 to 777
 function SentryGunBrain:set_idle(state)
 	self._idle = state
 
@@ -662,12 +754,12 @@ function SentryGunBrain:set_idle(state)
 	end
 end
 
--- Lines: 693 to 694
+-- Lines: 781 to 782
 function SentryGunBrain:get_repair_counter()
 	return self._auto_repair_counter
 end
 
--- Lines: 700 to 719
+-- Lines: 788 to 807
 function SentryGunBrain:switch_off()
 	local is_server = Network:is_server()
 
@@ -692,7 +784,7 @@ function SentryGunBrain:switch_off()
 	self._attention_obj = nil
 end
 
--- Lines: 723 to 747
+-- Lines: 811 to 835
 function SentryGunBrain:switch_on()
 	if self._active or self._unit:character_damage():dead() then
 		return
@@ -722,7 +814,7 @@ function SentryGunBrain:switch_on()
 	end
 end
 
--- Lines: 751 to 755
+-- Lines: 839 to 843
 function SentryGunBrain:_setup_attention_handler()
 	self._attention_handler = CharacterAttentionObject:new(self._unit)
 
@@ -730,27 +822,27 @@ function SentryGunBrain:_setup_attention_handler()
 	PlayerMovement.set_attention_settings(self, {"sentry_gun_enemy_cbt"})
 end
 
--- Lines: 759 to 760
+-- Lines: 847 to 848
 function SentryGunBrain:attention_handler()
 	return self._attention_handler
 end
 
--- Lines: 765 to 766
+-- Lines: 853 to 854
 function SentryGunBrain:SO_access()
 	return self._SO_access
 end
 
--- Lines: 771 to 773
+-- Lines: 859 to 861
 function SentryGunBrain:on_hacked_start()
 	PlayerMovement.set_attention_settings(self, {"sentry_gun_enemy_cbt_hacked"})
 end
 
--- Lines: 777 to 779
+-- Lines: 865 to 867
 function SentryGunBrain:on_hacked_end()
 	PlayerMovement.set_attention_settings(self, {"sentry_gun_enemy_cbt"})
 end
 
--- Lines: 781 to 785
+-- Lines: 869 to 873
 function SentryGunBrain:_attention_health_ratio(attention)
 	if attention and attention.health_ratio then
 		return attention.unit:character_damage():health_ratio()
@@ -759,7 +851,7 @@ function SentryGunBrain:_attention_health_ratio(attention)
 	return 1
 end
 
--- Lines: 788 to 792
+-- Lines: 876 to 880
 function SentryGunBrain:_attention_objective(attention)
 	if attention and attention.objective then
 		return attention.unit:brain():objective()
@@ -769,7 +861,7 @@ function SentryGunBrain:_attention_objective(attention)
 end
 local up_offs = math.UP * 50
 
--- Lines: 796 to 807
+-- Lines: 884 to 895
 function SentryGunBrain:_ignore_shield(ignore_units, my_pos, attention)
 	if self._ap_bullets then
 		return false
@@ -786,7 +878,7 @@ function SentryGunBrain:_ignore_shield(ignore_units, my_pos, attention)
 	return false
 end
 
--- Lines: 812 to 820
+-- Lines: 900 to 908
 function SentryGunBrain:save(save_data)
 	local my_save_data = {}
 	save_data.brain = my_save_data
@@ -795,7 +887,7 @@ function SentryGunBrain:save(save_data)
 	my_save_data.idle = self._idle
 end
 
--- Lines: 824 to 837
+-- Lines: 912 to 925
 function SentryGunBrain:load(save_data)
 	if not save_data or not save_data.brain then
 		return
@@ -810,7 +902,7 @@ function SentryGunBrain:load(save_data)
 	self:set_idle(my_save_data.idle)
 end
 
--- Lines: 841 to 851
+-- Lines: 929 to 939
 function SentryGunBrain:pre_destroy()
 	for key, attention_info in pairs(self._detected_attention_objects) do
 		self:_destroy_detected_attention_object_data(attention_info)
@@ -823,7 +915,7 @@ function SentryGunBrain:pre_destroy()
 	end
 end
 
--- Lines: 854 to 855
+-- Lines: 942 to 943
 function SentryGunBrain:on_intimidated(amount, aggressor_unit)
 end
 

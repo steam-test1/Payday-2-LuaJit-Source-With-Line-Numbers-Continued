@@ -78,19 +78,30 @@ function ProjectileBase:get_name_id()
 	return alive(self._weapon_unit) and self._weapon_unit:base():get_name_id() or self._projectile_entry
 end
 
--- Lines: 86 to 89
+-- Lines: 84 to 90
+function ProjectileBase:is_category(...)
+	for _, cat in ipairs({...}) do
+		if cat == "projectile" then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- Lines: 95 to 98
 function ProjectileBase:set_active(active)
 	self._active = active
 
 	self._unit:set_extension_update_enabled(Idstring("base"), self._active)
 end
 
--- Lines: 91 to 92
+-- Lines: 100 to 101
 function ProjectileBase:active()
 	return self._active
 end
 
--- Lines: 98 to 106
+-- Lines: 107 to 115
 function ProjectileBase:create_sweep_data()
 	self._sweep_data = {slot_mask = self._slot_mask}
 	self._sweep_data.slot_mask = managers.mutators:modify_value("ProjectileBase:create_sweep_data:slot_mask", self._sweep_data.slot_mask)
@@ -98,7 +109,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
--- Lines: 110 to 179
+-- Lines: 119 to 188
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -158,7 +169,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
--- Lines: 183 to 186
+-- Lines: 192 to 195
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
@@ -168,7 +179,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
--- Lines: 190 to 233
+-- Lines: 199 to 242
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -214,7 +225,7 @@ function ProjectileBase:update(unit, t, dt)
 	end
 end
 
--- Lines: 238 to 266
+-- Lines: 247 to 275
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -243,34 +254,34 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
--- Lines: 270 to 272
+-- Lines: 279 to 281
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
--- Lines: 276 to 278
+-- Lines: 285 to 287
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
--- Lines: 282 to 287
+-- Lines: 291 to 296
 function ProjectileBase:save(data)
 	local state = {timer = self._timer}
 	data.ProjectileBase = state
 end
 
--- Lines: 291 to 294
+-- Lines: 300 to 303
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
 end
 
--- Lines: 298 to 300
+-- Lines: 307 to 309
 function ProjectileBase:destroy()
 	self:remove_trail_effect()
 end
 
--- Lines: 306 to 342
+-- Lines: 315 to 351
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
@@ -314,14 +325,14 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines: 347 to 350
+-- Lines: 356 to 359
 function ProjectileBase:add_trail_effect()
 	managers.game_play_central:add_projectile_trail(self._unit, self._unit:orientation_object())
 
 	self._added_trail_effect = true
 end
 
--- Lines: 352 to 357
+-- Lines: 361 to 366
 function ProjectileBase:remove_trail_effect()
 	if self._added_trail_effect then
 		managers.game_play_central:remove_projectile_trail(self._unit)
@@ -330,7 +341,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines: 361 to 377
+-- Lines: 370 to 386
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -351,18 +362,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines: 390 to 392
+-- Lines: 399 to 401
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines: 397 to 398
+-- Lines: 406 to 407
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines: 400 to 415
+-- Lines: 409 to 424
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -382,13 +393,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines: 419 to 422
+-- Lines: 428 to 431
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines: 424 to 426
+-- Lines: 433 to 435
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

@@ -79,7 +79,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self:_add_desc_from_name_macro(self.weapon_mods)
 end
 
--- Lines: 123 to 323
+-- Lines: 123 to 341
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {locked = {}}
 	self.characters.locked.fps_unit = "units/payday2/characters/fps_mover/fps_mover"
@@ -307,7 +307,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines: 327 to 403
+-- Lines: 345 to 421
 function BlackMarketTweakData:_init_cash()
 	self.cash = {cash10 = {}}
 	self.cash.cash10.name_id = "bm_csh_cash10"
@@ -421,7 +421,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines: 407 to 469
+-- Lines: 425 to 487
 function BlackMarketTweakData:_init_xp()
 	self.xp = {xp10 = {}}
 	self.xp.xp10.name_id = "bm_exp_xp10"
@@ -521,7 +521,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines: 473 to 512
+-- Lines: 491 to 530
 function BlackMarketTweakData:_init_armors()
 	self.armors = {level_1 = {}}
 	self.armors.level_1.name_id = "bm_armor_level_1"
@@ -561,7 +561,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines: 516 to 548
+-- Lines: 534 to 566
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {doctor_bag = {}}
 	self.deployables.doctor_bag.name_id = "bm_equipment_doctor_bag"
@@ -577,7 +577,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines: 550 to 557
+-- Lines: 568 to 575
 function BlackMarketTweakData:get_mask_icon(mask_id)
 	local guis_catalog = "guis/"
 	local bundle_folder = tweak_data.blackmarket.masks[mask_id] and tweak_data.blackmarket.masks[mask_id].texture_bundle_folder
@@ -589,7 +589,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines: 560 to 570
+-- Lines: 578 to 588
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

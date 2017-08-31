@@ -2013,7 +2013,7 @@ function CopMovement:clbk_inventory(unit, event)
 			table.insert(self._weapon_hold, weap_tweak.hold)
 		end
 
-		local weapon_usage = weap_tweak.usage
+		local weapon_usage = weap_tweak.anim_usage or weap_tweak.usage
 
 		self._machine:set_global(weapon_usage, 1)
 
@@ -2491,7 +2491,7 @@ end
 
 -- Lines: 2609 to 2611
 function CopMovement:sync_action_tase_end()
-	self:_cancel_latest_action("tase", true)
+	self:_cancel_latest_action("tase")
 end
 
 -- Lines: 2615 to 2623

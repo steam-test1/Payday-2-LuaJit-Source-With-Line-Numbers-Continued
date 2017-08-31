@@ -302,7 +302,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines: 322 to 433
+-- Lines: 322 to 436
 function IngameWaitingForPlayersState:at_enter()
 	self._started_from_beginning = true
 
@@ -396,7 +396,7 @@ function IngameWaitingForPlayersState:at_enter()
 	TestAPIHelper.on_event("start_job_loadout")
 end
 
--- Lines: 437 to 468
+-- Lines: 440 to 471
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -434,7 +434,7 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines: 472 to 485
+-- Lines: 475 to 488
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	if not self._skip_promt_shown and not self._file_streamer_max_workload and not managers.menu:active_menu() and managers.network:session() then
 		if managers.network:session():are_peers_done_streaming() then
@@ -451,7 +451,7 @@ function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	end
 end
 
--- Lines: 487 to 494
+-- Lines: 490 to 497
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -462,7 +462,7 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines: 497 to 503
+-- Lines: 500 to 506
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 	Global.statistics_manager.playing_from_start = nil
@@ -470,12 +470,12 @@ function IngameWaitingForPlayersState:set_dropin(char_name)
 	print("Joining as " .. char_name)
 end
 
--- Lines: 505 to 506
+-- Lines: 508 to 509
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines: 509 to 592
+-- Lines: 512 to 595
 function IngameWaitingForPlayersState:at_exit()
 	managers.dyn_resource:set_file_streaming_chunk_size_mul(0.25, 5)
 
@@ -552,7 +552,7 @@ function IngameWaitingForPlayersState:at_exit()
 	TestAPIHelper.on_event("start_job")
 end
 
--- Lines: 594 to 607
+-- Lines: 597 to 610
 function IngameWaitingForPlayersState:_get_cameras()
 	self._cameras = {}
 
@@ -583,7 +583,7 @@ function IngameWaitingForPlayersState:_get_cameras()
 	end
 end
 
--- Lines: 609 to 622
+-- Lines: 612 to 625
 function IngameWaitingForPlayersState:_next_camera()
 	self._camera_data.next_t = Application:time() + 8 + math.rand(4)
 	self._camera_data.index = self._camera_data.index + 1
@@ -597,17 +597,17 @@ function IngameWaitingForPlayersState:_next_camera()
 	self._cam_unit:camera():start(math.rand(30))
 end
 
--- Lines: 624 to 626
+-- Lines: 627 to 629
 function IngameWaitingForPlayersState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 628 to 630
+-- Lines: 631 to 633
 function IngameWaitingForPlayersState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 632 to 634
+-- Lines: 635 to 637
 function IngameWaitingForPlayersState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

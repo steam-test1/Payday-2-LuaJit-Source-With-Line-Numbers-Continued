@@ -134,10 +134,9 @@ function PlayerManager:init()
 	self:check_skills()
 end
 
--- Lines: 125 to 228
+-- Lines: 125 to 227
 function PlayerManager:check_skills()
 	self._coroutine_mgr:remove_coroutine(PlayerAction.UnseenStrike)
-	self._coroutine_mgr:remove_coroutine(PlayerAction.UnseenStrikeStart)
 	self._coroutine_mgr:remove_coroutine(PlayerAction.BloodthirstBase)
 
 	self._saw_panic_when_kill = self:has_category_upgrade("saw", "panic_when_kill")
@@ -157,7 +156,7 @@ function PlayerManager:check_skills()
 
 	if self:has_category_upgrade("player", "melee_damage_stacking") then
 
-		-- Lines: 146 to 155
+		-- Lines: 145 to 154
 		local function start_bloodthirst_base(weapon_unit, variant)
 			if variant ~= "melee" and not self._coroutine_mgr:is_running(PlayerAction.BloodthirstBase) then
 				local data = self:upgrade_value("player", "melee_damage_stacking", nil)
@@ -235,7 +234,7 @@ function PlayerManager:check_skills()
 		local cooldown = self:upgrade_value("player", "dodge_shot_gain")[2]
 
 
-		-- Lines: 209 to 215
+		-- Lines: 208 to 214
 		local function on_player_damage(attack_data)
 			local t = TimerManager:game():time()
 
@@ -260,7 +259,7 @@ function PlayerManager:check_skills()
 	end
 end
 
--- Lines: 230 to 235
+-- Lines: 229 to 234
 function PlayerManager:damage_absorption()
 	local absorb = Application:digest_value(self._damage_absorption, false)
 	absorb = managers.crime_spree:modify_value("PlayerManager:GetDamageAbsorption", absorb)
@@ -268,12 +267,12 @@ function PlayerManager:damage_absorption()
 	return absorb
 end
 
--- Lines: 238 to 240
+-- Lines: 237 to 239
 function PlayerManager:set_damage_absorption(value)
 	self._damage_absorption = Application:digest_value(value, true)
 end
 
--- Lines: 242 to 251
+-- Lines: 241 to 250
 function PlayerManager:_on_expert_handling_event(attacker_unit, unit, variant)
 	if attacker_unit == self:player_unit() and self:is_current_weapon_of_category("pistol") and variant == "bullet" and not self._coroutine_mgr:is_running(PlayerAction.ExpertHandling) then
 		local data = self:upgrade_value("pistol", "stacked_accuracy_bonus", nil)
@@ -284,7 +283,7 @@ function PlayerManager:_on_expert_handling_event(attacker_unit, unit, variant)
 	end
 end
 
--- Lines: 253 to 262
+-- Lines: 252 to 261
 function PlayerManager:_on_enter_trigger_happy_event(attacker_unit, unit, variant)
 	if attacker_unit == self:player_unit() and variant == "bullet" and not self._coroutine_mgr:is_running("trigger_happy") and self:is_current_weapon_of_category("pistol") then
 		local data = self:upgrade_value("pistol", "stacking_hit_damage_multiplier", 0)
@@ -295,7 +294,7 @@ function PlayerManager:_on_enter_trigger_happy_event(attacker_unit, unit, varian
 	end
 end
 
--- Lines: 264 to 271
+-- Lines: 263 to 270
 function PlayerManager:_on_enemy_killed_bloodthirst(equipped_unit, variant, killed_unit)
 	if variant == "melee" then
 		local data = self:upgrade_value("player", "melee_kill_increase_reload_speed", 0)
@@ -306,7 +305,7 @@ function PlayerManager:_on_enemy_killed_bloodthirst(equipped_unit, variant, kill
 	end
 end
 
--- Lines: 273 to 280
+-- Lines: 272 to 279
 function PlayerManager:_on_enter_ammo_efficiency_event()
 	if not self._coroutine_mgr:is_running("ammo_efficiency") then
 		local weapon_unit = self:equipped_weapon_unit()
@@ -317,7 +316,7 @@ function PlayerManager:_on_enter_ammo_efficiency_event()
 	end
 end
 
--- Lines: 282 to 292
+-- Lines: 281 to 291
 function PlayerManager:_on_activate_aggressive_reload_event(attack_data)
 	if attack_data and attack_data.variant ~= "projectile" then
 		local weapon_unit = self:equipped_weapon_unit()
@@ -332,7 +331,7 @@ function PlayerManager:_on_activate_aggressive_reload_event(attack_data)
 	end
 end
 
--- Lines: 294 to 303
+-- Lines: 293 to 302
 function PlayerManager:_on_enter_shock_and_awe_event()
 	if not self._coroutine_mgr:is_running("automatic_faster_reload") then
 		local equipped_unit = self:get_current_state()._equipped_unit
@@ -345,38 +344,38 @@ function PlayerManager:_on_enter_shock_and_awe_event()
 	end
 end
 
--- Lines: 305 to 313
+-- Lines: 304 to 312
 function PlayerManager:_on_messiah_event()
 	if self._messiah_charges > 0 and self._current_state == "bleed_out" and not self._coroutine_mgr:is_running("get_up_messiah") then
 		self._coroutine_mgr:add_coroutine("get_up_messiah", PlayerAction.MessiahGetUp, self)
 	end
 end
 
--- Lines: 315 to 316
+-- Lines: 314 to 315
 function PlayerManager:messiah_charges()
 	return self._messiah_charges
 end
 
--- Lines: 319 to 323
+-- Lines: 318 to 322
 function PlayerManager:use_messiah_charge()
 	if self._messiah_charges then
 		self._messiah_charges = math.max(self._messiah_charges - 1, 0)
 	end
 end
 
--- Lines: 325 to 329
+-- Lines: 324 to 328
 function PlayerManager:_on_messiah_recharge_event()
 	if self._messiah_charges and self._max_messiah_charges then
 		self._messiah_charges = math.min(self._messiah_charges + 1, self._max_messiah_charges)
 	end
 end
 
--- Lines: 331 to 332
+-- Lines: 330 to 331
 function PlayerManager:stockholm_syndrome_count()
 	return self._super_syndrome_count
 end
 
--- Lines: 335 to 345
+-- Lines: 334 to 344
 function PlayerManager:change_stockholm_syndrome_count(value)
 	self._super_syndrome_count = math.max(self._super_syndrome_count + value, 0)
 
@@ -389,7 +388,7 @@ function PlayerManager:change_stockholm_syndrome_count(value)
 	end
 end
 
--- Lines: 347 to 355
+-- Lines: 346 to 354
 function PlayerManager:_on_spawn_extra_ammo_event(equipped_unit, variant, killed_unit)
 	if self._num_kills % self._target_kills == 0 then
 		if Network:is_client() then
@@ -400,122 +399,122 @@ function PlayerManager:_on_spawn_extra_ammo_event(equipped_unit, variant, killed
 	end
 end
 
--- Lines: 357 to 359
+-- Lines: 356 to 358
 function PlayerManager:mul_melee_damage(value)
 	self._melee_dmg_mul = self._melee_dmg_mul * value
 end
 
--- Lines: 361 to 363
+-- Lines: 360 to 362
 function PlayerManager:set_melee_dmg_multiplier(value)
 	self._melee_dmg_mul = value
 end
 
--- Lines: 365 to 367
+-- Lines: 364 to 366
 function PlayerManager:reset_melee_dmg_multiplier()
 	self._melee_dmg_mul = 1
 end
 
--- Lines: 369 to 370
+-- Lines: 368 to 369
 function PlayerManager:get_melee_dmg_multiplier()
 	return self._melee_dmg_mul
 end
 
--- Lines: 373 to 375
+-- Lines: 372 to 374
 function PlayerManager:mul_to_accuracy_multiplier(value)
 	self._accuracy_multiplier = self._accuracy_multiplier * value
 end
 
--- Lines: 377 to 379
+-- Lines: 376 to 378
 function PlayerManager:reset_acuracy_multiplier()
 	self._accuracy_multiplier = 1
 end
 
--- Lines: 381 to 382
+-- Lines: 380 to 381
 function PlayerManager:get_accuracy_multiplier()
 	return self._accuracy_multiplier
 end
 
--- Lines: 385 to 387
+-- Lines: 384 to 386
 function PlayerManager:add_to_crit_mul(value)
 	self._crit_mul = self._crit_mul + value
 end
 
--- Lines: 389 to 391
+-- Lines: 388 to 390
 function PlayerManager:sub_from_crit_mul(value)
 	self._crit_mul = self._crit_mul - value
 end
 
--- Lines: 393 to 395
+-- Lines: 392 to 394
 function PlayerManager:register_message(message, uid, func)
 	self._message_system:register(message, uid, func)
 end
 
--- Lines: 397 to 399
+-- Lines: 396 to 398
 function PlayerManager:unregister_message(message, uid)
 	self._message_system:unregister(message, uid)
 end
 
--- Lines: 401 to 403
+-- Lines: 400 to 402
 function PlayerManager:send_message(message, uid, ...)
 	self._message_system:notify(message, uid, ...)
 end
 
--- Lines: 405 to 407
+-- Lines: 404 to 406
 function PlayerManager:send_message_now(message, uid, ...)
 	self._message_system:notify_now(message, uid, ...)
 end
 
--- Lines: 409 to 411
+-- Lines: 408 to 410
 function PlayerManager:add_coroutine(name, func, ...)
 	self._coroutine_mgr:add_coroutine(name, func, ...)
 end
 
--- Lines: 413 to 415
+-- Lines: 412 to 414
 function PlayerManager:add_to_property(name, value)
 	self._properties:add_to_property(name, value)
 end
 
--- Lines: 417 to 419
+-- Lines: 416 to 418
 function PlayerManager:mul_to_property(name, value)
 	self._properties:mul_to_property(name, value)
 end
 
--- Lines: 421 to 423
+-- Lines: 420 to 422
 function PlayerManager:remove_property(name)
 	self._properties:remove_property(name)
 end
 
--- Lines: 425 to 427
+-- Lines: 424 to 426
 function PlayerManager:set_property(name, value)
 	self._properties:set_property(name, value)
 end
 
--- Lines: 429 to 430
+-- Lines: 428 to 429
 function PlayerManager:get_property(name, default)
 	return self._properties:get_property(name, default)
 end
 
--- Lines: 433 to 434
+-- Lines: 432 to 433
 function PlayerManager:get_temporary_property(name, default)
 	return self._temporary_properties:get_property(name, default)
 end
 
--- Lines: 437 to 439
+-- Lines: 436 to 438
 function PlayerManager:activate_temporary_property(name, time, value)
 	self._temporary_properties:activate_property(name, time, value)
 end
 
--- Lines: 441 to 443
+-- Lines: 440 to 442
 function PlayerManager:add_to_temporary_property(name, time, value)
 	self._temporary_properties:add_to_property(name, time, value)
 end
 
--- Lines: 445 to 446
+-- Lines: 444 to 445
 function PlayerManager:has_active_temporary_property(name)
 	return self._temporary_properties:has_active_property(name)
 end
 
--- Lines: 449 to 502
+-- Lines: 448 to 501
 function PlayerManager:_setup()
 	self._equipment = {
 		selections = {},
@@ -566,12 +565,12 @@ function PlayerManager:_setup()
 	self._global = Global.player_manager
 end
 
--- Lines: 504 to 508
+-- Lines: 503 to 507
 function PlayerManager:_setup_rules()
 	self._rules = {no_run = 0}
 end
 
--- Lines: 511 to 527
+-- Lines: 510 to 526
 function PlayerManager:aquire_default_upgrades()
 	local default_upgrades = tweak_data.skilltree.default_upgrades or {}
 
@@ -590,7 +589,7 @@ function PlayerManager:aquire_default_upgrades()
 	self:_verify_equipment_kit(true)
 end
 
--- Lines: 529 to 577
+-- Lines: 528 to 576
 function PlayerManager:update(t, dt)
 	self._message_system:update()
 
@@ -627,7 +626,7 @@ function PlayerManager:update(t, dt)
 	self._coroutine_mgr:update(t, dt)
 	self._action_mgr:update(t, dt)
 
-	if self._unseen_strike and not self._coroutine_mgr:is_running(PlayerAction.UnseenStrike) and not self._coroutine_mgr:is_running(PlayerAction.UnseenStrikeStart) then
+	if self._unseen_strike and not self._coroutine_mgr:is_running(PlayerAction.UnseenStrike) then
 		local data = self:upgrade_value("player", "unseen_increased_crit_chance", 0)
 
 		if data ~= 0 then
@@ -644,21 +643,21 @@ function PlayerManager:update(t, dt)
 	self:update_smoke_screens(t, dt)
 end
 
--- Lines: 579 to 581
+-- Lines: 578 to 580
 function PlayerManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines: 583 to 585
+-- Lines: 582 to 584
 function PlayerManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines: 587 to 588
+-- Lines: 586 to 587
 function PlayerManager:preload()
 end
 
--- Lines: 590 to 600
+-- Lines: 589 to 599
 function PlayerManager:need_send_player_status()
 	local player = self:player_unit()
 
@@ -675,7 +674,7 @@ function PlayerManager:need_send_player_status()
 	player:character_damage():send_set_status()
 end
 
--- Lines: 602 to 687
+-- Lines: 601 to 686
 function PlayerManager:_internal_load()
 	local player = self:player_unit()
 
@@ -787,7 +786,7 @@ function PlayerManager:_internal_load()
 	end
 end
 
--- Lines: 690 to 707
+-- Lines: 689 to 706
 function PlayerManager:_add_level_equipment(player)
 	local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
 	id = id ~= "none" and id or nil
@@ -812,7 +811,7 @@ function PlayerManager:_add_level_equipment(player)
 	end
 end
 
--- Lines: 709 to 758
+-- Lines: 708 to 757
 function PlayerManager:spawn_dropin_penalty(dead, bleed_out, health, used_deployable, used_cable_ties, used_body_bags)
 	local player = self:player_unit()
 
@@ -861,17 +860,17 @@ function PlayerManager:spawn_dropin_penalty(dead, bleed_out, health, used_deploy
 	end
 end
 
--- Lines: 760 to 761
+-- Lines: 759 to 760
 function PlayerManager:nr_players()
 	return self._nr_players
 end
 
--- Lines: 764 to 766
+-- Lines: 763 to 765
 function PlayerManager:set_nr_players(nr)
 	self._nr_players = nr
 end
 
--- Lines: 768 to 776
+-- Lines: 767 to 775
 function PlayerManager:player_id(unit)
 	local id = self._last_id
 
@@ -884,7 +883,7 @@ function PlayerManager:player_id(unit)
 	return id
 end
 
--- Lines: 779 to 784
+-- Lines: 778 to 783
 function PlayerManager:viewport_config()
 	local configs = self._viewport_configs[self._last_id]
 
@@ -893,7 +892,7 @@ function PlayerManager:viewport_config()
 	end
 end
 
--- Lines: 786 to 797
+-- Lines: 785 to 796
 function PlayerManager:setup_viewports()
 	local configs = self._viewport_configs[self._last_id]
 
@@ -906,7 +905,7 @@ function PlayerManager:setup_viewports()
 	end
 end
 
--- Lines: 800 to 806
+-- Lines: 799 to 805
 function PlayerManager:player_states()
 	local ret = {}
 
@@ -919,22 +918,22 @@ function PlayerManager:player_states()
 	return ret
 end
 
--- Lines: 810 to 811
+-- Lines: 809 to 810
 function PlayerManager:current_state()
 	return self._current_state
 end
 
--- Lines: 814 to 815
+-- Lines: 813 to 814
 function PlayerManager:default_player_state()
 	return self._DEFAULT_STATE
 end
 
--- Lines: 818 to 819
+-- Lines: 817 to 818
 function PlayerManager:current_sync_state()
 	return self._current_sync_state
 end
 
--- Lines: 823 to 873
+-- Lines: 822 to 872
 function PlayerManager:set_player_state(state)
 	state = state or self._current_state
 
@@ -981,7 +980,7 @@ function PlayerManager:set_player_state(state)
 	self:_change_player_state()
 end
 
--- Lines: 875 to 881
+-- Lines: 874 to 880
 function PlayerManager:spawn_players(position, rotation, state)
 	for var = 1, self._nr_players, 1 do
 		self._last_id = var
@@ -992,7 +991,7 @@ function PlayerManager:spawn_players(position, rotation, state)
 	return self._players[1]
 end
 
--- Lines: 884 to 895
+-- Lines: 883 to 894
 function PlayerManager:spawned_player(id, unit)
 	self._players[id] = unit
 
@@ -1006,7 +1005,7 @@ function PlayerManager:spawned_player(id, unit)
 	end
 end
 
--- Lines: 897 to 908
+-- Lines: 896 to 907
 function PlayerManager:_change_player_state()
 	local unit = self:player_unit()
 
@@ -1023,35 +1022,35 @@ function PlayerManager:_change_player_state()
 	unit:movement():change_state(self._current_state)
 end
 
--- Lines: 910 to 913
+-- Lines: 909 to 912
 function PlayerManager:player_destroyed(id)
 	self._players[id] = nil
 	self._respawn = true
 end
 
--- Lines: 915 to 916
+-- Lines: 914 to 915
 function PlayerManager:players()
 	return self._players
 end
 
--- Lines: 919 to 920
+-- Lines: 918 to 919
 function PlayerManager:player_unit_name()
 	return self._player_name
 end
 
--- Lines: 923 to 925
+-- Lines: 922 to 924
 function PlayerManager:player_unit(id)
 	local p_id = id or 1
 
 	return self._players[p_id]
 end
 
--- Lines: 928 to 929
+-- Lines: 927 to 928
 function PlayerManager:local_player()
 	return self:player_unit()
 end
 
--- Lines: 932 to 941
+-- Lines: 931 to 940
 function PlayerManager:num_players_with_more_health()
 	local num_players = 0
 	local count = #self._player_list
@@ -1066,12 +1065,12 @@ function PlayerManager:num_players_with_more_health()
 	return num_players
 end
 
--- Lines: 944 to 945
+-- Lines: 943 to 944
 function PlayerManager:num_connected_players()
 	return #self._player_list
 end
 
--- Lines: 948 to 953
+-- Lines: 947 to 952
 function PlayerManager:warp_to(pos, rot, id, velocity)
 	local player = self._players[id or 1]
 
@@ -1080,7 +1079,7 @@ function PlayerManager:warp_to(pos, rot, id, velocity)
 	end
 end
 
--- Lines: 955 to 983
+-- Lines: 954 to 982
 function PlayerManager:on_out_of_world()
 	local player_unit = managers.player:player_unit()
 
@@ -1114,7 +1113,7 @@ function PlayerManager:on_out_of_world()
 	managers.player:warp_to(pos, player_unit:rotation())
 end
 
--- Lines: 985 to 996
+-- Lines: 984 to 995
 function PlayerManager:aquire_weapon(upgrade, id)
 	if self._global.weapons[id] then
 		return
@@ -1128,28 +1127,28 @@ function PlayerManager:aquire_weapon(upgrade, id)
 	end
 end
 
--- Lines: 998 to 1000
+-- Lines: 997 to 999
 function PlayerManager:unaquire_weapon(upgrade, id)
 	self._global.weapons[id] = upgrade
 end
 
--- Lines: 1003 to 1004
+-- Lines: 1002 to 1003
 function PlayerManager:aquire_melee_weapon(upgrade, id)
 end
 
--- Lines: 1007 to 1008
+-- Lines: 1006 to 1007
 function PlayerManager:unaquire_melee_weapon(upgrade, id)
 end
 
--- Lines: 1011 to 1012
+-- Lines: 1010 to 1011
 function PlayerManager:aquire_grenade(upgrade, id)
 end
 
--- Lines: 1015 to 1016
+-- Lines: 1014 to 1015
 function PlayerManager:unaquire_grenade(upgrade, id)
 end
 
--- Lines: 1019 to 1029
+-- Lines: 1018 to 1028
 function PlayerManager:_verify_equipment_kit(loading)
 	if not self._global.kit.equipment_slots[1] then
 		if managers.blackmarket then
@@ -1166,7 +1165,7 @@ function PlayerManager:_verify_equipment_kit(loading)
 	end
 end
 
--- Lines: 1031 to 1043
+-- Lines: 1030 to 1042
 function PlayerManager:aquire_equipment(upgrade, id, loading)
 	if self._global.equipment[id] then
 		return
@@ -1181,14 +1180,14 @@ function PlayerManager:aquire_equipment(upgrade, id, loading)
 	self:_verify_equipment_kit(loading)
 end
 
--- Lines: 1045 to 1049
+-- Lines: 1044 to 1048
 function PlayerManager:spawn_extra_ammo(unit)
 	if alive(unit) then
 		unit:character_damage():drop_pickup(true)
 	end
 end
 
--- Lines: 1052 to 1167
+-- Lines: 1051 to 1166
 function PlayerManager:on_killshot(killed_unit, variant, headshot, weapon_id)
 	local player_unit = self:player_unit()
 
@@ -1303,7 +1302,7 @@ function PlayerManager:on_killshot(killed_unit, variant, headshot, weapon_id)
 	self._on_killshot_t = t + (tweak_data.upgrades.on_killshot_cooldown or 0)
 end
 
--- Lines: 1171 to 1245
+-- Lines: 1170 to 1244
 function PlayerManager:chk_wild_kill_counter(killed_unit, variant)
 	local player_unit = self:player_unit()
 
@@ -1373,7 +1372,7 @@ function PlayerManager:chk_wild_kill_counter(killed_unit, variant)
 	end
 end
 
--- Lines: 1248 to 1268
+-- Lines: 1247 to 1267
 function PlayerManager:chk_store_armor_health_kill_counter(killed_unit, variant)
 	local player_unit = self:player_unit()
 
@@ -1399,7 +1398,7 @@ function PlayerManager:chk_store_armor_health_kill_counter(killed_unit, variant)
 	end
 end
 
--- Lines: 1271 to 1306
+-- Lines: 1270 to 1305
 function PlayerManager:_update_damage_dealt(t, dt)
 	local local_peer_id = managers.network:session() and managers.network:session():local_peer():id()
 
@@ -1434,7 +1433,7 @@ function PlayerManager:_update_damage_dealt(t, dt)
 	end
 end
 
--- Lines: 1310 to 1328
+-- Lines: 1309 to 1327
 function PlayerManager:on_damage_dealt(unit, damage_info)
 	local player_unit = self:player_unit()
 
@@ -1454,7 +1453,7 @@ function PlayerManager:on_damage_dealt(unit, damage_info)
 	self._on_damage_dealt_t = t + (tweak_data.upgrades.on_damage_dealt_cooldown or 0)
 end
 
--- Lines: 1331 to 1351
+-- Lines: 1330 to 1350
 function PlayerManager:_check_damage_to_cops(t, unit, damage_info)
 	local player_unit = self:player_unit()
 
@@ -1478,7 +1477,7 @@ function PlayerManager:_check_damage_to_cops(t, unit, damage_info)
 	self._damage_dealt_to_cops = self._damage_dealt_to_cops + (damage_info.damage or 0)
 end
 
--- Lines: 1354 to 1373
+-- Lines: 1353 to 1372
 function PlayerManager:on_headshot_dealt()
 	local player_unit = self:player_unit()
 
@@ -1503,7 +1502,7 @@ function PlayerManager:on_headshot_dealt()
 	end
 end
 
--- Lines: 1375 to 1381
+-- Lines: 1374 to 1380
 function PlayerManager:on_lethal_headshot_dealt(attacker_unit, attack_data)
 	if not self:player_unit() or attacker_unit ~= self:player_unit() then
 		return
@@ -1512,7 +1511,7 @@ function PlayerManager:on_lethal_headshot_dealt(attacker_unit, attack_data)
 	self._message_system:notify(Message.OnLethalHeadShot, nil, attack_data)
 end
 
--- Lines: 1383 to 1429
+-- Lines: 1382 to 1428
 function PlayerManager:_check_damage_to_hot(t, unit, damage_info)
 	local player_unit = self:player_unit()
 
@@ -1565,7 +1564,7 @@ function PlayerManager:_check_damage_to_hot(t, unit, damage_info)
 	self._next_allowed_doh_t = t + data.stacking_cooldown
 end
 
--- Lines: 1431 to 1446
+-- Lines: 1430 to 1445
 function PlayerManager:unaquire_equipment(upgrade, id)
 	if not self._global.equipment[id] then
 		return
@@ -1584,7 +1583,7 @@ function PlayerManager:unaquire_equipment(upgrade, id)
 	end
 end
 
--- Lines: 1448 to 1464
+-- Lines: 1447 to 1463
 function PlayerManager:aquire_upgrade(upgrade)
 	self._global.upgrades[upgrade.category] = self._global.upgrades[upgrade.category] or {}
 	self._global.upgrades[upgrade.category][upgrade.upgrade] = math.max(upgrade.value, self._global.upgrades[upgrade.category][upgrade.upgrade] or 0)
@@ -1600,7 +1599,7 @@ function PlayerManager:aquire_upgrade(upgrade)
 	end
 end
 
--- Lines: 1466 to 1483
+-- Lines: 1465 to 1482
 function PlayerManager:unaquire_upgrade(upgrade)
 	if not self._global.upgrades[upgrade.category] then
 		Application:error("[PlayerManager:unaquire_upgrade] Can't unaquire upgrade of category", upgrade.category)
@@ -1621,7 +1620,7 @@ function PlayerManager:unaquire_upgrade(upgrade)
 	self:unaquire_incremental_upgrade(upgrade)
 end
 
--- Lines: 1486 to 1513
+-- Lines: 1485 to 1512
 function PlayerManager:aquire_incremental_upgrade(upgrade)
 	self._global.upgrades[upgrade.category] = self._global.upgrades[upgrade.category] or {}
 	local val = self._global.upgrades[upgrade.category][upgrade.upgrade]
@@ -1648,7 +1647,7 @@ function PlayerManager:aquire_incremental_upgrade(upgrade)
 	end
 end
 
--- Lines: 1515 to 1542
+-- Lines: 1514 to 1541
 function PlayerManager:unaquire_incremental_upgrade(upgrade)
 	if not self._global.upgrades[upgrade.category] then
 		Application:error("[PlayerManager:unaquire_incremental_upgrade] Can't unaquire upgrade of category", upgrade.category)
@@ -1678,12 +1677,12 @@ function PlayerManager:unaquire_incremental_upgrade(upgrade)
 	end
 end
 
--- Lines: 1544 to 1545
+-- Lines: 1543 to 1544
 function PlayerManager:is_upgrade_synced(category, upgrade)
 	return self._global.synced_upgrades[category] and self._global.synced_upgrades[category][upgrade]
 end
 
--- Lines: 1548 to 1556
+-- Lines: 1547 to 1555
 function PlayerManager:temporary_upgrade_index(category, upgrade)
 	if self._temporary_upgrade_indices and self._temporary_upgrade_indices[category .. upgrade] then
 		return self._temporary_upgrade_indices[category .. upgrade]
@@ -1696,7 +1695,7 @@ function PlayerManager:temporary_upgrade_index(category, upgrade)
 	return self._temporary_upgrade_indices[category .. upgrade]
 end
 
--- Lines: 1561 to 1571
+-- Lines: 1560 to 1570
 function PlayerManager:upgrade_value(category, upgrade, default)
 	if not self._global.upgrades[category] then
 		return default or 0
@@ -1712,7 +1711,7 @@ function PlayerManager:upgrade_value(category, upgrade, default)
 	return value or value ~= false and (default or 0) or false
 end
 
--- Lines: 1575 to 1587
+-- Lines: 1574 to 1586
 function PlayerManager:crew_ability_upgrade_value(upgrade, default)
 	if not self._global.upgrades.team or not self._global.upgrades.team[upgrade] then
 		return default or 0
@@ -1727,22 +1726,22 @@ function PlayerManager:crew_ability_upgrade_value(upgrade, default)
 	return value and value[ai_level] or default
 end
 
--- Lines: 1590 to 1592
+-- Lines: 1589 to 1591
 function PlayerManager:start_custom_cooldown(category, upgrade, cooldown)
 	self["_cooldown_" .. category .. "_" .. upgrade] = Application:time() + cooldown
 end
 
--- Lines: 1595 to 1596
+-- Lines: 1594 to 1595
 function PlayerManager:is_custom_cooldown_not_active(category, upgrade)
 	return self:has_category_upgrade(category, upgrade) and not self:has_active_ability_cooldown(category .. "_" .. upgrade)
 end
 
--- Lines: 1600 to 1601
+-- Lines: 1599 to 1600
 function PlayerManager:get_custom_cooldown_left(category, upgrade)
 	return self:get_ability_cooldown_left(category .. "_" .. upgrade)
 end
 
--- Lines: 1604 to 1618
+-- Lines: 1603 to 1617
 function PlayerManager:consumable_upgrade_value(upgrade, default)
 	if self._consumable_upgrades[upgrade] then
 		local amount = self._consumable_upgrades[upgrade].amount
@@ -1764,7 +1763,7 @@ function PlayerManager:consumable_upgrade_value(upgrade, default)
 	return default or 1
 end
 
--- Lines: 1622 to 1624
+-- Lines: 1621 to 1623
 function PlayerManager:add_consumable_upgrade(upgrade, amount, data)
 	self._consumable_upgrades[upgrade] = {
 		amount = amount,
@@ -1772,12 +1771,12 @@ function PlayerManager:add_consumable_upgrade(upgrade, amount, data)
 	}
 end
 
--- Lines: 1628 to 1629
+-- Lines: 1627 to 1628
 function PlayerManager:list_level_rewards(dlcs)
 	return managers.upgrades:list_level_rewards(dlcs)
 end
 
--- Lines: 1634 to 1666
+-- Lines: 1633 to 1665
 function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1794,7 +1793,7 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	end
 end
 
--- Lines: 1668 to 1686
+-- Lines: 1667 to 1685
 function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, level)
 	local upgrade_level = self:upgrade_level(category, upgrade, 0) or 0
 
@@ -1816,7 +1815,7 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 	}
 end
 
--- Lines: 1688 to 1698
+-- Lines: 1687 to 1697
 function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1831,7 +1830,7 @@ function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
 	self._temporary_upgrades[category][upgrade] = nil
 end
 
--- Lines: 1700 to 1714
+-- Lines: 1699 to 1713
 function PlayerManager:has_activate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1850,7 +1849,7 @@ function PlayerManager:has_activate_temporary_upgrade(category, upgrade)
 	return Application:time() < self._temporary_upgrades[category][upgrade].expire_time
 end
 
--- Lines: 1717 to 1731
+-- Lines: 1716 to 1730
 function PlayerManager:has_inactivate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1869,7 +1868,7 @@ function PlayerManager:has_inactivate_temporary_upgrade(category, upgrade)
 	return self._temporary_upgrades[category][upgrade].expire_time <= Application:time()
 end
 
--- Lines: 1734 to 1748
+-- Lines: 1733 to 1747
 function PlayerManager:get_activate_temporary_expire_time(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1888,7 +1887,7 @@ function PlayerManager:get_activate_temporary_expire_time(category, upgrade)
 	return self._temporary_upgrades[category][upgrade].expire_time or 0
 end
 
--- Lines: 1751 to 1773
+-- Lines: 1750 to 1772
 function PlayerManager:temporary_upgrade_value(category, upgrade, default)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1915,12 +1914,12 @@ function PlayerManager:temporary_upgrade_value(category, upgrade, default)
 	return upgrade_value[1]
 end
 
--- Lines: 1776 to 1777
+-- Lines: 1775 to 1776
 function PlayerManager:equiptment_upgrade_value(category, upgrade, default)
 	return self:upgrade_value(category, upgrade, default)
 end
 
--- Lines: 1782 to 1794
+-- Lines: 1781 to 1793
 function PlayerManager:aquire_cooldown_upgrade(upgrade)
 	self:aquire_upgrade(upgrade)
 
@@ -1934,12 +1933,12 @@ function PlayerManager:aquire_cooldown_upgrade(upgrade)
 	self._global.cooldown_upgrades[upgrade.category][upgrade.upgrade] = {cooldown_time = Application:time()}
 end
 
--- Lines: 1796 to 1798
+-- Lines: 1795 to 1797
 function PlayerManager:unaquire_cooldown_upgrade(upgrade)
 	self:unaquire_upgrade(upgrade)
 end
 
--- Lines: 1800 to 1812
+-- Lines: 1799 to 1811
 function PlayerManager:disable_cooldown_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1952,7 +1951,7 @@ function PlayerManager:disable_cooldown_upgrade(category, upgrade)
 	self._global.cooldown_upgrades[category][upgrade] = {cooldown_time = Application:time() + time}
 end
 
--- Lines: 1814 to 1828
+-- Lines: 1813 to 1827
 function PlayerManager:has_disabled_cooldown_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1971,7 +1970,7 @@ function PlayerManager:has_disabled_cooldown_upgrade(category, upgrade)
 	return Application:time() < self._global.cooldown_upgrades[category][upgrade].cooldown_time
 end
 
--- Lines: 1831 to 1845
+-- Lines: 1830 to 1844
 function PlayerManager:has_enabled_cooldown_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1990,7 +1989,7 @@ function PlayerManager:has_enabled_cooldown_upgrade(category, upgrade)
 	return self._global.cooldown_upgrades[category][upgrade].cooldown_time <= Application:time()
 end
 
--- Lines: 1848 to 1862
+-- Lines: 1847 to 1861
 function PlayerManager:get_disabled_cooldown_time(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2009,7 +2008,7 @@ function PlayerManager:get_disabled_cooldown_time(category, upgrade)
 	return self._global.cooldown_upgrades[category][upgrade].cooldown_time or 0
 end
 
--- Lines: 1865 to 1887
+-- Lines: 1864 to 1886
 function PlayerManager:cooldown_upgrade_value(category, upgrade, default)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2036,7 +2035,7 @@ function PlayerManager:cooldown_upgrade_value(category, upgrade, default)
 	return upgrade_value[1]
 end
 
--- Lines: 1894 to 1903
+-- Lines: 1893 to 1902
 function PlayerManager:upgrade_level(category, upgrade, default)
 	if not self._global.upgrades[category] then
 		return default or 0
@@ -2051,12 +2050,12 @@ function PlayerManager:upgrade_level(category, upgrade, default)
 	return level
 end
 
--- Lines: 1907 to 1908
+-- Lines: 1906 to 1907
 function PlayerManager:upgrade_value_by_level(category, upgrade, level, default)
 	return tweak_data.upgrades.values[category][upgrade][level] or default or 0
 end
 
--- Lines: 1912 to 1922
+-- Lines: 1911 to 1921
 function PlayerManager:equipped_upgrade_value(equipped, category, upgrade)
 	if not self:has_category_upgrade(category, upgrade) then
 		return 0
@@ -2071,7 +2070,7 @@ function PlayerManager:equipped_upgrade_value(equipped, category, upgrade)
 	return self:upgrade_value(category, upgrade)
 end
 
--- Lines: 1926 to 1933
+-- Lines: 1925 to 1932
 function PlayerManager:has_category_upgrade(category, upgrade)
 	if not self._global.upgrades[category] then
 		return false
@@ -2084,14 +2083,14 @@ function PlayerManager:has_category_upgrade(category, upgrade)
 	return true
 end
 
--- Lines: 1937 to 1939
+-- Lines: 1936 to 1938
 function PlayerManager:body_armor_value(category, override_value, default)
 	local armor_data = tweak_data.blackmarket.armors[managers.blackmarket:equipped_armor(true, true)]
 
 	return self:upgrade_value_by_level("player", "body_armor", category, {})[override_value or armor_data.upgrade_level] or default or 0
 end
 
--- Lines: 1944 to 1953
+-- Lines: 1943 to 1952
 function PlayerManager:get_infamy_exp_multiplier()
 	local multiplier = 1
 
@@ -2106,7 +2105,7 @@ function PlayerManager:get_infamy_exp_multiplier()
 	return multiplier
 end
 
--- Lines: 1956 to 1994
+-- Lines: 1955 to 1993
 function PlayerManager:get_skill_exp_multiplier(whisper_mode)
 	local multiplier = 1
 	multiplier = (multiplier + managers.player:upgrade_value("player", "xp_multiplier", 1)) - 1
@@ -2154,7 +2153,7 @@ function PlayerManager:get_skill_exp_multiplier(whisper_mode)
 	return multiplier
 end
 
--- Lines: 1997 to 2039
+-- Lines: 1996 to 2038
 function PlayerManager:get_skill_money_multiplier(whisper_mode)
 	local cash_skill_mulitplier = 1
 	local bag_skill_mulitplier = 1
@@ -2206,7 +2205,7 @@ function PlayerManager:get_skill_money_multiplier(whisper_mode)
 	return cash_skill_mulitplier, bag_skill_mulitplier
 end
 
--- Lines: 2044 to 2066
+-- Lines: 2043 to 2065
 function PlayerManager:get_hostage_bonus_multiplier(category)
 	local hostages = managers.groupai and managers.groupai:state():hostage_count() or 0
 	local minions = self:num_local_minions() or 0
@@ -2231,7 +2230,7 @@ function PlayerManager:get_hostage_bonus_multiplier(category)
 	return 1 + multiplier * hostages
 end
 
--- Lines: 2069 to 2091
+-- Lines: 2068 to 2090
 function PlayerManager:get_hostage_bonus_addend(category)
 	local hostages = managers.groupai and managers.groupai:state():hostage_count() or 0
 	local minions = self:num_local_minions() or 0
@@ -2256,7 +2255,7 @@ function PlayerManager:get_hostage_bonus_addend(category)
 	return addend * hostages
 end
 
--- Lines: 2096 to 2137
+-- Lines: 2095 to 2136
 function PlayerManager:movement_speed_multiplier(speed_state, bonus_multiplier, upgrade_level, health_ratio)
 	local multiplier = 1
 	local armor_penalty = self:mod_movement_penalty(self:body_armor_value("movement", upgrade_level, 1))
@@ -2299,7 +2298,7 @@ function PlayerManager:movement_speed_multiplier(speed_state, bonus_multiplier, 
 	return multiplier
 end
 
--- Lines: 2142 to 2154
+-- Lines: 2141 to 2153
 function PlayerManager:mod_movement_penalty(movement_penalty)
 	local skill_mods = self:upgrade_value("player", "passive_armor_movement_penalty_multiplier", 1)
 	skill_mods = skill_mods * self:upgrade_value("team", "crew_reduce_speed_penalty", 1)
@@ -2313,7 +2312,7 @@ function PlayerManager:mod_movement_penalty(movement_penalty)
 	return movement_penalty
 end
 
--- Lines: 2157 to 2173
+-- Lines: 2156 to 2172
 function PlayerManager:body_armor_skill_multiplier(override_armor)
 	local multiplier = 1
 	multiplier = (multiplier + self:upgrade_value("player", "tier_armor_multiplier", 1)) - 1
@@ -2328,7 +2327,7 @@ function PlayerManager:body_armor_skill_multiplier(override_armor)
 	return multiplier
 end
 
--- Lines: 2176 to 2194
+-- Lines: 2175 to 2193
 function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
 	local multiplier = 1
 	multiplier = multiplier * self:upgrade_value("player", "armor_regen_timer_multiplier_tier", 1)
@@ -2350,7 +2349,7 @@ function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
 	return multiplier
 end
 
--- Lines: 2197 to 2212
+-- Lines: 2196 to 2211
 function PlayerManager:body_armor_skill_addend(override_armor)
 	local addend = 0
 	addend = addend + self:upgrade_value("player", tostring(override_armor or managers.blackmarket:equipped_armor(true, true)) .. "_armor_addend", 0)
@@ -2366,7 +2365,7 @@ function PlayerManager:body_armor_skill_addend(override_armor)
 	return addend
 end
 
--- Lines: 2215 to 2252
+-- Lines: 2214 to 2251
 function PlayerManager:skill_dodge_chance(running, crouching, on_zipline, override_armor, detection_risk)
 	local chance = self:upgrade_value("player", "passive_dodge_chance", 0)
 	local dodge_shot_gain = self:_dodge_shot_gain()
@@ -2405,7 +2404,7 @@ function PlayerManager:skill_dodge_chance(running, crouching, on_zipline, overri
 	return chance
 end
 
--- Lines: 2255 to 2266
+-- Lines: 2254 to 2265
 function PlayerManager:stamina_multiplier()
 	local multiplier = 1
 	multiplier = (multiplier + self:upgrade_value("player", "stamina_multiplier", 1)) - 1
@@ -2417,7 +2416,7 @@ function PlayerManager:stamina_multiplier()
 	return multiplier
 end
 
--- Lines: 2269 to 2274
+-- Lines: 2268 to 2273
 function PlayerManager:stamina_addend()
 	local addend = 0
 	addend = addend + self:upgrade_value("team", "crew_add_stamina", 0)
@@ -2425,13 +2424,14 @@ function PlayerManager:stamina_addend()
 	return addend
 end
 
--- Lines: 2277 to 2289
+-- Lines: 2276 to 2289
 function PlayerManager:critical_hit_chance()
 	local multiplier = 0
 	multiplier = multiplier + self:upgrade_value("player", "critical_hit_chance", 0)
 	multiplier = multiplier + self:upgrade_value("weapon", "critical_hit_chance", 0)
 	multiplier = multiplier + self:team_upgrade_value("critical_hit", "chance", 0)
 	multiplier = (multiplier + self:get_hostage_bonus_multiplier("critical_hit")) - 1
+	multiplier = multiplier + managers.player:temporary_upgrade_value("temporary", "unseen_strike", 1) - 1
 	multiplier = (multiplier + self._crit_mul) - 1
 	local detection_risk_add_crit_chance = managers.player:upgrade_value("player", "detection_risk_add_crit_chance")
 	multiplier = multiplier + self:get_value_from_risk_upgrade(detection_risk_add_crit_chance)

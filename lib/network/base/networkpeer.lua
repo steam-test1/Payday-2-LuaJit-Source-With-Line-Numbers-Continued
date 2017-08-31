@@ -2132,7 +2132,7 @@ function NetworkPeer:unit_delete()
 	self._unit = nil
 end
 
--- Lines: 2307 to 2332
+-- Lines: 2307 to 2340
 function NetworkPeer:_update_equipped_armor()
 	if not alive(self._unit) then
 		return
@@ -2154,6 +2154,14 @@ function NetworkPeer:_update_equipped_armor()
 			self._unit:damage():run_sequence_simple(armor_sequence)
 		end
 
+		if self._unit:base() and self._unit:base().set_armor_id then
+			self._unit:base():set_armor_id(new_armor_id)
+		end
+
+		if self._unit:armor_skin() and self._unit:armor_skin().set_armor_id then
+			self._unit:armor_skin():set_armor_id(new_armor_id)
+		end
+
 		local con_mul, index = managers.blackmarket:get_concealment_of_peer(self)
 
 		self._unit:base():set_suspicion_multiplier("equipment", 1 / con_mul)
@@ -2162,12 +2170,12 @@ function NetworkPeer:_update_equipped_armor()
 	end
 end
 
--- Lines: 2336 to 2338
+-- Lines: 2344 to 2346
 function NetworkPeer:set_is_dropin(is_dropin)
 	self._is_dropin = is_dropin
 end
 
--- Lines: 2340 to 2341
+-- Lines: 2348 to 2349
 function NetworkPeer:is_dropin()
 	return self._is_dropin
 end

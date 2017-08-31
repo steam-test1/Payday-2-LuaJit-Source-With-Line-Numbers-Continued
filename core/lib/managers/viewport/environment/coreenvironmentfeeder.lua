@@ -182,7 +182,7 @@ UnderlayPathFeeder.DATA_PATH_KEY = Idstring("others/underlay"):key()
 UnderlayPathFeeder.IS_GLOBAL = true
 UnderlayPathFeeder.FILTER_CATEGORY = "Underlay path"
 
--- Lines: 185 to 223
+-- Lines: 185 to 229
 function UnderlayPathFeeder:apply(handler, viewport, scene)
 	if CoreCode.alive(Global._global_light) then
 		World:delete_light(Global._global_light)
@@ -226,7 +226,7 @@ GlobalLightColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 GlobalLightColorFeeder.IS_GLOBAL = true
 GlobalLightColorFeeder.FILTER_CATEGORY = "Sun"
 
--- Lines: 232 to 248
+-- Lines: 238 to 254
 function GlobalLightColorFeeder:apply(handler, viewport, scene)
 	if alive(Global._global_light) then
 		local color = handler:get_value(GlobalLightColorFeeder.DATA_PATH_KEY)
@@ -256,7 +256,7 @@ CubeMapTextureFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 CubeMapTextureFeeder.IS_GLOBAL = true
 CubeMapTextureFeeder.FILTER_CATEGORY = "Cubemap"
 
--- Lines: 265 to 267
+-- Lines: 271 to 273
 function CubeMapTextureFeeder:apply(handler, viewport, scene)
 	managers.global_texture:set_texture("current_global_texture", self._current, "CUBEMAP")
 end
@@ -266,7 +266,7 @@ WorldOverlayTextureFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 WorldOverlayTextureFeeder.IS_GLOBAL = true
 WorldOverlayTextureFeeder.FILTER_CATEGORY = "GlobalTexture"
 
--- Lines: 276 to 278
+-- Lines: 282 to 284
 function WorldOverlayTextureFeeder:apply(handler, viewport, scene)
 	managers.global_texture:set_texture("current_global_world_overlay_texture", self._current, "texture")
 end
@@ -276,7 +276,7 @@ WorldOverlayMaskTextureFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 WorldOverlayMaskTextureFeeder.IS_GLOBAL = true
 WorldOverlayMaskTextureFeeder.FILTER_CATEGORY = "GlobalTexture"
 
--- Lines: 287 to 289
+-- Lines: 293 to 295
 function WorldOverlayMaskTextureFeeder:apply(handler, viewport, scene)
 	managers.global_texture:set_texture("current_global_world_overlay_mask_texture", self._current, "texture")
 end
@@ -286,7 +286,7 @@ SkyRotationFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 SkyRotationFeeder.IS_GLOBAL = true
 SkyRotationFeeder.FILTER_CATEGORY = false
 
--- Lines: 298 to 303
+-- Lines: 304 to 309
 function SkyRotationFeeder:apply(handler, viewport, scene)
 	if UnderlayPathFeeder.ref_cam_obj then
 		mrotation.set_yaw_pitch_roll(temp_rotation, -self._current, 0, 0)
@@ -299,7 +299,7 @@ UnderlaySkyTopColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 UnderlaySkyTopColorFeeder.IS_GLOBAL = true
 UnderlaySkyTopColorFeeder.FILTER_CATEGORY = "Sky"
 
--- Lines: 313 to 327
+-- Lines: 319 to 333
 function UnderlaySkyTopColorFeeder:apply(handler, viewport, scene)
 	if UnderlayPathFeeder.sky_material then
 		local color = handler:get_value(UnderlaySkyTopColorFeeder.DATA_PATH_KEY)
@@ -327,7 +327,7 @@ UnderlaySkyBottomColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 UnderlaySkyBottomColorFeeder.IS_GLOBAL = true
 UnderlaySkyBottomColorFeeder.FILTER_CATEGORY = "Sky"
 
--- Lines: 344 to 358
+-- Lines: 350 to 364
 function UnderlaySkyBottomColorFeeder:apply(handler, viewport, scene)
 	if UnderlayPathFeeder.sky_material then
 		local color = handler:get_value(UnderlaySkyBottomColorFeeder.DATA_PATH_KEY)
@@ -355,7 +355,7 @@ PostAmbientFalloffScaleFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostAmbientFalloffScaleFeeder.IS_GLOBAL = nil
 PostAmbientFalloffScaleFeeder.FILTER_CATEGORY = "Ambient"
 
--- Lines: 376 to 379
+-- Lines: 382 to 385
 function PostAmbientFalloffScaleFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -367,7 +367,7 @@ PostAmbientColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostAmbientColorFeeder.IS_GLOBAL = nil
 PostAmbientColorFeeder.FILTER_CATEGORY = "Ambient"
 
--- Lines: 388 to 401
+-- Lines: 394 to 407
 function PostAmbientColorFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 	local color = handler:get_value(PostAmbientColorFeeder.DATA_PATH_KEY)
@@ -394,7 +394,7 @@ PostSkyTopColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostSkyTopColorFeeder.IS_GLOBAL = nil
 PostSkyTopColorFeeder.FILTER_CATEGORY = "Ambient"
 
--- Lines: 418 to 431
+-- Lines: 424 to 437
 function PostSkyTopColorFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 	local color = handler:get_value(PostSkyTopColorFeeder.DATA_PATH_KEY)
@@ -421,7 +421,7 @@ PostSkyBottomColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostSkyBottomColorFeeder.IS_GLOBAL = nil
 PostSkyBottomColorFeeder.FILTER_CATEGORY = "Ambient"
 
--- Lines: 448 to 461
+-- Lines: 454 to 467
 function PostSkyBottomColorFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 	local color = handler:get_value(PostSkyBottomColorFeeder.DATA_PATH_KEY)
@@ -448,7 +448,7 @@ PostFogStartColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostFogStartColorFeeder.IS_GLOBAL = nil
 PostFogStartColorFeeder.FILTER_CATEGORY = "Fog"
 
--- Lines: 478 to 484
+-- Lines: 484 to 490
 function PostFogStartColorFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -462,7 +462,7 @@ PostFogFarLowColorFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostFogFarLowColorFeeder.IS_GLOBAL = nil
 PostFogFarLowColorFeeder.FILTER_CATEGORY = "Fog"
 
--- Lines: 493 to 499
+-- Lines: 499 to 505
 function PostFogFarLowColorFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -476,7 +476,7 @@ PostFogMinRangeFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostFogMinRangeFeeder.IS_GLOBAL = nil
 PostFogMinRangeFeeder.FILTER_CATEGORY = "Fog"
 
--- Lines: 508 to 512
+-- Lines: 514 to 518
 function PostFogMinRangeFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -488,7 +488,7 @@ PostFogMaxRangeFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostFogMaxRangeFeeder.IS_GLOBAL = nil
 PostFogMaxRangeFeeder.FILTER_CATEGORY = "Fog"
 
--- Lines: 521 to 525
+-- Lines: 527 to 531
 function PostFogMaxRangeFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -500,7 +500,7 @@ PostFogMaxDensityFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostFogMaxDensityFeeder.IS_GLOBAL = nil
 PostFogMaxDensityFeeder.FILTER_CATEGORY = "Fog"
 
--- Lines: 533 to 537
+-- Lines: 539 to 543
 function PostFogMaxDensityFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -512,7 +512,7 @@ PostAmbientScaleFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostAmbientScaleFeeder.IS_GLOBAL = nil
 PostAmbientScaleFeeder.FILTER_CATEGORY = "Ambient"
 
--- Lines: 545 to 549
+-- Lines: 551 to 555
 function PostAmbientScaleFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -524,7 +524,7 @@ PostEffectLightScaleFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostEffectLightScaleFeeder.IS_GLOBAL = nil
 PostEffectLightScaleFeeder.FILTER_CATEGORY = "Ambient"
 
--- Lines: 558 to 562
+-- Lines: 564 to 568
 function PostEffectLightScaleFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -532,7 +532,7 @@ function PostEffectLightScaleFeeder:apply(handler, viewport, scene)
 end
 
 
--- Lines: 569 to 570
+-- Lines: 575 to 576
 local function _apply_fov_ratio(current)
 end
 
@@ -542,7 +542,7 @@ PostShadowSlice0Feeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostShadowSlice0Feeder.IS_GLOBAL = nil
 PostShadowSlice0Feeder.FILTER_CATEGORY = "Shadow"
 
--- Lines: 578 to 583
+-- Lines: 584 to 589
 function PostShadowSlice0Feeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_shadow_modifier_id, ids_shadow_processor, ids_shadow_rendering, ids_shadow_modifier)
 
@@ -555,7 +555,7 @@ PostShadowSlice1Feeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostShadowSlice1Feeder.IS_GLOBAL = nil
 PostShadowSlice1Feeder.FILTER_CATEGORY = "Shadow"
 
--- Lines: 592 to 597
+-- Lines: 598 to 603
 function PostShadowSlice1Feeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_shadow_modifier_id, ids_shadow_processor, ids_shadow_rendering, ids_shadow_modifier)
 
@@ -568,7 +568,7 @@ PostShadowSlice2Feeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostShadowSlice2Feeder.IS_GLOBAL = nil
 PostShadowSlice2Feeder.FILTER_CATEGORY = "Shadow"
 
--- Lines: 606 to 611
+-- Lines: 612 to 617
 function PostShadowSlice2Feeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_shadow_modifier_id, ids_shadow_processor, ids_shadow_rendering, ids_shadow_modifier)
 
@@ -581,7 +581,7 @@ PostShadowSlice3Feeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostShadowSlice3Feeder.IS_GLOBAL = nil
 PostShadowSlice3Feeder.FILTER_CATEGORY = "Shadow"
 
--- Lines: 620 to 625
+-- Lines: 626 to 631
 function PostShadowSlice3Feeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_shadow_modifier_id, ids_shadow_processor, ids_shadow_rendering, ids_shadow_modifier)
 
@@ -594,7 +594,7 @@ PostShadowSliceDepthsFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostShadowSliceDepthsFeeder.IS_GLOBAL = nil
 PostShadowSliceDepthsFeeder.FILTER_CATEGORY = "Shadow"
 
--- Lines: 634 to 639
+-- Lines: 640 to 645
 function PostShadowSliceDepthsFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_shadow_modifier_id, ids_shadow_processor, ids_shadow_rendering, ids_shadow_modifier)
 
@@ -607,7 +607,7 @@ PostShadowSliceOverlapFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 PostShadowSliceOverlapFeeder.IS_GLOBAL = nil
 PostShadowSliceOverlapFeeder.FILTER_CATEGORY = "Shadow"
 
--- Lines: 648 to 653
+-- Lines: 654 to 659
 function PostShadowSliceOverlapFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_shadow_modifier_id, ids_shadow_processor, ids_shadow_rendering, ids_shadow_modifier)
 
@@ -621,7 +621,7 @@ PostEffectBloomThresholdFeeder.IS_GLOBAL = nil
 PostEffectBloomThresholdFeeder.DEFAULT_VALUE = 0.55
 PostEffectBloomThresholdFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 662 to 665
+-- Lines: 668 to 671
 function PostEffectBloomThresholdFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_ambient_id, ids_deferred, ids_deferred_lighting, ids_apply_ambient)
 
@@ -634,7 +634,7 @@ PostEffectBloomIntensityFeeder.IS_GLOBAL = nil
 PostEffectBloomIntensityFeeder.DEFAULT_VALUE = 0.5
 PostEffectBloomIntensityFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 674 to 677
+-- Lines: 680 to 683
 function PostEffectBloomIntensityFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_bloom_lense_id, ids_bloom_combine_processor, ids_bloom_combine, ids_bloom_lense)
 
@@ -647,7 +647,7 @@ PostEffectBloomBlurSizeFeeder.IS_GLOBAL = nil
 PostEffectBloomBlurSizeFeeder.DEFAULT_VALUE = 4
 PostEffectBloomBlurSizeFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 686 to 688
+-- Lines: 692 to 694
 function PostEffectBloomBlurSizeFeeder:apply(handler, viewport, scene)
 	managers.environment_controller:bloom_blur_size(self._current, viewport)
 end
@@ -658,7 +658,7 @@ PostEffectLenseIntensityFeeder.IS_GLOBAL = nil
 PostEffectLenseIntensityFeeder.DEFAULT_VALUE = 0.5
 PostEffectLenseIntensityFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 697 to 700
+-- Lines: 703 to 706
 function PostEffectLenseIntensityFeeder:apply(handler, viewport, scene)
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_bloom_lense_id, ids_bloom_combine_processor, ids_bloom_combine, ids_bloom_lense)
 
@@ -670,7 +670,7 @@ EnvironmentEffectFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 EnvironmentEffectFeeder.IS_GLOBAL = nil
 EnvironmentEffectFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 709 to 712
+-- Lines: 715 to 718
 function EnvironmentEffectFeeder:apply(handler, viewport, scene)
 	local effects = string.split(self._current, ";")
 

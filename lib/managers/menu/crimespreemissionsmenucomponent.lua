@@ -305,35 +305,37 @@ function CrimeSpreeMissionsMenuComponent:mouse_pressed(o, button, x, y)
 	return self:confirm_pressed()
 end
 
--- Lines: 315 to 324
+-- Lines: 315 to 325
 function CrimeSpreeMissionsMenuComponent:confirm_pressed()
 	if not self:_is_host() then
-		return false
+		return nil
 	end
 
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
 			btn:callback()()
+
+			return true
 		end
 	end
 end
 
--- Lines: 326 to 327
+-- Lines: 327 to 328
 function CrimeSpreeMissionsMenuComponent:dummy_trigger()
 	return self:confirm_pressed()
 end
 
--- Lines: 330 to 332
+-- Lines: 331 to 333
 function CrimeSpreeMissionsMenuComponent:move_left()
 	self:move_selection(-1)
 end
 
--- Lines: 334 to 336
+-- Lines: 335 to 337
 function CrimeSpreeMissionsMenuComponent:move_right()
 	self:move_selection(1)
 end
 
--- Lines: 339 to 340
+-- Lines: 340 to 341
 function CrimeSpreeMissionsMenuComponent:input_focus()
 end
 CrimeSpreeMissionButton = CrimeSpreeMissionButton or class(MenuGuiItem)
@@ -346,7 +348,7 @@ CrimeSpreeMissionButton.RandomState = {
 	Spin = 1
 }
 
--- Lines: 355 to 488
+-- Lines: 356 to 489
 function CrimeSpreeMissionButton:init(idx, parent, mission_data)
 	self._idx = idx
 	self._mission_data = mission_data
@@ -480,7 +482,7 @@ function CrimeSpreeMissionButton:init(idx, parent, mission_data)
 	self:refresh()
 end
 
--- Lines: 490 to 495
+-- Lines: 491 to 496
 function CrimeSpreeMissionButton:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(self:is_active() or self:is_selected())
@@ -488,37 +490,37 @@ function CrimeSpreeMissionButton:refresh()
 	self._active_border:set_visible(self:is_active())
 end
 
--- Lines: 497 to 498
+-- Lines: 498 to 499
 function CrimeSpreeMissionButton:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 501 to 502
+-- Lines: 502 to 503
 function CrimeSpreeMissionButton:panel()
 	return self._panel
 end
 
--- Lines: 505 to 506
+-- Lines: 506 to 507
 function CrimeSpreeMissionButton:index()
 	return self._idx
 end
 
--- Lines: 509 to 510
+-- Lines: 510 to 511
 function CrimeSpreeMissionButton:callback()
 	return self._callback
 end
 
--- Lines: 513 to 515
+-- Lines: 514 to 516
 function CrimeSpreeMissionButton:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines: 517 to 518
+-- Lines: 518 to 519
 function CrimeSpreeMissionButton:is_randomizing()
 	return self._randomize ~= nil
 end
 
--- Lines: 522 to 612
+-- Lines: 523 to 613
 function CrimeSpreeMissionButton:update(t, dt)
 	if self._randomize then
 		if self._randomize.state == CrimeSpreeMissionButton.RandomState.Spin then
@@ -599,7 +601,7 @@ function CrimeSpreeMissionButton:update(t, dt)
 	end
 end
 
--- Lines: 615 to 627
+-- Lines: 616 to 628
 function CrimeSpreeMissionButton:randomize(mission_data)
 	self._mission_data = mission_data
 	self._randomize = {
@@ -613,7 +615,7 @@ function CrimeSpreeMissionButton:randomize(mission_data)
 	self:_create_random_texts()
 end
 
--- Lines: 629 to 633
+-- Lines: 630 to 634
 function CrimeSpreeMissionButton:update_mission(mission_data)
 	self._mission_data = mission_data
 
@@ -621,7 +623,7 @@ function CrimeSpreeMissionButton:update_mission(mission_data)
 	self:update_info_text(mission_data)
 end
 
--- Lines: 637 to 655
+-- Lines: 638 to 656
 function CrimeSpreeMissionButton:update_button_text(text, mission_data, dont_reset_pos)
 	text = text or self._level_text
 	mission_data = mission_data or self._mission_data
@@ -644,12 +646,12 @@ function CrimeSpreeMissionButton:update_button_text(text, mission_data, dont_res
 	end
 end
 
--- Lines: 657 to 658
+-- Lines: 658 to 659
 function CrimeSpreeMissionButton:button_text_h()
 	return (self._panel:h() - tweak_data.menu.pd2_small_font_size) - 4
 end
 
--- Lines: 662 to 698
+-- Lines: 663 to 699
 function CrimeSpreeMissionButton:update_info_text(mission_data)
 	mission_data = mission_data or self._mission_data
 	local text = ""
@@ -685,7 +687,7 @@ function CrimeSpreeMissionButton:update_info_text(mission_data)
 	end
 end
 
--- Lines: 701 to 733
+-- Lines: 702 to 734
 function CrimeSpreeMissionButton:_create_random_texts()
 	self:_cleanup_random_texts()
 
@@ -721,7 +723,7 @@ function CrimeSpreeMissionButton:_create_random_texts()
 	end
 end
 
--- Lines: 736 to 746
+-- Lines: 737 to 747
 function CrimeSpreeMissionButton:_cleanup_random_texts()
 	if self._random_texts then
 		for i, text in ipairs(self._random_texts) do
@@ -734,7 +736,7 @@ function CrimeSpreeMissionButton:_cleanup_random_texts()
 	end
 end
 
--- Lines: 749 to 772
+-- Lines: 750 to 773
 function CrimeSpreeMissionButton:_move_random_texts(speed, dt)
 	for i, text in ipairs(self._random_texts) do
 		text:set_y(text:y() + speed * dt)
@@ -757,7 +759,7 @@ function CrimeSpreeMissionButton:_move_random_texts(speed, dt)
 	end
 end
 
--- Lines: 774 to 782
+-- Lines: 775 to 783
 function CrimeSpreeMissionButton:_get_mission_category(mission)
 	if mission.add <= 5 then
 		return "short"
@@ -768,7 +770,7 @@ function CrimeSpreeMissionButton:_get_mission_category(mission)
 	end
 end
 
--- Lines: 784 to 785
+-- Lines: 785 to 786
 function CrimeSpreeMissionButton:mission_id()
 	return (self._mission_data or {}).id
 end

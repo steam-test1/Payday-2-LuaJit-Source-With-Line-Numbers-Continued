@@ -177,7 +177,22 @@ function WalletGuiObject.move_wallet(mx, my)
 	Global.wallet_panel:move(mx, my)
 end
 
--- Lines: 146 to 171
+-- Lines: 146 to 156
+function WalletGuiObject.set_wallet_pos(mx, my)
+	if not alive(Global.wallet_panel) then
+		return
+	end
+
+	if mx then
+		Global.wallet_panel:set_x(mx)
+	end
+
+	if my then
+		Global.wallet_panel:set_y(my)
+	end
+end
+
+-- Lines: 158 to 183
 function WalletGuiObject.set_object_visible(object, visible)
 	if not alive(Global.wallet_panel) then
 		return
@@ -206,7 +221,7 @@ function WalletGuiObject.set_object_visible(object, visible)
 	bg_blur:set_leftbottom(Global.wallet_panel:child("wallet_money_icon"):leftbottom())
 end
 
--- Lines: 173 to 181
+-- Lines: 185 to 193
 function WalletGuiObject.remove_wallet()
 	if not alive(Global.wallet_panel) or not alive(Global.wallet_panel:parent()) then
 		Global.wallet_panel = nil
@@ -219,7 +234,7 @@ function WalletGuiObject.remove_wallet()
 	Global.wallet_panel = nil
 end
 
--- Lines: 183 to 195
+-- Lines: 195 to 207
 function WalletGuiObject.close_wallet(panel)
 	if not alive(Global.wallet_panel) or not alive(Global.wallet_panel:parent()) then
 		Global.wallet_panel = nil

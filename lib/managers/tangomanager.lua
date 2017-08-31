@@ -17,7 +17,7 @@ function TangoManager:_setup()
 	self._global = Global.tango
 end
 
--- Lines: 23 to 28
+-- Lines: 23 to 30
 function TangoManager:_setup_challenges()
 	Global.tango.challenges = {}
 
@@ -26,7 +26,7 @@ function TangoManager:_setup_challenges()
 	end
 end
 
--- Lines: 31 to 64
+-- Lines: 33 to 66
 function TangoManager:save(cache)
 	local challenges = {}
 
@@ -64,7 +64,7 @@ function TangoManager:save(cache)
 	cache.Tango = save_data
 end
 
--- Lines: 67 to 122
+-- Lines: 69 to 124
 function TangoManager:load(cache, version)
 	local state = cache.Tango
 
@@ -113,7 +113,7 @@ function TangoManager:load(cache, version)
 	end
 end
 
--- Lines: 124 to 129
+-- Lines: 126 to 131
 function TangoManager:reset()
 	Global.tango = nil
 
@@ -124,18 +124,18 @@ function TangoManager:reset()
 	self:_setup()
 end
 
--- Lines: 131 to 134
+-- Lines: 133 to 136
 function TangoManager:_reset_feature()
 	managers.features._global.announcements.tango_weapon_unlocked = 1
 	managers.features._global.announced.tango_weapon_unlocked = false
 end
 
--- Lines: 138 to 139
+-- Lines: 140 to 141
 function TangoManager:challenges()
 	return self._global.challenges
 end
 
--- Lines: 142 to 148
+-- Lines: 144 to 150
 function TangoManager:get_challenge(id)
 	for idx, challenge in pairs(self._global.challenges) do
 		if challenge.id == id then
@@ -144,12 +144,12 @@ function TangoManager:get_challenge(id)
 	end
 end
 
--- Lines: 152 to 153
+-- Lines: 154 to 155
 function TangoManager:can_progress()
 	return managers.dlc:has_tango()
 end
 
--- Lines: 157 to 167
+-- Lines: 159 to 169
 function TangoManager:is_mission_complete(challenge_id)
 	if not self:can_progress() then
 		return false
@@ -164,7 +164,7 @@ function TangoManager:is_mission_complete(challenge_id)
 	return false
 end
 
--- Lines: 172 to 188
+-- Lines: 174 to 190
 function TangoManager:is_objective_complete(challenge_id, objective_id)
 	if not self:can_progress() then
 		return false
@@ -183,7 +183,7 @@ function TangoManager:is_objective_complete(challenge_id, objective_id)
 	return false
 end
 
--- Lines: 194 to 204
+-- Lines: 201 to 211
 function TangoManager:has_unlocked_arbiter()
 	if not self:can_progress() then
 		return nil
@@ -198,7 +198,7 @@ function TangoManager:has_unlocked_arbiter()
 	return true
 end
 
--- Lines: 211 to 221
+-- Lines: 218 to 228
 function TangoManager:award(id)
 	if not self:can_progress() then
 		return
@@ -211,7 +211,7 @@ function TangoManager:award(id)
 	end
 end
 
--- Lines: 224 to 252
+-- Lines: 231 to 259
 function TangoManager:_update_challenge_progress(challenge, key, id, amount, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if not objective.completed and objective[key] == id then
@@ -240,7 +240,7 @@ function TangoManager:_update_challenge_progress(challenge, key, id, amount, com
 	end
 end
 
--- Lines: 254 to 260
+-- Lines: 261 to 273
 function TangoManager:completed_challenge(challenge_or_id)
 	local challenge = type(challenge_or_id) == "table" and challenge_or_id or self:get_challenge(challenge_or_id)
 
@@ -250,7 +250,7 @@ function TangoManager:completed_challenge(challenge_or_id)
 	end
 end
 
--- Lines: 263 to 284
+-- Lines: 276 to 297
 function TangoManager:has_already_claimed_reward(challenge_id, reward_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -283,7 +283,7 @@ function TangoManager:has_already_claimed_reward(challenge_id, reward_id)
 	return false
 end
 
--- Lines: 289 to 334
+-- Lines: 302 to 347
 function TangoManager:claim_reward(challenge_id, reward_id)
 	if not self:can_progress() then
 		return
@@ -333,14 +333,14 @@ function TangoManager:claim_reward(challenge_id, reward_id)
 	end
 end
 
--- Lines: 336 to 340
+-- Lines: 350 to 355
 function TangoManager:attempt_announce_tango_weapon()
 	if game_state_machine:current_state_name() == "menu_main" and managers.features:can_announce("tango_weapon_unlocked") and self:has_unlocked_arbiter() then
 		managers.features:announce_feature("tango_weapon_unlocked")
 	end
 end
 
--- Lines: 343 to 363
+-- Lines: 358 to 378
 function TangoManager:announce_tango_weapon()
 	local weapon_id = tweak_data.tango.arbiter_data.weapon_id
 	local weapon_tweak = tweak_data.weapon[weapon_id]
@@ -360,7 +360,7 @@ function TangoManager:announce_tango_weapon()
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines: 366 to 367
+-- Lines: 381 to 382
 function TangoManager:any_challenge_completed()
 	return self._has_completed_mission
 end

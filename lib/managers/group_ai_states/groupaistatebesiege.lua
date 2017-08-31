@@ -3837,62 +3837,91 @@ function GroupAIStateBesiege:_check_spawn_phalanx()
 	end
 end
 
--- Lines: 3866 to 3912
+-- Lines: 3866 to 3915
 function GroupAIStateBesiege:_spawn_phalanx()
-	if self._phalanx_center_pos then
-		local phalanx_center_pos = self._phalanx_center_pos
-		local phalanx_center_nav_seg = managers.navigation:get_nav_seg_from_pos(phalanx_center_pos)
-		local phalanx_area = self:get_area_from_nav_seg_id(phalanx_center_nav_seg)
-		local phalanx_group = {Phalanx = {
-			1,
-			1,
-			1
-		}}
+	if not self._phalanx_center_pos then
+		Application:error("self._phalanx_center_pos NOT SET!!!")
 
-		if phalanx_area then
-			local spawn_group, spawn_group_type = self:_find_spawn_group_near_area(phalanx_area, phalanx_group, nil, nil, nil)
+		return
+	end
 
-			if spawn_group then
-				if spawn_group.spawn_pts[1] and spawn_group.spawn_pts[1].pos then
-					local spawn_pos = spawn_group.spawn_pts[1].pos
-					local spawn_nav_seg = managers.navigation:get_nav_seg_from_pos(spawn_pos)
-					local spawn_area = self:get_area_from_nav_seg_id(spawn_nav_seg)
+	local phalanx_center_pos = self._phalanx_center_pos
+	local phalanx_center_nav_seg = managers.navigation:get_nav_seg_from_pos(phalanx_center_pos)
+	local phalanx_area = self:get_area_from_nav_seg_id(phalanx_center_nav_seg)
+	local phalanx_group = {Phalanx = {
+		1,
+		1,
+		1
+	}}
 
-					if spawn_group then
-						local grp_objective = {
-							type = "defend_area",
-							area = spawn_area,
-							nav_seg = spawn_nav_seg
-						}
+	if not phalanx_area then
+		Application:error("Could not get area from phalanx_center_nav_seg!")
 
-						print("Phalanx spawn started!")
+		return
+	end
 
-						self._phalanx_spawn_group = self:_spawn_in_group(spawn_group, spawn_group_type, grp_objective, nil)
+	local spawn_group, spawn_group_type = self:_find_spawn_group_near_area(phalanx_area, phalanx_group, nil, nil, nil)
 
-						self:set_assault_endless(true)
-						managers.game_play_central:announcer_say("cpa_a02_01")
-						managers.network:session():send_to_peers_synched("group_ai_event", self:get_sync_event_id("phalanx_spawned"), 0)
-					end
+	if not spawn_group then
+		Application:error("Could not get spawn_group from phalanx_area!")
+
+		return
+	end
+
+	if spawn_group.spawn_pts[1] and spawn_group.spawn_pts[1].pos then
+		local spawn_pos = spawn_group.spawn_pts[1].pos
+		local spawn_nav_seg = managers.navigation:get_nav_seg_from_pos(spawn_pos)
+		local spawn_area = self:get_area_from_nav_seg_id(spawn_nav_seg)
+
+		if spawn_group then
+			local grp_objective = {
+				type = "defend_area",
+				area = spawn_area,
+				nav_seg = spawn_nav_seg
+			}
+
+			print("Phalanx spawn started!")
+
+			self._phalanx_spawn_group = self:_spawn_in_group(spawn_group, spawn_group_type, grp_objective, nil)
+
+			self:set_assault_endless(true)
+			managers.game_play_central:announcer_say("cpa_a02_01")
+			managers.network:session():send_to_peers_synched("group_ai_event", self:get_sync_event_id("phalanx_spawned"), 0)
+		end
+	end
+end
+
+-- Lines: 3919 to 3947
+function GroupAIStateBesiege:_check_phalanx_group_has_spawned()
+	if self._phalanx_spawn_group then
+		if self._phalanx_spawn_group.has_spawned then
+			if not self._phalanx_spawn_group.set_to_phalanx_group_obj then
+				local pos = self._phalanx_center_pos
+				local nav_seg = managers.navigation:get_nav_seg_from_pos(pos)
+				local area = self:get_area_from_nav_seg_id(nav_seg)
+				local grp_objective = {
+					type = "create_phalanx",
+					area = area,
+					nav_seg = nav_seg,
+					pos = pos
+				}
+
+				print("Phalanx spawn finished, setting phalanx objective!")
+				self:_set_objective_to_enemy_group(self._phalanx_spawn_group, grp_objective)
+
+				self._phalanx_spawn_group.set_to_phalanx_group_obj = true
+
+				for i, group_unit in pairs(self._phalanx_spawn_group.units) do
+					group_unit.unit:base().is_phalanx = true
 				end
-			else
-				Application:error("Could not get spawn_group from phalanx_area!")
 			end
 		else
-			Application:error("Could not get area from phalanx_center_nav_seg!")
+			print("Phalanx group has not yet spawned completely!")
 		end
-	else
-		Application:error("self._phalanx_center_pos NOT SET!!!")
 	end
 end
 
--- Lines: 3916 to 3941
-function GroupAIStateBesiege:_check_phalanx_group_has_spawned()
-	if self._phalanx_spawn_group and (not self._phalanx_spawn_group.has_spawned or not self._phalanx_spawn_group.set_to_phalanx_group_obj and true) then
-		print("Phalanx group has not yet spawned completely!")
-	end
-end
-
--- Lines: 3945 to 3949
+-- Lines: 3951 to 3955
 function GroupAIStateBesiege:phalanx_damage_reduction_enable()
 	local law1team = self:_get_law1_team()
 
@@ -3901,21 +3930,21 @@ function GroupAIStateBesiege:phalanx_damage_reduction_enable()
 	self._phalanx_damage_reduction_last_increase = self._phalanx_damage_reduction_last_increase or TimerManager:game():time()
 end
 
--- Lines: 3953 to 3956
+-- Lines: 3959 to 3962
 function GroupAIStateBesiege:phalanx_damage_reduction_disable()
 	self:set_phalanx_damage_reduction_buff(-1)
 
 	self._phalanx_damage_reduction_last_increase = nil
 end
 
--- Lines: 3960 to 3962
+-- Lines: 3966 to 3968
 function GroupAIStateBesiege:_get_law1_team()
 	local team_id = tweak_data.levels:get_default_team_ID("combatant")
 
 	return self:team_data(team_id)
 end
 
--- Lines: 3967 to 3992
+-- Lines: 3973 to 3998
 function GroupAIStateBesiege:_check_phalanx_damage_reduction_increase()
 	local law1team = self:_get_law1_team()
 	local damage_reduction_max = tweak_data.group_ai.phalanx.vip.damage_reduction.max
@@ -3942,7 +3971,7 @@ function GroupAIStateBesiege:_check_phalanx_damage_reduction_increase()
 	end
 end
 
--- Lines: 3996 to 4014
+-- Lines: 4002 to 4020
 function GroupAIStateBesiege:set_phalanx_damage_reduction_buff(damage_reduction)
 	local law1team = self:_get_law1_team()
 	damage_reduction = damage_reduction or -1
@@ -3962,7 +3991,7 @@ function GroupAIStateBesiege:set_phalanx_damage_reduction_buff(damage_reduction)
 	end
 end
 
--- Lines: 4018 to 4032
+-- Lines: 4024 to 4038
 function GroupAIStateBesiege:set_damage_reduction_buff_hud()
 	local law1team = self:_get_law1_team()
 
@@ -3979,7 +4008,7 @@ function GroupAIStateBesiege:set_damage_reduction_buff_hud()
 	end
 end
 
--- Lines: 4036 to 4049
+-- Lines: 4042 to 4055
 function GroupAIStateBesiege:set_assault_endless(enabled)
 	self._hunt_mode = enabled
 
@@ -3994,7 +4023,7 @@ function GroupAIStateBesiege:set_assault_endless(enabled)
 	end
 end
 
--- Lines: 4055 to 4061
+-- Lines: 4061 to 4067
 function GroupAIStateBesiege:phalanx_despawned()
 	self._phalanx_despawn_time = TimerManager:game():time()
 	self._phalanx_spawn_group = nil
@@ -4002,12 +4031,12 @@ function GroupAIStateBesiege:phalanx_despawned()
 	self._phalanx_current_spawn_chance = math.max(0, self._phalanx_current_spawn_chance or tweak_data.group_ai.phalanx.spawn_chance.start - spawn_chance_decrease)
 end
 
--- Lines: 4065 to 4066
+-- Lines: 4071 to 4072
 function GroupAIStateBesiege:phalanx_spawn_group()
 	return self._phalanx_spawn_group
 end
 
--- Lines: 4071 to 4081
+-- Lines: 4077 to 4087
 function GroupAIStateBesiege:force_end_assault_phase()
 	local task_data = self._task_data.assault
 
@@ -4021,7 +4050,7 @@ function GroupAIStateBesiege:force_end_assault_phase()
 	self:set_assault_endless(false)
 end
 
--- Lines: 4085 to 4086
+-- Lines: 4091 to 4092
 function GroupAIStateBesiege:get_assault_number()
 	return self._assault_number
 end

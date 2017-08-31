@@ -121,7 +121,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines: 121 to 221
+-- Lines: 121 to 225
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -190,7 +190,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines: 224 to 236
+-- Lines: 228 to 240
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
@@ -202,7 +202,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines: 238 to 266
+-- Lines: 242 to 270
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -235,7 +235,7 @@ function MenuSetup:init_finalize()
 	managers.dyn_resource:post_init()
 end
 
--- Lines: 271 to 287
+-- Lines: 275 to 291
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -253,32 +253,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines: 289 to 294
+-- Lines: 293 to 298
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines: 296 to 300
+-- Lines: 300 to 304
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines: 302 to 330
+-- Lines: 306 to 334
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines: 332 to 336
+-- Lines: 336 to 340
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines: 338 to 341
+-- Lines: 342 to 345
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

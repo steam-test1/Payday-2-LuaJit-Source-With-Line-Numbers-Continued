@@ -1,6 +1,6 @@
 MenuNodeSkinEditorGui = MenuNodeSkinEditorGui or class(MenuNodeGui)
 
--- Lines: 3 to 13
+-- Lines: 4 to 14
 function MenuNodeSkinEditorGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -13,7 +13,7 @@ function MenuNodeSkinEditorGui:init(node, layer, parameters)
 	MenuNodeSkinEditorGui.super.init(self, node, layer, parameters)
 end
 
--- Lines: 15 to 47
+-- Lines: 16 to 48
 function MenuNodeSkinEditorGui:mouse_pressed(button, x, y)
 	if button == Idstring("1") then
 		local row_item = self._highlighted_item and self:row_item(self._highlighted_item)

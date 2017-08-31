@@ -20,7 +20,7 @@ TeamAILogicTravel.get_pathing_prio = CopLogicTravel.get_pathing_prio
 TeamAILogicTravel.action_complete_clbk = CopLogicTravel.action_complete_clbk
 TeamAILogicTravel.on_intimidated = TeamAILogicIdle.on_intimidated
 
--- Lines: 29 to 102
+-- Lines: 29 to 106
 function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -84,7 +84,12 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	data.unit:movement():set_allow_fire(false)
 
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
+	local w_td = alive(data.unit) and data.unit:inventory():equipped_unit() and data.unit:inventory():equipped_unit():base():weapon_tweak_data()
+
+	if w_td then
+		local cw_td = data.char_tweak.weapon[w_td.usage]
+		my_data.weapon_range = (cw_td or {}).range or 5000
+	end
 
 	if not data.unit:movement():chk_action_forbidden("walk") or data.unit:anim_data().act_idle then
 		local new_action = {
@@ -96,7 +101,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 106 to 127
+-- Lines: 110 to 131
 function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -121,7 +126,7 @@ function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines: 131 to 158
+-- Lines: 135 to 162
 function TeamAILogicTravel.check_inspire(data, attention)
 	if not attention then
 		return
@@ -158,7 +163,7 @@ function TeamAILogicTravel.check_inspire(data, attention)
 	end
 end
 
--- Lines: 161 to 168
+-- Lines: 165 to 172
 function TeamAILogicTravel.update(data)
 	if data.objective.type == "revive" and managers.player:is_custom_cooldown_not_active("team", "crew_inspire") then
 		local attention = data.detected_attention_objects[data.objective.follow_unit:key()]
@@ -169,7 +174,7 @@ function TeamAILogicTravel.update(data)
 	return CopLogicTravel.upd_advance(data)
 end
 
--- Lines: 173 to 242
+-- Lines: 177 to 246
 function TeamAILogicTravel._upd_enemy_detection(data)
 	data.t = TimerManager:game():time()
 	local my_data = data.internal_data
@@ -232,7 +237,7 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicTravel._upd_enemy_detection, data, data.t + delay)
 end
 
--- Lines: 246 to 253
+-- Lines: 250 to 257
 function TeamAILogicTravel._remove_enemy_attention(param)
 	local data = param.data
 
@@ -243,7 +248,7 @@ function TeamAILogicTravel._remove_enemy_attention(param)
 	CopLogicBase._reset_attention(data)
 end
 
--- Lines: 257 to 268
+-- Lines: 261 to 272
 function TeamAILogicTravel.is_available_for_assignment(data, new_objective)
 	if new_objective and new_objective.forced then
 		return true

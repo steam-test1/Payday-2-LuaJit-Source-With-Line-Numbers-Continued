@@ -106,7 +106,7 @@ local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines: 112 to 338
+-- Lines: 112 to 372
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local result = nil
 	local hit_enemies = {}
@@ -123,7 +123,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local enemy_died = false
 
 
-	-- Lines: 127 to 146
+	-- Lines: 127 to 165
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then
 			local enemy_key = col_ray.unit:key()
@@ -354,7 +354,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 end
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines: 346 to 349
+-- Lines: 380 to 383
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -362,7 +362,7 @@ function SaigaShotgun:init(...)
 end
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines: 359 to 373
+-- Lines: 393 to 407
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {

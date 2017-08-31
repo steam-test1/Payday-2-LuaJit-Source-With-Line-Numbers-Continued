@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines: 29 to 816
+-- Lines: 29 to 843
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -263,7 +263,9 @@ function MoneyTweakData:init(tweak_data)
 		ant_free = 1,
 		pn2 = 0,
 		max = 1,
-		dgm = 1
+		dgm = 1,
+		raidww2_clan = 1,
+		fdm = 0
 	}
 	self.global_value_bonus_multiplier = {
 		normal = 0,
@@ -351,7 +353,9 @@ function MoneyTweakData:init(tweak_data)
 		ant_free = 1,
 		pn2 = 0,
 		max = 1,
-		dgm = 1
+		dgm = 1,
+		raidww2_clan = 1,
+		fdm = 1
 	}
 	local smallest_cashout = (self.stage_completion[1] + self.job_completion[1]) * self.offshore_rate
 	local biggest_mask_cost = self.biggest_cashout * 40

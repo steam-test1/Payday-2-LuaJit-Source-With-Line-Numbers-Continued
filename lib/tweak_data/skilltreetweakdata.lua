@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines: 9 to 1609
+-- Lines: 9 to 1612
 function SkillTreeTweakData:init()
 
 	-- Lines: 9 to 10
@@ -2054,11 +2054,17 @@ function SkillTreeTweakData:init()
 	}
 	self.skills.unseen_strike = {
 		{
-			upgrades = {"player_unseen_increased_crit_chance_1"},
+			upgrades = {
+				"player_unseen_increased_crit_chance_1",
+				"player_unseen_temp_increased_crit_chance_1"
+			},
 			cost = self.costs.hightier
 		},
 		{
-			upgrades = {"player_unseen_increased_crit_chance_2"},
+			upgrades = {
+				"player_unseen_increased_crit_chance_2",
+				"player_unseen_temp_increased_crit_chance_2"
+			},
 			cost = self.costs.hightierpro
 		},
 		name_id = "menu_unseen_strike_beta",
@@ -3965,7 +3971,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines: 1611 to 1626
+-- Lines: 1614 to 1629
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -3986,7 +3992,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines: 1629 to 1637
+-- Lines: 1632 to 1640
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -3999,17 +4005,17 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines: 1640 to 1642
+-- Lines: 1643 to 1645
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines: 1645 to 1652
+-- Lines: 1648 to 1655
 function SkillTreeTweakData:get_tier_unlocks()
 
-	-- Lines: 1645 to 1646
+	-- Lines: 1648 to 1649
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4024,7 +4030,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines: 1655 to 1677
+-- Lines: 1658 to 1680
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

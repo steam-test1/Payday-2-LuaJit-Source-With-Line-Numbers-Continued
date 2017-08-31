@@ -1,6 +1,6 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 4036
+-- Lines: 10 to 4496
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -38,6 +38,7 @@ function DLCTweakData:init(tweak_data)
 			alienware_alpha = true,
 			humble_summer_2015 = 1,
 			mdm = 1,
+			fdm = true,
 			hoxton_revenge = 1,
 			hl_miami = true,
 			pn2 = true,
@@ -71,6 +72,7 @@ function DLCTweakData:init(tweak_data)
 			turtles = true,
 			gage_pack_jobs = false,
 			butcher_pack_mods = true,
+			gcm = true,
 			character_pack_bonnie = true,
 			animal = true,
 			gage_pack_assault = true,
@@ -231,6 +233,11 @@ function DLCTweakData:init(tweak_data)
 		item_entry = "unicorn",
 		amount = 1
 	}}
+	self.raidww2_clan_bundle = {
+		content = {},
+		dlc = "has_raidww2_clan"
+	}
+	self.raidww2_clan_bundle.content.loot_drops = {}
 	self.pd2_clan_crimefest_oct19 = {
 		content = {},
 		dlc = "has_pd2_clan"
@@ -5189,7 +5196,7 @@ function DLCTweakData:init(tweak_data)
 		amount = 1
 	}}
 	self.howl = {
-		free = true,
+		free = false,
 		content = {}
 	}
 	self.howl.content.loot_global_value = "halloween"
@@ -5302,11 +5309,6 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_upg_ak_m_quick",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_upg_g36_b_ultra",
 			amount = 1
 		},
 		{
@@ -5780,7 +5782,7 @@ function DLCTweakData:init(tweak_data)
 	self.pn2_bundle.content.loot_global_value = "pn2"
 	self.pn2_bundle.content.loot_drops = {}
 	self.mp2_bundle = {
-		free = true,
+		free = false,
 		content = {}
 	}
 	self.mp2_bundle.content.loot_global_value = "normal"
@@ -5807,7 +5809,7 @@ function DLCTweakData:init(tweak_data)
 		}
 	}
 	self.amp_bundle = {
-		free = true,
+		free = false,
 		content = {}
 	}
 	self.amp_bundle.content.loot_global_value = "normal"
@@ -5920,6 +5922,26 @@ function DLCTweakData:init(tweak_data)
 	self.dgm_bundle.content.loot_drops = {{
 		type_items = "masks",
 		item_entry = "dgm",
+		amount = 1
+	}}
+	self.gcm_bundle = {
+		free = true,
+		content = {}
+	}
+	self.gcm_bundle.content.loot_global_value = "pd2_clan"
+	self.gcm_bundle.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "gcm",
+		amount = 1
+	}}
+	self.fdm_bundle = {
+		dlc = "has_fdm",
+		content = {}
+	}
+	self.fdm_bundle.content.loot_global_value = "fdm"
+	self.fdm_bundle.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "fdm",
 		amount = 1
 	}}
 end

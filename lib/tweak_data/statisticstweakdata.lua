@@ -46,7 +46,7 @@ function StatisticsTweakData:statistics_specializations()
 	return 18
 end
 
--- Lines: 41 to 626
+-- Lines: 41 to 657
 function StatisticsTweakData:statistics_table()
 	local level_list = {
 		"safehouse",
@@ -607,7 +607,9 @@ function StatisticsTweakData:statistics_table()
 		"ant_06",
 		"ant_07",
 		"ant_08",
-		"dgm"
+		"dgm",
+		"gcm",
+		"fdm"
 	}
 	local weapon_list = {
 		"ak5",
@@ -729,7 +731,10 @@ function StatisticsTweakData:statistics_table()
 		"coal",
 		"lemming",
 		"chinchilla",
-		"x_chinchilla"
+		"x_chinchilla",
+		"breech",
+		"ching",
+		"erma"
 	}
 	local melee_list = {
 		"weapon",
@@ -814,7 +819,9 @@ function StatisticsTweakData:statistics_table()
 		"catch",
 		"oxide",
 		"sword",
-		"agave"
+		"agave",
+		"push",
+		"grip"
 	}
 	local grenade_list = {
 		"frag",
@@ -922,7 +929,7 @@ function StatisticsTweakData:statistics_table()
 	return level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list, deployable_list
 end
 
--- Lines: 629 to 630
+-- Lines: 660 to 661
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -941,7 +948,7 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines: 633 to 634
+-- Lines: 664 to 665
 function StatisticsTweakData:mission_statistics_table()
 	return {"labrat"}
 end

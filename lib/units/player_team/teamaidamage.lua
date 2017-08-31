@@ -651,8 +651,78 @@ function TeamAIDamage:_clamp_health_percentage(health_abs)
 	return health_abs, health_percent
 end
 
--- Lines: 650 to 665
+-- Lines: 653 to 682
+function TeamAIDamage:_get_closest_player(ignore_constraints)
+	local desired_player = nil
+	local player_distance = math.huge
+	local ai_pos = self._unit:movement():m_pos()
+
+	for _, data in ipairs(managers.criminals:characters()) do
+		if data.taken and not data.ai and alive(data.unit) and self._unit ~= data.unit then
+			local new_dist = mvector3.distance(ai_pos, data.unit:position())
+
+			if new_dist < player_distance then
+				local peer = managers.network:session():peer_by_unit(data.unit)
+
+				if peer then
+					local peer_id = peer:id()
+					local vehicle_data = managers.player:get_vehicle_for_peer(peer_id)
+					local zipline_unit = data.unit:movement():zipline_unit()
+					local being_tased = data.unit:movement():tased()
+					local is_valid = not vehicle_data and not zipline_unit and not being_tased
+
+					if ignore_constraints or is_valid then
+						desired_player = data.unit
+						player_distance = new_dist
+					end
+				end
+			end
+		end
+	end
+
+	return desired_player
+end
+
+-- Lines: 687 to 721
+function TeamAIDamage:_teleport_carried_bag()
+	if self._unit:movement()._carry_unit then
+		self._unit:movement():throw_bag()
+	end
+
+	local dropped_bag = self._unit:movement():was_carrying_bag()
+
+	if dropped_bag and alive(dropped_bag.unit) then
+		local distance = mvector3.distance_sq(self._unit:movement():m_pos(), dropped_bag.unit:position())
+		local max_distance = math.pow(tweak_data.ai_carry.death_distance_teleport, 2)
+
+		if distance <= max_distance then
+			local desired_player = self:_get_closest_player(false)
+			desired_player = desired_player or self:_get_closest_player(true)
+
+			if desired_player then
+				local pos = desired_player:movement():m_head_pos()
+				local dir = desired_player:movement():m_head_rot():z()
+
+				if managers.player:player_unit() == desired_player then
+					dir = desired_player:camera():forward()
+				end
+
+				dropped_bag.unit:carry_data():set_position_and_throw(pos, dir * 5000, 1)
+
+				return true
+			else
+				Application:error("Couldn't find a valid player to teleport AI carried bag to: ", dropped_bag.unit)
+			end
+		end
+	end
+
+	return false
+end
+
+-- Lines: 730 to 750
 function TeamAIDamage:_die()
+	self:_teleport_carried_bag()
+
 	self._dead = true
 	self._revive_reminder_line_t = nil
 
@@ -670,7 +740,7 @@ function TeamAIDamage:_die()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines: 669 to 677
+-- Lines: 754 to 762
 function TeamAIDamage:_unregister_unit()
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
 
@@ -681,42 +751,42 @@ function TeamAIDamage:_unregister_unit()
 	Network:detach_unit(self._unit)
 end
 
--- Lines: 681 to 683
+-- Lines: 766 to 768
 function TeamAIDamage:_send_damage_drama(attack_data, health_subtracted)
 	PlayerDamage._send_damage_drama(self, attack_data, health_subtracted)
 end
 
--- Lines: 687 to 692
+-- Lines: 772 to 777
 function TeamAIDamage:_call_listeners(damage_info)
 	CopDamage._call_listeners(self, damage_info)
 end
 
--- Lines: 696 to 698
+-- Lines: 781 to 783
 function TeamAIDamage:add_listener(...)
 	CopDamage.add_listener(self, ...)
 end
 
--- Lines: 702 to 704
+-- Lines: 787 to 789
 function TeamAIDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
--- Lines: 708 to 709
+-- Lines: 793 to 794
 function TeamAIDamage:health_ratio()
 	return self._health_ratio
 end
 
--- Lines: 714 to 715
+-- Lines: 799 to 800
 function TeamAIDamage:focus_delay_mul()
 	return 1
 end
 
--- Lines: 720 to 721
+-- Lines: 805 to 806
 function TeamAIDamage:dead()
 	return self._dead
 end
 
--- Lines: 726 to 762
+-- Lines: 811 to 847
 function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offset_height)
 	if self:_cannot_take_damage() then
 		return
@@ -757,7 +827,7 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 766 to 800
+-- Lines: 851 to 885
 function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_variant)
 	if self:_cannot_take_damage() then
 		return
@@ -795,7 +865,7 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 804 to 838
+-- Lines: 889 to 923
 function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	if self:_cannot_take_damage() then
 		return
@@ -833,7 +903,7 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 842 to 879
+-- Lines: 927 to 964
 function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_percent, i_body, hit_offset_height)
 	if self:_cannot_take_damage() then
 		return
@@ -876,22 +946,22 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 883 to 885
+-- Lines: 968 to 970
 function TeamAIDamage:shoot_pos_mid(m_pos)
 	self._spine2_obj:m_position(m_pos)
 end
 
--- Lines: 889 to 890
+-- Lines: 974 to 975
 function TeamAIDamage:need_revive()
 	return (self._bleed_out or self._fatal) and not self._dead
 end
 
--- Lines: 895 to 896
+-- Lines: 980 to 981
 function TeamAIDamage:arrested()
 	return self._arrested_timer
 end
 
--- Lines: 901 to 956
+-- Lines: 986 to 1057
 function TeamAIDamage:revive(reviving_unit)
 	if self._dead then
 		return
@@ -946,9 +1016,24 @@ function TeamAIDamage:revive(reviving_unit)
 
 	managers.hud:set_mugshot_normal(self._unit:unit_data().mugshot_id)
 	self._unit:sound():say("s05x_sin", true)
+
+	local dropped_bag = self._unit:movement():was_carrying_bag()
+
+	if dropped_bag and alive(dropped_bag.unit) then
+		local distance = mvector3.distance_sq(self._unit:movement():m_pos(), dropped_bag.unit:position())
+		local max_distance = math.pow(tweak_data.ai_carry.revive_distance_autopickup, 2)
+
+		if distance <= max_distance then
+			dropped_bag.unit:carry_data():link_to(self._unit, false)
+
+			if self._unit:movement().set_carrying_bag then
+				self._unit:movement():set_carrying_bag(dropped_bag.unit)
+			end
+		end
+	end
 end
 
--- Lines: 960 to 968
+-- Lines: 1061 to 1069
 function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 	local attacker = attack_data.attacker_unit
@@ -962,7 +1047,7 @@ function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	self._unit:network():send("from_server_damage_bullet", attacker, hit_offset_height, result_index)
 end
 
--- Lines: 972 to 979
+-- Lines: 1073 to 1080
 function TeamAIDamage:_send_explosion_attack_result(attack_data)
 	local attacker = attack_data.attacker_unit
 
@@ -975,7 +1060,7 @@ function TeamAIDamage:_send_explosion_attack_result(attack_data)
 	self._unit:network():send("from_server_damage_explosion_fire", attacker, result_index, CopDamage._get_attack_variant_index(self, attack_data.variant))
 end
 
--- Lines: 981 to 988
+-- Lines: 1082 to 1089
 function TeamAIDamage:_send_fire_attack_result(attack_data)
 	local attacker = attack_data.attacker_unit
 
@@ -988,7 +1073,7 @@ function TeamAIDamage:_send_fire_attack_result(attack_data)
 	self._unit:network():send("from_server_damage_explosion_fire", attacker, result_index, CopDamage._get_attack_variant_index(self, attack_data.variant))
 end
 
--- Lines: 992 to 1000
+-- Lines: 1093 to 1101
 function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 	local attacker = attack_data.attacker_unit
@@ -1002,12 +1087,12 @@ function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	self._unit:network():send("from_server_damage_melee", attacker, hit_offset_height, result_index)
 end
 
--- Lines: 1004 to 1006
+-- Lines: 1105 to 1107
 function TeamAIDamage:_send_tase_attack_result()
 	self._unit:network():send("from_server_damage_tase")
 end
 
--- Lines: 1010 to 1038
+-- Lines: 1111 to 1139
 function TeamAIDamage:on_tase_ended()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -1038,14 +1123,14 @@ function TeamAIDamage:on_tase_ended()
 	end
 end
 
--- Lines: 1042 to 1045
+-- Lines: 1143 to 1146
 function TeamAIDamage:clbk_exit_to_incapacitated()
 	self._to_incapacitated_clbk_id = nil
 
 	self:_on_incapacitated()
 end
 
--- Lines: 1049 to 1054
+-- Lines: 1150 to 1155
 function TeamAIDamage:on_incapacitated()
 	if self:_cannot_take_damage() then
 		return
@@ -1054,7 +1139,7 @@ function TeamAIDamage:on_incapacitated()
 	self:_on_incapacitated()
 end
 
--- Lines: 1059 to 1084
+-- Lines: 1160 to 1185
 function TeamAIDamage:_on_incapacitated()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -1088,7 +1173,7 @@ function TeamAIDamage:_on_incapacitated()
 	self._unit:network():send("from_server_damage_incapacitated")
 end
 
--- Lines: 1089 to 1100
+-- Lines: 1190 to 1201
 function TeamAIDamage:clbk_exit_to_dead()
 	managers.mission:call_global_event("ai_in_custody")
 
@@ -1107,22 +1192,22 @@ function TeamAIDamage:clbk_exit_to_dead()
 	self:_unregister_unit()
 end
 
--- Lines: 1104 to 1106
+-- Lines: 1205 to 1207
 function TeamAIDamage:pre_destroy()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines: 1116 to 1117
+-- Lines: 1217 to 1218
 function TeamAIDamage:_cannot_take_damage()
 	return self._invulnerable or self._dead or self._fatal or self._arrested_timer
 end
 
--- Lines: 1122 to 1124
+-- Lines: 1223 to 1225
 function TeamAIDamage:disable()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines: 1128 to 1137
+-- Lines: 1229 to 1238
 function TeamAIDamage:_clear_damage_transition_callbacks()
 	if self._to_incapacitated_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._to_incapacitated_clbk_id)
@@ -1137,17 +1222,17 @@ function TeamAIDamage:_clear_damage_transition_callbacks()
 	end
 end
 
--- Lines: 1141 to 1142
+-- Lines: 1242 to 1243
 function TeamAIDamage:last_suppression_t()
 	return self._last_received_dmg_t
 end
 
--- Lines: 1147 to 1148
+-- Lines: 1248 to 1249
 function TeamAIDamage:can_attach_projectiles()
 	return false
 end
 
--- Lines: 1153 to 1166
+-- Lines: 1254 to 1267
 function TeamAIDamage:save(data)
 	if self._arrested_timer then
 		data.char_dmg = data.char_dmg or {}
