@@ -390,9 +390,9 @@ function CoreAreaUnitElement:set_shape_properties(type, pos, end_pos)
 		type = type,
 		position = pos,
 		rotation = Rotation(),
-		size_mul = 1,
-		height = end_pos.z - t.position.z
+		size_mul = 1
 	}
+	t.height = end_pos.z - t.position.z
 
 	if type == "sphere" then
 		t.radious = Vector3(t.position.x, t.position.y, 0) - Vector3(end_pos.x, end_pos.y, 0):length()

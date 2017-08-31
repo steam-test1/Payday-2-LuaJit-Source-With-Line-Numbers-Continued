@@ -25,9 +25,9 @@ function CoreUnitDamage:init(unit, default_body_extension_class, body_extension_
 			interval = element:get_interval(),
 			quick = element:is_quick(),
 			is_within = element:get_start_within(),
-			slotmask = element:get_slotmask(),
-			last_check_time = TimerManager:game():time() + math.rand(math.min(data.interval, 0))
+			slotmask = element:get_slotmask()
 		}
+		data.last_check_time = TimerManager:game():time() + math.rand(math.min(data.interval, 0))
 
 		self:populate_proximity_range_data(data, "within_data", element:get_within_element())
 		self:populate_proximity_range_data(data, "outside_data", element:get_outside_element())

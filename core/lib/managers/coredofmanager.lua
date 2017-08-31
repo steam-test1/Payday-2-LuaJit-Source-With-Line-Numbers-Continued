@@ -247,11 +247,11 @@ function DOFManager:play(dof_data, amplitude_multiplier)
 	local t = timer:time()
 	local prog_data = {
 		clamp = amplitude_multiplier and dof_data.clamp * amplitude_multiplier or dof_data.clamp,
-		fade_in_end = dof_data.fade_in and t + dof_data.fade_in or t,
-		sustain_end = dof_data.sustain and prog_data.fade_in_end + dof_data.sustain,
-		finish_t = prog_data.sustain_end and prog_data.sustain_end + (dof_data.fade_out or 0),
-		start_t = t
+		fade_in_end = dof_data.fade_in and t + dof_data.fade_in or t
 	}
+	prog_data.sustain_end = dof_data.sustain and prog_data.fade_in_end + dof_data.sustain
+	prog_data.finish_t = prog_data.sustain_end and prog_data.sustain_end + (dof_data.fade_out or 0)
+	prog_data.start_t = t
 	local cur_values = nil
 	local near_min, near_max, far_min, far_max, clamp = self:get_dof_values()
 	cur_values = clamp > 0 and {

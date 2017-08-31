@@ -97,15 +97,13 @@ function MenuBackdropGUI:setup_saferect_shape()
 
 	temp_saferect_panel:set_center(self._panel:w() * 0.5, self._panel:h() * 0.5)
 
-	local saferect_shape = {
-		x = saferect_shape[1],
-		y = saferect_shape[2],
-		w = saferect_shape[3],
-		h = saferect_shape[4],
-		width = saferect_shape.w,
-		height = saferect_shape.h,
-		temp_saferect_panel:shape()
-	}
+	saferect_shape = {temp_saferect_panel:shape()}
+	saferect_shape.x = saferect_shape[1]
+	saferect_shape.y = saferect_shape[2]
+	saferect_shape.w = saferect_shape[3]
+	saferect_shape.h = saferect_shape[4]
+	saferect_shape.width = saferect_shape.w
+	saferect_shape.height = saferect_shape.h
 
 	self._panel:remove(temp_saferect_panel)
 

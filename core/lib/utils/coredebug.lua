@@ -69,10 +69,8 @@ function out(...)
 	-- Lines: 89 to 93
 	local function correct_spaces(...)
 		local args = {...}
-		local sel = {
-			args[1] .. " " .. tostring(sel[1]),
-			select(2, ...)
-		}
+		local sel = {select(2, ...)}
+		sel[1] = args[1] .. " " .. tostring(sel[1])
 
 		return unpack(sel)
 	end

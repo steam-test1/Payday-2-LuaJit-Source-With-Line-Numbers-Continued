@@ -430,11 +430,11 @@ function SequenceManager:_add_start_time_callback(element_id, env, delay, repeat
 		id = self._last_start_time_callback_id,
 		element_id = element_id,
 		env = env,
-		delay = tonumber(delay) or 0,
-		start_time = time_callback.delay,
-		repeat_nr = tonumber(repeat_nr) or 1,
-		sequence_name = sequence_name
+		delay = tonumber(delay) or 0
 	}
+	time_callback.start_time = time_callback.delay
+	time_callback.repeat_nr = tonumber(repeat_nr) or 1
+	time_callback.sequence_name = sequence_name
 
 	table.insert(self._start_time_callback_list, time_callback)
 
