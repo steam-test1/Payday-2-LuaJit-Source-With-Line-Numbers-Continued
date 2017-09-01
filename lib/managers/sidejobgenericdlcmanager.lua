@@ -319,22 +319,20 @@ function SideJobGenericDLCManager:claim_reward(challenge_id, reward_id)
 	end
 end
 
--- Lines: 338 to 348
+-- Lines: 338 to 350
 function SideJobGenericDLCManager:_award_reward(reward)
 	if reward.item_entry then
 		local entry = tweak_data:get_raw_value("blackmarket", reward.type_items, reward.item_entry)
 
-		if entry then
-			for i = 1, reward.amount or 1, 1 do
-				local global_value = reward.global_value or entry.infamous and "infamous" or entry.global_value or entry.dlc or entry.dlcs and entry.dlcs[math.random(#entry.dlcs)] or "normal"
-
-				managers.blackmarket:add_to_inventory(global_value, reward.type_items, reward.item_entry)
-			end
+		if entry and false then
+			-- Nothing
 		end
+	elseif reward[1] == "safehouse_coins" and reward[2] > 0 then
+		managers.custom_safehouse:add_coins(reward[2])
 	end
 end
 
--- Lines: 351 to 367
+-- Lines: 353 to 369
 function SideJobGenericDLCManager:has_completed_and_claimed_rewards(challenge_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -357,7 +355,7 @@ function SideJobGenericDLCManager:has_completed_and_claimed_rewards(challenge_id
 	return true
 end
 
--- Lines: 372 to 373
+-- Lines: 374 to 375
 function SideJobGenericDLCManager:any_challenge_completed()
 	return self._has_completed_mission
 end

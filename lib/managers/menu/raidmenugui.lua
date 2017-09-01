@@ -99,12 +99,18 @@ function RaidMenuGui:open_raid_twitch()
 	Steam:overlay_activate("url", "https://www.twitch.tv/liongamelion")
 end
 
--- Lines: 103 to 105
+-- Lines: 103 to 106
+function RaidMenuGui:open_raid_preorder_menu()
+	managers.menu:open_node("raid_beta_preorder", {})
+	managers.menu:post_event("menu_enter")
+end
+
+-- Lines: 108 to 110
 function RaidMenuGui:open_raid_preorder()
 	Steam:overlay_activate("url", "https://store.steampowered.com/app/" .. RaidMenuGui.RaidAppId .. "/")
 end
 
--- Lines: 109 to 111
+-- Lines: 114 to 116
 function RaidMenuGui:preview_breech()
 	managers.blackmarket:view_weapon_platform("breech", callback(self, self, "_open_preview_node", {
 		id = "breech",
@@ -112,7 +118,7 @@ function RaidMenuGui:preview_breech()
 	}))
 end
 
--- Lines: 113 to 115
+-- Lines: 118 to 120
 function RaidMenuGui:preview_ching()
 	managers.blackmarket:view_weapon_platform("ching", callback(self, self, "_open_preview_node", {
 		id = "ching",
@@ -120,7 +126,7 @@ function RaidMenuGui:preview_ching()
 	}))
 end
 
--- Lines: 117 to 119
+-- Lines: 122 to 124
 function RaidMenuGui:preview_erma()
 	managers.blackmarket:view_weapon_platform("erma", callback(self, self, "_open_preview_node", {
 		id = "erma",
@@ -128,7 +134,7 @@ function RaidMenuGui:preview_erma()
 	}))
 end
 
--- Lines: 121 to 124
+-- Lines: 126 to 129
 function RaidMenuGui:preview_push()
 	managers.menu:open_node("raid_weapon_preview_node", {{
 		category = "melee",
@@ -137,7 +143,7 @@ function RaidMenuGui:preview_push()
 	managers.blackmarket:preview_melee_weapon("push")
 end
 
--- Lines: 126 to 129
+-- Lines: 131 to 134
 function RaidMenuGui:preview_grip()
 	managers.menu:open_node("raid_weapon_preview_node", {{
 		category = "melee",
@@ -146,7 +152,7 @@ function RaidMenuGui:preview_grip()
 	managers.blackmarket:preview_melee_weapon("grip")
 end
 
--- Lines: 131 to 133
+-- Lines: 136 to 138
 function RaidMenuGui:_open_preview_node(data)
 	managers.menu:open_node("raid_weapon_preview_node", {{
 		item_id = data.id,
@@ -154,27 +160,27 @@ function RaidMenuGui:_open_preview_node(data)
 	}})
 end
 
--- Lines: 137 to 139
+-- Lines: 142 to 144
 function RaidMenuGui:preview_jfr_01()
 	self:_preview_mask("jfr_01")
 end
 
--- Lines: 141 to 143
+-- Lines: 146 to 148
 function RaidMenuGui:preview_jfr_02()
 	self:_preview_mask("jfr_02")
 end
 
--- Lines: 145 to 147
+-- Lines: 150 to 152
 function RaidMenuGui:preview_jfr_03()
 	self:_preview_mask("jfr_03")
 end
 
--- Lines: 149 to 151
+-- Lines: 154 to 156
 function RaidMenuGui:preview_jfr_04()
 	self:_preview_mask("jfr_04")
 end
 
--- Lines: 153 to 156
+-- Lines: 158 to 161
 function RaidMenuGui:_preview_mask(mask_id)
 	managers.blackmarket:view_mask_with_mask_id(mask_id)
 	managers.menu:open_node("raid_weapon_preview_node", {{

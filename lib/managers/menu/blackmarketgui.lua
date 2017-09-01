@@ -3103,6 +3103,13 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 				pc_btn = "menu_preview_item",
 				callback = callback(self, self, "preview_armor_skin_callback")
 			},
+			as_workshop = {
+				btn = "BTN_STICK_L",
+				name = "bm_menu_btn_skin",
+				prio = 5,
+				pc_btn = "menu_edit_skin",
+				callback = callback(self, self, "edit_armor_skin_callback")
+			},
 			m_equip = {
 				btn = "BTN_A",
 				prio = 1,
@@ -10060,6 +10067,7 @@ function BlackMarketGui:populate_armor_skins(data)
 		end
 
 		table.insert(new_data, "as_preview")
+		table.insert(new_data, "as_workshop")
 
 		data[index] = new_data
 	end
@@ -12773,6 +12781,13 @@ function BlackMarketGui:preview_armor_skin_callback(data)
 		textures_retrieved = callback(self, self, "_character_preview_textures_retrieved"),
 		texture_loaded = callback(self, self, "_character_preview_texture_loaded")
 	})
+end
+
+-- Lines: 10573 to 10577
+function BlackMarketGui:edit_armor_skin_callback(data)
+	managers.workshop:_init_items()
+	managers.blackmarket:armor_skin_editor():init_items()
+	managers.menu:open_node(ArmorSkinEditor.menu_node_name, {data})
 end
 
 -- Lines: 10592 to 10598
