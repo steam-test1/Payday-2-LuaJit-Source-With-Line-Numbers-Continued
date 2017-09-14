@@ -877,14 +877,19 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 	self._select_x = math.clamp(self._select_x, 1, math.min(#self._previous_content_updates, self._num_previous_updates))
 	local diff_x = old_x - self._select_x
 
-	if diff_x >= 0 or self:previous_page() then
-		if diff_x > 0 then
-			-- Nothing
-		else
+	if diff_x < 0 then
+		if self:previous_page() then
+			self._select_x = self._num_previous_updates
 			content_highlighted = self._previous_content_updates[self._select_x]
 
 			self:set_latest_content(content_highlighted, true)
 		end
+	elseif diff_x > 0 then
+		-- Nothing
+	else
+		content_highlighted = self._previous_content_updates[self._select_x]
+
+		self:set_latest_content(content_highlighted, true)
 	end
 end
 

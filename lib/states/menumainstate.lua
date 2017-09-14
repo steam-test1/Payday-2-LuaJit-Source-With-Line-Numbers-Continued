@@ -87,10 +87,24 @@ function MenuMainState:at_enter(old_state)
 		end
 
 		Global.psn_boot_invite_checked = true
-	elseif (SystemInfo:platform() ~= Idstring("WIN32") or SystemInfo:distribution() == Idstring("STEAM") and Global.boot_invite) and (SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1")) and Global.boot_invite and next(Global.boot_invite) then
-		has_invite = true
+	elseif SystemInfo:platform() == Idstring("WIN32") then
+		if SystemInfo:distribution() == Idstring("STEAM") and Global.boot_invite then
+			has_invite = true
+			local lobby = Global.boot_invite
+			Global.boot_invite = nil
 
-		managers.network.matchmake:join_boot_invite()
+			managers.network.matchmake:join_server_with_check(lobby)
+		end
+	elseif SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+		if XboxLive:has_boot_invite() then
+			has_invite = true
+		end
+
+		if Global.boot_invite and next(Global.boot_invite) then
+			has_invite = true
+
+			managers.network.matchmake:join_boot_invite()
+		end
 	end
 
 	if Global.open_trial_buy then
@@ -102,7 +116,17 @@ function MenuMainState:at_enter(old_state)
 			managers.features:announce_feature("short_heist")
 		end
 
-		if (managers.custom_safehouse:unlocked() or not Global.mission_manager.has_played_tutorial) and not managers.custom_safehouse:has_entered_safehouse() then
+		if not managers.custom_safehouse:unlocked() then
+			if not Global.mission_manager.has_played_tutorial then
+
+				-- Lines: 116 to 118
+				local function yes_func()
+					MenuCallbackHandler:play_safehouse({skip_question = true})
+				end
+
+				managers.menu:show_question_start_tutorial({yes_func = yes_func})
+			end
+		elseif not managers.custom_safehouse:has_entered_safehouse() then
 
 			-- Lines: 124 to 127
 			local function yes_func()

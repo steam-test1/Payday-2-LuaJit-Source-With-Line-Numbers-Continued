@@ -160,9 +160,16 @@ function GroupAIStateBase:upd_team_AI_distance()
 				end
 			end
 
-			if closest_unit and tweak_data.team_ai.stop_action.teleport_distance * tweak_data.team_ai.stop_action.teleport_distance < closest_distance then
-				ai.unit:movement():set_position(unit:position())
-				print("[GroupAIStateBase:update] team ai is too far away, teleported to player")
+			if closest_unit then
+				if ai.unit:movement() and ai.unit:movement()._should_stay and tweak_data.team_ai.stop_action.distance * tweak_data.team_ai.stop_action.distance < closest_distance then
+					ai.unit:movement():set_should_stay(false)
+					print("[GroupAIStateBase:update] team ai is too far away, started moving again")
+				end
+
+				if tweak_data.team_ai.stop_action.teleport_distance * tweak_data.team_ai.stop_action.teleport_distance < closest_distance then
+					ai.unit:movement():set_position(unit:position())
+					print("[GroupAIStateBase:update] team ai is too far away, teleported to player")
+				end
 			end
 		end
 	end
@@ -266,7 +273,11 @@ function GroupAIStateBase:set_AI_enabled(state)
 		end
 	end
 
-	if state and (not Application:editor() or {}) or self._editor_sim_rem_units then
+	if state then
+		if Application:editor() then
+			self._editor_sim_rem_units = {}
+		end
+	elseif self._editor_sim_rem_units then
 		for u_key, unit in pairs(self._editor_sim_rem_units) do
 			if alive(unit) then
 				World:delete_unit(unit)
@@ -520,7 +531,19 @@ function GroupAIStateBase:_add_drama(amount)
 	local new_val = math.clamp(drama_data.amount + amount, 0, 1)
 	drama_data.amount = new_val
 
-	if (drama_data.high_p >= new_val or drama_data.zone ~= "high") and (new_val >= drama_data.low_p or drama_data.zone ~= "low") and drama_data.zone then
+	if drama_data.high_p < new_val then
+		if drama_data.zone ~= "high" then
+			drama_data.zone = "high"
+
+			self:_on_drama_zone_change()
+		end
+	elseif new_val < drama_data.low_p then
+		if drama_data.zone ~= "low" then
+			drama_data.zone = "low"
+
+			self:_on_drama_zone_change()
+		end
+	elseif drama_data.zone then
 		drama_data.zone = nil
 
 		self:_on_drama_zone_change()
@@ -731,7 +754,13 @@ function GroupAIStateBase:_hostage_hint_clbk()
 		self._hstg_hint_clbk = nil
 	end
 
-	if self._hostage_headcount ~= 0 or self._first_hostage_hint and false then
+	if self._hostage_headcount == 0 then
+		if self._first_hostage_hint then
+			self._first_hostage_hint = nil
+
+			managers.enemy:add_delayed_clbk("_hostage_hint_clbk", self._hstg_hint_clbk, Application:time() + 120)
+		end
+	else
 		self._hstg_hint_clbk = nil
 	end
 end
@@ -788,7 +817,11 @@ function GroupAIStateBase:has_room_for_police_hostage()
 	local nr_hostages_allowed = 4
 
 	for u_key, u_data in pairs(self._player_criminals) do
-		if u_data.unit:base().is_local_player and (not managers.player:has_category_upgrade("player", "intimidate_enemies") or nr_hostages_allowed + 1) or u_data.unit:base():upgrade_value("player", "intimidate_enemies") then
+		if u_data.unit:base().is_local_player then
+			if managers.player:has_category_upgrade("player", "intimidate_enemies") then
+				nr_hostages_allowed = nr_hostages_allowed + 1
+			end
+		elseif u_data.unit:base():upgrade_value("player", "intimidate_enemies") then
 			nr_hostages_allowed = nr_hostages_allowed + 1
 		end
 	end
@@ -1766,7 +1799,13 @@ function GroupAIStateBase:check_gameover_conditions()
 		gameover = true
 	end
 
-	if (not gameover or not self._gameover_clbk) and self._gameover_clbk then
+	if gameover then
+		if not self._gameover_clbk then
+			self._gameover_clbk = callback(self, self, "_gameover_clbk_func")
+
+			managers.enemy:add_delayed_clbk("_gameover_clbk", self._gameover_clbk, Application:time() + 10)
+		end
+	elseif self._gameover_clbk then
 		managers.enemy:remove_delayed_clbk("_gameover_clbk")
 
 		self._gameover_clbk = nil
@@ -2507,9 +2546,15 @@ function GroupAIStateBase:_process_recurring_grp_SO(recurring_id, data)
 						end
 					end
 
-					if is_junk and (not group.objective.fail_t or self._t - group.objective.fail_t < tweak_data.group_ai.besiege.recurring_group_SO[recurring_id].retire_delay and nil) then
-						group.objective.fail_t = self._t
-						is_junk = nil
+					if is_junk then
+						if group.objective.fail_t then
+							if self._t - group.objective.fail_t < tweak_data.group_ai.besiege.recurring_group_SO[recurring_id].retire_delay then
+								is_junk = nil
+							end
+						else
+							group.objective.fail_t = self._t
+							is_junk = nil
+						end
 					end
 				end
 
@@ -3371,10 +3416,24 @@ function GroupAIStateBase:hostage_killed(killer_unit)
 
 	self._hostages_killed = (self._hostages_killed or 0) + 1
 
-	if not self._hunt_mode and (self._hostages_killed >= 1 and not self._hostage_killed_warning_lines and (not self:sync_hostage_killed_warning(1) or 1) or self._hostages_killed >= 3 and self._hostage_killed_warning_lines == 1 and (not self:sync_hostage_killed_warning(2) or 2) or self._hostages_killed >= 7 and self._hostage_killed_warning_lines == 2 and self:sync_hostage_killed_warning(3)) then
-		managers.network:session():send_to_peers_synched("sync_hostage_killed_warning", 3)
+	if not self._hunt_mode then
+		if self._hostages_killed >= 1 and not self._hostage_killed_warning_lines then
+			if self:sync_hostage_killed_warning(1) then
+				managers.network:session():send_to_peers_synched("sync_hostage_killed_warning", 1)
 
-		self._hostage_killed_warning_lines = 3
+				self._hostage_killed_warning_lines = 1
+			end
+		elseif self._hostages_killed >= 3 and self._hostage_killed_warning_lines == 1 then
+			if self:sync_hostage_killed_warning(2) then
+				managers.network:session():send_to_peers_synched("sync_hostage_killed_warning", 2)
+
+				self._hostage_killed_warning_lines = 2
+			end
+		elseif self._hostages_killed >= 7 and self._hostage_killed_warning_lines == 2 and self:sync_hostage_killed_warning(3) then
+			managers.network:session():send_to_peers_synched("sync_hostage_killed_warning", 3)
+
+			self._hostage_killed_warning_lines = 3
+		end
 	end
 
 	if not criminal.is_deployable then
@@ -4986,7 +5045,11 @@ function GroupAIStateBase:register_ecm_jammer(unit, jam_settings)
 	} or nil
 	local is_jammer_active = next(self._ecm_jammers) and true or false
 
-	if (not was_jammer_active or not is_jammer_active) and is_jammer_active then
+	if was_jammer_active then
+		if not is_jammer_active then
+			managers.mission:call_global_event("ecm_jammer_off", unit)
+		end
+	elseif is_jammer_active then
 		managers.mission:call_global_event("ecm_jammer_on", unit)
 	end
 end

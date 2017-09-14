@@ -400,7 +400,46 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 
 	-- Lines: 369 to 394
 	local function copy_cb(success, message)
-		if not success or skin:submit(changelog, cb) then
+		if success then
+			if skin:submit(changelog, cb) then
+				local bar_radius = 20
+				local panel = managers.menu:active_menu().renderer.ws:panel()
+				self._publish_bar = CircleBitmapGuiObject:new(panel, {
+					use_bg = true,
+					current = 0,
+					blend_mode = "add",
+					layer = 2,
+					radius = bar_radius,
+					sides = bar_radius,
+					total = bar_radius,
+					color = Color.white:with_alpha(1)
+				})
+
+				self._publish_bar:set_position(0, panel:h() - bar_radius * 2)
+
+
+				-- Lines: 377 to 387
+				local function update_publish(o)
+					local current = 0
+					local skin_editor = managers.blackmarket:skin_editor()
+
+					while current < 1 do
+						local bar = skin_editor._publish_bar
+
+						if not bar then
+							break
+						end
+
+						current = current + skin_editor:get_current_skin():get_update_progress()
+
+						bar:set_current(current)
+						coroutine.yield()
+					end
+				end
+
+				panel:animate(update_publish)
+			end
+		else
 			cb("copy_failed:" .. message)
 		end
 	end

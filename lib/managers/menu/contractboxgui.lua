@@ -64,6 +64,25 @@ function ContractBoxGui:init(ws, fullscreen_ws)
 
 	if MenuBackdropGUI and crewpage_text then
 		local bg_text = self._fullscreen_panel:text({
+			name = "crewpage_text",
+			vertical = "top",
+			h = 90,
+			alpha = 0.4,
+			align = "left",
+			layer = 1,
+			text = managers.localization:to_upper_text("menu_crewpage"),
+			font_size = tweak_data.menu.pd2_massive_font_size,
+			font = tweak_data.menu.pd2_massive_font,
+			color = tweak_data.screen_colors.button_stage_3
+		})
+		local x, y = managers.gui_data:safe_to_full_16_9(crewpage_text:world_x(), crewpage_text:world_center_y())
+
+		bg_text:set_world_left(x)
+		bg_text:set_world_center_y(y)
+		bg_text:move(-13, 9)
+		MenuBackdropGUI.animate_bg_text(self, bg_text)
+
+		local bg_text = self._fullscreen_panel:text({
 			vertical = "bottom",
 			h = 90,
 			alpha = 0.4,
@@ -588,7 +607,12 @@ function ContractBoxGui:check_update_mutators_tooltip()
 		self._lobby_mutators_text:set_visible(managers.mutators:are_mutators_enabled())
 	end
 
-	if managers.mutators:are_mutators_enabled() or self._mutators_tooltip and true then
+	if not managers.mutators:are_mutators_enabled() then
+		if self._mutators_tooltip then
+			refresh_contract = true
+			refresh_tooltip = true
+		end
+	else
 		local lobby_data = managers.mutators:get_mutators_from_lobby_data()
 
 		if self._mutators_data then
