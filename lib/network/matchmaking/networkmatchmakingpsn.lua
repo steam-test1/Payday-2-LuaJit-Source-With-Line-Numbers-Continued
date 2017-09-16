@@ -239,9 +239,7 @@ end
 
 -- Lines: 315 to 327
 function NetworkMatchMakingPSN:remove_ping_watch()
-	if self:_is_client() then
-		-- Nothing
-	else
+	if not self:_is_client() or self._server_rpc then
 		for k, v in pairs(self._players) do
 			if v.rpc then
 				-- Nothing

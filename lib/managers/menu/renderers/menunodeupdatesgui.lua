@@ -884,9 +884,7 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 
 			self:set_latest_content(content_highlighted, true)
 		end
-	elseif diff_x > 0 then
-		-- Nothing
-	else
+	elseif diff_x <= 0 or self:next_page() then
 		content_highlighted = self._previous_content_updates[self._select_x]
 
 		self:set_latest_content(content_highlighted, true)

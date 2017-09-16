@@ -1232,6 +1232,10 @@ function CopBrain:on_alarm_pager_interaction(status, player)
 			else
 				self._unit:sound():play(self:_get_radio_id("dsp_radio_fooled_" .. tostring(cue_index)), nil, true)
 			end
+
+			if is_last then
+				-- Nothing
+			end
 		else
 			managers.groupai:state():on_police_called("alarm_pager_bluff_failed")
 			self._unit:interaction():set_active(false, true)

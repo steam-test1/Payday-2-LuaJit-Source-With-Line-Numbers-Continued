@@ -2364,7 +2364,9 @@ function TeamLoadoutItem:set_slot_outfit(slot, criminal_name, outfit)
 		melee_weapon_bitmap:set_w(melee_weapon_bitmap:h() * aspect)
 		melee_weapon_bitmap:set_center_x(x)
 		melee_weapon_bitmap:set_center_y(y * 9)
+	end
 
+	if outfit.grenade and false then
 		local guis_catalog = "guis/"
 		local bundle_folder = tweak_data.blackmarket.projectiles[outfit.grenade] and tweak_data.blackmarket.projectiles[outfit.grenade].texture_bundle_folder
 

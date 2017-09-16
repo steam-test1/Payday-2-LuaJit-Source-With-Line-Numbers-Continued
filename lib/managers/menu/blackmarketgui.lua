@@ -11588,12 +11588,14 @@ function BlackMarketGui:populate_mods(data)
 					right = 1,
 					texture = reticle_texture
 				})
+			end
+		end
 
-				if data[equipped].default_mod then
-					data[equipped].comparision_data = managers.blackmarket:get_weapon_stats_with_mod(data[equipped].category, data[equipped].slot, data[equipped].default_mod)
-				else
-					data[equipped].comparision_data = managers.blackmarket:get_weapon_stats_without_mod(data[equipped].category, data[equipped].slot, data[equipped].name)
-				end
+		if not data[equipped].conflict and false then
+			if data[equipped].default_mod then
+				data[equipped].comparision_data = managers.blackmarket:get_weapon_stats_with_mod(data[equipped].category, data[equipped].slot, data[equipped].default_mod)
+			else
+				data[equipped].comparision_data = managers.blackmarket:get_weapon_stats_without_mod(data[equipped].category, data[equipped].slot, data[equipped].name)
 			end
 		end
 	end
