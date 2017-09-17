@@ -1,7 +1,7 @@
 PlayerAction.UnseenStrike = {}
 PlayerAction.UnseenStrike.Priority = 1
 
--- Lines: 9 to 35
+-- Lines: 9 to 36
 PlayerAction.UnseenStrike.Function = function (player_manager, min_time, max_duration, crit_chance)
 	local co = coroutine.running()
 	local current_time = Application:time()
@@ -9,12 +9,12 @@ PlayerAction.UnseenStrike.Function = function (player_manager, min_time, max_dur
 	local can_activate = true
 
 
-	-- Lines: 16 to 20
+	-- Lines: 16 to 21
 	local function on_damage_taken()
-		managers.player:deactivate_temporary_upgrade("temporary", "unseen_strike")
-
-		target_time = Application:time() + min_time
-		can_activate = true
+		if not player_manager:has_activate_temporary_upgrade("temporary", "unseen_strike") then
+			target_time = Application:time() + min_time
+			can_activate = true
+		end
 	end
 
 	player_manager:register_message(Message.OnPlayerDamage, co, on_damage_taken)

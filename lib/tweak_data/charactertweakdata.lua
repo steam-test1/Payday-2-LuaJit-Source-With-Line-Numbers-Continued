@@ -15700,7 +15700,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5567 to 5991
+-- Lines: 5567 to 6021
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

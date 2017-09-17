@@ -76,7 +76,7 @@ function DOTManager:_add_doted_enemy(enemy_unit, dot_damage_received_time, weapo
 	end
 end
 
--- Lines: 68 to 113
+-- Lines: 68 to 101
 function DOTManager:check_achievemnts(unit, t)
 	if not unit and not alive(unit) then
 		return
@@ -104,25 +104,13 @@ function DOTManager:check_achievemnts(unit, t)
 		variant_count_pass = not achievement_data.count or achievement_data.variant and dotted_enemies_by_variant[achievement_data.variant] and achievement_data.count <= #dotted_enemies_by_variant[achievement_data.variant]
 		all_pass = variant_count_pass
 
-		if all_pass then
-			if achievement_data.stat then
-				managers.achievment:award_progress(achievement_data.stat)
-			elseif achievement_data.award then
-				managers.achievment:award(achievement_data.award)
-			elseif achievement_data.challenge_stat then
-				managers.challenge:award_progress(achievement_data.challenge_stat)
-			elseif achievement_data.trophy_stat then
-				managers.custom_safehouse:award(achievement_data.trophy_stat)
-			elseif achievement_data.challenge_award then
-				managers.challenge:award(achievement_data.challenge_award)
-			else
-				Application:debug("[MissionEndState] complete_heist_achievements:", achievement)
-			end
+		if all_pass and not managers.achievment:award_data(achievement_data) then
+			Application:debug("[DOTManager] dot_achievements:", achievement)
 		end
 	end
 end
 
--- Lines: 117 to 130
+-- Lines: 105 to 118
 function DOTManager:_damage_dot(dot_info)
 	local attacker_unit = managers.player:player_unit()
 	local col_ray = {unit = dot_info.enemy_unit}
@@ -136,7 +124,7 @@ function DOTManager:_damage_dot(dot_info)
 	end
 end
 
--- Lines: 133 to 140
+-- Lines: 121 to 128
 function DOTManager:create_dot_data(type, custom_data)
 	local dot_data = deep_clone(tweak_data:get_dot_type_data(type))
 
@@ -148,7 +136,7 @@ function DOTManager:create_dot_data(type, custom_data)
 	return dot_data
 end
 
--- Lines: 143 to 145
+-- Lines: 131 to 133
 function DOTManager:on_simulation_ended()
 	self._doted_enemies = {}
 end

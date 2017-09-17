@@ -418,12 +418,27 @@ function ViewportManager:set_adapter_index(adapter_index)
 	end
 end
 
--- Lines: 375 to 376
+-- Lines: 373 to 384
+function ViewportManager:reset_viewport_settings()
+	Application:reset_render_settings({
+		"adapter_index",
+		"aspect_ratio",
+		"fullscreen",
+		"resolution",
+		"v_sync"
+	})
+
+	self._render_settings_change_map = nil
+
+	self:resolution_changed()
+end
+
+-- Lines: 388 to 389
 function ViewportManager:aspect_ratio()
 	return self._aspect_ratio
 end
 
--- Lines: 379 to 381
+-- Lines: 392 to 394
 function ViewportManager:set_aspect_ratio2(aspect_ratio)
 	self._aspect_ratio = aspect_ratio
 end

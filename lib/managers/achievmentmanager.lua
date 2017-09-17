@@ -266,7 +266,12 @@ function AchievmentManager:heist_success_awards()
 	return self._mission_end_achievements
 end
 
--- Lines: 303 to 344
+-- Lines: 297 to 298
+function AchievmentManager:award_data(t, name)
+	return self:_award_achievement(t, name)
+end
+
+-- Lines: 312 to 353
 function AchievmentManager:award(id)
 	if not self:exists(id) then
 		Application:error("[AchievmentManager:award] Awarding non-existing achievement", "id", id)
@@ -296,7 +301,7 @@ function AchievmentManager:award(id)
 	managers.mission:call_global_event(Message.OnAchievement, id)
 end
 
--- Lines: 409 to 427
+-- Lines: 418 to 436
 function AchievmentManager:_give_reward(id, skip_exp)
 	print("[AchievmentManager:_give_reward] ", id)
 
@@ -308,7 +313,7 @@ function AchievmentManager:_give_reward(id, skip_exp)
 	end
 end
 
--- Lines: 430 to 486
+-- Lines: 439 to 495
 function AchievmentManager:award_progress(stat, value)
 	if Application:editor() then
 		return
@@ -336,7 +341,7 @@ function AchievmentManager:award_progress(stat, value)
 	managers.network.account:publish_statistics(stats, true)
 end
 
--- Lines: 490 to 494
+-- Lines: 499 to 503
 function AchievmentManager:get_stat(stat)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return managers.network.account:get_stat(stat)
@@ -345,12 +350,12 @@ function AchievmentManager:get_stat(stat)
 	return false
 end
 
--- Lines: 499 to 501
+-- Lines: 508 to 510
 function AchievmentManager:award_none(id)
 	Application:debug("[AchievmentManager:award_none] Awarded achievment", id)
 end
 
--- Lines: 505 to 519
+-- Lines: 514 to 528
 function AchievmentManager:award_steam(id)
 	Application:debug("[AchievmentManager:award_steam] Awarded Steam achievment", id)
 	self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
@@ -366,7 +371,7 @@ function AchievmentManager:award_steam(id)
 	end
 end
 
--- Lines: 523 to 533
+-- Lines: 532 to 542
 function AchievmentManager:clear_steam(id)
 	print("[AchievmentManager:clear_steam]", id)
 
@@ -380,7 +385,7 @@ function AchievmentManager:clear_steam(id)
 	self.handler:store_data()
 end
 
--- Lines: 537 to 547
+-- Lines: 546 to 556
 function AchievmentManager:clear_all_steam()
 	print("[AchievmentManager:clear_all_steam]")
 
@@ -394,7 +399,7 @@ function AchievmentManager:clear_all_steam()
 	self.handler:store_data()
 end
 
--- Lines: 551 to 560
+-- Lines: 560 to 569
 function AchievmentManager.steam_unlock_result(achievment)
 	print("[AchievmentManager:steam_unlock_result] Awarded Steam achievment", achievment)
 
@@ -407,12 +412,12 @@ function AchievmentManager.steam_unlock_result(achievment)
 	end
 end
 
--- Lines: 563 to 579
+-- Lines: 572 to 588
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
 
-	-- Lines: 571 to 576
+	-- Lines: 580 to 585
 	local function x360_unlock_result(result)
 		print("result", result)
 	end
@@ -420,7 +425,7 @@ function AchievmentManager:award_x360(id)
 	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
 end
 
--- Lines: 583 to 594
+-- Lines: 592 to 603
 function AchievmentManager:award_psn(id)
 	print("[AchievmentManager:award] Awarded PSN achievment", id, self:get_info(id).id)
 
@@ -434,7 +439,7 @@ function AchievmentManager:award_psn(id)
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
--- Lines: 596 to 604
+-- Lines: 605 to 613
 function AchievmentManager.psn_unlock_result(request, error_str)
 	print("[AchievmentManager:psn_unlock_result] Awarded PSN achievment", request, error_str)
 
@@ -447,7 +452,7 @@ function AchievmentManager.psn_unlock_result(request, error_str)
 	end
 end
 
--- Lines: 608 to 618
+-- Lines: 617 to 627
 function AchievmentManager:chk_install_trophies()
 	if Trophies:is_installed() then
 		print("[AchievmentManager:chk_install_trophies] Already installed")
@@ -462,7 +467,7 @@ function AchievmentManager:chk_install_trophies()
 	end
 end
 
--- Lines: 622 to 628
+-- Lines: 631 to 637
 function AchievmentManager:clbk_install_trophies(result)
 	print("[AchievmentManager:clbk_install_trophies]", result)
 
@@ -473,7 +478,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines: 633 to 680
+-- Lines: 642 to 689
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
@@ -528,7 +533,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 	end
 end
 
--- Lines: 685 to 691
+-- Lines: 694 to 700
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -538,7 +543,7 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines: 695 to 714
+-- Lines: 704 to 723
 function AchievmentManager:_check_autounlock_complete_heist()
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_achievements) do
 		if table.size(achievement_data) == 3 and achievement_data.award and achievement_data.difficulty and (achievement_data.job or achievement_data.jobs) then
@@ -559,32 +564,37 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines: 717 to 719
+-- Lines: 726 to 728
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines: 722 to 724
+-- Lines: 731 to 733
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines: 727 to 746
-function AchievmentManager:_award_achievement(achievement_data, achievement_name)
-	if achievement_name then
-		print("[AchievmentManager] awarding: ", achievement_name)
+-- Lines: 735 to 762
+function AchievmentManager:_award_achievement(t, name)
+	if name then
+		print("[AchievmentManager] awarding: ", name)
 	end
 
-	if achievement_data.stat then
-		managers.achievment:award_progress(achievement_data.stat)
-	elseif achievement_data.award then
-		managers.achievment:award(achievement_data.award)
-	elseif achievement_data.challenge_stat then
-		managers.challenge:award_progress(achievement_data.challenge_stat)
-	elseif achievement_data.trophy_stat then
-		managers.custom_safehouse:award(achievement_data.trophy_stat)
-	elseif achievement_data.challenge_award then
-		managers.challenge:award(achievement_data.challenge_award)
+	if t.stat then
+		managers.achievment:award_progress(t.stat)
+	elseif t.award then
+		managers.achievment:award(t.award)
+		managers.generic_side_jobs:award(t.award)
+	elseif t.challenge_stat then
+		managers.challenge:award_progress(t.challenge_stat)
+	elseif t.challenge_award then
+		managers.challenge:award(t.challenge_award)
+	elseif t.trophy_stat then
+		managers.custom_safehouse:award(t.trophy_stat)
+	else
+		return false
 	end
+
+	return true
 end
 

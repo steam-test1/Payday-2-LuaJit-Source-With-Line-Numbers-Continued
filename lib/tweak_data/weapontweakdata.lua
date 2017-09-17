@@ -3041,7 +3041,7 @@ function WeaponTweakData:_init_data_breech_crew()
 	self.breech_crew.suppression = 1
 end
 
--- Lines: 4017 to 4037
+-- Lines: 4017 to 4038
 function WeaponTweakData:_init_data_ching_crew()
 	self.ching_crew.sounds.prefix = "ching_npc"
 	self.ching_crew.use_data.selection_index = 2
@@ -3059,7 +3059,7 @@ function WeaponTweakData:_init_data_ching_crew()
 	self.ching_crew.suppression = 1
 end
 
--- Lines: 4039 to 4061
+-- Lines: 4040 to 4061
 function WeaponTweakData:_init_data_erma_crew()
 	self.erma_crew.sounds.prefix = "erma_npc"
 	self.erma_crew.use_data.selection_index = 1
@@ -3701,7 +3701,7 @@ function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
 	}
 end
 
--- Lines: 4361 to 19404
+-- Lines: 4361 to 19403
 function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol_default, autohit_shotgun_default, autohit_lmg_default, autohit_snp_default, autohit_smg_default, autohit_minigun_default, damage_melee_default, damage_melee_effect_multiplier_default, aim_assist_rifle_default, aim_assist_pistol_default, aim_assist_shotgun_default, aim_assist_lmg_default, aim_assist_snp_default, aim_assist_smg_default, aim_assist_minigun_default)
 	local total_damage_primary = 300
 	local total_damage_secondary = 150
@@ -14966,7 +14966,6 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 	self.breech.unlock_func = "has_unlocked_breech"
 	self.ching = {
 		categories = {"assault_rifle"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
 		damage_melee = damage_melee_default,
 		damage_melee_effect_mul = damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15149,7 +15148,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 	self.erma.unlock_func = "has_unlocked_erma"
 end
 
--- Lines: 19411 to 19514
+-- Lines: 19410 to 19513
 function WeaponTweakData:_init_data_offhand_weapons()
 	self.b92fs_primary = deep_clone(self.b92fs)
 	self.b92fs_primary.parent_weapon_id = "b92fs"
@@ -15243,7 +15242,7 @@ function WeaponTweakData:_init_data_offhand_weapons()
 	self.m4_secondary.AMMO_MAX = math.round(self.m4_secondary.AMMO_MAX * 0.75)
 end
 
--- Lines: 19520 to 19803
+-- Lines: 19519 to 19802
 function WeaponTweakData:_create_table_structure()
 	self.c45_npc = {
 		usage = "is_pistol",
@@ -16158,7 +16157,8 @@ function WeaponTweakData:_create_table_structure()
 		auto = {}
 	}
 	self.ching_crew = {
-		usage = "is_rifle",
+		usage = "is_sniper",
+		anim_usage = "is_rifle",
 		sounds = {},
 		use_data = {},
 		auto = {}
@@ -16171,11 +16171,11 @@ function WeaponTweakData:_create_table_structure()
 	}
 end
 
--- Lines: 19806 to 19807
+-- Lines: 19805 to 19806
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines: 19810 to 19818
+-- Lines: 19809 to 19817
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then

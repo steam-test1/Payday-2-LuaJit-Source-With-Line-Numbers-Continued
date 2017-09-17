@@ -66,7 +66,7 @@ function Manager:get_menu(menu_name)
 	return menu
 end
 
--- Lines: 64 to 102
+-- Lines: 64 to 98
 function Manager:open_menu(menu_name, position, ...)
 	local menu = self._registered_menus[menu_name]
 
@@ -78,10 +78,6 @@ function Manager:open_menu(menu_name, position, ...)
 		end
 
 		local current_open_menu = self._open_menus[#self._open_menus]
-
-		if self._open_menus[#self._open_menus] then
-			-- Nothing
-		end
 
 		if position then
 			table.insert(self._open_menus, position, menu)
@@ -106,7 +102,7 @@ function Manager:open_menu(menu_name, position, ...)
 	end
 end
 
--- Lines: 104 to 123
+-- Lines: 100 to 119
 function Manager:close_menu(menu_name)
 	local menu = nil
 
@@ -129,7 +125,7 @@ function Manager:close_menu(menu_name)
 	end
 end
 
--- Lines: 125 to 141
+-- Lines: 121 to 137
 function Manager:_menu_closed(menu_name)
 	if menu_name then
 		for i, menu in ipairs(self._open_menus) do
@@ -148,11 +144,11 @@ function Manager:_menu_closed(menu_name)
 	end
 end
 
--- Lines: 143 to 144
+-- Lines: 139 to 140
 function Manager:_node_selected(menu_name, node)
 end
 
--- Lines: 146 to 152
+-- Lines: 142 to 148
 function Manager:input_enabled(enabled)
 	self._input_enabled = enabled
 
@@ -161,7 +157,7 @@ function Manager:input_enabled(enabled)
 	end
 end
 
--- Lines: 156 to 181
+-- Lines: 152 to 177
 function Manager:update(t, dt)
 	local active_menu = self._open_menus[#self._open_menus]
 

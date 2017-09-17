@@ -1,6 +1,6 @@
 LootDropTweakData = LootDropTweakData or class()
 
--- Lines: 4 to 1793
+-- Lines: 4 to 1812
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1575,7 +1575,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 1795 to 1800
+-- Lines: 1814 to 1819
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

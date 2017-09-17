@@ -44,24 +44,29 @@ function ButlerSound:_mirroring_clbk()
 	end
 end
 
--- Lines: 68 to 72
+-- Lines: 68 to 74
 function ButlerSound:_mirroring_sound_callback()
 	local count = #_butler_idle_anims
 	local rnd_idx = math.random(1, count)
 
 	self._unit:play_redirect(_butler_idle_anims[rnd_idx])
+	self._unit:set_extension_update_enabled(Idstring("sound"), true)
+	self:_randomize_speech_time()
 end
 
--- Lines: 74 to 84
+-- Lines: 76 to 89
 function ButlerSound:_sound_start_mirroring()
 	local snd_event, debug = managers.butler_mirroring:get_sound_event()
 
 	if snd_event then
 		self:say(snd_event, false, true)
+	else
+		self._unit:set_extension_update_enabled(Idstring("sound"), true)
+		self:_randomize_speech_time()
 	end
 end
 
--- Lines: 87 to 116
+-- Lines: 92 to 122
 function ButlerSound:_sound_start_muttering()
 	local override_sound = nil
 

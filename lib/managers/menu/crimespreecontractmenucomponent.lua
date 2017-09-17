@@ -755,7 +755,7 @@ function CrimeSpreeStartingLevelItem:panel()
 end
 MenuCrimeNetCrimeSpreeContractInitiator = MenuCrimeNetCrimeSpreeContractInitiator or class()
 
--- Lines: 764 to 817
+-- Lines: 764 to 820
 function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
