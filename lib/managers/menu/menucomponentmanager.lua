@@ -2145,12 +2145,12 @@ end
 
 -- Lines: 2194 to 2196
 function MenuComponentManager:enable_crimenet()
-	self._set_crimenet_enabled = true
+	self._set_crimenet_enabled = self._set_crimenet_enabled == nil and true
 end
 
 -- Lines: 2198 to 2200
 function MenuComponentManager:disable_crimenet()
-	self._set_crimenet_enabled = false
+	self._set_crimenet_enabled = self._set_crimenet_enabled == nil and false
 end
 
 -- Lines: 2202 to 2206
