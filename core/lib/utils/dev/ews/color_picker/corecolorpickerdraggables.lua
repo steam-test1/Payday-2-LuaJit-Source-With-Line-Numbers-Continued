@@ -34,7 +34,7 @@ end
 
 -- Lines: 32 to 33
 function ColorPickerDraggables:color()
-	return self._alpha_slider or self._value_slider or self._spectrum:color()
+	return (self._alpha_slider or self._value_slider or self._spectrum):color()
 end
 
 -- Lines: 36 to 52
@@ -117,7 +117,7 @@ function ColorPickerDraggables:_update_ui_except(sender)
 	end
 
 	if sender ~= self._alpha_slider and self._alpha_slider ~= nil then
-		local opaque_color = self._value_slider or self._spectrum:color()
+		local opaque_color = (self._value_slider or self._spectrum):color()
 
 		self._alpha_slider:set_top_color(opaque_color)
 		self._alpha_slider:set_bottom_color(opaque_color:with_alpha(0))

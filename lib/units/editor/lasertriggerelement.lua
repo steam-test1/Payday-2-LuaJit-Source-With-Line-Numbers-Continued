@@ -150,7 +150,7 @@ end
 -- Lines: 122 to 128
 function LaserTriggerUnitElement:_get_close_point(points, pos)
 	for i, point in pairs(points) do
-		if point.pos - pos:length() < self.CLOSE_DISTANCE then
+		if (point.pos - pos):length() < self.CLOSE_DISTANCE then
 			return i, point
 		end
 	end

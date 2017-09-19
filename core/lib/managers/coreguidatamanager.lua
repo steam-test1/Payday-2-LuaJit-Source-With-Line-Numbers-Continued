@@ -24,7 +24,7 @@ end
 
 -- Lines: 24 to 30
 function GuiDataManager:create_saferect_workspace(workspace_object, scene)
-	local ws = scene or self._scene_gui or Overlay:gui():create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
 	self:layout_workspace(ws)
 
@@ -33,7 +33,7 @@ end
 
 -- Lines: 33 to 39
 function GuiDataManager:create_fullscreen_workspace(workspace_object, scene)
-	local ws = scene or self._scene_gui or Overlay:gui():create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
 	self:layout_fullscreen_workspace(ws)
 
@@ -42,7 +42,7 @@ end
 
 -- Lines: 42 to 48
 function GuiDataManager:create_fullscreen_16_9_workspace(workspace_object, scene)
-	local ws = scene or self._scene_gui or Overlay:gui():create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
 	self:layout_fullscreen_16_9_workspace(ws)
 
@@ -51,7 +51,7 @@ end
 
 -- Lines: 51 to 57
 function GuiDataManager:create_corner_saferect_workspace(workspace_object, scene)
-	local ws = scene or self._scene_gui or Overlay:gui():create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
 	self:layout_corner_saferect_workspace(ws)
 
@@ -60,7 +60,7 @@ end
 
 -- Lines: 60 to 66
 function GuiDataManager:create_1280_workspace(workspace_object, scene)
-	local ws = scene or self._scene_gui or Overlay:gui():create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
 	self:layout_1280_workspace(ws)
 
@@ -69,7 +69,7 @@ end
 
 -- Lines: 69 to 75
 function GuiDataManager:create_corner_saferect_1280_workspace(workspace_object, scene)
-	local ws = scene or self._scene_gui or Overlay:gui():create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
 	self:layout_corner_saferect_1280_workspace(ws)
 
@@ -78,7 +78,7 @@ end
 
 -- Lines: 90 to 93
 function GuiDataManager:destroy_workspace(ws)
-	self._scene_gui or Overlay:gui():destroy_workspace(ws)
+	(self._scene_gui or Overlay:gui()):destroy_workspace(ws)
 end
 
 -- Lines: 95 to 96

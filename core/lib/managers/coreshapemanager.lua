@@ -636,7 +636,7 @@ end
 
 -- Lines: 551 to 552
 function ShapeSphere:is_inside(pos)
-	return pos - self:position():length() < self._properties.radius
+	return (pos - self:position()):length() < self._properties.radius
 end
 
 -- Lines: 555 to 560

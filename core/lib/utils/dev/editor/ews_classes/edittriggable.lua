@@ -5,7 +5,7 @@ EditUnitTriggable = EditUnitTriggable or class(EditUnitBase)
 
 -- Lines: 6 to 49
 function EditUnitTriggable:init(editor)
-	local panel, sizer = editor or managers.editor:add_unit_edit_page({
+	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Sequences",
 		class = self
 	})

@@ -1704,7 +1704,7 @@ end
 
 -- Lines: 1563 to 1569
 function CoreMissionElement:_add_static_unit_list_btn(params)
-	local dialog = params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal:new("Add Unit", params.add_filter)
+	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Add Unit", params.add_filter)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		local id = unit:unit_data().unit_id
@@ -1715,7 +1715,7 @@ end
 
 -- Lines: 1571 to 1576
 function CoreMissionElement:_remove_static_unit_list_btn(params)
-	local dialog = params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal:new("Remove Unit", params.remove_filter)
+	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Remove Unit", params.remove_filter)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		params.remove_result(unit)
