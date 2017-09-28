@@ -555,7 +555,7 @@ function PlayerInventory:show_equipped_unit()
 	end
 end
 
--- Lines: 553 to 586
+-- Lines: 553 to 592
 function PlayerInventory:save(data)
 	if self._equipped_selection then
 		local eq_weap_name = self:equipped_unit():base()._factory_id or self:equipped_unit():name()
@@ -582,7 +582,7 @@ function PlayerInventory:save(data)
 	end
 end
 
--- Lines: 590 to 602
+-- Lines: 596 to 608
 function PlayerInventory:cosmetics_string_from_peer(peer, weapon_name)
 	if peer then
 		local outfit = peer:blackmarket_outfit()
@@ -598,7 +598,7 @@ function PlayerInventory:cosmetics_string_from_peer(peer, weapon_name)
 	end
 end
 
--- Lines: 606 to 623
+-- Lines: 612 to 638
 function PlayerInventory:load(data)
 	if data.equipped_weapon_index then
 		self._weapon_add_clbk = "playerinventory_load"
@@ -615,7 +615,7 @@ function PlayerInventory:load(data)
 	self._mask_visibility = data.mask_visibility and true or false
 end
 
--- Lines: 625 to 653
+-- Lines: 640 to 668
 function PlayerInventory:_clbk_weapon_add(data)
 	self._weapon_add_clbk = nil
 
@@ -643,12 +643,12 @@ function PlayerInventory:_clbk_weapon_add(data)
 	end
 end
 
--- Lines: 657 to 658
+-- Lines: 672 to 673
 function PlayerInventory:mask_visibility()
 	return self._mask_visibility or false
 end
 
--- Lines: 662 to 737
+-- Lines: 677 to 752
 function PlayerInventory:set_mask_visibility(state)
 	self._mask_visibility = state
 
@@ -726,7 +726,7 @@ function PlayerInventory:set_mask_visibility(state)
 	end
 end
 
--- Lines: 741 to 757
+-- Lines: 756 to 772
 function PlayerInventory:update_mask_offset(mask_data)
 	local char = nil
 	char = mask_data.peer_id and managers.blackmarket:get_real_character(nil, mask_data.peer_id) or managers.blackmarket:get_real_character(mask_data.character_name, nil)
@@ -742,7 +742,7 @@ function PlayerInventory:update_mask_offset(mask_data)
 	end
 end
 
--- Lines: 760 to 775
+-- Lines: 775 to 790
 function PlayerInventory:set_mask_offset(mask_unit, mask_align, position, rotation)
 	if not alive(mask_unit) then
 		return
@@ -757,7 +757,7 @@ function PlayerInventory:set_mask_offset(mask_unit, mask_align, position, rotati
 	end
 end
 
--- Lines: 778 to 798
+-- Lines: 793 to 813
 function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 	self._melee_weapon_data = managers.blackmarket:get_melee_weapon_data(melee_weapon_id)
 
@@ -774,11 +774,11 @@ function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 	end
 end
 
--- Lines: 800 to 801
+-- Lines: 815 to 816
 function PlayerInventory:set_melee_weapon_by_peer(peer)
 end
 
--- Lines: 805 to 813
+-- Lines: 820 to 828
 function PlayerInventory:set_ammo(ammo)
 	for id, weapon in pairs(self._available_selections) do
 		weapon.unit:base():set_ammo(ammo)
@@ -786,7 +786,7 @@ function PlayerInventory:set_ammo(ammo)
 	end
 end
 
--- Lines: 817 to 823
+-- Lines: 832 to 838
 function PlayerInventory:need_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if not weapon.unit:base():ammo_full() then
@@ -797,7 +797,7 @@ function PlayerInventory:need_ammo()
 	return false
 end
 
--- Lines: 829 to 835
+-- Lines: 844 to 850
 function PlayerInventory:all_out_of_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if not weapon.unit:base():out_of_ammo() then
@@ -808,17 +808,17 @@ function PlayerInventory:all_out_of_ammo()
 	return true
 end
 
--- Lines: 842 to 844
+-- Lines: 857 to 859
 function PlayerInventory:anim_cbk_spawn_character_mask(unit)
 	self:set_mask_visibility(true)
 end
 
--- Lines: 846 to 848
+-- Lines: 861 to 863
 function PlayerInventory:anim_clbk_equip_exit(unit)
 	self:set_mask_visibility(true)
 end
 
--- Lines: 852 to 860
+-- Lines: 867 to 875
 function PlayerInventory:set_visibility_state(state)
 	for i, sel_data in pairs(self._available_selections) do
 		local enabled = sel_data.unit:enabled()
@@ -831,7 +831,7 @@ function PlayerInventory:set_visibility_state(state)
 	end
 end
 
--- Lines: 864 to 871
+-- Lines: 879 to 886
 function PlayerInventory:set_weapon_enabled(state)
 	if self._equipped_selection then
 		self:equipped_unit():set_enabled(state)

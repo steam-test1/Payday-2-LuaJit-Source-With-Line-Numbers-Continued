@@ -3,7 +3,7 @@ LevelsTweakData.LevelType = {}
 LevelsTweakData.LevelType.America = "america"
 LevelsTweakData.LevelType.Russia = "russia"
 
--- Lines: 7 to 1843
+-- Lines: 7 to 1855
 function LevelsTweakData:init()
 	local america = LevelsTweakData.LevelType.America
 	local russia = LevelsTweakData.LevelType.Russia
@@ -44,6 +44,7 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.025,
 		max_bags = 13,
+		repossess_bags = true,
 		ai_group_type = america
 	}
 	self.framing_frame_3 = {
@@ -152,6 +153,7 @@ function LevelsTweakData:init()
 		package = "packages/narr_alex2",
 		cube = "cube_apply_heist_bank",
 		max_bags = 19,
+		repossess_bags = true,
 		ai_group_type = america
 	}
 	self.alex_3 = {
@@ -209,6 +211,7 @@ function LevelsTweakData:init()
 		package = {"packages/narr_watchdogs2"},
 		cube = "cube_apply_heist_bank",
 		max_bags = 16,
+		repossess_bags = true,
 		ai_group_type = america
 	}
 	self.watchdogs_2_day = deep_clone(self.watchdogs_2)
@@ -424,7 +427,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_cafe",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.escape_park_day = {
 		name_id = "heist_escape_park_hl",
@@ -435,7 +439,8 @@ function LevelsTweakData:init()
 		outro_event = "nothing",
 		music = "heist",
 		package = "packages/escape_park",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		repossess_bags = true
 	}
 	self.escape_cafe = {
 		name_id = "heist_escape_cafe_hl",
@@ -447,7 +452,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_cafe",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.escape_park = {
 		name_id = "heist_escape_park_hl",
@@ -459,7 +465,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_park",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.escape_street = {
 		name_id = "heist_escape_street_hl",
@@ -471,7 +478,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_street",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.escape_overpass = {
 		name_id = "heist_escape_overpass_hl",
@@ -483,7 +491,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_overpass",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.escape_overpass_night = deep_clone(self.escape_overpass)
 	self.escape_garage = {
@@ -496,7 +505,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_garage",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.driving_escapes_industry_day = {
 		name_id = "heist_driving_escapes_industry_hl",
@@ -1138,7 +1148,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/narr_peta2",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		repossess_bags = true
 	}
 	self.pal = {
 		name_id = "heist_pal_hl",
@@ -1599,12 +1610,12 @@ function LevelsTweakData:init()
 	}
 end
 
--- Lines: 1847 to 1848
+-- Lines: 1859 to 1860
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
--- Lines: 1851 to 1855
+-- Lines: 1863 to 1867
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -1613,12 +1624,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
--- Lines: 1860 to 1861
+-- Lines: 1872 to 1873
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
--- Lines: 1866 to 1872
+-- Lines: 1878 to 1884
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -1627,7 +1638,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
--- Lines: 1876 to 1882
+-- Lines: 1888 to 1894
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -1636,17 +1647,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
--- Lines: 1884 to 1885
+-- Lines: 1896 to 1897
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
--- Lines: 1888 to 1889
+-- Lines: 1900 to 1901
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
--- Lines: 1894 to 1900
+-- Lines: 1906 to 1912
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -1655,7 +1666,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines: 1902 to 1908
+-- Lines: 1914 to 1920
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -1664,7 +1675,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines: 1910 to 1916
+-- Lines: 1922 to 1928
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -1673,7 +1684,7 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
--- Lines: 1918 to 1970
+-- Lines: 1930 to 1982
 function LevelsTweakData:get_music_switches()
 	if not Global.level_data then
 		return nil
@@ -1733,7 +1744,7 @@ function LevelsTweakData:get_music_switches()
 	return switches
 end
 
--- Lines: 1973 to 1982
+-- Lines: 1985 to 1994
 function LevelsTweakData:get_music_event(stage)
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music_id = level_data and level_data.music or "default"
@@ -1745,7 +1756,7 @@ function LevelsTweakData:get_music_event(stage)
 	return tweak_data.music[music_id][stage]
 end
 
--- Lines: 1985 to 1991
+-- Lines: 1997 to 2003
 function LevelsTweakData:get_music_event_ext()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music = level_data and level_data.music_ext
@@ -1754,7 +1765,7 @@ function LevelsTweakData:get_music_event_ext()
 	return music, music_start
 end
 
--- Lines: 1995 to 2013
+-- Lines: 2007 to 2025
 function LevelsTweakData:get_default_team_ID(type)
 	local lvl_tweak = self[Global.level_data.level_id]
 
@@ -1777,7 +1788,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
--- Lines: 2015 to 2041
+-- Lines: 2027 to 2053
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = Application:editor() and managers.editor and self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")] or Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -1838,7 +1849,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines: 2044 to 2061
+-- Lines: 2056 to 2073
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = Application:editor() and managers.editor and self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")] or Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -1853,7 +1864,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
--- Lines: 2064 to 2077
+-- Lines: 2076 to 2089
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -1873,7 +1884,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines: 2080 to 2087
+-- Lines: 2092 to 2099
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 
@@ -1884,7 +1895,7 @@ function LevelsTweakData:get_team_index(team_id)
 	end
 end
 
--- Lines: 2089 to 2099
+-- Lines: 2101 to 2111
 function LevelsTweakData:get_ai_group_type()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 

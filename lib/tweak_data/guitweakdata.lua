@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 974
+-- Lines: 4 to 987
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -1680,15 +1680,6 @@ function GuiTweakData:init()
 			x = 425
 		},
 		{
-			name_id = "menu_cn_premium_buy",
-			menu_node = "crimenet_contract_special",
-			x = 420,
-			y = 846,
-			id = "premium_buy",
-			icon = "guis/textures/pd2/crimenet_marker_buy",
-			desc_id = "menu_cn_premium_buy_desc"
-		},
-		{
 			name_id = "menu_cn_contact_info",
 			menu_node = "crimenet_contact_info",
 			x = 912,
@@ -1708,6 +1699,15 @@ function GuiTweakData:init()
 			icon = "guis/textures/pd2/crimenet_casino",
 			x = 385,
 			pulse_color = Color(204, 255, 209, 32) / 255
+		},
+		{
+			name_id = "menu_cn_premium_buy",
+			menu_node = "crimenet_contract_special",
+			x = 420,
+			y = 846,
+			id = "premium_buy",
+			icon = "guis/textures/pd2/crimenet_marker_buy",
+			desc_id = "menu_cn_premium_buy_desc"
 		},
 		{
 			name_id = "menu_cn_short",
@@ -4860,6 +4860,11 @@ function GuiTweakData:init()
 	self.new_heists = {limit = 5}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_community_safe_5",
+		texture_path = "guis/textures/pd2/new_heists/community_safe_5",
+		url = "http://www.overkillsoftware.com/games/communitysafe5/"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_aldstone_room",
 		texture_path = "guis/textures/pd2/new_heists/aldstone_room",
 		url = "http://www.overkillsoftware.com/games/aldstonesheritage/"
@@ -4875,14 +4880,14 @@ function GuiTweakData:init()
 		url = "http://www.overkillsoftware.com/games/communitysafe4/"
 	})
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_crime_spree_update",
-		texture_path = "guis/textures/pd2/new_heists/crime_spree_update",
-		url = "http://store.steampowered.com/news/?appids=218620"
-	})
-	table.insert(self.new_heists, {
 		name_id = "menu_nh_ultimate_edition",
 		texture_path = "guis/textures/pd2/new_heists/ultimate_edition",
 		url = "http://store.steampowered.com/app/218620"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_crime_spree_update",
+		texture_path = "guis/textures/pd2/new_heists/crime_spree_update",
+		url = "http://store.steampowered.com/news/?appids=218620"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_dsync_beta_is_live",
@@ -4896,7 +4901,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 976 to 995
+-- Lines: 989 to 1008
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -4924,7 +4929,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 997 to 1065
+-- Lines: 1010 to 1078
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5000,15 +5005,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1068 to 1069
+-- Lines: 1081 to 1082
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1079 to 1080
+-- Lines: 1092 to 1093
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1082 to 1115
+-- Lines: 1095 to 1128
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5047,7 +5052,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1118 to 1242
+-- Lines: 1131 to 1255
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5170,12 +5175,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1245 to 1246
+-- Lines: 1258 to 1259
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1249 to 1255
+-- Lines: 1262 to 1268
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

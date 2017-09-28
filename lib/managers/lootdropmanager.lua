@@ -381,7 +381,7 @@ function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, re
 	return global_value, pc_type, entry, pc
 end
 
--- Lines: 401 to 487
+-- Lines: 401 to 511
 function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -410,64 +410,82 @@ function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_
 	local droppable_items, maxed_inventory_items = self:droppable_items(item_pc or 40, infamous_success, setup_data and setup_data.skip_types)
 	local global_value, entry = nil
 	return_data.items = {}
+	return_data.progress = {total = amount}
+	local co = coroutine.create(function ()
+		local itr = 0
 
-	for i = 1, amount, 1 do
-		local weighted_type_chance = {}
-		local sum = 0
+		for i = 1, amount, 1 do
+			local weighted_type_chance = {}
+			local sum = 0
 
-		for type, items in pairs(droppable_items) do
-			weighted_type_chance[type] = tweak_data.lootdrop.WEIGHTED_TYPE_CHANCE[pc][type]
-			sum = sum + weighted_type_chance[type]
-		end
-
-		if setup_data and setup_data.preferred_type and setup_data.preferred_chance then
-			local increase = setup_data.preferred_chance * sum
-			weighted_type_chance[setup_data.preferred_type] = (weighted_type_chance[setup_data.preferred_type] or 0) + increase
-			sum = sum + increase
-		end
-
-		local normalized_chance = {}
-
-		for type, items in pairs(droppable_items) do
-			normalized_chance[type] = weighted_type_chance[type] > 0 and weighted_type_chance[type] / sum or 0
-		end
-
-		local pc_type = setup_data and setup_data.preferred_type_drop or self:_get_type_items(normalized_chance, true)
-		local drop_table = droppable_items[pc_type] or maxed_inventory_items[pc_type]
-
-		if drop_table then
-			sum = 0
-
-			for index, item_data in ipairs(drop_table) do
-				sum = sum + item_data.weight
+			for type, items in pairs(droppable_items) do
+				weighted_type_chance[type] = tweak_data.lootdrop.WEIGHTED_TYPE_CHANCE[pc][type]
+				sum = sum + weighted_type_chance[type]
 			end
 
-			normalized_chance = {}
-
-			for index, item_data in ipairs(drop_table) do
-				normalized_chance[index] = item_data.weight / sum
+			if setup_data and setup_data.preferred_type and setup_data.preferred_chance then
+				local increase = setup_data.preferred_chance * sum
+				weighted_type_chance[setup_data.preferred_type] = (weighted_type_chance[setup_data.preferred_type] or 0) + increase
+				sum = sum + increase
 			end
 
-			local dropped_index = self:_get_type_items(normalized_chance, true)
-			local dropped_item = drop_table[dropped_index]
+			local normalized_chance = {}
 
-			managers.blackmarket:add_to_inventory(dropped_item.global_value, pc_type, dropped_item.entry)
+			for type, items in pairs(droppable_items) do
+				normalized_chance[type] = weighted_type_chance[type] > 0 and weighted_type_chance[type] / sum or 0
+			end
 
-			global_value = dropped_item.global_value
-			entry = dropped_item.entry
+			local pc_type = setup_data and setup_data.preferred_type_drop or self:_get_type_items(normalized_chance, true)
+			local drop_table = droppable_items[pc_type] or maxed_inventory_items[pc_type]
+
+			if drop_table then
+				sum = 0
+
+				for index, item_data in ipairs(drop_table) do
+					sum = sum + item_data.weight
+				end
+
+				normalized_chance = {}
+
+				for index, item_data in ipairs(drop_table) do
+					normalized_chance[index] = item_data.weight / sum
+				end
+
+				local dropped_index = self:_get_type_items(normalized_chance, true)
+				local dropped_item = drop_table[dropped_index]
+
+				managers.blackmarket:add_to_inventory(dropped_item.global_value, pc_type, dropped_item.entry)
+
+				global_value = dropped_item.global_value
+				entry = dropped_item.entry
+			end
+
+			local item = {
+				global_value = global_value,
+				type_items = pc_type,
+				item_entry = entry
+			}
+
+			table.insert(return_data.items, item)
+
+			itr = itr + 1
+
+			if itr > 5 then
+				coroutine.yield()
+
+				itr = 0
+				return_data.progress.current = i
+				droppable_items, maxed_inventory_items = self:droppable_items(item_pc or 40, infamous_success, setup_data and setup_data.skip_types)
+			end
 		end
+	end)
+	local result = coroutine.resume(co)
+	local status = coroutine.status(co)
 
-		local item = {
-			global_value = global_value,
-			type_items = pc_type,
-			item_entry = entry
-		}
-
-		table.insert(return_data.items, item)
-	end
+	return co
 end
 
--- Lines: 491 to 524
+-- Lines: 517 to 550
 function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	amount = amount or 10
 	add_to_inventory = add_to_inventory or false
@@ -499,14 +517,14 @@ function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	Global.debug_drop_result = self._debug_drop_result
 end
 
--- Lines: 526 to 529
+-- Lines: 552 to 555
 function LootDropManager:make_drop(return_data)
 	return_data = type(return_data) == "table" and return_data or {}
 
 	self:_make_drop(false, true, nil, return_data)
 end
 
--- Lines: 534 to 888
+-- Lines: 560 to 914
 function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return_data)
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
 	local all_humans = human_players == 4
@@ -722,7 +740,7 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 	end
 end
 
--- Lines: 890 to 901
+-- Lines: 916 to 927
 function LootDropManager:_get_type_items(normalized_chance, debug)
 	local seed = math.rand(1)
 
@@ -749,14 +767,14 @@ function LootDropManager:_get_type_items(normalized_chance, debug)
 	return next(normalized_chance)
 end
 
--- Lines: 904 to 907
+-- Lines: 930 to 933
 function LootDropManager:reset()
 	Global.lootdrop_manager = nil
 
 	self:_setup()
 end
 
--- Lines: 909 to 955
+-- Lines: 935 to 981
 function LootDropManager:can_drop_weapon_mods()
 	local plvl = managers.experience:current_level()
 	local dropable_items = {}
@@ -808,7 +826,7 @@ function LootDropManager:can_drop_weapon_mods()
 	return #dropable_items > 0
 end
 
--- Lines: 958 to 960
+-- Lines: 984 to 986
 function LootDropManager:specific_fake_loot_pc(preferred)
 	local to_drop = {
 		cash = 3,
@@ -823,7 +841,7 @@ function LootDropManager:specific_fake_loot_pc(preferred)
 	return to_drop[preferred] or 1
 end
 
--- Lines: 963 to 987
+-- Lines: 989 to 1013
 function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	local sum = 0
 	local to_drop = {
@@ -861,7 +879,7 @@ function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	return 1
 end
 
--- Lines: 1016 to 1032
+-- Lines: 1042 to 1058
 function LootDropManager:debug_check_items(check_type)
 	local t = {}
 
@@ -884,7 +902,7 @@ function LootDropManager:debug_check_items(check_type)
 	return t
 end
 
--- Lines: 1035 to 1062
+-- Lines: 1061 to 1088
 function LootDropManager:debug_loot_aquire_method(type)
 	local no_pcs = managers.lootdrop:debug_check_items(type)
 	local t = {
@@ -927,7 +945,7 @@ function LootDropManager:debug_loot_aquire_method(type)
 	return t
 end
 
--- Lines: 1065 to 1085
+-- Lines: 1091 to 1111
 function LootDropManager:debug_print_pc_items(check_type)
 	for type, data in pairs(tweak_data.blackmarket) do
 		if not check_type or type == check_type then
@@ -951,12 +969,12 @@ function LootDropManager:debug_print_pc_items(check_type)
 	end
 end
 
--- Lines: 1088 to 1090
+-- Lines: 1114 to 1116
 function LootDropManager:save(data)
 	data.LootDropManager = self._global
 end
 
--- Lines: 1093 to 1095
+-- Lines: 1119 to 1121
 function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end

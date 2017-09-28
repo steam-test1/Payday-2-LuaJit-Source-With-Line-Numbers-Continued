@@ -1,6 +1,6 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 4525
+-- Lines: 10 to 4575
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -5972,5 +5972,9 @@ function DLCTweakData:init(tweak_data)
 		item_entry = "fdm",
 		amount = 1
 	}}
+	self.jfr = {
+		free = true,
+		content = {}
+	}
 end
 

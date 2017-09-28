@@ -27,15 +27,24 @@ function CrimeSpreeRewardsMenuComponent:init(ws, fullscreen_ws, node)
 	self:_setup()
 end
 
--- Lines: 29 to 34
+-- Lines: 29 to 40
 function CrimeSpreeRewardsMenuComponent:close()
-	self._ws:panel():remove(self._panel)
-	self._ws:panel():remove(self._text_header)
-	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
+	if alive(self._panel) then
+		self._ws:panel():remove(self._panel)
+	end
+
+	if alive(self._text_header) then
+		self._ws:panel():remove(self._text_header)
+	end
+
+	if alive(self._fullscreen_panel) then
+		self._fullscreen_ws:panel():remove(self._fullscreen_panel)
+	end
+
 	managers.menu_component:post_event("count_1_finished")
 end
 
--- Lines: 38 to 121
+-- Lines: 44 to 159
 function CrimeSpreeRewardsMenuComponent:_setup()
 	self._exp_data = {
 		total = managers.experience:total(),
@@ -73,7 +82,7 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	})
 
 
-	-- Lines: 77 to 80
+	-- Lines: 83 to 86
 	local function func(o)
 		local start_blur = 0
 
@@ -114,6 +123,53 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 		1
 	}})
 
+	local progress_bar_h = 24
+	self._progress_panel = self._panel:panel({
+		layer = 10,
+		w = self._panel:w() * 0.8,
+		h = progress_bar_h + tweak_data.menu.pd2_medium_font_size
+	})
+
+	self._progress_panel:set_center_x(self._panel:w() * 0.5)
+	self._progress_panel:set_center_y(self._panel:h() * 0.5)
+	self._progress_panel:text({
+		vertical = "top",
+		align = "left",
+		text = managers.localization:to_upper_text("menu_cs_generating_rewards"),
+		font_size = tweak_data.menu.pd2_medium_font_size,
+		font = tweak_data.menu.pd2_medium_font,
+		color = tweak_data.screen_colors.text
+	})
+
+	self._progress_text = self._progress_panel:text({
+		text = "",
+		vertical = "top",
+		align = "right",
+		font_size = tweak_data.menu.pd2_medium_font_size,
+		font = tweak_data.menu.pd2_medium_font,
+		color = tweak_data.screen_colors.text
+	})
+	local progress_bar_panel = self._progress_panel:panel({h = progress_bar_h})
+
+	progress_bar_panel:set_bottom(self._progress_panel:h())
+	BoxGuiObject:new(progress_bar_panel:panel({layer = 100}), {sides = {
+		1,
+		1,
+		1,
+		1
+	}})
+
+	self._progress_bar = progress_bar_panel:rect({
+		alpha = 0.8,
+		blend_mode = "add",
+		color = tweak_data.screen_colors.button_stage_2
+	})
+end
+
+-- Lines: 163 to 174
+function CrimeSpreeRewardsMenuComponent:_setup_gui()
+	self._progress_panel:animate(callback(self, self, "fade_out"), 0.5, 0)
+
 	local panel_w = math.floor(self._panel:w() / 3)
 	self._rewards_panel = self._panel:panel({})
 
@@ -122,35 +178,28 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	self:_create_coins_reward(3, panel_w)
 end
 
--- Lines: 125 to 129
+-- Lines: 178 to 182
 function CrimeSpreeRewardsMenuComponent:mouse_wheel_up(x, y)
 	if self._list_scroll then
 		return self._list_scroll:scroll(x, y, 1)
 	end
 end
 
--- Lines: 131 to 135
+-- Lines: 184 to 188
 function CrimeSpreeRewardsMenuComponent:mouse_wheel_down(x, y)
 	if self._list_scroll then
 		return self._list_scroll:scroll(x, y, -1)
 	end
 end
 
--- Lines: 137 to 141
-function CrimeSpreeRewardsMenuComponent:update(t, dt)
-	for idx, btn in ipairs(self._buttons) do
-		btn:update(t, dt)
-	end
-end
-
--- Lines: 143 to 147
+-- Lines: 190 to 194
 function CrimeSpreeRewardsMenuComponent:confirm_pressed()
 	if self._selected_item and self._selected_item:callback() then
 		self._selected_item:callback()()
 	end
 end
 
--- Lines: 150 to 166
+-- Lines: 197 to 213
 function CrimeSpreeRewardsMenuComponent:mouse_moved(o, x, y)
 	if not managers.menu:is_pc_controller() then
 		return
@@ -172,7 +221,7 @@ function CrimeSpreeRewardsMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 171 to 179
+-- Lines: 218 to 226
 function CrimeSpreeRewardsMenuComponent:mouse_pressed(o, button, x, y)
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
@@ -183,13 +232,13 @@ function CrimeSpreeRewardsMenuComponent:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 184 to 188
+-- Lines: 231 to 235
 function CrimeSpreeRewardsMenuComponent:_close_rewards()
 	managers.menu:close_menu("menu_main")
 	managers.menu:open_menu("menu_main")
 end
 
--- Lines: 193 to 220
+-- Lines: 240 to 267
 function CrimeSpreeRewardsMenuComponent:create_card(panel, icon, size)
 	local rotation = math.rand(-10, 10)
 	local texture, rect, coords = tweak_data.hud_icons:get_icon_data(icon or "downcard_overkill_deck")
@@ -222,7 +271,7 @@ function CrimeSpreeRewardsMenuComponent:create_card(panel, icon, size)
 	return upcard
 end
 
--- Lines: 225 to 311
+-- Lines: 272 to 358
 function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 	self._exp_panel = self._rewards_panel:panel({
 		x = panel_w * (idx - 1),
@@ -313,7 +362,7 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 	experience_gained:set_top(experience_text:bottom())
 end
 
--- Lines: 314 to 416
+-- Lines: 361 to 463
 function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 	self._cash_panel = self._rewards_panel:panel({
 		x = panel_w * (idx - 1),
@@ -419,7 +468,7 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 	offshore_gained:set_top(offshore_text:bottom())
 end
 
--- Lines: 419 to 473
+-- Lines: 466 to 520
 function CrimeSpreeRewardsMenuComponent:_create_coins_reward(idx, panel_w)
 	self._coins_panel = self._rewards_panel:panel({
 		x = panel_w * (idx - 1),
@@ -475,12 +524,12 @@ function CrimeSpreeRewardsMenuComponent:_create_coins_reward(idx, panel_w)
 	coins_gained:set_top(coins_text:bottom())
 end
 
--- Lines: 475 to 476
+-- Lines: 522 to 523
 function CrimeSpreeRewardsMenuComponent:get_reward(id)
 	return (self._rewards_table or {})[id] or 0
 end
 
--- Lines: 480 to 563
+-- Lines: 527 to 610
 function CrimeSpreeRewardsMenuComponent:_add_item_textures(lootdrop_data, panel)
 	local item_id = lootdrop_data.item_entry
 	local category = lootdrop_data.type_items
@@ -586,7 +635,7 @@ function CrimeSpreeRewardsMenuComponent:_add_item_textures(lootdrop_data, panel)
 	end
 end
 
--- Lines: 566 to 615
+-- Lines: 613 to 662
 function CrimeSpreeRewardsMenuComponent:_texture_loaded_clbk(params, texture_idstring)
 	if not alive(self._loot_panel) then
 		TextureCache:unretrieve(texture_idstring)
@@ -690,8 +739,27 @@ CrimeSpreeRewardsMenuComponent.states = {
 	}
 }
 
--- Lines: 635 to 658
+-- Lines: 682 to 730
 function CrimeSpreeRewardsMenuComponent:update(t, dt)
+	if managers.crime_spree:is_generating_rewards() then
+		local current, total = managers.crime_spree:reward_generation_progress()
+		local complete = managers.crime_spree:has_finished_generating_rewards()
+
+		if alive(self._progress_text) then
+			self._progress_text:set_text(string.format("%i/%i", complete and total or current, total))
+
+			if alive(self._progress_bar) then
+				self._progress_bar:set_w(self._progress_panel:w() * (complete and 1 or current / total))
+			end
+		end
+
+		if complete then
+			self:_setup_gui()
+		end
+
+		return
+	end
+
 	if self._wait_t then
 		self._wait_t = self._wait_t - dt
 
@@ -717,9 +785,13 @@ function CrimeSpreeRewardsMenuComponent:update(t, dt)
 	if self[func] then
 		self[func](self, t, dt)
 	end
+
+	for idx, btn in ipairs(self._buttons) do
+		btn:update(t, dt)
+	end
 end
 
--- Lines: 660 to 666
+-- Lines: 732 to 738
 function CrimeSpreeRewardsMenuComponent:next_state(wait_t)
 	self._current_state = (self._current_state or 0) + 1
 	local t = CrimeSpreeRewardsMenuComponent.states[self._current_state] and CrimeSpreeRewardsMenuComponent.states[self._current_state][2] or 0
@@ -729,12 +801,12 @@ function CrimeSpreeRewardsMenuComponent:next_state(wait_t)
 	end
 end
 
--- Lines: 668 to 670
+-- Lines: 740 to 742
 function CrimeSpreeRewardsMenuComponent:wait(t)
 	self._wait_t = t
 end
 
--- Lines: 674 to 679
+-- Lines: 746 to 751
 function CrimeSpreeRewardsMenuComponent:set_text(element, text, delay)
 	if delay then
 		wait(delay)
@@ -743,7 +815,7 @@ function CrimeSpreeRewardsMenuComponent:set_text(element, text, delay)
 	element:set_text(text)
 end
 
--- Lines: 682 to 706
+-- Lines: 754 to 778
 function CrimeSpreeRewardsMenuComponent:flip_card(card)
 	local start_rot = card:rotation()
 	local start_w = card:w()
@@ -768,7 +840,7 @@ function CrimeSpreeRewardsMenuComponent:flip_card(card)
 	end)
 end
 
--- Lines: 709 to 751
+-- Lines: 781 to 823
 function CrimeSpreeRewardsMenuComponent:flip_item_card(card, item_type, delay)
 	local start_rot = card:rotation()
 	local start_w = card:w()
@@ -813,7 +885,7 @@ function CrimeSpreeRewardsMenuComponent:flip_item_card(card, item_type, delay)
 	end)
 end
 
--- Lines: 753 to 760
+-- Lines: 825 to 832
 function CrimeSpreeRewardsMenuComponent:fade_in(element, duration, delay)
 	if delay then
 		wait(delay)
@@ -824,7 +896,7 @@ function CrimeSpreeRewardsMenuComponent:fade_in(element, duration, delay)
 	end)
 end
 
--- Lines: 762 to 769
+-- Lines: 834 to 841
 function CrimeSpreeRewardsMenuComponent:fade_out(element, duration, delay)
 	if delay then
 		wait(delay)
@@ -835,7 +907,7 @@ function CrimeSpreeRewardsMenuComponent:fade_out(element, duration, delay)
 	end)
 end
 
--- Lines: 771 to 782
+-- Lines: 843 to 854
 function CrimeSpreeRewardsMenuComponent:count_text(element, cash_string, start_val, end_val, duration, delay)
 	if delay then
 		wait(delay)
@@ -852,7 +924,7 @@ function CrimeSpreeRewardsMenuComponent:count_text(element, cash_string, start_v
 	managers.menu_component:post_event("count_1_finished")
 end
 
--- Lines: 784 to 792
+-- Lines: 856 to 864
 function CrimeSpreeRewardsMenuComponent:fill_circle(element, start, target, duration, delay)
 	if delay then
 		wait(delay)
@@ -865,7 +937,7 @@ function CrimeSpreeRewardsMenuComponent:fill_circle(element, start, target, dura
 	end)
 end
 
--- Lines: 794 to 799
+-- Lines: 866 to 871
 function CrimeSpreeRewardsMenuComponent:post_event(element, event, delay)
 	if delay then
 		wait(delay)
@@ -874,17 +946,17 @@ function CrimeSpreeRewardsMenuComponent:post_event(element, event, delay)
 	managers.menu:post_event(event)
 end
 
--- Lines: 803 to 805
+-- Lines: 875 to 877
 function CrimeSpreeRewardsMenuComponent:_start_animation(t, dt)
 	self:next_state()
 end
 
--- Lines: 808 to 862
+-- Lines: 880 to 934
 function CrimeSpreeRewardsMenuComponent:_update_experience()
 	local t = 0
 
 
-	-- Lines: 810 to 812
+	-- Lines: 882 to 884
 	local function wait(x)
 		t = t + x
 	end
@@ -942,12 +1014,12 @@ function CrimeSpreeRewardsMenuComponent:_update_experience()
 	self:next_state(t - 0.5)
 end
 
--- Lines: 865 to 927
+-- Lines: 937 to 999
 function CrimeSpreeRewardsMenuComponent:_update_cash(t, dt)
 	local t = 0
 
 
-	-- Lines: 867 to 869
+	-- Lines: 939 to 941
 	local function wait(x)
 		t = t + x
 	end
@@ -1018,12 +1090,12 @@ function CrimeSpreeRewardsMenuComponent:_update_cash(t, dt)
 	self:next_state(t - 0.5)
 end
 
--- Lines: 930 to 970
+-- Lines: 1002 to 1042
 function CrimeSpreeRewardsMenuComponent:_update_coins(t, dt)
 	local t = 0
 
 
-	-- Lines: 932 to 934
+	-- Lines: 1004 to 1006
 	local function wait(x)
 		t = t + x
 	end
@@ -1066,7 +1138,7 @@ function CrimeSpreeRewardsMenuComponent:_update_coins(t, dt)
 	self:next_state(t - 0.5)
 end
 
--- Lines: 973 to 984
+-- Lines: 1045 to 1056
 function CrimeSpreeRewardsMenuComponent:_fade_out_exp_panels()
 	local t = 0
 	local fade_t = 0.5
@@ -1080,7 +1152,7 @@ function CrimeSpreeRewardsMenuComponent:_fade_out_exp_panels()
 	self:next_state(t)
 end
 
--- Lines: 987 to 1134
+-- Lines: 1059 to 1206
 function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 	self._cosmetics_panel = self._panel:panel({
 		x = padding,
@@ -1229,7 +1301,7 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 	self:next_state(t + 1)
 end
 
--- Lines: 1136 to 1141
+-- Lines: 1208 to 1213
 function CrimeSpreeRewardsMenuComponent:_cleanup_cosmetic_drops()
 	if alive(self._cosmetics_panel) then
 		self._panel:remove(self._cosmetics_panel)
@@ -1238,7 +1310,7 @@ function CrimeSpreeRewardsMenuComponent:_cleanup_cosmetic_drops()
 	self:next_state(0)
 end
 
--- Lines: 1144 to 1254
+-- Lines: 1216 to 1347
 function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 	local loot_drops = managers.crime_spree:loot_drops()
 
@@ -1276,11 +1348,12 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 	local max_lines = 3
 	local max_items = items_per_line * max_lines
 	local item_size = self._loot_scroll:canvas():w() / items_per_line
+	local max_pages = 3
 	local c = 0
 	local intial_delay = 0
 	local end_t = 0
 
-	for i = 1, num_items, 1 do
+	for i = 1, math.min(num_items, max_items * max_pages), 1 do
 		local lootdrop_data = loot_drops[i]
 		local card_types = {
 			weapon_mods = "upcard_weapon",
@@ -1351,11 +1424,29 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 		end_t = t
 	end
 
+	if max_items * max_pages < num_items then
+		local more_text = self._loot_scroll:canvas():text({
+			vertical = "center",
+			align = "center",
+			alpha = 0,
+			text = managers.localization:text("menu_cs_loot_drops_not_shown", {remaining = tostring(num_items - max_items * max_pages)}),
+			font_size = tweak_data.menu.pd2_large_font_size,
+			font = tweak_data.menu.pd2_large_font,
+			color = tweak_data.screen_colors.text
+		})
+		local t = end_t
+
+		more_text:animate(callback(self, self, "fade_in"), 0.25, t)
+		more_text:animate(callback(self, self, "fade_out"), 0.25, t + 2)
+
+		end_t = end_t + 2.5
+	end
+
 	self._loot_scroll:update_canvas_size()
 	self:next_state(end_t)
 end
 
--- Lines: 1256 to 1261
+-- Lines: 1349 to 1354
 function CrimeSpreeRewardsMenuComponent:_cleanup_loot_drops()
 	if alive(self._loot_panel) then
 		self._panel:remove(self._loot_panel)
@@ -1364,7 +1455,7 @@ function CrimeSpreeRewardsMenuComponent:_cleanup_loot_drops()
 	self:next_state(0)
 end
 
--- Lines: 1264 to 1405
+-- Lines: 1357 to 1498
 function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	self._list_panel = self._panel:panel({
 		x = padding,
@@ -1382,7 +1473,7 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	local size = tweak_data.menu.pd2_small_font_size
 
 
-	-- Lines: 1279 to 1298
+	-- Lines: 1372 to 1391
 	local function add_reward_text(text, color)
 		local reward_text = self._list_scroll:canvas():text({
 			alpha = 0,

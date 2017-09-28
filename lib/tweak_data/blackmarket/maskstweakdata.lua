@@ -1,7 +1,7 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 local allow_halloween_lootdrop = is_nextgen_console
 
--- Lines: 10 to 5184
+-- Lines: 10 to 5224
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"

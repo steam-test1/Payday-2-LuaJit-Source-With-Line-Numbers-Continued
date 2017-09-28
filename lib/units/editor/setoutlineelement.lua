@@ -1,18 +1,20 @@
 SetOutlineElement = SetOutlineElement or class(MissionElement)
 SetOutlineElement.LINK_ELEMENTS = {"elements"}
 
--- Lines: 4 to 12
+-- Lines: 4 to 14
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
 
 	self._hed.elements = {}
 	self._hed.set_outline = true
+	self._hed.use_instigator = false
 
 	table.insert(self._save_values, "elements")
 	table.insert(self._save_values, "set_outline")
+	table.insert(self._save_values, "use_instigator")
 end
 
--- Lines: 16 to 29
+-- Lines: 18 to 33
 function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -33,18 +35,19 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 		ctrlr = set_outline
 	})
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
+	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Sets outline on the instigator")
 end
 
--- Lines: 33 to 35
+-- Lines: 37 to 39
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 37 to 38
+-- Lines: 41 to 42
 function SetOutlineElement:update_editing()
 end
 
--- Lines: 41 to 49
+-- Lines: 45 to 53
 function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -62,7 +65,7 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 51 to 63
+-- Lines: 55 to 67
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -80,7 +83,7 @@ function SetOutlineElement:add_element()
 	end
 end
 
--- Lines: 66 to 68
+-- Lines: 70 to 72
 function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

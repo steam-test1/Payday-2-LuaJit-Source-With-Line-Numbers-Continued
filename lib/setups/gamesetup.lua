@@ -204,7 +204,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines: 297 to 440
+-- Lines: 298 to 441
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -322,7 +322,7 @@ function GameSetup:load_packages()
 	self._loaded_diff_packages = {}
 
 
-	-- Lines: 414 to 419
+	-- Lines: 415 to 420
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
 			table.insert(self._loaded_diff_packages, package_name)
@@ -349,7 +349,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines: 442 to 514
+-- Lines: 443 to 515
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -421,12 +421,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines: 516 to 518
+-- Lines: 517 to 519
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines: 520 to 559
+-- Lines: 521 to 561
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -460,7 +460,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines: 561 to 602
+-- Lines: 563 to 604
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -507,7 +507,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines: 605 to 647
+-- Lines: 607 to 649
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -553,7 +553,7 @@ function GameSetup:init_finalize()
 	end
 end
 
--- Lines: 649 to 686
+-- Lines: 651 to 689
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -581,7 +581,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 688 to 698
+-- Lines: 691 to 701
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -593,7 +593,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 700 to 716
+-- Lines: 703 to 719
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -607,13 +607,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 718 to 723
+-- Lines: 721 to 726
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 725 to 749
+-- Lines: 728 to 752
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -638,7 +638,7 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 end
 
--- Lines: 751 to 776
+-- Lines: 754 to 779
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -664,7 +664,7 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 end
 
--- Lines: 809 to 810
+-- Lines: 812 to 813
 function GameSetup:_update_debug_input()
 end
 

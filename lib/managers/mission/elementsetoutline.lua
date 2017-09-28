@@ -11,7 +11,7 @@ end
 function ElementSetOutline:client_on_executed(...)
 end
 
--- Lines: 13 to 35
+-- Lines: 13 to 38
 function ElementSetOutline:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -29,10 +29,14 @@ function ElementSetOutline:on_executed(instigator)
 		end
 	end
 
-	for _, id in ipairs(self._values.elements) do
-		local element = self:get_mission_element(id)
+	if self._values.use_instigator then
+		f(instigator)
+	else
+		for _, id in ipairs(self._values.elements) do
+			local element = self:get_mission_element(id)
 
-		element:execute_on_all_units(f)
+			element:execute_on_all_units(f)
+		end
 	end
 
 	ElementSetOutline.super.on_executed(self, instigator)

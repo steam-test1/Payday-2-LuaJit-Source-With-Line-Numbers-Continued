@@ -5,53 +5,46 @@ function LootManager:init()
 	self:_setup()
 end
 
--- Lines: 8 to 35
+-- Lines: 8 to 28
 function LootManager:_setup()
-	local distribute = {}
-	local saved_secured = {}
-	local saved_mandatory_bags = Global.loot_manager and Global.loot_manager.mandatory_bags
-	local postponed_small_loot = Global.loot_manager and Global.loot_manager.postponed_small_loot
+	Global.loot_manager = Global.loot_manager or {
+		secured = {},
+		mandatory_bags = {},
+		postponed_small_loot = {}
+	}
+	self._global = Global.loot_manager
+	self._initial_loot = deep_clone(self._global.secured)
+	self._distribution_loot = {}
+	local level_id = Global.level_data and Global.level_data.level_id
+	local level_tweak = tweak_data.levels[level_id]
 
-	if Global.loot_manager and Global.loot_manager.secured then
-		saved_secured = deep_clone(Global.loot_manager.secured)
-
-		for _, data in ipairs(Global.loot_manager.secured) do
-			if not tweak_data.carry.small_loot[data.carry_id] then
-				table.insert(distribute, data)
-			end
-		end
+	if level_tweak and level_tweak.repossess_bags then
+		self:_repossess_bags_for_distribution()
 	end
 
-	Global.loot_manager = {}
-	Global.loot_manager.secured = {}
-	Global.loot_manager.distribute = distribute
-	Global.loot_manager.saved_secured = saved_secured
-	Global.loot_manager.mandatory_bags = saved_mandatory_bags or {}
-	Global.loot_manager.postponed_small_loot = postponed_small_loot
-	self._global = Global.loot_manager
 	self._triggers = {}
 	self._respawns = {}
 end
 
--- Lines: 37 to 39
+-- Lines: 30 to 32
 function LootManager:clear()
 	Global.loot_manager = nil
 end
 
--- Lines: 41 to 44
+-- Lines: 34 to 37
 function LootManager:reset()
 	Global.loot_manager = nil
 
 	self:_setup()
 end
 
--- Lines: 46 to 49
+-- Lines: 39 to 42
 function LootManager:on_simulation_ended()
 	self._respawns = {}
 	self._global.mandatory_bags = {}
 end
 
--- Lines: 51 to 54
+-- Lines: 44 to 47
 function LootManager:add_trigger(id, type, amount, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -60,10 +53,8 @@ function LootManager:add_trigger(id, type, amount, callback)
 	}
 end
 
--- Lines: 56 to 81
+-- Lines: 49 to 73
 function LootManager:_check_triggers(type)
-	print("LootManager:_check_triggers", type)
-
 	if not self._triggers[type] then
 		return
 	end
@@ -91,34 +82,34 @@ function LootManager:_check_triggers(type)
 	end
 end
 
--- Lines: 83 to 85
+-- Lines: 75 to 77
 function LootManager:on_retry_job_stage()
-	self._global.secured = self._global.saved_secured
+	self._global.secured = self._initial_loot
 end
 
--- Lines: 87 to 88
+-- Lines: 79 to 80
 function LootManager:get_secured()
 	return table.remove(self._global.secured, 1)
 end
 
--- Lines: 91 to 93
+-- Lines: 83 to 85
 function LootManager:get_secured_random()
 	local entry = math.random(#self._global.secured)
 
 	return table.remove(self._global.secured, entry)
 end
 
--- Lines: 96 to 97
+-- Lines: 88 to 89
 function LootManager:get_distribute()
-	return table.remove(self._global.distribute, 1)
+	return table.remove(self._distribution_loot, 1)
 end
 
--- Lines: 100 to 101
+-- Lines: 92 to 93
 function LootManager:get_respawn()
 	return table.remove(self._respawns, 1)
 end
 
--- Lines: 104 to 106
+-- Lines: 96 to 98
 function LootManager:add_to_respawn(carry_id, multiplier)
 	table.insert(self._respawns, {
 		carry_id = carry_id,
@@ -126,12 +117,26 @@ function LootManager:add_to_respawn(carry_id, multiplier)
 	})
 end
 
--- Lines: 108 to 110
+-- Lines: 100 to 110
+function LootManager:_repossess_bags_for_distribution()
+	local small_loot = {}
+	local distribute = self._distribution_loot
+
+	for _, data in ipairs(self._global.secured) do
+		local is_small = tweak_data.carry.small_loot[data.carry_id] ~= nil
+
+		table.insert(is_small and small_loot or distribute, data)
+	end
+
+	self._global.secured = small_loot
+end
+
+-- Lines: 112 to 114
 function LootManager:on_job_deactivated()
 	self:clear()
 end
 
--- Lines: 114 to 120
+-- Lines: 116 to 122
 function LootManager:secure(carry_id, multiplier_level, silent)
 	if Network:is_server() then
 		self:server_secure_loot(carry_id, multiplier_level, silent)
@@ -140,13 +145,13 @@ function LootManager:secure(carry_id, multiplier_level, silent)
 	end
 end
 
--- Lines: 123 to 126
+-- Lines: 125 to 128
 function LootManager:server_secure_loot(carry_id, multiplier_level, silent)
 	managers.network:session():send_to_peers_synched("sync_secure_loot", carry_id, multiplier_level, silent)
 	self:sync_secure_loot(carry_id, multiplier_level, silent)
 end
 
--- Lines: 128 to 149
+-- Lines: 130 to 148
 function LootManager:sync_secure_loot(carry_id, multiplier_level, silent)
 	local multiplier = tweak_data.carry.small_loot[carry_id] and managers.player:upgrade_value_by_level("player", "small_loot_multiplier", multiplier_level, 1) or 1
 
@@ -169,7 +174,7 @@ function LootManager:sync_secure_loot(carry_id, multiplier_level, silent)
 	self:check_achievements(carry_id, multiplier)
 end
 
--- Lines: 151 to 186
+-- Lines: 150 to 185
 function LootManager:_count_achievement_secured(achievement, secured_data)
 	local amount = 0
 	local total_amount = 0
@@ -208,20 +213,14 @@ function LootManager:_count_achievement_secured(achievement, secured_data)
 	return total_amount, amount, value
 end
 
--- Lines: 189 to 202
+-- Lines: 188 to 192
 function LootManager:_check_secured(achievement, secured_data)
-	print("[LootManager:_check_secured]")
-	print(inspect(achievement))
-	print(inspect(secured_data))
-
 	local total_amount, amount, value = self:_count_achievement_secured(achievement, secured_data)
-
-	print("Did we get it?", secured_data.total_amount and secured_data.total_amount <= total_amount or secured_data.amount and secured_data.amount <= amount or secured_data.value and secured_data.value <= value)
 
 	return secured_data.total_amount and secured_data.total_amount <= total_amount or secured_data.amount and secured_data.amount <= amount or secured_data.value and secured_data.value <= value
 end
 
--- Lines: 222 to 294
+-- Lines: 196 to 264
 function LootManager:check_achievements(carry_id, multiplier)
 	local real_total_value = self:get_real_total_value()
 	local memory, total_memory_value, all_pass, total_value_pass, jobs_pass, levels_pass, difficulties_pass, total_time_pass, no_assets_pass, no_deployable_pass, secured_pass, is_dropin_pass = nil
@@ -293,28 +292,28 @@ function LootManager:check_achievements(carry_id, multiplier)
 	end
 end
 
--- Lines: 305 to 307
+-- Lines: 266 to 268
 function LootManager:secure_small_loot(type, multiplier_level)
 	self:secure(type, multiplier_level)
 end
 
--- Lines: 309 to 311
+-- Lines: 270 to 272
 function LootManager:show_small_loot_taken_hint(type, multiplier)
 	managers.hint:show_hint("grabbed_small_loot", 2, nil, {MONEY = managers.experience:cash_string(self:get_real_value(type, multiplier))})
 end
 
--- Lines: 315 to 318
+-- Lines: 276 to 279
 function LootManager:set_mandatory_bags_data(carry_id, amount)
 	self._global.mandatory_bags.carry_id = carry_id
 	self._global.mandatory_bags.amount = amount
 end
 
--- Lines: 320 to 321
+-- Lines: 281 to 282
 function LootManager:get_mandatory_bags_data()
 	return self._global.mandatory_bags
 end
 
--- Lines: 326 to 339
+-- Lines: 285 to 291
 function LootManager:check_secured_mandatory_bags()
 	if not self._global.mandatory_bags.amount or self._global.mandatory_bags.amount == 0 then
 		return true
@@ -322,21 +321,10 @@ function LootManager:check_secured_mandatory_bags()
 
 	local amount = self:get_secured_mandatory_bags_amount()
 
-	print("mandatory amount", amount)
-
 	return self._global.mandatory_bags.amount <= amount
 end
 
--- Lines: 342 to 347
-function LootManager:add_saved_bags_to_secured()
-	for _, data in ipairs(self._global.distribute) do
-		table.insert(self._global.secured, data)
-	end
-
-	self._global.distribute = {}
-end
-
--- Lines: 349 to 366
+-- Lines: 294 to 310
 function LootManager:get_secured_mandatory_bags_amount(is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 
@@ -356,7 +344,7 @@ function LootManager:get_secured_mandatory_bags_amount(is_vehicle)
 	return amount
 end
 
--- Lines: 369 to 385
+-- Lines: 313 to 329
 function LootManager:get_secured_bonus_bags_amount(is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 	local secured_mandatory_bags_amount = self:get_secured_mandatory_bags_amount()
@@ -375,7 +363,7 @@ function LootManager:get_secured_bonus_bags_amount(is_vehicle)
 	return amount
 end
 
--- Lines: 388 to 405
+-- Lines: 332 to 349
 function LootManager:get_secured_bonus_bags_value(level_id, is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 	local amount_bags = tweak_data.levels[level_id] and tweak_data.levels[level_id].max_bags or 20
@@ -396,7 +384,7 @@ function LootManager:get_secured_bonus_bags_value(level_id, is_vehicle)
 	return value
 end
 
--- Lines: 408 to 421
+-- Lines: 352 to 365
 function LootManager:get_secured_mandatory_bags_value(is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 	local value = 0
@@ -411,7 +399,7 @@ function LootManager:get_secured_mandatory_bags_value(is_vehicle)
 	return value
 end
 
--- Lines: 424 to 444
+-- Lines: 368 to 386
 function LootManager:is_bonus_bag(carry_id, is_vehicle)
 	if self._global.mandatory_bags.carry_id ~= "none" and carry_id and carry_id ~= self._global.mandatory_bags.carry_id then
 		return true
@@ -432,7 +420,7 @@ function LootManager:is_bonus_bag(carry_id, is_vehicle)
 	return false
 end
 
--- Lines: 449 to 459
+-- Lines: 391 to 401
 function LootManager:get_real_value(carry_id, multiplier)
 	local mul_value = 1
 
@@ -446,7 +434,7 @@ function LootManager:get_real_value(carry_id, multiplier)
 	return managers.money:get_bag_value(carry_id, multiplier) * mul_value
 end
 
--- Lines: 465 to 470
+-- Lines: 407 to 412
 function LootManager:get_real_total_value()
 	local value = 0
 
@@ -457,7 +445,7 @@ function LootManager:get_real_total_value()
 	return value
 end
 
--- Lines: 474 to 488
+-- Lines: 416 to 430
 function LootManager:get_real_total_loot_value()
 	local value = 0
 	local loot_value = nil
@@ -479,7 +467,7 @@ function LootManager:get_real_total_loot_value()
 	return value
 end
 
--- Lines: 492 to 506
+-- Lines: 434 to 448
 function LootManager:get_real_total_small_loot_value()
 	local value = 0
 	local loot_value = nil
@@ -501,7 +489,7 @@ function LootManager:get_real_total_small_loot_value()
 	return value
 end
 
--- Lines: 510 to 517
+-- Lines: 452 to 459
 function LootManager:set_postponed_small_loot()
 	self._global.postponed_small_loot = {}
 
@@ -512,7 +500,7 @@ function LootManager:set_postponed_small_loot()
 	end
 end
 
--- Lines: 519 to 529
+-- Lines: 461 to 471
 function LootManager:get_real_total_postponed_small_loot_value()
 	if not self._global.postponed_small_loot then
 		return 0
@@ -527,12 +515,12 @@ function LootManager:get_real_total_postponed_small_loot_value()
 	return value
 end
 
--- Lines: 532 to 534
+-- Lines: 474 to 476
 function LootManager:clear_postponed_small_loot()
 	self._global.postponed_small_loot = nil
 end
 
--- Lines: 546 to 553
+-- Lines: 480 to 487
 function LootManager:total_value_by_carry_id(carry_id)
 	local value = 0
 
@@ -545,7 +533,7 @@ function LootManager:total_value_by_carry_id(carry_id)
 	return value
 end
 
--- Lines: 556 to 563
+-- Lines: 490 to 497
 function LootManager:total_small_loot_value()
 	local value = 0
 
@@ -558,7 +546,7 @@ function LootManager:total_small_loot_value()
 	return value
 end
 
--- Lines: 566 to 578
+-- Lines: 500 to 512
 function LootManager:total_value_by_type(type)
 	if not tweak_data.carry.types[type] then
 		Application:error("Carry type", type, "doesn't exists!")
@@ -577,7 +565,7 @@ function LootManager:total_value_by_type(type)
 	return value
 end
 
--- Lines: 583 to 588
+-- Lines: 517 to 522
 function LootManager:get_loot_stinger()
 	local job_tweak = tweak_data.narrative.jobs[managers.job:current_real_job_id()]
 
@@ -588,7 +576,7 @@ function LootManager:get_loot_stinger()
 	return "stinger_objectivecomplete"
 end
 
--- Lines: 591 to 617
+-- Lines: 525 to 543
 function LootManager:_present(carry_id, multiplier)
 	local real_value = 0
 	local is_small_loot = not not tweak_data.carry.small_loot[carry_id]
@@ -611,18 +599,12 @@ function LootManager:_present(carry_id, multiplier)
 	})
 end
 
--- Lines: 622 to 628
+-- Lines: 548 to 550
 function LootManager:sync_save(data)
-	data.LootManager = {}
-
-	for key, value in pairs(self._global) do
-		data.LootManager[key] = value
-	end
-
-	data.LootManager.distribute = {}
+	data.LootManager = clone(self._global)
 end
 
--- Lines: 631 to 640
+-- Lines: 553 to 562
 function LootManager:sync_load(data)
 	self._global = data.LootManager
 	Global.loot_manager = self._global
