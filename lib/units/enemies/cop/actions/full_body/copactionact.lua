@@ -59,6 +59,7 @@ CopActionAct._act_redirects.enemy_spawn = {
 	"e_sp_down_12m",
 	"e_sp_down_16m",
 	"e_sp_kick_enter",
+	"e_sp_down_train_roof_hatch",
 	"e_sp_kick",
 	"e_sp_kicked",
 	"e_sp_fight_winner",
@@ -1146,7 +1147,7 @@ CopActionAct._act_redirects.SO = {
 	"drive_blackhawk_1_back_left"
 }
 
--- Lines: 1245 to 1290
+-- Lines: 1263 to 1308
 function CopActionAct:init(action_desc, common_data)
 	self._common_data = common_data
 	self._action_desc = action_desc
@@ -1195,7 +1196,7 @@ function CopActionAct:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 1295 to 1324
+-- Lines: 1313 to 1342
 function CopActionAct:on_exit()
 	if self._changed_driving then
 		self._unit:set_driving("script")
@@ -1229,7 +1230,7 @@ function CopActionAct:on_exit()
 	end
 end
 
--- Lines: 1328 to 1338
+-- Lines: 1346 to 1356
 function CopActionAct:_init_ik()
 	if managers.job:current_level_id() == "chill" then
 		self._look_vec = mvector3.copy(self._common_data.fwd)
@@ -1240,7 +1241,7 @@ function CopActionAct:_init_ik()
 	end
 end
 
--- Lines: 1343 to 1411
+-- Lines: 1361 to 1429
 function CopActionAct:_ik_update_func(t)
 	self:_update_ik_type()
 
@@ -1330,7 +1331,7 @@ function CopActionAct:_ik_update_func(t)
 	end
 end
 
--- Lines: 1415 to 1428
+-- Lines: 1433 to 1446
 function CopActionAct:on_attention(attention)
 	self:_update_ik_type()
 
@@ -1346,7 +1347,7 @@ function CopActionAct:on_attention(attention)
 	self._ext_movement:enable_update()
 end
 
--- Lines: 1432 to 1451
+-- Lines: 1450 to 1469
 function CopActionAct:_update_ik_type()
 	local new_ik_type = self._ext_anim.ik_type
 
@@ -1371,7 +1372,7 @@ function CopActionAct:_update_ik_type()
 	end
 end
 
--- Lines: 1455 to 1469
+-- Lines: 1473 to 1487
 function CopActionAct:_upd_wait_for_full_blend()
 	if not self._ext_anim.idle or self._ext_anim.idle_full_blend and not self._ext_anim.to_idle then
 		self._waiting_full_blend = nil
@@ -1392,7 +1393,7 @@ function CopActionAct:_upd_wait_for_full_blend()
 	end
 end
 
--- Lines: 1473 to 1494
+-- Lines: 1491 to 1512
 function CopActionAct:_clamping_update(t)
 	if self._ext_anim.act then
 		if not self._unit:parent() then
@@ -1416,7 +1417,7 @@ function CopActionAct:_clamping_update(t)
 	end
 end
 
--- Lines: 1498 to 1559
+-- Lines: 1516 to 1577
 function CopActionAct:update(t)
 	local vis_state = self._ext_base:lod_stage()
 	vis_state = vis_state or 4
@@ -1486,17 +1487,17 @@ function CopActionAct:update(t)
 	self._ext_movement:spawn_wanted_items()
 end
 
--- Lines: 1563 to 1564
+-- Lines: 1581 to 1582
 function CopActionAct:type()
 	return "act"
 end
 
--- Lines: 1569 to 1570
+-- Lines: 1587 to 1588
 function CopActionAct:expired()
 	return self._expired
 end
 
--- Lines: 1575 to 1595
+-- Lines: 1593 to 1613
 function CopActionAct:save(save_data)
 	for k, v in pairs(self._action_desc) do
 		save_data[k] = v
@@ -1518,19 +1519,19 @@ function CopActionAct:save(save_data)
 	save_data.pos_z = mvector3.z(self._common_data.pos)
 end
 
--- Lines: 1599 to 1600
+-- Lines: 1617 to 1618
 function CopActionAct:need_upd()
 	return self._attention or self._waiting_full_blend
 end
 
--- Lines: 1605 to 1607
+-- Lines: 1623 to 1625
 function CopActionAct:chk_block(action_type, t)
 	local unblock_t = self._blocks[action_type]
 
 	return unblock_t and (unblock_t == -1 or t < unblock_t)
 end
 
--- Lines: 1612 to 1621
+-- Lines: 1630 to 1639
 function CopActionAct:_create_blocks_table(block_desc)
 	local blocks = self._blocks or {}
 
@@ -1545,7 +1546,7 @@ function CopActionAct:_create_blocks_table(block_desc)
 	self._blocks = blocks
 end
 
--- Lines: 1625 to 1637
+-- Lines: 1643 to 1655
 function CopActionAct:_get_act_index(anim_name)
 	local cat_offset = 0
 
@@ -1566,7 +1567,7 @@ function CopActionAct:_get_act_index(anim_name)
 	return 1
 end
 
--- Lines: 1642 to 1651
+-- Lines: 1660 to 1669
 function CopActionAct:_get_act_name_from_index(index)
 	for _, category_name in ipairs(self._ACT_CATEGORY_INDEX) do
 		local category = self._act_redirects[category_name]
@@ -1581,7 +1582,7 @@ function CopActionAct:_get_act_name_from_index(index)
 	debug_pause("[CopActionAct:_get_act_name_from_index] index", index, "is out of limits.")
 end
 
--- Lines: 1663 to 1727
+-- Lines: 1681 to 1745
 function CopActionAct:_play_anim()
 	if self._ext_anim.upper_body_active and not self._ext_anim.upper_body_empty then
 		self._ext_movement:play_redirect("up_idle")
@@ -1642,7 +1643,7 @@ function CopActionAct:_play_anim()
 	return true
 end
 
--- Lines: 1732 to 1750
+-- Lines: 1750 to 1768
 function CopActionAct:_sync_anim_play()
 	if Network:is_server() then
 		local action_index = self:_get_act_index(self._action_desc.variant)
@@ -1667,12 +1668,12 @@ function CopActionAct:_sync_anim_play()
 	end
 end
 
--- Lines: 1754 to 1756
+-- Lines: 1772 to 1774
 function CopActionAct:_set_updator(func_name)
 	self.update = func_name and self[func_name] or nil
 end
 
--- Lines: 1760 to 1767
+-- Lines: 1778 to 1785
 function CopActionAct:anim_act_clbk(trigger)
 	if trigger == "fire_blank" then
 		local weapon_unit = self._unit:inventory():equipped_unit()

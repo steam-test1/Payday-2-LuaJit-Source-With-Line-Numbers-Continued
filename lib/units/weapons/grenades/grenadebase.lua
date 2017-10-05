@@ -100,7 +100,7 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 	self:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count)
 end
 
--- Lines: 95 to 183
+-- Lines: 95 to 196
 function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count)
 	local unit_type = unit:base()._tweak_table
 	local is_gangster = unit:character_damage().is_gangster(unit_type)
@@ -189,18 +189,18 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 	end
 end
 
--- Lines: 187 to 189
+-- Lines: 200 to 202
 function GrenadeBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines: 191 to 195
+-- Lines: 204 to 208
 function GrenadeBase:save(data)
 	local state = {timer = self._timer}
 	data.GrenadeBase = state
 end
 
--- Lines: 199 to 202
+-- Lines: 212 to 215
 function GrenadeBase:load(data)
 	local state = data.GrenadeBase
 	self._timer = state.timer

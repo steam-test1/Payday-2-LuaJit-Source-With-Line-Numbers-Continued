@@ -4,7 +4,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines: 32 to 623
+-- Lines: 32 to 631
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.name_id = "bm_grenade_frag"
@@ -21,6 +21,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.frag.expire_t = 1.1
 	self.projectiles.frag.repeat_expire_t = 1.5
 	self.projectiles.frag.is_a_grenade = true
+	self.projectiles.frag.is_explosive = true
 	self.projectiles.concussion = {
 		name_id = "bm_concussion",
 		unit = "units/pd2_crimefest_2016/fez1/weapons/wpn_fps_gre_pressure/wpn_third_gre_pressure",
@@ -71,7 +72,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		throw_allowed_expire_t = 0.1,
 		expire_t = 1.3,
 		repeat_expire_t = 1.5,
-		is_a_grenade = true
+		is_a_grenade = true,
+		is_explosive = true
 	}
 	self.projectiles.wpn_prj_four = {
 		name_id = "bm_wpn_prj_four",
@@ -118,6 +120,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "gre_m79",
 		no_cheat_count = true,
 		impact_detonation = true,
+		is_explosive = true,
 		time_cheat = 1
 	}
 	self.projectiles.rocket_frag = {
@@ -126,6 +129,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "rpg7",
 		no_cheat_count = true,
 		impact_detonation = true,
+		is_explosive = true,
 		time_cheat = 1,
 		physic_effect = Idstring("physic_effects/anti_gravitate"),
 		adjust_z = 0
@@ -152,6 +156,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "arbiter",
 		no_cheat_count = true,
 		impact_detonation = true,
+		is_explosive = true,
 		time_cheat = 0.2,
 		adjust_z = 0
 	}
@@ -170,6 +175,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "ray",
 		no_cheat_count = true,
 		impact_detonation = true,
+		is_explosive = true,
 		time_cheat = 1,
 		physic_effect = Idstring("physic_effects/anti_gravitate"),
 		adjust_z = 0
@@ -190,7 +196,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "plainsrider",
 		no_cheat_count = true,
 		impact_detonation = true,
-		client_authoritative = true
+		client_authoritative = true,
+		is_explosive = true
 	}
 	self.projectiles.bow_poison_arrow = {
 		unit = "units/pd2_dlc_turtles/weapons/wpn_prj_bow_poison_arrow/wpn_prj_bow_poison_arrow",
@@ -222,7 +229,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "hunter",
 		no_cheat_count = true,
 		impact_detonation = true,
-		client_authoritative = true
+		client_authoritative = true,
+		is_explosive = true
 	}
 	self.projectiles.wpn_prj_jav = {
 		name_id = "bm_wpn_prj_jav",
@@ -266,7 +274,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "arblast",
 		no_cheat_count = true,
 		impact_detonation = true,
-		client_authoritative = true
+		client_authoritative = true,
+		is_explosive = true
 	}
 	self.projectiles.frankish_arrow = {
 		unit = "units/pd2_dlc_steel/weapons/wpn_prj_frankish_arrow/wpn_prj_frankish_arrow",
@@ -290,7 +299,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "frankish",
 		no_cheat_count = true,
 		impact_detonation = true,
-		client_authoritative = true
+		client_authoritative = true,
+		is_explosive = true
 	}
 	self.projectiles.long_arrow = {
 		unit = "units/pd2_dlc_steel/weapons/wpn_fps_bow_long_pts/wpn_prj_long_arrow",
@@ -314,7 +324,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		weapon_id = "long",
 		no_cheat_count = true,
 		impact_detonation = true,
-		client_authoritative = true
+		client_authoritative = true,
+		is_explosive = true
 	}
 	self.projectiles.wpn_prj_hur = {
 		name_id = "bm_wpn_prj_hur",
@@ -371,6 +382,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		expire_t = 1.1,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
+		is_explosive = true,
 		dlc = "pd2_clan"
 	}
 	self.projectiles.fir_com = {
@@ -441,6 +453,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		expire_t = 1.3,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
+		is_explosive = true,
 		dlc = "pd2_clan",
 		texture_bundle_folder = "mtl"
 	}
@@ -497,12 +510,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines: 625 to 626
+-- Lines: 633 to 634
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines: 629 to 635
+-- Lines: 637 to 643
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -513,7 +526,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines: 638 to 639
+-- Lines: 646 to 647
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

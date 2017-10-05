@@ -2931,7 +2931,7 @@ function CharacterTweakData:_init_escort(presets)
 	self.escort.escort_scared_dist = 600
 end
 
--- Lines: 1790 to 1813
+-- Lines: 1790 to 1817
 function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_undercover = deep_clone(self.civilian)
 	self.escort_undercover.move_speed = presets.move_speed.slow
@@ -2955,7 +2955,7 @@ function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_chinese_prisoner.no_run_stop = false
 end
 
--- Lines: 1824 to 1850
+-- Lines: 1828 to 1854
 function CharacterTweakData:_init_old_hoxton_mission(presets)
 	self.old_hoxton_mission = deep_clone(presets.base)
 	self.old_hoxton_mission.experience = {}
@@ -2983,7 +2983,7 @@ function CharacterTweakData:_init_old_hoxton_mission(presets)
 	self.old_hoxton_mission.rescue_hostages = false
 end
 
--- Lines: 1854 to 1862
+-- Lines: 1858 to 1866
 function CharacterTweakData:_init_spa_vip(presets)
 	self.spa_vip = deep_clone(self.old_hoxton_mission)
 	self.spa_vip.spotlight_important = 100
@@ -2993,7 +2993,7 @@ function CharacterTweakData:_init_spa_vip(presets)
 	self.spa_vip.suppression.panic_chance_mul = 0
 end
 
--- Lines: 1863 to 1873
+-- Lines: 1867 to 1877
 function CharacterTweakData:_init_spa_vip_hurt(presets)
 	self.spa_vip_hurt = deep_clone(self.civilian)
 	self.spa_vip_hurt.move_speed = presets.move_speed.slow
@@ -3005,7 +3005,7 @@ function CharacterTweakData:_init_spa_vip_hurt(presets)
 	self.spa_vip_hurt.ignores_aggression = true
 end
 
--- Lines: 1880 to 1905
+-- Lines: 1884 to 1909
 function CharacterTweakData:_init_russian(presets)
 	self.russian = {
 		damage = presets.gang_member_damage,
@@ -3028,7 +3028,7 @@ function CharacterTweakData:_init_russian(presets)
 	}
 end
 
--- Lines: 1911 to 1937
+-- Lines: 1915 to 1941
 function CharacterTweakData:_init_german(presets)
 	self.german = {
 		damage = presets.gang_member_damage,
@@ -3051,7 +3051,7 @@ function CharacterTweakData:_init_german(presets)
 	}
 end
 
--- Lines: 1943 to 1969
+-- Lines: 1947 to 1973
 function CharacterTweakData:_init_spanish(presets)
 	self.spanish = {
 		damage = presets.gang_member_damage,
@@ -3074,7 +3074,7 @@ function CharacterTweakData:_init_spanish(presets)
 	}
 end
 
--- Lines: 1975 to 2000
+-- Lines: 1979 to 2004
 function CharacterTweakData:_init_american(presets)
 	self.american = {
 		damage = presets.gang_member_damage,
@@ -3097,7 +3097,7 @@ function CharacterTweakData:_init_american(presets)
 	}
 end
 
--- Lines: 2006 to 2031
+-- Lines: 2010 to 2035
 function CharacterTweakData:_init_jowi(presets)
 	self.jowi = {
 		damage = presets.gang_member_damage,
@@ -3120,7 +3120,7 @@ function CharacterTweakData:_init_jowi(presets)
 	}
 end
 
--- Lines: 2037 to 2063
+-- Lines: 2041 to 2067
 function CharacterTweakData:_init_old_hoxton(presets)
 	self.old_hoxton = {
 		damage = presets.gang_member_damage,
@@ -3143,7 +3143,7 @@ function CharacterTweakData:_init_old_hoxton(presets)
 	}
 end
 
--- Lines: 2069 to 2093
+-- Lines: 2073 to 2097
 function CharacterTweakData:_init_clover(presets)
 	self.female_1 = {
 		damage = presets.gang_member_damage,
@@ -3166,7 +3166,7 @@ function CharacterTweakData:_init_clover(presets)
 	}
 end
 
--- Lines: 2099 to 2123
+-- Lines: 2103 to 2127
 function CharacterTweakData:_init_dragan(presets)
 	self.dragan = {
 		damage = presets.gang_member_damage,
@@ -3189,7 +3189,7 @@ function CharacterTweakData:_init_dragan(presets)
 	}
 end
 
--- Lines: 2130 to 2154
+-- Lines: 2134 to 2158
 function CharacterTweakData:_init_jacket(presets)
 	self.jacket = {
 		damage = presets.gang_member_damage,
@@ -3212,7 +3212,7 @@ function CharacterTweakData:_init_jacket(presets)
 	}
 end
 
--- Lines: 2156 to 2180
+-- Lines: 2160 to 2184
 function CharacterTweakData:_init_bonnie(presets)
 	self.bonnie = {
 		damage = presets.gang_member_damage,
@@ -3235,7 +3235,7 @@ function CharacterTweakData:_init_bonnie(presets)
 	}
 end
 
--- Lines: 2182 to 2206
+-- Lines: 2186 to 2210
 function CharacterTweakData:_init_sokol(presets)
 	self.sokol = {
 		damage = presets.gang_member_damage,
@@ -3258,7 +3258,7 @@ function CharacterTweakData:_init_sokol(presets)
 	}
 end
 
--- Lines: 2208 to 2232
+-- Lines: 2212 to 2236
 function CharacterTweakData:_init_dragon(presets)
 	self.dragon = {
 		damage = presets.gang_member_damage,
@@ -3281,7 +3281,7 @@ function CharacterTweakData:_init_dragon(presets)
 	}
 end
 
--- Lines: 2234 to 2258
+-- Lines: 2238 to 2262
 function CharacterTweakData:_init_bodhi(presets)
 	self.bodhi = {
 		damage = presets.gang_member_damage,
@@ -3304,7 +3304,7 @@ function CharacterTweakData:_init_bodhi(presets)
 	}
 end
 
--- Lines: 2261 to 2285
+-- Lines: 2265 to 2289
 function CharacterTweakData:_init_jimmy(presets)
 	self.jimmy = {
 		damage = presets.gang_member_damage,
@@ -3327,7 +3327,7 @@ function CharacterTweakData:_init_jimmy(presets)
 	}
 end
 
--- Lines: 2289 to 2313
+-- Lines: 2293 to 2317
 function CharacterTweakData:_init_sydney(presets)
 	self.sydney = {
 		damage = presets.gang_member_damage,
@@ -3350,7 +3350,7 @@ function CharacterTweakData:_init_sydney(presets)
 	}
 end
 
--- Lines: 2317 to 2341
+-- Lines: 2321 to 2345
 function CharacterTweakData:_init_wild(presets)
 	self.wild = {
 		damage = presets.gang_member_damage,
@@ -3373,7 +3373,7 @@ function CharacterTweakData:_init_wild(presets)
 	}
 end
 
--- Lines: 2345 to 2369
+-- Lines: 2349 to 2373
 function CharacterTweakData:_init_chico(presets)
 	self.chico = {
 		damage = presets.gang_member_damage,
@@ -3396,7 +3396,7 @@ function CharacterTweakData:_init_chico(presets)
 	}
 end
 
--- Lines: 2373 to 2397
+-- Lines: 2377 to 2401
 function CharacterTweakData:_init_max(presets)
 	self.max = {
 		damage = presets.gang_member_damage,
@@ -3419,7 +3419,7 @@ function CharacterTweakData:_init_max(presets)
 	}
 end
 
--- Lines: 2446 to 4291
+-- Lines: 2450 to 4295
 function CharacterTweakData:_presets(tweak_data)
 	local presets = {hurt_severities = {}}
 	presets.hurt_severities.no_hurts = {
@@ -10078,7 +10078,7 @@ function CharacterTweakData:_presets(tweak_data)
 	return presets
 end
 
--- Lines: 4298 to 4361
+-- Lines: 4302 to 4365
 function CharacterTweakData:_create_table_structure()
 	self.weap_ids = {
 		"beretta92",
@@ -10144,7 +10144,7 @@ function CharacterTweakData:_create_table_structure()
 	}
 end
 
--- Lines: 4366 to 4392
+-- Lines: 4370 to 4396
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for id, unit_data in pairs(self) do
 		if type(unit_data) == "table" and unit_data.weapon then
@@ -10173,12 +10173,12 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
--- Lines: 4396 to 4397
+-- Lines: 4400 to 4401
 function CharacterTweakData:enemy_list()
 	return self._enemy_list
 end
 
--- Lines: 4402 to 4420
+-- Lines: 4406 to 4424
 function CharacterTweakData:_set_easy()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -10196,7 +10196,7 @@ function CharacterTweakData:_set_easy()
 	self.flashbang_multiplier = 1
 end
 
--- Lines: 4424 to 4548
+-- Lines: 4428 to 4552
 function CharacterTweakData:_set_normal()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(1.05, 1.1)
@@ -11116,7 +11116,7 @@ function CharacterTweakData:_set_normal()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4552 to 4653
+-- Lines: 4556 to 4657
 function CharacterTweakData:_set_hard()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -11728,7 +11728,7 @@ function CharacterTweakData:_set_hard()
 	}
 end
 
--- Lines: 4657 to 4771
+-- Lines: 4661 to 4775
 function CharacterTweakData:_set_overkill()
 	self:_multiply_all_hp(2, 2)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -12346,7 +12346,7 @@ function CharacterTweakData:_set_overkill()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4775 to 4842
+-- Lines: 4779 to 4846
 function CharacterTweakData:_set_overkill_145()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(3, 3)
@@ -12536,7 +12536,7 @@ function CharacterTweakData:_set_overkill_145()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4847 to 4990
+-- Lines: 4851 to 4994
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -13091,7 +13091,7 @@ function CharacterTweakData:_set_easy_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4993 to 5195
+-- Lines: 4997 to 5199
 function CharacterTweakData:_set_overkill_290()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -14300,7 +14300,7 @@ function CharacterTweakData:_set_overkill_290()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5198 to 5400
+-- Lines: 5202 to 5404
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(9, 1.5)
@@ -15509,7 +15509,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5404 to 5411
+-- Lines: 5408 to 5415
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -15520,7 +15520,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines: 5416 to 5523
+-- Lines: 5420 to 5527
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -15638,7 +15638,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines: 5527 to 5555
+-- Lines: 5531 to 5559
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -15683,7 +15683,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines: 5558 to 5563
+-- Lines: 5562 to 5567
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -15700,7 +15700,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5567 to 6021
+-- Lines: 5571 to 6038
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

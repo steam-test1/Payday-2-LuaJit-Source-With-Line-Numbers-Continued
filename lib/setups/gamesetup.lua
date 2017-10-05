@@ -553,7 +553,7 @@ function GameSetup:init_finalize()
 	end
 end
 
--- Lines: 651 to 689
+-- Lines: 651 to 692
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -581,7 +581,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 691 to 701
+-- Lines: 694 to 704
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -593,7 +593,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 703 to 719
+-- Lines: 706 to 722
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -607,13 +607,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 721 to 726
+-- Lines: 724 to 729
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 728 to 752
+-- Lines: 731 to 755
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -638,7 +638,7 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 end
 
--- Lines: 754 to 779
+-- Lines: 757 to 782
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -664,7 +664,7 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 end
 
--- Lines: 812 to 813
+-- Lines: 815 to 816
 function GameSetup:_update_debug_input()
 end
 

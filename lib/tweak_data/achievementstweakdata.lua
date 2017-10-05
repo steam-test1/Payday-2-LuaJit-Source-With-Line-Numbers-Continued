@@ -1,6 +1,6 @@
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 7 to 1518
+-- Lines: 7 to 1574
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",

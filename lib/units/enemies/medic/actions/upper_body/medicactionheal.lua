@@ -1,6 +1,6 @@
 MedicActionHeal = MedicActionHeal or class()
 
--- Lines: 3 to 18
+-- Lines: 3 to 22
 function MedicActionHeal:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_movement = common_data.ext_movement
@@ -20,14 +20,14 @@ function MedicActionHeal:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 21 to 25
+-- Lines: 25 to 29
 function MedicActionHeal:on_exit()
 	if self._unit:contour() then
 		self._unit:contour():remove("medic_healing", true)
 	end
 end
 
--- Lines: 27 to 33
+-- Lines: 31 to 37
 function MedicActionHeal:update(t)
 	if not self._unit:anim_data().healing then
 		self._done = true
@@ -40,17 +40,17 @@ function MedicActionHeal:update(t)
 	end
 end
 
--- Lines: 35 to 36
+-- Lines: 39 to 40
 function MedicActionHeal:type()
 	return "heal"
 end
 
--- Lines: 39 to 40
+-- Lines: 43 to 44
 function MedicActionHeal:expired()
 	return self._expired
 end
 
--- Lines: 43 to 47
+-- Lines: 47 to 51
 function MedicActionHeal:chk_block(action_type, t)
 	if action_type == "heavy_hurt" or action_type == "hurt" or action_type == "death" then
 		return false
@@ -59,22 +59,22 @@ function MedicActionHeal:chk_block(action_type, t)
 	return not self._done
 end
 
--- Lines: 50 to 52
+-- Lines: 54 to 56
 function MedicActionHeal:on_attention(attention)
 	self._attention = attention
 end
 
--- Lines: 54 to 55
+-- Lines: 58 to 59
 function MedicActionHeal:body_part()
 	return self._body_part
 end
 
--- Lines: 58 to 59
+-- Lines: 62 to 63
 function MedicActionHeal:need_upd()
 	return true
 end
 
--- Lines: 62 to 68
+-- Lines: 66 to 72
 function MedicActionHeal:save(save_data)
 	for i, k in pairs(self._action_desc) do
 		if type_name(k) ~= "Unit" or alive(k) then

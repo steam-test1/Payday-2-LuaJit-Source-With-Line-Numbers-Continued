@@ -162,7 +162,7 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 	return text
 end
 
--- Lines: 156 to 278
+-- Lines: 156 to 282
 function InventoryDescription.create_description_item(item, tweak, colors, ingame_format)
 	local desc = ""
 	color_ranges = {}
@@ -245,7 +245,7 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 		end
 
 		collection_string = func_color_text(collection_string, color_collection, ingame_format)
-		desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. collection_string
+		desc = item.category == "armor_skins" and desc .. func_add_lb(ingame_format) .. collection_string or desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. collection_string
 	end
 
 	if tweak.weapon_id then
@@ -324,7 +324,7 @@ WeaponDescription._stats_shown = {
 table.insert(WeaponDescription._stats_shown, {name = "reload"})
 
 
--- Lines: 291 to 309
+-- Lines: 295 to 313
 function WeaponDescription.get_bonus_stats(cosmetic_id, weapon_id, bonus)
 	local base_stats = WeaponDescription._get_base_stats(weapon_id)
 	local mod_stats = WeaponDescription._get_mods_stats(weapon_id, base_stats, {}, bonus)
@@ -346,7 +346,7 @@ function WeaponDescription.get_bonus_stats(cosmetic_id, weapon_id, bonus)
 	return stats
 end
 
--- Lines: 312 to 371
+-- Lines: 316 to 375
 function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_ammo_mod)
 	local weapon_tweak_data = tweak_data.weapon[weapon_id]
 	local ammo_max_multiplier = managers.player:upgrade_value("player", "extra_ammo_multiplier", 1)
@@ -368,10 +368,10 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	end
 
 
-	-- Lines: 340 to 355
+	-- Lines: 344 to 359
 	local function get_ammo_max_per_clip(weapon_id)
 
-		-- Lines: 331 to 340
+		-- Lines: 335 to 344
 		local function upgrade_blocked(category, upgrade)
 			if not weapon_tweak_data.upgrade_blocks then
 				return false
@@ -416,7 +416,7 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	return ammo_max_per_clip, ammo_max, ammo_data
 end
 
--- Lines: 374 to 513
+-- Lines: 378 to 517
 function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mods_stats, silencer, single_mod, auto_mod, blueprint)
 	local skill_stats = {}
 	local tweak_stats = tweak_data.weapon.stats
@@ -562,7 +562,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	return skill_stats
 end
 
--- Lines: 516 to 655
+-- Lines: 520 to 659
 function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
@@ -705,7 +705,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	return mods_stats
 end
 
--- Lines: 658 to 746
+-- Lines: 662 to 750
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
 	local index = nil
@@ -797,7 +797,7 @@ function WeaponDescription._get_base_stats(name)
 	return base_stats
 end
 
--- Lines: 749 to 792
+-- Lines: 753 to 796
 function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local equipped_mods = nil
 	local silencer = false
@@ -841,7 +841,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines: 795 to 813
+-- Lines: 799 to 817
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
 	local equipped_mods = nil
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
@@ -862,7 +862,7 @@ function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, sl
 	return WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 end
 
--- Lines: 816 to 962
+-- Lines: 820 to 966
 function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 	local tweak_stats = tweak_data.weapon.stats
 	local tweak_factory = tweak_data.weapon.factory.parts

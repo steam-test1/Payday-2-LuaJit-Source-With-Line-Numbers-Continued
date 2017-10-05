@@ -118,17 +118,31 @@ function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	end
 end
 
--- Lines: 135 to 136
+-- Lines: 135 to 144
 function HuskPlayerBase:upgrade_value(category, upgrade)
-	return self._upgrades[category] and self._upgrades[category][upgrade]
+	local val = self._upgrades[category] and self._upgrades[category][upgrade]
+
+	if not val then
+		local i = self._temporary_upgrades_map[category] and self._temporary_upgrades_map[category][upgrade]
+		local t = i and self._temporary_upgrades[i]
+
+		if t then
+			val = {
+				t.value,
+				t.time
+			}
+		end
+	end
+
+	return val
 end
 
--- Lines: 139 to 140
+-- Lines: 147 to 148
 function HuskPlayerBase:upgrade_level(category, upgrade)
 	return self._upgrade_levels[category] and self._upgrade_levels[category][upgrade]
 end
 
--- Lines: 145 to 157
+-- Lines: 153 to 165
 function HuskPlayerBase:pre_destroy(unit)
 	self._unit:movement():pre_destroy(unit)
 	self._unit:inventory():pre_destroy(self._unit)
@@ -145,18 +159,18 @@ function HuskPlayerBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines: 161 to 163
+-- Lines: 169 to 171
 function HuskPlayerBase:nick_name()
 	local peer = managers.network:session():peer_by_unit(self._unit)
 
 	return peer and peer:name() or ""
 end
 
--- Lines: 169 to 170
+-- Lines: 177 to 178
 function HuskPlayerBase:on_death_exit()
 end
 
--- Lines: 174 to 175
+-- Lines: 182 to 183
 function HuskPlayerBase:chk_freeze_anims()
 end
 

@@ -1,6 +1,6 @@
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2392
+-- Lines: 9 to 2406
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -2823,7 +2823,7 @@ function HudIconsTweakData:init()
 end
 local atlas_data = nil
 
--- Lines: 2395 to 2398
+-- Lines: 2409 to 2412
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -2836,7 +2836,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2400 to 2415
+-- Lines: 2414 to 2429
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -2862,7 +2862,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2418 to 2422
+-- Lines: 2432 to 2436
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -2876,7 +2876,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2425 to 2430
+-- Lines: 2439 to 2444
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -2887,7 +2887,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2433 to 2438
+-- Lines: 2447 to 2452
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture]
 

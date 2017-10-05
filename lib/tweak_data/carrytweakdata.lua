@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines: 7 to 1010
+-- Lines: 7 to 1008
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -52,10 +52,10 @@ function CarryTweakData:init(tweak_data)
 		throw_distance_multiplier = 1
 	}
 	self.types.coke_light = {
-		move_speed_modifier = self.types.light.move_speed_modifier,
-		jump_modifier = self.types.light.jump_modifier,
-		can_run = self.types.light.can_run,
-		throw_distance_multiplier = self.types.light.throw_distance_multiplier
+		move_speed_modifier = 1,
+		jump_modifier = 1,
+		can_run = true,
+		throw_distance_multiplier = 1
 	}
 	self.types.explosives = deep_clone(self.types.medium)
 	self.types.explosives.can_explode = true
@@ -749,7 +749,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 1012 to 1020
+-- Lines: 1010 to 1018
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -764,7 +764,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines: 1024 to 1031
+-- Lines: 1022 to 1029
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

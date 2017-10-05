@@ -373,3 +373,13 @@ function PlayerBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
+-- Lines: 426 to 427
+function PlayerBase:upgrade_value(category, upgrade)
+	return managers.player:upgrade_value_nil(category, upgrade)
+end
+
+-- Lines: 430 to 431
+function PlayerBase:upgrade_level(category, upgrade)
+	return managers.player:upgrade_level_nil(category, upgrade)
+end
+
