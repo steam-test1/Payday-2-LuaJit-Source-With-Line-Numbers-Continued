@@ -117,7 +117,7 @@ _next_update_funcs = _next_update_funcs or {}
 local next_update_funcs_busy = nil
 
 
--- Lines: 187 to 194
+-- Lines: 190 to 197
 function call_on_next_update(func, optional_key)
 	if not optional_key then
 		table.insert(_next_update_funcs, func)
@@ -128,7 +128,7 @@ function call_on_next_update(func, optional_key)
 end
 
 
--- Lines: 196 to 203
+-- Lines: 199 to 206
 function call_next_update_functions()
 	local current = _next_update_funcs
 	_next_update_funcs = {}
@@ -139,7 +139,7 @@ function call_next_update_functions()
 end
 
 
--- Lines: 208 to 257
+-- Lines: 211 to 260
 function Setup:init_category_print()
 	CoreSetup.CoreSetup.init_category_print(self)
 
@@ -180,7 +180,7 @@ function Setup:init_category_print()
 	catprint_load()
 end
 
--- Lines: 259 to 284
+-- Lines: 262 to 287
 function Setup:load_packages()
 	PackageManager:set_resource_loaded_clbk(Idstring("unit"), nil)
 	TextureCache:set_streaming_enabled(true)
@@ -208,7 +208,7 @@ function Setup:load_packages()
 	end
 end
 
--- Lines: 287 to 410
+-- Lines: 290 to 416
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
 		drop_in_allowed = true,
@@ -283,7 +283,7 @@ function Setup:init_managers(managers)
 	game_state_machine = GameStateMachine:new()
 end
 
--- Lines: 412 to 417
+-- Lines: 418 to 423
 function Setup:start_boot_loading_screen()
 	if not PackageManager:loaded("packages/boot_screen") then
 		PackageManager:load("packages/boot_screen")
@@ -292,12 +292,12 @@ function Setup:start_boot_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines: 419 to 421
+-- Lines: 425 to 427
 function Setup:start_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines: 423 to 432
+-- Lines: 429 to 438
 function Setup:stop_loading_screen()
 	if Global.is_loading then
 		cat_print("loading_environment", "[LoadingEnvironment] Stop.")
@@ -310,7 +310,7 @@ function Setup:stop_loading_screen()
 	end
 end
 
--- Lines: 434 to 622
+-- Lines: 440 to 628
 function Setup:_start_loading_screen()
 	if Global.is_loading then
 		Application:stack_dump_error("[LoadingEnvironment] Tried to start loading screen when it was already started.")
@@ -430,7 +430,7 @@ function Setup:_start_loading_screen()
 	Global.is_loading = true
 end
 
--- Lines: 624 to 709
+-- Lines: 630 to 715
 function Setup:_setup_loading_environment()
 	local env_map = {
 		deferred = {
@@ -468,7 +468,7 @@ function Setup:_setup_loading_environment()
 	Application:destroy_viewport(dummy_vp)
 end
 
--- Lines: 711 to 723
+-- Lines: 717 to 729
 function Setup:init_game()
 	if not Global.initialized then
 		Global.level_data = {}
@@ -483,7 +483,7 @@ function Setup:init_game()
 	return game_state_machine
 end
 
--- Lines: 726 to 744
+-- Lines: 732 to 750
 function Setup:init_finalize()
 	Setup.super.init_finalize(self)
 	game_state_machine:init_finilize()
@@ -506,7 +506,7 @@ function Setup:init_finalize()
 	tweak_data:add_reload_callback(self, self.on_tweak_data_reloaded)
 end
 
--- Lines: 746 to 784
+-- Lines: 752 to 790
 function Setup:update(t, dt)
 	local main_t = TimerManager:main():time()
 	local main_dt = TimerManager:main():delta_time()
@@ -535,7 +535,7 @@ function Setup:update(t, dt)
 	TestAPIHelper.update(t, dt)
 end
 
--- Lines: 786 to 800
+-- Lines: 792 to 806
 function Setup:paused_update(t, dt)
 	self:_upd_unload_packages()
 	managers.platform:paused_update(t, dt)
@@ -549,7 +549,7 @@ function Setup:paused_update(t, dt)
 	TestAPIHelper.update(t, dt)
 end
 
--- Lines: 802 to 808
+-- Lines: 808 to 814
 function Setup:end_update(t, dt)
 	game_state_machine:end_update(t, dt)
 
@@ -558,7 +558,7 @@ function Setup:end_update(t, dt)
 	end
 end
 
--- Lines: 810 to 816
+-- Lines: 816 to 822
 function Setup:paused_end_update(t, dt)
 	game_state_machine:end_update(t, dt)
 
@@ -567,31 +567,31 @@ function Setup:paused_end_update(t, dt)
 	end
 end
 
--- Lines: 819 to 823
+-- Lines: 825 to 829
 function Setup:end_frame(t, dt)
 	while self._end_frame_callbacks and #self._end_frame_callbacks > 0 do
 		table.remove(self._end_frame_callbacks)()
 	end
 end
 
--- Lines: 826 to 829
+-- Lines: 832 to 835
 function Setup:add_end_frame_callback(callback)
 	self._end_frame_callbacks = self._end_frame_callbacks or {}
 
 	table.insert(self._end_frame_callbacks, callback)
 end
 
--- Lines: 831 to 833
+-- Lines: 837 to 839
 function Setup:add_end_frame_clbk(func)
 	table.insert(self._end_frame_clbks, func)
 end
 
--- Lines: 835 to 837
+-- Lines: 841 to 843
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 end
 
--- Lines: 839 to 848
+-- Lines: 845 to 854
 function Setup:destroy()
 	managers.system_menu:destroy()
 	managers.menu:destroy()
@@ -603,7 +603,7 @@ function Setup:destroy()
 	end
 end
 
--- Lines: 850 to 869
+-- Lines: 856 to 875
 function Setup:load_level(level, mission, world_setting, level_class_name, level_id)
 	managers.menu:close_all_menus()
 	managers.platform:destroy_context()
@@ -622,14 +622,14 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	self:exec(level)
 end
 
--- Lines: 871 to 874
+-- Lines: 877 to 880
 function Setup:load_start_menu_lobby()
 	self:load_start_menu()
 
 	Global.load_start_menu_lobby = true
 end
 
--- Lines: 876 to 901
+-- Lines: 882 to 907
 function Setup:load_start_menu()
 	managers.platform:set_playing(false)
 	managers.job:deactivate_current_job()
@@ -653,7 +653,7 @@ function Setup:load_start_menu()
 	managers.butler_mirroring = ButlerMirroringManager:new()
 end
 
--- Lines: 903 to 926
+-- Lines: 909 to 932
 function Setup:exec(context)
 	if managers.network then
 		if SystemInfo:platform() == Idstring("PS4") then
@@ -685,7 +685,7 @@ function Setup:exec(context)
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
--- Lines: 928 to 935
+-- Lines: 934 to 941
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
 
@@ -695,7 +695,7 @@ function Setup:quit()
 	end
 end
 
--- Lines: 937 to 944
+-- Lines: 943 to 950
 function Setup:restart()
 	local data = Global.level_data
 
@@ -706,7 +706,7 @@ function Setup:restart()
 	end
 end
 
--- Lines: 946 to 999
+-- Lines: 952 to 1005
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -752,12 +752,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines: 1002 to 1003
+-- Lines: 1008 to 1009
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines: 1006 to 1012
+-- Lines: 1012 to 1018
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -767,14 +767,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines: 1014 to 1018
+-- Lines: 1020 to 1024
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines: 1020 to 1030
+-- Lines: 1026 to 1036
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -789,7 +789,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines: 1033 to 1034
+-- Lines: 1039 to 1040
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

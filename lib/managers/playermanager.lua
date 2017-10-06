@@ -5535,9 +5535,13 @@ function PlayerManager:on_hallowSPOOCed()
 	end
 end
 
--- Lines: 5186 to 5208
+-- Lines: 5186 to 5217
 function PlayerManager:attempt_ability(ability)
 	if not self:player_unit() or self:has_activate_temporary_upgrade("temporary", ability) then
+		return
+	end
+
+	if self:has_active_ability_timer(ability) then
 		return
 	end
 
@@ -5551,15 +5555,21 @@ function PlayerManager:attempt_ability(ability)
 		self:player_unit():sound():play(tweak.sounds.activate)
 	end
 
+	local td = tweak_data.blackmarket.projectiles[ability]
+
+	if td.base_cooldown then
+		self:start_ability_timer(ability, TimerManager:game():time() + td.base_cooldown)
+	end
+
 	managers.network:session():send_to_peers("sync_ability_hud", self:temporary_upgrade_index("temporary", ability), self:upgrade_value("temporary", ability)[2])
 end
 
--- Lines: 5210 to 5217
+-- Lines: 5219 to 5226
 function PlayerManager:_attempt_chico_injector()
 	self:activate_temporary_upgrade("temporary", "chico_injector")
 
 
-	-- Lines: 5213 to 5215
+	-- Lines: 5222 to 5224
 	local function speed_up_on_kill()
 		managers.player:speed_up_ability_timer("chico_injector", 1)
 	end
@@ -5569,7 +5579,7 @@ function PlayerManager:_attempt_chico_injector()
 	return true
 end
 
--- Lines: 5250 to 5259
+-- Lines: 5259 to 5268
 function PlayerManager:_update_timers(t)
 	local cd = table.map_copy(self._timers)
 
@@ -5584,7 +5594,7 @@ function PlayerManager:_update_timers(t)
 	end
 end
 
--- Lines: 5261 to 5263
+-- Lines: 5270 to 5272
 function PlayerManager:start_ability_timer(ability, time, func)
 	self._timers[ability] = {
 		t = time,
@@ -5592,7 +5602,7 @@ function PlayerManager:start_ability_timer(ability, time, func)
 	}
 end
 
--- Lines: 5265 to 5271
+-- Lines: 5274 to 5280
 function PlayerManager:stop_ability_timer(ability, call_func)
 	if call_func then
 		local d = self._timers[ability] or {}
@@ -5605,12 +5615,12 @@ function PlayerManager:stop_ability_timer(ability, call_func)
 	self._timers[ability] = nil
 end
 
--- Lines: 5273 to 5274
+-- Lines: 5282 to 5283
 function PlayerManager:has_active_ability_timer(ability)
 	return self:get_ability_timer(ability) and true or false
 end
 
--- Lines: 5277 to 5280
+-- Lines: 5286 to 5289
 function PlayerManager:get_ability_timer(ability)
 	if not ability then
 		return
@@ -5621,13 +5631,13 @@ function PlayerManager:get_ability_timer(ability)
 	return d and TimerManager:game():time() < d.t and d.t or nil
 end
 
--- Lines: 5283 to 5286
+-- Lines: 5292 to 5295
 function PlayerManager:speed_up_ability_timer(ability, time)
 	local d = self._timers[ability] or {t = 0}
 	d.t = d.t - time
 end
 
--- Lines: 5288 to 5290
+-- Lines: 5297 to 5299
 function PlayerManager:get_ability_time_left(ability)
 	if not self:has_active_ability_timer(ability) then
 		return
@@ -5637,7 +5647,7 @@ function PlayerManager:get_ability_time_left(ability)
 end
 local last_synced_cooldown = nil
 
--- Lines: 5305 to 5325
+-- Lines: 5314 to 5334
 function PlayerManager:update_ability_hud(ability)
 	local tweak = tweak_data.blackmarket.projectiles[ability]
 
@@ -5667,7 +5677,7 @@ function PlayerManager:update_ability_hud(ability)
 	end
 end
 
--- Lines: 5327 to 5331
+-- Lines: 5336 to 5340
 function PlayerManager:reset_ability_hud()
 	managers.hud:set_player_ability_cooldown({0})
 	managers.hud:set_player_ability_radial({
@@ -5678,7 +5688,7 @@ function PlayerManager:reset_ability_hud()
 	self._should_reset_ability_hud = nil
 end
 
--- Lines: 5334 to 5343
+-- Lines: 5343 to 5352
 function PlayerManager:update_smoke_screens(t, dt)
 	if self._smoke_screen_effects and #self._smoke_screen_effects > 0 then
 		for i, smoke_screen_effect in dpairs(self._smoke_screen_effects) do
@@ -5691,12 +5701,12 @@ function PlayerManager:update_smoke_screens(t, dt)
 	end
 end
 
--- Lines: 5345 to 5346
+-- Lines: 5354 to 5355
 function PlayerManager:smoke_screens()
 	return self._smoke_screen_effects or {}
 end
 
--- Lines: 5349 to 5358
+-- Lines: 5358 to 5367
 function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_dodge_bonus)
 	local time = tweak_data.projectiles.smoke_screen_grenade.duration
 	self._smoke_screen_effects = self._smoke_screen_effects or {}
@@ -5710,7 +5720,7 @@ function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_do
 	self._smoke_grenade = grenade_unit
 end
 
--- Lines: 5360 to 5366
+-- Lines: 5369 to 5375
 function PlayerManager:_dodge_shot_gain(gain_value)
 	if gain_value then
 		self._dodge_shot_gain_value = gain_value
@@ -5719,12 +5729,12 @@ function PlayerManager:_dodge_shot_gain(gain_value)
 	end
 end
 
--- Lines: 5368 to 5370
+-- Lines: 5377 to 5379
 function PlayerManager:_dodge_replenish_armor()
 	self:player_unit():character_damage():_regenerate_armor()
 end
 
--- Lines: 5410 to 5418
+-- Lines: 5419 to 5427
 function PlayerManager:crew_add_concealment(new_value)
 	for k, v in pairs(managers.network:session():all_peers()) do
 		local unit = v:unit()

@@ -46,7 +46,7 @@ function StatisticsTweakData:statistics_specializations()
 	return 18
 end
 
--- Lines: 41 to 668
+-- Lines: 41 to 674
 function StatisticsTweakData:statistics_table()
 	local level_list = {
 		"safehouse",
@@ -617,7 +617,11 @@ function StatisticsTweakData:statistics_table()
 		"wmp_01",
 		"wmp_02",
 		"wmp_03",
-		"wmp_04"
+		"wmp_04",
+		"eng_01",
+		"eng_02",
+		"eng_03",
+		"eng_04"
 	}
 	local weapon_list = {
 		"ak5",
@@ -937,7 +941,7 @@ function StatisticsTweakData:statistics_table()
 	return level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list, deployable_list
 end
 
--- Lines: 671 to 672
+-- Lines: 677 to 678
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -956,7 +960,7 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines: 675 to 676
+-- Lines: 681 to 682
 function StatisticsTweakData:mission_statistics_table()
 	return {"labrat"}
 end

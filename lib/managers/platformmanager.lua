@@ -324,7 +324,7 @@ end
 WinPlatformManager = WinPlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("WIN32"):key()] = WinPlatformManager
 
--- Lines: 313 to 384
+-- Lines: 313 to 388
 function WinPlatformManager:set_rich_presence(name)
 	self._current_rich_presence = name
 

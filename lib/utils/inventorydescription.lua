@@ -416,7 +416,7 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	return ammo_max_per_clip, ammo_max, ammo_data
 end
 
--- Lines: 378 to 517
+-- Lines: 378 to 522
 function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mods_stats, silencer, single_mod, auto_mod, blueprint)
 	local skill_stats = {}
 	local tweak_stats = tweak_data.weapon.stats
@@ -445,7 +445,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 				local has_magazine = weapon_tweak.has_magazine
 				local add_modifier = false
 
-				if primary_category == "shotgun" and has_magazine then
+				if is_weapon_category(weapon_tweak, "shotgun") and has_magazine then
 					skill_stats[stat.name].value = skill_stats[stat.name].value + managers.player:upgrade_value("shotgun", "magazine_capacity_inc", 0)
 					add_modifier = managers.player:has_category_upgrade("shotgun", "magazine_capacity_inc")
 				elseif is_weapon_category(weapon_tweak, "pistol") and not is_weapon_category(weapon_tweak, "revolver") and managers.player:has_category_upgrade("pistol", "magazine_capacity_inc") then
@@ -562,7 +562,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	return skill_stats
 end
 
--- Lines: 520 to 659
+-- Lines: 525 to 664
 function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
@@ -705,7 +705,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	return mods_stats
 end
 
--- Lines: 662 to 750
+-- Lines: 667 to 755
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
 	local index = nil
@@ -797,7 +797,7 @@ function WeaponDescription._get_base_stats(name)
 	return base_stats
 end
 
--- Lines: 753 to 796
+-- Lines: 758 to 801
 function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local equipped_mods = nil
 	local silencer = false
@@ -841,7 +841,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines: 799 to 817
+-- Lines: 804 to 822
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
 	local equipped_mods = nil
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
@@ -862,7 +862,7 @@ function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, sl
 	return WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 end
 
--- Lines: 820 to 966
+-- Lines: 825 to 971
 function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 	local tweak_stats = tweak_data.weapon.stats
 	local tweak_factory = tweak_data.weapon.factory.parts
