@@ -92,7 +92,7 @@ function CopLogicPhalanxVip.enter(data, new_logic_name, enter_params)
 	data.unit:sound():say("cpw_a01", true, true)
 end
 
--- Lines: 93 to 129
+-- Lines: 93 to 132
 function CopLogicPhalanxVip.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -106,7 +106,7 @@ function CopLogicPhalanxVip.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines: 133 to 177
+-- Lines: 136 to 180
 function CopLogicPhalanxVip.queued_update(data)
 	local my_data = data.internal_data
 	local delay = data.logic._upd_enemy_detection(data)
@@ -148,28 +148,28 @@ function CopLogicPhalanxVip.queued_update(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicPhalanxVip.queued_update, data, data.t + delay, data.important and true)
 end
 
--- Lines: 181 to 184
+-- Lines: 184 to 187
 function CopLogicPhalanxVip.damage_clbk(data, damage_info)
 	CopLogicIdle.damage_clbk(data, damage_info)
 	CopLogicPhalanxVip._chk_should_breakup(data)
 end
 
--- Lines: 186 to 187
+-- Lines: 189 to 190
 function CopLogicPhalanxVip.chk_should_turn(data, my_data)
 	return not my_data.turning and not my_data.has_old_action and not data.unit:movement():chk_action_forbidden("walk") and not my_data.moving_to_cover and not my_data.walking_to_cover_shoot_pos and not my_data.surprised
 end
 
--- Lines: 192 to 194
+-- Lines: 195 to 197
 function CopLogicPhalanxVip.register_in_group_ai(unit)
 	managers.groupai:state():register_phalanx_vip(unit)
 end
 
--- Lines: 198 to 200
+-- Lines: 201 to 203
 function CopLogicPhalanxVip._set_final_health_limit(data)
 	data.unit:character_damage():host_set_final_lower_health_percentage_limit()
 end
 
--- Lines: 204 to 211
+-- Lines: 207 to 214
 function CopLogicPhalanxVip._chk_should_breakup(data)
 	local flee_health_ratio = tweak_data.group_ai.phalanx.vip.health_ratio_flee
 	local vip_health_ratio = data.unit:character_damage():health_ratio()
@@ -179,7 +179,7 @@ function CopLogicPhalanxVip._chk_should_breakup(data)
 	end
 end
 
--- Lines: 215 to 264
+-- Lines: 218 to 267
 function CopLogicPhalanxVip.breakup(remote_call)
 	print("CopLogicPhalanxVip.breakup")
 
@@ -217,7 +217,7 @@ function CopLogicPhalanxVip.breakup(remote_call)
 	end
 end
 
--- Lines: 268 to 285
+-- Lines: 271 to 288
 function CopLogicPhalanxVip._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -236,7 +236,7 @@ function CopLogicPhalanxVip._upd_enemy_detection(data)
 	return delay
 end
 
--- Lines: 290 to 306
+-- Lines: 293 to 309
 function CopLogicPhalanxVip.action_complete_clbk(data, action)
 	local action_type = action:type()
 
@@ -257,17 +257,17 @@ function CopLogicPhalanxVip.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 310 to 311
+-- Lines: 313 to 314
 function CopLogicPhalanxVip.is_available_for_assignment(data, objective)
 	return false
 end
 
--- Lines: 316 to 317
+-- Lines: 319 to 320
 function CopLogicPhalanxVip.calc_initial_phalanx_pos(own_pos, objective)
 	return managers.groupai:state()._phalanx_center_pos
 end
 
--- Lines: 322 to 327
+-- Lines: 325 to 330
 function CopLogicPhalanxVip.on_criminal_neutralized(data, criminal_key)
 	local my_data = data.internal_data
 

@@ -11,16 +11,20 @@ end
 function ElementSetOutline:client_on_executed(...)
 end
 
--- Lines: 13 to 38
+-- Lines: 13 to 42
 function ElementSetOutline:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
 
-	-- Lines: 18 to 26
+	-- Lines: 18 to 30
 	local function f(unit)
 		if unit:contour() then
+			if self._values.clear_previous then
+				unit:contour():remove("highlight", true)
+			end
+
 			if self._values.set_outline then
 				unit:contour():add("highlight_character", true)
 			else

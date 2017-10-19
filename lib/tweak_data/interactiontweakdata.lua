@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5076
+-- Lines: 3 to 5167
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -1346,6 +1346,13 @@ function InteractionTweakData:init(tweak_data)
 		icon = "interaction_diamond",
 		text_id = "debug_interact_temp_interact_box_press",
 		sound_event = "ammo_bag_drop",
+		start_active = false
+	}
+	self.diamond_single_pickup_axis = {
+		icon = "interaction_diamond",
+		text_id = "debug_interact_temp_interact_box_press",
+		sound_event = "ammo_bag_drop",
+		axis = "x",
 		start_active = false
 	}
 	self.suburbia_necklace_pickup = {
@@ -4787,6 +4794,12 @@ function InteractionTweakData:init(tweak_data)
 		start_active = true,
 		timer = 1,
 		interact_distance = 150
+	}
+	self.take_confidential_folder_icc = {
+		text_id = "hud_int_take_confidential_folder_icc",
+		start_active = false,
+		timer = 1,
+		interact_distance = 100
 	}
 end
 

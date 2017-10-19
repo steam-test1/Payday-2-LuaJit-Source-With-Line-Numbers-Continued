@@ -1,6 +1,6 @@
 CustomSafehouseTweakData = CustomSafehouseTweakData or class()
 
--- Lines: 5 to 50
+-- Lines: 5 to 51
 function CustomSafehouseTweakData:init(tweak_data)
 	self.prices = {
 		rooms = {
@@ -9,6 +9,7 @@ function CustomSafehouseTweakData:init(tweak_data)
 			24
 		},
 		weapon_mod = 6,
+		event_weapon_mod = 18,
 		crew_boost = 2,
 		crew_ability = 6
 	}
@@ -44,7 +45,7 @@ function CustomSafehouseTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 53 to 188
+-- Lines: 54 to 189
 function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters = {base = {}}
 	self.heisters.base.idle_line_dist = 500
@@ -167,7 +168,7 @@ function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters.vlad.idle_offset = 20
 end
 
--- Lines: 190 to 196
+-- Lines: 191 to 197
 function CustomSafehouseTweakData:get_voice(tweak_data, character_name)
 	for i, data in ipairs(tweak_data.criminals.characters) do
 		if data.name == character_name then
@@ -176,7 +177,7 @@ function CustomSafehouseTweakData:get_voice(tweak_data, character_name)
 	end
 end
 
--- Lines: 200 to 412
+-- Lines: 201 to 413
 function CustomSafehouseTweakData:_init_safehouse_contractors(tweak_data)
 	local heister_weighting = 98 / #tweak_data.criminals.character_names
 	local butler_weighting = 2
@@ -362,7 +363,7 @@ function CustomSafehouseTweakData:_init_safehouse_contractors(tweak_data)
 	})
 end
 
--- Lines: 415 to 703
+-- Lines: 416 to 704
 function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 	self.rooms = {}
 
@@ -608,7 +609,7 @@ function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 	})
 end
 
--- Lines: 706 to 727
+-- Lines: 707 to 728
 function CustomSafehouseTweakData:_create_objective(data)
 	local save_values = {
 		"achievement_id",
@@ -639,7 +640,7 @@ function CustomSafehouseTweakData:_create_objective(data)
 	return obj
 end
 
--- Lines: 731 to 734
+-- Lines: 732 to 735
 function CustomSafehouseTweakData:_achievement(achievement_id, data)
 	data = data or {}
 	data.achievement_id = achievement_id
@@ -647,7 +648,7 @@ function CustomSafehouseTweakData:_achievement(achievement_id, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 737 to 741
+-- Lines: 738 to 742
 function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	data = data or {}
 	data.progress_id = progress_id
@@ -656,7 +657,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 745 to 1486
+-- Lines: 746 to 1487
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1201,7 +1202,7 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	})
 end
 
--- Lines: 1488 to 1494
+-- Lines: 1489 to 1495
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1212,7 +1213,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines: 1497 to 1506
+-- Lines: 1498 to 1507
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1226,7 +1227,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines: 1509 to 1858
+-- Lines: 1510 to 1859
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1470,7 +1471,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines: 1860 to 1866
+-- Lines: 1861 to 1867
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1479,7 +1480,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines: 1870 to 2071
+-- Lines: 1871 to 2072
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,

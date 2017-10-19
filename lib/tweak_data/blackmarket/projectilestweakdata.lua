@@ -4,7 +4,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines: 32 to 631
+-- Lines: 32 to 633
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.name_id = "bm_grenade_frag"
@@ -406,6 +406,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.chico_injector = {
 		name_id = "bm_ability_chico_injector",
 		desc_id = "bm_ability_chico_injector_desc",
+		skip_statistics = true,
 		icon = "chico_injector",
 		ability = "chico_injector",
 		texture_bundle_folder = "chico",
@@ -510,12 +511,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines: 633 to 634
+-- Lines: 635 to 636
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines: 637 to 643
+-- Lines: 639 to 645
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -526,7 +527,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines: 646 to 647
+-- Lines: 648 to 649
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

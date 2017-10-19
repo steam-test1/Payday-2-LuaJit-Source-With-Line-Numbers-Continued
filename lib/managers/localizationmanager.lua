@@ -157,7 +157,7 @@ function LocalizationManager:_setup_macros()
 end
 local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
--- Lines: 289 to 314
+-- Lines: 289 to 299
 function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	if not button then
 		return
@@ -170,7 +170,13 @@ function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 		return
 	end
 
+	return self:key_to_btn_text(key, to_upper, type)
+end
+
+-- Lines: 302 to 319
+function LocalizationManager:key_to_btn_text(key, to_upper, type)
 	key = tostring(key)
+	type = type or managers.controller:get_default_wrapper_type()
 	local translations = self._input_translations[type]
 	local res = translations and translations[key]
 
@@ -185,22 +191,22 @@ function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines: 317 to 318
+-- Lines: 322 to 323
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines: 321 to 322
+-- Lines: 326 to 327
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines: 337 to 338
+-- Lines: 342 to 343
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines: 342 to 351
+-- Lines: 347 to 356
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -214,7 +220,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines: 354 to 400
+-- Lines: 359 to 405
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -262,7 +268,7 @@ function LocalizationManager:check_translation()
 	end
 end
 
--- Lines: 403 to 405
+-- Lines: 408 to 410
 function LocalizationManager:set_input_translation(button_name, translation)
 	self._input_translations[button_name] = translation
 end

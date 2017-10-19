@@ -8,7 +8,7 @@ function HostStateInGame:enter(data, enter_params)
 	self._new_peers = {}
 end
 
--- Lines: 13 to 187
+-- Lines: 13 to 193
 function HostStateInGame:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, gameversion, join_attempt_identifier, auth_ticket, sender)
 	print("[HostStateInGame:on_join_request_received]", data, peer_name, client_preferred_character, dlcs, xuid, peer_level, gameversion, join_attempt_identifier, sender:ip_at_index(0))
 
@@ -164,7 +164,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	self._new_peers[new_peer_id] = true
 end
 
--- Lines: 191 to 211
+-- Lines: 197 to 217
 function HostStateInGame:on_peer_finished_loading(data, peer)
 	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
@@ -185,7 +185,7 @@ function HostStateInGame:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines: 215 to 216
+-- Lines: 221 to 222
 function HostStateInGame:is_joinable(data)
 	return not data.wants_to_load_level
 end

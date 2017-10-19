@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1003
+-- Lines: 4 to 1027
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -1787,6 +1787,76 @@ function GuiTweakData:init()
 		})
 	end
 
+	self.crime_net.sidebar = {
+		{
+			name_id = "menu_cn_shortcuts",
+			icon = "sidebar_expand",
+			show_name_while_collapsed = false,
+			callback = "clbk_toggle_sidebar"
+		},
+		{
+			visible_callback = "clbk_visible_not_in_lobby",
+			btn_macro = "menu_toggle_filters",
+			callback = "clbk_crimenet_filters",
+			name_id = "menu_cn_filters_sidebar",
+			icon = "sidebar_filters"
+		},
+		{
+			visible_callback = "clbk_visible_not_in_lobby",
+			callback = "clbk_the_basics",
+			name_id = "menu_cn_short",
+			icon = "sidebar_basics",
+			item_class = "CrimeNetSidebarTutorialHeistsItem"
+		},
+		{
+			name_id = "menu_cn_story_missions",
+			icon = "sidebar_question",
+			item_class = "CrimeNetSidebarStoryMissionItem",
+			callback = "clbk_open_story_missions"
+		},
+		{
+			name_id = "menu_cn_chill",
+			callback = "clbk_safehouse",
+			id = "safehouse",
+			icon = "sidebar_safehouse",
+			item_class = "CrimeNetSidebarSafehouseItem"
+		},
+		{
+			name_id = "menu_cn_premium_buy",
+			icon = "sidebar_broker",
+			callback = "clbk_contract_broker"
+		},
+		{
+			name_id = "menu_cn_contact_info",
+			icon = "sidebar_codex",
+			callback = "clbk_contact_database"
+		},
+		{
+			name_id = "menu_cn_casino",
+			icon = "sidebar_casino",
+			callback = "clbk_offshore_payday"
+		},
+		{
+			name_id = "menu_cn_gage_assignment",
+			icon = "sidebar_gage",
+			callback = "clbk_gage_courier"
+		},
+		{
+			name_id = "menu_mutators",
+			callback = "clbk_mutators",
+			id = "mutators",
+			icon = "sidebar_mutators",
+			item_class = "CrimeNetSidebarMutatorsItem"
+		},
+		{
+			visible_callback = "clbk_visible_not_in_lobby",
+			name_id = "cn_crime_spree",
+			callback = "clbk_crime_spree",
+			id = "crime_spree",
+			icon = "sidebar_crimespree",
+			item_class = "CrimeNetSidebarCrimeSpreeItem"
+		}
+	}
 	self.crime_net.codex = {
 		{
 			{
@@ -4860,6 +4930,11 @@ function GuiTweakData:init()
 	self.new_heists = {limit = 5}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_locke_and_load",
+		texture_path = "guis/textures/pd2/new_heists/locke_and_load",
+		url = "http://www.overkillsoftware.com/games/lockeandload/"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_enter_the_gungeon_collab",
 		texture_path = "guis/textures/pd2/new_heists/enter_the_gungeon_collab",
 		url = "http://steamcommunity.com/games/218620/announcements/detail/1462966036244751362"
@@ -4906,7 +4981,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1005 to 1024
+-- Lines: 1029 to 1048
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -4934,7 +5009,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1026 to 1094
+-- Lines: 1050 to 1118
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5010,15 +5085,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1097 to 1098
+-- Lines: 1121 to 1122
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1108 to 1109
+-- Lines: 1132 to 1133
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1111 to 1144
+-- Lines: 1135 to 1168
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5057,7 +5132,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1147 to 1271
+-- Lines: 1171 to 1295
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5180,12 +5255,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1274 to 1275
+-- Lines: 1298 to 1299
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1278 to 1284
+-- Lines: 1302 to 1308
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

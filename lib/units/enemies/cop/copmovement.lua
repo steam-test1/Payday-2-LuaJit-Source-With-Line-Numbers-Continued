@@ -198,7 +198,7 @@ CopMovement._stance.blend = {
 	0.4
 }
 
--- Lines: 334 to 365
+-- Lines: 338 to 369
 function CopMovement:init(unit)
 	self._unit = unit
 	self._machine = self._unit:anim_state_machine()
@@ -232,7 +232,7 @@ function CopMovement:init(unit)
 	self._suppression = {value = 0}
 end
 
--- Lines: 369 to 462
+-- Lines: 373 to 466
 function CopMovement:post_init()
 	local unit = self._unit
 	self._ext_brain = unit:brain()
@@ -346,7 +346,7 @@ function CopMovement:post_init()
 	self:_post_init()
 end
 
--- Lines: 466 to 476
+-- Lines: 470 to 480
 function CopMovement:add_weapons()
 	local prim_weap_name = self._ext_base:default_weapon_name("primary")
 	local sec_weap_name = self._ext_base:default_weapon_name("secondary")
@@ -360,7 +360,7 @@ function CopMovement:add_weapons()
 	end
 end
 
--- Lines: 480 to 491
+-- Lines: 484 to 495
 function CopMovement:_post_init()
 	self:set_character_anim_variables()
 
@@ -375,7 +375,7 @@ function CopMovement:_post_init()
 	end
 end
 
--- Lines: 495 to 519
+-- Lines: 499 to 523
 function CopMovement:set_character_anim_variables()
 	if self._anim_global then
 		self._machine:set_global(self._anim_global, 1)
@@ -400,17 +400,17 @@ function CopMovement:set_character_anim_variables()
 	end
 end
 
--- Lines: 523 to 524
+-- Lines: 527 to 528
 function CopMovement:nav_tracker()
 	return self._nav_tracker
 end
 
--- Lines: 529 to 531
+-- Lines: 533 to 535
 function CopMovement:warp_to(pos, rot)
 	self._unit:warp_to(rot, pos)
 end
 
--- Lines: 535 to 572
+-- Lines: 539 to 576
 function CopMovement:update(unit, t, dt)
 	self._gnd_ray = nil
 
@@ -434,7 +434,7 @@ function CopMovement:update(unit, t, dt)
 	end
 end
 
--- Lines: 576 to 625
+-- Lines: 580 to 629
 function CopMovement:_upd_actions(t)
 	local a_actions = self._active_actions
 	local has_no_action = true
@@ -500,7 +500,7 @@ function CopMovement:_upd_actions(t)
 	end
 end
 
--- Lines: 629 to 676
+-- Lines: 633 to 680
 function CopMovement:_upd_stance(t)
 	if self._stance.transition then
 		local stance = self._stance
@@ -562,18 +562,18 @@ function CopMovement:_upd_stance(t)
 	end
 end
 
--- Lines: 680 to 682
+-- Lines: 684 to 686
 function CopMovement:on_anim_freeze(state)
 	self._frozen = state
 end
 
--- Lines: 686 to 690
+-- Lines: 690 to 694
 function CopMovement:upd_m_head_pos()
 	self._obj_head:m_position(self._m_head_pos)
 	self._obj_spine:m_position(self._m_com)
 end
 
--- Lines: 694 to 703
+-- Lines: 698 to 707
 function CopMovement:set_position(pos)
 	mvec3_set(self._m_pos, pos)
 	mvec3_set(self._m_stand_pos, pos)
@@ -584,7 +584,7 @@ function CopMovement:set_position(pos)
 	self._unit:set_position(pos)
 end
 
--- Lines: 707 to 715
+-- Lines: 711 to 719
 function CopMovement:set_m_pos(pos)
 	mvec3_set(self._m_pos, pos)
 	mvec3_set(self._m_stand_pos, pos)
@@ -594,7 +594,7 @@ function CopMovement:set_m_pos(pos)
 	self._obj_spine:m_position(self._m_com)
 end
 
--- Lines: 719 to 723
+-- Lines: 723 to 727
 function CopMovement:set_m_rot(rot)
 	mrot_set(self._m_rot, rot:yaw(), 0, 0)
 
@@ -602,7 +602,7 @@ function CopMovement:set_m_rot(rot)
 	self._action_common_data.right = rot:x()
 end
 
--- Lines: 727 to 732
+-- Lines: 731 to 736
 function CopMovement:set_rotation(rot)
 	mrot_set(self._m_rot, rot:yaw(), 0, 0)
 
@@ -612,78 +612,78 @@ function CopMovement:set_rotation(rot)
 	self._unit:set_rotation(rot)
 end
 
--- Lines: 736 to 737
+-- Lines: 740 to 741
 function CopMovement:m_pos()
 	return self._m_pos
 end
 
--- Lines: 742 to 743
+-- Lines: 746 to 747
 function CopMovement:m_stand_pos()
 	return self._m_stand_pos
 end
 
--- Lines: 748 to 749
+-- Lines: 752 to 753
 function CopMovement:m_com()
 	return self._m_com
 end
 
--- Lines: 754 to 755
+-- Lines: 758 to 759
 function CopMovement:m_head_pos()
 	return self._m_head_pos
 end
 
--- Lines: 760 to 761
+-- Lines: 764 to 765
 function CopMovement:m_head_rot()
 	return self._obj_head:rotation()
 end
 
--- Lines: 766 to 767
+-- Lines: 770 to 771
 function CopMovement:m_fwd()
 	return self._action_common_data.fwd
 end
 
--- Lines: 772 to 773
+-- Lines: 776 to 777
 function CopMovement:m_rot()
 	return self._m_rot
 end
 
--- Lines: 778 to 779
+-- Lines: 782 to 783
 function CopMovement:get_object(object_name)
 	return self._unit:get_object(object_name)
 end
 
--- Lines: 784 to 786
+-- Lines: 788 to 790
 function CopMovement:set_m_host_stop_pos(pos)
 	mvec3_set(self._m_host_stop_pos, pos)
 end
 
--- Lines: 790 to 791
+-- Lines: 794 to 795
 function CopMovement:m_host_stop_pos()
 	return self._m_host_stop_pos
 end
 
--- Lines: 802 to 804
+-- Lines: 806 to 808
 function CopMovement:play_redirect(redirect_name, at_time)
 	local result = self._unit:play_redirect(Idstring(redirect_name), at_time)
 
 	return result ~= Idstring("") and result
 end
 
--- Lines: 809 to 811
+-- Lines: 813 to 815
 function CopMovement:play_state(state_name, at_time)
 	local result = self._unit:play_state(Idstring(state_name), at_time)
 
 	return result ~= Idstring("") and result
 end
 
--- Lines: 816 to 818
+-- Lines: 820 to 822
 function CopMovement:play_state_idstr(state_name, at_time)
 	local result = self._unit:play_state(state_name, at_time)
 
 	return result ~= Idstring("") and result
 end
 
--- Lines: 823 to 835
+-- Lines: 827 to 839
 function CopMovement:set_root_blend(state)
 	if state then
 		if self._root_blend_ref == 1 then
@@ -700,7 +700,7 @@ function CopMovement:set_root_blend(state)
 	end
 end
 
--- Lines: 839 to 848
+-- Lines: 843 to 852
 function CopMovement:chk_action_forbidden(action_type)
 	local t = TimerManager:game():time()
 
@@ -711,7 +711,7 @@ function CopMovement:chk_action_forbidden(action_type)
 	end
 end
 
--- Lines: 852 to 862
+-- Lines: 856 to 866
 function CopMovement:can_request_actions()
 	if Network:is_server() then
 		if self._active_actions[1] and self._active_actions[1]:type() == "hurt" and self._active_actions[1]:hurt_type() == "death" then
@@ -724,7 +724,7 @@ function CopMovement:can_request_actions()
 	end
 end
 
--- Lines: 867 to 930
+-- Lines: 871 to 934
 function CopMovement:action_request(action_desc)
 	if not self:can_request_actions() then
 		return
@@ -740,7 +740,7 @@ function CopMovement:action_request(action_desc)
 	local interrupted_actions = nil
 
 
-	-- Lines: 882 to 894
+	-- Lines: 886 to 898
 	local function _interrupt_action(body_part)
 		local old_action = active_actions[body_part]
 
@@ -796,12 +796,12 @@ function CopMovement:action_request(action_desc)
 	return success and action
 end
 
--- Lines: 935 to 936
+-- Lines: 939 to 940
 function CopMovement:get_action(body_part)
 	return self._active_actions[body_part]
 end
 
--- Lines: 941 to 1006
+-- Lines: 945 to 1010
 function CopMovement:set_attention(attention)
 	if not attention and not self._attention then
 		return
@@ -878,7 +878,7 @@ function CopMovement:set_attention(attention)
 	end
 end
 
--- Lines: 1010 to 1020
+-- Lines: 1014 to 1024
 function CopMovement:set_stance(new_stance_name, instant, execute_queued)
 	if not Network:is_server() then
 		return
@@ -893,7 +893,7 @@ function CopMovement:set_stance(new_stance_name, instant, execute_queued)
 	end
 end
 
--- Lines: 1024 to 1029
+-- Lines: 1028 to 1033
 function CopMovement:set_stance_by_code(new_stance_code, instant, execute_queued)
 	if self._stance.code ~= new_stance_code and Network:is_server() then
 		self._ext_network:send("set_stance", new_stance_code, instant or false, execute_queued or false)
@@ -901,7 +901,7 @@ function CopMovement:set_stance_by_code(new_stance_code, instant, execute_queued
 	end
 end
 
--- Lines: 1036 to 1134
+-- Lines: 1040 to 1138
 function CopMovement:_change_stance(stance_code, instant)
 	if self._tweak_data.allowed_stances then
 		if stance_code == 1 and not self._tweak_data.allowed_stances.ntl then
@@ -1016,7 +1016,7 @@ function CopMovement:_change_stance(stance_code, instant)
 	self:enable_update()
 end
 
--- Lines: 1138 to 1153
+-- Lines: 1142 to 1157
 function CopMovement:sync_stance(i_stance, instant, execute_queued)
 	if execute_queued and (self._active_actions[1] and self._active_actions[1]:type() ~= "idle" or self._active_actions[2] and self._active_actions[2]:type() ~= "idle") then
 		table.insert(self._queued_actions, {
@@ -1038,17 +1038,17 @@ function CopMovement:sync_stance(i_stance, instant, execute_queued)
 	end
 end
 
--- Lines: 1157 to 1158
+-- Lines: 1161 to 1162
 function CopMovement:stance_name()
 	return self._stance.name
 end
 
--- Lines: 1163 to 1164
+-- Lines: 1167 to 1168
 function CopMovement:stance_code()
 	return self._stance.code
 end
 
--- Lines: 1169 to 1189
+-- Lines: 1173 to 1193
 function CopMovement:_chk_play_equip_weapon()
 	if self._stance.values[1] == 1 and not self._ext_anim.equip and not self._tweak_data.no_equip_anim and not self:chk_action_forbidden("action") then
 		local redir_res = self:play_redirect("equip")
@@ -1076,7 +1076,7 @@ function CopMovement:_chk_play_equip_weapon()
 	self._ext_inventory:set_weapon_enabled(true)
 end
 
--- Lines: 1193 to 1233
+-- Lines: 1197 to 1237
 function CopMovement:set_cool(state, giveaway)
 	state = state and true or false
 
@@ -1121,32 +1121,32 @@ function CopMovement:set_cool(state, giveaway)
 	end
 end
 
--- Lines: 1237 to 1238
+-- Lines: 1241 to 1242
 function CopMovement:cool()
 	return self._cool
 end
 
--- Lines: 1241 to 1242
+-- Lines: 1245 to 1246
 function CopMovement:coolness_giveaway()
 	return self._coolness_giveaway
 end
 
--- Lines: 1245 to 1247
+-- Lines: 1249 to 1251
 function CopMovement:set_giveaway(giveaway)
 	self._coolness_giveaway = giveaway
 end
 
--- Lines: 1249 to 1251
+-- Lines: 1253 to 1255
 function CopMovement:remove_giveaway()
 	self._coolness_giveaway = false
 end
 
--- Lines: 1256 to 1257
+-- Lines: 1260 to 1261
 function CopMovement:not_cool_t()
 	return self._not_cool_t
 end
 
--- Lines: 1262 to 1284
+-- Lines: 1266 to 1288
 function CopMovement:synch_attention(attention)
 	if attention and self._unit:character_damage():dead() then
 		debug_pause_unit(self._unit, "[CopMovement:synch_attention] dead AI", self._unit, inspect(attention))
@@ -1172,7 +1172,7 @@ function CopMovement:synch_attention(attention)
 	end
 end
 
--- Lines: 1288 to 1303
+-- Lines: 1292 to 1307
 function CopMovement:_add_attention_destroy_listener(attention)
 	if attention and attention.unit then
 		local listener_class = attention.unit:base() and attention.unit:base().add_destroy_listener and attention.unit:base() or attention.unit:unit_data() and attention.unit:unit_data().add_destroy_listener and attention.unit:unit_data()
@@ -1190,7 +1190,7 @@ function CopMovement:_add_attention_destroy_listener(attention)
 	end
 end
 
--- Lines: 1307 to 1322
+-- Lines: 1311 to 1326
 function CopMovement:_remove_attention_destroy_listener(attention)
 	if attention and attention.destroy_listener_key then
 		if not alive(attention.unit) then
@@ -1209,12 +1209,12 @@ function CopMovement:_remove_attention_destroy_listener(attention)
 	end
 end
 
--- Lines: 1326 to 1327
+-- Lines: 1330 to 1331
 function CopMovement:attention()
 	return self._attention
 end
 
--- Lines: 1332 to 1338
+-- Lines: 1336 to 1342
 function CopMovement:attention_unit_destroy_clbk(unit)
 	if Network:is_server() then
 		self:set_attention()
@@ -1223,7 +1223,7 @@ function CopMovement:attention_unit_destroy_clbk(unit)
 	end
 end
 
--- Lines: 1343 to 1348
+-- Lines: 1347 to 1352
 function CopMovement:set_allow_fire_on_client(state, unit)
 	if Network:is_server() then
 		unit:network():send_to_unit({
@@ -1234,7 +1234,7 @@ function CopMovement:set_allow_fire_on_client(state, unit)
 	end
 end
 
--- Lines: 1352 to 1362
+-- Lines: 1356 to 1366
 function CopMovement:set_allow_fire(state)
 	if self._allow_fire == state then
 		return
@@ -1249,7 +1249,7 @@ function CopMovement:set_allow_fire(state)
 	self:enable_update()
 end
 
--- Lines: 1366 to 1374
+-- Lines: 1370 to 1378
 function CopMovement:synch_allow_fire(state)
 	for _, action in pairs(self._active_actions) do
 		if action and action.allow_fire_clbk then
@@ -1261,7 +1261,7 @@ function CopMovement:synch_allow_fire(state)
 	self._action_common_data.allow_fire = state
 end
 
--- Lines: 1378 to 1386
+-- Lines: 1382 to 1390
 function CopMovement:linked(state, physical, parent_unit)
 	if state then
 		self._link_data = {
@@ -1277,24 +1277,24 @@ function CopMovement:linked(state, physical, parent_unit)
 	end
 end
 
--- Lines: 1390 to 1393
+-- Lines: 1394 to 1397
 function CopMovement:parent_clbk_unit_destroyed(parent_unit, key)
 	self._link_data = nil
 
 	parent_unit:base():remove_destroy_listener("CopMovement" .. tostring(self._unit:key()))
 end
 
--- Lines: 1397 to 1398
+-- Lines: 1401 to 1402
 function CopMovement:is_physically_linked()
 	return self._link_data and self._link_data.physical
 end
 
--- Lines: 1403 to 1404
+-- Lines: 1407 to 1408
 function CopMovement:move_vec()
 	return self._move_dir
 end
 
--- Lines: 1414 to 1475
+-- Lines: 1418 to 1479
 function CopMovement:upd_ground_ray(from_pos)
 	local ground_z = self._nav_tracker:field_z()
 	local safe_pos = temp_vec1
@@ -1360,7 +1360,7 @@ function CopMovement:upd_ground_ray(from_pos)
 	self._gnd_ray = fake_ray
 end
 
--- Lines: 1479 to 1632
+-- Lines: 1483 to 1636
 function CopMovement:on_suppressed(state)
 	local suppression = self._suppression
 	local end_value = state and 1 or 0
@@ -1402,7 +1402,7 @@ function CopMovement:on_suppressed(state)
 				self:action_request(action_desc)
 			else
 
-				-- Lines: 1538 to 1539
+				-- Lines: 1542 to 1543
 				local function debug_fumble(result, from, to)
 				end
 
@@ -1498,7 +1498,7 @@ function CopMovement:on_suppressed(state)
 	end
 end
 
--- Lines: 1638 to 1777
+-- Lines: 1642 to 1781
 function CopMovement:damage_clbk(my_unit, damage_info)
 	local hurt_type = damage_info.result.type
 
@@ -1641,7 +1641,7 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 	end
 end
 
--- Lines: 1782 to 1784
+-- Lines: 1786 to 1788
 function CopMovement:anim_clbk_spawn_effect(unit, effect_name, object_name)
 	World:effect_manager():spawn({
 		effect = Idstring(effect_name),
@@ -1649,12 +1649,12 @@ function CopMovement:anim_clbk_spawn_effect(unit, effect_name, object_name)
 	})
 end
 
--- Lines: 1786 to 1788
+-- Lines: 1790 to 1792
 function CopMovement:anim_clbk_footstep(unit)
 	managers.game_play_central:request_play_footstep(unit, self._m_pos)
 end
 
--- Lines: 1792 to 1801
+-- Lines: 1796 to 1805
 function CopMovement:get_footstep_event()
 	local event_name = nil
 
@@ -1669,7 +1669,7 @@ function CopMovement:get_footstep_event()
 	return event_name
 end
 
--- Lines: 1806 to 1811
+-- Lines: 1810 to 1815
 function CopMovement:get_walk_to_pos()
 	local leg_action = self._active_actions[1] or self._active_actions[2]
 
@@ -1678,7 +1678,7 @@ function CopMovement:get_walk_to_pos()
 	end
 end
 
--- Lines: 1815 to 1821
+-- Lines: 1819 to 1825
 function CopMovement:anim_clbk_death_drop(...)
 	for _, action in ipairs(self._active_actions) do
 		if action and action.on_death_drop then
@@ -1687,7 +1687,7 @@ function CopMovement:anim_clbk_death_drop(...)
 	end
 end
 
--- Lines: 1825 to 1831
+-- Lines: 1829 to 1835
 function CopMovement:on_death_exit()
 	for _, action in ipairs(self._active_actions) do
 		if action and action.on_death_exit then
@@ -1696,14 +1696,14 @@ function CopMovement:on_death_exit()
 	end
 end
 
--- Lines: 1835 to 1839
+-- Lines: 1839 to 1843
 function CopMovement:anim_clbk_reload_exit()
 	if self._ext_inventory:equipped_unit() then
 		self._ext_inventory:equipped_unit():base():on_reload()
 	end
 end
 
--- Lines: 1843 to 1849
+-- Lines: 1847 to 1853
 function CopMovement:anim_clbk_force_ragdoll()
 	for _, action in ipairs(self._active_actions) do
 		if action and action.force_ragdoll then
@@ -1712,7 +1712,7 @@ function CopMovement:anim_clbk_force_ragdoll()
 	end
 end
 
--- Lines: 1853 to 1870
+-- Lines: 1857 to 1874
 function CopMovement:anim_clbk_rope(unit, state)
 	if state == "on" then
 		if self._rope then
@@ -1736,22 +1736,22 @@ function CopMovement:anim_clbk_rope(unit, state)
 	end
 end
 
--- Lines: 1874 to 1875
+-- Lines: 1878 to 1879
 function CopMovement:rope_unit()
 	return self._rope
 end
 
--- Lines: 1878 to 1879
+-- Lines: 1882 to 1883
 function CopMovement:died_on_rope()
 	return self._rope_death
 end
 
--- Lines: 1884 to 1885
+-- Lines: 1888 to 1889
 function CopMovement:pos_rsrv_id()
 	return self._pos_rsrv_id
 end
 
--- Lines: 1890 to 1896
+-- Lines: 1894 to 1900
 function CopMovement:anim_clbk_melee_strike(unit)
 	for body_part, action in pairs(self._active_actions) do
 		if action and action.anim_clbk_melee_strike then
@@ -1760,14 +1760,14 @@ function CopMovement:anim_clbk_melee_strike(unit)
 	end
 end
 
--- Lines: 1900 to 1903
+-- Lines: 1904 to 1907
 function CopMovement:anim_clbk_set_visibility(unit, state)
 	state = state == true and true or false
 
 	self._unit:set_visible(state)
 end
 
--- Lines: 1907 to 1910
+-- Lines: 1911 to 1914
 function CopMovement:anim_clbk_wanted_item(unit, item_type, align_place, droppable)
 	self._wanted_items = self._wanted_items or {}
 
@@ -1778,7 +1778,7 @@ function CopMovement:anim_clbk_wanted_item(unit, item_type, align_place, droppab
 	})
 end
 
--- Lines: 1914 to 1921
+-- Lines: 1918 to 1925
 function CopMovement:anim_clbk_block_info(unit, preset_name, block_state)
 	local state_bool = block_state == "true" and true or false
 
@@ -1789,7 +1789,7 @@ function CopMovement:anim_clbk_block_info(unit, preset_name, block_state)
 	end
 end
 
--- Lines: 1925 to 1932
+-- Lines: 1929 to 1936
 function CopMovement:anim_clbk_ik_change(unit)
 	local preset_name = self._ext_anim.base_aim_ik
 
@@ -1800,7 +1800,7 @@ function CopMovement:anim_clbk_ik_change(unit)
 	end
 end
 
--- Lines: 1936 to 1942
+-- Lines: 1940 to 1946
 function CopMovement:anim_clbk_enter_vehicle(unit)
 	if self.vehicle_unit and self.vehicle_seat then
 		self.vehicle_unit:vehicle_driving():on_team_ai_enter(self._unit)
@@ -1809,7 +1809,7 @@ function CopMovement:anim_clbk_enter_vehicle(unit)
 	end
 end
 
--- Lines: 1947 to 1963
+-- Lines: 1951 to 1967
 function CopMovement:anim_clbk_police_called(unit)
 	if Network:is_server() then
 		if not managers.groupai:state():is_ecm_jammer_active("call") then
@@ -1829,12 +1829,12 @@ function CopMovement:anim_clbk_police_called(unit)
 	end
 end
 
--- Lines: 1967 to 1969
+-- Lines: 1971 to 1973
 function CopMovement:anim_clbk_stance(unit, stance_name, instant)
 	self:set_stance(stance_name, instant)
 end
 
--- Lines: 1973 to 1980
+-- Lines: 1977 to 1984
 function CopMovement:spawn_wanted_items()
 	if self._wanted_items then
 		for _, spawn_info in ipairs(self._wanted_items) do
@@ -1845,7 +1845,7 @@ function CopMovement:spawn_wanted_items()
 	end
 end
 
--- Lines: 1984 to 2010
+-- Lines: 1988 to 2014
 function CopMovement:_equip_item(item_type, align_place, droppable)
 	local align_name = self._gadgets.aligns[align_place]
 
@@ -1881,17 +1881,17 @@ function CopMovement:_equip_item(item_type, align_place, droppable)
 	end
 end
 
--- Lines: 2014 to 2016
+-- Lines: 2018 to 2020
 function CopMovement:anim_clbk_drop_held_items()
 	self:drop_held_items()
 end
 
--- Lines: 2020 to 2022
+-- Lines: 2024 to 2026
 function CopMovement:anim_clbk_flush_wanted_items()
 	self._wanted_items = nil
 end
 
--- Lines: 2026 to 2063
+-- Lines: 2030 to 2067
 function CopMovement:drop_held_items()
 	if not self._droppable_gadgets then
 		return
@@ -1935,7 +1935,7 @@ function CopMovement:drop_held_items()
 	self._droppable_gadgets = nil
 end
 
--- Lines: 2067 to 2082
+-- Lines: 2071 to 2086
 function CopMovement:_destroy_gadgets()
 	if not self._equipped_gadgets then
 		return
@@ -1953,7 +1953,7 @@ function CopMovement:_destroy_gadgets()
 	self._droppable_gadgets = nil
 end
 
--- Lines: 2086 to 2103
+-- Lines: 2090 to 2107
 function CopMovement:anim_clbk_enemy_spawn_melee_item()
 	if alive(self._melee_item_unit) then
 		return
@@ -1973,7 +1973,7 @@ function CopMovement:anim_clbk_enemy_spawn_melee_item()
 	end
 end
 
--- Lines: 2105 to 2111
+-- Lines: 2109 to 2115
 function CopMovement:anim_clbk_enemy_unspawn_melee_item()
 	if alive(self._melee_item_unit) then
 		self._melee_item_unit:unlink()
@@ -1983,7 +1983,7 @@ function CopMovement:anim_clbk_enemy_unspawn_melee_item()
 	end
 end
 
--- Lines: 2115 to 2152
+-- Lines: 2119 to 2156
 function CopMovement:clbk_inventory(unit, event)
 	local weapon = self._ext_inventory:equipped_unit()
 
@@ -2029,7 +2029,7 @@ function CopMovement:clbk_inventory(unit, event)
 	end
 end
 
--- Lines: 2154 to 2160
+-- Lines: 2158 to 2164
 function CopMovement:get_hold_type_weight(hold)
 	if tweak_data.animation.hold_types[hold] then
 		return tweak_data.animation.hold_types[hold].weight
@@ -2038,7 +2038,7 @@ function CopMovement:get_hold_type_weight(hold)
 	end
 end
 
--- Lines: 2164 to 2181
+-- Lines: 2168 to 2185
 function CopMovement:sync_shot_blank(impact)
 	local equipped_weapon = self._ext_inventory:equipped_unit()
 
@@ -2063,7 +2063,7 @@ function CopMovement:sync_shot_blank(impact)
 	end
 end
 
--- Lines: 2185 to 2190
+-- Lines: 2189 to 2194
 function CopMovement:sync_taser_fire()
 	local tase_action = self._active_actions[3]
 
@@ -2072,7 +2072,7 @@ function CopMovement:sync_taser_fire()
 	end
 end
 
--- Lines: 2195 to 2284
+-- Lines: 2199 to 2288
 function CopMovement:save(save_data)
 	local my_save_data = {}
 
@@ -2124,7 +2124,7 @@ function CopMovement:save(save_data)
 		my_save_data.equipped_gadgets = equipped_items
 
 
-		-- Lines: 2248 to 2257
+		-- Lines: 2252 to 2261
 		local function _get_item_type_from_unit(item_unit)
 			local wanted_item_name = item_unit:name()
 
@@ -2138,7 +2138,7 @@ function CopMovement:save(save_data)
 		end
 
 
-		-- Lines: 2259 to 2270
+		-- Lines: 2263 to 2274
 		local function _is_item_droppable(item_unit)
 			if not self._droppable_gadgets then
 				return
@@ -2171,7 +2171,7 @@ function CopMovement:save(save_data)
 	end
 end
 
--- Lines: 2289 to 2332
+-- Lines: 2293 to 2336
 function CopMovement:load(load_data)
 	local my_load_data = load_data.movement
 
@@ -2219,21 +2219,21 @@ function CopMovement:load(load_data)
 	end
 end
 
--- Lines: 2336 to 2339
+-- Lines: 2340 to 2343
 function CopMovement:clbk_team_def()
 	self._team = managers.groupai:state():team_data(self._team.id)
 
 	managers.groupai:state():remove_listener("CopMovement_team_def_" .. tostring(self._unit:key()))
 end
 
--- Lines: 2343 to 2347
+-- Lines: 2347 to 2351
 function CopMovement:tweak_data_clbk_reload()
 	self._tweak_data = tweak_data.character[self._ext_base._tweak_table]
 	self._action_common_data = self._action_common_data or {}
 	self._action_common_data.char_tweak = self._tweak_data
 end
 
--- Lines: 2351 to 2382
+-- Lines: 2355 to 2386
 function CopMovement:_chk_start_queued_action()
 	local queued_actions = self._queued_actions
 
@@ -2270,17 +2270,17 @@ function CopMovement:_chk_start_queued_action()
 	end
 end
 
--- Lines: 2386 to 2388
+-- Lines: 2390 to 2392
 function CopMovement:_push_back_queued_action(action_desc)
 	table.insert(self._queued_actions, action_desc)
 end
 
--- Lines: 2392 to 2394
+-- Lines: 2396 to 2398
 function CopMovement:_push_front_queued_action(action_desc)
 	table.insert(self._queued_actions, 1, action_desc)
 end
 
--- Lines: 2399 to 2424
+-- Lines: 2403 to 2428
 function CopMovement:_cancel_latest_action(search_type, explicit)
 	if self._queued_actions then
 		for i = #self._queued_actions, 1, -1 do
@@ -2312,7 +2312,7 @@ function CopMovement:_cancel_latest_action(search_type, explicit)
 	end
 end
 
--- Lines: 2429 to 2446
+-- Lines: 2433 to 2450
 function CopMovement:_get_latest_walk_action(explicit)
 	if self._queued_actions then
 		for i = #self._queued_actions, 1, -1 do
@@ -2331,7 +2331,7 @@ function CopMovement:_get_latest_walk_action(explicit)
 	end
 end
 
--- Lines: 2450 to 2465
+-- Lines: 2454 to 2469
 function CopMovement:_get_latest_act_action()
 	if self._queued_actions then
 		for i = #self._queued_actions, 1, -1 do
@@ -2346,7 +2346,7 @@ function CopMovement:_get_latest_act_action()
 	end
 end
 
--- Lines: 2470 to 2480
+-- Lines: 2474 to 2484
 function CopMovement:sync_action_walk_nav_point(pos, explicit)
 	local walk_action, is_queued = self:_get_latest_walk_action(explicit)
 
@@ -2359,19 +2359,19 @@ function CopMovement:sync_action_walk_nav_point(pos, explicit)
 	end
 end
 
--- Lines: 2485 to 2497
+-- Lines: 2489 to 2501
 function CopMovement:sync_action_walk_nav_link(pos, rot, anim_index, from_idle)
 	local nav_link = self._actions.walk.synthesize_nav_link(pos, rot, self._actions.act:_get_act_name_from_index(anim_index), from_idle)
 	local walk_action, is_queued = self:_get_latest_walk_action()
 
 	if is_queued then
 
-		-- Lines: 2488 to 2489
+		-- Lines: 2492 to 2493
 		nav_link.element.value = function (element, name)
 			return element[name]
 		end
 
-		-- Lines: 2489 to 2490
+		-- Lines: 2493 to 2494
 		nav_link.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle
 		end
@@ -2384,7 +2384,7 @@ function CopMovement:sync_action_walk_nav_link(pos, rot, anim_index, from_idle)
 	end
 end
 
--- Lines: 2502 to 2512
+-- Lines: 2506 to 2516
 function CopMovement:sync_action_walk_stop(explicit)
 	local walk_action, is_queued = self:_get_latest_walk_action()
 
@@ -2399,7 +2399,7 @@ function CopMovement:sync_action_walk_stop(explicit)
 	end
 end
 
--- Lines: 2517 to 2531
+-- Lines: 2521 to 2535
 function CopMovement:_get_latest_spooc_action(action_id)
 	if self._queued_actions then
 		for i = #self._queued_actions, 1, -1 do
@@ -2416,7 +2416,7 @@ function CopMovement:_get_latest_spooc_action(action_id)
 	end
 end
 
--- Lines: 2536 to 2554
+-- Lines: 2540 to 2558
 function CopMovement:sync_action_spooc_nav_point(pos, action_id)
 	local spooc_action, is_queued = self:_get_latest_spooc_action(action_id)
 
@@ -2439,7 +2439,7 @@ function CopMovement:sync_action_spooc_nav_point(pos, action_id)
 	end
 end
 
--- Lines: 2559 to 2588
+-- Lines: 2563 to 2592
 function CopMovement:sync_action_spooc_stop(pos, nav_index, action_id)
 	local spooc_action, is_queued = self:_get_latest_spooc_action(action_id)
 
@@ -2476,7 +2476,7 @@ function CopMovement:sync_action_spooc_stop(pos, nav_index, action_id)
 	end
 end
 
--- Lines: 2593 to 2605
+-- Lines: 2597 to 2609
 function CopMovement:sync_action_spooc_strike(pos, action_id)
 	local spooc_action, is_queued = self:_get_latest_spooc_action(action_id)
 
@@ -2493,12 +2493,12 @@ function CopMovement:sync_action_spooc_strike(pos, action_id)
 	end
 end
 
--- Lines: 2609 to 2611
+-- Lines: 2613 to 2615
 function CopMovement:sync_action_tase_end()
 	self:_cancel_latest_action("tase")
 end
 
--- Lines: 2615 to 2623
+-- Lines: 2619 to 2627
 function CopMovement:sync_pose(pose_code)
 	if self._ext_damage:dead() then
 		return
@@ -2513,7 +2513,7 @@ function CopMovement:sync_pose(pose_code)
 	self:action_request(new_action_data)
 end
 
--- Lines: 2627 to 2659
+-- Lines: 2631 to 2663
 function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, needs_full_blend, start_rot, start_pos)
 	if self._ext_damage:dead() then
 		return
@@ -2547,7 +2547,7 @@ function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, n
 	self:action_request(action_data)
 end
 
--- Lines: 2663 to 2676
+-- Lines: 2667 to 2680
 function CopMovement:sync_action_act_end()
 	local act_action, queued = self:_get_latest_act_action()
 
@@ -2565,7 +2565,7 @@ function CopMovement:sync_action_act_end()
 	end
 end
 
--- Lines: 2680 to 2696
+-- Lines: 2684 to 2700
 function CopMovement:sync_action_dodge_start(body_part, var, side, rot, speed, shoot_acc)
 	if self._ext_damage:dead() then
 		return
@@ -2584,17 +2584,17 @@ function CopMovement:sync_action_dodge_start(body_part, var, side, rot, speed, s
 	self:action_request(action_data)
 end
 
--- Lines: 2700 to 2702
+-- Lines: 2704 to 2706
 function CopMovement:sync_action_dodge_end()
 	self:_cancel_latest_action("dodge")
 end
 
--- Lines: 2706 to 2708
+-- Lines: 2710 to 2712
 function CopMovement:sync_action_aim_end()
 	self:_cancel_latest_action("shoot", true)
 end
 
--- Lines: 2713 to 2757
+-- Lines: 2717 to 2761
 function CopMovement:sync_action_hurt_end()
 	for i = #self._queued_actions, 1, -1 do
 		if self._queued_actions[i].type == "hurt" then
@@ -2644,7 +2644,7 @@ function CopMovement:sync_action_hurt_end()
 	debug_pause("[CopMovement:sync_action_hurt_end] no queued or ongoing hurt action", self._unit, inspect(self._queued_actions), inspect(self._active_actions))
 end
 
--- Lines: 2761 to 2767
+-- Lines: 2765 to 2771
 function CopMovement:enable_update(force_head_upd)
 	if not self._need_upd then
 		self._unit:set_extension_update_enabled(ids_movement, true)
@@ -2654,12 +2654,12 @@ function CopMovement:enable_update(force_head_upd)
 	end
 end
 
--- Lines: 2771 to 2772
+-- Lines: 2775 to 2776
 function CopMovement:ground_ray()
 	return self._gnd_ray
 end
 
--- Lines: 2777 to 2783
+-- Lines: 2781 to 2787
 function CopMovement:on_nav_link_unregistered(element_id)
 	for body_part, action in pairs(self._active_actions) do
 		if action and action.on_nav_link_unregistered then
@@ -2668,7 +2668,7 @@ function CopMovement:on_nav_link_unregistered(element_id)
 	end
 end
 
--- Lines: 2787 to 2821
+-- Lines: 2791 to 2825
 function CopMovement:pre_destroy()
 	self._pre_destroyed = true
 
@@ -2713,7 +2713,7 @@ function CopMovement:pre_destroy()
 	self:_remove_attention_destroy_listener(self._attention)
 end
 
--- Lines: 2825 to 2831
+-- Lines: 2829 to 2835
 function CopMovement:on_anim_act_clbk(anim_act)
 	for body_part, action in ipairs(self._active_actions) do
 		if action and action.anim_act_clbk then
@@ -2722,7 +2722,7 @@ function CopMovement:on_anim_act_clbk(anim_act)
 	end
 end
 
--- Lines: 2836 to 2854
+-- Lines: 2840 to 2858
 function CopMovement:clbk_sync_attention(attention)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -2743,7 +2743,7 @@ function CopMovement:clbk_sync_attention(attention)
 	end
 end
 
--- Lines: 2858 to 2870
+-- Lines: 2862 to 2874
 function CopMovement:set_team(team_data)
 	self._team = team_data
 
@@ -2760,19 +2760,19 @@ function CopMovement:set_team(team_data)
 	end
 end
 
--- Lines: 2874 to 2875
+-- Lines: 2878 to 2879
 function CopMovement:team()
 	return self._team
 end
 
--- Lines: 2880 to 2882
+-- Lines: 2884 to 2886
 function CopMovement:get_location_id()
 	local metadata = managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id)
 
 	return metadata and metadata.location_id
 end
 
--- Lines: 2888 to 2895
+-- Lines: 2892 to 2899
 function CopMovement:in_smoke()
 	for _, smoke_screen in ipairs(managers.player:smoke_screens()) do
 		local in_smoke, variant = smoke_screen:is_in_smoke(self._unit)
@@ -2786,18 +2786,18 @@ function CopMovement:in_smoke()
 end
 IgnoreAlertsMovement = IgnoreAlertsMovement or class(CopMovement)
 
--- Lines: 2904 to 2905
+-- Lines: 2908 to 2909
 function IgnoreAlertsMovement:set_cool(state, giveaway)
 end
 
--- Lines: 2910 to 2912
+-- Lines: 2914 to 2916
 function CopMovement:_equipped_weapon_base()
 	local equipped_weapon = self._unit:inventory():equipped_unit()
 
 	return alive(equipped_weapon) and equipped_weapon:base()
 end
 
--- Lines: 2915 to 2920
+-- Lines: 2919 to 2924
 function CopMovement:_equipped_weapon_crew_tweak_data()
 	local equipped_weapon = self:_equipped_weapon_base()
 
@@ -2806,7 +2806,7 @@ function CopMovement:_equipped_weapon_crew_tweak_data()
 	end
 end
 
--- Lines: 2922 to 2931
+-- Lines: 2926 to 2935
 function CopMovement:_equipped_weapon_tweak_data()
 	local equipped_weapon = self:_equipped_weapon_base()
 
@@ -2855,7 +2855,7 @@ CopMovement.magazine_collisions = {
 	}
 }
 
--- Lines: 2946 to 2960
+-- Lines: 2950 to 2964
 function CopMovement:_material_config_name(part_id, unit_name, use_cc_material_config)
 	local unit_name = tweak_data.weapon.factory.parts[part_id].unit
 
@@ -2873,7 +2873,7 @@ function CopMovement:_material_config_name(part_id, unit_name, use_cc_material_c
 	return Idstring(unit_name .. cc_string .. thq_string)
 end
 
--- Lines: 2964 to 2965
+-- Lines: 2968 to 2969
 function CopMovement:allow_dropped_magazines()
 	return managers.weapon_factory:use_thq_weapon_parts()
 end
@@ -2897,7 +2897,7 @@ local material_variables = {
 	pattern_tweak = "pattern_tweak"
 }
 
--- Lines: 2989 to 3049
+-- Lines: 2993 to 3053
 function CopMovement:_spawn_magazine_unit(part_id, unit_name, pos, rot)
 	local equipped_weapon = self._unit:inventory():equipped_unit()
 	local is_thq = managers.weapon_factory:use_thq_weapon_parts()
@@ -2959,7 +2959,7 @@ function CopMovement:_spawn_magazine_unit(part_id, unit_name, pos, rot)
 	return magazine_unit
 end
 
--- Lines: 3054 to 3065
+-- Lines: 3058 to 3069
 function CopMovement:_set_unit_bullet_objects_visible(unit, bullet_objects, visible)
 	if bullet_objects then
 		local prefix = bullet_objects.prefix
@@ -2974,7 +2974,7 @@ function CopMovement:_set_unit_bullet_objects_visible(unit, bullet_objects, visi
 	end
 end
 
--- Lines: 3068 to 3116
+-- Lines: 3072 to 3120
 function CopMovement:anim_clbk_show_magazine_in_hand(unit, name)
 	if not self:allow_dropped_magazines() then
 		return
@@ -3017,7 +3017,7 @@ function CopMovement:anim_clbk_show_magazine_in_hand(unit, name)
 	end
 end
 
--- Lines: 3119 to 3214
+-- Lines: 3123 to 3218
 function CopMovement:anim_clbk_spawn_dropped_magazine()
 	if not self:allow_dropped_magazines() then
 		return
@@ -3105,7 +3105,7 @@ function CopMovement:anim_clbk_spawn_dropped_magazine()
 	end
 end
 
--- Lines: 3217 to 3248
+-- Lines: 3221 to 3252
 function CopMovement:anim_clbk_show_new_magazine_in_hand(unit, name)
 	if not self:allow_dropped_magazines() then
 		return
@@ -3134,7 +3134,7 @@ function CopMovement:anim_clbk_show_new_magazine_in_hand(unit, name)
 	end
 end
 
--- Lines: 3251 to 3280
+-- Lines: 3255 to 3284
 function CopMovement:anim_clbk_hide_magazine_in_hand()
 	if not self:allow_dropped_magazines() then
 		return
@@ -3161,7 +3161,7 @@ function CopMovement:anim_clbk_hide_magazine_in_hand()
 	self:destroy_magazine_in_hand()
 end
 
--- Lines: 3282 to 3289
+-- Lines: 3286 to 3293
 function CopMovement:destroy_magazine_in_hand()
 	if self._magazine_data then
 		if alive(self._magazine_data.unit) then
@@ -3172,7 +3172,7 @@ function CopMovement:destroy_magazine_in_hand()
 	end
 end
 
--- Lines: 3291 to 3300
+-- Lines: 3295 to 3304
 function CopMovement:_play_weapon_reload_animation_sfx(unit, event)
 	if self:allow_dropped_magazines() then
 		local equipped_weapon = self._unit:inventory():equipped_unit()

@@ -301,7 +301,7 @@ function AchievmentManager:award(id)
 	managers.mission:call_global_event(Message.OnAchievement, id)
 end
 
--- Lines: 514 to 533
+-- Lines: 525 to 544
 function AchievmentManager:_give_reward(id, skip_exp)
 	print("[AchievmentManager:_give_reward] ", id)
 
@@ -313,7 +313,7 @@ function AchievmentManager:_give_reward(id, skip_exp)
 	end
 end
 
--- Lines: 536 to 592
+-- Lines: 547 to 603
 function AchievmentManager:award_progress(stat, value)
 	if Application:editor() then
 		return
@@ -341,7 +341,7 @@ function AchievmentManager:award_progress(stat, value)
 	managers.network.account:publish_statistics(stats, true)
 end
 
--- Lines: 596 to 600
+-- Lines: 607 to 611
 function AchievmentManager:get_stat(stat)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return managers.network.account:get_stat(stat)
@@ -350,12 +350,12 @@ function AchievmentManager:get_stat(stat)
 	return false
 end
 
--- Lines: 605 to 607
+-- Lines: 616 to 618
 function AchievmentManager:award_none(id)
 	Application:debug("[AchievmentManager:award_none] Awarded achievment", id)
 end
 
--- Lines: 611 to 625
+-- Lines: 622 to 636
 function AchievmentManager:award_steam(id)
 	Application:debug("[AchievmentManager:award_steam] Awarded Steam achievment", id)
 	self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
@@ -371,7 +371,7 @@ function AchievmentManager:award_steam(id)
 	end
 end
 
--- Lines: 629 to 639
+-- Lines: 640 to 650
 function AchievmentManager:clear_steam(id)
 	print("[AchievmentManager:clear_steam]", id)
 
@@ -385,7 +385,7 @@ function AchievmentManager:clear_steam(id)
 	self.handler:store_data()
 end
 
--- Lines: 643 to 653
+-- Lines: 654 to 664
 function AchievmentManager:clear_all_steam()
 	print("[AchievmentManager:clear_all_steam]")
 
@@ -399,7 +399,7 @@ function AchievmentManager:clear_all_steam()
 	self.handler:store_data()
 end
 
--- Lines: 657 to 666
+-- Lines: 668 to 677
 function AchievmentManager.steam_unlock_result(achievment)
 	print("[AchievmentManager:steam_unlock_result] Awarded Steam achievment", achievment)
 
@@ -412,12 +412,12 @@ function AchievmentManager.steam_unlock_result(achievment)
 	end
 end
 
--- Lines: 669 to 685
+-- Lines: 680 to 696
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
 
-	-- Lines: 677 to 682
+	-- Lines: 688 to 693
 	local function x360_unlock_result(result)
 		print("result", result)
 	end
@@ -425,7 +425,7 @@ function AchievmentManager:award_x360(id)
 	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
 end
 
--- Lines: 689 to 700
+-- Lines: 700 to 711
 function AchievmentManager:award_psn(id)
 	print("[AchievmentManager:award] Awarded PSN achievment", id, self:get_info(id).id)
 
@@ -439,7 +439,7 @@ function AchievmentManager:award_psn(id)
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
--- Lines: 702 to 710
+-- Lines: 713 to 721
 function AchievmentManager.psn_unlock_result(request, error_str)
 	print("[AchievmentManager:psn_unlock_result] Awarded PSN achievment", request, error_str)
 
@@ -452,7 +452,7 @@ function AchievmentManager.psn_unlock_result(request, error_str)
 	end
 end
 
--- Lines: 714 to 724
+-- Lines: 725 to 735
 function AchievmentManager:chk_install_trophies()
 	if Trophies:is_installed() then
 		print("[AchievmentManager:chk_install_trophies] Already installed")
@@ -467,7 +467,7 @@ function AchievmentManager:chk_install_trophies()
 	end
 end
 
--- Lines: 728 to 734
+-- Lines: 739 to 745
 function AchievmentManager:clbk_install_trophies(result)
 	print("[AchievmentManager:clbk_install_trophies]", result)
 
@@ -478,7 +478,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines: 739 to 786
+-- Lines: 750 to 797
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
@@ -533,7 +533,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 	end
 end
 
--- Lines: 791 to 797
+-- Lines: 802 to 808
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -543,7 +543,7 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines: 801 to 820
+-- Lines: 812 to 831
 function AchievmentManager:_check_autounlock_complete_heist()
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_achievements) do
 		if table.size(achievement_data) == 3 and achievement_data.award and achievement_data.difficulty and (achievement_data.job or achievement_data.jobs) then
@@ -564,17 +564,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines: 823 to 825
+-- Lines: 834 to 836
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines: 828 to 830
+-- Lines: 839 to 841
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines: 832 to 859
+-- Lines: 843 to 870
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)
@@ -591,6 +591,8 @@ function AchievmentManager:_award_achievement(t, name)
 		managers.challenge:award(t.challenge_award)
 	elseif t.trophy_stat then
 		managers.custom_safehouse:award(t.trophy_stat)
+	elseif t.story then
+		managers.story:award(t.story)
 	else
 		return false
 	end

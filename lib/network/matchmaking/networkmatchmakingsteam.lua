@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = tweak_data.max_players
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "payday2_v1.78.340"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "payday2_v1.79.376"
 
 -- Lines: 71 to 80
 function NetworkMatchMakingSTEAM:init()
@@ -927,7 +927,7 @@ function NetworkMatchMakingSTEAM:server_state_name()
 	return tweak_data:index_to_server_state(self._lobby_attributes.state)
 end
 
--- Lines: 1109 to 1157
+-- Lines: 1113 to 1161
 function NetworkMatchMakingSTEAM:set_attributes(settings)
 	if not self.lobby_handler then
 		return
@@ -970,7 +970,7 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(permissions[settings.numbers[3]])
 end
 
--- Lines: 1159 to 1170
+-- Lines: 1163 to 1174
 function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
 	return {
 		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
@@ -986,7 +986,7 @@ function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
 	}
 end
 
--- Lines: 1173 to 1183
+-- Lines: 1177 to 1187
 function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingSTEAM::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 

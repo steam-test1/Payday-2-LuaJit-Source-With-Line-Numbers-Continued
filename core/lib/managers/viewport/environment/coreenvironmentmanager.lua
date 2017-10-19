@@ -373,10 +373,22 @@ function EnvironmentManager:_create_feeder(data_path_key, value)
 	return feeder
 end
 
--- Lines: 251 to 264
+-- Lines: 251 to 269
 function EnvironmentManager:_load(path)
 	local raw_data = nil
-	raw_data = Application:editor() and PackageManager:editor_load_script_data(ids_extension, path:id()) or PackageManager:script_data(ids_extension, path:id())
+
+	if Application:editor() then
+		if DB:has(ids_extension, path:id()) then
+			raw_data = PackageManager:editor_load_script_data(ids_extension, path:id())
+		else
+			managers.editor:output_error("Environment " .. path .. " is not in the database, probably removed. Using default instead.")
+
+			raw_data = PackageManager:editor_load_script_data(ids_extension, self._default_environment_path:id())
+		end
+	else
+		raw_data = PackageManager:script_data(ids_extension, path:id())
+	end
+
 	local env_data = {}
 
 	self:_load_env_data(nil, env_data, raw_data.data)
@@ -384,7 +396,7 @@ function EnvironmentManager:_load(path)
 	return env_data
 end
 
--- Lines: 267 to 283
+-- Lines: 272 to 288
 function EnvironmentManager:_load_env_data(data_path, env_data, raw_data)
 	for _, sub_raw_data in ipairs(raw_data) do
 		if sub_raw_data._meta == "param" then

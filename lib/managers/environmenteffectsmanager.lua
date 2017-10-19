@@ -3,10 +3,11 @@ core:import("CoreEnvironmentEffectsManager")
 local is_editor = Application:editor()
 EnvironmentEffectsManager = EnvironmentEffectsManager or class(CoreEnvironmentEffectsManager.EnvironmentEffectsManager)
 
--- Lines: 11 to 26
+-- Lines: 11 to 27
 function EnvironmentEffectsManager:init()
 	EnvironmentEffectsManager.super.init(self)
 	self:add_effect("rain", RainEffect:new())
+	self:add_effect("snow", SnowEffect:new())
 	self:add_effect("raindrop_screen", RainDropScreenEffect:new())
 	self:add_effect("lightning", LightningEffect:new())
 
@@ -14,7 +15,7 @@ function EnvironmentEffectsManager:init()
 	self._camera_rotation = Rotation()
 end
 
--- Lines: 28 to 40
+-- Lines: 29 to 41
 function EnvironmentEffectsManager:set_active_effects(effects)
 	for effect_name, effect in pairs(self._effects) do
 		if not table.contains(effects, effect_name) then
@@ -28,7 +29,7 @@ function EnvironmentEffectsManager:set_active_effects(effects)
 	end
 end
 
--- Lines: 42 to 46
+-- Lines: 43 to 47
 function EnvironmentEffectsManager:update(t, dt)
 	self._camera_position = managers.viewport:get_current_camera_position()
 	self._camera_rotation = managers.viewport:get_current_camera_rotation()
@@ -36,39 +37,39 @@ function EnvironmentEffectsManager:update(t, dt)
 	EnvironmentEffectsManager.super.update(self, t, dt)
 end
 
--- Lines: 48 to 49
+-- Lines: 49 to 50
 function EnvironmentEffectsManager:camera_position()
 	return self._camera_position
 end
 
--- Lines: 52 to 53
+-- Lines: 53 to 54
 function EnvironmentEffectsManager:camera_rotation()
 	return self._camera_rotation
 end
 EnvironmentEffect = EnvironmentEffect or class()
 
--- Lines: 60 to 63
+-- Lines: 61 to 64
 function EnvironmentEffect:init(default)
 	self._default = default
 end
 
--- Lines: 68 to 69
+-- Lines: 69 to 70
 function EnvironmentEffect:load_effects()
 end
 
--- Lines: 72 to 73
+-- Lines: 73 to 74
 function EnvironmentEffect:update(t, dt)
 end
 
--- Lines: 76 to 77
+-- Lines: 77 to 78
 function EnvironmentEffect:start()
 end
 
--- Lines: 80 to 81
+-- Lines: 81 to 82
 function EnvironmentEffect:stop()
 end
 
--- Lines: 83 to 84
+-- Lines: 84 to 85
 function EnvironmentEffect:default()
 	return self._default
 end
@@ -77,21 +78,21 @@ local ids_rain_post_processor = Idstring("rain_post_processor")
 local ids_rain_ripples = Idstring("rain_ripples")
 local ids_rain_off = Idstring("rain_off")
 
--- Lines: 95 to 100
+-- Lines: 96 to 101
 function RainEffect:init()
 	EnvironmentEffect.init(self)
 
 	self._effect_name = Idstring("effects/particles/rain/rain_01_a")
 end
 
--- Lines: 102 to 106
+-- Lines: 103 to 107
 function RainEffect:load_effects()
 	if is_editor then
 		CoreEngineAccess._editor_load(Idstring("effect"), self._effect_name)
 	end
 end
 
--- Lines: 108 to 131
+-- Lines: 109 to 132
 function RainEffect:update(t, dt)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -120,7 +121,7 @@ function RainEffect:update(t, dt)
 	World:effect_manager():move_rotate(self._effect, c_pos, c_rot)
 end
 
--- Lines: 133 to 135
+-- Lines: 134 to 136
 function RainEffect:start()
 	self._effect = World:effect_manager():spawn({
 		effect = self._effect_name,
@@ -129,7 +130,7 @@ function RainEffect:start()
 	})
 end
 
--- Lines: 137 to 144
+-- Lines: 138 to 145
 function RainEffect:stop()
 	World:effect_manager():kill(self._effect)
 
@@ -141,25 +142,94 @@ function RainEffect:stop()
 		self._vp = nil
 	end
 end
+SnowEffect = SnowEffect or class(EnvironmentEffect)
+local ids_snow_post_processor = Idstring("snow_post_processor")
+local ids_snow_ripples = Idstring("snow_ripples")
+local ids_snow_off = Idstring("snow_off")
+
+-- Lines: 157 to 162
+function SnowEffect:init()
+	EnvironmentEffect.init(self)
+
+	self._effect_name = Idstring("effects/particles/snow/snow_01")
+end
+
+-- Lines: 164 to 168
+function SnowEffect:load_effects()
+	if is_editor then
+		CoreEngineAccess._editor_load(Idstring("effect"), self._effect_name)
+	end
+end
+
+-- Lines: 170 to 193
+function SnowEffect:update(t, dt)
+	local vp = managers.viewport:first_active_viewport()
+
+	if vp and self._vp ~= vp then
+		vp:vp():set_post_processor_effect("World", ids_snow_post_processor, ids_snow_ripples)
+
+		if alive(self._vp) then
+			self._vp:vp():set_post_processor_effect("World", ids_snow_post_processor, ids_snow_off)
+		end
+
+		self._vp = vp
+	end
+
+	local c_rot = managers.environment_effects:camera_rotation()
+
+	if not c_rot then
+		return
+	end
+
+	local c_pos = managers.environment_effects:camera_position()
+
+	if not c_pos then
+		return
+	end
+
+	World:effect_manager():move_rotate(self._effect, c_pos, c_rot)
+end
+
+-- Lines: 195 to 197
+function SnowEffect:start()
+	self._effect = World:effect_manager():spawn({
+		effect = self._effect_name,
+		position = Vector3(),
+		rotation = Rotation()
+	})
+end
+
+-- Lines: 199 to 206
+function SnowEffect:stop()
+	World:effect_manager():kill(self._effect)
+
+	self._effect = nil
+
+	if alive(self._vp) then
+		self._vp:vp():set_post_processor_effect("World", ids_snow_post_processor, ids_snow_off)
+
+		self._vp = nil
+	end
+end
 LightningEffect = LightningEffect or class(EnvironmentEffect)
 
--- Lines: 150 to 152
+-- Lines: 212 to 214
 function LightningEffect:init()
 	EnvironmentEffect.init(self)
 end
 
--- Lines: 154 to 155
+-- Lines: 216 to 217
 function LightningEffect:load_effects()
 end
 
--- Lines: 157 to 161
+-- Lines: 219 to 223
 function LightningEffect:_update_wait_start()
 	if Underlay:loaded() then
 		self:start()
 	end
 end
 
--- Lines: 163 to 196
+-- Lines: 225 to 258
 function LightningEffect:_update(t, dt)
 	if not self._started then
 		return
@@ -195,7 +265,7 @@ function LightningEffect:_update(t, dt)
 	end
 end
 
--- Lines: 199 to 226
+-- Lines: 261 to 288
 function LightningEffect:start()
 	if not Underlay:loaded() then
 		self.update = self._update_wait_start
@@ -218,7 +288,7 @@ function LightningEffect:start()
 	self:_set_next_timer()
 end
 
--- Lines: 228 to 238
+-- Lines: 290 to 300
 function LightningEffect:stop()
 	print("[LightningEffect] Stop")
 
@@ -234,7 +304,7 @@ function LightningEffect:stop()
 	self:_set_original_values()
 end
 
--- Lines: 240 to 246
+-- Lines: 302 to 308
 function LightningEffect:_update_first(t, dt)
 	self._first_flash_time = self._first_flash_time - dt
 
@@ -245,7 +315,7 @@ function LightningEffect:_update_first(t, dt)
 	end
 end
 
--- Lines: 248 to 254
+-- Lines: 310 to 316
 function LightningEffect:_update_pause(t, dt)
 	self._pause_flash_time = self._pause_flash_time - dt
 
@@ -256,7 +326,7 @@ function LightningEffect:_update_pause(t, dt)
 	end
 end
 
--- Lines: 256 to 262
+-- Lines: 318 to 324
 function LightningEffect:_update_second(t, dt)
 	self._second_flash_time = self._second_flash_time - dt
 
@@ -267,7 +337,7 @@ function LightningEffect:_update_second(t, dt)
 	end
 end
 
--- Lines: 264 to 274
+-- Lines: 326 to 336
 function LightningEffect:_set_original_values()
 	if alive(self._sky_material) then
 		self._sky_material:set_variable(Idstring("color0"), self._original_color0)
@@ -282,7 +352,7 @@ function LightningEffect:_set_original_values()
 	end
 end
 
--- Lines: 276 to 285
+-- Lines: 338 to 347
 function LightningEffect:_make_lightning()
 	if alive(self._sky_material) then
 		self._sky_material:set_variable(Idstring("color0"), self._intensity_value)
@@ -293,7 +363,7 @@ function LightningEffect:_make_lightning()
 	self._sound_source:post_event(tweak_data.env_effect.lightning.event_name)
 end
 
--- Lines: 287 to 310
+-- Lines: 349 to 372
 function LightningEffect:_set_lightning_values()
 	self._first_flash_time = 0.1
 	self._pause_flash_time = 0.1
@@ -315,13 +385,13 @@ function LightningEffect:_set_lightning_values()
 	end
 end
 
--- Lines: 312 to 314
+-- Lines: 374 to 376
 function LightningEffect:_set_next_timer()
 	self._next = self._min_interval + math.rand(self._rnd_interval)
 end
 RainDropEffect = RainDropEffect or class(EnvironmentEffect)
 
--- Lines: 500 to 505
+-- Lines: 562 to 567
 function RainDropEffect:init()
 	EnvironmentEffect.init(self)
 
@@ -329,18 +399,18 @@ function RainDropEffect:init()
 	self._slotmask = managers.slot:get_mask("statics")
 end
 
--- Lines: 507 to 511
+-- Lines: 569 to 573
 function RainDropEffect:load_effects()
 	if is_editor then
 		CoreEngineAccess._editor_load(Idstring("effect"), self._effect_name)
 	end
 end
 
--- Lines: 544 to 545
+-- Lines: 606 to 607
 function RainDropEffect:update(t, dt)
 end
 
--- Lines: 547 to 551
+-- Lines: 609 to 613
 function RainDropEffect:start()
 	local t = {
 		effect = self._effect_name,
@@ -351,7 +421,7 @@ function RainDropEffect:start()
 	self._extra_raindrops = World:effect_manager():spawn(t)
 end
 
--- Lines: 553 to 559
+-- Lines: 615 to 621
 function RainDropEffect:stop()
 	if self._raindrops then
 		World:effect_manager():fade_kill(self._raindrops)
@@ -362,7 +432,7 @@ function RainDropEffect:stop()
 end
 RainDropScreenEffect = RainDropScreenEffect or class(RainDropEffect)
 
--- Lines: 563 to 567
+-- Lines: 625 to 629
 function RainDropScreenEffect:init()
 	RainDropEffect.init(self)
 

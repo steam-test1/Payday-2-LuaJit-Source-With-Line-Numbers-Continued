@@ -1,20 +1,22 @@
 SetOutlineElement = SetOutlineElement or class(MissionElement)
 SetOutlineElement.LINK_ELEMENTS = {"elements"}
 
--- Lines: 4 to 14
+-- Lines: 4 to 16
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
 
 	self._hed.elements = {}
 	self._hed.set_outline = true
 	self._hed.use_instigator = false
+	self._hed.clear_previous = false
 
 	table.insert(self._save_values, "elements")
 	table.insert(self._save_values, "set_outline")
 	table.insert(self._save_values, "use_instigator")
+	table.insert(self._save_values, "clear_previous")
 end
 
--- Lines: 18 to 33
+-- Lines: 20 to 36
 function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -36,18 +38,19 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Sets outline on the instigator")
+	self:_build_value_checkbox(panel, panel_sizer, "clear_previous", "Clears any previously set outlines (fixes issue with escorts)")
 end
 
--- Lines: 37 to 39
+-- Lines: 40 to 42
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 41 to 42
+-- Lines: 44 to 45
 function SetOutlineElement:update_editing()
 end
 
--- Lines: 45 to 53
+-- Lines: 48 to 56
 function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -65,7 +68,7 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 55 to 67
+-- Lines: 58 to 70
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -83,7 +86,7 @@ function SetOutlineElement:add_element()
 	end
 end
 
--- Lines: 70 to 72
+-- Lines: 73 to 75
 function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

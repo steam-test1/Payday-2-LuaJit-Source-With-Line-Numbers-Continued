@@ -1081,59 +1081,16 @@ function CustomSafehouseManager:_get_server_time()
 	return self._server_time_cache or 0
 end
 
--- Lines: 1048 to 1073
+-- Lines: 1045 to 1073
 function CustomSafehouseManager:spawn_safehouse_contract()
-	if self._has_spawned_safehouse_contract or managers.menu_component._crimenet_gui and managers.menu_component._crimenet_gui:does_job_exist("safehouse") then
-		return
-	end
-
-	local contract_data = {
-		name_id = "menu_cn_chill",
-		menu_node = "custom_safehouse",
-		pulse_level = 10,
-		pulse = true,
-		desc_id = "menu_cn_chill_desc",
-		y = 696,
-		id = "safehouse",
-		icon = "guis/dlcs/chill/textures/pd2/safehouse/crimenet_marker_safehouse",
-		x = 362,
-		pulse_color = Color(204, 255, 209, 32) / 255
-	}
-
-	if managers.menu_component._crimenet_gui then
-		managers.menu_component._crimenet_gui:remove_job("safehouse_combat", true)
-		managers.menu_component._crimenet_gui:add_special_contract(contract_data)
-	end
+	self._has_spawned_safehouse_contract = true
 end
 
--- Lines: 1089 to 1115
+-- Lines: 1105 to 1106
 function CustomSafehouseManager:spawn_safehouse_combat_contract()
-	if self._has_spawned_safehouse_contract or not self._global._has_entered_safehouse then
-		return
-	end
-
-	local contract_data = {
-		name_id = "menu_cn_chill_combat",
-		menu_node = "crimenet_contract_chill",
-		pulse = true,
-		desc_id = "menu_cn_chill_combat_desc",
-		y = 696,
-		id = "safehouse_combat",
-		icon = "guis/dlcs/chill/textures/pd2/safehouse/crimenet_marker_safehouse",
-		x = 362,
-		pulse_color = Color(204, 255, 32, 32) / 255
-	}
-
-	if managers.menu_component._crimenet_gui then
-		managers.menu_component:post_event("pln_sfr_cnc_01_01", true)
-		managers.menu_component._crimenet_gui:add_special_contract(contract_data)
-		managers.menu_component._crimenet_gui:remove_job("safehouse", true)
-
-		self._has_spawned_safehouse_contract = true
-	end
 end
 
--- Lines: 1117 to 1122
+-- Lines: 1108 to 1113
 function CustomSafehouseManager:remove_combat_contract()
 	if managers.menu_component._crimenet_gui then
 		managers.menu_component._crimenet_gui:remove_job("safehouse_combat", true)
@@ -1142,12 +1099,12 @@ function CustomSafehouseManager:remove_combat_contract()
 	end
 end
 
--- Lines: 1124 to 1125
+-- Lines: 1115 to 1116
 function CustomSafehouseManager:has_entered_safehouse()
 	return self._global._has_entered_safehouse
 end
 
--- Lines: 1128 to 1129
+-- Lines: 1119 to 1120
 function CustomSafehouseManager:is_new_player()
 	return self._global._new_player
 end

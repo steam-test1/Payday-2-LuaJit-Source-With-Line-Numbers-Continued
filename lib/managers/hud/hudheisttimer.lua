@@ -36,7 +36,7 @@ function HUDHeistTimer:init(hud, tweak_hud)
 	end
 end
 
--- Lines: 23 to 39
+-- Lines: 34 to 51
 function HUDHeistTimer:set_time(time)
 	if not self._enabled or math.floor(time) < self._last_time then
 		return
@@ -55,7 +55,7 @@ function HUDHeistTimer:set_time(time)
 	self._timer_text:set_text(text)
 end
 
--- Lines: 41 to 43
+-- Lines: 53 to 55
 function HUDHeistTimer:reset()
 	self._last_time = 0
 end

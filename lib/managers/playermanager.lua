@@ -1738,7 +1738,7 @@ end
 
 -- Lines: 1601 to 1603
 function PlayerManager:start_custom_cooldown(category, upgrade, cooldown)
-	self:start_ability_timer(category .. "_" .. upgrade, cooldown)
+	self:start_ability_timer(category .. "_" .. upgrade, TimerManager:game():time() + cooldown)
 end
 
 -- Lines: 1606 to 1607
@@ -2740,6 +2740,10 @@ end
 -- Lines: 2579 to 2586
 function PlayerManager:set_equipment_in_slot(item, slot)
 	self._global.kit.equipment_slots[slot or 1] = item
+
+	if item then
+		managers.story:award("story_inv_deployable")
+	end
 end
 
 -- Lines: 2589 to 2596

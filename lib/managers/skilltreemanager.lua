@@ -606,8 +606,16 @@ function SkillTreeManager:_on_points_spent(tree, points)
 	MenuCallbackHandler:_update_outfit_information()
 end
 
--- Lines: 544 to 551
+-- Lines: 536 to 551
 function SkillTreeManager:_check_achievements()
+	if tweak_data.story.sm_2_skillpoints <= self:total_points_spent() then
+		managers.story:award("story_inv_skillpoints")
+	end
+
+	if self:current_specialization_tier() > 0 then
+		managers.story:award("story_inv_perkdeck")
+	end
+
 	for tree, data in pairs(tweak_data.skilltree.skilltree) do
 		if self:points_spent_in_skilltree(tree) < tweak_data.achievement.im_a_healer_tank_damage_dealer then
 			return
@@ -1976,6 +1984,7 @@ function SkillTreeManager:_increase_specialization_tier(tree)
 		}
 	end
 
+	self:_check_achievements()
 	MenuCallbackHandler:_update_outfit_information()
 
 	return true
@@ -2038,6 +2047,7 @@ function SkillTreeManager:set_current_specialization(tree)
 		self._global.skill_switches[self._global.selected_skill_switch].specialization = self._global.specializations.current_specialization
 	end
 
+	self:_check_achievements()
 	MenuCallbackHandler:_update_outfit_information()
 
 	if SystemInfo:distribution() == Idstring("STEAM") then

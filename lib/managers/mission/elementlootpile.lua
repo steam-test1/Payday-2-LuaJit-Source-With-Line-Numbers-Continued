@@ -265,7 +265,7 @@ end
 
 -- Lines: 261 to 265
 function ElementLootPile:on_pickup_SO_administered(loot_index, thief)
-	if not self._steal_SO_data[loot_index].thief then
+	if loot_index and self._steal_SO_data[loot_index] and not self._steal_SO_data[loot_index].thief then
 		self._steal_SO_data[loot_index].SO_registered = false
 	end
 end

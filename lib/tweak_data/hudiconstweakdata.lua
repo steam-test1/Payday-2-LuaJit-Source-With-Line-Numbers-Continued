@@ -1,6 +1,6 @@
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2406
+-- Lines: 9 to 2467
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -2820,10 +2820,25 @@ function HudIconsTweakData:init()
 	self.skill_6 = self:create_next_icon("guis/dlcs/mom/textures/pd2/ai_skills")
 	self.skill_7 = self:create_next_icon("guis/dlcs/mom/textures/pd2/ai_skills")
 	self.skill_8 = self:create_next_icon("guis/dlcs/mom/textures/pd2/ai_skills")
+	local sidebar_atlas = "guis/dlcs/new/textures/pd2/crimenet/crimenet_sidebar_icons"
+
+	self:create_grid_atlas(sidebar_atlas, 256, 256, 64, 64)
+
+	self.sidebar_mutators = self:create_next_icon(sidebar_atlas)
+	self.sidebar_codex = self:create_next_icon(sidebar_atlas)
+	self.sidebar_broker = self:create_next_icon(sidebar_atlas)
+	self.sidebar_gage = self:create_next_icon(sidebar_atlas)
+	self.sidebar_expand = self:create_next_icon(sidebar_atlas)
+	self.sidebar_casino = self:create_next_icon(sidebar_atlas)
+	self.sidebar_safehouse = self:create_next_icon(sidebar_atlas)
+	self.sidebar_basics = self:create_next_icon(sidebar_atlas)
+	self.sidebar_crimespree = self:create_next_icon(sidebar_atlas)
+	self.sidebar_filters = self:create_next_icon(sidebar_atlas)
+	self.sidebar_question = self:create_next_icon(sidebar_atlas)
 end
 local atlas_data = nil
 
--- Lines: 2409 to 2412
+-- Lines: 2470 to 2473
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -2836,7 +2851,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2414 to 2429
+-- Lines: 2475 to 2490
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -2862,7 +2877,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2432 to 2436
+-- Lines: 2493 to 2497
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -2876,7 +2891,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2439 to 2444
+-- Lines: 2500 to 2505
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -2887,7 +2902,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2447 to 2452
+-- Lines: 2508 to 2513
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture]
 

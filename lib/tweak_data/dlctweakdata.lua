@@ -1,12 +1,12 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 4586
+-- Lines: 10 to 4616
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
 	else
 		tweak_data.BUNDLED_DLC_PACKAGES = {
-			lxy = true,
+			cmo = true,
 			washington_reveal = true,
 			fir = true,
 			dlc_pack_overkill = true,
@@ -29,15 +29,16 @@ function DLCTweakData:init(tweak_data)
 			wild = true,
 			howl = 1,
 			rip = true,
+			lxy = true,
 			steel = true,
-			hlm2 = true,
 			gage_pack_lmg = true,
 			dos = true,
-			speedrunners = 1,
+			hlm2 = true,
 			paydaycon2016 = 1,
+			speedrunners = 1,
 			alienware_alpha = true,
-			humble_summer_2015 = 1,
 			mdm = 1,
+			humble_summer_2015 = 1,
 			fdm = true,
 			hoxton_revenge = 1,
 			hl_miami = true,
@@ -5959,6 +5960,33 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "wmp_04",
+			amount = 1
+		}
+	}
+	self.cmo_bundle = {
+		free = true,
+		content = {}
+	}
+	self.cmo_bundle.content.loot_global_value = "normal"
+	self.cmo_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "cmo_01",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "cmo_02",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "cmo_03",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "cmo_04",
 			amount = 1
 		}
 	}
