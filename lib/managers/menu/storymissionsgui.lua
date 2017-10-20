@@ -216,7 +216,7 @@ function StoryMissionsGui:_update_side(current)
 	end
 end
 
--- Lines: 209 to 369
+-- Lines: 209 to 380
 function StoryMissionsGui:_update_info(mission)
 	self._info_scroll:clear()
 	self:_change_legend("select", false)
@@ -319,6 +319,8 @@ function StoryMissionsGui:_update_info(mission)
 		color = text_col
 	}), nil, 0)
 
+	local locked = false
+
 	if not mission.hide_progress then
 		placer:add_row(canvas:fine_text({
 			text = managers.localization:to_upper_text("menu_unlock_progress"),
@@ -342,14 +344,31 @@ function StoryMissionsGui:_update_info(mission)
 				}), obj_padd_x, 0)
 
 				if not mission.completed and not objective.completed and objective.levels and (not objective.basic or not Network:is_server()) and not Network:is_client() then
-					placer:add_right(TextButton:new(canvas, {
-						text_id = "menu_sm_start_level",
-						font = small_font,
-						font_size = small_font_size
-					}, function ()
-						managers.story:start_mission(mission, objective.progress_id)
-					end), 10)
-					self:_change_legend("start_mission", true)
+					if objective.dlc and not managers.dlc:is_dlc_unlocked(objective.dlc) and not Global.game_settings.single_player then
+						placer:add_right(canvas:fine_text({
+							text = managers.localization:to_upper_text("menu_ultimate_edition_short"),
+							font = small_font,
+							font_size = small_font_size,
+							color = tweak_data.screen_colors.dlc_color
+						}), 5)
+						placer:add_right(canvas:fine_text({
+							text_id = "menu_sm_dlc_locked",
+							font = small_font,
+							font_size = small_font_size,
+							color = tweak_data.screen_colors.important_1
+						}), 5)
+
+						locked = true
+					else
+						placer:add_right(TextButton:new(canvas, {
+							text_id = "menu_sm_start_level",
+							font = small_font,
+							font_size = small_font_size
+						}, function ()
+							managers.story:start_mission(mission, objective.progress_id)
+						end), 10)
+						self:_change_legend("start_mission", true)
+					end
 				end
 
 				if objective.max_progress > 1 then
@@ -395,6 +414,17 @@ function StoryMissionsGui:_update_info(mission)
 				}), nil, 0)
 			end
 		end
+	end
+
+	if locked then
+		placer:add_row(canvas:fine_text({
+			wrap = true,
+			text_id = "menu_sm_dlc_locked_help_text",
+			word_wrap = true,
+			font = small_font,
+			font_size = small_font_size,
+			color = text_col
+		}), nil, nil)
 	end
 
 	if mission.reward_id then
@@ -488,7 +518,7 @@ function StoryMissionsGui:_update_info(mission)
 	end
 end
 
--- Lines: 406 to 420
+-- Lines: 417 to 431
 function StoryMissionsGui:toggle_voice_message(message)
 	if not self._voice then
 		return
@@ -512,7 +542,7 @@ function StoryMissionsGui:toggle_voice_message(message)
 	end
 end
 
--- Lines: 422 to 429
+-- Lines: 433 to 440
 function StoryMissionsGui:sound_event_callback(event_type, duration)
 	if not self._voice or not alive(self._voice.text) then
 		return
@@ -524,7 +554,7 @@ function StoryMissionsGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines: 431 to 445
+-- Lines: 442 to 456
 function StoryMissionsGui:update()
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -541,25 +571,25 @@ function StoryMissionsGui:update()
 	end
 end
 
--- Lines: 447 to 451
+-- Lines: 458 to 462
 function StoryMissionsGui:confirm_pressed()
 	if alive(self._select_btn) then
 		self._select_btn:_trigger()
 	end
 end
 
--- Lines: 453 to 455
+-- Lines: 464 to 466
 function StoryMissionsGui:_start_mission_general()
 	managers.story:start_current()
 end
 
--- Lines: 457 to 458
+-- Lines: 468 to 469
 function StoryMissionsGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(ExtendedPanel)
 
--- Lines: 465 to 489
+-- Lines: 476 to 500
 function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	StoryMissionsGuiSidebarItem.super.init(self, panel)
 
@@ -584,12 +614,12 @@ function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	self:set_h(self._text:bottom())
 end
 
--- Lines: 491 to 493
+-- Lines: 502 to 504
 function StoryMissionsGuiSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines: 495 to 502
+-- Lines: 506 to 513
 function StoryMissionsGuiSidebarItem:set_icon(icon)
 	if icon then
 		self._icon:set_visible(true)
@@ -599,14 +629,14 @@ function StoryMissionsGuiSidebarItem:set_icon(icon)
 	end
 end
 
--- Lines: 504 to 507
+-- Lines: 515 to 518
 function StoryMissionsGuiSidebarItem:set_color(color)
 	self._text:set_color(color)
 	self._icon:set_color(color)
 end
 
 
--- Lines: 511 to 516
+-- Lines: 522 to 527
 local function set_defaults(target, source)
 	target = target or {}
 
@@ -620,7 +650,7 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines: 524 to 606
+-- Lines: 535 to 617
 function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	config = set_defaults(config, {
 		input = true,
@@ -720,7 +750,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines: 608 to 610
+-- Lines: 619 to 621
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end

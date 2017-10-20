@@ -697,7 +697,7 @@ function WeaponFactoryTweakData:_init_sights()
 			wpn_fps_ass_m14 = {translation = Vector3(-0.04, 0, -3.87)},
 			wpn_fps_smg_mp9 = {translation = Vector3(0, 0, -3.47)},
 			wpn_fps_smg_mp5 = {translation = Vector3(0, 0, -3)},
-			wpn_fps_smg_mac10 = {translation = Vector3(0, -10, -3)},
+			wpn_fps_smg_mac10 = {translation = Vector3(0, -10, -3.1)},
 			wpn_fps_ass_s552 = {translation = Vector3(-0.08, 0, -2.1)},
 			wpn_fps_smg_m45 = {translation = Vector3(0, 0, -3.9)},
 			wpn_fps_smg_mp7 = {translation = Vector3(0, 0, -2.8)},
@@ -1358,7 +1358,7 @@ function WeaponFactoryTweakData:_init_content_dlc2_dec16()
 			wpn_fps_ass_m14 = {translation = Vector3(-0.02, -15, -3.85)},
 			wpn_fps_smg_mp9 = {translation = Vector3(0, 0, -3.47)},
 			wpn_fps_smg_mp5 = {translation = Vector3(0, 0, -3)},
-			wpn_fps_smg_mac10 = {translation = Vector3(0, -10, -3)},
+			wpn_fps_smg_mac10 = {translation = Vector3(0, -10, -3.1)},
 			wpn_fps_ass_s552 = {translation = Vector3(-0.08, 0, -2.1)},
 			wpn_fps_smg_m45 = {translation = Vector3(0, -10, -3.9)},
 			wpn_fps_smg_mp7 = {translation = Vector3(0, 0, -2.8)},
@@ -6620,8 +6620,8 @@ function WeaponFactoryTweakData:_init_mac10()
 		},
 		adds = {"wpn_upg_o_marksmansight_rear_vanilla"},
 		stance_mod = {wpn_fps_smg_mac10 = {
-			translation = Vector3(0, 0, -1),
-			rotation = Rotation(0, -0.899, 0)
+			translation = Vector3(0, 0, -1.8),
+			rotation = Rotation(0, 0, 0)
 		}},
 		forbids = {
 			"wpn_fps_addon_ris",
@@ -6640,8 +6640,8 @@ function WeaponFactoryTweakData:_init_mac10()
 		unit = "units/payday2/weapons/wpn_fps_smg_mac10_pts/wpn_fps_smg_mac10_body_ris_special",
 		stats = {value = 1},
 		stance_mod = {wpn_fps_smg_mac10 = {
-			translation = Vector3(0, 0, -1),
-			rotation = Rotation(0, -0.899, 0)
+			translation = Vector3(0, 0, -1.8),
+			rotation = Rotation(0, 0, 0)
 		}}
 	}
 	self.parts.wpn_fps_smg_mac10_m_extended = {
@@ -28371,7 +28371,7 @@ function WeaponFactoryTweakData:_init_varmods()
 			wpn_fps_ass_m14 = {translation = Vector3(-0.04, 6, -3.87)},
 			wpn_fps_smg_mp9 = {translation = Vector3(0, 6, -3.47)},
 			wpn_fps_smg_mp5 = {translation = Vector3(0, 6, -3)},
-			wpn_fps_smg_mac10 = {translation = Vector3(0, -4, -3)},
+			wpn_fps_smg_mac10 = {translation = Vector3(0, -4, -3.1)},
 			wpn_fps_ass_s552 = {translation = Vector3(-0.08, 6, -2.1)},
 			wpn_fps_smg_m45 = {translation = Vector3(0, 6, -3.9)},
 			wpn_fps_smg_mp7 = {translation = Vector3(0, 6, -2.8)},
@@ -29547,7 +29547,7 @@ function WeaponFactoryTweakData:_init_erma()
 	self.wpn_fps_smg_erma_npc.unit = "units/pd2_dlc_old/weapons/wpn_fps_smg_erma/wpn_fps_smg_erma_npc"
 end
 
--- Lines: 17397 to 17448
+-- Lines: 17397 to 17449
 function WeaponFactoryTweakData:_init_icc()
 	self.parts.wpn_fps_smg_p90_body_boxy = {
 		texture_bundle_folder = "icc",

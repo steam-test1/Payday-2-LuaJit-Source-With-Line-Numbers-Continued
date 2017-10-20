@@ -642,9 +642,9 @@ function TextButton:set_text(text)
 end
 IconButton = IconButton or class(BaseButton)
 
--- Lines: 563 to 578
+-- Lines: 562 to 577
 function IconButton:init(parent, icon_config, func)
-	IconButton.super.init(self, parent, {}, func)
+	IconButton.super.init(self, parent, {binding = icon_config.binding}, func)
 
 	self._select_panel = ExtendedPanel:new(self)
 	self._normal_color = icon_config.normal_color or icon_config.color
@@ -660,25 +660,25 @@ function IconButton:init(parent, icon_config, func)
 	self:set_size(self._button:size())
 end
 
--- Lines: 580 to 584
+-- Lines: 579 to 583
 function IconButton:_set_color(col)
 	if col then
 		self._button:set_color(col)
 	end
 end
 
--- Lines: 586 to 588
+-- Lines: 585 to 587
 function IconButton:_hover_changed(hover)
 	self:_set_color(hover and self._hover_color or self._normal_color)
 end
 
--- Lines: 590 to 592
+-- Lines: 589 to 591
 function IconButton:_enabled_changed(state)
 	self:_set_color(state and self._normal_color or self._disabled_color)
 end
 ProgressBar = ProgressBar or class(ExtendedPanel)
 
--- Lines: 602 to 619
+-- Lines: 601 to 618
 function ProgressBar:init(parent, config, progress)
 	ProgressBar.super.init(self, parent, config)
 
@@ -697,12 +697,12 @@ function ProgressBar:init(parent, config, progress)
 	end
 end
 
--- Lines: 621 to 622
+-- Lines: 620 to 621
 function ProgressBar:max()
 	return self._max
 end
 
--- Lines: 626 to 629
+-- Lines: 625 to 628
 function ProgressBar:set_progress(v)
 	v = math.clamp(v, 0, self._max)
 
@@ -711,7 +711,7 @@ function ProgressBar:set_progress(v)
 	return v
 end
 
--- Lines: 633 to 638
+-- Lines: 632 to 637
 function ProgressBar:set_max(v, dont_scale_current)
 	local current = dont_scale_current and self._progress:w() / self._back:w() * self._max or self._progress:w() / self._back:w() * v
 	self._max = v
@@ -720,7 +720,7 @@ function ProgressBar:set_max(v, dont_scale_current)
 end
 TextProgressBar = TextProgressBar or class(ProgressBar)
 
--- Lines: 652 to 675
+-- Lines: 651 to 674
 function TextProgressBar:init(parent, config, text_config, progress)
 	TextProgressBar.super.init(self, parent, config)
 
@@ -746,7 +746,7 @@ function TextProgressBar:init(parent, config, text_config, progress)
 	end
 end
 
--- Lines: 677 to 699
+-- Lines: 676 to 698
 function TextProgressBar:set_progress(v)
 	v = TextProgressBar.super.set_progress(self, v)
 	local at = self._progress:right()
@@ -775,7 +775,7 @@ function TextProgressBar:set_progress(v)
 end
 SpecialButtonBinding = SpecialButtonBinding or class()
 
--- Lines: 705 to 714
+-- Lines: 704 to 713
 function SpecialButtonBinding:init(binding, func, add_to_panel)
 	self._binding = Idstring(binding)
 	self._on_trigger = func or function ()
@@ -787,12 +787,12 @@ function SpecialButtonBinding:init(binding, func, add_to_panel)
 	end
 end
 
--- Lines: 716 to 717
+-- Lines: 715 to 716
 function SpecialButtonBinding:allow_input()
 	return self._enabled
 end
 
--- Lines: 720 to 725
+-- Lines: 719 to 724
 function SpecialButtonBinding:special_btn_pressed(button)
 	if button == self._binding then
 		self._on_trigger()
@@ -801,14 +801,14 @@ function SpecialButtonBinding:special_btn_pressed(button)
 	end
 end
 
--- Lines: 727 to 729
+-- Lines: 726 to 728
 function SpecialButtonBinding:set_enabled(state)
 	self._enabled = state
 end
 ButtonLegendsBar = ButtonLegendsBar or class(GrowPanel)
 ButtonLegendsBar.PADDING = 10
 
--- Lines: 757 to 767
+-- Lines: 756 to 766
 function ButtonLegendsBar:init(panel, config, panel_config)
 	panel_config = set_defaults(panel_config, {
 		border = 0,
@@ -828,7 +828,7 @@ function ButtonLegendsBar:init(panel, config, panel_config)
 	self._lookup = {}
 end
 
--- Lines: 769 to 791
+-- Lines: 768 to 790
 function ButtonLegendsBar:add_item(data, id, dont_update)
 	if type(data) == "string" then
 		local text = managers.localization:exists(data) and managers.localization:to_upper_text(data) or data
@@ -857,7 +857,7 @@ function ButtonLegendsBar:add_item(data, id, dont_update)
 	self:_update_items()
 end
 
--- Lines: 793 to 802
+-- Lines: 792 to 801
 function ButtonLegendsBar:_create_btn(data, text)
 	local config = clone(self._text_config)
 	config.text = text
@@ -875,7 +875,7 @@ function ButtonLegendsBar:_create_btn(data, text)
 	return item
 end
 
--- Lines: 805 to 818
+-- Lines: 804 to 817
 function ButtonLegendsBar:_create_legend(data, text)
 	data = data or {}
 	local config = data.config or clone(self._text_config)
@@ -897,7 +897,7 @@ function ButtonLegendsBar:_create_legend(data, text)
 	return item
 end
 
--- Lines: 821 to 827
+-- Lines: 820 to 826
 function ButtonLegendsBar:add_items(list)
 	for k, v in pairs(list) do
 		self:add_item(v, nil, true)
@@ -906,7 +906,7 @@ function ButtonLegendsBar:add_items(list)
 	self:_update_items()
 end
 
--- Lines: 829 to 836
+-- Lines: 828 to 835
 function ButtonLegendsBar:set_item_enabled(id_or_pos, state)
 	local id = type(id_or_pos) == "number" and id_or_pos or self._lookup[id_or_pos]
 	local data = self._items[id]
@@ -918,7 +918,7 @@ function ButtonLegendsBar:set_item_enabled(id_or_pos, state)
 	end
 end
 
--- Lines: 838 to 853
+-- Lines: 837 to 852
 function ButtonLegendsBar:_update_items()
 	local placer = self:placer()
 
@@ -941,7 +941,7 @@ end
 TextLegendsBar = TextLegendsBar or class(ButtonLegendsBar)
 TextLegendsBar.SEPERATOR = "  |  "
 
--- Lines: 860 to 868
+-- Lines: 859 to 867
 function TextLegendsBar:init(panel, config, panel_config)
 	TextLegendsBar.super.init(self, panel, config, panel_config)
 
@@ -956,12 +956,12 @@ function TextLegendsBar:init(panel, config, panel_config)
 	self:set_h(self._text_item:h())
 end
 
--- Lines: 870 to 871
+-- Lines: 869 to 870
 function TextLegendsBar:_create_btn(data, text)
 	return self:_create_legend(data, text)
 end
 
--- Lines: 874 to 882
+-- Lines: 873 to 881
 function TextLegendsBar:_create_legend(data, text)
 	data = data or {}
 	local item = {
@@ -976,7 +976,7 @@ function TextLegendsBar:_create_legend(data, text)
 	return item
 end
 
--- Lines: 885 to 900
+-- Lines: 884 to 899
 function TextLegendsBar:_update_items()
 	local str = nil
 

@@ -1447,36 +1447,44 @@ function CustomSafehouseGuiPageMap:_change_zoom(zoom, x, y)
 	return self:_set_zoom(self._map_zoom + zoom, x, y)
 end
 
--- Lines: 1098 to 1102
+-- Lines: 1099 to 1107
 function CustomSafehouseGuiPageMap:zoom_out(x, y)
+	if self:is_being_raided() then
+		return
+	end
+
 	if self:_change_zoom(-0.05, x, y) then
 		managers.menu_component:post_event("zoom_out")
 	end
 end
 
--- Lines: 1104 to 1108
+-- Lines: 1110 to 1118
 function CustomSafehouseGuiPageMap:zoom_in(x, y)
+	if self:is_being_raided() then
+		return
+	end
+
 	if self:_change_zoom(0.05, x, y) then
 		managers.menu_component:post_event("zoom_in")
 	end
 end
 
--- Lines: 1110 to 1111
+-- Lines: 1120 to 1121
 function CustomSafehouseGuiPageMap:min_zoom()
 	return self:current_floor():min_zoom() or self._min_zoom
 end
 
--- Lines: 1114 to 1115
+-- Lines: 1124 to 1125
 function CustomSafehouseGuiPageMap:max_zoom()
 	return self:current_floor():max_zoom() or self._max_zoom
 end
 
--- Lines: 1118 to 1119
+-- Lines: 1128 to 1129
 function CustomSafehouseGuiPageMap:current_zoom(custom_zoom)
 	return (custom_zoom or self._map_zoom) * (self:max_zoom() - self:min_zoom()) + self:min_zoom()
 end
 
--- Lines: 1140 to 1169
+-- Lines: 1150 to 1179
 function CustomSafehouseGuiPageMap:_set_map_position(x, y, location)
 	self._map_panel:set_position(x, y)
 	self._grid_panel:set_center(self._map_panel:center())
@@ -1509,7 +1517,7 @@ function CustomSafehouseGuiPageMap:_set_map_position(x, y, location)
 end
 CustomSafehouseMapFloor = CustomSafehouseMapFloor or class()
 
--- Lines: 1176 to 1236
+-- Lines: 1186 to 1246
 function CustomSafehouseMapFloor:init(panel, map_panel, tweak)
 	if tweak.static_overlay then
 		if tweak.video then
@@ -1571,72 +1579,72 @@ function CustomSafehouseMapFloor:init(panel, map_panel, tweak)
 	self._points = {}
 end
 
--- Lines: 1238 to 1239
+-- Lines: 1248 to 1249
 function CustomSafehouseMapFloor:is_static_overlay()
 	return self._static_overlay
 end
 
--- Lines: 1242 to 1243
+-- Lines: 1252 to 1253
 function CustomSafehouseMapFloor:should_disable_cursor()
 	return self._disable_cursor
 end
 
--- Lines: 1246 to 1247
+-- Lines: 1256 to 1257
 function CustomSafehouseMapFloor:min_zoom()
 	return self._min_zoom
 end
 
--- Lines: 1250 to 1251
+-- Lines: 1260 to 1261
 function CustomSafehouseMapFloor:max_zoom()
 	return self._max_zoom
 end
 
--- Lines: 1254 to 1255
+-- Lines: 1264 to 1265
 function CustomSafehouseMapFloor:start_zoom()
 	return self._start_zoom
 end
 
--- Lines: 1258 to 1259
+-- Lines: 1268 to 1269
 function CustomSafehouseMapFloor:x()
 	return self._x
 end
 
--- Lines: 1262 to 1263
+-- Lines: 1272 to 1273
 function CustomSafehouseMapFloor:y()
 	return self._y
 end
 
--- Lines: 1266 to 1267
+-- Lines: 1276 to 1277
 function CustomSafehouseMapFloor:w()
 	return self._w
 end
 
--- Lines: 1270 to 1271
+-- Lines: 1280 to 1281
 function CustomSafehouseMapFloor:h()
 	return self._h
 end
 
--- Lines: 1274 to 1275
+-- Lines: 1284 to 1285
 function CustomSafehouseMapFloor:name_id()
 	return self._name_id
 end
 
--- Lines: 1278 to 1279
+-- Lines: 1288 to 1289
 function CustomSafehouseMapFloor:desc_id()
 	return self._desc_id
 end
 
--- Lines: 1282 to 1284
+-- Lines: 1292 to 1294
 function CustomSafehouseMapFloor:add_point(point)
 	table.insert(self._points, point)
 end
 
--- Lines: 1286 to 1287
+-- Lines: 1296 to 1297
 function CustomSafehouseMapFloor:points()
 	return self._points
 end
 
--- Lines: 1290 to 1296
+-- Lines: 1300 to 1306
 function CustomSafehouseMapFloor:hide()
 	self._bg:hide()
 
@@ -1645,7 +1653,7 @@ function CustomSafehouseMapFloor:hide()
 	end
 end
 
--- Lines: 1298 to 1304
+-- Lines: 1308 to 1314
 function CustomSafehouseMapFloor:show()
 	self._bg:show()
 
@@ -1654,21 +1662,21 @@ function CustomSafehouseMapFloor:show()
 	end
 end
 
--- Lines: 1306 to 1310
+-- Lines: 1316 to 1320
 function CustomSafehouseMapFloor:update()
 	for _, point in ipairs(self._points) do
 		point:update()
 	end
 end
 
--- Lines: 1312 to 1316
+-- Lines: 1322 to 1326
 function CustomSafehouseMapFloor:refresh()
 	for _, point in ipairs(self._points) do
 		point:refresh()
 	end
 end
 
--- Lines: 1318 to 1325
+-- Lines: 1328 to 1335
 function CustomSafehouseMapFloor:confirm_pressed()
 	for _, point in ipairs(self._points) do
 		if point:is_selected() then
@@ -1679,7 +1687,7 @@ function CustomSafehouseMapFloor:confirm_pressed()
 	end
 end
 
--- Lines: 1327 to 1335
+-- Lines: 1337 to 1345
 function CustomSafehouseMapFloor:mouse_moved(o, x, y)
 	local used, pointer = nil
 
@@ -1695,7 +1703,7 @@ function CustomSafehouseMapFloor:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 1338 to 1343
+-- Lines: 1348 to 1353
 function CustomSafehouseMapFloor:mouse_pressed(button, x, y)
 	local ret = nil
 
@@ -1706,7 +1714,7 @@ function CustomSafehouseMapFloor:mouse_pressed(button, x, y)
 	return ret
 end
 
--- Lines: 1346 to 1350
+-- Lines: 1356 to 1360
 function CustomSafehouseMapFloor:set_zoom_value(zoom)
 	for _, point in ipairs(self._points) do
 		point:set_zoom_value(zoom, self._alpha_limit)
@@ -1725,7 +1733,7 @@ CustomSafehouseMapPoint.colors.unlocked = Color.white
 CustomSafehouseMapPoint.colors.unavailable = tweak_data.screen_colors.important_1
 CustomSafehouseMapPoint.colors.current = tweak_data.screen_colors.button_stage_3:with_alpha(1)
 
--- Lines: 1369 to 1433
+-- Lines: 1379 to 1443
 function CustomSafehouseMapPoint:init(parent, map_panel, id)
 	self.make_fine_text = BlackMarketGui.make_fine_text
 	self._parent = parent
@@ -1800,12 +1808,12 @@ function CustomSafehouseMapPoint:init(parent, map_panel, id)
 	self._frame_image:animate(anim_deselect, CustomSafehouseMapPoint.FRAME_WIDTH, CustomSafehouseMapPoint.FRAME_HEIGHT)
 end
 
--- Lines: 1435 to 1437
+-- Lines: 1445 to 1447
 function CustomSafehouseMapPoint:set_tier_image(tier)
 	self._frame_image:set_image(tweak_data.safehouse.map.frame_texture[tier])
 end
 
--- Lines: 1439 to 1450
+-- Lines: 1449 to 1460
 function CustomSafehouseMapPoint:refresh()
 	self._current_tier = managers.custom_safehouse:get_room_current_tier(self._id)
 
@@ -1820,22 +1828,22 @@ function CustomSafehouseMapPoint:refresh()
 	end
 end
 
--- Lines: 1452 to 1454
+-- Lines: 1462 to 1464
 function CustomSafehouseMapPoint:update()
 	self:_update_position()
 end
 
--- Lines: 1456 to 1458
+-- Lines: 1466 to 1468
 function CustomSafehouseMapPoint:hide()
 	self._panel:hide()
 end
 
--- Lines: 1460 to 1462
+-- Lines: 1470 to 1472
 function CustomSafehouseMapPoint:show()
 	self._panel:show()
 end
 
--- Lines: 1464 to 1470
+-- Lines: 1474 to 1480
 function CustomSafehouseMapPoint:_update_position()
 	local diff_width = 1 - self._map_width / self._map_panel:width()
 	local diff_height = 1 - self._map_height / self._map_panel:height()
@@ -1845,7 +1853,7 @@ function CustomSafehouseMapPoint:_update_position()
 	self._panel:set_center(self._map_panel:w() * self._x, self._map_panel:h() * self._y)
 end
 
--- Lines: 1472 to 1492
+-- Lines: 1482 to 1502
 function CustomSafehouseMapPoint:mouse_moved(o, x, y)
 	local used, pointer, new_selected = nil
 
@@ -1869,7 +1877,7 @@ function CustomSafehouseMapPoint:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 1495 to 1507
+-- Lines: 1505 to 1517
 function CustomSafehouseMapPoint:mouse_pressed(button, x, y)
 	if button ~= Idstring("0") then
 		return
@@ -1886,7 +1894,7 @@ function CustomSafehouseMapPoint:mouse_pressed(button, x, y)
 	return ret
 end
 
--- Lines: 1510 to 1526
+-- Lines: 1520 to 1536
 function CustomSafehouseMapPoint:set_selected(selected)
 	self._is_selected = selected
 
@@ -1906,18 +1914,18 @@ function CustomSafehouseMapPoint:set_selected(selected)
 	end
 end
 
--- Lines: 1528 to 1529
+-- Lines: 1538 to 1539
 function CustomSafehouseMapPoint:is_selected()
 	return self._is_selected
 end
 
--- Lines: 1532 to 1535
+-- Lines: 1542 to 1545
 function CustomSafehouseMapPoint:select_tier(id)
 	managers.custom_safehouse:set_room_tier(self._id, id)
 	managers.menu_component:custom_safehouse_gui():call_refresh()
 end
 
--- Lines: 1537 to 1594
+-- Lines: 1547 to 1604
 function CustomSafehouseMapPoint:attempt_purchase(step)
 	step = step or 0
 	local next_tier = managers.custom_safehouse:get_next_tier_unlocked(self._id) + step
@@ -1988,7 +1996,7 @@ function CustomSafehouseMapPoint:attempt_purchase(step)
 	end
 end
 
--- Lines: 1596 to 1609
+-- Lines: 1606 to 1619
 function CustomSafehouseMapPoint:_confirm_purchase(data)
 	local can_afford = managers.custom_safehouse:can_afford_tier(managers.custom_safehouse:get_next_tier_unlocked(self._id))
 
@@ -2005,7 +2013,7 @@ function CustomSafehouseMapPoint:_confirm_purchase(data)
 	end
 end
 
--- Lines: 1611 to 1616
+-- Lines: 1621 to 1626
 function CustomSafehouseMapPoint:invalid_purchase(sound)
 	if sound then
 		managers.menu_component:post_event("menu_error")
@@ -2014,7 +2022,7 @@ function CustomSafehouseMapPoint:invalid_purchase(sound)
 	self._image:animate(anim_invalid)
 end
 
--- Lines: 1618 to 1646
+-- Lines: 1628 to 1656
 function CustomSafehouseMapPoint:update_help_text(tier_id)
 	local next_tier = math.min(tier_id + 1, managers.custom_safehouse:get_room_max_tier(self._id))
 
@@ -2043,7 +2051,7 @@ function CustomSafehouseMapPoint:update_help_text(tier_id)
 	end
 end
 
--- Lines: 1648 to 1651
+-- Lines: 1658 to 1661
 function CustomSafehouseMapPoint:set_zoom_value(zoom, alpha_limit)
 	self._alpha = math.clamp((zoom - alpha_limit) * 10, 0, 1)
 
@@ -2051,7 +2059,7 @@ function CustomSafehouseMapPoint:set_zoom_value(zoom, alpha_limit)
 end
 CustomSafehouseGuiRaidButton = CustomSafehouseGuiRaidButton or class(CustomSafehouseGuiItem)
 
--- Lines: 1659 to 1690
+-- Lines: 1669 to 1700
 function CustomSafehouseGuiRaidButton:init(panel, layer, y, callback)
 	CustomSafehouseGuiRaidButton.super.init(self)
 
@@ -2081,7 +2089,7 @@ function CustomSafehouseGuiRaidButton:init(panel, layer, y, callback)
 	})
 end
 
--- Lines: 1692 to 1697
+-- Lines: 1702 to 1707
 function CustomSafehouseGuiRaidButton:set_text(text)
 	self._text:set_text(utf8.to_upper(text))
 
@@ -2091,32 +2099,32 @@ function CustomSafehouseGuiRaidButton:set_text(text)
 	self._background_panel:set_h(h)
 end
 
--- Lines: 1699 to 1700
+-- Lines: 1709 to 1710
 function CustomSafehouseGuiRaidButton:text()
 	return self._text:text()
 end
 
--- Lines: 1703 to 1704
+-- Lines: 1713 to 1714
 function CustomSafehouseGuiRaidButton:inside(x, y)
 	return self._background_panel:inside(x, y)
 end
 
--- Lines: 1707 to 1709
+-- Lines: 1717 to 1719
 function CustomSafehouseGuiRaidButton:show()
 	self:set_selected(true, true)
 end
 
--- Lines: 1711 to 1713
+-- Lines: 1721 to 1723
 function CustomSafehouseGuiRaidButton:hide()
 	self:set_selected(false)
 end
 
--- Lines: 1715 to 1716
+-- Lines: 1725 to 1726
 function CustomSafehouseGuiRaidButton:visible()
 	return self._panel:visible()
 end
 
--- Lines: 1719 to 1725
+-- Lines: 1729 to 1735
 function CustomSafehouseGuiRaidButton:refresh()
 	if self._selected then
 		self:show()
@@ -2125,13 +2133,13 @@ function CustomSafehouseGuiRaidButton:refresh()
 	end
 end
 
--- Lines: 1727 to 1730
+-- Lines: 1737 to 1740
 function CustomSafehouseGuiRaidButton:trigger()
 	CustomSafehouseGuiRaidButton.super.trigger(self)
 	self._callback()
 end
 
--- Lines: 1732 to 1736
+-- Lines: 1742 to 1746
 function CustomSafehouseGuiRaidButton:set_color(color, selected_color)
 	self._color = color or self._color
 	self._selected_color = selected_color or color or self._selected_color
@@ -2139,7 +2147,7 @@ function CustomSafehouseGuiRaidButton:set_color(color, selected_color)
 	self:set_selected(self._selected, false)
 end
 
--- Lines: 1738 to 1745
+-- Lines: 1748 to 1755
 function CustomSafehouseGuiRaidButton:set_selected(selected, play_sound)
 	CustomSafehouseGuiRaidButton.super.set_selected(self, selected, play_sound)
 

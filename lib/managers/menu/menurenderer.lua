@@ -400,8 +400,12 @@ function MenuRenderer:accept_input(accept)
 	managers.menu_component:accept_input(accept)
 end
 
--- Lines: 375 to 383
+-- Lines: 373 to 386
 function MenuRenderer:input_focus()
+	if self:active_node_gui() and (self:active_node_gui().name == "crimenet_contract_crime_spree_join" or self:active_node_gui().name == "crimenet_crime_spree_contract_host" or self:active_node_gui().name == "crimenet_crime_spree_contract_singleplayer") then
+		return false
+	end
+
 	if self:active_node_gui() and self:active_node_gui().input_focus then
 		local input_focus = self:active_node_gui():input_focus()
 
@@ -413,7 +417,7 @@ function MenuRenderer:input_focus()
 	return managers.menu_component:input_focus()
 end
 
--- Lines: 386 to 398
+-- Lines: 389 to 401
 function MenuRenderer:mouse_pressed(o, button, x, y)
 	if self:active_node_gui() and self:active_node_gui().mouse_pressed and self:active_node_gui():mouse_pressed(button, x, y) then
 		return true
@@ -428,7 +432,7 @@ function MenuRenderer:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 400 to 413
+-- Lines: 403 to 416
 function MenuRenderer:mouse_released(o, button, x, y)
 	if self:active_node_gui() and self:active_node_gui().mouse_released and self:active_node_gui():mouse_released(button, x, y) then
 		return true
@@ -445,7 +449,7 @@ function MenuRenderer:mouse_released(o, button, x, y)
 	return false
 end
 
--- Lines: 416 to 425
+-- Lines: 419 to 428
 function MenuRenderer:mouse_clicked(o, button, x, y)
 	if self:active_node_gui() and self:active_node_gui().mouse_clicked and self:active_node_gui():mouse_clicked(button, x, y) then
 		return true
@@ -458,7 +462,7 @@ function MenuRenderer:mouse_clicked(o, button, x, y)
 	return false
 end
 
--- Lines: 428 to 433
+-- Lines: 431 to 436
 function MenuRenderer:mouse_double_click(o, button, x, y)
 	if managers.menu_component:mouse_double_click(o, button, x, y) then
 		return true
@@ -467,7 +471,7 @@ function MenuRenderer:mouse_double_click(o, button, x, y)
 	return false
 end
 
--- Lines: 436 to 462
+-- Lines: 439 to 465
 function MenuRenderer:mouse_moved(o, x, y)
 	local wanted_pointer = "arrow"
 
@@ -499,17 +503,17 @@ function MenuRenderer:mouse_moved(o, x, y)
 	return false, wanted_pointer
 end
 
--- Lines: 465 to 466
+-- Lines: 468 to 469
 function MenuRenderer:scroll_up()
 	return managers.menu_component:scroll_up()
 end
 
--- Lines: 469 to 470
+-- Lines: 472 to 473
 function MenuRenderer:scroll_down()
 	return managers.menu_component:scroll_down()
 end
 
--- Lines: 473 to 477
+-- Lines: 476 to 480
 function MenuRenderer:move_up()
 	if self:active_node_gui() and self:active_node_gui().move_up and self:active_node_gui():move_up() then
 		return true
@@ -518,7 +522,7 @@ function MenuRenderer:move_up()
 	return managers.menu_component:move_up()
 end
 
--- Lines: 480 to 484
+-- Lines: 483 to 487
 function MenuRenderer:move_down()
 	if self:active_node_gui() and self:active_node_gui().move_down and self:active_node_gui():move_down() then
 		return true
@@ -527,7 +531,7 @@ function MenuRenderer:move_down()
 	return managers.menu_component:move_down()
 end
 
--- Lines: 487 to 491
+-- Lines: 490 to 494
 function MenuRenderer:move_left()
 	if self:active_node_gui() and self:active_node_gui().move_left and self:active_node_gui():move_left() then
 		return true
@@ -536,7 +540,7 @@ function MenuRenderer:move_left()
 	return managers.menu_component:move_left()
 end
 
--- Lines: 494 to 498
+-- Lines: 497 to 501
 function MenuRenderer:move_right()
 	if self:active_node_gui() and self:active_node_gui().move_right and self:active_node_gui():move_right() then
 		return true
@@ -545,7 +549,7 @@ function MenuRenderer:move_right()
 	return managers.menu_component:move_right()
 end
 
--- Lines: 501 to 505
+-- Lines: 504 to 508
 function MenuRenderer:next_page()
 	if self:active_node_gui() and self:active_node_gui().next_page and self:active_node_gui():next_page() then
 		return true
@@ -554,7 +558,7 @@ function MenuRenderer:next_page()
 	return managers.menu_component:next_page()
 end
 
--- Lines: 508 to 512
+-- Lines: 511 to 515
 function MenuRenderer:previous_page()
 	if self:active_node_gui() and self:active_node_gui().previous_page and self:active_node_gui():previous_page() then
 		return true
@@ -563,7 +567,7 @@ function MenuRenderer:previous_page()
 	return managers.menu_component:previous_page()
 end
 
--- Lines: 515 to 519
+-- Lines: 518 to 522
 function MenuRenderer:confirm_pressed()
 	if self:active_node_gui() and self:active_node_gui().confirm_pressed and self:active_node_gui():confirm_pressed() then
 		return true
@@ -572,12 +576,12 @@ function MenuRenderer:confirm_pressed()
 	return managers.menu_component:confirm_pressed()
 end
 
--- Lines: 522 to 523
+-- Lines: 525 to 526
 function MenuRenderer:back_pressed()
 	return managers.menu_component:back_pressed()
 end
 
--- Lines: 526 to 530
+-- Lines: 529 to 533
 function MenuRenderer:special_btn_pressed(...)
 	if self:active_node_gui() and self:active_node_gui().special_btn_pressed and self:active_node_gui():special_btn_pressed(...) then
 		return true
@@ -586,7 +590,7 @@ function MenuRenderer:special_btn_pressed(...)
 	return managers.menu_component:special_btn_pressed(...)
 end
 
--- Lines: 533 to 537
+-- Lines: 536 to 540
 function MenuRenderer:special_btn_released(...)
 	if self:active_node_gui() and self:active_node_gui().special_btn_released and self:active_node_gui():special_btn_released(...) then
 		return true
@@ -595,7 +599,7 @@ function MenuRenderer:special_btn_released(...)
 	return managers.menu_component:special_btn_released(...)
 end
 
--- Lines: 540 to 557
+-- Lines: 543 to 560
 function MenuRenderer:ws_test()
 	if alive(self._test_safe) then
 		managers.gui_data:destroy_workspace(self._test_safe)

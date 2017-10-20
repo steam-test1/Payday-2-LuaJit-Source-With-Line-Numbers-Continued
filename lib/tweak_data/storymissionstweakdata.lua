@@ -29,7 +29,7 @@ function StoryMissionsTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 26 to 39
+-- Lines: 26 to 40
 function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	local tweak_data = self._tweak_data or tweak_data
 	local data = self:_progress(progress_id, ...)
@@ -41,7 +41,8 @@ function StoryMissionsTweakData:_level_progress(progress_id, ...)
 		return data
 	end
 
-	data.levels = ach.job and {ach.job} or ach.jobs
+	local had_levels = data.levels
+	data.levels = data.levels or ach.job and {ach.job} or ach.jobs
 	data.difficulty = ach.difficulty and ach.difficulty[1]
 
 	print("difficulty", data.difficulty, ach.difficulty and ach.difficulty[1])
@@ -55,7 +56,7 @@ function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	return data
 end
 
--- Lines: 42 to 43
+-- Lines: 43 to 44
 function StoryMissionsTweakData:_default_reward()
 	return {{
 		"safehouse_coins",
@@ -63,7 +64,7 @@ function StoryMissionsTweakData:_default_reward()
 	}}
 end
 
--- Lines: 46 to 50
+-- Lines: 47 to 51
 function StoryMissionsTweakData:_default_pre_coins()
 	return {
 		{
@@ -77,7 +78,7 @@ function StoryMissionsTweakData:_default_pre_coins()
 	}
 end
 
--- Lines: 57 to 63
+-- Lines: 58 to 64
 function StoryMissionsTweakData:get_mission(id)
 	for idx, mission in ipairs(self.missions) do
 		if mission.id == id then
@@ -86,7 +87,7 @@ function StoryMissionsTweakData:get_mission(id)
 	end
 end
 
--- Lines: 65 to 71
+-- Lines: 66 to 72
 function StoryMissionsTweakData:_mission(id, data)
 	data = data or {}
 	data.id = id
@@ -98,7 +99,7 @@ function StoryMissionsTweakData:_mission(id, data)
 end
 
 
--- Lines: 75 to 80
+-- Lines: 76 to 81
 local function level_check(id, ach_id)
 	local d = tweak_data.achievement.level_achievements[ach_id or id]
 
@@ -108,7 +109,7 @@ local function level_check(id, ach_id)
 end
 
 
--- Lines: 82 to 86
+-- Lines: 83 to 87
 local function maybe_award(id, check, set)
 	if check then
 		managers.story:award(id, set == true and check or set or nil)
@@ -116,17 +117,17 @@ local function maybe_award(id, check, set)
 end
 
 
--- Lines: 90 to 92
+-- Lines: 91 to 93
 function StoryMissionsTweakData._sm_1_check(mission_data)
 	level_check("story_basics_lvl10")
 end
 
--- Lines: 94 to 96
+-- Lines: 95 to 97
 function StoryMissionsTweakData._sm_first_safehouse_check()
 	maybe_award("story_first_safehouse", managers.custom_safehouse:unlocked())
 end
 
--- Lines: 98 to 103
+-- Lines: 99 to 104
 function StoryMissionsTweakData._sm_2_check()
 	local slots = managers.player:equipment_slots()
 
@@ -135,17 +136,17 @@ function StoryMissionsTweakData._sm_2_check()
 	maybe_award("story_inv_skillpoints", tweak_data.story.sm_2_skillpoints <= managers.skilltree:total_points_spent())
 end
 
--- Lines: 105 to 107
+-- Lines: 106 to 108
 function StoryMissionsTweakData._sm_moving_up_check()
 	level_check("story_chill_level")
 end
 
--- Lines: 109 to 111
+-- Lines: 110 to 112
 function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines: 117 to 481
+-- Lines: 118 to 482
 function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 5
 	self.missions = {
@@ -199,7 +200,7 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 		self:_mission("sm_4", {
 			reward_id = "menu_sm_4_reward",
 			voice_line = "Play_pln_stq_04",
-			objectives = {{self:_progress("story_shadow_raid_bags", 9, {
+			objectives = {{self:_progress("story_shadow_raid_bags", 4, {
 				name_id = "menu_sm_shadow_raid_bags",
 				levels = {"kosugi"}
 			})}},
@@ -231,7 +232,16 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			reward_id = "menu_sm_pre_coin_reward",
 			voice_line = "Play_pln_stq_06",
 			objectives = {{
-				self:_level_progress("story_transport_mult", 3, {name_id = "menu_sm_transport_mult"}),
+				self:_level_progress("story_transport_mult", 3, {
+					name_id = "menu_sm_transport_mult",
+					levels = {
+						"arm_cro",
+						"arm_hcm",
+						"arm_fac",
+						"arm_par",
+						"arm_und"
+					}
+				}),
 				self:_level_progress("story_train_heist", 1, {name_id = "menu_sm_train_heist"})
 			}},
 			rewards = self:_default_pre_coins()
