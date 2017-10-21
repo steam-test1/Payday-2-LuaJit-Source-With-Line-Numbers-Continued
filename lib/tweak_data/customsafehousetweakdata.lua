@@ -657,7 +657,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 746 to 1487
+-- Lines: 746 to 1483
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1165,7 +1165,6 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		image_id = "safehouse_trophies_preview_bullet",
 		objective_id = "trophy_eng_1_completion_objective",
 		id = "trophy_eng_1",
-		gives_reward = false,
 		desc_id = "trophy_eng_1_desc",
 		show_progress = true,
 		objectives = {self:_progress("eng_1_stats", 5, {name_id = "trophy_eng_progress"})}
@@ -1175,7 +1174,6 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		image_id = "safehouse_trophies_preview_the_robot",
 		objective_id = "trophy_eng_2_completion_objective",
 		id = "trophy_eng_2",
-		gives_reward = false,
 		desc_id = "trophy_eng_2_desc",
 		show_progress = true,
 		objectives = {self:_progress("eng_2_stats", 5, {name_id = "trophy_eng_progress"})}
@@ -1185,7 +1183,6 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		image_id = "safehouse_trophies_preview_the_marine",
 		objective_id = "trophy_eng_3_completion_objective",
 		id = "trophy_eng_3",
-		gives_reward = false,
 		desc_id = "trophy_eng_3_desc",
 		show_progress = true,
 		objectives = {self:_progress("eng_3_stats", 5, {name_id = "trophy_eng_progress"})}
@@ -1195,14 +1192,13 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		image_id = "safehouse_trophies_preview_the_cultist",
 		objective_id = "trophy_eng_4_completion_objective",
 		id = "trophy_eng_4",
-		gives_reward = false,
 		desc_id = "trophy_eng_4_desc",
 		show_progress = true,
 		objectives = {self:_progress("eng_4_stats", 5, {name_id = "trophy_eng_progress"})}
 	})
 end
 
--- Lines: 1489 to 1495
+-- Lines: 1485 to 1491
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1213,7 +1209,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines: 1498 to 1507
+-- Lines: 1494 to 1503
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1227,7 +1223,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines: 1510 to 1859
+-- Lines: 1506 to 1855
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1471,7 +1467,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines: 1861 to 1867
+-- Lines: 1857 to 1863
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1480,7 +1476,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines: 1871 to 2072
+-- Lines: 1867 to 2068
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,

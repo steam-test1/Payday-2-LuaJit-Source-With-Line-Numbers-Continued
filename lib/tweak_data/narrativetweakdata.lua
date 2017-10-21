@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines: 3 to 3148
+-- Lines: 3 to 3154
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{jcs = {
@@ -265,6 +265,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.firestarter_2,
 			self.stages.firestarter_3
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_firestarter_01",
 		briefing_event = "hct_firestarter_brf",
 		debrief_event = "hct_firestarter_debrief",
 		crimenet_callouts = {"hct_firestarter_cnc_01"},
@@ -504,7 +505,8 @@ function NarrativeTweakData:init(tweak_data)
 		chain = {
 			self.stages.welcome_to_the_jungle_1_d,
 			self.stages.welcome_to_the_jungle_2
-		}
+		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_bigoil_01"
 	}
 	self.jobs.welcome_to_the_jungle_prof = deep_clone(self.jobs.welcome_to_the_jungle)
 	self.jobs.welcome_to_the_jungle_night = deep_clone(self.jobs.welcome_to_the_jungle)
@@ -542,6 +544,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.framing_frame_2,
 			self.stages.framing_frame_3
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_framingframe_01",
 		briefing_event = "elp_framing_brf",
 		debrief_event = "elp_framing_debrief",
 		crimenet_callouts = {"elp_framing_cmc_01"},
@@ -674,13 +677,15 @@ function NarrativeTweakData:init(tweak_data)
 		chain = {
 			self.stages.watchdogs_1_d,
 			self.stages.watchdogs_2_n
-		}
+		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_watchdogs_01"
 	}
 	self.jobs.watchdogs_night = deep_clone(self.jobs.watchdogs)
 	self.jobs.watchdogs_night.chain = {
 		self.stages.watchdogs_1_n,
 		self.stages.watchdogs_2_d
 	}
+	self.jobs.watchdogs_night.load_screen = "guis/dlcs/pic/textures/loading/job_watchdogs_01"
 	self.stages.nightclub = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -694,6 +699,7 @@ function NarrativeTweakData:init(tweak_data)
 		contact = "vlad",
 		jc = 30,
 		chain = {self.stages.nightclub},
+		load_screen = "guis/dlcs/pic/textures/loading/job_nightclub",
 		briefing_event = "vld_nightclub_brf",
 		debrief_event = "vld_nightclub_debrief",
 		crimenet_callouts = {"vld_nightclub_cnc_01"},
@@ -753,6 +759,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 20,
 		chain = {self.stages.ukrainian_job},
+		load_screen = "guis/dlcs/pic/textures/loading/job_jewelry_store",
 		briefing_event = "vld_ukranian_brf",
 		debrief_event = "vld_ukranian_debrief",
 		crimenet_callouts = {"vld_ukranian_cnc_01"},
@@ -824,6 +831,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 10,
 		chain = {self.stages.jewelry_store},
+		load_screen = "guis/dlcs/pic/textures/loading/job_jewelry_store",
 		briefing_event = "pln_jewelrystore_stage1_brf_speak",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_jewelrystore_stage1_cnc_01"},
@@ -890,6 +898,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 20,
 		chain = {self.stages.four_stores},
+		load_screen = "guis/dlcs/pic/textures/loading/job_fourstores",
 		briefing_event = "vld_fourstores_brf",
 		debrief_event = "vld_fourstores_debrief",
 		crimenet_callouts = {"vld_fourstores_cnc_01"},
@@ -933,6 +942,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 20,
 		chain = {self.stages.mallcrasher},
+		load_screen = "guis/dlcs/pic/textures/loading/job_mallcrasher",
 		briefing_event = "vld_mallcrashers_brf",
 		debrief_event = "vld_mallcrashers_debrief",
 		crimenet_callouts = {"vld_mallcrashers_cnc_01"},
@@ -994,6 +1004,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.branchbank_random},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_branchbank_random_brf_speak",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_branchbank_random_cnc_01"},
@@ -1078,6 +1089,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.branchbank_deposit},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_branchbank_depositbox_brf_speak",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_branchbank_deposit_cnc_01"},
@@ -1141,6 +1153,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.branchbank_cash},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_branchbank_cash_brf_speak",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_branchbank_cash_cnc_01"},
@@ -1204,6 +1217,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.branchbank_gold},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_branchbank_gold_brf_speak",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_branchbank_gold_cnc_01"},
@@ -1316,6 +1330,7 @@ function NarrativeTweakData:init(tweak_data)
 				self.stages.election_day_3_skip2
 			}
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_electionday_01",
 		briefing_event = "elp_election_brf",
 		debrief_event = "elp_election_debrief",
 		crimenet_callouts = {"elp_election_cmc_01"},
@@ -1446,6 +1461,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.arm_cro},
+		load_screen = "guis/dlcs/pic/textures/loading/job_crossroads",
 		briefing_event = "pln_at1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_at1_cnc_01_01"},
@@ -1515,6 +1531,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.arm_und},
+		load_screen = "guis/dlcs/pic/textures/loading/job_underpass",
 		briefing_event = "pln_at1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_at1_cnc_05_01"},
@@ -1584,6 +1601,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.arm_hcm},
+		load_screen = "guis/dlcs/pic/textures/loading/job_downtown",
 		briefing_event = "pln_at1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_at1_cnc_02_01"},
@@ -1653,6 +1671,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.arm_par},
+		load_screen = "guis/dlcs/pic/textures/loading/job_park",
 		briefing_event = "pln_at1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_at1_cnc_04_01"},
@@ -1722,6 +1741,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.arm_fac},
+		load_screen = "guis/dlcs/pic/textures/loading/job_harbor",
 		briefing_event = "pln_at1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_at1_cnc_03_01"},
@@ -1791,6 +1811,7 @@ function NarrativeTweakData:init(tweak_data)
 		jc = 70,
 		package = "packages/job_arm_for",
 		chain = {self.stages.arm_for},
+		load_screen = "guis/dlcs/pic/textures/loading/job_trainheist",
 		briefing_event = "pln_tr1b_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_tr1b_cnc_01_01"},
@@ -1858,6 +1879,7 @@ function NarrativeTweakData:init(tweak_data)
 		jc = 60,
 		package = "packages/narr_rat",
 		chain = {self.stages.rat},
+		load_screen = "guis/dlcs/pic/textures/loading/job_cookoff",
 		briefing_event = "pln_rt1b_cbf_01",
 		debrief_event = {
 			"Play_pln_rt1b_end_01",
@@ -1922,6 +1944,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 20,
 		chain = {self.stages.family},
+		load_screen = "guis/dlcs/pic/textures/loading/job_diamondstore",
 		briefing_event = "pln_fj1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_fj1_cnc_01_01"},
@@ -1991,6 +2014,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 60,
 		chain = {self.stages.big},
+		load_screen = "guis/dlcs/pic/textures/loading/job_bigbank",
 		briefing_event = "gus_bb1_cbf_01",
 		debrief_event = "gus_bb1_debrief_01",
 		crimenet_callouts = {"gus_bb1_cnc_01"},
@@ -2053,6 +2077,7 @@ function NarrativeTweakData:init(tweak_data)
 			region = "street",
 			jc = 40,
 			chain = {self.stages.roberts},
+			load_screen = "guis/dlcs/pic/textures/loading/job_go_bank",
 			briefing_event = "pln_cs1_cbf_01",
 			debrief_event = nil,
 			crimenet_callouts = {"pln_cs1_cnc_01"},
@@ -2121,6 +2146,7 @@ function NarrativeTweakData:init(tweak_data)
 		jc = 30,
 		package = "packages/narr_kosugi",
 		chain = {self.stages.kosugi},
+		load_screen = "guis/dlcs/pic/textures/loading/job_shadow_raid",
 		briefing_event = "pln_ko1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_ko1_cnc_01"},
@@ -2206,6 +2232,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.mia_1,
 			self.stages.mia_2
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_hlm_01",
 		briefing_event = "dentist_hm1_cnc_01",
 		debrief_event = "dentist_hm1_debrief_01_01",
 		crimenet_callouts = {"dentist_hm1_cnc_01"},
@@ -2278,6 +2305,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 20,
 		chain = {self.stages.gallery},
+		load_screen = "guis/dlcs/pic/textures/loading/job_gallery",
 		briefing_event = "pln_art_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_art_cnc_01"},
@@ -2347,6 +2375,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.hox_1,
 			self.stages.hox_2
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_breakout_01",
 		briefing_event = "dentist_hb1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"dentist_hb1_cnc_01"},
@@ -2418,6 +2447,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 40,
 		chain = {self.stages.pines},
+		load_screen = "guis/dlcs/pic/textures/loading/job_whitexmas",
 		briefing_event = "vld_cp1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"vld_cp1_cnc_01"},
@@ -2486,6 +2516,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 50,
 		chain = {self.stages.mus},
+		load_screen = "guis/dlcs/pic/textures/loading/job_diamond",
 		briefing_event = "dentist_hd1_cbf_01",
 		debrief_event = {
 			"dentist_hd1_debrief_01",
@@ -2553,6 +2584,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.cage},
+		load_screen = "guis/dlcs/pic/textures/loading/job_carshop",
 		briefing_event = "pln_ch1_cbf_01",
 		debrief_event = "pln_ch1_end_01",
 		crimenet_callouts = {"pln_ch1_cnc_01_01"},
@@ -2612,6 +2644,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 40,
 		chain = {self.stages.hox_3},
+		load_screen = "guis/dlcs/pic/textures/loading/job_hoxtonrevenge",
 		briefing_event = "hoxton_hb3_cbf_01",
 		debrief_event = "hoxton_hb3_debrief_01",
 		crimenet_callouts = {"hoxton_hb3_cnc_01_01"},
@@ -2676,6 +2709,7 @@ function NarrativeTweakData:init(tweak_data)
 		contact = "the_butcher",
 		jc = 60,
 		chain = {self.stages.crojob1},
+		load_screen = "guis/dlcs/pic/textures/loading/job_bomb_dockyard",
 		briefing_event = "butcher_cr1_cbf_02",
 		debrief_event = {
 			"butcher_cr1_debrief_01",
@@ -2780,6 +2814,7 @@ function NarrativeTweakData:init(tweak_data)
 			800000,
 			800000
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_bomb_forest",
 		contract_visuals = {}
 	}
 	self.jobs.crojob_wrapper.contract_visuals.min_mission_xp = {
@@ -2834,6 +2869,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.shoutout_raid},
+		load_screen = "guis/dlcs/pic/textures/loading/job_meltdown",
 		briefing_event = "vld_ko1b_cbf_01_01",
 		debrief_event = nil,
 		crimenet_callouts = {"vld_ko1b_cnc_01_01"},
@@ -2893,6 +2929,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 60,
 		chain = {self.stages.arena},
+		load_screen = "guis/dlcs/pic/textures/loading/job_alesso",
 		briefing_event = "pln_al1_cbf_01_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_al1_cnc_01_01"},
@@ -2954,6 +2991,7 @@ function NarrativeTweakData:init(tweak_data)
 		contact = "the_dentist",
 		jc = 70,
 		chain = {self.stages.kenaz},
+		load_screen = "guis/dlcs/pic/textures/loading/job_casino",
 		briefing_event = "dentist_ca1_cbf_01",
 		debrief_event = {
 			"dentist_ca1_debrief_01",
@@ -3021,6 +3059,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.jolly},
+		load_screen = "guis/dlcs/pic/textures/loading/job_aftershock",
 		contract_visuals = {}
 	}
 	self.jobs.jolly.contract_visuals.min_mission_xp = {
@@ -3080,6 +3119,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 60,
 		chain = {self.stages.red2},
+		load_screen = "guis/dlcs/pic/textures/loading/job_fwb",
 		briefing_event = "pln_fwb_cbf_01",
 		debrief_event = "pln_fwb_34",
 		crimenet_callouts = {
@@ -3143,6 +3183,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.dinner},
+		load_screen = "guis/dlcs/pic/textures/loading/job_slaughterhouse",
 		briefing_event = "pln_dn1_cbf_01",
 		debrief_event = "pln_dn1_31",
 		crimenet_callouts = {"pln_dn1_cnc_01"},
@@ -3204,6 +3245,7 @@ function NarrativeTweakData:init(tweak_data)
 		dlc = "berry",
 		jc = 30,
 		chain = {self.stages.pbr},
+		load_screen = "guis/dlcs/pic/textures/loading/job_beneath_the_mountain",
 		briefing_event = "loc_jr1_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"loc_jr1_cnc_01"},
@@ -3261,6 +3303,7 @@ function NarrativeTweakData:init(tweak_data)
 		dlc = "berry",
 		jc = 30,
 		chain = {self.stages.pbr2},
+		load_screen = "guis/dlcs/pic/textures/loading/job_birth_of_sky",
 		briefing_event = "loc_jr2_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"loc_jr2_cnc_01"},
@@ -3320,6 +3363,7 @@ function NarrativeTweakData:init(tweak_data)
 		chain = {self.stages.pal}
 	}
 	self.jobs.branchbank.contract_visuals.preview_image = {icon = "branchbank"}
+	self.jobs.pal.load_screen = "guis/dlcs/pic/textures/loading/job_counterfeit"
 	self.jobs.pal.briefing_event = "pln_pal_cbf_01"
 	self.jobs.pal.debrief_event = nil
 	self.jobs.pal.crimenet_callouts = {"pln_pal_cnc_01"}
@@ -3379,6 +3423,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 10,
 		chain = {self.stages.cane},
+		load_screen = "guis/dlcs/pic/textures/loading/job_santasworkshop",
 		briefing_event = "vld_can_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"vld_can_cnc_01"},
@@ -3439,6 +3484,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.nail},
+		load_screen = "guis/dlcs/pic/textures/loading/job_labrats",
 		briefing_event = "pln_nai_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_nai_cnc_01"},
@@ -3574,6 +3620,7 @@ function NarrativeTweakData:init(tweak_data)
 		dlc = "pal",
 		jc = 30,
 		chain = {self.stages.man},
+		load_screen = "guis/dlcs/pic/textures/loading/job_undercover",
 		briefing_event = "pln_man_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_man_cnc_01"},
@@ -3632,6 +3679,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.dark},
+		load_screen = "guis/dlcs/pic/textures/loading/job_murkystation",
 		briefing_event = "rb14_drk_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"rb14_drk_cnc_01"},
@@ -3686,6 +3734,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.mad},
+		load_screen = "guis/dlcs/pic/textures/loading/job_boilingpoint",
 		briefing_event = "rb14_mad_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"rb14_mad_cnc_01"},
@@ -3751,6 +3800,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.born,
 			self.stages.chew
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_born",
 		briefing_event = "elp_brn_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"elp_brn_cnc_01"},
@@ -3838,6 +3888,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.short_2_1,
 			self.stages.short_2_2
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_sh11_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {
@@ -3870,6 +3921,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.short_1_1,
 			self.stages.short_1_2
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_sh11_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {
@@ -3902,6 +3954,7 @@ function NarrativeTweakData:init(tweak_data)
 			self.stages.short_2_1,
 			self.stages.short_2_2
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank",
 		briefing_event = "pln_sh21_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {
@@ -3947,6 +4000,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.chill},
+		load_screen = "guis/dlcs/pic/textures/loading/job_safehouse_new",
 		briefing_event = "pln_sh21_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {
@@ -3978,6 +4032,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.chill_combat},
+		load_screen = "guis/dlcs/pic/textures/loading/job_safehouse_new",
 		briefing_event = "pln_sfr_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_sfr_cnc_01_01"},
@@ -4016,6 +4071,7 @@ function NarrativeTweakData:init(tweak_data)
 		jc = 30,
 		dlc = "friend",
 		chain = {self.stages.friend},
+		load_screen = "guis/dlcs/pic/textures/loading/job_mansion",
 		briefing_event = "Play_butcher_fri_cbf_01",
 		debrief_event = {
 			"Play_btc_fri_end_a",
@@ -4077,6 +4133,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.moon},
+		load_screen = "guis/dlcs/pic/textures/loading/job_stealing_xmas",
 		briefing_event = "vld_moon_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"vld_moon_cnc_01"},
@@ -4139,6 +4196,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.spa},
+		load_screen = "guis/dlcs/pic/textures/loading/job_brooklyn1010",
 		briefing_event = "pln_spa_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_spa_cnc_01"},
@@ -4199,6 +4257,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.fish},
+		load_screen = "guis/dlcs/pic/textures/loading/job_yachtheist",
 		briefing_event = "cha_fish_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"cha_fish_cnc_01"},
@@ -4253,6 +4312,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.flat},
+		load_screen = "guis/dlcs/pic/textures/loading/job_panicroom",
 		briefing_event = "pln_flt_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_flt_cnc_01"},
@@ -4311,6 +4371,7 @@ function NarrativeTweakData:init(tweak_data)
 		region = "street",
 		jc = 30,
 		chain = {self.stages.help},
+		load_screen = "guis/dlcs/pic/textures/loading/job_prisonnightmare",
 		briefing_event = "pln_hlp_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"pln_hlp_cnc_01_01"},
@@ -4394,6 +4455,7 @@ function NarrativeTweakData:init(tweak_data)
 			900000,
 			900000
 		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_heatstreet",
 		contract_visuals = {}
 	}
 	self.jobs.run.contract_visuals.min_mission_xp = {
@@ -4426,6 +4488,7 @@ function NarrativeTweakData:init(tweak_data)
 		contact = "classic",
 		jc = 50,
 		chain = {self.stages.glace},
+		load_screen = "guis/dlcs/pic/textures/loading/job_greenbridge",
 		briefing_event = "Play_pln_glc_cbf_01",
 		debrief_event = nil,
 		crimenet_callouts = {"Play_pln_glc_cnc_01"},
@@ -4532,6 +4595,65 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.jobs.crime_spree.ignore_heat = true
 	self.jobs.crime_spree.hidden = true
+	self.jobs.arm_cro.contract_visuals.preview_image = {id = "armor_crossroads"}
+	self.jobs.arm_fac.contract_visuals.preview_image = {id = "armor_harbor"}
+	self.jobs.arm_for.contract_visuals.preview_image = {id = "armor_train"}
+	self.jobs.arm_hcm.contract_visuals.preview_image = {id = "armor_downtown"}
+	self.jobs.arm_par.contract_visuals.preview_image = {id = "armor_park"}
+	self.jobs.arm_und.contract_visuals.preview_image = {id = "armor_underpass"}
+	self.jobs.gallery.contract_visuals.preview_image = {id = "gallery"}
+	self.jobs.cage.contract_visuals.preview_image = {id = "carshop"}
+	self.jobs.branchbank_cash.contract_visuals.preview_image = {id = "branchbank"}
+	self.jobs.branchbank_gold_prof.contract_visuals.preview_image = {id = "branchbank"}
+	self.jobs.branchbank_prof.contract_visuals.preview_image = {id = "branchbank"}
+	self.jobs.branchbank_deposit.contract_visuals.preview_image = {id = "branchbank"}
+	self.jobs.rat.contract_visuals.preview_image = {id = "cook_off"}
+	self.jobs.family.contract_visuals.preview_image = {id = "diamondstore"}
+	self.jobs.arena.contract_visuals.preview_image = {id = "arena"}
+	self.jobs.roberts.contract_visuals.preview_image = {id = "go_bank"}
+	self.jobs.jewelry_store.contract_visuals.preview_image = {id = "jewelrystore"}
+	self.jobs.kosugi.contract_visuals.preview_image = {id = "shadowraid"}
+	self.jobs.pbr.contract_visuals.preview_image = {id = "beneath_the_mountain"}
+	self.jobs.pbr2.contract_visuals.preview_image = {id = "birth_of_sky"}
+	self.jobs.dark.contract_visuals.preview_image = {id = "murkystation"}
+	self.jobs.mad.contract_visuals.preview_image = {id = "boilingpoint"}
+	self.jobs.firestarter.contract_visuals.preview_image = {id = "firestarter_01"}
+	self.jobs.alex.contract_visuals.preview_image = {id = "rats_01"}
+	self.jobs.watchdogs_wrapper.contract_visuals.preview_image = {id = "watchdogs_01"}
+	self.jobs.friend.contract_visuals.preview_image = {id = "mansion"}
+	self.jobs.crojob1.contract_visuals.preview_image = {id = "bomb_dockyard"}
+	self.jobs.crojob_wrapper.contract_visuals.preview_image = {id = "bomb_forest"}
+	self.jobs.spa.contract_visuals.preview_image = {id = "brooklyn"}
+	self.jobs.fish.contract_visuals.preview_image = {id = "yacht"}
+	self.jobs.kenaz.contract_visuals.preview_image = {id = "casino"}
+	self.jobs.mia.contract_visuals.preview_image = {id = "hotline_miami_01"}
+	self.jobs.hox.contract_visuals.preview_image = {id = "hoxton_breakout_01"}
+	self.jobs.hox_3.contract_visuals.preview_image = {id = "hoxton_revenge"}
+	self.jobs.big.contract_visuals.preview_image = {id = "bigbank"}
+	self.jobs.mus.contract_visuals.preview_image = {id = "museum"}
+	self.jobs.born.contract_visuals.preview_image = {id = "biker_01"}
+	self.jobs.welcome_to_the_jungle_wrapper_prof.contract_visuals.preview_image = {id = "bigoil_01"}
+	self.jobs.election_day.contract_visuals.preview_image = {id = "electionday_02"}
+	self.jobs.framing_frame.contract_visuals.preview_image = {id = "gallery"}
+	self.jobs.jolly.contract_visuals.preview_image = {id = "aftershock"}
+	self.jobs.cane.contract_visuals.preview_image = {id = "santas_workshop"}
+	self.jobs.moon.contract_visuals.preview_image = {id = "stealing_xmas"}
+	self.jobs.ukrainian_job_prof.contract_visuals.preview_image = {id = "jewelrystore"}
+	self.jobs.pines.contract_visuals.preview_image = {id = "white_xmas"}
+	self.jobs.peta.contract_visuals.preview_image = {id = "goatsim_01"}
+	self.jobs.four_stores.contract_visuals.preview_image = {id = "fourstores"}
+	self.jobs.mallcrasher.contract_visuals.preview_image = {id = "mallcrasher"}
+	self.jobs.nightclub.contract_visuals.preview_image = {id = "nightclub"}
+	self.jobs.shoutout_raid.contract_visuals.preview_image = {id = "meltdown"}
+	self.jobs.nail.contract_visuals.preview_image = {id = "labrats"}
+	self.jobs.help.contract_visuals.preview_image = {id = "prison_nightmare"}
+	self.jobs.red2.contract_visuals.preview_image = {id = "fwb"}
+	self.jobs.glace.contract_visuals.preview_image = {id = "green_bridge"}
+	self.jobs.run.contract_visuals.preview_image = {id = "heat_street"}
+	self.jobs.flat.contract_visuals.preview_image = {id = "panicroom"}
+	self.jobs.dinner.contract_visuals.preview_image = {id = "slaughterhouse"}
+	self.jobs.pal.contract_visuals.preview_image = {id = "counterfeit"}
+	self.jobs.man.contract_visuals.preview_image = {id = "undercover"}
 	self._jobs_index = {
 		"jewelry_store",
 		"four_stores",
@@ -4617,7 +4739,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines: 3152 to 3167
+-- Lines: 3158 to 3173
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -4636,22 +4758,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines: 3169 to 3170
+-- Lines: 3175 to 3176
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines: 3173 to 3174
+-- Lines: 3179 to 3180
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines: 3179 to 3180
+-- Lines: 3185 to 3186
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines: 3185 to 3191
+-- Lines: 3191 to 3197
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -4662,12 +4784,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines: 3196 to 3197
+-- Lines: 3202 to 3203
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines: 3202 to 3217
+-- Lines: 3208 to 3223
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -4684,7 +4806,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines: 3220 to 3229
+-- Lines: 3226 to 3235
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -4697,7 +4819,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines: 3234 to 3284
+-- Lines: 3240 to 3290
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -4754,7 +4876,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines: 3289 to 3301
+-- Lines: 3295 to 3307
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package

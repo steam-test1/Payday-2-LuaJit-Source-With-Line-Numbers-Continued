@@ -64,6 +64,12 @@ end
 -- Lines: 77 to 88
 function NetworkAccountSTEAM:_set_presences()
 	Steam:set_rich_presence("level", managers.experience:current_level())
+
+	if MenuCallbackHandler:is_modded_client() then
+		Steam:set_rich_presence("is_modded", 1)
+	else
+		Steam:set_rich_presence("is_modded", 0)
+	end
 end
 
 -- Lines: 90 to 92
@@ -247,6 +253,18 @@ end
 -- Lines: 287 to 288
 function NetworkAccountSTEAM:get_stat(key)
 	return Steam:sa_handler():get_stat(key)
+end
+
+-- Lines: 292 to 293
+function NetworkAccountSTEAM:has_stat(key)
+	return Steam:sa_handler():has_stat(key)
+end
+
+-- Lines: 296 to 298
+function NetworkAccountSTEAM:achievement_unlock_time(key)
+	local res = Steam:sa_handler():achievement_unlock_time(key)
+
+	return res ~= -1 and res or nil
 end
 
 -- Lines: 301 to 302

@@ -323,6 +323,24 @@ function MenuManager:show_peer_banned_dialog(params)
 	Global.on_remove_peer_message = nil
 end
 
+-- Lines: 272 to 286
+function MenuManager:show_mods_disallowed_dialog(params)
+	local title = "dialog_mp_mods_disallowed_title"
+	local dialog_data = {
+		title = managers.localization:text(title),
+		text = managers.localization:text("dialog_mp_mods_disallowed_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok"),
+		callback_func = params and params.ok_func
+	}
+	dialog_data.button_list = {ok_button}
+
+	managers.system_menu:show(dialog_data)
+
+	Global.on_remove_peer_message = nil
+end
+
 -- Lines: 289 to 301
 function MenuManager:show_default_option_dialog(params)
 	local dialog_data = {

@@ -12,6 +12,7 @@ end
 function ChatManager:_setup()
 	self._chatlog = {}
 	self._receivers = {}
+	self._muted_peers = {}
 end
 
 -- Lines: 22 to 25
@@ -55,8 +56,12 @@ function ChatManager:feed_system_message(channel_id, message)
 	end
 end
 
--- Lines: 65 to 69
+-- Lines: 60 to 69
 function ChatManager:receive_message_by_peer(channel_id, peer, message)
+	if self:is_peer_muted(peer) then
+		return
+	end
+
 	local color_id = peer:id()
 	local color = tweak_data.chat_colors[color_id] or tweak_data.chat_colors[#tweak_data.chat_colors]
 
@@ -77,6 +82,29 @@ function ChatManager:_receive_message(channel_id, name, message, color, icon)
 	for i, receiver in ipairs(self._receivers[channel_id]) do
 		receiver:receive_message(name, message, color, icon)
 	end
+end
+
+-- Lines: 89 to 93
+function ChatManager:mute_peer(peer)
+	if peer and peer:user_id() then
+		self._muted_peers[peer:user_id()] = true
+	end
+end
+
+-- Lines: 95 to 99
+function ChatManager:unmute_peer(peer)
+	if peer and peer:user_id() then
+		self._muted_peers[peer:user_id()] = nil
+	end
+end
+
+-- Lines: 101 to 105
+function ChatManager:is_peer_muted(peer)
+	if peer and peer:user_id() then
+		return self._muted_peers[peer:user_id()] or false
+	end
+
+	return false
 end
 
 -- Lines: 112 to 113

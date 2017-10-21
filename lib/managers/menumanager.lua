@@ -2408,6 +2408,38 @@ function MenuCallbackHandler:is_multiplayer()
 	return not Global.game_settings.single_player
 end
 
+-- Lines: 2704 to 2705
+function MenuCallbackHandler:is_modded_client()
+	return rawget(_G, "BLT") ~= nil
+end
+
+-- Lines: 2713 to 2714
+function MenuCallbackHandler:is_not_modded_client()
+	return rawget(_G, "BLT") == nil
+end
+
+-- Lines: 2718 to 2736
+function MenuCallbackHandler:build_mods_list()
+	local mods = {}
+
+	if self:is_modded_client() then
+		local BLT = rawget(_G, "BLT")
+
+		if BLT and BLT.Mods and BLT.Mods then
+			for _, mod in ipairs(BLT.Mods:Mods()) do
+				local data = {
+					mod:GetName(),
+					mod:GetId()
+				}
+
+				table.insert(mods, data)
+			end
+		end
+	end
+
+	return mods
+end
+
 -- Lines: 2741 to 2742
 function MenuCallbackHandler:is_prof_job()
 	return managers.job:is_current_job_professional()
@@ -3102,6 +3134,15 @@ function MenuCallbackHandler:choice_mutated_lobbies_filter(item)
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
+-- Lines: 3380 to 3385
+function MenuCallbackHandler:choice_modded_lobbies_filter(item)
+	local allow_modded = item:value() == "on" and true or false
+	Global.game_settings.search_modded_lobbies = allow_modded
+
+	managers.user:set_setting("crimenet_filter_modded", allow_modded)
+	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
+end
+
 -- Lines: 3388 to 3398
 function MenuCallbackHandler:choice_server_state_lobby(item)
 	local state_filter = item:value()
@@ -3490,6 +3531,13 @@ end
 -- Lines: 3761 to 3764
 function MenuCallbackHandler:choice_crimenet_auto_kick(item)
 	Global.game_settings.auto_kick = item:value() == "on"
+
+	self:_on_host_setting_updated()
+end
+
+-- Lines: 3767 to 3770
+function MenuCallbackHandler:choice_allow_modded_players(item)
+	Global.game_settings.allow_modded_players = item:value() == "on"
 
 	self:_on_host_setting_updated()
 end
@@ -4224,6 +4272,14 @@ function MenuCallbackHandler:mute_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:mute_player(item:parameters().peer, item:value() == "on")
 		item:parameters().peer:set_muted(item:value() == "on")
+	end
+
+	if managers.chat then
+		if item:value() == "on" then
+			managers.chat:mute_peer(item:parameters().peer)
+		else
+			managers.chat:unmute_peer(item:parameters().peer)
+		end
 	end
 end
 
@@ -6170,6 +6226,12 @@ function LobbyOptionInitiator:modify_node(node)
 		item_lobby_toggle_auto_kick:set_value(Global.game_settings.auto_kick and "on" or "off")
 	end
 
+	local item_lobby_toggle_modded_players = node:item("toggle_allow_modded_players")
+
+	if item_lobby_toggle_modded_players then
+		item_lobby_toggle_modded_players:set_value(Global.game_settings.allow_modded_players and "on" or "off")
+	end
+
 	local character_item = node:item("choose_character")
 
 	if character_item then
@@ -6562,6 +6624,7 @@ function MenuCrimeNetContractInitiator:modify_node(original_node, data)
 		node:item("lobby_drop_in_option"):set_value(Global.game_settings.drop_in_option)
 		node:item("toggle_ai"):set_value(Global.game_settings.team_ai and Global.game_settings.team_ai_option or 0)
 		node:item("toggle_auto_kick"):set_value(Global.game_settings.auto_kick and "on" or "off")
+		node:item("toggle_allow_modded_players"):set_value(Global.game_settings.allow_modded_players and "on" or "off")
 
 		if tweak_data.quickplay.stealth_levels[data.job_id] then
 			local job_plan_item = node:item("lobby_job_plan")
@@ -9397,6 +9460,7 @@ function MenuCrimeNetFiltersInitiator:modify_node(original_node, data)
 		node:item("toggle_job_appropriate_lobby"):set_value(Global.game_settings.search_appropriate_jobs and "on" or "off")
 		node:item("toggle_allow_safehouses"):set_value(Global.game_settings.allow_search_safehouses and "on" or "off")
 		node:item("toggle_mutated_lobby"):set_value(Global.game_settings.search_mutated_lobbies and "on" or "off")
+		node:item("toggle_modded_lobby"):set_value(Global.game_settings.search_modded_lobbies and "on" or "off")
 		node:item("max_lobbies_filter"):set_value(managers.network.matchmake:get_lobby_return_count())
 		node:item("server_filter"):set_value(managers.network.matchmake:distance_filter())
 		node:item("difficulty_filter"):set_value(matchmake_filters.difficulty and matchmake_filters.difficulty.value or -1)

@@ -27,7 +27,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.075,
 		max_bags = 13,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_framingframe_01"
 	}
 	self.framing_frame_2 = {
 		name_id = "heist_framing_frame_2_hl",
@@ -45,7 +46,8 @@ function LevelsTweakData:init()
 		ghost_bonus = 0.025,
 		max_bags = 13,
 		repossess_bags = true,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_frame02"
 	}
 	self.framing_frame_3 = {
 		name_id = "heist_framing_frame_3_hl",
@@ -63,7 +65,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.15,
 		max_bags = 21,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_framingframe_03"
 	}
 	self.election_day_1 = {
 		name_id = "heist_election_day_1_hl",
@@ -81,7 +84,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.05,
 		max_bags = 0,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_electionday_01"
 	}
 	self.election_day_2 = {
 		name_id = "heist_election_day_2_hl",
@@ -98,7 +102,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.15,
 		max_bags = 21,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_electionday_02"
 	}
 	self.election_day_3 = {
 		name_id = "heist_election_day_3_hl",
@@ -111,7 +116,8 @@ function LevelsTweakData:init()
 		package = "packages/narr_election3",
 		cube = "cube_apply_heist_bank",
 		max_bags = 16,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_electionday_03"
 	}
 	self.election_day_3_skip1 = deep_clone(self.election_day_3)
 	self.election_day_3_skip1.briefing_id = "eday3_brief_skip1"
@@ -134,7 +140,8 @@ function LevelsTweakData:init()
 		package = "packages/narr_alex1",
 		cube = "cube_apply_heist_bank",
 		max_bags = 11,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_rats01"
 	}
 	self.alex_2 = {
 		name_id = "heist_alex_2_hl",
@@ -154,7 +161,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		max_bags = 19,
 		repossess_bags = true,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_rats02"
 	}
 	self.alex_3 = {
 		name_id = "heist_alex_3_hl",
@@ -171,7 +179,8 @@ function LevelsTweakData:init()
 		package = "packages/narr_alex3",
 		cube = "cube_apply_heist_bank",
 		max_bags = 34,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_rats03"
 	}
 	self.watchdogs_1 = {
 		name_id = "heist_watchdogs_1_hl",
@@ -188,7 +197,8 @@ function LevelsTweakData:init()
 		package = {"packages/narr_watchdogs1"},
 		cube = "cube_apply_heist_bank",
 		max_bags = 16,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_watchdogs_01"
 	}
 	self.watchdogs_1_night = deep_clone(self.watchdogs_1)
 	self.watchdogs_1_night.env_params = {environment = "environments/pd2_env_night/pd2_env_night"}
@@ -212,7 +222,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		max_bags = 16,
 		repossess_bags = true,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_watchdogs_02"
 	}
 	self.watchdogs_2_day = deep_clone(self.watchdogs_2)
 	self.watchdogs_2_day.env_params = {environment = "environments/pd2_env_wd2_evening/pd2_env_wd2_evening"}
@@ -231,7 +242,8 @@ function LevelsTweakData:init()
 		package = "packages/narr_firestarter1",
 		cube = "cube_apply_heist_bank",
 		max_bags = 16,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_firestarter_01"
 	}
 	self.firestarter_2 = {
 		name_id = "heist_firestarter_2_hl",
@@ -248,7 +260,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.15,
 		max_bags = 34,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_firestarter_02"
 	}
 	self.firestarter_3 = {
 		name_id = "heist_firestarter_3_hl",
@@ -266,7 +279,8 @@ function LevelsTweakData:init()
 		mission_data = {{mission = "default"}},
 		ghost_bonus = 0.05,
 		max_bags = 54,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_branchbank"
 	}
 	self.welcome_to_the_jungle_1 = {
 		name_id = "heist_welcome_to_the_jungle_1_hl",
@@ -284,7 +298,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.15,
 		max_bags = 14,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_bigoil_01"
 	}
 	self.welcome_to_the_jungle_1_night = deep_clone(self.welcome_to_the_jungle_1)
 	self.welcome_to_the_jungle_1_night.env_params = {environment = "environments/pd2_env_night/pd2_env_night"}
@@ -304,7 +319,8 @@ function LevelsTweakData:init()
 		package = {"packages/narr_jungle2"},
 		cube = "cube_apply_heist_bank",
 		max_bags = 15,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_bigoil_02"
 	}
 	self.ukrainian_job = {
 		name_id = "heist_ukrainian_job_hl",
@@ -428,7 +444,8 @@ function LevelsTweakData:init()
 		package = "packages/escape_cafe",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_cafe"
 	}
 	self.escape_park_day = {
 		name_id = "heist_escape_park_hl",
@@ -440,7 +457,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/escape_park",
 		cube = "cube_apply_heist_bank",
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_park"
 	}
 	self.escape_cafe = {
 		name_id = "heist_escape_cafe_hl",
@@ -453,7 +471,8 @@ function LevelsTweakData:init()
 		package = "packages/escape_cafe",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_cafe"
 	}
 	self.escape_park = {
 		name_id = "heist_escape_park_hl",
@@ -466,7 +485,8 @@ function LevelsTweakData:init()
 		package = "packages/escape_park",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_park"
 	}
 	self.escape_street = {
 		name_id = "heist_escape_street_hl",
@@ -479,7 +499,8 @@ function LevelsTweakData:init()
 		package = "packages/escape_street",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_street"
 	}
 	self.escape_overpass = {
 		name_id = "heist_escape_overpass_hl",
@@ -492,7 +513,8 @@ function LevelsTweakData:init()
 		package = "packages/escape_overpass",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_overpass"
 	}
 	self.escape_overpass_night = deep_clone(self.escape_overpass)
 	self.escape_garage = {
@@ -506,7 +528,8 @@ function LevelsTweakData:init()
 		package = "packages/escape_garage",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/escape_garage"
 	}
 	self.driving_escapes_industry_day = {
 		name_id = "heist_driving_escapes_industry_hl",
@@ -713,7 +736,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		ghost_bonus = 0.05,
 		max_bags = 24,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_diamondstore"
 	}
 	self.big = {
 		name_id = "heist_big_hl",
@@ -781,6 +805,7 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		max_bags = 28,
 		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_hlm_02",
 		teams = {
 			criminal1 = {
 				foes = {
@@ -873,6 +898,7 @@ function LevelsTweakData:init()
 	self.gallery.intro_event = "Play_pln_art_intro"
 	self.gallery.outro_event = {"Play_pln_art_end"}
 	self.gallery.briefing_dialog = "Play_pln_art_brf"
+	self.gallery.load_screen = "guis/dlcs/pic/textures/loading/job_gallery"
 	self.hox_1 = {
 		name_id = "heist_hox_1_hl",
 		briefing_id = "heist_hox_1_briefing",
@@ -897,7 +923,8 @@ function LevelsTweakData:init()
 		package = "packages/narr_hox_2",
 		cube = "cube_apply_heist_bank",
 		block_AIs = {old_hoxton = true},
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_breakout_02"
 	}
 	self.pines = {
 		name_id = "heist_pines_hl",
@@ -1005,7 +1032,8 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		max_bags = 25,
 		ghost_bonus = 0.1,
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_alesso"
 	}
 	self.kenaz = {
 		name_id = "heist_kenaz_hl",
@@ -1138,7 +1166,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/narr_peta",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = america
+		ai_group_type = america,
+		load_screen = "guis/dlcs/pic/textures/loading/job_goatsim_01"
 	}
 	self.peta2 = {
 		name_id = "heist_peta2_hl",
@@ -1151,7 +1180,8 @@ function LevelsTweakData:init()
 		package = "packages/narr_peta2",
 		cube = "cube_apply_heist_bank",
 		ai_group_type = america,
-		repossess_bags = true
+		repossess_bags = true,
+		load_screen = "guis/dlcs/pic/textures/loading/job_goatsim_02"
 	}
 	self.pal = {
 		name_id = "heist_pal_hl",
@@ -1245,7 +1275,8 @@ function LevelsTweakData:init()
 		outro_event = "Play_elp_chw_01",
 		music = "heist",
 		package = "packages/lvl_chew",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		load_screen = "guis/dlcs/pic/textures/loading/job_chew"
 	}
 	self.short1_stage1 = {
 		name_id = "heist_short1_stage1_hl",
@@ -1268,7 +1299,8 @@ function LevelsTweakData:init()
 			primary_mods = {"wpn_fps_upg_ns_ass_smg_small"},
 			secondary_mods = {"wpn_fps_upg_ns_pis_medium"}
 		},
-		disable_mutators = true
+		disable_mutators = true,
+		load_screen = "guis/dlcs/pic/textures/loading/job_basics_stealth1"
 	}
 	self.short1_stage2 = {
 		name_id = "heist_short1_stage2_hl",
@@ -1291,7 +1323,8 @@ function LevelsTweakData:init()
 			primary_mods = {"wpn_fps_upg_ns_ass_smg_small"},
 			secondary_mods = {"wpn_fps_upg_ns_pis_medium"}
 		},
-		disable_mutators = true
+		disable_mutators = true,
+		load_screen = "guis/dlcs/pic/textures/loading/job_basics_stealth2"
 	}
 	self.short2_stage1 = {
 		name_id = "heist_short2_stage1_hl",
@@ -1312,7 +1345,8 @@ function LevelsTweakData:init()
 			primary = "wpn_fps_ass_amcar",
 			melee = "none"
 		},
-		disable_mutators = true
+		disable_mutators = true,
+		load_screen = "guis/dlcs/pic/textures/loading/job_basics_loud1"
 	}
 	self.short2_stage2b = {
 		name_id = "heist_short2_stage2b_hl",
@@ -1333,7 +1367,8 @@ function LevelsTweakData:init()
 			primary = "wpn_fps_ass_amcar",
 			melee = "none"
 		},
-		disable_mutators = true
+		disable_mutators = true,
+		load_screen = "guis/dlcs/pic/textures/loading/job_basics_loud2"
 	}
 	self.chill = {
 		name_id = "heist_chill_hl",

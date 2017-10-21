@@ -328,9 +328,9 @@ function CrimeNetSidebarGui:clbk_safehouse()
 	end
 end
 
--- Lines: 308 to 311
+-- Lines: 306 to 311
 function CrimeNetSidebarGui:clbk_contract_broker()
-	managers.menu:open_node("crimenet_contract_special")
+	managers.menu:open_node("contract_broker")
 end
 
 -- Lines: 313 to 315
