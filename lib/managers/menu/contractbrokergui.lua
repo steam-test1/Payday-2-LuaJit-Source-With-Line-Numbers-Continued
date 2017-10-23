@@ -691,7 +691,7 @@ function ContractBrokerGui:perform_filter_tactic(value)
 			if self._current_filter == 1 then
 				allow = allow or level_data.ghost_bonus == nil
 			elseif self._current_filter == 2 then
-				allow = allow or level_data.ghost_required
+				allow = allow or level_data.ghost_required or level_data.ghost_required_visual
 			elseif self._current_filter == 3 then
 				allow = allow or level_data.ghost_bonus ~= nil
 			end
@@ -712,7 +712,7 @@ function ContractBrokerGui:perform_filter_search(job_tweak)
 		local search_text = string.lower(self._search.text:text())
 
 		if #search_text > 0 then
-			local job_name = string.lower(managers.localization:text(job_tweak.name_id))
+			local job_name = string.lower(managers.localization:text(job_tweak.name_id or "no name_id"))
 
 			if string.find(job_name, search_text) then
 				return true
@@ -721,7 +721,7 @@ function ContractBrokerGui:perform_filter_search(job_tweak)
 			local contact_tweak = tweak_data.narrative.contacts[job_tweak.contact]
 
 			if contact_tweak then
-				local contact_name = string.lower(managers.localization:text(contact_tweak.name_id))
+				local contact_name = string.lower(managers.localization:text(contact_tweak.name_id or "no name_id"))
 
 				if string.find(contact_name, search_text) then
 					return true
@@ -804,7 +804,7 @@ function ContractBrokerGui:set_sorting_function(sort_func)
 	self._sorting_func = sort_func
 end
 
--- Lines: 808 to 924
+-- Lines: 808 to 929
 function ContractBrokerGui:_setup_jobs()
 	local date_value = {
 		tonumber(os.date("%Y")),
@@ -831,6 +831,12 @@ function ContractBrokerGui:_setup_jobs()
 
 	for index, job_id in ipairs(tweak_data.narrative:get_jobs_index()) do
 		local job_tweak = tweak_data.narrative:job_data(job_id)
+		local wrapped_tweak = nil
+
+		if job_tweak.job_wrapper then
+			wrapped_tweak = tweak_data.narrative.jobs[job_tweak.job_wrapper[1]]
+		end
+
 		local filter_pass = true
 		local contact_pass = true
 		local contact = job_tweak.contact
@@ -854,7 +860,7 @@ function ContractBrokerGui:_setup_jobs()
 						break
 					end
 				elseif key == "job" then
-					if not pass_func(self, job_tweak) then
+					if not pass_func(self, job_tweak, wrapped_tweak) then
 						filter_pass = false
 
 						break
@@ -912,7 +918,7 @@ function ContractBrokerGui:_setup_jobs()
 	self._panels.scroll:update_canvas_size()
 end
 
--- Lines: 929 to 935
+-- Lines: 934 to 940
 function ContractBrokerGui:update(t, dt)
 	local cx, cy = managers.menu_component:get_right_controller_axis()
 
@@ -921,7 +927,7 @@ function ContractBrokerGui:update(t, dt)
 	end
 end
 
--- Lines: 938 to 964
+-- Lines: 943 to 969
 function ContractBrokerGui:refresh()
 	if self._filter_buttons[self._current_filter] then
 		self._filter_selection_bg:set_y(self._filter_buttons[self._current_filter]:y())
@@ -949,12 +955,12 @@ function ContractBrokerGui:refresh()
 	end
 end
 
--- Lines: 966 to 968
+-- Lines: 971 to 973
 function ContractBrokerGui:_move_selection(dir)
 	self:_set_selection((self._current_selection or 0) + dir)
 end
 
--- Lines: 972 to 1002
+-- Lines: 977 to 1007
 function ContractBrokerGui:_set_selection(idx)
 	local last_selection = self._current_selection
 	self._current_selection = math.clamp(idx, 1, #self._heist_items)
@@ -984,7 +990,7 @@ function ContractBrokerGui:_set_selection(idx)
 	end
 end
 
--- Lines: 1005 to 1098
+-- Lines: 1010 to 1103
 function ContractBrokerGui:mouse_moved(button, x, y)
 	local used, pointer = nil
 
@@ -1085,7 +1091,7 @@ function ContractBrokerGui:mouse_moved(button, x, y)
 	return used, pointer
 end
 
--- Lines: 1104 to 1162
+-- Lines: 1109 to 1167
 function ContractBrokerGui:mouse_clicked(o, button, x, y)
 	self:disconnect_search_input()
 
@@ -1144,7 +1150,7 @@ function ContractBrokerGui:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines: 1164 to 1169
+-- Lines: 1169 to 1174
 function ContractBrokerGui:mouse_pressed(button, x, y)
 	if self._panels.scroll:mouse_pressed(button, x, y) then
 		self._scroll_event = true
@@ -1153,7 +1159,7 @@ function ContractBrokerGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 1171 to 1176
+-- Lines: 1176 to 1181
 function ContractBrokerGui:mouse_released(button, x, y)
 	if self._panels.scroll:mouse_released(button, x, y) then
 		self._scroll_event = true
@@ -1162,7 +1168,7 @@ function ContractBrokerGui:mouse_released(button, x, y)
 	end
 end
 
--- Lines: 1178 to 1186
+-- Lines: 1183 to 1191
 function ContractBrokerGui:confirm_pressed()
 	if self._search_focus then
 		return
@@ -1175,7 +1181,7 @@ function ContractBrokerGui:confirm_pressed()
 	end
 end
 
--- Lines: 1188 to 1193
+-- Lines: 1193 to 1198
 function ContractBrokerGui:back_pressed()
 	if self._search_focus then
 		return
@@ -1188,7 +1194,7 @@ local ids_favourite = Idstring("menu_toggle_legends")
 local ids_trigger_left = Idstring("trigger_left")
 local ids_trigger_right = Idstring("trigger_right")
 
--- Lines: 1201 to 1239
+-- Lines: 1206 to 1244
 function ContractBrokerGui:special_btn_pressed(button)
 	if self._search_focus then
 		return
@@ -1231,17 +1237,17 @@ function ContractBrokerGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 1241 to 1243
+-- Lines: 1246 to 1248
 function ContractBrokerGui:move_up()
 	self:_move_selection(-1)
 end
 
--- Lines: 1245 to 1247
+-- Lines: 1250 to 1252
 function ContractBrokerGui:move_down()
 	self:_move_selection(1)
 end
 
--- Lines: 1249 to 1256
+-- Lines: 1254 to 1261
 function ContractBrokerGui:next_page()
 	self._current_tab = self._current_tab + 1
 
@@ -1253,7 +1259,7 @@ function ContractBrokerGui:next_page()
 	managers.menu:post_event("menu_enter")
 end
 
--- Lines: 1258 to 1265
+-- Lines: 1263 to 1270
 function ContractBrokerGui:previous_page()
 	self._current_tab = self._current_tab - 1
 
@@ -1265,22 +1271,22 @@ function ContractBrokerGui:previous_page()
 	managers.menu:post_event("menu_enter")
 end
 
--- Lines: 1267 to 1269
+-- Lines: 1272 to 1274
 function ContractBrokerGui:mouse_wheel_up(x, y)
 	self._panels.scroll:scroll(x, y, 1)
 end
 
--- Lines: 1271 to 1273
+-- Lines: 1276 to 1278
 function ContractBrokerGui:mouse_wheel_down(x, y)
 	self._panels.scroll:scroll(x, y, -1)
 end
 
--- Lines: 1275 to 1276
+-- Lines: 1280 to 1281
 function ContractBrokerGui:input_focus()
 	return 1
 end
 
--- Lines: 1279 to 1284
+-- Lines: 1284 to 1289
 function ContractBrokerGui:save_temporary_data(job_id)
 	Global.contract_broker = {}
 	Global.contract_broker.filter = self._current_filter
@@ -1288,7 +1294,7 @@ function ContractBrokerGui:save_temporary_data(job_id)
 	Global.contract_broker.job_id = job_id
 end
 
--- Lines: 1289 to 1306
+-- Lines: 1294 to 1311
 function ContractBrokerGui:connect_search_input()
 	if not self._search_focus then
 		self._ws:connect_keyboard(Input:keyboard())
@@ -1304,7 +1310,7 @@ function ContractBrokerGui:connect_search_input()
 	end
 end
 
--- Lines: 1309 to 1323
+-- Lines: 1314 to 1328
 function ContractBrokerGui:disconnect_search_input()
 	if self._search_focus then
 		self._ws:disconnect_keyboard()
@@ -1318,7 +1324,7 @@ function ContractBrokerGui:disconnect_search_input()
 	end
 end
 
--- Lines: 1326 to 1406
+-- Lines: 1331 to 1411
 function ContractBrokerGui:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -1404,14 +1410,14 @@ function ContractBrokerGui:search_key_press(o, k)
 	self:update_caret()
 end
 
--- Lines: 1408 to 1412
+-- Lines: 1413 to 1417
 function ContractBrokerGui:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
 end
 
--- Lines: 1415 to 1468
+-- Lines: 1420 to 1473
 function ContractBrokerGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -1473,7 +1479,7 @@ function ContractBrokerGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 1472 to 1495
+-- Lines: 1477 to 1500
 function ContractBrokerGui:enter_text(o, s)
 	if self._skip_first then
 		self._skip_first = false
@@ -1501,17 +1507,17 @@ function ContractBrokerGui:enter_text(o, s)
 	self:_setup_change_search()
 end
 
--- Lines: 1497 to 1499
+-- Lines: 1502 to 1504
 function ContractBrokerGui:enter_key_callback()
 	self:_setup_change_search()
 end
 
--- Lines: 1501 to 1503
+-- Lines: 1506 to 1508
 function ContractBrokerGui:esc_key_callback()
 	self:disconnect_search_input()
 end
 
--- Lines: 1505 to 1512
+-- Lines: 1510 to 1517
 function ContractBrokerGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -1521,7 +1527,7 @@ function ContractBrokerGui.blink(o)
 	end
 end
 
--- Lines: 1514 to 1528
+-- Lines: 1519 to 1533
 function ContractBrokerGui:set_blinking(b)
 	local caret = self._search.caret
 
@@ -1542,7 +1548,7 @@ function ContractBrokerGui:set_blinking(b)
 	end
 end
 
--- Lines: 1531 to 1560
+-- Lines: 1536 to 1565
 function ContractBrokerGui:update_caret()
 	local text = self._search.text
 	local caret = self._search.caret

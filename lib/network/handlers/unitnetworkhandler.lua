@@ -79,6 +79,15 @@ function UnitNetworkHandler:set_weapon_gadget_state(unit, gadget_state, sender)
 	unit:inventory():synch_weapon_gadget_state(gadget_state)
 end
 
+-- Lines: 85 to 90
+function UnitNetworkHandler:set_weapon_gadget_color(unit, red, green, blue, sender)
+	if not self._verify_character_and_sender(unit, sender) then
+		return
+	end
+
+	unit:inventory():sync_weapon_gadget_color(Color(red / 255, green / 255, blue / 255))
+end
+
 -- Lines: 93 to 97
 function UnitNetworkHandler:first_aid_kit_sync(unit, min_distance)
 	if min_distance ~= 0 then

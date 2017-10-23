@@ -374,6 +374,17 @@ function AchievmentManager:award(id)
 	managers.mission:call_global_event(Message.OnAchievement, id)
 end
 
+-- Lines: 366 to 373
+function AchievmentManager:award_enemy_kill_achievement(id)
+	for achievement_id, achievement_data in pairs(tweak_data.achievement.enemy_kill_achievements) do
+		if achievement_id == id then
+			managers.achievment:_award_achievement(achievement_data, achievement_id)
+
+			break
+		end
+	end
+end
+
 -- Lines: 377 to 411
 function AchievmentManager:update()
 	local cur = nil
@@ -549,7 +560,7 @@ function AchievmentManager:_give_reward(id, skip_exp)
 	data.awarded = true
 	self._with_progress[id] = nil
 
-	self:force_track(id, false)
+	self:track(id, false)
 
 	data.unlock_time = self.handler:achievement_unlock_time(id)
 

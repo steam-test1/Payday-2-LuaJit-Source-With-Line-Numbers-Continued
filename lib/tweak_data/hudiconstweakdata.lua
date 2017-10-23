@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2467
+-- Lines: 9 to 2480
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -10820,12 +10820,102 @@ function HudIconsTweakData:init()
 	self.sidebar_crimespree = self:create_next_icon(sidebar_atlas)
 	self.sidebar_filters = self:create_next_icon(sidebar_atlas)
 	self.sidebar_question = self:create_next_icon(sidebar_atlas)
+	self.C_Locke_H_AlsDeal_AllDiffs_D0 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			87,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_AllDiffs_D1 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			174,
+			87,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_AllDiffs_D2 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			174,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_AllDiffs_D3 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			261,
+			87,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_AllDiffs_D4 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			261,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_AllDiffs_D5 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			348,
+			87,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_AllDiffs_D6 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			348,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_HeadlessSnow_D0 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			87,
+			87,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_TheFuelMust_D3 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			0,
+			87,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_AlsDeal_ThereWasRoom_D0 = {
+		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
+		texture_rect = {
+			0,
+			0,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 end
 local atlas_data = nil
 
--- Lines: 2470 to 2473
+-- Lines: 2483 to 2486
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -10838,7 +10928,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2475 to 2490
+-- Lines: 2488 to 2503
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -10864,7 +10954,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2493 to 2497
+-- Lines: 2506 to 2510
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -10878,7 +10968,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2500 to 2505
+-- Lines: 2513 to 2518
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -10889,7 +10979,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2508 to 2513
+-- Lines: 2521 to 2526
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture]
 

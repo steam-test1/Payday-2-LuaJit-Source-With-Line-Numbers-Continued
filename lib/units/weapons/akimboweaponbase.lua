@@ -233,6 +233,23 @@ function AkimboWeaponBase:set_gadget_on(...)
 	end
 end
 
+-- Lines: 206 to 219
+function AkimboWeaponBase:set_gadget_color(...)
+	if not self._enabled then
+		return
+	end
+
+	if not self._assembly_complete then
+		return
+	end
+
+	AkimboWeaponBase.super.set_gadget_color(self, ...)
+
+	if alive(self._second_gun) then
+		self._second_gun:base():set_gadget_color(...)
+	end
+end
+
 -- Lines: 222 to 226
 function AkimboWeaponBase:_second_gun_tweak_data_anim_version(anim)
 	if not self:weapon_tweak_data().animations.second_gun_versions then
@@ -433,7 +450,16 @@ end
 function NPCAkimboWeaponBase:on_melee_item_hidden()
 	if alive(self._second_gun) then
 		self._second_gun:base():on_enabled()
-		self._second_gun:base():set_gadget_on(self:is_gadget_on())
+
+		local active, part_id = self:get_active_gadget()
+
+		if part_id then
+			self._second_gun:base():set_gadget_on_by_part_id(part_id)
+
+			if self._second_gun:base().gadget_color and self._second_gun:base():gadget_color() then
+				self._second_gun:base():set_gadget_color(self._second_gun:base():gadget_color())
+			end
+		end
 	end
 end
 
@@ -443,6 +469,30 @@ function NPCAkimboWeaponBase:set_gadget_on(...)
 
 	if alive(self._second_gun) then
 		self._second_gun:base():set_gadget_on(...)
+	end
+end
+
+-- Lines: 414 to 415
+function NPCAkimboWeaponBase:gadget_color()
+	return self._gadget_color
+end
+
+-- Lines: 419 to 434
+function NPCAkimboWeaponBase:set_gadget_color(color)
+	if not self._enabled then
+		return
+	end
+
+	if not self._assembly_complete then
+		return
+	end
+
+	self._gadget_color = color
+
+	NPCAkimboWeaponBase.super.set_gadget_color(self, color)
+
+	if alive(self._second_gun) then
+		self._second_gun:base():set_gadget_color(color)
 	end
 end
 

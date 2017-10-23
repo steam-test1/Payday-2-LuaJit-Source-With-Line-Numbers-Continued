@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedAchievementTweakData")
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 7 to 1812
+-- Lines: 7 to 1821
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -449,6 +449,11 @@ function AchievementsTweakData:init(tweak_data)
 			trophy_stat = "daily_grenades",
 			grenade_type = "dada_com",
 			is_civilian = false
+		},
+		explosive_kills = {
+			kill = true,
+			explosive = true,
+			challenge_stat = "explosive_kills"
 		}
 	}
 	self.shotgun_single_shot_kills = {tango_1 = {
@@ -682,6 +687,31 @@ function AchievementsTweakData:init(tweak_data)
 		pistol_kills = {
 			weapon_type = "pistol",
 			challenge_stat = "pistol_kills"
+		},
+		lmg_kills = {
+			weapon_type = "lmg",
+			challenge_stat = "lmg_kills"
+		},
+		sniper_kills = {
+			weapon_type = "snp",
+			challenge_stat = "sniper_kills"
+		},
+		critical_kills = {
+			critical = true,
+			challenge_stat = "critical_kills"
+		},
+		explosive_kills = {
+			variant = "explosion",
+			challenge_stat = "explosive_kills"
+		},
+		sentry_kills = {
+			attack_weapon_type = "sentry_gun",
+			challenge_stat = "sentry_kills"
+		},
+		challenge_winters_mutated = {
+			challenge_award = "challenge_winters_mutated",
+			is_vip = true,
+			mutators = {"MutatorHydra"}
 		},
 		any_kills = {challenge_stat = "any_kills"},
 		any_headshot_kills = {
@@ -935,6 +965,16 @@ function AchievementsTweakData:init(tweak_data)
 			melee_id = "push",
 			stat = "aru_1",
 			is_not_civilian = true
+		},
+		critical_kills = {
+			critical = true,
+			is_not_civilian = true,
+			challenge_stat = "critical_kills"
+		},
+		challenge_melee_creeps = {
+			is_not_civilian = true,
+			challenge_stat = "challenge_melee_creeps",
+			mutators = {"MutatorExplodingEnemies"}
 		}
 	}
 	self.complete_heist_achievements = {
@@ -2286,6 +2326,41 @@ function AchievementsTweakData:init(tweak_data)
 			job = "run",
 			difficulty = overkill_and_above
 		},
+		wwh_1 = {
+			award = "wwh_1",
+			job = "wwh",
+			difficulty = normal_and_above
+		},
+		wwh_2 = {
+			award = "wwh_2",
+			job = "wwh",
+			difficulty = hard_and_above
+		},
+		wwh_3 = {
+			award = "wwh_3",
+			job = "wwh",
+			difficulty = veryhard_and_above
+		},
+		wwh_4 = {
+			award = "wwh_4",
+			job = "wwh",
+			difficulty = overkill_and_above
+		},
+		wwh_5 = {
+			award = "wwh_5",
+			job = "wwh",
+			difficulty = easywish_and_above
+		},
+		wwh_6 = {
+			award = "wwh_6",
+			job = "wwh",
+			difficulty = deathwish_and_above
+		},
+		wwh_7 = {
+			award = "wwh_7",
+			job = "wwh",
+			difficulty = sm_wish_and_above
+		},
 		trk_af_0 = {
 			award = "trk_af_0",
 			job = "jolly",
@@ -3535,6 +3610,134 @@ function AchievementsTweakData:init(tweak_data)
 				secondaries = {"wpn_fps_pis_g17"}
 			}
 		},
+		challenge_safehouse_raid = {
+			need_full_job = true,
+			challenge_stat = "challenge_safehouse_raid",
+			jobs = {"chill_combat"}
+		},
+		challenge_xmas_white = {
+			need_full_job = true,
+			challenge_award = "challenge_xmas_white",
+			jobs = {"pines"}
+		},
+		challenge_xmas_santas = {
+			need_full_job = true,
+			challenge_award = "challenge_xmas_santas",
+			jobs = {"cane"}
+		},
+		challenge_xmas_stealing = {
+			need_full_job = true,
+			challenge_award = "challenge_xmas_stealing",
+			jobs = {"moon"}
+		},
+		challenge_art_ghost = {
+			everyone_killed_by_melee = 0,
+			challenge_award = "challenge_art_ghost",
+			everyone_killed_by_weapons = 0,
+			job = "gallery",
+			everyone_killed_by_grenade = 0,
+			stealth = true,
+			secured = {
+				carry_id = "painting",
+				total_amount = 9
+			}
+		},
+		challenge_cookoff_mutated = {
+			need_full_job = true,
+			challenge_award = "challenge_cookoff_mutated",
+			mutators = 6,
+			job = "rat"
+		},
+		challenge_mallcrasher_stealth = {
+			need_full_job = true,
+			challenge_award = "challenge_mallcrasher_stealth",
+			stealth = true,
+			job = "mallcrasher"
+		},
+		challenge_rats_pacifist = {
+			need_full_job = true,
+			challenge_award = "challenge_rats_pacifist",
+			job = "alex",
+			memory = {is_shortterm = false}
+		},
+		challenge_crime_spree = {
+			crime_spree = true,
+			challenge_stat = "challenge_crime_spree"
+		},
+		challenge_clone_1 = {
+			challenge_award = "challenge_clone_1",
+			need_full_job = true,
+			difficulty = overkill_and_above,
+			jobs = {"hox"},
+			mutators = {{
+				id = "MutatorEnemyReplacer",
+				override_enemy = "tank"
+			}}
+		},
+		challenge_clone_2 = {
+			challenge_award = "challenge_clone_2",
+			need_full_job = true,
+			difficulty = overkill_and_above,
+			jobs = {
+				"welcome_to_the_jungle_wrapper_prof",
+				"welcome_to_the_jungle_night_prof",
+				"welcome_to_the_jungle_prof"
+			},
+			mutators = {{
+				id = "MutatorEnemyReplacer",
+				override_enemy = "taser"
+			}}
+		},
+		challenge_clone_3 = {
+			challenge_award = "challenge_clone_3",
+			need_full_job = true,
+			difficulty = overkill_and_above,
+			jobs = {
+				"watchdogs_wrapper",
+				"watchdogs_night",
+				"watchdogs"
+			},
+			mutators = {{
+				id = "MutatorEnemyReplacer",
+				override_enemy = "shield"
+			}}
+		},
+		challenge_clone_4 = {
+			challenge_award = "challenge_clone_4",
+			need_full_job = true,
+			difficulty = overkill_and_above,
+			jobs = {"help"},
+			mutators = {{
+				id = "MutatorEnemyReplacer",
+				override_enemy = "spooc"
+			}}
+		},
+		challenge_clone_5 = {
+			challenge_award = "challenge_clone_5",
+			need_full_job = true,
+			difficulty = overkill_and_above,
+			jobs = {"red2"},
+			mutators = {{
+				id = "MutatorEnemyReplacer",
+				override_enemy = "medic"
+			}}
+		},
+		monthly_prison = {
+			everyone_killed_by_grenade = 0,
+			challenge_award = "monthly_prison",
+			everyone_killed_by_weapons = 0,
+			job = "help",
+			difficulty = overkill_and_above
+		},
+		monthly_tabula = {
+			challenge_award = "monthly_tabula",
+			crime_spree = 100,
+			equipped_team = {
+				num_skills = 0,
+				primaries = {"wpn_fps_ass_amcar"},
+				secondaries = {"wpn_fps_pis_g17"}
+			}
+		},
 		trophy_transport_crossroads = {
 			trophy_stat = "trophy_transport_crossroads",
 			level_id = "arm_cro",
@@ -4061,6 +4264,24 @@ function AchievementsTweakData:init(tweak_data)
 			job = "friend",
 			story = "story_very_hard_scarface",
 			difficulty = veryhard_and_above
+		},
+		challenge_srtd = {
+			everyone_killed_by_melee = 0,
+			everyone_killed_by_grenade = 0,
+			job = "chill_combat",
+			challenge_award = "challenge_srtd",
+			difficulty = overkill_and_above,
+			everyone_weapons_used = {
+				"sentry_gun",
+				"swat_van_turret_module"
+			}
+		},
+		challenge_geneva = {
+			complete_job = true,
+			challenge_award = "challenge_geneva",
+			job = "red2",
+			difficulty = overkill_and_above,
+			killed = {medic = 0}
 		}
 	}
 	self.check_equipment_memory_on_leave = {
@@ -5165,6 +5386,10 @@ function AchievementsTweakData:init(tweak_data)
 			level = 20
 		}
 	}
+	self.medic_heal_achievements = {challenge_overheal = {
+		total = 50,
+		challenge_award = "challenge_overheal"
+	}}
 	local gage_5_1_achievement = {
 		max_progress = 25,
 		stat = "gage5_1_stats",
@@ -5505,7 +5730,7 @@ function AchievementsTweakData:init(tweak_data)
 end
 
 
--- Lines: 1816 to 1842
+-- Lines: 1825 to 1851
 local function get_texture_path(tweak_data, category, id)
 	local td = tweak_data:get_raw_value("blackmarket", category, id)
 	local rtn = {}
@@ -5538,7 +5763,7 @@ local tracking = {
 }
 
 
--- Lines: 1860 to 1886
+-- Lines: 1869 to 1895
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5550,7 +5775,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 1869 to 1879
+	-- Lines: 1878 to 1888
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5581,7 +5806,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 1889 to 1893
+-- Lines: 1898 to 1902
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5595,7 +5820,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 1896 to 1903
+-- Lines: 1905 to 1912
 local function from_level(level)
 	if not level then
 		error()
@@ -5612,7 +5837,7 @@ local function from_level(level)
 end
 
 
--- Lines: 1906 to 1913
+-- Lines: 1915 to 1922
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5629,7 +5854,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 1916 to 1926
+-- Lines: 1925 to 1935
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5652,7 +5877,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 1934 to 2136
+-- Lines: 1943 to 2145
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -5799,7 +6024,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2173 to 2293
+-- Lines: 2182 to 2302
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -5921,7 +6146,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.steel_2.progress = {
 		get = function ()
 			if table.contains(steel_2.melee_weapons, managers.blackmarket:equipped_melee_weapon()) then
-				return managers.statistics:session_enemy_killed_by_type(achievement_data.enemy_kills.enemy, "melee")
+				return managers.statistics:session_enemy_killed_by_type(steel_2.enemy_kills.enemy, "melee")
 			end
 
 			return 0

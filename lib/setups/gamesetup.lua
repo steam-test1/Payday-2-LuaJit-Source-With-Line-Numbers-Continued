@@ -204,7 +204,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines: 301 to 444
+-- Lines: 301 to 443
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -236,6 +236,36 @@ function GameSetup:load_packages()
 		end
 	end
 
+	local job_tweak_contact_data, job_tweak_package_data = nil
+
+	if Global.job_manager and Global.job_manager.current_job and Global.job_manager.current_job.job_id then
+		job_tweak_contact_data = tweak_data.narrative:job_data(Global.job_manager.current_job.job_id)
+		job_tweak_package_data = tweak_data.narrative:job_data(Global.job_manager.current_job.job_id, true)
+	end
+
+	self._loaded_diff_packages = {}
+
+
+	-- Lines: 337 to 342
+	local function load_difficulty_package(package_name)
+		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
+			table.insert(self._loaded_diff_packages, package_name)
+			PackageManager:load(package_name)
+		end
+	end
+
+	if job_tweak_package_data and job_tweak_package_data.load_all_difficulty_packages then
+		for i, difficulty in ipairs(tweak_data.difficulties) do
+			local diff_package = "packages/" .. (difficulty or "normal")
+
+			load_difficulty_package(diff_package)
+		end
+	else
+		local diff_package = "packages/" .. (Global.game_settings and Global.game_settings.difficulty or "normal")
+
+		load_difficulty_package(diff_package)
+	end
+
 	local level_package = nil
 
 	if not Global.level_data or not Global.level_data.level_id then
@@ -261,13 +291,6 @@ function GameSetup:load_packages()
 
 			PackageManager:load(level_package)
 		end
-	end
-
-	local job_tweak_contact_data, job_tweak_package_data = nil
-
-	if Global.job_manager and Global.job_manager.current_job and Global.job_manager.current_job.job_id then
-		job_tweak_contact_data = tweak_data.narrative:job_data(Global.job_manager.current_job.job_id)
-		job_tweak_package_data = tweak_data.narrative:job_data(Global.job_manager.current_job.job_id, true)
 	end
 
 	local contact = nil
@@ -319,29 +342,6 @@ function GameSetup:load_packages()
 		end
 	end
 
-	self._loaded_diff_packages = {}
-
-
-	-- Lines: 418 to 423
-	local function load_difficulty_package(package_name)
-		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
-			table.insert(self._loaded_diff_packages, package_name)
-			PackageManager:load(package_name)
-		end
-	end
-
-	if job_tweak_package_data and job_tweak_package_data.load_all_difficulty_packages then
-		for i, difficulty in ipairs(tweak_data.difficulties) do
-			local diff_package = "packages/" .. (difficulty or "normal")
-
-			load_difficulty_package(diff_package)
-		end
-	else
-		local diff_package = "packages/" .. (Global.game_settings and Global.game_settings.difficulty or "normal")
-
-		load_difficulty_package(diff_package)
-	end
-
 	if Global.mutators and Global.mutators.active_on_load and table.size(Global.mutators.active_on_load) > 0 and PackageManager:package_exists(MutatorsManager.package) and not PackageManager:loaded(MutatorsManager.package) then
 		self._mutators_package = MutatorsManager.package
 
@@ -349,7 +349,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines: 446 to 518
+-- Lines: 445 to 517
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -421,12 +421,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines: 520 to 522
+-- Lines: 519 to 521
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines: 524 to 564
+-- Lines: 523 to 563
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -460,7 +460,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines: 566 to 607
+-- Lines: 565 to 606
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -507,7 +507,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines: 610 to 652
+-- Lines: 609 to 651
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -553,7 +553,7 @@ function GameSetup:init_finalize()
 	end
 end
 
--- Lines: 654 to 695
+-- Lines: 653 to 694
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -582,7 +582,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 697 to 707
+-- Lines: 696 to 706
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -594,7 +594,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 709 to 725
+-- Lines: 708 to 724
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -608,13 +608,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 727 to 732
+-- Lines: 726 to 731
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 734 to 758
+-- Lines: 733 to 757
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -639,7 +639,7 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 end
 
--- Lines: 760 to 785
+-- Lines: 759 to 784
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -665,7 +665,7 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 end
 
--- Lines: 818 to 819
+-- Lines: 817 to 818
 function GameSetup:_update_debug_input()
 end
 

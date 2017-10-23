@@ -726,7 +726,7 @@ end
 AchievementListGui = AchievementListGui or class(ExtendedPanel)
 AchievementListGui.ADD_PER_UPDATE = 20
 
--- Lines: 530 to 646
+-- Lines: 530 to 648
 function AchievementListGui:init(ws, fullscreen_ws, node)
 	if AchievementListGui.panel_crash_protection then
 		AchievementListGui.panel_crash_protection:remove_self()
@@ -914,7 +914,7 @@ function AchievementListGui:init(ws, fullscreen_ws, node)
 		self:_do_popup(AchievementRecentListGui:new(self, recent_list, callback(self, self, "_on_popup_done")))
 	end
 
-	if managers.achievment.handler.friends_achievements_cache then
+	if managers.achievment.handler.friends_achievements_cache and managers.network.account:signin_state() == "signed in" then
 		managers.achievment.handler:friends_achievements_cache(function (ok)
 			print("[Ach]", "cache result", ok)
 
@@ -927,7 +927,7 @@ function AchievementListGui:init(ws, fullscreen_ws, node)
 	end
 end
 
--- Lines: 648 to 654
+-- Lines: 650 to 656
 function AchievementListGui:_toggle_tracked()
 	if self._view_tracked then
 		self:_show_all()
@@ -936,7 +936,7 @@ function AchievementListGui:_toggle_tracked()
 	end
 end
 
--- Lines: 656 to 668
+-- Lines: 658 to 670
 function AchievementListGui:_show_tracked()
 	self._view_tracked = true
 
@@ -952,7 +952,7 @@ function AchievementListGui:_show_tracked()
 	end
 end
 
--- Lines: 670 to 681
+-- Lines: 672 to 683
 function AchievementListGui:_show_all()
 	self._view_tracked = false
 
@@ -969,7 +969,7 @@ function AchievementListGui:_show_all()
 end
 
 
--- Lines: 683 to 688
+-- Lines: 685 to 690
 local function count_done(list)
 	local count = 0
 
@@ -981,7 +981,7 @@ local function count_done(list)
 end
 
 
--- Lines: 691 to 752
+-- Lines: 693 to 754
 function AchievementListGui:generate_side_panel()
 	self._filter_panel:clear()
 
@@ -1074,7 +1074,7 @@ function AchievementListGui:generate_side_panel()
 	self:update_detail()
 end
 
--- Lines: 754 to 792
+-- Lines: 756 to 794
 function AchievementListGui:update_detail()
 	self._detail_scroll:clear()
 
@@ -1136,7 +1136,7 @@ function AchievementListGui:update_detail()
 	add_achievement_detail_text(self._detail_scroll, placer, visual, tweak_data.screen_colors.achievement_grey)
 end
 
--- Lines: 794 to 842
+-- Lines: 796 to 844
 function AchievementListGui:update(...)
 	self:keep_filling_list()
 
@@ -1189,7 +1189,7 @@ function AchievementListGui:update(...)
 	end
 end
 
--- Lines: 844 to 932
+-- Lines: 846 to 934
 function AchievementListGui:filter(list)
 	local data = Global.achievements_filters or {}
 	data.tags = data.tags or {}
@@ -1258,7 +1258,7 @@ function AchievementListGui:filter(list)
 	return list, filtered
 end
 
--- Lines: 935 to 944
+-- Lines: 937 to 946
 function AchievementListGui:sort(list, order_setting)
 	local data = Global.achievements_filters or {}
 	local sorters = {
@@ -1276,7 +1276,7 @@ function AchievementListGui:sort(list, order_setting)
 	table.sort(list, sort)
 end
 
--- Lines: 946 to 965
+-- Lines: 948 to 967
 function AchievementListGui:filter_and_sort()
 	local data = Global.achievements_filters or {}
 	data.tags = data.tags or {}
@@ -1288,7 +1288,7 @@ function AchievementListGui:filter_and_sort()
 	self:set_list(list)
 end
 
--- Lines: 967 to 976
+-- Lines: 969 to 978
 function AchievementListGui:set_list(list)
 	local iter, array, at = ipairs(list)
 	self._adding_to_data = {
@@ -1305,7 +1305,7 @@ function AchievementListGui:set_list(list)
 	self:generate_side_panel()
 end
 
--- Lines: 978 to 997
+-- Lines: 980 to 999
 function AchievementListGui:keep_filling_list()
 	if not self._adding_to_data then
 		return
@@ -1330,7 +1330,7 @@ function AchievementListGui:keep_filling_list()
 	self._adding_to_data = nil
 end
 
--- Lines: 999 to 1018
+-- Lines: 1001 to 1020
 function AchievementListGui:close()
 	if self._panel then
 		self:remove_self()
@@ -1355,7 +1355,7 @@ function AchievementListGui:close()
 	end
 end
 
--- Lines: 1020 to 1028
+-- Lines: 1022 to 1030
 function AchievementListGui:show_blur()
 	if not alive(self._blur_ws) then
 		self._blur_ws = managers.gui_data:create_fullscreen_workspace()
@@ -1381,7 +1381,7 @@ function AchievementListGui:show_blur()
 	end
 end
 
--- Lines: 1030 to 1036
+-- Lines: 1032 to 1038
 function AchievementListGui:remove_blur()
 	if alive(self._blur_ws) then
 		self._blur:parent():remove(self._blur)
@@ -1391,7 +1391,7 @@ function AchievementListGui:remove_blur()
 	end
 end
 
--- Lines: 1038 to 1043
+-- Lines: 1040 to 1045
 function AchievementListGui:_on_preview()
 	local selected = self._scroll:selected_item()
 
@@ -1400,7 +1400,7 @@ function AchievementListGui:_on_preview()
 	end
 end
 
--- Lines: 1045 to 1050
+-- Lines: 1047 to 1052
 function AchievementListGui:_on_force()
 	local selected = self._scroll:selected_item()
 
@@ -1409,7 +1409,7 @@ function AchievementListGui:_on_force()
 	end
 end
 
--- Lines: 1052 to 1057
+-- Lines: 1054 to 1059
 function AchievementListGui:_on_toggle_tracked()
 	local selected = self._scroll:selected_item()
 
@@ -1418,7 +1418,7 @@ function AchievementListGui:_on_toggle_tracked()
 	end
 end
 
--- Lines: 1059 to 1065
+-- Lines: 1061 to 1067
 function AchievementListGui:_on_toggle_unlocked()
 	Global.achievements_filters = Global.achievements_filters or {}
 	local data = Global.achievements_filters
@@ -1427,7 +1427,7 @@ function AchievementListGui:_on_toggle_unlocked()
 	self:filter_and_sort()
 end
 
--- Lines: 1067 to 1074
+-- Lines: 1069 to 1076
 function AchievementListGui:_do_popup(gui)
 	if not gui then
 		return
@@ -1441,7 +1441,7 @@ function AchievementListGui:_do_popup(gui)
 	self:show_blur()
 end
 
--- Lines: 1076 to 1083
+-- Lines: 1078 to 1085
 function AchievementListGui:_on_popup_done()
 	if self._popup then
 		self._popup:close()
@@ -1454,7 +1454,7 @@ function AchievementListGui:_on_popup_done()
 	self._main_panel.enabled = true
 end
 
--- Lines: 1085 to 1089
+-- Lines: 1087 to 1091
 function AchievementListGui:_on_filters_done()
 	self:remove_blur()
 	self:filter_and_sort()
@@ -1464,7 +1464,7 @@ function AchievementListGui:_on_filters_done()
 	end
 end
 
--- Lines: 1091 to 1097
+-- Lines: 1093 to 1099
 function AchievementListGui:open_filter_popup()
 	managers.menu:open_node("achievements_filter", {{
 		on_filters_done = callback(self, self, "_on_filters_done"),
@@ -1475,7 +1475,7 @@ function AchievementListGui:open_filter_popup()
 	self:show_blur()
 end
 
--- Lines: 1099 to 1109
+-- Lines: 1101 to 1111
 function AchievementListGui:_clear_filters()
 	local data = Global.achievements_filters or {}
 	data.hide_unlocked = nil
@@ -1485,17 +1485,17 @@ function AchievementListGui:_clear_filters()
 	self:filter_and_sort()
 end
 
--- Lines: 1111 to 1112
+-- Lines: 1113 to 1114
 function AchievementListGui.default_order(lhs, rhs)
 	return lhs.data.sort_name < rhs.data.sort_name
 end
 
--- Lines: 1115 to 1116
+-- Lines: 1117 to 1118
 function AchievementListGui.alphabetical_order(lhs, rhs)
 	return lhs.title < rhs.title
 end
 
--- Lines: 1119 to 1130
+-- Lines: 1121 to 1132
 function AchievementListGui.chronological_order(lhs, rhs)
 	if lhs.info.unlock_time and rhs.info.unlock_time then
 		if lhs.info.unlock_time == rhs.info.unlock_time then
@@ -1512,7 +1512,7 @@ function AchievementListGui.chronological_order(lhs, rhs)
 	return lhs.info.awarded
 end
 
--- Lines: 1133 to 1157
+-- Lines: 1135 to 1159
 function AchievementListGui.progress_order(lhs, rhs)
 	local lp = lhs.data.progress
 	local rp = rhs.data.progress
@@ -1545,10 +1545,10 @@ function AchievementListGui.progress_order(lhs, rhs)
 	end
 end
 
--- Lines: 1169 to 1171
+-- Lines: 1171 to 1173
 function AchievementListGui.create_tracked_then_other_order(other_sort)
 
-	-- Lines: 1161 to 1169
+	-- Lines: 1163 to 1171
 	local function func(lhs, rhs)
 		if lhs.info.forced or rhs.info.forced then
 			if lhs.info.forced == rhs.info.forced then
@@ -1564,17 +1564,17 @@ function AchievementListGui.create_tracked_then_other_order(other_sort)
 	return func
 end
 
--- Lines: 1175 to 1176
+-- Lines: 1177 to 1178
 function AchievementListGui:allow_input()
 	return not alive(self._blur_ws) or self._popup
 end
 
--- Lines: 1179 to 1180
+-- Lines: 1181 to 1182
 function AchievementListGui:input_focus()
 	return self:allow_input() and (self._popup and true or 1)
 end
 
--- Lines: 1183 to 1184
+-- Lines: 1185 to 1186
 function AchievementListGui:back_pressed()
 	return AchievementListGui.super.back_pressed(self)
 end

@@ -1871,6 +1871,10 @@ function WINDLCManager:init()
 			dnm = {
 				app_id = "218620",
 				no_install = true
+			},
+			wwh = {
+				app_id = "218620",
+				no_install = true
 			}
 		}
 
