@@ -6,7 +6,7 @@ PlayerDamage._ARMOR_DAMAGE_REDUCTION = tweak_data.player.damage.ARMOR_DAMAGE_RED
 PlayerDamage._ARMOR_DAMAGE_REDUCTION_STEPS = tweak_data.player.damage.ARMOR_DAMAGE_REDUCTION_STEPS
 PlayerDamage._UPPERS_COOLDOWN = 20
 
--- Lines: 19 to 150
+-- Lines: 19 to 158
 function PlayerDamage:init(unit)
 	self._lives_init = tweak_data.player.damage.LIVES_INIT
 
@@ -166,12 +166,17 @@ function PlayerDamage:init(unit)
 		self:set_mission_damage_blockers("damage_fall_disabled", true)
 		self:set_mission_damage_blockers("invulnerable", true)
 	end
+
+	self._delayed_damage = {
+		epsilon = 0.001,
+		chunks = {}
+	}
 end
 
--- Lines: 153 to 162
+-- Lines: 161 to 170
 function PlayerDamage:_init_standard_listeners()
 
-	-- Lines: 153 to 154
+	-- Lines: 161 to 162
 	function self._on_damage_callback_func()
 		return callback(self, self, "_on_damage_event")
 	end
@@ -186,17 +191,19 @@ function PlayerDamage:_init_standard_listeners()
 	end
 end
 
--- Lines: 164 to 167
+-- Lines: 172 to 175
 function PlayerDamage:_on_use_armor_bag_event()
 	self:_init_armor_grinding_data()
 	self:_regenerate_armor()
 end
 
--- Lines: 170 to 179
+-- Lines: 178 to 188
 function PlayerDamage:_on_damage_event()
 	self:set_regenerate_timer_to_max()
 
-	if self:get_real_armor() <= 0 and self._has_damage_speed then
+	local armor_broken = self:_max_armor() > 0 and self:get_real_armor() <= 0
+
+	if armor_broken and self._has_damage_speed then
 		managers.player:activate_temporary_upgrade("temporary", "damage_speed_multiplier")
 
 		if self._has_damage_speed_team then
@@ -205,12 +212,12 @@ function PlayerDamage:_on_damage_event()
 	end
 end
 
--- Lines: 182 to 184
+-- Lines: 191 to 193
 function PlayerDamage:_on_damage_armor_grinding()
 	self._current_state = self._update_armor_grinding
 end
 
--- Lines: 186 to 197
+-- Lines: 195 to 206
 function PlayerDamage:_init_armor_grinding_data()
 	local armor_grinding_data = managers.player:upgrade_value("player", "armor_grinding", nil)
 
@@ -229,12 +236,12 @@ function PlayerDamage:_init_armor_grinding_data()
 	return false
 end
 
--- Lines: 201 to 203
+-- Lines: 210 to 212
 function PlayerDamage:_on_enter_bleedout_event()
 	self:_remove_on_damage_event()
 end
 
--- Lines: 205 to 214
+-- Lines: 214 to 223
 function PlayerDamage:_on_enter_swansong_event()
 	self:_remove_on_damage_event()
 
@@ -248,7 +255,7 @@ function PlayerDamage:_on_enter_swansong_event()
 	end
 end
 
--- Lines: 216 to 221
+-- Lines: 225 to 230
 function PlayerDamage:_on_exit_swansong_event()
 	self.swansong = nil
 
@@ -257,12 +264,12 @@ function PlayerDamage:_on_exit_swansong_event()
 	end
 end
 
--- Lines: 223 to 225
+-- Lines: 232 to 234
 function PlayerDamage:_activate_combat_medic_damage_reduction()
 	managers.player:activate_temporary_upgrade("temporary", "revive_damage_reduction")
 end
 
--- Lines: 227 to 231
+-- Lines: 236 to 240
 function PlayerDamage:_on_revive_event()
 	self:_add_on_damage_event()
 
@@ -270,12 +277,12 @@ function PlayerDamage:_on_revive_event()
 	self.swansong = nil
 end
 
--- Lines: 233 to 235
+-- Lines: 242 to 244
 function PlayerDamage:_remove_on_damage_event()
 	self._listener_holder:remove("on_damage")
 end
 
--- Lines: 237 to 239
+-- Lines: 246 to 248
 function PlayerDamage:_add_on_damage_event()
 	self._listener_holder:add("on_damage", {
 		"on_damage",
@@ -283,24 +290,24 @@ function PlayerDamage:_add_on_damage_event()
 	}, self:_on_damage_callback_func())
 end
 
--- Lines: 241 to 244
+-- Lines: 250 to 253
 function PlayerDamage:recharge_pistol_messiah()
 	local recharge = managers.player:upgrade_value("player", "recharge_pistol_messiah", 0)
 	self._messiah_charges = math.max(self._messiah_charges + recharge, 1)
 end
 
--- Lines: 246 to 248
+-- Lines: 255 to 257
 function PlayerDamage:post_init()
 	self:send_set_status()
 end
 
--- Lines: 250 to 258
+-- Lines: 259 to 267
 function PlayerDamage:send_set_status()
 	self:_send_set_armor()
 	self:_send_set_health()
 end
 
--- Lines: 261 to 275
+-- Lines: 270 to 284
 function PlayerDamage:force_into_bleedout(can_activate_berserker)
 	if self:incapacitated() or self:arrested() then
 		return
@@ -321,7 +328,7 @@ function PlayerDamage:force_into_bleedout(can_activate_berserker)
 	self:_set_health_effect()
 end
 
--- Lines: 277 to 431
+-- Lines: 286 to 446
 function PlayerDamage:update(unit, t, dt)
 	self:_check_update_max_health()
 	self:_check_update_max_armor()
@@ -487,9 +494,13 @@ function PlayerDamage:update(unit, t, dt)
 	if not self._dead and not self._bleed_out and not self._check_berserker_done then
 		self:_upd_health_regen(t, dt)
 	end
+
+	if not self:is_downed() then
+		self:_update_delayed_damage(t, dt)
+	end
 end
 
--- Lines: 433 to 438
+-- Lines: 448 to 453
 function PlayerDamage:get_revives()
 	local revives = 0
 
@@ -500,7 +511,7 @@ function PlayerDamage:get_revives()
 	return revives
 end
 
--- Lines: 442 to 451
+-- Lines: 457 to 466
 function PlayerDamage:_update_armor_hud(t, dt)
 	local real_armor = self:get_real_armor()
 	self._current_armor_fill = math.lerp(self._current_armor_fill, real_armor, 10 * dt)
@@ -508,8 +519,7 @@ function PlayerDamage:_update_armor_hud(t, dt)
 	if math.abs(self._current_armor_fill - real_armor) > 0.01 then
 		managers.hud:set_player_armor({
 			current = self._current_armor_fill,
-			total = self:_total_armor(),
-			max = self:_max_armor()
+			total = self:_max_armor()
 		})
 	end
 
@@ -518,7 +528,7 @@ function PlayerDamage:_update_armor_hud(t, dt)
 	end
 end
 
--- Lines: 453 to 459
+-- Lines: 468 to 474
 function PlayerDamage:_update_regenerate_timer(t, dt)
 	self._regenerate_timer = math.max(self._regenerate_timer - dt * (self._regenerate_speed or 1), 0)
 
@@ -527,7 +537,7 @@ function PlayerDamage:_update_regenerate_timer(t, dt)
 	end
 end
 
--- Lines: 462 to 468
+-- Lines: 477 to 483
 function PlayerDamage:_update_armor_grinding(t, dt)
 	self._armor_grinding.elapsed = self._armor_grinding.elapsed + dt
 
@@ -538,7 +548,7 @@ function PlayerDamage:_update_armor_grinding(t, dt)
 	end
 end
 
--- Lines: 474 to 487
+-- Lines: 489 to 502
 function PlayerDamage:band_aid_health()
 	if managers.platform:presence() == "Playing" and (self:arrested() or self:need_revive()) then
 		return
@@ -556,7 +566,7 @@ function PlayerDamage:band_aid_health()
 	end
 end
 
--- Lines: 489 to 496
+-- Lines: 504 to 511
 function PlayerDamage:recover_health()
 	if managers.platform:presence() == "Playing" and (self:arrested() or self:need_revive()) then
 		self:revive(true)
@@ -570,7 +580,7 @@ function PlayerDamage:recover_health()
 	})
 end
 
--- Lines: 498 to 508
+-- Lines: 513 to 523
 function PlayerDamage:replenish()
 	if (Application:editor() or managers.platform:presence() == "Playing") and (self:arrested() or self:need_revive()) then
 		self:revive(true)
@@ -587,7 +597,7 @@ function PlayerDamage:replenish()
 	SoundDevice:set_rtpc("downed_state_progression", 0)
 end
 
--- Lines: 512 to 521
+-- Lines: 527 to 536
 function PlayerDamage:_regenerate_armor(no_sound)
 	if self._unit:sound() and not no_sound then
 		self._unit:sound():play("shield_full_indicator")
@@ -601,16 +611,16 @@ function PlayerDamage:_regenerate_armor(no_sound)
 	self._current_state = nil
 end
 
--- Lines: 523 to 524
+-- Lines: 538 to 539
 function PlayerDamage:is_regenerating_armor()
 	return self._current_state == self._update_regenerate_timer
 end
 
--- Lines: 527 to 528
+-- Lines: 542 to 543
 function PlayerDamage:_inline_RIP1()
 end
 
--- Lines: 530 to 541
+-- Lines: 545 to 556
 function PlayerDamage:restore_health(health_restored, is_static, chk_health_ratio)
 	if chk_health_ratio and managers.player:is_damage_health_ratio_active(self:health_ratio()) then
 		return false
@@ -625,7 +635,7 @@ function PlayerDamage:restore_health(health_restored, is_static, chk_health_rati
 	end
 end
 
--- Lines: 543 to 557
+-- Lines: 558 to 572
 function PlayerDamage:restore_armor(armor_restored)
 	if self._dead or self._bleed_out or self._check_berserker_done then
 		return
@@ -643,7 +653,7 @@ function PlayerDamage:restore_armor(armor_restored)
 	end
 end
 
--- Lines: 559 to 577
+-- Lines: 574 to 592
 function PlayerDamage:update_armor_stored_health()
 	if managers.hud then
 		local max_health = self:_max_health()
@@ -659,14 +669,14 @@ function PlayerDamage:update_armor_stored_health()
 	end
 end
 
--- Lines: 579 to 583
+-- Lines: 594 to 598
 function PlayerDamage:change_regenerate_speed(value, percent)
 	if self._regenerate_speed then
 		self._regenerate_speed = percent and self._regenerate_speed * value or self._regenerate_speed + value
 	end
 end
 
--- Lines: 585 to 595
+-- Lines: 600 to 610
 function PlayerDamage:max_armor_stored_health()
 	if not managers.player:has_category_upgrade("player", "armor_health_store_amount") then
 		return 0
@@ -679,22 +689,24 @@ function PlayerDamage:max_armor_stored_health()
 	return max
 end
 
--- Lines: 598 to 599
+-- Lines: 613 to 614
 function PlayerDamage:can_store_armor_health()
 	return self:get_real_armor() > 0 and not self._dead and not self._bleed_out and not self._check_berserker_done
 end
 
--- Lines: 602 to 603
+-- Lines: 617 to 618
 function PlayerDamage:armor_stored_health(amount)
 	return self._armor_stored_health
 end
 
--- Lines: 606 to 607
+-- Lines: 621 to 623
 function PlayerDamage:armor_ratio()
-	return self:get_real_armor() / self:_max_armor()
+	local max_armor = self:_max_armor()
+
+	return max_armor ~= 0 and self:get_real_armor() / max_armor or 0
 end
 
--- Lines: 610 to 620
+-- Lines: 626 to 636
 function PlayerDamage:add_armor_stored_health(amount)
 	self._armor_stored_health = math.min(self._armor_stored_health + amount, self:max_armor_stored_health())
 
@@ -705,7 +717,7 @@ function PlayerDamage:add_armor_stored_health(amount)
 	end
 end
 
--- Lines: 622 to 630
+-- Lines: 638 to 646
 function PlayerDamage:clear_armor_stored_health()
 	self._armor_stored_health = 0
 
@@ -714,7 +726,7 @@ function PlayerDamage:clear_armor_stored_health()
 	end
 end
 
--- Lines: 632 to 637
+-- Lines: 648 to 653
 function PlayerDamage:consume_armor_stored_health(amount)
 	if self._armor_stored_health and not self._dead and not self._bleed_out and not self._check_berserker_done then
 		self:change_health(self._armor_stored_health)
@@ -723,7 +735,7 @@ function PlayerDamage:consume_armor_stored_health(amount)
 	self:clear_armor_stored_health()
 end
 
--- Lines: 640 to 655
+-- Lines: 656 to 671
 function PlayerDamage:_regenerated(no_messiah)
 	self:set_health(self:_max_health())
 	self:_send_set_health()
@@ -742,7 +754,7 @@ function PlayerDamage:_regenerated(no_messiah)
 	end
 end
 
--- Lines: 657 to 663
+-- Lines: 673 to 679
 function PlayerDamage:consume_messiah_charge()
 	if self:got_messiah_charges() then
 		self._messiah_charges = self._messiah_charges - 1
@@ -753,22 +765,22 @@ function PlayerDamage:consume_messiah_charge()
 	return false
 end
 
--- Lines: 666 to 667
+-- Lines: 682 to 683
 function PlayerDamage:got_messiah_charges()
 	return self._messiah_charges and self._messiah_charges > 0
 end
 
--- Lines: 672 to 673
+-- Lines: 688 to 689
 function PlayerDamage:get_real_health()
 	return Application:digest_value(self._health, false)
 end
 
--- Lines: 676 to 677
+-- Lines: 692 to 693
 function PlayerDamage:get_real_armor()
 	return Application:digest_value(self._armor, false)
 end
 
--- Lines: 680 to 693
+-- Lines: 696 to 709
 function PlayerDamage:_check_update_max_health()
 	local max_health = self:_max_health()
 	self._current_max_health = self._current_max_health or self:_max_health()
@@ -783,14 +795,14 @@ function PlayerDamage:_check_update_max_health()
 	end
 end
 
--- Lines: 695 to 697
+-- Lines: 711 to 713
 function PlayerDamage:change_health(change_of_health)
 	self:_check_update_max_health()
 
 	return self:set_health(self:get_real_health() + change_of_health)
 end
 
--- Lines: 700 to 717
+-- Lines: 716 to 733
 function PlayerDamage:set_health(health)
 	self:_check_update_max_health()
 
@@ -815,26 +827,26 @@ function PlayerDamage:set_health(health)
 	return prev_health ~= Application:digest_value(self._health, false)
 end
 
--- Lines: 720 to 732
+-- Lines: 736 to 748
 function PlayerDamage:_check_update_max_armor()
 	local max_armor = self:_max_armor()
-	self._current_max_armor = self._current_max_armor or self:_max_armor()
+	self._current_max_armor = self._current_max_armor or max_armor
 
 	if self._current_max_armor ~= max_armor then
-		local ratio = max_armor / self._current_max_armor
+		local ratio = self._current_max_armor ~= 0 and max_armor / self._current_max_armor or 0
 		self._current_armor_fill = self._current_armor_fill * ratio
 		self._armor = Application:digest_value(math.clamp(self:get_real_armor() * ratio, 0, max_armor), true)
 		self._current_max_armor = max_armor
 	end
 end
 
--- Lines: 734 to 737
+-- Lines: 750 to 753
 function PlayerDamage:change_armor(change)
 	self:_check_update_max_armor()
 	self:set_armor(self:get_real_armor() + change)
 end
 
--- Lines: 739 to 755
+-- Lines: 755 to 771
 function PlayerDamage:set_armor(armor)
 	self:_check_update_max_armor()
 
@@ -847,7 +859,7 @@ function PlayerDamage:set_armor(armor)
 			self:consume_armor_stored_health()
 		elseif current_armor ~= 0 and armor == 0 and self._dire_need then
 
-			-- Lines: 748 to 749
+			-- Lines: 764 to 765
 			local function clbk()
 				return self:is_regenerating_armor()
 			end
@@ -859,23 +871,23 @@ function PlayerDamage:set_armor(armor)
 	self._armor = Application:digest_value(armor, true)
 end
 
--- Lines: 758 to 759
+-- Lines: 774 to 775
 function PlayerDamage:down_time()
 	return self._down_time
 end
 
--- Lines: 762 to 763
+-- Lines: 778 to 779
 function PlayerDamage:health_ratio()
 	return self:get_real_health() / self:_max_health()
 end
 
--- Lines: 766 to 767
+-- Lines: 782 to 783
 function PlayerDamage:health_ratio_100()
-	return math.floor(self:get_real_health() / self:_max_health() * 100)
+	return math.floor(self:health_ratio() * 100)
 end
 
--- Lines: 770 to 776
-function PlayerDamage:_max_health()
+-- Lines: 786 to 792
+function PlayerDamage:_raw_max_health()
 	local base_max_health = self._HEALTH_INIT + managers.player:health_skill_addend()
 	local mul = managers.player:health_skill_multiplier()
 	mul = managers.crime_spree:modify_value("PlayerDamage:GetMaxHealth", mul)
@@ -883,8 +895,21 @@ function PlayerDamage:_max_health()
 	return base_max_health * mul
 end
 
--- Lines: 779 to 785
-function PlayerDamage:_total_armor()
+-- Lines: 795 to 804
+function PlayerDamage:_max_health()
+	local max_health = self:_raw_max_health()
+
+	if managers.player:has_category_upgrade("player", "armor_to_health_conversion") then
+		local max_armor = self:_raw_max_armor()
+		local conversion_factor = managers.player:upgrade_value("player", "armor_to_health_conversion") * 0.01
+		max_health = max_health + max_armor * conversion_factor
+	end
+
+	return max_health
+end
+
+-- Lines: 807 to 813
+function PlayerDamage:_raw_max_armor()
 	local base_max_armor = self._ARMOR_INIT + managers.player:body_armor_value("armor") + managers.player:body_armor_skill_addend()
 	local mul = managers.player:body_armor_skill_multiplier()
 	mul = managers.crime_spree:modify_value("PlayerDamage:GetMaxArmor", mul)
@@ -892,29 +917,36 @@ function PlayerDamage:_total_armor()
 	return base_max_armor * mul
 end
 
--- Lines: 788 to 789
+-- Lines: 816 to 824
 function PlayerDamage:_max_armor()
-	return self:_total_armor()
+	local max_armor = self:_raw_max_armor()
+
+	if managers.player:has_category_upgrade("player", "armor_to_health_conversion") then
+		local conversion_factor = managers.player:upgrade_value("player", "armor_to_health_conversion") * 0.01
+		max_armor = max_armor * (1 - conversion_factor)
+	end
+
+	return max_armor
 end
 
--- Lines: 792 to 793
+-- Lines: 827 to 828
 function PlayerDamage:_armor_steps()
 	return self._ARMOR_STEPS
 end
 
--- Lines: 796 to 797
+-- Lines: 831 to 832
 function PlayerDamage:_armor_damage_reduction()
 	return 0
 end
 
--- Lines: 802 to 804
+-- Lines: 837 to 839
 function PlayerDamage:full_health()
 	local diff = math.abs(self:get_real_health() - self:_max_health() * self._max_health_reduction)
 
 	return diff < 0.001
 end
 
--- Lines: 809 to 837
+-- Lines: 844 to 872
 function PlayerDamage:damage_tase(attack_data)
 	if self._god_mode then
 		return
@@ -946,22 +978,22 @@ function PlayerDamage:damage_tase(attack_data)
 	end
 end
 
--- Lines: 841 to 842
+-- Lines: 876 to 877
 function PlayerDamage:on_tased(non_lethal)
 end
 
--- Lines: 846 to 847
+-- Lines: 881 to 882
 function PlayerDamage:tase_data()
 	return self._tase_data
 end
 
--- Lines: 852 to 854
+-- Lines: 887 to 889
 function PlayerDamage:erase_tase_data()
 	self._tase_data = nil
 end
 local mvec1 = Vector3()
 
--- Lines: 858 to 901
+-- Lines: 893 to 936
 function PlayerDamage:damage_melee(attack_data)
 	if not self:_chk_can_take_dmg() then
 		return
@@ -1018,7 +1050,7 @@ function PlayerDamage:damage_melee(attack_data)
 	return result
 end
 
--- Lines: 906 to 918
+-- Lines: 941 to 953
 function PlayerDamage:is_friendly_fire(unit)
 	if not unit then
 		return false
@@ -1034,14 +1066,14 @@ function PlayerDamage:is_friendly_fire(unit)
 	return friendly_fire
 end
 
--- Lines: 923 to 927
+-- Lines: 958 to 962
 function PlayerDamage:play_whizby(position)
 	self._unit:sound():play_whizby({position = position})
 	self._unit:camera():play_shaker("whizby", 0.1)
 	managers.rumble:play("bullet_whizby")
 end
 
--- Lines: 931 to 936
+-- Lines: 966 to 971
 function PlayerDamage:clbk_kill_taunt(attack_data)
 	if attack_data.attacker_unit and attack_data.attacker_unit:alive() then
 		self._kill_taunt_clbk_id = nil
@@ -1050,7 +1082,7 @@ function PlayerDamage:clbk_kill_taunt(attack_data)
 	end
 end
 
--- Lines: 940 to 1101
+-- Lines: 975 to 1133
 function PlayerDamage:damage_bullet(attack_data)
 	if not self:_chk_can_take_dmg() then
 		return
@@ -1068,16 +1100,10 @@ function PlayerDamage:damage_bullet(attack_data)
 	attack_data.damage = attack_data.damage * dmg_mul
 	attack_data.damage = managers.mutators:modify_value("PlayerDamage:TakeDamageBullet", attack_data.damage)
 	attack_data.damage = managers.crime_spree:modify_value("PlayerDamage:TakeDamageBullet", attack_data.damage)
-	local damage_absorption = pm:get_best_cocaine_damage_absorption()
+	local damage_absorption = pm:damage_absorption()
 
 	if damage_absorption > 0 then
 		attack_data.damage = math.max(0, attack_data.damage - damage_absorption)
-	end
-
-	local hostage_absorption = pm:damage_absorption()
-
-	if hostage_absorption > 0 then
-		attack_data.damage = math.max(0, attack_data.damage - hostage_absorption)
 	end
 
 	if self._god_mode then
@@ -1163,6 +1189,8 @@ function PlayerDamage:damage_bullet(attack_data)
 	self:_hit_direction(attack_data.attacker_unit:position())
 	pm:check_damage_carry(attack_data)
 
+	attack_data.damage = managers.player:modify_value("damage_taken", attack_data.damage, attack_data)
+
 	if self._bleed_out then
 		self:_bleed_out_damage(attack_data)
 
@@ -1203,7 +1231,7 @@ function PlayerDamage:damage_bullet(attack_data)
 	self:_call_listeners(damage_info)
 end
 
--- Lines: 1103 to 1129
+-- Lines: 1135 to 1161
 function PlayerDamage:_calc_armor_damage(attack_data)
 	local health_subtracted = 0
 
@@ -1215,7 +1243,7 @@ function PlayerDamage:_calc_armor_damage(attack_data)
 		health_subtracted = health_subtracted - self:get_real_armor()
 
 		self:_damage_screen()
-		SoundDevice:set_rtpc("shield_status", self:get_real_armor() / self:_total_armor() * 100)
+		SoundDevice:set_rtpc("shield_status", self:armor_ratio() * 100)
 		self:_send_set_armor()
 
 		if self:get_real_armor() <= 0 then
@@ -1242,7 +1270,7 @@ function PlayerDamage:_calc_armor_damage(attack_data)
 	return health_subtracted
 end
 
--- Lines: 1132 to 1140
+-- Lines: 1164 to 1172
 function PlayerDamage:_chk_cheat_death()
 	if Application:digest_value(self._revives, false) > 1 and not self._check_berserker_done and managers.player:has_category_upgrade("player", "cheat_death_chance") then
 		local r = math.rand(1)
@@ -1253,7 +1281,7 @@ function PlayerDamage:_chk_cheat_death()
 	end
 end
 
--- Lines: 1142 to 1163
+-- Lines: 1174 to 1195
 function PlayerDamage:_calc_health_damage(attack_data)
 	local health_subtracted = 0
 	health_subtracted = self:get_real_health()
@@ -1281,7 +1309,7 @@ function PlayerDamage:_calc_health_damage(attack_data)
 	return health_subtracted
 end
 
--- Lines: 1167 to 1193
+-- Lines: 1199 to 1225
 function PlayerDamage:_check_chico_heal(attack_data)
 	if managers.player:has_activate_temporary_upgrade("temporary", "chico_injector") then
 		local dmg_to_hp_ratio = managers.player:temporary_upgrade_value("temporary", "chico_injector", 0)
@@ -1307,7 +1335,7 @@ function PlayerDamage:_check_chico_heal(attack_data)
 			local upg_values = managers.player:upgrade_value("player", "chico_injector_health_to_speed")
 			local times = math.floor(self._injector_overflow / upg_values[1])
 
-			managers.player:speed_up_ability_timer("chico_injector", upg_values[2] * times)
+			managers.player:speed_up_grenade_cooldown(upg_values[2] * times)
 
 			self._injector_overflow = self._injector_overflow - upg_values[1] * times
 		else
@@ -1316,7 +1344,7 @@ function PlayerDamage:_check_chico_heal(attack_data)
 	end
 end
 
--- Lines: 1198 to 1217
+-- Lines: 1230 to 1249
 function PlayerDamage:_send_damage_drama(attack_data, health_subtracted)
 	local dmg_percent = health_subtracted / self._HEALTH_INIT
 	local attacker = nil
@@ -1342,7 +1370,7 @@ function PlayerDamage:_send_damage_drama(attack_data, health_subtracted)
 	end
 end
 
--- Lines: 1221 to 1256
+-- Lines: 1253 to 1292
 function PlayerDamage:damage_killzone(attack_data)
 	local damage_info = {result = {
 		variant = "killzone",
@@ -1366,6 +1394,8 @@ function PlayerDamage:damage_killzone(attack_data)
 		return
 	end
 
+	attack_data.damage = managers.player:modify_value("damage_taken", attack_data.damage, attack_data)
+
 	self:_check_chico_heal(attack_data)
 
 	local armor_reduction_multiplier = 0
@@ -1381,7 +1411,7 @@ function PlayerDamage:damage_killzone(attack_data)
 	self:_call_listeners(damage_info)
 end
 
--- Lines: 1260 to 1337
+-- Lines: 1296 to 1373
 function PlayerDamage:damage_fall(data)
 	local damage_info = {result = {
 		variant = "fall",
@@ -1473,7 +1503,7 @@ function PlayerDamage:damage_fall(data)
 	return true
 end
 
--- Lines: 1340 to 1381
+-- Lines: 1376 to 1422
 function PlayerDamage:damage_explosion(attack_data)
 	if not self:_chk_can_take_dmg() then
 		return
@@ -1509,6 +1539,7 @@ function PlayerDamage:damage_explosion(attack_data)
 	local dmg_mul = managers.player:damage_reduction_skill_multiplier("explosion")
 	attack_data.damage = damage * dmg_mul
 	attack_data.damage = managers.crime_spree:modify_value("PlayerDamage:OnTakeExplosionDamage", attack_data.damage)
+	attack_data.damage = managers.player:modify_value("damage_taken", attack_data.damage, attack_data)
 
 	self:_check_chico_heal(attack_data)
 
@@ -1520,7 +1551,7 @@ function PlayerDamage:damage_explosion(attack_data)
 	self:_call_listeners(damage_info)
 end
 
--- Lines: 1383 to 1430
+-- Lines: 1424 to 1476
 function PlayerDamage:damage_fire(attack_data)
 	if not self:_chk_can_take_dmg() then
 		return
@@ -1561,6 +1592,7 @@ function PlayerDamage:damage_fire(attack_data)
 
 	local dmg_mul = managers.player:damage_reduction_skill_multiplier("fire")
 	attack_data.damage = damage * dmg_mul
+	attack_data.damage = managers.player:modify_value("damage_taken", attack_data.damage, attack_data)
 
 	self:_check_chico_heal(attack_data)
 
@@ -1571,7 +1603,49 @@ function PlayerDamage:damage_fire(attack_data)
 	self:_call_listeners(damage_info)
 end
 
--- Lines: 1435 to 1449
+-- Lines: 1479 to 1515
+function PlayerDamage:damage_simple(attack_data)
+	local damage_info = {result = {
+		type = "hurt",
+		variant = attack_data.variant
+	}}
+
+	if self._god_mode or self._invulnerable or self._mission_damage_blockers.invulnerable then
+		self:_call_listeners(damage_info)
+
+		return
+	elseif self:incapacitated() then
+		return
+	elseif self._unit:movement():current_state().immortal then
+		return
+	end
+
+	self._unit:sound():play("player_hit")
+
+	attack_data.damage = managers.player:modify_value("damage_taken", attack_data.damage, attack_data)
+
+	if self._bleed_out then
+		self:_bleed_out_damage(attack_data)
+
+		return
+	end
+
+	self:_check_chico_heal(attack_data)
+
+	local armor_reduction_multiplier = 0
+
+	if self:get_real_armor() <= 0 then
+		armor_reduction_multiplier = 1
+	end
+
+	local health_subtracted = self:_calc_armor_damage(attack_data)
+	attack_data.damage = attack_data.damage * armor_reduction_multiplier
+	health_subtracted = health_subtracted + self:_calc_health_damage(attack_data)
+
+	self:_call_listeners(damage_info)
+end
+
+-- Lines: 1521 to 1535
 function PlayerDamage:update_downed(t, dt)
 	if self._downed_timer and self._downed_paused_counter == 0 then
 		self._downed_timer = self._downed_timer - dt
@@ -1591,12 +1665,12 @@ function PlayerDamage:update_downed(t, dt)
 	return false
 end
 
--- Lines: 1452 to 1453
+-- Lines: 1538 to 1539
 function PlayerDamage:is_berserker()
 	return not not self._check_berserker_done
 end
 
--- Lines: 1456 to 1529
+-- Lines: 1542 to 1615
 function PlayerDamage:_check_bleed_out(can_activate_berserker, ignore_movement_state)
 	if self:get_real_health() == 0 and not self._check_berserker_done then
 		if self._unit:movement():zipline_unit() then
@@ -1681,7 +1755,7 @@ function PlayerDamage:_check_bleed_out(can_activate_berserker, ignore_movement_s
 	end
 end
 
--- Lines: 1531 to 1567
+-- Lines: 1617 to 1653
 function PlayerDamage:_drop_blood_sample()
 	local remove = math.rand(1) < 0.5
 
@@ -1723,7 +1797,7 @@ function PlayerDamage:_drop_blood_sample()
 	end
 end
 
--- Lines: 1569 to 1576
+-- Lines: 1655 to 1662
 function PlayerDamage:disable_berserker()
 	managers.hud:set_teammate_condition(HUDManager.PLAYER_PANEL, "mugshot_normal", "")
 	managers.hud:set_player_custom_radial({
@@ -1738,7 +1812,7 @@ function PlayerDamage:disable_berserker()
 	managers.network:session():send_to_peers("sync_swansong_timer", self._unit, 0, self:_max_health(), Application:digest_value(self._revives, false), managers.network:session():local_peer():id())
 end
 
--- Lines: 1578 to 1597
+-- Lines: 1664 to 1686
 function PlayerDamage:on_downed()
 	self._current_state = nil
 	self._downed_timer = self:down_time()
@@ -1752,15 +1826,16 @@ function PlayerDamage:on_downed()
 	self:_stop_tinnitus()
 	self:_stop_concussion()
 	self:clear_armor_stored_health()
+	self:clear_delayed_damage()
 	self._listener_holder:call("on_enter_bleedout")
 end
 
--- Lines: 1601 to 1602
+-- Lines: 1690 to 1691
 function PlayerDamage:get_paused_counter_name_by_peer(peer_id)
 	return self._paused_counter_name_by_peer_map and self._paused_counter_name_by_peer_map[peer_id]
 end
 
--- Lines: 1605 to 1614
+-- Lines: 1694 to 1703
 function PlayerDamage:set_peer_paused_counter(peer_id, counter_name)
 	if peer_id then
 		self._paused_counter_name_by_peer_map = self._paused_counter_name_by_peer_map or {}
@@ -1772,7 +1847,7 @@ function PlayerDamage:set_peer_paused_counter(peer_id, counter_name)
 	end
 end
 
--- Lines: 1618 to 1628
+-- Lines: 1707 to 1717
 function PlayerDamage:pause_downed_timer(timer, peer_id)
 	self._downed_paused_counter = self._downed_paused_counter + 1
 
@@ -1788,7 +1863,7 @@ function PlayerDamage:pause_downed_timer(timer, peer_id)
 	end
 end
 
--- Lines: 1630 to 1640
+-- Lines: 1719 to 1729
 function PlayerDamage:unpause_downed_timer(peer_id)
 	self._downed_paused_counter = self._downed_paused_counter - 1
 
@@ -1804,7 +1879,7 @@ function PlayerDamage:unpause_downed_timer(peer_id)
 	end
 end
 
--- Lines: 1645 to 1650
+-- Lines: 1734 to 1739
 function PlayerDamage:update_arrested(t, dt)
 	if self._arrested_timer and self._arrested_paused_counter == 0 then
 		self._arrested_timer = self._arrested_timer - dt
@@ -1815,13 +1890,13 @@ function PlayerDamage:update_arrested(t, dt)
 	return false
 end
 
--- Lines: 1655 to 1658
+-- Lines: 1744 to 1747
 function PlayerDamage:on_freed()
 	self._arrested_timer = nil
 	self._arrested = nil
 end
 
--- Lines: 1660 to 1666
+-- Lines: 1749 to 1755
 function PlayerDamage:on_arrested()
 	self._bleed_out = false
 	self._arrested_timer = tweak_data.player.damage.ARRESTED_TIME
@@ -1831,7 +1906,7 @@ function PlayerDamage:on_arrested()
 	managers.hud:on_arrested()
 end
 
--- Lines: 1668 to 1679
+-- Lines: 1757 to 1768
 function PlayerDamage:pause_arrested_timer(peer_id)
 	if not self._arrested_timer or self._arrested_timer <= 0 then
 		return
@@ -1847,7 +1922,7 @@ function PlayerDamage:pause_arrested_timer(peer_id)
 	end
 end
 
--- Lines: 1681 to 1692
+-- Lines: 1770 to 1781
 function PlayerDamage:unpause_arrested_timer(peer_id)
 	if not self._arrested_timer or self._arrested_timer <= 0 then
 		return
@@ -1863,34 +1938,34 @@ function PlayerDamage:unpause_arrested_timer(peer_id)
 	end
 end
 
--- Lines: 1697 to 1698
+-- Lines: 1786 to 1787
 function PlayerDamage:update_incapacitated(t, dt)
 	return self:update_downed(t, dt)
 end
 
--- Lines: 1701 to 1704
+-- Lines: 1790 to 1793
 function PlayerDamage:on_incapacitated()
 	self:on_downed()
 
 	self._incapacitated = true
 end
 
--- Lines: 1708 to 1709
+-- Lines: 1797 to 1798
 function PlayerDamage:bleed_out()
 	return self._bleed_out
 end
 
--- Lines: 1714 to 1715
+-- Lines: 1803 to 1804
 function PlayerDamage:incapacitated()
 	return self._incapacitated
 end
 
--- Lines: 1720 to 1721
+-- Lines: 1809 to 1810
 function PlayerDamage:arrested()
 	return self._arrested_timer or self._arrested
 end
 
--- Lines: 1726 to 1740
+-- Lines: 1815 to 1829
 function PlayerDamage:_bleed_out_damage(attack_data)
 	local health_subtracted = Application:digest_value(self._bleed_out_health, false)
 	self._bleed_out_health = Application:digest_value(math.max(0, health_subtracted - attack_data.damage), true)
@@ -1907,30 +1982,31 @@ function PlayerDamage:_bleed_out_damage(attack_data)
 	end
 end
 
--- Lines: 1744 to 1748
+-- Lines: 1833 to 1837
 function PlayerDamage:_hit_direction(position_vector)
 	if position_vector then
 		managers.hud:on_hit_direction(position_vector, self:get_real_armor() > 0 and HUDHitDirection.DAMAGE_TYPES.ARMOUR or HUDHitDirection.DAMAGE_TYPES.HEALTH)
 	end
 end
 
--- Lines: 1752 to 1757
+-- Lines: 1841 to 1847
 function PlayerDamage:_damage_screen()
-	self._hurt_value = 1 - math.clamp(0.8 - math.pow(self:get_real_armor() / self:_max_armor(), 2), 0, 1)
-	self._armor_value = math.clamp(self:get_real_armor() / self:_max_armor(), 0, 1)
+	local armor_ratio = self:armor_ratio()
+	self._hurt_value = 1 - math.clamp(0.8 - math.pow(armor_ratio, 2), 0, 1)
+	self._armor_value = math.clamp(armor_ratio, 0, 1)
 
 	managers.environment_controller:set_hurt_value(self._hurt_value)
 	self._listener_holder:call("on_damage")
 end
 
--- Lines: 1761 to 1764
+-- Lines: 1851 to 1854
 function PlayerDamage:set_revive_boost(revive_health_level)
 	self._revive_health_multiplier = tweak_data.upgrades.revive_health_multiplier[revive_health_level]
 
 	print("PlayerDamage:set_revive_boost", "revive_health_level", revive_health_level, "revive_health_multiplier", tostring(self._revive_health_multiplier))
 end
 
--- Lines: 1769 to 1815
+-- Lines: 1859 to 1905
 function PlayerDamage:revive(helped_self)
 	if Application:digest_value(self._revives, false) == 0 then
 		self._revive_health_multiplier = nil
@@ -1953,7 +2029,7 @@ function PlayerDamage:revive(helped_self)
 
 	if not arrested then
 		self:set_health(self:_max_health() * tweak_data.player.damage.REVIVE_HEALTH_STEPS[self._revive_health_i] * (self._revive_health_multiplier or 1) * managers.player:upgrade_value("player", "revived_health_regain", 1))
-		self:set_armor(self:_total_armor())
+		self:set_armor(self:_max_armor())
 
 		self._revive_health_i = math.min(#tweak_data.player.damage.REVIVE_HEALTH_STEPS, self._revive_health_i + 1)
 		self._revive_miss = 2
@@ -1990,32 +2066,32 @@ function PlayerDamage:revive(helped_self)
 	end
 end
 
--- Lines: 1819 to 1820
+-- Lines: 1909 to 1910
 function PlayerDamage:need_revive()
 	return self._bleed_out or self._incapacitated
 end
 
--- Lines: 1825 to 1826
+-- Lines: 1915 to 1916
 function PlayerDamage:is_downed()
 	return self._bleed_out or self._incapacitated
 end
 
--- Lines: 1832 to 1833
+-- Lines: 1922 to 1923
 function PlayerDamage:dead()
 	return false
 end
 
--- Lines: 1838 to 1840
+-- Lines: 1928 to 1930
 function PlayerDamage:set_mission_damage_blockers(type, state)
 	self._mission_damage_blockers[type] = state
 end
 
--- Lines: 1842 to 1843
+-- Lines: 1932 to 1933
 function PlayerDamage:get_mission_blocker(type)
 	return self._mission_damage_blockers[type]
 end
 
--- Lines: 1848 to 1852
+-- Lines: 1938 to 1942
 function PlayerDamage:set_god_mode(state)
 	Global.god_mode = state
 	self._god_mode = state
@@ -2023,43 +2099,43 @@ function PlayerDamage:set_god_mode(state)
 	self:print("PlayerDamage god mode " .. (state and "ON" or "OFF"))
 end
 
--- Lines: 1856 to 1857
+-- Lines: 1946 to 1947
 function PlayerDamage:god_mode()
 	return self._god_mode
 end
 
--- Lines: 1862 to 1864
+-- Lines: 1952 to 1954
 function PlayerDamage:print(...)
 	cat_print("player_damage", ...)
 end
 
--- Lines: 1868 to 1870
+-- Lines: 1958 to 1960
 function PlayerDamage:set_invulnerable(state)
 	self._invulnerable = state
 end
 
--- Lines: 1874 to 1877
+-- Lines: 1964 to 1967
 function PlayerDamage:set_danger_level(danger_level)
 	self._danger_level = self._danger_level ~= danger_level and danger_level or nil
 	self._focus_delay_mul = danger_level and tweak_data.danger_zones[self._danger_level] or 1
 end
 
--- Lines: 1881 to 1882
+-- Lines: 1971 to 1972
 function PlayerDamage:focus_delay_mul()
 	return self._focus_delay_mul
 end
 
--- Lines: 1887 to 1889
+-- Lines: 1977 to 1979
 function PlayerDamage:shoot_pos_mid(m_pos)
 	mvector3.set(m_pos, self._unit:movement():m_head_pos())
 end
 
--- Lines: 1893 to 1894
+-- Lines: 1983 to 1984
 function PlayerDamage:got_max_doh_stacks()
 	return self._doh_data.max_stacks and (tonumber(self._doh_data.max_stacks) or 1) <= #self._damage_to_hot_stack
 end
 
--- Lines: 1898 to 1908
+-- Lines: 1988 to 1998
 function PlayerDamage:add_damage_to_hot()
 	if self:got_max_doh_stacks() then
 		return
@@ -2078,7 +2154,7 @@ function PlayerDamage:add_damage_to_hot()
 	end)
 end
 
--- Lines: 1912 to 1918
+-- Lines: 2002 to 2008
 function PlayerDamage:set_regenerate_timer_to_max()
 	local mul = managers.player:body_armor_regen_multiplier(alive(self._unit) and self._unit:movement():current_state()._moving, self:health_ratio())
 	self._regenerate_timer = tweak_data.player.damage.REGENERATE_TIME * mul
@@ -2087,7 +2163,7 @@ function PlayerDamage:set_regenerate_timer_to_max()
 	self._current_state = self._update_regenerate_timer
 end
 
--- Lines: 1922 to 1936
+-- Lines: 2012 to 2026
 function PlayerDamage:_send_set_health()
 	if self._unit:network() then
 		local hp = math.round(self:get_real_health() / self:_max_health() * 100)
@@ -2101,7 +2177,7 @@ function PlayerDamage:_send_set_health()
 	end
 end
 
--- Lines: 1938 to 1942
+-- Lines: 2028 to 2032
 function PlayerDamage:_set_health_effect()
 	local hp = self:get_real_health() / self:_max_health()
 
@@ -2109,17 +2185,17 @@ function PlayerDamage:_set_health_effect()
 	managers.environment_controller:set_health_effect_value(hp)
 end
 
--- Lines: 1946 to 1956
+-- Lines: 2036 to 2046
 function PlayerDamage:_send_set_armor()
 	if self._unit:network() then
-		local armor = math.round(self:get_real_armor() / self:_total_armor() * 100)
-		local max_mul = math.min(self:_total_armor() / 100, 1)
+		local armor = math.round(self:armor_ratio() * 100)
+		local max_mul = math.min(self:_max_armor() / 100, 1)
 
 		self._unit:network():send("set_armor", math.clamp(armor, 0, 100), max_mul)
 	end
 end
 
--- Lines: 1980 to 1992
+-- Lines: 2070 to 2082
 function PlayerDamage:stop_heartbeat()
 	if self._critical_state_heart_loop_instance then
 		self._critical_state_heart_loop_instance:stop()
@@ -2138,7 +2214,7 @@ function PlayerDamage:stop_heartbeat()
 	SoundDevice:set_rtpc("stamina", 100)
 end
 
--- Lines: 1994 to 2024
+-- Lines: 2084 to 2114
 function PlayerDamage:pre_destroy()
 	if alive(self._gui) and alive(self._ws) then
 		self._gui:destroy_workspace(self._ws)
@@ -2169,36 +2245,36 @@ function PlayerDamage:pre_destroy()
 	self._unit:sound():play("concussion_effect_off")
 end
 
--- Lines: 2028 to 2030
+-- Lines: 2118 to 2120
 function PlayerDamage:_call_listeners(damage_info)
 	CopDamage._call_listeners(self, damage_info)
 end
 
--- Lines: 2034 to 2036
+-- Lines: 2124 to 2126
 function PlayerDamage:add_listener(...)
 	CopDamage.add_listener(self, ...)
 end
 
--- Lines: 2040 to 2042
+-- Lines: 2130 to 2132
 function PlayerDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
--- Lines: 2046 to 2051
+-- Lines: 2136 to 2141
 function PlayerDamage:on_fatal_state_enter()
 	local dmg_info = {result = {type = "death"}}
 
 	self:_call_listeners(dmg_info)
 end
 
--- Lines: 2055 to 2060
+-- Lines: 2145 to 2150
 function PlayerDamage:on_incapacitated_state_enter()
 	local dmg_info = {result = {type = "death"}}
 
 	self:_call_listeners(dmg_info)
 end
 
--- Lines: 2064 to 2069
+-- Lines: 2154 to 2159
 function PlayerDamage:_chk_dmg_too_soon(damage)
 	local next_allowed_dmg_t = type(self._next_allowed_dmg_t) == "number" and self._next_allowed_dmg_t or Application:digest_value(self._next_allowed_dmg_t, false)
 
@@ -2207,14 +2283,14 @@ function PlayerDamage:_chk_dmg_too_soon(damage)
 	end
 end
 
--- Lines: 2073 to 2077
+-- Lines: 2163 to 2167
 function PlayerDamage:_chk_suppression_too_soon(amount)
 	if amount <= self._last_received_sup and managers.player:player_timer():time() < self._next_allowed_sup_t then
 		return true
 	end
 end
 
--- Lines: 2081 to 2096
+-- Lines: 2171 to 2186
 function PlayerDamage.clbk_msg_overwrite_criminal_hurt(overwrite_data, msg_queue, msg_name, crim_unit, attacker_unit, dmg)
 	if msg_queue then
 		local crim_key = crim_unit:key()
@@ -2239,7 +2315,7 @@ function PlayerDamage.clbk_msg_overwrite_criminal_hurt(overwrite_data, msg_queue
 	end
 end
 
--- Lines: 2100 to 2121
+-- Lines: 2190 to 2211
 function PlayerDamage:build_suppression(amount)
 	if self:_chk_suppression_too_soon(amount) then
 		return
@@ -2260,7 +2336,7 @@ function PlayerDamage:build_suppression(amount)
 	data.decay_start_t = managers.player:player_timer():time() + tweak_data.player.suppression.decay_start_delay
 end
 
--- Lines: 2125 to 2145
+-- Lines: 2215 to 2235
 function PlayerDamage:_upd_suppression(t, dt)
 	local data = self._supperssion_data
 
@@ -2284,7 +2360,7 @@ function PlayerDamage:_upd_suppression(t, dt)
 	end
 end
 
--- Lines: 2149 to 2190
+-- Lines: 2239 to 2280
 function PlayerDamage:_upd_health_regen(t, dt)
 	if self._health_regen_update_timer then
 		self._health_regen_update_timer = self._health_regen_update_timer - dt
@@ -2331,35 +2407,35 @@ function PlayerDamage:_upd_health_regen(t, dt)
 	end
 end
 
--- Lines: 2192 to 2193
+-- Lines: 2282 to 2283
 function PlayerDamage:melee_hit_sfx()
 	return "hit_body"
 end
 
--- Lines: 2198 to 2199
+-- Lines: 2288 to 2289
 function PlayerDamage:suppression_ratio()
 	return (self._supperssion_data.value or 0) / tweak_data.player.suppression.max_value
 end
 
--- Lines: 2204 to 2206
+-- Lines: 2294 to 2296
 function PlayerDamage:effective_suppression_ratio()
 	local effective_ratio = math.max(0, (self._supperssion_data.value or 0) - tweak_data.player.suppression.tolerance) / (tweak_data.player.suppression.max_value - tweak_data.player.suppression.tolerance)
 
 	return effective_ratio
 end
 
--- Lines: 2211 to 2212
+-- Lines: 2301 to 2302
 function PlayerDamage:is_suppressed()
 	return self:effective_suppression_ratio() > 0
 end
 
--- Lines: 2217 to 2220
+-- Lines: 2307 to 2310
 function PlayerDamage:reset_suppression()
 	self._supperssion_data.value = nil
 	self._supperssion_data.decay_start_t = nil
 end
 
--- Lines: 2225 to 2231
+-- Lines: 2315 to 2321
 function PlayerDamage:on_concussion(mul)
 	if self._downed_timer then
 		return
@@ -2368,7 +2444,7 @@ function PlayerDamage:on_concussion(mul)
 	self:_start_concussion(mul)
 end
 
--- Lines: 2233 to 2251
+-- Lines: 2323 to 2341
 function PlayerDamage:_start_concussion(mul)
 	if self._concussion_data then
 		self._concussion_data.intensity = mul
@@ -2390,7 +2466,7 @@ function PlayerDamage:_start_concussion(mul)
 	self._unit:sound():play("concussion_effect_on")
 end
 
--- Lines: 2253 to 2261
+-- Lines: 2343 to 2351
 function PlayerDamage:_stop_concussion()
 	if not self._concussion_data then
 		return
@@ -2401,7 +2477,7 @@ function PlayerDamage:_stop_concussion()
 	self._concussion_data = nil
 end
 
--- Lines: 2266 to 2271
+-- Lines: 2356 to 2361
 function PlayerDamage:on_flashbanged(sound_eff_mul)
 	if self._downed_timer then
 		return
@@ -2410,7 +2486,7 @@ function PlayerDamage:on_flashbanged(sound_eff_mul)
 	self:_start_tinnitus(sound_eff_mul)
 end
 
--- Lines: 2275 to 2302
+-- Lines: 2365 to 2392
 function PlayerDamage:_start_tinnitus(sound_eff_mul, skip_explosion_sfx)
 	if self._tinnitus_data then
 		if sound_eff_mul < self._tinnitus_data.intensity then
@@ -2446,7 +2522,7 @@ function PlayerDamage:_start_tinnitus(sound_eff_mul, skip_explosion_sfx)
 	end
 end
 
--- Lines: 2306 to 2314
+-- Lines: 2396 to 2404
 function PlayerDamage:_stop_tinnitus()
 	if not self._tinnitus_data then
 		return
@@ -2457,7 +2533,7 @@ function PlayerDamage:_stop_tinnitus()
 	self._tinnitus_data = nil
 end
 
--- Lines: 2317 to 2326
+-- Lines: 2407 to 2416
 function PlayerDamage:_chk_can_take_dmg()
 	if not self._unit:inventory():mask_visibility() then
 		return false
@@ -2469,12 +2545,12 @@ function PlayerDamage:_chk_can_take_dmg()
 	return can_take_damage
 end
 
--- Lines: 2330 to 2332
+-- Lines: 2420 to 2422
 function PlayerDamage:_update_can_take_dmg_timer(dt)
 	self._can_take_dmg_timer = math.max(self._can_take_dmg_timer - dt, 0)
 end
 
--- Lines: 2334 to 2339
+-- Lines: 2424 to 2429
 function PlayerDamage:_start_regen_on_the_side(time)
 	if self._regen_on_the_side_timer <= 0 and time > 0 then
 		self._regen_on_the_side_timer = time
@@ -2482,7 +2558,7 @@ function PlayerDamage:_start_regen_on_the_side(time)
 	end
 end
 
--- Lines: 2341 to 2349
+-- Lines: 2431 to 2439
 function PlayerDamage:_update_regen_on_the_side(dt)
 	if self._regen_on_the_side then
 		self._regen_on_the_side_timer = math.max(self._regen_on_the_side_timer - dt, 0)
@@ -2495,30 +2571,107 @@ function PlayerDamage:_update_regen_on_the_side(dt)
 	end
 end
 
--- Lines: 2351 to 2352
+-- Lines: 2441 to 2442
 function PlayerDamage:get_armor_regenerate_timer()
 	return self._regenerate_timer or 0
 end
 
--- Lines: 2355 to 2356
+-- Lines: 2445 to 2446
 function PlayerDamage:get_armor_regenerate_speed()
 	return self._regenerate_speed or 1
 end
+
+-- Lines: 2452 to 2489
+function PlayerDamage:_update_delayed_damage(t, dt)
+	local no_chunks = #self._delayed_damage.chunks == 0
+	local time_for_tick = self._delayed_damage.next_tick and t < self._delayed_damage.next_tick
+
+	if no_chunks or time_for_tick then
+		return
+	end
+
+	self._delayed_damage.next_tick = t + 1
+	local total_tick = 0
+	local remaining_chunks = {}
+
+	for _, damage_chunk in ipairs(self._delayed_damage.chunks) do
+		total_tick = total_tick + damage_chunk.tick
+		damage_chunk.remaining = damage_chunk.remaining - damage_chunk.tick
+
+		if self._delayed_damage.epsilon < damage_chunk.remaining then
+			table.insert(remaining_chunks, damage_chunk)
+		end
+	end
+
+	self._delayed_damage.chunks = remaining_chunks
+
+	if total_tick > 0 then
+		self:damage_simple({
+			variant = "delayed_tick",
+			damage = total_tick
+		})
+	end
+
+	local remaining_damage = self:remaining_delayed_damage()
+
+	if remaining_damage == 0 then
+		self._delayed_damage.next_tick = nil
+	end
+
+	managers.hud:set_teammate_delayed_damage(HUDManager.PLAYER_PANEL, remaining_damage)
+end
+
+-- Lines: 2491 to 2504
+function PlayerDamage:delay_damage(damage, seconds)
+	local damage_chunk = {
+		tick = damage / seconds,
+		remaining = damage
+	}
+
+	if not self._delayed_damage.next_tick then
+		self._delayed_damage.next_tick = TimerManager:game():time() + 1
+	end
+
+	table.insert(self._delayed_damage.chunks, damage_chunk)
+	managers.hud:set_teammate_delayed_damage(HUDManager.PLAYER_PANEL, self:remaining_delayed_damage())
+end
+
+-- Lines: 2506 to 2513
+function PlayerDamage:clear_delayed_damage()
+	local remaining_damage = self:remaining_delayed_damage()
+	self._delayed_damage.chunks = {}
+	self._delayed_damage.next_tick = nil
+
+	managers.hud:set_teammate_delayed_damage(HUDManager.PLAYER_PANEL, 0)
+
+	return remaining_damage
+end
+
+-- Lines: 2516 to 2521
+function PlayerDamage:remaining_delayed_damage()
+	local remaining_damage = 0
+
+	for _, damage_chunk in ipairs(self._delayed_damage.chunks) do
+		remaining_damage = remaining_damage + damage_chunk.remaining
+	end
+
+	return remaining_damage
+end
 PlayerBodyDamage = PlayerBodyDamage or class()
 
--- Lines: 2363 to 2367
+-- Lines: 2529 to 2533
 function PlayerBodyDamage:init(unit, unit_extension, body)
 	self._unit = unit
 	self._unit_extension = unit_extension
 	self._body = body
 end
 
--- Lines: 2369 to 2370
+-- Lines: 2535 to 2536
 function PlayerBodyDamage:get_body()
 	return self._body
 end
 
--- Lines: 2373 to 2376
+-- Lines: 2539 to 2542
 function PlayerBodyDamage:damage_fire(attack_unit, normal, position, direction, damage, velocity)
 	local attack_data = {
 		damage = damage,

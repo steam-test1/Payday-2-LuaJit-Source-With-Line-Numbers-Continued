@@ -844,14 +844,13 @@ ElementSpecialObjective._stealth_idles = {
 	"e_so_ntl_look_around",
 	"e_so_ntl_look_behind",
 	"e_so_ntl_look_up",
-	"e_so_ntl_pick_up",
 	"e_so_ntl_restless",
 	"e_so_ntl_scratches_chin",
 	"e_so_ntl_stretch_shoulders",
 	"e_so_ntl_watch_look_calm"
 }
 
--- Lines: 798 to 804
+-- Lines: 797 to 803
 function ElementSpecialObjective:_check_new_stealth_idle()
 	if table.contains(ElementSpecialObjective._stealth_idles, self._values.so_action) then
 		local new = ElementSpecialObjective._stealth_idles[math.random(#ElementSpecialObjective._stealth_idles)]

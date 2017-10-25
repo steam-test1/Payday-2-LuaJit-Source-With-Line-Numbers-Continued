@@ -569,6 +569,11 @@ function GenericDLCManager:has_fdm()
 	return self:is_dlc_unlocked("fdm")
 end
 
+-- Lines: 630 to 631
+function GenericDLCManager:has_myh()
+	return self:is_dlc_unlocked("myh")
+end
+
 -- Lines: 645 to 646
 function GenericDLCManager:has_goty_all_dlc_bundle_2014()
 	return self:has_goty_weapon_bundle_2014() and self:has_goty_heist_bundle_2014() and self:is_dlcs_unlocked({"character_pack_clover"})
@@ -1517,7 +1522,7 @@ end
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
--- Lines: 1770 to 2270
+-- Lines: 1770 to 2276
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
@@ -1875,6 +1880,10 @@ function WINDLCManager:init()
 			wwh = {
 				app_id = "218620",
 				no_install = true
+			},
+			myh = {
+				app_id = "218620",
+				no_install = true
 			}
 		}
 
@@ -1882,7 +1891,7 @@ function WINDLCManager:init()
 	end
 end
 
--- Lines: 2272 to 2288
+-- Lines: 2278 to 2294
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -1899,7 +1908,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines: 2290 to 2302
+-- Lines: 2296 to 2308
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -1908,7 +1917,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines: 2304 to 2311
+-- Lines: 2310 to 2317
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

@@ -1,5 +1,5 @@
 
--- Lines: 1 to 6294
+-- Lines: 2 to 6295
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {

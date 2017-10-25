@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines: 9 to 1632
+-- Lines: 9 to 1671
 function SkillTreeTweakData:init()
 
 	-- Lines: 9 to 10
@@ -3967,11 +3967,79 @@ function SkillTreeTweakData:init()
 			},
 			desc_id = "menu_st_spec_18_desc",
 			name_id = "menu_st_spec_18"
+		},
+		{
+			{
+				cost = 200,
+				texture_bundle_folder = "myh",
+				desc_id = "menu_deck19_1_desc",
+				name_id = "menu_deck19_1",
+				upgrades = {
+					"temporary_damage_control",
+					"damage_control",
+					"player_damage_control_passive",
+					"player_damage_control_cooldown_drain_1"
+				},
+				icon_xy = {
+					0,
+					0
+				}
+			},
+			deck2,
+			{
+				cost = 400,
+				texture_bundle_folder = "myh",
+				desc_id = "menu_deck19_3_desc",
+				name_id = "menu_deck19_3",
+				upgrades = {"player_armor_to_health_conversion"},
+				icon_xy = {
+					1,
+					0
+				}
+			},
+			deck4,
+			{
+				cost = 1000,
+				texture_bundle_folder = "myh",
+				desc_id = "menu_deck19_5_desc",
+				name_id = "menu_deck19_5",
+				upgrades = {"player_damage_control_auto_shrug"},
+				icon_xy = {
+					2,
+					0
+				}
+			},
+			deck6,
+			{
+				cost = 2400,
+				texture_bundle_folder = "myh",
+				desc_id = "menu_deck19_7_desc",
+				name_id = "menu_deck19_7",
+				upgrades = {"player_damage_control_cooldown_drain_2"},
+				icon_xy = {
+					3,
+					0
+				}
+			},
+			deck8,
+			{
+				cost = 4000,
+				texture_bundle_folder = "myh",
+				desc_id = "menu_deck19_9_desc",
+				name_id = "menu_deck19_9",
+				upgrades = {"player_damage_control_healing"},
+				icon_xy = {
+					0,
+					1
+				}
+			},
+			desc_id = "menu_st_spec_19_desc",
+			name_id = "menu_st_spec_19"
 		}
 	}
 end
 
--- Lines: 1634 to 1649
+-- Lines: 1673 to 1688
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -3992,7 +4060,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines: 1652 to 1660
+-- Lines: 1691 to 1699
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -4005,17 +4073,17 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines: 1663 to 1665
+-- Lines: 1702 to 1704
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines: 1668 to 1675
+-- Lines: 1707 to 1714
 function SkillTreeTweakData:get_tier_unlocks()
 
-	-- Lines: 1668 to 1669
+	-- Lines: 1707 to 1708
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4030,7 +4098,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines: 1678 to 1700
+-- Lines: 1717 to 1739
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

@@ -1,7 +1,7 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 local allow_halloween_lootdrop = is_nextgen_console
 
--- Lines: 10 to 5288
+-- Lines: 10 to 5394
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"
@@ -24,6 +24,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.character_locked.wild = "rust"
 	self.masks.character_locked.chico = "chc_terry"
 	self.masks.character_locked.max = "max"
+	self.masks.character_locked.myh = "myh"
 	self.masks.skull = {
 		unit = "units/payday2/masks/msk_skull/msk_skull",
 		name_id = "bm_msk_skull",
@@ -1854,7 +1855,11 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		unit = "units/pd2_dlc_infamy/masks/msk_balaclava_dallas/msk_balaclava_dallas",
 		name_id = "bm_msk_cheat_error",
 		type = "helmet",
-		inaccessible = true
+		inaccessible = true,
+		offsets = {myh = {
+			Vector3(0, -0.16098, -0.399472),
+			Rotation(-0.30048, 2.27524, -0.30048)
+		}}
 	}
 	self.masks.balaclava_dragan = {
 		unit = "units/pd2_dlc_infamy/masks/msk_balaclava_dragan/msk_balaclava_dragan",
@@ -1909,11 +1914,12 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		characters = {
 			bonnie = "balaclava_dallas",
 			sokol = "balaclava_sokol",
-			dragon = "balaclava_dallas",
+			myh = "balaclava_dallas",
 			chico = "balaclava_chico",
 			dragan = "balaclava_dragan",
 			jowi = "balaclava_john_wick",
 			max = "balaclava_dallas",
+			dragon = "balaclava_dallas",
 			old_hoxton = "balaclava_hoxton",
 			dallas = "balaclava_dallas",
 			jacket = "balaclava_wolf",
@@ -3787,6 +3793,10 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			bonnie = {
 				Vector3(0.0775149, 0.673747, 0.435254),
 				Rotation(-0, -0, -0)
+			},
+			myh = {
+				Vector3(0, -0.637965, 0.196759),
+				Rotation(-0, -0, -0)
 			}
 		}
 	}
@@ -3802,11 +3812,12 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		characters = {
 			dragan = "grv_01_bodhi",
 			wild = "grv_01_bodhi",
-			jowi = "grv_01_bonnie",
+			myh = "grv_01_bonnie",
 			chico = "grv_01_bodhi",
 			dragon = "grv_01_bodhi",
 			bonnie = "grv_01_bonnie",
 			max = "grv_01_bodhi",
+			jowi = "grv_01_bonnie",
 			old_hoxton = "grv_01_bodhi",
 			dallas = "grv_01_bodhi",
 			jacket = "grv_01_bonnie",
@@ -3928,7 +3939,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "amp",
-		sort_number = 43
+		sort_number = 43,
+		offsets = {}
 	}
 	self.masks.amp_02 = {
 		unit = "units/pd2_dlc_amp/masks/amp_02/msk_amp_02",
@@ -4031,6 +4043,10 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 				Vector3(0, 4.48963, -2.06892),
 				Rotation(0, 2.27525, 0)
 			},
+			myh = {
+				Vector3(0, 3.6549, 0.316006),
+				Rotation(0, -13.1791, 0)
+			},
 			bonnie = {
 				Vector3(0, 3.77415, 0),
 				Rotation(0, -8.02763, 0)
@@ -4121,11 +4137,12 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		characters = {
 			dragan = "bny_01_bodhi",
 			wild = "bny_01_bodhi",
-			jowi = "bny_01_bodhi",
+			myh = "bny_01_bonnie",
 			chico = "bny_01_bonnie",
 			dragon = "bny_01_bodhi",
 			bonnie = "bny_01_bonnie",
 			max = "bny_01_bodhi",
+			jowi = "bny_01_bodhi",
 			old_hoxton = "bny_01_bodhi",
 			dallas = "bny_01_clover",
 			jacket = "bny_01_clover",
@@ -4188,6 +4205,10 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			bonnie = {
 				Vector3(0, 2.58169, -0.637963),
 				Rotation(0, -5.45191, 0)
+			},
+			myh = {
+				Vector3(0, 2.70093, -0.0417333),
+				Rotation(0, -13.1791, 0.558094)
 			}
 		}
 	}
@@ -4243,11 +4264,12 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		characters = {
 			dragan = "bny_02_bonnie",
 			wild = "bny_02_bonnie",
-			jowi = "bny_02_bonnie",
+			myh = "bny_02_bonnie",
 			chico = "bny_02_bonnie",
 			dragon = "bny_02_bonnie",
 			bonnie = "bny_02_bonnie",
 			max = "bny_02_bodhi",
+			jowi = "bny_02_bonnie",
 			old_hoxton = "bny_02_bodhi",
 			dallas = "bny_02_bodhi",
 			jacket = "bny_02_bonnie",
@@ -4290,6 +4312,10 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			max = {
 				Vector3(0, 3.17792, 0.316008),
 				Rotation(0, 0, -0)
+			},
+			myh = {
+				Vector3(0, 2.1047, -0.16098),
+				Rotation(0, 3.99239, 0)
 			},
 			bonnie = {
 				Vector3(0, 3.17792, 0.316008),
@@ -4359,11 +4385,12 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		characters = {
 			dragan = "bny_03_bodhi",
 			wild = "bny_03_bodhi",
-			jowi = "bny_03_bodhi",
+			myh = "bny_03_bodhi",
 			chico = "bny_03_bodhi",
 			dragon = "bny_03_bodhi",
 			bonnie = "bny_03_bodhi",
 			max = "bny_03_bodhi",
+			jowi = "bny_03_bodhi",
 			old_hoxton = "bny_03_bodhi",
 			dallas = "bny_03_clover",
 			jacket = "bny_03_clover",
@@ -4833,6 +4860,16 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			}
 		}
 	}
+	self.masks.mmj = {
+		unit = "units/pd2_dlc_mmj/masks/msk_mmj",
+		name_id = "bm_msk_mmj",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "mmj",
+		sort_number = 55,
+		type = "helmet",
+		offsets = {}
+	}
 	self.masks.fdm = {
 		unit = "units/pd2_dlc_fdm/masks/msk_fdm",
 		name_id = "bm_msk_fdm",
@@ -4955,6 +4992,45 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		infamous = true,
 		sort_number = 29,
 		texture_bundle_folder = "dnm"
+	}
+	self.masks.kwm = {
+		unit = "units/pd2_dlc_kwm/masks/msk_kwm",
+		name_id = "bm_msk_kwm",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "kwm",
+		sort_number = 58,
+		type = "helmet"
+	}
+	self.masks.myh = {
+		unit = "units/pd2_dlc_myh/masks/msk_myh",
+		name_id = "bm_msk_myh",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 0,
+		texture_bundle_folder = "myh",
+		sort_number = 55,
+		infamous = true,
+		global_value = "infamous"
+	}
+	self.masks.myh_begins = {
+		unit = "units/pd2_dlc_myh/masks/msk_myh_begins",
+		name_id = "bm_msk_myh_begins",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 0,
+		texture_bundle_folder = "myh",
+		sort_number = 55,
+		infamous = true,
+		global_value = "infamous"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

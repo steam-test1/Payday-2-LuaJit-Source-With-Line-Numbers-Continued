@@ -4,7 +4,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines: 32 to 633
+-- Lines: 32 to 661
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.name_id = "bm_grenade_frag"
@@ -458,6 +458,16 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		dlc = "pd2_clan",
 		texture_bundle_folder = "mtl"
 	}
+	self.projectiles.damage_control = {
+		name_id = "bm_grenade_damage_control",
+		desc_id = "bm_grenade_damage_control_desc",
+		icon = "damage_control",
+		ability = true,
+		texture_bundle_folder = "myh",
+		max_amount = 1,
+		base_cooldown = 10,
+		sounds = {cooldown = "perkdeck_cooldown_over"}
+	}
 	self._projectiles_index = {
 		"frag",
 		"launcher_frag",
@@ -511,12 +521,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines: 635 to 636
+-- Lines: 663 to 664
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines: 639 to 645
+-- Lines: 667 to 673
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -527,7 +537,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines: 648 to 649
+-- Lines: 676 to 677
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedAchievementTweakData")
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 7 to 1821
+-- Lines: 7 to 1839
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -4508,7 +4508,8 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		locke = {
 			"pbr",
-			"pbr2"
+			"pbr2",
+			"wwh"
 		},
 		jimmy = {
 			"mad",
@@ -5730,7 +5731,7 @@ function AchievementsTweakData:init(tweak_data)
 end
 
 
--- Lines: 1825 to 1851
+-- Lines: 1843 to 1869
 local function get_texture_path(tweak_data, category, id)
 	local td = tweak_data:get_raw_value("blackmarket", category, id)
 	local rtn = {}
@@ -5763,7 +5764,7 @@ local tracking = {
 }
 
 
--- Lines: 1869 to 1895
+-- Lines: 1887 to 1913
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5775,7 +5776,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 1878 to 1888
+	-- Lines: 1896 to 1906
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5806,7 +5807,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 1898 to 1902
+-- Lines: 1916 to 1920
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5820,7 +5821,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 1905 to 1912
+-- Lines: 1923 to 1930
 local function from_level(level)
 	if not level then
 		error()
@@ -5837,7 +5838,7 @@ local function from_level(level)
 end
 
 
--- Lines: 1915 to 1922
+-- Lines: 1933 to 1940
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5854,7 +5855,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 1925 to 1935
+-- Lines: 1943 to 1953
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5877,7 +5878,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 1943 to 2145
+-- Lines: 1961 to 2163
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6024,7 +6025,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2182 to 2302
+-- Lines: 2200 to 2313
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

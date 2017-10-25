@@ -156,6 +156,8 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_breech_crew()
 	self:_init_data_ching_crew()
 	self:_init_data_erma_crew()
+	self:_init_data_shrew_crew()
+	self:_init_data_x_shrew_crew()
 	self:_init_data_basset_crew()
 	self:_init_data_x_basset_crew()
 	self:_precalculate_values()
@@ -3083,6 +3085,37 @@ function WeaponTweakData:_init_data_erma_crew()
 	self.erma_crew.suppression = 1
 end
 
+-- Lines: 4104 to 4121
+function WeaponTweakData:_init_data_shrew_crew()
+	self.shrew_crew.sounds.prefix = "shrew_npc"
+	self.shrew_crew.use_data.selection_index = 1
+	self.shrew_crew.DAMAGE = 1
+	self.shrew_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.shrew_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.shrew_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.shrew_crew.CLIP_AMMO_MAX = 17
+	self.shrew_crew.NR_CLIPS_MAX = 5
+	self.shrew_crew.pull_magazine_during_reload = "pistol"
+	self.shrew_crew.hold = "pistol"
+	self.shrew_crew.alert_size = 2500
+	self.shrew_crew.suppression = 1
+end
+
+-- Lines: 4122 to 4138
+function WeaponTweakData:_init_data_x_shrew_crew()
+	self.x_shrew_crew.sounds.prefix = "shrew_npc"
+	self.x_shrew_crew.use_data.selection_index = 2
+	self.x_shrew_crew.DAMAGE = 1.25
+	self.x_shrew_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.x_shrew_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.x_shrew_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.x_shrew_crew.CLIP_AMMO_MAX = 34
+	self.x_shrew_crew.NR_CLIPS_MAX = 5
+	self.x_shrew_crew.hold = "akimbo_pistol"
+	self.x_shrew_crew.alert_size = 1800
+	self.x_shrew_crew.suppression = 2
+end
+
 -- Lines: 4141 to 4161
 function WeaponTweakData:_init_data_basset_crew()
 	self.basset_crew.sounds.prefix = "basset_npc"
@@ -3740,7 +3773,7 @@ function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
 	}
 end
 
--- Lines: 4480 to 20147
+-- Lines: 4480 to 20146
 function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol_default, autohit_shotgun_default, autohit_lmg_default, autohit_snp_default, autohit_smg_default, autohit_minigun_default, damage_melee_default, damage_melee_effect_multiplier_default, aim_assist_rifle_default, aim_assist_pistol_default, aim_assist_shotgun_default, aim_assist_lmg_default, aim_assist_snp_default, aim_assist_smg_default, aim_assist_minigun_default)
 	local total_damage_primary = 300
 	local total_damage_secondary = 150
@@ -15185,6 +15218,196 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		concealment = 24
 	}
 	self.erma.unlock_func = "has_unlocked_erma"
+	self.shrew = {
+		categories = {"pistol"},
+		damage_melee = damage_melee_default,
+		damage_melee_effect_mul = damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.shrew.sounds.fire = "shrew_fire"
+	self.shrew.sounds.dryfire = "secondary_dryfire"
+	self.shrew.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.shrew.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.shrew.sounds.magazine_empty = "wp_pistol_slide_lock"
+	self.shrew.FIRE_MODE = "single"
+	self.shrew.fire_mode_data = {fire_rate = 0.125}
+	self.shrew.single = {fire_rate = 0.125}
+	self.shrew.timers = {
+		reload_not_empty = 1.47,
+		reload_empty = 2.12,
+		unequip = 0.5,
+		equip = 0.35
+	}
+	self.shrew.name_id = "bm_w_shrew"
+	self.shrew.desc_id = "bm_w_shrew_desc"
+	self.shrew.description_id = "des_shrew"
+	self.shrew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
+	self.shrew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.shrew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.shrew.use_data = {selection_index = 1}
+	self.shrew.DAMAGE = 1
+	self.shrew.CLIP_AMMO_MAX = 17
+	self.shrew.NR_CLIPS_MAX = 9
+	self.shrew.AMMO_MAX = self.shrew.CLIP_AMMO_MAX * self.shrew.NR_CLIPS_MAX
+	self.shrew.AMMO_PICKUP = self:_pickup_chance(self.shrew.AMMO_MAX, 1)
+	self.shrew.spread = {
+		standing = self.new_m4.spread.standing,
+		crouching = self.new_m4.spread.crouching,
+		steelsight = self.new_m4.spread.steelsight,
+		moving_standing = self.new_m4.spread.moving_standing,
+		moving_crouching = self.new_m4.spread.moving_crouching,
+		moving_steelsight = self.new_m4.spread.moving_steelsight
+	}
+	self.shrew.kick = {standing = {
+		1.2,
+		1.8,
+		-0.5,
+		0.5
+	}}
+	self.shrew.kick.crouching = self.shrew.kick.standing
+	self.shrew.kick.steelsight = self.shrew.kick.standing
+	self.shrew.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.shrew.crosshair.standing.offset = 0.175
+	self.shrew.crosshair.standing.moving_offset = 0.6
+	self.shrew.crosshair.standing.kick_offset = 0.4
+	self.shrew.crosshair.crouching.offset = 0.1
+	self.shrew.crosshair.crouching.moving_offset = 0.6
+	self.shrew.crosshair.crouching.kick_offset = 0.3
+	self.shrew.crosshair.steelsight.hidden = true
+	self.shrew.crosshair.steelsight.offset = 0
+	self.shrew.crosshair.steelsight.moving_offset = 0
+	self.shrew.crosshair.steelsight.kick_offset = 0.1
+	self.shrew.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = 1
+	}
+	self.shrew.autohit = autohit_pistol_default
+	self.shrew.aim_assist = aim_assist_pistol_default
+	self.shrew.weapon_hold = "glock"
+	self.shrew.animations = {
+		equip_id = "equip_glock",
+		recoil_steelsight = true,
+		magazine_empty = "last_recoil"
+	}
+	self.shrew.texture_bundle_folder = "myh"
+	self.shrew.transition_duration = 0
+	self.shrew.panic_suppression_chance = 0.2
+	self.shrew.stats = {
+		zoom = 1,
+		total_ammo_mod = 21,
+		damage = 37,
+		alert_size = 7,
+		spread = 17,
+		spread_moving = 14,
+		recoil = 16,
+		value = 1,
+		extra_ammo = 6,
+		reload = 11,
+		suppression = 16,
+		concealment = 30
+	}
+	self.x_shrew = {
+		categories = {
+			"akimbo",
+			"pistol"
+		},
+		damage_melee = damage_melee_default,
+		damage_melee_effect_mul = damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.x_shrew.sounds.fire = "shrew_fire"
+	self.x_shrew.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.x_shrew.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.x_shrew.sounds.dryfire = "secondary_dryfire"
+	self.x_shrew.sounds.magazine_empty = "wp_akimbo_pistol_slide_lock"
+	self.x_shrew.timers = {
+		reload_not_empty = 3.17,
+		reload_empty = 4,
+		unequip = 0.5,
+		equip = 0.5
+	}
+	self.x_shrew.name_id = "bm_w_x_shrew"
+	self.x_shrew.desc_id = "bm_w_x_shrew_desc"
+	self.x_shrew.description_id = "des_x_shrew"
+	self.x_shrew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
+	self.x_shrew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.x_shrew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.x_shrew.use_data = {selection_index = 2}
+	self.x_shrew.DAMAGE = 1
+	self.x_shrew.CLIP_AMMO_MAX = 34
+	self.x_shrew.NR_CLIPS_MAX = 5
+	self.x_shrew.AMMO_MAX = self.x_shrew.CLIP_AMMO_MAX * self.x_shrew.NR_CLIPS_MAX
+	self.x_shrew.AMMO_PICKUP = self:_pickup_chance(self.x_shrew.AMMO_MAX, 1)
+	self.x_shrew.FIRE_MODE = "single"
+	self.x_shrew.fire_mode_data = {fire_rate = 0.09}
+	self.x_shrew.single = {fire_rate = 0.09}
+	self.x_shrew.spread = {
+		standing = self.new_m4.spread.standing,
+		crouching = self.new_m4.spread.crouching,
+		steelsight = self.new_m4.spread.steelsight,
+		moving_standing = self.new_m4.spread.moving_standing,
+		moving_crouching = self.new_m4.spread.moving_crouching,
+		moving_steelsight = self.new_m4.spread.moving_steelsight
+	}
+	self.x_shrew.kick = {standing = {
+		1.6,
+		1.3,
+		-0.3,
+		0.3
+	}}
+	self.x_shrew.kick.crouching = self.x_shrew.kick.standing
+	self.x_shrew.kick.steelsight = self.x_shrew.kick.standing
+	self.x_shrew.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.x_shrew.crosshair.standing.offset = 0.2
+	self.x_shrew.crosshair.standing.moving_offset = 0.6
+	self.x_shrew.crosshair.standing.kick_offset = 0.4
+	self.x_shrew.crosshair.crouching.offset = 0.1
+	self.x_shrew.crosshair.crouching.moving_offset = 0.6
+	self.x_shrew.crosshair.crouching.kick_offset = 0.3
+	self.x_shrew.crosshair.steelsight.hidden = true
+	self.x_shrew.crosshair.steelsight.offset = 0
+	self.x_shrew.crosshair.steelsight.moving_offset = 0
+	self.x_shrew.crosshair.steelsight.kick_offset = 0.1
+	self.x_shrew.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.x_shrew.autohit = autohit_pistol_default
+	self.x_shrew.aim_assist = aim_assist_pistol_default
+	self.x_shrew.weapon_hold = "jowi_pistol"
+	self.x_shrew.animations = {
+		second_gun_versions = {
+			reload_not_empty = "reload_not_empty_left",
+			reload = "reload_left"
+		},
+		has_steelsight_stance = true,
+		magazine_empty = "last_recoil",
+		recoil_steelsight = true
+	}
+	self.x_shrew.panic_suppression_chance = 0.2
+	self.x_shrew.texture_bundle_folder = "myh"
+	self.x_shrew.stats = {
+		zoom = 1,
+		total_ammo_mod = 21,
+		damage = 37,
+		alert_size = 7,
+		spread = 17,
+		spread_moving = 14,
+		recoil = 16,
+		value = 1,
+		extra_ammo = 6,
+		reload = 11,
+		suppression = 16,
+		concealment = 30
+	}
 	self.basset = {
 		categories = {"shotgun"},
 		has_magazine = true,
@@ -15317,18 +15540,18 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 	self.x_basset.CLIP_AMMO_MAX = 16
 	self.x_basset.NR_CLIPS_MAX = 6
 	self.x_basset.AMMO_MAX = self.x_basset.CLIP_AMMO_MAX * self.x_basset.NR_CLIPS_MAX
-	self.x_basset.AMMO_PICKUP = self:_pickup_chance(self.x_basset.AMMO_MAX, 1)
+	self.x_basset.AMMO_PICKUP = self:_pickup_chance(self.x_basset.AMMO_MAX, 4)
 	self.x_basset.FIRE_MODE = "auto"
 	self.x_basset.fire_mode_data = {fire_rate = 0.18}
 	self.x_basset.single = {fire_rate = 0.18}
 	self.x_basset.CAN_TOGGLE_FIREMODE = true
 	self.x_basset.spread = {
-		standing = self.new_m4.spread.standing,
-		crouching = self.new_m4.spread.crouching,
-		steelsight = self.new_m4.spread.steelsight,
-		moving_standing = self.new_m4.spread.moving_standing,
-		moving_crouching = self.new_m4.spread.moving_crouching,
-		moving_steelsight = self.new_m4.spread.moving_steelsight
+		standing = self.r870.spread.standing,
+		crouching = self.r870.spread.crouching,
+		steelsight = self.r870.spread.steelsight,
+		moving_standing = self.r870.spread.moving_standing,
+		moving_crouching = self.r870.spread.moving_crouching,
+		moving_steelsight = self.r870.spread.moving_steelsight
 	}
 	self.x_basset.kick = {standing = {
 		1.4,
@@ -15382,7 +15605,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 	}
 end
 
--- Lines: 20154 to 20257
+-- Lines: 20153 to 20256
 function WeaponTweakData:_init_data_offhand_weapons()
 	self.b92fs_primary = deep_clone(self.b92fs)
 	self.b92fs_primary.parent_weapon_id = "b92fs"
@@ -15476,7 +15699,7 @@ function WeaponTweakData:_init_data_offhand_weapons()
 	self.m4_secondary.AMMO_MAX = math.round(self.m4_secondary.AMMO_MAX * 0.75)
 end
 
--- Lines: 20263 to 20557
+-- Lines: 20262 to 20556
 function WeaponTweakData:_create_table_structure()
 	self.c45_npc = {
 		usage = "is_pistol",
@@ -16403,6 +16626,18 @@ function WeaponTweakData:_create_table_structure()
 		use_data = {},
 		auto = {}
 	}
+	self.shrew_crew = {
+		usage = "is_pistol",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.x_shrew_crew = {
+		usage = "akimbo_pistol",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
 	self.basset_crew = {
 		usage = "is_bullpup",
 		sounds = {},
@@ -16417,11 +16652,11 @@ function WeaponTweakData:_create_table_structure()
 	}
 end
 
--- Lines: 20560 to 20561
+-- Lines: 20559 to 20560
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines: 20564 to 20572
+-- Lines: 20563 to 20571
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then

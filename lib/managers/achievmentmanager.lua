@@ -340,7 +340,7 @@ function AchievmentManager:award_data(t, name)
 	return self:_award_achievement(t, name)
 end
 
--- Lines: 322 to 363
+-- Lines: 322 to 365
 function AchievmentManager:award(id)
 	if not self:exists(id) then
 		Application:error("[AchievmentManager:award] Awarding non-existing achievement", "id", id)
@@ -356,12 +356,16 @@ function AchievmentManager:award(id)
 		return
 	end
 
-	if self:get_info(id).awarded then
+	local info = self:get_info(id)
+
+	if info.awarded then
 		return
 	end
 
-	if managers.hud then
+	if managers.hud and not info.showed_awarded then
 		managers.hud:achievement_popup(id)
+
+		info.showed_awarded = true
 	end
 
 	if id == "christmas_present" then
@@ -374,7 +378,7 @@ function AchievmentManager:award(id)
 	managers.mission:call_global_event(Message.OnAchievement, id)
 end
 
--- Lines: 366 to 373
+-- Lines: 368 to 375
 function AchievmentManager:award_enemy_kill_achievement(id)
 	for achievement_id, achievement_data in pairs(tweak_data.achievement.enemy_kill_achievements) do
 		if achievement_id == id then
@@ -385,7 +389,7 @@ function AchievmentManager:award_enemy_kill_achievement(id)
 	end
 end
 
--- Lines: 377 to 411
+-- Lines: 379 to 413
 function AchievmentManager:update()
 	local cur = nil
 	self._progress_iter, cur = next(self._with_progress, self._with_progress[self._progress_iter] and self._progress_iter)
@@ -427,7 +431,7 @@ function AchievmentManager:update()
 	end
 end
 
--- Lines: 413 to 433
+-- Lines: 415 to 435
 function AchievmentManager:force_track(id, state)
 	local data = self:get_info(id)
 
@@ -457,12 +461,12 @@ function AchievmentManager:force_track(id, state)
 	return data.forced
 end
 
--- Lines: 436 to 437
+-- Lines: 438 to 439
 function AchievmentManager:get_force_tracked()
 	return self._forced
 end
 
--- Lines: 440 to 467
+-- Lines: 442 to 469
 function AchievmentManager:get_tracked_fill(max)
 	max = max or self.MAX_TRACKED
 
@@ -493,7 +497,7 @@ function AchievmentManager:get_tracked_fill(max)
 	return list
 end
 
--- Lines: 470 to 485
+-- Lines: 472 to 487
 function AchievmentManager:track(id, state)
 	local data = self:get_info(id)
 
@@ -514,24 +518,24 @@ function AchievmentManager:track(id, state)
 	return data.tracked
 end
 
--- Lines: 489 to 490
+-- Lines: 491 to 492
 function AchievmentManager:get_friends_with_achievement(id, callback)
 	return self.handler:friends_with_achievement(id, callback)
 end
 
--- Lines: 493 to 494
+-- Lines: 495 to 496
 function AchievmentManager:get_global_achieved_percent(id)
 	return self.handler:achievement_achieved_percent(id)
 end
 
--- Lines: 498 to 502
+-- Lines: 500 to 504
 function AchievmentManager:set_recent_time(time)
 	time = time or os.time()
 	self._recent_data = self._recent_data or {}
 	self._recent_data.time = time >= 0 and time or os.time() + time
 end
 
--- Lines: 504 to 521
+-- Lines: 506 to 523
 function AchievmentManager:get_recent_achievements(params)
 	params = params or {}
 	local recent = params.from or self._recent_data.time
@@ -552,7 +556,7 @@ function AchievmentManager:get_recent_achievements(params)
 	return rtn
 end
 
--- Lines: 525 to 544
+-- Lines: 527 to 546
 function AchievmentManager:_give_reward(id, skip_exp)
 	print("[AchievmentManager:_give_reward] ", id)
 
@@ -569,7 +573,7 @@ function AchievmentManager:_give_reward(id, skip_exp)
 	end
 end
 
--- Lines: 547 to 603
+-- Lines: 549 to 605
 function AchievmentManager:award_progress(stat, value)
 	if Application:editor() then
 		return
@@ -616,7 +620,7 @@ function AchievmentManager:award_progress(stat, value)
 	end
 end
 
--- Lines: 607 to 611
+-- Lines: 609 to 613
 function AchievmentManager:get_stat(stat)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return managers.network.account:get_stat(stat)
@@ -625,12 +629,12 @@ function AchievmentManager:get_stat(stat)
 	return false
 end
 
--- Lines: 616 to 618
+-- Lines: 618 to 620
 function AchievmentManager:award_none(id)
 	Application:debug("[AchievmentManager:award_none] Awarded achievment", id)
 end
 
--- Lines: 622 to 636
+-- Lines: 624 to 638
 function AchievmentManager:award_steam(id)
 	Application:debug("[AchievmentManager:award_steam] Awarded Steam achievment", id)
 	self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
@@ -646,7 +650,7 @@ function AchievmentManager:award_steam(id)
 	end
 end
 
--- Lines: 640 to 650
+-- Lines: 642 to 652
 function AchievmentManager:clear_steam(id)
 	print("[AchievmentManager:clear_steam]", id)
 
@@ -660,7 +664,7 @@ function AchievmentManager:clear_steam(id)
 	self.handler:store_data()
 end
 
--- Lines: 654 to 664
+-- Lines: 656 to 666
 function AchievmentManager:clear_all_steam()
 	print("[AchievmentManager:clear_all_steam]")
 
@@ -674,7 +678,7 @@ function AchievmentManager:clear_all_steam()
 	self.handler:store_data()
 end
 
--- Lines: 668 to 677
+-- Lines: 670 to 679
 function AchievmentManager.steam_unlock_result(achievment)
 	print("[AchievmentManager:steam_unlock_result] Awarded Steam achievment", achievment)
 
@@ -687,12 +691,12 @@ function AchievmentManager.steam_unlock_result(achievment)
 	end
 end
 
--- Lines: 680 to 696
+-- Lines: 682 to 698
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
 
-	-- Lines: 688 to 693
+	-- Lines: 690 to 695
 	local function x360_unlock_result(result)
 		print("result", result)
 	end
@@ -700,7 +704,7 @@ function AchievmentManager:award_x360(id)
 	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
 end
 
--- Lines: 700 to 711
+-- Lines: 702 to 713
 function AchievmentManager:award_psn(id)
 	print("[AchievmentManager:award] Awarded PSN achievment", id, self:get_info(id).id)
 
@@ -714,7 +718,7 @@ function AchievmentManager:award_psn(id)
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
--- Lines: 713 to 721
+-- Lines: 715 to 723
 function AchievmentManager.psn_unlock_result(request, error_str)
 	print("[AchievmentManager:psn_unlock_result] Awarded PSN achievment", request, error_str)
 
@@ -727,7 +731,7 @@ function AchievmentManager.psn_unlock_result(request, error_str)
 	end
 end
 
--- Lines: 725 to 735
+-- Lines: 727 to 737
 function AchievmentManager:chk_install_trophies()
 	if Trophies:is_installed() then
 		print("[AchievmentManager:chk_install_trophies] Already installed")
@@ -742,7 +746,7 @@ function AchievmentManager:chk_install_trophies()
 	end
 end
 
--- Lines: 739 to 745
+-- Lines: 741 to 747
 function AchievmentManager:clbk_install_trophies(result)
 	print("[AchievmentManager:clbk_install_trophies]", result)
 
@@ -753,7 +757,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines: 750 to 797
+-- Lines: 752 to 799
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
@@ -808,7 +812,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 	end
 end
 
--- Lines: 802 to 808
+-- Lines: 804 to 810
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -818,7 +822,7 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines: 812 to 831
+-- Lines: 814 to 833
 function AchievmentManager:_check_autounlock_complete_heist()
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_achievements) do
 		if table.size(achievement_data) == 3 and achievement_data.award and achievement_data.difficulty and (achievement_data.job or achievement_data.jobs) then
@@ -839,17 +843,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines: 834 to 836
+-- Lines: 836 to 838
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines: 839 to 841
+-- Lines: 841 to 843
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines: 843 to 870
+-- Lines: 845 to 872
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)

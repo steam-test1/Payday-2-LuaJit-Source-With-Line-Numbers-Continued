@@ -1,6 +1,6 @@
 LootDropTweakData = LootDropTweakData or class()
 
--- Lines: 4 to 1932
+-- Lines: 4 to 1936
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1534,6 +1534,22 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 300,
 		category = "dlc"
 	}
+	self.global_values.myh = {
+		name_id = "bm_global_value_myh",
+		desc_id = "menu_l_global_value_myh",
+		unlock_id = "bm_global_value_myh_unlock",
+		color = dlc_color,
+		dlc = true,
+		free = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "dlc",
+		ignore_ulti = true
+	}
 
 	if SystemInfo:platform() == Idstring("PS3") then
 		self.global_values.sweettooth = {
@@ -1624,7 +1640,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 1934 to 1939
+-- Lines: 1938 to 1943
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

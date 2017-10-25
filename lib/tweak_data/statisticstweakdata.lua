@@ -233,7 +233,8 @@ function StatisticsTweakData:statistics_table()
 		"sydney",
 		"wild",
 		"chico",
-		"max"
+		"max",
+		"myh"
 	}
 	local deployable_list = {
 		"ammo_bag",

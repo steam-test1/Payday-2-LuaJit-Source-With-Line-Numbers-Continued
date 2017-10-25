@@ -4,6 +4,7 @@ require("lib/states/MenuTitlescreenState")
 require("lib/states/MenuMainState")
 require("lib/states/EditorState")
 require("lib/states/WorldCameraState")
+require("lib/utils/game_state_machine/GameStateFilters")
 require("lib/states/IngamePlayerBase")
 require("lib/states/IngameStandard")
 require("lib/states/IngameMaskOff")
@@ -34,7 +35,7 @@ require("lib/gamemodes/GamemodeCrimeSpree")
 
 GameStateMachine = GameStateMachine or class(CoreGameStateMachine.GameStateMachine)
 
--- Lines: 48 to 521
+-- Lines: 50 to 523
 function GameStateMachine:init()
 	if not Global.game_state_machine then
 		Global.game_state_machine = {
@@ -63,55 +64,55 @@ function GameStateMachine:init()
 	managers.system_menu:add_active_changed_callback(callback(self, self, "dialog_active_changed_callback"))
 end
 
--- Lines: 523 to 527
+-- Lines: 525 to 529
 function GameStateMachine:init_finilize()
 	if managers.hud then
 		managers.hud:add_chatinput_changed_callback(callback(self, self, "chatinput_changed_callback"))
 	end
 end
 
--- Lines: 529 to 532
+-- Lines: 531 to 534
 function GameStateMachine:set_boot_intro_done(is_boot_intro_done)
 	Global.game_state_machine.is_boot_intro_done = is_boot_intro_done
 	self._is_boot_intro_done = is_boot_intro_done
 end
 
--- Lines: 534 to 535
+-- Lines: 536 to 537
 function GameStateMachine:is_boot_intro_done()
 	return self._is_boot_intro_done
 end
 
--- Lines: 538 to 540
+-- Lines: 540 to 542
 function GameStateMachine:set_boot_from_sign_out(is_boot_from_sign_out)
 	Global.game_state_machine.is_boot_from_sign_out = is_boot_from_sign_out
 end
 
--- Lines: 542 to 543
+-- Lines: 544 to 545
 function GameStateMachine:is_boot_from_sign_out()
 	return self._is_boot_from_sign_out
 end
 
--- Lines: 546 to 548
+-- Lines: 548 to 550
 function GameStateMachine:menu_active_changed_callback(active)
 	self:_set_controller_enabled(not active)
 end
 
--- Lines: 550 to 552
+-- Lines: 552 to 554
 function GameStateMachine:dialog_active_changed_callback(active)
 	self:_set_controller_enabled(not active)
 end
 
--- Lines: 554 to 556
+-- Lines: 556 to 558
 function GameStateMachine:chatinput_changed_callback(active)
 	self:_set_controller_enabled(not active)
 end
 
--- Lines: 558 to 559
+-- Lines: 560 to 561
 function GameStateMachine:is_controller_enabled()
 	return self._controller_enabled_count > 0
 end
 
--- Lines: 562 to 578
+-- Lines: 564 to 580
 function GameStateMachine:_set_controller_enabled(enabled)
 	local was_enabled = self:is_controller_enabled()
 
@@ -130,12 +131,12 @@ function GameStateMachine:_set_controller_enabled(enabled)
 	end
 end
 
--- Lines: 583 to 584
+-- Lines: 585 to 586
 function GameStateMachine:gamemode()
 	return self._gamemode
 end
 
--- Lines: 587 to 592
+-- Lines: 589 to 594
 function GameStateMachine:change_gamemode_by_name(gamemode, setup_boot, setup_title)
 	Global.game_settings.gamemode = gamemode
 	local gamemode_class = Gamemode.MAP[gamemode] or GamemodeStandard
@@ -144,7 +145,7 @@ function GameStateMachine:change_gamemode_by_name(gamemode, setup_boot, setup_ti
 	self._gamemode:setup_gsm(self, self._empty_state, setup_boot, setup_title)
 end
 
--- Lines: 594 to 597
+-- Lines: 596 to 599
 function GameStateMachine:can_change_state_by_name(state_name)
 	local name = self:gamemode():get_state(state_name)
 	local state = assert(self._states[name], "[GameStateMachine] Name '" .. tostring(name) .. "' does not correspond to a valid state.")
@@ -152,11 +153,18 @@ function GameStateMachine:can_change_state_by_name(state_name)
 	return self:can_change_state(state)
 end
 
--- Lines: 600 to 604
+-- Lines: 602 to 606
 function GameStateMachine:change_state_by_name(state_name, params)
 	local name = self:gamemode():get_state(state_name)
 	local state = assert(self._states[name], "[GameStateMachine] Name '" .. tostring(name) .. "' does not correspond to a valid state.")
 
 	self:change_state(state, params)
+end
+
+-- Lines: 610 to 612
+function GameStateMachine:verify_game_state(filter, state)
+	state = state or self:last_queued_state_name()
+
+	return filter[state]
 end
 

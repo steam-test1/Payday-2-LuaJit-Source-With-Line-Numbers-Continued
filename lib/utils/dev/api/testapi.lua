@@ -264,8 +264,10 @@ TestAPIHelper.register_API_function("get_jobs", "jobs", "", function ()
 end, "Returns a table with all available jobs.")
 
 
--- Lines: 243 to 262
+-- Lines: 243 to 264
 local function start(job_id, difficulty, stage)
+	assert(not not tweak_data.narrative.jobs[job_id], string.format("invalid job: %s", job_id))
+
 	Global.game_settings.single_player = true
 
 	managers.network:host_game()
@@ -321,7 +323,7 @@ TestAPIHelper.register_API_function("delay", "internal", "time = 1", function ()
 end, "Delays queued calls by the given time (seconds).", true)
 
 
--- Lines: 303 to 333
+-- Lines: 305 to 335
 local function equip_weapon_in_game(category, slot)
 	assert(category == "primaries" or category == "secondaries", string.format("invalid category: %s", category))
 	assert(slot and slot <= #Global.blackmarket_manager.crafted_items[category], string.format("invalid slot: %d", slot))
@@ -330,7 +332,7 @@ local function equip_weapon_in_game(category, slot)
 	local first_time = true
 
 
-	-- Lines: 310 to 322
+	-- Lines: 312 to 324
 	local function clbk()
 		if first_time then
 			managers.blackmarket:equip_weapon(category, slot)

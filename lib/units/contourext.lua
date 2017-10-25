@@ -304,7 +304,7 @@ function ContourExt:is_flashing()
 	end
 end
 
--- Lines: 332 to 350
+-- Lines: 333 to 351
 function ContourExt:remove(type, sync)
 	if not self._contour_list then
 		return
@@ -327,11 +327,13 @@ function ContourExt:remove(type, sync)
 	self:apply_to_linked("remove", type, sync)
 end
 
--- Lines: 353 to 370
+-- Lines: 355 to 373
 function ContourExt:remove_by_id(id, sync)
 	if not self._contour_list then
 		return
 	end
+
+	local remove_type = id.type
 
 	for i, setup in ipairs(self._contour_list) do
 		if setup == id then
@@ -345,10 +347,10 @@ function ContourExt:remove_by_id(id, sync)
 		end
 	end
 
-	self:apply_to_linked("remove_by_id", id, sync)
+	self:apply_to_linked("remove", remove_type, sync)
 end
 
--- Lines: 372 to 378
+-- Lines: 375 to 381
 function ContourExt:has_id(id)
 	for i, setup in ipairs(self._contour_list) do
 		if setup.type == id then
@@ -359,15 +361,20 @@ function ContourExt:has_id(id)
 	return false
 end
 
--- Lines: 381 to 384
+-- Lines: 384 to 387
 function ContourExt:_clear()
 	self._contour_list = nil
 	self._materials = nil
 end
 
--- Lines: 388 to 436
+-- Lines: 391 to 442
 function ContourExt:_remove(index, sync)
-	local setup = self._contour_list[index]
+	local setup = self._contour_list and self._contour_list[index]
+
+	if not setup then
+		return
+	end
+
 	local contour_type = setup.type
 	local data = self._types[setup.type]
 
@@ -413,11 +420,9 @@ function ContourExt:_remove(index, sync)
 
 		managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, u_id, table.index_of(ContourExt.indexed_types, contour_type), false, 1)
 	end
-
-	self:apply_to_linked("_remove", index, sync)
 end
 
--- Lines: 438 to 486
+-- Lines: 444 to 492
 function ContourExt:update(unit, t, dt)
 	local index = 1
 
@@ -467,7 +472,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 488 to 513
+-- Lines: 494 to 519
 function ContourExt:_upd_opacity(opacity, is_retry)
 	if opacity == self._last_opacity then
 		return
@@ -497,8 +502,12 @@ function ContourExt:_upd_opacity(opacity, is_retry)
 	self:apply_to_linked("_upd_opacity", opacity, is_retry)
 end
 
--- Lines: 515 to 535
+-- Lines: 522 to 546
 function ContourExt:_upd_color(is_retry)
+	if not self._contour_list then
+		return
+	end
+
 	local color = self._types[self._contour_list[1].type].color or self._contour_list[1].color
 
 	if not color then
@@ -524,7 +533,7 @@ function ContourExt:_upd_color(is_retry)
 	self:apply_to_linked("_upd_color", is_retry)
 end
 
--- Lines: 537 to 557
+-- Lines: 548 to 568
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
@@ -545,7 +554,7 @@ function ContourExt:_apply_top_preset()
 	end
 end
 
--- Lines: 559 to 582
+-- Lines: 570 to 593
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -573,7 +582,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines: 584 to 600
+-- Lines: 595 to 611
 function ContourExt:_chk_update_state()
 	local needs_update = nil
 
@@ -594,7 +603,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines: 602 to 610
+-- Lines: 613 to 621
 function ContourExt:update_materials()
 	if self._contour_list and next(self._contour_list) then
 		self._materials = nil
@@ -607,7 +616,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines: 612 to 621
+-- Lines: 623 to 632
 function ContourExt:save(data)
 	if self._contour_list then
 		for _, setup in ipairs(self._contour_list) do
@@ -620,7 +629,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines: 623 to 627
+-- Lines: 634 to 638
 function ContourExt:load(data)
 	if data and data.highlight_character then
 		self:add(data.highlight_character.type)

@@ -12,7 +12,7 @@ function CoroutineManager:init()
 	end
 end
 
--- Lines: 16 to 31
+-- Lines: 16 to 33
 function CoroutineManager:update(t, dt)
 	self:_add()
 
@@ -21,12 +21,14 @@ function CoroutineManager:update(t, dt)
 	for i = 1, size, 1 do
 		for key, value in pairs(self._coroutines[i]) do
 			if value then
-				local result = coroutine.resume(value.co, unpack(value.arg))
+				local result, error_msg = coroutine.resume(value.co, unpack(value.arg))
 				local status = coroutine.status(value.co)
 
-				if status == "dead" then
-					print("[CoroutineManager:update] ", value, " has ended ", result)
+				if result == false then
+					Application:error("Coroutine failed (" .. tostring(key) .. "): " .. error_msg)
+				end
 
+				if status == "dead" then
 					self._coroutines[i][key] = nil
 				end
 			end
@@ -34,7 +36,7 @@ function CoroutineManager:update(t, dt)
 	end
 end
 
--- Lines: 33 to 39
+-- Lines: 35 to 41
 function CoroutineManager:add_coroutine(name, func, ...)
 	local priority = func.Priority
 
@@ -48,12 +50,16 @@ function CoroutineManager:add_coroutine(name, func, ...)
 	end
 end
 
--- Lines: 42 to 50
+-- Lines: 44 to 55
 function CoroutineManager:add_and_run_coroutine(name, func, ...)
 	local arg = {...}
 	local co = coroutine.create(func.Function)
-	local result = coroutine.resume(co, unpack(arg))
+	local result, error_msg = coroutine.resume(co, unpack(arg))
 	local status = coroutine.status(co)
+
+	if result == false then
+		Application:error("Coroutine failed (" .. tostring(name) .. "): " .. error_msg)
+	end
 
 	if status ~= "dead" then
 		self._coroutines[func.Priority][name] = {
@@ -63,7 +69,7 @@ function CoroutineManager:add_and_run_coroutine(name, func, ...)
 	end
 end
 
--- Lines: 52 to 60
+-- Lines: 57 to 65
 function CoroutineManager:_add()
 	for key, value in pairs(self._buffer) do
 		local co = coroutine.create(value.func.Function)
@@ -78,7 +84,7 @@ function CoroutineManager:_add()
 	self._buffer = {}
 end
 
--- Lines: 62 to 68
+-- Lines: 67 to 73
 function CoroutineManager:is_running(name)
 	if self._buffer[name] then
 		return true
@@ -95,7 +101,7 @@ function CoroutineManager:is_running(name)
 	return false
 end
 
--- Lines: 73 to 85
+-- Lines: 78 to 90
 function CoroutineManager:remove_coroutine(name)
 	if self._buffer[name] then
 		self._buffer[name] = nil
@@ -110,5 +116,10 @@ function CoroutineManager:remove_coroutine(name)
 			return
 		end
 	end
+end
+
+-- Lines: 92 to 94
+function CoroutineManager:clear()
+	self:init()
 end
 
