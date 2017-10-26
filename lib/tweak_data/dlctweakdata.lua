@@ -1,6 +1,6 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 4619
+-- Lines: 10 to 4631
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -6088,6 +6088,16 @@ function DLCTweakData:init(tweak_data)
 	self.kwm_bundle.content.loot_drops = {{
 		type_items = "masks",
 		item_entry = "kwm",
+		amount = 1
+	}}
+	self.mmj_bundle = {
+		free = true,
+		content = {}
+	}
+	self.mmj_bundle.content.loot_global_value = "normal"
+	self.mmj_bundle.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "mmj",
 		amount = 1
 	}}
 end

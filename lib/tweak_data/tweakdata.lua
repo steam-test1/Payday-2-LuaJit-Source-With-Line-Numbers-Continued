@@ -449,7 +449,8 @@ function TweakData:init()
 					ai_mask_id = "dallas",
 					ai_character_id = "ai_dallas",
 					ssuffix = "a"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "german",
@@ -459,7 +460,8 @@ function TweakData:init()
 					ai_mask_id = "wolf",
 					ai_character_id = "ai_wolf",
 					ssuffix = "c"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "spanish",
@@ -469,7 +471,8 @@ function TweakData:init()
 					ai_mask_id = "chains",
 					ai_character_id = "ai_chains",
 					ssuffix = "b"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "american",
@@ -479,7 +482,8 @@ function TweakData:init()
 					ai_mask_id = "hoxton",
 					ai_character_id = "ai_hoxton",
 					ssuffix = "l"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "jowi",
@@ -489,7 +493,8 @@ function TweakData:init()
 					ai_mask_id = "jw_shades",
 					ai_character_id = "ai_jowi",
 					ssuffix = "m"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "old_hoxton",
@@ -499,7 +504,8 @@ function TweakData:init()
 					ai_mask_id = "old_hoxton",
 					ai_character_id = "ai_old_hoxton",
 					ssuffix = "d"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "female_1",
@@ -509,7 +515,8 @@ function TweakData:init()
 					ai_mask_id = "msk_grizel",
 					ai_character_id = "ai_female_1",
 					ssuffix = "n"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "dragan",
@@ -519,7 +526,8 @@ function TweakData:init()
 					ai_mask_id = "dragan",
 					ai_character_id = "ai_dragan",
 					ssuffix = "o"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "jacket",
@@ -529,7 +537,8 @@ function TweakData:init()
 					ai_mask_id = "richard_returns",
 					ai_character_id = "ai_jacket",
 					ssuffix = "p"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "bonnie",
@@ -539,7 +548,8 @@ function TweakData:init()
 					ai_mask_id = "bonnie",
 					ai_character_id = "ai_bonnie",
 					ssuffix = "q"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "sokol",
@@ -549,7 +559,8 @@ function TweakData:init()
 					ai_mask_id = "sokol",
 					ai_character_id = "ai_sokol",
 					ssuffix = "r"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "dragon",
@@ -559,7 +570,8 @@ function TweakData:init()
 					ai_mask_id = "jiro",
 					ai_character_id = "ai_dragon",
 					ssuffix = "s"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "bodhi",
@@ -569,7 +581,8 @@ function TweakData:init()
 					ai_mask_id = "bodhi",
 					ai_character_id = "ai_bodhi",
 					ssuffix = "t"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "jimmy",
@@ -579,7 +592,8 @@ function TweakData:init()
 					ai_mask_id = "jimmy_duct",
 					ai_character_id = "ai_jimmy",
 					ssuffix = "u"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "sydney",
@@ -589,7 +603,8 @@ function TweakData:init()
 					ai_mask_id = "sydney",
 					ai_character_id = "ai_sydney",
 					ssuffix = "v"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "wild",
@@ -599,7 +614,8 @@ function TweakData:init()
 					ai_mask_id = "rust",
 					ai_character_id = "ai_wild",
 					ssuffix = "w"
-				}
+				},
+				body_g_object = Idstring("g_body")
 			},
 			{
 				name = "chico",
@@ -609,7 +625,8 @@ function TweakData:init()
 					ai_mask_id = "chc_terry",
 					ai_character_id = "ai_chico",
 					ssuffix = "x"
-				}
+				},
+				body_g_object = Idstring("g_body_terry")
 			},
 			{
 				name = "max",
@@ -619,7 +636,8 @@ function TweakData:init()
 					ai_mask_id = "max",
 					ai_character_id = "ai_max",
 					ssuffix = "y"
-				}
+				},
+				body_g_object = Idstring("g_body_max")
 			},
 			{
 				name = "myh",
@@ -629,7 +647,8 @@ function TweakData:init()
 					ai_mask_id = "myh",
 					ai_character_id = "ai_myh",
 					ssuffix = "ac"
-				}
+				},
+				body_g_object = Idstring("g_body_myh")
 			}
 		},
 		character_names = {}

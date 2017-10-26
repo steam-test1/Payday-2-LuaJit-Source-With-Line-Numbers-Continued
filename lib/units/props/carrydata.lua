@@ -69,7 +69,22 @@ local ids_g_g = Idstring("g_g")
 local ids_g_goat = Idstring("g_goat")
 local ids_g_bodybag = Idstring("g_bodybag")
 
--- Lines: 79 to 134
+-- Lines: 78 to 86
+function CarryData:_get_carry_body(unit)
+	local body = nil
+
+	for _, char in ipairs(tweak_data.criminals.characters) do
+		body = unit:get_object(char.body_g_object)
+
+		if body then
+			return body
+		end
+	end
+
+	return nil
+end
+
+-- Lines: 90 to 146
 function CarryData:_update_throw_link(unit, t, dt)
 	if not self._linked_to then
 		local bag_object = self._unit:get_object(ids_g_bag) or self._unit:get_object(ids_g_canvasbag) or self._unit:get_object(ids_g_g) or self._unit:get_object(ids_g_goat) or self._unit:get_object(ids_g_bodybag)
@@ -79,7 +94,7 @@ function CarryData:_update_throw_link(unit, t, dt)
 
 			for key, data in pairs(managers.groupai:state():all_AI_criminals()) do
 				if alive(data.unit) then
-					local body = data.unit:get_object(Idstring("g_body")) or data.unit:get_object(Idstring("g_body_terry")) or data.unit:get_object(Idstring("g_body_max"))
+					local body = self:_get_carry_body(data.unit)
 
 					if body then
 						local bag_center = bag_object:oobb():center()
@@ -131,7 +146,7 @@ function CarryData:_update_throw_link(unit, t, dt)
 	end
 end
 
--- Lines: 138 to 159
+-- Lines: 150 to 171
 function CarryData:_update_teleport(unit, t, dt)
 	if self._perform_push and self._teleport_push then
 		self._unit:push(unpack(self._teleport_push))
@@ -157,7 +172,7 @@ function CarryData:_update_teleport(unit, t, dt)
 	end
 end
 
--- Lines: 163 to 179
+-- Lines: 175 to 191
 function CarryData:_check_dye_explode()
 	return
 
@@ -174,12 +189,12 @@ function CarryData:_check_dye_explode()
 	self._dye_risk.next_t = Application:time() + 2 + math.random(3)
 end
 
--- Lines: 181 to 183
+-- Lines: 193 to 195
 function CarryData:sync_dye_exploded()
 	self:_dye_exploded()
 end
 
--- Lines: 185 to 195
+-- Lines: 197 to 207
 function CarryData:_dye_exploded()
 	return
 
@@ -195,7 +210,7 @@ function CarryData:_dye_exploded()
 	})
 end
 
--- Lines: 197 to 226
+-- Lines: 209 to 238
 function CarryData:check_explodes_on_impact(velocity, air_time)
 	if not Network:is_server() then
 		return
@@ -227,12 +242,12 @@ function CarryData:check_explodes_on_impact(velocity, air_time)
 	end
 end
 
--- Lines: 228 to 229
+-- Lines: 240 to 241
 function CarryData:explode_sequence_started()
 	return self._explode_t and true or false
 end
 
--- Lines: 232 to 238
+-- Lines: 244 to 250
 function CarryData:can_explode()
 	if self._disarmed then
 		return false
@@ -243,14 +258,14 @@ function CarryData:can_explode()
 	return tweak_data.carry.types[tweak_info.type].can_explode
 end
 
--- Lines: 242 to 244
+-- Lines: 254 to 256
 function CarryData:can_poof()
 	local tweak_info = tweak_data.carry[self._carry_id]
 
 	return tweak_data.carry.types[tweak_info.type].can_poof
 end
 
--- Lines: 248 to 267
+-- Lines: 260 to 279
 function CarryData:start_explosion(instant)
 	if self._explode_t then
 		return
@@ -272,12 +287,12 @@ function CarryData:start_explosion(instant)
 	end
 end
 
--- Lines: 269 to 271
+-- Lines: 281 to 283
 function CarryData:_start_explosion()
 	self._unit:interaction():set_active(false)
 end
 
--- Lines: 273 to 276
+-- Lines: 285 to 288
 function CarryData:disarm()
 	self._explode_t = nil
 	self._disarmed = true
@@ -295,7 +310,7 @@ CarryData.EXPLOSION_CUSTOM_PARAMS = {
 }
 local mvec1 = Vector3()
 
--- Lines: 283 to 331
+-- Lines: 295 to 343
 function CarryData:_explode()
 	managers.mission:call_global_event("loot_exploded")
 
@@ -356,7 +371,7 @@ CarryData.POOF_CUSTOM_PARAMS = {
 	camera_shake_mul = 4
 }
 
--- Lines: 336 to 354
+-- Lines: 348 to 366
 function CarryData:poof()
 	if not self:can_poof() then
 		return
@@ -375,7 +390,7 @@ function CarryData:poof()
 	self._unit:set_slot(0)
 end
 
--- Lines: 357 to 367
+-- Lines: 369 to 379
 function CarryData:_local_player_explosion_damage()
 	local pos = self._unit:position()
 	local range = CarryData.EXPLOSION_SETTINGS.range
@@ -383,7 +398,7 @@ function CarryData:_local_player_explosion_damage()
 	managers.explosion:give_local_player_dmg(pos, range, CarryData.EXPLOSION_SETTINGS.player_damage)
 end
 
--- Lines: 369 to 382
+-- Lines: 381 to 394
 function CarryData:sync_net_event(event_id)
 	if event_id == CarryData.EVENT_IDS.explode then
 		local range = CarryData.EXPLOSION_SETTINGS.range
@@ -398,7 +413,7 @@ function CarryData:sync_net_event(event_id)
 	end
 end
 
--- Lines: 384 to 418
+-- Lines: 396 to 430
 function CarryData:clbk_out_of_world()
 	if self._bodies_to_revert then
 		for i_body, body in ipairs(self._bodies_to_revert) do
@@ -439,12 +454,12 @@ function CarryData:clbk_out_of_world()
 	managers.enemy:add_delayed_clbk(self._register_out_of_world_clbk_id, callback(self, self, "clbk_out_of_world"), TimerManager:game():time() + 2)
 end
 
--- Lines: 420 to 421
+-- Lines: 432 to 433
 function CarryData:carry_id()
 	return self._carry_id
 end
 
--- Lines: 424 to 429
+-- Lines: 436 to 441
 function CarryData:set_carry_id(carry_id)
 	self._carry_id = carry_id
 	self._register_steal_SO_clbk_id = "CarryDataregiserSO" .. tostring(self._unit:key())
@@ -452,34 +467,34 @@ function CarryData:set_carry_id(carry_id)
 	managers.enemy:add_delayed_clbk(self._register_steal_SO_clbk_id, callback(self, self, "clbk_register_steal_SO"), 0)
 end
 
--- Lines: 431 to 434
+-- Lines: 443 to 446
 function CarryData:clbk_register_steal_SO(carry_id)
 	self._register_steal_SO_clbk_id = nil
 
 	self:_chk_register_steal_SO()
 end
 
--- Lines: 444 to 446
+-- Lines: 456 to 458
 function CarryData:set_dye_initiated(initiated)
 	self._dye_initiated = initiated
 end
 
--- Lines: 448 to 449
+-- Lines: 460 to 461
 function CarryData:dye_initiated()
 	return self._dye_initiated
 end
 
--- Lines: 457 to 458
+-- Lines: 469 to 470
 function CarryData:has_dye_pack()
 	return self._has_dye_pack
 end
 
--- Lines: 461 to 462
+-- Lines: 473 to 474
 function CarryData:dye_value_multiplier()
 	return self._dye_value_multiplier
 end
 
--- Lines: 465 to 478
+-- Lines: 477 to 490
 function CarryData:set_dye_pack_data(dye_initiated, has_dye_pack, dye_value_multiplier)
 	self._dye_initiated = dye_initiated
 	self._has_dye_pack = has_dye_pack
@@ -494,42 +509,42 @@ function CarryData:set_dye_pack_data(dye_initiated, has_dye_pack, dye_value_mult
 	end
 end
 
--- Lines: 480 to 481
+-- Lines: 492 to 493
 function CarryData:dye_pack_data()
 	return self._dye_initiated, self._has_dye_pack, self._dye_value_multiplier
 end
 
--- Lines: 484 to 486
+-- Lines: 496 to 498
 function CarryData:_disable_dye_pack()
 	self._dye_risk = false
 end
 
--- Lines: 496 to 497
+-- Lines: 508 to 509
 function CarryData:value()
 	return self._value
 end
 
--- Lines: 500 to 502
+-- Lines: 512 to 514
 function CarryData:set_value(value)
 	self._value = value
 end
 
--- Lines: 504 to 505
+-- Lines: 516 to 517
 function CarryData:multiplier()
 	return self._multiplier
 end
 
--- Lines: 508 to 510
+-- Lines: 520 to 522
 function CarryData:set_multiplier(multiplier)
 	self._multiplier = multiplier
 end
 
--- Lines: 513 to 515
+-- Lines: 525 to 527
 function CarryData:sequence_clbk_secured()
 	self:_disable_dye_pack()
 end
 
--- Lines: 517 to 538
+-- Lines: 529 to 550
 function CarryData:_unregister_steal_SO()
 	if not self._steal_SO_data then
 		return
@@ -554,7 +569,7 @@ function CarryData:_unregister_steal_SO()
 	self._steal_SO_data = nil
 end
 
--- Lines: 541 to 679
+-- Lines: 553 to 691
 function CarryData:_chk_register_steal_SO()
 	local body = self._unit:body("hinge_body_1") or self._unit:body(0)
 
@@ -679,7 +694,7 @@ function CarryData:_chk_register_steal_SO()
 	managers.groupai:state():register_loot(self._unit, pickup_area)
 end
 
--- Lines: 682 to 701
+-- Lines: 694 to 713
 function CarryData:clbk_pickup_SO_verification(candidate_unit)
 	if not self._steal_SO_data or not self._steal_SO_data.SO_id then
 		debug_pause_unit(self._unit, "[CarryData:clbk_pickup_SO_verification] SO is not registered", self._unit, candidate_unit, inspect(self._steal_SO_data))
@@ -704,7 +719,7 @@ function CarryData:clbk_pickup_SO_verification(candidate_unit)
 	return true
 end
 
--- Lines: 705 to 713
+-- Lines: 717 to 725
 function CarryData:on_pickup_SO_administered(thief)
 	if self._steal_SO_data.thief then
 		debug_pause("[CarryData:on_pickup_SO_administered] Already had a thief!!!!", thief, self._steal_SO_data.thief)
@@ -716,7 +731,7 @@ function CarryData:on_pickup_SO_administered(thief)
 	managers.groupai:state():unregister_loot(self._unit:key())
 end
 
--- Lines: 723 to 732
+-- Lines: 735 to 744
 function CarryData:on_pickup_SO_completed(thief)
 	if thief ~= self._steal_SO_data.thief then
 		debug_pause_unit(thief, "[CarryData:on_pickup_SO_completed] idiot thinks he is stealing", thief)
@@ -729,7 +744,7 @@ function CarryData:on_pickup_SO_completed(thief)
 	self:link_to(thief)
 end
 
--- Lines: 736 to 748
+-- Lines: 748 to 760
 function CarryData:on_pickup_SO_failed(thief)
 	if not self._steal_SO_data.thief then
 		return
@@ -746,7 +761,7 @@ function CarryData:on_pickup_SO_failed(thief)
 	self:_chk_register_steal_SO()
 end
 
--- Lines: 751 to 763
+-- Lines: 763 to 775
 function CarryData:on_secure_SO_completed(thief)
 	if thief ~= self._steal_SO_data.thief then
 		debug_pause_unit(sympathy_civ, "[CarryData:on_secure_SO_completed] idiot thinks he is stealing", thief)
@@ -763,7 +778,7 @@ function CarryData:on_secure_SO_completed(thief)
 	self:unlink()
 end
 
--- Lines: 767 to 781
+-- Lines: 779 to 793
 function CarryData:on_secure_SO_failed(thief)
 	if not self._steal_SO_data.thief then
 		return
@@ -781,7 +796,7 @@ function CarryData:on_secure_SO_failed(thief)
 	self:unlink()
 end
 
--- Lines: 784 to 843
+-- Lines: 796 to 855
 function CarryData:link_to(parent_unit, keep_collisions)
 	if self._linked_to and managers.groupai:state():is_unit_team_AI(self._linked_to) then
 		self._linked_to:movement():set_carrying_bag(nil)
@@ -845,7 +860,7 @@ function CarryData:link_to(parent_unit, keep_collisions)
 	end
 end
 
--- Lines: 846 to 875
+-- Lines: 858 to 887
 function CarryData:unlink()
 	if self._linked_to and managers.groupai:state():is_unit_team_AI(self._linked_to) then
 		self._linked_to:movement():set_carrying_bag(nil)
@@ -880,7 +895,7 @@ function CarryData:unlink()
 	end
 end
 
--- Lines: 878 to 901
+-- Lines: 890 to 913
 function CarryData:clbk_body_active_state(tag, unit, body, activated)
 	if not self._has_body_activation_clbk[body:key()] then
 		return
@@ -907,14 +922,14 @@ function CarryData:clbk_body_active_state(tag, unit, body, activated)
 	end
 end
 
--- Lines: 903 to 907
+-- Lines: 915 to 919
 function CarryData:clbk_send_link()
 	if alive(self._unit) and self._steal_SO_data and self._steal_SO_data.thief and self._steal_SO_data.picked_up then
 		managers.network:session():send_to_peers_synched("loot_link", self._unit, self._steal_SO_data.thief)
 	end
 end
 
--- Lines: 910 to 932
+-- Lines: 922 to 944
 function CarryData:set_zipline_unit(zipline_unit)
 	self._zipline_unit = zipline_unit
 
@@ -939,19 +954,19 @@ function CarryData:set_zipline_unit(zipline_unit)
 	end
 end
 
--- Lines: 934 to 935
+-- Lines: 946 to 947
 function CarryData:is_attached_to_zipline_unit()
 	return self._zipline_unit and true
 end
 
--- Lines: 938 to 942
+-- Lines: 950 to 954
 function CarryData:_on_load_attach_to_zipline(zipline_unit)
 	if alive(zipline_unit) then
 		zipline_unit:zipline():attach_bag(self._unit)
 	end
 end
 
--- Lines: 944 to 959
+-- Lines: 956 to 971
 function CarryData:save(data)
 	local state = {
 		carry_id = self._carry_id,
@@ -969,7 +984,7 @@ function CarryData:save(data)
 	data.CarryData = state
 end
 
--- Lines: 961 to 972
+-- Lines: 973 to 984
 function CarryData:load(data)
 	local state = data.CarryData
 	self._carry_id = state.carry_id
@@ -983,7 +998,7 @@ function CarryData:load(data)
 	end
 end
 
--- Lines: 974 to 996
+-- Lines: 986 to 1008
 function CarryData:destroy()
 	if self._register_steal_SO_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._register_steal_SO_clbk_id)
@@ -1012,27 +1027,27 @@ function CarryData:destroy()
 	self._linked_to = nil
 end
 
--- Lines: 998 to 1000
+-- Lines: 1010 to 1012
 function CarryData:set_latest_peer_id(peer_id)
 	self._latest_peer_id = peer_id
 end
 
--- Lines: 1002 to 1003
+-- Lines: 1014 to 1015
 function CarryData:latest_peer_id()
 	return self._latest_peer_id
 end
 
--- Lines: 1007 to 1008
+-- Lines: 1019 to 1020
 function CarryData:is_linked_to_unit()
 	return self._linked_to or false
 end
 
--- Lines: 1012 to 1013
+-- Lines: 1024 to 1025
 function CarryData:is_teleporting()
 	return self._teleport
 end
 
--- Lines: 1017 to 1030
+-- Lines: 1029 to 1042
 function CarryData:teleport_to(pos)
 	self._dynamic_bodies = {}
 	local nr_bodies = self._unit:num_bodies()
@@ -1049,7 +1064,7 @@ function CarryData:teleport_to(pos)
 	self._teleport = pos
 end
 
--- Lines: 1032 to 1034
+-- Lines: 1044 to 1046
 function CarryData:teleport_push(force, direction)
 	self._teleport_push = {
 		force,
@@ -1057,7 +1072,7 @@ function CarryData:teleport_push(force, direction)
 	}
 end
 
--- Lines: 1037 to 1051
+-- Lines: 1049 to 1063
 function CarryData:set_position_and_throw(position, direction, force)
 	if Network:is_client() then
 		self:unlink()
