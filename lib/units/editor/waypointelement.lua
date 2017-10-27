@@ -43,25 +43,34 @@ function WaypointUnitElement:init(unit)
 	table.insert(self._save_values, "only_in_civilian")
 end
 
--- Lines: 21 to 29
-function WaypointUnitElement:_add_wp_options()
-	self._text_options = {"debug_none"}
+-- Lines: 22 to 33
+function WaypointUnitElement:_add_text_options_from_file(path)
+	local xml = SystemFS:parse_xml(Application:base_path() .. "../../assets/" .. path)
 
-	for _, id_string in ipairs(managers.localization:ids("strings/system_text")) do
-		local s = id_string:s()
+	if xml then
+		for child in xml:children() do
+			local s_id = child:parameter("id")
 
-		if string.find(s, "wp_") then
-			table.insert(self._text_options, s)
+			if string.find(s_id, "wp_") then
+				table.insert(self._text_options, s_id)
+			end
 		end
 	end
 end
 
--- Lines: 31 to 33
+-- Lines: 35 to 38
+function WaypointUnitElement:_add_wp_options()
+	self._text_options = {"debug_none"}
+
+	self:_add_text_options_from_file("strings/system_text.strings")
+end
+
+-- Lines: 40 to 42
 function WaypointUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
--- Lines: 35 to 40
+-- Lines: 44 to 49
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
@@ -70,7 +79,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 42 to 59
+-- Lines: 51 to 68
 function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

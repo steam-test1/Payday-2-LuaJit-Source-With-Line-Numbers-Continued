@@ -2972,6 +2972,8 @@ function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_chinese_prisoner.move_speed = presets.move_speed.slow
 	self.escort_chinese_prisoner.no_run_start = false
 	self.escort_chinese_prisoner.no_run_stop = false
+	self.escort_cfo = deep_clone(self.escort_undercover)
+	self.escort_cfo.move_speed = presets.move_speed.normal
 end
 
 -- Lines: 1851 to 1877
@@ -16170,6 +16172,13 @@ function CharacterTweakData:character_map()
 				"ene_bulldozer_medic",
 				"ene_bulldozer_minigun",
 				"ene_zeal_swat_heavy_sniper"
+			}
+		},
+		dah = {
+			path = "units/pd2_dlc_dah/characters/",
+			list = {
+				"npc_male_cfo",
+				"npc_male_ralph"
 			}
 		},
 		wwh = {

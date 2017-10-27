@@ -25,3 +25,7 @@ function ElementEnemyDummyTrigger:on_executed(instigator)
 	ElementEnemyDummyTrigger.super.on_executed(self, instigator)
 end
 
+-- Lines: 24 to 25
+function ElementEnemyDummyTrigger:load()
+end
+

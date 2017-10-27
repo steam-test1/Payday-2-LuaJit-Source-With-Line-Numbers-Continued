@@ -114,12 +114,12 @@ function SubtitleManager:is_showing_subtitles()
 	return self:enabled() and self:visible() and self.__player ~= nil
 end
 
--- Lines: 96 to 98
+-- Lines: 100 to 102
 function SubtitleManager:show_subtitle(string_id, duration, macros)
 	self:show_subtitle_localized(managers.localization:text(string_id, macros), duration)
 end
 
--- Lines: 100 to 104
+-- Lines: 104 to 108
 function SubtitleManager:show_subtitle_localized(localized_string, duration)
 	local sequence = CoreSubtitleSequence.SubtitleSequence:new()
 
@@ -128,23 +128,23 @@ function SubtitleManager:show_subtitle_localized(localized_string, duration)
 	self.__player = CoreSubtitleSequencePlayer.SubtitleSequencePlayer:new(sequence, self:presenter())
 end
 
--- Lines: 106 to 109
+-- Lines: 110 to 113
 function SubtitleManager:run_subtitle_sequence(sequence_id)
 	local sequence = sequence_id and assert(self.__subtitle_sequences[sequence_id], string.format("Sequence \"%s\" not found.", sequence_id))
 	self.__player = sequence and CoreSubtitleSequencePlayer.SubtitleSequencePlayer:new(sequence, self:presenter())
 end
 
--- Lines: 111 to 112
+-- Lines: 115 to 116
 function SubtitleManager:subtitle_sequence_ids()
 	return CoreTable.table.map_keys(self.__subtitle_sequences or {})
 end
 
--- Lines: 115 to 116
+-- Lines: 119 to 120
 function SubtitleManager:has_subtitle_sequence(sequence_id)
 	return (self.__subtitle_sequences and self.__subtitle_sequences[sequence_id]) ~= nil
 end
 
--- Lines: 119 to 123
+-- Lines: 123 to 127
 function SubtitleManager:_update_presenter_visibility()
 	local presenter = self:presenter()
 	local show_presenter = self:enabled() and self:visible() and (not managers.user or managers.user:get_setting("subtitle"))

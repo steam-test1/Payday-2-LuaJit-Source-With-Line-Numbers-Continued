@@ -232,7 +232,7 @@ function ExplosionManager:detect_and_stun(params)
 	return hit_units, splinters, results
 end
 
--- Lines: 222 to 445
+-- Lines: 222 to 443
 function ExplosionManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -388,7 +388,13 @@ function ExplosionManager:detect_and_give_dmg(params)
 			damage = dmg * math.pow(math.clamp(1 - len / range, 0, 1), curve_pow)
 
 			if apply_dmg then
-				self:_apply_body_damage(true, hit_body, user_unit, dir, damage)
+				local prop_damage = damage
+
+				if 1 - len / range < -5 then
+					prop_damage = math.max(damage, 1)
+				end
+
+				self:_apply_body_damage(true, hit_body, user_unit, dir, prop_damage)
 			end
 
 			damage = math.max(damage, 1)
@@ -449,7 +455,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines: 448 to 485
+-- Lines: 446 to 483
 function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	for u_key, unit in pairs(units_to_push) do
 		if alive(unit) then
@@ -491,7 +497,7 @@ function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	end
 end
 
--- Lines: 487 to 537
+-- Lines: 486 to 536
 function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -535,13 +541,13 @@ function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir
 	end
 end
 
--- Lines: 540 to 543
+-- Lines: 539 to 542
 function ExplosionManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines: 545 to 565
+-- Lines: 544 to 564
 function ExplosionManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -564,13 +570,13 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines: 568 to 572
+-- Lines: 567 to 571
 function ExplosionManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table)
 end
 
--- Lines: 574 to 613
+-- Lines: 573 to 612
 function ExplosionManager:player_feedback(position, normal, range, custom_params)
 	local player = managers.player:player_unit()
 
@@ -634,7 +640,7 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines: 617 to 681
+-- Lines: 616 to 680
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
 	local effect_id = nil
@@ -711,7 +717,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	end
 end
 
--- Lines: 683 to 716
+-- Lines: 682 to 715
 function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 

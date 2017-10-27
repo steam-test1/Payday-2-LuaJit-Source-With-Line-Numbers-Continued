@@ -389,15 +389,18 @@ function AiLayer:_build_ai_settings()
 	return graphs_sizer
 end
 
--- Lines: 381 to 455
+-- Lines: 381 to 458
 function AiLayer:_build_ai_unit_settings()
 	local options = {}
+	local xml = SystemFS:parse_xml(Application:base_path() .. "../../assets/strings/atmospheric_text.strings")
 
-	for _, id_string in ipairs(managers.localization:ids("strings/atmospheric_text")) do
-		local s = id_string:s()
+	if xml then
+		for child in xml:children() do
+			local s_id = child:parameter("id")
 
-		if string.find(s, "location_") then
-			table.insert(options, s)
+			if string.find(s_id, "location_") then
+				table.insert(options, s_id)
+			end
 		end
 	end
 
@@ -468,7 +471,7 @@ function AiLayer:_build_ai_unit_settings()
 	return sizer
 end
 
--- Lines: 459 to 486
+-- Lines: 462 to 489
 function AiLayer:_build_ai_data()
 	local ai_data_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Ai Data")
 	local patrol_paths_sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "Patrol paths")
@@ -493,7 +496,7 @@ function AiLayer:_build_ai_data()
 	return ai_data_sizer
 end
 
--- Lines: 490 to 569
+-- Lines: 493 to 572
 function AiLayer:_build_motion_path_section()
 	local motion_paths_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Motion Paths (Work In Progress)")
 	local create_paths_btn = EWS:Button(self._ews_panel, "Recreate Paths", "", "BU_EXACTFIT,NO_BORDER")
@@ -568,7 +571,7 @@ function AiLayer:_build_motion_path_section()
 	return motion_paths_sizer
 end
 
--- Lines: 574 to 584
+-- Lines: 577 to 587
 function AiLayer:_set_mop_type()
 	local selected_path = self:_selected_motion_path()
 
@@ -584,7 +587,7 @@ function AiLayer:_set_mop_type()
 	end
 end
 
--- Lines: 587 to 599
+-- Lines: 590 to 602
 function AiLayer:_set_mop_speed_limit()
 	local speed_limit = self.motion_path_settings_guis.default_speed_limit.value
 	local selected_path = self:_selected_motion_path()
@@ -600,17 +603,17 @@ function AiLayer:_set_mop_speed_limit()
 	managers.motion_path:set_default_speed_limit(speed_limit)
 end
 
--- Lines: 601 to 603
+-- Lines: 604 to 606
 function AiLayer:_delete_motion_path()
 	Application:debug("AiLayer:_delete_motion_path()")
 end
 
--- Lines: 605 to 607
+-- Lines: 608 to 610
 function AiLayer:_toggle_only_draw_selected_motion_path(motion_path_toolbar)
 	self._only_draw_selected_motion_path = motion_path_toolbar:tool_state("ONLY_DRAW_SELECTED_MOTION_PATH")
 end
 
--- Lines: 610 to 657
+-- Lines: 613 to 660
 function AiLayer:_update_motion_paths_list()
 	self._motion_paths_list:clear()
 
@@ -658,13 +661,13 @@ function AiLayer:_update_motion_paths_list()
 	end
 end
 
--- Lines: 659 to 662
+-- Lines: 662 to 665
 function AiLayer:_create_motion_paths()
 	managers.motion_path:recreate_paths()
 	self:_update_motion_paths_list()
 end
 
--- Lines: 665 to 675
+-- Lines: 668 to 678
 function AiLayer:_select_motion_path()
 	local motion_path_name = self:_selected_motion_path()
 
@@ -676,7 +679,7 @@ function AiLayer:_select_motion_path()
 	end
 end
 
--- Lines: 677 to 682
+-- Lines: 680 to 685
 function AiLayer:_selected_motion_path()
 	local index = self._motion_paths_list:selected_index()
 
@@ -687,12 +690,12 @@ function AiLayer:_selected_motion_path()
 	return nil
 end
 
--- Lines: 685 to 687
+-- Lines: 688 to 690
 function AiLayer:_toggle_only_draw_selected_patrol_path(patrol_path_toolbar)
 	self._only_draw_selected_patrol_path = patrol_path_toolbar:tool_state("ONLY_DRAW_SELECTED_PATH")
 end
 
--- Lines: 689 to 725
+-- Lines: 692 to 728
 function AiLayer:_calc_graphs(params)
 	local build_type = params.build_type
 
@@ -738,7 +741,7 @@ function AiLayer:_calc_graphs(params)
 	end
 end
 
--- Lines: 728 to 736
+-- Lines: 731 to 739
 function AiLayer:_graphs_done(vis_graph)
 	managers.editor:output("Navigation seqments calculated")
 
@@ -751,7 +754,7 @@ function AiLayer:_graphs_done(vis_graph)
 	end
 end
 
--- Lines: 739 to 756
+-- Lines: 742 to 759
 function AiLayer:_build_visibility_graph()
 	local all_visible = self._all_visible:get_value() and true
 	local exclude, include = nil
@@ -773,12 +776,12 @@ function AiLayer:_build_visibility_graph()
 	managers.navigation:build_visibility_graph(callback(self, self, "_visibility_graph_done"), all_visible, exclude, include, ray_lenght)
 end
 
--- Lines: 759 to 761
+-- Lines: 762 to 764
 function AiLayer:_visibility_graph_done()
 	managers.editor:output("Visibility graph calculated")
 end
 
--- Lines: 764 to 785
+-- Lines: 767 to 788
 function AiLayer:_get_build_settings(type, build_type)
 	local settings = {}
 	local units = self:_get_units(type, build_type)
@@ -804,7 +807,7 @@ function AiLayer:_get_build_settings(type, build_type)
 	return settings
 end
 
--- Lines: 789 to 797
+-- Lines: 792 to 800
 function AiLayer:_get_units(type, build_type)
 	local unit_name = self._unit_graph_types[type]
 	local units = {}
@@ -818,7 +821,7 @@ function AiLayer:_get_units(type, build_type)
 	return units
 end
 
--- Lines: 800 to 808
+-- Lines: 803 to 811
 function AiLayer:_toggle_debug_draw(debug)
 	local show = debug:get_value()
 
@@ -831,7 +834,7 @@ function AiLayer:_toggle_debug_draw(debug)
 	self:_set_debug_options()
 end
 
--- Lines: 810 to 821
+-- Lines: 813 to 824
 function AiLayer:_set_debug_options()
 	if not self._debug_draw:get_value() then
 		return
@@ -846,7 +849,7 @@ function AiLayer:_set_debug_options()
 	managers.navigation:set_debug_draw_state(options)
 end
 
--- Lines: 823 to 827
+-- Lines: 826 to 830
 function AiLayer:_set_location()
 	self._selected_unit:ai_editor_data().location_id = self._ai_unit_settings_guis.locations.value
 
@@ -854,14 +857,14 @@ function AiLayer:_set_location()
 	managers.navigation:set_location_ID(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.locations.value)
 end
 
--- Lines: 829 to 832
+-- Lines: 832 to 835
 function AiLayer:_set_group_state()
 	self._ai_settings.group_state = self._ai_settings_guis.group_state.value
 
 	managers.groupai:set_state(self._ai_settings.group_state)
 end
 
--- Lines: 834 to 840
+-- Lines: 837 to 843
 function AiLayer:_update_settings()
 	for name, value in pairs(self._ai_settings) do
 		if self._ai_settings_guis[name] then
@@ -870,7 +873,7 @@ function AiLayer:_update_settings()
 	end
 end
 
--- Lines: 842 to 849
+-- Lines: 845 to 852
 function AiLayer:_clear_graphs()
 	local confirm = EWS:message_box(Global.frame_panel, "Clear all graphs?", "AI", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -881,7 +884,7 @@ function AiLayer:_clear_graphs()
 	managers.navigation:clear()
 end
 
--- Lines: 856 to 864
+-- Lines: 859 to 867
 function AiLayer:_clear_selected_nav_segment()
 	print("[AiLayer:_clear_selected_nav_segment]")
 
@@ -894,7 +897,7 @@ function AiLayer:_clear_selected_nav_segment()
 	end
 end
 
--- Lines: 867 to 889
+-- Lines: 870 to 892
 function AiLayer:set_select_unit(unit)
 	self._ai_unit_settings_guis.locations.ctrlr:set_enabled(false)
 
@@ -921,7 +924,7 @@ function AiLayer:set_select_unit(unit)
 	end
 end
 
--- Lines: 891 to 930
+-- Lines: 894 to 933
 function AiLayer:_add_to_visible_exlude_filter(unit)
 	if not alive(unit) then
 		return false
@@ -962,7 +965,7 @@ function AiLayer:_add_to_visible_exlude_filter(unit)
 	return false
 end
 
--- Lines: 935 to 947
+-- Lines: 938 to 950
 function AiLayer:_set_selection_patrol_paths_listbox(name)
 	for i = 0, self._patrol_paths_list:nr_items() - 1, 1 do
 		if self._patrol_paths_list:get_string(i) == name then
@@ -973,7 +976,7 @@ function AiLayer:_set_selection_patrol_paths_listbox(name)
 	self:_select_patrol_path()
 end
 
--- Lines: 949 to 964
+-- Lines: 952 to 967
 function AiLayer:_create_new_patrol_path()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new patrol path:", "Create patrol path", "new_patrol_path", Vector3(-1, -1, 0), true)
 
@@ -994,7 +997,7 @@ function AiLayer:_create_new_patrol_path()
 	end
 end
 
--- Lines: 966 to 972
+-- Lines: 969 to 975
 function AiLayer:_current_patrol_units(name)
 	local t = {}
 	local path = managers.ai_data:patrol_path(name)
@@ -1006,7 +1009,7 @@ function AiLayer:_current_patrol_units(name)
 	return t
 end
 
--- Lines: 975 to 992
+-- Lines: 978 to 995
 function AiLayer:_delete_patrol_path()
 	local name = self:_selected_patrol_path()
 
@@ -1030,7 +1033,7 @@ function AiLayer:_delete_patrol_path()
 	end
 end
 
--- Lines: 994 to 1000
+-- Lines: 997 to 1003
 function AiLayer:_update_patrol_paths_list()
 	self._patrol_paths_list:clear()
 
@@ -1039,7 +1042,7 @@ function AiLayer:_update_patrol_paths_list()
 	end
 end
 
--- Lines: 1002 to 1007
+-- Lines: 1005 to 1010
 function AiLayer:_selected_patrol_path()
 	local index = self._patrol_paths_list:selected_index()
 
@@ -1050,7 +1053,7 @@ function AiLayer:_selected_patrol_path()
 	return nil
 end
 
--- Lines: 1010 to 1018
+-- Lines: 1013 to 1021
 function AiLayer:_select_patrol_path()
 	local name = self:_selected_patrol_path()
 
@@ -1063,7 +1066,7 @@ function AiLayer:_select_patrol_path()
 	end
 end
 
--- Lines: 1020 to 1032
+-- Lines: 1023 to 1035
 function AiLayer:do_spawn_unit(name, pos, rot)
 	if Idstring(name) == self._patrol_point_unit and not self._current_patrol_path then
 		managers.editor:output("Create or select a patrol path first!")
@@ -1080,7 +1083,7 @@ function AiLayer:do_spawn_unit(name, pos, rot)
 	return unit
 end
 
--- Lines: 1035 to 1042
+-- Lines: 1038 to 1045
 function AiLayer:_add_patrol_point(unit)
 	local name = self:_selected_patrol_path()
 
@@ -1091,7 +1094,7 @@ function AiLayer:_add_patrol_point(unit)
 	managers.ai_data:add_patrol_point(name, unit)
 end
 
--- Lines: 1044 to 1055
+-- Lines: 1047 to 1058
 function AiLayer:_insert()
 	if not alive(self._selected_unit) or self._selected_unit:name() ~= self._patrol_point_unit then
 		return
@@ -1107,7 +1110,7 @@ function AiLayer:_insert()
 	table.insert(path.points, i + 1, point)
 end
 
--- Lines: 1057 to 1073
+-- Lines: 1060 to 1076
 function AiLayer:delete_unit(unit)
 	for _, u in ipairs(self._created_units) do
 		if u:name() == self._nav_surface_unit and u ~= unit then
@@ -1126,19 +1129,19 @@ function AiLayer:delete_unit(unit)
 	AiLayer.super.delete_unit(self, unit)
 end
 
--- Lines: 1075 to 1077
+-- Lines: 1078 to 1080
 function AiLayer:update_unit_settings()
 	AiLayer.super.update_unit_settings(self)
 end
 
--- Lines: 1079 to 1084
+-- Lines: 1082 to 1087
 function AiLayer:_init_ai_settings()
 	self._ai_settings = {group_state = "besiege"}
 
 	managers.groupai:set_state(self._ai_settings.group_state)
 end
 
--- Lines: 1086 to 1095
+-- Lines: 1089 to 1098
 function AiLayer:_init_mop_settings()
 	self._motion_path_settings = {}
 
@@ -1151,7 +1154,7 @@ function AiLayer:_init_mop_settings()
 	end
 end
 
--- Lines: 1097 to 1112
+-- Lines: 1100 to 1115
 function AiLayer:clear()
 	AiLayer.super.clear(self)
 
@@ -1169,7 +1172,7 @@ function AiLayer:clear()
 	self._ai_unit_settings_guis.locations.ctrlr:set_enabled(false)
 end
 
--- Lines: 1114 to 1118
+-- Lines: 1117 to 1121
 function AiLayer:add_triggers()
 	AiLayer.super.add_triggers(self)
 
@@ -1178,14 +1181,14 @@ function AiLayer:add_triggers()
 	vc:add_trigger(Idstring("enter"), callback(self, self, "_insert"))
 end
 
--- Lines: 1120 to 1123
+-- Lines: 1123 to 1126
 function AiLayer:_set_suspicion_mul()
 	self._selected_unit:ai_editor_data().suspicion_mul = self._ai_unit_settings_guis.suspicion_multiplier.value
 
 	managers.navigation:set_suspicion_multiplier(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.suspicion_multiplier.value)
 end
 
--- Lines: 1125 to 1128
+-- Lines: 1128 to 1131
 function AiLayer:_set_detection_mul()
 	self._selected_unit:ai_editor_data().detection_mul = self._ai_unit_settings_guis.detection_multiplier.value
 

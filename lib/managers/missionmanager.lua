@@ -208,6 +208,9 @@ function MissionManager:init(...)
 		"pku_tin_boy_toy",
 		"pku_high_heels",
 		"pku_vr_headset",
+		"pku_red_diamond",
+		"pku_diamond_dah",
+		"pku_blue_diamond",
 		"pku_german_folder",
 		"pku_old_wine"
 	})

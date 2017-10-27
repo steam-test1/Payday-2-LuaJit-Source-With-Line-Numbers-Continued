@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines: 3 to 3155
+-- Lines: 3 to 3156
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{jcs = {
@@ -4535,6 +4535,66 @@ function NarrativeTweakData:init(tweak_data)
 		28000,
 		28000
 	}
+	self.stages.dah = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "dah"
+	}
+	self.jobs.dah = {
+		name_id = "heist_dah",
+		briefing_id = "heist_dah_crimenet",
+		contact = "classic",
+		region = "street",
+		jc = 30,
+		chain = {self.stages.dah},
+		briefing_event = "Play_pln_dah_cbf_01",
+		debrief_event = nil,
+		crimenet_callouts = {"Play_pln_dah_cnc_01"},
+		crimenet_videos = {"cn_branchbank1"},
+		payout = {
+			50000,
+			125000,
+			250000,
+			550000,
+			700000,
+			700000,
+			700000
+		},
+		contract_cost = {
+			24000,
+			48000,
+			120000,
+			240000,
+			300000,
+			300000,
+			300000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.dah.contract_visuals.min_mission_xp = {
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200
+	}
+	self.jobs.dah.contract_visuals.max_mission_xp = {
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200
+	}
+	self.jobs.dah.contract_visuals.preview_image = {id = "dah"}
+	self.jobs.dah.date_added = {
+		2017,
+		10,
+		27
+	}
 	self.jobs.crime_spree = {
 		name_id = "heist_crime_spree",
 		briefing_id = "heist_crime_spree_brief",
@@ -4782,6 +4842,7 @@ function NarrativeTweakData:init(tweak_data)
 		"moon",
 		"run",
 		"glace",
+		"dah",
 		"crime_spree",
 		"wwh"
 	}
@@ -4801,7 +4862,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines: 3159 to 3174
+-- Lines: 3160 to 3175
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -4820,22 +4881,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines: 3176 to 3177
+-- Lines: 3177 to 3178
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines: 3180 to 3181
+-- Lines: 3181 to 3182
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines: 3186 to 3187
+-- Lines: 3187 to 3188
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines: 3192 to 3198
+-- Lines: 3193 to 3199
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -4846,12 +4907,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines: 3203 to 3204
+-- Lines: 3204 to 3205
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines: 3209 to 3224
+-- Lines: 3210 to 3225
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -4868,7 +4929,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines: 3227 to 3236
+-- Lines: 3228 to 3237
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -4881,7 +4942,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines: 3241 to 3291
+-- Lines: 3242 to 3292
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -4938,7 +4999,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines: 3296 to 3308
+-- Lines: 3297 to 3309
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package

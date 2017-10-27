@@ -385,7 +385,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines: 376 to 2293
+-- Lines: 376 to 2296
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1422,7 +1422,8 @@ Play the full version soon to get your full PAYDAY!]],
 		keycard_outlined = {unit = Idstring("units/pd2_dlc_red/pickups/gen_pku_keycard_outlined/gen_pku_keycard_outlined")},
 		keycard_standard_outlined = {unit = Idstring("units/payday2/pickups/gen_pku_keycard_standard_outline/gen_pku_keycard_standard_outline")},
 		hotel_room_key = {unit = Idstring("units/pd2_dlc_casino/props/cas_prop_keycard/cas_prop_keycard")},
-		pku_rambo = {unit = Idstring("units/pd2_dlc_jolly/pickups/gen_pku_rambo/gen_pku_rambo")}
+		pku_rambo = {unit = Idstring("units/pd2_dlc_jolly/pickups/gen_pku_rambo/gen_pku_rambo")},
+		keycard_outlined_waypoint = {unit = Idstring("units/pd2_dlc_red/pickups/gen_pku_keycard_outlined_waypoint/gen_pku_keycard_outlined_waypoint")}
 	}
 	self.danger_zones = {
 		0.6,
@@ -1624,6 +1625,7 @@ Play the full version soon to get your full PAYDAY!]],
 		{track = "track_52"},
 		{track = "track_53"},
 		{track = "track_54"},
+		{track = "track_55"},
 		{track = "track_32_lcv"},
 		{track = "track_33_lcv"},
 		{track = "track_34_lcv"},
@@ -2408,19 +2410,19 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines: 2297 to 2349
+-- Lines: 2300 to 2352
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines: 2354 to 2355
+-- Lines: 2357 to 2358
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines: 2360 to 2368
+-- Lines: 2363 to 2371
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2431,7 +2433,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines: 2372 to 2375
+-- Lines: 2375 to 2378
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2441,7 +2443,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines: 2379 to 2388
+-- Lines: 2382 to 2391
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2454,7 +2456,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines: 2392 to 2568
+-- Lines: 2395 to 2571
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2643,7 +2645,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines: 2570 to 2733
+-- Lines: 2573 to 2736
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2749,7 +2751,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines: 2735 to 2807
+-- Lines: 2738 to 2810
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2822,7 +2824,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines: 2810 to 2814
+-- Lines: 2813 to 2817
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -2841,7 +2843,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 end
 
 
--- Lines: 2831 to 3045
+-- Lines: 2834 to 3048
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

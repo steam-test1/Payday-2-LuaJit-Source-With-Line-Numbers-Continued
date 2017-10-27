@@ -574,6 +574,11 @@ function GenericDLCManager:has_myh()
 	return self:is_dlc_unlocked("myh")
 end
 
+-- Lines: 638 to 639
+function GenericDLCManager:has_pbm()
+	return self:is_dlc_unlocked("pbm")
+end
+
 -- Lines: 645 to 646
 function GenericDLCManager:has_goty_all_dlc_bundle_2014()
 	return self:has_goty_weapon_bundle_2014() and self:has_goty_heist_bundle_2014() and self:is_dlcs_unlocked({"character_pack_clover"})
@@ -1871,6 +1876,10 @@ function WINDLCManager:init()
 			},
 			cmo = {
 				app_id = "218620",
+				no_install = true
+			},
+			pbm = {
+				app_id = "735630",
 				no_install = true
 			},
 			dnm = {

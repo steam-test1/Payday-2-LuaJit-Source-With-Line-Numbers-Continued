@@ -1,7 +1,7 @@
 PlayerAction.DamageControl = {}
 PlayerAction.DamageControl.Priority = 1
 
--- Lines: 4 to 99
+-- Lines: 4 to 105
 PlayerAction.DamageControl.Function = function ()
 	local timer = TimerManager:game()
 	local auto_shrug_time = nil
@@ -25,10 +25,16 @@ PlayerAction.DamageControl.Function = function ()
 	}
 
 
-	-- Lines: 30 to 39
+	-- Lines: 30 to 45
 	local function shrug_off_damage()
 		local player_damage = managers.player:player_unit():character_damage()
 		local remaining_damage = player_damage:clear_delayed_damage()
+		local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
+		local swan_song_active = managers.player:has_activate_temporary_upgrade("temporary", "berserker_damage_multiplier")
+
+		if is_downed or swan_song_active then
+			return
+		end
 
 		if shrug_healing then
 			player_damage:restore_health(remaining_damage * shrug_healing, true)
@@ -38,7 +44,7 @@ PlayerAction.DamageControl.Function = function ()
 	end
 
 
-	-- Lines: 41 to 57
+	-- Lines: 47 to 63
 	local function modify_damage_taken(amount, attack_data)
 		local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
 
@@ -60,7 +66,7 @@ PlayerAction.DamageControl.Function = function ()
 	end
 
 
-	-- Lines: 60 to 64
+	-- Lines: 66 to 70
 	local function on_ability_activated(ability_name)
 		if ability_name == "damage_control" then
 			shrug_off_damage()
@@ -68,7 +74,7 @@ PlayerAction.DamageControl.Function = function ()
 	end
 
 
-	-- Lines: 66 to 73
+	-- Lines: 72 to 79
 	local function on_enemy_killed(weapon_unit, variant, enemy_unit)
 		local player = managers.player:player_unit()
 		local low_health = player:character_damage():health_ratio() <= cooldown_drain.health_ratio
@@ -89,7 +95,7 @@ PlayerAction.DamageControl.Function = function ()
 	local damage_taken_key = managers.player:add_modifier("damage_taken", modify_damage_taken)
 
 
-	-- Lines: 83 to 88
+	-- Lines: 89 to 94
 	local function remove_listeners()
 		managers.player:unregister_message("check_skills", on_check_skills_key)
 		managers.player:unregister_message(Message.OnEnemyKilled, on_enemy_killed_key)

@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedAchievementTweakData")
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 7 to 1839
+-- Lines: 7 to 1842
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -2361,6 +2361,41 @@ function AchievementsTweakData:init(tweak_data)
 			job = "wwh",
 			difficulty = sm_wish_and_above
 		},
+		dah_1 = {
+			award = "dah_1",
+			job = "dah",
+			difficulty = normal_and_above
+		},
+		dah_2 = {
+			award = "dah_2",
+			job = "dah",
+			difficulty = hard_and_above
+		},
+		dah_3 = {
+			award = "dah_3",
+			job = "dah",
+			difficulty = veryhard_and_above
+		},
+		dah_4 = {
+			award = "dah_4",
+			job = "dah",
+			difficulty = overkill_and_above
+		},
+		dah_5 = {
+			award = "dah_5",
+			job = "dah",
+			difficulty = easywish_and_above
+		},
+		dah_6 = {
+			award = "dah_6",
+			job = "dah",
+			difficulty = deathwish_and_above
+		},
+		dah_7 = {
+			award = "dah_7",
+			job = "dah",
+			difficulty = sm_wish_and_above
+		},
 		trk_af_0 = {
 			award = "trk_af_0",
 			job = "jolly",
@@ -4004,7 +4039,8 @@ function AchievementsTweakData:init(tweak_data)
 				"pal",
 				"man",
 				"run",
-				"glace"
+				"glace",
+				"dah"
 			}
 		},
 		daily_discord = {
@@ -4354,6 +4390,15 @@ function AchievementsTweakData:init(tweak_data)
 				value = 1000000
 			}
 		},
+		dah_9 = {
+			award = "dah_9",
+			job = "dah",
+			difficulties = overkill_and_above,
+			secured = {
+				carry_id = "red_diamond",
+				amount = 1
+			}
+		},
 		trophy_tfturret = {
 			trophy_stat = "trophy_tfturret",
 			is_dropin = false,
@@ -4504,7 +4549,8 @@ function AchievementsTweakData:init(tweak_data)
 			"man",
 			"flat",
 			"run",
-			"glace"
+			"glace",
+			"dah"
 		},
 		locke = {
 			"pbr",
@@ -5731,7 +5777,7 @@ function AchievementsTweakData:init(tweak_data)
 end
 
 
--- Lines: 1843 to 1869
+-- Lines: 1846 to 1872
 local function get_texture_path(tweak_data, category, id)
 	local td = tweak_data:get_raw_value("blackmarket", category, id)
 	local rtn = {}
@@ -5764,7 +5810,7 @@ local tracking = {
 }
 
 
--- Lines: 1887 to 1913
+-- Lines: 1890 to 1916
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5776,7 +5822,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 1896 to 1906
+	-- Lines: 1899 to 1909
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5807,7 +5853,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 1916 to 1920
+-- Lines: 1919 to 1923
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5821,7 +5867,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 1923 to 1930
+-- Lines: 1926 to 1933
 local function from_level(level)
 	if not level then
 		error()
@@ -5838,7 +5884,7 @@ local function from_level(level)
 end
 
 
--- Lines: 1933 to 1940
+-- Lines: 1936 to 1943
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5855,7 +5901,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 1943 to 1953
+-- Lines: 1946 to 1956
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5878,7 +5924,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 1961 to 2163
+-- Lines: 1964 to 2166
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6025,7 +6071,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2200 to 2313
+-- Lines: 2203 to 2316
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

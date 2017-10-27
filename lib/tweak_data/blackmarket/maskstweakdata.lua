@@ -1,7 +1,7 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 local allow_halloween_lootdrop = is_nextgen_console
 
--- Lines: 10 to 5394
+-- Lines: 10 to 5421
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"
@@ -4992,6 +4992,17 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		infamous = true,
 		sort_number = 29,
 		texture_bundle_folder = "dnm"
+	}
+	self.masks.pbm = {
+		unit = "units/pd2_dlc_pbm/masks/msk_pbm",
+		name_id = "bm_msk_pbm",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "pbm",
+		sort_number = 57,
+		type = "helmet",
+		dlc = "pbm",
+		global_value = "pbm"
 	}
 	self.masks.kwm = {
 		unit = "units/pd2_dlc_kwm/masks/msk_kwm",

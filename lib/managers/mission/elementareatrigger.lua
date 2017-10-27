@@ -216,6 +216,8 @@ function ElementAreaTrigger:project_instigators()
 				"vr_headset",
 				"diamond_necklace",
 				"yayo",
+				"red_diamond",
+				"diamonds_dah",
 				"old_wine"
 			}
 

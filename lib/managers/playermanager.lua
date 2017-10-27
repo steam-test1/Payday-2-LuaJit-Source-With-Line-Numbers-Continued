@@ -5602,15 +5602,18 @@ function PlayerManager:on_hallowSPOOCed()
 	end
 end
 
--- Lines: 5154 to 5177
+-- Lines: 5154 to 5181
 function PlayerManager:attempt_ability(ability)
 	if not self:player_unit() then
 		return
 	end
 
 	local local_peer_id = managers.network:session():local_peer():id()
+	local has_no_grenades = self:get_grenade_amount(local_peer_id) == 0
+	local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
+	local swan_song_active = managers.player:has_activate_temporary_upgrade("temporary", "berserker_damage_multiplier")
 
-	if self:get_grenade_amount(local_peer_id) == 0 then
+	if has_no_grenades or is_downed or swan_song_active then
 		return
 	end
 
@@ -5630,7 +5633,7 @@ function PlayerManager:attempt_ability(ability)
 	self._message_system:notify("ability_activated", nil, ability)
 end
 
--- Lines: 5180 to 5195
+-- Lines: 5184 to 5199
 function PlayerManager:_attempt_chico_injector()
 	if self:has_activate_temporary_upgrade("temporary", "chico_injector") then
 		return false
@@ -5643,7 +5646,7 @@ function PlayerManager:_attempt_chico_injector()
 	self:activate_temporary_upgrade("temporary", "chico_injector")
 
 
-	-- Lines: 5191 to 5193
+	-- Lines: 5195 to 5197
 	local function speed_up_on_kill()
 		managers.player:speed_up_grenade_cooldown(1)
 	end
@@ -5653,7 +5656,7 @@ function PlayerManager:_attempt_chico_injector()
 	return true
 end
 
--- Lines: 5266 to 5275
+-- Lines: 5270 to 5279
 function PlayerManager:_update_timers(t)
 	local timers_copy = table.map_copy(self._timers)
 
@@ -5668,7 +5671,7 @@ function PlayerManager:_update_timers(t)
 	end
 end
 
--- Lines: 5277 to 5280
+-- Lines: 5281 to 5284
 function PlayerManager:start_timer(key, duration, callback)
 	local end_time = TimerManager:game():time() + duration
 	self._timers[key] = {
@@ -5677,7 +5680,7 @@ function PlayerManager:start_timer(key, duration, callback)
 	}
 end
 
--- Lines: 5282 to 5285
+-- Lines: 5286 to 5289
 function PlayerManager:get_timer(key)
 	if not key then
 		return
@@ -5688,12 +5691,12 @@ function PlayerManager:get_timer(key)
 	return timer and TimerManager:game():time() < timer.t and timer.t or nil
 end
 
--- Lines: 5288 to 5289
+-- Lines: 5292 to 5293
 function PlayerManager:has_active_timer(key)
 	return self:get_timer(key) ~= nil
 end
 
--- Lines: 5292 to 5295
+-- Lines: 5296 to 5299
 function PlayerManager:get_timer_remaining(key)
 	local time = self:get_timer(key)
 	local now = TimerManager:game():time()
@@ -5701,12 +5704,12 @@ function PlayerManager:get_timer_remaining(key)
 	return time and time - now
 end
 
--- Lines: 5298 to 5300
+-- Lines: 5302 to 5304
 function PlayerManager:clear_timers()
 	self._timers = {}
 end
 
--- Lines: 5302 to 5306
+-- Lines: 5306 to 5310
 function PlayerManager:reset_ability_hud()
 	managers.hud:set_player_grenade_cooldown(nil)
 	managers.hud:set_player_ability_radial({
@@ -5717,7 +5720,7 @@ function PlayerManager:reset_ability_hud()
 	self._should_reset_ability_hud = nil
 end
 
--- Lines: 5309 to 5318
+-- Lines: 5313 to 5322
 function PlayerManager:update_smoke_screens(t, dt)
 	if self._smoke_screen_effects and #self._smoke_screen_effects > 0 then
 		for i, smoke_screen_effect in dpairs(self._smoke_screen_effects) do
@@ -5730,12 +5733,12 @@ function PlayerManager:update_smoke_screens(t, dt)
 	end
 end
 
--- Lines: 5320 to 5321
+-- Lines: 5324 to 5325
 function PlayerManager:smoke_screens()
 	return self._smoke_screen_effects or {}
 end
 
--- Lines: 5324 to 5333
+-- Lines: 5328 to 5337
 function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_dodge_bonus)
 	local time = tweak_data.projectiles.smoke_screen_grenade.duration
 	self._smoke_screen_effects = self._smoke_screen_effects or {}
@@ -5749,7 +5752,7 @@ function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_do
 	self._smoke_grenade = grenade_unit
 end
 
--- Lines: 5335 to 5341
+-- Lines: 5339 to 5345
 function PlayerManager:_dodge_shot_gain(gain_value)
 	if gain_value then
 		self._dodge_shot_gain_value = gain_value
@@ -5758,12 +5761,12 @@ function PlayerManager:_dodge_shot_gain(gain_value)
 	end
 end
 
--- Lines: 5343 to 5345
+-- Lines: 5347 to 5349
 function PlayerManager:_dodge_replenish_armor()
 	self:player_unit():character_damage():_regenerate_armor()
 end
 
--- Lines: 5384 to 5392
+-- Lines: 5388 to 5396
 function PlayerManager:crew_add_concealment(new_value)
 	for k, v in pairs(managers.network:session():all_peers()) do
 		local unit = v:unit()

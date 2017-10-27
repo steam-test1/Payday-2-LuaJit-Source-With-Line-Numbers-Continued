@@ -52,7 +52,7 @@ function ManageSpawnedUnits:spawned_units()
 	return self._spawned_units
 end
 
--- Lines: 96 to 136
+-- Lines: 96 to 143
 function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if self._spawned_units[unit_id] then
 		return
@@ -107,14 +107,20 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if Network:is_server() and not self.local_only then
 		managers.network:session():send_to_peers_synched("sync_link_spawned_unit", self._unit, unit_id, joint_table, "spawn_manager")
 	end
+
+	local spawned_unit = self._spawned_units[unit_id] and self._spawned_units[unit_id].unit
+
+	if spawned_unit and spawned_unit:base() and spawned_unit:base().on_unit_link_successful then
+		spawned_unit:base():on_unit_link_successful(self._unit)
+	end
 end
 
--- Lines: 138 to 139
+-- Lines: 145 to 146
 function ManageSpawnedUnits:linked_units()
 	return self._sync_spawn_and_link
 end
 
--- Lines: 153 to 170
+-- Lines: 160 to 177
 function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -135,7 +141,7 @@ function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	self:_spawn_run_sequence(unit_id, sequence_name)
 end
 
--- Lines: 192 to 241
+-- Lines: 199 to 248
 function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
 	if not unit_id then
 		Application:error("param1", "nil:\n", self._spawned_units[unit_id].unit:name())
@@ -197,7 +203,7 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
--- Lines: 251 to 259
+-- Lines: 258 to 266
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
@@ -208,7 +214,7 @@ function ManageSpawnedUnits:remove_unit(unit_id)
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines: 268 to 275
+-- Lines: 275 to 282
 function ManageSpawnedUnits:destroy(unit)
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
@@ -219,7 +225,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines: 279 to 292
+-- Lines: 286 to 299
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -234,7 +240,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines: 296 to 313
+-- Lines: 303 to 320
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -254,7 +260,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines: 317 to 340
+-- Lines: 324 to 347
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -283,7 +289,7 @@ function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	end
 end
 
--- Lines: 344 to 355
+-- Lines: 351 to 362
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	for index, value in ipairs(self[joint_table]) do
 		if index > 1 then
@@ -299,7 +305,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	self._unit:set_moving()
 end
 
--- Lines: 358 to 366
+-- Lines: 365 to 373
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 

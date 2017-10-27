@@ -673,7 +673,7 @@ function MissionScript:save(data)
 	data[self._name] = state
 end
 
--- Lines: 643 to 669
+-- Lines: 643 to 674
 function MissionScript:load(data)
 	local state = data[self._name]
 
@@ -692,7 +692,7 @@ function MissionScript:load(data)
 	end
 end
 
--- Lines: 672 to 677
+-- Lines: 677 to 682
 function MissionScript:stop_simulation(...)
 	for _, element in pairs(self._elements) do
 		element:stop_simulation(...)
@@ -701,7 +701,7 @@ function MissionScript:stop_simulation(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines: 680 to 685
+-- Lines: 685 to 690
 function MissionScript:pre_destroy(...)
 	for _, element in pairs(self._elements) do
 		element:pre_destroy(...)
@@ -710,7 +710,7 @@ function MissionScript:pre_destroy(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines: 688 to 693
+-- Lines: 693 to 698
 function MissionScript:destroy(...)
 	for _, element in pairs(self._elements) do
 		element:destroy(...)
