@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5239
+-- Lines: 3 to 5255
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -4908,6 +4908,18 @@ function InteractionTweakData:init(tweak_data)
 		start_active = false,
 		timer = 3,
 		axis = "y",
+		requires_mask_off_upgrade = {
+			upgrade = "mask_off_pickup",
+			category = "player"
+		}
+	}
+	self.diamonds_pickup_full = {
+		icon = "interaction_diamond",
+		text_id = "hud_int_take_diamonds_dah",
+		action_text_id = "hud_action_taking_diamonds_dah",
+		sound_event = "money_grab",
+		start_active = false,
+		timer = 3,
 		requires_mask_off_upgrade = {
 			upgrade = "mask_off_pickup",
 			category = "player"
