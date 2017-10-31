@@ -5677,13 +5677,16 @@ function GroupAIStateBase._create_hud_suspicion_icon(obs_key, u_observer, icon_n
 	return icon_pos
 end
 
--- Lines: 5558 to 5722
+-- Lines: 5555 to 5721
 function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, status)
 	if not self._ai_enabled or not self._whisper_mode then
 		return
 	end
 
-	if u_observer:brain() and u_observer:brain()._ignore_suspicion then
+	local ignore_suspicion = u_observer:brain() and u_observer:brain()._ignore_suspicion
+	local observer_is_dead = u_observer:character_damage() and u_observer:character_damage():dead()
+
+	if ignore_suspicion or observer_is_dead then
 		return
 	end
 
@@ -5697,7 +5700,7 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 	local susp_key = u_suspect and u_suspect:key()
 
 
-	-- Lines: 5577 to 5581
+	-- Lines: 5576 to 5580
 	local function _sync_status(sync_status_code)
 		if Network:is_server() and managers.network:session() then
 			managers.network:session():send_to_peers_synched("suspicion_hud", u_observer, sync_status_code)
@@ -5873,7 +5876,7 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 	end
 end
 
--- Lines: 5727 to 5760
+-- Lines: 5726 to 5759
 function GroupAIStateBase:_upd_criminal_suspicion_progress()
 	local susp_data = self._suspicion_hud_data
 
@@ -5912,7 +5915,7 @@ function GroupAIStateBase:_upd_criminal_suspicion_progress()
 	end
 end
 
--- Lines: 5764 to 5774
+-- Lines: 5763 to 5773
 function GroupAIStateBase:_clear_criminal_suspicion_data()
 	for obs_key, obs_susp_data in pairs(self._suspicion_hud_data) do
 		if not obs_susp_data.persistent then
@@ -5927,7 +5930,7 @@ function GroupAIStateBase:_clear_criminal_suspicion_data()
 	end
 end
 
--- Lines: 5778 to 5789
+-- Lines: 5777 to 5788
 function GroupAIStateBase:_clear_character_criminal_suspicion_data(obs_key)
 	local obs_susp_data = self._suspicion_hud_data[obs_key]
 
@@ -5944,17 +5947,17 @@ function GroupAIStateBase:_clear_character_criminal_suspicion_data(obs_key)
 	self._suspicion_hud_data[obs_key] = nil
 end
 
--- Lines: 5793 to 5794
+-- Lines: 5792 to 5793
 function GroupAIStateBase:get_nr_successful_alarm_pager_bluffs()
 	return self._nr_successful_alarm_pager_bluffs
 end
 
--- Lines: 5799 to 5801
+-- Lines: 5798 to 5800
 function GroupAIStateBase:on_successful_alarm_pager_bluff()
 	self._nr_successful_alarm_pager_bluffs = self._nr_successful_alarm_pager_bluffs + 1
 end
 
--- Lines: 5805 to 5824
+-- Lines: 5804 to 5823
 function GroupAIStateBase:trim_coarse_path_to_areas(coarse_path)
 	local all_areas = self._area_data
 	local i = 1
@@ -5976,13 +5979,13 @@ function GroupAIStateBase:trim_coarse_path_to_areas(coarse_path)
 	end
 end
 
--- Lines: 5828 to 5831
+-- Lines: 5827 to 5830
 function GroupAIStateBase:on_editor_sim_unit_spawned(unit)
 	self._editor_sim_rem_units = self._editor_sim_rem_units or {}
 	self._editor_sim_rem_units[unit:key()] = unit
 end
 
--- Lines: 5835 to 5856
+-- Lines: 5834 to 5855
 function GroupAIStateBase:_get_balancing_multiplier(balance_multipliers)
 	local nr_players = 0
 
@@ -6006,7 +6009,7 @@ function GroupAIStateBase:_get_balancing_multiplier(balance_multipliers)
 	return balance_multipliers[nr_players]
 end
 
--- Lines: 5861 to 5870
+-- Lines: 5860 to 5869
 function GroupAIStateBase:draw_attention_objects_by_preset_name(wanted_preset_name)
 	if wanted_preset_name then
 		self._attention_debug_draw_data = {
@@ -6018,7 +6021,7 @@ function GroupAIStateBase:draw_attention_objects_by_preset_name(wanted_preset_na
 	end
 end
 
--- Lines: 5874 to 5886
+-- Lines: 5873 to 5885
 function GroupAIStateBase:_upd_debug_draw_attentions()
 	if not self._attention_debug_draw_data then
 		return
@@ -6034,12 +6037,12 @@ function GroupAIStateBase:_upd_debug_draw_attentions()
 	end
 end
 
--- Lines: 5890 to 5891
+-- Lines: 5889 to 5890
 function GroupAIStateBase:is_enemy_converted_to_criminal(unit)
 	return self._converted_police[unit:key()]
 end
 
--- Lines: 5896 to 5901
+-- Lines: 5895 to 5900
 function GroupAIStateBase:get_amount_enemies_converted_to_criminals()
 	local num = self._converted_police and table.size(self._converted_police)
 
@@ -6050,12 +6053,12 @@ function GroupAIStateBase:get_amount_enemies_converted_to_criminals()
 	return num
 end
 
--- Lines: 5906 to 5907
+-- Lines: 5905 to 5906
 function GroupAIStateBase:all_converted_enemies()
 	return self._converted_police
 end
 
--- Lines: 5913 to 5922
+-- Lines: 5912 to 5921
 function GroupAIStateBase._get_group_acces_mask(group)
 	local quadfield = managers.navigation._quad_field
 	local union_mask = quadfield:convert_access_filter_to_number("0")
@@ -6068,7 +6071,7 @@ function GroupAIStateBase._get_group_acces_mask(group)
 	return union_mask
 end
 
--- Lines: 5929 to 5972
+-- Lines: 5928 to 5971
 function GroupAIStateBase:on_hostage_follow(owner, follower, state)
 	if state then
 		local owner_data = self:criminal_record(owner:key())
@@ -6114,7 +6117,7 @@ function GroupAIStateBase:on_hostage_follow(owner, follower, state)
 	end
 end
 
--- Lines: 5976 to 5982
+-- Lines: 5975 to 5981
 function GroupAIStateBase:get_following_hostages(owner)
 	local owner_data = self:criminal_record(owner:key())
 
@@ -6125,7 +6128,7 @@ function GroupAIStateBase:get_following_hostages(owner)
 	return owner_data.following_hostages
 end
 
--- Lines: 5987 to 5996
+-- Lines: 5986 to 5995
 function GroupAIStateBase:check_criminals_dead()
 	local all_criminals = self:all_char_criminals()
 	local total_count = #all_criminals
@@ -6140,14 +6143,14 @@ function GroupAIStateBase:check_criminals_dead()
 	return count == total_count
 end
 
--- Lines: 6001 to 6004
+-- Lines: 6000 to 6003
 function GroupAIStateBase:register_turret(unit)
 	self._turret_units = self._turret_units or {}
 
 	table.insert(self._turret_units, unit)
 end
 
--- Lines: 6006 to 6017
+-- Lines: 6005 to 6016
 function GroupAIStateBase:unregister_turret(unit)
 	if not self._turret_units then
 		return
@@ -6162,42 +6165,42 @@ function GroupAIStateBase:unregister_turret(unit)
 	end
 end
 
--- Lines: 6019 to 6020
+-- Lines: 6018 to 6019
 function GroupAIStateBase:turrets()
 	return self._turret_units
 end
 
--- Lines: 6025 to 6026
+-- Lines: 6024 to 6025
 function GroupAIStateBase:phalanx_minions()
 	return self._phalanx_data.minions
 end
 
--- Lines: 6031 to 6032
+-- Lines: 6030 to 6031
 function GroupAIStateBase:phalanx_vip()
 	return self._phalanx_data.vip
 end
 
--- Lines: 6037 to 6038
+-- Lines: 6036 to 6037
 function GroupAIStateBase:get_phalanx_minion_count()
 	return table.size(self._phalanx_data.minions or {})
 end
 
--- Lines: 6043 to 6045
+-- Lines: 6042 to 6044
 function GroupAIStateBase:register_phalanx_minion(unit)
 	self._phalanx_data.minions[unit:key()] = unit
 end
 
--- Lines: 6049 to 6051
+-- Lines: 6048 to 6050
 function GroupAIStateBase:register_phalanx_vip(unit)
 	self._phalanx_data.vip = unit
 end
 
--- Lines: 6056 to 6058
+-- Lines: 6055 to 6057
 function GroupAIStateBase:unregister_phalanx_minion(unit_key)
 	self._phalanx_data.minions[unit_key] = nil
 end
 
--- Lines: 6062 to 6068
+-- Lines: 6061 to 6067
 function GroupAIStateBase:unregister_phalanx_vip()
 	self._phalanx_data.vip = nil
 
@@ -6206,17 +6209,17 @@ function GroupAIStateBase:unregister_phalanx_vip()
 	end
 end
 
--- Lines: 6072 to 6073
+-- Lines: 6071 to 6072
 function GroupAIStateBase:is_unit_in_phalanx_minion_data(unit_key)
 	return self._phalanx_data and self._phalanx_data.minions and self._phalanx_data.minions[unit_key] and true
 end
 
--- Lines: 6078 to 6079
+-- Lines: 6077 to 6078
 function GroupAIStateBase:is_unit_team_AI(unit)
 	return self._ai_criminals[unit:key()]
 end
 
--- Lines: 6084 to 6092
+-- Lines: 6083 to 6091
 function GroupAIStateBase:set_force_attention(data)
 	if data then
 		self._force_attention_data = deep_clone(data)
@@ -6227,7 +6230,7 @@ function GroupAIStateBase:set_force_attention(data)
 	end
 end
 
--- Lines: 6094 to 6100
+-- Lines: 6093 to 6099
 function GroupAIStateBase:add_affected_force_attention_unit(unit)
 	if not self._force_attention_data or not alive(unit) then
 		return
@@ -6236,7 +6239,7 @@ function GroupAIStateBase:add_affected_force_attention_unit(unit)
 	self._force_attention_data.included_units[unit:key()] = true
 end
 
--- Lines: 6102 to 6108
+-- Lines: 6101 to 6107
 function GroupAIStateBase:add_excluded_force_attention_unit(unit)
 	if not self._force_attention_data or not alive(unit) then
 		return
@@ -6245,7 +6248,7 @@ function GroupAIStateBase:add_excluded_force_attention_unit(unit)
 	self._force_attention_data.excluded_units[unit:key()] = true
 end
 
--- Lines: 6111 to 6127
+-- Lines: 6110 to 6126
 function GroupAIStateBase:force_attention_data(unit)
 	if not self._force_attention_data or not alive(unit) then
 		return nil
@@ -6262,7 +6265,7 @@ function GroupAIStateBase:force_attention_data(unit)
 	end
 end
 
--- Lines: 6129 to 6137
+-- Lines: 6128 to 6136
 function GroupAIStateBase:get_AI_attention_object_by_unit(unit)
 	local new_data = {}
 

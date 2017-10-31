@@ -36,9 +36,16 @@ function HUDHeistTimer:init(hud, tweak_hud)
 	end
 end
 
--- Lines: 34 to 51
+-- Lines: 24 to 51
 function HUDHeistTimer:set_time(time)
-	if not self._enabled or math.floor(time) < self._last_time then
+	local inverted = false
+
+	if time < 0 then
+		inverted = true
+		time = math.abs(time)
+	end
+
+	if not self._enabled or not inverted and math.floor(time) < self._last_time then
 		return
 	end
 
@@ -56,6 +63,11 @@ function HUDHeistTimer:set_time(time)
 end
 
 -- Lines: 53 to 55
+function HUDHeistTimer:modify_time(time)
+	self:set_time(self._last_time + time)
+end
+
+-- Lines: 57 to 59
 function HUDHeistTimer:reset()
 	self._last_time = 0
 end

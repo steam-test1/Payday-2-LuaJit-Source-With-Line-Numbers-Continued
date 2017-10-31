@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedAchievementTweakData")
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 7 to 1842
+-- Lines: 7 to 1840
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -3699,6 +3699,16 @@ function AchievementsTweakData:init(tweak_data)
 			crime_spree = true,
 			challenge_stat = "challenge_crime_spree"
 		},
+		challenge_walking_nightmare = {
+			need_full_job = true,
+			challenge_award = "challenge_walking_nightmare",
+			jobs = {
+				"pines",
+				"cane",
+				"moon"
+			},
+			mutators = {"MutatorTitandozers"}
+		},
 		challenge_clone_1 = {
 			challenge_award = "challenge_clone_1",
 			need_full_job = true,
@@ -5777,7 +5787,7 @@ function AchievementsTweakData:init(tweak_data)
 end
 
 
--- Lines: 1846 to 1872
+-- Lines: 1844 to 1870
 local function get_texture_path(tweak_data, category, id)
 	local td = tweak_data:get_raw_value("blackmarket", category, id)
 	local rtn = {}
@@ -5810,7 +5820,7 @@ local tracking = {
 }
 
 
--- Lines: 1890 to 1916
+-- Lines: 1888 to 1914
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5822,7 +5832,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 1899 to 1909
+	-- Lines: 1897 to 1907
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5853,7 +5863,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 1919 to 1923
+-- Lines: 1917 to 1921
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5867,7 +5877,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 1926 to 1933
+-- Lines: 1924 to 1931
 local function from_level(level)
 	if not level then
 		error()
@@ -5884,7 +5894,7 @@ local function from_level(level)
 end
 
 
--- Lines: 1936 to 1943
+-- Lines: 1934 to 1941
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5901,7 +5911,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 1946 to 1956
+-- Lines: 1944 to 1954
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5924,7 +5934,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 1964 to 2166
+-- Lines: 1962 to 2164
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6071,7 +6081,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2203 to 2316
+-- Lines: 2201 to 2314
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

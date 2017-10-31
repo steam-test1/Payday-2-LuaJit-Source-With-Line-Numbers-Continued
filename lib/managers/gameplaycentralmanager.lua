@@ -676,26 +676,46 @@ function GamePlayCentralManager:get_heist_timer()
 	return self._heist_timer and Application:time() - (self._heist_timer.start_time or 0) + (self._heist_timer.offset_time or 0) or 0
 end
 
--- Lines: 701 to 706
+-- Lines: 697 to 706
 function GamePlayCentralManager:start_heist_timer()
+	if self._heist_timer and self._heist_timer.inverted then
+		return
+	end
+
 	self._heist_timer.running = true
 	self._heist_timer.start_time = Application:time()
 	self._heist_timer.offset_time = 0
 	self._heist_timer.next_sync = Application:time() + 10
 end
 
--- Lines: 723 to 725
+-- Lines: 709 to 715
+function GamePlayCentralManager:start_inverted_heist_timer(time)
+	self._heist_timer.running = true
+	self._heist_timer.start_time = Application:time() + time
+	self._heist_timer.offset_time = 0
+	self._heist_timer.next_sync = Application:time() + 10
+	self._heist_timer.inverted = true
+end
+
+-- Lines: 717 to 720
+function GamePlayCentralManager:modify_heist_timer(time)
+	self._heist_timer.start_time = self._heist_timer.start_time + time
+
+	managers.hud:modify_heist_time(time)
+end
+
+-- Lines: 724 to 726
 function GamePlayCentralManager:stop_heist_timer()
 	self._heist_timer.running = false
 end
 
--- Lines: 728 to 731
+-- Lines: 729 to 732
 function GamePlayCentralManager:sync_heist_time(heist_time)
 	self._heist_timer.offset_time = heist_time
 	self._heist_timer.start_time = Application:time()
 end
 
--- Lines: 735 to 743
+-- Lines: 736 to 744
 function GamePlayCentralManager:restart_the_game()
 	managers.criminals:save_current_character_names()
 	managers.job:stop_sounds()
@@ -705,7 +725,7 @@ function GamePlayCentralManager:restart_the_game()
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines: 745 to 757
+-- Lines: 746 to 758
 function GamePlayCentralManager:stop_the_game()
 	managers.job:stop_sounds()
 	managers.statistics:stop_session()
@@ -721,7 +741,7 @@ function GamePlayCentralManager:stop_the_game()
 	end
 end
 
--- Lines: 762 to 767
+-- Lines: 763 to 768
 function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	self._queue_fire_raycast = self._queue_fire_raycast or {}
 	local data = {
@@ -733,7 +753,7 @@ function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	table.insert(self._queue_fire_raycast, data)
 end
 
--- Lines: 769 to 787
+-- Lines: 770 to 788
 function GamePlayCentralManager:_flush_queue_fire_raycast()
 	local i = 1
 
@@ -755,7 +775,7 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 	end
 end
 
--- Lines: 793 to 818
+-- Lines: 794 to 819
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
 
@@ -785,7 +805,7 @@ function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	return true
 end
 
--- Lines: 823 to 828
+-- Lines: 824 to 829
 function GamePlayCentralManager:get_shotgun_push_range()
 	local range = 500
 	range = managers.mutators:modify_value("GamePlayCentralManager:get_shotgun_push_range", range)
@@ -793,7 +813,7 @@ function GamePlayCentralManager:get_shotgun_push_range()
 	return range
 end
 
--- Lines: 832 to 844
+-- Lines: 833 to 845
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if self:get_shotgun_push_range() < distance then
 		return
@@ -806,7 +826,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, at
 	self:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 end
 
--- Lines: 847 to 873
+-- Lines: 848 to 874
 function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if unit:movement()._active_actions[1] and unit:movement()._active_actions[1]:type() == "hurt" then
 		unit:movement()._active_actions[1]:force_ragdoll()
@@ -835,7 +855,7 @@ function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, a
 end
 local default_projectile_trail = Idstring("effects/payday2/particles/weapons/arrow_trail")
 
--- Lines: 878 to 885
+-- Lines: 879 to 886
 function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	if self._projectile_trails[unit:key()] then
 		return
@@ -849,7 +869,7 @@ function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	self._projectile_trails[unit:key()] = {effect = effect}
 end
 
--- Lines: 887 to 899
+-- Lines: 888 to 900
 function GamePlayCentralManager:remove_projectile_trail(unit)
 	local data = self._projectile_trails[unit:key()]
 
@@ -868,7 +888,7 @@ local atom_ids = Idstring("Trail - Straight")
 local simulator_ids = Idstring("opacity_1")
 local opacity_ids = Idstring("opacity")
 
--- Lines: 905 to 917
+-- Lines: 906 to 918
 function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	for unit_key, data in pairs(self._projectile_trails) do
 		if data.t then
@@ -886,7 +906,7 @@ function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	end
 end
 
--- Lines: 921 to 927
+-- Lines: 922 to 928
 function GamePlayCentralManager:announcer_say(event)
 	if not self._announcer_sound_source then
 		self._announcer_sound_source = SoundDevice:create_source("announcer")
@@ -895,7 +915,7 @@ function GamePlayCentralManager:announcer_say(event)
 	self._announcer_sound_source:post_event(event)
 end
 
--- Lines: 931 to 940
+-- Lines: 932 to 941
 function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
@@ -907,7 +927,7 @@ function GamePlayCentralManager:save(data)
 	data.GamePlayCentralManager = state
 end
 
--- Lines: 942 to 956
+-- Lines: 943 to 957
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
 
@@ -927,7 +947,7 @@ function GamePlayCentralManager:load(data)
 	end
 end
 
--- Lines: 964 to 1020
+-- Lines: 965 to 1021
 function GamePlayCentralManager:debug_weapon()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {"gui"})
@@ -938,7 +958,7 @@ function GamePlayCentralManager:debug_weapon()
 	gui:clear()
 
 
-	-- Lines: 971 to 1015
+	-- Lines: 972 to 1016
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
 			return ""
@@ -950,7 +970,7 @@ function GamePlayCentralManager:debug_weapon()
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
 
-		-- Lines: 981 to 982
+		-- Lines: 982 to 983
 		local function add_line(text, s)
 			return text .. s .. "\n"
 		end

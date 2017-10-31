@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines: 3 to 3156
+-- Lines: 3 to 3166
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{jcs = {
@@ -4535,6 +4535,65 @@ function NarrativeTweakData:init(tweak_data)
 		28000,
 		28000
 	}
+	self.stages.haunted = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "haunted"
+	}
+	self.jobs.haunted = {
+		name_id = "heist_haunted",
+		briefing_id = "heist_haunted_crimenet",
+		contact = "events",
+		region = "street",
+		jc = 10,
+		chain = {self.stages.haunted},
+		load_screen = "guis/dlcs/pic/textures/loading/old_safehouse_halloween_df",
+		briefing_event = nil,
+		debrief_event = nil,
+		crimenet_videos = {
+			"cn_branchbank1",
+			"cn_branchbank2",
+			"cn_branchbank3"
+		},
+		payout = {
+			20000,
+			30000,
+			40000,
+			70000,
+			80000,
+			90000,
+			100000
+		},
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			240000,
+			280000
+		},
+		is_halloween_level = true,
+		contract_visuals = {}
+	}
+	self.jobs.haunted.contract_visuals.min_mission_xp = {
+		10000,
+		10000,
+		10000,
+		10000,
+		10000,
+		10000,
+		10000
+	}
+	self.jobs.haunted.contract_visuals.max_mission_xp = {
+		10000,
+		10000,
+		10000,
+		10000,
+		10000,
+		10000,
+		10000
+	}
 	self.stages.dah = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -4655,6 +4714,71 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.jobs.crime_spree.ignore_heat = true
 	self.jobs.crime_spree.hidden = true
+	self.stages.hvh = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "hvh"
+	}
+	self.jobs.hvh = {
+		name_id = "heist_hvh",
+		briefing_id = "heist_hvh_crimenet",
+		package = "packages/narr_hvh",
+		contact = "events",
+		region = "street",
+		jc = 30,
+		chain = {self.stages.hvh},
+		briefing_event = "hvh_cbf_01",
+		debrief_event = nil,
+		crimenet_callouts = {"hvh_cnc_01"},
+		crimenet_videos = {
+			"cn_jewel1",
+			"cn_jewel2",
+			"cn_jewel3"
+		},
+		payout = {
+			20000,
+			30000,
+			40000,
+			70000,
+			80000,
+			80000,
+			80000
+		},
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			200000,
+			200000
+		},
+		is_halloween_level = true,
+		contract_visuals = {}
+	}
+	self.jobs.hvh.contract_visuals.min_mission_xp = {
+		2000,
+		2000,
+		2000,
+		2000,
+		2000,
+		2000,
+		2000
+	}
+	self.jobs.hvh.contract_visuals.max_mission_xp = {
+		60000,
+		60000,
+		60000,
+		60000,
+		60000,
+		60000,
+		60000
+	}
+	self.jobs.hvh.date_added = {
+		2017,
+		10,
+		31
+	}
 	self.stages.wwh = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -4768,6 +4892,7 @@ function NarrativeTweakData:init(tweak_data)
 	self.jobs.shoutout_raid.contract_visuals.preview_image = {id = "meltdown"}
 	self.jobs.nail.contract_visuals.preview_image = {id = "labrats"}
 	self.jobs.help.contract_visuals.preview_image = {id = "prison_nightmare"}
+	self.jobs.hvh.contract_visuals.preview_image = {id = "halloween2017"}
 	self.jobs.red2.contract_visuals.preview_image = {id = "fwb"}
 	self.jobs.glace.contract_visuals.preview_image = {id = "green_bridge"}
 	self.jobs.run.contract_visuals.preview_image = {id = "heat_street"}
@@ -4775,6 +4900,7 @@ function NarrativeTweakData:init(tweak_data)
 	self.jobs.dinner.contract_visuals.preview_image = {id = "slaughterhouse"}
 	self.jobs.pal.contract_visuals.preview_image = {id = "counterfeit"}
 	self.jobs.man.contract_visuals.preview_image = {id = "undercover"}
+	self.jobs.haunted.contract_visuals = {preview_image = {id = "safehouse_old"}}
 	self._jobs_index = {
 		"jewelry_store",
 		"four_stores",
@@ -4837,6 +4963,7 @@ function NarrativeTweakData:init(tweak_data)
 		"friend",
 		"flat",
 		"help",
+		"haunted",
 		"spa",
 		"fish",
 		"moon",
@@ -4844,6 +4971,7 @@ function NarrativeTweakData:init(tweak_data)
 		"glace",
 		"dah",
 		"crime_spree",
+		"hvh",
 		"wwh"
 	}
 
@@ -4862,7 +4990,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines: 3160 to 3175
+-- Lines: 3170 to 3185
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -4881,22 +5009,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines: 3177 to 3178
+-- Lines: 3187 to 3188
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines: 3181 to 3182
+-- Lines: 3191 to 3192
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines: 3187 to 3188
+-- Lines: 3197 to 3198
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines: 3193 to 3199
+-- Lines: 3203 to 3209
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -4907,12 +5035,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines: 3204 to 3205
+-- Lines: 3214 to 3215
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines: 3210 to 3225
+-- Lines: 3220 to 3235
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -4929,7 +5057,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines: 3228 to 3237
+-- Lines: 3238 to 3247
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -4942,7 +5070,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines: 3242 to 3292
+-- Lines: 3252 to 3302
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -4999,7 +5127,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines: 3297 to 3309
+-- Lines: 3307 to 3319
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package

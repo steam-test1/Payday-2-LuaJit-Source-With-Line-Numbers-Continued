@@ -18,7 +18,7 @@ MutatorsManager._options_icon_coord = {
 	2
 }
 
--- Lines: 21 to 104
+-- Lines: 21 to 102
 function MutatorsManager:init()
 	managers.mutators = self
 	self._message_system = MessageSystem:new()
@@ -41,7 +41,8 @@ function MutatorsManager:init()
 		MutatorEnemyReplacer:new(self),
 		MutatorMediDozer:new(self),
 		MutatorCloakerEffect:new(self),
-		MutatorShieldDozers:new(self)
+		MutatorShieldDozers:new(self),
+		MutatorTitandozers:new(self)
 	}
 	self._active_mutators = {}
 	local activate = Global.mutators and Global.mutators.active_on_load
@@ -87,7 +88,7 @@ function MutatorsManager:init()
 	end
 end
 
--- Lines: 107 to 113
+-- Lines: 105 to 111
 function MutatorsManager:update(t, dt)
 	self:message_system():update(t, dt)
 
@@ -96,7 +97,7 @@ function MutatorsManager:update(t, dt)
 	end
 end
 
--- Lines: 116 to 131
+-- Lines: 114 to 129
 function MutatorsManager:save(data)
 	local values = {}
 
@@ -114,7 +115,7 @@ function MutatorsManager:save(data)
 	data.Mutators = state
 end
 
--- Lines: 134 to 155
+-- Lines: 132 to 153
 function MutatorsManager:load(data, version)
 	cat_print("jamwil", "[Mutators] Begin loading...")
 
@@ -138,7 +139,7 @@ function MutatorsManager:load(data, version)
 	cat_print("jamwil", "[Mutators] Loading finished!")
 end
 
--- Lines: 160 to 165
+-- Lines: 158 to 163
 function MutatorsManager:can_mutators_be_active()
 	if Global.game_settings.gamemode ~= GamemodeStandard.id then
 		return false
@@ -147,7 +148,7 @@ function MutatorsManager:can_mutators_be_active()
 	return true
 end
 
--- Lines: 169 to 180
+-- Lines: 167 to 178
 function MutatorsManager:are_mutators_active()
 	if not self:can_mutators_be_active() then
 		return false
@@ -162,7 +163,7 @@ function MutatorsManager:are_mutators_active()
 	end
 end
 
--- Lines: 183 to 197
+-- Lines: 181 to 195
 function MutatorsManager:are_mutators_enabled()
 	if not self:can_mutators_be_active() then
 		return false
@@ -181,17 +182,17 @@ function MutatorsManager:are_mutators_enabled()
 	end
 end
 
--- Lines: 200 to 201
+-- Lines: 198 to 199
 function MutatorsManager:mutators()
 	return self._mutators
 end
 
--- Lines: 205 to 206
+-- Lines: 203 to 204
 function MutatorsManager:active_mutators()
 	return self._active_mutators
 end
 
--- Lines: 210 to 216
+-- Lines: 208 to 214
 function MutatorsManager:is_mutator_active(mutator)
 	for _, active_mutator in pairs(self:active_mutators()) do
 		if mutator._type == active_mutator.mutator:id() then
@@ -202,7 +203,7 @@ function MutatorsManager:is_mutator_active(mutator)
 	return false
 end
 
--- Lines: 219 to 225
+-- Lines: 217 to 223
 function MutatorsManager:get_mutator(mutator_class)
 	for i, mutator in pairs(self:mutators()) do
 		if mutator_class._type == mutator:id() then
@@ -211,7 +212,7 @@ function MutatorsManager:get_mutator(mutator_class)
 	end
 end
 
--- Lines: 229 to 234
+-- Lines: 227 to 232
 function MutatorsManager:allow_mutators_in_level(level_id)
 	local level_data = tweak_data.levels[level_id]
 
@@ -222,7 +223,7 @@ function MutatorsManager:allow_mutators_in_level(level_id)
 	return true
 end
 
--- Lines: 239 to 270
+-- Lines: 237 to 268
 function MutatorsManager:globalize_active_mutators()
 	Global.mutators.active_on_load = {}
 
@@ -255,12 +256,12 @@ function MutatorsManager:globalize_active_mutators()
 	end
 end
 
--- Lines: 273 to 275
+-- Lines: 271 to 273
 function MutatorsManager:clear_global_mutators()
 	Global.mutators.active_on_load = {}
 end
 
--- Lines: 278 to 290
+-- Lines: 276 to 288
 function MutatorsManager:reset_all_mutators()
 	for _, mutator in ipairs(self:mutators()) do
 		self:set_enabled(mutator, false)
@@ -273,7 +274,7 @@ function MutatorsManager:reset_all_mutators()
 	end
 end
 
--- Lines: 294 to 300
+-- Lines: 292 to 298
 function MutatorsManager:get_mutator_from_id(id)
 	for _, mutator in ipairs(self:mutators()) do
 		if mutator:id() == id then
@@ -284,7 +285,7 @@ function MutatorsManager:get_mutator_from_id(id)
 	return nil
 end
 
--- Lines: 303 to 309
+-- Lines: 301 to 307
 function MutatorsManager:can_enable_mutator(mutator)
 	for _, imutator in ipairs(self:mutators()) do
 		if imutator:id() ~= mutator:id() and imutator:is_enabled() and imutator:is_incompatible_with(mutator) then
@@ -295,7 +296,7 @@ function MutatorsManager:can_enable_mutator(mutator)
 	return true
 end
 
--- Lines: 313 to 330
+-- Lines: 311 to 328
 function MutatorsManager:set_enabled(mutator, enabled)
 	if enabled == nil then
 		enabled = true
@@ -316,7 +317,7 @@ function MutatorsManager:set_enabled(mutator, enabled)
 	end
 end
 
--- Lines: 334 to 335
+-- Lines: 332 to 333
 function MutatorsManager:categories()
 	return {
 		"all",
@@ -325,27 +326,27 @@ function MutatorsManager:categories()
 	}
 end
 
--- Lines: 340 to 341
+-- Lines: 338 to 339
 function MutatorsManager:message_system()
 	return self._message_system
 end
 
--- Lines: 344 to 346
+-- Lines: 342 to 344
 function MutatorsManager:notify(message, ...)
 	self._message_system:notify(message, nil, ...)
 end
 
--- Lines: 348 to 350
+-- Lines: 346 to 348
 function MutatorsManager:register_message(message, uid, func)
 	self._message_system:register(message, uid, func)
 end
 
--- Lines: 352 to 354
+-- Lines: 350 to 352
 function MutatorsManager:unregister_message(message, uid)
 	self._message_system:unregister(message, uid)
 end
 
--- Lines: 358 to 365
+-- Lines: 356 to 363
 function MutatorsManager:_get_reduction(func)
 	local max_reduction = 0
 
@@ -358,27 +359,27 @@ function MutatorsManager:_get_reduction(func)
 	return max_reduction
 end
 
--- Lines: 368 to 369
+-- Lines: 366 to 367
 function MutatorsManager:get_cash_multiplier()
 	return 1 - self:_get_reduction("get_cash_reduction")
 end
 
--- Lines: 372 to 373
+-- Lines: 370 to 371
 function MutatorsManager:get_cash_reduction()
 	return self:_get_reduction("get_cash_reduction")
 end
 
--- Lines: 376 to 377
+-- Lines: 374 to 375
 function MutatorsManager:get_experience_multiplier()
 	return 1 - self:_get_reduction("get_experience_reduction")
 end
 
--- Lines: 380 to 381
+-- Lines: 378 to 379
 function MutatorsManager:get_experience_reduction()
 	return self:_get_reduction("get_experience_reduction")
 end
 
--- Lines: 386 to 396
+-- Lines: 384 to 394
 function MutatorsManager:are_achievements_disabled()
 	if game_state_machine:current_state_name() ~= "menu_main" then
 		for _, mutator in pairs(self:mutators()) do
@@ -391,39 +392,39 @@ function MutatorsManager:are_achievements_disabled()
 	end
 end
 
--- Lines: 398 to 399
+-- Lines: 396 to 397
 function MutatorsManager:are_challenges_disabled()
 	return self:are_achievements_disabled()
 end
 
--- Lines: 402 to 403
+-- Lines: 400 to 401
 function MutatorsManager:are_trophies_disabled()
 	return self:are_achievements_disabled()
 end
 
--- Lines: 406 to 407
+-- Lines: 404 to 405
 function MutatorsManager:should_disable_statistics()
 	return self:get_cash_reduction() > 0 or self:get_experience_reduction() > 0
 end
 
--- Lines: 412 to 413
+-- Lines: 410 to 411
 function MutatorsManager:delay_lobby_time()
 	return 16
 end
 
--- Lines: 416 to 417
+-- Lines: 414 to 415
 function MutatorsManager:lobby_delay()
 	return self._lobby_delay or 0
 end
 
--- Lines: 420 to 423
+-- Lines: 418 to 421
 function MutatorsManager:set_lobby_delay(delay)
 	print("[Mutators] Delaying lobby start by ", delay)
 
 	self._lobby_delay = TimerManager:main():time() + delay
 end
 
--- Lines: 425 to 439
+-- Lines: 423 to 437
 function MutatorsManager:should_delay_game_start()
 	if BaseNetworkHandler._verify_gamestate(BaseNetworkHandler._gamestate_filter.any_ingame) then
 		return false
@@ -446,7 +447,7 @@ function MutatorsManager:should_delay_game_start()
 	return self:lobby_delay() - TimerManager:main():time() > 0
 end
 
--- Lines: 444 to 449
+-- Lines: 442 to 447
 function MutatorsManager:use_start_the_game_initial_delay()
 	if not self._used_start_game_delay then
 		self:set_lobby_delay(self:delay_lobby_time())
@@ -455,12 +456,12 @@ function MutatorsManager:use_start_the_game_initial_delay()
 	end
 end
 
--- Lines: 451 to 453
+-- Lines: 449 to 451
 function MutatorsManager:start_the_game_countdown_cancelled()
 	self._used_start_game_delay = nil
 end
 
--- Lines: 457 to 464
+-- Lines: 455 to 462
 function MutatorsManager:_run_func(func_name, ...)
 	for i, active_mutator in pairs(self:active_mutators()) do
 		local mutator = active_mutator.mutator
@@ -471,17 +472,17 @@ function MutatorsManager:_run_func(func_name, ...)
 	end
 end
 
--- Lines: 466 to 468
+-- Lines: 464 to 466
 function MutatorsManager:modify_character_tweak_data(character_tweak)
 	self:_run_func("modify_character_tweak_data", character_tweak)
 end
 
--- Lines: 470 to 472
+-- Lines: 468 to 470
 function MutatorsManager:modify_tweak_data(id, value)
 	self:_run_func("modify_tweak_data", id, value)
 end
 
--- Lines: 474 to 484
+-- Lines: 472 to 482
 function MutatorsManager:modify_value(id, value)
 	for i, active_mutator in pairs(self:active_mutators()) do
 		local mutator = active_mutator.mutator
@@ -498,7 +499,7 @@ function MutatorsManager:modify_value(id, value)
 	return value
 end
 
--- Lines: 490 to 506
+-- Lines: 488 to 504
 function MutatorsManager:update_lobby_info()
 	print("[Mutators] Updating lobby info...")
 
@@ -511,7 +512,7 @@ function MutatorsManager:update_lobby_info()
 	end
 end
 
--- Lines: 509 to 522
+-- Lines: 507 to 520
 function MutatorsManager:apply_matchmake_attributes(lobby_attributes)
 	print("[Mutators] Applying lobby attributes...")
 
@@ -527,7 +528,7 @@ function MutatorsManager:apply_matchmake_attributes(lobby_attributes)
 	lobby_attributes.mutators = count
 end
 
--- Lines: 525 to 533
+-- Lines: 523 to 531
 function MutatorsManager:send_mutators_notification_to_clients(countdown)
 	for i, peer in pairs(managers.network:session():peers()) do
 		if not self:has_peer_been_notified(peer:id()) then
@@ -537,7 +538,7 @@ function MutatorsManager:send_mutators_notification_to_clients(countdown)
 	end
 end
 
--- Lines: 538 to 551
+-- Lines: 536 to 549
 function MutatorsManager:get_mutators_from_lobby_data()
 	if not managers.network or not managers.network.matchmake or not managers.network.matchmake.lobby_handler then
 		return false
@@ -550,7 +551,7 @@ function MutatorsManager:get_mutators_from_lobby_data()
 	end
 
 
-	-- Lines: 548 to 549
+	-- Lines: 546 to 547
 	local function func(key)
 		return lobby_data[key]
 	end
@@ -558,14 +559,14 @@ function MutatorsManager:get_mutators_from_lobby_data()
 	return self:_get_mutators_data(func)
 end
 
--- Lines: 556 to 564
+-- Lines: 554 to 562
 function MutatorsManager:get_mutators_from_lobby(lobby)
 	if not lobby then
 		return false
 	end
 
 
-	-- Lines: 561 to 562
+	-- Lines: 559 to 560
 	local function func(key)
 		return lobby:key_value(key)
 	end
@@ -573,17 +574,17 @@ function MutatorsManager:get_mutators_from_lobby(lobby)
 	return self:_get_mutators_data(func)
 end
 
--- Lines: 568 to 570
+-- Lines: 566 to 568
 function MutatorsManager:set_crimenet_lobby_data(lobby_data)
 	self._crimenet_lobby_data = lobby_data
 end
 
--- Lines: 572 to 573
+-- Lines: 570 to 571
 function MutatorsManager:crimenet_lobby_data()
 	return self._crimenet_lobby_data
 end
 
--- Lines: 578 to 605
+-- Lines: 576 to 603
 function MutatorsManager:_get_mutators_data(get_data_func)
 	local num_mutators = 0
 	local mutators_kv = get_data_func("mutators")
@@ -609,7 +610,7 @@ function MutatorsManager:_get_mutators_data(get_data_func)
 	end
 end
 
--- Lines: 608 to 631
+-- Lines: 606 to 629
 function MutatorsManager:_parse_mutator_strings(...)
 	local mutators_list = {}
 
@@ -634,7 +635,7 @@ function MutatorsManager:_parse_mutator_strings(...)
 	return mutators_list
 end
 
--- Lines: 639 to 687
+-- Lines: 637 to 685
 function MutatorsManager:show_mutators_launch_countdown(countdown)
 	if Network:is_server() then
 		return
@@ -685,23 +686,23 @@ function MutatorsManager:show_mutators_launch_countdown(countdown)
 	end
 end
 
--- Lines: 690 to 692
+-- Lines: 688 to 690
 function MutatorsManager:_dialog_mutators_accept()
 	managers.network:session():send_to_host("sync_mutators_launch_ready", managers.network:session():local_peer():id(), true)
 end
 
--- Lines: 694 to 696
+-- Lines: 692 to 694
 function MutatorsManager:_dialog_mutators_decline()
 	MenuCallbackHandler:_dialog_leave_lobby_yes()
 end
 
--- Lines: 700 to 703
+-- Lines: 698 to 701
 function MutatorsManager:set_peer_notified(peer_id, is_notified)
 	Global.mutators._peers_notified = Global.mutators._peers_notified or {}
 	Global.mutators._peers_notified[peer_id] = is_notified
 end
 
--- Lines: 705 to 709
+-- Lines: 703 to 707
 function MutatorsManager:has_peer_been_notified(peer_id)
 	if Global.mutators._peers_notified then
 		return Global.mutators._peers_notified[peer_id] or false
@@ -710,7 +711,7 @@ function MutatorsManager:has_peer_been_notified(peer_id)
 	return false
 end
 
--- Lines: 713 to 722
+-- Lines: 711 to 720
 function MutatorsManager:set_peer_is_ready(peer_id, is_ready, disable_check)
 	Global.mutators._peers_ready = Global.mutators._peers_ready or {}
 	Global.mutators._peers_ready[peer_id] = is_ready
@@ -720,7 +721,7 @@ function MutatorsManager:set_peer_is_ready(peer_id, is_ready, disable_check)
 	end
 end
 
--- Lines: 724 to 728
+-- Lines: 722 to 726
 function MutatorsManager:is_peer_ready(peer_id)
 	if Global.mutators._peers_ready then
 		return Global.mutators._peers_ready[peer_id] or false
@@ -729,7 +730,7 @@ function MutatorsManager:is_peer_ready(peer_id)
 	return false
 end
 
--- Lines: 731 to 736
+-- Lines: 729 to 734
 function MutatorsManager:force_all_ready()
 	for i, peer in pairs(managers.network:session():peers()) do
 		self:set_peer_notified(peer:id(), true)
@@ -737,7 +738,7 @@ function MutatorsManager:force_all_ready()
 	end
 end
 
--- Lines: 738 to 744
+-- Lines: 736 to 742
 function MutatorsManager:_check_all_peers_are_ready()
 	for i, peer in pairs(managers.network:session():peers()) do
 		if not self:has_peer_been_notified(peer:id()) or not self:is_peer_ready(peer:id()) then
@@ -748,7 +749,7 @@ function MutatorsManager:_check_all_peers_are_ready()
 	return true
 end
 
--- Lines: 749 to 763
+-- Lines: 747 to 761
 function MutatorsManager:on_peer_added(peer, peer_id)
 	if self:are_mutators_active() or self:are_mutators_enabled() then
 		self._used_start_game_delay = nil
@@ -760,7 +761,7 @@ function MutatorsManager:on_peer_added(peer, peer_id)
 	end
 end
 
--- Lines: 766 to 776
+-- Lines: 764 to 774
 function MutatorsManager:on_peer_removed(peer, peer_id, reason)
 	self:set_peer_notified(peer_id, false)
 	self:set_peer_is_ready(peer_id, false)
@@ -771,13 +772,13 @@ function MutatorsManager:on_peer_removed(peer, peer_id, reason)
 	end
 end
 
--- Lines: 778 to 781
+-- Lines: 776 to 779
 function MutatorsManager:on_lobby_left()
 	Global.mutators._peers_notified = nil
 	Global.mutators._peers_ready = nil
 end
 
--- Lines: 786 to 832
+-- Lines: 784 to 830
 function MutatorsManager:check_achievements(achievement_data)
 	if not achievement_data.mutators then
 		return not self:are_achievements_disabled()

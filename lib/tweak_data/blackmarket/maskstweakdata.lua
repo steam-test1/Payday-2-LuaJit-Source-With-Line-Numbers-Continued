@@ -1,7 +1,8 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 local allow_halloween_lootdrop = is_nextgen_console
+allow_halloween_lootdrop = true
 
--- Lines: 10 to 5421
+-- Lines: 10 to 5429
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"
@@ -674,6 +675,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			30,
 			40
 		}
+		self.masks.pumpkin_king.weight = 25
+		self.masks.pumpkin_king.got_item_weight_mod = 0.02
 	else
 		self.masks.pumpkin_king.pcs = nil
 		self.masks.pumpkin_king.weight = 1000
@@ -696,6 +699,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			30,
 			40
 		}
+		self.masks.witch.weight = 25
+		self.masks.witch.got_item_weight_mod = 0.02
 	else
 		self.masks.witch.pcs = nil
 		self.masks.witch.weight = 1000
@@ -718,6 +723,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			30,
 			40
 		}
+		self.masks.venomorph.weight = 25
+		self.masks.venomorph.got_item_weight_mod = 0.02
 	else
 		self.masks.venomorph.pcs = nil
 		self.masks.venomorph.weight = 1000
@@ -740,6 +747,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			30,
 			40
 		}
+		self.masks.frank.weight = 25
+		self.masks.frank.got_item_weight_mod = 0.02
 	else
 		self.masks.frank.pcs = nil
 		self.masks.frank.weight = 1000
@@ -5042,6 +5051,69 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		sort_number = 55,
 		infamous = true,
 		global_value = "infamous"
+	}
+	self.masks.sds_01 = {
+		unit = "units/pd2_dlc_sds/masks/sds_01/msk_sds_01",
+		name_id = "bm_msl_sds_01",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
+	}
+	self.masks.sds_02 = {
+		unit = "units/pd2_dlc_sds/masks/sds_02/msk_sds_02",
+		name_id = "bm_msl_sds_02",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
+	}
+	self.masks.sds_03 = {
+		unit = "units/pd2_dlc_sds/masks/sds_03/msk_sds_03",
+		name_id = "bm_msl_sds_03",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
+	}
+	self.masks.sds_04 = {
+		unit = "units/pd2_dlc_sds/masks/sds_04/msk_sds_04",
+		name_id = "bm_msl_sds_04",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
+	}
+	self.masks.sds_05 = {
+		unit = "units/pd2_dlc_sds/masks/sds_05/msk_sds_05",
+		name_id = "bm_msl_sds_05",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
+	}
+	self.masks.sds_06 = {
+		unit = "units/pd2_dlc_sds/masks/sds_06/msk_sds_06",
+		name_id = "bm_msl_sds_06",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
+	}
+	self.masks.sds_07 = {
+		unit = "units/pd2_dlc_sds/masks/sds_07/msk_sds_07",
+		name_id = "bm_msl_sds_07",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "sds",
+		sort_number = 59,
+		global_value = "halloween"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

@@ -308,7 +308,8 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"glace",
 			"run",
 			"dah",
-			"wwh"
+			"wwh",
+			"hvh"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_grenade_crate_desc",
@@ -354,7 +355,8 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"glace",
 			"run",
 			"dah",
-			"wwh"
+			"wwh",
+			"hvh"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_ammo_desc",
@@ -397,7 +399,8 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"glace",
 			"run",
 			"dah",
-			"wwh"
+			"wwh",
+			"hvh"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_health_desc",

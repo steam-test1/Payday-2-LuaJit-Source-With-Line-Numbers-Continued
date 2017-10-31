@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5255
+-- Lines: 3 to 5263
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -4969,6 +4969,21 @@ function InteractionTweakData:init(tweak_data)
 			upgrade = "mask_off_pickup",
 			category = "player"
 		}
+	}
+	self.hold_to_choose_mask = {
+		text_id = "hud_int_hold_to_choose_mask",
+		action_text_id = "hud_action_choosing_mask",
+		axis = "y",
+		start_active = true,
+		timer = 3,
+		interact_distance = 150
+	}
+	self.hold_take_mask_axis = {
+		text_id = "hud_int_hold_take_mask",
+		action_text_id = "hud_action_taking_mask",
+		timer = 1,
+		axis = "z",
+		interact_distance = 200
 	}
 end
 
