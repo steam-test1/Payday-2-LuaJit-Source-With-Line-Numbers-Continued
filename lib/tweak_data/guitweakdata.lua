@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1050
+-- Lines: 4 to 1062
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -5005,7 +5005,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1052 to 1071
+-- Lines: 1064 to 1083
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5033,7 +5033,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1073 to 1141
+-- Lines: 1085 to 1153
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5109,15 +5109,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1144 to 1145
+-- Lines: 1156 to 1157
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1155 to 1156
+-- Lines: 1167 to 1168
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1158 to 1191
+-- Lines: 1170 to 1203
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5156,7 +5156,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1194 to 1318
+-- Lines: 1206 to 1330
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5279,12 +5279,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1321 to 1322
+-- Lines: 1333 to 1334
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1325 to 1331
+-- Lines: 1337 to 1343
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

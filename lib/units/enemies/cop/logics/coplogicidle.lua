@@ -1505,32 +1505,40 @@ function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	end
 end
 
--- Lines: 1555 to 1568
+-- Lines: 1555 to 1574
 function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
-	if not my_data.action_started and objective and objective.action and not data.unit:anim_data().to_idle then
-		if my_data.advancing then
-			if not data.unit:movement():chk_action_forbidden("idle") then
-				data.unit:brain():action_request({
-					sync = true,
-					body_part = 2,
-					type = "idle"
-				})
-			end
-		elseif not data.unit:movement():chk_action_forbidden("idle") and data.unit:anim_data().needs_idle then
-			CopLogicIdle._start_idle_action_from_act(data)
-		elseif data.unit:anim_data().act_idle then
+	local can_stop_action = not my_data.action_started and objective and objective.action and not data.unit:anim_data().to_idle
+
+	if objective and objective.type == "free" then
+		can_stop_action = true
+	end
+
+	if not can_stop_action then
+		return
+	end
+
+	if my_data.advancing then
+		if not data.unit:movement():chk_action_forbidden("idle") then
 			data.unit:brain():action_request({
 				sync = true,
 				body_part = 2,
 				type = "idle"
 			})
 		end
-
-		CopLogicIdle._chk_has_old_action(data, my_data)
+	elseif not data.unit:movement():chk_action_forbidden("idle") and data.unit:anim_data().needs_idle then
+		CopLogicIdle._start_idle_action_from_act(data)
+	elseif data.unit:anim_data().act_idle then
+		data.unit:brain():action_request({
+			sync = true,
+			body_part = 2,
+			type = "idle"
+		})
 	end
+
+	CopLogicIdle._chk_has_old_action(data, my_data)
 end
 
--- Lines: 1572 to 1578
+-- Lines: 1578 to 1584
 function CopLogicIdle._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act
@@ -1538,7 +1546,7 @@ function CopLogicIdle._chk_has_old_action(data, my_data)
 	my_data.advancing = lower_body_action and lower_body_action:type() == "walk" and lower_body_action
 end
 
--- Lines: 1582 to 1584
+-- Lines: 1588 to 1590
 function CopLogicIdle._start_idle_action_from_act(data)
 	data.unit:brain():action_request({
 		variant = "idle",

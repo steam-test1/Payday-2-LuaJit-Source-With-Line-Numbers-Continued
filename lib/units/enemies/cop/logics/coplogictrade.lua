@@ -126,7 +126,7 @@ function CopLogicTrade.exit(data, new_logic_name, enter_params)
 	data.unit:network():send("set_unit_invulnerable", false)
 end
 
--- Lines: 117 to 155
+-- Lines: 117 to 199
 function CopLogicTrade.on_trade(data, pos, rotation, free_criminal)
 	if not data.internal_data._trade_enabled then
 		return
@@ -146,7 +146,48 @@ function CopLogicTrade.on_trade(data, pos, rotation, free_criminal)
 		managers.groupai:state():remove_minion(data.key, nil)
 	end
 
-	local flee_pos = managers.groupai:state():flee_point(data.unit:movement():nav_tracker():nav_segment())
+	local ignore_segments = {}
+	local flee_pos = managers.groupai:state():flee_point(data.unit:movement():nav_tracker():nav_segment(), ignore_segments)
+
+	if not flee_pos then
+		data.unit:set_slot(0)
+
+		return
+	end
+
+	local iterations = 1
+	local coarse_path = nil
+	local my_data = data.internal_data
+	local search_params = {
+		from_tracker = data.unit:movement():nav_tracker(),
+		id = "CopLogicTrade._get_coarse_flee_path" .. tostring(data.key),
+		access_pos = data.char_tweak.access
+	}
+	local max_attempts = 8
+
+	while iterations < max_attempts do
+		local nav_seg = managers.navigation:get_nav_seg_from_pos(flee_pos)
+		search_params.to_seg = nav_seg
+		coarse_path = managers.navigation:search_coarse(search_params)
+
+		if not coarse_path then
+			coarse_path = nil
+
+			table.insert(ignore_segments, nav_seg)
+		else
+			break
+		end
+
+		iterations = iterations + 1
+
+		if iterations < max_attempts then
+			flee_pos = managers.groupai:state():flee_point(data.unit:movement():nav_tracker():nav_segment(), ignore_segments)
+
+			if not flee_pos then
+				break
+			end
+		end
+	end
 
 	if flee_pos then
 		data.internal_data.fleeing = true
@@ -181,7 +222,7 @@ function CopLogicTrade.on_trade(data, pos, rotation, free_criminal)
 	end
 end
 
--- Lines: 160 to 179
+-- Lines: 204 to 223
 function CopLogicTrade.update(data)
 	local my_data = data.internal_data
 
@@ -203,7 +244,7 @@ function CopLogicTrade.update(data)
 	end
 end
 
--- Lines: 183 to 198
+-- Lines: 227 to 242
 function CopLogicTrade._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -223,7 +264,7 @@ function CopLogicTrade._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines: 201 to 210
+-- Lines: 245 to 254
 function CopLogicTrade._chk_request_action_walk_to_flee_pos(data, my_data, end_rot)
 	local new_action_data = {
 		type = "walk",
@@ -235,7 +276,7 @@ function CopLogicTrade._chk_request_action_walk_to_flee_pos(data, my_data, end_r
 	my_data.walking_to_flee_pos = data.unit:brain():action_request(new_action_data)
 end
 
--- Lines: 212 to 222
+-- Lines: 256 to 266
 function CopLogicTrade.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -248,27 +289,27 @@ function CopLogicTrade.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 226 to 227
+-- Lines: 270 to 271
 function CopLogicTrade.can_activate()
 	return false
 end
 
--- Lines: 232 to 233
+-- Lines: 276 to 277
 function CopLogicTrade.is_available_for_assignment(data)
 	return false
 end
 
--- Lines: 238 to 241
+-- Lines: 282 to 285
 function CopLogicTrade._get_all_paths(data)
 	return {flee_path = data.internal_data.flee_path}
 end
 
--- Lines: 246 to 248
+-- Lines: 290 to 292
 function CopLogicTrade._set_verified_paths(data, verified_paths)
 	data.internal_data.flee_path = verified_paths.flee_path
 end
 
--- Lines: 252 to 254
+-- Lines: 296 to 298
 function CopLogicTrade.pre_destroy(data)
 	managers.trade:change_hostage()
 end

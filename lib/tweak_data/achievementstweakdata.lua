@@ -1,8 +1,35 @@
 require("lib/tweak_data/GeneratedAchievementTweakData")
 
+
+-- Lines: 6 to 32
+local function get_texture_path(tweak_data, category, id)
+	local td = tweak_data:get_raw_value("blackmarket", category, id)
+	local rtn = {}
+
+	if category == "textures" then
+		rtn.texture = td.texture
+		rtn.render_template = "VertexColorTexturedPatterns"
+	else
+		local guis_catalog = "guis/"
+		local bundle_folder = td.texture_bundle_folder
+
+		if bundle_folder then
+			guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
+		end
+
+		rtn.texture = guis_catalog .. "textures/pd2/blackmarket/icons/" .. (category == "weapon_mods" and "mods" or category) .. "/" .. id
+	end
+
+	if not DB:has(Idstring("texture"), Idstring(rtn.texture)) then
+		debug_pause("[Track]", "ERROR TEXTURE PATH", category, id)
+	end
+
+	return rtn
+end
+
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 7 to 1840
+-- Lines: 41 to 1937
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -3842,10 +3869,16 @@ function AchievementsTweakData:init(tweak_data)
 			used_weapon_category = "pistol",
 			difficulty = deathwish_and_above,
 			jobs = {"kenaz"},
-			equipped = {secondaries = {
-				category = "pistol",
-				blueprint_part_data = {sub_type = "silencer"}
-			}}
+			equipped = {
+				primaries = {
+					category = "pistol",
+					blueprint_part_data = {sub_type = "silencer"}
+				},
+				secondaries = {
+					category = "pistol",
+					blueprint_part_data = {sub_type = "silencer"}
+				}
+			}
 		},
 		trophy_nightclub_dw = {
 			stealth = true,
@@ -5318,7 +5351,8 @@ function AchievementsTweakData:init(tweak_data)
 				"skulloverkill",
 				"skulloverkillplus",
 				"gitgud_e_wish",
-				"gitgud_sm_wish"
+				"gitgud_sm_wish",
+				"dnm"
 			}
 		},
 		funding_father = {
@@ -5785,34 +5819,6 @@ function AchievementsTweakData:init(tweak_data)
 
 	self:_init_visual(tweak_data)
 end
-
-
--- Lines: 1844 to 1870
-local function get_texture_path(tweak_data, category, id)
-	local td = tweak_data:get_raw_value("blackmarket", category, id)
-	local rtn = {}
-
-	if category == "textures" then
-		rtn.texture = td.texture
-		rtn.render_template = "VertexColorTexturedPatterns"
-	else
-		local guis_catalog = "guis/"
-		local bundle_folder = td.texture_bundle_folder
-
-		if bundle_folder then
-			guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
-		end
-
-		rtn.texture = guis_catalog .. "textures/pd2/blackmarket/icons/" .. (category == "weapon_mods" and "mods" or category) .. "/" .. id
-	end
-
-	if not DB:has(Idstring("texture"), Idstring(rtn.texture)) then
-		debug_pause("[Track]", "ERROR TEXTURE PATH", category, id)
-	end
-
-	return rtn
-end
-
 local tracking = {
 	second = "second",
 	realtime = "realtime",
@@ -5820,7 +5826,7 @@ local tracking = {
 }
 
 
--- Lines: 1888 to 1914
+-- Lines: 1956 to 1982
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5832,7 +5838,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 1897 to 1907
+	-- Lines: 1965 to 1975
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5863,7 +5869,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 1917 to 1921
+-- Lines: 1985 to 1989
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5877,7 +5883,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 1924 to 1931
+-- Lines: 1992 to 1999
 local function from_level(level)
 	if not level then
 		error()
@@ -5894,7 +5900,7 @@ local function from_level(level)
 end
 
 
--- Lines: 1934 to 1941
+-- Lines: 2002 to 2009
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5911,7 +5917,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 1944 to 1954
+-- Lines: 2012 to 2022
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5934,7 +5940,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 1962 to 2164
+-- Lines: 2030 to 2232
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6081,7 +6087,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2201 to 2314
+-- Lines: 2269 to 2382
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

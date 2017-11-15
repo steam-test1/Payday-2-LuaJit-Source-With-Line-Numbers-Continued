@@ -139,7 +139,22 @@ function UiPlacer:add_right(item, padding)
 	return item
 end
 
--- Lines: 127 to 135
+-- Lines: 127 to 136
+function UiPlacer:add_right_center(item, padding)
+	padding = self:_padd_x(padding)
+
+	if item then
+		item:set_left(self._right + padding)
+		item:set_center_y((self._top + self._bottom) / 2)
+		self:set_at_from(item)
+	else
+		return self:set_at(self._right + padding, nil)
+	end
+
+	return item
+end
+
+-- Lines: 139 to 147
 function UiPlacer:add_left(item, padding)
 	padding = self:_padd_x(padding)
 
@@ -153,7 +168,22 @@ function UiPlacer:add_left(item, padding)
 	return item
 end
 
--- Lines: 138 to 146
+-- Lines: 150 to 159
+function UiPlacer:add_left_center(item, padding)
+	padding = self:_padd_x(padding)
+
+	if item then
+		item:set_right(self._left - padding)
+		item:set_center_y((self._top + self._bottom) / 2)
+		self:set_at_from(item)
+	else
+		return self:set_at(self._left - padding, nil)
+	end
+
+	return item
+end
+
+-- Lines: 162 to 170
 function UiPlacer:add_top(item, padding)
 	padding = self:_padd_y(padding)
 
@@ -167,7 +197,7 @@ function UiPlacer:add_top(item, padding)
 	return item
 end
 
--- Lines: 149 to 157
+-- Lines: 173 to 181
 function UiPlacer:add_top_ralign(item, padding)
 	padding = self:_padd_y(padding)
 
@@ -181,7 +211,7 @@ function UiPlacer:add_top_ralign(item, padding)
 	return item
 end
 
--- Lines: 160 to 168
+-- Lines: 184 to 192
 function UiPlacer:add_bottom(item, padding)
 	padding = self:_padd_y(padding)
 
@@ -195,7 +225,7 @@ function UiPlacer:add_bottom(item, padding)
 	return item
 end
 
--- Lines: 171 to 179
+-- Lines: 195 to 203
 function UiPlacer:add_bottom_ralign(item, padding)
 	padding = self:_padd_y(padding)
 
@@ -209,7 +239,7 @@ function UiPlacer:add_bottom_ralign(item, padding)
 	return item
 end
 
--- Lines: 185 to 190
+-- Lines: 209 to 214
 function UiPlacer:new_row(padding_x, padding_y)
 	padding_x = padding_x or 0
 	padding_y = self:_padd_y(padding_y)
@@ -219,14 +249,19 @@ function UiPlacer:new_row(padding_x, padding_y)
 	self._first = true
 end
 
--- Lines: 192 to 194
+-- Lines: 216 to 218
 function UiPlacer:add_row(item, padding_x, padding_y)
 	self:new_row(padding_x, padding_y)
 
 	return self:add_right(item)
 end
 
--- Lines: 200 to 206
+-- Lines: 221 to 222
+function UiPlacer:is_first_in_row()
+	return self._first
+end
+
+-- Lines: 227 to 233
 function UiPlacer:_push(x, y)
 	table.insert(self._stack, {
 		self._start_x,
@@ -244,7 +279,7 @@ function UiPlacer:_push(x, y)
 	}
 end
 
--- Lines: 208 to 213
+-- Lines: 235 to 240
 function UiPlacer:push()
 	table.insert(self._stack, {
 		self._start_x,
@@ -260,27 +295,27 @@ function UiPlacer:push()
 	}
 end
 
--- Lines: 215 to 217
+-- Lines: 242 to 244
 function UiPlacer:push_right()
 	self:_push(self._right, self._top)
 end
 
--- Lines: 219 to 221
+-- Lines: 246 to 248
 function UiPlacer:push_left()
 	self:_push(self._left, self._top)
 end
 
--- Lines: 223 to 225
+-- Lines: 250 to 252
 function UiPlacer:push_top()
 	self:_push(self._left, self._top)
 end
 
--- Lines: 227 to 229
+-- Lines: 254 to 256
 function UiPlacer:push_bottom()
 	self:_push(self._left, self._bottom)
 end
 
--- Lines: 232 to 244
+-- Lines: 259 to 271
 function UiPlacer:pop()
 	self._left = self._most.left
 	self._top = self._most.top
@@ -294,70 +329,70 @@ function UiPlacer:pop()
 	self._most.bottom = math.max(self._most.bottom, most.bottom)
 end
 
--- Lines: 246 to 247
+-- Lines: 273 to 274
 function UiPlacer:corners()
 	return self._left, self._top, self._right, self._bottom
 end
 
--- Lines: 250 to 251
+-- Lines: 277 to 278
 function UiPlacer:current_right()
 	return self._right
 end
 
--- Lines: 254 to 255
+-- Lines: 281 to 282
 function UiPlacer:current_left()
 	return self._left
 end
 
--- Lines: 258 to 259
+-- Lines: 285 to 286
 function UiPlacer:current_top()
 	return self._top
 end
 
--- Lines: 262 to 263
+-- Lines: 289 to 290
 function UiPlacer:current_bottom()
 	return self._bottom
 end
 
--- Lines: 266 to 267
+-- Lines: 293 to 294
 function UiPlacer:current_center()
 	return self._left + (self._right - self._left) / 2, self._top + (self._bottom - self._top) / 2
 end
 
--- Lines: 271 to 272
+-- Lines: 298 to 299
 function UiPlacer:most()
 	return self._most
 end
 
--- Lines: 275 to 276
+-- Lines: 302 to 303
 function UiPlacer:most_corners()
 	return self._most.left, self._most.top, self._most.right, self._most.bottom
 end
 
--- Lines: 279 to 280
+-- Lines: 306 to 307
 function UiPlacer:most_rightbottom()
 	return self._most.right, self._most.bottom
 end
 
--- Lines: 283 to 284
+-- Lines: 310 to 311
 function UiPlacer:most_leftbottom()
 	return self._most.left, self._most.bottom
 end
 BranchPlacer = BranchPlacer or class(UiPlacer)
 
--- Lines: 293 to 295
+-- Lines: 320 to 322
 function BranchPlacer:init(placer)
 	self._from = placer
 end
 
--- Lines: 297 to 300
+-- Lines: 324 to 327
 function BranchPlacer:_update_most(a, b, c, d, branch)
 	self._from:_update_most(a, b, c, d, true)
 	BranchPlacer.super._update_most(a, b, c, d, branch)
 end
 ResizingPlacer = ResizingPlacer or class(UiPlacer)
 
--- Lines: 306 to 312
+-- Lines: 333 to 339
 function ResizingPlacer:init(panel, config)
 	self._panel = panel
 	self._border_padding_x = config.border_x or config.border or 0
@@ -366,7 +401,7 @@ function ResizingPlacer:init(panel, config)
 	ResizingPlacer.super.init(self, config.x or self._border_padding_x, config.y or self._border_padding_y, config.padding_x or config.padding, config.padding_y or config.padding)
 end
 
--- Lines: 314 to 329
+-- Lines: 341 to 356
 function ResizingPlacer:clear(keep_stack)
 	if not keep_stack and #self._stack > 0 then
 		self._start_x, self._start_y = unpack(self._stack[1])
@@ -383,7 +418,7 @@ function ResizingPlacer:clear(keep_stack)
 	self._first = true
 end
 
--- Lines: 331 to 339
+-- Lines: 358 to 366
 function ResizingPlacer:_update_most(...)
 	ResizingPlacer.super._update_most(self, ...)
 

@@ -1223,6 +1223,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		}
 	else
+		self.textures.pumpgrin.pcs = {
+			10,
+			20,
+			30,
+			40
+		}
 		self.textures.pumpgrin.weight = 3
 	end
 
@@ -1239,6 +1245,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		}
 	else
+		self.textures.shout.pcs = {
+			10,
+			20,
+			30,
+			40
+		}
 		self.textures.shout.weight = 3
 	end
 
@@ -1255,6 +1267,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		}
 	else
+		self.textures.webbed.pcs = {
+			10,
+			20,
+			30,
+			40
+		}
 		self.textures.webbed.weight = 3
 	end
 
@@ -1271,6 +1289,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		}
 	else
+		self.textures.hannibalistic.pcs = {
+			10,
+			20,
+			30,
+			40
+		}
 		self.textures.hannibalistic.weight = 3
 	end
 
@@ -1287,6 +1311,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		}
 	else
+		self.textures.stitches.pcs = {
+			10,
+			20,
+			30,
+			40
+		}
 		self.textures.stitches.weight = 3
 	end
 
@@ -1303,6 +1333,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		}
 	else
+		self.textures.doomweaver.pcs = {
+			10,
+			20,
+			30,
+			40
+		}
 		self.textures.doomweaver.weight = 3
 	end
 

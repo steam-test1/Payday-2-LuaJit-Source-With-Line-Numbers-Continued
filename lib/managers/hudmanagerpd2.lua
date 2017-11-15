@@ -2299,7 +2299,7 @@ function HUDManager:custom_ingame_popup_text(title, text, icon_id)
 	HudChallangeNotification.queue(title, text, icon_id)
 end
 
--- Lines: 2077 to 2095
+-- Lines: 2077 to 2098
 function HUDManager:safe_house_challenge_popup(id, c_type)
 	local d = nil
 	local title_id = "hud_trophy_popup"
@@ -2317,6 +2317,8 @@ function HUDManager:safe_house_challenge_popup(id, c_type)
 		return
 	end
 
-	HudChallangeNotification.queue(managers.localization:to_upper_text(title_id), managers.localization:to_upper_text(d.name_id))
+	if not d.hidden_in_list then
+		HudChallangeNotification.queue(managers.localization:to_upper_text(title_id), managers.localization:to_upper_text(d.name_id))
+	end
 end
 

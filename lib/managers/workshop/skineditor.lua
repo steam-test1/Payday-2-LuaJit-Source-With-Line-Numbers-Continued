@@ -884,27 +884,19 @@ function SkinEditor:get_current_weapon_tags()
 	return tags
 end
 
--- Lines: 814 to 830
+-- Lines: 814 to 823
 function SkinEditor:get_excluded_weapons()
 	return {
 		"akm_gold",
 		"arblast",
-		"c96",
 		"cobray",
-		"desertfox",
 		"hajk",
-		"hk21",
 		"packrat",
-		"pl14",
-		"rota",
-		"schakal",
-		"sr2",
-		"tecci",
-		"x_sr2"
+		"pl14"
 	}
 end
 
--- Lines: 833 to 841
+-- Lines: 826 to 834
 function SkinEditor:get_excluded_type_categories()
 	return {
 		"ammo",

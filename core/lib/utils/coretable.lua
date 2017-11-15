@@ -496,7 +496,19 @@ function table.range(s, e)
 	return range
 end
 
--- Lines: 433 to 441
+-- Lines: 433 to 439
+function table.list_reverse(list)
+	local copy = {}
+	local size = #list
+
+	for k, v in ipairs(list) do
+		copy[size - k + 1] = v
+	end
+
+	return copy
+end
+
+-- Lines: 442 to 450
 function table.reverse_ipairs(t)
 	local i = #t + 1
 
@@ -511,7 +523,7 @@ function table.reverse_ipairs(t)
 	end
 end
 
--- Lines: 453 to 473
+-- Lines: 462 to 482
 function table.unpack_sparse(sparse_list)
 	table.__unpack_sparse_implementations = table.__unpack_sparse_implementations or {}
 	local count = 0
@@ -535,17 +547,17 @@ function table.unpack_sparse(sparse_list)
 	return func(sparse_list)
 end
 
--- Lines: 476 to 477
+-- Lines: 485 to 486
 function table.unpack_map(map)
 	return unpack(table.map_to_list(map))
 end
 
--- Lines: 481 to 482
+-- Lines: 490 to 491
 function table.set(...)
 	return table.list_to_set({...})
 end
 
--- Lines: 485 to 490
+-- Lines: 494 to 499
 function table.list_to_set(list)
 	local rtn = {}
 
@@ -556,7 +568,7 @@ function table.list_to_set(list)
 	return rtn
 end
 
--- Lines: 493 to 499
+-- Lines: 502 to 508
 function table.map_to_list(map)
 	local list = {}
 
@@ -568,7 +580,7 @@ function table.map_to_list(map)
 	return list
 end
 
--- Lines: 502 to 509
+-- Lines: 511 to 518
 function table.map_keys(map, sort_func)
 	local keys = {}
 
@@ -581,7 +593,7 @@ function table.map_keys(map, sort_func)
 	return keys
 end
 
--- Lines: 512 to 522
+-- Lines: 521 to 531
 function table.map_values(map, sort_func)
 	local values = {}
 
@@ -596,7 +608,7 @@ function table.map_values(map, sort_func)
 	return values
 end
 
--- Lines: 525 to 533
+-- Lines: 534 to 542
 function table.remap(map, remap_func)
 	local result = {}
 
@@ -608,7 +620,7 @@ function table.remap(map, remap_func)
 	return result
 end
 
--- Lines: 539 to 546
+-- Lines: 548 to 555
 function table.list_add(...)
 	local result = {}
 
@@ -621,7 +633,7 @@ function table.list_add(...)
 	return result
 end
 
--- Lines: 555 to 568
+-- Lines: 564 to 577
 function table.list_union(...)
 	local unique = {}
 
@@ -640,7 +652,7 @@ function table.list_union(...)
 	return result
 end
 
--- Lines: 571 to 580
+-- Lines: 580 to 589
 function table.is_list_value_union(list1, list2)
 	for _, value1 in ipairs(list1) do
 		for _, value2 in ipairs(list2) do
@@ -653,7 +665,7 @@ function table.is_list_value_union(list1, list2)
 	return false
 end
 
--- Lines: 586 to 592
+-- Lines: 595 to 601
 function table.list_append(t, ...)
 	for _, list_table in ipairs({...}) do
 		for _, value in ipairs(list_table) do
@@ -662,7 +674,7 @@ function table.list_append(t, ...)
 	end
 end
 
--- Lines: 597 to 603
+-- Lines: 606 to 612
 function table.map_append(t, ...)
 	for _, list_table in ipairs({...}) do
 		for key, value in pairs(list_table) do
@@ -673,7 +685,7 @@ function table.map_append(t, ...)
 	return t
 end
 
--- Lines: 610 to 627
+-- Lines: 619 to 636
 function table.print_data(data, t)
 	if type(data) == "table" then
 		t = t or ""
@@ -694,7 +706,7 @@ function table.print_data(data, t)
 	end
 end
 
--- Lines: 630 to 638
+-- Lines: 639 to 647
 function table.lower_bound(t, target, func)
 	func = func or function (a, b)
 		return a < b
@@ -707,7 +719,7 @@ function table.lower_bound(t, target, func)
 	end
 end
 
--- Lines: 643 to 651
+-- Lines: 652 to 660
 function table.upper_bound(t, target, func)
 	func = func or function (a, b)
 		return a < b
@@ -724,7 +736,7 @@ if Application:ews_enabled() then
 	local __lua_representation, __write_lua_representation_to_file = nil
 
 
-	-- Lines: 662 to 671
+	-- Lines: 671 to 680
 	function __lua_representation(value)
 		local t = type(value)
 
@@ -738,7 +750,7 @@ if Application:ews_enabled() then
 	end
 
 
-	-- Lines: 673 to 692
+	-- Lines: 682 to 701
 	function __write_lua_representation_to_file(value, file, indentation)
 		indentation = indentation or 1
 		local t = type(value)
@@ -764,7 +776,7 @@ if Application:ews_enabled() then
 	end
 
 
-	-- Lines: 700 to 706
+	-- Lines: 709 to 715
 	function write_lua_representation_to_path(value, path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -776,7 +788,7 @@ if Application:ews_enabled() then
 	end
 
 
-	-- Lines: 708 to 715
+	-- Lines: 717 to 724
 	function read_lua_representation_from_path(path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -791,7 +803,7 @@ end
 
 local default_unpack = default_unpack or unpack
 
--- Lines: 724 to 730
+-- Lines: 733 to 739
 function _G.unpack(t, i, n)
 	if i == nil and n == nil then
 		return default_unpack(t, 1, table.maxn(t))

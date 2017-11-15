@@ -264,9 +264,13 @@ TestAPIHelper.register_API_function("get_jobs", "jobs", "", function ()
 end, "Returns a table with all available jobs.")
 
 
--- Lines: 243 to 264
+-- Lines: 243 to 268
 local function start(job_id, difficulty, stage)
 	assert(not not tweak_data.narrative.jobs[job_id], string.format("invalid job: %s", job_id))
+
+	if managers.job:current_job_id() == job_id and managers.job:current_stage() == stage and Global.game_settings.difficulty == difficulty then
+		return false
+	end
 
 	Global.game_settings.single_player = true
 
@@ -286,15 +290,23 @@ local function start(job_id, difficulty, stage)
 	local mission = Global.game_settings.mission ~= "none" and Global.game_settings.mission or nil
 
 	managers.network:session():load_level(level_name, mission, Global.game_settings.world_setting, nil, Global.game_settings.level_id)
+
+	return true
 end
 
 TestAPIHelper.register_API_function("start_job", "jobs", "job_id, difficulty = normal, stage = 1", function ()
 	Global.exe_argument_auto_enter_level = true
 
-	start(job_id, difficulty, stage)
+	if not start(job_id, difficulty, stage) then
+		TestAPIHelper.on_event("start_job")
+	end
 end, "Starts the given job and skips the loadout screen.", true)
 TestAPIHelper.register_API_function("start_job_loadout", "jobs", "job_id, difficulty = normal, stage = 1", function ()
-	start(job_id, difficulty, stage)
+	Global.exe_argument_auto_enter_level = false
+
+	if not start(job_id, difficulty, stage) then
+		TestAPIHelper.on_event("start_job_loadout")
+	end
 end, "Starts the given job.", true)
 TestAPIHelper.register_API_function("finish_job", "jobs", "", function ()
 	if managers.platform:presence() == "Playing" then
@@ -323,7 +335,7 @@ TestAPIHelper.register_API_function("delay", "internal", "time = 1", function ()
 end, "Delays queued calls by the given time (seconds).", true)
 
 
--- Lines: 305 to 335
+-- Lines: 315 to 345
 local function equip_weapon_in_game(category, slot)
 	assert(category == "primaries" or category == "secondaries", string.format("invalid category: %s", category))
 	assert(slot and slot <= #Global.blackmarket_manager.crafted_items[category], string.format("invalid slot: %d", slot))
@@ -332,7 +344,7 @@ local function equip_weapon_in_game(category, slot)
 	local first_time = true
 
 
-	-- Lines: 312 to 324
+	-- Lines: 322 to 334
 	local function clbk()
 		if first_time then
 			managers.blackmarket:equip_weapon(category, slot)
@@ -389,4 +401,39 @@ TestAPIHelper.register_API_function("load_weapon", "ingame", "weapon_id", functi
 		managers.blackmarket:clear_temporary()
 	end)
 end, "Loads the given weapon while in a job and equips it.", true)
+TestAPIHelper.register_API_function("exit_to_menu", "ingame", "", function ()
+	if not Global.game_settings.is_playing then
+		TestAPIHelper.on_event("exit_to_menu")
+
+		return
+	end
+
+	Global.skip_menu_dialogs = true
+
+	managers.platform:set_playing(false)
+	managers.job:clear_saved_ghost_bonus()
+	managers.statistics:stop_session({quit = true})
+	managers.savefile:save_progress()
+	managers.job:deactivate_current_job()
+	managers.gage_assignment:deactivate_assignments()
+
+	if managers.custom_safehouse then
+		managers.custom_safehouse:flush_completed_trophies()
+	end
+
+	if managers.crime_spree then
+		managers.crime_spree:on_left_lobby()
+	end
+
+	if Network:multiplayer() then
+		Network:set_multiplayer(false)
+		managers.network:session():send_to_peers("set_peer_left")
+		managers.network:queue_stop_network()
+	end
+
+	managers.network.matchmake:destroy_game()
+	managers.network.voice_chat:destroy_voice()
+	managers.groupai:state():set_AI_enabled(false)
+	setup:load_start_menu()
+end, "Ends the current game and returns to menu.", true)
 

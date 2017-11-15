@@ -636,12 +636,14 @@ function StoryMissionsGuiSidebarItem:set_color(color)
 end
 
 
--- Lines: 522 to 527
+-- Lines: 522 to 529
 local function set_defaults(target, source)
 	target = target or {}
 
 	for k, v in pairs(source) do
-		target[k] = target[k] or v
+		if target[k] == nil then
+			target[k] = v
+		end
 	end
 
 	return target
@@ -650,7 +652,7 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines: 535 to 617
+-- Lines: 537 to 619
 function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	config = set_defaults(config, {
 		input = true,
@@ -750,7 +752,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines: 619 to 621
+-- Lines: 621 to 623
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end
