@@ -167,14 +167,14 @@ function PlayerCarry:_update_check_actions(t, dt)
 	self:_find_pickups(t)
 end
 
--- Lines: 241 to 245
+-- Lines: 245 to 249
 function PlayerCarry:_check_action_run(...)
 	if tweak_data.carry.types[self._tweak_data_name].can_run or managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		PlayerCarry.super._check_action_run(self, ...)
 	end
 end
 
--- Lines: 248 to 279
+-- Lines: 252 to 283
 function PlayerCarry:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_release and self._throw_time and t and t < self._throw_time
@@ -214,27 +214,27 @@ function PlayerCarry:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines: 285 to 286
+-- Lines: 289 to 290
 function PlayerCarry:_check_change_weapon(...)
 	return PlayerCarry.super._check_change_weapon(self, ...)
 end
 
--- Lines: 292 to 293
+-- Lines: 296 to 297
 function PlayerCarry:_check_action_equip(...)
 	return PlayerCarry.super._check_action_equip(self, ...)
 end
 
--- Lines: 300 to 302
+-- Lines: 304 to 306
 function PlayerCarry:_update_movement(t, dt)
 	PlayerCarry.super._update_movement(self, t, dt)
 end
 
--- Lines: 306 to 309
+-- Lines: 310 to 313
 function PlayerCarry:_start_action_jump(...)
 	PlayerCarry.super._start_action_jump(self, ...)
 end
 
--- Lines: 311 to 317
+-- Lines: 315 to 321
 function PlayerCarry:_perform_jump(jump_vec)
 	if managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		-- Nothing
@@ -245,7 +245,7 @@ function PlayerCarry:_perform_jump(jump_vec)
 	PlayerCarry.super._perform_jump(self, jump_vec)
 end
 
--- Lines: 321 to 339
+-- Lines: 329 to 347
 function PlayerCarry:_get_max_walk_speed(...)
 	local multiplier = tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 	multiplier = managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") and 1 or math.clamp(multiplier * managers.player:upgrade_value("carry", "movement_speed_multiplier", 1), 0, 1)
@@ -264,16 +264,25 @@ function PlayerCarry:_get_max_walk_speed(...)
 	return PlayerCarry.super._get_max_walk_speed(self, ...) * multiplier
 end
 
--- Lines: 342 to 343
+-- Lines: 350 to 351
 function PlayerCarry:_get_walk_headbob(...)
 	return PlayerCarry.super._get_walk_headbob(self, ...) * tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 end
 
--- Lines: 349 to 350
+-- Lines: 357 to 358
 function PlayerCarry:pre_destroy(unit)
 end
 
--- Lines: 355 to 356
+-- Lines: 363 to 364
 function PlayerCarry:destroy()
+end
+
+-- Lines: 369 to 370
+function PlayerCarry:_get_input(...)
+	return PlayerCarry.super._get_input(self, ...)
+end
+
+if _G.IS_VR then
+	require("lib/units/beings/player/states/vr/PlayerCarryVR")
 end
 

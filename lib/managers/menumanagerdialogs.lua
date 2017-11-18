@@ -2444,3 +2444,39 @@ function MenuManager:show_crime_spree_cleared_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
+-- Lines: 2094 to 2101
+function MenuManager:show_vr_settings_dialog()
+	local dialog_data = {
+		title = managers.localization:text("dialog_vr_settings_title"),
+		text = managers.localization:text("dialog_vr_settings_text"),
+		id = "vr_settings",
+		no_buttons = true
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines: 2103 to 2111
+function MenuManager:show_heist_is_locked_dialog()
+	local dialog_data = {
+		title = managers.localization:text("dialog_heist_locked_title"),
+		text = managers.localization:text("dialog_heist_locked_text")
+	}
+	local ok_button = {text = managers.localization:text("dialog_ok")}
+	dialog_data.button_list = {ok_button}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines: 2114 to 2122
+function MenuManager:show_vr_beta_savefile_dialog()
+	local dialog_data = {
+		title = managers.localization:text("dialog_vr_beta_savefile_title"),
+		text = managers.localization:text("dialog_vr_beta_savefile_text")
+	}
+	local ok_button = {text = managers.localization:text("dialog_ok")}
+	dialog_data.button_list = {ok_button}
+
+	managers.system_menu:show(dialog_data)
+end
+

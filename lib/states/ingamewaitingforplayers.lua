@@ -78,7 +78,7 @@ function IngameWaitingForPlayersState:_start()
 	managers.network:session():send_to_peers_synched("sync_waiting_for_player_start", variant, Global.music_manager.current_track)
 end
 
--- Lines: 77 to 113
+-- Lines: 77 to 119
 function IngameWaitingForPlayersState:sync_start(variant, soundtrack)
 	managers.menu_component:disable_mission_briefing_gui()
 	self._kit_menu.renderer:set_all_items_enabled(false)
@@ -99,7 +99,10 @@ function IngameWaitingForPlayersState:sync_start(variant, soundtrack)
 		managers.music:post_event(start_switch)
 	end
 
-	self._fade_out_id = managers.overlay_effect:play_effect(tweak_data.overlay_effects.fade_out_permanent)
+	if not _G.IS_VR then
+		self._fade_out_id = managers.overlay_effect:play_effect(tweak_data.overlay_effects.fade_out_permanent)
+	end
+
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	self._intro_text_id = level_data and level_data.intro_text_id
 	self._intro_event = level_data and (variant == 0 and level_data.intro_event or level_data.intro_event[variant])
@@ -116,12 +119,12 @@ function IngameWaitingForPlayersState:sync_start(variant, soundtrack)
 	end
 end
 
--- Lines: 115 to 116
+-- Lines: 121 to 122
 function IngameWaitingForPlayersState:blackscreen_started()
 	return self._blackscreen_started or false
 end
 
--- Lines: 119 to 143
+-- Lines: 125 to 158
 function IngameWaitingForPlayersState:_start_audio()
 	managers.hud:show(self.LEVEL_INTRO_GUI)
 	managers.hud:set_blackscreen_mid_text(self._intro_text_id and managers.localization:text(self._intro_text_id) or "")
@@ -132,6 +135,14 @@ function IngameWaitingForPlayersState:_start_audio()
 	self._audio_started = true
 
 	managers.menu:close_menu("kit_menu")
+
+	if _G.IS_VR then
+		managers.hud:hide(self.GUI_SAFERECT)
+		managers.hud:hide(self.GUI_FULLSCREEN)
+		managers.menu_component:hide_game_chat_gui()
+		managers.menu_component:close_mission_briefing_gui()
+		managers.menu_component:kill_preplanning_map_gui()
+	end
 
 	local event_started = nil
 	local job_data = managers.job:current_job_data()
@@ -158,7 +169,7 @@ function IngameWaitingForPlayersState:_start_audio()
 	end
 end
 
--- Lines: 145 to 156
+-- Lines: 160 to 171
 function IngameWaitingForPlayersState:_create_blackscreen_loading_icon()
 	if self._fadeout_loading_icon then
 		return
@@ -172,7 +183,7 @@ function IngameWaitingForPlayersState:_create_blackscreen_loading_icon()
 	self._fadeout_loading_icon = FadeoutGuiObject:new(settings)
 end
 
--- Lines: 158 to 163
+-- Lines: 173 to 178
 function IngameWaitingForPlayersState:_start_delay()
 	if self._delay_start_t then
 		return
@@ -181,7 +192,7 @@ function IngameWaitingForPlayersState:_start_delay()
 	self._delay_start_t = Application:time() + 1
 end
 
--- Lines: 166 to 188
+-- Lines: 181 to 203
 function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
 	self:_create_blackscreen_loading_icon()
 
@@ -190,13 +201,13 @@ function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
 	end
 end
 
--- Lines: 190 to 194
+-- Lines: 205 to 209
 function IngameWaitingForPlayersState:_briefing_callback(event_type, label, cookie)
 	print("[IngameWaitingForPlayersState]", "event_type", event_type, "label", label, "cookie", cookie)
 	managers.menu_component:set_mission_briefing_description(label)
 end
 
--- Lines: 203 to 320
+-- Lines: 218 to 346
 function IngameWaitingForPlayersState:update(t, dt)
 	if not managers.network:session() then
 		return
@@ -272,6 +283,10 @@ function IngameWaitingForPlayersState:update(t, dt)
 			if self._controller then
 				local btn_skip_press = self._controller:get_input_bool("confirm")
 
+				if _G.IS_VR then
+					btn_skip_press = btn_skip_press or self._controller:get_input_bool("laser_primary")
+				end
+
 				if btn_skip_press and not self._skip_data then
 					self._skip_data = {
 						total = 1,
@@ -302,8 +317,13 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines: 322 to 436
+-- Lines: 349 to 472
 function IngameWaitingForPlayersState:at_enter()
+	if _G.IS_VR then
+		managers.menu:open_menu("waiting_for_players")
+		managers.overlay_effect:set_hmd_tracking(false)
+	end
+
 	self._started_from_beginning = true
 
 	if Global.job_manager.current_job and Global.job_manager.current_job.current_stage == 1 then
@@ -318,9 +338,9 @@ function IngameWaitingForPlayersState:at_enter()
 	self._sound_listener:activate(true)
 	managers.crime_spree:on_mission_started(managers.crime_spree:current_mission())
 	managers.crimenet:set_job_played_today(managers.job:current_job_id())
-	managers.hud:load_hud(self.GUI_SAFERECT, false, true, true, {})
+	managers.hud:load_hud_menu(self.GUI_SAFERECT, false, true, true, {})
 	managers.hud:show(self.GUI_SAFERECT)
-	managers.hud:load_hud(self.GUI_FULLSCREEN, false, true, false, {}, nil, nil, true)
+	managers.hud:load_hud_menu(self.GUI_FULLSCREEN, false, true, false, {}, nil, nil, true)
 	managers.hud:show(self.GUI_FULLSCREEN)
 	managers.hud._hud_mission_briefing:reload()
 	managers.hud._hud_mission_briefing:show()
@@ -334,10 +354,10 @@ function IngameWaitingForPlayersState:at_enter()
 	end
 
 	if not managers.hud:exists(self.LEVEL_INTRO_GUI) then
-		managers.hud:load_hud(self.LEVEL_INTRO_GUI, false, false, true, {})
+		managers.hud:load_hud_menu(self.LEVEL_INTRO_GUI, false, false, true, {})
 	end
 
-	managers.menu:close_menu()
+	managers.menu:close_menu("pause_menu")
 	managers.menu:open_menu("kit_menu")
 
 	self._kit_menu = managers.menu:get_menu("kit_menu")
@@ -397,7 +417,7 @@ function IngameWaitingForPlayersState:at_enter()
 	TestAPIHelper.on_event("start_job_loadout")
 end
 
--- Lines: 440 to 471
+-- Lines: 476 to 507
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -435,9 +455,9 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines: 475 to 488
+-- Lines: 511 to 525
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
-	if not self._skip_promt_shown and not self._file_streamer_max_workload and not managers.menu:active_menu() and managers.network:session() then
+	if not self._skip_promt_shown and not self._file_streamer_max_workload and (not managers.menu:active_menu() or managers.menu:active_menu().name == "waiting_for_players") and managers.network:session() then
 		if managers.network:session():are_peers_done_streaming() then
 			self._skip_promt_shown = true
 
@@ -452,7 +472,7 @@ function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	end
 end
 
--- Lines: 490 to 497
+-- Lines: 527 to 534
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -463,7 +483,7 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines: 500 to 506
+-- Lines: 537 to 543
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 	Global.statistics_manager.playing_from_start = nil
@@ -471,13 +491,17 @@ function IngameWaitingForPlayersState:set_dropin(char_name)
 	print("Joining as " .. char_name)
 end
 
--- Lines: 508 to 509
+-- Lines: 545 to 546
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines: 512 to 595
+-- Lines: 550 to 646
 function IngameWaitingForPlayersState:at_exit()
+	if _G.IS_VR then
+		managers.menu:close_menu("waiting_for_players")
+	end
+
 	managers.dyn_resource:set_file_streaming_chunk_size_mul(0.25, 5)
 
 	if self._file_streamer_max_workload then
@@ -505,7 +529,10 @@ function IngameWaitingForPlayersState:at_exit()
 	managers.menu_component:close_mission_briefing_gui()
 	managers.menu_component:kill_preplanning_map_gui()
 	managers.overlay_effect:play_effect(tweak_data.overlay_effects.level_fade_in)
-	managers.overlay_effect:stop_effect(self._fade_out_id)
+
+	if self._fade_out_id then
+		managers.overlay_effect:stop_effect(self._fade_out_id)
+	end
 
 	if self._sound_listener then
 		self._sound_listener:delete()
@@ -553,7 +580,7 @@ function IngameWaitingForPlayersState:at_exit()
 	TestAPIHelper.on_event("start_job")
 end
 
--- Lines: 597 to 610
+-- Lines: 648 to 661
 function IngameWaitingForPlayersState:_get_cameras()
 	self._cameras = {}
 
@@ -584,7 +611,7 @@ function IngameWaitingForPlayersState:_get_cameras()
 	end
 end
 
--- Lines: 612 to 625
+-- Lines: 663 to 676
 function IngameWaitingForPlayersState:_next_camera()
 	self._camera_data.next_t = Application:time() + 8 + math.rand(4)
 	self._camera_data.index = self._camera_data.index + 1
@@ -598,17 +625,17 @@ function IngameWaitingForPlayersState:_next_camera()
 	self._cam_unit:camera():start(math.rand(30))
 end
 
--- Lines: 627 to 629
+-- Lines: 678 to 680
 function IngameWaitingForPlayersState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 631 to 633
+-- Lines: 682 to 684
 function IngameWaitingForPlayersState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 635 to 637
+-- Lines: 686 to 688
 function IngameWaitingForPlayersState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

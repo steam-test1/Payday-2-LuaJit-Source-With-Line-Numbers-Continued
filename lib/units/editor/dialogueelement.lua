@@ -2,7 +2,7 @@ DialogueUnitElement = DialogueUnitElement or class(MissionElement)
 DialogueUnitElement.SAVE_UNIT_POSITION = false
 DialogueUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 21
+-- Lines: 5 to 23
 function DialogueUnitElement:init(unit)
 	DialogueUnitElement.super.init(self, unit)
 
@@ -12,6 +12,7 @@ function DialogueUnitElement:init(unit)
 	self._hed.force_quit_current = nil
 	self._hed.use_instigator = false
 	self._hed.can_not_be_muted = false
+	self._hed.play_on_player_instigator_only = false
 
 	table.insert(self._save_values, "dialogue")
 	table.insert(self._save_values, "execute_on_executed_when_done")
@@ -19,9 +20,10 @@ function DialogueUnitElement:init(unit)
 	table.insert(self._save_values, "force_quit_current")
 	table.insert(self._save_values, "use_instigator")
 	table.insert(self._save_values, "can_not_be_muted")
+	table.insert(self._save_values, "play_on_player_instigator_only")
 end
 
--- Lines: 23 to 27
+-- Lines: 25 to 29
 function DialogueUnitElement:new_save_values(...)
 	local t = DialogueUnitElement.super.new_save_values(self, ...)
 	t.position = self._hed.use_position and self._unit:position() or nil
@@ -29,7 +31,7 @@ function DialogueUnitElement:new_save_values(...)
 	return t
 end
 
--- Lines: 30 to 39
+-- Lines: 32 to 41
 function DialogueUnitElement:test_element()
 	if self._hed.dialogue == "none" then
 		return
@@ -45,14 +47,14 @@ function DialogueUnitElement:test_element()
 	managers.editor:set_listener_enabled(true)
 end
 
--- Lines: 41 to 45
+-- Lines: 43 to 47
 function DialogueUnitElement:stop_test_element()
 	managers.dialog:quit_dialog()
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
 end
 
--- Lines: 47 to 59
+-- Lines: 49 to 62
 function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -65,5 +67,6 @@ function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "use_position")
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Play on instigator")
 	self:_build_value_checkbox(panel, panel_sizer, "can_not_be_muted", "This dialogue will play regardless of if the player has disabled contractor VO")
+	self:_build_value_checkbox(panel, panel_sizer, "play_on_player_instigator_only", "This dialogue will only play on the player that triggers it")
 end
 

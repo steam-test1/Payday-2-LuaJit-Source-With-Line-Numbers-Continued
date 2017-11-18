@@ -247,19 +247,24 @@ function ViewportManager:set_override_environment(environment_path, blend_durati
 	end
 end
 
--- Lines: 225 to 228
+-- Lines: 222 to 224
+function ViewportManager:move_to_front(vp)
+	self:_move_ao_to_front(vp)
+end
+
+-- Lines: 230 to 233
 function ViewportManager:_viewport_destroyed(vp)
 	self:_del_accessobj(vp)
 
 	self._current_camera = nil
 end
 
--- Lines: 230 to 231
+-- Lines: 235 to 236
 function ViewportManager:_get_environment_manager()
 	return self._env_manager
 end
 
--- Lines: 234 to 250
+-- Lines: 239 to 255
 function ViewportManager:_prioritize_and_activate()
 	local old_first_vp = self:first_active_viewport()
 
@@ -278,7 +283,7 @@ function ViewportManager:_prioritize_and_activate()
 	end
 end
 
--- Lines: 257 to 263
+-- Lines: 262 to 268
 function ViewportManager:first_active_world_viewport()
 	for _, vp in ipairs(self:active_viewports()) do
 		if vp:is_rendering_scene("World") then
@@ -287,7 +292,7 @@ function ViewportManager:first_active_world_viewport()
 	end
 end
 
--- Lines: 265 to 272
+-- Lines: 270 to 277
 function ViewportManager:get_current_camera()
 	if self._current_camera then
 		return self._current_camera
@@ -299,7 +304,7 @@ function ViewportManager:get_current_camera()
 	return self._current_camera
 end
 
--- Lines: 275 to 284
+-- Lines: 280 to 289
 function ViewportManager:get_current_camera_position()
 	if self._current_camera_position_updated then
 		return self._current_camera_position
@@ -314,7 +319,7 @@ function ViewportManager:get_current_camera_position()
 	return self._current_camera_position
 end
 
--- Lines: 287 to 293
+-- Lines: 292 to 298
 function ViewportManager:get_current_camera_rotation()
 	if self._current_camera_rotation then
 		return self._current_camera_rotation
@@ -325,12 +330,12 @@ function ViewportManager:get_current_camera_rotation()
 	return self._current_camera_rotation
 end
 
--- Lines: 296 to 297
+-- Lines: 301 to 302
 function ViewportManager:get_active_vp()
 	return self:active_vp():vp()
 end
 
--- Lines: 300 to 302
+-- Lines: 305 to 307
 function ViewportManager:active_vp()
 	local vps = self:active_viewports()
 
@@ -340,7 +345,7 @@ local is_win32 = SystemInfo:platform() == Idstring("WIN32")
 local is_ps4 = SystemInfo:platform() == Idstring("PS4")
 local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 
--- Lines: 309 to 312
+-- Lines: 314 to 317
 function ViewportManager:get_safe_rect()
 	local a = is_win32 and 0.032 or (is_ps4 or is_xb1) and 0.05 or 0.075
 	local b = 1 - a * 2
@@ -353,7 +358,7 @@ function ViewportManager:get_safe_rect()
 	}
 end
 
--- Lines: 315 to 325
+-- Lines: 320 to 330
 function ViewportManager:get_safe_rect_pixels()
 	local res = RenderSettings.resolution
 	local safe_rect_scale = self:get_safe_rect()
@@ -367,7 +372,7 @@ function ViewportManager:get_safe_rect_pixels()
 	return safe_rect_pixels
 end
 
--- Lines: 328 to 333
+-- Lines: 333 to 338
 function ViewportManager:set_resolution(resolution)
 	if RenderSettings.resolution ~= resolution or self._render_settings_change_map and self._render_settings_change_map.resolution ~= resolution then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -375,7 +380,7 @@ function ViewportManager:set_resolution(resolution)
 	end
 end
 
--- Lines: 335 to 341
+-- Lines: 340 to 346
 function ViewportManager:is_fullscreen()
 	if self._render_settings_change_map and self._render_settings_change_map.fullscreen ~= nil then
 		return self._render_settings_change_map.fullscreen
@@ -384,7 +389,7 @@ function ViewportManager:is_fullscreen()
 	end
 end
 
--- Lines: 343 to 348
+-- Lines: 348 to 353
 function ViewportManager:set_fullscreen(fullscreen)
 	if not RenderSettings.fullscreen ~= not fullscreen or self._render_settings_change_map and not self._render_settings_change_map.fullscreen ~= not fullscreen then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -392,7 +397,7 @@ function ViewportManager:set_fullscreen(fullscreen)
 	end
 end
 
--- Lines: 350 to 356
+-- Lines: 355 to 361
 function ViewportManager:set_aspect_ratio(aspect_ratio)
 	if RenderSettings.aspect_ratio ~= aspect_ratio or self._render_settings_change_map and self._render_settings_change_map.aspect_ratio ~= aspect_ratio then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -401,7 +406,7 @@ function ViewportManager:set_aspect_ratio(aspect_ratio)
 	end
 end
 
--- Lines: 358 to 364
+-- Lines: 363 to 369
 function ViewportManager:set_vsync(vsync)
 	if RenderSettings.v_sync ~= vsync or self._render_settings_change_map and self._render_settings_change_map.v_sync ~= vsync then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -410,7 +415,7 @@ function ViewportManager:set_vsync(vsync)
 	end
 end
 
--- Lines: 366 to 371
+-- Lines: 371 to 376
 function ViewportManager:set_adapter_index(adapter_index)
 	if RenderSettings.adapter_index ~= adapter_index or self._render_settings_change_map and self._render_settings_change_map.adapter_index ~= adapter_index then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -418,7 +423,7 @@ function ViewportManager:set_adapter_index(adapter_index)
 	end
 end
 
--- Lines: 373 to 384
+-- Lines: 378 to 389
 function ViewportManager:reset_viewport_settings()
 	Application:reset_render_settings({
 		"adapter_index",
@@ -433,12 +438,12 @@ function ViewportManager:reset_viewport_settings()
 	self:resolution_changed()
 end
 
--- Lines: 388 to 389
+-- Lines: 393 to 394
 function ViewportManager:aspect_ratio()
 	return self._aspect_ratio
 end
 
--- Lines: 392 to 394
+-- Lines: 397 to 399
 function ViewportManager:set_aspect_ratio2(aspect_ratio)
 	self._aspect_ratio = aspect_ratio
 end

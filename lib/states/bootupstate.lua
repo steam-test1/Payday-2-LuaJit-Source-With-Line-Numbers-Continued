@@ -94,7 +94,7 @@ function BootupState:on_savefile_loaded(slot, success, is_setting_slot, cache_on
 	end
 end
 
--- Lines: 47 to 101
+-- Lines: 47 to 111
 function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -102,7 +102,14 @@ function BootupState:setup()
 	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_x360 = SystemInfo:platform() == Idstring("X360")
 	local show_esrb = false
-	self._full_workspace = gui:create_screen_workspace()
+
+	if _G.IS_VR then
+		self._full_workspace = managers.gui_data:create_fullscreen_workspace()
+		res = Vector3(1280, 720, 0)
+	else
+		self._full_workspace = gui:create_screen_workspace()
+	end
+
 	self._workspace = managers.gui_data:create_saferect_workspace()
 	self._back_drop_gui = MenuBackdropGUI:new()
 
@@ -169,7 +176,7 @@ function BootupState:setup()
 	end
 end
 
--- Lines: 104 to 118
+-- Lines: 114 to 128
 function BootupState:setup_intro_videos()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -212,7 +219,7 @@ function BootupState:setup_intro_videos()
 	})
 end
 
--- Lines: 120 to 144
+-- Lines: 130 to 164
 function BootupState:at_enter()
 	managers.menu:input_enabled(false)
 
@@ -231,22 +238,43 @@ function BootupState:at_enter()
 	self._clbk_game_has_music_control_callback = callback(self, self, "clbk_game_has_music_control")
 
 	managers.platform:add_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
-	self:play_next()
+
+	if _G.IS_VR then
+		managers.menu:_enter_menu_room()
+	end
+
+	self._wait_for_textures = _G.IS_VR
+
+	if not self._wait_for_textures then
+		self:play_next()
+	end
 
 	if Global.exe_argument_level then
 		self:gsm():change_state_by_name("menu_titlescreen")
 	end
 end
 
--- Lines: 146 to 150
+-- Lines: 166 to 170
 function BootupState:clbk_game_has_music_control(status)
 	if self._play_data and self._play_data.video then
 		self._gui_obj:set_volume_gain(status and self._bootup_volume or 0)
 	end
 end
 
--- Lines: 152 to 159
+-- Lines: 174 to 191
 function BootupState:update(t, dt)
+	if self._wait_for_textures then
+		if TextureCache:check_textures_loaded() then
+			self._wait_for_textures = false
+
+			managers.vr:stop_loading()
+			managers.overlay_effect:play_effect(tweak_data.overlay_effects.level_fade_in)
+			setup:set_main_thread_loading_screen_visible(false)
+		end
+
+		return
+	end
+
 	self:check_confirm_pressed()
 
 	if not self:is_playing() or (self._play_data.can_skip or Global.override_bootup_can_skip) and self:is_skipped() then
@@ -256,7 +284,7 @@ function BootupState:update(t, dt)
 	end
 end
 
--- Lines: 161 to 173
+-- Lines: 193 to 205
 function BootupState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -272,7 +300,7 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines: 175 to 213
+-- Lines: 207 to 245
 function BootupState:update_fades()
 	local time, duration = nil
 
@@ -313,7 +341,7 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines: 215 to 227
+-- Lines: 247 to 259
 function BootupState:apply_fade()
 	if self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
@@ -328,7 +356,7 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines: 229 to 236
+-- Lines: 261 to 268
 function BootupState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -339,7 +367,7 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines: 239 to 249
+-- Lines: 271 to 281
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
@@ -352,7 +380,7 @@ function BootupState:is_playing()
 	end
 end
 
--- Lines: 251 to 350
+-- Lines: 283 to 387
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -389,6 +417,11 @@ function BootupState:play_next(is_skipped)
 		end
 
 		local res = RenderSettings.resolution
+
+		if _G.IS_VR then
+			res = Vector3(1280, 720, 0)
+		end
+
 		local width, height = nil
 		local padding = self._play_data.padding or 0
 
@@ -462,19 +495,23 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines: 352 to 389
+-- Lines: 389 to 434
 function BootupState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
 	if alive(self._workspace) then
-		Overlay:gui():destroy_workspace(self._workspace)
+		managers.gui_data:destroy_workspace(self._workspace)
 
 		self._workspace = nil
 		self._gui_obj = nil
 	end
 
 	if alive(self._full_workspace) then
-		Overlay:gui():destroy_workspace(self._full_workspace)
+		if _G.IS_VR then
+			managers.gui_data:destroy_workspace(self._full_workspace)
+		else
+			Overlay:gui():destroy_workspace(self._full_workspace)
+		end
 
 		self._full_workspace = nil
 	end

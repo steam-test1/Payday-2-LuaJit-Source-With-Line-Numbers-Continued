@@ -202,3 +202,7 @@ function PlayerFreefall:_pitch_down()
 	self._camera_unit:base():animate_pitch(t, nil, self._tweak_data.camera.target_pitch, 1.7)
 end
 
+-- Lines: 255 to 256
+function PlayerFreefall:tweak_data_clbk_reload()
+end
+

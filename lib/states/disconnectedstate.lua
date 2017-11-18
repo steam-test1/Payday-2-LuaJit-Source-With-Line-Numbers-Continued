@@ -7,7 +7,7 @@ function DisconnectedState:init(game_state_machine, setup)
 	DisconnectedState.super.init(self, "disconnected", game_state_machine, setup)
 end
 
--- Lines: 10 to 21
+-- Lines: 10 to 27
 function DisconnectedState:at_enter(...)
 	self._success = false
 	self._completion_bonus_done = true
@@ -22,30 +22,30 @@ function DisconnectedState:at_enter(...)
 	self:_create_disconnected_dialog()
 end
 
--- Lines: 25 to 27
+-- Lines: 41 to 43
 function DisconnectedState:_create_disconnected_dialog()
 	MenuMainState._create_disconnected_dialog(self)
 end
 
--- Lines: 31 to 32
+-- Lines: 47 to 48
 function DisconnectedState:on_server_left_ok_pressed()
 end
 
--- Lines: 34 to 38
+-- Lines: 50 to 54
 function DisconnectedState:on_disconnected()
 	self._completion_bonus_done = true
 
 	self:_set_continue_button_text()
 end
 
--- Lines: 40 to 44
+-- Lines: 56 to 60
 function DisconnectedState:on_server_left()
 	self._completion_bonus_done = true
 
 	self:_set_continue_button_text()
 end
 
--- Lines: 46 to 50
+-- Lines: 62 to 66
 function DisconnectedState:_load_start_menu()
 	if not managers.job:stage_success() or not managers.job:on_last_stage() then
 		setup:load_start_menu()

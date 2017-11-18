@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5288
+-- Lines: 3 to 5346
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -540,6 +540,17 @@ function InteractionTweakData:init(tweak_data)
 	self.lance = {
 		icon = "equipment_drill",
 		contour = "interactable_icon",
+		text_id = "hud_int_equipment_lance",
+		equipment_text_id = "hud_int_equipment_no_lance",
+		timer = 3,
+		blocked_hint = "no_lance",
+		sound_start = "bar_thermal_lance_apply",
+		sound_interupt = "bar_thermal_lance_apply_cancel",
+		sound_done = "bar_thermal_lance_apply_finished",
+		action_text_id = "hud_action_placing_lance"
+	}
+	self.lance_bbv = {
+		icon = "equipment_drill",
 		text_id = "hud_int_equipment_lance",
 		equipment_text_id = "hud_int_equipment_no_lance",
 		timer = 3,
@@ -4990,6 +5001,20 @@ function InteractionTweakData:init(tweak_data)
 		timer = 1,
 		axis = "z",
 		interact_distance = 200
+	}
+	self.hold_choose_hand_left = {
+		text_id = "hud_int_hold_choose_hand_left",
+		action_text_id = "hud_int_hold_action_choose_hand_left",
+		timer = 2,
+		interact_distance = 200,
+		sound_done = "pick_up_poster"
+	}
+	self.hold_choose_hand_right = {
+		text_id = "hud_int_hold_choose_hand_right",
+		action_text_id = "hud_int_hold_action_choose_hand_right",
+		timer = 2,
+		interact_distance = 200,
+		sound_done = "pick_up_poster"
 	}
 end
 

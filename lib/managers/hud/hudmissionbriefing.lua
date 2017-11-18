@@ -2,11 +2,13 @@ require("lib/managers/menu/MenuBackdropGUI")
 
 HUDMissionBriefing = HUDMissionBriefing or class()
 
--- Lines: 5 to 284
+-- Lines: 5 to 290
 function HUDMissionBriefing:init(hud, workspace)
 	self._backdrop = MenuBackdropGUI:new(workspace)
 
-	self._backdrop:create_black_borders()
+	if not _G.IS_VR then
+		self._backdrop:create_black_borders()
+	end
 
 	self._hud = hud
 	self._workspace = workspace
@@ -513,7 +515,7 @@ function HUDMissionBriefing:init(hud, workspace)
 	end
 end
 
--- Lines: 286 to 304
+-- Lines: 292 to 310
 function HUDMissionBriefing:_apply_ghost_color(ghost, i, is_unknown)
 	local accumulated_ghost_bonus = managers.job:get_accumulated_ghost_bonus()
 	local agb = accumulated_ghost_bonus and accumulated_ghost_bonus[i]
@@ -535,7 +537,7 @@ function HUDMissionBriefing:_apply_ghost_color(ghost, i, is_unknown)
 	end
 end
 
--- Lines: 306 to 314
+-- Lines: 312 to 320
 function HUDMissionBriefing:on_whisper_mode_changed()
 	if alive(self._job_schedule_panel) then
 		local i = managers.job:current_stage() or 1
@@ -547,7 +549,7 @@ function HUDMissionBriefing:on_whisper_mode_changed()
 	end
 end
 
--- Lines: 316 to 328
+-- Lines: 322 to 334
 function HUDMissionBriefing:hide()
 	self._backdrop:hide()
 
@@ -556,13 +558,13 @@ function HUDMissionBriefing:hide()
 	end
 end
 
--- Lines: 331 to 334
+-- Lines: 337 to 340
 function HUDMissionBriefing:show()
 	print("SHOW")
 	self._backdrop:show()
 end
 
--- Lines: 336 to 360
+-- Lines: 342 to 366
 function HUDMissionBriefing:inside_slot(peer_id, child, x, y)
 	local slot = self._ready_slot_panel:child("slot_" .. tostring(peer_id))
 
@@ -583,7 +585,7 @@ function HUDMissionBriefing:inside_slot(peer_id, child, x, y)
 	return object:inside(x, y)
 end
 
--- Lines: 363 to 402
+-- Lines: 369 to 408
 function HUDMissionBriefing:set_player_slot(nr, params)
 	print("set_player_slot( nr, params )", nr, params)
 
@@ -619,7 +621,7 @@ function HUDMissionBriefing:set_player_slot(nr, params)
 	end
 end
 
--- Lines: 404 to 439
+-- Lines: 410 to 445
 function HUDMissionBriefing:set_slot_joining(peer, peer_id)
 	print("set_slot_joining( peer, peer_id )", peer, peer_id)
 
@@ -642,7 +644,7 @@ function HUDMissionBriefing:set_slot_joining(peer, peer_id)
 	slot:child("status"):set_font_size(tweak_data.menu.pd2_small_font_size)
 
 
-	-- Lines: 430 to 437
+	-- Lines: 436 to 443
 	local function animate_joining(o)
 		local t = 0
 
@@ -656,7 +658,7 @@ function HUDMissionBriefing:set_slot_joining(peer, peer_id)
 	slot:child("status"):animate(animate_joining)
 end
 
--- Lines: 441 to 462
+-- Lines: 447 to 468
 function HUDMissionBriefing:set_slot_ready(peer, peer_id)
 	print("set_slot_ready( peer, peer_id )", peer, peer_id)
 
@@ -676,7 +678,7 @@ function HUDMissionBriefing:set_slot_ready(peer, peer_id)
 	managers.menu_component:flash_ready_mission_briefing_gui()
 end
 
--- Lines: 464 to 492
+-- Lines: 470 to 498
 function HUDMissionBriefing:set_slot_not_ready(peer, peer_id)
 	print("set_slot_not_ready( peer, peer_id )", peer, peer_id)
 
@@ -694,7 +696,7 @@ function HUDMissionBriefing:set_slot_not_ready(peer, peer_id)
 	slot:child("status"):set_font_size(tweak_data.menu.pd2_small_font_size)
 end
 
--- Lines: 495 to 512
+-- Lines: 501 to 518
 function HUDMissionBriefing:set_dropin_progress(peer_id, progress_percentage, mode)
 	local slot = self._ready_slot_panel:child("slot_" .. tostring(peer_id))
 
@@ -712,12 +714,12 @@ function HUDMissionBriefing:set_dropin_progress(peer_id, progress_percentage, mo
 	slot:child("status"):set_font_size(tweak_data.menu.pd2_small_font_size)
 end
 
--- Lines: 514 to 516
+-- Lines: 520 to 522
 function HUDMissionBriefing:set_kit_selection(peer_id, category, id, slot)
 	print("set_kit_selection( peer_id, category, id, slot )", peer_id, category, id, slot)
 end
 
--- Lines: 520 to 543
+-- Lines: 526 to 549
 function HUDMissionBriefing:set_slot_outfit(peer_id, criminal_name, outfit)
 	local slot = self._ready_slot_panel:child("slot_" .. tostring(peer_id))
 
@@ -745,7 +747,7 @@ function HUDMissionBriefing:set_slot_outfit(peer_id, criminal_name, outfit)
 	end
 end
 
--- Lines: 545 to 554
+-- Lines: 551 to 560
 function HUDMissionBriefing:set_slot_voice(peer, peer_id, active)
 	print("set_slot_voice( peer, peer_id, active )", peer, peer_id, active)
 
@@ -758,7 +760,7 @@ function HUDMissionBriefing:set_slot_voice(peer, peer_id, active)
 	slot:child("voice"):set_visible(active)
 end
 
--- Lines: 556 to 582
+-- Lines: 562 to 588
 function HUDMissionBriefing:remove_player_slot_by_peer_id(peer, reason)
 	print("remove_player_slot_by_peer_id( peer, reason )", peer, reason)
 
@@ -782,12 +784,12 @@ function HUDMissionBriefing:remove_player_slot_by_peer_id(peer, reason)
 	slot:child("detection_value"):set_visible(slot:child("detection"):visible())
 end
 
--- Lines: 584 to 586
+-- Lines: 590 to 592
 function HUDMissionBriefing:update_layout()
 	self._backdrop:_set_black_borders()
 end
 
--- Lines: 593 to 599
+-- Lines: 599 to 605
 function HUDMissionBriefing:reload()
 	self._backdrop:close()
 

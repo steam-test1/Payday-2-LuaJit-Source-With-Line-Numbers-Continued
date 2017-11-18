@@ -114,3 +114,7 @@ function HUDHitDirection:_remove(indicator, data)
 	self._hit_direction_panel:remove(indicator)
 end
 
+if _G.IS_VR then
+	require("lib/managers/hud/vr/HUDHitDirectionVR")
+end
+

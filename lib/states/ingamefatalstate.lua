@@ -16,7 +16,7 @@ function IngameFatalState.on_local_player_dead()
 	managers.groupai:state():on_player_criminal_death(peer_id)
 end
 
--- Lines: 17 to 28
+-- Lines: 17 to 32
 function IngameFatalState:update(t, dt)
 	local player_manager = managers.player
 	local player = player_manager:player_unit()
@@ -30,7 +30,7 @@ function IngameFatalState:update(t, dt)
 	end
 end
 
--- Lines: 31 to 55
+-- Lines: 35 to 59
 function IngameFatalState:at_enter()
 	local player_manager = managers.player
 	local players = player_manager:players()
@@ -60,7 +60,7 @@ function IngameFatalState:at_enter()
 	hud_manager:show(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 57 to 81
+-- Lines: 61 to 85
 function IngameFatalState:at_exit()
 	local player = managers.player:player_unit()
 
@@ -75,17 +75,17 @@ function IngameFatalState:at_exit()
 	hud_manager:hide(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 83 to 85
+-- Lines: 87 to 89
 function IngameFatalState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 87 to 89
+-- Lines: 91 to 93
 function IngameFatalState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 91 to 93
+-- Lines: 95 to 97
 function IngameFatalState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

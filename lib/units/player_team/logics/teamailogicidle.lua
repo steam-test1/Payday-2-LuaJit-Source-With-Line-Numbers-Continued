@@ -326,7 +326,7 @@ function TeamAILogicIdle.on_alert(data, alert_data)
 	end
 end
 
--- Lines: 308 to 464
+-- Lines: 308 to 471
 function TeamAILogicIdle.on_long_dis_interacted(data, other_unit, secondary)
 	if data.objective and data.objective.type == "revive" then
 		return
@@ -467,7 +467,7 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit, secondary)
 	end
 end
 
--- Lines: 468 to 501
+-- Lines: 475 to 508
 function TeamAILogicIdle.on_new_objective(data, old_objective)
 	local new_objective = data.objective
 
@@ -506,7 +506,7 @@ function TeamAILogicIdle.on_new_objective(data, old_objective)
 	end
 end
 
--- Lines: 505 to 583
+-- Lines: 512 to 590
 function TeamAILogicIdle._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -582,14 +582,14 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicIdle._upd_enemy_detection, data, data.t + delay)
 end
 
--- Lines: 589 to 591
+-- Lines: 596 to 598
 function TeamAILogicIdle.find_civilian_to_intimidate(criminal, max_angle, max_dis)
 	local best_civ = TeamAILogicIdle._find_intimidateable_civilians(criminal, false, max_angle, max_dis)
 
 	return best_civ
 end
 
--- Lines: 596 to 643
+-- Lines: 603 to 650
 function TeamAILogicIdle._find_intimidateable_civilians(criminal, use_default_shout_shape, max_angle, max_dis)
 	local head_pos = criminal:movement():m_head_pos()
 	local look_vec = criminal:movement():m_rot():y()
@@ -644,7 +644,7 @@ function TeamAILogicIdle._find_intimidateable_civilians(criminal, use_default_sh
 	return best_civ, highest_wgt, intimidateable_civilians
 end
 
--- Lines: 650 to 724
+-- Lines: 657 to 731
 function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_action, primary_target)
 	if alive(primary_target) and primary_target:unit_data().disable_shout then
 		return false
@@ -731,7 +731,7 @@ function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_a
 	return primary_target or best_civ
 end
 
--- Lines: 730 to 777
+-- Lines: 737 to 784
 function TeamAILogicIdle.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -789,7 +789,7 @@ function TeamAILogicIdle.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 781 to 805
+-- Lines: 788 to 812
 function TeamAILogicIdle.is_available_for_assignment(data, new_objective)
 	if data.internal_data.exiting then
 		return
@@ -818,7 +818,7 @@ function TeamAILogicIdle.is_available_for_assignment(data, new_objective)
 	return true
 end
 
--- Lines: 810 to 815
+-- Lines: 817 to 822
 function TeamAILogicIdle.clbk_heat(data)
 	local inventory = data.unit:inventory()
 
@@ -827,7 +827,7 @@ function TeamAILogicIdle.clbk_heat(data)
 	end
 end
 
--- Lines: 819 to 835
+-- Lines: 826 to 842
 function TeamAILogicIdle.clbk_revive_complete(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -846,7 +846,7 @@ function TeamAILogicIdle.clbk_revive_complete(ignore_this, data)
 	end
 end
 
--- Lines: 839 to 855
+-- Lines: 846 to 862
 function TeamAILogicIdle.clbk_action_timeout(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -869,7 +869,7 @@ function TeamAILogicIdle.clbk_action_timeout(ignore_this, data)
 	data.objective_complete_clbk(data.unit, old_objective)
 end
 
--- Lines: 859 to 914
+-- Lines: 866 to 921
 function TeamAILogicIdle._check_should_relocate(data, my_data, objective)
 	local follow_unit = objective.follow_unit
 	local my_nav_seg_id = data.unit:movement():nav_tracker():nav_segment()
@@ -929,7 +929,7 @@ function TeamAILogicIdle._check_should_relocate(data, my_data, objective)
 	end
 end
 
--- Lines: 920 to 938
+-- Lines: 927 to 945
 function TeamAILogicIdle._ignore_shield(unit, attention)
 	if managers.player:has_category_upgrade("team", "crew_ai_ap_ammo") then
 		return false
@@ -952,7 +952,7 @@ function TeamAILogicIdle._ignore_shield(unit, attention)
 	return not not hit_shield
 end
 
--- Lines: 944 to 1075
+-- Lines: 951 to 1082
 function TeamAILogicIdle._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or TeamAILogicBase._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -1052,7 +1052,7 @@ function TeamAILogicIdle._get_priority_attention(data, attention_objects, reacti
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines: 1080 to 1097
+-- Lines: 1087 to 1104
 function TeamAILogicIdle._upd_sneak_spotting(data, my_data)
 	if false then
 		if managers.groupai:state():whisper_mode() and (not TeamAILogicAssault._mark_special_chk_t or TeamAILogicAssault._mark_special_chk_t + 0.75 < data.t) and (not TeamAILogicAssault._mark_special_t or TeamAILogicAssault._mark_special_t + 6 < data.t) and not data.unit:sound():speaking() then
@@ -1068,7 +1068,7 @@ function TeamAILogicIdle._upd_sneak_spotting(data, my_data)
 	end
 end
 
--- Lines: 1101 to 1120
+-- Lines: 1108 to 1127
 function TeamAILogicIdle.find_sneak_char_to_mark(data)
 	local best_nmy, best_nmy_wgt = nil
 
@@ -1082,7 +1082,7 @@ function TeamAILogicIdle.find_sneak_char_to_mark(data)
 	return best_nmy
 end
 
--- Lines: 1125 to 1138
+-- Lines: 1132 to 1145
 function TeamAILogicIdle.mark_sneak_char(data, criminal, to_mark, play_sound, play_action)
 	if play_sound then
 		criminal:sound():say(to_mark:base():char_tweak().silent_priority_shout .. "x_any", true, false)

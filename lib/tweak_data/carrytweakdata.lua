@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines: 7 to 1028
+-- Lines: 7 to 1051
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -63,6 +63,7 @@ function CarryTweakData:init(tweak_data)
 	self.types.cloaker_explosives.can_poof = true
 	self.small_loot = {
 		money_bundle = tweak_data:get_value("money_manager", "small_loot", "money_bundle"),
+		money_bundle_value = tweak_data:get_value("money_manager", "small_loot", "money_bundle_value"),
 		ring_band = tweak_data:get_value("money_manager", "small_loot", "ring_band"),
 		diamondheist_vault_bust = tweak_data:get_value("money_manager", "small_loot", "diamondheist_vault_bust"),
 		diamondheist_vault_diamond = tweak_data:get_value("money_manager", "small_loot", "diamondheist_vault_diamond"),
@@ -762,9 +763,27 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
 		AI_carry = {SO_category = "enemies"}
 	}
+	self.bag = {
+		type = "medium",
+		name_id = "hud_carry_bag",
+		bag_value = "money",
+		unit = "units/payday2/pickups/bbv_pku_lootbag/bbv_pku_lootbag",
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		dye = true,
+		AI_carry = {SO_category = "enemies"}
+	}
+	self.bag_01 = {
+		type = "medium",
+		name_id = "hud_carry_bag",
+		bag_value = "money",
+		unit = "units/payday2/pickups/bbv_pku_lootbag_01/bbv_pku_lootbag_01",
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		dye = true,
+		AI_carry = {SO_category = "enemies"}
+	}
 end
 
--- Lines: 1030 to 1038
+-- Lines: 1053 to 1061
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -779,7 +798,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines: 1042 to 1049
+-- Lines: 1065 to 1072
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

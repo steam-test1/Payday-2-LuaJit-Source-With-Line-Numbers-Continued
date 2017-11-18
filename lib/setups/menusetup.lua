@@ -21,13 +21,130 @@ require("lib/units/weapons/WeaponUnderbarrel")
 require("lib/units/weapons/WeaponUnderbarrelLauncher")
 require("lib/units/menu/MenuArmourBase")
 require("lib/units/ArmorSkinExt")
+require("lib/managers/EnvironmentEffectsManager")
+
+IngameUIExt = IngameUIExt or class()
+
+-- Lines: 39 to 40
+function IngameUIExt:init(unit)
+end
+
+-- Lines: 41 to 42
+function IngameUIExt:set_active(unit)
+end
+AIAttentionObject = AIAttentionObject or class()
+
+-- Lines: 45 to 46
+function AIAttentionObject:init(unit)
+end
+
+-- Lines: 47 to 48
+function AIAttentionObject:set_active()
+end
+UseInteractionExt = UseInteractionExt or class()
+
+-- Lines: 51 to 52
+function UseInteractionExt:init(unit)
+end
+
+-- Lines: 53 to 54
+function UseInteractionExt:set_active()
+end
+SecurityCamera = SecurityCamera or class()
+
+-- Lines: 57 to 58
+function SecurityCamera:init(unit)
+end
+SecurityCameraInteractionExt = SecurityCameraInteractionExt or class()
+
+-- Lines: 61 to 62
+function SecurityCameraInteractionExt:init(unit)
+end
+
+-- Lines: 64 to 65
+function SecurityCameraInteractionExt:set_active()
+end
+ContourExt = ContourExt or class()
+
+-- Lines: 68 to 69
+function ContourExt:init(unit)
+end
+
+-- Lines: 70 to 71
+function ContourExt:set_active()
+end
+SyncUnitData = SyncUnitData or class()
+
+-- Lines: 74 to 75
+function SyncUnitData:init(unit)
+end
+
+-- Lines: 76 to 77
+function SyncUnitData:set_active()
+end
+AccessWeaponMenuInteractionExt = AccessWeaponMenuInteractionExt or class()
+
+-- Lines: 80 to 81
+function AccessWeaponMenuInteractionExt:init(unit)
+end
+
+-- Lines: 83 to 84
+function AccessWeaponMenuInteractionExt:set_active()
+end
+NetworkBaseExtension = NetworkBaseExtension or class()
+
+-- Lines: 87 to 88
+function NetworkBaseExtension:init(unit)
+end
+
+-- Lines: 89 to 90
+function NetworkBaseExtension:set_active()
+end
+DrivingInteractionExt = DrivingInteractionExt or class()
+
+-- Lines: 93 to 94
+function DrivingInteractionExt:init(unit)
+end
+
+-- Lines: 95 to 96
+function DrivingInteractionExt:set_active()
+end
+VehicleDamage = VehicleDamage or class()
+
+-- Lines: 99 to 100
+function VehicleDamage:init(unit)
+end
+
+-- Lines: 101 to 102
+function VehicleDamage:set_active()
+end
+CarryData = CarryData or class()
+
+-- Lines: 105 to 106
+function CarryData:init(unit)
+end
+
+-- Lines: 107 to 108
+function CarryData:set_active()
+end
+VehicleDrivingExt = VehicleDrivingExt or class()
+
+-- Lines: 111 to 112
+function VehicleDrivingExt:init(unit)
+end
+VehicleCamera = VehicleCamera or class()
+
+-- Lines: 115 to 116
+function VehicleCamera:init(unit)
+end
+
 require("lib/wip")
 core:import("SequenceManager")
 
 MenuSetup = MenuSetup or class(Setup)
 MenuSetup.IS_START_MENU = true
 
--- Lines: 42 to 87
+-- Lines: 126 to 181
 function MenuSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -41,6 +158,14 @@ function MenuSetup:load_packages()
 
 	if not PackageManager:loaded("packages/load_default") then
 		PackageManager:load("packages/load_default")
+	end
+
+	if not PackageManager:loaded("packages/vr_base") then
+		PackageManager:load("packages/vr_base")
+	end
+
+	if not PackageManager:loaded("packages/vr_menu") then
+		PackageManager:load("packages/vr_menu")
 	end
 
 	local prefix = "packages/dlcs/"
@@ -71,13 +196,13 @@ function MenuSetup:load_packages()
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
 
-		-- Lines: 79 to 81
+		-- Lines: 173 to 175
 		local function _load_wip_func()
 			Global._game_base_package_loaded = true
 		end
 
 
-		-- Lines: 82 to 84
+		-- Lines: 176 to 178
 		local function load_base_func()
 			PackageManager:load("packages/game_base", _load_wip_func)
 		end
@@ -86,7 +211,7 @@ function MenuSetup:load_packages()
 	end
 end
 
--- Lines: 89 to 111
+-- Lines: 183 to 205
 function MenuSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -112,16 +237,20 @@ function MenuSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines: 113 to 119
+-- Lines: 207 to 219
 function MenuSetup:unload_packages()
 	Setup.unload_packages(self)
 
 	if PackageManager:loaded("packages/start_menu") then
 		PackageManager:unload("packages/start_menu")
 	end
+
+	if PackageManager:loaded("packages/vr_menu") then
+		PackageManager:unload("packages/vr_menu")
+	end
 end
 
--- Lines: 121 to 225
+-- Lines: 221 to 343
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -158,9 +287,11 @@ function MenuSetup:init_game()
 					world_setting = arg_list[i + 1]
 					i = i + 1
 				elseif arg == "-skip_intro" then
-					game_state_machine:set_boot_intro_done(true)
+					if not _G.IS_VR then
+						game_state_machine:set_boot_intro_done(true)
 
-					intro_skipped = true
+						intro_skipped = true
+					end
 				elseif arg == "+connect_lobby" then
 					Global.boot_invite = arg_list[i + 1]
 				elseif arg == "-auto_enter_level" then
@@ -190,7 +321,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines: 228 to 240
+-- Lines: 346 to 358
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
@@ -202,7 +333,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines: 242 to 272
+-- Lines: 360 to 390
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -236,7 +367,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines: 277 to 293
+-- Lines: 395 to 411
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -254,32 +385,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines: 295 to 300
+-- Lines: 413 to 418
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines: 302 to 306
+-- Lines: 420 to 424
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines: 308 to 336
+-- Lines: 426 to 454
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines: 338 to 342
+-- Lines: 456 to 460
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines: 344 to 347
+-- Lines: 462 to 465
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

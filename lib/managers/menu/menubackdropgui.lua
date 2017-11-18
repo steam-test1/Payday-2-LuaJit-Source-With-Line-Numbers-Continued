@@ -4,7 +4,7 @@ MenuBackdropGUI.BASE_RES = {
 	h = 720
 }
 
--- Lines: 18 to 68
+-- Lines: 18 to 70
 function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 	self._fixed_dt = fixed_dt
 	self._gui_data_manager = gui_data_manager
@@ -13,6 +13,10 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 
 	if not ws then
 		self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
+
+		if _G.IS_VR then
+			self._black_bg_ws:set_pinned_screen(true)
+		end
 
 		self._black_bg_ws:panel():rect({
 			valign = "scale",
@@ -85,7 +89,7 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 	self:enable_light(true)
 end
 
--- Lines: 70 to 88
+-- Lines: 72 to 90
 function MenuBackdropGUI:setup_saferect_shape()
 	local saferect_shape = {}
 	local safe_scaled_size = (self._gui_data_manager or managers.gui_data):safe_scaled_size()
@@ -110,7 +114,7 @@ function MenuBackdropGUI:setup_saferect_shape()
 	self._saferect_shape = saferect_shape
 end
 
--- Lines: 92 to 104
+-- Lines: 94 to 108
 function MenuBackdropGUI:create_black_borders()
 	if self._black_bg_ws then
 		self._gui_data_scene_gui:destroy_workspace(self._black_bg_ws)
@@ -121,6 +125,10 @@ function MenuBackdropGUI:create_black_borders()
 	self._gui_data_scene_gui = managers.gui_data:get_scene_gui()
 	self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
+	if _G.IS_VR then
+		self._black_bg_ws:set_pinned_screen(true)
+	end
+
 	self._black_bg_ws:panel():rect({
 		valign = "scale",
 		name = "bg",
@@ -130,7 +138,7 @@ function MenuBackdropGUI:create_black_borders()
 	})
 end
 
--- Lines: 106 to 123
+-- Lines: 110 to 127
 function MenuBackdropGUI:_set_black_borders(manager)
 	return
 
@@ -149,7 +157,7 @@ function MenuBackdropGUI:_set_black_borders(manager)
 	bottom_border:set_size(border_w, border_h + 2)
 end
 
--- Lines: 125 to 130
+-- Lines: 129 to 134
 function MenuBackdropGUI:resolution_changed()
 	local manager = self._gui_data_manager or managers.gui_data
 
@@ -157,7 +165,7 @@ function MenuBackdropGUI:resolution_changed()
 	self:_set_black_borders(manager)
 end
 
--- Lines: 132 to 141
+-- Lines: 136 to 145
 function MenuBackdropGUI:_get_correct_fullscreen_texture_size(texture_width, texture_height)
 	local aspect = self.BASE_RES.w / self.BASE_RES.h
 	local sw = math.min(texture_width, texture_height * aspect)
@@ -168,7 +176,7 @@ function MenuBackdropGUI:_get_correct_fullscreen_texture_size(texture_width, tex
 	return dw * self.BASE_RES.w, dh * self.BASE_RES.h
 end
 
--- Lines: 144 to 149
+-- Lines: 148 to 153
 function MenuBackdropGUI:set_fullscreen_bitmap_shape(gui_object, size_mod)
 	local dw, dh = self:_get_correct_fullscreen_texture_size(gui_object:texture_width(), gui_object:texture_height())
 
@@ -176,14 +184,14 @@ function MenuBackdropGUI:set_fullscreen_bitmap_shape(gui_object, size_mod)
 	gui_object:set_center(self.BASE_RES.w * 0.5, self.BASE_RES.h * 0.5)
 end
 
--- Lines: 153 to 156
+-- Lines: 157 to 160
 function MenuBackdropGUI:_set_layers_of_layer(layer, set_to)
 	self._layer_layers[layer] = set_to
 
 	self:_update_layers()
 end
 
--- Lines: 158 to 170
+-- Lines: 162 to 174
 function MenuBackdropGUI:_update_layers()
 	local layers_name_table = {
 		"base_layer",
@@ -207,7 +215,7 @@ function MenuBackdropGUI:_update_layers()
 	layer:set_layer(num_layers)
 end
 
--- Lines: 174 to 182
+-- Lines: 178 to 186
 function MenuBackdropGUI:_create_base_layer()
 	local base_layer = self._panel:child("base_layer")
 
@@ -222,7 +230,7 @@ function MenuBackdropGUI:_create_base_layer()
 	self:set_fullscreen_bitmap_shape(bd_base_layer, 1)
 end
 
--- Lines: 186 to 221
+-- Lines: 190 to 225
 function MenuBackdropGUI:enable_light(enabled)
 	local light_layer = self._panel:child("light_layer")
 
@@ -246,7 +254,7 @@ function MenuBackdropGUI:enable_light(enabled)
 	bd_light:set_blend_mode("add")
 
 
-	-- Lines: 203 to 218
+	-- Lines: 207 to 222
 	local function light_flicker_animation(o)
 		local alpha = 0
 		local acceleration = 0
@@ -268,7 +276,7 @@ function MenuBackdropGUI:enable_light(enabled)
 	bd_light:animate(light_flicker_animation)
 end
 
--- Lines: 225 to 319
+-- Lines: 229 to 323
 function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 	local bg_layer = self._panel:child("pattern_layer")
 
@@ -289,7 +297,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 	object:set_alpha(alpha or 0.2)
 
 
-	-- Lines: 240 to 315
+	-- Lines: 244 to 319
 	local function mechanic_animation(o)
 		local corner_left = -bg_layer:w() * 0.2
 		local corner_right = -bg_layer:w() * 0.05
@@ -312,7 +320,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 		local dir_moved = 0
 
 
-		-- Lines: 265 to 271
+		-- Lines: 269 to 275
 		local function move_one_axis(p)
 			if move_on_x_axis then
 				o:set_x(math.lerp(start_x, wanted_x, p))
@@ -322,7 +330,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 		end
 
 
-		-- Lines: 273 to 279
+		-- Lines: 277 to 283
 		local function overshoot_one_axis(p)
 			if move_on_x_axis then
 				o:set_x(math.lerp(wanted_x, wanted_x + overshoot, p))
@@ -332,7 +340,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 		end
 
 
-		-- Lines: 281 to 287
+		-- Lines: 285 to 291
 		local function bringback_one_axis(p)
 			if move_on_x_axis then
 				o:set_x(math.lerp(wanted_x + overshoot, wanted_x, p))
@@ -373,7 +381,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 	return object
 end
 
--- Lines: 324 to 336
+-- Lines: 328 to 340
 function MenuBackdropGUI:set_particles_object(bitmap_texture, row, column, num_particles)
 	local particles_layer = self._panel:child("particles_layer")
 
@@ -390,7 +398,7 @@ function MenuBackdropGUI:set_particles_object(bitmap_texture, row, column, num_p
 	end
 end
 
--- Lines: 338 to 405
+-- Lines: 342 to 409
 function MenuBackdropGUI:_create_particle()
 	local particles_layer = self._panel:child("particles_layer")
 	local texture_rect_x = (math.random(self._row) - 1) * 32
@@ -416,7 +424,7 @@ function MenuBackdropGUI:_create_particle()
 	particle:rotate(math.rand(180))
 
 
-	-- Lines: 355 to 403
+	-- Lines: 359 to 407
 	local function particle_animation(o, self)
 		local start_x = o:center_x()
 		local start_y = o:center_y()
@@ -469,7 +477,7 @@ function MenuBackdropGUI:_create_particle()
 	particle:animate(particle_animation, self)
 end
 
--- Lines: 407 to 411
+-- Lines: 411 to 415
 function MenuBackdropGUI:_remove_particle(o)
 	local particles_layer = self._panel:child("particles_layer")
 
@@ -477,7 +485,7 @@ function MenuBackdropGUI:_remove_particle(o)
 	self:_create_particle()
 end
 
--- Lines: 415 to 418
+-- Lines: 419 to 422
 function MenuBackdropGUI:get_new_base_layer()
 	local new_layer = self._panel:child("base_layer"):panel({layer = self._layer_layers[1]})
 
@@ -486,7 +494,7 @@ function MenuBackdropGUI:get_new_base_layer()
 	return new_layer
 end
 
--- Lines: 421 to 424
+-- Lines: 425 to 428
 function MenuBackdropGUI:get_new_background_layer()
 	local new_layer = self._panel:child("item_background_layer"):panel({layer = self._layer_layers[3]})
 
@@ -495,7 +503,7 @@ function MenuBackdropGUI:get_new_background_layer()
 	return new_layer
 end
 
--- Lines: 427 to 430
+-- Lines: 431 to 434
 function MenuBackdropGUI:get_new_foreground_layer()
 	local new_layer = self._panel:child("item_foreground_layer"):panel({layer = self._layer_layers[3]})
 
@@ -504,44 +512,48 @@ function MenuBackdropGUI:get_new_foreground_layer()
 	return new_layer
 end
 
--- Lines: 435 to 437
+-- Lines: 439 to 441
 function MenuBackdropGUI:set_abstract_background_layers(num_layers)
 	self:_set_layers_of_layer(3, num_layers)
 end
 
--- Lines: 439 to 441
+-- Lines: 443 to 445
 function MenuBackdropGUI:set_abstract_foreground_layers(num_layers)
 	self:_set_layers_of_layer(6, num_layers)
 end
 
--- Lines: 445 to 447
+-- Lines: 449 to 451
 function MenuBackdropGUI:background_layers()
 	local num_layers = self._layer_layers[1] + self._layer_layers[2]
 
 	return num_layers, self._layer_layers[3]
 end
 
--- Lines: 450 to 452
+-- Lines: 454 to 456
 function MenuBackdropGUI:foreground_layers()
 	local num_layers = self._layer_layers[1] + self._layer_layers[2] + self._layer_layers[3] + self._layer_layers[4] + self._layer_layers[5]
 
 	return num_layers, self._layer_layers[6]
 end
 
--- Lines: 457 to 458
+-- Lines: 461 to 462
 function MenuBackdropGUI:layer()
 	return self._panel:layer()
 end
 
--- Lines: 461 to 462
+-- Lines: 465 to 466
 function MenuBackdropGUI:set_layer(layer)
 	return self._panel:set_layer(layer)
 end
 
--- Lines: 467 to 478
+-- Lines: 471 to 488
 function MenuBackdropGUI:show()
 	if self._panel then
 		self._panel:show()
+	end
+
+	if _G.IS_VR then
+		return
 	end
 
 	if self._blackborder_workspace then
@@ -553,7 +565,7 @@ function MenuBackdropGUI:show()
 	end
 end
 
--- Lines: 480 to 491
+-- Lines: 490 to 501
 function MenuBackdropGUI:hide()
 	if self._panel then
 		self._panel:hide()
@@ -568,7 +580,7 @@ function MenuBackdropGUI:hide()
 	end
 end
 
--- Lines: 493 to 501
+-- Lines: 503 to 511
 function MenuBackdropGUI:show_layer(layer)
 	local layer_panel = self._panel:child(layer)
 
@@ -579,7 +591,7 @@ function MenuBackdropGUI:show_layer(layer)
 	end
 end
 
--- Lines: 503 to 511
+-- Lines: 513 to 521
 function MenuBackdropGUI:hide_layer(layer)
 	local layer_panel = self._panel:child(layer)
 
@@ -590,22 +602,22 @@ function MenuBackdropGUI:hide_layer(layer)
 	end
 end
 
--- Lines: 515 to 516
+-- Lines: 525 to 526
 function MenuBackdropGUI:panel()
 	return self._panel
 end
 
--- Lines: 519 to 520
+-- Lines: 529 to 530
 function MenuBackdropGUI:workspace()
 	return self._workspace
 end
 
--- Lines: 525 to 526
+-- Lines: 535 to 536
 function MenuBackdropGUI:saferect_shape()
 	return self._saferect_shape
 end
 
--- Lines: 529 to 536
+-- Lines: 539 to 546
 function MenuBackdropGUI:set_panel_to_saferect(panel)
 	if not panel then
 		return
@@ -616,10 +628,10 @@ function MenuBackdropGUI:set_panel_to_saferect(panel)
 	panel:set_shape(shape.x, shape.y, shape.w, shape.h)
 end
 
--- Lines: 558 to 560
+-- Lines: 568 to 570
 function MenuBackdropGUI:animate_bg_text(text)
 
-	-- Lines: 541 to 559
+	-- Lines: 551 to 569
 	local function animate_text(o)
 		local left = true
 		local target_speed = 10
@@ -646,11 +658,11 @@ function MenuBackdropGUI:animate_bg_text(text)
 	end
 end
 
--- Lines: 562 to 563
+-- Lines: 572 to 573
 function MenuBackdropGUI:update(t, dt)
 end
 
--- Lines: 565 to 582
+-- Lines: 575 to 592
 function MenuBackdropGUI:mouse_moved(x, y)
 	local particles = self._panel:child("particles_layer")
 	local fx, fy = managers.gui_data:safe_to_full_16_9(x, y)
@@ -660,7 +672,7 @@ function MenuBackdropGUI:mouse_moved(x, y)
 			particle:stop()
 
 
-			-- Lines: 572 to 576
+			-- Lines: 582 to 586
 			local function fade_anim(o, self)
 				local alpha = o:alpha()
 
@@ -678,12 +690,12 @@ function MenuBackdropGUI:mouse_moved(x, y)
 	end
 end
 
--- Lines: 584 to 586
+-- Lines: 594 to 596
 function MenuBackdropGUI:close()
 	self:destroy()
 end
 
--- Lines: 589 to 608
+-- Lines: 599 to 618
 function MenuBackdropGUI:destroy()
 	if self._blackborder_workspace then
 		self._gui_data_scene_gui:destroy_workspace(self._blackborder_workspace)

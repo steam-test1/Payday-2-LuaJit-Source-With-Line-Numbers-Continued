@@ -221,7 +221,7 @@ function TeamAILogicDisabled.on_recovered(data, reviving_unit)
 	CopLogicBase._exit(data.unit, "assault")
 end
 
--- Lines: 235 to 298
+-- Lines: 239 to 302
 function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	local followup_objective = {
 		scan = true,
@@ -283,7 +283,7 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	my_data.deathguard_SO_id = PlayerBleedOut._register_deathguard_SO(data.unit)
 end
 
--- Lines: 302 to 319
+-- Lines: 306 to 323
 function TeamAILogicDisabled._unregister_revive_SO(my_data)
 	if my_data.deathguard_SO_id then
 		PlayerBleedOut._unregister_deathguard_SO(my_data.deathguard_SO_id)
@@ -305,12 +305,12 @@ function TeamAILogicDisabled._unregister_revive_SO(my_data)
 	end
 end
 
--- Lines: 323 to 324
+-- Lines: 327 to 328
 function TeamAILogicDisabled.is_available_for_assignment(data, new_objective)
 	return false
 end
 
--- Lines: 329 to 345
+-- Lines: 333 to 349
 function TeamAILogicDisabled.damage_clbk(data, damage_info)
 	local my_data = data.internal_data
 
@@ -331,14 +331,14 @@ function TeamAILogicDisabled.damage_clbk(data, damage_info)
 	TeamAILogicIdle.damage_clbk(data, damage_info)
 end
 
--- Lines: 349 to 353
+-- Lines: 353 to 357
 function TeamAILogicDisabled.on_revive_SO_administered(ignore_this, data, receiver_unit)
 	local my_data = data.internal_data
 	my_data.rescuer = receiver_unit
 	my_data.SO_id = nil
 end
 
--- Lines: 357 to 363
+-- Lines: 361 to 367
 function TeamAILogicDisabled.on_revive_SO_failed(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -349,7 +349,7 @@ function TeamAILogicDisabled.on_revive_SO_failed(ignore_this, data)
 	end
 end
 
--- Lines: 367 to 372
+-- Lines: 371 to 376
 function TeamAILogicDisabled.on_new_objective(data, old_objective)
 	TeamAILogicBase.on_new_objective(data, old_objective)
 

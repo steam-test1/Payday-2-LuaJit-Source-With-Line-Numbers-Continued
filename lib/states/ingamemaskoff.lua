@@ -10,7 +10,7 @@ function IngameMaskOffState:init(game_state_machine)
 	self._MASK_OFF_HUD = Idstring("guis/mask_off_hud")
 end
 
--- Lines: 12 to 37
+-- Lines: 12 to 43
 function IngameMaskOffState:at_enter()
 	local players = managers.player:players()
 
@@ -28,7 +28,10 @@ function IngameMaskOffState:at_enter()
 		managers.hud:load_hud(self._MASK_OFF_HUD, false, false, true, {})
 	end
 
-	managers.hud:show(self._MASK_OFF_HUD)
+	if not _G.IS_VR then
+		managers.hud:show(self._MASK_OFF_HUD)
+	end
+
 	managers.hud:show(PlayerBase.PLAYER_INFO_HUD)
 	managers.hud:show(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 
@@ -39,7 +42,7 @@ function IngameMaskOffState:at_enter()
 	end
 end
 
--- Lines: 50 to 60
+-- Lines: 56 to 66
 function IngameMaskOffState:at_exit()
 	local player = managers.player:player_unit()
 
@@ -52,17 +55,17 @@ function IngameMaskOffState:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 62 to 64
+-- Lines: 68 to 70
 function IngameMaskOffState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 66 to 68
+-- Lines: 72 to 74
 function IngameMaskOffState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 70 to 72
+-- Lines: 76 to 78
 function IngameMaskOffState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

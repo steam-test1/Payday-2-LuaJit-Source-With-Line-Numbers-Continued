@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1062
+-- Lines: 4 to 1068
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -1802,26 +1802,6 @@ function GuiTweakData:init()
 			icon = "sidebar_filters"
 		},
 		{
-			visible_callback = "clbk_visible_not_in_lobby",
-			callback = "clbk_the_basics",
-			name_id = "menu_cn_short",
-			icon = "sidebar_basics",
-			item_class = "CrimeNetSidebarTutorialHeistsItem"
-		},
-		{
-			name_id = "menu_cn_story_missions",
-			icon = "sidebar_question",
-			item_class = "CrimeNetSidebarStoryMissionItem",
-			callback = "clbk_open_story_missions"
-		},
-		{
-			name_id = "menu_cn_chill",
-			callback = "clbk_safehouse",
-			id = "safehouse",
-			icon = "sidebar_safehouse",
-			item_class = "CrimeNetSidebarSafehouseItem"
-		},
-		{
 			name_id = "menu_cn_premium_buy",
 			icon = "sidebar_broker",
 			callback = "clbk_contract_broker"
@@ -1840,21 +1820,6 @@ function GuiTweakData:init()
 			name_id = "menu_cn_gage_assignment",
 			icon = "sidebar_gage",
 			callback = "clbk_gage_courier"
-		},
-		{
-			name_id = "menu_mutators",
-			callback = "clbk_mutators",
-			id = "mutators",
-			icon = "sidebar_mutators",
-			item_class = "CrimeNetSidebarMutatorsItem"
-		},
-		{
-			visible_callback = "clbk_visible_not_in_lobby",
-			name_id = "cn_crime_spree",
-			callback = "clbk_crime_spree",
-			id = "crime_spree",
-			icon = "sidebar_crimespree",
-			item_class = "CrimeNetSidebarCrimeSpreeItem"
 		}
 	}
 	self.crime_net.codex = {
@@ -5005,7 +4970,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1064 to 1083
+-- Lines: 1070 to 1089
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5033,7 +4998,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1085 to 1153
+-- Lines: 1091 to 1159
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5109,15 +5074,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1156 to 1157
+-- Lines: 1162 to 1163
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1167 to 1168
+-- Lines: 1173 to 1174
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1170 to 1203
+-- Lines: 1176 to 1209
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5156,7 +5121,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1206 to 1330
+-- Lines: 1212 to 1336
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5279,12 +5244,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1333 to 1334
+-- Lines: 1339 to 1340
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1337 to 1343
+-- Lines: 1343 to 1349
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

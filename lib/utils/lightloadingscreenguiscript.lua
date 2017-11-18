@@ -1,12 +1,17 @@
 LightLoadingScreenGuiScript = LightLoadingScreenGuiScript or class()
 
--- Lines: 4 to 44
+-- Lines: 4 to 46
 function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, is_win32)
 	self._base_layer = base_layer
 	self._is_win32 = is_win32
 	self._scene_gui = scene_gui
 	self._res = res
 	self._ws = scene_gui:create_screen_workspace()
+
+	if _G.IS_VR then
+		self._ws:set_pinned_screen(true)
+	end
+
 	self._safe_rect_pixels = self:get_safe_rect_pixels(res)
 	self._saferect = self._scene_gui:create_screen_workspace()
 
@@ -68,7 +73,7 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	self:setup(res, progress)
 end
 
--- Lines: 46 to 55
+-- Lines: 48 to 57
 function LightLoadingScreenGuiScript:layout_saferect()
 	local scaled_size = {
 		x = 0,
@@ -86,7 +91,7 @@ function LightLoadingScreenGuiScript:layout_saferect()
 	self._saferect:set_screen(w, h, x, y, sw)
 end
 
--- Lines: 58 to 61
+-- Lines: 60 to 63
 function LightLoadingScreenGuiScript:get_safe_rect()
 	local a = self._is_win32 and 0.032 or 0.075
 	local b = 1 - a * 2
@@ -99,7 +104,7 @@ function LightLoadingScreenGuiScript:get_safe_rect()
 	}
 end
 
--- Lines: 66 to 75
+-- Lines: 68 to 77
 function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	local safe_rect_scale = self:get_safe_rect()
 	local safe_rect_pixels = {
@@ -112,7 +117,7 @@ function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	return safe_rect_pixels
 end
 
--- Lines: 78 to 101
+-- Lines: 80 to 103
 function LightLoadingScreenGuiScript:setup(res, progress)
 	self._gui_tweak_data = {
 		upper_saferect_border = 64,
@@ -137,7 +142,7 @@ function LightLoadingScreenGuiScript:setup(res, progress)
 	end
 end
 
--- Lines: 103 to 117
+-- Lines: 105 to 119
 function LightLoadingScreenGuiScript:update(progress, dt)
 	self._indicator:rotate(180 * dt)
 
@@ -152,11 +157,11 @@ function LightLoadingScreenGuiScript:update(progress, dt)
 	end
 end
 
--- Lines: 124 to 125
+-- Lines: 126 to 127
 function LightLoadingScreenGuiScript:set_text(text)
 end
 
--- Lines: 127 to 134
+-- Lines: 129 to 136
 function LightLoadingScreenGuiScript:destroy()
 	if alive(self._ws) then
 		self._scene_gui:destroy_workspace(self._ws)
@@ -167,12 +172,12 @@ function LightLoadingScreenGuiScript:destroy()
 	end
 end
 
--- Lines: 136 to 137
+-- Lines: 138 to 139
 function LightLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
--- Lines: 140 to 156
+-- Lines: 142 to 164
 function LightLoadingScreenGuiScript:set_visible(visible, res)
 	if res then
 		self._res = res
@@ -183,6 +188,10 @@ function LightLoadingScreenGuiScript:set_visible(visible, res)
 	end
 
 	if visible then
+		if _G.IS_VR then
+			return
+		end
+
 		self._ws:show()
 		self._saferect:show()
 	else

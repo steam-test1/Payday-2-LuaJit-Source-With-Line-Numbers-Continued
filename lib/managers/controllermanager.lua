@@ -109,7 +109,7 @@ function ControllerManager:init_finalize()
 	self:_check_dialog()
 end
 
--- Lines: 109 to 124
+-- Lines: 109 to 126
 function ControllerManager:default_controller_connect_change(connected)
 	ControllerManager.super.default_controller_connect_change(self, connected)
 
@@ -118,19 +118,19 @@ function ControllerManager:default_controller_connect_change(connected)
 	end
 end
 
--- Lines: 127 to 131
+-- Lines: 129 to 133
 function ControllerManager:_check_dialog()
 	if Global.controller_manager.connect_controller_dialog_visible and not self:_controller_changed_dialog_active() then
 		self:_show_controller_changed_dialog()
 	end
 end
 
--- Lines: 133 to 134
+-- Lines: 135 to 136
 function ControllerManager:_controller_changed_dialog_active()
 	return managers.system_menu:is_active_by_id("connect_controller_dialog") and true or false
 end
 
--- Lines: 138 to 159
+-- Lines: 140 to 161
 function ControllerManager:_show_controller_changed_dialog()
 	if self:_controller_changed_dialog_active() then
 		return
@@ -155,12 +155,12 @@ function ControllerManager:_show_controller_changed_dialog()
 	managers.system_menu:show(data)
 end
 
--- Lines: 161 to 166
+-- Lines: 163 to 168
 function ControllerManager:_change_mode(mode)
 	self:change_default_wrapper_mode(mode)
 end
 
--- Lines: 168 to 182
+-- Lines: 170 to 184
 function ControllerManager:set_menu_mode_enabled(enabled)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
@@ -178,12 +178,12 @@ function ControllerManager:set_menu_mode_enabled(enabled)
 	end
 end
 
--- Lines: 184 to 185
+-- Lines: 186 to 187
 function ControllerManager:get_menu_mode_enabled()
 	return self._menu_mode_enabled and self._menu_mode_enabled > 0
 end
 
--- Lines: 188 to 198
+-- Lines: 190 to 200
 function ControllerManager:set_ingame_mode(mode)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		if mode then
@@ -196,7 +196,7 @@ function ControllerManager:set_ingame_mode(mode)
 	end
 end
 
--- Lines: 209 to 215
+-- Lines: 211 to 217
 function ControllerManager:_close_controller_changed_dialog(hard)
 	if Global.controller_manager.connect_controller_dialog_visible or self:_controller_changed_dialog_active() then
 		print("[ControllerManager:_close_controller_changed_dialog] closing")
@@ -205,12 +205,12 @@ function ControllerManager:_close_controller_changed_dialog(hard)
 	end
 end
 
--- Lines: 219 to 226
+-- Lines: 221 to 228
 function ControllerManager:connect_controller_dialog_callback()
 	Global.controller_manager.connect_controller_dialog_visible = nil
 end
 
--- Lines: 228 to 242
+-- Lines: 230 to 244
 function ControllerManager:get_mouse_controller()
 	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
@@ -225,6 +225,31 @@ function ControllerManager:get_mouse_controller()
 	end
 
 	return Input:mouse()
+end
+
+-- Lines: 248 to 255
+function ControllerManager:get_vr_wrapper_index()
+	for index = 1, self._wrapper_count, 1 do
+		local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
+
+		if wrapper_class and wrapper_class.TYPE == "vr" then
+			return index
+		end
+	end
+end
+
+-- Lines: 257 to 266
+function ControllerManager:get_vr_controller()
+	for index = 1, self._wrapper_count, 1 do
+		local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
+
+		if wrapper_class and wrapper_class.TYPE == "vr" then
+			local controller_index = self._wrapper_to_controller_list[index][1]
+			local controller = Input:controller(controller_index)
+
+			return controller
+		end
+	end
 end
 
 CoreClass.override_class(CoreControllerManager.ControllerManager, ControllerManager)

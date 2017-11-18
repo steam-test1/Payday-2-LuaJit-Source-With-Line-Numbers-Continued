@@ -62,9 +62,15 @@ function ElementDialogue:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 41 to 67
+-- Lines: 41 to 72
 function ElementDialogue:on_executed(instigator)
 	if not self._values.enabled then
+		return
+	end
+
+	if self._values.play_on_player_instigator_only and instigator ~= managers.player:player_unit() then
+		ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
+
 		return
 	end
 
@@ -99,12 +105,12 @@ function ElementDialogue:on_executed(instigator)
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
 end
 
--- Lines: 69 to 71
+-- Lines: 74 to 76
 function ElementDialogue:_done_callback(instigator, reason)
 	ElementDialogue.super._trigger_execute_on_executed(self, instigator)
 end
 
--- Lines: 74 to 95
+-- Lines: 79 to 100
 function ElementDialogue:_can_play()
 	if managers.user:get_setting("mute_heist_vo") and not self._values.can_not_be_muted then
 		local dialog_str = string.lower(self._values.dialogue)

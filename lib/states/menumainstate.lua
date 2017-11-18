@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines: 9 to 169
+-- Lines: 9 to 209
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -56,6 +56,10 @@ function MenuMainState:at_enter(old_state)
 				fade_out = 0.25,
 				color = Color.black
 			})
+		end
+
+		if _G.IS_VR then
+			managers.menu:initialize_customization_gui()
 		end
 	end
 
@@ -111,7 +115,7 @@ function MenuMainState:at_enter(old_state)
 		Global.open_trial_buy = nil
 
 		managers.menu:open_node("trial_info")
-	elseif not has_invite and not managers.network:session() then
+	elseif not has_invite and not managers.network:session() and false then
 		if managers.statistics:get_play_time() < 300 then
 			managers.features:announce_feature("short_heist")
 		end
@@ -119,7 +123,7 @@ function MenuMainState:at_enter(old_state)
 		if not managers.custom_safehouse:unlocked() then
 			if not Global.mission_manager.has_played_tutorial and not Global.skip_menu_dialogs then
 
-				-- Lines: 120 to 122
+				-- Lines: 134 to 136
 				local function yes_func()
 					MenuCallbackHandler:play_safehouse({skip_question = true})
 				end
@@ -128,7 +132,7 @@ function MenuMainState:at_enter(old_state)
 			end
 		elseif not managers.custom_safehouse:has_entered_safehouse() and not Global.skip_menu_dialogs then
 
-			-- Lines: 128 to 131
+			-- Lines: 142 to 145
 			local function yes_func()
 				MenuCallbackHandler:play_single_player()
 				MenuCallbackHandler:start_single_player_job({
@@ -168,7 +172,7 @@ function MenuMainState:at_enter(old_state)
 	end
 end
 
--- Lines: 172 to 180
+-- Lines: 218 to 230
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -181,7 +185,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines: 182 to 187
+-- Lines: 241 to 242
+function MenuMainState:update(t, dt)
+end
+
+-- Lines: 244 to 249
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -190,7 +198,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines: 189 to 203
+-- Lines: 251 to 265
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -207,19 +215,19 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 205 to 211
+-- Lines: 267 to 273
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines: 213 to 216
+-- Lines: 275 to 278
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({ok_func = callback(self, self, "on_server_left_ok_pressed")})
 end
 
--- Lines: 218 to 219
+-- Lines: 280 to 281
 function MenuMainState:on_disconnected()
 end
 

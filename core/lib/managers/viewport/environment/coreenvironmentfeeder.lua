@@ -212,6 +212,10 @@ function UnderlayPathFeeder:apply(handler, viewport, scene)
 	Global._underlay_ref_camera:set_far_range(10000000)
 	Global._underlay_ref_camera:set_fov(75)
 
+	if _G.IS_VR then
+		Global._underlay_ref_camera:set_hmd_tracking(false)
+	end
+
 	UnderlayPathFeeder.sky_material = Underlay:material(ids_sky)
 	UnderlayPathFeeder.ref_cam_obj = Underlay:get_object(ids_ref_cam_obj)
 
@@ -670,11 +674,13 @@ EnvironmentEffectFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 EnvironmentEffectFeeder.IS_GLOBAL = nil
 EnvironmentEffectFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 715 to 718
+-- Lines: 715 to 720
 function EnvironmentEffectFeeder:apply(handler, viewport, scene)
 	local effects = string.split(self._current, ";")
 
-	managers.environment_effects:set_active_effects(effects)
+	if managers.environment_effects then
+		managers.environment_effects:set_active_effects(effects)
+	end
 end
 UnderlayPathFeeder.AFFECTED_LIST = {
 	GlobalLightColorScaleFeeder,

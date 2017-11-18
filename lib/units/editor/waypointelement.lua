@@ -1,6 +1,6 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 
--- Lines: 3 to 19
+-- Lines: 3 to 21
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
 	self:_add_wp_options()
@@ -37,13 +37,15 @@ function WaypointUnitElement:init(unit)
 	self._hed.icon = "pd2_goto"
 	self._hed.text_id = "debug_none"
 	self._hed.only_in_civilian = false
+	self._hed.only_on_instigator = false
 
 	table.insert(self._save_values, "icon")
 	table.insert(self._save_values, "text_id")
 	table.insert(self._save_values, "only_in_civilian")
+	table.insert(self._save_values, "only_on_instigator")
 end
 
--- Lines: 22 to 33
+-- Lines: 24 to 35
 function WaypointUnitElement:_add_text_options_from_file(path)
 	local xml = SystemFS:parse_xml(Application:base_path() .. "../../assets/" .. path)
 
@@ -58,19 +60,19 @@ function WaypointUnitElement:_add_text_options_from_file(path)
 	end
 end
 
--- Lines: 35 to 38
+-- Lines: 37 to 40
 function WaypointUnitElement:_add_wp_options()
 	self._text_options = {"debug_none"}
 
 	self:_add_text_options_from_file("strings/system_text.strings")
 end
 
--- Lines: 40 to 42
+-- Lines: 42 to 44
 function WaypointUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
--- Lines: 44 to 49
+-- Lines: 46 to 51
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
@@ -79,7 +81,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 51 to 68
+-- Lines: 53 to 71
 function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -89,6 +91,7 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "only_in_civilian", "This waypoint will only be visible for players that are in civilian mode")
 	self:_build_value_combobox(panel, panel_sizer, "icon", self._icon_options, "Select an icon")
 	self:_build_value_combobox(panel, panel_sizer, "text_id", self._text_options, "Select a text id")
+	self:_build_value_checkbox(panel, panel_sizer, "only_on_instigator", "This waypoint will only be visible for the player that triggers it")
 
 	local text_sizer = EWS:BoxSizer("HORIZONTAL")
 

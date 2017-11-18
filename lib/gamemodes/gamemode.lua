@@ -33,12 +33,12 @@ Gamemode.STATES = {
 	ingame_civilian = "ingame_civilian"
 }
 
--- Lines: 40 to 42
+-- Lines: 43 to 45
 function Gamemode.register(id, class)
 	Gamemode.MAP[id] = class
 end
 
--- Lines: 44 to 50
+-- Lines: 47 to 53
 function Gamemode:get_state(state_name)
 	if self.STATES[state_name] then
 		return self.STATES[state_name]
@@ -47,7 +47,7 @@ function Gamemode:get_state(state_name)
 	end
 end
 
--- Lines: 53 to 55
+-- Lines: 56 to 58
 function Gamemode:setup_gsm(gsm, empty, setup_boot, setup_title)
 	error("Gamemode:setup_gsm not implemented for " .. self._NAME)
 end

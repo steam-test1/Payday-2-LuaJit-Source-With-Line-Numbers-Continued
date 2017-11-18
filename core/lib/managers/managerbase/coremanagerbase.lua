@@ -48,45 +48,57 @@ function ManagerBase:_all_ao()
 	return self.__aos
 end
 
--- Lines: 51 to 52
+-- Lines: 51 to 59
+function ManagerBase:_move_ao_to_front(ao)
+	for i, v in ipairs(self.__aos) do
+		if v == ao then
+			table.remove(self.__aos, i)
+			table.insert(self.__aos, 1, ao)
+
+			return
+		end
+	end
+end
+
+-- Lines: 61 to 62
 function ManagerBase:_all_really_active()
 	return self.__really_active
 end
 
--- Lines: 55 to 56
+-- Lines: 65 to 66
 function ManagerBase:_all_active_requested()
 	return self.__active_requested
 end
 
--- Lines: 59 to 60
+-- Lines: 69 to 70
 function ManagerBase:_ao_by_name(name)
 	return table.find_value(self.__aos, function (ao)
 		return ao:name() == name
 	end)
 end
 
--- Lines: 63 to 64
+-- Lines: 73 to 74
 function ManagerBase:_all_ao_by_prio(prio)
 	return table.find_all_values(self.__aos, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
--- Lines: 67 to 68
+-- Lines: 77 to 78
 function ManagerBase:_all_really_active_by_prio(prio)
 	return table.find_all_values(self.__really_active, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
--- Lines: 71 to 72
+-- Lines: 81 to 82
 function ManagerBase:_all_active_requested_by_prio(prio)
 	return table.find_all_values(self.__active_requested, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
--- Lines: 76 to 106
+-- Lines: 86 to 116
 function ManagerBase:_prioritize_and_activate()
 	self.__active_requested = table.find_all_values(self.__aos, function (ao)
 		return ao:active_requested()
@@ -123,7 +135,7 @@ function ManagerBase:_prioritize_and_activate()
 	self.__changed = true
 end
 
--- Lines: 108 to 124
+-- Lines: 118 to 134
 function ManagerBase:end_update(t, dt)
 	if self.__changed then
 		local p2aos = {}

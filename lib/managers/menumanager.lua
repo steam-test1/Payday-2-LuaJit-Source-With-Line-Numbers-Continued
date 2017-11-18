@@ -38,7 +38,7 @@ require("lib/managers/MenuManagerDialogs")
 require("lib/managers/MenuManagerDebug")
 
 
--- Lines: 47 to 240
+-- Lines: 47 to 256
 function MenuManager:init(is_start_menu)
 	MenuManager.super.init(self)
 
@@ -60,6 +60,12 @@ function MenuManager:init(is_start_menu)
 		}
 
 		self:register_menu(menu_main)
+
+		if _G.IS_VR then
+			local menu_data = self._registered_menus.menu_main.data
+			local lobby_parameters = menu_data:get_node("lobby"):parameters()
+			lobby_parameters.scene_state = "lobby_vr"
+		end
 	else
 		local menu_pause = {
 			input = "MenuInput",
@@ -196,17 +202,21 @@ function MenuManager:init(is_start_menu)
 	self:workshop_changed(nil, nil, managers.user:get_setting("workshop"))
 end
 
--- Lines: 243 to 245
+-- Lines: 258 to 259
+function MenuManager:init_finalize()
+end
+
+-- Lines: 262 to 264
 function MenuManager:post_event(event)
 	local event = self._sound_source:post_event(event)
 end
 
--- Lines: 247 to 249
+-- Lines: 266 to 268
 function MenuManager:_cb_matchmake_found_game(game_id, created)
 	print("_cb_matchmake_found_game", game_id, created)
 end
 
--- Lines: 251 to 267
+-- Lines: 270 to 286
 function MenuManager:_cb_matchmake_player_joined(player_info)
 	print("_cb_matchmake_player_joined")
 
@@ -215,23 +225,23 @@ function MenuManager:_cb_matchmake_player_joined(player_info)
 	end
 end
 
--- Lines: 269 to 272
+-- Lines: 288 to 291
 function MenuManager:destroy()
 	MenuManager.super.destroy(self)
 	self:destroy_controller()
 end
 
--- Lines: 274 to 276
+-- Lines: 293 to 295
 function MenuManager:set_delayed_open_savefile_menu_callback(callback_func)
 	self._delayed_open_savefile_menu_callback = callback_func
 end
 
--- Lines: 278 to 280
+-- Lines: 297 to 299
 function MenuManager:set_save_game_callback(callback_func)
 	self._save_game_callback = callback_func
 end
 
--- Lines: 282 to 293
+-- Lines: 301 to 312
 function MenuManager:system_menu_active_changed(active)
 	local active_menu = self:active_menu()
 
@@ -246,7 +256,7 @@ function MenuManager:system_menu_active_changed(active)
 	end
 end
 
--- Lines: 295 to 308
+-- Lines: 314 to 327
 function MenuManager:set_and_send_sync_state(state)
 	if not managers.network or not managers.network:session() then
 		return
@@ -260,7 +270,7 @@ function MenuManager:set_and_send_sync_state(state)
 	end
 end
 
--- Lines: 310 to 319
+-- Lines: 329 to 338
 function MenuManager:_set_peer_sync_state(peer_id, state)
 	Application:debug("MenuManager: " .. peer_id .. " sync state is now", state)
 
@@ -272,30 +282,30 @@ function MenuManager:_set_peer_sync_state(peer_id, state)
 	end
 end
 
--- Lines: 321 to 324
+-- Lines: 340 to 343
 function MenuManager:set_peer_sync_state_index(peer_id, index)
 	local state = tweak_data:index_to_menu_sync_state(index)
 
 	self:_set_peer_sync_state(peer_id, state)
 end
 
--- Lines: 326 to 327
+-- Lines: 345 to 346
 function MenuManager:get_all_peers_state()
 	return self._peers_state
 end
 
--- Lines: 330 to 331
+-- Lines: 349 to 350
 function MenuManager:get_peer_state(peer_id)
 	return self._peers_state and self._peers_state[peer_id]
 end
 
--- Lines: 334 to 337
+-- Lines: 353 to 356
 function MenuManager:_node_selected(menu_name, node)
 	managers.vote:message_vote()
 	self:set_and_send_sync_state(node and node:parameters().sync_state)
 end
 
--- Lines: 339 to 345
+-- Lines: 358 to 364
 function MenuManager:active_menu(node_name, parameter_list)
 	local active_menu = self._open_menus[#self._open_menus]
 
@@ -304,13 +314,13 @@ function MenuManager:active_menu(node_name, parameter_list)
 	end
 end
 
--- Lines: 347 to 350
+-- Lines: 366 to 369
 function MenuManager:open_menu(menu_name, position, ...)
 	MenuManager.super.open_menu(self, menu_name, position, ...)
 	self:activate()
 end
 
--- Lines: 352 to 357
+-- Lines: 371 to 376
 function MenuManager:open_node(node_name, parameter_list)
 	local active_menu = self._open_menus[#self._open_menus]
 
@@ -319,7 +329,7 @@ function MenuManager:open_node(node_name, parameter_list)
 	end
 end
 
--- Lines: 359 to 365
+-- Lines: 378 to 384
 function MenuManager:back(queue, skip_nodes)
 	local active_menu = self._open_menus[#self._open_menus]
 
@@ -328,7 +338,7 @@ function MenuManager:back(queue, skip_nodes)
 	end
 end
 
--- Lines: 367 to 373
+-- Lines: 386 to 392
 function MenuManager:force_back(queue, skip_nodes)
 	local active_menu = self._open_menus[#self._open_menus]
 
@@ -337,7 +347,7 @@ function MenuManager:force_back(queue, skip_nodes)
 	end
 end
 
--- Lines: 375 to 383
+-- Lines: 394 to 402
 function MenuManager:close_menu(menu_name)
 	self:post_event("menu_exit")
 
@@ -350,13 +360,13 @@ function MenuManager:close_menu(menu_name)
 	MenuManager.super.close_menu(self, menu_name)
 end
 
--- Lines: 385 to 388
+-- Lines: 404 to 407
 function MenuManager:_menu_closed(menu_name)
 	MenuManager.super._menu_closed(self, menu_name)
 	self:deactivate()
 end
 
--- Lines: 390 to 401
+-- Lines: 409 to 420
 function MenuManager:close_all_menus()
 	local names = {}
 
@@ -373,7 +383,7 @@ function MenuManager:close_all_menus()
 	end
 end
 
--- Lines: 403 to 409
+-- Lines: 422 to 428
 function MenuManager:is_open(menu_name)
 	for _, menu in ipairs(self._open_menus) do
 		if menu.name == menu_name then
@@ -384,7 +394,7 @@ function MenuManager:is_open(menu_name)
 	return false
 end
 
--- Lines: 412 to 418
+-- Lines: 431 to 437
 function MenuManager:is_in_root(menu_name)
 	for _, menu in ipairs(self._open_menus) do
 		if menu.name == menu_name then
@@ -395,17 +405,17 @@ function MenuManager:is_in_root(menu_name)
 	return false
 end
 
--- Lines: 421 to 422
+-- Lines: 440 to 441
 function MenuManager:is_pc_controller()
 	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and self:active_menu().input._controller.TYPE == "pc" or managers.controller:get_default_wrapper_type() == "pc" or self:is_steam_controller()
 end
 
--- Lines: 425 to 426
+-- Lines: 444 to 445
 function MenuManager:is_steam_controller()
 	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and self:active_menu().input._controller.TYPE == "steam" or managers.controller:get_default_wrapper_type() == "steam"
 end
 
--- Lines: 429 to 474
+-- Lines: 448 to 493
 function MenuManager:toggle_menu_state()
 	if self._is_start_menu then
 		return
@@ -443,14 +453,14 @@ function MenuManager:toggle_menu_state()
 	end
 end
 
--- Lines: 476 to 480
+-- Lines: 495 to 499
 function MenuManager:push_to_talk(enabled)
 	if managers.network and managers.network.voice_chat then
 		managers.network.voice_chat:set_recording(enabled)
 	end
 end
 
--- Lines: 482 to 503
+-- Lines: 501 to 522
 function MenuManager:toggle_chatinput()
 	if Global.game_settings.single_player or Application:editor() then
 		return
@@ -475,7 +485,7 @@ function MenuManager:toggle_chatinput()
 	end
 end
 
--- Lines: 505 to 510
+-- Lines: 524 to 529
 function MenuManager:set_slot_voice(peer, peer_id, active)
 	local kit_menu = managers.menu:get_menu("kit_menu")
 
@@ -484,7 +494,7 @@ function MenuManager:set_slot_voice(peer, peer_id, active)
 	end
 end
 
--- Lines: 512 to 525
+-- Lines: 531 to 544
 function MenuManager:create_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("MenuManager", nil, false)
@@ -498,12 +508,12 @@ function MenuManager:create_controller()
 	end
 end
 
--- Lines: 527 to 528
+-- Lines: 546 to 547
 function MenuManager:get_controller()
 	return self._controller
 end
 
--- Lines: 531 to 549
+-- Lines: 550 to 568
 function MenuManager:safefile_manager_active_changed(active)
 	if self._controller then
 		if active then
@@ -524,7 +534,7 @@ function MenuManager:safefile_manager_active_changed(active)
 	end
 end
 
--- Lines: 551 to 556
+-- Lines: 570 to 575
 function MenuManager:destroy_controller()
 	if self._controller then
 		self._controller:destroy()
@@ -533,7 +543,7 @@ function MenuManager:destroy_controller()
 	end
 end
 
--- Lines: 558 to 564
+-- Lines: 577 to 583
 function MenuManager:activate()
 	if #self._open_menus == 1 then
 		managers.rumble:set_enabled(false)
@@ -543,7 +553,7 @@ function MenuManager:activate()
 	end
 end
 
--- Lines: 567 to 573
+-- Lines: 586 to 592
 function MenuManager:deactivate()
 	if #self._open_menus == 0 then
 		managers.rumble:set_enabled(managers.user:get_setting("rumble"))
@@ -553,62 +563,62 @@ function MenuManager:deactivate()
 	end
 end
 
--- Lines: 576 to 577
+-- Lines: 595 to 596
 function MenuManager:is_active()
 	return self._active
 end
 
--- Lines: 581 to 583
+-- Lines: 600 to 602
 function MenuManager:add_active_changed_callback(callback_func)
 	self._active_changed_callback_handler:add(callback_func)
 end
 
--- Lines: 584 to 586
+-- Lines: 603 to 605
 function MenuManager:remove_active_changed_callback(callback_func)
 	self._active_changed_callback_handler:remove(callback_func)
 end
 
--- Lines: 589 to 593
+-- Lines: 608 to 612
 function MenuManager:video_ao_changed(name, old_value, new_value)
 	if managers.environment_controller then
 		managers.environment_controller:set_ao_setting(new_value)
 	end
 end
 
--- Lines: 597 to 601
+-- Lines: 616 to 620
 function MenuManager:parallax_mapping_changed(name, old_value, new_value)
 	if managers.environment_controller then
 		managers.environment_controller:set_parallax_setting(new_value)
 	end
 end
 
--- Lines: 605 to 609
+-- Lines: 624 to 628
 function MenuManager:video_aa_changed(name, old_value, new_value)
 	if managers.environment_controller then
 		managers.environment_controller:set_aa_setting(new_value)
 	end
 end
 
--- Lines: 613 to 617
+-- Lines: 632 to 636
 function MenuManager:workshop_changed(name, old_value, new_value)
 	if managers.workshop then
 		managers.workshop:set_enabled(new_value)
 	end
 end
 
--- Lines: 620 to 623
+-- Lines: 639 to 642
 function MenuManager:brightness_changed(name, old_value, new_value)
 	local brightness = math.clamp(new_value, _G.tweak_data.menu.MIN_BRIGHTNESS, _G.tweak_data.menu.MAX_BRIGHTNESS)
 
 	Application:set_brightness(brightness)
 end
 
--- Lines: 627 to 629
+-- Lines: 646 to 648
 function MenuManager:effect_quality_changed(name, old_value, new_value)
 	World:effect_manager():set_quality(new_value)
 end
 
--- Lines: 633 to 674
+-- Lines: 652 to 693
 function MenuManager:set_mouse_sensitivity(zoomed)
 	local zoom_sense = zoomed
 	local sense_x, sense_y = nil
@@ -640,7 +650,7 @@ function MenuManager:set_mouse_sensitivity(zoomed)
 	managers.controller:rebind_connections()
 end
 
--- Lines: 676 to 694
+-- Lines: 695 to 713
 function MenuManager:camera_sensitivity_x_changed(name, old_value, new_value)
 	local setup = self._controller:get_setup()
 	local look_connection = setup:get_connection("look")
@@ -662,7 +672,7 @@ function MenuManager:camera_sensitivity_x_changed(name, old_value, new_value)
 	end
 end
 
--- Lines: 696 to 714
+-- Lines: 715 to 733
 function MenuManager:camera_sensitivity_y_changed(name, old_value, new_value)
 	local setup = self._controller:get_setup()
 	local look_connection = setup:get_connection("look")
@@ -684,7 +694,7 @@ function MenuManager:camera_sensitivity_y_changed(name, old_value, new_value)
 	end
 end
 
--- Lines: 716 to 737
+-- Lines: 735 to 756
 function MenuManager:camera_sensitivity_changed(name, old_value, new_value)
 	if self:is_console() then
 		local setup = self._controller:get_setup()
@@ -708,12 +718,12 @@ function MenuManager:camera_sensitivity_changed(name, old_value, new_value)
 	end
 end
 
--- Lines: 741 to 743
+-- Lines: 760 to 762
 function MenuManager:rumble_changed(name, old_value, new_value)
 	managers.rumble:set_enabled(new_value)
 end
 
--- Lines: 745 to 759
+-- Lines: 764 to 778
 function MenuManager:invert_camera_x_changed(name, old_value, new_value)
 	local setup = self._controller:get_setup()
 	local look_connection = setup:get_connection("look")
@@ -724,7 +734,7 @@ function MenuManager:invert_camera_x_changed(name, old_value, new_value)
 	managers.controller:rebind_connections()
 end
 
--- Lines: 761 to 775
+-- Lines: 780 to 794
 function MenuManager:invert_camera_y_changed(name, old_value, new_value)
 	local setup = self._controller:get_setup()
 	local look_connection = setup:get_connection("look")
@@ -735,7 +745,7 @@ function MenuManager:invert_camera_y_changed(name, old_value, new_value)
 	managers.controller:rebind_connections()
 end
 
--- Lines: 777 to 830
+-- Lines: 796 to 849
 function MenuManager:southpaw_changed(name, old_value, new_value)
 	if self._controller.TYPE ~= "xbox360" and self._controller.TYPE ~= "ps3" and self._controller.TYPE ~= "xb1" and self._controller.TYPE ~= "ps4" then
 		return
@@ -758,17 +768,17 @@ function MenuManager:southpaw_changed(name, old_value, new_value)
 	managers.controller:rebind_connections()
 end
 
--- Lines: 832 to 834
+-- Lines: 851 to 853
 function MenuManager:dof_setting_changed(name, old_value, new_value)
 	managers.environment_controller:set_dof_setting(new_value)
 end
 
--- Lines: 836 to 838
+-- Lines: 855 to 857
 function MenuManager:chromatic_setting_changed(name, old_value, new_value)
 	managers.environment_controller:set_chromatic_enabled(new_value == "standard")
 end
 
--- Lines: 840 to 845
+-- Lines: 859 to 864
 function MenuManager:fps_limit_changed(name, old_value, new_value)
 	if SystemInfo:platform() ~= Idstring("WIN32") then
 		return
@@ -777,30 +787,30 @@ function MenuManager:fps_limit_changed(name, old_value, new_value)
 	setup:set_fps_cap(new_value)
 end
 
--- Lines: 847 to 851
+-- Lines: 866 to 870
 function MenuManager:net_packet_throttling_changed(name, old_value, new_value)
 	if managers.network then
 		managers.network:set_packet_throttling_enabled(new_value)
 	end
 end
 
--- Lines: 853 to 856
+-- Lines: 872 to 875
 function MenuManager:net_forwarding_changed(name, old_value, new_value)
 	print("[Network:set_forwarding_enabled]", new_value)
 	Network:set_forwarding_enabled(new_value)
 end
 
--- Lines: 858 to 860
+-- Lines: 877 to 879
 function MenuManager:net_use_compression_changed(name, old_value, new_value)
 	Network:set_use_compression(new_value)
 end
 
--- Lines: 862 to 865
+-- Lines: 881 to 884
 function MenuManager:flush_gpu_command_queue_changed(name, old_value, new_value)
 	RenderSettings.flush_gpu_command_queue = new_value
 end
 
--- Lines: 868 to 883
+-- Lines: 887 to 902
 function MenuManager:use_thq_weapon_parts_changed(name, old_value, new_value)
 	if managers.weapon_factory then
 		managers.weapon_factory:set_use_thq_weapon_parts(managers.user:get_setting("use_thq_weapon_parts"))
@@ -817,12 +827,12 @@ function MenuManager:use_thq_weapon_parts_changed(name, old_value, new_value)
 	end
 end
 
--- Lines: 885 to 887
+-- Lines: 904 to 906
 function MenuManager:subtitle_changed(name, old_value, new_value)
 	managers.subtitle:set_visible(new_value)
 end
 
--- Lines: 890 to 894
+-- Lines: 909 to 913
 function MenuManager:music_volume_changed(name, old_value, new_value)
 	local tweak = _G.tweak_data.menu
 	local percentage = (new_value - tweak.MIN_MUSIC_VOLUME) / (tweak.MAX_MUSIC_VOLUME - tweak.MIN_MUSIC_VOLUME)
@@ -830,7 +840,7 @@ function MenuManager:music_volume_changed(name, old_value, new_value)
 	managers.music:set_volume(percentage)
 end
 
--- Lines: 896 to 902
+-- Lines: 915 to 921
 function MenuManager:sfx_volume_changed(name, old_value, new_value)
 	local tweak = _G.tweak_data.menu
 	local percentage = (new_value - tweak.MIN_SFX_VOLUME) / (tweak.MAX_SFX_VOLUME - tweak.MIN_SFX_VOLUME)
@@ -839,31 +849,31 @@ function MenuManager:sfx_volume_changed(name, old_value, new_value)
 	managers.video:volume_changed(percentage)
 end
 
--- Lines: 904 to 908
+-- Lines: 923 to 927
 function MenuManager:voice_volume_changed(name, old_value, new_value)
 	if managers.network and managers.network.voice_chat then
 		managers.network.voice_chat:set_volume(new_value)
 	end
 end
 
--- Lines: 910 to 914
+-- Lines: 929 to 933
 function MenuManager:lightfx_changed(name, old_value, new_value)
 	if managers.network and managers.network.account then
 		managers.network.account:set_lightfx()
 	end
 end
 
--- Lines: 917 to 919
+-- Lines: 936 to 938
 function MenuManager:set_debug_menu_enabled(enabled)
 	self._debug_menu_enabled = enabled
 end
 
--- Lines: 920 to 921
+-- Lines: 939 to 940
 function MenuManager:debug_menu_enabled()
 	return self._debug_menu_enabled
 end
 
--- Lines: 925 to 939
+-- Lines: 944 to 958
 function MenuManager:add_back_button(new_node)
 	new_node:delete_item("back")
 
@@ -879,12 +889,12 @@ function MenuManager:add_back_button(new_node)
 	new_node:add_item(new_item)
 end
 
--- Lines: 942 to 944
+-- Lines: 961 to 963
 function MenuManager:reload()
 	self:_recompile(managers.database:root_path() .. "assets\\guis\\")
 end
 
--- Lines: 946 to 963
+-- Lines: 965 to 982
 function MenuManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
@@ -906,7 +916,7 @@ function MenuManager:_recompile(dir)
 	end
 end
 
--- Lines: 965 to 977
+-- Lines: 984 to 996
 function MenuManager:_source_files(dir)
 	local files = {}
 	local entry_path = managers.database:entry_path(dir) .. "/"
@@ -924,7 +934,7 @@ function MenuManager:_source_files(dir)
 	return files
 end
 
--- Lines: 980 to 991
+-- Lines: 999 to 1010
 function MenuManager:progress_resetted()
 	local dialog_data = {
 		title = "Dr Evil",
@@ -939,41 +949,41 @@ function MenuManager:progress_resetted()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 993 to 994
+-- Lines: 1012 to 1013
 function MenuManager:_dialog_progress_resetted_ok()
 end
 
--- Lines: 996 to 997
+-- Lines: 1015 to 1016
 function MenuManager:is_console()
 	return self:is_ps3() or self:is_x360() or self:is_ps4() or self:is_xb1()
 end
 
--- Lines: 1000 to 1001
+-- Lines: 1019 to 1020
 function MenuManager:is_ps3()
 	return SystemInfo:platform() == Idstring("PS3")
 end
 
--- Lines: 1004 to 1005
+-- Lines: 1023 to 1024
 function MenuManager:is_ps4()
 	return SystemInfo:platform() == Idstring("PS4")
 end
 
--- Lines: 1009 to 1010
+-- Lines: 1028 to 1029
 function MenuManager:is_x360()
 	return SystemInfo:platform() == Idstring("X360")
 end
 
--- Lines: 1013 to 1014
+-- Lines: 1032 to 1033
 function MenuManager:is_xb1()
 	return SystemInfo:platform() == Idstring("XB1")
 end
 
--- Lines: 1017 to 1018
+-- Lines: 1036 to 1037
 function MenuManager:is_na()
 	return MenuManager.IS_NORTH_AMERICA
 end
 
--- Lines: 1021 to 1080
+-- Lines: 1040 to 1099
 function MenuManager:open_sign_in_menu(cb)
 	if self:is_ps3() then
 		managers.network.matchmake:register_callback("found_game", callback(self, self, "_cb_matchmake_found_game"))
@@ -989,7 +999,7 @@ function MenuManager:open_sign_in_menu(cb)
 			end})
 
 
-			-- Lines: 1033 to 1034
+			-- Lines: 1052 to 1053
 			local function f()
 				self:open_ps4_sign_in_menu(cb)
 			end
@@ -1030,7 +1040,7 @@ function MenuManager:open_sign_in_menu(cb)
 	end
 end
 
--- Lines: 1082 to 1095
+-- Lines: 1101 to 1114
 function MenuManager:_check_privilege_callback(is_success)
 	if self._queued_privilege_check_cb then
 		local cb = self._queued_privilege_check_cb
@@ -1047,7 +1057,7 @@ function MenuManager:_check_privilege_callback(is_success)
 	end
 end
 
--- Lines: 1097 to 1118
+-- Lines: 1116 to 1137
 function MenuManager:open_ps3_sign_in_menu(cb)
 	local success = true
 
@@ -1077,7 +1087,7 @@ function MenuManager:open_ps3_sign_in_menu(cb)
 	cb(success)
 end
 
--- Lines: 1120 to 1155
+-- Lines: 1139 to 1174
 function MenuManager:open_ps4_sign_in_menu(cb)
 	if managers.system_menu:is_active_by_id("fetching_status") then
 		managers.system_menu:close("fetching_status")
@@ -1125,21 +1135,21 @@ function MenuManager:open_ps4_sign_in_menu(cb)
 	cb(success)
 end
 
--- Lines: 1158 to 1161
+-- Lines: 1177 to 1180
 function MenuManager:open_x360_sign_in_menu(cb)
 	local success = self:_enter_online_menus_x360()
 
 	cb(success)
 end
 
--- Lines: 1163 to 1166
+-- Lines: 1182 to 1185
 function MenuManager:open_xb1_sign_in_menu(cb)
 	local success = self:_enter_online_menus_xb1()
 
 	cb(success)
 end
 
--- Lines: 1170 to 1181
+-- Lines: 1189 to 1200
 function MenuManager:external_enter_online_menus()
 	if self:is_ps3() then
 		self:_enter_online_menus()
@@ -1152,7 +1162,7 @@ function MenuManager:external_enter_online_menus()
 	end
 end
 
--- Lines: 1183 to 1207
+-- Lines: 1202 to 1226
 function MenuManager:_enter_online_menus()
 	if PSN:user_age() < MenuManager.ONLINE_AGE and PSN:parental_control_settings_active() then
 		Global.boot_invite = nil
@@ -1179,7 +1189,7 @@ function MenuManager:_enter_online_menus()
 	return false
 end
 
--- Lines: 1210 to 1217
+-- Lines: 1229 to 1236
 function MenuManager:_enter_online_menus_ps4()
 	managers.platform:set_presence("Signed_in")
 	print("voice chat from enter_online_menus_ps4")
@@ -1188,7 +1198,7 @@ function MenuManager:_enter_online_menus_ps4()
 	PSN:set_online_callback(callback(self, self, "ps3_disconnect"))
 end
 
--- Lines: 1220 to 1225
+-- Lines: 1239 to 1244
 function MenuManager:_enter_online_menus_x360()
 	managers.platform:set_presence("Signed_in")
 	managers.user:on_entered_online_menus()
@@ -1196,7 +1206,7 @@ function MenuManager:_enter_online_menus_x360()
 	return true
 end
 
--- Lines: 1228 to 1233
+-- Lines: 1247 to 1252
 function MenuManager:_enter_online_menus_xb1()
 	managers.platform:set_presence("Signed_in")
 	managers.user:on_entered_online_menus()
@@ -1204,7 +1214,7 @@ function MenuManager:_enter_online_menus_xb1()
 	return true
 end
 
--- Lines: 1238 to 1248
+-- Lines: 1257 to 1267
 function MenuManager:psn_disconnected()
 	if managers.network:session() then
 		managers.network:queue_stop_network()
@@ -1218,7 +1228,7 @@ function MenuManager:psn_disconnected()
 	self:show_mp_disconnected_internet_dialog({})
 end
 
--- Lines: 1251 to 1260
+-- Lines: 1270 to 1279
 function MenuManager:steam_disconnected()
 	if managers.network:session() then
 		managers.network:queue_stop_network()
@@ -1231,7 +1241,7 @@ function MenuManager:steam_disconnected()
 	self:show_mp_disconnected_internet_dialog({})
 end
 
--- Lines: 1262 to 1273
+-- Lines: 1281 to 1292
 function MenuManager:xbox_disconnected()
 	print("xbox_disconnected()")
 
@@ -1247,7 +1257,7 @@ function MenuManager:xbox_disconnected()
 	self:show_mp_disconnected_internet_dialog({})
 end
 
--- Lines: 1276 to 1294
+-- Lines: 1295 to 1313
 function MenuManager:ps3_disconnect(connected)
 	if not connected then
 		managers.network:queue_stop_network()
@@ -1264,7 +1274,7 @@ function MenuManager:ps3_disconnect(connected)
 	end
 end
 
--- Lines: 1296 to 1324
+-- Lines: 1315 to 1343
 function MenuManager:show_disconnect_message(requires_signin)
 	if self._showing_disconnect_message then
 		return
@@ -1283,7 +1293,7 @@ function MenuManager:show_disconnect_message(requires_signin)
 	end})
 end
 
--- Lines: 1327 to 1334
+-- Lines: 1346 to 1353
 function MenuManager:created_lobby()
 	Global.game_settings.single_player = false
 
@@ -1293,7 +1303,7 @@ function MenuManager:created_lobby()
 	self:on_enter_lobby()
 end
 
--- Lines: 1337 to 1369
+-- Lines: 1356 to 1388
 function MenuManager:exit_online_menues()
 	local must_show_controller_disconnect = nil
 
@@ -1321,7 +1331,7 @@ function MenuManager:exit_online_menues()
 	end
 end
 
--- Lines: 1371 to 1379
+-- Lines: 1390 to 1398
 function MenuManager:leave_online_menu()
 	if self:is_ps3() or self:is_ps4() then
 		PSN:set_online_callback(callback(self, self, "refresh_player_profile_gui"))
@@ -1332,14 +1342,14 @@ function MenuManager:leave_online_menu()
 	end
 end
 
--- Lines: 1381 to 1385
+-- Lines: 1400 to 1404
 function MenuManager:refresh_player_profile_gui()
 	if managers.menu_component then
 		managers.menu_component:refresh_player_profile_gui()
 	end
 end
 
--- Lines: 1387 to 1393
+-- Lines: 1406 to 1412
 function MenuManager:_close_lobby_menu_components()
 	managers.menu_scene:hide_all_lobby_characters()
 	managers.menu_component:remove_game_chat()
@@ -1348,7 +1358,7 @@ function MenuManager:_close_lobby_menu_components()
 	managers.menu_component:close_chat_gui()
 end
 
--- Lines: 1396 to 1424
+-- Lines: 1415 to 1443
 function MenuManager:on_leave_lobby()
 	local skip_destroy_matchmaking = self:is_ps3() or self:is_ps4()
 
@@ -1374,7 +1384,7 @@ function MenuManager:on_leave_lobby()
 	managers.crime_spree:on_left_lobby()
 end
 
--- Lines: 1426 to 1476
+-- Lines: 1445 to 1495
 function MenuManager:show_global_success(node)
 	local node_gui = nil
 
@@ -1425,7 +1435,7 @@ function MenuManager:show_global_success(node)
 	end
 end
 
--- Lines: 1478 to 1484
+-- Lines: 1497 to 1503
 function MenuManager:change_theme(theme)
 	managers.user:set_setting("menu_theme", theme)
 
@@ -1434,7 +1444,7 @@ function MenuManager:change_theme(theme)
 	end
 end
 
--- Lines: 1490 to 1502
+-- Lines: 1509 to 1521
 function MenuManager:on_storage_changed(old_user_data, user_data)
 	if old_user_data and old_user_data.storage_id and user_data and user_data.signin_state ~= "not_signed_in" and not old_user_data.has_signed_out and managers.user:get_platform_id() == user_data.platform_id and not self:is_xb1() then
 		self:show_storage_removed_dialog()
@@ -1447,7 +1457,7 @@ function MenuManager:on_storage_changed(old_user_data, user_data)
 	end
 end
 
--- Lines: 1507 to 1516
+-- Lines: 1526 to 1535
 function MenuManager:on_user_changed(old_user_data, user_data)
 	if old_user_data and (old_user_data.signin_state ~= "not_signed_in" or not old_user_data.username) then
 		print("MenuManager:on_user_changed(), clear save data")
@@ -1460,7 +1470,7 @@ function MenuManager:on_user_changed(old_user_data, user_data)
 	end
 end
 
--- Lines: 1518 to 1523
+-- Lines: 1537 to 1542
 function MenuManager:reset_all_loaded_data()
 	self:do_clear_progress()
 	managers.user:reset_setting_map()
@@ -1468,7 +1478,7 @@ function MenuManager:reset_all_loaded_data()
 	managers.achievment:on_user_signout()
 end
 
--- Lines: 1525 to 1561
+-- Lines: 1544 to 1580
 function MenuManager:do_clear_progress()
 	managers.skilltree:reset()
 	managers.experience:reset()
@@ -1497,7 +1507,7 @@ function MenuManager:do_clear_progress()
 	end
 end
 
--- Lines: 1564 to 1578
+-- Lines: 1583 to 1597
 function MenuManager:on_user_sign_out()
 	print("MenuManager:on_user_sign_out()")
 
@@ -1515,308 +1525,308 @@ function MenuManager:on_user_sign_out()
 	end
 end
 
--- Lines: 1584 to 1587
+-- Lines: 1603 to 1606
 function MenuCallbackHandler:init()
 	MenuCallbackHandler.super.init(self)
 
 	self._sound_source = SoundDevice:create_source("MenuCallbackHandler")
 end
 
--- Lines: 1589 to 1592
+-- Lines: 1608 to 1611
 function MenuCallbackHandler:trial_buy()
 	print("[MenuCallbackHandler:trial_buy]")
 	managers.dlc:buy_full_game()
 end
 
--- Lines: 1594 to 1597
+-- Lines: 1613 to 1616
 function MenuCallbackHandler:dlc_buy_pc()
 	print("[MenuCallbackHandler:dlc_buy_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1599 to 1606
+-- Lines: 1618 to 1625
 function MenuCallbackHandler:dlc_buy_gage_pack_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1608 to 1615
+-- Lines: 1627 to 1634
 function MenuCallbackHandler:dlc_buy_big_bank_pc()
 	print("[MenuCallbackHandler:dlc_buy_big_bank_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1617 to 1624
+-- Lines: 1636 to 1643
 function MenuCallbackHandler:dlc_buy_gage_pack_historical_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_historical_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1626 to 1633
+-- Lines: 1645 to 1652
 function MenuCallbackHandler:dlc_buy_hl_miami_pc()
 	print("[MenuCallbackHandler:dlc_buy_hl_miami_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1635 to 1642
+-- Lines: 1654 to 1661
 function MenuCallbackHandler:dlc_buy_gage_pack_assault_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_assault_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1644 to 1651
+-- Lines: 1663 to 1670
 function MenuCallbackHandler:dlc_buy_gage_pack_shotgun_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_shotgun_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1653 to 1660
+-- Lines: 1672 to 1679
 function MenuCallbackHandler:dlc_buy_gage_pack_snp_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_snp_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1662 to 1669
+-- Lines: 1681 to 1688
 function MenuCallbackHandler:dlc_buy_gage_pack_jobs_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_jobs_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1671 to 1678
+-- Lines: 1690 to 1697
 function MenuCallbackHandler:dlc_buy_gage_pack_lmg_pc()
 	print("[MenuCallbackHandler:dlc_buy_gage_pack_lmg_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1680 to 1687
+-- Lines: 1699 to 1706
 function MenuCallbackHandler:dlc_buy_armadillo_pc()
 	print("[MenuCallbackHandler:dlc_buy_armadillo_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1689 to 1696
+-- Lines: 1708 to 1715
 function MenuCallbackHandler:dlc_buy_character_pack_clover_pc()
 	print("[MenuCallbackHandler:dlc_buy_character_pack_clover_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1698 to 1705
+-- Lines: 1717 to 1724
 function MenuCallbackHandler:dlc_buy_character_pack_dragan_pc()
 	print("[MenuCallbackHandler:dlc_buy_character_pack_dragan_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1707 to 1714
+-- Lines: 1726 to 1733
 function MenuCallbackHandler:dlc_buy_hope_diamond_pc()
 	print("[MenuCallbackHandler:dlc_buy_hope_diamond_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1716 to 1723
+-- Lines: 1735 to 1742
 function MenuCallbackHandler:dlc_buy_the_bomb_pc()
 	print("[MenuCallbackHandler:dlc_buy_the_bomb_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1725 to 1732
+-- Lines: 1744 to 1751
 function MenuCallbackHandler:dlc_buy_akm4_pack_pc()
 	print("[MenuCallbackHandler:dlc_buy_akm4_pack_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1734 to 1741
+-- Lines: 1753 to 1760
 function MenuCallbackHandler:dlc_buy_overkill_pack_pc()
 	print("[MenuCallbackHandler:dlc_buy_overkill_pack_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1743 to 1750
+-- Lines: 1762 to 1769
 function MenuCallbackHandler:dlc_buy_complete_overkill_pack_pc()
 	print("[MenuCallbackHandler:dlc_buy_complete_overkill_pack_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1752 to 1759
+-- Lines: 1771 to 1778
 function MenuCallbackHandler:dlc_buy_bbq_pc()
 	print("[MenuCallbackHandler:dlc_buy_bbq_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1761 to 1768
+-- Lines: 1780 to 1787
 function MenuCallbackHandler:dlc_buy_west_pc()
 	print("[MenuCallbackHandler:dlc_buy_west_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1770 to 1777
+-- Lines: 1789 to 1796
 function MenuCallbackHandler:dlc_buy_arena_pc()
 	print("[MenuCallbackHandler:dlc_buy_arena_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1779 to 1786
+-- Lines: 1798 to 1805
 function MenuCallbackHandler:dlc_buy_character_pack_sokol_pc()
 	print("[MenuCallbackHandler:dlc_buy_character_pack_sokol_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1788 to 1795
+-- Lines: 1807 to 1814
 function MenuCallbackHandler:dlc_buy_kenaz_pc()
 	print("[MenuCallbackHandler:dlc_buy_kenaz_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1797 to 1804
+-- Lines: 1816 to 1823
 function MenuCallbackHandler:dlc_buy_turtles_pc()
 	print("[MenuCallbackHandler:dlc_buy_turtles_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1806 to 1813
+-- Lines: 1825 to 1832
 function MenuCallbackHandler:dlc_buy_dragon_pc()
 	print("[MenuCallbackHandler:dlc_buy_dragon_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1815 to 1822
+-- Lines: 1834 to 1841
 function MenuCallbackHandler:dlc_buy_steel_pc()
 	print("[MenuCallbackHandler:dlc_buy_steel_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1824 to 1831
+-- Lines: 1843 to 1850
 function MenuCallbackHandler:dlc_buy_berry_pc()
 	print("[MenuCallbackHandler:dlc_buy_berry_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1834 to 1841
+-- Lines: 1853 to 1860
 function MenuCallbackHandler:dlc_buy_peta_pc()
 	print("[MenuCallbackHandler:dlc_buy_peta_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1845 to 1852
+-- Lines: 1864 to 1871
 function MenuCallbackHandler:dlc_buy_pal_pc()
 	print("[MenuCallbackHandler:dlc_buy_pal_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1856 to 1863
+-- Lines: 1875 to 1882
 function MenuCallbackHandler:dlc_buy_coco_pc()
 	print("[MenuCallbackHandler:dlc_buy_coco_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1867 to 1874
+-- Lines: 1886 to 1893
 function MenuCallbackHandler:dlc_buy_opera_pc()
 	print("[MenuCallbackHandler:dlc_buy_opera_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1878 to 1885
+-- Lines: 1897 to 1904
 function MenuCallbackHandler:dlc_buy_wild_pc()
 	print("[MenuCallbackHandler:dlc_buy_wild_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1889 to 1896
+-- Lines: 1908 to 1915
 function MenuCallbackHandler:dlc_buy_born_pc()
 	print("[MenuCallbackHandler:dlc_buy_born_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1900 to 1907
+-- Lines: 1919 to 1926
 function MenuCallbackHandler:dlc_buy_pim_pc()
 	print("[MenuCallbackHandler:dlc_buy_pim_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1911 to 1918
+-- Lines: 1930 to 1937
 function MenuCallbackHandler:dlc_buy_tango_pc()
 	print("[MenuCallbackHandler:dlc_buy_tango_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1922 to 1929
+-- Lines: 1941 to 1948
 function MenuCallbackHandler:dlc_buy_friend_pc()
 	print("[MenuCallbackHandler:dlc_buy_friend_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1933 to 1940
+-- Lines: 1952 to 1959
 function MenuCallbackHandler:dlc_buy_chico_pc()
 	print("[MenuCallbackHandler:dlc_buy_chico_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1955 to 1962
+-- Lines: 1974 to 1981
 function MenuCallbackHandler:dlc_buy_spa_pc()
 	print("[MenuCallbackHandler:dlc_buy_spa_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1966 to 1973
+-- Lines: 1985 to 1992
 function MenuCallbackHandler:dlc_buy_grv_pc()
 	print("[MenuCallbackHandler:dlc_buy_grv_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1977 to 1984
+-- Lines: 1996 to 2003
 function MenuCallbackHandler:dlc_buy_amp_pc()
 	print("[MenuCallbackHandler:dlc_buy_amp_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 1988 to 1995
+-- Lines: 2007 to 2014
 function MenuCallbackHandler:dlc_buy_mp2_pc()
 	print("[MenuCallbackHandler:dlc_buy_mp2_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 2010 to 2017
+-- Lines: 2029 to 2036
 function MenuCallbackHandler:dlc_buy_max_pc()
 	print("[MenuCallbackHandler:dlc_buy_max_pc]")
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 2020 to 2023
+-- Lines: 2039 to 2042
 function MenuCallbackHandler:dlc_buy_ps3()
 	print("[MenuCallbackHandler:dlc_buy_ps3]")
 	managers.dlc:buy_product("dlc1")
 end
 
--- Lines: 2025 to 2026
+-- Lines: 2044 to 2045
 function MenuCallbackHandler:has_full_game()
 	return managers.dlc:has_full_game()
 end
 
--- Lines: 2029 to 2030
+-- Lines: 2048 to 2049
 function MenuCallbackHandler:is_trial()
 	return managers.dlc:is_trial()
 end
 
--- Lines: 2033 to 2034
+-- Lines: 2052 to 2053
 function MenuCallbackHandler:is_not_trial()
 	return not self:is_trial()
 end
 
--- Lines: 2037 to 2038
+-- Lines: 2056 to 2057
 function MenuCallbackHandler:has_preorder()
 	return managers.dlc:is_dlc_unlocked("preorder")
 end
 
--- Lines: 2041 to 2042
+-- Lines: 2060 to 2061
 function MenuCallbackHandler:not_has_preorder()
 	return not managers.dlc:is_dlc_unlocked("preorder")
 end
 
--- Lines: 2045 to 2046
+-- Lines: 2064 to 2065
 function MenuCallbackHandler:has_all_dlcs()
 	return true
 end
 
--- Lines: 2049 to 2057
+-- Lines: 2068 to 2076
 function MenuCallbackHandler:is_overlay_enabled()
 	if SystemInfo:platform() ~= Idstring("WIN32") then
 		return false
@@ -1825,7 +1835,7 @@ function MenuCallbackHandler:is_overlay_enabled()
 	return true
 end
 
--- Lines: 2061 to 2066
+-- Lines: 2080 to 2085
 function MenuCallbackHandler:is_installed()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return true
@@ -1836,22 +1846,22 @@ function MenuCallbackHandler:is_installed()
 	return not is_installing
 end
 
--- Lines: 2069 to 2071
+-- Lines: 2088 to 2090
 function MenuCallbackHandler:show_game_is_installing_menu()
 	managers.menu:show_game_is_installing_menu()
 end
 
--- Lines: 2073 to 2074
+-- Lines: 2092 to 2093
 function MenuCallbackHandler:bang_active()
 	return true
 end
 
--- Lines: 2084 to 2086
+-- Lines: 2103 to 2105
 function MenuCallbackHandler:choice_crimenet_lobby_job_plan(item)
 	Global.game_settings.job_plan = item:value()
 end
 
--- Lines: 2088 to 2092
+-- Lines: 2107 to 2111
 function MenuCallbackHandler:choice_lobby_job_plan(item)
 	Global.game_settings.job_plan = item:value()
 
@@ -1859,11 +1869,11 @@ function MenuCallbackHandler:choice_lobby_job_plan(item)
 	self:_on_host_setting_updated()
 end
 
--- Lines: 2104 to 2105
+-- Lines: 2123 to 2124
 function MenuCallbackHandler:_on_host_setting_updated()
 end
 
--- Lines: 2107 to 2117
+-- Lines: 2126 to 2136
 function MenuCallbackHandler:choice_job_plan_filter(item)
 	local job_plan_filter = item:value()
 
@@ -1876,7 +1886,7 @@ function MenuCallbackHandler:choice_job_plan_filter(item)
 	managers.user:set_setting("crimenet_filter_tactic", job_plan_filter)
 end
 
--- Lines: 2121 to 2189
+-- Lines: 2140 to 2208
 function MenuCallbackHandler:is_dlc_latest_locked(check_dlc)
 	local dlcs = {
 		"max",
@@ -1933,7 +1943,7 @@ function MenuCallbackHandler:is_dlc_latest_locked(check_dlc)
 	return false
 end
 
--- Lines: 2193 to 2197
+-- Lines: 2212 to 2216
 function MenuCallbackHandler:visible_callback_armored_transport(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1941,7 +1951,7 @@ function MenuCallbackHandler:visible_callback_armored_transport(item)
 	return self:is_dlc_latest_locked("armored_transport")
 end
 
--- Lines: 2201 to 2205
+-- Lines: 2220 to 2224
 function MenuCallbackHandler:visible_callback_gage_pack(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1949,7 +1959,7 @@ function MenuCallbackHandler:visible_callback_gage_pack(item)
 	return self:is_dlc_latest_locked("gage_pack")
 end
 
--- Lines: 2209 to 2213
+-- Lines: 2228 to 2232
 function MenuCallbackHandler:visible_callback_gage_pack_lmg(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1957,7 +1967,7 @@ function MenuCallbackHandler:visible_callback_gage_pack_lmg(item)
 	return self:is_dlc_latest_locked("gage_pack_lmg")
 end
 
--- Lines: 2217 to 2221
+-- Lines: 2236 to 2240
 function MenuCallbackHandler:visible_callback_gage_pack_jobs(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1965,7 +1975,7 @@ function MenuCallbackHandler:visible_callback_gage_pack_jobs(item)
 	return self:is_dlc_latest_locked("gage_pack_jobs")
 end
 
--- Lines: 2225 to 2229
+-- Lines: 2244 to 2248
 function MenuCallbackHandler:visible_callback_gage_pack_snp(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1973,7 +1983,7 @@ function MenuCallbackHandler:visible_callback_gage_pack_snp(item)
 	return self:is_dlc_latest_locked("gage_pack_snp")
 end
 
--- Lines: 2233 to 2237
+-- Lines: 2252 to 2256
 function MenuCallbackHandler:visible_callback_gage_pack_shotgun(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1981,7 +1991,7 @@ function MenuCallbackHandler:visible_callback_gage_pack_shotgun(item)
 	return self:is_dlc_latest_locked("gage_pack_shotgun")
 end
 
--- Lines: 2241 to 2245
+-- Lines: 2260 to 2264
 function MenuCallbackHandler:visible_callback_gage_pack_assault(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1989,7 +1999,7 @@ function MenuCallbackHandler:visible_callback_gage_pack_assault(item)
 	return self:is_dlc_latest_locked("gage_pack_assault")
 end
 
--- Lines: 2249 to 2253
+-- Lines: 2268 to 2272
 function MenuCallbackHandler:visible_callback_hl_miami(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -1997,7 +2007,7 @@ function MenuCallbackHandler:visible_callback_hl_miami(item)
 	return self:is_dlc_latest_locked("hl_miami")
 end
 
--- Lines: 2257 to 2261
+-- Lines: 2276 to 2280
 function MenuCallbackHandler:visible_callback_big_bank(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2005,7 +2015,7 @@ function MenuCallbackHandler:visible_callback_big_bank(item)
 	return self:is_dlc_latest_locked("big_bank")
 end
 
--- Lines: 2265 to 2269
+-- Lines: 2284 to 2288
 function MenuCallbackHandler:visible_callback_gage_pack_historical(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2013,7 +2023,7 @@ function MenuCallbackHandler:visible_callback_gage_pack_historical(item)
 	return self:is_dlc_latest_locked("gage_pack_historical")
 end
 
--- Lines: 2273 to 2277
+-- Lines: 2292 to 2296
 function MenuCallbackHandler:visible_callback_character_pack_clover(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2021,7 +2031,7 @@ function MenuCallbackHandler:visible_callback_character_pack_clover(item)
 	return self:is_dlc_latest_locked("character_pack_clover")
 end
 
--- Lines: 2281 to 2285
+-- Lines: 2300 to 2304
 function MenuCallbackHandler:visible_callback_character_pack_dragan(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2029,7 +2039,7 @@ function MenuCallbackHandler:visible_callback_character_pack_dragan(item)
 	return self:is_dlc_latest_locked("character_pack_dragan")
 end
 
--- Lines: 2289 to 2293
+-- Lines: 2308 to 2312
 function MenuCallbackHandler:visible_callback_hope_diamond(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2037,7 +2047,7 @@ function MenuCallbackHandler:visible_callback_hope_diamond(item)
 	return self:is_dlc_latest_locked("hope_diamond")
 end
 
--- Lines: 2297 to 2301
+-- Lines: 2316 to 2320
 function MenuCallbackHandler:visible_callback_the_bomb(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2045,7 +2055,7 @@ function MenuCallbackHandler:visible_callback_the_bomb(item)
 	return self:is_dlc_latest_locked("the_bomb")
 end
 
--- Lines: 2305 to 2309
+-- Lines: 2324 to 2328
 function MenuCallbackHandler:visible_callback_akm4_pack(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2053,7 +2063,7 @@ function MenuCallbackHandler:visible_callback_akm4_pack(item)
 	return self:is_dlc_latest_locked("akm4_pack")
 end
 
--- Lines: 2313 to 2317
+-- Lines: 2332 to 2336
 function MenuCallbackHandler:visible_callback_overkill_pack(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2061,7 +2071,7 @@ function MenuCallbackHandler:visible_callback_overkill_pack(item)
 	return self:is_dlc_latest_locked("overkill_pack")
 end
 
--- Lines: 2321 to 2325
+-- Lines: 2340 to 2344
 function MenuCallbackHandler:visible_callback_complete_overkill_pack(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2069,7 +2079,7 @@ function MenuCallbackHandler:visible_callback_complete_overkill_pack(item)
 	return self:is_dlc_latest_locked("complete_overkill_pack")
 end
 
--- Lines: 2329 to 2333
+-- Lines: 2348 to 2352
 function MenuCallbackHandler:visible_callback_bbq(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2077,7 +2087,7 @@ function MenuCallbackHandler:visible_callback_bbq(item)
 	return self:is_dlc_latest_locked("bbq")
 end
 
--- Lines: 2337 to 2341
+-- Lines: 2356 to 2360
 function MenuCallbackHandler:visible_callback_west(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2085,7 +2095,7 @@ function MenuCallbackHandler:visible_callback_west(item)
 	return self:is_dlc_latest_locked("west")
 end
 
--- Lines: 2345 to 2349
+-- Lines: 2364 to 2368
 function MenuCallbackHandler:visible_callback_arena(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2093,7 +2103,7 @@ function MenuCallbackHandler:visible_callback_arena(item)
 	return self:is_dlc_latest_locked("arena")
 end
 
--- Lines: 2353 to 2357
+-- Lines: 2372 to 2376
 function MenuCallbackHandler:visible_callback_character_pack_sokol(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2101,7 +2111,7 @@ function MenuCallbackHandler:visible_callback_character_pack_sokol(item)
 	return self:is_dlc_latest_locked("character_pack_sokol")
 end
 
--- Lines: 2361 to 2365
+-- Lines: 2380 to 2384
 function MenuCallbackHandler:visible_callback_kenaz(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2109,7 +2119,7 @@ function MenuCallbackHandler:visible_callback_kenaz(item)
 	return self:is_dlc_latest_locked("kenaz")
 end
 
--- Lines: 2369 to 2373
+-- Lines: 2388 to 2392
 function MenuCallbackHandler:visible_callback_turtles(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2117,7 +2127,7 @@ function MenuCallbackHandler:visible_callback_turtles(item)
 	return self:is_dlc_latest_locked("turtles")
 end
 
--- Lines: 2377 to 2381
+-- Lines: 2396 to 2400
 function MenuCallbackHandler:visible_callback_dragon(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2125,7 +2135,7 @@ function MenuCallbackHandler:visible_callback_dragon(item)
 	return self:is_dlc_latest_locked("dragon")
 end
 
--- Lines: 2385 to 2389
+-- Lines: 2404 to 2408
 function MenuCallbackHandler:visible_callback_steel(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2133,7 +2143,7 @@ function MenuCallbackHandler:visible_callback_steel(item)
 	return self:is_dlc_latest_locked("steel")
 end
 
--- Lines: 2393 to 2397
+-- Lines: 2412 to 2416
 function MenuCallbackHandler:visible_callback_berry(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2141,7 +2151,7 @@ function MenuCallbackHandler:visible_callback_berry(item)
 	return self:is_dlc_latest_locked("berry")
 end
 
--- Lines: 2402 to 2406
+-- Lines: 2421 to 2425
 function MenuCallbackHandler:visible_callback_peta(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2149,7 +2159,7 @@ function MenuCallbackHandler:visible_callback_peta(item)
 	return self:is_dlc_latest_locked("peta")
 end
 
--- Lines: 2411 to 2415
+-- Lines: 2430 to 2434
 function MenuCallbackHandler:visible_callback_pal(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2157,7 +2167,7 @@ function MenuCallbackHandler:visible_callback_pal(item)
 	return self:is_dlc_latest_locked("pal")
 end
 
--- Lines: 2431 to 2435
+-- Lines: 2450 to 2454
 function MenuCallbackHandler:visible_callback_opera(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2165,7 +2175,7 @@ function MenuCallbackHandler:visible_callback_opera(item)
 	return self:is_dlc_latest_locked("opera")
 end
 
--- Lines: 2440 to 2444
+-- Lines: 2459 to 2463
 function MenuCallbackHandler:visible_callback_born(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2173,7 +2183,7 @@ function MenuCallbackHandler:visible_callback_born(item)
 	return self:is_dlc_latest_locked("born")
 end
 
--- Lines: 2449 to 2453
+-- Lines: 2468 to 2472
 function MenuCallbackHandler:visible_callback_wild(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2181,7 +2191,7 @@ function MenuCallbackHandler:visible_callback_wild(item)
 	return self:is_dlc_latest_locked("wild")
 end
 
--- Lines: 2458 to 2462
+-- Lines: 2477 to 2481
 function MenuCallbackHandler:visible_callback_pim(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2189,7 +2199,7 @@ function MenuCallbackHandler:visible_callback_pim(item)
 	return self:is_dlc_latest_locked("pim")
 end
 
--- Lines: 2467 to 2471
+-- Lines: 2486 to 2490
 function MenuCallbackHandler:visible_callback_tango(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2197,7 +2207,7 @@ function MenuCallbackHandler:visible_callback_tango(item)
 	return self:is_dlc_latest_locked("tango")
 end
 
--- Lines: 2476 to 2480
+-- Lines: 2495 to 2499
 function MenuCallbackHandler:visible_callback_friend(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2205,7 +2215,7 @@ function MenuCallbackHandler:visible_callback_friend(item)
 	return self:is_dlc_latest_locked("friend")
 end
 
--- Lines: 2485 to 2489
+-- Lines: 2504 to 2508
 function MenuCallbackHandler:visible_callback_chico(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2213,7 +2223,7 @@ function MenuCallbackHandler:visible_callback_chico(item)
 	return self:is_dlc_latest_locked("chico")
 end
 
--- Lines: 2503 to 2507
+-- Lines: 2522 to 2526
 function MenuCallbackHandler:visible_callback_spa(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2221,7 +2231,7 @@ function MenuCallbackHandler:visible_callback_spa(item)
 	return self:is_dlc_latest_locked("spa")
 end
 
--- Lines: 2512 to 2516
+-- Lines: 2531 to 2535
 function MenuCallbackHandler:visible_callback_grv(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2229,7 +2239,7 @@ function MenuCallbackHandler:visible_callback_grv(item)
 	return self:is_dlc_latest_locked("grv")
 end
 
--- Lines: 2521 to 2525
+-- Lines: 2540 to 2544
 function MenuCallbackHandler:visible_callback_amp(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2237,7 +2247,7 @@ function MenuCallbackHandler:visible_callback_amp(item)
 	return self:is_dlc_latest_locked("amp")
 end
 
--- Lines: 2530 to 2534
+-- Lines: 2549 to 2553
 function MenuCallbackHandler:visible_callback_mp2(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2245,7 +2255,7 @@ function MenuCallbackHandler:visible_callback_mp2(item)
 	return self:is_dlc_latest_locked("mp2")
 end
 
--- Lines: 2548 to 2552
+-- Lines: 2567 to 2571
 function MenuCallbackHandler:visible_callback_max(item)
 	item:set_parameter("text_id", "menu_dlc_buy_ue")
 	item:set_parameter("help_id", "menu_dlc_buy_ue_help")
@@ -2253,172 +2263,177 @@ function MenuCallbackHandler:visible_callback_max(item)
 	return self:is_dlc_latest_locked("max")
 end
 
--- Lines: 2568 to 2569
+-- Lines: 2587 to 2588
 function MenuCallbackHandler:not_has_all_dlcs()
 	return not self:has_all_dlcs()
 end
 
--- Lines: 2572 to 2573
+-- Lines: 2591 to 2592
 function MenuCallbackHandler:reputation_check(data)
 	return data:value() <= managers.experience:current_level()
 end
 
--- Lines: 2576 to 2577
+-- Lines: 2595 to 2596
 function MenuCallbackHandler:non_overkill_145(data)
 	return true
 end
 
--- Lines: 2580 to 2581
+-- Lines: 2599 to 2600
 function MenuCallbackHandler:to_be_continued()
 	return true
 end
 
--- Lines: 2584 to 2585
+-- Lines: 2603 to 2604
 function MenuCallbackHandler:is_level_145()
 	return managers.experience:current_level() >= 145
 end
 
--- Lines: 2588 to 2589
+-- Lines: 2607 to 2608
 function MenuCallbackHandler:is_level_100()
 	return managers.experience:current_level() >= 100
 end
 
--- Lines: 2592 to 2593
+-- Lines: 2611 to 2612
 function MenuCallbackHandler:is_level_50()
 	return managers.experience:current_level() >= 50
 end
 
--- Lines: 2596 to 2597
+-- Lines: 2615 to 2616
 function MenuCallbackHandler:is_win32()
 	return SystemInfo:platform() == Idstring("WIN32")
 end
 
--- Lines: 2604 to 2605
+-- Lines: 2623 to 2624
 function MenuCallbackHandler:is_actually_win32()
 	return SystemInfo:platform() == Idstring("WIN32")
 end
 
--- Lines: 2609 to 2610
+-- Lines: 2628 to 2629
+function MenuCallbackHandler:is_win32_pc()
+	return SystemInfo:platform() == Idstring("WIN32") and not self:is_vr()
+end
+
+-- Lines: 2632 to 2633
 function MenuCallbackHandler:is_steam()
 	return SystemInfo:distribution() == Idstring("STEAM")
 end
 
--- Lines: 2613 to 2614
+-- Lines: 2636 to 2637
 function MenuCallbackHandler:is_fullscreen()
 	return managers.viewport:is_fullscreen()
 end
 
--- Lines: 2617 to 2618
+-- Lines: 2640 to 2641
 function MenuCallbackHandler:voice_enabled()
 	return self:is_ps3() or self:is_win32() and managers.network and managers.network.voice_chat and managers.network.voice_chat:enabled()
 end
 
--- Lines: 2621 to 2622
+-- Lines: 2644 to 2645
 function MenuCallbackHandler:customize_controller_enabled()
 	return true
 end
 
--- Lines: 2625 to 2626
+-- Lines: 2648 to 2649
 function MenuCallbackHandler:is_win32_not_lan()
 	return SystemInfo:platform() == Idstring("WIN32") and not Global.game_settings.playing_lan
 end
 
--- Lines: 2629 to 2630
+-- Lines: 2652 to 2653
 function MenuCallbackHandler:is_console()
 	return self:is_ps3() or self:is_x360() or self:is_ps4() or self:is_xb1()
 end
 
--- Lines: 2633 to 2634
+-- Lines: 2656 to 2657
 function MenuCallbackHandler:is_ps3()
 	return SystemInfo:platform() == Idstring("PS3")
 end
 
--- Lines: 2637 to 2638
+-- Lines: 2660 to 2661
 function MenuCallbackHandler:is_ps4()
 	return SystemInfo:platform() == Idstring("PS4")
 end
 
--- Lines: 2641 to 2642
+-- Lines: 2664 to 2665
 function MenuCallbackHandler:is_x360()
 	return SystemInfo:platform() == Idstring("X360")
 end
 
--- Lines: 2645 to 2646
+-- Lines: 2668 to 2669
 function MenuCallbackHandler:is_xb1()
 	return SystemInfo:platform() == Idstring("XB1")
 end
 
--- Lines: 2649 to 2650
+-- Lines: 2672 to 2673
 function MenuCallbackHandler:is_not_xb1()
 	return not self:is_xb1()
 end
 
--- Lines: 2653 to 2654
+-- Lines: 2676 to 2677
 function MenuCallbackHandler:is_not_x360()
 	return not self:is_x360()
 end
 
--- Lines: 2657 to 2658
+-- Lines: 2680 to 2681
 function MenuCallbackHandler:is_not_xbox()
 	return not self:is_x360()
 end
 
--- Lines: 2661 to 2662
+-- Lines: 2684 to 2685
 function MenuCallbackHandler:is_not_x360_or_xb1()
 	return not self:is_x360() and not self:is_xb1()
 end
 
--- Lines: 2665 to 2666
+-- Lines: 2688 to 2689
 function MenuCallbackHandler:is_not_nextgen()
 	return not self:is_xb1() and not self:is_ps4()
 end
 
--- Lines: 2669 to 2670
+-- Lines: 2692 to 2693
 function MenuCallbackHandler:is_na()
 	return MenuManager.IS_NORTH_AMERICA
 end
 
--- Lines: 2673 to 2674
+-- Lines: 2696 to 2697
 function MenuCallbackHandler:has_dropin()
 	return NetworkManager.DROPIN_ENABLED
 end
 
--- Lines: 2678 to 2679
+-- Lines: 2701 to 2702
 function MenuCallbackHandler:is_server()
 	return Network:is_server()
 end
 
--- Lines: 2682 to 2683
+-- Lines: 2705 to 2706
 function MenuCallbackHandler:is_not_server()
 	return not self:is_server()
 end
 
--- Lines: 2686 to 2687
+-- Lines: 2709 to 2710
 function MenuCallbackHandler:is_online()
 	return managers.network.account:signin_state() == "signed in"
 end
 
--- Lines: 2690 to 2691
+-- Lines: 2713 to 2714
 function MenuCallbackHandler:is_singleplayer()
 	return Global.game_settings.single_player
 end
 
--- Lines: 2694 to 2695
+-- Lines: 2717 to 2718
 function MenuCallbackHandler:is_multiplayer()
 	return not Global.game_settings.single_player
 end
 
--- Lines: 2704 to 2705
+-- Lines: 2727 to 2728
 function MenuCallbackHandler:is_modded_client()
 	return rawget(_G, "BLT") ~= nil
 end
 
--- Lines: 2713 to 2714
+-- Lines: 2736 to 2737
 function MenuCallbackHandler:is_not_modded_client()
 	return rawget(_G, "BLT") == nil
 end
 
--- Lines: 2718 to 2736
+-- Lines: 2741 to 2759
 function MenuCallbackHandler:build_mods_list()
 	local mods = {}
 
@@ -2440,42 +2455,42 @@ function MenuCallbackHandler:build_mods_list()
 	return mods
 end
 
--- Lines: 2741 to 2742
+-- Lines: 2764 to 2765
 function MenuCallbackHandler:is_prof_job()
 	return managers.job:is_current_job_professional()
 end
 
--- Lines: 2745 to 2746
+-- Lines: 2768 to 2769
 function MenuCallbackHandler:is_normal_job()
 	return not self:is_prof_job()
 end
 
--- Lines: 2749 to 2750
+-- Lines: 2772 to 2773
 function MenuCallbackHandler:is_not_max_rank()
 	return managers.experience:current_rank() < #tweak_data.infamy.ranks
 end
 
--- Lines: 2753 to 2754
+-- Lines: 2776 to 2777
 function MenuCallbackHandler:can_become_infamous()
 	return self:is_level_100() and self:is_not_max_rank()
 end
 
--- Lines: 2757 to 2758
+-- Lines: 2780 to 2781
 function MenuCallbackHandler:singleplayer_restart()
 	return self:is_singleplayer() and self:has_full_game() and self:is_normal_job() and not managers.job:stage_success()
 end
 
--- Lines: 2761 to 2762
+-- Lines: 2784 to 2785
 function MenuCallbackHandler:kick_player_visible()
 	return self:is_server() and self:is_multiplayer() and managers.platform:presence() ~= "Mission_end" and managers.vote:option_host_kick()
 end
 
--- Lines: 2765 to 2766
+-- Lines: 2788 to 2789
 function MenuCallbackHandler:kick_vote_visible()
 	return self:is_multiplayer() and managers.platform:presence() ~= "Mission_end" and managers.vote:option_vote_kick()
 end
 
--- Lines: 2769 to 2775
+-- Lines: 2792 to 2798
 function MenuCallbackHandler:_restart_level_visible()
 	if not self:is_multiplayer() or self:is_prof_job() or managers.job:stage_success() then
 		return false
@@ -2486,17 +2501,17 @@ function MenuCallbackHandler:_restart_level_visible()
 	return state ~= "ingame_waiting_for_players" and state ~= "ingame_lobby_menu" and state ~= "empty"
 end
 
--- Lines: 2778 to 2779
+-- Lines: 2801 to 2802
 function MenuCallbackHandler:restart_level_visible()
 	return self:is_server() and self:_restart_level_visible() and managers.vote:option_host_restart()
 end
 
--- Lines: 2782 to 2783
+-- Lines: 2805 to 2806
 function MenuCallbackHandler:restart_vote_visible()
 	return self:_restart_level_visible() and managers.vote:option_vote_restart()
 end
 
--- Lines: 2786 to 2795
+-- Lines: 2809 to 2818
 function MenuCallbackHandler:abort_mission_visible()
 	if not self:is_not_editor() or not self:is_server() or not self:is_multiplayer() then
 		return false
@@ -2509,112 +2524,117 @@ function MenuCallbackHandler:abort_mission_visible()
 	return true
 end
 
--- Lines: 2799 to 2800
+-- Lines: 2822 to 2823
 function MenuCallbackHandler:is_custom_safehouse_unlocked()
 	return managers.custom_safehouse:unlocked()
 end
 
--- Lines: 2804 to 2805
+-- Lines: 2827 to 2828
 function MenuCallbackHandler:lobby_exist()
 	return managers.network.matchmake.lobby_handler
 end
 
--- Lines: 2808 to 2809
+-- Lines: 2831 to 2832
 function MenuCallbackHandler:hidden()
 	return false
 end
 
--- Lines: 2812 to 2813
+-- Lines: 2835 to 2836
 function MenuCallbackHandler:chat_visible()
 	return SystemInfo:platform() == Idstring("WIN32")
 end
 
--- Lines: 2817 to 2818
+-- Lines: 2840 to 2841
 function MenuCallbackHandler:is_pc_controller()
 	return managers.menu:is_pc_controller()
 end
 
--- Lines: 2822 to 2823
+-- Lines: 2845 to 2846
 function MenuCallbackHandler:is_not_pc_controller()
 	return not self:is_pc_controller()
 end
 
--- Lines: 2826 to 2827
+-- Lines: 2849 to 2850
 function MenuCallbackHandler:is_steam_controller()
 	return managers.menu:is_steam_controller()
 end
 
--- Lines: 2830 to 2831
+-- Lines: 2853 to 2854
 function MenuCallbackHandler:is_not_steam_controller()
 	return not self:is_steam_controller()
 end
 
--- Lines: 2834 to 2835
+-- Lines: 2857 to 2858
 function MenuCallbackHandler:is_not_editor()
 	return not Application:editor()
 end
 
--- Lines: 2844 to 2846
+-- Lines: 2868 to 2869
+function MenuCallbackHandler:is_vr()
+	return _G.IS_VR
+end
+
+-- Lines: 2873 to 2875
 function MenuCallbackHandler:show_credits()
 	game_state_machine:change_state_by_name("menu_credits")
 end
 
--- Lines: 2849 to 2850
+-- Lines: 2878 to 2879
 function MenuCallbackHandler:can_load_game()
 	return not Application:editor() and not Network:multiplayer()
 end
 
--- Lines: 2853 to 2854
+-- Lines: 2882 to 2883
 function MenuCallbackHandler:can_save_game()
 	return not Application:editor() and not Network:multiplayer()
 end
 
--- Lines: 2857 to 2858
+-- Lines: 2886 to 2887
 function MenuCallbackHandler:is_not_multiplayer()
 	return not Network:multiplayer()
 end
 
--- Lines: 2862 to 2863
+-- Lines: 2891 to 2892
 function MenuCallbackHandler:is_not_crime_spree()
 	return not self:is_crime_spree()
 end
 
--- Lines: 2870 to 2871
+-- Lines: 2899 to 2900
 function MenuCallbackHandler:is_crime_spree()
 	return managers.crime_spree:is_active()
 end
 
--- Lines: 2875 to 2876
+-- Lines: 2904 to 2905
 function MenuCallbackHandler:debug_menu_enabled()
 	return managers.menu:debug_menu_enabled()
 end
 
--- Lines: 2880 to 2883
+-- Lines: 2909 to 2912
 function MenuCallbackHandler:leave_online_menu()
 	managers.menu:leave_online_menu()
 end
 
--- Lines: 2885 to 2886
+-- Lines: 2914 to 2915
 function MenuCallbackHandler:has_peer_1()
 	return not not managers.network:session() and managers.network:session():peer(1)
 end
 
--- Lines: 2889 to 2890
+-- Lines: 2918 to 2919
 function MenuCallbackHandler:has_peer_2()
 	return not not managers.network:session() and managers.network:session():peer(2)
 end
 
--- Lines: 2893 to 2894
+-- Lines: 2922 to 2923
 function MenuCallbackHandler:has_peer_3()
 	return not not managers.network:session() and managers.network:session():peer(3)
 end
 
--- Lines: 2897 to 2898
+-- Lines: 2926 to 2927
 function MenuCallbackHandler:has_peer_4()
 	return not not managers.network:session() and managers.network:session():peer(4)
 end
 
--- Lines: 2902 to 2908
+-- Lines: 2931 to 2937
 function MenuCallbackHandler:on_visit_forum()
 	if not MenuCallbackHandler:is_overlay_enabled() then
 		managers.menu:show_enable_steam_overlay()
@@ -2625,7 +2645,7 @@ function MenuCallbackHandler:on_visit_forum()
 	Steam:overlay_activate("url", "http://forums.steampowered.com/forums/forumdisplay.php?f=1225")
 end
 
--- Lines: 2910 to 2916
+-- Lines: 2939 to 2945
 function MenuCallbackHandler:on_visit_gamehub()
 	if not MenuCallbackHandler:is_overlay_enabled() then
 		managers.menu:show_enable_steam_overlay()
@@ -2636,20 +2656,20 @@ function MenuCallbackHandler:on_visit_gamehub()
 	Steam:overlay_activate("url", "http://steamcommunity.com/app/218620")
 end
 
--- Lines: 2918 to 2920
+-- Lines: 2947 to 2949
 function MenuCallbackHandler:on_buy_dlc1()
 	Steam:overlay_activate("url", tweak_data.gui.store_page)
 end
 
--- Lines: 2922 to 2929
+-- Lines: 2951 to 2958
 function MenuCallbackHandler:on_account_picker()
 	print("MenuCallbackHandler:on_account_picker()")
 
 
-	-- Lines: 2924 to 2927
+	-- Lines: 2953 to 2956
 	local function confirm_cb()
 
-		-- Lines: 2924 to 2925
+		-- Lines: 2953 to 2954
 		local function f(...)
 			print("result", ...)
 		end
@@ -2663,13 +2683,13 @@ function MenuCallbackHandler:on_account_picker()
 	managers.menu:show_account_picker_dialog({yes_func = confirm_cb})
 end
 
--- Lines: 2931 to 2934
+-- Lines: 2960 to 2963
 function MenuCallbackHandler:on_menu_option_help()
 	print("MenuCallbackHandler:on_menu_option_help()")
 	XboxLive:show_help_ui()
 end
 
--- Lines: 2936 to 2952
+-- Lines: 2965 to 2981
 function MenuCallbackHandler:quit_game()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -2692,41 +2712,41 @@ function MenuCallbackHandler:quit_game()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 2954 to 2973
+-- Lines: 2983 to 3002
 function MenuCallbackHandler:_dialog_quit_yes()
 	self:_dialog_save_progress_backup_no()
 end
 
--- Lines: 2975 to 2976
+-- Lines: 3004 to 3005
 function MenuCallbackHandler:_dialog_quit_no()
 end
 
--- Lines: 2978 to 2981
+-- Lines: 3007 to 3010
 function MenuCallbackHandler:_dialog_save_progress_backup_yes()
 	managers.savefile:save_progress("local_hdd")
 	setup:quit()
 end
 
--- Lines: 2983 to 2985
+-- Lines: 3012 to 3014
 function MenuCallbackHandler:_dialog_save_progress_backup_no()
 	setup:quit()
 end
 
--- Lines: 2987 to 2993
+-- Lines: 3016 to 3022
 function MenuCallbackHandler:chk_dlc_content_updated()
 	if SystemInfo:platform() ~= Idstring("XB1") and managers.dlc then
 		managers.dlc:chk_content_updated()
 	end
 end
 
--- Lines: 2995 to 3001
+-- Lines: 3024 to 3030
 function MenuCallbackHandler:chk_dlc_content_updated_xb1()
 	if SystemInfo:platform() == Idstring("XB1") and managers.dlc then
 		managers.dlc:chk_content_updated()
 	end
 end
 
--- Lines: 3004 to 3021
+-- Lines: 3033 to 3050
 function MenuCallbackHandler:toggle_ready(item)
 	local ready = item:value() == "on"
 
@@ -2744,7 +2764,7 @@ function MenuCallbackHandler:toggle_ready(item)
 	managers.network:session():on_set_member_ready(managers.network:session():local_peer():id(), ready, true, false)
 end
 
--- Lines: 3023 to 3028
+-- Lines: 3052 to 3057
 function MenuCallbackHandler:change_nr_players(item)
 	local nr_players = item:value()
 	Global.nr_players = nr_players
@@ -2752,70 +2772,70 @@ function MenuCallbackHandler:change_nr_players(item)
 	managers.player:set_nr_players(nr_players)
 end
 
--- Lines: 3031 to 3034
+-- Lines: 3060 to 3063
 function MenuCallbackHandler:toggle_rumble(item)
 	local rumble = item:value() == "on"
 
 	managers.user:set_setting("rumble", rumble)
 end
 
--- Lines: 3036 to 3039
+-- Lines: 3065 to 3068
 function MenuCallbackHandler:invert_camera_horisontally(item)
 	local invert = item:value() == "on"
 
 	managers.user:set_setting("invert_camera_x", invert)
 end
 
--- Lines: 3041 to 3044
+-- Lines: 3070 to 3073
 function MenuCallbackHandler:invert_camera_vertically(item)
 	local invert = item:value() == "on"
 
 	managers.user:set_setting("invert_camera_y", invert)
 end
 
--- Lines: 3046 to 3049
+-- Lines: 3075 to 3078
 function MenuCallbackHandler:toggle_southpaw(item)
 	local southpaw = item:value() == "on"
 
 	managers.user:set_setting("southpaw", southpaw)
 end
 
--- Lines: 3051 to 3054
+-- Lines: 3080 to 3083
 function MenuCallbackHandler:toggle_dof_setting(item)
 	local dof_setting = item:value() == "on"
 
 	managers.user:set_setting("dof_setting", dof_setting and "standard" or "none")
 end
 
--- Lines: 3056 to 3059
+-- Lines: 3085 to 3088
 function MenuCallbackHandler:toggle_chromatic_setting(item)
 	local chromatic_setting = item:value() == "on"
 
 	managers.user:set_setting("chromatic_setting", chromatic_setting and "standard" or "none")
 end
 
--- Lines: 3061 to 3064
+-- Lines: 3090 to 3093
 function MenuCallbackHandler:hold_to_steelsight(item)
 	local hold = item:value() == "on"
 
 	managers.user:set_setting("hold_to_steelsight", hold)
 end
 
--- Lines: 3066 to 3069
+-- Lines: 3095 to 3098
 function MenuCallbackHandler:hold_to_run(item)
 	local hold = item:value() == "on"
 
 	managers.user:set_setting("hold_to_run", hold)
 end
 
--- Lines: 3071 to 3074
+-- Lines: 3100 to 3103
 function MenuCallbackHandler:hold_to_duck(item)
 	local hold = item:value() == "on"
 
 	managers.user:set_setting("hold_to_duck", hold)
 end
 
--- Lines: 3076 to 3091
+-- Lines: 3105 to 3120
 function MenuCallbackHandler:toggle_fullscreen(item)
 	local fullscreen = item:value() == "on"
 
@@ -2832,63 +2852,63 @@ function MenuCallbackHandler:toggle_fullscreen(item)
 	self:refresh_node()
 end
 
--- Lines: 3093 to 3096
+-- Lines: 3122 to 3125
 function MenuCallbackHandler:toggle_subtitle(item)
 	local subtitle = item:value() == "on"
 
 	managers.user:set_setting("subtitle", subtitle)
 end
 
--- Lines: 3098 to 3101
+-- Lines: 3127 to 3130
 function MenuCallbackHandler:toggle_hit_indicator(item)
 	local on = item:value() == "on"
 
 	managers.user:set_setting("hit_indicator", on)
 end
 
--- Lines: 3103 to 3106
+-- Lines: 3132 to 3135
 function MenuCallbackHandler:toggle_objective_reminder(item)
 	local on = item:value() == "on"
 
 	managers.user:set_setting("objective_reminder", on)
 end
 
--- Lines: 3108 to 3111
+-- Lines: 3137 to 3140
 function MenuCallbackHandler:toggle_aim_assist(item)
 	local on = item:value() == "on"
 
 	managers.user:set_setting("aim_assist", on)
 end
 
--- Lines: 3114 to 3117
+-- Lines: 3143 to 3146
 function MenuCallbackHandler:toggle_sticky_aim(item)
 	local on = item:value() == "on"
 
 	managers.user:set_setting("sticky_aim", on)
 end
 
--- Lines: 3127 to 3130
+-- Lines: 3156 to 3159
 function MenuCallbackHandler:toggle_voicechat(item)
 	local vchat = item:value() == "on"
 
 	managers.user:set_setting("voice_chat", vchat)
 end
 
--- Lines: 3132 to 3135
+-- Lines: 3161 to 3164
 function MenuCallbackHandler:toggle_push_to_talk(item)
 	local vchat = item:value() == "on"
 
 	managers.user:set_setting("push_to_talk", vchat)
 end
 
--- Lines: 3138 to 3141
+-- Lines: 3167 to 3170
 function MenuCallbackHandler:toggle_team_AI(item)
 	Global.game_settings.team_ai = item:value() == "on"
 
 	managers.groupai:state():on_criminal_team_AI_enabled_state_changed()
 end
 
--- Lines: 3143 to 3151
+-- Lines: 3172 to 3180
 function MenuCallbackHandler:toggle_coordinates(item)
 	Global.debug_show_coords = item:value() == "on"
 
@@ -2899,21 +2919,21 @@ function MenuCallbackHandler:toggle_coordinates(item)
 	end
 end
 
--- Lines: 3153 to 3156
+-- Lines: 3182 to 3185
 function MenuCallbackHandler:toggle_net_throttling(item)
 	local state = item:value() == "on"
 
 	managers.user:set_setting("net_packet_throttling", state, nil)
 end
 
--- Lines: 3158 to 3161
+-- Lines: 3187 to 3190
 function MenuCallbackHandler:toggle_net_forwarding(item)
 	local state = item:value() == "on"
 
 	managers.user:set_setting("net_forwarding", state, nil)
 end
 
--- Lines: 3163 to 3167
+-- Lines: 3192 to 3196
 function MenuCallbackHandler:toggle_net_use_compression(item)
 	local state = item:value() == "on"
 
@@ -2921,7 +2941,7 @@ function MenuCallbackHandler:toggle_net_use_compression(item)
 	managers.user:set_setting("net_use_compression", state, nil)
 end
 
--- Lines: 3169 to 3184
+-- Lines: 3198 to 3213
 function MenuCallbackHandler:change_resolution(item)
 	local old_resolution = RenderSettings.resolution
 
@@ -2933,7 +2953,7 @@ function MenuCallbackHandler:change_resolution(item)
 	managers.viewport:set_aspect_ratio(item:parameters().resolution.x / item:parameters().resolution.y)
 
 
-	-- Lines: 3178 to 3181
+	-- Lines: 3207 to 3210
 	local function on_decline()
 		managers.viewport:set_resolution(old_resolution)
 		managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
@@ -2942,7 +2962,7 @@ function MenuCallbackHandler:change_resolution(item)
 	managers.menu:show_accept_gfx_settings_dialog(on_decline)
 end
 
--- Lines: 3188 to 3199
+-- Lines: 3217 to 3228
 function MenuCallbackHandler:toggle_throwable_contour(item)
 	local state = item:value() == "on"
 
@@ -2957,7 +2977,7 @@ function MenuCallbackHandler:toggle_throwable_contour(item)
 	end
 end
 
--- Lines: 3202 to 3213
+-- Lines: 3231 to 3242
 function MenuCallbackHandler:toggle_ammo_contour(item)
 	local state = item:value() == "on"
 
@@ -2972,19 +2992,19 @@ function MenuCallbackHandler:toggle_ammo_contour(item)
 	end
 end
 
--- Lines: 3217 to 3219
+-- Lines: 3246 to 3248
 function MenuCallbackHandler:toggle_mute_heist_vo(item)
 	managers.user:set_setting("mute_heist_vo", item:value() == "on", nil)
 end
 
--- Lines: 3228 to 3231
+-- Lines: 3257 to 3260
 function MenuCallbackHandler:choice_test(item)
 	local test = item:value()
 
 	print("MenuCallbackHandler", test)
 end
 
--- Lines: 3233 to 3252
+-- Lines: 3262 to 3281
 function MenuCallbackHandler:choice_premium_contact(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -3006,7 +3026,7 @@ function MenuCallbackHandler:choice_premium_contact(item)
 	end
 end
 
--- Lines: 3254 to 3271
+-- Lines: 3283 to 3300
 function MenuCallbackHandler:choice_controller_type(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -3028,7 +3048,7 @@ function MenuCallbackHandler:choice_controller_type(item)
 	end
 end
 
--- Lines: 3273 to 3284
+-- Lines: 3302 to 3313
 function MenuCallbackHandler:choice_max_lobbies_filter(item)
 	if not managers.crimenet then
 		return
@@ -3041,7 +3061,7 @@ function MenuCallbackHandler:choice_max_lobbies_filter(item)
 	managers.user:set_setting("crimenet_filter_max_servers", max_server_jobs_filter)
 end
 
--- Lines: 3286 to 3296
+-- Lines: 3315 to 3325
 function MenuCallbackHandler:choice_distance_filter(item)
 	local dist_filter = item:value()
 
@@ -3054,7 +3074,7 @@ function MenuCallbackHandler:choice_distance_filter(item)
 	managers.user:set_setting("crimenet_filter_distance", dist_filter)
 end
 
--- Lines: 3298 to 3315
+-- Lines: 3327 to 3344
 function MenuCallbackHandler:choice_difficulty_filter(item)
 	local diff_filter = item:value()
 
@@ -3068,7 +3088,7 @@ function MenuCallbackHandler:choice_difficulty_filter(item)
 	managers.crimenet:update_difficulty_filter()
 end
 
--- Lines: 3317 to 3327
+-- Lines: 3346 to 3356
 function MenuCallbackHandler:choice_job_id_filter(item)
 	local job_id_filter = item:value()
 
@@ -3081,7 +3101,7 @@ function MenuCallbackHandler:choice_job_id_filter(item)
 	managers.user:set_setting("crimenet_filter_contract", job_id_filter)
 end
 
--- Lines: 3329 to 3339
+-- Lines: 3358 to 3368
 function MenuCallbackHandler:choice_new_servers_only(item)
 	local num_players_filter = item:value()
 
@@ -3094,7 +3114,7 @@ function MenuCallbackHandler:choice_new_servers_only(item)
 	managers.user:set_setting("crimenet_filter_new_servers_only", num_players_filter)
 end
 
--- Lines: 3341 to 3351
+-- Lines: 3370 to 3380
 function MenuCallbackHandler:choice_kick_option(item)
 	local kicking_filter = item:value()
 
@@ -3107,7 +3127,7 @@ function MenuCallbackHandler:choice_kick_option(item)
 	managers.user:set_setting("crimenet_filter_kick", kicking_filter)
 end
 
--- Lines: 3353 to 3359
+-- Lines: 3382 to 3388
 function MenuCallbackHandler:choice_job_appropriate_filter(item)
 	local diff_appropriate = item:value()
 	Global.game_settings.search_appropriate_jobs = diff_appropriate == "on" and true or false
@@ -3116,7 +3136,7 @@ function MenuCallbackHandler:choice_job_appropriate_filter(item)
 	managers.user:set_setting("crimenet_filter_level_appopriate", diff_appropriate == "on" and true or false)
 end
 
--- Lines: 3362 to 3367
+-- Lines: 3391 to 3396
 function MenuCallbackHandler:choice_allow_safehouses_filter(item)
 	local allow_safehouses = item:value() == "on" and true or false
 	Global.game_settings.allow_search_safehouses = allow_safehouses
@@ -3125,7 +3145,7 @@ function MenuCallbackHandler:choice_allow_safehouses_filter(item)
 	managers.user:set_setting("crimenet_filter_safehouses", allow_safehouses)
 end
 
--- Lines: 3371 to 3376
+-- Lines: 3400 to 3405
 function MenuCallbackHandler:choice_mutated_lobbies_filter(item)
 	local allow_mutators = item:value() == "on" and true or false
 	Global.game_settings.search_mutated_lobbies = allow_mutators
@@ -3134,7 +3154,7 @@ function MenuCallbackHandler:choice_mutated_lobbies_filter(item)
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
--- Lines: 3380 to 3385
+-- Lines: 3409 to 3414
 function MenuCallbackHandler:choice_modded_lobbies_filter(item)
 	local allow_modded = item:value() == "on" and true or false
 	Global.game_settings.search_modded_lobbies = allow_modded
@@ -3143,7 +3163,7 @@ function MenuCallbackHandler:choice_modded_lobbies_filter(item)
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
--- Lines: 3388 to 3398
+-- Lines: 3417 to 3427
 function MenuCallbackHandler:choice_server_state_lobby(item)
 	local state_filter = item:value()
 
@@ -3156,12 +3176,12 @@ function MenuCallbackHandler:choice_server_state_lobby(item)
 	managers.user:set_setting("crimenet_filter_in_lobby", state_filter)
 end
 
--- Lines: 3400 to 3402
+-- Lines: 3429 to 3431
 function MenuCallbackHandler:save_crimenet_filters()
 	managers.savefile:save_setting(true)
 end
 
--- Lines: 3404 to 3410
+-- Lines: 3433 to 3439
 function MenuCallbackHandler:refresh_node(item)
 	local logic = managers.menu:active_menu().logic
 
@@ -3170,7 +3190,7 @@ function MenuCallbackHandler:refresh_node(item)
 	end
 end
 
--- Lines: 3412 to 3418
+-- Lines: 3441 to 3447
 function MenuCallbackHandler:open_contract_node(item)
 	local job_tweak = tweak_data.narrative:job_data(item:parameters().id)
 	local is_professional = job_tweak and job_tweak.professional or false
@@ -3188,7 +3208,7 @@ function MenuCallbackHandler:open_contract_node(item)
 	}})
 end
 
--- Lines: 3420 to 3454
+-- Lines: 3449 to 3483
 function MenuCallbackHandler:is_contract_difficulty_allowed(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -3230,7 +3250,7 @@ function MenuCallbackHandler:is_contract_difficulty_allowed(item)
 	return is_not_level_locked and math.clamp(job_jc + difficulty_jc, 0, 100) <= managers.job:get_max_jc_for_player()
 end
 
--- Lines: 3457 to 3469
+-- Lines: 3486 to 3498
 function MenuCallbackHandler:buy_crimenet_contract(item, node)
 	local job_data = item:parameters().gui_node.node:parameters().menu_component_data
 
@@ -3247,7 +3267,7 @@ function MenuCallbackHandler:buy_crimenet_contract(item, node)
 	managers.menu:show_confirm_buy_premium_contract(params)
 end
 
--- Lines: 3471 to 3491
+-- Lines: 3500 to 3520
 function MenuCallbackHandler:_buy_crimenet_contract(item, node)
 	local job_data = item:parameters().gui_node.node:parameters().menu_component_data
 
@@ -3270,7 +3290,7 @@ function MenuCallbackHandler:_buy_crimenet_contract(item, node)
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines: 3493 to 3498
+-- Lines: 3522 to 3527
 function MenuCallbackHandler:crimenet_casino_secured_cards()
 	local card1 = managers.menu:active_menu().logic:selected_node():item("secure_card_1"):value() == "on" and 1 or 0
 	local card2 = managers.menu:active_menu().logic:selected_node():item("secure_card_2"):value() == "on" and 1 or 0
@@ -3279,14 +3299,14 @@ function MenuCallbackHandler:crimenet_casino_secured_cards()
 	return card1 + card2 + card3
 end
 
--- Lines: 3501 to 3505
+-- Lines: 3530 to 3534
 function MenuCallbackHandler:crimenet_casino_update(item)
 	if item:enabled() then
 		self:refresh_node()
 	end
 end
 
--- Lines: 3507 to 3518
+-- Lines: 3536 to 3547
 function MenuCallbackHandler:crimenet_casino_safe_card1(item)
 	if managers.menu:active_menu().logic:selected_node():item("secure_card_1"):enabled() then
 		if managers.menu:active_menu().logic:selected_node():item("secure_card_2"):value() == "on" then
@@ -3299,7 +3319,7 @@ function MenuCallbackHandler:crimenet_casino_safe_card1(item)
 	end
 end
 
--- Lines: 3520 to 3531
+-- Lines: 3549 to 3560
 function MenuCallbackHandler:crimenet_casino_safe_card2(item)
 	if managers.menu:active_menu().logic:selected_node():item("secure_card_2"):enabled() then
 		if managers.menu:active_menu().logic:selected_node():item("secure_card_3"):value() == "on" then
@@ -3312,7 +3332,7 @@ function MenuCallbackHandler:crimenet_casino_safe_card2(item)
 	end
 end
 
--- Lines: 3533 to 3540
+-- Lines: 3562 to 3569
 function MenuCallbackHandler:crimenet_casino_safe_card3(item)
 	if managers.menu:active_menu().logic:selected_node():item("secure_card_3"):enabled() then
 		managers.menu:active_menu().logic:selected_node():item("secure_card_1"):set_value("on")
@@ -3321,12 +3341,12 @@ function MenuCallbackHandler:crimenet_casino_safe_card3(item)
 	end
 end
 
--- Lines: 3542 to 3543
+-- Lines: 3571 to 3572
 function MenuCallbackHandler:not_customize_contract(item)
 	return not self:customize_contract(item)
 end
 
--- Lines: 3546 to 3560
+-- Lines: 3575 to 3589
 function MenuCallbackHandler:customize_contract(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -3347,7 +3367,7 @@ function MenuCallbackHandler:customize_contract(item)
 	return managers.menu:active_menu().logic:selected_node():parameters().menu_component_data.customize_contract
 end
 
--- Lines: 3563 to 3589
+-- Lines: 3592 to 3618
 function MenuCallbackHandler:change_contract_difficulty(item)
 	managers.menu_component:set_crimenet_contract_difficulty_id(item:value())
 
@@ -3378,7 +3398,7 @@ function MenuCallbackHandler:change_contract_difficulty(item)
 	self:refresh_node()
 end
 
--- Lines: 3593 to 3601
+-- Lines: 3622 to 3630
 function MenuCallbackHandler:choice_difficulty_filter_ps3(item)
 	local diff_filter = item:value()
 
@@ -3390,7 +3410,7 @@ function MenuCallbackHandler:choice_difficulty_filter_ps3(item)
 	managers.network.matchmake:start_search_lobbys(managers.network.matchmake:searching_friends_only())
 end
 
--- Lines: 3605 to 3625
+-- Lines: 3634 to 3659
 function MenuCallbackHandler:choice_lobby_difficulty(item)
 	local difficulty = item:value()
 	Global.game_settings.difficulty = difficulty
@@ -3412,19 +3432,19 @@ function MenuCallbackHandler:choice_lobby_difficulty(item)
 	self:update_matchmake_attributes()
 end
 
--- Lines: 3627 to 3630
+-- Lines: 3661 to 3664
 function MenuCallbackHandler:lobby_start_campaign(item)
 	MenuCallbackHandler:choice_lobby_campaign(item)
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines: 3632 to 3635
+-- Lines: 3666 to 3669
 function MenuCallbackHandler:lobby_create_campaign(item)
 	MenuCallbackHandler:choice_lobby_campaign(item)
 	MenuCallbackHandler:create_lobby(item)
 end
 
--- Lines: 3637 to 3657
+-- Lines: 3671 to 3691
 function MenuCallbackHandler:choice_lobby_campaign(item)
 	if not item:enabled() then
 		return
@@ -3446,7 +3466,7 @@ function MenuCallbackHandler:choice_lobby_campaign(item)
 	self:update_matchmake_attributes()
 end
 
--- Lines: 3659 to 3665
+-- Lines: 3693 to 3699
 function MenuCallbackHandler:choice_lobby_mission(item)
 	if not item:enabled() then
 		return
@@ -3455,7 +3475,7 @@ function MenuCallbackHandler:choice_lobby_mission(item)
 	Global.game_settings.mission = item:value()
 end
 
--- Lines: 3668 to 3673
+-- Lines: 3702 to 3707
 function MenuCallbackHandler:choice_friends_only(item)
 	local choice_friends_only = item:value() == "on"
 	Global.game_settings.search_friends_only = choice_friends_only
@@ -3463,7 +3483,7 @@ function MenuCallbackHandler:choice_friends_only(item)
 	managers.user:set_setting("crimenet_filter_friends_only", choice_friends_only)
 end
 
--- Lines: 3676 to 3682
+-- Lines: 3710 to 3716
 function MenuCallbackHandler:choice_lobby_permission(item)
 	local permission = item:value()
 	local level_id = item:value()
@@ -3473,7 +3493,7 @@ function MenuCallbackHandler:choice_lobby_permission(item)
 	self:_on_host_setting_updated()
 end
 
--- Lines: 3684 to 3704
+-- Lines: 3718 to 3738
 function MenuCallbackHandler:choice_lobby_reputation_permission(item)
 	local reputation_permission = item:value()
 	Global.game_settings.reputation_permission = reputation_permission
@@ -3482,13 +3502,13 @@ function MenuCallbackHandler:choice_lobby_reputation_permission(item)
 	self:_on_host_setting_updated()
 end
 
--- Lines: 3707 to 3714
+-- Lines: 3741 to 3748
 function MenuCallbackHandler:choice_team_ai(item)
 	Global.game_settings.team_ai = item:value() ~= 0
 	Global.game_settings.team_ai_option = item:value()
 end
 
--- Lines: 3717 to 3732
+-- Lines: 3751 to 3766
 function MenuCallbackHandler:choice_drop_in(item)
 	local choice_drop_in = item:value()
 	Global.game_settings.drop_in_allowed = choice_drop_in ~= 0
@@ -3503,24 +3523,24 @@ function MenuCallbackHandler:choice_drop_in(item)
 	self:_on_host_setting_updated()
 end
 
--- Lines: 3736 to 3738
+-- Lines: 3770 to 3772
 function MenuCallbackHandler:choice_kicking_option(item)
 	Global.game_settings.kick_option = item:value()
 end
 
--- Lines: 3740 to 3743
+-- Lines: 3774 to 3777
 function MenuCallbackHandler:choice_crimenet_lobby_permission(item)
 	local permission = item:value()
 	Global.game_settings.permission = permission
 end
 
--- Lines: 3745 to 3748
+-- Lines: 3779 to 3782
 function MenuCallbackHandler:choice_crimenet_lobby_reputation_permission(item)
 	local reputation_permission = item:value()
 	Global.game_settings.reputation_permission = reputation_permission
 end
 
--- Lines: 3751 to 3759
+-- Lines: 3785 to 3793
 function MenuCallbackHandler:choice_crimenet_team_ai(item)
 	Global.game_settings.team_ai = item:value() ~= 0
 	Global.game_settings.team_ai_option = item:value()
@@ -3528,21 +3548,21 @@ function MenuCallbackHandler:choice_crimenet_team_ai(item)
 	self:_on_host_setting_updated()
 end
 
--- Lines: 3761 to 3764
+-- Lines: 3795 to 3798
 function MenuCallbackHandler:choice_crimenet_auto_kick(item)
 	Global.game_settings.auto_kick = item:value() == "on"
 
 	self:_on_host_setting_updated()
 end
 
--- Lines: 3767 to 3770
+-- Lines: 3801 to 3804
 function MenuCallbackHandler:choice_allow_modded_players(item)
 	Global.game_settings.allow_modded_players = item:value() == "on"
 
 	self:_on_host_setting_updated()
 end
 
--- Lines: 3774 to 3786
+-- Lines: 3808 to 3820
 function MenuCallbackHandler:choice_crimenet_drop_in(item)
 	local choice_drop_in = item:value()
 	Global.game_settings.drop_in_allowed = choice_drop_in ~= 0
@@ -3553,7 +3573,7 @@ function MenuCallbackHandler:choice_crimenet_drop_in(item)
 	end
 end
 
--- Lines: 3789 to 3802
+-- Lines: 3823 to 3836
 function MenuCallbackHandler:accept_crimenet_contract(item, node)
 	managers.menu:active_menu().logic:navigate_back(true)
 
@@ -3569,22 +3589,22 @@ function MenuCallbackHandler:accept_crimenet_contract(item, node)
 	end
 end
 
--- Lines: 3804 to 3806
+-- Lines: 3838 to 3840
 function MenuCallbackHandler:kit_menu_ready()
 	managers.menu:close_menu("kit_menu")
 end
 
--- Lines: 3808 to 3810
+-- Lines: 3842 to 3844
 function MenuCallbackHandler:set_lan_game()
 	Global.game_settings.playing_lan = true
 end
 
--- Lines: 3812 to 3814
+-- Lines: 3846 to 3848
 function MenuCallbackHandler:set_not_lan_game()
 	Global.game_settings.playing_lan = nil
 end
 
--- Lines: 3816 to 3847
+-- Lines: 3850 to 3881
 function MenuCallbackHandler:get_matchmake_attributes()
 	local level_id = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
 	local difficulty_id = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
@@ -3617,17 +3637,17 @@ function MenuCallbackHandler:get_matchmake_attributes()
 	return attributes
 end
 
--- Lines: 3851 to 3853
+-- Lines: 3885 to 3887
 function MenuCallbackHandler:update_matchmake_attributes()
 	managers.network.matchmake:set_server_attributes(self:get_matchmake_attributes())
 end
 
--- Lines: 3855 to 3857
+-- Lines: 3889 to 3891
 function MenuCallbackHandler:create_lobby()
 	managers.network.matchmake:create_lobby(self:get_matchmake_attributes())
 end
 
--- Lines: 3861 to 3866
+-- Lines: 3895 to 3900
 function MenuCallbackHandler:play_single_player()
 	Global.game_settings.single_player = true
 
@@ -3635,7 +3655,7 @@ function MenuCallbackHandler:play_single_player()
 	Network:set_server()
 end
 
--- Lines: 3868 to 3873
+-- Lines: 3902 to 3907
 function MenuCallbackHandler:play_online_game()
 	Global.game_settings.single_player = false
 
@@ -3644,10 +3664,10 @@ function MenuCallbackHandler:play_online_game()
 	end
 end
 
--- Lines: 3881 to 3889
+-- Lines: 3915 to 3923
 function MenuCallbackHandler:play_safehouse(params)
 
-	-- Lines: 3876 to 3882
+	-- Lines: 3910 to 3916
 	local function yes_func()
 		self:play_single_player()
 
@@ -3668,7 +3688,7 @@ function MenuCallbackHandler:play_safehouse(params)
 	managers.menu:show_play_safehouse_question({yes_func = yes_func})
 end
 
--- Lines: 3892 to 3899
+-- Lines: 3926 to 3933
 function MenuCallbackHandler:play_short_heist(item)
 	Global.game_settings.team_ai = true
 	Global.game_settings.team_ai_option = 2
@@ -3680,7 +3700,7 @@ function MenuCallbackHandler:play_short_heist(item)
 	})
 end
 
--- Lines: 3902 to 3947
+-- Lines: 3936 to 3981
 function MenuCallbackHandler:_increase_infamous(yes_clbk)
 	managers.menu_scene:destroy_infamy_card()
 
@@ -3727,7 +3747,7 @@ function MenuCallbackHandler:_increase_infamous(yes_clbk)
 	end
 end
 
--- Lines: 3949 to 3978
+-- Lines: 3983 to 4012
 function MenuCallbackHandler:become_infamous(params)
 	if not self:can_become_infamous() then
 		return
@@ -3743,7 +3763,7 @@ function MenuCallbackHandler:become_infamous(params)
 
 	if infamous_cost <= managers.money:offshore() and managers.experience:current_level() >= 100 then
 
-		-- Lines: 3964 to 3969
+		-- Lines: 3998 to 4003
 		function params.yes_func()
 			local rank = managers.experience:current_rank() + 1
 
@@ -3754,7 +3774,7 @@ function MenuCallbackHandler:become_infamous(params)
 	end
 
 
-	-- Lines: 3971 to 3975
+	-- Lines: 4005 to 4009
 	function params.no_func()
 		if no_clbk then
 			no_clbk()
@@ -3764,15 +3784,20 @@ function MenuCallbackHandler:become_infamous(params)
 	managers.menu:show_confirm_become_infamous(params)
 end
 
--- Lines: 3982 to 3984
+-- Lines: 4015 to 4017
+function MenuCallbackHandler:toggle_adaptive_quality(item)
+	managers.user:set_setting("adaptive_quality", item:value() == "on")
+end
+
+-- Lines: 4020 to 4022
 function MenuCallbackHandler:choice_choose_video_adapter(item)
 	managers.viewport:set_adapter_index(item:value())
 end
 
--- Lines: 3989 to 4009
+-- Lines: 4027 to 4047
 function MenuCallbackHandler:apply_and_save_render_settings()
 
-	-- Lines: 3987 to 3990
+	-- Lines: 4025 to 4028
 	local function func()
 		Application:apply_render_settings()
 		Application:save_render_settings()
@@ -3807,39 +3832,39 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 	end
 end
 
--- Lines: 4011 to 4015
+-- Lines: 4049 to 4053
 function MenuCallbackHandler:choice_choose_texture_quality(item)
 	RenderSettings.texture_quality_default = item:value()
 
 	MenuCallbackHandler:apply_and_save_render_settings()
 end
 
--- Lines: 4017 to 4021
+-- Lines: 4055 to 4059
 function MenuCallbackHandler:choice_choose_shadow_quality(item)
 	RenderSettings.shadow_quality_default = item:value()
 
 	MenuCallbackHandler:apply_and_save_render_settings()
 end
 
--- Lines: 4023 to 4025
+-- Lines: 4061 to 4063
 function MenuCallbackHandler:toggle_gpu_flush_setting(item)
 	managers.user:set_setting("flush_gpu_command_queue", item:value() == "on")
 end
 
--- Lines: 4027 to 4031
+-- Lines: 4065 to 4069
 function MenuCallbackHandler:choice_choose_anisotropic(item)
 	RenderSettings.max_anisotropy = item:value()
 
 	MenuCallbackHandler:apply_and_save_render_settings()
 end
 
--- Lines: 4033 to 4036
+-- Lines: 4071 to 4074
 function MenuCallbackHandler:choice_fps_cap(item)
 	setup:set_fps_cap(item:value())
 	managers.user:set_setting("fps_cap", item:value())
 end
 
--- Lines: 4038 to 4043
+-- Lines: 4076 to 4081
 function MenuCallbackHandler:choice_choose_color_grading(item)
 	managers.user:set_setting("video_color_grading", item:value())
 
@@ -3848,37 +3873,37 @@ function MenuCallbackHandler:choice_choose_color_grading(item)
 	end
 end
 
--- Lines: 4045 to 4047
+-- Lines: 4083 to 4085
 function MenuCallbackHandler:choice_choose_menu_theme(item)
 	managers.menu:change_theme(item:value())
 end
 
--- Lines: 4050 to 4052
+-- Lines: 4088 to 4090
 function MenuCallbackHandler:choice_corpse_limit(item)
 	managers.user:set_setting("corpse_limit", item:value())
 end
 
--- Lines: 4056 to 4058
+-- Lines: 4094 to 4096
 function MenuCallbackHandler:choice_choose_ao(item)
 	managers.user:set_setting("video_ao", item:value())
 end
 
--- Lines: 4062 to 4064
+-- Lines: 4100 to 4102
 function MenuCallbackHandler:toggle_parallax(item)
 	managers.user:set_setting("parallax_mapping", item:value() == "on")
 end
 
--- Lines: 4068 to 4070
+-- Lines: 4106 to 4108
 function MenuCallbackHandler:choice_choose_aa(item)
 	managers.user:set_setting("video_aa", item:value())
 end
 
--- Lines: 4074 to 4076
+-- Lines: 4112 to 4114
 function MenuCallbackHandler:toggle_workshop(item)
 	managers.user:set_setting("workshop", item:value() == "on")
 end
 
--- Lines: 4079 to 4085
+-- Lines: 4117 to 4123
 function MenuCallbackHandler:choice_choose_anti_alias(item)
 	managers.user:set_setting("video_anti_alias", item:value())
 
@@ -3887,22 +3912,22 @@ function MenuCallbackHandler:choice_choose_anti_alias(item)
 	end
 end
 
--- Lines: 4087 to 4089
+-- Lines: 4125 to 4127
 function MenuCallbackHandler:choice_choose_anim_lod(item)
 	managers.user:set_setting("video_animation_lod", item:value())
 end
 
--- Lines: 4091 to 4093
+-- Lines: 4129 to 4131
 function MenuCallbackHandler:toggle_vsync(item)
 	managers.viewport:set_vsync(item:value() == "on")
 end
 
--- Lines: 4096 to 4098
+-- Lines: 4134 to 4136
 function MenuCallbackHandler:toggle_use_thq_weapon_parts(item)
 	managers.user:set_setting("use_thq_weapon_parts", item:value() == "on")
 end
 
--- Lines: 4100 to 4106
+-- Lines: 4138 to 4144
 function MenuCallbackHandler:toggle_streaks(item)
 	managers.user:set_setting("video_streaks", item:value() == "on")
 
@@ -3911,7 +3936,7 @@ function MenuCallbackHandler:toggle_streaks(item)
 	end
 end
 
--- Lines: 4108 to 4114
+-- Lines: 4146 to 4152
 function MenuCallbackHandler:toggle_light_adaption(item)
 	managers.user:set_setting("light_adaption", item:value() == "on")
 
@@ -3920,17 +3945,17 @@ function MenuCallbackHandler:toggle_light_adaption(item)
 	end
 end
 
--- Lines: 4117 to 4119
+-- Lines: 4155 to 4157
 function MenuCallbackHandler:toggle_lightfx(item)
 	managers.user:set_setting("use_lightfx", item:value() == "on")
 end
 
--- Lines: 4121 to 4123
+-- Lines: 4159 to 4161
 function MenuCallbackHandler:choice_max_streaming_chunk(item)
 	managers.user:set_setting("max_streaming_chunk", item:value())
 end
 
--- Lines: 4125 to 4132
+-- Lines: 4163 to 4170
 function MenuCallbackHandler:set_fov_multiplier(item)
 	local fov_multiplier = item:value()
 
@@ -3941,7 +3966,7 @@ function MenuCallbackHandler:set_fov_multiplier(item)
 	end
 end
 
--- Lines: 4135 to 4151
+-- Lines: 4173 to 4189
 function MenuCallbackHandler:set_fov_standard(item)
 	return
 
@@ -3964,7 +3989,7 @@ function MenuCallbackHandler:set_fov_standard(item)
 	end
 end
 
--- Lines: 4153 to 4169
+-- Lines: 4191 to 4207
 function MenuCallbackHandler:set_fov_zoom(item)
 	return
 
@@ -3987,22 +4012,22 @@ function MenuCallbackHandler:set_fov_zoom(item)
 	end
 end
 
--- Lines: 4171 to 4173
+-- Lines: 4209 to 4211
 function MenuCallbackHandler:toggle_headbob(item)
 	managers.user:set_setting("use_headbob", item:value() == "on")
 end
 
--- Lines: 4175 to 4177
+-- Lines: 4213 to 4215
 function MenuCallbackHandler:on_stage_success()
 	managers.mission:on_stage_success()
 end
 
--- Lines: 4179 to 4181
+-- Lines: 4217 to 4219
 function MenuCallbackHandler:lobby_start_the_game()
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines: 4183 to 4208
+-- Lines: 4221 to 4246
 function MenuCallbackHandler:leave_lobby()
 	if game_state_machine:current_state_name() == "ingame_lobby_menu" then
 		self:end_game()
@@ -4034,7 +4059,7 @@ function MenuCallbackHandler:leave_lobby()
 	return true
 end
 
--- Lines: 4212 to 4223
+-- Lines: 4250 to 4261
 function MenuCallbackHandler:_dialog_leave_lobby_yes()
 	if managers.network:session() then
 		managers.network:session():local_peer():set_in_lobby(false)
@@ -4045,14 +4070,14 @@ function MenuCallbackHandler:_dialog_leave_lobby_yes()
 	managers.menu:on_leave_lobby()
 end
 
--- Lines: 4225 to 4226
+-- Lines: 4263 to 4264
 function MenuCallbackHandler:_dialog_leave_lobby_no()
 end
 
--- Lines: 4245 to 4249
+-- Lines: 4283 to 4287
 function MenuCallbackHandler:connect_to_host_rpc(item)
 
-	-- Lines: 4229 to 4246
+	-- Lines: 4267 to 4284
 	local function f(res)
 		if res == "JOINED_LOBBY" then
 			self:on_enter_lobby()
@@ -4072,7 +4097,7 @@ function MenuCallbackHandler:connect_to_host_rpc(item)
 	managers.network:join_game_at_host_rpc(item:parameters().rpc, f)
 end
 
--- Lines: 4251 to 4268
+-- Lines: 4289 to 4306
 function MenuCallbackHandler:host_multiplayer(item)
 	managers.network:host_game()
 
@@ -4085,10 +4110,10 @@ function MenuCallbackHandler:host_multiplayer(item)
 	managers.network:session():load_level(level_name, nil, nil, nil, level_id)
 end
 
--- Lines: 4279 to 4282
+-- Lines: 4317 to 4320
 function MenuCallbackHandler:join_multiplayer()
 
-	-- Lines: 4271 to 4280
+	-- Lines: 4309 to 4318
 	local function f(new_host_rpc)
 		if new_host_rpc then
 			managers.menu:active_menu().logic:refresh_node("select_host")
@@ -4098,11 +4123,11 @@ function MenuCallbackHandler:join_multiplayer()
 	managers.network:discover_hosts(f)
 end
 
--- Lines: 4284 to 4293
+-- Lines: 4322 to 4331
 function MenuCallbackHandler:find_lan_games()
 	if self:is_win32() then
 
-		-- Lines: 4286 to 4290
+		-- Lines: 4324 to 4328
 		local function f(new_host_rpc)
 			if new_host_rpc then
 				managers.menu:active_menu().logic:refresh_node("play_lan")
@@ -4113,21 +4138,21 @@ function MenuCallbackHandler:find_lan_games()
 	end
 end
 
--- Lines: 4295 to 4297
+-- Lines: 4333 to 4335
 function MenuCallbackHandler:find_online_games_with_friends()
 	self:_find_online_games(true)
 end
 
--- Lines: 4299 to 4301
+-- Lines: 4337 to 4339
 function MenuCallbackHandler:find_online_games()
 	self:_find_online_games()
 end
 
--- Lines: 4303 to 4361
+-- Lines: 4341 to 4399
 function MenuCallbackHandler:_find_online_games(friends_only)
 	if self:is_win32() then
 
-		-- Lines: 4305 to 4310
+		-- Lines: 4343 to 4348
 		local function f(info)
 			print("info in function")
 			print(inspect(info))
@@ -4139,7 +4164,7 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 		managers.network.matchmake:search_lobby(friends_only)
 
 
-		-- Lines: 4316 to 4327
+		-- Lines: 4354 to 4365
 		local function usrs_f(success, amount)
 			print("usrs_f", success, amount)
 
@@ -4163,7 +4188,7 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 		end
 
 
-		-- Lines: 4340 to 4345
+		-- Lines: 4378 to 4383
 		local function f(info_list)
 			print("info_list in function")
 			print(inspect(info_list))
@@ -4176,12 +4201,12 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 	end
 end
 
--- Lines: 4366 to 4368
+-- Lines: 4404 to 4406
 function MenuCallbackHandler:connect_to_lobby(item)
 	managers.network.matchmake:join_server_with_check(item:parameters().room_id)
 end
 
--- Lines: 4374 to 4379
+-- Lines: 4412 to 4417
 function MenuCallbackHandler:stop_multiplayer()
 	Global.game_settings.single_player = false
 
@@ -4190,11 +4215,11 @@ function MenuCallbackHandler:stop_multiplayer()
 	end
 end
 
--- Lines: 4383 to 4384
+-- Lines: 4421 to 4422
 function MenuCallbackHandler:find_friends()
 end
 
--- Lines: 4387 to 4396
+-- Lines: 4425 to 4434
 function MenuCallbackHandler:invite_friends()
 	if managers.network.matchmake.lobby_handler then
 		if MenuCallbackHandler:is_overlay_enabled() then
@@ -4205,7 +4230,7 @@ function MenuCallbackHandler:invite_friends()
 	end
 end
 
--- Lines: 4400 to 4405
+-- Lines: 4438 to 4443
 function MenuCallbackHandler:invite_friend(item)
 	if item:parameters().signin_status ~= "signed_in" then
 		return
@@ -4214,14 +4239,14 @@ function MenuCallbackHandler:invite_friend(item)
 	managers.network.matchmake:send_join_invite(item:parameters().friend)
 end
 
--- Lines: 4418 to 4421
+-- Lines: 4456 to 4459
 function MenuCallbackHandler:invite_friends_X360()
 	local platform_id = managers.user:get_platform_id()
 
 	XboxLive:show_friends_ui(platform_id)
 end
 
--- Lines: 4423 to 4428
+-- Lines: 4461 to 4466
 function MenuCallbackHandler:invite_friends_XB1()
 	if managers.network.matchmake._session then
 		local platform_id = managers.user:get_platform_id()
@@ -4230,35 +4255,35 @@ function MenuCallbackHandler:invite_friends_XB1()
 	end
 end
 
--- Lines: 4431 to 4434
+-- Lines: 4469 to 4472
 function MenuCallbackHandler:invite_xbox_live_party()
 	local platform_id = managers.user:get_platform_id()
 
 	XboxLive:show_party_ui(platform_id)
 end
 
--- Lines: 4437 to 4439
+-- Lines: 4475 to 4477
 function MenuCallbackHandler:invite_friends_ps4()
 	PSN:invite_friends()
 end
 
--- Lines: 4441 to 4446
+-- Lines: 4479 to 4484
 function MenuCallbackHandler:view_invites()
 	print("View invites")
 	print(PSN:display_message_invitation())
 end
 
--- Lines: 4449 to 4450
+-- Lines: 4487 to 4488
 function MenuCallbackHandler:waiting_players_visible(item)
 	return #managers.wait:list_of_waiting() > 0
 end
 
--- Lines: 4453 to 4455
+-- Lines: 4491 to 4493
 function MenuCallbackHandler:show_waiting_players(item)
 	managers.wait:spawn_all_waiting()
 end
 
--- Lines: 4458 to 4464
+-- Lines: 4496 to 4502
 function MenuCallbackHandler:kick_player(item)
 	if managers.vote:option_host_kick() then
 		managers.vote:message_host_kick(item:parameters().peer)
@@ -4267,7 +4292,7 @@ function MenuCallbackHandler:kick_player(item)
 	end
 end
 
--- Lines: 4466 to 4480
+-- Lines: 4504 to 4518
 function MenuCallbackHandler:mute_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:mute_player(item:parameters().peer, item:value() == "on")
@@ -4283,7 +4308,7 @@ function MenuCallbackHandler:mute_player(item)
 	end
 end
 
--- Lines: 4482 to 4487
+-- Lines: 4520 to 4525
 function MenuCallbackHandler:mute_xbox_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:set_muted(item:parameters().xuid, item:value() == "on")
@@ -4291,7 +4316,7 @@ function MenuCallbackHandler:mute_xbox_player(item)
 	end
 end
 
--- Lines: 4489 to 4494
+-- Lines: 4527 to 4532
 function MenuCallbackHandler:mute_xb1_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:set_muted(item:parameters().xuid, item:value() == "on")
@@ -4299,7 +4324,7 @@ function MenuCallbackHandler:mute_xb1_player(item)
 	end
 end
 
--- Lines: 4496 to 4501
+-- Lines: 4534 to 4539
 function MenuCallbackHandler:mute_ps4_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:mute_player(item:value() == "on", item:parameters().peer)
@@ -4307,7 +4332,7 @@ function MenuCallbackHandler:mute_ps4_player(item)
 	end
 end
 
--- Lines: 4504 to 4529
+-- Lines: 4542 to 4567
 function MenuCallbackHandler:restart_level(item)
 	if not managers.vote:available() or managers.vote:is_restarting() then
 		return
@@ -4339,22 +4364,22 @@ function MenuCallbackHandler:restart_level(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 4531 to 4533
+-- Lines: 4569 to 4571
 function MenuCallbackHandler:view_gamer_card(item)
 	XboxLive:show_gamer_card_ui(managers.user:get_platform_id(), item:parameters().xuid)
 end
 
--- Lines: 4535 to 4537
+-- Lines: 4573 to 4575
 function MenuCallbackHandler:save_settings()
 	managers.savefile:save_setting(true)
 end
 
--- Lines: 4539 to 4541
+-- Lines: 4577 to 4579
 function MenuCallbackHandler:save_progress()
 	managers.savefile:save_progress()
 end
 
--- Lines: 4543 to 4548
+-- Lines: 4581 to 4586
 function MenuCallbackHandler:debug_level_jump(item)
 	local param_map = item:parameters()
 
@@ -4365,7 +4390,7 @@ function MenuCallbackHandler:debug_level_jump(item)
 	managers.network:session():load_level(param_map.level, param_map.mission, param_map.world_setting, param_map.level_class_name, level_id, nil)
 end
 
--- Lines: 4550 to 4561
+-- Lines: 4588 to 4599
 function MenuCallbackHandler:save_game(item)
 	if not managers.savefile:is_active() then
 		local param_map = item:parameters()
@@ -4380,13 +4405,13 @@ function MenuCallbackHandler:save_game(item)
 	end
 end
 
--- Lines: 4563 to 4566
+-- Lines: 4601 to 4604
 function MenuCallbackHandler:save_game_callback()
 	managers.menu:set_save_game_callback(nil)
 	managers.menu:back()
 end
 
--- Lines: 4570 to 4601
+-- Lines: 4608 to 4645
 function MenuCallbackHandler:start_the_game()
 	local mutators_manager = managers.mutators
 
@@ -4420,12 +4445,12 @@ function MenuCallbackHandler:start_the_game()
 	managers.network:session():load_level(level_name, mission, world_setting, nil, level_id)
 end
 
--- Lines: 4604 to 4606
+-- Lines: 4648 to 4650
 function MenuCallbackHandler:cancel_start_the_game_countdown()
 	managers.mutators:start_the_game_countdown_cancelled()
 end
 
--- Lines: 4609 to 4618
+-- Lines: 4653 to 4662
 function MenuCallbackHandler:restart_game(item)
 	managers.menu:show_restart_game_dialog({yes_func = function ()
 		if managers.job:stage_success() then
@@ -4438,7 +4463,7 @@ function MenuCallbackHandler:restart_game(item)
 	end})
 end
 
--- Lines: 4620 to 4631
+-- Lines: 4664 to 4675
 function MenuCallbackHandler:set_music_volume(item)
 	local volume = item:value()
 	local old_volume = managers.user:get_setting("music_volume")
@@ -4452,7 +4477,7 @@ function MenuCallbackHandler:set_music_volume(item)
 	end
 end
 
--- Lines: 4633 to 4644
+-- Lines: 4677 to 4688
 function MenuCallbackHandler:set_sfx_volume(item)
 	local volume = item:value()
 	local old_volume = managers.user:get_setting("sfx_volume")
@@ -4466,7 +4491,7 @@ function MenuCallbackHandler:set_sfx_volume(item)
 	end
 end
 
--- Lines: 4646 to 4657
+-- Lines: 4690 to 4701
 function MenuCallbackHandler:set_voice_volume(item)
 	local volume = item:value()
 	local old_volume = managers.user:get_setting("voice_volume")
@@ -4480,21 +4505,21 @@ function MenuCallbackHandler:set_voice_volume(item)
 	end
 end
 
--- Lines: 4659 to 4662
+-- Lines: 4703 to 4706
 function MenuCallbackHandler:set_brightness(item)
 	local brightness = item:value()
 
 	managers.user:set_setting("brightness", brightness)
 end
 
--- Lines: 4664 to 4668
+-- Lines: 4708 to 4712
 function MenuCallbackHandler:set_effect_quality(item)
 	local effect_quality = item:value()
 
 	managers.user:set_setting("effect_quality", effect_quality)
 end
 
--- Lines: 4670 to 4682
+-- Lines: 4714 to 4726
 function MenuCallbackHandler:_update_linked_sliders(linked_sliders, value)
 	local triggers = {}
 
@@ -4512,7 +4537,7 @@ function MenuCallbackHandler:_update_linked_sliders(linked_sliders, value)
 	end
 end
 
--- Lines: 4684 to 4695
+-- Lines: 4728 to 4739
 function MenuCallbackHandler:set_camera_sensitivity(item)
 	local value = item:value()
 
@@ -4528,7 +4553,7 @@ function MenuCallbackHandler:set_camera_sensitivity(item)
 	end
 end
 
--- Lines: 4697 to 4703
+-- Lines: 4741 to 4747
 function MenuCallbackHandler:set_camera_sensitivity_x(item)
 	local value = item:value()
 
@@ -4543,7 +4568,7 @@ function MenuCallbackHandler:set_camera_sensitivity_x(item)
 	end
 end
 
--- Lines: 4705 to 4711
+-- Lines: 4749 to 4755
 function MenuCallbackHandler:set_camera_sensitivity_y(item)
 	local value = item:value()
 
@@ -4558,14 +4583,14 @@ function MenuCallbackHandler:set_camera_sensitivity_y(item)
 	end
 end
 
--- Lines: 4713 to 4720
+-- Lines: 4757 to 4764
 function MenuCallbackHandler:toggle_camera_sensitivity_separate(item)
 	local value = item:value() == "on"
 
 	managers.user:set_setting("enable_camera_sensitivity_separate", value)
 end
 
--- Lines: 4722 to 4733
+-- Lines: 4766 to 4777
 function MenuCallbackHandler:set_camera_zoom_sensitivity(item)
 	local value = item:value()
 
@@ -4581,7 +4606,7 @@ function MenuCallbackHandler:set_camera_zoom_sensitivity(item)
 	end
 end
 
--- Lines: 4735 to 4742
+-- Lines: 4779 to 4786
 function MenuCallbackHandler:set_camera_zoom_sensitivity_x(item)
 	local value = item:value()
 
@@ -4596,7 +4621,7 @@ function MenuCallbackHandler:set_camera_zoom_sensitivity_x(item)
 	end
 end
 
--- Lines: 4744 to 4751
+-- Lines: 4788 to 4795
 function MenuCallbackHandler:set_camera_zoom_sensitivity_y(item)
 	local value = item:value()
 
@@ -4611,7 +4636,7 @@ function MenuCallbackHandler:set_camera_zoom_sensitivity_y(item)
 	end
 end
 
--- Lines: 4753 to 4763
+-- Lines: 4797 to 4807
 function MenuCallbackHandler:toggle_zoom_sensitivity(item)
 	local value = item:value() == "on"
 
@@ -4626,19 +4651,19 @@ function MenuCallbackHandler:toggle_zoom_sensitivity(item)
 	end
 end
 
--- Lines: 4765 to 4768
+-- Lines: 4809 to 4812
 function MenuCallbackHandler:toggle_fov_based_zoom(item)
 	local value = item:value() == "on"
 
 	managers.user:set_setting("enable_fov_based_sensitivity", value)
 end
 
--- Lines: 4770 to 4771
+-- Lines: 4814 to 4815
 function MenuCallbackHandler:is_current_resolution(item)
 	return item:name() == string.format("%d x %d", RenderSettings.resolution.x, RenderSettings.resolution.y)
 end
 
--- Lines: 4775 to 4791
+-- Lines: 4819 to 4835
 function MenuCallbackHandler:end_game()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -4661,7 +4686,7 @@ function MenuCallbackHandler:end_game()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 4793 to 4823
+-- Lines: 4837 to 4867
 function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.platform:set_playing(false)
 	managers.job:clear_saved_ghost_bonus()
@@ -4686,10 +4711,10 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	setup:load_start_menu()
 end
 
--- Lines: 4828 to 4831
+-- Lines: 4872 to 4875
 function MenuCallbackHandler:leave_safehouse()
 
-	-- Lines: 4826 to 4829
+	-- Lines: 4870 to 4873
 	local function yes_func()
 		Global.load_crime_net = true
 
@@ -4699,7 +4724,7 @@ function MenuCallbackHandler:leave_safehouse()
 	managers.menu:show_leave_safehouse_dialog({yes_func = yes_func})
 end
 
--- Lines: 4833 to 4841
+-- Lines: 4877 to 4885
 function MenuCallbackHandler:leave_mission()
 	if game_state_machine:current_state_name() ~= "disconnected" then
 		if self:is_singleplayer() then
@@ -4710,14 +4735,14 @@ function MenuCallbackHandler:leave_mission()
 	end
 end
 
--- Lines: 4843 to 4854
+-- Lines: 4887 to 4898
 function MenuCallbackHandler:abort_mission()
 	if game_state_machine:current_state_name() == "disconnected" then
 		return
 	end
 
 
-	-- Lines: 4848 to 4852
+	-- Lines: 4892 to 4896
 	local function yes_func()
 		if game_state_machine:current_state_name() ~= "disconnected" then
 			self:load_start_menu_lobby()
@@ -4727,7 +4752,7 @@ function MenuCallbackHandler:abort_mission()
 	managers.menu:show_abort_mission_dialog({yes_func = yes_func})
 end
 
--- Lines: 4856 to 4887
+-- Lines: 4900 to 4931
 function MenuCallbackHandler:load_start_menu_lobby()
 	managers.job:clear_saved_ghost_bonus()
 	managers.job:stop_sounds()
@@ -4736,17 +4761,17 @@ function MenuCallbackHandler:load_start_menu_lobby()
 	managers.network:session():load_lobby()
 end
 
--- Lines: 4889 to 4890
+-- Lines: 4933 to 4934
 function MenuCallbackHandler:_dialog_end_game_no()
 end
 
--- Lines: 4892 to 4895
+-- Lines: 4936 to 4939
 function MenuCallbackHandler:_reset_mainmusic()
 	managers.music:post_event("stop_all_music")
 	managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
 end
 
--- Lines: 4897 to 4911
+-- Lines: 4941 to 4955
 function MenuCallbackHandler:show_steam_controller_binding_panel()
 	if MenuCallbackHandler:is_not_steam_controller() then
 		return
@@ -4765,7 +4790,7 @@ function MenuCallbackHandler:show_steam_controller_binding_panel()
 	end
 end
 
--- Lines: 4913 to 4926
+-- Lines: 4957 to 4970
 function MenuCallbackHandler:set_default_options()
 	local params = {
 		text = managers.localization:text("dialog_default_options_message"),
@@ -4785,7 +4810,7 @@ function MenuCallbackHandler:set_default_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines: 4928 to 4934
+-- Lines: 4972 to 4978
 function MenuCallbackHandler:set_default_control_options()
 	local params = {
 		text = managers.localization:text("dialog_default_controls_options_message"),
@@ -4798,7 +4823,7 @@ function MenuCallbackHandler:set_default_control_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines: 4936 to 4953
+-- Lines: 4980 to 4997
 function MenuCallbackHandler:set_default_video_options()
 	local params = {
 		text = managers.localization:text("dialog_default_video_options_message"),
@@ -4819,7 +4844,7 @@ function MenuCallbackHandler:set_default_video_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines: 4955 to 4961
+-- Lines: 4999 to 5005
 function MenuCallbackHandler:set_default_sound_options()
 	local params = {
 		text = managers.localization:text("dialog_default_sound_options_message"),
@@ -4834,7 +4859,7 @@ function MenuCallbackHandler:set_default_sound_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines: 4963 to 4969
+-- Lines: 5007 to 5013
 function MenuCallbackHandler:set_default_network_options()
 	local params = {
 		text = managers.localization:text("dialog_default_network_options_message"),
@@ -4847,19 +4872,19 @@ function MenuCallbackHandler:set_default_network_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines: 4971 to 4973
+-- Lines: 5015 to 5017
 function MenuCallbackHandler:resume_game()
 	managers.menu:close_menu("menu_pause")
 end
 
--- Lines: 4976 to 4979
+-- Lines: 5020 to 5023
 function MenuManager:on_heister_interaction()
 	self:open_menu("heister_interact_menu")
 
 	self._heister_interaction = true
 end
 
--- Lines: 4981 to 4990
+-- Lines: 5025 to 5034
 function MenuManager:on_resume_heister_interaction()
 	self:close_menu("heister_interact_menu")
 
@@ -4871,16 +4896,16 @@ function MenuManager:on_resume_heister_interaction()
 	end
 end
 
--- Lines: 4992 to 4994
+-- Lines: 5036 to 5038
 function MenuCallbackHandler:heister_interaction_resume_game()
 	managers.menu:on_resume_heister_interaction()
 end
 
--- Lines: 4997 to 4998
+-- Lines: 5041 to 5042
 function MenuCallbackHandler:change_upgrade(menu_item)
 end
 
--- Lines: 5000 to 5008
+-- Lines: 5044 to 5052
 function MenuCallbackHandler:delayed_open_savefile_menu(item)
 	if not self._delayed_open_savefile_menu_callback then
 		if managers.savefile:is_active() then
@@ -4891,7 +4916,7 @@ function MenuCallbackHandler:delayed_open_savefile_menu(item)
 	end
 end
 
--- Lines: 5010 to 5015
+-- Lines: 5054 to 5059
 function MenuCallbackHandler:open_savefile_menu(item)
 	managers.menu:set_delayed_open_savefile_menu_callback(nil)
 
@@ -4900,12 +4925,12 @@ function MenuCallbackHandler:open_savefile_menu(item)
 	managers.menu:open_node(parameter_map.delayed_node, {parameter_map})
 end
 
--- Lines: 5017 to 5019
+-- Lines: 5061 to 5063
 function MenuCallbackHandler:hide_huds()
 	managers.hud:set_disabled()
 end
 
--- Lines: 5021 to 5027
+-- Lines: 5065 to 5071
 function MenuCallbackHandler:toggle_hide_huds(item)
 	if item:value() == "on" then
 		managers.hud:set_disabled()
@@ -4914,17 +4939,17 @@ function MenuCallbackHandler:toggle_hide_huds(item)
 	end
 end
 
--- Lines: 5029 to 5031
+-- Lines: 5073 to 5075
 function MenuCallbackHandler:toggle_mission_fading_debug_enabled(item)
 	managers.mission:set_fading_debug_enabled(item:value() == "off")
 end
 
--- Lines: 5033 to 5035
+-- Lines: 5077 to 5079
 function MenuCallbackHandler:menu_back()
 	managers.menu:back()
 end
 
--- Lines: 5037 to 5053
+-- Lines: 5081 to 5097
 function MenuCallbackHandler:clear_progress()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -4947,7 +4972,7 @@ function MenuCallbackHandler:clear_progress()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 5055 to 5070
+-- Lines: 5099 to 5114
 function MenuCallbackHandler:_dialog_clear_progress_yes()
 	managers.menu:do_clear_progress()
 
@@ -4959,11 +4984,11 @@ function MenuCallbackHandler:_dialog_clear_progress_yes()
 	managers.savefile:save_setting(true)
 end
 
--- Lines: 5072 to 5073
+-- Lines: 5116 to 5117
 function MenuCallbackHandler:_dialog_clear_progress_no()
 end
 
--- Lines: 5075 to 5091
+-- Lines: 5119 to 5135
 function MenuCallbackHandler:set_default_controller(item)
 	local params = {
 		text = managers.localization:text("dialog_use_default_keys_message"),
@@ -4982,14 +5007,14 @@ function MenuCallbackHandler:set_default_controller(item)
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines: 5093 to 5096
+-- Lines: 5137 to 5140
 function MenuCallbackHandler:choice_button_layout_category(item)
 	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
 	node_gui:set_current_category(item:value())
 end
 
--- Lines: 5098 to 5121
+-- Lines: 5142 to 5165
 function MenuCallbackHandler:debug_goto_custody()
 	local player = managers.player:player_unit()
 
@@ -5016,7 +5041,7 @@ function MenuCallbackHandler:debug_goto_custody()
 end
 MenuUpgrades = MenuUpgrades or class()
 
--- Lines: 5128 to 5173
+-- Lines: 5172 to 5217
 function MenuUpgrades:modify_node(node, up, ...)
 	local new_node = up and node or deep_clone(node)
 	local tree = new_node:parameters().tree
@@ -5060,7 +5085,7 @@ function MenuUpgrades:modify_node(node, up, ...)
 	return new_node
 end
 
--- Lines: 5176 to 5187
+-- Lines: 5220 to 5231
 function MenuCallbackHandler:toggle_visual_upgrade(item)
 	managers.upgrades:toggle_visual_weapon_upgrade(item:parameters().upgrade_id)
 	managers.upgrades:setup_current_weapon()
@@ -5075,12 +5100,12 @@ function MenuCallbackHandler:toggle_visual_upgrade(item)
 end
 InviteFriendsPSN = InviteFriendsPSN or class()
 
--- Lines: 5195 to 5211
+-- Lines: 5239 to 5255
 function InviteFriendsPSN:modify_node(node, up)
 	local new_node = up and node or deep_clone(node)
 
 
-	-- Lines: 5202 to 5204
+	-- Lines: 5246 to 5248
 	local function f2(friends)
 		managers.menu:active_menu().logic:refresh_node("invite_friends", true, friends)
 	end
@@ -5093,7 +5118,7 @@ function InviteFriendsPSN:modify_node(node, up)
 	return new_node
 end
 
--- Lines: 5215 to 5245
+-- Lines: 5259 to 5289
 function InviteFriendsPSN:refresh_node(node, friends)
 	for i, friend in ipairs(friends) do
 		if i < 103 then
@@ -5122,7 +5147,7 @@ function InviteFriendsPSN:refresh_node(node, friends)
 	return node
 end
 
--- Lines: 5278 to 5286
+-- Lines: 5322 to 5330
 function InviteFriendsPSN:update_node(node)
 	if self._update_friends_t and Application:time() < self._update_friends_t then
 		return
@@ -5134,22 +5159,22 @@ function InviteFriendsPSN:update_node(node)
 end
 InviteFriendsSTEAM = InviteFriendsSTEAM or class()
 
--- Lines: 5394 to 5395
+-- Lines: 5438 to 5439
 function InviteFriendsSTEAM:modify_node(node, up)
 	return node
 end
 
--- Lines: 5398 to 5399
+-- Lines: 5442 to 5443
 function InviteFriendsSTEAM:refresh_node(node, friend)
 	return node
 end
 
--- Lines: 5402 to 5403
+-- Lines: 5446 to 5447
 function InviteFriendsSTEAM:update_node(node)
 end
 PauseMenu = PauseMenu or class()
 
--- Lines: 5408 to 5422
+-- Lines: 5452 to 5466
 function PauseMenu:modify_node(node)
 	local item = node:item("restart_vote")
 
@@ -5169,13 +5194,13 @@ function PauseMenu:modify_node(node)
 	return node
 end
 
--- Lines: 5425 to 5426
+-- Lines: 5469 to 5470
 function PauseMenu:refresh_node(node)
 	return self:modify_node(node)
 end
 KickPlayer = KickPlayer or class()
 
--- Lines: 5432 to 5461
+-- Lines: 5476 to 5505
 function KickPlayer:modify_node(node, up)
 	node:clean_items()
 
@@ -5207,13 +5232,13 @@ function KickPlayer:modify_node(node, up)
 	return node
 end
 
--- Lines: 5464 to 5465
+-- Lines: 5508 to 5509
 function KickPlayer:refresh_node(node)
 	return self:modify_node(node)
 end
 MutePlayer = MutePlayer or class()
 
--- Lines: 5471 to 5501
+-- Lines: 5515 to 5545
 function MutePlayer:modify_node(node, up)
 	local new_node = deep_clone(node)
 
@@ -5272,7 +5297,7 @@ function MutePlayer:modify_node(node, up)
 end
 MutePlayerX360 = MutePlayerX360 or class()
 
--- Lines: 5506 to 5538
+-- Lines: 5550 to 5582
 function MutePlayerX360:modify_node(node, up)
 	local new_node = deep_clone(node)
 
@@ -5332,7 +5357,7 @@ function MutePlayerX360:modify_node(node, up)
 end
 MutePlayerXB1 = MutePlayerXB1 or class()
 
--- Lines: 5543 to 5575
+-- Lines: 5587 to 5619
 function MutePlayerXB1:modify_node(node, up)
 	local new_node = deep_clone(node)
 
@@ -5392,7 +5417,7 @@ function MutePlayerXB1:modify_node(node, up)
 end
 MutePlayerPS4 = MutePlayerPS4 or class()
 
--- Lines: 5580 to 5612
+-- Lines: 5624 to 5656
 function MutePlayerPS4:modify_node(node, up)
 	local new_node = deep_clone(node)
 
@@ -5451,7 +5476,7 @@ function MutePlayerPS4:modify_node(node, up)
 end
 ViewGamerCard = ViewGamerCard or class()
 
--- Lines: 5618 to 5639
+-- Lines: 5662 to 5683
 function ViewGamerCard:modify_node(node, up)
 	local new_node = deep_clone(node)
 
@@ -5477,14 +5502,14 @@ function ViewGamerCard:modify_node(node, up)
 end
 MenuPSNHostBrowser = MenuPSNHostBrowser or class()
 
--- Lines: 5646 to 5649
+-- Lines: 5690 to 5693
 function MenuPSNHostBrowser:modify_node(node, up)
 	local new_node = up and node or deep_clone(node)
 
 	return new_node
 end
 
--- Lines: 5652 to 5658
+-- Lines: 5696 to 5702
 function MenuPSNHostBrowser:update_node(node)
 	if #PSN:get_world_list() == 0 then
 		return
@@ -5493,7 +5518,7 @@ function MenuPSNHostBrowser:update_node(node)
 	managers.network.matchmake:start_search_lobbys(managers.network.matchmake:searching_friends_only())
 end
 
--- Lines: 5660 to 5695
+-- Lines: 5704 to 5739
 function MenuPSNHostBrowser:add_filter(node)
 	if node:item("difficulty_filter") then
 		return
@@ -5550,7 +5575,7 @@ function MenuPSNHostBrowser:add_filter(node)
 	node:add_item(new_item)
 end
 
--- Lines: 5702 to 5808
+-- Lines: 5746 to 5852
 function MenuPSNHostBrowser:refresh_node(node, info_list, friends_only)
 	local new_node = node
 
@@ -5656,19 +5681,19 @@ function MenuPSNHostBrowser:refresh_node(node, info_list, friends_only)
 end
 MenuSTEAMHostBrowser = MenuSTEAMHostBrowser or class()
 
--- Lines: 5815 to 5817
+-- Lines: 5859 to 5861
 function MenuSTEAMHostBrowser:modify_node(node, up)
 	local new_node = up and node or deep_clone(node)
 
 	return new_node
 end
 
--- Lines: 5825 to 5827
+-- Lines: 5869 to 5871
 function MenuSTEAMHostBrowser:update_node(node)
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
--- Lines: 5830 to 5884
+-- Lines: 5874 to 5928
 function MenuSTEAMHostBrowser:add_filter(node)
 	if node:item("server_filter") then
 		return
@@ -5761,7 +5786,7 @@ function MenuSTEAMHostBrowser:add_filter(node)
 	node:add_item(new_item)
 end
 
--- Lines: 5887 to 6005
+-- Lines: 5931 to 6049
 function MenuSTEAMHostBrowser:refresh_node(node, info, friends_only)
 	local new_node = node
 
@@ -5870,14 +5895,14 @@ function MenuSTEAMHostBrowser:refresh_node(node, info, friends_only)
 end
 MenuLANHostBrowser = MenuLANHostBrowser or class()
 
--- Lines: 6015 to 6017
+-- Lines: 6059 to 6061
 function MenuLANHostBrowser:modify_node(node, up)
 	local new_node = up and node or deep_clone(node)
 
 	return new_node
 end
 
--- Lines: 6020 to 6073
+-- Lines: 6064 to 6117
 function MenuLANHostBrowser:refresh_node(node)
 	local new_node = node
 	local hosts = managers.network:session():discovered_hosts()
@@ -5938,7 +5963,7 @@ function MenuLANHostBrowser:refresh_node(node)
 end
 MenuMPHostBrowser = MenuMPHostBrowser or class()
 
--- Lines: 6080 to 6085
+-- Lines: 6124 to 6129
 function MenuMPHostBrowser:modify_node(node, up)
 	local new_node = up and node or deep_clone(node)
 
@@ -5947,7 +5972,7 @@ function MenuMPHostBrowser:modify_node(node, up)
 	return new_node
 end
 
--- Lines: 6088 to 6153
+-- Lines: 6132 to 6197
 function MenuMPHostBrowser:refresh_node(node)
 	local new_node = node
 	local hosts = managers.network:session():discovered_hosts()
@@ -6013,7 +6038,7 @@ function MenuMPHostBrowser:refresh_node(node)
 end
 MenuResolutionCreator = MenuResolutionCreator or class()
 
--- Lines: 6159 to 6186
+-- Lines: 6203 to 6230
 function MenuResolutionCreator:modify_node(node)
 	local new_node = deep_clone(node)
 
@@ -6045,7 +6070,7 @@ function MenuResolutionCreator:modify_node(node)
 end
 MenuSoundCreator = MenuSoundCreator or class()
 
--- Lines: 6190 to 6236
+-- Lines: 6234 to 6280
 function MenuSoundCreator:modify_node(node)
 	local music_item = node:item("music_volume")
 
@@ -6099,12 +6124,12 @@ function MenuSoundCreator:modify_node(node)
 	return node
 end
 
--- Lines: 6239 to 6241
+-- Lines: 6283 to 6285
 function MenuSoundCreator:refresh_node(node)
 	self:modify_node(node)
 end
 
--- Lines: 6245 to 6306
+-- Lines: 6289 to 6350
 function MenuManager.refresh_level_select(node, verify_dlc_owned)
 	if verify_dlc_owned and tweak_data.levels[Global.game_settings.level_id].dlc then
 		local dlcs = string.split(managers.dlc:dlcs_string(), " ")
@@ -6180,7 +6205,7 @@ function MenuManager.refresh_level_select(node, verify_dlc_owned)
 end
 MenuPSNPlayerProfileInitiator = MenuPSNPlayerProfileInitiator or class()
 
--- Lines: 6309 to 6313
+-- Lines: 6353 to 6357
 function MenuPSNPlayerProfileInitiator:modify_node(node)
 	if (managers.menu:is_ps3() or managers.menu:is_ps4()) and not managers.network:session() then
 		PSN:set_online_callback(callback(managers.menu, managers.menu, "refresh_player_profile_gui"))
@@ -6190,7 +6215,7 @@ function MenuPSNPlayerProfileInitiator:modify_node(node)
 end
 GlobalSuccessRateInitiator = GlobalSuccessRateInitiator or class()
 
--- Lines: 6317 to 6319
+-- Lines: 6361 to 6363
 function GlobalSuccessRateInitiator:modify_node(node)
 	managers.menu:show_global_success(node)
 
@@ -6198,7 +6223,7 @@ function GlobalSuccessRateInitiator:modify_node(node)
 end
 LobbyOptionInitiator = LobbyOptionInitiator or class()
 
--- Lines: 6324 to 6407
+-- Lines: 6368 to 6451
 function LobbyOptionInitiator:modify_node(node)
 	MenuManager.refresh_level_select(node, Network:is_server())
 
@@ -6271,7 +6296,7 @@ function LobbyOptionInitiator:modify_node(node)
 end
 VerifyLevelOptionInitiator = VerifyLevelOptionInitiator or class()
 
--- Lines: 6411 to 6413
+-- Lines: 6455 to 6457
 function VerifyLevelOptionInitiator:modify_node(node)
 	MenuManager.refresh_level_select(node, true)
 
@@ -6493,7 +6518,7 @@ MenuCustomizeControllerCreator.CONTROLS_INFO.drop_in_kick = {
 	text_id = "menu_button_drop_in_kick"
 }
 
--- Lines: 6490 to 6497
+-- Lines: 6534 to 6541
 function MenuCustomizeControllerCreator.controls_info_by_category(category)
 	local t = {}
 
@@ -6506,21 +6531,21 @@ function MenuCustomizeControllerCreator.controls_info_by_category(category)
 	return t
 end
 
--- Lines: 6500 to 6502
+-- Lines: 6544 to 6546
 function MenuCustomizeControllerCreator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node)
 end
 
--- Lines: 6505 to 6507
+-- Lines: 6549 to 6551
 function MenuCustomizeControllerCreator:refresh_node(node)
 	self:setup_node(node)
 
 	return node
 end
 
--- Lines: 6511 to 6587
+-- Lines: 6555 to 6631
 function MenuCustomizeControllerCreator:setup_node(node)
 	local new_node = node
 	local controller_category = node:parameters().controller_category or "normal"
@@ -6608,7 +6633,7 @@ function MenuCustomizeControllerCreator:setup_node(node)
 end
 MenuCrimeNetContractInitiator = MenuCrimeNetContractInitiator or class()
 
--- Lines: 6592 to 6663
+-- Lines: 6636 to 6713
 function MenuCrimeNetContractInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -6661,6 +6686,10 @@ function MenuCrimeNetContractInitiator:modify_node(original_node, data)
 		end
 	end
 
+	if tweak_data.narrative:is_job_locked(data.job_id) then
+		node:item("accept_contract"):set_enabled(false)
+	end
+
 	if data and data.back_callback then
 		table.insert(node:parameters().back_callback, data.back_callback)
 	end
@@ -6670,7 +6699,7 @@ function MenuCrimeNetContractInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 6666 to 6684
+-- Lines: 6716 to 6734
 function MenuCallbackHandler:set_contact_info(item)
 	local parameters = item:parameters() or {}
 	local id = parameters.name
@@ -6690,7 +6719,7 @@ function MenuCallbackHandler:set_contact_info(item)
 	end
 end
 
--- Lines: 6686 to 6692
+-- Lines: 6736 to 6742
 function MenuCallbackHandler:is_current_contact_info(item)
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -6707,7 +6736,7 @@ MenuCrimeNetContactInfoInitiator.ALLOW_IMAGES = false
 MenuCrimeNetContactInfoInitiator.USE_SUBTEXT = false
 MenuCrimeNetContactInfoInitiator.DEFAULT_ITEM = "bain"
 
--- Lines: 6701 to 6787
+-- Lines: 6751 to 6837
 function MenuCrimeNetContactInfoInitiator:modify_node(original_node, data)
 	local node = original_node
 	local codex_data = {}
@@ -6790,12 +6819,12 @@ function MenuCrimeNetContactInfoInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 6790 to 6791
+-- Lines: 6840 to 6841
 function MenuCrimeNetContactInfoInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 6795 to 6810
+-- Lines: 6845 to 6860
 function MenuCrimeNetContactInfoInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		localize = "false",
@@ -6811,7 +6840,7 @@ function MenuCrimeNetContactInfoInitiator:create_divider(node, id, text_id, size
 	node:add_item(new_item)
 end
 
--- Lines: 6812 to 6842
+-- Lines: 6862 to 6892
 function MenuCrimeNetContactInfoInitiator:create_item(node, contact)
 	local text_id = contact.name_localized
 	local sub_text = contact.sub_text
@@ -6841,7 +6870,7 @@ function MenuCrimeNetContactInfoInitiator:create_item(node, contact)
 end
 MenuCrimeNetContactShortInitiator = MenuCrimeNetContactShortInitiator or class()
 
--- Lines: 6980 to 7019
+-- Lines: 7030 to 7069
 function MenuCrimeNetContactShortInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -6878,12 +6907,12 @@ function MenuCrimeNetContactShortInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 7022 to 7023
+-- Lines: 7072 to 7073
 function MenuCrimeNetContactShortInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 7027 to 7042
+-- Lines: 7077 to 7092
 function MenuCrimeNetContactShortInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		localize = "false",
@@ -6899,7 +6928,7 @@ function MenuCrimeNetContactShortInitiator:create_divider(node, id, text_id, siz
 	node:add_item(new_item)
 end
 
--- Lines: 7044 to 7059
+-- Lines: 7094 to 7109
 function MenuCrimeNetContactShortInitiator:create_item(node, data)
 	local params = {
 		callback = "play_short_heist",
@@ -6915,7 +6944,7 @@ function MenuCrimeNetContactShortInitiator:create_item(node, data)
 	node:add_item(new_item)
 end
 
--- Lines: 7064 to 7076
+-- Lines: 7114 to 7126
 function MenuCallbackHandler:play_chill_combat(item)
 	if managers.job:has_active_job() then
 		self:_dialog_leave_lobby_yes()
@@ -6935,20 +6964,20 @@ function MenuCallbackHandler:play_chill_combat(item)
 	end
 end
 
--- Lines: 7078 to 7082
+-- Lines: 7128 to 7132
 function MenuCallbackHandler:ignore_chill_combat(item)
 	item:parameters().gui_node:remove_blur()
 	managers.custom_safehouse:ignore_raid()
 	managers.menu:back()
 end
 
--- Lines: 7084 to 7086
+-- Lines: 7134 to 7136
 function MenuCallbackHandler:_on_chill_change_difficulty(item)
 	item:parameters().gui_node:set_difficulty(item._options[item._current_index]:value())
 end
 MenuCrimeNetContactChillInitiator = MenuCrimeNetContactChillInitiator or class()
 
--- Lines: 7089 to 7162
+-- Lines: 7139 to 7212
 function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -7046,21 +7075,21 @@ function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 7165 to 7166
+-- Lines: 7215 to 7216
 function MenuCrimeNetContactChillInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 7170 to 7171
+-- Lines: 7220 to 7221
 function MenuCrimeNetContactChillInitiator:create_divider(node, id, text_id, size, color)
 end
 
--- Lines: 7173 to 7174
+-- Lines: 7223 to 7224
 function MenuCrimeNetContactChillInitiator:create_item(node, data)
 end
 MenuJukeboxInitiator = MenuJukeboxInitiator or class()
 
--- Lines: 7183 to 7249
+-- Lines: 7233 to 7299
 function MenuJukeboxInitiator:modify_node(node, data)
 	if not node:item("choose_jukebox_your_choice") then
 		local track_list, track_locked = managers.music:jukebox_music_tracks()
@@ -7128,7 +7157,7 @@ function MenuJukeboxInitiator:modify_node(node, data)
 end
 MenuJukeboxHeistPlaylist = MenuJukeboxHeistPlaylist or class()
 
--- Lines: 7256 to 7298
+-- Lines: 7306 to 7348
 function MenuJukeboxHeistPlaylist:modify_node(node, data)
 	managers.menu_component:show_contract_character(false)
 	node:clean_items()
@@ -7195,7 +7224,7 @@ function MenuJukeboxHeistPlaylist:modify_node(node, data)
 end
 MenuJukeboxHeistTracks = MenuJukeboxHeistTracks or class()
 
--- Lines: 7305 to 7373
+-- Lines: 7355 to 7423
 function MenuJukeboxHeistTracks:modify_node(node, data)
 	managers.menu_component:show_contract_character(false)
 	node:clean_items()
@@ -7293,7 +7322,7 @@ function MenuJukeboxHeistTracks:modify_node(node, data)
 	return node
 end
 
--- Lines: 7376 to 7399
+-- Lines: 7426 to 7449
 function MenuJukeboxHeistTracks:_have_music(job_id)
 	local job_tweak = tweak_data.narrative.jobs[job_id]
 
@@ -7321,7 +7350,7 @@ function MenuJukeboxHeistTracks:_have_music(job_id)
 end
 MenuJukeboxMenuPlaylist = MenuJukeboxMenuPlaylist or class()
 
--- Lines: 7406 to 7448
+-- Lines: 7456 to 7498
 function MenuJukeboxMenuPlaylist:modify_node(node, data)
 	managers.menu_component:show_contract_character(false)
 	node:clean_items()
@@ -7388,7 +7417,7 @@ function MenuJukeboxMenuPlaylist:modify_node(node, data)
 end
 MenuJukeboxMenuTracks = MenuJukeboxMenuTracks or class()
 
--- Lines: 7455 to 7492
+-- Lines: 7505 to 7542
 function MenuJukeboxMenuTracks:modify_node(node, data)
 	managers.menu_component:show_contract_character(false)
 	node:clean_items()
@@ -7447,7 +7476,7 @@ function MenuJukeboxMenuTracks:modify_node(node, data)
 end
 MenuPrePlanningInitiator = MenuPrePlanningInitiator or class(MenuCrimeNetContactInfoInitiator)
 
--- Lines: 7499 to 7513
+-- Lines: 7549 to 7563
 function MenuPrePlanningInitiator:modify_node(node, item_name, selected_item)
 	node:clean_items()
 
@@ -7466,7 +7495,7 @@ function MenuPrePlanningInitiator:modify_node(node, item_name, selected_item)
 	return node
 end
 
--- Lines: 7518 to 7558
+-- Lines: 7568 to 7608
 function MenuPrePlanningInitiator:create_info_items(node, params, selected_item)
 	self:create_divider(node, "info_div", nil, nil, nil)
 
@@ -7502,7 +7531,7 @@ function MenuPrePlanningInitiator:create_info_items(node, params, selected_item)
 	return node, selected_item
 end
 
--- Lines: 7561 to 7613
+-- Lines: 7611 to 7663
 function MenuPrePlanningInitiator:modifiy_node_view_only(node, item_name, selected_item)
 	local subgroups = managers.preplanning:get_mission_element_subgroups()
 
@@ -7550,7 +7579,7 @@ function MenuPrePlanningInitiator:modifiy_node_view_only(node, item_name, select
 	return node, selected_item
 end
 
--- Lines: 7616 to 7640
+-- Lines: 7666 to 7690
 function MenuPrePlanningInitiator:set_locks_to_param(params, key, index)
 	local data = tweak_data:get_raw_value("preplanning", key, index) or {}
 	local enabled = params.enabled ~= false
@@ -7581,7 +7610,7 @@ function MenuPrePlanningInitiator:set_locks_to_param(params, key, index)
 	params.ignore_disabled = true
 end
 
--- Lines: 7642 to 7694
+-- Lines: 7692 to 7744
 function MenuPrePlanningInitiator:modifiy_node_preplanning(node, item_name, selected_item)
 	if not managers.preplanning:can_edit_preplan() then
 		return self:modifiy_node_view_only(node, item_name, selected_item)
@@ -7633,7 +7662,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning(node, item_name, sele
 	return node, selected_item
 end
 
--- Lines: 7699 to 7762
+-- Lines: 7749 to 7812
 function MenuPrePlanningInitiator:modifiy_node_preplanning_category(node, item_name, selected_item)
 	node:parameters().current_category = item_name or node:parameters().current_category
 	local current_category = node:parameters().current_category
@@ -7698,7 +7727,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_category(node, item_n
 	return node, selected_item
 end
 
--- Lines: 7767 to 7903
+-- Lines: 7817 to 7953
 function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name, selected_item)
 	node:parameters().current_type = item_name or node:parameters().current_type
 	local current_type = node:parameters().current_type
@@ -7836,7 +7865,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name,
 	return node, selected_item
 end
 
--- Lines: 7908 to 7988
+-- Lines: 7958 to 8038
 function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name, selected_item)
 	node:parameters().current_plan = item_name or node:parameters().current_plan
 	local current_plan = node:parameters().current_plan
@@ -7924,7 +7953,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name,
 	return node, selected_item
 end
 
--- Lines: 7993 to 8043
+-- Lines: 8043 to 8093
 function MenuPrePlanningInitiator:modifiy_node_preplanning_custom(node, item_name, selected_item)
 	node:parameters().current_custom = item_name or node:parameters().current_custom
 	local current_custom = node:parameters().current_custom
@@ -7979,14 +8008,14 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_custom(node, item_nam
 	return node, selected_item
 end
 
--- Lines: 8049 to 8051
+-- Lines: 8099 to 8101
 function MenuPrePlanningInitiator:refresh_node(node)
 	local selected_item_name = node:selected_item() and node:selected_item():name()
 
 	return self:modify_node(node, nil, selected_item_name)
 end
 
--- Lines: 8054 to 8060
+-- Lines: 8104 to 8110
 function MenuPrePlanningInitiator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, deep_clone(params))
@@ -7997,27 +8026,27 @@ function MenuPrePlanningInitiator:create_item(node, params)
 	return new_item
 end
 
--- Lines: 8067 to 8070
+-- Lines: 8117 to 8120
 function MenuCallbackHandler:open_preplanning_plan_item(item)
 	managers.menu:open_node("preplanning_plan", {item:name()})
 end
 
--- Lines: 8073 to 8076
+-- Lines: 8123 to 8126
 function MenuCallbackHandler:open_preplanning_category_item(item)
 	managers.menu:open_node("preplanning_category", {item:name()})
 end
 
--- Lines: 8079 to 8082
+-- Lines: 8129 to 8132
 function MenuCallbackHandler:open_preplanning_custom_item(item)
 	managers.menu:open_node("preplanning_custom", {item:name()})
 end
 
--- Lines: 8085 to 8088
+-- Lines: 8135 to 8138
 function MenuCallbackHandler:open_preplanning_type_item(item)
 	managers.menu:open_node("preplanning_type", {item:name()})
 end
 
--- Lines: 8093 to 8127
+-- Lines: 8143 to 8177
 function MenuCallbackHandler:open_preplanning_to_type(category, type, item_name)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local node_name = logic and logic:selected_node() and logic:selected_node():parameters().name
@@ -8066,7 +8095,7 @@ function MenuCallbackHandler:open_preplanning_to_type(category, type, item_name)
 	})
 end
 
--- Lines: 8129 to 8149
+-- Lines: 8179 to 8199
 function MenuCallbackHandler:open_preplanning_to_plan(plan, item_name)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local node_name = logic and logic:selected_node() and logic:selected_node():parameters().name
@@ -8093,12 +8122,12 @@ function MenuCallbackHandler:open_preplanning_to_plan(plan, item_name)
 	})
 end
 
--- Lines: 8151 to 8153
+-- Lines: 8201 to 8203
 function MenuCallbackHandler:stop_preplanning_post_event()
 	managers.menu_component:preplanning_stop_event()
 end
 
--- Lines: 8155 to 8160
+-- Lines: 8205 to 8210
 function MenuCallbackHandler:pressed_preplanning_custom_point(item)
 	if item:parameters().post_event then
 		managers.menu_component:preplanning_post_event(item:parameters().post_event, item:name())
@@ -8106,14 +8135,14 @@ function MenuCallbackHandler:pressed_preplanning_custom_point(item)
 	end
 end
 
--- Lines: 8162 to 8168
+-- Lines: 8212 to 8218
 function MenuCallbackHandler:set_preplanning_custom_filter(item)
 	if item and item:enabled() then
 		print("AAAAAAAAAAAAA ", item:name())
 	end
 end
 
--- Lines: 8170 to 8175
+-- Lines: 8220 to 8225
 function MenuCallbackHandler:set_preplanning_category_filter(item)
 	if item and item:enabled() then
 		managers.menu_component:set_preplanning_category_filter(item:name())
@@ -8124,7 +8153,7 @@ function MenuCallbackHandler:set_preplanning_category_filter(item)
 	end
 end
 
--- Lines: 8177 to 8182
+-- Lines: 8227 to 8232
 function MenuCallbackHandler:set_preplanning_type_filter(item)
 	if item and item:enabled() then
 		managers.menu_component:set_preplanning_type_filter(item:name())
@@ -8135,7 +8164,7 @@ function MenuCallbackHandler:set_preplanning_type_filter(item)
 	end
 end
 
--- Lines: 8184 to 8198
+-- Lines: 8234 to 8248
 function MenuCallbackHandler:vote_preplanning_mission_element_by_item(item)
 	if item then
 		if item:enabled() then
@@ -8154,7 +8183,7 @@ function MenuCallbackHandler:vote_preplanning_mission_element_by_item(item)
 	end
 end
 
--- Lines: 8200 to 8206
+-- Lines: 8250 to 8256
 function MenuCallbackHandler:vote_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local item = logic and logic:selected_node() and logic:selected_node():item(id)
@@ -8164,17 +8193,17 @@ function MenuCallbackHandler:vote_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines: 8210 to 8211
+-- Lines: 8260 to 8261
 function MenuCallbackHandler:select_preplanning_mission_element_by_item(item)
 end
 
--- Lines: 8214 to 8217
+-- Lines: 8264 to 8267
 function MenuCallbackHandler:reserve_preplanning_mission_element(type, id)
 	print("[reserve_preplanning_mission_element]", "type", type, "id", id)
 	managers.preplanning:reserve_mission_element(type, id)
 end
 
--- Lines: 8219 to 8232
+-- Lines: 8269 to 8282
 function MenuCallbackHandler:reserve_preplanning_mission_element_by_item(item)
 	if item then
 		if item:enabled() then
@@ -8190,7 +8219,7 @@ function MenuCallbackHandler:reserve_preplanning_mission_element_by_item(item)
 	end
 end
 
--- Lines: 8234 to 8240
+-- Lines: 8284 to 8290
 function MenuCallbackHandler:reserve_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local item = logic and logic:selected_node() and logic:selected_node():item(id)
@@ -8200,20 +8229,20 @@ function MenuCallbackHandler:reserve_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines: 8244 to 8247
+-- Lines: 8294 to 8297
 function MenuCallbackHandler:unreserve_preplanning_mission_element(id)
 	print("[unreserve_preplanning_mission_element]", "id", id)
 	managers.preplanning:unreserve_mission_element(id)
 end
 
--- Lines: 8249 to 8253
+-- Lines: 8299 to 8303
 function MenuCallbackHandler:unreserve_preplanning_mission_element_by_item(item)
 	if item and item:enabled() then
 		MenuCallbackHandler:unreserve_preplanning_mission_element(item:name())
 	end
 end
 
--- Lines: 8255 to 8262
+-- Lines: 8305 to 8312
 function MenuCallbackHandler:unreserve_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local item = logic and logic:selected_node() and logic:selected_node():item(id)
@@ -8223,7 +8252,7 @@ function MenuCallbackHandler:unreserve_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines: 8266 to 8278
+-- Lines: 8316 to 8328
 function MenuCallbackHandler:swap_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu().logic
 
@@ -8240,14 +8269,14 @@ function MenuCallbackHandler:swap_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines: 8281 to 8285
+-- Lines: 8331 to 8335
 function MenuCallbackHandler:swap_preplanning_mission_element_by_item(item)
 	if item and item:enabled() then
 		MenuCallbackHandler:swap_preplanning_mission_element_by_id(item:name())
 	end
 end
 
--- Lines: 8287 to 8298
+-- Lines: 8337 to 8348
 function MenuCallbackHandler:select_preplanning_item_by_id(id)
 	local logic = managers.menu:active_menu().logic
 
@@ -8262,44 +8291,44 @@ function MenuCallbackHandler:select_preplanning_item_by_id(id)
 	end
 end
 
--- Lines: 8300 to 8301
+-- Lines: 8350 to 8351
 function MenuCallbackHandler:chk_preplanning_type(item)
 	return managers.menu_component:get_preplanning_filter() == item:name()
 end
 
--- Lines: 8304 to 8305
+-- Lines: 8354 to 8355
 function MenuCallbackHandler:chk_preplanning_point(item)
 	return false
 end
 
--- Lines: 8309 to 8311
+-- Lines: 8359 to 8361
 function MenuCallbackHandler:clear_preplanning_category_filter()
 	managers.menu_component:set_preplanning_category_filter(false)
 end
 
--- Lines: 8313 to 8315
+-- Lines: 8363 to 8365
 function MenuCallbackHandler:clear_preplanning_type_filter()
 	managers.menu_component:set_preplanning_type_filter(false)
 end
 
--- Lines: 8319 to 8321
+-- Lines: 8369 to 8371
 function MenuCallbackHandler:open_preplanning_help(item)
 	managers.menu:show_preplanning_help()
 end
 
--- Lines: 8323 to 8325
+-- Lines: 8373 to 8375
 function MenuCallbackHandler:open_preplanning_drawboard_item(item)
 	managers.menu:open_node("preplanning_drawboard")
 end
 
--- Lines: 8327 to 8330
+-- Lines: 8377 to 8380
 function MenuCallbackHandler:toggle_preplanning_drawing(item)
 	local peer_id = tonumber(item:name())
 
 	managers.menu_component:toggle_preplanning_drawing(peer_id)
 end
 
--- Lines: 8334 to 8349
+-- Lines: 8384 to 8399
 function MenuCallbackHandler:_jukebox_disable_items(selected_item)
 	local your_choice = managers.menu:active_menu().logic:selected_node():item("toggle_jukebox_your_choice")
 	local items = {}
@@ -8317,7 +8346,7 @@ function MenuCallbackHandler:_jukebox_disable_items(selected_item)
 	managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):set_enabled(selected_item == your_choice)
 end
 
--- Lines: 8351 to 8359
+-- Lines: 8401 to 8409
 function MenuCallbackHandler:jukebox_playlist_all(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8329,7 +8358,7 @@ function MenuCallbackHandler:jukebox_playlist_all(item)
 	end
 end
 
--- Lines: 8361 to 8369
+-- Lines: 8411 to 8419
 function MenuCallbackHandler:jukebox_playlist_global(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8341,7 +8370,7 @@ function MenuCallbackHandler:jukebox_playlist_global(item)
 	end
 end
 
--- Lines: 8371 to 8379
+-- Lines: 8421 to 8429
 function MenuCallbackHandler:jukebox_playlist_heist(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8353,7 +8382,7 @@ function MenuCallbackHandler:jukebox_playlist_heist(item)
 	end
 end
 
--- Lines: 8381 to 8389
+-- Lines: 8431 to 8439
 function MenuCallbackHandler:jukebox_server_choice(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8365,7 +8394,7 @@ function MenuCallbackHandler:jukebox_server_choice(item)
 	end
 end
 
--- Lines: 8391 to 8396
+-- Lines: 8441 to 8446
 function MenuCallbackHandler:jukebox_your_choice(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8374,7 +8403,7 @@ function MenuCallbackHandler:jukebox_your_choice(item)
 	end
 end
 
--- Lines: 8398 to 8410
+-- Lines: 8448 to 8460
 function MenuCallbackHandler:jukebox_track_selection(item)
 	local track = item:value()
 	Global.music_manager.loadout_selection = track
@@ -8389,7 +8418,7 @@ function MenuCallbackHandler:jukebox_track_selection(item)
 	end
 end
 
--- Lines: 8412 to 8443
+-- Lines: 8462 to 8493
 function MenuCallbackHandler:jukebox_option_heist_tracks(item)
 	local track = item:value()
 	local job = item:parameters().heist_job
@@ -8426,7 +8455,7 @@ function MenuCallbackHandler:jukebox_option_heist_tracks(item)
 	managers.savefile:setting_changed()
 end
 
--- Lines: 8445 to 8477
+-- Lines: 8495 to 8527
 function MenuCallbackHandler:jukebox_option_heist_playlist(item)
 	local tracks_list = managers.music:jukebox_music_tracks()
 	local empty_list = true
@@ -8463,7 +8492,7 @@ function MenuCallbackHandler:jukebox_option_heist_playlist(item)
 	end
 end
 
--- Lines: 8479 to 8511
+-- Lines: 8529 to 8561
 function MenuCallbackHandler:jukebox_option_menu_playlist(item)
 	local tracks_list = managers.music:jukebox_menu_tracks()
 	local empty_list = true
@@ -8500,7 +8529,7 @@ function MenuCallbackHandler:jukebox_option_menu_playlist(item)
 	end
 end
 
--- Lines: 8513 to 8532
+-- Lines: 8563 to 8582
 function MenuCallbackHandler:jukebox_option_menu_tracks(item)
 	local track = item:value()
 	local item_list = managers.menu:active_menu().logic:selected_node():items()
@@ -8523,12 +8552,12 @@ function MenuCallbackHandler:jukebox_option_menu_tracks(item)
 	managers.savefile:setting_changed()
 end
 
--- Lines: 8534 to 8536
+-- Lines: 8584 to 8586
 function MenuCallbackHandler:jukebox_options_enter(item)
 	managers.music:post_event("stop_all_music")
 end
 
--- Lines: 8538 to 8542
+-- Lines: 8588 to 8592
 function MenuCallbackHandler:jukebox_option_back(item)
 	managers.music:track_listen_stop()
 	managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
@@ -8536,7 +8565,7 @@ function MenuCallbackHandler:jukebox_option_back(item)
 end
 MenuCrimeNetGageAssignmentInitiator = MenuCrimeNetGageAssignmentInitiator or class(MenuCrimeNetContactInfoInitiator)
 
--- Lines: 8551 to 8612
+-- Lines: 8601 to 8662
 function MenuCrimeNetGageAssignmentInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -8613,21 +8642,21 @@ MenuCrimeNetSpecialInitiator = MenuCrimeNetSpecialInitiator or class()
 MenuCrimeNetSpecialInitiator.job_callback = nil
 MenuCrimeNetSpecialInitiator.choose_any_job = nil
 
--- Lines: 8619 to 8621
+-- Lines: 8669 to 8671
 function MenuCrimeNetSpecialInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node)
 end
 
--- Lines: 8624 to 8626
+-- Lines: 8674 to 8676
 function MenuCrimeNetSpecialInitiator:refresh_node(node)
 	self:setup_node(node)
 
 	return node
 end
 
--- Lines: 8629 to 8801
+-- Lines: 8679 to 8851
 function MenuCrimeNetSpecialInitiator:setup_node(node)
 	local listed_contact = node:parameters().listed_contact
 
@@ -8796,7 +8825,7 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 	return node
 end
 
--- Lines: 8805 to 8819
+-- Lines: 8855 to 8869
 function MenuCrimeNetSpecialInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -8811,7 +8840,7 @@ function MenuCrimeNetSpecialInitiator:create_divider(node, id, text_id, size, co
 	node:add_item(new_item)
 end
 
--- Lines: 8821 to 8909
+-- Lines: 8871 to 8959
 function MenuCrimeNetSpecialInitiator:create_job(node, contract)
 	local id = contract.id
 	local enabled = contract.enabled
@@ -8882,14 +8911,14 @@ function MenuCrimeNetSpecialInitiator:create_job(node, contract)
 end
 MenuReticleSwitchInitiator = MenuReticleSwitchInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines: 8913 to 8915
+-- Lines: 8963 to 8965
 function MenuReticleSwitchInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines: 8918 to 9014
+-- Lines: 8968 to 9064
 function MenuReticleSwitchInitiator:setup_node(node, data)
 	node:clean_items()
 
@@ -8985,7 +9014,7 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 	return node
 end
 
--- Lines: 9017 to 9026
+-- Lines: 9067 to 9076
 function MenuReticleSwitchInitiator:refresh_node(node, data)
 	local confirm = node:item("confirm")
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -8997,11 +9026,11 @@ function MenuReticleSwitchInitiator:refresh_node(node, data)
 	end
 end
 
--- Lines: 9028 to 9029
+-- Lines: 9078 to 9079
 function MenuReticleSwitchInitiator:create_multichoice()
 end
 
--- Lines: 9031 to 9051
+-- Lines: 9081 to 9101
 function MenuCallbackHandler:is_reticle_applicable(node)
 	local type = node:item("reticle_type"):value()
 	local color = node:item("reticle_color"):value()
@@ -9015,7 +9044,7 @@ function MenuCallbackHandler:is_reticle_applicable(node)
 	return pass_type and pass_color
 end
 
--- Lines: 9054 to 9086
+-- Lines: 9104 to 9136
 function MenuCallbackHandler:update_weapon_texture_switch(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -9049,7 +9078,7 @@ function MenuCallbackHandler:update_weapon_texture_switch(item)
 	end
 end
 
--- Lines: 9088 to 9120
+-- Lines: 9138 to 9170
 function MenuCallbackHandler:set_weapon_texture_switch(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -9082,7 +9111,7 @@ function MenuCallbackHandler:set_weapon_texture_switch(item)
 end
 MenuCrimeNetCasinoInitiator = MenuCrimeNetCasinoInitiator or class()
 
--- Lines: 9124 to 9134
+-- Lines: 9174 to 9184
 function MenuCrimeNetCasinoInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -9097,7 +9126,7 @@ function MenuCrimeNetCasinoInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 9137 to 9148
+-- Lines: 9187 to 9198
 function MenuCrimeNetCasinoInitiator:refresh_node(node)
 	local options = {
 		preferred = node:item("preferred_item"):value(),
@@ -9113,12 +9142,12 @@ function MenuCrimeNetCasinoInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 9151 to 9152
+-- Lines: 9201 to 9202
 function MenuCallbackHandler:casino_betting_visible()
 	return true
 end
 
--- Lines: 9187 to 9378
+-- Lines: 9237 to 9428
 function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 	local visible_callback = "casino_betting_visible"
 	local preferred_data = {
@@ -9415,7 +9444,7 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 	end
 end
 
--- Lines: 9380 to 9395
+-- Lines: 9430 to 9445
 function MenuCrimeNetCasinoInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		visible_callback = "casino_betting_visible",
@@ -9432,7 +9461,7 @@ function MenuCrimeNetCasinoInitiator:create_divider(node, id, text_id, size, col
 end
 MenuCrimeNetCasinoLootdropInitiator = MenuCrimeNetCasinoLootdropInitiator or class()
 
--- Lines: 9399 to 9407
+-- Lines: 9449 to 9457
 function MenuCrimeNetCasinoLootdropInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -9446,7 +9475,7 @@ function MenuCrimeNetCasinoLootdropInitiator:modify_node(original_node, data)
 end
 MenuCrimeNetFiltersInitiator = MenuCrimeNetFiltersInitiator or class()
 
--- Lines: 9412 to 9463
+-- Lines: 9462 to 9513
 function MenuCrimeNetFiltersInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -9494,7 +9523,7 @@ function MenuCrimeNetFiltersInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 9466 to 9492
+-- Lines: 9516 to 9542
 function MenuCrimeNetFiltersInitiator:update_node(node)
 	if MenuCallbackHandler:is_win32() then
 		local not_friends_only = not Global.game_settings.search_friends_only
@@ -9517,23 +9546,23 @@ function MenuCrimeNetFiltersInitiator:update_node(node)
 	end
 end
 
--- Lines: 9495 to 9496
+-- Lines: 9545 to 9546
 function MenuCrimeNetFiltersInitiator:is_standard()
 	return not Global.game_settings or not Global.game_settings.gamemode_filter or Global.game_settings.gamemode_filter == GamemodeStandard.id
 end
 
--- Lines: 9499 to 9500
+-- Lines: 9549 to 9550
 function MenuCrimeNetFiltersInitiator:is_crime_spree()
 	return Global.game_settings and Global.game_settings.gamemode_filter == GamemodeCrimeSpree.id
 end
 
--- Lines: 9504 to 9507
+-- Lines: 9554 to 9557
 function MenuCrimeNetFiltersInitiator:refresh_node(node)
 	self:modify_node(node, {})
 	self:update_node(node)
 end
 
--- Lines: 9510 to 9615
+-- Lines: 9560 to 9665
 function MenuCrimeNetFiltersInitiator:add_filters(node)
 	if node:item("divider_end") then
 		return
@@ -9651,7 +9680,7 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 	self:modify_node(node, {})
 end
 
--- Lines: 9617 to 9623
+-- Lines: 9667 to 9673
 function MenuCallbackHandler:_reset_filters(item)
 	if managers.network.matchmake.reset_filters then
 		managers.network.matchmake:reset_filters()
@@ -9661,14 +9690,14 @@ function MenuCallbackHandler:_reset_filters(item)
 end
 MenuMutatorOptionsInitiator = MenuMutatorOptionsInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines: 9627 to 9629
+-- Lines: 9677 to 9679
 function MenuMutatorOptionsInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines: 9633 to 9676
+-- Lines: 9683 to 9726
 function MenuMutatorOptionsInitiator:setup_node(node, mutator)
 	node:clean_items()
 
@@ -9712,16 +9741,16 @@ function MenuMutatorOptionsInitiator:setup_node(node, mutator)
 	return node
 end
 
--- Lines: 9680 to 9681
+-- Lines: 9730 to 9731
 function MenuMutatorOptionsInitiator:refresh_node(node, data)
 end
 
--- Lines: 9683 to 9685
+-- Lines: 9733 to 9735
 function MenuCallbackHandler:reset_mutator(item)
 	item:parameters().mutator:reset_to_default()
 end
 
--- Lines: 9689 to 9699
+-- Lines: 9739 to 9749
 function MenuCallbackHandler:save_mutator_options(item)
 	local mutator = item:parameters().gui_node.node:parameters()._mutator
 
@@ -9734,7 +9763,7 @@ function MenuCallbackHandler:save_mutator_options(item)
 	self:_update_mutators_info()
 end
 
--- Lines: 9702 to 9707
+-- Lines: 9752 to 9757
 function MenuCallbackHandler:_update_mutators_info()
 	if Network:is_server() then
 		managers.network.matchmake:set_server_attributes(self:get_matchmake_attributes())
@@ -9743,14 +9772,14 @@ function MenuCallbackHandler:_update_mutators_info()
 end
 MenuLobbyCountdownInitiator = MenuLobbyCountdownInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines: 9712 to 9714
+-- Lines: 9762 to 9764
 function MenuLobbyCountdownInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines: 9718 to 9737
+-- Lines: 9768 to 9787
 function MenuLobbyCountdownInitiator:setup_node(node, mutator)
 	node:clean_items()
 
@@ -9771,12 +9800,12 @@ function MenuLobbyCountdownInitiator:setup_node(node, mutator)
 	return node
 end
 
--- Lines: 9741 to 9742
+-- Lines: 9791 to 9792
 function MenuLobbyCountdownInitiator:refresh_node(node, data)
 end
 MenuCrimeNetSmartmatchmakeInitiator = MenuCrimeNetSmartmatchmakeInitiator or class()
 
--- Lines: 9749 to 9764
+-- Lines: 9799 to 9814
 function MenuCrimeNetSmartmatchmakeInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -9791,7 +9820,7 @@ function MenuCrimeNetSmartmatchmakeInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 9767 to 9823
+-- Lines: 9817 to 9873
 function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 	if node:item("divider_end") then
 		return
@@ -9847,7 +9876,7 @@ function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 	node:add_item(new_item)
 end
 
--- Lines: 9825 to 9858
+-- Lines: 9875 to 9908
 function MenuCallbackHandler:start_smart_matchmaking(item)
 	if item:name() == "quick_join" then
 		local jobs = managers.crimenet:get_jobs_by_player_stars()
@@ -9867,7 +9896,7 @@ function MenuCallbackHandler:start_smart_matchmaking(item)
 	end
 end
 
--- Lines: 9860 to 9864
+-- Lines: 9910 to 9914
 function MenuCallbackHandler:open_contract_smart_matchmaking_node(item)
 	local job_tweak = tweak_data.narrative:job_data(item:parameters().id)
 	local is_professional = job_tweak and job_tweak.professional or false
@@ -9885,7 +9914,7 @@ MenuCrimeNetSmartMatchmakingInitiator.job_callback = "open_contract_smart_matchm
 MenuCrimeNetSmartMatchmakingInitiator.choose_any_job = true
 MenuCrimeNetSmartMatchmakingInitiator.contract_divider_id = "menu_cn_smart_matchmaking_divider_title"
 
--- Lines: 9873 to 9887
+-- Lines: 9923 to 9937
 function MenuCrimeNetSmartMatchmakingInitiator:pre_create_clbk(node)
 	local params = {
 		callback = "start_smart_matchmaking",
@@ -9900,7 +9929,7 @@ function MenuCrimeNetSmartMatchmakingInitiator:pre_create_clbk(node)
 end
 MenuOptionInitiator = MenuOptionInitiator or class()
 
--- Lines: 9890 to 9919
+-- Lines: 9940 to 9973
 function MenuOptionInitiator:modify_node(node)
 	local node_name = node:parameters().name
 
@@ -9922,15 +9951,17 @@ function MenuOptionInitiator:modify_node(node)
 		return self:modify_gameplay_options(node)
 	elseif node_name == "user_interface_options" then
 		return self:modify_user_interface_options(node)
+	elseif node_name == "vr_options" then
+		return self:modify_vr_options(node)
 	end
 end
 
--- Lines: 9921 to 9923
+-- Lines: 9975 to 9977
 function MenuOptionInitiator:refresh_node(node)
 	self:modify_node(node)
 end
 
--- Lines: 9925 to 9931
+-- Lines: 9979 to 9985
 function MenuOptionInitiator:modify_resolution(node)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		local res_name = string.format("%d x %d", RenderSettings.resolution.x, RenderSettings.resolution.y)
@@ -9941,7 +9972,7 @@ function MenuOptionInitiator:modify_resolution(node)
 	return node
 end
 
--- Lines: 9934 to 10017
+-- Lines: 9988 to 10078
 function MenuOptionInitiator:modify_adv_video(node)
 	node:item("toggle_vsync"):set_value(RenderSettings.v_sync and "on" or "off")
 
@@ -10032,10 +10063,16 @@ function MenuOptionInitiator:modify_adv_video(node)
 		color_grading_item:set_value(managers.user:get_setting("video_color_grading"))
 	end
 
+	local toggle_adaptive_quality = node:item("toggle_adaptive_quality")
+
+	if toggle_adaptive_quality then
+		toggle_adaptive_quality:set_value(managers.user:get_setting("adaptive_quality") and "on" or "off")
+	end
+
 	return node
 end
 
--- Lines: 10021 to 10091
+-- Lines: 10082 to 10152
 function MenuOptionInitiator:modify_video(node)
 	local adapter_item = node:item("choose_video_adapter")
 
@@ -10131,7 +10168,7 @@ function MenuOptionInitiator:modify_video(node)
 	return node
 end
 
--- Lines: 10095 to 10251
+-- Lines: 10156 to 10312
 function MenuOptionInitiator:modify_controls(node)
 	local option_value = "off"
 	local rumble_item = node:item("toggle_rumble")
@@ -10303,7 +10340,7 @@ function MenuOptionInitiator:modify_controls(node)
 	return node
 end
 
--- Lines: 10256 to 10292
+-- Lines: 10317 to 10353
 function MenuOptionInitiator:modify_gameplay_options(node)
 	local option_value = "off"
 	local throwable_contour = node:item("toggle_throwable_contour")
@@ -10336,7 +10373,7 @@ function MenuOptionInitiator:modify_gameplay_options(node)
 	return node
 end
 
--- Lines: 10298 to 10311
+-- Lines: 10359 to 10372
 function MenuOptionInitiator:modify_user_interface_options(node)
 	local controller_hint_box = node:item("toggle_controller_hint")
 	local controller_hint_setting = managers.user:get_setting("loading_screen_show_controller")
@@ -10355,12 +10392,12 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	return node
 end
 
--- Lines: 10434 to 10435
+-- Lines: 10494 to 10495
 function MenuOptionInitiator:modify_debug_options(node)
 	return node
 end
 
--- Lines: 10440 to 10445
+-- Lines: 10500 to 10505
 function MenuOptionInitiator:modify_options(node)
 	if node:item("toggle_workshop") then
 		node:item("toggle_workshop"):set_value(managers.user:get_setting("workshop") and "on" or "off")
@@ -10369,7 +10406,7 @@ function MenuOptionInitiator:modify_options(node)
 	return node
 end
 
--- Lines: 10450 to 10469
+-- Lines: 10510 to 10529
 function MenuOptionInitiator:modify_network_options(node)
 	local toggle_throttling_item = node:item("toggle_throttling")
 
@@ -10399,7 +10436,7 @@ function MenuOptionInitiator:modify_network_options(node)
 end
 SkillSwitchInitiator = SkillSwitchInitiator or class()
 
--- Lines: 10474 to 10516
+-- Lines: 10534 to 10576
 function SkillSwitchInitiator:modify_node(node, data)
 	node:clean_items()
 
@@ -10450,7 +10487,7 @@ function SkillSwitchInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines: 10519 to 10526
+-- Lines: 10579 to 10586
 function SkillSwitchInitiator:refresh_node(node, data)
 	local selected_item = node:selected_item() and node:selected_item():name()
 	node = self:modify_node(node, data)
@@ -10462,7 +10499,7 @@ function SkillSwitchInitiator:refresh_node(node, data)
 	return node
 end
 
--- Lines: 10529 to 10535
+-- Lines: 10589 to 10595
 function SkillSwitchInitiator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10471,7 +10508,7 @@ function SkillSwitchInitiator:create_item(node, params)
 	node:add_item(new_item)
 end
 
--- Lines: 10537 to 10551
+-- Lines: 10597 to 10611
 function SkillSwitchInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -10486,7 +10523,7 @@ function SkillSwitchInitiator:create_divider(node, id, text_id, size, color)
 	node:add_item(new_item)
 end
 
--- Lines: 10553 to 10568
+-- Lines: 10613 to 10628
 function SkillSwitchInitiator:add_back_button(node)
 	node:delete_item("back")
 
@@ -10502,7 +10539,7 @@ function SkillSwitchInitiator:add_back_button(node)
 	node:add_item(new_item)
 end
 
--- Lines: 10571 to 10602
+-- Lines: 10631 to 10662
 function MenuCallbackHandler:unlock_skill_switch(item)
 	local spending_cost = managers.money:get_unlock_skill_switch_spending_cost(item:parameters().name)
 	local offshore_cost = managers.money:get_unlock_skill_switch_offshore_cost(item:parameters().name)
@@ -10535,19 +10572,19 @@ function MenuCallbackHandler:unlock_skill_switch(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 10604 to 10607
+-- Lines: 10664 to 10667
 function MenuCallbackHandler:set_active_skill_switch(item)
 	managers.skilltree:switch_skills(item:parameters().name)
 	self:refresh_node()
 end
 
--- Lines: 10612 to 10613
+-- Lines: 10672 to 10673
 function MenuCallbackHandler:has_installed_mods()
 	return not self:is_console() and table.size(DB:mods()) > 0
 end
 ModMenuCreator = ModMenuCreator or class()
 
--- Lines: 10617 to 10621
+-- Lines: 10677 to 10681
 function ModMenuCreator:modify_node(original_node, data)
 	local node = original_node
 
@@ -10556,7 +10593,7 @@ function ModMenuCreator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 10625 to 10680
+-- Lines: 10685 to 10740
 function ModMenuCreator:create_mod_menu(node)
 	node:clean_items()
 
@@ -10566,7 +10603,7 @@ function ModMenuCreator:create_mod_menu(node)
 	local modded_content = {}
 
 
-	-- Lines: 10634 to 10635
+	-- Lines: 10694 to 10695
 	local function id_key(path)
 		return Idstring(path):key()
 	end
@@ -10625,7 +10662,7 @@ function ModMenuCreator:create_mod_menu(node)
 	node:parameters().modded_content = modded_content
 end
 
--- Lines: 10682 to 10696
+-- Lines: 10742 to 10756
 function ModMenuCreator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -10640,7 +10677,7 @@ function ModMenuCreator:create_divider(node, id, text_id, size, color)
 	node:add_item(new_item)
 end
 
--- Lines: 10698 to 10704
+-- Lines: 10758 to 10764
 function ModMenuCreator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10649,7 +10686,7 @@ function ModMenuCreator:create_item(node, params)
 	node:add_item(new_item)
 end
 
--- Lines: 10706 to 10715
+-- Lines: 10766 to 10775
 function ModMenuCreator:create_toggle(node, params)
 	local data_node = {
 		{
@@ -10690,7 +10727,7 @@ function ModMenuCreator:create_toggle(node, params)
 	return new_item
 end
 
--- Lines: 10718 to 10731
+-- Lines: 10778 to 10791
 function ModMenuCreator:add_back_button(node)
 	node:delete_item("back")
 
@@ -10706,11 +10743,11 @@ function ModMenuCreator:add_back_button(node)
 	node:add_item(new_item)
 end
 
--- Lines: 10734 to 10735
+-- Lines: 10794 to 10795
 function MenuCallbackHandler:save_mod_changes(node)
 end
 
--- Lines: 10737 to 10743
+-- Lines: 10797 to 10803
 function MenuCallbackHandler:mod_option_toggle_enabled(item)
 	print("mod_option_toggle_enabled", "mod", item:name(), "status", item:value())
 
@@ -10720,7 +10757,7 @@ function MenuCallbackHandler:mod_option_toggle_enabled(item)
 end
 MenuCrimeNetChallengeInitiator = MenuCrimeNetChallengeInitiator or class(MenuCrimeNetGageAssignmentInitiator)
 
--- Lines: 10748 to 10771
+-- Lines: 10808 to 10831
 function MenuCrimeNetChallengeInitiator:modify_node(original_node, data)
 	local node, first_item = self:setup_node(original_node)
 
@@ -10738,7 +10775,7 @@ function MenuCrimeNetChallengeInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 10774 to 10791
+-- Lines: 10834 to 10851
 function MenuCrimeNetChallengeInitiator:refresh_node(node)
 	local _, first_item = self:setup_node(node)
 
@@ -10751,7 +10788,7 @@ function MenuCrimeNetChallengeInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 10794 to 10800
+-- Lines: 10854 to 10860
 function MenuCallbackHandler:is_current_challenge(item)
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -10762,7 +10799,7 @@ function MenuCallbackHandler:is_current_challenge(item)
 	return false
 end
 
--- Lines: 10803 to 10917
+-- Lines: 10863 to 10977
 function MenuCrimeNetChallengeInitiator:setup_node(node)
 	node:clean_items()
 	self:create_divider(node, 1, managers.localization:text("menu_gage_assignment_div_menu"), nil, tweak_data.screen_colors.text)
@@ -10881,7 +10918,7 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 	return node, first_item
 end
 
--- Lines: 10920 to 10935
+-- Lines: 10980 to 10995
 function MenuCallbackHandler:update_challenge_menu_node()
 	if not managers.menu:active_menu() then
 		return false
@@ -10902,7 +10939,7 @@ function MenuCallbackHandler:update_challenge_menu_node()
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 10937 to 10959
+-- Lines: 10997 to 11019
 function MenuCallbackHandler:give_challenge_reward(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -10927,7 +10964,7 @@ function MenuCallbackHandler:give_challenge_reward(item)
 end
 MenuChooseWeaponRewardInitiator = MenuChooseWeaponRewardInitiator or class()
 
--- Lines: 10963 to 11088
+-- Lines: 11023 to 11148
 function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -10943,13 +10980,13 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local items = {}
 
 
-	-- Lines: 10986 to 10987
+	-- Lines: 11046 to 11047
 	local function chk_unlocked_func(weapon)
 		return not not weapon.unlocked
 	end
 
 
-	-- Lines: 10990 to 10997
+	-- Lines: 11050 to 11057
 	local function chk_dlc_func(weapon)
 		x_id = weapon.weapon_id
 		x_gv = weapon_tweak[x_id].global_value
@@ -10962,7 +10999,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	end
 
 
-	-- Lines: 11000 to 11002
+	-- Lines: 11060 to 11062
 	local function chk_dropable_func(weapon)
 		local loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon.weapon_id, nil, true)
 
@@ -10970,7 +11007,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	end
 
 
-	-- Lines: 11005 to 11006
+	-- Lines: 11065 to 11066
 	local function chk_parent_func(weapon)
 		return weapon_tweak[weapon.weapon_id] and not weapon_tweak[weapon.weapon_id].parent_weapon_id
 	end
@@ -11001,7 +11038,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	end
 
 
-	-- Lines: 11030 to 11064
+	-- Lines: 11090 to 11124
 	local function sort_func(x, y)
 		x_unlocked = x.unlocked
 		y_unlocked = y.unlocked
@@ -11063,14 +11100,14 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 11091 to 11093
+-- Lines: 11151 to 11153
 function MenuChooseWeaponRewardInitiator:refresh_node(node)
 	self:setup_node(node)
 
 	return node
 end
 
--- Lines: 11096 to 11248
+-- Lines: 11156 to 11308
 function MenuChooseWeaponRewardInitiator:setup_node(node)
 	local listed_category = node:parameters().listed_category or "assault_rifle"
 	local listed_weapon = node:parameters().listed_weapon or "amcar"
@@ -11182,7 +11219,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		local x_sn, y_sn = nil
 
 
-		-- Lines: 11176 to 11190
+		-- Lines: 11236 to 11250
 		local function sort_func(x, y)
 			if x == "normal" then
 				return true
@@ -11274,7 +11311,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 	return node
 end
 
--- Lines: 11252 to 11268
+-- Lines: 11312 to 11328
 function MenuChooseWeaponRewardInitiator:create_divider(node, id, text_id, size, color, align)
 	local params = {
 		name = "divider_" .. id,
@@ -11291,7 +11328,7 @@ function MenuChooseWeaponRewardInitiator:create_divider(node, id, text_id, size,
 	node:add_item(new_item)
 end
 
--- Lines: 11270 to 11291
+-- Lines: 11330 to 11351
 function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11318,7 +11355,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11293 to 11312
+-- Lines: 11353 to 11372
 function MenuCallbackHandler:choice_challenge_choose_weapon(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11345,7 +11382,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11314 to 11334
+-- Lines: 11374 to 11394
 function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11372,7 +11409,7 @@ function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11336 to 11373
+-- Lines: 11396 to 11433
 function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11413,7 +11450,7 @@ function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 	managers.menu:show_challenge_reward(reward)
 end
 
--- Lines: 11375 to 11387
+-- Lines: 11435 to 11447
 function MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_value)
 	local loot_table, limited_loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon_id, global_value, true)
 	local my_loot_table = #limited_loot_table > 0 and limited_loot_table or loot_table
@@ -11429,14 +11466,14 @@ function MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_va
 end
 MenuCustomizeGadgetInitiator = MenuCustomizeGadgetInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines: 11393 to 11395
+-- Lines: 11453 to 11455
 function MenuCustomizeGadgetInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines: 11399 to 11551
+-- Lines: 11459 to 11611
 function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	node:clean_items()
 
@@ -11588,7 +11625,7 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	return node
 end
 
--- Lines: 11555 to 11564
+-- Lines: 11615 to 11624
 function MenuCustomizeGadgetInitiator:refresh_node(node, data)
 	local confirm = node:item("confirm")
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -11600,7 +11637,7 @@ function MenuCustomizeGadgetInitiator:refresh_node(node, data)
 	end
 end
 
--- Lines: 11566 to 11580
+-- Lines: 11626 to 11640
 function MenuCustomizeGadgetInitiator:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
@@ -11621,37 +11658,37 @@ function MenuCustomizeGadgetInitiator:create_slider(node, params)
 	return new_item
 end
 
--- Lines: 11583 to 11585
+-- Lines: 11643 to 11645
 function MenuCallbackHandler:set_gadget_laser_hue()
 	self:update_gadget_customization()
 end
 
--- Lines: 11587 to 11589
+-- Lines: 11647 to 11649
 function MenuCallbackHandler:set_gadget_laser_sat()
 	self:update_gadget_customization()
 end
 
--- Lines: 11591 to 11593
+-- Lines: 11651 to 11653
 function MenuCallbackHandler:set_gadget_laser_val()
 	self:update_gadget_customization()
 end
 
--- Lines: 11595 to 11597
+-- Lines: 11655 to 11657
 function MenuCallbackHandler:set_gadget_flashlight_hue()
 	self:update_gadget_customization()
 end
 
--- Lines: 11599 to 11601
+-- Lines: 11659 to 11661
 function MenuCallbackHandler:set_gadget_flashlight_sat()
 	self:update_gadget_customization()
 end
 
--- Lines: 11603 to 11605
+-- Lines: 11663 to 11665
 function MenuCallbackHandler:set_gadget_flashlight_val()
 	self:update_gadget_customization()
 end
 
--- Lines: 11607 to 11626
+-- Lines: 11667 to 11686
 function MenuCallbackHandler:update_gadget_customization(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11675,7 +11712,7 @@ function MenuCallbackHandler:update_gadget_customization(item)
 	end
 end
 
--- Lines: 11628 to 11653
+-- Lines: 11688 to 11713
 function MenuCallbackHandler:set_gadget_customize_params()
 	if not managers.menu:active_menu() then
 		return false
@@ -11703,5 +11740,9 @@ function MenuCallbackHandler:set_gadget_customize_params()
 
 	managers.blackmarket:set_part_custom_colors(category, slot, part_id, colors)
 	managers.menu:back()
+end
+
+if _G.IS_VR then
+	require("lib/managers/MenuManagerVR")
 end
 
