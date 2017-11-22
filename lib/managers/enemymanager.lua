@@ -871,7 +871,7 @@ function EnemyManager:on_criminal_unregistered(u_key)
 	self:_destroy_unit_gfx_lod_data(u_key)
 end
 
--- Lines: 912 to 990
+-- Lines: 912 to 995
 function EnemyManager:_upd_corpse_disposal()
 	local t = TimerManager:game():time()
 	local enemy_data = self._enemy_data
@@ -957,7 +957,7 @@ function EnemyManager:_upd_corpse_disposal()
 	end
 end
 
--- Lines: 995 to 1071
+-- Lines: 1000 to 1076
 function EnemyManager:_upd_shield_disposal()
 	local t = TimerManager:game():time()
 	local enemy_data = self._enemy_data
@@ -1041,7 +1041,7 @@ function EnemyManager:_upd_shield_disposal()
 	end
 end
 
--- Lines: 1076 to 1092
+-- Lines: 1081 to 1097
 function EnemyManager:set_corpse_disposal_enabled(state)
 	local was_enabled = self._corpse_disposal_enabled > 0
 	self._corpse_disposal_enabled = self._corpse_disposal_enabled + (state and 1 or 0)
@@ -1055,21 +1055,21 @@ function EnemyManager:set_corpse_disposal_enabled(state)
 	end
 end
 
--- Lines: 1096 to 1097
+-- Lines: 1101 to 1102
 function EnemyManager:is_corpse_disposal_enabled()
 	return self._corpse_disposal_enabled > 0 and true
 end
 
--- Lines: 1103 to 1104
+-- Lines: 1108 to 1109
 function EnemyManager:on_simulation_ended()
 end
 
--- Lines: 1108 to 1110
+-- Lines: 1113 to 1115
 function EnemyManager:on_simulation_started()
 	self._destroyed = nil
 end
 
--- Lines: 1115 to 1132
+-- Lines: 1120 to 1137
 function EnemyManager:get_my_hostages(id)
 	local civilians = self:all_civilians()
 	local all_hostages = managers.groupai:state():all_hostages()
@@ -1088,7 +1088,7 @@ function EnemyManager:get_my_hostages(id)
 	return list
 end
 
--- Lines: 1137 to 1149
+-- Lines: 1142 to 1154
 function EnemyManager:dispose_all_corpses()
 	self._destroyed = true
 
@@ -1103,7 +1103,7 @@ function EnemyManager:dispose_all_corpses()
 	end
 end
 
--- Lines: 1153 to 1176
+-- Lines: 1158 to 1181
 function EnemyManager:save(data)
 	local my_data = nil
 
@@ -1130,7 +1130,7 @@ function EnemyManager:save(data)
 	data.enemy_manager = my_data
 end
 
--- Lines: 1180 to 1219
+-- Lines: 1185 to 1224
 function EnemyManager:load(data)
 	local my_data = data.enemy_manager
 
@@ -1188,12 +1188,12 @@ function EnemyManager:load(data)
 	end
 end
 
--- Lines: 1223 to 1224
+-- Lines: 1228 to 1229
 function EnemyManager:get_corpse_unit_data_from_key(u_key)
 	return self._enemy_data.corpses[u_key]
 end
 
--- Lines: 1229 to 1235
+-- Lines: 1234 to 1240
 function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1202,7 +1202,7 @@ function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	end
 end
 
--- Lines: 1239 to 1246
+-- Lines: 1244 to 1251
 function EnemyManager:remove_corpse_by_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1213,7 +1213,7 @@ function EnemyManager:remove_corpse_by_id(u_id)
 	end
 end
 
--- Lines: 1250 to 1262
+-- Lines: 1255 to 1267
 function EnemyManager:get_nearby_medic(unit)
 	if self:is_civilian(unit) then
 		return nil
@@ -1230,7 +1230,7 @@ function EnemyManager:get_nearby_medic(unit)
 	return nil
 end
 
--- Lines: 1268 to 1274
+-- Lines: 1273 to 1279
 function EnemyManager:add_magazine(magazine, collision)
 	self._magazines = self._magazines or {}
 
@@ -1244,7 +1244,7 @@ function EnemyManager:add_magazine(magazine, collision)
 	end
 end
 
--- Lines: 1279 to 1289
+-- Lines: 1284 to 1294
 function EnemyManager:cleanup_magazines()
 	for i = 1, #self._magazines - EnemyManager.MAX_MAGAZINES, 1 do
 		for _, unit in ipairs(self._magazines[1]) do

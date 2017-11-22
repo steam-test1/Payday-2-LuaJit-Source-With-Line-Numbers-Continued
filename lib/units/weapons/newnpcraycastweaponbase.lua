@@ -634,7 +634,7 @@ end
 
 -- Lines: 653 to 664
 function NewNPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
-	if alive(not self._obj_fire) then
+	if not alive(self._obj_fire) then
 		return
 	end
 

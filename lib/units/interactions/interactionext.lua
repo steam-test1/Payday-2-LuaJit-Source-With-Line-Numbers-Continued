@@ -3015,10 +3015,15 @@ function CivilianHeisterInteractionExt:is_daily_accepted()
 	return self._accepted
 end
 
--- Lines: 2769 to 2789
+-- Lines: 2769 to 2796
 function CivilianHeisterInteractionExt:update_character()
-	local character_name = CriminalsManager.convert_new_to_old_character_workname(self.character)
-	local character_tier = managers.custom_safehouse:get_host_room_tier(character_name)
+	local room_name = CriminalsManager.convert_new_to_old_character_workname(self.character)
+
+	if room_name == "ecp_male" or room_name == "ecp_female" then
+		room_name = "ecp"
+	end
+
+	local character_tier = managers.custom_safehouse:get_host_room_tier(room_name)
 
 	if self._unit:damage() and self.heister_data.character_material then
 		self._unit:damage():run_sequence_simple(self.heister_data.character_material)
@@ -3037,7 +3042,7 @@ function CivilianHeisterInteractionExt:update_character()
 	self._idle_count = 0
 end
 
--- Lines: 2792 to 2835
+-- Lines: 2799 to 2842
 function CivilianHeisterInteractionExt:get_character_voice_line(key, character_tier, anim)
 	local voice_lines = self.heister_data[key] or {}
 
@@ -3084,7 +3089,7 @@ function CivilianHeisterInteractionExt:get_character_voice_line(key, character_t
 	return string.gsub(current_line.sound_event, "{voice}", tostring(self.heister_data.voice))
 end
 
--- Lines: 2840 to 2876
+-- Lines: 2847 to 2883
 function CivilianHeisterInteractionExt:get_character_anim_voice_lines(key, character_tier)
 	local voice_lines = {}
 
@@ -3129,12 +3134,12 @@ function CivilianHeisterInteractionExt:get_character_anim_voice_lines(key, chara
 	return lines
 end
 
--- Lines: 2880 to 2881
+-- Lines: 2887 to 2888
 function CivilianHeisterInteractionExt:_interact_blocked(player)
 	return self._unit:sound():speaking(TimerManager:game():time())
 end
 
--- Lines: 2885 to 2926
+-- Lines: 2892 to 2933
 function CivilianHeisterInteractionExt:interact(player)
 	CivilianHeisterInteractionExt.super.super.interact(self, player)
 
@@ -3179,7 +3184,7 @@ function CivilianHeisterInteractionExt:interact(player)
 	return true
 end
 
--- Lines: 2930 to 2948
+-- Lines: 2937 to 2955
 function CivilianHeisterInteractionExt:_play_idle_line()
 	for _, anim_block in ipairs(self.heister_data.anim_blocks or {}) do
 		if anim_block.block == "idle" and self._unit:anim_data()[anim_block.anim_value] then
@@ -3202,7 +3207,7 @@ function CivilianHeisterInteractionExt:_play_idle_line()
 	self._idle_count = self._idle_count + 1
 end
 
--- Lines: 2952 to 2960
+-- Lines: 2959 to 2967
 function CivilianHeisterInteractionExt:_play_voice_line(snd_event)
 	self:set_active(false)
 
@@ -3212,14 +3217,14 @@ function CivilianHeisterInteractionExt:_play_voice_line(snd_event)
 	self._unit:sound():_play(snd_event)
 end
 
--- Lines: 2962 to 2965
+-- Lines: 2969 to 2972
 function CivilianHeisterInteractionExt:_reenable_ext()
 	self:set_active(true)
 
 	self._is_speaking = false
 end
 
--- Lines: 2968 to 3033
+-- Lines: 2975 to 3040
 function CivilianHeisterInteractionExt:update(unit, t, dt)
 	for _, anim_block in ipairs(self.heister_data.anim_blocks or {}) do
 		if anim_block.block == "answering" and self._active == self._unit:anim_data()[anim_block.anim_value] then
@@ -3282,24 +3287,24 @@ function CivilianHeisterInteractionExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 3035 to 3038
+-- Lines: 3042 to 3045
 function CivilianHeisterInteractionExt:show_waypoint()
 	self._unit:contour():add("highlight", true)
 end
 
--- Lines: 3040 to 3042
+-- Lines: 3047 to 3049
 function CivilianHeisterInteractionExt:hide_waypoint()
 	self._unit:contour():remove("highlight")
 end
 
--- Lines: 3045 to 3048
+-- Lines: 3052 to 3055
 function CivilianHeisterInteractionExt:play_minigame_vo(state)
 	self._unit:sound():set_minigame_response(state)
 	self:_play_voice_line("Play_" .. tostring(self.heister_data.voice) .. "_minigame")
 end
 SafehouseNPCInteractionExt = SafehouseNPCInteractionExt or class(UseInteractionExt)
 
--- Lines: 3054 to 3061
+-- Lines: 3061 to 3068
 function SafehouseNPCInteractionExt:init(unit)
 	self.character = self.character or "dallas"
 	self.tweak_data = string.format("%s_%s", self.tweak_data, self.character)
@@ -3310,12 +3315,12 @@ function SafehouseNPCInteractionExt:init(unit)
 	self._answer_line = string.format("Play_%s_answering", self.character)
 end
 
--- Lines: 3063 to 3064
+-- Lines: 3070 to 3071
 function SafehouseNPCInteractionExt:_interact_blocked(player)
 	return self._unit:sound():speaking(TimerManager:game():time())
 end
 
--- Lines: 3067 to 3084
+-- Lines: 3074 to 3091
 function SafehouseNPCInteractionExt:interact(player)
 	SafehouseNPCInteractionExt.super.super.interact(self, player)
 
@@ -3337,13 +3342,13 @@ function SafehouseNPCInteractionExt:interact(player)
 	return true
 end
 
--- Lines: 3087 to 3089
+-- Lines: 3094 to 3096
 function SafehouseNPCInteractionExt:_reenable_ext()
 	self:set_active(true)
 end
 ButlerInteractionExt = ButlerInteractionExt or class(SafehouseNPCInteractionExt)
 
--- Lines: 3095 to 3099
+-- Lines: 3102 to 3106
 function ButlerInteractionExt:init(unit)
 	ButlerInteractionExt.super.init(self, unit)
 
@@ -3351,12 +3356,12 @@ function ButlerInteractionExt:init(unit)
 end
 AccessFBIFilesInteractionExt = AccessFBIFilesInteractionExt or class(UseInteractionExt)
 
--- Lines: 3105 to 3106
+-- Lines: 3112 to 3113
 function AccessFBIFilesInteractionExt:_interact_blocked(player)
 	return false
 end
 
--- Lines: 3109 to 3112
+-- Lines: 3116 to 3119
 function AccessFBIFilesInteractionExt:interact(player)
 	AccessFBIFilesInteractionExt.super.super.interact(self, player)
 	Steam:overlay_activate("url", tweak_data.gui.fbi_files_webpage .. "/suspect/" .. Steam:userid() .. "/")
@@ -3365,12 +3370,12 @@ function AccessFBIFilesInteractionExt:interact(player)
 end
 AccessPD2StashInteractionExt = AccessPD2StashInteractionExt or class(UseInteractionExt)
 
--- Lines: 3119 to 3120
+-- Lines: 3126 to 3127
 function AccessPD2StashInteractionExt:_interact_blocked(player)
 	return false
 end
 
--- Lines: 3123 to 3126
+-- Lines: 3130 to 3133
 function AccessPD2StashInteractionExt:interact(player)
 	AccessPD2StashInteractionExt.super.super.interact(self, player)
 	Steam:overlay_activate("url", "http://pd2stash.com/")
@@ -3379,12 +3384,12 @@ function AccessPD2StashInteractionExt:interact(player)
 end
 AccessSideJobsInteractionExt = AccessSideJobsInteractionExt or class(UseInteractionExt)
 
--- Lines: 3133 to 3134
+-- Lines: 3140 to 3141
 function AccessSideJobsInteractionExt:_interact_blocked(player)
 	return false
 end
 
--- Lines: 3137 to 3140
+-- Lines: 3144 to 3147
 function AccessSideJobsInteractionExt:interact(player)
 	AccessSideJobsInteractionExt.super.super.interact(self, player)
 	managers.custom_safehouse:enable_in_game_menu()
@@ -3393,7 +3398,7 @@ function AccessSideJobsInteractionExt:interact(player)
 end
 AccessWeaponMenuInteractionExt = AccessWeaponMenuInteractionExt or class(UseInteractionExt)
 
--- Lines: 3146 to 3150
+-- Lines: 3153 to 3157
 function AccessWeaponMenuInteractionExt:interact(player)
 	AccessWeaponMenuInteractionExt.super.super.interact(self, player)
 
@@ -3405,7 +3410,7 @@ function AccessWeaponMenuInteractionExt:interact(player)
 end
 AccessCrimeNetInteractionExt = AccessCrimeNetInteractionExt or class(UseInteractionExt)
 
--- Lines: 3158 to 3166
+-- Lines: 3165 to 3173
 function AccessCrimeNetInteractionExt:init(unit)
 	AccessCrimeNetInteractionExt.super.init(self, unit)
 
@@ -3420,7 +3425,7 @@ function AccessCrimeNetInteractionExt:init(unit)
 end
 local offs = Vector3(0, 0, 1) * 200
 
--- Lines: 3169 to 3185
+-- Lines: 3176 to 3192
 function AccessCrimeNetInteractionExt:update(unit, t, dt)
 	self._tick_t = self._tick_t + 1
 

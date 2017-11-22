@@ -1,6 +1,6 @@
 LootDropTweakData = LootDropTweakData or class()
 
--- Lines: 4 to 1936
+-- Lines: 4 to 1939
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1506,6 +1506,21 @@ function LootDropTweakData:init(tweak_data)
 		category = "global_event",
 		ignore_ulti = true
 	}
+	self.global_values.ecp = {
+		name_id = "bm_global_value_ecp",
+		desc_id = "menu_l_global_value_ecp",
+		unlock_id = "bm_global_value_ecp_unlock",
+		color = dlc_color,
+		dlc = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "dlc",
+		ignore_ulti = true
+	}
 	self.global_values.cmo = {
 		name_id = "bm_global_value_cmo",
 		desc_id = "menu_l_global_value_cmo",
@@ -1649,6 +1664,7 @@ function LootDropTweakData:init(tweak_data)
 		"max",
 		"dgm",
 		"fdm",
+		"ecp",
 		"cmo",
 		"pbm",
 		"eng"
@@ -1657,7 +1673,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 1938 to 1943
+-- Lines: 1941 to 1946
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

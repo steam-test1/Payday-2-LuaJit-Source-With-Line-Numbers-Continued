@@ -1834,6 +1834,19 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	end
 end
 
+-- Lines: 1698 to 1712
+function PlayerManager:extend_temporary_upgrade(category, upgrade, time)
+	local upgrade_value = self:upgrade_value(category, upgrade)
+
+	if upgrade_value == 0 then
+		return
+	end
+
+	local time = upgrade_value[2]
+	local upgrade = self._temporary_upgrades[category][upgrade]
+	upgrade.expire_time = upgrade_expire_time + time
+end
+
 -- Lines: 1715 to 1733
 function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, level)
 	local upgrade_level = self:upgrade_level(category, upgrade, 0) or 0
@@ -5654,7 +5667,65 @@ function PlayerManager:_attempt_chico_injector()
 	return true
 end
 
--- Lines: 5268 to 5277
+-- Lines: 5230 to 5269
+function PlayerManager:_attempt_tag_team()
+	local player = managers.player:player_unit()
+	local player_eye = player:camera():position()
+	local player_fwd = player:camera():rotation():y()
+	local tagged = nil
+	local heisters_slot_mask = World:make_slot_mask(2, 3, 4, 5, 16, 24)
+	local cone_camera = player:camera():camera_object()
+	local cone_center = Vector3(0, 0)
+	local cone_radius = managers.player:upgrade_value("player", "tag_team_base").radius
+	local tag_distance = managers.player:upgrade_value("player", "tag_team_base").distance * 100
+	local heisters = World:find_units("camera_cone", cone_camera, cone_center, cone_radius, tag_distance, heisters_slot_mask)
+	local best_dot = -1
+
+	for _, heister in ipairs(heisters) do
+		local heister_center = heister:oobb():center()
+		local heister_dir = heister_center - player_eye
+		local distance_pass = mvector3.length_sq(heister_dir) <= tag_distance * tag_distance
+		local raycast = nil
+
+		if distance_pass then
+			mvector3.normalize(heister_dir)
+
+			local heister_dot = Vector3.dot(player_fwd, heister_dir)
+
+			if best_dot < heister_dot then
+				best_dot = heister_dot
+				raycast = World:raycast(player_eye, heister_center)
+				tagged = raycast and raycast.unit:in_slot(heisters_slot_mask) and heister
+			end
+		end
+	end
+
+	if not tagged or self._coroutine_mgr:is_running("tag_team") then
+		return false
+	end
+
+	self:add_coroutine("tag_team", PlayerAction.TagTeam, tagged, player)
+
+	return true
+end
+
+-- Lines: 5272 to 5279
+function PlayerManager:sync_tag_team(tagged, owner, end_time)
+	if tagged == self:local_player() then
+		local tagged_id = managers.network:session():peer_by_unit(tagged):id()
+		local owner_id = managers.network:session():peer_by_unit(owner):id()
+		local coroutine_key = "tag_team_" .. tagged_id .. owner_id
+
+		self:add_coroutine(coroutine_key, PlayerAction.TagTeamTagged, tagged, owner, end_time)
+	end
+end
+
+-- Lines: 5281 to 5283
+function PlayerManager:end_tag_team(tagged, owner)
+	self._listener_holder:call("tag_team_end", tagged, owner)
+end
+
+-- Lines: 5286 to 5295
 function PlayerManager:_update_timers(t)
 	local timers_copy = table.map_copy(self._timers)
 
@@ -5669,7 +5740,7 @@ function PlayerManager:_update_timers(t)
 	end
 end
 
--- Lines: 5279 to 5282
+-- Lines: 5297 to 5300
 function PlayerManager:start_timer(key, duration, callback)
 	local end_time = TimerManager:game():time() + duration
 	self._timers[key] = {
@@ -5678,7 +5749,7 @@ function PlayerManager:start_timer(key, duration, callback)
 	}
 end
 
--- Lines: 5284 to 5287
+-- Lines: 5302 to 5305
 function PlayerManager:get_timer(key)
 	if not key then
 		return
@@ -5689,12 +5760,12 @@ function PlayerManager:get_timer(key)
 	return timer and TimerManager:game():time() < timer.t and timer.t or nil
 end
 
--- Lines: 5290 to 5291
+-- Lines: 5308 to 5309
 function PlayerManager:has_active_timer(key)
 	return self:get_timer(key) ~= nil
 end
 
--- Lines: 5294 to 5297
+-- Lines: 5312 to 5315
 function PlayerManager:get_timer_remaining(key)
 	local time = self:get_timer(key)
 	local now = TimerManager:game():time()
@@ -5702,12 +5773,12 @@ function PlayerManager:get_timer_remaining(key)
 	return time and time - now
 end
 
--- Lines: 5300 to 5302
+-- Lines: 5318 to 5320
 function PlayerManager:clear_timers()
 	self._timers = {}
 end
 
--- Lines: 5304 to 5308
+-- Lines: 5322 to 5326
 function PlayerManager:reset_ability_hud()
 	managers.hud:set_player_grenade_cooldown(nil)
 	managers.hud:set_player_ability_radial({
@@ -5718,7 +5789,7 @@ function PlayerManager:reset_ability_hud()
 	self._should_reset_ability_hud = nil
 end
 
--- Lines: 5311 to 5320
+-- Lines: 5329 to 5338
 function PlayerManager:update_smoke_screens(t, dt)
 	if self._smoke_screen_effects and #self._smoke_screen_effects > 0 then
 		for i, smoke_screen_effect in dpairs(self._smoke_screen_effects) do
@@ -5731,12 +5802,12 @@ function PlayerManager:update_smoke_screens(t, dt)
 	end
 end
 
--- Lines: 5322 to 5323
+-- Lines: 5340 to 5341
 function PlayerManager:smoke_screens()
 	return self._smoke_screen_effects or {}
 end
 
--- Lines: 5326 to 5335
+-- Lines: 5344 to 5353
 function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_dodge_bonus)
 	local time = tweak_data.projectiles.smoke_screen_grenade.duration
 	self._smoke_screen_effects = self._smoke_screen_effects or {}
@@ -5750,7 +5821,7 @@ function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_do
 	self._smoke_grenade = grenade_unit
 end
 
--- Lines: 5337 to 5343
+-- Lines: 5355 to 5361
 function PlayerManager:_dodge_shot_gain(gain_value)
 	if gain_value then
 		self._dodge_shot_gain_value = gain_value
@@ -5759,12 +5830,12 @@ function PlayerManager:_dodge_shot_gain(gain_value)
 	end
 end
 
--- Lines: 5345 to 5347
+-- Lines: 5363 to 5365
 function PlayerManager:_dodge_replenish_armor()
 	self:player_unit():character_damage():_regenerate_armor()
 end
 
--- Lines: 5386 to 5394
+-- Lines: 5404 to 5412
 function PlayerManager:crew_add_concealment(new_value)
 	for k, v in pairs(managers.network:session():all_peers()) do
 		local unit = v:unit()

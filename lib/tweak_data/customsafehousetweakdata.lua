@@ -45,7 +45,7 @@ function CustomSafehouseTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 54 to 189
+-- Lines: 54 to 199
 function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters = {base = {}}
 	self.heisters.base.idle_line_dist = 500
@@ -164,6 +164,12 @@ function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters.myh = clone(self.heisters.base)
 	self.heisters.myh.character_material = "var_mtr_myh"
 	self.heisters.myh.voice = self:get_voice(tweak_data, "myh")
+	self.heisters.ecp_female = clone(self.heisters.base)
+	self.heisters.ecp_female.character_material = "var_mtr_ecp_female"
+	self.heisters.ecp_female.voice = self:get_voice(tweak_data, "ecp_female")
+	self.heisters.ecp_male = clone(self.heisters.base)
+	self.heisters.ecp_male.character_material = "var_mtr_ecp_male"
+	self.heisters.ecp_male.voice = self:get_voice(tweak_data, "ecp_male")
 	self.heisters.butler = clone(self.heisters.base)
 	self.heisters.butler.character_material = ""
 	self.heisters.vlad = clone(self.heisters.base)
@@ -171,7 +177,7 @@ function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters.vlad.idle_offset = 20
 end
 
--- Lines: 191 to 197
+-- Lines: 201 to 207
 function CustomSafehouseTweakData:get_voice(tweak_data, character_name)
 	for i, data in ipairs(tweak_data.criminals.characters) do
 		if data.name == character_name then
@@ -180,7 +186,7 @@ function CustomSafehouseTweakData:get_voice(tweak_data, character_name)
 	end
 end
 
--- Lines: 201 to 413
+-- Lines: 211 to 423
 function CustomSafehouseTweakData:_init_safehouse_contractors(tweak_data)
 	local heister_weighting = 98 / #tweak_data.criminals.character_names
 	local butler_weighting = 2
@@ -366,7 +372,7 @@ function CustomSafehouseTweakData:_init_safehouse_contractors(tweak_data)
 	})
 end
 
--- Lines: 416 to 704
+-- Lines: 426 to 729
 function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 	self.rooms = {}
 
@@ -599,6 +605,18 @@ function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 		}
 	})
 	table.insert(self.rooms, {
+		title_id = "menu_cs_title_ecp",
+		tier_max = 3,
+		name_id = "menu_ecp",
+		room_id = "ecp",
+		help_id = "menu_cs_help_ecp",
+		images = {
+			"guis/dlcs/chill/textures/pd2/rooms/safehouse_room_preview_ecp_lvl1",
+			"guis/dlcs/chill/textures/pd2/rooms/safehouse_room_preview_ecp_lvl2",
+			"guis/dlcs/chill/textures/pd2/rooms/safehouse_room_preview_ecp_lvl3"
+		}
+	})
+	table.insert(self.rooms, {
 		title_id = "menu_cs_title_vault",
 		tier_max = 3,
 		name_id = "menu_cs_vault",
@@ -624,7 +642,7 @@ function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 	})
 end
 
--- Lines: 707 to 728
+-- Lines: 732 to 753
 function CustomSafehouseTweakData:_create_objective(data)
 	local save_values = {
 		"achievement_id",
@@ -655,7 +673,7 @@ function CustomSafehouseTweakData:_create_objective(data)
 	return obj
 end
 
--- Lines: 732 to 735
+-- Lines: 757 to 760
 function CustomSafehouseTweakData:_achievement(achievement_id, data)
 	data = data or {}
 	data.achievement_id = achievement_id
@@ -663,7 +681,7 @@ function CustomSafehouseTweakData:_achievement(achievement_id, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 738 to 742
+-- Lines: 763 to 767
 function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	data = data or {}
 	data.progress_id = progress_id
@@ -672,7 +690,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 746 to 1483
+-- Lines: 771 to 1508
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1213,7 +1231,7 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	})
 end
 
--- Lines: 1485 to 1491
+-- Lines: 1510 to 1516
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1224,7 +1242,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines: 1494 to 1503
+-- Lines: 1519 to 1528
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1238,7 +1256,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines: 1506 to 1855
+-- Lines: 1531 to 1880
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1482,7 +1500,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines: 1857 to 1863
+-- Lines: 1882 to 1888
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1491,7 +1509,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines: 1867 to 2068
+-- Lines: 1892 to 2109
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,
@@ -1559,7 +1577,8 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 			"sydney",
 			"wild",
 			"livingroom",
-			"max"
+			"max",
+			"ecp"
 		}
 	})
 	table.insert(self.map.floors, {
@@ -1664,8 +1683,8 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 	}
 	self.map.rooms.livingroom = {
 		icon = "safehouse_character_icon_livingroom",
-		x = 1140,
-		y = 830
+		x = 1170,
+		y = 930
 	}
 	self.map.rooms.old_hoxton = {
 		icon = "safehouse_character_icon_reborn",
@@ -1699,6 +1718,12 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 		icon = "safehouse_character_icon_myh",
 		x = 1155,
 		y = 955
+	}
+	self.map.rooms.ecp = {
+		path = "guis/dlcs/ecp/textures/pd2/blackmarket/icons/safehouse_icons/",
+		icon = "safehouse_character_icon_ecp",
+		x = 1140,
+		y = 830
 	}
 end
 

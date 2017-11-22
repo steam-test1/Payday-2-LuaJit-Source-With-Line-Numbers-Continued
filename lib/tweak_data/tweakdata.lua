@@ -384,7 +384,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines: 373 to 2300
+-- Lines: 373 to 2310
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -648,6 +648,28 @@ function TweakData:init()
 					ssuffix = "ac"
 				},
 				body_g_object = Idstring("g_body_myh")
+			},
+			{
+				name = "ecp_male",
+				order = 21,
+				static_data = {
+					voice = "rb20",
+					ai_mask_id = "ecp_male",
+					ai_character_id = "ai_ecp_male",
+					ssuffix = "aa"
+				},
+				body_g_object = Idstring("g_body_ecp_male")
+			},
+			{
+				name = "ecp_female",
+				order = 22,
+				static_data = {
+					voice = "rb21",
+					ai_mask_id = "ecp_female",
+					ai_character_id = "ai_ecp_female",
+					ssuffix = "ab"
+				},
+				body_g_object = Idstring("g_body_ecp_female")
 			}
 		},
 		character_names = {}
@@ -2339,6 +2361,20 @@ Play the full version soon to get your full PAYDAY!]],
 		name_id = "bm_grenade_dada_com",
 		sound_event = "mtl_explosion"
 	}
+	self.projectiles.ecp_arrow = {
+		damage = 70,
+		launch_speed = 3500,
+		adjust_z = 0,
+		mass_look_up_modifier = 1,
+		push_at_body_index = 0
+	}
+	self.projectiles.ecp_arrow_poison = deep_clone(self.projectiles.ecp_arrow)
+	self.projectiles.ecp_arrow_poison.damage = 10
+	self.projectiles.ecp_arrow_poison.bullet_class = "PoisonBulletBase"
+	self.projectiles.ecp_arrow_exp = deep_clone(self.projectiles.ecp_arrow)
+	self.projectiles.ecp_arrow_exp.damage = 55
+	self.projectiles.ecp_arrow_exp.bullet_class = "InstantExplosiveBulletBase"
+	self.projectiles.ecp_arrow_exp.remove_on_impact = true
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
@@ -2409,19 +2445,19 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines: 2304 to 2356
+-- Lines: 2314 to 2366
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines: 2361 to 2362
+-- Lines: 2371 to 2372
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines: 2367 to 2375
+-- Lines: 2377 to 2385
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2432,7 +2468,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines: 2379 to 2382
+-- Lines: 2389 to 2392
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2442,7 +2478,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines: 2386 to 2395
+-- Lines: 2396 to 2405
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2455,7 +2491,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines: 2399 to 2575
+-- Lines: 2409 to 2585
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2644,7 +2680,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines: 2577 to 2740
+-- Lines: 2587 to 2750
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2750,7 +2786,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines: 2742 to 2814
+-- Lines: 2752 to 2824
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2823,7 +2859,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines: 2817 to 2821
+-- Lines: 2827 to 2831
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -2842,7 +2878,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 end
 
 
--- Lines: 2838 to 3052
+-- Lines: 2848 to 3062
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false
