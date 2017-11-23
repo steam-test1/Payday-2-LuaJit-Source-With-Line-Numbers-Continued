@@ -4647,28 +4647,30 @@ function PlayerStandard:_changing_weapon()
 	return self._unequip_weapon_expire_t or self._equip_weapon_expire_t
 end
 
--- Lines: 5089 to 5106
+-- Lines: 5089 to 5108
 function PlayerStandard:_find_pickups(t)
 	local pickups = World:find_units_quick("sphere", self._unit:movement():m_pos(), self._pickup_area, self._slotmask_pickups)
+	local grenade_tweak = tweak_data.blackmarket.projectiles[managers.blackmarket:equipped_grenade()]
+	local may_find_grenade = not grenade_tweak.base_cooldown and managers.player:has_category_upgrade("player", "regain_throwable_from_ammo")
 
 	for _, pickup in ipairs(pickups) do
 		if pickup:pickup() and pickup:pickup():pickup(self._unit) then
-			for id, weapon in pairs(self._unit:inventory():available_selections()) do
-				if managers.player:has_category_upgrade("player", "regain_throwable_from_ammo") then
-					local data = managers.player:upgrade_value("player", "regain_throwable_from_ammo", nil)
+			if may_find_grenade then
+				local data = managers.player:upgrade_value("player", "regain_throwable_from_ammo", nil)
 
-					if data then
-						managers.player:add_coroutine("regain_throwable_from_ammo", PlayerAction.FullyLoaded, managers.player, data.chance, data.chance_inc)
-					end
+				if data then
+					managers.player:add_coroutine("regain_throwable_from_ammo", PlayerAction.FullyLoaded, managers.player, data.chance, data.chance_inc)
 				end
+			end
 
+			for id, weapon in pairs(self._unit:inventory():available_selections()) do
 				managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
 			end
 		end
 	end
 end
 
--- Lines: 5110 to 5127
+-- Lines: 5112 to 5129
 function PlayerStandard:_upd_attention()
 	local preset = nil
 
@@ -4701,15 +4703,15 @@ function PlayerStandard:_upd_attention()
 	self._ext_movement:set_attention_settings(preset)
 end
 
--- Lines: 5133 to 5134
+-- Lines: 5135 to 5136
 function PlayerStandard:get_melee_damage_result(attack_data)
 end
 
--- Lines: 5140 to 5141
+-- Lines: 5142 to 5143
 function PlayerStandard:get_bullet_damage_result(attack_data)
 end
 
--- Lines: 5147 to 5154
+-- Lines: 5149 to 5156
 function PlayerStandard:push(vel)
 	if self._unit:mover() then
 		self._last_velocity_xy = self._last_velocity_xy + vel
@@ -4720,7 +4722,7 @@ function PlayerStandard:push(vel)
 	self:_interupt_action_running(managers.player:player_timer():time())
 end
 
--- Lines: 5162 to 5178
+-- Lines: 5164 to 5180
 function PlayerStandard:_get_dir_str_from_vec(fwd, dir_vec)
 	local att_dir_spin = dir_vec:to_polar_with_reference(fwd, math.UP).spin
 	local abs_spin = math.abs(att_dir_spin)
@@ -4738,7 +4740,7 @@ function PlayerStandard:_get_dir_str_from_vec(fwd, dir_vec)
 	managers.network:session():send_to_peers_synched("sync_underbarrel_switch", self._equipped_unit:base():selection_index(), underbarrel_base.name_id, underbarrel_base:is_on())
 end
 
--- Lines: 5181 to 5187
+-- Lines: 5183 to 5189
 function PlayerStandard:get_movement_state()
 	if self._state_data.ducking then
 		return self._moving and "moving_crouching" or "crouching"
@@ -4747,7 +4749,7 @@ function PlayerStandard:get_movement_state()
 	end
 end
 
--- Lines: 5193 to 5214
+-- Lines: 5195 to 5216
 function PlayerStandard:set_animation_weapon_hold(name_override)
 	if self._weapon_hold then
 		self._camera_unit:anim_state_machine():set_global(self._weapon_hold, 0)
@@ -4772,7 +4774,7 @@ function PlayerStandard:set_animation_weapon_hold(name_override)
 	end
 end
 
--- Lines: 5241 to 5266
+-- Lines: 5243 to 5268
 function PlayerStandard:inventory_clbk_listener(unit, event)
 	if event == "equip" then
 		local weapon = self._ext_inventory:equipped_unit()
@@ -4801,14 +4803,14 @@ function PlayerStandard:inventory_clbk_listener(unit, event)
 	end
 end
 
--- Lines: 5270 to 5274
+-- Lines: 5272 to 5276
 function PlayerStandard:weapon_recharge_clbk_listener()
 	for id, weapon in pairs(self._ext_inventory:available_selections()) do
 		managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
 	end
 end
 
--- Lines: 5277 to 5281
+-- Lines: 5279 to 5283
 function PlayerStandard:get_equipped_weapon()
 	if self._equipped_unit then
 		return self._equipped_unit:base()
@@ -4817,7 +4819,7 @@ function PlayerStandard:get_equipped_weapon()
 	return nil
 end
 
--- Lines: 5286 to 5292
+-- Lines: 5288 to 5294
 function PlayerStandard:save(data)
 	if self._state_data.ducking then
 		data.pose = 2
@@ -4826,7 +4828,7 @@ function PlayerStandard:save(data)
 	end
 end
 
--- Lines: 5296 to 5304
+-- Lines: 5298 to 5306
 function PlayerStandard:pre_destroy()
 	if self._pos_reservation then
 		managers.navigation:unreserve_pos(self._pos_reservation)
@@ -4839,7 +4841,7 @@ function PlayerStandard:pre_destroy()
 	end
 end
 
--- Lines: 5310 to 5312
+-- Lines: 5312 to 5314
 function PlayerStandard:tweak_data_clbk_reload()
 	self._tweak_data = tweak_data.player.movement_state.standard
 end

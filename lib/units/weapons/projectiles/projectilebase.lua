@@ -109,7 +109,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
--- Lines: 119 to 188
+-- Lines: 119 to 173
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -169,7 +169,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
--- Lines: 192 to 194
+-- Lines: 177 to 179
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	self:throw({
 		dir = dir,
@@ -177,7 +177,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
--- Lines: 198 to 241
+-- Lines: 183 to 226
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -223,7 +223,7 @@ function ProjectileBase:update(unit, t, dt)
 	end
 end
 
--- Lines: 246 to 274
+-- Lines: 231 to 259
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -252,34 +252,34 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
--- Lines: 278 to 280
+-- Lines: 263 to 265
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
--- Lines: 284 to 286
+-- Lines: 269 to 271
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
--- Lines: 290 to 295
+-- Lines: 275 to 280
 function ProjectileBase:save(data)
 	local state = {timer = self._timer}
 	data.ProjectileBase = state
 end
 
--- Lines: 299 to 302
+-- Lines: 284 to 287
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
 end
 
--- Lines: 306 to 308
+-- Lines: 291 to 293
 function ProjectileBase:destroy()
 	self:remove_trail_effect()
 end
 
--- Lines: 314 to 347
+-- Lines: 299 to 332
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)
 	if not ProjectileBase.check_time_cheat(projectile_type, owner_peer_id) then
 		return
@@ -323,14 +323,14 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines: 352 to 355
+-- Lines: 337 to 340
 function ProjectileBase:add_trail_effect()
 	managers.game_play_central:add_projectile_trail(self._unit, self._unit:orientation_object())
 
 	self._added_trail_effect = true
 end
 
--- Lines: 357 to 362
+-- Lines: 342 to 347
 function ProjectileBase:remove_trail_effect()
 	if self._added_trail_effect then
 		managers.game_play_central:remove_projectile_trail(self._unit)
@@ -339,7 +339,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines: 366 to 382
+-- Lines: 351 to 367
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -360,18 +360,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines: 395 to 397
+-- Lines: 380 to 382
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines: 402 to 403
+-- Lines: 387 to 388
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines: 405 to 420
+-- Lines: 390 to 405
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -391,13 +391,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines: 424 to 427
+-- Lines: 409 to 412
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines: 429 to 431
+-- Lines: 414 to 416
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end
