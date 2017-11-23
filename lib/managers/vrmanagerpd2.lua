@@ -3,7 +3,7 @@ require("lib/utils/VRLoadingEnvironment")
 VRManagerPD2 = VRManagerPD2 or class()
 VRManagerPD2.DISABLE_ADAPTIVE_QUALITY = false
 
--- Lines: 6 to 93
+-- Lines: 6 to 94
 function VRManagerPD2:init()
 	print("[VRManagerPD2] init")
 
@@ -60,6 +60,7 @@ function VRManagerPD2:init()
 		auto_reload = true,
 		weapon_switch_button = false,
 		zipline_screen = true,
+		weapon_assist_toggle = false,
 		default_tablet_hand = "left"
 	}
 	self._limits = {
@@ -95,7 +96,7 @@ function VRManagerPD2:init()
 	MenuRoom:load("units/pd2_dlc_vr/menu/vr_menu_mini", false)
 end
 
--- Lines: 95 to 116
+-- Lines: 96 to 117
 function VRManagerPD2:init_finalize()
 	print("[VRManagerPD2] init_finalize")
 
@@ -112,7 +113,7 @@ function VRManagerPD2:init_finalize()
 	self._use_adaptive_quality = managers.user:get_setting("adaptive_quality")
 end
 
--- Lines: 118 to 148
+-- Lines: 119 to 149
 function VRManagerPD2:apply_arcade_settings()
 	print("[VRManagerPD2] Apply arcade settings")
 	managers.user:set_setting("video_ao", "off")
@@ -135,79 +136,79 @@ function VRManagerPD2:apply_arcade_settings()
 	end
 end
 
--- Lines: 150 to 153
+-- Lines: 151 to 154
 function VRManagerPD2:force_start_loading()
 	print("[VRManagerPD2] Force start loading")
 	self._vr_loading_environment:force_start()
 end
 
--- Lines: 155 to 158
+-- Lines: 156 to 159
 function VRManagerPD2:start_loading()
 	print("[VRManagerPD2] Start loading")
 	self._vr_loading_environment:start()
 end
 
--- Lines: 160 to 163
+-- Lines: 161 to 164
 function VRManagerPD2:start_end_screen()
 	print("[VRManagerPD2] Start end screen")
 	self._vr_loading_environment:start("end")
 end
 
--- Lines: 165 to 168
+-- Lines: 166 to 169
 function VRManagerPD2:stop_loading()
 	print("[VRManagerPD2] Stop loading")
 	self._vr_loading_environment:stop()
 end
 
--- Lines: 170 to 173
+-- Lines: 171 to 174
 function VRManagerPD2:destroy()
 	managers.user:remove_setting_changed_callback("adaptive_quality", self._adaptive_quality_setting_changed_clbk)
 	print("[VRManagerPD2] destroy")
 end
 
--- Lines: 178 to 182
+-- Lines: 179 to 183
 function VRManagerPD2:update(t, dt)
 	self:_update_adaptive_quality_level()
 	self._vr_loading_environment:update(t, dt)
 end
 
--- Lines: 184 to 187
+-- Lines: 185 to 188
 function VRManagerPD2:paused_update(t, dt)
 	self:_update_adaptive_quality_level()
 	self._vr_loading_environment:update(t, dt)
 end
 
--- Lines: 206 to 207
+-- Lines: 207 to 208
 function VRManagerPD2:end_update(t, dt)
 end
 
--- Lines: 213 to 214
+-- Lines: 214 to 215
 function VRManagerPD2:render()
 end
 
--- Lines: 216 to 218
+-- Lines: 217 to 219
 function VRManagerPD2:set_hand_state_machine(hsm)
 	self._hsm = hsm
 end
 
--- Lines: 220 to 221
+-- Lines: 221 to 222
 function VRManagerPD2:hand_state_machine()
 	return self._hsm
 end
 
--- Lines: 224 to 226
+-- Lines: 225 to 227
 function VRManagerPD2:_on_adaptive_quality_setting_changed(setting, old, new)
 	self._use_adaptive_quality = new
 end
 
--- Lines: 228 to 230
+-- Lines: 229 to 231
 function VRManagerPD2:set_force_disable_low_adaptive_quality(disable)
 	self._force_disable_low_adaptive_quality = disable
 end
 
--- Lines: 233 to 259
+-- Lines: 234 to 260
 function VRManagerPD2:_update_adaptive_quality_level()
-	local quality_level = self._use_adaptive_quality and VRManager:adaptive_level() + 1 or 3
+	local quality_level = self._use_adaptive_quality and VRManager:adaptive_level() + 1 or 7
 
 	if self._force_disable_low_adaptive_quality then
 		quality_level = math.max(quality_level, 3)
@@ -227,12 +228,12 @@ function VRManagerPD2:_update_adaptive_quality_level()
 	end
 end
 
--- Lines: 261 to 262
+-- Lines: 262 to 263
 function VRManagerPD2:block_exec()
 	return self._vr_loading_environment:block_exec()
 end
 
--- Lines: 269 to 284
+-- Lines: 270 to 285
 function VRManagerPD2:save(data)
 	data.vr = {}
 
@@ -244,7 +245,7 @@ function VRManagerPD2:save(data)
 	data.vr.has_shown_savefile_dialog = self._global.has_shown_savefile_dialog
 end
 
--- Lines: 291 to 310
+-- Lines: 292 to 313
 function VRManagerPD2:load(data)
 	if not data.vr then
 		return
@@ -258,9 +259,11 @@ function VRManagerPD2:load(data)
 		self._global.has_set_height = data.vr.has_set_height
 		self._global.has_shown_savefile_dialog = data.vr.has_shown_savefile_dialog
 	end
+
+	self._global.weapon_assist_toggle = false
 end
 
--- Lines: 314 to 318
+-- Lines: 317 to 321
 function VRManagerPD2:add_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map = self._setting_callback_handler_map or {}
 	self._setting_callback_handler_map[setting] = self._setting_callback_handler_map[setting] or CoreEvent.CallbackEventHandler:new()
@@ -268,7 +271,7 @@ function VRManagerPD2:add_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map[setting]:add(callback)
 end
 
--- Lines: 320 to 326
+-- Lines: 323 to 329
 function VRManagerPD2:remove_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map = self._setting_callback_handler_map or {}
 	self._setting_callback_handler_map[setting] = self._setting_callback_handler_map[setting]
@@ -278,7 +281,7 @@ function VRManagerPD2:remove_setting_changed_callback(setting, callback)
 	end
 end
 
--- Lines: 330 to 335
+-- Lines: 333 to 338
 function VRManagerPD2:setting_limits(setting)
 	local limits = self._limits[setting]
 
@@ -287,12 +290,12 @@ function VRManagerPD2:setting_limits(setting)
 	end
 end
 
--- Lines: 339 to 340
+-- Lines: 342 to 343
 function VRManagerPD2:has_set_height()
 	return self._global.has_set_height
 end
 
--- Lines: 343 to 366
+-- Lines: 346 to 369
 function VRManagerPD2:set_setting(setting, value)
 	if type(value) == "number" then
 		local limits = self._limits[setting]
@@ -319,17 +322,17 @@ function VRManagerPD2:set_setting(setting, value)
 	end
 end
 
--- Lines: 368 to 370
+-- Lines: 371 to 373
 function VRManagerPD2:reset_setting(setting)
 	self:set_setting(setting, self._default[setting])
 end
 
--- Lines: 372 to 373
+-- Lines: 375 to 376
 function VRManagerPD2:get_setting(setting)
 	return self._global[setting]
 end
 
--- Lines: 384 to 389
+-- Lines: 387 to 392
 function VRManagerPD2:show_savefile_dialog()
 	if not self._global.has_shown_savefile_dialog then
 		managers.menu:show_vr_beta_savefile_dialog()

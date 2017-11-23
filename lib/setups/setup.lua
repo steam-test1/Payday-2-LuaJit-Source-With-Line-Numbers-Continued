@@ -705,9 +705,10 @@ function Setup:load_start_menu_lobby()
 	Global.load_start_menu_lobby = true
 end
 
--- Lines: 978 to 1011
+-- Lines: 978 to 1012
 function Setup:load_start_menu()
 	if _G.IS_VR then
+		self:set_main_thread_loading_screen_visible(true)
 		managers.vr:start_loading()
 
 		if managers.overlay_effect then
@@ -737,7 +738,7 @@ function Setup:load_start_menu()
 	managers.butler_mirroring = ButlerMirroringManager:new()
 end
 
--- Lines: 1013 to 1036
+-- Lines: 1014 to 1037
 function Setup:exec(context)
 	if managers.network then
 		if SystemInfo:platform() == Idstring("PS4") then
@@ -769,7 +770,7 @@ function Setup:exec(context)
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
--- Lines: 1038 to 1045
+-- Lines: 1039 to 1046
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
 
@@ -779,7 +780,7 @@ function Setup:quit()
 	end
 end
 
--- Lines: 1047 to 1054
+-- Lines: 1048 to 1055
 function Setup:restart()
 	local data = Global.level_data
 
@@ -790,7 +791,7 @@ function Setup:restart()
 	end
 end
 
--- Lines: 1056 to 1115
+-- Lines: 1057 to 1116
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -840,12 +841,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines: 1118 to 1119
+-- Lines: 1119 to 1120
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines: 1122 to 1128
+-- Lines: 1123 to 1129
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -855,14 +856,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines: 1130 to 1134
+-- Lines: 1131 to 1135
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines: 1136 to 1146
+-- Lines: 1137 to 1147
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -877,7 +878,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines: 1149 to 1150
+-- Lines: 1150 to 1151
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

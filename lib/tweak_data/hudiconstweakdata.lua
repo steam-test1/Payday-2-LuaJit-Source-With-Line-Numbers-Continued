@@ -11071,7 +11071,7 @@ end
 
 -- Lines: 2534 to 2539
 function HudIconsTweakData:get_texture(texture_path)
-	local icon_data = self[texture]
+	local icon_data = self[texture_path]
 
 	if not icon_data then
 		return texture_path

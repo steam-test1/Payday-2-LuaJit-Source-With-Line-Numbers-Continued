@@ -2226,7 +2226,7 @@ function HUDManager:set_custody_respawn_type(is_ai_trade)
 	self._hud_player_custody:set_respawn_type(is_ai_trade)
 end
 
--- Lines: 2017 to 2059
+-- Lines: 2017 to 2064
 function HUDManager:set_ai_stopped(ai_id, stopped)
 	local teammate_panel = self._teammate_panels[ai_id]
 
@@ -2271,6 +2271,13 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 				texture_rect = tweak_data.hud_icons.ai_stopped.texture_rect
 			})
 
+			if _G.IS_VR then
+				label_stop_icon:configure({
+					depth_mode = "disabled",
+					render_template = Idstring("OverlayVertexColorTextured")
+				})
+			end
+
 			label_stop_icon:set_right(label.text:left())
 			label_stop_icon:set_center_y(label.text:center_y())
 		end
@@ -2285,7 +2292,7 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 	end
 end
 
--- Lines: 2066 to 2072
+-- Lines: 2071 to 2077
 function HUDManager:achievement_popup(id)
 	if managers.network.account:signin_state() ~= "signed in" then
 		return
@@ -2296,22 +2303,22 @@ function HUDManager:achievement_popup(id)
 	HudChallangeNotification.queue(managers.localization:to_upper_text("hud_achieved_popup"), managers.localization:to_upper_text(d.name_id), d.icon_id)
 end
 
--- Lines: 2075 to 2078
+-- Lines: 2080 to 2083
 function HUDManager:challenge_popup(d)
 	HudChallangeNotification.queue(managers.localization:to_upper_text("hud_challenge_popup"), managers.localization:to_upper_text(d.name_id))
 end
 
--- Lines: 2080 to 2083
+-- Lines: 2085 to 2088
 function HUDManager:custom_ingame_popup(title_id, text_id, icon_id)
 	HudChallangeNotification.queue(managers.localization:to_upper_text(title_id), managers.localization:to_upper_text(text_id), icon_id)
 end
 
--- Lines: 2085 to 2087
+-- Lines: 2090 to 2092
 function HUDManager:custom_ingame_popup_text(title, text, icon_id)
 	HudChallangeNotification.queue(title, text, icon_id)
 end
 
--- Lines: 2089 to 2110
+-- Lines: 2094 to 2115
 function HUDManager:safe_house_challenge_popup(id, c_type)
 	local d = nil
 	local title_id = "hud_trophy_popup"
@@ -2334,7 +2341,7 @@ function HUDManager:safe_house_challenge_popup(id, c_type)
 	end
 end
 
--- Lines: 2115 to 2123
+-- Lines: 2120 to 2128
 function HUDManager:register_ingame_workspace(name, obj)
 	self._ingame_workspaces = self._ingame_workspaces or {}
 
@@ -2347,7 +2354,7 @@ function HUDManager:register_ingame_workspace(name, obj)
 	end
 end
 
--- Lines: 2125 to 2126
+-- Lines: 2130 to 2131
 function HUDManager:ingame_workspace(name)
 	return self._ingame_workspaces and self._ingame_workspaces[name]
 end

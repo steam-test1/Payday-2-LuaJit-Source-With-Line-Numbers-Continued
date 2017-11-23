@@ -4,11 +4,11 @@ ProjectileWeaponBase = ProjectileWeaponBase or class(NewRaycastWeaponBase)
 function ProjectileWeaponBase:init(...)
 	ProjectileWeaponBase.super.init(self, ...)
 
-	self._projectile_type_index = self:weapon_tweak_data().projectile_type_index
+	self._projectile_type = self:weapon_tweak_data().projectile_type
 end
 local mvec_spread_direction = Vector3()
 
--- Lines: 11 to 51
+-- Lines: 11 to 53
 function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local unit = nil
 	local spread_x, spread_y = self:_get_spread(user_unit)
@@ -22,10 +22,15 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	mvector3.add(mvec_spread_direction, right * math.rad(ax))
 	mvector3.add(mvec_spread_direction, up * math.rad(ay))
 
-	local projectile_type_index = self._projectile_type_index or 2
+	local projectile_type = self._projectile_type or tweak_data.blackmarket:get_projectile_name_from_index(2)
 
 	if self._ammo_data and self._ammo_data.launcher_grenade then
-		projectile_type_index = self:weapon_tweak_data().projectile_type_indices and self:weapon_tweak_data().projectile_type_indices[self._ammo_data.launcher_grenade] and self:weapon_tweak_data().projectile_type_indices[self._ammo_data.launcher_grenade] or tweak_data.blackmarket:get_index_from_projectile_id(self._ammo_data.launcher_grenade)
+		if self:weapon_tweak_data().projectile_types then
+			local equipped_type = self:weapon_tweak_data().projectile_types[self._ammo_data.launcher_grenade]
+			projectile_type = equipped_type or self._ammo_data.launcher_grenade
+		else
+			projectile_type = self._ammo_data.launcher_grenade
+		end
 	end
 
 	self:_adjust_throw_z(mvec_spread_direction)
@@ -36,12 +41,14 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 
 	if not self._client_authoritative then
 		if Network:is_client() then
+			local projectile_type_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_type)
+
 			managers.network:session():send_to_host("request_throw_projectile", projectile_type_index, from_pos, mvec_spread_direction)
 		else
-			unit = ProjectileBase.throw_projectile(projectile_type_index, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
+			unit = ProjectileBase.throw_projectile(projectile_type, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
 		end
 	else
-		unit = ProjectileBase.throw_projectile(projectile_type_index, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
+		unit = ProjectileBase.throw_projectile(projectile_type, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
 	end
 
 	managers.statistics:shot_fired({
@@ -52,7 +59,7 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	return {}
 end
 
--- Lines: 65 to 72
+-- Lines: 58 to 65
 function ProjectileWeaponBase:_update_stats_values()
 	ProjectileWeaponBase.super._update_stats_values(self)
 
@@ -61,21 +68,21 @@ function ProjectileWeaponBase:_update_stats_values()
 	end
 end
 
--- Lines: 74 to 75
+-- Lines: 67 to 68
 function ProjectileWeaponBase:_adjust_throw_z(m_vec)
 end
 
--- Lines: 80 to 81
+-- Lines: 73 to 74
 function ProjectileWeaponBase:projectile_damage_multiplier()
 	return self._dmg_mul
 end
 
--- Lines: 86 to 87
+-- Lines: 79 to 80
 function ProjectileWeaponBase:projectile_speed_multiplier()
 	return 1
 end
 
--- Lines: 92 to 93
+-- Lines: 85 to 86
 function ProjectileWeaponBase:_get_spawn_offset()
 	return 0
 end

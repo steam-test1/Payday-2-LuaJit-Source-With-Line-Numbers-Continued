@@ -146,10 +146,49 @@ function PlayerTased:update(t, dt)
 	PlayerTased.super.update(self, t, dt)
 end
 
--- Lines: 143 to 221
+-- Lines: 143 to 190
 function PlayerTased:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
+	self:_check_action_shock(t, input)
+
+	self._taser_value = math.step(self._taser_value, 0.8, dt / 4)
+
+	managers.environment_controller:set_taser_value(self._taser_value)
+
+	local shooting = self:_check_action_primary_attack(t, input)
+
+	if shooting then
+		self._camera_unit:base():recoil_kick(-5, 5, -5, 5)
+	end
+
+	if self._unequip_weapon_expire_t and self._unequip_weapon_expire_t <= t then
+		self._unequip_weapon_expire_t = nil
+
+		self:_start_action_equip_weapon(t)
+	end
+
+	if self._equip_weapon_expire_t and self._equip_weapon_expire_t <= t then
+		self._equip_weapon_expire_t = nil
+	end
+
+	if input.btn_stats_screen_press then
+		self._unit:base():set_stats_screen_visible(true)
+	elseif input.btn_stats_screen_release then
+		self._unit:base():set_stats_screen_visible(false)
+	end
+
+	self:_update_foley(t, input)
+
+	local new_action = nil
+
+	self:_check_action_interact(t, input)
+
+	local new_action = nil
+end
+
+-- Lines: 194 to 227
+function PlayerTased:_check_action_shock(t, input)
 	if self._next_shock < t then
 		self._num_shocks = self._num_shocks + 1
 		self._next_shock = t + 0.25 + math.rand(1)
@@ -186,43 +225,9 @@ function PlayerTased:_update_check_actions(t, dt)
 			self._camera_unit:base():stop_shooting()
 		end
 	end
-
-	self._taser_value = math.step(self._taser_value, 0.8, dt / 4)
-
-	managers.environment_controller:set_taser_value(self._taser_value)
-
-	self._shooting = self:_check_action_primary_attack(t, input)
-
-	if self._shooting then
-		self._camera_unit:base():recoil_kick(-5, 5, -5, 5)
-	end
-
-	if self._unequip_weapon_expire_t and self._unequip_weapon_expire_t <= t then
-		self._unequip_weapon_expire_t = nil
-
-		self:_start_action_equip_weapon(t)
-	end
-
-	if self._equip_weapon_expire_t and self._equip_weapon_expire_t <= t then
-		self._equip_weapon_expire_t = nil
-	end
-
-	if input.btn_stats_screen_press then
-		self._unit:base():set_stats_screen_visible(true)
-	elseif input.btn_stats_screen_release then
-		self._unit:base():set_stats_screen_visible(false)
-	end
-
-	self:_update_foley(t, input)
-
-	local new_action = nil
-
-	self:_check_action_interact(t, input)
-
-	local new_action = nil
 end
 
--- Lines: 225 to 363
+-- Lines: 231 to 371
 function PlayerTased:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
@@ -363,10 +368,12 @@ function PlayerTased:_check_action_primary_attack(t, input)
 		self._camera_unit:base():stop_shooting()
 	end
 
+	self._shooting = new_action
+
 	return new_action
 end
 
--- Lines: 370 to 380
+-- Lines: 378 to 388
 function PlayerTased:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) and not alive(self._counter_taser_unit) then
 		if _G.IS_VR then
@@ -379,7 +386,7 @@ function PlayerTased:_check_action_interact(t, input)
 	end
 end
 
--- Lines: 384 to 409
+-- Lines: 392 to 417
 function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, false, true, false)
 	local interact_type, queue_name = nil
@@ -407,7 +414,7 @@ function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	end
 end
 
--- Lines: 413 to 420
+-- Lines: 421 to 428
 function PlayerTased:_start_action_tased(t, non_lethal)
 	self:_interupt_action_running(t)
 	self:_stance_entered()
@@ -417,14 +424,14 @@ function PlayerTased:_start_action_tased(t, non_lethal)
 	managers.hint:show_hint(non_lethal and "hint_been_electrocuted" or "hint_been_tasered")
 end
 
--- Lines: 424 to 427
+-- Lines: 432 to 435
 function PlayerTased:_start_action_counter_tase(t, prime_target)
 	self._counter_taser_unit = prime_target.unit
 
 	self._unit:camera():play_redirect(self:get_animation("tased_counter"))
 end
 
--- Lines: 431 to 458
+-- Lines: 439 to 466
 function PlayerTased:_register_revive_SO()
 	if self._SO_id or not managers.navigation:is_data_ready() then
 		return
@@ -454,14 +461,14 @@ function PlayerTased:_register_revive_SO()
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
 end
 
--- Lines: 462 to 465
+-- Lines: 470 to 473
 function PlayerTased:clbk_exit_to_fatal()
 	self._fatal_delayed_clbk = nil
 
 	managers.player:set_player_state("incapacitated")
 end
 
--- Lines: 469 to 477
+-- Lines: 477 to 485
 function PlayerTased:clbk_exit_to_std()
 	self._recover_delayed_clbk = nil
 
@@ -474,7 +481,7 @@ function PlayerTased:clbk_exit_to_std()
 	end
 end
 
--- Lines: 481 to 494
+-- Lines: 489 to 502
 function PlayerTased:on_tase_ended()
 	self._tase_ended = true
 
@@ -495,14 +502,14 @@ function PlayerTased:on_tase_ended()
 	self._taser_unit = nil
 end
 
--- Lines: 498 to 502
+-- Lines: 506 to 510
 function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	if self._unit == tased_unit then
 		self._taser_unit = taser_unit
 	end
 end
 
--- Lines: 506 to 513
+-- Lines: 514 to 521
 function PlayerTased:give_shock_to_taser()
 	if not alive(self._counter_taser_unit) then
 		return
@@ -513,7 +520,7 @@ function PlayerTased:give_shock_to_taser()
 	self:_give_shock_to_taser(self._counter_taser_unit)
 end
 
--- Lines: 515 to 529
+-- Lines: 523 to 537
 function PlayerTased:_give_shock_to_taser(taser_unit)
 	return
 
@@ -532,7 +539,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	taser_unit:character_damage():damage_melee(action_data)
 end
 
--- Lines: 533 to 551
+-- Lines: 541 to 559
 function PlayerTased:give_shock_to_taser_no_damage()
 	if not alive(self._taser_unit) then
 		return
@@ -554,7 +561,7 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	self._unit:sound():play("tase_counter_attack")
 end
 
--- Lines: 554 to 574
+-- Lines: 562 to 582
 function PlayerTased:_on_malfunction_to_taser_event()
 	if not alive(self._taser_unit) then
 		return

@@ -36,7 +36,7 @@ function AkimboWeaponBaseVR:on_reload(...)
 
 	__on_reload(self, ...)
 end
-local __update_reloading = AkimboWeaponBase.update_reloading
+local __update_reloading = NewRaycastWeaponBase.update_reloading
 
 -- Lines: 40 to 46
 function AkimboWeaponBaseVR:update_reloading(...)
@@ -46,7 +46,7 @@ function AkimboWeaponBaseVR:update_reloading(...)
 
 	__update_reloading(self, ...)
 end
-local __update_reload_finish = AkimboWeaponBase.update_reload_finish
+local __update_reload_finish = NewRaycastWeaponBase.update_reload_finish
 
 -- Lines: 49 to 57
 function AkimboWeaponBaseVR:update_reload_finish(...)

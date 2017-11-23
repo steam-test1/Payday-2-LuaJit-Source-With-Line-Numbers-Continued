@@ -4,7 +4,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines: 32 to 660
+-- Lines: 32 to 687
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.name_id = "bm_grenade_frag"
@@ -458,6 +458,44 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		dlc = "pd2_clan",
 		texture_bundle_folder = "mtl"
 	}
+	self.projectiles.tag_team = {
+		name_id = "bm_grenade_tag_team",
+		desc_id = "bm_grenade_tag_team_desc",
+		icon = "tag_team",
+		ability = "tag_team",
+		texture_bundle_folder = "ecp",
+		max_amount = 1,
+		base_cooldown = 60,
+		sounds = {
+			activate = "perkdeck_activate",
+			cooldown = "perkdeck_cooldown_over"
+		}
+	}
+	self.projectiles.ecp_arrow = {
+		unit = "units/pd2_dlc_ecp/weapons/wpn_prj_ecp_arrow/wpn_prj_ecp_arrow",
+		local_unit = "units/pd2_dlc_ecp/weapons/wpn_prj_ecp_arrow/wpn_prj_ecp_arrow_local",
+		weapon_id = "ecp",
+		no_cheat_count = true,
+		impact_detonation = true,
+		client_authoritative = true
+	}
+	self.projectiles.ecp_arrow_poison = {
+		unit = "units/pd2_dlc_ecp/weapons/wpn_prj_ecp_arrow_poison/wpn_prj_ecp_arrow_poison",
+		local_unit = "units/pd2_dlc_ecp/weapons/wpn_prj_ecp_arrow_poison/wpn_prj_ecp_arrow_poison_local",
+		weapon_id = "ecp",
+		no_cheat_count = true,
+		impact_detonation = true,
+		client_authoritative = true
+	}
+	self.projectiles.ecp_arrow_exp = {
+		unit = "units/pd2_dlc_ecp/weapons/wpn_prj_ecp_arrow_exp/wpn_prj_ecp_arrow_exp",
+		local_unit = "units/pd2_dlc_ecp/weapons/wpn_prj_ecp_arrow_exp/wpn_prj_ecp_arrow_exp_local",
+		weapon_id = "ecp",
+		no_cheat_count = true,
+		impact_detonation = true,
+		client_authoritative = true,
+		is_explosive = true
+	}
 	self.projectiles.damage_control = {
 		name_id = "bm_grenade_damage_control",
 		desc_id = "bm_grenade_damage_control_desc",
@@ -508,7 +546,11 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		"rocket_ray_frag",
 		"fir_com",
 		"smoke_screen_grenade",
-		"dada_com"
+		"dada_com",
+		"tag_team",
+		"ecp_arrow",
+		"ecp_arrow_exp",
+		"ecp_arrow_poison"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 
@@ -521,12 +563,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines: 662 to 663
+-- Lines: 689 to 690
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines: 666 to 672
+-- Lines: 693 to 699
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -537,7 +579,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines: 675 to 676
+-- Lines: 702 to 703
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

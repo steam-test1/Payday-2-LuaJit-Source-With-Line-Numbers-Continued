@@ -712,12 +712,18 @@ function ContractBoxGui:update(t, dt)
 	end
 end
 
--- Lines: 568 to 652
-function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
+-- Lines: 568 to 659
+function ContractBoxGui:create_character_text(peer_id, x, y, text, icon, panel)
+	panel = panel or self._panel
+
+	if _G.IS_VR then
+		panel, x, y = managers.menu_scene:create_character_text_panel(peer_id)
+	end
+
 	self._peers = self._peers or {}
 	local color_id = peer_id
 	local color = tweak_data.chat_colors[color_id] or tweak_data.chat_colors[#tweak_data.chat_colors]
-	self._peers[peer_id] = self._peers[peer_id] or self._panel:text({
+	self._peers[peer_id] = self._peers[peer_id] or panel:text({
 		vertical = "center",
 		blend_mode = "add",
 		align = "center",
@@ -738,7 +744,7 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
 	self._peers[peer_id]:set_center(x, y)
 
 	self._peers_state = self._peers_state or {}
-	self._peers_state[peer_id] = self._peers_state[peer_id] or self._panel:text({
+	self._peers_state[peer_id] = self._peers_state[peer_id] or panel:text({
 		vertical = "top",
 		blend_mode = "add",
 		align = "center",
@@ -757,7 +763,7 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
 	if icon then
 		local texture = tweak_data.hud_icons:get_icon_data("infamy_icon")
 		self._peers_icon = self._peers_icon or {}
-		self._peers_icon[peer_id] = self._peers_icon[peer_id] or self._panel:bitmap({
+		self._peers_icon[peer_id] = self._peers_icon[peer_id] or panel:bitmap({
 			w = 16,
 			h = 32,
 			texture = texture,
@@ -767,7 +773,7 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
 		self._peers_icon[peer_id]:set_right(self._peers[peer_id]:x())
 		self._peers_icon[peer_id]:set_top(self._peers[peer_id]:y())
 	elseif self._peers_icon and self._peers_icon[peer_id] then
-		self._panel:remove(self._peers_icon[peer_id])
+		panel:remove(self._peers_icon[peer_id])
 
 		self._peers_icon[peer_id] = nil
 	end
@@ -777,7 +783,7 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
 	if self._peers[peer_id]:visible() and self._peers[peer_id]:text() ~= "" then
 		local level = managers.crime_spree:get_peer_spree_level(peer_id)
 		local text = managers.experience:cash_string(level, "") .. managers.localization:get_default_macro("BTN_SPREE_TICKET")
-		self._peers_spree[peer_id] = self._peers_spree[peer_id] or self._panel:text({
+		self._peers_spree[peer_id] = self._peers_spree[peer_id] or panel:text({
 			vertical = "top",
 			blend_mode = "add",
 			align = "center",
@@ -799,13 +805,13 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
 		self._peers_spree[peer_id]:set_center_x(self._peers[peer_id]:center_x())
 		self._peers_spree[peer_id]:set_visible(self._enabled and game_state_machine:gamemode().id == GamemodeCrimeSpree.id and level >= 0)
 	elseif self._peers_spree and self._peers_spree[peer_id] then
-		self._panel:remove(self._peers_spree[peer_id])
+		panel:remove(self._peers_spree[peer_id])
 
 		self._peers_spree[peer_id] = nil
 	end
 end
 
--- Lines: 654 to 684
+-- Lines: 661 to 691
 function ContractBoxGui:update_character(peer_id)
 	if not peer_id or not managers.network:session() then
 		return
@@ -837,7 +843,7 @@ function ContractBoxGui:update_character(peer_id)
 	self:create_character_text(peer_id, x, y, text, player_rank > 0)
 end
 
--- Lines: 686 to 694
+-- Lines: 693 to 701
 function ContractBoxGui:update_character_menu_state(peer_id, state)
 	if not self._peers_state then
 		return
@@ -850,7 +856,7 @@ function ContractBoxGui:update_character_menu_state(peer_id, state)
 	self._peers_state[peer_id]:set_text(state and managers.localization:to_upper_text("menu_lobby_menu_state_" .. state) or "")
 end
 
--- Lines: 696 to 701
+-- Lines: 703 to 708
 function ContractBoxGui:update_bg_state(peer_id, state)
 	local peer = managers.network:session() and managers.network:session():local_peer() or false
 
@@ -859,7 +865,7 @@ function ContractBoxGui:update_bg_state(peer_id, state)
 	end
 end
 
--- Lines: 703 to 715
+-- Lines: 710 to 722
 function ContractBoxGui:set_character_panel_alpha(peer_id, alpha)
 	if self._peers and self._peers[peer_id] then
 		self._peers[peer_id]:set_alpha(alpha)
@@ -874,15 +880,15 @@ function ContractBoxGui:set_character_panel_alpha(peer_id, alpha)
 	end
 end
 
--- Lines: 723 to 724
+-- Lines: 730 to 731
 function ContractBoxGui:_create_text_box(ws, title, text, content_data, config)
 end
 
--- Lines: 754 to 755
+-- Lines: 761 to 762
 function ContractBoxGui:_create_lower_static_panel(lower_static_panel)
 end
 
--- Lines: 757 to 785
+-- Lines: 764 to 792
 function ContractBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() then
 		return
@@ -908,7 +914,7 @@ function ContractBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 787 to 818
+-- Lines: 794 to 825
 function ContractBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() then
 		return
@@ -942,39 +948,39 @@ function ContractBoxGui:mouse_moved(x, y)
 	return used, pointer
 end
 
--- Lines: 821 to 822
+-- Lines: 828 to 829
 function ContractBoxGui:can_take_input()
 	return true
 end
 
--- Lines: 825 to 826
+-- Lines: 832 to 833
 function ContractBoxGui:moved_scroll_bar()
 end
 
--- Lines: 828 to 829
+-- Lines: 835 to 836
 function ContractBoxGui:mouse_wheel_down()
 end
 
--- Lines: 831 to 832
+-- Lines: 838 to 839
 function ContractBoxGui:mouse_wheel_up()
 end
 
--- Lines: 834 to 835
+-- Lines: 841 to 842
 function ContractBoxGui:check_minimize()
 	return false
 end
 
--- Lines: 838 to 839
+-- Lines: 845 to 846
 function ContractBoxGui:check_grab_scroll_bar()
 	return false
 end
 
--- Lines: 842 to 843
+-- Lines: 849 to 850
 function ContractBoxGui:release_scroll_bar()
 	return false
 end
 
--- Lines: 847 to 863
+-- Lines: 854 to 870
 function ContractBoxGui:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -995,15 +1001,15 @@ function ContractBoxGui:set_enabled(enabled)
 	end
 end
 
--- Lines: 867 to 868
+-- Lines: 874 to 875
 function ContractBoxGui:set_size(x, y)
 end
 
--- Lines: 871 to 872
+-- Lines: 878 to 879
 function ContractBoxGui:set_visible(visible)
 end
 
--- Lines: 875 to 878
+-- Lines: 882 to 885
 function ContractBoxGui:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)

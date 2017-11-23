@@ -592,7 +592,9 @@ function HUDManagerVR:_add_name_label(data)
 	local radius = 24
 	local interact = CircleBitmapGuiObject:new(panel, {
 		blend_mode = "add",
+		depth_mode = "disabled",
 		use_bg = true,
+		render_template = "OverlayVertexColorTexturedRadial",
 		layer = 0,
 		radius = radius,
 		color = Color.white

@@ -46,7 +46,7 @@ function StatisticsTweakData:statistics_specializations()
 	return table.size(tweak_data.skilltree.specializations)
 end
 
--- Lines: 43 to 274
+-- Lines: 43 to 278
 function StatisticsTweakData:statistics_table()
 	if not self._level_list then
 		self._level_list = {}
@@ -234,7 +234,9 @@ function StatisticsTweakData:statistics_table()
 		"wild",
 		"chico",
 		"max",
-		"myh"
+		"myh",
+		"ecp_female",
+		"ecp_male"
 	}
 	local deployable_list = {
 		"ammo_bag",
@@ -251,7 +253,7 @@ function StatisticsTweakData:statistics_table()
 	return self._level_list, self._job_list, self._mask_list, self._weapon_list, self._melee_list, self._grenade_list, enemy_list, armor_list, character_list, deployable_list
 end
 
--- Lines: 277 to 278
+-- Lines: 281 to 282
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -270,7 +272,7 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines: 281 to 282
+-- Lines: 285 to 286
 function StatisticsTweakData:mission_statistics_table()
 	return {"labrat"}
 end

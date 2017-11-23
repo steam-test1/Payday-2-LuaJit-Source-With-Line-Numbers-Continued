@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1068
+-- Lines: 4 to 1075
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -2157,6 +2157,15 @@ function GuiTweakData:init()
 				},
 				name_id = "menu_myh",
 				id = "myh"
+			},
+			{
+				{
+					desc_id = "menu_ecp_desc_codex",
+					post_event = "pln_contact_ecp",
+					videos = {"ecp1"}
+				},
+				name_id = "menu_ecp",
+				id = "ecp"
 			},
 			name_id = "menu_playable_characters",
 			id = "playable_characters"
@@ -4901,17 +4910,22 @@ function GuiTweakData:init()
 		"category",
 		"bonus"
 	}
-	self.new_heists = {limit = 3}
+	self.new_heists = {limit = 4}
 
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_halloween_2017_heist",
-		texture_path = "guis/textures/pd2/new_heists/halloween_2017_heist",
-		url = "http://steamcommunity.com/games/218620/announcements/detail/1453961083959105742"
+		name_id = "menu_nh_h3h3_characters",
+		texture_path = "guis/textures/pd2/new_heists/h3h3_characters",
+		url = "http://www.overkillsoftware.com/games/h3h3/"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_locke_and_load_ultimate_discount",
 		texture_path = "guis/textures/pd2/new_heists/locke_and_load_discount",
 		url = "http://store.steampowered.com/bundle/3756/PAYDAY_2_Ultimate_Edition/"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_halloween_2017_heist",
+		texture_path = "guis/textures/pd2/new_heists/halloween_2017_heist",
+		url = "http://steamcommunity.com/games/218620/announcements/detail/1453961083959105742"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_locke_and_load_event",
@@ -4970,7 +4984,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1070 to 1089
+-- Lines: 1077 to 1096
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -4998,7 +5012,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1091 to 1159
+-- Lines: 1098 to 1166
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5074,15 +5088,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1162 to 1163
+-- Lines: 1169 to 1170
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1173 to 1174
+-- Lines: 1180 to 1181
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1176 to 1209
+-- Lines: 1183 to 1216
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5121,7 +5135,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1212 to 1336
+-- Lines: 1219 to 1343
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5244,12 +5258,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1339 to 1340
+-- Lines: 1346 to 1347
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1343 to 1349
+-- Lines: 1350 to 1356
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

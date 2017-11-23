@@ -2,7 +2,7 @@ WeaponUnderbarrelLauncher = WeaponUnderbarrelLauncher or class(WeaponUnderbarrel
 WeaponUnderbarrelLauncher.GADGET_TYPE = "underbarrel_launcher"
 local mvec_spread_direction = Vector3()
 
--- Lines: 7 to 49
+-- Lines: 7 to 47
 function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	self._ammo_data = {launcher_grenade = self.launcher_projectile}
 	local unit = nil
@@ -17,11 +17,8 @@ function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_po
 	mvector3.add(mvec_spread_direction, right * math.rad(ax))
 	mvector3.add(mvec_spread_direction, up * math.rad(ay))
 
-	local projectile_type_index = self._projectile_type_index or 2
-
-	if self._ammo_data and self._ammo_data.launcher_grenade then
-		projectile_type_index = tweak_data.blackmarket:get_index_from_projectile_id(self._ammo_data.launcher_grenade)
-	end
+	local projectile_type = self.launcher_projectile
+	local projectile_type_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_type)
 
 	self:_adjust_throw_z(mvec_spread_direction)
 
@@ -33,10 +30,10 @@ function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_po
 		if Network:is_client() then
 			managers.network:session():send_to_host("request_throw_projectile", projectile_type_index, from_pos, mvec_spread_direction)
 		else
-			unit = ProjectileBase.throw_projectile(projectile_type_index, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
+			unit = ProjectileBase.throw_projectile(projectile_type, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
 		end
 	else
-		unit = ProjectileBase.throw_projectile(projectile_type_index, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
+		unit = ProjectileBase.throw_projectile(projectile_type, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
 	end
 
 	managers.statistics:shot_fired({
@@ -49,11 +46,11 @@ function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_po
 	return {}
 end
 
--- Lines: 53 to 54
+-- Lines: 51 to 52
 function WeaponUnderbarrelLauncher:_adjust_throw_z(m_vec)
 end
 
--- Lines: 57 to 58
+-- Lines: 55 to 56
 function WeaponUnderbarrelLauncher:_get_spawn_offset()
 	return 0
 end

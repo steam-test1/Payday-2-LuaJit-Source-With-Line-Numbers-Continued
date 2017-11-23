@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines: 3 to 2994
+-- Lines: 3 to 2999
 function TweakDataVR:init()
 	self.melee_offsets = {
 		default = {rotation = Rotation(0, 70)},
@@ -100,7 +100,7 @@ function TweakDataVR:init()
 		},
 		weapons = {
 			r93 = true,
-			model70 = true,
+			ecp = true,
 			par = true,
 			long = true,
 			flamethrower_mk2 = true,
@@ -108,25 +108,26 @@ function TweakDataVR:init()
 			frankish = true,
 			mosin = true,
 			contraband = true,
+			model70 = true,
 			wa2000 = true,
 			tti = true,
 			siltstone = true,
-			arblast = true,
 			m134 = true,
-			rpk = true,
+			arblast = true,
 			saw = true,
-			mg42 = true,
+			rpk = true,
 			winchester1874 = true,
 			ray = true,
-			hunter = true,
 			rpg7 = true,
+			hunter = true,
 			m32 = true,
 			m249 = true,
 			m95 = true,
-			saw_secondary = true,
+			mg42 = true,
 			china = true,
 			desertfox = true,
 			arbiter = true,
+			saw_secondary = true,
 			gre_m79 = true,
 			plainsrider = true,
 			hk21 = true
@@ -408,7 +409,7 @@ function TweakDataVR:init()
 			erma = {position = Vector3(0, 30, -4)}
 		},
 		limits = {
-			max = 40,
+			max = 50,
 			min = 5
 		}
 	}
@@ -4890,6 +4891,7 @@ function TweakDataVR:init()
 		position = Vector3(0, -5, 5),
 		rotation = Rotation(180, 135, 0)
 	}}
+	self.ladder = {distance = 500}
 	self.autowarp_length = {
 		short = 0.65,
 		long = 1
@@ -5015,7 +5017,7 @@ function TweakDataVR:init()
 	}
 end
 
--- Lines: 2996 to 3007
+-- Lines: 3001 to 3012
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -5034,7 +5036,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines: 3018 to 3029
+-- Lines: 3023 to 3034
 function TweakDataVR:get_offset_by_id(id)
 	if tweak_data.blackmarket.melee_weapons[id] then
 		return self:_get_melee_offset_by_id(id)
@@ -5050,7 +5052,7 @@ function TweakDataVR:get_offset_by_id(id)
 end
 
 
--- Lines: 3032 to 3036
+-- Lines: 3037 to 3041
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
@@ -5058,7 +5060,7 @@ local function combine_offset(offset, new)
 end
 
 
--- Lines: 3038 to 3049
+-- Lines: 3043 to 3054
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -5076,7 +5078,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines: 3052 to 3059
+-- Lines: 3057 to 3064
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -5089,7 +5091,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines: 3062 to 3065
+-- Lines: 3067 to 3070
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -5098,7 +5100,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 3068 to 3075
+-- Lines: 3073 to 3080
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 

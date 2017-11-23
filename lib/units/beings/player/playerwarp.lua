@@ -168,20 +168,33 @@ function PlayerWarp:set_player_unit(player_unit)
 	self._player_unit = player_unit
 end
 
--- Lines: 148 to 165
-function PlayerWarp:set_targeting(enabled)
-	if enabled ~= self._targeting then
+-- Lines: 148 to 169
+function PlayerWarp:update_ladder_targeting()
+	local min_dis = tweak_data.vr.ladder.distance * tweak_data.vr.ladder.distance
+	local closest = nil
+
+	if self._targeting and #self._ladders > 0 then
 		for _, ladder in ipairs(self._ladders) do
 			local going_down = ladder:ladder():top().z < self._unit:position().z
+			local dis = mvector3.distance_sq(self._unit:position(), going_down and ladder:ladder():top() or ladder:ladder():bottom())
 
-			if enabled and mvector3.distance_sq(self._unit:position(), going_down and ladder:ladder():top() or ladder:ladder():bottom()) < 250000 and mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal() * (going_down and -1 or 1)) < 0 then
-				self:show_ladder_marker(ladder, going_down, true)
-			else
-				self:hide_ladder_marker()
+			if dis < min_dis and mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal() * (going_down and -1 or 1)) < 0 and (not closest or dis < closest) then
+				if self._active_ladder ~= ladder then
+					self:show_ladder_marker(ladder, going_down, true)
+				end
+
+				closest = dis
 			end
 		end
 	end
 
+	if not closest and alive(self._active_ladder) then
+		self:hide_ladder_marker()
+	end
+end
+
+-- Lines: 171 to 176
+function PlayerWarp:set_targeting(enabled)
 	self._targeting = enabled
 
 	if not self._targeting then
@@ -189,27 +202,27 @@ function PlayerWarp:set_targeting(enabled)
 	end
 end
 
--- Lines: 167 to 168
+-- Lines: 178 to 179
 function PlayerWarp:target_position()
 	return self._target.position
 end
 
--- Lines: 171 to 172
+-- Lines: 182 to 183
 function PlayerWarp:target_type()
 	return self._target.type
 end
 
--- Lines: 175 to 176
+-- Lines: 186 to 187
 function PlayerWarp:target_data()
 	return self._target.data
 end
 
--- Lines: 179 to 181
+-- Lines: 190 to 192
 function PlayerWarp:clear_snap_points()
 	self._snap_points = {}
 end
 
--- Lines: 183 to 185
+-- Lines: 194 to 196
 function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	table.insert(self._snap_points, {
 		position = position,
@@ -219,18 +232,18 @@ function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	})
 end
 
--- Lines: 187 to 189
+-- Lines: 198 to 200
 function PlayerWarp:clear_ladders()
 	self._ladders = {}
 end
 
--- Lines: 191 to 193
+-- Lines: 202 to 204
 function PlayerWarp:add_ladder(ladder)
 	table.insert(self._ladders, ladder)
 end
 
 
--- Lines: 195 to 209
+-- Lines: 206 to 220
 local function brush_debug_print(brush, position, ysize, text_data)
 	local ypos = 0
 	local t = text_data
@@ -250,7 +263,7 @@ end
 
 local jump_vec = Vector3()
 
--- Lines: 213 to 280
+-- Lines: 224 to 293
 function PlayerWarp:update(unit, t, dt)
 	if self._targeting then
 		self._target.position = nil
@@ -323,40 +336,42 @@ function PlayerWarp:update(unit, t, dt)
 			brush_debug_print(self._brush_text, text_pos - right * 10, 5, info)
 		end
 	end
+
+	self:update_ladder_targeting()
 end
 
--- Lines: 282 to 284
+-- Lines: 295 to 297
 function PlayerWarp:set_range(range)
 	self._range = math.min(range, self._max_range)
 end
 
--- Lines: 286 to 289
+-- Lines: 299 to 302
 function PlayerWarp:set_max_range(max_range)
 	self._max_range = max_range
 	self._range = math.min(self._range, max_range)
 end
 
--- Lines: 291 to 293
+-- Lines: 304 to 306
 function PlayerWarp:set_enable_jump(enabled)
 	self._enable_jump = enabled
 end
 
--- Lines: 295 to 297
+-- Lines: 308 to 310
 function PlayerWarp:set_max_jump_distance(max_jump_distance)
 	self._max_jump_distance = max_jump_distance
 end
 
--- Lines: 299 to 301
+-- Lines: 312 to 314
 function PlayerWarp:set_jump_move_speed(speed)
 	self._jump_move_speed = speed
 end
 
--- Lines: 303 to 305
+-- Lines: 316 to 318
 function PlayerWarp:set_blocked(blocked)
 	self._blocked = blocked
 end
 
--- Lines: 307 to 347
+-- Lines: 320 to 360
 function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 	local line_segments = {}
 	local v = target - source
@@ -404,7 +419,7 @@ function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 	end
 end
 
--- Lines: 349 to 383
+-- Lines: 362 to 396
 function PlayerWarp:_draw(brush, unit_pos)
 	local yaw = self._player_unit:camera():rotation():yaw()
 
@@ -453,7 +468,7 @@ function PlayerWarp:_draw(brush, unit_pos)
 	end
 end
 
--- Lines: 385 to 425
+-- Lines: 398 to 438
 function PlayerWarp:_find_warp_position(player_position, pos, forward)
 	local warp_target, jump_target = self:_find_target(player_position, pos, forward)
 	self._target.type = "move"
@@ -487,7 +502,7 @@ function PlayerWarp:_find_warp_position(player_position, pos, forward)
 	end
 end
 
--- Lines: 432 to 471
+-- Lines: 445 to 484
 function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_target, jump_target)
 	if not self._enable_jump then
 		return false
@@ -526,7 +541,7 @@ function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_targ
 	return true
 end
 
--- Lines: 474 to 481
+-- Lines: 487 to 494
 function PlayerWarp:_can_see_target(position, target)
 	if target then
 		ray = self._unit:raycast("ray", position, target, "slot_mask", self._slotmask, "ray_type", "body walk")
@@ -540,7 +555,7 @@ function PlayerWarp:_can_see_target(position, target)
 end
 
 
--- Lines: 484 to 489
+-- Lines: 497 to 502
 local function clip_line_to_sphere(origin, radius, position, direction)
 	local o_c = position - origin
 	local p = mvector3.dot(o_c, direction)
@@ -551,7 +566,7 @@ local function clip_line_to_sphere(origin, radius, position, direction)
 end
 
 
--- Lines: 494 to 581
+-- Lines: 507 to 594
 function PlayerWarp:_find_target(player_position, position, forward)
 	if mvector3.dot(forward, math.UP) > 0.8 then
 		return nil
@@ -624,7 +639,7 @@ function PlayerWarp:_find_target(player_position, position, forward)
 	return warp_target, jump_target
 end
 
--- Lines: 584 to 599
+-- Lines: 597 to 612
 function PlayerWarp:_check_snap_point(position, forward, sp)
 	local dir = mvector3.copy(sp.position)
 

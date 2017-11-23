@@ -533,11 +533,11 @@ function PlayerEquipment:throw_projectile()
 		if Network:is_client() then
 			managers.network:session():send_to_host("request_throw_projectile", projectile_index, pos, dir)
 		else
-			ProjectileBase.throw_projectile(projectile_index, pos, dir, managers.network:session():local_peer():id())
+			ProjectileBase.throw_projectile(projectile_entry, pos, dir, managers.network:session():local_peer():id())
 			managers.player:verify_grenade(managers.network:session():local_peer():id())
 		end
 	else
-		ProjectileBase.throw_projectile(projectile_index, pos, dir, managers.network:session():local_peer():id())
+		ProjectileBase.throw_projectile(projectile_entry, pos, dir, managers.network:session():local_peer():id())
 		managers.player:verify_grenade(managers.network:session():local_peer():id())
 	end
 
@@ -561,7 +561,7 @@ function PlayerEquipment:throw_grenade()
 	if Network:is_client() then
 		managers.network:session():send_to_host("request_throw_projectile", grenade_index, pos, dir)
 	else
-		ProjectileBase.throw_projectile(grenade_index, pos, dir, managers.network:session():local_peer():id())
+		ProjectileBase.throw_projectile(grenade_name, pos, dir, managers.network:session():local_peer():id())
 		managers.player:verify_grenade(managers.network:session():local_peer():id())
 	end
 

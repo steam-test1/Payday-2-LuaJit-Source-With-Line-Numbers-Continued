@@ -62,7 +62,7 @@ end
 function MenuSceneManagerVR:_update_vr(t, dt)
 end
 
--- Lines: 58 to 71
+-- Lines: 58 to 75
 function MenuSceneManagerVR:_setup_bg()
 	self._bg_unit = managers.menu:menu_unit()
 
@@ -72,11 +72,15 @@ function MenuSceneManagerVR:_setup_bg()
 		end
 	end
 
+	if alive(self._character_unit) then
+		self._character_unit:set_position(Vector3(0, 0, -500))
+	end
+
 	self:_setup_lobby_characters()
 	self:_setup_henchmen_characters()
 end
 
--- Lines: 73 to 90
+-- Lines: 77 to 94
 function MenuSceneManagerVR:_set_up_environments()
 	self._environments = {standard = {}}
 	self._environments.standard.environment = "environments/pd2_menu_vr/pd2_menu_vr"
@@ -94,7 +98,7 @@ function MenuSceneManagerVR:_set_up_environments()
 	}
 end
 
--- Lines: 93 to 153
+-- Lines: 97 to 166
 function MenuSceneManagerVR:_set_up_templates()
 	local ref = self._bg_unit:get_object(Idstring("a_camera_reference"))
 	local c_ref = self._bg_unit:get_object(Idstring("a_reference"))
@@ -107,6 +111,14 @@ function MenuSceneManagerVR:_set_up_templates()
 	self._scene_templates.standard.target_pos = target_pos
 	self._scene_templates.standard.character_pos = c_ref:position()
 	self._scene_templates.standard.disable_item_updates = true
+	self._scene_templates.title = {
+		use_character_grab = false,
+		character_visible = false,
+		camera_pos = ref:position(),
+		target_pos = target_pos,
+		character_pos = Vector3(0, 0, -500),
+		disable_item_updates = true
+	}
 	local cloned_templates = {
 		"blackmarket",
 		"blackmarket_mask",
@@ -152,20 +164,20 @@ function MenuSceneManagerVR:_set_up_templates()
 end
 local __set_lobby_character_out_fit = MenuSceneManager.set_lobby_character_out_fit
 
--- Lines: 156 to 164
+-- Lines: 169 to 177
 function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 	__set_lobby_character_out_fit(self, i, outfit_string, rank)
 
 	local unit = self._lobby_characters[i]
 	local is_me = i == managers.network:session():local_peer():id()
-	local pos = Vector3(550 - (is_me and 100 or 0), 50 - i * 75, 0)
+	local pos = Vector3(500 - (is_me and 100 or 0), 50 - i * 75, 0)
 
 	unit:set_position(pos)
 	unit:set_rotation(Rotation:look_at(Vector3(0, 100, 0) - pos, math.UP))
 end
 local __set_item_unit = MenuSceneManager._set_item_unit
 
--- Lines: 167 to 189
+-- Lines: 180 to 202
 function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, second_unit, custom_data)
 	__set_item_unit(self, unit, oobb_object, max_mod, type, second_unit, custom_data)
 
@@ -194,7 +206,7 @@ function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, sec
 end
 local __remove_item = MenuSceneManager.remove_item
 
--- Lines: 192 to 198
+-- Lines: 205 to 211
 function MenuSceneManagerVR:remove_item()
 	__remove_item(self)
 
@@ -205,7 +217,7 @@ function MenuSceneManagerVR:remove_item()
 end
 local __set_scene_template = MenuSceneManager.set_scene_template
 
--- Lines: 202 to 209
+-- Lines: 215 to 222
 function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip_transition)
 	__set_scene_template(self, template, data, custom_name, skip_transition)
 
@@ -216,15 +228,53 @@ function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip
 	end
 end
 
--- Lines: 211 to 212
+-- Lines: 224 to 225
 function MenuSceneManagerVR:spawn_workbench_room()
 end
 
--- Lines: 214 to 218
+-- Lines: 227 to 231
 function MenuSceneManagerVR:get_henchmen_positioning(index)
 	local pos = Vector3(-180 + 50 * index, 340 + 30 * index, 0)
 	local rot = Rotation(180)
 
 	return pos, rot
+end
+
+-- Lines: 235 to 252
+function MenuSceneManagerVR:create_character_text_panel(peer_id)
+	self._character_text_ws = self._character_text_ws or {}
+	local character = self._lobby_characters[peer_id]
+
+	if not alive(character) then
+		return
+	end
+
+	local ws = self._character_text_ws[peer_id]
+	local w = 300
+	local h = 100
+
+	if not ws then
+		ws = managers.gui_data:get_scene_gui():create_world_workspace(w, h, Vector3(), Vector3(1, 0, 0), Vector3(0, 0, 1))
+		self._character_text_ws[peer_id] = ws
+	end
+
+	local rot = character:rotation()
+
+	ws:set_world(w, h, character:position() + rot:x() * 60 + rot:y() * 45 + rot:z() * 150, -rot:x() * 120, -rot:z() * 40)
+
+	local panel = ws:panel()
+
+	return panel, panel:center()
+end
+
+-- Lines: 255 to 263
+function MenuSceneManagerVR:clear_character_text_panels()
+	if not self._character_text_ws then
+		return
+	end
+
+	for _, ws in pairs(self._character_text_ws) do
+		ws:panel():clear()
+	end
 end
 

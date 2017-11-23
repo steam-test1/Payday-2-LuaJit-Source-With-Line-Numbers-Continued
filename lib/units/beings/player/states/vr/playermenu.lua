@@ -717,22 +717,19 @@ function PlayerMenu:_set_tracking_enabled(enabled)
 	self._tracking_enabled = enabled
 end
 
--- Lines: 678 to 687
+-- Lines: 678 to 685
 function PlayerMenu:_set_primary_hand(hand)
-	if self._primary_hand then
-		local offhand = 3 - self._primary_hand
+	local offhand = 3 - hand
 
-		self._hand_state_machine:enter_hand_state(offhand, "empty")
-		self._hands[offhand]:set_state("idle")
-	end
-
+	self._hand_state_machine:enter_hand_state(offhand, "empty")
+	self._hands[offhand]:set_state("idle")
 	self._hand_state_machine:enter_hand_state(hand, "laser")
 	self._hands[hand]:set_state("laser")
 
 	self._primary_hand = hand
 end
 
--- Lines: 692 to 729
+-- Lines: 690 to 727
 function PlayerMenu:_setup_states()
 	self._current_state = nil
 	self._states = {
@@ -768,7 +765,7 @@ function PlayerMenu:_setup_states()
 end
 PlayerMenuHandBase = PlayerMenuHandBase or class()
 
--- Lines: 735 to 742
+-- Lines: 733 to 740
 function PlayerMenuHandBase:init(config)
 	self._base_position = config.base_position or Vector3()
 	self._base_rotation = config.base_rotation or Rotation()
@@ -778,7 +775,7 @@ function PlayerMenuHandBase:init(config)
 	self._forward = self._base_rotation:y()
 end
 
--- Lines: 744 to 755
+-- Lines: 742 to 753
 function PlayerMenuHandBase:update_orientation(position, rotation, player_position, hmd_horz)
 	mrotation.multiply(rotation, self._base_rotation)
 
@@ -792,36 +789,36 @@ function PlayerMenuHandBase:update_orientation(position, rotation, player_positi
 	self:set_orientation(self._position, self._rotation)
 end
 
--- Lines: 757 to 758
+-- Lines: 755 to 756
 function PlayerMenuHandBase:position()
 	return self._position
 end
 
--- Lines: 761 to 762
+-- Lines: 759 to 760
 function PlayerMenuHandBase:rotation()
 	return self._rotation
 end
 
--- Lines: 765 to 766
+-- Lines: 763 to 764
 function PlayerMenuHandBase:forward()
 	return self._forward
 end
 
--- Lines: 769 to 770
+-- Lines: 767 to 768
 function PlayerMenuHandBase:set_state(state)
 end
 
--- Lines: 772 to 773
+-- Lines: 770 to 771
 function PlayerMenuHandBase:laser_position()
 	return self._laser_position
 end
 
--- Lines: 776 to 777
+-- Lines: 774 to 775
 function PlayerMenuHandBase:set_orientation(position, rotation)
 end
 PlayerMenuHandUnit = PlayerMenuHandUnit or class(PlayerMenuHandBase)
 
--- Lines: 783 to 790
+-- Lines: 781 to 788
 function PlayerMenuHandUnit:init(config)
 	self.super.init(self, config)
 
@@ -834,25 +831,25 @@ function PlayerMenuHandUnit:init(config)
 	self._unit = hand_unit
 end
 
--- Lines: 792 to 796
+-- Lines: 790 to 794
 function PlayerMenuHandUnit:set_orientation(position, rotation)
 	self._unit:set_position(position)
 	self._unit:set_rotation(rotation)
 	self._unit:set_moving(2)
 end
 
--- Lines: 798 to 800
+-- Lines: 796 to 798
 function PlayerMenuHandUnit:set_state(state)
 	self._unit:damage():run_sequence_simple(state)
 end
 
--- Lines: 802 to 803
+-- Lines: 800 to 801
 function PlayerMenuHandUnit:unit()
 	return self._unit
 end
 PlayerMenuHandObject = PlayerMenuHandObject or class(PlayerMenuHandBase)
 
--- Lines: 810 to 817
+-- Lines: 808 to 815
 function PlayerMenuHandObject:init(config)
 	self.super.init(self, config)
 
@@ -865,7 +862,7 @@ function PlayerMenuHandObject:init(config)
 	end
 end
 
--- Lines: 819 to 824
+-- Lines: 817 to 822
 function PlayerMenuHandObject:set_orientation(position, rotation)
 	if self._object then
 		self._object:set_position(position)
@@ -873,7 +870,7 @@ function PlayerMenuHandObject:set_orientation(position, rotation)
 	end
 end
 
--- Lines: 826 to 837
+-- Lines: 824 to 835
 function PlayerMenuHandObject:_set_visibility(object, visibility)
 	if object then
 		local objects = {object}
@@ -890,7 +887,7 @@ function PlayerMenuHandObject:_set_visibility(object, visibility)
 	end
 end
 
--- Lines: 839 to 849
+-- Lines: 837 to 847
 function PlayerMenuHandObject:set_state(state)
 	local obj = self._states[state]
 
@@ -905,14 +902,14 @@ function PlayerMenuHandObject:set_state(state)
 	end
 end
 
--- Lines: 851 to 855
+-- Lines: 849 to 853
 function PlayerMenuHandObject:_hide_all()
 	for _, o in pairs(self._states) do
 		self:_set_visibility(o, false)
 	end
 end
 
--- Lines: 859 to 900
+-- Lines: 857 to 898
 function PlayerMenu:_create_hands()
 	if self._is_start_menu then
 		self._hands = {
@@ -955,7 +952,7 @@ function PlayerMenu:_create_hands()
 	end
 end
 
--- Lines: 902 to 930
+-- Lines: 900 to 928
 function PlayerMenu:_create_camera()
 	if self._is_start_menu then
 		self._camera_object = World:create_camera()
@@ -992,19 +989,19 @@ function PlayerMenu:_create_camera()
 	end
 end
 
--- Lines: 942 to 944
+-- Lines: 940 to 942
 function PlayerMenu:_set_viewport_active(active)
 	self._vp:set_active(active)
 end
 
--- Lines: 946 to 950
+-- Lines: 944 to 948
 function PlayerMenu:_warp_target(to)
 	if self._is_start_menu then
 		self._warp_marker:set_position(to)
 	end
 end
 
--- Lines: 952 to 961
+-- Lines: 950 to 959
 function PlayerMenu:_warp_ray(from, to)
 	if self._is_start_menu then
 		self._brush_warp:cylinder(from, to, 1)
@@ -1019,7 +1016,7 @@ function PlayerMenu:_warp_ray(from, to)
 	end
 end
 
--- Lines: 963 to 976
+-- Lines: 961 to 974
 function PlayerMenu:_laser_ray(visible, from, to)
 	if self._is_start_menu then
 		if visible then
@@ -1037,7 +1034,7 @@ function PlayerMenu:_laser_ray(visible, from, to)
 	end
 end
 
--- Lines: 978 to 1005
+-- Lines: 976 to 1003
 function PlayerMenu:_update_fadeout(t, dt, distance)
 	if not self._is_start_menu then
 		return false
@@ -1067,7 +1064,7 @@ function PlayerMenu:_update_fadeout(t, dt, distance)
 	return self._position_reset_timer_t > 0.2
 end
 
--- Lines: 1008 to 1021
+-- Lines: 1006 to 1019
 function PlayerMenu:_setup_draw()
 	if self._is_start_menu then
 		self._brush_warp = Draw:brush(Color(0.07, 0, 0.60784, 0.81176))

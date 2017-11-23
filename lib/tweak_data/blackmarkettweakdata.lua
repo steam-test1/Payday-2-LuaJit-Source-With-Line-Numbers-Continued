@@ -79,7 +79,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self:_add_desc_from_name_macro(self.weapon_mods)
 end
 
--- Lines: 123 to 390
+-- Lines: 123 to 392
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {locked = {}}
 	self.characters.locked.fps_unit = "units/payday2/characters/fps_mover/fps_mover"
@@ -307,6 +307,38 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 		mask_on_sequence = "mask_on_myh",
 		mask_off_sequence = "mask_off_myh"
 	}
+	self.characters.ecp_female = {
+		fps_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_female/fps_ecp_female_mover",
+		npc_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_female/npc_criminal_ecp_female",
+		menu_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_female/npc_criminal_ecp_female_menu",
+		texture_bundle_folder = "ecp",
+		sequence = "var_mtr_ecp_female",
+		mask_on_sequence = "mask_on_ecp_female",
+		mask_off_sequence = "mask_off_ecp_female",
+		dlc = "ecp"
+	}
+	self.characters.ecp_male = {
+		fps_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_male/fps_ecp_male_mover",
+		npc_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_male/npc_criminal_ecp_male",
+		menu_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_male/npc_criminal_ecp_male_menu",
+		texture_bundle_folder = "ecp",
+		sequence = "var_mtr_ecp_male",
+		mask_on_sequence = "mask_on_ecp_male",
+		mask_off_sequence = "mask_off_ecp_male",
+		dlc = "ecp"
+	}
+	self.characters.ai_ecp_female = {
+		npc_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_female/ecp_female/npc_criminal_ecp_female",
+		sequence = "var_mtr_ecp_female",
+		mask_on_sequence = "mask_on_ecp_female",
+		mask_off_sequence = "mask_off_ecp_female"
+	}
+	self.characters.ai_ecp_male = {
+		npc_unit = "units/pd2_dlc_ecp/characters/npc_criminals_ecp_male/ecp_male/npc_criminal_ecp_male",
+		sequence = "var_mtr_ecp_male",
+		mask_on_sequence = "mask_on_ecp_male",
+		mask_off_sequence = "mask_off_ecp_male"
+	}
 	local free_dlcs = tweak_data:free_dlc_list()
 
 	for _, data in pairs(self.characters) do
@@ -322,7 +354,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines: 394 to 470
+-- Lines: 396 to 472
 function BlackMarketTweakData:_init_cash()
 	self.cash = {cash10 = {}}
 	self.cash.cash10.name_id = "bm_csh_cash10"
@@ -436,7 +468,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines: 474 to 536
+-- Lines: 476 to 538
 function BlackMarketTweakData:_init_xp()
 	self.xp = {xp10 = {}}
 	self.xp.xp10.name_id = "bm_exp_xp10"
@@ -536,7 +568,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines: 540 to 579
+-- Lines: 542 to 581
 function BlackMarketTweakData:_init_armors()
 	self.armors = {level_1 = {}}
 	self.armors.level_1.name_id = "bm_armor_level_1"
@@ -576,7 +608,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines: 583 to 615
+-- Lines: 585 to 617
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {doctor_bag = {}}
 	self.deployables.doctor_bag.name_id = "bm_equipment_doctor_bag"
@@ -592,7 +624,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines: 617 to 624
+-- Lines: 619 to 626
 function BlackMarketTweakData:get_mask_icon(mask_id)
 	local guis_catalog = "guis/"
 	local bundle_folder = tweak_data.blackmarket.masks[mask_id] and tweak_data.blackmarket.masks[mask_id].texture_bundle_folder
@@ -604,7 +636,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines: 627 to 637
+-- Lines: 629 to 639
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

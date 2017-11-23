@@ -101,7 +101,7 @@ end
 -- Lines: 104 to 132
 function MenuManagerVR:_setup_ingame_viewport()
 	if not self._is_start_menu then
-		local rt_resolution = Vector3(1280, 720, 0)
+		local rt_resolution = Vector3(2560, 720, 0)
 		self._render_target = Application:create_texture("render_target", rt_resolution.x, rt_resolution.y)
 
 		self._render_target:set_disable_clear(true)

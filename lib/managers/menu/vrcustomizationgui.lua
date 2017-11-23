@@ -828,7 +828,7 @@ function VRCustomizationGui:_setup_gui()
 	self._controls_image:set_size(self._controls_image:texture_width() * dh, h)
 end
 
--- Lines: 683 to 743
+-- Lines: 683 to 733
 function VRCustomizationGui:_setup_sub_menus()
 	self._sub_menus = {}
 	self._open_menu = nil
@@ -854,36 +854,12 @@ function VRCustomizationGui:_setup_sub_menus()
 			end
 		}
 	})
-	self:add_settings_menu("belt", {
-		{
-			setting = "belt_snap",
-			type = "slider",
-			text_id = "menu_vr_belt_snap",
-			params = {snap = 15}
-		},
-		{
-			setting = "belt_height_ratio",
-			type = "trigger",
-			text_id = "menu_vr_belt_height",
-			params = {
-				trigger_text_id = "menu_vr_set_height",
-				value_clbk = function (btn)
-					local belt = btn:parent_menu():object("belt")
-
-					if belt then
-						return belt:height() / managers.vr:get_setting("height")
-					end
-				end,
-				change_clbk = function (btn, value)
-					local belt = btn:parent_menu():object("belt")
-
-					if belt then
-						belt:reset(value * managers.vr:get_setting("height"))
-					end
-				end
-			}
-		}
-	}, function (menu, enabled)
+	self:add_settings_menu("belt", {{
+		setting = "belt_snap",
+		type = "slider",
+		text_id = "menu_vr_belt_snap",
+		params = {snap = 15}
+	}}, function (menu, enabled)
 		if enabled then
 			if not menu:object("belt") then
 				menu:add_object("belt", VRBeltCustomization:new(is_start_menu))
@@ -946,12 +922,12 @@ function VRCustomizationGui:_setup_sub_menus()
 	})
 end
 
--- Lines: 745 to 746
+-- Lines: 735 to 736
 function VRCustomizationGui:sub_menu(id)
 	return self._sub_menus[id]
 end
 
--- Lines: 749 to 763
+-- Lines: 739 to 753
 function VRCustomizationGui:add_sub_menu(id, desc, buttons, clbk)
 	local menu = VRSubMenu:new(self._panel, id)
 
@@ -973,7 +949,7 @@ function VRCustomizationGui:add_sub_menu(id, desc, buttons, clbk)
 	self:add_menu_button(id)
 end
 
--- Lines: 765 to 779
+-- Lines: 755 to 774
 function VRCustomizationGui:add_settings_menu(id, settings, clbk)
 	local menu = VRSubMenu:new(self._panel, id)
 
@@ -982,6 +958,12 @@ function VRCustomizationGui:add_settings_menu(id, settings, clbk)
 		for setting, item in pairs(menu._settings) do
 			managers.vr:reset_setting(setting)
 			item.button:setting_changed()
+		end
+
+		for _, object in pairs(menu._objects) do
+			if object.reset then
+				object:reset()
+			end
 		end
 	end)
 
@@ -994,7 +976,7 @@ function VRCustomizationGui:add_settings_menu(id, settings, clbk)
 	self:add_menu_button(id)
 end
 
--- Lines: 781 to 787
+-- Lines: 776 to 782
 function VRCustomizationGui:add_image_menu(id, params, clbk)
 	local menu = VRSubMenu:new(self._panel, id)
 
@@ -1006,7 +988,7 @@ function VRCustomizationGui:add_image_menu(id, params, clbk)
 	self:add_menu_button(id)
 end
 
--- Lines: 789 to 796
+-- Lines: 784 to 791
 function VRCustomizationGui:open_sub_menu(id)
 	self:close_sub_menu()
 	self._controls_image:set_visible(false)
@@ -1016,7 +998,7 @@ function VRCustomizationGui:open_sub_menu(id)
 	self._open_menu:set_enabled(true)
 end
 
--- Lines: 798 to 805
+-- Lines: 793 to 800
 function VRCustomizationGui:close_sub_menu()
 	if self._open_menu then
 		self._open_menu:set_enabled(false)
@@ -1027,7 +1009,7 @@ function VRCustomizationGui:close_sub_menu()
 	end
 end
 
--- Lines: 807 to 812
+-- Lines: 802 to 807
 function VRCustomizationGui:add_menu_button(id)
 	local x = PADDING
 	local y = PADDING + (self._buttons[#self._buttons] and self._buttons[#self._buttons].button:bottom() or 0)
@@ -1043,7 +1025,7 @@ function VRCustomizationGui:add_menu_button(id)
 	})
 end
 
--- Lines: 814 to 819
+-- Lines: 809 to 814
 function VRCustomizationGui:add_back_button()
 	local x = PADDING
 	local y = (self._panel:h() - 75) - PADDING
@@ -1059,14 +1041,14 @@ function VRCustomizationGui:add_back_button()
 	})
 end
 
--- Lines: 821 to 825
+-- Lines: 816 to 820
 function VRCustomizationGui:update(t, dt)
 	if self._open_menu then
 		self._open_menu:update(t, dt)
 	end
 end
 
--- Lines: 827 to 837
+-- Lines: 822 to 832
 function VRCustomizationGui:activate()
 	local clbks = {
 		mouse_move = callback(self, self, "mouse_moved"),
@@ -1081,14 +1063,14 @@ function VRCustomizationGui:activate()
 	self._active = true
 end
 
--- Lines: 839 to 842
+-- Lines: 834 to 837
 function VRCustomizationGui:deactivate()
 	managers.mouse_pointer:remove_mouse(self._id)
 
 	self._active = false
 end
 
--- Lines: 844 to 854
+-- Lines: 839 to 849
 function VRCustomizationGui:exit_menu()
 	for _, menu in pairs(self._sub_menus) do
 		menu:clear_objects()
@@ -1102,7 +1084,7 @@ function VRCustomizationGui:exit_menu()
 end
 VRBeltCustomization = VRBeltCustomization or class()
 
--- Lines: 860 to 888
+-- Lines: 855 to 883
 function VRBeltCustomization:init(is_start_menu)
 	local scene = is_start_menu and World or MenuRoom
 	local player = managers.menu:player()
@@ -1131,16 +1113,15 @@ function VRBeltCustomization:init(is_start_menu)
 	managers.menu:active_menu().input:focus(true)
 end
 
--- Lines: 890 to 896
-function VRBeltCustomization:reset(reset_value)
-	if reset_value then
-		self._start_height = reset_value
-	end
+-- Lines: 885 to 890
+function VRBeltCustomization:reset()
+	managers.vr:reset_setting("belt_height_ratio")
 
+	self._start_height = managers.vr:get_setting("belt_height_ratio") * managers.vr:get_setting("height")
 	self._height = self._start_height
 end
 
--- Lines: 898 to 911
+-- Lines: 892 to 905
 function VRBeltCustomization:_setup_help_panel(panel)
 	local up_arrow = panel:bitmap({
 		texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
@@ -1183,7 +1164,7 @@ function VRBeltCustomization:_setup_help_panel(panel)
 	self._state = "active"
 end
 
--- Lines: 913 to 936
+-- Lines: 907 to 930
 function VRBeltCustomization:_set_help_state(state)
 	if state == self._state then
 		return
@@ -1211,7 +1192,7 @@ function VRBeltCustomization:_set_help_state(state)
 	text:set_center_x(self._help_panel:w() / 2)
 end
 
--- Lines: 938 to 953
+-- Lines: 932 to 947
 function VRBeltCustomization:destroy()
 	self._ws:gui():destroy_workspace(self._ws)
 	self._help_ws:gui():destroy_workspace(self._help_ws)
@@ -1229,12 +1210,12 @@ function VRBeltCustomization:destroy()
 	World:delete_unit(self._belt_unit)
 end
 
--- Lines: 955 to 956
+-- Lines: 949 to 950
 function VRBeltCustomization:height()
 	return self._height
 end
 
--- Lines: 959 to 998
+-- Lines: 953 to 996
 function VRBeltCustomization:update(t, dt)
 	local player = managers.menu:player()
 	local hand = player:hand(player:primary_hand_index())
@@ -1265,6 +1246,10 @@ function VRBeltCustomization:update(t, dt)
 	else
 		self._belt:set_alpha(0.4)
 		self:_set_help_state("inactive")
+	end
+
+	if managers.menu:get_controller():get_input_released("interact") then
+		managers.vr:set_setting("belt_height_ratio", self:height() / managers.vr:get_setting("height"))
 	end
 
 	self._belt_unit:set_position(player:position():with_z(self._height) + math.Y:rotate_with(self._belt_unit:rotation()) * 20)

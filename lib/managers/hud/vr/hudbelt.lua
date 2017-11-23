@@ -631,12 +631,12 @@ function HUDBelt:destroy()
 end
 
 -- Lines: 471 to 473
-function HUDBelt:_reload_setting_changed(setting, new_value)
+function HUDBelt:_reload_setting_changed(setting, old_value, new_value)
 	self:set_state("reload", new_value and "disabled" or "inactive")
 end
 
 -- Lines: 475 to 477
-function HUDBelt:_primary_hand_changed(setting, new_value)
+function HUDBelt:_primary_hand_changed(setting, old_value, new_value)
 	self:layout_grid(self.grid_layouts[new_value])
 end
 
