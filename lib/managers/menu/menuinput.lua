@@ -778,7 +778,7 @@ function MenuInput:update(t, dt)
 	self._mouse_moved = nil
 end
 
--- Lines: 787 to 822
+-- Lines: 787 to 825
 function MenuInput:_give_special_buttons()
 	if self._controller then
 		local special_btns = {
@@ -836,7 +836,7 @@ function MenuInput:_give_special_buttons()
 	end
 end
 
--- Lines: 824 to 833
+-- Lines: 827 to 836
 function MenuInput:menu_axis_move()
 	local axis_moved = {
 		x = 0,
@@ -854,72 +854,72 @@ function MenuInput:menu_axis_move()
 	return axis_moved
 end
 
--- Lines: 848 to 850
+-- Lines: 851 to 853
 function MenuInput:post_event(event)
 	self._sound_source:post_event(event)
 end
 
--- Lines: 853 to 854
+-- Lines: 856 to 857
 function MenuInput:menu_up_input_bool()
 	return MenuInput.super.menu_up_input_bool(self) or self._move_axis_limit < self:menu_axis_move().y
 end
 
--- Lines: 856 to 858
+-- Lines: 859 to 861
 function MenuInput:menu_up_pressed()
 	return MenuInput.super.menu_up_pressed(self) or self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_move().y > 0
 end
 
--- Lines: 860 to 861
+-- Lines: 863 to 864
 function MenuInput:menu_up_released()
 	return MenuInput.super.menu_up_released(self) or self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines: 866 to 867
+-- Lines: 869 to 870
 function MenuInput:menu_down_input_bool()
 	return MenuInput.super.menu_down_input_bool(self) or self:menu_axis_move().y < -self._move_axis_limit
 end
 
--- Lines: 869 to 871
+-- Lines: 872 to 874
 function MenuInput:menu_down_pressed()
 	return MenuInput.super.menu_down_pressed(self) or self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_move().y < 0
 end
 
--- Lines: 873 to 874
+-- Lines: 876 to 877
 function MenuInput:menu_down_released()
 	return MenuInput.super.menu_down_released(self) or self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines: 879 to 881
+-- Lines: 882 to 884
 function MenuInput:menu_left_input_bool()
 	return MenuInput.super.menu_left_input_bool(self) or self:menu_axis_move().x < -self._move_axis_limit
 end
 
--- Lines: 883 to 885
+-- Lines: 886 to 888
 function MenuInput:menu_left_pressed()
 	return MenuInput.super.menu_left_pressed(self) or self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_move().x < 0
 end
 
--- Lines: 887 to 888
+-- Lines: 890 to 891
 function MenuInput:menu_left_released()
 	return MenuInput.super.menu_left_released(self) or self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines: 893 to 895
+-- Lines: 896 to 898
 function MenuInput:menu_right_input_bool()
 	return MenuInput.super.menu_right_input_bool(self) or self._move_axis_limit < self:menu_axis_move().x
 end
 
--- Lines: 897 to 899
+-- Lines: 900 to 902
 function MenuInput:menu_right_pressed()
 	return MenuInput.super.menu_right_pressed(self) or self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_move().x > 0
 end
 
--- Lines: 901 to 902
+-- Lines: 904 to 905
 function MenuInput:menu_right_released()
 	return MenuInput.super.menu_right_released(self) or self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines: 918 to 922
+-- Lines: 921 to 925
 function MenuInput:menu_next_page_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("next_page")
@@ -928,7 +928,7 @@ function MenuInput:menu_next_page_input_bool()
 	return false
 end
 
--- Lines: 925 to 929
+-- Lines: 928 to 932
 function MenuInput:menu_next_page_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("next_page")
@@ -937,7 +937,7 @@ function MenuInput:menu_next_page_pressed()
 	return false
 end
 
--- Lines: 931 to 935
+-- Lines: 934 to 938
 function MenuInput:menu_next_page_released()
 	if self._controller then
 		return self._controller:get_input_released("next_page")
@@ -946,7 +946,7 @@ function MenuInput:menu_next_page_released()
 	return false
 end
 
--- Lines: 940 to 944
+-- Lines: 943 to 947
 function MenuInput:menu_previous_page_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("previous_page")
@@ -955,7 +955,7 @@ function MenuInput:menu_previous_page_input_bool()
 	return false
 end
 
--- Lines: 947 to 951
+-- Lines: 950 to 954
 function MenuInput:menu_previous_page_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("previous_page")
@@ -964,7 +964,7 @@ function MenuInput:menu_previous_page_pressed()
 	return false
 end
 
--- Lines: 953 to 957
+-- Lines: 956 to 960
 function MenuInput:menu_previous_page_released()
 	if self._controller then
 		return self._controller:get_input_released("previous_page")
@@ -973,7 +973,7 @@ function MenuInput:menu_previous_page_released()
 	return false
 end
 
--- Lines: 965 to 989
+-- Lines: 968 to 992
 function MenuInput:_update_axis_status()
 	local axis_moved = self:menu_axis_move()
 
@@ -998,7 +998,7 @@ function MenuInput:_update_axis_status()
 	end
 end
 
--- Lines: 992 to 1014
+-- Lines: 995 to 1017
 function MenuInput:_update_axis_scroll_status()
 	local axis_scrolled = self:menu_axis_scroll()
 
@@ -1023,7 +1023,7 @@ function MenuInput:_update_axis_scroll_status()
 	end
 end
 
--- Lines: 1018 to 1038
+-- Lines: 1021 to 1041
 function MenuInput:input_crime_spree_item(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		local node_gui = managers.menu:active_menu().renderer:active_node_gui()

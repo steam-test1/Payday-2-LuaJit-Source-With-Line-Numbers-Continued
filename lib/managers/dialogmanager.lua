@@ -1,6 +1,6 @@
 DialogManager = DialogManager or class()
 
--- Lines: 3 to 9
+-- Lines: 3 to 15
 function DialogManager:init()
 	self._dialog_list = {}
 	self._current_dialog = nil
@@ -8,12 +8,12 @@ function DialogManager:init()
 	self._bain_unit = World:spawn_unit(Idstring("units/payday2/characters/fps_mover/bain"), Vector3(), Rotation())
 end
 
--- Lines: 11 to 13
+-- Lines: 17 to 19
 function DialogManager:init_finalize()
 	self:_load_dialogs()
 end
 
--- Lines: 16 to 54
+-- Lines: 22 to 60
 function DialogManager:queue_dialog(id, params)
 	if not params.skip_idle_check and managers.platform:presence() == "Idle" then
 		return
@@ -58,7 +58,7 @@ function DialogManager:queue_dialog(id, params)
 	return true
 end
 
--- Lines: 57 to 83
+-- Lines: 78 to 104
 function DialogManager:finished()
 	self:_stop_dialog()
 
@@ -87,7 +87,7 @@ function DialogManager:finished()
 	end
 end
 
--- Lines: 85 to 97
+-- Lines: 106 to 118
 function DialogManager:quit_dialog(no_done_cbk)
 	managers.subtitle:set_visible(false)
 	managers.subtitle:set_enabled(false)
@@ -101,7 +101,7 @@ function DialogManager:quit_dialog(no_done_cbk)
 	self._next_dialog = nil
 end
 
--- Lines: 99 to 105
+-- Lines: 120 to 126
 function DialogManager:conversation_names()
 	local t = {}
 
@@ -114,12 +114,12 @@ function DialogManager:conversation_names()
 	return t
 end
 
--- Lines: 108 to 110
+-- Lines: 129 to 131
 function DialogManager:on_simulation_ended()
 	self:quit_dialog(true)
 end
 
--- Lines: 112 to 144
+-- Lines: 133 to 165
 function DialogManager:_play_dialog(dialog, params, line)
 	local unit = params.on_unit or params.override_characters and managers.player:player_unit()
 
@@ -156,21 +156,21 @@ function DialogManager:_play_dialog(dialog, params, line)
 	end
 end
 
--- Lines: 146 to 150
+-- Lines: 167 to 171
 function DialogManager:_stop_dialog()
 	if self._current_dialog and self._current_dialog.unit then
 		self._current_dialog.unit:drama():stop_cue()
 	end
 end
 
--- Lines: 152 to 156
+-- Lines: 173 to 177
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
 	end
 end
 
--- Lines: 158 to 167
+-- Lines: 179 to 188
 function DialogManager:_load_dialogs()
 	local file_name = "gamedata/dialogs/index"
 	local data = PackageManager:script_data(Idstring("dialog_index"), file_name:id())
@@ -182,7 +182,7 @@ function DialogManager:_load_dialogs()
 	end
 end
 
--- Lines: 169 to 195
+-- Lines: 190 to 216
 function DialogManager:_load_dialog_data(name)
 	local file_name = "gamedata/dialogs/" .. name
 	local data = PackageManager:script_data(Idstring("dialog"), file_name:id())
