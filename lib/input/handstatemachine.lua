@@ -27,7 +27,7 @@ function HandStateMachine:init(states, default_l, default_r)
 				if not data.hand or data.hand == hand then
 					local hand_suffix = hand == 1 and "r" or "l"
 
-					for _, input in ipairs(data.inputs) do
+					for _, input in ipairs(data.inputs or {}) do
 						local full_input = input .. hand_suffix
 
 						if not table.contains(self._possible_inputs[connection], full_input) then
@@ -156,7 +156,7 @@ function HandStateMachine:hand_from_connection(connection_name)
 	end
 end
 
--- Lines: 143 to 188
+-- Lines: 143 to 199
 function HandStateMachine:_apply_bindings()
 	if not self._controllers or #self._controllers <= 0 then
 		return
@@ -172,20 +172,32 @@ function HandStateMachine:_apply_bindings()
 
 	local connection_map = {}
 
-	for key_name, connection_name in pairs(key_map) do
-		connection_map[connection_name] = connection_map[connection_name] or {}
+	for key_name, connection_list in pairs(key_map) do
+		for _, connection_name in ipairs(connection_list) do
+			connection_map[connection_name] = connection_map[connection_name] or {}
 
-		table.insert(connection_map[connection_name], key_name)
+			table.insert(connection_map[connection_name], key_name)
+		end
+	end
+
+	if HandStateMachine.DEBUG then
+		print("[HandStateMachine] ----------------- Connection map ----------------- ")
+
+		for connection_name, key_list in pairs(connection_map) do
+			print(connection_name)
+
+			for _, key_name in ipairs(key_list) do
+				print("\t" .. key_name)
+			end
+		end
 	end
 
 	for _, controller in ipairs(self._controllers) do
-		for connection_name, _ in pairs(controller:get_connection_map()) do
+		for connection_name, connection in pairs(controller:get_setup():get_connection_map()) do
 			local new_connection = connection_map[connection_name]
 			local modified_connection = self._modified_connection_list[connection_name]
 
 			if new_connection or modified_connection then
-				local connection = controller:get_connection_settings(connection_name)
-
 				if new_connection then
 					connection:set_input_name_list(new_connection)
 					connection:set_enabled(true)

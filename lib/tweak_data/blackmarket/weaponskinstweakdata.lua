@@ -1,5 +1,5 @@
 
--- Lines: 1 to 27584
+-- Lines: 1 to 27593
 function BlackMarketTweakData:_init_weapon_skins()
 	self.weapon_skins = {serbu_woodland = {}}
 	self.weapon_skins.serbu_woodland.name_id = "bm_wskn_serbu_woodland"
@@ -879,7 +879,8 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_m4_lower_reciever",
 			"wpn_fps_ass_l85a2_m_emag",
 			"wpn_fps_upg_o_acog",
-			"wpn_fps_upg_ass_m4_upper_reciever_ballos"
+			"wpn_fps_upg_ass_m4_upper_reciever_ballos",
+			"wpn_fps_amcar_bolt_standard"
 		}
 	}
 	self.weapon_skins.deagle_bling = {
@@ -970,6 +971,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_ass_l85a2_m_emag",
 			"wpn_fps_m4_uupg_b_short",
 			"wpn_fps_upg_ass_m4_upper_reciever_ballos",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_upg_m4_s_ubr",
 			"wpn_fps_upg_ass_ns_jprifles",
 			"wpn_fps_upg_o_acog",
@@ -5163,6 +5165,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_upg_o_cmore",
 			"wpn_fps_upg_m4_s_mk46",
 			"wpn_fps_upg_ass_m4_upper_reciever_ballos",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_upg_ass_ns_surefire"
 		},
 		types = {
@@ -5711,6 +5714,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_upg_m4_m_quad",
 			"wpn_fps_upg_m4_s_ubr",
 			"wpn_fps_upg_ass_m4_upper_reciever_ballos",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_upg_o_rx30"
 		},
 		parts = {wpn_fps_m4_lower_reciever = {[Idstring("m4_lower_reciever"):key()] = {
@@ -5959,7 +5963,8 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_ass_m16_s_legend",
 			"wpn_fps_upg_m4_g_mgrip",
 			"wpn_fps_upg_ass_m4_lower_reciever_core",
-			"wpn_fps_upg_ass_m4_upper_reciever_core"
+			"wpn_fps_upg_ass_m4_upper_reciever_core",
+			"wpn_fps_amcar_bolt_standard"
 		},
 		parts = {
 			wpn_fps_upg_m4_g_mgrip = {[Idstring("mtr_moek"):key()] = {
@@ -14814,6 +14819,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 		base_gradient = Idstring("units/payday2_cash/safes/cs3/base_gradient/base_cs3_022_df"),
 		default_blueprint = {
 			"wpn_fps_m4_upper_reciever_round",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_m4_uupg_b_medium_vanilla",
 			"wpn_fps_m4_uupg_draghandle",
 			"wpn_fps_snp_tti_g_grippy",
@@ -16275,6 +16281,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 		default_blueprint = {
 			"wpn_fps_m4_lower_reciever",
 			"wpn_fps_m4_upper_reciever_round",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_m4_uupg_draghandle",
 			"wpn_fps_upg_m4_m_straight_vanilla",
 			"wpn_fps_upg_m4_g_standard_vanilla",
@@ -17917,6 +17924,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_upg_m4_g_standard_vanilla",
 			"wpn_fps_m4_lower_reciever",
 			"wpn_fps_m4_upper_reciever_round",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_m4_uupg_b_medium_vanilla",
 			"wpn_fps_m4_uupg_fg_rail",
 			"wpn_fps_m4_uupg_m_std_vanilla",
@@ -18033,6 +18041,7 @@ function BlackMarketTweakData:_init_weapon_skins()
 			"wpn_fps_m4_uupg_b_medium_vanilla",
 			"wpn_fps_m4_lower_reciever",
 			"wpn_fps_amcar_uupg_body_upperreciever",
+			"wpn_fps_amcar_bolt_standard",
 			"wpn_fps_amcar_uupg_fg_amcar",
 			"wpn_fps_upg_m4_m_straight_vanilla",
 			"wpn_fps_upg_m4_s_standard_vanilla",

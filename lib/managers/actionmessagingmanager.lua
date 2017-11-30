@@ -72,7 +72,7 @@ function ActionMessagingManager:show_message(id, instigator)
 	self:_show_message(id, instigator)
 end
 
--- Lines: 71 to 91
+-- Lines: 71 to 95
 function ActionMessagingManager:_show_message(id, instigator)
 	local msg_data = self:message(id)
 	local title = instigator:base():nick_name()
@@ -102,18 +102,18 @@ function ActionMessagingManager:_show_message(id, instigator)
 	end
 end
 
--- Lines: 93 to 97
+-- Lines: 97 to 101
 function ActionMessagingManager:sync_show_message(id, instigator)
 	if alive(instigator) and managers.network:session():peer_by_unit(instigator) then
 		self:_show_message(id, instigator)
 	end
 end
 
--- Lines: 100 to 101
+-- Lines: 104 to 105
 function ActionMessagingManager:save(data)
 end
 
--- Lines: 104 to 105
+-- Lines: 108 to 109
 function ActionMessagingManager:load(data)
 end
 

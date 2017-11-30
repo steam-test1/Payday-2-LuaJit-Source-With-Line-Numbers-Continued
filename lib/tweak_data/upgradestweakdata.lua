@@ -163,7 +163,7 @@ function UpgradesTweakData:_init_pd2_values()
 	self.morale_boost_reload_speed_bonus = 1.2
 	self.morale_boost_base_cooldown = 3.5
 	self.max_weapon_dmg_mul_stacks = 4
-	self.max_melee_weapon_dmg_mul_stacks = 4
+	self.max_melee_weapon_dmg_mul_stacks = 1
 	self.hostage_near_player_radius = 1000
 	self.hostage_near_player_check_t = 0.5
 	self.hostage_near_player_multiplier = 1.25
@@ -1006,26 +1006,26 @@ function UpgradesTweakData:_init_pd2_values()
 		10
 	}}
 	self.values.temporary.dmg_dampener_outnumbered_strong = {{
-		0.92,
+		0.88,
 		7
 	}}
 	self.values.temporary.dmg_dampener_close_contact = {
 		{
-			0.94,
+			0.92,
 			7
 		},
 		{
-			0.88,
+			0.84,
 			7
 		},
 		{
-			0.82,
+			0.76,
 			7
 		}
 	}
 	self.values.melee.stacking_hit_damage_multiplier = {
-		0.1,
-		0.2
+		10,
+		10
 	}
 	self.values.melee.stacking_hit_expire_t = {7}
 	self.values.player.melee_kill_life_leech = {0.1}
@@ -1046,7 +1046,7 @@ function UpgradesTweakData:_init_pd2_values()
 			12
 		},
 		multiplier = 0.2,
-		cd = 4,
+		cd = 3,
 		base = 8
 	}
 	self.values.player.marked_inc_dmg_distance = {{
@@ -1288,10 +1288,10 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.player.smoke_screen_ally_dodge_bonus = {0.1}
 	self.values.player.sicario_multiplier = {2}
 	self.values.player.tag_team_base = {{
-		kill_health_gain = 1,
-		radius = 0.3,
-		distance = 10,
-		kill_extension = 0.6,
+		kill_health_gain = 1.5,
+		radius = 0.6,
+		distance = 18,
+		kill_extension = 1.3,
 		duration = 12,
 		tagged_health_gain_ratio = 0.5
 	}}
@@ -1312,7 +1312,7 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.player.armor_to_health_conversion = {100}
 	self.values.player.damage_control_passive = {{
 		75,
-		6.25
+		9
 	}}
 	self.values.player.damage_control_auto_shrug = {4}
 	self.values.player.damage_control_cooldown_drain = {
@@ -2600,27 +2600,26 @@ function UpgradesTweakData:_init_pd2_values()
 			}
 		},
 		{
-			{"6%"},
+			{
+				"12%",
+				"1",
+				"10"
+			},
 			{"25%"},
-			{"6%"},
+			{"8%"},
 			{
 				"+1",
 				"15%",
 				"45%"
 			},
 			{
-				"6%",
-				"10%",
-				"7",
-				"4"
-			},
-			{"135%"},
-			{
 				"8%",
 				"10%",
 				"7",
 				"4"
 			},
+			{"135%"},
+			{"8%"},
 			{
 				"5%",
 				"20%"
@@ -2632,11 +2631,16 @@ function UpgradesTweakData:_init_pd2_values()
 			}
 		},
 		{
-			{"6%"},
+			{
+				"12%",
+				"1",
+				"10"
+			},
 			{"25%"},
 			{
 				"30",
-				"1"
+				"1",
+				"10%"
 			},
 			{
 				"+1",
@@ -2645,12 +2649,14 @@ function UpgradesTweakData:_init_pd2_values()
 			},
 			{
 				"10%",
-				"1"
+				"1",
+				"8%"
 			},
 			{"135%"},
 			{
 				"30",
-				"1"
+				"1",
+				"10%"
 			},
 			{
 				"5%",
@@ -2666,20 +2672,24 @@ function UpgradesTweakData:_init_pd2_values()
 			{
 				"16",
 				"24",
-				"4",
+				"3",
 				"20%"
 			},
 			{"25%"},
 			{
 				"50%",
-				"5"
+				"5",
+				"20%"
 			},
 			{
 				"+1",
 				"15%",
 				"45%"
 			},
-			{"50%"},
+			{
+				"50%",
+				"20%"
+			},
 			{"135%"},
 			{"8"},
 			{

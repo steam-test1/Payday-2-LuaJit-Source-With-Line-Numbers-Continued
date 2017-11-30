@@ -68,7 +68,7 @@ local MIN_JUMP_TARGET_TO_WARP_THRESHOLD = 25
 local MAX_JUMP_HEIGHT = (tweak_data.player.movement_state.standard.movement.jump_velocity.z * tweak_data.player.movement_state.standard.movement.jump_velocity.z) / 1964
 PlayerWarp.TARGET_TYPE = 0
 
--- Lines: 64 to 104
+-- Lines: 64 to 103
 function PlayerWarp:init(hand_unit)
 	self._unit = hand_unit
 	self._targeting = false
@@ -112,43 +112,62 @@ function PlayerWarp:init(hand_unit)
 	table.insert(self._warp_markers, WarpTargetMarker:new(MARKER_UNIT_ID))
 
 	self._ladders = {}
-	self._ladder_marker = World:spawn_unit(LADDER_UNIT_ID, Vector3(), Rotation())
-
-	self:hide_ladder_marker()
+	self._ladder_markers = {}
 end
 
--- Lines: 106 to 118
-function PlayerWarp:show_ladder_marker(ladder, going_down, idle)
-	self._active_ladder = ladder
-	self._going_down_ladder = going_down
+-- Lines: 105 to 134
+function PlayerWarp:show_ladder_marker(key, active)
+	local ladder_data = self._ladders[key]
 
-	self._ladder_marker:set_position(going_down and ladder:ladder():top() or ladder:ladder():bottom())
+	if ladder_data.active and (self._active_ladder_key == key) == active then
+		return
+	end
+
+	local ladder = ladder_data.ladder
+	ladder_data.active = true
+
+	if active then
+		self._active_ladder_key = key
+	elseif self._active_ladder_key == key then
+		self._active_ladder_key = nil
+	end
+
+	self._ladder_markers[key] = self._ladder_markers[key] or World:spawn_unit(LADDER_UNIT_ID, Vector3(), Rotation())
+	local ladder_marker = self._ladder_markers[key]
+
+	ladder_marker:set_position(ladder_data.going_down and ladder:ladder():top() or ladder:ladder():bottom())
 
 	local ladder_rot = ladder:rotation()
 
-	if going_down then
+	if ladder_data.going_down then
 		ladder_rot = ladder_rot * Rotation(180)
 	end
 
-	self._ladder_marker:set_rotation(ladder_rot)
-	self._ladder_marker:damage():run_sequence_simple("ladder_" .. (going_down and "down" or "up") .. (idle and "_idle" or ""))
+	ladder_marker:set_rotation(ladder_rot)
+	ladder_marker:damage():run_sequence_simple("ladder_" .. (ladder_data.going_down and "down" or "up") .. (active and "" or "_idle"))
 end
 
--- Lines: 120 to 123
-function PlayerWarp:hide_ladder_marker()
-	self._active_ladder = nil
+-- Lines: 136 to 145
+function PlayerWarp:hide_ladder_marker(key)
+	if self._ladders[key] and self._ladders[key].active then
+		self._ladders[key].active = nil
 
-	self._ladder_marker:damage():run_sequence_simple("ladder_hide")
+		self._ladder_markers[key]:damage():run_sequence_simple("ladder_hide")
+
+		if self._active_ladder_key == key then
+			self._active_ladder_key = nil
+		end
+	end
 end
 
--- Lines: 125 to 129
+-- Lines: 147 to 151
 function PlayerWarp:hide_markers()
 	for i = 1, #self._warp_markers, 1 do
 		self._warp_markers[i]:hide()
 	end
 end
 
--- Lines: 131 to 142
+-- Lines: 153 to 164
 function PlayerWarp:show_markers(...)
 	local args = {...}
 	local nr_args = #args
@@ -163,37 +182,53 @@ function PlayerWarp:show_markers(...)
 	end
 end
 
--- Lines: 144 to 146
+-- Lines: 166 to 168
 function PlayerWarp:set_player_unit(player_unit)
 	self._player_unit = player_unit
 end
 
--- Lines: 148 to 169
+-- Lines: 170 to 199
 function PlayerWarp:update_ladder_targeting()
-	local min_dis = tweak_data.vr.ladder.distance * tweak_data.vr.ladder.distance
-	local closest = nil
+	if self._ladders_enabled and self._targeting and #Ladder.active_ladders > 0 then
+		for _, ladder in ipairs(Ladder.active_ladders) do
+			ladder:ladder():check_ground_clipping()
 
-	if self._targeting and #self._ladders > 0 then
-		for _, ladder in ipairs(self._ladders) do
-			local going_down = ladder:ladder():top().z < self._unit:position().z
-			local dis = mvector3.distance_sq(self._unit:position(), going_down and ladder:ladder():top() or ladder:ladder():bottom())
+			local can_access = nil
 
-			if dis < min_dis and mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal() * (going_down and -1 or 1)) < 0 and (not closest or dis < closest) then
-				if self._active_ladder ~= ladder then
-					self:show_ladder_marker(ladder, going_down, true)
+			if ladder:ladder():can_access(self._player_unit:position()) then
+				local going_down = ladder:ladder():top().z < self._player_unit:position().z + 75
+				local dis = mvector3.distance_sq(self._unit:position(), going_down and ladder:ladder():top() or ladder:ladder():bottom())
+				self._ladders[ladder:key()] = self._ladders[ladder:key()] or {ladder = ladder}
+
+				if going_down or mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal()) < 0 then
+					self._ladders[ladder:key()].going_down = going_down
+					self._ladders[ladder:key()].distance = dis
+
+					self:show_ladder_marker(ladder:key(), ladder:key() == self._active_ladder_key and self._target.type == "ladder")
+
+					can_access = true
 				end
+			end
 
-				closest = dis
+			if not can_access then
+				self:hide_ladder_marker(ladder:key())
+			end
+		end
+	else
+		for key, ladder_data in pairs(self._ladders) do
+			if ladder_data.active then
+				self:hide_ladder_marker(key)
 			end
 		end
 	end
-
-	if not closest and alive(self._active_ladder) then
-		self:hide_ladder_marker()
-	end
 end
 
--- Lines: 171 to 176
+-- Lines: 201 to 203
+function PlayerWarp:set_ladders_enabled(enabled)
+	self._ladders_enabled = enabled
+end
+
+-- Lines: 205 to 210
 function PlayerWarp:set_targeting(enabled)
 	self._targeting = enabled
 
@@ -202,27 +237,27 @@ function PlayerWarp:set_targeting(enabled)
 	end
 end
 
--- Lines: 178 to 179
+-- Lines: 212 to 213
 function PlayerWarp:target_position()
 	return self._target.position
 end
 
--- Lines: 182 to 183
+-- Lines: 216 to 217
 function PlayerWarp:target_type()
 	return self._target.type
 end
 
--- Lines: 186 to 187
+-- Lines: 220 to 221
 function PlayerWarp:target_data()
 	return self._target.data
 end
 
--- Lines: 190 to 192
+-- Lines: 224 to 226
 function PlayerWarp:clear_snap_points()
 	self._snap_points = {}
 end
 
--- Lines: 194 to 196
+-- Lines: 228 to 230
 function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	table.insert(self._snap_points, {
 		position = position,
@@ -232,18 +267,8 @@ function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	})
 end
 
--- Lines: 198 to 200
-function PlayerWarp:clear_ladders()
-	self._ladders = {}
-end
 
--- Lines: 202 to 204
-function PlayerWarp:add_ladder(ladder)
-	table.insert(self._ladders, ladder)
-end
-
-
--- Lines: 206 to 220
+-- Lines: 232 to 246
 local function brush_debug_print(brush, position, ysize, text_data)
 	local ypos = 0
 	local t = text_data
@@ -263,7 +288,7 @@ end
 
 local jump_vec = Vector3()
 
--- Lines: 224 to 293
+-- Lines: 250 to 339
 function PlayerWarp:update(unit, t, dt)
 	if self._targeting then
 		self._target.position = nil
@@ -285,23 +310,45 @@ function PlayerWarp:update(unit, t, dt)
 			end
 		end
 
-		if self._active_ladder then
-			local ladder = self._active_ladder:ladder()
-			local ladder_pos = self._going_down_ladder and ladder:top() or ladder:bottom()
+		local closest_ladder_data = nil
 
-			if mvector3.distance_sq(pos, ladder_pos) < 250000 and mvector3.dot(forward, (ladder_pos - pos):normalized()) > 0.95 then
-				if self._target.type ~= "ladder" then
-					self:show_ladder_marker(self._active_ladder, self._going_down_ladder)
+		for key, ladder_data in pairs(self._ladders) do
+			if ladder_data.active then
+				local ladder = ladder_data.ladder:ladder()
+				local ladder_pos = ladder_data.going_down and ladder:top() or ladder:bottom()
+				local dis = mvector3.distance_sq(pos, ladder_pos)
+				local ray = self._unit:raycast("ray", pos, ladder_pos, "slot_mask", self._slotmask, "ray_type", "body walk")
+
+				if (not ray or mvector3.distance_sq(ray.position, ladder_pos) < 500) and mvector3.dot(forward, (ladder_pos - pos):normalized()) > 0.95 then
+					if not closest_ladder_data or dis < closest_ladder_data.dis then
+						closest_ladder_data = {
+							dis = dis,
+							ladder = ladder_data.ladder,
+							pos = ladder_pos
+						}
+					end
+				elseif self._target.type == "ladder" and self._active_ladder_key == key then
+					self:show_ladder_marker(key)
+				end
+			end
+		end
+
+		if closest_ladder_data then
+			local ladder = closest_ladder_data.ladder
+
+			if self._target.type ~= "ladder" or self._active_ladder_key ~= ladder:key() then
+				if self._active_ladder_key then
+					self:show_ladder_marker(self._active_ladder_key)
 				end
 
-				sp_found = true
-				self._target.position = ladder_pos + ladder:normal() * 40
-				self._target.type = "ladder"
-				self._target.data = self._active_ladder
-				self._aim_position = self._target.position
-			elseif self._target.type == "ladder" then
-				self:show_ladder_marker(self._active_ladder, self._going_down_ladder, true)
+				self:show_ladder_marker(ladder:key(), true)
 			end
+
+			sp_found = true
+			self._target.position = closest_ladder_data.pos + ladder:ladder():normal() * 40
+			self._target.type = "ladder"
+			self._target.data = ladder
+			self._aim_position = self._target.position
 		end
 
 		if not sp_found then
@@ -340,38 +387,38 @@ function PlayerWarp:update(unit, t, dt)
 	self:update_ladder_targeting()
 end
 
--- Lines: 295 to 297
+-- Lines: 341 to 343
 function PlayerWarp:set_range(range)
 	self._range = math.min(range, self._max_range)
 end
 
--- Lines: 299 to 302
+-- Lines: 345 to 348
 function PlayerWarp:set_max_range(max_range)
 	self._max_range = max_range
 	self._range = math.min(self._range, max_range)
 end
 
--- Lines: 304 to 306
+-- Lines: 350 to 352
 function PlayerWarp:set_enable_jump(enabled)
 	self._enable_jump = enabled
 end
 
--- Lines: 308 to 310
+-- Lines: 354 to 356
 function PlayerWarp:set_max_jump_distance(max_jump_distance)
 	self._max_jump_distance = max_jump_distance
 end
 
--- Lines: 312 to 314
+-- Lines: 358 to 360
 function PlayerWarp:set_jump_move_speed(speed)
 	self._jump_move_speed = speed
 end
 
--- Lines: 316 to 318
+-- Lines: 362 to 364
 function PlayerWarp:set_blocked(blocked)
 	self._blocked = blocked
 end
 
--- Lines: 320 to 360
+-- Lines: 366 to 406
 function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 	local line_segments = {}
 	local v = target - source
@@ -419,7 +466,7 @@ function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 	end
 end
 
--- Lines: 362 to 396
+-- Lines: 408 to 442
 function PlayerWarp:_draw(brush, unit_pos)
 	local yaw = self._player_unit:camera():rotation():yaw()
 
@@ -468,7 +515,7 @@ function PlayerWarp:_draw(brush, unit_pos)
 	end
 end
 
--- Lines: 398 to 438
+-- Lines: 444 to 484
 function PlayerWarp:_find_warp_position(player_position, pos, forward)
 	local warp_target, jump_target = self:_find_target(player_position, pos, forward)
 	self._target.type = "move"
@@ -502,7 +549,7 @@ function PlayerWarp:_find_warp_position(player_position, pos, forward)
 	end
 end
 
--- Lines: 445 to 484
+-- Lines: 491 to 530
 function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_target, jump_target)
 	if not self._enable_jump then
 		return false
@@ -541,21 +588,8 @@ function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_targ
 	return true
 end
 
--- Lines: 487 to 494
-function PlayerWarp:_can_see_target(position, target)
-	if target then
-		ray = self._unit:raycast("ray", position, target, "slot_mask", self._slotmask, "ray_type", "body walk")
 
-		if ray and mvector3.distance_sq(ray.position, target) > 1 then
-			return false
-		end
-	end
-
-	return true
-end
-
-
--- Lines: 497 to 502
+-- Lines: 533 to 538
 local function clip_line_to_sphere(origin, radius, position, direction)
 	local o_c = position - origin
 	local p = mvector3.dot(o_c, direction)
@@ -566,7 +600,7 @@ local function clip_line_to_sphere(origin, radius, position, direction)
 end
 
 
--- Lines: 507 to 594
+-- Lines: 543 to 620
 function PlayerWarp:_find_target(player_position, position, forward)
 	if mvector3.dot(forward, math.UP) > 0.8 then
 		return nil
@@ -628,18 +662,10 @@ function PlayerWarp:_find_target(player_position, position, forward)
 		end
 	end
 
-	if warp_target and self._can_see_target(position, warp_target + Vector3(0, 0, 10)) == false then
-		warp_target = nil
-	end
-
-	if jump_target and self._can_see_target(position, jump_target + Vector3(0, 0, 10)) == false then
-		jump_target = nil
-	end
-
 	return warp_target, jump_target
 end
 
--- Lines: 597 to 612
+-- Lines: 623 to 638
 function PlayerWarp:_check_snap_point(position, forward, sp)
 	local dir = mvector3.copy(sp.position)
 

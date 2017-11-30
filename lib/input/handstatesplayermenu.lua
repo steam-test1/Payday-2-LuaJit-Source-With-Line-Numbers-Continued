@@ -15,27 +15,23 @@ M.DefaultHandState.init = function (self)
 end
 M.EmptyHandState = M.EmptyHandState or class(HandState)
 
--- Lines: 28 to 49
+-- Lines: 28 to 44
 M.EmptyHandState.init = function (self)
 	M.EmptyHandState.super.init(self)
 
 	self._connections = {
 		toggle_menu = {inputs = {"menu_"}},
-		warp_right = {
-			hand = 1,
-			inputs = {"trackpad_button_"}
-		},
-		warp_left = {
-			hand = 2,
-			inputs = {"trackpad_button_"}
-		},
 		cancel = {inputs = {"grip_"}},
-		touchpad_warp_target = {inputs = {"dpad_"}}
+		warp = {inputs = {
+			"trackpad_button_",
+			"d_up_"
+		}},
+		warp_target = {inputs = {"trackpad_button_"}}
 	}
 end
 M.LaserHandState = M.LaserHandState or class(HandState)
 
--- Lines: 56 to 77
+-- Lines: 51 to 72
 M.LaserHandState.init = function (self)
 	M.LaserHandState.super.init(self)
 
@@ -49,7 +45,7 @@ M.LaserHandState.init = function (self)
 end
 M.CustomizationLaserHandState = M.CustomizationLaserHandState or class(HandState)
 
--- Lines: 84 to 105
+-- Lines: 79 to 100
 M.CustomizationLaserHandState.init = function (self)
 	M.CustomizationLaserHandState.super.init(self)
 

@@ -256,7 +256,7 @@ function PlayerHandStateItem:set_bodies_colliding(colliding)
 	end
 end
 
--- Lines: 223 to 279
+-- Lines: 223 to 280
 function PlayerHandStateItem:update(t, dt)
 	if self._wants_dynamic then
 		self._dynamic_t = t + 0.05
@@ -307,15 +307,16 @@ function PlayerHandStateItem:update(t, dt)
 	elseif self._item_type == "magazine" then
 		local player = managers.player:player_unit()
 		local weapon = player:inventory():equipped_unit()
+		local mag_locator = weapon:get_object(Idstring("a_m"))
 
-		if mvector3.distance_sq(self._hand_unit:position(), weapon:position()) < 400 then
+		if mvector3.distance_sq(self._hand_unit:position(), (mag_locator or weapon):position()) < 400 then
 			player:movement():current_state():trigger_reload()
 			self:hsm():change_to_default()
 		end
 	end
 end
 
--- Lines: 281 to 287
+-- Lines: 282 to 288
 function PlayerHandStateItem:swipe_transition(next_state, params)
 	params.unit = alive(self._item_unit) and self._item_unit
 	params.type = self._item_type

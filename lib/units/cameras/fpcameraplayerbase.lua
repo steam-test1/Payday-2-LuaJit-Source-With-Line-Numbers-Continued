@@ -2142,16 +2142,21 @@ function FPCameraPlayerBase:reset_base_rotation(rot)
 end
 
 -- Lines: 2325 to 2327
+function FPCameraPlayerBase:rotate_base(rot)
+	self._base_rotation = self._base_rotation * rot
+end
+
+-- Lines: 2329 to 2331
 function FPCameraPlayerBase:set_base_rotation(rot)
 	self._base_rotation = Rotation(self._base_rotation:yaw() - self._output_data.rotation:yaw(), 0, 0) * rot
 end
 
--- Lines: 2329 to 2330
+-- Lines: 2333 to 2334
 function FPCameraPlayerBase:base_rotation()
 	return self._base_rotation
 end
 
--- Lines: 2333 to 2335
+-- Lines: 2337 to 2339
 function FPCameraPlayerBase:enter_vehicle()
 	self._initial_hmd_rotation = VRManager:hmd_rotation()
 end

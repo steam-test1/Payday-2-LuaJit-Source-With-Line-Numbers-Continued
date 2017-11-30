@@ -7,11 +7,11 @@ function PlayerHandStateMelee:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeapon.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 59
+-- Lines: 9 to 64
 function PlayerHandStateMelee:_spawn_melee_unit()
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
 	self._melee_entry = melee_entry
-	local unit_name = tweak_data.blackmarket.melee_weapons[melee_entry].third_unit
+	local unit_name = tweak_data.blackmarket.melee_weapons[melee_entry].unit
 
 	if unit_name then
 		local aligns = tweak_data.blackmarket.melee_weapons[melee_entry].align_objects or {"a_weapon_left"}
@@ -61,10 +61,16 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 		if alive(self._melee_unit) and self._melee_unit:damage() and self._melee_unit:damage():has_sequence("game") then
 			self._melee_unit:damage():run_sequence_simple("game")
 		end
+
+		local new_material_config = Idstring(unit_name .. "_thq")
+
+		if DB:has(Idstring("material_config"), new_material_config) then
+			self._melee_unit:set_material_config(new_material_config, true)
+		end
 	end
 end
 
--- Lines: 61 to 77
+-- Lines: 66 to 82
 function PlayerHandStateMelee:at_enter(prev_state, params)
 	PlayerHandStateWeapon.super.at_enter(self, prev_state)
 	managers.player:player_unit():movement():current_state():_interupt_action_reload()
@@ -80,7 +86,7 @@ function PlayerHandStateMelee:at_enter(prev_state, params)
 	managers.hud:belt():set_state("melee", "active")
 end
 
--- Lines: 79 to 90
+-- Lines: 84 to 95
 function PlayerHandStateMelee:at_exit(next_state)
 	PlayerHandStateMelee.super.at_exit(self, next_state)
 	self:hsm():exit_controller_state("item")
@@ -92,7 +98,7 @@ function PlayerHandStateMelee:at_exit(next_state)
 	end
 end
 
--- Lines: 92 to 115
+-- Lines: 97 to 120
 function PlayerHandStateMelee:update(t, dt)
 	local controller = managers.vr:hand_state_machine():controller()
 

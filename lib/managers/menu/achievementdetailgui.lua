@@ -100,7 +100,7 @@ end
 
 AchievementDetailGui = AchievementDetailGui or class(GrowPanel)
 
--- Lines: 82 to 262
+-- Lines: 82 to 278
 function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback)
 	AchievementDetailGui.super.init(self, parent, {
 		padding = 10,
@@ -168,13 +168,6 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	if unlock_date then
 		placer:add_bottom(self:fine_text({
 			text = managers.localization:text("menu_achievement_unlock_date", {DATE = os.date("%d %b %Y %H:%M", unlock_date)}),
-			font = small_font,
-			font_size = small_font_size,
-			color = grey_color
-		}), 5)
-	elseif self._info.forced then
-		placer:add_bottom(self:fine_text({
-			text = "TRACKED",
 			font = small_font,
 			font_size = small_font_size,
 			color = grey_color
@@ -379,7 +372,7 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	self:set_center(parent:w() / 2, parent:h() / 2)
 end
 
--- Lines: 264 to 267
+-- Lines: 280 to 283
 function AchievementDetailGui:close()
 	self:remove_self()
 
@@ -388,7 +381,7 @@ function AchievementDetailGui:close()
 	end
 end
 
--- Lines: 269 to 283
+-- Lines: 285 to 299
 function AchievementDetailGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -405,7 +398,7 @@ function AchievementDetailGui:update(...)
 	end
 end
 
--- Lines: 285 to 287
+-- Lines: 301 to 303
 function AchievementDetailGui:back_pressed()
 	self._back_callback()
 

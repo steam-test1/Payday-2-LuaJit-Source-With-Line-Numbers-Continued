@@ -3,7 +3,7 @@ require("lib/utils/VRLoadingEnvironment")
 VRManagerPD2 = VRManagerPD2 or class()
 VRManagerPD2.DISABLE_ADAPTIVE_QUALITY = false
 
--- Lines: 6 to 94
+-- Lines: 6 to 89
 function VRManagerPD2:init()
 	print("[VRManagerPD2] init")
 
@@ -14,6 +14,7 @@ function VRManagerPD2:init()
 	VRManager:set_max_adaptive_levels(7)
 	VRManager:set_present_post_processor(Idstring("core/shaders/render_to_backbuffer"), Idstring("stretch_copy"))
 
+	self._is_oculus = string.find(string.lower(VRManager:hmd_manufacturer()), "oculus") ~= nil
 	local tres = VRManager:target_resolution()
 	local rres = VRManager:recommended_target_resolution()
 	self._adaptive_scale = {}
@@ -31,16 +32,16 @@ function VRManagerPD2:init()
 		local x_scale = scaling / 1.4
 		local res_x = math.floor(tres.x * x_scale)
 
-		if res_x % 2 > 0.01 then
-			res_x = res_x + 1
+		if res_x % 8 > 0.01 then
+			res_x = res_x + 8 - res_x % 8
 		end
 
 		x_scale = res_x / tres.x
 		local y_scale = scaling / 1.4
 		local res_y = math.floor(tres.y * y_scale)
 
-		if res_y % 2 > 0.01 then
-			res_y = res_y + 1
+		if res_y % 8 > 0.01 then
+			res_y = res_y + 8 - res_y % 8
 		end
 
 		y_scale = res_y / tres.y
@@ -61,7 +62,8 @@ function VRManagerPD2:init()
 		weapon_switch_button = false,
 		zipline_screen = true,
 		weapon_assist_toggle = false,
-		default_tablet_hand = "left"
+		default_tablet_hand = "left",
+		rotate_player_angle = 45
 	}
 	self._limits = {
 		height = {
@@ -75,6 +77,10 @@ function VRManagerPD2:init()
 		belt_snap = {
 			max = 360,
 			min = 0
+		},
+		rotate_player_angle = {
+			max = 90,
+			min = 45
 		}
 	}
 
@@ -96,7 +102,7 @@ function VRManagerPD2:init()
 	MenuRoom:load("units/pd2_dlc_vr/menu/vr_menu_mini", false)
 end
 
--- Lines: 96 to 117
+-- Lines: 91 to 112
 function VRManagerPD2:init_finalize()
 	print("[VRManagerPD2] init_finalize")
 
@@ -113,7 +119,12 @@ function VRManagerPD2:init_finalize()
 	self._use_adaptive_quality = managers.user:get_setting("adaptive_quality")
 end
 
--- Lines: 119 to 149
+-- Lines: 114 to 115
+function VRManagerPD2:is_oculus()
+	return self._is_oculus
+end
+
+-- Lines: 118 to 148
 function VRManagerPD2:apply_arcade_settings()
 	print("[VRManagerPD2] Apply arcade settings")
 	managers.user:set_setting("video_ao", "off")
@@ -136,77 +147,77 @@ function VRManagerPD2:apply_arcade_settings()
 	end
 end
 
--- Lines: 151 to 154
+-- Lines: 150 to 153
 function VRManagerPD2:force_start_loading()
 	print("[VRManagerPD2] Force start loading")
 	self._vr_loading_environment:force_start()
 end
 
--- Lines: 156 to 159
+-- Lines: 155 to 158
 function VRManagerPD2:start_loading()
 	print("[VRManagerPD2] Start loading")
 	self._vr_loading_environment:start()
 end
 
--- Lines: 161 to 164
+-- Lines: 160 to 163
 function VRManagerPD2:start_end_screen()
 	print("[VRManagerPD2] Start end screen")
 	self._vr_loading_environment:start("end")
 end
 
--- Lines: 166 to 169
+-- Lines: 165 to 168
 function VRManagerPD2:stop_loading()
 	print("[VRManagerPD2] Stop loading")
 	self._vr_loading_environment:stop()
 end
 
--- Lines: 171 to 174
+-- Lines: 170 to 173
 function VRManagerPD2:destroy()
 	managers.user:remove_setting_changed_callback("adaptive_quality", self._adaptive_quality_setting_changed_clbk)
 	print("[VRManagerPD2] destroy")
 end
 
--- Lines: 179 to 183
+-- Lines: 178 to 182
 function VRManagerPD2:update(t, dt)
 	self:_update_adaptive_quality_level()
 	self._vr_loading_environment:update(t, dt)
 end
 
--- Lines: 185 to 188
+-- Lines: 184 to 187
 function VRManagerPD2:paused_update(t, dt)
 	self:_update_adaptive_quality_level()
 	self._vr_loading_environment:update(t, dt)
 end
 
--- Lines: 207 to 208
+-- Lines: 206 to 207
 function VRManagerPD2:end_update(t, dt)
 end
 
--- Lines: 214 to 215
+-- Lines: 213 to 214
 function VRManagerPD2:render()
 end
 
--- Lines: 217 to 219
+-- Lines: 216 to 218
 function VRManagerPD2:set_hand_state_machine(hsm)
 	self._hsm = hsm
 end
 
--- Lines: 221 to 222
+-- Lines: 220 to 221
 function VRManagerPD2:hand_state_machine()
 	return self._hsm
 end
 
--- Lines: 225 to 227
+-- Lines: 224 to 226
 function VRManagerPD2:_on_adaptive_quality_setting_changed(setting, old, new)
 	self._use_adaptive_quality = new
 end
 
--- Lines: 229 to 231
+-- Lines: 228 to 230
 function VRManagerPD2:set_force_disable_low_adaptive_quality(disable)
 	self._force_disable_low_adaptive_quality = disable
 end
 
--- Lines: 234 to 260
+-- Lines: 233 to 259
 function VRManagerPD2:_update_adaptive_quality_level()
 	local quality_level = self._use_adaptive_quality and VRManager:adaptive_level() + 1 or 7
 
@@ -228,12 +239,12 @@ function VRManagerPD2:_update_adaptive_quality_level()
 	end
 end
 
--- Lines: 262 to 263
+-- Lines: 261 to 262
 function VRManagerPD2:block_exec()
 	return self._vr_loading_environment:block_exec()
 end
 
--- Lines: 270 to 285
+-- Lines: 269 to 284
 function VRManagerPD2:save(data)
 	data.vr = {}
 
@@ -245,7 +256,7 @@ function VRManagerPD2:save(data)
 	data.vr.has_shown_savefile_dialog = self._global.has_shown_savefile_dialog
 end
 
--- Lines: 292 to 313
+-- Lines: 291 to 310
 function VRManagerPD2:load(data)
 	if not data.vr then
 		return
@@ -259,11 +270,9 @@ function VRManagerPD2:load(data)
 		self._global.has_set_height = data.vr.has_set_height
 		self._global.has_shown_savefile_dialog = data.vr.has_shown_savefile_dialog
 	end
-
-	self._global.weapon_assist_toggle = false
 end
 
--- Lines: 317 to 321
+-- Lines: 314 to 318
 function VRManagerPD2:add_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map = self._setting_callback_handler_map or {}
 	self._setting_callback_handler_map[setting] = self._setting_callback_handler_map[setting] or CoreEvent.CallbackEventHandler:new()
@@ -271,7 +280,7 @@ function VRManagerPD2:add_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map[setting]:add(callback)
 end
 
--- Lines: 323 to 329
+-- Lines: 320 to 326
 function VRManagerPD2:remove_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map = self._setting_callback_handler_map or {}
 	self._setting_callback_handler_map[setting] = self._setting_callback_handler_map[setting]
@@ -281,7 +290,7 @@ function VRManagerPD2:remove_setting_changed_callback(setting, callback)
 	end
 end
 
--- Lines: 333 to 338
+-- Lines: 330 to 335
 function VRManagerPD2:setting_limits(setting)
 	local limits = self._limits[setting]
 
@@ -290,12 +299,12 @@ function VRManagerPD2:setting_limits(setting)
 	end
 end
 
--- Lines: 342 to 343
+-- Lines: 339 to 340
 function VRManagerPD2:has_set_height()
 	return self._global.has_set_height
 end
 
--- Lines: 346 to 369
+-- Lines: 343 to 366
 function VRManagerPD2:set_setting(setting, value)
 	if type(value) == "number" then
 		local limits = self._limits[setting]
@@ -322,17 +331,17 @@ function VRManagerPD2:set_setting(setting, value)
 	end
 end
 
--- Lines: 371 to 373
+-- Lines: 368 to 370
 function VRManagerPD2:reset_setting(setting)
 	self:set_setting(setting, self._default[setting])
 end
 
--- Lines: 375 to 376
+-- Lines: 372 to 373
 function VRManagerPD2:get_setting(setting)
 	return self._global[setting]
 end
 
--- Lines: 387 to 392
+-- Lines: 384 to 389
 function VRManagerPD2:show_savefile_dialog()
 	if not self._global.has_shown_savefile_dialog then
 		managers.menu:show_vr_beta_savefile_dialog()

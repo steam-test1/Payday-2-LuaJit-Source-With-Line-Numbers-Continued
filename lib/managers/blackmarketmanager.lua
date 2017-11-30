@@ -9020,10 +9020,10 @@ function BlackMarketManager:equip_weapon_in_game(category, slot, force_equip, do
 	end
 end
 
--- Lines: 8518 to 8553
+-- Lines: 8546 to 8581
 function BlackMarketManager:get_reload_time(weapon_id)
 
-	-- Lines: 8516 to 8518
+	-- Lines: 8544 to 8546
 	local function failure(err)
 		Application:error("[BlackMarketManager:get_reload_time] " .. tostring(err) .. "\nReturning 1 to avoid crashing.")
 
@@ -9060,7 +9060,7 @@ function BlackMarketManager:get_reload_time(weapon_id)
 	return failure("no reload time found!")
 end
 
--- Lines: 8557 to 8637
+-- Lines: 8585 to 8665
 function BlackMarketManager:get_reload_animation_time(weapon_id)
 	if not weapon_id then
 		Application:error("[BlackMarketManager:get_reload_animation_time] no weapon id given!\nReturning 1 to avoid crashing.")
@@ -9089,7 +9089,7 @@ function BlackMarketManager:get_reload_animation_time(weapon_id)
 	local anim_set = AnimationManager:animation_set(Idstring("anims/fps/fps"))
 
 
-	-- Lines: 8590 to 8611
+	-- Lines: 8618 to 8639
 	local function get_time(id, overrides)
 		overrides = overrides or {}
 		local reload_anim_id = Idstring(id .. "_reload")
@@ -9146,7 +9146,7 @@ function BlackMarketManager:get_reload_animation_time(weapon_id)
 	return 1
 end
 
--- Lines: 8642 to 8652
+-- Lines: 8670 to 8680
 function BlackMarketManager:craft_temporary(category, weapon_id, slot)
 	if category ~= "primaries" and category ~= "secondaries" then
 		return
@@ -9164,7 +9164,7 @@ function BlackMarketManager:craft_temporary(category, weapon_id, slot)
 	}
 end
 
--- Lines: 8654 to 8665
+-- Lines: 8682 to 8693
 function BlackMarketManager:clear_temporary()
 	local categories = {
 		"primaries",
@@ -9182,7 +9182,7 @@ function BlackMarketManager:clear_temporary()
 	end
 end
 
--- Lines: 8667 to 8680
+-- Lines: 8695 to 8708
 function BlackMarketManager:get_preview_blueprint(category, slot)
 	if not self._preview_blueprint or self._preview_blueprint.category ~= category or self._preview_blueprint.slot ~= slot then
 		if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
@@ -9202,7 +9202,7 @@ function BlackMarketManager:get_preview_blueprint(category, slot)
 	return self._preview_blueprint.blueprint
 end
 
--- Lines: 8683 to 8688
+-- Lines: 8711 to 8716
 function BlackMarketManager:is_previewing_mod(mod_id)
 	if not self._preview_blueprint or not self._preview_blueprint.blueprint then
 		return false
@@ -9211,7 +9211,7 @@ function BlackMarketManager:is_previewing_mod(mod_id)
 	return table.contains(self._preview_blueprint.blueprint, mod_id)
 end
 
--- Lines: 8691 to 8708
+-- Lines: 8719 to 8736
 function BlackMarketManager:is_previewing_any_mod()
 	if not self._preview_blueprint or not self._preview_blueprint.blueprint then
 		return false
@@ -9234,7 +9234,7 @@ function BlackMarketManager:is_previewing_any_mod()
 	return not equal or #self._preview_blueprint.blueprint ~= #self._global.crafted_items[self._preview_blueprint.category][self._preview_blueprint.slot].blueprint or self._preview_blueprint.cosmetics
 end
 
--- Lines: 8711 to 8719
+-- Lines: 8739 to 8747
 function BlackMarketManager:preview_mod_forbidden(category, slot, part_id)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:can_preview_mod] Weapon doesn't exist", category, slot)
@@ -9248,19 +9248,19 @@ function BlackMarketManager:preview_mod_forbidden(category, slot, part_id)
 	return managers.weapon_factory:can_add_part(craft_data.factory_id, part_id, blueprint)
 end
 
--- Lines: 8722 to 8724
+-- Lines: 8750 to 8752
 function BlackMarketManager:clear_preview_blueprint()
 	self._preview_blueprint = {}
 end
 
--- Lines: 8726 to 8729
+-- Lines: 8754 to 8757
 function BlackMarketManager:set_preview_cosmetics(category, slot, cosmetics)
 	self:get_preview_blueprint(category, slot)
 
 	self._preview_blueprint.cosmetics = cosmetics
 end
 
--- Lines: 8731 to 8734
+-- Lines: 8759 to 8762
 function BlackMarketManager:get_preview_cosmetics(category, slot)
 	self:get_preview_blueprint(category, slot)
 
@@ -9269,12 +9269,12 @@ function BlackMarketManager:get_preview_cosmetics(category, slot)
 	return self._preview_blueprint.cosmetics
 end
 
--- Lines: 8741 to 8742
+-- Lines: 8769 to 8770
 function BlackMarketManager:has_unlocked_arbiter()
 	return managers.tango:has_unlocked_arbiter()
 end
 
--- Lines: 8748 to 8760
+-- Lines: 8776 to 8788
 function BlackMarketManager:get_type_by_id(id)
 	for key, data in pairs(self._global) do
 		if type(data) == "table" and data[id] then
@@ -9289,27 +9289,27 @@ function BlackMarketManager:get_type_by_id(id)
 	end
 end
 
--- Lines: 8764 to 8765
+-- Lines: 8792 to 8793
 function BlackMarketManager:has_unlocked_breech()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_1"), "bm_menu_locked_breech"
 end
 
--- Lines: 8768 to 8769
+-- Lines: 8796 to 8797
 function BlackMarketManager:has_unlocked_ching()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_3"), "bm_menu_locked_ching"
 end
 
--- Lines: 8772 to 8773
+-- Lines: 8800 to 8801
 function BlackMarketManager:has_unlocked_erma()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_2"), "bm_menu_locked_erma"
 end
 
--- Lines: 8776 to 8777
+-- Lines: 8804 to 8805
 function BlackMarketManager:has_unlocked_push()
 	return true
 end
 
--- Lines: 8781 to 8782
+-- Lines: 8809 to 8810
 function BlackMarketManager:has_unlocked_grip()
 	return true
 end

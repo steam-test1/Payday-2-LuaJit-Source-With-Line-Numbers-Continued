@@ -1,5 +1,5 @@
 
--- Lines: 2 to 6296
+-- Lines: 2 to 6297
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -3779,10 +3779,12 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		glace_9 = {
-			sort_name = "C_Classics_H_GreenBridge_Caution",
+			additional_id = true,
+			sort_name = "C_Classics_H_GreenBridge_Caution_D3",
 			icon_id = "C_Classics_H_GreenBridge_Caution",
 			tags = {
 				tags.progress.heisting,
+				tags.difficulty.overkill,
 				tags.tactics.loud,
 				tags.contracts.classic
 			}

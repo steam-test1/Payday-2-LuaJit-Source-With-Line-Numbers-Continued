@@ -25,7 +25,7 @@ function PlayerHandStateBelt:at_exit(next_state)
 	end
 end
 
--- Lines: 25 to 120
+-- Lines: 25 to 121
 function PlayerHandStateBelt:update(t, dt)
 	local belt_state = nil
 
@@ -121,7 +121,7 @@ function PlayerHandStateBelt:update(t, dt)
 				local weap_base = player:inventory():equipped_unit():base()
 				local mag_name = weap_base:magazine_unit_name()
 
-				if mag_name then
+				if player:movement():current_state():can_grab_mag() and mag_name then
 					local mag_unit = World:spawn_unit(Idstring(mag_name), Vector3(0, 0, 0), Rotation())
 					local second_mag = nil
 
@@ -143,9 +143,12 @@ function PlayerHandStateBelt:update(t, dt)
 						end
 					end
 
+					local offset = tweak_data.vr:get_offset_by_id("magazine", weap_base.name_id)
+
 					self._hsm:change_state_by_name("item", {
 						type = "magazine",
 						unit = mag_unit,
+						offset = offset.position,
 						prev_state = self._prev_state
 					})
 					managers.hud:belt():trigger_reload()

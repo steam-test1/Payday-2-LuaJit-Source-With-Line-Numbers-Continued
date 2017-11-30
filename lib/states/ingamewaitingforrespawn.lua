@@ -188,7 +188,7 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 	end
 end
 
--- Lines: 193 to 257
+-- Lines: 193 to 261
 function IngameWaitingForRespawnState:update(t, dt)
 	if self._player_state_change_needed and not alive(managers.player:player_unit()) then
 		self._player_state_change_needed = nil
@@ -276,7 +276,7 @@ local mrot_set_axis_angle = mrotation.set_axis_angle
 local mrot_set_look_at = mrotation.set_look_at
 local math_up = math.UP
 
--- Lines: 285 to 436
+-- Lines: 289 to 440
 function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	self:_refresh_teammate_list()
 
@@ -393,7 +393,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	end
 end
 
--- Lines: 441 to 516
+-- Lines: 445 to 520
 function IngameWaitingForRespawnState:at_enter()
 	if _G.IS_VR then
 		managers.menu:open_menu("custody")
@@ -475,7 +475,7 @@ function IngameWaitingForRespawnState:at_enter()
 	end
 end
 
--- Lines: 521 to 550
+-- Lines: 525 to 554
 function IngameWaitingForRespawnState:at_exit()
 	if _G.IS_VR then
 		managers.menu:close_menu("custody")
@@ -509,7 +509,7 @@ function IngameWaitingForRespawnState:at_exit()
 	managers.hud:set_player_condition("mugshot_normal", "")
 end
 
--- Lines: 554 to 597
+-- Lines: 558 to 601
 function IngameWaitingForRespawnState:_refresh_teammate_list()
 	local all_teammates = self._spectator_data.teammate_records
 	local teammate_list = self._spectator_data.teammate_list
@@ -559,7 +559,7 @@ function IngameWaitingForRespawnState:_refresh_teammate_list()
 	end
 end
 
--- Lines: 601 to 607
+-- Lines: 605 to 611
 function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	for i_key, test_u_key in ipairs(self._spectator_data.teammate_list) do
 		if test_u_key == u_key then
@@ -568,12 +568,12 @@ function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	end
 end
 
--- Lines: 611 to 640
+-- Lines: 615 to 644
 function IngameWaitingForRespawnState:watch_priority_character()
 	self:_refresh_teammate_list()
 
 
-	-- Lines: 614 to 621
+	-- Lines: 618 to 625
 	local function try_watch_unit(unit_key)
 		if table.contains(self._spectator_data.teammate_list, unit_key) then
 			self._spectator_data.watch_u_key = unit_key
@@ -602,7 +602,7 @@ function IngameWaitingForRespawnState:watch_priority_character()
 	self._dis_curr = nil
 end
 
--- Lines: 644 to 661
+-- Lines: 648 to 665
 function IngameWaitingForRespawnState:cb_next_player()
 	self:_refresh_teammate_list()
 
@@ -619,7 +619,7 @@ function IngameWaitingForRespawnState:cb_next_player()
 	self._dis_curr = nil
 end
 
--- Lines: 665 to 682
+-- Lines: 669 to 686
 function IngameWaitingForRespawnState:cb_prev_player()
 	self:_refresh_teammate_list()
 
@@ -636,7 +636,7 @@ function IngameWaitingForRespawnState:cb_prev_player()
 	self._dis_curr = nil
 end
 
--- Lines: 687 to 719
+-- Lines: 691 to 743
 function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
 	managers.hud:set_custody_can_be_trade_visible(false)
 
@@ -667,12 +667,12 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 	end
 end
 
--- Lines: 721 to 723
+-- Lines: 745 to 747
 function IngameWaitingForRespawnState:finish_trade()
 	self:_begin_game_enter_transition()
 end
 
--- Lines: 725 to 744
+-- Lines: 749 to 776
 function IngameWaitingForRespawnState:begin_trade()
 	managers.hud:set_custody_can_be_trade_visible(true)
 
@@ -696,22 +696,22 @@ function IngameWaitingForRespawnState:begin_trade()
 	self._play_too_long_line_t = Application:time() + 60
 end
 
--- Lines: 746 to 748
+-- Lines: 778 to 780
 function IngameWaitingForRespawnState:cancel_trade()
 	managers.hud:set_custody_can_be_trade_visible(false)
 end
 
--- Lines: 750 to 752
+-- Lines: 782 to 784
 function IngameWaitingForRespawnState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 754 to 756
+-- Lines: 786 to 788
 function IngameWaitingForRespawnState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 758 to 760
+-- Lines: 790 to 792
 function IngameWaitingForRespawnState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

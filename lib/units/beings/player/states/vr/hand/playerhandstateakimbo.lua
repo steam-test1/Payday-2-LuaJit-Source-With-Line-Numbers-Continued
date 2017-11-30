@@ -81,7 +81,7 @@ function PlayerHandStateAkimbo:update(t, dt)
 		end
 	end
 
-	if managers.vr:hand_state_machine():controller():get_input_bool("warp_left") or managers.vr:hand_state_machine():controller():get_input_bool("warp_right") then
+	if managers.vr:hand_state_machine():controller():get_input_bool("warp") then
 		if not self._warping then
 			self._warping = true
 

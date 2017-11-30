@@ -30,7 +30,7 @@ function PlayerCarryVR:update(t, dt)
 	__update(self, t, dt)
 end
 
--- Lines: 32 to 48
+-- Lines: 32 to 49
 function PlayerCarryVR:_check_use_item(t, input)
 	local new_action = nil
 
@@ -42,6 +42,7 @@ function PlayerCarryVR:_check_use_item(t, input)
 
 	if not action_forbidden then
 		managers.player:drop_carry()
+		managers.player:player_unit():movement():current_state():set_throwing_projectile(self._unit:hand():get_active_hand_id("bag"))
 
 		new_action = true
 	end
@@ -49,7 +50,7 @@ function PlayerCarryVR:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines: 54 to 58
+-- Lines: 55 to 59
 function PlayerCarryVR:_can_run()
 	if tweak_data.carry.types[self._tweak_data_name].can_run or managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		return true
@@ -59,7 +60,7 @@ function PlayerCarryVR:_can_run()
 end
 local __get_input = PlayerCarry._get_input
 
--- Lines: 62 to 67
+-- Lines: 63 to 68
 function PlayerCarryVR:_get_input(...)
 	local input = __get_input(self, ...)
 

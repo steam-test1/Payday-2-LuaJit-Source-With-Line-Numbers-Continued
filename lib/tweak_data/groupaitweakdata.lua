@@ -7,7 +7,7 @@ function GroupAITweakData:init(tweak_data)
 
 	print("[GroupAITweakData:init] difficulty", difficulty, "difficulty_index", difficulty_index)
 
-	self.ai_tick_rate = 180
+	self.ai_tick_rate = 0.016666666666666666
 
 	self:_read_mission_preset(tweak_data)
 	self:_create_table_structure()
