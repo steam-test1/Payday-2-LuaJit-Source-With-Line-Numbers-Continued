@@ -8,13 +8,19 @@ function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 end
 
--- Lines: 10 to 213
+-- Lines: 10 to 232
 function ElementAreaTrigger:project_instigators()
 	local instigators = {}
 
 	if Network:is_client() then
 		if self._values.instigator == "player" or self._values.instigator == "local_criminals" or self._values.instigator == "persons" then
 			table.insert(instigators, managers.player:player_unit())
+		elseif self._values.instigator == "player1" or self._values.instigator == "player2" or self._values.instigator == "player3" or self._values.instigator == "player4" then
+			local id = tonumber(string.match(self._values.instigator, "%d$"))
+
+			if managers.network:session() and managers.network:session():local_peer():id() == id then
+				table.insert(instigators, managers.player:player_unit())
+			end
 		end
 
 		return instigators
@@ -216,6 +222,7 @@ function ElementAreaTrigger:project_instigators()
 				"vr_headset",
 				"diamond_necklace",
 				"yayo",
+				"rubies",
 				"red_diamond",
 				"diamonds_dah",
 				"old_wine"
@@ -239,28 +246,36 @@ function ElementAreaTrigger:project_instigators()
 				table.insert(instigators, unit)
 			end
 		end
-	elseif self._values.instigator == "equipment" and self._values.instigator_name ~= nil then
-		local all_found = World:find_units_quick("all", 14)
+	elseif self._values.instigator == "equipment" then
+		if self._values.instigator_name ~= nil then
+			local all_found = World:find_units_quick("all", 14)
 
 
-		-- Lines: 198 to 202
-		local function filter_func(unit)
-			if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then
-				return true
+			-- Lines: 213 to 217
+			local function filter_func(unit)
+				if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then
+					return true
+				end
+			end
+
+			for _, unit in ipairs(all_found) do
+				if filter_func(unit) then
+					table.insert(instigators, unit)
+				end
 			end
 		end
+	elseif self._values.instigator == "player1" or self._values.instigator == "player2" or self._values.instigator == "player3" or self._values.instigator == "player4" and not Global.game_host then
+		local id = tonumber(string.match(self._values.instigator, "%d$"))
 
-		for _, unit in ipairs(all_found) do
-			if filter_func(unit) then
-				table.insert(instigators, unit)
-			end
+		if managers.network:session() and managers.network:session():local_peer():id() == id then
+			table.insert(instigators, managers.player:player_unit())
 		end
 	end
 
 	return instigators
 end
 
--- Lines: 217 to 231
+-- Lines: 236 to 250
 function ElementAreaTrigger:project_amount_all()
 	if self._values.instigator == "criminals" or self._values.instigator == "local_criminals" then
 		local i = 0
@@ -283,7 +298,7 @@ function ElementAreaTrigger:project_amount_all()
 	return managers.network:session() and managers.network:session():amount_of_alive_players() or 0
 end
 
--- Lines: 234 to 256
+-- Lines: 253 to 275
 function ElementAreaTrigger:project_amount_inside()
 	local counter = #self._inside
 
@@ -315,7 +330,7 @@ function ElementAreaTrigger:project_amount_inside()
 	return counter
 end
 
--- Lines: 259 to 279
+-- Lines: 278 to 298
 function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._values.instigator == "vehicle_with_players" and unit then
 		local result = false

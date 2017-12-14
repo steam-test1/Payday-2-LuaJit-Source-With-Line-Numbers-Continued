@@ -7,7 +7,7 @@ function IngameBleedOutState:init(game_state_machine)
 	IngameBleedOutState.super.init(self, "ingame_bleed_out", game_state_machine)
 end
 
--- Lines: 9 to 20
+-- Lines: 9 to 24
 function IngameBleedOutState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -20,7 +20,7 @@ function IngameBleedOutState:update(t, dt)
 	end
 end
 
--- Lines: 22 to 55
+-- Lines: 26 to 59
 function IngameBleedOutState:at_enter()
 	local players = managers.player:players()
 
@@ -47,7 +47,7 @@ function IngameBleedOutState:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 67 to 90
+-- Lines: 71 to 94
 function IngameBleedOutState:at_exit()
 	local player = managers.player:player_unit()
 
@@ -60,17 +60,17 @@ function IngameBleedOutState:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 92 to 94
+-- Lines: 96 to 98
 function IngameBleedOutState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 96 to 98
+-- Lines: 100 to 102
 function IngameBleedOutState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 100 to 102
+-- Lines: 104 to 106
 function IngameBleedOutState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

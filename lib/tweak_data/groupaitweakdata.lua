@@ -1,11 +1,14 @@
 GroupAITweakData = GroupAITweakData or class()
 
--- Lines: 3 to 16
+-- Lines: 3 to 25
 function GroupAITweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
 
 	print("[GroupAITweakData:init] difficulty", difficulty, "difficulty_index", difficulty_index)
+
+	self.ai_tick_rate = 0.016666666666666666
+
 	self:_read_mission_preset(tweak_data)
 	self:_create_table_structure()
 	self:_init_task_data(difficulty_index)
@@ -14,7 +17,7 @@ function GroupAITweakData:init(tweak_data)
 	self:_init_enemy_spawn_groups(difficulty_index)
 end
 
--- Lines: 20 to 119
+-- Lines: 29 to 128
 function GroupAITweakData:_init_chatter_data()
 	self.enemy_chatter = {
 		aggressive = {
@@ -188,7 +191,7 @@ function GroupAITweakData:_init_chatter_data()
 	}
 end
 
--- Lines: 123 to 1222
+-- Lines: 132 to 1231
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	local access_type_walk_only = {walk = true}
 	local access_type_all = {
@@ -733,7 +736,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 	}
 end
 
--- Lines: 1266 to 1968
+-- Lines: 1275 to 1977
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -2554,7 +2557,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
 end
 
--- Lines: 1972 to 2456
+-- Lines: 1981 to 2465
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -3769,7 +3772,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines: 2477 to 2483
+-- Lines: 2486 to 2492
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -3779,7 +3782,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines: 2487 to 2533
+-- Lines: 2496 to 2542
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

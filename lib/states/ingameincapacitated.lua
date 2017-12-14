@@ -7,7 +7,7 @@ function IngameIncapacitatedState:init(game_state_machine)
 	IngameIncapacitatedState.super.init(self, "ingame_incapacitated", game_state_machine)
 end
 
--- Lines: 9 to 21
+-- Lines: 9 to 25
 function IngameIncapacitatedState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -21,7 +21,7 @@ function IngameIncapacitatedState:update(t, dt)
 	end
 end
 
--- Lines: 23 to 45
+-- Lines: 27 to 49
 function IngameIncapacitatedState:at_enter()
 	local players = managers.player:players()
 
@@ -48,7 +48,7 @@ function IngameIncapacitatedState:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 47 to 56
+-- Lines: 51 to 60
 function IngameIncapacitatedState:at_exit()
 	local player = managers.player:player_unit()
 
@@ -61,17 +61,17 @@ function IngameIncapacitatedState:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 58 to 60
+-- Lines: 62 to 64
 function IngameIncapacitatedState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 62 to 64
+-- Lines: 66 to 68
 function IngameIncapacitatedState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 66 to 68
+-- Lines: 70 to 72
 function IngameIncapacitatedState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

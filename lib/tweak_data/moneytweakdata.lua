@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines: 29 to 856
+-- Lines: 29 to 863
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -109,6 +109,7 @@ function MoneyTweakData:init(tweak_data)
 		expensive_vine = 2875,
 		ordinary_wine = 2875,
 		robot_toy = 2875,
+		rubies = 1500,
 		red_diamond = 10000,
 		old_wine = 2000
 	}
@@ -255,6 +256,7 @@ function MoneyTweakData:init(tweak_data)
 		tango = 1,
 		friend = 1,
 		chico = 1,
+		rvd = 1,
 		swm_bundle = 1,
 		spa = 1,
 		sha = 1,
@@ -518,6 +520,7 @@ function MoneyTweakData:init(tweak_data)
 
 	if difficulty_index <= 2 then
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 900
 		self.small_loot.diamondheist_vault_diamond = 1150
@@ -543,6 +546,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_macka = 1
 	elseif difficulty_index == 3 then
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 1800
 		self.small_loot.diamondheist_vault_diamond = 2300
@@ -568,6 +572,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_macka = 1
 	elseif difficulty_index == 4 then
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 4500
 		self.small_loot.diamondheist_vault_diamond = 5750
@@ -593,6 +598,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_macka = 1
 	elseif difficulty_index == 5 then
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 9000
 		self.small_loot.diamondheist_vault_diamond = 11500
@@ -618,6 +624,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_macka = 1
 	elseif difficulty_index == 6 then
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 12000
 		self.small_loot.diamondheist_vault_diamond = 15000
@@ -643,6 +650,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_macka = 1
 	elseif difficulty_index == 7 then
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 12000
 		self.small_loot.diamondheist_vault_diamond = 15000
@@ -668,6 +676,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_macka = 1
 	else
 		self.small_loot.money_bundle = 1000
+		self.small_loot.money_bundle_value = 10000
 		self.small_loot.ring_band = 1954
 		self.small_loot.diamondheist_vault_bust = 12000
 		self.small_loot.diamondheist_vault_diamond = 15000

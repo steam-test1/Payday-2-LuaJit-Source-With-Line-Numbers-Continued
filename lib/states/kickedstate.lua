@@ -7,7 +7,7 @@ function KickedState:init(game_state_machine, setup)
 	KickedState.super.init(self, "kicked", game_state_machine, setup)
 end
 
--- Lines: 11 to 23
+-- Lines: 11 to 28
 function KickedState:at_enter(...)
 	self._kicked = true
 	self._success = false
@@ -22,7 +22,7 @@ function KickedState:at_enter(...)
 	self:_create_kicked_dialog()
 end
 
--- Lines: 28 to 37
+-- Lines: 42 to 51
 function KickedState:_create_kicked_dialog()
 	if managers.crime_spree:is_active() then
 		MenuCallbackHandler:show_peer_kicked_crime_spree_dialog()
@@ -31,14 +31,14 @@ function KickedState:_create_kicked_dialog()
 	end
 end
 
--- Lines: 41 to 44
+-- Lines: 55 to 58
 function KickedState:on_kicked_ok_pressed()
 	self._completion_bonus_done = true
 
 	self:_set_continue_button_text()
 end
 
--- Lines: 48 to 52
+-- Lines: 62 to 66
 function KickedState:_load_start_menu()
 	if not managers.job:stage_success() or not managers.job:on_last_stage() then
 		setup:load_start_menu()

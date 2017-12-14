@@ -98,7 +98,7 @@ function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
 	params.text_gui:set_text(text_string)
 end
 
--- Lines: 89 to 117
+-- Lines: 94 to 130
 function MenuTitlescreenState:at_enter()
 	if not self._controller_list then
 		self:setup()
@@ -131,19 +131,19 @@ function MenuTitlescreenState:at_enter()
 	self:reset_attract_video()
 end
 
--- Lines: 122 to 123
+-- Lines: 135 to 136
 function MenuTitlescreenState:get_video_volume()
 	return 1
 end
 
--- Lines: 127 to 131
+-- Lines: 140 to 144
 function MenuTitlescreenState:clbk_game_has_music_control(status)
 	if alive(self._attract_video_gui) then
 		self._attract_video_gui:set_volume_gain(status and self:get_video_volume() or 0)
 	end
 end
 
--- Lines: 134 to 183
+-- Lines: 147 to 201
 function MenuTitlescreenState:update(t, dt)
 	if self._waiting_for_loaded_savegames then
 		if not managers.savefile:is_in_loading_sequence() and not self._user_has_changed then
@@ -189,7 +189,7 @@ function MenuTitlescreenState:update(t, dt)
 	end
 end
 
--- Lines: 185 to 209
+-- Lines: 217 to 241
 function MenuTitlescreenState:get_start_pressed_controller_index()
 	for index, controller in ipairs(self._controller_list) do
 		if is_ps4 or is_xb1 then
@@ -214,7 +214,7 @@ function MenuTitlescreenState:get_start_pressed_controller_index()
 	return nil
 end
 
--- Lines: 212 to 218
+-- Lines: 244 to 250
 function MenuTitlescreenState:get_first_keyboard_controller_index()
 	for index, controller in ipairs(self._controller_list) do
 		if controller._default_controller_id == "keyboard" then
@@ -225,7 +225,7 @@ function MenuTitlescreenState:get_first_keyboard_controller_index()
 	return nil
 end
 
--- Lines: 221 to 245
+-- Lines: 253 to 277
 function MenuTitlescreenState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -255,7 +255,7 @@ function MenuTitlescreenState:check_confirm_pressed()
 	end
 end
 
--- Lines: 248 to 269
+-- Lines: 280 to 301
 function MenuTitlescreenState:check_user_callback(success)
 	managers.dlc:on_signin_complete()
 
@@ -283,7 +283,7 @@ function MenuTitlescreenState:check_user_callback(success)
 	end
 end
 
--- Lines: 271 to 295
+-- Lines: 303 to 327
 function MenuTitlescreenState:check_storage_callback(success)
 	if success then
 		self._waiting_for_loaded_savegames = true
@@ -309,7 +309,7 @@ function MenuTitlescreenState:check_storage_callback(success)
 	end
 end
 
--- Lines: 297 to 301
+-- Lines: 329 to 333
 function MenuTitlescreenState:_load_savegames_done()
 	local sound_source = SoundDevice:create_source("MenuTitleScreen")
 
@@ -317,18 +317,18 @@ function MenuTitlescreenState:_load_savegames_done()
 	self:gsm():change_state_by_name("menu_main")
 end
 
--- Lines: 304 to 306
+-- Lines: 336 to 338
 function MenuTitlescreenState:continue_without_saving_yes_callback()
 	self:gsm():change_state_by_name("menu_main")
 end
 
--- Lines: 308 to 311
+-- Lines: 340 to 343
 function MenuTitlescreenState:continue_without_saving_no_callback()
 	managers.user:set_index(nil)
 	managers.controller:set_default_wrapper_index(nil)
 end
 
--- Lines: 313 to 324
+-- Lines: 345 to 356
 function MenuTitlescreenState:check_attract_video()
 	if alive(self._attract_video_gui) then
 		if self._attract_video_gui:loop_count() > 0 or self:is_any_input_pressed() then
@@ -343,7 +343,7 @@ function MenuTitlescreenState:check_attract_video()
 	return false
 end
 
--- Lines: 327 to 334
+-- Lines: 359 to 366
 function MenuTitlescreenState:is_any_input_pressed()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -354,7 +354,7 @@ function MenuTitlescreenState:is_any_input_pressed()
 	return false
 end
 
--- Lines: 337 to 345
+-- Lines: 369 to 377
 function MenuTitlescreenState:reset_attract_video()
 	self._attract_video_time = TimerManager:main():time()
 
@@ -366,12 +366,12 @@ function MenuTitlescreenState:reset_attract_video()
 	end
 end
 
--- Lines: 347 to 348
+-- Lines: 379 to 380
 function MenuTitlescreenState:is_attract_video_delay_done()
 	return self._attract_video_time + _G.tweak_data.states.title.ATTRACT_VIDEO_DELAY < TimerManager:main():time()
 end
 
--- Lines: 351 to 372
+-- Lines: 383 to 404
 function MenuTitlescreenState:play_attract_video()
 	self:reset_attract_video()
 
@@ -403,7 +403,7 @@ function MenuTitlescreenState:play_attract_video()
 	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and self:get_video_volume() or 0)
 end
 
--- Lines: 374 to 404
+-- Lines: 406 to 436
 function MenuTitlescreenState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
@@ -434,7 +434,7 @@ function MenuTitlescreenState:at_exit()
 	managers.system_menu:init_finalize()
 end
 
--- Lines: 406 to 413
+-- Lines: 438 to 445
 function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_user_changed")
 
@@ -443,7 +443,7 @@ function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	end
 end
 
--- Lines: 415 to 420
+-- Lines: 447 to 452
 function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_storage_changed")
 

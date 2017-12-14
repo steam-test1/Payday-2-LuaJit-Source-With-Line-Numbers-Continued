@@ -11,7 +11,7 @@ function IngameWaitingForSpawnAllowed:_begin_game_enter_transition()
 	self._fade_in_overlay_eff_id = managers.overlay_effect:play_effect(overlay_effect_desc)
 end
 
--- Lines: 21 to 50
+-- Lines: 21 to 51
 function IngameWaitingForSpawnAllowed.spawn_waiting_player(peer_to_spawn)
 	if managers.groupai and managers.groupai:state():whisper_mode() and not managers.wait:check_waiting_allowed_spawn(peer_to_spawn) then
 		return
@@ -20,7 +20,8 @@ function IngameWaitingForSpawnAllowed.spawn_waiting_player(peer_to_spawn)
 	if Network:is_client() then
 		debug_pause("Trying to request player spawn on client trough IngameWaitingForSpawnAllowed")
 	else
-		local pos_rot = managers.criminals:get_valid_player_spawn_pos_rot()
+		local peer = managers.network:session():peer(peer_to_spawn)
+		local pos_rot = managers.criminals:get_valid_player_spawn_pos_rot(peer and peer:id())
 
 		if not pos_rot and managers.network then
 			local spawn_point = managers.network:session() and managers.network:session():get_next_spawn_point() or managers.network:spawn_point(1)
@@ -44,12 +45,12 @@ function IngameWaitingForSpawnAllowed.spawn_waiting_player(peer_to_spawn)
 	end
 end
 
--- Lines: 54 to 56
+-- Lines: 55 to 57
 function IngameWaitingForSpawnAllowed:update(t, dt)
 	self:_upd_watch(t, dt)
 end
 
--- Lines: 60 to 110
+-- Lines: 61 to 111
 function IngameWaitingForSpawnAllowed:at_enter()
 	managers.overlay_effect:play_effect(tweak_data.overlay_effects.fade_in)
 	self:_setup_camera()
@@ -102,7 +103,7 @@ function IngameWaitingForSpawnAllowed:at_enter()
 	})
 end
 
--- Lines: 114 to 135
+-- Lines: 115 to 136
 function IngameWaitingForSpawnAllowed:at_exit(data)
 	if self.music_on_death then
 		managers.music:track_listen_stop()
@@ -128,19 +129,19 @@ function IngameWaitingForSpawnAllowed:at_exit(data)
 	managers.hud:set_player_condition("mugshot_normal", "")
 end
 
--- Lines: 141 to 142
+-- Lines: 142 to 143
 function IngameWaitingForSpawnAllowed:trade_death(respawn_delay, hostages_killed)
 end
 
--- Lines: 144 to 145
+-- Lines: 145 to 146
 function IngameWaitingForSpawnAllowed:finish_trade()
 end
 
--- Lines: 147 to 148
+-- Lines: 148 to 149
 function IngameWaitingForSpawnAllowed:begin_trade()
 end
 
--- Lines: 150 to 151
+-- Lines: 151 to 152
 function IngameWaitingForSpawnAllowed:cancel_trade()
 end
 

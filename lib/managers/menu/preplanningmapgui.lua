@@ -224,7 +224,7 @@ function PrePlanningPoint:init(map_panel, element, shape, rotation, active_node,
 	self._states = {}
 end
 
--- Lines: 175 to 206
+-- Lines: 175 to 218
 function PrePlanningPoint:add_properties(category, type, index)
 	if not self._properties then
 		local texture_atlas = tweak_data.preplanning.gui.category_icons_path
@@ -307,33 +307,33 @@ function PrePlanningPoint:add_properties(category, type, index)
 	self._properties.type[type] = index
 end
 
--- Lines: 210 to 211
+-- Lines: 222 to 223
 function PrePlanningPoint:map_position()
 	return self._x * self._map_panel:w(), self._y * self._map_panel:h()
 end
 
--- Lines: 214 to 215
+-- Lines: 226 to 227
 function PrePlanningPoint:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 218 to 219
+-- Lines: 230 to 231
 function PrePlanningPoint:alive()
 	return alive(self._panel)
 end
 
--- Lines: 222 to 223
+-- Lines: 234 to 235
 function PrePlanningPoint:element()
 	return self._element
 end
 
--- Lines: 228 to 234
+-- Lines: 240 to 246
 function PrePlanningPoint:set_color(color)
 	self._box:set_color(color)
 	self._bg:set_color(color)
 end
 
--- Lines: 236 to 249
+-- Lines: 248 to 261
 function PrePlanningPoint:set_state(...)
 	local states = {...}
 
@@ -351,17 +351,17 @@ function PrePlanningPoint:set_state(...)
 	end
 end
 
--- Lines: 253 to 282
+-- Lines: 265 to 294
 function PrePlanningPoint:flash()
 	if alive(self._box) and alive(self._bg) then
 
-		-- Lines: 255 to 278
+		-- Lines: 267 to 290
 		local function flash_anim(panel)
 			local start_color = tweak_data.screen_colors.text
 			local s = 0
 
 
-			-- Lines: 259 to 263
+			-- Lines: 271 to 275
 			local function f(t)
 				s = math.min(1, math.sin(t * 180) * 2)
 
@@ -397,7 +397,7 @@ function PrePlanningPoint:flash()
 	end
 end
 
--- Lines: 286 to 293
+-- Lines: 298 to 305
 function PrePlanningPoint:dirty()
 	if not self._need_update then
 		self._need_update = true
@@ -406,7 +406,7 @@ function PrePlanningPoint:dirty()
 	end
 end
 
--- Lines: 295 to 348
+-- Lines: 307 to 360
 function PrePlanningPoint:_update_reserved()
 	local reserved_data = self._element and managers.preplanning:get_reserved_mission_element(self._element:id()) or false
 
@@ -519,7 +519,7 @@ function PrePlanningPoint:_update_reserved()
 	end
 end
 
--- Lines: 350 to 392
+-- Lines: 362 to 404
 function PrePlanningPoint:_update_extra()
 	local alpha = 0
 	local is_selected = self._active_node.node:selected_item() and self._active_node.node:selected_item():name() == self._element:id()
@@ -569,7 +569,7 @@ function PrePlanningPoint:_update_extra()
 	end
 end
 
--- Lines: 394 to 413
+-- Lines: 406 to 425
 function PrePlanningPoint:_update_position()
 	if self._panel:visible() then
 		local diff_width = 1 - self._map_width / self._map_panel:width()
@@ -590,7 +590,7 @@ function PrePlanningPoint:_update_position()
 	end
 end
 
--- Lines: 415 to 423
+-- Lines: 427 to 435
 function PrePlanningPoint:update_me()
 	if self._need_update then
 		self._need_update = false
@@ -602,7 +602,7 @@ function PrePlanningPoint:update_me()
 	end
 end
 
--- Lines: 428 to 451
+-- Lines: 440 to 463
 function PrePlanningPoint:animate_size_mod(o)
 	local dt, step, diff = nil
 	local done = false
@@ -631,7 +631,7 @@ function PrePlanningPoint:animate_size_mod(o)
 	end
 end
 
--- Lines: 453 to 464
+-- Lines: 465 to 476
 function PrePlanningPoint:_set_size_mod(size_mod)
 	local info_box_alpha = self._current_state ~= Idstring("hidden") and self._mouse_selected and 1 or 0
 
@@ -647,12 +647,12 @@ function PrePlanningPoint:_set_size_mod(size_mod)
 	end
 end
 
--- Lines: 466 to 468
+-- Lines: 478 to 480
 function PrePlanningPoint:_enable_size_mod()
 	self:_set_size_mod(1.2, true)
 end
 
--- Lines: 470 to 476
+-- Lines: 482 to 488
 function PrePlanningPoint:_disable_size_mod()
 	if self._size_mod then
 		self._size_mod = 1
@@ -662,7 +662,7 @@ function PrePlanningPoint:_disable_size_mod()
 	end
 end
 
--- Lines: 478 to 492
+-- Lines: 490 to 504
 function PrePlanningPoint:_set_selected()
 	local ids = alive(self._reserved_icon) and Idstring("selected_reserved") or self._has_majority and self._selected and Idstring("selected_majority") or Idstring("selected")
 
@@ -682,7 +682,7 @@ function PrePlanningPoint:_set_selected()
 	end
 end
 
--- Lines: 494 to 510
+-- Lines: 506 to 522
 function PrePlanningPoint:_set_selectable()
 	local ids = alive(self._reserved_icon) and Idstring("selectable_reserved") or Idstring("selectable")
 
@@ -704,7 +704,7 @@ function PrePlanningPoint:_set_selectable()
 	end
 end
 
--- Lines: 512 to 528
+-- Lines: 524 to 540
 function PrePlanningPoint:_set_visible()
 	local ids = alive(self._reserved_icon) and Idstring("visible_reserved") or Idstring("visible")
 
@@ -726,7 +726,7 @@ function PrePlanningPoint:_set_visible()
 	end
 end
 
--- Lines: 530 to 544
+-- Lines: 542 to 556
 function PrePlanningPoint:_set_hidden()
 	local ids = alive(self._reserved_icon) and Idstring("hidden_reserved") or Idstring("hidden")
 
@@ -746,7 +746,7 @@ function PrePlanningPoint:_set_hidden()
 	end
 end
 
--- Lines: 549 to 617
+-- Lines: 561 to 629
 function PrePlanningPoint:_update_state()
 	local selected = self._active_node.node:selected_item() and self._active_node.node:selected_item():name() == self._element:id()
 	self._selected = selected
@@ -813,7 +813,7 @@ function PrePlanningPoint:_update_state()
 	end
 end
 
--- Lines: 622 to 633
+-- Lines: 634 to 645
 function PrePlanningPoint:_state_color()
 	if not self._states.visible then
 		return Color(0.5, 1, 1, 1)
@@ -826,7 +826,7 @@ function PrePlanningPoint:_state_color()
 	return Color.red
 end
 
--- Lines: 638 to 654
+-- Lines: 650 to 666
 function PrePlanningPoint:_chk_mouse_pos(x, y)
 	if not self:inside(x, y) then
 		return false
@@ -851,7 +851,7 @@ function PrePlanningPoint:_chk_mouse_pos(x, y)
 	return true
 end
 
--- Lines: 657 to 674
+-- Lines: 669 to 686
 function PrePlanningPoint:select_mouse_over()
 	if not self._active_node.current_type then
 		if self._active_node.current_plan then
@@ -876,7 +876,7 @@ function PrePlanningPoint:select_mouse_over()
 	end
 end
 
--- Lines: 676 to 693
+-- Lines: 688 to 705
 function PrePlanningPoint:mouse_moved(x, y, used)
 	local mouse_check = self:_chk_mouse_pos(x, y)
 	local mouse_selected = mouse_check and not used
@@ -897,7 +897,7 @@ function PrePlanningPoint:mouse_moved(x, y, used)
 	end
 end
 
--- Lines: 695 to 700
+-- Lines: 707 to 712
 function PrePlanningPoint:mouse_pressed(x, y)
 	if not self:_chk_mouse_pos(x, y) then
 		return
@@ -908,7 +908,7 @@ function PrePlanningPoint:mouse_pressed(x, y)
 	return true
 end
 
--- Lines: 703 to 738
+-- Lines: 715 to 750
 function PrePlanningPoint:mouse_released(x, y)
 	if not self._pressed then
 		return false
@@ -950,7 +950,7 @@ function PrePlanningPoint:mouse_released(x, y)
 end
 PrePlanningCustomPoint = PrePlanningCustomPoint or class(PrePlanningPoint)
 
--- Lines: 746 to 805
+-- Lines: 758 to 817
 function PrePlanningCustomPoint:init(map_panel, data, texture_width, texture_height, location_rotation, active_node, name)
 	local width = PrePlanningPoint.WIDTH
 	local height = PrePlanningPoint.HEIGHT
@@ -1040,16 +1040,16 @@ function PrePlanningCustomPoint:init(map_panel, data, texture_width, texture_hei
 	self._talk_icon:hide()
 end
 
--- Lines: 807 to 808
+-- Lines: 819 to 820
 function PrePlanningCustomPoint:name()
 	return self._name
 end
 
--- Lines: 811 to 812
+-- Lines: 823 to 824
 function PrePlanningCustomPoint:_update_reserved()
 end
 
--- Lines: 814 to 832
+-- Lines: 826 to 844
 function PrePlanningCustomPoint:_update_state()
 	local selected = self._mouse_selected or self._active_node.current_custom and self._active_node.node:selected_item() and self._active_node.node:selected_item():name() == self._name
 	local visible = self._active_node.current_custom == "custom_points"
@@ -1067,11 +1067,11 @@ function PrePlanningCustomPoint:_update_state()
 	end
 end
 
--- Lines: 834 to 835
+-- Lines: 846 to 847
 function PrePlanningCustomPoint:_update_extra()
 end
 
--- Lines: 837 to 845
+-- Lines: 849 to 857
 function PrePlanningCustomPoint:_update_position()
 	if self._panel:visible() then
 		local diff_width = 1 - self._map_width / self._map_panel:width()
@@ -1083,7 +1083,7 @@ function PrePlanningCustomPoint:_update_position()
 	end
 end
 
--- Lines: 847 to 854
+-- Lines: 859 to 866
 function PrePlanningCustomPoint:_set_selected()
 	local ids = Idstring("selected")
 
@@ -1095,7 +1095,7 @@ function PrePlanningCustomPoint:_set_selected()
 	end
 end
 
--- Lines: 856 to 863
+-- Lines: 868 to 875
 function PrePlanningCustomPoint:_set_visible()
 	local ids = Idstring("visible")
 
@@ -1107,7 +1107,7 @@ function PrePlanningCustomPoint:_set_visible()
 	end
 end
 
--- Lines: 865 to 871
+-- Lines: 877 to 883
 function PrePlanningCustomPoint:_set_hidden()
 	local ids = Idstring("hidden")
 
@@ -1118,12 +1118,12 @@ function PrePlanningCustomPoint:_set_hidden()
 	end
 end
 
--- Lines: 873 to 874
+-- Lines: 885 to 886
 function PrePlanningCustomPoint:inside(x, y)
 	return self._panel:child("icon"):inside(x, y)
 end
 
--- Lines: 877 to 882
+-- Lines: 889 to 894
 function PrePlanningCustomPoint:_chk_mouse_pos(x, y)
 	if not self:inside(x, y) then
 		return false
@@ -1132,12 +1132,12 @@ function PrePlanningCustomPoint:_chk_mouse_pos(x, y)
 	return self._active_node.current_custom and self._active_node.current_custom == "custom_points"
 end
 
--- Lines: 885 to 886
+-- Lines: 897 to 898
 function PrePlanningCustomPoint:element()
 	return false
 end
 
--- Lines: 889 to 900
+-- Lines: 901 to 912
 function PrePlanningCustomPoint:mouse_moved(x, y, used)
 	local mouse_check = self:_chk_mouse_pos(x, y)
 	local mouse_selected = mouse_check and not used
@@ -1153,7 +1153,7 @@ function PrePlanningCustomPoint:mouse_moved(x, y, used)
 	end
 end
 
--- Lines: 902 to 907
+-- Lines: 914 to 919
 function PrePlanningCustomPoint:mouse_pressed(x, y)
 	if not self:_chk_mouse_pos(x, y) then
 		return
@@ -1164,7 +1164,7 @@ function PrePlanningCustomPoint:mouse_pressed(x, y)
 	return true
 end
 
--- Lines: 910 to 926
+-- Lines: 922 to 938
 function PrePlanningCustomPoint:mouse_released(x, y)
 	if not self._pressed then
 		return false
@@ -1186,7 +1186,7 @@ function PrePlanningCustomPoint:mouse_released(x, y)
 	return true
 end
 
--- Lines: 929 to 946
+-- Lines: 941 to 958
 function PrePlanningCustomPoint:start_custom_talk()
 	if self._talk_icon then
 		self._talk_icon:show()
@@ -1210,7 +1210,7 @@ function PrePlanningCustomPoint:start_custom_talk()
 	end
 end
 
--- Lines: 948 to 953
+-- Lines: 960 to 965
 function PrePlanningCustomPoint:stop_custom_talk()
 	if self._talk_icon then
 		self._talk_icon:hide()
@@ -1219,7 +1219,7 @@ function PrePlanningCustomPoint:stop_custom_talk()
 end
 PrePlanningLocation = PrePlanningLocation or class()
 
--- Lines: 960 to 1026
+-- Lines: 972 to 1043
 function PrePlanningLocation:init(panel, index, size, active_node)
 	self._active_node = active_node
 	self._location = managers.preplanning:get_location_by_index(index)
@@ -1295,63 +1295,63 @@ function PrePlanningLocation:init(panel, index, size, active_node)
 	self._active = true
 end
 
--- Lines: 1028 to 1029
+-- Lines: 1045 to 1046
 function PrePlanningLocation:name()
 	return self._name
 end
 
--- Lines: 1032 to 1033
+-- Lines: 1049 to 1050
 function PrePlanningLocation:index()
 	return self._index
 end
 
--- Lines: 1036 to 1037
+-- Lines: 1053 to 1054
 function PrePlanningLocation:group()
 	return self._group
 end
 
--- Lines: 1040 to 1041
+-- Lines: 1057 to 1058
 function PrePlanningLocation:points()
 	return self._points
 end
 
--- Lines: 1044 to 1045
+-- Lines: 1061 to 1062
 function PrePlanningLocation:map_rotation()
 	return self._rotation
 end
 
--- Lines: 1048 to 1049
+-- Lines: 1065 to 1066
 function PrePlanningLocation:map_shape()
 	return self._panel:shape()
 end
 
--- Lines: 1052 to 1053
+-- Lines: 1069 to 1070
 function PrePlanningLocation:map_texture_size()
 	return self._map:texture_width(), self._map:texture_height()
 end
 
--- Lines: 1056 to 1060
+-- Lines: 1073 to 1077
 function PrePlanningLocation:flash_error(id)
 	if self._points[id] then
 		self._points[id]:flash()
 	end
 end
 
--- Lines: 1062 to 1066
+-- Lines: 1079 to 1083
 function PrePlanningLocation:start_custom_talk(id)
 	if self._custom_points[id] then
 		self._custom_points[id]:start_custom_talk()
 	end
 end
 
--- Lines: 1068 to 1072
+-- Lines: 1085 to 1089
 function PrePlanningLocation:stop_custom_talk(id)
 	if self._custom_points[id] then
 		self._custom_points[id]:stop_custom_talk()
 	end
 end
 
--- Lines: 1075 to 1085
+-- Lines: 1092 to 1102
 function PrePlanningLocation:get_point_map_position(id)
 	if self._active_node.current_custom then
 		if self._custom_points[id] then
@@ -1366,7 +1366,7 @@ function PrePlanningLocation:get_point_map_position(id)
 	end
 end
 
--- Lines: 1087 to 1108
+-- Lines: 1104 to 1125
 function PrePlanningLocation:add_point(category, type, index, element)
 	self._points_by_type[type] = self._points_by_type[type] or {}
 	self._points_by_category[category] = self._points_by_category[category] or {}
@@ -1391,7 +1391,7 @@ function PrePlanningLocation:add_point(category, type, index, element)
 	end
 end
 
--- Lines: 1110 to 1115
+-- Lines: 1127 to 1132
 function PrePlanningLocation:add_custom_point(custom_point, index)
 	local name = tostring(self._index) .. "_" .. tostring(index)
 
@@ -1400,7 +1400,7 @@ function PrePlanningLocation:add_custom_point(custom_point, index)
 	end
 end
 
--- Lines: 1117 to 1124
+-- Lines: 1134 to 1141
 function PrePlanningLocation:set_active(active)
 	return
 
@@ -1413,7 +1413,7 @@ function PrePlanningLocation:set_active(active)
 	end
 end
 
--- Lines: 1126 to 1142
+-- Lines: 1143 to 1159
 function PrePlanningLocation:_get_point(type, id)
 	if type then
 		if self._points_by_type[type] then
@@ -1432,7 +1432,7 @@ function PrePlanningLocation:_get_point(type, id)
 	end
 end
 
--- Lines: 1144 to 1153
+-- Lines: 1161 to 1170
 function PrePlanningLocation:update_element(type, id)
 	if id then
 		local point = self:_get_point(type, id)
@@ -1445,7 +1445,7 @@ function PrePlanningLocation:update_element(type, id)
 	end
 end
 
--- Lines: 1155 to 1163
+-- Lines: 1172 to 1180
 function PrePlanningLocation:update_me()
 	self:clear_active_points()
 
@@ -1458,7 +1458,7 @@ function PrePlanningLocation:update_me()
 	end
 end
 
--- Lines: 1165 to 1222
+-- Lines: 1182 to 1239
 function PrePlanningLocation:_update_active_points()
 	local current_type = self._active_node.current_type
 	local current_category = self._active_node.current_category
@@ -1517,17 +1517,17 @@ function PrePlanningLocation:_update_active_points()
 	return self._active_points
 end
 
--- Lines: 1225 to 1227
+-- Lines: 1242 to 1244
 function PrePlanningLocation:clear_active_points()
 	self._active_points = nil
 end
 
--- Lines: 1229 to 1230
+-- Lines: 1246 to 1247
 function PrePlanningLocation:_get_active_points()
 	return self._active_points or self:_update_active_points()
 end
 
--- Lines: 1233 to 1258
+-- Lines: 1250 to 1275
 function PrePlanningLocation:mouse_moved(x, y)
 	local used, icon, eused, eicon, eother, remember_point = nil
 
@@ -1561,7 +1561,7 @@ function PrePlanningLocation:mouse_moved(x, y)
 	return used, icon
 end
 
--- Lines: 1261 to 1267
+-- Lines: 1278 to 1284
 function PrePlanningLocation:mouse_pressed(x, y)
 	for _, point in ipairs(self:_get_active_points()) do
 		if point:mouse_pressed(x, y) then
@@ -1570,7 +1570,7 @@ function PrePlanningLocation:mouse_pressed(x, y)
 	end
 end
 
--- Lines: 1269 to 1275
+-- Lines: 1286 to 1292
 function PrePlanningLocation:mouse_released(x, y)
 	for _, point in ipairs(self:_get_active_points()) do
 		if point:mouse_released(x, y) then
@@ -1579,18 +1579,18 @@ function PrePlanningLocation:mouse_released(x, y)
 	end
 end
 
--- Lines: 1277 to 1279
+-- Lines: 1294 to 1296
 function PrePlanningLocation:set_selected_point(element_id)
 	self:update_me()
 end
 PrePlanningMapGui = PrePlanningMapGui or class()
 
--- Lines: 1286 to 1288
+-- Lines: 1303 to 1305
 function PrePlanningMapGui:init(saferect_ws, fullscreen_ws, node)
 	self:setup(saferect_ws, fullscreen_ws, node)
 end
 
--- Lines: 1290 to 1604
+-- Lines: 1307 to 1621
 function PrePlanningMapGui:setup(saferect_ws, fullscreen_ws, node)
 	debug_assert(managers.preplanning:num_active_locations() > 0, "[PrePlanningMapGui:init] This level have on locations", "level_id", managers.job:current_level_id())
 
@@ -2131,12 +2131,12 @@ function PrePlanningMapGui:setup(saferect_ws, fullscreen_ws, node)
 	self:_update_drawboard()
 end
 
--- Lines: 1608 to 1610
+-- Lines: 1625 to 1627
 function PrePlanningMapGui:resolution_changed()
 	self:_setup_blackborders()
 end
 
--- Lines: 1612 to 1644
+-- Lines: 1629 to 1661
 function PrePlanningMapGui:_setup_blackborders()
 	if self._blackborder_workspace then
 		managers.gui_data:destroy_workspace(self._blackborder_workspace)
@@ -2189,7 +2189,7 @@ function PrePlanningMapGui:_setup_blackborders()
 	right_border:set_right(self._blackborder_workspace:panel():w())
 end
 
--- Lines: 1648 to 1654
+-- Lines: 1665 to 1671
 function PrePlanningMapGui:set_drawboard_button_position(x, y)
 	if self._drawboard_button then
 		self._drawboard_button:set_position(x, y)
@@ -2198,7 +2198,7 @@ function PrePlanningMapGui:set_drawboard_button_position(x, y)
 	end
 end
 
--- Lines: 1656 to 1667
+-- Lines: 1673 to 1684
 function PrePlanningMapGui:hide_drawboard()
 	if self._drawing_panel:visible() then
 		self._drawing_panel:hide()
@@ -2213,7 +2213,7 @@ function PrePlanningMapGui:hide_drawboard()
 	end
 end
 
--- Lines: 1669 to 1680
+-- Lines: 1686 to 1697
 function PrePlanningMapGui:toggle_drawboard(button)
 	self._drawing_panel:set_visible(not self._drawing_panel:visible())
 
@@ -2230,7 +2230,7 @@ function PrePlanningMapGui:toggle_drawboard(button)
 	return true
 end
 
--- Lines: 1683 to 1717
+-- Lines: 1700 to 1734
 function PrePlanningMapGui:_update_drawboard()
 	local drawing_panel, button, peer = nil
 
@@ -2293,7 +2293,7 @@ function PrePlanningMapGui:_update_drawboard()
 	end
 end
 
--- Lines: 1719 to 1725
+-- Lines: 1736 to 1742
 function PrePlanningMapGui:set_draw_tooltip_clbk(button)
 	local peer_id = managers.network:session():local_peer():id()
 	local can_draw = alive(self._grid_panel:child(tostring(peer_id))) and self._grid_panel:child(tostring(peer_id)):visible()
@@ -2302,7 +2302,7 @@ function PrePlanningMapGui:set_draw_tooltip_clbk(button)
 	self._drawing_panel:child("tooltip"):set_text(utf8.to_upper(text))
 end
 
--- Lines: 1729 to 1736
+-- Lines: 1746 to 1753
 function PrePlanningMapGui:toggle_breakdown(button)
 	local breakdown_panel = self._panel:child("breakdown_panel")
 
@@ -2314,7 +2314,7 @@ function PrePlanningMapGui:toggle_breakdown(button)
 	return true
 end
 
--- Lines: 1740 to 1816
+-- Lines: 1757 to 1833
 function PrePlanningMapGui:_update_breakdown()
 	local breakdown_panel = self._panel:child("breakdown_panel")
 
@@ -2448,7 +2448,7 @@ function PrePlanningMapGui:_update_breakdown()
 	breakdown_panel:set_alpha(width > 0 and 1 or 0)
 end
 
--- Lines: 1854 to 1885
+-- Lines: 1871 to 1902
 function PrePlanningMapGui:sync_draw_point(peer_id, x, y)
 	local line_index = self._peer_draw_line_index[peer_id]
 
@@ -2494,7 +2494,7 @@ function PrePlanningMapGui:sync_draw_point(peer_id, x, y)
 	end
 end
 
--- Lines: 1887 to 1891
+-- Lines: 1904 to 1908
 function PrePlanningMapGui:sync_start_drawing(peer_id, width, color_index)
 	print("sync_start_drawing", peer_id, width, color_index)
 	table.insert(self._peer_draw_lines[peer_id], {
@@ -2506,14 +2506,14 @@ function PrePlanningMapGui:sync_start_drawing(peer_id, width, color_index)
 	self._peer_draw_line_index[peer_id] = #self._peer_draw_lines[peer_id]
 end
 
--- Lines: 1893 to 1896
+-- Lines: 1910 to 1913
 function PrePlanningMapGui:sync_end_drawing(peer_id)
 	print("sync_end_drawing", peer_id)
 
 	self._peer_draw_line_index[peer_id] = nil
 end
 
--- Lines: 1898 to 1907
+-- Lines: 1915 to 1924
 function PrePlanningMapGui:sync_undo_drawing(peer_id)
 	local draws = self._peer_draw_lines[peer_id]
 
@@ -2528,7 +2528,7 @@ function PrePlanningMapGui:sync_undo_drawing(peer_id)
 	end
 end
 
--- Lines: 1909 to 1921
+-- Lines: 1926 to 1938
 function PrePlanningMapGui:sync_erase_drawing(peer_id)
 	local draws = self._peer_draw_lines[peer_id]
 
@@ -2544,7 +2544,7 @@ function PrePlanningMapGui:sync_erase_drawing(peer_id)
 	self._peer_draw_line_index[peer_id] = nil
 end
 
--- Lines: 1925 to 1932
+-- Lines: 1942 to 1949
 function PrePlanningMapGui:set_num_draw_points(num)
 	self._num_draw_points = num
 	local ink = self._drawing_panel:child("draw_ink")
@@ -2556,7 +2556,7 @@ function PrePlanningMapGui:set_num_draw_points(num)
 	self:_update_drawboard()
 end
 
--- Lines: 1936 to 1948
+-- Lines: 1953 to 1965
 function PrePlanningMapGui:undo_drawing()
 	local peer_id = managers.network:session():local_peer():id()
 	local draws = self._peer_draw_lines[peer_id]
@@ -2575,7 +2575,7 @@ function PrePlanningMapGui:undo_drawing()
 	return true
 end
 
--- Lines: 1951 to 1957
+-- Lines: 1968 to 1974
 function PrePlanningMapGui:erase_drawing()
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -2586,7 +2586,7 @@ function PrePlanningMapGui:erase_drawing()
 	return true
 end
 
--- Lines: 1960 to 1978
+-- Lines: 1977 to 1995
 function PrePlanningMapGui:start_drawing()
 	if tweak_data.preplanning.gui.MAX_DRAW_POINTS <= self._num_draw_points then
 		return
@@ -2606,7 +2606,7 @@ function PrePlanningMapGui:start_drawing()
 	end
 end
 
--- Lines: 1980 to 1991
+-- Lines: 1997 to 2008
 function PrePlanningMapGui:end_drawing()
 	if self._draw_mode then
 		self._draw_mode = false
@@ -2619,7 +2619,7 @@ function PrePlanningMapGui:end_drawing()
 	end
 end
 
--- Lines: 1993 to 2016
+-- Lines: 2010 to 2033
 function PrePlanningMapGui:_draw_point(x, y)
 	if self._mouse_moved then
 		if tweak_data.preplanning.gui.MAX_DRAW_POINTS <= self._num_draw_points then
@@ -2645,14 +2645,14 @@ function PrePlanningMapGui:_draw_point(x, y)
 	end
 end
 
--- Lines: 2018 to 2022
+-- Lines: 2035 to 2039
 function PrePlanningMapGui:toggle_drawing_clbk(data)
 	if data then
 		return self:toggle_drawing(data.value)
 	end
 end
 
--- Lines: 2024 to 2031
+-- Lines: 2041 to 2048
 function PrePlanningMapGui:toggle_drawing(peer_id)
 	local panel = self._grid_panel:child(tostring(peer_id))
 
@@ -2667,7 +2667,7 @@ function PrePlanningMapGui:toggle_drawing(peer_id)
 end
 local seconds_per_draw = 0.016666666666666666
 
--- Lines: 2035 to 2050
+-- Lines: 2052 to 2067
 function PrePlanningMapGui:update_drawing(t, dt)
 	if self._draw_mode then
 		self._last_draw_t = self._last_draw_t or t - seconds_per_draw
@@ -2682,7 +2682,7 @@ function PrePlanningMapGui:update_drawing(t, dt)
 	end
 end
 
--- Lines: 2052 to 2081
+-- Lines: 2069 to 2098
 function PrePlanningMapGui:set_drawings(peer_draw_lines, peer_draw_line_index)
 	for peer_id, _ in pairs(self._peer_draw_lines) do
 		self:sync_erase_drawing(peer_id)
@@ -2725,7 +2725,7 @@ function PrePlanningMapGui:set_drawings(peer_draw_lines, peer_draw_line_index)
 	end
 end
 
--- Lines: 2083 to 2093
+-- Lines: 2100 to 2110
 function PrePlanningMapGui:get_drawings()
 	local peer_draw_lines = deep_clone(self._peer_draw_lines)
 	local peer_draw_line_index = deep_clone(self._peer_draw_line_index)
@@ -2739,13 +2739,13 @@ function PrePlanningMapGui:get_drawings()
 	return peer_draw_lines, peer_draw_line_index
 end
 
--- Lines: 2098 to 2121
+-- Lines: 2115 to 2138
 function PrePlanningMapGui._flash_anim(text, start_color)
 	start_color = start_color or tweak_data.screen_colors.text
 	local s = 0
 
 
-	-- Lines: 2102 to 2105
+	-- Lines: 2119 to 2122
 	local function f(t)
 		s = math.min(1, math.sin(t * 180) * 2)
 
@@ -2775,7 +2775,7 @@ function PrePlanningMapGui._flash_anim(text, start_color)
 	text:set_color(start_color)
 end
 
--- Lines: 2124 to 2171
+-- Lines: 2141 to 2188
 function PrePlanningMapGui:flash_error(element_id, budget, money, ...)
 	managers.menu_component:post_event("menu_error")
 
@@ -2798,35 +2798,35 @@ function PrePlanningMapGui:flash_error(element_id, budget, money, ...)
 	end
 end
 
--- Lines: 2175 to 2179
+-- Lines: 2192 to 2196
 function PrePlanningMapGui:set_location_clbk(button)
 	if button and button.value then
 		return self:set_location(button.value:group())
 	end
 end
 
--- Lines: 2181 to 2185
+-- Lines: 2198 to 2202
 function PrePlanningMapGui:start_custom_talk(id)
 	for i, location in pairs(self._locations) do
 		location:start_custom_talk(id)
 	end
 end
 
--- Lines: 2187 to 2191
+-- Lines: 2204 to 2208
 function PrePlanningMapGui:stop_custom_talk(id)
 	for i, location in pairs(self._locations) do
 		location:stop_custom_talk(id)
 	end
 end
 
--- Lines: 2193 to 2197
+-- Lines: 2210 to 2214
 function PrePlanningMapGui:post_event_end_clbk(type, event, cookie)
 	if cookie then
 		self:stop_custom_talk(cookie)
 	end
 end
 
--- Lines: 2199 to 2210
+-- Lines: 2216 to 2227
 function PrePlanningMapGui:post_event(event, custom_end_id)
 	if custom_end_id then
 		managers.briefing:post_event(event, {
@@ -2842,12 +2842,12 @@ function PrePlanningMapGui:post_event(event, custom_end_id)
 	end
 end
 
--- Lines: 2212 to 2219
+-- Lines: 2229 to 2236
 function PrePlanningMapGui:stop_event()
 	managers.briefing:stop_event()
 end
 
--- Lines: 2223 to 2243
+-- Lines: 2240 to 2260
 function PrePlanningMapGui:set_location(group)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -2868,7 +2868,7 @@ function PrePlanningMapGui:set_location(group)
 	end
 end
 
--- Lines: 2246 to 2257
+-- Lines: 2263 to 2274
 function PrePlanningMapGui:set_selected_element_item(item)
 	if not self._enabled then
 		return
@@ -2883,7 +2883,7 @@ function PrePlanningMapGui:set_selected_element_item(item)
 	end
 end
 
--- Lines: 2259 to 2266
+-- Lines: 2276 to 2283
 function PrePlanningMapGui:set_selected_element_index(index)
 	return
 
@@ -2894,7 +2894,7 @@ function PrePlanningMapGui:set_selected_element_index(index)
 	end
 end
 
--- Lines: 2268 to 2292
+-- Lines: 2285 to 2309
 function PrePlanningMapGui:update_element(type, id)
 	local current_budget, total_budget = managers.preplanning:get_current_budget()
 
@@ -2923,7 +2923,7 @@ function PrePlanningMapGui:update_element(type, id)
 	end
 end
 
--- Lines: 2296 to 2371
+-- Lines: 2313 to 2388
 function PrePlanningMapGui:create_text_button(params)
 	local left = params.left or params.x
 	local right = params.right
@@ -3020,7 +3020,7 @@ function PrePlanningMapGui:create_text_button(params)
 	return button_panel, #self._text_buttons
 end
 
--- Lines: 2374 to 2481
+-- Lines: 2391 to 2498
 function PrePlanningMapGui:set_active_node(node)
 	if not self._enabled or self._active_node.node ~= node then
 		self._active_node.node = node
@@ -3130,12 +3130,12 @@ function PrePlanningMapGui:set_active_node(node)
 	end
 end
 
--- Lines: 2483 to 2484
+-- Lines: 2500 to 2501
 function PrePlanningMapGui:enabled()
 	return self._enabled
 end
 
--- Lines: 2487 to 2505
+-- Lines: 2504 to 2522
 function PrePlanningMapGui:disable()
 	if self._enabled then
 		self._enabled = false
@@ -3156,7 +3156,7 @@ function PrePlanningMapGui:disable()
 	end
 end
 
--- Lines: 2507 to 2656
+-- Lines: 2524 to 2673
 function PrePlanningMapGui:update(t, dt)
 	if not self._enabled then
 		return
@@ -3326,7 +3326,7 @@ function PrePlanningMapGui:update(t, dt)
 	self._one_frame_input_delay = false
 end
 
--- Lines: 2660 to 2671
+-- Lines: 2677 to 2688
 function PrePlanningMapGui:set_map_position_to_item(item)
 	if not self._enabled then
 		return
@@ -3343,7 +3343,7 @@ function PrePlanningMapGui:set_map_position_to_item(item)
 	end
 end
 
--- Lines: 2673 to 2695
+-- Lines: 2690 to 2712
 function PrePlanningMapGui:set_map_position(x, y, location, lerp)
 	if not self._enabled then
 		return
@@ -3375,7 +3375,7 @@ function PrePlanningMapGui:set_map_position(x, y, location, lerp)
 	end
 end
 
--- Lines: 2697 to 2732
+-- Lines: 2714 to 2749
 function PrePlanningMapGui:_set_map_position(x, y, location)
 	self._map_panel:set_position(x, y)
 	self._grid_panel:set_center(self._map_panel:center())
@@ -3411,12 +3411,12 @@ function PrePlanningMapGui:_set_map_position(x, y, location)
 	end
 end
 
--- Lines: 2734 to 2736
+-- Lines: 2751 to 2753
 function PrePlanningMapGui:_move_map_position(mx, my)
 	self:_set_map_position(self._map_x + mx, self._map_y + my)
 end
 
--- Lines: 2738 to 2746
+-- Lines: 2755 to 2763
 function PrePlanningMapGui:set_lerp_zoom(zoom)
 	local min = self._min_zoom or 1
 	local max = self._max_zoom or 5
@@ -3427,7 +3427,7 @@ function PrePlanningMapGui:set_lerp_zoom(zoom)
 	end
 end
 
--- Lines: 2748 to 2780
+-- Lines: 2765 to 2797
 function PrePlanningMapGui:_set_zoom(zoom, x, y, ignore_update)
 	local min = self._min_zoom or 1
 	local max = self._max_zoom or 5
@@ -3461,26 +3461,26 @@ function PrePlanningMapGui:_set_zoom(zoom, x, y, ignore_update)
 	return false
 end
 
--- Lines: 2783 to 2784
+-- Lines: 2800 to 2801
 function PrePlanningMapGui:_change_zoom(zoom, x, y)
 	return self:_set_zoom(self._map_zoom * zoom, x, y)
 end
 
--- Lines: 2787 to 2791
+-- Lines: 2804 to 2808
 function PrePlanningMapGui:zoom_out(x, y)
 	if self:_change_zoom(0.9, x, y) then
 		managers.menu_component:post_event("zoom_out")
 	end
 end
 
--- Lines: 2793 to 2797
+-- Lines: 2810 to 2814
 function PrePlanningMapGui:zoom_in(x, y)
 	if self:_change_zoom(1.1, x, y) then
 		managers.menu_component:post_event("zoom_in")
 	end
 end
 
--- Lines: 2801 to 2916
+-- Lines: 2818 to 2933
 function PrePlanningMapGui:mouse_moved(o, x, y)
 	if not self._enabled or self._one_frame_input_delay then
 		return false, "arrow"
@@ -3602,7 +3602,7 @@ function PrePlanningMapGui:mouse_moved(o, x, y)
 	return used, icon or "arrow"
 end
 
--- Lines: 2919 to 2979
+-- Lines: 2936 to 2996
 function PrePlanningMapGui:mouse_pressed(button, x, y)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3669,7 +3669,7 @@ function PrePlanningMapGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 2981 to 3012
+-- Lines: 2998 to 3029
 function PrePlanningMapGui:mouse_released(button, x, y)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3711,7 +3711,7 @@ function PrePlanningMapGui:mouse_released(button, x, y)
 	end
 end
 
--- Lines: 3014 to 3027
+-- Lines: 3031 to 3044
 function PrePlanningMapGui:special_btn_pressed(button)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3724,11 +3724,11 @@ function PrePlanningMapGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 3029 to 3030
+-- Lines: 3046 to 3047
 function PrePlanningMapGui:confirm_pressed()
 end
 
--- Lines: 3032 to 3038
+-- Lines: 3049 to 3055
 function PrePlanningMapGui:next_page()
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3737,7 +3737,7 @@ function PrePlanningMapGui:next_page()
 	self:zoom_in(self._panel:w() / 2, self._panel:h() / 2)
 end
 
--- Lines: 3040 to 3046
+-- Lines: 3057 to 3063
 function PrePlanningMapGui:previous_page()
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3746,12 +3746,12 @@ function PrePlanningMapGui:previous_page()
 	self:zoom_out(self._panel:w() / 2, self._panel:h() / 2)
 end
 
--- Lines: 3048 to 3049
+-- Lines: 3065 to 3066
 function PrePlanningMapGui:input_focus()
 	return self._enabled and self._grabbed_map and true or false
 end
 
--- Lines: 3054 to 3065
+-- Lines: 3071 to 3082
 function PrePlanningMapGui:close()
 	self:stop_event()
 	self._saferect_root_panel:remove(self._panel)

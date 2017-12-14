@@ -121,7 +121,7 @@ function PlayerFatal:_update_check_actions(t, dt)
 	self:_check_action_interact(t, input)
 end
 
--- Lines: 156 to 165
+-- Lines: 156 to 170
 function PlayerFatal:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) then
 		self._intimidate_t = t
@@ -132,7 +132,7 @@ function PlayerFatal:_check_action_interact(t, input)
 	end
 end
 
--- Lines: 168 to 176
+-- Lines: 173 to 181
 function PlayerFatal:_start_action_dead(t)
 	self:_interupt_action_running(t)
 
@@ -144,7 +144,7 @@ function PlayerFatal:_start_action_dead(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
--- Lines: 180 to 191
+-- Lines: 185 to 196
 function PlayerFatal:_end_action_dead(t)
 	if not self:_can_stand() then
 		return
@@ -158,14 +158,14 @@ function PlayerFatal:_end_action_dead(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines: 195 to 199
+-- Lines: 200 to 204
 function PlayerFatal:pre_destroy(unit)
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end
 end
 
--- Lines: 203 to 207
+-- Lines: 208 to 212
 function PlayerFatal:destroy()
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)

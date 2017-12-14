@@ -7,7 +7,7 @@ function ElementCarry:init(...)
 	ElementCarry.super.init(self, ...)
 end
 
--- Lines: 9 to 84
+-- Lines: 9 to 85
 function ElementCarry:on_executed(instigator)
 	if not self._values.enabled or not alive(instigator) then
 		return
@@ -61,8 +61,9 @@ function ElementCarry:on_executed(instigator)
 					local silent = self._values.operation == "secure_silent"
 					local carry_id = carry_ext:carry_id()
 					local multiplier = carry_ext:multiplier()
+					local peer_id = carry_ext:latest_peer_id()
 
-					managers.loot:secure(carry_id, multiplier, silent)
+					managers.loot:secure(carry_id, multiplier, silent, peer_id)
 				end
 
 				carry_ext:set_value(0)
@@ -91,7 +92,7 @@ function ElementCarry:on_executed(instigator)
 	end
 end
 
--- Lines: 86 to 88
+-- Lines: 87 to 89
 function ElementCarry:client_on_executed(...)
 	self:on_executed(...)
 end

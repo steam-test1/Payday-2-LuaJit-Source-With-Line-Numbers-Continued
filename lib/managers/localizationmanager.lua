@@ -13,7 +13,7 @@ function LocalizationManager:init()
 	Application:set_default_letter(95)
 end
 
--- Lines: 33 to 286
+-- Lines: 33 to 291
 function LocalizationManager:_setup_macros()
 	local btn_a = utf8.char(57344)
 	local btn_b = utf8.char(57345)
@@ -157,7 +157,7 @@ function LocalizationManager:_setup_macros()
 end
 local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
--- Lines: 289 to 299
+-- Lines: 294 to 304
 function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	if not button then
 		return
@@ -173,7 +173,7 @@ function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	return self:key_to_btn_text(key, to_upper, type)
 end
 
--- Lines: 302 to 319
+-- Lines: 312 to 329
 function LocalizationManager:key_to_btn_text(key, to_upper, type)
 	key = tostring(key)
 	type = type or managers.controller:get_default_wrapper_type()
@@ -191,22 +191,22 @@ function LocalizationManager:key_to_btn_text(key, to_upper, type)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines: 322 to 323
+-- Lines: 332 to 333
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines: 326 to 327
+-- Lines: 336 to 337
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines: 342 to 343
+-- Lines: 352 to 353
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines: 347 to 356
+-- Lines: 357 to 366
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -220,7 +220,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines: 359 to 405
+-- Lines: 369 to 415
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -268,7 +268,7 @@ function LocalizationManager:check_translation()
 	end
 end
 
--- Lines: 408 to 410
+-- Lines: 418 to 420
 function LocalizationManager:set_input_translation(button_name, translation)
 	self._input_translations[button_name] = translation
 end

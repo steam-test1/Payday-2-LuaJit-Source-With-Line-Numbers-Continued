@@ -178,7 +178,7 @@ function PlayerBase:set_enabled(enabled)
 	self._unit:set_extension_update_enabled(Idstring("movement"), enabled)
 end
 
--- Lines: 179 to 187
+-- Lines: 179 to 194
 function PlayerBase:set_visible(visible)
 	self._unit:set_visible(visible)
 	self._unit:camera():camera_unit():set_visible(visible)
@@ -190,7 +190,7 @@ function PlayerBase:set_visible(visible)
 	end
 end
 
--- Lines: 191 to 220
+-- Lines: 198 to 227
 function PlayerBase:_setup_hud()
 	if not managers.hud:exists(self.PLAYER_HUD) then
 		managers.hud:load_hud(self.PLAYER_HUD, false, false, true, {})
@@ -201,11 +201,11 @@ function PlayerBase:_setup_hud()
 	end
 end
 
--- Lines: 224 to 225
+-- Lines: 231 to 232
 function PlayerBase:_equip_default_weapon()
 end
 
--- Lines: 229 to 233
+-- Lines: 236 to 240
 function PlayerBase:_setup_controller()
 	self._controller = managers.controller:create_controller("player_" .. tostring(self._id), nil, false)
 
@@ -213,17 +213,17 @@ function PlayerBase:_setup_controller()
 	managers.controller:set_ingame_mode("main")
 end
 
--- Lines: 237 to 238
+-- Lines: 244 to 245
 function PlayerBase:id()
 	return self._id
 end
 
--- Lines: 243 to 244
+-- Lines: 250 to 251
 function PlayerBase:nick_name()
 	return managers.network:session():local_peer():name()
 end
 
--- Lines: 249 to 262
+-- Lines: 256 to 269
 function PlayerBase:set_controller_enabled(enabled)
 	if not self._controller then
 		return
@@ -242,13 +242,13 @@ function PlayerBase:set_controller_enabled(enabled)
 	end
 end
 
--- Lines: 264 to 265
+-- Lines: 271 to 272
 function PlayerBase:controller()
 	return self._controller
 end
 local on_ladder_footstep_material = Idstring("steel")
 
--- Lines: 272 to 303
+-- Lines: 279 to 310
 function PlayerBase:anim_data_clbk_footstep(foot)
 	local obj = self._unit:orientation_object()
 	local proj_dir = math.UP
@@ -265,12 +265,12 @@ function PlayerBase:anim_data_clbk_footstep(foot)
 	self._unit:sound():play_footstep(foot, material_name)
 end
 
--- Lines: 307 to 308
+-- Lines: 314 to 315
 function PlayerBase:get_rumble_position()
 	return self._unit:position() + math.UP * 100
 end
 
--- Lines: 314 to 326
+-- Lines: 321 to 333
 function PlayerBase:replenish()
 	for id, weapon in pairs(self._unit:inventory():available_selections()) do
 		if alive(weapon.unit) then
@@ -282,17 +282,17 @@ function PlayerBase:replenish()
 	self._unit:character_damage():replenish()
 end
 
--- Lines: 330 to 331
+-- Lines: 337 to 338
 function PlayerBase:suspicion_settings()
 	return self._suspicion_settings
 end
 
--- Lines: 336 to 337
+-- Lines: 343 to 344
 function PlayerBase:detection_settings()
 	return self._detection_settings
 end
 
--- Lines: 342 to 356
+-- Lines: 349 to 363
 function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.multipliers[reason] = multiplier
 	local buildup_mul = self._suspicion_settings.init_buildup_mul
@@ -310,7 +310,7 @@ function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.range_mul = range_mul
 end
 
--- Lines: 360 to 371
+-- Lines: 367 to 378
 function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.multipliers[reason] = multiplier
 	local delay_mul = self._detection_settings.init_delay_mul
@@ -325,12 +325,12 @@ function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.range_mul = range_mul
 end
 
--- Lines: 375 to 376
+-- Lines: 382 to 383
 function PlayerBase:arrest_settings()
 	return tweak_data.player.arrest
 end
 
--- Lines: 381 to 388
+-- Lines: 388 to 395
 function PlayerBase:_unregister()
 	if not self._unregistered then
 		self._unit:movement():attention_handler():set_attention(nil)
@@ -340,7 +340,7 @@ function PlayerBase:_unregister()
 	end
 end
 
--- Lines: 392 to 418
+-- Lines: 399 to 425
 function PlayerBase:pre_destroy(unit)
 	self:_unregister()
 	UnitBase.pre_destroy(self, unit)
@@ -373,12 +373,12 @@ function PlayerBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
--- Lines: 426 to 427
+-- Lines: 433 to 434
 function PlayerBase:upgrade_value(category, upgrade)
 	return managers.player:upgrade_value_nil(category, upgrade)
 end
 
--- Lines: 430 to 431
+-- Lines: 437 to 438
 function PlayerBase:upgrade_level(category, upgrade)
 	return managers.player:upgrade_level_nil(category, upgrade)
 end

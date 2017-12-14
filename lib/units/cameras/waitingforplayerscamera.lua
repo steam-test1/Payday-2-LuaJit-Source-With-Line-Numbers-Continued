@@ -34,7 +34,7 @@ function WaitingForPlayersCamera:_setup_sound_listener()
 	})
 end
 
--- Lines: 36 to 43
+-- Lines: 41 to 48
 function WaitingForPlayersCamera:start(time)
 	self._playing = true
 
@@ -44,7 +44,7 @@ function WaitingForPlayersCamera:start(time)
 	self._viewport:set_active(true)
 end
 
--- Lines: 45 to 51
+-- Lines: 50 to 56
 function WaitingForPlayersCamera:stop()
 	self._viewport:set_active(false)
 	self._unit:anim_stop(Idstring("camera_animation"))
@@ -53,7 +53,7 @@ function WaitingForPlayersCamera:stop()
 	self._playing = false
 end
 
--- Lines: 53 to 65
+-- Lines: 58 to 70
 function WaitingForPlayersCamera:update(unit, t, dt)
 	if self._playing then
 		if self._wait_t then
@@ -68,7 +68,7 @@ function WaitingForPlayersCamera:update(unit, t, dt)
 	end
 end
 
--- Lines: 67 to 84
+-- Lines: 72 to 89
 function WaitingForPlayersCamera:destroy()
 	if self._viewport then
 		self._viewport:destroy()

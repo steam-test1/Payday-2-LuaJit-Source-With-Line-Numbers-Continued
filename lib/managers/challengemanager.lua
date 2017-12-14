@@ -325,26 +325,26 @@ function ChallengeManager:_check_challenge_completed(id, key)
 	return false
 end
 
--- Lines: 361 to 362
+-- Lines: 364 to 365
 function ChallengeManager:can_progress_challenges()
 	return true
 end
 
--- Lines: 365 to 369
+-- Lines: 368 to 372
 function ChallengeManager:award(id)
 	if self:can_progress_challenges() then
 		self:on_achievement_awarded(id)
 	end
 end
 
--- Lines: 371 to 375
+-- Lines: 374 to 378
 function ChallengeManager:award_progress(progress_id, amount)
 	if self:can_progress_challenges() then
 		self:on_achievement_progressed(progress_id, amount)
 	end
 end
 
--- Lines: 377 to 392
+-- Lines: 380 to 395
 function ChallengeManager:on_achievement_awarded(id)
 	if not self._global.validated then
 		return
@@ -364,7 +364,7 @@ function ChallengeManager:on_achievement_awarded(id)
 	end
 end
 
--- Lines: 394 to 410
+-- Lines: 397 to 413
 function ChallengeManager:on_achievement_progressed(progress_id, amount)
 	if not self._global.validated then
 		return
@@ -384,28 +384,28 @@ function ChallengeManager:on_achievement_progressed(progress_id, amount)
 	end
 end
 
--- Lines: 412 to 414
+-- Lines: 415 to 417
 function ChallengeManager:can_give_reward(id, key)
 	local active_challenge = self:get_active_challenge(id, key)
 
 	return self._global.validated and active_challenge and active_challenge.completed and not active_challenge.rewarded and true or false
 end
 
--- Lines: 417 to 419
+-- Lines: 420 to 422
 function ChallengeManager:is_challenge_rewarded(id, key)
 	local active_challenge = self:get_active_challenge(id, key)
 
 	return active_challenge and active_challenge.rewarded and true or false
 end
 
--- Lines: 422 to 424
+-- Lines: 425 to 427
 function ChallengeManager:is_challenge_completed(id, key)
 	local active_challenge = self:get_active_challenge(id, key)
 
 	return active_challenge and active_challenge.completed and true or false
 end
 
--- Lines: 427 to 432
+-- Lines: 430 to 435
 function ChallengeManager:any_challenge_completed()
 	if self._any_challenge_completed then
 		self._any_challenge_completed = nil
@@ -414,7 +414,7 @@ function ChallengeManager:any_challenge_completed()
 	end
 end
 
--- Lines: 434 to 439
+-- Lines: 437 to 442
 function ChallengeManager:any_challenge_rewarded()
 	if self._any_challenge_rewarded then
 		self._any_challenge_rewarded = nil
@@ -423,7 +423,7 @@ function ChallengeManager:any_challenge_rewarded()
 	end
 end
 
--- Lines: 441 to 453
+-- Lines: 444 to 456
 function ChallengeManager:is_choose_weapon_unrewarded(id, key, reward_index)
 	if not self._global.validated then
 		return
@@ -442,7 +442,7 @@ function ChallengeManager:is_choose_weapon_unrewarded(id, key, reward_index)
 	return false
 end
 
--- Lines: 456 to 482
+-- Lines: 459 to 485
 function ChallengeManager:on_give_reward(id, key, reward_index)
 	if not self._global.validated then
 		return
@@ -476,7 +476,7 @@ function ChallengeManager:on_give_reward(id, key, reward_index)
 	end
 end
 
--- Lines: 484 to 510
+-- Lines: 487 to 513
 function ChallengeManager:set_as_rewarded(id, key, reward_index)
 	if not self._global.validated then
 		return
@@ -510,7 +510,7 @@ function ChallengeManager:set_as_rewarded(id, key, reward_index)
 	end
 end
 
--- Lines: 512 to 528
+-- Lines: 515 to 531
 function ChallengeManager:on_give_all_rewards(id, key)
 	if not self._global.validated then
 		return
@@ -532,7 +532,7 @@ function ChallengeManager:on_give_all_rewards(id, key)
 	end
 end
 
--- Lines: 530 to 595
+-- Lines: 533 to 598
 function ChallengeManager:_give_reward(challenge, reward)
 	if not challenge or reward.rewarded then
 		return reward
@@ -605,7 +605,7 @@ function ChallengeManager:_give_reward(challenge, reward)
 	return reward
 end
 
--- Lines: 617 to 642
+-- Lines: 620 to 645
 function ChallengeManager:save(data)
 	Application:debug("[ChallengeManager:save]")
 
@@ -621,7 +621,7 @@ function ChallengeManager:save(data)
 	data.ChallengeManager = save_data
 end
 
--- Lines: 644 to 668
+-- Lines: 647 to 671
 function ChallengeManager:load(data, version)
 	Application:debug("[ChallengeManager:load]")
 
@@ -649,19 +649,19 @@ function ChallengeManager:load(data, version)
 	end
 end
 
--- Lines: 670 to 673
+-- Lines: 673 to 676
 function ChallengeManager:_load_done()
 	self._load_done = true
 
 	self:fetch_challenges()
 end
 
--- Lines: 675 to 676
+-- Lines: 678 to 679
 function ChallengeManager:mission_value(variable)
 	return self._global.mission_values and self._global.mission_values[variable]
 end
 
--- Lines: 679 to 685
+-- Lines: 682 to 688
 function ChallengeManager:mission_set_value(variable, activated)
 	self._global.mission_values = self._global.mission_values or {}
 
@@ -670,7 +670,7 @@ function ChallengeManager:mission_set_value(variable, activated)
 	end
 end
 
--- Lines: 690 to 750
+-- Lines: 693 to 753
 function ChallengeManager:check_equipped_outfit(equip_data, outfit, character)
 	local pass_armor, pass_deployable, pass_mask, pass_melee_weapon, pass_primary, pass_secondary, pass_primaries, pass_secondaries, pass_primary_unmodded, pass_secondary_unmodded, pass_skills, pass_melee_weapons, pass_primary_category, pass_secondary_category, pass_masks, pass_armors, pass_characters, pass_detection, pass_perk_deck, pass_grenade, pass_single_deployable, pass_weapons = nil
 	local ad = equip_data
@@ -722,7 +722,7 @@ function ChallengeManager:check_equipped_outfit(equip_data, outfit, character)
 	return pass_armor and pass_armors and pass_deployable and pass_mask and pass_masks and pass_melee_weapon and pass_primary and pass_secondary and pass_primaries and pass_secondaries and pass_primary_unmodded and pass_secondary_unmodded and pass_skills and pass_melee_weapons and pass_characters and pass_primary_category and pass_secondary_category and pass_detection and pass_grenade and pass_perk_deck and pass_single_deployable and pass_weapons
 end
 
--- Lines: 755 to 769
+-- Lines: 758 to 772
 function ChallengeManager:check_equipped_team(achievement_data)
 	if achievement_data.equipped_team then
 		local ad = achievement_data.equipped_team
@@ -738,7 +738,7 @@ function ChallengeManager:check_equipped_team(achievement_data)
 	return true
 end
 
--- Lines: 773 to 778
+-- Lines: 776 to 781
 function ChallengeManager:check_equipped(achievement_data)
 	if achievement_data.equipped_outfit then
 		local peer = managers.network:session():local_peer()

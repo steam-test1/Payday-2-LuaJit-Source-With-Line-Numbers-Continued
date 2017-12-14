@@ -26,8 +26,8 @@ function BoxGuiObject:create_sides(panel, config)
 
 	self._panel = panel:panel({
 		layer = 1,
-		halign = "grow",
-		valign = "grow",
+		halign = "scale",
+		valign = "scale",
 		name = config.name,
 		w = config.w,
 		h = config.h
@@ -44,7 +44,7 @@ function BoxGuiObject:create_sides(panel, config)
 	self:_create_side(self._panel, "bottom", bottom_side, config.texture)
 end
 
--- Lines: 37 to 150
+-- Lines: 37 to 166
 function BoxGuiObject:_create_side(panel, side, type, texture)
 	local ids_side = Idstring(side)
 	local ids_left = Idstring("left")
@@ -64,34 +64,28 @@ function BoxGuiObject:_create_side(panel, side, type, texture)
 	end
 
 	local side_panel = panel:panel({
-		halign = "grow",
-		valign = "grow",
 		name = side,
 		w = w,
-		h = h
+		h = h,
+		halign = left_or_right and side or "scale",
+		valign = left_or_right and "scale" or side
 	})
 
 	if type == 0 then
 		return
 	elseif type == 1 or type == 3 or type == 4 then
-		local one = side_panel:bitmap({
-			valign = "grow",
-			wrap_mode = "wrap",
-			halign = "grow",
-			texture = texture or "guis/textures/pd2/shared_lines"
-		})
-		local two = side_panel:bitmap({
-			valign = "grow",
-			wrap_mode = "wrap",
-			halign = "grow",
-			texture = texture or "guis/textures/pd2/shared_lines"
-		})
+		local one = side_panel:bitmap({texture = texture or "guis/textures/pd2/shared_lines"})
+		local two = side_panel:bitmap({texture = texture or "guis/textures/pd2/shared_lines"})
 		local x = math.random(1, 255)
 		local y = math.random(0, one:texture_height() / 2 - 1) * 2
 		local tw = math.min(10, w)
 		local th = math.min(10, h)
 
 		if left_or_right then
+			one:set_halign(side)
+			two:set_halign(side)
+			one:set_valign("scale")
+			two:set_valign("scale")
 			mvector3.set_static(mvector_tl, x, y + tw, 0)
 			mvector3.set_static(mvector_tr, x, y, 0)
 			mvector3.set_static(mvector_bl, x + th, y + tw, 0)
@@ -110,6 +104,10 @@ function BoxGuiObject:_create_side(panel, side, type, texture)
 			two:set_size(2, th)
 			two:set_bottom(h)
 		else
+			one:set_halign("scale")
+			two:set_halign("scale")
+			one:set_valign(side)
+			two:set_valign(side)
 			mvector3.set_static(mvector_tl, x, y, 0)
 			mvector3.set_static(mvector_tr, x + tw, y, 0)
 			mvector3.set_static(mvector_bl, x, y + th, 0)
@@ -133,9 +131,6 @@ function BoxGuiObject:_create_side(panel, side, type, texture)
 		two:set_visible(type == 1 or type == 4)
 	elseif type == 2 then
 		local full = side_panel:bitmap({
-			valign = "grow",
-			halign = "grow",
-			wrap_mode = "wrap",
 			texture = texture or "guis/textures/pd2/shared_lines",
 			w = side_panel:w(),
 			h = side_panel:h()
@@ -144,12 +139,16 @@ function BoxGuiObject:_create_side(panel, side, type, texture)
 		local y = math.random(0, math.round(full:texture_height() / 2 - 1)) * 2
 
 		if left_or_right then
+			full:set_halign(side)
+			full:set_valign("scale")
 			mvector3.set_static(mvector_tl, x, y + w, 0)
 			mvector3.set_static(mvector_tr, x, y, 0)
 			mvector3.set_static(mvector_bl, x + h, y + w, 0)
 			mvector3.set_static(mvector_br, x + h, y, 0)
 			full:set_texture_coordinates(mvector_tl, mvector_tr, mvector_bl, mvector_br)
 		else
+			full:set_halign("scale")
+			full:set_valign(side)
 			mvector3.set_static(mvector_tl, x, y, 0)
 			mvector3.set_static(mvector_tr, x + w, y, 0)
 			mvector3.set_static(mvector_bl, x, y + h, 0)
@@ -174,42 +173,42 @@ function BoxGuiObject:_create_side(panel, side, type, texture)
 	return side_panel
 end
 
--- Lines: 153 to 156
+-- Lines: 169 to 172
 function BoxGuiObject:hide()
 	self._panel:hide()
 end
 
--- Lines: 158 to 161
+-- Lines: 174 to 177
 function BoxGuiObject:show()
 	self._panel:show()
 end
 
--- Lines: 163 to 166
+-- Lines: 179 to 182
 function BoxGuiObject:set_visible(visible)
 	self._panel:set_visible(visible)
 end
 
--- Lines: 168 to 169
+-- Lines: 184 to 185
 function BoxGuiObject:visible()
 	return self._panel:visible()
 end
 
--- Lines: 172 to 174
+-- Lines: 188 to 190
 function BoxGuiObject:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines: 176 to 177
+-- Lines: 192 to 193
 function BoxGuiObject:size()
 	return self._panel:size()
 end
 
--- Lines: 180 to 181
+-- Lines: 196 to 197
 function BoxGuiObject:alive()
 	return alive(self._panel)
 end
 
--- Lines: 184 to 194
+-- Lines: 200 to 210
 function BoxGuiObject:inside(x, y, side)
 	if not self:alive() then
 		return false
@@ -222,7 +221,7 @@ function BoxGuiObject:inside(x, y, side)
 	end
 end
 
--- Lines: 196 to 201
+-- Lines: 212 to 217
 function BoxGuiObject:set_aligns(halign, valign)
 	for i, d in pairs(self._panel:children()) do
 		d:set_valign(valign)
@@ -230,7 +229,7 @@ function BoxGuiObject:set_aligns(halign, valign)
 	end
 end
 
--- Lines: 203 to 211
+-- Lines: 219 to 227
 function BoxGuiObject:set_clipping(clip, rec_panel)
 	for i, d in pairs(rec_panel and rec_panel:children() or self._panel:children()) do
 		if d.set_rotation then
@@ -241,12 +240,12 @@ function BoxGuiObject:set_clipping(clip, rec_panel)
 	end
 end
 
--- Lines: 213 to 214
+-- Lines: 229 to 230
 function BoxGuiObject:color()
 	return self._color
 end
 
--- Lines: 217 to 226
+-- Lines: 233 to 242
 function BoxGuiObject:set_color(color, rec_panel)
 	self._color = color
 
@@ -259,12 +258,12 @@ function BoxGuiObject:set_color(color, rec_panel)
 	end
 end
 
--- Lines: 228 to 229
+-- Lines: 244 to 245
 function BoxGuiObject:blend_mode()
 	return self._blend_mode
 end
 
--- Lines: 232 to 241
+-- Lines: 248 to 257
 function BoxGuiObject:set_blend_mode(blend_mode, rec_panel)
 	self._blend_mode = blend_mode
 
@@ -277,7 +276,7 @@ function BoxGuiObject:set_blend_mode(blend_mode, rec_panel)
 	end
 end
 
--- Lines: 243 to 247
+-- Lines: 259 to 263
 function BoxGuiObject:close()
 	if alive(self._panel) and alive(self._panel:parent()) then
 		self._panel:parent():remove(self._panel)

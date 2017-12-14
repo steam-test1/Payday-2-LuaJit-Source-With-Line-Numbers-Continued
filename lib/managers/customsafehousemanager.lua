@@ -556,7 +556,7 @@ CustomSafehouseManager._mutator_achievement_categories = {
 	"enemy_melee_kill_achievements"
 }
 
--- Lines: 556 to 580
+-- Lines: 560 to 584
 function CustomSafehouseManager:can_progress_trophies(id)
 	if not self:unlocked() then
 		return false
@@ -581,34 +581,34 @@ function CustomSafehouseManager:can_progress_trophies(id)
 	return true
 end
 
--- Lines: 583 to 586
+-- Lines: 587 to 590
 function CustomSafehouseManager:award(id)
 	self:on_achievement_awarded(id)
 	self:on_achievement_progressed(id, 1)
 end
 
--- Lines: 588 to 591
+-- Lines: 592 to 595
 function CustomSafehouseManager:award_progress(id, amount)
 	amount = amount or 1
 
 	self:on_achievement_progressed(id, amount)
 end
 
--- Lines: 593 to 597
+-- Lines: 597 to 601
 function CustomSafehouseManager:on_achievement_awarded(id)
 	if self:can_progress_trophies(id) then
 		self:update_progress("achievement_id", id)
 	end
 end
 
--- Lines: 599 to 603
+-- Lines: 603 to 607
 function CustomSafehouseManager:on_achievement_progressed(progress_id, amount)
 	if self:can_progress_trophies(progress_id) then
 		self:update_progress("progress_id", progress_id, amount)
 	end
 end
 
--- Lines: 605 to 620
+-- Lines: 609 to 624
 function CustomSafehouseManager:update_progress(key, id, amount)
 	if self:can_progress_trophies(id) then
 		amount = amount or 1
@@ -621,7 +621,7 @@ function CustomSafehouseManager:update_progress(key, id, amount)
 	end
 end
 
--- Lines: 623 to 656
+-- Lines: 627 to 660
 function CustomSafehouseManager:_update_trophy_progress(trophy, key, id, amount, complete_func)
 	for obj_idx, objective in ipairs(trophy.objectives) do
 		if not objective.completed and objective[key] == id then
@@ -657,7 +657,7 @@ function CustomSafehouseManager:_update_trophy_progress(trophy, key, id, amount,
 	end
 end
 
--- Lines: 658 to 669
+-- Lines: 662 to 673
 function CustomSafehouseManager:complete_trophy(trophy_or_id)
 	local trophy = type(trophy_or_id) == "table" and trophy_or_id or self:get_trophy(trophy_or_id)
 
@@ -676,7 +676,7 @@ function CustomSafehouseManager:complete_trophy(trophy_or_id)
 	end
 end
 
--- Lines: 672 to 691
+-- Lines: 676 to 695
 function CustomSafehouseManager:add_completed_trophy(trophy, trophy_type)
 	if trophy.hidden_in_list then
 		return
@@ -699,14 +699,14 @@ function CustomSafehouseManager:add_completed_trophy(trophy, trophy_type)
 	table.insert(self._global.completed_trophies, completed_data)
 end
 
--- Lines: 693 to 695
+-- Lines: 697 to 699
 function CustomSafehouseManager:completed_any_trophies()
 	self._completed_trophies = self._completed_trophies or {}
 
 	return #self._global.completed_trophies > 0 or #self._completed_trophies > 0
 end
 
--- Lines: 698 to 705
+-- Lines: 702 to 709
 function CustomSafehouseManager:completed_trophies()
 	self._completed_trophies = self._completed_trophies or {}
 
@@ -719,7 +719,7 @@ function CustomSafehouseManager:completed_trophies()
 	return self._completed_trophies
 end
 
--- Lines: 708 to 710
+-- Lines: 712 to 714
 function CustomSafehouseManager:flush_completed_trophies()
 	self._global.completed_trophies = {}
 end
@@ -732,17 +732,17 @@ CustomSafehouseManager.DAILY_STATES = {
 }
 CustomSafehouseManager.get_timestamp = ChallengeManager.get_timestamp
 
--- Lines: 724 to 725
+-- Lines: 728 to 729
 function CustomSafehouseManager:get_daily_challenge()
 	return self._global.daily
 end
 
--- Lines: 728 to 729
+-- Lines: 732 to 733
 function CustomSafehouseManager:_get_daily_state()
 	return self._global.daily.state
 end
 
--- Lines: 732 to 738
+-- Lines: 736 to 742
 function CustomSafehouseManager:_set_daily_state(new_state)
 	if table.contains(CustomSafehouseManager.DAILY_STATES, new_state) then
 		self._global.daily.state = new_state
@@ -751,17 +751,17 @@ function CustomSafehouseManager:_set_daily_state(new_state)
 	end
 end
 
--- Lines: 740 to 741
+-- Lines: 744 to 745
 function CustomSafehouseManager:is_daily_new()
 	return self:_get_daily_state() == "unstarted"
 end
 
--- Lines: 744 to 745
+-- Lines: 748 to 749
 function CustomSafehouseManager:has_daily_been_accepted_from_heister()
 	return self:_get_daily_state() ~= "unstarted" and self:_get_daily_state() ~= "seen"
 end
 
--- Lines: 748 to 763
+-- Lines: 752 to 767
 function CustomSafehouseManager:has_completed_daily()
 	local complete = self:_get_daily_state() == "completed"
 
@@ -784,7 +784,7 @@ function CustomSafehouseManager:has_completed_daily()
 	return complete
 end
 
--- Lines: 766 to 773
+-- Lines: 770 to 777
 function CustomSafehouseManager:has_rewarded_daily()
 	local is_just_completed = false
 
@@ -797,7 +797,7 @@ function CustomSafehouseManager:has_rewarded_daily()
 	return self:_get_daily_state() == "rewarded" and not is_just_completed
 end
 
--- Lines: 777 to 783
+-- Lines: 781 to 787
 function CustomSafehouseManager:mark_daily_as_seen()
 	if not self:has_daily_been_accepted_from_heister() then
 		print("CustomSafehouseManager:mark_daily_as_seen()")
@@ -805,7 +805,7 @@ function CustomSafehouseManager:mark_daily_as_seen()
 	end
 end
 
--- Lines: 786 to 792
+-- Lines: 790 to 796
 function CustomSafehouseManager:accept_daily()
 	if not self:has_daily_been_accepted_from_heister() then
 		print("CustomSafehouseManager:accept_daily()")
@@ -813,7 +813,7 @@ function CustomSafehouseManager:accept_daily()
 	end
 end
 
--- Lines: 794 to 811
+-- Lines: 798 to 815
 function CustomSafehouseManager:complete_daily()
 	if not self:unlocked() then
 		return
@@ -839,7 +839,7 @@ function CustomSafehouseManager:complete_daily()
 	end
 end
 
--- Lines: 813 to 823
+-- Lines: 817 to 827
 function CustomSafehouseManager:reward_daily()
 	if self._global.daily.trophy.completed and not self._global.daily.trophy.rewarded then
 		self:add_completed_trophy(self._global.daily.trophy, "daily")
@@ -854,7 +854,7 @@ function CustomSafehouseManager:reward_daily()
 	end
 end
 
--- Lines: 825 to 830
+-- Lines: 829 to 834
 function CustomSafehouseManager:complete_and_reward_daily()
 	if not self._global.daily.trophy.completed then
 		self:complete_daily()
@@ -862,7 +862,7 @@ function CustomSafehouseManager:complete_and_reward_daily()
 	end
 end
 
--- Lines: 834 to 856
+-- Lines: 838 to 860
 function CustomSafehouseManager:_get_random_daily()
 	local selector = WeightedSelector:new()
 
@@ -889,7 +889,7 @@ function CustomSafehouseManager:_get_random_daily()
 	return nil, contractor
 end
 
--- Lines: 862 to 871
+-- Lines: 866 to 875
 function CustomSafehouseManager:set_active_daily(id)
 	if tweak_data.safehouse.daily_redirects[id] then
 		id = tweak_data.safehouse.daily_redirects[id]
@@ -902,7 +902,7 @@ function CustomSafehouseManager:set_active_daily(id)
 	end
 end
 
--- Lines: 873 to 911
+-- Lines: 877 to 915
 function CustomSafehouseManager:generate_daily(id, tag)
 	local daily, contractor = self:_get_random_daily()
 
@@ -946,7 +946,7 @@ function CustomSafehouseManager:generate_daily(id, tag)
 	end
 end
 
--- Lines: 920 to 925
+-- Lines: 924 to 929
 function CustomSafehouseManager:check_if_new_daily_available()
 	local generate_new = self:interval_til_new_daily() < self:get_timestamp() - Global.custom_safehouse_manager.daily.timestamp
 
@@ -957,17 +957,17 @@ function CustomSafehouseManager:check_if_new_daily_available()
 	return generate_new
 end
 
--- Lines: 930 to 931
+-- Lines: 934 to 935
 function CustomSafehouseManager:daily_challenge_interval()
 	return 23
 end
 
--- Lines: 935 to 936
+-- Lines: 939 to 940
 function CustomSafehouseManager:interval_til_new_daily()
 	return Global.custom_safehouse_manager.daily.state == "rewarded" and 16 or self:daily_challenge_interval()
 end
 
--- Lines: 941 to 949
+-- Lines: 945 to 953
 function CustomSafehouseManager:enable_in_game_menu(skip_safehouse_menu)
 	self._should_enable_hud = not Global.hud_disabled
 
@@ -979,7 +979,7 @@ function CustomSafehouseManager:enable_in_game_menu(skip_safehouse_menu)
 	end
 end
 
--- Lines: 951 to 964
+-- Lines: 955 to 968
 function CustomSafehouseManager:disable_in_game_menu()
 	if self._should_enable_hud then
 		managers.hud:set_enabled()
@@ -994,7 +994,7 @@ function CustomSafehouseManager:disable_in_game_menu()
 	end
 end
 
--- Lines: 967 to 975
+-- Lines: 971 to 979
 function CustomSafehouseManager:open_in_game_loadout(category)
 	if not managers.menu:active_menu() or managers.menu:active_menu().name ~= "custom_safehouse_menu" then
 		self:enable_in_game_menu(true)
@@ -1005,24 +1005,24 @@ function CustomSafehouseManager:open_in_game_loadout(category)
 	managers.menu:open_node("loadout_" .. category)
 end
 
--- Lines: 977 to 979
+-- Lines: 981 to 983
 function CustomSafehouseManager:register_equipped_weapon(data)
 	self._equip_data = data
 end
 
--- Lines: 984 to 986
+-- Lines: 988 to 990
 function CustomSafehouseManager:_on_enter_safe_house()
 	self._global._has_entered_safehouse = true
 end
 
--- Lines: 997 to 1001
+-- Lines: 1001 to 1005
 function CustomSafehouseManager:_on_heist_completed(job_id)
 	if job_id == "chill_combat" and (Network:is_server() or Global.game_settings.single_player) then
 		self:_set_safehouse_cooldown()
 	end
 end
 
--- Lines: 1003 to 1009
+-- Lines: 1007 to 1013
 function CustomSafehouseManager:is_being_raided()
 	if not self:unlocked() or not self:has_entered_safehouse() then
 		return false
@@ -1033,7 +1033,7 @@ function CustomSafehouseManager:is_being_raided()
 	return self.SPAWN_COOLDOWN <= server_time - (self._global._spawn_cooldown or 0)
 end
 
--- Lines: 1014 to 1034
+-- Lines: 1018 to 1038
 function CustomSafehouseManager:tick_safehouse_spawn()
 	if not self:unlocked() then
 		return
@@ -1052,17 +1052,17 @@ function CustomSafehouseManager:tick_safehouse_spawn()
 	end
 end
 
--- Lines: 1036 to 1038
+-- Lines: 1040 to 1042
 function CustomSafehouseManager:on_exit_crimenet()
 	self._has_spawned_safehouse_contract = false
 end
 
--- Lines: 1041 to 1043
+-- Lines: 1045 to 1047
 function CustomSafehouseManager:_set_safehouse_cooldown()
 	self._global._spawn_cooldown = Steam:server_time()
 end
 
--- Lines: 1046 to 1053
+-- Lines: 1050 to 1057
 function CustomSafehouseManager:ignore_raid()
 	self:remove_combat_contract()
 	self:spawn_safehouse_contract()
@@ -1070,7 +1070,7 @@ function CustomSafehouseManager:ignore_raid()
 	self._global._spawn_cooldown = Steam:server_time() - (self.SPAWN_COOLDOWN - self.IGNORE_SPAWN_COOLDOWN)
 end
 
--- Lines: 1055 to 1060
+-- Lines: 1059 to 1064
 function CustomSafehouseManager:_get_server_time()
 	self._tick = self._tick and self._tick + 1 or 0
 
@@ -1081,16 +1081,16 @@ function CustomSafehouseManager:_get_server_time()
 	return self._server_time_cache or 0
 end
 
--- Lines: 1066 to 1094
+-- Lines: 1070 to 1098
 function CustomSafehouseManager:spawn_safehouse_contract()
 	self._has_spawned_safehouse_contract = true
 end
 
--- Lines: 1126 to 1127
+-- Lines: 1130 to 1131
 function CustomSafehouseManager:spawn_safehouse_combat_contract()
 end
 
--- Lines: 1129 to 1134
+-- Lines: 1133 to 1138
 function CustomSafehouseManager:remove_combat_contract()
 	if managers.menu_component._crimenet_gui then
 		managers.menu_component._crimenet_gui:remove_job("safehouse_combat", true)
@@ -1099,12 +1099,12 @@ function CustomSafehouseManager:remove_combat_contract()
 	end
 end
 
--- Lines: 1136 to 1137
+-- Lines: 1140 to 1141
 function CustomSafehouseManager:has_entered_safehouse()
 	return self._global._has_entered_safehouse
 end
 
--- Lines: 1140 to 1141
+-- Lines: 1144 to 1145
 function CustomSafehouseManager:is_new_player()
 	return self._global._new_player
 end

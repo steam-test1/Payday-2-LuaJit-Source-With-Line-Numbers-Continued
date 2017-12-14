@@ -512,7 +512,7 @@ function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_i
 	end
 end
 
--- Lines: 520 to 540
+-- Lines: 520 to 544
 function NetworkManager:host_game()
 	self:stop_network(true)
 	self:start_network()
@@ -530,7 +530,7 @@ function NetworkManager:host_game()
 	end
 end
 
--- Lines: 544 to 551
+-- Lines: 548 to 555
 function NetworkManager:join_game_at_host_rpc(host_rpc, result_cb)
 	self._discover_hosts_cb = nil
 
@@ -541,7 +541,7 @@ function NetworkManager:join_game_at_host_rpc(host_rpc, result_cb)
 	end
 end
 
--- Lines: 555 to 558
+-- Lines: 559 to 562
 function NetworkManager:register_spawn_point(id, data)
 	local runtime_data = {
 		pos_rot = {
@@ -553,27 +553,27 @@ function NetworkManager:register_spawn_point(id, data)
 	self._spawn_points[id] = runtime_data
 end
 
--- Lines: 562 to 564
+-- Lines: 566 to 568
 function NetworkManager:unregister_spawn_point(id)
 	self._spawn_points[id] = nil
 end
 
--- Lines: 568 to 570
+-- Lines: 572 to 574
 function NetworkManager:unregister_all_spawn_points()
 	self._spawn_points = {}
 end
 
--- Lines: 574 to 575
+-- Lines: 578 to 579
 function NetworkManager:has_spawn_points()
 	return next(self._spawn_points)
 end
 
--- Lines: 580 to 581
+-- Lines: 584 to 585
 function NetworkManager:spawn_point(sp_id)
 	return self._spawn_points[sp_id]
 end
 
--- Lines: 586 to 610
+-- Lines: 590 to 614
 function NetworkManager:_register_PSN_matchmaking_callbacks()
 	local gen_clbk = callback(self, self, "clbk_PSN_event")
 
@@ -601,12 +601,12 @@ function NetworkManager:_register_PSN_matchmaking_callbacks()
 	PSN:set_matchmaking_callback("error", gen_clbk)
 end
 
--- Lines: 614 to 616
+-- Lines: 618 to 620
 function NetworkManager:clbk_PSN_event(...)
 	print("[NetworkManager:clbk_PSN_event]", inspect(...))
 end
 
--- Lines: 620 to 628
+-- Lines: 624 to 632
 function NetworkManager:search_ses()
 	PSN:set_matchmaking_callback("session_search", callback(self, self, "clbk_search_session"))
 
@@ -618,7 +618,7 @@ function NetworkManager:search_ses()
 	PSN:search_session(search_params, {}, PSN:get_world_list()[1].world_id)
 end
 
--- Lines: 632 to 637
+-- Lines: 636 to 641
 function NetworkManager:clbk_search_session(search_results)
 	print("[NetworkManager:clbk_search_session]", search_results)
 
@@ -627,7 +627,7 @@ function NetworkManager:clbk_search_session(search_results)
 	end
 end
 
--- Lines: 641 to 652
+-- Lines: 645 to 656
 function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	if msg_queue then
 		if overwrite_data.index then
@@ -642,19 +642,19 @@ function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	end
 end
 
--- Lines: 656 to 657
+-- Lines: 660 to 661
 function NetworkManager:protocol_type()
 	return self.PROTOCOL_TYPE
 end
 
--- Lines: 662 to 666
+-- Lines: 666 to 670
 function NetworkManager:set_packet_throttling_enabled(state)
 	if self._session and self._is_win32 then
 		self._session:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines: 670 to 694
+-- Lines: 674 to 698
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 

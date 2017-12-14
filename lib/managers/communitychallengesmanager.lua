@@ -19,7 +19,7 @@ function CommunityChallengesManager:update(t, dt)
 	self._message_system:update()
 end
 
--- Lines: 40 to 51
+-- Lines: 40 to 56
 function CommunityChallengesManager:fetch_community_challenge_data()
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		local now = Application:time()
@@ -35,7 +35,7 @@ function CommunityChallengesManager:fetch_community_challenge_data()
 	end
 end
 
--- Lines: 53 to 106
+-- Lines: 58 to 111
 function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	if not success then
 		return
@@ -45,7 +45,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._global.active_bonus = 0
 
 
-	-- Lines: 61 to 66
+	-- Lines: 66 to 71
 	local function get_60_day_stat(stat_name)
 		local stat_value = 0
 
@@ -57,7 +57,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	end
 
 
-	-- Lines: 69 to 76
+	-- Lines: 74 to 81
 	local function better_ceil(number)
 		local mod = number % 1
 
@@ -96,22 +96,22 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._message_system:notify(Message.OnCommunityChallengeDataReceived, nil, self._global.challenge_data)
 end
 
--- Lines: 108 to 109
+-- Lines: 113 to 114
 function CommunityChallengesManager:get_challenge_data()
 	return self._global.challenge_data
 end
 
--- Lines: 112 to 113
+-- Lines: 117 to 118
 function CommunityChallengesManager:get_active_experience_bonus()
 	return self._global.active_bonus
 end
 
--- Lines: 180 to 182
+-- Lines: 185 to 187
 function CommunityChallengesManager:add_event_listener(message, uid, func)
 	self._message_system:register(message, uid, func)
 end
 
--- Lines: 184 to 186
+-- Lines: 189 to 191
 function CommunityChallengesManager:remove_event_listener(message, uid)
 	self._message_system:unregister(message, uid)
 end

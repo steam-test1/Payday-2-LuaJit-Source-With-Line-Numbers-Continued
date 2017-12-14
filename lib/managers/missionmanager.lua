@@ -114,7 +114,11 @@ require("lib/managers/mission/ElementCharacterDamage")
 require("lib/managers/mission/ElementAIForceAttention")
 require("lib/managers/mission/ElementAIForceAttentionOperator")
 require("lib/managers/mission/ElementSideJob")
+require("lib/managers/mission/ElementTeleportPlayer")
 require("lib/managers/mission/ElementHeistTimer")
+require("lib/managers/mission/ElementDropInPoint")
+require("lib/managers/mission/ElementSpawnTeamAI")
+require("lib/managers/mission/ElementArcadeState")
 require("lib/managers/mission/ElementPlayerSpawner")
 require("lib/managers/mission/ElementAreaTrigger")
 require("lib/managers/mission/ElementSpawnEnemyDummy")
@@ -127,7 +131,7 @@ require("lib/managers/mission/ElementEnvironmentOperator")
 
 MissionManager = MissionManager or class(CoreMissionManager.MissionManager)
 
--- Lines: 146 to 216
+-- Lines: 150 to 227
 function MissionManager:init(...)
 	MissionManager.super.init(self, ...)
 	self:add_area_instigator_categories("player")
@@ -147,6 +151,10 @@ function MissionManager:init(...)
 	self:add_area_instigator_categories("hostages")
 	self:add_area_instigator_categories("equipment")
 	self:add_area_instigator_categories("intimidated_enemies")
+	self:add_area_instigator_categories("player1")
+	self:add_area_instigator_categories("player2")
+	self:add_area_instigator_categories("player3")
+	self:add_area_instigator_categories("player4")
 	self:set_default_area_instigator("player")
 	self:set_global_event_list({
 		"bankmanager_key",
@@ -211,6 +219,7 @@ function MissionManager:init(...)
 		"pku_red_diamond",
 		"pku_diamond_dah",
 		"pku_blue_diamond",
+		"pku_jewelry_instant",
 		"pku_german_folder",
 		"pku_old_wine"
 	})
@@ -226,50 +235,50 @@ function MissionManager:init(...)
 	end
 end
 
--- Lines: 218 to 220
+-- Lines: 229 to 231
 function MissionManager:set_saved_job_value(key, value)
 	Global.mission_manager.saved_job_values[key] = value
 end
 
--- Lines: 222 to 223
+-- Lines: 233 to 234
 function MissionManager:get_saved_job_value(key)
 	return Global.mission_manager.saved_job_values[key]
 end
 
--- Lines: 232 to 236
+-- Lines: 243 to 247
 function MissionManager:on_reset_profile()
 	for key, value in pairs(Global.mission_manager.saved_job_values) do
 		Global.mission_manager.saved_job_values[key] = nil
 	end
 end
 
--- Lines: 238 to 241
+-- Lines: 249 to 252
 function MissionManager:set_job_value(key, value)
 	Global.mission_manager.stage_job_values[key] = value
 end
 
--- Lines: 243 to 244
+-- Lines: 254 to 255
 function MissionManager:get_job_value(key)
 	return Global.mission_manager.job_values[key] or Global.mission_manager.stage_job_values[key]
 end
 
--- Lines: 247 to 249
+-- Lines: 258 to 260
 function MissionManager:on_job_deactivated()
 	self:clear_job_values()
 end
 
--- Lines: 251 to 254
+-- Lines: 262 to 265
 function MissionManager:clear_job_values()
 	Global.mission_manager.job_values = {}
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines: 257 to 259
+-- Lines: 268 to 270
 function MissionManager:on_retry_job_stage()
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines: 262 to 267
+-- Lines: 273 to 278
 function MissionManager:on_stage_success()
 	for key, value in pairs(Global.mission_manager.stage_job_values) do
 		Global.mission_manager.job_values[key] = value
@@ -278,27 +287,27 @@ function MissionManager:on_stage_success()
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines: 269 to 271
+-- Lines: 280 to 282
 function MissionManager:set_mission_filter(mission_filter)
 	self._mission_filter = mission_filter
 end
 
--- Lines: 273 to 274
+-- Lines: 284 to 285
 function MissionManager:check_mission_filter(value)
 	return table.contains(self._mission_filter, value)
 end
 
--- Lines: 277 to 278
+-- Lines: 288 to 289
 function MissionManager:default_instigator()
 	return managers.player:player_unit()
 end
 
--- Lines: 282 to 286
+-- Lines: 293 to 297
 function MissionManager:activate_script(...)
 	MissionManager.super.activate_script(self, ...)
 end
 
--- Lines: 288 to 296
+-- Lines: 299 to 307
 function MissionManager:client_run_mission_element(id, unit, orientation_element_index)
 	for name, data in pairs(self._scripts) do
 		if data:element(id) then
@@ -310,7 +319,7 @@ function MissionManager:client_run_mission_element(id, unit, orientation_element
 	end
 end
 
--- Lines: 299 to 309
+-- Lines: 310 to 320
 function MissionManager:client_run_mission_element_end_screen(id, unit, orientation_element_index)
 	for name, data in pairs(self._scripts) do
 		if data:element(id) then
@@ -324,7 +333,7 @@ function MissionManager:client_run_mission_element_end_screen(id, unit, orientat
 	end
 end
 
--- Lines: 311 to 319
+-- Lines: 322 to 330
 function MissionManager:server_run_mission_element_trigger(id, unit)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -337,7 +346,7 @@ function MissionManager:server_run_mission_element_trigger(id, unit)
 	end
 end
 
--- Lines: 322 to 337
+-- Lines: 333 to 348
 function MissionManager:to_server_area_event(event_id, id, unit)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -356,7 +365,7 @@ function MissionManager:to_server_area_event(event_id, id, unit)
 	end
 end
 
--- Lines: 361 to 368
+-- Lines: 372 to 379
 function MissionManager:to_server_access_camera_trigger(id, trigger, instigator)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -367,7 +376,7 @@ function MissionManager:to_server_access_camera_trigger(id, trigger, instigator)
 	end
 end
 
--- Lines: 370 to 376
+-- Lines: 381 to 387
 function MissionManager:save_job_values(data)
 	local state = {
 		saved_job_values = Global.mission_manager.saved_job_values,
@@ -376,7 +385,7 @@ function MissionManager:save_job_values(data)
 	data.ProductMissionManager = state
 end
 
--- Lines: 378 to 384
+-- Lines: 389 to 395
 function MissionManager:load_job_values(data)
 	local state = data.ProductMissionManager
 
@@ -386,7 +395,7 @@ function MissionManager:load_job_values(data)
 	end
 end
 
--- Lines: 387 to 392
+-- Lines: 398 to 403
 function MissionManager:stop_simulation(...)
 	MissionManager.super.stop_simulation(self, ...)
 
@@ -396,7 +405,7 @@ function MissionManager:stop_simulation(...)
 	managers.loot:reset()
 end
 
--- Lines: 395 to 404
+-- Lines: 406 to 415
 function MissionManager:debug_execute_mission_element_by_name(name)
 	for _, data in pairs(self._scripts) do
 		for id, element in pairs(data:elements()) do
@@ -413,7 +422,7 @@ CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines: 410 to 426
+-- Lines: 421 to 437
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)

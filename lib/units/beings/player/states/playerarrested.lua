@@ -142,7 +142,7 @@ function PlayerArrested:_update_check_actions(t, dt)
 	local new_action = self:_check_action_interact(t, input)
 end
 
--- Lines: 168 to 183
+-- Lines: 168 to 188
 function PlayerArrested:_check_action_interact(t, input)
 	local new_action = nil
 	local interaction_wanted = input.btn_interact_press
@@ -164,7 +164,7 @@ function PlayerArrested:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines: 188 to 193
+-- Lines: 193 to 198
 function PlayerArrested:_start_action_distance_interact(t)
 	if not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t then
 		self._intimidate_t = t
@@ -173,7 +173,7 @@ function PlayerArrested:_start_action_distance_interact(t)
 	end
 end
 
--- Lines: 197 to 225
+-- Lines: 202 to 230
 function PlayerArrested:call_teammate(line, t, no_gesture, skip_alert, skip_mark_cop)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, true, true, false)
 	local interact_type, queue_name = nil
@@ -206,11 +206,11 @@ function PlayerArrested:call_teammate(line, t, no_gesture, skip_alert, skip_mark
 	end
 end
 
--- Lines: 229 to 230
+-- Lines: 234 to 235
 function PlayerArrested:_update_movement(t, dt)
 end
 
--- Lines: 234 to 243
+-- Lines: 239 to 248
 function PlayerArrested:_start_action_handcuffed(t)
 	self:_interupt_action_running(t)
 
@@ -225,7 +225,7 @@ function PlayerArrested:_start_action_handcuffed(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
--- Lines: 247 to 259
+-- Lines: 252 to 264
 function PlayerArrested:_end_action_handcuffed(t)
 	if not self:_can_stand() then
 		return
@@ -242,14 +242,14 @@ function PlayerArrested:_end_action_handcuffed(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines: 263 to 266
+-- Lines: 268 to 271
 function PlayerArrested:clbk_entry_speech()
 	self._entry_speech_clbk = nil
 
 	PlayerStandard.say_line(self, "s20x_sin")
 end
 
--- Lines: 269 to 276
+-- Lines: 274 to 281
 function PlayerArrested:pre_destroy(unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 
@@ -260,7 +260,7 @@ function PlayerArrested:pre_destroy(unit)
 	end
 end
 
--- Lines: 280 to 282
+-- Lines: 285 to 287
 function PlayerArrested:destroy()
 	PlayerBleedOut._unregister_revive_SO(self)
 end

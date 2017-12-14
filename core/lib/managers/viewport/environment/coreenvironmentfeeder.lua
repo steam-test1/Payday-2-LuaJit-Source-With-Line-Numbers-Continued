@@ -670,11 +670,13 @@ EnvironmentEffectFeeder.APPLY_GROUP_ID = Feeder.get_next_id()
 EnvironmentEffectFeeder.IS_GLOBAL = nil
 EnvironmentEffectFeeder.FILTER_CATEGORY = "Effect"
 
--- Lines: 715 to 718
+-- Lines: 715 to 720
 function EnvironmentEffectFeeder:apply(handler, viewport, scene)
 	local effects = string.split(self._current, ";")
 
-	managers.environment_effects:set_active_effects(effects)
+	if managers.environment_effects then
+		managers.environment_effects:set_active_effects(effects)
+	end
 end
 UnderlayPathFeeder.AFFECTED_LIST = {
 	GlobalLightColorScaleFeeder,

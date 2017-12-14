@@ -422,7 +422,7 @@ function ContourExt:_remove(index, sync)
 	end
 end
 
--- Lines: 444 to 492
+-- Lines: 444 to 496
 function ContourExt:update(unit, t, dt)
 	local index = 1
 
@@ -472,7 +472,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 494 to 519
+-- Lines: 498 to 523
 function ContourExt:_upd_opacity(opacity, is_retry)
 	if opacity == self._last_opacity then
 		return
@@ -502,7 +502,7 @@ function ContourExt:_upd_opacity(opacity, is_retry)
 	self:apply_to_linked("_upd_opacity", opacity, is_retry)
 end
 
--- Lines: 522 to 546
+-- Lines: 526 to 550
 function ContourExt:_upd_color(is_retry)
 	if not self._contour_list then
 		return
@@ -533,7 +533,7 @@ function ContourExt:_upd_color(is_retry)
 	self:apply_to_linked("_upd_color", is_retry)
 end
 
--- Lines: 548 to 568
+-- Lines: 552 to 572
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
@@ -554,7 +554,7 @@ function ContourExt:_apply_top_preset()
 	end
 end
 
--- Lines: 570 to 593
+-- Lines: 574 to 597
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -582,7 +582,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines: 595 to 611
+-- Lines: 599 to 615
 function ContourExt:_chk_update_state()
 	local needs_update = nil
 
@@ -603,7 +603,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines: 613 to 621
+-- Lines: 617 to 625
 function ContourExt:update_materials()
 	if self._contour_list and next(self._contour_list) then
 		self._materials = nil
@@ -616,7 +616,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines: 623 to 632
+-- Lines: 627 to 636
 function ContourExt:save(data)
 	if self._contour_list then
 		for _, setup in ipairs(self._contour_list) do
@@ -629,7 +629,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines: 634 to 638
+-- Lines: 638 to 642
 function ContourExt:load(data)
 	if data and data.highlight_character then
 		self:add(data.highlight_character.type)

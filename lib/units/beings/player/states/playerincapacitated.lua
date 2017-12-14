@@ -128,7 +128,7 @@ function PlayerIncapacitated:_update_check_actions(t, dt)
 	self:_check_action_interact(t, input)
 end
 
--- Lines: 165 to 172
+-- Lines: 165 to 177
 function PlayerIncapacitated:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) then
 		self._intimidate_t = t
@@ -137,7 +137,7 @@ function PlayerIncapacitated:_check_action_interact(t, input)
 	end
 end
 
--- Lines: 176 to 188
+-- Lines: 181 to 193
 function PlayerIncapacitated:_start_action_incapacitated(t)
 	self:_interupt_action_running(t)
 
@@ -151,7 +151,7 @@ function PlayerIncapacitated:_start_action_incapacitated(t)
 	self._unit:camera()._camera_unit:base():animate_fov(75)
 end
 
--- Lines: 192 to 205
+-- Lines: 197 to 210
 function PlayerIncapacitated:_end_action_incapacitated(t)
 	if not self:_can_stand() then
 		return
@@ -165,12 +165,12 @@ function PlayerIncapacitated:_end_action_incapacitated(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines: 210 to 212
+-- Lines: 215 to 217
 function PlayerIncapacitated:pre_destroy(unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 end
 
--- Lines: 214 to 217
+-- Lines: 219 to 222
 function PlayerIncapacitated:destroy(unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 	managers.environment_controller:set_taser_value(1)

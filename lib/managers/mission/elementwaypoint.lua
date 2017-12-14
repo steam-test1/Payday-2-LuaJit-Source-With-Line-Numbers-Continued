@@ -23,9 +23,15 @@ function ElementWaypoint:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 22 to 34
+-- Lines: 22 to 39
 function ElementWaypoint:on_executed(instigator)
 	if not self._values.enabled then
+		return
+	end
+
+	if self._values.only_on_instigator and instigator ~= managers.player:player_unit() then
+		ElementWaypoint.super.on_executed(self, instigator)
+
 		return
 	end
 
@@ -47,17 +53,17 @@ function ElementWaypoint:on_executed(instigator)
 	ElementWaypoint.super.on_executed(self, instigator)
 end
 
--- Lines: 36 to 38
+-- Lines: 41 to 43
 function ElementWaypoint:operation_remove()
 	managers.hud:remove_waypoint(self._id)
 end
 
--- Lines: 40 to 42
+-- Lines: 45 to 47
 function ElementWaypoint:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 44 to 46
+-- Lines: 49 to 51
 function ElementWaypoint:load(data)
 	self:set_enabled(data.enabled)
 end

@@ -1774,7 +1774,7 @@ function NetworkPeer:clbk_outfit_texture_loaded(outfit_assets, tex_name)
 	end
 end
 
--- Lines: 1908 to 1927
+-- Lines: 1908 to 1934
 function NetworkPeer:_chk_outfit_loading_complete()
 	if not self._loading_outfit_assets or not self._all_outfit_load_requests_sent then
 		return
@@ -1792,19 +1792,40 @@ function NetworkPeer:_chk_outfit_loading_complete()
 	self._loading_outfit_assets = nil
 
 	managers.network:session():on_peer_outfit_loaded(self)
+
+	if self._outfit_loaded_clbks then
+		for _, clbk in ipairs(self._outfit_loaded_clbks) do
+			clbk()
+		end
+
+		self._outfit_loaded_clbks = nil
+	end
 end
 
--- Lines: 1931 to 1933
+-- Lines: 1938 to 1946
+function NetworkPeer:add_outfit_loaded_clbk(clbk)
+	if self:is_outfit_loaded() then
+		clbk()
+
+		return
+	end
+
+	self._outfit_loaded_clbks = self._outfit_loaded_clbks or {}
+
+	table.insert(self._outfit_loaded_clbks, clbk)
+end
+
+-- Lines: 1950 to 1952
 function NetworkPeer:set_other_peer_outfit_loaded_status(status)
 	self._other_peer_outfits_loaded = status
 end
 
--- Lines: 1937 to 1938
+-- Lines: 1956 to 1957
 function NetworkPeer:other_peer_outfit_loaded_status()
 	return self._other_peer_outfits_loaded
 end
 
--- Lines: 1943 to 1949
+-- Lines: 1962 to 1968
 function NetworkPeer:_increment_outfit_version()
 	if self._outfit_version == 100 then
 		self._outfit_version = 1
@@ -1815,12 +1836,12 @@ function NetworkPeer:_increment_outfit_version()
 	return self._outfit_version
 end
 
--- Lines: 1954 to 1955
+-- Lines: 1973 to 1974
 function NetworkPeer:outfit_version()
 	return self._outfit_version
 end
 
--- Lines: 1960 to 1968
+-- Lines: 1979 to 1987
 function NetworkPeer:set_throttling_enabled(state)
 	if self._rpc then
 		Network:set_throttling_disabled(self._rpc, not state)
@@ -1831,17 +1852,17 @@ function NetworkPeer:set_throttling_enabled(state)
 	end
 end
 
--- Lines: 1972 to 1973
+-- Lines: 1991 to 1992
 function NetworkPeer:drop_in_progress()
 	return self._dropin_progress
 end
 
--- Lines: 1978 to 1980
+-- Lines: 1997 to 1999
 function NetworkPeer:set_drop_in_progress(dropin_progress)
 	self._dropin_progress = dropin_progress
 end
 
--- Lines: 1985 to 2014
+-- Lines: 2004 to 2033
 function NetworkPeer:sync_lobby_data(peer)
 	print("[NetworkPeer:sync_lobby_data] to", peer:id())
 
@@ -1870,7 +1891,7 @@ function NetworkPeer:sync_lobby_data(peer)
 	self:sync_mods(peer)
 end
 
--- Lines: 2019 to 2047
+-- Lines: 2038 to 2072
 function NetworkPeer:sync_data(peer)
 	print("[NetworkPeer:sync_data] to", peer:id())
 
@@ -1895,18 +1916,18 @@ function NetworkPeer:sync_data(peer)
 	end
 end
 
--- Lines: 2051 to 2052
+-- Lines: 2076 to 2077
 function NetworkPeer:unit()
 	return self._unit
 end
 
--- Lines: 2057 to 2060
+-- Lines: 2082 to 2085
 function NetworkPeer:make_waiting()
 	managers.wait:add_waiting(self._id)
 	self:send_queued_sync("set_waiting")
 end
 
--- Lines: 2064 to 2206
+-- Lines: 2089 to 2242
 function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	if self._unit then
 		return
@@ -1920,7 +1941,7 @@ function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	local pos_rot = nil
 
 	if is_drop_in then
-		pos_rot = managers.criminals:get_valid_player_spawn_pos_rot()
+		pos_rot = managers.criminals:get_valid_player_spawn_pos_rot(self:id())
 
 		if not pos_rot then
 			local spawn_point = managers.network:session():get_next_spawn_point() or managers.network:spawn_point(1)
@@ -2035,7 +2056,7 @@ function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	return unit
 end
 
--- Lines: 2209 to 2232
+-- Lines: 2245 to 2268
 function NetworkPeer:_get_old_entry()
 	local peer_ident = SystemInfo:platform() == Idstring("WIN32") and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
@@ -2060,12 +2081,12 @@ function NetworkPeer:_get_old_entry()
 	return member_downed, member_dead, health, used_deployable, used_cable_ties, used_body_bags, hostages_killed, respawn_penalty, old_plr_entry
 end
 
--- Lines: 2237 to 2238
+-- Lines: 2273 to 2274
 function NetworkPeer:spawn_unit_called()
 	return self._spawn_unit_called
 end
 
--- Lines: 2243 to 2308
+-- Lines: 2279 to 2344
 function NetworkPeer:set_unit(unit, character_name, team_id)
 	local is_new_unit = unit and (not self._unit or self._unit:key() ~= unit:key())
 	self._unit = unit
@@ -2138,7 +2159,7 @@ function NetworkPeer:set_unit(unit, character_name, team_id)
 	end
 end
 
--- Lines: 2312 to 2328
+-- Lines: 2348 to 2364
 function NetworkPeer:unit_delete()
 	if managers.criminals then
 		managers.criminals:remove_character_by_peer_id(self._id)
@@ -2160,7 +2181,7 @@ function NetworkPeer:unit_delete()
 	self._unit = nil
 end
 
--- Lines: 2332 to 2365
+-- Lines: 2368 to 2410
 function NetworkPeer:_update_equipped_armor()
 	if not alive(self._unit) then
 		return
@@ -2198,17 +2219,17 @@ function NetworkPeer:_update_equipped_armor()
 	end
 end
 
--- Lines: 2369 to 2371
+-- Lines: 2414 to 2416
 function NetworkPeer:set_is_dropin(is_dropin)
 	self._is_dropin = is_dropin
 end
 
--- Lines: 2373 to 2374
+-- Lines: 2418 to 2419
 function NetworkPeer:is_dropin()
 	return self._is_dropin
 end
 
--- Lines: 2382 to 2396
+-- Lines: 2427 to 2441
 function NetworkPeer:register_mod(id, friendly)
 	for _, mod in ipairs(self._mods) do
 		if mod.id == id then
@@ -2224,17 +2245,17 @@ function NetworkPeer:register_mod(id, friendly)
 	})
 end
 
--- Lines: 2398 to 2399
+-- Lines: 2443 to 2444
 function NetworkPeer:is_modded()
 	return #self._mods > 0
 end
 
--- Lines: 2402 to 2403
+-- Lines: 2447 to 2448
 function NetworkPeer:synced_mods()
 	return self._mods
 end
 
--- Lines: 2407 to 2428
+-- Lines: 2452 to 2473
 function NetworkPeer:sync_mods(to_peer)
 	local mods = nil
 	mods = MenuCallbackHandler:build_mods_list()

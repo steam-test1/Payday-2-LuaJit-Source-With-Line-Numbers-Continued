@@ -73,7 +73,7 @@ function HUDHint:stop()
 	self._stop = true
 end
 
--- Lines: 51 to 189
+-- Lines: 51 to 192
 function HUDHint:_animate_show(hint_panel, done_cb, seconds, text)
 	local clip_panel = hint_panel:child("clip_panel")
 	local hint_text = clip_panel:child("hint_text")
@@ -105,8 +105,12 @@ function HUDHint:_animate_show(hint_panel, done_cb, seconds, text)
 
 	while presenting do
 		local dt = coroutine.yield()
-		w = math.clamp(w + dt * speed, 0, target_w)
-		presenting = w ~= target_w
+		w = w + dt * speed
+
+		if target_w < w then
+			presenting = false
+			w = target_w
+		end
 
 		clip_panel:set_w(w)
 		hint_text:set_text("")
@@ -142,7 +146,7 @@ function HUDHint:_animate_show(hint_panel, done_cb, seconds, text)
 	done_cb()
 end
 
--- Lines: 193 to 194
+-- Lines: 196 to 197
 function HUDHint:show_done()
 end
 

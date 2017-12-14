@@ -17,7 +17,7 @@ function PlayerCivilian:enter(state_data, enter_data)
 	end
 end
 
--- Lines: 20 to 46
+-- Lines: 20 to 57
 function PlayerCivilian:_enter(enter_data)
 	local equipped_selection = self._unit:inventory():equipped_selection()
 
@@ -46,7 +46,7 @@ function PlayerCivilian:_enter(enter_data)
 	self._show_casing_t = Application:time() + 4
 end
 
--- Lines: 48 to 75
+-- Lines: 59 to 98
 function PlayerCivilian:exit(state_data, new_state_name)
 	PlayerCivilian.super.exit(self, state_data)
 	MenuCallbackHandler:_update_outfit_information()
@@ -76,7 +76,7 @@ function PlayerCivilian:exit(state_data, new_state_name)
 	end
 end
 
--- Lines: 78 to 85
+-- Lines: 101 to 108
 function PlayerCivilian:update(t, dt)
 	PlayerCivilian.super.update(self, t, dt)
 
@@ -87,7 +87,7 @@ function PlayerCivilian:update(t, dt)
 	end
 end
 
--- Lines: 91 to 138
+-- Lines: 114 to 161
 function PlayerCivilian:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -124,7 +124,7 @@ function PlayerCivilian:_update_check_actions(t, dt)
 	self:_check_action_use_item(t, input)
 end
 
--- Lines: 143 to 172
+-- Lines: 166 to 200
 function PlayerCivilian:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 
@@ -154,7 +154,7 @@ function PlayerCivilian:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines: 175 to 183
+-- Lines: 203 to 211
 function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	self._interact_expire_t = timer
 	self._interact_params = {
@@ -167,7 +167,7 @@ function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 1, true, self._interact_params.tweak_data, timer, false)
 end
 
--- Lines: 185 to 197
+-- Lines: 213 to 225
 function PlayerCivilian:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
@@ -185,13 +185,11 @@ function PlayerCivilian:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines: 199 to 226
+-- Lines: 227 to 252
 function PlayerCivilian:_update_interaction_timers(t)
 	if self._interact_expire_t then
 		local dt = self:_get_interaction_speed()
 		self._interact_expire_t = self._interact_expire_t - dt
-
-		print("self._interact_expire_t: ", self._interact_expire_t)
 
 		if not alive(self._interact_params.object) or self._interact_params.object ~= managers.interaction:active_unit() or self._interact_params.tweak_data ~= self._interact_params.object:interaction().tweak_data or self._interact_params.object:interaction():check_interupt() then
 			self:_interupt_action_interact(t)
@@ -207,35 +205,35 @@ function PlayerCivilian:_update_interaction_timers(t)
 	end
 end
 
--- Lines: 230 to 234
+-- Lines: 256 to 260
 function PlayerCivilian:_check_action_jump(t, input)
 	if input.btn_duck_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 236 to 240
+-- Lines: 262 to 266
 function PlayerCivilian:_check_action_duck(t, input)
 	if input.btn_jump_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 242 to 246
+-- Lines: 268 to 272
 function PlayerCivilian:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 248 to 252
+-- Lines: 274 to 278
 function PlayerCivilian:_check_action_use_item(t, input)
 	if input.btn_use_item_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 254 to 260
+-- Lines: 280 to 286
 function PlayerCivilian:clbk_enemy_weapons_hot()
 	if self._enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
@@ -244,12 +242,12 @@ function PlayerCivilian:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines: 262 to 263
+-- Lines: 288 to 289
 function PlayerCivilian:interaction_blocked()
 	return false
 end
 
--- Lines: 266 to 267
+-- Lines: 292 to 293
 function PlayerCivilian:_get_walk_headbob()
 	return 0.0125
 end

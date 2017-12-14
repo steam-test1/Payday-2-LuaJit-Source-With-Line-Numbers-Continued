@@ -1,9 +1,13 @@
 CivilianBase = CivilianBase or class(CopBase)
 
--- Lines: 3 to 25
+-- Lines: 3 to 29
 function CivilianBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
+
+	self:set_anim_lod(1)
+
+	self._lod_stage = 1
 	local spawn_state = nil
 
 	if self._spawn_state then
@@ -26,7 +30,7 @@ function CivilianBase:post_init()
 	self:enable_leg_arm_hitbox()
 end
 
--- Lines: 28 to 29
+-- Lines: 32 to 33
 function CivilianBase:default_weapon_name()
 end
 

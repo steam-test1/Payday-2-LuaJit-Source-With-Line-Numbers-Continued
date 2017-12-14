@@ -7,7 +7,7 @@ function ServerLeftState:init(game_state_machine, setup)
 	ServerLeftState.super.init(self, "server_left", game_state_machine, setup)
 end
 
--- Lines: 21 to 45
+-- Lines: 21 to 50
 function ServerLeftState:at_enter(...)
 	self._success = false
 	self._server_left = true
@@ -30,23 +30,23 @@ function ServerLeftState:at_enter(...)
 	end
 end
 
--- Lines: 50 to 51
+-- Lines: 64 to 65
 function ServerLeftState:on_server_left()
 end
 
--- Lines: 53 to 55
+-- Lines: 67 to 69
 function ServerLeftState:_create_server_left_dialog()
 	MenuMainState._create_server_left_dialog(self)
 end
 
--- Lines: 57 to 61
+-- Lines: 71 to 75
 function ServerLeftState:_load_start_menu()
 	if not managers.job:stage_success() or not managers.job:on_last_stage() then
 		setup:load_start_menu()
 	end
 end
 
--- Lines: 65 to 68
+-- Lines: 79 to 82
 function ServerLeftState:on_server_left_ok_pressed()
 	self._completion_bonus_done = true
 

@@ -11,7 +11,7 @@ function RumbleManager:init()
 	self:setup_preset_rumbles()
 end
 
--- Lines: 17 to 28
+-- Lines: 17 to 35
 function RumbleManager:setup_preset_rumbles()
 	self:add_preset_rumbles("weapon_fire", {
 		sustain = 0.1,

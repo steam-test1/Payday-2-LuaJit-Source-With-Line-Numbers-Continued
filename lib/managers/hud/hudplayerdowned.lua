@@ -49,7 +49,7 @@ function HUDPlayerDowned:set_arrest_finished_text()
 	self._hud.arrest_finished_text:set_text(utf8.to_upper(managers.localization:text("hud_instruct_finish_arrest", {BTN_INTERACT = managers.localization:btn_macro("interact")})))
 end
 
--- Lines: 41 to 45
+-- Lines: 41 to 49
 function HUDPlayerDowned:on_downed()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -57,7 +57,7 @@ function HUDPlayerDowned:on_downed()
 	timer_msg:set_text(utf8.to_upper(managers.localization:text("hud_custody_in")))
 end
 
--- Lines: 47 to 51
+-- Lines: 51 to 55
 function HUDPlayerDowned:on_arrested()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -65,7 +65,7 @@ function HUDPlayerDowned:on_arrested()
 	timer_msg:set_text(utf8.to_upper(managers.localization:text("hud_uncuffed_in")))
 end
 
--- Lines: 53 to 61
+-- Lines: 57 to 65
 function HUDPlayerDowned:show_timer()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -76,7 +76,7 @@ function HUDPlayerDowned:show_timer()
 	self._hud.timer:set_alpha(1)
 end
 
--- Lines: 63 to 70
+-- Lines: 67 to 74
 function HUDPlayerDowned:hide_timer()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -85,7 +85,7 @@ function HUDPlayerDowned:hide_timer()
 	self._hud.timer:set_alpha(0.65)
 end
 
--- Lines: 72 to 78
+-- Lines: 76 to 82
 function HUDPlayerDowned:show_arrest_finished()
 	self._hud.arrest_finished_text:set_visible(true)
 
@@ -96,7 +96,7 @@ function HUDPlayerDowned:show_arrest_finished()
 	self._hud.timer:set_visible(false)
 end
 
--- Lines: 80 to 82
+-- Lines: 84 to 86
 function HUDPlayerDowned:hide_arrest_finished()
 	self._hud.arrest_finished_text:set_visible(false)
 end

@@ -54,7 +54,7 @@ function IngameWaitingForRespawnState:set_controller_enabled(enabled)
 	end
 end
 
--- Lines: 61 to 70
+-- Lines: 61 to 80
 function IngameWaitingForRespawnState:_setup_camera()
 	self._camera_object = World:create_camera()
 
@@ -68,18 +68,20 @@ function IngameWaitingForRespawnState:_setup_camera()
 	self._viewport:set_active(true)
 end
 
--- Lines: 74 to 80
+-- Lines: 84 to 96
 function IngameWaitingForRespawnState:_clear_camera()
-	self._viewport:destroy()
+	if self._viewport then
+		self._viewport:destroy()
 
-	self._viewport = nil
+		self._viewport = nil
+	end
 
 	World:delete_camera(self._camera_object)
 
 	self._camera_object = nil
 end
 
--- Lines: 84 to 89
+-- Lines: 100 to 105
 function IngameWaitingForRespawnState:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("spectator_camera", self._camera_object, self._camera_object, nil, false)
 
@@ -93,7 +95,7 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 	})
 end
 
--- Lines: 93 to 98
+-- Lines: 109 to 114
 function IngameWaitingForRespawnState:_clear_sound_listener()
 	managers.sound_environment:remove_check_object(self._sound_check_object)
 	managers.listener:remove_listener(self._listener_id)
@@ -102,7 +104,7 @@ function IngameWaitingForRespawnState:_clear_sound_listener()
 	self._listener_id = nil
 end
 
--- Lines: 102 to 113
+-- Lines: 118 to 129
 function IngameWaitingForRespawnState:_create_spectator_data()
 	local all_teammates = managers.groupai:state():all_char_criminals()
 	local teammate_list = {}
@@ -118,7 +120,7 @@ function IngameWaitingForRespawnState:_create_spectator_data()
 	}
 end
 
--- Lines: 117 to 129
+-- Lines: 133 to 145
 function IngameWaitingForRespawnState:_begin_game_enter_transition()
 	if self._ready_to_spawn_t then
 		return
@@ -132,12 +134,13 @@ function IngameWaitingForRespawnState:_begin_game_enter_transition()
 	self._ready_to_spawn_t = TimerManager:game():time() + fade_in_duration
 end
 
--- Lines: 133 to 172
+-- Lines: 149 to 189
 function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 	if Network:is_client() then
 		managers.network:session():server_peer():send("request_spawn_member")
 	else
-		local pos_rot = managers.criminals:get_valid_player_spawn_pos_rot()
+		local peer = managers.network:session():peer(peer_to_spawn)
+		local pos_rot = managers.criminals:get_valid_player_spawn_pos_rot(peer and peer:id())
 
 		if not pos_rot and managers.network then
 			local spawn_point = managers.network:session() and managers.network:session():get_next_spawn_point() or managers.network:spawn_point(1)
@@ -176,7 +179,7 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 	end
 end
 
--- Lines: 176 to 244
+-- Lines: 193 to 261
 function IngameWaitingForRespawnState:update(t, dt)
 	if self._player_state_change_needed and not alive(managers.player:player_unit()) then
 		self._player_state_change_needed = nil
@@ -243,7 +246,7 @@ function IngameWaitingForRespawnState:update(t, dt)
 	if self._play_too_long_line_t and self._play_too_long_line_t < t and managers.groupai:state():bain_state() then
 		self._play_too_long_line_t = nil
 
-		managers.dialog:queue_dialog("Play_ban_h38x", {})
+		managers.dialog:queue_narrator_dialog("h38x", {})
 	end
 
 	self:_upd_watch(t, dt)
@@ -264,7 +267,7 @@ local mrot_set_axis_angle = mrotation.set_axis_angle
 local mrot_set_look_at = mrotation.set_look_at
 local math_up = math.UP
 
--- Lines: 272 to 423
+-- Lines: 289 to 440
 function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	self:_refresh_teammate_list()
 
@@ -381,7 +384,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	end
 end
 
--- Lines: 427 to 498
+-- Lines: 449 to 520
 function IngameWaitingForRespawnState:at_enter()
 	managers.player:force_drop_carry()
 	managers.hud:set_player_health({
@@ -459,7 +462,7 @@ function IngameWaitingForRespawnState:at_enter()
 	end
 end
 
--- Lines: 502 to 527
+-- Lines: 529 to 554
 function IngameWaitingForRespawnState:at_exit()
 	if self.music_on_death then
 		managers.music:track_listen_stop()
@@ -489,7 +492,7 @@ function IngameWaitingForRespawnState:at_exit()
 	managers.hud:set_player_condition("mugshot_normal", "")
 end
 
--- Lines: 531 to 574
+-- Lines: 558 to 601
 function IngameWaitingForRespawnState:_refresh_teammate_list()
 	local all_teammates = self._spectator_data.teammate_records
 	local teammate_list = self._spectator_data.teammate_list
@@ -539,7 +542,7 @@ function IngameWaitingForRespawnState:_refresh_teammate_list()
 	end
 end
 
--- Lines: 578 to 584
+-- Lines: 605 to 611
 function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	for i_key, test_u_key in ipairs(self._spectator_data.teammate_list) do
 		if test_u_key == u_key then
@@ -548,12 +551,12 @@ function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	end
 end
 
--- Lines: 588 to 617
+-- Lines: 615 to 644
 function IngameWaitingForRespawnState:watch_priority_character()
 	self:_refresh_teammate_list()
 
 
-	-- Lines: 591 to 598
+	-- Lines: 618 to 625
 	local function try_watch_unit(unit_key)
 		if table.contains(self._spectator_data.teammate_list, unit_key) then
 			self._spectator_data.watch_u_key = unit_key
@@ -582,7 +585,7 @@ function IngameWaitingForRespawnState:watch_priority_character()
 	self._dis_curr = nil
 end
 
--- Lines: 621 to 638
+-- Lines: 648 to 665
 function IngameWaitingForRespawnState:cb_next_player()
 	self:_refresh_teammate_list()
 
@@ -599,7 +602,7 @@ function IngameWaitingForRespawnState:cb_next_player()
 	self._dis_curr = nil
 end
 
--- Lines: 642 to 659
+-- Lines: 669 to 686
 function IngameWaitingForRespawnState:cb_prev_player()
 	self:_refresh_teammate_list()
 
@@ -616,7 +619,7 @@ function IngameWaitingForRespawnState:cb_prev_player()
 	self._dis_curr = nil
 end
 
--- Lines: 664 to 716
+-- Lines: 691 to 743
 function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
 	managers.hud:set_custody_can_be_trade_visible(false)
 
@@ -634,25 +637,25 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 
 	if (not Global.game_settings.single_player or is_ai_trade_possible) and managers.groupai:state():bain_state() then
 		if managers.groupai:state():get_assault_mode() and not is_ai_trade_possible then
-			managers.dialog:queue_dialog("ban_h31x", {})
+			managers.dialog:queue_narrator_dialog("h31x", {})
 		elseif is_ai_trade_possible then
-			managers.dialog:queue_dialog("Play_ban_h51", {})
+			managers.dialog:queue_narrator_dialog("h51", {})
 		elseif hostages_killed == 0 then
-			managers.dialog:queue_dialog("Play_ban_h32x", {})
+			managers.dialog:queue_narrator_dialog("h32x", {})
 		elseif hostages_killed < 3 then
-			managers.dialog:queue_dialog("Play_ban_h33x", {})
+			managers.dialog:queue_narrator_dialog("h33x", {})
 		else
-			managers.dialog:queue_dialog("Play_ban_h34x", {})
+			managers.dialog:queue_narrator_dialog("h34x", {})
 		end
 	end
 end
 
--- Lines: 718 to 720
+-- Lines: 745 to 747
 function IngameWaitingForRespawnState:finish_trade()
 	self:_begin_game_enter_transition()
 end
 
--- Lines: 722 to 749
+-- Lines: 749 to 776
 function IngameWaitingForRespawnState:begin_trade()
 	managers.hud:set_custody_can_be_trade_visible(true)
 
@@ -664,34 +667,34 @@ function IngameWaitingForRespawnState:begin_trade()
 
 	if managers.groupai:state():bain_state() and next(crims) then
 		if table.size(crims) > 1 then
-			managers.dialog:queue_dialog("Play_ban_h36x", {})
+			managers.dialog:queue_narrator_dialog("h36x", {})
 		else
 			local _, data = next(crims)
 			local char_code = managers.criminals:character_static_data_by_unit(data.unit).ssuffix
 
-			managers.dialog:queue_dialog("Play_ban_h37" .. char_code, {})
+			managers.dialog:queue_narrator_dialog("h37" .. char_code, {})
 		end
 	end
 
 	self._play_too_long_line_t = Application:time() + 60
 end
 
--- Lines: 751 to 753
+-- Lines: 778 to 780
 function IngameWaitingForRespawnState:cancel_trade()
 	managers.hud:set_custody_can_be_trade_visible(false)
 end
 
--- Lines: 755 to 757
+-- Lines: 782 to 784
 function IngameWaitingForRespawnState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 759 to 761
+-- Lines: 786 to 788
 function IngameWaitingForRespawnState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 763 to 765
+-- Lines: 790 to 792
 function IngameWaitingForRespawnState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

@@ -9,6 +9,15 @@ local function make_fine_text(text_gui)
 	text_gui:set_position(math.round(text_gui:x()), math.round(text_gui:y()))
 end
 
+
+-- Lines: 10 to 14
+local function fit_text_height(text_gui)
+	local _, y, _, h = text_gui:text_rect()
+
+	text_gui:set_h(h)
+	text_gui:set_y(math.round(text_gui:y()))
+end
+
 local massive_font = tweak_data.menu.pd2_massive_font
 local large_font = tweak_data.menu.pd2_large_font
 local medium_font = tweak_data.menu.pd2_medium_font
@@ -34,7 +43,7 @@ SKILLS_WIDTH_PERCENT = SKILLS_WIDTH_PERCENT / _saferect_width_estimate
 local PAGE_TAB_H = medium_font_size + 10
 NewSkillTreeGui = NewSkillTreeGui or class()
 
--- Lines: 57 to 84
+-- Lines: 63 to 90
 function NewSkillTreeGui:init(ws, fullscreen_ws, node)
 	self._event_listener = EventListenerHolder:new()
 	self._skilltree = managers.skilltree
@@ -56,12 +65,12 @@ function NewSkillTreeGui:init(ws, fullscreen_ws, node)
 	self._event_listener:add(self, {"refresh"}, callback(self, self, "_on_refresh_event"))
 end
 
--- Lines: 86 to 87
+-- Lines: 92 to 93
 function NewSkillTreeGui:event_listener()
 	return self._event_listener
 end
 
--- Lines: 90 to 281
+-- Lines: 96 to 296
 function NewSkillTreeGui:_setup()
 	if alive(self._panel) then
 		self._ws:panel():remove(self._panel)
@@ -354,7 +363,7 @@ function NewSkillTreeGui:_setup()
 	})
 
 
-	-- Lines: 270 to 272
+	-- Lines: 285 to 287
 	local function func(o)
 		over(0.6, function (p)
 			o:set_alpha(p)
@@ -366,7 +375,7 @@ function NewSkillTreeGui:_setup()
 	self:_rec_round_object(self._panel)
 end
 
--- Lines: 284 to 296
+-- Lines: 299 to 311
 function NewSkillTreeGui:set_skill_point_text(skill_points)
 	local x, y, old_w, old_h = self._skill_points_text:text_rect()
 
@@ -385,12 +394,12 @@ function NewSkillTreeGui:set_skill_point_text(skill_points)
 	self._skill_points_text:set_color(color)
 end
 
--- Lines: 298 to 299
+-- Lines: 313 to 314
 function NewSkillTreeGui:selected_page()
 	return self._selected_page
 end
 
--- Lines: 302 to 346
+-- Lines: 317 to 361
 function NewSkillTreeGui:refresh_reset_skills_legends(trees_idx)
 	local legend_panel_reset_skills = self._panel:child("LegendPanelResetSkills")
 
@@ -443,7 +452,7 @@ function NewSkillTreeGui:refresh_reset_skills_legends(trees_idx)
 	end
 end
 
--- Lines: 348 to 353
+-- Lines: 363 to 368
 function NewSkillTreeGui:_on_refresh_event()
 	local points = self._skilltree:points()
 
@@ -452,7 +461,7 @@ function NewSkillTreeGui:_on_refresh_event()
 	self:refresh_reset_skills_legends(self._selected_page:trees_idx())
 end
 
--- Lines: 355 to 363
+-- Lines: 370 to 378
 function NewSkillTreeGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -465,17 +474,17 @@ function NewSkillTreeGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 365 to 367
+-- Lines: 380 to 382
 function NewSkillTreeGui:set_layer(layer)
 	self._panel:set_layer(self._init_layer + layer)
 end
 
--- Lines: 369 to 370
+-- Lines: 384 to 385
 function NewSkillTreeGui:layer()
 	return self._panel:layer()
 end
 
--- Lines: 374 to 380
+-- Lines: 389 to 395
 function NewSkillTreeGui:next_page(play_sound)
 	if not self._enabled then
 		return
@@ -484,7 +493,7 @@ function NewSkillTreeGui:next_page(play_sound)
 	self:set_active_page(self._active_page + 1, play_sound)
 end
 
--- Lines: 382 to 388
+-- Lines: 397 to 403
 function NewSkillTreeGui:previous_page(play_sound)
 	if not self._enabled then
 		return
@@ -493,7 +502,7 @@ function NewSkillTreeGui:previous_page(play_sound)
 	self:set_active_page(self._active_page - 1, play_sound)
 end
 
--- Lines: 390 to 428
+-- Lines: 405 to 443
 function NewSkillTreeGui:set_active_page(new_page, play_sound)
 	if new_page == self._active_page or new_page <= 0 or #self._tab_items + 1 <= new_page then
 		return false
@@ -539,7 +548,7 @@ function NewSkillTreeGui:set_active_page(new_page, play_sound)
 	return true
 end
 
--- Lines: 431 to 448
+-- Lines: 446 to 463
 function NewSkillTreeGui:set_selected_item(item, play_sound)
 	if item == nil or item == self._selected_item then
 		return
@@ -559,7 +568,7 @@ function NewSkillTreeGui:set_selected_item(item, play_sound)
 	self:update_item()
 end
 
--- Lines: 451 to 466
+-- Lines: 466 to 481
 function NewSkillTreeGui:set_active_tier(item)
 	if item == self._active_tier_item then
 		return
@@ -577,7 +586,7 @@ function NewSkillTreeGui:set_active_tier(item)
 	end
 end
 
--- Lines: 468 to 482
+-- Lines: 483 to 497
 function NewSkillTreeGui:set_active_tree(item)
 	if item == self._active_tree_item then
 		return
@@ -594,7 +603,7 @@ function NewSkillTreeGui:set_active_tree(item)
 	end
 end
 
--- Lines: 484 to 493
+-- Lines: 499 to 508
 function NewSkillTreeGui:update_item()
 	local item = self._selected_item
 
@@ -606,7 +615,7 @@ function NewSkillTreeGui:update_item()
 	self:_update_description(item)
 end
 
--- Lines: 495 to 563
+-- Lines: 510 to 595
 function NewSkillTreeGui:_update_description(item)
 	local desc_panel = self._panel:child("InfoRootPanel"):child("DescriptionPanel")
 	local text = desc_panel:child("DescriptionText")
@@ -682,7 +691,7 @@ function NewSkillTreeGui:_update_description(item)
 	end
 end
 
--- Lines: 565 to 633
+-- Lines: 597 to 665
 function NewSkillTreeGui:_update_legends(item)
 	local legend_panel = self._panel:child("LegendsPanel")
 	local text = legend_panel:child("LegendText")
@@ -792,7 +801,7 @@ function NewSkillTreeGui:_update_legends(item)
 	end
 end
 
--- Lines: 635 to 643
+-- Lines: 667 to 675
 function NewSkillTreeGui:move_up()
 	if not self._enabled then
 		return
@@ -803,7 +812,7 @@ function NewSkillTreeGui:move_up()
 	end
 end
 
--- Lines: 645 to 653
+-- Lines: 677 to 685
 function NewSkillTreeGui:move_down()
 	if not self._enabled then
 		return
@@ -814,7 +823,7 @@ function NewSkillTreeGui:move_down()
 	end
 end
 
--- Lines: 655 to 663
+-- Lines: 687 to 695
 function NewSkillTreeGui:move_left()
 	if not self._enabled then
 		return
@@ -825,7 +834,7 @@ function NewSkillTreeGui:move_left()
 	end
 end
 
--- Lines: 665 to 672
+-- Lines: 697 to 704
 function NewSkillTreeGui:move_right()
 	if not self._enabled then
 		return
@@ -836,7 +845,7 @@ function NewSkillTreeGui:move_right()
 	end
 end
 
--- Lines: 676 to 779
+-- Lines: 708 to 811
 function NewSkillTreeGui:mouse_moved(o, x, y)
 	if self._renaming_skill_switch then
 		return true, "link"
@@ -942,14 +951,14 @@ function NewSkillTreeGui:mouse_moved(o, x, y)
 	return inside, pointer
 end
 
--- Lines: 782 to 786
+-- Lines: 814 to 818
 function NewSkillTreeGui:mouse_released(button, x, y)
 	if not self._enabled then
 		return
 	end
 end
 
--- Lines: 788 to 845
+-- Lines: 820 to 877
 function NewSkillTreeGui:mouse_pressed(button, x, y)
 	if self._renaming_skill_switch then
 		self:_stop_rename_skill_switch()
@@ -1017,7 +1026,7 @@ function NewSkillTreeGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 847 to 878
+-- Lines: 879 to 910
 function NewSkillTreeGui:invest_point(item)
 	local skill_id = item:skill_id()
 	local step = self._skilltree:next_skill_step(skill_id)
@@ -1050,7 +1059,7 @@ function NewSkillTreeGui:invest_point(item)
 	end
 end
 
--- Lines: 880 to 903
+-- Lines: 912 to 935
 function NewSkillTreeGui:refund_point(item)
 	local skill_id = item:skill_id()
 	local step = self._skilltree:next_skill_step(skill_id)
@@ -1076,7 +1085,7 @@ function NewSkillTreeGui:refund_point(item)
 	end
 end
 
--- Lines: 905 to 921
+-- Lines: 937 to 953
 function NewSkillTreeGui:confirm_pressed()
 	if self._renaming_skill_switch then
 		self:_stop_rename_skill_switch()
@@ -1097,7 +1106,7 @@ function NewSkillTreeGui:confirm_pressed()
 	return false
 end
 
--- Lines: 924 to 943
+-- Lines: 956 to 975
 function NewSkillTreeGui:special_btn_pressed(button)
 	if not self._enabled then
 		return
@@ -1124,13 +1133,13 @@ function NewSkillTreeGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines: 946 to 949
+-- Lines: 978 to 981
 function NewSkillTreeGui:flash_item(item)
 	item:flash()
 	managers.menu_component:post_event("menu_error")
 end
 
--- Lines: 951 to 966
+-- Lines: 983 to 998
 function NewSkillTreeGui:_dialog_confirm_yes(item)
 	if item and alive(item._skill_panel) then
 		local skill_refresh_skills = item:trigger() or {}
@@ -1150,26 +1159,26 @@ function NewSkillTreeGui:_dialog_confirm_yes(item)
 	end
 end
 
--- Lines: 968 to 969
+-- Lines: 1000 to 1001
 function NewSkillTreeGui:_dialog_confirm_no(item)
 end
 
--- Lines: 971 to 975
+-- Lines: 1003 to 1007
 function NewSkillTreeGui:on_tier_unlocked(tree, tier)
 	return
 
 	self._pages[tree]:unlock_tier(tier)
 end
 
--- Lines: 977 to 978
+-- Lines: 1009 to 1010
 function NewSkillTreeGui:on_skill_unlocked(tree, skill_id)
 end
 
--- Lines: 980 to 981
+-- Lines: 1012 to 1013
 function NewSkillTreeGui:on_points_spent()
 end
 
--- Lines: 983 to 989
+-- Lines: 1015 to 1021
 function NewSkillTreeGui:respec_page(page)
 	local params = {
 		tree = page:name(),
@@ -1180,7 +1189,7 @@ function NewSkillTreeGui:respec_page(page)
 	managers.menu:show_confirm_respec_skilltree(params)
 end
 
--- Lines: 991 to 996
+-- Lines: 1023 to 1028
 function NewSkillTreeGui:respec_all()
 	local params = {
 		yes_func = callback(self, self, "_dialog_respec_all_yes"),
@@ -1190,12 +1199,12 @@ function NewSkillTreeGui:respec_all()
 	managers.menu:show_confirm_respec_skilltree_all(params)
 end
 
--- Lines: 998 to 1001
+-- Lines: 1030 to 1033
 function NewSkillTreeGui:respec_tree(tree)
 	local params = {tree = tree}
 end
 
--- Lines: 1003 to 1011
+-- Lines: 1035 to 1043
 function NewSkillTreeGui:_dialog_respec_trees_yes(trees_idx)
 	for i = 1, #trees_idx, 1 do
 		local tree_idx = trees_idx[i]
@@ -1208,7 +1217,7 @@ function NewSkillTreeGui:_dialog_respec_trees_yes(trees_idx)
 	self._event_listener:call("refresh")
 end
 
--- Lines: 1013 to 1024
+-- Lines: 1045 to 1056
 function NewSkillTreeGui:_dialog_respec_all_yes()
 	for i = 1, #self._tree_items, 1 do
 		local trees_idx = self._tree_items[i]:trees_idx()
@@ -1225,11 +1234,11 @@ function NewSkillTreeGui:_dialog_respec_all_yes()
 	self._event_listener:call("refresh")
 end
 
--- Lines: 1026 to 1027
+-- Lines: 1058 to 1059
 function NewSkillTreeGui:_dialog_respec_no()
 end
 
--- Lines: 1029 to 1036
+-- Lines: 1061 to 1068
 function NewSkillTreeGui:has_tree_spent_points(trees_idx)
 	for i = 1, #trees_idx, 1 do
 		local tree_idx = trees_idx[i]
@@ -1242,7 +1251,7 @@ function NewSkillTreeGui:has_tree_spent_points(trees_idx)
 	return false
 end
 
--- Lines: 1039 to 1049
+-- Lines: 1071 to 1081
 function NewSkillTreeGui:has_spent_skill_points()
 	for i = 1, #self._tree_items, 1 do
 		local trees_idx = self._tree_items[i]:trees_idx()
@@ -1259,7 +1268,7 @@ function NewSkillTreeGui:has_spent_skill_points()
 	return false
 end
 
--- Lines: 1052 to 1059
+-- Lines: 1084 to 1091
 function NewSkillTreeGui:on_skilltree_reset(tree)
 	self:_pre_reload()
 	NewSkillTreeGui.init(self, self._ws, self._fullscreen_ws, self._node)
@@ -1268,7 +1277,7 @@ function NewSkillTreeGui:on_skilltree_reset(tree)
 	self:set_selected_item(self._active_page:item(), true)
 end
 
--- Lines: 1061 to 1070
+-- Lines: 1093 to 1102
 function NewSkillTreeGui:_pre_reload()
 	self._temp_panel = self._panel
 	self._temp_fullscreen_panel = self._fullscreen_panel
@@ -1279,13 +1288,13 @@ function NewSkillTreeGui:_pre_reload()
 	self._temp_fullscreen_panel:hide()
 end
 
--- Lines: 1072 to 1075
+-- Lines: 1104 to 1107
 function NewSkillTreeGui:_post_reload()
 	self._ws:panel():remove(self._temp_panel)
 	self._fullscreen_ws:panel():remove(self._temp_fullscreen_panel)
 end
 
--- Lines: 1077 to 1083
+-- Lines: 1109 to 1115
 function NewSkillTreeGui:input_focus()
 	if self._one_frame_input_delay then
 		self._one_frame_input_delay = nil
@@ -1296,17 +1305,17 @@ function NewSkillTreeGui:input_focus()
 	return self._enabled and 1 or self._renaming_skill_switch and true
 end
 
--- Lines: 1086 to 1087
+-- Lines: 1118 to 1119
 function NewSkillTreeGui:visible()
 	return self._visible
 end
 
--- Lines: 1090 to 1091
+-- Lines: 1122 to 1123
 function NewSkillTreeGui:is_enabled()
 	return self._enabled
 end
 
--- Lines: 1094 to 1101
+-- Lines: 1126 to 1133
 function NewSkillTreeGui:enable()
 	self._enabled = true
 
@@ -1317,7 +1326,7 @@ function NewSkillTreeGui:enable()
 	end
 end
 
--- Lines: 1103 to 1113
+-- Lines: 1135 to 1145
 function NewSkillTreeGui:disable()
 	self._enabled = false
 
@@ -1344,7 +1353,7 @@ function NewSkillTreeGui:disable()
 	})
 end
 
--- Lines: 1115 to 1127
+-- Lines: 1147 to 1159
 function NewSkillTreeGui:close()
 	managers.menu:active_menu().renderer.ws:show()
 	self:_cancel_rename_skill_switch()
@@ -1360,7 +1369,7 @@ function NewSkillTreeGui:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines: 1130 to 1139
+-- Lines: 1162 to 1171
 function NewSkillTreeGui:mouse_clicked(o, button, x, y)
 	self._mouse_click_index = ((self._mouse_click_index or 0) + 1) % 2
 	self._mouse_click = self._mouse_click or {}
@@ -1372,7 +1381,7 @@ function NewSkillTreeGui:mouse_clicked(o, button, x, y)
 	}
 end
 
--- Lines: 1141 to 1158
+-- Lines: 1173 to 1190
 function NewSkillTreeGui:mouse_double_click(o, button, x, y)
 	if not self._mouse_click or not self._mouse_click[0] or not self._mouse_click[1] then
 		return
@@ -1393,7 +1402,7 @@ function NewSkillTreeGui:mouse_double_click(o, button, x, y)
 	self:press_first_btn(button)
 end
 
--- Lines: 1160 to 1186
+-- Lines: 1192 to 1218
 function NewSkillTreeGui:press_first_btn(button)
 	local first_btn_callback = nil
 	local first_btn_prio = 999
@@ -1425,7 +1434,7 @@ function NewSkillTreeGui:press_first_btn(button)
 	return false
 end
 
--- Lines: 1189 to 1194
+-- Lines: 1221 to 1226
 function NewSkillTreeGui:update(t, dt)
 	local active_tree = self._tree_items[self._active_page]
 
@@ -1434,7 +1443,7 @@ function NewSkillTreeGui:update(t, dt)
 	end
 end
 
--- Lines: 1197 to 1240
+-- Lines: 1229 to 1272
 function NewSkillTreeGui:show_btns(...)
 	local data = {...}
 
@@ -1487,7 +1496,7 @@ function NewSkillTreeGui:show_btns(...)
 	self:_update_borders()
 end
 
--- Lines: 1242 to 1255
+-- Lines: 1274 to 1287
 function NewSkillTreeGui:press_pc_button(button)
 	if not self._enabled then
 		return
@@ -1507,7 +1516,7 @@ function NewSkillTreeGui:press_pc_button(button)
 	return false
 end
 
--- Lines: 1258 to 1288
+-- Lines: 1290 to 1320
 function NewSkillTreeGui:_update_borders()
 	local spec_box_panel = self._specialization_panel:child("spec_box_panel")
 	local desc_box_panel = self._specialization_panel:child("desc_box_panel")
@@ -1553,14 +1562,14 @@ function NewSkillTreeGui:_update_borders()
 	end
 end
 
--- Lines: 1290 to 1294
+-- Lines: 1322 to 1326
 function NewSkillTreeGui:on_notify(tree, msg)
 	for i = 1, #self._tree_items, 1 do
 		self._tree_items[i]:on_notify(tree, msg)
 	end
 end
 
--- Lines: 1296 to 1300
+-- Lines: 1328 to 1332
 function NewSkillTreeGui:reload_connections()
 	for i = 1, #self._tree_items, 1 do
 		self._tree_items[i]:reload_connections()
@@ -1568,25 +1577,25 @@ function NewSkillTreeGui:reload_connections()
 end
 NewSkillTreeItem = NewSkillTreeItem or class()
 
--- Lines: 1306 to 1308
+-- Lines: 1338 to 1340
 function NewSkillTreeItem:init()
 	self._selected = false
 end
 
--- Lines: 1310 to 1311
+-- Lines: 1342 to 1343
 function NewSkillTreeItem:refresh()
 end
 
--- Lines: 1314 to 1315
+-- Lines: 1346 to 1347
 function NewSkillTreeItem:inside()
 end
 
--- Lines: 1317 to 1318
+-- Lines: 1349 to 1350
 function NewSkillTreeItem:is_selected()
 	return self._selected
 end
 
--- Lines: 1321 to 1328
+-- Lines: 1353 to 1360
 function NewSkillTreeItem:set_selected(selected, play_sound)
 	self._selected = selected
 
@@ -1597,30 +1606,30 @@ function NewSkillTreeItem:set_selected(selected, play_sound)
 	end
 end
 
--- Lines: 1330 to 1331
+-- Lines: 1362 to 1363
 function NewSkillTreeItem:is_active()
 	return self._active
 end
 
--- Lines: 1334 to 1337
+-- Lines: 1366 to 1369
 function NewSkillTreeItem:set_active(active, play_sound)
 	self._active = active
 
 	self:refresh()
 end
 
--- Lines: 1339 to 1342
+-- Lines: 1371 to 1374
 function NewSkillTreeItem:trigger()
 	managers.menu_component:post_event("menu_enter")
 	self:refresh()
 end
 
--- Lines: 1344 to 1345
+-- Lines: 1376 to 1377
 function NewSkillTreeItem:flash()
 end
 NewSkillTreeTabItem = NewSkillTreeTabItem or class(NewSkillTreeItem)
 
--- Lines: 1353 to 1375
+-- Lines: 1385 to 1407
 function NewSkillTreeTabItem:init(page_tab_panel, page, tab_x, index, gui, page_item)
 	NewSkillTreeTabItem.super.init(self)
 
@@ -1661,49 +1670,49 @@ function NewSkillTreeTabItem:init(page_tab_panel, page, tab_x, index, gui, page_
 	self:refresh()
 end
 
--- Lines: 1377 to 1378
+-- Lines: 1409 to 1410
 function NewSkillTreeTabItem:index()
 	return self._index
 end
 
--- Lines: 1381 to 1382
+-- Lines: 1413 to 1414
 function NewSkillTreeTabItem:page()
 	return self._page_item
 end
 
--- Lines: 1385 to 1386
+-- Lines: 1417 to 1418
 function NewSkillTreeTabItem:prev_page_position()
 	return self._page_panel:left() - 15
 end
 
--- Lines: 1389 to 1390
+-- Lines: 1421 to 1422
 function NewSkillTreeTabItem:next_page_position()
 	return self._page_panel:right() + 15
 end
 
--- Lines: 1393 to 1396
+-- Lines: 1425 to 1428
 function NewSkillTreeTabItem:set_active(active)
 	self._active = active
 
 	self:refresh()
 end
 
--- Lines: 1398 to 1399
+-- Lines: 1430 to 1431
 function NewSkillTreeTabItem:is_active()
 	return self._active
 end
 
--- Lines: 1402 to 1403
+-- Lines: 1434 to 1435
 function NewSkillTreeTabItem:tree()
 	return self._tree
 end
 
--- Lines: 1406 to 1407
+-- Lines: 1438 to 1439
 function NewSkillTreeTabItem:inside(x, y)
 	return self._page_panel:inside(x, y)
 end
 
--- Lines: 1410 to 1419
+-- Lines: 1442 to 1451
 function NewSkillTreeTabItem:refresh()
 	if not alive(self._page_panel) then
 		return
@@ -1715,7 +1724,7 @@ function NewSkillTreeTabItem:refresh()
 end
 NewSkillTreePage = NewSkillTreePage or class(NewSkillTreeItem)
 
--- Lines: 1426 to 1475
+-- Lines: 1458 to 1507
 function NewSkillTreePage:init(page, page_data, tree_title_panel, tree_panel, fullscreen_panel, gui)
 	NewSkillTreePage.super.init(self)
 
@@ -1777,35 +1786,35 @@ function NewSkillTreePage:init(page, page_data, tree_title_panel, tree_panel, fu
 	self:refresh()
 end
 
--- Lines: 1477 to 1479
+-- Lines: 1509 to 1511
 function NewSkillTreePage:trees_idx()
 	local trees_idx = deep_clone(self._trees_idx)
 
 	return trees_idx
 end
 
--- Lines: 1482 to 1484
+-- Lines: 1514 to 1516
 function NewSkillTreePage:_on_refresh_event()
 	self:refresh()
 end
 
--- Lines: 1486 to 1490
+-- Lines: 1518 to 1522
 function NewSkillTreePage:update(t, dt)
 	for i = 1, #self._trees, 1 do
 		self._trees[i]:update(t, dt)
 	end
 end
 
--- Lines: 1492 to 1493
+-- Lines: 1524 to 1525
 function NewSkillTreePage:on_points_spent()
 end
 
--- Lines: 1495 to 1496
+-- Lines: 1527 to 1528
 function NewSkillTreePage:item(tree, tier, skill_id)
 	return self._trees[tree or 1] and self._trees[tree or 1]:item(tier, skill_id)
 end
 
--- Lines: 1500 to 1516
+-- Lines: 1532 to 1548
 function NewSkillTreePage:inside(x, y)
 	if self._tree_panel:inside(x, y) then
 		local item, tree_inside = nil
@@ -1826,22 +1835,22 @@ function NewSkillTreePage:inside(x, y)
 	end
 end
 
--- Lines: 1518 to 1519
+-- Lines: 1550 to 1551
 function NewSkillTreePage:inside_tree(x, y, tree)
 	return self._trees[tree] and self._trees[tree]:inside(x, y)
 end
 
--- Lines: 1522 to 1523
+-- Lines: 1554 to 1555
 function NewSkillTreePage:inside_tree_tier(x, y, tree, tier)
 	return self._trees[tree] and self._trees[tree]:inside_tier(x, y, tier)
 end
 
--- Lines: 1526 to 1527
+-- Lines: 1558 to 1559
 function NewSkillTreePage:inside_tree_tier_skill(x, y, tree, tier, skill)
 	return self._trees[tree] and self._trees[tree]:inside_tier_skill(x, y, tier, skill)
 end
 
--- Lines: 1530 to 1542
+-- Lines: 1562 to 1574
 function NewSkillTreePage:refresh()
 	self._tree_panel:set_visible(self._active)
 	self._tree_title_panel:set_visible(self._active)
@@ -1856,7 +1865,7 @@ function NewSkillTreePage:refresh()
 	end
 end
 
--- Lines: 1544 to 1550
+-- Lines: 1576 to 1582
 function NewSkillTreePage:set_active(active)
 	self._active = active
 
@@ -1869,27 +1878,27 @@ function NewSkillTreePage:set_active(active)
 	return active and self:item(1, 1)
 end
 
--- Lines: 1553 to 1557
+-- Lines: 1585 to 1589
 function NewSkillTreePage:on_notify(tree, msg)
 	for i = 1, #self._trees, 1 do
 		self._trees[i]:on_notify(tree, msg)
 	end
 end
 
--- Lines: 1559 to 1563
+-- Lines: 1591 to 1595
 function NewSkillTreePage:reload_connections()
 	for i = 1, #self._trees, 1 do
 		self._trees[i]:reload_connections()
 	end
 end
 
--- Lines: 1565 to 1566
+-- Lines: 1597 to 1598
 function NewSkillTreePage:name()
 	return self._page_name
 end
 NewSkillTreeTreeItem = NewSkillTreeTreeItem or class(NewSkillTreeItem)
 
--- Lines: 1572 to 1612
+-- Lines: 1604 to 1644
 function NewSkillTreeTreeItem:init(tree, tree_data, tree_panel, fullscreen_panel, gui, page)
 	NewSkillTreeTreeItem.super.init(self)
 
@@ -1934,7 +1943,7 @@ function NewSkillTreeTreeItem:init(tree, tree_data, tree_panel, fullscreen_panel
 	self._progress:set_y(self._progress_pos_current)
 end
 
--- Lines: 1614 to 1624
+-- Lines: 1646 to 1656
 function NewSkillTreeTreeItem:update(t, dt)
 	for _, tier_item in ipairs(self._tiers) do
 		tier_item:update(t, dt)
@@ -1948,17 +1957,17 @@ function NewSkillTreeTreeItem:update(t, dt)
 	end
 end
 
--- Lines: 1626 to 1627
+-- Lines: 1658 to 1659
 function NewSkillTreeTreeItem:tier(tier)
 	return self._tiers[tier]
 end
 
--- Lines: 1630 to 1631
+-- Lines: 1662 to 1663
 function NewSkillTreeTreeItem:item(tier, skill_id)
 	return self._tiers[tier or 1] and self._tiers[tier or 1]:item(skill_id)
 end
 
--- Lines: 1634 to 1646
+-- Lines: 1666 to 1678
 function NewSkillTreeTreeItem:inside(x, y)
 	if self._tree_panel:inside(x, y) then
 		local item = nil
@@ -1975,17 +1984,17 @@ function NewSkillTreeTreeItem:inside(x, y)
 	end
 end
 
--- Lines: 1648 to 1649
+-- Lines: 1680 to 1681
 function NewSkillTreeTreeItem:inside_tier(x, y, tier)
 	return self._tiers[tier] and self._tiers[tier]:inside(x, y)
 end
 
--- Lines: 1652 to 1653
+-- Lines: 1684 to 1685
 function NewSkillTreeTreeItem:inside_tier_skill(x, y, tier, skill)
 	return self._tiers[tier] and self._tiers[tier]:inside_skill(x, y, skill)
 end
 
--- Lines: 1656 to 1663
+-- Lines: 1688 to 1695
 function NewSkillTreeTreeItem:_on_refresh_event()
 	self:refresh()
 
@@ -1996,13 +2005,13 @@ function NewSkillTreeTreeItem:_on_refresh_event()
 	end
 end
 
--- Lines: 1665 to 1668
+-- Lines: 1697 to 1700
 function NewSkillTreeTreeItem:refresh()
 	local tier, points_spent, points_max = self:_tree_points()
 	self._progress_pos_wanted = math.max(0, (self._progress_start - self._progress_tier_height * tier) - self._progress_tier_height * points_spent / points_max)
 end
 
--- Lines: 1670 to 1677
+-- Lines: 1702 to 1709
 function NewSkillTreeTreeItem:reload_connections()
 	for _, tier_item in ipairs(self._tiers) do
 		tier_item:reload_connections()
@@ -2012,7 +2021,7 @@ function NewSkillTreeTreeItem:reload_connections()
 	self._progress_pos_wanted = math.max(0, (self._progress_start - self._progress_tier_height * tier) - self._progress_tier_height * points_spent / points_max)
 end
 
--- Lines: 1679 to 1686
+-- Lines: 1711 to 1718
 function NewSkillTreeTreeItem:set_active(active)
 	for tier, tier_item in pairs(self._tiers) do
 		tier_item:refresh_points(active)
@@ -2023,7 +2032,7 @@ function NewSkillTreeTreeItem:set_active(active)
 	self._progress:set_alpha(active and 1 or 0.5)
 end
 
--- Lines: 1688 to 1703
+-- Lines: 1720 to 1735
 function NewSkillTreeTreeItem:_tree_points()
 	local points_spent = managers.skilltree:points_spent(self._tree)
 	local points_max = nil
@@ -2042,7 +2051,7 @@ function NewSkillTreeTreeItem:_tree_points()
 	return #self._tiers - 1, points_spent, points_max
 end
 
--- Lines: 1706 to 1719
+-- Lines: 1738 to 1751
 function NewSkillTreeTreeItem:link(left_tree, right_tree)
 	local first_item, last_item = nil
 
@@ -2060,7 +2069,7 @@ function NewSkillTreeTreeItem:link(left_tree, right_tree)
 	end
 end
 
--- Lines: 1729 to 1739
+-- Lines: 1761 to 1771
 function NewSkillTreeTreeItem:on_notify(tree, msg)
 	if tree == self._tree or tree == 0 then
 		for tier, tier_item in ipairs(self._tiers) do
@@ -2074,7 +2083,7 @@ function NewSkillTreeTreeItem:on_notify(tree, msg)
 end
 NewSkillTreeTierItem = NewSkillTreeTierItem or class(NewSkillTreeItem)
 
--- Lines: 1743 to 1860
+-- Lines: 1775 to 1892
 function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree, tree_item, fullscreen_panel, gui)
 	NewSkillTreeTierItem.super.init(self)
 
@@ -2306,7 +2315,7 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 	self:refresh()
 end
 
--- Lines: 1862 to 1898
+-- Lines: 1894 to 1930
 function NewSkillTreeTierItem:refresh_points(selected)
 	self._tier_points:set_visible(selected)
 	self._tier_points_0:set_visible(selected)
@@ -2346,7 +2355,7 @@ function NewSkillTreeTierItem:refresh_points(selected)
 	end
 end
 
--- Lines: 1900 to 1924
+-- Lines: 1932 to 1956
 function NewSkillTreeTierItem:_refresh_tier_text(selected)
 	local enable = selected
 
@@ -2377,14 +2386,14 @@ function NewSkillTreeTierItem:_refresh_tier_text(selected)
 	self._tier_points_needed_zero:set_visible(enable)
 end
 
--- Lines: 1926 to 1930
+-- Lines: 1958 to 1962
 function NewSkillTreeTierItem:update(t, dt)
 	for _, skill_id in ipairs(self._skills_ordered) do
 		self._skills[skill_id]:update(t, dt)
 	end
 end
 
--- Lines: 1932 to 1936
+-- Lines: 1964 to 1968
 function NewSkillTreeTierItem:next_item_by_index(index)
 	if index == 0 then
 		return nil
@@ -2393,27 +2402,27 @@ function NewSkillTreeTierItem:next_item_by_index(index)
 	return self._skills_ordered[index] and self._skills[self._skills_ordered[index]] or self:next_item_by_index(index - 1)
 end
 
--- Lines: 1939 to 1940
+-- Lines: 1971 to 1972
 function NewSkillTreeTierItem:first_item()
 	return self._skills_ordered[1] and self._skills[self._skills_ordered[1]]
 end
 
--- Lines: 1943 to 1944
+-- Lines: 1975 to 1976
 function NewSkillTreeTierItem:last_item()
 	return self._skills_ordered[#self._skills_ordered] and self._skills[self._skills_ordered[#self._skills_ordered]]
 end
 
--- Lines: 1947 to 1948
+-- Lines: 1979 to 1980
 function NewSkillTreeTierItem:item_by_index(index)
 	return self._skills_ordered[index] and self._skills[self._skills_ordered[index]]
 end
 
--- Lines: 1951 to 1952
+-- Lines: 1983 to 1984
 function NewSkillTreeTierItem:item(skill_id)
 	return self._skills[skill_id] or self._skills_ordered[1] and self._skills[self._skills_ordered[1]]
 end
 
--- Lines: 1955 to 1969
+-- Lines: 1987 to 2001
 function NewSkillTreeTierItem:link(up_tier, down_tier)
 	local neighbour_tiers = {
 		[3] = up_tier,
@@ -2439,7 +2448,7 @@ function NewSkillTreeTierItem:link(up_tier, down_tier)
 	end
 end
 
--- Lines: 1971 to 1985
+-- Lines: 2003 to 2017
 function NewSkillTreeTierItem:connect(tier)
 	if not tier then
 		return
@@ -2458,19 +2467,19 @@ function NewSkillTreeTierItem:connect(tier)
 	end
 end
 
--- Lines: 1987 to 1991
+-- Lines: 2019 to 2023
 function NewSkillTreeTierItem:reload_connections()
 	for _, skill_id in ipairs(self._skills_ordered) do
 		self._skills[skill_id]:reload_connection()
 	end
 end
 
--- Lines: 1993 to 1995
+-- Lines: 2025 to 2027
 function NewSkillTreeTierItem:set_active(active)
 	self:_refresh_tier_text(active)
 end
 
--- Lines: 1997 to 2007
+-- Lines: 2029 to 2039
 function NewSkillTreeTierItem:inside(x, y)
 	if self._tier_panel:inside(x, y) then
 		self._gui:set_active_tier(self)
@@ -2483,12 +2492,12 @@ function NewSkillTreeTierItem:inside(x, y)
 	end
 end
 
--- Lines: 2009 to 2010
+-- Lines: 2041 to 2042
 function NewSkillTreeTierItem:inside_skill(x, y, skill)
 	return self._skills[skill] and self._skills[skill]:inside(x, y)
 end
 
--- Lines: 2021 to 2027
+-- Lines: 2053 to 2059
 function NewSkillTreeTierItem:on_notify(tree, tier, msg)
 	for _, obj in pairs(self._skills) do
 		if self._tree == tree or tree == 0 then
@@ -2498,7 +2507,7 @@ function NewSkillTreeTierItem:on_notify(tree, tier, msg)
 end
 NewSkillTreeSkillItem = NewSkillTreeSkillItem or class(NewSkillTreeItem)
 
--- Lines: 2034 to 2083
+-- Lines: 2066 to 2132
 function NewSkillTreeSkillItem:init(skill_id, skill_data, skill_panel, tree_panel, tree, tier, tier_item, fullscreen_panel, gui)
 	NewSkillTreeSkillItem.super.init(self)
 
@@ -2589,24 +2598,24 @@ function NewSkillTreeSkillItem:init(skill_id, skill_data, skill_panel, tree_pane
 	self:refresh()
 end
 
--- Lines: 2085 to 2087
+-- Lines: 2134 to 2136
 function NewSkillTreeSkillItem:_on_refresh_event()
 	self:refresh()
 end
 
--- Lines: 2089 to 2095
+-- Lines: 2138 to 2144
 function NewSkillTreeSkillItem:on_notify(tree, tier, msg)
 	if (self._tier == tier or tier == 0) and msg.label == "refresh" then
 		self:refresh()
 	end
 end
 
--- Lines: 2097 to 2098
+-- Lines: 2146 to 2147
 function NewSkillTreeSkillItem:is_active()
 	return self._skilltree:skill_completed(self._skill_id)
 end
 
--- Lines: 2101 to 2128
+-- Lines: 2150 to 2177
 function NewSkillTreeSkillItem:refresh()
 	if not alive(self._skill_panel) then
 		return
@@ -2632,32 +2641,32 @@ function NewSkillTreeSkillItem:refresh()
 	self:_update_can_refund()
 end
 
--- Lines: 2130 to 2131
+-- Lines: 2179 to 2180
 function NewSkillTreeSkillItem:panel()
 	return self._skill_panel
 end
 
--- Lines: 2134 to 2135
+-- Lines: 2183 to 2184
 function NewSkillTreeSkillItem:tree()
 	return self._tree
 end
 
--- Lines: 2138 to 2139
+-- Lines: 2187 to 2188
 function NewSkillTreeSkillItem:tier()
 	return self._tier
 end
 
--- Lines: 2142 to 2143
+-- Lines: 2191 to 2192
 function NewSkillTreeSkillItem:skill_id()
 	return self._skill_id
 end
 
--- Lines: 2146 to 2147
+-- Lines: 2195 to 2196
 function NewSkillTreeSkillItem:can_refund()
 	return self._can_refund
 end
 
--- Lines: 2150 to 2156
+-- Lines: 2199 to 2205
 function NewSkillTreeSkillItem:_update_can_refund()
 	if self._selected then
 		self._can_refund = self._skilltree:skill_can_be_removed(self:tree(), self:tier(), self:skill_id())
@@ -2666,13 +2675,13 @@ function NewSkillTreeSkillItem:_update_can_refund()
 	end
 end
 
--- Lines: 2158 to 2161
+-- Lines: 2207 to 2210
 function NewSkillTreeSkillItem:set_selected(selected, play_sound)
 	NewSkillTreeSkillItem.super.set_selected(self, selected, play_sound)
 	self:_update_can_refund()
 end
 
--- Lines: 2164 to 2169
+-- Lines: 2213 to 2218
 function NewSkillTreeSkillItem:link(left_item, right_item, up_item, down_item)
 	self._left_item = left_item or self._left_item
 	self._right_item = right_item or self._right_item
@@ -2680,7 +2689,7 @@ function NewSkillTreeSkillItem:link(left_item, right_item, up_item, down_item)
 	self._down_item = down_item or self._down_item
 end
 
--- Lines: 2171 to 2181
+-- Lines: 2220 to 2230
 function NewSkillTreeSkillItem:get_link(link)
 	if link == "left" then
 		return self._left_item
@@ -2693,23 +2702,23 @@ function NewSkillTreeSkillItem:get_link(link)
 	end
 end
 
--- Lines: 2184 to 2185
+-- Lines: 2233 to 2234
 function NewSkillTreeSkillItem:connect(item)
 end
 
--- Lines: 2187 to 2188
+-- Lines: 2236 to 2237
 function NewSkillTreeSkillItem:create_connection_point(offset)
 	return self._skill_panel:child("SkillIconPanel"):world_center_x() - self._tree_panel:world_x(), self._skill_panel:child("SkillIconPanel"):world_center_y() - self._tree_panel:world_y()
 end
 
--- Lines: 2191 to 2195
+-- Lines: 2240 to 2244
 function NewSkillTreeSkillItem:reload_connection()
 	for _, connection in pairs(self._connection) do
 		self:connect(connection.item)
 	end
 end
 
--- Lines: 2198 to 2220
+-- Lines: 2247 to 2269
 function NewSkillTreeSkillItem:update(t, dt)
 	for _, connection in pairs(self._connection) do
 		if connection.rotate then
@@ -2734,12 +2743,12 @@ function NewSkillTreeSkillItem:update(t, dt)
 	end
 end
 
--- Lines: 2267 to 2268
+-- Lines: 2316 to 2317
 function NewSkillTreeSkillItem:inside(x, y)
 	return self._skill_panel:child("SkillIconPanel"):inside(x, y)
 end
 
--- Lines: 2271 to 2293
+-- Lines: 2320 to 2342
 function NewSkillTreeSkillItem:flash()
 	local skill_text = self._skill_panel:child("SkillName")
 
@@ -2750,7 +2759,7 @@ function NewSkillTreeSkillItem:flash()
 	self._is_flashing = true
 
 
-	-- Lines: 2280 to 2289
+	-- Lines: 2329 to 2338
 	local function flash_anim(panel)
 		local st_color = skill_text:color()
 		local s = 0
@@ -2769,7 +2778,7 @@ function NewSkillTreeSkillItem:flash()
 	self._skill_panel:animate(flash_anim)
 end
 
--- Lines: 2295 to 2310
+-- Lines: 2344 to 2359
 function NewSkillTreeSkillItem:invest()
 	local refresh = false
 	local skill_id = self._skill_id
@@ -2789,7 +2798,7 @@ function NewSkillTreeSkillItem:invest()
 	return refresh
 end
 
--- Lines: 2313 to 2331
+-- Lines: 2362 to 2380
 function NewSkillTreeSkillItem:refund()
 	local skill_tree = self._skilltree
 	local skill_id = self._skill_id
@@ -2815,7 +2824,7 @@ function NewSkillTreeSkillItem:refund()
 	return refresh
 end
 
--- Lines: 2338 to 2357
+-- Lines: 2387 to 2406
 function NewSkillTreeGui:_start_rename_skill_switch()
 	if not self._renaming_skill_switch then
 		self._enabled = false
@@ -2846,7 +2855,7 @@ function NewSkillTreeGui:_start_rename_skill_switch()
 	end
 end
 
--- Lines: 2359 to 2379
+-- Lines: 2408 to 2428
 function NewSkillTreeGui:_stop_rename_skill_switch()
 	if self._renaming_skill_switch then
 		self._enabled = true
@@ -2871,7 +2880,7 @@ function NewSkillTreeGui:_stop_rename_skill_switch()
 	end
 end
 
--- Lines: 2381 to 2399
+-- Lines: 2430 to 2448
 function NewSkillTreeGui:_cancel_rename_skill_switch()
 	if self._renaming_skill_switch then
 		self._enabled = true
@@ -2894,7 +2903,7 @@ function NewSkillTreeGui:_cancel_rename_skill_switch()
 	end
 end
 
--- Lines: 2401 to 2427
+-- Lines: 2450 to 2476
 function NewSkillTreeGui:_update_rename_skill_switch()
 	local skill_set_text = self._skillset_panel:child("SkillSetText")
 
@@ -2926,14 +2935,14 @@ function NewSkillTreeGui:_update_rename_skill_switch()
 	end
 end
 
--- Lines: 2429 to 2431
+-- Lines: 2478 to 2480
 function NewSkillTreeGui:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines: 2434 to 2441
+-- Lines: 2483 to 2490
 function NewSkillTreeGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -2943,7 +2952,7 @@ function NewSkillTreeGui.blink(o)
 	end
 end
 
--- Lines: 2443 to 2452
+-- Lines: 2492 to 2501
 function NewSkillTreeGui:enter_text(o, s)
 	if self._renaming_skill_switch then
 		local m = tweak_data:get_raw_value("gui", "rename_skill_set_max_letters") or 15
@@ -2955,7 +2964,7 @@ function NewSkillTreeGui:enter_text(o, s)
 	end
 end
 
--- Lines: 2454 to 2481
+-- Lines: 2503 to 2530
 function NewSkillTreeGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -2989,7 +2998,7 @@ function NewSkillTreeGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 2483 to 2490
+-- Lines: 2532 to 2539
 function NewSkillTreeGui:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -3000,7 +3009,7 @@ function NewSkillTreeGui:key_release(o, k)
 	end
 end
 
--- Lines: 2492 to 2523
+-- Lines: 2541 to 2572
 function NewSkillTreeGui:key_press(o, k)
 	local text = self._renaming_skill_switch
 	local n = utf8.len(text)

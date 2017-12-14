@@ -1,6 +1,6 @@
 HUDBlackScreen = HUDBlackScreen or class()
 
--- Lines: 4 to 42
+-- Lines: 4 to 47
 function HUDBlackScreen:init(hud)
 	self._hud_panel = hud.panel
 
@@ -87,12 +87,12 @@ function HUDBlackScreen:init(hud)
 	self._skip_circle:set_position(self._blackscreen_panel:w() - self._circle_radius * 3, self._blackscreen_panel:h() - self._circle_radius * 3)
 end
 
--- Lines: 45 to 47
+-- Lines: 50 to 52
 function HUDBlackScreen:set_skip_circle(current, total)
 	self._skip_circle:set_current(current / total)
 end
 
--- Lines: 50 to 74
+-- Lines: 55 to 79
 function HUDBlackScreen:set_loading_text_status(status)
 	if status then
 		self._blackscreen_panel:child("skip_text"):set_visible(false)
@@ -129,7 +129,7 @@ function HUDBlackScreen:set_loading_text_status(status)
 	end
 end
 
--- Lines: 76 to 86
+-- Lines: 81 to 91
 function HUDBlackScreen:skip_circle_done()
 	self._blackscreen_panel:child("skip_text"):set_visible(false)
 
@@ -160,7 +160,7 @@ function HUDBlackScreen:skip_circle_done()
 	bitmap:animate(callback(self, HUDInteraction, "_animate_interaction_complete"), circle)
 end
 
--- Lines: 89 to 98
+-- Lines: 94 to 103
 function HUDBlackScreen:set_job_data()
 	if managers.crime_spree:is_active() then
 		self:_set_job_data_crime_spree()
@@ -169,7 +169,7 @@ function HUDBlackScreen:set_job_data()
 	end
 end
 
--- Lines: 100 to 136
+-- Lines: 105 to 141
 function HUDBlackScreen:_set_job_data()
 	if not managers.job:has_active_job() then
 		return
@@ -222,7 +222,7 @@ function HUDBlackScreen:_set_job_data()
 	risk_text:set_center_x(risk_panel:center_x())
 end
 
--- Lines: 140 to 172
+-- Lines: 145 to 177
 function HUDBlackScreen:_set_job_data_crime_spree()
 	local job_panel = self._blackscreen_panel:panel({
 		y = 0,
@@ -257,7 +257,7 @@ function HUDBlackScreen:_set_job_data_crime_spree()
 	risk_text:set_center_x(job_panel:center_x())
 end
 
--- Lines: 176 to 252
+-- Lines: 181 to 257
 function HUDBlackScreen:_create_stages()
 	local job_chain = managers.job:current_job_chain_data()
 	local job_panel = self._blackscreen_panel:child("job_panel")
@@ -433,7 +433,7 @@ function HUDBlackScreen:_create_stages()
 	stages_panel:set_center_x(math.round(job_panel:child("portrait"):w() + (job_panel:w() - job_panel:child("portrait"):w()) / 2))
 end
 
--- Lines: 254 to 258
+-- Lines: 259 to 263
 function HUDBlackScreen:set_mid_text(text)
 	local mid_text = self._blackscreen_panel:child("mid_text")
 
@@ -441,17 +441,17 @@ function HUDBlackScreen:set_mid_text(text)
 	mid_text:set_text(utf8.to_upper(text))
 end
 
--- Lines: 260 to 262
+-- Lines: 265 to 267
 function HUDBlackScreen:fade_in_mid_text()
 	self._blackscreen_panel:child("mid_text"):animate(callback(self, self, "_animate_fade_in"))
 end
 
--- Lines: 264 to 266
+-- Lines: 269 to 271
 function HUDBlackScreen:fade_out_mid_text()
 	self._blackscreen_panel:child("mid_text"):animate(callback(self, self, "_animate_fade_out"))
 end
 
--- Lines: 268 to 287
+-- Lines: 273 to 292
 function HUDBlackScreen:_animate_fade_in(mid_text)
 	local job_panel = self._blackscreen_panel:child("job_panel")
 	local t = 1
@@ -480,7 +480,7 @@ function HUDBlackScreen:_animate_fade_in(mid_text)
 	self._blackscreen_panel:set_alpha(1)
 end
 
--- Lines: 289 to 308
+-- Lines: 294 to 313
 function HUDBlackScreen:_animate_fade_out(mid_text)
 	local job_panel = self._blackscreen_panel:child("job_panel")
 	local t = 1

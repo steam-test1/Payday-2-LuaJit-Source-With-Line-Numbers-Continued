@@ -1,6 +1,7 @@
 HUDAccessCamera = HUDAccessCamera or class()
+local old_buttons = true
 
--- Lines: 3 to 37
+-- Lines: 9 to 43
 function HUDAccessCamera:init(hud, full_hud)
 	self._hud_panel = hud.panel
 	self._full_hud_panel = full_hud.panel
@@ -164,26 +165,26 @@ function HUDAccessCamera:init(hud, full_hud)
 	self._full_hud_panel:child("noise2"):set_texture_rect(0, 0, size, size)
 end
 
--- Lines: 39 to 48
+-- Lines: 45 to 54
 function HUDAccessCamera:start()
 	local prev = "hud_prev_camera"
 	local next = "hud_next_camera"
 
-	self._hud_panel:child("legend_prev"):set_text(utf8.to_upper(managers.localization:text(prev, {BTN_PRIMARY = managers.localization:btn_macro("primary_attack")})))
-	self._hud_panel:child("legend_next"):set_text(utf8.to_upper(managers.localization:text(next, {BTN_SECONDARY = managers.localization:btn_macro("secondary_attack")})))
-	self._hud_panel:child("legend_exit"):set_text(utf8.to_upper(managers.localization:text("hud_exit_camera", {BTN_JUMP = managers.localization:btn_macro("jump")})))
+	self._hud_panel:child("legend_prev"):set_text(utf8.to_upper(managers.localization:text(prev, {BTN_PRIMARY = managers.localization:btn_macro(old_buttons and "primary_attack" or "suvcam_prev")})))
+	self._hud_panel:child("legend_next"):set_text(utf8.to_upper(managers.localization:text(next, {BTN_SECONDARY = managers.localization:btn_macro(old_buttons and "secondary_attack" or "suvcam_next")})))
+	self._hud_panel:child("legend_exit"):set_text(utf8.to_upper(managers.localization:text("hud_exit_camera", {BTN_JUMP = managers.localization:btn_macro(old_buttons and "jump" or "suvcam_exit")})))
 
 	self._active = true
 
 	self._hud_panel:animate(callback(self, self, "_animate_date"))
 end
 
--- Lines: 50 to 52
+-- Lines: 56 to 58
 function HUDAccessCamera:stop()
 	self._active = false
 end
 
--- Lines: 54 to 60
+-- Lines: 60 to 66
 function HUDAccessCamera:set_destroyed(destroyed, no_feed)
 	self._full_hud_panel:child("destroyed_rect"):set_visible(destroyed)
 	self._hud_panel:child("destroyed_rect_bg"):set_visible(destroyed)
@@ -191,17 +192,17 @@ function HUDAccessCamera:set_destroyed(destroyed, no_feed)
 	self._hud_panel:child("destroyed_text"):set_visible(destroyed)
 end
 
--- Lines: 62 to 64
+-- Lines: 68 to 70
 function HUDAccessCamera:set_camera_name(name)
 	self._hud_panel:child("camera_name"):set_text(utf8.to_upper(name))
 end
 
--- Lines: 66 to 68
+-- Lines: 72 to 74
 function HUDAccessCamera:set_date(date)
 	self._hud_panel:child("date"):set_text(date)
 end
 
--- Lines: 70 to 79
+-- Lines: 76 to 85
 function HUDAccessCamera:_animate_date()
 	while self._active do
 		local dt = coroutine.yield()
@@ -212,7 +213,7 @@ function HUDAccessCamera:_animate_date()
 	end
 end
 
--- Lines: 81 to 90
+-- Lines: 87 to 96
 function HUDAccessCamera:draw_marker(i, pos)
 	self._markers = self._markers or {}
 
@@ -229,7 +230,7 @@ function HUDAccessCamera:draw_marker(i, pos)
 	self._markers[i]:set_center(pos.x, pos.y)
 end
 
--- Lines: 93 to 101
+-- Lines: 99 to 107
 function HUDAccessCamera:max_markers(amount)
 	while amount < #self._markers do
 		local obj = table.remove(self._markers, amount + 1)
