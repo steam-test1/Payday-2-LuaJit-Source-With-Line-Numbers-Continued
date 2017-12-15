@@ -5,13 +5,13 @@ PlayerFatalVR._end_action_dead = PlayerBleedOutVR._end_action_bleedout
 local __enter = PlayerFatal.enter
 local __exit = PlayerFatal.exit
 
--- Lines: 10 to 14
+-- Lines: 11 to 15
 function PlayerFatalVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("incapacitated", self._unit:position())
 end
 
--- Lines: 16 to 23
+-- Lines: 17 to 24
 function PlayerFatalVR:exit(state_data, new_state_name)
 	self._ext_movement:set_orientation_state("none")
 
@@ -24,7 +24,7 @@ function PlayerFatalVR:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines: 26 to 63
+-- Lines: 27 to 64
 function PlayerFatalVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		self._weapon_hand_id = self._unit:hand():get_active_hand_id("weapon")

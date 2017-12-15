@@ -3,7 +3,7 @@ __enter = PlayerCarry.enter
 __exit = PlayerCarry.exit
 __check_use_item = PlayerCarry._check_use_item
 
--- Lines: 8 to 13
+-- Lines: 9 to 14
 function PlayerCarryVR:enter(state_data, enter_data)
 	__enter(self, state_data, enter_data)
 
@@ -11,7 +11,7 @@ function PlayerCarryVR:enter(state_data, enter_data)
 	self._should_skip_hand = enter_data and enter_data.skip_hand_carry
 end
 
--- Lines: 15 to 18
+-- Lines: 16 to 19
 function PlayerCarryVR:exit(...)
 	self._unit:hand():set_carry(false)
 
@@ -19,7 +19,7 @@ function PlayerCarryVR:exit(...)
 end
 local __update = PlayerCarry.update
 
--- Lines: 22 to 28
+-- Lines: 23 to 29
 function PlayerCarryVR:update(t, dt)
 	if self._should_set_hand_carry then
 		self._unit:hand():set_carry(true, self._should_skip_hand)
@@ -30,7 +30,7 @@ function PlayerCarryVR:update(t, dt)
 	__update(self, t, dt)
 end
 
--- Lines: 32 to 49
+-- Lines: 33 to 50
 function PlayerCarryVR:_check_use_item(t, input)
 	local new_action = nil
 
@@ -50,7 +50,7 @@ function PlayerCarryVR:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines: 55 to 59
+-- Lines: 56 to 60
 function PlayerCarryVR:_can_run()
 	if tweak_data.carry.types[self._tweak_data_name].can_run or managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		return true
@@ -60,7 +60,7 @@ function PlayerCarryVR:_can_run()
 end
 local __get_input = PlayerCarry._get_input
 
--- Lines: 63 to 68
+-- Lines: 64 to 69
 function PlayerCarryVR:_get_input(...)
 	local input = __get_input(self, ...)
 

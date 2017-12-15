@@ -5,7 +5,7 @@ local __init = HUDManager.init
 local __destroy = HUDManager.destroy
 local __update = HUDManager.update
 
--- Lines: 10 to 23
+-- Lines: 11 to 24
 function HUDManagerVR:init()
 	__init(self)
 	print("[HUDManagerVR] Init")
@@ -22,12 +22,12 @@ function HUDManagerVR:init()
 	self:_init_full_hmd_gui()
 end
 
--- Lines: 25 to 28
+-- Lines: 26 to 29
 function HUDManagerVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 30 to 65
+-- Lines: 31 to 66
 function HUDManagerVR:_init_tablet_gui()
 	self._tablet_ws = self._gui:create_world_workspace(402, 226, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0))
 	local tablet_panel = self._tablet_ws:panel()
@@ -68,7 +68,7 @@ function HUDManagerVR:_init_tablet_gui()
 	self._tablet_ws:hide()
 end
 
--- Lines: 67 to 71
+-- Lines: 68 to 72
 function HUDManagerVR:_init_prompt_gui()
 	self._prompt_ws = self._gui:create_world_workspace(600, 150, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0))
 
@@ -76,7 +76,7 @@ function HUDManagerVR:_init_prompt_gui()
 	self._prompt_ws:hide()
 end
 
--- Lines: 73 to 90
+-- Lines: 74 to 91
 function HUDManagerVR:_init_ammo_gui()
 	self._ammo_ws = self._gui:create_world_workspace(300, 200, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0))
 
@@ -107,7 +107,7 @@ function HUDManagerVR:_init_ammo_gui()
 	self._controller_assist_panel:set_visible(false)
 end
 
--- Lines: 92 to 99
+-- Lines: 93 to 100
 function HUDManagerVR:_init_watch_gui()
 	self._watch_ws = self._gui:create_world_workspace(100, 100, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0))
 
@@ -119,7 +119,7 @@ function HUDManagerVR:_init_watch_gui()
 	self._watch_prompt_ws:hide()
 end
 
--- Lines: 101 to 110
+-- Lines: 102 to 111
 function HUDManagerVR:_init_holo_gui()
 	self._holo_ws = {}
 	self._holo_count = 15
@@ -133,7 +133,7 @@ function HUDManagerVR:_init_holo_gui()
 	end
 end
 
--- Lines: 112 to 117
+-- Lines: 113 to 118
 function HUDManagerVR:_init_belt()
 	self._belt_ws = self._gui:create_world_workspace(640, 240, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0))
 
@@ -142,7 +142,7 @@ function HUDManagerVR:_init_belt()
 	self._belt = HUDBelt:new(self._belt_ws)
 end
 
--- Lines: 119 to 123
+-- Lines: 120 to 124
 function HUDManagerVR:_init_interaction()
 	self._interaction_ws = self._gui:create_world_workspace(80, 80, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0))
 
@@ -150,14 +150,14 @@ function HUDManagerVR:_init_interaction()
 	self._interaction_ws:hide()
 end
 
--- Lines: 125 to 128
+-- Lines: 126 to 129
 function HUDManagerVR:_init_full_hmd_gui()
 	self._full_hmd_ws = Overlay:gui():create_screen_workspace()
 
 	self._full_hmd_ws:set_pinned_screen(true)
 end
 
--- Lines: 132 to 139
+-- Lines: 133 to 140
 function HUDManagerVR:set_ammo_flash_color(color)
 	local ammo_flash = self:ammo_flash()
 	local trans = color:with_alpha(0)
@@ -177,17 +177,17 @@ function HUDManagerVR:set_ammo_flash_color(color)
 	end
 end
 
--- Lines: 141 to 143
+-- Lines: 142 to 144
 function HUDManagerVR:set_ammo_alpha(alpha)
 	self:ammo_panel():set_alpha(math.max(alpha, self._forced_ammo_alpha or 0))
 end
 
--- Lines: 145 to 147
+-- Lines: 146 to 148
 function HUDManagerVR:set_forced_ammo_alpha(alpha)
 	self._forced_ammo_alpha = alpha
 end
 
--- Lines: 151 to 173
+-- Lines: 152 to 174
 function HUDManagerVR:show_controller_assist(text_id, macros)
 	local panel = self._controller_assist_panel
 
@@ -211,69 +211,74 @@ function HUDManagerVR:show_controller_assist(text_id, macros)
 	panel:set_visible(true)
 end
 
--- Lines: 175 to 178
+-- Lines: 176 to 179
 function HUDManagerVR:hide_controller_assist()
 	self._controller_assist_current_id = nil
 
 	self._controller_assist_panel:set_visible(false)
 end
 
--- Lines: 182 to 183
+-- Lines: 183 to 184
 function HUDManagerVR:holo_count()
 	return self._holo_count
 end
 
--- Lines: 188 to 189
+-- Lines: 189 to 190
 function HUDManagerVR:tablet_page(page)
 	return self._tablet_ws:panel():child(page or "main_page")
 end
 
--- Lines: 192 to 193
+-- Lines: 193 to 194
 function HUDManagerVR:prompt_panel()
 	return self._prompt_ws:panel()
 end
 
--- Lines: 196 to 197
+-- Lines: 197 to 198
 function HUDManagerVR:ammo_panel()
 	return self._ammo_ws:panel()
 end
 
--- Lines: 200 to 201
+-- Lines: 201 to 202
 function HUDManagerVR:ammo_flash()
 	return self._ammo_ws:panel():child("ammo_flash")
 end
 
--- Lines: 204 to 205
+-- Lines: 205 to 206
 function HUDManagerVR:watch_panel()
 	return self._watch_ws:panel()
 end
 
--- Lines: 208 to 209
+-- Lines: 209 to 210
 function HUDManagerVR:holo_panel(index)
 	return self._holo_ws[index]:panel()
 end
 
--- Lines: 212 to 213
+-- Lines: 213 to 214
 function HUDManagerVR:watch_prompt_panel()
 	return self._watch_prompt_ws:panel()
 end
 
--- Lines: 216 to 217
+-- Lines: 217 to 218
 function HUDManagerVR:belt()
 	return self._belt
 end
 
--- Lines: 220 to 221
+-- Lines: 221 to 222
 function HUDManagerVR:interaction_panel()
 	return self._interaction_ws:panel()
 end
 
--- Lines: 224 to 225
+-- Lines: 225 to 226
 function HUDManagerVR:full_hmd_panel()
 	return self._full_hmd_ws:panel()
 end
 
--- Lines: 230 to 271
+-- Lines: 229 to 230
+function HUDManagerVR:belt_workspace()
+	return self._belt_ws
+end
+
+-- Lines: 235 to 276
 function HUDManagerVR:on_flick(dir, time)
 	if not self._pages[self._current_page][dir] then
 		return
@@ -289,7 +294,7 @@ function HUDManagerVR:on_flick(dir, time)
 	end
 
 
-	-- Lines: 240 to 260
+	-- Lines: 245 to 265
 	local function panel_swipe(o, x, y)
 		if not alive(o) then
 			return
@@ -331,7 +336,7 @@ function HUDManagerVR:on_flick(dir, time)
 	self._current_page = self._pages[self._current_page][dir]
 end
 
--- Lines: 273 to 287
+-- Lines: 278 to 292
 function HUDManagerVR:set_tablet_page(page)
 	local dir = nil
 
@@ -350,28 +355,28 @@ function HUDManagerVR:set_tablet_page(page)
 	end
 end
 
--- Lines: 289 to 290
+-- Lines: 294 to 295
 function HUDManagerVR:current_tablet_page()
 	return self._current_page
 end
 
--- Lines: 295 to 307
+-- Lines: 300 to 312
 function HUDManagerVR:link_ammo_hud(hand_unit, side)
 	local hand_obj = hand_unit:get_object(Idstring("g_glove"))
 	local hand_rot = hand_unit:rotation()
 
 	if side == 1 or side == "right" then
-		self._ammo_ws:set_linked(300, 200, hand_obj, hand_obj:position() + Vector3(-20, -5, 7):rotate_with(hand_rot), Vector3(15, 0, 0):rotate_with(hand_rot), Vector3(0, 0, -7.5):rotate_with(hand_rot))
+		self._ammo_ws:set_linked(300, 200, hand_obj, hand_obj:position() + Vector3(-20, -5, 7):rotate_with(hand_rot), Vector3(15, 0, 0):rotate_with(hand_rot), Vector3(0, 0, -10):rotate_with(hand_rot))
 		self._controller_assist_panel:set_x(100)
 	elseif side == 2 or side == "left" then
-		self._ammo_ws:set_linked(300, 200, hand_obj, hand_obj:position() + Vector3(5, -5, 7):rotate_with(hand_rot), Vector3(15, 0, 0):rotate_with(hand_rot), Vector3(0, 0, -7.5):rotate_with(hand_rot))
+		self._ammo_ws:set_linked(300, 200, hand_obj, hand_obj:position() + Vector3(5, -5, 7):rotate_with(hand_rot), Vector3(15, 0, 0):rotate_with(hand_rot), Vector3(0, 0, -10):rotate_with(hand_rot))
 		self._controller_assist_panel:set_x(0)
 	end
 
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_hand(side)
 end
 
--- Lines: 309 to 325
+-- Lines: 314 to 330
 function HUDManagerVR:link_watch_prompt(hand_unit, side)
 	local hand_obj = hand_unit:get_object(Idstring("g_glove"))
 	local hand_rot = hand_unit:rotation()
@@ -383,7 +388,7 @@ function HUDManagerVR:link_watch_prompt(hand_unit, side)
 	end
 end
 
--- Lines: 327 to 336
+-- Lines: 332 to 341
 function HUDManagerVR:link_watch_prompt_as_hand(hand_unit, side, offset)
 	offset = offset or Vector3()
 	local hand_obj = hand_unit:get_object(Idstring("g_glove"))
@@ -396,7 +401,7 @@ function HUDManagerVR:link_watch_prompt_as_hand(hand_unit, side, offset)
 	end
 end
 
--- Lines: 338 to 348
+-- Lines: 343 to 353
 function HUDManagerVR:bind_watch_to_hand(hand_unit)
 	local watch_object = hand_unit:get_object(Idstring("player_hud_watch"))
 
@@ -411,7 +416,7 @@ function HUDManagerVR:bind_watch_to_hand(hand_unit)
 	end
 end
 
--- Lines: 350 to 377
+-- Lines: 355 to 382
 function HUDManagerVR:bind_hud_to_vr_hand(weapon_hand_unit, tablet_hand_unit, belt_unit, weapon_side, tablet_side)
 	local tablet_object = tablet_hand_unit:get_object(Idstring("player_hud_tablet"))
 
@@ -426,10 +431,12 @@ function HUDManagerVR:bind_hud_to_vr_hand(weapon_hand_unit, tablet_hand_unit, be
 	self:belt():update_icons()
 end
 
--- Lines: 380 to 394
-function HUDManagerVR.link_belt(ws, belt_unit)
-	local sx = 96
-	local sy = 51
+-- Lines: 385 to 401
+function HUDManagerVR.link_belt(ws, belt_unit, custom_size)
+	local aspect_ratio = 0.53125
+	local size = custom_size or managers.vr:get_setting("belt_size")
+	local sx = size
+	local sy = size * aspect_ratio
 	local belt_rot = belt_unit:rotation()
 	local x_vec = Vector3(sx, 0, 0):rotate_with(belt_rot)
 	local y_vec = Vector3(0, -sy, 0):rotate_with(belt_rot)
@@ -438,14 +445,14 @@ function HUDManagerVR.link_belt(ws, belt_unit)
 	ws:show()
 end
 
--- Lines: 396 to 400
+-- Lines: 403 to 407
 function HUDManagerVR:link_interaction_hud(hand_unit, interaction_object)
 	self._interaction_hand = hand_unit
 	self._interaction_object = interaction_object
 	self._interaction_use_head = not alive(interaction_object)
 end
 
--- Lines: 402 to 423
+-- Lines: 409 to 430
 function HUDManagerVR:start_reload_timer(time, clip_start, clip_full)
 	local reload_panel = self:reload_panel()
 	local size = reload_panel:w()
@@ -482,7 +489,7 @@ function HUDManagerVR:start_reload_timer(time, clip_start, clip_full)
 	self._reload_timer = timer_circle
 end
 
--- Lines: 425 to 433
+-- Lines: 432 to 440
 function HUDManagerVR:stop_reload_timer()
 	if not self._reload_timer or not alive(self._reload_timer._panel) then
 		return
@@ -493,30 +500,30 @@ function HUDManagerVR:stop_reload_timer()
 	self:reload_panel():child("reload_text"):hide()
 end
 
--- Lines: 435 to 437
+-- Lines: 442 to 444
 function HUDManagerVR:reload_world_pos()
 	local x, y = self:reload_panel():center()
 
 	return self._reload_ws:local_to_world(Vector3(x, y, 0))
 end
 
--- Lines: 442 to 444
+-- Lines: 449 to 451
 function HUDManagerVR:set_stamina(data)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_stamina(data)
 end
 
--- Lines: 446 to 448
+-- Lines: 453 to 455
 function HUDManagerVR:set_reload_visible(visible)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_reload_visible(visible)
 end
 
--- Lines: 450 to 452
+-- Lines: 457 to 459
 function HUDManagerVR:set_reload_timer(current, max)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_reload_timer(current, max)
 end
 local tmp_vec1 = Vector3()
 
--- Lines: 457 to 469
+-- Lines: 464 to 476
 function HUDManagerVR:update(t, dt)
 	if alive(self._interaction_hand) and (alive(self._interaction_object) or self._interaction_use_head) and self:interaction_panel():visible() then
 		local interaction_object_pos = self._interaction_use_head and managers.player:player_unit():movement():m_head_pos() or self._interaction_object:interaction() and self._interaction_object:interaction():interact_position() or self._interaction_object:position()
@@ -535,7 +542,7 @@ function HUDManagerVR:update(t, dt)
 	__update(self, t, dt)
 end
 
--- Lines: 474 to 485
+-- Lines: 481 to 492
 function HUDManagerVR:create_vehicle_interaction_ws(id, vehicle_unit, position, direction, up)
 	self._vehicle_interactions = self._vehicle_interactions or {}
 
@@ -551,7 +558,7 @@ function HUDManagerVR:create_vehicle_interaction_ws(id, vehicle_unit, position, 
 	return self._vehicle_interactions[id]
 end
 
--- Lines: 488 to 496
+-- Lines: 495 to 503
 function HUDManagerVR:destroy_vehicle_interaction_ws(id)
 	self._vehicle_interactions = self._vehicle_interactions or {}
 
@@ -564,7 +571,7 @@ function HUDManagerVR:destroy_vehicle_interaction_ws(id)
 	self._vehicle_interactions[id] = nil
 end
 
--- Lines: 501 to 557
+-- Lines: 508 to 564
 function HUDManagerVR:_add_name_label(data)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
 	local id = last_id + 1
@@ -700,7 +707,7 @@ function HUDManagerVR:_add_name_label(data)
 	return id
 end
 
--- Lines: 560 to 600
+-- Lines: 567 to 607
 function HUDManager:add_vehicle_name_label(data)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
@@ -818,7 +825,7 @@ function HUDManager:add_vehicle_name_label(data)
 	return id
 end
 
--- Lines: 605 to 642
+-- Lines: 612 to 649
 function HUDManagerVR:_update_name_labels(t, dt)
 	if not alive(managers.player:player_unit()) then
 		return
@@ -852,7 +859,7 @@ function HUDManagerVR:_update_name_labels(t, dt)
 	end
 end
 
--- Lines: 644 to 652
+-- Lines: 651 to 659
 function HUDManagerVR:_remove_name_label(id)
 	for i, data in ipairs(self._hud.name_labels) do
 		if data.id == id then
@@ -865,27 +872,27 @@ function HUDManagerVR:_remove_name_label(id)
 end
 local __align_teammate_name_label = HUDManager.align_teammate_name_label
 
--- Lines: 655 to 659
+-- Lines: 662 to 666
 function HUDManagerVR:align_teammate_name_label(panel, interact)
 	__align_teammate_name_label(self, panel, interact)
 	panel:set_center_x(panel:parent():w() / 2)
 end
 local __show_progress_timer = HUDManager.show_progress_timer
 
--- Lines: 668 to 671
+-- Lines: 675 to 678
 function HUDManagerVR:show_progress_timer(...)
 	__show_progress_timer(self, ...)
 	self._hud_interaction:remove_interact()
 end
 local __remove_progress_timer = HUDManager.remove_progress_timer
 
--- Lines: 674 to 677
+-- Lines: 681 to 684
 function HUDManagerVR:remove_progress_timer()
 	__remove_progress_timer(self)
 	self._hud_interaction:show_interact()
 end
 
--- Lines: 685 to 781
+-- Lines: 692 to 788
 function HUDManager:add_waypoint(id, data)
 	if self._hud.waypoints[id] then
 		self:remove_waypoint(id)
@@ -1066,7 +1073,7 @@ function HUDManager:add_waypoint(id, data)
 	end
 end
 
--- Lines: 783 to 797
+-- Lines: 790 to 804
 function HUDManager:change_waypoint_icon(id, icon)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1091,7 +1098,7 @@ function HUDManager:change_waypoint_icon(id, icon)
 	wp_data.bitmap_world:set_size(rect[3], rect[4])
 end
 
--- Lines: 799 to 809
+-- Lines: 806 to 816
 function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1105,7 +1112,7 @@ function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	wp_data.bitmap_world:set_alpha(alpha)
 end
 
--- Lines: 811 to 819
+-- Lines: 818 to 826
 function HUDManager:change_waypoint_arrow_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1118,7 +1125,7 @@ function HUDManager:change_waypoint_arrow_color(id, color)
 	wp_data.arrow:set_color(color)
 end
 
--- Lines: 821 to 838
+-- Lines: 828 to 845
 function HUDManager:remove_waypoint(id)
 	self._hud.stored_waypoints[id] = nil
 
@@ -1148,7 +1155,7 @@ local wp_cam_forward = Vector3()
 local wp_onscreen_direction = Vector3()
 local wp_onscreen_target_pos = Vector3()
 
--- Lines: 846 to 1020
+-- Lines: 853 to 1027
 function HUDManager:_update_waypoints(t, dt)
 	local cam = managers.viewport:get_current_camera()
 

@@ -2,14 +2,14 @@ PlayerArrestedVR = PlayerArrested or Application:error("PlayerArrestedVR needs P
 local __enter = PlayerArrested.enter
 local __exit = PlayerArrested.exit
 
--- Lines: 6 to 11
+-- Lines: 7 to 12
 function PlayerArrestedVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("cuffed", self._unit:position())
 	self._unit:hand():set_cuffed(true)
 end
 
--- Lines: 13 to 18
+-- Lines: 14 to 19
 function PlayerArrestedVR:exit(...)
 	__exit(self, ...)
 	self._ext_movement:set_orientation_state("none")
@@ -18,7 +18,7 @@ end
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 
--- Lines: 23 to 34
+-- Lines: 24 to 35
 function PlayerArrestedVR:_update_movement(t, dt)
 	local pos_new = mvec_pos_new
 
@@ -33,7 +33,7 @@ function PlayerArrestedVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new)
 end
 
--- Lines: 41 to 80
+-- Lines: 42 to 81
 function PlayerArrestedVR:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 

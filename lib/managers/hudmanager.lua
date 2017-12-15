@@ -4,17 +4,17 @@ HUDManager.STATS_SCREEN_SAFERECT = Idstring("guis/stats_screen/stats_screen_safe
 HUDManager.STATS_SCREEN_FULLSCREEN = Idstring("guis/stats_screen/stats_screen_fullscreen")
 HUDManager.WAITING_FOR_PLAYERS_SAFERECT = Idstring("guis/waiting_saferect")
 HUDManager.ASSAULT_DIALOGS = {
-	"gen_ban_b01a",
-	"gen_ban_b01b",
-	"gen_ban_b02a",
-	"gen_ban_b02b",
-	"gen_ban_b02c",
-	"gen_ban_b03x",
-	"gen_ban_b04x",
-	"gen_ban_b05x",
-	"gen_ban_b10",
-	"gen_ban_b11",
-	"gen_ban_b12"
+	"b01a",
+	"b01b",
+	"b02a",
+	"b02b",
+	"b02c",
+	"b03x",
+	"b04x",
+	"b05x",
+	"b10",
+	"b11",
+	"b12"
 }
 HUDManager.ASSAULTS_MAX = 1024
 
@@ -1622,7 +1622,7 @@ function HUDManager:sync_assault_dialog(index)
 
 	local dialog = HUDManager.ASSAULT_DIALOGS[index]
 
-	managers.dialog:queue_dialog(dialog, {})
+	managers.dialog:queue_narrator_dialog(dialog, {})
 end
 
 -- Lines: 1414 to 1415

@@ -1,7 +1,7 @@
 PlayerDrivingVR = PlayerDriving or Application:error("PlayerDrivingVR needs PlayerDriving!")
 local __enter = PlayerDriving.enter
 
--- Lines: 4 to 67
+-- Lines: 5 to 69
 function PlayerDrivingVR:enter(...)
 	__enter(self, ...)
 	self._camera_unit:base():enter_vehicle()
@@ -28,9 +28,9 @@ function PlayerDrivingVR:enter(...)
 		debug_pause("Missing tweak_data for vehicle:", self._vehicle_ext.tweak_data)
 	end
 
-	if self._seat.driving then
-		self._vehicle_ws_ids = {}
+	self._vehicle_ws_ids = {}
 
+	if self._seat.driving then
 		if type(driving_tweak.steering_pos) ~= "table" or not driving_tweak.steering_pos then
 			local offsets = {driving_tweak.steering_pos}
 		end
@@ -105,7 +105,7 @@ function PlayerDrivingVR:enter(...)
 end
 local __exit = PlayerDriving.exit
 
--- Lines: 70 to 81
+-- Lines: 72 to 83
 function PlayerDrivingVR:exit(...)
 	__exit(self, ...)
 	self._unit:hand():_change_hand_to_default(PlayerHand.RIGHT)
@@ -113,12 +113,12 @@ function PlayerDrivingVR:exit(...)
 	self._unit:hand():set_base_rotation(self._camera_unit:base():base_rotation())
 	managers.hud:belt():set_visible(true)
 
-	for _, id in ipairs(self._vehicle_ws_ids or {}) do
+	for _, id in ipairs(self._vehicle_ws_ids) do
 		managers.hud:destroy_vehicle_interaction_ws(id)
 	end
 end
 
--- Lines: 83 to 94
+-- Lines: 85 to 96
 function PlayerDrivingVR:_postion_player_on_seat(seat)
 	local rot = self._seat.object:rotation()
 	local pos = self._seat.object:position()
@@ -137,7 +137,7 @@ local ghost_pos = Vector3()
 local seat_offset = Vector3()
 local hmd_rot = Rotation()
 
--- Lines: 101 to 125
+-- Lines: 103 to 127
 function PlayerDrivingVR:update(t, dt)
 	__update(self, t, dt)
 
@@ -162,13 +162,13 @@ function PlayerDrivingVR:update(t, dt)
 	self._ext_movement:set_ghost_position(ghost_pos)
 end
 
--- Lines: 127 to 129
+-- Lines: 129 to 131
 function PlayerDrivingVR:set_steering(value)
 	self._steering_value = value
 end
 local __get_drive_axis = PlayerDriving._get_drive_axis
 
--- Lines: 132 to 139
+-- Lines: 134 to 141
 function PlayerDrivingVR:_get_drive_axis()
 	local drive_axis = __get_drive_axis(self)
 

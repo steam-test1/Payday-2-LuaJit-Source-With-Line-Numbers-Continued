@@ -3,7 +3,7 @@ local __enter_default = PlayerMaskOff._enter
 local __exit_default = PlayerMaskOff.exit
 local __check_use_item_default = PlayerMaskOff._check_use_item
 
--- Lines: 7 to 78
+-- Lines: 8 to 79
 function PlayerMaskOffVR:_enter(enter_data)
 	__enter_default(self, enter_data)
 
@@ -79,7 +79,7 @@ function PlayerMaskOffVR:_enter(enter_data)
 	managers.hud:belt():set_visible(false)
 end
 
--- Lines: 80 to 95
+-- Lines: 81 to 96
 function PlayerMaskOffVR:exit(state_data, new_state_name)
 	if alive(self._mask_unit) then
 		for _, linked_unit in ipairs(self._mask_unit:children()) do
@@ -97,7 +97,7 @@ function PlayerMaskOffVR:exit(state_data, new_state_name)
 	__exit_default(self, state_data, new_state_name)
 end
 
--- Lines: 99 to 119
+-- Lines: 100 to 120
 function PlayerMaskOffVR:_check_use_item(t, input)
 	if input.btn_use_item_press then
 		local action_forbidden = self._use_item_expire_t or self:_changing_weapon() or self:_interacting()
@@ -125,23 +125,23 @@ function PlayerMaskOffVR:_check_use_item(t, input)
 end
 local __start_action_state_standard = PlayerMaskOff._start_action_state_standard
 
--- Lines: 123 to 127
+-- Lines: 124 to 128
 function PlayerMaskOffVR:_start_action_state_standard(...)
 	managers.hud:link_interaction_hud(self._unit:hand():mask_hand_unit())
 	__start_action_state_standard(self, ...)
 end
 
--- Lines: 129 to 130
+-- Lines: 130 to 131
 function PlayerMaskOffVR:_can_run()
 	return false
 end
 
--- Lines: 133 to 134
+-- Lines: 134 to 135
 function PlayerMaskOffVR:_can_jump()
 	return false
 end
 
--- Lines: 137 to 138
+-- Lines: 138 to 139
 function PlayerMaskOffVR:_can_duck()
 	return false
 end

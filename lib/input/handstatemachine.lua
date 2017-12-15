@@ -1,6 +1,6 @@
 HandStateMachine = HandStateMachine or class()
 
--- Lines: 12 to 45
+-- Lines: 13 to 47
 function HandStateMachine:init(states, default_l, default_r)
 	self._states = states
 	self._hands = {
@@ -26,8 +26,9 @@ function HandStateMachine:init(states, default_l, default_r)
 			for hand = 1, 2, 1 do
 				if not data.hand or data.hand == hand then
 					local hand_suffix = hand == 1 and "r" or "l"
+					local inputs = type(data.inputs) == "table" and data.inputs or {}
 
-					for _, input in ipairs(data.inputs or {}) do
+					for _, input in ipairs(inputs) do
 						local full_input = input .. hand_suffix
 
 						if not table.contains(self._possible_inputs[connection], full_input) then
@@ -42,7 +43,7 @@ function HandStateMachine:init(states, default_l, default_r)
 	self:_apply_bindings()
 end
 
--- Lines: 47 to 71
+-- Lines: 49 to 73
 function HandStateMachine:enter_hand_state(hand, state_name)
 	local other_hand = hand == 1 and 2 or 1
 	local active_states = self._hands[hand]
@@ -74,7 +75,7 @@ function HandStateMachine:enter_hand_state(hand, state_name)
 	self:_apply_bindings()
 end
 
--- Lines: 73 to 87
+-- Lines: 75 to 89
 function HandStateMachine:exit_hand_state(hand, state_name)
 	local active_states = self._hands[hand]
 	local target_state = self._states[state_name]
@@ -95,12 +96,12 @@ function HandStateMachine:exit_hand_state(hand, state_name)
 	end
 end
 
--- Lines: 89 to 91
+-- Lines: 91 to 93
 function HandStateMachine:refresh()
 	self:_apply_bindings()
 end
 
--- Lines: 93 to 107
+-- Lines: 95 to 109
 function HandStateMachine:attach_controller(controller, main)
 	self._controllers = self._controllers or {}
 
@@ -119,7 +120,7 @@ function HandStateMachine:attach_controller(controller, main)
 	self:_apply_bindings()
 end
 
--- Lines: 109 to 119
+-- Lines: 111 to 121
 function HandStateMachine:deattach_controller(controller)
 	for i, c in ipairs(self._controllers) do
 		if c == controller then
@@ -134,12 +135,12 @@ function HandStateMachine:deattach_controller(controller)
 	end
 end
 
--- Lines: 121 to 122
+-- Lines: 123 to 124
 function HandStateMachine:controller()
 	return self._controller
 end
 
--- Lines: 125 to 141
+-- Lines: 127 to 143
 function HandStateMachine:hand_from_connection(connection_name)
 	for hand, active_states in ipairs(self._hands) do
 		if active_states then
@@ -156,7 +157,7 @@ function HandStateMachine:hand_from_connection(connection_name)
 	end
 end
 
--- Lines: 143 to 199
+-- Lines: 145 to 201
 function HandStateMachine:_apply_bindings()
 	if not self._controllers or #self._controllers <= 0 then
 		return

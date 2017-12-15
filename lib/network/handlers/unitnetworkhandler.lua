@@ -3062,7 +3062,7 @@ function UnitNetworkHandler:bain_comment(bain_line, sender)
 	end
 
 	if managers.dialog and managers.groupai and managers.groupai:state():bain_state() then
-		managers.dialog:queue_dialog(bain_line, {})
+		managers.dialog:queue_narrator_dialog(bain_line, {})
 	end
 end
 

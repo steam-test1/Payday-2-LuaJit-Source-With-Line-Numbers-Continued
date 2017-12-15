@@ -4,40 +4,40 @@ local __update = MenuSceneManager.update
 local __destroy = MenuSceneManager.destroy
 local ids_unit = Idstring("unit")
 
--- Lines: 11 to 15
+-- Lines: 12 to 16
 function MenuSceneManagerVR:init()
 	__init(self)
 	print("[MenuSceneManagerVR] Init")
 	self:_use_environment("standard")
 end
 
--- Lines: 17 to 19
+-- Lines: 18 to 20
 function MenuSceneManagerVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 21 to 22
+-- Lines: 22 to 23
 function MenuSceneManagerVR:_set_dimensions()
 end
 
--- Lines: 24 to 25
+-- Lines: 25 to 26
 function MenuSceneManagerVR:_set_camera_position()
 end
 
--- Lines: 27 to 28
+-- Lines: 28 to 29
 function MenuSceneManagerVR:_set_target_position()
 end
 
--- Lines: 30 to 31
+-- Lines: 31 to 32
 function MenuSceneManagerVR:mouse_pressed()
 end
 
--- Lines: 33 to 34
+-- Lines: 34 to 35
 function MenuSceneManagerVR:character_screen_position()
 	return Vector3(0, 0, 0)
 end
 
--- Lines: 37 to 47
+-- Lines: 38 to 48
 function MenuSceneManagerVR:setup_camera()
 	self._camera_values = {
 		camera_pos_current = Vector3(0, 0, 0),
@@ -52,17 +52,17 @@ function MenuSceneManagerVR:setup_camera()
 	self:_use_environment("standard")
 end
 
--- Lines: 49 to 52
+-- Lines: 50 to 53
 function MenuSceneManagerVR:update(t, dt)
 	self:_update_vr(t, dt)
 	__update(self, t, dt)
 end
 
--- Lines: 55 to 56
+-- Lines: 56 to 57
 function MenuSceneManagerVR:_update_vr(t, dt)
 end
 
--- Lines: 58 to 75
+-- Lines: 59 to 76
 function MenuSceneManagerVR:_setup_bg()
 	self._bg_unit = managers.menu:menu_unit()
 
@@ -80,7 +80,7 @@ function MenuSceneManagerVR:_setup_bg()
 	self:_setup_henchmen_characters()
 end
 
--- Lines: 77 to 94
+-- Lines: 78 to 95
 function MenuSceneManagerVR:_set_up_environments()
 	self._environments = {standard = {}}
 	self._environments.standard.environment = "environments/pd2_menu_vr/pd2_menu_vr"
@@ -98,7 +98,7 @@ function MenuSceneManagerVR:_set_up_environments()
 	}
 end
 
--- Lines: 97 to 166
+-- Lines: 98 to 167
 function MenuSceneManagerVR:_set_up_templates()
 	local ref = self._bg_unit:get_object(Idstring("a_camera_reference"))
 	local c_ref = self._bg_unit:get_object(Idstring("a_reference"))
@@ -164,7 +164,7 @@ function MenuSceneManagerVR:_set_up_templates()
 end
 local __set_lobby_character_out_fit = MenuSceneManager.set_lobby_character_out_fit
 
--- Lines: 169 to 177
+-- Lines: 170 to 178
 function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 	__set_lobby_character_out_fit(self, i, outfit_string, rank)
 
@@ -177,7 +177,7 @@ function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 end
 local __set_item_unit = MenuSceneManager._set_item_unit
 
--- Lines: 180 to 202
+-- Lines: 181 to 203
 function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, second_unit, custom_data)
 	__set_item_unit(self, unit, oobb_object, max_mod, type, second_unit, custom_data)
 
@@ -206,7 +206,7 @@ function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, sec
 end
 local __remove_item = MenuSceneManager.remove_item
 
--- Lines: 205 to 211
+-- Lines: 206 to 212
 function MenuSceneManagerVR:remove_item()
 	__remove_item(self)
 
@@ -217,7 +217,7 @@ function MenuSceneManagerVR:remove_item()
 end
 local __set_scene_template = MenuSceneManager.set_scene_template
 
--- Lines: 215 to 222
+-- Lines: 216 to 223
 function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip_transition)
 	__set_scene_template(self, template, data, custom_name, skip_transition)
 
@@ -228,11 +228,11 @@ function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip
 	end
 end
 
--- Lines: 224 to 225
+-- Lines: 225 to 226
 function MenuSceneManagerVR:spawn_workbench_room()
 end
 
--- Lines: 227 to 231
+-- Lines: 228 to 232
 function MenuSceneManagerVR:get_henchmen_positioning(index)
 	local pos = Vector3(-180 + 50 * index, 340 + 30 * index, 0)
 	local rot = Rotation(180)
@@ -240,7 +240,7 @@ function MenuSceneManagerVR:get_henchmen_positioning(index)
 	return pos, rot
 end
 
--- Lines: 235 to 252
+-- Lines: 236 to 253
 function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	self._character_text_ws = self._character_text_ws or {}
 	local character = self._lobby_characters[peer_id]
@@ -267,7 +267,7 @@ function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	return panel, panel:center()
 end
 
--- Lines: 255 to 263
+-- Lines: 256 to 264
 function MenuSceneManagerVR:clear_character_text_panels()
 	if not self._character_text_ws then
 		return

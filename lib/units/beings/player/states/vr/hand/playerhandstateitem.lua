@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateItem = PlayerHandStateItem or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateItem:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateItem.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 26
+-- Lines: 10 to 42
 function PlayerHandStateItem:_link_item(item_unit, body, offset)
 	self._item_unit = item_unit
 
@@ -26,13 +26,28 @@ function PlayerHandStateItem:_link_item(item_unit, body, offset)
 	end
 
 	if offset then
-		self._item_unit:set_local_position(offset)
+		if type(offset) == "table" then
+			self._item_unit:set_local_position(offset.position)
+			self._item_unit:set_local_rotation(offset.rotation)
+
+			local sequence = self._sequence
+
+			if offset.grip then
+				sequence = offset.grip
+			end
+
+			if self._hand_unit and sequence and self._hand_unit:damage():has_sequence(sequence) then
+				self._hand_unit:damage():run_sequence_simple(sequence)
+			end
+		else
+			self._item_unit:set_local_position(offset)
+		end
 	end
 
 	self._item_unit:set_visible(true)
 end
 
--- Lines: 29 to 55
+-- Lines: 45 to 71
 function PlayerHandStateItem:_prompt(prompt)
 	self._prompt_data = prompt
 
@@ -64,17 +79,17 @@ function PlayerHandStateItem:_prompt(prompt)
 	managers.hud:watch_prompt_panel():show()
 end
 
--- Lines: 57 to 58
+-- Lines: 73 to 74
 function PlayerHandStateItem:item_type()
 	return self._item_type
 end
 
--- Lines: 61 to 62
+-- Lines: 77 to 78
 function PlayerHandStateItem:item_unit()
 	return self._item_unit
 end
 
--- Lines: 65 to 69
+-- Lines: 81 to 85
 function PlayerHandStateItem:switch_hands()
 	self._switching_hands = true
 
@@ -86,7 +101,7 @@ function PlayerHandStateItem:switch_hands()
 	self:hsm():change_to_default()
 end
 
--- Lines: 71 to 137
+-- Lines: 87 to 153
 function PlayerHandStateItem:at_enter(prev_state, params)
 	PlayerHandStateItem.super.at_enter(self, prev_state, params)
 
@@ -162,7 +177,7 @@ function PlayerHandStateItem:at_enter(prev_state, params)
 	end
 end
 
--- Lines: 139 to 159
+-- Lines: 155 to 175
 function PlayerHandStateItem:at_exit(next_state, hide_item)
 	self:hsm():exit_controller_state(self._controller_state)
 
@@ -185,7 +200,7 @@ function PlayerHandStateItem:at_exit(next_state, hide_item)
 	self._switching_hands = false
 end
 
--- Lines: 161 to 174
+-- Lines: 177 to 190
 function PlayerHandStateItem:_remove_unit()
 	if alive(self._item_unit) then
 		for _, linked_unit in ipairs(self._item_unit:children()) do
@@ -202,7 +217,7 @@ function PlayerHandStateItem:_remove_unit()
 	end
 end
 
--- Lines: 176 to 187
+-- Lines: 192 to 203
 function PlayerHandStateItem:_hide_unit()
 	if alive(self._item_unit) then
 		for _, linked_unit in ipairs(self._item_unit:children()) do
@@ -217,7 +232,7 @@ function PlayerHandStateItem:_hide_unit()
 	end
 end
 
--- Lines: 189 to 198
+-- Lines: 205 to 214
 function PlayerHandStateItem:set_warping(warping)
 	if not warping then
 		self._wants_dynamic = true
@@ -230,7 +245,7 @@ function PlayerHandStateItem:set_warping(warping)
 	end
 end
 
--- Lines: 200 to 213
+-- Lines: 216 to 229
 function PlayerHandStateItem:set_bodies_dynamic(dynamic, ignore_body)
 	if alive(self._item_unit) then
 		for i = 0, self._item_unit:num_bodies() - 1, 1 do
@@ -247,7 +262,7 @@ function PlayerHandStateItem:set_bodies_dynamic(dynamic, ignore_body)
 	end
 end
 
--- Lines: 215 to 221
+-- Lines: 231 to 237
 function PlayerHandStateItem:set_bodies_colliding(colliding)
 	if alive(self._item_unit) then
 		for i = 0, self._item_unit:num_bodies() - 1, 1 do
@@ -256,7 +271,7 @@ function PlayerHandStateItem:set_bodies_colliding(colliding)
 	end
 end
 
--- Lines: 223 to 280
+-- Lines: 239 to 307
 function PlayerHandStateItem:update(t, dt)
 	if self._wants_dynamic then
 		self._dynamic_t = t + 0.05
@@ -308,15 +323,28 @@ function PlayerHandStateItem:update(t, dt)
 		local player = managers.player:player_unit()
 		local weapon = player:inventory():equipped_unit()
 		local mag_locator = weapon:get_object(Idstring("a_m"))
+		local offset = tweak_data.vr:get_offset_by_id("magazine", weapon:base().name_id)
+		local mag_pos = nil
 
-		if mvector3.distance_sq(self._hand_unit:position(), (mag_locator or weapon):position()) < 400 then
+		if mag_locator and not offset.weapon_offset then
+			mag_pos = mag_locator:position()
+			mag_pos = mag_pos - offset.position:rotate_with(weapon:rotation())
+		else
+			mag_pos = weapon:position()
+
+			if offset.weapon_offset then
+				mag_pos = mag_pos + offset.weapon_offset:rotate_with(weapon:rotation())
+			end
+		end
+
+		if mvector3.distance_sq(self._hand_unit:position(), mag_pos) < 400 then
 			player:movement():current_state():trigger_reload()
 			self:hsm():change_to_default()
 		end
 	end
 end
 
--- Lines: 282 to 288
+-- Lines: 309 to 315
 function PlayerHandStateItem:swipe_transition(next_state, params)
 	params.unit = alive(self._item_unit) and self._item_unit
 	params.type = self._item_type

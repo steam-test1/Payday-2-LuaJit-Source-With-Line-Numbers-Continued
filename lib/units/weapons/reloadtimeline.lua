@@ -82,7 +82,9 @@ function ReloadTimeline:get_data(time)
 		"rot",
 		"visible",
 		"sound",
-		"anims"
+		"anims",
+		"drop_mag",
+		"effect"
 	}) do
 		data[key] = self:get_key(key, time)
 	end

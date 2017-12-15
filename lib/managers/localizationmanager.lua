@@ -173,9 +173,9 @@ function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	return self:key_to_btn_text(key, to_upper, type)
 end
 
--- Lines: 307 to 325
+-- Lines: 308 to 329
 function LocalizationManager:key_to_btn_text(key, to_upper, type)
-	if not key then
+	if _G.IS_VR and not key then
 		return ""
 	end
 
@@ -195,22 +195,22 @@ function LocalizationManager:key_to_btn_text(key, to_upper, type)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines: 328 to 329
+-- Lines: 332 to 333
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines: 332 to 333
+-- Lines: 336 to 337
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines: 348 to 349
+-- Lines: 352 to 353
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines: 353 to 362
+-- Lines: 357 to 366
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -224,7 +224,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines: 365 to 411
+-- Lines: 369 to 415
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -272,7 +272,7 @@ function LocalizationManager:check_translation()
 	end
 end
 
--- Lines: 414 to 416
+-- Lines: 418 to 420
 function LocalizationManager:set_input_translation(button_name, translation)
 	self._input_translations[button_name] = translation
 end

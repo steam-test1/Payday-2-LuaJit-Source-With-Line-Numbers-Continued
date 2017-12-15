@@ -1,6 +1,6 @@
 HUDInteractionVR = HUDInteraction
 
--- Lines: 3 to 66
+-- Lines: 4 to 67
 function HUDInteractionVR:init(hud, child_name)
 	self._watch_prompt_panel = managers.hud:watch_prompt_panel()
 	hud.old_panel = hud.panel
@@ -69,7 +69,7 @@ function HUDInteractionVR:init(hud, child_name)
 end
 HUDInteractionVR.default_show_interact = HUDInteraction.show_interact
 
--- Lines: 69 to 75
+-- Lines: 70 to 76
 function HUDInteractionVR:show_interact(data)
 	data = data or {text = self._last_interaction_text or ""}
 
@@ -81,7 +81,7 @@ function HUDInteractionVR:show_interact(data)
 	self._hud_panel:show()
 end
 
--- Lines: 77 to 90
+-- Lines: 78 to 91
 function HUDInteractionVR:remove_interact()
 	if not alive(self._hud_panel) then
 		return
@@ -100,7 +100,7 @@ function HUDInteractionVR:remove_interact()
 	end
 end
 
--- Lines: 96 to 105
+-- Lines: 97 to 106
 function HUDInteractionVR:set_bar_valid(valid, text_id)
 	self._hud_panel:child(self._child_name_text):set_visible(valid)
 
@@ -114,7 +114,7 @@ function HUDInteractionVR:set_bar_valid(valid, text_id)
 	self._hud_panel:child(self._child_name_text .. "_bg"):set_visible(true)
 end
 
--- Lines: 108 to 117
+-- Lines: 109 to 118
 function HUDInteractionVR:show_interaction_bar(current, total)
 	if self._interact_circle then
 		self._interact_circle:remove()
@@ -139,14 +139,14 @@ function HUDInteractionVR:show_interaction_bar(current, total)
 	self._interaction_panel:show()
 end
 
--- Lines: 119 to 123
+-- Lines: 120 to 124
 function HUDInteractionVR:set_interaction_bar_width(current, total)
 	if self._interact_circle then
 		self._interact_circle:set_current(current / total)
 	end
 end
 
--- Lines: 125 to 131
+-- Lines: 126 to 132
 function HUDInteractionVR:hide_interaction_bar(complete)
 	if self._interact_circle then
 		self._interact_circle:remove()
@@ -157,7 +157,7 @@ function HUDInteractionVR:hide_interaction_bar(complete)
 	end
 end
 
--- Lines: 133 to 142
+-- Lines: 134 to 143
 function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text))
 	self._hud_panel:remove(self._hud_panel:child(self._child_ivalid_name_text))
@@ -171,7 +171,7 @@ function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text .. "_bg"))
 end
 
--- Lines: 146 to 149
+-- Lines: 147 to 150
 function HUDInteractionVR:_animate_interaction_complete(bitmap, circle)
 	bitmap:parent():remove(bitmap)
 	circle:remove()

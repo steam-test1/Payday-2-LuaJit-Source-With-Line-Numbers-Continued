@@ -1,33 +1,33 @@
 HandMelee = HandMelee or class()
 
--- Lines: 3 to 5
+-- Lines: 4 to 6
 function HandMelee:init(hand_unit)
 	self._hand_unit = hand_unit
 end
 
--- Lines: 7 to 8
+-- Lines: 8 to 9
 function HandMelee:has_weapon()
 	return self._entry == "weapon" and alive(self._weapon_unit) and self._weapon_unit:enabled() and self._weapon_unit:visible()
 end
 
--- Lines: 11 to 12
+-- Lines: 12 to 13
 function HandMelee:has_melee_weapon()
 	return self._entry ~= "weapon" and alive(self._melee_unit)
 end
 
--- Lines: 15 to 18
+-- Lines: 16 to 19
 function HandMelee:set_melee_unit(unit)
 	self._melee_unit = unit
 	self._entry = alive(unit) and managers.blackmarket:equipped_melee_weapon() or "weapon"
 end
 
--- Lines: 20 to 23
+-- Lines: 21 to 24
 function HandMelee:set_fist(entry)
 	self._melee_unit = self._hand_unit
 	self._entry = entry
 end
 
--- Lines: 25 to 45
+-- Lines: 26 to 46
 function HandMelee:set_weapon_unit(unit)
 	self._weapon_unit = unit
 
@@ -50,7 +50,7 @@ function HandMelee:set_weapon_unit(unit)
 	end
 end
 
--- Lines: 47 to 53
+-- Lines: 48 to 54
 function HandMelee:unit()
 	if self:has_weapon() then
 		return self._weapon_unit
@@ -61,7 +61,7 @@ end
 local ray_vec = Vector3(0, 0, 0)
 local ray_pen = Draw:pen()
 
--- Lines: 57 to 83
+-- Lines: 58 to 84
 function HandMelee:_get_hitpoint()
 	if self:has_weapon() then
 		if alive(self._bayonet_unit) then
@@ -96,7 +96,7 @@ end
 local mvec_delta = Vector3()
 local mvec_bayonet_dir = Vector3()
 
--- Lines: 87 to 191
+-- Lines: 88 to 192
 function HandMelee:update(unit, t, dt)
 	if not self:has_melee_weapon() and not self:has_weapon() then
 		if alive(self._weapon_unit) then
@@ -202,12 +202,12 @@ function HandMelee:update(unit, t, dt)
 	end
 end
 
--- Lines: 193 to 194
+-- Lines: 194 to 195
 function HandMelee:charge_start_t()
 	return self._charge_start_t
 end
 
--- Lines: 197 to 212
+-- Lines: 198 to 213
 function HandMelee:set_charge_start_t(t)
 	if self._next_full_hit_t and t and t < self._next_full_hit_t then
 		return

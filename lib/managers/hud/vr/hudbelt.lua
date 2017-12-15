@@ -1,7 +1,7 @@
 HUDBeltInteraction = HUDBeltInteraction or class()
 
 
--- Lines: 3 to 7
+-- Lines: 4 to 8
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -10,7 +10,7 @@ local function make_fine_text(text)
 end
 
 
--- Lines: 10 to 38
+-- Lines: 11 to 39
 local function get_icon(icon_type)
 	if icon_type == "primary" then
 		local texture = "guis/textures/pd2/blackmarket/icons/weapons/outline/" .. managers.blackmarket:equipped_primary().weapon_id
@@ -48,7 +48,7 @@ local function get_icon(icon_type)
 end
 
 
--- Lines: 40 to 47
+-- Lines: 41 to 48
 local function scale_by_aspect(gui_obj, max_size)
 	local w = gui_obj:texture_width()
 	local h = gui_obj:texture_height()
@@ -64,14 +64,14 @@ local PADDING = 40
 local GRID_BOX = 200
 
 
--- Lines: 54 to 55
+-- Lines: 55 to 56
 function grid_position(x, y)
 	return (x - 1) * GRID_BOX + PADDING, (y - 1) * GRID_BOX + PADDING
 end
 
 local Outline = Outline or class()
 
--- Lines: 61 to 65
+-- Lines: 62 to 66
 function Outline:init(panel)
 	self._panel = panel
 	self._box_gui = BoxGuiObject:new(panel, {sides = {
@@ -84,7 +84,7 @@ function Outline:init(panel)
 	self._box_gui:set_layer(2)
 end
 
--- Lines: 67 to 74
+-- Lines: 68 to 75
 function Outline:set_selected(selected)
 	self._selected = selected
 
@@ -105,19 +105,19 @@ function Outline:set_selected(selected)
 	end
 end
 
--- Lines: 76 to 77
+-- Lines: 77 to 78
 function Outline:selected()
 	return self._selected
 end
 
--- Lines: 80 to 82
+-- Lines: 81 to 83
 function Outline:set_alpha(alpha)
 	self._box_gui:set_color(self._box_gui:color():with_alpha(alpha))
 end
 HUDBeltInteraction.size_x = 160
 HUDBeltInteraction.size_y = 160
 
--- Lines: 89 to 146
+-- Lines: 90 to 147
 function HUDBeltInteraction:init(ws, id, custom_icon_id)
 	self._ws = ws
 	self._id = id
@@ -175,7 +175,7 @@ function HUDBeltInteraction:init(ws, id, custom_icon_id)
 	end
 end
 
--- Lines: 148 to 152
+-- Lines: 149 to 153
 function HUDBeltInteraction:update_icon()
 	self._texture = get_icon(self._custom_icon_id or self._id)
 
@@ -183,14 +183,14 @@ function HUDBeltInteraction:update_icon()
 	scale_by_aspect(self._icon, self.size_y)
 end
 
--- Lines: 154 to 157
+-- Lines: 155 to 158
 function HUDBeltInteraction:set_custom_icon_id(id)
 	self._custom_icon_id = id
 
 	self:update_icon()
 end
 
--- Lines: 159 to 183
+-- Lines: 160 to 184
 function HUDBeltInteraction:set_amount(amount)
 	if not self._amount_text then
 		self._amount_text = self._panel:text({
@@ -218,7 +218,7 @@ function HUDBeltInteraction:set_amount(amount)
 	self._amount_text:set_color((amount > 0 and Color.white or Color.red):with_alpha(self._alpha + self._alpha_diff))
 end
 
--- Lines: 185 to 197
+-- Lines: 186 to 198
 function HUDBeltInteraction:set_state(state)
 	if not table.contains(HUDBelt.states, state) then
 		Application:error("[HUDBeltInteraction:set_state] invalid state", state)
@@ -239,12 +239,12 @@ function HUDBeltInteraction:set_state(state)
 	self._state = state
 end
 
--- Lines: 199 to 200
+-- Lines: 200 to 201
 function HUDBeltInteraction:state()
 	return self._state
 end
 
--- Lines: 203 to 210
+-- Lines: 204 to 211
 function HUDBeltInteraction:set_alpha(alpha)
 	self._icon:set_color(self._icon:color():with_alpha(alpha))
 
@@ -260,7 +260,7 @@ function HUDBeltInteraction:set_alpha(alpha)
 end
 local anim_speed = 1
 
--- Lines: 214 to 236
+-- Lines: 215 to 237
 function HUDBeltInteraction:_animate_size_alpha(o, size_ratio, alpha)
 	local panel = self._panel
 
@@ -290,7 +290,7 @@ function HUDBeltInteraction:_animate_size_alpha(o, size_ratio, alpha)
 	self._alpha_diff = alpha
 end
 
--- Lines: 238 to 249
+-- Lines: 239 to 250
 function HUDBeltInteraction:set_selected(selected)
 	if self._selected == selected then
 		return
@@ -306,7 +306,7 @@ function HUDBeltInteraction:set_selected(selected)
 	self._grip_text:set_visible(selected)
 end
 
--- Lines: 251 to 260
+-- Lines: 252 to 261
 function HUDBeltInteraction:set_other_selected(selected)
 	if self._other_selected == selected then
 		return
@@ -318,7 +318,7 @@ function HUDBeltInteraction:set_other_selected(selected)
 	self._other_selected = selected
 end
 
--- Lines: 262 to 273
+-- Lines: 263 to 275
 function HUDBeltInteraction:start_timer(time)
 	local timer_circle = CircleBitmapGuiObject:new(self._panel, {
 		image = "guis/textures/pd2/progress_reload",
@@ -334,6 +334,7 @@ function HUDBeltInteraction:start_timer(time)
 	})
 
 	timer_circle:set_position(self.size_x / 2 - self.size_y / 2, 0)
+	timer_circle:set_align("scale")
 	self._panel:animate(function (o)
 		if not alive(o) or not alive(timer_circle._circle) then
 			return
@@ -348,7 +349,7 @@ function HUDBeltInteraction:start_timer(time)
 	self._timer_circle = timer_circle
 end
 
--- Lines: 275 to 282
+-- Lines: 277 to 284
 function HUDBeltInteraction:stop_timer()
 	if not self._timer_circle or not alive(self._timer_circle._panel) then
 		return
@@ -358,71 +359,71 @@ function HUDBeltInteraction:stop_timer()
 	self._timer_circle:remove()
 end
 
--- Lines: 284 to 287
+-- Lines: 286 to 289
 function HUDBeltInteraction:set_grid_position(gx, gy)
 	local x, y = grid_position(gx, gy)
 
 	self:set_center(x + GRID_BOX / 2, y + GRID_BOX / 2)
 end
 
--- Lines: 288 to 289
+-- Lines: 290 to 291
 function HUDBeltInteraction:set_x(x)
 	self._panel:set_x(x)
 end
 
--- Lines: 289 to 290
+-- Lines: 291 to 292
 function HUDBeltInteraction:set_y(y)
 	self._panel:set_y(y)
 end
 
--- Lines: 290 to 291
+-- Lines: 292 to 293
 function HUDBeltInteraction:set_right(right)
 	self._panel:set_right(right)
 end
 
--- Lines: 291 to 292
+-- Lines: 293 to 294
 function HUDBeltInteraction:set_bottom(bottom)
 	self._panel:set_bottom(bottom)
 end
 
--- Lines: 292 to 293
+-- Lines: 294 to 295
 function HUDBeltInteraction:set_center(x, y)
 	self._panel:set_center(x, y)
 end
 
--- Lines: 293 to 294
+-- Lines: 295 to 296
 function HUDBeltInteraction:x()
 	return self._panel:x()
 end
 
--- Lines: 294 to 295
+-- Lines: 296 to 297
 function HUDBeltInteraction:y()
 	return self._panel:y()
 end
 
--- Lines: 295 to 296
+-- Lines: 297 to 298
 function HUDBeltInteraction:right()
 	return self._panel:right()
 end
 
--- Lines: 296 to 297
+-- Lines: 298 to 299
 function HUDBeltInteraction:bottom()
 	return self._panel:bottom()
 end
 
--- Lines: 297 to 298
+-- Lines: 299 to 300
 function HUDBeltInteraction:center()
 	return self._panel:center()
 end
 
--- Lines: 298 to 299
+-- Lines: 300 to 301
 function HUDBeltInteraction:ws()
 	return self._ws
 end
 HUDBeltInteractionReload = HUDBeltInteractionReload or class(HUDBeltInteraction)
 HUDBeltInteractionReload.size_x = 320
 
--- Lines: 307 to 323
+-- Lines: 309 to 325
 function HUDBeltInteractionReload:init(ws, id)
 	HUDBeltInteractionReload.super.init(self, ws, id)
 
@@ -440,7 +441,7 @@ function HUDBeltInteractionReload:init(ws, id)
 	self._ammo_text:set_bottom(self.size_y)
 end
 
--- Lines: 325 to 331
+-- Lines: 327 to 333
 function HUDBeltInteractionReload:set_alpha(alpha)
 	if self._waiting_for_trigger then
 		alpha = 0.6
@@ -450,7 +451,7 @@ function HUDBeltInteractionReload:set_alpha(alpha)
 	self._ammo_text:set_color(self._ammo_text:color():with_alpha(alpha + self._alpha_diff + 0.2))
 end
 
--- Lines: 333 to 355
+-- Lines: 335 to 357
 function HUDBeltInteractionReload:_reload_animate(o, time, clip_start, clip_full)
 	local ammo_text = self._ammo_text
 
@@ -481,13 +482,13 @@ function HUDBeltInteractionReload:_reload_animate(o, time, clip_start, clip_full
 	self._bg:set_color(Color.black)
 end
 
--- Lines: 357 to 360
+-- Lines: 359 to 362
 function HUDBeltInteractionReload:start_reload(time, clip_start, clip_full)
 	self:start_timer(time)
 	self._panel:animate(callback(self, self, "_reload_animate"), time, clip_start, clip_full)
 end
 
--- Lines: 362 to 366
+-- Lines: 364 to 368
 function HUDBeltInteractionReload:trigger_reload()
 	self._waiting_for_trigger = nil
 
@@ -495,7 +496,7 @@ function HUDBeltInteractionReload:trigger_reload()
 	self:stop_timer()
 end
 
--- Lines: 368 to 371
+-- Lines: 370 to 373
 function HUDBeltInteractionReload:set_grid_position(gx, gy)
 	local x, y = grid_position(gx, gy)
 
@@ -582,7 +583,7 @@ HUDBelt.grid_layouts = {
 	}
 }
 
--- Lines: 416 to 464
+-- Lines: 418 to 466
 function HUDBelt:init(ws)
 	self._ws = ws
 	self._panel = ws:panel()
@@ -624,30 +625,30 @@ function HUDBelt:init(ws)
 	self:layout_grid(self.grid_layouts[managers.vr:get_setting("default_weapon_hand")])
 end
 
--- Lines: 466 to 469
+-- Lines: 468 to 471
 function HUDBelt:destroy()
 	managers.vr:remove_setting_changed_callback("auto_reload", self._reload_setting_clbk)
 	managers.vr:remove_setting_changed_callback("default_weapon_hand", self._primary_hand_clbk)
 end
 
--- Lines: 471 to 473
+-- Lines: 473 to 475
 function HUDBelt:_reload_setting_changed(setting, old_value, new_value)
 	self:set_state("reload", new_value and "disabled" or "inactive")
 end
 
--- Lines: 475 to 477
+-- Lines: 477 to 479
 function HUDBelt:_primary_hand_changed(setting, old_value, new_value)
 	self:layout_grid(self.grid_layouts[new_value])
 end
 
--- Lines: 480 to 484
+-- Lines: 482 to 486
 function HUDBelt:layout_grid(layout)
 	for id, positions in pairs(layout) do
 		self:set_grid_position(id, unpack(positions))
 	end
 end
 
--- Lines: 486 to 493
+-- Lines: 488 to 495
 function HUDBelt:set_grid_position(id, x, y)
 	local interaction = self._interactions[id]
 
@@ -658,7 +659,7 @@ function HUDBelt:set_grid_position(id, x, y)
 	interaction:set_grid_position(x, y)
 end
 
--- Lines: 495 to 502
+-- Lines: 497 to 504
 function HUDBelt:get_interaction_point(id)
 	local interaction = self._interactions[id]
 
@@ -671,17 +672,17 @@ function HUDBelt:get_interaction_point(id)
 	return interaction:ws():local_to_world(Vector3(x, y, 0))
 end
 
--- Lines: 508 to 510
+-- Lines: 510 to 512
 function HUDBelt:set_visible(visible)
 	self._ws[visible and "show" or "hide"](self._ws)
 end
 
--- Lines: 512 to 513
+-- Lines: 514 to 515
 function HUDBelt:visible()
 	return self._ws:visible()
 end
 
--- Lines: 516 to 532
+-- Lines: 518 to 534
 function HUDBelt:set_state(id, state)
 	local interaction = self._interactions[id]
 
@@ -702,7 +703,7 @@ function HUDBelt:set_state(id, state)
 	self._cached_interactions = nil
 end
 
--- Lines: 534 to 541
+-- Lines: 536 to 543
 function HUDBelt:state(id)
 	local interaction = self._interactions[id]
 
@@ -715,7 +716,7 @@ function HUDBelt:state(id)
 	return interaction:state()
 end
 
--- Lines: 544 to 556
+-- Lines: 546 to 558
 function HUDBelt:valid_interactions()
 	if self._cached_interactions then
 		return self._cached_interactions
@@ -734,7 +735,7 @@ function HUDBelt:valid_interactions()
 	return interactions
 end
 
--- Lines: 560 to 574
+-- Lines: 562 to 576
 function HUDBelt:set_alpha(alpha, id)
 	if id then
 		local interaction = self._interactions[id]
@@ -753,7 +754,7 @@ function HUDBelt:set_alpha(alpha, id)
 	end
 end
 
--- Lines: 576 to 590
+-- Lines: 578 to 592
 function HUDBelt:set_selected(id, selected)
 	local interaction = self._interactions[id]
 
@@ -772,7 +773,7 @@ function HUDBelt:set_selected(id, selected)
 	end
 end
 
--- Lines: 592 to 600
+-- Lines: 594 to 602
 function HUDBelt:update_icon(id)
 	local interaction = self._interactions[id]
 
@@ -785,14 +786,14 @@ function HUDBelt:update_icon(id)
 	interaction:update_icon()
 end
 
--- Lines: 602 to 606
+-- Lines: 604 to 608
 function HUDBelt:update_icons()
 	for _, interaction in pairs(self._interactions) do
 		interaction:update_icon()
 	end
 end
 
--- Lines: 608 to 616
+-- Lines: 610 to 618
 function HUDBelt:set_amount(id, amount)
 	local interaction = self._interactions[id]
 
@@ -805,7 +806,7 @@ function HUDBelt:set_amount(id, amount)
 	interaction:set_amount(amount)
 end
 
--- Lines: 618 to 626
+-- Lines: 620 to 628
 function HUDBelt:start_timer(id, time)
 	local interaction = self._interactions[id]
 
@@ -818,7 +819,7 @@ function HUDBelt:start_timer(id, time)
 	interaction:start_timer(time)
 end
 
--- Lines: 628 to 636
+-- Lines: 630 to 638
 function HUDBelt:stop_timer(id)
 	local interaction = self._interactions[id]
 
@@ -831,19 +832,19 @@ function HUDBelt:stop_timer(id)
 	interaction:stop_timer()
 end
 
--- Lines: 638 to 641
+-- Lines: 640 to 643
 function HUDBelt:start_reload(time, clip_start, clip_full)
 	self._interactions.reload:start_reload(time, clip_start, clip_full)
 	self:set_state("reload", "default")
 end
 
--- Lines: 643 to 646
+-- Lines: 645 to 648
 function HUDBelt:trigger_reload()
 	self._interactions.reload:trigger_reload()
 	self:set_state("reload", managers.vr:get_setting("auto_reload") and "disabled" or "inactive")
 end
 
--- Lines: 648 to 656
+-- Lines: 650 to 658
 function HUDBelt:set_icon_by_type(id, icon_id)
 	local interaction = self._interactions[id]
 

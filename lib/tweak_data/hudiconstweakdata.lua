@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2493
+-- Lines: 9 to 2508
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -1401,6 +1401,15 @@ function HudIconsTweakData:init()
 		texture_rect = {
 			96,
 			64,
+			32,
+			32
+		}
+	}
+	self.equipment_liquid_nitrogen_canister = {
+		texture = "guis/textures/pd2/hud_pickups",
+		texture_rect = {
+			128,
+			96,
 			32,
 			32
 		}
@@ -11000,12 +11009,120 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D0 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D1 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D2 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D3 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D4 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D5 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_AllDiffs_D6 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_United_D3 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			89,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_GetOffMy = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_Pinky_D5 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_WasteNot_D3 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_ReservoirDogs_CloseShave_D3 = {
+		texture = "guis/dlcs/rvd/textures/pd2/rvd_achievements_atlas",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 end
 local atlas_data = nil
 
--- Lines: 2496 to 2499
+-- Lines: 2511 to 2514
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -11018,7 +11135,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2501 to 2516
+-- Lines: 2516 to 2531
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -11044,7 +11161,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2519 to 2523
+-- Lines: 2534 to 2538
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -11058,7 +11175,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2526 to 2531
+-- Lines: 2541 to 2546
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -11069,7 +11186,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2534 to 2539
+-- Lines: 2549 to 2554
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

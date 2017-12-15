@@ -1024,7 +1024,7 @@ function HUDManager:sync_start_assault(assault_number)
 	managers.music:post_event(tweak_data.levels:get_music_event("assault"))
 
 	if not managers.groupai:state():get_hunt_mode() then
-		managers.dialog:queue_dialog("gen_ban_b02c", {})
+		managers.dialog:queue_narrator_dialog("b02c", {})
 	end
 
 	self._hud_assault_corner:sync_start_assault(assault_number)
@@ -1035,13 +1035,13 @@ function HUDManager:sync_end_assault(result)
 	managers.music:post_event(tweak_data.levels:get_music_event("control"))
 
 	local result_diag = {
-		"gen_ban_b12",
-		"gen_ban_b11",
-		"gen_ban_b10"
+		"b12",
+		"b11",
+		"b10"
 	}
 
 	if result then
-		managers.dialog:queue_dialog(result_diag[result + 1], {})
+		managers.dialog:queue_narrator_dialog(result_diag[result + 1], {})
 	end
 
 	self._hud_assault_corner:sync_end_assault(result)

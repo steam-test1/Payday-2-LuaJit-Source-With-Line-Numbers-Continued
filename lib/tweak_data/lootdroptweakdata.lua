@@ -1,6 +1,6 @@
 LootDropTweakData = LootDropTweakData or class()
 
--- Lines: 4 to 1962
+-- Lines: 4 to 1985
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1296,6 +1296,21 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 301,
 		category = "dlc"
 	}
+	self.global_values.rvd = {
+		name_id = "bm_global_value_rvd",
+		desc_id = "menu_l_global_value_rvd",
+		unlock_id = "bm_global_value_rvd_unlock",
+		color = dlc_color,
+		dlc = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 301,
+		category = "collaboration",
+		ignore_ulti = true
+	}
 	self.global_values.swm = {
 		name_id = "bm_global_value_swm",
 		desc_id = "menu_l_global_value_swm",
@@ -1651,6 +1666,7 @@ function LootDropTweakData:init(tweak_data)
 		"tango",
 		"chico",
 		"friend",
+		"rvd",
 		"swm",
 		"spa",
 		"sha",
@@ -1673,7 +1689,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 1964 to 1969
+-- Lines: 1987 to 1992
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

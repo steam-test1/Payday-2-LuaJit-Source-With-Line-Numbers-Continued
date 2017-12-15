@@ -3,12 +3,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 PlayerHandStateDriving = PlayerHandStateDriving or class(PlayerHandState)
 PlayerHandStateDriving.DEBUG = false
 
--- Lines: 7 to 9
+-- Lines: 8 to 10
 function PlayerHandStateDriving:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateDriving.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 11 to 29
+-- Lines: 12 to 30
 function PlayerHandStateDriving:at_enter(prev_state, params)
 	PlayerHandStateDriving.super.at_enter(self, prev_state)
 	self:hsm():enter_controller_state("driving")
@@ -28,12 +28,12 @@ function PlayerHandStateDriving:at_enter(prev_state, params)
 	self._hand_side = self:hsm():hand_id() == 1 and "right" or "left"
 end
 
--- Lines: 32 to 34
+-- Lines: 33 to 35
 function PlayerHandStateDriving:at_exit(next_state)
 	PlayerHandStateDriving.super.at_exit(self, next_state)
 end
 
--- Lines: 36 to 37
+-- Lines: 37 to 38
 function PlayerHandStateDriving:gripping()
 	return self._gripping
 end
@@ -43,10 +43,10 @@ local middle = Vector3()
 local steering_vec = Vector3()
 local exit = Vector3()
 
--- Lines: 52 to 158
+-- Lines: 53 to 159
 function PlayerHandStateDriving:update(t, dt)
 
-	-- Lines: 46 to 53
+	-- Lines: 47 to 54
 	local function offset_to_world(output, offset)
 		mvector3.set(output, offset)
 		mvector3.rotate_with(output, self._vehicle.vehicle_unit:rotation())

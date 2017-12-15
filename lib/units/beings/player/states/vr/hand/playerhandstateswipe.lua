@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateSwipe = PlayerHandStateSwipe or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateSwipe:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeapon.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 15
+-- Lines: 10 to 16
 function PlayerHandStateSwipe:at_enter(prev_state, params)
 	PlayerHandStateSwipe.super.at_enter(self, prev_state)
 
@@ -18,7 +18,7 @@ function PlayerHandStateSwipe:at_enter(prev_state, params)
 	self:hsm():enter_controller_state("tablet")
 end
 
--- Lines: 17 to 20
+-- Lines: 18 to 21
 function PlayerHandStateSwipe:at_exit(next_state)
 	PlayerHandStateSwipe.super.at_exit(self, next_state)
 
@@ -26,7 +26,7 @@ function PlayerHandStateSwipe:at_exit(next_state)
 end
 local tmp_vec = Vector3(0, 0, 0)
 
--- Lines: 23 to 45
+-- Lines: 24 to 46
 function PlayerHandStateSwipe:update(t, dt)
 	mvector3.set(tmp_vec, Vector3(4, 12, 3.5))
 	mvector3.rotate_with(tmp_vec, self._hand_unit:rotation())
@@ -53,7 +53,7 @@ function PlayerHandStateSwipe:update(t, dt)
 end
 local dir_vec = Vector3(0, 0, 0)
 
--- Lines: 48 to 78
+-- Lines: 49 to 79
 function PlayerHandStateSwipe:_check_flick(start, current, dt)
 	if mvector3.distance_sq(start, current) / dt > 100 then
 		mvector3.set(dir_vec, current)
@@ -85,7 +85,7 @@ function PlayerHandStateSwipe:_check_flick(start, current, dt)
 	end
 end
 
--- Lines: 80 to 83
+-- Lines: 81 to 84
 function PlayerHandStateSwipe:item_transition(next_state, params)
 	params = self._params
 

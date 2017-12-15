@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateAkimbo = PlayerHandStateAkimbo or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateAkimbo:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateAkimbo.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 21
+-- Lines: 10 to 22
 function PlayerHandStateAkimbo:_link_weapon(weapon_unit)
 	if not alive(self._weapon_unit) then
 		self._weapon_unit = weapon_unit
@@ -24,7 +24,7 @@ function PlayerHandStateAkimbo:_link_weapon(weapon_unit)
 	end
 end
 
--- Lines: 23 to 30
+-- Lines: 24 to 31
 function PlayerHandStateAkimbo:_unlink_weapon()
 	if alive(self._weapon_unit) then
 		self._weapon_unit:set_visible(false)
@@ -35,7 +35,7 @@ function PlayerHandStateAkimbo:_unlink_weapon()
 	end
 end
 
--- Lines: 32 to 47
+-- Lines: 33 to 60
 function PlayerHandStateAkimbo:at_enter(prev_state)
 	PlayerHandStateAkimbo.super.at_enter(self, prev_state)
 
@@ -49,9 +49,20 @@ function PlayerHandStateAkimbo:at_enter(prev_state)
 	self._hand_unit:melee():set_weapon_unit(self._weapon_unit)
 	self:hsm():enter_controller_state("empty")
 	self:hsm():enter_controller_state("akimbo")
+
+	local sequence = self._sequence
+	local tweak = tweak_data.vr:get_offset_by_id(self._weapon_unit:base().name_id)
+
+	if tweak.grip then
+		sequence = tweak.grip
+	end
+
+	if self._hand_unit and sequence and self._hand_unit:damage():has_sequence(sequence) then
+		self._hand_unit:damage():run_sequence_simple(sequence)
+	end
 end
 
--- Lines: 49 to 57
+-- Lines: 62 to 70
 function PlayerHandStateAkimbo:at_exit(next_state)
 	self:hsm():exit_controller_state("akimbo")
 	self._hand_unit:melee():set_weapon_unit()
@@ -59,12 +70,12 @@ function PlayerHandStateAkimbo:at_exit(next_state)
 	PlayerHandStateAkimbo.super.at_exit(self, next_state)
 end
 
--- Lines: 59 to 61
+-- Lines: 72 to 74
 function PlayerHandStateAkimbo:set_wanted_weapon_kick(amount)
 	self._wanted_weapon_kick = math.min((self._wanted_weapon_kick or 0) + amount * tweak_data.vr.weapon_kick.kick_mul, tweak_data.vr.weapon_kick.max_kick)
 end
 
--- Lines: 63 to 91
+-- Lines: 76 to 104
 function PlayerHandStateAkimbo:update(t, dt)
 	if self._weapon_kick then
 		self._hand_unit:set_position(self:hsm():position() - self._hand_unit:rotation():y() * self._weapon_kick)

@@ -6,13 +6,13 @@ PlayerIncapacitatedVR.set_belt_and_hands_enabled = PlayerFatalVR.set_belt_and_ha
 local __enter = PlayerIncapacitated.enter
 local __exit = PlayerIncapacitated.exit
 
--- Lines: 11 to 15
+-- Lines: 12 to 16
 function PlayerIncapacitatedVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("incapacitated", self._unit:position())
 end
 
--- Lines: 17 to 24
+-- Lines: 18 to 25
 function PlayerIncapacitatedVR:exit(state_data, new_state_name)
 	self._ext_movement:set_orientation_state("none")
 

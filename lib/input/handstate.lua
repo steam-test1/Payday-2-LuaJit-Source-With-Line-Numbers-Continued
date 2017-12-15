@@ -1,16 +1,16 @@
 HandState = HandState or class()
 
--- Lines: 6 to 8
+-- Lines: 7 to 9
 function HandState:init(level)
 	self._level = level or 0
 end
 
--- Lines: 10 to 11
+-- Lines: 11 to 12
 function HandState:level()
 	return self._level
 end
 
--- Lines: 14 to 24
+-- Lines: 15 to 25
 function HandState:connnection_names()
 	local names = {}
 
@@ -25,7 +25,7 @@ function HandState:connnection_names()
 	return names
 end
 
--- Lines: 27 to 57
+-- Lines: 28 to 61
 function HandState:apply(hand, key_map)
 	if not self._connections then
 		return
@@ -36,7 +36,11 @@ function HandState:apply(hand, key_map)
 
 	for connection_name, connection_data in pairs(self._connections) do
 		if (connection_data.hand == hand or not connection_data.hand) and (not connection_data.condition or connection_data.condition and connection_data:condition(hand, key_map)) then
-			local inputs = connection_data.inputs or connection_data.input_function and connection_data:input_function(hand, key_map)
+			local inputs = connection_data.inputs
+
+			if type(inputs) == "function" then
+				inputs = inputs(hand, key_map)
+			end
 
 			if connection_data.exclusive then
 				for key, connections in pairs(key_map) do

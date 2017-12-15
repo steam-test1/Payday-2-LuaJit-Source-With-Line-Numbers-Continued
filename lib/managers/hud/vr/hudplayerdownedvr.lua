@@ -1,6 +1,6 @@
 HUDPlayerDownedVR = HUDPlayerDowned
 
--- Lines: 3 to 65
+-- Lines: 4 to 66
 function HUDPlayerDownedVR:init(hud)
 	hud.panel = managers.hud:watch_panel():panel({})
 	self._hud = hud
@@ -62,12 +62,12 @@ function HUDPlayerDownedVR:init(hud)
 	managers.hud:hide(PlayerBase.PLAYER_DOWNED_HUD)
 
 
-	-- Lines: 58 to 60
+	-- Lines: 59 to 61
 	self._hud.show = function ()
 		managers.hud._hud_heist_timer:hide()
 	end
 
-	-- Lines: 62 to 64
+	-- Lines: 63 to 65
 	self._hud.hide = function ()
 		managers.hud._hud_heist_timer:show()
 	end

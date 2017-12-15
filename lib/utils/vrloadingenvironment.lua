@@ -5,7 +5,7 @@ VRLoadingEnvironment.STATE_RESUME = 3
 VRLoadingEnvironment.STATE_FADEIN = 4
 VRLoadingEnvironment.STATE_NONE = 5
 
--- Lines: 10 to 57
+-- Lines: 11 to 58
 function VRLoadingEnvironment:init(overlays)
 	if overlays then
 		self._overlays = overlays
@@ -52,29 +52,29 @@ function VRLoadingEnvironment:init(overlays)
 	self:change_state(VRLoadingEnvironment.STATE_NONE)
 end
 
--- Lines: 59 to 61
+-- Lines: 60 to 62
 function VRLoadingEnvironment:force_start()
 	self:change_state(VRLoadingEnvironment.STATE_START)
 end
 
--- Lines: 64 to 68
+-- Lines: 65 to 69
 function VRLoadingEnvironment:start(params)
 	if self._current_state ~= VRLoadingEnvironment.STATE_RESUME and self._current_state ~= VRLoadingEnvironment.STATE_FADEIN and self._current_state ~= VRLoadingEnvironment.STATE_START then
 		self:change_state(VRLoadingEnvironment.STATE_START, params)
 	end
 end
 
--- Lines: 71 to 73
+-- Lines: 72 to 74
 function VRLoadingEnvironment:stop()
 	self:change_state(VRLoadingEnvironment.STATE_STOP)
 end
 
--- Lines: 76 to 78
+-- Lines: 77 to 79
 function VRLoadingEnvironment:resume()
 	self:change_state(VRLoadingEnvironment.STATE_RESUME)
 end
 
--- Lines: 80 to 104
+-- Lines: 81 to 105
 function VRLoadingEnvironment:change_state(state, ...)
 	print("[VRLoadingEnvironment] Change state ", state)
 
@@ -107,12 +107,12 @@ function VRLoadingEnvironment:change_state(state, ...)
 	self._update_timer = not self._states[self._current_state].no_timer
 end
 
--- Lines: 106 to 107
+-- Lines: 107 to 108
 function VRLoadingEnvironment:current_state()
 	return self._current_state
 end
 
--- Lines: 110 to 120
+-- Lines: 111 to 121
 function VRLoadingEnvironment:update(t, dt)
 	if self._state_update then
 		if self._update_timer then
@@ -124,7 +124,7 @@ function VRLoadingEnvironment:update(t, dt)
 	end
 end
 
--- Lines: 122 to 129
+-- Lines: 123 to 130
 function VRLoadingEnvironment:find_overlay(name)
 	local overlays = {}
 
@@ -135,7 +135,7 @@ function VRLoadingEnvironment:find_overlay(name)
 	end
 end
 
--- Lines: 131 to 139
+-- Lines: 132 to 140
 function VRLoadingEnvironment:find_overlays(name)
 	local overlays = {}
 
@@ -148,12 +148,12 @@ function VRLoadingEnvironment:find_overlays(name)
 	return overlays
 end
 
--- Lines: 142 to 143
+-- Lines: 143 to 144
 function VRLoadingEnvironment:block_exec()
 	return self._block_exec
 end
 
--- Lines: 152 to 178
+-- Lines: 153 to 179
 function VRLoadingEnvironment:_start_enter(start_type)
 	self._loading_spin = nil
 	self._block_exec = true
@@ -165,13 +165,13 @@ function VRLoadingEnvironment:_start_enter(start_type)
 	self:_fade_overlays(0)
 end
 
--- Lines: 183 to 187
+-- Lines: 184 to 188
 function VRLoadingEnvironment:_start_exit()
 	VRManager:set_skybox_override({Idstring("guis/dlcs/vr/textures/loading/loading_bg")})
 	VRManager:suspend_rendering(true)
 end
 
--- Lines: 189 to 194
+-- Lines: 190 to 195
 function VRLoadingEnvironment:_start_update(t, dt)
 	self:_update_progress(t, dt)
 
@@ -180,7 +180,7 @@ function VRLoadingEnvironment:_start_update(t, dt)
 	end
 end
 
--- Lines: 199 to 203
+-- Lines: 200 to 204
 function VRLoadingEnvironment:_stop_enter()
 	self._timer_t = TimerManager:main():time() + self._fade_black_t
 
@@ -188,7 +188,7 @@ function VRLoadingEnvironment:_stop_enter()
 	VRManager:fade_to_color(self._fade_black_t, Color(1, 0, 0, 0), true)
 end
 
--- Lines: 205 to 211
+-- Lines: 206 to 212
 function VRLoadingEnvironment:_stop_exit()
 	VRManager:suspend_rendering(false)
 	VRManager:clear_skybox_override()
@@ -197,7 +197,7 @@ function VRLoadingEnvironment:_stop_exit()
 	VRManager:fade_to_color(1, Color(0, 0, 0, 0), true)
 end
 
--- Lines: 213 to 219
+-- Lines: 214 to 220
 function VRLoadingEnvironment:_stop_update(t, dt)
 	self:_fade_overlays((self._timer_t - t) / self._fade_black_t)
 	self:_update_progress(t, dt)
@@ -207,7 +207,7 @@ function VRLoadingEnvironment:_stop_update(t, dt)
 	end
 end
 
--- Lines: 224 to 230
+-- Lines: 225 to 231
 function VRLoadingEnvironment:_fadein_enter()
 	self._timer_t = TimerManager:main():time() + self._fade_in_t
 
@@ -215,12 +215,12 @@ function VRLoadingEnvironment:_fadein_enter()
 	VRManager:fade_to_color(self._fade_in_t, Color(0, 0, 0, 0), true)
 end
 
--- Lines: 232 to 234
+-- Lines: 233 to 235
 function VRLoadingEnvironment:_fadein_exit()
 	self._block_exec = false
 end
 
--- Lines: 236 to 242
+-- Lines: 237 to 243
 function VRLoadingEnvironment:_fadein_update(t, dt)
 	self:_fade_overlays(1 - (self._timer_t - t) / self._fade_in_t)
 	self:_update_progress(t, dt)
@@ -230,20 +230,20 @@ function VRLoadingEnvironment:_fadein_update(t, dt)
 	end
 end
 
--- Lines: 247 to 248
+-- Lines: 248 to 249
 function VRLoadingEnvironment:_resume_enter()
 end
 
--- Lines: 250 to 251
+-- Lines: 251 to 252
 function VRLoadingEnvironment:_resume_exit()
 end
 
--- Lines: 253 to 255
+-- Lines: 254 to 256
 function VRLoadingEnvironment:_resume_update(t, dt)
 	self:_update_progress(t, dt)
 end
 
--- Lines: 260 to 268
+-- Lines: 261 to 269
 function VRLoadingEnvironment:_fade_overlays(alpha)
 	alpha = math.clamp(alpha, 0, 1)
 
@@ -256,7 +256,7 @@ function VRLoadingEnvironment:_fade_overlays(alpha)
 	end
 end
 
--- Lines: 270 to 278
+-- Lines: 271 to 279
 function VRLoadingEnvironment:_update_progress(t, dt)
 	self._loading_spin = self._loading_spin or self:find_overlay("loading_spin")
 
@@ -270,7 +270,7 @@ function VRLoadingEnvironment:_update_progress(t, dt)
 	overlay:set_transform_linked(self._loading_spin.parent, Vector3(0, 0, 0), Rotation(0, 0, (self._loading_spin.t * 360) % 360))
 end
 
--- Lines: 281 to 310
+-- Lines: 282 to 311
 function VRLoadingEnvironment:_show_loading_screen(name)
 	local config = tweak_data.vr.loading_screens[name]
 
@@ -320,7 +320,7 @@ function VRLoadingEnvironment:_show_loading_screen(name)
 	end
 end
 
--- Lines: 313 to 322
+-- Lines: 314 to 323
 function VRLoadingEnvironment:_remove_overlays()
 	for _, o in ipairs(Global.__vr_overlays) do
 		if alive(o.overlay) then
@@ -333,7 +333,7 @@ function VRLoadingEnvironment:_remove_overlays()
 	self._loading_spin = nil
 end
 
--- Lines: 324 to 350
+-- Lines: 325 to 351
 function VRLoadingEnvironment:_create_overlay(path, name, config, parent)
 	local overlay = VRManager:create_overlay(path, name)
 

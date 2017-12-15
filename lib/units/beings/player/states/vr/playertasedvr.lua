@@ -3,7 +3,7 @@ local __update_movement = PlayerTased._update_movement
 local __enter = PlayerTased.enter
 local __exit = PlayerTased.exit
 
--- Lines: 7 to 12
+-- Lines: 8 to 13
 function PlayerTasedVR:enter(...)
 	__enter(self, ...)
 
@@ -12,7 +12,7 @@ function PlayerTasedVR:enter(...)
 	self._unit:hand():set_tased(true)
 end
 
--- Lines: 14 to 19
+-- Lines: 15 to 20
 function PlayerTasedVR:exit(...)
 	__exit(self, ...)
 
@@ -24,7 +24,7 @@ local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 local mvec_hmd_pos = Vector3()
 
--- Lines: 26 to 42
+-- Lines: 27 to 43
 function PlayerTasedVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 
@@ -45,7 +45,7 @@ function PlayerTasedVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new, self._unit:position())
 end
 
--- Lines: 48 to 91
+-- Lines: 49 to 92
 function PlayerTasedVR:_check_action_shock(t, input)
 	local has_akimbo = alive(self._equipped_unit) and self._equipped_unit:base().akimbo
 	local use_akimbo = has_akimbo and math.random() > 0.5
@@ -91,7 +91,7 @@ function PlayerTasedVR:_check_action_shock(t, input)
 	end
 end
 
--- Lines: 97 to 147
+-- Lines: 98 to 148
 function PlayerTasedVR:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
@@ -131,7 +131,7 @@ function PlayerTasedVR:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines: 150 to 272
+-- Lines: 151 to 273
 function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_base, akimbo)
 	if not held then
 		return false
@@ -170,7 +170,7 @@ function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_b
 			end
 		end
 
-		if not self._shooting_weapons[akimbo and 2 or 1] then
+		if not self._shooting_weapons or not self._shooting_weapons[akimbo and 2 or 1] then
 			return
 		end
 

@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateReady = PlayerHandStateReady or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateReady:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateReady.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 16
+-- Lines: 10 to 17
 function PlayerHandStateReady:at_enter(prev_state, blocked)
 	PlayerHandStateReady.super.at_enter(self, prev_state)
 	self:hsm():enter_controller_state("empty")
@@ -16,20 +16,20 @@ function PlayerHandStateReady:at_enter(prev_state, blocked)
 	self:set_blocked(blocked)
 end
 
--- Lines: 18 to 22
+-- Lines: 19 to 23
 function PlayerHandStateReady:set_blocked(blocked)
 	self._hand_unit:damage():run_sequence_simple(blocked and "ready_warning" or self._sequence)
 
 	self._blocked = blocked
 end
 
--- Lines: 24 to 27
+-- Lines: 25 to 28
 function PlayerHandStateReady:at_exit(next_state)
 	PlayerHandStateReady.super.at_exit(self, next_state)
 	managers.hud:watch_prompt_panel():hide()
 end
 
--- Lines: 29 to 43
+-- Lines: 30 to 44
 function PlayerHandStateReady:update(t, dt)
 	local controller = managers.vr:hand_state_machine():controller()
 	local interact_button = self:hsm():hand_id() == PlayerHand.LEFT and "interact_left" or "interact_right"

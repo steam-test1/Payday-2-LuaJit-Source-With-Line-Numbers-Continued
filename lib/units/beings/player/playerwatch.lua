@@ -1,6 +1,6 @@
 PlayerWatch = PlayerWatch or class()
 
--- Lines: 3 to 5
+-- Lines: 4 to 6
 function PlayerWatch:init(unit)
 	self._unit = unit
 end

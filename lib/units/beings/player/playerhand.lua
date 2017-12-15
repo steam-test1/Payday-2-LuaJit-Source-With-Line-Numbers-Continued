@@ -21,7 +21,7 @@ function PlayerHand.other_hand_id(arg)
 	return 3 - PlayerHand.hand_id(arg)
 end
 
--- Lines: 25 to 122
+-- Lines: 25 to 133
 function PlayerHand:init(unit)
 	print("[PlayerHand] Init")
 
@@ -73,25 +73,36 @@ function PlayerHand:init(unit)
 	unit:link(l_hand_unit)
 	unit:link(r_hand_unit)
 	unit:link(self._shadow_unit)
+
+	local controller_rotation = Rotation()
+
+	if managers.vr:is_oculus() then
+		controller_rotation = Rotation(math.X, -30)
+	end
+
 	table.insert(self._hand_data, {
 		hand = "right",
 		state = "idle",
 		unit = r_hand_unit,
 		base_rotation = Rotation(math.X, -50),
-		base_position = Vector3(0, -2, -7)
+		base_rotation_controller = controller_rotation,
+		base_position = Vector3(0, -2, -7),
+		rotation_raw = Rotation()
 	})
 	table.insert(self._hand_data, {
 		hand = "left",
 		state = "idle",
 		unit = l_hand_unit,
 		base_rotation = Rotation(math.X, -50),
-		base_position = Vector3(0, -2, -7)
+		base_rotation_controller = controller_rotation,
+		base_position = Vector3(0, -2, -7),
+		rotation_raw = Rotation()
 	})
 
 	self._watch = PlayerWatch:new(l_hand_unit)
-	local transition_queue = StateMachineTransitionQueue:new()
-	self._hand_data[PlayerHand.RIGHT].state_machine = PlayerHandStateMachine:new(self._hand_data[PlayerHand.RIGHT].unit, PlayerHand.RIGHT, transition_queue)
-	self._hand_data[PlayerHand.LEFT].state_machine = PlayerHandStateMachine:new(self._hand_data[PlayerHand.LEFT].unit, PlayerHand.LEFT, transition_queue)
+	self._shared_transition_queue = StateMachineTransitionQueue:new()
+	self._hand_data[PlayerHand.RIGHT].state_machine = PlayerHandStateMachine:new(self._hand_data[PlayerHand.RIGHT].unit, PlayerHand.RIGHT, self._shared_transition_queue)
+	self._hand_data[PlayerHand.LEFT].state_machine = PlayerHandStateMachine:new(self._hand_data[PlayerHand.LEFT].unit, PlayerHand.LEFT, self._shared_transition_queue)
 
 	self._hand_data[PlayerHand.RIGHT].state_machine:set_other_hand(self._hand_data[PlayerHand.LEFT].state_machine)
 	self._hand_data[PlayerHand.LEFT].state_machine:set_other_hand(self._hand_data[PlayerHand.RIGHT].state_machine)
@@ -110,9 +121,13 @@ function PlayerHand:init(unit)
 	self._tablet_hand_changed_clbk = callback(self, self, "on_tablet_hand_changed")
 
 	managers.vr:add_setting_changed_callback("default_tablet_hand", self._tablet_hand_changed_clbk)
+
+	self._belt_size_changed_clbk = callback(self, self, "on_belt_size_changed")
+
+	managers.vr:add_setting_changed_callback("belt_size", self._belt_size_changed_clbk)
 end
 
--- Lines: 124 to 133
+-- Lines: 135 to 145
 function PlayerHand:destroy()
 	print("[PlayerHand] Destroy")
 
@@ -124,9 +139,10 @@ function PlayerHand:destroy()
 	end
 
 	managers.vr:remove_setting_changed_callback("default_tablet_hand", self._tablet_hand_changed_clbk)
+	managers.vr:remove_setting_changed_callback("belt_size", self._belt_size_changed_clbk)
 end
 
--- Lines: 135 to 147
+-- Lines: 147 to 159
 function PlayerHand:on_tablet_hand_changed(setting, old, new)
 	self:hand_unit(new):damage():run_sequence_simple("show_gadgets")
 	self:hand_unit(old):damage():run_sequence_simple("hide_gadgets")
@@ -143,24 +159,29 @@ function PlayerHand:on_tablet_hand_changed(setting, old, new)
 	end
 end
 
--- Lines: 149 to 153
+-- Lines: 161 to 163
+function PlayerHand:on_belt_size_changed(setting, old, new)
+	HUDManagerVR.link_belt(managers.hud:belt_workspace(), self._belt_unit)
+end
+
+-- Lines: 165 to 169
 function PlayerHand:_set_hand_state(hand, state, params)
 	if self._hand_data[hand].state_machine:can_change_state_by_name(state) then
 		self._hand_data[hand].state_machine:change_state_by_name(state, params)
 	end
 end
 
--- Lines: 155 to 157
+-- Lines: 171 to 173
 function PlayerHand:_change_hand_to_default(hand, params)
 	self._hand_data[hand].state_machine:change_to_default(params)
 end
 
--- Lines: 159 to 160
+-- Lines: 175 to 176
 function PlayerHand:current_hand_state(hand)
 	return self._hand_data[hand].state_machine:current_state()
 end
 
--- Lines: 163 to 169
+-- Lines: 179 to 185
 function PlayerHand:get_default_hand_id(state)
 	for id, hand_data in ipairs(self._hand_data) do
 		if hand_data.state_machine:default_state_name() == state then
@@ -169,19 +190,19 @@ function PlayerHand:get_default_hand_id(state)
 	end
 end
 
--- Lines: 171 to 173
+-- Lines: 187 to 189
 function PlayerHand:set_default_state(hand, state)
 	self._hand_data[self.hand_id(hand)].state_machine:set_default_state(state)
 end
 
--- Lines: 175 to 177
+-- Lines: 191 to 193
 function PlayerHand:set_custom_belt_height_ratio(height)
 	self._custom_belt_height_ratio = height
 end
 local pen = Draw:pen()
 local prints = 20
 
--- Lines: 181 to 263
+-- Lines: 197 to 287
 function PlayerHand:_update_controllers(t, dt)
 	local hmd_pos = VRManager:hmd_position()
 	local current_height = hmd_pos.z
@@ -200,6 +221,9 @@ function PlayerHand:_update_controllers(t, dt)
 
 			pos = pos + ghost_position
 
+			mrotation.set_zero(controller.rotation_raw)
+			mrotation.multiply(controller.rotation_raw, rot)
+			mrotation.multiply(controller.rotation_raw, controller.base_rotation_controller)
 			mrotation.multiply(rot, controller.base_rotation)
 
 			controller.rotation = rot
@@ -211,8 +235,7 @@ function PlayerHand:_update_controllers(t, dt)
 			controller.unit:set_position(pos)
 			controller.unit:set_rotation(rot)
 			controller.state_machine:set_position(pos)
-			controller.state_machine:update(t, dt)
-			controller.state_machine:end_update(t, dt)
+			controller.state_machine:set_rotation(rot)
 
 			if self._scheculed_wall_checks and self._scheculed_wall_checks[i] and self._scheculed_wall_checks[i].t < t then
 				local custom_obj = self._scheculed_wall_checks[i].custom_obj
@@ -223,6 +246,12 @@ function PlayerHand:_update_controllers(t, dt)
 				end
 			end
 		end
+
+		for _, controller in ipairs(self._hand_data) do
+			controller.state_machine:update(t, dt)
+		end
+
+		self._shared_transition_queue:do_state_change()
 	end
 
 	local rot = VRManager:hmd_rotation()
@@ -241,21 +270,21 @@ function PlayerHand:_update_controllers(t, dt)
 
 	mvector3.set_z(v, 0)
 	mvector3.normalize(v)
-	self._shadow_unit:set_position(self._unit:position() - v * 30 + Vector3(0, 0, 5))
+	self._shadow_unit:set_position(ghost_position - v * 30 + Vector3(0, 0, 5))
 
 	local max_angle = managers.vr:get_setting("belt_snap")
 	local angle = rot:rotation_difference(Rotation(self._belt_yaw, 0, 0), Rotation(rot:yaw(), 0, 0)):yaw()
 	local abs_angle = math.abs(angle)
 	local distance = mvector3.distance_sq(self._prev_ghost_position, ghost_position)
 
-	if rot:pitch() > -35 or max_angle < abs_angle or distance > 1600 or self._controller:get_input_pressed("menu_snap") then
+	if rot:pitch() > -35 or max_angle < abs_angle or distance > 1600 then
 		self._prev_ghost_position = mvector3.copy(ghost_position)
 		self._belt_yaw = rot:yaw()
 	end
 
 	local belt_rot = Rotation(self._belt_yaw, 0, 0)
 
-	self._belt_unit:set_position(ghost_position + Vector3(0, 10, current_height * (self._custom_belt_height_ratio or managers.vr:get_setting("belt_height_ratio"))):rotate_with(belt_rot))
+	self._belt_unit:set_position(ghost_position + Vector3(0, managers.vr:get_setting("belt_distance"), current_height * (self._custom_belt_height_ratio or managers.vr:get_setting("belt_height_ratio"))):rotate_with(belt_rot))
 	self._belt_unit:set_rotation(belt_rot)
 
 	local look_dot = math.clamp(mvector3.dot(rot:y(), Vector3(0, 0, -1)), 0, 1) - 0.6
@@ -278,7 +307,7 @@ end
 local tablet_normal = Vector3(-1, 0, 0)
 local rotated_tablet_normal = Vector3(0, 0, 0)
 
--- Lines: 267 to 318
+-- Lines: 291 to 342
 function PlayerHand:update(unit, t, dt)
 	if self._block_input then
 		return
@@ -336,7 +365,18 @@ function PlayerHand:update(unit, t, dt)
 	end
 end
 
--- Lines: 320 to 326
+-- Lines: 344 to 350
+function PlayerHand:raw_hand_rotation(hand)
+	if hand == 1 or hand == "right" then
+		return self._hand_data[PlayerHand.RIGHT].rotation_raw
+	elseif hand == 2 or hand == "left" then
+		return self._hand_data[PlayerHand.LEFT].rotation_raw
+	end
+
+	return nil
+end
+
+-- Lines: 353 to 359
 function PlayerHand:hand_unit(hand)
 	if hand == 1 or hand == "right" then
 		return self._hand_data[PlayerHand.RIGHT].unit
@@ -347,19 +387,19 @@ function PlayerHand:hand_unit(hand)
 	return nil
 end
 
--- Lines: 329 to 331
+-- Lines: 362 to 364
 function PlayerHand:mask_hand_id()
 	local default_tablet_hand = self.hand_id(managers.vr:get_setting("default_tablet_hand") or "left")
 
 	return self.other_hand_id(default_tablet_hand)
 end
 
--- Lines: 334 to 335
+-- Lines: 367 to 368
 function PlayerHand:mask_hand_unit()
 	return self:hand_unit(self:mask_hand_id())
 end
 
--- Lines: 338 to 345
+-- Lines: 371 to 378
 function PlayerHand:link_mask(mask_unit)
 	local default_weapon_hand = self.hand_id(managers.vr:get_setting("default_weapon_hand") or "right")
 
@@ -377,7 +417,7 @@ function PlayerHand:link_mask(mask_unit)
 	self._mask_unit = mask_unit
 end
 
--- Lines: 347 to 359
+-- Lines: 380 to 392
 function PlayerHand:unlink_mask(next_state)
 	local default_weapon_hand = self.hand_id(managers.vr:get_setting("default_weapon_hand") or "right")
 	self._mask_unit = nil
@@ -387,7 +427,7 @@ function PlayerHand:unlink_mask(next_state)
 	self:_change_hand_to_default(self.other_hand_id(default_weapon_hand))
 end
 
--- Lines: 361 to 372
+-- Lines: 394 to 405
 function PlayerHand:set_point_at_tablet(point)
 	local non_tablet_hand_id = self.other_hand_id(managers.vr:get_setting("default_tablet_hand") or "left")
 
@@ -402,7 +442,7 @@ function PlayerHand:set_point_at_tablet(point)
 	end
 end
 
--- Lines: 374 to 389
+-- Lines: 407 to 422
 function PlayerHand:set_belt_active(active, hand)
 	if not hand then
 		self:set_belt_active(active, PlayerHand.RIGHT)
@@ -422,17 +462,17 @@ function PlayerHand:set_belt_active(active, hand)
 	end
 end
 
--- Lines: 391 to 392
+-- Lines: 424 to 425
 function PlayerHand:warp()
 	return self._hand_data[PlayerHand.LEFT].unit:warp()
 end
 
--- Lines: 395 to 396
+-- Lines: 428 to 429
 function PlayerHand:watch()
 	return self._watch
 end
 
--- Lines: 399 to 419
+-- Lines: 432 to 452
 function PlayerHand:interaction_ids()
 	local weapon_hand_id = self:get_active_hand_id("weapon")
 
@@ -460,7 +500,7 @@ function PlayerHand:interaction_ids()
 	end
 end
 
--- Lines: 421 to 426
+-- Lines: 454 to 459
 function PlayerHand:interaction_units()
 	local units = {}
 
@@ -471,7 +511,7 @@ function PlayerHand:interaction_units()
 	return units
 end
 
--- Lines: 429 to 436
+-- Lines: 462 to 469
 function PlayerHand:start_show_intrest(blocked, hand)
 	if self:current_hand_state(hand):name() == "ready" then
 		self:current_hand_state(hand):set_blocked(blocked)
@@ -482,24 +522,24 @@ function PlayerHand:start_show_intrest(blocked, hand)
 	self._vr_controller:trigger_haptic_pulse(hand - 1, 0, 700)
 end
 
--- Lines: 438 to 442
+-- Lines: 471 to 475
 function PlayerHand:end_show_intrest(hand)
 	if self:current_hand_state(hand):name() == "ready" then
 		self:_change_hand_to_default(hand)
 	end
 end
 
--- Lines: 444 to 446
+-- Lines: 477 to 479
 function PlayerHand:intimidate(hand)
 	self:_set_hand_state(hand, "point")
 end
 
--- Lines: 448 to 449
+-- Lines: 481 to 482
 function PlayerHand:belt_unit()
 	return self._belt_unit
 end
 
--- Lines: 452 to 479
+-- Lines: 485 to 512
 function PlayerHand:set_carry(carry, skip_hand)
 	self._carry = carry
 
@@ -543,7 +583,7 @@ function PlayerHand:set_carry(carry, skip_hand)
 	end
 end
 
--- Lines: 484 to 489
+-- Lines: 517 to 522
 function PlayerHand:get_active_hand(item)
 	local id = self:get_active_hand_id(item)
 
@@ -552,7 +592,7 @@ function PlayerHand:get_active_hand(item)
 	end
 end
 
--- Lines: 491 to 500
+-- Lines: 524 to 533
 function PlayerHand:get_active_hand_id(item)
 	for i in ipairs(self._hand_data) do
 		local state = self:current_hand_state(i)
@@ -565,7 +605,7 @@ function PlayerHand:get_active_hand_id(item)
 	end
 end
 
--- Lines: 502 to 507
+-- Lines: 535 to 540
 function PlayerHand:apply_weapon_kick(amount, akimbo)
 	local id = self:get_active_hand_id(akimbo and "akimbo" or "weapon")
 
@@ -574,7 +614,7 @@ function PlayerHand:apply_weapon_kick(amount, akimbo)
 	end
 end
 
--- Lines: 509 to 518
+-- Lines: 542 to 551
 function PlayerHand:set_cuffed(cuffed)
 	for hand in ipairs(self._hand_data) do
 		if cuffed then
@@ -585,17 +625,17 @@ function PlayerHand:set_cuffed(cuffed)
 	end
 end
 
--- Lines: 520 to 522
+-- Lines: 553 to 555
 function PlayerHand:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines: 524 to 526
+-- Lines: 557 to 559
 function PlayerHand:set_base_rotation(rot)
 	self._base_rotation = rot
 end
 
--- Lines: 529 to 536
+-- Lines: 562 to 569
 function PlayerHand:set_warping(warping)
 	for hand in ipairs(self._hand_data) do
 		local state = self:current_hand_state(hand)
@@ -606,7 +646,7 @@ function PlayerHand:set_warping(warping)
 	end
 end
 
--- Lines: 538 to 555
+-- Lines: 571 to 588
 function PlayerHand:set_tased(tased)
 	if self._tase_effects then
 		for _, id in ipairs(self._tase_effects) do
@@ -628,7 +668,7 @@ function PlayerHand:set_tased(tased)
 	end
 end
 
--- Lines: 559 to 594
+-- Lines: 592 to 627
 function PlayerHand:check_hand_through_wall(hand, custom_obj)
 	local hand_unit = self:hand_unit(hand)
 	local head_pos = self._unit_movement_ext:m_head_pos()
@@ -696,7 +736,7 @@ function PlayerHand:check_hand_through_wall(hand, custom_obj)
 	return true
 end
 
--- Lines: 597 to 599
+-- Lines: 630 to 632
 function PlayerHand:warp_hand()
 	local hand_index = self._hand_state_machine:hand_from_connection("warp") or PlayerHand.other_hand_id(managers.vr:get_setting("default_weapon_hand"))
 

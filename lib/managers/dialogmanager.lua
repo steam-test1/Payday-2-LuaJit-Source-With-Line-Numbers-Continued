@@ -6,6 +6,10 @@ function DialogManager:init()
 	self._current_dialog = nil
 	self._next_dialog = nil
 	self._bain_unit = World:spawn_unit(Idstring("units/payday2/characters/fps_mover/bain"), Vector3(), Rotation())
+	local level_id = Global.level_data and Global.level_data.level_id
+	local level_tweak = tweak_data.levels[level_id]
+
+	self:set_narrator(level_tweak and level_tweak.narrator or "bain")
 end
 
 -- Lines: 17 to 19
@@ -56,6 +60,20 @@ function DialogManager:queue_dialog(id, params)
 	end
 
 	return true
+end
+
+-- Lines: 64 to 66
+function DialogManager:queue_narrator_dialog(id, params)
+	self:queue_dialog(self._narrator_prefix .. id, params)
+end
+
+-- Lines: 68 to 75
+function DialogManager:set_narrator(narrator)
+	local narrator_codes = {
+		bain = "ban",
+		locke = "loc"
+	}
+	self._narrator_prefix = "Play_" .. narrator_codes[narrator] .. "_"
 end
 
 -- Lines: 78 to 104

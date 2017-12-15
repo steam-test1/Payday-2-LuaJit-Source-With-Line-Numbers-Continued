@@ -14,7 +14,7 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandStateDriving")
 
 PlayerHandStateMachine = PlayerHandStateMachine or class(StateMachine)
 
--- Lines: 18 to 135
+-- Lines: 19 to 136
 function PlayerHandStateMachine:init(hand_unit, hand_id, transition_queue)
 	self._hand_id = hand_id
 	self._hand_unit = hand_unit
@@ -116,13 +116,13 @@ function PlayerHandStateMachine:init(hand_unit, hand_id, transition_queue)
 	managers.vr:add_setting_changed_callback("default_weapon_hand", self._weapon_hand_changed_clbk)
 end
 
--- Lines: 137 to 141
+-- Lines: 138 to 142
 function PlayerHandStateMachine:destroy()
 	PlayerHandStateMachine.super.destroy(self)
 	managers.vr:remove_setting_changed_callback("default_weapon_hand", self._weapon_hand_changed_clbk)
 end
 
--- Lines: 143 to 156
+-- Lines: 144 to 157
 function PlayerHandStateMachine:on_default_weapon_hand_changed(setting, old, new)
 	if old == new then
 		return
@@ -135,7 +135,7 @@ function PlayerHandStateMachine:on_default_weapon_hand_changed(setting, old, new
 	end
 end
 
--- Lines: 158 to 160
+-- Lines: 159 to 161
 function PlayerHandStateMachine:queue_default_state_switch(state, other_hand_state)
 	self._queued_default_state_switch = {
 		state,
@@ -143,7 +143,7 @@ function PlayerHandStateMachine:queue_default_state_switch(state, other_hand_sta
 	}
 end
 
--- Lines: 163 to 174
+-- Lines: 164 to 175
 function PlayerHandStateMachine:set_default_state(state_name)
 	if self._default_state and state_name == self._default_state:name() then
 		return
@@ -158,68 +158,68 @@ function PlayerHandStateMachine:set_default_state(state_name)
 	self._default_state = new_default
 end
 
--- Lines: 176 to 180
+-- Lines: 177 to 181
 function PlayerHandStateMachine:change_to_default(params, front)
 	if self:can_change_state(self._default_state) then
 		self:change_state(self._default_state, params, front)
 	end
 end
 
--- Lines: 182 to 183
+-- Lines: 183 to 184
 function PlayerHandStateMachine:default_state_name()
 	return self._default_state and self._default_state:name()
 end
 
--- Lines: 186 to 187
+-- Lines: 187 to 188
 function PlayerHandStateMachine:hand_id()
 	return self._hand_id
 end
 
--- Lines: 190 to 191
+-- Lines: 191 to 192
 function PlayerHandStateMachine:hand_unit()
 	return self._hand_unit
 end
 
--- Lines: 194 to 196
+-- Lines: 195 to 197
 function PlayerHandStateMachine:enter_controller_state(state_name)
 	managers.vr:hand_state_machine():enter_hand_state(self._hand_id, state_name)
 end
 
--- Lines: 198 to 200
+-- Lines: 199 to 201
 function PlayerHandStateMachine:exit_controller_state(state_name)
 	managers.vr:hand_state_machine():exit_hand_state(self._hand_id, state_name)
 end
 
--- Lines: 202 to 204
+-- Lines: 203 to 205
 function PlayerHandStateMachine:set_other_hand(hsm)
 	self._other_hand = hsm
 end
 
--- Lines: 206 to 207
+-- Lines: 207 to 208
 function PlayerHandStateMachine:other_hand()
 	return self._other_hand
 end
 
--- Lines: 210 to 212
+-- Lines: 211 to 213
 function PlayerHandStateMachine:can_change_state_by_name(state_name)
 	local state = assert(self._states[state_name], "[PlayerHandStateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	return self:can_change_state(state)
 end
 
--- Lines: 215 to 218
+-- Lines: 216 to 219
 function PlayerHandStateMachine:change_state_by_name(state_name, params, front)
 	local state = assert(self._states[state_name], "[PlayerHandStateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	self:change_state(state, params, front)
 end
 
--- Lines: 220 to 221
+-- Lines: 221 to 222
 function PlayerHandStateMachine:is_controller_enabled()
 	return true
 end
 
--- Lines: 224 to 231
+-- Lines: 225 to 232
 function PlayerHandStateMachine:update(t, dt)
 	if self._queued_default_state_switch then
 		self:set_default_state(self._queued_default_state_switch[1])
@@ -231,13 +231,23 @@ function PlayerHandStateMachine:update(t, dt)
 	return PlayerHandStateMachine.super.update(self, t, dt)
 end
 
--- Lines: 234 to 236
+-- Lines: 235 to 237
 function PlayerHandStateMachine:set_position(pos)
 	self._position = pos
 end
 
--- Lines: 238 to 239
+-- Lines: 239 to 240
 function PlayerHandStateMachine:position()
 	return self._position or self:hand_unit():position()
+end
+
+-- Lines: 243 to 245
+function PlayerHandStateMachine:set_rotation(rot)
+	self._rotation = rot
+end
+
+-- Lines: 247 to 248
+function PlayerHandStateMachine:rotation()
+	return self._rotation or self:hand_unit():rotation()
 end
 

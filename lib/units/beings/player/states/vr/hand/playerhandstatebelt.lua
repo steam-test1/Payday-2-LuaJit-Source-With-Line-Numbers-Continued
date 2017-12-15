@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateBelt = PlayerHandStateBelt or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateBelt:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateBelt.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 15
+-- Lines: 10 to 16
 function PlayerHandStateBelt:at_enter(prev_state)
 	PlayerHandStateBelt.super.at_enter(self, prev_state)
 	self._hsm:enter_controller_state("belt")
@@ -15,7 +15,7 @@ function PlayerHandStateBelt:at_enter(prev_state)
 	self._belt_button = self:hsm():hand_id() == 1 and "belt_right" or "belt_left"
 end
 
--- Lines: 17 to 23
+-- Lines: 18 to 24
 function PlayerHandStateBelt:at_exit(next_state)
 	PlayerHandStateBelt.super.at_exit(self, next_state)
 	self._hsm:exit_controller_state("belt")
@@ -25,7 +25,7 @@ function PlayerHandStateBelt:at_exit(next_state)
 	end
 end
 
--- Lines: 25 to 121
+-- Lines: 26 to 123
 function PlayerHandStateBelt:update(t, dt)
 	local belt_state = nil
 
@@ -119,40 +119,42 @@ function PlayerHandStateBelt:update(t, dt)
 				self._hsm:change_state_by_name("melee", {prev_state = self._prev_state})
 			elseif self._belt_state == "reload" and self._hsm:default_state_name() ~= "weapon" then
 				local weap_base = player:inventory():equipped_unit():base()
-				local mag_name = weap_base:magazine_unit_name()
 
-				if player:movement():current_state():can_grab_mag() and mag_name then
-					local mag_unit = World:spawn_unit(Idstring(mag_name), Vector3(0, 0, 0), Rotation())
-					local second_mag = nil
+				if player:movement():current_state():can_grab_mag() then
+					local mag_unit = weap_base:spawn_belt_magazine_unit(weap_base.akimbo and Vector3(-5, 0, 0) or Vector3())
 
-					if weap_base.akimbo then
-						second_mag = World:spawn_unit(Idstring(mag_name), Vector3(-5, 0, 0), Rotation())
+					if mag_unit then
+						local second_mag = nil
 
-						mag_unit:link(mag_unit:orientation_object():name(), second_mag)
-					end
+						if weap_base.akimbo then
+							second_mag = weap_base:spawn_belt_magazine_unit()
 
-					if weap_base:reload_object_name() then
-						for _, mag in ipairs({
-							mag_unit,
-							second_mag
-						}) do
-							local reload_obj = mag:get_object(Idstring(weap_base:reload_object_name()))
-
-							reload_obj:set_position(mag:position())
-							reload_obj:set_visibility(true)
+							mag_unit:link(mag_unit:orientation_object():name(), second_mag)
 						end
+
+						local offset = tweak_data.vr:get_offset_by_id("magazine", weap_base.name_id)
+
+						if weap_base:reload_object_name() then
+							for _, mag in ipairs({
+								mag_unit,
+								second_mag
+							}) do
+								local reload_obj = mag:get_object(Idstring(weap_base:reload_object_name()))
+
+								reload_obj:set_position(mag:position())
+								reload_obj:set_visibility(true)
+							end
+						end
+
+						self._hsm:change_state_by_name("item", {
+							type = "magazine",
+							unit = mag_unit,
+							offset = offset,
+							prev_state = self._prev_state
+						})
+						managers.hud:belt():trigger_reload()
+						player:movement():current_state():grab_mag()
 					end
-
-					local offset = tweak_data.vr:get_offset_by_id("magazine", weap_base.name_id)
-
-					self._hsm:change_state_by_name("item", {
-						type = "magazine",
-						unit = mag_unit,
-						offset = offset.position,
-						prev_state = self._prev_state
-					})
-					managers.hud:belt():trigger_reload()
-					player:movement():current_state():grab_mag()
 				end
 			end
 		end

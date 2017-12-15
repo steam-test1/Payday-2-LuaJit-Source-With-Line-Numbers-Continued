@@ -532,12 +532,17 @@ function PlayerMovement:current_state_name()
 	return self._current_state_name
 end
 
--- Lines: 626 to 627
+-- Lines: 627 to 630
+function PlayerMovement:in_clean_state()
+	return self._current_state_name == "clean" or self._current_state_name == "civilian" or self._current_state_name == "mask_off"
+end
+
+-- Lines: 635 to 636
 function PlayerMovement:state_enter_time()
 	return self._state_enter_t
 end
 
--- Lines: 632 to 650
+-- Lines: 641 to 659
 function PlayerMovement:_create_attention_setting_from_descriptor(setting_desc, setting_name)
 	local setting = clone(setting_desc)
 	setting.id = setting_name
@@ -560,7 +565,7 @@ function PlayerMovement:_create_attention_setting_from_descriptor(setting_desc, 
 	return setting
 end
 
--- Lines: 655 to 666
+-- Lines: 664 to 675
 function PlayerMovement:_apply_attention_setting_modifications(setting)
 	setting.detection = self._unit:base():detection_settings()
 
@@ -577,7 +582,7 @@ function PlayerMovement:_apply_attention_setting_modifications(setting)
 	end
 end
 
--- Lines: 673 to 720
+-- Lines: 682 to 729
 function PlayerMovement:set_attention_settings(settings_list)
 	local changes = self._attention_handler:chk_settings_diff(settings_list)
 
@@ -588,7 +593,7 @@ function PlayerMovement:set_attention_settings(settings_list)
 	local all_attentions = nil
 
 
-	-- Lines: 681 to 693
+	-- Lines: 690 to 702
 	local function _add_attentions_to_all(names)
 		for _, setting_name in ipairs(names) do
 			local setting_desc = tweak_data.attention.settings[setting_name]
@@ -632,14 +637,14 @@ function PlayerMovement:set_attention_settings(settings_list)
 	end
 end
 
--- Lines: 725 to 729
+-- Lines: 734 to 738
 function PlayerMovement:clbk_attention_notice_sneak(observer_unit, status)
 	if alive(observer_unit) then
 		self:on_suspicion(observer_unit, status)
 	end
 end
 
--- Lines: 735 to 773
+-- Lines: 744 to 782
 function PlayerMovement:on_suspicion(observer_unit, status)
 	if Network:is_server() then
 		self._suspicion_debug = self._suspicion_debug or {}
@@ -680,7 +685,7 @@ function PlayerMovement:on_suspicion(observer_unit, status)
 	self:_feed_suspicion_to_hud()
 end
 
--- Lines: 777 to 784
+-- Lines: 786 to 793
 function PlayerMovement:_feed_suspicion_to_hud()
 	local susp_ratio = self._suspicion_ratio
 
@@ -692,7 +697,7 @@ function PlayerMovement:_feed_suspicion_to_hud()
 	managers.hud:set_suspicion(susp_ratio)
 end
 
--- Lines: 789 to 823
+-- Lines: 798 to 832
 function PlayerMovement:_calc_suspicion_ratio_and_sync(observer_unit, status)
 	local suspicion_sync = nil
 
@@ -730,7 +735,7 @@ function PlayerMovement:_calc_suspicion_ratio_and_sync(observer_unit, status)
 	end
 end
 
--- Lines: 828 to 841
+-- Lines: 837 to 850
 function PlayerMovement.clbk_msg_overwrite_suspicion(overwrite_data, msg_queue, msg_name, suspect_peer_id, suspicion)
 	if msg_queue then
 		if overwrite_data.indexes[suspect_peer_id] then
@@ -751,7 +756,7 @@ function PlayerMovement.clbk_msg_overwrite_suspicion(overwrite_data, msg_queue, 
 	end
 end
 
--- Lines: 845 to 865
+-- Lines: 854 to 874
 function PlayerMovement:clbk_enemy_weapons_hot()
 	if self._current_state_name == "mask_off" then
 		self:on_uncovered(nil)
@@ -772,7 +777,7 @@ function PlayerMovement:clbk_enemy_weapons_hot()
 	self:_feed_suspicion_to_hud()
 end
 
--- Lines: 869 to 878
+-- Lines: 878 to 887
 function PlayerMovement:inventory_clbk_listener(unit, event)
 	if event == "add" then
 		local data = self._unit:inventory():get_latest_addition_hud_data()
@@ -785,7 +790,7 @@ function PlayerMovement:inventory_clbk_listener(unit, event)
 	end
 end
 
--- Lines: 882 to 892
+-- Lines: 891 to 901
 function PlayerMovement:chk_play_mask_on_slow_mo(state_data)
 	if not state_data.uncovered and managers.enemy:chk_any_unit_in_slotmask_visible(managers.slot:get_mask("enemies"), self._unit:camera():position(), self._nav_trakcer) then
 		local effect_id_world = "world_MaskOn_Peer" .. tostring(managers.network:session():local_peer():id())
@@ -798,17 +803,17 @@ function PlayerMovement:chk_play_mask_on_slow_mo(state_data)
 	end
 end
 
--- Lines: 896 to 897
+-- Lines: 905 to 906
 function PlayerMovement:SO_access()
 	return self._SO_access
 end
 
--- Lines: 902 to 903
+-- Lines: 911 to 912
 function PlayerMovement:rally_skill_data()
 	return self._rally_skill_data
 end
 
--- Lines: 909 to 948
+-- Lines: 918 to 957
 function PlayerMovement:_upd_underdog_skill(t)
 	local data = self._underdog_skill_data
 
@@ -857,7 +862,7 @@ function PlayerMovement:_upd_underdog_skill(t)
 	data.chk_t = t + (activated and data.chk_interval_active or data.chk_interval_inactive)
 end
 
--- Lines: 952 to 962
+-- Lines: 961 to 971
 function PlayerMovement:on_targetted_for_attack(state, attacker_unit)
 	if state then
 		self._attackers = self._attackers or {}
@@ -871,27 +876,27 @@ function PlayerMovement:on_targetted_for_attack(state, attacker_unit)
 	end
 end
 
--- Lines: 966 to 968
+-- Lines: 975 to 977
 function PlayerMovement:set_carry_restriction(state)
 	self._carry_restricted = state
 end
 
--- Lines: 972 to 973
+-- Lines: 981 to 982
 function PlayerMovement:has_carry_restriction()
 	return self._carry_restricted
 end
 
--- Lines: 979 to 980
+-- Lines: 988 to 989
 function PlayerMovement:object_interaction_blocked()
 	return self._current_state:interaction_blocked()
 end
 
--- Lines: 983 to 985
+-- Lines: 992 to 994
 function PlayerMovement:interupt_interact()
 	self._current_state:interupt_interact()
 end
 
--- Lines: 989 to 1001
+-- Lines: 998 to 1010
 function PlayerMovement:on_morale_boost(benefactor_unit)
 	if self._morale_boost then
 		managers.enemy:reschedule_delayed_clbk(self._morale_boost.expire_clbk_id, TimerManager:game():time() + tweak_data.upgrades.morale_boost_time)
@@ -907,24 +912,24 @@ function PlayerMovement:on_morale_boost(benefactor_unit)
 	end
 end
 
--- Lines: 1005 to 1006
+-- Lines: 1014 to 1015
 function PlayerMovement:morale_boost()
 	return self._morale_boost
 end
 
--- Lines: 1011 to 1013
+-- Lines: 1020 to 1022
 function PlayerMovement:clbk_morale_boost_expire()
 	self._morale_boost = nil
 end
 
--- Lines: 1017 to 1021
+-- Lines: 1026 to 1030
 function PlayerMovement:push(vel)
 	if self._current_state.push then
 		self._current_state:push(vel)
 	end
 end
 
--- Lines: 1025 to 1037
+-- Lines: 1034 to 1046
 function PlayerMovement:set_team(team_data)
 	self._team = team_data
 
@@ -941,12 +946,12 @@ function PlayerMovement:set_team(team_data)
 	end
 end
 
--- Lines: 1041 to 1042
+-- Lines: 1050 to 1051
 function PlayerMovement:team()
 	return self._team
 end
 
--- Lines: 1047 to 1051
+-- Lines: 1056 to 1060
 function PlayerMovement:sync_net_event(event_id, peer)
 	local team_id = tweak_data.levels:get_team_names_indexed()[event_id]
 	local team_data = managers.groupai:state():team_data(team_id)
@@ -954,7 +959,7 @@ function PlayerMovement:sync_net_event(event_id, peer)
 	self:set_team(team_data)
 end
 
--- Lines: 1055 to 1067
+-- Lines: 1064 to 1076
 function PlayerMovement:set_friendly_fire(state)
 	if state then
 		if self._friendly_fire then
@@ -969,12 +974,12 @@ function PlayerMovement:set_friendly_fire(state)
 	end
 end
 
--- Lines: 1071 to 1072
+-- Lines: 1080 to 1081
 function PlayerMovement:friendly_fire(unit)
 	return self._friendly_fire and true or false
 end
 
--- Lines: 1077 to 1119
+-- Lines: 1086 to 1128
 function PlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	data.movement = {
@@ -1016,7 +1021,7 @@ function PlayerMovement:save(data)
 	data.movement.special_material = managers.network:session():peer(peer_id)._special_material
 end
 
--- Lines: 1124 to 1138
+-- Lines: 1133 to 1147
 function PlayerMovement:pre_destroy(unit)
 	self._attention_handler:set_attention(nil)
 	self._current_state:pre_destroy(unit)
@@ -1034,7 +1039,7 @@ function PlayerMovement:pre_destroy(unit)
 	end
 end
 
--- Lines: 1142 to 1156
+-- Lines: 1151 to 1165
 function PlayerMovement:destroy(unit)
 	if self._link_data then
 		self._link_data.parent:base():remove_destroy_listener("PlayerMovement" .. tostring(self._unit:key()))
@@ -1050,7 +1055,7 @@ function PlayerMovement:destroy(unit)
 	end
 end
 
--- Lines: 1166 to 1173
+-- Lines: 1175 to 1182
 function PlayerMovement:_max_stamina()
 	local base_stamina = self._STAMINA_INIT + managers.player:stamina_addend()
 	local max_stamina = base_stamina * managers.player:body_armor_value("stamina") * managers.player:stamina_multiplier()
@@ -1060,7 +1065,7 @@ function PlayerMovement:_max_stamina()
 	return max_stamina
 end
 
--- Lines: 1176 to 1192
+-- Lines: 1185 to 1201
 function PlayerMovement:_change_stamina(value)
 	local max_stamina = self:_max_stamina()
 	local stamina_maxed = self._stamina == max_stamina
@@ -1080,79 +1085,79 @@ function PlayerMovement:_change_stamina(value)
 	SoundDevice:set_rtpc("stamina", stamina_breath)
 end
 
--- Lines: 1199 to 1201
+-- Lines: 1208 to 1210
 function PlayerMovement:subtract_stamina(value)
 	self:_change_stamina(-math.abs(value))
 end
 
--- Lines: 1203 to 1205
+-- Lines: 1212 to 1214
 function PlayerMovement:add_stamina(value)
 	self:_change_stamina(math.abs(value) * managers.player:upgrade_value("player", "stamina_regen_multiplier", 1))
 end
 
--- Lines: 1207 to 1208
+-- Lines: 1216 to 1217
 function PlayerMovement:is_above_stamina_threshold()
 	return tweak_data.player.movement_state.stamina.MIN_STAMINA_THRESHOLD < self._stamina
 end
 
--- Lines: 1211 to 1212
+-- Lines: 1220 to 1221
 function PlayerMovement:is_stamina_drained()
 	return self._stamina <= 0
 end
 
--- Lines: 1215 to 1218
+-- Lines: 1224 to 1227
 function PlayerMovement:set_running(running)
 	self._is_running = running
 
 	self:_restart_stamina_regen_timer()
 end
 
--- Lines: 1220 to 1222
+-- Lines: 1229 to 1231
 function PlayerMovement:_restart_stamina_regen_timer()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines: 1224 to 1225
+-- Lines: 1233 to 1234
 function PlayerMovement:running()
 	return self._is_running
 end
 
--- Lines: 1228 to 1229
+-- Lines: 1237 to 1238
 function PlayerMovement:crouching()
 	return self._state_data.ducking
 end
 
--- Lines: 1232 to 1233
+-- Lines: 1241 to 1242
 function PlayerMovement:in_air()
 	return self._state_data.in_air
 end
 
--- Lines: 1236 to 1237
+-- Lines: 1245 to 1246
 function PlayerMovement:on_ladder()
 	return self._state_data.on_ladder
 end
 
--- Lines: 1242 to 1244
+-- Lines: 1251 to 1253
 function PlayerMovement:on_enter_ladder(ladder_unit)
 	self._ladder_unit = ladder_unit
 end
 
--- Lines: 1246 to 1248
+-- Lines: 1255 to 1257
 function PlayerMovement:on_exit_ladder()
 	self._ladder_unit = nil
 end
 
--- Lines: 1250 to 1251
+-- Lines: 1259 to 1260
 function PlayerMovement:ladder_unit()
 	return self._ladder_unit
 end
 
--- Lines: 1256 to 1258
+-- Lines: 1265 to 1267
 function PlayerMovement:on_enter_zipline(zipline_unit)
 	self._zipline_unit = zipline_unit
 end
 
--- Lines: 1260 to 1265
+-- Lines: 1269 to 1274
 function PlayerMovement:on_exit_zipline()
 	if alive(self._zipline_unit) then
 		self._zipline_unit:zipline():set_user(nil)
@@ -1161,12 +1166,12 @@ function PlayerMovement:on_exit_zipline()
 	self._zipline_unit = nil
 end
 
--- Lines: 1267 to 1268
+-- Lines: 1276 to 1277
 function PlayerMovement:zipline_unit()
 	return self._zipline_unit
 end
 
--- Lines: 1276 to 1280
+-- Lines: 1285 to 1289
 function PlayerMovement:_init_vr()
 	self._orientation_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/player/vr_orientation"), Vector3(0, 0, 0), Rotation())
 
@@ -1174,7 +1179,7 @@ function PlayerMovement:_init_vr()
 	self:set_orientation_state("none")
 end
 
--- Lines: 1285 to 1302
+-- Lines: 1294 to 1311
 function PlayerMovement:set_orientation_state(state, base_position)
 	if state == "none" then
 		self._orientation_unit:set_visible(false)
@@ -1187,7 +1192,7 @@ function PlayerMovement:set_orientation_state(state, base_position)
 
 		if base_position then
 			local from = base_position + Vector3(0, 0, 100)
-			local to = base_position + Vector3(0, 0, -100)
+			local to = base_position + Vector3(0, 0, -2000)
 			local ray = self._unit:raycast("ray", from, to, "slot_mask", 1)
 
 			if ray then
@@ -1197,7 +1202,7 @@ function PlayerMovement:set_orientation_state(state, base_position)
 	end
 end
 
--- Lines: 1306 to 1314
+-- Lines: 1315 to 1323
 function PlayerMovement:_update_vr(unit, t, dt)
 	if self._block_input then
 		return
@@ -1210,66 +1215,66 @@ function PlayerMovement:_update_vr(unit, t, dt)
 	mvector3.set(self._hmd_pos, hmd_pos)
 end
 
--- Lines: 1319 to 1323
+-- Lines: 1328 to 1332
 function PlayerMovement:_post_init_vr()
 	self._ghost_position = mvector3.copy(self._m_pos)
 	self._hmd_pos = VRManager:hmd_position()
 	self._hmd_delta = Vector3()
 end
 
--- Lines: 1327 to 1328
+-- Lines: 1336 to 1337
 function PlayerMovement:hmd_delta()
 	return self._hmd_delta
 end
 
--- Lines: 1333 to 1334
+-- Lines: 1342 to 1343
 function PlayerMovement:hmd_position()
 	return self._hmd_pos
 end
 
--- Lines: 1339 to 1342
+-- Lines: 1348 to 1351
 function PlayerMovement:set_ghost_position(pos, unit_position)
 	mvector3.set(self._ghost_position, pos)
 	self._unit:set_position(unit_position and unit_position or pos)
 end
 
--- Lines: 1346 to 1347
+-- Lines: 1355 to 1356
 function PlayerMovement:ghost_position()
 	return self._ghost_position
 end
 
--- Lines: 1352 to 1354
+-- Lines: 1361 to 1363
 function PlayerMovement:reset_ghost_position()
 	self:set_ghost_position(self._m_pos)
 end
 
--- Lines: 1358 to 1359
+-- Lines: 1367 to 1368
 function PlayerMovement:warping()
 	return self._state_data.warping
 end
 
--- Lines: 1362 to 1364
+-- Lines: 1371 to 1373
 function PlayerMovement:activate_regeneration()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines: 1366 to 1367
+-- Lines: 1375 to 1376
 function PlayerMovement:stamina()
 	return self._stamina
 end
 
--- Lines: 1372 to 1374
+-- Lines: 1381 to 1383
 function PlayerMovement:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines: 1376 to 1379
+-- Lines: 1385 to 1388
 function PlayerMovement:reset_hmd_position()
 	mvector3.set(self._hmd_pos, VRManager:hmd_position())
 	mvector3.set_zero(self._hmd_delta)
 end
 
--- Lines: 1384 to 1406
+-- Lines: 1393 to 1415
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1293,7 +1298,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines: 1408 to 1463
+-- Lines: 1417 to 1472
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1343,12 +1348,12 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines: 1465 to 1466
+-- Lines: 1474 to 1475
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines: 1469 to 1470
+-- Lines: 1478 to 1479
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
 end

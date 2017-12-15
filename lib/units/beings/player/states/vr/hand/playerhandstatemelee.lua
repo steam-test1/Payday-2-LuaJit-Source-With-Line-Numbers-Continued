@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateMelee = PlayerHandStateMelee or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateMelee:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeapon.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 64
+-- Lines: 10 to 69
 function PlayerHandStateMelee:_spawn_melee_unit()
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
 	self._melee_entry = melee_entry
@@ -50,6 +50,10 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 			if self._hand_unit and sequence and self._hand_unit:damage():has_sequence(sequence) then
 				self._hand_unit:damage():run_sequence_simple(sequence)
 			end
+
+			if offset.anim then
+				self._melee_unit:anim_play(Idstring(offset.anim))
+			end
 		end
 
 		local align_obj_name = Idstring(align)
@@ -70,7 +74,7 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 	end
 end
 
--- Lines: 66 to 82
+-- Lines: 71 to 87
 function PlayerHandStateMelee:at_enter(prev_state, params)
 	PlayerHandStateWeapon.super.at_enter(self, prev_state)
 	managers.player:player_unit():movement():current_state():_interupt_action_reload()
@@ -86,7 +90,7 @@ function PlayerHandStateMelee:at_enter(prev_state, params)
 	managers.hud:belt():set_state("melee", "active")
 end
 
--- Lines: 84 to 95
+-- Lines: 89 to 100
 function PlayerHandStateMelee:at_exit(next_state)
 	PlayerHandStateMelee.super.at_exit(self, next_state)
 	self:hsm():exit_controller_state("item")
@@ -98,7 +102,7 @@ function PlayerHandStateMelee:at_exit(next_state)
 	end
 end
 
--- Lines: 97 to 120
+-- Lines: 102 to 125
 function PlayerHandStateMelee:update(t, dt)
 	local controller = managers.vr:hand_state_machine():controller()
 

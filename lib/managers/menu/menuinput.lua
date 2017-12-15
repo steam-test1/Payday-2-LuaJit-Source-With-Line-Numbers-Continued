@@ -121,7 +121,7 @@ function MenuInput:get_controller()
 	return self._controller:get_controller()
 end
 
--- Lines: 123 to 130
+-- Lines: 123 to 129
 function MenuInput:deactivate_mouse()
 	if not self._mouse_active then
 		return
@@ -129,7 +129,7 @@ function MenuInput:deactivate_mouse()
 
 	self._mouse_active = false
 
-	managers.mouse_pointer:remove_mouse(self._menu_name)
+	return managers.mouse_pointer:remove_mouse(self._menu_name)
 end
 
 -- Lines: 132 to 151

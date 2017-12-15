@@ -1,53 +1,21 @@
 require("lib/input/HandState")
 
-
--- Lines: 3 to 9
-local function warp_inputs(self)
-	local inputs = {"trackpad_button_"}
-
-	if managers.vr:is_oculus() then
-		table.insert(inputs, "d_up_")
-		table.insert(inputs, "b_")
-	end
-
-	return inputs
-end
-
-
--- Lines: 12 to 17
-local function warp_target_inputs(self)
-	local inputs = {"trackpad_button_"}
-
-	if managers.vr:is_oculus() then
-		table.insert(inputs, "b_")
-	end
-
-	return inputs
-end
-
+local common = require("lib/input/HandStatesCommon")
 EmptyHandState = EmptyHandState or class(HandState)
 
--- Lines: 25 to 71
+-- Lines: 11 to 53
 function EmptyHandState:init()
 	EmptyHandState.super.init(self)
 
 	self._connections = {
 		toggle_menu = {
 			inputs = {"menu_"},
-			condition = function (self, hand, key_map)
-				for key, connections in pairs(key_map) do
-					if table.contains(connections, "toggle_menu") then
-						return false
-					end
-				end
-
-				local default_hand = managers.vr:get_setting("default_weapon_hand") == "right" and 1 or 2
-
-				return hand == default_hand
-			end
+			condition = common.toggle_menu_condition
 		},
-		warp = {input_function = warp_inputs},
-		warp_target = {input_function = warp_target_inputs},
+		warp = {inputs = common.warp_inputs},
+		warp_target = {inputs = common.warp_target_inputs},
+		run = {inputs = common.run_input},
+		touchpad_move = {inputs = {"dpad_"}},
 		interact_right = {
 			hand = 1,
 			inputs = {"grip_"}
@@ -61,19 +29,21 @@ function EmptyHandState:init()
 end
 PointHandState = PointHandState or class(HandState)
 
--- Lines: 86 to 102
+-- Lines: 68 to 90
 function PointHandState:init()
 	PointHandState.super.init(self)
 
 	self._connections = {
-		warp = {input_function = warp_inputs},
-		warp_target = {input_function = warp_target_inputs},
+		warp = {inputs = common.warp_inputs},
+		warp_target = {inputs = common.warp_target_inputs},
+		run = {inputs = common.run_input},
+		touchpad_move = {inputs = {"dpad_"}},
 		automove = {inputs = {"trigger_"}}
 	}
 end
 WeaponHandState = WeaponHandState or class(HandState)
 
--- Lines: 109 to 156
+-- Lines: 97 to 141
 function WeaponHandState:init()
 	WeaponHandState.super.init(self)
 
@@ -87,13 +57,12 @@ function WeaponHandState:init()
 		switch_hands = {inputs = {"d_up_"}},
 		weapon_firemode = {inputs = {"d_left_"}},
 		weapon_gadget = {inputs = {"d_right_"}},
-		menu_snap = {inputs = {"d_down_"}},
 		touchpad_primary = {inputs = {"dpad_"}}
 	}
 end
 AkimboHandState = AkimboHandState or class(HandState)
 
--- Lines: 163 to 171
+-- Lines: 148 to 156
 function AkimboHandState:init()
 	AkimboHandState.super.init(self, 1)
 
@@ -101,7 +70,7 @@ function AkimboHandState:init()
 end
 MaskHandState = MaskHandState or class(HandState)
 
--- Lines: 178 to 191
+-- Lines: 163 to 176
 function MaskHandState:init()
 	MaskHandState.super.init(self)
 
@@ -115,7 +84,7 @@ function MaskHandState:init()
 end
 ItemHandState = ItemHandState or class(HandState)
 
--- Lines: 198 to 209
+-- Lines: 183 to 194
 function ItemHandState:init()
 	ItemHandState.super.init(self, 1)
 
@@ -126,7 +95,7 @@ function ItemHandState:init()
 end
 AbilityHandState = AbilityHandState or class(HandState)
 
--- Lines: 216 to 224
+-- Lines: 201 to 209
 function AbilityHandState:init()
 	AbilityHandState.super.init(self, 2)
 
@@ -134,7 +103,7 @@ function AbilityHandState:init()
 end
 EquipmentHandState = EquipmentHandState or class(HandState)
 
--- Lines: 231 to 242
+-- Lines: 216 to 227
 function EquipmentHandState:init()
 	EquipmentHandState.super.init(self, 1)
 
@@ -145,17 +114,26 @@ function EquipmentHandState:init()
 end
 TabletHandState = TabletHandState or class(HandState)
 
--- Lines: 249 to 251
+-- Lines: 234 to 242
 function TabletHandState:init()
 	TabletHandState.super.init(self)
+
+	self._connections = {toggle_menu = {
+		inputs = {"menu_"},
+		condition = common.toggle_menu_condition
+	}}
 end
 BeltHandState = BeltHandState or class(HandState)
 
--- Lines: 258 to 275
+-- Lines: 249 to 270
 function BeltHandState:init()
 	BeltHandState.super.init(self, 1)
 
 	self._connections = {
+		toggle_menu = {
+			inputs = {"menu_"},
+			condition = common.toggle_menu_condition
+		},
 		belt_right = {
 			hand = 1,
 			inputs = {"grip_"}
@@ -169,13 +147,13 @@ function BeltHandState:init()
 end
 RepeaterHandState = RepeaterHandState or class(HandState)
 
--- Lines: 282 to 284
+-- Lines: 277 to 279
 function RepeaterHandState:init()
 	RepeaterHandState.super.init(self, 2)
 end
 DrivingHandState = DrivingHandState or class(HandState)
 
--- Lines: 291 to 308
+-- Lines: 286 to 303
 function DrivingHandState:init()
 	DrivingHandState.super.init(self)
 

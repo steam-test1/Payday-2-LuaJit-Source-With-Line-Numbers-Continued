@@ -29,7 +29,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 41 to 1943
+-- Lines: 41 to 1989
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -1002,6 +1002,13 @@ function AchievementsTweakData:init(tweak_data)
 			is_not_civilian = true,
 			challenge_stat = "challenge_melee_creeps",
 			mutators = {"MutatorExplodingEnemies"}
+		},
+		rvd_12 = {
+			melee_id = "clean",
+			job = "rvd",
+			stat = "rvd_12_stats",
+			difficulty = overkill_and_above,
+			enemy_tags_all = {"special"}
 		}
 	}
 	self.complete_heist_achievements = {
@@ -3602,6 +3609,49 @@ function AchievementsTweakData:init(tweak_data)
 			job = "fish",
 			difficulty = overkill_and_above
 		},
+		rvd_1 = {
+			award = "rvd_1",
+			job = "rvd",
+			difficulty = normal_and_above
+		},
+		rvd_2 = {
+			award = "rvd_2",
+			job = "rvd",
+			difficulty = hard_and_above
+		},
+		rvd_3 = {
+			award = "rvd_3",
+			job = "rvd",
+			difficulty = veryhard_and_above
+		},
+		rvd_4 = {
+			award = "rvd_4",
+			job = "rvd",
+			difficulty = overkill_and_above
+		},
+		rvd_5 = {
+			award = "rvd_5",
+			job = "rvd",
+			difficulty = easywish_and_above
+		},
+		rvd_6 = {
+			award = "rvd_6",
+			job = "rvd",
+			difficulty = deathwish_and_above
+		},
+		rvd_7 = {
+			award = "rvd_7",
+			job = "rvd",
+			difficulty = sm_wish_and_above
+		},
+		rvd_8 = {
+			melee_used = false,
+			award = "rvd_8",
+			job = "rvd",
+			difficulty = overkill_and_above,
+			weapons_used = {"corgi"},
+			equipped = {primaries = {weapon_id = "corgi"}}
+		},
 		bain_jobs = {
 			complete_job = true,
 			contract = "bain",
@@ -4570,7 +4620,8 @@ function AchievementsTweakData:init(tweak_data)
 			"gallery",
 			"rat",
 			"cage",
-			"arena"
+			"arena",
+			"rvd"
 		},
 		the_dentist = {
 			"big",
@@ -4606,7 +4657,9 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		events = {
 			"nail",
-			"help"
+			"help",
+			"haunted",
+			"hvh"
 		},
 		the_continental = {
 			"spa",
@@ -4873,6 +4926,10 @@ function AchievementsTweakData:init(tweak_data)
 		eng_4_stats = {{
 			award = "eng_4",
 			at = 5
+		}},
+		rvd_12_stats = {{
+			award = "rvd_12",
+			at = 92
 		}}
 	}
 	local jobs = {}
@@ -5826,7 +5883,7 @@ local tracking = {
 }
 
 
--- Lines: 1962 to 1988
+-- Lines: 2008 to 2034
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5838,7 +5895,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 1971 to 1981
+	-- Lines: 2017 to 2027
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5869,7 +5926,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 1991 to 1995
+-- Lines: 2037 to 2041
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5883,7 +5940,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 1998 to 2005
+-- Lines: 2044 to 2051
 local function from_level(level)
 	if not level then
 		error()
@@ -5900,7 +5957,7 @@ local function from_level(level)
 end
 
 
--- Lines: 2008 to 2015
+-- Lines: 2054 to 2061
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5917,7 +5974,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 2018 to 2028
+-- Lines: 2064 to 2074
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5940,7 +5997,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 2036 to 2238
+-- Lines: 2082 to 2284
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6087,7 +6144,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2275 to 2388
+-- Lines: 2321 to 2434
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

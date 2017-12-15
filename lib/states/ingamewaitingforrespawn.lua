@@ -255,7 +255,7 @@ function IngameWaitingForRespawnState:update(t, dt)
 	if self._play_too_long_line_t and self._play_too_long_line_t < t and managers.groupai:state():bain_state() then
 		self._play_too_long_line_t = nil
 
-		managers.dialog:queue_dialog("Play_ban_h38x", {})
+		managers.dialog:queue_narrator_dialog("h38x", {})
 	end
 
 	self:_upd_watch(t, dt)
@@ -654,15 +654,15 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 
 	if (not Global.game_settings.single_player or is_ai_trade_possible) and managers.groupai:state():bain_state() then
 		if managers.groupai:state():get_assault_mode() and not is_ai_trade_possible then
-			managers.dialog:queue_dialog("ban_h31x", {})
+			managers.dialog:queue_narrator_dialog("h31x", {})
 		elseif is_ai_trade_possible then
-			managers.dialog:queue_dialog("Play_ban_h51", {})
+			managers.dialog:queue_narrator_dialog("h51", {})
 		elseif hostages_killed == 0 then
-			managers.dialog:queue_dialog("Play_ban_h32x", {})
+			managers.dialog:queue_narrator_dialog("h32x", {})
 		elseif hostages_killed < 3 then
-			managers.dialog:queue_dialog("Play_ban_h33x", {})
+			managers.dialog:queue_narrator_dialog("h33x", {})
 		else
-			managers.dialog:queue_dialog("Play_ban_h34x", {})
+			managers.dialog:queue_narrator_dialog("h34x", {})
 		end
 	end
 end
@@ -684,12 +684,12 @@ function IngameWaitingForRespawnState:begin_trade()
 
 	if managers.groupai:state():bain_state() and next(crims) then
 		if table.size(crims) > 1 then
-			managers.dialog:queue_dialog("Play_ban_h36x", {})
+			managers.dialog:queue_narrator_dialog("h36x", {})
 		else
 			local _, data = next(crims)
 			local char_code = managers.criminals:character_static_data_by_unit(data.unit).ssuffix
 
-			managers.dialog:queue_dialog("Play_ban_h37" .. char_code, {})
+			managers.dialog:queue_narrator_dialog("h37" .. char_code, {})
 		end
 	end
 

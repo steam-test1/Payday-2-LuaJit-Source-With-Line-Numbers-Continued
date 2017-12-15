@@ -3,13 +3,13 @@ local __update_movement = PlayerBleedOut._update_movement
 local __enter = PlayerBleedOut.enter
 local __exit = PlayerBleedOut.exit
 
--- Lines: 7 to 11
+-- Lines: 8 to 12
 function PlayerBleedOutVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("bleedout", self._unit:position())
 end
 
--- Lines: 13 to 20
+-- Lines: 14 to 21
 function PlayerBleedOutVR:exit(state_data, new_state_name)
 	self._ext_movement:set_orientation_state("none")
 
@@ -24,9 +24,10 @@ end
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 local mvec_hmd_pos = Vector3()
-local vec_ray_dis = Vector3(0, 0, 200)
+local vec_ray_up = Vector3(0, 0, 200)
+local vec_ray_down = Vector3(0, 0, 200)
 
--- Lines: 29 to 55
+-- Lines: 31 to 61
 function PlayerBleedOutVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 
@@ -38,13 +39,18 @@ function PlayerBleedOutVR:_update_movement(t, dt)
 
 	mvector3.set(hmd_pos, self._ext_movement:hmd_position())
 
-	local from = pos_new + vec_ray_dis
-	local to = pos_new - vec_ray_dis
+	local move_unit = false
+	local from = pos_new + vec_ray_up
+	local to = pos_new - vec_ray_down
 	local ray = self._unit:raycast("ray", from, to, "slot_mask", 1)
 
 	if ray then
 		mvector3.set_z(self._height_offset, hmd_pos.z * 0.6)
 		mvector3.set_z(pos_new, ray.position.z - self._height_offset.z)
+	else
+		mvector3.set_z(pos_new, pos_new.z - self.WARP_SPEED * dt)
+
+		move_unit = true
 	end
 
 	local hmd_delta = mvec_hmd_delta
@@ -53,10 +59,10 @@ function PlayerBleedOutVR:_update_movement(t, dt)
 	mvector3.set_z(hmd_delta, 0)
 	mvector3.rotate_with(hmd_delta, self._camera_base_rot)
 	mvector3.add(pos_new, hmd_delta)
-	self._ext_movement:set_ghost_position(pos_new, self._unit:position())
+	self._ext_movement:set_ghost_position(pos_new, not move_unit and self._unit:position())
 end
 
--- Lines: 59 to 68
+-- Lines: 65 to 74
 function PlayerBleedOutVR:_start_action_bleedout(t)
 	self:_interupt_action_running(t)
 	self._unit:kill_mover()
@@ -69,9 +75,10 @@ function PlayerBleedOutVR:_start_action_bleedout(t)
 	self._state_data.downed = true
 end
 
--- Lines: 72 to 81
+-- Lines: 78 to 88
 function PlayerBleedOutVR:_end_action_bleedout(t)
 	self:_activate_mover(Idstring(self:_can_stand() and "stand" or "duck"))
+	self._unit:mover():set_velocity(Vector3())
 
 	local new_pos = self._ext_movement:ghost_position() + self._height_offset
 
@@ -82,7 +89,7 @@ function PlayerBleedOutVR:_end_action_bleedout(t)
 	self._state_data.downed = false
 end
 
--- Lines: 84 to 109
+-- Lines: 91 to 116
 function PlayerBleedOutVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		local disallowed_hand_id = self._unit:hand():get_active_hand_id("melee") or self._unit:hand():get_active_hand_id("deployable")

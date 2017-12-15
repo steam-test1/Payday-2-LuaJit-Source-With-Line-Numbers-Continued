@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateStandard = PlayerHandStateStandard or class(PlayerHandState)
 
--- Lines: 5 to 7
+-- Lines: 6 to 8
 function PlayerHandStateStandard:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateStandard.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 9 to 14
+-- Lines: 10 to 15
 function PlayerHandStateStandard:at_enter(prev_state)
 	PlayerHandStateStandard.super.at_enter(self, prev_state)
 	self:hsm():enter_controller_state("empty")
@@ -15,7 +15,7 @@ function PlayerHandStateStandard:at_enter(prev_state)
 	self._check_first = true
 end
 
--- Lines: 16 to 31
+-- Lines: 17 to 32
 function PlayerHandStateStandard:update(t, dt)
 	local controller = managers.vr:hand_state_machine():controller()
 	local interact_button = self:hsm():hand_id() == PlayerHand.LEFT and "interact_left" or "interact_right"

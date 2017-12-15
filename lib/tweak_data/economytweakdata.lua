@@ -1,6 +1,6 @@
 EconomyTweakData = EconomyTweakData or class()
 
--- Lines: 3 to 1102
+-- Lines: 3 to 1118
 function EconomyTweakData:init()
 	self.safes = {}
 	self.drills = {}
@@ -898,6 +898,18 @@ function EconomyTweakData:init()
 			contents = {}
 		}
 	}
+	self.bundles.cas_01 = {
+		def_id = 30005,
+		dlc_id = "763390",
+		contains = {armor_skins = {
+			"cas_m90",
+			"cas_police",
+			"cas_miami",
+			"cas_slayer",
+			"cas_trash",
+			"cas_gensec"
+		}}
+	}
 	self.safes.overkill_01 = {
 		def_id = 50000,
 		promo = true,
@@ -1143,10 +1155,11 @@ function EconomyTweakData:init()
 		free = true,
 		drill = "cas_01",
 		content = "cas_01",
+		bundle = "cas_01",
 		name_id = "bm_menu_safe_cas_01",
 		unit_name = "units/payday2_cash/safes/cas/safe/eco_safe_cas",
 		texture_bundle_folder = "cash/safes/cas",
-		market_link = "https://steamcommunity.com/market/listings/218620/Armor%20Safe%202%3A%20cas"
+		market_link = "https://steamcommunity.com/market/listings/218620/Community%20Armor%20Safe%201"
 	}
 	self.drills.overkill_01 = {
 		safe = "overkill_01",
@@ -1439,7 +1452,7 @@ function EconomyTweakData:init()
 	self:_init_armor_skins()
 end
 
--- Lines: 1112 to 1121
+-- Lines: 1128 to 1137
 function EconomyTweakData:get_entry_from_index(category, index)
 	for entry, data in pairs(self[category] or {}) do
 		if not data.index then
@@ -1452,12 +1465,12 @@ function EconomyTweakData:get_entry_from_index(category, index)
 	end
 end
 
--- Lines: 1123 to 1124
+-- Lines: 1139 to 1140
 function EconomyTweakData:get_index_from_entry(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].index
 end
 
--- Lines: 1127 to 1139
+-- Lines: 1143 to 1155
 function EconomyTweakData:get_bonus_icons(entry)
 	local bonus_data = self.bonuses[entry]
 	local bonuses = {}
@@ -1475,7 +1488,7 @@ function EconomyTweakData:get_bonus_icons(entry)
 	return bonuses
 end
 
--- Lines: 1142 to 1153
+-- Lines: 1158 to 1169
 function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmetic_id)
 	local cosmetic_name = tweak_data.blackmarket.weapon_skins[cosmetic_id] and managers.localization:text(tweak_data.blackmarket.weapon_skins[cosmetic_id].name_id)
 	local weapon_name = managers.weapon_factory:get_weapon_name_by_weapon_id(weapon_id)
@@ -1490,7 +1503,7 @@ function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmet
 	return nil
 end
 
--- Lines: 1157 to 1164
+-- Lines: 1173 to 1180
 function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	local cosmetic_name = tweak_data.economy.armor_skins[cosmetic_id] and managers.localization:text(tweak_data.economy.armor_skins[cosmetic_id].name_id)
 
@@ -1503,22 +1516,22 @@ function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	return nil
 end
 
--- Lines: 1168 to 1169
+-- Lines: 1184 to 1185
 function EconomyTweakData:create_market_link_url(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].market_link
 end
 
--- Lines: 1172 to 1173
+-- Lines: 1188 to 1189
 function EconomyTweakData:create_buy_tradable_url(def_id, quantity)
 	return "https://store.steampowered.com/buyitem/218620/" .. tostring(def_id) .. "/"
 end
 
--- Lines: 1176 to 1177
+-- Lines: 1192 to 1193
 function EconomyTweakData:create_sell_tradable_url(steam_id, instance_id)
 	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/?sellOnLoad=1#218620_2_" .. tostring(instance_id)
 end
 
--- Lines: 1180 to 1209
+-- Lines: 1196 to 1225
 function EconomyTweakData:get_bonuses_by_safe(safe)
 	local safe_tweak = self.contents[safe]
 	local ids = deep_clone(safe_tweak.contains.weapon_skins)

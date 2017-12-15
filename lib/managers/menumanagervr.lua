@@ -10,7 +10,7 @@ local __open_menu = MenuManager.open_menu
 local __close_menu = MenuManager.close_menu
 local __post_event = MenuManager.post_event
 
--- Lines: 16 to 102
+-- Lines: 17 to 103
 function MenuManagerVR:init(is_start_menu)
 	print("[MenuManagerVR] Init")
 
@@ -98,7 +98,7 @@ function MenuManagerVR:init(is_start_menu)
 	end
 end
 
--- Lines: 104 to 132
+-- Lines: 105 to 133
 function MenuManagerVR:_setup_ingame_viewport()
 	if not self._is_start_menu then
 		local rt_resolution = Vector3(2560, 720, 0)
@@ -130,7 +130,7 @@ function MenuManagerVR:_setup_ingame_viewport()
 	end
 end
 
--- Lines: 134 to 138
+-- Lines: 135 to 139
 function MenuManagerVR:set_override_ingame_camera(camera_object)
 	self._override_camera = camera_object
 	camera_object = camera_object or self._ingame_camera_object
@@ -138,7 +138,7 @@ function MenuManagerVR:set_override_ingame_camera(camera_object)
 	self._ingame_viewport:set_camera(camera_object)
 end
 
--- Lines: 143 to 152
+-- Lines: 144 to 153
 function MenuManagerVR:init_finalize()
 	if not self._is_start_menu then
 		managers.system_menu:add_active_changed_callback(callback(self, self, "dialog_active_changed_callback"))
@@ -152,19 +152,19 @@ function MenuManagerVR:init_finalize()
 	self:init_customization_gui()
 end
 
--- Lines: 156 to 158
+-- Lines: 157 to 159
 function MenuManagerVR:init_customization_gui()
 	self._customization_gui = self._customization_gui or VRCustomizationGui:new(self._is_start_menu)
 end
 
--- Lines: 160 to 164
+-- Lines: 161 to 165
 function MenuManagerVR:initialize_customization_gui()
 	if self._customization_gui then
 		self._customization_gui:initialize()
 	end
 end
 
--- Lines: 175 to 192
+-- Lines: 176 to 193
 function MenuManagerVR:update(t, dt)
 	__update(self, t, dt)
 
@@ -188,7 +188,7 @@ function MenuManagerVR:update(t, dt)
 	end
 end
 
--- Lines: 196 to 204
+-- Lines: 197 to 205
 function MenuManagerVR:destroy()
 	print("[MenuManagerVR] Destroy")
 	managers.gui_data:set_scene_gui(nil)
@@ -202,12 +202,12 @@ function MenuManagerVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 209 to 210
+-- Lines: 210 to 211
 function MenuManagerVR:is_pc_controller()
 	return true
 end
 
--- Lines: 216 to 234
+-- Lines: 217 to 235
 function MenuManagerVR:open_menu(menu_name, ...)
 	managers.vr:set_force_disable_low_adaptive_quality(true)
 
@@ -229,7 +229,7 @@ function MenuManagerVR:open_menu(menu_name, ...)
 	print("[MenuManagerVR] Open ", menu_name)
 end
 
--- Lines: 239 to 262
+-- Lines: 240 to 263
 function MenuManagerVR:close_menu(menu_name)
 	managers.vr:set_force_disable_low_adaptive_quality(false)
 
@@ -254,7 +254,7 @@ function MenuManagerVR:close_menu(menu_name)
 	print("[MenuManagerVR] Close ", menu_name)
 end
 
--- Lines: 267 to 276
+-- Lines: 268 to 277
 function MenuManagerVR:_load_scene()
 	self._menu_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/menu/vr_menu"), Vector3(), Rotation())
 
@@ -269,7 +269,7 @@ function MenuManagerVR:_load_scene()
 	assert(WorldHolder:new(t):create_world("world", "statics", Vector3()), "Cant load the level!")
 end
 
--- Lines: 278 to 312
+-- Lines: 279 to 313
 function MenuManagerVR:_setup_workspaces(is_start_menu)
 	if is_start_menu then
 		managers.gui_data:set_scene_gui(World:gui())
@@ -311,7 +311,7 @@ function MenuManagerVR:_setup_workspaces(is_start_menu)
 	end
 end
 
--- Lines: 314 to 320
+-- Lines: 315 to 321
 function MenuManagerVR:dialog_active_changed_callback(active)
 	if active then
 		managers.menu:open_menu("system_menu")
@@ -320,17 +320,17 @@ function MenuManagerVR:dialog_active_changed_callback(active)
 	end
 end
 
--- Lines: 322 to 323
+-- Lines: 323 to 324
 function MenuManagerVR:screen(screen_id)
 	return self._menu_screens[screen_id]
 end
 
--- Lines: 326 to 327
+-- Lines: 327 to 328
 function MenuManagerVR:menu_unit()
 	return self._menu_unit
 end
 
--- Lines: 330 to 335
+-- Lines: 331 to 336
 function MenuManagerVR:set_primary_hand(hand)
 	self._hand_index = hand == "right" and 0 or 1
 
@@ -339,7 +339,7 @@ function MenuManagerVR:set_primary_hand(hand)
 	end
 end
 
--- Lines: 337 to 340
+-- Lines: 338 to 341
 function MenuManagerVR:post_event(event)
 	__post_event(self, event)
 	self:post_event_vr(event)
@@ -349,14 +349,14 @@ local medium_pulse_events = {
 	menu_skill_investment = true
 }
 
--- Lines: 347 to 353
+-- Lines: 348 to 354
 function MenuManagerVR:post_event_vr(event)
 	if event and medium_pulse_events[event] then
 		self._vr_controller:trigger_haptic_pulse(self._hand_index, 0, 200)
 	end
 end
 
--- Lines: 355 to 366
+-- Lines: 356 to 367
 function MenuManagerVR:_enter_menu_room()
 	if not self._player:is_active() then
 		self._hand_index = managers.vr:get_setting("default_weapon_hand") == "right" and 0 or 1
@@ -371,7 +371,7 @@ function MenuManagerVR:_enter_menu_room()
 	end
 end
 
--- Lines: 368 to 386
+-- Lines: 369 to 387
 function MenuManagerVR:_exit_menu_room()
 	if self._player:is_active() then
 		self._player:stop()
@@ -392,18 +392,18 @@ function MenuManagerVR:_exit_menu_room()
 	end
 end
 
--- Lines: 388 to 389
+-- Lines: 389 to 390
 function MenuManagerVR:player()
 	return self._player
 end
 
--- Lines: 394 to 397
+-- Lines: 395 to 398
 function MenuManagerVR:on_enter_menu_disable_ingame_camera()
 	self._ingame_camera_bm:set_visible(false)
 	self._ingame_viewport:set_active(false)
 end
 
--- Lines: 400 to 402
+-- Lines: 401 to 403
 function MenuManagerVR:on_enter_menu_disable_ingame_camera_active_bg()
 	self._ingame_viewport:set_active(false)
 end

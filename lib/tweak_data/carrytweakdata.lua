@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines: 7 to 1051
+-- Lines: 7 to 1053
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -741,6 +741,13 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
 		AI_carry = {SO_category = "enemies"}
 	}
+	self.rubies = {
+		type = "heavy",
+		name_id = "hud_carry_rubies",
+		bag_value = "rubies",
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		AI_carry = {SO_category = "enemies"}
+	}
 	self.red_diamond = {
 		type = "coke_light",
 		name_id = "hud_carry_red_diamond",
@@ -763,27 +770,9 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
 		AI_carry = {SO_category = "enemies"}
 	}
-	self.bag = {
-		type = "medium",
-		name_id = "hud_carry_bag",
-		bag_value = "money",
-		unit = "units/payday2/pickups/bbv_pku_lootbag/bbv_pku_lootbag",
-		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
-		dye = true,
-		AI_carry = {SO_category = "enemies"}
-	}
-	self.bag_01 = {
-		type = "medium",
-		name_id = "hud_carry_bag",
-		bag_value = "money",
-		unit = "units/payday2/pickups/bbv_pku_lootbag_01/bbv_pku_lootbag_01",
-		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
-		dye = true,
-		AI_carry = {SO_category = "enemies"}
-	}
 end
 
--- Lines: 1053 to 1061
+-- Lines: 1055 to 1063
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -798,7 +787,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines: 1065 to 1072
+-- Lines: 1067 to 1074
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

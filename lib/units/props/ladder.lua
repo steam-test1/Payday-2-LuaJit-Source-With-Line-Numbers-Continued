@@ -8,7 +8,7 @@ Ladder.SEGMENT_LENGTH = 200
 Ladder.MOVER_NORMAL_OFFSET = 30
 
 if _G.IS_VR then
-	Ladder.MOVER_NORMAL_OFFSET = 60
+	Ladder.MOVER_NORMAL_OFFSET = 50
 end
 
 Ladder.EXIT_OFFSET_TOP = 50
@@ -48,7 +48,7 @@ function Ladder:init(unit)
 	table.insert(Ladder.ladders, self._unit)
 end
 
--- Lines: 53 to 120
+-- Lines: 53 to 128
 function Ladder:set_config(check_ground_clipping)
 	self._ladder_orientation_obj = self._unit:get_object(Idstring(self._ladder_orientation_obj_name))
 	local rotation = self._ladder_orientation_obj:rotation()
@@ -65,11 +65,20 @@ function Ladder:set_config(check_ground_clipping)
 	local top = position + self._up * self._height
 
 	if check_ground_clipping then
-		local ray = self._unit:raycast("ray", top + self._normal * 10, position + self._normal * 10, "slot_mask", 1)
+		local middle_pos = (position - top) / 2 + top
+		local up_ray = self._unit:raycast("ray", middle_pos + self._normal * self.MOVER_NORMAL_OFFSET, top + self._normal * self.MOVER_NORMAL_OFFSET, "slot_mask", 1)
 
-		if ray then
-			position = ray.position - self._normal * 10
+		if up_ray then
+			top = (up_ray.position - self._normal * self.MOVER_NORMAL_OFFSET) - self._up * 10
 		end
+
+		local bottom_ray = self._unit:raycast("ray", middle_pos + self._normal * self.MOVER_NORMAL_OFFSET, position + self._normal * self.MOVER_NORMAL_OFFSET, "slot_mask", 1)
+
+		if bottom_ray then
+			position = bottom_ray.position - self._normal * self.MOVER_NORMAL_OFFSET + self._up * 10
+		end
+
+		self._height = mvector3.distance(top, position)
 	end
 
 	self._bottom = position
@@ -114,7 +123,7 @@ function Ladder:set_config(check_ground_clipping)
 	self._w_dir_half = self._w_dir * self._width * 0.5
 end
 
--- Lines: 124 to 129
+-- Lines: 132 to 137
 function Ladder:check_ground_clipping()
 	if not self._has_checked_ground then
 		self:set_config(true)
@@ -123,7 +132,7 @@ function Ladder:check_ground_clipping()
 	end
 end
 
--- Lines: 131 to 135
+-- Lines: 139 to 143
 function Ladder:update(t, dt)
 	if Ladder.DEBUG then
 		self:debug_draw()
@@ -131,7 +140,7 @@ function Ladder:update(t, dt)
 end
 local mvec1 = Vector3()
 
--- Lines: 138 to 182
+-- Lines: 146 to 190
 function Ladder:can_access(pos, move_dir)
 	if not self._enabled then
 		return
@@ -179,8 +188,12 @@ function Ladder:can_access(pos, move_dir)
 	end
 end
 
--- Lines: 185 to 190
+-- Lines: 194 to 203
 function Ladder:_can_access_vr(pos, move_dir)
+	if self._up_dot < 0.5 then
+		return false
+	end
+
 	local min_dis = tweak_data.vr.ladder.distance * tweak_data.vr.ladder.distance
 
 	if mvector3.distance_sq(pos, self:bottom()) < min_dis or mvector3.distance_sq(pos, self:top()) < min_dis then
@@ -188,7 +201,7 @@ function Ladder:_can_access_vr(pos, move_dir)
 	end
 end
 
--- Lines: 192 to 216
+-- Lines: 205 to 229
 function Ladder:_check_end_climbing_vr(pos, move_dir, gnd_ray)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self._corners[1])
@@ -213,7 +226,29 @@ function Ladder:_check_end_climbing_vr(pos, move_dir, gnd_ray)
 	end
 end
 
--- Lines: 219 to 254
+-- Lines: 231 to 244
+function Ladder:on_ladder_vr(pos, t)
+	local l_pos = self:position(t) - self._w_dir_half
+
+	mvector3.set(mvec1, pos)
+	mvector3.subtract(mvec1, l_pos)
+
+	local w_dot = math.dot(self._w_dir, mvec1)
+
+	if w_dot < -100 or self._width + 100 < w_dot then
+		return false
+	end
+
+	local n_dot = math.dot(self._normal, mvec1)
+
+	if Ladder.ON_LADDER_NORMAL_OFFSET + 50 < n_dot then
+		return false
+	end
+
+	return true
+end
+
+-- Lines: 248 to 283
 function Ladder:check_end_climbing(pos, move_dir, gnd_ray)
 	if not self._enabled then
 		return true
@@ -246,7 +281,7 @@ function Ladder:check_end_climbing(pos, move_dir, gnd_ray)
 	end
 end
 
--- Lines: 258 to 265
+-- Lines: 287 to 294
 function Ladder:get_normal_move_offset(pos)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self._corners[1])
@@ -257,7 +292,7 @@ function Ladder:get_normal_move_offset(pos)
 	return normal_move_offset
 end
 
--- Lines: 268 to 272
+-- Lines: 297 to 301
 function Ladder:position(t)
 	local pos = mvector3.copy(self._up)
 
@@ -267,8 +302,12 @@ function Ladder:position(t)
 	return pos
 end
 
--- Lines: 275 to 288
+-- Lines: 305 to 323
 function Ladder:on_ladder(pos, t)
+	if _G.IS_VR then
+		return self:on_ladder_vr(pos, t)
+	end
+
 	local l_pos = self:position(t) - self._w_dir_half
 
 	mvector3.set(mvec1, pos)
@@ -289,7 +328,7 @@ function Ladder:on_ladder(pos, t)
 	return true
 end
 
--- Lines: 291 to 297
+-- Lines: 326 to 332
 function Ladder:horizontal_offset(pos)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self._bottom)
@@ -301,81 +340,81 @@ function Ladder:horizontal_offset(pos)
 	return offset
 end
 
--- Lines: 300 to 301
+-- Lines: 335 to 336
 function Ladder:rotation()
 	return self._rotation
 end
 
--- Lines: 304 to 305
+-- Lines: 339 to 340
 function Ladder:up()
 	return self._up
 end
 
--- Lines: 308 to 309
+-- Lines: 343 to 344
 function Ladder:normal()
 	return self._normal
 end
 
--- Lines: 312 to 313
+-- Lines: 347 to 348
 function Ladder:w_dir()
 	return self._w_dir
 end
 
--- Lines: 316 to 317
+-- Lines: 351 to 352
 function Ladder:bottom()
 	return self._bottom
 end
 
--- Lines: 320 to 321
+-- Lines: 355 to 356
 function Ladder:bottom_exit()
 	return self._bottom_exit
 end
 
--- Lines: 324 to 325
+-- Lines: 359 to 360
 function Ladder:top()
 	return self._top
 end
 
--- Lines: 328 to 329
+-- Lines: 363 to 364
 function Ladder:top_exit()
 	return self._top_exit
 end
 
--- Lines: 332 to 333
+-- Lines: 367 to 368
 function Ladder:segments()
 	return self._segments
 end
 
--- Lines: 336 to 339
+-- Lines: 371 to 374
 function Ladder:set_width(width)
 	self._width = width
 
 	self:set_config()
 end
 
--- Lines: 341 to 342
+-- Lines: 376 to 377
 function Ladder:width()
 	return self._width
 end
 
--- Lines: 345 to 348
+-- Lines: 380 to 383
 function Ladder:set_height(height)
 	self._height = height
 
 	self:set_config()
 end
 
--- Lines: 350 to 351
+-- Lines: 385 to 386
 function Ladder:height()
 	return self._height
 end
 
--- Lines: 354 to 355
+-- Lines: 389 to 390
 function Ladder:corners()
 	return self._corners
 end
 
--- Lines: 358 to 367
+-- Lines: 393 to 402
 function Ladder:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -388,13 +427,13 @@ function Ladder:set_enabled(enabled)
 	end
 end
 
--- Lines: 369 to 372
+-- Lines: 404 to 407
 function Ladder:destroy(unit)
 	table.delete(Ladder.ladders, self._unit)
 	table.delete(Ladder.active_ladders, self._unit)
 end
 
--- Lines: 374 to 389
+-- Lines: 409 to 424
 function Ladder:debug_draw()
 	local brush = Draw:brush(Color.white:with_alpha(0.5))
 
@@ -409,7 +448,7 @@ function Ladder:debug_draw()
 	brush:sphere(self._corners[1], 5)
 end
 
--- Lines: 391 to 397
+-- Lines: 426 to 432
 function Ladder:save(data)
 	local state = {
 		enabled = self._enabled,
@@ -419,7 +458,7 @@ function Ladder:save(data)
 	data.Ladder = state
 end
 
--- Lines: 399 to 407
+-- Lines: 434 to 442
 function Ladder:load(data)
 	local state = data.Ladder
 

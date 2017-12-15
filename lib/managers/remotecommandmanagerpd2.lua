@@ -1,6 +1,6 @@
 RemoteCommandManagerPD2 = RemoteCommandManagerPD2 or class()
 
--- Lines: 3 to 8
+-- Lines: 4 to 9
 function RemoteCommandManagerPD2:init()
 	print("[RemoteCommandManagerPD2] Init")
 
@@ -10,7 +10,7 @@ function RemoteCommandManagerPD2:init()
 end
 local steam_users = {}
 
--- Lines: 13 to 103
+-- Lines: 14 to 104
 function RemoteCommandManagerPD2:remote_callback(method, parameters)
 	if method == "user_id" then
 		return tostring(Steam:userid())

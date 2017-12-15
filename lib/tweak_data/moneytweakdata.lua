@@ -109,6 +109,7 @@ function MoneyTweakData:init(tweak_data)
 		expensive_vine = 2875,
 		ordinary_wine = 2875,
 		robot_toy = 2875,
+		rubies = 1500,
 		red_diamond = 10000,
 		old_wine = 2000
 	}
@@ -255,6 +256,7 @@ function MoneyTweakData:init(tweak_data)
 		tango = 1,
 		friend = 1,
 		chico = 1,
+		rvd = 1,
 		swm_bundle = 1,
 		spa = 1,
 		sha = 1,
