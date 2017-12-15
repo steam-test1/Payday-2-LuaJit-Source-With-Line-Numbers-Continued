@@ -79,13 +79,21 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec_l_dir = Vector3()
 
--- Lines: 93 to 141
+-- Lines: 104 to 165
 function WeaponLaser:update(unit, t, dt)
-	mrotation.y(self._laser_obj:rotation(), mvec_l_dir)
+	local rotation = self._custom_rotation or self._laser_obj:rotation()
+
+	mrotation.y(rotation, mvec_l_dir)
 
 	local from = mvec1
 
-	mvector3.set(from, self._laser_obj:position())
+	if self._custom_position then
+		mvector3.set(from, self._laser_obj:local_position())
+		mvector3.rotate_with(from, rotation)
+		mvector3.add(from, self._custom_position)
+	else
+		mvector3.set(from, self._laser_obj:position())
+	end
 
 	local to = mvec2
 
@@ -125,9 +133,12 @@ function WeaponLaser:update(unit, t, dt)
 		self._light_glow:set_final_position(to)
 		self._brush:cylinder(from, to, self._is_npc and 0.5 or 0.25)
 	end
+
+	self._custom_position = nil
+	self._custom_rotation = nil
 end
 
--- Lines: 145 to 152
+-- Lines: 169 to 176
 function WeaponLaser:_check_state(current_state)
 	WeaponLaser.super._check_state(self, current_state)
 	self._light:set_enable(self._on)
@@ -137,12 +148,12 @@ function WeaponLaser:_check_state(current_state)
 	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
 end
 
--- Lines: 154 to 156
+-- Lines: 178 to 180
 function WeaponLaser:set_npc()
 	self._is_npc = true
 end
 
--- Lines: 160 to 170
+-- Lines: 184 to 194
 function WeaponLaser:destroy(unit)
 	WeaponLaser.super.destroy(self, unit)
 
@@ -155,7 +166,7 @@ function WeaponLaser:destroy(unit)
 	end
 end
 
--- Lines: 174 to 186
+-- Lines: 198 to 210
 function WeaponLaser:set_color_by_theme(type)
 	self._theme_type = type
 	local theme = self._themes[type] or self._themes.default
@@ -167,12 +178,12 @@ function WeaponLaser:set_color_by_theme(type)
 	self._brush:set_color(theme.brush)
 end
 
--- Lines: 190 to 191
+-- Lines: 214 to 215
 function WeaponLaser:theme_type()
 	return self._theme_type
 end
 
--- Lines: 198 to 217
+-- Lines: 222 to 241
 function WeaponLaser:set_color(color)
 	if not color then
 		return
@@ -189,17 +200,17 @@ function WeaponLaser:set_color(color)
 	self._brush:set_color(color)
 end
 
--- Lines: 220 to 221
+-- Lines: 244 to 245
 function WeaponLaser:color()
 	return self._color or tweak_data.custom_colors.defaults.laser
 end
 
--- Lines: 227 to 229
+-- Lines: 251 to 253
 function WeaponLaser:set_max_distace(dis)
 	self._max_distance = dis
 end
 
--- Lines: 233 to 236
+-- Lines: 257 to 260
 function WeaponLaser:add_ray_ignore_unit(unit)
 	self._ray_ignore_units = self._ray_ignore_units or {}
 
