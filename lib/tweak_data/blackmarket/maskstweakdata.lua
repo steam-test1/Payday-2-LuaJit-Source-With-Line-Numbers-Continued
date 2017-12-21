@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines: 10 to 5951
+-- Lines: 10 to 5949
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"
@@ -5571,6 +5571,42 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 				Rotation(0, 9.14383, 0)
 			}
 		}
+	}
+	self.masks.cmt_01 = {
+		unit = "units/pd2_dlc_cmt/masks/cmt_01/msk_cmt_01",
+		name_id = "bm_msk_cmt_01",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "cmt",
+		sort_number = 62,
+		global_value = "cmt"
+	}
+	self.masks.cmt_02 = {
+		unit = "units/pd2_dlc_cmt/masks/cmt_02/msk_cmt_02",
+		name_id = "bm_msk_cmt_02",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "cmt",
+		sort_number = 62,
+		global_value = "cmt"
+	}
+	self.masks.cmt_03 = {
+		unit = "units/pd2_dlc_cmt/masks/cmt_03/msk_cmt_03",
+		name_id = "bm_msk_cmt_03",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "cmt",
+		sort_number = 62,
+		global_value = "cmt"
+	}
+	self.masks.cmt_04 = {
+		unit = "units/pd2_dlc_cmt/masks/cmt_04/msk_cmt_04",
+		name_id = "bm_msk_cmt_04",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "cmt",
+		sort_number = 62,
+		global_value = "cmt"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

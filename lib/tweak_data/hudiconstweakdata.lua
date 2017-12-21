@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2508
+-- Lines: 9 to 2528
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -1410,6 +1410,15 @@ function HudIconsTweakData:init()
 		texture_rect = {
 			128,
 			96,
+			32,
+			32
+		}
+	}
+	self.equipment_medallion = {
+		texture = "guis/textures/pd2/hud_pickups",
+		texture_rect = {
+			128,
+			128,
 			32,
 			32
 		}
@@ -11117,12 +11126,102 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D0 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			350,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D1 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D2 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D3 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			89,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D4 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D5 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			176,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AllDiffs_D6 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			176,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AlltheGold_D2 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			263,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_AnimalKingdom_D3 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			350,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BrooklynBank_Obsessive_D3 = {
+		texture = "guis/dlcs/brb/textures/pd2/achievements_atlas_brb",
+		texture_rect = {
+			263,
+			2,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 end
 local atlas_data = nil
 
--- Lines: 2511 to 2514
+-- Lines: 2531 to 2534
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -11135,7 +11234,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2516 to 2531
+-- Lines: 2536 to 2551
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -11161,7 +11260,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2534 to 2538
+-- Lines: 2554 to 2558
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -11175,7 +11274,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2541 to 2546
+-- Lines: 2561 to 2566
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -11186,7 +11285,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2549 to 2554
+-- Lines: 2569 to 2574
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

@@ -29,7 +29,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 41 to 1989
+-- Lines: 41 to 2012
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -3652,6 +3652,41 @@ function AchievementsTweakData:init(tweak_data)
 			weapons_used = {"corgi"},
 			equipped = {primaries = {weapon_id = "corgi"}}
 		},
+		brb_1 = {
+			award = "brb_1",
+			job = "brb",
+			difficulty = normal_and_above
+		},
+		brb_2 = {
+			award = "brb_2",
+			job = "brb",
+			difficulty = hard_and_above
+		},
+		brb_3 = {
+			award = "brb_3",
+			job = "brb",
+			difficulty = veryhard_and_above
+		},
+		brb_4 = {
+			award = "brb_4",
+			job = "brb",
+			difficulty = overkill_and_above
+		},
+		brb_5 = {
+			award = "brb_5",
+			job = "brb",
+			difficulty = easywish_and_above
+		},
+		brb_6 = {
+			award = "brb_6",
+			job = "brb",
+			difficulty = deathwish_and_above
+		},
+		brb_7 = {
+			award = "brb_7",
+			job = "brb",
+			difficulty = sm_wish_and_above
+		},
 		bain_jobs = {
 			complete_job = true,
 			contract = "bain",
@@ -4649,7 +4684,8 @@ function AchievementsTweakData:init(tweak_data)
 		locke = {
 			"pbr",
 			"pbr2",
-			"wwh"
+			"wwh",
+			"brb"
 		},
 		jimmy = {
 			"mad",
@@ -5490,6 +5526,17 @@ function AchievementsTweakData:init(tweak_data)
 				"pazuzu",
 				"cursed_crown"
 			}
+		},
+		brb_10 = {
+			award = "brb_10",
+			job = "brb",
+			difficulties = overkill_and_above,
+			masks = {
+				"cmt_01",
+				"cmt_02",
+				"cmt_03",
+				"cmt_04"
+			}
 		}
 	}
 	self.sniper_kill_achievements = {
@@ -5883,7 +5930,7 @@ local tracking = {
 }
 
 
--- Lines: 2008 to 2034
+-- Lines: 2031 to 2057
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5895,7 +5942,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 2017 to 2027
+	-- Lines: 2040 to 2050
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5926,7 +5973,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 2037 to 2041
+-- Lines: 2060 to 2064
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5940,7 +5987,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 2044 to 2051
+-- Lines: 2067 to 2074
 local function from_level(level)
 	if not level then
 		error()
@@ -5957,7 +6004,7 @@ local function from_level(level)
 end
 
 
--- Lines: 2054 to 2061
+-- Lines: 2077 to 2084
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -5974,7 +6021,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 2064 to 2074
+-- Lines: 2087 to 2097
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -5997,7 +6044,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 2082 to 2284
+-- Lines: 2105 to 2307
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6144,7 +6191,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2321 to 2434
+-- Lines: 2344 to 2457
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

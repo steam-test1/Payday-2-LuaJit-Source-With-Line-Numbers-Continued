@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines: 7 to 1053
+-- Lines: 7 to 1069
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -408,6 +408,20 @@ function CarryTweakData:init(tweak_data)
 		unit = "units/payday2/pickups/gen_pku_toolbag_large/gen_pku_toolbag_large",
 		visual_unit_name = "units/payday2/characters/npc_acc_tools_bag_large_1/npc_acc_tools_bag_large_1"
 	}
+	self.winch_part_2 = {
+		type = "heavy",
+		name_id = "hud_carry_winch_bag",
+		skip_exit_secure = true,
+		unit = "units/payday2/pickups/gen_pku_toolbag_large/gen_pku_toolbag_large_2",
+		visual_unit_name = "units/payday2/characters/npc_acc_tools_bag_large_1/npc_acc_tools_bag_large_1"
+	}
+	self.winch_part_3 = {
+		type = "heavy",
+		name_id = "hud_carry_winch_bag",
+		skip_exit_secure = true,
+		unit = "units/payday2/pickups/gen_pku_toolbag_large/gen_pku_toolbag_large_3",
+		visual_unit_name = "units/payday2/characters/npc_acc_tools_bag_large_1/npc_acc_tools_bag_large_1"
+	}
 	self.fireworks = {
 		type = "light",
 		name_id = "hud_carry_fireworks_bag",
@@ -772,7 +786,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 1055 to 1063
+-- Lines: 1071 to 1079
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -787,7 +801,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines: 1067 to 1074
+-- Lines: 1083 to 1090
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

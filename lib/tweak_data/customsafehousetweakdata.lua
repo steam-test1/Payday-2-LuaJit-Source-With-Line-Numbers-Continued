@@ -690,7 +690,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 771 to 1508
+-- Lines: 771 to 1521
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1229,9 +1229,18 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		show_progress = true,
 		objectives = {self:_progress("eng_4_stats", 5, {name_id = "trophy_eng_progress"})}
 	})
+	table.insert(self.trophies, {
+		name_id = "trophy_brb_1",
+		image_id = "safehouse_trophies_preview_medallion",
+		objective_id = "trophy_brb_1_completion_objective",
+		id = "trophy_brb_1",
+		gives_reward = false,
+		desc_id = "trophy_brb_1_desc",
+		objectives = {self:_achievement("brb_4")}
+	})
 end
 
--- Lines: 1510 to 1516
+-- Lines: 1523 to 1529
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1242,7 +1251,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines: 1519 to 1528
+-- Lines: 1532 to 1541
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1256,7 +1265,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines: 1531 to 1880
+-- Lines: 1544 to 1893
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1500,7 +1509,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines: 1882 to 1888
+-- Lines: 1895 to 1901
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1509,7 +1518,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines: 1892 to 2109
+-- Lines: 1905 to 2122
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,

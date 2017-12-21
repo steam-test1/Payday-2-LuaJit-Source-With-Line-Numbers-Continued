@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1093
+-- Lines: 4 to 1102
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -4948,14 +4948,14 @@ function GuiTweakData:init()
 	self.new_heists = {limit = 4}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_brooklynbank_heist",
+		texture_path = "guis/textures/pd2/new_heists/brooklynbank_heist",
+		url = "http://www.overkillsoftware.com/games/brookyn-bank-heist/"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_reservoirdogs_heist",
 		texture_path = "guis/textures/pd2/new_heists/reservoirdogs_heist",
 		url = "http://www.overkillsoftware.com/games/reservoirdogs/"
-	})
-	table.insert(self.new_heists, {
-		name_id = "menu_nh_cas",
-		texture_path = "guis/textures/pd2/new_heists/community_armor_safe",
-		url = "http://www.overkillsoftware.com/games/communityarmorsafe/"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_h3h3_characters",
@@ -4971,6 +4971,11 @@ function GuiTweakData:init()
 		name_id = "menu_nh_halloween_2017_heist",
 		texture_path = "guis/textures/pd2/new_heists/halloween_2017_heist",
 		url = "http://steamcommunity.com/games/218620/announcements/detail/1453961083959105742"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_cas",
+		texture_path = "guis/textures/pd2/new_heists/community_armor_safe",
+		url = "http://www.overkillsoftware.com/games/communityarmorsafe/"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_locke_and_load_event",
@@ -5029,7 +5034,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1095 to 1114
+-- Lines: 1104 to 1123
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5057,7 +5062,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1116 to 1184
+-- Lines: 1125 to 1193
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5133,15 +5138,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1187 to 1188
+-- Lines: 1196 to 1197
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1198 to 1199
+-- Lines: 1207 to 1208
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1201 to 1234
+-- Lines: 1210 to 1243
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5180,7 +5185,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1237 to 1361
+-- Lines: 1246 to 1370
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5303,12 +5308,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1364 to 1365
+-- Lines: 1373 to 1374
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1368 to 1374
+-- Lines: 1377 to 1383
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
