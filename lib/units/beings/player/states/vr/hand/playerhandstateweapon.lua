@@ -131,7 +131,7 @@ local weapon_pos = Vector3()
 local weapon_rot = Rotation()
 local pen = Draw:pen()
 
--- Lines: 158 to 342
+-- Lines: 158 to 347
 function PlayerHandStateWeapon:update(t, dt)
 	mvector3.set(weapon_pos, self:hsm():position())
 
@@ -236,6 +236,12 @@ function PlayerHandStateWeapon:update(t, dt)
 
 					if not self._assist_position then
 						debug_pause("Invalid assist tweak data for " .. self._weapon_unit:base().name_id)
+					else
+						local tweak = tweak_data.vr:get_offset_by_id(self._weapon_unit:base().name_id)
+
+						if tweak and tweak.position then
+							mvector3.add(self._assist_position, tweak.position)
+						end
 					end
 				end
 
@@ -304,7 +310,7 @@ function PlayerHandStateWeapon:update(t, dt)
 	end
 end
 
--- Lines: 344 to 346
+-- Lines: 349 to 351
 function PlayerHandStateWeapon:set_warping(warping)
 	self._warping = warping
 end

@@ -3,28 +3,30 @@ local __update_movement = PlayerTased._update_movement
 local __enter = PlayerTased.enter
 local __exit = PlayerTased.exit
 
--- Lines: 8 to 13
+-- Lines: 8 to 14
 function PlayerTasedVR:enter(...)
 	__enter(self, ...)
 
 	self._state_data.tased = true
 
 	self._unit:hand():set_tased(true)
+	self:set_belt_and_hands_enabled(false)
 end
 
--- Lines: 15 to 20
+-- Lines: 16 to 22
 function PlayerTasedVR:exit(...)
 	__exit(self, ...)
 
 	self._state_data.tased = false
 
 	self._unit:hand():set_tased(false)
+	self:set_belt_and_hands_enabled(true)
 end
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 local mvec_hmd_pos = Vector3()
 
--- Lines: 27 to 43
+-- Lines: 29 to 45
 function PlayerTasedVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 
@@ -45,7 +47,7 @@ function PlayerTasedVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new, self._unit:position())
 end
 
--- Lines: 49 to 92
+-- Lines: 51 to 94
 function PlayerTasedVR:_check_action_shock(t, input)
 	local has_akimbo = alive(self._equipped_unit) and self._equipped_unit:base().akimbo
 	local use_akimbo = has_akimbo and math.random() > 0.5
@@ -91,7 +93,7 @@ function PlayerTasedVR:_check_action_shock(t, input)
 	end
 end
 
--- Lines: 98 to 148
+-- Lines: 100 to 150
 function PlayerTasedVR:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
@@ -131,7 +133,7 @@ function PlayerTasedVR:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines: 151 to 273
+-- Lines: 153 to 275
 function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_base, akimbo)
 	if not held then
 		return false
@@ -262,5 +264,39 @@ function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_b
 	end
 
 	return new_action
+end
+
+-- Lines: 278 to 304
+function PlayerTasedVR:set_belt_and_hands_enabled(enabled)
+	if not enabled then
+		local belt_states = {
+			melee = managers.hud:belt():state("melee"),
+			deployable = managers.hud:belt():state("deployable"),
+			deployable_secondary = managers.hud:belt():state("deployable_secondary"),
+			throwable = managers.hud:belt():state("throwable"),
+			weapon = managers.hud:belt():state("weapon"),
+			bag = managers.hud:belt():state("bag")
+		}
+
+		for id, state in pairs(belt_states) do
+			if state ~= "disabled" then
+				managers.hud:belt():set_state(id, "disabled")
+			end
+		end
+	else
+		managers.hud:belt():set_state("melee", "default")
+		managers.hud:belt():set_state("weapon", "default")
+		managers.hud:belt():set_state("throwable", managers.player:get_grenade_amount(managers.network:session():local_peer():id()) > 0 and "default" or "invalid")
+		managers.hud:belt():set_state("bag", managers.player:is_carrying() and "default" or "inactive")
+
+		for slot, equipment in ipairs({
+			managers.player:equipment_in_slot(1),
+			managers.player:equipment_in_slot(2)
+		}) do
+			local amount = managers.player:get_equipment_amount(equipment)
+
+			managers.hud:belt():set_state(slot == 1 and "deployable" or "deployable_secondary", amount > 0 and "default" or "invalid")
+		end
+	end
 end
 

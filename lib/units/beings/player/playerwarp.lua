@@ -204,7 +204,7 @@ function PlayerWarp:update_ladder_targeting()
 				local ray = self._unit:raycast("ray", self._unit:position(), ladder_pos, "slot_mask", self._slotmask, "ray_type", "body walk")
 				self._ladders[ladder:key()] = self._ladders[ladder:key()] or {ladder = ladder}
 
-				if (not ray or mvector3.distance_sq(ray.position, ladder_pos) < 500) and (going_down or mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal()) < 0) then
+				if (not ray or mvector3.distance_sq(ray.position, ladder_pos) < 400) and (going_down or mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal()) < 0) then
 					self._ladders[ladder:key()].going_down = going_down
 					self._ladders[ladder:key()].distance = dis
 

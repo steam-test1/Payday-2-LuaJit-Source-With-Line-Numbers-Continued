@@ -1270,7 +1270,7 @@ function MenuManager:ps3_disconnect(connected)
 	end
 
 	if managers.menu_component then
-		managers.menu_component:refresh_player_profile_gui()
+		-- Nothing
 	end
 end
 
@@ -10103,7 +10103,7 @@ function MenuOptionInitiator:modify_adv_video(node)
 	return node
 end
 
--- Lines: 10105 to 10181
+-- Lines: 10105 to 10185
 function MenuOptionInitiator:modify_video(node)
 	local adapter_item = node:item("choose_video_adapter")
 
@@ -10182,6 +10182,10 @@ function MenuOptionInitiator:modify_video(node)
 		br_item:set_value(option_value)
 	end
 
+	if node:item("fov_multiplier") then
+		node:item("fov_multiplier"):set_value(managers.user:get_setting("fov_multiplier"))
+	end
+
 	local effect_quality_item = node:item("effect_quality")
 
 	if effect_quality_item then
@@ -10205,7 +10209,7 @@ function MenuOptionInitiator:modify_video(node)
 	return node
 end
 
--- Lines: 10185 to 10341
+-- Lines: 10189 to 10345
 function MenuOptionInitiator:modify_controls(node)
 	local option_value = "off"
 	local rumble_item = node:item("toggle_rumble")
@@ -10377,7 +10381,7 @@ function MenuOptionInitiator:modify_controls(node)
 	return node
 end
 
--- Lines: 10346 to 10382
+-- Lines: 10350 to 10386
 function MenuOptionInitiator:modify_gameplay_options(node)
 	local option_value = "off"
 	local throwable_contour = node:item("toggle_throwable_contour")
@@ -10410,7 +10414,7 @@ function MenuOptionInitiator:modify_gameplay_options(node)
 	return node
 end
 
--- Lines: 10388 to 10401
+-- Lines: 10392 to 10413
 function MenuOptionInitiator:modify_user_interface_options(node)
 	local controller_hint_box = node:item("toggle_controller_hint")
 	local controller_hint_setting = managers.user:get_setting("loading_screen_show_controller")
@@ -10429,12 +10433,12 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	return node
 end
 
--- Lines: 10523 to 10524
+-- Lines: 10535 to 10536
 function MenuOptionInitiator:modify_debug_options(node)
 	return node
 end
 
--- Lines: 10529 to 10534
+-- Lines: 10541 to 10546
 function MenuOptionInitiator:modify_options(node)
 	if node:item("toggle_workshop") then
 		node:item("toggle_workshop"):set_value(managers.user:get_setting("workshop") and "on" or "off")
@@ -10443,7 +10447,7 @@ function MenuOptionInitiator:modify_options(node)
 	return node
 end
 
--- Lines: 10539 to 10558
+-- Lines: 10551 to 10570
 function MenuOptionInitiator:modify_network_options(node)
 	local toggle_throttling_item = node:item("toggle_throttling")
 
@@ -10473,7 +10477,7 @@ function MenuOptionInitiator:modify_network_options(node)
 end
 SkillSwitchInitiator = SkillSwitchInitiator or class()
 
--- Lines: 10563 to 10605
+-- Lines: 10575 to 10617
 function SkillSwitchInitiator:modify_node(node, data)
 	node:clean_items()
 
@@ -10524,7 +10528,7 @@ function SkillSwitchInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines: 10608 to 10615
+-- Lines: 10620 to 10627
 function SkillSwitchInitiator:refresh_node(node, data)
 	local selected_item = node:selected_item() and node:selected_item():name()
 	node = self:modify_node(node, data)
@@ -10536,7 +10540,7 @@ function SkillSwitchInitiator:refresh_node(node, data)
 	return node
 end
 
--- Lines: 10618 to 10624
+-- Lines: 10630 to 10636
 function SkillSwitchInitiator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10545,7 +10549,7 @@ function SkillSwitchInitiator:create_item(node, params)
 	node:add_item(new_item)
 end
 
--- Lines: 10626 to 10640
+-- Lines: 10638 to 10652
 function SkillSwitchInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -10560,7 +10564,7 @@ function SkillSwitchInitiator:create_divider(node, id, text_id, size, color)
 	node:add_item(new_item)
 end
 
--- Lines: 10642 to 10657
+-- Lines: 10654 to 10669
 function SkillSwitchInitiator:add_back_button(node)
 	node:delete_item("back")
 
@@ -10576,7 +10580,7 @@ function SkillSwitchInitiator:add_back_button(node)
 	node:add_item(new_item)
 end
 
--- Lines: 10660 to 10691
+-- Lines: 10672 to 10703
 function MenuCallbackHandler:unlock_skill_switch(item)
 	local spending_cost = managers.money:get_unlock_skill_switch_spending_cost(item:parameters().name)
 	local offshore_cost = managers.money:get_unlock_skill_switch_offshore_cost(item:parameters().name)
@@ -10609,19 +10613,19 @@ function MenuCallbackHandler:unlock_skill_switch(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 10693 to 10696
+-- Lines: 10705 to 10708
 function MenuCallbackHandler:set_active_skill_switch(item)
 	managers.skilltree:switch_skills(item:parameters().name)
 	self:refresh_node()
 end
 
--- Lines: 10701 to 10702
+-- Lines: 10713 to 10714
 function MenuCallbackHandler:has_installed_mods()
 	return not self:is_console() and table.size(DB:mods()) > 0
 end
 ModMenuCreator = ModMenuCreator or class()
 
--- Lines: 10706 to 10710
+-- Lines: 10718 to 10722
 function ModMenuCreator:modify_node(original_node, data)
 	local node = original_node
 
@@ -10630,7 +10634,7 @@ function ModMenuCreator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 10714 to 10769
+-- Lines: 10726 to 10781
 function ModMenuCreator:create_mod_menu(node)
 	node:clean_items()
 
@@ -10640,7 +10644,7 @@ function ModMenuCreator:create_mod_menu(node)
 	local modded_content = {}
 
 
-	-- Lines: 10723 to 10724
+	-- Lines: 10735 to 10736
 	local function id_key(path)
 		return Idstring(path):key()
 	end
@@ -10699,7 +10703,7 @@ function ModMenuCreator:create_mod_menu(node)
 	node:parameters().modded_content = modded_content
 end
 
--- Lines: 10771 to 10785
+-- Lines: 10783 to 10797
 function ModMenuCreator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -10714,7 +10718,7 @@ function ModMenuCreator:create_divider(node, id, text_id, size, color)
 	node:add_item(new_item)
 end
 
--- Lines: 10787 to 10793
+-- Lines: 10799 to 10805
 function ModMenuCreator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10723,7 +10727,7 @@ function ModMenuCreator:create_item(node, params)
 	node:add_item(new_item)
 end
 
--- Lines: 10795 to 10804
+-- Lines: 10807 to 10816
 function ModMenuCreator:create_toggle(node, params)
 	local data_node = {
 		{
@@ -10764,7 +10768,7 @@ function ModMenuCreator:create_toggle(node, params)
 	return new_item
 end
 
--- Lines: 10807 to 10820
+-- Lines: 10819 to 10832
 function ModMenuCreator:add_back_button(node)
 	node:delete_item("back")
 
@@ -10780,11 +10784,11 @@ function ModMenuCreator:add_back_button(node)
 	node:add_item(new_item)
 end
 
--- Lines: 10823 to 10824
+-- Lines: 10835 to 10836
 function MenuCallbackHandler:save_mod_changes(node)
 end
 
--- Lines: 10826 to 10832
+-- Lines: 10838 to 10844
 function MenuCallbackHandler:mod_option_toggle_enabled(item)
 	print("mod_option_toggle_enabled", "mod", item:name(), "status", item:value())
 
@@ -10794,7 +10798,7 @@ function MenuCallbackHandler:mod_option_toggle_enabled(item)
 end
 MenuCrimeNetChallengeInitiator = MenuCrimeNetChallengeInitiator or class(MenuCrimeNetGageAssignmentInitiator)
 
--- Lines: 10837 to 10860
+-- Lines: 10849 to 10872
 function MenuCrimeNetChallengeInitiator:modify_node(original_node, data)
 	local node, first_item = self:setup_node(original_node)
 
@@ -10812,7 +10816,7 @@ function MenuCrimeNetChallengeInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 10863 to 10880
+-- Lines: 10875 to 10892
 function MenuCrimeNetChallengeInitiator:refresh_node(node)
 	local _, first_item = self:setup_node(node)
 
@@ -10825,7 +10829,7 @@ function MenuCrimeNetChallengeInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 10883 to 10889
+-- Lines: 10895 to 10901
 function MenuCallbackHandler:is_current_challenge(item)
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -10836,7 +10840,7 @@ function MenuCallbackHandler:is_current_challenge(item)
 	return false
 end
 
--- Lines: 10892 to 11006
+-- Lines: 10904 to 11018
 function MenuCrimeNetChallengeInitiator:setup_node(node)
 	node:clean_items()
 	self:create_divider(node, 1, managers.localization:text("menu_gage_assignment_div_menu"), nil, tweak_data.screen_colors.text)
@@ -10955,7 +10959,7 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 	return node, first_item
 end
 
--- Lines: 11009 to 11024
+-- Lines: 11021 to 11036
 function MenuCallbackHandler:update_challenge_menu_node()
 	if not managers.menu:active_menu() then
 		return false
@@ -10976,7 +10980,7 @@ function MenuCallbackHandler:update_challenge_menu_node()
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11026 to 11048
+-- Lines: 11038 to 11060
 function MenuCallbackHandler:give_challenge_reward(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11001,7 +11005,7 @@ function MenuCallbackHandler:give_challenge_reward(item)
 end
 MenuChooseWeaponRewardInitiator = MenuChooseWeaponRewardInitiator or class()
 
--- Lines: 11052 to 11177
+-- Lines: 11064 to 11189
 function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -11017,13 +11021,13 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local items = {}
 
 
-	-- Lines: 11075 to 11076
+	-- Lines: 11087 to 11088
 	local function chk_unlocked_func(weapon)
 		return not not weapon.unlocked
 	end
 
 
-	-- Lines: 11079 to 11086
+	-- Lines: 11091 to 11098
 	local function chk_dlc_func(weapon)
 		x_id = weapon.weapon_id
 		x_gv = weapon_tweak[x_id].global_value
@@ -11036,7 +11040,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	end
 
 
-	-- Lines: 11089 to 11091
+	-- Lines: 11101 to 11103
 	local function chk_dropable_func(weapon)
 		local loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon.weapon_id, nil, true)
 
@@ -11044,7 +11048,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	end
 
 
-	-- Lines: 11094 to 11095
+	-- Lines: 11106 to 11107
 	local function chk_parent_func(weapon)
 		return weapon_tweak[weapon.weapon_id] and not weapon_tweak[weapon.weapon_id].parent_weapon_id
 	end
@@ -11075,7 +11079,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	end
 
 
-	-- Lines: 11119 to 11153
+	-- Lines: 11131 to 11165
 	local function sort_func(x, y)
 		x_unlocked = x.unlocked
 		y_unlocked = y.unlocked
@@ -11137,14 +11141,14 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 11180 to 11182
+-- Lines: 11192 to 11194
 function MenuChooseWeaponRewardInitiator:refresh_node(node)
 	self:setup_node(node)
 
 	return node
 end
 
--- Lines: 11185 to 11337
+-- Lines: 11197 to 11349
 function MenuChooseWeaponRewardInitiator:setup_node(node)
 	local listed_category = node:parameters().listed_category or "assault_rifle"
 	local listed_weapon = node:parameters().listed_weapon or "amcar"
@@ -11256,7 +11260,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		local x_sn, y_sn = nil
 
 
-		-- Lines: 11265 to 11279
+		-- Lines: 11277 to 11291
 		local function sort_func(x, y)
 			if x == "normal" then
 				return true
@@ -11348,7 +11352,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 	return node
 end
 
--- Lines: 11341 to 11357
+-- Lines: 11353 to 11369
 function MenuChooseWeaponRewardInitiator:create_divider(node, id, text_id, size, color, align)
 	local params = {
 		name = "divider_" .. id,
@@ -11365,7 +11369,7 @@ function MenuChooseWeaponRewardInitiator:create_divider(node, id, text_id, size,
 	node:add_item(new_item)
 end
 
--- Lines: 11359 to 11380
+-- Lines: 11371 to 11392
 function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11392,7 +11396,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11382 to 11401
+-- Lines: 11394 to 11413
 function MenuCallbackHandler:choice_challenge_choose_weapon(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11419,7 +11423,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11403 to 11423
+-- Lines: 11415 to 11435
 function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11446,7 +11450,7 @@ function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines: 11425 to 11462
+-- Lines: 11437 to 11474
 function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11487,7 +11491,7 @@ function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 	managers.menu:show_challenge_reward(reward)
 end
 
--- Lines: 11464 to 11476
+-- Lines: 11476 to 11488
 function MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_value)
 	local loot_table, limited_loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon_id, global_value, true)
 	local my_loot_table = #limited_loot_table > 0 and limited_loot_table or loot_table
@@ -11503,14 +11507,14 @@ function MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_va
 end
 MenuCustomizeGadgetInitiator = MenuCustomizeGadgetInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines: 11482 to 11484
+-- Lines: 11494 to 11496
 function MenuCustomizeGadgetInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines: 11488 to 11640
+-- Lines: 11500 to 11652
 function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	node:clean_items()
 
@@ -11662,7 +11666,7 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	return node
 end
 
--- Lines: 11644 to 11653
+-- Lines: 11656 to 11665
 function MenuCustomizeGadgetInitiator:refresh_node(node, data)
 	local confirm = node:item("confirm")
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -11674,7 +11678,7 @@ function MenuCustomizeGadgetInitiator:refresh_node(node, data)
 	end
 end
 
--- Lines: 11655 to 11669
+-- Lines: 11667 to 11681
 function MenuCustomizeGadgetInitiator:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
@@ -11695,37 +11699,37 @@ function MenuCustomizeGadgetInitiator:create_slider(node, params)
 	return new_item
 end
 
--- Lines: 11672 to 11674
+-- Lines: 11684 to 11686
 function MenuCallbackHandler:set_gadget_laser_hue()
 	self:update_gadget_customization()
 end
 
--- Lines: 11676 to 11678
+-- Lines: 11688 to 11690
 function MenuCallbackHandler:set_gadget_laser_sat()
 	self:update_gadget_customization()
 end
 
--- Lines: 11680 to 11682
+-- Lines: 11692 to 11694
 function MenuCallbackHandler:set_gadget_laser_val()
 	self:update_gadget_customization()
 end
 
--- Lines: 11684 to 11686
+-- Lines: 11696 to 11698
 function MenuCallbackHandler:set_gadget_flashlight_hue()
 	self:update_gadget_customization()
 end
 
--- Lines: 11688 to 11690
+-- Lines: 11700 to 11702
 function MenuCallbackHandler:set_gadget_flashlight_sat()
 	self:update_gadget_customization()
 end
 
--- Lines: 11692 to 11694
+-- Lines: 11704 to 11706
 function MenuCallbackHandler:set_gadget_flashlight_val()
 	self:update_gadget_customization()
 end
 
--- Lines: 11696 to 11715
+-- Lines: 11708 to 11727
 function MenuCallbackHandler:update_gadget_customization(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11749,7 +11753,7 @@ function MenuCallbackHandler:update_gadget_customization(item)
 	end
 end
 
--- Lines: 11717 to 11742
+-- Lines: 11729 to 11754
 function MenuCallbackHandler:set_gadget_customize_params()
 	if not managers.menu:active_menu() then
 		return false

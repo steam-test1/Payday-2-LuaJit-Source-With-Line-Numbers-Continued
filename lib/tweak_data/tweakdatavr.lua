@@ -1,7 +1,7 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines: 4 to 3839
-function TweakDataVR:init()
+-- Lines: 4 to 3907
+function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {rotation = Rotation(0, 70)},
 		types = {fists = {rotation = Rotation(180, 70, 180)}},
@@ -154,7 +154,7 @@ function TweakDataVR:init()
 				grip = "weapon_2_grip",
 				position = Vector3(-0.8, 0, 0)
 			},
-			hk21 = {position = Vector3(-0.5, 3, 2.8)},
+			hk21 = {position = Vector3(-0.5, 1, 2.8)},
 			m249 = {position = Vector3(-0.5, 1, 1)},
 			rpk = {position = Vector3(-0.5, 2, 1)},
 			mg42 = {position = Vector3(-0.5, 1, -1)},
@@ -481,6 +481,10 @@ function TweakDataVR:init()
 		hk21 = {position = Vector3(12, 0, 0)},
 		m249 = {position = Vector3(12, 0, 0)},
 		rpk = {position = Vector3(8, 0, 4)},
+		mg42 = {
+			position = Vector3(7, 0, 0),
+			weapon_offset = Vector3(0, 16, 8)
+		},
 		par = {
 			position = Vector3(0, -3, -10),
 			rotation = Rotation(25, 0, 0)
@@ -517,6 +521,10 @@ function TweakDataVR:init()
 		ecp = {
 			position = Vector3(8, 0, 8),
 			rotation = Rotation(86, -90, 6)
+		},
+		slap = {
+			position = Vector3(1.5, 0, 2),
+			rotation = Rotation(-45, 12, -20)
 		}
 	}
 	self.locked = {
@@ -525,33 +533,27 @@ function TweakDataVR:init()
 			road = true
 		},
 		weapons = {
-			r93 = true,
-			flamethrower_mk2 = true,
-			par = true,
+			tti = true,
+			wa2000 = true,
+			rpg7 = true,
 			long = true,
 			ecp = true,
 			msr = true,
 			frankish = true,
 			mosin = true,
 			contraband = true,
-			wa2000 = true,
-			tti = true,
-			siltstone = true,
 			m95 = true,
-			m134 = true,
-			rpk = true,
+			r93 = true,
+			flamethrower_mk2 = true,
+			siltstone = true,
 			arblast = true,
-			mg42 = true,
 			winchester1874 = true,
 			ray = true,
-			rpg7 = true,
-			m249 = true,
 			model70 = true,
 			desertfox = true,
 			arbiter = true,
 			hunter = true,
-			plainsrider = true,
-			hk21 = true
+			plainsrider = true
 		},
 		skills = {
 			rifleman = {
@@ -661,10 +663,13 @@ function TweakDataVR:init()
 				grip = "idle_wpn",
 				position = Vector3(-2, 28, 2)
 			},
-			hk21 = {position = Vector3(-5, 38, 4)},
+			hk21 = {points = {
+				{position = Vector3(-4.5, 39, 3.2)},
+				{position = Vector3(-9.5, 17, -3.8)}
+			}},
 			rpk = {points = {
-				{position = Vector3(0, 30, -2)},
-				{position = Vector3(-8, 14, -6)}
+				{position = Vector3(0.5, 32, -1)},
+				{position = Vector3(-7.5, 16, -7)}
 			}},
 			m249 = {points = {
 				{position = Vector3(0, 30, 2)},
@@ -4902,47 +4907,64 @@ function TweakDataVR:init()
 			}
 		},
 		mg42 = {
+			reload_part_type = "lower_reciever",
+			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_mg42/wpn_vr_m_mg42",
 			start = {
 				{
 					time = 0,
 					sound = "wp_mg42_cover_open"
 				},
 				{
-					time = 0.01,
-					pos = Vector3(-2, 0, -2)
-				},
-				{
 					time = 0.03,
 					sound = "wp_mg42_box_remove",
-					pos = Vector3(-2, 0, -2)
-				},
-				{
-					drop_mag = true,
-					time = 0.05,
-					visible = false,
-					pos = Vector3(0, 0, -20)
+					visible = {
+						visible = false,
+						parts = {lower_reciever = {
+							"g_mag",
+							"g_bullet_1",
+							"g_bullet_2",
+							"g_bullet_3",
+							"g_bullet_4",
+							"g_bullet_5",
+							"g_bullet_6",
+							"g_band_1",
+							"g_band_2",
+							"g_band_3",
+							"g_band_4",
+							"g_mag_handle"
+						}}
+					}
 				}
 			},
 			finish = {
 				{
 					time = 0,
 					sound = "wp_mg42_box_slide_in",
-					visible = true,
-					pos = Vector3(0, 0, -20)
-				},
-				{
-					time = 0.1,
-					pos = Vector3(-2, 0, -2)
+					visible = {
+						visible = true,
+						parts = {lower_reciever = {
+							"g_mag",
+							"g_bullet_1",
+							"g_bullet_2",
+							"g_bullet_3",
+							"g_bullet_4",
+							"g_bullet_5",
+							"g_bullet_6",
+							"g_band_1",
+							"g_band_2",
+							"g_band_3",
+							"g_band_4",
+							"g_mag_handle"
+						}}
+					}
 				},
 				{
 					time = 0.56,
-					sound = "wp_mg42_cover_close",
-					pos = Vector3(-2, 0, -2)
+					sound = "wp_mg42_cover_close"
 				},
 				{
 					time = 0.6,
-					sound = "wp_mg42_lever_release",
-					pos = Vector3()
+					sound = "wp_mg42_lever_release"
 				}
 			}
 		},
@@ -5867,7 +5889,7 @@ function TweakDataVR:init()
 	}}
 end
 
--- Lines: 3841 to 3852
+-- Lines: 4009 to 4020
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -5886,7 +5908,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines: 3863 to 3878
+-- Lines: 4031 to 4046
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -5906,7 +5928,7 @@ function TweakDataVR:get_offset_by_id(id, ...)
 end
 
 
--- Lines: 3881 to 3885
+-- Lines: 4049 to 4053
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
@@ -5914,7 +5936,7 @@ local function combine_offset(offset, new)
 end
 
 
--- Lines: 3887 to 3898
+-- Lines: 4055 to 4066
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -5932,7 +5954,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines: 3901 to 3908
+-- Lines: 4069 to 4076
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -5945,7 +5967,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines: 3911 to 3914
+-- Lines: 4079 to 4082
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -5954,7 +5976,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 3917 to 3924
+-- Lines: 4085 to 4092
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -5969,7 +5991,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 3927 to 3933
+-- Lines: 4095 to 4101
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 

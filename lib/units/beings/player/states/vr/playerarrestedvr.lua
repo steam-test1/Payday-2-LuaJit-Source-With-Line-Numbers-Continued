@@ -2,23 +2,25 @@ PlayerArrestedVR = PlayerArrested or Application:error("PlayerArrestedVR needs P
 local __enter = PlayerArrested.enter
 local __exit = PlayerArrested.exit
 
--- Lines: 7 to 12
+-- Lines: 7 to 13
 function PlayerArrestedVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("cuffed", self._unit:position())
 	self._unit:hand():set_cuffed(true)
+	self:set_belt_and_hands_enabled(false)
 end
 
--- Lines: 14 to 19
+-- Lines: 15 to 21
 function PlayerArrestedVR:exit(...)
 	__exit(self, ...)
 	self._ext_movement:set_orientation_state("none")
 	self._unit:hand():set_cuffed(false)
+	self:set_belt_and_hands_enabled(true)
 end
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 
--- Lines: 24 to 35
+-- Lines: 26 to 37
 function PlayerArrestedVR:_update_movement(t, dt)
 	local pos_new = mvec_pos_new
 
@@ -33,7 +35,7 @@ function PlayerArrestedVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new)
 end
 
--- Lines: 42 to 81
+-- Lines: 44 to 83
 function PlayerArrestedVR:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -64,5 +66,39 @@ function PlayerArrestedVR:_update_check_actions(t, dt)
 	self:_update_foley(t, input)
 
 	local new_action = self:_check_action_interact(t, input)
+end
+
+-- Lines: 85 to 111
+function PlayerArrestedVR:set_belt_and_hands_enabled(enabled)
+	if not enabled then
+		local belt_states = {
+			melee = managers.hud:belt():state("melee"),
+			deployable = managers.hud:belt():state("deployable"),
+			deployable_secondary = managers.hud:belt():state("deployable_secondary"),
+			throwable = managers.hud:belt():state("throwable"),
+			weapon = managers.hud:belt():state("weapon"),
+			bag = managers.hud:belt():state("bag")
+		}
+
+		for id, state in pairs(belt_states) do
+			if state ~= "disabled" then
+				managers.hud:belt():set_state(id, "disabled")
+			end
+		end
+	else
+		managers.hud:belt():set_state("melee", "default")
+		managers.hud:belt():set_state("weapon", "default")
+		managers.hud:belt():set_state("throwable", managers.player:get_grenade_amount(managers.network:session():local_peer():id()) > 0 and "default" or "invalid")
+		managers.hud:belt():set_state("bag", managers.player:is_carrying() and "default" or "inactive")
+
+		for slot, equipment in ipairs({
+			managers.player:equipment_in_slot(1),
+			managers.player:equipment_in_slot(2)
+		}) do
+			local amount = managers.player:get_equipment_amount(equipment)
+
+			managers.hud:belt():set_state(slot == 1 and "deployable" or "deployable_secondary", amount > 0 and "default" or "invalid")
+		end
+	end
 end
 

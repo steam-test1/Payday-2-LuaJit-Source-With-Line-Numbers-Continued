@@ -100,11 +100,7 @@ end
 
 -- Lines: 118 to 193
 function WarpTargetState:transition()
-	if self.params.state_data.warping or self.params.state_data.on_zipline or self.params.state_data.on_ladder then
-		return WarpIdleState
-	end
-
-	if not self.params.input:is_movement_warp() then
+	if self.params.state_data.warping or self.params.state_data.on_zipline or self.params.state_data.on_ladder or self.params.state_data.interacting or not self.params.input:is_movement_warp() then
 		return WarpIdleState
 	end
 
@@ -309,7 +305,7 @@ function PlayerStandardVR:_start_action_warp(t)
 	self._unit:hand():set_warping(true)
 end
 
--- Lines: 446 to 462
+-- Lines: 446 to 482
 function PlayerStandardVR:_end_action_warp(t)
 	self._state_data.warping = false
 
@@ -330,12 +326,12 @@ function PlayerStandardVR:_end_action_warp(t)
 	end
 end
 
--- Lines: 464 to 465
+-- Lines: 484 to 485
 function PlayerStandardVR:_can_run_directional()
 	return true
 end
 
--- Lines: 468 to 499
+-- Lines: 488 to 519
 function PlayerStandardVR:_can_run()
 	if self:on_ladder() or self:_on_zipline() then
 		return false
@@ -360,7 +356,7 @@ function PlayerStandardVR:_can_run()
 	return true
 end
 
--- Lines: 502 to 543
+-- Lines: 522 to 560
 function PlayerStandardVR:_get_max_walk_speed(t, force_run)
 	local speed_tweak = self._tweak_data.movement.speed
 	local movement_speed = speed_tweak.STANDARD_MAX
@@ -371,10 +367,7 @@ function PlayerStandardVR:_get_max_walk_speed(t, force_run)
 		speed_state = "run"
 	end
 
-	if self._state_data.in_steelsight and not managers.player:has_category_upgrade("player", "steelsight_normal_movement_speed") then
-		movement_speed = speed_tweak.STEELSIGHT_MAX
-		speed_state = "steelsight"
-	elseif self:on_ladder() then
+	if self:on_ladder() then
 		movement_speed = speed_tweak.CLIMBING_MAX
 		speed_state = "climb"
 	elseif self._state_data.ducking then
@@ -405,7 +398,7 @@ function PlayerStandardVR:_get_max_walk_speed(t, force_run)
 	return movement_speed * multiplier
 end
 
--- Lines: 553 to 561
+-- Lines: 570 to 578
 function PlayerStandardVR:_check_action_run(t, input)
 	if self._movement_input:state().run then
 		if not self._running then
@@ -416,7 +409,7 @@ function PlayerStandardVR:_check_action_run(t, input)
 	end
 end
 
--- Lines: 563 to 574
+-- Lines: 580 to 591
 function PlayerStandardVR:_start_action_running(t, input)
 	if self:_can_run() then
 		if self._shooting and not self._equipped_unit:base():run_and_shoot_allowed() then
@@ -430,7 +423,7 @@ function PlayerStandardVR:_start_action_running(t, input)
 	end
 end
 
--- Lines: 576 to 583
+-- Lines: 593 to 600
 function PlayerStandardVR:_end_action_running(t)
 	if not self._end_running_expire_t then
 		self:set_running(false)
@@ -440,7 +433,7 @@ function PlayerStandardVR:_end_action_running(t)
 	end
 end
 
--- Lines: 586 to 593
+-- Lines: 603 to 610
 function PlayerStandardVR:_rotate_player(right)
 	local angle = managers.vr:get_setting("rotate_player_angle")
 	local rot = right and Rotation(-angle, 0, 0) or Rotation(angle, 0, 0)
@@ -453,7 +446,7 @@ function PlayerStandardVR:_rotate_player(right)
 	managers.overlay_effect:play_effect(tweak_data.vr.overlay_effects.fade_in_rotate_player)
 end
 
--- Lines: 596 to 615
+-- Lines: 613 to 632
 function PlayerStandardVR:_check_vr_actions(t, dt)
 	if self._controller:get_input_pressed("rotate_player_left") then
 		self:_rotate_player(false)
@@ -476,7 +469,7 @@ function PlayerStandardVR:_check_vr_actions(t, dt)
 	end
 end
 
--- Lines: 617 to 650
+-- Lines: 634 to 667
 function PlayerStandardVR:_update_variables(t, dt)
 	local hand = self._unit:hand()
 
@@ -512,7 +505,7 @@ function PlayerStandardVR:_update_variables(t, dt)
 	end
 end
 
--- Lines: 655 to 674
+-- Lines: 672 to 691
 function PlayerStandardVR:update(t, dt)
 	self:_update_variables(t, dt)
 	self:_check_vr_actions(t)
@@ -527,7 +520,7 @@ local mvec_hmd_delta = Vector3()
 local mvec_prev_pos = Vector3()
 local mvec_mover_to_ghost = Vector3()
 
--- Lines: 685 to 794
+-- Lines: 702 to 811
 function PlayerStandardVR:_update_movement(t, dt)
 	local pos_new = mvec_pos_new
 
@@ -590,7 +583,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 
 		self._ext_movement:set_ghost_position(pos_new, unit_position)
 		mvector3.set(pos_new, unit_position)
-	elseif self._movement_input:is_movement_walk() and not self._state_data.warping then
+	elseif self._movement_input:is_movement_walk() and not self:_interacting() and not self._state_data.warping then
 		local movement = mvector3.copy(self._movement_input:state().move_axis)
 
 		mvector3.multiply(movement, self:_get_max_walk_speed(t) * dt)
@@ -641,7 +634,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 	end
 end
 
--- Lines: 799 to 817
+-- Lines: 816 to 834
 function PlayerStandardVR:_check_action_duck(t, input)
 	if not self._state_data.warping and not self._state_data.on_ladder then
 		local diff = managers.vr:get_setting("height") - self._current_height
@@ -656,7 +649,7 @@ function PlayerStandardVR:_check_action_duck(t, input)
 	end
 end
 
--- Lines: 822 to 827
+-- Lines: 839 to 844
 function PlayerStandardVR:_start_action_ducking(t)
 	if self._state_data.warping or not self._unit:mover() then
 		return
@@ -665,7 +658,7 @@ function PlayerStandardVR:_start_action_ducking(t)
 	__start_action_ducking_standard(self, t)
 end
 
--- Lines: 829 to 835
+-- Lines: 846 to 852
 function PlayerStandardVR:_teleport_player(target)
 	target = mvector3.copy(target)
 
@@ -676,7 +669,7 @@ function PlayerStandardVR:_teleport_player(target)
 	self._pos = target
 end
 
--- Lines: 840 to 898
+-- Lines: 857 to 915
 function PlayerStandardVR:_check_action_ladder(t, input)
 	if self._state_data.on_ladder then
 		local t_pos = self._state_data.ladder.t_pos
@@ -739,7 +732,7 @@ function PlayerStandardVR:_check_action_ladder(t, input)
 	end
 end
 
--- Lines: 900 to 925
+-- Lines: 917 to 942
 function PlayerStandardVR:_end_action_ladder()
 	if not self._state_data.on_ladder then
 		return
@@ -766,7 +759,7 @@ function PlayerStandardVR:_end_action_ladder()
 end
 local mvec3_zero = Vector3()
 
--- Lines: 929 to 976
+-- Lines: 946 to 993
 function PlayerStandardVR:_start_action_ladder(t, ladder_unit, need_warp)
 	if need_warp then
 		local ladder = ladder_unit:ladder()
@@ -815,7 +808,7 @@ function PlayerStandardVR:_start_action_ladder(t, ladder_unit, need_warp)
 	end
 end
 
--- Lines: 981 to 990
+-- Lines: 998 to 1007
 function PlayerStandardVR:_start_action_zipline(t, input, zipline_unit)
 	if managers.vr:get_setting("zipline_screen") then
 		self._camera_unit:base():set_hmd_tracking(false)
@@ -829,7 +822,7 @@ function PlayerStandardVR:_start_action_zipline(t, input, zipline_unit)
 	self._state_data.zipline_data.hmd_offset = Vector3()
 end
 
--- Lines: 995 to 1003
+-- Lines: 1012 to 1020
 function PlayerStandardVR:_end_action_zipline(t)
 	if self._zipline_screen_active then
 		managers.menu:close_menu("zipline")
@@ -842,17 +835,17 @@ function PlayerStandardVR:_end_action_zipline(t)
 	__end_action_zipline_standard(self, t)
 end
 
--- Lines: 1008 to 1009
+-- Lines: 1025 to 1026
 function PlayerStandardVR:get_fire_weapon_position()
 	return self._equipped_unit:base():fire_object():position()
 end
 
--- Lines: 1015 to 1016
+-- Lines: 1032 to 1033
 function PlayerStandardVR:get_fire_weapon_direction()
 	return self._equipped_unit:base():fire_object():rotation():y()
 end
 
--- Lines: 1023 to 1040
+-- Lines: 1040 to 1057
 function PlayerStandardVR:enter(state_data, enter_data)
 	__enter_standard(self, state_data, enter_data)
 
@@ -861,7 +854,7 @@ function PlayerStandardVR:enter(state_data, enter_data)
 	managers.vr:add_setting_changed_callback("zipline_screen", self._zipline_screen_setting_changed_clbk)
 end
 
--- Lines: 1045 to 1049
+-- Lines: 1062 to 1066
 function PlayerStandardVR:exit(state_data, new_state_name)
 	self._warp_state_machine:_set_state(WarpIdleState)
 	managers.vr:remove_setting_changed_callback("zipline_screen", self._zipline_screen_setting_changed_clbk)
@@ -869,7 +862,7 @@ function PlayerStandardVR:exit(state_data, new_state_name)
 	return __exit_standard(self, state_data, new_state_name)
 end
 
--- Lines: 1056 to 1074
+-- Lines: 1073 to 1091
 function PlayerStandardVR:_update_network_jump(pos, is_exit, t, dt)
 	if self._is_jumping then
 		if self._jump_timer < self._jump_time and not is_exit then
@@ -895,7 +888,7 @@ function PlayerStandardVR:_update_network_jump(pos, is_exit, t, dt)
 	end
 end
 
--- Lines: 1079 to 1088
+-- Lines: 1096 to 1105
 function PlayerStandardVR:_update_network_position(t, dt, cur_pos, pos_new)
 	if (not self._last_sent_pos_t or 1 / tweak_data.network.player_tick_rate < t - self._last_sent_pos_t) and (not pos_new or mvector3.distance_sq(self._last_sent_pos, pos_new) > 2500) then
 		self._ext_network:send("action_walk_nav_point", cur_pos)
@@ -906,7 +899,7 @@ function PlayerStandardVR:_update_network_position(t, dt, cur_pos, pos_new)
 	end
 end
 
--- Lines: 1093 to 1107
+-- Lines: 1110 to 1124
 function PlayerStandardVR:_get_melee_charge_lerp_value(t, offset)
 	local melee_hand = self._unit:hand():get_active_hand_id("melee")
 
@@ -928,11 +921,11 @@ function PlayerStandardVR:_get_melee_charge_lerp_value(t, offset)
 end
 local __get_input = PlayerStandard._get_input
 
--- Lines: 1114 to 1134
-function PlayerStandardVR:_get_input(t, dt)
-	local input = __get_input(self, t, dt)
+-- Lines: 1131 to 1151
+function PlayerStandardVR:_get_input(t, dt, paused)
+	local input = __get_input(self, t, dt, paused)
 
-	if self._controller:enabled() then
+	if self._controller:enabled() and not paused then
 		input.btn_unequip_press = self._controller:get_input_pressed("unequip")
 		input.btn_unequip_release = self._controller:get_input_released("unequip")
 		input.btn_akimbo_fire_press = self._controller:get_input_pressed("akimbo_fire")
@@ -949,7 +942,7 @@ function PlayerStandardVR:_get_input(t, dt)
 	return input
 end
 
--- Lines: 1139 to 1164
+-- Lines: 1156 to 1181
 function PlayerStandardVR:_is_throwing_projectile(input)
 	if not input then
 		return false
@@ -980,12 +973,12 @@ function PlayerStandardVR:_is_throwing_projectile(input)
 	return false
 end
 
--- Lines: 1167 to 1169
+-- Lines: 1184 to 1186
 function PlayerStandardVR:set_throwing_projectile(id)
 	self._throwing_projectile_id = id
 end
 
--- Lines: 1174 to 1187
+-- Lines: 1191 to 1204
 function PlayerStandardVR:_check_stop_shooting()
 	if self._shooting and self._shooting_weapons then
 		for k, weap_base in pairs(self._shooting_weapons) do
@@ -1002,7 +995,7 @@ function PlayerStandardVR:_check_stop_shooting()
 	end
 end
 
--- Lines: 1195 to 1249
+-- Lines: 1212 to 1266
 function PlayerStandardVR:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_primary_attack_state or input.btn_primary_attack_release or input.btn_akimbo_fire_state or input.btn_akimbo_fire_release
@@ -1034,7 +1027,7 @@ function PlayerStandardVR:_check_action_primary_attack(t, input)
 	end
 end
 
--- Lines: 1255 to 1478
+-- Lines: 1272 to 1498
 function PlayerStandardVR:_check_fire_per_weapon(t, pressed, held, released, weap_base, akimbo)
 	if not pressed and not held and not released then
 		return false
@@ -1078,7 +1071,9 @@ function PlayerStandardVR:_check_fire_per_weapon(t, pressed, held, released, wea
 			if not self._next_wall_check_t or self._next_wall_check_t < t then
 				local wall_check_obj = tweak_data.vr.custom_wall_check[weap_base.name_id] and weap_base._unit:get_object(Idstring(tweak_data.vr.custom_wall_check[weap_base.name_id])) or weap_base:fire_object()
 				self._shooting_forbidden = self._unit:hand():check_hand_through_wall(self._unit:hand():get_active_hand_id(akimbo and "akimbo" or "weapon"), wall_check_obj)
-				self._next_wall_check_t = t + tweak_data.vr.wall_check_delay
+				local weapon_tweak = weap_base:weapon_tweak_data()
+				local delay = weapon_tweak.auto and weapon_tweak.auto.fire_rate or tweak_data.vr.wall_check_delay
+				self._next_wall_check_t = t + delay
 			end
 
 			if weap_base:start_shooting_allowed() and not self._shooting_forbidden then
@@ -1257,10 +1252,10 @@ function PlayerStandardVR:_check_fire_per_weapon(t, pressed, held, released, wea
 	return new_action
 end
 
--- Lines: 1498 to 1507
+-- Lines: 1518 to 1527
 function PlayerStandardVR:_check_action_weapon_gadget(t, input)
 
-	-- Lines: 1488 to 1499
+	-- Lines: 1508 to 1519
 	local function toggle_gadget(weap_base)
 		if weap_base.toggle_gadget and weap_base:has_gadget() and weap_base:toggle_gadget(self) then
 			self._unit:network():send("set_weapon_gadget_state", weap_base._gadget_on)
@@ -1279,25 +1274,20 @@ function PlayerStandardVR:_check_action_weapon_gadget(t, input)
 		toggle_gadget(self._equipped_unit:base())
 	end
 end
-local tmp_head_to_gun = Vector3(0, 0, 0)
+local tmp_head_fwd = Vector3(0, 0, 0)
 
--- Lines: 1531 to 1548
+-- Lines: 1548 to 1565
 function PlayerStandardVR:_check_action_steelsight(t, input)
 
-	-- Lines: 1517 to 1531
+	-- Lines: 1537 to 1548
 	local function check_weapon_aim(weapon_unit)
-		mvector3.set(tmp_head_to_gun, weapon_unit:position())
-		mvector3.subtract(tmp_head_to_gun, self._ext_movement:m_head_pos())
-
-		local head_forward = self._ext_movement:m_head_rot():y()
-
-		if mvector3.angle(head_forward, tmp_head_to_gun) > 30 then
+		if self._ext_movement:m_head_pos().z - weapon_unit:position().z > 20 or weapon_unit:position().z - self._ext_movement:m_head_pos().z > 0 then
 			return false
 		end
 
-		local weapon_forward = weapon_unit:rotation():y()
+		mvector3.set(tmp_head_fwd, self._ext_movement:m_head_rot():y())
 
-		if mvector3.angle(head_forward, weapon_forward) > 15 then
+		if mvector3.angle(tmp_head_fwd, weapon_unit:rotation():y()) > 35 then
 			return false
 		end
 
@@ -1305,7 +1295,7 @@ function PlayerStandardVR:_check_action_steelsight(t, input)
 	end
 
 	if alive(self._equipped_unit) then
-		local steelsight_wanted = self._unit:hand():get_active_hand("weapon_assist")
+		local steelsight_wanted = check_weapon_aim(self._equipped_unit)
 
 		if steelsight_wanted and not self._state_data.in_steelsight then
 			self._ext_network:send("set_stance", 3, false, false)
@@ -1321,14 +1311,14 @@ function PlayerStandardVR:_check_action_steelsight(t, input)
 	self._state_data.in_steelsight = false
 end
 
--- Lines: 1553 to 1558
+-- Lines: 1570 to 1575
 function PlayerStandardVR:_start_action_steelsight(t, gadget_state)
 	if gadget_state ~= nil then
 		self._equipped_unit:base():play_sound("gadget_steelsight_" .. (gadget_state and "enter" or "exit"))
 	end
 end
 
--- Lines: 1563 to 1580
+-- Lines: 1580 to 1597
 function PlayerStandardVR:_update_fwd_ray()
 	if alive(self._equipped_unit) then
 		local from = self._equipped_unit:position()
@@ -1349,7 +1339,7 @@ function PlayerStandardVR:_update_fwd_ray()
 	end
 end
 
--- Lines: 1584 to 1604
+-- Lines: 1601 to 1621
 function PlayerStandardVR:swap_weapon(hand_id, selection_wanted, clbk)
 	if self._ext_inventory:is_equipped(selection_wanted) then
 		return
@@ -1371,7 +1361,7 @@ function PlayerStandardVR:swap_weapon(hand_id, selection_wanted, clbk)
 	self._ext_network:send("switch_weapon", speed_multiplier, 1)
 end
 
--- Lines: 1606 to 1620
+-- Lines: 1623 to 1637
 function PlayerStandardVR:_update_swap_weapon_timers(t)
 	if not self._weapon_swap_done_t then
 		return
@@ -1390,12 +1380,12 @@ function PlayerStandardVR:_update_swap_weapon_timers(t)
 end
 local __is_reloading = PlayerStandard._is_reloading
 
--- Lines: 1625 to 1626
+-- Lines: 1642 to 1643
 function PlayerStandardVR:_is_reloading()
 	return __is_reloading(self) or self._can_trigger_reload
 end
 
--- Lines: 1629 to 1634
+-- Lines: 1646 to 1651
 function PlayerStandardVR:_start_action_reload_enter(t)
 	if self._equipped_unit:base():can_reload() then
 		managers.player:send_message_now(Message.OnPlayerReload, nil, self._equipped_unit)
@@ -1403,7 +1393,7 @@ function PlayerStandardVR:_start_action_reload_enter(t)
 	end
 end
 
--- Lines: 1636 to 1689
+-- Lines: 1653 to 1707
 function PlayerStandardVR:_start_action_reload(t)
 	local weapon = self._equipped_unit:base()
 
@@ -1451,7 +1441,9 @@ function PlayerStandardVR:_start_action_reload(t)
 
 				self._state_data.needs_full_reload = true
 			else
-				managers.hud:belt():start_reload(reload_time, weapon:get_ammo_remaining_in_clip(), weapon:get_ammo_max_per_clip())
+				local max_ammo = math.min(weapon:get_ammo_max_per_clip(), weapon:get_ammo_total())
+
+				managers.hud:belt():start_reload(reload_time, weapon:get_ammo_remaining_in_clip(), max_ammo)
 			end
 		end
 
@@ -1459,7 +1451,7 @@ function PlayerStandardVR:_start_action_reload(t)
 	end
 end
 
--- Lines: 1691 to 1705
+-- Lines: 1709 to 1723
 function PlayerStandardVR:_interupt_action_reload(t)
 	if alive(self._equipped_unit) then
 		self._equipped_unit:base():check_bullet_objects()
@@ -1477,7 +1469,7 @@ function PlayerStandardVR:_interupt_action_reload(t)
 	self:send_reload_interupt()
 end
 
--- Lines: 1707 to 1748
+-- Lines: 1725 to 1766
 function PlayerStandardVR:_update_reload_timers(t, dt, input)
 	if not alive(self._equipped_unit) then
 		return
@@ -1518,22 +1510,28 @@ function PlayerStandardVR:_update_reload_timers(t, dt, input)
 	end
 end
 
--- Lines: 1750 to 1775
+-- Lines: 1768 to 1778
+function PlayerStandardVR:_current_reload_amount()
+	if self._state_data.reload_expire_t then
+		local t = TimerManager:game():time()
+		local weapon = self._equipped_unit:base()
+		local total = self._state_data.reload_expire_t - self._state_data.reload_start_t
+		local progress = t - self._state_data.reload_start_t
+		local ratio = progress / total
+		local max_ammo = math.min(weapon:get_ammo_max_per_clip(), weapon:get_ammo_total())
+
+		return math.floor((max_ammo - weapon:get_ammo_remaining_in_clip()) * ratio) + weapon:get_ammo_remaining_in_clip()
+	end
+end
+
+-- Lines: 1780 to 1799
 function PlayerStandardVR:grab_mag()
 	if not self:can_grab_mag() then
 		return false
 	end
 
-	local amount = nil
-	local t = TimerManager:game():time()
 	local weapon = self._equipped_unit:base()
-
-	if self._state_data.reload_expire_t then
-		local total = self._state_data.reload_expire_t - self._state_data.reload_start_t
-		local progress = t - self._state_data.reload_start_t
-		local ratio = progress / total
-		amount = math.floor((weapon:get_ammo_max_per_clip() - weapon:get_ammo_remaining_in_clip()) * ratio) + weapon:get_ammo_remaining_in_clip()
-	end
+	local amount = self:_current_reload_amount()
 
 	if weapon.akimbo then
 		local second_gun = weapon._second_gun
@@ -1550,17 +1548,19 @@ function PlayerStandardVR:grab_mag()
 	managers.hud:set_reload_visible(false)
 end
 
--- Lines: 1777 to 1778
+-- Lines: 1801 to 1802
 function PlayerStandardVR:can_trigger_reload()
 	return self._can_trigger_reload
 end
 
--- Lines: 1781 to 1782
+-- Lines: 1805 to 1809
 function PlayerStandardVR:can_grab_mag()
-	return not managers.vr:get_setting("auto_reload") and (not self._state_data.needs_full_reload or self:can_trigger_reload())
+	local amount = self:_current_reload_amount()
+
+	return not managers.vr:get_setting("auto_reload") and (not self._state_data.needs_full_reload or self:can_trigger_reload()) and (not amount or amount > 0)
 end
 
--- Lines: 1785 to 1808
+-- Lines: 1812 to 1835
 function PlayerStandardVR:trigger_reload()
 	if not self:can_trigger_reload() then
 		return
@@ -1583,7 +1583,7 @@ function PlayerStandardVR:trigger_reload()
 	managers.hud:set_reload_visible(false)
 end
 
--- Lines: 1816 to 1836
+-- Lines: 1843 to 1863
 function PlayerStandardVR:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_hand = nil
@@ -1605,7 +1605,7 @@ function PlayerStandardVR:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines: 1839 to 1855
+-- Lines: 1866 to 1882
 function PlayerStandardVR:_interupt_action_use_item(t, input, complete)
 	if self._use_item_expire_t then
 		self._use_item_expire_t = nil
@@ -1625,7 +1625,7 @@ function PlayerStandardVR:_interupt_action_use_item(t, input, complete)
 end
 local __start_action_interact = PlayerStandard._start_action_interact
 
--- Lines: 1860 to 1865
+-- Lines: 1887 to 1892
 function PlayerStandardVR:_start_action_interact(t, input, timer, interact_object)
 	managers.hud:link_interaction_hud(self._unit:hand():hand_unit(self._interact_hand), interact_object)
 
@@ -1635,13 +1635,13 @@ function PlayerStandardVR:_start_action_interact(t, input, timer, interact_objec
 end
 local __start_action_use_item = PlayerStandard._start_action_use_item
 
--- Lines: 1869 to 1873
+-- Lines: 1896 to 1900
 function PlayerStandardVR:_start_action_use_item(...)
 	managers.hud:link_interaction_hud(self._unit:hand():get_active_hand("deployable"), self._unit:equipment():dummy_unit())
 	__start_action_use_item(self, ...)
 end
 
--- Lines: 1878 to 1892
+-- Lines: 1905 to 1919
 function PlayerStandardVR:_on_zipline_screen_setting_changed(setting, old, new)
 	if not self:_on_zipline() then
 		return
@@ -1660,7 +1660,7 @@ function PlayerStandardVR:_on_zipline_screen_setting_changed(setting, old, new)
 	end
 end
 
--- Lines: 1897 to 1914
+-- Lines: 1924 to 1941
 function PlayerStandardVR:_on_menu_active_changed_vr(active)
 	if not alive(self._unit) then
 		return
@@ -1683,7 +1683,7 @@ function PlayerStandardVR:_on_menu_active_changed_vr(active)
 	end
 end
 
--- Lines: 1916 to 1920
+-- Lines: 1943 to 1947
 function PlayerStandardVR:set_base_rotation(rot)
 	self._ext_camera:camera_unit():base():set_base_rotation(Rotation(rot:yaw(), 0, 0))
 	self._unit:hand():set_base_rotation(self._camera_unit:base():base_rotation())
