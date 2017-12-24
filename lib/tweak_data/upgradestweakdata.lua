@@ -3211,7 +3211,8 @@ function UpgradesTweakData:init(tweak_data)
 			upgrades = {
 				"rep_upgrade2",
 				"schakal",
-				"agave"
+				"agave",
+				"slap"
 			}
 		},
 		[21] = {
@@ -3797,6 +3798,7 @@ function UpgradesTweakData:init(tweak_data)
 	self:_basset_weapon_definitions()
 	self:_x_basset_weapon_definitions()
 	self:_corgi_weapon_definitions()
+	self:_slap_weapon_definitions()
 	self:_melee_weapon_definitions()
 	self:_grenades_definitions()
 	self:_carry_definitions()
@@ -13252,6 +13254,15 @@ function UpgradesTweakData:_corgi_weapon_definitions()
 	self.definitions.corgi = {
 		factory_id = "wpn_fps_ass_corgi",
 		weapon_id = "corgi",
+		category = "weapon"
+	}
+end
+
+-- Lines: 11999 to 12005
+function UpgradesTweakData:_slap_weapon_definitions()
+	self.definitions.slap = {
+		factory_id = "wpn_fps_gre_slap",
+		weapon_id = "slap",
 		category = "weapon"
 	}
 end
