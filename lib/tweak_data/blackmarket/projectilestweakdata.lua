@@ -4,7 +4,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines: 32 to 699
+-- Lines: 32 to 700
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.name_id = "bm_grenade_frag"
@@ -148,6 +148,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.launcher_incendiary_m32.weapon_id = "m32"
 	self.projectiles.launcher_frag_china = deep_clone(self.projectiles.launcher_frag)
 	self.projectiles.launcher_frag_china.weapon_id = "china"
+	self.projectiles.launcher_frag_china.unit = "units/pd2_dlc_lupus/weapons/wpn_launcher_frag_grenade_china/wpn_launcher_frag_grenade_china"
 	self.projectiles.launcher_incendiary_china = deep_clone(self.projectiles.launcher_incendiary)
 	self.projectiles.launcher_incendiary_china.weapon_id = "china"
 	self.projectiles.launcher_frag_arbiter = {
@@ -569,12 +570,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines: 701 to 702
+-- Lines: 702 to 703
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines: 705 to 711
+-- Lines: 706 to 712
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -585,7 +586,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines: 714 to 715
+-- Lines: 715 to 716
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

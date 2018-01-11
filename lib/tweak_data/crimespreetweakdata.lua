@@ -33,7 +33,7 @@ function CrimeSpreeTweakData:init(tweak_data)
 	self:init_gui(tweak_data)
 end
 
--- Lines: 61 to 404
+-- Lines: 61 to 432
 function CrimeSpreeTweakData:init_missions(tweak_data)
 	local debug_short_add = 5
 	local debug_med_add = 7
@@ -155,109 +155,32 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 		},
 		{
 			{
-				stage_id = "arm_cro",
-				id = "arm_cro",
-				icon = "csm_crossroads",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.arm_cro
-			},
-			{
-				stage_id = "help",
-				id = "help",
-				icon = "csm_prison",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.help
-			},
-			{
-				stage_id = "cage",
-				id = "arm_und",
-				icon = "csm_overpass",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.arm_und
-			},
-			{
-				stage_id = "arm_hcm",
-				id = "arm_hcm",
-				icon = "csm_downtown",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.arm_hcm
-			},
-			{
-				stage_id = "arm_par",
-				id = "arm_par",
-				icon = "csm_park",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.arm_par
-			},
-			{
-				stage_id = "arm_fac",
-				id = "arm_fac",
-				icon = "csm_harbor",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.arm_fac
-			},
-			{
-				stage_id = "chew",
-				add = 3,
-				id = "biker_2",
-				icon = "csm_biker_2",
-				level = tweak_data.narrative.stages.chew
-			},
-			{
-				stage_id = "firestarter_1",
-				add = 4,
-				id = "fs_1",
-				icon = "csm_fs_1",
-				level = tweak_data.narrative.stages.firestarter_1
-			},
-			{
-				stage_id = "nail",
-				id = "nail",
-				icon = "csm_labrats",
-				add = debug_short_add,
-				level = tweak_data.narrative.stages.nail
-			},
-			{
-				stage_id = "watchdogs_1_d",
-				add = 6,
-				id = "watchdogs_1_d",
-				icon = "csm_watchdogs_1",
-				level = tweak_data.narrative.stages.watchdogs_1_d
-			},
-			{
-				stage_id = "pines",
-				id = "pines",
-				icon = "csm_white_xmas",
-				add = debug_med_add,
-				level = tweak_data.narrative.stages.pines
-			},
-			{
-				stage_id = "moon",
-				id = "moon",
-				icon = "csm_stealing_xmas",
-				add = debug_med_add,
-				level = tweak_data.narrative.stages.moon
-			},
-			{
-				stage_id = "spa",
+				stage_id = "wwh",
 				add = 8,
-				id = "spa",
-				icon = "csm_brooklyn",
-				level = tweak_data.narrative.stages.spa
+				id = "wwh",
+				icon = "csm_wwh",
+				level = tweak_data.narrative.stages.wwh
 			},
 			{
-				stage_id = "cane",
+				stage_id = "rvd1",
 				add = 8,
-				id = "cane",
-				icon = "csm_santas_workshop",
-				level = tweak_data.narrative.stages.cane
+				id = "rvd1",
+				icon = "csm_rvd_1",
+				level = tweak_data.narrative.stages.rvd_1
 			},
 			{
-				stage_id = "mia_2",
+				stage_id = "rvd2",
+				add = 10,
+				id = "rvd2",
+				icon = "csm_rvd_2",
+				level = tweak_data.narrative.stages.rvd_2
+			},
+			{
+				stage_id = "brb",
 				add = 8,
-				id = "mia_2",
-				icon = "csm_miami_2",
-				level = tweak_data.narrative.stages.mia_2
+				id = "brb",
+				icon = "csm_brb",
+				level = tweak_data.narrative.stages.brb
 			}
 		},
 		{
@@ -370,7 +293,7 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 	}
 end
 
--- Lines: 755 to 1091
+-- Lines: 783 to 1119
 function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	local health_increase = 25
 	local damage_increase = 25
@@ -720,7 +643,7 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	}}}
 end
 
--- Lines: 1093 to 1099
+-- Lines: 1121 to 1127
 function CrimeSpreeTweakData:get_reward_icon(reward)
 	for _, data in ipairs(self.rewards) do
 		if data.id == reward then
@@ -731,7 +654,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return "downcard_overkill_deck"
 end
 
--- Lines: 1103 to 1185
+-- Lines: 1131 to 1213
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -848,7 +771,7 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 	}
 end
 
--- Lines: 1188 to 1377
+-- Lines: 1216 to 1405
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
@@ -988,7 +911,7 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	}
 end
 
--- Lines: 1380 to 1395
+-- Lines: 1408 to 1423
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {

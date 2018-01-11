@@ -3494,7 +3494,7 @@ function CharacterTweakData:_init_myh(presets)
 	}
 end
 
--- Lines: 2527 to 2553
+-- Lines: 2527 to 2573
 function CharacterTweakData:_init_ecp(presets)
 	self.ecp_female = {
 		damage = presets.gang_member_damage,
@@ -3515,11 +3515,28 @@ function CharacterTweakData:_init_ecp(presets)
 		aggression_timeout = 6,
 		arrest_timeout = 240
 	}
-	self.ecp_male = deep_clone(self.ecp_female)
+	self.ecp_male = {
+		damage = presets.gang_member_damage,
+		weapon = deep_clone(presets.weapon.gang_member)
+	}
+	self.ecp_male.weapon.weapons_of_choice = {
+		primary = "wpn_fps_ass_m4_npc",
+		secondary = Idstring("units/payday2/weapons/wpn_npc_mac11/wpn_npc_mac11")
+	}
+	self.ecp_male.detection = presets.detection.gang_member
+	self.ecp_male.move_speed = presets.move_speed.very_fast
+	self.ecp_male.crouch_move = false
 	self.ecp_male.speech_prefix = "rb20"
+	self.ecp_male.weapon_voice = "3"
+	self.ecp_male.access = "teamAI1"
+	self.ecp_male.arrest = {
+		timeout = 240,
+		aggression_timeout = 6,
+		arrest_timeout = 240
+	}
 end
 
--- Lines: 2575 to 4420
+-- Lines: 2595 to 4440
 function CharacterTweakData:_presets(tweak_data)
 	local presets = {hurt_severities = {}}
 	presets.hurt_severities.no_hurts = {
@@ -10178,7 +10195,7 @@ function CharacterTweakData:_presets(tweak_data)
 	return presets
 end
 
--- Lines: 4427 to 4490
+-- Lines: 4447 to 4510
 function CharacterTweakData:_create_table_structure()
 	self.weap_ids = {
 		"beretta92",
@@ -10244,7 +10261,7 @@ function CharacterTweakData:_create_table_structure()
 	}
 end
 
--- Lines: 4495 to 4521
+-- Lines: 4515 to 4541
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for id, unit_data in pairs(self) do
 		if type(unit_data) == "table" and unit_data.weapon then
@@ -10273,12 +10290,12 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
--- Lines: 4525 to 4526
+-- Lines: 4545 to 4546
 function CharacterTweakData:enemy_list()
 	return self._enemy_list
 end
 
--- Lines: 4531 to 4549
+-- Lines: 4551 to 4569
 function CharacterTweakData:_set_easy()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -10296,7 +10313,7 @@ function CharacterTweakData:_set_easy()
 	self.flashbang_multiplier = 1
 end
 
--- Lines: 4553 to 4681
+-- Lines: 4573 to 4701
 function CharacterTweakData:_set_normal()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(1.05, 1.1)
@@ -11221,7 +11238,7 @@ function CharacterTweakData:_set_normal()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4685 to 4790
+-- Lines: 4705 to 4810
 function CharacterTweakData:_set_hard()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -11838,7 +11855,7 @@ function CharacterTweakData:_set_hard()
 	}
 end
 
--- Lines: 4794 to 4908
+-- Lines: 4814 to 4928
 function CharacterTweakData:_set_overkill()
 	self:_multiply_all_hp(2, 2)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -12456,7 +12473,7 @@ function CharacterTweakData:_set_overkill()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4912 to 4979
+-- Lines: 4932 to 4999
 function CharacterTweakData:_set_overkill_145()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(3, 3)
@@ -12646,7 +12663,7 @@ function CharacterTweakData:_set_overkill_145()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4984 to 5127
+-- Lines: 5004 to 5147
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -13201,7 +13218,7 @@ function CharacterTweakData:_set_easy_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5130 to 5332
+-- Lines: 5150 to 5352
 function CharacterTweakData:_set_overkill_290()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -14410,7 +14427,7 @@ function CharacterTweakData:_set_overkill_290()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5335 to 5537
+-- Lines: 5355 to 5557
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(9, 1.5)
@@ -15619,7 +15636,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5541 to 5548
+-- Lines: 5561 to 5568
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -15630,7 +15647,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines: 5553 to 5660
+-- Lines: 5573 to 5680
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -15748,7 +15765,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines: 5664 to 5692
+-- Lines: 5684 to 5712
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -15793,7 +15810,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines: 5695 to 5700
+-- Lines: 5715 to 5720
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -15810,7 +15827,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5704 to 6184
+-- Lines: 5724 to 6204
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

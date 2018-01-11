@@ -1140,7 +1140,7 @@ function PlayerMovement:zipline_unit()
 	return self._zipline_unit
 end
 
--- Lines: 1399 to 1421
+-- Lines: 1403 to 1425
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1164,7 +1164,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines: 1423 to 1478
+-- Lines: 1427 to 1482
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1210,12 +1210,12 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines: 1480 to 1481
+-- Lines: 1484 to 1485
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines: 1484 to 1485
+-- Lines: 1488 to 1489
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
 end
