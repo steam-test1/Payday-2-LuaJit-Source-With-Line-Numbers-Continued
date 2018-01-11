@@ -811,20 +811,19 @@ function CriminalsManager:_reserve_loadout_for(char)
 	return managers.blackmarket:henchman_loadout(1, true)
 end
 
--- Lines: 876 to 917
+-- Lines: 876 to 910
 function CriminalsManager:_reassign_loadouts()
-	print("[CriminalsManager]:_reassign_loadouts")
-
 	local current_taken = {}
 	local remove_from_index = 1
 
 	for i = 1, managers.criminals.MAX_NR_TEAM_AI, 1 do
 		local data = self._loadout_slots[i]
 		local char_data = data and self._characters[data.char_index]
-		current_taken[i] = char_data and char_data.data.ai and char_data.taken and char_data or false
+		local taken_by_ai = char_data and char_data.data.ai and char_data.taken
+		current_taken[i] = taken_by_ai and char_data or false
 
 		if current_taken[i] then
-			remove_from_index = remove_from_index + 1 or remove_from_index
+			remove_from_index = remove_from_index + 1
 		end
 	end
 
@@ -833,7 +832,7 @@ function CriminalsManager:_reassign_loadouts()
 	for i = remove_from_index, managers.criminals.MAX_NR_TEAM_AI, 1 do
 		local data = current_taken[i]
 
-		if data then
+		if data and alive(data.unit) then
 			table.insert(to_reassign, data)
 
 			local index = self._loadout_map[data.name]
@@ -854,12 +853,12 @@ function CriminalsManager:_reassign_loadouts()
 	end
 end
 
--- Lines: 921 to 922
+-- Lines: 914 to 915
 function CriminalsManager:get_loadout_string_for(char_name)
 	return managers.blackmarket:henchman_loadout_string(self:get_loadout_for(char_name))
 end
 
--- Lines: 925 to 928
+-- Lines: 918 to 921
 function CriminalsManager:get_loadout_for(char_name)
 	local index = self._loadout_map[char_name] or 1
 

@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5422
+-- Lines: 3 to 5439
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -1196,6 +1196,8 @@ function InteractionTweakData:init(tweak_data)
 	self.atm_interaction = deep_clone(self.invisible_interaction_open)
 	self.atm_interaction.start_active = false
 	self.atm_interaction.contour = "interactable_icon"
+	self.bank_open_interaction = deep_clone(self.atm_interaction)
+	self.bank_open_interaction.interact_distance = 90
 	self.weapon_case = deep_clone(self.invisible_interaction_open)
 	self.weapon_case.axis = "x"
 	self.weapon_case.interact_distance = 110

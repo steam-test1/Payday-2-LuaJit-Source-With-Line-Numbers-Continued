@@ -20,7 +20,7 @@ function PlayerHandStateDriving:at_enter(prev_state, params)
 	if self._tweak.middle_pos and type(self._tweak.steering_pos) ~= "table" then
 		self._start_vec = self._tweak.steering_pos - self._tweak.middle_pos
 		self._two_handed = false
-	else
+	elseif self._tweak.steering_pos then
 		self._start_vec = self._tweak.steering_pos.left - self._tweak.steering_pos.right
 		self._two_handed = true
 	end
@@ -43,7 +43,7 @@ local middle = Vector3()
 local steering_vec = Vector3()
 local exit = Vector3()
 
--- Lines: 53 to 159
+-- Lines: 53 to 163
 function PlayerHandStateDriving:update(t, dt)
 
 	-- Lines: 47 to 54
@@ -68,7 +68,7 @@ function PlayerHandStateDriving:update(t, dt)
 
 	local controller = managers.vr:hand_state_machine():controller()
 
-	if self._vehicle.seat == "driver" then
+	if self._vehicle.seat == "driver" and self._tweak.steering_pos then
 		if self._two_handed then
 			offset_to_world(offset, self._tweak.steering_pos[self._hand_side])
 			mvector3.set(middle, self:hsm():other_hand():position())
@@ -125,7 +125,11 @@ function PlayerHandStateDriving:update(t, dt)
 
 			local angle = mvector3.angle(steering_vec, self._start_vec:rotate_with(steering_rot))
 
-			if steering_vec.x < 0 then
+			if steering_vec.z > 0 then
+				self._invert_angle = steering_vec.x < 0
+			end
+
+			if self._invert_angle then
 				angle = angle * -1
 			end
 

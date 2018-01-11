@@ -1,6 +1,11 @@
 VRFadeout = VRFadeout or class()
+VRFadeout.FADEOUT_TYPES = {
+	fadeout_smooth = 2,
+	fadeout_stepped = 3,
+	fadeout_instant = 1
+}
 
--- Lines: 5 to 20
+-- Lines: 11 to 29
 function VRFadeout:init()
 	self._slotmask = managers.slot:get_mask("statics")
 	self._fadeout = {
@@ -16,13 +21,32 @@ function VRFadeout:init()
 		}
 	}
 	self._ghost_reset_timer_t = 0
+	self._fadeout_type_default = VRFadeout.FADEOUT_TYPES.fadeout_smooth
+
+	self:_add_setting_callback("fadeout_type", "_fadeout_type_changed")
+	self:_add_setting_callback("collision_instant_teleport", "_collision_instant_teleport_changed")
+end
+
+-- Lines: 31 to 37
+function VRFadeout:_add_setting_callback(setting_name, method)
+	local clbk = callback(self, self, method)
+
+	managers.vr:add_setting_changed_callback(setting_name, clbk)
+	clbk(setting_name, nil, managers.vr:get_setting(setting_name))
+
+	self._settings = self._settings or {}
+
+	table.insert(self._settings, {
+		name = setting_name,
+		clbk = clbk
+	})
 end
 local mvec_temp1 = Vector3()
 local mvec_temp2 = Vector3()
 local mvec_temp3 = Vector3()
 
 
--- Lines: 26 to 56
+-- Lines: 43 to 73
 local function raycast_multi_dir(position, forward, length, slotmask)
 	local dir = mvec_temp1
 
@@ -60,7 +84,7 @@ local function raycast_multi_dir(position, forward, length, slotmask)
 end
 
 
--- Lines: 59 to 70
+-- Lines: 76 to 87
 local function raycast_head(position, rotation, slotmask)
 	local hit, distance = raycast_multi_dir(position, rotation:y(), 20, slotmask)
 	local h, d = raycast_multi_dir(position, rotation:x(), 20, slotmask)
@@ -79,31 +103,142 @@ local function raycast_head(position, rotation, slotmask)
 end
 
 
--- Lines: 74 to 124
-local function fadeout_func(mover_position, head_position, rotation, slotmask)
-	local distance_to_mover = mvector3.distance(head_position:with_z(0), mover_position:with_z(0))
+-- Lines: 90 to 98
+local function ghost_mover_separation(mover_position, head_position)
+	local ghost_separation_fade_distance = 13
 	local ghost_max_th = 50
-	local fade_distance = 13
-	local distance_to_obstacle = fade_distance
-	local fadeout = 0
-	local outer = World:sphere_overlap(head_position, 15, slotmask)
+	local distance_to_mover = mvector3.distance(head_position:with_z(0), mover_position:with_z(0))
 
-	if outer then
+	if ghost_max_th < distance_to_mover then
+		return math.min((distance_to_mover - ghost_max_th) / ghost_separation_fade_distance, 1)
+	end
+
+	return 0
+end
+
+
+-- Lines: 103 to 132
+local function fadeout_func_instant(mover_position, head_position, rotation, slotmask, ignore_head_collisions, ignore_ghost_distance)
+	if not ignore_head_collisions then
+		local inner = World:capsule_overlap(head_position, rotation, 5, 7.5, slotmask)
+
+		if inner then
+			return 1
+		end
+	end
+
+	local pos = mvec_temp1
+
+	mvector3.set(pos, mover_position)
+	mvector3.set_z(pos, pos.z - 15)
+
+	local ray = World:raycast("ray", pos, head_position, "slot_mask", slotmask, "ray_type", "body mover", "sphere_cast_radius", 10, "bundle", 5)
+
+	if ray then
+		local d1 = mvector3.distance(mover_position, ray.position)
+		local d2 = mvector3.distance(mover_position, head_position)
+		local d = math.abs(d2 - d1)
+
+		if d1 < d2 or d < 5 then
+			return 1
+		end
+	end
+
+	if ignore_ghost_distance then
+		return 0
+	end
+
+	local separation = ghost_mover_separation(mover_position, head_position)
+
+	return separation < 1 and 0 or 1
+end
+
+
+-- Lines: 137 to 192
+local function fadeout_func_stepped(mover_position, head_position, rotation, slotmask, ignore_head_collisions, ignore_ghost_distance)
+	if not ignore_head_collisions then
 		local inner = World:sphere_overlap(head_position, 7.5, slotmask)
 
 		if inner then
 			return 1
 		end
+	end
 
-		local hit, distance = raycast_head(head_position, rotation, slotmask)
+	local pos = mvec_temp1
 
-		if hit then
-			local obstacle_min_th = 7
+	mvector3.set(pos, mover_position)
+	mvector3.set_z(pos, pos.z - 15)
 
-			if distance <= obstacle_min_th then
-				distance_to_obstacle = 0
-			elseif distance < obstacle_min_th + fade_distance then
-				distance_to_obstacle = distance - obstacle_min_th
+	local ray = World:raycast("ray", pos, head_position, "slot_mask", slotmask, "ray_type", "body mover", "sphere_cast_radius", 10, "bundle", 5)
+
+	if ray then
+		local d1 = mvector3.distance(mover_position, ray.position)
+		local d2 = mvector3.distance(mover_position, head_position)
+		local d = math.abs(d2 - d1)
+
+		if d1 < d2 or d < 5 then
+			return 1
+		end
+	end
+
+	local fadeout = 0
+
+	if not ignore_head_collisions then
+		local middle = World:sphere_overlap(head_position, 10, slotmask)
+
+		if middle then
+			fadeout = 0.55
+		end
+
+		local middle = World:sphere_overlap(head_position, 13, slotmask)
+
+		if middle then
+			fadeout = math.max(0.35, fadeout)
+		end
+	end
+
+	if ignore_ghost_distance then
+		return fadeout
+	end
+
+	local separation = ghost_mover_separation(mover_position, head_position)
+
+	if separation < 1 then
+		separation = separation > 0.66 and 0.55 or separation > 0.33 and 0.35 or 0
+	end
+
+	fadeout = math.max(separation, fadeout)
+
+	return fadeout
+end
+
+
+-- Lines: 195 to 247
+local function fadeout_func_smooth(mover_position, head_position, rotation, slotmask, ignore_head_collisions, ignore_ghost_distance)
+	local fade_distance = 13
+	local distance_to_obstacle = fade_distance
+	local fadeout = 0
+
+	if not ignore_head_collisions then
+		local outer = World:sphere_overlap(head_position, 15, slotmask)
+
+		if outer then
+			local inner = World:sphere_overlap(head_position, 7.5, slotmask)
+
+			if inner then
+				return 1
+			end
+
+			local hit, distance = raycast_head(head_position, rotation, slotmask)
+
+			if hit then
+				local obstacle_min_th = 7
+
+				if distance <= obstacle_min_th then
+					distance_to_obstacle = 0
+				elseif distance < obstacle_min_th + fade_distance then
+					distance_to_obstacle = distance - obstacle_min_th
+				end
 			end
 		end
 	end
@@ -128,39 +263,55 @@ local function fadeout_func(mover_position, head_position, rotation, slotmask)
 	end
 
 	fadeout = 1 - distance_to_obstacle / fade_distance
+	fadeout = math.clamp(fadeout, 0, 1)
 
-	if ghost_max_th < distance_to_mover then
-		fadeout = math.max((distance_to_mover - ghost_max_th) / fade_distance, fadeout)
+	if ignore_ghost_distance then
+		return fadeout
 	end
 
-	fadeout = math.clamp(fadeout, 0, 1)
+	fadeout = math.max(ghost_mover_separation(mover_position, head_position), fadeout)
 
 	return fadeout
 end
 
+local fadeout_func = {
+	fadeout_func_instant,
+	fadeout_func_smooth,
+	fadeout_func_stepped
+}
 
--- Lines: 127 to 129
+-- Lines: 256 to 258
 function VRFadeout:play()
 	self._fadeout.effect_id = self._fadeout.effect_id or managers.overlay_effect:play_effect(self._fadeout.effect)
 end
 
--- Lines: 131 to 134
+-- Lines: 260 to 263
 function VRFadeout:reset()
 	self._fadeout.value = 0
 	self._fadeout.effect.color.alpha = 0
 end
 
--- Lines: 136 to 167
-function VRFadeout:update(mover_position, head_position, rotation, t, dt)
+-- Lines: 265 to 267
+function VRFadeout:_fadeout_type_changed(setting, old, new)
+	self._fadeout_type = VRFadeout.FADEOUT_TYPES[new] or self._fadeout_type_default
+end
+
+-- Lines: 269 to 271
+function VRFadeout:_collision_instant_teleport_changed(setting, old, new)
+	self._instant_teleport = new
+end
+
+-- Lines: 273 to 304
+function VRFadeout:update(mover_position, head_position, rotation, t, dt, ignore_head_collisions, ignore_ghost_distance)
 	local fadeout_data = self._fadeout
-	local fadeout = fadeout_func(mover_position, head_position, rotation, self._slotmask)
+	local fadeout = fadeout_func[self._fadeout_type](mover_position, head_position, rotation, self._slotmask, ignore_head_collisions, ignore_ghost_distance)
 
 	if fadeout_data.value < fadeout then
-		fadeout_data.value = math.step(fadeout_data.value, fadeout, fadeout < 1 and dt * 3 or dt * 10)
+		fadeout_data.value = math.step(fadeout_data.value, fadeout, fadeout < 0.99 and dt * 3 or dt * 10)
 		fadeout_data.fadein_speed = 0
 	elseif fadeout < fadeout_data.value then
 		fadeout_data.value = math.step(fadeout_data.value, fadeout, dt * fadeout_data.fadein_speed)
-		fadeout_data.fadein_speed = math.min(fadeout_data.fadein_speed + dt * 1, 0.7)
+		fadeout_data.fadein_speed = math.min(fadeout_data.fadein_speed + (fadeout > 0.5 and dt * 10 or dt * 1), 0.7)
 	end
 
 	local v = fadeout_data.value
@@ -172,7 +323,7 @@ function VRFadeout:update(mover_position, head_position, rotation, t, dt)
 		self._ghost_reset_timer_t = 0
 	end
 
-	if self._ghost_reset_timer_t > 1.5 then
+	if self._ghost_reset_timer_t > 0.75 or self._instant_teleport and self._ghost_reset_timer_t > 0 and not ignore_ghost_distance then
 		self._ghost_reset_timer_t = 0
 
 		return true

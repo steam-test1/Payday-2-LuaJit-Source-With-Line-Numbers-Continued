@@ -1,7 +1,7 @@
 PlayerDrivingVR = PlayerDriving or Application:error("PlayerDrivingVR needs PlayerDriving!")
 local __enter = PlayerDriving.enter
 
--- Lines: 5 to 69
+-- Lines: 5 to 70
 function PlayerDrivingVR:enter(...)
 	__enter(self, ...)
 	self._camera_unit:base():enter_vehicle()
@@ -12,6 +12,7 @@ function PlayerDrivingVR:enter(...)
 
 	if not self._seat.allow_shooting and not self._seat.has_shooting_mode then
 		managers.hud:belt():set_visible(false)
+		self._unit:hand():set_belt_active(false)
 		self._unit:hand():_set_hand_state(PlayerHand.RIGHT, "driving")
 		self._unit:hand():_set_hand_state(PlayerHand.LEFT, "driving")
 	else
@@ -105,7 +106,7 @@ function PlayerDrivingVR:enter(...)
 end
 local __exit = PlayerDriving.exit
 
--- Lines: 72 to 83
+-- Lines: 73 to 84
 function PlayerDrivingVR:exit(...)
 	__exit(self, ...)
 	self._unit:hand():_change_hand_to_default(PlayerHand.RIGHT)
@@ -118,7 +119,7 @@ function PlayerDrivingVR:exit(...)
 	end
 end
 
--- Lines: 85 to 96
+-- Lines: 86 to 97
 function PlayerDrivingVR:_postion_player_on_seat(seat)
 	local rot = self._seat.object:rotation()
 	local pos = self._seat.object:position()
@@ -137,14 +138,21 @@ local ghost_pos = Vector3()
 local seat_offset = Vector3()
 local hmd_rot = Rotation()
 
--- Lines: 103 to 127
+-- Lines: 104 to 135
 function PlayerDrivingVR:update(t, dt)
 	__update(self, t, dt)
+	self:_update_swap_weapon_timers(t)
 
 	local seat_pos, seat_rot = self._vehicle_unit:vehicle_driving():get_object_placement(self._unit)
 
 	if not seat_pos or not seat_rot then
 		return
+	end
+
+	if self._seat.allow_shooting and self._stance ~= PlayerDriving.STANCE_SHOOTING then
+		self._stance = PlayerDriving.STANCE_SHOOTING
+
+		self._ext_network:send("sync_vehicle_change_stance", self._stance)
 	end
 
 	mrotation.set_zero(hmd_rot)
@@ -162,13 +170,13 @@ function PlayerDrivingVR:update(t, dt)
 	self._ext_movement:set_ghost_position(ghost_pos)
 end
 
--- Lines: 129 to 131
+-- Lines: 137 to 139
 function PlayerDrivingVR:set_steering(value)
 	self._steering_value = value
 end
 local __get_drive_axis = PlayerDriving._get_drive_axis
 
--- Lines: 134 to 141
+-- Lines: 142 to 149
 function PlayerDrivingVR:_get_drive_axis()
 	local drive_axis = __get_drive_axis(self)
 

@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines: 4 to 3907
+-- Lines: 4 to 3915
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {rotation = Rotation(0, 70)},
@@ -150,6 +150,7 @@ function TweakDataVR:init(tweak_data)
 			arbiter = {position = Vector3(-0.5, 1, 1.6)},
 			ray = {position = Vector3(-0.5, 0, 4)},
 			ecp = {position = Vector3(-0.5, 1, 1)},
+			slap = {position = Vector3(-0.5, 1, 3)},
 			china = {
 				grip = "weapon_2_grip",
 				position = Vector3(-0.8, 0, 0)
@@ -891,7 +892,8 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(0, 48, -6)
 			},
 			ray = {position = Vector3(0, 20, -6)},
-			ecp = {position = Vector3(0, 25, -2)}
+			ecp = {position = Vector3(0, 25, -2)},
+			slap = {position = Vector3(0, 18, -1)}
 		},
 		limits = {
 			pistol_max = 20,
@@ -2968,6 +2970,49 @@ function TweakDataVR:init(tweak_data)
 					sound = "ecp_lever_release",
 					pos = Vector3(),
 					rot = Rotation()
+				}
+			}
+		},
+		slap = {
+			start = {
+				{
+					time = 0,
+					anims = {{
+						anim_group = "reload",
+						to = 1,
+						from = 0.4
+					}}
+				},
+				{
+					sound = "wp_gl40_shell_out",
+					time = 0.2,
+					visible = {
+						visible = false,
+						parts = {magazine = true}
+					},
+					effect = {
+						object = "a_m",
+						name = "effects/payday2/particles/weapons/shells/shell_40mm"
+					}
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_gl40_shell_in",
+					visible = {
+						visible = true,
+						parts = {magazine = true}
+					}
+				},
+				{
+					time = 0.99,
+					sound = "wp_gl40_barrel_close",
+					pos = Vector3(),
+					anims = {{
+						anim_group = "reload",
+						from = 3
+					}}
 				}
 			}
 		},
@@ -5876,7 +5921,25 @@ function TweakDataVR:init(tweak_data)
 					direction = Vector3(-1, 0, 0)
 				}
 			}
-		}
+		},
+		blackhawk_1 = {exit_pos = {
+			driver = {
+				position = Vector3(-160, 10, 120),
+				direction = Vector3(-1, 0, 0)
+			},
+			passenger_front = {
+				position = Vector3(160, 10, 120),
+				direction = Vector3(1, 0, 0)
+			},
+			passenger_back_right = {
+				position = Vector3(160, -65, 120),
+				direction = Vector3(1, 0, 0)
+			},
+			passenger_back_left = {
+				position = Vector3(-160, -65, 120),
+				direction = Vector3(-1, 0, 0)
+			}
+		}}
 	}
 	self.overlay_effects = {fade_in_rotate_player = {
 		blend_mode = "normal",
@@ -5889,7 +5952,7 @@ function TweakDataVR:init(tweak_data)
 	}}
 end
 
--- Lines: 4009 to 4020
+-- Lines: 4017 to 4028
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -5908,7 +5971,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines: 4031 to 4046
+-- Lines: 4039 to 4054
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -5928,7 +5991,7 @@ function TweakDataVR:get_offset_by_id(id, ...)
 end
 
 
--- Lines: 4049 to 4053
+-- Lines: 4057 to 4061
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
@@ -5936,7 +5999,7 @@ local function combine_offset(offset, new)
 end
 
 
--- Lines: 4055 to 4066
+-- Lines: 4063 to 4074
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -5954,7 +6017,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines: 4069 to 4076
+-- Lines: 4077 to 4084
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -5967,7 +6030,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines: 4079 to 4082
+-- Lines: 4087 to 4090
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -5976,7 +6039,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 4085 to 4092
+-- Lines: 4093 to 4100
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -5991,7 +6054,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 4095 to 4101
+-- Lines: 4103 to 4109
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 

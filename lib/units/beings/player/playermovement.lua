@@ -1257,28 +1257,33 @@ function PlayerMovement:warping()
 	return self._state_data.warping
 end
 
--- Lines: 1377 to 1379
+-- Lines: 1377 to 1378
+function PlayerMovement:on_zipline()
+	return self._state_data.on_zipline
+end
+
+-- Lines: 1381 to 1383
 function PlayerMovement:activate_regeneration()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines: 1381 to 1382
+-- Lines: 1385 to 1386
 function PlayerMovement:stamina()
 	return self._stamina
 end
 
--- Lines: 1387 to 1389
+-- Lines: 1391 to 1393
 function PlayerMovement:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines: 1391 to 1394
+-- Lines: 1395 to 1398
 function PlayerMovement:reset_hmd_position()
 	mvector3.set(self._hmd_pos, VRManager:hmd_position())
 	mvector3.set_zero(self._hmd_delta)
 end
 
--- Lines: 1399 to 1421
+-- Lines: 1403 to 1425
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1302,7 +1307,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines: 1423 to 1478
+-- Lines: 1427 to 1482
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1352,12 +1357,12 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines: 1480 to 1481
+-- Lines: 1484 to 1485
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines: 1484 to 1485
+-- Lines: 1488 to 1489
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
 end

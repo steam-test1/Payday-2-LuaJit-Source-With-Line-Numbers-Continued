@@ -431,9 +431,11 @@ function HUDManagerVR:bind_hud_to_vr_hand(weapon_hand_unit, tablet_hand_unit, be
 	self:belt():update_icons()
 end
 
--- Lines: 385 to 401
+-- Lines: 385 to 402
 function HUDManagerVR.link_belt(ws, belt_unit, custom_size)
-	local aspect_ratio = 0.53125
+	local width = 1380
+	local height = 880
+	local aspect_ratio = height / width
 	local size = custom_size or managers.vr:get_setting("belt_size")
 	local sx = size
 	local sy = size * aspect_ratio
@@ -441,18 +443,18 @@ function HUDManagerVR.link_belt(ws, belt_unit, custom_size)
 	local x_vec = Vector3(sx, 0, 0):rotate_with(belt_rot)
 	local y_vec = Vector3(0, -sy, 0):rotate_with(belt_rot)
 
-	ws:set_linked(1280, 680, belt_unit:orientation_object(), belt_unit:position() + Vector3(-sx / 2, sy / 2, 0):rotate_with(belt_rot), x_vec, y_vec)
+	ws:set_linked(width, height, belt_unit:orientation_object(), belt_unit:position() + Vector3(-sx / 2, sy / 2, 0):rotate_with(belt_rot), x_vec, y_vec)
 	ws:show()
 end
 
--- Lines: 403 to 407
+-- Lines: 404 to 408
 function HUDManagerVR:link_interaction_hud(hand_unit, interaction_object)
 	self._interaction_hand = hand_unit
 	self._interaction_object = interaction_object
 	self._interaction_use_head = not alive(interaction_object)
 end
 
--- Lines: 409 to 430
+-- Lines: 410 to 431
 function HUDManagerVR:start_reload_timer(time, clip_start, clip_full)
 	local reload_panel = self:reload_panel()
 	local size = reload_panel:w()
@@ -489,7 +491,7 @@ function HUDManagerVR:start_reload_timer(time, clip_start, clip_full)
 	self._reload_timer = timer_circle
 end
 
--- Lines: 432 to 440
+-- Lines: 433 to 441
 function HUDManagerVR:stop_reload_timer()
 	if not self._reload_timer or not alive(self._reload_timer._panel) then
 		return
@@ -500,30 +502,30 @@ function HUDManagerVR:stop_reload_timer()
 	self:reload_panel():child("reload_text"):hide()
 end
 
--- Lines: 442 to 444
+-- Lines: 443 to 445
 function HUDManagerVR:reload_world_pos()
 	local x, y = self:reload_panel():center()
 
 	return self._reload_ws:local_to_world(Vector3(x, y, 0))
 end
 
--- Lines: 449 to 451
+-- Lines: 450 to 452
 function HUDManagerVR:set_stamina(data)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_stamina(data)
 end
 
--- Lines: 453 to 455
+-- Lines: 454 to 456
 function HUDManagerVR:set_reload_visible(visible)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_reload_visible(visible)
 end
 
--- Lines: 457 to 459
+-- Lines: 458 to 460
 function HUDManagerVR:set_reload_timer(current, max)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_reload_timer(current, max)
 end
 local tmp_vec1 = Vector3()
 
--- Lines: 464 to 476
+-- Lines: 465 to 477
 function HUDManagerVR:update(t, dt)
 	if alive(self._interaction_hand) and (alive(self._interaction_object) or self._interaction_use_head) and self:interaction_panel():visible() then
 		local interaction_object_pos = self._interaction_use_head and managers.player:player_unit():movement():m_head_pos() or self._interaction_object:interaction() and self._interaction_object:interaction():interact_position() or self._interaction_object:position()
@@ -542,7 +544,7 @@ function HUDManagerVR:update(t, dt)
 	__update(self, t, dt)
 end
 
--- Lines: 481 to 492
+-- Lines: 482 to 493
 function HUDManagerVR:create_vehicle_interaction_ws(id, vehicle_unit, position, direction, up)
 	self._vehicle_interactions = self._vehicle_interactions or {}
 
@@ -558,7 +560,7 @@ function HUDManagerVR:create_vehicle_interaction_ws(id, vehicle_unit, position, 
 	return self._vehicle_interactions[id]
 end
 
--- Lines: 495 to 503
+-- Lines: 496 to 504
 function HUDManagerVR:destroy_vehicle_interaction_ws(id)
 	self._vehicle_interactions = self._vehicle_interactions or {}
 
@@ -571,7 +573,7 @@ function HUDManagerVR:destroy_vehicle_interaction_ws(id)
 	self._vehicle_interactions[id] = nil
 end
 
--- Lines: 508 to 564
+-- Lines: 509 to 565
 function HUDManagerVR:_add_name_label(data)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
 	local id = last_id + 1
@@ -707,7 +709,7 @@ function HUDManagerVR:_add_name_label(data)
 	return id
 end
 
--- Lines: 567 to 607
+-- Lines: 568 to 608
 function HUDManager:add_vehicle_name_label(data)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
@@ -825,7 +827,7 @@ function HUDManager:add_vehicle_name_label(data)
 	return id
 end
 
--- Lines: 612 to 649
+-- Lines: 613 to 650
 function HUDManagerVR:_update_name_labels(t, dt)
 	if not alive(managers.player:player_unit()) then
 		return
@@ -859,7 +861,7 @@ function HUDManagerVR:_update_name_labels(t, dt)
 	end
 end
 
--- Lines: 651 to 659
+-- Lines: 652 to 660
 function HUDManagerVR:_remove_name_label(id)
 	for i, data in ipairs(self._hud.name_labels) do
 		if data.id == id then
@@ -872,27 +874,27 @@ function HUDManagerVR:_remove_name_label(id)
 end
 local __align_teammate_name_label = HUDManager.align_teammate_name_label
 
--- Lines: 662 to 666
+-- Lines: 663 to 667
 function HUDManagerVR:align_teammate_name_label(panel, interact)
 	__align_teammate_name_label(self, panel, interact)
 	panel:set_center_x(panel:parent():w() / 2)
 end
 local __show_progress_timer = HUDManager.show_progress_timer
 
--- Lines: 675 to 678
+-- Lines: 676 to 679
 function HUDManagerVR:show_progress_timer(...)
 	__show_progress_timer(self, ...)
 	self._hud_interaction:remove_interact()
 end
 local __remove_progress_timer = HUDManager.remove_progress_timer
 
--- Lines: 681 to 684
+-- Lines: 682 to 685
 function HUDManagerVR:remove_progress_timer()
 	__remove_progress_timer(self)
 	self._hud_interaction:show_interact()
 end
 
--- Lines: 692 to 788
+-- Lines: 693 to 789
 function HUDManager:add_waypoint(id, data)
 	if self._hud.waypoints[id] then
 		self:remove_waypoint(id)
@@ -1073,7 +1075,7 @@ function HUDManager:add_waypoint(id, data)
 	end
 end
 
--- Lines: 790 to 804
+-- Lines: 791 to 805
 function HUDManager:change_waypoint_icon(id, icon)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1098,7 +1100,7 @@ function HUDManager:change_waypoint_icon(id, icon)
 	wp_data.bitmap_world:set_size(rect[3], rect[4])
 end
 
--- Lines: 806 to 816
+-- Lines: 807 to 817
 function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1112,7 +1114,7 @@ function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	wp_data.bitmap_world:set_alpha(alpha)
 end
 
--- Lines: 818 to 826
+-- Lines: 819 to 827
 function HUDManager:change_waypoint_arrow_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1125,7 +1127,7 @@ function HUDManager:change_waypoint_arrow_color(id, color)
 	wp_data.arrow:set_color(color)
 end
 
--- Lines: 828 to 845
+-- Lines: 829 to 846
 function HUDManager:remove_waypoint(id)
 	self._hud.stored_waypoints[id] = nil
 
@@ -1155,7 +1157,7 @@ local wp_cam_forward = Vector3()
 local wp_onscreen_direction = Vector3()
 local wp_onscreen_target_pos = Vector3()
 
--- Lines: 853 to 1027
+-- Lines: 854 to 1028
 function HUDManager:_update_waypoints(t, dt)
 	local cam = managers.viewport:get_current_camera()
 

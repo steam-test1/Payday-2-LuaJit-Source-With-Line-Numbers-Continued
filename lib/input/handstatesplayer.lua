@@ -153,11 +153,15 @@ function RepeaterHandState:init()
 end
 DrivingHandState = DrivingHandState or class(HandState)
 
--- Lines: 286 to 303
+-- Lines: 286 to 307
 function DrivingHandState:init()
 	DrivingHandState.super.init(self)
 
 	self._connections = {
+		toggle_menu = {
+			inputs = {"menu_"},
+			condition = common.toggle_menu_condition
+		},
 		hand_brake = {
 			hand = 2,
 			inputs = {"trackpad_button_"}

@@ -385,7 +385,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines: 414 to 2374
+-- Lines: 414 to 2373
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -2066,7 +2066,7 @@ Play the full version soon to get your full PAYDAY!]],
 		name_id = "bm_launcher_frag"
 	}
 	self.projectiles.launcher_rocket = {
-		damage = 1000,
+		damage = 1250,
 		launch_speed = 2500,
 		curve_pow = 0.1,
 		player_damage = 40,
@@ -2117,7 +2117,7 @@ Play the full version soon to get your full PAYDAY!]],
 		init_timer = 2.5,
 		mass_look_up_modifier = 1,
 		sound_event = "gl_explode",
-		sound_event_impact_duration = 0.25,
+		sound_event_impact_duration = 1,
 		name_id = "bm_launcher_incendiary",
 		burn_duration = 6,
 		burn_tick_period = 0.5
@@ -2160,6 +2160,8 @@ Play the full version soon to get your full PAYDAY!]],
 		burn_duration = 3,
 		burn_tick_period = 0.5
 	}
+	self.projectiles.launcher_frag_slap = deep_clone(self.projectiles.launcher_frag)
+	self.projectiles.launcher_incendiary_slap = deep_clone(self.projectiles.launcher_incendiary)
 	self.projectiles.fir_com = {
 		damage = 3,
 		curve_pow = 0.1,
@@ -2342,7 +2344,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self.projectiles.launcher_m203 = deep_clone(self.projectiles.launcher_frag)
 	self.projectiles.launcher_m203.projectile_trail = true
 	self.projectiles.rocket_ray_frag = deep_clone(self.projectiles.launcher_rocket)
-	self.projectiles.rocket_ray_frag.damage = 500
+	self.projectiles.rocket_ray_frag.damage = 620
 	self.projectiles.rocket_ray_frag.projectile_trail = true
 	self.projectiles.rocket_ray_frag.adjust_z = 0
 	self.projectiles.rocket_ray_frag.push_at_body_index = 0
@@ -2452,19 +2454,19 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines: 2378 to 2430
+-- Lines: 2377 to 2429
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines: 2435 to 2436
+-- Lines: 2434 to 2435
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines: 2441 to 2449
+-- Lines: 2440 to 2448
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2475,7 +2477,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines: 2453 to 2456
+-- Lines: 2452 to 2455
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2485,7 +2487,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines: 2460 to 2469
+-- Lines: 2459 to 2468
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2498,7 +2500,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines: 2473 to 2649
+-- Lines: 2472 to 2648
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2687,7 +2689,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines: 2651 to 2814
+-- Lines: 2650 to 2813
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2793,7 +2795,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines: 2816 to 2888
+-- Lines: 2815 to 2887
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2866,7 +2868,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines: 2891 to 2895
+-- Lines: 2890 to 2894
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -2885,7 +2887,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 end
 
 
--- Lines: 2912 to 3126
+-- Lines: 2911 to 3125
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

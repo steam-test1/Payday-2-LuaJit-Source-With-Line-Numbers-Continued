@@ -973,7 +973,7 @@ function PlayerMenu:_create_hands()
 	end
 end
 
--- Lines: 938 to 945
+-- Lines: 938 to 946
 function PlayerMenu:_create_mover()
 	if self._is_start_menu then
 		self._mover_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/units/menu_mover"), Vector3(0, 0, 0), Rotation())
@@ -981,15 +981,16 @@ function PlayerMenu:_create_mover()
 		self._mover_unit:camera():set_menu_player(self)
 		self._mover_unit:mover():set_velocity(Vector3())
 		self._mover_unit:mover():set_gravity(Vector3(0, 0, -982))
+		self._mover_unit:set_position(self._position)
 	end
 end
 
--- Lines: 947 to 948
+-- Lines: 948 to 949
 function PlayerMenu:render_target()
 	return self._render_target
 end
 
--- Lines: 951 to 952
+-- Lines: 952 to 953
 function PlayerMenu:render_target_resolution()
 	return self._render_target_resolution
 end
@@ -1000,7 +1001,7 @@ local ids_dof_settings = Idstring("settings")
 local ids_contrast = Idstring("contrast")
 local ids_chromatic = Idstring("chromatic_amount")
 
--- Lines: 962 to 969
+-- Lines: 963 to 970
 function PlayerMenu:_update_post_material_vars()
 	if self._post_material then
 		self._post_material:set_variable(ids_chromatic, 0)
@@ -1010,7 +1011,7 @@ function PlayerMenu:_update_post_material_vars()
 	end
 end
 
--- Lines: 971 to 1020
+-- Lines: 972 to 1021
 function PlayerMenu:_create_camera()
 	if self._is_start_menu then
 		self._camera_object = World:create_camera()
@@ -1072,12 +1073,12 @@ function PlayerMenu:_create_camera()
 	end
 end
 
--- Lines: 1032 to 1034
+-- Lines: 1033 to 1035
 function PlayerMenu:_set_viewport_active(active)
 	self._vp:set_active(active)
 end
 
--- Lines: 1036 to 1052
+-- Lines: 1037 to 1053
 function PlayerMenu:_laser_ray(visible, from, to)
 	if self._is_start_menu then
 		if visible then
@@ -1098,18 +1099,20 @@ function PlayerMenu:_laser_ray(visible, from, to)
 	end
 end
 
--- Lines: 1054 to 1062
+-- Lines: 1055 to 1063
 function PlayerMenu:_update_fadeout(mover_position, head_position, rotation, t, dt)
 	if not self._is_start_menu then
 		return false
 	end
 
-	if self._fadeout:update(mover_position, head_position, rotation, t, dt) then
+	local ignore_fade = self._current_state == PlayerMenu.STATE_WARPING
+
+	if self._fadeout:update(mover_position, head_position, rotation, t, dt, ignore_fade, ignore_fade) then
 		mvector3.set(self._position, self._mover_unit:position())
 	end
 end
 
--- Lines: 1064 to 1082
+-- Lines: 1065 to 1083
 function PlayerMenu:_setup_draw()
 	if self._is_start_menu then
 		self._brush_warp = Draw:brush(Color(0.07, 0, 0.60784, 0.81176))

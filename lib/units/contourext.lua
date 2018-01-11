@@ -504,7 +504,7 @@ end
 
 -- Lines: 526 to 550
 function ContourExt:_upd_color(is_retry)
-	if not self._contour_list then
+	if not self._contour_list or #self._contour_list == 0 then
 		return
 	end
 
