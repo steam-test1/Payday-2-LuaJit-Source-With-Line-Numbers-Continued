@@ -4198,10 +4198,8 @@ function UnitNetworkHandler:sync_carry_set_position_and_throw(unit, destination,
 	unit:carry_data():set_position_and_throw(destination, direction, force)
 end
 
--- Lines: 4169 to 4178
+-- Lines: 4169 to 4177
 function UnitNetworkHandler:sync_tag_team(tagged, owner, sender)
-	print("[Debug] UnitNetworkHandler:sync_tag_team", tagged, owner)
-
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
 	end
@@ -4213,10 +4211,8 @@ function UnitNetworkHandler:sync_tag_team(tagged, owner, sender)
 	managers.player:sync_tag_team(tagged, owner)
 end
 
--- Lines: 4180 to 4186
+-- Lines: 4179 to 4184
 function UnitNetworkHandler:end_tag_team(tagged, owner, sender)
-	print("[Debug] UnitNetworkHandler:end_tag_team")
-
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
 	end
@@ -4224,7 +4220,7 @@ function UnitNetworkHandler:end_tag_team(tagged, owner, sender)
 	managers.player:end_tag_team(tagged, owner)
 end
 
--- Lines: 4190 to 4200
+-- Lines: 4188 to 4198
 function UnitNetworkHandler:sync_delayed_damage_hud(delayed_damage, sender)
 	local peer = self._verify_sender(sender)
 
@@ -4239,7 +4235,7 @@ function UnitNetworkHandler:sync_delayed_damage_hud(delayed_damage, sender)
 	end
 end
 
--- Lines: 4203 to 4213
+-- Lines: 4201 to 4211
 function UnitNetworkHandler:sync_damage_absorption_hud(absorption_amount, sender)
 	local peer = self._verify_sender(sender)
 

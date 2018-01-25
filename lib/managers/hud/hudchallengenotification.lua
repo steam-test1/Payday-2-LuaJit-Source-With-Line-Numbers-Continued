@@ -152,36 +152,37 @@ local function wait_global(seconds)
 	end
 end
 
-HudChallangeNotification = HudChallangeNotification or class(ExtendedPanel)
-HudChallangeNotification.ICON_SIZE = 80
-HudChallangeNotification.BOX_MAX_W = 400
-HudChallangeNotification.default_queue = HudChallangeNotification.default_queue or {}
+HudChallengeNotification = HudChallengeNotification or class(ExtendedPanel)
+HudChallengeNotification.ICON_SIZE = 80
+HudChallengeNotification.BOX_MAX_W = 400
+HudChallengeNotification.default_queue = HudChallengeNotification.default_queue or {}
 
 -- Lines: 93 to 104
-function HudChallangeNotification.queue(title, text, icon, queue)
+function HudChallengeNotification.queue(title, text, icon, rewards, queue)
 	if Application:editor() then
 		return
 	end
 
-	queue = queue or HudChallangeNotification.default_queue
+	queue = queue or HudChallengeNotification.default_queue
 
 	table.insert(queue, {
 		title,
 		text,
 		icon,
+		rewards,
 		queue
 	})
 
 	if #queue == 1 then
-		HudChallangeNotification:new(unpack(queue[1]))
+		HudChallengeNotification:new(unpack(queue[1]))
 	end
 end
 
--- Lines: 106 to 152
-function HudChallangeNotification:init(title, text, icon, queue)
+-- Lines: 106 to 213
+function HudChallengeNotification:init(title, text, icon, rewards, queue)
 	self._ws = managers.gui_data:create_fullscreen_workspace()
 
-	HudChallangeNotification.super.init(self, self._ws:panel())
+	HudChallengeNotification.super.init(self, self._ws:panel())
 	self:set_layer(1000)
 
 	self._queue = queue or {}
@@ -213,23 +214,59 @@ function HudChallangeNotification:init(title, text, icon, queue)
 	local icon_texture, icon_texture_rect = tweak_data.hud_icons:get_icon_or(icon, nil)
 
 	if icon_texture then
-		placer:add_right(self._box:fit_bitmap({
+		local icon_bitmap = self._box:fit_bitmap({
 			texture = icon_texture,
 			texture_rect = icon_texture_rect,
 			w = self.ICON_SIZE,
 			h = self.ICON_SIZE
-		}))
+		})
+
+		placer:add_right(icon_bitmap)
 		self._top:set_left(placer:current_right())
 	end
 
-	placer:add_right(self._box:fine_text({
+	local description = self._box:fine_text({
 		wrap = true,
 		word_wrap = true,
-		text = text or "HELLO WORLD!",
+		text = text,
 		font = medium_font,
 		font_size = medium_font_size,
 		w = self.BOX_MAX_W - placer:current_left()
-	}))
+	})
+
+	placer:add_right(description)
+
+	local box_height = self._box:height()
+
+	for i, reward in ipairs(rewards or {}) do
+		local reward_panel = self._box:panel({
+			h = 32,
+			x = description:left(),
+			y = description:bottom() + (i - 1) * 32
+		})
+		local reward_icon = reward_panel:bitmap({
+			w = 32,
+			h = 32,
+			texture = reward.texture
+		})
+		local reward_text = managers.localization:text(reward.name_id)
+
+		if reward.amount then
+			reward_text = reward.amount .. "x " .. reward_text
+		end
+
+		local reward_text_gui = FineText:new(reward_panel, {
+			text = reward_text,
+			x = reward_icon:right() + 8
+		})
+
+		reward_text_gui:set_center_y(reward_icon:center_y())
+		reward_panel:set_width(reward_text_gui:right())
+
+		box_height = math.max(box_height, reward_panel:bottom() + 8)
+	end
+
+	self._box:set_height(box_height)
 
 	local total_w = self._box:right()
 
@@ -253,8 +290,8 @@ function HudChallangeNotification:init(title, text, icon, queue)
 	end)
 end
 
--- Lines: 154 to 165
-function HudChallangeNotification:close()
+-- Lines: 215 to 226
+function HudChallengeNotification:close()
 	self:remove_self()
 
 	if self._ws then
@@ -266,7 +303,7 @@ function HudChallangeNotification:close()
 	table.remove(self._queue, 1)
 
 	if #self._queue > 0 then
-		HudChallangeNotification:new(unpack(self._queue[1]))
+		HudChallengeNotification:new(unpack(self._queue[1]))
 	end
 end
 

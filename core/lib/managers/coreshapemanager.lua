@@ -438,7 +438,7 @@ function ShapeBox:still_inside(pos)
 	return self:is_inside(pos)
 end
 
--- Lines: 370 to 391
+-- Lines: 375 to 396
 function ShapeBox:is_inside(pos)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self:position())
@@ -468,7 +468,7 @@ function ShapeBox:is_inside(pos)
 	return false
 end
 
--- Lines: 394 to 403
+-- Lines: 400 to 409
 function ShapeBox:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -482,7 +482,7 @@ function ShapeBox:draw(t, dt, r, g, b)
 	self:draw_outline(t, dt, r, g, b)
 end
 
--- Lines: 405 to 408
+-- Lines: 411 to 414
 function ShapeBox:draw_outline(t, dt, r, g, b)
 	local rot = self:rotation()
 
@@ -490,12 +490,12 @@ function ShapeBox:draw_outline(t, dt, r, g, b)
 end
 ShapeBoxMiddle = ShapeBoxMiddle or class(ShapeBox)
 
--- Lines: 414 to 416
+-- Lines: 420 to 422
 function ShapeBoxMiddle:init(params)
 	ShapeBox.init(self, params)
 end
 
--- Lines: 418 to 461
+-- Lines: 429 to 472
 function ShapeBoxMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local x = mvec1
@@ -543,7 +543,7 @@ function ShapeBoxMiddle:is_inside(pos)
 	return false
 end
 
--- Lines: 464 to 475
+-- Lines: 476 to 487
 function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 	local brush = Draw:brush()
 
@@ -560,12 +560,12 @@ function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 end
 ShapeBoxMiddleBottom = ShapeBoxMiddleBottom or class(ShapeBox)
 
--- Lines: 481 to 483
+-- Lines: 493 to 495
 function ShapeBoxMiddleBottom:init(params)
 	ShapeBox.init(self, params)
 end
 
--- Lines: 486 to 504
+-- Lines: 498 to 516
 function ShapeBoxMiddleBottom:is_inside(pos)
 	local rot = self:rotation()
 	local x = (rot:x() * self._properties.width) / 2
@@ -589,7 +589,7 @@ function ShapeBoxMiddleBottom:is_inside(pos)
 	return false
 end
 
--- Lines: 507 to 519
+-- Lines: 519 to 531
 function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -607,14 +607,14 @@ function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 end
 ShapeSphere = ShapeSphere or class(Shape)
 
--- Lines: 525 to 531
+-- Lines: 537 to 543
 function ShapeSphere:init(params)
 	Shape.init(self, params)
 
 	self._properties.radius = params.radius or 1000
 end
 
--- Lines: 533 to 541
+-- Lines: 545 to 553
 function ShapeSphere:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -624,22 +624,22 @@ function ShapeSphere:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 50, 0))
 end
 
--- Lines: 543 to 544
+-- Lines: 555 to 556
 function ShapeSphere:radius()
 	return self._properties.radius
 end
 
--- Lines: 547 to 549
+-- Lines: 559 to 561
 function ShapeSphere:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
--- Lines: 551 to 552
+-- Lines: 563 to 564
 function ShapeSphere:is_inside(pos)
 	return (pos - self:position()):length() < self._properties.radius
 end
 
--- Lines: 555 to 560
+-- Lines: 567 to 572
 function ShapeSphere:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -649,7 +649,7 @@ function ShapeSphere:draw(t, dt, r, g, b)
 end
 ShapeCylinder = ShapeCylinder or class(Shape)
 
--- Lines: 566 to 573
+-- Lines: 578 to 585
 function ShapeCylinder:init(params)
 	Shape.init(self, params)
 
@@ -657,7 +657,7 @@ function ShapeCylinder:init(params)
 	self._properties.height = params.height or 1000
 end
 
--- Lines: 575 to 584
+-- Lines: 587 to 596
 function ShapeCylinder:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -668,27 +668,27 @@ function ShapeCylinder:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 70, 0))
 end
 
--- Lines: 586 to 587
+-- Lines: 598 to 599
 function ShapeCylinder:radius()
 	return self._properties.radius
 end
 
--- Lines: 590 to 592
+-- Lines: 602 to 604
 function ShapeCylinder:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
--- Lines: 594 to 595
+-- Lines: 606 to 607
 function ShapeCylinder:height()
 	return self._properties.height
 end
 
--- Lines: 598 to 600
+-- Lines: 610 to 612
 function ShapeCylinder:set_height(height)
 	self:set_property("height", height)
 end
 
--- Lines: 602 to 609
+-- Lines: 614 to 621
 function ShapeCylinder:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -701,7 +701,7 @@ function ShapeCylinder:draw(t, dt, r, g, b)
 	Application:draw_cylinder(pos, pos + rot:z() * self._properties.height, self._properties.radius, r, g, b)
 end
 
--- Lines: 611 to 624
+-- Lines: 628 to 641
 function ShapeCylinder:is_inside(pos)
 	local pos_dir = pos - self:position()
 	local rot = self:rotation()
@@ -720,12 +720,12 @@ function ShapeCylinder:is_inside(pos)
 end
 ShapeCylinderMiddle = ShapeCylinderMiddle or class(ShapeCylinder)
 
--- Lines: 630 to 632
+-- Lines: 647 to 649
 function ShapeCylinderMiddle:init(params)
 	ShapeCylinderMiddle.super.init(self, params)
 end
 
--- Lines: 634 to 662
+-- Lines: 651 to 679
 function ShapeCylinderMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local z = mvec3
@@ -762,7 +762,7 @@ function ShapeCylinderMiddle:is_inside(pos)
 	return false
 end
 
--- Lines: 676 to 685
+-- Lines: 693 to 702
 function ShapeCylinderMiddle:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 

@@ -1,6 +1,6 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 4808
+-- Lines: 10 to 4844
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -6200,6 +6200,61 @@ function DLCTweakData:init(tweak_data)
 		item_entry = "mmj",
 		amount = 1
 	}}
+	self.ami_2 = {
+		dlc = "has_achievement_milestone",
+		milestone_id = "ami_2",
+		content = {}
+	}
+	self.ami_2.content.loot_global_value = "infamous"
+	self.ami_2.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "ami_02",
+		amount = 1
+	}}
+	self.ami_4 = {
+		dlc = "has_achievement_milestone",
+		milestone_id = "ami_4",
+		content = {}
+	}
+	self.ami_4.content.loot_global_value = "infamous"
+	self.ami_4.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "ami_03",
+		amount = 1
+	}}
+	self.ami_6 = {
+		dlc = "has_achievement_milestone",
+		milestone_id = "ami_6",
+		content = {}
+	}
+	self.ami_6.content.loot_global_value = "infamous"
+	self.ami_6.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "ami_05",
+		amount = 1
+	}}
+	self.ami_8 = {
+		dlc = "has_achievement_milestone",
+		milestone_id = "ami_8",
+		content = {}
+	}
+	self.ami_8.content.loot_global_value = "infamous"
+	self.ami_8.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "ami_04",
+		amount = 1
+	}}
+	self.ami_10 = {
+		dlc = "has_achievement_milestone",
+		milestone_id = "ami_10",
+		content = {}
+	}
+	self.ami_10.content.loot_global_value = "infamous"
+	self.ami_10.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "ami_01",
+		amount = 1
+	}}
 	self.ecp_bundle = {
 		dlc = "has_ecp",
 		content = {}
@@ -6301,5 +6356,11 @@ function DLCTweakData:init(tweak_data)
 			amount = 1
 		}
 	}
+	self.ami_bundle = {
+		dlc = "has_ami",
+		content = {}
+	}
+	self.ami_bundle.content.loot_global_value = "normal"
+	self.ami_bundle.content.loot_drops = {}
 end
 

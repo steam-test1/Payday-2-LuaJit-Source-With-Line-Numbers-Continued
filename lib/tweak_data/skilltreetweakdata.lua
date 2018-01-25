@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines: 9 to 1671
+-- Lines: 9 to 1677
 function SkillTreeTweakData:init()
 
 	-- Lines: 9 to 10
@@ -3995,7 +3995,6 @@ function SkillTreeTweakData:init()
 				desc_id = "menu_deck19_1_desc",
 				name_id = "menu_deck19_1",
 				upgrades = {
-					"temporary_damage_control",
 					"damage_control",
 					"player_damage_control_passive",
 					"player_damage_control_cooldown_drain_1"
@@ -4136,7 +4135,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines: 1673 to 1688
+-- Lines: 1679 to 1694
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -4157,7 +4156,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines: 1691 to 1699
+-- Lines: 1697 to 1705
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -4170,17 +4169,17 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines: 1702 to 1704
+-- Lines: 1708 to 1710
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines: 1707 to 1714
+-- Lines: 1713 to 1720
 function SkillTreeTweakData:get_tier_unlocks()
 
-	-- Lines: 1707 to 1708
+	-- Lines: 1713 to 1714
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4195,7 +4194,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines: 1717 to 1739
+-- Lines: 1723 to 1745
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

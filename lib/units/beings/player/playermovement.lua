@@ -1054,79 +1054,79 @@ function PlayerMovement:_change_stamina(value)
 	SoundDevice:set_rtpc("stamina", stamina_breath)
 end
 
--- Lines: 1214 to 1216
+-- Lines: 1242 to 1244
 function PlayerMovement:subtract_stamina(value)
 	self:_change_stamina(-math.abs(value))
 end
 
--- Lines: 1218 to 1220
+-- Lines: 1246 to 1248
 function PlayerMovement:add_stamina(value)
 	self:_change_stamina(math.abs(value) * managers.player:upgrade_value("player", "stamina_regen_multiplier", 1))
 end
 
--- Lines: 1222 to 1223
+-- Lines: 1250 to 1251
 function PlayerMovement:is_above_stamina_threshold()
 	return tweak_data.player.movement_state.stamina.MIN_STAMINA_THRESHOLD < self._stamina
 end
 
--- Lines: 1226 to 1227
+-- Lines: 1254 to 1255
 function PlayerMovement:is_stamina_drained()
 	return self._stamina <= 0
 end
 
--- Lines: 1230 to 1233
+-- Lines: 1258 to 1261
 function PlayerMovement:set_running(running)
 	self._is_running = running
 
 	self:_restart_stamina_regen_timer()
 end
 
--- Lines: 1235 to 1237
+-- Lines: 1263 to 1265
 function PlayerMovement:_restart_stamina_regen_timer()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines: 1239 to 1240
+-- Lines: 1267 to 1268
 function PlayerMovement:running()
 	return self._is_running
 end
 
--- Lines: 1243 to 1244
+-- Lines: 1271 to 1272
 function PlayerMovement:crouching()
 	return self._state_data.ducking
 end
 
--- Lines: 1247 to 1248
+-- Lines: 1275 to 1276
 function PlayerMovement:in_air()
 	return self._state_data.in_air
 end
 
--- Lines: 1251 to 1252
+-- Lines: 1279 to 1280
 function PlayerMovement:on_ladder()
 	return self._state_data.on_ladder
 end
 
--- Lines: 1257 to 1259
+-- Lines: 1285 to 1287
 function PlayerMovement:on_enter_ladder(ladder_unit)
 	self._ladder_unit = ladder_unit
 end
 
--- Lines: 1261 to 1263
+-- Lines: 1289 to 1291
 function PlayerMovement:on_exit_ladder()
 	self._ladder_unit = nil
 end
 
--- Lines: 1265 to 1266
+-- Lines: 1293 to 1294
 function PlayerMovement:ladder_unit()
 	return self._ladder_unit
 end
 
--- Lines: 1271 to 1273
+-- Lines: 1299 to 1301
 function PlayerMovement:on_enter_zipline(zipline_unit)
 	self._zipline_unit = zipline_unit
 end
 
--- Lines: 1275 to 1280
+-- Lines: 1303 to 1308
 function PlayerMovement:on_exit_zipline()
 	if alive(self._zipline_unit) then
 		self._zipline_unit:zipline():set_user(nil)
@@ -1135,12 +1135,12 @@ function PlayerMovement:on_exit_zipline()
 	self._zipline_unit = nil
 end
 
--- Lines: 1282 to 1283
+-- Lines: 1310 to 1311
 function PlayerMovement:zipline_unit()
 	return self._zipline_unit
 end
 
--- Lines: 1403 to 1425
+-- Lines: 1447 to 1469
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1164,7 +1164,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines: 1427 to 1482
+-- Lines: 1471 to 1526
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1210,12 +1210,12 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines: 1484 to 1485
+-- Lines: 1528 to 1529
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines: 1488 to 1489
+-- Lines: 1532 to 1533
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
 end

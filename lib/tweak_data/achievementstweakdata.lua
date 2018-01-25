@@ -1,7 +1,7 @@
 require("lib/tweak_data/GeneratedAchievementTweakData")
 
 
--- Lines: 6 to 32
+-- Lines: 6 to 28
 local function get_texture_path(tweak_data, category, id)
 	local td = tweak_data:get_raw_value("blackmarket", category, id)
 	local rtn = {}
@@ -21,7 +21,9 @@ local function get_texture_path(tweak_data, category, id)
 	end
 
 	if not DB:has(Idstring("texture"), Idstring(rtn.texture)) then
-		debug_pause("[Track]", "ERROR TEXTURE PATH", category, id)
+		Application:error("ERROR MISSING TEXTURE:", rtn.texture)
+
+		rtn.texture = "guis/textures/pd2/endscreen/exp_ring"
 	end
 
 	return rtn
@@ -29,7 +31,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 41 to 2012
+-- Lines: 37 to 2007
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -5921,6 +5923,111 @@ function AchievementsTweakData:init(tweak_data)
 		self.weapon_part_tracker = {}
 	end
 
+	local default = "guis/dlcs/ami/textures/pd2/milestone_trophy_icon"
+	self.milestones = {
+		{
+			id = "ami_0",
+			at = 20,
+			coins = 4,
+			texture = default
+		},
+		{
+			id = "ami_1",
+			at = 50,
+			coins = 8,
+			texture = default
+		},
+		{
+			at = 90,
+			has_drop = true,
+			id = "ami_2",
+			coins = 12,
+			texture = default
+		},
+		{
+			id = "ami_3",
+			at = 140,
+			coins = 16,
+			texture = default
+		},
+		{
+			at = 200,
+			has_drop = true,
+			id = "ami_4",
+			coins = 20,
+			texture = default
+		},
+		{
+			id = "ami_5",
+			at = 270,
+			coins = 24,
+			texture = default
+		},
+		{
+			at = 350,
+			has_drop = true,
+			id = "ami_6",
+			coins = 28,
+			texture = default
+		},
+		{
+			id = "ami_7",
+			at = 450,
+			coins = 36,
+			texture = default
+		},
+		{
+			at = 550,
+			has_drop = true,
+			id = "ami_8",
+			coins = 36,
+			texture = default
+		},
+		{
+			id = "ami_9",
+			at = 650,
+			coins = 36,
+			texture = default
+		},
+		{
+			at = 750,
+			has_drop = true,
+			id = "ami_10",
+			coins = 36,
+			texture = default
+		},
+		{
+			id = "ami_11",
+			at = 850,
+			coins = 36,
+			texture = default
+		}
+	}
+	local last_at = 0
+
+	for _, v in ipairs(self.milestones) do
+		v.rewards = v.coins and {{
+			name_id = "menu_cs_coins",
+			texture = "guis/dlcs/chill/textures/pd2/safehouse/continental_coins_drop",
+			amount = v.coins
+		}} or {}
+
+		if v.has_drop then
+			local data = tweak_data.dlc[v.id]
+
+			for _, loot in ipairs(data.content.loot_drops) do
+				local td = tweak_data:get_raw_value("blackmarket", loot.type_items, loot.item_entry)
+				local data = get_texture_path(tweak_data, loot.type_items, loot.item_entry)
+				data.name_id = td.name_id
+
+				table.insert(v.rewards, data)
+			end
+		end
+
+		v.last_at = last_at
+		last_at = v.at
+	end
+
 	self:_init_visual(tweak_data)
 end
 local tracking = {
@@ -5930,7 +6037,7 @@ local tracking = {
 }
 
 
--- Lines: 2031 to 2057
+-- Lines: 2026 to 2052
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -5942,7 +6049,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 2040 to 2050
+	-- Lines: 2035 to 2045
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -5973,7 +6080,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 2060 to 2064
+-- Lines: 2055 to 2059
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -5987,7 +6094,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 2067 to 2074
+-- Lines: 2062 to 2069
 local function from_level(level)
 	if not level then
 		error()
@@ -6004,7 +6111,7 @@ local function from_level(level)
 end
 
 
--- Lines: 2077 to 2084
+-- Lines: 2072 to 2079
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -6021,7 +6128,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 2087 to 2097
+-- Lines: 2082 to 2092
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -6044,7 +6151,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 2105 to 2307
+-- Lines: 2100 to 2302
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6191,7 +6298,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2344 to 2457
+-- Lines: 2339 to 2452
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
