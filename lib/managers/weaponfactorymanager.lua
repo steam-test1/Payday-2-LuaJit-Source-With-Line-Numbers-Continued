@@ -776,7 +776,7 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 	end
 end
 
--- Lines: 761 to 849
+-- Lines: 761 to 850
 function WeaponFactoryManager:clbk_part_unit_loaded(task_data, status, u_type, u_name)
 	if not self._async_load_tasks[task_data] then
 		return
@@ -854,6 +854,7 @@ function WeaponFactoryManager:clbk_part_unit_loaded(task_data, status, u_type, u
 	for part_id, part in pairs(task_data.parts) do
 		if alive(part.unit) then
 			part.unit:set_enabled(true)
+			self:_set_visibility(part_id, part)
 		end
 	end
 
@@ -866,7 +867,31 @@ function WeaponFactoryManager:clbk_part_unit_loaded(task_data, status, u_type, u
 	task_data.done_cb(task_data.parts, task_data.blueprint)
 end
 
--- Lines: 851 to 858
+-- Lines: 852 to 864
+function WeaponFactoryManager:_set_visibility(part_id, part)
+	local visibility = self:_visibility_from_part_id(part_id)
+
+	if visibility then
+		for _, group in ipairs(visibility) do
+			if not group.condition or group.condition() then
+				for object_name, visible in pairs(group.objects) do
+					local object = part.unit:get_object(Idstring(object_name))
+
+					object:set_visibility(visible)
+				end
+			end
+		end
+	end
+end
+
+-- Lines: 866 to 868
+function WeaponFactoryManager:_visibility_from_part_id(part_id)
+	local factory = tweak_data.weapon.factory
+
+	return factory.parts[part_id] and factory.parts[part_id].visibility
+end
+
+-- Lines: 871 to 878
 function WeaponFactoryManager:_spawn_and_link_unit(u_name, a_obj, third_person, link_to_unit)
 	local unit = World:spawn_unit(u_name, Vector3(), Rotation())
 	local res = link_to_unit:link(a_obj, unit, unit:orientation_object():name())
@@ -878,7 +903,7 @@ function WeaponFactoryManager:_spawn_and_link_unit(u_name, a_obj, third_person, 
 	return unit
 end
 
--- Lines: 862 to 870
+-- Lines: 882 to 890
 function WeaponFactoryManager:load_package(package)
 	if not self._loaded_packages[package] then
 		PackageManager:load(package)
@@ -889,7 +914,7 @@ function WeaponFactoryManager:load_package(package)
 	end
 end
 
--- Lines: 872 to 885
+-- Lines: 892 to 905
 function WeaponFactoryManager:unload_package(package)
 	print("WeaponFactoryManager:_unload_package", package)
 
@@ -909,7 +934,7 @@ function WeaponFactoryManager:unload_package(package)
 	end
 end
 
--- Lines: 889 to 901
+-- Lines: 909 to 921
 function WeaponFactoryManager:get_parts_from_weapon_by_type_or_perk(type_or_perk, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local type_parts = {}
@@ -925,7 +950,7 @@ function WeaponFactoryManager:get_parts_from_weapon_by_type_or_perk(type_or_perk
 	return type_parts
 end
 
--- Lines: 903 to 914
+-- Lines: 923 to 934
 function WeaponFactoryManager:get_parts_from_weapon_by_perk(perk, parts)
 	local factory = tweak_data.weapon.factory
 	local type_parts = {}
@@ -941,14 +966,14 @@ function WeaponFactoryManager:get_parts_from_weapon_by_perk(perk, parts)
 	return type_parts
 end
 
--- Lines: 917 to 919
+-- Lines: 937 to 939
 function WeaponFactoryManager:get_custom_stats_from_part_id(part_id)
 	local factory = tweak_data.weapon.factory.parts
 
 	return factory[part_id] and factory[part_id].custom_stats or false
 end
 
--- Lines: 922 to 933
+-- Lines: 942 to 953
 function WeaponFactoryManager:get_custom_stats_from_weapon(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local t = {}
@@ -964,7 +989,7 @@ function WeaponFactoryManager:get_custom_stats_from_weapon(factory_id, blueprint
 	return t
 end
 
--- Lines: 937 to 948
+-- Lines: 957 to 968
 function WeaponFactoryManager:get_ammo_data_from_weapon(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local t = {}
@@ -979,7 +1004,7 @@ function WeaponFactoryManager:get_ammo_data_from_weapon(factory_id, blueprint)
 	return t
 end
 
--- Lines: 951 to 960
+-- Lines: 971 to 980
 function WeaponFactoryManager:get_part_id_from_weapon_by_type(type, blueprint)
 	local factory = tweak_data.weapon.factory
 
@@ -992,7 +1017,7 @@ function WeaponFactoryManager:get_part_id_from_weapon_by_type(type, blueprint)
 	return false
 end
 
--- Lines: 963 to 972
+-- Lines: 983 to 992
 function WeaponFactoryManager:get_part_from_weapon_by_type(type, parts)
 	local factory = tweak_data.weapon.factory
 
@@ -1005,7 +1030,7 @@ function WeaponFactoryManager:get_part_from_weapon_by_type(type, parts)
 	return false
 end
 
--- Lines: 975 to 984
+-- Lines: 995 to 1004
 function WeaponFactoryManager:get_part_data_type_from_weapon_by_type(type, data_type, parts)
 	local factory = tweak_data.weapon.factory
 
@@ -1018,7 +1043,7 @@ function WeaponFactoryManager:get_part_data_type_from_weapon_by_type(type, data_
 	return false
 end
 
--- Lines: 987 to 1002
+-- Lines: 1007 to 1022
 function WeaponFactoryManager:is_weapon_unmodded(factory_id, blueprint)
 	local weapon_tweak = tweak_data.weapon.factory[factory_id]
 	local blueprint_map = {}
@@ -1038,7 +1063,7 @@ function WeaponFactoryManager:is_weapon_unmodded(factory_id, blueprint)
 	return table.size(blueprint_map) == 0
 end
 
--- Lines: 1005 to 1021
+-- Lines: 1025 to 1041
 function WeaponFactoryManager:get_duplicate_parts_by_type(blueprint)
 	local duplicate_parts = {}
 	local types_gotten = {}
@@ -1060,26 +1085,26 @@ function WeaponFactoryManager:get_duplicate_parts_by_type(blueprint)
 	return duplicate_parts
 end
 
--- Lines: 1024 to 1026
+-- Lines: 1044 to 1046
 function WeaponFactoryManager:has_weapon_more_than_default_parts(factory_id)
 	local weapon_tweak = tweak_data.weapon.factory[factory_id]
 
 	return #weapon_tweak.default_blueprint < #weapon_tweak.uses_parts
 end
 
--- Lines: 1029 to 1030
+-- Lines: 1049 to 1050
 function WeaponFactoryManager:get_parts_from_factory_id(factory_id)
 	return self._parts_by_weapon[factory_id]
 end
 
--- Lines: 1033 to 1035
+-- Lines: 1053 to 1055
 function WeaponFactoryManager:get_parts_from_weapon_id(weapon_id)
 	local factory_id = self:get_factory_id_by_weapon_id(weapon_id)
 
 	return self._parts_by_weapon[factory_id]
 end
 
--- Lines: 1038 to 1050
+-- Lines: 1058 to 1070
 function WeaponFactoryManager:is_part_standard_issue(factory_id, part_id)
 	local weapon_factory_tweak_data = tweak_data.weapon.factory[factory_id]
 	local part_tweak_data = tweak_data.weapon.factory.parts[part_id]
@@ -1099,12 +1124,12 @@ function WeaponFactoryManager:is_part_standard_issue(factory_id, part_id)
 	return table.contains(weapon_factory_tweak_data.default_blueprint or {}, part_id)
 end
 
--- Lines: 1053 to 1054
+-- Lines: 1073 to 1074
 function WeaponFactoryManager:is_part_standard_issue_by_weapon_id(weapon_id, part_id)
 	return self:is_part_standard_issue(self:get_factory_id_by_weapon_id(weapon_id), part_id)
 end
 
--- Lines: 1057 to 1071
+-- Lines: 1077 to 1091
 function WeaponFactoryManager:get_part_desc_by_part_id_from_weapon(part_id, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local override = self:_get_override_parts(factory_id, blueprint)
@@ -1124,14 +1149,14 @@ function WeaponFactoryManager:get_part_desc_by_part_id_from_weapon(part_id, fact
 	return Application:production_build() and managers.localization:text(desc_id) or ""
 end
 
--- Lines: 1074 to 1076
+-- Lines: 1094 to 1096
 function WeaponFactoryManager:get_part_data_by_part_id_from_weapon(part_id, factory_id, blueprint)
 	local override = self:_get_override_parts(factory_id, blueprint)
 
 	return self:_part_data(part_id, factory_id, override)
 end
 
--- Lines: 1079 to 1089
+-- Lines: 1099 to 1109
 function WeaponFactoryManager:get_part_name_by_part_id_from_weapon(part_id, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
@@ -1145,7 +1170,7 @@ function WeaponFactoryManager:get_part_name_by_part_id_from_weapon(part_id, fact
 	end
 end
 
--- Lines: 1091 to 1099
+-- Lines: 1111 to 1119
 function WeaponFactoryManager:get_part_desc_by_part_id(part_id)
 	local part_tweak_data = tweak_data.weapon.factory.parts[part_id]
 
@@ -1160,7 +1185,7 @@ function WeaponFactoryManager:get_part_desc_by_part_id(part_id)
 	return desc_id and managers.localization:text(desc_id, {BTN_GADGET = managers.localization:btn_macro("weapon_gadget", true)}) or Application:production_build() and "Add ##desc_id## to ##" .. part_id .. "## in tweak_data.blackmarket.weapon_mods" or ""
 end
 
--- Lines: 1102 to 1109
+-- Lines: 1122 to 1129
 function WeaponFactoryManager:get_part_name_by_part_id(part_id)
 	local part_tweak_data = tweak_data.weapon.factory.parts[part_id]
 
@@ -1173,7 +1198,7 @@ function WeaponFactoryManager:get_part_name_by_part_id(part_id)
 	return managers.localization:text(part_tweak_data.name_id or "")
 end
 
--- Lines: 1114 to 1148
+-- Lines: 1134 to 1168
 function WeaponFactoryManager:change_part(p_unit, factory_id, part_id, parts, blueprint)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1210,7 +1235,7 @@ function WeaponFactoryManager:change_part(p_unit, factory_id, part_id, parts, bl
 	return parts
 end
 
--- Lines: 1151 to 1160
+-- Lines: 1171 to 1180
 function WeaponFactoryManager:remove_part_from_blueprint(part_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1224,7 +1249,7 @@ function WeaponFactoryManager:remove_part_from_blueprint(part_id, blueprint)
 	table.delete(blueprint, part_id)
 end
 
--- Lines: 1162 to 1227
+-- Lines: 1182 to 1247
 function WeaponFactoryManager:change_part_blueprint_only(factory_id, part_id, blueprint, remove_part)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1278,7 +1303,7 @@ function WeaponFactoryManager:change_part_blueprint_only(factory_id, part_id, bl
 	return false
 end
 
--- Lines: 1232 to 1264
+-- Lines: 1252 to 1284
 function WeaponFactoryManager:get_replaces_parts(factory_id, part_id, blueprint, remove_part)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1311,7 +1336,7 @@ function WeaponFactoryManager:get_replaces_parts(factory_id, part_id, blueprint,
 	return replaces
 end
 
--- Lines: 1268 to 1309
+-- Lines: 1288 to 1329
 function WeaponFactoryManager:get_removes_parts(factory_id, part_id, blueprint, remove_part)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1340,7 +1365,7 @@ function WeaponFactoryManager:get_removes_parts(factory_id, part_id, blueprint, 
 	return removes
 end
 
--- Lines: 1313 to 1324
+-- Lines: 1333 to 1344
 function WeaponFactoryManager:can_add_part(factory_id, part_id, blueprint)
 	local new_blueprint = deep_clone(blueprint)
 
@@ -1357,7 +1382,7 @@ function WeaponFactoryManager:can_add_part(factory_id, part_id, blueprint)
 	return nil
 end
 
--- Lines: 1329 to 1342
+-- Lines: 1349 to 1362
 function WeaponFactoryManager:remove_part(p_unit, factory_id, part_id, parts, blueprint)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1374,7 +1399,7 @@ function WeaponFactoryManager:remove_part(p_unit, factory_id, part_id, parts, bl
 	return self:assemble_from_blueprint(factory_id, p_unit, blueprint)
 end
 
--- Lines: 1347 to 1360
+-- Lines: 1367 to 1380
 function WeaponFactoryManager:remove_part_by_type(p_unit, factory_id, type, parts, blueprint)
 	local factory = tweak_data.weapon.factory
 
@@ -1391,14 +1416,14 @@ function WeaponFactoryManager:remove_part_by_type(p_unit, factory_id, type, part
 	return self:assemble_from_blueprint(factory_id, p_unit, blueprint)
 end
 
--- Lines: 1365 to 1367
+-- Lines: 1385 to 1387
 function WeaponFactoryManager:change_blueprint(p_unit, factory_id, parts, blueprint)
 	self:disassemble(parts)
 
 	return self:assemble_from_blueprint(factory_id, p_unit, blueprint)
 end
 
--- Lines: 1373 to 1390
+-- Lines: 1393 to 1410
 function WeaponFactoryManager:blueprint_to_string(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local index_table = {}
@@ -1420,7 +1445,7 @@ function WeaponFactoryManager:blueprint_to_string(factory_id, blueprint)
 	return s
 end
 
--- Lines: 1394 to 1405
+-- Lines: 1414 to 1425
 function WeaponFactoryManager:unpack_blueprint_from_string(factory_id, blueprint_string)
 	local factory = tweak_data.weapon.factory
 	local index_table = string.split(blueprint_string, " ")
@@ -1438,7 +1463,7 @@ function WeaponFactoryManager:unpack_blueprint_from_string(factory_id, blueprint
 	return blueprint
 end
 
--- Lines: 1410 to 1438
+-- Lines: 1430 to 1458
 function WeaponFactoryManager:get_stats(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
@@ -1468,7 +1493,7 @@ function WeaponFactoryManager:get_stats(factory_id, blueprint)
 	return stats
 end
 
--- Lines: 1443 to 1478
+-- Lines: 1463 to 1498
 function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second_sight)
 	local factory = tweak_data.weapon.factory
 	local assembled_blueprint = self:get_assembled_blueprint(factory_id, blueprint)
@@ -1504,7 +1529,7 @@ function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second
 	}
 end
 
--- Lines: 1483 to 1500
+-- Lines: 1503 to 1520
 function WeaponFactoryManager:has_perk(perk_name, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
@@ -1522,7 +1547,7 @@ function WeaponFactoryManager:has_perk(perk_name, factory_id, blueprint)
 	return false
 end
 
--- Lines: 1503 to 1520
+-- Lines: 1523 to 1540
 function WeaponFactoryManager:get_perk_stats(perk_name, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
@@ -1540,14 +1565,14 @@ function WeaponFactoryManager:get_perk_stats(perk_name, factory_id, blueprint)
 	return nil
 end
 
--- Lines: 1525 to 1527
+-- Lines: 1545 to 1547
 function WeaponFactoryManager:get_type_from_part_id(part_id)
 	local factory = tweak_data.weapon.factory
 
 	return factory.parts[part_id] and factory.parts[part_id].type
 end
 
--- Lines: 1530 to 1542
+-- Lines: 1550 to 1562
 function WeaponFactoryManager:get_perks_from_part_id(part_id)
 	local factory = tweak_data.weapon.factory
 
@@ -1566,7 +1591,7 @@ function WeaponFactoryManager:get_perks_from_part_id(part_id)
 	return perks
 end
 
--- Lines: 1545 to 1561
+-- Lines: 1565 to 1581
 function WeaponFactoryManager:get_perks(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
@@ -1583,7 +1608,7 @@ function WeaponFactoryManager:get_perks(factory_id, blueprint)
 	return perks
 end
 
--- Lines: 1566 to 1602
+-- Lines: 1586 to 1622
 function WeaponFactoryManager:get_sound_switch(switch_group, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
@@ -1621,7 +1646,7 @@ function WeaponFactoryManager:get_sound_switch(switch_group, factory_id, bluepri
 	return nil
 end
 
--- Lines: 1607 to 1633
+-- Lines: 1627 to 1653
 function WeaponFactoryManager:disassemble(parts)
 	for task_data, _ in pairs(self._async_load_tasks) do
 		if task_data.parts == parts then
@@ -1654,17 +1679,17 @@ function WeaponFactoryManager:disassemble(parts)
 	end
 end
 
--- Lines: 1638 to 1640
+-- Lines: 1658 to 1660
 function WeaponFactoryManager:save(data)
 	data.weapon_factory = self._global
 end
 
--- Lines: 1644 to 1646
+-- Lines: 1664 to 1666
 function WeaponFactoryManager:load(data)
 	self._global = data.weapon_factory
 end
 
--- Lines: 1651 to 1662
+-- Lines: 1671 to 1682
 function WeaponFactoryManager:debug_get_stats(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)

@@ -1,6 +1,6 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 4844
+-- Lines: 10 to 4867
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}

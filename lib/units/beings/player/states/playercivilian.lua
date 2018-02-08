@@ -132,7 +132,7 @@ function PlayerCivilian:_check_action_interact(t, input)
 		local action_forbidden = self:chk_action_forbidden("interact") or self._unit:base():stats_screen_visible() or self:_interacting() or self._ext_movement:has_carry_restriction() or self:_on_zipline()
 
 		if not action_forbidden then
-			new_action, timer, interact_object = managers.interaction:interact(self._unit)
+			new_action, timer, interact_object = managers.interaction:interact(self._unit, input.data, self._interact_hand)
 
 			if timer then
 				new_action = true
@@ -154,7 +154,7 @@ function PlayerCivilian:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines: 203 to 211
+-- Lines: 210 to 218
 function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	self._interact_expire_t = timer
 	self._interact_params = {
@@ -167,7 +167,7 @@ function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 1, true, self._interact_params.tweak_data, timer, false)
 end
 
--- Lines: 213 to 225
+-- Lines: 220 to 240
 function PlayerCivilian:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
@@ -185,7 +185,7 @@ function PlayerCivilian:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines: 227 to 252
+-- Lines: 242 to 267
 function PlayerCivilian:_update_interaction_timers(t)
 	if self._interact_expire_t then
 		local dt = self:_get_interaction_speed()
@@ -205,35 +205,35 @@ function PlayerCivilian:_update_interaction_timers(t)
 	end
 end
 
--- Lines: 256 to 260
+-- Lines: 271 to 275
 function PlayerCivilian:_check_action_jump(t, input)
 	if input.btn_duck_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 262 to 266
+-- Lines: 277 to 281
 function PlayerCivilian:_check_action_duck(t, input)
 	if input.btn_jump_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 268 to 272
+-- Lines: 283 to 287
 function PlayerCivilian:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 274 to 278
+-- Lines: 289 to 293
 function PlayerCivilian:_check_action_use_item(t, input)
 	if input.btn_use_item_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 280 to 286
+-- Lines: 295 to 301
 function PlayerCivilian:clbk_enemy_weapons_hot()
 	if self._enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
@@ -242,12 +242,12 @@ function PlayerCivilian:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines: 288 to 289
+-- Lines: 303 to 304
 function PlayerCivilian:interaction_blocked()
 	return false
 end
 
--- Lines: 292 to 293
+-- Lines: 307 to 308
 function PlayerCivilian:_get_walk_headbob()
 	return 0.0125
 end

@@ -1,10 +1,10 @@
 PlayerHand = PlayerHand or class()
 
--- Lines: 638 to 639
+-- Lines: 697 to 698
 function PlayerHand:init(unit)
 end
 
--- Lines: 641 to 642
+-- Lines: 700 to 701
 function PlayerHand:destroy()
 end
 

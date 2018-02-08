@@ -594,31 +594,31 @@ function Setup:paused_end_update(t, dt)
 	end
 end
 
--- Lines: 917 to 921
+-- Lines: 923 to 927
 function Setup:end_frame(t, dt)
 	while self._end_frame_callbacks and #self._end_frame_callbacks > 0 do
 		table.remove(self._end_frame_callbacks)()
 	end
 end
 
--- Lines: 924 to 927
+-- Lines: 930 to 933
 function Setup:add_end_frame_callback(callback)
 	self._end_frame_callbacks = self._end_frame_callbacks or {}
 
 	table.insert(self._end_frame_callbacks, callback)
 end
 
--- Lines: 929 to 931
+-- Lines: 935 to 937
 function Setup:add_end_frame_clbk(func)
 	table.insert(self._end_frame_clbks, func)
 end
 
--- Lines: 933 to 935
+-- Lines: 939 to 941
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 end
 
--- Lines: 943 to 952
+-- Lines: 949 to 958
 function Setup:destroy()
 	managers.system_menu:destroy()
 	managers.menu:destroy()
@@ -630,7 +630,7 @@ function Setup:destroy()
 	end
 end
 
--- Lines: 959 to 978
+-- Lines: 965 to 984
 function Setup:load_level(level, mission, world_setting, level_class_name, level_id)
 	managers.menu:close_all_menus()
 	managers.platform:destroy_context()
@@ -649,14 +649,14 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	self:exec(level)
 end
 
--- Lines: 980 to 983
+-- Lines: 986 to 989
 function Setup:load_start_menu_lobby()
 	self:load_start_menu()
 
 	Global.load_start_menu_lobby = true
 end
 
--- Lines: 995 to 1020
+-- Lines: 1001 to 1026
 function Setup:load_start_menu()
 	managers.platform:set_playing(false)
 	managers.job:deactivate_current_job()
@@ -680,7 +680,7 @@ function Setup:load_start_menu()
 	managers.butler_mirroring = ButlerMirroringManager:new()
 end
 
--- Lines: 1022 to 1045
+-- Lines: 1028 to 1051
 function Setup:exec(context)
 	if managers.network then
 		if SystemInfo:platform() == Idstring("PS4") then
@@ -712,7 +712,7 @@ function Setup:exec(context)
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
--- Lines: 1047 to 1054
+-- Lines: 1053 to 1060
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
 
@@ -722,7 +722,7 @@ function Setup:quit()
 	end
 end
 
--- Lines: 1056 to 1063
+-- Lines: 1062 to 1069
 function Setup:restart()
 	local data = Global.level_data
 
@@ -733,7 +733,7 @@ function Setup:restart()
 	end
 end
 
--- Lines: 1065 to 1124
+-- Lines: 1071 to 1130
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -779,12 +779,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines: 1127 to 1128
+-- Lines: 1133 to 1134
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines: 1131 to 1137
+-- Lines: 1137 to 1143
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -794,14 +794,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines: 1139 to 1143
+-- Lines: 1145 to 1149
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines: 1145 to 1155
+-- Lines: 1151 to 1161
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -816,7 +816,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines: 1158 to 1159
+-- Lines: 1164 to 1165
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

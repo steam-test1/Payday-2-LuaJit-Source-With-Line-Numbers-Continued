@@ -1563,7 +1563,7 @@ end
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
--- Lines: 1840 to 2388
+-- Lines: 1840 to 2400
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
@@ -1956,7 +1956,7 @@ function WINDLCManager:init()
 	end
 end
 
--- Lines: 2390 to 2406
+-- Lines: 2402 to 2418
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -1973,7 +1973,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines: 2408 to 2420
+-- Lines: 2420 to 2432
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -1982,7 +1982,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines: 2422 to 2429
+-- Lines: 2434 to 2441
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

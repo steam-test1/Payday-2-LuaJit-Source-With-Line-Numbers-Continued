@@ -120,67 +120,71 @@ function CoreSetup:paused_update(t, dt)
 end
 
 -- Lines: 166 to 167
-function CoreSetup:render()
+function CoreSetup:pre_render()
 end
 
 -- Lines: 169 to 170
-function CoreSetup:end_frame(t, dt)
+function CoreSetup:render()
 end
 
 -- Lines: 172 to 173
-function CoreSetup:end_update(t, dt)
+function CoreSetup:end_frame(t, dt)
 end
 
 -- Lines: 175 to 176
-function CoreSetup:paused_end_update(t, dt)
+function CoreSetup:end_update(t, dt)
 end
 
 -- Lines: 178 to 179
-function CoreSetup:save(data)
+function CoreSetup:paused_end_update(t, dt)
 end
 
 -- Lines: 181 to 182
-function CoreSetup:load(data)
+function CoreSetup:save(data)
 end
 
 -- Lines: 184 to 185
+function CoreSetup:load(data)
+end
+
+-- Lines: 187 to 188
 function CoreSetup:destroy()
 end
 
--- Lines: 191 to 192
+-- Lines: 194 to 195
 function CoreSetup:freeflight()
 	return self.__freeflight
 end
 
--- Lines: 199 to 202
+-- Lines: 202 to 205
 function CoreSetup:exec(context)
 	self.__exec = true
 	self.__context = context
 end
 
--- Lines: 204 to 208
+-- Lines: 207 to 211
 function CoreSetup:quit()
 	if not Application:editor() then
 		self.__quit = true
 	end
 end
 
--- Lines: 210 to 211
+-- Lines: 213 to 214
 function CoreSetup:block_exec()
 	return false
 end
 
--- Lines: 214 to 215
+-- Lines: 217 to 218
 function CoreSetup:block_quit()
 	return false
 end
 
--- Lines: 218 to 219
+-- Lines: 221 to 222
 function CoreSetup:has_queued_exec()
 	return self.__exec
 end
 
--- Lines: 228 to 276
+-- Lines: 231 to 279
 function CoreSetup:__pre_init()
 	if Application:editor() then
 		managers.global_texture = CoreGTextureManager.GTextureManager:new()
@@ -223,7 +227,7 @@ function CoreSetup:__pre_init()
 	end
 end
 
--- Lines: 278 to 423
+-- Lines: 281 to 426
 function CoreSetup:__init()
 	self:init_category_print()
 
@@ -328,7 +332,7 @@ function CoreSetup:__init()
 	self:init_finalize()
 end
 
--- Lines: 425 to 454
+-- Lines: 428 to 457
 function CoreSetup:__destroy()
 	self:destroy()
 	self.__gsm:destroy()
@@ -343,11 +347,11 @@ function CoreSetup:__destroy()
 	self._smoketest:destroy()
 end
 
--- Lines: 456 to 457
+-- Lines: 459 to 460
 function CoreSetup:loading_update(t, dt)
 end
 
--- Lines: 461 to 538
+-- Lines: 464 to 541
 function CoreSetup:__update(t, dt)
 	if self.__firstupdate then
 		self:stop_loading_screen()
@@ -375,7 +379,7 @@ function CoreSetup:__update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines: 540 to 574
+-- Lines: 543 to 577
 function CoreSetup:__paused_update(t, dt)
 	managers.viewport:paused_update(t, dt)
 
@@ -394,7 +398,7 @@ function CoreSetup:__paused_update(t, dt)
 	self:paused_update(t, dt)
 end
 
--- Lines: 576 to 589
+-- Lines: 579 to 592
 function CoreSetup:__end_update(t, dt)
 	managers.camera:update(t, dt)
 	self._session:end_update(t, dt)
@@ -409,22 +413,23 @@ function CoreSetup:__end_update(t, dt)
 	end
 end
 
--- Lines: 591 to 596
+-- Lines: 594 to 599
 function CoreSetup:__paused_end_update(t, dt)
 	self:paused_end_update(t, dt)
 	self.__gsm:end_update(t, dt)
 	managers.DOF:paused_update(t, dt)
 end
 
--- Lines: 598 to 603
+-- Lines: 601 to 607
 function CoreSetup:__render()
 	managers.portal:render()
+	self:pre_render()
 	managers.viewport:render()
 	managers.overlay_effect:render()
 	self:render()
 end
 
--- Lines: 605 to 659
+-- Lines: 609 to 663
 function CoreSetup:__end_frame(t, dt)
 	self:end_frame(t, dt)
 	managers.viewport:end_frame(t, dt)
@@ -481,21 +486,21 @@ function CoreSetup:__end_frame(t, dt)
 	end
 end
 
--- Lines: 661 to 664
+-- Lines: 665 to 668
 function CoreSetup:__loading_update(t, dt)
 	self._session:update(t, dt)
 	self:loading_update()
 end
 
--- Lines: 666 to 667
+-- Lines: 670 to 671
 function CoreSetup:__animations_reloaded()
 end
 
--- Lines: 669 to 670
+-- Lines: 673 to 674
 function CoreSetup:__script_reloaded()
 end
 
--- Lines: 672 to 677
+-- Lines: 676 to 681
 function CoreSetup:__entering_window(user_data, event_object)
 	if Global.frame:is_active() then
 		Global.application_window:set_focus()
@@ -503,26 +508,26 @@ function CoreSetup:__entering_window(user_data, event_object)
 	end
 end
 
--- Lines: 679 to 683
+-- Lines: 683 to 687
 function CoreSetup:__leaving_window(user_data, event_object)
 	if not managers.editor or managers.editor._in_mixed_input_mode then
 		Input:keyboard():unacquire()
 	end
 end
 
--- Lines: 685 to 689
+-- Lines: 689 to 693
 function CoreSetup:__kill_focus(user_data, event_object)
 	if managers.editor and not managers.editor:in_mixed_input_mode() and not Global.running_simulation then
 		managers.editor:set_in_mixed_input_mode(true)
 	end
 end
 
--- Lines: 691 to 693
+-- Lines: 695 to 697
 function CoreSetup:__save(data)
 	self:save(data)
 end
 
--- Lines: 695 to 697
+-- Lines: 699 to 701
 function CoreSetup:__load(data)
 	self:load(data)
 end
@@ -531,7 +536,7 @@ core:module("CoreSetup")
 
 CoreSetup = _CoreSetup
 
--- Lines: 707 to 745
+-- Lines: 711 to 749
 function CoreSetup:make_entrypoint()
 	if not _G.CoreSetup.__entrypoint_is_setup then
 		assert(rawget(_G, "pre_init") == nil)
