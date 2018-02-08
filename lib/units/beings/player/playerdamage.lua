@@ -11,7 +11,7 @@ function PlayerDamage:init(unit)
 	self._lives_init = tweak_data.player.damage.LIVES_INIT
 
 	if Global.game_settings.difficulty == "sm_wish" then
-		self._lives_init = 2
+		-- Nothing
 	end
 
 	self._lives_init = managers.crime_spree:modify_value("PlayerDamage:GetMaximumLives", self._lives_init)

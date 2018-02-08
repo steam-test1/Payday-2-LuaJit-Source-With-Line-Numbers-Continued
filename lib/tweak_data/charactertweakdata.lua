@@ -2842,7 +2842,7 @@ function CharacterTweakData:_init_civilian(presets)
 			5,
 			20
 		},
-		damage = presets.hurt_severities.no_hurts,
+		damage = {hurt_severity = presets.hurt_severities.no_hurts},
 		ecm_vulnerability = 1,
 		ecm_hurts = {ears = {
 			max_duration = 10,
@@ -12667,9 +12667,9 @@ end
 -- Lines: 5005 to 5148
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
-		self:_multiply_all_hp(6, 1.5)
+		self:_multiply_all_hp(6, 2)
 	else
-		self:_multiply_all_hp(6, 1.5)
+		self:_multiply_all_hp(6, 2)
 	end
 
 	self.hector_boss.HEALTH_INIT = 900
@@ -13227,6 +13227,7 @@ function CharacterTweakData:_set_overkill_290()
 		self:_multiply_all_hp(6, 1.5)
 	end
 
+	self.tank_mini.HEALTH_INIT = 2400
 	self.hector_boss.weapon.is_shotgun_mag.FALLOFF = {
 		{
 			dmg_mul = 3.14,
@@ -13336,8 +13337,8 @@ function CharacterTweakData:_set_overkill_290()
 	self.presets.gang_member_damage.HEALTH_INIT = 800
 	self.presets.weapon.gang_member.is_pistol.FALLOFF = {
 		{
-			dmg_mul = 15,
-			r = 3000,
+			dmg_mul = 10,
+			r = 300,
 			acc = {
 				1,
 				1
@@ -13347,35 +13348,35 @@ function CharacterTweakData:_set_overkill_290()
 				0.45
 			},
 			mode = {
-				0,
-				0,
-				0,
-				1
+				0.1,
+				0.3,
+				4,
+				7
 			}
 		},
 		{
-			dmg_mul = 10,
-			r = 100000,
+			dmg_mul = 5,
+			r = 10000,
 			acc = {
 				1,
 				1
 			},
 			recoil = {
-				0.25,
-				0.45
+				2,
+				3
 			},
 			mode = {
-				0,
-				0,
-				0,
-				1
+				0.1,
+				0.3,
+				4,
+				7
 			}
 		}
 	}
 	self.presets.weapon.gang_member.is_rifle.FALLOFF = {
 		{
-			dmg_mul = 15,
-			r = 3000,
+			dmg_mul = 10,
+			r = 300,
 			acc = {
 				1,
 				1
@@ -13385,28 +13386,28 @@ function CharacterTweakData:_set_overkill_290()
 				0.45
 			},
 			mode = {
-				0,
-				0,
-				0,
-				1
+				0.1,
+				0.3,
+				4,
+				7
 			}
 		},
 		{
-			dmg_mul = 10,
-			r = 100000,
+			dmg_mul = 5,
+			r = 10000,
 			acc = {
 				1,
 				1
 			},
 			recoil = {
-				0.25,
-				0.45
+				2,
+				3
 			},
 			mode = {
-				0,
-				0,
-				0,
-				1
+				0.1,
+				0.3,
+				4,
+				7
 			}
 		}
 	}
@@ -13504,7 +13505,7 @@ function CharacterTweakData:_set_overkill_290()
 	}
 	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 100,
 			acc = {
 				1,
@@ -13522,7 +13523,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 12,
+			dmg_mul = 7.5,
 			r = 1000,
 			acc = {
 				0.85,
@@ -13540,7 +13541,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 10,
+			dmg_mul = 5,
 			r = 2000,
 			acc = {
 				0.6,
@@ -13558,7 +13559,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 10,
+			dmg_mul = 3,
 			r = 3000,
 			acc = {
 				0.5,
@@ -13576,7 +13577,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 8,
+			dmg_mul = 2,
 			r = 4000,
 			acc = {
 				0.02,
@@ -13594,7 +13595,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 5,
+			dmg_mul = 0.5,
 			r = 10000,
 			acc = {
 				0.01,
@@ -13614,8 +13615,8 @@ function CharacterTweakData:_set_overkill_290()
 	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
-			dmg_mul = 15,
-			r = 3000,
+			dmg_mul = 10,
+			r = 300,
 			acc = {
 				1,
 				1
@@ -13625,34 +13626,34 @@ function CharacterTweakData:_set_overkill_290()
 				0.45
 			},
 			mode = {
-				0,
-				0,
-				0,
-				1
+				0.1,
+				0.3,
+				4,
+				7
 			}
 		},
 		{
-			dmg_mul = 10,
-			r = 100000,
+			dmg_mul = 5,
+			r = 10000,
 			acc = {
 				1,
 				1
 			},
 			recoil = {
-				0.25,
-				0.45
+				2,
+				3
 			},
 			mode = {
-				0,
-				0,
-				0,
-				1
+				0.1,
+				0.3,
+				4,
+				7
 			}
 		}
 	}
 	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 100,
 			acc = {
 				1,
@@ -13670,7 +13671,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 15,
+			dmg_mul = 8,
 			r = 500,
 			acc = {
 				1,
@@ -13688,7 +13689,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 12,
+			dmg_mul = 7,
 			r = 1000,
 			acc = {
 				0.85,
@@ -13706,7 +13707,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 8,
+			dmg_mul = 5,
 			r = 2000,
 			acc = {
 				0.75,
@@ -13724,7 +13725,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 5,
+			dmg_mul = 2,
 			r = 3000,
 			acc = {
 				0.4,
@@ -13742,7 +13743,7 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		},
 		{
-			dmg_mul = 1,
+			dmg_mul = 0.2,
 			r = 10000,
 			acc = {
 				0.05,
@@ -14428,14 +14429,17 @@ function CharacterTweakData:_set_overkill_290()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5356 to 5558
+-- Lines: 5356 to 5562
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
-		self:_multiply_all_hp(9, 1.5)
+		self:_multiply_all_hp(6, 1.5)
 	else
-		self:_multiply_all_hp(9, 1.5)
+		self:_multiply_all_hp(6, 1.5)
 	end
 
+	self.tank.HEALTH_INIT = 2400
+	self.tank_mini.HEALTH_INIT = 4800
+	self.tank_medic.HEALTH_INIT = 2400
 	self.hector_boss.weapon.is_shotgun_mag.FALLOFF = {
 		{
 			dmg_mul = 3.14,
@@ -14533,7 +14537,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.biker_boss.HEALTH_INIT = 3000
 	self.chavez_boss.HEALTH_INIT = 900
 
-	self:_multiply_all_speeds(2.05, 2.1)
+	self:_multiply_all_speeds(4.05, 4.1)
 	self:_multiply_weapon_delay(self.presets.weapon.normal, 0)
 	self:_multiply_weapon_delay(self.presets.weapon.good, 0)
 	self:_multiply_weapon_delay(self.presets.weapon.expert, 0)
@@ -14545,7 +14549,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.presets.gang_member_damage.HEALTH_INIT = 800
 	self.presets.weapon.gang_member.is_pistol.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 300,
 			acc = {
 				1,
@@ -14563,7 +14567,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 7.5,
+			dmg_mul = 5,
 			r = 10000,
 			acc = {
 				1,
@@ -14583,7 +14587,7 @@ function CharacterTweakData:_set_sm_wish()
 	}
 	self.presets.weapon.gang_member.is_rifle.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 300,
 			acc = {
 				1,
@@ -14601,7 +14605,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 7.5,
+			dmg_mul = 5,
 			r = 10000,
 			acc = {
 				1,
@@ -14713,7 +14717,7 @@ function CharacterTweakData:_set_sm_wish()
 	}
 	self.presets.weapon.gang_member.is_lmg.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 100,
 			acc = {
 				1,
@@ -14731,7 +14735,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 12,
+			dmg_mul = 7.5,
 			r = 1000,
 			acc = {
 				0.85,
@@ -14749,7 +14753,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 10,
+			dmg_mul = 5,
 			r = 2000,
 			acc = {
 				0.6,
@@ -14767,7 +14771,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 10,
+			dmg_mul = 3,
 			r = 3000,
 			acc = {
 				0.5,
@@ -14785,7 +14789,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 8,
+			dmg_mul = 2,
 			r = 4000,
 			acc = {
 				0.02,
@@ -14803,7 +14807,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 5,
+			dmg_mul = 0.5,
 			r = 10000,
 			acc = {
 				0.01,
@@ -14823,7 +14827,7 @@ function CharacterTweakData:_set_sm_wish()
 	}
 	self.presets.weapon.gang_member.is_shotgun_pump.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 300,
 			acc = {
 				1,
@@ -14841,7 +14845,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 7.5,
+			dmg_mul = 5,
 			r = 10000,
 			acc = {
 				1,
@@ -14861,7 +14865,7 @@ function CharacterTweakData:_set_sm_wish()
 	}
 	self.presets.weapon.gang_member.is_shotgun_mag.FALLOFF = {
 		{
-			dmg_mul = 15,
+			dmg_mul = 10,
 			r = 100,
 			acc = {
 				1,
@@ -14879,7 +14883,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 15,
+			dmg_mul = 8,
 			r = 500,
 			acc = {
 				1,
@@ -14897,7 +14901,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 12,
+			dmg_mul = 7,
 			r = 1000,
 			acc = {
 				0.85,
@@ -14915,7 +14919,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 8,
+			dmg_mul = 5,
 			r = 2000,
 			acc = {
 				0.75,
@@ -14933,7 +14937,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 5,
+			dmg_mul = 2,
 			r = 3000,
 			acc = {
 				0.4,
@@ -14951,7 +14955,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 1,
+			dmg_mul = 0.2,
 			r = 10000,
 			acc = {
 				0.05,
@@ -15050,7 +15054,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.tank.weapon.is_shotgun_mag.focus_dis = 200
 	self.tank.weapon.is_shotgun_mag.FALLOFF = {
 		{
-			dmg_mul = 3,
+			dmg_mul = 9,
 			r = 100,
 			acc = {
 				0.75,
@@ -15068,7 +15072,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 8.5,
 			r = 500,
 			acc = {
 				0.75,
@@ -15086,7 +15090,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 2,
+			dmg_mul = 8,
 			r = 1000,
 			acc = {
 				0.7,
@@ -15104,7 +15108,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 2,
+			dmg_mul = 5,
 			r = 2000,
 			acc = {
 				0.5,
@@ -15122,7 +15126,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 1,
+			dmg_mul = 3.5,
 			r = 3000,
 			acc = {
 				0.3,
@@ -15151,11 +15155,11 @@ function CharacterTweakData:_set_sm_wish()
 	self.tank.weapon.is_rifle.focus_delay = 0
 	self.tank.weapon.is_rifle.FALLOFF = {
 		{
-			dmg_mul = 5,
+			dmg_mul = 6,
 			r = 100,
 			acc = {
-				0.8,
-				0.95
+				0.7,
+				0.9
 			},
 			recoil = {
 				0.4,
@@ -15169,10 +15173,10 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 4,
+			dmg_mul = 6,
 			r = 500,
 			acc = {
-				0.6,
+				0.5,
 				0.75
 			},
 			recoil = {
@@ -15187,11 +15191,11 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 6,
 			r = 1000,
 			acc = {
-				0.4,
-				0.7
+				0.3,
+				0.6
 			},
 			recoil = {
 				1,
@@ -15205,10 +15209,10 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 6,
 			r = 2000,
 			acc = {
-				0.4,
+				0.25,
 				0.55
 			},
 			recoil = {
@@ -15223,7 +15227,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 6,
 			r = 3000,
 			acc = {
 				0.15,
@@ -15241,13 +15245,18 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		}
 	}
+	self.tank.weapon.mini.aim_delay = {
+		0,
+		0
+	}
+	self.tank.weapon.mini.focus_delay = 0
 	self.tank.weapon.mini.FALLOFF = {
 		{
-			dmg_mul = 5,
+			dmg_mul = 6,
 			r = 100,
 			acc = {
-				0.8,
-				0.95
+				0.7,
+				0.9
 			},
 			recoil = {
 				0.4,
@@ -15261,10 +15270,10 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 4,
+			dmg_mul = 6,
 			r = 500,
 			acc = {
-				0.6,
+				0.5,
 				0.75
 			},
 			recoil = {
@@ -15279,11 +15288,11 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 6,
 			r = 1000,
 			acc = {
-				0.4,
-				0.7
+				0.3,
+				0.6
 			},
 			recoil = {
 				1,
@@ -15297,10 +15306,10 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 6,
 			r = 2000,
 			acc = {
-				0.4,
+				0.25,
 				0.55
 			},
 			recoil = {
@@ -15315,7 +15324,7 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 6,
 			r = 3000,
 			acc = {
 				0.15,
@@ -15637,7 +15646,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5562 to 5569
+-- Lines: 5566 to 5573
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -15648,7 +15657,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines: 5574 to 5681
+-- Lines: 5578 to 5685
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -15766,7 +15775,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines: 5685 to 5713
+-- Lines: 5689 to 5717
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -15811,7 +15820,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines: 5716 to 5721
+-- Lines: 5720 to 5725
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -15828,7 +15837,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5725 to 6205
+-- Lines: 5729 to 6209
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

@@ -1529,15 +1529,13 @@ function NavigationManager._convert_nav_seg_map_to_vec(nav_seg_map)
 	return nav_seg_vec
 end
 
--- Lines: 1554 to 1565
+-- Lines: 1554 to 1560
 function NavigationManager:find_cover_in_nav_seg_1(nav_seg_id)
 	if type(nav_seg_id) == "table" then
 		nav_seg_id = self._convert_nav_seg_map_to_vec(nav_seg_id)
 	end
 
-	local search_params = {in_nav_seg = nav_seg_id}
-
-	return self._quad_field:find_cover(search_params)
+	return self._quad_field:find_cover_in_set(nav_seg_id)
 end
 
 -- Lines: 1571 to 1581
@@ -1587,26 +1585,9 @@ function NavigationManager:find_cover_from_threat(nav_seg_id, optimal_threat_dis
 	return self._quad_field:find_cover(search_params)
 end
 
--- Lines: 1621 to 1638
+-- Lines: 1619 to 1620
 function NavigationManager:find_cover_in_cone_from_threat_pos_1(threat_pos, furthest_pos, near_pos, search_from_pos, angle, min_dis, nav_seg, optimal_threat_dis, rsrv_filter)
-	if type(nav_seg) == "table" then
-		nav_seg = self._convert_nav_seg_map_to_vec(nav_seg)
-	end
-
-	local search_params = {
-		variation_z = 250,
-		near_pos = near_pos,
-		threat_pos = threat_pos,
-		search_start_pos = search_from_pos,
-		min_threat_distance = min_dis,
-		cone_angle = angle,
-		cone_base = furthest_pos,
-		in_nav_seg = nav_seg,
-		optimal_threat_dis = optimal_threat_dis,
-		rsrv_filter = rsrv_filter
-	}
-
-	return self._quad_field:find_cover(search_params)
+	return self._quad_field:find_cover_in_cone(near_pos, threat_pos, angle, furthest_pos, rsrv_filter)
 end
 
 -- Lines: 1644 to 1687

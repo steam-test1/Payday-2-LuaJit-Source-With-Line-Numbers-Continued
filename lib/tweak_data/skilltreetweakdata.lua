@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines: 9 to 1680
+-- Lines: 9 to 1681
 function SkillTreeTweakData:init()
 
 	-- Lines: 9 to 10
@@ -362,6 +362,7 @@ function SkillTreeTweakData:init()
 	self.skills.joker = {
 		{
 			upgrades = {
+				"player_convert_enemies_damage_multiplier_1",
 				"player_convert_enemies",
 				"player_convert_enemies_max_minions_1"
 			},
@@ -369,7 +370,7 @@ function SkillTreeTweakData:init()
 		},
 		{
 			upgrades = {
-				"player_convert_enemies_damage_multiplier",
+				"player_convert_enemies_damage_multiplier_2",
 				"player_convert_enemies_interaction_speed_multiplier"
 			},
 			cost = self.costs.hightierpro
@@ -1320,22 +1321,6 @@ function SkillTreeTweakData:init()
 			9
 		}
 	}
-	self.skills.hitman = {
-		{
-			upgrades = {"weapon_silencer_damage_multiplier_1"},
-			cost = self.costs.hightier
-		},
-		{
-			upgrades = {"weapon_silencer_damage_multiplier_2"},
-			cost = self.costs.hightierpro
-		},
-		name_id = "menu_hitman_beta",
-		desc_id = "menu_hitman_beta_desc",
-		icon_xy = {
-			5,
-			9
-		}
-	}
 	self.skills.silence_expert = {
 		{
 			upgrades = {
@@ -1733,7 +1718,7 @@ function SkillTreeTweakData:init()
 			5
 		}
 	}
-	self.skills.spotter_teamwork = {
+	self.skills.hitman = {
 		{
 			upgrades = {"player_marked_enemy_extra_damage"},
 			cost = self.costs.hightier
@@ -1754,7 +1739,7 @@ function SkillTreeTweakData:init()
 			2
 		}
 	}
-	self.skills.single_shot_ammo_return = {
+	self.skills.spotter_teamwork = {
 		{
 			upgrades = {"head_shot_ammo_return_1"},
 			cost = self.costs.hightier
@@ -2270,6 +2255,22 @@ function SkillTreeTweakData:init()
 		icon_xy = {
 			1,
 			5
+		}
+	}
+	self.skills.single_shot_ammo_return = {
+		{
+			upgrades = {"snp_graze_damage_1"},
+			cost = self.costs.hightier
+		},
+		{
+			upgrades = {"snp_graze_damage_2"},
+			cost = self.costs.hightierpro
+		},
+		name_id = "menu_sniper_graze_damage",
+		desc_id = "menu_sniper_graze_damage_desc",
+		icon_xy = {
+			0,
+			0
 		}
 	}
 	self.trees = {
@@ -4135,7 +4136,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines: 1682 to 1697
+-- Lines: 1683 to 1698
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -4156,7 +4157,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines: 1700 to 1708
+-- Lines: 1701 to 1709
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -4169,17 +4170,17 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines: 1711 to 1713
+-- Lines: 1712 to 1714
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines: 1716 to 1723
+-- Lines: 1717 to 1724
 function SkillTreeTweakData:get_tier_unlocks()
 
-	-- Lines: 1716 to 1717
+	-- Lines: 1717 to 1718
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4194,7 +4195,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines: 1726 to 1748
+-- Lines: 1727 to 1749
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

@@ -72,7 +72,7 @@ function AchievementsTweakData:init(tweak_data)
 		"overkill_290",
 		"sm_wish"
 	}
-	local sm_wish_and_above = {"sm_wish"}
+	local sm_wish_and_above = {}
 	self.im_a_healer_tank_damage_dealer = 10
 	self.iron_man = "level_7"
 	self.going_places = 1000000
