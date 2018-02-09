@@ -533,20 +533,60 @@ end
 function RaycastWeaponBase:get_damage_falloff(damage, col_ray, user_unit)
 	return damage
 end
+
+-- Lines: 562 to 608
+function RaycastWeaponBase:_collect_hits(from, to)
+	local can_shoot_through = self._can_shoot_through_wall or self._can_shoot_through_shield or self._can_shoot_through_enemy
+	local ray_hits = nil
+	local hit_enemy = false
+
+	if can_shoot_through then
+		ray_hits = World:raycast_wall("ray", from, to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units, "thickness", 40, "thickness_mask", managers.slot:get_mask("world_geometry"))
+		local units_hit = {}
+		local unique_hits = {}
+
+		for i, hit in ipairs(ray_hits) do
+			if not units_hit[hit.unit:key()] then
+				units_hit[hit.unit:key()] = true
+				unique_hits[#unique_hits + 1] = hit
+
+				if hit.unit:in_slot(managers.slot:get_mask("enemies")) then
+					hit_enemy = true
+
+					if not self._can_shoot_through_enemy then
+						break
+					end
+				elseif hit.unit:in_slot(managers.slot:get_mask("world_geometry")) and not self._can_shoot_through_wall then
+					break
+				elseif hit.unit:in_slot(managers.slot:get_mask("enemy_shield_check")) and not self._can_shoot_through_shield then
+					break
+				end
+			end
+		end
+
+		ray_hits = unique_hits
+	else
+		local ray_hit = World:raycast("ray", from, to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
+		hit_enemy = ray_hit and ray_hit.unit:in_slot(managers.slot:get_mask("enemies"))
+		ray_hits = {ray_hit}
+	end
+
+	return ray_hits, hit_enemy
+end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 local mvec1 = Vector3()
 
--- Lines: 567 to 799
-function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
+-- Lines: 615 to 813
+function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	if self:gadget_overrides_weapon_functions() then
-		return self:gadget_function_override("_fire_raycast", self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
+		return self:gadget_function_override("_fire_raycast", self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	end
 
 	local result = {}
 	local hit_result = nil
 	local spread_x, spread_y = self:_get_spread(user_unit)
-	local ray_distance = shoot_through_data and shoot_through_data.ray_distance or self:weapon_range()
+	local ray_distance = self:weapon_range()
 	local right = direction:cross(Vector3(0, 0, 1)):normalized()
 	local up = direction:cross(right):normalized()
 	local theta = math.random() * 360
@@ -561,33 +601,8 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 	mvector3.add(mvec_to, from_pos)
 
 	local damage = self:_get_current_damage(dmg_mul)
-	local hit_enemy = false
+	local ray_hits, hit_enemy = self:_collect_hits(from_pos, mvec_to)
 	local hit_anyone = false
-	local ray_hits = nil
-
-	if self._can_shoot_through_wall or self._can_shoot_through_shield or self._can_shoot_through_enemy then
-		ray_hits = World:raycast_wall("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units, "thickness", 40, "thickness_mask", managers.slot:get_mask("world_geometry"))
-		local units_hit = {}
-		local unique_hits = {}
-
-		for i, hit in ipairs(ray_hits) do
-			if not units_hit[hit.unit:key()] then
-				units_hit[hit.unit:key()] = true
-				unique_hits[#unique_hits + 1] = hit
-
-				if hit.unit:in_slot(managers.slot:get_mask("enemies")) then
-					hit_enemy = true
-				end
-			end
-		end
-
-		ray_hits = unique_hits
-	else
-		local ray_hit = World:raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
-		hit_enemy = ray_hit and ray_hit.unit:in_slot(managers.slot:get_mask("enemies"))
-		ray_hits = {ray_hit}
-	end
-
 	local auto_hit_candidate, suppression_enemies = self:check_autoaim(from_pos, direction)
 
 	if suppression_enemies and self._suppression then
@@ -606,8 +621,11 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 
 			if math.random() < autohit_chance then
 				self._autohit_current = (self._autohit_current + weight) / (1 + weight)
-				ray_hits = {auto_hit_candidate}
-				hit_enemy = true
+
+				mvector3.set(mvec_to, from_pos)
+				mvector3.add_scaled(mvec_to, auto_hit_candidate.ray, ray_distance)
+
+				ray_hits, hit_enemy = self:_collect_hits(from_pos, mvec_to)
 			end
 		end
 
@@ -685,7 +703,7 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 		end
 
 		if not tweak_data.achievement.tango_4.difficulty or table.contains(tweak_data.achievement.tango_4.difficulty, Global.game_settings.difficulty) then
-			if self._has_gadget and table.contains(self._has_gadget, "wpn_fps_upg_o_45rds") and hit_result and hit_result.type == "death" and managers.player:player_unit():movement():current_state():in_steelsight() and col_ray.unit:base() and col_ray.unit:base()._tweak_table ~= "civilian" and col_ray.unit:base()._tweak_table ~= "civilian_female" then
+			if self._has_gadget and table.contains(self._has_gadget, "wpn_fps_upg_o_45rds") and hit_result and hit_result.type == "death" and managers.player:player_unit():movement():current_state():in_steelsight() and (not hit.unit:base() or not hit.unit:base():has_tag("civilian")) then
 				if self._tango_4_data then
 					if self._gadget_on == self._tango_4_data.last_gadget_state then
 						self._tango_4_data = nil
@@ -703,7 +721,7 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 						last_gadget_state = self._gadget_on
 					}
 				end
-			elseif self._tango_4_data and not shoot_through_data then
+			elseif self._tango_4_data then
 				self._tango_4_data = nil
 			end
 		end
@@ -740,7 +758,7 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 	return result
 end
 
--- Lines: 804 to 866
+-- Lines: 818 to 880
 function RaycastWeaponBase:get_aim_assist(from_pos, direction, max_dist, use_aim_assist)
 	local autohit = use_aim_assist and self._aim_assist_data or self._autohit_data
 	local autohit_near_angle = autohit.near_angle
@@ -806,7 +824,7 @@ function RaycastWeaponBase:get_aim_assist(from_pos, direction, max_dist, use_aim
 	return closest_ray
 end
 
--- Lines: 870 to 961
+-- Lines: 884 to 975
 function RaycastWeaponBase:check_autoaim(from_pos, direction, max_dist, use_aim_assist, autohit_override_data)
 	local autohit = use_aim_assist and self._aim_assist_data or self._autohit_data
 	autohit = autohit_override_data or autohit
@@ -885,7 +903,7 @@ function RaycastWeaponBase:check_autoaim(from_pos, direction, max_dist, use_aim_
 end
 local mvec_from_pos = Vector3()
 
--- Lines: 967 to 1024
+-- Lines: 981 to 1038
 function RaycastWeaponBase:_check_alert(rays, fire_pos, direction, user_unit)
 	local group_ai = managers.groupai:state()
 	local t = TimerManager:game():time()
@@ -971,7 +989,7 @@ function RaycastWeaponBase:_check_alert(rays, fire_pos, direction, user_unit)
 	end
 end
 
--- Lines: 1028 to 1078
+-- Lines: 1042 to 1092
 function RaycastWeaponBase:damage_player(col_ray, from_pos, direction, params)
 	local unit = managers.player:player_unit()
 
@@ -1030,7 +1048,7 @@ function RaycastWeaponBase:damage_player(col_ray, from_pos, direction, params)
 	return nil, ray_data
 end
 
--- Lines: 1084 to 1090
+-- Lines: 1098 to 1104
 function RaycastWeaponBase:force_hit(from_pos, direction, user_unit, impact_pos, impact_normal, hit_unit, hit_body)
 	self:set_ammo_remaining_in_clip(math.max(0, self:get_ammo_remaining_in_clip() - 1))
 
@@ -1045,7 +1063,7 @@ function RaycastWeaponBase:force_hit(from_pos, direction, user_unit, impact_pos,
 	self._bullet_class:on_collision(col_ray, self._unit, user_unit, self._damage)
 end
 
--- Lines: 1095 to 1101
+-- Lines: 1109 to 1115
 function RaycastWeaponBase:_get_tweak_data_weapon_animation(anim)
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("_get_tweak_data_weapon_animation", anim)
@@ -1056,7 +1074,7 @@ function RaycastWeaponBase:_get_tweak_data_weapon_animation(anim)
 	return animations and animations[anim]
 end
 
--- Lines: 1105 to 1109
+-- Lines: 1119 to 1123
 function RaycastWeaponBase:_get_anim_start_offset(anim)
 	if anim == "reload" and self:ammo_base():get_ammo_remaining_in_clip() <= (self.AKIMBO and 1 or 0) and self:weapon_tweak_data().animations.magazine_empty then
 		return 0.033
@@ -1065,7 +1083,7 @@ function RaycastWeaponBase:_get_anim_start_offset(anim)
 	return false
 end
 
--- Lines: 1113 to 1119
+-- Lines: 1127 to 1133
 function RaycastWeaponBase:tweak_data_anim_play(anim, ...)
 	local animation = self:_get_tweak_data_weapon_animation(anim)
 
@@ -1078,7 +1096,7 @@ function RaycastWeaponBase:tweak_data_anim_play(anim, ...)
 	return false
 end
 
--- Lines: 1122 to 1135
+-- Lines: 1136 to 1149
 function RaycastWeaponBase:anim_play(anim, speed_multiplier)
 	if anim then
 		local length = self._unit:anim_length(Idstring(anim))
@@ -1095,7 +1113,7 @@ function RaycastWeaponBase:anim_play(anim, speed_multiplier)
 	end
 end
 
--- Lines: 1138 to 1144
+-- Lines: 1152 to 1158
 function RaycastWeaponBase:tweak_data_anim_play_at_end(anim, ...)
 	local animation = self:_get_tweak_data_weapon_animation(anim)
 
@@ -1108,7 +1126,7 @@ function RaycastWeaponBase:tweak_data_anim_play_at_end(anim, ...)
 	return false
 end
 
--- Lines: 1147 to 1155
+-- Lines: 1161 to 1169
 function RaycastWeaponBase:anim_play_at_end(anim, speed_multiplier)
 	if anim then
 		local length = self._unit:anim_length(Idstring(anim))
@@ -1120,7 +1138,7 @@ function RaycastWeaponBase:anim_play_at_end(anim, speed_multiplier)
 	end
 end
 
--- Lines: 1158 to 1164
+-- Lines: 1172 to 1178
 function RaycastWeaponBase:tweak_data_anim_stop(anim, ...)
 	local animation = self:_get_tweak_data_weapon_animation(anim)
 
@@ -1133,12 +1151,12 @@ function RaycastWeaponBase:tweak_data_anim_stop(anim, ...)
 	return false
 end
 
--- Lines: 1167 to 1169
+-- Lines: 1181 to 1183
 function RaycastWeaponBase:anim_stop(anim)
 	self._unit:anim_stop(Idstring(anim))
 end
 
--- Lines: 1172 to 1177
+-- Lines: 1186 to 1191
 function RaycastWeaponBase:tweak_data_anim_is_playing(anim)
 	local animation = self:_get_tweak_data_weapon_animation(anim)
 
@@ -1149,12 +1167,12 @@ function RaycastWeaponBase:tweak_data_anim_is_playing(anim)
 	return false
 end
 
--- Lines: 1180 to 1181
+-- Lines: 1194 to 1195
 function RaycastWeaponBase:is_playing_anim(anim)
 	return self._unit:anim_is_playing(anim)
 end
 
--- Lines: 1187 to 1193
+-- Lines: 1201 to 1207
 function RaycastWeaponBase:digest_value(value, digest)
 	if self._digest_values then
 		return Application:digest_value(value, digest)
@@ -1163,7 +1181,7 @@ function RaycastWeaponBase:digest_value(value, digest)
 	end
 end
 
--- Lines: 1197 to 1208
+-- Lines: 1211 to 1222
 function RaycastWeaponBase:set_ammo_max_per_clip(ammo_max_per_clip)
 	if self._ammo_max_per_clip then
 		if self._ammo_max_per_clip2 then
@@ -1178,12 +1196,12 @@ function RaycastWeaponBase:set_ammo_max_per_clip(ammo_max_per_clip)
 	end
 end
 
--- Lines: 1209 to 1210
+-- Lines: 1223 to 1224
 function RaycastWeaponBase:get_ammo_max_per_clip()
 	return self._ammo_max_per_clip and self:digest_value(self._ammo_max_per_clip, false) or self:digest_value(self._ammo_max_per_clip2, false)
 end
 
--- Lines: 1215 to 1226
+-- Lines: 1229 to 1240
 function RaycastWeaponBase:set_ammo_max(ammo_max)
 	if self._ammo_max then
 		if self._ammo_max2 then
@@ -1198,17 +1216,17 @@ function RaycastWeaponBase:set_ammo_max(ammo_max)
 	end
 end
 
--- Lines: 1227 to 1228
+-- Lines: 1241 to 1242
 function RaycastWeaponBase:get_ammo_max()
 	return self._ammo_max and self:digest_value(self._ammo_max, false) or self:digest_value(self._ammo_max2, false)
 end
 
--- Lines: 1233 to 1247
+-- Lines: 1247 to 1261
 function RaycastWeaponBase:set_ammo_total(ammo_total)
 	self._ammo_total = self:digest_value(ammo_total, true)
 end
 
--- Lines: 1250 to 1261
+-- Lines: 1264 to 1275
 function RaycastWeaponBase:add_ammo_to_pool(ammo, index)
 	local max_ammo = self:get_ammo_max()
 	local current_ammo = self:get_ammo_total()
@@ -1222,12 +1240,12 @@ function RaycastWeaponBase:add_ammo_to_pool(ammo, index)
 	managers.hud:set_ammo_amount(index, self:ammo_info())
 end
 
--- Lines: 1263 to 1264
+-- Lines: 1277 to 1278
 function RaycastWeaponBase:get_ammo_total()
 	return self._ammo_total and self:digest_value(self._ammo_total, false) or self:digest_value(self._ammo_total2, false)
 end
 
--- Lines: 1267 to 1270
+-- Lines: 1281 to 1284
 function RaycastWeaponBase:get_ammo_ratio()
 	local ammo_max = self:get_ammo_max()
 	local ammo_total = self:get_ammo_total()
@@ -1235,7 +1253,7 @@ function RaycastWeaponBase:get_ammo_ratio()
 	return ammo_total / math.max(ammo_max, 1)
 end
 
--- Lines: 1274 to 1281
+-- Lines: 1288 to 1295
 function RaycastWeaponBase:get_ammo_ratio_excluding_clip()
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local max_ammo = self:get_ammo_max() - ammo_in_clip
@@ -1248,7 +1266,7 @@ function RaycastWeaponBase:get_ammo_ratio_excluding_clip()
 	return current_ammo / max_ammo
 end
 
--- Lines: 1284 to 1287
+-- Lines: 1298 to 1301
 function RaycastWeaponBase:get_max_ammo_excluding_clip()
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local max_ammo = self:get_ammo_max() - ammo_in_clip
@@ -1256,7 +1274,7 @@ function RaycastWeaponBase:get_max_ammo_excluding_clip()
 	return max_ammo
 end
 
--- Lines: 1290 to 1298
+-- Lines: 1304 to 1312
 function RaycastWeaponBase:remove_ammo_from_pool(percent)
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local current_ammo = self:get_ammo_total() - ammo_in_clip
@@ -1269,7 +1287,7 @@ function RaycastWeaponBase:remove_ammo_from_pool(percent)
 	end
 end
 
--- Lines: 1300 to 1309
+-- Lines: 1314 to 1323
 function RaycastWeaponBase:remove_ammo(percent)
 	local total_ammo = self:get_ammo_total()
 	local ammo = math.floor(total_ammo * percent)
@@ -1285,7 +1303,7 @@ function RaycastWeaponBase:remove_ammo(percent)
 	return total_ammo - ammo
 end
 
--- Lines: 1314 to 1325
+-- Lines: 1328 to 1339
 function RaycastWeaponBase:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	if self._ammo_remaining_in_clip then
 		if self._ammo_remaining_in_clip2 then
@@ -1300,12 +1318,12 @@ function RaycastWeaponBase:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	end
 end
 
--- Lines: 1326 to 1327
+-- Lines: 1340 to 1341
 function RaycastWeaponBase:get_ammo_remaining_in_clip()
 	return self._ammo_remaining_in_clip and self:digest_value(self._ammo_remaining_in_clip, false) or self:digest_value(self._ammo_remaining_in_clip2, false)
 end
 
--- Lines: 1334 to 1355
+-- Lines: 1348 to 1369
 function RaycastWeaponBase:replenish()
 	local ammo_max_multiplier = managers.player:upgrade_value("player", "extra_ammo_multiplier", 1)
 
@@ -1329,7 +1347,7 @@ function RaycastWeaponBase:replenish()
 	self:update_damage()
 end
 
--- Lines: 1359 to 1368
+-- Lines: 1373 to 1382
 function RaycastWeaponBase:upgrade_blocked(category, upgrade)
 	if not self:weapon_tweak_data().upgrade_blocks then
 		return false
@@ -1342,7 +1360,7 @@ function RaycastWeaponBase:upgrade_blocked(category, upgrade)
 	return table.contains(self:weapon_tweak_data().upgrade_blocks[category], upgrade)
 end
 
--- Lines: 1371 to 1382
+-- Lines: 1385 to 1396
 function RaycastWeaponBase:calculate_ammo_max_per_clip()
 	local ammo = tweak_data.weapon[self._name_id].CLIP_AMMO_MAX
 	ammo = ammo + managers.player:upgrade_value(self._name_id, "clip_ammo_increase")
@@ -1360,7 +1378,7 @@ function RaycastWeaponBase:calculate_ammo_max_per_clip()
 	return ammo
 end
 
--- Lines: 1386 to 1391
+-- Lines: 1400 to 1405
 function RaycastWeaponBase:_get_current_damage(dmg_mul)
 	local damage = self._damage * (dmg_mul or 1)
 	damage = damage * managers.player:temporary_upgrade_value("temporary", "combat_medic_damage_multiplier", 1)
@@ -1368,22 +1386,22 @@ function RaycastWeaponBase:_get_current_damage(dmg_mul)
 	return damage
 end
 
--- Lines: 1395 to 1397
+-- Lines: 1409 to 1411
 function RaycastWeaponBase:update_damage()
 	self._damage = tweak_data.weapon[self._name_id].DAMAGE * self:damage_multiplier()
 end
 
--- Lines: 1399 to 1400
+-- Lines: 1413 to 1414
 function RaycastWeaponBase:recoil()
 	return self._recoil
 end
 
--- Lines: 1403 to 1404
+-- Lines: 1417 to 1418
 function RaycastWeaponBase:spread_moving()
 	return self._spread_moving
 end
 
--- Lines: 1407 to 1417
+-- Lines: 1421 to 1431
 function RaycastWeaponBase:reload_speed_multiplier()
 	local multiplier = 1
 
@@ -1398,12 +1416,12 @@ function RaycastWeaponBase:reload_speed_multiplier()
 	return multiplier
 end
 
--- Lines: 1421 to 1422
+-- Lines: 1435 to 1436
 function RaycastWeaponBase:reload_speed_stat()
 	return self._reload
 end
 
--- Lines: 1426 to 1432
+-- Lines: 1440 to 1446
 function RaycastWeaponBase:damage_multiplier()
 	local multiplier = 1
 
@@ -1416,12 +1434,12 @@ function RaycastWeaponBase:damage_multiplier()
 	return multiplier
 end
 
--- Lines: 1435 to 1436
+-- Lines: 1449 to 1450
 function RaycastWeaponBase:melee_damage_multiplier()
 	return managers.player:upgrade_value(self._name_id, "melee_multiplier", 1)
 end
 
--- Lines: 1439 to 1446
+-- Lines: 1453 to 1460
 function RaycastWeaponBase:spread_multiplier()
 	local multiplier = 1
 
@@ -1435,7 +1453,7 @@ function RaycastWeaponBase:spread_multiplier()
 	return multiplier
 end
 
--- Lines: 1449 to 1455
+-- Lines: 1463 to 1469
 function RaycastWeaponBase:exit_run_speed_multiplier()
 	local multiplier = 1
 
@@ -1448,12 +1466,12 @@ function RaycastWeaponBase:exit_run_speed_multiplier()
 	return multiplier
 end
 
--- Lines: 1458 to 1459
+-- Lines: 1472 to 1473
 function RaycastWeaponBase:recoil_addend()
 	return 0
 end
 
--- Lines: 1462 to 1475
+-- Lines: 1476 to 1489
 function RaycastWeaponBase:recoil_multiplier()
 	local multiplier = 1
 
@@ -1472,7 +1490,7 @@ function RaycastWeaponBase:recoil_multiplier()
 	return multiplier
 end
 
--- Lines: 1478 to 1485
+-- Lines: 1492 to 1499
 function RaycastWeaponBase:enter_steelsight_speed_multiplier()
 	local multiplier = 1
 
@@ -1486,22 +1504,22 @@ function RaycastWeaponBase:enter_steelsight_speed_multiplier()
 	return multiplier
 end
 
--- Lines: 1488 to 1489
+-- Lines: 1502 to 1503
 function RaycastWeaponBase:fire_rate_multiplier()
 	return 1
 end
 
--- Lines: 1492 to 1493
+-- Lines: 1506 to 1507
 function RaycastWeaponBase:upgrade_value(value, default)
 	return managers.player:upgrade_value(self._name_id, value, default)
 end
 
--- Lines: 1496 to 1497
+-- Lines: 1510 to 1511
 function RaycastWeaponBase:transition_duration()
 	return self:weapon_tweak_data().transition_duration
 end
 
--- Lines: 1502 to 1506
+-- Lines: 1516 to 1520
 function RaycastWeaponBase:melee_damage_info()
 	local my_tweak_data = self:weapon_tweak_data()
 	local dmg = my_tweak_data.damage_melee * self:melee_damage_multiplier()
@@ -1510,12 +1528,12 @@ function RaycastWeaponBase:melee_damage_info()
 	return dmg, dmg_effect
 end
 
--- Lines: 1511 to 1512
+-- Lines: 1525 to 1526
 function RaycastWeaponBase:ammo_info()
 	return self:ammo_base():get_ammo_max_per_clip(), self:ammo_base():get_ammo_remaining_in_clip(), self:ammo_base():get_ammo_total(), self:ammo_base():get_ammo_max()
 end
 
--- Lines: 1517 to 1521
+-- Lines: 1531 to 1535
 function RaycastWeaponBase:set_ammo(ammo)
 	local ammo_num = math.floor(ammo * self:ammo_base():get_ammo_max())
 
@@ -1523,10 +1541,10 @@ function RaycastWeaponBase:set_ammo(ammo)
 	self:ammo_base():set_ammo_remaining_in_clip(math.min(self:ammo_base():get_ammo_max_per_clip(), ammo_num))
 end
 
--- Lines: 1528 to 1542
+-- Lines: 1542 to 1556
 function RaycastWeaponBase:ammo_full()
 
-	-- Lines: 1527 to 1528
+	-- Lines: 1541 to 1542
 	local function is_full(ammo_base)
 		return ammo_base:get_ammo_total() == ammo_base:get_ammo_max()
 	end
@@ -1544,68 +1562,68 @@ function RaycastWeaponBase:ammo_full()
 	return true
 end
 
--- Lines: 1548 to 1549
+-- Lines: 1562 to 1563
 function RaycastWeaponBase:clip_full()
 	return self:ammo_base():get_ammo_remaining_in_clip() == self:ammo_base():get_ammo_max_per_clip()
 end
 
--- Lines: 1554 to 1555
+-- Lines: 1568 to 1569
 function RaycastWeaponBase:clip_ratio()
 	return self:ammo_base():get_ammo_max_per_clip() / self:ammo_base():get_ammo_remaining_in_clip()
 end
 
--- Lines: 1560 to 1561
+-- Lines: 1574 to 1575
 function RaycastWeaponBase:clip_empty()
 	return self:ammo_base():get_ammo_remaining_in_clip() == 0
 end
 
--- Lines: 1566 to 1567
+-- Lines: 1580 to 1581
 function RaycastWeaponBase:clip_not_empty()
 	return self:ammo_base():get_ammo_remaining_in_clip() > 0
 end
 
--- Lines: 1572 to 1573
+-- Lines: 1586 to 1587
 function RaycastWeaponBase:remaining_full_clips()
 	return math.max(math.floor((self:ammo_base():get_ammo_total() - self:ammo_base():get_ammo_remaining_in_clip()) / self:ammo_base():get_ammo_max_per_clip()), 0)
 end
 
--- Lines: 1578 to 1579
+-- Lines: 1592 to 1593
 function RaycastWeaponBase:zoom()
 	return self._zoom
 end
 
--- Lines: 1584 to 1585
+-- Lines: 1598 to 1599
 function RaycastWeaponBase:reload_expire_t()
 	return nil
 end
 
--- Lines: 1588 to 1589
+-- Lines: 1602 to 1603
 function RaycastWeaponBase:reload_enter_expire_t()
 	return nil
 end
 
--- Lines: 1592 to 1593
+-- Lines: 1606 to 1607
 function RaycastWeaponBase:reload_exit_expire_t()
 	return nil
 end
 
--- Lines: 1600 to 1601
+-- Lines: 1614 to 1615
 function RaycastWeaponBase:update_reloading(t, dt, time_left)
 end
 
--- Lines: 1606 to 1611
+-- Lines: 1620 to 1625
 function RaycastWeaponBase:start_reload()
 	self._reload_ammo_base = self:ammo_base()
 
 	self:set_magazine_empty(false)
 end
 
--- Lines: 1616 to 1617
+-- Lines: 1630 to 1631
 function RaycastWeaponBase:reload_interuptable()
 	return false
 end
 
--- Lines: 1623 to 1634
+-- Lines: 1637 to 1648
 function RaycastWeaponBase:on_reload(amount)
 	local ammo_base = self._reload_ammo_base or self:ammo_base()
 	amount = amount or ammo_base:get_ammo_max_per_clip()
@@ -1622,30 +1640,30 @@ function RaycastWeaponBase:on_reload(amount)
 	self._reload_ammo_base = nil
 end
 
--- Lines: 1638 to 1639
+-- Lines: 1652 to 1653
 function RaycastWeaponBase:ammo_max()
 	return self:ammo_base():get_ammo_max() == self:ammo_base():get_ammo_total()
 end
 
--- Lines: 1644 to 1645
+-- Lines: 1658 to 1659
 function RaycastWeaponBase:out_of_ammo()
 	return self:ammo_base():get_ammo_total() == 0
 end
 
--- Lines: 1650 to 1651
+-- Lines: 1664 to 1665
 function RaycastWeaponBase:reload_prefix()
 	return ""
 end
 
--- Lines: 1655 to 1656
+-- Lines: 1669 to 1670
 function RaycastWeaponBase:can_reload()
 	return self:ammo_base():get_ammo_remaining_in_clip() < self:ammo_base():get_ammo_total()
 end
 
--- Lines: 1666 to 1681
+-- Lines: 1680 to 1695
 function RaycastWeaponBase:add_ammo_in_bullets(bullets)
 
-	-- Lines: 1661 to 1666
+	-- Lines: 1675 to 1680
 	local function add_ammo(ammo_base, bullets)
 		local ammo_max = ammo_base:get_ammo_max()
 		local ammo_total = ammo_base:get_ammo_total()
@@ -1665,10 +1683,10 @@ function RaycastWeaponBase:add_ammo_in_bullets(bullets)
 	end
 end
 
--- Lines: 1734 to 1756
+-- Lines: 1748 to 1770
 function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
 
-	-- Lines: 1688 to 1733
+	-- Lines: 1702 to 1747
 	local function _add_ammo(ammo_base, ratio, add_amount_override)
 		if ammo_base:get_ammo_max() == ammo_base:get_ammo_total() then
 			return false, 0
@@ -1731,10 +1749,10 @@ function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
 	return picked_up, add_amount
 end
 
--- Lines: 1772 to 1784
+-- Lines: 1786 to 1798
 function RaycastWeaponBase:add_ammo_ratio(ammo_ratio_increase)
 
-	-- Lines: 1762 to 1773
+	-- Lines: 1776 to 1787
 	local function _add_ammo(ammo_base, ammo_ratio_increase)
 		if ammo_base:get_ammo_max() == ammo_base:get_ammo_total() then
 			return
@@ -1757,10 +1775,10 @@ function RaycastWeaponBase:add_ammo_ratio(ammo_ratio_increase)
 	end
 end
 
--- Lines: 1803 to 1818
+-- Lines: 1817 to 1832
 function RaycastWeaponBase:add_ammo_from_bag(available)
 
-	-- Lines: 1789 to 1802
+	-- Lines: 1803 to 1816
 	local function process_ammo(ammo_base, amount_available)
 		if ammo_base:get_ammo_max() == ammo_base:get_ammo_total() then
 			return 0
@@ -1791,7 +1809,7 @@ function RaycastWeaponBase:add_ammo_from_bag(available)
 	return can_have
 end
 
--- Lines: 1822 to 1837
+-- Lines: 1836 to 1851
 function RaycastWeaponBase:reduce_ammo_by_procentage_of_total(ammo_procentage)
 	local ammo_max = self:get_ammo_max()
 	local ammo_total = self:get_ammo_total()
@@ -1811,12 +1829,12 @@ function RaycastWeaponBase:reduce_ammo_by_procentage_of_total(ammo_procentage)
 	self:set_ammo_remaining_in_clip(math.round(math.min(ammo_after_reduction, ammo_remaining_in_clip)))
 end
 
--- Lines: 1842 to 1845
+-- Lines: 1856 to 1859
 function RaycastWeaponBase:on_equip(user_unit)
 	self:_check_magazine_empty()
 end
 
--- Lines: 1848 to 1857
+-- Lines: 1862 to 1871
 function RaycastWeaponBase:_check_magazine_empty()
 	local mag = self:ammo_base():get_ammo_remaining_in_clip()
 
@@ -1831,31 +1849,31 @@ function RaycastWeaponBase:_check_magazine_empty()
 	end
 end
 
--- Lines: 1861 to 1866
+-- Lines: 1875 to 1880
 function RaycastWeaponBase:on_unequip(user_unit)
 	if self._tango_4_data then
 		self._tango_4_data = nil
 	end
 end
 
--- Lines: 1868 to 1873
+-- Lines: 1882 to 1887
 function RaycastWeaponBase:on_enabled()
 	self._enabled = true
 
 	self:_check_magazine_empty()
 end
 
--- Lines: 1875 to 1877
+-- Lines: 1889 to 1891
 function RaycastWeaponBase:on_disabled()
 	self._enabled = false
 end
 
--- Lines: 1879 to 1880
+-- Lines: 1893 to 1894
 function RaycastWeaponBase:enabled()
 	return self._enabled
 end
 
--- Lines: 1885 to 1890
+-- Lines: 1899 to 1904
 function RaycastWeaponBase:play_tweak_data_sound(event, alternative_event)
 	local event = self:_get_sound_event(event, alternative_event)
 
@@ -1864,12 +1882,12 @@ function RaycastWeaponBase:play_tweak_data_sound(event, alternative_event)
 	end
 end
 
--- Lines: 1892 to 1894
+-- Lines: 1906 to 1908
 function RaycastWeaponBase:play_sound(event)
 	self._sound_fire:post_event(event)
 end
 
--- Lines: 1897 to 1910
+-- Lines: 1911 to 1924
 function RaycastWeaponBase:_get_sound_event(event, alternative_event)
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("_get_sound_event", self, event, alternative_event)
@@ -1887,7 +1905,7 @@ function RaycastWeaponBase:_get_sound_event(event, alternative_event)
 	return event
 end
 
--- Lines: 1915 to 1921
+-- Lines: 1929 to 1935
 function RaycastWeaponBase:destroy(unit)
 	RaycastWeaponBase.super.pre_destroy(self, unit)
 
@@ -1896,7 +1914,7 @@ function RaycastWeaponBase:destroy(unit)
 	end
 end
 
--- Lines: 1925 to 1948
+-- Lines: 1939 to 1962
 function RaycastWeaponBase:_get_spread(user_unit)
 	local spread_multiplier = self:spread_multiplier()
 	local current_state = user_unit:movement()._current_state
@@ -1922,29 +1940,29 @@ function RaycastWeaponBase:_get_spread(user_unit)
 	return self._spread * tweak_data.weapon[self._name_id].spread[current_state._moving and "moving_standing" or "standing"] * spread_multiplier
 end
 
--- Lines: 1953 to 1955
+-- Lines: 1967 to 1969
 function RaycastWeaponBase:set_visibility_state(state)
 	self._unit:set_visible(state)
 end
 
--- Lines: 1959 to 1961
+-- Lines: 1973 to 1975
 function RaycastWeaponBase:set_bullet_hit_slotmask(new_slotmask)
 	self._bullet_slotmask = new_slotmask
 end
 
--- Lines: 1966 to 1967
+-- Lines: 1980 to 1981
 function RaycastWeaponBase:flashlight_state_changed()
 end
 
--- Lines: 1970 to 1971
+-- Lines: 1984 to 1985
 function RaycastWeaponBase:set_flashlight_enabled(enabled)
 end
 
--- Lines: 1976 to 1977
+-- Lines: 1990 to 1991
 function RaycastWeaponBase:set_scope_enabled(enabled)
 end
 
--- Lines: 1981 to 1985
+-- Lines: 1995 to 1999
 function RaycastWeaponBase:set_timer(timer)
 	self._timer = timer
 
@@ -1952,7 +1970,7 @@ function RaycastWeaponBase:set_timer(timer)
 	self._unit:set_animation_timer(timer)
 end
 
--- Lines: 1989 to 2000
+-- Lines: 2003 to 2014
 function RaycastWeaponBase:set_objects_visible(unit, objects, visible)
 	if type(objects) == "string" then
 		objects = {objects}
@@ -1967,7 +1985,7 @@ function RaycastWeaponBase:set_objects_visible(unit, objects, visible)
 	end
 end
 
--- Lines: 2004 to 2019
+-- Lines: 2018 to 2033
 function RaycastWeaponBase:set_magazine_empty(is_empty)
 	local data = tweak_data.weapon.factory[self._factory_id]
 
@@ -1986,14 +2004,14 @@ function RaycastWeaponBase:set_magazine_empty(is_empty)
 	end
 end
 
--- Lines: 2024 to 2025
+-- Lines: 2038 to 2039
 function RaycastWeaponBase:weapon_range()
 	return self._weapon_range or 20000
 end
 InstantBulletBase = InstantBulletBase or class()
 InstantBulletBase.id = "instant"
 
--- Lines: 2034 to 2106
+-- Lines: 2048 to 2120
 function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank, no_sound)
 	local hit_unit = col_ray.unit
 	local shield_knock = false
@@ -2077,7 +2095,7 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 	return result
 end
 
--- Lines: 2109 to 2116
+-- Lines: 2123 to 2130
 function InstantBulletBase:on_collision_effects(col_ray, weapon_unit, user_unit, damage, blank, no_sound)
 	local hit_unit = col_ray.unit
 	local play_impact_flesh = not hit_unit:character_damage() or not hit_unit:character_damage()._no_blood
@@ -2091,7 +2109,7 @@ function InstantBulletBase:on_collision_effects(col_ray, weapon_unit, user_unit,
 	end
 end
 
--- Lines: 2118 to 2123
+-- Lines: 2132 to 2137
 function InstantBulletBase:_get_character_push_multiplier(weapon_unit, died)
 	if alive(weapon_unit) and weapon_unit:base().is_category and weapon_unit:base():is_category("shotgun") then
 		return nil
@@ -2100,7 +2118,7 @@ function InstantBulletBase:_get_character_push_multiplier(weapon_unit, died)
 	return died and 2.5 or nil
 end
 
--- Lines: 2126 to 2129
+-- Lines: 2140 to 2143
 function InstantBulletBase:on_hit_player(col_ray, weapon_unit, user_unit, damage)
 	local armor_piercing = alive(weapon_unit) and weapon_unit:base():weapon_tweak_data().armor_piercing or nil
 	col_ray.unit = managers.player:player_unit()
@@ -2108,17 +2126,17 @@ function InstantBulletBase:on_hit_player(col_ray, weapon_unit, user_unit, damage
 	return self:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 end
 
--- Lines: 2135 to 2136
+-- Lines: 2149 to 2150
 function InstantBulletBase:bullet_slotmask()
 	return managers.slot:get_mask("bullet_impact_targets")
 end
 
--- Lines: 2139 to 2140
+-- Lines: 2153 to 2154
 function InstantBulletBase:blank_slotmask()
 	return managers.slot:get_mask("bullet_blank_impact_targets")
 end
 
--- Lines: 2145 to 2154
+-- Lines: 2159 to 2168
 function InstantBulletBase:_get_sound_and_effects_params(weapon_unit, col_ray, no_sound)
 	local bullet_tweak = self.id and (tweak_data.blackmarket.bullets[self.id] or {}) or {}
 	local params = {
@@ -2132,12 +2150,12 @@ function InstantBulletBase:_get_sound_and_effects_params(weapon_unit, col_ray, n
 	return params
 end
 
--- Lines: 2157 to 2159
+-- Lines: 2171 to 2173
 function InstantBulletBase:play_impact_sound_and_effects(weapon_unit, col_ray, no_sound)
 	managers.game_play_central:play_impact_sound_and_effects(self:_get_sound_and_effects_params(weapon_unit, col_ray, no_sound))
 end
 
--- Lines: 2163 to 2177
+-- Lines: 2177 to 2191
 function InstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing, shield_knock, knock_down, stagger, variant)
 	local action_data = {
 		variant = variant or "bullet",
@@ -2156,7 +2174,7 @@ function InstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, d
 	return defense_data
 end
 
--- Lines: 2182 to 2190
+-- Lines: 2196 to 2204
 function InstantBulletBase._get_vector_sync_yaw_pitch(dir, yaw_resolution, pitch_resolution)
 	mrotation.set_look_at(tmp_rot1, dir, math.UP)
 
@@ -2185,22 +2203,22 @@ InstantExplosiveBulletBase.EFFECT_PARAMS = {
 	idstr_effect = Idstring("")
 }
 
--- Lines: 2212 to 2213
+-- Lines: 2226 to 2227
 function InstantExplosiveBulletBase:bullet_slotmask()
 	return managers.slot:get_mask("bullet_impact_targets")
 end
 
--- Lines: 2216 to 2217
+-- Lines: 2230 to 2231
 function InstantExplosiveBulletBase:blank_slotmask()
 	return managers.slot:get_mask("bullet_blank_impact_targets")
 end
 
--- Lines: 2220 to 2222
+-- Lines: 2234 to 2236
 function InstantExplosiveBulletBase:play_impact_sound_and_effects(weapon_unit, col_ray)
 	managers.game_play_central:play_impact_sound_and_effects(self:_get_sound_and_effects_params(weapon_unit, col_ray, false))
 end
 
--- Lines: 2224 to 2281
+-- Lines: 2238 to 2295
 function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local hit_unit = col_ray.unit
 
@@ -2253,7 +2271,7 @@ function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit
 	return nil
 end
 
--- Lines: 2284 to 2342
+-- Lines: 2298 to 2356
 function InstantExplosiveBulletBase:on_collision_server(position, normal, damage, user_unit, weapon_unit, owner_peer_id, owner_selection_index)
 	local slot_mask = managers.slot:get_mask("explosion_targets")
 
@@ -2318,7 +2336,7 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 	end
 end
 
--- Lines: 2344 to 2347
+-- Lines: 2358 to 2361
 function InstantExplosiveBulletBase:on_collision_client(position, normal, damage, user_unit)
 	managers.explosion:give_local_player_dmg(position, self.RANGE, damage * self.PLAYER_DMG_MUL)
 	managers.explosion:explode_on_client(position, normal, user_unit, damage, self.RANGE, self.CURVE_POW, self.EFFECT_PARAMS)
@@ -2336,12 +2354,12 @@ FlameBulletBase.EFFECT_PARAMS = {
 	pushunits = tweak_data.upgrades
 }
 
--- Lines: 2520 to 2521
+-- Lines: 2534 to 2535
 function FlameBulletBase:bullet_slotmask()
 	return managers.slot:get_mask("bullet_impact_targets_no_shields")
 end
 
--- Lines: 2524 to 2588
+-- Lines: 2538 to 2602
 function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local hit_unit = col_ray.unit
 	local play_impact_flesh = false
@@ -2399,7 +2417,7 @@ function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, b
 	return result
 end
 
--- Lines: 2593 to 2619
+-- Lines: 2607 to 2633
 function FlameBulletBase:give_fire_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local fire_dot_data = nil
 
@@ -2427,7 +2445,7 @@ function FlameBulletBase:give_fire_damage(col_ray, weapon_unit, user_unit, damag
 	return defense_data
 end
 
--- Lines: 2622 to 2636
+-- Lines: 2636 to 2650
 function FlameBulletBase:give_fire_damage_dot(col_ray, weapon_unit, attacker_unit, damage, is_fire_dot_damage, is_molotov)
 	local action_data = {
 		variant = "fire",
@@ -2447,13 +2465,13 @@ function FlameBulletBase:give_fire_damage_dot(col_ray, weapon_unit, attacker_uni
 	return defense_data
 end
 
--- Lines: 2640 to 2641
+-- Lines: 2654 to 2655
 function FlameBulletBase:play_impact_sound_and_effects(weapon_unit, col_ray, no_sound)
 end
 DragonBreathBulletBase = DragonBreathBulletBase or class(InstantBulletBase)
 DragonBreathBulletBase.id = "dragons_breath"
 
--- Lines: 2649 to 2708
+-- Lines: 2663 to 2722
 function DragonBreathBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local hit_unit = col_ray.unit
 	local play_impact_flesh = not hit_unit:character_damage() or not hit_unit:character_damage()._no_blood
@@ -2504,7 +2522,7 @@ function DragonBreathBulletBase:on_collision(col_ray, weapon_unit, user_unit, da
 	return result
 end
 
--- Lines: 2711 to 2722
+-- Lines: 2725 to 2736
 function DragonBreathBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local action_data = {
 		variant = "bullet",
@@ -2527,7 +2545,7 @@ DOTBulletBase.DOT_DATA = {
 	dot_tick_period = 0.5
 }
 
--- Lines: 2732 to 2743
+-- Lines: 2746 to 2757
 function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local result = DOTBulletBase.super.on_collision(self, col_ray, weapon_unit, user_unit, damage, blank, self.NO_BULLET_INPACT_SOUND)
 	local hit_unit = col_ray.unit
@@ -2539,7 +2557,7 @@ function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, bla
 	return result
 end
 
--- Lines: 2746 to 2755
+-- Lines: 2760 to 2769
 function DOTBulletBase:_dot_data_by_weapon(weapon_unit)
 	if not alive(weapon_unit) then
 		return nil
@@ -2554,7 +2572,7 @@ function DOTBulletBase:_dot_data_by_weapon(weapon_unit)
 	return nil
 end
 
--- Lines: 2759 to 2763
+-- Lines: 2773 to 2777
 function DOTBulletBase:start_dot_damage(col_ray, weapon_unit, dot_data, weapon_id)
 	local hurt_animation = not dot_data.hurt_animation_chance or math.rand(1) < dot_data.hurt_animation_chance
 	dot_data = dot_data or self.DOT_DATA
@@ -2562,7 +2580,7 @@ function DOTBulletBase:start_dot_damage(col_ray, weapon_unit, dot_data, weapon_i
 	managers.dot:add_doted_enemy(col_ray.unit, TimerManager:game():time(), weapon_unit, dot_data.dot_length, dot_data.dot_damage, hurt_animation, self.VARIANT, weapon_id)
 end
 
--- Lines: 2765 to 2779
+-- Lines: 2779 to 2793
 function DOTBulletBase:give_damage_dot(col_ray, weapon_unit, attacker_unit, damage, hurt_animation, weapon_id)
 	local action_data = {
 		variant = self.VARIANT,
@@ -2586,7 +2604,7 @@ PoisonBulletBase.VARIANT = "poison"
 ProjectilesPoisonBulletBase = ProjectilesPoisonBulletBase or class(PoisonBulletBase)
 ProjectilesPoisonBulletBase.NO_BULLET_INPACT_SOUND = true
 
--- Lines: 2790 to 2811
+-- Lines: 2804 to 2825
 function ProjectilesPoisonBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local result = DOTBulletBase.super.on_collision(self, col_ray, weapon_unit, user_unit, damage, blank, self.NO_BULLET_INPACT_SOUND)
 	local hit_unit = col_ray.unit

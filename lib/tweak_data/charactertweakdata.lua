@@ -15657,7 +15657,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines: 5578 to 5685
+-- Lines: 5578 to 5693
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -15667,6 +15667,8 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.gangster.HEALTH_INIT = self.gangster.HEALTH_INIT * hp_mul
 	self.biker.HEALTH_INIT = self.biker.HEALTH_INIT * hp_mul
 	self.tank.HEALTH_INIT = self.tank.HEALTH_INIT * hp_mul
+	self.tank_mini.HEALTH_INIT = self.tank_mini.HEALTH_INIT * hp_mul
+	self.tank_medic.HEALTH_INIT = self.tank_medic.HEALTH_INIT * hp_mul
 	self.spooc.HEALTH_INIT = self.spooc.HEALTH_INIT * hp_mul
 	self.shield.HEALTH_INIT = self.shield.HEALTH_INIT * hp_mul
 	self.phalanx_minion.HEALTH_INIT = self.phalanx_minion.HEALTH_INIT * hp_mul
@@ -15773,9 +15775,17 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	if self.bolivian_indoors.headshot_dmg_mul then
 		self.bolivian_indoors.headshot_dmg_mul = self.bolivian_indoors.headshot_dmg_mul * hs_mul
 	end
+
+	if self.tank_medic.headshot_dmg_mul then
+		self.tank_medic.headshot_dmg_mul = self.tank_medic.headshot_dmg_mul * hs_mul
+	end
+
+	if self.tank_mini.headshot_dmg_mul then
+		self.tank_mini.headshot_dmg_mul = self.tank_mini.headshot_dmg_mul * hs_mul
+	end
 end
 
--- Lines: 5689 to 5717
+-- Lines: 5697 to 5725
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -15820,7 +15830,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines: 5720 to 5725
+-- Lines: 5728 to 5733
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -15837,7 +15847,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5729 to 6209
+-- Lines: 5737 to 6217
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

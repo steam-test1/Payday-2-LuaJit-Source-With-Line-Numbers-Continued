@@ -7167,7 +7167,7 @@ function WeaponTweakData:_init_s552(weapon_data)
 	self.s552.stats = {
 		zoom = 3,
 		total_ammo_mod = 21,
-		damage = 38,
+		damage = 42,
 		alert_size = 7,
 		spread = 10,
 		spread_moving = 8,

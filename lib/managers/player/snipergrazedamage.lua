@@ -1,6 +1,6 @@
 SniperGrazeDamage = SniperGrazeDamage or {}
 
--- Lines: 35 to 123
+-- Lines: 35 to 124
 function SniperGrazeDamage:on_weapon_fired(weapon_unit, result)
 	if not weapon_unit:base():is_category("snp") then
 		return
@@ -53,7 +53,7 @@ function SniperGrazeDamage:on_weapon_fired(weapon_unit, result)
 
 	mvector3.add_scaled(to, furthest_hit.ray, distance)
 
-	local hits = World:raycast_all("ray", from, to, "sphere_cast_radius", radius, "slot_mask", managers.slot:get_mask("enemies", "civilians"))
+	local hits = World:raycast_all("ray", from, to, "sphere_cast_radius", radius, "disable_inner_ray", "slot_mask", managers.slot:get_mask("enemies", "civilians"))
 
 	for i, hit in ipairs(hits) do
 		local key = hit.unit:key()
