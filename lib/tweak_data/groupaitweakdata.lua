@@ -236,16 +236,16 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 			shield = 4,
 			medic = 3,
 			taser = 3,
-			tank = 3,
-			spooc = 3
+			tank = 2,
+			spooc = 2
 		}
 	elseif difficulty_index == 8 then
 		self.special_unit_spawn_limits = {
 			shield = 4,
 			medic = 3,
 			taser = 3,
-			tank = 4,
-			spooc = 3
+			tank = 3,
+			spooc = 2
 		}
 	else
 		self.special_unit_spawn_limits = {

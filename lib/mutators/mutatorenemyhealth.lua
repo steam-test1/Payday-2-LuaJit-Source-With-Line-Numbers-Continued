@@ -7,23 +7,24 @@ MutatorEnemyHealth.reductions = {
 	money = 0,
 	exp = 0
 }
+MutatorEnemyHealth.disables_achievements = true
 MutatorEnemyHealth.categories = {"enemies"}
 MutatorEnemyHealth.icon_coords = {
 	4,
 	1
 }
 
--- Lines: 14 to 16
+-- Lines: 16 to 18
 function MutatorEnemyHealth:register_values(mutator_manager)
 	self:register_value("health_multiplier", 2, "hm")
 end
 
--- Lines: 18 to 20
+-- Lines: 20 to 22
 function MutatorEnemyHealth:setup()
 	self:modify_character_tweak_data(tweak_data.character, self:get_health_multiplier())
 end
 
--- Lines: 22 to 29
+-- Lines: 24 to 31
 function MutatorEnemyHealth:name()
 	local name = MutatorEnemyHealth.super.name(self)
 
@@ -34,12 +35,12 @@ function MutatorEnemyHealth:name()
 	end
 end
 
--- Lines: 33 to 34
+-- Lines: 35 to 36
 function MutatorEnemyHealth:get_health_multiplier()
 	return self:value("health_multiplier")
 end
 
--- Lines: 38 to 54
+-- Lines: 40 to 56
 function MutatorEnemyHealth:modify_character_tweak_data(character_tweak, multiplier)
 	if character_tweak then
 		multiplier = multiplier or self:get_health_multiplier()
@@ -56,17 +57,17 @@ function MutatorEnemyHealth:modify_character_tweak_data(character_tweak, multipl
 	end
 end
 
--- Lines: 58 to 59
+-- Lines: 60 to 61
 function MutatorEnemyHealth:_min_health()
 	return 1.01
 end
 
--- Lines: 62 to 63
+-- Lines: 64 to 65
 function MutatorEnemyHealth:_max_health()
 	return 10
 end
 
--- Lines: 67 to 87
+-- Lines: 69 to 89
 function MutatorEnemyHealth:setup_options_gui(node)
 	local params = {
 		name = "enemy_health_slider",
@@ -92,12 +93,12 @@ function MutatorEnemyHealth:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 91 to 93
+-- Lines: 93 to 95
 function MutatorEnemyHealth:_update_health_multiplier(item)
 	self:set_value("health_multiplier", item:value())
 end
 
--- Lines: 96 to 106
+-- Lines: 98 to 108
 function MutatorEnemyHealth:reset_to_default()
 	self:clear_values()
 
@@ -110,7 +111,7 @@ function MutatorEnemyHealth:reset_to_default()
 	end
 end
 
--- Lines: 108 to 109
+-- Lines: 110 to 111
 function MutatorEnemyHealth:options_fill()
 	return self:_get_percentage_fill(self:_min_health(), self:_max_health(), self:get_health_multiplier())
 end

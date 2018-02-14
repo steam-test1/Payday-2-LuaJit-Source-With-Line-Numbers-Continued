@@ -3,9 +3,10 @@ MutatorShieldDozers._type = "MutatorShieldDozers"
 MutatorShieldDozers.name_id = "mutator_shield_dozers"
 MutatorShieldDozers.desc_id = "mutator_shield_dozers_desc"
 MutatorShieldDozers.reductions = {
-	money = 0.5,
-	exp = 0.5
+	money = 0,
+	exp = 0
 }
+MutatorShieldDozers.disables_achievements = true
 MutatorShieldDozers.categories = {"enemies"}
 MutatorShieldDozers.icon_coords = {
 	1,
@@ -21,7 +22,7 @@ MutatorShieldDozers.allowed_tweak_datas = {
 	"tank_hw"
 }
 
--- Lines: 26 to 37
+-- Lines: 28 to 39
 function MutatorShieldDozers:modify_value(id, value)
 	if id == "CopInventory:add_unit_by_name" then
 		local unit_type = value._unit:base()._tweak_table

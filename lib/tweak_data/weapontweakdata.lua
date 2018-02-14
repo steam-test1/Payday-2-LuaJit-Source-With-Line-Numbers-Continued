@@ -241,7 +241,7 @@ end
 -- Lines: 421 to 435
 function WeaponTweakData:_set_easy_wish()
 	self.ak47_ass_npc.DAMAGE = 2.5
-	self.g36_npc.DAMAGE = 0.65
+	self.g36_npc.DAMAGE = 1
 	self.swat_van_turret_module.HEALTH_INIT = 40000
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 700
 	self.swat_van_turret_module.DAMAGE = 3.5

@@ -539,39 +539,32 @@ function RaycastWeaponBase:_collect_hits(from, to)
 	local can_shoot_through = self._can_shoot_through_wall or self._can_shoot_through_shield or self._can_shoot_through_enemy
 	local ray_hits = nil
 	local hit_enemy = false
+	local enemy_mask = managers.slot:get_mask("enemies")
+	local wall_mask = managers.slot:get_mask("world_geometry", "vehicles")
+	local shield_mask = managers.slot:get_mask("enemy_shield_check")
+	local ai_vision_ids = Idstring("ai_vision")
+	ray_hits = self._can_shoot_through_wall and World:raycast_wall("ray", from, to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units, "thickness", 40, "thickness_mask", wall_mask) or World:raycast_all("ray", from, to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
+	local units_hit = {}
+	local unique_hits = {}
 
-	if can_shoot_through then
-		ray_hits = World:raycast_wall("ray", from, to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units, "thickness", 40, "thickness_mask", managers.slot:get_mask("world_geometry"))
-		local units_hit = {}
-		local unique_hits = {}
+	for i, hit in ipairs(ray_hits) do
+		if not units_hit[hit.unit:key()] then
+			units_hit[hit.unit:key()] = true
+			unique_hits[#unique_hits + 1] = hit
+			local hit_enemy = hit_enemy or hit.unit:in_slot(enemy_mask)
+			local weak_body = hit.body:has_ray_type(ai_vision_ids)
 
-		for i, hit in ipairs(ray_hits) do
-			if not units_hit[hit.unit:key()] then
-				units_hit[hit.unit:key()] = true
-				unique_hits[#unique_hits + 1] = hit
-
-				if hit.unit:in_slot(managers.slot:get_mask("enemies")) then
-					hit_enemy = true
-
-					if not self._can_shoot_through_enemy then
-						break
-					end
-				elseif hit.unit:in_slot(managers.slot:get_mask("world_geometry")) and not self._can_shoot_through_wall then
-					break
-				elseif hit.unit:in_slot(managers.slot:get_mask("enemy_shield_check")) and not self._can_shoot_through_shield then
-					break
-				end
+			if not self._can_shoot_through_enemy and hit_enemy then
+				break
+			elseif not self._can_shoot_through_wall and hit.unit:in_slot(wall_mask) and weak_body then
+				break
+			elseif not self._can_shoot_through_shield and hit.unit:in_slot(shield_mask) then
+				break
 			end
 		end
-
-		ray_hits = unique_hits
-	else
-		local ray_hit = World:raycast("ray", from, to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
-		hit_enemy = ray_hit and ray_hit.unit:in_slot(managers.slot:get_mask("enemies"))
-		ray_hits = {ray_hit}
 	end
 
-	return ray_hits, hit_enemy
+	return unique_hits, hit_enemy
 end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()

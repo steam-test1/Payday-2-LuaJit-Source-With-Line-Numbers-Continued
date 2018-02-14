@@ -4,9 +4,10 @@ MutatorHydra.name_id = "mutator_hydra"
 MutatorHydra.desc_id = "mutator_hydra_desc"
 MutatorHydra.has_options = true
 MutatorHydra.reductions = {
-	money = 0.1,
-	exp = 0.1
+	money = 0,
+	exp = 0
 }
+MutatorHydra.disables_achievements = true
 MutatorHydra.categories = {
 	"enemies",
 	"gameplay"
@@ -288,12 +289,12 @@ MutatorHydra.raw_enemy_list = {
 	["units/payday2/characters/ene_gang_russian_1/ene_gang_russian_1"] = {}
 }
 
--- Lines: 183 to 185
+-- Lines: 185 to 187
 function MutatorHydra:register_values(mutator_manager)
 	self:register_value("max_unit_depth", 2, "md")
 end
 
--- Lines: 188 to 193
+-- Lines: 190 to 195
 function MutatorHydra:setup(mutator_manager)
 	self._units = {}
 
@@ -301,7 +302,7 @@ function MutatorHydra:setup(mutator_manager)
 	self:_setup_enemy_list()
 end
 
--- Lines: 197 to 219
+-- Lines: 199 to 221
 function MutatorHydra:_setup_enemy_list()
 	local converted_list = {}
 
@@ -323,7 +324,7 @@ function MutatorHydra:_setup_enemy_list()
 	self.enemy_list = converted_list
 end
 
--- Lines: 221 to 231
+-- Lines: 223 to 233
 function MutatorHydra:name()
 	local name = MutatorHydra.super.name(self)
 
@@ -336,12 +337,12 @@ function MutatorHydra:name()
 	end
 end
 
--- Lines: 235 to 236
+-- Lines: 237 to 238
 function MutatorHydra:get_max_unit_depth()
 	return self:value("max_unit_depth")
 end
 
--- Lines: 243 to 271
+-- Lines: 245 to 273
 function MutatorHydra:update(t, dt)
 	for i, spawn_data in pairs(self._hydra_spawns or {}) do
 		spawn_data.t = spawn_data.t - dt
@@ -373,7 +374,7 @@ function MutatorHydra:update(t, dt)
 end
 MutatorHydra._sound_devices = 0
 
--- Lines: 276 to 305
+-- Lines: 278 to 307
 function MutatorHydra.play_split_particle(position, rotation)
 	if not _G.managers or not managers.mutators or not PackageManager:loaded(managers.mutators.package) then
 		return false
@@ -407,7 +408,7 @@ function MutatorHydra.play_split_particle(position, rotation)
 	end
 end
 
--- Lines: 308 to 332
+-- Lines: 310 to 334
 function MutatorHydra:split_enemy(cop_damage, attack_data)
 	if Network:is_server() then
 		local parent_unit = cop_damage._unit
@@ -430,7 +431,7 @@ function MutatorHydra:split_enemy(cop_damage, attack_data)
 	end
 end
 
--- Lines: 335 to 364
+-- Lines: 337 to 366
 function MutatorHydra:_spawn_unit(name, parent_unit, depth)
 	if not name or self:get_max_unit_depth() <= depth then
 		return false
@@ -462,27 +463,27 @@ function MutatorHydra:_spawn_unit(name, parent_unit, depth)
 	})
 end
 
--- Lines: 366 to 367
+-- Lines: 368 to 369
 function MutatorHydra:get_hydra_depth(unit)
 	return self._units[unit:key()] or 0
 end
 
--- Lines: 370 to 372
+-- Lines: 372 to 374
 function MutatorHydra:set_hydra_depth(unit, depth)
 	self._units[unit:key()] = depth
 end
 
--- Lines: 376 to 377
+-- Lines: 378 to 379
 function MutatorHydra:_min_splits()
 	return 1
 end
 
--- Lines: 380 to 381
+-- Lines: 382 to 383
 function MutatorHydra:_max_splits()
 	return 4
 end
 
--- Lines: 385 to 405
+-- Lines: 387 to 407
 function MutatorHydra:setup_options_gui(node)
 	local params = {
 		name = "hydra_split_slider",
@@ -508,12 +509,12 @@ function MutatorHydra:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 409 to 411
+-- Lines: 411 to 413
 function MutatorHydra:_update_max_unit_depth(item)
 	self:set_value("max_unit_depth", math.round(item:value()))
 end
 
--- Lines: 414 to 424
+-- Lines: 416 to 426
 function MutatorHydra:reset_to_default()
 	self:clear_values()
 
@@ -526,7 +527,7 @@ function MutatorHydra:reset_to_default()
 	end
 end
 
--- Lines: 426 to 427
+-- Lines: 428 to 429
 function MutatorHydra:options_fill()
 	return self:_get_percentage_fill(1, self:_max_splits(), self:get_max_unit_depth())
 end

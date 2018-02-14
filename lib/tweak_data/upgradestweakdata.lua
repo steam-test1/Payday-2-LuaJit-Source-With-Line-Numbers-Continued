@@ -271,14 +271,14 @@ function UpgradesTweakData:_init_pd2_values()
 	}}
 	self.values.pistol.stacking_hit_damage_multiplier = {
 		{
-			max_stacks = 4,
+			max_stacks = 1,
 			max_time = 2,
-			damage_bonus = 1.2
+			damage_bonus = 2.2
 		},
 		{
-			max_stacks = 4,
-			max_time = 10,
-			damage_bonus = 1.2
+			max_stacks = 1,
+			max_time = 4,
+			damage_bonus = 2.2
 		}
 	}
 	self.values.assault_rifle.reload_speed_multiplier = {1.15}
@@ -2225,12 +2225,12 @@ function UpgradesTweakData:_init_pd2_values()
 			{
 				"10%",
 				"2",
-				"4",
-				"20%"
+				"1",
+				"120%"
 			},
 			{
 				"8",
-				"10"
+				"4"
 			}
 		},
 		perseverance = {
