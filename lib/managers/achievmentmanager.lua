@@ -924,10 +924,38 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines: 941 to 960
+-- Lines: 941 to 982
 function AchievmentManager:_check_autounlock_complete_heist()
+	local condition_whitelist = {
+		"award",
+		"difficulty",
+		"one_down",
+		"job",
+		"jobs"
+	}
+
+
+	-- Lines: 950 to 964
+	local function eligible_for_autounlock(achievement_data)
+		local has_award = achievement_data.award
+		local has_difficulty = achievement_data.difficulty
+		local has_job = achievement_data.job or achievement_data.jobs
+
+		if not has_award or not has_difficulty or not has_job then
+			return false
+		end
+
+		for key, _ in pairs(achievement_data) do
+			if not table.contains(condition_whitelist, key) then
+				return false
+			end
+		end
+
+		return true
+	end
+
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_achievements) do
-		if achievement_data.award and achievement_data.difficulty and (achievement_data.job or achievement_data.jobs) then
+		if eligible_for_autounlock(achievement_data) then
 			if not achievement_data.jobs then
 				local jobs = {achievement_data.job}
 			end
@@ -947,17 +975,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines: 963 to 965
+-- Lines: 985 to 987
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines: 968 to 970
+-- Lines: 990 to 992
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines: 972 to 999
+-- Lines: 994 to 1021
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)
