@@ -438,12 +438,37 @@ function ShapeBox:still_inside(pos)
 	return self:is_inside(pos)
 end
 
--- Lines: 371 to 372
+-- Lines: 375 to 396
 function ShapeBox:is_inside(pos)
-	return math.is_inside_box(pos, self:position(), self:rotation(), self._properties.width, self._properties.depth, self._properties.height)
+	mvector3.set(mvec1, pos)
+	mvector3.subtract(mvec1, self:position())
+
+	local rot = self:rotation()
+
+	mrotation.x(rot, mvec2)
+
+	local inside = mvector3.dot(mvec2, mvec1)
+
+	if inside > 0 and inside < self._properties.width then
+		mrotation.y(rot, mvec2)
+
+		inside = mvector3.dot(mvec2, mvec1)
+
+		if inside > 0 and inside < self._properties.depth then
+			mrotation.z(rot, mvec2)
+
+			inside = mvector3.dot(mvec2, mvec1)
+
+			if inside > 0 and inside < self._properties.height then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
--- Lines: 376 to 385
+-- Lines: 400 to 409
 function ShapeBox:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -457,7 +482,7 @@ function ShapeBox:draw(t, dt, r, g, b)
 	self:draw_outline(t, dt, r, g, b)
 end
 
--- Lines: 387 to 390
+-- Lines: 411 to 414
 function ShapeBox:draw_outline(t, dt, r, g, b)
 	local rot = self:rotation()
 
@@ -465,17 +490,60 @@ function ShapeBox:draw_outline(t, dt, r, g, b)
 end
 ShapeBoxMiddle = ShapeBoxMiddle or class(ShapeBox)
 
--- Lines: 396 to 398
+-- Lines: 420 to 422
 function ShapeBoxMiddle:init(params)
 	ShapeBox.init(self, params)
 end
 
--- Lines: 401 to 402
+-- Lines: 429 to 472
 function ShapeBoxMiddle:is_inside(pos)
-	return math.is_inside_box_middle(pos, self:position(), self:rotation(), self._properties.width, self._properties.depth, self._properties.height)
+	local rot = self:rotation()
+	local x = mvec1
+	local y = mvec2
+	local z = mvec3
+
+	mrotation.x(rot, x)
+	mvector3.multiply(x, self._properties.width / 2)
+	mrotation.y(rot, y)
+	mvector3.multiply(y, self._properties.depth / 2)
+	mrotation.z(rot, z)
+	mvector3.multiply(z, self._properties.height / 2)
+
+	local position = mposition
+
+	mvector3.set(position, self:position())
+	mvector3.subtract(position, x)
+	mvector3.subtract(position, y)
+	mvector3.subtract(position, z)
+
+	local pos_dir = position
+
+	mvector3.multiply(pos_dir, -1)
+	mvector3.add(pos_dir, pos)
+	mrotation.x(rot, x)
+
+	local inside = mvector3.dot(x, pos_dir)
+
+	if inside > 0 and inside < self._properties.width then
+		mrotation.y(rot, y)
+
+		inside = mvector3.dot(y, pos_dir)
+
+		if inside > 0 and inside < self._properties.depth then
+			mrotation.z(rot, z)
+
+			inside = mvector3.dot(z, pos_dir)
+
+			if inside > 0 and inside < self._properties.height then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
--- Lines: 406 to 417
+-- Lines: 476 to 487
 function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 	local brush = Draw:brush()
 
@@ -492,12 +560,12 @@ function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 end
 ShapeBoxMiddleBottom = ShapeBoxMiddleBottom or class(ShapeBox)
 
--- Lines: 423 to 425
+-- Lines: 493 to 495
 function ShapeBoxMiddleBottom:init(params)
 	ShapeBox.init(self, params)
 end
 
--- Lines: 428 to 446
+-- Lines: 498 to 516
 function ShapeBoxMiddleBottom:is_inside(pos)
 	local rot = self:rotation()
 	local x = (rot:x() * self._properties.width) / 2
@@ -521,7 +589,7 @@ function ShapeBoxMiddleBottom:is_inside(pos)
 	return false
 end
 
--- Lines: 449 to 461
+-- Lines: 519 to 531
 function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -539,14 +607,14 @@ function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 end
 ShapeSphere = ShapeSphere or class(Shape)
 
--- Lines: 467 to 473
+-- Lines: 537 to 543
 function ShapeSphere:init(params)
 	Shape.init(self, params)
 
 	self._properties.radius = params.radius or 1000
 end
 
--- Lines: 475 to 483
+-- Lines: 545 to 553
 function ShapeSphere:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -556,22 +624,22 @@ function ShapeSphere:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 50, 0))
 end
 
--- Lines: 485 to 486
+-- Lines: 555 to 556
 function ShapeSphere:radius()
 	return self._properties.radius
 end
 
--- Lines: 489 to 491
+-- Lines: 559 to 561
 function ShapeSphere:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
--- Lines: 493 to 494
+-- Lines: 563 to 564
 function ShapeSphere:is_inside(pos)
 	return (pos - self:position()):length() < self._properties.radius
 end
 
--- Lines: 497 to 502
+-- Lines: 567 to 572
 function ShapeSphere:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -581,7 +649,7 @@ function ShapeSphere:draw(t, dt, r, g, b)
 end
 ShapeCylinder = ShapeCylinder or class(Shape)
 
--- Lines: 508 to 515
+-- Lines: 578 to 585
 function ShapeCylinder:init(params)
 	Shape.init(self, params)
 
@@ -589,7 +657,7 @@ function ShapeCylinder:init(params)
 	self._properties.height = params.height or 1000
 end
 
--- Lines: 517 to 526
+-- Lines: 587 to 596
 function ShapeCylinder:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -600,27 +668,27 @@ function ShapeCylinder:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 70, 0))
 end
 
--- Lines: 528 to 529
+-- Lines: 598 to 599
 function ShapeCylinder:radius()
 	return self._properties.radius
 end
 
--- Lines: 532 to 534
+-- Lines: 602 to 604
 function ShapeCylinder:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
--- Lines: 536 to 537
+-- Lines: 606 to 607
 function ShapeCylinder:height()
 	return self._properties.height
 end
 
--- Lines: 540 to 542
+-- Lines: 610 to 612
 function ShapeCylinder:set_height(height)
 	self:set_property("height", height)
 end
 
--- Lines: 544 to 551
+-- Lines: 614 to 621
 function ShapeCylinder:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -633,18 +701,31 @@ function ShapeCylinder:draw(t, dt, r, g, b)
 	Application:draw_cylinder(pos, pos + rot:z() * self._properties.height, self._properties.radius, r, g, b)
 end
 
--- Lines: 554 to 555
+-- Lines: 628 to 641
 function ShapeCylinder:is_inside(pos)
-	return math.is_inside_cyl(pos, self:position(), self:rotation(), self._properties.radius, self._properties.height)
+	local pos_dir = pos - self:position()
+	local rot = self:rotation()
+	local inside = rot:z():dot(pos_dir)
+
+	if inside > 0 and inside < self._properties.height then
+		local pos_a = self:position()
+		local pos_b = pos_a + rot:z() * self._properties.height
+
+		if math.distance_to_segment(pos, pos_a, pos_b) <= self._properties.radius then
+			return true
+		end
+	end
+
+	return false
 end
 ShapeCylinderMiddle = ShapeCylinderMiddle or class(ShapeCylinder)
 
--- Lines: 561 to 563
+-- Lines: 647 to 649
 function ShapeCylinderMiddle:init(params)
 	ShapeCylinderMiddle.super.init(self, params)
 end
 
--- Lines: 565 to 593
+-- Lines: 651 to 679
 function ShapeCylinderMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local z = mvec3
@@ -681,7 +762,7 @@ function ShapeCylinderMiddle:is_inside(pos)
 	return false
 end
 
--- Lines: 607 to 616
+-- Lines: 693 to 702
 function ShapeCylinderMiddle:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 

@@ -1,6 +1,6 @@
 HostStateInLobby = HostStateInLobby or class(HostStateBase)
 
--- Lines: 4 to 195
+-- Lines: 4 to 196
 function HostStateInLobby:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, gameversion, join_attempt_identifier, auth_ticket, sender)
 	print("HostStateInLobby:on_join_request_received peer_level", peer_level, join_attempt_identifier, gameversion)
 
@@ -135,6 +135,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, client_prefe
 		character,
 		level_index,
 		difficulty_index,
+		Global.game_settings.one_down,
 		1,
 		data.local_peer:character(),
 		my_user_id,
@@ -170,7 +171,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, client_prefe
 	managers.crime_spree:on_peer_finished_loading(new_peer)
 end
 
--- Lines: 199 to 200
+-- Lines: 200 to 201
 function HostStateInLobby:is_joinable(data)
 	return not data.wants_to_load_level
 end

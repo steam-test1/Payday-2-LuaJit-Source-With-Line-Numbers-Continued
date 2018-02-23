@@ -126,7 +126,7 @@ function HUDStatsScreen:init()
 	self:recreate_right()
 end
 
--- Lines: 87 to 231
+-- Lines: 87 to 253
 function HUDStatsScreen:recreate_left()
 	self._left:clear()
 	self._left:bitmap({
@@ -238,13 +238,24 @@ function HUDStatsScreen:recreate_left()
 				local difficulty_stars = managers.job:current_difficulty_stars()
 				local difficulty = tweak_data.difficulties[difficulty_stars + 2] or 1
 				local difficulty_string = managers.localization:to_upper_text(tweak_data.difficulty_name_ids[difficulty])
-
-				placer:add_right(self._left:fine_text({
+				local difficulty_text = self._left:fine_text({
 					font = medium_font,
 					font_size = tweak_data.hud_stats.loot_size,
 					text = difficulty_string,
 					color = difficulty_stars > 0 and tweak_data.screen_colors.risk or tweak_data.screen_colors.text
-				}))
+				})
+
+				if Global.game_settings.one_down then
+					local one_down_string = managers.localization:to_upper_text("menu_one_down")
+
+					difficulty_text:set_text(difficulty_string .. " " .. one_down_string)
+					difficulty_text:set_range_color(#difficulty_string + 1, math.huge, tweak_data.screen_colors.one_down)
+				end
+
+				local _, _, tw, th = difficulty_text:text_rect()
+
+				difficulty_text:set_size(tw, th)
+				placer:add_right(difficulty_text)
 			end
 
 			placer:new_row(8, 0)
@@ -396,7 +407,7 @@ function HUDStatsScreen:recreate_left()
 	loot_panel:set_leftbottom(0, self._left:h() - 16)
 end
 
--- Lines: 233 to 254
+-- Lines: 255 to 276
 function HUDStatsScreen:recreate_right()
 	self._right:clear()
 	self._right:bitmap({
@@ -432,7 +443,7 @@ function HUDStatsScreen:recreate_right()
 	track_text:set_leftbottom(10, self._right:h() - 10)
 end
 
--- Lines: 257 to 276
+-- Lines: 279 to 298
 function HUDStatsScreen:_create_tracked_list(panel)
 	local placer = UiPlacer:new(10, 10, 0, 8)
 
@@ -473,7 +484,7 @@ function HUDStatsScreen:_create_tracked_list(panel)
 	end
 end
 
--- Lines: 280 to 289
+-- Lines: 302 to 311
 function HUDStatsScreen:_create_mutators_list(panel)
 	local placer = UiPlacer:new(10, 10)
 
@@ -492,7 +503,7 @@ function HUDStatsScreen:_create_mutators_list(panel)
 	end
 end
 
--- Lines: 293 to 303
+-- Lines: 315 to 325
 function HUDStatsScreen:hide()
 	local left_panel = self._left
 	local right_panel = self._right
@@ -507,7 +518,7 @@ function HUDStatsScreen:hide()
 	left_panel:animate(callback(self, self, "_animate_hide_stats_left_panel"), right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 end
 
--- Lines: 305 to 322
+-- Lines: 327 to 344
 function HUDStatsScreen:show()
 	self:recreate_left()
 	self:recreate_right()
@@ -530,17 +541,17 @@ function HUDStatsScreen:show()
 	left_panel:animate(callback(self, self, "_animate_show_stats_left_panel"), right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 end
 
--- Lines: 325 to 327
+-- Lines: 347 to 349
 function HUDStatsScreen:loot_value_updated()
 	self:recreate_left()
 end
 
--- Lines: 329 to 331
+-- Lines: 351 to 353
 function HUDStatsScreen:on_ext_inventory_changed()
 	self:recreate_left()
 end
 
--- Lines: 333 to 341
+-- Lines: 355 to 363
 function HUDStatsScreen:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -553,7 +564,7 @@ function HUDStatsScreen:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 356 to 398
+-- Lines: 378 to 420
 function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
@@ -593,7 +604,7 @@ function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, 
 	self:_rec_round_object(bottom_panel)
 end
 
--- Lines: 400 to 436
+-- Lines: 422 to 458
 function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
@@ -630,7 +641,7 @@ function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, 
 	bottom_panel:set_y(bottom_panel:parent():h())
 end
 
--- Lines: 438 to 442
+-- Lines: 460 to 464
 function HUDStatsScreen:update(t, dt)
 	for _, v in pairs(self._tracked_items or {}) do
 		v:update_progress()

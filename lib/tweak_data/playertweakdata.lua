@@ -114,7 +114,7 @@ function PlayerTweakData:init()
 	}
 
 	if is_vr then
-		self.damage.HEALTH_INIT = 28
+		self.damage.HEALTH_INIT = 23
 	else
 		self.damage.HEALTH_INIT = 23
 	end
@@ -1726,8 +1726,8 @@ end
 -- Lines: 2385 to 2418
 function PlayerTweakData:_init_p226()
 	self.stances.p226 = deep_clone(self.stances.default)
-	local pivot_shoulder_translation = Vector3(8.5121, 38.8014, -3.46065)
-	local pivot_shoulder_rotation = Rotation(0.10024, -0.688283, 0.631346)
+	local pivot_shoulder_translation = Vector3(8.45416, 39.1301, -4.58611)
+	local pivot_shoulder_rotation = Rotation(0.100083, -0.688408, 0.630516)
 	local pivot_head_translation = Vector3(7, 31, -3)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 	self.stances.p226.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)

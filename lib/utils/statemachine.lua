@@ -52,7 +52,7 @@ function StateMachineTransitionQueue:queue_transition(state, params, state_machi
 	})
 end
 
--- Lines: 44 to 64
+-- Lines: 44 to 69
 function StateMachineTransitionQueue:do_state_change()
 	if not self._queued_transitions or #self._queued_transitions == 0 then
 		return
@@ -66,13 +66,17 @@ function StateMachineTransitionQueue:do_state_change()
 		local params = transition[2]
 		local state_machine = transition[3]
 		local old_state = state_machine._current_state
-		local trans_func = state_machine._transitions[old_state][new_state]
+		local trans_func, condition = unpack(state_machine._transitions[old_state][new_state])
 
-		cat_print("state_machine", "[StateMachine] Executing state change '" .. tostring(old_state:name()) .. "' --> '" .. tostring(new_state:name()) .. "'")
+		if not condition or condition(old_state, new_state) then
+			cat_print("state_machine", "[StateMachine] Executing state change '" .. tostring(old_state:name()) .. "' --> '" .. tostring(new_state:name()) .. "'")
 
-		state_machine._current_state = new_state
+			state_machine._current_state = new_state
 
-		trans_func(old_state, new_state, params)
+			trans_func(old_state, new_state, params)
+		else
+			cat_print("state_machine", "[StateMachine] Condition failed, blocking state change '" .. tostring(old_state:name()) .. "' --> '" .. tostring(new_state:name()) .. "'")
+		end
 
 		i = i + 1
 	until i == #self._queued_transitions + 1
@@ -80,7 +84,7 @@ function StateMachineTransitionQueue:do_state_change()
 	self._queued_transitions = nil
 end
 
--- Lines: 66 to 75
+-- Lines: 71 to 80
 function StateMachineTransitionQueue:last_queued_state(state_machine)
 	local state = nil
 
@@ -95,7 +99,7 @@ function StateMachineTransitionQueue:last_queued_state(state_machine)
 	return state
 end
 
--- Lines: 78 to 87
+-- Lines: 83 to 92
 function StateMachineTransitionQueue:last_queued_state_name(state_machine)
 	local state_name = nil
 
@@ -110,14 +114,14 @@ function StateMachineTransitionQueue:last_queued_state_name(state_machine)
 	return state_name
 end
 
--- Lines: 90 to 104
+-- Lines: 95 to 109
 function StateMachine:init(start_state, shared_queue)
 	self._states = {}
 	self._transitions = {}
 	local init = InitState:new(self)
 	self._states[init:name()] = init
 	self._transitions[init] = self._transitions[init] or {}
-	self._transitions[init][start_state] = init.default_transition
+	self._transitions[init][start_state] = {init.default_transition}
 	self._current_state = init
 	self._transition_queue = shared_queue or StateMachineTransitionQueue:new()
 
@@ -125,7 +129,7 @@ function StateMachine:init(start_state, shared_queue)
 	self._transition_queue:do_state_change()
 end
 
--- Lines: 106 to 113
+-- Lines: 111 to 118
 function StateMachine:destroy()
 	for _, state in pairs(self._states) do
 		state:destroy()
@@ -135,20 +139,23 @@ function StateMachine:destroy()
 	self._transitions = {}
 end
 
--- Lines: 115 to 120
-function StateMachine:add_transition(from, to, trans_func)
+-- Lines: 120 to 125
+function StateMachine:add_transition(from, to, trans_func, condition)
 	self._states[from:name()] = from
 	self._states[to:name()] = to
 	self._transitions[from] = self._transitions[from] or {}
-	self._transitions[from][to] = trans_func
+	self._transitions[from][to] = {
+		trans_func,
+		condition
+	}
 end
 
--- Lines: 122 to 123
+-- Lines: 127 to 128
 function StateMachine:current_state()
 	return self._current_state
 end
 
--- Lines: 126 to 129
+-- Lines: 131 to 134
 function StateMachine:can_change_state(state)
 	local state_from = self._transition_queue:last_queued_state(self) or self._current_state
 	local valid_transitions = self._transitions[state_from]
@@ -156,7 +163,7 @@ function StateMachine:can_change_state(state)
 	return valid_transitions and valid_transitions[state] ~= nil
 end
 
--- Lines: 132 to 148
+-- Lines: 137 to 153
 function StateMachine:change_state(state, params)
 	local transition_debug_string = string.format("'%s' --> '%s'", tostring(self:last_queued_state_name()), tostring(state:name()))
 
@@ -169,45 +176,45 @@ function StateMachine:change_state(state, params)
 	end
 end
 
--- Lines: 150 to 151
+-- Lines: 155 to 156
 function StateMachine:current_state_name()
 	return self._current_state:name()
 end
 
--- Lines: 154 to 156
+-- Lines: 159 to 161
 function StateMachine:can_change_state_by_name(state_name)
 	local state = assert(self._states[state_name], "[StateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	return self:can_change_state(state)
 end
 
--- Lines: 159 to 162
+-- Lines: 164 to 167
 function StateMachine:change_state_by_name(state_name, params)
 	local state = assert(self._states[state_name], "[StateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	self:change_state(state, params)
 end
 
--- Lines: 164 to 168
+-- Lines: 169 to 173
 function StateMachine:update(t, dt)
 	if self._current_state.update then
 		self._current_state:update(t, dt)
 	end
 end
 
--- Lines: 170 to 174
+-- Lines: 175 to 179
 function StateMachine:paused_update(t, dt)
 	if self._current_state.paused_update then
 		self._current_state:paused_update(t, dt)
 	end
 end
 
--- Lines: 176 to 178
+-- Lines: 181 to 183
 function StateMachine:end_update(t, dt)
 	self._transition_queue:do_state_change()
 end
 
--- Lines: 180 to 181
+-- Lines: 185 to 186
 function StateMachine:last_queued_state_name()
 	return self._transition_queue:last_queued_state_name(self) or self:current_state_name()
 end

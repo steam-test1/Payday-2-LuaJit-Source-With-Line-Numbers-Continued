@@ -31,7 +31,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 37 to 2007
+-- Lines: 37 to 2011
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -1665,26 +1665,31 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		sm_wish_ukranian = {
 			award = "axe_1",
+			one_down = true,
 			job = "ukrainian_job_prof",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_mallcrasher = {
 			award = "axe_2",
+			one_down = true,
 			job = "mallcrasher",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_four_stores = {
 			award = "axe_3",
+			one_down = true,
 			job = "four_stores",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_nightclub = {
 			award = "axe_4",
+			one_down = true,
 			job = "nightclub",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_watchdogs = {
 			award = "axe_5",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {
 				"watchdogs_wrapper",
@@ -1694,21 +1699,25 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		sm_wish_rats = {
 			award = "axe_7",
+			one_down = true,
 			job = "alex",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_firestarter = {
 			award = "axe_9",
+			one_down = true,
 			job = "firestarter",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_framing_frame = {
 			award = "axe_11",
+			one_down = true,
 			job = "framing_frame",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_big_oil = {
 			award = "axe_13",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {
 				"welcome_to_the_jungle_wrapper_prof",
@@ -1718,246 +1727,295 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		sm_wish_jewelry_store = {
 			award = "axe_14",
+			one_down = true,
 			job = "jewelry_store",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_diamond_store = {
 			award = "axe_15",
+			one_down = true,
 			job = "family",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_go_bank = {
 			award = "axe_16",
+			one_down = true,
 			job = "roberts",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_bank_heist = {
 			award = "axe_17",
+			one_down = true,
 			job = "branchbank_prof",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_bank_heist_gold = {
 			award = "axe_18",
+			one_down = true,
 			job = "branchbank_gold_prof",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_bank_heist_cash = {
 			award = "axe_19",
+			one_down = true,
 			job = "branchbank_cash",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_bank_heist_deposit = {
 			award = "axe_20",
+			one_down = true,
 			job = "branchbank_deposit",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_transport_crossroads = {
 			award = "axe_21",
+			one_down = true,
 			job = "arm_cro",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_transport_downtown = {
 			award = "axe_22",
+			one_down = true,
 			job = "arm_hcm",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_transport_harbor = {
 			award = "axe_23",
+			one_down = true,
 			job = "arm_fac",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_transport_park = {
 			award = "axe_24",
+			one_down = true,
 			job = "arm_par",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_transport_underpass = {
 			award = "axe_25",
+			one_down = true,
 			job = "arm_und",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_transport_train = {
 			award = "axe_26",
+			one_down = true,
 			job = "arm_for",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_election_day = {
 			award = "axe_27",
+			one_down = true,
 			job = "election_day",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_kosugi = {
 			award = "axe_29",
+			one_down = true,
 			job = "kosugi",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_bigbank = {
 			award = "axe_30",
+			one_down = true,
 			job = "big",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_miami = {
 			award = "axe_31",
+			one_down = true,
 			job = "mia",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_artgallery = {
 			award = "axe_33",
+			one_down = true,
 			job = "gallery",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_hoxton = {
 			award = "axe_34",
+			one_down = true,
 			job = "hox",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_mus = {
 			award = "axe_36",
+			one_down = true,
 			job = "mus",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_red = {
 			award = "axe_37",
+			one_down = true,
 			job = "red2",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_dinner = {
 			award = "axe_38",
+			one_down = true,
 			job = "dinner",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_hox_3 = {
 			award = "axe_39",
+			one_down = true,
 			job = "hox_3",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_rat = {
 			award = "axe_40",
+			one_down = true,
 			job = "rat",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_cage = {
 			award = "axe_41",
+			one_down = true,
 			job = "cage",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_shoutout = {
 			award = "axe_42",
+			one_down = true,
 			job = "shoutout_raid",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_arena = {
 			award = "axe_43",
+			one_down = true,
 			job = "arena",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_kenaz = {
 			award = "axe_44",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {"kenaz"}
 		},
 		sm_wish_sinus = {
+			one_down = true,
 			award = "axe_45",
 			job = "jolly",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_nails = {
+			one_down = true,
 			award = "axe_46",
 			job = "nail",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_berry = {
 			award = "axe_47",
+			one_down = true,
 			job = "pbr",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_jerry = {
 			award = "axe_48",
+			one_down = true,
 			job = "pbr2",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_peta = {
 			award = "axe_49",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {"peta"}
 		},
 		sm_wish_pal = {
 			award = "axe_51",
+			one_down = true,
 			job = "pal",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_man = {
 			award = "axe_52",
+			one_down = true,
 			job = "man",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_dark = {
 			award = "axe_53",
+			one_down = true,
 			job = "dark",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_cane = {
 			award = "axe_54",
+			one_down = true,
 			job = "cane",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_flat = {
 			award = "axe_55",
+			one_down = true,
 			job = "flat",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_mad = {
 			award = "axe_56",
+			one_down = true,
 			job = "mad",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_born = {
 			award = "axe_57",
+			one_down = true,
 			job = "born",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_help = {
 			award = "orange_3",
+			one_down = true,
 			job = "help",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_moon = {
 			award = "moon_3",
+			one_down = true,
 			job = "moon",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_friend = {
 			award = "friend_3",
+			one_down = true,
 			job = "friend",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_spa = {
 			award = "spa_3",
+			one_down = true,
 			job = "spa",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_fish = {
 			award = "fish_3",
+			one_down = true,
 			job = "fish",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_glace = {
 			award = "glace_7",
+			one_down = true,
 			job = "glace",
 			difficulty = sm_wish_and_above
 		},
 		sm_wish_run = {
 			award = "run_7",
+			one_down = true,
 			job = "run",
 			difficulty = sm_wish_and_above
 		},
 		complete_pines_sm_wish = {
 			award = "axe_59",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {"pines"}
 		},
 		complete_crojob_for_sm_wish = {
 			award = "axe_60",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {
 				"crojob_wrapper",
@@ -1967,6 +2025,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		complete_crojob_dock_sm_wish = {
 			award = "axe_61",
+			one_down = true,
 			difficulty = sm_wish_and_above,
 			jobs = {"crojob1"}
 		},
@@ -2394,6 +2453,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		wwh_7 = {
 			award = "wwh_7",
+			one_down = true,
 			job = "wwh",
 			difficulty = sm_wish_and_above
 		},
@@ -2429,6 +2489,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		dah_7 = {
 			award = "dah_7",
+			one_down = true,
 			job = "dah",
 			difficulty = sm_wish_and_above
 		},
@@ -3292,6 +3353,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_sa_6 = {
 			award = "trk_sa_6",
+			one_down = true,
 			job = "chill_combat",
 			difficulty = sm_wish_and_above
 		},
@@ -3643,6 +3705,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		rvd_7 = {
 			award = "rvd_7",
+			one_down = true,
 			job = "rvd",
 			difficulty = sm_wish_and_above
 		},
@@ -3686,6 +3749,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		brb_7 = {
 			award = "brb_7",
+			one_down = true,
 			job = "brb",
 			difficulty = sm_wish_and_above
 		},
@@ -5044,21 +5108,25 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		sm_vlad = {
 			award = "axe_62",
+			one_down = true,
 			contact = "vlad",
 			difficulty = sm_wish_and_above
 		},
 		sm_hector = {
 			award = "axe_63",
+			one_down = true,
 			contact = "hector",
 			difficulty = sm_wish_and_above
 		},
 		sm_elephant = {
 			award = "axe_64",
+			one_down = true,
 			contact = "the_elephant",
 			difficulty = sm_wish_and_above
 		},
 		sm_bain = {
 			award = "axe_65",
+			one_down = true,
 			contact = "bain",
 			difficulty = sm_wish_and_above
 		},
@@ -5089,6 +5157,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		skull_smwish = {
 			award = "axe_66",
+			one_down = true,
 			contact = "all",
 			difficulty = sm_wish_and_above
 		},
@@ -5149,6 +5218,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_c_6 = {
 			award = "trk_c_6",
+			one_down = true,
 			contact = "the_continental",
 			difficulty = sm_wish_and_above
 		},
@@ -5184,6 +5254,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_cb_6 = {
 			award = "trk_cb_6",
+			one_down = true,
 			contact = "the_butcher",
 			difficulty = sm_wish_and_above
 		},
@@ -5219,6 +5290,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_cc_6 = {
 			award = "trk_cc_6",
+			one_down = true,
 			contact = "classic",
 			difficulty = sm_wish_and_above
 		},
@@ -5254,6 +5326,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_d_6 = {
 			award = "trk_d_6",
+			one_down = true,
 			contact = "the_dentist",
 			difficulty = sm_wish_and_above
 		},
@@ -5309,6 +5382,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_ev_6 = {
 			award = "trk_ev_6",
+			one_down = true,
 			contact = "events",
 			difficulty = sm_wish_and_above
 		},
@@ -5364,6 +5438,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_j_6 = {
 			award = "trk_j_6",
+			one_down = true,
 			contact = "jimmy",
 			difficulty = sm_wish_and_above
 		},
@@ -5399,6 +5474,7 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trk_l_6 = {
 			award = "trk_l_6",
+			one_down = true,
 			contact = "locke",
 			difficulty = sm_wish_and_above
 		},
@@ -5423,8 +5499,9 @@ function AchievementsTweakData:init(tweak_data)
 			difficulty = overkill_and_above
 		},
 		trophy_smwish = {
-			contact = "all",
+			one_down = true,
 			trophy_stat = "trophy_smwish",
+			contact = "all",
 			difficulty = sm_wish_and_above
 		}
 	}
@@ -6037,7 +6114,7 @@ local tracking = {
 }
 
 
--- Lines: 2026 to 2052
+-- Lines: 2030 to 2056
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -6049,13 +6126,13 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 2035 to 2045
+	-- Lines: 2039 to 2049
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
 		for _, job in pairs(heists) do
 			for _, difficulty in ipairs(item.difficulty) do
-				if managers.statistics:completed_job(job, difficulty) > 0 then
+				if managers.statistics:completed_job(job, difficulty, item.one_down) > 0 then
 					res[job] = nil
 
 					break
@@ -6080,7 +6157,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 2055 to 2059
+-- Lines: 2059 to 2063
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -6094,7 +6171,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 2062 to 2069
+-- Lines: 2066 to 2073
 local function from_level(level)
 	if not level then
 		error()
@@ -6111,7 +6188,7 @@ local function from_level(level)
 end
 
 
--- Lines: 2072 to 2079
+-- Lines: 2076 to 2083
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -6128,7 +6205,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 2082 to 2092
+-- Lines: 2086 to 2096
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -6151,7 +6228,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 2100 to 2302
+-- Lines: 2104 to 2306
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6298,7 +6375,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2339 to 2452
+-- Lines: 2343 to 2456
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
