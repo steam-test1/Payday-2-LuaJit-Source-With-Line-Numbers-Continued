@@ -1,6 +1,6 @@
 IngameContractGui = IngameContractGui or class()
 
--- Lines: 3 to 235
+-- Lines: 3 to 286
 function IngameContractGui:init(ws, node)
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
 	self._panel = ws:panel():panel({
@@ -107,7 +107,26 @@ function IngameContractGui:init(ws, node)
 	})
 
 	managers.hud:make_fine_text(modifiers_text)
-	modifiers_text:set_bottom(text_panel:h() / 2)
+	modifiers_text:set_bottom(text_panel:h() * 0.5)
+
+	local next_top = modifiers_text:bottom()
+	local one_down_warning_text = nil
+
+	if Global.game_settings.one_down then
+		one_down_warning_text = text_panel:text({
+			name = "one_down_warning_text",
+			text = managers.localization:to_upper_text("menu_one_down"),
+			font = tweak_data.menu.pd2_small_font,
+			font_size = tweak_data.menu.pd2_small_font_size,
+			color = tweak_data.screen_colors.one_down
+		})
+
+		managers.hud:make_fine_text(one_down_warning_text)
+		one_down_warning_text:set_top(next_top)
+		one_down_warning_text:set_left(10)
+
+		next_top = one_down_warning_text:bottom()
+	end
 
 	local job_heat_mul = managers.job:get_job_heat_multipliers(managers.job:current_job_id()) - 1
 	local job_heat = math.round(job_heat_mul * 100)
@@ -145,29 +164,34 @@ function IngameContractGui:init(ws, node)
 		})
 
 		managers.hud:make_fine_text(ghost_warning_text)
-		ghost_warning_text:set_top(modifiers_text:bottom())
+		ghost_warning_text:set_top(next_top)
 		ghost_warning_text:set_left(10)
+
+		next_top = ghost_warning_text:bottom()
 	end
 
 	local heat_warning_text = nil
 	local heat_color = managers.job:get_job_heat_color(managers.job:current_job_id())
 
 	if is_job_heated then
+		local job_heat_text_id = "menu_heat_" .. (job_heat_mul > 0 and "warm" or job_heat_mul < 0 and "cold" or "ok")
 		heat_warning_text = text_panel:text({
 			name = "heat_warning_text",
 			vertical = "top",
 			word_wrap = true,
 			wrap = true,
 			align = "left",
-			text = managers.localization:to_upper_text("menu_heat_" .. (job_heat_mul > 0 and "warm" or job_heat_mul < 0 and "cold" or "ok"), {job_heat = job_heat_string}),
+			text = managers.localization:to_upper_text(job_heat_text_id, {job_heat = job_heat_string}),
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			color = heat_color
 		})
 
 		managers.hud:make_fine_text(heat_warning_text)
-		heat_warning_text:set_top(has_ghost_bonus and ghost_warning_text:bottom() or modifiers_text:bottom())
+		heat_warning_text:set_top(next_top)
 		heat_warning_text:set_left(10)
+
+		next_top = heat_warning_text:bottom()
 	end
 
 	local pro_warning_text = nil
@@ -188,11 +212,15 @@ function IngameContractGui:init(ws, node)
 
 		managers.hud:make_fine_text(pro_warning_text)
 		pro_warning_text:set_h(pro_warning_text:h())
-		pro_warning_text:set_top(is_job_heated and heat_warning_text:bottom() or has_ghost_bonus and ghost_warning_text:bottom() or modifiers_text:bottom())
+		pro_warning_text:set_top(next_top)
 		pro_warning_text:set_left(10)
+
+		next_top = pro_warning_text:bottom()
 	end
 
-	modifiers_text:set_visible(heat_warning_text and heat_warning_text:visible() or pro_warning_text and pro_warning_text:visible() or ghost_warning_text and ghost_warning_text:visible())
+	next_top = next_top + 5
+
+	modifiers_text:set_visible(heat_warning_text or pro_warning_text or ghost_warning_text or one_down_warning_text)
 
 	local risk_color = tweak_data.screen_colors.risk
 	local risk_title = text_panel:text({
@@ -203,7 +231,7 @@ function IngameContractGui:init(ws, node)
 	})
 
 	managers.hud:make_fine_text(risk_title)
-	risk_title:set_top((pro_warning_text and pro_warning_text:visible() and pro_warning_text:bottom() or heat_warning_text and heat_warning_text:visible() and heat_warning_text:bottom() or ghost_warning_text and ghost_warning_text:visible() and ghost_warning_text:bottom() or math.round(text_panel:h() / 2)) + 5)
+	risk_title:set_top(next_top)
 	risk_title:set_visible(job_data and true or false)
 
 	local menu_risk_id = "menu_risk_pd"
@@ -368,7 +396,7 @@ function IngameContractGui:init(ws, node)
 	}})
 end
 
--- Lines: 237 to 245
+-- Lines: 288 to 296
 function IngameContractGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -381,24 +409,24 @@ function IngameContractGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 247 to 249
+-- Lines: 298 to 300
 function IngameContractGui:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines: 251 to 252
+-- Lines: 302 to 303
 function IngameContractGui:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines: 255 to 260
+-- Lines: 306 to 311
 function IngameContractGui:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
 	text:set_size(w, h)
 end
 
--- Lines: 262 to 386
+-- Lines: 313 to 437
 function IngameContractGui:set_potential_rewards(show_max)
 	if not alive(self._rewards_panel) then
 		return
@@ -566,7 +594,7 @@ function IngameContractGui:set_potential_rewards(show_max)
 	payday_text:set_bottom(self._rewards_panel:h())
 end
 
--- Lines: 388 to 403
+-- Lines: 439 to 454
 function IngameContractGui:mouse_moved(o, x, y)
 	if alive(self._potential_rewards_title) and self._potential_rewards_title:visible() then
 		if self._potential_rewards_title:inside(x, y) then
@@ -588,14 +616,14 @@ function IngameContractGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines: 406 to 410
+-- Lines: 457 to 461
 function IngameContractGui:mouse_pressed(button, x, y)
 	if alive(self._potential_rewards_title) and self._potential_rewards_title:visible() and self._potential_rewards_title:inside(x, y) then
 		self:_toggle_potential_rewards()
 	end
 end
 
--- Lines: 412 to 421
+-- Lines: 463 to 472
 function IngameContractGui:_toggle_potential_rewards()
 	if alive(self._potential_rewards_title) then
 		self._potential_show_max = not self._potential_show_max
@@ -607,7 +635,7 @@ function IngameContractGui:_toggle_potential_rewards()
 	end
 end
 
--- Lines: 423 to 428
+-- Lines: 474 to 479
 function IngameContractGui:special_btn_pressed(button)
 	if button == Idstring("menu_modify_item") then
 		self:_toggle_potential_rewards()
@@ -616,7 +644,7 @@ function IngameContractGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines: 431 to 436
+-- Lines: 482 to 487
 function IngameContractGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)

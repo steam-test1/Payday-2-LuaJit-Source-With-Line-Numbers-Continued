@@ -592,7 +592,7 @@ function PlayerDriving:_get_drive_axis()
 	return self._controller:get_input_axis("drive")
 end
 
--- Lines: 619 to 772
+-- Lines: 619 to 778
 function PlayerDriving:_update_input(dt)
 	if self._seat.driving then
 		local move_d = self:_get_drive_axis()
@@ -736,7 +736,7 @@ function PlayerDriving:_update_input(dt)
 	end
 end
 
--- Lines: 774 to 783
+-- Lines: 780 to 789
 function PlayerDriving:on_inventory_event(unit, event)
 	local weapon = self._unit:inventory():equipped_unit()
 
@@ -751,7 +751,7 @@ function PlayerDriving:on_inventory_event(unit, event)
 	weapon:base():set_visibility_state(true)
 end
 
--- Lines: 786 to 795
+-- Lines: 792 to 801
 function PlayerDriving:smoothstep(a, b, step, n)
 	local v = step / n
 	v = 1 - (1 - v) * (1 - v)

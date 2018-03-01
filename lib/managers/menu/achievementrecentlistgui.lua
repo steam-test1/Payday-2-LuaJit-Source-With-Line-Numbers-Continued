@@ -26,7 +26,7 @@ function OnPressedTextButton:mouse_pressed(button, x, y)
 end
 local AchievementRecentListItem = AchievementRecentListItem or class(GrowPanel)
 
--- Lines: 35 to 89
+-- Lines: 35 to 90
 function AchievementRecentListItem:init(parent, item, black_bg)
 	AchievementRecentListItem.super.init(self, parent, {
 		border = 10,
@@ -43,9 +43,10 @@ function AchievementRecentListItem:init(parent, item, black_bg)
 		texture = texture,
 		texture_rect = texture_rect
 	}))
+	local name_text = managers.localization:text(self._visual.name_id)
 
 	placer:add_right(self:fine_text({
-		text_id = self._visual.name_id,
+		text = name_text,
 		font = medium_font,
 		font_size = medium_font_size
 	}))
@@ -107,7 +108,7 @@ function AchievementRecentListItem:init(parent, item, black_bg)
 end
 AchievementRecentListGui = AchievementRecentListGui or class(ExtendedPanel)
 
--- Lines: 95 to 150
+-- Lines: 96 to 151
 function AchievementRecentListGui:init(parent, list, back_callback)
 	self._back_callback = back_callback
 
@@ -199,7 +200,7 @@ function AchievementRecentListGui:init(parent, list, back_callback)
 	self._back = back_panel
 end
 
--- Lines: 152 to 155
+-- Lines: 153 to 156
 function AchievementRecentListGui:close()
 	self:remove_self()
 
@@ -208,7 +209,7 @@ function AchievementRecentListGui:close()
 	end
 end
 
--- Lines: 157 to 166
+-- Lines: 158 to 167
 function AchievementRecentListGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_left_controller_axis()
@@ -219,7 +220,7 @@ function AchievementRecentListGui:update(...)
 	end
 end
 
--- Lines: 168 to 170
+-- Lines: 169 to 171
 function AchievementRecentListGui:back_pressed()
 	self._back_callback()
 

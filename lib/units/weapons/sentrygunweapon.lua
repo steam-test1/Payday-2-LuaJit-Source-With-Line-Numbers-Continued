@@ -226,8 +226,12 @@ function SentryGunWeapon:start_autofire()
 	self._fire_start_t = self._timer:time()
 end
 
--- Lines: 224 to 240
+-- Lines: 224 to 243
 function SentryGunWeapon:stop_autofire()
+	if self._unit:damage() and self._unit:damage():has_sequence("anim_fire_stop_seq") then
+		self._unit:damage():run_sequence_simple("anim_fire_stop_seq")
+	end
+
 	if not self._shooting then
 		return
 	end
@@ -245,7 +249,7 @@ function SentryGunWeapon:stop_autofire()
 	self._shooting = nil
 end
 
--- Lines: 244 to 254
+-- Lines: 247 to 257
 function SentryGunWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_unit)
 	local fired = nil
 
@@ -262,7 +266,7 @@ function SentryGunWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_
 	return fired
 end
 
--- Lines: 259 to 263
+-- Lines: 262 to 266
 function SentryGunWeapon:interaction_setup(fire_mode_unit, owner_id)
 	self._fire_mode_unit = fire_mode_unit
 
@@ -270,7 +274,7 @@ function SentryGunWeapon:interaction_setup(fire_mode_unit, owner_id)
 	self._fire_mode_unit:interaction():set_owner_id(owner_id)
 end
 
--- Lines: 267 to 291
+-- Lines: 270 to 301
 function SentryGunWeapon:fire(blanks, expend_ammo, shoot_player, target_unit)
 	if expend_ammo then
 		if self._ammo_total <= 0 then
@@ -291,6 +295,10 @@ function SentryGunWeapon:fire(blanks, expend_ammo, shoot_player, target_unit)
 		World:effect_manager():spawn(self._shell_ejection_effect_table)
 	end
 
+	if self._unit:damage() and self._unit:damage():has_sequence("anim_fire_seq") then
+		self._unit:damage():run_sequence_simple("anim_fire_seq")
+	end
+
 	local ray_res = self:_fire_raycast(from_pos, direction, shoot_player, target_unit)
 
 	if self._alert_events and ray_res.rays then
@@ -304,7 +312,7 @@ function SentryGunWeapon:fire(blanks, expend_ammo, shoot_player, target_unit)
 end
 local mvec_to = Vector3()
 
--- Lines: 297 to 352
+-- Lines: 307 to 362
 function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target_unit)
 	local result = {}
 	local hit_unit, col_ray = nil
@@ -365,7 +373,7 @@ function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target
 	return result
 end
 
--- Lines: 357 to 379
+-- Lines: 367 to 389
 function SentryGunWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	local damage_out = damage * self._current_damage_mul
 
@@ -393,12 +401,12 @@ function SentryGunWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	return damage_out
 end
 
--- Lines: 384 to 386
+-- Lines: 394 to 396
 function SentryGunWeapon:_sound_autofire_start()
 	self._autofire_sound_event = self._unit:sound_source():post_event(self:auto_fire_start_event())
 end
 
--- Lines: 390 to 396
+-- Lines: 400 to 406
 function SentryGunWeapon:_sound_autofire_end()
 	if self._autofire_sound_event then
 		self._autofire_sound_event:stop()
@@ -409,7 +417,7 @@ function SentryGunWeapon:_sound_autofire_end()
 	self._unit:sound_source():post_event(self:auto_fire_end_event())
 end
 
--- Lines: 400 to 408
+-- Lines: 410 to 418
 function SentryGunWeapon:_sound_autofire_end_empty()
 	if self._autofire_sound_event then
 		self._autofire_sound_event:stop()
@@ -422,7 +430,7 @@ function SentryGunWeapon:_sound_autofire_end_empty()
 	end
 end
 
--- Lines: 412 to 419
+-- Lines: 422 to 429
 function SentryGunWeapon:_sound_autofire_end_cooldown()
 	if self._autofire_sound_event then
 		self._autofire_sound_event:stop()
@@ -434,7 +442,7 @@ function SentryGunWeapon:_sound_autofire_end_cooldown()
 	self._unit:sound_source():post_event(self._fire_cooldown_snd_event)
 end
 
--- Lines: 423 to 430
+-- Lines: 433 to 440
 function SentryGunWeapon:_spawn_trail_effect(direction, col_ray)
 	self._effect_align[self._interleaving_fire]:m_position(self._trail_effect_table.position)
 	mvector3.set(self._trail_effect_table.normal, direction)
@@ -446,7 +454,7 @@ function SentryGunWeapon:_spawn_trail_effect(direction, col_ray)
 	end
 end
 
--- Lines: 434 to 440
+-- Lines: 444 to 450
 function SentryGunWeapon:out_of_ammo()
 	if self._ammo_total then
 		return self._ammo_total == 0
@@ -455,7 +463,7 @@ function SentryGunWeapon:out_of_ammo()
 	end
 end
 
--- Lines: 442 to 448
+-- Lines: 452 to 458
 function SentryGunWeapon:auto_fire_start_event()
 	if self._use_armor_piercing then
 		return self._fire_start_snd_event_ap
@@ -464,7 +472,7 @@ function SentryGunWeapon:auto_fire_start_event()
 	end
 end
 
--- Lines: 450 to 456
+-- Lines: 460 to 466
 function SentryGunWeapon:auto_fire_end_event()
 	if self._use_armor_piercing then
 		return self._fire_stop_snd_event_ap
@@ -473,7 +481,7 @@ function SentryGunWeapon:auto_fire_end_event()
 	end
 end
 
--- Lines: 460 to 466
+-- Lines: 470 to 476
 function SentryGunWeapon:ammo_ratio()
 	if self._ammo_total then
 		return self._ammo_total / self._ammo_max
@@ -482,27 +490,27 @@ function SentryGunWeapon:ammo_ratio()
 	end
 end
 
--- Lines: 470 to 471
+-- Lines: 480 to 481
 function SentryGunWeapon:ammo_total()
 	return self._ammo_total
 end
 
--- Lines: 476 to 477
+-- Lines: 486 to 487
 function SentryGunWeapon:ammo_max()
 	return self._ammo_max
 end
 
--- Lines: 482 to 483
+-- Lines: 492 to 493
 function SentryGunWeapon:can_auto_reload()
 	return self._auto_reload
 end
 
--- Lines: 488 to 490
+-- Lines: 498 to 500
 function SentryGunWeapon:on_team_set(team_data)
 	self._foe_teams = team_data.foes
 end
 
--- Lines: 494 to 520
+-- Lines: 504 to 530
 function SentryGunWeapon:set_laser_enabled(mode, blink)
 	if mode then
 		self:_set_laser_state(true)
@@ -535,7 +543,7 @@ function SentryGunWeapon:set_laser_enabled(mode, blink)
 	end
 end
 
--- Lines: 524 to 544
+-- Lines: 534 to 554
 function SentryGunWeapon:_set_laser_state(state)
 	if state then
 		if not alive(self._laser_unit) then
@@ -558,12 +566,12 @@ function SentryGunWeapon:_set_laser_state(state)
 	end
 end
 
--- Lines: 548 to 549
+-- Lines: 558 to 559
 function SentryGunWeapon:has_laser()
 	return self._laser_align and true or false
 end
 
--- Lines: 554 to 578
+-- Lines: 564 to 588
 function SentryGunWeapon:update_laser()
 	if not self:has_laser() then
 		return
@@ -590,7 +598,7 @@ function SentryGunWeapon:update_laser()
 	self:set_laser_enabled(laser_mode, blink)
 end
 
--- Lines: 582 to 594
+-- Lines: 592 to 604
 function SentryGunWeapon:save(save_data)
 	local my_save_data = {}
 	save_data.weapon = my_save_data
@@ -606,7 +614,7 @@ function SentryGunWeapon:save(save_data)
 	my_save_data.use_armor_piercing = self._use_armor_piercing
 end
 
--- Lines: 598 to 619
+-- Lines: 608 to 629
 function SentryGunWeapon:load(save_data)
 	self._name_id = self._unit:base():get_name_id()
 
@@ -627,13 +635,13 @@ function SentryGunWeapon:load(save_data)
 	end
 end
 
--- Lines: 623 to 626
+-- Lines: 633 to 636
 function SentryGunWeapon:destroy(unit)
 	self:remove_fire_mode_interaction()
 	self:_set_laser_state(nil)
 end
 
--- Lines: 628 to 633
+-- Lines: 638 to 643
 function SentryGunWeapon:remove_fire_mode_interaction()
 	if self._fire_mode_unit and alive(self._fire_mode_unit) then
 		self._fire_mode_unit:set_slot(0)
@@ -642,7 +650,7 @@ function SentryGunWeapon:remove_fire_mode_interaction()
 	end
 end
 
--- Lines: 636 to 643
+-- Lines: 646 to 653
 function SentryGunWeapon:setup_virtual_ammo(mul)
 	local ammo_amount = tweak_data.upgrades.sentry_gun_base_ammo * mul
 	self._virtual_max_ammo = ammo_amount
@@ -653,7 +661,7 @@ function SentryGunWeapon:setup_virtual_ammo(mul)
 	event_listener:add("virtual_ammo_on_sync", {"on_sync_ammo"}, callback(self, self, "_sync_virtual_ammo"))
 end
 
--- Lines: 645 to 649
+-- Lines: 655 to 659
 function SentryGunWeapon:get_virtual_ammo_ratio()
 	if self._virtual_max_ammo and self._virtual_ammo then
 		return self._virtual_ammo / self._virtual_max_ammo
@@ -662,14 +670,14 @@ function SentryGunWeapon:get_virtual_ammo_ratio()
 	return 1
 end
 
--- Lines: 652 to 656
+-- Lines: 662 to 666
 function SentryGunWeapon:_on_fire_virtual_shoot()
 	if self._virtual_ammo then
 		self._virtual_ammo = self._virtual_ammo - 1
 	end
 end
 
--- Lines: 658 to 662
+-- Lines: 668 to 672
 function SentryGunWeapon:_sync_virtual_ammo()
 	if self._virtual_max_ammo and self._virtual_ammo then
 		self._virtual_ammo = self._virtual_max_ammo * self:ammo_ratio()

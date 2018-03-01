@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1125
+-- Lines: 4 to 1134
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -4936,6 +4936,11 @@ function GuiTweakData:init()
 	self.new_heists = {limit = 5}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_ggez",
+		texture_path = "guis/textures/pd2/new_heists/difficultyandsniper_update",
+		url = "http://steamcommunity.com/games/218620/announcements/detail/1666767238319907275"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_css",
 		texture_path = "guis/textures/pd2/new_heists/css",
 		url = "http://steamcommunity.com/games/218620/announcements/detail/1671268301110805355"
@@ -5037,7 +5042,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1127 to 1146
+-- Lines: 1136 to 1155
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5065,7 +5070,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1148 to 1216
+-- Lines: 1157 to 1225
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5141,15 +5146,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1219 to 1220
+-- Lines: 1228 to 1229
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1230 to 1231
+-- Lines: 1239 to 1240
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1233 to 1266
+-- Lines: 1242 to 1275
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5188,7 +5193,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1269 to 1393
+-- Lines: 1278 to 1402
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5311,12 +5316,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1396 to 1397
+-- Lines: 1405 to 1406
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1400 to 1406
+-- Lines: 1409 to 1415
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

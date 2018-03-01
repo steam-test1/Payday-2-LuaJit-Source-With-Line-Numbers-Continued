@@ -404,7 +404,7 @@ end
 
 -- Lines: 404 to 405
 function MutatorsManager:should_disable_statistics()
-	return self:get_cash_reduction() > 0 or self:get_experience_reduction() > 0
+	return self:get_cash_reduction() > 0 or self:get_experience_reduction() > 0 or self:are_achievements_disabled()
 end
 
 -- Lines: 410 to 411

@@ -774,7 +774,7 @@ function IngameWaitingGui:next_page()
 	return false
 end
 
--- Lines: 620 to 647
+-- Lines: 620 to 649
 function IngameWaitingGui:mouse_moved(o, x, y)
 	if not self._content_panel:visible() then
 		return
@@ -783,7 +783,10 @@ function IngameWaitingGui:mouse_moved(o, x, y)
 	if self._content_panel:inside(x, y) then
 		if not self._highlighted then
 			self:dummy_set_highlight(true)
-			managers.menu:active_menu().logic:mouse_over_select_item(self._dummy_item.name, false)
+
+			if self._dummy_item then
+				managers.menu:active_menu().logic:mouse_over_select_item(self._dummy_item.name, false)
+			end
 		end
 	else
 		return
@@ -805,7 +808,7 @@ function IngameWaitingGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines: 649 to 656
+-- Lines: 651 to 658
 function IngameWaitingGui:special_btn_pressed(button)
 	print(button)
 
@@ -816,7 +819,7 @@ function IngameWaitingGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 658 to 676
+-- Lines: 660 to 678
 function IngameWaitingGui:mouse_pressed(button, x, y)
 	if not self._content_panel:visible() or button ~= Idstring("0") then
 		return
@@ -838,7 +841,7 @@ function IngameWaitingGui:mouse_pressed(button, x, y)
 	local t = self._prev_arrow:panel():inside(x, y) and self:prev_page()
 end
 
--- Lines: 678 to 688
+-- Lines: 680 to 690
 function IngameWaitingGui:set_current_button(index)
 	index = math.clamp(1, index or 1, #self._buttons)
 	local current = self._current_btn.button
@@ -852,7 +855,7 @@ function IngameWaitingGui:set_current_button(index)
 end
 IngameWaitingButton = IngameWaitingButton or class()
 
--- Lines: 694 to 705
+-- Lines: 696 to 707
 function IngameWaitingButton:init(parent_panel, text, binding, callback)
 	self._panel = parent_panel:panel()
 	self._callback = callback
@@ -870,19 +873,19 @@ function IngameWaitingButton:init(parent_panel, text, binding, callback)
 	return self._panel
 end
 
--- Lines: 708 to 711
+-- Lines: 710 to 713
 function IngameWaitingButton:set_highlighted(highlighted)
 	self._highlighted = highlighted
 
 	self._text:set_color(highlighted and font_color_highlighted or font_color_rest)
 end
 
--- Lines: 713 to 714
+-- Lines: 715 to 716
 function IngameWaitingButton:panel()
 	return self._panel
 end
 
--- Lines: 717 to 721
+-- Lines: 719 to 723
 function IngameWaitingButton:trigger()
 	if self._callback then
 		self._callback()

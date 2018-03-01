@@ -155,7 +155,7 @@ function IngameAccessCamera:_show_camera()
 	managers.hud:set_access_camera_name(managers.localization:text(text_id, {NUMBER = number}))
 end
 
--- Lines: 212 to 303
+-- Lines: 212 to 325
 function IngameAccessCamera:update(t, dt)
 	if self._no_feeds then
 		return
@@ -231,7 +231,7 @@ function IngameAccessCamera:update(t, dt)
 	managers.hud:access_camera_track_max_amount(amount)
 end
 
--- Lines: 305 to 311
+-- Lines: 327 to 333
 function IngameAccessCamera:update_player_stamina(t, dt)
 	local player = managers.player:player_unit()
 
@@ -240,12 +240,12 @@ function IngameAccessCamera:update_player_stamina(t, dt)
 	end
 end
 
--- Lines: 313 to 315
+-- Lines: 335 to 337
 function IngameAccessCamera:_player_damage(info)
 	self:cb_leave()
 end
 
--- Lines: 317 to 374
+-- Lines: 339 to 396
 function IngameAccessCamera:at_enter(old_state, ...)
 	local player = managers.player:player_unit()
 
@@ -295,7 +295,7 @@ function IngameAccessCamera:at_enter(old_state, ...)
 	self:_setup_controller()
 end
 
--- Lines: 376 to 387
+-- Lines: 398 to 409
 function IngameAccessCamera:_any_enabled_cameras()
 	if not self._cameras or #self._cameras == 0 then
 		return false
@@ -310,7 +310,7 @@ function IngameAccessCamera:_any_enabled_cameras()
 	return false
 end
 
--- Lines: 390 to 416
+-- Lines: 412 to 438
 function IngameAccessCamera:on_camera_access_changed(camera_unit)
 	local access_camera = self._camera_data.index and self._cameras[self._camera_data.index] and self._cameras[self._camera_data.index].access_camera
 	self._no_feeds = not self:_any_enabled_cameras()
@@ -324,7 +324,7 @@ function IngameAccessCamera:on_camera_access_changed(camera_unit)
 	end
 end
 
--- Lines: 418 to 456
+-- Lines: 440 to 478
 function IngameAccessCamera:at_exit()
 	self._sound_source:post_event("camera_monitor_leave")
 	managers.environment_controller:set_default_color_grading(self._saved_default_color_grading)
@@ -348,17 +348,17 @@ function IngameAccessCamera:at_exit()
 	end
 end
 
--- Lines: 458 to 460
+-- Lines: 480 to 482
 function IngameAccessCamera:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 462 to 464
+-- Lines: 484 to 486
 function IngameAccessCamera:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 466 to 468
+-- Lines: 488 to 490
 function IngameAccessCamera:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines: 10 to 6089
+-- Lines: 10 to 6131
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"
@@ -1042,7 +1042,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		skip_mask_on_sequence = true,
 		global_value = "infamy",
 		texture_bundle_folder = "infamous",
-		infamy_lock = "infamy_root"
+		infamy_lock = "infamy_root",
+		offsets = {}
 	}
 	self.masks.ghost = {
 		unit = "units/pd2_dlc_infamy/masks/msk_ghost/msk_ghost",
@@ -1924,7 +1925,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		unit = "units/pd2_dlc_ecp/masks/msk_balaclava_ecp_male/msk_balaclava_ecp_male",
 		name_id = "bm_msk_cheat_error",
 		type = "helmet",
-		inaccessible = true
+		inaccessible = true,
+		offsets = {}
 	}
 	self.masks.balaclava = {
 		name_id = "bm_msk_balaclava",
@@ -1965,8 +1967,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		value = 0,
 		dlc = "overkill_pack",
 		texture_bundle_folder = "dlc_pack_overkill",
-		type = "glasses",
-		offsets = {}
+		type = "glasses"
 	}
 	self.masks.dallas_glow = {
 		unit = "units/pd2_dlc_cop/masks/msk_dallas_glow/msk_dallas_glow",
@@ -2202,7 +2203,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		texture_bundle_folder = "west",
 		value = 0,
 		type = "helmet",
-		skip_mask_on_sequence = true
+		skip_mask_on_sequence = true,
+		offsets = {}
 	}
 	self.masks.grendel = {
 		unit = "units/pd2_dlc_shoutout_raid/masks/grendel/msk_grendel",
@@ -3081,7 +3083,8 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		type = "helmet",
 		texture_bundle_folder = "born",
 		sort_number = 21,
-		dlc = "born"
+		dlc = "born",
+		offsets = {}
 	}
 	self.masks.brutal = {
 		unit = "units/pd2_dlc_born/masks/brutal/msk_brutal",
@@ -5628,6 +5631,15 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		sort_number = 62,
 		global_value = "infamous"
 	}
+	self.masks.ami_06 = {
+		unit = "units/pd2_dlc_ami/masks/ami_06/msk_ami_06",
+		name_id = "bm_msk_ami_06",
+		pcs = {},
+		value = 0,
+		texture_bundle_folder = "ami",
+		sort_number = 62,
+		global_value = "infamous"
+	}
 	self.masks.cmt_01 = {
 		unit = "units/pd2_dlc_cmt/masks/cmt_01/msk_cmt_01",
 		name_id = "bm_msk_cmt_01",
@@ -5663,6 +5675,16 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		texture_bundle_folder = "cmt",
 		sort_number = 62,
 		global_value = "cmt"
+	}
+	self.masks.ggac_od_t2 = {
+		unit = "units/pd2_dlc_ggac/masks/ggac_od_t2/msk_ggac_od_t2",
+		name_id = "bm_msk_ggac",
+		pcs = {},
+		value = 0,
+		qlvl = 0,
+		infamous = true,
+		texture_bundle_folder = "ggac",
+		sort_number = 36
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

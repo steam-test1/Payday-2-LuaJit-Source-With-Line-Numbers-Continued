@@ -857,35 +857,35 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines: 878 to 925
+-- Lines: 878 to 926
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_stats_achievements) do
-		local available_jobs = nil
+		local remaining_jobs = nil
 
 		if achievement_data.contact == "all" then
-			available_jobs = {}
+			remaining_jobs = {}
 
 			for _, list in pairs(tweak_data.achievement.job_list) do
 				for _, job in pairs(list) do
-					table.insert(available_jobs, job)
+					table.insert(remaining_jobs, job)
 				end
 			end
 		else
-			available_jobs = deep_clone(tweak_data.achievement.job_list[achievement_data.contact])
+			remaining_jobs = deep_clone(tweak_data.achievement.job_list[achievement_data.contact])
 		end
 
-		for id = #available_jobs, 1, -1 do
-			job = available_jobs[id]
+		for id = #remaining_jobs, 1, -1 do
+			job = remaining_jobs[id]
 
 			if type(job) == "table" then
 				for _, job_id in ipairs(job) do
 					local break_outer = false
 
 					for _, difficulty in ipairs(achievement_data.difficulty) do
-						if managers.statistics:completed_job(job_id, difficulty) > 0 then
-							table.remove(available_jobs, id)
+						if managers.statistics:completed_job(job_id, difficulty, achievement_data.one_down) > 0 then
+							table.remove(remaining_jobs, id)
 
 							break_outer = true
 
@@ -899,20 +899,22 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 				end
 			else
 				for _, difficulty in ipairs(achievement_data.difficulty) do
-					if managers.statistics:completed_job(job, difficulty) > 0 then
-						table.remove(available_jobs, id)
+					local completion_count = managers.statistics:completed_job(job, difficulty, achievement_data.one_down)
+
+					if completion_count > 0 then
+						table.remove(remaining_jobs, id)
 					end
 				end
 			end
 		end
 
-		if table.size(available_jobs) == 0 then
+		if table.size(remaining_jobs) == 0 then
 			self:_award_achievement(achievement_data)
 		end
 	end
 end
 
--- Lines: 930 to 936
+-- Lines: 931 to 937
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -922,17 +924,47 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines: 940 to 959
+-- Lines: 941 to 982
 function AchievmentManager:_check_autounlock_complete_heist()
+	local condition_whitelist = {
+		"award",
+		"difficulty",
+		"one_down",
+		"job",
+		"jobs"
+	}
+
+
+	-- Lines: 950 to 964
+	local function eligible_for_autounlock(achievement_data)
+		local has_award = achievement_data.award
+		local has_difficulty = achievement_data.difficulty
+		local has_job = achievement_data.job or achievement_data.jobs
+
+		if not has_award or not has_difficulty or not has_job then
+			return false
+		end
+
+		for key, _ in pairs(achievement_data) do
+			if not table.contains(condition_whitelist, key) then
+				return false
+			end
+		end
+
+		return true
+	end
+
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_achievements) do
-		if table.size(achievement_data) == 3 and achievement_data.award and achievement_data.difficulty and (achievement_data.job or achievement_data.jobs) then
+		if eligible_for_autounlock(achievement_data) then
 			if not achievement_data.jobs then
 				local jobs = {achievement_data.job}
 			end
 
 			for i, job in pairs(jobs) do
 				for _, difficulty in ipairs(achievement_data.difficulty) do
-					if managers.statistics:completed_job(job, difficulty) > 0 then
+					local completion_count = managers.statistics:completed_job(job, difficulty, achievement_data.one_down)
+
+					if completion_count > 0 then
 						self:_award_achievement(achievement_data)
 
 						break
@@ -943,17 +975,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines: 962 to 964
+-- Lines: 985 to 987
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines: 967 to 969
+-- Lines: 990 to 992
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines: 971 to 998
+-- Lines: 994 to 1021
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)

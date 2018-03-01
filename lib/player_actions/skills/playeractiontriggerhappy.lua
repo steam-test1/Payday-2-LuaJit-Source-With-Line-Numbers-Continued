@@ -1,15 +1,18 @@
 PlayerAction.TriggerHappy = {}
 PlayerAction.TriggerHappy.Priority = 1
 
--- Lines: 6 to 34
+-- Lines: 6 to 36
 PlayerAction.TriggerHappy.Function = function (player_manager, damage_bonus, max_stacks, max_time)
 	local co = coroutine.running()
 	local current_time = Application:time()
 	local current_stacks = 1
 
 
-	-- Lines: 12 to 19
-	local function on_hit(attacker_unit, unit, variant)
+	-- Lines: 12 to 21
+	local function on_hit(unit, attack_data)
+		local attacker_unit = attack_data.attacker_unit
+		local variant = attack_data.variant
+
 		if attacker_unit == player_manager:player_unit() and variant == "bullet" then
 			current_stacks = current_stacks + 1
 
