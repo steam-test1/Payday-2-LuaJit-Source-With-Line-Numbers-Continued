@@ -1,5 +1,5 @@
 HUDAccessCamera = HUDAccessCamera or class()
-local old_buttons = true
+local old_buttons = not _G.IS_VR
 
 -- Lines: 9 to 43
 function HUDAccessCamera:init(hud, full_hud)

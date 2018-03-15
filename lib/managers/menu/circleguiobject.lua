@@ -207,3 +207,12 @@ function CircleBitmapGuiObject:remove()
 	self._panel = nil
 end
 
+-- Lines: 197 to 202
+function CircleBitmapGuiObject:set_depth_mode(mode)
+	self._circle:configure({depth_mode = mode})
+
+	if self._bg_circle then
+		self._bg_circle:configure({depth_mode = mode})
+	end
+end
+

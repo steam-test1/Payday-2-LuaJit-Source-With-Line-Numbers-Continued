@@ -45,6 +45,7 @@ require("lib/tweak_data/StoryMissionsTweakData")
 require("lib/tweak_data/PromotionalMenusTweakData")
 require("lib/tweak_data/PromoUnlocksTweakData")
 require("lib/tweak_data/RaidJobsTweakData")
+require("lib/tweak_data/TweakDataVR")
 
 TweakData = TweakData or class()
 
@@ -384,7 +385,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines: 414 to 2375
+-- Lines: 414 to 2378
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -2046,7 +2047,8 @@ Play the full version soon to get your full PAYDAY!]],
 			explosion = false,
 			fire = false
 		},
-		environment_fire = {fire = false}
+		environment_fire = {fire = false},
+		dynamite = {fire = false}
 	}
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.damage = 160
@@ -2446,6 +2448,7 @@ Play the full version soon to get your full PAYDAY!]],
 		}
 	}}
 	self.promos = PromotionalMenusTweakData:new(self)
+	self.vr = TweakDataVR:new(self)
 
 	self:_init_wip_tweak_data()
 	self:set_difficulty()
@@ -2453,19 +2456,19 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines: 2379 to 2431
+-- Lines: 2382 to 2457
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines: 2436 to 2437
+-- Lines: 2462 to 2463
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines: 2442 to 2450
+-- Lines: 2468 to 2476
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2476,7 +2479,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines: 2454 to 2457
+-- Lines: 2480 to 2483
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2486,7 +2489,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines: 2461 to 2470
+-- Lines: 2487 to 2496
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2499,7 +2502,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines: 2474 to 2650
+-- Lines: 2500 to 2676
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2688,7 +2691,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines: 2652 to 2815
+-- Lines: 2678 to 2841
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2794,7 +2797,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines: 2817 to 2889
+-- Lines: 2843 to 2915
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2867,7 +2870,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines: 2892 to 2896
+-- Lines: 2918 to 2922
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -2886,7 +2889,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 end
 
 
--- Lines: 2913 to 3127
+-- Lines: 2939 to 3153
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

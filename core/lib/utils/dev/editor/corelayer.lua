@@ -1624,7 +1624,7 @@ function Layer:on_clone_edited_values()
 	end
 end
 
--- Lines: 1531 to 1604
+-- Lines: 1531 to 1608
 function Layer:clone_edited_values(unit, source)
 	if unit:name() ~= source:name() then
 		return
@@ -1710,10 +1710,12 @@ function Layer:clone_edited_values(unit, source)
 	if unit:ladder() then
 		unit:ladder():set_width(source:ladder():width())
 		unit:ladder():set_height(source:ladder():height())
+		unit:ladder():set_pc_disabled(source:ladder():pc_disabled())
+		unit:ladder():set_vr_disabled(source:ladder():vr_disabled())
 	end
 end
 
--- Lines: 1607 to 1612
+-- Lines: 1611 to 1616
 function Layer:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -1724,7 +1726,7 @@ function Layer:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
--- Lines: 1616 to 1623
+-- Lines: 1620 to 1627
 function Layer:set_enabled(enabled)
 	self._layer_enabled = enabled
 
@@ -1737,22 +1739,22 @@ function Layer:set_enabled(enabled)
 	return true
 end
 
--- Lines: 1627 to 1629
+-- Lines: 1631 to 1633
 function Layer:hide_all()
 	self:_hide_units(self._created_units, true)
 end
 
--- Lines: 1632 to 1634
+-- Lines: 1636 to 1638
 function Layer:unhide_all()
 	self:_hide_units(self._created_units, false)
 end
 
--- Lines: 1637 to 1639
+-- Lines: 1641 to 1643
 function Layer:on_hide_selected()
 	self:_hide_units(_G.clone(self:selected_units()), true)
 end
 
--- Lines: 1642 to 1646
+-- Lines: 1646 to 1650
 function Layer:_hide_units(units, hide)
 	local hide_command = CoreEditorCommand.HideUnitsCommand:new(self)
 
@@ -1760,7 +1762,7 @@ function Layer:_hide_units(units, hide)
 	managers.editor:register_undo_command(hide_command)
 end
 
--- Lines: 1648 to 1664
+-- Lines: 1652 to 1668
 function Layer:clear()
 	for _, unit in ipairs(self._created_units) do
 		if alive(unit) then
@@ -1782,7 +1784,7 @@ function Layer:clear()
 	end
 end
 
--- Lines: 1667 to 1679
+-- Lines: 1671 to 1683
 function Layer:set_unit_name(units)
 	local i = units:selected_item()
 
@@ -1802,7 +1804,7 @@ function Layer:set_unit_name(units)
 	end
 end
 
--- Lines: 1682 to 1688
+-- Lines: 1686 to 1692
 function Layer:get_real_name(name)
 	local fs = " %*"
 
@@ -1814,51 +1816,51 @@ function Layer:get_real_name(name)
 	return name
 end
 
--- Lines: 1690 to 1691
+-- Lines: 1694 to 1695
 function Layer:condition()
 	return managers.editor:conditions() or self._using_widget
 end
 
--- Lines: 1693 to 1694
+-- Lines: 1697 to 1698
 function Layer:grab()
 	return self._grab
 end
 
--- Lines: 1696 to 1697
+-- Lines: 1700 to 1701
 function Layer:create_marker()
 end
 
--- Lines: 1698 to 1699
+-- Lines: 1702 to 1703
 function Layer:use_marker()
 end
 
--- Lines: 1702 to 1703
+-- Lines: 1706 to 1707
 function Layer:on_continent_changed()
 end
 
--- Lines: 1706 to 1707
+-- Lines: 1710 to 1711
 function Layer:set_unit_rotations(rot, finalize)
 end
 
--- Lines: 1710 to 1711
+-- Lines: 1714 to 1715
 function Layer:set_unit_positions(pos, finalize)
 end
 
--- Lines: 1715 to 1716
+-- Lines: 1719 to 1720
 function Layer:_add_project_save_data(data)
 end
 
--- Lines: 1720 to 1721
+-- Lines: 1724 to 1725
 function Layer:_add_project_unit_save_data(unit, data)
 end
 
--- Lines: 1723 to 1724
+-- Lines: 1727 to 1728
 function Layer:selected_amount_string()
 	return "Selected " .. self._save_name .. ": " .. #self._selected_units
 end
 local idstring_wpn = Idstring("wpn")
 
--- Lines: 1728 to 1748
+-- Lines: 1732 to 1752
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
 		local unit_data = unit:unit_data()
@@ -1884,7 +1886,7 @@ function Layer:save()
 	end
 end
 
--- Lines: 1750 to 1800
+-- Lines: 1754 to 1804
 function Layer:test_spawn(type)
 	local pos = Vector3()
 	local rot = Rotation()
@@ -1942,17 +1944,17 @@ function Layer:test_spawn(type)
 	print("DONE")
 end
 
--- Lines: 1802 to 1803
+-- Lines: 1806 to 1807
 function Layer:shift()
 	return CoreInput.shift()
 end
 
--- Lines: 1805 to 1806
+-- Lines: 1809 to 1810
 function Layer:ctrl()
 	return CoreInput.ctrl()
 end
 
--- Lines: 1808 to 1809
+-- Lines: 1812 to 1813
 function Layer:alt()
 	return CoreInput.alt()
 end

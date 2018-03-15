@@ -1,6 +1,6 @@
 EnvEffectTweakData = EnvEffectTweakData or class()
 
--- Lines: 7 to 13
+-- Lines: 7 to 19
 function EnvEffectTweakData:init()
 	self.lightning = {
 		event_name = "thunder_struck",
@@ -9,7 +9,7 @@ function EnvEffectTweakData:init()
 	}
 end
 
--- Lines: 15 to 33
+-- Lines: 21 to 39
 function EnvEffectTweakData:molotov_fire()
 	local params = {
 		sound_event = "molotov_impact",
@@ -37,7 +37,7 @@ function EnvEffectTweakData:molotov_fire()
 	return params
 end
 
--- Lines: 36 to 53
+-- Lines: 42 to 59
 function EnvEffectTweakData:trip_mine_fire()
 	local params = {
 		sound_event = "molotov_impact",
@@ -64,7 +64,7 @@ function EnvEffectTweakData:trip_mine_fire()
 	return params
 end
 
--- Lines: 56 to 73
+-- Lines: 62 to 79
 function EnvEffectTweakData:incendiary_fire()
 	local params = {
 		sound_event = "gl_explode",
@@ -91,7 +91,7 @@ function EnvEffectTweakData:incendiary_fire()
 	return params
 end
 
--- Lines: 76 to 93
+-- Lines: 82 to 99
 function EnvEffectTweakData:incendiary_fire_arbiter()
 	local params = {
 		sound_event = "gl_explode",

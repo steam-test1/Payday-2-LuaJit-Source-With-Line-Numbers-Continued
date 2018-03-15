@@ -119,7 +119,13 @@ function MenuTitlescreenState:at_enter()
 		color = Color.black
 	})
 	managers.menu_scene:setup_camera()
-	managers.menu_scene:set_scene_template("lobby")
+
+	if _G.IS_VR then
+		managers.menu_scene:set_scene_template("title")
+	else
+		managers.menu_scene:set_scene_template("lobby")
+	end
+
 	self._workspace:show()
 	self._full_workspace:show()
 	managers.user:set_index(nil)
@@ -189,8 +195,18 @@ function MenuTitlescreenState:update(t, dt)
 	end
 end
 
--- Lines: 217 to 241
+-- Lines: 205 to 241
 function MenuTitlescreenState:get_start_pressed_controller_index()
+	if _G.IS_VR then
+		for index, controller in ipairs(self._controller_list) do
+			if controller._default_controller_id == "vr" and controller:get_any_input_pressed() then
+				return index
+			end
+		end
+
+		return nil
+	end
+
 	for index, controller in ipairs(self._controller_list) do
 		if is_ps4 or is_xb1 then
 			if controller:get_input_pressed("confirm") then

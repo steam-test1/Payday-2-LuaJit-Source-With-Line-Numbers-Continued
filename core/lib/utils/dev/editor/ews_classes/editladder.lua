@@ -3,7 +3,7 @@ core:import("CoreEws")
 
 EditLadder = EditLadder or class(EditUnitBase)
 
--- Lines: 6 to 48
+-- Lines: 6 to 56
 function EditLadder:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Ladder",
@@ -57,11 +57,21 @@ function EditLadder:init(editor)
 	}
 
 	CoreEws.number_controller(self._height_params)
+
+	self._pc_disabled_ctrlr = EWS:CheckBox(panel, "Disabled in PC", "")
+
+	self._pc_disabled_ctrlr:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_pc_disabled"), nil)
+	sizer:add(self._pc_disabled_ctrlr, 0, 0, "EXPAND")
+
+	self._vr_disabled_ctrlr = EWS:CheckBox(panel, "Disabled in VR", "")
+
+	self._vr_disabled_ctrlr:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_vr_disabled"), nil)
+	sizer:add(self._vr_disabled_ctrlr, 0, 0, "EXPAND")
 	panel:layout()
 	panel:set_enabled(false)
 end
 
--- Lines: 50 to 56
+-- Lines: 58 to 64
 function EditLadder:update(t, dt)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -70,7 +80,7 @@ function EditLadder:update(t, dt)
 	end
 end
 
--- Lines: 58 to 64
+-- Lines: 66 to 72
 function EditLadder:_update_width(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -79,7 +89,7 @@ function EditLadder:_update_width(params)
 	end
 end
 
--- Lines: 66 to 72
+-- Lines: 74 to 80
 function EditLadder:_update_height(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -88,7 +98,25 @@ function EditLadder:_update_height(params)
 	end
 end
 
--- Lines: 74 to 90
+-- Lines: 82 to 88
+function EditLadder:set_pc_disabled()
+	for _, unit in ipairs(self._selected_units) do
+		if unit:ladder() then
+			unit:ladder():set_pc_disabled(self._pc_disabled_ctrlr:get_value())
+		end
+	end
+end
+
+-- Lines: 90 to 96
+function EditLadder:set_vr_disabled()
+	for _, unit in ipairs(self._selected_units) do
+		if unit:ladder() then
+			unit:ladder():set_vr_disabled(self._vr_disabled_ctrlr:get_value())
+		end
+	end
+end
+
+-- Lines: 98 to 117
 function EditLadder:is_editable(unit, units)
 	if alive(unit) and unit:ladder() then
 		self._reference_unit = unit
@@ -97,6 +125,8 @@ function EditLadder:is_editable(unit, units)
 
 		CoreEws.change_entered_number(self._width_params, unit:ladder():width())
 		CoreEws.change_entered_number(self._height_params, unit:ladder():height())
+		self._pc_disabled_ctrlr:set_value(unit:ladder():pc_disabled())
+		self._vr_disabled_ctrlr:set_value(unit:ladder():vr_disabled())
 
 		self._no_event = false
 

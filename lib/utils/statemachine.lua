@@ -52,7 +52,7 @@ function StateMachineTransitionQueue:queue_transition(state, params, state_machi
 	})
 end
 
--- Lines: 44 to 69
+-- Lines: 44 to 72
 function StateMachineTransitionQueue:do_state_change()
 	if not self._queued_transitions or #self._queued_transitions == 0 then
 		return
@@ -76,6 +76,10 @@ function StateMachineTransitionQueue:do_state_change()
 			trans_func(old_state, new_state, params)
 		else
 			cat_print("state_machine", "[StateMachine] Condition failed, blocking state change '" .. tostring(old_state:name()) .. "' --> '" .. tostring(new_state:name()) .. "'")
+
+			self._queued_transitions = nil
+
+			return
 		end
 
 		i = i + 1
@@ -84,7 +88,7 @@ function StateMachineTransitionQueue:do_state_change()
 	self._queued_transitions = nil
 end
 
--- Lines: 71 to 80
+-- Lines: 74 to 83
 function StateMachineTransitionQueue:last_queued_state(state_machine)
 	local state = nil
 
@@ -99,7 +103,7 @@ function StateMachineTransitionQueue:last_queued_state(state_machine)
 	return state
 end
 
--- Lines: 83 to 92
+-- Lines: 86 to 95
 function StateMachineTransitionQueue:last_queued_state_name(state_machine)
 	local state_name = nil
 
@@ -114,7 +118,7 @@ function StateMachineTransitionQueue:last_queued_state_name(state_machine)
 	return state_name
 end
 
--- Lines: 95 to 109
+-- Lines: 98 to 112
 function StateMachine:init(start_state, shared_queue)
 	self._states = {}
 	self._transitions = {}
@@ -129,7 +133,7 @@ function StateMachine:init(start_state, shared_queue)
 	self._transition_queue:do_state_change()
 end
 
--- Lines: 111 to 118
+-- Lines: 114 to 121
 function StateMachine:destroy()
 	for _, state in pairs(self._states) do
 		state:destroy()
@@ -139,7 +143,7 @@ function StateMachine:destroy()
 	self._transitions = {}
 end
 
--- Lines: 120 to 125
+-- Lines: 123 to 128
 function StateMachine:add_transition(from, to, trans_func, condition)
 	self._states[from:name()] = from
 	self._states[to:name()] = to
@@ -150,12 +154,12 @@ function StateMachine:add_transition(from, to, trans_func, condition)
 	}
 end
 
--- Lines: 127 to 128
+-- Lines: 130 to 131
 function StateMachine:current_state()
 	return self._current_state
 end
 
--- Lines: 131 to 134
+-- Lines: 134 to 137
 function StateMachine:can_change_state(state)
 	local state_from = self._transition_queue:last_queued_state(self) or self._current_state
 	local valid_transitions = self._transitions[state_from]
@@ -163,7 +167,7 @@ function StateMachine:can_change_state(state)
 	return valid_transitions and valid_transitions[state] ~= nil
 end
 
--- Lines: 137 to 153
+-- Lines: 140 to 156
 function StateMachine:change_state(state, params)
 	local transition_debug_string = string.format("'%s' --> '%s'", tostring(self:last_queued_state_name()), tostring(state:name()))
 
@@ -176,45 +180,45 @@ function StateMachine:change_state(state, params)
 	end
 end
 
--- Lines: 155 to 156
+-- Lines: 158 to 159
 function StateMachine:current_state_name()
 	return self._current_state:name()
 end
 
--- Lines: 159 to 161
+-- Lines: 162 to 164
 function StateMachine:can_change_state_by_name(state_name)
 	local state = assert(self._states[state_name], "[StateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	return self:can_change_state(state)
 end
 
--- Lines: 164 to 167
+-- Lines: 167 to 170
 function StateMachine:change_state_by_name(state_name, params)
 	local state = assert(self._states[state_name], "[StateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	self:change_state(state, params)
 end
 
--- Lines: 169 to 173
+-- Lines: 172 to 176
 function StateMachine:update(t, dt)
 	if self._current_state.update then
 		self._current_state:update(t, dt)
 	end
 end
 
--- Lines: 175 to 179
+-- Lines: 178 to 182
 function StateMachine:paused_update(t, dt)
 	if self._current_state.paused_update then
 		self._current_state:paused_update(t, dt)
 	end
 end
 
--- Lines: 181 to 183
+-- Lines: 184 to 186
 function StateMachine:end_update(t, dt)
 	self._transition_queue:do_state_change()
 end
 
--- Lines: 185 to 186
+-- Lines: 188 to 189
 function StateMachine:last_queued_state_name()
 	return self._transition_queue:last_queued_state_name(self) or self:current_state_name()
 end

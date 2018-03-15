@@ -724,6 +724,11 @@ end
 -- Lines: 586 to 677
 function ContractBoxGui:create_character_text(peer_id, x, y, text, icon, panel)
 	panel = panel or self._panel
+
+	if _G.IS_VR then
+		panel, x, y = managers.menu_scene:create_character_text_panel(peer_id)
+	end
+
 	self._peers = self._peers or {}
 	local color_id = peer_id
 	local color = tweak_data.chat_colors[color_id] or tweak_data.chat_colors[#tweak_data.chat_colors]

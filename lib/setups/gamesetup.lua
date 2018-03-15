@@ -33,6 +33,11 @@ require("lib/managers/ExplosionManager")
 require("lib/managers/DOTManager")
 require("lib/managers/WaitManager")
 require("lib/units/ArmorSkinExt")
+
+if _G.IS_VR then
+	require("lib/managers/HUDManagerVR")
+end
+
 core:import("SequenceManager")
 
 if Application:editor() then
@@ -53,32 +58,39 @@ require("lib/units/beings/player/PlayerEquipment")
 require("lib/units/beings/player/PlayerMovement")
 require("lib/player_actions/PlayerAction")
 
-PlayerHand = PlayerHand or class()
+if _G.IS_VR then
+	require("lib/units/beings/player/PlayerHand")
+	require("lib/units/beings/player/PlayerWarp")
+	require("lib/units/beings/player/HandMelee")
+	require("lib/units/beings/player/HandExt")
+else
+	PlayerHand = PlayerHand or class()
 
--- Lines: 100 to 101
-function PlayerHand:init(unit)
-end
+	-- Lines: 96 to 97
+	function PlayerHand:init(unit)
+	end
 
--- Lines: 100 to 101
-function PlayerHand:destroy()
-end
-PlayerWarp = PlayerWarp or class()
+	-- Lines: 96 to 97
+	function PlayerHand:destroy()
+	end
+	PlayerWarp = PlayerWarp or class()
 
--- Lines: 101 to 102
-function PlayerWarp:init(unit)
-end
+	-- Lines: 97 to 98
+	function PlayerWarp:init(unit)
+	end
 
--- Lines: 101 to 102
-function PlayerWarp:destroy()
-end
-HandMelee = HandMelee or class()
+	-- Lines: 97 to 98
+	function PlayerWarp:destroy()
+	end
+	HandMelee = HandMelee or class()
 
--- Lines: 102 to 103
-function HandMelee:init(unit)
-end
+	-- Lines: 98 to 99
+	function HandMelee:init(unit)
+	end
 
--- Lines: 102 to 103
-function HandMelee:destroy()
+	-- Lines: 98 to 99
+	function HandMelee:destroy()
+	end
 end
 
 require("lib/network/base/extensions/NetworkBaseExtension")
@@ -236,7 +248,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines: 326 to 476
+-- Lines: 327 to 477
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -278,7 +290,7 @@ function GameSetup:load_packages()
 	self._loaded_diff_packages = {}
 
 
-	-- Lines: 370 to 375
+	-- Lines: 371 to 376
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
 			table.insert(self._loaded_diff_packages, package_name)
@@ -381,7 +393,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines: 478 to 559
+-- Lines: 479 to 560
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -453,12 +465,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines: 561 to 563
+-- Lines: 562 to 564
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines: 565 to 605
+-- Lines: 566 to 606
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -492,7 +504,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines: 607 to 648
+-- Lines: 608 to 649
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -539,7 +551,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines: 651 to 693
+-- Lines: 652 to 694
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -585,7 +597,7 @@ function GameSetup:init_finalize()
 	end
 end
 
--- Lines: 695 to 736
+-- Lines: 696 to 737
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -614,7 +626,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 738 to 748
+-- Lines: 739 to 749
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -626,7 +638,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 750 to 766
+-- Lines: 751 to 767
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -640,13 +652,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 768 to 773
+-- Lines: 769 to 774
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 775 to 799
+-- Lines: 776 to 800
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -671,7 +683,7 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 end
 
--- Lines: 801 to 826
+-- Lines: 802 to 827
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -697,7 +709,7 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 end
 
--- Lines: 859 to 860
+-- Lines: 860 to 861
 function GameSetup:_update_debug_input()
 end
 

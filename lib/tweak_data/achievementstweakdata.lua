@@ -31,7 +31,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 37 to 2099
+-- Lines: 37 to 2113
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -4131,6 +4131,42 @@ function AchievementsTweakData:init(tweak_data)
 			job = "hvh",
 			difficulty = sm_wish_and_above
 		},
+		nbm_1 = {
+			award = "nbm_1",
+			job = "haunted",
+			difficulty = normal_and_above
+		},
+		nbm_2 = {
+			award = "nbm_2",
+			job = "haunted",
+			difficulty = hard_and_above
+		},
+		nbm_3 = {
+			award = "nbm_3",
+			job = "haunted",
+			difficulty = veryhard_and_above
+		},
+		nbm_4 = {
+			award = "nbm_4",
+			job = "haunted",
+			difficulty = overkill_and_above
+		},
+		pick_666 = {
+			award = "pick_666",
+			job = "haunted",
+			difficulty = easywish_and_above
+		},
+		halloween_nightmare_5 = {
+			award = "halloween_nightmare_5",
+			job = "haunted",
+			difficulty = deathwish_and_above
+		},
+		axe_666 = {
+			award = "axe_666",
+			one_down = true,
+			job = "haunted",
+			difficulty = sm_wish_and_above
+		},
 		bain_jobs = {
 			complete_job = true,
 			contract = "bain",
@@ -6559,7 +6595,7 @@ local tracking = {
 }
 
 
--- Lines: 2118 to 2144
+-- Lines: 2132 to 2158
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -6571,7 +6607,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 2127 to 2137
+	-- Lines: 2141 to 2151
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -6602,7 +6638,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 2147 to 2151
+-- Lines: 2161 to 2165
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -6616,7 +6652,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 2154 to 2161
+-- Lines: 2168 to 2175
 local function from_level(level)
 	if not level then
 		error()
@@ -6633,7 +6669,7 @@ local function from_level(level)
 end
 
 
--- Lines: 2164 to 2171
+-- Lines: 2178 to 2185
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -6650,7 +6686,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 2174 to 2184
+-- Lines: 2188 to 2198
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -6673,7 +6709,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 2192 to 2366
+-- Lines: 2206 to 2380
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6820,7 +6856,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2403 to 2516
+-- Lines: 2417 to 2530
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

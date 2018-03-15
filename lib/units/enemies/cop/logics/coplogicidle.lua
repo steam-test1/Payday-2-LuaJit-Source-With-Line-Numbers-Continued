@@ -1189,7 +1189,7 @@ function CopLogicIdle._chk_turn_needed(data, my_data, my_pos, look_pos)
 	return err_to_correct
 end
 
--- Lines: 1182 to 1423
+-- Lines: 1182 to 1441
 function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or CopLogicIdle._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -1287,6 +1287,11 @@ function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_
 					if managers.player:has_activate_temporary_upgrade("temporary", "chico_injector") and managers.player:upgrade_value("player", "chico_preferred_target", false) then
 						weight_mul = (weight_mul or 1) * 1000
 					end
+
+					if _G.IS_VR and tweak_data.vr.long_range_damage_reduction_distance[1] < distance then
+						local mul = math.clamp((distance / tweak_data.vr.long_range_damage_reduction_distance[2]) / 2, 0, 1) + 1
+						weight_mul = (weight_mul or 1) * mul
+					end
 				elseif att_unit:base() and att_unit:base().upgrade_value then
 					if att_unit:movement() and not att_unit:movement()._move_data and att_unit:movement()._pose_code and att_unit:movement()._pose_code == 2 then
 						weight_mul = (weight_mul or 1) * (att_unit:base():upgrade_value("player", "stand_still_crouch_camouflage_bonus") or 1)
@@ -1294,6 +1299,11 @@ function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_
 
 					if att_unit:base().has_activate_temporary_upgrade and att_unit:base():has_activate_temporary_upgrade("temporary", "chico_injector") and att_unit:base():upgrade_value("player", "chico_preferred_target") then
 						weight_mul = (weight_mul or 1) * 1000
+					end
+
+					if att_unit:movement().is_vr and att_unit:movement():is_vr() and tweak_data.vr.long_range_damage_reduction_distance[1] < distance then
+						local mul = math.clamp((distance / tweak_data.vr.long_range_damage_reduction_distance[2]) / 2, 0, 1) + 1
+						weight_mul = (weight_mul or 1) * mul
 					end
 				end
 
@@ -1375,7 +1385,7 @@ function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines: 1428 to 1465
+-- Lines: 1446 to 1483
 function CopLogicIdle._upd_curious_reaction(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -1391,7 +1401,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 	end
 
 
-	-- Lines: 1446 to 1447
+	-- Lines: 1464 to 1465
 	local function _get_spin_to_att_obj()
 		return (attention_obj.m_pos - data.m_pos):to_polar_with_reference(data.unit:movement():m_rot():y(), math.UP).spin
 	end
@@ -1417,7 +1427,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 	end
 end
 
--- Lines: 1469 to 1479
+-- Lines: 1487 to 1497
 function CopLogicIdle._turn_by_spin(data, my_data, spin)
 	local new_action_data = {
 		body_part = 2,
@@ -1431,7 +1441,7 @@ function CopLogicIdle._turn_by_spin(data, my_data, spin)
 	end
 end
 
--- Lines: 1483 to 1501
+-- Lines: 1501 to 1519
 function CopLogicIdle._chk_objective_needs_travel(data, new_objective)
 	if not new_objective.nav_seg and new_objective.type ~= "follow" then
 		return
@@ -1454,7 +1464,7 @@ function CopLogicIdle._chk_objective_needs_travel(data, new_objective)
 	return true
 end
 
--- Lines: 1506 to 1559
+-- Lines: 1524 to 1577
 function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	if data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -1516,7 +1526,7 @@ function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	end
 end
 
--- Lines: 1563 to 1583
+-- Lines: 1581 to 1601
 function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	if objective and not my_data.action_started and (data.unit:anim_data().act_idle or not data.unit:movement():chk_action_forbidden("action")) then
 		if objective.action then
@@ -1541,7 +1551,7 @@ function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	end
 end
 
--- Lines: 1587 to 1606
+-- Lines: 1605 to 1624
 function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
 	local can_stop_action = not my_data.action_started and objective and objective.action and not data.unit:anim_data().to_idle
 
@@ -1574,7 +1584,7 @@ function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
 	CopLogicIdle._chk_has_old_action(data, my_data)
 end
 
--- Lines: 1610 to 1616
+-- Lines: 1628 to 1634
 function CopLogicIdle._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act
@@ -1582,7 +1592,7 @@ function CopLogicIdle._chk_has_old_action(data, my_data)
 	my_data.advancing = lower_body_action and lower_body_action:type() == "walk" and lower_body_action
 end
 
--- Lines: 1620 to 1622
+-- Lines: 1638 to 1640
 function CopLogicIdle._start_idle_action_from_act(data)
 	data.unit:brain():action_request({
 		variant = "idle",

@@ -15,6 +15,20 @@ require("lib/units/beings/player/states/PlayerDriving")
 require("lib/units/beings/player/states/PlayerFreefall")
 require("lib/units/beings/player/states/PlayerParachuting")
 
+if _G.IS_VR then
+	require("lib/units/beings/player/states/vr/PlayerStandardVR")
+	require("lib/units/beings/player/states/vr/PlayerMaskOffVR")
+	require("lib/units/beings/player/states/vr/PlayerBleedOutVR")
+	require("lib/units/beings/player/states/vr/PlayerFatalVR")
+	require("lib/units/beings/player/states/vr/PlayerArrestedVR")
+	require("lib/units/beings/player/states/vr/PlayerTasedVR")
+	require("lib/units/beings/player/states/vr/PlayerIncapacitatedVR")
+	require("lib/units/beings/player/states/vr/PlayerCarryVR")
+	require("lib/units/beings/player/states/vr/PlayerDrivingVR")
+	require("lib/units/beings/player/states/vr/PlayerFreefallVR")
+	require("lib/units/beings/player/states/vr/PlayerParachutingVR")
+end
+
 PlayerMovement = PlayerMovement or class()
 PlayerMovement._STAMINA_INIT = tweak_data.player.movement_state.stamina.STAMINA_INIT or 10
 PlayerMovement.OUT_OF_WORLD_Z = -4000
@@ -72,10 +86,18 @@ function PlayerMovement:init(unit)
 	end
 
 	self:set_friendly_fire(true)
+
+	if _G.IS_VR then
+		self:_init_vr()
+	end
 end
 
--- Lines: 126 to 143
+-- Lines: 120 to 143
 function PlayerMovement:post_init()
+	if _G.IS_VR then
+		self:_post_init_vr()
+	end
+
 	self._m_head_rot = self._unit:camera()._m_cam_rot
 	self._m_head_pos = self._unit:camera()._m_cam_pos
 
@@ -123,6 +145,10 @@ function PlayerMovement:warp_to(pos, rot, velocity)
 	local camera_base = self:current_state()._camera_unit:base()
 	camera_base._camera_properties.spin = rot:yaw() + 90
 	camera_base._camera_properties.pitch = rot:pitch()
+
+	if _G.IS_VR then
+		self:set_ghost_position(pos)
+	end
 end
 
 -- Lines: 186 to 213
@@ -224,8 +250,12 @@ function PlayerMovement:change_state(name)
 	self._unit:network():send("sync_player_movement_state", self._current_state_name, self._unit:character_damage():down_time(), self._unit:id())
 end
 
--- Lines: 315 to 345
+-- Lines: 311 to 345
 function PlayerMovement:update(unit, t, dt)
+	if _G.IS_VR then
+		self:_update_vr(unit, t, dt)
+	end
+
 	self:_calculate_m_pose()
 
 	if self:_check_out_of_world(t) then
@@ -236,12 +266,6 @@ function PlayerMovement:update(unit, t, dt)
 
 	if self._current_state then
 		self._current_state:update(t, dt)
-	end
-
-	if self._kill_overlay_t and self._kill_overlay_t < t then
-		self._kill_overlay_t = nil
-
-		managers.overlay_effect:stop_effect()
 	end
 
 	self:update_stamina(t, dt)
@@ -267,6 +291,13 @@ function PlayerMovement:update_stamina(t, dt, ignore_running)
 		end
 	elseif self._stamina < self:_max_stamina() then
 		self:_restart_stamina_regen_timer()
+	end
+
+	if _G.IS_VR then
+		managers.hud:set_stamina({
+			current = self._stamina,
+			total = self:_max_stamina()
+		})
 	end
 end
 
@@ -1022,6 +1053,10 @@ function PlayerMovement:destroy(unit)
 	managers.hud:set_suspicion(false)
 	SoundDevice:set_rtpc("suspicion", 0)
 	SoundDevice:set_rtpc("stamina", 100)
+
+	if alive(self._orientation_unit) then
+		World:delete_unit(self._orientation_unit)
+	end
 end
 
 -- Lines: 1181 to 1188
@@ -1054,79 +1089,117 @@ function PlayerMovement:_change_stamina(value)
 	SoundDevice:set_rtpc("stamina", stamina_breath)
 end
 
--- Lines: 1242 to 1244
+-- Lines: 1215 to 1247
 function PlayerMovement:subtract_stamina(value)
+	if managers.player:has_category_upgrade("player", "stamina_ammo_refill_single") then
+		self._subtracted_stamina_single = (self._subtracted_stamina_single or 0) + math.abs(value)
+		local stamina_needed, ammo_refill = unpack(managers.player:upgrade_value("player", "stamina_ammo_refill_single"))
+
+		if stamina_needed < self._subtracted_stamina_single then
+			for i = 1, 2, 1 do
+				local weapon = self._unit:inventory():unit_by_selection(i):base()
+
+				if weapon:fire_mode() == "single" then
+					local ammo = math.ceil(weapon:get_ammo_max() * ammo_refill)
+
+					weapon:add_ammo_to_pool(ammo, i)
+				end
+			end
+
+			self._subtracted_stamina_single = self._subtracted_stamina_single - stamina_needed
+		end
+	end
+
+	if managers.player:has_category_upgrade("player", "stamina_ammo_refill_auto") then
+		self._subtracted_stamina_auto = (self._subtracted_stamina_auto or 0) + math.abs(value)
+		local stamina_needed, ammo_refill = unpack(managers.player:upgrade_value("player", "stamina_ammo_refill_auto"))
+
+		if stamina_needed < self._subtracted_stamina_auto then
+			for i = 1, 2, 1 do
+				local weapon = self._unit:inventory():unit_by_selection(i):base()
+
+				if weapon:fire_mode() == "auto" then
+					local ammo = math.ceil(weapon:get_ammo_max() * ammo_refill)
+
+					weapon:add_ammo_to_pool(ammo, i)
+				end
+			end
+
+			self._subtracted_stamina_auto = self._subtracted_stamina_auto - stamina_needed
+		end
+	end
+
 	self:_change_stamina(-math.abs(value))
 end
 
--- Lines: 1246 to 1248
+-- Lines: 1249 to 1251
 function PlayerMovement:add_stamina(value)
 	self:_change_stamina(math.abs(value) * managers.player:upgrade_value("player", "stamina_regen_multiplier", 1))
 end
 
--- Lines: 1250 to 1251
+-- Lines: 1253 to 1254
 function PlayerMovement:is_above_stamina_threshold()
 	return tweak_data.player.movement_state.stamina.MIN_STAMINA_THRESHOLD < self._stamina
 end
 
--- Lines: 1254 to 1255
+-- Lines: 1257 to 1258
 function PlayerMovement:is_stamina_drained()
 	return self._stamina <= 0
 end
 
--- Lines: 1258 to 1261
+-- Lines: 1261 to 1264
 function PlayerMovement:set_running(running)
 	self._is_running = running
 
 	self:_restart_stamina_regen_timer()
 end
 
--- Lines: 1263 to 1265
+-- Lines: 1266 to 1268
 function PlayerMovement:_restart_stamina_regen_timer()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines: 1267 to 1268
+-- Lines: 1270 to 1271
 function PlayerMovement:running()
 	return self._is_running
 end
 
--- Lines: 1271 to 1272
+-- Lines: 1274 to 1275
 function PlayerMovement:crouching()
 	return self._state_data.ducking
 end
 
--- Lines: 1275 to 1276
+-- Lines: 1278 to 1279
 function PlayerMovement:in_air()
 	return self._state_data.in_air
 end
 
--- Lines: 1279 to 1280
+-- Lines: 1282 to 1283
 function PlayerMovement:on_ladder()
 	return self._state_data.on_ladder
 end
 
--- Lines: 1285 to 1287
+-- Lines: 1288 to 1290
 function PlayerMovement:on_enter_ladder(ladder_unit)
 	self._ladder_unit = ladder_unit
 end
 
--- Lines: 1289 to 1291
+-- Lines: 1292 to 1294
 function PlayerMovement:on_exit_ladder()
 	self._ladder_unit = nil
 end
 
--- Lines: 1293 to 1294
+-- Lines: 1296 to 1297
 function PlayerMovement:ladder_unit()
 	return self._ladder_unit
 end
 
--- Lines: 1299 to 1301
+-- Lines: 1302 to 1304
 function PlayerMovement:on_enter_zipline(zipline_unit)
 	self._zipline_unit = zipline_unit
 end
 
--- Lines: 1303 to 1308
+-- Lines: 1306 to 1311
 function PlayerMovement:on_exit_zipline()
 	if alive(self._zipline_unit) then
 		self._zipline_unit:zipline():set_user(nil)
@@ -1135,12 +1208,139 @@ function PlayerMovement:on_exit_zipline()
 	self._zipline_unit = nil
 end
 
--- Lines: 1310 to 1311
+-- Lines: 1313 to 1314
 function PlayerMovement:zipline_unit()
 	return self._zipline_unit
 end
 
--- Lines: 1447 to 1469
+-- Lines: 1322 to 1326
+function PlayerMovement:_init_vr()
+	self._orientation_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/player/vr_orientation"), Vector3(0, 0, 0), Rotation())
+
+	self._unit:link(self._orientation_unit)
+	self:set_orientation_state("none")
+end
+
+-- Lines: 1331 to 1348
+function PlayerMovement:set_orientation_state(state, base_position)
+	if state == "none" then
+		self._orientation_unit:set_visible(false)
+	else
+		self._orientation_unit:set_visible(true)
+
+		if self._orientation_unit:damage():has_sequence(state) then
+			self._orientation_unit:damage():run_sequence_simple(state)
+		end
+
+		if base_position then
+			local from = base_position + Vector3(0, 0, 100)
+			local to = base_position + Vector3(0, 0, -2000)
+			local ray = self._unit:raycast("ray", from, to, "slot_mask", 1)
+
+			if ray then
+				self._orientation_unit:set_position(ray.position)
+			end
+		end
+	end
+end
+
+-- Lines: 1353 to 1355
+function PlayerMovement:set_next_reload_speed_multiplier(multiplier)
+	self._next_reload_speed_multiplier = math.max(multiplier, self._next_reload_speed_multiplier or 0)
+end
+
+-- Lines: 1357 to 1358
+function PlayerMovement:next_reload_speed_multiplier()
+	return self._next_reload_speed_multiplier
+end
+
+-- Lines: 1361 to 1363
+function PlayerMovement:reset_next_reload_speed_multiplier()
+	self._next_reload_speed_multiplier = nil
+end
+
+-- Lines: 1368 to 1376
+function PlayerMovement:_update_vr(unit, t, dt)
+	if self._block_input then
+		return
+	end
+
+	local hmd_pos = VRManager:hmd_position()
+
+	mvector3.set(self._hmd_delta, hmd_pos)
+	mvector3.subtract(self._hmd_delta, self._hmd_pos)
+	mvector3.set(self._hmd_pos, hmd_pos)
+end
+
+-- Lines: 1381 to 1385
+function PlayerMovement:_post_init_vr()
+	self._ghost_position = mvector3.copy(self._m_pos)
+	self._hmd_pos = VRManager:hmd_position()
+	self._hmd_delta = Vector3()
+end
+
+-- Lines: 1389 to 1390
+function PlayerMovement:hmd_delta()
+	return self._hmd_delta
+end
+
+-- Lines: 1395 to 1396
+function PlayerMovement:hmd_position()
+	return self._hmd_pos
+end
+
+-- Lines: 1401 to 1404
+function PlayerMovement:set_ghost_position(pos, unit_position)
+	mvector3.set(self._ghost_position, pos)
+	self._unit:set_position(unit_position and unit_position or pos)
+end
+
+-- Lines: 1408 to 1409
+function PlayerMovement:ghost_position()
+	return self._ghost_position
+end
+
+-- Lines: 1414 to 1420
+function PlayerMovement:reset_ghost_position()
+	self:set_ghost_position(self._m_pos)
+
+	if self:current_state().reset_ghost_position then
+		self:current_state():reset_ghost_position()
+	end
+end
+
+-- Lines: 1424 to 1425
+function PlayerMovement:warping()
+	return self._state_data.warping
+end
+
+-- Lines: 1428 to 1429
+function PlayerMovement:on_zipline()
+	return self._state_data.on_zipline
+end
+
+-- Lines: 1432 to 1434
+function PlayerMovement:activate_regeneration()
+	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
+end
+
+-- Lines: 1436 to 1437
+function PlayerMovement:stamina()
+	return self._stamina
+end
+
+-- Lines: 1442 to 1444
+function PlayerMovement:set_block_input(block)
+	self._block_input = block
+end
+
+-- Lines: 1446 to 1449
+function PlayerMovement:reset_hmd_position()
+	mvector3.set(self._hmd_pos, VRManager:hmd_position())
+	mvector3.set_zero(self._hmd_delta)
+end
+
+-- Lines: 1454 to 1476
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1164,7 +1364,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines: 1471 to 1526
+-- Lines: 1478 to 1533
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1173,6 +1373,10 @@ function PlayerMovement:update_teleport(t, dt)
 	if self._teleport_t and self._teleport_t < t then
 		self:warp_to(self._teleport_data.position, self._teleport_data.rotation)
 		self._unit:network():send("action_teleport", self._teleport_data.position)
+
+		if _G.IS_VR then
+			self:set_ghost_position(self._teleport_data.position)
+		end
 
 		self._teleport_t = nil
 		local new_selection = nil
@@ -1210,12 +1414,12 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines: 1528 to 1529
+-- Lines: 1535 to 1536
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines: 1532 to 1533
+-- Lines: 1539 to 1540
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
 end

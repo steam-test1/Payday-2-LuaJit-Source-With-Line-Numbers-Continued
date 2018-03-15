@@ -7,7 +7,7 @@ function CoreEnvironmentControllerManager:init()
 	self._DEFAULT_DOF_DISTANCE = 10
 	self._dof_distance = self._DEFAULT_DOF_DISTANCE
 	self._current_dof_distance = self._dof_distance
-	self._chromatic_enabled = true
+	self._chromatic_enabled = false
 	self._base_chromatic_amount = 0.15
 	self._base_contrast = 0.1
 	self._hurt_value = 1
@@ -1054,8 +1054,10 @@ function CoreEnvironmentControllerManager:set_base_chromatic_amount(base_chromat
 	self._base_chromatic_amount = base_chromatic_amount
 end
 
--- Lines: 1206 to 1215
+-- Lines: 1204 to 1215
 function CoreEnvironmentControllerManager:set_chromatic_enabled(enabled)
+	return
+
 	self._chromatic_enabled = enabled
 
 	if self._material then

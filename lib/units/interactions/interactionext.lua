@@ -196,8 +196,14 @@ function BaseInteractionExt:update(distance_to_player)
 end
 local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
--- Lines: 174 to 175
+-- Lines: 169 to 175
 function BaseInteractionExt:_btn_interact()
+	if _G.IS_VR then
+		local button = self._hand_id == PlayerHand.LEFT and "interact_left" or "interact_right"
+
+		return managers.localization:btn_macro(button, false)
+	end
+
 	return managers.localization:btn_macro("interact", false)
 end
 
@@ -239,6 +245,7 @@ function BaseInteractionExt:selected(player, locator, hand_id)
 		return
 	end
 
+	self._hand_id = hand_id
 	self._is_selected = true
 	local string_macros = {}
 

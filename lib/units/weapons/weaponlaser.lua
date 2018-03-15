@@ -75,6 +75,16 @@ function WeaponLaser:init(unit)
 
 	self._brush:set_blend_mode("opacity_add")
 end
+
+-- Lines: 90 to 92
+function WeaponLaser:set_position(pos)
+	self._custom_position = pos
+end
+
+-- Lines: 94 to 96
+function WeaponLaser:set_rotation(rot)
+	self._custom_rotation = rot
+end
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec_l_dir = Vector3()

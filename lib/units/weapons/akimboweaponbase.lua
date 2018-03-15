@@ -659,6 +659,11 @@ function EnemyAkimboWeaponBase:anim_stop(anim)
 	self._second_gun:anim_stop(Idstring(anim))
 end
 
+if _G.IS_VR then
+	require("lib/units/weapons/vr/AkimboWeaponBaseVR")
+end
+
+
 -- Lines: 568 to 569
 function EnemyAkimboWeaponBase:mute_firing()
 	AkimboWeaponBase.mute_firing(self)

@@ -25,6 +25,7 @@ end
 -- Lines: 24 to 30
 function GuiDataManager:create_saferect_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
 
 	self:layout_workspace(ws)
 
@@ -34,6 +35,7 @@ end
 -- Lines: 33 to 39
 function GuiDataManager:create_fullscreen_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
 
 	self:layout_fullscreen_workspace(ws)
 
@@ -43,6 +45,7 @@ end
 -- Lines: 42 to 48
 function GuiDataManager:create_fullscreen_16_9_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
 
 	self:layout_fullscreen_16_9_workspace(ws)
 
@@ -52,6 +55,7 @@ end
 -- Lines: 51 to 57
 function GuiDataManager:create_corner_saferect_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
 
 	self:layout_corner_saferect_workspace(ws)
 
@@ -61,6 +65,7 @@ end
 -- Lines: 60 to 66
 function GuiDataManager:create_1280_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
 
 	self:layout_1280_workspace(ws)
 
@@ -70,15 +75,24 @@ end
 -- Lines: 69 to 75
 function GuiDataManager:create_corner_saferect_1280_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
+	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
 
 	self:layout_corner_saferect_1280_workspace(ws)
 
 	return ws
 end
 
--- Lines: 90 to 93
+-- Lines: 80 to 93
 function GuiDataManager:destroy_workspace(ws)
-	(self._scene_gui or Overlay:gui()):destroy_workspace(ws)
+	if not ws then
+		return
+	end
+
+	if ws then
+		self._workspace_configuration[ws:key()] = nil
+	end
+
+	ws:gui():destroy_workspace(ws)
 end
 
 -- Lines: 95 to 96
@@ -250,9 +264,52 @@ function GuiDataManager:layout_corner_saferect_1280_workspace(ws)
 	self:_set_layout(ws, self._corner_saferect_1280_data)
 end
 
+-- Lines: 299 to 320
+function GuiDataManager:_set_linked_ws(ws, obj, screen_data)
+	local rot = obj:rotation()
+	local size = obj:oobb():size()
+	local w = size.x
+	local h = size.y
+	local on_screen_height = screen_data.on_screen_width / screen_data.w * screen_data.h
+	local gui = ws:gui()
+	local scale_w = w / gui:width()
+	local scale_h = h / gui:height()
+	local x_axis = Vector3(scale_w * screen_data.on_screen_width, 0, 0)
+
+	mvector3.rotate_with(x_axis, rot)
+
+	local y_axis = Vector3(0, scale_h * on_screen_height, 0)
+
+	mvector3.rotate_with(y_axis, rot)
+
+	local center = Vector3(w / 2, h / 2, 0)
+
+	mvector3.rotate_with(center, rot)
+
+	local offset = Vector3(screen_data.x * scale_w, screen_data.y * scale_h, 0)
+
+	mvector3.rotate_with(offset, rot)
+	ws:set_linked(screen_data.w, screen_data.h, obj, obj:position() - center + offset, x_axis, y_axis)
+end
+
 -- Lines: 323 to 341
 function GuiDataManager:_set_layout(ws, screen_data)
 	self._ws_size_data[ws:key()] = screen_data
+
+	if self._workspace_objects then
+		local conf = self._workspace_configuration[ws:key()]
+		local is_screen = conf and conf.workspace_object == "screen"
+
+		if not is_screen then
+			local obj = conf and conf.workspace_object and self._workspace_objects[conf.workspace_object] or self._workspace_objects.default
+
+			if obj then
+				self:_set_linked_ws(ws, obj, screen_data)
+
+				return
+			end
+		end
+	end
 
 	ws:set_screen(screen_data.w, screen_data.h, screen_data.x, screen_data.y, screen_data.on_screen_width)
 end
@@ -357,5 +414,21 @@ end
 -- Lines: 437 to 439
 function GuiDataManager:resolution_changed()
 	self:_setup_workspace_data()
+end
+
+-- Lines: 442 to 444
+function GuiDataManager:set_scene_gui(gui)
+	self._scene_gui = gui
+end
+
+-- Lines: 446 to 448
+function GuiDataManager:set_workspace_objects(workspace_objects)
+	self._workspace_objects = workspace_objects
+end
+
+-- Lines: 450 to 453
+function GuiDataManager:add_workspace_object(name, workspace_object)
+	self._workspace_objects = self._workspace_objects or {}
+	self._workspace_objects[name] = workspace_object
 end
 

@@ -278,8 +278,12 @@ function MenuRenderer:trigger_item(item)
 	end
 end
 
--- Lines: 249 to 251
+-- Lines: 245 to 251
 function MenuRenderer:post_event(event)
+	if _G.IS_VR then
+		managers.menu:post_event_vr(event)
+	end
+
 	self._sound_source:post_event(event)
 end
 

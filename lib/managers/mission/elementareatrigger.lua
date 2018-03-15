@@ -8,7 +8,7 @@ function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 end
 
--- Lines: 10 to 236
+-- Lines: 10 to 247
 function ElementAreaTrigger:project_instigators()
 	local instigators = {}
 
@@ -21,6 +21,8 @@ function ElementAreaTrigger:project_instigators()
 			if managers.network:session() and managers.network:session():local_peer():id() == id then
 				table.insert(instigators, managers.player:player_unit())
 			end
+		elseif self._values.instigator == "vr_player" and _G.IS_VR then
+			table.insert(instigators, managers.player:player_unit())
 		end
 
 		return instigators
@@ -29,6 +31,8 @@ function ElementAreaTrigger:project_instigators()
 	if self._values.instigator == "player" then
 		table.insert(instigators, managers.player:player_unit())
 	elseif self._values.instigator == "player_not_in_vehicle" then
+		table.insert(instigators, managers.player:player_unit())
+	elseif self._values.instigator == "vr_player" and _G.IS_VR then
 		table.insert(instigators, managers.player:player_unit())
 	elseif self._values.instigator == "vehicle" then
 		local vehicles = managers.vehicle:get_all_vehicles()
@@ -253,7 +257,7 @@ function ElementAreaTrigger:project_instigators()
 			local all_found = World:find_units_quick("all", 14)
 
 
-			-- Lines: 217 to 221
+			-- Lines: 228 to 232
 			local function filter_func(unit)
 				if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then
 					return true
@@ -277,7 +281,7 @@ function ElementAreaTrigger:project_instigators()
 	return instigators
 end
 
--- Lines: 240 to 254
+-- Lines: 251 to 265
 function ElementAreaTrigger:project_amount_all()
 	if self._values.instigator == "criminals" or self._values.instigator == "local_criminals" then
 		local i = 0
@@ -300,7 +304,7 @@ function ElementAreaTrigger:project_amount_all()
 	return managers.network:session() and managers.network:session():amount_of_alive_players() or 0
 end
 
--- Lines: 257 to 279
+-- Lines: 268 to 290
 function ElementAreaTrigger:project_amount_inside()
 	local counter = #self._inside
 
@@ -332,7 +336,7 @@ function ElementAreaTrigger:project_amount_inside()
 	return counter
 end
 
--- Lines: 282 to 302
+-- Lines: 293 to 313
 function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._values.instigator == "vehicle_with_players" and unit then
 		local result = false

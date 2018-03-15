@@ -14,6 +14,10 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 	if not ws then
 		self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
+		if _G.IS_VR then
+			self._black_bg_ws:set_pinned_screen(true)
+		end
+
 		self._black_bg_ws:panel():rect({
 			valign = "scale",
 			name = "bg",
@@ -120,6 +124,10 @@ function MenuBackdropGUI:create_black_borders()
 
 	self._gui_data_scene_gui = managers.gui_data:get_scene_gui()
 	self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
+
+	if _G.IS_VR then
+		self._black_bg_ws:set_pinned_screen(true)
+	end
 
 	self._black_bg_ws:panel():rect({
 		valign = "scale",
@@ -542,6 +550,10 @@ end
 function MenuBackdropGUI:show()
 	if self._panel then
 		self._panel:show()
+	end
+
+	if _G.IS_VR then
+		return
 	end
 
 	if self._blackborder_workspace then

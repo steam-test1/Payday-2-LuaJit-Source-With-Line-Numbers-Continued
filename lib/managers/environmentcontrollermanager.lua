@@ -3,10 +3,18 @@ EnvironmentControllerManager = EnvironmentControllerManager or class(CoreEnviron
 -- Lines: 3 to 11
 function EnvironmentControllerManager:init()
 	EnvironmentControllerManager.super.init(self)
+
+	if _G.IS_VR then
+		self:set_dof_setting("none")
+	end
 end
 
--- Lines: 19 to 21
+-- Lines: 14 to 21
 function EnvironmentControllerManager:set_dof_setting(setting)
+	if _G.IS_VR then
+		setting = "none"
+	end
+
 	EnvironmentControllerManager.super.set_dof_setting(self, setting)
 end
 

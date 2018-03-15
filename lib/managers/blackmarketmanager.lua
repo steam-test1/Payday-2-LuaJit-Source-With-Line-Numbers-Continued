@@ -25,6 +25,7 @@ function BlackMarketManager:_setup()
 		preferred_character = "russian",
 		grenade = "frag",
 		melee_weapon = "weapon",
+		melee_weapon = _G.IS_VR and "fists",
 		henchman = {mask = "character_locked"}
 	}
 
@@ -163,6 +164,10 @@ function BlackMarketManager:_setup_melee_weapons()
 		local is_default, weapon_level = managers.upgrades:get_value(melee_weapon, self._defaults.melee_weapon)
 		melee_weapons[melee_weapon].level = weapon_level
 		melee_weapons[melee_weapon].skill_based = not is_default and weapon_level == 0 and not tweak_data.blackmarket.melee_weapons[melee_weapon].dlc
+
+		if _G.IS_VR then
+			melee_weapons[melee_weapon].vr_locked = tweak_data.vr:is_locked("melee_weapons", melee_weapon)
+		end
 	end
 
 	melee_weapons[self._defaults.melee_weapon].equipped = true
@@ -296,6 +301,10 @@ function BlackMarketManager:_setup_weapons()
 			weapons[weapon].level = weapon_level
 			weapons[weapon].skill_based = got_parent or not is_default and weapon_level == 0 and not tweak_data.weapon[weapon].global_value
 			weapons[weapon].func_based = tweak_data.weapon[weapon].unlock_func
+
+			if _G.IS_VR then
+				weapons[weapon].vr_locked = tweak_data.vr:is_locked("weapons", weapon)
+			end
 		end
 	end
 end
@@ -332,6 +341,10 @@ function BlackMarketManager:weapon_unlocked_by_crafted(category, slot)
 	local cosmetic_blueprint = cosmetics and cosmetics.id and tweak_data.blackmarket.weapon_skins[cosmetics.id] and tweak_data.blackmarket.weapon_skins[cosmetics.id].default_blueprint or {}
 	local data = Global.blackmarket_manager.weapons[weapon_id]
 	local unlocked = data.unlocked
+
+	if _G.IS_VR then
+		unlocked = unlocked and not data.vr_locked
+	end
 
 	if unlocked then
 		local is_any_part_dlc_locked = false
@@ -3775,6 +3788,10 @@ function BlackMarketManager:get_sorted_melee_weapons(hide_locked)
 		x_td = m_tweak_data[x[1]]
 		y_td = m_tweak_data[y[1]]
 
+		if _G.IS_VR and xd.vr_locked ~= yd.vr_locked then
+			return not xd.vr_locked
+		end
+
 		if xd.unlocked ~= yd.unlocked then
 			return xd.unlocked
 		end
@@ -4314,8 +4331,12 @@ function BlackMarketManager:equip_next_character()
 	end
 end
 
--- Lines: 4034 to 4051
+-- Lines: 4026 to 4051
 function BlackMarketManager:on_aquired_weapon_platform(upgrade, id, loading)
+	if _G.IS_VR and tweak_data.vr:is_locked("weapons", id) then
+		return
+	end
+
 	self._global.weapons[id].unlocked = true
 	local category = tweak_data.weapon[upgrade.weapon_id].use_data.selection_index == 2 and "primaries" or "secondaries"
 
@@ -4362,6 +4383,10 @@ function BlackMarketManager:on_aquired_melee_weapon(upgrade, id, loading)
 	if not self._global.melee_weapons[id] then
 		Application:error("[BlackMarketManager:on_aquired_melee_weapon] Melee weapon do not exist in blackmarket", "melee_weapon_id", id)
 
+		return
+	end
+
+	if _G.IS_VR and tweak_data.vr:is_locked("melee_weapons", id) then
 		return
 	end
 
@@ -8322,7 +8347,7 @@ function BlackMarketManager:_verfify_equipped_category(category)
 		for melee_weapon, craft in pairs(Global.blackmarket_manager.melee_weapons) do
 			local melee_weapon_data = tweak_data.blackmarket.melee_weapons[melee_weapon] or {}
 
-			if craft.equipped and craft.unlocked and (not melee_weapon_data.dlc or managers.dlc:is_dlc_unlocked(melee_weapon_data.dlc)) then
+			if craft.equipped and craft.unlocked and (not melee_weapon_data.dlc or managers.dlc:is_dlc_unlocked(melee_weapon_data.dlc)) and (not _G.IS_VR or not craft.vr_locked) then
 				melee_weapon_id = melee_weapon
 			end
 		end
@@ -8925,6 +8950,7 @@ function BlackMarketManager:equip_weapon_in_game(category, slot, force_equip, do
 		"primaries"
 	}
 	local should_equip = selection_categories[managers.player:player_unit():inventory():equipped_selection()] == category or force_equip
+	should_equip = should_equip and not _G.IS_VR
 
 	if should_equip then
 		managers.player:player_unit():movement():current_state():_start_action_unequip_weapon(TimerManager:game():time(), {
@@ -9205,27 +9231,27 @@ function BlackMarketManager:get_type_by_id(id)
 	end
 end
 
--- Lines: 8731 to 8732
+-- Lines: 8734 to 8735
 function BlackMarketManager:has_unlocked_breech()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_1"), "bm_menu_locked_breech"
 end
 
--- Lines: 8735 to 8736
+-- Lines: 8742 to 8743
 function BlackMarketManager:has_unlocked_ching()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_3"), "bm_menu_locked_ching"
 end
 
--- Lines: 8739 to 8740
+-- Lines: 8750 to 8751
 function BlackMarketManager:has_unlocked_erma()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_2"), "bm_menu_locked_erma"
 end
 
--- Lines: 8743 to 8744
+-- Lines: 8755 to 8756
 function BlackMarketManager:has_unlocked_push()
 	return true
 end
 
--- Lines: 8748 to 8749
+-- Lines: 8760 to 8761
 function BlackMarketManager:has_unlocked_grip()
 	return true
 end

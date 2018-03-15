@@ -1,5 +1,5 @@
 
--- Lines: 1 to 2693
+-- Lines: 1 to 2798
 function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 	self.melee_weapons = {weapon = {}}
 	self.melee_weapons.weapon.name_id = "bm_melee_weapon"
@@ -2432,6 +2432,7 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 	self.melee_weapons.grip.sounds.charge = "knife_charge"
 	self.melee_weapons.grip.stats.concealment = 30
 	self.melee_weapons.grip.dlc = "raidww2_clan"
+	self.melee_weapons.grip.locks = {dlc = "raidww2_clan"}
 	self.melee_weapons.grip.texture_bundle_folder = "old"
 	self.melee_weapons.grip.graphic_objects = {
 		a_weapon_right = "g_grip",
@@ -2442,7 +2443,6 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 		loop = false,
 		start_time = -1
 	}
-	self.melee_weapons.grip.locks = {dlc = "raidww2_clan"}
 	self.melee_weapons.sap = deep_clone(self.melee_weapons.tomahawk)
 	self.melee_weapons.sap.name_id = "bm_melee_sap"
 	self.melee_weapons.sap.unit = "units/pd2_dlc_myh/weapons/wpn_fps_mel_sap/wpn_fps_mel_sap"

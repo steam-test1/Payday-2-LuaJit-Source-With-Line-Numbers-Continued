@@ -44,6 +44,15 @@ function PlayerCivilian:_enter(enter_data)
 	self._ext_network:send("set_stance", 1, false, false)
 
 	self._show_casing_t = Application:time() + 4
+
+	if _G.IS_VR then
+		managers.hud:belt():set_visible(false)
+
+		self._weapon_hand_id = self._unit:hand():get_active_hand_id("weapon")
+
+		self._unit:hand():set_default_state(PlayerHand.LEFT, "idle", true)
+		self._unit:hand():set_default_state(PlayerHand.RIGHT, "idle", true)
+	end
 end
 
 -- Lines: 59 to 98
@@ -73,6 +82,11 @@ function PlayerCivilian:exit(state_data, new_state_name)
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
 
 		self._enemy_weapons_hot_listen_id = nil
+	end
+
+	if _G.IS_VR then
+		managers.hud:belt():set_visible(true)
+		self._unit:hand():set_default_state(self._weapon_hand_id or PlayerHand.hand_id(managers.vr:get_setting("default_weapon_hand") or "right"), "weapon")
 	end
 end
 
@@ -129,6 +143,10 @@ function PlayerCivilian:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 
 	if input.btn_interact_press then
+		if _G.IS_VR then
+			self._interact_hand = input.btn_interact_left_press and PlayerHand.LEFT or PlayerHand.RIGHT
+		end
+
 		local action_forbidden = self:chk_action_forbidden("interact") or self._unit:base():stats_screen_visible() or self:_interacting() or self._ext_movement:has_carry_restriction() or self:_on_zipline()
 
 		if not action_forbidden then
@@ -154,8 +172,14 @@ function PlayerCivilian:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines: 210 to 218
+-- Lines: 204 to 218
 function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
+	if _G.IS_VR then
+		managers.hud:link_interaction_hud(self._unit:hand():hand_unit(self._interact_hand), interact_object)
+
+		self._state_data.interacting = true
+	end
+
 	self._interact_expire_t = timer
 	self._interact_params = {
 		object = interact_object,
@@ -167,7 +191,7 @@ function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 1, true, self._interact_params.tweak_data, timer, false)
 end
 
--- Lines: 220 to 240
+-- Lines: 220 to 239
 function PlayerCivilian:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
@@ -183,9 +207,15 @@ function PlayerCivilian:_interupt_action_interact(t, input, complete)
 
 		self._interact_params = nil
 	end
+
+	if _G.IS_VR then
+		managers.hud:hide_interaction_bar(complete)
+
+		self._state_data.interacting = false
+	end
 end
 
--- Lines: 242 to 267
+-- Lines: 241 to 266
 function PlayerCivilian:_update_interaction_timers(t)
 	if self._interact_expire_t then
 		local dt = self:_get_interaction_speed()
@@ -205,35 +235,35 @@ function PlayerCivilian:_update_interaction_timers(t)
 	end
 end
 
--- Lines: 271 to 275
+-- Lines: 270 to 274
 function PlayerCivilian:_check_action_jump(t, input)
 	if input.btn_duck_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 277 to 281
+-- Lines: 276 to 280
 function PlayerCivilian:_check_action_duck(t, input)
 	if input.btn_jump_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 283 to 287
+-- Lines: 282 to 286
 function PlayerCivilian:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 289 to 293
+-- Lines: 288 to 292
 function PlayerCivilian:_check_action_use_item(t, input)
 	if input.btn_use_item_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines: 295 to 301
+-- Lines: 294 to 300
 function PlayerCivilian:clbk_enemy_weapons_hot()
 	if self._enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
@@ -242,12 +272,12 @@ function PlayerCivilian:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines: 303 to 304
+-- Lines: 302 to 303
 function PlayerCivilian:interaction_blocked()
 	return false
 end
 
--- Lines: 307 to 308
+-- Lines: 306 to 307
 function PlayerCivilian:_get_walk_headbob()
 	return 0.0125
 end

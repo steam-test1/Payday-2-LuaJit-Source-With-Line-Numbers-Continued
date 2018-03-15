@@ -1,5 +1,5 @@
 
--- Lines: 1 to 1469
+-- Lines: 1 to 1467
 function BlackMarketTweakData:_init_materials(tweak_data)
 	self.materials = {plastic = {}}
 	self.materials.plastic.name_id = "bm_mtl_plastic"

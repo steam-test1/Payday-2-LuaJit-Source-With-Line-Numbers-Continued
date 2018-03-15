@@ -34,8 +34,12 @@ function WaitingForPlayersCamera:_setup_sound_listener()
 	})
 end
 
--- Lines: 41 to 48
+-- Lines: 37 to 48
 function WaitingForPlayersCamera:start(time)
+	if _G.IS_VR then
+		return
+	end
+
 	self._playing = true
 
 	self._unit:anim_stop(Idstring("camera_animation"))

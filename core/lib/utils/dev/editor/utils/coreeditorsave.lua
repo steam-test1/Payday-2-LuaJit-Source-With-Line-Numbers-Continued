@@ -137,14 +137,16 @@ function _editable_gui_data_table(unit)
 end
 
 
--- Lines: 119 to 128
+-- Lines: 119 to 132
 function _editable_ladder_table(unit)
 	local t = nil
 
 	if unit:ladder() then
 		t = {
 			width = unit:ladder():width(),
-			height = unit:ladder():height()
+			height = unit:ladder():height(),
+			pc_disabled = unit:ladder():pc_disabled(),
+			vr_disabled = unit:ladder():vr_disabled()
 		}
 	end
 
@@ -152,7 +154,7 @@ function _editable_ladder_table(unit)
 end
 
 
--- Lines: 131 to 142
+-- Lines: 135 to 146
 function _editable_zipline_table(unit)
 	local t = nil
 
@@ -170,7 +172,7 @@ function _editable_zipline_table(unit)
 end
 
 
--- Lines: 146 to 180
+-- Lines: 150 to 184
 function save_layout(params)
 	local dialogs = {}
 
@@ -210,7 +212,7 @@ function save_layout(params)
 end
 
 
--- Lines: 183 to 200
+-- Lines: 187 to 204
 function load_layout(params)
 	local data = ScriptSerializer:from_generic_xml(params.file:read())
 

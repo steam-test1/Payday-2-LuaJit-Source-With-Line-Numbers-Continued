@@ -181,7 +181,10 @@ end
 -- Lines: 179 to 194
 function PlayerBase:set_visible(visible)
 	self._unit:set_visible(visible)
-	self._unit:camera():camera_unit():set_visible(visible)
+
+	if not _G.IS_VR then
+		self._unit:camera():camera_unit():set_visible(visible)
+	end
 
 	if visible then
 		self._unit:inventory():show_equipped_unit()

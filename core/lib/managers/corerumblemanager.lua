@@ -27,6 +27,7 @@ function RumbleManager:initialize_controller_types()
 	self._rumbling_controller_types.ps3 = true
 	self._rumbling_controller_types.ps4 = true
 	self._rumbling_controller_types.xb1 = true
+	self._rumbling_controller_types.vr = true
 end
 
 -- Lines: 31 to 48

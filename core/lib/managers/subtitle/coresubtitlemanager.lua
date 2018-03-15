@@ -144,10 +144,14 @@ function SubtitleManager:has_subtitle_sequence(sequence_id)
 	return (self.__subtitle_sequences and self.__subtitle_sequences[sequence_id]) ~= nil
 end
 
--- Lines: 123 to 130
+-- Lines: 123 to 133
 function SubtitleManager:_update_presenter_visibility()
 	local presenter = self:presenter()
 	local show_presenter = self:enabled() and self:visible() and (not managers.user or managers.user:get_setting("subtitle"))
+
+	if _G.IS_VR then
+		show_presenter = false
+	end
 
 	presenter[show_presenter and "show" or "hide"](presenter)
 end

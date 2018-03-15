@@ -1,5 +1,5 @@
 
--- Lines: 1 to 29375
+-- Lines: 1 to 29381
 function BlackMarketTweakData:_init_weapon_skins()
 	self.weapon_skins = {serbu_woodland = {}}
 	self.weapon_skins.serbu_woodland.name_id = "bm_wskn_serbu_woodland"

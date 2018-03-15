@@ -1,6 +1,6 @@
 MissionAccessCamera = MissionAccessCamera or class()
 
--- Lines: 3 to 45
+-- Lines: 3 to 46
 function MissionAccessCamera:init(unit)
 	self._unit = unit
 	self._camera = World:create_camera()
@@ -13,6 +13,14 @@ function MissionAccessCamera:init(unit)
 
 	local scale_x = 1
 	local scale_y = 1
+
+	if _G.IS_VR then
+		local rt_resolution = managers.menu:player():render_target_resolution()
+		local resolution = VRManager:target_resolution()
+		scale_x = rt_resolution.x / resolution.x
+		scale_y = rt_resolution.y / resolution.y
+	end
+
 	self._viewport = managers.viewport:new_vp(0, 0, scale_x, scale_y, "MissionAccessCamera", CoreManagerBase.PRIO_WORLDCAMERA)
 	self._director = self._viewport:director()
 	self._shaker = self._director:shaker()
@@ -22,9 +30,16 @@ function MissionAccessCamera:init(unit)
 	self._director:set_camera(self._camera_controller)
 	self._director:position_as(self._camera)
 	self._camera_controller:set_both(self._unit)
+
+	if _G.IS_VR then
+		self._camera:set_aspect_ratio(1.7777777777777777)
+		self._camera:set_stereo(false)
+		self._viewport:set_enable_adaptive_quality(false)
+		managers.viewport:move_to_front(self._viewport)
+	end
 end
 
--- Lines: 47 to 57
+-- Lines: 48 to 58
 function MissionAccessCamera:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("access_camera", self._camera, self._camera, nil, false)
 
@@ -38,24 +53,24 @@ function MissionAccessCamera:_setup_sound_listener()
 	})
 end
 
--- Lines: 59 to 62
+-- Lines: 60 to 63
 function MissionAccessCamera:set_rotation(rotation)
 	self._original_rotation = rotation
 
 	self._unit:set_rotation(rotation)
 end
 
--- Lines: 64 to 65
+-- Lines: 65 to 66
 function MissionAccessCamera:get_original_rotation()
 	return self._original_rotation
 end
 
--- Lines: 68 to 69
+-- Lines: 69 to 70
 function MissionAccessCamera:get_offset_rotation()
 	return self._offset_rotation
 end
 
--- Lines: 72 to 80
+-- Lines: 73 to 81
 function MissionAccessCamera:start(time)
 	self._playing = true
 
@@ -66,7 +81,7 @@ function MissionAccessCamera:start(time)
 	self._viewport:set_active(true)
 end
 
--- Lines: 82 to 88
+-- Lines: 83 to 89
 function MissionAccessCamera:stop()
 	self._viewport:set_active(false)
 	self._unit:anim_stop(Idstring("camera_animation"))
@@ -75,23 +90,23 @@ function MissionAccessCamera:stop()
 	self._playing = false
 end
 
--- Lines: 96 to 97
+-- Lines: 97 to 98
 function MissionAccessCamera:set_destroyed(destroyed)
 end
 
--- Lines: 102 to 105
+-- Lines: 103 to 106
 function MissionAccessCamera:modify_fov(fov)
 	self._fov = math.clamp(self._fov + fov, 25, 75)
 
 	self._camera:set_fov(self._fov)
 end
 
--- Lines: 107 to 108
+-- Lines: 108 to 109
 function MissionAccessCamera:zoomed_value()
 	return self._fov / self._default_fov
 end
 
--- Lines: 111 to 122
+-- Lines: 112 to 123
 function MissionAccessCamera:set_offset_rotation(yaw, pitch, roll)
 	self._offset_rotation = self._offset_rotation or Rotation()
 	yaw = yaw + mrotation.yaw(self._original_rotation)
@@ -101,7 +116,7 @@ function MissionAccessCamera:set_offset_rotation(yaw, pitch, roll)
 	self._unit:set_rotation(self._offset_rotation)
 end
 
--- Lines: 124 to 141
+-- Lines: 125 to 142
 function MissionAccessCamera:destroy()
 	if self._viewport then
 		self._viewport:destroy()

@@ -1227,3 +1227,14 @@ function ConnectionNetworkHandler:sync_phalanx_vip_achievement_unlocked(achievem
 	managers.achievment:award_enemy_kill_achievement(achievement_id)
 end
 
+-- Lines: 1194 to 1200
+function ConnectionNetworkHandler:sync_is_vr(sender)
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
+	peer:set_is_vr()
+end
+

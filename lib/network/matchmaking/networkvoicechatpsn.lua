@@ -444,14 +444,11 @@ function NetworkVoiceChatPSN:update()
 	end
 end
 
--- Lines: 415 to 419
+-- Lines: 444 to 445
 function NetworkVoiceChatPSN:voice_ui_update_callback(user_info)
-	Application:trace("--------------------------- VOICE CHAT UI UPDATE --------------------------------")
-	Application:trace(inspect(user_info))
-	Application:trace("---------------------------------------------------------------------------------")
 end
 
--- Lines: 421 to 428
+-- Lines: 447 to 454
 function NetworkVoiceChatPSN:psn_session_destroyed(roomid)
 	print("[VOICECHAT] NetworkVoiceChatPSN:psn_session_destroyed() see following stack dump")
 
@@ -461,7 +458,7 @@ function NetworkVoiceChatPSN:psn_session_destroyed(roomid)
 	end
 end
 
--- Lines: 431 to 444
+-- Lines: 457 to 470
 function NetworkVoiceChatPSN:_get_peer_user_id(peer)
 	if not self._room_id then
 		return
@@ -477,26 +474,26 @@ function NetworkVoiceChatPSN:_get_peer_user_id(peer)
 	end
 end
 
--- Lines: 447 to 451
+-- Lines: 473 to 477
 function NetworkVoiceChatPSN:on_member_added(peer, mute)
 	if peer:rpc() then
 		PSNVoice:on_member_added(peer:name(), peer:rpc(), mute)
 	end
 end
 
--- Lines: 454 to 456
+-- Lines: 480 to 482
 function NetworkVoiceChatPSN:on_member_removed(peer)
 	PSNVoice:on_member_removed(peer:name())
 end
 
--- Lines: 458 to 461
+-- Lines: 484 to 494
 function NetworkVoiceChatPSN:mute_player(mute, peer)
 	self._muted_players[peer:name()] = mute
 
 	PSNVoice:mute_player(mute, peer:name())
 end
 
--- Lines: 464 to 465
+-- Lines: 497 to 498
 function NetworkVoiceChatPSN:is_muted(peer)
 	return self._muted_players[peer:name()] or false
 end

@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2666
+-- Lines: 9 to 2673
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -12026,6 +12026,42 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Event_H_SafeHouseNightmare_GiliamsSweet = {
+		texture = "guis/dlcs/trk/textures/pd2/achievement_atlas_nbm",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Event_H_SafeHouseNightmare_Temper = {
+		texture = "guis/dlcs/trk/textures/pd2/achievement_atlas_nbm",
+		texture_rect = {
+			89,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Event_H_SafeHouseNightmare_CheerfulChild = {
+		texture = "guis/dlcs/trk/textures/pd2/achievement_atlas_nbm",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Event_H_SafeHouseNightmare_WaterWorks = {
+		texture = "guis/dlcs/trk/textures/pd2/achievement_atlas_nbm",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -12041,7 +12077,7 @@ function HudIconsTweakData:init()
 end
 local atlas_data = nil
 
--- Lines: 2669 to 2672
+-- Lines: 2676 to 2679
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -12054,7 +12090,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2674 to 2689
+-- Lines: 2681 to 2696
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -12080,7 +12116,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2692 to 2696
+-- Lines: 2699 to 2703
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -12094,7 +12130,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2699 to 2704
+-- Lines: 2706 to 2711
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -12105,7 +12141,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2707 to 2712
+-- Lines: 2714 to 2719
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 
