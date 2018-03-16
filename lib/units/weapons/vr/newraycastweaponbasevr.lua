@@ -350,12 +350,14 @@ function NewRaycastWeaponBaseVR:_mag_data()
 	end
 end
 
--- Lines: 315 to 316
+-- Lines: 315 to 317
 function NewRaycastWeaponBaseVR:custom_magazine_name()
-	return tweak_data.vr.reload_timelines[self.name_id].custom_mag_unit
+	local data = tweak_data.vr.reload_timelines[self.name_id]
+
+	return data and data.custom_mag_unit
 end
 
--- Lines: 319 to 324
+-- Lines: 320 to 325
 function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	if self:custom_magazine_name() then
 		return World:spawn_unit(Idstring(self:custom_magazine_name()), pos or Vector3(), Rotation())
@@ -364,7 +366,7 @@ function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	return self:spawn_magazine_unit(pos)
 end
 
--- Lines: 327 to 332
+-- Lines: 328 to 333
 function NewRaycastWeaponBaseVR:reload_object_name()
 	local mag_data = self:_mag_data()
 
@@ -373,19 +375,19 @@ function NewRaycastWeaponBaseVR:reload_object_name()
 	end
 end
 
--- Lines: 334 to 337
+-- Lines: 335 to 338
 function NewRaycastWeaponBaseVR:_set_part_temporary_visibility(part_id, visible)
 	self._invisible_parts = self._invisible_parts or {}
 	self._invisible_parts[part_id] = not visible
 end
 
--- Lines: 339 to 340
+-- Lines: 340 to 341
 function NewRaycastWeaponBaseVR:_is_part_visible(part_id)
 	return not self._invisible_parts or not self._invisible_parts[part_id]
 end
 local __get_sound_event = NewRaycastWeaponBase._get_sound_event
 
--- Lines: 344 to 353
+-- Lines: 345 to 354
 function NewRaycastWeaponBaseVR:_get_sound_event(event, alternative_event)
 	local sound_overrides = tweak_data.vr.weapon_sound_overrides[self.name_id]
 
