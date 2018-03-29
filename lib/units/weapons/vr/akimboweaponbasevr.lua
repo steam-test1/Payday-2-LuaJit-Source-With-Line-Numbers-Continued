@@ -57,17 +57,21 @@ function AkimboWeaponBaseVR:update_reload_finish(...)
 	__update_reload_finish(self, ...)
 end
 
--- Lines: 64 to 66
+-- Lines: 64 to 69
 function AkimboWeaponBaseVR:on_enabled(...)
+	if alive(self.parent_weapon) then
+		self._last_gadget_idx = self.parent_weapon:base()._gadget_on
+	end
+
 	AkimboWeaponBaseVR.super.on_enabled(self, ...)
 end
 
--- Lines: 68 to 70
+-- Lines: 71 to 73
 function AkimboWeaponBaseVR:on_disabled(...)
 	AkimboWeaponBaseVR.super.on_disabled(self, ...)
 end
 
--- Lines: 72 to 74
+-- Lines: 75 to 77
 function AkimboWeaponBaseVR:set_gadget_on(...)
 	AkimboWeaponBaseVR.super.set_gadget_on(self, ...)
 end

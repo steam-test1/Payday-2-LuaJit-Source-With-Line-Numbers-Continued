@@ -126,18 +126,21 @@ function EquipmentHandState:init()
 end
 TabletHandState = TabletHandState or class(HandState)
 
--- Lines: 227 to 235
+-- Lines: 227 to 238
 function TabletHandState:init()
 	TabletHandState.super.init(self)
 
-	self._connections = {toggle_menu = {
-		inputs = {"menu_"},
-		condition = common.toggle_menu_condition
-	}}
+	self._connections = {
+		toggle_menu = {
+			inputs = {"menu_"},
+			condition = common.toggle_menu_condition
+		},
+		tablet_interact = {inputs = {"trigger_"}}
+	}
 end
 BeltHandState = BeltHandState or class(HandState)
 
--- Lines: 242 to 263
+-- Lines: 245 to 266
 function BeltHandState:init()
 	BeltHandState.super.init(self, 1)
 
@@ -159,13 +162,13 @@ function BeltHandState:init()
 end
 RepeaterHandState = RepeaterHandState or class(HandState)
 
--- Lines: 270 to 272
+-- Lines: 273 to 275
 function RepeaterHandState:init()
 	RepeaterHandState.super.init(self, 2)
 end
 DrivingHandState = DrivingHandState or class(HandState)
 
--- Lines: 279 to 300
+-- Lines: 282 to 303
 function DrivingHandState:init()
 	DrivingHandState.super.init(self)
 
@@ -187,5 +190,13 @@ function DrivingHandState:init()
 			inputs = {"grip_"}
 		}
 	}
+end
+ArrowHandState = ArrowHandState or class(HandState)
+
+-- Lines: 310 to 318
+function ArrowHandState:init()
+	ArrowHandState.super.init(self, 1)
+
+	self._connections = {secondary_attack = {inputs = {"grip_"}}}
 end
 

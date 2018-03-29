@@ -27,8 +27,8 @@ function IngameAccessCamera:_setup_controller()
 	self._next_camera_cb = callback(self, self, "_next_camera")
 
 	self._controller:add_trigger(old_buttons and "jump" or "suvcam_exit", self._leave_cb)
-	self._controller:add_trigger(old_buttons and "primary_attack" or "suvcam_prev", self._prev_camera_cb)
-	self._controller:add_trigger(old_buttons and "secondary_attack" or "suvcam_next", self._next_camera_cb)
+	self._controller:add_trigger(old_buttons and "primary_attack" or "suvcam_next", self._prev_camera_cb)
+	self._controller:add_trigger(old_buttons and "secondary_attack" or "suvcam_prev", self._next_camera_cb)
 	self._controller:set_enabled(true)
 	managers.controller:set_ingame_mode("access_camera")
 end
@@ -41,8 +41,8 @@ function IngameAccessCamera:_clear_controller()
 		end
 
 		self._controller:remove_trigger(old_buttons and "jump" or "suvcam_exit", self._leave_cb)
-		self._controller:remove_trigger(old_buttons and "primary_attack" or "suvcam_prev", self._prev_camera_cb)
-		self._controller:remove_trigger(old_buttons and "secondary_attack" or "suvcam_next", self._next_camera_cb)
+		self._controller:remove_trigger(old_buttons and "primary_attack" or "suvcam_next", self._prev_camera_cb)
+		self._controller:remove_trigger(old_buttons and "secondary_attack" or "suvcam_prev", self._next_camera_cb)
 		self._controller:set_enabled(false)
 		self._controller:destroy()
 

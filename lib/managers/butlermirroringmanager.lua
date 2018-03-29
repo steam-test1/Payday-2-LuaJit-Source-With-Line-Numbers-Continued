@@ -142,7 +142,7 @@ function ButlerMirroringManager:_set_and_combine_queue(q_type, event_data)
 	end
 end
 
--- Lines: 170 to 301
+-- Lines: 170 to 305
 function ButlerMirroringManager:_on_heist_complete(level_id, difficulty_id)
 	local sound_event = nil
 	local heist_difficulties = {
@@ -287,7 +287,7 @@ function ButlerMirroringManager:_on_heist_complete(level_id, difficulty_id)
 	end
 end
 
--- Lines: 303 to 383
+-- Lines: 307 to 387
 function ButlerMirroringManager:_on_achievement(id)
 	local l = {
 		the_wire = "Play_btl_ach_08",
@@ -369,7 +369,7 @@ function ButlerMirroringManager:_on_achievement(id)
 	end
 end
 
--- Lines: 385 to 389
+-- Lines: 389 to 393
 function ButlerMirroringManager:_on_level_up()
 	if math.random() > 0.4 then
 		self:_set_queue("Message.OnLevelUp", {
@@ -380,7 +380,7 @@ function ButlerMirroringManager:_on_level_up()
 	end
 end
 
--- Lines: 392 to 396
+-- Lines: 396 to 400
 function ButlerMirroringManager:_on_weapon_bought()
 	if math.random() > 0.4 then
 		self:_set_queue("Message.OnWeaponBought", {
@@ -391,7 +391,7 @@ function ButlerMirroringManager:_on_weapon_bought()
 	end
 end
 
--- Lines: 398 to 400
+-- Lines: 402 to 404
 function ButlerMirroringManager:_on_safe_house_upgrade()
 	self:_set_queue("Message.OnSafeHouseUpgrade", {
 		debug = "on safehouse upgrade VO",
@@ -401,7 +401,7 @@ function ButlerMirroringManager:_on_safe_house_upgrade()
 end
 
 
--- Lines: 402 to 412
+-- Lines: 406 to 416
 local function get_close_passed(t, val)
 	local _, k = table.find_value(t, function (v)
 		return val < v.at
@@ -418,7 +418,7 @@ local function get_close_passed(t, val)
 end
 
 
--- Lines: 414 to 415
+-- Lines: 418 to 419
 local function make_close(line, at, close)
 	return {
 		line = line,
@@ -428,7 +428,7 @@ local function make_close(line, at, close)
 end
 
 
--- Lines: 418 to 478
+-- Lines: 422 to 482
 function ButlerMirroringManager:_on_enter_safe_house()
 	self._global._queue.this_visit = nil
 	local visitor_lines = {vlad = "Play_btl_visit_vlad"}
@@ -496,7 +496,7 @@ function ButlerMirroringManager:_on_enter_safe_house()
 	end
 end
 
--- Lines: 480 to 484
+-- Lines: 484 to 488
 function ButlerMirroringManager:_on_mission_end(success)
 	if not success then
 		self:_set_queue("heist_result", {
@@ -508,7 +508,7 @@ function ButlerMirroringManager:_on_mission_end(success)
 	end
 end
 
--- Lines: 487 to 494
+-- Lines: 491 to 498
 function ButlerMirroringManager:_on_safe_opened(item)
 	if not item or item.category ~= "weapon_skins" then
 		return
@@ -521,7 +521,7 @@ function ButlerMirroringManager:_on_safe_opened(item)
 	})
 end
 
--- Lines: 498 to 508
+-- Lines: 502 to 512
 function ButlerMirroringManager:_on_days_in_row(days)
 	local lines = {
 		[3.0] = "Play_btl_played_days_3",
@@ -539,7 +539,7 @@ function ButlerMirroringManager:_on_days_in_row(days)
 	end
 end
 
--- Lines: 511 to 513
+-- Lines: 515 to 517
 function ButlerMirroringManager:_on_new_crimespree_record(new_record)
 	self:_set_queue("crimespree", {
 		debug = "on crimespree record VO",

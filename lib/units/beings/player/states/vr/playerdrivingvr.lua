@@ -242,7 +242,7 @@ function PlayerDrivingVR:_postion_player_on_seat(seat)
 	self._ext_movement:reset_ghost_position()
 	self._ext_movement:reset_hmd_position()
 
-	self._initial_hmd_rotation = VRManager:hmd_rotation()
+	self._initial_hmd_rotation_inv = Rotation(VRManager:hmd_rotation():yaw(), 0, 0):inverse()
 	self._hmd_delta = Vector3()
 end
 local __update = PlayerDriving.update
@@ -251,7 +251,7 @@ local ghost_pos = Vector3()
 local seat_offset = Vector3()
 local hmd_rot = Rotation()
 
--- Lines: 207 to 242
+-- Lines: 207 to 241
 function PlayerDrivingVR:update(t, dt)
 	__update(self, t, dt)
 
@@ -267,9 +267,8 @@ function PlayerDrivingVR:update(t, dt)
 		self._ext_network:send("sync_vehicle_change_stance", self._stance)
 	end
 
-	mrotation.set_yaw_pitch_roll(hmd_rot, self._initial_hmd_rotation:yaw(), 0, 0)
-	mrotation.invert(hmd_rot)
-	mrotation.multiply(hmd_rot, seat_rot)
+	mrotation.set_yaw_pitch_roll(hmd_rot, seat_rot:yaw(), seat_rot:pitch(), seat_rot:roll())
+	mrotation.multiply(hmd_rot, self._initial_hmd_rotation_inv)
 	self._unit:hand():set_base_rotation(hmd_rot)
 	mvector3.add(self._hmd_delta, self._ext_movement:hmd_delta())
 	mvector3.set(hmd_delta, self._hmd_delta)
@@ -291,23 +290,23 @@ function PlayerDrivingVR:update(t, dt)
 	self._ext_movement:set_ghost_position(ghost_pos)
 end
 
--- Lines: 244 to 246
+-- Lines: 243 to 245
 function PlayerDrivingVR:reset_ghost_position()
 	self._hmd_delta = Vector3()
 end
 
--- Lines: 248 to 250
+-- Lines: 247 to 249
 function PlayerDrivingVR:set_steering(value)
 	self._steering_value = value
 end
 
--- Lines: 252 to 290
+-- Lines: 251 to 289
 function PlayerDrivingVR:set_throttle(value)
 	self._throttle_value = value
 
 	if self._throttle_arrows then
 
-		-- Lines: 257 to 263
+		-- Lines: 256 to 262
 		local function stretch_value(val, range)
 			if val == 0 then
 				return 0
@@ -320,7 +319,7 @@ function PlayerDrivingVR:set_throttle(value)
 		end
 
 
-		-- Lines: 266 to 275
+		-- Lines: 265 to 274
 		local function set_arrow_size(arrow, val, inverse)
 			val = stretch_value(val, 0.4)
 			local size = 128
@@ -351,7 +350,7 @@ function PlayerDrivingVR:set_throttle(value)
 end
 local __get_drive_axis = PlayerDriving._get_drive_axis
 
--- Lines: 293 to 304
+-- Lines: 292 to 303
 function PlayerDrivingVR:_get_drive_axis()
 	local drive_axis = __get_drive_axis(self)
 

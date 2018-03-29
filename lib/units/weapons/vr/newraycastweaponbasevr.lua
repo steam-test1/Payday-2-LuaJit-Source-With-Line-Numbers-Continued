@@ -240,7 +240,7 @@ function NewRaycastWeaponBase:_play_reload_anim(anim_group_id, to, from, unit)
 	end
 end
 
--- Lines: 226 to 297
+-- Lines: 226 to 298
 function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	if not self._timeline then
 		return
@@ -291,8 +291,6 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 
 	if mag_data.anims then
 		for _, anim_data in ipairs(mag_data.anims) do
-			local anim_group_id = Idstring(anim_data.anim_group)
-
 			if anim_data.part then
 				local part_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk(anim_data.part, self._factory_id, self._blueprint)
 
@@ -300,10 +298,14 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 					local part_data = self._parts[part_name]
 
 					if part_data.animations and part_data.animations[anim_data.anim_group] then
+						local anim_group_id = Idstring(part_data.animations[anim_data.anim_group])
+
 						self:_play_reload_anim(anim_group_id, anim_data.to, anim_data.from, part_data.unit)
 					end
 				end
 			else
+				local anim_group_id = Idstring(anim_data.anim_group)
+
 				self:_play_reload_anim(anim_group_id, anim_data.to, anim_data.from)
 			end
 		end
@@ -330,17 +332,17 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	end
 end
 
--- Lines: 299 to 300
+-- Lines: 300 to 301
 function NewRaycastWeaponBaseVR:is_finishing_reload()
 	return not not self._reload_finish_current_time
 end
 
--- Lines: 303 to 304
+-- Lines: 304 to 305
 function NewRaycastWeaponBaseVR:get_reload_mag_unit()
 	return self._reload_mag_unit
 end
 
--- Lines: 307 to 313
+-- Lines: 308 to 314
 function NewRaycastWeaponBaseVR:_mag_data()
 	local mag_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("magazine", self._factory_id, self._blueprint)
 	local mag_id = mag_list and mag_list[1]
@@ -350,14 +352,14 @@ function NewRaycastWeaponBaseVR:_mag_data()
 	end
 end
 
--- Lines: 315 to 317
+-- Lines: 316 to 318
 function NewRaycastWeaponBaseVR:custom_magazine_name()
 	local data = tweak_data.vr.reload_timelines[self.name_id]
 
 	return data and data.custom_mag_unit
 end
 
--- Lines: 320 to 325
+-- Lines: 321 to 326
 function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	if self:custom_magazine_name() then
 		return World:spawn_unit(Idstring(self:custom_magazine_name()), pos or Vector3(), Rotation())
@@ -366,7 +368,7 @@ function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	return self:spawn_magazine_unit(pos)
 end
 
--- Lines: 328 to 333
+-- Lines: 329 to 334
 function NewRaycastWeaponBaseVR:reload_object_name()
 	local mag_data = self:_mag_data()
 
@@ -375,19 +377,19 @@ function NewRaycastWeaponBaseVR:reload_object_name()
 	end
 end
 
--- Lines: 335 to 338
+-- Lines: 336 to 339
 function NewRaycastWeaponBaseVR:_set_part_temporary_visibility(part_id, visible)
 	self._invisible_parts = self._invisible_parts or {}
 	self._invisible_parts[part_id] = not visible
 end
 
--- Lines: 340 to 341
+-- Lines: 341 to 342
 function NewRaycastWeaponBaseVR:_is_part_visible(part_id)
 	return not self._invisible_parts or not self._invisible_parts[part_id]
 end
 local __get_sound_event = NewRaycastWeaponBase._get_sound_event
 
--- Lines: 345 to 354
+-- Lines: 346 to 355
 function NewRaycastWeaponBaseVR:_get_sound_event(event, alternative_event)
 	local sound_overrides = tweak_data.vr.weapon_sound_overrides[self.name_id]
 

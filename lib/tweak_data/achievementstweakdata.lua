@@ -31,7 +31,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 37 to 2113
+-- Lines: 37 to 2393
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -839,19 +839,22 @@ function AchievementsTweakData:init(tweak_data)
 			weapons = {"ching"}
 		}
 	}
-	self.enemy_melee_kill_achievements = {
+	self.enemy_melee_hit_achievements = {
 		cloak_n_dagger = {
-			award = "gage2_2",
+			enemy = "spooc",
 			melee_type = "knife",
-			enemy = "spooc"
+			award = "gage2_2",
+			result = "death"
 		},
 		are_you_kidding_me = {
-			award = "gage2_10",
+			enemy = "tank",
 			melee_type = "knife",
-			enemy = "tank"
+			award = "gage2_10",
+			result = "death"
 		},
 		no_time_to_bleed = {
 			health = 25,
+			result = "death",
 			stat = "gage2_9_stats",
 			melee_type = "knife",
 			enemies = {
@@ -861,23 +864,27 @@ function AchievementsTweakData:init(tweak_data)
 			difficulty = overkill_and_above
 		},
 		police_brutality = {
-			award = "gage4_1",
+			enemy = "shield",
 			melee_id = "baton",
-			enemy = "shield"
+			award = "gage4_1",
+			result = "death"
 		},
 		every_day_shovelin = {
-			melee_id = "shovel",
 			stat = "gage4_7_stats",
+			level_id = "nightclub",
 			is_cop = true,
-			level_id = "nightclub"
+			result = "death",
+			melee_id = "shovel"
 		},
 		cant_touch_this = {
 			melee_id = "dingdong",
 			stat = "gage5_8_stats",
-			is_gangster = true
+			is_gangster = true,
+			result = "death"
 		},
 		hurting_people = {
 			melee_id = "baseballbat",
+			result = "death",
 			stat = "pig_3_stats",
 			enemies = {
 				"mobster",
@@ -887,24 +894,28 @@ function AchievementsTweakData:init(tweak_data)
 			jobs = {"mia"}
 		},
 		special_operations = {
-			melee_id = "fairbair",
 			stat = "eagle_2_stats",
-			is_not_civilian = true,
-			is_stealth = true
+			melee_id = "fairbair",
+			is_stealth = true,
+			result = "death",
+			is_not_civilian = true
 		},
 		knockout = {
-			award = "gorilla_1",
+			enemy = "tank",
 			melee_id = "boxing_gloves",
-			enemy = "tank"
+			award = "gorilla_1",
+			result = "death"
 		},
 		stick_a_fork_in_me = {
-			is_on_fire = true,
-			melee_id = "fork",
+			is_not_civilian = true,
 			award = "grill_2",
-			is_not_civilian = true
+			result = "death",
+			melee_id = "fork",
+			is_on_fire = true
 		},
 		steel_2 = {
 			award = "steel_2",
+			result = "death",
 			melee_weapons = {
 				"morning",
 				"buck",
@@ -918,47 +929,56 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		steel_4 = {
 			enemy = "tank",
-			melee_id = "great",
+			enemy_weapon = "saiga",
 			award = "steel_4",
-			enemy_weapon = "saiga"
+			result = "death",
+			melee_id = "great"
 		},
 		melee_kills = {
+			result = "death",
 			is_not_civilian = true,
 			challenge_stat = "melee_kills"
 		},
 		any_kills = {
+			result = "death",
 			is_not_civilian = true,
 			challenge_stat = "any_kills"
 		},
 		any_sniper_kills = {
+			result = "death",
 			is_not_civilian = true,
 			enemy = "sniper",
 			challenge_stat = "any_sniper_kills"
 		},
 		any_shield_kills = {
+			result = "death",
 			is_not_civilian = true,
 			enemy = "shield",
 			challenge_stat = "any_shield_kills"
 		},
 		any_taser_kills = {
+			result = "death",
 			is_not_civilian = true,
 			enemy = "taser",
 			challenge_stat = "any_taser_kills"
 		},
 		any_tank_kills = {
+			result = "death",
 			is_not_civilian = true,
 			enemy = "tank",
 			challenge_stat = "any_tank_kills"
 		},
 		any_spooc_kills = {
+			result = "death",
 			is_not_civilian = true,
 			enemy = "spooc",
 			challenge_stat = "any_spooc_kills"
 		},
 		trophy_knockouts = {
-			melee_id = "boxing_gloves",
 			trophy_stat = "trophy_knockouts",
 			is_not_civilian = true,
+			result = "death",
+			melee_id = "boxing_gloves",
 			enemies = {
 				"tank",
 				"tank_hw"
@@ -966,16 +986,19 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		trophy_washington = {
 			is_not_civilian = true,
-			trophy_stat = "trophy_washington"
+			trophy_stat = "trophy_washington",
+			result = "death"
 		},
 		trophy_medic = {
 			is_not_civilian = true,
 			trophy_stat = "trophy_medic",
-			enemy = "medic"
+			enemy = "medic",
+			result = "death"
 		},
 		trophy_special_kills = {
-			is_not_civilian = true,
 			trophy_stat = "trophy_special_kills",
+			is_not_civilian = true,
+			result = "death",
 			enemies = {
 				"sniper",
 				"shield",
@@ -988,26 +1011,31 @@ function AchievementsTweakData:init(tweak_data)
 		daily_hangover = {
 			melee_id = "whiskey",
 			trophy_stat = "daily_hangover",
-			is_not_civilian = true
+			is_not_civilian = true,
+			result = "death"
 		},
 		raid_aru_1 = {
 			melee_id = "push",
 			stat = "aru_1",
-			is_not_civilian = true
+			is_not_civilian = true,
+			result = "death"
 		},
 		critical_kills = {
 			critical = true,
 			is_not_civilian = true,
+			result = "death",
 			challenge_stat = "critical_kills"
 		},
 		challenge_melee_creeps = {
+			result = "death",
 			is_not_civilian = true,
 			challenge_stat = "challenge_melee_creeps",
 			mutators = {"MutatorExplodingEnemies"}
 		},
 		rvd_12 = {
-			melee_id = "clean",
 			job = "rvd",
+			melee_id = "clean",
+			result = "death",
 			stat = "rvd_12_stats",
 			difficulty = overkill_and_above,
 			enemy_tags_all = {"special"}
@@ -6595,7 +6623,7 @@ local tracking = {
 }
 
 
--- Lines: 2132 to 2158
+-- Lines: 2412 to 2438
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -6607,7 +6635,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 
-	-- Lines: 2141 to 2151
+	-- Lines: 2421 to 2431
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -6638,7 +6666,7 @@ local function from_complete_heist_stats_item(self, item)
 end
 
 
--- Lines: 2161 to 2165
+-- Lines: 2441 to 2445
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -6652,7 +6680,7 @@ local function from_crimespree_item(item)
 end
 
 
--- Lines: 2168 to 2175
+-- Lines: 2448 to 2455
 local function from_level(level)
 	if not level then
 		error()
@@ -6669,7 +6697,7 @@ local function from_level(level)
 end
 
 
--- Lines: 2178 to 2185
+-- Lines: 2458 to 2465
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -6686,7 +6714,7 @@ local function from_owned_weapons(num)
 end
 
 
--- Lines: 2188 to 2198
+-- Lines: 2468 to 2478
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -6709,7 +6737,7 @@ local function from_timed_memory(item, memory_name, count_name)
 end
 
 
--- Lines: 2206 to 2380
+-- Lines: 2486 to 2661
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6856,7 +6884,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2417 to 2530
+-- Lines: 2698 to 2811
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -6974,7 +7002,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = pal_2.secured.value,
 		update = tracking.second
 	}
-	local steel_2 = self.enemy_melee_kill_achievements.steel_2
+	local steel_2 = self.enemy_melee_hit_achievements.steel_2
 	self.visual.steel_2.progress = {
 		get = function ()
 			if table.contains(steel_2.melee_weapons, managers.blackmarket:equipped_melee_weapon()) then

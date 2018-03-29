@@ -17,13 +17,23 @@ function PlayerHandStateWeapon:on_grip_toggle_setting_changed(setting, old, new)
 	self._grip_toggle_setting = new
 end
 
--- Lines: 18 to 36
+-- Lines: 18 to 39
 function PlayerHandStateWeapon:_link_weapon(weapon_unit)
 	if not alive(weapon_unit) then
 		return
 	end
 
 	if not alive(self._weapon_unit) then
+		if table.contains(weapon_unit:base():weapon_tweak_data().categories, "bow") then
+			self:hsm():other_hand():set_default_state("bow")
+
+			self._is_bow = true
+
+			weapon_unit:base():check_bullet_objects()
+
+			return
+		end
+
 		self._weapon_unit = weapon_unit
 
 		self._weapon_unit:base():on_enabled()
@@ -35,7 +45,7 @@ function PlayerHandStateWeapon:_link_weapon(weapon_unit)
 	end
 end
 
--- Lines: 38 to 46
+-- Lines: 41 to 49
 function PlayerHandStateWeapon:_unlink_weapon()
 	if alive(self._weapon_unit) then
 		self._weapon_unit:base():set_visibility_state(false)
@@ -45,10 +55,17 @@ function PlayerHandStateWeapon:_unlink_weapon()
 	end
 end
 
--- Lines: 48 to 90
+-- Lines: 51 to 98
 function PlayerHandStateWeapon:at_enter(prev_state)
 	PlayerHandStateWeapon.super.at_enter(self, prev_state)
-	self:_link_weapon(managers.player:player_unit():inventory():equipped_unit())
+
+	if alive(managers.player:player_unit()) then
+		local weapon_unit = managers.player:player_unit():inventory():equipped_unit()
+		self._weapon_id = alive(weapon_unit) and weapon_unit:base().name_id
+
+		self:_link_weapon(weapon_unit)
+	end
+
 	managers.hud:link_ammo_hud(self._hand_unit, self:hsm():hand_id())
 	managers.hud:ammo_panel():set_visible(true)
 	self._hand_unit:melee():set_weapon_unit(self._weapon_unit)
@@ -66,22 +83,46 @@ function PlayerHandStateWeapon:at_enter(prev_state)
 	self._pistol_grip = false
 	self._assist_position = nil
 	self._grip_toggle = nil
-	local sequence = self._sequence
-	local tweak = tweak_data.vr:get_offset_by_id(self._weapon_unit:base().name_id)
 
-	if tweak.grip then
-		sequence = tweak.grip
-	end
+	if alive(self._weapon_unit) or self._is_bow then
+		local sequence = self._sequence
+		local tweak = self._is_bow and tweak_data.vr:get_offset_by_id("bow", self._weapon_id) or tweak_data.vr:get_offset_by_id(self._weapon_id)
 
-	if self._hand_unit and sequence and self._hand_unit:damage():has_sequence(sequence) then
-		self._hand_unit:damage():run_sequence_simple(sequence)
+		if tweak.grip then
+			sequence = tweak.grip
+		end
+
+		if self._hand_unit and sequence and self._hand_unit:damage():has_sequence(sequence) then
+			self._hand_unit:damage():run_sequence_simple(sequence)
+		end
 	end
 end
 
--- Lines: 106 to 121
+-- Lines: 100 to 115
+function PlayerHandStateWeapon:inventory_changed(unit, event)
+	if event == "equip" then
+		self:_link_weapon(unit:inventory():equipped_unit())
+	elseif event == "unequip" then
+		self:_unlink_weapon()
+
+		if self._is_bow then
+			self:unlink_arrow_unit()
+		end
+	end
+
+	self._pistol_grip = false
+	self._assist_position = nil
+	self._weapon_assist_toggle = nil
+end
+
+-- Lines: 119 to 138
 function PlayerHandStateWeapon:at_exit(next_state)
 	if self:hsm():other_hand():current_state_name() == "weapon_assist" then
 		self:hsm():other_hand():change_to_default()
+	end
+
+	if self._is_bow then
+		self:unlink_arrow_unit()
 	end
 
 	self:hsm():exit_controller_state("weapon")
@@ -91,23 +132,76 @@ function PlayerHandStateWeapon:at_exit(next_state)
 	PlayerHandStateWeapon.super.at_exit(self, next_state)
 end
 
--- Lines: 123 to 129
+-- Lines: 140 to 146
 function PlayerHandStateWeapon:set_wanted_weapon_kick(amount)
-	if alive(self._weapon_unit) and tweak_data.vr.weapon_kick.exclude_list[self._weapon_unit:base().name_id] then
+	if alive(self._weapon_unit) and tweak_data.vr.weapon_kick.exclude_list[self._weapon_id] then
 		return
 	end
 
 	self._wanted_weapon_kick = math.min((self._wanted_weapon_kick or 0) + amount * tweak_data.vr.weapon_kick.kick_mul, tweak_data.vr.weapon_kick.max_kick)
 end
 
--- Lines: 131 to 132
+-- Lines: 148 to 149
 function PlayerHandStateWeapon:assist_position()
 	return self._assist_position
 end
 
--- Lines: 135 to 136
+-- Lines: 152 to 153
 function PlayerHandStateWeapon:assist_grip()
 	return self._assist_grip
+end
+
+-- Lines: 157 to 163
+function PlayerHandStateWeapon:lock_hand_orientation(position, rotation)
+	if not position or not rotation then
+		self._locked_hand_orientation = nil
+	else
+		self._locked_hand_orientation = {
+			pos = position,
+			rot = rotation
+		}
+	end
+end
+
+-- Lines: 165 to 186
+function PlayerHandStateWeapon:link_arrow_unit(weap_base)
+	if not weap_base or alive(self._arrow_unit) then
+		return
+	end
+
+	local arrow_id = managers.weapon_factory:get_part_id_from_weapon_by_type("ammo", weap_base._blueprint)
+	local arrow_data = managers.weapon_factory:get_part_data_by_part_id_from_weapon(arrow_id, weap_base._factory_id, weap_base._blueprint)
+	local unit_name = arrow_data.unit
+	self._arrow_unit = World:spawn_unit(Idstring(unit_name), self._hand_unit:position(), self._hand_unit:rotation())
+	local material_config_ids = weap_base:_material_config_name(arrow_id, unit_name, weap_base._cosmetics_data and true)
+
+	if self._arrow_unit:material_config() ~= material_config_ids and DB:has(Idstring("material_config"), material_config_ids) then
+		self._arrow_unit:set_material_config(material_config_ids, true)
+	end
+
+	self._hand_unit:link(self._hand_unit:orientation_object():name(), self._arrow_unit, self._arrow_unit:orientation_object():name())
+
+	local offset = tweak_data.vr:get_offset_by_id("bow", self._weapon_id)
+
+	if offset and offset.arrow_position then
+		self._arrow_unit:set_local_position(offset.arrow_position)
+	end
+
+	self._hand_unit:melee():set_custom_unit(self._arrow_unit)
+end
+
+-- Lines: 188 to 198
+function PlayerHandStateWeapon:unlink_arrow_unit()
+	if not alive(self._arrow_unit) then
+		return
+	end
+
+	self._arrow_unit:unlink()
+	World:delete_unit(self._arrow_unit)
+
+	self._arrow_unit = nil
+
+	self._hand_unit:melee():set_custom_unit()
 end
 local hand_to_hand = Vector3()
 local other_hand = Vector3()
@@ -115,11 +209,13 @@ local weapon_pos = Vector3()
 local weapon_rot = Rotation()
 local pen = Draw:pen()
 
--- Lines: 144 to 339
+-- Lines: 205 to 409
 function PlayerHandStateWeapon:update(t, dt)
 	mvector3.set(weapon_pos, self:hsm():position())
 
-	if self._weapon_kick and alive(self._weapon_unit) then
+	if self._locked_hand_orientation then
+		self._hand_unit:set_position(self._locked_hand_orientation.pos)
+	elseif self._weapon_kick and alive(self._weapon_unit) then
 		mvector3.subtract(weapon_pos, self._weapon_unit:rotation():y() * self._weapon_kick)
 		self._hand_unit:set_position(weapon_pos)
 	end
@@ -155,11 +251,12 @@ function PlayerHandStateWeapon:update(t, dt)
 			self._weapon_unit:base():set_gadget_rotation(rot)
 		end
 
-		local assist_tweak = tweak_data.vr.weapon_assist.weapons[self._weapon_unit:base().name_id]
+		local assist_tweak = tweak_data.vr.weapon_assist.weapons[self._weapon_id]
 		assist_tweak = assist_tweak or self._default_assist_tweak
-		self._pistol_grip = assist_tweak.pistol_grip
 
 		if assist_tweak then
+			self._pistol_grip = assist_tweak.pistol_grip
+
 			if Global.draw_assist_point then
 				local positions = {}
 
@@ -172,7 +269,7 @@ function PlayerHandStateWeapon:update(t, dt)
 				end
 
 				for _, position in ipairs(positions) do
-					pen:sphere(weapon_pos + position:rotate_with(self._weapon_unit:rotation()) + (tweak_data.vr.weapon_offsets.weapons[self._weapon_unit:base().name_id] or tweak_data.vr.weapon_offsets.default).position:rotate_with(self._weapon_unit:rotation()), 5)
+					pen:sphere(weapon_pos + position:rotate_with(self._weapon_unit:rotation()) + (tweak_data.vr.weapon_offsets.weapons[self._weapon_id] or tweak_data.vr.weapon_offsets.default).position:rotate_with(self._weapon_unit:rotation()), 5)
 				end
 			end
 
@@ -203,7 +300,7 @@ function PlayerHandStateWeapon:update(t, dt)
 						local closest_dis, closest = nil
 
 						for _, assist_data in ipairs(assist_tweak.points) do
-							local dis = mvector3.distance_sq(other_hand, weapon_pos + assist_data.position:rotate_with(self._weapon_unit:rotation()) + (tweak_data.vr.weapon_offsets.weapons[self._weapon_unit:base().name_id] or tweak_data.vr.weapon_offsets.default).position:rotate_with(self._weapon_unit:rotation()))
+							local dis = mvector3.distance_sq(other_hand, weapon_pos + assist_data.position:rotate_with(self._weapon_unit:rotation()) + (tweak_data.vr.weapon_offsets.weapons[self._weapon_id] or tweak_data.vr.weapon_offsets.default).position:rotate_with(self._weapon_unit:rotation()))
 
 							if not closest_dis or dis < closest_dis then
 								closest_dis = dis
@@ -219,9 +316,9 @@ function PlayerHandStateWeapon:update(t, dt)
 					end
 
 					if not self._assist_position then
-						debug_pause("Invalid assist tweak data for " .. self._weapon_unit:base().name_id)
+						debug_pause("Invalid assist tweak data for " .. self._weapon_id)
 					else
-						local tweak = tweak_data.vr:get_offset_by_id(self._weapon_unit:base().name_id)
+						local tweak = tweak_data.vr:get_offset_by_id(self._weapon_id)
 
 						if tweak and tweak.position then
 							mvector3.add(self._assist_position, tweak.position)
@@ -266,7 +363,7 @@ function PlayerHandStateWeapon:update(t, dt)
 			end
 		end
 
-		local tweak = tweak_data.vr:get_offset_by_id(self._weapon_unit:base().name_id)
+		local tweak = tweak_data.vr:get_offset_by_id(self._weapon_id)
 
 		if tweak and tweak.position then
 			mvector3.add(weapon_pos, tweak.position:rotate_with(self._weapon_unit:rotation()))
@@ -279,6 +376,10 @@ function PlayerHandStateWeapon:update(t, dt)
 			self:hsm():set_default_state("idle")
 			self:hsm():other_hand():set_default_state("weapon")
 		end
+	end
+
+	if self._locked_hand_orientation and mvector3.dot(self._locked_hand_orientation.rot:y(), self:hsm():rotation():y()) > 0.8 and mvector3.dot(self._locked_hand_orientation.rot:z(), self:hsm():rotation():z()) > 0.8 then
+		self._hand_unit:set_rotation(self._locked_hand_orientation.rot)
 	end
 
 	local touch_limit = 0.3
@@ -300,7 +401,7 @@ function PlayerHandStateWeapon:update(t, dt)
 	end
 end
 
--- Lines: 341 to 343
+-- Lines: 411 to 413
 function PlayerHandStateWeapon:set_warping(warping)
 	self._warping = warping
 end

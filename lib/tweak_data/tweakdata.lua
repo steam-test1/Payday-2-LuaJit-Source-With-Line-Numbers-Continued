@@ -385,7 +385,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines: 414 to 2378
+-- Lines: 414 to 2306
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -684,6 +684,8 @@ function TweakData:init()
 		table.insert(self.criminals.character_names, character.name)
 	end
 
+	self:init_screen_colors()
+
 	self.hud_icons = HudIconsTweakData:new()
 	self.weapon = WeaponTweakData:new(self)
 	local weapon_tweak_meta = {__index = function (table, key)
@@ -906,79 +908,6 @@ function TweakData:init()
 		Color("ffff7800"),
 		Color("ffffff00")
 	}
-	self.screen_colors = {
-		text = Color(255, 255, 255, 255) / 255,
-		resource = Color(255, 77, 198, 255) / 255,
-		important_1 = Color(255, 255, 51, 51) / 255,
-		important_2 = Color(125, 255, 51, 51) / 255,
-		item_stage_1 = Color(255, 255, 255, 255) / 255,
-		item_stage_2 = Color(255, 89, 115, 128) / 255,
-		item_stage_3 = Color(255, 23, 33, 38) / 255,
-		button_stage_1 = Color(255, 0, 0, 0) / 255,
-		button_stage_2 = Color(255, 77, 198, 255) / 255,
-		button_stage_3 = Color(127, 0, 170, 255) / 255,
-		crimenet_lines = Color(255, 127, 157, 182) / 255,
-		risk = Color(255, 255, 204, 0) / 255,
-		friend_color = Color(255, 41, 204, 122) / 255,
-		regular_color = Color(255, 41, 150, 240) / 255,
-		pro_color = Color(255, 255, 51, 51) / 255,
-		dlc_color = Color(255, 255, 212, 0) / 255,
-		skill_color = Color(255, 77, 198, 255) / 255,
-		ghost_color = Color("4ca6ff"),
-		extra_bonus_color = Color(255, 255, 255, 255) / 255,
-		community_color = Color(255, 59, 174, 254) / 255,
-		challenge_completed_color = Color(255, 255, 168, 0) / 255,
-		stat_maxed = Color("FF00FF"),
-		competitive_color = Color(255, 41, 204, 122) / 255,
-		mutators_color = Color(255, 211, 133, 255) / 255,
-		mutators_color_text = Color(255, 211, 133, 255) / 255,
-		crime_spree_risk = Color(255, 255, 255, 0) / 255,
-		achievement_grey = Color(255, 145, 145, 145) / 255,
-		heat_cold_color = Color(255, 255, 51, 51) / 255,
-		heat_warm_color = Color("ff7f00"),
-		heat_standard_color = Color(255, 255, 255, 255) / 255
-	}
-	self.screen_colors.heat_color = self.screen_colors.heat_standard_color
-	self.screen_colors.one_down = Color(255, 250, 30, 0) / 255
-	self.screen_colors.challenge_title = Color(255, 255, 168, 0) / 255
-	self.screen_colors.stats_positive = Color(255, 191, 221, 125) / 255
-	self.screen_colors.stats_negative = Color(255, 254, 93, 99) / 255
-	self.screen_colors.stats_mods = Color(255, 229, 229, 76) / 255
-
-	if Global.test_new_colors then
-		for i, d in pairs(self.screen_colors) do
-			self.screen_colors[i] = Color.purple
-		end
-	end
-
-	if Global.old_colors_purple then
-		self.screen_color_white = Color.purple
-		self.screen_color_red = Color.purple
-		self.screen_color_green = Color.purple
-		self.screen_color_grey = Color.purple
-		self.screen_color_light_grey = Color.purple
-		self.screen_color_blue = Color.purple
-		self.screen_color_blue_selected = Color.purple
-		self.screen_color_blue_highlighted = Color.purple
-		self.screen_color_blue_noselected = Color.purple
-		self.screen_color_yellow = Color.purple
-		self.screen_color_yellow_selected = Color.purple
-		self.screen_color_yellow_noselected = Color.purple
-	else
-		self.screen_color_white = Color(1, 1, 1)
-		self.screen_color_red = Color(0.7137254901960784, 0.24705882352941178, 0.21176470588235294)
-		self.screen_color_green = Color(0.12549019607843137, 1, 0.5176470588235295)
-		self.screen_color_grey = Color(0.39215686274509803, 0.39215686274509803, 0.39215686274509803)
-		self.screen_color_light_grey = Color(0.7843137254901961, 0.7843137254901961, 0.7843137254901961)
-		self.screen_color_blue = Color(0.30196078431372547, 0.7764705882352941, 1)
-		self.screen_color_blue_selected = Color(0.30196078431372547, 0.7764705882352941, 1)
-		self.screen_color_blue_highlighted = self.screen_color_blue_selected:with_alpha(0.75)
-		self.screen_color_blue_noselected = self.screen_color_blue_selected:with_alpha(0.5)
-		self.screen_color_yellow = Color(0.8627450980392157, 0.6745098039215687, 0.17647058823529413)
-		self.screen_color_yellow_selected = Color(1, 0.8, 0)
-		self.screen_color_yellow_noselected = Color(0.7333333333333333, 0.42745098039215684, 0.0784313725490196)
-	end
-
 	self.dialog = {
 		WIDTH = 400,
 		HEIGHT = 300,
@@ -2456,19 +2385,96 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines: 2382 to 2457
+-- Lines: 2311 to 2403
+function TweakData:init_screen_colors()
+	self.screen_colors = {
+		text = Color(255, 255, 255, 255) / 255,
+		resource = Color(255, 77, 198, 255) / 255,
+		important_1 = Color(255, 255, 51, 51) / 255,
+		important_2 = Color(125, 255, 51, 51) / 255,
+		item_stage_1 = Color(255, 255, 255, 255) / 255,
+		item_stage_2 = Color(255, 89, 115, 128) / 255,
+		item_stage_3 = Color(255, 23, 33, 38) / 255,
+		button_stage_1 = Color(255, 0, 0, 0) / 255,
+		button_stage_2 = Color(255, 77, 198, 255) / 255,
+		button_stage_3 = Color(127, 0, 170, 255) / 255,
+		crimenet_lines = Color(255, 127, 157, 182) / 255,
+		risk = Color(255, 255, 204, 0) / 255,
+		friend_color = Color(255, 41, 204, 122) / 255,
+		regular_color = Color(255, 41, 150, 240) / 255,
+		pro_color = Color(255, 255, 51, 51) / 255,
+		dlc_color = Color(255, 255, 212, 0) / 255,
+		skill_color = Color(255, 77, 198, 255) / 255,
+		ghost_color = Color("4ca6ff"),
+		extra_bonus_color = Color(255, 255, 255, 255) / 255,
+		community_color = Color(255, 59, 174, 254) / 255,
+		challenge_completed_color = Color(255, 255, 168, 0) / 255,
+		stat_maxed = Color("FF00FF"),
+		competitive_color = Color(255, 41, 204, 122) / 255,
+		event_color = Color(255, 255, 145, 0) / 255,
+		mutators_color = Color(255, 211, 133, 255) / 255,
+		mutators_color_text = Color(255, 211, 133, 255) / 255,
+		crime_spree_risk = Color(255, 255, 255, 0) / 255,
+		achievement_grey = Color(255, 145, 145, 145) / 255,
+		heat_cold_color = Color(255, 255, 51, 51) / 255,
+		heat_warm_color = Color("ff7f00"),
+		heat_standard_color = Color(255, 255, 255, 255) / 255
+	}
+	self.screen_colors.heat_color = self.screen_colors.heat_standard_color
+	self.screen_colors.one_down = Color(255, 250, 30, 0) / 255
+	self.screen_colors.challenge_title = Color(255, 255, 168, 0) / 255
+	self.screen_colors.stats_positive = Color(255, 191, 221, 125) / 255
+	self.screen_colors.stats_negative = Color(255, 254, 93, 99) / 255
+	self.screen_colors.stats_mods = Color(255, 229, 229, 76) / 255
+
+	if Global.test_new_colors then
+		for i, d in pairs(self.screen_colors) do
+			self.screen_colors[i] = Color.purple
+		end
+	end
+
+	if Global.old_colors_purple then
+		self.screen_color_white = Color.purple
+		self.screen_color_red = Color.purple
+		self.screen_color_green = Color.purple
+		self.screen_color_grey = Color.purple
+		self.screen_color_light_grey = Color.purple
+		self.screen_color_blue = Color.purple
+		self.screen_color_blue_selected = Color.purple
+		self.screen_color_blue_highlighted = Color.purple
+		self.screen_color_blue_noselected = Color.purple
+		self.screen_color_yellow = Color.purple
+		self.screen_color_yellow_selected = Color.purple
+		self.screen_color_yellow_noselected = Color.purple
+	else
+		self.screen_color_white = Color(1, 1, 1)
+		self.screen_color_red = Color(0.7137254901960784, 0.24705882352941178, 0.21176470588235294)
+		self.screen_color_green = Color(0.12549019607843137, 1, 0.5176470588235295)
+		self.screen_color_grey = Color(0.39215686274509803, 0.39215686274509803, 0.39215686274509803)
+		self.screen_color_light_grey = Color(0.7843137254901961, 0.7843137254901961, 0.7843137254901961)
+		self.screen_color_blue = Color(0.30196078431372547, 0.7764705882352941, 1)
+		self.screen_color_blue_selected = Color(0.30196078431372547, 0.7764705882352941, 1)
+		self.screen_color_blue_highlighted = self.screen_color_blue_selected:with_alpha(0.75)
+		self.screen_color_blue_noselected = self.screen_color_blue_selected:with_alpha(0.5)
+		self.screen_color_yellow = Color(0.8627450980392157, 0.6745098039215687, 0.17647058823529413)
+		self.screen_color_yellow_selected = Color(1, 0.8, 0)
+		self.screen_color_yellow_noselected = Color(0.7333333333333333, 0.42745098039215684, 0.0784313725490196)
+	end
+end
+
+-- Lines: 2407 to 2486
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines: 2462 to 2463
+-- Lines: 2491 to 2492
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines: 2468 to 2476
+-- Lines: 2497 to 2505
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2479,7 +2485,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines: 2480 to 2483
+-- Lines: 2509 to 2512
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2489,7 +2495,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines: 2487 to 2496
+-- Lines: 2516 to 2525
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2502,7 +2508,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines: 2500 to 2676
+-- Lines: 2529 to 2705
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2691,7 +2697,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines: 2678 to 2841
+-- Lines: 2707 to 2870
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2797,7 +2803,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines: 2843 to 2915
+-- Lines: 2872 to 2944
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2870,7 +2876,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines: 2918 to 2922
+-- Lines: 2947 to 2951
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -2889,7 +2895,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 end
 
 
--- Lines: 2939 to 3153
+-- Lines: 2968 to 3182
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

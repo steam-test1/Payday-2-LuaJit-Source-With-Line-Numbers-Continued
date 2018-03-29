@@ -1563,7 +1563,7 @@ end
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
--- Lines: 1780 to 2358
+-- Lines: 1780 to 2362
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
@@ -1956,11 +1956,12 @@ function WINDLCManager:init()
 			}
 		}
 
+		self:init_generated()
 		self:_verify_dlcs()
 	end
 end
 
--- Lines: 2360 to 2376
+-- Lines: 2364 to 2380
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -1977,7 +1978,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines: 2378 to 2390
+-- Lines: 2382 to 2394
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -1986,7 +1987,25 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines: 2392 to 2399
+-- Lines: 2397 to 2407
+function WINDLCManager:chk_vr_dlc()
+	local steam_vr = Steam:is_app_installed("250820")
+	local payday2_vr = Steam:is_product_installed("826090")
+
+	if steam_vr and not payday2_vr then
+		Steam:install_dlc("826090")
+
+		return true
+	elseif not steam_vr and payday2_vr then
+		Steam:uninstall_dlc("826090")
+
+		return false
+	end
+
+	return nil
+end
+
+-- Lines: 2411 to 2418
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -1996,4 +2015,6 @@ function WINDLCManager:chk_content_updated()
 		end
 	end
 end
+
+require("lib/managers/dlc/DLCManagerGeneratedData")
 

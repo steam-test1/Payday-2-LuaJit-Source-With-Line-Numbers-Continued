@@ -27,9 +27,13 @@ function SubtitleManager:presenter()
 	return assert(self.__presenter, "Invalid presenter. SubtitleManager might have been destroyed.")
 end
 
--- Lines: 26 to 37
+-- Lines: 26 to 41
 function SubtitleManager:set_presenter(presenter)
 	assert(presenter == nil or type(presenter.preprocess_sequence) == "function", "Invalid presenter.")
+
+	if self.__player then
+		self.__player = nil
+	end
 
 	if self.__presenter then
 		self.__presenter:destroy()
@@ -42,7 +46,7 @@ function SubtitleManager:set_presenter(presenter)
 	end
 end
 
--- Lines: 39 to 50
+-- Lines: 43 to 54
 function SubtitleManager:load_sequences(sequence_file_path)
 	local root_node = DB:load_node("subtitle_sequence", sequence_file_path)
 
@@ -58,7 +62,7 @@ function SubtitleManager:load_sequences(sequence_file_path)
 	end
 end
 
--- Lines: 52 to 57
+-- Lines: 56 to 61
 function SubtitleManager:reload_sequences()
 	self.__subtitle_sequences = {}
 
@@ -67,7 +71,7 @@ function SubtitleManager:reload_sequences()
 	end
 end
 
--- Lines: 59 to 68
+-- Lines: 63 to 72
 function SubtitleManager:update(time, delta_time)
 	if self.__player then
 		self.__player:update(time, delta_time)
@@ -80,36 +84,36 @@ function SubtitleManager:update(time, delta_time)
 	self:presenter():update(time, delta_time)
 end
 
--- Lines: 70 to 71
+-- Lines: 74 to 75
 function SubtitleManager:enabled()
 	return Global.__SubtitleManager__enabled or false
 end
 
--- Lines: 74 to 77
+-- Lines: 78 to 81
 function SubtitleManager:set_enabled(enabled)
 	Global.__SubtitleManager__enabled = not not enabled
 
 	self:_update_presenter_visibility()
 end
 
--- Lines: 79 to 80
+-- Lines: 83 to 84
 function SubtitleManager:visible()
 	return not self.__hidden
 end
 
--- Lines: 83 to 86
+-- Lines: 87 to 90
 function SubtitleManager:set_visible(visible)
 	self.__hidden = not visible or nil
 
 	self:_update_presenter_visibility()
 end
 
--- Lines: 88 to 90
+-- Lines: 92 to 94
 function SubtitleManager:clear_subtitle()
 	self:show_subtitle_localized("")
 end
 
--- Lines: 92 to 93
+-- Lines: 96 to 97
 function SubtitleManager:is_showing_subtitles()
 	return self:enabled() and self:visible() and self.__player ~= nil
 end
@@ -144,14 +148,10 @@ function SubtitleManager:has_subtitle_sequence(sequence_id)
 	return (self.__subtitle_sequences and self.__subtitle_sequences[sequence_id]) ~= nil
 end
 
--- Lines: 123 to 133
+-- Lines: 123 to 127
 function SubtitleManager:_update_presenter_visibility()
 	local presenter = self:presenter()
 	local show_presenter = self:enabled() and self:visible() and (not managers.user or managers.user:get_setting("subtitle"))
-
-	if _G.IS_VR then
-		show_presenter = false
-	end
 
 	presenter[show_presenter and "show" or "hide"](presenter)
 end

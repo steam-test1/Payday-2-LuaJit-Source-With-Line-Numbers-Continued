@@ -55,6 +55,7 @@ core:import("CoreGuiDataManager")
 
 if _G.IS_VR then
 	require("lib/managers/VRManagerPD2")
+	require("lib/managers/subtitle/SubtitlePresenterVR")
 end
 
 require("lib/managers/ControllerWrapper")
@@ -130,7 +131,7 @@ _next_update_funcs = _next_update_funcs or {}
 local next_update_funcs_busy = nil
 
 
--- Lines: 211 to 218
+-- Lines: 212 to 219
 function call_on_next_update(func, optional_key)
 	if not optional_key then
 		table.insert(_next_update_funcs, func)
@@ -141,7 +142,7 @@ function call_on_next_update(func, optional_key)
 end
 
 
--- Lines: 220 to 227
+-- Lines: 221 to 228
 function call_next_update_functions()
 	local current = _next_update_funcs
 	_next_update_funcs = {}
@@ -152,7 +153,7 @@ function call_next_update_functions()
 end
 
 
--- Lines: 232 to 281
+-- Lines: 233 to 282
 function Setup:init_category_print()
 	CoreSetup.CoreSetup.init_category_print(self)
 
@@ -193,7 +194,7 @@ function Setup:init_category_print()
 	catprint_load()
 end
 
--- Lines: 283 to 308
+-- Lines: 284 to 309
 function Setup:load_packages()
 	PackageManager:set_resource_loaded_clbk(Idstring("unit"), nil)
 	TextureCache:set_streaming_enabled(true)
@@ -221,7 +222,7 @@ function Setup:load_packages()
 	end
 end
 
--- Lines: 311 to 449
+-- Lines: 312 to 450
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
 		is_playing = false,
@@ -308,7 +309,7 @@ function Setup:init_managers(managers)
 	game_state_machine = GameStateMachine:new()
 end
 
--- Lines: 453 to 463
+-- Lines: 454 to 464
 function Setup:start_boot_loading_screen()
 	if _G.IS_VR then
 		VRManager:fade_to_color(0, Color(1, 0, 0, 0), false)
@@ -323,12 +324,12 @@ function Setup:start_boot_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines: 465 to 467
+-- Lines: 466 to 468
 function Setup:start_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines: 469 to 486
+-- Lines: 470 to 487
 function Setup:stop_loading_screen()
 	if Global.is_loading then
 		cat_print("loading_environment", "[LoadingEnvironment] Stop.")
@@ -347,7 +348,7 @@ function Setup:stop_loading_screen()
 	end
 end
 
--- Lines: 488 to 680
+-- Lines: 489 to 681
 function Setup:_start_loading_screen()
 	if Global.is_loading then
 		Application:stack_dump_error("[LoadingEnvironment] Tried to start loading screen when it was already started.")
@@ -470,7 +471,7 @@ function Setup:_start_loading_screen()
 	Global.is_loading = true
 end
 
--- Lines: 682 to 767
+-- Lines: 683 to 768
 function Setup:_setup_loading_environment()
 	local env_map = {
 		deferred = {
@@ -508,7 +509,7 @@ function Setup:_setup_loading_environment()
 	Application:destroy_viewport(dummy_vp)
 end
 
--- Lines: 769 to 781
+-- Lines: 770 to 782
 function Setup:init_game()
 	if not Global.initialized then
 		Global.level_data = {}
@@ -523,7 +524,7 @@ function Setup:init_game()
 	return game_state_machine
 end
 
--- Lines: 784 to 808
+-- Lines: 785 to 809
 function Setup:init_finalize()
 	Setup.super.init_finalize(self)
 	game_state_machine:init_finilize()
@@ -551,7 +552,7 @@ function Setup:init_finalize()
 	end
 end
 
--- Lines: 810 to 857
+-- Lines: 811 to 858
 function Setup:update(t, dt)
 	local main_t = TimerManager:main():time()
 	local main_dt = TimerManager:main():delta_time()
@@ -591,7 +592,7 @@ function Setup:update(t, dt)
 	TestAPIHelper.update(t, dt)
 end
 
--- Lines: 859 to 882
+-- Lines: 860 to 883
 function Setup:paused_update(t, dt)
 	self:_upd_unload_packages()
 
@@ -616,7 +617,7 @@ function Setup:paused_update(t, dt)
 	TestAPIHelper.update(t, dt)
 end
 
--- Lines: 885 to 895
+-- Lines: 886 to 896
 function Setup:end_update(t, dt)
 	if _G.IS_VR then
 		managers.vr:end_update(t, dt)
@@ -629,7 +630,7 @@ function Setup:end_update(t, dt)
 	end
 end
 
--- Lines: 898 to 908
+-- Lines: 899 to 909
 function Setup:paused_end_update(t, dt)
 	if _G.IS_VR then
 		managers.vr:end_update(t, dt)
@@ -642,45 +643,45 @@ function Setup:paused_end_update(t, dt)
 	end
 end
 
--- Lines: 911 to 915
+-- Lines: 912 to 916
 function Setup:pre_render()
 	if _G.IS_VR then
 		managers.vr:pre_render()
 	end
 end
 
--- Lines: 917 to 921
+-- Lines: 918 to 922
 function Setup:render()
 	if _G.IS_VR then
 		managers.vr:render()
 	end
 end
 
--- Lines: 925 to 929
+-- Lines: 926 to 930
 function Setup:end_frame(t, dt)
 	while self._end_frame_callbacks and #self._end_frame_callbacks > 0 do
 		table.remove(self._end_frame_callbacks)()
 	end
 end
 
--- Lines: 932 to 935
+-- Lines: 933 to 936
 function Setup:add_end_frame_callback(callback)
 	self._end_frame_callbacks = self._end_frame_callbacks or {}
 
 	table.insert(self._end_frame_callbacks, callback)
 end
 
--- Lines: 937 to 939
+-- Lines: 938 to 940
 function Setup:add_end_frame_clbk(func)
 	table.insert(self._end_frame_clbks, func)
 end
 
--- Lines: 941 to 943
+-- Lines: 942 to 944
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 end
 
--- Lines: 946 to 960
+-- Lines: 947 to 961
 function Setup:destroy()
 	if _G.IS_VR then
 		managers.vr:destroy()
@@ -696,7 +697,7 @@ function Setup:destroy()
 	end
 end
 
--- Lines: 963 to 986
+-- Lines: 964 to 987
 function Setup:load_level(level, mission, world_setting, level_class_name, level_id)
 	if _G.IS_VR then
 		managers.vr:start_loading()
@@ -719,14 +720,14 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	self:exec(level)
 end
 
--- Lines: 988 to 991
+-- Lines: 989 to 992
 function Setup:load_start_menu_lobby()
 	self:load_start_menu()
 
 	Global.load_start_menu_lobby = true
 end
 
--- Lines: 994 to 1028
+-- Lines: 995 to 1029
 function Setup:load_start_menu()
 	if _G.IS_VR then
 		self:set_main_thread_loading_screen_visible(true)
@@ -759,7 +760,7 @@ function Setup:load_start_menu()
 	managers.butler_mirroring = ButlerMirroringManager:new()
 end
 
--- Lines: 1030 to 1053
+-- Lines: 1031 to 1054
 function Setup:exec(context)
 	if managers.network then
 		if SystemInfo:platform() == Idstring("PS4") then
@@ -791,7 +792,7 @@ function Setup:exec(context)
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
--- Lines: 1055 to 1062
+-- Lines: 1056 to 1063
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
 
@@ -801,7 +802,7 @@ function Setup:quit()
 	end
 end
 
--- Lines: 1064 to 1071
+-- Lines: 1065 to 1072
 function Setup:restart()
 	local data = Global.level_data
 
@@ -812,7 +813,7 @@ function Setup:restart()
 	end
 end
 
--- Lines: 1073 to 1132
+-- Lines: 1074 to 1133
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -862,12 +863,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines: 1135 to 1136
+-- Lines: 1136 to 1137
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines: 1139 to 1145
+-- Lines: 1140 to 1146
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -877,14 +878,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines: 1147 to 1151
+-- Lines: 1148 to 1152
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines: 1153 to 1163
+-- Lines: 1154 to 1164
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -899,7 +900,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines: 1166 to 1167
+-- Lines: 1167 to 1168
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

@@ -330,7 +330,7 @@ function MultiProfileItemGui:arrow_selection()
 	return self._arrow_selection
 end
 
--- Lines: 203 to 235
+-- Lines: 203 to 240
 function MultiProfileItemGui:set_editing(editing)
 	if not self._name_editing_enabled then
 		return
@@ -362,7 +362,7 @@ function MultiProfileItemGui:set_editing(editing)
 	end
 end
 
--- Lines: 237 to 244
+-- Lines: 242 to 249
 function MultiProfileItemGui.blink(o)
 	while true do
 		o:set_color(Color(0.05, 1, 1, 1))
@@ -372,7 +372,7 @@ function MultiProfileItemGui.blink(o)
 	end
 end
 
--- Lines: 246 to 253
+-- Lines: 251 to 258
 function MultiProfileItemGui:set_blinking(b)
 	local caret = self._caret
 
@@ -393,7 +393,7 @@ function MultiProfileItemGui:set_blinking(b)
 	end
 end
 
--- Lines: 255 to 272
+-- Lines: 260 to 277
 function MultiProfileItemGui:_update_caret()
 	local text = self._name_text
 	local caret = self._caret
@@ -420,7 +420,7 @@ function MultiProfileItemGui:_update_caret()
 	self:set_blinking(s == e and self._editing)
 end
 
--- Lines: 274 to 281
+-- Lines: 279 to 286
 function MultiProfileItemGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -431,7 +431,7 @@ function MultiProfileItemGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 283 to 296
+-- Lines: 288 to 301
 function MultiProfileItemGui:key_press(o, k)
 	if not self._editing then
 		return
@@ -446,7 +446,7 @@ function MultiProfileItemGui:key_press(o, k)
 	self:_update_caret()
 end
 
--- Lines: 298 to 309
+-- Lines: 303 to 314
 function MultiProfileItemGui:key_release(o, k)
 	if not self._editing then
 		return
@@ -460,7 +460,7 @@ function MultiProfileItemGui:key_release(o, k)
 	self:_update_caret()
 end
 
--- Lines: 311 to 323
+-- Lines: 316 to 328
 function MultiProfileItemGui:trigger()
 	if not self._editing then
 		self:set_editing(true)
@@ -477,7 +477,7 @@ function MultiProfileItemGui:trigger()
 	self:_update_caret()
 end
 
--- Lines: 325 to 334
+-- Lines: 330 to 346
 function MultiProfileItemGui:enter_text(o, s)
 	if not self._editing then
 		return
@@ -489,7 +489,7 @@ function MultiProfileItemGui:enter_text(o, s)
 	self._name_text:replace_text(s)
 end
 
--- Lines: 336 to 379
+-- Lines: 348 to 391
 function MultiProfileItemGui:handle_key(k, pressed)
 	local text = self._name_text
 	local s, e = text:selection()

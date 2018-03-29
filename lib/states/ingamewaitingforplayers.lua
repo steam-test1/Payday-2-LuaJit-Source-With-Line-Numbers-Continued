@@ -483,20 +483,17 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines: 537 to 543
+-- Lines: 537 to 539
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
-	Global.statistics_manager.playing_from_start = nil
-
-	print("Joining as " .. char_name)
 end
 
--- Lines: 545 to 546
+-- Lines: 541 to 542
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines: 550 to 646
+-- Lines: 546 to 642
 function IngameWaitingForPlayersState:at_exit()
 	if _G.IS_VR then
 		managers.menu:close_menu("waiting_for_players")
@@ -580,7 +577,7 @@ function IngameWaitingForPlayersState:at_exit()
 	TestAPIHelper.on_event("start_job")
 end
 
--- Lines: 648 to 661
+-- Lines: 644 to 657
 function IngameWaitingForPlayersState:_get_cameras()
 	self._cameras = {}
 
@@ -611,7 +608,7 @@ function IngameWaitingForPlayersState:_get_cameras()
 	end
 end
 
--- Lines: 663 to 676
+-- Lines: 659 to 672
 function IngameWaitingForPlayersState:_next_camera()
 	self._camera_data.next_t = Application:time() + 8 + math.rand(4)
 	self._camera_data.index = self._camera_data.index + 1
@@ -625,17 +622,17 @@ function IngameWaitingForPlayersState:_next_camera()
 	self._cam_unit:camera():start(math.rand(30))
 end
 
--- Lines: 678 to 680
+-- Lines: 674 to 676
 function IngameWaitingForPlayersState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 682 to 684
+-- Lines: 678 to 680
 function IngameWaitingForPlayersState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 686 to 688
+-- Lines: 682 to 684
 function IngameWaitingForPlayersState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

@@ -1853,7 +1853,7 @@ function AchievementListGui:_on_milestone()
 end
 AchievementListGui.MAX_SEARCH_LENGTH = 28
 
--- Lines: 1553 to 1567
+-- Lines: 1553 to 1572
 function AchievementListGui:connect_search_input()
 	if self._adding_to_data or self._search_focus then
 		return
@@ -1871,7 +1871,7 @@ function AchievementListGui:connect_search_input()
 	self:update_caret()
 end
 
--- Lines: 1570 to 1588
+-- Lines: 1575 to 1593
 function AchievementListGui:disconnect_search_input()
 	if self._search_focus then
 		self._ws:disconnect_keyboard()
@@ -1890,12 +1890,12 @@ function AchievementListGui:disconnect_search_input()
 	end
 end
 
--- Lines: 1590 to 1592
+-- Lines: 1595 to 1597
 function AchievementListGui:_setup_change_search()
 	self:_redo_filter()
 end
 
--- Lines: 1595 to 1676
+-- Lines: 1600 to 1688
 function AchievementListGui:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -1982,7 +1982,7 @@ function AchievementListGui:search_key_press(o, k)
 	self:update_caret()
 end
 
--- Lines: 1678 to 1683
+-- Lines: 1690 to 1695
 function AchievementListGui:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -1991,7 +1991,7 @@ function AchievementListGui:search_key_release(o, k)
 	end
 end
 
--- Lines: 1686 to 1739
+-- Lines: 1698 to 1751
 function AchievementListGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -2053,7 +2053,7 @@ function AchievementListGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 1743 to 1766
+-- Lines: 1755 to 1786
 function AchievementListGui:enter_text(o, s)
 	if self._skip_first then
 		self._skip_first = false
@@ -2081,19 +2081,19 @@ function AchievementListGui:enter_text(o, s)
 	self:_setup_change_search()
 end
 
--- Lines: 1768 to 1770
+-- Lines: 1788 to 1790
 function AchievementListGui:enter_key_callback()
 	self:_setup_change_search()
 end
 
--- Lines: 1772 to 1776
+-- Lines: 1792 to 1796
 function AchievementListGui:esc_key_callback()
 	call_on_next_update(function ()
 		self:disconnect_search_input()
 	end)
 end
 
--- Lines: 1778 to 1785
+-- Lines: 1798 to 1805
 function AchievementListGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -2103,7 +2103,7 @@ function AchievementListGui.blink(o)
 	end
 end
 
--- Lines: 1787 to 1801
+-- Lines: 1807 to 1821
 function AchievementListGui:set_blinking(b)
 	local caret = self._search.caret
 
@@ -2124,7 +2124,7 @@ function AchievementListGui:set_blinking(b)
 	end
 end
 
--- Lines: 1803 to 1829
+-- Lines: 1823 to 1849
 function AchievementListGui:update_caret()
 	local text = self._search.text
 	local caret = self._search.caret

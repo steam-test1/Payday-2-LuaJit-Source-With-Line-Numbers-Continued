@@ -7,7 +7,7 @@ function PlayerHandStateMelee:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeapon.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 76
+-- Lines: 10 to 87
 function PlayerHandStateMelee:_spawn_melee_unit()
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
 	self._melee_entry = melee_entry
@@ -19,7 +19,7 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 		local align = nil
 
 		if #aligns > 1 then
-			align = self._hsm:hand_id() == 1 and "a_weapon_left" or "a_weapon_right"
+			align = self._hsm:hand_id() == 1 and "a_weapon_right" or "a_weapon_left"
 
 			if not table.contains(aligns, align) then
 				Application:error("[PlayerHandStateMelee:_spawn_melee_unit] can't spawn melee weapon in this hand", melee_entry, self._hand_unit)
@@ -38,11 +38,25 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 		local offset = tweak_data.vr:get_offset_by_id(melee_entry)
 
 		if offset then
-			self._melee_unit:set_local_position(offset.position or Vector3())
+			if offset.position then
+				if self:hsm():hand_id() == PlayerHand.LEFT then
+					local x = -offset.position.x
+
+					self._melee_unit:set_local_position(offset.position:with_x(x))
+				else
+					self._melee_unit:set_local_position(offset.position)
+				end
+			end
 
 			if offset.rotation then
-				if offset.hand_flip and self:hsm():hand_id() == PlayerHand.LEFT then
-					self._melee_unit:set_local_rotation(offset.rotation * Rotation(180))
+				if self:hsm():hand_id() == PlayerHand.LEFT then
+					local rot = Rotation(-offset.rotation:yaw(), offset.rotation:pitch(), -offset.rotation:roll())
+
+					if offset.hand_flip then
+						rot = rot * Rotation(180)
+					end
+
+					self._melee_unit:set_local_rotation(rot)
 				else
 					self._melee_unit:set_local_rotation(offset.rotation)
 				end
@@ -81,7 +95,7 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 	end
 end
 
--- Lines: 78 to 94
+-- Lines: 89 to 105
 function PlayerHandStateMelee:at_enter(prev_state, params)
 	PlayerHandStateWeapon.super.at_enter(self, prev_state)
 	managers.player:player_unit():movement():current_state():_interupt_action_reload()
@@ -97,7 +111,7 @@ function PlayerHandStateMelee:at_enter(prev_state, params)
 	managers.hud:belt():set_state("melee", "active")
 end
 
--- Lines: 96 to 107
+-- Lines: 107 to 118
 function PlayerHandStateMelee:at_exit(next_state)
 	PlayerHandStateMelee.super.at_exit(self, next_state)
 	self:hsm():exit_controller_state("item")
@@ -109,7 +123,7 @@ function PlayerHandStateMelee:at_exit(next_state)
 	end
 end
 
--- Lines: 109 to 132
+-- Lines: 120 to 143
 function PlayerHandStateMelee:update(t, dt)
 	local controller = managers.vr:hand_state_machine():controller()
 

@@ -350,7 +350,7 @@ function MenuManagerVR:post_event_vr(event)
 	end
 end
 
--- Lines: 352 to 363
+-- Lines: 352 to 365
 function MenuManagerVR:_enter_menu_room()
 	if not self._player:is_active() then
 		self._hand_index = managers.vr:get_setting("default_weapon_hand") == "right" and 0 or 1
@@ -361,11 +361,12 @@ function MenuManagerVR:_enter_menu_room()
 		if not self._is_start_menu then
 			self._ingame_camera_bm:set_visible(true)
 			self._ingame_viewport:set_active(true)
+			self:set_ingame_subtitle_presenter(false)
 		end
 	end
 end
 
--- Lines: 365 to 383
+-- Lines: 367 to 387
 function MenuManagerVR:_exit_menu_room()
 	if self._player:is_active() then
 		self._player:stop()
@@ -380,24 +381,35 @@ function MenuManagerVR:_exit_menu_room()
 			if self._customization_gui then
 				self._customization_gui:exit_menu()
 			end
+
+			self:set_ingame_subtitle_presenter(true)
 		end
 
 		managers.overlay_effect:play_effect(self._exit_fade_in)
 	end
 end
 
--- Lines: 385 to 386
+-- Lines: 389 to 399
+function MenuManagerVR:set_ingame_subtitle_presenter(ingame)
+	local presenter = nil
+	presenter = ingame and CoreSubtitlePresenter.IngamePresenterVR:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size, managers.hud:subtitle_workspace()) or CoreSubtitlePresenter.OverlayPresenter:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size)
+
+	managers.subtitle:set_presenter(presenter)
+	presenter:show()
+end
+
+-- Lines: 401 to 402
 function MenuManagerVR:player()
 	return self._player
 end
 
--- Lines: 391 to 394
+-- Lines: 407 to 410
 function MenuManagerVR:on_enter_menu_disable_ingame_camera()
 	self._ingame_camera_bm:set_visible(false)
 	self._ingame_viewport:set_active(false)
 end
 
--- Lines: 397 to 399
+-- Lines: 413 to 415
 function MenuManagerVR:on_enter_menu_disable_ingame_camera_active_bg()
 	self._ingame_viewport:set_active(false)
 end

@@ -156,13 +156,15 @@ function CharacterTweakData:_init_region_zombie()
 	self._speech_prefix_p2 = "n"
 end
 
--- Lines: 225 to 266
+-- Lines: 225 to 268
 function CharacterTweakData:_init_security(presets)
 	self.security = deep_clone(presets.base)
+	self.security.tags = {"law"}
 	self.security.experience = {}
 	self.security.weapon = presets.weapon.normal
 	self.security.detection = presets.detection.guard
 	self.security.HEALTH_INIT = 4
+	self.security.headshot_dmg_mul = 2
 	self.security.headshot_dmg_mul = 2
 	self.security.move_speed = presets.move_speed.normal
 	self.security.crouch_move = nil
@@ -202,9 +204,10 @@ function CharacterTweakData:_init_security(presets)
 	table.insert(self._enemy_list, "security_undominatable")
 end
 
--- Lines: 272 to 306
+-- Lines: 274 to 309
 function CharacterTweakData:_init_gensec(presets)
 	self.gensec = deep_clone(presets.base)
+	self.gensec.tags = {"law"}
 	self.gensec.experience = {}
 	self.gensec.weapon = presets.weapon.normal
 	self.gensec.detection = presets.detection.guard
@@ -242,9 +245,10 @@ function CharacterTweakData:_init_gensec(presets)
 	table.insert(self._enemy_list, "gensec")
 end
 
--- Lines: 312 to 355
+-- Lines: 315 to 359
 function CharacterTweakData:_init_cop(presets)
 	self.cop = deep_clone(presets.base)
+	self.cop.tags = {"law"}
 	self.cop.experience = {}
 	self.cop.weapon = presets.weapon.normal
 	self.cop.detection = presets.detection.normal
@@ -291,9 +295,10 @@ function CharacterTweakData:_init_cop(presets)
 	table.insert(self._enemy_list, "cop_female")
 end
 
--- Lines: 362 to 392
+-- Lines: 366 to 397
 function CharacterTweakData:_init_fbi(presets)
 	self.fbi = deep_clone(presets.base)
+	self.fbi.tags = {"law"}
 	self.fbi.experience = {}
 	self.fbi.weapon = presets.weapon.normal
 	self.fbi.detection = presets.detection.normal
@@ -327,10 +332,11 @@ function CharacterTweakData:_init_fbi(presets)
 	table.insert(self._enemy_list, "fbi")
 end
 
--- Lines: 395 to 430
+-- Lines: 400 to 435
 function CharacterTweakData:_init_medic(presets)
 	self.medic = deep_clone(presets.base)
 	self.medic.tags = {
+		"law",
 		"medic",
 		"special"
 	}
@@ -374,9 +380,10 @@ function CharacterTweakData:_init_medic(presets)
 	table.insert(self._enemy_list, "medic")
 end
 
--- Lines: 438 to 468
+-- Lines: 443 to 474
 function CharacterTweakData:_init_swat(presets)
 	self.swat = deep_clone(presets.base)
+	self.swat.tags = {"law"}
 	self.swat.experience = {}
 	self.swat.weapon = presets.weapon.normal
 	self.swat.detection = presets.detection.normal
@@ -410,9 +417,10 @@ function CharacterTweakData:_init_swat(presets)
 	table.insert(self._enemy_list, "swat")
 end
 
--- Lines: 475 to 511
+-- Lines: 481 to 518
 function CharacterTweakData:_init_heavy_swat(presets)
 	self.heavy_swat = deep_clone(presets.base)
+	self.heavy_swat.tags = {"law"}
 	self.heavy_swat.experience = {}
 	self.heavy_swat.weapon = presets.weapon.normal
 	self.heavy_swat.detection = presets.detection.normal
@@ -448,9 +456,10 @@ function CharacterTweakData:_init_heavy_swat(presets)
 	table.insert(self._enemy_list, "heavy_swat_sniper")
 end
 
--- Lines: 517 to 546
+-- Lines: 524 to 554
 function CharacterTweakData:_init_fbi_swat(presets)
 	self.fbi_swat = deep_clone(presets.base)
+	self.fbi_swat.tags = {"law"}
 	self.fbi_swat.experience = {}
 	self.fbi_swat.weapon = presets.weapon.good
 	self.fbi_swat.detection = presets.detection.normal
@@ -483,9 +492,10 @@ function CharacterTweakData:_init_fbi_swat(presets)
 	table.insert(self._enemy_list, "fbi_swat")
 end
 
--- Lines: 551 to 579
+-- Lines: 559 to 588
 function CharacterTweakData:_init_fbi_heavy_swat(presets)
 	self.fbi_heavy_swat = deep_clone(presets.base)
+	self.fbi_heavy_swat.tags = {"law"}
 	self.fbi_heavy_swat.experience = {}
 	self.fbi_heavy_swat.weapon = presets.weapon.good
 	self.fbi_heavy_swat.detection = presets.detection.normal
@@ -518,9 +528,10 @@ function CharacterTweakData:_init_fbi_heavy_swat(presets)
 	table.insert(self._enemy_list, "fbi_heavy_swat")
 end
 
--- Lines: 584 to 615
+-- Lines: 593 to 625
 function CharacterTweakData:_init_city_swat(presets)
 	self.city_swat = deep_clone(presets.base)
+	self.city_swat.tags = {"law"}
 	self.city_swat.experience = {}
 	self.city_swat.weapon = presets.weapon.good
 	self.city_swat.detection = presets.detection.normal
@@ -554,10 +565,11 @@ function CharacterTweakData:_init_city_swat(presets)
 	table.insert(self._enemy_list, "city_swat")
 end
 
--- Lines: 621 to 655
+-- Lines: 631 to 665
 function CharacterTweakData:_init_sniper(presets)
 	self.sniper = deep_clone(presets.base)
 	self.sniper.tags = {
+		"law",
 		"sniper",
 		"special"
 	}
@@ -592,7 +604,7 @@ function CharacterTweakData:_init_sniper(presets)
 	table.insert(self._enemy_list, "sniper")
 end
 
--- Lines: 665 to 699
+-- Lines: 675 to 709
 function CharacterTweakData:_init_gangster(presets)
 	self.gangster = deep_clone(presets.base)
 	self.gangster.experience = {}
@@ -629,7 +641,7 @@ function CharacterTweakData:_init_gangster(presets)
 	table.insert(self._enemy_list, "gangster")
 end
 
--- Lines: 701 to 706
+-- Lines: 711 to 716
 function CharacterTweakData:_init_biker(presets)
 	self.biker = deep_clone(self.gangster)
 	self.biker.calls_in = true
@@ -637,7 +649,7 @@ function CharacterTweakData:_init_biker(presets)
 	table.insert(self._enemy_list, "biker")
 end
 
--- Lines: 708 to 722
+-- Lines: 718 to 732
 function CharacterTweakData:_init_captain(presets)
 	self.captain = deep_clone(self.gangster)
 	self.captain.calls_in = true
@@ -654,7 +666,7 @@ function CharacterTweakData:_init_captain(presets)
 	table.insert(self._enemy_list, "biker")
 end
 
--- Lines: 724 to 732
+-- Lines: 734 to 742
 function CharacterTweakData:_init_biker_escape(presets)
 	self.biker_escape = deep_clone(self.gangster)
 	self.biker_escape.melee_weapon = "knife_1"
@@ -665,7 +677,7 @@ function CharacterTweakData:_init_biker_escape(presets)
 	table.insert(self._enemy_list, "biker_escape")
 end
 
--- Lines: 735 to 740
+-- Lines: 745 to 750
 function CharacterTweakData:_init_mobster(presets)
 	self.mobster = deep_clone(self.gangster)
 	self.mobster.calls_in = nil
@@ -673,7 +685,7 @@ function CharacterTweakData:_init_mobster(presets)
 	table.insert(self._enemy_list, "mobster")
 end
 
--- Lines: 743 to 800
+-- Lines: 753 to 810
 function CharacterTweakData:_init_mobster_boss(presets)
 	self.mobster_boss = deep_clone(presets.base)
 	self.mobster_boss.experience = {}
@@ -830,7 +842,7 @@ function CharacterTweakData:_init_mobster_boss(presets)
 	table.insert(self._enemy_list, "mobster_boss")
 end
 
--- Lines: 803 to 868
+-- Lines: 813 to 878
 function CharacterTweakData:_init_biker_boss(presets)
 	self.biker_boss = deep_clone(presets.base)
 	self.biker_boss.experience = {}
@@ -993,7 +1005,7 @@ function CharacterTweakData:_init_biker_boss(presets)
 	table.insert(self._enemy_list, "biker_boss")
 end
 
--- Lines: 872 to 936
+-- Lines: 882 to 946
 function CharacterTweakData:_init_chavez_boss(presets)
 	self.chavez_boss = deep_clone(presets.base)
 	self.chavez_boss.experience = {}
@@ -1155,7 +1167,7 @@ function CharacterTweakData:_init_chavez_boss(presets)
 	table.insert(self._enemy_list, "chavez_boss")
 end
 
--- Lines: 940 to 971
+-- Lines: 950 to 981
 function CharacterTweakData:_init_hector_boss(presets)
 	self.hector_boss = deep_clone(self.mobster_boss)
 	self.hector_boss.DAMAGE_CLAMP_BULLET = 320
@@ -1282,7 +1294,7 @@ function CharacterTweakData:_init_hector_boss(presets)
 	table.insert(self._enemy_list, "hector_boss")
 end
 
--- Lines: 973 to 990
+-- Lines: 983 to 1000
 function CharacterTweakData:_init_hector_boss_no_armor(presets)
 	self.hector_boss_no_armor = deep_clone(self.fbi)
 	self.hector_boss_no_armor.damage.hurt_severity = presets.hurt_severities.base_no_poison
@@ -1301,7 +1313,7 @@ function CharacterTweakData:_init_hector_boss_no_armor(presets)
 	table.insert(self._enemy_list, "hector_boss_no_armor")
 end
 
--- Lines: 999 to 1014
+-- Lines: 1009 to 1024
 function CharacterTweakData:_init_bolivians(presets)
 	self.bolivian = deep_clone(self.gangster)
 	self.bolivian.detection = presets.detection.guard
@@ -1324,7 +1336,7 @@ function CharacterTweakData:_init_bolivians(presets)
 	table.insert(self._enemy_list, "bolivian_indoors")
 end
 
--- Lines: 1016 to 1081
+-- Lines: 1026 to 1091
 function CharacterTweakData:_init_drug_lord_boss(presets)
 	self.drug_lord_boss = deep_clone(presets.base)
 	self.drug_lord_boss.experience = {}
@@ -1487,7 +1499,7 @@ function CharacterTweakData:_init_drug_lord_boss(presets)
 	table.insert(self._enemy_list, "drug_lord_boss")
 end
 
--- Lines: 1083 to 1148
+-- Lines: 1093 to 1158
 function CharacterTweakData:_init_drug_lord_boss_stealth(presets)
 	self.drug_lord_boss_stealth = deep_clone(presets.base)
 	self.drug_lord_boss_stealth.experience = {}
@@ -1650,10 +1662,11 @@ function CharacterTweakData:_init_drug_lord_boss_stealth(presets)
 	table.insert(self._enemy_list, "drug_lord_boss_stealth")
 end
 
--- Lines: 1159 to 1336
+-- Lines: 1169 to 1346
 function CharacterTweakData:_init_tank(presets)
 	self.tank = deep_clone(presets.base)
 	self.tank.tags = {
+		"law",
 		"tank",
 		"special"
 	}
@@ -2227,10 +2240,11 @@ function CharacterTweakData:_init_tank(presets)
 	table.insert(self._enemy_list, "tank_mini")
 end
 
--- Lines: 1363 to 1426
+-- Lines: 1373 to 1436
 function CharacterTweakData:_init_spooc(presets)
 	self.spooc = deep_clone(presets.base)
 	self.spooc.tags = {
+		"law",
 		"spooc",
 		"special"
 	}
@@ -2293,10 +2307,11 @@ function CharacterTweakData:_init_spooc(presets)
 	table.insert(self._enemy_list, "spooc")
 end
 
--- Lines: 1432 to 1524
+-- Lines: 1442 to 1534
 function CharacterTweakData:_init_shield(presets)
 	self.shield = deep_clone(presets.base)
 	self.shield.tags = {
+		"law",
 		"shield",
 		"special"
 	}
@@ -2569,7 +2584,7 @@ function CharacterTweakData:_init_shield(presets)
 	table.insert(self._enemy_list, "shield")
 end
 
--- Lines: 1530 to 1559
+-- Lines: 1540 to 1569
 function CharacterTweakData:_init_phalanx_minion(presets)
 	self.phalanx_minion = deep_clone(self.shield)
 	self.phalanx_minion.experience = {}
@@ -2596,7 +2611,7 @@ function CharacterTweakData:_init_phalanx_minion(presets)
 	table.insert(self._enemy_list, "phalanx_minion")
 end
 
--- Lines: 1565 to 1581
+-- Lines: 1575 to 1591
 function CharacterTweakData:_init_phalanx_vip(presets)
 	self.phalanx_vip = deep_clone(self.phalanx_minion)
 	self.phalanx_vip.LOWER_HEALTH_PERCENTAGE_LIMIT = 1
@@ -2611,10 +2626,11 @@ function CharacterTweakData:_init_phalanx_vip(presets)
 	table.insert(self._enemy_list, "phalanx_vip")
 end
 
--- Lines: 1588 to 1657
+-- Lines: 1598 to 1667
 function CharacterTweakData:_init_taser(presets)
 	self.taser = deep_clone(presets.base)
 	self.taser.tags = {
+		"law",
 		"taser",
 		"special"
 	}
@@ -2785,7 +2801,7 @@ function CharacterTweakData:_init_taser(presets)
 	table.insert(self._enemy_list, "taser")
 end
 
--- Lines: 1659 to 1688
+-- Lines: 1669 to 1698
 function CharacterTweakData:_init_inside_man(presets)
 	self.inside_man = deep_clone(presets.base)
 	self.inside_man.experience = {}
@@ -2817,7 +2833,7 @@ function CharacterTweakData:_init_inside_man(presets)
 	self.inside_man.calls_in = nil
 end
 
--- Lines: 1698 to 1741
+-- Lines: 1708 to 1752
 function CharacterTweakData:_init_civilian(presets)
 	self.civilian = {
 		experience = {},
@@ -2850,6 +2866,7 @@ function CharacterTweakData:_init_civilian(presets)
 		}}
 	}
 	self.civilian.experience.cable_tie = "tie_civ"
+	self.civilian.silent_priority_shout = "f37"
 	self.civilian.speech_prefix_p1 = "cm"
 	self.civilian.speech_prefix_count = 2
 	self.civilian.access = "civ_male"
@@ -2868,9 +2885,10 @@ function CharacterTweakData:_init_civilian(presets)
 	self.robbers_safehouse.intimidateable = false
 	self.robbers_safehouse.ignores_aggression = true
 	self.robbers_safehouse.ignores_contours = true
+	self.robbers_safehouse.use_ik = true
 end
 
--- Lines: 1747 to 1756
+-- Lines: 1758 to 1767
 function CharacterTweakData:_init_melee_box(presets)
 	self.melee_box = deep_clone(self.civilian)
 	self.melee_box.move_speed = presets.move_speed.civ_fast
@@ -2882,7 +2900,7 @@ function CharacterTweakData:_init_melee_box(presets)
 	self.melee_box.ignores_aggression = true
 end
 
--- Lines: 1762 to 1789
+-- Lines: 1773 to 1800
 function CharacterTweakData:_init_bank_manager(presets)
 	self.bank_manager = {
 		experience = {},
@@ -2919,7 +2937,7 @@ function CharacterTweakData:_init_bank_manager(presets)
 	self.bank_manager.calls_in = true
 end
 
--- Lines: 1795 to 1805
+-- Lines: 1806 to 1816
 function CharacterTweakData:_init_drunk_pilot(presets)
 	self.drunk_pilot = deep_clone(self.civilian)
 	self.drunk_pilot.move_speed = presets.move_speed.civ_fast
@@ -2931,7 +2949,7 @@ function CharacterTweakData:_init_drunk_pilot(presets)
 	self.drunk_pilot.ignores_aggression = true
 end
 
--- Lines: 1811 to 1821
+-- Lines: 1822 to 1832
 function CharacterTweakData:_init_boris(presets)
 	self.boris = deep_clone(self.civilian)
 	self.boris.flee_type = "hide"
@@ -2942,7 +2960,7 @@ function CharacterTweakData:_init_boris(presets)
 	self.boris.ignores_aggression = true
 end
 
--- Lines: 1827 to 1857
+-- Lines: 1838 to 1868
 function CharacterTweakData:_init_escort(presets)
 	self.escort = {
 		experience = {},
@@ -2982,7 +3000,7 @@ function CharacterTweakData:_init_escort(presets)
 	self.escort.escort_scared_dist = 600
 end
 
--- Lines: 1860 to 1887
+-- Lines: 1871 to 1898
 function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_undercover = deep_clone(self.civilian)
 	self.escort_undercover.move_speed = presets.move_speed.slow
@@ -3008,7 +3026,7 @@ function CharacterTweakData:_init_escort_undercover(presets)
 	self.escort_cfo.move_speed = presets.move_speed.normal
 end
 
--- Lines: 1898 to 1924
+-- Lines: 1909 to 1935
 function CharacterTweakData:_init_old_hoxton_mission(presets)
 	self.old_hoxton_mission = deep_clone(presets.base)
 	self.old_hoxton_mission.experience = {}
@@ -3036,7 +3054,7 @@ function CharacterTweakData:_init_old_hoxton_mission(presets)
 	self.old_hoxton_mission.rescue_hostages = false
 end
 
--- Lines: 1928 to 1936
+-- Lines: 1939 to 1947
 function CharacterTweakData:_init_spa_vip(presets)
 	self.spa_vip = deep_clone(self.old_hoxton_mission)
 	self.spa_vip.spotlight_important = 100
@@ -3046,7 +3064,7 @@ function CharacterTweakData:_init_spa_vip(presets)
 	self.spa_vip.suppression.panic_chance_mul = 0
 end
 
--- Lines: 1937 to 1947
+-- Lines: 1948 to 1958
 function CharacterTweakData:_init_spa_vip_hurt(presets)
 	self.spa_vip_hurt = deep_clone(self.civilian)
 	self.spa_vip_hurt.move_speed = presets.move_speed.slow
@@ -3058,7 +3076,7 @@ function CharacterTweakData:_init_spa_vip_hurt(presets)
 	self.spa_vip_hurt.ignores_aggression = true
 end
 
--- Lines: 1954 to 1979
+-- Lines: 1965 to 1990
 function CharacterTweakData:_init_russian(presets)
 	self.russian = {
 		damage = presets.gang_member_damage,
@@ -3081,7 +3099,7 @@ function CharacterTweakData:_init_russian(presets)
 	}
 end
 
--- Lines: 1985 to 2011
+-- Lines: 1996 to 2022
 function CharacterTweakData:_init_german(presets)
 	self.german = {
 		damage = presets.gang_member_damage,
@@ -3104,7 +3122,7 @@ function CharacterTweakData:_init_german(presets)
 	}
 end
 
--- Lines: 2017 to 2043
+-- Lines: 2028 to 2054
 function CharacterTweakData:_init_spanish(presets)
 	self.spanish = {
 		damage = presets.gang_member_damage,
@@ -3127,7 +3145,7 @@ function CharacterTweakData:_init_spanish(presets)
 	}
 end
 
--- Lines: 2049 to 2074
+-- Lines: 2060 to 2085
 function CharacterTweakData:_init_american(presets)
 	self.american = {
 		damage = presets.gang_member_damage,
@@ -3150,7 +3168,7 @@ function CharacterTweakData:_init_american(presets)
 	}
 end
 
--- Lines: 2080 to 2105
+-- Lines: 2091 to 2116
 function CharacterTweakData:_init_jowi(presets)
 	self.jowi = {
 		damage = presets.gang_member_damage,
@@ -3173,7 +3191,7 @@ function CharacterTweakData:_init_jowi(presets)
 	}
 end
 
--- Lines: 2111 to 2137
+-- Lines: 2122 to 2148
 function CharacterTweakData:_init_old_hoxton(presets)
 	self.old_hoxton = {
 		damage = presets.gang_member_damage,
@@ -3196,7 +3214,7 @@ function CharacterTweakData:_init_old_hoxton(presets)
 	}
 end
 
--- Lines: 2143 to 2167
+-- Lines: 2154 to 2178
 function CharacterTweakData:_init_clover(presets)
 	self.female_1 = {
 		damage = presets.gang_member_damage,
@@ -3219,7 +3237,7 @@ function CharacterTweakData:_init_clover(presets)
 	}
 end
 
--- Lines: 2173 to 2197
+-- Lines: 2184 to 2208
 function CharacterTweakData:_init_dragan(presets)
 	self.dragan = {
 		damage = presets.gang_member_damage,
@@ -3242,7 +3260,7 @@ function CharacterTweakData:_init_dragan(presets)
 	}
 end
 
--- Lines: 2204 to 2228
+-- Lines: 2215 to 2239
 function CharacterTweakData:_init_jacket(presets)
 	self.jacket = {
 		damage = presets.gang_member_damage,
@@ -3265,7 +3283,7 @@ function CharacterTweakData:_init_jacket(presets)
 	}
 end
 
--- Lines: 2230 to 2254
+-- Lines: 2241 to 2265
 function CharacterTweakData:_init_bonnie(presets)
 	self.bonnie = {
 		damage = presets.gang_member_damage,
@@ -3288,7 +3306,7 @@ function CharacterTweakData:_init_bonnie(presets)
 	}
 end
 
--- Lines: 2256 to 2280
+-- Lines: 2267 to 2291
 function CharacterTweakData:_init_sokol(presets)
 	self.sokol = {
 		damage = presets.gang_member_damage,
@@ -3311,7 +3329,7 @@ function CharacterTweakData:_init_sokol(presets)
 	}
 end
 
--- Lines: 2282 to 2306
+-- Lines: 2293 to 2317
 function CharacterTweakData:_init_dragon(presets)
 	self.dragon = {
 		damage = presets.gang_member_damage,
@@ -3334,7 +3352,7 @@ function CharacterTweakData:_init_dragon(presets)
 	}
 end
 
--- Lines: 2308 to 2332
+-- Lines: 2319 to 2343
 function CharacterTweakData:_init_bodhi(presets)
 	self.bodhi = {
 		damage = presets.gang_member_damage,
@@ -3357,7 +3375,7 @@ function CharacterTweakData:_init_bodhi(presets)
 	}
 end
 
--- Lines: 2335 to 2359
+-- Lines: 2346 to 2370
 function CharacterTweakData:_init_jimmy(presets)
 	self.jimmy = {
 		damage = presets.gang_member_damage,
@@ -3380,7 +3398,7 @@ function CharacterTweakData:_init_jimmy(presets)
 	}
 end
 
--- Lines: 2363 to 2387
+-- Lines: 2374 to 2398
 function CharacterTweakData:_init_sydney(presets)
 	self.sydney = {
 		damage = presets.gang_member_damage,
@@ -3403,7 +3421,7 @@ function CharacterTweakData:_init_sydney(presets)
 	}
 end
 
--- Lines: 2391 to 2415
+-- Lines: 2402 to 2426
 function CharacterTweakData:_init_wild(presets)
 	self.wild = {
 		damage = presets.gang_member_damage,
@@ -3426,7 +3444,7 @@ function CharacterTweakData:_init_wild(presets)
 	}
 end
 
--- Lines: 2419 to 2443
+-- Lines: 2430 to 2454
 function CharacterTweakData:_init_chico(presets)
 	self.chico = {
 		damage = presets.gang_member_damage,
@@ -3449,7 +3467,7 @@ function CharacterTweakData:_init_chico(presets)
 	}
 end
 
--- Lines: 2447 to 2471
+-- Lines: 2458 to 2482
 function CharacterTweakData:_init_max(presets)
 	self.max = {
 		damage = presets.gang_member_damage,
@@ -3472,7 +3490,7 @@ function CharacterTweakData:_init_max(presets)
 	}
 end
 
--- Lines: 2502 to 2525
+-- Lines: 2513 to 2536
 function CharacterTweakData:_init_myh(presets)
 	self.myh = {
 		damage = presets.gang_member_damage,
@@ -3495,7 +3513,7 @@ function CharacterTweakData:_init_myh(presets)
 	}
 end
 
--- Lines: 2529 to 2575
+-- Lines: 2540 to 2586
 function CharacterTweakData:_init_ecp(presets)
 	self.ecp_female = {
 		damage = presets.gang_member_damage,
@@ -3537,7 +3555,7 @@ function CharacterTweakData:_init_ecp(presets)
 	}
 end
 
--- Lines: 2597 to 4442
+-- Lines: 2608 to 4453
 function CharacterTweakData:_presets(tweak_data)
 	local presets = {hurt_severities = {}}
 	presets.hurt_severities.no_hurts = {
@@ -10196,7 +10214,7 @@ function CharacterTweakData:_presets(tweak_data)
 	return presets
 end
 
--- Lines: 4449 to 4512
+-- Lines: 4460 to 4523
 function CharacterTweakData:_create_table_structure()
 	self.weap_ids = {
 		"beretta92",
@@ -10262,7 +10280,7 @@ function CharacterTweakData:_create_table_structure()
 	}
 end
 
--- Lines: 4517 to 4543
+-- Lines: 4528 to 4554
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for id, unit_data in pairs(self) do
 		if type(unit_data) == "table" and unit_data.weapon then
@@ -10291,12 +10309,12 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
--- Lines: 4547 to 4548
+-- Lines: 4558 to 4559
 function CharacterTweakData:enemy_list()
 	return self._enemy_list
 end
 
--- Lines: 4553 to 4571
+-- Lines: 4564 to 4582
 function CharacterTweakData:_set_easy()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -10314,7 +10332,7 @@ function CharacterTweakData:_set_easy()
 	self.flashbang_multiplier = 1
 end
 
--- Lines: 4575 to 4703
+-- Lines: 4586 to 4714
 function CharacterTweakData:_set_normal()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(1.05, 1.1)
@@ -11239,7 +11257,7 @@ function CharacterTweakData:_set_normal()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4707 to 4812
+-- Lines: 4718 to 4823
 function CharacterTweakData:_set_hard()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -11856,7 +11874,7 @@ function CharacterTweakData:_set_hard()
 	}
 end
 
--- Lines: 4816 to 4930
+-- Lines: 4827 to 4941
 function CharacterTweakData:_set_overkill()
 	self:_multiply_all_hp(2, 2)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -12474,7 +12492,7 @@ function CharacterTweakData:_set_overkill()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 4934 to 5001
+-- Lines: 4945 to 5012
 function CharacterTweakData:_set_overkill_145()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(3, 3)
@@ -12664,7 +12682,7 @@ function CharacterTweakData:_set_overkill_145()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5006 to 5149
+-- Lines: 5017 to 5160
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 2)
@@ -13219,7 +13237,7 @@ function CharacterTweakData:_set_easy_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5152 to 5356
+-- Lines: 5163 to 5367
 function CharacterTweakData:_set_overkill_290()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -14429,7 +14447,7 @@ function CharacterTweakData:_set_overkill_290()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5359 to 5567
+-- Lines: 5370 to 5578
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -15646,7 +15664,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines: 5571 to 5578
+-- Lines: 5582 to 5589
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -15657,7 +15675,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines: 5583 to 5702
+-- Lines: 5594 to 5713
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -15785,7 +15803,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines: 5706 to 5734
+-- Lines: 5717 to 5745
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -15830,7 +15848,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines: 5737 to 5742
+-- Lines: 5748 to 5753
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -15847,7 +15865,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5746 to 6250
+-- Lines: 5757 to 6272
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

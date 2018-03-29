@@ -1304,7 +1304,7 @@ function ContractBrokerGui:save_temporary_data(job_id)
 	Global.contract_broker.job_id = job_id
 end
 
--- Lines: 1304 to 1321
+-- Lines: 1304 to 1326
 function ContractBrokerGui:connect_search_input()
 	if not self._search_focus then
 		self._ws:connect_keyboard(Input:keyboard())
@@ -1320,7 +1320,7 @@ function ContractBrokerGui:connect_search_input()
 	end
 end
 
--- Lines: 1324 to 1338
+-- Lines: 1329 to 1343
 function ContractBrokerGui:disconnect_search_input()
 	if self._search_focus then
 		self._ws:disconnect_keyboard()
@@ -1334,7 +1334,7 @@ function ContractBrokerGui:disconnect_search_input()
 	end
 end
 
--- Lines: 1341 to 1421
+-- Lines: 1346 to 1432
 function ContractBrokerGui:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -1420,14 +1420,14 @@ function ContractBrokerGui:search_key_press(o, k)
 	self:update_caret()
 end
 
--- Lines: 1423 to 1427
+-- Lines: 1434 to 1438
 function ContractBrokerGui:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
 end
 
--- Lines: 1430 to 1483
+-- Lines: 1441 to 1494
 function ContractBrokerGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -1489,7 +1489,7 @@ function ContractBrokerGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 1487 to 1510
+-- Lines: 1498 to 1529
 function ContractBrokerGui:enter_text(o, s)
 	if self._skip_first then
 		self._skip_first = false
@@ -1517,17 +1517,17 @@ function ContractBrokerGui:enter_text(o, s)
 	self:_setup_change_search()
 end
 
--- Lines: 1512 to 1514
+-- Lines: 1531 to 1533
 function ContractBrokerGui:enter_key_callback()
 	self:_setup_change_search()
 end
 
--- Lines: 1516 to 1518
+-- Lines: 1535 to 1537
 function ContractBrokerGui:esc_key_callback()
 	self:disconnect_search_input()
 end
 
--- Lines: 1520 to 1527
+-- Lines: 1539 to 1546
 function ContractBrokerGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -1537,7 +1537,7 @@ function ContractBrokerGui.blink(o)
 	end
 end
 
--- Lines: 1529 to 1543
+-- Lines: 1548 to 1562
 function ContractBrokerGui:set_blinking(b)
 	local caret = self._search.caret
 
@@ -1558,7 +1558,7 @@ function ContractBrokerGui:set_blinking(b)
 	end
 end
 
--- Lines: 1546 to 1575
+-- Lines: 1565 to 1594
 function ContractBrokerGui:update_caret()
 	local text = self._search.text
 	local caret = self._search.caret

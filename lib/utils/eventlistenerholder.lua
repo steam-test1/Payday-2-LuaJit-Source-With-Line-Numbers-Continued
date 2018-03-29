@@ -1,7 +1,9 @@
 EventListenerHolder = EventListenerHolder or class()
 
--- Lines: 5 to 11
+-- Lines: 5 to 12
 function EventListenerHolder:add(key, event_types, clbk)
+	event_types = type(event_types) == "table" and event_types or {event_types}
+
 	if self._calling then
 		self:_set_new(key, event_types, clbk)
 	else
@@ -9,7 +11,7 @@ function EventListenerHolder:add(key, event_types, clbk)
 	end
 end
 
--- Lines: 16 to 22
+-- Lines: 17 to 23
 function EventListenerHolder:remove(key)
 	if self._calling then
 		self:_set_trash(key)
@@ -18,7 +20,7 @@ function EventListenerHolder:remove(key)
 	end
 end
 
--- Lines: 26 to 44
+-- Lines: 27 to 45
 function EventListenerHolder:call(event, ...)
 	if self._listeners then
 		local event_listeners = self._listeners[event]
@@ -40,7 +42,7 @@ function EventListenerHolder:call(event, ...)
 	end
 end
 
--- Lines: 48 to 66
+-- Lines: 49 to 67
 function EventListenerHolder:_remove(key)
 	local listeners = self._listeners
 
@@ -68,7 +70,7 @@ function EventListenerHolder:_remove(key)
 	end
 end
 
--- Lines: 70 to 87
+-- Lines: 71 to 88
 function EventListenerHolder:_add(key, event_types, clbk)
 	if self._listener_keys and self._listener_keys[key] then
 		debug_pause("[EventListenerHolder:_add] duplicate", key, inspect(event_types), clbk)
@@ -92,7 +94,7 @@ function EventListenerHolder:_add(key, event_types, clbk)
 	self._listener_keys[key] = event_types
 end
 
--- Lines: 91 to 97
+-- Lines: 92 to 98
 function EventListenerHolder:_set_trash(key)
 	self._trash = self._trash or {}
 	self._trash[key] = true
@@ -102,7 +104,7 @@ function EventListenerHolder:_set_trash(key)
 	end
 end
 
--- Lines: 101 to 111
+-- Lines: 102 to 112
 function EventListenerHolder:_set_new(key, event_types, clbk)
 	if self._additions and self._additions[key] then
 		debug_pause("[EventListenerHolder:_set_new] duplicate", key, inspect(event_types), clbk)
@@ -121,7 +123,7 @@ function EventListenerHolder:_set_new(key, event_types, clbk)
 	end
 end
 
--- Lines: 115 to 132
+-- Lines: 116 to 133
 function EventListenerHolder:_append_new_additions()
 	if self._additions then
 		local listeners = self._listeners
@@ -145,7 +147,7 @@ function EventListenerHolder:_append_new_additions()
 	end
 end
 
--- Lines: 136 to 143
+-- Lines: 137 to 144
 function EventListenerHolder:_dispose_trash()
 	if self._trash then
 		for key, _ in pairs(self._trash) do
@@ -156,12 +158,12 @@ function EventListenerHolder:_dispose_trash()
 	end
 end
 
--- Lines: 147 to 148
+-- Lines: 148 to 149
 function EventListenerHolder:_not_trash(key)
 	return not self._trash or not self._trash[key]
 end
 
--- Lines: 153 to 154
+-- Lines: 154 to 155
 function EventListenerHolder:has_listeners_for_event(event)
 	return self._listeners and self._listeners[event]
 end

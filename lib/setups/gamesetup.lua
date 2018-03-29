@@ -199,6 +199,7 @@ require("lib/units/weapons/grenades/SmokeGrenade")
 require("lib/units/weapons/grenades/QuickSmokeGrenade")
 require("lib/units/weapons/grenades/QuickFlashGrenade")
 require("lib/units/weapons/grenades/QuickCsGrenade")
+require("lib/units/weapons/grenades/FlashGrenadeUnitDamage")
 require("lib/units/weapons/grenades/TearGasGrenade")
 require("lib/units/equipment/repel_rope/RepelRopeBase")
 require("lib/units/weapons/ProjectileWeaponBase")
@@ -248,7 +249,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines: 327 to 477
+-- Lines: 328 to 478
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -290,7 +291,7 @@ function GameSetup:load_packages()
 	self._loaded_diff_packages = {}
 
 
-	-- Lines: 371 to 376
+	-- Lines: 372 to 377
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
 			table.insert(self._loaded_diff_packages, package_name)
@@ -393,7 +394,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines: 479 to 560
+-- Lines: 480 to 561
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -465,12 +466,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines: 562 to 564
+-- Lines: 563 to 565
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines: 566 to 606
+-- Lines: 567 to 607
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -504,7 +505,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines: 608 to 649
+-- Lines: 609 to 650
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -551,7 +552,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines: 652 to 694
+-- Lines: 653 to 699
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -597,7 +598,7 @@ function GameSetup:init_finalize()
 	end
 end
 
--- Lines: 696 to 737
+-- Lines: 701 to 742
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -626,7 +627,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 739 to 749
+-- Lines: 744 to 754
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -638,7 +639,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 751 to 767
+-- Lines: 756 to 772
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -652,13 +653,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 769 to 774
+-- Lines: 774 to 779
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 776 to 800
+-- Lines: 781 to 805
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -683,7 +684,7 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 end
 
--- Lines: 802 to 827
+-- Lines: 807 to 832
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -709,7 +710,7 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 end
 
--- Lines: 860 to 861
+-- Lines: 865 to 866
 function GameSetup:_update_debug_input()
 end
 

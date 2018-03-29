@@ -2831,7 +2831,7 @@ function NewSkillTreeSkillItem:refund()
 	return refresh
 end
 
--- Lines: 2352 to 2371
+-- Lines: 2352 to 2376
 function NewSkillTreeGui:_start_rename_skill_switch()
 	if not self._renaming_skill_switch then
 		self._enabled = false
@@ -2862,7 +2862,7 @@ function NewSkillTreeGui:_start_rename_skill_switch()
 	end
 end
 
--- Lines: 2373 to 2393
+-- Lines: 2378 to 2398
 function NewSkillTreeGui:_stop_rename_skill_switch()
 	if self._renaming_skill_switch then
 		self._enabled = true
@@ -2887,7 +2887,7 @@ function NewSkillTreeGui:_stop_rename_skill_switch()
 	end
 end
 
--- Lines: 2395 to 2413
+-- Lines: 2400 to 2418
 function NewSkillTreeGui:_cancel_rename_skill_switch()
 	if self._renaming_skill_switch then
 		self._enabled = true
@@ -2910,7 +2910,7 @@ function NewSkillTreeGui:_cancel_rename_skill_switch()
 	end
 end
 
--- Lines: 2415 to 2441
+-- Lines: 2420 to 2446
 function NewSkillTreeGui:_update_rename_skill_switch()
 	local skill_set_text = self._skillset_panel:child("SkillSetText")
 
@@ -2942,14 +2942,14 @@ function NewSkillTreeGui:_update_rename_skill_switch()
 	end
 end
 
--- Lines: 2443 to 2445
+-- Lines: 2448 to 2450
 function NewSkillTreeGui:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines: 2448 to 2455
+-- Lines: 2453 to 2460
 function NewSkillTreeGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -2959,7 +2959,7 @@ function NewSkillTreeGui.blink(o)
 	end
 end
 
--- Lines: 2457 to 2466
+-- Lines: 2462 to 2479
 function NewSkillTreeGui:enter_text(o, s)
 	if self._renaming_skill_switch then
 		local m = tweak_data:get_raw_value("gui", "rename_skill_set_max_letters") or 15
@@ -2971,7 +2971,7 @@ function NewSkillTreeGui:enter_text(o, s)
 	end
 end
 
--- Lines: 2468 to 2495
+-- Lines: 2481 to 2508
 function NewSkillTreeGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -3005,7 +3005,7 @@ function NewSkillTreeGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 2497 to 2504
+-- Lines: 2510 to 2517
 function NewSkillTreeGui:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -3016,7 +3016,7 @@ function NewSkillTreeGui:key_release(o, k)
 	end
 end
 
--- Lines: 2506 to 2537
+-- Lines: 2519 to 2556
 function NewSkillTreeGui:key_press(o, k)
 	local text = self._renaming_skill_switch
 	local n = utf8.len(text)

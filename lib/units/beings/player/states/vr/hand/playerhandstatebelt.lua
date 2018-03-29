@@ -30,7 +30,7 @@ function PlayerHandStateBelt:at_exit(next_state)
 	self._belt_state = nil
 end
 
--- Lines: 30 to 124
+-- Lines: 30 to 125
 function PlayerHandStateBelt:update(t, dt)
 	local belt_state = nil
 
@@ -61,7 +61,7 @@ function PlayerHandStateBelt:update(t, dt)
 	if self._belt_state then
 		local player = managers.player:player_unit()
 
-		if self._belt_state == "reload" and self._hsm:default_state_name() == "weapon" and player:movement():current_state():can_trigger_reload() then
+		if self._belt_state == "reload" and self._hsm:default_state_name() == "weapon" and (self._hsm:other_hand():default_state_name() ~= "bow" or managers.vr:hand_state_machine():controller():get_input_pressed(self._belt_button)) and player:movement():current_state():can_trigger_reload() then
 			player:movement():current_state():trigger_reload()
 			managers.hud:belt():trigger_reload()
 			self:hsm():change_to_default()
@@ -73,7 +73,7 @@ function PlayerHandStateBelt:update(t, dt)
 				local _, wanted_selection = player:inventory():get_next_selection()
 				local hsm = self:hsm()
 
-				player:movement():current_state():swap_weapon(self:hsm():hand_id(), wanted_selection)
+				player:movement():current_state():swap_weapon(wanted_selection)
 				player:sound():play("m4_equip")
 				player:inventory():equip_selection(wanted_selection, true)
 				hsm:set_default_state("weapon")

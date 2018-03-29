@@ -1,6 +1,9 @@
 DLCTweakData = DLCTweakData or class()
 
--- Lines: 10 to 5151
+require("lib/tweak_data/GeneratedDLCTweakData")
+
+
+-- Lines: 12 to 5122
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -6385,5 +6388,7 @@ function DLCTweakData:init(tweak_data)
 		item_entry = "ggac_od_t2",
 		amount = 1
 	}}
+
+	self:init_generated()
 end
 

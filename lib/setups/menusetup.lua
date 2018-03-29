@@ -218,7 +218,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines: 282 to 312
+-- Lines: 282 to 316
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -252,7 +252,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines: 317 to 333
+-- Lines: 321 to 337
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -270,32 +270,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines: 335 to 340
+-- Lines: 339 to 344
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines: 342 to 346
+-- Lines: 346 to 350
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines: 348 to 376
+-- Lines: 352 to 380
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines: 378 to 382
+-- Lines: 382 to 386
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines: 384 to 387
+-- Lines: 388 to 391
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

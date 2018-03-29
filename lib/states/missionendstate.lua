@@ -831,7 +831,7 @@ function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines: 848 to 1480
+-- Lines: 848 to 1491
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()

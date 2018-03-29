@@ -21,7 +21,7 @@ function PlayerHand.other_hand_id(arg)
 	return 3 - PlayerHand.hand_id(arg)
 end
 
--- Lines: 25 to 154
+-- Lines: 25 to 155
 function PlayerHand:init(unit)
 	print("[PlayerHand] Init")
 
@@ -44,7 +44,8 @@ function PlayerHand:init(unit)
 		tablet = TabletHandState:new(),
 		belt = BeltHandState:new(),
 		repeater = RepeaterHandState:new(),
-		driving = DrivingHandState:new()
+		driving = DrivingHandState:new(),
+		arrow = ArrowHandState:new()
 	}
 	self._hand_state_machine = HandStateMachine:new(hand_states, hand_states.empty, hand_states.empty)
 
@@ -147,7 +148,7 @@ function PlayerHand:init(unit)
 	managers.vr:add_setting_changed_callback("belt_size", self._belt_size_changed_clbk)
 end
 
--- Lines: 156 to 166
+-- Lines: 157 to 167
 function PlayerHand:destroy()
 	print("[PlayerHand] Destroy")
 
@@ -162,7 +163,7 @@ function PlayerHand:destroy()
 	managers.vr:remove_setting_changed_callback("belt_size", self._belt_size_changed_clbk)
 end
 
--- Lines: 168 to 180
+-- Lines: 169 to 181
 function PlayerHand:on_tablet_hand_changed(setting, old, new)
 	self:hand_unit(new):damage():run_sequence_simple("show_gadgets")
 	self:hand_unit(old):damage():run_sequence_simple("hide_gadgets")
@@ -179,29 +180,29 @@ function PlayerHand:on_tablet_hand_changed(setting, old, new)
 	end
 end
 
--- Lines: 182 to 184
+-- Lines: 183 to 185
 function PlayerHand:on_belt_size_changed(setting, old, new)
 	HUDManagerVR.link_belt(managers.hud:belt_workspace(), self._belt_unit)
 end
 
--- Lines: 186 to 190
+-- Lines: 187 to 191
 function PlayerHand:_set_hand_state(hand, state, params)
 	if self._hand_data[hand].state_machine:can_change_state_by_name(state) then
 		self._hand_data[hand].state_machine:change_state_by_name(state, params)
 	end
 end
 
--- Lines: 192 to 194
+-- Lines: 193 to 195
 function PlayerHand:_change_hand_to_default(hand, params)
 	self._hand_data[hand].state_machine:change_to_default(params)
 end
 
--- Lines: 196 to 197
+-- Lines: 197 to 198
 function PlayerHand:current_hand_state(hand)
 	return self._hand_data[hand].state_machine:current_state()
 end
 
--- Lines: 200 to 206
+-- Lines: 201 to 207
 function PlayerHand:get_default_hand_id(state)
 	for id, hand_data in ipairs(self._hand_data) do
 		if hand_data.state_machine:default_state_name() == state then
@@ -210,30 +211,30 @@ function PlayerHand:get_default_hand_id(state)
 	end
 end
 
--- Lines: 208 to 210
+-- Lines: 209 to 211
 function PlayerHand:set_default_state(hand, state, force_change)
 	self._hand_data[self.hand_id(hand)].state_machine:set_default_state(state, force_change)
 end
 
--- Lines: 212 to 214
+-- Lines: 213 to 215
 function PlayerHand:set_custom_belt_height_ratio(height)
 	self._custom_belt_height_ratio = height
 end
 local pen = Draw:pen()
 local prints = 20
 
--- Lines: 219 to 222
+-- Lines: 220 to 223
 function PlayerHand:set_precision_mode(precision_mode, length)
 	self._precision_mode = precision_mode
 	self._precision_mode_length = length
 end
 
--- Lines: 224 to 225
+-- Lines: 225 to 226
 function PlayerHand:precision_mode()
 	return self._precision_mode
 end
 
--- Lines: 228 to 382
+-- Lines: 229 to 383
 function PlayerHand:_update_controllers(t, dt)
 	local hmd_pos = VRManager:hmd_position()
 	local current_height = hmd_pos.z
@@ -396,7 +397,7 @@ end
 local tablet_normal = Vector3(-1, 0, 0)
 local rotated_tablet_normal = Vector3(0, 0, 0)
 
--- Lines: 386 to 401
+-- Lines: 387 to 402
 function PlayerHand:update(unit, t, dt)
 	if self._block_input then
 		return
@@ -416,7 +417,7 @@ function PlayerHand:update(unit, t, dt)
 	self:update_tablet(t, dt, hmd_forward)
 end
 
--- Lines: 407 to 461
+-- Lines: 408 to 461
 function PlayerHand:update_tablet(t, dt, hmd_forward)
 	local default_tablet_hand = self.hand_id(managers.vr:get_setting("default_tablet_hand") or "left")
 	local other_hand = self.other_hand_id(default_tablet_hand)
@@ -456,10 +457,6 @@ function PlayerHand:update_tablet(t, dt, hmd_forward)
 		end
 	elseif not looking_at_tablet or tablet.interaction_radius_sq < mvector3.distance_sq(pos, center) or tablet.interaction_angle_th < mvector3.dot(hand_rotation:y(), up) then
 		self:set_point_at_tablet(false)
-	end
-
-	if not looking_at_tablet and managers.hud:current_tablet_page() ~= "main" then
-		managers.hud:set_tablet_page("main")
 	end
 end
 

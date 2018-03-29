@@ -16,7 +16,7 @@ M.DefaultHandState.init = function (self)
 end
 M.EmptyHandState = M.EmptyHandState or class(HandState)
 
--- Lines: 31 to 53
+-- Lines: 31 to 56
 M.EmptyHandState.init = function (self)
 	M.EmptyHandState.super.init(self)
 
@@ -26,12 +26,13 @@ M.EmptyHandState.init = function (self)
 		warp = {inputs = common.warp_inputs},
 		warp_target = {inputs = common.warp_target_inputs},
 		touchpad_move = {inputs = {"dpad_"}},
-		touchpad_secondary = {inputs = {"dpad_"}}
+		touchpad_secondary = {inputs = {"dpad_"}},
+		menu_challenge_claim = {inputs = {"trigger_"}}
 	}
 end
 M.LaserHandState = M.LaserHandState or class(HandState)
 
--- Lines: 60 to 81
+-- Lines: 63 to 84
 M.LaserHandState.init = function (self)
 	M.LaserHandState.super.init(self)
 
@@ -45,7 +46,7 @@ M.LaserHandState.init = function (self)
 end
 M.CustomizationLaserHandState = M.CustomizationLaserHandState or class(HandState)
 
--- Lines: 88 to 114
+-- Lines: 91 to 117
 M.CustomizationLaserHandState.init = function (self)
 	M.CustomizationLaserHandState.super.init(self)
 
@@ -66,7 +67,7 @@ M.CustomizationLaserHandState.init = function (self)
 end
 M.CustomizationEmptyHandState = M.CustomizationEmptyHandState or class(HandState)
 
--- Lines: 121 to 148
+-- Lines: 124 to 151
 M.CustomizationEmptyHandState.init = function (self)
 	M.CustomizationEmptyHandState.super.init(self)
 

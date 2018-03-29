@@ -1,5 +1,5 @@
 
--- Lines: 1 to 2798
+-- Lines: 1 to 2810
 function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 	self.melee_weapons = {weapon = {}}
 	self.melee_weapons.weapon.name_id = "bm_melee_weapon"

@@ -88,7 +88,7 @@ function HUDChat:enter_key_callback()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines: 65 to 83
+-- Lines: 65 to 90
 function HUDChat:_create_input_panel()
 	self._input_panel = self._panel:panel({
 		name = "input_panel",
@@ -169,7 +169,7 @@ function HUDChat:_create_input_panel()
 	})
 end
 
--- Lines: 85 to 119
+-- Lines: 92 to 126
 function HUDChat:_layout_output_panel()
 	local output_panel = self._panel:child("output_panel")
 
@@ -212,7 +212,7 @@ function HUDChat:_layout_output_panel()
 	output_panel:set_bottom(self._input_panel:top())
 end
 
--- Lines: 121 to 133
+-- Lines: 128 to 140
 function HUDChat:_layout_input_panel()
 	self._input_panel:set_w(self._panel_width)
 
@@ -228,17 +228,17 @@ function HUDChat:_layout_input_panel()
 	self._input_panel:set_y(self._input_panel:parent():h() - self._input_panel:h())
 end
 
--- Lines: 140 to 141
+-- Lines: 147 to 148
 function HUDChat:input_focus()
 	return self._focus
 end
 
--- Lines: 172 to 174
+-- Lines: 179 to 181
 function HUDChat:set_skip_first(skip_first)
 	self._skip_first = skip_first
 end
 
--- Lines: 176 to 214
+-- Lines: 183 to 226
 function HUDChat:_on_focus()
 	if self._focus then
 		return
@@ -265,7 +265,7 @@ function HUDChat:_on_focus()
 	self:update_caret()
 end
 
--- Lines: 216 to 244
+-- Lines: 228 to 256
 function HUDChat:_loose_focus()
 	if not self._focus then
 		return
@@ -291,7 +291,7 @@ function HUDChat:_loose_focus()
 	self:update_caret()
 end
 
--- Lines: 246 to 253
+-- Lines: 258 to 265
 function HUDChat:clear()
 	local text = self._input_panel:child("input_text")
 
@@ -301,14 +301,14 @@ function HUDChat:clear()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines: 255 to 257
+-- Lines: 267 to 269
 function HUDChat:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines: 261 to 268
+-- Lines: 273 to 280
 function HUDChat.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -318,7 +318,7 @@ function HUDChat.blink(o)
 	end
 end
 
--- Lines: 270 to 277
+-- Lines: 282 to 289
 function HUDChat:set_blinking(b)
 	local caret = self._input_panel:child("caret")
 
@@ -339,7 +339,7 @@ function HUDChat:set_blinking(b)
 	end
 end
 
--- Lines: 279 to 308
+-- Lines: 291 to 320
 function HUDChat:update_caret()
 	local text = self._input_panel:child("input_text")
 	local caret = self._input_panel:child("caret")
@@ -377,7 +377,7 @@ function HUDChat:update_caret()
 	})
 end
 
--- Lines: 313 to 341
+-- Lines: 325 to 353
 function HUDChat:enter_text(o, s)
 	if managers.hud and managers.hud:showing_stats_screen() then
 		return
@@ -410,7 +410,7 @@ function HUDChat:enter_text(o, s)
 	self:update_caret()
 end
 
--- Lines: 344 to 401
+-- Lines: 356 to 413
 function HUDChat:update_key_down(o, k)
 	wait(0.6)
 
@@ -476,14 +476,14 @@ function HUDChat:update_key_down(o, k)
 	end
 end
 
--- Lines: 403 to 407
+-- Lines: 415 to 419
 function HUDChat:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
 end
 
--- Lines: 412 to 495
+-- Lines: 424 to 507
 function HUDChat:key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -569,11 +569,11 @@ function HUDChat:key_press(o, k)
 	self:update_caret()
 end
 
--- Lines: 500 to 501
+-- Lines: 512 to 513
 function HUDChat:send_message(name, message)
 end
 
--- Lines: 504 to 543
+-- Lines: 516 to 555
 function HUDChat:receive_message(name, message, color, icon)
 	local output_panel = self._panel:child("output_panel")
 	local len = utf8.len(name) + 1
@@ -631,7 +631,7 @@ function HUDChat:receive_message(name, message, color, icon)
 	end
 end
 
--- Lines: 545 to 560
+-- Lines: 557 to 572
 function HUDChat:_animate_fade_output()
 	local wait_t = 10
 	local fade_t = 1
@@ -654,7 +654,7 @@ function HUDChat:_animate_fade_output()
 	self:set_output_alpha(0)
 end
 
--- Lines: 562 to 573
+-- Lines: 574 to 585
 function HUDChat:_animate_show_component(input_panel, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -670,7 +670,7 @@ function HUDChat:_animate_show_component(input_panel, start_alpha)
 	input_panel:set_alpha(1)
 end
 
--- Lines: 575 to 585
+-- Lines: 587 to 597
 function HUDChat:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -685,7 +685,7 @@ function HUDChat:_animate_hide_input(input_panel)
 	input_panel:set_alpha(0)
 end
 
--- Lines: 587 to 596
+-- Lines: 599 to 608
 function HUDChat:_animate_input_bg(input_bg)
 	local t = 0
 
@@ -698,12 +698,12 @@ function HUDChat:_animate_input_bg(input_bg)
 	end
 end
 
--- Lines: 598 to 600
+-- Lines: 610 to 612
 function HUDChat:set_output_alpha(alpha)
 	self._panel:child("output_panel"):set_alpha(alpha)
 end
 
--- Lines: 603 to 611
+-- Lines: 615 to 623
 function HUDChat:remove()
 	self._panel:child("output_panel"):stop()
 	self._input_panel:stop()
