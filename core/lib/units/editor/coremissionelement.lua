@@ -296,10 +296,10 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	self:append_elements_sorted()
 	self:set_on_executed_element()
 
-
+	
 	-- Lines: 295 to 299
 	local function refresh_list_flow_cbk(ctrlr)
-
+		
 		-- Lines: 295 to 296
 		local function f()
 			managers.editor:layer("Mission"):refresh_list_flow()
@@ -352,7 +352,7 @@ end
 function CoreMissionElement:_add_unit_to_orientation_elements()
 	local script = self._unit:mission_element_data().script
 
-
+	
 	-- Lines: 335 to 346
 	local function f(unit)
 		if not string.find(unit:name():s(), "point_orientation", 1, true) then
@@ -385,7 +385,7 @@ function CoreMissionElement:_remove_unit_from_orientation_elements()
 		return
 	end
 
-
+	
 	-- Lines: 358 to 359
 	local function f(unit)
 		return table.contains(self._hed.orientation_elements, unit:unit_data().unit_id)
@@ -529,7 +529,7 @@ end
 
 -- Lines: 495 to 501
 function CoreMissionElement:_on_toolbar_add_element()
-
+	
 	-- Lines: 495 to 496
 	local function f(unit)
 		return unit:type() == Idstring("mission_element") and unit ~= self._unit
@@ -1614,7 +1614,7 @@ function CoreMissionElement:_add_unit_list_btn(params)
 	local elements = params.elements or {}
 	local script = self._unit:mission_element_data().script
 
-
+	
 	-- Lines: 1492 to 1511
 	local function f_correct_unit(unit)
 		if not params.names and not params.exact_names then
@@ -1642,7 +1642,7 @@ function CoreMissionElement:_add_unit_list_btn(params)
 		return false
 	end
 
-
+	
 	-- Lines: 1514 to 1525
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
@@ -1675,7 +1675,7 @@ end
 function CoreMissionElement:_remove_unit_list_btn(params)
 	local elements = params.elements
 
-
+	
 	-- Lines: 1536 to 1537
 	local function f(unit)
 		return table.contains(elements, unit:unit_data().unit_id)

@@ -18,7 +18,7 @@ end
 function HuskCopMovement:action_request(action_desc)
 	self:enable_update(false)
 
-
+	
 	-- Lines: 26 to 30
 	local function _chk_would_interrupt(b_part)
 		if self._active_actions[1] and self._active_actions[1]:type() == "idle" then

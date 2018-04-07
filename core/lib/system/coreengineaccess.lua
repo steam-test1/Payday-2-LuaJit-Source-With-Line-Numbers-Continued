@@ -1,6 +1,5 @@
 core:module("CoreEngineAccess")
 
-
 -- Lines: 15 to 22
 local function get_class_table(engine_class_name)
 	local class_table = rawget(_G, engine_class_name)
@@ -11,7 +10,6 @@ local function get_class_table(engine_class_name)
 		return nil, string.format("Engine-side class not found: \"%s\".", engine_class_name)
 	end
 end
-
 
 -- Lines: 24 to 44
 local function get_method_table(engine_class_name)
@@ -40,12 +38,11 @@ local function get_method_table(engine_class_name)
 	return method_table, nil
 end
 
-
 -- Lines: 47 to 73
 local function hide_static_engine_method(engine_class_name, method_name, message)
 	assert(engine_class_name and method_name, "Invalid argument list.")
 
-
+	
 	-- Lines: 52 to 53
 	local function failure_func(failure_message)
 		return function (...)
@@ -65,7 +62,7 @@ local function hide_static_engine_method(engine_class_name, method_name, message
 		return failure_func("Method not found.")
 	end
 
-
+	
 	-- Lines: 66 to 68
 	method_table[method_name] = function ()
 		error(string.format("%s:%s(...) has been hidden by core. %s", engine_class_name, method_name, message or "You should not call it directly."))

@@ -273,7 +273,7 @@ function JobManager:get_job_ghost_bonus(job_id)
 		return false
 	end
 
-
+	
 	-- Lines: 235 to 242
 	local function math_min(a, b)
 		if not a then
@@ -287,7 +287,7 @@ function JobManager:get_job_ghost_bonus(job_id)
 		return math.min(a, b)
 	end
 
-
+	
 	-- Lines: 245 to 252
 	local function math_max(a, b, c)
 		if not a then

@@ -7,7 +7,6 @@ function CoreEnvEditor:init_effects_tab()
 	self:create_effects_tab()
 end
 
-
 -- Lines: 9 to 15
 local function popuplate_list(list, items)
 	list:clear_all()
@@ -18,7 +17,6 @@ local function popuplate_list(list, items)
 		list:set_item_data(index, item)
 	end
 end
-
 
 -- Lines: 17 to 71
 function CoreEnvEditor:create_effects_tab()

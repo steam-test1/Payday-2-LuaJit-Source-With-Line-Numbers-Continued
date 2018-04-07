@@ -40,7 +40,6 @@ commands:add({
 	help = "Closes this window"
 })
 
-
 -- Lines: 15 to 51
 function CoreCutsceneBatchOptimizerDialog:init(parent_window)
 	self.__window = EWS:Frame("Batch Export to Game", Vector3(100, 500, 0), Vector3(400, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,FRAME_FLOAT_ON_PARENT", parent_window)
@@ -50,7 +49,7 @@ function CoreCutsceneBatchOptimizerDialog:init(parent_window)
 	self.__window:set_background_colour((EWS:get_system_colour("3DFACE") * 255):unpack())
 	self.__window:connect("EVT_CLOSE_WINDOW", callback(self, self, "_on_exit"))
 
-
+	
 	-- Lines: 22 to 26
 	local function connect_command(command_id, callback_name, callback_data)
 		callback_name = callback_name or "_on_" .. string.lower(command_id)

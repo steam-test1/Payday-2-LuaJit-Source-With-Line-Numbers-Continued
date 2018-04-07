@@ -9,7 +9,6 @@ local TOP_ADJUSTMENT = NOT_WIN_32 and 50 or 55
 local BOX_GAP = 54
 local NUM_TREES_PER_PAGE = 4
 
-
 -- Lines: 14 to 18
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -17,7 +16,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 20 to 24
 local function fit_text_height(text_gui)
@@ -287,7 +285,7 @@ function SkillTreeSkillItem:flash()
 	local state_image = self._skill_panel:child("state_image")
 	local box = self._box
 
-
+	
 	-- Lines: 313 to 330
 	local function flash_anim(panel)
 		local st_color = skill_text:color()
@@ -626,7 +624,7 @@ function SkillTreePage:init(tree, data, parent_panel, fullscreen_panel, tree_tab
 				color = tweak_data.screen_colors.button_stage_3
 			})
 
-
+			
 			-- Lines: 727 to 735
 			local function anim_pulse_glow(o)
 				local t = 0
@@ -1068,7 +1066,7 @@ function SkillTreeGui:_setup(add_skilltree, add_specialization)
 		h = self._fullscreen_ws:panel():h()
 	})
 
-
+	
 	-- Lines: 1098 to 1100
 	local function func(o)
 		over(0.6, function (p)
@@ -4144,7 +4142,7 @@ function SpecializationTreeItem:refresh()
 	local current_specialization = managers.skilltree:get_specialization_value("current_specialization")
 	self._active = self._tree == current_specialization
 
-
+	
 	-- Lines: 3916 to 3940
 	local function anim_refresh(o)
 		local start_alpha = self._tree_panel:alpha()

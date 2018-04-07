@@ -12,7 +12,6 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 
-
 -- Lines: 17 to 22
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -20,7 +19,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 24 to 40
 local function fit_texture(bitmap, target_w, target_h)
@@ -37,7 +35,6 @@ local function fit_texture(bitmap, target_w, target_h)
 
 	bitmap:set_size(math.round(dw * target_w), math.round(dh * target_h))
 end
-
 
 -- Lines: 46 to 60
 local function select_anim(object, size, instant)
@@ -58,7 +55,6 @@ local function select_anim(object, size, instant)
 	end
 end
 
-
 -- Lines: 62 to 76
 local function unselect_anim(object, size, instant)
 	local current_width = object:w()
@@ -77,7 +73,6 @@ local function unselect_anim(object, size, instant)
 		end)
 	end
 end
-
 
 -- Lines: 78 to 91
 local function select_anim_text(object, font_size, instant)
@@ -98,7 +93,6 @@ local function select_anim_text(object, font_size, instant)
 	end
 end
 
-
 -- Lines: 93 to 106
 local function unselect_anim_text(object, font_size, instant)
 	local current_size = object:font_size()
@@ -117,7 +111,6 @@ local function unselect_anim_text(object, font_size, instant)
 		end)
 	end
 end
-
 
 -- Lines: 110 to 294
 function CrewManagementGui:init(ws, fullscreen_ws, node)
@@ -173,7 +166,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		info_button._panel = info_panel
 		info_button._select_col = Color.white:with_alpha(0.25)
 		info_button._normal_col = Color.white
-
+		
 		-- Lines: 153 to 155
 		function info_button:_selected_changed(state)
 			info_icon:set_color(state and self._select_col or self._normal_col)
@@ -283,7 +276,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		2
 	}})
 	local char_panel_size = {char_images[1]:size()}
-
+	
 	-- Lines: 235 to 240
 	function char_btn:_selected_changed(state, instant)
 		CrewManagementGuiButton._selected_changed(self, state, instant)
@@ -585,7 +578,6 @@ function CrewManagementGui:show_help_dialog()
 
 	managers.system_menu:show(dialog_data)
 end
-
 
 -- Lines: 485 to 493
 local function adapt_text_width(text_item, target_w)
@@ -936,7 +928,7 @@ function CrewManagementGui:open_custom_menu(params, category, custom_w, custom_h
 		custom_select = callback(self, self, "select_" .. category, params),
 		custom_unselect = callback(self, self, "select_" .. category, params)
 	}
-
+	
 	-- Lines: 787 to 795
 	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
@@ -978,7 +970,7 @@ function CrewManagementGui:open_character_menu(henchman_index)
 		custom_unselect = callback(self, self, "select_characters"),
 		c_clear_slots = callback(self, self, "clear_character_order")
 	}
-
+	
 	-- Lines: 827 to 833
 	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
@@ -1217,7 +1209,7 @@ end
 
 -- Lines: 1076 to 1080
 function CrewManagementGui:buy_new_weapon(data, gui)
-
+	
 	-- Lines: 1075 to 1076
 	local function item_allowed(weapon_data)
 		return managers.blackmarket:is_weapon_category_allowed_for_crew(weapon_data.categories[1])

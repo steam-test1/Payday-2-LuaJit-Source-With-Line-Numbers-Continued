@@ -20,7 +20,6 @@ function bezier3.interpolate(write, x1, y1, x2, y2, x3, y3, x4, y4, m_approximat
 	write("line", x4, y4)
 end
 
-
 -- Lines: 31 to 199
 function recursive_bezier(write, x1, y1, x2, y2, x3, y3, x4, y4, level, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
 	if curve_recursion_limit < level then

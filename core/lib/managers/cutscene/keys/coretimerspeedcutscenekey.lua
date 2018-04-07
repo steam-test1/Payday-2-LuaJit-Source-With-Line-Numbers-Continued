@@ -7,7 +7,6 @@ CoreTimerSpeedCutsceneKey.NAME = "Timer Speed"
 CoreTimerSpeedCutsceneKey:register_serialized_attribute("speed", 1, tonumber)
 CoreTimerSpeedCutsceneKey:register_serialized_attribute("duration", 0, tonumber)
 
-
 -- Lines: 9 to 10
 function CoreTimerSpeedCutsceneKey:__tostring()
 	return string.format("Change timer speed to \"%g\" over \"%g\" seconds.", self:speed(), self:duration())

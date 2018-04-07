@@ -635,7 +635,6 @@ function StoryMissionsGuiSidebarItem:set_color(color)
 	self._icon:set_color(color)
 end
 
-
 -- Lines: 522 to 529
 local function set_defaults(target, source)
 	target = target or {}

@@ -569,14 +569,14 @@ function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permissio
 
 	managers.menu:show_joining_lobby_dialog()
 
-
+	
 	-- Lines: 709 to 710
 	local function empty()
 	end
 
 	local cancel_id = self:add_cancelable_callback()
 
-
+	
 	-- Lines: 712 to 770
 	local function f(servers)
 		if self:check_callback_canceled(cancel_id) then
@@ -853,7 +853,7 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 		managers.network:session():on_join_request_cancelled()
 	end})
 
-
+	
 	-- Lines: 1031 to 1087
 	local function joined_game(res, level_index, difficulty_index, state_index)
 		managers.system_menu:close("waiting_for_server_response")
@@ -1546,7 +1546,7 @@ function NetworkMatchMakingXBL:_test_join(xs_info, skip_showing_dialog)
 			managers.network:session():on_join_request_cancelled()
 		end})
 
-
+		
 		-- Lines: 1830 to 1879
 		local function joined_game(res, level_index, difficulty_index, state_index)
 			managers.system_menu:close("waiting_for_server_response")

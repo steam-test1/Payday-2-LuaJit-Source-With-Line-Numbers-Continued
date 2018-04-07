@@ -1,6 +1,5 @@
 core:module("CoreString")
 
-
 -- Lines: 15 to 21
 function utf8.find_char(text, char)
 	for i, c in ipairs(utf8.characters(text)) do

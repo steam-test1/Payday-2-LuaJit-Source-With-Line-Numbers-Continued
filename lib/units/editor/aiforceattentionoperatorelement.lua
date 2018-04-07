@@ -16,7 +16,7 @@ end
 
 -- Lines: 27 to 37
 function AIForceAttentionOperatorElement:select_element(label)
-
+	
 	-- Lines: 23 to 27
 	local function f(unit)
 		if self._hed.att_unit_id == unit:unit_data().unit_id then

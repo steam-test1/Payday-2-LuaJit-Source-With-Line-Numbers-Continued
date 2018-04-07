@@ -4,10 +4,9 @@ function set_widget_help(widget, help_text)
 	widget:set_tool_tip(help_text)
 end
 
-
 -- Lines: 11 to 27
 function set_widget_box_help(widget, help_header, help_text, view)
-
+	
 	-- Lines: 8 to 12
 	local function on_enter(t, evt)
 		t:set_own_font_weight("FONTWEIGHT_BOLD")
@@ -15,7 +14,7 @@ function set_widget_box_help(widget, help_header, help_text, view)
 		evt:skip()
 	end
 
-
+	
 	-- Lines: 14 to 18
 	local function on_leave(t, evt)
 		t:set_own_font_weight("FONTWEIGHT_NORMAL")
@@ -23,7 +22,7 @@ function set_widget_box_help(widget, help_header, help_text, view)
 		evt:skip()
 	end
 
-
+	
 	-- Lines: 20 to 22
 	local function on_left_down(t, evt)
 		t[1]:set_box_help(t[2], t[3])
@@ -39,7 +38,6 @@ function set_widget_box_help(widget, help_header, help_text, view)
 	})
 end
 
-
 -- Lines: 29 to 36
 function base_path(n)
 	local bs = n:reverse():find("\\")
@@ -50,7 +48,6 @@ function base_path(n)
 		return n
 	end
 end
-
 
 -- Lines: 38 to 45
 function dir_name(n)

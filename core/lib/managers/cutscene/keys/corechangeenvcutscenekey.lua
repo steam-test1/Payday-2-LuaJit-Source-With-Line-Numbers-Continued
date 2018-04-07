@@ -7,7 +7,6 @@ CoreChangeEnvCutsceneKey.NAME = "Environment Change"
 CoreChangeEnvCutsceneKey:register_serialized_attribute("name", "")
 CoreChangeEnvCutsceneKey:register_serialized_attribute("transition_time", 0, tonumber)
 
-
 -- Lines: 9 to 10
 function CoreChangeEnvCutsceneKey:__tostring()
 	return "Change environment to \"" .. self:name() .. "\"."

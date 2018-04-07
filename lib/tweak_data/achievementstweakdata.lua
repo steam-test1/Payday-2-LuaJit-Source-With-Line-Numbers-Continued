@@ -1,6 +1,5 @@
 require("lib/tweak_data/GeneratedAchievementTweakData")
 
-
 -- Lines: 6 to 28
 local function get_texture_path(tweak_data, category, id)
 	local td = tweak_data:get_raw_value("blackmarket", category, id)
@@ -6622,7 +6621,6 @@ local tracking = {
 	rarely = "rarely"
 }
 
-
 -- Lines: 2412 to 2438
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
@@ -6634,7 +6632,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-
+	
 	-- Lines: 2421 to 2431
 	local function get_todo()
 		local res = table.list_to_set(heists)
@@ -6665,7 +6663,6 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
-
 -- Lines: 2441 to 2445
 local function from_crimespree_item(item)
 	return {
@@ -6678,7 +6675,6 @@ local function from_crimespree_item(item)
 		update = tracking.realtime
 	}
 end
-
 
 -- Lines: 2448 to 2455
 local function from_level(level)
@@ -6696,7 +6692,6 @@ local function from_level(level)
 	}
 end
 
-
 -- Lines: 2458 to 2465
 local function from_owned_weapons(num)
 	if not num then
@@ -6712,7 +6707,6 @@ local function from_owned_weapons(num)
 		update = tracking.rarely
 	}
 end
-
 
 -- Lines: 2468 to 2478
 local function from_timed_memory(item, memory_name, count_name)
@@ -6735,7 +6729,6 @@ local function from_timed_memory(item, memory_name, count_name)
 		update = tracking.realtime
 	}
 end
-
 
 -- Lines: 2486 to 2661
 function AchievementsTweakData:_init_visual(tweak_data)

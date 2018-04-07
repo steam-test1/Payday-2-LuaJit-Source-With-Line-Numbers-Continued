@@ -6,7 +6,6 @@ CoreChangeShadowCutsceneKey.NAME = "Shadow Change"
 
 CoreChangeShadowCutsceneKey:register_serialized_attribute("name", "")
 
-
 -- Lines: 8 to 23
 function CoreChangeShadowCutsceneKey:init(keycollection)
 	self.super.init(self, keycollection)
@@ -26,7 +25,7 @@ function CoreChangeShadowCutsceneKey:init(keycollection)
 	for _, var in ipairs(list) do
 		local data_path_key = Idstring(suffix .. var):key()
 
-
+		
 		-- Lines: 17 to 18
 		local function func()
 			return managers.viewport:get_environment_value(self:name(), data_path_key), true

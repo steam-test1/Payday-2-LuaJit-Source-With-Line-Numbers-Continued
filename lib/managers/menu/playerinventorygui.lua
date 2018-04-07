@@ -6,7 +6,6 @@ local NOT_WIN_32 = not IS_WIN_32
 local TOP_ADJUSTMENT = NOT_WIN_32 and 50 or 55
 local BOT_ADJUSTMENT = NOT_WIN_32 and 50 or 60
 
-
 -- Lines: 10 to 28
 local function select_anim(o, box, instant)
 	if box.image_object then
@@ -28,7 +27,6 @@ local function select_anim(o, box, instant)
 		end
 	end
 end
-
 
 -- Lines: 30 to 48
 local function unselect_anim(o, box, instant)
@@ -54,7 +52,6 @@ end
 
 PlayerInventoryGui = PlayerInventoryGui or class()
 
-
 -- Lines: 53 to 57
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -62,7 +59,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 59 to 804
 function PlayerInventoryGui:init(ws, fullscreen_ws, node)
@@ -979,7 +975,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self._text_buttons = {}
 	local alias_show_button, alias_hide_button, column_one_show_button, column_one_hide_button, column_two_show_button, column_two_hide_button, column_three_show_button, column_three_hide_button = nil
 
-
+	
 	-- Lines: 498 to 514
 	local function alias_hide_func()
 		if alive(alias_show_button) then
@@ -1008,7 +1004,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 516 to 532
 	local function alias_show_func()
 		if alive(alias_show_button) then
@@ -1037,7 +1033,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 535 to 555
 	local function column_one_hide_func()
 		if alive(column_one_show_button) then
@@ -1072,7 +1068,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 557 to 577
 	local function column_one_show_func()
 		if alive(column_one_show_button) then
@@ -1107,7 +1103,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 580 to 603
 	local function column_two_hide_func()
 		if alive(column_two_show_button) then
@@ -1146,7 +1142,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 605 to 628
 	local function column_two_show_func()
 		if alive(column_two_show_button) then
@@ -1185,7 +1181,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 632 to 657
 	local function column_three_hide_func()
 		if alive(column_three_show_button) then
@@ -1226,7 +1222,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-
+	
 	-- Lines: 659 to 684
 	local function column_three_show_func()
 		if alive(column_three_show_button) then
@@ -2272,12 +2268,10 @@ function PlayerInventoryGui:set_skilltree_stats(panel, data)
 	end
 end
 
-
 -- Lines: 1256 to 1257
 local function format_round(num, round_value)
 	return round_value and tostring(math.round(num)) or string.format("%.1f", num):gsub("%.?0+$", "")
 end
-
 
 -- Lines: 1260 to 1289
 function PlayerInventoryGui:_update_player_stats()

@@ -276,7 +276,7 @@ function ClipDragTrackBehaviour:_snap_to_clips(track, time_displacement)
 
 	local closest_snapped_displacement = nil
 
-
+	
 	-- Lines: 261 to 276
 	local function update_closest_snapped_displacement(initial_time, displacement, clip_edge)
 		local unsnapped_time = initial_time + displacement

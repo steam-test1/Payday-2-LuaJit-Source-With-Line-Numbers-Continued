@@ -1,7 +1,6 @@
 local _max_priority = 100000
 local __max_priority = _max_priority - 1
 
-
 -- Lines: 7 to 9
 local function _increase_priority(sound_event, inc, max)
 	sound_event.priority = math.min(sound_event.priority * inc, max)
@@ -400,7 +399,6 @@ function ButlerMirroringManager:_on_safe_house_upgrade()
 	}, 1.1, 99)
 end
 
-
 -- Lines: 406 to 416
 local function get_close_passed(t, val)
 	local _, k = table.find_value(t, function (v)
@@ -417,7 +415,6 @@ local function get_close_passed(t, val)
 	end
 end
 
-
 -- Lines: 418 to 419
 local function make_close(line, at, close)
 	return {
@@ -426,7 +423,6 @@ local function make_close(line, at, close)
 		close = close
 	}
 end
-
 
 -- Lines: 422 to 482
 function ButlerMirroringManager:_on_enter_safe_house()

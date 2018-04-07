@@ -82,7 +82,6 @@ end
 
 local box_speed = 1000
 
-
 -- Lines: 24 to 46
 function HUDBGBox_animate_open_right(panel, wait_t, target_w, done_cb)
 	panel:set_visible(false)
@@ -114,7 +113,6 @@ function HUDBGBox_animate_open_right(panel, wait_t, target_w, done_cb)
 	done_cb()
 end
 
-
 -- Lines: 48 to 62
 function HUDBGBox_animate_close_right(panel, done_cb)
 	local speed = box_speed
@@ -132,7 +130,6 @@ function HUDBGBox_animate_close_right(panel, done_cb)
 	panel:set_w(0)
 	done_cb()
 end
-
 
 -- Lines: 64 to 91
 function HUDBGBox_animate_open_left(panel, wait_t, target_w, done_cb, config)
@@ -177,7 +174,6 @@ function HUDBGBox_animate_open_left(panel, wait_t, target_w, done_cb, config)
 	done_cb()
 end
 
-
 -- Lines: 93 to 110
 function HUDBGBox_animate_close_left(panel, done_cb)
 	local speed = box_speed
@@ -198,7 +194,6 @@ function HUDBGBox_animate_close_left(panel, done_cb)
 	panel:set_right(right)
 	done_cb()
 end
-
 
 -- Lines: 112 to 140
 function HUDBGBox_animate_open_center(panel, wait_t, target_w, done_cb, config)
@@ -244,7 +239,6 @@ function HUDBGBox_animate_open_center(panel, wait_t, target_w, done_cb, config)
 	end
 end
 
-
 -- Lines: 142 to 161
 function HUDBGBox_animate_close_center(panel, done_cb)
 	local center_x = panel:center_x()
@@ -268,7 +262,6 @@ function HUDBGBox_animate_close_center(panel, done_cb)
 		done_cb()
 	end
 end
-
 
 -- Lines: 163 to 177
 function HUDBGBox_animate_bg_attention(bg, config)
@@ -506,7 +499,7 @@ function HUDObjectives:_animate_complete_objective(objectives_panel)
 		amount_text:set_visible(false)
 	end
 
-
+	
 	-- Lines: 341 to 344
 	local function done_cb()
 		objectives_panel:child("objective_text"):set_text(utf8.to_upper(""))

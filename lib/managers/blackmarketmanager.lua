@@ -1426,7 +1426,7 @@ end
 
 -- Lines: 1390 to 1410
 function BlackMarketManager:henchman_loadout_string_from_loadout(loadout)
-
+	
 	-- Lines: 1384 to 1390
 	local function get_string(data, name, ...)
 		if not name or not data then
@@ -1463,7 +1463,7 @@ function BlackMarketManager:unpack_henchman_loadout_string(string)
 	local data = string.split(string or "", " ")
 	local index = 1
 
-
+	
 	-- Lines: 1418 to 1421
 	local function get_data()
 		local rtn = data[index]
@@ -1645,7 +1645,7 @@ function BlackMarketManager:load_economy_safe(safe_entry, safe_scene_data)
 	local drill_name = safe_scene_data.drill_data.drill_name
 	local saferoom_name = safe_scene_data.saferoom_data.saferoom_name
 
-
+	
 	-- Lines: 1592 to 1600
 	local function load_done()
 		safe_scene_data.safe_data.ready = true
@@ -1783,7 +1783,7 @@ function BlackMarketManager:create_preload_ws()
 			new_script.set_progress(new_script.progress + 1)
 		end
 	}
-
+	
 	-- Lines: 1711 to 1725
 	function new_script.set_progress(progress)
 		new_script.progress = progress
@@ -1880,7 +1880,7 @@ function BlackMarketManager:create_preload_ws()
 	}})
 	panel:script().set_progress(1)
 
-
+	
 	-- Lines: 1781 to 1785
 	local function fade_in_animation(panel)
 		panel:hide()
@@ -2022,7 +2022,7 @@ function BlackMarketManager:update(t, dt)
 					if next_in_line.package then
 						managers.weapon_factory:load_package(next_in_line.package)
 					else
-
+						
 						-- Lines: 1904 to 1906
 						local function f()
 							self._streaming_preload = nil
@@ -2920,7 +2920,7 @@ function BlackMarketManager:get_lootdropable_mods_by_weapon_id(weapon_id, global
 		global_value = false
 	end
 
-
+	
 	-- Lines: 2700 to 2705
 	local function chk_dlc_func(global_value)
 		local all_dlc_data = Global.dlc_manager.all_dlc_data
@@ -3780,7 +3780,7 @@ function BlackMarketManager:get_sorted_melee_weapons(hide_locked)
 	local m_tweak_data = tweak_data.blackmarket.melee_weapons
 	local l_tweak_data = tweak_data.lootdrop.global_values
 
-
+	
 	-- Lines: 3446 to 3496
 	local function sort_func(x, y)
 		xd = x[2]
@@ -5795,7 +5795,7 @@ function BlackMarketManager:get_mask_default_blueprint(mask_id)
 	local mask_default_blueprint = mask_tweak_data.default_blueprint
 
 	if mask_default_blueprint then
-
+		
 		-- Lines: 5389 to 5395
 		local function get_global_value_func(data)
 			local global_value = data.infamous and "infamous" or data.global_value or data.dlc or data.dlcs and data.dlcs[1] or "normal"
@@ -7470,7 +7470,7 @@ function BlackMarketManager:refill_track_global_values()
 	}
 	local global_values = nil
 
-
+	
 	-- Lines: 6895 to 6902
 	local function add_crafted_item_func(global_value, category, slot, id)
 		local global_value_item = new_global_value_items[global_value]
@@ -7482,7 +7482,7 @@ function BlackMarketManager:refill_track_global_values()
 		end
 	end
 
-
+	
 	-- Lines: 6904 to 6910
 	local function add_inventory_item_func(global_value, category, id, num)
 		local global_value_item = new_global_value_items[global_value]
@@ -7619,7 +7619,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 
 	local crafted_masks = crafted_items.masks
 
-
+	
 	-- Lines: 7226 to 7227
 	local function chk_global_value_func(global_value, data, real_global_value)
 		return tweak_data.lootdrop.global_values[global_value or "normal"] and true or false
@@ -7661,7 +7661,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 	local invalid_weapons = {}
 	local invalid_parts = {}
 
-
+	
 	-- Lines: 7266 to 7275
 	local function invalid_add_weapon_remove_parts_func(slot, item, part_id)
 		table.insert(invalid_weapons, slot)
@@ -7865,7 +7865,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 	local invalid_items = {}
 	local changed_items = {}
 
-
+	
 	-- Lines: 7432 to 7436
 	local function add_invalid_global_value_func(global_value)
 		invalid_items[global_value] = true
@@ -7873,7 +7873,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 		Application:error("BlackMarketManager:_cleanup_blackmarket() Invalid inventory global_value detected", "global_value", global_value)
 	end
 
-
+	
 	-- Lines: 7437 to 7442
 	local function add_invalid_category_func(global_value, category)
 		invalid_items[global_value] = invalid_items[global_value] or {}
@@ -7882,7 +7882,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 		Application:error("BlackMarketManager:_cleanup_blackmarket() Invalid inventory category detected", "global_value", global_value, "category", category)
 	end
 
-
+	
 	-- Lines: 7443 to 7449
 	local function add_invalid_item_func(global_value, category, item)
 		invalid_items[global_value] = invalid_items[global_value] or {}
@@ -8917,7 +8917,7 @@ function BlackMarketManager:equip_weapon_in_game(category, slot, force_equip, do
 	local primary = category == "primaries"
 	local first_time = true
 
-
+	
 	-- Lines: 8427 to 8441
 	local function clbk()
 		if first_time then
@@ -8964,7 +8964,7 @@ end
 
 -- Lines: 8499 to 8534
 function BlackMarketManager:get_reload_time(weapon_id)
-
+	
 	-- Lines: 8497 to 8499
 	local function failure(err)
 		Application:error("[BlackMarketManager:get_reload_time] " .. tostring(err) .. "\nReturning 1 to avoid crashing.")
@@ -9030,7 +9030,7 @@ function BlackMarketManager:get_reload_animation_time(weapon_id)
 	weapon_id = swaps[weapon_id] or weapon_id
 	local anim_set = AnimationManager:animation_set(Idstring("anims/fps/fps"))
 
-
+	
 	-- Lines: 8571 to 8592
 	local function get_time(id, overrides)
 		overrides = overrides or {}

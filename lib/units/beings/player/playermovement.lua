@@ -596,7 +596,7 @@ function PlayerMovement:set_attention_settings(settings_list)
 
 	local all_attentions = nil
 
-
+	
 	-- Lines: 696 to 708
 	local function _add_attentions_to_all(names)
 		for _, setting_name in ipairs(names) do

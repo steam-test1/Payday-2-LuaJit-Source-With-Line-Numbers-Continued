@@ -1,6 +1,5 @@
 core:import("CoreEngineAccess")
 
-
 -- Lines: 3 to 12
 function CoreEditor:build_lower_panel(parent)
 	self._lower_panel = EWS:Panel(Global.frame_panel, "", "TAB_TRAVERSAL")

@@ -988,7 +988,6 @@ function GroupAIStateBesiege:_find_spawn_points_near_area(target_area, nr_wanted
 	return #s_points > 0 and s_points
 end
 
-
 -- Lines: 1004 to 1006
 local function make_dis_id(from, to)
 	local f = from < to and from or to
@@ -997,12 +996,10 @@ local function make_dis_id(from, to)
 	return tostring(f) .. "-" .. tostring(t)
 end
 
-
 -- Lines: 1009 to 1010
 local function spawn_group_id(spawn_group)
 	return spawn_group.mission_element:id()
 end
-
 
 -- Lines: 1015 to 1145
 function GroupAIStateBesiege:_find_spawn_group_near_area(target_area, allowed_groups, target_pos, max_dis, verify_clbk)
@@ -1283,7 +1280,7 @@ function GroupAIStateBesiege:_spawn_in_group(spawn_group, spawn_group_type, grp_
 
 	self._extract_group_desc_structure(spawn_group_desc.spawn, valid_unit_types)
 
-
+	
 	-- Lines: 1301 to 1305
 	local function _get_special_unit_type_count(special_type)
 		if not self._special_units[special_type] then
@@ -1329,7 +1326,7 @@ function GroupAIStateBesiege:_spawn_in_group(spawn_group, spawn_group_type, grp_
 
 	table.insert(self._spawning_groups, spawn_task)
 
-
+	
 	-- Lines: 1345 to 1360
 	local function _add_unit_type_to_spawn_task(i, spawn_entry)
 		local spawn_amount_mine = 1 + (spawn_task.units_remaining[spawn_entry.unit] and spawn_task.units_remaining[spawn_entry.unit].amount or 0)
@@ -1436,7 +1433,7 @@ function GroupAIStateBesiege:_perform_group_spawning(spawn_task, force, use_last
 	local group_ai_tweak = tweak_data.group_ai
 	local spawn_points = spawn_task.spawn_group.spawn_pts
 
-
+	
 	-- Lines: 1453 to 1532
 	local function _try_spawn_unit(u_type_name, spawn_entry)
 		if GroupAIStateBesiege._MAX_SIMULTANEOUS_SPAWNS <= nr_units_spawned and not force then
@@ -1893,7 +1890,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-
+	
 	-- Lines: 1873 to 1911
 	local function _f_draw_logic_name(u_key, l_data, draw_color)
 		local logic_name_text = logic_name_texts[u_key]
@@ -1947,7 +1944,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-
+	
 	-- Lines: 1913 to 1956
 	local function _f_draw_obj_pos(unit)
 		local brush = nil
@@ -2037,7 +2034,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		mvector3.set_zero(group_center)
 	end
 
-
+	
 	-- Lines: 1994 to 2007
 	local function _f_draw_attention_on_player(l_data)
 		if l_data.attention_obj then
@@ -3522,7 +3519,7 @@ end
 
 -- Lines: 3463 to 3466
 function GroupAIStateBesiege:_assign_assault_groups_to_retire()
-
+	
 	-- Lines: 3441 to 3464
 	local function suitable_grp_func(group)
 		if group.objective.type == "assault_area" then
@@ -3556,7 +3553,7 @@ end
 
 -- Lines: 3481 to 3484
 function GroupAIStateBesiege:_assign_recon_groups_to_retire()
-
+	
 	-- Lines: 3471 to 3482
 	local function suitable_grp_func(group)
 		if group.objective.type == "recon_area" then

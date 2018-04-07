@@ -27,7 +27,7 @@ function ElementCharacterTeam:on_executed(instigator)
 		return
 	end
 
-
+	
 	-- Lines: 29 to 31
 	local function _set_unit_team_f(unit)
 		managers.groupai:state():set_char_team(unit, self._values.team)

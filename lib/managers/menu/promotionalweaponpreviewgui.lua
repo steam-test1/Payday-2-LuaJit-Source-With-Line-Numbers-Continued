@@ -1,7 +1,6 @@
 PromotionalWeaponPreviewGui = PromotionalWeaponPreviewGui or class(MenuGuiComponent)
 local padding = 10
 
-
 -- Lines: 5 to 9
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -9,7 +8,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 12 to 21
 function PromotionalWeaponPreviewGui:init(ws, fullscreen_ws, node)

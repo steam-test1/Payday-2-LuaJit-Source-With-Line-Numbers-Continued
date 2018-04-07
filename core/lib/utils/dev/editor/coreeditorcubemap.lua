@@ -1,6 +1,5 @@
 core:import("CoreEditorUtils")
 
-
 -- Lines: 4 to 65
 function CoreEditor:create_projection_light(type)
 	local lights = {}

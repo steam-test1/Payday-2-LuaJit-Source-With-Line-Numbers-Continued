@@ -565,7 +565,7 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 	local half_range_sq = range * 0.5
 	half_range_sq = half_range_sq * half_range_sq
 
-
+	
 	-- Lines: 603 to 643
 	local function _chk_apply_dmg_to_char(u_data)
 		if not u_data.char_tweak.ecm_vulnerability then

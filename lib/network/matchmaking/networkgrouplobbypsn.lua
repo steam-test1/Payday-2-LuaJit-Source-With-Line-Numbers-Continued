@@ -17,7 +17,7 @@ function NetworkGroupLobbyPSN:init()
 	self._is_client_var = false
 	self._callback_map = {}
 
-
+	
 	-- Lines: 109 to 110
 	local function f(...)
 		self:_custom_message_cb(...)
@@ -65,7 +65,7 @@ function NetworkGroupLobbyPSN:create_group_lobby()
 	self._players = {}
 	local world_list = PSN:get_world_list()
 
-
+	
 	-- Lines: 145 to 146
 	local function session_created(roomid)
 		managers.network.group:_created_group_lobby(roomid)
@@ -90,7 +90,7 @@ function NetworkGroupLobbyPSN:join_group_lobby(room_info)
 
 	self._room_id = room_info.room_id
 
-
+	
 	-- Lines: 165 to 166
 	local function f(...)
 		self:_join_invite(...)
@@ -603,7 +603,7 @@ end
 
 -- Lines: 634 to 637
 function NetworkGroupLobbyPSN:_clear_psn_callback(cb)
-
+	
 	-- Lines: 634 to 635
 	local function f()
 	end

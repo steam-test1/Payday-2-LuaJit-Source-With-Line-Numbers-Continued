@@ -24,7 +24,7 @@ PlayerAction.DamageControl.Function = function ()
 		seconds_above = managers.player:upgrade_value_by_level("player", "damage_control_cooldown_drain", 1)[2]
 	}
 
-
+	
 	-- Lines: 30 to 45
 	local function shrug_off_damage()
 		local player_damage = managers.player:player_unit():character_damage()
@@ -43,7 +43,7 @@ PlayerAction.DamageControl.Function = function ()
 		auto_shrug_time = nil
 	end
 
-
+	
 	-- Lines: 47 to 63
 	local function modify_damage_taken(amount, attack_data)
 		local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
@@ -65,7 +65,7 @@ PlayerAction.DamageControl.Function = function ()
 		return -removed
 	end
 
-
+	
 	-- Lines: 66 to 70
 	local function on_ability_activated(ability_name)
 		if ability_name == "damage_control" then
@@ -73,7 +73,7 @@ PlayerAction.DamageControl.Function = function ()
 		end
 	end
 
-
+	
 	-- Lines: 72 to 79
 	local function on_enemy_killed(weapon_unit, variant, enemy_unit)
 		local player = managers.player:player_unit()
@@ -94,7 +94,7 @@ PlayerAction.DamageControl.Function = function ()
 
 	local damage_taken_key = managers.player:add_modifier("damage_taken", modify_damage_taken)
 
-
+	
 	-- Lines: 89 to 94
 	local function remove_listeners()
 		managers.player:unregister_message("check_skills", on_check_skills_key)

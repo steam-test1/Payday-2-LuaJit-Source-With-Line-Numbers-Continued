@@ -109,7 +109,7 @@ function SkinEditor:select_skin(local_skin_id)
 	id = string.sub(id, string.len(new_cosmetics_data.weapon_id .. "_") + 1, -1)
 	new_cosmetics_data.id = id
 
-
+	
 	-- Lines: 101 to 112
 	local function cb()
 		local weapon = managers.blackmarket:get_crafted_category_slot(self:category_slot())
@@ -166,7 +166,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		return
 	end
 
-
+	
 	-- Lines: 151 to 186
 	local function cb(result)
 		if result == "success" then
@@ -239,7 +239,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		table.insert(copy_data, pair)
 	end
 
-
+	
 	-- Lines: 216 to 241
 	local function copy_cb(success, message)
 		if success then
@@ -259,7 +259,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 
 				self._publish_bar:set_position(0, panel:h() - bar_radius * 2)
 
-
+				
 				-- Lines: 224 to 234
 				local function update_publish(o)
 					local current = 0
@@ -286,7 +286,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		end
 	end
 
-
+	
 	-- Lines: 243 to 250
 	local function sub(result)
 		if result == "success" then
@@ -306,7 +306,7 @@ end
 
 -- Lines: 274 to 288
 function SkinEditor:enter_screenshot_mode()
-
+	
 	-- Lines: 260 to 275
 	local function cb()
 		local weapon = managers.blackmarket:get_crafted_category_slot(self:category_slot())
@@ -471,7 +471,7 @@ function SkinEditor:get_texture_list(skin, path)
 	local texture_list = {}
 	local file_list = SystemFS:list(path, false)
 
-
+	
 	-- Lines: 395 to 401
 	local function valid_ext(filename)
 		local dot_index = string.find(filename, ".[^.]*$")

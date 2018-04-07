@@ -56,7 +56,7 @@ function MenuNodeButtonLayoutGui:_setup()
 		color = Color.black
 	})
 
-
+	
 	-- Lines: 80 to 83
 	local function func(o)
 		local start_blur = 0

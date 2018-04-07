@@ -301,7 +301,7 @@ end
 function SequenceManager:get_keys_as_string(key_value_list, none_string, dot_at_end, only_values)
 	local count = 0
 
-
+	
 	-- Lines: 291 to 292
 	local function func()
 		return none_string
@@ -312,7 +312,7 @@ function SequenceManager:get_keys_as_string(key_value_list, none_string, dot_at_
 		local append_string = nil
 		append_string = only_values and value or key
 
-
+		
 		-- Lines: 304 to 316
 		function func(count, first)
 			if count == 1 then
@@ -1987,7 +1987,7 @@ function BaseElement:init(node, unit_element)
 	end
 
 	if __filter_name ~= nil and unit_element then
-
+		
 		-- Lines: 1807 to 1816
 		function self:_is_allowed_func(env)
 			local filter_name = self:run_parsed_func(env, __filter_name)
@@ -2002,7 +2002,7 @@ function BaseElement:init(node, unit_element)
 	end
 
 	if __delayed_filter_name ~= nil and unit_element then
-
+		
 		-- Lines: 1820 to 1829
 		function self:_delayed_is_allowed_func(env)
 			local filter_name = self:run_parsed_func(env, __delayed_filter_name)
@@ -6128,7 +6128,7 @@ function SlotElement:activate_callback(env)
 		local frustum_far_clip = self:run_parsed_func(env, self._frustum_far_clip)
 		local data = {}
 
-
+		
 		-- Lines: 5716 to 5717
 		local function func()
 			return self:check_frustum_delay(frustum_close_radius, frustum_extension, frustum_far_clip, visible, env, data)

@@ -127,12 +127,12 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	if nav_link_act_index ~= 0 then
 		local nav_link_rot = (360 * nav_link_yaw) / 255
 		local nav_link = unit:movement()._actions.walk.synthesize_nav_link(first_nav_point, nav_link_rot, unit:movement()._actions.act:_get_act_name_from_index(nav_link_act_index), from_idle)
-
+		
 		-- Lines: 129 to 130
 		nav_link.element.value = function (element, name)
 			return element[name]
 		end
-
+		
 		-- Lines: 130 to 131
 		nav_link.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle

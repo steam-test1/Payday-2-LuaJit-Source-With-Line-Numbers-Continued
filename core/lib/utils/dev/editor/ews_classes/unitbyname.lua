@@ -38,7 +38,7 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self._filter_buttons = {}
 
-
+	
 	-- Lines: 37 to 40
 	local function add_filter_button(id, name)
 		self._filter_buttons[id] = EWS:RadioButton(panel, name, "filter_type", "")

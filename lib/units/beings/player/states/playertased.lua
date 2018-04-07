@@ -71,7 +71,7 @@ function PlayerTased:enter(state_data, enter_data)
 
 		managers.player:add_coroutine("escape_tase", PlayerAction.EscapeTase, managers.player, Application:time() + target_time)
 
-
+		
 		-- Lines: 67 to 68
 		local function clbk()
 			self:give_shock_to_taser_no_damage()

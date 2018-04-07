@@ -1593,7 +1593,7 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	end
 
 	if completed and not reward_data.rewarded then
-
+		
 		-- Lines: 1533 to 1539
 		local function glow_anim(o)
 			while true do

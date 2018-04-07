@@ -405,7 +405,7 @@ function HUDManagerVR:on_flick(dir, time)
 		return true
 	end
 
-
+	
 	-- Lines: 331 to 351
 	local function panel_swipe(o, x, y)
 		if not alive(o) then

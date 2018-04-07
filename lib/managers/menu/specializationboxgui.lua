@@ -11,7 +11,6 @@ function SpecializationBoxGui:init(...)
 	SpecializationBoxGui.super.init(self, ...)
 end
 
-
 -- Lines: 13 to 21
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -24,7 +23,6 @@ local function make_fine_text(text)
 
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 23 to 155
 function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, config)

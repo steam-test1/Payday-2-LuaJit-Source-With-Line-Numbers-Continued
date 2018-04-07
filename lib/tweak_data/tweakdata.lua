@@ -2895,7 +2895,6 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
-
 -- Lines: 2968 to 3182
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then

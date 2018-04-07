@@ -13,7 +13,6 @@ if not Global.render_debug_initialized.coredebug then
 	Global.render_debug_initialized.coredebug = true
 end
 
-
 -- Lines: 37 to 48
 function only_in_debug(f, klass)
 	klass = klass or getmetatable(Application)
@@ -21,7 +20,7 @@ function only_in_debug(f, klass)
 
 	if not klass[old] then
 		klass[old] = klass[f]
-
+		
 		-- Lines: 42 to 46
 		klass[f] = function (...)
 			if Global.render_debug.draw_enabled then
@@ -58,14 +57,13 @@ if not Global.category_print_initialized.coredebug then
 	Global.category_print_initialized.coredebug = true
 end
 
-
 -- Lines: 84 to 117
 function out(...)
 	local CAT_TYPE = "debug"
 	local NO_CAT = "spam"
 	local args = {...}
 
-
+	
 	-- Lines: 89 to 93
 	local function correct_spaces(...)
 		local args = {...}
@@ -75,7 +73,7 @@ function out(...)
 		return unpack(sel)
 	end
 
-
+	
 	-- Lines: 96 to 106
 	local function do_print(c, ...)
 		local cat = CAT_TYPE
@@ -104,14 +102,12 @@ function out(...)
 	end
 end
 
-
 -- Lines: 119 to 123
 function cat_print(cat, ...)
 	if Global.category_print[cat] then
 		_G.print(...)
 	end
 end
-
 
 -- Lines: 125 to 129
 function cat_debug(cat, ...)
@@ -120,7 +116,6 @@ function cat_debug(cat, ...)
 	end
 end
 
-
 -- Lines: 131 to 135
 function cat_error(cat, ...)
 	if Global.category_print[cat] then
@@ -128,14 +123,12 @@ function cat_error(cat, ...)
 	end
 end
 
-
 -- Lines: 137 to 141
 function cat_stack_dump(cat)
 	if Global.category_print[cat] then
 		Application:stack_dump()
 	end
 end
-
 
 -- Lines: 143 to 149
 function cat_print_inspect(cat, ...)
@@ -146,7 +139,6 @@ function cat_print_inspect(cat, ...)
 	end
 end
 
-
 -- Lines: 151 to 157
 function cat_debug_inspect(cat, ...)
 	if Global.category_print[cat] then
@@ -155,7 +147,6 @@ function cat_debug_inspect(cat, ...)
 		end
 	end
 end
-
 
 -- Lines: 159 to 173
 function catprint_save()
@@ -177,7 +168,6 @@ function catprint_save()
 	file:print(ScriptSerializer:to_custom_xml(data))
 	file:close()
 end
-
 
 -- Lines: 175 to 196
 function catprint_load()
@@ -204,7 +194,6 @@ function catprint_load()
 	end
 end
 
-
 -- Lines: 200 to 204
 function print_console_result(...)
 	for i = 1, select("#", ...), 1 do
@@ -212,16 +201,15 @@ function print_console_result(...)
 	end
 end
 
-
 -- Lines: 212 to 228
 function compile_and_reload()
-
+	
 	-- Lines: 207 to 212
 	local function root_path()
 		local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "../../")
 		local f = nil
 
-
+		
 		-- Lines: 210 to 211
 		function f(s)
 			local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
@@ -245,12 +233,10 @@ function compile_and_reload()
 	Application:console_command("reload")
 end
 
-
 -- Lines: 237 to 238
 function class_name(class)
 	return core:_lookup(class)
 end
-
 
 -- Lines: 241 to 244
 function full_class_name(class)
@@ -258,7 +244,6 @@ function full_class_name(class)
 
 	return y .. "." .. x
 end
-
 
 -- Lines: 253 to 274
 function watch(cond_func, exact)
@@ -287,12 +272,11 @@ function watch(cond_func, exact)
 	end, "l", 1)
 end
 
-
 -- Lines: 296 to 371
 function trace_ref(class_name, init_name, destroy_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
 
-
+	
 	-- Lines: 299 to 306
 	local function ref()
 		local t = rawget(_G, "_trace_ref_table")
@@ -305,7 +289,7 @@ function trace_ref(class_name, init_name, destroy_name)
 		end
 	end
 
-
+	
 	-- Lines: 308 to 309
 	local function stack()
 		return string.gsub(debug.traceback(), "%\n", "\n[CoreTraceRef]\t")
@@ -376,7 +360,6 @@ function trace_ref(class_name, init_name, destroy_name)
 	end
 end
 
-
 -- Lines: 373 to 384
 function trace_ref_add_destroy_all(class_name, func_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
@@ -394,16 +377,13 @@ function trace_ref_add_destroy_all(class_name, func_name)
 	end
 end
 
-
 -- Lines: 395 to 396
 function debug_pause(...)
 end
 
-
 -- Lines: 408 to 409
 function debug_pause_unit(unit, ...)
 end
-
 
 -- Lines: 411 to 420
 function get_n_key(t, n)
@@ -417,7 +397,6 @@ function get_n_key(t, n)
 		end
 	end
 end
-
 
 -- Lines: 422 to 431
 function get_n_value(t, n)

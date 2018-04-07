@@ -38,7 +38,6 @@ function InGameHeisterInteractionInitiator:refresh_node(node)
 	return node
 end
 
-
 -- Lines: 44 to 48
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()

@@ -648,7 +648,6 @@ function MenuInput:mouse_double_click(o, button, x, y)
 end
 local print_timers = {}
 
-
 -- Lines: 657 to 662
 local function upd_print(id, t, ...)
 	if not print_timers[id] or print_timers[id] < t then
@@ -657,7 +656,6 @@ local function upd_print(id, t, ...)
 		print_timers[id] = t + 0.5
 	end
 end
-
 
 -- Lines: 664 to 785
 function MenuInput:update(t, dt)

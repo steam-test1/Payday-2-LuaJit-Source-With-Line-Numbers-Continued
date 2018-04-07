@@ -2,7 +2,6 @@ core:module("CoreEditorUtils")
 core:import("CoreEngineAccess")
 core:import("CoreClass")
 
-
 -- Lines: 7 to 15
 function all_lights()
 	local lights = {}
@@ -16,7 +15,6 @@ function all_lights()
 
 	return lights
 end
-
 
 -- Lines: 18 to 43
 function get_editable_lights(unit)
@@ -45,14 +43,12 @@ function get_editable_lights(unit)
 	return lights
 end
 
-
 -- Lines: 46 to 48
 function has_editable_lights(unit)
 	local lights = get_editable_lights(unit)
 
 	return lights and #lights > 0
 end
-
 
 -- Lines: 51 to 56
 function has_any_projection_light(unit)
@@ -64,7 +60,6 @@ function has_any_projection_light(unit)
 
 	return has_projection_light(unit, "shadow_projection") or has_projection_light(unit, "projection")
 end
-
 
 -- Lines: 59 to 80
 function has_projection_light(unit, type)
@@ -87,7 +82,6 @@ function has_projection_light(unit, type)
 	return nil
 end
 
-
 -- Lines: 85 to 105
 function is_projection_light(unit, light, type)
 	type = type or "projection"
@@ -109,7 +103,6 @@ function is_projection_light(unit, light, type)
 	return false
 end
 
-
 -- Lines: 108 to 114
 function intensity_value()
 	local t = {}
@@ -124,7 +117,6 @@ function intensity_value()
 end
 
 INTENSITY_VALUES = intensity_value()
-
 
 -- Lines: 120 to 146
 function get_intensity_preset(multiplier)
@@ -156,18 +148,15 @@ function get_intensity_preset(multiplier)
 	end
 end
 
-
 -- Lines: 148 to 150
 function get_sequence_files_by_unit(unit, sequence_files)
 	_get_sequence_file(CoreEngineAccess._editor_unit_data(unit:name()), sequence_files)
 end
 
-
 -- Lines: 152 to 154
 function get_sequence_files_by_unit_name(unit_name, sequence_files)
 	_get_sequence_file(CoreEngineAccess._editor_unit_data(unit_name), sequence_files)
 end
-
 
 -- Lines: 156 to 161
 function _get_sequence_file(unit_data, sequence_files)
@@ -197,7 +186,6 @@ function GrabInfo:position()
 end
 layer_types = layer_types or {}
 
-
 -- Lines: 178 to 198
 function parse_layer_types()
 	assert(DB:has("xml", "core/settings/editor_types"), "Editor type settings are missing from core settings.")
@@ -225,18 +213,15 @@ function parse_layer_types()
 	end
 end
 
-
 -- Lines: 200 to 201
 function layer_type(layer)
 	return layer_types[layer]
 end
 
-
 -- Lines: 204 to 205
 function get_layer_types()
 	return layer_types
 end
-
 
 -- Lines: 214 to 221
 function toolbar_toggle(data, event)
@@ -248,7 +233,6 @@ function toolbar_toggle(data, event)
 		c[data.menu]:set_checked(event:get_id(), c[data.value])
 	end
 end
-
 
 -- Lines: 232 to 240
 function toolbar_toggle_trg(data)
@@ -263,7 +247,6 @@ function toolbar_toggle_trg(data)
 		c[data.menu]:set_checked(data.id, c[data.value])
 	end
 end
-
 
 -- Lines: 246 to 300
 function dump_mesh(units, name, get_objects_string)
@@ -317,7 +300,6 @@ function dump_mesh(units, name, get_objects_string)
 	cat_print("editor", "  Dumped " .. #objects .. " objects")
 	MeshDumper:dump_meshes(managers.database:root_path() .. name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
 end
-
 
 -- Lines: 303 to 350
 function dump_all(units, name, get_objects_string)

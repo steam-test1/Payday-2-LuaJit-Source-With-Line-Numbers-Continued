@@ -1537,7 +1537,7 @@ end
 
 -- Lines: 1545 to 1559
 function RaycastWeaponBase:ammo_full()
-
+	
 	-- Lines: 1544 to 1545
 	local function is_full(ammo_base)
 		return ammo_base:get_ammo_total() == ammo_base:get_ammo_max()
@@ -1656,7 +1656,7 @@ end
 
 -- Lines: 1683 to 1698
 function RaycastWeaponBase:add_ammo_in_bullets(bullets)
-
+	
 	-- Lines: 1678 to 1683
 	local function add_ammo(ammo_base, bullets)
 		local ammo_max = ammo_base:get_ammo_max()
@@ -1679,7 +1679,7 @@ end
 
 -- Lines: 1751 to 1773
 function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
-
+	
 	-- Lines: 1705 to 1750
 	local function _add_ammo(ammo_base, ratio, add_amount_override)
 		if ammo_base:get_ammo_max() == ammo_base:get_ammo_total() then
@@ -1745,7 +1745,7 @@ end
 
 -- Lines: 1789 to 1801
 function RaycastWeaponBase:add_ammo_ratio(ammo_ratio_increase)
-
+	
 	-- Lines: 1779 to 1790
 	local function _add_ammo(ammo_base, ammo_ratio_increase)
 		if ammo_base:get_ammo_max() == ammo_base:get_ammo_total() then
@@ -1771,7 +1771,7 @@ end
 
 -- Lines: 1820 to 1835
 function RaycastWeaponBase:add_ammo_from_bag(available)
-
+	
 	-- Lines: 1806 to 1819
 	local function process_ammo(ammo_base, amount_available)
 		if ammo_base:get_ammo_max() == ammo_base:get_ammo_total() then

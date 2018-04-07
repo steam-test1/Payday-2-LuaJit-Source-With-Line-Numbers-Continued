@@ -689,7 +689,7 @@ function FriendsBoxGui:set_size(x, y)
 
 	friends_panel:set_w(self._scroll_panel:w())
 
-
+	
 	-- Lines: 587 to 593
 	local function f(friends_panel, panel)
 		panel:set_w(friends_panel:w())

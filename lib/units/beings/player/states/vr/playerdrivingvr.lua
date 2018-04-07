@@ -305,7 +305,7 @@ function PlayerDrivingVR:set_throttle(value)
 	self._throttle_value = value
 
 	if self._throttle_arrows then
-
+		
 		-- Lines: 256 to 262
 		local function stretch_value(val, range)
 			if val == 0 then
@@ -318,7 +318,7 @@ function PlayerDrivingVR:set_throttle(value)
 			return (val - 0.5) * mul + 0.5
 		end
 
-
+		
 		-- Lines: 265 to 274
 		local function set_arrow_size(arrow, val, inverse)
 			val = stretch_value(val, 0.4)

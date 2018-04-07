@@ -2,7 +2,7 @@ InfamyTweakData = InfamyTweakData or class()
 
 -- Lines: 3 to 337
 function InfamyTweakData:init()
-
+	
 	-- Lines: 3 to 4
 	local function digest(value)
 		return Application:digest_value(value, true)

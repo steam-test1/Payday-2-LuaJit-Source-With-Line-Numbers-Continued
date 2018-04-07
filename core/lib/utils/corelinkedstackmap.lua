@@ -32,7 +32,7 @@ end
 
 -- Lines: 32 to 34
 function LinkedStackMap:iterator()
-
+	
 	-- Lines: 30 to 32
 	local function func(map, key)
 		local id, link = next(map, key)
@@ -45,7 +45,7 @@ end
 
 -- Lines: 51 to 53
 function LinkedStackMap:top_bottom_iterator()
-
+	
 	-- Lines: 38 to 52
 	local function func(map, link_id)
 		if link_id then
@@ -68,7 +68,7 @@ end
 
 -- Lines: 70 to 72
 function LinkedStackMap:bottom_top_iterator()
-
+	
 	-- Lines: 57 to 71
 	local function func(map, link_id)
 		if link_id then

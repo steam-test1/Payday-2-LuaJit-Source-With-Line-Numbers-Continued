@@ -133,7 +133,7 @@ function CoreCutsceneFootage:_camera_cut_list()
 		self._camera_cut_cache = {}
 
 		if self._cutscene:has_cameras() then
-
+			
 			-- Lines: 118 to 122
 			local function add_camera_cut(start_frame, end_frame, camera)
 				if start_frame < end_frame then

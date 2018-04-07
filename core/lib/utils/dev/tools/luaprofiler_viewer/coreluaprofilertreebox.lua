@@ -63,7 +63,7 @@ function LuaProfilerTreeBox:set_displayformat(...)
 	self._displayformat = parse_kwargs({...}, "number:displayformat")
 
 	if self._lpd then
-
+		
 		-- Lines: 73 to 90
 		function relabel(cnid)
 			if self._lpd:cn_treenodeid(cnid) ~= -1 then
@@ -107,7 +107,7 @@ end
 
 -- Lines: 117 to 121
 function LuaProfilerTreeBox:_clear()
-
+	
 	-- Lines: 111 to 118
 	local function clear_treenodeid(cnid)
 		if self._lpd:cn_treenodeid(cnid) ~= -1 then
@@ -241,7 +241,7 @@ end
 
 -- Lines: 239 to 242
 function LuaProfilerTreeBox:_collapse_all()
-
+	
 	-- Lines: 231 to 240
 	function collapse(cnid)
 		tnid = self._lpd:cn_treenodeid(cnid)
@@ -279,7 +279,7 @@ end
 
 -- Lines: 271 to 274
 function LuaProfilerTreeBox:_clear_highlights()
-
+	
 	-- Lines: 263 to 272
 	function clear_highlight(cnid)
 		local tnid = self._lpd:cn_treenodeid(cnid)

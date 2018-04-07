@@ -62,7 +62,7 @@ function StatisticsTweakData:statistics_table()
 		self._job_list = {}
 		self._level_list = {}
 
-
+		
 		-- Lines: 58 to 63
 		local function add_level_id(level_id)
 			local level_tweak = tweak_data.levels[level_id]

@@ -5,7 +5,6 @@ local text_font_size = tweak_data.menu.pd2_medium_font_size
 local font_color_highlighted = tweak_data.screen_colors.button_stage_2
 local font_color_rest = tweak_data.screen_colors.button_stage_3
 
-
 -- Lines: 11 to 15
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -13,7 +12,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 17 to 122
 function IngameWaitingGui:init(ws)

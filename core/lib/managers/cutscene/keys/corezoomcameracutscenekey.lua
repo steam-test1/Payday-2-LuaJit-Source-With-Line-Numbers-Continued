@@ -30,7 +30,6 @@ CoreZoomCameraCutsceneKey:register_serialized_attribute("interpolation_bias", 0.
 	return (tonumber(n) or 0) / 100
 end)
 
-
 -- Lines: 31 to 32
 function CoreZoomCameraCutsceneKey:__tostring()
 	return "Change camera zoom."

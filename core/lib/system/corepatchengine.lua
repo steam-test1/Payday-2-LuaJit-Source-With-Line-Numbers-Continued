@@ -30,22 +30,22 @@ function string:raw()
 end
 
 if Vector3 then
-
+	
 	-- Lines: 41 to 42
 	function Vector3.__concat(o1, o2)
 		return tostring(o1) .. tostring(o2)
 	end
-
+	
 	-- Lines: 44 to 45
 	function Vector3:flat(v)
 		return math.cross(math.cross(v, self), v)
 	end
-
+	
 	-- Lines: 48 to 49
 	function Vector3:orthogonal(ratio)
 		return self:orthogonal_func()(ratio)
 	end
-
+	
 	-- Lines: 52 to 54
 	function Vector3:orthogonal_func(start_dir)
 		local rot = Rotation(self, start_dir or Vector3(0, 0, -1))
@@ -54,7 +54,7 @@ if Vector3 then
 			return (-rot:z() * math.cos(180 + 360 * ratio) + rot:x() * math.cos(90 + 360 * ratio)):normalized()
 		end
 	end
-
+	
 	-- Lines: 57 to 58
 	function Vector3:unpack()
 		return self.x, self.y, self.z
@@ -62,7 +62,7 @@ if Vector3 then
 end
 
 if Color then
-
+	
 	-- Lines: 63 to 64
 	function Color:unpack()
 		return self.r, self.g, self.b
@@ -72,7 +72,7 @@ end
 local AppClass = getmetatable(Application)
 
 if AppClass then
-
+	
 	-- Lines: 70 to 85
 	function AppClass:draw_box(s_pos, e_pos, r, g, b)
 		Application:draw_line(s_pos, Vector3(e_pos.x, s_pos.y, s_pos.z), r, g, b)
@@ -88,7 +88,7 @@ if AppClass then
 		Application:draw_line(Vector3(e_pos.x, e_pos.y, e_pos.z), Vector3(s_pos.x, e_pos.y, e_pos.z), r, g, b)
 		Application:draw_line(Vector3(e_pos.x, e_pos.y, e_pos.z), Vector3(e_pos.x, s_pos.y, e_pos.z), r, g, b)
 	end
-
+	
 	-- Lines: 88 to 112
 	function AppClass:draw_box_rotation(pos, rot, width, depth, height, r, g, b)
 		local c1 = pos
@@ -113,14 +113,14 @@ if AppClass then
 		Application:draw_line(c6, c8, r, g, b)
 		Application:draw_line(c7, c8, r, g, b)
 	end
-
+	
 	-- Lines: 114 to 118
 	function AppClass:draw_rotation_size(pos, rot, size)
 		Application:draw_line(pos, pos + rot:x() * size, 1, 0, 0)
 		Application:draw_line(pos, pos + rot:y() * size, 0, 1, 0)
 		Application:draw_line(pos, pos + rot:z() * size, 0, 0, 1)
 	end
-
+	
 	-- Lines: 120 to 127
 	function AppClass:draw_arrow(from, to, r, g, b, scale)
 		scale = scale or 1
@@ -131,7 +131,7 @@ if AppClass then
 		Application:draw_cylinder(from, arrow_end_pos, 10 * scale, r, g, b)
 		Application:draw_cone(to, arrow_end_pos, 40 * scale, r, g, b)
 	end
-
+	
 	-- Lines: 129 to 132
 	function AppClass:stack_dump_error(...)
 		Application:error(...)
@@ -142,7 +142,7 @@ end
 if Draw then
 	Draw:pen()
 
-
+	
 	-- Lines: 230 to 237
 	function Pen:arrow(from, to, scale)
 		scale = scale or 1
@@ -162,7 +162,7 @@ if SteamClass then
 	local requests = {}
 	local current_request, check_requests_func, request_done_func = nil
 
-
+	
 	-- Lines: 250 to 258
 	function request_done_func(success, page)
 		if current_request then
@@ -175,7 +175,7 @@ if SteamClass then
 		check_requests_func()
 	end
 
-
+	
 	-- Lines: 260 to 269
 	function check_requests_func()
 		if not current_request then
@@ -187,7 +187,7 @@ if SteamClass then
 		end
 	end
 
-
+	
 	-- Lines: 271 to 288
 	function SteamClass:http_request(path, clbk, id_key)
 		if id_key then

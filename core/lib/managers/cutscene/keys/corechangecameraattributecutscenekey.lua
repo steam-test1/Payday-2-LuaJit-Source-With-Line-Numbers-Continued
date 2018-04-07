@@ -9,7 +9,6 @@ CoreChangeCameraAttributeCutsceneKey:register_serialized_attribute("far_range", 
 CoreChangeCameraAttributeCutsceneKey:attribute_affects("near_range", "far_range")
 CoreChangeCameraAttributeCutsceneKey:attribute_affects("far_range", "near_range")
 
-
 -- Lines: 11 to 12
 function CoreChangeCameraAttributeCutsceneKey:__tostring()
 	return "Change camera attributes."
@@ -32,7 +31,7 @@ end
 
 -- Lines: 33 to 39
 function CoreChangeCameraAttributeCutsceneKey:evaluate(player, fast_forward)
-
+	
 	-- Lines: 28 to 34
 	local function set_attribute_if_valid(attribute_name)
 		local value = self:attribute_value(attribute_name)

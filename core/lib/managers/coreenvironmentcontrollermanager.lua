@@ -639,7 +639,6 @@ function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	end
 end
 
-
 -- Lines: 817 to 834
 local function set_modifier_transform(effect, id, transform)
 	local modifier = effect:modifier(Idstring(id))
@@ -666,14 +665,12 @@ local function set_modifier_transform(effect, id, transform)
 	end
 end
 
-
 -- Lines: 836 to 840
 local function set_modifier_visibility(effect, id, visibility_state)
 	set_modifier_transform(effect, id, function (mod)
 		mod:set_visibility(visibility_state)
 	end)
 end
-
 
 -- Lines: 842 to 855
 local function set_post_material_parameter(post_id, modifier_name, parameter_id, value)
@@ -693,7 +690,6 @@ local function set_post_material_parameter(post_id, modifier_name, parameter_id,
 		end
 	end
 end
-
 
 -- Lines: 858 to 859
 function CoreEnvironmentControllerManager:get_aa_setting()

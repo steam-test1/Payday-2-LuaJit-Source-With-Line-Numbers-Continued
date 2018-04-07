@@ -253,7 +253,7 @@ function MenuBackdropGUI:enable_light(enabled)
 	bd_light:set_alpha(0)
 	bd_light:set_blend_mode("add")
 
-
+	
 	-- Lines: 207 to 222
 	local function light_flicker_animation(o)
 		local alpha = 0
@@ -296,7 +296,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 	self:set_fullscreen_bitmap_shape(object, 1.25)
 	object:set_alpha(alpha or 0.2)
 
-
+	
 	-- Lines: 244 to 319
 	local function mechanic_animation(o)
 		local corner_left = -bg_layer:w() * 0.2
@@ -319,7 +319,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 		local overshoot = move_on_x_axis and math.rand(bg_layer:w() * 0.02) or math.rand(bg_layer:h() * 0.02) * dir
 		local dir_moved = 0
 
-
+		
 		-- Lines: 269 to 275
 		local function move_one_axis(p)
 			if move_on_x_axis then
@@ -329,7 +329,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 			end
 		end
 
-
+		
 		-- Lines: 277 to 283
 		local function overshoot_one_axis(p)
 			if move_on_x_axis then
@@ -339,7 +339,7 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 			end
 		end
 
-
+		
 		-- Lines: 285 to 291
 		local function bringback_one_axis(p)
 			if move_on_x_axis then
@@ -423,7 +423,7 @@ function MenuBackdropGUI:_create_particle()
 	particle:set_center(cx, cy)
 	particle:rotate(math.rand(180))
 
-
+	
 	-- Lines: 359 to 407
 	local function particle_animation(o, self)
 		local start_x = o:center_x()
@@ -630,7 +630,7 @@ end
 
 -- Lines: 568 to 570
 function MenuBackdropGUI:animate_bg_text(text)
-
+	
 	-- Lines: 551 to 569
 	local function animate_text(o)
 		local left = true
@@ -671,7 +671,7 @@ function MenuBackdropGUI:mouse_moved(x, y)
 		if not particle:has_script() and particle:inside(fx, fy) then
 			particle:stop()
 
-
+			
 			-- Lines: 582 to 586
 			local function fade_anim(o, self)
 				local alpha = o:alpha()

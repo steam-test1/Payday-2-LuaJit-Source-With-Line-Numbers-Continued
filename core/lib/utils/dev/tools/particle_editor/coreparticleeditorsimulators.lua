@@ -296,7 +296,7 @@ keys - use key curve over time]]
 
 	constant_lifetime:set_can_be_infinite(true)
 
-
+	
 	-- Lines: 264 to 271
 	local function validate_lifetime(p)
 		local ret = {

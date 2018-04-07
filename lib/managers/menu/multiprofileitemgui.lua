@@ -208,7 +208,7 @@ end
 
 -- Lines: 101 to 175
 function MultiProfileItemGui:mouse_moved(x, y)
-
+	
 	-- Lines: 93 to 102
 	local function anim_func(o, large)
 		local current_width = o:w()

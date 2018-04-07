@@ -141,7 +141,7 @@ function SentryGunBrain:_upd_detection(t)
 	local max_detection_range = self._tweak_data.DETECTION_RANGE
 	local all_attention_objects = managers.groupai:state():get_AI_attention_objects_by_filter(my_SO_access_str, my_team)
 
-
+	
 	-- Lines: 164 to 175
 	local function _distance_chk(handler, settings, attention_pos)
 		attention_pos = attention_pos or handler:get_detection_m_pos()
@@ -159,7 +159,7 @@ function SentryGunBrain:_upd_detection(t)
 
 	local ignore_units = {self._unit}
 
-
+	
 	-- Lines: 180 to 208
 	local function _nearly_visible_chk(attention_info, detect_pos)
 		local near_pos = tmp_vec1
@@ -379,7 +379,7 @@ function SentryGunBrain:_select_focus_attention(t)
 
 	local max_dis = self._tweak_data.DETECTION_RANGE
 
-
+	
 	-- Lines: 389 to 421
 	local function _get_weight(attention_info)
 		if not attention_info.identified then

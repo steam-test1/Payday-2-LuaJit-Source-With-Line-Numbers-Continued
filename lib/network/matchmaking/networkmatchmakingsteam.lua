@@ -166,7 +166,7 @@ function NetworkMatchMakingSTEAM:update()
 
 			Application:error("RE-ENTERING LOBBY", self.lobby_handler:id())
 
-
+			
 			-- Lines: 246 to 256
 			local function _join_lobby_result_f(result, handler)
 				if result == "success" then
@@ -223,18 +223,18 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 	local lobbies = {}
 	local num_updated_lobbies = 0
 
-
+	
 	-- Lines: 297 to 298
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
 	end
 
-
+	
 	-- Lines: 300 to 301
 	local function empty()
 	end
 
-
+	
 	-- Lines: 302 to 348
 	local function f(updated_lobby)
 		updated_lobby:setup_callback(empty)
@@ -389,7 +389,7 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 		return
 	end
 
-
+	
 	-- Lines: 434 to 435
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
@@ -398,7 +398,7 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 	if friends_only then
 		self:get_friends_lobbies()
 	else
-
+		
 		-- Lines: 443 to 494
 		local function refresh_lobby()
 			if not self.browser then
@@ -625,12 +625,12 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 
 	local lobby = Steam:lobby(room_id)
 
-
+	
 	-- Lines: 693 to 694
 	local function empty()
 	end
 
-
+	
 	-- Lines: 695 to 733
 	local function f()
 		print("NetworkMatchMakingSTEAM:join_server_with_check f")
@@ -742,7 +742,7 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 		managers.menu:show_joining_lobby_dialog()
 	end
 
-
+	
 	-- Lines: 818 to 975
 	local function f(result, handler)
 		print("[NetworkMatchMakingSTEAM:join_server:f]", result, handler)
@@ -786,7 +786,7 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 				end
 			end
 
-
+			
 			-- Lines: 860 to 968
 			local function joined_game(res, level_index, difficulty_index, state_index)
 				if res ~= "JOINED_LOBBY" and res ~= "JOINED_GAME" then
@@ -902,7 +902,7 @@ function NetworkMatchMakingSTEAM:create_lobby(settings)
 
 	managers.system_menu:show(dialog_data)
 
-
+	
 	-- Lines: 1002 to 1024
 	local function f(result, handler)
 		print("Create lobby callback!!", result, handler)

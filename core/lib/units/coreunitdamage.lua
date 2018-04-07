@@ -2732,22 +2732,22 @@ function CoreInflictFireUpdator:init(unit, body, body_damage_ext, inflict_elemen
 	self._set_attribute_func_map.fire_height = callback(self, self, "set_fire_height")
 	self._set_attribute_func_map.velocity = callback(self, self, "set_velocity")
 	self._set_attribute_func_map.falloff = callback(self, self, "set_falloff")
-
+	
 	-- Lines: 2589 to 2590
 	self._get_attribute_func_map.fire_object = function ()
 		return self._fire_object
 	end
-
+	
 	-- Lines: 2590 to 2591
 	self._get_attribute_func_map.fire_height = function ()
 		return self._fire_height
 	end
-
+	
 	-- Lines: 2591 to 2592
 	self._get_attribute_func_map.velocity = function ()
 		return self._velocity
 	end
-
+	
 	-- Lines: 2592 to 2593
 	self._get_attribute_func_map.falloff = function ()
 		return self._falloff

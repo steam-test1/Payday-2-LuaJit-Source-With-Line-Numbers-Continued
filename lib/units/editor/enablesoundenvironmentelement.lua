@@ -104,7 +104,7 @@ end
 
 -- Lines: 84 to 97
 function EnableSoundEnvironmentElement:add_unit_list_btn()
-
+	
 	-- Lines: 84 to 85
 	local function f(unit)
 		return unit:type() == Idstring("sound")

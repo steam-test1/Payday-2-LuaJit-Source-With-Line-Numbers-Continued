@@ -138,7 +138,7 @@ function NetworkMatchMaking:update()
 
 			Application:error("RE-ENTERING LOBBY", self.lobby_handler:id())
 
-
+			
 			-- Lines: 141 to 151
 			local function _join_lobby_result_f(result, handler)
 				if result == "success" then
@@ -188,18 +188,18 @@ function NetworkMatchMaking:get_friends_lobbies()
 	local lobbies = {}
 	local num_updated_lobbies = 0
 
-
+	
 	-- Lines: 185 to 186
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
 	end
 
-
+	
 	-- Lines: 188 to 189
 	local function empty()
 	end
 
-
+	
 	-- Lines: 190 to 229
 	local function f(updated_lobby)
 		updated_lobby:setup_callback(empty)
@@ -331,7 +331,7 @@ function NetworkMatchMaking:search_lobby(friends_only)
 		return
 	end
 
-
+	
 	-- Lines: 306 to 307
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
@@ -340,7 +340,7 @@ function NetworkMatchMaking:search_lobby(friends_only)
 	if friends_only then
 		self:get_friends_lobbies()
 	else
-
+		
 		-- Lines: 313 to 357
 		local function refresh_lobby()
 			if not self.browser then
@@ -543,7 +543,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 		managers.menu:show_joining_lobby_dialog()
 	end
 
-
+	
 	-- Lines: 511 to 626
 	local function f(result, handler)
 		print("[NetworkMatchMaking:join_server:f]", result, handler)
@@ -573,7 +573,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 				managers.network:session():on_join_request_cancelled()
 			end})
 
-
+			
 			-- Lines: 537 to 619
 			local function joined_game(res, level_index, difficulty_index, state_index)
 				managers.system_menu:close("waiting_for_server_response")
@@ -673,7 +673,7 @@ function NetworkMatchMaking:create_lobby(settings)
 
 	managers.system_menu:show(dialog_data)
 
-
+	
 	-- Lines: 651 to 673
 	local function f(result, handler)
 		print("Create lobby callback!!", result, handler)

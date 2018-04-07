@@ -706,7 +706,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 	invalid[51] = 1
 	invalid[57] = 1
 
-
+	
 	-- Lines: 793 to 814
 	local function get_lvl_stat(diff, heist, stat, i)
 		if i == 0 then
@@ -732,7 +732,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 		return num
 	end
 
-
+	
 	-- Lines: 818 to 839
 	local function get_weapon_stat(weapon, stat, i)
 		if i == 0 then

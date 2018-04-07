@@ -429,7 +429,7 @@ the effect will be culled while still visible]]
 	help = "Internal event listeners - these are listeners capable of handling events spawned by the simulators with a fixed behaviour.\nFor more advanced event handling, script callbacks can be registered with effect instances at runtime."
 	p = CoreEffectProperty:new("event_listeners", "list_objects", "", help)
 
-
+	
 	-- Lines: 394 to 400
 	local function create_event_types()
 		local event_types = CoreEffectProperty:new("event", "value_list", "collision", "Type of event that handler should respond to")
@@ -442,7 +442,7 @@ the effect will be culled while still visible]]
 		return event_types
 	end
 
-
+	
 	-- Lines: 404 to 411
 	local function create_effect_spawn_property()
 		local effect_spawn_property = CoreEffectProperty:new("effect_spawn", "compound", "", "")
@@ -458,7 +458,7 @@ the effect will be culled while still visible]]
 		return effect_spawn_property
 	end
 
-
+	
 	-- Lines: 415 to 422
 	local function create_effect_spawn_once_property()
 		local effect_spawn_once_property = CoreEffectProperty:new("effect_spawn_once_drag", "compound", "", "")
@@ -474,7 +474,7 @@ the effect will be culled while still visible]]
 		return effect_spawn_once_property
 	end
 
-
+	
 	-- Lines: 426 to 437
 	local function create_play_sound_property()
 		local play_sound = CoreEffectProperty:new("play_sound", "compound", "", "")
@@ -517,7 +517,7 @@ end
 function CoreEffectAtom:collect_stack_time_events()
 	local ret = {}
 
-
+	
 	-- Lines: 457 to 471
 	local function traverse_property(pref, ret, p)
 		if p._type == "time" then

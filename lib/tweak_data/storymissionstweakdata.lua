@@ -98,7 +98,6 @@ function StoryMissionsTweakData:_mission(id, data)
 	return data
 end
 
-
 -- Lines: 76 to 81
 local function level_check(id, ach_id)
 	local d = tweak_data.achievement.level_achievements[ach_id or id]
@@ -108,14 +107,12 @@ local function level_check(id, ach_id)
 	end
 end
 
-
 -- Lines: 83 to 87
 local function maybe_award(id, check, set)
 	if check then
 		managers.story:award(id, set == true and check or set or nil)
 	end
 end
-
 
 -- Lines: 91 to 93
 function StoryMissionsTweakData._sm_1_check(mission_data)

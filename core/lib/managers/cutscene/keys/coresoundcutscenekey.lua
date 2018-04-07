@@ -181,7 +181,7 @@ function CoreSoundCutsceneKey:_trigger_sound(offset)
 	local instance = self:sound():play(self:sync_to_video() and "running_offset" or "offset", offset or 0)
 
 	if alive(instance) then
-
+		
 		-- Lines: 149 to 153
 		function self._sound_abort_func()
 			if alive(instance) and instance:is_playing() then

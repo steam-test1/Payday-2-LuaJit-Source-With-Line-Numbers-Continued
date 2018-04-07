@@ -28,7 +28,7 @@ PlayerAction.FullyLoaded.Function = function (player_manager, pickup_chance, inc
 	local gained_throwable = false
 	local chance = pickup_chance
 
-
+	
 	-- Lines: 29 to 31
 	local function on_ammo_pickup_message(unit)
 		gained_throwable, chance = on_ammo_pickup(unit, chance, increase)

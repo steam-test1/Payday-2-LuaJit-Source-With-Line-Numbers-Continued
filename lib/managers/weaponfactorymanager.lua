@@ -212,7 +212,7 @@ end
 function WeaponFactoryManager:create_blueprints(factory_id)
 	local i_table = self:_indexed_parts(factory_id)
 
-
+	
 	-- Lines: 193 to 205
 	local function dump(i_category, result, new_combination_in)
 		for i_pryl, pryl_name in ipairs(i_table[i_category].parts) do
@@ -786,7 +786,7 @@ function WeaponFactoryManager:clbk_part_unit_loaded(task_data, status, u_type, u
 	end
 
 	if task_data.spawn then
-
+		
 		-- Lines: 773 to 780
 		local function _spawn(part)
 			local unit = self:_spawn_and_link_unit(part.name, part.a_obj, task_data.third_person, part.link_to_unit)

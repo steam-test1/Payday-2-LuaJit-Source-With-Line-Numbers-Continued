@@ -5,7 +5,6 @@ end
 
 nice = math.nice
 
-
 -- Lines: 20 to 41
 function rgb_to_hsv(r, g, b)
 	local max = math.max(r, g, b)
@@ -30,7 +29,6 @@ function rgb_to_hsv(r, g, b)
 
 	return hue, saturation, value
 end
-
 
 -- Lines: 44 to 60
 function hsv_to_rgb(h, s, v)
@@ -75,7 +73,6 @@ function hsv_to_rgb(h, s, v)
 	return unpack(cases[math.fmod(c, 6)])
 end
 
-
 -- Lines: 63 to 77
 function string_to_value(type, value)
 	if type == "number" then
@@ -95,7 +92,6 @@ function string_to_value(type, value)
 	return value
 end
 
-
 -- Lines: 80 to 87
 function vector_to_string(v, f)
 	if f then
@@ -108,7 +104,6 @@ function vector_to_string(v, f)
 
 	return v.x .. " " .. v.y .. " " .. v.z
 end
-
 
 -- Lines: 90 to 97
 function rotation_to_string(r, f)
@@ -123,12 +118,10 @@ function rotation_to_string(r, f)
 	return r:yaw() .. " " .. r:pitch() .. " " .. r:roll()
 end
 
-
 -- Lines: 100 to 101
 function width_mul(aspect_ratio)
 	return 0.75 * aspect_ratio
 end
-
 
 -- Lines: 104 to 115
 function wire_set_midpoint(unit, source, target, middle)
@@ -146,7 +139,6 @@ function wire_set_midpoint(unit, source, target, middle)
 		co:set_rotation(Rotation:look_at((e_pos - s_pos):normalized(), math.UP))
 	end
 end
-
 
 -- Lines: 120 to 138
 function probability(chance_table, result_table)
@@ -171,7 +163,6 @@ function probability(chance_table, result_table)
 	return choice
 end
 
-
 -- Lines: 141 to 150
 function get_fit_size(width, height, bounding_width, bounding_height)
 	local bounding_aspect = bounding_width / bounding_height
@@ -183,7 +174,6 @@ function get_fit_size(width, height, bounding_width, bounding_height)
 		return bounding_width, (bounding_height * bounding_aspect) / aspect
 	end
 end
-
 
 -- Lines: 153 to 177
 function os.get_oldest_date(date1, date2)

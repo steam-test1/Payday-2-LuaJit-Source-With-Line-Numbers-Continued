@@ -141,7 +141,7 @@ function CopDamage:init(unit)
 
 	self._has_been_staggered = false
 
-
+	
 	-- Lines: 148 to 150
 	local function clbk()
 		self._has_been_staggered = false
@@ -1464,7 +1464,7 @@ end
 function CopDamage:_on_stun_hit_exit()
 	self:set_accuracy_multiplier(self._ON_STUN_ACCURACY_DECREASE)
 
-
+	
 	-- Lines: 1468 to 1469
 	local function f()
 		self:set_accuracy_multiplier(1)
@@ -3383,7 +3383,7 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		self._ws:panel():child("variant"):set_color(vc)
 
-
+		
 		-- Lines: 3353 to 3368
 		local function func(o)
 			local mt = 0.25
@@ -3421,7 +3421,7 @@ function CopDamage:_update_debug_ws(damage_info)
 				color = Color.white
 			})
 
-
+			
 			-- Lines: 3374 to 3387
 			local function func2(o, dir)
 				local mt = 8

@@ -114,7 +114,7 @@ end
 function VehicleOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-
+	
 	-- Lines: 95 to 103
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
@@ -141,7 +141,7 @@ end
 
 -- Lines: 113 to 120
 function VehicleOperatorUnitElement:remove_unit_list_btn()
-
+	
 	-- Lines: 113 to 114
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)

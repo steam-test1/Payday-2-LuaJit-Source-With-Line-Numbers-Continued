@@ -2,7 +2,6 @@ require("lib/managers/menu/items/ContractBrokerHeistItem")
 
 local padding = 10
 
-
 -- Lines: 5 to 9
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()

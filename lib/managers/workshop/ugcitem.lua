@@ -7,14 +7,12 @@ UGCItem.DEFAULT_TAGS = {}
 UGCItem.DEFAULT_VISIBILITY = "hidden"
 local UGC = Steam:ugc_handler()
 
-
 -- Lines: 13 to 15
 local function time_stamp()
 	local t = os.date("*t")
 
 	return string.format("%04u%03u%02u%02u%02u", t.year, t.yday, t.hour, t.min, t.sec)
 end
-
 
 -- Lines: 22 to 23
 function UGCItem.SortByTimestamp(lhs, rhs)
@@ -109,7 +107,7 @@ function UGCItem:prepare_for_submit(callback)
 	if not self._ugc_item then
 		print("[UGCItem:submit] Creating item")
 
-
+		
 		-- Lines: 135 to 144
 		local function on_create_callback(result, item)
 			if result == "success" then
@@ -238,7 +236,7 @@ function UGCItem:_submit_item(changenotes, callback)
 		return false
 	end
 
-
+	
 	-- Lines: 251 to 257
 	local function on_submit_item(result, item)
 		print("[UGCItem:_submit_item] Result ", result)
@@ -381,7 +379,6 @@ function UGCItem:_load_xml(path, load_node_func, root_node, param_preprocessor)
 	return true
 end
 
-
 -- Lines: 378 to 383
 local function indent_string(str, indent)
 	local s = ""
@@ -392,7 +389,6 @@ local function indent_string(str, indent)
 
 	return s .. str
 end
-
 
 -- Lines: 386 to 456
 function UGCItem:_save_xml(path, node_name, attributes, params, param_preprocessor)
@@ -467,7 +463,7 @@ end
 
 -- Lines: 466 to 481
 function UGCItem:_load_config()
-
+	
 	-- Lines: 460 to 466
 	local function parse_vector(key, value)
 		if string.find(value, "Vector3") then
@@ -502,7 +498,6 @@ function UGCItem:_save_config()
 	end
 end
 
-
 -- Lines: 495 to 504
 local function tags_to_string(tags)
 	local tag_string = nil
@@ -513,7 +508,6 @@ local function tags_to_string(tags)
 
 	return tag_string
 end
-
 
 -- Lines: 508 to 516
 local function string_to_tags(tags_string)
@@ -528,7 +522,6 @@ local function string_to_tags(tags_string)
 
 	return tags
 end
-
 
 -- Lines: 519 to 542
 function UGCItem:_load_info()
@@ -564,7 +557,7 @@ function UGCItem:_save_info()
 		return
 	end
 
-
+	
 	-- Lines: 551 to 555
 	local function param_preprocessor(key, value)
 		if key == "tags" then

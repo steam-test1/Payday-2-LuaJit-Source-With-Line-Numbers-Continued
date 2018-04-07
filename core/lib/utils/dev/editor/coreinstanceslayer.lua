@@ -858,7 +858,7 @@ function InstancesLayer:build_panel(notebook, settings)
 
 	self._instance_info_guis = {}
 
-
+	
 	-- Lines: 848 to 855
 	local function _info(name)
 		local text_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -881,7 +881,7 @@ function InstancesLayer:build_panel(notebook, settings)
 
 	self._predefined_instances_info_guis = {}
 
-
+	
 	-- Lines: 867 to 874
 	local function _info(name)
 		local text_sizer = EWS:BoxSizer("HORIZONTAL")

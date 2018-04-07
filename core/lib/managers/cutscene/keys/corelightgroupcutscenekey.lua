@@ -8,7 +8,6 @@ CoreLightGroupCutsceneKey:register_serialized_attribute("group", "")
 CoreLightGroupCutsceneKey:register_serialized_attribute("enable", false, toboolean)
 CoreLightGroupCutsceneKey:attribute_affects("group", "enable")
 
-
 -- Lines: 10 to 11
 function CoreLightGroupCutsceneKey:__tostring()
 	return string.format("Change light group, %s stateto %s.", self:group(), tostring(self:enable()))

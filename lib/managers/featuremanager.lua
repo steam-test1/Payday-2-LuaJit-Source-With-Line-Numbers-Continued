@@ -275,7 +275,7 @@ function FeatureManager:thq_feature()
 		return
 	end
 
-
+	
 	-- Lines: 221 to 224
 	local function yes_function()
 		managers.user:set_setting("use_thq_weapon_parts", true)
@@ -314,7 +314,7 @@ end
 function FeatureManager:short_heist()
 	print("FeatureManager:short_heist()")
 
-
+	
 	-- Lines: 251 to 258
 	local function yes_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
@@ -325,7 +325,7 @@ function FeatureManager:short_heist()
 		MenuCallbackHandler:play_short_heist()
 	end
 
-
+	
 	-- Lines: 260 to 264
 	local function no_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then

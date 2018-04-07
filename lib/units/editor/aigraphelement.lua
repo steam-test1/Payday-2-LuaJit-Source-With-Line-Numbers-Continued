@@ -83,7 +83,7 @@ end
 
 -- Lines: 65 to 71
 function AIGraphUnitElement:add_unit_list_btn()
-
+	
 	-- Lines: 65 to 66
 	local function f(unit)
 		return unit:type() == Idstring("ai")

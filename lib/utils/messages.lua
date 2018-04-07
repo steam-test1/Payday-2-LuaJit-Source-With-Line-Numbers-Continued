@@ -1,6 +1,5 @@
 local enum = 0
 
-
 -- Lines: 5 to 7
 local function set_enum()
 	enum = enum + 1

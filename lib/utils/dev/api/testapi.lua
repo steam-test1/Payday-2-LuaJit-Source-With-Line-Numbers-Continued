@@ -31,7 +31,6 @@ function TestAPIHelper.register_event_callback(id, clbk)
 	Global.test_api["callback_" .. id] = clbk
 end
 
-
 -- Lines: 43 to 62
 local function parse_to_var(str)
 	if type(str) ~= "string" then
@@ -57,7 +56,6 @@ local function parse_to_var(str)
 	return ret
 end
 
-
 -- Lines: 71 to 129
 function TestAPIHelper.register_API_function(name, category, args_str, func, desc, async)
 	local args = {}
@@ -78,7 +76,7 @@ function TestAPIHelper.register_API_function(name, category, args_str, func, des
 		TestAPI[category] = {}
 	end
 
-
+	
 	-- Lines: 85 to 123
 	TestAPI[category][name] = function (response_string, arg_tbl)
 		TestAPIHelper.register_event(name, response_string)
@@ -180,7 +178,6 @@ function TestAPI.setup_call_queue(call_queue)
 	TestAPIHelper.call_next()
 end
 
-
 -- Lines: 180 to 185
 local function get_max_padding_from_table_keys(tbl)
 	local padding = 0
@@ -191,7 +188,6 @@ local function get_max_padding_from_table_keys(tbl)
 
 	return padding + 1
 end
-
 
 -- Lines: 190 to 195
 local function get_max_padding_from_table(tbl, func)
@@ -204,7 +200,6 @@ local function get_max_padding_from_table(tbl, func)
 	return padding + 1
 end
 
-
 -- Lines: 198 to 203
 local function center(text, w, delimeter)
 	delimeter = delimeter or " "
@@ -214,7 +209,6 @@ local function center(text, w, delimeter)
 
 	return ret .. " " .. string.rep(delimeter, (w - string.len(ret)) - 1)
 end
-
 
 -- Lines: 206 to 226
 function TestAPI.help()
@@ -262,7 +256,6 @@ TestAPIHelper.register_API_function("get_jobs", "jobs", "", function ()
 
 	return {jobs = jobs}
 end, "Returns a table with all available jobs.")
-
 
 -- Lines: 243 to 268
 local function start(job_id, difficulty, stage)
@@ -334,7 +327,6 @@ TestAPIHelper.register_API_function("delay", "internal", "time = 1", function ()
 	table.insert(Global.test_api.delayed_callbacks, delayed)
 end, "Delays queued calls by the given time (seconds).", true)
 
-
 -- Lines: 315 to 345
 local function equip_weapon_in_game(category, slot)
 	assert(category == "primaries" or category == "secondaries", string.format("invalid category: %s", category))
@@ -343,7 +335,7 @@ local function equip_weapon_in_game(category, slot)
 	local primary = category == "primaries"
 	local first_time = true
 
-
+	
 	-- Lines: 322 to 334
 	local function clbk()
 		if first_time then

@@ -34,7 +34,7 @@ function StatisticsGenerator._root_path()
 	path = Application:nice_path(path, true)
 	local f = nil
 
-
+	
 	-- Lines: 38 to 39
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")

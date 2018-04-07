@@ -9,7 +9,6 @@ if Application:ews_enabled() then
 	end)
 end
 
-
 -- Lines: 14 to 54
 function CoreExtendedMultiChoiceDialog:init(parent, caption, message, pos, size, style, objects)
 	self._objects = objects or {}

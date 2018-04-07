@@ -1,6 +1,5 @@
 require("lib/managers/menu/BoxGuiObject")
 
-
 -- Lines: 4 to 8
 function alive(obj)
 	if obj and obj:alive() then
@@ -10,12 +9,10 @@ function alive(obj)
 	return false
 end
 
-
 -- Lines: 11 to 12
 function Idstring(str)
 	return str
 end
-
 
 -- Lines: 15 to 19
 local function make_fine_text(text_obj)
@@ -24,7 +21,6 @@ local function make_fine_text(text_obj)
 	text_obj:set_size(w, h)
 	text_obj:set_position(math.round(text_obj:x()), math.round(text_obj:y()))
 end
-
 
 -- Lines: 21 to 52
 local function shrinkwrap(panel, padding)

@@ -7,7 +7,7 @@ function MenuNodeEconomySafe:init(node, layer, parameters)
 	local safe_entry = node:parameters().safe_entry
 
 	if node:parameters().debug then
-
+		
 		-- Lines: 12 to 14
 		local function f()
 			self:_test_start_open_economy_safe(safe_entry)
@@ -36,7 +36,7 @@ function MenuNodeEconomySafe:_test_start_open_economy_safe(safe_entry)
 
 	managers.network.account:inventory_reward_unlock(safe_entry, nil, nil, callback(self, self, "_test_safe_result_recieved", MenuNodeEconomySafe.reward_unlock_request_id))
 
-
+	
 	-- Lines: 36 to 38
 	local function ready_clbk()
 		print("ECONOMY SAFE READY CALLBACK")
@@ -63,7 +63,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 	if error then
 		managers.menu:set_cash_safe_scene_done(true)
 
-
+		
 		-- Lines: 56 to 57
 		local function ok_func()
 			managers.menu:back(true)
@@ -91,7 +91,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 	managers.mission:call_global_event(Message.OnSafeOpened, result)
 	print("B: RESULT RECIEVED", result.weapon_skin, Application:time())
 
-
+	
 	-- Lines: 76 to 101
 	local function ready_clbk()
 		if not alive(self._raffle_panel) then
@@ -100,7 +100,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 
 		print("READY CALLBACK")
 
-
+		
 		-- Lines: 82 to 87
 		local function stopped_clbk()
 			print("stopped_clbk")

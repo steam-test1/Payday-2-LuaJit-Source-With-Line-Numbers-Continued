@@ -1,6 +1,5 @@
 core:import("CoreEngineAccess")
 
-
 -- Lines: 3 to 465
 function CoreEditor:build_menubar()
 	local menu_bar = EWS:MenuBar()
@@ -1096,7 +1095,6 @@ end
 -- Lines: 1001 to 1003
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
-
 
 "And the Earth Was Without Form and Void.."
 

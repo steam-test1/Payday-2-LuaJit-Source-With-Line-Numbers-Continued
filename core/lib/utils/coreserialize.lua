@@ -1,6 +1,5 @@
 core:module("CoreSerialize")
 
-
 -- Lines: 12 to 30
 function string_to_classtable(s)
 	local module_name, name = nil
@@ -27,7 +26,6 @@ function string_to_classtable(s)
 		return obj
 	end
 end
-
 
 -- Lines: 32 to 40
 function classtable_to_string(ct)

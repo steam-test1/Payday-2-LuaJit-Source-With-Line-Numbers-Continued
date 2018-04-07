@@ -1025,7 +1025,7 @@ function MenuNodeGui:activate_customize_controller(item)
 	self._listening_to_input = true
 	self._skip_first_activate_key = true
 
-
+	
 	-- Lines: 872 to 873
 	local function f(o, key)
 		self:_key_press(o, key, "keyboard", item)
@@ -1034,7 +1034,7 @@ function MenuNodeGui:activate_customize_controller(item)
 	row_item.controller_binding:set_text("_")
 	row_item.controller_binding:key_release(f)
 
-
+	
 	-- Lines: 875 to 876
 	local function f(o, key)
 		self:_key_press(o, key, "mouse", item)
@@ -1042,7 +1042,7 @@ function MenuNodeGui:activate_customize_controller(item)
 
 	row_item.controller_binding:mouse_click(f)
 
-
+	
 	-- Lines: 878 to 879
 	local function f(index, key)
 		self:_key_press(row_item.controller_binding, key, "mouse", item, true)
@@ -1879,7 +1879,7 @@ function MenuNodeMainGui:_add_version_string()
 			font_size = tweak_data.menu.pd2_small_font_size
 		})
 
-
+		
 		-- Lines: 1808 to 1828
 		local function fade_in(o)
 			local from = Color(0, 1, 1, 1)

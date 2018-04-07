@@ -1,6 +1,5 @@
 require("lib/managers/menu/WalletGuiObject")
 
-
 -- Lines: 4 to 8
 local function make_fine_text(text_gui)
 	local x, y, w, h = text_gui:text_rect()
@@ -8,7 +7,6 @@ local function make_fine_text(text_gui)
 	text_gui:set_size(w, h)
 	text_gui:set_position(math.round(text_gui:x()), math.round(text_gui:y()))
 end
-
 
 -- Lines: 10 to 14
 local function fit_text_height(text_gui)
@@ -362,7 +360,7 @@ function NewSkillTreeGui:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-
+	
 	-- Lines: 276 to 278
 	local function func(o)
 		over(0.6, function (p)
@@ -2765,7 +2763,7 @@ function NewSkillTreeSkillItem:flash()
 
 	self._is_flashing = true
 
-
+	
 	-- Lines: 2294 to 2303
 	local function flash_anim(panel)
 		local st_color = skill_text:color()

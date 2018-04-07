@@ -24,7 +24,6 @@ else
 	TeamAIBrain._reload_clbks = {}
 end
 
-
 -- Lines: 32 to 45
 function TeamAIBrain:init(unit)
 	self._unit = unit

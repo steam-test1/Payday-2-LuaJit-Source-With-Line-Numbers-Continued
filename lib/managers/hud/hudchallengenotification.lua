@@ -9,7 +9,6 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 
-
 -- Lines: 15 to 34
 local function HUDBGBox_create_ex(panel, config)
 	local box_panel = panel
@@ -93,7 +92,6 @@ end
 
 local box_speed = 1500
 
-
 -- Lines: 40 to 57
 local function animate_open(panel, done_cb)
 	local target_w = panel:w()
@@ -118,7 +116,6 @@ local function animate_open(panel, done_cb)
 	done_cb()
 end
 
-
 -- Lines: 59 to 74
 local function animate_close(panel, done_cb)
 	local speed = box_speed
@@ -138,7 +135,6 @@ local function animate_close(panel, done_cb)
 	panel:set_w(0)
 	done_cb()
 end
-
 
 -- Lines: 76 to 83
 local function wait_global(seconds)

@@ -1,6 +1,5 @@
 local ids_unit = Idstring("unit")
 
-
 -- Lines: 39 to 50
 function preload_all()
 	for id, part in pairs(tweak_data.weapon.factory.parts) do
@@ -13,7 +12,6 @@ function preload_all()
 		end
 	end
 end
-
 
 -- Lines: 52 to 62
 function preload_all_units()
@@ -28,7 +26,6 @@ function preload_all_units()
 	end
 end
 
-
 -- Lines: 64 to 74
 function print_package_strings_unit()
 	for id, part in pairs(tweak_data.weapon.factory) do
@@ -37,7 +34,6 @@ function print_package_strings_unit()
 		end
 	end
 end
-
 
 -- Lines: 76 to 93
 function print_package_strings_part_unit()
@@ -55,7 +51,6 @@ function print_package_strings_part_unit()
 	end
 end
 
-
 -- Lines: 95 to 106
 function preload_all_first()
 	for id, part in pairs(tweak_data.weapon.factory.parts) do
@@ -69,7 +64,6 @@ function preload_all_first()
 	end
 end
 
-
 -- Lines: 108 to 118
 function print_package_strings()
 	for id, part in pairs(tweak_data.weapon.factory.parts) do
@@ -78,7 +72,6 @@ function print_package_strings()
 		end
 	end
 end
-
 
 -- Lines: 121 to 139
 function print_parts_without_texture()

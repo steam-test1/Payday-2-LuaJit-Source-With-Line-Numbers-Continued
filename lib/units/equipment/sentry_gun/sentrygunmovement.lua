@@ -424,7 +424,7 @@ function SentryGunMovement:_upd_movement(dt)
 	error_polar = Polar(1, math.clamp(error_polar.pitch, self._pitch_min, self._pitch_max), error_polar.spin)
 	error_polar = error_polar - fwd_polar
 
-
+	
 	-- Lines: 452 to 482
 	local function _ramp_value(value, err, vel, slowdown_at, max_vel, min_vel, acc)
 		local sign_err = math.sign(err)

@@ -446,7 +446,6 @@ function ToggleInputPanel:allow_input()
 	return ToggleInputPanel.super.allow_input(self) and self.enabled
 end
 
-
 -- Lines: 372 to 441
 function add_achievement_detail_text(scroll, placer, visual, info, font_color)
 	if not visual then
@@ -1090,7 +1089,6 @@ function AchievementListGui:_show_all()
 	end
 end
 
-
 -- Lines: 890 to 895
 local function count_done(list)
 	local count = 0
@@ -1101,7 +1099,6 @@ local function count_done(list)
 
 	return count
 end
-
 
 -- Lines: 898 to 995
 function AchievementListGui:generate_side_panel()
@@ -1789,7 +1786,7 @@ end
 
 -- Lines: 1503 to 1505
 function AchievementListGui.create_tracked_then_other_order(other_sort)
-
+	
 	-- Lines: 1495 to 1503
 	local function func(lhs, rhs)
 		if lhs.info.forced or rhs.info.forced then

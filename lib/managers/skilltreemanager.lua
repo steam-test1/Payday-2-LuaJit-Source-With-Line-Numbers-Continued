@@ -1,7 +1,6 @@
 SkillTreeManager = SkillTreeManager or class()
 SkillTreeManager.VERSION = 9
 
-
 -- Lines: 4 to 12
 local function get_skill_costs()
 	local t = {
@@ -25,7 +24,6 @@ local function get_skill_costs()
 
 	return t
 end
-
 
 -- Lines: 15 to 26
 function SkillTreeManager:init()
@@ -953,7 +951,7 @@ function SkillTreeManager:switch_skills(selected_skill_switch)
 		return
 	end
 
-
+	
 	-- Lines: 842 to 856
 	local function unaquire_skill(skill_id)
 		local progress_data = self._global.skills[skill_id]
@@ -2084,7 +2082,7 @@ function SkillTreeManager:debug()
 
 	local j = 1
 
-
+	
 	-- Lines: 1927 to 1974
 	local function add_func(skill_id)
 		local skill = tweak_data.skilltree.skills[skill_id]

@@ -579,7 +579,7 @@ function PrePlanningManager:execute_reserved_mission_elements()
 		local location_group_converter = self:_get_location_groups_converter()
 		local location_group, location_index, element = nil
 
-
+		
 		-- Lines: 505 to 525
 		local function execute_func(type, index, finished_table)
 			if not self:is_type_disabled(type) then
@@ -638,7 +638,7 @@ function PrePlanningManager:get_current_preplan()
 	local location_group_converter = self:_get_location_groups_converter()
 	local location_group, category, element = nil
 
-
+	
 	-- Lines: 553 to 566
 	local function set_func(type, index, peer_id, current_table)
 		if not self:is_type_disabled(type) then

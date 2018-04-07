@@ -45,13 +45,13 @@ function PlayerHandStateMachine:init(hand_unit, hand_id, transition_queue)
 	local item_to_swipe = callback(nil, item, "swipe_transition")
 	local swipe_to_item = callback(nil, swipe, "item_transition")
 
-
+	
 	-- Lines: 65 to 66
 	local function weapon_assist_cond(prev_state, next_state)
 		return next_state:hsm():other_hand():current_state_name() == "weapon"
 	end
 
-
+	
 	-- Lines: 69 to 71
 	local function weapon_swipe_condition(prev_state, next_state)
 		local other_hand = next_state:hsm():other_hand()
@@ -59,13 +59,13 @@ function PlayerHandStateMachine:init(hand_unit, hand_id, transition_queue)
 		return other_hand:current_state_name() ~= "bow" or not other_hand:current_state():gripping_string()
 	end
 
-
+	
 	-- Lines: 74 to 75
 	local function weapon_belt_condition(prev_state, next_state)
 		return next_state:hsm():other_hand():current_state_name() ~= "weapon_assist" and weapon_swipe_condition(prev_state, next_state)
 	end
 
-
+	
 	-- Lines: 78 to 79
 	local function exit_driving_condition(prev_state, next_state)
 		return managers.player:current_state() ~= "driving"

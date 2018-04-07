@@ -3,7 +3,6 @@ require("lib/managers/menu/PlayerInventoryGui")
 local IS_WIN_32 = SystemInfo:platform() == Idstring("WIN32")
 local NOT_WIN_32 = not IS_WIN_32
 
-
 -- Lines: 6 to 10
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -11,7 +10,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 12 to 13
 local function format_round(num, round_value)
@@ -778,7 +776,7 @@ end
 function MainMenuGui:_update_box_status(box, selected)
 	local box_object = nil
 
-
+	
 	-- Lines: 701 to 710
 	local function _update_box_object(object)
 		local variables = {

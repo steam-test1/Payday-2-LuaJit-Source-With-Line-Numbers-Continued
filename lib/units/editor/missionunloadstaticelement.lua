@@ -149,7 +149,7 @@ end
 
 -- Lines: 127 to 136
 function MissionUnloadStaticElement:add_unit_list_btn()
-
+	
 	-- Lines: 122 to 127
 	local function filter_p(unit)
 		if self._units[unit:unit_data().unit_id] then
@@ -170,7 +170,7 @@ end
 
 -- Lines: 140 to 149
 function MissionUnloadStaticElement:remove_unit_list_btn()
-
+	
 	-- Lines: 139 to 140
 	local function filter_p(unit)
 		return self._units[unit:unit_data().unit_id]

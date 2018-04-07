@@ -57,12 +57,10 @@ function HalfCircleProgressBar:set_progress(value)
 	self._left:set_color(self._color:with_red(0.5 + value * 0.5))
 end
 
-
 -- Lines: 51 to 52
 local function create_tag_text(str)
 	return "menu_achievements_" .. str
 end
-
 
 -- Lines: 55 to 56
 local function get_tag_category(tag)
@@ -79,12 +77,10 @@ local difficulty_translate = {
 	difficulty_mayhem = "menu_difficulty_easy_wish"
 }
 
-
 -- Lines: 64 to 65
 local function create_difficulty_text(str)
 	return difficulty_translate[str]
 end
-
 
 -- Lines: 68 to 75
 local function create_contract_text(str)

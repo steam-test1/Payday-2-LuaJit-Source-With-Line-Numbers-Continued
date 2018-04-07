@@ -169,7 +169,7 @@ end
 
 -- Lines: 169 to 190
 function WorldDefinition:_load_continent_package(path)
-
+	
 	-- Lines: 165 to 169
 	function blacklist_filter_pred(t, name)
 		if t == Idstring("unit") then

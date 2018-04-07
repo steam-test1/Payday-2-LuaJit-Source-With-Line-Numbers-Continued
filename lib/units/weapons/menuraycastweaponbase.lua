@@ -3,7 +3,6 @@ NewRaycastWeaponBase = NewRaycastWeaponBase or class()
 require("lib/units/weapons/CosmeticsWeaponBase")
 require("lib/units/weapons/ScopeBase")
 
-
 -- Lines: 6 to 15
 function NewRaycastWeaponBase:init(unit)
 	self._unit = unit

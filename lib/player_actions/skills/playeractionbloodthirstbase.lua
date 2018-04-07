@@ -7,7 +7,7 @@ PlayerAction.BloodthirstBase.Function = function (player_manager, melee_multipli
 	local multiplier = 1
 	local quit = false
 
-
+	
 	-- Lines: 10 to 13
 	local function increase_multiplier()
 		multiplier = math.min(multiplier + melee_multiplier, max_multiplier)
@@ -17,7 +17,7 @@ PlayerAction.BloodthirstBase.Function = function (player_manager, melee_multipli
 
 	increase_multiplier()
 
-
+	
 	-- Lines: 15 to 21
 	local function on_enemy_killed(weapon_unit, variant)
 		if variant == "melee" then

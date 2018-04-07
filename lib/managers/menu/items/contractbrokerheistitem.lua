@@ -1,6 +1,5 @@
 local padding = 10
 
-
 -- Lines: 3 to 7
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()

@@ -54,7 +54,7 @@ function PlayerDamage:init(unit)
 	self._has_damage_speed = managers.player:has_inactivate_temporary_upgrade("temporary", "damage_speed_multiplier")
 	self._has_damage_speed_team = managers.player:upgrade_value("player", "team_damage_speed_multiplier_send", 0) ~= 0
 
-
+	
 	-- Lines: 74 to 75
 	local function revive_player()
 		self:revive(true)
@@ -79,7 +79,7 @@ function PlayerDamage:init(unit)
 				elapsed = 0
 			}
 
-
+			
 			-- Lines: 93 to 106
 			local function on_damage(damage_info)
 				local attacker_unit = damage_info and damage_info.attacker_unit
@@ -106,7 +106,7 @@ function PlayerDamage:init(unit)
 	self._listener_holder:add("on_use_armor_bag", {"on_use_armor_bag"}, callback(self, self, "_on_use_armor_bag_event"))
 
 	if self:_init_armor_grinding_data() then
-
+		
 		-- Lines: 111 to 112
 		function self._on_damage_callback_func()
 			return callback(self, self, "_on_damage_armor_grinding")
@@ -130,19 +130,19 @@ function PlayerDamage:init(unit)
 	end
 
 	if player_manager:has_category_upgrade("player", "revive_damage_reduction") and player_manager:has_category_upgrade("player", "revive_damage_reduction") then
-
+		
 		-- Lines: 131 to 132
 		local function on_revive_interaction_start()
 			managers.player:set_property("revive_damage_reduction", player_manager:upgrade_value("player", "revive_damage_reduction"), 1)
 		end
 
-
+		
 		-- Lines: 132 to 133
 		local function on_exit_interaction()
 			managers.player:remove_property("revive_damage_reduction")
 		end
 
-
+		
 		-- Lines: 133 to 134
 		local function on_revive_interaction_success()
 			managers.player:activate_temporary_upgrade("temporary", "revive_damage_reduction")
@@ -171,7 +171,7 @@ end
 
 -- Lines: 161 to 170
 function PlayerDamage:_init_standard_listeners()
-
+	
 	-- Lines: 161 to 162
 	function self._on_damage_callback_func()
 		return callback(self, self, "_on_damage_event")
@@ -324,7 +324,6 @@ function PlayerDamage:force_into_bleedout(can_activate_berserker)
 	self:_set_health_effect()
 end
 
-
 -- Lines: 287 to 295
 local function get_heartbeat_value(t)
 	local speed = 550
@@ -336,7 +335,6 @@ local function get_heartbeat_value(t)
 
 	return val < 0.4 and 0 or val
 end
-
 
 -- Lines: 298 to 300
 function PlayerDamage:stop_vr_heartbeat()
@@ -894,7 +892,7 @@ function PlayerDamage:set_armor(armor)
 		if current_armor == 0 and armor ~= 0 then
 			self:consume_armor_stored_health()
 		elseif current_armor ~= 0 and armor == 0 and self._dire_need then
-
+			
 			-- Lines: 816 to 817
 			local function clbk()
 				return self:is_regenerating_armor()

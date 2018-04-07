@@ -543,7 +543,7 @@ end
 
 -- Lines: 586 to 591
 function CrimeNetManager:_find_online_games_xbox360(friends_only)
-
+	
 	-- Lines: 531 to 587
 	local function f(info)
 		local friends = managers.network.friends:get_friends_by_name()
@@ -640,7 +640,7 @@ function CrimeNetManager:_find_online_games_xb1(friends_only)
 		return
 	end
 
-
+	
 	-- Lines: 604 to 674
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
@@ -731,7 +731,7 @@ end
 
 -- Lines: 738 to 820
 function CrimeNetManager:_find_online_games_ps3(friends_only)
-
+	
 	-- Lines: 682 to 739
 	local function f(info_list)
 		managers.network.matchmake:search_lobby_done()
@@ -783,7 +783,7 @@ function CrimeNetManager:_find_online_games_ps3(friends_only)
 		return
 	end
 
-
+	
 	-- Lines: 746 to 749
 	local function done_verify_func()
 		managers.network.matchmake:register_callback("search_lobby", f)
@@ -805,7 +805,7 @@ function CrimeNetManager:_find_online_games_ps3(friends_only)
 		table.insert(rooms, table.remove(rooms_original, math.random(#rooms_original)))
 	end
 
-
+	
 	-- Lines: 766 to 813
 	local function updated_session_attributes(active_info_list)
 		self._test_result = active_info_list
@@ -868,7 +868,7 @@ end
 
 -- Lines: 879 to 964
 function CrimeNetManager:_find_online_games_ps4(friends_only)
-
+	
 	-- Lines: 823 to 880
 	local function f(info_list)
 		managers.network.matchmake:search_lobby_done()
@@ -920,7 +920,7 @@ function CrimeNetManager:_find_online_games_ps4(friends_only)
 		return
 	end
 
-
+	
 	-- Lines: 887 to 890
 	local function done_verify_func()
 		managers.network.matchmake:register_callback("search_lobby", f)
@@ -943,7 +943,7 @@ function CrimeNetManager:_find_online_games_ps4(friends_only)
 		table.insert(rooms, table.remove(rooms_original, math.random(#rooms_original)))
 	end
 
-
+	
 	-- Lines: 910 to 957
 	local function updated_session_attributes(active_info_list)
 		self._test_result = active_info_list
@@ -1022,7 +1022,7 @@ end
 
 -- Lines: 1131 to 1145
 function CrimeNetManager:_find_online_games_win32(friends_only)
-
+	
 	-- Lines: 987 to 1132
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
@@ -1147,7 +1147,7 @@ function CrimeNetManager:_find_online_games_win32(friends_only)
 	managers.network.matchmake:register_callback("search_lobby", f)
 	managers.network.matchmake:search_lobby(friends_only)
 
-
+	
 	-- Lines: 1137 to 1141
 	local function usrs_f(success, amount)
 		if success then
@@ -1182,7 +1182,7 @@ function CrimeNetManager:join_quick_play_game()
 		return
 	end
 
-
+	
 	-- Lines: 1178 to 1311
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
@@ -1461,7 +1461,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 	bd_light:set_alpha(0)
 	bd_light:set_blend_mode("add")
 
-
+	
 	-- Lines: 1376 to 1391
 	local function light_flicker_animation(o)
 		local alpha = 0
@@ -1812,7 +1812,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 		layer = 40
 	})
 
-
+	
 	-- Lines: 1560 to 1569
 	local function mul_to_procent_string(multiplier)
 		local pro = math.round(multiplier * 100)
@@ -1889,7 +1889,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 			child:set_alpha(0)
 		end
 
-
+		
 		-- Lines: 1621 to 1643
 		local function global_bonuses_anim(panel)
 			local child_num = 1
@@ -1922,7 +1922,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 
 		global_bonuses_panel:animate(global_bonuses_anim)
 	elseif #global_bonuses_panel:children() == 1 then
-
+		
 		-- Lines: 1648 to 1656
 		local function global_bonuses_anim(panel)
 			while alive(panel) do
@@ -2676,7 +2676,7 @@ function CrimeNetGui:add_special_contract(special_contract, no_casino, no_quickp
 		gui_data.dlc = special_contract.dlc
 
 		if special_contract.pulse and (not special_contract.pulse_level or managers.experience:current_level() <= special_contract.pulse_level and managers.experience:current_rank() == 0) then
-
+			
 			-- Lines: 2462 to 2466
 			local function animate_pulse(o)
 				while true do
@@ -2817,7 +2817,7 @@ function CrimeNetGui:_create_job_gui(data, type, fixed_x, fixed_y, fixed_locatio
 	local range_colors = {}
 	local text_string = managers.localization:to_upper_text("menu_exp_short")
 
-
+	
 	-- Lines: 2606 to 2615
 	local function mul_to_procent_string(multiplier)
 		local pro = math.round(multiplier * 100)
@@ -4517,7 +4517,7 @@ function CrimeNetGui:update_job_gui(job, inside)
 	if job.mouse_over ~= inside then
 		job.mouse_over = inside
 
-
+		
 		-- Lines: 4276 to 4427
 		local function animate_alpha(o, objects, job, alphas, inside)
 			local wanted_alpha = alphas[1]
@@ -4608,7 +4608,7 @@ function CrimeNetGui:update_job_gui(job, inside)
 					glow_met = job.glow_panel:alpha() == (inside and 0.2 or 0)
 
 					if glow_met and inside then
-
+						
 						-- Lines: 4368 to 4372
 						local function animate_pulse(o)
 							while true do

@@ -226,7 +226,7 @@ function FreeFlight:_setup_gui()
 		layer = 1000000
 	}
 
-
+	
 	-- Lines: 188 to 192
 	local function anim_fade_out_func(o)
 		CoreEvent.over(TEXT_FADE_TIME, function (t)
@@ -234,7 +234,7 @@ function FreeFlight:_setup_gui()
 		end)
 	end
 
-
+	
 	-- Lines: 193 to 197
 	local function anim_fade_in_func(o)
 		CoreEvent.over(TEXT_FADE_TIME, function (t)

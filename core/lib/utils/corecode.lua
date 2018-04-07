@@ -4,7 +4,6 @@ core:import("CoreDebug")
 core:import("CoreClass")
 core:import("CoreApp")
 
-
 -- Lines: 24 to 30
 local function open_lua_source_file(source)
 	if DB:is_bundled() then
@@ -16,7 +15,6 @@ local function open_lua_source_file(source)
 
 	return DB:has(entry_type, entry_name:id()) and DB:open(entry_type, entry_name:id()) or nil
 end
-
 
 -- Lines: 34 to 49
 function get_prototype(info)
@@ -37,7 +35,6 @@ function get_prototype(info)
 
 	return prototype
 end
-
 
 -- Lines: 53 to 77
 function get_source(info)
@@ -67,7 +64,6 @@ function get_source(info)
 	return table.concat(lines, "\n")
 end
 
-
 -- Lines: 81 to 97
 function traceback(max_level)
 	max_level = max_level or 2
@@ -90,7 +86,6 @@ function traceback(max_level)
 	end
 end
 
-
 -- Lines: 99 to 103
 function alive(obj)
 	if obj and obj:alive() then
@@ -100,12 +95,10 @@ function alive(obj)
 	return false
 end
 
-
 -- Lines: 106 to 108
 function deprecation_warning(method_name, breaking_release_name)
 	CoreDebug.cat_print("debug", string.format("DEPRECATION WARNING: %s will be removed in %s", method_name, breaking_release_name or "a future release"))
 end
-
 
 -- Lines: 119 to 149
 function sort_iterator(t, raw)
@@ -142,7 +135,6 @@ function sort_iterator(t, raw)
 		end
 	end
 end
-
 
 -- Lines: 156 to 196
 function line_representation(x, seen, raw)
@@ -201,7 +193,6 @@ function line_representation(x, seen, raw)
 	end
 end
 
-
 -- Lines: 202 to 225
 function add_prints(class_name, ignore_list)
 	local obj = _G[class_name]
@@ -215,7 +206,7 @@ function add_prints(class_name, ignore_list)
 
 	for k, v in pairs(obj) do
 		if type(v) == "function" and not ignore[k] then
-
+			
 			-- Lines: 215 to 217
 			to_change[k] = function (...)
 				print("[" .. class_name .. "]" .. "." .. k, ...)
@@ -230,12 +221,11 @@ function add_prints(class_name, ignore_list)
 	end
 end
 
-
 -- Lines: 236 to 258
 function tag_print(tag, ...)
 	tag = string.sub(tag, 1, 1) == "[" and tag or "[" .. tag .. "]"
 
-
+	
 	-- Lines: 238 to 254
 	local function do_things(tag, ...)
 		local str = ""
@@ -263,14 +253,12 @@ function tag_print(tag, ...)
 	print(do_things(tag, ...))
 end
 
-
 -- Lines: 263 to 264
 function make_tag_print(tag)
 	return function (...)
 		tag_print(tag, ...)
 	end
 end
-
 
 -- Lines: 269 to 285
 function full_representation(x, seen)
@@ -291,7 +279,6 @@ end
 
 inspect = full_representation
 
-
 -- Lines: 288 to 294
 function properties(x)
 	local t = {}
@@ -303,12 +290,11 @@ function properties(x)
 	CoreDebug.cat_print("debug", ascii_table(t))
 end
 
-
 -- Lines: 297 to 334
 function help(o)
 	local methods = {}
 
-
+	
 	-- Lines: 299 to 326
 	local function add_methods(t)
 		if type(t) == "table" then
@@ -357,7 +343,6 @@ function help(o)
 	end
 end
 
-
 -- Lines: 339 to 356
 function ascii_table(t, raw)
 	local out = ""
@@ -388,7 +373,6 @@ function ascii_table(t, raw)
 	return out
 end
 
-
 -- Lines: 362 to 422
 function memory_report(limit)
 	local seen = {}
@@ -401,7 +385,7 @@ function memory_report(limit)
 		end
 	end
 
-
+	
 	-- Lines: 373 to 377
 	local function simple(item)
 		local t = type(item)
@@ -417,7 +401,7 @@ function memory_report(limit)
 		return true
 	end
 
-
+	
 	-- Lines: 380 to 402
 	local function recurse(item, parent, key)
 		local index = type(item) == "userdata" and item:key() or item
@@ -492,7 +476,6 @@ end
 
 __profiled = {}
 
-
 -- Lines: 437 to 473
 function profile(s)
 	if __profiled[s] then
@@ -513,7 +496,7 @@ function profile(s)
 		end
 
 		t.f = rawget(_G, t.class)[t.name]
-
+		
 		-- Lines: 450 to 451
 		function t.patch(f)
 			_G[t.class][t.name] = f
@@ -521,7 +504,7 @@ function profile(s)
 	else
 		t.name = s
 		t.f = rawget(_G, t.name)
-
+		
 		-- Lines: 454 to 455
 		function t.patch(f)
 			_G[t.name] = f
@@ -534,7 +517,7 @@ function profile(s)
 		return
 	end
 
-
+	
 	-- Lines: 463 to 467
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
@@ -552,7 +535,6 @@ function profile(s)
 	Application:console_command("profiler add " .. s)
 end
 
-
 -- Lines: 475 to 482
 function unprofile(s)
 	local t = __profiled[s]
@@ -565,7 +547,6 @@ function unprofile(s)
 
 	__profiled[s] = nil
 end
-
 
 -- Lines: 484 to 489
 function reprofile()

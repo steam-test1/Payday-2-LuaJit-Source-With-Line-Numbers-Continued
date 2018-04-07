@@ -174,7 +174,7 @@ end
 
 -- Lines: 161 to 168
 function CoreUnitSequenceTriggerUnitElement:select_unit_list_btn()
-
+	
 	-- Lines: 155 to 161
 	local function f(unit)
 		if not managers.editor:layer("Statics"):category_map()[unit:type():s()] then

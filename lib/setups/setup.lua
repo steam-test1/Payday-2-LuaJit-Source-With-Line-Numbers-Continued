@@ -130,7 +130,6 @@ Setup = Setup or class(CoreSetup.CoreSetup)
 _next_update_funcs = _next_update_funcs or {}
 local next_update_funcs_busy = nil
 
-
 -- Lines: 212 to 219
 function call_on_next_update(func, optional_key)
 	if not optional_key then
@@ -141,7 +140,6 @@ function call_on_next_update(func, optional_key)
 	end
 end
 
-
 -- Lines: 221 to 228
 function call_next_update_functions()
 	local current = _next_update_funcs
@@ -151,7 +149,6 @@ function call_next_update_functions()
 		func()
 	end
 end
-
 
 -- Lines: 233 to 282
 function Setup:init_category_print()

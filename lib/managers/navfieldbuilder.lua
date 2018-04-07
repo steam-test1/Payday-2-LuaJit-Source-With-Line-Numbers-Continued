@@ -501,7 +501,7 @@ end
 function NavFieldBuilder:_expand_rooms()
 	local progress = nil
 
-
+	
 	-- Lines: 472 to 480
 	local function can_room_expand(expansion_data)
 		if expansion_data then
@@ -513,7 +513,7 @@ function NavFieldBuilder:_expand_rooms()
 		end
 	end
 
-
+	
 	-- Lines: 482 to 524
 	local function expand_room(room)
 		local expansion_data = room.expansion_segments
@@ -591,7 +591,7 @@ end
 
 -- Lines: 559 to 757
 function NavFieldBuilder:_merge_rooms()
-
+	
 	-- Lines: 553 to 560
 	local function _remove_room_from_sorted_list(i_room, sorted_rooms)
 		for sort_index, sorted_i_room in ipairs(sorted_rooms) do
@@ -603,7 +603,7 @@ function NavFieldBuilder:_merge_rooms()
 		end
 	end
 
-
+	
 	-- Lines: 564 to 583
 	local function _dispose_trash_rooms(trash_rooms, sorted_rooms)
 		for i, i_room in pairs(trash_rooms) do
@@ -625,7 +625,7 @@ function NavFieldBuilder:_merge_rooms()
 		end
 	end
 
-
+	
 	-- Lines: 587 to 611
 	local function _find_walls_on_side(room, side)
 		local all_doors = self._room_doors
@@ -653,7 +653,7 @@ function NavFieldBuilder:_merge_rooms()
 		return walls
 	end
 
-
+	
 	-- Lines: 616 to 657
 	local function _get_room_expandable_borders(room)
 		local expandable_sides = {}
@@ -690,7 +690,7 @@ function NavFieldBuilder:_merge_rooms()
 		return expandable_sides
 	end
 
-
+	
 	-- Lines: 662 to 671
 	local function _is_larger_than_neighbours(room, dir_str)
 		local area = room.area

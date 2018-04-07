@@ -3,30 +3,25 @@ local min = math.min
 local max = math.max
 local sqrt = math.sqrt
 
-
 -- Lines: 9 to 10
 local function value(t, x1, x2, x3, x4)
 	return (1 - t) ^ 3 * x1 + 3 * (1 - t) ^ 2 * t * x2 + 3 * (1 - t) * t ^ 2 * x3 + t ^ 3 * x4
 end
-
 
 -- Lines: 14 to 15
 local function coefficients(x1, x2, x3, x4)
 	return x4 - x1 + 3 * (x2 - x3), 3 * x1 - 6 * x2 + 3 * x3, 3 * (x2 - x1), x1
 end
 
-
 -- Lines: 19 to 20
 local function value_for(t, a, b, c, d)
 	return d + t * (c + t * (b + t * a))
 end
 
-
 -- Lines: 24 to 25
 local function derivative1_for(t, a, b, c)
 	return c + t * (2 * b + 3 * a * t)
 end
-
 
 -- Lines: 29 to 43
 local function derivative1_roots(x1, x2, x3, x4)
@@ -45,7 +40,6 @@ local function derivative1_roots(x1, x2, x3, x4)
 		end
 	end
 end
-
 
 -- Lines: 47 to 62
 local function minmax(x1, x2, x3, x4)
@@ -68,7 +62,6 @@ local function minmax(x1, x2, x3, x4)
 	return minx, maxx
 end
 
-
 -- Lines: 66 to 69
 local function bounding_box(x1, y1, x2, y2, x3, y3, x4, y4)
 	local minx, maxx = minmax(x1, x2, x3, x4)
@@ -77,12 +70,10 @@ local function bounding_box(x1, y1, x2, y2, x3, y3, x4, y4)
 	return minx, miny, maxx - minx, maxy - miny
 end
 
-
 -- Lines: 75 to 77
 local function to_bezier2(x1, y1, x2, y2, x3, y3, x4, y4)
 	return (-0.25 * x1 + 0.75 * x2 + 0.75 * x3) - 0.25 * x4, (-0.25 * y1 + 0.75 * y2 + 0.75 * y3) - 0.25 * y4
 end
-
 
 -- Lines: 83 to 85
 local function point(t, x1, y1, x2, y2, x3, y3, x4, y4)
@@ -90,7 +81,6 @@ local function point(t, x1, y1, x2, y2, x3, y3, x4, y4)
 end
 
 local length = length_function(coefficients, derivative1_for)
-
 
 -- Lines: 92 to 108
 local function split(t, x1, y1, x2, y2, x3, y3, x4, y4)
@@ -121,7 +111,6 @@ local curve_angle_tolerance_epsilon = 0.01
 local curve_recursion_limit = 32
 local recursive_bezier = nil
 
-
 -- Lines: 130 to 139
 function interpolate(write, x1, y1, x2, y2, x3, y3, x4, y4, m_approximation_scale, m_angle_tolerance, m_cusp_limit)
 	m_approximation_scale = m_approximation_scale or 1
@@ -132,7 +121,6 @@ function interpolate(write, x1, y1, x2, y2, x3, y3, x4, y4, m_approximation_scal
 	recursive_bezier(write, x1, y1, x2, y2, x3, y3, x4, y4, 0, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
 	write("line", x4, y4)
 end
-
 
 -- Lines: 142 to 310
 function recursive_bezier(write, x1, y1, x2, y2, x3, y3, x4, y4, level, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
@@ -298,3 +286,4 @@ return {
 	point = point,
 	length = length,
 	split = split
+}

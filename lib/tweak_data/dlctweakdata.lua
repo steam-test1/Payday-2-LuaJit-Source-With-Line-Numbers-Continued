@@ -2,7 +2,6 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
-
 -- Lines: 12 to 5122
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then

@@ -99,7 +99,6 @@ else
 	CopBrain._reload_clbks = {}
 end
 
-
 -- Lines: 126 to 140
 function CopBrain:init(unit)
 	self._unit = unit

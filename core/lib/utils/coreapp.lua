@@ -1,6 +1,5 @@
 core:module("CoreApp")
 
-
 -- Lines: 13 to 19
 function arg_supplied(key)
 	for _, arg in ipairs(Application:argv()) do
@@ -11,7 +10,6 @@ function arg_supplied(key)
 
 	return false
 end
-
 
 -- Lines: 22 to 31
 function arg_value(key)
@@ -25,7 +23,6 @@ function arg_value(key)
 		end
 	end
 end
-
 
 -- Lines: 61 to 62
 function min_exe_version(version, system_name)

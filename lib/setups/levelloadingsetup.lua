@@ -11,7 +11,6 @@ if _G.IS_VR then
 	require("lib/utils/VRLoadingEnvironment")
 end
 
-
 -- Lines: 17 to 27
 function fake_inspect(val)
 	if val == nil or type(val) ~= "table" then

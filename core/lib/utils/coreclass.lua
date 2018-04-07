@@ -3,7 +3,6 @@ core:module("CoreClass")
 __overrides = {}
 __everyclass = {}
 
-
 -- Lines: 16 to 39
 function class(...)
 	local super = ...
@@ -24,7 +23,7 @@ function class(...)
 
 	setmetatable(class_table, __overrides[super] or super)
 
-
+	
 	-- Lines: 31 to 37
 	function class_table.new(klass, ...)
 		local object = {}
@@ -41,7 +40,6 @@ function class(...)
 	return class_table
 end
 
-
 -- Lines: 42 to 51
 function override_class(old_class, new_class)
 	assert(__everyclass, "Too late to override class now.")
@@ -57,12 +55,10 @@ function override_class(old_class, new_class)
 	__overrides[old_class] = new_class
 end
 
-
 -- Lines: 53 to 55
 function close_override()
 	__everyclass = nil
 end
-
 
 -- Lines: 62 to 67
 function type_name(value)
@@ -74,7 +70,6 @@ function type_name(value)
 
 	return name
 end
-
 
 -- Lines: 74 to 82
 function mixin(res, ...)
@@ -89,12 +84,10 @@ function mixin(res, ...)
 	return res
 end
 
-
 -- Lines: 85 to 86
 function mix(...)
 	return mixin({}, ...)
 end
-
 
 -- Lines: 89 to 93
 function mixin_add(res, ...)
@@ -107,12 +100,10 @@ function mixin_add(res, ...)
 	return res
 end
 
-
 -- Lines: 96 to 97
 function mix_add(...)
 	return mixin_add({}, ...)
 end
-
 
 -- Lines: 104 to 119
 function hijack_func(instance_or_meta, func_name, func)
@@ -133,7 +124,6 @@ function hijack_func(instance_or_meta, func_name, func)
 	end
 end
 
-
 -- Lines: 121 to 134
 function unhijack_func(instance_or_meta, func_name)
 	local meta = getmetatable(instance_or_meta) or instance_or_meta
@@ -153,7 +143,6 @@ end
 __frozen__newindex = __frozen__newindex or function (self, key, value)
 	error(string.format("Attempt to set %s = %s in frozen %s.", tostring(key), tostring(value), type_or_class_name(self)))
 end
-
 
 -- Lines: 140 to 151
 function freeze(...)
@@ -176,7 +165,6 @@ function freeze(...)
 	return ...
 end
 
-
 -- Lines: 154 to 156
 function is_frozen(instance)
 	local metatable = debug.getmetatable(instance)
@@ -184,12 +172,11 @@ function is_frozen(instance)
 	return metatable and metatable.__newindex == __frozen__newindex
 end
 
-
 -- Lines: 159 to 166
 function frozen_class(...)
 	local class_table = class(...)
 	local new = class_table.new
-
+	
 	-- Lines: 162 to 164
 	function class_table.new(klass, ...)
 		local instance, ret = new(klass, ...)
@@ -200,12 +187,11 @@ function frozen_class(...)
 	return class_table
 end
 
-
 -- Lines: 177 to 180
 function responder(...)
 	local response = {...}
 
-
+	
 	-- Lines: 178 to 179
 	local function responder_function()
 		return unpack(response)
@@ -215,7 +201,6 @@ function responder(...)
 		return responder_function
 	end})
 end
-
 
 -- Lines: 190 to 199
 function responder_map(response_table)
@@ -229,7 +214,7 @@ function responder_map(response_table)
 				end
 			end})
 		else
-
+			
 			-- Lines: 195 to 196
 			responder[key] = function ()
 				return value
@@ -246,12 +231,12 @@ GetSet = GetSet or class()
 function GetSet:init(t)
 	for k, v in pairs(t) do
 		self["_" .. k] = v
-
+		
 		-- Lines: 211 to 212
 		self[k] = function (self)
 			return self["_" .. k]
 		end
-
+		
 		-- Lines: 212 to 213
 		self["set_" .. k] = function (self, v)
 			self["_" .. k] = v

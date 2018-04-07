@@ -135,7 +135,6 @@ function DependencyParser:not_reached(start_dn_list, pattern)
 	return filter(not_reached_dn, pattern)
 end
 
-
 -- Lines: 141 to 146
 function _set2list(set)
 	local list = {}
@@ -147,7 +146,6 @@ function _set2list(set)
 	return list
 end
 
-
 -- Lines: 149 to 154
 function _list2set(list)
 	local set = {}
@@ -158,7 +156,6 @@ function _list2set(list)
 
 	return set
 end
-
 
 -- Lines: 157 to 165
 function union(A_list, B_list)
@@ -175,7 +172,6 @@ function union(A_list, B_list)
 	return _set2list(set)
 end
 
-
 -- Lines: 168 to 176
 function intersect(A_list, B_list)
 	local b_set = _list2set(B_list)
@@ -190,7 +186,6 @@ function intersect(A_list, B_list)
 	return _set2list(c_set)
 end
 
-
 -- Lines: 179 to 184
 function set_difference(A_list, B_list)
 	local set = _list2set(A_list)
@@ -201,7 +196,6 @@ function set_difference(A_list, B_list)
 
 	return _set2list(set)
 end
-
 
 -- Lines: 187 to 193
 function names(A_list)
@@ -216,7 +210,6 @@ function names(A_list)
 	return names
 end
 
-
 -- Lines: 196 to 203
 function filter(dn_list, pattern)
 	res_list = {}
@@ -229,7 +222,6 @@ function filter(dn_list, pattern)
 
 	return res_list
 end
-
 
 -- Lines: 211 to 315
 function generate_report(filepath, protected_list, dp)
@@ -244,7 +236,7 @@ function generate_report(filepath, protected_list, dp)
 
 	local not_reached = dp:complement(reached)
 
-
+	
 	-- Lines: 222 to 246
 	function make_first_worksheet()
 		local ws = CoreWorksheet.Worksheet:new("README")
@@ -275,7 +267,7 @@ function generate_report(filepath, protected_list, dp)
 		return ws
 	end
 
-
+	
 	-- Lines: 249 to 258
 	function make_worksheet(type_, name)
 		local ws = CoreWorksheet.Worksheet:new(name)
@@ -295,7 +287,7 @@ function generate_report(filepath, protected_list, dp)
 		return ws
 	end
 
-
+	
 	-- Lines: 261 to 288
 	function make_protected_worksheet()
 		local ws = CoreWorksheet.Worksheet:new("Protected Assets")
@@ -348,7 +340,6 @@ function generate_report(filepath, protected_list, dp)
 	end
 end
 
-
 -- Lines: 317 to 338
 function generate_BC_report(filepath)
 	local dp = dp or DependencyParser:new(ProjectDatabase)
@@ -371,7 +362,6 @@ function generate_BC_report(filepath)
 
 	generate_report(filepath, prot, dp)
 end
-
 
 -- Lines: 340 to 362
 function generate_FAITH_report(filepath)

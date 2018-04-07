@@ -125,7 +125,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local weight = 0.1
 	local enemy_died = false
 
-
+	
 	-- Lines: 129 to 167
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then

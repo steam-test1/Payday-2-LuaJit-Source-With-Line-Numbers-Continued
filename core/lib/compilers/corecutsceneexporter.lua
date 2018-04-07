@@ -81,7 +81,7 @@ end
 function CoreCutsceneExporter:_problem_map()
 	local problem_map = {}
 
-
+	
 	-- Lines: 60 to 61
 	local function add_problem(problem)
 		problem_map[problem] = true

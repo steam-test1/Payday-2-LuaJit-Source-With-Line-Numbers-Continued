@@ -65,29 +65,29 @@ if _G.IS_VR then
 	require("lib/units/beings/player/HandExt")
 else
 	PlayerHand = PlayerHand or class()
-
+	
 	-- Lines: 96 to 97
 	function PlayerHand:init(unit)
 	end
-
+	
 	-- Lines: 96 to 97
 	function PlayerHand:destroy()
 	end
 	PlayerWarp = PlayerWarp or class()
-
+	
 	-- Lines: 97 to 98
 	function PlayerWarp:init(unit)
 	end
-
+	
 	-- Lines: 97 to 98
 	function PlayerWarp:destroy()
 	end
 	HandMelee = HandMelee or class()
-
+	
 	-- Lines: 98 to 99
 	function HandMelee:init(unit)
 	end
-
+	
 	-- Lines: 98 to 99
 	function HandMelee:destroy()
 	end
@@ -290,7 +290,7 @@ function GameSetup:load_packages()
 
 	self._loaded_diff_packages = {}
 
-
+	
 	-- Lines: 372 to 377
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
@@ -714,3 +714,4 @@ end
 function GameSetup:_update_debug_input()
 end
 
+return GameSetup

@@ -41,3 +41,4 @@ function NetworkGameSetup:paused_end_update(t, dt)
 	managers.network:end_update()
 end
 
+return NetworkGameSetup

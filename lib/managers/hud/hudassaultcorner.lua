@@ -390,7 +390,7 @@ function HUDAssaultCorner:_animate_text(text_panel, bg_box, color, color_functio
 	local texts = {}
 	local padding = 10
 
-
+	
 	-- Lines: 217 to 248
 	local function create_new_text(text_panel, text_list, text_index, texts)
 		if texts[text_index] and texts[text_index].text then
@@ -785,7 +785,7 @@ function HUDAssaultCorner:_close_assault_box()
 
 	icon_assaultbox:stop()
 
-
+	
 	-- Lines: 532 to 540
 	local function close_done()
 		self._bg_box:set_visible(false)
@@ -948,7 +948,7 @@ end
 
 -- Lines: 710 to 717
 function HUDAssaultCorner:flash_point_of_no_return_timer(beep)
-
+	
 	-- Lines: 697 to 711
 	local function flash_timer(o)
 		local t = 0
@@ -1024,7 +1024,7 @@ function HUDAssaultCorner:hide_casing()
 
 	icon_casingbox:stop()
 
-
+	
 	-- Lines: 778 to 785
 	local function close_done()
 		self._casing_bg_box:set_visible(false)
@@ -1077,7 +1077,7 @@ function HUDAssaultCorner:_animate_show_casing(casing_panel, delay_time)
 	icon_casingbox:stop()
 	icon_casingbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-
+	
 	-- Lines: 834 to 835
 	local function open_done()
 	end
@@ -1109,7 +1109,7 @@ function HUDAssaultCorner:_animate_show_noreturn(point_of_no_return_panel, delay
 	icon_noreturnbox:stop()
 	icon_noreturnbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-
+	
 	-- Lines: 864 to 866
 	local function open_done()
 		point_of_no_return_text:animate(callback(self, self, "_animate_show_texts"), {

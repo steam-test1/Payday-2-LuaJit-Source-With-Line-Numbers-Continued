@@ -1406,7 +1406,6 @@ function SentryGunInteractionExt:_on_death_event()
 	self:set_active(false, false)
 end
 
-
 -- Lines: 1250 to 1261
 local function sentry_gun_interaction_add_string_macros(macros, ammo_ratio)
 	macros.BTN_INTERACT = managers.localization:btn_macro("interact", true)
@@ -1421,7 +1420,6 @@ local function sentry_gun_interaction_add_string_macros(macros, ammo_ratio)
 		macros.AMMO_LEFT = 0
 	end
 end
-
 
 -- Lines: 1264 to 1267
 function SentryGunInteractionExt:_add_string_macros(macros)
@@ -1999,7 +1997,7 @@ end
 
 -- Lines: 1837 to 1947
 function IntimitateInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
-
+	
 	-- Lines: 1829 to 1837
 	local function _get_unit()
 		local unit = player

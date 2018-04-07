@@ -22,3 +22,4 @@ function CoreMaterialEditorSeparator:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
+return CoreMaterialEditorSeparator

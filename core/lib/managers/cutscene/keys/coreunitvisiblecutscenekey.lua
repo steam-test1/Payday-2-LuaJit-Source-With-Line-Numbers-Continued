@@ -7,7 +7,6 @@ CoreUnitVisibleCutsceneKey.NAME = "Unit Visibility"
 CoreUnitVisibleCutsceneKey:register_serialized_attribute("unit_name", "")
 CoreUnitVisibleCutsceneKey:register_serialized_attribute("visible", true, toboolean)
 
-
 -- Lines: 9 to 10
 function CoreUnitVisibleCutsceneKey:__tostring()
 	return (self:visible() and "Show" or "Hide") .. " \"" .. self:unit_name() .. "\"."

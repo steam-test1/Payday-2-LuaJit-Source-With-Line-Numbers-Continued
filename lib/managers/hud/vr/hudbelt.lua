@@ -1,6 +1,5 @@
 HUDBeltInteraction = HUDBeltInteraction or class()
 
-
 -- Lines: 4 to 8
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -8,7 +7,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 11 to 39
 local function get_icon(icon_type)
@@ -47,7 +45,6 @@ local function get_icon(icon_type)
 	end
 end
 
-
 -- Lines: 41 to 48
 local function scale_by_aspect(gui_obj, max_size)
 	local w = gui_obj:texture_width()
@@ -62,7 +59,6 @@ end
 
 local PADDING = 40
 local GRID_BOX = 100
-
 
 -- Lines: 55 to 56
 function grid_position(x, y)

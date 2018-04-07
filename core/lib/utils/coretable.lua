@@ -2,7 +2,6 @@ core:module("CoreTable")
 core:import("CoreClass")
 core:import("CoreDebug")
 
-
 -- Lines: 19 to 25
 function clone(o)
 	local res = {}
@@ -15,7 +14,6 @@ function clone(o)
 
 	return res
 end
-
 
 -- Lines: 28 to 39
 function deep_clone(o)
@@ -37,7 +35,6 @@ function deep_clone(o)
 
 	return res
 end
-
 
 -- Lines: 46 to 63
 function dpairs(vector_table)
@@ -63,7 +60,6 @@ function dpairs(vector_table)
 		end
 	end
 end
-
 
 -- Lines: 79 to 88
 function table.tuple_iterator(v, n)
@@ -328,7 +324,7 @@ end
 function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 	local count = 0
 
-
+	
 	-- Lines: 287 to 288
 	local function func()
 		return none_string
@@ -343,7 +339,7 @@ function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 		local append_string = nil
 		append_string = concat_values and tostring(value) or tostring(key)
 
-
+		
 		-- Lines: 304 to 312
 		function func(count, first)
 			if count == 1 then
@@ -761,7 +757,7 @@ end
 if Application:ews_enabled() then
 	local __lua_representation, __write_lua_representation_to_file = nil
 
-
+	
 	-- Lines: 691 to 700
 	function __lua_representation(value)
 		local t = type(value)
@@ -775,7 +771,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-
+	
 	-- Lines: 702 to 721
 	function __write_lua_representation_to_file(value, file, indentation)
 		indentation = indentation or 1
@@ -801,7 +797,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-
+	
 	-- Lines: 729 to 735
 	function write_lua_representation_to_path(value, path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
@@ -813,7 +809,7 @@ if Application:ews_enabled() then
 		file:close()
 	end
 
-
+	
 	-- Lines: 737 to 744
 	function read_lua_representation_from_path(path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")

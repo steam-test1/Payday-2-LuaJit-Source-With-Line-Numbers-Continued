@@ -63,7 +63,7 @@ local exit = Vector3()
 
 -- Lines: 68 to 303
 function PlayerHandStateDriving:update(t, dt)
-
+	
 	-- Lines: 62 to 69
 	local function offset_to_world(output, offset)
 		mvector3.set(output, offset)

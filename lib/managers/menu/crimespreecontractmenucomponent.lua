@@ -73,7 +73,7 @@ function CrimeSpreeContractMenuComponent:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-
+	
 	-- Lines: 81 to 84
 	local function func(o)
 		local start_blur = 0

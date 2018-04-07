@@ -740,7 +740,7 @@ function CopMovement:action_request(action_desc)
 	local active_actions = self._active_actions
 	local interrupted_actions = nil
 
-
+	
 	-- Lines: 895 to 907
 	local function _interrupt_action(body_part)
 		local old_action = active_actions[body_part]
@@ -1402,7 +1402,7 @@ function CopMovement:on_suppressed(state)
 
 				self:action_request(action_desc)
 			else
-
+				
 				-- Lines: 1551 to 1552
 				local function debug_fumble(result, from, to)
 				end
@@ -2133,7 +2133,7 @@ function CopMovement:save(save_data)
 		local equipped_items = {}
 		my_save_data.equipped_gadgets = equipped_items
 
-
+		
 		-- Lines: 2269 to 2278
 		local function _get_item_type_from_unit(item_unit)
 			local wanted_item_name = item_unit:name()
@@ -2147,7 +2147,7 @@ function CopMovement:save(save_data)
 			end
 		end
 
-
+		
 		-- Lines: 2280 to 2291
 		local function _is_item_droppable(item_unit)
 			if not self._droppable_gadgets then
@@ -2375,12 +2375,12 @@ function CopMovement:sync_action_walk_nav_link(pos, rot, anim_index, from_idle)
 	local walk_action, is_queued = self:_get_latest_walk_action()
 
 	if is_queued then
-
+		
 		-- Lines: 2509 to 2510
 		nav_link.element.value = function (element, name)
 			return element[name]
 		end
-
+		
 		-- Lines: 2510 to 2511
 		nav_link.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle

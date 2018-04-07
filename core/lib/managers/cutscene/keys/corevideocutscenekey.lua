@@ -9,7 +9,6 @@ CoreVideoCutsceneKey:register_serialized_attribute("gui_layer", 2, tonumber)
 CoreVideoCutsceneKey:register_serialized_attribute("loop", 0, tonumber)
 CoreVideoCutsceneKey:register_serialized_attribute("speed", 1, tonumber)
 
-
 -- Lines: 11 to 12
 function CoreVideoCutsceneKey:__tostring()
 	return string.format("Play video \"%s\".", self:video())

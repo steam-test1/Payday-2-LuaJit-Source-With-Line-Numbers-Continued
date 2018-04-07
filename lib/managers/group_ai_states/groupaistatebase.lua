@@ -468,13 +468,13 @@ function GroupAIStateBase:propagate_alert(alert_data)
 		if alert_epicenter then
 			local alert_rad_sq = alert_data[3] * alert_data[3]
 
-
+			
 			-- Lines: 509 to 510
 			function proximity_chk_func(listener_pos)
 				return mvec3_dis_sq(alert_epicenter, listener_pos) < alert_rad_sq
 			end
 		else
-
+			
 			-- Lines: 513 to 514
 			function proximity_chk_func()
 				return true
@@ -2079,7 +2079,7 @@ function GroupAIStateBase:_debug_draw_drama(t)
 	local top_r = Vector3(0, draw_data.bg_top_l.y, 90)
 	local bottom_r = Vector3(0, draw_data.bg_bottom_l.y, 90)
 
-
+	
 	-- Lines: 2118 to 2136
 	local function _draw_events(event_brush, event_list)
 		while event_list[1] and event_list[1][2] and t_span < t - event_list[1][2] do
@@ -2352,7 +2352,7 @@ function GroupAIStateBase:_execute_so(so_data, so_rooms, so_administered)
 	local nav_manager = managers.navigation
 	local access_f = nav_manager.check_access
 
-
+	
 	-- Lines: 2361 to 2365
 	local function check_allowed(u_key, u_unit_dat)
 		return (not so_administered or not so_administered[u_key]) and (so_objective.forced or u_unit_dat.unit:brain():is_available_for_assignment(so_objective)) and (not so_data.verification_clbk or so_data.verification_clbk(u_unit_dat.unit)) and access_f(nav_manager, so_access, u_unit_dat.so_access, 0)
@@ -2725,7 +2725,7 @@ function GroupAIStateBase:_update_point_of_no_return(t, dt)
 		return
 	end
 
-
+	
 	-- Lines: 2709 to 2715
 	local function get_mission_script_element(id)
 		for name, script in pairs(managers.mission:scripts()) do
@@ -5701,7 +5701,7 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 	local susp_data = self._suspicion_hud_data
 	local susp_key = u_suspect and u_suspect:key()
 
-
+	
 	-- Lines: 5629 to 5633
 	local function _sync_status(sync_status_code)
 		if Network:is_server() and managers.network:session() then

@@ -8,7 +8,6 @@ CoreObjectVisibleCutsceneKey:register_serialized_attribute("unit_name", "")
 CoreObjectVisibleCutsceneKey:register_serialized_attribute("object_name", "")
 CoreObjectVisibleCutsceneKey:register_serialized_attribute("visible", true, toboolean)
 
-
 -- Lines: 10 to 11
 function CoreObjectVisibleCutsceneKey:__tostring()
 	return (self:visible() and "Show" or "Hide") .. " \"" .. self:object_name() .. "\" in \"" .. self:unit_name() .. "\"."

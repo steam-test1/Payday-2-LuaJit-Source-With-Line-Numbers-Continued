@@ -14,7 +14,7 @@ function class(...)
 
 	setmetatable(class_table, super)
 
-
+	
 	-- Lines: 27 to 33
 	function class_table.new(klass, ...)
 		local object = {}
@@ -30,7 +30,6 @@ function class(...)
 
 	return class_table
 end
-
 
 -- Lines: 38 to 61
 function callback(o, base_callback_class, base_callback_func_name, base_callback_param)

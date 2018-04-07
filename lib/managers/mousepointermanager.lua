@@ -152,7 +152,7 @@ function MousePointerManager:change_mouse_to_controller(controller)
 		self._controller_acc_y = 0
 		self._test_controller_acc = nil
 
-
+		
 		-- Lines: 109 to 165
 		local function update_controller_pointer(o, self)
 			local ws = self._ws

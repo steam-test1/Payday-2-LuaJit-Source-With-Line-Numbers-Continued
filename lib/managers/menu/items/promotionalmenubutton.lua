@@ -1,7 +1,6 @@
 PromotionalMenuButton = PromotionalMenuButton or class()
 local padding = 10
 
-
 -- Lines: 5 to 9
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -9,7 +8,6 @@ local function make_fine_text(text)
 	text:set_size(w, h)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
-
 
 -- Lines: 12 to 30
 function PromotionalMenuButton:init(parent_gui, panel, params, theme)

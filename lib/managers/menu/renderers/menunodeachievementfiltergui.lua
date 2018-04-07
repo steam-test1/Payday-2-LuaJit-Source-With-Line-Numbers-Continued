@@ -85,7 +85,6 @@ function MenuNodeAchievementFilterCreator:create_tags_option(node, category_name
 	return rtn
 end
 
-
 -- Lines: 67 to 68
 local function create_tag_text(str)
 	return "menu_achievements_" .. str
@@ -101,12 +100,10 @@ local difficulty_order = {
 	"difficulty_death_sentence"
 }
 
-
 -- Lines: 76 to 77
 local function difficulty_sort(lhs, rhs)
 	return (table.index_of(difficulty_order, lhs) or 999) < (table.index_of(difficulty_order, rhs) or 998)
 end
-
 
 -- Lines: 80 to 81
 local function alphabetical_sort(lhs, rhs)
@@ -123,12 +120,10 @@ local difficulty_translate = {
 	difficulty_mayhem = "menu_difficulty_easy_wish"
 }
 
-
 -- Lines: 89 to 90
 local function create_difficulty_text(str)
 	return difficulty_translate[str]
 end
-
 
 -- Lines: 93 to 100
 local function create_contract_text(str)

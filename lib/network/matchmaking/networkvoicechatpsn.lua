@@ -255,7 +255,7 @@ function NetworkVoiceChatPSN:_save_globals(disable_voice)
 		Global.psn = {}
 	end
 
-
+	
 	-- Lines: 247 to 248
 	local function f(...)
 	end
@@ -375,7 +375,7 @@ function NetworkVoiceChatPSN:_callback(info)
 		end
 
 		if info.unload_succeeded ~= nil then
-
+			
 			-- Lines: 355 to 356
 			local function f(...)
 			end

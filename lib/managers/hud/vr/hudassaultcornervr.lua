@@ -77,7 +77,7 @@ end
 
 -- Lines: 77 to 81
 function HUDAssaultCornerVR:flash_point_of_no_return_timer()
-
+	
 	-- Lines: 65 to 78
 	local function flash_timer(o)
 		local t = 0
@@ -108,7 +108,7 @@ function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, del
 	icon_noreturnbox:stop()
 	icon_noreturnbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-
+	
 	-- Lines: 97 to 99
 	local function open_done()
 		point_of_no_return_text:animate(callback(self, self, "_animate_show_texts"), {point_of_no_return_text})

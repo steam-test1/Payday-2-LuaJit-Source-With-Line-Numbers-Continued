@@ -414,7 +414,7 @@ end
 
 -- Lines: 366 to 374
 function StoryMissionsManager:reset_all()
-
+	
 	-- Lines: 359 to 367
 	local function reset(m)
 		if not m then

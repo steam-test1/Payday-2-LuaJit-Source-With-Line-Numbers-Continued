@@ -3049,7 +3049,7 @@ function HuskPlayerMovement:sync_shot_blank(impact)
 
 		self._aim_up_expire_t = TimerManager:game():time() + 2
 	else
-
+		
 		-- Lines: 3191 to 3192
 		function f(impact)
 			self:_shoot_blank(impact)
@@ -3071,7 +3071,7 @@ function HuskPlayerMovement:sync_start_auto_fire_sound()
 		if delay then
 			self._auto_firing = 1
 
-
+			
 			-- Lines: 3207 to 3211
 			local function f(t)
 				local equipped_weapon = self._unit:inventory():equipped_unit()
@@ -3107,7 +3107,7 @@ function HuskPlayerMovement:sync_raise_weapon()
 		if delay then
 			self._auto_firing = 1
 
-
+			
 			-- Lines: 3234 to 3236
 			local function f(t)
 				self._auto_firing = 2

@@ -22,7 +22,6 @@ for _, char in ipairs({
 	table.insert(VALID_MAYA_NODE_TYPES, "animCurveU" .. char)
 end
 
-
 -- Lines: 18 to 27
 function CoreCutsceneMayaExporterCurve:init(maya_node_type, node_name, attribute_name)
 	self.__samples = {}

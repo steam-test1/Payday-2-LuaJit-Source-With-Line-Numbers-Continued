@@ -1,18 +1,15 @@
 core:module("CoreInput")
 core:import("CoreClass")
 
-
 -- Lines: 18 to 19
 function shift()
 	return Input:keyboard():down(Idstring("left shift")) or Input:keyboard():down(Idstring("right shift"))
 end
 
-
 -- Lines: 22 to 23
 function ctrl()
 	return Input:keyboard():down(Idstring("left ctrl")) or Input:keyboard():down(Idstring("right ctrl"))
 end
-
 
 -- Lines: 26 to 27
 function alt()

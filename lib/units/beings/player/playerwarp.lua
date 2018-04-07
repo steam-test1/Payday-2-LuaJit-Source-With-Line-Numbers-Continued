@@ -282,7 +282,6 @@ function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	})
 end
 
-
 -- Lines: 250 to 264
 local function brush_debug_print(brush, position, ysize, text_data)
 	local ypos = 0
@@ -619,7 +618,6 @@ function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_targ
 	return true
 end
 
-
 -- Lines: 565 to 570
 local function clip_line_to_sphere(origin, radius, position, direction)
 	local o_c = position - origin
@@ -629,7 +627,6 @@ local function clip_line_to_sphere(origin, radius, position, direction)
 
 	return length > 0 and length or 0
 end
-
 
 -- Lines: 575 to 652
 function PlayerWarp:_find_target(player_position, position, forward)

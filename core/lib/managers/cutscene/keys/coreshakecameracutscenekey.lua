@@ -9,7 +9,6 @@ CoreShakeCameraCutsceneKey:register_serialized_attribute("amplitude", 1, tonumbe
 CoreShakeCameraCutsceneKey:register_serialized_attribute("frequency", 1, tonumber)
 CoreShakeCameraCutsceneKey:register_serialized_attribute("offset", 0, tonumber)
 
-
 -- Lines: 11 to 12
 function CoreShakeCameraCutsceneKey:__tostring()
 	return "Trigger camera shake \"" .. self:name() .. "\"."

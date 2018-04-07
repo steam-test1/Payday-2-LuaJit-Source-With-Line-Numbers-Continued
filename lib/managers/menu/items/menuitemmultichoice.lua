@@ -295,7 +295,6 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 	return true
 end
 
-
 -- Lines: 248 to 267
 local function scroll_text(text, clone)
 	while true do
@@ -321,7 +320,6 @@ local function scroll_text(text, clone)
 		end
 	end
 end
-
 
 -- Lines: 269 to 350
 function MenuItemMultiChoice:reload(row_item, node)

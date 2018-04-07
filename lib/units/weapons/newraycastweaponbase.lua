@@ -18,7 +18,6 @@ NewRaycastWeaponBase = NewRaycastWeaponBase or class(RaycastWeaponBase)
 require("lib/units/weapons/CosmeticsWeaponBase")
 require("lib/units/weapons/ScopeBase")
 
-
 -- Lines: 26 to 56
 function NewRaycastWeaponBase:init(unit)
 	NewRaycastWeaponBase.super.init(self, unit)
@@ -39,7 +38,7 @@ function NewRaycastWeaponBase:init(unit)
 	self._fire_mode_category = self:weapon_tweak_data().FIRE_MODE
 
 	if managers.player:has_category_upgrade("player", "armor_depleted_stagger_shot") then
-
+		
 		-- Lines: 42 to 43
 		local function clbk(value)
 			self:set_stagger(value)

@@ -161,7 +161,7 @@ end
 
 -- Lines: 141 to 147
 function EditUnitTriggable:add_unit_list_btn()
-
+	
 	-- Lines: 141 to 142
 	local function f(unit)
 		return #managers.sequence:get_triggable_sequence_list(unit:name()) > 0

@@ -5,7 +5,6 @@ function ReloadTimeline:init(timeline_tweak)
 	self._timeline = deep_clone(timeline_tweak)
 end
 
-
 -- Lines: 7 to 26
 local function lerp_func(a, b, t)
 	assert(type(a) == type(b), "Can't lerp different types!\n" .. type(a) .. " and " .. type(b))
@@ -34,7 +33,6 @@ local function lerp_func(a, b, t)
 
 	assert(false, "Invalid lerp")
 end
-
 
 -- Lines: 28 to 54
 function ReloadTimeline:get_key(key, time)

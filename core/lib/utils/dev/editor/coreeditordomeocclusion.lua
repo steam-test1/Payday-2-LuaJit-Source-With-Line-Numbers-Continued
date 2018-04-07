@@ -1,6 +1,5 @@
 core:import("CoreEditorUtils")
 
-
 -- Lines: 4 to 22
 function CoreEditor:init_create_dome_occlusion(shape, res)
 	print("CoreEditor:init_create_dome_occlusion()")

@@ -138,7 +138,7 @@ end
 function CameraManager:get_camera_layer(name)
 	local camera_setups = self._templates._setups
 
-
+	
 	-- Lines: 130 to 142
 	local function get_camera_layer(name)
 		local camera_setup = camera_setups[name]
@@ -172,7 +172,7 @@ function CameraManager:create_camera(name)
 	local camera_node_setups = templates._node_setups
 	local camera_list = {}
 
-
+	
 	-- Lines: 156 to 166
 	local function get_camera_chain(name, cam_list)
 		local camera_setup = camera_setups[name]
@@ -404,7 +404,7 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 	setup._blend_table = {}
 	camera_setups[name] = setup
 
-
+	
 	-- Lines: 363 to 380
 	local function parse_node(xml_node)
 		local node = {_node_name = xml_node:parameter("node_name")}
@@ -426,7 +426,7 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 		table.insert(setup._camera_nodes, node)
 	end
 
-
+	
 	-- Lines: 382 to 386
 	local function parse_default_blend(xml_node)
 		if xml_node:has_parameter("blend") then
@@ -434,7 +434,7 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 		end
 	end
 
-
+	
 	-- Lines: 388 to 397
 	local function parse_from_blend(xml_node)
 		if xml_node:has_parameter("name") then
@@ -467,7 +467,7 @@ end
 
 -- Lines: 421 to 451
 function CameraTemplateManager:parse_camera_node(xml_node, space)
-
+	
 	-- Lines: 416 to 421
 	local function split_string(str)
 		local strings = {}

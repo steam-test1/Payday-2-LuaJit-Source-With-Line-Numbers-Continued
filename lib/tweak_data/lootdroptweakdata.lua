@@ -2,7 +2,6 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
-
 -- Lines: 6 to 2215
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10

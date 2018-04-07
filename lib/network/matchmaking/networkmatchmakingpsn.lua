@@ -22,7 +22,7 @@ function NetworkMatchMakingPSN:init()
 	self._server_joinable = true
 	self._connection_info = {}
 
-
+	
 	-- Lines: 96 to 97
 	local function f(info)
 		self:_error_cb(info)
@@ -34,7 +34,7 @@ function NetworkMatchMakingPSN:init()
 	self._cancelled = false
 	self._peer_join_request_remove = {}
 
-
+	
 	-- Lines: 105 to 106
 	local function f(...)
 		self:_custom_message_cb(...)
@@ -45,7 +45,7 @@ function NetworkMatchMakingPSN:init()
 	PSN:set_matchmaking_callback("join_invite_accepted_xmb", callback(self, self, "_xmb_join_invite_cb"))
 	PSN:set_matchmaking_callback("worlds_fetched", callback(self, self, "_worlds_fetched_cb"))
 
-
+	
 	-- Lines: 114 to 115
 	local function js(...)
 		self:cb_connection_established(...)
@@ -56,7 +56,7 @@ end
 
 -- Lines: 124 to 127
 function NetworkMatchMakingPSN:_xmb_join_invite_cb(message)
-
+	
 	-- Lines: 121 to 125
 	local function ok_func()
 		if managers.network.account:signin_state() == "not signed in" then
@@ -587,7 +587,7 @@ end
 
 -- Lines: 686 to 689
 function NetworkMatchMakingPSN:_clear_psn_callback(cb)
-
+	
 	-- Lines: 686 to 687
 	local function f()
 	end
@@ -739,7 +739,7 @@ function NetworkMatchMakingPSN:create_lobby(settings)
 	self._peer_join_request_remove = {}
 	local world_list = PSN:get_world_list()
 
-
+	
 	-- Lines: 831 to 832
 	local function session_created(roomid)
 		managers.network.matchmake:_created_lobby(roomid)
@@ -862,7 +862,7 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 	self._friends_only = friends_only
 
 	if not self._friends_only then
-
+		
 		-- Lines: 958 to 971
 		local function f(info)
 			table.insert(self._lobbys_info_list, info)
@@ -883,7 +883,7 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 	else
 		print("start_search_lobbys friends")
 
-
+		
 		-- Lines: 985 to 1045
 		local function f(results, ...)
 			local room_ids = {}
@@ -905,7 +905,7 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 				end
 			end
 
-
+			
 			-- Lines: 1007 to 1033
 			local function f2(results)
 				if results.rooms then
@@ -1092,7 +1092,7 @@ end
 
 -- Lines: 1170 to 1173
 function NetworkMatchMakingPSN:test_search()
-
+	
 	-- Lines: 1163 to 1171
 	local function f(info)
 		print(inspect(info))
@@ -1347,7 +1347,7 @@ function NetworkMatchMakingPSN:join_server_with_check(room_id, skip_permission_c
 	self._check_room_id = room_id
 	self._checking_server_attributes = true
 
-
+	
 	-- Lines: 1492 to 1523
 	local function f(results)
 		local room_id = self._check_room_id
@@ -1582,7 +1582,7 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 			end
 		end})
 
-
+		
 		-- Lines: 1689 to 1747
 		local function f(res, level_index, difficulty_index, state_index)
 			managers.system_menu:close("waiting_for_server_response")

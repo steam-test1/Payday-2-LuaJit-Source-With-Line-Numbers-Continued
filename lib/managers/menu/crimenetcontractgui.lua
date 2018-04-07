@@ -35,7 +35,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		h = self._fullscreen_ws:panel():h()
 	})
 
-
+	
 	-- Lines: 30 to 33
 	local function func(o)
 		local start_blur = 0
@@ -669,7 +669,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	pages_panel:set_visible(false)
 
-
+	
 	-- Lines: 438 to 468
 	local function add_tab(text_id)
 		local prev_tab = self._tabs[#self._tabs]
@@ -753,7 +753,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		local _y = 7
 		local add_back = true
 
-
+		
 		-- Lines: 552 to 594
 		local function add_line(left_text, right_text)
 			if right_text == nil or left_text == nil then
@@ -840,7 +840,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			local _y = 7
 			local add_back = true
 
-
+			
 			-- Lines: 628 to 667
 			local function add_line(id, text, ignore_back)
 				local canvas = self._mods_scroll:canvas()
@@ -1163,7 +1163,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 		potential_level_up_text:set_blend_mode("normal")
 
 		if gonna_level_up then
-
+			
 			-- Lines: 933 to 938
 			local function pulse_anim(o)
 				o:set_blend_mode("add")

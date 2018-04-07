@@ -1346,7 +1346,7 @@ local tmp_head_fwd = Vector3(0, 0, 0)
 
 -- Lines: 1572 to 1589
 function PlayerStandardVR:_check_action_steelsight(t, input)
-
+	
 	-- Lines: 1561 to 1572
 	local function check_weapon_aim(weapon_unit)
 		if self._ext_movement:m_head_pos().z - weapon_unit:position().z > 20 or weapon_unit:position().z - self._ext_movement:m_head_pos().z > 0 then

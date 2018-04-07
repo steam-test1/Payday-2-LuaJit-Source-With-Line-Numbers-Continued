@@ -45,7 +45,6 @@ function Tween.ease_out(from, to, t)
 	return (from - to) * t * (t - 2) + from
 end
 
-
 -- Lines: 161 to 181
 local function make_value_string(number, additional_zeroes)
 	if number == 0 then
@@ -69,7 +68,6 @@ local function make_value_string(number, additional_zeroes)
 
 	return result
 end
-
 
 -- Lines: 184 to 242
 local function make_roman_numerals(number)

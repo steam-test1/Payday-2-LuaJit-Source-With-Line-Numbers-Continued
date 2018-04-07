@@ -44,7 +44,7 @@ function DebugDrawFonts:init(ws)
 		h = self._panel:h()
 	})
 
-
+	
 	-- Lines: 38 to 40
 	local function func(o)
 		over(0.6, function (p)

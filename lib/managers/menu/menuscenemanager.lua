@@ -2877,7 +2877,7 @@ function MenuSceneManager:spawn_item_weapon(factory_id, blueprint, cosmetics, te
 
 	mrotation.set_zero(self._item_rot)
 
-
+	
 	-- Lines: 2724 to 2734
 	local function spawn_weapon(pos, rot)
 		local w_unit = World:spawn_unit(ids_unit_name, pos, rot)
@@ -3638,7 +3638,7 @@ end
 function MenuSceneManager:_test_start_open_economy_safe(safe_entry)
 	managers.network.account:inventory_reward_unlock(safe_entry, nil, nil, callback(self, self, "_safe_result_recieved"))
 
-
+	
 	-- Lines: 3534 to 3536
 	local function ready_clbk()
 		print("ECONOMY SAFE READY CALLBACK")
@@ -3826,7 +3826,7 @@ function MenuSceneManager:_safe_result_recieved(error, items_new, items_removed)
 
 	print("B: RESULT RECIEVED", result.weapon_skin, Application:time())
 
-
+	
 	-- Lines: 3726 to 3730
 	local function ready_clbk()
 		local min_time_left = math.max(3 - (Application:time() - load_start_time), 0)

@@ -138,7 +138,6 @@ function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_m
 	return ray_res
 end
 
-
 -- Lines: 139 to 145
 local function ray_table_contains(table, unit)
 	for i, hit in pairs(table) do
@@ -149,7 +148,6 @@ local function ray_table_contains(table, unit)
 
 	return false
 end
-
 
 -- Lines: 148 to 159
 local function ray_copy(table, ray)
@@ -165,7 +163,6 @@ local function ray_copy(table, ray)
 		end
 	end
 end
-
 
 -- Lines: 161 to 162
 function SawWeaponBase:third_person_important()

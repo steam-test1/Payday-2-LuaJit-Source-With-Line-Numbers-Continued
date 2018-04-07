@@ -79,7 +79,7 @@ function FiniteStateMachine:_set_state(new_state_class, ...)
 	self:_destroy_current_state()
 
 	local init_function = new_state_class.init
-
+	
 	-- Lines: 68 to 69
 	function new_state_class.init()
 	end

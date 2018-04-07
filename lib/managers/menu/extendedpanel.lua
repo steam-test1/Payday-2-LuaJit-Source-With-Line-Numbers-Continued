@@ -2,7 +2,7 @@
 -- Lines: 2 to 9
 local function redirect_to_member(class, member_name, functions)
 	for _, name in pairs(functions) do
-
+		
 		-- Lines: 4 to 6
 		class[name] = function (self, ...)
 			local member = self[member_name]
@@ -14,16 +14,15 @@ local function redirect_to_member(class, member_name, functions)
 	return class
 end
 
-
 -- Lines: 16 to 27
 local function redirect_to_panel(class, blacklist)
 	local old_index = class.__index
-
+	
 	-- Lines: 18 to 25
 	function class.__index(table, key)
 		for k, func in pairs(Panel) do
 			if not blacklist[k] and not rawget(class, k) then
-
+				
 				-- Lines: 20 to 21
 				class[k] = function (self, ...)
 					return func(self._panel, ...)
@@ -320,7 +319,6 @@ function ExtendedPanel:allow_input()
 	return alive(self._panel) and self._panel:visible()
 end
 
-
 -- Lines: 215 to 222
 local function call_on_all_exists(set, func_name, ...)
 	for v, _ in pairs(set) do
@@ -334,7 +332,6 @@ local function call_on_all_exists(set, func_name, ...)
 	end
 end
 
-
 -- Lines: 224 to 233
 local function call_return_b_on_all_exists(set, func_name, ...)
 	for v, _ in pairs(set) do
@@ -347,7 +344,6 @@ local function call_return_b_on_all_exists(set, func_name, ...)
 		end
 	end
 end
-
 
 -- Lines: 256 to 269
 function ExtendedPanel:mouse_moved(o, x, y)

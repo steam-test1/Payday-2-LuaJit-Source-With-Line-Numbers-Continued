@@ -105,7 +105,7 @@ end
 
 -- Lines: 225 to 227
 function LocalizationManager:_text_localize(text)
-
+	
 	-- Lines: 225 to 226
 	local function func(id)
 		return self:exists(id) and self:text(id) or false
@@ -116,7 +116,7 @@ end
 
 -- Lines: 230 to 232
 function LocalizationManager:_text_macroize(text, macros)
-
+	
 	-- Lines: 230 to 231
 	local function func(word)
 		return macros[word] or false

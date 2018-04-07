@@ -6,7 +6,6 @@ FPCameraPlayerBase.camera_last_pos = nil
 
 require("lib/utils/VRFadeout")
 
-
 -- Lines: 17 to 98
 function FPCameraPlayerBase:init(unit)
 	UnitBase.init(self, unit, true)
@@ -877,7 +876,6 @@ function FPCameraPlayerBase:_get_look_speed(stick_input, stick_input_multiplier,
 	}, self._camera_properties.look_speed_transition_timer)
 end
 
-
 -- Lines: 1043 to 1047
 local function get_look_setting(a, b, c, t)
 	if t < 0.5 then
@@ -887,12 +885,10 @@ local function get_look_setting(a, b, c, t)
 	return math.lerp(b, c, (t - 0.5) / 0.5)
 end
 
-
 -- Lines: 1050 to 1051
 local function get_look_setting_x_y(a, b, c, x, y)
 	return get_look_setting(a, b, c, x), get_look_setting(a, b, c, y)
 end
-
 
 -- Lines: 1089 to 1108
 function FPCameraPlayerBase:_get_look_speed_ctl(stick_input, stick_input_multiplier, dt)

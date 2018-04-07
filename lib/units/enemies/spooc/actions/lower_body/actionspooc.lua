@@ -221,7 +221,7 @@ function ActionSpooc:_chk_can_strike()
 
 	self._chase_tracker:m_position(target_pos)
 
-
+	
 	-- Lines: 221 to 226
 	local function _dis_chk(pos)
 		mvector3.subtract(pos, my_pos)

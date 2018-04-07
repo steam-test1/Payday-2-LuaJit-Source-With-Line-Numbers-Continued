@@ -100,7 +100,7 @@ function DatabaseManager:root_path()
 	path = Application:nice_path(path, true)
 	local f = nil
 
-
+	
 	-- Lines: 86 to 87
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")

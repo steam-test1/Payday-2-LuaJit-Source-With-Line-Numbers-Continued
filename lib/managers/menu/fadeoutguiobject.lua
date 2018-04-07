@@ -27,7 +27,7 @@ function FadeoutGuiObject:init(params)
 		loading_icon:set_position(managers.gui_data:safe_to_full(0, 0))
 		loading_icon:set_center_y(self._panel:h() / 2)
 
-
+		
 		-- Lines: 32 to 38
 		local function spin_forever_animation(o)
 			local dt = nil
@@ -42,7 +42,7 @@ function FadeoutGuiObject:init(params)
 		loading_icon:animate(spin_forever_animation)
 	end
 
-
+	
 	-- Lines: 43 to 58
 	local function fade_out_animation(panel)
 		local loading_icon = panel:child("loading_icon")

@@ -1,7 +1,6 @@
 require("lib/managers/menu/renderers/MenuNodeBaseGui")
 require("lib/utils/InventoryDescription")
 
-
 -- Lines: 4 to 8
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
@@ -1436,7 +1435,7 @@ function MenuNodeCrimenetContactInfoGui:_setup_layout()
 		h = self._fullscreen_panel:h()
 	})
 
-
+	
 	-- Lines: 1319 to 1322
 	local function func(o)
 		local start_blur = 0
@@ -1935,7 +1934,7 @@ function MenuNodeCrimenetContactShortGui:_setup_layout()
 		h = self._fullscreen_panel:h()
 	})
 
-
+	
 	-- Lines: 1709 to 1712
 	local function func(o)
 		local start_blur = 0
@@ -2505,7 +2504,7 @@ function MenuNodeCrimenetContactChillGui:_setup_layout()
 		h = self._fullscreen_panel:h()
 	})
 
-
+	
 	-- Lines: 2102 to 2105
 	local function func(o)
 		local start_blur = 0
@@ -3323,7 +3322,7 @@ function MenuNodeCrimenetGageAssignmentGui:_setup_blur()
 		h = self._fullscreen_panel:h()
 	})
 
-
+	
 	-- Lines: 2653 to 2656
 	local function func(o)
 		local start_blur = 0
@@ -3777,7 +3776,7 @@ function MenuNodeCrimenetChallengeGui:create_reward(panel, reward, challenge)
 
 		glow:set_center(reward_panel:center())
 
-
+		
 		-- Lines: 2997 to 3002
 		local function glow_anim(o)
 			local dt = nil
@@ -4497,7 +4496,7 @@ function MenuNodeChooseWeaponCosmeticGui:_setup_item_panel(safe_rect, res)
 	blur:set_top(self.box_panel:top())
 	blur:set_left(self.box_panel:left())
 
-
+	
 	-- Lines: 3757 to 3760
 	local function func(o)
 		local start_blur = 0
@@ -4802,7 +4801,7 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 
 	local x_td, y_td, x_rtd, y_rtd = nil
 
-
+	
 	-- Lines: 4026 to 4037
 	local function sort_func(x, y)
 		x_td = (x.category == "weapon_skins" and tweak_data.blackmarket.weapon_skins or tweak_data.economy[x.category])[x.entry]

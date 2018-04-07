@@ -2,7 +2,6 @@ core:module("CoreUnit")
 core:import("CoreEngineAccess")
 core:import("CoreCode")
 
-
 -- Lines: 12 to 20
 function table.get_ray_ignore_args(...)
 	local arg_list = {}
@@ -16,7 +15,6 @@ function table.get_ray_ignore_args(...)
 
 	return unpack(arg_list)
 end
-
 
 -- Lines: 23 to 33
 function get_distance_to_body(body, pos)
@@ -34,7 +32,6 @@ function get_distance_to_body(body, pos)
 
 	return min_dist
 end
-
 
 -- Lines: 36 to 62
 function reload_units(unit_name)
@@ -68,7 +65,6 @@ function reload_units(unit_name)
 	return num_reloads
 end
 
-
 -- Lines: 65 to 73
 function set_unit_and_children_visible(unit, visible, filter_func)
 	if filter_func == nil or filter_func(unit) then
@@ -79,7 +75,6 @@ function set_unit_and_children_visible(unit, visible, filter_func)
 		set_unit_and_children_visible(child, visible, filter_func)
 	end
 end
-
 
 -- Lines: 75 to 91
 function editor_load_unit(unit_name)
@@ -102,14 +97,12 @@ function editor_load_unit(unit_name)
 	end
 end
 
-
 -- Lines: 93 to 97
 function safe_spawn_unit(unit_name, ...)
 	if editor_load_unit(unit_name) then
 		return World:spawn_unit(unit_name:id(), ...)
 	end
 end
-
 
 -- Lines: 99 to 101
 function safe_spawn_unit_without_extensions(unit_name, ...)

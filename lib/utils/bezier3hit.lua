@@ -12,7 +12,7 @@ function bezier3.hit(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	local mind = inf
 	local minx, miny, mint = nil
 
-
+	
 	-- Lines: 29 to 36
 	local function test_solution(t)
 		assert(t >= 0 and t <= 1)
@@ -63,12 +63,10 @@ local cubicz32 = 0.3
 local cubicz33 = 0.6
 local cubicz34 = 1
 
-
 -- Lines: 60 to 61
 local function dot_product(ax, ay, bx, by)
 	return ax * bx + ay * by
 end
-
 
 -- Lines: 65 to 107
 function bezier3_to_bezier5(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
@@ -108,7 +106,6 @@ function bezier3_to_bezier5(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	return 0, y1, 0.2, y2, 0.4, y3, 0.6, y4, 0.8, y5, 1, y6
 end
 
-
 -- Lines: 111 to 133
 function bezier5_roots(write, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, depth)
 	local switch = bezier5_crossing_count(y1, y2, y3, y4, y5, y6)
@@ -134,7 +131,6 @@ function bezier5_roots(write, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, de
 	bezier5_roots(write, x1, y1, x12, y12, x123, y123, x1234, y1234, x12345, y12345, x123456, y123456, depth + 1)
 	bezier5_roots(write, x123456, y123456, x23456, y23456, x3456, y3456, x456, y456, x56, y56, x6, y6, depth + 1)
 end
-
 
 -- Lines: 136 to 169
 function bezier5_split_in_half(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
@@ -172,12 +168,10 @@ function bezier5_split_in_half(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
 	return x1, y1, x12, y12, x123, y123, x1234, y1234, x12345, y12345, x123456, y123456, x123456, y123456, x23456, y23456, x3456, y3456, x456, y456, x56, y56, x6, y6
 end
 
-
 -- Lines: 175 to 180
 function bezier5_crossing_count(y1, y2, y3, y4, y5, y6)
 	return (y1 < 0 ~= y2 < 0 and 1 or 0) + (y2 < 0 ~= y3 < 0 and 1 or 0) + (y3 < 0 ~= y4 < 0 and 1 or 0) + (y4 < 0 ~= y5 < 0 and 1 or 0) + (y5 < 0 ~= y6 < 0 and 1 or 0)
 end
-
 
 -- Lines: 186 to 222
 function bezier5_flat_enough(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
@@ -209,7 +203,6 @@ function bezier5_flat_enough(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
 
 	return error < curve_flatness_epsilon
 end
-
 
 -- Lines: 226 to 236
 function bezier5_xintercept(x1, y1, x6, y6)

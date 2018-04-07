@@ -421,7 +421,6 @@ for module_name, _ in pairs(MissionScript.imported_modules) do
 	MissionScript.import(module_name)
 end
 
-
 -- Lines: 386 to 389
 function MissionScript.import(module_name)
 	MissionScript.imported_modules[module_name] = true

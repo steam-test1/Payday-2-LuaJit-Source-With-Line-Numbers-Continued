@@ -497,7 +497,6 @@ function PlayerMenu:update(t, dt)
 	self:_update_post_material_vars()
 end
 
-
 -- Lines: 470 to 500
 local function intersect_ws(shape, normal, from, dir)
 	local d = mvector3.dot(dir, normal)
@@ -527,7 +526,6 @@ local function intersect_ws(shape, normal, from, dir)
 
 	return p
 end
-
 
 -- Lines: 503 to 557
 function PlayerMenu:raycast(from, dir)

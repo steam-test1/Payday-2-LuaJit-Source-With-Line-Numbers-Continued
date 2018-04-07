@@ -39,7 +39,7 @@ function CoreFilteredTreeControl:refresh_tree()
 	self:freeze()
 	self:_view_tree_root():remove_children()
 
-
+	
 	-- Lines: 32 to 36
 	local function append_to_visible_tree(child)
 		if self:_node_passes_filters(child) then

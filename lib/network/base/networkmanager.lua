@@ -49,7 +49,6 @@ else
 	NetworkManager.PROTOCOL_TYPE = "STEAM"
 end
 
-
 -- Lines: 57 to 114
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {

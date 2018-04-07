@@ -45,7 +45,6 @@ local mvec_temp1 = Vector3()
 local mvec_temp2 = Vector3()
 local mvec_temp3 = Vector3()
 
-
 -- Lines: 43 to 73
 local function raycast_multi_dir(position, forward, length, slotmask)
 	local dir = mvec_temp1
@@ -83,7 +82,6 @@ local function raycast_multi_dir(position, forward, length, slotmask)
 	return hit, distance
 end
 
-
 -- Lines: 76 to 87
 local function raycast_head(position, rotation, slotmask)
 	local hit, distance = raycast_multi_dir(position, rotation:y(), 20, slotmask)
@@ -102,7 +100,6 @@ local function raycast_head(position, rotation, slotmask)
 	return hit, distance
 end
 
-
 -- Lines: 90 to 98
 local function ghost_mover_separation(mover_position, head_position)
 	local ghost_separation_fade_distance = 13
@@ -115,7 +112,6 @@ local function ghost_mover_separation(mover_position, head_position)
 
 	return 0
 end
-
 
 -- Lines: 103 to 132
 local function fadeout_func_instant(mover_position, head_position, rotation, slotmask, ignore_head_collisions, ignore_ghost_distance)
@@ -152,7 +148,6 @@ local function fadeout_func_instant(mover_position, head_position, rotation, slo
 
 	return separation < 1 and 0 or 1
 end
-
 
 -- Lines: 137 to 192
 local function fadeout_func_stepped(mover_position, head_position, rotation, slotmask, ignore_head_collisions, ignore_ghost_distance)
@@ -211,7 +206,6 @@ local function fadeout_func_stepped(mover_position, head_position, rotation, slo
 
 	return fadeout
 end
-
 
 -- Lines: 195 to 246
 local function fadeout_func_smooth(mover_position, head_position, rotation, slotmask, ignore_head_collisions, ignore_ghost_distance)

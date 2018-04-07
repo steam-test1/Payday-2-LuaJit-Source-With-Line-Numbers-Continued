@@ -200,7 +200,7 @@ function HUDTemp:_animate_hide_bag_panel(bag_panel)
 	bag_text:animate(callback(self, self, "_animate_hide_text"))
 	wait(0.5)
 
-
+	
 	-- Lines: 109 to 111
 	local function close_done()
 		bag_panel:set_visible(false)
@@ -221,7 +221,7 @@ function HUDTemp:_animate_show_bag_panel(bag_panel)
 	local center_y = bag_panel:center_y()
 	local bag_text = self._bg_box:child("bag_text")
 
-
+	
 	-- Lines: 132 to 136
 	local function open_done()
 		bag_text:stop()

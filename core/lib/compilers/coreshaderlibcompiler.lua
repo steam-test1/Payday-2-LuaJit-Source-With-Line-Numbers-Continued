@@ -92,7 +92,7 @@ function CoreShaderLibCompiler:root_path()
 	local path = data_path_abs() .. self.ROOT_PATH
 	local f = nil
 
-
+	
 	-- Lines: 90 to 91
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.\\", "\\")

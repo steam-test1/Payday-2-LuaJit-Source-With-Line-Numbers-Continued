@@ -3,7 +3,6 @@ if core then
 	core:import("CoreDebug")
 end
 
-
 -- Lines: 18 to 41
 function callback(o, base_callback_class, base_callback_func_name, base_callback_param)
 	if base_callback_class and base_callback_func_name and base_callback_class[base_callback_func_name] then
@@ -39,7 +38,6 @@ end
 
 local tc = 0
 
-
 -- Lines: 49 to 50
 function get_ticket(delay)
 	return {
@@ -48,12 +46,10 @@ function get_ticket(delay)
 	}
 end
 
-
 -- Lines: 53 to 54
 function valid_ticket(ticket)
 	return tc % ticket[1] == ticket[2]
 end
-
 
 -- Lines: 57 to 62
 function update_tickets()
@@ -71,7 +67,7 @@ function BasicEventHandling:connect(event_name, callback_func, data)
 	self._event_callbacks = self._event_callbacks or {}
 	self._event_callbacks[event_name] = self._event_callbacks[event_name] or {}
 
-
+	
 	-- Lines: 75 to 76
 	local function wrapped_func(...)
 		callback_func(data, ...)
@@ -246,7 +242,6 @@ function CallbackEventHandler:dispatch(...)
 	end
 end
 
-
 -- Lines: 240 to 249
 function over(seconds, f, fixed_dt)
 	local t = 0
@@ -264,7 +259,6 @@ function over(seconds, f, fixed_dt)
 
 	f(1, seconds)
 end
-
 
 -- Lines: 255 to 266
 function seconds(s, t)
@@ -289,7 +283,6 @@ function seconds(s, t)
 		return t, t, dt
 	end
 end
-
 
 -- Lines: 269 to 275
 function wait(seconds, fixed_dt)

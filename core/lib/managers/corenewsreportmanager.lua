@@ -54,7 +54,7 @@ end
 
 -- Lines: 48 to 60
 function NewsReportManager:replace(str)
-
+	
 	-- Lines: 46 to 48
 	local function replace_str(s)
 		local value = NewsReportManager.KEYWORDS[s]

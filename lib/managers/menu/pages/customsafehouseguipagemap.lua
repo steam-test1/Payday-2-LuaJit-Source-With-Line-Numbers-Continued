@@ -13,7 +13,6 @@ local BOX_GAP = 13.5
 local PANEL_PADDING = 8
 local LINE_PADDING = 4
 
-
 -- Lines: 19 to 35
 local function anim_select(o, w, h, instant)
 	local current_width = o:w()
@@ -33,7 +32,6 @@ local function anim_select(o, w, h, instant)
 	end
 end
 
-
 -- Lines: 37 to 53
 local function anim_deselect(o, w, h, instant)
 	local current_width = o:w()
@@ -52,7 +50,6 @@ local function anim_deselect(o, w, h, instant)
 		end)
 	end
 end
-
 
 -- Lines: 55 to 63
 local function anim_invalid(o)
@@ -456,7 +453,7 @@ function CustomSafehouseGuiPageMap:_setup_info_panel()
 
 	local remaining_height = self:info_panel():h()
 
-
+	
 	-- Lines: 353 to 357
 	local function new_info_panel(parent, name, h)
 		local panel = parent:panel({

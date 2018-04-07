@@ -10,7 +10,6 @@ local mrotation_mul = mrotation.multiply
 local mrotation_slerp = mrotation.slerp
 local mrotation_set_zero = mrotation.set_zero
 
-
 -- Lines: 13 to 17
 local function safe_divide(a, b)
 	if b == 0 then

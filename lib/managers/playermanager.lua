@@ -8,7 +8,6 @@ PlayerManager.WEAPON_SLOTS = 2
 PlayerManager.TARGET_COCAINE_AMOUNT = 1500
 PlayerManager._SHOCK_AND_AWE_TARGET_KILLS = 2
 
-
 -- Lines: 15 to 20
 local function get_as_digested(amount)
 	local list = {}
@@ -20,12 +19,10 @@ local function get_as_digested(amount)
 	return list
 end
 
-
 -- Lines: 23 to 24
 local function make_double_hud_string(a, b)
 	return string.format("%01d|%01d", a, b)
 end
-
 
 -- Lines: 27 to 33
 local function add_hud_item(amount, icon)
@@ -43,7 +40,6 @@ local function add_hud_item(amount, icon)
 	end
 end
 
-
 -- Lines: 35 to 41
 local function set_hud_item_amount(index, amount)
 	if #amount > 1 then
@@ -52,7 +48,6 @@ local function set_hud_item_amount(index, amount)
 		managers.hud:set_item_amount(index, amount[1])
 	end
 end
-
 
 -- Lines: 43 to 139
 function PlayerManager:init()
@@ -159,7 +154,7 @@ function PlayerManager:check_skills()
 	end
 
 	if self:has_category_upgrade("player", "melee_damage_stacking") then
-
+		
 		-- Lines: 166 to 175
 		local function start_bloodthirst_base(weapon_unit, variant)
 			if variant ~= "melee" and not self._coroutine_mgr:is_running(PlayerAction.BloodthirstBase) then
@@ -237,7 +232,7 @@ function PlayerManager:check_skills()
 		local dodge_gain = self:upgrade_value("player", "dodge_shot_gain")[1]
 		local cooldown = self:upgrade_value("player", "dodge_shot_gain")[2]
 
-
+		
 		-- Lines: 229 to 235
 		local function on_player_damage(attack_data)
 			local t = TimerManager:game():time()
@@ -5700,7 +5695,7 @@ function PlayerManager:_attempt_chico_injector()
 	managers.network:session():send_to_peers("sync_ability_hud", now + duration, duration)
 	self:activate_temporary_upgrade("temporary", "chico_injector")
 
-
+	
 	-- Lines: 5275 to 5277
 	local function speed_up_on_kill()
 		managers.player:speed_up_grenade_cooldown(1)

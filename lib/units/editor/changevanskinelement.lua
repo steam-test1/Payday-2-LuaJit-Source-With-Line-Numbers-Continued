@@ -194,7 +194,7 @@ end
 
 -- Lines: 167 to 177
 function ChangeVanSkinUnitElement:add_unit_list_btn()
-
+	
 	-- Lines: 163 to 167
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
@@ -215,7 +215,7 @@ end
 
 -- Lines: 182 to 192
 function ChangeVanSkinUnitElement:remove_unit_list_btn()
-
+	
 	-- Lines: 181 to 182
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]

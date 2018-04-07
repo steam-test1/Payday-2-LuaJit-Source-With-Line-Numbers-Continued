@@ -8,7 +8,7 @@ PlayerAction.UnseenStrike.Function = function (player_manager, min_time, max_dur
 	local target_time = Application:time() + min_time
 	local can_activate = true
 
-
+	
 	-- Lines: 16 to 21
 	local function on_damage_taken()
 		if not player_manager:has_activate_temporary_upgrade("temporary", "unseen_strike") then

@@ -234,7 +234,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 
 	if nr_wanted > 0 and assault_data.phase ~= "fade" and not next(self._spawning_groups) then
-
+		
 		-- Lines: 230 to 231
 		local function verif_clbk(test_spawn_group)
 			return test_spawn_group.area.id == target_area.id

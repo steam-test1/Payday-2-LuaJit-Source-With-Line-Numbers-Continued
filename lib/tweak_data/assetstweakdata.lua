@@ -1261,7 +1261,7 @@ function AssetsTweakData:debug_assets()
 		levels[level_id] = 0
 	end
 
-
+	
 	-- Lines: 1725 to 1733
 	local function f(id)
 		if id == "all" then

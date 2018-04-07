@@ -310,7 +310,7 @@ function SavefileManager:get_save_info_list(include_empty_slot)
 		end
 	end
 
-
+	
 	-- Lines: 310 to 311
 	local function sort_func(data1, data2)
 		return self:_compare_sort_list(data1.sort_list, data2.sort_list) < 0
@@ -664,7 +664,7 @@ function SavefileManager:_save_data_to_slot(target_slot, data, clbk, save_system
 		task_data.save_system = save_system or "steam_cloud"
 	end
 
-
+	
 	-- Lines: 710 to 726
 	local function save_callback_obj(task_data, result_data)
 		if not self:_on_task_completed(task_data) then
@@ -724,7 +724,7 @@ function SavefileManager:_copy_slot(src_slot, target_slot, clbk, save_system)
 		task_data.save_system = save_system or "steam_cloud"
 	end
 
-
+	
 	-- Lines: 762 to 764
 	local function load_callback_obj(td, rd)
 		self:clbk_result_load_copy_slot(src_slot, target_slot, td, rd, clbk or function ()
@@ -918,20 +918,20 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 				dialog_data.text = managers.localization:text(error_msg .. "_retry", {VERSION = req_version})
 
 				if is_setting_slot then
-
+					
 					-- Lines: 945 to 946
 					function yes_button.callback_func()
 						self:load_settings()
 					end
 				elseif is_progress_slot then
-
+					
 					-- Lines: 947 to 948
 					function yes_button.callback_func()
 						self:load_progress()
 					end
 				end
 
-
+				
 				-- Lines: 951 to 965
 				function no_button.callback_func()
 					if is_progress_slot and self._backup_data then
@@ -965,7 +965,7 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 				else
 					dialog_data.text = managers.localization:text(error_msg, {VERSION = req_version})
 					dialog_data.id = "savefile_new_safefile"
-
+					
 					-- Lines: 977 to 978
 					function ok_button.callback_func()
 						self:_remove(slot)
@@ -1276,7 +1276,7 @@ function SavefileManager:_ask_load_vr_progress(has_progress, load_params)
 		yes_button,
 		no_button
 	}
-
+	
 	-- Lines: 1343 to 1348
 	function yes_button.callback_func()
 		self._save_slots_to_load[self.PROGRESS_SLOT] = nil
@@ -1289,7 +1289,7 @@ function SavefileManager:_ask_load_vr_progress(has_progress, load_params)
 	end
 
 	if has_progress then
-
+		
 		-- Lines: 1351 to 1354
 		function no_button.callback_func()
 			self._vr_progress_data = nil
@@ -1297,7 +1297,7 @@ function SavefileManager:_ask_load_vr_progress(has_progress, load_params)
 			self:_load_done(self.PROGRESS_SLOT, unpack(load_params))
 		end
 	else
-
+		
 		-- Lines: 1357 to 1360
 		function no_button.callback_func()
 			self._vr_progress_data = nil
@@ -1320,7 +1320,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 		yes_button,
 		no_button
 	}
-
+	
 	-- Lines: 1379 to 1384
 	function yes_button.callback_func()
 		self._save_slots_to_load[self.PROGRESS_SLOT] = nil
@@ -1331,7 +1331,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 
 		self:_load_cache(self.PROGRESS_SLOT)
 	end
-
+	
 	-- Lines: 1386 to 1389
 	function no_button.callback_func()
 		self._backup_data = nil
@@ -1342,7 +1342,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 		dialog_data.text = managers.localization:text("dialog_ask_load_progress_backup_low_lvl")
 
 		if reason == "low_progress" then
-
+			
 			-- Lines: 1394 to 1397
 			function no_button.callback_func()
 				self._backup_data = nil
@@ -1352,7 +1352,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 		end
 	elseif reason == "progress_corrupt" or reason == "progress_wrong_version" then
 		dialog_data.text = managers.localization:text("dialog_ask_load_progress_backup_" .. (reason == "progress_corrupt" and "corrupt" or "wrong_version"))
-
+		
 		-- Lines: 1401 to 1404
 		function no_button.callback_func()
 			self._backup_data = nil

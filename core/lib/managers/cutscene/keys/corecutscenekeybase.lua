@@ -303,14 +303,14 @@ function CoreCutsceneKeyBase:register_serialized_attribute(attribute_name, defau
 		table.insert(class_table.__serialized_attribute_order, attribute_name)
 	end
 
-
+	
 	-- Lines: 247 to 249
 	class_table[attribute_name] = function (instance)
 		local value = instance["__" .. attribute_name]
 
 		return value == nil and default or value
 	end
-
+	
 	-- Lines: 252 to 267
 	class_table["set_" .. attribute_name] = function (instance, value)
 		local previous_value = instance["__" .. attribute_name]
@@ -346,7 +346,7 @@ function CoreCutsceneKeyBase:populate_sizer_with_editable_attributes(grid_sizer,
 	for _, attribute_name in ipairs(self:attribute_names()) do
 		local control = nil
 
-
+		
 		-- Lines: 281 to 290
 		local function on_control_edited()
 			local value_is_valid = self:validate_control_for_attribute(attribute_name)
@@ -518,7 +518,7 @@ end
 
 -- Lines: 417 to 420
 function CoreCutsceneKeyBase:standard_combo_box_control_refresh(attribute_name, values)
-
+	
 	-- Lines: 406 to 418
 	local function refresh_func(self, control)
 		control:freeze()
@@ -555,7 +555,7 @@ end
 
 -- Lines: 434 to 437
 function CoreCutsceneKeyBase:standard_percentage_slider_control_refresh(attribute_name)
-
+	
 	-- Lines: 432 to 435
 	local function refresh_func(self, control)
 		local attribute_value = self:attribute_value(attribute_name)

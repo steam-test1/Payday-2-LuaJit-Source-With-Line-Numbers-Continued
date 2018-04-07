@@ -798,7 +798,7 @@ end
 function UnitTreeBrowser:_populate_unit_paths(path, id)
 	local x_unit, y_unit = nil
 
-
+	
 	-- Lines: 773 to 780
 	local function sort(x, y)
 		x_unit = string.find(x, ".unit", nil, true) and true or false

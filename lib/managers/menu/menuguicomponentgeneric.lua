@@ -229,7 +229,7 @@ function MenuGuiComponentGeneric:_blur_background()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-
+	
 	-- Lines: 230 to 232
 	local function func(o)
 		over(0.6, function (p)

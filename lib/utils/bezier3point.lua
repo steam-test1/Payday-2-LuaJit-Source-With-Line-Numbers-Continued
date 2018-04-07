@@ -8,7 +8,6 @@ local radians = math.rad
 local degrees = math.deg
 local atan2 = math.atan2
 
-
 -- Lines: 8 to 12
 local function hypot(a, b)
 	if a == 0 and b == 0 then
@@ -23,18 +22,15 @@ local function hypot(a, b)
 	return a * sqrt(1 + (b / a) ^ 2)
 end
 
-
 -- Lines: 16 to 17
 local function distance(x1, y1, x2, y2)
 	return hypot(x2 - x1, y2 - y1)
 end
 
-
 -- Lines: 21 to 22
 local function distance2(x1, y1, x2, y2)
 	return (x2 - x1) ^ 2 + (y2 - y1) ^ 2
 end
-
 
 -- Lines: 26 to 30
 local function point_around(cx, cy, r, angle)
@@ -42,7 +38,6 @@ local function point_around(cx, cy, r, angle)
 
 	return cx + cos(angle) * r, cy + sin(angle) * r
 end
-
 
 -- Lines: 34 to 39
 local function rotate_point(x, y, cx, cy, angle)
@@ -59,18 +54,15 @@ local function rotate_point(x, y, cx, cy, angle)
 	return (cx + x * c) - y * s, cy + y * c + x * s
 end
 
-
 -- Lines: 43 to 44
 local function point_angle(x, y, cx, cy)
 	return degrees(atan2(y - cy, x - cx))
 end
 
-
 -- Lines: 48 to 49
 local function reflect_point(x, y, cx, cy)
 	return 2 * cx - x, 2 * cy - y
 end
-
 
 -- Lines: 53 to 59
 local function reflect_point_distance(x, y, cx, cy, length)
@@ -94,3 +86,4 @@ return {
 	point_angle = point_angle,
 	reflect_point = reflect_point,
 	reflect_point_distance = reflect_point_distance
+}

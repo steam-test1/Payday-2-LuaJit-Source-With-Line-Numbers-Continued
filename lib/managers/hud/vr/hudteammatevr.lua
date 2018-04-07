@@ -4,7 +4,7 @@ HUDTeammateVR.old_init = HUDTeammate.init
 -- Lines: 11 to 19
 function HUDTeammateVR:override_function_parameters(func_name, override)
 	self["overridden_" .. func_name] = self[func_name]
-
+	
 	-- Lines: 13 to 18
 	self[func_name] = function (...)
 		local new_params = {override(...)}
@@ -713,7 +713,7 @@ function HUDTeammateVR:set_ammo_amount_by_type(type, max_clip, current_clip, cur
 		return
 	end
 
-
+	
 	-- Lines: 549 to 559
 	local function ammo_flash(o, color, alpha)
 		managers.hud:set_ammo_flash_color(color)

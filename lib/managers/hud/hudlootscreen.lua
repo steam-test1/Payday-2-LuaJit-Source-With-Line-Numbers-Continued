@@ -386,7 +386,7 @@ function HUDLootScreen:create_selected_panel(peer_id)
 	glow_circle:set_center(selected_panel:w() * 0.5, selected_panel:h() * 0.5)
 	glow_stretch:set_center(selected_panel:w() * 0.5, selected_panel:h() * 0.5)
 
-
+	
 	-- Lines: 273 to 279
 	local function anim_func(o)
 		while true do
@@ -553,7 +553,7 @@ function HUDLootScreen:show()
 		color = Color.black
 	})
 
-
+	
 	-- Lines: 416 to 419
 	local function fade_out_anim(o)
 		over(0.5, function (p)
@@ -625,7 +625,7 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 		panel:child("card" .. i):show()
 	end
 
-
+	
 	-- Lines: 480 to 482
 	local function anim_fadein(o)
 		over(1, function (p)
@@ -1196,7 +1196,7 @@ function HUDLootScreen:show_item(peer_id)
 			child:set_center(panel:child("item"):w() * 0.5, panel:child("item"):h() * 0.5)
 		end
 
-
+		
 		-- Lines: 968 to 970
 		local function anim_fadein(o)
 			over(1, function (p)
@@ -1363,7 +1363,7 @@ function HUDLootScreen:create_stars_giving_animation()
 	star_reason_text:set_h(tweak_data.menu.pd2_medium_font_size)
 	star_reason_text:set_world_center_y(math.round(self._foreground_layer_safe:child("loot_text"):world_center_y()) + 2)
 
-
+	
 	-- Lines: 1131 to 1236
 	local function animation_func(o)
 		local texture, rect = tweak_data.hud_icons:get_icon_data("risk_pd")

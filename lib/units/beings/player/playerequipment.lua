@@ -200,7 +200,7 @@ end
 
 -- Lines: 196 to 198
 function PlayerEquipment:use_armor_kit()
-
+	
 	-- Lines: 187 to 197
 	local function redirect()
 		if Network:is_client() then

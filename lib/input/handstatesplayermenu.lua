@@ -88,3 +88,4 @@ M.CustomizationEmptyHandState.init = function (self)
 	}
 end
 
+return M

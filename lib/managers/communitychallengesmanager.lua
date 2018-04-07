@@ -46,7 +46,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._global.challenge_data = {}
 	self._global.active_bonus = 0
 
-
+	
 	-- Lines: 66 to 71
 	local function get_60_day_stat(stat_name)
 		local stat_value = 0
@@ -58,7 +58,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 		return stat_value > 0 and stat_value or 0
 	end
 
-
+	
 	-- Lines: 74 to 81
 	local function better_ceil(number)
 		local mod = number % 1

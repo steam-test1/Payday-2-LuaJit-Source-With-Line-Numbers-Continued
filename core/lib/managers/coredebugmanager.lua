@@ -571,7 +571,7 @@ function DebugProfilerCounter:set_enabled(enabled)
 			end
 
 			self._old_func = self._old_func or old_func
-
+			
 			-- Lines: 512 to 516
 			function self._new_func(...)
 				local id = Profiler:start(name)
@@ -2185,7 +2185,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 	local can_intersect = func_name ~= "find_units_quick"
 
 	if find_type == "cone" or find_type == "cylinder" or find_type == "capsule" then
-
+		
 		-- Lines: 2016 to 2018
 		function f(from, to)
 			result = World[func_name](World, "force_slot", find_type, from, to, radius, slotmask)
@@ -2196,7 +2196,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			counter = "find_" .. find_type
 		})
 
-
+		
 		-- Lines: 2021 to 2023
 		function f(from, to)
 			result = World[func_name](World, "force_physics", find_type, from, to, radius, slotmask)
@@ -2208,7 +2208,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		})
 
 		if can_intersect then
-
+			
 			-- Lines: 2027 to 2029
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_slot", find_type, from, to, radius, slotmask)
@@ -2219,7 +2219,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 				counter = "find_" .. find_type .. "_intersect"
 			})
 
-
+			
 			-- Lines: 2032 to 2034
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_physics", find_type, from, to, radius, slotmask)
@@ -2231,7 +2231,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			})
 		end
 	elseif find_type == "sphere" then
-
+		
 		-- Lines: 2038 to 2040
 		function f(from, to)
 			result = World[func_name](World, "force_slot", find_type, from, radius, slotmask)
@@ -2242,7 +2242,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			counter = "find_" .. find_type
 		})
 
-
+		
 		-- Lines: 2043 to 2045
 		function f(from, to)
 			result = World[func_name](World, "force_physics", find_type, from, radius, slotmask)
@@ -2254,7 +2254,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		})
 
 		if can_intersect then
-
+			
 			-- Lines: 2049 to 2051
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_slot", find_type, from, radius, slotmask)
@@ -2265,7 +2265,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 				counter = "find_" .. find_type .. "_intersect"
 			})
 
-
+			
 			-- Lines: 2054 to 2056
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_physics", find_type, from, radius, slotmask)
@@ -2298,7 +2298,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		return
 	end
 
-
+	
 	-- Lines: 2077 to 2079
 	function f(from, to)
 		result = World:raycast("ray", from, to, "sphere_cast_radius", radius, "bundle", bundle_count, "slot_mask", slotmask)
@@ -2309,7 +2309,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		func = f
 	})
 
-
+	
 	-- Lines: 2082 to 2084
 	function f(from, to)
 		result = World:raycast("ray", from, to, "sphere_cast_radius", radius, "slot_mask", slotmask)
@@ -2998,7 +2998,7 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 			local unit_file_path = asset_path .. tostring(unit_file) .. ".unit"
 			local object_file_path = asset_path .. tostring(object_file) .. ".object"
 
-
+			
 			-- Lines: 2738 to 2753
 			local function check_slot_func(slot, sequence_file_path)
 				if table.contains(slot_list, tonumber(slot)) then
@@ -3043,7 +3043,7 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 				if sequence_file and DB:has("sequence_manager", sequence_file) then
 					local sequence_data = PackageManager:editor_load_script_data(Idstring("sequence_manager"), Idstring(sequence_file))
 
-
+					
 					-- Lines: 2773 to 2790
 					local function find_slot_func(map, recursive_func)
 						for k, v in pairs(map) do
@@ -3290,7 +3290,7 @@ end
 -- Lines: 2998 to 3007
 function MemoryDebug:find_instance(find_value, is_meta_data, print_path, find_all, seen_map, map)
 	if find_value ~= nil then
-
+		
 		-- Lines: 3000 to 3001
 		local function func(path, key, value, populate_map, info_map, seen_map, func)
 			return self:find_instance_callback(print_path, path, key, value, populate_map, info_map, seen_map, find_value, is_meta_data, find_all)
@@ -3422,7 +3422,7 @@ function MemoryDebug:calc(map, seen_map)
 	local global_populate_map = nil
 
 	if map ~= nil then
-
+		
 		-- Lines: 3136 to 3144
 		local function func(path, key, value, populate_map, info_map, seen_map, func)
 			global_populate_map = global_populate_map or populate_map

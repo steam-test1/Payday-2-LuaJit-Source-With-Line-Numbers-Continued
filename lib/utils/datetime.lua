@@ -23,22 +23,22 @@ function DateTime:init(date)
 	self._value = self._value + self._date_table.month * DateTime.days_per_month
 	self._value = self._value + self._date_table.day
 	local mt = getmetatable(self)
-
+	
 	-- Lines: 37 to 38
 	function mt.__eq(a, b)
 		return a:value() == b:value()
 	end
-
+	
 	-- Lines: 40 to 41
 	function mt.__lt(a, b)
 		return a:value() < b:value()
 	end
-
+	
 	-- Lines: 43 to 44
 	function mt.__le(a, b)
 		return a:value() <= b:value()
 	end
-
+	
 	-- Lines: 46 to 51
 	function mt.__add(a, b)
 		local f = {
@@ -49,7 +49,7 @@ function DateTime:init(date)
 
 		return DateTime:new(f)
 	end
-
+	
 	-- Lines: 53 to 58
 	function mt.__sub(a, b)
 		local f = {
@@ -60,7 +60,7 @@ function DateTime:init(date)
 
 		return DateTime:new(f)
 	end
-
+	
 	-- Lines: 60 to 61
 	function mt.__tostring(t)
 		return string.format("%i/%i/%i [%i]", t._date_table.year or -1, t._date_table.month or -1, t._date_table.day or -1, t:value())

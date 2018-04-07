@@ -7,7 +7,6 @@ require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditorSimulators")
 require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditorVisualizers")
 require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditorPanel")
 
-
 -- Lines: 11 to 18
 function collect_members(cls, m)
 	for funcname, funcobj in pairs(cls) do
@@ -17,7 +16,6 @@ function collect_members(cls, m)
 		end
 	end
 end
-
 
 -- Lines: 20 to 27
 function collect_member_names(members, member_names)
@@ -76,19 +74,19 @@ end
 function CoreParticleEditor:start_dialog()
 	local dialog = EWS:Dialog(self._main_frame, "Tsar Bomba Particle Editor : Choose...", "", Vector3(-1, -1, 0), Vector3(400, 400, 0), "DEFAULT_DIALOG_STYLE")
 
-
+	
 	-- Lines: 58 to 60
 	local function on_new(dialog)
 		dialog:end_modal("NEW")
 	end
 
-
+	
 	-- Lines: 62 to 64
 	local function on_empty_new(dialog)
 		dialog:end_modal("EMPTY_NEW")
 	end
 
-
+	
 	-- Lines: 66 to 68
 	local function on_load(dialog)
 		dialog:end_modal("LOAD")
@@ -134,19 +132,19 @@ end
 function CoreParticleEditor:new_dialog()
 	local dialog = EWS:Dialog(self._main_frame, "Create New Effect", "", Vector3(-1, -1, 0), Vector3(300, 400, 0), "DEFAULT_DIALOG_STYLE")
 
-
+	
 	-- Lines: 108 to 110
 	local function on_new(dialog)
 		dialog:end_modal("NEW")
 	end
 
-
+	
 	-- Lines: 112 to 114
 	local function on_create(dialog)
 		dialog:end_modal("CREATE")
 	end
 
-
+	
 	-- Lines: 116 to 122
 	local function on_select_type(combo_desc)
 		local combo = combo_desc.combo

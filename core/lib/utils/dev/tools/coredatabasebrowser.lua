@@ -636,7 +636,7 @@ end
 function CoreDatabaseBrowser:on_read_database()
 	self._entrys = {}
 
-
+	
 	-- Lines: 631 to 635
 	local function apply_type_filter(type_combobox, dest_type_combobox)
 		local t = type_combobox:get_value()
@@ -909,13 +909,13 @@ end
 
 -- Lines: 856 to 924
 function CoreDatabaseBrowser:update_preview(entry)
-
+	
 	-- Lines: 855 to 856
 	local function valid_node(node)
 		return node and node:to_xml() ~= "</>\n"
 	end
 
-
+	
 	-- Lines: 859 to 871
 	local function preview_model_xml(self, node, valid_node)
 		if valid_node(node) then

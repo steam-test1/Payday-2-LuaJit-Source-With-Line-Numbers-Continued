@@ -34,7 +34,6 @@ for _, data in pairs(char_map) do
 	end
 end
 
-
 -- Lines: 30 to 48
 function CopBase:init(unit)
 	UnitBase.init(self, unit, false)

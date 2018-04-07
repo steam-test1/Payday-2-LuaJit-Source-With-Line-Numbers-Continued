@@ -8,7 +8,6 @@ require("lib/managers/menu/items/MenuItemColoredDivider")
 require("lib/managers/menu/MenuInitiatorBase")
 core:import("CoreEvent")
 
-
 -- Lines: 16 to 18
 function MenuManager:update(t, dt, ...)
 	MenuManager.super.update(self, t, dt, ...)
@@ -1131,7 +1130,7 @@ function InspectPlayerInitiator:modify_node(node, inspect_peer)
 			node:add_item(new_item)
 		end
 
-
+		
 		-- Lines: 1298 to 1299
 		local function get_identifier(peer)
 			return SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
@@ -1490,7 +1489,7 @@ function MenuCallbackHandler:steam_open_container(item)
 	local safe_entry = data.safe
 	local safe_tweak = tweak_data.economy.safes[safe_entry]
 
-
+	
 	-- Lines: 1661 to 1667
 	local function ready_clbk()
 		print("ECONOMY SAFE READY CALLBACK")
@@ -1540,7 +1539,7 @@ function MenuBanListInitiator:modify_node(node)
 
 	local added = false
 
-
+	
 	-- Lines: 1708 to 1709
 	local function get_identifier(peer)
 		return SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
@@ -1822,7 +1821,7 @@ MenuMutatorsInitiator = MenuMutatorsInitiator or class(MenuInitiatorBase)
 function MenuMutatorsInitiator:modify_node(node)
 	node:clean_items()
 
-
+	
 	-- Lines: 1913 to 1914
 	local function get_identifier(peer)
 		return SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
@@ -1963,7 +1962,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 
 		local skin_exists = managers.blackmarket:skin_editor():get_current_skin() and true
 
-
+		
 		-- Lines: 2053 to 2059
 		local function disable_func(item)
 			if not skin_exists and item:name() ~= "new_skin" and item:name() ~= "edit_skin" then
@@ -2716,14 +2715,14 @@ function MenuCallbackHandler:on_exit_skin_editor(item)
 		return false
 	end
 
-
+	
 	-- Lines: 2447 to 2450
 	local function on_yes()
 		managers.blackmarket:skin_editor():save_current_skin()
 		managers.menu:back(true)
 	end
 
-
+	
 	-- Lines: 2452 to 2455
 	local function on_no()
 		managers.blackmarket:skin_editor():set_ignore_unsaved(true)
@@ -2823,7 +2822,7 @@ end
 
 -- Lines: 2540 to 2564
 function MenuCallbackHandler:take_screenshot_skin(item)
-
+	
 	-- Lines: 2536 to 2541
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
@@ -2841,7 +2840,7 @@ function MenuCallbackHandler:take_screenshot_skin(item)
 
 	item:set_enabled(false)
 
-
+	
 	-- Lines: 2552 to 2561
 	local function co_screenshot(o)
 		for i = 0, 5, 1 do
@@ -2918,7 +2917,7 @@ end
 
 -- Lines: 2648 to 2697
 function MenuCallbackHandler:cleanup_weapon_skin_data(copy_data, skip_base)
-
+	
 	-- Lines: 2619 to 2649
 	local function remove_empty_func(data)
 		local remove = {}
@@ -3208,7 +3207,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 
 		local skin_exists = editor:get_current_skin() and true
 
-
+		
 		-- Lines: 2936 to 2942
 		local function disable_func(item)
 			if not skin_exists and item:name() ~= "new_skin" and item:name() ~= "edit_skin" then
@@ -3940,14 +3939,14 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 		return false
 	end
 
-
+	
 	-- Lines: 3374 to 3377
 	local function on_yes()
 		editor:save_current_skin()
 		managers.menu:back(true)
 	end
 
-
+	
 	-- Lines: 3379 to 3382
 	local function on_no()
 		editor:set_ignore_unsaved(true)
@@ -4193,7 +4192,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 		return
 	end
 
-
+	
 	-- Lines: 3600 to 3604
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
@@ -4209,7 +4208,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 
 	item:set_enabled(false)
 
-
+	
 	-- Lines: 3614 to 3623
 	local function co_screenshot(o)
 		for i = 0, 5, 1 do

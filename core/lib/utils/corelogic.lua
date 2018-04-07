@@ -1,6 +1,5 @@
 core:module("CoreLogic")
 
-
 -- Lines: 11 to 17
 function toboolean(value)
 	if type(value) == "string" then
@@ -9,7 +8,6 @@ function toboolean(value)
 		return value == 1
 	end
 end
-
 
 -- Lines: 19 to 25
 function iff(t, a, b)

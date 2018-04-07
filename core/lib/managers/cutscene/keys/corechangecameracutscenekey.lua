@@ -6,7 +6,6 @@ CoreChangeCameraCutsceneKey.NAME = "Camera Change"
 
 CoreChangeCameraCutsceneKey:register_serialized_attribute("camera", nil)
 
-
 -- Lines: 8 to 9
 function CoreChangeCameraCutsceneKey:__tostring()
 	return "Change camera to \"" .. self:camera() .. "\"."

@@ -279,7 +279,6 @@ for _, key_type in ipairs(CoreCutsceneKey:types()) do
 	end
 end
 
-
 -- Lines: 79 to 84
 function CoreCutsceneEditor:init()
 	self._cast = core_or_local("CutsceneCast")
@@ -336,7 +335,7 @@ function CoreCutsceneEditor:_create_window()
 	self._window:set_icon(CoreEWS.image_path("film_reel_16x16.png"))
 	self._window:set_min_size(Vector3(400, 321, 0))
 
-
+	
 	-- Lines: 158 to 162
 	local function connect_command(command_id, callback_name, callback_data)
 		callback_name = callback_name or "_on_" .. string.lower(command_id)
@@ -519,7 +518,7 @@ end
 function CoreCutsceneEditor:_create_tool_bar(parent_frame)
 	local tool_bar = commands:wrap_tool_bar(EWS:ToolBar(parent_frame, "", "TB_HORIZONTAL,TB_FLAT,TB_NOALIGN"))
 
-
+	
 	-- Lines: 327 to 337
 	local function add_labelled_field(label, field_text)
 		local label = EWS:StaticText(tool_bar:wrapped_object(), label)
@@ -568,7 +567,7 @@ end
 
 -- Lines: 369 to 375
 function CoreCutsceneEditor:_time_code_string_for_frame(frame)
-
+	
 	-- Lines: 366 to 369
 	local function consume_frames(frames_per_unit)
 		local whole_units = math.floor(frame / frames_per_unit)
@@ -779,7 +778,7 @@ function CoreCutsceneEditor:_refresh_footage_list()
 	table.sort(unoptimized_cutscene_names)
 	table.sort(optimized_cutscene_names)
 
-
+	
 	-- Lines: 554 to 561
 	local function add_cutscene_footage(name, icon_id)
 		local cutscene = managers.cutscene:get_cutscene(name)
@@ -1970,7 +1969,7 @@ function CoreCutsceneEditor:_draw_focus_planes()
 
 		local camera = self._player:_camera()
 
-
+		
 		-- Lines: 1547 to 1553
 		local function draw_focus_plane(value, color)
 			local point = camera:screen_to_world(Vector3(0, 0, value))

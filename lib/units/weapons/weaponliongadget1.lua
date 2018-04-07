@@ -8,7 +8,7 @@ function WeaponLionGadget1:init(unit)
 	self._unit = unit
 	self._is_npc = false
 
-
+	
 	-- Lines: 21 to 23
 	local function on_cash_inspect_weapon()
 		self:get_offsets()

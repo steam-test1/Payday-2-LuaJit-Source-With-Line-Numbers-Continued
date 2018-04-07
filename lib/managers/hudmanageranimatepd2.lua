@@ -1,6 +1,5 @@
 core:import("CoreEvent")
 
-
 -- Lines: 145 to 153
 function HUDManager:_animate_test_circle()
 	local t = 2

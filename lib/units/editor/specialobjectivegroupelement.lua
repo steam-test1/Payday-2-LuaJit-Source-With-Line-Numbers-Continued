@@ -207,7 +207,7 @@ end
 function SpecialObjectiveGroupElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-
+	
 	-- Lines: 165 to 184
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
@@ -250,7 +250,7 @@ end
 
 -- Lines: 212 to 224
 function SpecialObjectiveGroupElement:remove_unit_list_btn()
-
+	
 	-- Lines: 211 to 213
 	local function f(unit)
 		return self._hed.spawn_instigator_ids and table.contains(self._hed.spawn_instigator_ids, unit:unit_data().unit_id) or self._hed.followup_elements and table.contains(self._hed.followup_elements, unit:unit_data().unit_id)

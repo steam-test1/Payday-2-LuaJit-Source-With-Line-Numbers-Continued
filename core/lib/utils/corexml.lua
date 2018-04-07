@@ -2,7 +2,6 @@ core:module("CoreXml")
 core:import("CoreClass")
 core:import("CoreMath")
 
-
 -- Lines: 14 to 30
 function simple_value_string(name, value, t)
 	t = t or ""
@@ -26,7 +25,6 @@ function simple_value_string(name, value, t)
 
 	return string
 end
-
 
 -- Lines: 35 to 59
 function save_value_string(c, name, t, unit)
@@ -63,7 +61,6 @@ function save_value_string(c, name, t, unit)
 	return string
 end
 
-
 -- Lines: 63 to 81
 function save_table_value_string(in_table, string, t)
 	t = t .. "\t"
@@ -90,7 +87,6 @@ function save_table_value_string(in_table, string, t)
 	return string
 end
 
-
 -- Lines: 84 to 90
 function parse_values_node(node)
 	local t = {}
@@ -102,7 +98,6 @@ function parse_values_node(node)
 
 	return t
 end
-
 
 -- Lines: 93 to 107
 function parse_value_node(node)

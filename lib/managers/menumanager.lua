@@ -37,7 +37,6 @@ MenuManager.ONLINE_AGE = (SystemInfo:platform() == Idstring("PS3") or SystemInfo
 require("lib/managers/MenuManagerDialogs")
 require("lib/managers/MenuManagerDebug")
 
-
 -- Lines: 47 to 256
 function MenuManager:init(is_start_menu)
 	MenuManager.super.init(self)
@@ -1021,7 +1020,7 @@ function MenuManager:open_sign_in_menu(cb)
 				PSN:fetch_cancel()
 			end})
 
-
+			
 			-- Lines: 1074 to 1075
 			local function f()
 				self:open_ps4_sign_in_menu(cb)
@@ -2714,10 +2713,10 @@ end
 function MenuCallbackHandler:on_account_picker()
 	print("MenuCallbackHandler:on_account_picker()")
 
-
+	
 	-- Lines: 2993 to 2996
 	local function confirm_cb()
-
+		
 		-- Lines: 2993 to 2994
 		local function f(...)
 			print("result", ...)
@@ -3001,7 +3000,7 @@ function MenuCallbackHandler:change_resolution(item)
 	managers.viewport:set_resolution(item:parameters().resolution)
 	managers.viewport:set_aspect_ratio(item:parameters().resolution.x / item:parameters().resolution.y)
 
-
+	
 	-- Lines: 3247 to 3250
 	local function on_decline()
 		managers.viewport:set_resolution(old_resolution)
@@ -3728,7 +3727,7 @@ end
 
 -- Lines: 3963 to 3971
 function MenuCallbackHandler:play_safehouse(params)
-
+	
 	-- Lines: 3958 to 3964
 	local function yes_func()
 		self:play_single_player()
@@ -3824,7 +3823,7 @@ function MenuCallbackHandler:become_infamous(params)
 	}
 
 	if infamous_cost <= managers.money:offshore() and managers.experience:current_level() >= 100 then
-
+		
 		-- Lines: 4046 to 4051
 		function params.yes_func()
 			local rank = managers.experience:current_rank() + 1
@@ -3835,7 +3834,7 @@ function MenuCallbackHandler:become_infamous(params)
 		end
 	end
 
-
+	
 	-- Lines: 4053 to 4057
 	function params.no_func()
 		if no_clbk then
@@ -3863,7 +3862,7 @@ end
 
 -- Lines: 4080 to 4100
 function MenuCallbackHandler:apply_and_save_render_settings()
-
+	
 	-- Lines: 4078 to 4081
 	local function func()
 		Application:apply_render_settings()
@@ -4143,7 +4142,7 @@ end
 
 -- Lines: 4336 to 4340
 function MenuCallbackHandler:connect_to_host_rpc(item)
-
+	
 	-- Lines: 4320 to 4337
 	local function f(res)
 		if res == "JOINED_LOBBY" then
@@ -4179,7 +4178,7 @@ end
 
 -- Lines: 4370 to 4373
 function MenuCallbackHandler:join_multiplayer()
-
+	
 	-- Lines: 4362 to 4371
 	local function f(new_host_rpc)
 		if new_host_rpc then
@@ -4193,7 +4192,7 @@ end
 -- Lines: 4375 to 4384
 function MenuCallbackHandler:find_lan_games()
 	if self:is_win32() then
-
+		
 		-- Lines: 4377 to 4381
 		local function f(new_host_rpc)
 			if new_host_rpc then
@@ -4218,7 +4217,7 @@ end
 -- Lines: 4394 to 4452
 function MenuCallbackHandler:_find_online_games(friends_only)
 	if self:is_win32() then
-
+		
 		-- Lines: 4396 to 4401
 		local function f(info)
 			print("info in function")
@@ -4230,7 +4229,7 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 		managers.network.matchmake:register_callback("search_lobby", f)
 		managers.network.matchmake:search_lobby(friends_only)
 
-
+		
 		-- Lines: 4407 to 4418
 		local function usrs_f(success, amount)
 			print("usrs_f", success, amount)
@@ -4254,7 +4253,7 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 			return
 		end
 
-
+		
 		-- Lines: 4431 to 4436
 		local function f(info_list)
 			print("info_list in function")
@@ -4780,7 +4779,7 @@ end
 
 -- Lines: 4925 to 4928
 function MenuCallbackHandler:leave_safehouse()
-
+	
 	-- Lines: 4923 to 4926
 	local function yes_func()
 		Global.load_crime_net = true
@@ -4808,7 +4807,7 @@ function MenuCallbackHandler:abort_mission()
 		return
 	end
 
-
+	
 	-- Lines: 4945 to 4949
 	local function yes_func()
 		if game_state_machine:current_state_name() ~= "disconnected" then
@@ -5171,7 +5170,7 @@ InviteFriendsPSN = InviteFriendsPSN or class()
 function InviteFriendsPSN:modify_node(node, up)
 	local new_node = up and node or deep_clone(node)
 
-
+	
 	-- Lines: 5303 to 5305
 	local function f2(friends)
 		managers.menu:active_menu().logic:refresh_node("invite_friends", true, friends)
@@ -10749,7 +10748,7 @@ function ModMenuCreator:create_mod_menu(node)
 	local conflicted_content = {}
 	local modded_content = {}
 
-
+	
 	-- Lines: 10815 to 10816
 	local function id_key(path)
 		return Idstring(path):key()
@@ -11126,13 +11125,13 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local secondaries = managers.blackmarket:get_weapon_category("secondaries")
 	local items = {}
 
-
+	
 	-- Lines: 11167 to 11168
 	local function chk_unlocked_func(weapon)
 		return not not weapon.unlocked
 	end
 
-
+	
 	-- Lines: 11171 to 11178
 	local function chk_dlc_func(weapon)
 		x_id = weapon.weapon_id
@@ -11145,7 +11144,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 		return true
 	end
 
-
+	
 	-- Lines: 11181 to 11183
 	local function chk_dropable_func(weapon)
 		local loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon.weapon_id, nil, true)
@@ -11153,7 +11152,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 		return loot_table and #loot_table > 0 or false
 	end
 
-
+	
 	-- Lines: 11186 to 11187
 	local function chk_parent_func(weapon)
 		return weapon_tweak[weapon.weapon_id] and not weapon_tweak[weapon.weapon_id].parent_weapon_id
@@ -11184,7 +11183,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 		end
 	end
 
-
+	
 	-- Lines: 11211 to 11245
 	local function sort_func(x, y)
 		x_unlocked = x.unlocked
@@ -11365,7 +11364,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		global_values = table.list_union(global_values)
 		local x_sn, y_sn = nil
 
-
+		
 		-- Lines: 11357 to 11371
 		local function sort_func(x, y)
 			if x == "normal" then

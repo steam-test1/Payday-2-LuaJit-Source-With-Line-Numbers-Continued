@@ -535,7 +535,6 @@ function PostEffectLightScaleFeeder:apply(handler, viewport, scene)
 	material:set_variable(ids_effect_light_scale, self._current)
 end
 
-
 -- Lines: 575 to 576
 local function _apply_fov_ratio(current)
 end

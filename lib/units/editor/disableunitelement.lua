@@ -150,7 +150,7 @@ end
 
 -- Lines: 130 to 139
 function DisableUnitUnitElement:add_unit_list_btn()
-
+	
 	-- Lines: 126 to 130
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
@@ -171,7 +171,7 @@ end
 
 -- Lines: 141 to 149
 function DisableUnitUnitElement:remove_unit_list_btn()
-
+	
 	-- Lines: 141 to 142
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]

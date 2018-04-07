@@ -6446,14 +6446,12 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
-
 -- Lines: 4994 to 4998
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
-
 
 -- Lines: 5000 to 5011
 function TweakDataVR:_get_melee_offset_by_id(id)
