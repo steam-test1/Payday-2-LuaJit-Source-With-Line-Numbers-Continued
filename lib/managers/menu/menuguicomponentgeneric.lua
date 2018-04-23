@@ -671,7 +671,7 @@ end
 
 -- Lines: 628 to 652
 function MenuGuiComponentGeneric:update_tabs_hover(button, x, y)
-	if not self._tabs then
+	if not self._tabs or #self._tabs < 2 then
 		return
 	end
 

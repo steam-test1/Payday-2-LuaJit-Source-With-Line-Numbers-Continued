@@ -1,6 +1,6 @@
 EconomyTweakData = EconomyTweakData or class()
 
--- Lines: 3 to 1159
+-- Lines: 3 to 1187
 function EconomyTweakData:init()
 	self.safes = {}
 	self.drills = {}
@@ -1501,7 +1501,7 @@ function EconomyTweakData:init()
 	self:_init_armor_skins()
 end
 
--- Lines: 1169 to 1178
+-- Lines: 1197 to 1206
 function EconomyTweakData:get_entry_from_index(category, index)
 	for entry, data in pairs(self[category] or {}) do
 		if not data.index then
@@ -1514,12 +1514,12 @@ function EconomyTweakData:get_entry_from_index(category, index)
 	end
 end
 
--- Lines: 1180 to 1181
+-- Lines: 1208 to 1209
 function EconomyTweakData:get_index_from_entry(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].index
 end
 
--- Lines: 1184 to 1196
+-- Lines: 1212 to 1224
 function EconomyTweakData:get_bonus_icons(entry)
 	local bonus_data = self.bonuses[entry]
 	local bonuses = {}
@@ -1537,7 +1537,7 @@ function EconomyTweakData:get_bonus_icons(entry)
 	return bonuses
 end
 
--- Lines: 1199 to 1210
+-- Lines: 1227 to 1238
 function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmetic_id)
 	local cosmetic_name = tweak_data.blackmarket.weapon_skins[cosmetic_id] and managers.localization:text(tweak_data.blackmarket.weapon_skins[cosmetic_id].name_id)
 	local weapon_name = managers.weapon_factory:get_weapon_name_by_weapon_id(weapon_id)
@@ -1552,7 +1552,7 @@ function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmet
 	return nil
 end
 
--- Lines: 1214 to 1221
+-- Lines: 1242 to 1249
 function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	local cosmetic_name = tweak_data.economy.armor_skins[cosmetic_id] and managers.localization:text(tweak_data.economy.armor_skins[cosmetic_id].name_id)
 
@@ -1565,22 +1565,22 @@ function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	return nil
 end
 
--- Lines: 1225 to 1226
+-- Lines: 1253 to 1254
 function EconomyTweakData:create_market_link_url(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].market_link
 end
 
--- Lines: 1229 to 1230
+-- Lines: 1257 to 1258
 function EconomyTweakData:create_buy_tradable_url(def_id, quantity)
 	return "https://store.steampowered.com/buyitem/218620/" .. tostring(def_id) .. "/"
 end
 
--- Lines: 1233 to 1234
+-- Lines: 1261 to 1262
 function EconomyTweakData:create_sell_tradable_url(steam_id, instance_id)
 	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/?sellOnLoad=1#218620_2_" .. tostring(instance_id)
 end
 
--- Lines: 1237 to 1266
+-- Lines: 1265 to 1294
 function EconomyTweakData:get_bonuses_by_safe(safe)
 	local safe_tweak = self.contents[safe]
 	local ids = deep_clone(safe_tweak.contains.weapon_skins)

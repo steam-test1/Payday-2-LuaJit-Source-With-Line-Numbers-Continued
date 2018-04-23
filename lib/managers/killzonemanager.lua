@@ -5,7 +5,7 @@ function KillzoneManager:init()
 	self._units = {}
 end
 
--- Lines: 7 to 39
+-- Lines: 7 to 48
 function KillzoneManager:update(t, dt)
 	for _, data in pairs(self._units) do
 		if alive(data.unit) then
@@ -40,12 +40,20 @@ function KillzoneManager:update(t, dt)
 
 					self:_deal_fire_damage(data.unit)
 				end
+			elseif data.type == "laser" and not data.killed then
+				data.timer = data.timer + dt
+
+				if data.next_fire < data.timer then
+					self:_kill_unit(data.unit)
+
+					data.killed = true
+				end
 			end
 		end
 	end
 end
 
--- Lines: 41 to 47
+-- Lines: 50 to 56
 function KillzoneManager:set_unit(unit, type)
 	if self._units[unit:key()] then
 		self:_remove_unit(unit)
@@ -54,7 +62,16 @@ function KillzoneManager:set_unit(unit, type)
 	end
 end
 
--- Lines: 49 to 62
+-- Lines: 58 to 64
+function KillzoneManager:_kill_unit(unit)
+	if unit:character_damage():need_revive() then
+		return
+	end
+
+	unit:character_damage():damage_killzone({instant_death = true})
+end
+
+-- Lines: 66 to 79
 function KillzoneManager:_warning_shot(unit)
 	local rot = unit:camera():rotation()
 	rot = Rotation(rot:yaw(), 0, 0)
@@ -70,7 +87,7 @@ function KillzoneManager:_warning_shot(unit)
 	end
 end
 
--- Lines: 64 to 75
+-- Lines: 81 to 92
 function KillzoneManager:_deal_damage(unit)
 	if unit:character_damage():need_revive() then
 		return
@@ -88,7 +105,7 @@ function KillzoneManager:_deal_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines: 77 to 80
+-- Lines: 94 to 97
 function KillzoneManager:_deal_gas_damage(unit)
 	local attack_data = {
 		damage = 0.75,
@@ -98,7 +115,7 @@ function KillzoneManager:_deal_gas_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines: 82 to 85
+-- Lines: 99 to 102
 function KillzoneManager:_deal_fire_damage(unit)
 	local attack_data = {
 		damage = 0.5,
@@ -108,7 +125,7 @@ function KillzoneManager:_deal_fire_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines: 88 to 99
+-- Lines: 105 to 119
 function KillzoneManager:_add_unit(unit, type)
 	if type == "sniper" then
 		local next_shot = math.rand(1)
@@ -134,10 +151,18 @@ function KillzoneManager:_add_unit(unit, type)
 			next_fire = next_fire,
 			unit = unit
 		}
+	elseif type == "laser" then
+		local next_fire = math.rand(0.2)
+		self._units[unit:key()] = {
+			timer = 0,
+			type = type,
+			next_fire = next_fire,
+			unit = unit
+		}
 	end
 end
 
--- Lines: 101 to 103
+-- Lines: 121 to 123
 function KillzoneManager:_remove_unit(unit)
 	self._units[unit:key()] = nil
 end

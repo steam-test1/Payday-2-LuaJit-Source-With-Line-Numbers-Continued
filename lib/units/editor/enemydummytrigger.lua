@@ -83,7 +83,7 @@ function EnemyDummyTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 61 to 72
+-- Lines: 61 to 94
 function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -107,6 +107,8 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 		"panic",
 		"weapons_hot",
 		"tied",
+		"marked",
+		"unmarked",
 		"anim_act_01",
 		"anim_act_02",
 		"anim_act_03",

@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines: 4 to 4770
+-- Lines: 4 to 4791
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {rotation = Rotation(0, 70)},
@@ -72,6 +72,11 @@ function TweakDataVR:init(tweak_data)
 			brass_knuckles = {
 				rotation = Rotation(0, -110, 0),
 				position = Vector3(0, 1.5, 0)
+			},
+			aziz = {
+				rotation = Rotation(0, -90, 0),
+				position = Vector3(0, 0, 0),
+				hit_point = Vector3(0, 0, 0)
 			}
 		},
 		bayonets = {wpn_fps_snp_mosin_ns_bayonet = {hit_point = Vector3(0, 30, -3)}},
@@ -6160,7 +6165,7 @@ function TweakDataVR:init(tweak_data)
 	self:init_skills(tweak_data)
 end
 
--- Lines: 4776 to 4887
+-- Lines: 4797 to 4908
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -6332,7 +6337,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines: 4892 to 4949
+-- Lines: 4913 to 4972
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -6340,11 +6345,13 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 	self.steelsight_stamina_regen = 0.02
 
-	table.insert(tweak_data.skilltree.skills.rifleman[1].upgrades, "player_stamina_ammo_refill_single")
-	table.insert(tweak_data.skilltree.skills.shock_and_awe[1].upgrades, "player_stamina_ammo_refill_auto")
-	table.insert(tweak_data.skilltree.skills.close_by[1].upgrades, "player_post_warp_suppression")
-	table.insert(tweak_data.skilltree.skills.awareness[1].upgrades, "player_post_warp_reload_speed")
-	table.insert(tweak_data.skilltree.skills.sprinter[2].upgrades, "player_run_dodge_chance_vr")
+	if _G.IS_VR then
+		table.insert(tweak_data.skilltree.skills.rifleman[1].upgrades, "player_stamina_ammo_refill_single")
+		table.insert(tweak_data.skilltree.skills.shock_and_awe[1].upgrades, "player_stamina_ammo_refill_auto")
+		table.insert(tweak_data.skilltree.skills.close_by[1].upgrades, "player_post_warp_suppression")
+		table.insert(tweak_data.skilltree.skills.awareness[1].upgrades, "player_post_warp_reload_speed")
+		table.insert(tweak_data.skilltree.skills.sprinter[2].upgrades, "player_run_dodge_chance_vr")
+	end
 
 	local stamina_regen_macro = tostring(self.steelsight_stamina_regen * 100) .. "%"
 	self.skill_descs_addons = {
@@ -6406,7 +6413,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines: 4952 to 4963
+-- Lines: 4975 to 4986
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -6425,7 +6432,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines: 4974 to 4991
+-- Lines: 4997 to 5014
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -6446,14 +6453,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines: 4994 to 4998
+-- Lines: 5017 to 5021
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines: 5000 to 5011
+-- Lines: 5023 to 5034
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -6471,7 +6478,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines: 5014 to 5021
+-- Lines: 5037 to 5044
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -6484,7 +6491,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines: 5024 to 5027
+-- Lines: 5047 to 5050
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -6493,7 +6500,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 5030 to 5037
+-- Lines: 5053 to 5060
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -6508,7 +6515,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 5040 to 5046
+-- Lines: 5063 to 5069
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -6521,7 +6528,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines: 5049 to 5055
+-- Lines: 5072 to 5078
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

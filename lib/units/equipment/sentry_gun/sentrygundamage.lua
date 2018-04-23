@@ -359,8 +359,14 @@ function SentryGunDamage:focus_delay_mul()
 	return 1
 end
 
--- Lines: 380 to 427
-function SentryGunDamage:die(attacker_unit, variant)
+-- Lines: 379 to 434
+function SentryGunDamage:die(attacker_unit, variant, options)
+	options = options or {}
+	local sequence_death = options.sequence_death or self._death_sequence_name
+	local sequence_shield_death = options.sequence_shield_death or self._death_with_shield_sequence_name
+	local sequence_done = options.sequence_done or "done_turret_destroyed"
+	local global_event = options.global_event or "turret_destroyed"
+
 	if self._stats_name and attacker_unit == managers.player:player_unit() then
 		local data = {
 			name = self._stats_name,
@@ -385,19 +391,21 @@ function SentryGunDamage:die(attacker_unit, variant)
 
 	self._shield_smoke_level = 0
 
-	if self._unit:base():has_shield() and self._death_with_shield_sequence_name then
-		self._unit:damage():run_sequence_simple(self._death_with_shield_sequence_name)
-	elseif self._death_sequence_name then
-		self._unit:damage():run_sequence_simple(self._death_sequence_name)
+	if self._unit:base():has_shield() and sequence_shield_death then
+		self._unit:damage():run_sequence_simple(sequence_shield_death)
+	elseif sequence_death then
+		self._unit:damage():run_sequence_simple(sequence_death)
 	end
 
 	local turret_units = managers.groupai:state():turrets()
 
 	if turret_units and table.contains(turret_units, self._unit) then
-		managers.mission:call_global_event("turret_destroyed")
+		if global_event then
+			managers.mission:call_global_event("turret_destroyed")
+		end
 
-		if self._parent_unit ~= nil and self._parent_unit:damage():has_sequence("done_turret_destroyed") then
-			self._parent_unit:damage():run_sequence_simple("done_turret_destroyed")
+		if self._parent_unit ~= nil and self._parent_unit:damage():has_sequence(sequence_done) then
+			self._parent_unit:damage():run_sequence_simple(sequence_done)
 		end
 
 		self._unit:contour():remove("mark_unit_friendly", true)
@@ -410,7 +418,15 @@ function SentryGunDamage:die(attacker_unit, variant)
 	self._unit:event_listener():call("on_death")
 end
 
--- Lines: 431 to 451
+-- Lines: 440 to 446
+function SentryGunDamage:disable(attacker_unit, variant)
+	self:die(attacker_unit, variant, {
+		sequence_done = "done_turret_disabled",
+		sequence_death = self._disable_sequence_name
+	})
+end
+
+-- Lines: 450 to 470
 function SentryGunDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit_offset_height, variant, death)
 	if self._dead then
 		return
@@ -434,7 +450,7 @@ function SentryGunDamage:sync_damage_bullet(attacker_unit, damage_percent, i_bod
 	end
 end
 
--- Lines: 456 to 476
+-- Lines: 475 to 495
 function SentryGunDamage:sync_damage_fire(attacker_unit, damage_percent, death, direction)
 	if self._dead then
 		return
@@ -455,7 +471,7 @@ function SentryGunDamage:sync_damage_fire(attacker_unit, damage_percent, death, 
 	end
 end
 
--- Lines: 480 to 500
+-- Lines: 499 to 519
 function SentryGunDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	if self._dead then
 		return
@@ -477,7 +493,7 @@ function SentryGunDamage:sync_damage_explosion(attacker_unit, damage_percent, i_
 	end
 end
 
--- Lines: 506 to 600
+-- Lines: 525 to 619
 function SentryGunDamage:_apply_damage(damage, dmg_shield, dmg_body, is_local, attacker_unit, variant)
 	self._sync_dmg_leftover = 0
 
@@ -566,7 +582,7 @@ function SentryGunDamage:_apply_damage(damage, dmg_shield, dmg_body, is_local, a
 	end
 end
 
--- Lines: 604 to 624
+-- Lines: 623 to 643
 function SentryGunDamage:update_shield_smoke_level(ratio, up)
 	ratio = math.clamp(ratio, 0, 1)
 	local num_shield_smoke_levels = self._num_shield_smoke_levels
@@ -584,7 +600,7 @@ function SentryGunDamage:update_shield_smoke_level(ratio, up)
 	end
 end
 
--- Lines: 628 to 636
+-- Lines: 647 to 655
 function SentryGunDamage:_make_shield_smoke()
 	if self._shield_smoke_level == 0 then
 		self._unit:damage():run_sequence_simple(self._shield_smoke_level_0)
@@ -593,7 +609,7 @@ function SentryGunDamage:_make_shield_smoke()
 	end
 end
 
--- Lines: 640 to 650
+-- Lines: 659 to 669
 function SentryGunDamage:save(save_data)
 	local my_save_data = {}
 	save_data.char_damage = my_save_data
@@ -605,7 +621,7 @@ function SentryGunDamage:save(save_data)
 	my_save_data.shield_smoke_level = self._shield_smoke_level
 end
 
--- Lines: 654 to 679
+-- Lines: 673 to 698
 function SentryGunDamage:load(save_data)
 	if not save_data or not save_data.char_damage then
 		return
@@ -630,24 +646,24 @@ function SentryGunDamage:load(save_data)
 	end
 end
 
--- Lines: 681 to 682
+-- Lines: 700 to 701
 function SentryGunDamage:melee_hit_sfx()
 	return "hit_gen"
 end
 
--- Lines: 687 to 691
+-- Lines: 706 to 710
 function SentryGunDamage:destroy(unit)
 	unit:brain():pre_destroy()
 	unit:movement():pre_destroy()
 	unit:base():pre_destroy()
 end
 
--- Lines: 695 to 696
+-- Lines: 714 to 715
 function SentryGunDamage:shield_smoke_level()
 	return self._shield_smoke_level
 end
 
--- Lines: 701 to 703
+-- Lines: 720 to 722
 function SentryGunDamage:set_parent_unit(unit)
 	self._parent_unit = unit
 end

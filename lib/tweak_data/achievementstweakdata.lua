@@ -1,9 +1,10 @@
 require("lib/tweak_data/GeneratedAchievementTweakData")
 
--- Lines: 6 to 28
+-- Lines: 6 to 38
 local function get_texture_path(tweak_data, category, id)
-	local td = tweak_data:get_raw_value("blackmarket", category, id)
+	local td = nil
 	local rtn = {}
+	td = tweak_data:get_raw_value("blackmarket", category, id)
 
 	if category == "textures" then
 		rtn.texture = td.texture
@@ -30,7 +31,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 37 to 2393
+-- Lines: 47 to 2481
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -4194,6 +4195,47 @@ function AchievementsTweakData:init(tweak_data)
 			job = "haunted",
 			difficulty = sm_wish_and_above
 		},
+		tag_1 = {
+			award = "tag_1",
+			job = "tag",
+			difficulty = normal_and_above
+		},
+		tag_2 = {
+			award = "tag_2",
+			job = "tag",
+			difficulty = hard_and_above
+		},
+		tag_3 = {
+			award = "tag_3",
+			job = "tag",
+			difficulty = veryhard_and_above
+		},
+		tag_4 = {
+			award = "tag_4",
+			job = "tag",
+			difficulty = overkill_and_above
+		},
+		tag_5 = {
+			award = "tag_5",
+			job = "tag",
+			difficulty = easywish_and_above
+		},
+		tag_6 = {
+			award = "tag_6",
+			job = "tag",
+			difficulty = deathwish_and_above
+		},
+		tag_7 = {
+			award = "tag_7",
+			job = "tag",
+			difficulty = sm_wish_and_above
+		},
+		tag_8 = {
+			award = "tag_8",
+			one_down = true,
+			job = "tag",
+			difficulty = sm_wish_and_above
+		},
 		bain_jobs = {
 			complete_job = true,
 			contract = "bain",
@@ -6601,11 +6643,15 @@ function AchievementsTweakData:init(tweak_data)
 			local data = tweak_data.dlc[v.id]
 
 			for _, loot in ipairs(data.content.loot_drops) do
-				local td = tweak_data:get_raw_value("blackmarket", loot.type_items, loot.item_entry)
-				local data = get_texture_path(tweak_data, loot.type_items, loot.item_entry)
-				data.name_id = td.name_id
+				local td, data = nil
+				td = tweak_data:get_raw_value("blackmarket", loot.type_items, loot.item_entry)
 
-				table.insert(v.rewards, data)
+				if td then
+					data = get_texture_path(tweak_data, loot.type_items, loot.item_entry)
+					data.name_id = td.name_id
+
+					table.insert(v.rewards, data)
+				end
 			end
 		end
 
@@ -6621,7 +6667,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines: 2412 to 2438
+-- Lines: 2500 to 2526
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -6633,7 +6679,7 @@ local function from_complete_heist_stats_item(self, item)
 	end
 
 	
-	-- Lines: 2421 to 2431
+	-- Lines: 2509 to 2519
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -6663,7 +6709,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines: 2441 to 2445
+-- Lines: 2529 to 2533
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -6676,7 +6722,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines: 2448 to 2455
+-- Lines: 2536 to 2543
 local function from_level(level)
 	if not level then
 		error()
@@ -6692,7 +6738,7 @@ local function from_level(level)
 	}
 end
 
--- Lines: 2458 to 2465
+-- Lines: 2546 to 2553
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -6708,7 +6754,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines: 2468 to 2478
+-- Lines: 2556 to 2566
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -6730,7 +6776,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines: 2486 to 2661
+-- Lines: 2574 to 2749
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -6877,7 +6923,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2698 to 2811
+-- Lines: 2786 to 2963
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{

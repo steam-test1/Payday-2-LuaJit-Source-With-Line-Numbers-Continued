@@ -159,7 +159,7 @@ function CrimeSpreeContractMenuComponent:_setup()
 	end
 end
 
--- Lines: 159 to 332
+-- Lines: 159 to 348
 function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 	self._coins_panel = self._contract_panel:panel({
 		x = padding,
@@ -169,11 +169,13 @@ function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 
 	self._coins_panel:set_bottom(self._contract_panel:h() - padding)
 
+	local coins = 0
+	coins = managers.custom_safehouse:coins()
 	self._cost_text = self._coins_panel:text({
 		y = 0,
 		x = 0,
 		layer = 1,
-		text = managers.experience:cash_string(math.floor(managers.custom_safehouse:coins()), managers.localization:get_default_macro("BTN_CONTINENTAL_COINS")),
+		text = managers.experience:cash_string(math.floor(coins), managers.localization:get_default_macro("BTN_CONTINENTAL_COINS")),
 		color = Color.white,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
@@ -264,9 +266,11 @@ function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 		btn:set_callback(callback(self, self, "set_active_starting_level", btn))
 		btn._cost_text:set_center_y(btn._panel:h() * 0.5)
 
+		local coins = 0
+		coins = managers.custom_safehouse:coins()
 		local insert_pos = 1
 
-		if tweak_data.crime_spree.initial_cost <= managers.custom_safehouse:coins() then
+		if tweak_data.crime_spree.initial_cost <= coins then
 			insert_pos = #self._buttons
 		end
 
@@ -329,7 +333,7 @@ function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 	end
 end
 
--- Lines: 336 to 342
+-- Lines: 352 to 358
 function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, text_h)
 	if self:_is_host() then
 		self:_setup_continue_host(text_w, text_h)
@@ -338,7 +342,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, tex
 	end
 end
 
--- Lines: 345 to 404
+-- Lines: 361 to 420
 function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	local modifiers = managers.crime_spree:active_modifiers()
 	local next_modifiers_h = tweak_data.menu.pd2_small_font_size * 2
@@ -395,7 +399,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	self._scroll:update_canvas_size()
 end
 
--- Lines: 407 to 475
+-- Lines: 423 to 491
 function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	self._info_panel = self._contract_panel:panel({
 		x = padding,
@@ -468,7 +472,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	end
 end
 
--- Lines: 479 to 485
+-- Lines: 495 to 501
 function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	for idx, btn in ipairs(self._buttons) do
 		if button == btn then
@@ -479,7 +483,7 @@ function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	return 1
 end
 
--- Lines: 488 to 499
+-- Lines: 504 to 515
 function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	if btn:can_activate() then
 		for idx, btn in ipairs(self._buttons) do
@@ -495,7 +499,7 @@ function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	end
 end
 
--- Lines: 504 to 514
+-- Lines: 520 to 530
 function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	local used, pointer = nil
 
@@ -511,7 +515,7 @@ function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 519 to 527
+-- Lines: 535 to 543
 function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
@@ -522,21 +526,21 @@ function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 529 to 533
+-- Lines: 545 to 549
 function CrimeSpreeContractMenuComponent:mouse_wheel_up(x, y)
 	if alive(self._scroll) then
 		self._scroll:scroll(x, y, 1)
 	end
 end
 
--- Lines: 535 to 539
+-- Lines: 551 to 555
 function CrimeSpreeContractMenuComponent:mouse_wheel_down(x, y)
 	if alive(self._scroll) then
 		self._scroll:scroll(x, y, -1)
 	end
 end
 
--- Lines: 542 to 564
+-- Lines: 558 to 580
 function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	local change = 0
 
@@ -565,7 +569,7 @@ function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines: 567 to 575
+-- Lines: 583 to 591
 function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._gui = {
 		_left_axis_vector = Vector3(),
@@ -576,7 +580,7 @@ function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines: 577 to 583
+-- Lines: 593 to 599
 function CrimeSpreeContractMenuComponent:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._gui._left_axis_vector, axis_vector)
@@ -585,7 +589,7 @@ function CrimeSpreeContractMenuComponent:_axis_move(o, axis_name, axis_vector, c
 	end
 end
 
--- Lines: 587 to 596
+-- Lines: 603 to 612
 function CrimeSpreeContractMenuComponent:update(t, dt)
 	if not managers.menu:is_pc_controller() and self._gui and self._gui._right_axis_vector and alive(self._scroll) and not mvector3.is_zero(self._gui._right_axis_vector) then
 		local x = mvector3.x(self._gui._right_axis_vector)
@@ -597,7 +601,7 @@ end
 CrimeSpreeStartingLevelItem = CrimeSpreeStartingLevelItem or class(MenuGuiItem)
 CrimeSpreeStartingLevelItem.size = {h = 140}
 
--- Lines: 606 to 721
+-- Lines: 622 to 746
 function CrimeSpreeStartingLevelItem:init(parent, data)
 	self._parent = parent
 	self._level = data.level or 0
@@ -694,7 +698,10 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 		})
 	end
 
-	if managers.custom_safehouse:coins() < self._start_cost then
+	local coins = 0
+	coins = managers.custom_safehouse:coins()
+
+	if coins < self._start_cost then
 		self._highlight:set_color(tweak_data.screen_colors.important_1)
 		self._active_bg:set_color(tweak_data.screen_colors.important_1)
 		self._cost_text:set_color(tweak_data.screen_colors.important_1)
@@ -711,14 +718,17 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 	self:refresh()
 end
 
--- Lines: 724 to 738
+-- Lines: 749 to 772
 function CrimeSpreeStartingLevelItem:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(not self:is_active() and self:is_selected())
 	self._active_bg:set_visible(self:is_active())
 	self._outline_panel:set_visible(self:is_active())
 
-	if managers.custom_safehouse:coins() < self._start_cost then
+	local coins = 0
+	coins = managers.custom_safehouse:coins()
+
+	if coins < self._start_cost then
 		self._level_bg:set_color(tweak_data.screen_colors.important_1)
 		self._highlight:set_alpha(self:is_selected() and 0.6 or 0.2)
 	else
@@ -727,38 +737,38 @@ function CrimeSpreeStartingLevelItem:refresh()
 	end
 end
 
--- Lines: 740 to 741
+-- Lines: 778 to 779
 function CrimeSpreeStartingLevelItem:can_activate()
 	return self._start_cost < managers.custom_safehouse:coins()
 end
 
--- Lines: 744 to 745
+-- Lines: 784 to 785
 function CrimeSpreeStartingLevelItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 748 to 749
+-- Lines: 788 to 789
 function CrimeSpreeStartingLevelItem:callback()
 	return self._callback
 end
 
--- Lines: 752 to 754
+-- Lines: 792 to 794
 function CrimeSpreeStartingLevelItem:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines: 756 to 757
+-- Lines: 796 to 797
 function CrimeSpreeStartingLevelItem:level()
 	return self._level
 end
 
--- Lines: 760 to 761
+-- Lines: 800 to 801
 function CrimeSpreeStartingLevelItem:panel()
 	return self._panel
 end
 MenuCrimeNetCrimeSpreeContractInitiator = MenuCrimeNetCrimeSpreeContractInitiator or class()
 
--- Lines: 767 to 823
+-- Lines: 807 to 863
 function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 

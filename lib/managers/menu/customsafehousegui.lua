@@ -39,7 +39,7 @@ function CustomSafehouseGui:_setup(is_start_page, component_data)
 	CustomSafehouseGui.super._setup(self, is_start_page, self:_start_page_data())
 end
 
--- Lines: 33 to 49
+-- Lines: 33 to 51
 function CustomSafehouseGui:populate_tabs_data(tabs_data)
 	if not self._in_game then
 		table.insert(tabs_data, {

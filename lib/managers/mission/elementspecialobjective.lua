@@ -414,7 +414,7 @@ function ElementSpecialObjective:operation_remove()
 	end
 end
 
--- Lines: 353 to 478
+-- Lines: 353 to 483
 function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
@@ -535,7 +535,13 @@ function ElementSpecialObjective:get_objective(instigator)
 			objective.nav_seg = managers.navigation:get_nav_seg_from_pos(self._values.position)
 
 			if path_style == "destination" then
-				local path_data = managers.ai_data:destination_path(self._values.position, Rotation(self._values.rotation or 0, 0, 0))
+				local rotation = self._values.rotation
+
+				if not rotation and alive(instigator) and mvector3.distance_sq(instigator:movement():m_pos(), self._values.position) < 2500 then
+					objective.rot = instigator:rotation()
+				end
+
+				local path_data = managers.ai_data:destination_path(self._values.position, Rotation(rotation or 0, 0, 0))
 				objective.path_data = path_data
 			else
 				local path_name = self._values.patrol_path
@@ -552,7 +558,7 @@ function ElementSpecialObjective:get_objective(instigator)
 	return objective
 end
 
--- Lines: 483 to 508
+-- Lines: 488 to 513
 function ElementSpecialObjective:_get_hunt_location(instigator)
 	if not alive(instigator) then
 		return
@@ -586,7 +592,7 @@ function ElementSpecialObjective:_get_hunt_location(instigator)
 	return objective_nav_seg, criminal_tracker:field_position()
 end
 
--- Lines: 513 to 539
+-- Lines: 518 to 544
 function ElementSpecialObjective:_get_misc_SO_params()
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = nil
 	local values = self._values
@@ -616,52 +622,52 @@ function ElementSpecialObjective:_get_misc_SO_params()
 	return pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice
 end
 
--- Lines: 544 to 545
+-- Lines: 549 to 550
 function ElementSpecialObjective:nav_link_end_pos()
 	return self._values.search_position
 end
 
--- Lines: 550 to 551
+-- Lines: 555 to 556
 function ElementSpecialObjective:nav_link_access()
 	return tonumber(self._values.SO_access)
 end
 
--- Lines: 556 to 557
+-- Lines: 561 to 562
 function ElementSpecialObjective:chance()
 	return self:_get_default_value_if_nil("base_chance")
 end
 
--- Lines: 562 to 563
+-- Lines: 567 to 568
 function ElementSpecialObjective:nav_link_delay()
 	return self:_get_default_value_if_nil("interval")
 end
 
--- Lines: 568 to 569
+-- Lines: 573 to 574
 function ElementSpecialObjective:nav_link()
 	return self._nav_link
 end
 
--- Lines: 574 to 575
+-- Lines: 579 to 580
 function ElementSpecialObjective:id()
 	return self._id
 end
 
--- Lines: 580 to 581
+-- Lines: 585 to 586
 function ElementSpecialObjective:_is_nav_link()
 	return self._values.is_navigation_link or self._values.navigation_link and self._values.navigation_link ~= -1
 end
 
--- Lines: 586 to 588
+-- Lines: 591 to 593
 function ElementSpecialObjective:set_nav_link(nav_link)
 	self._nav_link = nav_link
 end
 
--- Lines: 592 to 593
+-- Lines: 597 to 598
 function ElementSpecialObjective:nav_link_wants_align_pos()
 	return self._values.align_position
 end
 
--- Lines: 598 to 630
+-- Lines: 603 to 635
 function ElementSpecialObjective:_select_units_from_spawners()
 	local candidates = {}
 	local objectives = {}
@@ -704,12 +710,12 @@ function ElementSpecialObjective:_select_units_from_spawners()
 	return chosen_units, chosen_objectives
 end
 
--- Lines: 635 to 636
+-- Lines: 640 to 641
 function ElementSpecialObjective:get_objective_trigger()
 	return self._values.trigger_on
 end
 
--- Lines: 641 to 675
+-- Lines: 646 to 680
 function ElementSpecialObjective:_administer_objective(unit, objective)
 	if objective.type == "phalanx" then
 		GroupAIStateBase:register_phalanx_unit(unit)
@@ -747,7 +753,7 @@ function ElementSpecialObjective:_administer_objective(unit, objective)
 	end
 end
 
--- Lines: 681 to 735
+-- Lines: 686 to 740
 function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	if not self._values.followup_elements then
 		return
@@ -798,7 +804,7 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	end
 end
 
--- Lines: 740 to 746
+-- Lines: 745 to 751
 function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	if (not unit or managers.navigation:check_access(self._values.SO_access, unit:brain():SO_access(), 0) and self:clbk_verify_administration(unit)) and not skip_element_ids[self._id] then
 		return self, self:_get_default_value_if_nil("base_chance")
@@ -807,7 +813,7 @@ function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	self:event("admin_fail", unit)
 end
 
--- Lines: 750 to 760
+-- Lines: 755 to 765
 function ElementSpecialObjective:_get_action_duration()
 	if not self._values.action_duration_max and not self._values.action_duration_min then
 		return
@@ -821,7 +827,7 @@ function ElementSpecialObjective:_get_action_duration()
 	end
 end
 
--- Lines: 764 to 765
+-- Lines: 769 to 770
 function ElementSpecialObjective:_get_default_value_if_nil(name_in)
 	return self._values[name_in] or self._DEFAULT_VALUES[name_in]
 end
@@ -850,7 +856,7 @@ ElementSpecialObjective._stealth_idles = {
 	"e_so_ntl_watch_look_calm"
 }
 
--- Lines: 797 to 803
+-- Lines: 802 to 808
 function ElementSpecialObjective:_check_new_stealth_idle()
 	if table.contains(ElementSpecialObjective._stealth_idles, self._values.so_action) then
 		local new = ElementSpecialObjective._stealth_idles[math.random(#ElementSpecialObjective._stealth_idles)]

@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines: 4 to 766
+-- Lines: 4 to 784
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -627,6 +627,18 @@ function EquipmentsTweakData:init()
 		icon = "equipment_medallion",
 		transfer_quantity = 1,
 		text_id = "hud_int_equipment_medallion"
+	}
+	self.specials.chimichanga = {
+		sync_possession = true,
+		icon = "equipment_chimichanga",
+		transfer_quantity = 4,
+		text_id = "hud_int_equipment_chimichanga"
+	}
+	self.specials.stapler = {
+		sync_possession = true,
+		icon = "equipment_stapler",
+		transfer_quantity = 4,
+		text_id = "hud_int_equipment_stapler"
 	}
 	self.specials.briefcase = {
 		sync_possession = true,

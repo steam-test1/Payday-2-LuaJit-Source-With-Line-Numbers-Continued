@@ -1,5 +1,5 @@
 
--- Lines: 1 to 29381
+-- Lines: 1 to 32348
 function BlackMarketTweakData:_init_weapon_skins()
 	self.weapon_skins = {serbu_woodland = {}}
 	self.weapon_skins.serbu_woodland.name_id = "bm_wskn_serbu_woodland"
@@ -20075,6 +20075,17 @@ function BlackMarketTweakData:_init_weapon_skins()
 		texture_bundle_folder = "cash/safes/css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_012_df",
 		pattern_gradient = "units/payday2_cash/safes/css/pattern_gradient/gradient_css_012_df",
+		default_blueprint = {
+			"wpn_fps_smg_coal_b_standard",
+			"wpn_fps_smg_coal_body_standard",
+			"wpn_fps_smg_coal_m_standard",
+			"wpn_fps_smg_coal_fg_standard",
+			"wpn_fps_smg_coal_dh_standard",
+			"wpn_fps_smg_coal_s_standard",
+			"wpn_fps_smg_coal_mr_standard",
+			"wpn_fps_upg_ns_ass_smg_medium",
+			"wpn_fps_upg_ak_g_rk3"
+		},
 		parts = {
 			wpn_fps_smg_coal_body_standard = {
 				[Idstring("mat_barrel_grp"):key()] = {base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_012_b_df"},

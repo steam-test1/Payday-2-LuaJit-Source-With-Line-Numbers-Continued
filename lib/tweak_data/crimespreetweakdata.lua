@@ -33,7 +33,7 @@ function CrimeSpreeTweakData:init(tweak_data)
 	self:init_gui(tweak_data)
 end
 
--- Lines: 61 to 432
+-- Lines: 61 to 440
 function CrimeSpreeTweakData:init_missions(tweak_data)
 	local debug_short_add = 5
 	local debug_med_add = 7
@@ -398,7 +398,7 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 	}
 end
 
--- Lines: 783 to 1119
+-- Lines: 795 to 1131
 function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	local health_increase = 25
 	local damage_increase = 25
@@ -748,7 +748,7 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	}}}
 end
 
--- Lines: 1121 to 1127
+-- Lines: 1133 to 1139
 function CrimeSpreeTweakData:get_reward_icon(reward)
 	for _, data in ipairs(self.rewards) do
 		if data.id == reward then
@@ -759,7 +759,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return "downcard_overkill_deck"
 end
 
--- Lines: 1131 to 1213
+-- Lines: 1143 to 1227
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -876,7 +876,7 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 	}
 end
 
--- Lines: 1216 to 1405
+-- Lines: 1230 to 1419
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
@@ -1016,7 +1016,7 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	}
 end
 
--- Lines: 1408 to 1423
+-- Lines: 1422 to 1437
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {

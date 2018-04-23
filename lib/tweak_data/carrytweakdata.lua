@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines: 7 to 1078
+-- Lines: 7 to 1101
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -777,6 +777,15 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
 		AI_carry = {SO_category = "enemies"}
 	}
+	self.box_unknown_tag = {
+		type = "heavy",
+		bag_value = "box_unknown",
+		name_id = "hud_carry_box",
+		skip_exit_secure = false,
+		AI_carry = {SO_category = "enemies"},
+		unit = "units/payday2/pickups/gen_pku_cage_bag/gen_pku_cage_bag",
+		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1"
+	}
 	self.old_wine = {
 		type = "slightly_heavy",
 		name_id = "hud_carry_old_wine",
@@ -786,7 +795,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 1080 to 1088
+-- Lines: 1103 to 1111
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -801,7 +810,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines: 1092 to 1099
+-- Lines: 1115 to 1122
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

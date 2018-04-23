@@ -495,6 +495,9 @@ CopActionAct._act_redirects.SO = {
 	"e_nl_up_1_down_6m_var3",
 	"e_nl_down_5m_var2",
 	"e_nl_down_5m_var3",
+	"e_nl_down_5m_var4",
+	"e_nl_down_4m_var3",
+	"e_nl_down_6m_var3",
 	"e_nl_down_4m_var2",
 	"e_nl_up_2_75_down_1m",
 	"e_nl_up_0_5_down_5_5m",
@@ -806,6 +809,34 @@ CopActionAct._act_redirects.SO = {
 	"e_so_sit_cigar",
 	"e_so_stand_drink_exit",
 	"e_so_stand_drink",
+	"e_so_ntl_bored",
+	"e_so_ntl_stand_inspect_var1",
+	"e_so_ntl_stand_inspect_var2",
+	"e_so_ntl_stand_inspect_var3",
+	"e_so_ntl_mobile_exit_angry",
+	"e_so_ntl_mobile_enter_angry",
+	"e_so_ntl_mobile_exit",
+	"e_so_ntl_mobile_enter",
+	"e_so_ntl_sms_enter",
+	"e_so_ntl_sms_exit",
+	"e_so_ntl_sms_loop",
+	"e_so_ntl_eat_enter",
+	"e_so_ntl_eat_exit",
+	"e_so_ntl_lever_press",
+	"e_so_ntl_run_push_door",
+	"e_so_ntl_eat_loop",
+	"e_so_ntl_mobile_exit_var2",
+	"e_so_ntl_mobile_enter_var2",
+	"e_so_ntl_open_door_in",
+	"e_so_ntl_open_door_out",
+	"e_so_sit_student_var1",
+	"e_so_sit_student_var2",
+	"e_so_sit_student_var3",
+	"e_so_sit_student_var4",
+	"e_so_sit_student_var5",
+	"e_so_sit_student_var6",
+	"e_so_sit_student_var7",
+	"e_so_sit_student_var8",
 	"so_stand_inspect_art",
 	"so_kneel_inspect_art",
 	"so_stand_drawing",
@@ -1274,7 +1305,7 @@ CopActionAct._act_redirects.SO = {
 	"drive_blackhawk_1_back_left"
 }
 
--- Lines: 1428 to 1473
+-- Lines: 1442 to 1487
 function CopActionAct:init(action_desc, common_data)
 	self._common_data = common_data
 	self._action_desc = action_desc
@@ -1323,7 +1354,7 @@ function CopActionAct:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 1478 to 1507
+-- Lines: 1492 to 1521
 function CopActionAct:on_exit()
 	if self._changed_driving then
 		self._unit:set_driving("script")
@@ -1357,7 +1388,7 @@ function CopActionAct:on_exit()
 	end
 end
 
--- Lines: 1511 to 1521
+-- Lines: 1525 to 1535
 function CopActionAct:_init_ik()
 	if managers.job:current_level_id() == "chill" or self._ext_base:char_tweak().use_ik then
 		self._look_vec = mvector3.copy(self._common_data.fwd)
@@ -1368,7 +1399,7 @@ function CopActionAct:_init_ik()
 	end
 end
 
--- Lines: 1526 to 1594
+-- Lines: 1540 to 1608
 function CopActionAct:_ik_update_func(t)
 	self:_update_ik_type()
 
@@ -1458,7 +1489,7 @@ function CopActionAct:_ik_update_func(t)
 	end
 end
 
--- Lines: 1598 to 1611
+-- Lines: 1612 to 1625
 function CopActionAct:on_attention(attention)
 	self:_update_ik_type()
 
@@ -1474,7 +1505,7 @@ function CopActionAct:on_attention(attention)
 	self._ext_movement:enable_update()
 end
 
--- Lines: 1615 to 1634
+-- Lines: 1629 to 1648
 function CopActionAct:_update_ik_type()
 	local new_ik_type = self._ext_anim.ik_type
 
@@ -1499,7 +1530,7 @@ function CopActionAct:_update_ik_type()
 	end
 end
 
--- Lines: 1638 to 1652
+-- Lines: 1652 to 1666
 function CopActionAct:_upd_wait_for_full_blend()
 	if not self._ext_anim.idle or self._ext_anim.idle_full_blend and not self._ext_anim.to_idle then
 		self._waiting_full_blend = nil
@@ -1520,7 +1551,7 @@ function CopActionAct:_upd_wait_for_full_blend()
 	end
 end
 
--- Lines: 1656 to 1677
+-- Lines: 1670 to 1691
 function CopActionAct:_clamping_update(t)
 	if self._ext_anim.act then
 		if not self._unit:parent() then
@@ -1544,7 +1575,7 @@ function CopActionAct:_clamping_update(t)
 	end
 end
 
--- Lines: 1681 to 1742
+-- Lines: 1695 to 1756
 function CopActionAct:update(t)
 	local vis_state = self._ext_base:lod_stage()
 	vis_state = vis_state or 4
@@ -1614,17 +1645,17 @@ function CopActionAct:update(t)
 	self._ext_movement:spawn_wanted_items()
 end
 
--- Lines: 1746 to 1747
+-- Lines: 1760 to 1761
 function CopActionAct:type()
 	return "act"
 end
 
--- Lines: 1752 to 1753
+-- Lines: 1766 to 1767
 function CopActionAct:expired()
 	return self._expired
 end
 
--- Lines: 1758 to 1778
+-- Lines: 1772 to 1792
 function CopActionAct:save(save_data)
 	for k, v in pairs(self._action_desc) do
 		save_data[k] = v
@@ -1646,19 +1677,19 @@ function CopActionAct:save(save_data)
 	save_data.pos_z = mvector3.z(self._common_data.pos)
 end
 
--- Lines: 1782 to 1783
+-- Lines: 1796 to 1797
 function CopActionAct:need_upd()
 	return self._attention or self._waiting_full_blend
 end
 
--- Lines: 1788 to 1790
+-- Lines: 1802 to 1804
 function CopActionAct:chk_block(action_type, t)
 	local unblock_t = self._blocks[action_type]
 
 	return unblock_t and (unblock_t == -1 or t < unblock_t)
 end
 
--- Lines: 1795 to 1804
+-- Lines: 1809 to 1818
 function CopActionAct:_create_blocks_table(block_desc)
 	local blocks = self._blocks or {}
 
@@ -1673,7 +1704,7 @@ function CopActionAct:_create_blocks_table(block_desc)
 	self._blocks = blocks
 end
 
--- Lines: 1808 to 1820
+-- Lines: 1822 to 1834
 function CopActionAct:_get_act_index(anim_name)
 	local cat_offset = 0
 
@@ -1694,7 +1725,7 @@ function CopActionAct:_get_act_index(anim_name)
 	return 1
 end
 
--- Lines: 1825 to 1834
+-- Lines: 1839 to 1848
 function CopActionAct:_get_act_name_from_index(index)
 	for _, category_name in ipairs(self._ACT_CATEGORY_INDEX) do
 		local category = self._act_redirects[category_name]
@@ -1709,7 +1740,7 @@ function CopActionAct:_get_act_name_from_index(index)
 	debug_pause("[CopActionAct:_get_act_name_from_index] index", index, "is out of limits.")
 end
 
--- Lines: 1846 to 1910
+-- Lines: 1860 to 1924
 function CopActionAct:_play_anim()
 	if self._ext_anim.upper_body_active and not self._ext_anim.upper_body_empty then
 		self._ext_movement:play_redirect("up_idle")
@@ -1770,7 +1801,7 @@ function CopActionAct:_play_anim()
 	return true
 end
 
--- Lines: 1915 to 1933
+-- Lines: 1929 to 1947
 function CopActionAct:_sync_anim_play()
 	if Network:is_server() then
 		local action_index = self:_get_act_index(self._action_desc.variant)
@@ -1795,12 +1826,12 @@ function CopActionAct:_sync_anim_play()
 	end
 end
 
--- Lines: 1937 to 1939
+-- Lines: 1951 to 1953
 function CopActionAct:_set_updator(func_name)
 	self.update = func_name and self[func_name] or nil
 end
 
--- Lines: 1943 to 1950
+-- Lines: 1957 to 1964
 function CopActionAct:anim_act_clbk(trigger)
 	if trigger == "fire_blank" then
 		local weapon_unit = self._unit:inventory():equipped_unit()

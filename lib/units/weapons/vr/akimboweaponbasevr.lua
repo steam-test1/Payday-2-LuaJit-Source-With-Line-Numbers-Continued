@@ -56,8 +56,18 @@ function AkimboWeaponBaseVR:update_reload_finish(...)
 
 	__update_reload_finish(self, ...)
 end
+local __tweak_data_anim_play = AkimboWeaponBase.tweak_data_anim_play
 
--- Lines: 64 to 69
+-- Lines: 61 to 72
+function AkimboWeaponBaseVR:tweak_data_anim_play(anim, ...)
+	if alive(self.parent_weapon) and anim == "magazine_empty" then
+		AkimboWeaponBase.super.tweak_data_anim_play(self.parent_weapon:base(), anim, ...)
+	end
+
+	return __tweak_data_anim_play(self, anim, ...)
+end
+
+-- Lines: 79 to 84
 function AkimboWeaponBaseVR:on_enabled(...)
 	if alive(self.parent_weapon) then
 		self._last_gadget_idx = self.parent_weapon:base()._gadget_on
@@ -66,12 +76,12 @@ function AkimboWeaponBaseVR:on_enabled(...)
 	AkimboWeaponBaseVR.super.on_enabled(self, ...)
 end
 
--- Lines: 71 to 73
+-- Lines: 86 to 88
 function AkimboWeaponBaseVR:on_disabled(...)
 	AkimboWeaponBaseVR.super.on_disabled(self, ...)
 end
 
--- Lines: 75 to 77
+-- Lines: 90 to 92
 function AkimboWeaponBaseVR:set_gadget_on(...)
 	AkimboWeaponBaseVR.super.set_gadget_on(self, ...)
 end

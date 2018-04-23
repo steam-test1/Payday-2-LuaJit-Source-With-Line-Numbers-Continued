@@ -5,7 +5,7 @@ function WalletGuiObject:init(panel)
 	WalletGuiObject.set_wallet(panel)
 end
 
--- Lines: 8 to 69
+-- Lines: 8 to 82
 function WalletGuiObject.set_wallet(panel, layer)
 	WalletGuiObject.remove_wallet()
 
@@ -63,13 +63,15 @@ function WalletGuiObject.set_wallet(panel, layer)
 	skillpoint_text:set_center_y(skillpoint_icon:center_y())
 	skillpoint_text:set_y(math.round(skillpoint_text:y()))
 
+	local coins = 0
+	coins = managers.custom_safehouse:coins()
 	local coins_icon = Global.wallet_panel:bitmap({
 		texture = "guis/dlcs/chill/textures/pd2/safehouse/continental_coins_symbol",
 		name = "wallet_coins_icon"
 	})
 	local coins_text = Global.wallet_panel:text({
 		name = "wallet_coins_text",
-		text = managers.experience:cash_string(math.floor(managers.custom_safehouse:coins()), ""),
+		text = managers.experience:cash_string(math.floor(coins), ""),
 		font_size = tweak_data.menu.pd2_small_font_size,
 		font = tweak_data.menu.pd2_small_font,
 		color = tweak_data.screen_colors.text
@@ -82,6 +84,8 @@ function WalletGuiObject.set_wallet(panel, layer)
 	coins_text:set_center_y(coins_icon:center_y())
 	coins_text:set_y(math.round(coins_text:y()))
 
+	local coins = 0
+	coins = managers.custom_safehouse:coins()
 	local max_w = coins_text:right()
 	local bg_blur = Global.wallet_panel:bitmap({
 		texture = "guis/textures/test_blur_df",
@@ -101,7 +105,7 @@ function WalletGuiObject.set_wallet(panel, layer)
 	WalletGuiObject.set_object_visible("wallet_coins_text", managers.custom_safehouse:unlocked() and managers.custom_safehouse:coins() > 0)
 end
 
--- Lines: 71 to 121
+-- Lines: 84 to 157
 function WalletGuiObject.refresh()
 	if Global.wallet_panel then
 		local money_icon = Global.wallet_panel:child("wallet_money_icon")
@@ -132,11 +136,16 @@ function WalletGuiObject.refresh()
 		WalletGuiObject.set_object_visible("wallet_skillpoint_icon", managers.skilltree:points() > 0)
 		WalletGuiObject.set_object_visible("wallet_skillpoint_text", managers.skilltree:points() > 0)
 
-		if managers.custom_safehouse:unlocked() then
+		local unlocked = false
+		local coins = 0
+		unlocked = managers.custom_safehouse:unlocked()
+		coins = managers.custom_safehouse:coins()
+
+		if unlocked then
 			local coins_icon = Global.wallet_panel:child("wallet_coins_icon")
 			local coins_text = Global.wallet_panel:child("wallet_coins_text")
 
-			coins_text:set_text(managers.experience:cash_string(math.floor(managers.custom_safehouse:coins()), ""))
+			coins_text:set_text(managers.experience:cash_string(math.floor(coins), ""))
 			WalletGuiObject.make_fine_text(coins_text)
 
 			local align = managers.skilltree:points() > 0 and skillpoint_text or level_text
@@ -149,7 +158,7 @@ function WalletGuiObject.refresh()
 	end
 end
 
--- Lines: 123 to 128
+-- Lines: 159 to 164
 function WalletGuiObject.make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -159,7 +168,7 @@ function WalletGuiObject.make_fine_text(text)
 	return w, h
 end
 
--- Lines: 131 to 137
+-- Lines: 167 to 173
 function WalletGuiObject.set_layer(layer)
 	if not alive(Global.wallet_panel) then
 		return
@@ -168,7 +177,7 @@ function WalletGuiObject.set_layer(layer)
 	Global.wallet_panel:set_layer(layer)
 end
 
--- Lines: 139 to 144
+-- Lines: 175 to 180
 function WalletGuiObject.move_wallet(mx, my)
 	if not alive(Global.wallet_panel) then
 		return
@@ -177,7 +186,7 @@ function WalletGuiObject.move_wallet(mx, my)
 	Global.wallet_panel:move(mx, my)
 end
 
--- Lines: 146 to 156
+-- Lines: 182 to 192
 function WalletGuiObject.set_wallet_pos(mx, my)
 	if not alive(Global.wallet_panel) then
 		return
@@ -192,7 +201,7 @@ function WalletGuiObject.set_wallet_pos(mx, my)
 	end
 end
 
--- Lines: 158 to 183
+-- Lines: 194 to 225
 function WalletGuiObject.set_object_visible(object, visible)
 	if not alive(Global.wallet_panel) then
 		return
@@ -221,7 +230,7 @@ function WalletGuiObject.set_object_visible(object, visible)
 	bg_blur:set_leftbottom(Global.wallet_panel:child("wallet_money_icon"):leftbottom())
 end
 
--- Lines: 185 to 193
+-- Lines: 227 to 235
 function WalletGuiObject.remove_wallet()
 	if not alive(Global.wallet_panel) or not alive(Global.wallet_panel:parent()) then
 		Global.wallet_panel = nil
@@ -234,7 +243,7 @@ function WalletGuiObject.remove_wallet()
 	Global.wallet_panel = nil
 end
 
--- Lines: 195 to 207
+-- Lines: 237 to 249
 function WalletGuiObject.close_wallet(panel)
 	if not alive(Global.wallet_panel) or not alive(Global.wallet_panel:parent()) then
 		Global.wallet_panel = nil

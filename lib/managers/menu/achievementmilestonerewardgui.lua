@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 local RecentMilestoneItem = RecentMilestoneItem or class(GrowPanel)
 
--- Lines: 17 to 59
+-- Lines: 17 to 60
 function RecentMilestoneItem:init(parent, data, black_bg)
 	RecentMilestoneItem.super.init(self, parent, {
 		border = 10,
@@ -59,8 +59,10 @@ function RecentMilestoneItem:init(parent, data, black_bg)
 			}))
 		end
 
+		local reward_text = managers.localization:text(data.name_id)
+
 		placer:add_right_center(self:fine_text({
-			text_id = data.name_id,
+			text = reward_text,
 			font = small_font,
 			font_size = small_font_size,
 			color = color
@@ -80,7 +82,7 @@ function RecentMilestoneItem:init(parent, data, black_bg)
 end
 AchievementMilestoneRewardGui = AchievementMilestoneRewardGui or class(GrowPanel)
 
--- Lines: 66 to 97
+-- Lines: 67 to 98
 function AchievementMilestoneRewardGui:init(parent, milestones, back_callback)
 	AchievementMilestoneRewardGui.super.init(self, parent, {
 		padding = 10,
@@ -147,7 +149,7 @@ function AchievementMilestoneRewardGui:init(parent, milestones, back_callback)
 	self:set_center(parent:w() / 2, parent:h() / 2)
 end
 
--- Lines: 99 to 102
+-- Lines: 100 to 103
 function AchievementMilestoneRewardGui:close()
 	self:remove_self()
 
@@ -156,7 +158,7 @@ function AchievementMilestoneRewardGui:close()
 	end
 end
 
--- Lines: 104 to 118
+-- Lines: 105 to 119
 function AchievementMilestoneRewardGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -167,7 +169,7 @@ function AchievementMilestoneRewardGui:update(...)
 	end
 end
 
--- Lines: 120 to 122
+-- Lines: 121 to 123
 function AchievementMilestoneRewardGui:back_pressed()
 	self._back_callback()
 

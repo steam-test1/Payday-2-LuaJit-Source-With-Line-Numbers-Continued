@@ -34,7 +34,7 @@ function PlayerFatalVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 37 to 78
+-- Lines: 37 to 82
 function PlayerFatalVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		self._weapon_hand_id = self._unit:hand():get_active_hand_id("weapon")
@@ -44,6 +44,12 @@ function PlayerFatalVR:set_belt_and_hands_enabled(enabled)
 
 			if akimbo_id then
 				self._unit:hand():set_default_state(akimbo_id, "idle")
+			end
+
+			local bow_hand_id = self._unit:hand():get_active_hand_id("bow")
+
+			if bow_hand_id then
+				self._unit:hand():set_default_state(bow_hand_id, "idle")
 			end
 
 			self._unit:hand():_set_hand_state(self._weapon_hand_id, "idle")

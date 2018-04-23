@@ -409,14 +409,12 @@ function MissionManager:stop_simulation(...)
 	managers.loot:reset()
 end
 
--- Lines: 412 to 421
-function MissionManager:debug_execute_mission_element_by_name(name)
+-- Lines: 411 to 419
+function MissionManager:get_mission_element_by_name(name)
 	for _, data in pairs(self._scripts) do
 		for id, element in pairs(data:elements()) do
 			if element:editor_name() == name then
-				element:on_executed()
-
-				return
+				return element
 			end
 		end
 	end
@@ -426,7 +424,7 @@ CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines: 427 to 443
+-- Lines: 435 to 451
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)

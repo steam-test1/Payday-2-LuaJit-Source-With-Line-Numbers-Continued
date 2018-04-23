@@ -1,27 +1,29 @@
 AIGraphUnitElement = AIGraphUnitElement or class(MissionElement)
 AIGraphUnitElement.LINK_ELEMENTS = {"elements"}
 
--- Lines: 4 to 12
+-- Lines: 4 to 14
 function AIGraphUnitElement:init(unit)
 	EnemyPreferedRemoveUnitElement.super.init(self, unit)
 
 	self._hed.graph_ids = {}
 	self._hed.operation = NavigationManager.nav_states[1]
+	self._hed.filter_group = "none"
 
 	table.insert(self._save_values, "graph_ids")
 	table.insert(self._save_values, "operation")
+	table.insert(self._save_values, "filter_group")
 end
 
--- Lines: 14 to 16
+-- Lines: 16 to 18
 function AIGraphUnitElement:draw_links(t, dt, selected_unit, all_units)
 	EnemyPreferedRemoveUnitElement.super.draw_links(self, t, dt, selected_unit)
 end
 
--- Lines: 18 to 19
+-- Lines: 20 to 21
 function AIGraphUnitElement:update_editing()
 end
 
--- Lines: 21 to 27
+-- Lines: 23 to 29
 function AIGraphUnitElement:_get_unit(id)
 	for _, unit in ipairs(managers.editor:layer("Ai"):created_units()) do
 		if unit:unit_data().unit_id == id then
@@ -30,7 +32,7 @@ function AIGraphUnitElement:_get_unit(id)
 	end
 end
 
--- Lines: 30 to 39
+-- Lines: 32 to 41
 function AIGraphUnitElement:update_selected(t, dt)
 	managers.editor:layer("Ai"):external_draw(t, dt)
 
@@ -49,7 +51,7 @@ function AIGraphUnitElement:update_selected(t, dt)
 	end
 end
 
--- Lines: 41 to 48
+-- Lines: 43 to 50
 function AIGraphUnitElement:update_unselected()
 	for _, id in ipairs(self._hed.graph_ids) do
 		local unit = self:_get_unit(id)
@@ -60,7 +62,7 @@ function AIGraphUnitElement:update_unselected()
 	end
 end
 
--- Lines: 50 to 55
+-- Lines: 52 to 57
 function AIGraphUnitElement:_add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -72,7 +74,7 @@ function AIGraphUnitElement:_add_element()
 	end
 end
 
--- Lines: 57 to 63
+-- Lines: 59 to 65
 function AIGraphUnitElement:_add_or_remove_graph(id)
 	if table.contains(self._hed.graph_ids, id) then
 		table.delete(self._hed.graph_ids, id)
@@ -81,10 +83,10 @@ function AIGraphUnitElement:_add_or_remove_graph(id)
 	end
 end
 
--- Lines: 65 to 71
+-- Lines: 67 to 73
 function AIGraphUnitElement:add_unit_list_btn()
 	
-	-- Lines: 65 to 66
+	-- Lines: 67 to 68
 	local function f(unit)
 		return unit:type() == Idstring("ai")
 	end
@@ -96,12 +98,21 @@ function AIGraphUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 74 to 76
+-- Lines: 76 to 78
 function AIGraphUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_add_element"))
 end
 
--- Lines: 79 to 120
+-- Lines: 80 to 86
+function AIGraphUnitElement:set_element_data(data)
+	AIGraphUnitElement.super.set_element_data(self, data)
+
+	if self._filter_group_element and data.value == "operation" then
+		self._filter_group_element:set_enabled(data.ctrlr:get_value() == "forbid_custom")
+	end
+end
+
+-- Lines: 89 to 133
 function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -132,8 +143,12 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = operations
 	})
 
+	self._filter_group_element = self:_build_value_combobox(panel, panel_sizer, "filter_group", table.list_add({"none"}, clone(ElementSpecialObjective._AI_GROUPS)), "Select a custom filter group.")
+
+	self._filter_group_element:set_enabled(self._hed.operation == "forbid_custom")
+
 	local help = {
-		text = "The operation defines what to do with the selected graphs",
+		text = "The operation defines what to do with the selected graphs. \"Forbid Custom\" marks the selected graphs as disabled for that specific type of units.",
 		panel = panel,
 		sizer = panel_sizer
 	}

@@ -39,17 +39,20 @@ ContourExt._types = {
 	mark_unit = {
 		priority = 4,
 		fadeout = 4.5,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_unit_dangerous = {
 		priority = 4,
 		fadeout = 9,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_unit_dangerous_damage_bonus = {
 		priority = 4,
-		fadeout = 9,
 		damage_bonus = true,
+		fadeout = 9,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_unit_dangerous_damage_bonus_distance = {
@@ -57,6 +60,7 @@ ContourExt._types = {
 		damage_bonus = true,
 		fadeout = 9,
 		damage_bonus_distance = 1,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_unit_friendly = {
@@ -68,6 +72,7 @@ ContourExt._types = {
 		priority = 5,
 		material_swap_required = true,
 		fadeout_silent = 13.5,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_damage_bonus = {
@@ -76,6 +81,7 @@ ContourExt._types = {
 		material_swap_required = true,
 		damage_bonus = true,
 		fadeout_silent = 13.5,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.more_dangerous_color
 	},
 	mark_enemy_damage_bonus_distance = {
@@ -85,6 +91,7 @@ ContourExt._types = {
 		damage_bonus = true,
 		damage_bonus_distance = 1,
 		fadeout_silent = 13.5,
+		trigger_marked_event = true,
 		color = tweak_data.contour.character.more_dangerous_color
 	},
 	highlight = {
@@ -153,7 +160,7 @@ end
 ContourExt._MAX_ID = 100000
 ContourExt._next_id = 1
 
--- Lines: 178 to 197
+-- Lines: 199 to 218
 function ContourExt:init(unit)
 	self._unit = unit
 
@@ -167,7 +174,7 @@ function ContourExt:init(unit)
 	end
 end
 
--- Lines: 199 to 209
+-- Lines: 220 to 230
 function ContourExt:apply_to_linked(func_name, ...)
 	if self._unit.spawn_manager and self._unit:spawn_manager() and self._unit:spawn_manager():linked_units() then
 		for unit_id, _ in pairs(self._unit:spawn_manager():linked_units()) do
@@ -182,7 +189,7 @@ function ContourExt:apply_to_linked(func_name, ...)
 	end
 end
 
--- Lines: 213 to 280
+-- Lines: 234 to 316
 function ContourExt:add(type, sync, multiplier)
 	if Global.debug_contour_enabled then
 		return
@@ -211,6 +218,8 @@ function ContourExt:add(type, sync, multiplier)
 		managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, u_id, table.index_of(ContourExt.indexed_types, type), true, multiplier or 1)
 	end
 
+	local should_trigger_marked_event = data.trigger_marked_event
+
 	for _, setup in ipairs(self._contour_list) do
 		if setup.type == type then
 			if fadeout then
@@ -220,6 +229,10 @@ function ContourExt:add(type, sync, multiplier)
 			end
 
 			return setup
+		end
+
+		if self._types[setup.type].trigger_marked_event then
+			should_trigger_marked_event = false
 		end
 	end
 
@@ -248,10 +261,14 @@ function ContourExt:add(type, sync, multiplier)
 
 	self:apply_to_linked("add", type, sync, multiplier)
 
+	if should_trigger_marked_event and self._unit:unit_data().mission_element then
+		self._unit:unit_data().mission_element:event("marked", self._unit)
+	end
+
 	return setup
 end
 
--- Lines: 283 to 298
+-- Lines: 319 to 334
 function ContourExt:change_color(type, color)
 	if not self._contour_list then
 		return
@@ -270,7 +287,7 @@ function ContourExt:change_color(type, color)
 	self:apply_to_linked("change_color", type, color)
 end
 
--- Lines: 300 to 317
+-- Lines: 336 to 353
 function ContourExt:flash(type_or_id, frequency)
 	if not self._contour_list then
 		return
@@ -291,7 +308,7 @@ function ContourExt:flash(type_or_id, frequency)
 	self:apply_to_linked("flash", type_or_id, frequency)
 end
 
--- Lines: 319 to 329
+-- Lines: 355 to 365
 function ContourExt:is_flashing()
 	if not self._contour_list then
 		return
@@ -304,7 +321,7 @@ function ContourExt:is_flashing()
 	end
 end
 
--- Lines: 333 to 351
+-- Lines: 369 to 387
 function ContourExt:remove(type, sync)
 	if not self._contour_list then
 		return
@@ -327,7 +344,7 @@ function ContourExt:remove(type, sync)
 	self:apply_to_linked("remove", type, sync)
 end
 
--- Lines: 355 to 373
+-- Lines: 391 to 409
 function ContourExt:remove_by_id(id, sync)
 	if not self._contour_list then
 		return
@@ -350,7 +367,7 @@ function ContourExt:remove_by_id(id, sync)
 	self:apply_to_linked("remove", remove_type, sync)
 end
 
--- Lines: 375 to 381
+-- Lines: 411 to 417
 function ContourExt:has_id(id)
 	for i, setup in ipairs(self._contour_list) do
 		if setup.type == id then
@@ -361,13 +378,13 @@ function ContourExt:has_id(id)
 	return false
 end
 
--- Lines: 384 to 387
+-- Lines: 420 to 423
 function ContourExt:_clear()
 	self._contour_list = nil
 	self._materials = nil
 end
 
--- Lines: 391 to 442
+-- Lines: 427 to 493
 function ContourExt:_remove(index, sync)
 	local setup = self._contour_list and self._contour_list[index]
 
@@ -420,9 +437,25 @@ function ContourExt:_remove(index, sync)
 
 		managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, u_id, table.index_of(ContourExt.indexed_types, contour_type), false, 1)
 	end
+
+	if data.trigger_marked_event then
+		local should_trigger_unmarked_event = true
+
+		for _, setup in ipairs(self._contour_list or {}) do
+			if self._types[setup.type].trigger_marked_event then
+				should_trigger_unmarked_event = false
+
+				break
+			end
+		end
+
+		if should_trigger_unmarked_event and self._unit:unit_data().mission_element then
+			self._unit:unit_data().mission_element:event("unmarked", self._unit)
+		end
+	end
 end
 
--- Lines: 444 to 496
+-- Lines: 495 to 547
 function ContourExt:update(unit, t, dt)
 	local index = 1
 
@@ -472,7 +505,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 498 to 523
+-- Lines: 549 to 574
 function ContourExt:_upd_opacity(opacity, is_retry)
 	if opacity == self._last_opacity then
 		return
@@ -502,7 +535,7 @@ function ContourExt:_upd_opacity(opacity, is_retry)
 	self:apply_to_linked("_upd_opacity", opacity, is_retry)
 end
 
--- Lines: 526 to 550
+-- Lines: 577 to 601
 function ContourExt:_upd_color(is_retry)
 	if not self._contour_list or #self._contour_list == 0 then
 		return
@@ -533,7 +566,7 @@ function ContourExt:_upd_color(is_retry)
 	self:apply_to_linked("_upd_color", is_retry)
 end
 
--- Lines: 552 to 572
+-- Lines: 603 to 623
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
@@ -554,7 +587,7 @@ function ContourExt:_apply_top_preset()
 	end
 end
 
--- Lines: 574 to 597
+-- Lines: 625 to 648
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -582,7 +615,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines: 599 to 615
+-- Lines: 650 to 666
 function ContourExt:_chk_update_state()
 	local needs_update = nil
 
@@ -603,7 +636,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines: 617 to 625
+-- Lines: 668 to 676
 function ContourExt:update_materials()
 	if self._contour_list and next(self._contour_list) then
 		self._materials = nil
@@ -616,7 +649,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines: 627 to 636
+-- Lines: 678 to 687
 function ContourExt:save(data)
 	if self._contour_list then
 		for _, setup in ipairs(self._contour_list) do
@@ -629,7 +662,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines: 638 to 642
+-- Lines: 689 to 693
 function ContourExt:load(data)
 	if data and data.highlight_character then
 		self:add(data.highlight_character.type)

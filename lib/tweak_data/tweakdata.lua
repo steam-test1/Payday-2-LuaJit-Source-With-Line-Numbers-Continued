@@ -385,7 +385,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines: 414 to 2306
+-- Lines: 414 to 2309
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -753,7 +753,6 @@ function TweakData:init()
 	self.infamy = InfamyTweakData:new(self)
 	self.gage_assignment = GageAssignmentTweakData:new(self)
 	self.preplanning = PrePlanningTweakData:new(self)
-	self.achievement = AchievementsTweakData:new(self)
 	self.safehouse = CustomSafehouseTweakData:new(self)
 	self.interaction = InteractionTweakData:new(self)
 	self.vehicle = VehicleTweakData:new(self)
@@ -761,6 +760,7 @@ function TweakData:init()
 
 	self._init_wip_economy(self.economy, self)
 
+	self.achievement = AchievementsTweakData:new(self)
 	self.van = VanSkinsTweakData:new(self)
 	self.env_effect = EnvEffectTweakData:new()
 	self.tango = TangoTweakData:new(self)
@@ -1827,7 +1827,8 @@ Play the full version soon to get your full PAYDAY!]],
 			track = "xmas13_deck_the_safe_house_instrumental",
 			lock = "xmas"
 		},
-		{track = "its_payday"}
+		{track = "its_payday"},
+		{track = "music_tag"}
 	}
 	self.music.soundbank_list = {
 		"soundbanks/music",
@@ -2386,7 +2387,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines: 2311 to 2403
+-- Lines: 2314 to 2406
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2463,19 +2464,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines: 2407 to 2486
+-- Lines: 2410 to 2489
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines: 2491 to 2492
+-- Lines: 2494 to 2495
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines: 2497 to 2505
+-- Lines: 2500 to 2508
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2486,7 +2487,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines: 2509 to 2512
+-- Lines: 2512 to 2515
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2496,7 +2497,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines: 2516 to 2525
+-- Lines: 2519 to 2528
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2509,7 +2510,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines: 2529 to 2705
+-- Lines: 2532 to 2708
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2698,7 +2699,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines: 2707 to 2870
+-- Lines: 2710 to 2873
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2804,7 +2805,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines: 2872 to 2944
+-- Lines: 2875 to 2947
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -2877,7 +2878,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines: 2947 to 2951
+-- Lines: 2950 to 2954
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -2895,7 +2896,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines: 2968 to 3182
+-- Lines: 2971 to 3185
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

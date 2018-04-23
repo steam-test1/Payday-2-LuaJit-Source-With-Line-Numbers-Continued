@@ -181,7 +181,7 @@ function AssetsTweakData:_init_gage_assets(tweak_data)
 	}
 end
 
--- Lines: 199 to 1667
+-- Lines: 199 to 1679
 function AssetsTweakData:_init_assets(tweak_data)
 	self.safe_escape = {
 		name_id = "menu_asset_safe_escape",
@@ -233,7 +233,8 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"dark",
 			"friend",
 			"fish",
-			"dah"
+			"dah",
+			"tag"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_bodybags_bag_desc",
@@ -1202,7 +1203,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 	}
 end
 
--- Lines: 1670 to 1717
+-- Lines: 1682 to 1729
 function AssetsTweakData:_init_debug_assets(tweak_data)
 	self.debug_1 = {
 		name_id = "debug_1",
@@ -1253,7 +1254,7 @@ function AssetsTweakData:_init_debug_assets(tweak_data)
 	}
 end
 
--- Lines: 1719 to 1756
+-- Lines: 1731 to 1768
 function AssetsTweakData:debug_assets()
 	local levels = {}
 
@@ -1262,7 +1263,7 @@ function AssetsTweakData:debug_assets()
 	end
 
 	
-	-- Lines: 1725 to 1733
+	-- Lines: 1737 to 1745
 	local function f(id)
 		if id == "all" then
 			for i, d in pairs(levels) do

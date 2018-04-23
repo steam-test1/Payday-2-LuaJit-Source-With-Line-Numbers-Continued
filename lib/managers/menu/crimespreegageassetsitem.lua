@@ -358,7 +358,7 @@ function GageAssetsItem:update_asset_positions()
 	end
 end
 
--- Lines: 315 to 427
+-- Lines: 315 to 435
 function GageAssetsItem:select_asset(i, instant)
 	if self._num_items < #self._assets_list then
 		if i then
@@ -407,8 +407,10 @@ function GageAssetsItem:select_asset(i, instant)
 	if self._assets_list[i].locked then
 		local can_unlock, reason = managers.crime_spree:can_unlock_asset()
 		extra_string = managers.localization:text("bm_cs_continental_coin_cost", {cost = managers.experience:cash_string(self._assets_list[i].data.cost, "")})
+		local coins = 0
+		coins = managers.custom_safehouse:coins()
 
-		if managers.custom_safehouse:coins() < self._assets_list[i].data.cost then
+		if coins < self._assets_list[i].data.cost then
 			extra_string = extra_string .. "\n" .. managers.localization:text("bm_cs_not_enough_coins")
 			extra_color = tweak_data.screen_colors.important_1
 		end
@@ -489,7 +491,7 @@ function GageAssetsItem:select_asset(i, instant)
 	end
 end
 
--- Lines: 429 to 437
+-- Lines: 437 to 445
 function GageAssetsItem:check_deselect_item()
 	if self._asset_selected and self._assets_list[self._asset_selected] then
 		self._assets_list[self._asset_selected].asset:stop()
@@ -500,7 +502,7 @@ function GageAssetsItem:check_deselect_item()
 	self._asset_selected = nil
 end
 
--- Lines: 439 to 501
+-- Lines: 447 to 509
 function GageAssetsItem:mouse_moved(x, y)
 	if alive(self._move_left_rect) and alive(self._move_right_rect) then
 		if self._move_left_rect:visible() and self._move_left_rect:inside(x, y) then
@@ -576,7 +578,7 @@ function GageAssetsItem:mouse_moved(x, y)
 	return selected, highlighted
 end
 
--- Lines: 504 to 525
+-- Lines: 512 to 533
 function GageAssetsItem:mouse_pressed(button, x, y)
 	local inside = GageAssetsItem.super.mouse_pressed(self, button, x, y)
 
@@ -605,7 +607,7 @@ function GageAssetsItem:mouse_pressed(button, x, y)
 	return inside
 end
 
--- Lines: 528 to 555
+-- Lines: 536 to 563
 function GageAssetsItem:move(x, y)
 	if #self._assets_list == 0 then
 		return
@@ -636,7 +638,7 @@ function GageAssetsItem:move(x, y)
 	end
 end
 
--- Lines: 557 to 568
+-- Lines: 565 to 576
 function GageAssetsItem:move_left()
 	self:move(-1, 0)
 
@@ -652,17 +654,17 @@ function GageAssetsItem:move_left()
 	self:select_asset(new_selected)
 end
 
--- Lines: 570 to 572
+-- Lines: 578 to 580
 function GageAssetsItem:move_up()
 	self:move(0, -1)
 end
 
--- Lines: 574 to 576
+-- Lines: 582 to 584
 function GageAssetsItem:move_down()
 	self:move(0, 1)
 end
 
--- Lines: 578 to 589
+-- Lines: 586 to 597
 function GageAssetsItem:move_right()
 	self:move(1, 0)
 
@@ -678,17 +680,17 @@ function GageAssetsItem:move_right()
 	self:select_asset(new_selected)
 end
 
--- Lines: 591 to 592
+-- Lines: 599 to 600
 function GageAssetsItem:confirm_pressed()
 	return self:_return_asset_info(self._asset_selected)
 end
 
--- Lines: 595 to 596
+-- Lines: 603 to 604
 function GageAssetsItem:something_selected()
 	return self._asset_selected and true or false
 end
 
--- Lines: 599 to 613
+-- Lines: 607 to 629
 function GageAssetsItem:_return_asset_info(i)
 	if not i or not self._assets_list[i] then
 		return nil
@@ -698,18 +700,20 @@ function GageAssetsItem:_return_asset_info(i)
 
 	if self._assets_list[i].locked then
 		local cost = self._assets_list[i].data.cost
-		asset_cost = cost <= managers.custom_safehouse:coins() and cost or true
+		local coins = 0
+		coins = managers.custom_safehouse:coins()
+		asset_cost = cost <= coins and cost or true
 	end
 
 	return i, asset_cost
 end
 
--- Lines: 616 to 617
+-- Lines: 632 to 633
 function GageAssetsItem:get_asset_id(i)
 	return self._assets_list[i].id, true, self._assets_list[i].locked
 end
 
--- Lines: 621 to 630
+-- Lines: 637 to 646
 function GageAssetsItem:unlock_asset_by_id(id)
 	for i, data in ipairs(self._assets_list) do
 		if Idstring(data.id) == Idstring(id) then
@@ -720,7 +724,7 @@ function GageAssetsItem:unlock_asset_by_id(id)
 	self:select_asset(self._asset_selected, true)
 end
 
--- Lines: 632 to 640
+-- Lines: 648 to 656
 function GageAssetsItem:_unlock_asset(i, asset_data)
 	asset_data.locked = false
 

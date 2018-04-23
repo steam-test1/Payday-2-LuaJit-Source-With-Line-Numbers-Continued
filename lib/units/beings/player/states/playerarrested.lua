@@ -253,8 +253,9 @@ function PlayerArrested:clbk_entry_speech()
 	PlayerStandard.say_line(self, "s20x_sin")
 end
 
--- Lines: 274 to 281
+-- Lines: 274 to 282
 function PlayerArrested:pre_destroy(unit)
+	PlayerArrested.super.pre_destroy(self, unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 
 	if self._entry_speech_clbk then
@@ -264,7 +265,7 @@ function PlayerArrested:pre_destroy(unit)
 	end
 end
 
--- Lines: 285 to 287
+-- Lines: 286 to 288
 function PlayerArrested:destroy()
 	PlayerBleedOut._unregister_revive_SO(self)
 end

@@ -456,7 +456,7 @@ function EconomyTweakData:_init_armor_skins_crime_spree()
 	}
 end
 
--- Lines: 682 to 1305
+-- Lines: 682 to 1300
 function EconomyTweakData:_init_armor_skins_armor_safe()
 	self.armor_skins.ast_armor1 = {
 		name_id = "bm_askn_ast_armor3",

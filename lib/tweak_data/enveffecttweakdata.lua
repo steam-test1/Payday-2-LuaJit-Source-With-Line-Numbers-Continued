@@ -1,15 +1,26 @@
 EnvEffectTweakData = EnvEffectTweakData or class()
 
--- Lines: 7 to 19
+-- Lines: 7 to 29
 function EnvEffectTweakData:init()
 	self.lightning = {
 		event_name = "thunder_struck",
 		min_interval = 10,
 		rnd_interval = 10
 	}
+	self.lightning_tag = {
+		event_name = "thunder_struck_muffled",
+		min_interval = 30,
+		rnd_interval = 40
+	}
+	self.rain = {
+		effect_name = Idstring("effects/particles/rain/rain_01_a"),
+		ripples = true
+	}
+	self.snow = {effect_name = Idstring("effects/particles/snow/snow_01")}
+	self.snow_slow = {effect_name = Idstring("effects/particles/snow/snow_slow")}
 end
 
--- Lines: 21 to 39
+-- Lines: 31 to 49
 function EnvEffectTweakData:molotov_fire()
 	local params = {
 		sound_event = "molotov_impact",
@@ -37,7 +48,7 @@ function EnvEffectTweakData:molotov_fire()
 	return params
 end
 
--- Lines: 42 to 59
+-- Lines: 52 to 69
 function EnvEffectTweakData:trip_mine_fire()
 	local params = {
 		sound_event = "molotov_impact",
@@ -64,7 +75,7 @@ function EnvEffectTweakData:trip_mine_fire()
 	return params
 end
 
--- Lines: 62 to 79
+-- Lines: 72 to 89
 function EnvEffectTweakData:incendiary_fire()
 	local params = {
 		sound_event = "gl_explode",
@@ -91,7 +102,7 @@ function EnvEffectTweakData:incendiary_fire()
 	return params
 end
 
--- Lines: 82 to 99
+-- Lines: 92 to 109
 function EnvEffectTweakData:incendiary_fire_arbiter()
 	local params = {
 		sound_event = "gl_explode",

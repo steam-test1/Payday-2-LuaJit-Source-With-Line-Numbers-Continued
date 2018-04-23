@@ -103,8 +103,54 @@ function CivilianLogicTravel.exit(data, new_logic_name, enter_params)
 		data.unit:brain():set_update_enabled_state(true)
 	end
 end
+local tmp_vec1 = Vector3()
 
--- Lines: 113 to 198
+-- Lines: 114 to 147
+function CivilianLogicTravel._optimize_path(path)
+	if #path <= 2 then
+		return path
+	end
+
+	
+	-- Lines: 119 to 125
+	local function remove_duplicates(path)
+		for i = #path, 2, -1 do
+			if path[i] == path[i - 1] then
+				table.remove(path, i - 1)
+			end
+		end
+	end
+
+	remove_duplicates(path)
+
+	local opt_path = {path[1]}
+	local i = 1
+	local count = 1
+
+	while i < #path do
+		local pos = path[i]
+		local next_index = i + 1
+
+		for j = i + 1, #path, 1 do
+			if not managers.navigation:raycast({
+				pos_from = pos,
+				pos_to = path[j]
+			}) then
+				next_index = j
+			end
+		end
+
+		opt_path[count + 1] = path[next_index]
+		count = count + 1
+		i = next_index
+	end
+
+	remove_duplicates(opt_path)
+
+	return opt_path
+end
+
+-- Lines: 152 to 241
 function CivilianLogicTravel.update(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -130,6 +176,10 @@ function CivilianLogicTravel.update(data)
 		-- Nothing
 	elseif my_data.advance_path then
 		CopLogicAttack._correct_path_start_pos(data, my_data.advance_path)
+
+		if my_data.is_hostage then
+			my_data.advance_path = CivilianLogicTravel._optimize_path(my_data.advance_path)
+		end
 
 		local end_rot = nil
 
@@ -192,7 +242,7 @@ function CivilianLogicTravel.update(data)
 	end
 end
 
--- Lines: 202 to 224
+-- Lines: 245 to 267
 function CivilianLogicTravel._on_destination_reached(data)
 	local objective = data.objective
 	objective.in_place = true
@@ -222,7 +272,7 @@ function CivilianLogicTravel._on_destination_reached(data)
 	data.logic.on_new_objective(data)
 end
 
--- Lines: 229 to 244
+-- Lines: 272 to 287
 function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	if not CivilianLogicIdle.is_obstructed(data, aggressor_unit) then
 		return
@@ -243,7 +293,7 @@ function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	data.unit:brain():set_objective(new_objective)
 end
 
--- Lines: 248 to 265
+-- Lines: 291 to 308
 function CivilianLogicTravel._determine_exact_destination(data, objective)
 	if objective.pos then
 		return objective.pos
@@ -261,13 +311,13 @@ function CivilianLogicTravel._determine_exact_destination(data, objective)
 	end
 end
 
--- Lines: 269 to 272
+-- Lines: 312 to 315
 function CivilianLogicTravel._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act and anim_data.needs_idle
 end
 
--- Lines: 276 to 283
+-- Lines: 319 to 326
 function CivilianLogicTravel._upd_stop_old_action(data, my_data, objective)
 	if not data.unit:anim_data().to_idle then
 		if not data.unit:movement():chk_action_forbidden("idle") and data.unit:anim_data().act and data.unit:anim_data().needs_idle then
@@ -278,7 +328,7 @@ function CivilianLogicTravel._upd_stop_old_action(data, my_data, objective)
 	end
 end
 
--- Lines: 287 to 292
+-- Lines: 330 to 335
 function CivilianLogicTravel.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true

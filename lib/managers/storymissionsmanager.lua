@@ -144,7 +144,7 @@ function StoryMissionsManager:claim_rewards(mission)
 	managers.savefile:save_progress()
 end
 
--- Lines: 128 to 147
+-- Lines: 128 to 154
 function StoryMissionsManager:_reward(reward)
 	if reward.type_items == "xp" then
 		local value_id = tweak_data.blackmarket[reward.type_items][reward.item_entry].value_id
@@ -169,7 +169,7 @@ function StoryMissionsManager:_reward(reward)
 	end
 end
 
--- Lines: 151 to 174
+-- Lines: 158 to 181
 function StoryMissionsManager:_check_complete(mission)
 	mission = self:_get_or_current(mission)
 
@@ -202,7 +202,7 @@ function StoryMissionsManager:_check_complete(mission)
 	end
 end
 
--- Lines: 176 to 190
+-- Lines: 183 to 197
 function StoryMissionsManager:_find_next_mission(dont_set)
 	local last = nil
 
@@ -225,7 +225,7 @@ function StoryMissionsManager:_find_next_mission(dont_set)
 	return last
 end
 
--- Lines: 193 to 200
+-- Lines: 200 to 207
 function StoryMissionsManager:_change_current_mission(mission)
 	self._global.current_mission = mission
 
@@ -235,7 +235,7 @@ function StoryMissionsManager:_change_current_mission(mission)
 	end
 end
 
--- Lines: 204 to 208
+-- Lines: 211 to 215
 function StoryMissionsManager:_get_offset_mission(mission, offset)
 	local m = self:_get_or_current(mission)
 
@@ -246,7 +246,7 @@ function StoryMissionsManager:_get_offset_mission(mission, offset)
 	return self._global.mission_order[m.order + offset]
 end
 
--- Lines: 213 to 220
+-- Lines: 220 to 227
 function StoryMissionsManager:_get_or_current(mission)
 	if mission then
 		if type(mission) == "string" then
@@ -259,7 +259,7 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines: 227 to 255
+-- Lines: 234 to 262
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
@@ -293,7 +293,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines: 257 to 267
+-- Lines: 264 to 274
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -308,7 +308,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines: 271 to 305
+-- Lines: 278 to 312
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -347,12 +347,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines: 307 to 308
+-- Lines: 314 to 315
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines: 311 to 354
+-- Lines: 318 to 361
 function StoryMissionsManager:start_mission(mission, objective_id)
 	if not self:_get_or_current(mission) then
 		local m = {objectives_flat = {}}
@@ -412,10 +412,10 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	managers.menu:open_node(Global.game_settings.single_player and "crimenet_contract_singleplayer" or "crimenet_contract_host", {data})
 end
 
--- Lines: 366 to 374
+-- Lines: 373 to 381
 function StoryMissionsManager:reset_all()
 	
-	-- Lines: 359 to 367
+	-- Lines: 366 to 374
 	local function reset(m)
 		if not m then
 			return

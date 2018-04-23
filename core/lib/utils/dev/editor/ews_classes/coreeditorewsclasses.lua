@@ -941,7 +941,7 @@ function UnitTreeBrowser:collapse_children(children)
 end
 GlobalSelectUnit = GlobalSelectUnit or class(CoreEditorEwsDialog)
 
--- Lines: 952 to 1063
+-- Lines: 952 to 1065
 function GlobalSelectUnit:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Global select unit", "", Vector3(525, 160, 0), Vector3(560, 680, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX", ...)
 	self:create_panel("VERTICAL")
@@ -982,6 +982,7 @@ function GlobalSelectUnit:init(...)
 
 	self._units:clear_all()
 	self._units:append_column("Name")
+	self._units:autosize_column(0)
 	list_sizer:add(self._units, 1, 0, "EXPAND")
 	self._units:connect("EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "on_select_unit_dialog"), self._units)
 	self._units:connect("EVT_KEY_DOWN", callback(self, self, "key_down"), "")
@@ -990,6 +991,7 @@ function GlobalSelectUnit:init(...)
 	self._short_name:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "update_list"), nil)
 	self._filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_list"), nil)
 	self._filter:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+	self._filter:connect("EVT_UPDATE_UI", callback(self, self, "update"), nil)
 
 	self._layer_cbs = {}
 	local layers = managers.editor:layers()
@@ -1057,7 +1059,7 @@ function GlobalSelectUnit:init(...)
 	self:set_visible(true)
 end
 
--- Lines: 1066 to 1074
+-- Lines: 1068 to 1076
 function GlobalSelectUnit:key_down(ctrlr, event)
 	event:skip()
 
@@ -1069,7 +1071,7 @@ function GlobalSelectUnit:key_down(ctrlr, event)
 	end
 end
 
--- Lines: 1076 to 1084
+-- Lines: 1078 to 1086
 function GlobalSelectUnit:key_up(ctrlr, event)
 	event:skip()
 
@@ -1081,7 +1083,7 @@ function GlobalSelectUnit:key_up(ctrlr, event)
 	end
 end
 
--- Lines: 1087 to 1094
+-- Lines: 1089 to 1096
 function GlobalSelectUnit:_show_unit_preview()
 	if self:_is_unit_being_previewed() then
 		self:_on_unit_preview_update()
@@ -1092,12 +1094,12 @@ function GlobalSelectUnit:_show_unit_preview()
 	self:_on_unit_preview_start(self:_get_selected_unit())
 end
 
--- Lines: 1096 to 1098
+-- Lines: 1098 to 1100
 function GlobalSelectUnit:_on_units_focus_lost(ctrlr, event)
 	self:_on_unit_preview_end()
 end
 
--- Lines: 1100 to 1112
+-- Lines: 1102 to 1114
 function GlobalSelectUnit:_on_unit_preview_start(unit_to_preview)
 	self._preview_unit = unit_to_preview
 	local previewed_unit_height = self:_calculate_bounding_sphere_radius(unit_to_preview)
@@ -1112,7 +1114,7 @@ function GlobalSelectUnit:_on_unit_preview_start(unit_to_preview)
 	self._rotation_point_for_preview = Vector3(unit_to_preview:oobb():center().x, unit_to_preview:oobb():center().y, unit_to_preview:oobb():center().z)
 end
 
--- Lines: 1114 to 1129
+-- Lines: 1116 to 1131
 function GlobalSelectUnit:_on_unit_preview_update()
 	local degrees_per_second = 45
 	local time = Application:time()
@@ -1126,7 +1128,7 @@ function GlobalSelectUnit:_on_unit_preview_update()
 	end
 end
 
--- Lines: 1131 to 1144
+-- Lines: 1133 to 1146
 function GlobalSelectUnit:_on_unit_preview_end()
 	if not self:_is_unit_being_previewed() then
 		return
@@ -1145,12 +1147,12 @@ function GlobalSelectUnit:_on_unit_preview_end()
 	self._last_preview_update_time = nil
 end
 
--- Lines: 1146 to 1147
+-- Lines: 1148 to 1149
 function GlobalSelectUnit:_is_unit_being_previewed()
 	return self._preview_unit
 end
 
--- Lines: 1150 to 1157
+-- Lines: 1152 to 1159
 function GlobalSelectUnit:_get_selected_unit()
 	if self._units:selected_item() == -1 then
 		return
@@ -1162,7 +1164,7 @@ function GlobalSelectUnit:_get_selected_unit()
 	return CoreUnit.safe_spawn_unit(name, Application:last_camera_position() + Application:last_camera_rotation():y(), Rotation(0, 0, 0))
 end
 
--- Lines: 1160 to 1168
+-- Lines: 1162 to 1170
 function GlobalSelectUnit:_setup_preview_camera(previewed_unit_height, desired_distance_to_camera)
 	local one_km = 10000
 	self._old_cam_pos = managers.viewport:get_current_camera():position()
@@ -1174,21 +1176,21 @@ function GlobalSelectUnit:_setup_preview_camera(previewed_unit_height, desired_d
 	managers.viewport:get_current_camera():set_position(self._new_cam_pos)
 end
 
--- Lines: 1170 to 1172
+-- Lines: 1172 to 1174
 function GlobalSelectUnit:_calculate_bounding_sphere_radius(unit)
 	local oobb_diagonal_length = math.sqrt(unit:oobb():size().x * unit:oobb():size().x + unit:oobb():size().y * unit:oobb():size().y + unit:oobb():size().z * unit:oobb():size().z)
 
 	return oobb_diagonal_length * 2
 end
 
--- Lines: 1175 to 1179
+-- Lines: 1177 to 1181
 function GlobalSelectUnit:_rotate_around_point(unit, point_to_rotate_around, axis, dt, speed)
 	unit:set_position(unit:position() - point_to_rotate_around * dt)
 	unit:set_rotation(unit:rotation() * Rotation(axis, speed * dt))
 	unit:set_position(unit:position() + point_to_rotate_around * dt)
 end
 
--- Lines: 1181 to 1185
+-- Lines: 1183 to 1187
 function GlobalSelectUnit:_stripped_unit_name(name)
 	local reverse = string.reverse(name)
 	local i = string.find(reverse, "/")
@@ -1197,7 +1199,7 @@ function GlobalSelectUnit:_stripped_unit_name(name)
 	return name
 end
 
--- Lines: 1188 to 1197
+-- Lines: 1190 to 1199
 function GlobalSelectUnit:_all_unit_names()
 	local names = {}
 	local layers = managers.editor:layers()
@@ -1213,7 +1215,7 @@ function GlobalSelectUnit:_all_unit_names()
 	return names
 end
 
--- Lines: 1200 to 1217
+-- Lines: 1202 to 1219
 function GlobalSelectUnit:_current_unit_names()
 	local layers = managers.editor:layers()
 	local current_names = {}
@@ -1237,14 +1239,14 @@ function GlobalSelectUnit:_current_unit_names()
 	return names
 end
 
--- Lines: 1220 to 1223
+-- Lines: 1222 to 1225
 function GlobalSelectUnit:on_only_list_used_units(data)
 	self._only_list_used_units = data.cb:get_value()
 
 	self:update_list()
 end
 
--- Lines: 1225 to 1231
+-- Lines: 1227 to 1233
 function GlobalSelectUnit:on_reload()
 	local i = self._units:selected_item()
 
@@ -1255,7 +1257,7 @@ function GlobalSelectUnit:on_reload()
 	end
 end
 
--- Lines: 1233 to 1239
+-- Lines: 1235 to 1241
 function GlobalSelectUnit:on_select_unit_dialog(units)
 	local i = units:selected_item()
 
@@ -1266,13 +1268,13 @@ function GlobalSelectUnit:on_select_unit_dialog(units)
 	end
 end
 
--- Lines: 1241 to 1280
+-- Lines: 1243 to 1278
 function GlobalSelectUnit:update_list(current)
-	self._units:freeze()
-
 	local filter = self._filter:get_value()
 
 	self._units:delete_all_items()
+
+	self._units_to_append = {}
 
 	if self._only_list_used_units then
 		current = current or self:_current_unit_names()
@@ -1284,9 +1286,10 @@ function GlobalSelectUnit:update_list(current)
 				local stripped_name = self._short_name:get_value() and self:_stripped_unit_name(name) or name
 
 				if string.find(stripped_name, filter, 1, true) then
-					local i = self._units:append_item(stripped_name)
-
-					self._units:set_item_data(i, name)
+					table.insert(self._units_to_append, {
+						stripped_name = stripped_name,
+						name = name
+					})
 				end
 			end
 		end
@@ -1298,19 +1301,48 @@ function GlobalSelectUnit:update_list(current)
 				local stripped_name = self._short_name:get_value() and self:_stripped_unit_name(name) or name
 
 				if string.find(stripped_name, filter, 1, true) then
-					local i = self._units:append_item(stripped_name)
-
-					self._units:set_item_data(i, name)
+					table.insert(self._units_to_append, {
+						stripped_name = stripped_name,
+						name = name
+					})
 				end
 			end
 		end
 	end
 
-	self._units:thaw()
-	self._units:autosize_column(0)
+	table.sort(self._units_to_append, function (a, b)
+		return a.stripped_name < b.stripped_name
+	end)
 end
 
--- Lines: 1282 to 1299
+-- Lines: 1280 to 1301
+function GlobalSelectUnit:update()
+	if not self._units_to_append then
+		return
+	end
+
+	local append_count = 100
+
+	while append_count > 0 do
+		if #self._units_to_append == 0 then
+			break
+		end
+
+		append_count = append_count - 1
+		local data = table.remove(self._units_to_append, 1)
+		local i = self._units:append_item(data.stripped_name)
+
+		self._units:set_item_data(i, data.name)
+	end
+
+	if #self._units_to_append == 0 then
+		self._units_to_append = nil
+
+		self._units:autosize_column(0)
+	end
+end
+
+-- Lines: 1303 to 1320
 function GlobalSelectUnit:spawned_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1335,7 +1367,7 @@ function GlobalSelectUnit:spawned_unit(unit)
 	end
 end
 
--- Lines: 1301 to 1314
+-- Lines: 1322 to 1335
 function GlobalSelectUnit:deleted_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1354,19 +1386,19 @@ function GlobalSelectUnit:deleted_unit(unit)
 	end
 end
 
--- Lines: 1316 to 1320
+-- Lines: 1337 to 1341
 function GlobalSelectUnit:set_visible(...)
 	CoreEditorEwsDialog.set_visible(self, ...)
 	self._filter:set_focus()
 	self._filter:set_selection(-1, -1)
 end
 
--- Lines: 1322 to 1324
+-- Lines: 1343 to 1345
 function GlobalSelectUnit:reset()
 	self:update_list()
 end
 
--- Lines: 1326 to 1331
+-- Lines: 1347 to 1352
 function GlobalSelectUnit:on_all_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(true)
@@ -1375,7 +1407,7 @@ function GlobalSelectUnit:on_all_layers()
 	self:update_list()
 end
 
--- Lines: 1333 to 1338
+-- Lines: 1354 to 1359
 function GlobalSelectUnit:on_none_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(false)
@@ -1384,7 +1416,7 @@ function GlobalSelectUnit:on_none_layers()
 	self:update_list()
 end
 
--- Lines: 1340 to 1345
+-- Lines: 1361 to 1366
 function GlobalSelectUnit:on_invert_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(not cb:get_value())
@@ -1393,13 +1425,13 @@ function GlobalSelectUnit:on_invert_layers()
 	self:update_list()
 end
 
--- Lines: 1347 to 1349
+-- Lines: 1368 to 1370
 function GlobalSelectUnit:on_layer_cb(data)
 	self:update_list()
 end
 ReplaceUnit = ReplaceUnit or class(CoreEditorEwsDialog)
 
--- Lines: 1355 to 1442
+-- Lines: 1376 to 1463
 function ReplaceUnit:init(name, types)
 	CoreEditorEwsDialog.init(self, nil, name, "", Vector3(300, 150, 0), Vector3(900, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 	self:create_panel("VERTICAL")
@@ -1502,7 +1534,7 @@ function ReplaceUnit:init(name, types)
 	self:show_modal()
 end
 
--- Lines: 1444 to 1457
+-- Lines: 1465 to 1478
 function ReplaceUnit:replace_unit_name(units)
 	for _, units_list in ipairs(self._all_unit_lists) do
 		if units_list ~= units then
@@ -1521,7 +1553,7 @@ function ReplaceUnit:replace_unit_name(units)
 	end
 end
 
--- Lines: 1459 to 1470
+-- Lines: 1480 to 1491
 function ReplaceUnit:update_filter(data)
 	local filter = data.filter:get_value()
 
@@ -1537,14 +1569,14 @@ function ReplaceUnit:update_filter(data)
 	data.units:thaw()
 end
 
--- Lines: 1472 to 1475
+-- Lines: 1493 to 1496
 function ReplaceUnit:close_replace_unit(data)
 	self._made_replace_choice = data.value
 
 	self:end_modal()
 end
 
--- Lines: 1477 to 1481
+-- Lines: 1498 to 1502
 function ReplaceUnit:result()
 	if self._made_replace_choice and self._replace_unit_name then
 		return self._replace_unit_name
@@ -1554,7 +1586,7 @@ function ReplaceUnit:result()
 end
 LayerReplaceUnit = LayerReplaceUnit or class(CoreEditorEwsDialog)
 
--- Lines: 1489 to 1540
+-- Lines: 1510 to 1561
 function LayerReplaceUnit:init(layer)
 	CoreEditorEwsDialog.init(self, nil, "Replace Units", "", Vector3(525, 200, 0), Vector3(270, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -1617,7 +1649,7 @@ function LayerReplaceUnit:init(layer)
 	self:set_visible(true)
 end
 
--- Lines: 1542 to 1548
+-- Lines: 1563 to 1569
 function LayerReplaceUnit:_all_unit_names(layer)
 	local names = {}
 
@@ -1630,7 +1662,7 @@ function LayerReplaceUnit:_all_unit_names(layer)
 	return names
 end
 
--- Lines: 1551 to 1560
+-- Lines: 1572 to 1581
 function LayerReplaceUnit:replace_unit(data)
 	if self._layer:selected_unit() and data then
 		local units = data.units
@@ -1644,7 +1676,7 @@ function LayerReplaceUnit:replace_unit(data)
 	end
 end
 
--- Lines: 1563 to 1576
+-- Lines: 1584 to 1597
 function LayerReplaceUnit:_current_unit_names()
 	local current_names = {}
 
@@ -1665,14 +1697,14 @@ function LayerReplaceUnit:_current_unit_names()
 	return names
 end
 
--- Lines: 1579 to 1582
+-- Lines: 1600 to 1603
 function LayerReplaceUnit:on_only_list_used_units(data)
 	self._only_list_used_units = data.cb:get_value()
 
 	self:update_list()
 end
 
--- Lines: 1584 to 1603
+-- Lines: 1605 to 1624
 function LayerReplaceUnit:update_list(current)
 	self._units:freeze()
 
@@ -1699,13 +1731,13 @@ function LayerReplaceUnit:update_list(current)
 	self._units:thaw()
 end
 
--- Lines: 1605 to 1608
+-- Lines: 1626 to 1629
 function LayerReplaceUnit:set_visible(visible)
 	CoreEditorEwsDialog.set_visible(self, visible)
 	self:update_list()
 end
 
--- Lines: 1610 to 1627
+-- Lines: 1631 to 1648
 function LayerReplaceUnit:spawned_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1730,7 +1762,7 @@ function LayerReplaceUnit:spawned_unit(unit)
 	end
 end
 
--- Lines: 1629 to 1642
+-- Lines: 1650 to 1663
 function LayerReplaceUnit:deleted_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1749,13 +1781,13 @@ function LayerReplaceUnit:deleted_unit(unit)
 	end
 end
 
--- Lines: 1644 to 1646
+-- Lines: 1665 to 1667
 function LayerReplaceUnit:reset()
 	self:update_list()
 end
 MoveTransformTypeIn = MoveTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines: 1653 to 1679
+-- Lines: 1674 to 1700
 function MoveTransformTypeIn:init()
 	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(264, 111, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("HORIZONTAL")
@@ -1779,7 +1811,7 @@ function MoveTransformTypeIn:init()
 	self._panel:set_enabled(false)
 end
 
--- Lines: 1681 to 1713
+-- Lines: 1702 to 1734
 function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -1839,7 +1871,7 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines: 1716 to 1722
+-- Lines: 1737 to 1743
 function MoveTransformTypeIn:update_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -1849,7 +1881,7 @@ function MoveTransformTypeIn:update_spin(data)
 	self:update_absolut(data)
 end
 
--- Lines: 1724 to 1738
+-- Lines: 1745 to 1759
 function MoveTransformTypeIn:update_absolut(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -1869,7 +1901,7 @@ function MoveTransformTypeIn:update_absolut(data)
 	end
 end
 
--- Lines: 1740 to 1757
+-- Lines: 1761 to 1778
 function MoveTransformTypeIn:update_offset(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -1891,14 +1923,14 @@ function MoveTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines: 1759 to 1762
+-- Lines: 1780 to 1783
 function MoveTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
 	self._panel:set_enabled(alive(self._unit))
 end
 
--- Lines: 1764 to 1777
+-- Lines: 1785 to 1798
 function MoveTransformTypeIn:update(t, dt)
 	if alive(self._unit) then
 		local pos = self._unit:position()
@@ -1918,7 +1950,7 @@ function MoveTransformTypeIn:update(t, dt)
 end
 RotateTransformTypeIn = RotateTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines: 1784 to 1810
+-- Lines: 1805 to 1831
 function RotateTransformTypeIn:init()
 	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(264, 111, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("HORIZONTAL")
@@ -1942,7 +1974,7 @@ function RotateTransformTypeIn:init()
 	self._panel:set_enabled(false)
 end
 
--- Lines: 1812 to 1844
+-- Lines: 1833 to 1865
 function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2002,7 +2034,7 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines: 1847 to 1853
+-- Lines: 1868 to 1874
 function RotateTransformTypeIn:update_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2012,7 +2044,7 @@ function RotateTransformTypeIn:update_spin(data)
 	self:update_absolut(data)
 end
 
--- Lines: 1855 to 1876
+-- Lines: 1876 to 1897
 function RotateTransformTypeIn:update_absolut(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2037,7 +2069,7 @@ function RotateTransformTypeIn:update_absolut(data)
 	end
 end
 
--- Lines: 1878 to 1895
+-- Lines: 1899 to 1916
 function RotateTransformTypeIn:update_offset(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2059,14 +2091,14 @@ function RotateTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines: 1897 to 1900
+-- Lines: 1918 to 1921
 function RotateTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
 	self._panel:set_enabled(alive(self._unit))
 end
 
--- Lines: 1902 to 1915
+-- Lines: 1923 to 1936
 function RotateTransformTypeIn:update(t, dt)
 	if alive(self._unit) then
 		local rot = self._unit:rotation()
@@ -2086,7 +2118,7 @@ function RotateTransformTypeIn:update(t, dt)
 end
 CameraTransformTypeIn = CameraTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines: 1923 to 1961
+-- Lines: 1944 to 1982
 function CameraTransformTypeIn:init()
 	CoreEditorEwsDialog.init(self, nil, "Camera transform type-in", "", Vector3(761, 180, 0), Vector3(264, 146, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -2120,7 +2152,7 @@ function CameraTransformTypeIn:init()
 	self._panel:set_enabled(true)
 end
 
--- Lines: 1963 to 1975
+-- Lines: 1984 to 1996
 function CameraTransformTypeIn:_create_fov_ctrl(sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2138,7 +2170,7 @@ function CameraTransformTypeIn:_create_fov_ctrl(sizer)
 	return ctrl
 end
 
--- Lines: 1978 to 1990
+-- Lines: 1999 to 2011
 function CameraTransformTypeIn:_create_far_range_ctrl(sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2156,7 +2188,7 @@ function CameraTransformTypeIn:_create_far_range_ctrl(sizer)
 	return ctrl
 end
 
--- Lines: 1993 to 2023
+-- Lines: 2014 to 2044
 function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2220,7 +2252,7 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines: 2026 to 2032
+-- Lines: 2047 to 2053
 function CameraTransformTypeIn:update_position_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2230,7 +2262,7 @@ function CameraTransformTypeIn:update_position_spin(data)
 	self:update_position(data)
 end
 
--- Lines: 2034 to 2040
+-- Lines: 2055 to 2061
 function CameraTransformTypeIn:update_rotation_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2240,7 +2272,7 @@ function CameraTransformTypeIn:update_rotation_spin(data)
 	self:update_rotation(data)
 end
 
--- Lines: 2042 to 2054
+-- Lines: 2063 to 2075
 function CameraTransformTypeIn:update_position(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2256,7 +2288,7 @@ function CameraTransformTypeIn:update_position(data)
 	managers.editor:set_camera(pos, managers.editor:camera_rotation())
 end
 
--- Lines: 2056 to 2074
+-- Lines: 2077 to 2095
 function CameraTransformTypeIn:update_rotation(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2279,7 +2311,7 @@ function CameraTransformTypeIn:update_rotation(data)
 	managers.editor:set_camera(managers.editor:camera_position(), rot)
 end
 
--- Lines: 2076 to 2083
+-- Lines: 2097 to 2104
 function CameraTransformTypeIn:update_fov()
 	local value = tonumber(self._fov:get_value()) or managers.editor:camera_fov()
 	value = math.clamp(value, 1, 170)
@@ -2289,7 +2321,7 @@ function CameraTransformTypeIn:update_fov()
 	managers.editor:set_default_camera_fov(value)
 end
 
--- Lines: 2085 to 2093
+-- Lines: 2106 to 2114
 function CameraTransformTypeIn:update_far_range()
 	local value = tonumber(self._far_range:get_value()) or managers.editor:camera_far_range() / 100
 
@@ -2304,7 +2336,7 @@ function CameraTransformTypeIn:update_far_range()
 	managers.editor:set_camera_far_range(value)
 end
 
--- Lines: 2095 to 2127
+-- Lines: 2116 to 2148
 function CameraTransformTypeIn:update(t, dt)
 	local pos = managers.editor:camera_position()
 
@@ -2344,7 +2376,7 @@ function CameraTransformTypeIn:update(t, dt)
 end
 EditControllerBindings = EditControllerBindings or class(CoreEditorEwsDialog)
 
--- Lines: 2133 to 2176
+-- Lines: 2154 to 2197
 function EditControllerBindings:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Controller bindings", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -2384,7 +2416,7 @@ function EditControllerBindings:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 2178 to 2188
+-- Lines: 2199 to 2209
 function EditControllerBindings:add_list(list)
 	local names = {}
 
@@ -2402,7 +2434,7 @@ function EditControllerBindings:add_list(list)
 end
 MissionGraph = MissionGraph or class(CoreEditorEwsDialog)
 
--- Lines: 2194 to 2249
+-- Lines: 2215 to 2270
 function MissionGraph:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Mission Graph", "", Vector3(100, 100, 0), Vector3(800, 600, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,,MINIMIZE_BOX,MAXIMIZE_BOX,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -2437,14 +2469,14 @@ function MissionGraph:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 2251 to 2255
+-- Lines: 2272 to 2276
 function MissionGraph:update(t, dt)
 	self._graph_view:update_graph(dt)
 	self._graph:notify_views()
 end
 WorldEditorNews = WorldEditorNews or class(CoreEditorEwsDialog)
 
--- Lines: 2261 to 2297
+-- Lines: 2282 to 2318
 function WorldEditorNews:init()
 	CoreEditorEwsDialog.init(self, nil, "World editor news", "", Vector3(270, 130, 0), Vector3(560, 620, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 
@@ -2477,7 +2509,7 @@ function WorldEditorNews:init()
 	self._dialog:set_visible(true)
 end
 
--- Lines: 2299 to 2305
+-- Lines: 2320 to 2326
 function WorldEditorNews:set_visible(visible)
 	if visible then
 		self._cancel_btn:set_caption(self._captions[math.random(#self._captions)])
@@ -2487,13 +2519,13 @@ function WorldEditorNews:set_visible(visible)
 	CoreEditorEwsDialog.set_visible(self, visible)
 end
 
--- Lines: 2307 to 2308
+-- Lines: 2328 to 2329
 function WorldEditorNews:version()
 	return self._text:get_last_position()
 end
 UnitDuality = UnitDuality or class(CoreEditorEwsDialog)
 
--- Lines: 2316 to 2330
+-- Lines: 2337 to 2351
 function UnitDuality:create_panel(orientation)
 	self._scrolled_window = EWS:ScrolledWindow(self._dialog, "", "VSCROLL")
 
@@ -2511,7 +2543,7 @@ function UnitDuality:create_panel(orientation)
 	self._panel:set_sizer(self._panel_sizer)
 end
 
--- Lines: 2333 to 2384
+-- Lines: 2354 to 2405
 function UnitDuality:init(collisions, pos)
 	pos = pos or Vector3(120, 130, 0)
 
@@ -2566,7 +2598,7 @@ function UnitDuality:init(collisions, pos)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 2386 to 2427
+-- Lines: 2407 to 2448
 function UnitDuality:build_collision(collision)
 	local u1 = collision.u1
 	local u2 = collision.u2
@@ -2625,7 +2657,7 @@ function UnitDuality:build_collision(collision)
 	return panel
 end
 
--- Lines: 2430 to 2438
+-- Lines: 2451 to 2459
 function UnitDuality:goto(collision)
 	local u1 = collision.u1
 	local u2 = collision.u2
@@ -2638,7 +2670,7 @@ function UnitDuality:goto(collision)
 	managers.editor:center_view_on_unit(u1)
 end
 
--- Lines: 2440 to 2446
+-- Lines: 2461 to 2467
 function UnitDuality:delete_unit(data)
 	if alive(data.unit) then
 		managers.editor:delete_unit(data.unit)
@@ -2648,13 +2680,13 @@ function UnitDuality:delete_unit(data)
 	data.panel:set_enabled(false)
 end
 
--- Lines: 2448 to 2450
+-- Lines: 2469 to 2471
 function UnitDuality:on_check_again()
 	managers.editor:on_check_duality()
 end
 BrushLayerDebug = BrushLayerDebug or class(CoreEditorEwsDialog)
 
--- Lines: 2458 to 2509
+-- Lines: 2479 to 2530
 function BrushLayerDebug:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Brush layer debug", "", Vector3(300, 150, 0), Vector3(600, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
 	self:create_panel("VERTICAL")
@@ -2710,12 +2742,12 @@ function BrushLayerDebug:init(...)
 	self:fill_unit_list()
 end
 
--- Lines: 2511 to 2513
+-- Lines: 2532 to 2534
 function BrushLayerDebug:_toolbar_toggle(params, event)
 	self[params.value] = params.toolbar:tool_state(event:get_id())
 end
 
--- Lines: 2515 to 2522
+-- Lines: 2536 to 2543
 function BrushLayerDebug:_on_gui_delete()
 	local current_data = self:_current_data()
 
@@ -2727,7 +2759,7 @@ function BrushLayerDebug:_on_gui_delete()
 	end
 end
 
--- Lines: 2524 to 2529
+-- Lines: 2545 to 2550
 function BrushLayerDebug:_on_gui_help()
 	local text = "Since brush units are not always visible, this dialog shows actual amount of units in the level."
 	text = text .. "\n\nSorting can be done by clicking the column namnes."
@@ -2736,7 +2768,7 @@ function BrushLayerDebug:_on_gui_help()
 	EWS:message_box(self._panel, text, "Help", "OK", Vector3())
 end
 
--- Lines: 2532 to 2546
+-- Lines: 2553 to 2567
 function BrushLayerDebug:fill_unit_list()
 	self:freeze()
 	self._unit_list:delete_all_items()
@@ -2757,14 +2789,14 @@ function BrushLayerDebug:fill_unit_list()
 	self:thaw()
 end
 
--- Lines: 2548 to 2552
+-- Lines: 2569 to 2573
 function BrushLayerDebug:_autosize_columns(list)
 	for i = 0, list:column_count() - 1, 1 do
 		list:autosize_column(i)
 	end
 end
 
--- Lines: 2554 to 2559
+-- Lines: 2575 to 2580
 function BrushLayerDebug:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -2773,7 +2805,7 @@ function BrushLayerDebug:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines: 2561 to 2568
+-- Lines: 2582 to 2589
 function BrushLayerDebug:_on_select_unit()
 	local current_data = self:_current_data()
 
@@ -2782,19 +2814,19 @@ function BrushLayerDebug:_on_select_unit()
 	end
 end
 
--- Lines: 2570 to 2573
+-- Lines: 2591 to 2594
 function BrushLayerDebug:column_click_list(...)
 	self._list = self._unit_list
 
 	UnitList.column_click_list(self, ...)
 end
 
--- Lines: 2575 to 2577
+-- Lines: 2596 to 2598
 function BrushLayerDebug:_right_clicked(list)
 	local item_data = self:_selected_list_data(list)
 end
 
--- Lines: 2579 to 2584
+-- Lines: 2600 to 2605
 function BrushLayerDebug:_current_data()
 	local index = self._unit_list:selected_item()
 
@@ -2805,7 +2837,7 @@ function BrushLayerDebug:_current_data()
 	return self._unit_list:get_item_data_ref(index)
 end
 
--- Lines: 2587 to 2592
+-- Lines: 2608 to 2613
 function BrushLayerDebug:_selected_list_data(list)
 	local index = list:selected_item()
 
@@ -2816,16 +2848,16 @@ function BrushLayerDebug:_selected_list_data(list)
 	return list:get_item_data_ref(index)
 end
 
--- Lines: 2596 to 2597
+-- Lines: 2617 to 2618
 function BrushLayerDebug:reset()
 end
 
--- Lines: 2599 to 2601
+-- Lines: 2620 to 2622
 function BrushLayerDebug:freeze()
 	self._unit_list:freeze()
 end
 
--- Lines: 2603 to 2605
+-- Lines: 2624 to 2626
 function BrushLayerDebug:thaw()
 	self._unit_list:thaw()
 end

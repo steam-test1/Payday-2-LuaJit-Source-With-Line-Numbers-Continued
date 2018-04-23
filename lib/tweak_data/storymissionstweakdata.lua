@@ -119,12 +119,12 @@ function StoryMissionsTweakData._sm_1_check(mission_data)
 	level_check("story_basics_lvl10")
 end
 
--- Lines: 95 to 97
+-- Lines: 98 to 102
 function StoryMissionsTweakData._sm_first_safehouse_check()
 	maybe_award("story_first_safehouse", managers.custom_safehouse:unlocked())
 end
 
--- Lines: 99 to 104
+-- Lines: 104 to 109
 function StoryMissionsTweakData._sm_2_check()
 	local slots = managers.player:equipment_slots()
 
@@ -133,17 +133,17 @@ function StoryMissionsTweakData._sm_2_check()
 	maybe_award("story_inv_skillpoints", tweak_data.story.sm_2_skillpoints <= managers.skilltree:total_points_spent())
 end
 
--- Lines: 106 to 108
+-- Lines: 111 to 113
 function StoryMissionsTweakData._sm_moving_up_check()
 	level_check("story_chill_level")
 end
 
--- Lines: 110 to 112
+-- Lines: 115 to 117
 function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines: 118 to 482
+-- Lines: 123 to 697
 function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 5
 	self.missions = {

@@ -164,7 +164,7 @@ function CivilianLogicEscort.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 159 to 188
+-- Lines: 159 to 191
 function CivilianLogicEscort._upd_pathing(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -190,7 +190,10 @@ function CivilianLogicEscort._upd_pathing(data, my_data)
 			my_data.processing_coarse_path = nil
 
 			if path ~= "failed" then
-				my_data.coarse_path = path
+				my_data.coarse_path = {
+					path[1],
+					path[#path]
+				}
 				my_data.coarse_path_index = 1
 			else
 				managers.groupai:state():on_civilian_objective_failed(data.unit, data.objective)
@@ -201,16 +204,16 @@ function CivilianLogicEscort._upd_pathing(data, my_data)
 	end
 end
 
--- Lines: 192 to 194
+-- Lines: 195 to 197
 function CivilianLogicEscort.on_new_objective(data, old_objective)
 	CivilianLogicIdle.on_new_objective(data, old_objective)
 end
 
--- Lines: 198 to 199
+-- Lines: 201 to 202
 function CivilianLogicEscort.damage_clbk(data, damage_info)
 end
 
--- Lines: 203 to 241
+-- Lines: 206 to 244
 function CivilianLogicEscort._get_objective_path_data(data, my_data)
 	local objective = data.objective
 	local path_data = objective.path_data
@@ -272,7 +275,7 @@ function CivilianLogicEscort._get_objective_path_data(data, my_data)
 	end
 end
 
--- Lines: 245 to 276
+-- Lines: 248 to 279
 function CivilianLogicEscort.too_scared_to_move(data)
 	local my_data = data.internal_data
 	local nobody_close = true
@@ -308,7 +311,7 @@ function CivilianLogicEscort.too_scared_to_move(data)
 	end
 end
 
--- Lines: 281 to 300
+-- Lines: 284 to 303
 function CivilianLogicEscort._begin_advance_action(data, my_data)
 	CopLogicAttack._correct_path_start_pos(data, my_data.advance_path)
 
@@ -332,7 +335,7 @@ function CivilianLogicEscort._begin_advance_action(data, my_data)
 	end
 end
 
--- Lines: 304 to 318
+-- Lines: 307 to 321
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
 		clamp_to_graph = true,
@@ -349,12 +352,12 @@ function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	my_data.getting_up = data.unit:movement():action_request(action)
 end
 
--- Lines: 322 to 325
+-- Lines: 325 to 328
 function CivilianLogicEscort._get_all_paths(data)
 	return {advance_path = data.internal_data.advance_path}
 end
 
--- Lines: 330 to 332
+-- Lines: 333 to 335
 function CivilianLogicEscort._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end

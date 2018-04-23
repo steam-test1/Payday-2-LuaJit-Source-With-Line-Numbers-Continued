@@ -148,7 +148,7 @@ end
 function PlayerBipod:set_tweak_data(name)
 end
 
--- Lines: 176 to 255
+-- Lines: 176 to 259
 function PlayerBipod:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -192,19 +192,20 @@ function PlayerBipod:_update_check_actions(t, dt)
 
 	self:_check_action_steelsight(t, input)
 	self:_check_use_item(t, input)
+	self:_check_action_night_vision(t, input)
 	self:_find_pickups(t)
 end
 
--- Lines: 257 to 258
+-- Lines: 261 to 262
 function PlayerBipod:interaction_blocked()
 	return true
 end
 
--- Lines: 261 to 262
+-- Lines: 265 to 266
 function PlayerBipod:_check_step(t)
 end
 
--- Lines: 264 to 277
+-- Lines: 268 to 281
 function PlayerBipod:_check_action_reload(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_reload_press
@@ -220,7 +221,7 @@ function PlayerBipod:_check_action_reload(t, input)
 	return new_action
 end
 
--- Lines: 281 to 297
+-- Lines: 285 to 301
 function PlayerBipod:_check_action_intimidate(t, input)
 	if not input.btn_interact_press then
 		return
@@ -235,7 +236,7 @@ function PlayerBipod:_check_action_intimidate(t, input)
 	return self:_start_action_intimidate(t)
 end
 
--- Lines: 302 to 307
+-- Lines: 306 to 311
 function PlayerBipod:_check_action_unmount_bipod(t, input)
 	if not input.btn_deploy_bipod then
 		return false
@@ -246,7 +247,7 @@ function PlayerBipod:_check_action_unmount_bipod(t, input)
 	return true
 end
 
--- Lines: 310 to 319
+-- Lines: 314 to 323
 function PlayerBipod:_unmount_bipod()
 	local weapon = self._equipped_unit:base()
 	local bipod_part = managers.weapon_factory:get_parts_from_weapon_by_perk("bipod", weapon._parts)
@@ -260,7 +261,7 @@ function PlayerBipod:_unmount_bipod()
 	end
 end
 
--- Lines: 323 to 333
+-- Lines: 327 to 337
 function PlayerBipod:_check_action_jump(t, input)
 	if input.btn_jump_press then
 		self:_unmount_bipod()
@@ -277,7 +278,7 @@ function PlayerBipod:_check_action_jump(t, input)
 	return false
 end
 
--- Lines: 336 to 350
+-- Lines: 340 to 354
 function PlayerBipod:_check_action_run(t, input)
 	if self._state_data.previous_state and self._state_data.previous_state == "carry" then
 		return
@@ -300,7 +301,7 @@ function PlayerBipod:_check_action_run(t, input)
 	return false
 end
 
--- Lines: 353 to 363
+-- Lines: 357 to 367
 function PlayerBipod:_check_change_weapon(t, input)
 	if input.btn_switch_weapon_press or input.btn_primary_choice == 1 then
 		self:_unmount_bipod()
@@ -318,7 +319,7 @@ function PlayerBipod:_check_change_weapon(t, input)
 	return false
 end
 
--- Lines: 366 to 375
+-- Lines: 370 to 379
 function PlayerBipod:_check_use_item(t, input)
 	if input.btn_use_item_press then
 		self:_unmount_bipod()
@@ -335,7 +336,7 @@ function PlayerBipod:_check_use_item(t, input)
 	return false
 end
 
--- Lines: 394 to 405
+-- Lines: 398 to 409
 function PlayerBipod:_check_action_throw_grenade(t, input)
 	local action_forbidden = not PlayerBase.USE_GRENADES or self._unit:base():stats_screen_visible()
 
@@ -354,7 +355,7 @@ function PlayerBipod:_check_action_throw_grenade(t, input)
 	return false
 end
 
--- Lines: 414 to 438
+-- Lines: 418 to 442
 function PlayerBipod:_check_action_throw_projectile(t, input)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
@@ -381,7 +382,7 @@ function PlayerBipod:_check_action_throw_projectile(t, input)
 	return false
 end
 
--- Lines: 441 to 457
+-- Lines: 445 to 461
 function PlayerBipod:_check_action_equip(t, input)
 	local new_action = nil
 	local selection_wanted = input.btn_primary_choice
@@ -402,36 +403,28 @@ function PlayerBipod:_check_action_equip(t, input)
 	return new_action
 end
 
--- Lines: 460 to 461
+-- Lines: 464 to 465
 function PlayerBipod:_check_action_steelsight(t, input)
 end
 
--- Lines: 465 to 466
+-- Lines: 469 to 470
 function PlayerBipod:_update_movement(t, dt)
 end
 
--- Lines: 470 to 471
+-- Lines: 474 to 475
 function PlayerBipod:_start_action_jump(...)
 end
 
--- Lines: 473 to 474
+-- Lines: 477 to 478
 function PlayerBipod:_perform_jump(jump_vec)
 end
 
--- Lines: 478 to 479
+-- Lines: 482 to 483
 function PlayerBipod:_get_max_walk_speed(...)
 end
 
--- Lines: 481 to 482
+-- Lines: 485 to 486
 function PlayerBipod:_get_walk_headbob(...)
 	return 0
-end
-
--- Lines: 488 to 489
-function PlayerBipod:pre_destroy(unit)
-end
-
--- Lines: 494 to 495
-function PlayerBipod:destroy()
 end
 

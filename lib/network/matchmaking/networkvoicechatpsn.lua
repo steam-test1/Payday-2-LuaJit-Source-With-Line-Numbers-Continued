@@ -445,14 +445,14 @@ function NetworkVoiceChatPSN:on_member_removed(peer)
 	PSNVoice:on_member_removed(peer:name())
 end
 
--- Lines: 457 to 467
+-- Lines: 457 to 468
 function NetworkVoiceChatPSN:mute_player(mute, peer)
 	self._muted_players[peer:name()] = mute
 
 	PSNVoice:mute_player(mute, peer:name())
 end
 
--- Lines: 470 to 471
+-- Lines: 471 to 472
 function NetworkVoiceChatPSN:is_muted(peer)
 	return self._muted_players[peer:name()] or false
 end

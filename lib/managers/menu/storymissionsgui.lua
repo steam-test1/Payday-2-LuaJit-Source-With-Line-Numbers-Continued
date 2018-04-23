@@ -48,7 +48,7 @@ function StoryMissionsGui:init(ws, fullscreen_ws, node)
 
 		self._legends:add_items({
 			"menu_legend_back",
-			"menu_legend_scroll_left_right",
+			"menu_legend_scroll",
 			{
 				id = "select",
 				enabled = false,
@@ -216,13 +216,15 @@ function StoryMissionsGui:_update_side(current)
 	end
 end
 
--- Lines: 209 to 380
+-- Lines: 209 to 392
 function StoryMissionsGui:_update_info(mission)
 	self._info_scroll:clear()
 	self:_change_legend("select", false)
 	self:_change_legend("start_mission", false)
 
 	self._select_btn = nil
+	self._level_btns = {}
+	self._selected_level_btn = nil
 
 	if self._voice then
 		managers.briefing:stop_event()
@@ -360,14 +362,25 @@ function StoryMissionsGui:_update_info(mission)
 
 						locked = true
 					else
-						placer:add_right(TextButton:new(canvas, {
+						local btn = TextButton:new(canvas, {
 							text_id = "menu_sm_start_level",
 							font = small_font,
 							font_size = small_font_size
 						}, function ()
 							managers.story:start_mission(mission, objective.progress_id)
-						end), 10)
+						end)
+
+						placer:add_right(btn, 10)
+						table.insert(self._level_btns, btn)
 						self:_change_legend("start_mission", true)
+
+						if not self._selected_level_btn then
+							self._selected_level_btn = btn
+
+							if not managers.menu:is_pc_controller() then
+								btn:_hover_changed(true)
+							end
+						end
 					end
 				end
 
@@ -518,7 +531,7 @@ function StoryMissionsGui:_update_info(mission)
 	end
 end
 
--- Lines: 417 to 431
+-- Lines: 429 to 443
 function StoryMissionsGui:toggle_voice_message(message)
 	if not self._voice then
 		return
@@ -542,7 +555,7 @@ function StoryMissionsGui:toggle_voice_message(message)
 	end
 end
 
--- Lines: 433 to 440
+-- Lines: 445 to 452
 function StoryMissionsGui:sound_event_callback(event_type, duration)
 	if not self._voice or not alive(self._voice.text) then
 		return
@@ -554,42 +567,84 @@ function StoryMissionsGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines: 442 to 456
+-- Lines: 454 to 472
 function StoryMissionsGui:update()
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
 
 		if axis_y ~= 0 then
+			self._side_scroll:perform_scroll(axis_y)
 			self._info_scroll:perform_scroll(axis_y)
 		end
 
-		local axis_x, axis_y = managers.menu_component:get_left_controller_axis()
+		local menu_input = managers.menu:active_menu().input
+		local up = menu_input:menu_up_input_bool()
+		local down = menu_input:menu_down_input_bool()
 
-		if axis_y ~= 0 then
-			self._side_scroll:perform_scroll(axis_y)
+		if up or down then
+			self:_change_selected_level(up and 1 or -1)
+		else
+			self:_enable_selected_level_btns()
 		end
 	end
 end
 
--- Lines: 458 to 462
+-- Lines: 474 to 498
+function StoryMissionsGui:_change_selected_level(axis)
+	if self._change_level_btn_disabled then
+		return
+	end
+
+	if self._level_btns and self._selected_level_btn then
+		local index = table.get_vector_index(self._level_btns, self._selected_level_btn) - 1
+
+		if not index then
+			return
+		end
+
+		index = axis < 0 and index - 1 or index + 1
+		index = index % #self._level_btns + 1
+
+		self._selected_level_btn:_hover_changed(false)
+
+		self._selected_level_btn = self._level_btns[index]
+
+		self._selected_level_btn:_hover_changed(true)
+
+		self._change_level_btn_disabled = true
+	end
+end
+
+-- Lines: 500 to 502
+function StoryMissionsGui:_enable_selected_level_btns()
+	self._change_level_btn_disabled = nil
+end
+
+-- Lines: 504 to 508
 function StoryMissionsGui:confirm_pressed()
 	if alive(self._select_btn) then
 		self._select_btn:_trigger()
 	end
 end
 
--- Lines: 464 to 466
+-- Lines: 510 to 517
 function StoryMissionsGui:_start_mission_general()
+	if self._selected_level_btn then
+		self._selected_level_btn:_trigger()
+
+		return
+	end
+
 	managers.story:start_current()
 end
 
--- Lines: 468 to 469
+-- Lines: 519 to 520
 function StoryMissionsGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(ExtendedPanel)
 
--- Lines: 476 to 500
+-- Lines: 527 to 551
 function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	StoryMissionsGuiSidebarItem.super.init(self, panel)
 
@@ -614,12 +669,12 @@ function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	self:set_h(self._text:bottom())
 end
 
--- Lines: 502 to 504
+-- Lines: 553 to 555
 function StoryMissionsGuiSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines: 506 to 513
+-- Lines: 557 to 564
 function StoryMissionsGuiSidebarItem:set_icon(icon)
 	if icon then
 		self._icon:set_visible(true)
@@ -629,13 +684,13 @@ function StoryMissionsGuiSidebarItem:set_icon(icon)
 	end
 end
 
--- Lines: 515 to 518
+-- Lines: 566 to 569
 function StoryMissionsGuiSidebarItem:set_color(color)
 	self._text:set_color(color)
 	self._icon:set_color(color)
 end
 
--- Lines: 522 to 529
+-- Lines: 573 to 580
 local function set_defaults(target, source)
 	target = target or {}
 
@@ -651,7 +706,7 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines: 537 to 619
+-- Lines: 588 to 670
 function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	config = set_defaults(config, {
 		input = true,
@@ -751,7 +806,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines: 621 to 623
+-- Lines: 672 to 674
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end
