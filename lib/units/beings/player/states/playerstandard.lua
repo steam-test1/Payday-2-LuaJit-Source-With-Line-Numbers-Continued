@@ -1264,6 +1264,7 @@ function PlayerStandard:_start_action_steelsight(t, gadget_state)
 	end
 
 	self._ext_network:send("set_stance", 3, false, false)
+	managers.job:set_memory("cac_4", true)
 end
 
 -- Lines: 1523 to 1541

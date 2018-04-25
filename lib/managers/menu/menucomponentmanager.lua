@@ -55,6 +55,7 @@ require("lib/managers/menu/PromotionalMenuGui")
 require("lib/managers/menu/PromotionalWeaponPreviewGui")
 require("lib/managers/menu/RaidMenuGui")
 require("lib/managers/menu/ContractBrokerGui")
+require("lib/managers/menu/SideJobsGui")
 
 MenuComponentManager = MenuComponentManager or class()
 
@@ -298,6 +299,10 @@ function MenuComponentManager:init()
 		contract_broker = {
 			create = callback(self, self, "create_contract_broker_gui"),
 			close = callback(self, self, "close_contract_broker_gui")
+		},
+		side_jobs = {
+			create = callback(self, self, "create_side_jobs_gui"),
+			close = callback(self, self, "close_side_jobs_gui")
 		}
 	}
 	self._alive_components = {}
@@ -5517,5 +5522,30 @@ end
 -- Lines: 5180 to 5181
 function MenuComponentManager:contract_broker_gui()
 	return self._contract_broker_gui
+end
+
+-- Lines: 5188 to 5192
+function MenuComponentManager:create_side_jobs_gui(node)
+	self:close_side_jobs_gui()
+
+	self._side_jobs_gui = SideJobsGui:new(self._ws, self._fullscreen_ws, node)
+
+	self:register_component("side_jobs", self._side_jobs_gui)
+end
+
+-- Lines: 5194 to 5200
+function MenuComponentManager:close_side_jobs_gui()
+	if self._side_jobs_gui then
+		self._side_jobs_gui:close()
+
+		self._side_jobs_gui = nil
+
+		self:unregister_component("side_jobs")
+	end
+end
+
+-- Lines: 5202 to 5203
+function MenuComponentManager:side_jobs_gui()
+	return self._side_jobs_gui
 end
 

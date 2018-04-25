@@ -1,6 +1,7 @@
 EconomyTweakData.sorting_groups = EconomyTweakData.sorting_groups or {}
 EconomyTweakData.ordered_sorting_groups = EconomyTweakData.ordered_sorting_groups or {}
 EconomyTweakData.sorting_groups.armor_skins = {
+	tam = 3,
 	camo = 2,
 	crime_spree = 1,
 	none = 0
@@ -8,11 +9,12 @@ EconomyTweakData.sorting_groups.armor_skins = {
 EconomyTweakData.ordered_sorting_groups.armor_skins = {
 	"none",
 	"crime_spree",
-	"camo"
+	"camo",
+	"tam"
 }
 local sorting_groups = EconomyTweakData.sorting_groups.armor_skins
 
--- Lines: 20 to 29
+-- Lines: 26 to 35
 function EconomyTweakData:get_real_armor_skin_id(skin_id)
 	local lbv = "_lbv"
 
@@ -23,12 +25,12 @@ function EconomyTweakData:get_real_armor_skin_id(skin_id)
 	end
 end
 
--- Lines: 31 to 32
+-- Lines: 37 to 38
 function EconomyTweakData:get_armor_skin_id(skin_id)
 	return skin_id
 end
 
--- Lines: 37 to 87
+-- Lines: 43 to 93
 function EconomyTweakData:get_armor_based_value(value_table, armor_level)
 	if not armor_level then
 		Application:stack_dump_error("")
@@ -74,7 +76,7 @@ function EconomyTweakData:get_armor_based_value(value_table, armor_level)
 	end
 end
 
--- Lines: 90 to 181
+-- Lines: 96 to 187
 function EconomyTweakData:_init_armor_skins()
 	local ids_big = Idstring("units/payday2/characters/shared_textures/vest_big_01_df")
 	local ids_small = Idstring("units/payday2/characters/shared_textures/vest_small_01_df")
@@ -147,7 +149,7 @@ function EconomyTweakData:_init_armor_skins()
 	self:_init_armor_skins_armor_safe()
 end
 
--- Lines: 185 to 677
+-- Lines: 191 to 683
 function EconomyTweakData:_init_armor_skins_crime_spree()
 	self.armor_skins.cvc_green = {
 		name_id = "bm_askn_cvc_green",
@@ -456,7 +458,7 @@ function EconomyTweakData:_init_armor_skins_crime_spree()
 	}
 end
 
--- Lines: 682 to 1300
+-- Lines: 688 to 1307
 function EconomyTweakData:_init_armor_skins_armor_safe()
 	self.armor_skins.ast_armor1 = {
 		name_id = "bm_askn_ast_armor3",
@@ -715,6 +717,31 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 			[7] = Vector3(0, 1, 0)
 		},
 		steam_economy = true
+	}
+	self.armor_skins.tam = {
+		name_id = "bm_askn_tam",
+		unlock_id = "bm_askn_tam_unlock",
+		rarity = "epic",
+		reserve_quality = false,
+		texture_bundle_folder = "tam/textures/pd2/blackmarket/icons",
+		base_gradient = "units/pd2_dlc_tam/base_gradient/tam_basegradient_001_armor_df",
+		sticker = "units/pd2_dlc_tam/sticker/tam_sticker_003_armor_df",
+		pattern_tweak = Vector3(7.88457, 0, 1),
+		uv_scale = {
+			[2] = Vector3(1.01, 1.01, 0),
+			[7] = Vector3(1.01, 1.01, 0)
+		},
+		uv_offset_rot = {
+			[2] = Vector3(0.588123, 1.11581, 3.15133),
+			[7] = Vector3(0, 1.00003, 0),
+			[6] = Vector3(0.0017407, 0.999791, 0)
+		},
+		normal_map = {
+			[2] = Idstring("units/payday2/characters/shared_textures/vest_small_nm"),
+			[3] = Idstring("units/pd2_dlc_tam/normal_map/tam_nm")
+		},
+		steam_economy = false,
+		sorting_idx = sorting_groups.tam
 	}
 	self.armor_skins.cvc_woodland_camo = {
 		name_id = "bm_askn_cvc_woodland_camo",

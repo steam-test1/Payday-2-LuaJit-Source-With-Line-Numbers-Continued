@@ -5,7 +5,7 @@ function WalletGuiObject:init(panel)
 	WalletGuiObject.set_wallet(panel)
 end
 
--- Lines: 8 to 82
+-- Lines: 8 to 85
 function WalletGuiObject.set_wallet(panel, layer)
 	WalletGuiObject.remove_wallet()
 
@@ -105,7 +105,7 @@ function WalletGuiObject.set_wallet(panel, layer)
 	WalletGuiObject.set_object_visible("wallet_coins_text", managers.custom_safehouse:unlocked() and managers.custom_safehouse:coins() > 0)
 end
 
--- Lines: 84 to 157
+-- Lines: 87 to 160
 function WalletGuiObject.refresh()
 	if Global.wallet_panel then
 		local money_icon = Global.wallet_panel:child("wallet_money_icon")
@@ -158,7 +158,7 @@ function WalletGuiObject.refresh()
 	end
 end
 
--- Lines: 159 to 164
+-- Lines: 162 to 167
 function WalletGuiObject.make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -168,7 +168,7 @@ function WalletGuiObject.make_fine_text(text)
 	return w, h
 end
 
--- Lines: 167 to 173
+-- Lines: 170 to 176
 function WalletGuiObject.set_layer(layer)
 	if not alive(Global.wallet_panel) then
 		return
@@ -177,7 +177,7 @@ function WalletGuiObject.set_layer(layer)
 	Global.wallet_panel:set_layer(layer)
 end
 
--- Lines: 175 to 180
+-- Lines: 178 to 183
 function WalletGuiObject.move_wallet(mx, my)
 	if not alive(Global.wallet_panel) then
 		return
@@ -186,7 +186,7 @@ function WalletGuiObject.move_wallet(mx, my)
 	Global.wallet_panel:move(mx, my)
 end
 
--- Lines: 182 to 192
+-- Lines: 185 to 195
 function WalletGuiObject.set_wallet_pos(mx, my)
 	if not alive(Global.wallet_panel) then
 		return
@@ -201,7 +201,7 @@ function WalletGuiObject.set_wallet_pos(mx, my)
 	end
 end
 
--- Lines: 194 to 225
+-- Lines: 197 to 228
 function WalletGuiObject.set_object_visible(object, visible)
 	if not alive(Global.wallet_panel) then
 		return
@@ -230,7 +230,7 @@ function WalletGuiObject.set_object_visible(object, visible)
 	bg_blur:set_leftbottom(Global.wallet_panel:child("wallet_money_icon"):leftbottom())
 end
 
--- Lines: 227 to 235
+-- Lines: 230 to 238
 function WalletGuiObject.remove_wallet()
 	if not alive(Global.wallet_panel) or not alive(Global.wallet_panel:parent()) then
 		Global.wallet_panel = nil
@@ -243,7 +243,7 @@ function WalletGuiObject.remove_wallet()
 	Global.wallet_panel = nil
 end
 
--- Lines: 237 to 249
+-- Lines: 240 to 252
 function WalletGuiObject.close_wallet(panel)
 	if not alive(Global.wallet_panel) or not alive(Global.wallet_panel:parent()) then
 		Global.wallet_panel = nil

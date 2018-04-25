@@ -5008,6 +5008,10 @@ function GroupAIStateBase:_set_converted_police(u_key, unit, owner_unit)
 	if not unit then
 		self:check_gameover_conditions()
 	end
+
+	if unit then
+		managers.player:send_message("cop_converted", nil, unit, owner_unit)
+	end
 end
 
 -- Lines: 5064 to 5075

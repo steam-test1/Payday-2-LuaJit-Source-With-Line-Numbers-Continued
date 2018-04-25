@@ -55,6 +55,8 @@ function TripMineBase:init(unit)
 
 		managers.enemy:add_delayed_clbk(self._validate_clbk_id, callback(self, self, "_clbk_validate"), Application:time() + 60)
 	end
+
+	managers.player:send_message("trip_mine_placed", nil, self._unit)
 end
 
 -- Lines: 65 to 72
