@@ -552,7 +552,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines: 656 to 702
+-- Lines: 656 to 698
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -596,11 +596,9 @@ function GameSetup:init_finalize()
 	if Network:is_server() and managers.job:current_job_id() == "chill" then
 		managers.custom_safehouse:send_room_tiers()
 	end
-
-	managers.achievment:post_init()
 end
 
--- Lines: 704 to 745
+-- Lines: 700 to 741
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -629,7 +627,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 747 to 757
+-- Lines: 743 to 753
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -641,7 +639,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 759 to 775
+-- Lines: 755 to 771
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -655,13 +653,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 777 to 782
+-- Lines: 773 to 778
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 784 to 808
+-- Lines: 780 to 804
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -686,7 +684,7 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 end
 
--- Lines: 810 to 835
+-- Lines: 806 to 831
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -712,7 +710,7 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 end
 
--- Lines: 868 to 869
+-- Lines: 864 to 865
 function GameSetup:_update_debug_input()
 end
 

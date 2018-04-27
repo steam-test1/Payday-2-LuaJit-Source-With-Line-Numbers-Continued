@@ -620,9 +620,19 @@ function GenericDLCManager:has_fgl()
 	return self:is_dlc_unlocked("fgl")
 end
 
+-- Lines: 628 to 629
+function GenericDLCManager:has_osa()
+	return self:is_dlc_unlocked("osa")
+end
+
 -- Lines: 646 to 647
 function GenericDLCManager:has_ami()
 	return self:is_dlc_unlocked("ami")
+end
+
+-- Lines: 658 to 659
+function GenericDLCManager:has_pmp()
+	return self:is_dlc_unlocked("pmp")
 end
 
 -- Lines: 665 to 666
@@ -1963,11 +1973,23 @@ function WINDLCManager:init()
 				app_id = "218620",
 				no_install = true
 			},
+			osa = {
+				app_id = "218620",
+				no_install = true
+			},
 			ami = {
 				app_id = "218620",
 				no_install = true
 			},
+			dmg = {
+				app_id = "218620",
+				no_install = true
+			},
 			ggac = {
+				app_id = "218620",
+				no_install = true
+			},
+			pmp = {
 				app_id = "218620",
 				no_install = true
 			}

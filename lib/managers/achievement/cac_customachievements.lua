@@ -124,7 +124,7 @@ local function init_cac_15()
 	managers.player:register_message("trip_mine_placed", listener_key, on_trip_mine_placed)
 end
 
--- Lines: 114 to 137
+-- Lines: 114 to 138
 local function init_cac_20()
 	local masks = {
 		"sds_01",
@@ -137,10 +137,13 @@ local function init_cac_20()
 	}
 
 	
-	-- Lines: 117 to 125
+	-- Lines: 117 to 127
 	local function attempt_award()
 		for _, mask_id in ipairs(masks) do
-			if not managers.blackmarket:has_item("halloween", "masks", mask_id) then
+			local has_in_inventory = managers.blackmarket:has_item("halloween", "masks", mask_id)
+			local has_crafted = managers.blackmarket:get_crafted_item_amount("masks", mask_id) > 0
+
+			if not has_in_inventory and not has_crafted then
 				return
 			end
 		end
@@ -151,7 +154,7 @@ local function init_cac_20()
 	local listener_key = {}
 
 	
-	-- Lines: 128 to 132
+	-- Lines: 130 to 134
 	local function on_item_added_to_inventory(id)
 		if table.contains(masks, id) then
 			attempt_award()
@@ -159,10 +162,10 @@ local function init_cac_20()
 	end
 
 	managers.blackmarket:add_event_listener(listener_key, "added_to_inventory", on_item_added_to_inventory)
-	attempt_award()
+	managers.savefile:add_load_sequence_done_callback_handler(attempt_award)
 end
 
--- Lines: 141 to 178
+-- Lines: 142 to 179
 local function init_cac_28()
 	if not managers.criminals then
 		return
@@ -171,7 +174,7 @@ local function init_cac_28()
 	local listener_key = {}
 
 	
-	-- Lines: 147 to 175
+	-- Lines: 148 to 176
 	local function on_criminal_added(name, unit, peer_id, ai)
 		local session = managers.network:session()
 		local peer = session:peer(peer_id)
@@ -196,7 +199,7 @@ local function init_cac_28()
 	managers.criminals:add_listener(listener_key, "on_criminal_added", on_criminal_added)
 end
 
--- Lines: 182 to 190
+-- Lines: 183 to 191
 function AchievmentManager:init_cac_custom_achievements()
 	init_cac_2()
 	init_cac_3()

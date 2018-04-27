@@ -1658,7 +1658,6 @@ function SkillTreeTweakData:init()
 		{
 			upgrades = {
 				"akimbo_extra_ammo_multiplier_1",
-				"akimbo_extra_ammo_multiplier_2",
 				"akimbo_recoil_index_addend_3"
 			},
 			cost = self.costs.hightierpro
@@ -2593,7 +2592,11 @@ function SkillTreeTweakData:init()
 		"x_sr2",
 		"x_mp5",
 		"x_akmsu",
-		"x_packrat"
+		"x_packrat",
+		"x_p226",
+		"x_m45",
+		"x_mp7",
+		"x_ppk"
 	}
 	self.skill_switches = {
 		{name_id = "menu_st_skill_switch_1"},
@@ -3011,7 +3014,7 @@ function SkillTreeTweakData:init()
 				upgrades = {
 					"player_perk_armor_regen_timer_multiplier_2",
 					"akimbo_recoil_index_addend_4",
-					"akimbo_extra_ammo_multiplier_3"
+					"akimbo_extra_ammo_multiplier_2"
 				},
 				icon_xy = {
 					7,

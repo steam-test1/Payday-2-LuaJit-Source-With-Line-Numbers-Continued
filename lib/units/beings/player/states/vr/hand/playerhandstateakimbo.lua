@@ -35,18 +35,20 @@ function PlayerHandStateAkimbo:_unlink_weapon()
 	end
 end
 
--- Lines: 33 to 62
+-- Lines: 33 to 64
 function PlayerHandStateAkimbo:at_enter(prev_state)
 	PlayerHandStateAkimbo.super.at_enter(self, prev_state)
 
 	if alive(managers.player:player_unit()) then
 		local equipped_weapon = managers.player:player_unit():inventory():equipped_unit()
 
-		if not equipped_weapon:base().akimbo then
-			debug_pause("[PlayerHandStateAkimbo] Entered akimbo state without an akimbo equipped")
-		end
+		if alive(equipped_weapon) then
+			if not equipped_weapon:base().akimbo then
+				debug_pause("[PlayerHandStateAkimbo] Entered akimbo state without an akimbo equipped")
+			end
 
-		self:_link_weapon(equipped_weapon:base()._second_gun)
+			self:_link_weapon(equipped_weapon:base()._second_gun)
+		end
 	end
 
 	self._hand_unit:melee():set_weapon_unit(self._weapon_unit)
@@ -65,7 +67,7 @@ function PlayerHandStateAkimbo:at_enter(prev_state)
 	end
 end
 
--- Lines: 64 to 72
+-- Lines: 66 to 74
 function PlayerHandStateAkimbo:at_exit(next_state)
 	self:hsm():exit_controller_state("akimbo")
 	self._hand_unit:melee():set_weapon_unit()
@@ -73,12 +75,12 @@ function PlayerHandStateAkimbo:at_exit(next_state)
 	PlayerHandStateAkimbo.super.at_exit(self, next_state)
 end
 
--- Lines: 74 to 76
+-- Lines: 76 to 78
 function PlayerHandStateAkimbo:set_wanted_weapon_kick(amount)
 	self._wanted_weapon_kick = math.min((self._wanted_weapon_kick or 0) + amount * tweak_data.vr.weapon_kick.kick_mul, tweak_data.vr.weapon_kick.max_kick)
 end
 
--- Lines: 78 to 92
+-- Lines: 80 to 94
 function PlayerHandStateAkimbo:update(t, dt)
 	if self._weapon_kick then
 		self._hand_unit:set_position(self:hsm():position() - self._hand_unit:rotation():y() * self._weapon_kick)
