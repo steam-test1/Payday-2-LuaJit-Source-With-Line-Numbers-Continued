@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2779
+-- Lines: 9 to 2793
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -1436,6 +1436,51 @@ function HudIconsTweakData:init()
 		texture = "guis/dlcs/tag/textures/pd2/hud_pickups_stapler",
 		texture_rect = {
 			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_compounda = {
+		texture = "guis/dlcs/des/textures/pd2/hud_pickups_des",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_compoundb = {
+		texture = "guis/dlcs/des/textures/pd2/hud_pickups_des",
+		texture_rect = {
+			32,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_compoundc = {
+		texture = "guis/dlcs/des/textures/pd2/hud_pickups_des",
+		texture_rect = {
+			0,
+			32,
+			32,
+			32
+		}
+	}
+	self.equipment_compoundd = {
+		texture = "guis/dlcs/des/textures/pd2/hud_pickups_des",
+		texture_rect = {
+			32,
+			32,
+			32,
+			32
+		}
+	}
+	self.equipment_compoundok = {
+		texture = "guis/dlcs/des/textures/pd2/hud_pickups_des",
+		texture_rect = {
+			64,
 			0,
 			32,
 			32
@@ -12539,6 +12584,105 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			85,
+			85,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			170,
+			170,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			85,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			170,
+			85,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			255,
+			170,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			170,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			255,
+			85,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			0,
+			170,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_BoomHead = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			0,
+			0,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_Hidden = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			85,
+			170,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_HenrysRock_TheRedButt = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_des",
+		texture_rect = {
+			0,
+			85,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -12554,7 +12698,7 @@ function HudIconsTweakData:init()
 end
 local atlas_data = nil
 
--- Lines: 2782 to 2785
+-- Lines: 2796 to 2799
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -12567,7 +12711,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2787 to 2802
+-- Lines: 2801 to 2816
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -12593,7 +12737,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2805 to 2809
+-- Lines: 2819 to 2823
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -12607,7 +12751,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2812 to 2817
+-- Lines: 2826 to 2831
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -12618,7 +12762,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2820 to 2825
+-- Lines: 2834 to 2839
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

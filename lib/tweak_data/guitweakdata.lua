@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1200
+-- Lines: 4 to 1222
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -721,13 +721,40 @@ function GuiTweakData:init()
 	self.mod_preview_max_fov = 3
 	self.stats_present_multiplier = 10
 	self.armor_damage_shake_base = 1.1
-	self.buy_weapon_category_groups = {
+	self.buy_weapon_category_aliases = {
 		flamethrower = "wpn_special",
 		grenade_launcher = "wpn_special",
 		bow = "wpn_special",
 		crossbow = "wpn_special",
 		minigun = "wpn_special",
 		saw = "wpn_special"
+	}
+	self.buy_weapon_categories = {
+		primaries = {
+			{"assault_rifle"},
+			{"shotgun"},
+			{"lmg"},
+			{"snp"},
+			{
+				"akimbo",
+				"pistol"
+			},
+			{
+				"akimbo",
+				"smg"
+			},
+			{
+				"akimbo",
+				"shotgun"
+			},
+			{"wpn_special"}
+		},
+		secondaries = {
+			{"pistol"},
+			{"smg"},
+			{"wpn_special"},
+			{"shotgun"}
+		}
 	}
 	self.LONGEST_CHAR_NAME = "JOHN WICK"
 	self.crime_net.regions = {
@@ -5065,7 +5092,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1202 to 1221
+-- Lines: 1224 to 1243
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5093,7 +5120,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1223 to 1291
+-- Lines: 1245 to 1313
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5169,15 +5196,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1294 to 1295
+-- Lines: 1316 to 1317
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1305 to 1306
+-- Lines: 1327 to 1328
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1308 to 1341
+-- Lines: 1330 to 1363
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5216,7 +5243,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1344 to 1468
+-- Lines: 1366 to 1490
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5339,12 +5366,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1471 to 1472
+-- Lines: 1493 to 1494
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1475 to 1481
+-- Lines: 1497 to 1503
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
