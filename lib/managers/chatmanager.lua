@@ -333,7 +333,7 @@ end
 
 -- Lines: 249 to 252
 function ChatGui:start_hud_blur()
-	
+
 	-- Lines: 248 to 250
 	local function func(o)
 		over(0.6, function (p)
@@ -355,7 +355,6 @@ function ChatGui:start_notify_new_message()
 	if MenuCallbackHandler:is_win32() and not self._crimenet_chat_state and not self._notifying_new_msg then
 		self._notifying_new_msg = true
 
-		
 		-- Lines: 264 to 269
 		local function func(o)
 			over(0.1, function (p)
@@ -563,7 +562,6 @@ function ChatGui:_show_crimenet_chat()
 			""
 		}
 
-		
 		-- Lines: 419 to 424
 		local function func(submitted, submitted_text)
 			if submitted then

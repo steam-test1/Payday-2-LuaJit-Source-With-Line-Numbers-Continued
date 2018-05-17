@@ -776,7 +776,6 @@ end
 function MainMenuGui:_update_box_status(box, selected)
 	local box_object = nil
 
-	
 	-- Lines: 701 to 710
 	local function _update_box_object(object)
 		local variables = {

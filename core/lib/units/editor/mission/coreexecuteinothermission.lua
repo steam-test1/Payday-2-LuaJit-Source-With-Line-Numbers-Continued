@@ -18,7 +18,7 @@ end
 
 -- Lines: 19 to 26
 function CoreExecuteInOtherMissionUnitElement:add_unit_list_btn()
-	
+
 	-- Lines: 19 to 20
 	local function f(unit)
 		return unit:type() == Idstring("mission_element") and unit ~= self._unit

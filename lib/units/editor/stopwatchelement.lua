@@ -476,7 +476,6 @@ end
 function StopwatchFilterUnitElement:draw_links(t, dt, selected_unit, all_units)
 	StopwatchFilterUnitElement.super.draw_links(self, t, dt, selected_unit)
 
-	
 	-- Lines: 422 to 432
 	local function draw_link_element(element_name, id, r, g, b)
 		local unit = all_units[id]

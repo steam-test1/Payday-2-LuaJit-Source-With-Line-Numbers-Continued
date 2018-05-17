@@ -79,7 +79,6 @@ function ParseAllDramas:start_parsing()
 
 	self._parsed_sound_events = {}
 
-	
 	-- Lines: 73 to 176
 	local function update_anim(panel)
 		local text = panel:child("text")

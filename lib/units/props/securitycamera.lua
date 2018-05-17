@@ -626,7 +626,7 @@ end
 
 -- Lines: 618 to 704
 function SecurityCamera:_upd_suspicion(t)
-	
+
 	-- Lines: 616 to 619
 	local function _exit_func(attention_data)
 		attention_data.unit:movement():on_uncovered(self._unit)

@@ -160,7 +160,7 @@ function CopLogicIdle.queued_update(data)
 		return
 	end
 
-	if data.team.id == "criminal1" and (not data.objective or data.objective.type == "free") and (not data.path_fail_t or data.t - data.path_fail_t > 6) then
+	if data.is_converted and (not data.objective or data.objective.type == "free") and (not data.path_fail_t or data.t - data.path_fail_t > 6) then
 		managers.groupai:state():on_criminal_jobless(data.unit)
 
 		if my_data ~= data.internal_data then
@@ -1400,7 +1400,6 @@ function CopLogicIdle._upd_curious_reaction(data)
 		CopLogicBase._set_attention(data, attention_obj)
 	end
 
-	
 	-- Lines: 1464 to 1465
 	local function _get_spin_to_att_obj()
 		return (attention_obj.m_pos - data.m_pos):to_polar_with_reference(data.unit:movement():m_rot():y(), math.UP).spin

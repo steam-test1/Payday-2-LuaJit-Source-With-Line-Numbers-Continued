@@ -61,12 +61,11 @@ function HUDPlayerDownedVR:init(hud)
 	hud_component.panel:set_script(hud)
 	managers.hud:hide(PlayerBase.PLAYER_DOWNED_HUD)
 
-	
 	-- Lines: 59 to 61
 	self._hud.show = function ()
 		managers.hud._hud_heist_timer:hide()
 	end
-	
+
 	-- Lines: 63 to 65
 	self._hud.hide = function ()
 		managers.hud._hud_heist_timer:show()

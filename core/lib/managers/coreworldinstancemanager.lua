@@ -259,7 +259,6 @@ function CoreWorldInstanceManager:prepare_unit_data(instance, continent_data)
 	local path = folder .. "/" .. "world"
 	local instance_data = self:_get_instance_continent_data(path)
 
-	
 	-- Lines: 236 to 253
 	local function _prepare_entries(entries)
 		if not entries then
@@ -306,7 +305,6 @@ function CoreWorldInstanceManager:check_highest_id(instance)
 	local amount = 0
 	local type_amount = {}
 
-	
 	-- Lines: 280 to 289
 	local function compare(datas)
 		if not datas then

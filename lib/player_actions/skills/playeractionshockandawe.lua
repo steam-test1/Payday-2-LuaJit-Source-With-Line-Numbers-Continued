@@ -6,7 +6,6 @@ PlayerAction.ShockAndAwe.Function = function (player_manager, target_enemies, ma
 	local co = coroutine.running()
 	local running = true
 
-	
 	-- Lines: 19 to 39
 	local function on_player_reload(weapon_unit)
 		if alive(weapon_unit) and running then
@@ -31,7 +30,6 @@ PlayerAction.ShockAndAwe.Function = function (player_manager, target_enemies, ma
 		end
 	end
 
-	
 	-- Lines: 41 to 43
 	local function on_switch_weapon_quit()
 		running = false

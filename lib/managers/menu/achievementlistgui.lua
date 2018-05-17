@@ -1786,7 +1786,7 @@ end
 
 -- Lines: 1503 to 1505
 function AchievementListGui.create_tracked_then_other_order(other_sort)
-	
+
 	-- Lines: 1495 to 1503
 	local function func(lhs, rhs)
 		if lhs.info.forced or rhs.info.forced then

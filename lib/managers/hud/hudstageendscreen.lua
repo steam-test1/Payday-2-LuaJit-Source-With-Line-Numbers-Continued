@@ -1537,7 +1537,6 @@ function HUDStageEndScreen:stage_money_counter_init(t, dt)
 	local crew_payout = payouts.crew_payout
 	local mutators_reduction = -payouts.mutators_reduction
 
-	
 	-- Lines: 1006 to 1012
 	local function check_if_clear(data)
 		for _, d in ipairs(data) do
@@ -1919,7 +1918,6 @@ function HUDStageEndScreen:coin_up(new_coins, alpha_multi)
 		alpha_multi = 1
 	end
 
-	
 	-- Lines: 1364 to 1372
 	local function level_text_func(o, ding_scale, new_coins)
 		local center_x, center_y = o:center()
@@ -1930,7 +1928,6 @@ function HUDStageEndScreen:coin_up(new_coins, alpha_multi)
 		o:set_text(managers.experience:cash_string(new_coins))
 	end
 
-	
 	-- Lines: 1374 to 1392
 	local function text_ding_func(o)
 		local TOTAL_T = 0.4
@@ -1952,7 +1949,6 @@ function HUDStageEndScreen:coin_up(new_coins, alpha_multi)
 		o:parent():remove(o)
 	end
 
-	
 	-- Lines: 1394 to 1413
 	local function circle_ding_func(o)
 		wait(0.15)
@@ -2822,7 +2818,7 @@ end
 
 -- Lines: 2190 to 2303
 function HUDStageEndScreen:level_up(level)
-	
+
 	-- Lines: 2182 to 2191
 	local function level_text_func(o, ding_scale, level)
 		local center_x, center_y = o:center()
@@ -2834,7 +2830,6 @@ function HUDStageEndScreen:level_up(level)
 		self:give_skill_points(1)
 	end
 
-	
 	-- Lines: 2193 to 2211
 	local function text_ding_func(o)
 		local TOTAL_T = 0.4
@@ -2856,7 +2851,6 @@ function HUDStageEndScreen:level_up(level)
 		o:parent():remove(o)
 	end
 
-	
 	-- Lines: 2213 to 2232
 	local function circle_ding_func(o)
 		wait(0.15)
@@ -2882,7 +2876,6 @@ function HUDStageEndScreen:level_up(level)
 		o:parent():remove(o)
 	end
 
-	
 	-- Lines: 2234 to 2282
 	local function package_func(o, data)
 		local start_alpha = o:alpha()
@@ -3034,7 +3027,6 @@ function HUDStageEndScreen:update(t, dt)
 	if self._update_skill_points then
 		self._update_skill_points = nil
 
-		
 		-- Lines: 2343 to 2371
 		local function skill_point_text_func(o, text)
 			local center_x, center_y = o:center()
@@ -3070,7 +3062,6 @@ function HUDStageEndScreen:update(t, dt)
 			end
 		end
 
-		
 		-- Lines: 2372 to 2378
 		local function animate_new_skillpoints(o)
 			while true do
@@ -3164,10 +3155,10 @@ end
 
 -- Lines: 2701 to 2705
 function HUDStageEndScreen:animate_level_progress(o, data)
-	
+
 	-- Lines: 2488 to 2702
 	local function animate_func(o, self, data)
-		
+
 		-- Lines: 2452 to 2489
 		local function spin_func(self, o, xp, end_xp, total_xp, current_xp, gained_xp, speed, breaks)
 			local dt = 0
@@ -3205,7 +3196,6 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 			end
 		end
 
-		
 		-- Lines: 2492 to 2507
 		local function wait_func(self, o, wait_time)
 			local dt = 0
@@ -3229,7 +3219,6 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 
 		local base_font_size = self._lp_text:font_size()
 
-		
 		-- Lines: 2510 to 2523
 		local function ding_func(o, font_size, ding_size, level)
 			local center_x, center_y = o:center()
@@ -3247,7 +3236,6 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 			end)
 		end
 
-		
 		-- Lines: 2525 to 2610
 		local function package_func(o, data)
 			local start_alpha = o:alpha()

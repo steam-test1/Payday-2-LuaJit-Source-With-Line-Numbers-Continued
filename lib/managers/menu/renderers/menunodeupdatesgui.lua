@@ -14,7 +14,6 @@ function MenuNodeUpdatesGui:init(node, layer, parameters)
 		if self._panel then
 			local previous_content_updates = self._panel:child("previous_content_updates")
 
-			
 			-- Lines: 14 to 21
 			local function animate_loading_texture(o)
 				local time = coroutine.yield()

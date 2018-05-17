@@ -2,24 +2,30 @@ CommunityChallengesManager = CommunityChallengesManager or class()
 CommunityChallengesManager.FULL_CREW_COUNT = 4
 CommunityChallengesManager.PER_CHALLENGE_BONUS = 0.01
 
--- Lines: 7 to 21
+-- Lines: 8 to 23
 function CommunityChallengesManager:init()
 	self._full_crew_start = nil
 	self._full_crew_time = 0
 	self._message_system = MessageSystem:new()
 	self._next_stat_request_limit = 0
+	self._challenges = {}
+
+	for _, challenge in ipairs(tweak_data.community_challenges) do
+		self._challenges[challenge.challenge_id] = challenge
+	end
+
 	self._global = Global.community_challenges_manager or {active_bonus = 0}
 	Global.community_challenges_manager = self._global
 
 	self:fetch_community_challenge_data()
 end
 
--- Lines: 23 to 25
+-- Lines: 25 to 27
 function CommunityChallengesManager:update(t, dt)
 	self._message_system:update()
 end
 
--- Lines: 40 to 56
+-- Lines: 29 to 45
 function CommunityChallengesManager:fetch_community_challenge_data()
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		local now = Application:time()
@@ -37,7 +43,7 @@ function CommunityChallengesManager:fetch_community_challenge_data()
 	end
 end
 
--- Lines: 58 to 111
+-- Lines: 47 to 93
 function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	if not success then
 		return
@@ -46,8 +52,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._global.challenge_data = {}
 	self._global.active_bonus = 0
 
-	
-	-- Lines: 66 to 71
+	-- Lines: 55 to 60
 	local function get_60_day_stat(stat_name)
 		local stat_value = 0
 
@@ -58,8 +63,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 		return stat_value > 0 and stat_value or 0
 	end
 
-	
-	-- Lines: 74 to 81
+	-- Lines: 63 to 70
 	local function better_ceil(number)
 		local mod = number % 1
 
@@ -75,13 +79,6 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	for _, challenge in ipairs(tweak_data.community_challenges) do
 		local base = challenge.base_target
 		local stat_value = get_60_day_stat(challenge.statistic_id)
-
-		if challenge.statistic_id == "sb17_challenge_5" then
-			stat_value = stat_value + math.floor(get_60_day_stat("sb17_challenge_1") / 60)
-		elseif challenge.statistic_id == "sb17_challenge_6" then
-			stat_value = stat_value + math.floor(get_60_day_stat("sb17_challenge_3") / 60)
-		end
-
 		local total_value = math.floor(tonumber(stat_value * (challenge.display_multiplier or 1)))
 		local stage = math.floor(math.log(1 - total_value * (1 - ratio) / base) / math.log(ratio))
 		local stage_base_value = math.floor(base * (1 - math.pow(ratio, stage)) / (1 - ratio))
@@ -98,22 +95,22 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._message_system:notify(Message.OnCommunityChallengeDataReceived, nil, self._global.challenge_data)
 end
 
--- Lines: 113 to 114
+-- Lines: 95 to 96
 function CommunityChallengesManager:get_challenge_data()
 	return self._global.challenge_data
 end
 
--- Lines: 117 to 118
+-- Lines: 99 to 100
 function CommunityChallengesManager:get_active_experience_bonus()
 	return self._global.active_bonus
 end
 
--- Lines: 185 to 187
+-- Lines: 171 to 173
 function CommunityChallengesManager:add_event_listener(message, uid, func)
 	self._message_system:register(message, uid, func)
 end
 
--- Lines: 189 to 191
+-- Lines: 175 to 177
 function CommunityChallengesManager:remove_event_listener(message, uid)
 	self._message_system:unregister(message, uid)
 end

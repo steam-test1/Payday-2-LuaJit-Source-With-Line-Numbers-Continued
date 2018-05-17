@@ -13,7 +13,6 @@ function ElementCharacterSequence:on_executed(instigator)
 		return
 	end
 
-	
 	-- Lines: 14 to 20
 	local function f(unit)
 		unit:damage():run_sequence_simple(self._values.sequence)

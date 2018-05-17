@@ -228,7 +228,6 @@ function NewHeistsGui:_move_pages(pages)
 		return
 	end
 
-	
 	-- Lines: 226 to 264
 	local function swipe_func(o, other_object, swipe_distance, time, end_pos)
 		time = math.max(0.0001, time or 1)

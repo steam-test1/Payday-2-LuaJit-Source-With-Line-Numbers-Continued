@@ -38,7 +38,7 @@ end
 
 -- Lines: 44 to 51
 function ElementPlaySound:_play_sound_on_elements()
-	
+
 	-- Lines: 41 to 45
 	local function f(unit)
 		if unit:id() ~= -1 then

@@ -592,7 +592,6 @@ function ExperienceManager:get_contract_xp_by_stars(job_id, job_stars, risk_star
 	local total_extra_risk_xp = 0
 	local total_xp = 0
 
-	
 	-- Lines: 560 to 561
 	local function make_fine_number(v)
 		return math.round(v)

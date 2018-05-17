@@ -1,6 +1,6 @@
 HUDPlayerCustody = HUDPlayerCustody or class()
 
--- Lines: 3 to 81
+-- Lines: 3 to 85
 function HUDPlayerCustody:init(hud)
 	self._hud = hud
 	self._hud_panel = hud.panel
@@ -89,6 +89,9 @@ function HUDPlayerCustody:init(hud)
 	trade_text1:set_h(h)
 	trade_text1:set_y((self._hud_panel:h() - 152) - 80)
 
+	local level_id = Global.level_data and Global.level_data.level_id
+	local level_tweak = tweak_data.levels[level_id]
+	local trade_text2_id = "menu_spectator_being_traded_hesitant_" .. (level_tweak and level_tweak.narrator or "bain")
 	local trade_text2 = self._hud.trade_text2
 
 	trade_text2:set_font(Idstring(tweak_data.hud_custody.custody_font))
@@ -96,7 +99,7 @@ function HUDPlayerCustody:init(hud)
 	trade_text2:set_visible(true)
 	trade_text2:set_align("right")
 	trade_text2:set_valign("bottom")
-	trade_text2:set_text(utf8.to_upper(managers.localization:text("menu_spectator_being_traded_hesitant")))
+	trade_text2:set_text(utf8.to_upper(managers.localization:text(trade_text2_id)))
 
 	local _, _, w, h = trade_text2:text_rect()
 
@@ -116,13 +119,13 @@ function HUDPlayerCustody:init(hud)
 	trade_delay:set_y(civilians_killed:bottom())
 end
 
--- Lines: 83 to 86
+-- Lines: 87 to 90
 function HUDPlayerCustody:set_timer_visibility(visible)
 	self._timer:set_visible(visible)
 	self._hud_panel:child("custody_panel"):child("timer_msg"):set_visible(visible)
 end
 
--- Lines: 88 to 96
+-- Lines: 92 to 100
 function HUDPlayerCustody:set_respawn_time(time)
 	if math.floor(time) == math.floor(self._last_time) then
 		return
@@ -134,7 +137,7 @@ function HUDPlayerCustody:set_respawn_time(time)
 	self._timer:set_text(utf8.to_upper(tostring(time_text)))
 end
 
--- Lines: 98 to 102
+-- Lines: 102 to 106
 function HUDPlayerCustody:set_civilians_killed(amount)
 	local amount_text = (amount < 10 and "0" or "") .. amount
 	local civilians_killed = self._hud_panel:child("custody_panel"):child("civilians_killed")
@@ -142,7 +145,7 @@ function HUDPlayerCustody:set_civilians_killed(amount)
 	civilians_killed:set_text(utf8.to_upper(managers.localization:text("hud_civilians_killed", {AMOUNT = tostring(amount_text)})))
 end
 
--- Lines: 104 to 113
+-- Lines: 108 to 117
 function HUDPlayerCustody:set_trade_delay(time)
 	if math.floor(time) == math.floor(self._last_trade_delay_time) then
 		return
@@ -155,13 +158,13 @@ function HUDPlayerCustody:set_trade_delay(time)
 	trade_delay:set_text(utf8.to_upper(managers.localization:text("hud_trade_delay", {TIME = tostring(time_text)})))
 end
 
--- Lines: 115 to 118
+-- Lines: 119 to 122
 function HUDPlayerCustody:set_trade_delay_visible(visible)
 	self._hud_panel:child("custody_panel"):child("trade_delay"):set_visible(visible)
 	self._hud_panel:child("custody_panel"):child("civilians_killed"):set_visible(visible)
 end
 
--- Lines: 120 to 126
+-- Lines: 124 to 130
 function HUDPlayerCustody:set_negotiating_visible(visible)
 	self._hud.trade_text2:set_visible(visible)
 	self._hud.trade_text2:stop()
@@ -171,7 +174,7 @@ function HUDPlayerCustody:set_negotiating_visible(visible)
 	end
 end
 
--- Lines: 128 to 134
+-- Lines: 132 to 138
 function HUDPlayerCustody:set_can_be_trade_visible(visible)
 	self._hud.trade_text1:set_visible(visible)
 	self._hud.trade_text1:stop()
@@ -181,7 +184,7 @@ function HUDPlayerCustody:set_can_be_trade_visible(visible)
 	end
 end
 
--- Lines: 136 to 144
+-- Lines: 140 to 148
 function HUDPlayerCustody:_get_time_text(time)
 	time = math.max(math.floor(time), 0)
 	local minutes = math.floor(time / 60)
@@ -192,7 +195,7 @@ function HUDPlayerCustody:_get_time_text(time)
 	return text .. (minutes < 10 and "0" .. minutes or minutes) .. ":" .. (seconds < 10 and "0" .. seconds or seconds)
 end
 
--- Lines: 147 to 155
+-- Lines: 151 to 159
 function HUDPlayerCustody:_animate_text_pulse(text)
 	local t = 0
 
@@ -205,7 +208,7 @@ function HUDPlayerCustody:_animate_text_pulse(text)
 	end
 end
 
--- Lines: 157 to 163
+-- Lines: 161 to 167
 function HUDPlayerCustody:set_respawn_type(is_ai_trade)
 	if self._last_respawn_type_is_ai_trade ~= is_ai_trade then
 		local text = utf8.to_upper(managers.localization:text(is_ai_trade and "hud_ai_traded_in" or "hud_respawning_in"))

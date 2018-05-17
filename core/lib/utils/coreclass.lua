@@ -23,7 +23,6 @@ function class(...)
 
 	setmetatable(class_table, __overrides[super] or super)
 
-	
 	-- Lines: 31 to 37
 	function class_table.new(klass, ...)
 		local object = {}
@@ -176,7 +175,7 @@ end
 function frozen_class(...)
 	local class_table = class(...)
 	local new = class_table.new
-	
+
 	-- Lines: 162 to 164
 	function class_table.new(klass, ...)
 		local instance, ret = new(klass, ...)
@@ -191,7 +190,6 @@ end
 function responder(...)
 	local response = {...}
 
-	
 	-- Lines: 178 to 179
 	local function responder_function()
 		return unpack(response)
@@ -214,7 +212,7 @@ function responder_map(response_table)
 				end
 			end})
 		else
-			
+
 			-- Lines: 195 to 196
 			responder[key] = function ()
 				return value
@@ -231,12 +229,12 @@ GetSet = GetSet or class()
 function GetSet:init(t)
 	for k, v in pairs(t) do
 		self["_" .. k] = v
-		
+
 		-- Lines: 211 to 212
 		self[k] = function (self)
 			return self["_" .. k]
 		end
-		
+
 		-- Lines: 212 to 213
 		self["set_" .. k] = function (self, v)
 			self["_" .. k] = v

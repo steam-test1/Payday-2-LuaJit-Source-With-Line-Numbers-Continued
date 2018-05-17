@@ -1997,7 +1997,7 @@ end
 
 -- Lines: 1837 to 1947
 function IntimitateInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
-	
+
 	-- Lines: 1829 to 1837
 	local function _get_unit()
 		local unit = player

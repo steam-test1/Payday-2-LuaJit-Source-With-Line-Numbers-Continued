@@ -96,7 +96,6 @@ function ArmorSkinEditor:select_skin(local_skin_id)
 	local new_cosmetics_data = deep_clone(skin:config().data)
 	new_cosmetics_data.id = skin:config().data.name_id or "skin_default"
 
-	
 	-- Lines: 90 to 98
 	local function cb()
 		managers.menu_scene._disable_item_updates = false
@@ -324,7 +323,6 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		return
 	end
 
-	
 	-- Lines: 304 to 339
 	local function cb(result)
 		if result == "success" then
@@ -397,7 +395,6 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		table.insert(copy_data, pair)
 	end
 
-	
 	-- Lines: 369 to 394
 	local function copy_cb(success, message)
 		if success then
@@ -417,7 +414,6 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 
 				self._publish_bar:set_position(0, panel:h() - bar_radius * 2)
 
-				
 				-- Lines: 377 to 387
 				local function update_publish(o)
 					local current = 0
@@ -444,7 +440,6 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		end
 	end
 
-	
 	-- Lines: 396 to 403
 	local function sub(result)
 		if result == "success" then

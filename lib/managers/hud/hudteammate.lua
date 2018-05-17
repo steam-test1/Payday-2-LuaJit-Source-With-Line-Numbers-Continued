@@ -1835,7 +1835,6 @@ function HUDTeammate:set_grenade_cooldown(data)
 		return
 	end
 
-	
 	-- Lines: 1378 to 1387
 	local function animate_radial(o)
 		repeat
@@ -1867,7 +1866,6 @@ function HUDTeammate:animate_grenade_flash()
 	local radial_ghost = grenades_panel:child("grenades_radial_ghost")
 	local icon_ghost = grenades_panel:child("grenades_icon_ghost")
 
-	
 	-- Lines: 1405 to 1431
 	local function animate_flash()
 		local radial_w, radial_h = radial:size()
@@ -1919,7 +1917,6 @@ function HUDTeammate:activate_ability_radial(time_left, time_total)
 	time_total = time_total or time_left
 	local progress_start = time_left / time_total
 
-	
 	-- Lines: 1456 to 1463
 	local function anim(o)
 		radial_ability_panel:set_visible(true)

@@ -588,7 +588,6 @@ end
 function IngameWaitingForRespawnState:watch_priority_character()
 	self:_refresh_teammate_list()
 
-	
 	-- Lines: 643 to 650
 	local function try_watch_unit(unit_key)
 		if table.contains(self._spectator_data.teammate_list, unit_key) then

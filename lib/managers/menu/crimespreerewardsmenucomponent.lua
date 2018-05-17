@@ -79,7 +79,6 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	
 	-- Lines: 83 to 86
 	local function func(o)
 		local start_blur = 0
@@ -961,7 +960,6 @@ end
 function CrimeSpreeRewardsMenuComponent:_update_experience()
 	local t = 0
 
-	
 	-- Lines: 896 to 898
 	local function wait(x)
 		t = t + x
@@ -1024,7 +1022,6 @@ end
 function CrimeSpreeRewardsMenuComponent:_update_cash(t, dt)
 	local t = 0
 
-	
 	-- Lines: 953 to 955
 	local function wait(x)
 		t = t + x
@@ -1100,7 +1097,6 @@ end
 function CrimeSpreeRewardsMenuComponent:_update_coins(t, dt)
 	local t = 0
 
-	
 	-- Lines: 1018 to 1020
 	local function wait(x)
 		t = t + x
@@ -1480,7 +1476,6 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	local fade_in_delay = fade_in_t / 4
 	local size = tweak_data.menu.pd2_small_font_size
 
-	
 	-- Lines: 1397 to 1416
 	local function add_reward_text(text, color)
 		local reward_text = self._list_scroll:canvas():text({

@@ -37,7 +37,7 @@ function CoreCutsceneData:cutscene_player(__skip_stall_warning, __skip_priming)
 		end
 
 		local actual_destroy_func = self.__cutscene_player.destroy
-		
+
 		-- Lines: 33 to 37
 		self.__cutscene_player.destroy = function (instance)
 			assert(instance == self.__cutscene_player)

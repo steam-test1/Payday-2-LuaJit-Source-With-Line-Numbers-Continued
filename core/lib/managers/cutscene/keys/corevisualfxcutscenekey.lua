@@ -51,7 +51,7 @@ function CoreVisualFXCutsceneKey:play(player, undo, fast_forward)
 			rotation = self:rotation(),
 			force_synch = self:force_synch()
 		})
-		
+
 		-- Lines: 45 to 46
 		function self._effect_abort_func()
 			effect_manager:kill(effect_id)

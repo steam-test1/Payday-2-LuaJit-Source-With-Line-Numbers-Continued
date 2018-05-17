@@ -67,7 +67,6 @@ function BasicEventHandling:connect(event_name, callback_func, data)
 	self._event_callbacks = self._event_callbacks or {}
 	self._event_callbacks[event_name] = self._event_callbacks[event_name] or {}
 
-	
 	-- Lines: 75 to 76
 	local function wrapped_func(...)
 		callback_func(data, ...)

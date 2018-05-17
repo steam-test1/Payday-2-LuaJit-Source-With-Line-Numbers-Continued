@@ -36,7 +36,6 @@ function CoreCutsceneEditorProject:save(audio_clips, film_clips, cutscene_keys, 
 
 	self._root_node = nil
 
-	
 	-- Lines: 28 to 29
 	local function is_valid(member)
 		return member ~= nil and member ~= ""

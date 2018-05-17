@@ -4,14 +4,12 @@ NetworkGenericPSN = NetworkGenericPSN or class()
 function NetworkGenericPSN:init()
 	cat_print("lobby", "generic = NetworkGenericPSN")
 
-	
 	-- Lines: 5 to 6
 	local function f()
 	end
 
 	PSN:set_matchmaking_callback("room_invitation", f)
 
-	
 	-- Lines: 8 to 9
 	local function psn_left(...)
 		self:psn_member_left(...)
@@ -19,7 +17,6 @@ function NetworkGenericPSN:init()
 
 	PSN:set_matchmaking_callback("member_left", psn_left)
 
-	
 	-- Lines: 11 to 12
 	local function psn_join(...)
 		self:psn_member_joined(...)
@@ -27,7 +24,6 @@ function NetworkGenericPSN:init()
 
 	PSN:set_matchmaking_callback("member_joined", psn_join)
 
-	
 	-- Lines: 14 to 15
 	local function psn_destroyed(...)
 		self:psn_session_destroyed(...)

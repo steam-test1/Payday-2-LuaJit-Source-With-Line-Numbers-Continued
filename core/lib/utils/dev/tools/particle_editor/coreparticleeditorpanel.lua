@@ -442,7 +442,6 @@ function CoreParticleEditorPanel:update_graph_view()
 	local affector_x = 0
 	local channel_x_count = 110
 
-	
 	-- Lines: 385 to 391
 	local function channel_x(channel)
 		if not channels[channel] then

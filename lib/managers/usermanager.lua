@@ -763,7 +763,7 @@ function GenericUserManager:check_storage(callback_func, auto_select)
 			callback_func(true)
 		end
 	else
-		
+
 		-- Lines: 783 to 791
 		local function wrapped_callback_func(success, result, ...)
 			if success then

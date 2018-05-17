@@ -42,7 +42,6 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	
 	-- Lines: 52 to 55
 	local function func(o)
 		local start_blur = 0

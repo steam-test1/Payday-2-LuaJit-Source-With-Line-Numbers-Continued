@@ -3610,7 +3610,6 @@ function CoreEditor:_save_package(file, package_table, streaming_options)
 	if streaming_options then
 		local streaming_element = "\t<streaming"
 
-		
 		-- Lines: 3416 to 3428
 		local function fill_platform_streaming_params(platform)
 			if streaming_options[platform] and next(streaming_options[platform]) then
@@ -3945,7 +3944,7 @@ end
 
 -- Lines: 3810 to 3847
 function CoreEditor:_save_blacklist(dir)
-	
+
 	-- Lines: 3804 to 3811
 	local function tableSetInsert(t, val)
 		for _, v in ipairs(t) do
@@ -3957,7 +3956,6 @@ function CoreEditor:_save_blacklist(dir)
 		table.insert(t, val)
 	end
 
-	
 	-- Lines: 3813 to 3819
 	local function tableSetContains(t, val)
 		for _, v in ipairs(t) do

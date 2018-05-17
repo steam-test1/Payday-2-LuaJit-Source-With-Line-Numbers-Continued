@@ -139,7 +139,22 @@ function HuskCopBrain:surrendered()
 	return self._surrendered
 end
 
--- Lines: 146 to 150
+-- Lines: 146 to 148
+function HuskCopBrain:sync_converted()
+	self._converted = true
+end
+
+-- Lines: 150 to 151
+function HuskCopBrain:converted()
+	return self._converted
+end
+
+-- Lines: 156 to 157
+function HuskCopBrain:is_hostile()
+	return not self._surrendered and not self._converted
+end
+
+-- Lines: 162 to 166
 function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit, secondary)
 	secondary = secondary or false
 	amount = math.clamp(math.ceil(amount * 10), 0, 10)
@@ -147,16 +162,16 @@ function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit, secondary)
 	self._unit:network():send_to_host("long_dis_interaction", amount, aggressor_unit, secondary)
 end
 
--- Lines: 153 to 154
+-- Lines: 169 to 170
 function HuskCopBrain:player_ignore()
 	return false
 end
 
--- Lines: 159 to 160
+-- Lines: 175 to 176
 function HuskCopBrain:on_team_set(team_data)
 end
 
--- Lines: 164 to 172
+-- Lines: 180 to 188
 function HuskCopBrain:update(unit, t, dt)
 	if self._add_laser_t ~= nil and self._post_init_complete then
 		self._add_laser_t = self._add_laser_t - dt
@@ -169,7 +184,7 @@ function HuskCopBrain:update(unit, t, dt)
 	end
 end
 
--- Lines: 174 to 180
+-- Lines: 190 to 196
 function HuskCopBrain:sync_net_event(event_id)
 	if event_id == self._NET_EVENTS.weapon_laser_on then
 		self._add_laser_t = HuskCopBrain._ENABLE_LASER_TIME
@@ -178,7 +193,7 @@ function HuskCopBrain:sync_net_event(event_id)
 	end
 end
 
--- Lines: 182 to 186
+-- Lines: 198 to 202
 function HuskCopBrain:enable_weapon_laser()
 	self._weapon_laser_on = true
 
@@ -186,7 +201,7 @@ function HuskCopBrain:enable_weapon_laser()
 	managers.enemy:_destroy_unit_gfx_lod_data(self._unit:key())
 end
 
--- Lines: 188 to 196
+-- Lines: 204 to 212
 function HuskCopBrain:disable_weapon_laser()
 	self._weapon_laser_on = nil
 
@@ -199,7 +214,7 @@ function HuskCopBrain:disable_weapon_laser()
 	end
 end
 
--- Lines: 200 to 215
+-- Lines: 216 to 231
 function HuskCopBrain:pre_destroy()
 	if Network:is_server() then
 		self._unit:movement():set_attention()

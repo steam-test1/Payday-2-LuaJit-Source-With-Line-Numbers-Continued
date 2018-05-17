@@ -64,7 +64,6 @@ function CoreCutsceneOptimizer:_write_cutscene_xml(path, animation_blobs)
 	if not table.empty(self:_all_controlled_unit_names(true)) then
 		local controlled_units_node = cutscene_node:make_child("controlled_units")
 
-		
 		-- Lines: 51 to 61
 		local function add_controlled_unit(unit_type, unit_name)
 			local unit_node = controlled_units_node:make_child("unit")
@@ -129,7 +128,7 @@ function CoreCutsceneOptimizer:_add_unit_visibility_keys(keys_node)
 
 				if visible ~= was_visible[unit_name] then
 					local visibility_key = CoreCutsceneKey:create(CoreUnitVisibleCutsceneKey.ELEMENT_NAME)
-					
+
 					-- Lines: 105 to 106
 					function visibility_key.is_valid_unit_name()
 						return true
@@ -180,7 +179,6 @@ function CoreCutsceneOptimizer:_write_cutscene_unit_xml(path)
 
 	model_node:set_parameter("file", "locator")
 
-	
 	-- Lines: 142 to 146
 	local function add_extension_node(name, class)
 		local extension_node = unit_node:make_child("extension")
@@ -281,7 +279,6 @@ end
 function CoreCutsceneOptimizer:_problem_map()
 	local problem_map = self.super._problem_map(self)
 
-	
 	-- Lines: 233 to 234
 	local function add_problem(problem)
 		problem_map[problem] = true

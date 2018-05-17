@@ -702,7 +702,6 @@ function AssetsItem:add_preplanning_button()
 	local index, texture_ids, key = nil
 	local texture_done_clbk = callback(self, self, "preplanning_texture_done_clbk")
 
-	
 	-- Lines: 556 to 563
 	local function request_texture_func(texture)
 		texture_ids = Idstring(texture)
@@ -3711,7 +3710,6 @@ function MissionBriefingGui:flash_ready()
 
 	self._next_ready_flash = TimerManager:main():time() + 3
 
-	
 	-- Lines: 2963 to 2990
 	local function animate_flash_ready(o)
 		local center_x, center_y = o:center()
@@ -3862,7 +3860,7 @@ function MissionBriefingGui:open_asset(asset_index)
 	local fullscreen_asset = self._fullscreen_assets_list[self._displaying_asset]
 
 	if fullscreen_asset and alive(fullscreen_asset) then
-		
+
 		-- Lines: 3095 to 3098
 		local function animate_show(o)
 			local start_alpha = o:alpha()
@@ -3907,7 +3905,7 @@ function MissionBriefingGui:close_asset()
 	local fullscreen_asset = self._fullscreen_assets_list[self._displaying_asset]
 
 	if fullscreen_asset and alive(fullscreen_asset) then
-		
+
 		-- Lines: 3138 to 3142
 		local function animate_hide(o)
 			local start_alpha = o:alpha()

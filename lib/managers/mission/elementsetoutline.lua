@@ -17,7 +17,6 @@ function ElementSetOutline:on_executed(instigator)
 		return
 	end
 
-	
 	-- Lines: 18 to 30
 	local function f(unit)
 		if unit:contour() then

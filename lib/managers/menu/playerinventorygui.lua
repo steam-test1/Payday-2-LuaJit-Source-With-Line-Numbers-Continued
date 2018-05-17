@@ -975,7 +975,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self._text_buttons = {}
 	local alias_show_button, alias_hide_button, column_one_show_button, column_one_hide_button, column_two_show_button, column_two_hide_button, column_three_show_button, column_three_hide_button = nil
 
-	
 	-- Lines: 498 to 514
 	local function alias_hide_func()
 		if alive(alias_show_button) then
@@ -1004,7 +1003,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 516 to 532
 	local function alias_show_func()
 		if alive(alias_show_button) then
@@ -1033,7 +1031,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 535 to 555
 	local function column_one_hide_func()
 		if alive(column_one_show_button) then
@@ -1068,7 +1065,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 557 to 577
 	local function column_one_show_func()
 		if alive(column_one_show_button) then
@@ -1103,7 +1099,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 580 to 603
 	local function column_two_hide_func()
 		if alive(column_two_show_button) then
@@ -1142,7 +1137,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 605 to 628
 	local function column_two_show_func()
 		if alive(column_two_show_button) then
@@ -1181,7 +1175,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 632 to 657
 	local function column_three_hide_func()
 		if alive(column_three_show_button) then
@@ -1222,7 +1215,6 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	
 	-- Lines: 659 to 684
 	local function column_three_show_func()
 		if alive(column_three_show_button) then

@@ -89,7 +89,6 @@ function PrePlanningPoint:init(map_panel, element, shape, rotation, active_node,
 	self._extras = {}
 	local yaw = mrotation.yaw(element_rotation)
 
-	
 	-- Lines: 80 to 158
 	local function add_extra_func(type, key)
 		local value = tweak_data:get_raw_value("preplanning", "types", type, key)
@@ -363,13 +362,12 @@ end
 -- Lines: 265 to 294
 function PrePlanningPoint:flash()
 	if alive(self._box) and alive(self._bg) then
-		
+
 		-- Lines: 267 to 290
 		local function flash_anim(panel)
 			local start_color = tweak_data.screen_colors.text
 			local s = 0
 
-			
 			-- Lines: 271 to 275
 			local function f(t)
 				s = math.min(1, math.sin(t * 180) * 2)
@@ -2758,7 +2756,6 @@ function PrePlanningMapGui._flash_anim(text, start_color)
 	start_color = start_color or tweak_data.screen_colors.text
 	local s = 0
 
-	
 	-- Lines: 2119 to 2122
 	local function f(t)
 		s = math.min(1, math.sin(t * 180) * 2)

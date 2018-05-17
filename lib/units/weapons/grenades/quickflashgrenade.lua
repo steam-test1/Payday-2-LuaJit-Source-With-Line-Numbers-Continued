@@ -232,7 +232,6 @@ function QuickFlashGrenade:_chk_dazzle_local_player(detonate_pos, range, ignore_
 
 	local slotmask = managers.slot:get_mask("bullet_impact_targets")
 
-	
 	-- Lines: 217 to 223
 	local function _vis_ray_func(from, to, boolean)
 		if ignore_units then

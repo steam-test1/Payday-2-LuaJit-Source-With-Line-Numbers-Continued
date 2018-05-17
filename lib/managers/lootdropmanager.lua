@@ -46,7 +46,6 @@ function LootDropManager:_setup_items()
 	local pc_items = {}
 	Global.lootdrop_manager.pc_items = pc_items
 
-	
 	-- Lines: 74 to 102
 	local function sort_pc(type, data)
 		for id, item_data in pairs(data) do

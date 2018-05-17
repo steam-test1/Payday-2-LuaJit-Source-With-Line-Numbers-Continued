@@ -638,7 +638,6 @@ function MutatorsManager:get_mutators_from_lobby_data()
 		return false
 	end
 
-	
 	-- Lines: 641 to 642
 	local function func(key)
 		return lobby_data[key]
@@ -653,7 +652,6 @@ function MutatorsManager:get_mutators_from_lobby(lobby)
 		return false
 	end
 
-	
 	-- Lines: 654 to 655
 	local function func(key)
 		return lobby:key_value(key)

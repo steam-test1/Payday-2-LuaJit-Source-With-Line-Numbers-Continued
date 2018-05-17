@@ -12,7 +12,6 @@ function bezier3.hit(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	local mind = inf
 	local minx, miny, mint = nil
 
-	
 	-- Lines: 29 to 36
 	local function test_solution(t)
 		assert(t >= 0 and t <= 1)

@@ -206,7 +206,7 @@ function add_prints(class_name, ignore_list)
 
 	for k, v in pairs(obj) do
 		if type(v) == "function" and not ignore[k] then
-			
+
 			-- Lines: 215 to 217
 			to_change[k] = function (...)
 				print("[" .. class_name .. "]" .. "." .. k, ...)
@@ -225,7 +225,6 @@ end
 function tag_print(tag, ...)
 	tag = string.sub(tag, 1, 1) == "[" and tag or "[" .. tag .. "]"
 
-	
 	-- Lines: 238 to 254
 	local function do_things(tag, ...)
 		local str = ""
@@ -294,7 +293,6 @@ end
 function help(o)
 	local methods = {}
 
-	
 	-- Lines: 299 to 326
 	local function add_methods(t)
 		if type(t) == "table" then
@@ -385,7 +383,6 @@ function memory_report(limit)
 		end
 	end
 
-	
 	-- Lines: 373 to 377
 	local function simple(item)
 		local t = type(item)
@@ -401,7 +398,6 @@ function memory_report(limit)
 		return true
 	end
 
-	
 	-- Lines: 380 to 402
 	local function recurse(item, parent, key)
 		local index = type(item) == "userdata" and item:key() or item
@@ -496,7 +492,7 @@ function profile(s)
 		end
 
 		t.f = rawget(_G, t.class)[t.name]
-		
+
 		-- Lines: 450 to 451
 		function t.patch(f)
 			_G[t.class][t.name] = f
@@ -504,7 +500,7 @@ function profile(s)
 	else
 		t.name = s
 		t.f = rawget(_G, t.name)
-		
+
 		-- Lines: 454 to 455
 		function t.patch(f)
 			_G[t.name] = f
@@ -517,7 +513,6 @@ function profile(s)
 		return
 	end
 
-	
 	-- Lines: 463 to 467
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)

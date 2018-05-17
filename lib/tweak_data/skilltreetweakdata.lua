@@ -2,7 +2,7 @@ SkillTreeTweakData = SkillTreeTweakData or class()
 
 -- Lines: 9 to 1683
 function SkillTreeTweakData:init()
-	
+
 	-- Lines: 9 to 10
 	local function digest(value)
 		return Application:digest_value(value, true)
@@ -4182,7 +4182,7 @@ end
 
 -- Lines: 1719 to 1726
 function SkillTreeTweakData:get_tier_unlocks()
-	
+
 	-- Lines: 1719 to 1720
 	local function digest(value)
 		return Application:digest_value(value, false)

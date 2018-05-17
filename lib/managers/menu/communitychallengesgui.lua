@@ -1,6 +1,9 @@
+require("lib/utils/gui/GUIObjectWrapper")
+require("lib/utils/gui/FineText")
+
 Tween = Tween or class()
 
--- Lines: 118 to 129
+-- Lines: 9 to 20
 function Tween:init(target, name, opts)
 	opts = opts or {}
 	self._target = target
@@ -14,7 +17,7 @@ function Tween:init(target, name, opts)
 	self._finished = false
 end
 
--- Lines: 131 to 143
+-- Lines: 22 to 34
 function Tween:update(t, dt)
 	if not self._finished then
 		self._time = self._time + dt
@@ -30,22 +33,22 @@ function Tween:update(t, dt)
 	end
 end
 
--- Lines: 145 to 146
+-- Lines: 36 to 37
 function Tween:finished()
 	return self._finished
 end
 
--- Lines: 149 to 150
+-- Lines: 40 to 41
 function Tween.ease_linear(from, to, t)
 	return from * (1 - t) + to * t
 end
 
--- Lines: 153 to 154
+-- Lines: 44 to 45
 function Tween.ease_out(from, to, t)
 	return (from - to) * t * (t - 2) + from
 end
 
--- Lines: 161 to 181
+-- Lines: 52 to 72
 local function make_value_string(number, additional_zeroes)
 	if number == 0 then
 		return "0"
@@ -69,7 +72,7 @@ local function make_value_string(number, additional_zeroes)
 	return result
 end
 
--- Lines: 184 to 242
+-- Lines: 75 to 133
 local function make_roman_numerals(number)
 	number = math.floor(number)
 
@@ -149,7 +152,7 @@ end
 
 CommunityChallengeProgressBar = CommunityChallengeProgressBar or class(GUIObjectWrapper)
 
--- Lines: 251 to 307
+-- Lines: 142 to 198
 function CommunityChallengeProgressBar:init(parent, config)
 	local panel = parent:panel()
 
@@ -202,7 +205,7 @@ function CommunityChallengeProgressBar:init(parent, config)
 	self:layout()
 end
 
--- Lines: 309 to 326
+-- Lines: 200 to 217
 function CommunityChallengeProgressBar:config(config)
 	self._target_value = config.target_value or 0
 	self._additional_zeroes = config.additional_zeroes or 0
@@ -222,7 +225,7 @@ function CommunityChallengeProgressBar:config(config)
 	self:layout()
 end
 
--- Lines: 328 to 339
+-- Lines: 219 to 230
 function CommunityChallengeProgressBar:layout()
 	self._title_text:set_lefttop(5, 1)
 	self._progress_text:set_leftbottom(5, self._height - 1)
@@ -236,7 +239,7 @@ function CommunityChallengeProgressBar:layout()
 	self._exp_icon:set_center_y(math.round(self._height * 0.5))
 end
 
--- Lines: 341 to 348
+-- Lines: 232 to 239
 function CommunityChallengeProgressBar:update(t, dt)
 	if not self._value_tween:finished() then
 		self._value_tween:update(t, dt)
@@ -248,7 +251,7 @@ function CommunityChallengeProgressBar:update(t, dt)
 	end
 end
 
--- Lines: 350 to 353
+-- Lines: 241 to 244
 function CommunityChallengeProgressBar:_make_progress_text()
 	local current = make_value_string(self._current_value, self._additional_zeroes)
 	local target = make_value_string(self._target_value, self._additional_zeroes)
@@ -256,13 +259,13 @@ function CommunityChallengeProgressBar:_make_progress_text()
 	return current .. " / " .. target
 end
 
--- Lines: 356 to 357
+-- Lines: 247 to 248
 function CommunityChallengeProgressBar:get_statistic_id()
 	return self._statistic_id
 end
 CommunityChallengeProgressTotal = CommunityChallengeProgressTotal or class(GUIObjectWrapper)
 
--- Lines: 366 to 410
+-- Lines: 257 to 301
 function CommunityChallengeProgressTotal:init(parent, config)
 	local panel = parent:panel()
 
@@ -307,7 +310,7 @@ function CommunityChallengeProgressTotal:init(parent, config)
 	self:layout()
 end
 
--- Lines: 412 to 423
+-- Lines: 303 to 314
 function CommunityChallengeProgressTotal:config(config)
 	self._total_value = config.total_value or 0
 	self._additional_zeroes = config.additional_zeroes or 0
@@ -319,39 +322,40 @@ function CommunityChallengeProgressTotal:config(config)
 	self:layout()
 end
 
--- Lines: 425 to 429
+-- Lines: 316 to 320
 function CommunityChallengeProgressTotal:layout()
 	self._title_text:set_lefttop(5, 1)
 	self._progress_text:set_leftbottom(5, self._height - 1)
 	self._stage_text:set_lefttop(self._title_text:right() + 5, 1)
 end
 
--- Lines: 431 to 432
+-- Lines: 322 to 323
 function CommunityChallengeProgressTotal:update(t, dt)
 end
 
--- Lines: 434 to 436
+-- Lines: 325 to 327
 function CommunityChallengeProgressTotal:_make_progress_text()
 	local total = make_value_string(self._total_value, self._additional_zeroes)
 
 	return "Total: " .. total
 end
 
--- Lines: 439 to 440
+-- Lines: 330 to 331
 function CommunityChallengeProgressTotal:get_statistic_id()
 	return self._statistic_id
 end
 CommunityChallengesGui = CommunityChallengesGui or class(GUIObjectWrapper)
 
--- Lines: 449 to 526
+-- Lines: 340 to 426
 function CommunityChallengesGui:init(parent)
 	local panel = parent:panel()
 
 	self.super.init(self, panel)
 
 	self._panel = panel
+	local width = 346
 
-	panel:set_size(346, 100)
+	panel:set_size(width, 100)
 
 	local font = tweak_data.menu.pd2_small_font
 	local font_size = tweak_data.menu.pd2_small_font_size
@@ -386,7 +390,7 @@ function CommunityChallengesGui:init(parent)
 		color = color_text
 	})
 	self._info_text = FineText:new(self._stats_container, {
-		text = managers.localization:to_upper_text("menu_community_challenges_info", {bonus = CommunityChallengesManager.PER_CHALLENGE_BONUS * 100}),
+		text = managers.localization:to_upper_text("menu_community_challenges_info_ended", {bonus = CommunityChallengesManager.PER_CHALLENGE_BONUS * 100}),
 		font = tweak_data.menu.pd2_tiny_font,
 		font_size = tweak_data.menu.pd2_tiny_font_size,
 		color = color_muted
@@ -414,7 +418,7 @@ function CommunityChallengesGui:init(parent)
 	managers.community_challenges:fetch_community_challenge_data()
 end
 
--- Lines: 528 to 537
+-- Lines: 428 to 437
 function CommunityChallengesGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -425,7 +429,7 @@ function CommunityChallengesGui:close()
 	managers.community_challenges:remove_event_listener(Message.OnCommunityChallengeDataReceived, "CommunityChallengesGui:consume_community_challenges_data")
 end
 
--- Lines: 539 to 557
+-- Lines: 439 to 457
 function CommunityChallengesGui:layout()
 	for i, pbar in ipairs(self._progress_bars) do
 		local zi = i - 1
@@ -447,21 +451,21 @@ function CommunityChallengesGui:layout()
 	self._panel:set_height(full_height)
 end
 
--- Lines: 559 to 563
+-- Lines: 459 to 463
 function CommunityChallengesGui:update(t, dt)
 	for _, pbar in ipairs(self._progress_bars) do
 		pbar:update(t, dt)
 	end
 end
 
--- Lines: 566 to 569
+-- Lines: 468 to 472
 function CommunityChallengesGui:add_progress_bar(config)
 	local progress_bar = CommunityChallengeProgressTotal:new(self._stats_container, config)
 
 	table.insert(self._progress_bars, progress_bar)
 end
 
--- Lines: 571 to 585
+-- Lines: 474 to 488
 function CommunityChallengesGui:consume_community_challenges_data(data)
 	for i, pbar in ipairs(self._progress_bars) do
 		local challenge = data[pbar:get_statistic_id()]

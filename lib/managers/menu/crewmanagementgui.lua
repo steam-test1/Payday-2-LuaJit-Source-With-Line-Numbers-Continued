@@ -166,7 +166,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		info_button._panel = info_panel
 		info_button._select_col = Color.white:with_alpha(0.25)
 		info_button._normal_col = Color.white
-		
+
 		-- Lines: 153 to 155
 		function info_button:_selected_changed(state)
 			info_icon:set_color(state and self._select_col or self._normal_col)
@@ -276,7 +276,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		2
 	}})
 	local char_panel_size = {char_images[1]:size()}
-	
+
 	-- Lines: 235 to 240
 	function char_btn:_selected_changed(state, instant)
 		CrewManagementGuiButton._selected_changed(self, state, instant)
@@ -928,7 +928,7 @@ function CrewManagementGui:open_custom_menu(params, category, custom_w, custom_h
 		custom_select = callback(self, self, "select_" .. category, params),
 		custom_unselect = callback(self, self, "select_" .. category, params)
 	}
-	
+
 	-- Lines: 787 to 795
 	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
@@ -970,7 +970,7 @@ function CrewManagementGui:open_character_menu(henchman_index)
 		custom_unselect = callback(self, self, "select_characters"),
 		c_clear_slots = callback(self, self, "clear_character_order")
 	}
-	
+
 	-- Lines: 827 to 833
 	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
@@ -1209,7 +1209,7 @@ end
 
 -- Lines: 1076 to 1080
 function CrewManagementGui:buy_new_weapon(data, gui)
-	
+
 	-- Lines: 1075 to 1076
 	local function item_allowed(weapon_data)
 		return managers.blackmarket:is_weapon_category_allowed_for_crew(weapon_data.categories[1])

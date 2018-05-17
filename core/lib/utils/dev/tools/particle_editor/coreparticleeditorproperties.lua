@@ -248,7 +248,7 @@ function CoreEffectProperty:validate()
 	}
 
 	if self._type == "value_list" then
-		
+
 		-- Lines: 205 to 217
 		local function contains(l, v)
 			for _, value in ipairs(l) do
@@ -508,7 +508,6 @@ end
 function create_color_selector(parent, view, prop)
 	local button = EWS:Button(parent, " ", "", "BU_EXACTFIT")
 
-	
 	-- Lines: 417 to 425
 	local function on_click(vars)
 		local cdlg = EWS:ColourDialog(vars.button, true, math.string_to_vector(vars.prop._value) * 0.00392156862745098)
@@ -522,7 +521,6 @@ function create_color_selector(parent, view, prop)
 		end
 	end
 
-	
 	-- Lines: 427 to 430
 	local function update_colour(vars)
 		local c = math.string_to_vector(vars.prop._value)
@@ -556,7 +554,6 @@ function create_texture_selector(parent, view, prop)
 	panel_sizer:add(field, 1, 0, "EXPAND")
 	panel_sizer:add(browse_button, 0, 0, "EXPAND")
 
-	
 	-- Lines: 448 to 456
 	local function on_browse_button_click()
 		local path = managers.database:open_file_dialog(panel, "Textures (*.dds)|*.dds", view._last_texture_dir)
@@ -588,7 +585,6 @@ function create_effect_selector(parent, view, prop)
 	panel_sizer:add(field, 1, 0, "EXPAND")
 	panel_sizer:add(browse_button, 0, 0, "EXPAND")
 
-	
 	-- Lines: 472 to 480
 	local function on_browse_button_click()
 		local path = managers.database:open_file_dialog(panel, "Effects (*.effect)|*.effect", view._last_used_dir)
@@ -611,7 +607,6 @@ end
 function create_percentage_slider(parent, view, prop)
 	local slider = EWS:Slider(parent, tonumber(prop._value) * 100, 0, 100, "", "")
 
-	
 	-- Lines: 491 to 494
 	local function on_thumbtrack(vars)
 		vars.prop._value = "" .. vars.slider:get_value() / 100
@@ -632,7 +627,6 @@ end
 function create_check(parent, view, prop)
 	local check = EWS:CheckBox(parent, "", "", "")
 
-	
 	-- Lines: 502 to 508
 	local function on_check(vars)
 		vars.prop._value = "false"
@@ -653,7 +647,7 @@ end
 
 -- Lines: 524 to 605
 function create_key_curve_widget(parent, view, prop)
-	
+
 	-- Lines: 517 to 525
 	local function refresh_list(vars)
 		local listbox = vars.listbox
@@ -668,7 +662,6 @@ function create_key_curve_widget(parent, view, prop)
 		vars.view:update_view(false)
 	end
 
-	
 	-- Lines: 527 to 536
 	local function on_add(vars)
 		local listbox = vars.listbox
@@ -685,7 +678,6 @@ function create_key_curve_widget(parent, view, prop)
 		end
 	end
 
-	
 	-- Lines: 538 to 548
 	local function on_remove(vars)
 		local listbox = vars.listbox
@@ -703,7 +695,6 @@ function create_key_curve_widget(parent, view, prop)
 		end
 	end
 
-	
 	-- Lines: 550 to 558
 	local function on_select(vars)
 		local listbox = vars.listbox
@@ -719,7 +710,6 @@ function create_key_curve_widget(parent, view, prop)
 		v:set_value(prop._keys[listbox:selected_index() + 1].v)
 	end
 
-	
 	-- Lines: 560 to 569
 	local function on_set(vars)
 		local listbox = vars.listbox
@@ -832,7 +822,6 @@ function CoreEffectProperty:create_widget(parent, view)
 	elseif self._type == "box" then
 		widget = EWS:AABBSelector(parent, "", math.string_to_vector(self._min), math.string_to_vector(self._max))
 
-		
 		-- Lines: 646 to 654
 		local function on_box_commit(widget_view)
 			if math.string_to_vector(self._min) ~= widget_view.widget:get_min() or math.string_to_vector(self._max) ~= widget_view.widget:get_max() then
@@ -888,7 +877,7 @@ function CoreEffectProperty:create_widget(parent, view)
 
 		self._compound_container:fill_property_container_sheet(widget, view)
 	elseif self._type == "list_objects" then
-		
+
 		-- Lines: 688 to 692
 		local function on_add_object(vars)
 			table.insert(vars.property._list_members, deep_clone(self._list_objects[vars.combo:get_value()]))
@@ -896,7 +885,6 @@ function CoreEffectProperty:create_widget(parent, view)
 			vars.view:update_view(false)
 		end
 
-		
 		-- Lines: 694 to 700
 		local function on_remove_object(vars)
 			if vars.list_box:selected_index() < 0 then
@@ -909,7 +897,6 @@ function CoreEffectProperty:create_widget(parent, view)
 			vars.view:update_view(false)
 		end
 
-		
 		-- Lines: 702 to 719
 		local function on_select_object(vars)
 			local top_sizer = EWS:BoxSizer("VERTICAL")
@@ -934,7 +921,6 @@ function CoreEffectProperty:create_widget(parent, view)
 			topdown_layout(vars.sheet)
 		end
 
-		
 		-- Lines: 721 to 726
 		local function fill_list(vars)
 			vars.list_box:clear()
@@ -1015,7 +1001,6 @@ function CoreEffectProperty:create_widget(parent, view)
 			widget:add_key(tonumber(k.t), v)
 		end
 
-		
 		-- Lines: 796 to 813
 		local function on_keys_commit(widget_view)
 			local keys = widget_view.widget:get_keys()
@@ -1149,7 +1134,7 @@ function CoreEffectProperty:load(node)
 		if self._type == "variant" then
 			self._variants[self._value]:load(node)
 		elseif self._type == "value_list" then
-			
+
 			-- Lines: 921 to 933
 			local function contains(l, v)
 				for _, value in ipairs(l) do

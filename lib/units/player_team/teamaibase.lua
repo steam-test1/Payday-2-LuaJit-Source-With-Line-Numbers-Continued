@@ -50,7 +50,6 @@ function TeamAIBase:set_loadout(loadout)
 		self:remove_upgrades()
 	end
 
-	
 	-- Lines: 62 to 67
 	local function aquire(item)
 		if not tweak_data.upgrades.crew_skill_definitions[item] then
@@ -78,7 +77,7 @@ end
 -- Lines: 79 to 94
 function TeamAIBase:remove_upgrades()
 	if self._loadout then
-		
+
 		-- Lines: 82 to 87
 		local function unaquire(item)
 			if not tweak_data.upgrades.crew_skill_definitions[item] then

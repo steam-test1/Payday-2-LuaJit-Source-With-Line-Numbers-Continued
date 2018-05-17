@@ -91,7 +91,6 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		}
 	})
 
-	
 	-- Lines: 69 to 71
 	local function animate_fade_in(o)
 		over(1, function (p)
@@ -109,7 +108,6 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		layer = self.layers.background - 1
 	})
 
-	
 	-- Lines: 76 to 79
 	local function func(o)
 		local start_blur = 0
@@ -201,7 +199,6 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 
 	self._credits_panel:set_height(ypos + 50)
 
-	
 	-- Lines: 165 to 186
 	local function scroll_func(o)
 		local y = o:top()

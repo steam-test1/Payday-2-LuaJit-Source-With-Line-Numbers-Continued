@@ -31,7 +31,7 @@ end
 
 -- Lines: 33 to 39
 function CoreChangeCameraAttributeCutsceneKey:evaluate(player, fast_forward)
-	
+
 	-- Lines: 28 to 34
 	local function set_attribute_if_valid(attribute_name)
 		local value = self:attribute_value(attribute_name)

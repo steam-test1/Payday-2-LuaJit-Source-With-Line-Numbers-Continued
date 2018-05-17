@@ -499,7 +499,6 @@ function HUDObjectives:_animate_complete_objective(objectives_panel)
 		amount_text:set_visible(false)
 	end
 
-	
 	-- Lines: 341 to 344
 	local function done_cb()
 		objectives_panel:child("objective_text"):set_text(utf8.to_upper(""))

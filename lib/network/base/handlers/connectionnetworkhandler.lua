@@ -1240,3 +1240,14 @@ function ConnectionNetworkHandler:sync_is_vr(sender)
 	peer:set_is_vr()
 end
 
+-- Lines: 1238 to 1245
+function ConnectionNetworkHandler:get_virus_achievement(sender)
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
+	managers.achievment:award("cac_28")
+end
+

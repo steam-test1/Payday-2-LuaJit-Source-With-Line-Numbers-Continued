@@ -158,49 +158,49 @@ function LuaProfilerGridBox:_sort_funcnodes()
 	local convert = nil
 
 	if self._sortcolumn == 1 then
-		
+
 		-- Lines: 143 to 144
 		function convert(fnid)
 			return string.lower(self._lpd:fn_func(fnid))
 		end
 	elseif self._sortcolumn == 2 then
-		
+
 		-- Lines: 147 to 148
 		function convert(fnid)
 			return string.lower(self._lpd:fn_file(fnid))
 		end
 	elseif self._sortcolumn == 3 then
-		
+
 		-- Lines: 151 to 152
 		function convert(fnid)
 			return tonumber(self._lpd:fn_line(fnid))
 		end
 	elseif self._sortcolumn == 4 then
-		
+
 		-- Lines: 155 to 156
 		function convert(fnid)
 			return self._lpd:fn_total_time(fnid)
 		end
 	elseif self._sortcolumn == 5 then
-		
+
 		-- Lines: 159 to 160
 		function convert(fnid)
 			return self._lpd:fn_local_time(fnid)
 		end
 	elseif self._sortcolumn == 6 then
-		
+
 		-- Lines: 163 to 164
 		function convert(fnid)
 			return self._lpd:fn_children_time(fnid)
 		end
 	elseif self._sortcolumn == 7 then
-		
+
 		-- Lines: 167 to 168
 		function convert(fnid)
 			return self._lpd:fn_num_calls(fnid)
 		end
 	elseif self._sortcolumn == 8 then
-		
+
 		-- Lines: 171 to 172
 		function convert(fnid)
 			return self._lpd:fn_num_sub_calls(fnid)
@@ -215,7 +215,6 @@ function LuaProfilerGridBox:_sort_funcnodes()
 		end
 	end
 
-	
 	-- Lines: 188 to 194
 	function sort(fn1, fn2)
 		if self._sortreverse then

@@ -1078,7 +1078,6 @@ function ControllerWrapper:get_input_axis_clbk(connection_name, func)
 
 	local connection = self._setup:get_connection(connection_name)
 
-	
 	-- Lines: 951 to 954
 	local function f(axis_id, controller_name, axis)
 		local unscaled_axis = mvector3.copy(axis)

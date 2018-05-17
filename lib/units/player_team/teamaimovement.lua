@@ -196,7 +196,7 @@ function TeamAIMovement:heat_clbk(state)
 	end
 end
 
--- Lines: 215 to 237
+-- Lines: 215 to 238
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
 		self._cool = false
@@ -212,7 +212,9 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 
 	if instant then
 		if self._switch_to_not_cool_clbk_id then
-			managers.enemy:remove_delayed_clbk(self._switch_to_not_cool_clbk_id)
+			local mute_debug_pause = self._switch_to_not_cool_clbk_id == "dummy"
+
+			managers.enemy:remove_delayed_clbk(self._switch_to_not_cool_clbk_id, mute_debug_pause)
 		end
 
 		self._switch_to_not_cool_clbk_id = "dummy"
@@ -225,7 +227,7 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 	end
 end
 
--- Lines: 241 to 260
+-- Lines: 242 to 261
 function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	if self._switch_to_not_cool_clbk_id and self._cool then
 		if self._unit:inventory():is_mask_unit_loaded() then
@@ -253,17 +255,17 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	end
 end
 
--- Lines: 264 to 265
+-- Lines: 265 to 266
 function TeamAIMovement:zipline_unit()
 	return nil
 end
 
--- Lines: 268 to 269
+-- Lines: 269 to 270
 function TeamAIMovement:current_state_name()
 	return nil
 end
 
--- Lines: 274 to 309
+-- Lines: 275 to 310
 function TeamAIMovement:pre_destroy()
 	if self._heat_listener_clbk then
 		managers.groupai:state():remove_listener(self._heat_listener_clbk)
@@ -308,7 +310,7 @@ function TeamAIMovement:pre_destroy()
 	end
 end
 
--- Lines: 313 to 323
+-- Lines: 314 to 324
 function TeamAIMovement:save(save_data)
 	TeamAIMovement.super.save(self, save_data)
 
@@ -317,7 +319,7 @@ function TeamAIMovement:save(save_data)
 	save_data.movement.has_bag = self:carrying_bag()
 end
 
--- Lines: 325 to 338
+-- Lines: 326 to 339
 function TeamAIMovement:load(load_data)
 	TeamAIMovement.super.load(self, load_data)
 
@@ -330,7 +332,7 @@ function TeamAIMovement:load(load_data)
 	end
 end
 
--- Lines: 341 to 354
+-- Lines: 342 to 355
 function TeamAIMovement:set_should_stay(should_stay)
 	if self._should_stay ~= should_stay then
 		local panel = managers.criminals:character_data_by_unit(self._unit)
@@ -349,7 +351,7 @@ function TeamAIMovement:set_should_stay(should_stay)
 	end
 end
 
--- Lines: 358 to 369
+-- Lines: 359 to 370
 function TeamAIMovement:chk_action_forbidden(action_type)
 	if action_type == "walk" and self._should_stay then
 		if Network:is_server() and self._unit:brain():objective() and (self._unit:brain():objective().type == "revive" or self._unit:brain():objective().forced) then
@@ -362,32 +364,32 @@ function TeamAIMovement:chk_action_forbidden(action_type)
 	return TeamAIMovement.super.chk_action_forbidden(self, action_type)
 end
 
--- Lines: 376 to 377
+-- Lines: 377 to 378
 function TeamAIMovement:carrying_bag()
 	return self._carry_unit and true or false
 end
 
--- Lines: 380 to 382
+-- Lines: 381 to 383
 function TeamAIMovement:set_carrying_bag(unit)
 	self._carry_unit = unit
 end
 
--- Lines: 384 to 385
+-- Lines: 385 to 386
 function TeamAIMovement:carry_id()
 	return self._carry_unit and self._carry_unit:carry_data():carry_id()
 end
 
--- Lines: 388 to 389
+-- Lines: 389 to 390
 function TeamAIMovement:carry_data()
 	return self._carry_unit and self._carry_unit:carry_data()
 end
 
--- Lines: 392 to 393
+-- Lines: 393 to 394
 function TeamAIMovement:carry_tweak()
 	return self:carry_id() and tweak_data.carry.types[tweak_data.carry[self:carry_id()].type]
 end
 
--- Lines: 396 to 411
+-- Lines: 397 to 412
 function TeamAIMovement:throw_bag(target_unit, reason)
 	if not self:carrying_bag() then
 		return
@@ -407,12 +409,12 @@ function TeamAIMovement:throw_bag(target_unit, reason)
 	end
 end
 
--- Lines: 414 to 415
+-- Lines: 415 to 416
 function TeamAIMovement:was_carrying_bag()
 	return self._was_carrying
 end
 
--- Lines: 420 to 429
+-- Lines: 421 to 430
 function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	if alive(target_unit) then
 		local dir = target_unit:position() - self._unit:position()
@@ -425,7 +427,7 @@ function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	end
 end
 
--- Lines: 432 to 485
+-- Lines: 433 to 486
 function TeamAIMovement:update(...)
 	TeamAIMovement.super.update(self, ...)
 

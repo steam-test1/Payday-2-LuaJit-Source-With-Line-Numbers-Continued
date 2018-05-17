@@ -1959,7 +1959,6 @@ function HUDManager:pd_start_progress(current, total, msg, icon_id)
 	self._pd2_hud_interaction:show_interaction_bar(current, total)
 	self._hud_player_downed:hide_timer()
 
-	
 	-- Lines: 1764 to 1771
 	local function feed_circle(o, total)
 		local t = 0

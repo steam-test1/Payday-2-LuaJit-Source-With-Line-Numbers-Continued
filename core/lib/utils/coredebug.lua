@@ -20,7 +20,7 @@ function only_in_debug(f, klass)
 
 	if not klass[old] then
 		klass[old] = klass[f]
-		
+
 		-- Lines: 42 to 46
 		klass[f] = function (...)
 			if Global.render_debug.draw_enabled then
@@ -63,7 +63,6 @@ function out(...)
 	local NO_CAT = "spam"
 	local args = {...}
 
-	
 	-- Lines: 89 to 93
 	local function correct_spaces(...)
 		local args = {...}
@@ -73,7 +72,6 @@ function out(...)
 		return unpack(sel)
 	end
 
-	
 	-- Lines: 96 to 106
 	local function do_print(c, ...)
 		local cat = CAT_TYPE
@@ -203,13 +201,12 @@ end
 
 -- Lines: 212 to 228
 function compile_and_reload()
-	
+
 	-- Lines: 207 to 212
 	local function root_path()
 		local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "../../")
 		local f = nil
 
-		
 		-- Lines: 210 to 211
 		function f(s)
 			local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
@@ -276,7 +273,6 @@ end
 function trace_ref(class_name, init_name, destroy_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
 
-	
 	-- Lines: 299 to 306
 	local function ref()
 		local t = rawget(_G, "_trace_ref_table")
@@ -289,7 +285,6 @@ function trace_ref(class_name, init_name, destroy_name)
 		end
 	end
 
-	
 	-- Lines: 308 to 309
 	local function stack()
 		return string.gsub(debug.traceback(), "%\n", "\n[CoreTraceRef]\t")

@@ -265,7 +265,7 @@ end
 
 -- Lines: 359 to 366
 function NavObstacleElement:select_unit_list_btn()
-	
+
 	-- Lines: 355 to 359
 	local function f(unit)
 		if not managers.editor:layer("Statics"):category_map()[unit:type():s()] then
@@ -327,7 +327,6 @@ function NavObstacleElement:_get_objects_by_unit(unit)
 		local tree_depth = 1
 		local _process_object_tree = nil
 
-		
 		-- Lines: 425 to 437
 		function _process_object_tree(obj, depth)
 			local indented_name = obj:name():s()

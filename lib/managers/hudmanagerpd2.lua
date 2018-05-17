@@ -174,7 +174,6 @@ function HUDManager:get_waiting_index(peer_id)
 		return self._waiting_index[peer_id]
 	end
 
-	
 	-- Lines: 191 to 193
 	local function set_index(i)
 		self._waiting_index[peer_id] = i
@@ -182,7 +181,6 @@ function HUDManager:get_waiting_index(peer_id)
 		return i
 	end
 
-	
 	-- Lines: 196 to 197
 	local function allowed_index(i)
 		return i and not table.contains(self._waiting_index, i)
@@ -711,7 +709,7 @@ end
 
 -- Lines: 795 to 813
 function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
-	
+
 	-- Lines: 733 to 795
 	local function add_panel(i)
 		self._teammate_panels[i]:add_panel()

@@ -369,7 +369,6 @@ function InfamyTreeGui:_setup()
 
 			item.glow_alpha = false
 
-			
 			-- Lines: 233 to 329
 			local function anim_pulse_glow(o)
 				local t = 0
@@ -576,7 +575,6 @@ function InfamyTreeGui:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	
 	-- Lines: 400 to 402
 	local function func(o)
 		over(0.6, function (p)
@@ -600,7 +598,6 @@ function InfamyTreeGui:_flash_item(item)
 	local image = item.panel:child("image")
 	local border = item.border
 
-	
 	-- Lines: 426 to 441
 	local function flash_anim()
 		local color = tweak_data.screen_colors.item_stage_1

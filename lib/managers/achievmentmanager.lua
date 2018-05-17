@@ -801,7 +801,6 @@ end
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
-	
 	-- Lines: 825 to 830
 	local function x360_unlock_result(result)
 		print("result", result)
@@ -940,7 +939,6 @@ function AchievmentManager:_check_autounlock_complete_heist()
 		"jobs"
 	}
 
-	
 	-- Lines: 959 to 973
 	local function eligible_for_autounlock(achievement_data)
 		local has_award = achievement_data.award

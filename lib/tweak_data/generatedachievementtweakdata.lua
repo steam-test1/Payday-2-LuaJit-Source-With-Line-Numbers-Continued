@@ -8585,6 +8585,7 @@ function init_auto_generated_achievement_data(tags)
 				tags.difficulty.normal,
 				tags.tactics.loud,
 				tags.tactics.killer,
+				tags.teamwork.players_1_to_4,
 				tags.contracts.locke
 			}
 		},

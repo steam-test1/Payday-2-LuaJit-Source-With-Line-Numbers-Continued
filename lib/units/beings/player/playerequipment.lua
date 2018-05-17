@@ -200,7 +200,7 @@ end
 
 -- Lines: 196 to 198
 function PlayerEquipment:use_armor_kit()
-	
+
 	-- Lines: 187 to 197
 	local function redirect()
 		if Network:is_client() then
@@ -251,7 +251,7 @@ function PlayerEquipment:use_bodybags_bag()
 	return false
 end
 
--- Lines: 233 to 256
+-- Lines: 233 to 261
 function PlayerEquipment:use_ecm_jammer()
 	if self._ecm_jammer_placement_requested then
 		return
@@ -264,16 +264,23 @@ function PlayerEquipment:use_ecm_jammer()
 		managers.statistics:use_ecm_jammer()
 
 		local duration_multiplier = managers.player:upgrade_level("ecm_jammer", "duration_multiplier", 0) + managers.player:upgrade_level("ecm_jammer", "duration_multiplier_2", 0) + 1
+		local relative_pos = ray.position - ray.body:position()
+
+		mvector3.rotate_with(relative_pos, ray.body:rotation():inverse())
+
+		local relative_rot = ray.body:rotation():inverse() * Rotation(ray.normal, math.UP)
 
 		if Network:is_client() then
 			self._ecm_jammer_placement_requested = true
 
-			managers.network:session():send_to_host("request_place_ecm_jammer", ray.position, ray.normal, duration_multiplier)
+			managers.network:session():send_to_host("request_place_ecm_jammer", duration_multiplier, ray.body, relative_pos, relative_rot)
 		else
 			local rot = Rotation(ray.normal, math.UP)
 			local unit = ECMJammerBase.spawn(ray.position, rot, duration_multiplier, self._unit, managers.network:session():local_peer():id())
 
 			unit:base():set_active(true)
+			unit:base():link_attachment(ray.body, relative_pos, relative_rot)
+			managers.network:session():send_to_peers_synched("sync_deployable_attachment", unit, ray.body, relative_pos, relative_rot)
 		end
 
 		return true
@@ -282,12 +289,12 @@ function PlayerEquipment:use_ecm_jammer()
 	return false
 end
 
--- Lines: 259 to 261
+-- Lines: 264 to 266
 function PlayerEquipment:from_server_ecm_jammer_placement_result()
 	self._ecm_jammer_placement_requested = nil
 end
 
--- Lines: 263 to 274
+-- Lines: 268 to 279
 function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 	if alive(self._dummy_unit) then
 		return self._dummy_unit
@@ -302,7 +309,7 @@ function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 	return self._dummy_unit
 end
 
--- Lines: 277 to 325
+-- Lines: 282 to 330
 function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	local from = self._unit:movement():m_head_pos()
 	local to = from + self._unit:movement():m_head_rot():y() * 220
@@ -358,7 +365,7 @@ function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
--- Lines: 329 to 345
+-- Lines: 334 to 350
 function PlayerEquipment:_can_place(eq_id)
 	if eq_id == "sentry_gun" then
 		local equipment_data = managers.player:selected_equipment()
@@ -382,7 +389,7 @@ function PlayerEquipment:_can_place(eq_id)
 	return true
 end
 
--- Lines: 349 to 367
+-- Lines: 354 to 372
 function PlayerEquipment:_sentry_gun_ammo_cost(sentry_uid)
 	local equipment_data = managers.player:selected_equipment()
 
@@ -413,7 +420,7 @@ function PlayerEquipment:_sentry_gun_ammo_cost(sentry_uid)
 	end
 end
 
--- Lines: 369 to 374
+-- Lines: 374 to 379
 function PlayerEquipment:get_sentry_deployement_cost(sentry_uid)
 	if self._sentry_ammo_cost and self._sentry_ammo_cost[sentry_uid] then
 		return self._sentry_ammo_cost[sentry_uid]
@@ -422,14 +429,14 @@ function PlayerEquipment:get_sentry_deployement_cost(sentry_uid)
 	return nil
 end
 
--- Lines: 377 to 381
+-- Lines: 382 to 386
 function PlayerEquipment:remove_sentry_deployement_cost(sentry_uid)
 	if self._sentry_ammo_cost and self._sentry_ammo_cost[sentry_uid] then
 		self._sentry_ammo_cost[sentry_uid] = nil
 	end
 end
 
--- Lines: 383 to 419
+-- Lines: 388 to 424
 function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	if self._sentrygun_placement_requested then
 		return
@@ -475,28 +482,28 @@ function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	return false
 end
 
--- Lines: 424 to 426
+-- Lines: 429 to 431
 function PlayerEquipment:use_flash_grenade()
 	self._grenade_name = "units/weapons/flash_grenade/flash_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines: 429 to 431
+-- Lines: 434 to 436
 function PlayerEquipment:use_smoke_grenade()
 	self._grenade_name = "units/weapons/smoke_grenade/smoke_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines: 434 to 436
+-- Lines: 439 to 441
 function PlayerEquipment:use_frag_grenade()
 	self._grenade_name = "units/weapons/frag_grenade/frag_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines: 440 to 452
+-- Lines: 445 to 457
 function PlayerEquipment:throw_flash_grenade()
 	if not self._grenade_name then
 		Application:error("Tried to throw a grenade with no name")
@@ -514,7 +521,7 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
--- Lines: 454 to 482
+-- Lines: 459 to 487
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
@@ -544,7 +551,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines: 484 to 504
+-- Lines: 489 to 509
 function PlayerEquipment:throw_grenade()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
@@ -568,7 +575,7 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
--- Lines: 508 to 511
+-- Lines: 513 to 516
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -577,7 +584,7 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
--- Lines: 516 to 521
+-- Lines: 521 to 526
 function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	if self._sentrygun_placement_requested then
 		self:_sentry_gun_ammo_cost(sentry_gun_id)
@@ -586,7 +593,7 @@ function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	self._sentrygun_placement_requested = nil
 end
 
--- Lines: 525 to 530
+-- Lines: 530 to 535
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)

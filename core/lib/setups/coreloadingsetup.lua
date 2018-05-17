@@ -14,7 +14,6 @@ function class(...)
 
 	setmetatable(class_table, super)
 
-	
 	-- Lines: 27 to 33
 	function class_table.new(klass, ...)
 		local object = {}

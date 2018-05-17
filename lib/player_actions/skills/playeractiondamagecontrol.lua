@@ -1,7 +1,7 @@
 PlayerAction.DamageControl = {}
 PlayerAction.DamageControl.Priority = 1
 
--- Lines: 4 to 105
+-- Lines: 4 to 109
 PlayerAction.DamageControl.Function = function ()
 	local timer = TimerManager:game()
 	local auto_shrug_time = nil
@@ -24,27 +24,29 @@ PlayerAction.DamageControl.Function = function ()
 		seconds_above = managers.player:upgrade_value_by_level("player", "damage_control_cooldown_drain", 1)[2]
 	}
 
-	
-	-- Lines: 30 to 45
+	-- Lines: 30 to 49
 	local function shrug_off_damage()
-		local player_damage = managers.player:player_unit():character_damage()
-		local remaining_damage = player_damage:clear_delayed_damage()
-		local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
-		local swan_song_active = managers.player:has_activate_temporary_upgrade("temporary", "berserker_damage_multiplier")
+		local player_unit = managers.player:player_unit()
 
-		if is_downed or swan_song_active then
-			return
-		end
+		if player_unit then
+			local player_damage = player_unit:character_damage()
+			local remaining_damage = player_damage:clear_delayed_damage()
+			local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
+			local swan_song_active = managers.player:has_activate_temporary_upgrade("temporary", "berserker_damage_multiplier")
 
-		if shrug_healing then
-			player_damage:restore_health(remaining_damage * shrug_healing, true)
+			if is_downed or swan_song_active then
+				return
+			end
+
+			if shrug_healing then
+				player_damage:restore_health(remaining_damage * shrug_healing, true)
+			end
 		end
 
 		auto_shrug_time = nil
 	end
 
-	
-	-- Lines: 47 to 63
+	-- Lines: 51 to 67
 	local function modify_damage_taken(amount, attack_data)
 		local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
 
@@ -65,16 +67,14 @@ PlayerAction.DamageControl.Function = function ()
 		return -removed
 	end
 
-	
-	-- Lines: 66 to 70
+	-- Lines: 70 to 74
 	local function on_ability_activated(ability_name)
 		if ability_name == "damage_control" then
 			shrug_off_damage()
 		end
 	end
 
-	
-	-- Lines: 72 to 79
+	-- Lines: 76 to 83
 	local function on_enemy_killed(weapon_unit, variant, enemy_unit)
 		local player = managers.player:player_unit()
 		local low_health = player:character_damage():health_ratio() <= cooldown_drain.health_ratio
@@ -94,8 +94,7 @@ PlayerAction.DamageControl.Function = function ()
 
 	local damage_taken_key = managers.player:add_modifier("damage_taken", modify_damage_taken)
 
-	
-	-- Lines: 89 to 94
+	-- Lines: 93 to 98
 	local function remove_listeners()
 		managers.player:unregister_message("check_skills", on_check_skills_key)
 		managers.player:unregister_message(Message.OnEnemyKilled, on_enemy_killed_key)

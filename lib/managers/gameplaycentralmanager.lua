@@ -958,7 +958,6 @@ function GamePlayCentralManager:debug_weapon()
 
 	gui:clear()
 
-	
 	-- Lines: 983 to 1027
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
@@ -970,7 +969,6 @@ function GamePlayCentralManager:debug_weapon()
 		local blueprint = weapon:base()._blueprint
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
-		
 		-- Lines: 993 to 994
 		local function add_line(text, s)
 			return text .. s .. "\n"

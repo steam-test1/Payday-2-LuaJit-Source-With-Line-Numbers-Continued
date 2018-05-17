@@ -63,7 +63,6 @@ function MenuInput:input_item(item, controller, mouse_click)
 		if item:parameters().sign_in then
 			print("requires sign in")
 
-			
 			-- Lines: 55 to 56
 			local function f(success)
 				print(success)

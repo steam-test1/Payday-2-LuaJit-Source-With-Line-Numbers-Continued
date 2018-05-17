@@ -76,7 +76,6 @@ function TestAPIHelper.register_API_function(name, category, args_str, func, des
 		TestAPI[category] = {}
 	end
 
-	
 	-- Lines: 85 to 123
 	TestAPI[category][name] = function (response_string, arg_tbl)
 		TestAPIHelper.register_event(name, response_string)
@@ -335,7 +334,6 @@ local function equip_weapon_in_game(category, slot)
 	local primary = category == "primaries"
 	local first_time = true
 
-	
 	-- Lines: 322 to 334
 	local function clbk()
 		if first_time then

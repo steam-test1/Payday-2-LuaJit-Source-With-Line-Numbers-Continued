@@ -111,7 +111,6 @@ function CivilianLogicTravel._optimize_path(path)
 		return path
 	end
 
-	
 	-- Lines: 119 to 125
 	local function remove_duplicates(path)
 		for i = #path, 2, -1 do

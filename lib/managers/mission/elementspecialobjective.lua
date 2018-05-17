@@ -77,14 +77,12 @@ end
 function ElementSpecialObjective:_finalize_values(values)
 	values.so_action = self:value("so_action")
 
-	
 	-- Lines: 37 to 40
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
 		values[name_in] = found_index ~= -1 and found_index or nil
 	end
 
-	
 	-- Lines: 42 to 46
 	local function _nil_if_default(name_in)
 		if values[name_in] == self._DEFAULT_VALUES[name_in] then
@@ -92,7 +90,6 @@ function ElementSpecialObjective:_finalize_values(values)
 		end
 	end
 
-	
 	-- Lines: 48 to 52
 	local function _nil_if_none(name_in)
 		if values[name_in] == "none" then
@@ -100,7 +97,6 @@ function ElementSpecialObjective:_finalize_values(values)
 		end
 	end
 
-	
 	-- Lines: 54 to 56
 	local function _save_boolean(name_in)
 		values[name_in] = values[name_in] or nil
@@ -354,7 +350,7 @@ function ElementSpecialObjective:on_executed(instigator)
 			Application:error("[ElementSpecialObjective:on_executed] Nav link without animation specified. Element id:", self._id)
 		end
 	else
-		local objective = self:get_objective(instigator)
+		local objective = self:get_objective()
 
 		if objective then
 			local search_dis_sq = self._values.search_distance

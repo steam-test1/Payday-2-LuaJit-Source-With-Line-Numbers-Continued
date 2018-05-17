@@ -13,7 +13,6 @@ PlayerAction.TagTeam.Function = function (tagged, owner)
 	local on_damage_key = {}
 	local on_damage_cooldown_key = {}
 
-	
 	-- Lines: 18 to 21
 	local function update_ability_radial()
 		local time_left = end_time - timer:time()
@@ -21,7 +20,6 @@ PlayerAction.TagTeam.Function = function (tagged, owner)
 		managers.hud:activate_teammate_ability_radial(HUDManager.PLAYER_PANEL, time_left, base_values.duration)
 	end
 
-	
 	-- Lines: 23 to 38
 	local function on_damage(damage_info)
 		local was_killed = damage_info.result.type == "death"
@@ -42,7 +40,6 @@ PlayerAction.TagTeam.Function = function (tagged, owner)
 		end
 	end
 
-	
 	-- Lines: 40 to 46
 	local function on_damage_cooldown(damage_info)
 		local was_killed = damage_info.result.type == "death"
@@ -89,7 +86,6 @@ PlayerAction.TagTeamTagged.Function = function (tagged, owner)
 	local end_time = timer:time() + base_values.duration
 	local on_damage_key = {}
 
-	
 	-- Lines: 86 to 93
 	local function on_damage(damage_info)
 		local was_killed = damage_info.result.type == "death"
@@ -107,7 +103,6 @@ PlayerAction.TagTeamTagged.Function = function (tagged, owner)
 	local ended_by_owner = false
 	local on_end_key = {}
 
-	
 	-- Lines: 99 to 103
 	local function on_action_end(end_tagged, end_owner)
 		local tagged_match = tagged == end_tagged

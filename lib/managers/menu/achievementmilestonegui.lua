@@ -56,7 +56,6 @@ function MilestoneItem:init(parent, data, black_bg)
 	if is_current then
 		local total = managers.achievment:total_unlocked()
 
-		
 		-- Lines: 50 to 51
 		local function func(o, at, max)
 			return string.format(" %d", at + data.last_at)

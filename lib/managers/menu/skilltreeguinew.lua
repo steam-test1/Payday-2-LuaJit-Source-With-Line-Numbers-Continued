@@ -360,7 +360,6 @@ function NewSkillTreeGui:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	
 	-- Lines: 276 to 278
 	local function func(o)
 		over(0.6, function (p)
@@ -2763,7 +2762,6 @@ function NewSkillTreeSkillItem:flash()
 
 	self._is_flashing = true
 
-	
 	-- Lines: 2294 to 2303
 	local function flash_anim(panel)
 		local st_color = skill_text:color()

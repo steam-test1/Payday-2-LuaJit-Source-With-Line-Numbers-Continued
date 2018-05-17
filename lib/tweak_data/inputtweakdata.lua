@@ -34,7 +34,6 @@ function InputTweakData:init(tweak_data)
 		}
 	}
 
-	
 	-- Lines: 58 to 76
 	local function valid_range(data, var, b, c, ex_b, ex_c)
 		local a = data[var]

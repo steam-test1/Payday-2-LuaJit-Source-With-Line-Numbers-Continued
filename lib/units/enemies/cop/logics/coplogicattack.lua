@@ -1519,7 +1519,7 @@ function CopLogicAttack._get_expected_attention_position(data, my_data)
 		end
 
 		if i_from_seg then
-			
+
 			-- Lines: 1541 to 1571
 			local function _find_aim_pos(from_nav_seg, to_nav_seg)
 				local closest_dis = 1000000000

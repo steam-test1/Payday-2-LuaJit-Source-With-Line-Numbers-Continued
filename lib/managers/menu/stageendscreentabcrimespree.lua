@@ -98,7 +98,6 @@ function CrimeSpreeResultTabItem:_create_level(total_w)
 	}
 	local bonus_i = 0
 
-	
 	-- Lines: 119 to 160
 	local function add_bonus(text, level, color)
 		local font = tweak_data.menu.pd2_small_font
@@ -270,7 +269,6 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	local level_gap = 5
 	local used_levels = {}
 
-	
 	-- Lines: 290 to 354
 	local function add_modifier_marker(level, text)
 		local p = 1 / ((end_val - start_level) / (level - start_level))
@@ -372,7 +370,6 @@ function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	})
 	local w = self._reward_panel:w() / #tweak_data.crime_spree.rewards
 
-	
 	-- Lines: 390 to 414
 	local function create_card(idx, panel, icon, rotation)
 		local scale = 0.65

@@ -7,7 +7,6 @@ PlayerAction.ExpertHandling.Function = function (player_manager, accuracy_bonus,
 	local current_time = Application:time()
 	local current_stacks = 0
 
-	
 	-- Lines: 12 to 17
 	local function on_hit()
 		current_stacks = current_stacks + 1

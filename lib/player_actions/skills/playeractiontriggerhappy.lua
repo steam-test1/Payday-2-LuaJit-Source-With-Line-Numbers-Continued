@@ -7,7 +7,6 @@ PlayerAction.TriggerHappy.Function = function (player_manager, damage_bonus, max
 	local current_time = Application:time()
 	local current_stacks = 1
 
-	
 	-- Lines: 12 to 21
 	local function on_hit(unit, attack_data)
 		local attacker_unit = attack_data.attacker_unit

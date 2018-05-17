@@ -21,7 +21,7 @@ end
 
 -- Lines: 34 to 39
 function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, all_units)
-	
+
 	-- Lines: 23 to 35
 	local function _draw_func(element_ids)
 		if not element_ids then
@@ -124,7 +124,6 @@ end
 function EnemyPreferedAddUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	
 	-- Lines: 105 to 120
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
@@ -167,7 +166,7 @@ end
 
 -- Lines: 137 to 145
 function EnemyPreferedAddUnitElement:remove_unit_list_btn()
-	
+
 	-- Lines: 136 to 138
 	local function f(unit)
 		return self._hed.spawn_groups and table.contains(self._hed.spawn_groups, unit:unit_data().unit_id) or self._hed.spawn_points and table.contains(self._hed.spawn_points, unit:unit_data().unit_id)

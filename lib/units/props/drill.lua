@@ -525,7 +525,6 @@ function Drill:set_skill_upgrades(upgrades)
 	}
 	local background_icon_x = 30
 
-	
 	-- Lines: 498 to 507
 	local function add_bg_icon_func(bg_icon_table, texture_name, color)
 		local icon_data = deep_clone(background_icon_template)

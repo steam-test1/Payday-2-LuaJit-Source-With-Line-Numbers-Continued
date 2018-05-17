@@ -172,7 +172,20 @@ function ECMJammerBase:setup(battery_life_upgrade_lvl, owner)
 	end
 end
 
--- Lines: 196 to 259
+-- Lines: 196 to 206
+function ECMJammerBase:link_attachment(body, relative_pos, relative_rot)
+	if relative_pos then
+		body:unit():link(body:root_object():name(), self._unit, self._unit:orientation_object():name())
+		self._unit:set_local_position(relative_pos)
+		self._unit:set_local_rotation(relative_rot)
+	else
+		body:unit():link(body:root_object():name(), self._unit)
+	end
+
+	self._attached_body = body
+end
+
+-- Lines: 208 to 255
 function ECMJammerBase:set_active(active)
 	active = active and true
 
@@ -182,20 +195,6 @@ function ECMJammerBase:set_active(active)
 
 	if Network:is_server() then
 		if active then
-			local from_pos = self._unit:position() + self._unit:rotation():y() * 10
-			local to_pos = self._unit:position() + self._unit:rotation():y() * -10
-			local ray = self._unit:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("trip_mine_placeables"))
-
-			if ray then
-				self._attached_data = {
-					body = ray.body,
-					position = ray.body:position(),
-					rotation = ray.body:rotation(),
-					index = 1,
-					max_index = 3
-				}
-			end
-
 			self._alert_filter = self:owner():movement():SO_access()
 			local jam_cameras, jam_pagers = nil
 
@@ -243,12 +242,12 @@ function ECMJammerBase:set_active(active)
 	self._jammer_active = active
 end
 
--- Lines: 263 to 264
+-- Lines: 259 to 260
 function ECMJammerBase:active()
 	return self._jammer_active
 end
 
--- Lines: 269 to 293
+-- Lines: 265 to 289
 function ECMJammerBase:update(unit, t, dt)
 	if self._battery_life > 0 then
 		self._battery_life = self._battery_life - dt
@@ -275,7 +274,7 @@ function ECMJammerBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines: 296 to 302
+-- Lines: 292 to 298
 function ECMJammerBase:check_battery()
 	if self._battery_life <= 0 then
 		self:set_battery_empty()
@@ -284,7 +283,7 @@ function ECMJammerBase:check_battery()
 	end
 end
 
--- Lines: 304 to 314
+-- Lines: 300 to 310
 function ECMJammerBase:set_battery_empty()
 	if self._battery_empty then
 		return
@@ -295,7 +294,7 @@ function ECMJammerBase:set_battery_empty()
 	self:_set_battery_empty()
 end
 
--- Lines: 316 to 328
+-- Lines: 312 to 324
 function ECMJammerBase:_set_battery_empty()
 	self._battery_empty = true
 
@@ -308,7 +307,7 @@ function ECMJammerBase:_set_battery_empty()
 	end
 end
 
--- Lines: 330 to 339
+-- Lines: 326 to 335
 function ECMJammerBase:set_battery_low()
 	if self._battery_low then
 		return
@@ -319,7 +318,7 @@ function ECMJammerBase:set_battery_low()
 	self:_set_battery_low()
 end
 
--- Lines: 341 to 354
+-- Lines: 337 to 350
 function ECMJammerBase:_set_battery_low()
 	self._battery_low = true
 
@@ -334,40 +333,26 @@ function ECMJammerBase:_set_battery_low()
 	end
 end
 
--- Lines: 356 to 359
+-- Lines: 352 to 355
 function ECMJammerBase:sync_set_battery_life(battery_life)
 	self._battery_life = battery_life
 
 	self:check_battery()
 end
 
--- Lines: 363 to 382
+-- Lines: 359 to 363
 function ECMJammerBase:_check_body()
-	if not self._attached_data then
-		return
-	end
-
-	if self._attached_data.index == 1 then
-		if not alive(self._attached_data.body) or not self._attached_data.body:enabled() then
-			self:_force_remove()
-		end
-	elseif self._attached_data.index == 2 then
-		if not alive(self._attached_data.body) or not mrotation.equal(self._attached_data.rotation, self._attached_data.body:rotation()) then
-			self:_force_remove()
-		end
-	elseif self._attached_data.index == 3 and (not alive(self._attached_data.body) or mvector3.not_equal(self._attached_data.position, self._attached_data.body:position())) then
+	if not alive(self._attached_body) or not self._attached_body:enabled() then
 		self:_force_remove()
 	end
-
-	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines: 386 to 387
+-- Lines: 367 to 368
 function ECMJammerBase:feedback_active()
 	return self._feedback_active
 end
 
--- Lines: 392 to 403
+-- Lines: 373 to 384
 function ECMJammerBase:set_feedback_active()
 	if not managers.network:session() then
 		return
@@ -380,7 +365,7 @@ function ECMJammerBase:set_feedback_active()
 	end
 end
 
--- Lines: 406 to 484
+-- Lines: 387 to 465
 function ECMJammerBase:_set_feedback_active(state)
 	state = state and true
 
@@ -463,12 +448,12 @@ function ECMJammerBase:_set_feedback_active(state)
 	self._feedback_active = state
 end
 
--- Lines: 488 to 490
+-- Lines: 469 to 471
 function ECMJammerBase:sync_set_feedback_active()
 	self:_set_feedback_active()
 end
 
--- Lines: 494 to 522
+-- Lines: 475 to 503
 function ECMJammerBase:clbk_feedback()
 	local t = TimerManager:game():time()
 	self._feedback_clbk_id = "ecm_feedback" .. tostring(self._unit:key())
@@ -508,24 +493,24 @@ function ECMJammerBase:clbk_feedback()
 	end
 end
 
--- Lines: 526 to 528
+-- Lines: 507 to 509
 function ECMJammerBase:contour_selected()
 	self._unit:contour():add("deployable_selected")
 end
 
--- Lines: 530 to 532
+-- Lines: 511 to 513
 function ECMJammerBase:contour_unselected()
 	self._unit:contour():remove("deployable_selected")
 end
 
--- Lines: 534 to 540
+-- Lines: 515 to 521
 function ECMJammerBase:contour_interaction()
 	if managers.player:has_category_upgrade("ecm_jammer", "can_activate_feedback") and managers.network:session() and self._unit:contour() and self._owner_id == managers.network:session():local_peer():id() then
 		self._unit:contour():add("deployable_interactable")
 	end
 end
 
--- Lines: 546 to 651
+-- Lines: 527 to 632
 function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, range)
 	local mvec3_dis_sq = mvector3.distance_sq
 	local slotmask = managers.slot:get_mask("bullet_impact_targets")
@@ -565,8 +550,7 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 	local half_range_sq = range * 0.5
 	half_range_sq = half_range_sq * half_range_sq
 
-	
-	-- Lines: 603 to 643
+	-- Lines: 584 to 624
 	local function _chk_apply_dmg_to_char(u_data)
 		if not u_data.char_tweak.ecm_vulnerability then
 			return
@@ -622,12 +606,12 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 	end
 end
 
--- Lines: 655 to 657
+-- Lines: 636 to 638
 function ECMJammerBase:_force_remove()
 	self._unit:set_slot(0)
 end
 
--- Lines: 661 to 669
+-- Lines: 642 to 650
 function ECMJammerBase:save(data)
 	local state = {
 		jammer_active = self._jammer_active or nil,
@@ -638,7 +622,7 @@ function ECMJammerBase:save(data)
 	data.ECMJammerBase = state
 end
 
--- Lines: 673 to 692
+-- Lines: 654 to 673
 function ECMJammerBase:load(data)
 	local state = data.ECMJammerBase
 	self._owner_id = state.owner_id
@@ -660,7 +644,7 @@ function ECMJammerBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines: 696 to 704
+-- Lines: 677 to 685
 function ECMJammerBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)

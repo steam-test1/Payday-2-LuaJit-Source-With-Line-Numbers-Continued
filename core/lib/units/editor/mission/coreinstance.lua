@@ -264,7 +264,7 @@ end
 
 -- Lines: 243 to 253
 function InstanceEventUnitElement:remove_entry(event_list_data)
-	
+
 	-- Lines: 232 to 244
 	local function _remove_guis(guis)
 		if guis then

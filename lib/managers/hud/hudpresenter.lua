@@ -142,7 +142,6 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 	local title = self._bg_box:child("title")
 	local text = self._bg_box:child("text")
 
-	
 	-- Lines: 194 to 217
 	local function open_done()
 		title:set_visible(true)
@@ -152,7 +151,6 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 		title:animate(callback(self, self, "_animate_hide_text"), text)
 		wait(0.5)
 
-		
 		-- Lines: 209 to 213
 		local function close_done()
 			present_panel:set_visible(false)

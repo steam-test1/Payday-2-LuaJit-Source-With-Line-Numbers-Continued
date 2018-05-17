@@ -442,7 +442,6 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 	local delay = 2
 	local player_importance_wgt = data.unit:in_slot(managers.slot:get_mask("enemies")) and {}
 
-	
 	-- Lines: 457 to 470
 	local function _angle_chk(attention_pos, dis, strictness)
 		mvector3.direction(tmp_vec1, my_pos, attention_pos)
@@ -456,7 +455,6 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 		end
 	end
 
-	
 	-- Lines: 473 to 506
 	local function _angle_and_dis_chk(handler, settings, attention_pos)
 		attention_pos = attention_pos or handler:get_detection_m_pos()
@@ -495,7 +493,6 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 		end
 	end
 
-	
 	-- Lines: 509 to 537
 	local function _nearly_visible_chk(attention_info, detect_pos)
 		local near_pos = tmp_vec1
@@ -533,7 +530,6 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 		end
 	end
 
-	
 	-- Lines: 541 to 556
 	local function _chk_record_acquired_attention_importance_wgt(attention_info)
 		if not player_importance_wgt or not attention_info.is_human_player then
@@ -550,7 +546,6 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 		table.insert(player_importance_wgt, weight)
 	end
 
-	
 	-- Lines: 560 to 587
 	local function _chk_record_attention_obj_importance_wgt(u_key, attention_info)
 		if not player_importance_wgt then
@@ -1111,7 +1106,7 @@ end
 
 -- Lines: 1155 to 1207
 function CopLogicBase._upd_suspicion(data, my_data, attention_obj)
-	
+
 	-- Lines: 1132 to 1156
 	local function _exit_func()
 		attention_obj.unit:movement():on_uncovered(data.unit)

@@ -487,7 +487,7 @@ function BlackMarketManager:equipped_armor(chk_armor_kit, chk_player_state)
 	if chk_armor_kit then
 		local equipped_deployable = self:equipped_deployable()
 
-		if managers.player:has_equipment_in_any_slot("armor_kit") and (managers.player:get_equipment_amount("armor_kit") > 0 or game_state_machine and game_state_machine:current_state_name() == "ingame_waiting_for_players") then
+		if managers.player:equipment_slot("armor_kit") and (managers.player:get_equipment_amount("armor_kit") > 0 or game_state_machine and game_state_machine:current_state_name() == "ingame_waiting_for_players") then
 			return self._defaults.armor
 		end
 	end
@@ -1442,7 +1442,7 @@ end
 
 -- Lines: 1390 to 1410
 function BlackMarketManager:henchman_loadout_string_from_loadout(loadout)
-	
+
 	-- Lines: 1384 to 1390
 	local function get_string(data, name, ...)
 		if not name or not data then
@@ -1479,7 +1479,6 @@ function BlackMarketManager:unpack_henchman_loadout_string(string)
 	local data = string.split(string or "", " ")
 	local index = 1
 
-	
 	-- Lines: 1418 to 1421
 	local function get_data()
 		local rtn = data[index]
@@ -1665,7 +1664,6 @@ function BlackMarketManager:load_economy_safe(safe_entry, safe_scene_data)
 	local drill_name = safe_scene_data.drill_data.drill_name
 	local saferoom_name = safe_scene_data.saferoom_data.saferoom_name
 
-	
 	-- Lines: 1620 to 1628
 	local function load_done()
 		safe_scene_data.safe_data.ready = true
@@ -1695,7 +1693,7 @@ function BlackMarketManager:load_economy_safe(safe_entry, safe_scene_data)
 	table.insert(self._preloading_list, {done_cb = load_done})
 end
 
--- Lines: 1642 to 1674
+-- Lines: 1642 to 1676
 function BlackMarketManager:preload_weapon_blueprint(category, factory_id, blueprint, spawn_workbench)
 	local parts = managers.weapon_factory:preload_blueprint(factory_id, blueprint, false, false, function ()
 	end, true)
@@ -1721,6 +1719,8 @@ function BlackMarketManager:preload_weapon_blueprint(category, factory_id, bluep
 			table.insert(self._preloading_list, new_loading)
 
 			loading_parts[part_id] = part
+		elseif self._category_resource_loaded[category] and self._category_resource_loaded[category][part_id] then
+			loading_parts[part_id] = part
 		end
 	end
 
@@ -1730,7 +1730,7 @@ function BlackMarketManager:preload_weapon_blueprint(category, factory_id, bluep
 	})
 end
 
--- Lines: 1677 to 1693
+-- Lines: 1679 to 1698
 function BlackMarketManager:resource_loaded_callback(category, loaded_table, parts)
 	if not category then
 		return
@@ -1740,10 +1740,12 @@ function BlackMarketManager:resource_loaded_callback(category, loaded_table, par
 
 	if loaded_category then
 		for part_id, unload in pairs(loaded_category) do
-			if unload.package then
-				managers.weapon_factory:unload_package(unload.package)
-			else
-				managers.dyn_resource:unload(Idstring("unit"), unload.name, managers.dyn_resource.DYN_RESOURCES_PACKAGE, false)
+			if not loaded_table[part_id] then
+				if unload.package then
+					managers.weapon_factory:unload_package(unload.package)
+				else
+					managers.dyn_resource:unload(Idstring("unit"), unload.name, managers.dyn_resource.DYN_RESOURCES_PACKAGE, false)
+				end
 			end
 		end
 	end
@@ -1751,7 +1753,7 @@ function BlackMarketManager:resource_loaded_callback(category, loaded_table, par
 	self._category_resource_loaded[category] = loaded_table
 end
 
--- Lines: 1695 to 1706
+-- Lines: 1700 to 1711
 function BlackMarketManager:release_preloaded_category(category)
 	if self._category_resource_loaded[category] then
 		for part_id, unload in pairs(self._category_resource_loaded[category]) do
@@ -1766,7 +1768,7 @@ function BlackMarketManager:release_preloaded_category(category)
 	end
 end
 
--- Lines: 1709 to 1720
+-- Lines: 1714 to 1725
 function BlackMarketManager:release_preloaded_blueprints()
 	for category, data in pairs(self._category_resource_loaded) do
 		for part_id, unload in pairs(data) do
@@ -1781,12 +1783,12 @@ function BlackMarketManager:release_preloaded_blueprints()
 	self._category_resource_loaded = {}
 end
 
--- Lines: 1722 to 1723
+-- Lines: 1727 to 1728
 function BlackMarketManager:is_preloading_weapons()
 	return #self._preloading_list > 0
 end
 
--- Lines: 1726 to 1815
+-- Lines: 1731 to 1820
 function BlackMarketManager:create_preload_ws()
 	if self._preload_ws then
 		return
@@ -1803,8 +1805,8 @@ function BlackMarketManager:create_preload_ws()
 			new_script.set_progress(new_script.progress + 1)
 		end
 	}
-	
-	-- Lines: 1739 to 1753
+
+	-- Lines: 1744 to 1758
 	function new_script.set_progress(progress)
 		new_script.progress = progress
 		local square_panel = panel:child("square_panel")
@@ -1900,8 +1902,7 @@ function BlackMarketManager:create_preload_ws()
 	}})
 	panel:script().set_progress(1)
 
-	
-	-- Lines: 1809 to 1813
+	-- Lines: 1814 to 1818
 	local function fade_in_animation(panel)
 		panel:hide()
 		coroutine.yield()
@@ -1911,13 +1912,13 @@ function BlackMarketManager:create_preload_ws()
 	panel:animate(fade_in_animation)
 end
 
--- Lines: 1819 to 1822
+-- Lines: 1824 to 1827
 function BlackMarketManager:buy_unlock_mask_slot(slot)
 	managers.money:on_buy_mask_slot(slot)
 	self:_unlock_mask_slot(slot)
 end
 
--- Lines: 1824 to 1829
+-- Lines: 1829 to 1834
 function BlackMarketManager:_unlock_mask_slot(slot)
 	if not self._global.unlocked_mask_slots then
 		self:_setup_unlocked_mask_slots()
@@ -1926,7 +1927,7 @@ function BlackMarketManager:_unlock_mask_slot(slot)
 	self._global.unlocked_mask_slots[slot] = true
 end
 
--- Lines: 1831 to 1836
+-- Lines: 1836 to 1841
 function BlackMarketManager:_lock_mask_slot(slot)
 	if not self._global.unlocked_mask_slots then
 		self:_setup_unlocked_mask_slots()
@@ -1935,18 +1936,18 @@ function BlackMarketManager:_lock_mask_slot(slot)
 	self._global.unlocked_mask_slots[slot] = false
 end
 
--- Lines: 1838 to 1839
+-- Lines: 1843 to 1844
 function BlackMarketManager:is_mask_slot_unlocked(slot)
 	return self._global.unlocked_mask_slots and self._global.unlocked_mask_slots[slot] or false
 end
 
--- Lines: 1844 to 1847
+-- Lines: 1849 to 1852
 function BlackMarketManager:buy_unlock_weapon_slot(category, slot)
 	managers.money:on_buy_weapon_slot(slot)
 	self:_unlock_weapon_slot(category, slot)
 end
 
--- Lines: 1849 to 1854
+-- Lines: 1854 to 1859
 function BlackMarketManager:_unlock_weapon_slot(category, slot)
 	if not self._global.unlocked_weapon_slots then
 		self:_setup_unlocked_weapon_slots()
@@ -1955,7 +1956,7 @@ function BlackMarketManager:_unlock_weapon_slot(category, slot)
 	self._global.unlocked_weapon_slots[category][slot] = true
 end
 
--- Lines: 1856 to 1861
+-- Lines: 1861 to 1866
 function BlackMarketManager:_lock_weapon_slot(category, slot)
 	if not self._global.unlocked_weapon_slots then
 		self:_setup_unlocked_weapon_slots()
@@ -1964,12 +1965,12 @@ function BlackMarketManager:_lock_weapon_slot(category, slot)
 	self._global.unlocked_weapon_slots[category][slot] = false
 end
 
--- Lines: 1863 to 1864
+-- Lines: 1868 to 1869
 function BlackMarketManager:is_weapon_slot_unlocked(category, slot)
 	return self._global.unlocked_weapon_slots and self._global.unlocked_weapon_slots[category] and self._global.unlocked_weapon_slots[category][slot] or false
 end
 
--- Lines: 1867 to 1877
+-- Lines: 1872 to 1882
 function BlackMarketManager:is_crafted_weapon_modified(category, slot)
 	local weapon = self._global.crafted_items[category][slot]
 
@@ -1985,7 +1986,7 @@ function BlackMarketManager:is_crafted_weapon_modified(category, slot)
 	return self:is_weapon_modified(factory_id, blueprint)
 end
 
--- Lines: 1880 to 1895
+-- Lines: 1885 to 1900
 function BlackMarketManager:is_weapon_modified(factory_id, blueprint)
 	local weapon = tweak_data.weapon.factory[factory_id]
 
@@ -2006,7 +2007,7 @@ function BlackMarketManager:is_weapon_modified(factory_id, blueprint)
 	return false
 end
 
--- Lines: 1900 to 1954
+-- Lines: 1905 to 1959
 function BlackMarketManager:update(t, dt)
 	if #self._preloading_list > 0 then
 		if not self._preload_ws then
@@ -2042,8 +2043,8 @@ function BlackMarketManager:update(t, dt)
 					if next_in_line.package then
 						managers.weapon_factory:load_package(next_in_line.package)
 					else
-						
-						-- Lines: 1932 to 1934
+
+						-- Lines: 1937 to 1939
 						local function f()
 							self._streaming_preload = nil
 						end
@@ -2070,7 +2071,7 @@ function BlackMarketManager:update(t, dt)
 	end
 end
 
--- Lines: 1956 to 1993
+-- Lines: 1961 to 1998
 function BlackMarketManager:add_to_inventory(global_value, category, id, not_new)
 	if category == "cash" then
 		local value_id = tweak_data.blackmarket[category][id].value_id
@@ -2102,14 +2103,14 @@ function BlackMarketManager:add_to_inventory(global_value, category, id, not_new
 	self:dispatch_event("added_to_inventory", id, category, global_value)
 end
 
--- Lines: 1995 to 1999
+-- Lines: 2000 to 2004
 function BlackMarketManager:_add_gvi_to_inventory(global_value, category, id)
 	self._global.global_value_items[global_value].inventory[category] = self._global.global_value_items[global_value].inventory[category] or {}
 	local inv_data = self._global.global_value_items[global_value].inventory[category]
 	inv_data[id] = (inv_data[id] or 0) + 1
 end
 
--- Lines: 2001 to 2009
+-- Lines: 2006 to 2014
 function BlackMarketManager:_remove_gvi_from_inventory(global_value, category, id)
 	local inv_data = self._global.global_value_items[global_value].inventory[category]
 
@@ -2122,7 +2123,7 @@ function BlackMarketManager:_remove_gvi_from_inventory(global_value, category, i
 	end
 end
 
--- Lines: 2011 to 2016
+-- Lines: 2016 to 2021
 function BlackMarketManager:_add_gvi_to_crafted_item(global_value, category, slot, id)
 	self._global.global_value_items[global_value].crafted_items[category] = self._global.global_value_items[global_value].crafted_items[category] or {}
 	local craft_data = self._global.global_value_items[global_value].crafted_items[category]
@@ -2130,7 +2131,7 @@ function BlackMarketManager:_add_gvi_to_crafted_item(global_value, category, slo
 	craft_data[slot][id] = (craft_data[slot][id] or 0) + 1
 end
 
--- Lines: 2018 to 2030
+-- Lines: 2023 to 2035
 function BlackMarketManager:_remove_gvi_from_crafted_item(global_value, category, slot, id)
 	local craft_data = self._global.global_value_items[global_value].crafted_items[category]
 
@@ -2147,7 +2148,7 @@ function BlackMarketManager:_remove_gvi_from_crafted_item(global_value, category
 	end
 end
 
--- Lines: 2032 to 2058
+-- Lines: 2037 to 2063
 function BlackMarketManager:alter_global_value_item(global_value, category, slot, id, ...)
 	if not self._global.global_value_items or not self._global.global_value_items[global_value] then
 		return
@@ -2176,7 +2177,7 @@ function BlackMarketManager:alter_global_value_item(global_value, category, slot
 	end
 end
 
--- Lines: 2060 to 2074
+-- Lines: 2065 to 2079
 function BlackMarketManager:fetch_new_items_unlocked()
 	local data = {}
 
@@ -2200,7 +2201,7 @@ function BlackMarketManager:fetch_new_items_unlocked()
 	return data
 end
 
--- Lines: 2077 to 2093
+-- Lines: 2082 to 2098
 function BlackMarketManager:remove_new_drop(global_value, category, id)
 	if not self._global.new_drops[global_value] then
 		return
@@ -2221,7 +2222,7 @@ function BlackMarketManager:remove_new_drop(global_value, category, id)
 	end
 end
 
--- Lines: 2095 to 2098
+-- Lines: 2100 to 2103
 function BlackMarketManager:remove_all_new_drop()
 	local cleared = table.size(self._global.new_drops) > 0
 	self._global.new_drops = {}
@@ -2229,7 +2230,7 @@ function BlackMarketManager:remove_all_new_drop()
 	return cleared
 end
 
--- Lines: 2101 to 2115
+-- Lines: 2106 to 2120
 function BlackMarketManager:get_weapon_new_part_drops(id)
 	local uses_parts = managers.weapon_factory:get_parts_from_factory_id(id) or {}
 	local new_parts = {}
@@ -2249,7 +2250,7 @@ function BlackMarketManager:get_weapon_new_part_drops(id)
 	return new_parts
 end
 
--- Lines: 2118 to 2125
+-- Lines: 2123 to 2130
 function BlackMarketManager:check_new_drop(global_value, category, id)
 	if not self._global.new_drops[global_value] then
 		return false
@@ -2262,7 +2263,7 @@ function BlackMarketManager:check_new_drop(global_value, category, id)
 	return self._global.new_drops[global_value][category][id] and true or false
 end
 
--- Lines: 2128 to 2136
+-- Lines: 2133 to 2141
 function BlackMarketManager:check_new_drop_category(global_value, category)
 	if not self._global.new_drops[global_value] then
 		return false
@@ -2275,7 +2276,7 @@ function BlackMarketManager:check_new_drop_category(global_value, category)
 	return table.size(self._global.new_drops[global_value][category]) > 0 and true or false
 end
 
--- Lines: 2139 to 2144
+-- Lines: 2144 to 2149
 function BlackMarketManager:got_any_new_drop()
 	local amount_new_loot = table.size(self._global.new_drops)
 
@@ -2286,7 +2287,7 @@ function BlackMarketManager:got_any_new_drop()
 	return false
 end
 
--- Lines: 2147 to 2231
+-- Lines: 2152 to 2236
 function BlackMarketManager:got_new_drop(global_value, category, id)
 	local category_ids = Idstring(category)
 
@@ -2380,7 +2381,7 @@ function BlackMarketManager:got_new_drop(global_value, category, id)
 	return false
 end
 
--- Lines: 2234 to 2246
+-- Lines: 2239 to 2251
 function BlackMarketManager:get_inventory_category(category)
 	local t = {}
 
@@ -2403,7 +2404,7 @@ function BlackMarketManager:get_inventory_category(category)
 	return t
 end
 
--- Lines: 2249 to 2267
+-- Lines: 2254 to 2272
 function BlackMarketManager:merge_inventory_masks()
 	local normals = self._global.inventory.normal.masks or {}
 
@@ -2425,7 +2426,7 @@ function BlackMarketManager:merge_inventory_masks()
 	end
 end
 
--- Lines: 2269 to 2279
+-- Lines: 2274 to 2284
 function BlackMarketManager:get_inventory_masks()
 	local masks = {}
 
@@ -2444,7 +2445,7 @@ function BlackMarketManager:get_inventory_masks()
 	return masks
 end
 
--- Lines: 2282 to 2286
+-- Lines: 2287 to 2291
 function BlackMarketManager:get_global_value(category, name_id)
 	local category = tweak_data.blackmarket[category] or tweak_data.economy[category]
 	local data = category[name_id]
@@ -2452,7 +2453,7 @@ function BlackMarketManager:get_global_value(category, name_id)
 	return data.infamous and "infamous" or data.global_value or data.dlc or data.dlcs and data.dlcs[1] or "normal"
 end
 
--- Lines: 2289 to 2294
+-- Lines: 2294 to 2299
 function BlackMarketManager:get_crafted_category(category)
 	if not self._global.crafted_items then
 		return
@@ -2461,7 +2462,7 @@ function BlackMarketManager:get_crafted_category(category)
 	return self._global.crafted_items[category]
 end
 
--- Lines: 2297 to 2305
+-- Lines: 2302 to 2310
 function BlackMarketManager:get_crafted_category_slot(category, slot)
 	if not self._global.crafted_items then
 		return
@@ -2474,12 +2475,12 @@ function BlackMarketManager:get_crafted_category_slot(category, slot)
 	return self._global.crafted_items[category][slot]
 end
 
--- Lines: 2308 to 2309
+-- Lines: 2313 to 2314
 function BlackMarketManager:get_weapon_data(weapon_id)
 	return self._global.weapons[weapon_id]
 end
 
--- Lines: 2312 to 2326
+-- Lines: 2317 to 2331
 function BlackMarketManager:get_crafted_custom_name(category, slot, add_quotation)
 	local crafted_slot = self:get_crafted_category_slot(category, slot)
 	local cosmetics = crafted_slot and crafted_slot.cosmetics
@@ -2499,7 +2500,7 @@ function BlackMarketManager:get_crafted_custom_name(category, slot, add_quotatio
 	end
 end
 
--- Lines: 2327 to 2335
+-- Lines: 2332 to 2340
 function BlackMarketManager:set_crafted_custom_name(category, slot, custom_name)
 	local crafted_slot = self:get_crafted_category_slot(category, slot)
 
@@ -2510,7 +2511,7 @@ function BlackMarketManager:set_crafted_custom_name(category, slot, custom_name)
 	crafted_slot.custom_name = custom_name ~= "" and custom_name
 end
 
--- Lines: 2337 to 2345
+-- Lines: 2342 to 2350
 function BlackMarketManager:get_mask_name_by_category_slot(category, slot)
 	local crafted_slot = self:get_crafted_category_slot(category, slot)
 
@@ -2525,7 +2526,7 @@ function BlackMarketManager:get_mask_name_by_category_slot(category, slot)
 	return ""
 end
 
--- Lines: 2349 to 2379
+-- Lines: 2354 to 2384
 function BlackMarketManager:get_weapon_name_by_category_slot(category, slot)
 	if category == "primaries" then
 		local forced_primary = self:forced_primary()
@@ -2562,7 +2563,7 @@ function BlackMarketManager:get_weapon_name_by_category_slot(category, slot)
 	return ""
 end
 
--- Lines: 2382 to 2392
+-- Lines: 2387 to 2397
 function BlackMarketManager:get_weapon_category(category)
 	local weapon_index = {
 		primaries = 2,
@@ -2582,7 +2583,7 @@ function BlackMarketManager:get_weapon_category(category)
 	return t
 end
 
--- Lines: 2395 to 2408
+-- Lines: 2400 to 2413
 function BlackMarketManager:get_weapon_blueprint(category, slot)
 	if not self._global.crafted_items then
 		return
@@ -2599,17 +2600,17 @@ function BlackMarketManager:get_weapon_blueprint(category, slot)
 	return self._global.crafted_items[category][slot].blueprint
 end
 
--- Lines: 2411 to 2412
+-- Lines: 2416 to 2417
 function BlackMarketManager:get_perks_from_weapon_blueprint(factory_id, blueprint)
 	return managers.weapon_factory:get_perks(factory_id, blueprint)
 end
 
--- Lines: 2415 to 2416
+-- Lines: 2420 to 2421
 function BlackMarketManager:get_perks_from_part(part_id)
 	return managers.weapon_factory:get_perks_from_part_id(part_id)
 end
 
--- Lines: 2420 to 2426
+-- Lines: 2425 to 2431
 function BlackMarketManager:get_melee_weapon_stats(melee_weapon_id)
 	local data = self:get_melee_weapon_data(melee_weapon_id)
 
@@ -2620,7 +2621,7 @@ function BlackMarketManager:get_melee_weapon_stats(melee_weapon_id)
 	return {}
 end
 
--- Lines: 2430 to 2457
+-- Lines: 2435 to 2462
 function BlackMarketManager:_get_weapon_stats(weapon_id, blueprint, cosmetics)
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 	local weapon_tweak_data = tweak_data.weapon[weapon_id] or {}
@@ -2655,7 +2656,7 @@ function BlackMarketManager:_get_weapon_stats(weapon_id, blueprint, cosmetics)
 	return weapon_stats
 end
 
--- Lines: 2460 to 2473
+-- Lines: 2465 to 2478
 function BlackMarketManager:get_weapon_stats(category, slot, blueprint)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:get_weapon_stats] Trying to get weapon stats on weapon that doesn't exist", category, slot)
@@ -2673,12 +2674,12 @@ function BlackMarketManager:get_weapon_stats(category, slot, blueprint)
 	return self:_get_weapon_stats(crafted.weapon_id, blueprint, crafted.cosmetics)
 end
 
--- Lines: 2476 to 2477
+-- Lines: 2481 to 2482
 function BlackMarketManager:get_weapon_stats_without_mod(category, slot, part_id)
 	return self:get_weapon_stats_with_mod(category, slot, part_id, true)
 end
 
--- Lines: 2480 to 2500
+-- Lines: 2485 to 2505
 function BlackMarketManager:get_weapon_stats_with_mod(category, slot, part_id, remove_mod)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:get_weapon_stats_with_mod] Trying to get weapon stats on weapon that doesn't exist", category, slot)
@@ -2698,22 +2699,22 @@ function BlackMarketManager:get_weapon_stats_with_mod(category, slot, part_id, r
 	return self:_get_weapon_stats(crafted.weapon_id, blueprint, crafted.cosmetics)
 end
 
--- Lines: 2503 to 2504
+-- Lines: 2508 to 2509
 function BlackMarketManager:calculate_weapon_visibility(weapon)
 	return #tweak_data.weapon.stats.concealment - self:calculate_weapon_concealment(weapon)
 end
 
--- Lines: 2508 to 2509
+-- Lines: 2513 to 2514
 function BlackMarketManager:calculate_armor_visibility(armor)
 	return #tweak_data.weapon.stats.concealment - self:_calculate_armor_concealment(armor or self:equipped_armor(true))
 end
 
--- Lines: 2512 to 2513
+-- Lines: 2517 to 2518
 function BlackMarketManager:calculate_melee_weapon_visibility(melee_weapon)
 	return #tweak_data.weapon.stats.concealment - self:_calculate_melee_weapon_concealment(melee_weapon or self:equipped_melee_weapon())
 end
 
--- Lines: 2516 to 2521
+-- Lines: 2521 to 2526
 function BlackMarketManager:calculate_weapon_concealment(weapon)
 	if type(weapon) == "string" then
 		weapon = weapon == "primaries" and self:equipped_primary() or weapon == "secondaries" and self:equipped_secondary()
@@ -2722,12 +2723,12 @@ function BlackMarketManager:calculate_weapon_concealment(weapon)
 	return self:_calculate_weapon_concealment(weapon)
 end
 
--- Lines: 2524 to 2525
+-- Lines: 2529 to 2530
 function BlackMarketManager:calculate_armor_concealment(armor)
 	return self:_calculate_armor_concealment(armor or self:equipped_armor(true))
 end
 
--- Lines: 2528 to 2546
+-- Lines: 2533 to 2551
 function BlackMarketManager:_calculate_weapon_concealment(weapon)
 	local factory_id = weapon.factory_id
 	local weapon_id = weapon.weapon_id or managers.weapon_factory:get_weapon_id_by_factory_id(factory_id)
@@ -2751,7 +2752,7 @@ function BlackMarketManager:_calculate_weapon_concealment(weapon)
 	return (base_stats.concealment + bonus + (parts_stats.concealment or 0) + (bonus_stats.concealment or 0)) * (modifiers_stats and modifiers_stats.concealment or 1)
 end
 
--- Lines: 2549 to 2552
+-- Lines: 2554 to 2557
 function BlackMarketManager:_calculate_armor_concealment(armor)
 	local armor_data = tweak_data.blackmarket.armors[armor]
 	local body_armor_value = managers.player:body_armor_value("concealment", armor_data.upgrade_level)
@@ -2759,14 +2760,14 @@ function BlackMarketManager:_calculate_armor_concealment(armor)
 	return body_armor_value
 end
 
--- Lines: 2555 to 2557
+-- Lines: 2560 to 2562
 function BlackMarketManager:_calculate_melee_weapon_concealment(melee_weapon)
 	local melee_weapon_data = tweak_data.blackmarket.melee_weapons[melee_weapon].stats
 
 	return melee_weapon_data.concealment or #tweak_data.weapon.stats.concealment
 end
 
--- Lines: 2560 to 2579
+-- Lines: 2565 to 2584
 function BlackMarketManager:_get_concealment(primary, secondary, armor, melee_weapon, modifier)
 	local stats_tweak_data = tweak_data.weapon.stats
 	local primary_visibility = self:calculate_weapon_visibility(primary)
@@ -2782,24 +2783,24 @@ function BlackMarketManager:_get_concealment(primary, secondary, armor, melee_we
 	return stats_tweak_data.concealment[total_concealment], total_concealment
 end
 
--- Lines: 2582 to 2583
+-- Lines: 2587 to 2588
 function BlackMarketManager:_get_concealment_from_local_player(ignore_armor_kit)
 	return self:_get_concealment(self:equipped_primary(), self:equipped_secondary(), self:equipped_armor(not ignore_armor_kit), self:equipped_melee_weapon(), self:visibility_modifiers())
 end
 
--- Lines: 2586 to 2587
+-- Lines: 2591 to 2592
 function BlackMarketManager:_get_concealment_from_outfit_string(outfit_string)
 	return self:_get_concealment(outfit_string.primary, outfit_string.secondary, outfit_string.armor_current or outfit_string.armor, outfit_string.melee_weapon, -outfit_string.concealment_modifier)
 end
 
--- Lines: 2590 to 2592
+-- Lines: 2595 to 2597
 function BlackMarketManager:_get_concealment_from_peer(peer)
 	local outfit = peer:blackmarket_outfit()
 
 	return self:_get_concealment(outfit.primary, outfit.secondary, outfit.armor_current or outfit.armor, outfit.melee_weapon, -outfit.concealment_modifier, peer)
 end
 
--- Lines: 2595 to 2607
+-- Lines: 2600 to 2612
 function BlackMarketManager:get_real_visibility_index_from_custom_data(data)
 	local stats_tweak_data = tweak_data.weapon.stats
 	local primary_visibility = self:calculate_weapon_visibility(data.primaries or "primaries")
@@ -2813,7 +2814,7 @@ function BlackMarketManager:get_real_visibility_index_from_custom_data(data)
 	return total_concealment
 end
 
--- Lines: 2611 to 2623
+-- Lines: 2616 to 2628
 function BlackMarketManager:get_real_visibility_index_of_local_player()
 	local stats_tweak_data = tweak_data.weapon.stats
 	local primary_visibility = self:calculate_weapon_visibility("primaries")
@@ -2827,22 +2828,22 @@ function BlackMarketManager:get_real_visibility_index_of_local_player()
 	return total_concealment
 end
 
--- Lines: 2627 to 2628
+-- Lines: 2632 to 2633
 function BlackMarketManager:get_suspicion_of_local_player()
 	return self:_get_concealment_from_local_player()
 end
 
--- Lines: 2632 to 2633
+-- Lines: 2637 to 2638
 function BlackMarketManager:get_concealment_of_peer(peer)
 	return self:_get_concealment_from_peer(peer)
 end
 
--- Lines: 2636 to 2637
+-- Lines: 2641 to 2642
 function BlackMarketManager:_get_concealment_of_outfit_string(outfit_string)
 	return self:_get_concealment_from_outfit_string(outfit_string)
 end
 
--- Lines: 2641 to 2648
+-- Lines: 2646 to 2653
 function BlackMarketManager:_calculate_suspicion_offset(index, lerp)
 	local con_val = tweak_data.weapon.stats.concealment[index]
 	local min_val = tweak_data.weapon.stats.concealment[1]
@@ -2854,21 +2855,21 @@ function BlackMarketManager:_calculate_suspicion_offset(index, lerp)
 	return math.lerp(0, lerp, susp_lerp)
 end
 
--- Lines: 2651 to 2653
+-- Lines: 2656 to 2658
 function BlackMarketManager:get_suspicion_offset_of_outfit_string(outfit_string, lerp)
 	local con_mul, index = self:_get_concealment_of_outfit_string(outfit_string)
 
 	return self:_calculate_suspicion_offset(index, lerp), index == 1
 end
 
--- Lines: 2656 to 2658
+-- Lines: 2661 to 2663
 function BlackMarketManager:get_suspicion_offset_of_peer(peer, lerp)
 	local con_mul, index = self:get_concealment_of_peer(peer)
 
 	return self:_calculate_suspicion_offset(index, lerp)
 end
 
--- Lines: 2661 to 2664
+-- Lines: 2666 to 2669
 function BlackMarketManager:get_suspicion_offset_of_local(lerp, ignore_armor_kit)
 	local con_mul, index = self:_get_concealment_from_local_player(ignore_armor_kit)
 	local val = self:_calculate_suspicion_offset(index, lerp or 1)
@@ -2876,7 +2877,7 @@ function BlackMarketManager:get_suspicion_offset_of_local(lerp, ignore_armor_kit
 	return val, index == 1, index == #tweak_data.weapon.stats.concealment - 1
 end
 
--- Lines: 2667 to 2672
+-- Lines: 2672 to 2677
 function BlackMarketManager:get_suspicion_offset_from_custom_data(data, lerp)
 	local index = self:get_real_visibility_index_from_custom_data(data)
 	index = math.clamp(index, 1, #tweak_data.weapon.stats.concealment)
@@ -2885,7 +2886,7 @@ function BlackMarketManager:get_suspicion_offset_from_custom_data(data, lerp)
 	return val, index == 1, index == #tweak_data.weapon.stats.concealment - 1
 end
 
--- Lines: 2675 to 2691
+-- Lines: 2680 to 2696
 function BlackMarketManager:visibility_modifiers()
 	local skill_bonuses = 0
 	skill_bonuses = skill_bonuses - managers.player:upgrade_value("player", "passive_concealment_modifier", 0)
@@ -2905,7 +2906,7 @@ function BlackMarketManager:visibility_modifiers()
 	return skill_bonuses
 end
 
--- Lines: 2694 to 2706
+-- Lines: 2699 to 2711
 function BlackMarketManager:concealment_modifier(type, upgrade_level)
 	local modifier = 0
 
@@ -2923,7 +2924,7 @@ function BlackMarketManager:concealment_modifier(type, upgrade_level)
 	return modifier
 end
 
--- Lines: 2711 to 2716
+-- Lines: 2716 to 2721
 function BlackMarketManager:team_visibility_modifiers()
 	local modifier = 0
 	modifier = modifier + managers.player:upgrade_value("team", "crew_add_concealment", 0)
@@ -2931,7 +2932,7 @@ function BlackMarketManager:team_visibility_modifiers()
 	return modifier
 end
 
--- Lines: 2719 to 2756
+-- Lines: 2724 to 2761
 function BlackMarketManager:get_lootdropable_mods_by_weapon_id(weapon_id, global_value, is_challenge_drop)
 	local droppable_parts = self:get_dropable_mods_by_weapon_id(weapon_id)
 	local loot_table = {}
@@ -2941,8 +2942,7 @@ function BlackMarketManager:get_lootdropable_mods_by_weapon_id(weapon_id, global
 		global_value = false
 	end
 
-	
-	-- Lines: 2728 to 2733
+	-- Lines: 2733 to 2738
 	local function chk_dlc_func(global_value)
 		local all_dlc_data = Global.dlc_manager.all_dlc_data
 
@@ -2975,7 +2975,7 @@ function BlackMarketManager:get_lootdropable_mods_by_weapon_id(weapon_id, global
 	return loot_table, limited_loot_table
 end
 
--- Lines: 2759 to 2865
+-- Lines: 2764 to 2870
 function BlackMarketManager:get_dropable_mods_by_weapon_id(weapon_id, weapon_data)
 	local parts_tweak_data = tweak_data.weapon.factory.parts
 	local all_mods = tweak_data.blackmarket.weapon_mods
@@ -3103,7 +3103,7 @@ function BlackMarketManager:get_dropable_mods_by_weapon_id(weapon_id, weapon_dat
 	return dropable_mods
 end
 
--- Lines: 2868 to 2875
+-- Lines: 2873 to 2880
 function BlackMarketManager:sell_item(item_data)
 	if not self:remove_item(item_data.global_value, item_data.category, item_data.id) then
 		Application:error("[BlackMarketManager:sell_item] Failed to sell item", item_data.global_value, item_data.category, item_data.id)
@@ -3114,7 +3114,7 @@ function BlackMarketManager:sell_item(item_data)
 	self:_sell_item(item_data)
 end
 
--- Lines: 2877 to 2884
+-- Lines: 2882 to 2889
 function BlackMarketManager:_sell_item(item_data)
 	local item_def = tweak_data.blackmarket[item_data.category][item_data.id]
 	local value_multiplier = tweak_data.lootdrop.global_values[item_data.global_value].value_multiplier
@@ -3124,7 +3124,7 @@ function BlackMarketManager:_sell_item(item_data)
 	print("Sold for", money, "! (", pc, value_multiplier, managers.plater:upgrade_value("player", "sell_cost_multiplier", 1), ")")
 end
 
--- Lines: 2887 to 2917
+-- Lines: 2892 to 2922
 function BlackMarketManager:apply_mask_craft_on_unit(unit, blueprint)
 	local materials = unit:get_objects_by_type(Idstring("material"))
 	local material = materials[#materials]
@@ -3163,7 +3163,7 @@ function BlackMarketManager:apply_mask_craft_on_unit(unit, blueprint)
 	return material_texture, reflection_texture
 end
 
--- Lines: 2921 to 2947
+-- Lines: 2926 to 2952
 function BlackMarketManager:test_craft_mask(slot)
 	slot = slot or 1
 	local blueprint = {}
@@ -3195,7 +3195,7 @@ function BlackMarketManager:test_craft_mask(slot)
 	self:craft_item("masks", slot, blueprint)
 end
 
--- Lines: 2949 to 2958
+-- Lines: 2954 to 2963
 function BlackMarketManager:has_parts_for_blueprint(category, blueprint)
 	for category, data in pairs(blueprint) do
 		if not self:has_item(data.global_value, category, data.id) then
@@ -3210,7 +3210,7 @@ function BlackMarketManager:has_parts_for_blueprint(category, blueprint)
 	return true
 end
 
--- Lines: 2961 to 2987
+-- Lines: 2966 to 2992
 function BlackMarketManager:get_crafted_item_amount(category, id)
 	local crafted_category = self._global.crafted_items[category]
 
@@ -3243,7 +3243,7 @@ function BlackMarketManager:get_crafted_item_amount(category, id)
 	return item_amount
 end
 
--- Lines: 2990 to 2996
+-- Lines: 2995 to 3001
 function BlackMarketManager:get_crafted_part_global_value(category, slot, part_id)
 	local global_values = self._global.crafted_items[category][slot].global_values
 
@@ -3252,7 +3252,7 @@ function BlackMarketManager:get_crafted_part_global_value(category, slot, part_i
 	end
 end
 
--- Lines: 2998 to 3005
+-- Lines: 3003 to 3010
 function BlackMarketManager:get_inventory_item_global_values(category, id)
 	local global_values = {}
 
@@ -3265,7 +3265,7 @@ function BlackMarketManager:get_inventory_item_global_values(category, id)
 	return global_values
 end
 
--- Lines: 3008 to 3020
+-- Lines: 3013 to 3025
 function BlackMarketManager:has_inventory_item(default_global_value, category, id)
 	if self:get_item_amount(default_global_value, category, id, true) > 0 then
 		return true
@@ -3278,7 +3278,7 @@ function BlackMarketManager:has_inventory_item(default_global_value, category, i
 	end
 end
 
--- Lines: 3022 to 3055
+-- Lines: 3027 to 3060
 function BlackMarketManager:get_item_amount(global_value, category, id, no_prints)
 	local global_value_data = self._global.inventory[global_value]
 
@@ -3323,7 +3323,7 @@ function BlackMarketManager:get_item_amount(global_value, category, id, no_print
 	return item_amount
 end
 
--- Lines: 3058 to 3083
+-- Lines: 3063 to 3088
 function BlackMarketManager:has_item(global_value, category, id)
 	local global_value_data = self._global.inventory[global_value]
 
@@ -3360,7 +3360,7 @@ function BlackMarketManager:has_item(global_value, category, id)
 	return true
 end
 
--- Lines: 3086 to 3098
+-- Lines: 3091 to 3103
 function BlackMarketManager:remove_item(global_value, category, id)
 	if not self:has_item(global_value, category, id) then
 		return false
@@ -3378,7 +3378,7 @@ function BlackMarketManager:remove_item(global_value, category, id)
 	return true
 end
 
--- Lines: 3101 to 3117
+-- Lines: 3106 to 3122
 function BlackMarketManager:craft_item(category, slot, blueprint)
 	if not self:has_parts_for_blueprint(category, blueprint) then
 		Application:error("[BlackMarketManager:craft_item] Blueprint not valid", category)
@@ -3395,7 +3395,7 @@ function BlackMarketManager:craft_item(category, slot, blueprint)
 	self._global.crafted_items[category][slot] = blueprint
 end
 
--- Lines: 3119 to 3139
+-- Lines: 3124 to 3144
 function BlackMarketManager:sell_crafted_item(category, slot)
 	if not self._global.crafted_items[category] then
 		Application:error("[BlackMarketManager:sell_crafted_item] No crafted items of category", category)
@@ -3425,7 +3425,7 @@ function BlackMarketManager:sell_crafted_item(category, slot)
 	self._global.crafted_items[category][slot] = nil
 end
 
--- Lines: 3141 to 3158
+-- Lines: 3146 to 3163
 function BlackMarketManager:uncraft_item(category, slot)
 	if not self._global.crafted_items[category] then
 		Application:error("[BlackMarketManager:uncraft_item] No crafted items of category", category)
@@ -3448,7 +3448,7 @@ function BlackMarketManager:uncraft_item(category, slot)
 	self._global.crafted_items[category][slot] = nil
 end
 
--- Lines: 3160 to 3181
+-- Lines: 3165 to 3186
 function BlackMarketManager:check_will_have_free_slot(category)
 	if not self._global.crafted_items[category] then
 		return false
@@ -3474,12 +3474,12 @@ function BlackMarketManager:check_will_have_free_slot(category)
 	return false
 end
 
--- Lines: 3184 to 3186
+-- Lines: 3189 to 3191
 function BlackMarketManager:preview_deployable(deployable_id)
 	managers.menu_scene:spawn_deployable(deployable_id)
 end
 
--- Lines: 3188 to 3200
+-- Lines: 3193 to 3205
 function BlackMarketManager:_get_free_weapon_slot(category)
 	if not self._global.crafted_items[category] then
 		return 1
@@ -3494,7 +3494,7 @@ function BlackMarketManager:_get_free_weapon_slot(category)
 	end
 end
 
--- Lines: 3202 to 3395
+-- Lines: 3207 to 3400
 function BlackMarketManager:player_loadout_data(show_all_icons)
 	local primary_texture = "guis/textures/pd2/endscreen/what_is_this"
 	local primary_bg_texture = "guis/textures/pd2/endscreen/what_is_this"
@@ -3715,17 +3715,17 @@ function BlackMarketManager:player_loadout_data(show_all_icons)
 	return data
 end
 
--- Lines: 3398 to 3399
+-- Lines: 3403 to 3404
 function BlackMarketManager:get_mask_icon(mask_id)
 	return tweak_data.blackmarket:get_mask_icon(mask_id)
 end
 
--- Lines: 3402 to 3403
+-- Lines: 3407 to 3408
 function BlackMarketManager:get_character_icon(character)
 	return tweak_data.blackmarket:get_character_icon(character)
 end
 
--- Lines: 3406 to 3428
+-- Lines: 3411 to 3433
 function BlackMarketManager:equip_previous_weapon(category)
 	if not Global.blackmarket_manager.crafted_items[category] then
 		return nil
@@ -3752,7 +3752,7 @@ function BlackMarketManager:equip_previous_weapon(category)
 	end
 end
 
--- Lines: 3430 to 3452
+-- Lines: 3435 to 3457
 function BlackMarketManager:equip_next_weapon(category)
 	if not Global.blackmarket_manager.crafted_items[category] then
 		return nil
@@ -3779,7 +3779,7 @@ function BlackMarketManager:equip_next_weapon(category)
 	end
 end
 
--- Lines: 3454 to 3544
+-- Lines: 3459 to 3549
 function BlackMarketManager:get_sorted_melee_weapons(hide_locked)
 	local items = {}
 	local global_value, td, category = nil
@@ -3801,8 +3801,7 @@ function BlackMarketManager:get_sorted_melee_weapons(hide_locked)
 	local m_tweak_data = tweak_data.blackmarket.melee_weapons
 	local l_tweak_data = tweak_data.lootdrop.global_values
 
-	
-	-- Lines: 3474 to 3524
+	-- Lines: 3479 to 3529
 	local function sort_func(x, y)
 		xd = x[2]
 		yd = y[2]
@@ -3871,7 +3870,7 @@ function BlackMarketManager:get_sorted_melee_weapons(hide_locked)
 	return sorted_categories, item_categories
 end
 
--- Lines: 3548 to 3594
+-- Lines: 3553 to 3599
 function BlackMarketManager:equip_next_melee_weapon()
 	local sorted_categories, item_categories = self:get_sorted_melee_weapons(true)
 	local equipped_melee_weapon = self:equipped_melee_weapon()
@@ -3924,7 +3923,7 @@ function BlackMarketManager:equip_next_melee_weapon()
 	end
 end
 
--- Lines: 3596 to 3645
+-- Lines: 3601 to 3650
 function BlackMarketManager:equip_previous_melee_weapon()
 	local sorted_categories, item_categories = self:get_sorted_melee_weapons(true)
 	local equipped_melee_weapon = self:equipped_melee_weapon()
@@ -3986,7 +3985,7 @@ function BlackMarketManager:equip_previous_melee_weapon()
 	end
 end
 
--- Lines: 3648 to 3669
+-- Lines: 3653 to 3674
 function BlackMarketManager:equip_previous_grenade()
 	local sort_data = self:get_sorted_grenades(true)
 	local equipped_grenade = self:equipped_grenade()
@@ -4011,7 +4010,7 @@ function BlackMarketManager:equip_previous_grenade()
 	end
 end
 
--- Lines: 3671 to 3692
+-- Lines: 3676 to 3697
 function BlackMarketManager:equip_next_grenade()
 	local sort_data = self:get_sorted_grenades(true)
 	local equipped_grenade = self:equipped_grenade()
@@ -4036,7 +4035,7 @@ function BlackMarketManager:equip_next_grenade()
 	end
 end
 
--- Lines: 3695 to 3716
+-- Lines: 3700 to 3721
 function BlackMarketManager:equip_previous_armor()
 	local sort_data = self:get_sorted_armors(true)
 	local equipped_armor = self:equipped_armor()
@@ -4061,7 +4060,7 @@ function BlackMarketManager:equip_previous_armor()
 	end
 end
 
--- Lines: 3718 to 3739
+-- Lines: 3723 to 3744
 function BlackMarketManager:equip_next_armor()
 	local sort_data = self:get_sorted_armors(true)
 	local equipped_armor = self:equipped_armor()
@@ -4086,7 +4085,7 @@ function BlackMarketManager:equip_next_armor()
 	end
 end
 
--- Lines: 3742 to 3771
+-- Lines: 3747 to 3776
 function BlackMarketManager:equip_previous_deployable(slot)
 	slot = slot or 1
 	local sort_data = self:get_sorted_deployables(true)
@@ -4124,7 +4123,7 @@ function BlackMarketManager:equip_previous_deployable(slot)
 	end
 end
 
--- Lines: 3773 to 3802
+-- Lines: 3778 to 3807
 function BlackMarketManager:equip_next_deployable(slot)
 	slot = slot or 1
 	local sort_data = self:get_sorted_deployables(true)
@@ -4162,7 +4161,7 @@ function BlackMarketManager:equip_next_deployable(slot)
 	end
 end
 
--- Lines: 3804 to 3832
+-- Lines: 3809 to 3837
 function BlackMarketManager:crafted_mask_unlocked(slot)
 	local crafted = Global.blackmarket_manager.crafted_items.masks[slot]
 
@@ -4199,7 +4198,7 @@ function BlackMarketManager:crafted_mask_unlocked(slot)
 	return not is_locked, locked_global_value
 end
 
--- Lines: 3836 to 3859
+-- Lines: 3841 to 3864
 function BlackMarketManager:equip_previous_mask()
 	local category = "masks"
 
@@ -4228,7 +4227,7 @@ function BlackMarketManager:equip_previous_mask()
 	end
 end
 
--- Lines: 3861 to 3884
+-- Lines: 3866 to 3889
 function BlackMarketManager:equip_next_mask()
 	local category = "masks"
 
@@ -4257,7 +4256,7 @@ function BlackMarketManager:equip_next_mask()
 	end
 end
 
--- Lines: 3980 to 3991
+-- Lines: 3985 to 3996
 function BlackMarketManager:get_sorted_characters(hide_locked)
 	local sort_data = {}
 
@@ -4274,7 +4273,7 @@ function BlackMarketManager:get_sorted_characters(hide_locked)
 	return sort_data
 end
 
--- Lines: 3994 to 4027
+-- Lines: 3999 to 4032
 function BlackMarketManager:equip_previous_character()
 	local sort_data = self:get_sorted_characters(true)
 	local preferred_characters = self:get_preferred_characters_list()
@@ -4313,7 +4312,7 @@ function BlackMarketManager:equip_previous_character()
 	end
 end
 
--- Lines: 4029 to 4062
+-- Lines: 4034 to 4067
 function BlackMarketManager:equip_next_character()
 	local sort_data = self:get_sorted_characters(true)
 	local preferred_characters = self:get_preferred_characters_list()
@@ -4352,7 +4351,7 @@ function BlackMarketManager:equip_next_character()
 	end
 end
 
--- Lines: 4068 to 4093
+-- Lines: 4073 to 4098
 function BlackMarketManager:on_aquired_weapon_platform(upgrade, id, loading)
 	if _G.IS_VR and tweak_data.vr:is_locked("weapons", id) then
 		return
@@ -4377,7 +4376,7 @@ function BlackMarketManager:on_aquired_weapon_platform(upgrade, id, loading)
 	end
 end
 
--- Lines: 4095 to 4116
+-- Lines: 4100 to 4121
 function BlackMarketManager:on_unaquired_weapon_platform(upgrade, id)
 	self._global.weapons[id].unlocked = false
 	local equipped_primariy = managers.blackmarket:equipped_primary()
@@ -4399,7 +4398,7 @@ function BlackMarketManager:on_unaquired_weapon_platform(upgrade, id)
 	end
 end
 
--- Lines: 4118 to 4139
+-- Lines: 4123 to 4144
 function BlackMarketManager:on_aquired_melee_weapon(upgrade, id, loading)
 	if not self._global.melee_weapons[id] then
 		Application:error("[BlackMarketManager:on_aquired_melee_weapon] Melee weapon do not exist in blackmarket", "melee_weapon_id", id)
@@ -4421,7 +4420,7 @@ function BlackMarketManager:on_aquired_melee_weapon(upgrade, id, loading)
 	end
 end
 
--- Lines: 4141 to 4150
+-- Lines: 4146 to 4155
 function BlackMarketManager:on_unaquired_melee_weapon(upgrade, id)
 	self._global.melee_weapons[id].unlocked = false
 	self._global.melee_weapons[id].owned = false
@@ -4434,7 +4433,7 @@ function BlackMarketManager:on_unaquired_melee_weapon(upgrade, id)
 	end
 end
 
--- Lines: 4152 to 4170
+-- Lines: 4157 to 4175
 function BlackMarketManager:on_aquired_grenade(upgrade, id, loading)
 	if not self._global.grenades[id] then
 		Application:error("[BlackMarketManager:on_aquired_grenade] Grenade do not exist in blackmarket", "grenade_id", id)
@@ -4456,7 +4455,7 @@ function BlackMarketManager:on_aquired_grenade(upgrade, id, loading)
 	end
 end
 
--- Lines: 4172 to 4181
+-- Lines: 4177 to 4186
 function BlackMarketManager:on_unaquired_grenade(upgrade, id)
 	self._global.grenades[id].unlocked = false
 	self._global.grenades[id].owned = false
@@ -4469,7 +4468,7 @@ function BlackMarketManager:on_unaquired_grenade(upgrade, id)
 	end
 end
 
--- Lines: 4185 to 4221
+-- Lines: 4190 to 4226
 function BlackMarketManager:aquire_default_weapons(only_enable)
 	local glock_17 = self._global and self._global.weapons and self._global.weapons.glock_17
 
@@ -4506,7 +4505,7 @@ function BlackMarketManager:aquire_default_weapons(only_enable)
 	end
 end
 
--- Lines: 4224 to 4285
+-- Lines: 4229 to 4290
 function BlackMarketManager:on_buy_weapon_platform(category, weapon_id, slot, free)
 	if category ~= "primaries" and category ~= "secondaries" then
 		return
@@ -4578,14 +4577,14 @@ function BlackMarketManager:on_buy_weapon_platform(category, weapon_id, slot, fr
 	end
 end
 
--- Lines: 4289 to 4294
+-- Lines: 4294 to 4299
 function BlackMarketManager:on_sell_weapon_part(part_id, global_value)
 	managers.money:on_sell_weapon_part(part_id, global_value)
 	self:alter_global_value_item(global_value, "weapon_mods", nil, part_id, INV_REMOVE)
 	self:remove_item(global_value, "weapon_mods", part_id)
 end
 
--- Lines: 4296 to 4319
+-- Lines: 4301 to 4324
 function BlackMarketManager:add_crafted_weapon_blueprint_to_inventory(category, slot, ignore_blueprint)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		return
@@ -4614,7 +4613,7 @@ function BlackMarketManager:add_crafted_weapon_blueprint_to_inventory(category, 
 	end
 end
 
--- Lines: 4321 to 4349
+-- Lines: 4326 to 4354
 function BlackMarketManager:on_sell_weapon(category, slot, skip_verification)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		return
@@ -4645,7 +4644,7 @@ function BlackMarketManager:on_sell_weapon(category, slot, skip_verification)
 	end
 end
 
--- Lines: 4351 to 4361
+-- Lines: 4356 to 4366
 function BlackMarketManager:_update_menu_scene_primary()
 	if not managers.menu_scene then
 		return
@@ -4660,7 +4659,7 @@ function BlackMarketManager:_update_menu_scene_primary()
 	end
 end
 
--- Lines: 4363 to 4373
+-- Lines: 4368 to 4378
 function BlackMarketManager:_update_menu_scene_secondary()
 	if not managers.menu_scene then
 		return
@@ -4675,7 +4674,7 @@ function BlackMarketManager:_update_menu_scene_secondary()
 	end
 end
 
--- Lines: 4375 to 4414
+-- Lines: 4380 to 4419
 function BlackMarketManager:get_weapon_icon_path(weapon_id, cosmetics)
 	local use_cosmetics = cosmetics and cosmetics.id and cosmetics.id ~= "nil" and true or false
 	local data = use_cosmetics and tweak_data.blackmarket.weapon_skins or tweak_data.weapon
@@ -4714,12 +4713,12 @@ function BlackMarketManager:get_weapon_icon_path(weapon_id, cosmetics)
 	return texture_path, rarity_path
 end
 
--- Lines: 4418 to 4419
+-- Lines: 4423 to 4424
 function BlackMarketManager:get_cosmetic_rarity_bg(rarity)
 	return tweak_data.economy.rarities[rarity] and tweak_data.economy.rarities[rarity].bg_texture
 end
 
--- Lines: 4423 to 4438
+-- Lines: 4428 to 4443
 function BlackMarketManager:get_modify_weapon_consequence(category, slot, part_id, remove_part)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:get_modify_weapon_consequence] Weapon doesn't exist", category, slot)
@@ -4734,7 +4733,7 @@ function BlackMarketManager:get_modify_weapon_consequence(category, slot, part_i
 	return replaces, removes
 end
 
--- Lines: 4442 to 4449
+-- Lines: 4447 to 4454
 function BlackMarketManager:can_modify_weapon(category, slot, part_id)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:can_modify_weapon] Weapon doesn't exist", category, slot)
@@ -4747,7 +4746,7 @@ function BlackMarketManager:can_modify_weapon(category, slot, part_id)
 	return managers.weapon_factory:can_add_part(craft_data.factory_id, part_id, craft_data.blueprint)
 end
 
--- Lines: 4452 to 4459
+-- Lines: 4457 to 4464
 function BlackMarketManager:remove_weapon_part(category, slot, global_value, part_id)
 	if not part_id or not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:remove_weapon_part] Trying to remove part", part_id, "from weapon that doesn't exist", category, slot)
@@ -4760,12 +4759,17 @@ function BlackMarketManager:remove_weapon_part(category, slot, global_value, par
 	return true
 end
 
--- Lines: 4462 to 4523
+-- Lines: 4467 to 4536
 function BlackMarketManager:modify_weapon(category, slot, global_value, part_id, remove_part)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:modify_weapon] Trying to modify weapon that doesn't exist", category, slot)
 
 		return
+	end
+
+	if self:is_previewing_legendary_skin() then
+		managers.blackmarket:view_weapon(category, slot, nil, nil, BlackMarketGui.get_crafting_custom_data())
+		managers.blackmarket:clear_preview_blueprint()
 	end
 
 	local replaces, removes = self:get_modify_weapon_consequence(category, slot, part_id, remove_part)
@@ -4826,7 +4830,7 @@ function BlackMarketManager:modify_weapon(category, slot, global_value, part_id,
 	self:_on_modified_weapon(category, slot)
 end
 
--- Lines: 4525 to 4557
+-- Lines: 4538 to 4560
 function BlackMarketManager:buy_and_modify_weapon(category, slot, global_value, part_id, free_of_charge, no_consume)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:modify_weapon] Trying to buy and modify weapon that doesn't exist", category, slot)
@@ -4834,12 +4838,6 @@ function BlackMarketManager:buy_and_modify_weapon(category, slot, global_value, 
 		return
 	end
 
-	if self:is_previewing_legendary_skin() then
-		managers.blackmarket:view_weapon(category, slot, nil, nil, BlackMarketGui.get_crafting_custom_data())
-		managers.blackmarket:clear_preview_blueprint()
-	end
-
-	managers.weapon_factory:change_part_blueprint_only(self._global.crafted_items[category][slot].factory_id, part_id, self:get_preview_blueprint(category, slot))
 	self:modify_weapon(category, slot, global_value, part_id)
 
 	if not free_of_charge then
@@ -4854,7 +4852,7 @@ function BlackMarketManager:buy_and_modify_weapon(category, slot, global_value, 
 	end
 end
 
--- Lines: 4559 to 4592
+-- Lines: 4562 to 4595
 function BlackMarketManager:_on_modified_weapon(category, slot)
 	local crafted = self:get_crafted_category_slot(category, slot)
 	local blueprint = crafted and crafted.blueprint or {}
@@ -4896,7 +4894,7 @@ function BlackMarketManager:_on_modified_weapon(category, slot)
 	MenuCallbackHandler:_update_outfit_information()
 end
 
--- Lines: 4594 to 4602
+-- Lines: 4597 to 4605
 function BlackMarketManager:view_weapon_platform(weapon_id, open_node_cb)
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 	local blueprint = deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
@@ -4909,7 +4907,7 @@ function BlackMarketManager:view_weapon_platform(weapon_id, open_node_cb)
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
 end
 
--- Lines: 4604 to 4618
+-- Lines: 4607 to 4621
 function BlackMarketManager:view_weapon(category, slot, open_node_cb, spawn_workbench, custom_data)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:view_weapon] Trying to view weapon that doesn't exist", category, slot)
@@ -4935,7 +4933,7 @@ function BlackMarketManager:view_weapon(category, slot, open_node_cb, spawn_work
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
 end
 
--- Lines: 4620 to 4645
+-- Lines: 4623 to 4648
 function BlackMarketManager:view_weapon_with_mod(category, slot, part_id, open_node_cb, spawn_workbench, custom_data)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:view_weapon_with_mod] Trying to view weapon that doesn't exist", category, slot)
@@ -4963,7 +4961,7 @@ function BlackMarketManager:view_weapon_with_mod(category, slot, part_id, open_n
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
 end
 
--- Lines: 4647 to 4672
+-- Lines: 4650 to 4675
 function BlackMarketManager:view_weapon_without_mod(category, slot, part_id, open_node_cb, spawn_workbench, custom_data)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:view_weapon_with_mod] Trying to view weapon that doesn't exist", category, slot)
@@ -4991,7 +4989,7 @@ function BlackMarketManager:view_weapon_without_mod(category, slot, part_id, ope
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
 end
 
--- Lines: 4674 to 4703
+-- Lines: 4677 to 4706
 function BlackMarketManager:view_weapon_with_cosmetics(category, slot, cosmetics, open_node_cb, spawn_workbench, custom_data)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:view_weapon] Trying to view weapon that doesn't exist", category, slot)
@@ -5034,7 +5032,7 @@ function BlackMarketManager:view_weapon_with_cosmetics(category, slot, cosmetics
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
 end
 
--- Lines: 4705 to 4721
+-- Lines: 4708 to 4724
 function BlackMarketManager:view_weapon_platform_with_cosmetics(weapon_id, cosmetics, open_node_cb, spawn_workbench, custom_data)
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 	local blueprint = deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
@@ -5063,32 +5061,32 @@ function BlackMarketManager:view_weapon_platform_with_cosmetics(weapon_id, cosme
 	table.insert(self._preloading_list, {done_cb = open_node_cb})
 end
 
--- Lines: 4724 to 4725
+-- Lines: 4727 to 4728
 function BlackMarketManager:last_previewed_cosmetic()
 	return self._last_viewed_cosmetic_id
 end
 
--- Lines: 4728 to 4729
+-- Lines: 4731 to 4732
 function BlackMarketManager:is_previewing_legendary_skin()
 	return tweak_data.blackmarket.weapon_skins[self._last_viewed_cosmetic_id] and tweak_data.blackmarket.weapon_skins[self._last_viewed_cosmetic_id].locked or false
 end
 
--- Lines: 4733 to 4735
+-- Lines: 4736 to 4738
 function BlackMarketManager:preview_grenade(grenade_id)
 	managers.menu_scene:spawn_grenade(grenade_id)
 end
 
--- Lines: 4737 to 4739
+-- Lines: 4740 to 4742
 function BlackMarketManager:preview_melee_weapon(melee_weapon_id)
 	managers.menu_scene:spawn_melee_weapon(melee_weapon_id)
 end
 
--- Lines: 4741 to 4742
+-- Lines: 4744 to 4745
 function BlackMarketManager:get_melee_weapon_data(melee_weapon_id)
 	return tweak_data.blackmarket.melee_weapons[melee_weapon_id]
 end
 
--- Lines: 4745 to 4750
+-- Lines: 4748 to 4753
 function BlackMarketManager:set_melee_weapon_favorite(melee_weapon_id, favorite)
 	local weapon_data = self._global.melee_weapons[melee_weapon_id]
 
@@ -5097,7 +5095,7 @@ function BlackMarketManager:set_melee_weapon_favorite(melee_weapon_id, favorite)
 	end
 end
 
--- Lines: 4754 to 4803
+-- Lines: 4757 to 4806
 function BlackMarketManager:get_sorted_grenades(hide_locked)
 	local sort_data = {}
 	local xd, yd, x_td, y_td, x_sn, y_sn, x_gv, y_gv = nil
@@ -5144,7 +5142,7 @@ function BlackMarketManager:get_sorted_grenades(hide_locked)
 	return sort_data
 end
 
--- Lines: 4808 to 4835
+-- Lines: 4811 to 4838
 function BlackMarketManager:get_sorted_armors(hide_locked)
 	local sort_data = {}
 
@@ -5178,7 +5176,7 @@ function BlackMarketManager:get_sorted_armors(hide_locked)
 	return sort_data, armor_level_data
 end
 
--- Lines: 4840 to 4853
+-- Lines: 4843 to 4856
 function BlackMarketManager:get_sorted_deployables(hide_locked)
 	local sort_data = {}
 
@@ -5198,17 +5196,17 @@ function BlackMarketManager:get_sorted_deployables(hide_locked)
 	return sort_data
 end
 
--- Lines: 4858 to 4859
+-- Lines: 4861 to 4862
 function BlackMarketManager:get_hold_crafted_item()
 	return self._hold_crafted_item
 end
 
--- Lines: 4862 to 4864
+-- Lines: 4865 to 4867
 function BlackMarketManager:drop_hold_crafted_item()
 	self._hold_crafted_item = nil
 end
 
--- Lines: 4866 to 4868
+-- Lines: 4869 to 4871
 function BlackMarketManager:pickup_crafted_item(category, slot)
 	self._hold_crafted_item = {
 		category = category,
@@ -5216,7 +5214,7 @@ function BlackMarketManager:pickup_crafted_item(category, slot)
 	}
 end
 
--- Lines: 4870 to 4884
+-- Lines: 4873 to 4887
 function BlackMarketManager:place_crafted_item(category, slot)
 	if not self._hold_crafted_item then
 		return
@@ -5232,7 +5230,7 @@ function BlackMarketManager:place_crafted_item(category, slot)
 	tmp, self._hold_crafted_item = nil
 end
 
--- Lines: 4888 to 4907
+-- Lines: 4891 to 4910
 function BlackMarketManager:on_aquired_armor(upgrade, id, loading)
 	if not self._global.armors[upgrade.armor_id] then
 		Application:error("[BlackMarketManager:on_aquired_armor] Armor do not exist in blackmarket", "armor_id", upgrade.armor_id)
@@ -5256,7 +5254,7 @@ function BlackMarketManager:on_aquired_armor(upgrade, id, loading)
 	end
 end
 
--- Lines: 4909 to 4925
+-- Lines: 4912 to 4928
 function BlackMarketManager:on_unaquired_armor(upgrade, id)
 	self._global.armors[upgrade.armor_id].unlocked = false
 	self._global.armors[upgrade.armor_id].owned = false
@@ -5275,12 +5273,12 @@ function BlackMarketManager:on_unaquired_armor(upgrade, id)
 	end
 end
 
--- Lines: 4928 to 4929
+-- Lines: 4931 to 4932
 function BlackMarketManager:_is_armor_skin_valid(skin_id)
 	return tweak_data.economy.armor_skins[skin_id] and true or false
 end
 
--- Lines: 4932 to 4938
+-- Lines: 4935 to 4941
 function BlackMarketManager:_get_default_armor_skin()
 	for id, skin in pairs(tweak_data.economy.armor_skins) do
 		if skin.default then
@@ -5291,7 +5289,7 @@ function BlackMarketManager:_get_default_armor_skin()
 	return nil
 end
 
--- Lines: 4942 to 4963
+-- Lines: 4945 to 4966
 function BlackMarketManager:armor_skin_unlocked(skin_id)
 	if not self:_is_armor_skin_valid(skin_id) then
 		Application:stack_dump_error("Attempting to check if invalid armor skin is unlocked.", skin_id)
@@ -5312,7 +5310,7 @@ function BlackMarketManager:armor_skin_unlocked(skin_id)
 	return false
 end
 
--- Lines: 4968 to 4976
+-- Lines: 4971 to 4979
 function BlackMarketManager:on_aquired_armor_skin(skin_id)
 	if not self:_is_armor_skin_valid(skin_id) then
 		Application:stack_dump_error("Attempting to aquire invalid armor skin.", skin_id)
@@ -5323,7 +5321,7 @@ function BlackMarketManager:on_aquired_armor_skin(skin_id)
 	self._global.armor_skins[skin_id].unlocked = true
 end
 
--- Lines: 4979 to 4993
+-- Lines: 4982 to 4996
 function BlackMarketManager:on_unaquired_armor_skin(skin_id)
 	if not self:_is_armor_skin_valid(skin_id) then
 		Application:stack_dump_error("Attempting to unaquire invalid armor skin.", skin_id)
@@ -5338,7 +5336,7 @@ function BlackMarketManager:on_unaquired_armor_skin(skin_id)
 	end
 end
 
--- Lines: 5007 to 5030
+-- Lines: 5010 to 5033
 function BlackMarketManager:_verify_preferred_characters()
 	local used_characters = {}
 	local preferred_characters = {}
@@ -5366,7 +5364,7 @@ function BlackMarketManager:_verify_preferred_characters()
 	self._global._preferred_characters[1] = self._global._preferred_characters[1] or self._defaults.preferred_character
 end
 
--- Lines: 5033 to 5057
+-- Lines: 5036 to 5060
 function BlackMarketManager:_update_preferred_character(update_character)
 	self:_verify_preferred_characters()
 
@@ -5391,7 +5389,7 @@ function BlackMarketManager:_update_preferred_character(update_character)
 	end
 end
 
--- Lines: 5059 to 5065
+-- Lines: 5062 to 5068
 function BlackMarketManager:swap_preferred_character(first_index, second_index)
 	local temp = self._global._preferred_characters[first_index]
 	self._global._preferred_characters[first_index] = self._global._preferred_characters[second_index]
@@ -5400,7 +5398,7 @@ function BlackMarketManager:swap_preferred_character(first_index, second_index)
 	self:_update_preferred_character(first_index == 1 or second_index == 1)
 end
 
--- Lines: 5067 to 5071
+-- Lines: 5070 to 5074
 function BlackMarketManager:clear_preferred_characters()
 	local update_menu_scene = self._global._preferred_characters[1] == self._defaults.preferred_character
 	self._global._preferred_characters = {}
@@ -5408,7 +5406,7 @@ function BlackMarketManager:clear_preferred_characters()
 	self:_update_preferred_character(update_menu_scene)
 end
 
--- Lines: 5073 to 5085
+-- Lines: 5076 to 5088
 function BlackMarketManager:set_preferred_character(character, index)
 	local new_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local char_tweak = tweak_data.blackmarket.characters.locked[new_name] or tweak_data.blackmarket.characters[new_name]
@@ -5428,7 +5426,7 @@ function BlackMarketManager:set_preferred_character(character, index)
 	self:_update_preferred_character(index == 1)
 end
 
--- Lines: 5087 to 5092
+-- Lines: 5090 to 5095
 function BlackMarketManager:get_character_id_by_character_name(character_name)
 	local new_name = CriminalsManager.convert_old_to_new_character_workname(character_name)
 
@@ -5439,17 +5437,17 @@ function BlackMarketManager:get_character_id_by_character_name(character_name)
 	return character_name
 end
 
--- Lines: 5095 to 5096
+-- Lines: 5098 to 5099
 function BlackMarketManager:get_preferred_characters_list()
 	return clone(self._global._preferred_characters)
 end
 
--- Lines: 5099 to 5100
+-- Lines: 5102 to 5103
 function BlackMarketManager:num_preferred_characters()
 	return #self._global._preferred_characters
 end
 
--- Lines: 5104 to 5111
+-- Lines: 5107 to 5114
 function BlackMarketManager:get_preferred_character(index)
 	local forced_character = self:forced_character()
 
@@ -5460,7 +5458,7 @@ function BlackMarketManager:get_preferred_character(index)
 	return self._global._preferred_characters and self._global._preferred_characters[index or 1] or self._global._preferred_character or self._defaults.preferred_character
 end
 
--- Lines: 5114 to 5126
+-- Lines: 5117 to 5129
 function BlackMarketManager:get_preferred_character_string()
 	if not self._global._preferred_characters then
 		return self._global._preferred_character or self._defaults.preferred_character
@@ -5479,17 +5477,17 @@ function BlackMarketManager:get_preferred_character_string()
 	return s
 end
 
--- Lines: 5129 to 5130
+-- Lines: 5132 to 5133
 function BlackMarketManager:get_preferred_character_real_name(index)
 	return managers.localization:text("menu_" .. tostring(self:get_preferred_character(index) or self._defaults.preferred_character))
 end
 
--- Lines: 5133 to 5134
+-- Lines: 5136 to 5137
 function BlackMarketManager:get_category_default(category)
 	return self._defaults and self._defaults[category]
 end
 
--- Lines: 5138 to 5161
+-- Lines: 5141 to 5164
 function BlackMarketManager:set_part_texture_switch(category, slot, part_id, data_string)
 	local part_data = tweak_data.weapon.factory.parts[part_id]
 
@@ -5520,7 +5518,7 @@ function BlackMarketManager:set_part_texture_switch(category, slot, part_id, dat
 	end
 end
 
--- Lines: 5163 to 5172
+-- Lines: 5166 to 5175
 function BlackMarketManager:get_part_texture_switch_data(category, slot, part_id)
 	local crafted_category = self._global.crafted_items[category]
 	local crafted_item = crafted_category and crafted_category[slot]
@@ -5533,7 +5531,7 @@ function BlackMarketManager:get_part_texture_switch_data(category, slot, part_id
 	return color_index, type_index
 end
 
--- Lines: 5175 to 5183
+-- Lines: 5178 to 5186
 function BlackMarketManager:get_part_texture_switch(category, slot, part_id)
 	local crafted_category = self._global.crafted_items[category]
 	local crafted_item = crafted_category and crafted_category[slot]
@@ -5548,7 +5546,7 @@ function BlackMarketManager:get_part_texture_switch(category, slot, part_id)
 	return self:get_texture_switch_from_data(data_string, part_id)
 end
 
--- Lines: 5186 to 5224
+-- Lines: 5189 to 5227
 function BlackMarketManager:get_texture_switch_from_data(data_string, part_id)
 	local part_data = tweak_data.weapon.factory.parts[part_id]
 
@@ -5593,7 +5591,7 @@ function BlackMarketManager:get_texture_switch_from_data(data_string, part_id)
 	return texture
 end
 
--- Lines: 5227 to 5233
+-- Lines: 5230 to 5236
 function BlackMarketManager:get_weapon_texture_switches(category, slot, weapon)
 	weapon = weapon or self._global.crafted_items[category][slot]
 
@@ -5604,7 +5602,7 @@ function BlackMarketManager:get_weapon_texture_switches(category, slot, weapon)
 	return weapon.texture_switches
 end
 
--- Lines: 5240 to 5265
+-- Lines: 5243 to 5268
 function BlackMarketManager:set_part_custom_colors(category, slot, part_id, colors)
 	local part_data = tweak_data.weapon.factory.parts[part_id]
 
@@ -5636,7 +5634,7 @@ function BlackMarketManager:set_part_custom_colors(category, slot, part_id, colo
 	crafted_item.custom_colors[part_id] = data_string
 end
 
--- Lines: 5268 to 5286
+-- Lines: 5271 to 5306
 function BlackMarketManager:get_part_custom_colors(category, slot, part_id, require_existing)
 	if require_existing == nil then
 		require_existing = false
@@ -5647,7 +5645,22 @@ function BlackMarketManager:get_part_custom_colors(category, slot, part_id, requ
 	local custom_colors = crafted_item and crafted_item.custom_colors
 
 	if custom_colors and custom_colors[part_id] then
-		return self:get_custom_colors_from_string(custom_colors and custom_colors[part_id])
+		local part_tweak = tweak_data.weapon.factory.parts[part_id]
+		local colors = self:get_custom_colors_from_string(custom_colors and custom_colors[part_id])
+		local sub_types = {[part_tweak.sub_type] = true}
+
+		if part_tweak.adds then
+			for _, added_part_id in pairs(part_tweak.adds) do
+				local added_part_tweak = tweak_data.weapon.factory.parts[part_id]
+				sub_types[added_part_tweak.sub_type] = true
+			end
+		end
+
+		for sub_type, _ in pairs(sub_types) do
+			colors[sub_type] = colors[sub_type] or tweak_data.custom_colors.defaults[sub_type]
+		end
+
+		return colors
 	elseif not require_existing then
 		return {
 			laser = tweak_data.custom_colors.defaults.laser,
@@ -5656,7 +5669,7 @@ function BlackMarketManager:get_part_custom_colors(category, slot, part_id, requ
 	end
 end
 
--- Lines: 5288 to 5296
+-- Lines: 5308 to 5316
 function BlackMarketManager:get_custom_colors_from_string(data_string)
 	local color_strs = string.split(data_string, ";")
 	local colors = {}
@@ -5670,7 +5683,7 @@ function BlackMarketManager:get_custom_colors_from_string(data_string)
 	return colors
 end
 
--- Lines: 5303 to 5309
+-- Lines: 5323 to 5329
 function BlackMarketManager:aquire_default_masks()
 	print("BlackMarketManager:aquire_default_masks()", self._global.crafted_items.masks)
 
@@ -5679,7 +5692,7 @@ function BlackMarketManager:aquire_default_masks()
 	end
 end
 
--- Lines: 5311 to 5322
+-- Lines: 5331 to 5342
 function BlackMarketManager:can_modify_mask(slot)
 	local mask = managers.blackmarket:get_crafted_category("masks")[slot]
 
@@ -5694,7 +5707,7 @@ function BlackMarketManager:can_modify_mask(slot)
 	return true
 end
 
--- Lines: 5326 to 5359
+-- Lines: 5346 to 5379
 function BlackMarketManager:start_customize_mask(slot)
 	print("start_customize_mask", slot)
 
@@ -5729,7 +5742,7 @@ function BlackMarketManager:start_customize_mask(slot)
 	self:view_mask(slot)
 end
 
--- Lines: 5361 to 5374
+-- Lines: 5381 to 5394
 function BlackMarketManager:select_customize_mask(category, id, global_value)
 	if not self._customize_mask then
 		Application:error("BlackMarketManager:select_customize_mask( category ), self._customize_mask is nil", category, id, global_value)
@@ -5753,7 +5766,7 @@ function BlackMarketManager:select_customize_mask(category, id, global_value)
 	return true
 end
 
--- Lines: 5378 to 5383
+-- Lines: 5398 to 5403
 function BlackMarketManager:customize_mask_category_id(category)
 	if not self._customize_mask then
 		Application:error("BlackMarketManager:customize_mask_category_id( category ), self._customize_mask is nil", category)
@@ -5764,7 +5777,7 @@ function BlackMarketManager:customize_mask_category_id(category)
 	return self._customize_mask[category] and self._customize_mask[category].id or ""
 end
 
--- Lines: 5386 to 5397
+-- Lines: 5406 to 5417
 function BlackMarketManager:customize_mask_category_default(category, include_color)
 	local default_blueprint = self._customize_mask and self._customize_mask.default_blueprint or {}
 
@@ -5788,7 +5801,7 @@ function BlackMarketManager:customize_mask_category_default(category, include_co
 	end
 end
 
--- Lines: 5399 to 5474
+-- Lines: 5419 to 5494
 function BlackMarketManager:get_mask_default_blueprint(mask_id)
 	local mask_tweak_data = tweak_data.blackmarket.masks[mask_id]
 	local default_blueprint = {
@@ -5816,8 +5829,8 @@ function BlackMarketManager:get_mask_default_blueprint(mask_id)
 	local mask_default_blueprint = mask_tweak_data.default_blueprint
 
 	if mask_default_blueprint then
-		
-		-- Lines: 5417 to 5423
+
+		-- Lines: 5437 to 5443
 		local function get_global_value_func(data)
 			local global_value = data.infamous and "infamous" or data.global_value or data.dlc or data.dlcs and data.dlcs[1] or "normal"
 
@@ -5893,7 +5906,7 @@ function BlackMarketManager:get_mask_default_blueprint(mask_id)
 	return default_blueprint
 end
 
--- Lines: 5477 to 5489
+-- Lines: 5497 to 5509
 function BlackMarketManager:get_customize_mask_id()
 	if not self._customize_mask then
 		return
@@ -5908,14 +5921,14 @@ function BlackMarketManager:get_customize_mask_id()
 	end
 end
 
--- Lines: 5491 to 5493
+-- Lines: 5511 to 5513
 function BlackMarketManager:get_customize_mask_value()
 	local blueprint = self:get_customized_mask_blueprint()
 
 	return managers.money:get_mask_crafting_price_modified(self._customize_mask.mask_id, self._customize_mask.global_value, blueprint), managers.money:can_afford_mask_crafting(self._customize_mask.mask_id, self._customize_mask.global_value, blueprint)
 end
 
--- Lines: 5496 to 5501
+-- Lines: 5516 to 5521
 function BlackMarketManager:warn_abort_customize_mask(params)
 	if self._customize_mask then
 		managers.menu:show_confirm_blackmarket_abort(params)
@@ -5924,19 +5937,19 @@ function BlackMarketManager:warn_abort_customize_mask(params)
 	end
 end
 
--- Lines: 5503 to 5504
+-- Lines: 5523 to 5524
 function BlackMarketManager:currently_customizing_mask()
 	return self._customize_mask and true or false
 end
 
--- Lines: 5508 to 5511
+-- Lines: 5528 to 5531
 function BlackMarketManager:abort_customize_mask()
 	self._customize_mask = nil
 
 	managers.menu_scene:remove_item()
 end
 
--- Lines: 5513 to 5571
+-- Lines: 5533 to 5591
 function BlackMarketManager:get_info_from_mask_blueprint(blueprint, mask_id)
 	local got_material = blueprint.material
 	local got_pattern = blueprint.pattern
@@ -5995,7 +6008,7 @@ function BlackMarketManager:get_info_from_mask_blueprint(blueprint, mask_id)
 	return status
 end
 
--- Lines: 5574 to 5575
+-- Lines: 5594 to 5595
 function BlackMarketManager:get_customize_mask_blueprint()
 	return {
 		material = self._customize_mask.materials,
@@ -6004,17 +6017,17 @@ function BlackMarketManager:get_customize_mask_blueprint()
 	}
 end
 
--- Lines: 5579 to 5580
+-- Lines: 5599 to 5600
 function BlackMarketManager:info_customize_mask()
 	return self:get_info_from_mask_blueprint(self:get_customize_mask_blueprint(), self._customize_mask.mask_id)
 end
 
--- Lines: 5584 to 5585
+-- Lines: 5604 to 5605
 function BlackMarketManager:can_view_customized_mask()
 	return self:can_finish_customize_mask()
 end
 
--- Lines: 5588 to 5606
+-- Lines: 5608 to 5626
 function BlackMarketManager:can_view_mask_blueprint(blueprint)
 	if not blueprint then
 		return false
@@ -6037,7 +6050,7 @@ function BlackMarketManager:can_view_mask_blueprint(blueprint)
 	return true
 end
 
--- Lines: 5609 to 5628
+-- Lines: 5629 to 5648
 function BlackMarketManager:can_view_customized_mask_with_mod(category, id, global_value)
 	if not self._customize_mask then
 		return false
@@ -6064,7 +6077,7 @@ function BlackMarketManager:can_view_customized_mask_with_mod(category, id, glob
 	return true
 end
 
--- Lines: 5631 to 5651
+-- Lines: 5651 to 5671
 function BlackMarketManager:view_customized_mask_with_mod(category, id)
 	if not self._customize_mask then
 		return
@@ -6089,7 +6102,7 @@ function BlackMarketManager:view_customized_mask_with_mod(category, id)
 	self:view_mask_with_blueprint(slot, blueprint)
 end
 
--- Lines: 5653 to 5675
+-- Lines: 5673 to 5695
 function BlackMarketManager:get_customized_mask_blueprint()
 	local blueprint = {
 		color = self._customize_mask.colors,
@@ -6129,7 +6142,7 @@ function BlackMarketManager:get_customized_mask_blueprint()
 	return blueprint
 end
 
--- Lines: 5678 to 5686
+-- Lines: 5698 to 5706
 function BlackMarketManager:view_customized_mask()
 	if not self._customize_mask then
 		return
@@ -6141,7 +6154,7 @@ function BlackMarketManager:view_customized_mask()
 	self:view_mask_with_blueprint(slot, blueprint)
 end
 
--- Lines: 5688 to 5693
+-- Lines: 5708 to 5713
 function BlackMarketManager:can_afford_customize_mask()
 	if not managers.money:can_afford_mask_crafting(self._customize_mask.mask_id, self._customize_mask.global_value, self:get_customized_mask_blueprint()) then
 		return false
@@ -6150,7 +6163,7 @@ function BlackMarketManager:can_afford_customize_mask()
 	return true
 end
 
--- Lines: 5696 to 5717
+-- Lines: 5716 to 5737
 function BlackMarketManager:can_finish_customize_mask(check_money)
 	if not self._customize_mask then
 		return false
@@ -6175,7 +6188,7 @@ function BlackMarketManager:can_finish_customize_mask(check_money)
 	return true
 end
 
--- Lines: 5720 to 5783
+-- Lines: 5740 to 5803
 function BlackMarketManager:finish_customize_mask()
 	print("finish_customize_mask", inspect(self._customize_mask))
 
@@ -6253,14 +6266,14 @@ function BlackMarketManager:finish_customize_mask()
 	managers.achievment:award("masked_villain")
 end
 
--- Lines: 5785 to 5789
+-- Lines: 5805 to 5809
 function BlackMarketManager:on_buy_mask_to_inventory(mask_id, global_value, slot, item_id)
 	self:on_buy_mask(mask_id, global_value, slot, item_id)
 	self:remove_item(global_value, "masks", mask_id)
 	self:alter_global_value_item(global_value, "masks", slot, mask_id, INV_TO_CRAFT)
 end
 
--- Lines: 5791 to 5803
+-- Lines: 5811 to 5823
 function BlackMarketManager:on_buy_mask(mask_id, global_value, slot, item_id)
 	local category = "masks"
 	self._global.crafted_items[category] = self._global.crafted_items[category] or {}
@@ -6290,7 +6303,7 @@ function BlackMarketManager:on_buy_mask(mask_id, global_value, slot, item_id)
 	self:_verfify_equipped_category(category)
 end
 
--- Lines: 5805 to 5811
+-- Lines: 5825 to 5831
 function BlackMarketManager:get_default_mask_blueprint()
 	local blueprint = {
 		color = {
@@ -6310,7 +6323,7 @@ function BlackMarketManager:get_default_mask_blueprint()
 	return blueprint
 end
 
--- Lines: 5814 to 5824
+-- Lines: 5834 to 5844
 function BlackMarketManager:on_sell_inventory_mask(mask_id, global_value)
 	local blueprint = {
 		color = {
@@ -6333,7 +6346,7 @@ function BlackMarketManager:on_sell_inventory_mask(mask_id, global_value)
 	end
 end
 
--- Lines: 5826 to 5861
+-- Lines: 5846 to 5881
 function BlackMarketManager:on_sell_mask(slot, skip_verification)
 	local category = "masks"
 
@@ -6378,12 +6391,12 @@ function BlackMarketManager:on_sell_mask(slot, skip_verification)
 	end
 end
 
--- Lines: 5863 to 5865
+-- Lines: 5883 to 5885
 function BlackMarketManager:view_mask_with_mask_id(mask_id)
 	managers.menu_scene:spawn_mask(mask_id)
 end
 
--- Lines: 5867 to 5878
+-- Lines: 5887 to 5898
 function BlackMarketManager:view_mask(slot)
 	local category = "masks"
 
@@ -6400,7 +6413,7 @@ function BlackMarketManager:view_mask(slot)
 	managers.menu_scene:spawn_mask(mask_id, blueprint)
 end
 
--- Lines: 5880 to 5895
+-- Lines: 5900 to 5915
 function BlackMarketManager:view_mask_with_blueprint(slot, blueprint)
 	local category = "masks"
 
@@ -6420,7 +6433,7 @@ function BlackMarketManager:view_mask_with_blueprint(slot, blueprint)
 	end
 end
 
--- Lines: 5897 to 5910
+-- Lines: 5917 to 5930
 function BlackMarketManager:set_mask_blueprint(slot, blueprint)
 	local category = "masks"
 
@@ -6439,7 +6452,7 @@ function BlackMarketManager:set_mask_blueprint(slot, blueprint)
 	self._global.crafted_items[category][slot].blueprint = blueprint
 end
 
--- Lines: 5914 to 5922
+-- Lines: 5934 to 5942
 function BlackMarketManager:get_real_character(character_name, peer_id)
 	local character = nil
 	character = managers.network and managers.network:session() and managers.network:session():peer(peer_id) and managers.network:session():peer(peer_id):character() or character_name or self:get_preferred_character()
@@ -6447,7 +6460,7 @@ function BlackMarketManager:get_real_character(character_name, peer_id)
 	return CriminalsManager.convert_old_to_new_character_workname(character)
 end
 
--- Lines: 5925 to 5950
+-- Lines: 5945 to 5970
 function BlackMarketManager:get_real_mask_id(mask_id, peer_id, char)
 	if not tweak_data.blackmarket.masks[mask_id] then
 		Application:error("[BlackMarketManager:get_real_mask_id] Missing mask:" .. mask_id .. ". Using dallas mask!")
@@ -6480,12 +6493,12 @@ function BlackMarketManager:get_real_mask_id(mask_id, peer_id, char)
 	return tweak_data.blackmarket.masks[mask_id][character] or "dallas"
 end
 
--- Lines: 5953 to 5954
+-- Lines: 5973 to 5974
 function BlackMarketManager:mask_unit_name_by_mask_id(mask_id, peer_id, character)
 	return tweak_data.blackmarket.masks[self:get_real_mask_id(mask_id, peer_id, character)].unit
 end
 
--- Lines: 5957 to 6013
+-- Lines: 5977 to 6033
 function BlackMarketManager:character_sequence_by_character_id(character_id, peer_id)
 	if not peer_id and character_id ~= "locked" then
 		return tweak_data.blackmarket.characters[character_id].sequence
@@ -6538,7 +6551,7 @@ function BlackMarketManager:character_sequence_by_character_id(character_id, pee
 	return shared_char_seq
 end
 
--- Lines: 6017 to 6043
+-- Lines: 6037 to 6063
 function BlackMarketManager:character_sequence_by_character_name(character, use_cc)
 	character = CriminalsManager.convert_old_to_new_character_workname(character)
 	local sequence = self:_character_tweak_data_by_name(character).sequence
@@ -6567,21 +6580,21 @@ function BlackMarketManager:character_sequence_by_character_name(character, use_
 	return sequence
 end
 
--- Lines: 6046 to 6048
+-- Lines: 6066 to 6068
 function BlackMarketManager:character_mask_on_sequence_by_character_name(character)
 	character = CriminalsManager.convert_old_to_new_character_workname(character)
 
 	return self:_character_tweak_data_by_name(character).mask_on_sequence
 end
 
--- Lines: 6051 to 6053
+-- Lines: 6071 to 6073
 function BlackMarketManager:character_mask_off_sequence_by_character_name(character)
 	character = CriminalsManager.convert_old_to_new_character_workname(character)
 
 	return self:_character_tweak_data_by_name(character).mask_off_sequence
 end
 
--- Lines: 6056 to 6061
+-- Lines: 6076 to 6081
 function BlackMarketManager:_character_tweak_data_by_name(character_name)
 	if tweak_data.blackmarket.characters.locked[character_name] then
 		return tweak_data.blackmarket.characters.locked[character_name]
@@ -6590,7 +6603,7 @@ function BlackMarketManager:_character_tweak_data_by_name(character_name)
 	return tweak_data.blackmarket.characters[character_name]
 end
 
--- Lines: 6064 to 6073
+-- Lines: 6084 to 6093
 function BlackMarketManager:weapon_cosmetics_type_check(weapon_id, weapon_skin_id)
 	local weapon_skin = tweak_data.blackmarket.weapon_skins[weapon_skin_id]
 
@@ -6603,7 +6616,7 @@ function BlackMarketManager:weapon_cosmetics_type_check(weapon_id, weapon_skin_i
 	end
 end
 
--- Lines: 6075 to 6088
+-- Lines: 6095 to 6108
 function BlackMarketManager:get_weapon_cosmetics(category, slot)
 	if not self._global.crafted_items then
 		return
@@ -6620,7 +6633,7 @@ function BlackMarketManager:get_weapon_cosmetics(category, slot)
 	return self._global.crafted_items[category][slot].cosmetics
 end
 
--- Lines: 6092 to 6102
+-- Lines: 6112 to 6122
 function BlackMarketManager:get_weapon_skins(weapon_id)
 	local skins_tweak = tweak_data.blackmarket.weapon_skins
 	local skins = {}
@@ -6634,7 +6647,7 @@ function BlackMarketManager:get_weapon_skins(weapon_id)
 	return skins
 end
 
--- Lines: 6105 to 6134
+-- Lines: 6125 to 6154
 function BlackMarketManager:on_remove_weapon_cosmetics(category, slot, skip_update)
 	local crafted = self._global.crafted_items[category][slot]
 
@@ -6671,7 +6684,7 @@ function BlackMarketManager:on_remove_weapon_cosmetics(category, slot, skip_upda
 	end
 end
 
--- Lines: 6136 to 6187
+-- Lines: 6156 to 6213
 function BlackMarketManager:on_equip_weapon_cosmetics(category, slot, instance_id)
 	local crafted = self._global.crafted_items[category][slot]
 
@@ -6680,10 +6693,17 @@ function BlackMarketManager:on_equip_weapon_cosmetics(category, slot, instance_i
 	end
 
 	local item_data = self:get_inventory_tradable()[instance_id]
-	item_data = item_data or {
-		quality = "mint",
-		entry = instance_id
-	}
+
+	if not item_data then
+		local is_not_steam_inventory_item = tweak_data.blackmarket.weapon_skins[instance_id] and tweak_data.blackmarket.weapon_skins[instance_id].is_a_unlockable
+
+		if is_not_steam_inventory_item then
+			item_data = {
+				quality = "mint",
+				entry = instance_id
+			}
+		end
+	end
 
 	if not item_data then
 		return
@@ -6735,7 +6755,7 @@ function BlackMarketManager:on_equip_weapon_cosmetics(category, slot, instance_i
 	MenuCallbackHandler:_update_outfit_information()
 end
 
--- Lines: 6190 to 6206
+-- Lines: 6216 to 6232
 function BlackMarketManager:get_cosmetics_instances_by_weapon_id(weapon_id)
 	local cosmetic_tweak = tweak_data.blackmarket.weapon_skins
 	local items = {}
@@ -6755,7 +6775,7 @@ function BlackMarketManager:get_cosmetics_instances_by_weapon_id(weapon_id)
 	return items
 end
 
--- Lines: 6210 to 6222
+-- Lines: 6236 to 6248
 function BlackMarketManager:get_cosmetics_by_weapon_id(weapon_id)
 	local cosmetic_tweak = tweak_data.blackmarket.weapon_skins
 	weapon_id = tweak_data.weapon[weapon_id].parent_weapon_id or weapon_id
@@ -6770,12 +6790,12 @@ function BlackMarketManager:get_cosmetics_by_weapon_id(weapon_id)
 	return cosmetics
 end
 
--- Lines: 6226 to 6227
+-- Lines: 6252 to 6253
 function BlackMarketManager:has_new_tradable_items()
 	return #self._global.new_tradable_items > 0
 end
 
--- Lines: 6230 to 6240
+-- Lines: 6256 to 6266
 function BlackMarketManager:fetch_new_tradable_items()
 	local data = self._global.new_tradable_items
 	self._global.new_tradable_items = {}
@@ -6789,12 +6809,12 @@ function BlackMarketManager:fetch_new_tradable_items()
 	return data
 end
 
--- Lines: 6243 to 6244
+-- Lines: 6269 to 6270
 function BlackMarketManager:get_inventory_tradable()
 	return self._global.inventory_tradable
 end
 
--- Lines: 6247 to 6263
+-- Lines: 6273 to 6289
 function BlackMarketManager:get_inventory_tradable_by_parameters(...)
 	local parameters = {...}
 	local items = {}
@@ -6819,7 +6839,7 @@ function BlackMarketManager:get_inventory_tradable_by_parameters(...)
 	return items
 end
 
--- Lines: 6266 to 6273
+-- Lines: 6292 to 6299
 function BlackMarketManager:get_inventory_tradable_by_category()
 	local items = {}
 
@@ -6832,7 +6852,7 @@ function BlackMarketManager:get_inventory_tradable_by_category()
 	return items
 end
 
--- Lines: 6276 to 6282
+-- Lines: 6302 to 6308
 function BlackMarketManager:tradable_instance_id(category, entry)
 	for instance_id, data in pairs(self._global.inventory_tradable) do
 		if data.category == category and data.entry == entry then
@@ -6841,7 +6861,7 @@ function BlackMarketManager:tradable_instance_id(category, entry)
 	end
 end
 
--- Lines: 6284 to 6291
+-- Lines: 6310 to 6317
 function BlackMarketManager:have_inventory_tradable_item(category, entry)
 	for instance_id, data in pairs(self._global.inventory_tradable) do
 		if data.category == category and data.entry == entry then
@@ -6852,7 +6872,7 @@ function BlackMarketManager:have_inventory_tradable_item(category, entry)
 	return false
 end
 
--- Lines: 6309 to 6317
+-- Lines: 6335 to 6343
 function BlackMarketManager:get_inventory_tradable_item_amount(category, entry)
 	local amount = 0
 
@@ -6865,7 +6885,7 @@ function BlackMarketManager:get_inventory_tradable_item_amount(category, entry)
 	return amount
 end
 
--- Lines: 6323 to 6335
+-- Lines: 6349 to 6361
 function BlackMarketManager:tradable_add_item(instance_id, category, entry, quality, bonus, amount)
 	if self._global.inventory_tradable[instance_id] then
 		local item = self._global.inventory_tradable[instance_id]
@@ -6888,7 +6908,7 @@ function BlackMarketManager:tradable_add_item(instance_id, category, entry, qual
 	end
 end
 
--- Lines: 6337 to 6346
+-- Lines: 6363 to 6372
 function BlackMarketManager:tradable_receive_item_by_instance_id(instance_id)
 	local item = self._global.inventory_tradable[instance_id]
 
@@ -6901,7 +6921,7 @@ function BlackMarketManager:tradable_receive_item_by_instance_id(instance_id)
 	end
 end
 
--- Lines: 6348 to 6355
+-- Lines: 6374 to 6381
 function BlackMarketManager:tradable_receive_item(category, entry)
 	for instance_id, data in pairs(self._global.inventory_tradable) do
 		if data.category == category and data.entry == entry then
@@ -6910,7 +6930,7 @@ function BlackMarketManager:tradable_receive_item(category, entry)
 	end
 end
 
--- Lines: 6357 to 6362
+-- Lines: 6383 to 6388
 function BlackMarketManager:tradable_amount(category, entry)
 	if not self._global.inventory_tradable[category] or not self._global.inventory_tradable[category][entry] then
 		return 0
@@ -6919,7 +6939,7 @@ function BlackMarketManager:tradable_amount(category, entry)
 	return table.size(self._global.inventory_tradable[category][entry])
 end
 
--- Lines: 6365 to 6378
+-- Lines: 6391 to 6404
 function BlackMarketManager:tradable_outfit()
 	local outfit = {}
 	local primary = self:equipped_primary()
@@ -6937,7 +6957,7 @@ function BlackMarketManager:tradable_outfit()
 	return outfit
 end
 
--- Lines: 6385 to 6459
+-- Lines: 6411 to 6485
 function BlackMarketManager:tradable_update(tradable_list, remove_missing)
 	print("[BlackMarketManager:tradable_update]", "list", tradable_list and #tradable_list or 0, remove_missing)
 
@@ -7013,7 +7033,7 @@ function BlackMarketManager:tradable_update(tradable_list, remove_missing)
 	end
 end
 
--- Lines: 6464 to 6484
+-- Lines: 6490 to 6510
 function BlackMarketManager:_remove_unowned_armor_skin()
 	local remove_armor = true
 	local skin_id = tweak_data.economy:get_real_armor_skin_id(self:equipped_armor_skin())
@@ -7038,7 +7058,7 @@ function BlackMarketManager:_remove_unowned_armor_skin()
 	return false
 end
 
--- Lines: 6489 to 6502
+-- Lines: 6515 to 6528
 function BlackMarketManager:tradable_verify(category, entry, quality, bonus, tradable_list)
 	if not tradable_list then
 		return false
@@ -7057,7 +7077,7 @@ function BlackMarketManager:tradable_verify(category, entry, quality, bonus, tra
 	return false
 end
 
--- Lines: 6505 to 6516
+-- Lines: 6531 to 6542
 function BlackMarketManager:tradable_achievement(category, entry)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		local tweak_item = tweak_data.economy[category][entry]
@@ -7069,7 +7089,7 @@ function BlackMarketManager:tradable_achievement(category, entry)
 	end
 end
 
--- Lines: 6518 to 6530
+-- Lines: 6544 to 6556
 function BlackMarketManager:tradable_dlcs()
 	for category, category_data in pairs(tweak_data.economy) do
 		for entry, item_data in pairs(category_data) do
@@ -7084,7 +7104,7 @@ function BlackMarketManager:tradable_dlcs()
 	end
 end
 
--- Lines: 6532 to 6546
+-- Lines: 6558 to 6572
 function BlackMarketManager:_clbk_tradable_dlcs(error, tradable_list)
 	if error then
 		Application:error("[BlackMarketManager:_clbk_tradable_reward] Failed to reward item (" .. tostring(error) .. ")")
@@ -7103,7 +7123,7 @@ function BlackMarketManager:_clbk_tradable_dlcs(error, tradable_list)
 	end
 end
 
--- Lines: 6550 to 6557
+-- Lines: 6576 to 6583
 function BlackMarketManager:_on_reset_unlock_aquired_weapons()
 	local weapons = Global.blackmarket_manager.weapons
 
@@ -7114,7 +7134,7 @@ function BlackMarketManager:_on_reset_unlock_aquired_weapons()
 	end
 end
 
--- Lines: 6559 to 6593
+-- Lines: 6585 to 6619
 function BlackMarketManager:reset()
 	self._global.inventory = {}
 	self._global.inventory_tradable = {}
@@ -7147,7 +7167,7 @@ function BlackMarketManager:reset()
 	end
 end
 
--- Lines: 6595 to 6618
+-- Lines: 6621 to 6644
 function BlackMarketManager:reset_equipped()
 	self._global.new_drops = {}
 	self._global.new_item_type_unlocked = {}
@@ -7171,7 +7191,7 @@ function BlackMarketManager:reset_equipped()
 	end
 end
 
--- Lines: 6620 to 6640
+-- Lines: 6646 to 6666
 function BlackMarketManager:save(data)
 	local save_data = deep_clone(self._global)
 	save_data.equipped_armor = self:equipped_armor()
@@ -7188,7 +7208,7 @@ function BlackMarketManager:save(data)
 	data.blackmarket = save_data
 end
 
--- Lines: 6642 to 6908
+-- Lines: 6668 to 6934
 function BlackMarketManager:load(data)
 	if data.blackmarket then
 		local default_global = self._global or {}
@@ -7473,7 +7493,7 @@ function BlackMarketManager:load(data)
 	end
 end
 
--- Lines: 6910 to 6977
+-- Lines: 6936 to 7003
 function BlackMarketManager:refill_track_global_values()
 	Application:debug("[BlackMarketManager:refill_track_global_values] Refilling Global.blackmarket_manager.global_value_items")
 
@@ -7497,8 +7517,7 @@ function BlackMarketManager:refill_track_global_values()
 	}
 	local global_values = nil
 
-	
-	-- Lines: 6930 to 6937
+	-- Lines: 6956 to 6963
 	local function add_crafted_item_func(global_value, category, slot, id)
 		local global_value_item = new_global_value_items[global_value]
 
@@ -7509,8 +7528,7 @@ function BlackMarketManager:refill_track_global_values()
 		end
 	end
 
-	
-	-- Lines: 6939 to 6945
+	-- Lines: 6965 to 6971
 	local function add_inventory_item_func(global_value, category, id, num)
 		local global_value_item = new_global_value_items[global_value]
 
@@ -7555,7 +7573,7 @@ function BlackMarketManager:refill_track_global_values()
 	Global.blackmarket_manager.global_value_items = new_global_value_items
 end
 
--- Lines: 6979 to 7026
+-- Lines: 7005 to 7052
 function BlackMarketManager:_load_done()
 	Application:debug("BlackMarketManager:_load_done()")
 	self:_verfify_equipped()
@@ -7609,7 +7627,7 @@ function BlackMarketManager:_load_done()
 	end
 end
 
--- Lines: 7028 to 7042
+-- Lines: 7054 to 7068
 function BlackMarketManager:verify_dlc_items()
 	self:_cleanup_blackmarket()
 
@@ -7629,7 +7647,7 @@ function BlackMarketManager:verify_dlc_items()
 	managers.dlc:give_missing_package()
 end
 
--- Lines: 7241 to 7626
+-- Lines: 7267 to 7652
 function BlackMarketManager:_cleanup_blackmarket()
 	Application:error("[BlackMarketManager:_cleanup_blackmarket] STARTING BLACKMARKET CLEANUP")
 	Application:error("----------------------------------------------------------------------")
@@ -7646,8 +7664,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 
 	local crafted_masks = crafted_items.masks
 
-	
-	-- Lines: 7261 to 7262
+	-- Lines: 7287 to 7288
 	local function chk_global_value_func(global_value, data, real_global_value)
 		return tweak_data.lootdrop.global_values[global_value or "normal"] and true or false
 	end
@@ -7688,8 +7705,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 	local invalid_weapons = {}
 	local invalid_parts = {}
 
-	
-	-- Lines: 7301 to 7310
+	-- Lines: 7327 to 7336
 	local function invalid_add_weapon_remove_parts_func(slot, item, part_id)
 		table.insert(invalid_weapons, slot)
 		Application:error("BlackMarketManager:_cleanup_blackmarket() Part non-existent, weapon invalid", "weapon_id", item.weapon_id, "slot", slot)
@@ -7903,16 +7919,14 @@ function BlackMarketManager:_cleanup_blackmarket()
 	local invalid_items = {}
 	local changed_items = {}
 
-	
-	-- Lines: 7486 to 7490
+	-- Lines: 7512 to 7516
 	local function add_invalid_global_value_func(global_value)
 		invalid_items[global_value] = true
 
 		Application:error("BlackMarketManager:_cleanup_blackmarket() Invalid inventory global_value detected", "global_value", global_value)
 	end
 
-	
-	-- Lines: 7491 to 7496
+	-- Lines: 7517 to 7522
 	local function add_invalid_category_func(global_value, category)
 		invalid_items[global_value] = invalid_items[global_value] or {}
 		invalid_items[global_value][category] = true
@@ -7920,8 +7934,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 		Application:error("BlackMarketManager:_cleanup_blackmarket() Invalid inventory category detected", "global_value", global_value, "category", category)
 	end
 
-	
-	-- Lines: 7497 to 7503
+	-- Lines: 7523 to 7529
 	local function add_invalid_item_func(global_value, category, item)
 		invalid_items[global_value] = invalid_items[global_value] or {}
 		invalid_items[global_value][category] = invalid_items[global_value][category] or {}
@@ -8055,11 +8068,11 @@ function BlackMarketManager:_cleanup_blackmarket()
 	Application:error("[BlackMarketManager:_cleanup_blackmarket] BLACKMARKET CLEANUP DONE")
 end
 
--- Lines: 7628 to 7629
+-- Lines: 7654 to 7655
 function BlackMarketManager:test_clean()
 end
 
--- Lines: 7631 to 7766
+-- Lines: 7657 to 7792
 function BlackMarketManager:_verify_dlc_items()
 	Application:debug("-----------------------BlackMarketManager:_verify_dlc_items-----------------------")
 
@@ -8204,7 +8217,7 @@ function BlackMarketManager:_verify_dlc_items()
 	end
 end
 
--- Lines: 7768 to 7778
+-- Lines: 7794 to 7804
 function BlackMarketManager:_verfify_equipped()
 	self:_verfify_equipped_category("secondaries")
 	self:_verfify_equipped_category("primaries")
@@ -8215,7 +8228,7 @@ function BlackMarketManager:_verfify_equipped()
 	self:verfify_crew_loadout()
 end
 
--- Lines: 7780 to 7797
+-- Lines: 7806 to 7823
 function BlackMarketManager:verfify_crew_loadout()
 	if not self._global._selected_henchmen then
 		return
@@ -8233,7 +8246,7 @@ function BlackMarketManager:verfify_crew_loadout()
 	end
 end
 
--- Lines: 7800 to 7820
+-- Lines: 7826 to 7846
 function BlackMarketManager:verfify_recived_crew_loadout(loadout, mark_host_as_cheater)
 	local weapon_id = loadout.primary and managers.weapon_factory:get_weapon_id_by_factory_id(loadout.primary)
 	local weapon_passed = self:is_weapon_allowed_for_crew(weapon_id)
@@ -8255,7 +8268,7 @@ function BlackMarketManager:verfify_recived_crew_loadout(loadout, mark_host_as_c
 	return passed
 end
 
--- Lines: 7823 to 7827
+-- Lines: 7849 to 7853
 function BlackMarketManager:verify_has_crew_skill(name)
 	if not name then
 		return true
@@ -8264,7 +8277,7 @@ function BlackMarketManager:verify_has_crew_skill(name)
 	return self:verify_is_crew_skill(name) and self:is_crew_item_unlocked(name)
 end
 
--- Lines: 7830 to 7834
+-- Lines: 7856 to 7860
 function BlackMarketManager:verify_has_crew_ability(name)
 	if not name then
 		return true
@@ -8273,7 +8286,7 @@ function BlackMarketManager:verify_has_crew_ability(name)
 	return self:verify_is_crew_ability(name) and self:is_crew_item_unlocked(name)
 end
 
--- Lines: 7837 to 7841
+-- Lines: 7863 to 7867
 function BlackMarketManager:verify_is_crew_skill(name)
 	if not name then
 		return true
@@ -8282,7 +8295,7 @@ function BlackMarketManager:verify_is_crew_skill(name)
 	return not not tweak_data.upgrades.crew_skill_definitions[name]
 end
 
--- Lines: 7844 to 7848
+-- Lines: 7870 to 7874
 function BlackMarketManager:verify_is_crew_ability(name)
 	if not name then
 		return true
@@ -8291,7 +8304,7 @@ function BlackMarketManager:verify_is_crew_ability(name)
 	return not not tweak_data.upgrades.crew_ability_definitions[name]
 end
 
--- Lines: 7851 to 7858
+-- Lines: 7877 to 7884
 function BlackMarketManager:_verify_crew_mask(npc_mask_id, slot)
 	if not npc_mask_id or not slot then
 		return
@@ -8303,7 +8316,7 @@ function BlackMarketManager:_verify_crew_mask(npc_mask_id, slot)
 	return mask_id == npc_mask_id
 end
 
--- Lines: 7861 to 7868
+-- Lines: 7887 to 7894
 function BlackMarketManager:_verify_crew_weapon(category, npc_factory_id, slot)
 	if not npc_factory_id or not slot then
 		return
@@ -8315,7 +8328,7 @@ function BlackMarketManager:_verify_crew_weapon(category, npc_factory_id, slot)
 	return npc_name == npc_factory_id and self:is_weapon_allowed_for_crew(found.weapon_id)
 end
 
--- Lines: 7871 to 7876
+-- Lines: 7897 to 7902
 function BlackMarketManager:is_weapon_allowed_for_crew(weapon_id)
 	if weapon_id == nil then
 		return true
@@ -8333,12 +8346,12 @@ local ALLOWED_CREW_WEAPON_CATEGORIES = {
 	snp = true
 }
 
--- Lines: 7888 to 7889
+-- Lines: 7914 to 7915
 function BlackMarketManager:is_weapon_category_allowed_for_crew(weapon_category)
 	return not not ALLOWED_CREW_WEAPON_CATEGORIES[weapon_category]
 end
 
--- Lines: 7893 to 8013
+-- Lines: 7919 to 8039
 function BlackMarketManager:_verfify_equipped_category(category)
 	if category == "armors" then
 		local armor_id = self._defaults.armor
@@ -8456,7 +8469,7 @@ function BlackMarketManager:_verfify_equipped_category(category)
 	managers.money:on_buy_weapon_platform(weapon_id, true)
 end
 
--- Lines: 8019 to 8027
+-- Lines: 8045 to 8053
 function BlackMarketManager:_convert_add_to_mul(value)
 	if value > 1 then
 		return 1 / value
@@ -8467,7 +8480,7 @@ function BlackMarketManager:_convert_add_to_mul(value)
 	end
 end
 
--- Lines: 8030 to 8039
+-- Lines: 8056 to 8065
 function BlackMarketManager:fire_rate_multiplier(name, categories, silencer, detection_risk, current_state, blueprint)
 	local multiplier = 1
 	multiplier = multiplier + 1 - managers.player:upgrade_value(name, "fire_rate_multiplier", 1)
@@ -8480,7 +8493,7 @@ function BlackMarketManager:fire_rate_multiplier(name, categories, silencer, det
 	return self:_convert_add_to_mul(multiplier)
 end
 
--- Lines: 8042 to 8057
+-- Lines: 8068 to 8083
 function BlackMarketManager:damage_addend(name, categories, silencer, detection_risk, current_state, blueprint)
 	local value = 0
 
@@ -8499,7 +8512,7 @@ function BlackMarketManager:damage_addend(name, categories, silencer, detection_
 	return value
 end
 
--- Lines: 8060 to 8100
+-- Lines: 8086 to 8126
 function BlackMarketManager:damage_multiplier(name, categories, silencer, detection_risk, current_state, blueprint)
 	local multiplier = 1
 
@@ -8542,7 +8555,7 @@ function BlackMarketManager:damage_multiplier(name, categories, silencer, detect
 	return self:_convert_add_to_mul(multiplier)
 end
 
--- Lines: 8103 to 8109
+-- Lines: 8129 to 8135
 function BlackMarketManager:threat_multiplier(name, categories, silencer)
 	local multiplier = 1
 	multiplier = multiplier + 1 - managers.player:upgrade_value("player", "suppression_multiplier", 1)
@@ -8552,7 +8565,7 @@ function BlackMarketManager:threat_multiplier(name, categories, silencer)
 	return self:_convert_add_to_mul(multiplier)
 end
 
--- Lines: 8112 to 8147
+-- Lines: 8138 to 8173
 function BlackMarketManager:accuracy_addend(name, categories, spread_index, silencer, current_state, fire_mode, blueprint, is_moving, is_single_shot)
 	local addend = 0
 
@@ -8593,7 +8606,7 @@ function BlackMarketManager:accuracy_addend(name, categories, spread_index, sile
 	return addend
 end
 
--- Lines: 8150 to 8173
+-- Lines: 8176 to 8199
 function BlackMarketManager:accuracy_index_addend(name, categories, silencer, current_state, fire_mode, blueprint)
 	local index = 0
 	index = index + managers.player:upgrade_value("player", "weapon_accuracy_increase", 0)
@@ -8623,7 +8636,7 @@ function BlackMarketManager:accuracy_index_addend(name, categories, silencer, cu
 	return index
 end
 
--- Lines: 8176 to 8189
+-- Lines: 8202 to 8215
 function BlackMarketManager:accuracy_multiplier(name, categories, silencer, current_state, spread_moving, fire_mode, blueprint, is_single_shot)
 	local multiplier = 1
 
@@ -8642,7 +8655,7 @@ function BlackMarketManager:accuracy_multiplier(name, categories, silencer, curr
 	return self:_convert_add_to_mul(multiplier)
 end
 
--- Lines: 8192 to 8245
+-- Lines: 8218 to 8271
 function BlackMarketManager:recoil_addend(name, categories, recoil_index, silencer, blueprint, current_state, is_single_shot)
 	local addend = 0
 
@@ -8702,7 +8715,7 @@ function BlackMarketManager:recoil_addend(name, categories, recoil_index, silenc
 	return addend
 end
 
--- Lines: 8248 to 8289
+-- Lines: 8274 to 8315
 function BlackMarketManager:recoil_multiplier(name, categories, silencer, blueprint, is_moving)
 	local multiplier = 1
 
@@ -8752,7 +8765,7 @@ function BlackMarketManager:recoil_multiplier(name, categories, silencer, bluepr
 	return self:_convert_add_to_mul(multiplier)
 end
 
--- Lines: 8295 to 8307
+-- Lines: 8321 to 8333
 function BlackMarketManager:forced_character()
 	if managers.network and managers.network:session() then
 		local level_data = tweak_data.levels[managers.job:current_level_id()]
@@ -8769,7 +8782,7 @@ function BlackMarketManager:forced_character()
 	end
 end
 
--- Lines: 8309 to 8323
+-- Lines: 8335 to 8349
 function BlackMarketManager:forced_primary()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 	local items = level_data and level_data.force_equipment
@@ -8793,7 +8806,7 @@ function BlackMarketManager:forced_primary()
 	end
 end
 
--- Lines: 8325 to 8339
+-- Lines: 8351 to 8365
 function BlackMarketManager:forced_secondary()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 	local items = level_data and level_data.force_equipment
@@ -8817,28 +8830,28 @@ function BlackMarketManager:forced_secondary()
 	end
 end
 
--- Lines: 8341 to 8343
+-- Lines: 8367 to 8369
 function BlackMarketManager:forced_armor()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 
 	return level_data and level_data.force_equipment and level_data.force_equipment.armor
 end
 
--- Lines: 8346 to 8348
+-- Lines: 8372 to 8374
 function BlackMarketManager:forced_deployable()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 
 	return level_data and level_data.force_equipment and level_data.force_equipment.deployable
 end
 
--- Lines: 8351 to 8353
+-- Lines: 8377 to 8379
 function BlackMarketManager:forced_throwable()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 
 	return level_data and level_data.force_equipment and level_data.force_equipment.throwable
 end
 
--- Lines: 8361 to 8415
+-- Lines: 8387 to 8441
 function BlackMarketManager:check_frog_1()
 	if not managers.statistics or not managers.statistics:started_session_from_beginning() then
 		return false
@@ -8894,7 +8907,7 @@ function BlackMarketManager:check_frog_1()
 	return false
 end
 
--- Lines: 8419 to 8426
+-- Lines: 8445 to 8452
 function BlackMarketManager:is_single_shot(blueprint, category)
 	if category == "snp" then
 		return true
@@ -8909,7 +8922,7 @@ function BlackMarketManager:is_single_shot(blueprint, category)
 	return false
 end
 
--- Lines: 8430 to 8447
+-- Lines: 8456 to 8473
 function BlackMarketManager:player_owns_silenced_weapon()
 	local factory_parts = tweak_data.weapon.factory.parts
 	local categories = {
@@ -8932,7 +8945,7 @@ function BlackMarketManager:player_owns_silenced_weapon()
 	return false
 end
 
--- Lines: 8457 to 8515
+-- Lines: 8483 to 8541
 function BlackMarketManager:equip_weapon_in_game(category, slot, force_equip, done_cb)
 	if managers.job:current_real_job_id() ~= "chill" then
 		Application:error("[BlackMarketManager:equip_weapon_in_game] feature not available outside safehouse")
@@ -8955,8 +8968,7 @@ function BlackMarketManager:equip_weapon_in_game(category, slot, force_equip, do
 	local primary = category == "primaries"
 	local first_time = true
 
-	
-	-- Lines: 8481 to 8495
+	-- Lines: 8507 to 8521
 	local function clbk()
 		if first_time then
 			managers.blackmarket:equip_weapon(category, slot)
@@ -9000,10 +9012,10 @@ function BlackMarketManager:equip_weapon_in_game(category, slot, force_equip, do
 	end
 end
 
--- Lines: 8553 to 8588
+-- Lines: 8579 to 8614
 function BlackMarketManager:get_reload_time(weapon_id)
-	
-	-- Lines: 8551 to 8553
+
+	-- Lines: 8577 to 8579
 	local function failure(err)
 		Application:error("[BlackMarketManager:get_reload_time] " .. tostring(err) .. "\nReturning 1 to avoid crashing.")
 
@@ -9040,7 +9052,7 @@ function BlackMarketManager:get_reload_time(weapon_id)
 	return failure("no reload time found!")
 end
 
--- Lines: 8592 to 8672
+-- Lines: 8618 to 8698
 function BlackMarketManager:get_reload_animation_time(weapon_id)
 	if not weapon_id then
 		Application:error("[BlackMarketManager:get_reload_animation_time] no weapon id given!\nReturning 1 to avoid crashing.")
@@ -9068,8 +9080,7 @@ function BlackMarketManager:get_reload_animation_time(weapon_id)
 	weapon_id = swaps[weapon_id] or weapon_id
 	local anim_set = AnimationManager:animation_set(Idstring("anims/fps/fps"))
 
-	
-	-- Lines: 8625 to 8646
+	-- Lines: 8651 to 8672
 	local function get_time(id, overrides)
 		overrides = overrides or {}
 		local reload_anim_id = Idstring(id .. "_reload")
@@ -9126,7 +9137,7 @@ function BlackMarketManager:get_reload_animation_time(weapon_id)
 	return 1
 end
 
--- Lines: 8677 to 8687
+-- Lines: 8703 to 8713
 function BlackMarketManager:craft_temporary(category, weapon_id, slot)
 	if category ~= "primaries" and category ~= "secondaries" then
 		return
@@ -9144,7 +9155,7 @@ function BlackMarketManager:craft_temporary(category, weapon_id, slot)
 	}
 end
 
--- Lines: 8689 to 8700
+-- Lines: 8715 to 8726
 function BlackMarketManager:clear_temporary()
 	local categories = {
 		"primaries",
@@ -9162,7 +9173,7 @@ function BlackMarketManager:clear_temporary()
 	end
 end
 
--- Lines: 8702 to 8715
+-- Lines: 8728 to 8741
 function BlackMarketManager:get_preview_blueprint(category, slot)
 	if not self._preview_blueprint or self._preview_blueprint.category ~= category or self._preview_blueprint.slot ~= slot then
 		if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
@@ -9182,7 +9193,7 @@ function BlackMarketManager:get_preview_blueprint(category, slot)
 	return self._preview_blueprint.blueprint
 end
 
--- Lines: 8718 to 8723
+-- Lines: 8744 to 8749
 function BlackMarketManager:is_previewing_mod(mod_id)
 	if not self._preview_blueprint or not self._preview_blueprint.blueprint then
 		return false
@@ -9191,7 +9202,7 @@ function BlackMarketManager:is_previewing_mod(mod_id)
 	return table.contains(self._preview_blueprint.blueprint, mod_id)
 end
 
--- Lines: 8726 to 8743
+-- Lines: 8752 to 8769
 function BlackMarketManager:is_previewing_any_mod()
 	if not self._preview_blueprint or not self._preview_blueprint.blueprint then
 		return false
@@ -9214,7 +9225,7 @@ function BlackMarketManager:is_previewing_any_mod()
 	return not equal or #self._preview_blueprint.blueprint ~= #self._global.crafted_items[self._preview_blueprint.category][self._preview_blueprint.slot].blueprint or self._preview_blueprint.cosmetics
 end
 
--- Lines: 8746 to 8754
+-- Lines: 8772 to 8780
 function BlackMarketManager:preview_mod_forbidden(category, slot, part_id)
 	if not self._global.crafted_items[category] or not self._global.crafted_items[category][slot] then
 		Application:error("[BlackMarketManager:can_preview_mod] Weapon doesn't exist", category, slot)
@@ -9228,19 +9239,19 @@ function BlackMarketManager:preview_mod_forbidden(category, slot, part_id)
 	return managers.weapon_factory:can_add_part(craft_data.factory_id, part_id, blueprint)
 end
 
--- Lines: 8757 to 8759
+-- Lines: 8783 to 8785
 function BlackMarketManager:clear_preview_blueprint()
 	self._preview_blueprint = {}
 end
 
--- Lines: 8761 to 8764
+-- Lines: 8787 to 8790
 function BlackMarketManager:set_preview_cosmetics(category, slot, cosmetics)
 	self:get_preview_blueprint(category, slot)
 
 	self._preview_blueprint.cosmetics = cosmetics
 end
 
--- Lines: 8766 to 8769
+-- Lines: 8792 to 8795
 function BlackMarketManager:get_preview_cosmetics(category, slot)
 	self:get_preview_blueprint(category, slot)
 
@@ -9249,12 +9260,12 @@ function BlackMarketManager:get_preview_cosmetics(category, slot)
 	return self._preview_blueprint.cosmetics
 end
 
--- Lines: 8776 to 8777
+-- Lines: 8802 to 8803
 function BlackMarketManager:has_unlocked_arbiter()
 	return managers.tango:has_unlocked_arbiter()
 end
 
--- Lines: 8783 to 8795
+-- Lines: 8809 to 8821
 function BlackMarketManager:get_type_by_id(id)
 	for key, data in pairs(self._global) do
 		if type(data) == "table" and data[id] then
@@ -9269,27 +9280,27 @@ function BlackMarketManager:get_type_by_id(id)
 	end
 end
 
--- Lines: 8802 to 8803
+-- Lines: 8828 to 8829
 function BlackMarketManager:has_unlocked_breech()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_1"), "bm_menu_locked_breech"
 end
 
--- Lines: 8810 to 8811
+-- Lines: 8836 to 8837
 function BlackMarketManager:has_unlocked_ching()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_3"), "bm_menu_locked_ching"
 end
 
--- Lines: 8818 to 8819
+-- Lines: 8844 to 8845
 function BlackMarketManager:has_unlocked_erma()
 	return managers.generic_side_jobs:has_completed_and_claimed_rewards("aru_2"), "bm_menu_locked_erma"
 end
 
--- Lines: 8823 to 8824
+-- Lines: 8849 to 8850
 function BlackMarketManager:has_unlocked_push()
 	return true
 end
 
--- Lines: 8828 to 8829
+-- Lines: 8854 to 8855
 function BlackMarketManager:has_unlocked_grip()
 	return true
 end

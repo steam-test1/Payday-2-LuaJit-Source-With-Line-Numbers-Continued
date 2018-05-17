@@ -7,7 +7,6 @@ PlayerAction.AmmoEfficiency.Function = function (player_manager, target_headshot
 	local time = Application:time()
 	local headshots = 1
 
-	
 	-- Lines: 13 to 19
 	local function on_headshot()
 		headshots = headshots + 1

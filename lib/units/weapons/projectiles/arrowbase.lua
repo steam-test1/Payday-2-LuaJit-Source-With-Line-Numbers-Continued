@@ -629,7 +629,7 @@ function ArrowBase:load(data)
 		print(inspect(state.sync_attach_data))
 
 		if state.sync_attach_data then
-			
+
 			-- Lines: 674 to 679
 			local function _dropin_attach(parent_unit)
 				local parent_body = parent_unit:body(state.sync_attach_data.parent_body_index)

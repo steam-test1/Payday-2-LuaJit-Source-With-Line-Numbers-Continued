@@ -107,7 +107,6 @@ function UGCItem:prepare_for_submit(callback)
 	if not self._ugc_item then
 		print("[UGCItem:submit] Creating item")
 
-		
 		-- Lines: 135 to 144
 		local function on_create_callback(result, item)
 			if result == "success" then
@@ -236,7 +235,6 @@ function UGCItem:_submit_item(changenotes, callback)
 		return false
 	end
 
-	
 	-- Lines: 251 to 257
 	local function on_submit_item(result, item)
 		print("[UGCItem:_submit_item] Result ", result)
@@ -463,7 +461,7 @@ end
 
 -- Lines: 466 to 481
 function UGCItem:_load_config()
-	
+
 	-- Lines: 460 to 466
 	local function parse_vector(key, value)
 		if string.find(value, "Vector3") then
@@ -557,7 +555,6 @@ function UGCItem:_save_info()
 		return
 	end
 
-	
 	-- Lines: 551 to 555
 	local function param_preprocessor(key, value)
 		if key == "tags" then

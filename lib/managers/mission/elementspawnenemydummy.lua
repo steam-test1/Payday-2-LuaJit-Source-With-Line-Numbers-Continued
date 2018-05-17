@@ -25,13 +25,11 @@ function ElementSpawnEnemyDummy:_finalize_values()
 	local values = self._values
 	values.spawn_action = self:value("spawn_action")
 
-	
 	-- Lines: 24 to 26
 	local function _save_boolean(name_in)
 		values[name_in] = values[name_in] or nil
 	end
 
-	
 	-- Lines: 28 to 32
 	local function _nil_if_none(name_in)
 		if not values[name_in] or values[name_in] == "none" then
@@ -39,7 +37,6 @@ function ElementSpawnEnemyDummy:_finalize_values()
 		end
 	end
 
-	
 	-- Lines: 34 to 37
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])

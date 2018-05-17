@@ -149,7 +149,7 @@ end
 
 -- Lines: 130 to 139
 function MissionLoadDelayedElement:add_unit_list_btn()
-	
+
 	-- Lines: 122 to 130
 	local function filter_p(unit)
 		if self._units[unit:unit_data().unit_id] then
@@ -174,7 +174,7 @@ end
 
 -- Lines: 143 to 152
 function MissionLoadDelayedElement:remove_unit_list_btn()
-	
+
 	-- Lines: 142 to 143
 	local function filter_p(unit)
 		return self._units[unit:unit_data().unit_id]

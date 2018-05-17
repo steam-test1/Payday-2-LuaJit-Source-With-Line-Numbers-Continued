@@ -124,7 +124,6 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 
 	local x_td, y_td, xr_td, yr_td = nil
 
-	
 	-- Lines: 113 to 123
 	local function sort_func(x, y)
 		x_td = (tweak_data.economy[x.category] or tweak_data.blackmarket[x.category])[x.entry]
@@ -365,10 +364,9 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 		ammo_max_multiplier = ammo_max_multiplier * managers.player:body_armor_value("skill_ammo_mul", nil, 1)
 	end
 
-	
 	-- Lines: 344 to 359
 	local function get_ammo_max_per_clip(weapon_id)
-		
+
 		-- Lines: 335 to 344
 		local function upgrade_blocked(category, upgrade)
 			if not weapon_tweak_data.upgrade_blocks then

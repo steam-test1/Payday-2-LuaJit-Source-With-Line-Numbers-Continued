@@ -39,7 +39,7 @@ end
 
 -- Lines: 43 to 60
 function AIForceAttentionElement:select_att_unit(label)
-	
+
 	-- Lines: 39 to 43
 	local function f(unit)
 		if self._hed.att_unit_id == unit:unit_data().unit_id then
@@ -75,7 +75,7 @@ end
 
 -- Lines: 80 to 91
 function AIForceAttentionElement:add_included_units(label)
-	
+
 	-- Lines: 70 to 80
 	local function f(unit)
 		if table.contains(self._hed.included_units, unit:unit_data().unit_id) or table.contains(self._hed.excluded_units, unit:unit_data().unit_id) then
@@ -106,7 +106,7 @@ end
 
 -- Lines: 95 to 105
 function AIForceAttentionElement:remove_included_units(label)
-	
+
 	-- Lines: 94 to 95
 	local function f(unit)
 		return table.contains(self._hed.included_units, unit:unit_data().unit_id)
@@ -124,7 +124,7 @@ end
 
 -- Lines: 118 to 129
 function AIForceAttentionElement:add_excluded_units(label)
-	
+
 	-- Lines: 108 to 118
 	local function f(unit)
 		if table.contains(self._hed.excluded_units, unit:unit_data().unit_id) or table.contains(self._hed.included_units, unit:unit_data().unit_id) then
@@ -155,7 +155,7 @@ end
 
 -- Lines: 133 to 143
 function AIForceAttentionElement:remove_excluded_units(label)
-	
+
 	-- Lines: 132 to 133
 	local function f(unit)
 		return table.contains(self._hed.excluded_units, unit:unit_data().unit_id)

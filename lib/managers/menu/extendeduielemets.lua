@@ -337,7 +337,6 @@ function ScrollableList:add_lines_and_static_down_indicator()
 		2
 	}})
 
-	
 	-- Lines: 294 to 298
 	local function update_down_indicator()
 		local indicate = self:scroll_item()._scroll_bar:visible()
@@ -1088,7 +1087,6 @@ function TextLegendsBar:_update_items()
 	placer:set_start(self:w(), 0)
 	self:set_size(self:w(), 0)
 
-	
 	-- Lines: 996 to 1003
 	local function complete_line(text_item)
 		self.make_fine_text(text_item, true)

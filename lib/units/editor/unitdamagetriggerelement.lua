@@ -156,7 +156,7 @@ end
 
 -- Lines: 134 to 144
 function UnitDamageTriggerUnitElement:add_unit_list_btn()
-	
+
 	-- Lines: 130 to 134
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
@@ -177,7 +177,7 @@ end
 
 -- Lines: 149 to 159
 function UnitDamageTriggerUnitElement:remove_unit_list_btn()
-	
+
 	-- Lines: 148 to 149
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]

@@ -435,12 +435,12 @@ function CopActionWalk:_init()
 
 		for i, nav_point in ipairs(self._nav_path) do
 			if not nav_point.x then
-				
+
 				-- Lines: 336 to 337
 				nav_point.element.value = function (element, name)
 					return element[name]
 				end
-				
+
 				-- Lines: 337 to 338
 				nav_point.element.nav_link_wants_align_pos = function (element)
 					return element.from_idle
@@ -838,7 +838,6 @@ function CopActionWalk:_calculate_curved_path(path, index, curvature_factor, ent
 		mvec3_add(p3, vec_out)
 	end
 
-	
 	-- Lines: 711 to 721
 	local function _on_fail()
 		if curvature_factor < 1 then
@@ -2030,7 +2029,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 
 	if self._ext_anim.pose ~= "crouch" then
 		if self._stop_anim_side == "fwd" then
-			
+
 			-- Lines: 1912 to 1914
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local t_clamp = (math.clamp(t, 0, 0.6) / 0.6) ^ 0.8
@@ -2038,7 +2037,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 				return math.lerp(p1, p2, t_clamp)
 			end
 		elseif self._stop_anim_side == "bwd" then
-			
+
 			-- Lines: 1917 to 1926
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local low = 0.97
@@ -2049,7 +2048,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 				return math.lerp(p1, p2, t_clamp)
 			end
 		elseif self._stop_anim_side == "l" then
-			
+
 			-- Lines: 1929 to 1938
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local p_1_5 = 0.6
@@ -2060,7 +2059,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 				return math.lerp(p1, p2, t_clamp)
 			end
 		else
-			
+
 			-- Lines: 1941 to 1950
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local low = 0.9
@@ -2072,7 +2071,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 			end
 		end
 	elseif self._stop_anim_side == "fwd" or self._stop_anim_side == "bwd" then
-		
+
 		-- Lines: 1955 to 1958
 		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.4) / 0.4
@@ -2081,7 +2080,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 			return math.lerp(p1, p2, t_clamp)
 		end
 	elseif self._stop_anim_side == "l" then
-		
+
 		-- Lines: 1961 to 1964
 		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.3) / 0.3
@@ -2090,7 +2089,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 			return math.lerp(p1, p2, t_clamp)
 		end
 	else
-		
+
 		-- Lines: 1967 to 1970
 		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.6) / 0.6
@@ -2217,12 +2216,12 @@ end
 -- Lines: 2103 to 2129
 function CopActionWalk:append_nav_point(nav_point)
 	if not nav_point.x then
-		
+
 		-- Lines: 2104 to 2105
 		nav_point.element.value = function (element, name)
 			return element[name]
 		end
-		
+
 		-- Lines: 2105 to 2106
 		nav_point.element.nav_link_wants_align_pos = function (element)
 			return element.from_idle

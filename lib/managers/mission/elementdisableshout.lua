@@ -22,7 +22,6 @@ function ElementDisableShout:on_executed(instigator)
 		return
 	end
 
-	
 	-- Lines: 22 to 25
 	local function f(unit)
 		ElementDisableShout.sync_function(unit, self._values.disable_shout)

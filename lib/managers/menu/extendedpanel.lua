@@ -2,7 +2,7 @@
 -- Lines: 2 to 9
 local function redirect_to_member(class, member_name, functions)
 	for _, name in pairs(functions) do
-		
+
 		-- Lines: 4 to 6
 		class[name] = function (self, ...)
 			local member = self[member_name]
@@ -17,12 +17,12 @@ end
 -- Lines: 16 to 27
 local function redirect_to_panel(class, blacklist)
 	local old_index = class.__index
-	
+
 	-- Lines: 18 to 25
 	function class.__index(table, key)
 		for k, func in pairs(Panel) do
 			if not blacklist[k] and not rawget(class, k) then
-				
+
 				-- Lines: 20 to 21
 				class[k] = function (self, ...)
 					return func(self._panel, ...)

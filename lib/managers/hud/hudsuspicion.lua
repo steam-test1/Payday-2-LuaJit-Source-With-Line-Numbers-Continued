@@ -133,7 +133,6 @@ function HUDSuspicion:animate_eye()
 	self._discovered = nil
 	self._back_to_stealth = nil
 
-	
 	-- Lines: 67 to 223
 	local function animate_func(o, self)
 		local wanted_value = 0
@@ -143,7 +142,6 @@ function HUDSuspicion:animate_eye()
 		local suspicion_detected = o:child("suspicion_detected")
 		local misc_panel = o:child("misc_panel")
 
-		
 		-- Lines: 78 to 94
 		local function animate_hide_misc(o)
 			local hud_stealthmeter_bg = o:child("hud_stealthmeter_bg")
@@ -157,7 +155,6 @@ function HUDSuspicion:animate_eye()
 			end)
 		end
 
-		
 		-- Lines: 96 to 111
 		local function animate_show_misc(o)
 			local hud_stealthmeter_bg = o:child("hud_stealthmeter_bg")
@@ -200,7 +197,6 @@ function HUDSuspicion:animate_eye()
 
 					self._sound_source:post_event("hud_suspicion_discovered")
 
-					
 					-- Lines: 141 to 157
 					local function animate_detect_text(o)
 						local c = 0

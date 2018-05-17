@@ -67,7 +67,6 @@ function GenericDLCManager:_modify_locked_content()
 		return
 	end
 
-	
 	-- Lines: 67 to 83
 	local function _modify_loot_drop(loot_drop)
 		local entry = tweak_data.blackmarket[loot_drop.type_items] and tweak_data.blackmarket[loot_drop.type_items][loot_drop.item_entry]

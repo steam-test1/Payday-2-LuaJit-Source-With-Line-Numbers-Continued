@@ -113,7 +113,7 @@ local overrides = {
 }
 
 for _, func in ipairs(overrides) do
-	
+
 	-- Lines: 91 to 92
 	VRGuiObject[func] = function (self, ...)
 		return self._panel[func](self._panel, ...)
@@ -678,7 +678,6 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			parent_menu = self
 		}, params))
 
-		
 		-- Lines: 601 to 609
 		function clbk(btn)
 			local new_value = not managers.vr:get_setting(setting)
@@ -691,7 +690,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			end
 		end
 	elseif type == "slider" then
-		
+
 		-- Lines: 610 to 611
 		local function clbk(value)
 			managers.vr:set_setting(setting, value)
@@ -714,7 +713,6 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			parent_menu = self
 		}, params))
 
-		
 		-- Lines: 623 to 633
 		function clbk(btn)
 			local current_index = table.index_of(params.options, managers.vr:get_setting(setting))
@@ -735,7 +733,6 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			parent_menu = self
 		}, params))
 
-		
 		-- Lines: 637 to 640
 		function clbk(btn)
 			local value = params.value_clbk(btn)

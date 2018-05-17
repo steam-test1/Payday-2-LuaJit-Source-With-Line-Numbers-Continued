@@ -705,7 +705,7 @@ HUDBelt.states = {
 HUDBelt.GRID_WIDTH = 13
 HUDBelt.GRID_HEIGHT = 8
 
--- Lines: 554 to 609
+-- Lines: 554 to 614
 function HUDBelt:init(ws)
 	self._ws = ws
 	self._panel = ws:panel()
@@ -752,11 +752,28 @@ function HUDBelt:init(ws)
 	self._grid_box_sizes_clbk = callback(self, self, "_grid_box_sizes_changed")
 
 	managers.vr:add_setting_changed_callback("belt_box_sizes", self._grid_box_sizes_clbk)
+
+	if not self:verify_belt_ids(managers.vr:get_setting("belt_layout")) or not self:verify_belt_ids(managers.vr:get_setting("belt_box_sizes")) then
+		managers.vr:reset_setting("belt_layout")
+		managers.vr:reset_setting("belt_box_sizes")
+	end
+
 	self:layout_grid(managers.vr:get_setting("belt_layout"))
 	self:set_box_sizes(managers.vr:get_setting("belt_box_sizes"))
 end
 
--- Lines: 611 to 616
+-- Lines: 616 to 622
+function HUDBelt:verify_belt_ids(layout)
+	for id, _ in pairs(layout) do
+		if not self._interactions[id] then
+			return false
+		end
+	end
+
+	return true
+end
+
+-- Lines: 625 to 630
 function HUDBelt:destroy()
 	managers.vr:remove_setting_changed_callback("auto_reload", self._reload_setting_clbk)
 	managers.vr:remove_setting_changed_callback("default_weapon_hand", self._primary_hand_clbk)
@@ -764,7 +781,7 @@ function HUDBelt:destroy()
 	managers.vr:remove_setting_changed_callback("belt_box_sizes", self._grid_box_sizes_clbk)
 end
 
--- Lines: 618 to 656
+-- Lines: 632 to 670
 function HUDBelt:set_grid_display(display)
 	if display == not not self._grid_display_panel then
 		return
@@ -811,40 +828,40 @@ function HUDBelt:set_grid_display(display)
 	end
 end
 
--- Lines: 658 to 660
+-- Lines: 672 to 674
 function HUDBelt:_reload_setting_changed(setting, old_value, new_value)
 	self:set_state("reload", new_value and "disabled" or "inactive")
 end
 
--- Lines: 663 to 664
+-- Lines: 677 to 678
 function HUDBelt:_primary_hand_changed(setting, old_value, new_value)
 end
 
--- Lines: 666 to 668
+-- Lines: 680 to 682
 function HUDBelt:_grid_layout_changed(setting, old_value, new_value)
 	self:layout_grid(new_value)
 end
 
--- Lines: 670 to 672
+-- Lines: 684 to 686
 function HUDBelt:_grid_box_sizes_changed(setting, old_value, new_value)
 	self:set_box_sizes(new_value)
 end
 
--- Lines: 675 to 679
+-- Lines: 689 to 693
 function HUDBelt:layout_grid(layout)
 	for id, positions in pairs(layout) do
 		self:set_grid_position(id, unpack(positions))
 	end
 end
 
--- Lines: 681 to 685
+-- Lines: 695 to 699
 function HUDBelt:set_box_sizes(sizes)
 	for id, size in pairs(sizes) do
 		self:set_grid_size(id, unpack(size))
 	end
 end
 
--- Lines: 687 to 695
+-- Lines: 701 to 709
 function HUDBelt:set_grid_position(id, x, y)
 	local interaction = self._interactions[id]
 
@@ -856,7 +873,7 @@ function HUDBelt:set_grid_position(id, x, y)
 	interaction:set_invalid_overlay(false)
 end
 
--- Lines: 697 to 704
+-- Lines: 711 to 718
 function HUDBelt:get_interaction_point(id)
 	local interaction = self._interactions[id]
 
@@ -869,7 +886,7 @@ function HUDBelt:get_interaction_point(id)
 	return interaction:ws():local_to_world(Vector3(x, y, 0))
 end
 
--- Lines: 707 to 727
+-- Lines: 721 to 741
 function HUDBelt:get_closest_interaction(pos, limit, allow_invalid)
 	local closest_id, closest_dis, interactions = nil
 
@@ -896,7 +913,7 @@ function HUDBelt:get_closest_interaction(pos, limit, allow_invalid)
 	return closest_id, closest_dis
 end
 
--- Lines: 733 to 748
+-- Lines: 747 to 762
 function HUDBelt:move_interaction(id, pos, snap_to_grid)
 	local interaction = self._interactions[id]
 
@@ -917,7 +934,7 @@ function HUDBelt:move_interaction(id, pos, snap_to_grid)
 	end
 end
 
--- Lines: 750 to 767
+-- Lines: 764 to 781
 function HUDBelt:resize_interaction(id, edge_pos)
 	local interaction = self._interactions[id]
 
@@ -946,7 +963,7 @@ function HUDBelt:resize_interaction(id, edge_pos)
 	interaction:set_invalid_overlay(not self:valid_grid_location(id))
 end
 
--- Lines: 769 to 779
+-- Lines: 783 to 793
 function HUDBelt:pos_on_grid(id)
 	local interaction = self._interactions[id]
 
@@ -963,7 +980,7 @@ function HUDBelt:pos_on_grid(id)
 	return x, y
 end
 
--- Lines: 782 to 811
+-- Lines: 796 to 825
 function HUDBelt:valid_grid_location(id)
 	local interaction = self._interactions[id]
 
@@ -986,17 +1003,17 @@ function HUDBelt:valid_grid_location(id)
 	return true
 end
 
--- Lines: 820 to 822
+-- Lines: 834 to 836
 function HUDBelt:set_visible(visible)
 	self._ws[visible and "show" or "hide"](self._ws)
 end
 
--- Lines: 824 to 825
+-- Lines: 838 to 839
 function HUDBelt:visible()
 	return self._ws:visible()
 end
 
--- Lines: 828 to 844
+-- Lines: 842 to 858
 function HUDBelt:set_state(id, state)
 	local interaction = self._interactions[id]
 
@@ -1017,7 +1034,7 @@ function HUDBelt:set_state(id, state)
 	self._cached_interactions = nil
 end
 
--- Lines: 846 to 853
+-- Lines: 860 to 867
 function HUDBelt:state(id)
 	local interaction = self._interactions[id]
 
@@ -1030,7 +1047,7 @@ function HUDBelt:state(id)
 	return interaction:state()
 end
 
--- Lines: 856 to 868
+-- Lines: 870 to 882
 function HUDBelt:valid_interactions()
 	if self._cached_interactions then
 		return self._cached_interactions
@@ -1049,7 +1066,7 @@ function HUDBelt:valid_interactions()
 	return interactions
 end
 
--- Lines: 871 to 876
+-- Lines: 885 to 890
 function HUDBelt:interactions()
 	local interactions = {}
 
@@ -1060,7 +1077,7 @@ function HUDBelt:interactions()
 	return interactions
 end
 
--- Lines: 880 to 894
+-- Lines: 894 to 908
 function HUDBelt:set_alpha(alpha, id)
 	if id then
 		local interaction = self._interactions[id]
@@ -1079,7 +1096,7 @@ function HUDBelt:set_alpha(alpha, id)
 	end
 end
 
--- Lines: 896 to 910
+-- Lines: 910 to 924
 function HUDBelt:set_selected(id, selected)
 	local interaction = self._interactions[id]
 
@@ -1098,7 +1115,7 @@ function HUDBelt:set_selected(id, selected)
 	end
 end
 
--- Lines: 912 to 920
+-- Lines: 926 to 934
 function HUDBelt:update_icon(id)
 	local interaction = self._interactions[id]
 
@@ -1111,14 +1128,14 @@ function HUDBelt:update_icon(id)
 	interaction:update_icon()
 end
 
--- Lines: 922 to 926
+-- Lines: 936 to 940
 function HUDBelt:update_icons()
 	for _, interaction in pairs(self._interactions) do
 		interaction:update_icon()
 	end
 end
 
--- Lines: 928 to 936
+-- Lines: 942 to 950
 function HUDBelt:set_amount(id, amount)
 	local interaction = self._interactions[id]
 
@@ -1131,7 +1148,7 @@ function HUDBelt:set_amount(id, amount)
 	interaction:set_amount(amount)
 end
 
--- Lines: 938 to 946
+-- Lines: 952 to 960
 function HUDBelt:start_timer(id, time, start_time)
 	local interaction = self._interactions[id]
 
@@ -1144,7 +1161,7 @@ function HUDBelt:start_timer(id, time, start_time)
 	interaction:start_timer(time, start_time)
 end
 
--- Lines: 948 to 956
+-- Lines: 962 to 970
 function HUDBelt:stop_timer(id)
 	local interaction = self._interactions[id]
 
@@ -1157,19 +1174,19 @@ function HUDBelt:stop_timer(id)
 	interaction:stop_timer()
 end
 
--- Lines: 958 to 961
+-- Lines: 972 to 975
 function HUDBelt:start_reload(time, clip_start, clip_full)
 	self._interactions.reload:start_reload(time, clip_start, clip_full)
 	self:set_state("reload", "default")
 end
 
--- Lines: 963 to 966
+-- Lines: 977 to 980
 function HUDBelt:trigger_reload()
 	self._interactions.reload:trigger_reload()
 	self:set_state("reload", managers.vr:get_setting("auto_reload") and "disabled" or "inactive")
 end
 
--- Lines: 968 to 976
+-- Lines: 982 to 990
 function HUDBelt:set_icon_by_type(id, icon_id)
 	local interaction = self._interactions[id]
 
@@ -1182,7 +1199,7 @@ function HUDBelt:set_icon_by_type(id, icon_id)
 	interaction:set_custom_icon_id(icon_id)
 end
 
--- Lines: 978 to 986
+-- Lines: 992 to 1000
 function HUDBelt:add_help_text(id, help_id, text_id, location)
 	local interaction = self._interactions[id]
 
@@ -1195,7 +1212,7 @@ function HUDBelt:add_help_text(id, help_id, text_id, location)
 	interaction:add_help_text(help_id, text_id, location)
 end
 
--- Lines: 988 to 996
+-- Lines: 1002 to 1010
 function HUDBelt:remove_help_text(id, help_id)
 	local interaction = self._interactions[id]
 
@@ -1208,7 +1225,7 @@ function HUDBelt:remove_help_text(id, help_id)
 	interaction:remove_help_text(help_id)
 end
 
--- Lines: 998 to 1012
+-- Lines: 1012 to 1026
 function HUDBelt:clear_help_texts(id)
 	if id then
 		local interaction = self._interactions[id]
@@ -1227,7 +1244,7 @@ function HUDBelt:clear_help_texts(id)
 	end
 end
 
--- Lines: 1014 to 1022
+-- Lines: 1028 to 1036
 function HUDBelt:set_grid_size(id, w, h)
 	local interaction = self._interactions[id]
 
@@ -1240,7 +1257,7 @@ function HUDBelt:set_grid_size(id, w, h)
 	interaction:set_grid_size(w, h)
 end
 
--- Lines: 1024 to 1031
+-- Lines: 1038 to 1045
 function HUDBelt:grid_size(id)
 	local interaction = self._interactions[id]
 
@@ -1253,7 +1270,7 @@ function HUDBelt:grid_size(id)
 	return interaction:grid_size()
 end
 
--- Lines: 1034 to 1049
+-- Lines: 1048 to 1063
 function HUDBelt:world_pos(id, pos_type)
 	local interaction = self._interactions[id]
 
@@ -1276,7 +1293,7 @@ function HUDBelt:world_pos(id, pos_type)
 	return self._ws:local_to_world(Vector3(x, y))
 end
 
--- Lines: 1052 to 1061
+-- Lines: 1066 to 1075
 function HUDBelt:world_size(id)
 	local interaction = self._interactions[id]
 
@@ -1292,7 +1309,7 @@ function HUDBelt:world_size(id)
 	return edge - pos
 end
 
--- Lines: 1064 to 1073
+-- Lines: 1078 to 1087
 function HUDBelt:world_radius(id)
 	local interaction = self._interactions[id]
 
@@ -1308,7 +1325,7 @@ function HUDBelt:world_radius(id)
 	return edge - center
 end
 
--- Lines: 1076 to 1087
+-- Lines: 1090 to 1101
 function HUDBelt:interacting(id, world_pos)
 	local interaction = self._interactions[id]
 

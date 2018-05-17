@@ -698,7 +698,6 @@ function HUDMissionBriefing:set_slot_joining(peer, peer_id)
 	slot:child("status"):set_text(managers.localization:text("menu_waiting_is_joining"))
 	slot:child("status"):set_font_size(tweak_data.menu.pd2_small_font_size)
 
-	
 	-- Lines: 512 to 519
 	local function animate_joining(o)
 		local t = 0

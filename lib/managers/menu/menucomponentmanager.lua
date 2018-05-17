@@ -4880,7 +4880,6 @@ function MenuComponentManager:play_transition(run_in_pause)
 		color = Color.black
 	})
 
-	
 	-- Lines: 4556 to 4572
 	local function animate_transition(o)
 		local fade1 = o:child("fade1")
@@ -4918,7 +4917,6 @@ function MenuComponentManager:test_camera_shutter_tech()
 			color = Color.black
 		})
 
-		
 		-- Lines: 4586 to 4590
 		local function one_frame_hide(o)
 			o:hide()
@@ -4931,7 +4929,6 @@ function MenuComponentManager:test_camera_shutter_tech()
 
 	local o = self._tcst:panel():children()[1]
 
-	
 	-- Lines: 4631 to 4647
 	local function animate_fade(o)
 		local black = o:child("black")

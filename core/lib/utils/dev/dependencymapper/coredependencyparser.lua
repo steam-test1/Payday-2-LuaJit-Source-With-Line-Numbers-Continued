@@ -236,7 +236,6 @@ function generate_report(filepath, protected_list, dp)
 
 	local not_reached = dp:complement(reached)
 
-	
 	-- Lines: 222 to 246
 	function make_first_worksheet()
 		local ws = CoreWorksheet.Worksheet:new("README")
@@ -267,7 +266,6 @@ function generate_report(filepath, protected_list, dp)
 		return ws
 	end
 
-	
 	-- Lines: 249 to 258
 	function make_worksheet(type_, name)
 		local ws = CoreWorksheet.Worksheet:new(name)
@@ -287,7 +285,6 @@ function generate_report(filepath, protected_list, dp)
 		return ws
 	end
 
-	
 	-- Lines: 261 to 288
 	function make_protected_worksheet()
 		local ws = CoreWorksheet.Worksheet:new("Protected Assets")

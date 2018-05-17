@@ -951,7 +951,6 @@ function SkillTreeManager:switch_skills(selected_skill_switch)
 		return
 	end
 
-	
 	-- Lines: 842 to 856
 	local function unaquire_skill(skill_id)
 		local progress_data = self._global.skills[skill_id]
@@ -2082,7 +2081,6 @@ function SkillTreeManager:debug()
 
 	local j = 1
 
-	
 	-- Lines: 1927 to 1974
 	local function add_func(skill_id)
 		local skill = tweak_data.skilltree.skills[skill_id]

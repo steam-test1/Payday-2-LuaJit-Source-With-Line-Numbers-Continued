@@ -14,7 +14,6 @@ function CrimeNetFiltersGui:init(ws, fullscreen_ws, node)
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	
 	-- Lines: 13 to 16
 	local function func(o)
 		local start_blur = 0

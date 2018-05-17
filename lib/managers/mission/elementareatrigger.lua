@@ -259,7 +259,6 @@ function ElementAreaTrigger:project_instigators()
 		if self._values.instigator_name ~= nil then
 			local all_found = World:find_units_quick("all", 14)
 
-			
 			-- Lines: 232 to 236
 			local function filter_func(unit)
 				if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then

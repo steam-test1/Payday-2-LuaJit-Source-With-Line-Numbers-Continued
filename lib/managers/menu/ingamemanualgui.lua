@@ -16,7 +16,6 @@ function IngameManualGui:init(ws, fullscreen_ws)
 		color = Color.black
 	})
 
-	
 	-- Lines: 16 to 18
 	local function fade_in_anim(o)
 		over(0.35, function (p)
@@ -251,7 +250,6 @@ function IngameManualGui:create_page(texture_path)
 	spinning_item:set_left(loading_text:right())
 	spinning_item:set_center_y(loading_text:center_y())
 
-	
 	-- Lines: 248 to 255
 	local function spin_anim(o)
 		local dt = nil

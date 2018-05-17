@@ -895,7 +895,6 @@ function PortalLayer:add_unit_list_btn()
 	local name = groups:get_string(i)
 	local group = managers.portal:unit_group(name)
 
-	
 	-- Lines: 795 to 796
 	local function f(unit)
 		return unit:slot() == 1
@@ -920,7 +919,6 @@ function PortalLayer:remove_unit_list_btn()
 	local name = groups:get_string(i)
 	local group = managers.portal:unit_group(name)
 
-	
 	-- Lines: 814 to 815
 	local function f(unit)
 		return group:ids()[unit:unit_data().unit_id]

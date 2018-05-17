@@ -227,7 +227,7 @@ function PlayerProfileGuiObject:init(ws)
 	level_text:set_center(exp_ring:center())
 
 	if skill_glow then
-		
+
 		-- Lines: 231 to 237
 		local function animate_new_skillpoints(o)
 			while true do

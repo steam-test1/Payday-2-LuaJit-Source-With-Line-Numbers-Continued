@@ -135,7 +135,7 @@ function CoreModule:_lookup(object)
 	assert(Application:production_build(), "core:_lookup(...) is for debugging only!")
 
 	if not self.__obj2nametable[object] then
-		
+
 		-- Lines: 126 to 133
 		local function find(o, n, t)
 			for k, v in pairs(t) do

@@ -1,6 +1,6 @@
 if Application == nil then
 	Application = setmetatable({}, {})
-	
+
 	-- Lines: 6 to 7
 	function Application:ews_enabled()
 		return false

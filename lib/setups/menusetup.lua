@@ -80,13 +80,12 @@ function MenuSetup:load_packages()
 			Global._game_base_package_loaded = true
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
-		
+
 		-- Lines: 95 to 97
 		local function _load_wip_func()
 			Global._game_base_package_loaded = true
 		end
 
-		
 		-- Lines: 98 to 100
 		local function load_base_func()
 			PackageManager:load("packages/game_base", _load_wip_func)

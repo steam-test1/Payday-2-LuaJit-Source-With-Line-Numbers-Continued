@@ -222,19 +222,19 @@ function CoreManagedTreeControl:connect(event_type, script_callback, script_data
 			_script_data = script_data
 		}
 	elseif string.begins(event_type, "EVT_COMMAND_TREE_") then
-		
+
 		-- Lines: 195 to 204
 		local function tree_event_wrapper(data, event, ...)
 			local event_metatable = getmetatable(event) or {}
 			local wrapped_event = setmetatable({}, {__index = event_metatable.__index})
 			local item_id = event:get_item()
 			local old_item_id = event:get_old_item()
-			
+
 			-- Lines: 200 to 201
 			function wrapped_event.get_item()
 				return item_id ~= -1 and CoreEWSTreeCtrlTreeNode:new(self._tree_ctrl, item_id, self._checkbox_style) or nil
 			end
-			
+
 			-- Lines: 201 to 202
 			function wrapped_event.get_old_item()
 				return old_item_id ~= -1 and CoreEWSTreeCtrlTreeNode:new(self._tree_ctrl, old_item_id, self._checkbox_style) or nil

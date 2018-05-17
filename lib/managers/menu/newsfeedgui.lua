@@ -158,7 +158,6 @@ function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	local len = string.len(s)
 	local i = 1
 
-	
 	-- Lines: 153 to 160
 	local function f(s, sp, ep, max_results)
 		local s1, e1 = string.find(s, sp, 1, true)
