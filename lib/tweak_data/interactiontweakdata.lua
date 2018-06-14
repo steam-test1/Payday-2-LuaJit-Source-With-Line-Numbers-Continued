@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5772
+-- Lines: 3 to 5815
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -1087,7 +1087,8 @@ function InteractionTweakData:init(tweak_data)
 			}
 		},
 		timer = 2,
-		no_contour = true
+		no_contour = true,
+		force_update_position = true
 	}
 	self.laptop_objective = {
 		icon = "laptop_objective",

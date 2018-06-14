@@ -862,7 +862,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines: 887 to 935
+-- Lines: 887 to 936
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
@@ -908,6 +908,8 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 
 					if completion_count > 0 then
 						table.remove(remaining_jobs, id)
+
+						break
 					end
 				end
 			end
@@ -919,7 +921,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 	end
 end
 
--- Lines: 940 to 946
+-- Lines: 941 to 947
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -929,7 +931,7 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines: 950 to 991
+-- Lines: 951 to 992
 function AchievmentManager:_check_autounlock_complete_heist()
 	local condition_whitelist = {
 		"award",
@@ -939,7 +941,7 @@ function AchievmentManager:_check_autounlock_complete_heist()
 		"jobs"
 	}
 
-	-- Lines: 959 to 973
+	-- Lines: 960 to 974
 	local function eligible_for_autounlock(achievement_data)
 		local has_award = achievement_data.award
 		local has_difficulty = achievement_data.difficulty
@@ -979,17 +981,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines: 994 to 996
+-- Lines: 995 to 997
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines: 999 to 1001
+-- Lines: 1000 to 1002
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines: 1003 to 1030
+-- Lines: 1004 to 1031
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)

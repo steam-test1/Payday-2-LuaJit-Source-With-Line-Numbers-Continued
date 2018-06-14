@@ -1,5 +1,5 @@
 
--- Lines: 4 to 62
+-- Lines: 20 to 110
 function DLCTweakData:init_generated()
 	self.flm_bundle = {
 		free = true,

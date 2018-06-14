@@ -196,20 +196,24 @@ function MissionAssetsManager:clear()
 	self._money_spent = 0
 end
 
--- Lines: 195 to 199
+-- Lines: 195 to 203
 function MissionAssetsManager:reset()
 	Global.asset_manager = nil
+	local old_triggers = self._triggers
 
 	self:_setup()
+
+	self._triggers = old_triggers
+
 	self:_check_triggers("asset")
 end
 
--- Lines: 201 to 203
+-- Lines: 205 to 207
 function MissionAssetsManager:on_simulation_ended()
 	self:reset()
 end
 
--- Lines: 205 to 222
+-- Lines: 209 to 226
 function MissionAssetsManager:reload_locks()
 	managers.money:refund_mission_assets()
 
@@ -229,7 +233,7 @@ function MissionAssetsManager:reload_locks()
 	end
 end
 
--- Lines: 224 to 227
+-- Lines: 228 to 231
 function MissionAssetsManager:add_trigger(id, type, asset_id, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -238,7 +242,7 @@ function MissionAssetsManager:add_trigger(id, type, asset_id, callback)
 	}
 end
 
--- Lines: 229 to 246
+-- Lines: 233 to 250
 function MissionAssetsManager:_check_triggers(type)
 	if not self._triggers[type] then
 		return
@@ -259,7 +263,7 @@ function MissionAssetsManager:_check_triggers(type)
 	end
 end
 
--- Lines: 248 to 264
+-- Lines: 252 to 268
 function MissionAssetsManager:trigger_asset_tweak(asset_id)
 	local asset_tweak_data = tweak_data.assets[asset_id]
 
@@ -280,7 +284,7 @@ function MissionAssetsManager:trigger_asset_tweak(asset_id)
 	end
 end
 
--- Lines: 266 to 289
+-- Lines: 270 to 293
 function MissionAssetsManager:unlock_asset(asset_id, is_show_chat_message)
 	if Idstring(asset_id) == Idstring("none") then
 		return
@@ -309,7 +313,7 @@ function MissionAssetsManager:unlock_asset(asset_id, is_show_chat_message)
 	end
 end
 
--- Lines: 293 to 309
+-- Lines: 297 to 313
 function MissionAssetsManager:_on_asset_unlocked(asset_id)
 	self._awarded_assets = self._awarded_assets or {}
 
@@ -328,12 +332,12 @@ function MissionAssetsManager:_on_asset_unlocked(asset_id)
 	end
 end
 
--- Lines: 311 to 312
+-- Lines: 315 to 316
 function MissionAssetsManager:get_money_spent()
 	return self._money_spent
 end
 
--- Lines: 315 to 325
+-- Lines: 319 to 329
 function MissionAssetsManager:server_unlock_asset(asset_id, is_show_chat_message, peer)
 	if not self:is_unlock_asset_allowed() then
 		return
@@ -346,7 +350,7 @@ function MissionAssetsManager:server_unlock_asset(asset_id, is_show_chat_message
 	self:_check_triggers("asset")
 end
 
--- Lines: 327 to 349
+-- Lines: 331 to 353
 function MissionAssetsManager:sync_unlock_asset(asset_id, is_show_chat_message, peer)
 	local asset = self:_get_asset_by_id(asset_id)
 
@@ -379,7 +383,7 @@ function MissionAssetsManager:sync_unlock_asset(asset_id, is_show_chat_message, 
 	end
 end
 
--- Lines: 352 to 357
+-- Lines: 356 to 361
 function MissionAssetsManager:get_every_asset_ids()
 	local asset_ids = {}
 
@@ -390,7 +394,7 @@ function MissionAssetsManager:get_every_asset_ids()
 	return asset_ids
 end
 
--- Lines: 360 to 370
+-- Lines: 364 to 374
 function MissionAssetsManager:get_all_asset_ids(only_visible)
 	local asset_ids = {}
 
@@ -406,7 +410,7 @@ function MissionAssetsManager:get_all_asset_ids(only_visible)
 	return asset_ids
 end
 
--- Lines: 373 to 380
+-- Lines: 377 to 384
 function MissionAssetsManager:get_unlocked_asset_ids(only_can_unlock)
 	local asset_ids = {}
 
@@ -419,12 +423,12 @@ function MissionAssetsManager:get_unlocked_asset_ids(only_can_unlock)
 	return asset_ids
 end
 
--- Lines: 383 to 384
+-- Lines: 387 to 388
 function MissionAssetsManager:get_default_asset_id()
 	return "none"
 end
 
--- Lines: 387 to 393
+-- Lines: 391 to 397
 function MissionAssetsManager:_get_asset_by_id(id)
 	for _, asset in pairs(self._global.assets) do
 		if asset.id == id then
@@ -433,7 +437,7 @@ function MissionAssetsManager:_get_asset_by_id(id)
 	end
 end
 
--- Lines: 395 to 419
+-- Lines: 399 to 423
 function MissionAssetsManager:is_asset_unlockable(id)
 	local asset_tweak_data = self:get_asset_tweak_data_by_id(id)
 
@@ -462,7 +466,7 @@ function MissionAssetsManager:is_asset_unlockable(id)
 	return can_unlock
 end
 
--- Lines: 422 to 443
+-- Lines: 426 to 447
 function MissionAssetsManager:get_asset_can_unlock_by_id(id)
 	local is_host = Network:is_server() or Global.game_settings.single_player
 	local is_client = not is_host
@@ -489,40 +493,40 @@ function MissionAssetsManager:get_asset_can_unlock_by_id(id)
 	return false
 end
 
--- Lines: 446 to 448
+-- Lines: 450 to 452
 function MissionAssetsManager:get_asset_visible_by_id(id)
 	local asset = self:_get_asset_by_id(id)
 
 	return asset and asset.show or false
 end
 
--- Lines: 451 to 453
+-- Lines: 455 to 457
 function MissionAssetsManager:get_asset_unlocked_by_id(id)
 	local asset = self:_get_asset_by_id(id)
 
 	return asset and asset.unlocked or false
 end
 
--- Lines: 456 to 458
+-- Lines: 460 to 462
 function MissionAssetsManager:get_asset_triggered_by_id(id)
 	local asset = self:_get_asset_by_id(id)
 
 	return asset and asset.is_triggered or false
 end
 
--- Lines: 461 to 463
+-- Lines: 465 to 467
 function MissionAssetsManager:get_asset_no_mystery_by_id(id)
 	local asset = self:_get_asset_by_id(id)
 
 	return asset and asset.no_mystery or false
 end
 
--- Lines: 466 to 467
+-- Lines: 470 to 471
 function MissionAssetsManager:get_asset_tweak_data_by_id(id)
 	return self._tweak_data[id]
 end
 
--- Lines: 470 to 496
+-- Lines: 474 to 500
 function MissionAssetsManager:get_asset_unlock_text_by_id(id)
 	local asset_tweak_data = self._tweak_data[id]
 	local prefix = "menu_asset_lock_"
@@ -548,7 +552,7 @@ function MissionAssetsManager:get_asset_unlock_text_by_id(id)
 	return prefix .. text
 end
 
--- Lines: 500 to 506
+-- Lines: 504 to 510
 function MissionAssetsManager:is_unlock_asset_allowed()
 	if game_state_machine:current_state_name() ~= "ingame_waiting_for_players" then
 		return false
@@ -559,19 +563,19 @@ function MissionAssetsManager:is_unlock_asset_allowed()
 	return not check_is_dropin
 end
 
--- Lines: 510 to 513
+-- Lines: 514 to 517
 function MissionAssetsManager:sync_save(data)
 	data.MissionAssetsManager = self._global
 end
 
--- Lines: 516 to 522
+-- Lines: 520 to 526
 function MissionAssetsManager:sync_load(data)
 	self._global = data.MissionAssetsManager
 
 	self:create_asset_textures()
 end
 
--- Lines: 524 to 534
+-- Lines: 528 to 538
 function MissionAssetsManager:clear_asset_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -584,7 +588,7 @@ function MissionAssetsManager:clear_asset_textures()
 	self._asset_textures_loaded = {}
 end
 
--- Lines: 538 to 570
+-- Lines: 542 to 574
 function MissionAssetsManager:create_asset_textures()
 	if managers.platform:presence() == "Playing" then
 		Application:debug("[MissionAssetsManager] create_asset_textures(): ", managers.platform:presence())
@@ -621,7 +625,7 @@ function MissionAssetsManager:create_asset_textures()
 	self:check_all_textures_loaded()
 end
 
--- Lines: 572 to 578
+-- Lines: 576 to 582
 function MissionAssetsManager:get_asset_texture(asset_id)
 	local texture = self._asset_textures_loaded[asset_id]
 
@@ -632,7 +636,7 @@ function MissionAssetsManager:get_asset_texture(asset_id)
 	return texture
 end
 
--- Lines: 581 to 600
+-- Lines: 585 to 604
 function MissionAssetsManager:texture_loaded_clbk(texture_idstring)
 	if not self._asset_textures_in_loading or not self._asset_textures_in_loading[texture_idstring:key()] then
 		return
@@ -655,7 +659,7 @@ function MissionAssetsManager:texture_loaded_clbk(texture_idstring)
 	self:check_all_textures_loaded()
 end
 
--- Lines: 602 to 607
+-- Lines: 606 to 611
 function MissionAssetsManager:check_all_textures_loaded()
 	if self:is_all_textures_loaded() or #self:get_all_asset_ids(true) == 0 then
 		Application:debug("[MissionAssetsManager] Creating mission assets")
@@ -663,7 +667,7 @@ function MissionAssetsManager:check_all_textures_loaded()
 	end
 end
 
--- Lines: 609 to 613
+-- Lines: 613 to 617
 function MissionAssetsManager:is_all_textures_loaded()
 	if not self._asset_textures_in_loading or not self._asset_textures_loaded then
 		return false

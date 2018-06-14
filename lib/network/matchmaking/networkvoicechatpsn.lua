@@ -94,6 +94,7 @@ end
 
 -- Lines: 104 to 138
 function NetworkVoiceChatPSN:open_session(roomid)
+	self:update_settings()
 	print("[VOICECHAT] NetworkVoiceChatPSN:open_session( ", roomid, " ) self._room_id: ", self._room_id, "self._restart_session: ", self._restart_session)
 
 	if self._room_id and self._room_id == roomid then
@@ -132,7 +133,6 @@ function NetworkVoiceChatPSN:open_session(roomid)
 	self._joining = true
 
 	PSNVoice:start_session(roomid)
-	self:update_settings()
 end
 
 -- Lines: 140 to 161
@@ -285,21 +285,17 @@ function NetworkVoiceChatPSN:enabled()
 	return managers.user:get_setting("voice_chat")
 end
 
--- Lines: 277 to 293
+-- Lines: 277 to 290
 function NetworkVoiceChatPSN:update_settings()
 	self._push_to_talk = false
 	self._enabled = managers.user:get_setting("voice_chat")
 
-	print("GN: Update settings")
-
 	if self._enabled then
 		PSNVoice:start_recording()
 		PSNVoice:set_enable(true)
-		print("GN: Voice chat set to true 1")
 	else
 		PSNVoice:stop_recording()
 		PSNVoice:set_enable(false)
-		print("GN: Voice chat set to false 1")
 	end
 
 	if self._enabled and self._push_to_talk then
@@ -307,7 +303,7 @@ function NetworkVoiceChatPSN:update_settings()
 	end
 end
 
--- Lines: 296 to 317
+-- Lines: 293 to 314
 function NetworkVoiceChatPSN:set_recording(button_pushed_to_talk)
 	self:update_settings()
 
@@ -330,7 +326,7 @@ function NetworkVoiceChatPSN:set_recording(button_pushed_to_talk)
 	end
 end
 
--- Lines: 319 to 360
+-- Lines: 316 to 357
 function NetworkVoiceChatPSN:_callback(info)
 	if info and PSN:get_local_userid() then
 		if info.load_succeeded ~= nil then
@@ -375,7 +371,7 @@ function NetworkVoiceChatPSN:_callback(info)
 
 		if info.unload_succeeded ~= nil then
 
-			-- Lines: 355 to 356
+			-- Lines: 352 to 353
 			local function f(...)
 			end
 
@@ -384,7 +380,7 @@ function NetworkVoiceChatPSN:_callback(info)
 	end
 end
 
--- Lines: 362 to 372
+-- Lines: 359 to 369
 function NetworkVoiceChatPSN:update()
 	if self._delay_frame and self._delay_frame < TimerManager:wall():time() then
 		self._delay_frame = nil
@@ -402,11 +398,11 @@ function NetworkVoiceChatPSN:update()
 	end
 end
 
--- Lines: 417 to 418
+-- Lines: 435 to 436
 function NetworkVoiceChatPSN:voice_ui_update_callback(user_info)
 end
 
--- Lines: 420 to 427
+-- Lines: 438 to 445
 function NetworkVoiceChatPSN:psn_session_destroyed(roomid)
 	print("[VOICECHAT] NetworkVoiceChatPSN:psn_session_destroyed() see following stack dump")
 
@@ -416,7 +412,7 @@ function NetworkVoiceChatPSN:psn_session_destroyed(roomid)
 	end
 end
 
--- Lines: 430 to 443
+-- Lines: 448 to 461
 function NetworkVoiceChatPSN:_get_peer_user_id(peer)
 	if not self._room_id then
 		return
@@ -432,27 +428,33 @@ function NetworkVoiceChatPSN:_get_peer_user_id(peer)
 	end
 end
 
--- Lines: 446 to 450
+-- Lines: 464 to 468
 function NetworkVoiceChatPSN:on_member_added(peer, mute)
 	if peer:rpc() then
 		PSNVoice:on_member_added(peer:name(), peer:rpc(), mute)
 	end
 end
 
--- Lines: 453 to 455
+-- Lines: 471 to 473
 function NetworkVoiceChatPSN:on_member_removed(peer)
 	PSNVoice:on_member_removed(peer:name())
 end
 
--- Lines: 457 to 468
+-- Lines: 475 to 493
 function NetworkVoiceChatPSN:mute_player(mute, peer)
 	self._muted_players[peer:name()] = mute
 
 	PSNVoice:mute_player(mute, peer:name())
 end
 
--- Lines: 471 to 472
+-- Lines: 496 to 497
 function NetworkVoiceChatPSN:is_muted(peer)
 	return self._muted_players[peer:name()] or false
+end
+
+-- Lines: 500 to 503
+function NetworkVoiceChatPSN:set_voicechat(enable)
+	PSNVoice:set_enable(enable)
+	print("set_voicechat( enable ) = ", enable)
 end
 

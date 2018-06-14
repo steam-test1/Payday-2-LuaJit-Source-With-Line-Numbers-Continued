@@ -94,10 +94,15 @@ function RaycastWeaponBase:has_part(part_id)
 	return false
 end
 
--- Lines: 106 to 119
+-- Lines: 105 to 106
+function RaycastWeaponBase:categories()
+	return self:weapon_tweak_data().categories
+end
+
+-- Lines: 110 to 123
 function RaycastWeaponBase:is_category(...)
 	local arg = {...}
-	local categories = self:weapon_tweak_data().categories
+	local categories = self:categories()
 
 	if not categories then
 		return false
@@ -112,7 +117,7 @@ function RaycastWeaponBase:is_category(...)
 	return false
 end
 
--- Lines: 125 to 131
+-- Lines: 129 to 135
 function RaycastWeaponBase:_weapon_tweak_data_id()
 	local override_gadget = self:gadget_overrides_weapon_functions()
 
@@ -123,44 +128,44 @@ function RaycastWeaponBase:_weapon_tweak_data_id()
 	return self._name_id
 end
 
--- Lines: 134 to 135
+-- Lines: 138 to 139
 function RaycastWeaponBase:weapon_tweak_data()
 	return tweak_data.weapon[self:_weapon_tweak_data_id()]
 end
 
--- Lines: 138 to 139
+-- Lines: 142 to 143
 function RaycastWeaponBase:selection_index()
 	return self:weapon_tweak_data().use_data.selection_index
 end
 
--- Lines: 142 to 143
+-- Lines: 146 to 147
 function RaycastWeaponBase:get_stance_id()
 	return self:weapon_tweak_data().use_stance or self:get_name_id()
 end
 
--- Lines: 146 to 148
+-- Lines: 150 to 152
 function RaycastWeaponBase:movement_penalty()
 	local primary_category = self:weapon_tweak_data().categories and self:weapon_tweak_data().categories[1]
 
 	return tweak_data.upgrades.weapon_movement_penalty[primary_category] or 1
 end
 
--- Lines: 151 to 152
+-- Lines: 155 to 156
 function RaycastWeaponBase:armor_piercing_chance()
 	return self:weapon_tweak_data().armor_piercing_chance or 0
 end
 
--- Lines: 155 to 156
+-- Lines: 159 to 160
 function RaycastWeaponBase:got_silencer()
 	return false
 end
 
--- Lines: 159 to 160
+-- Lines: 163 to 164
 function RaycastWeaponBase:run_and_shoot_allowed()
 	return managers.player:has_category_upgrade("player", "run_and_shoot")
 end
 
--- Lines: 164 to 181
+-- Lines: 168 to 185
 function RaycastWeaponBase:_create_use_setups()
 	local sel_index = tweak_data.weapon[self._name_id].use_data.selection_index
 	local align_place = tweak_data.weapon[self._name_id].use_data.align_place or "right_hand"
@@ -178,12 +183,12 @@ function RaycastWeaponBase:_create_use_setups()
 	npc_setup.unequip = {}
 end
 
--- Lines: 185 to 186
+-- Lines: 189 to 190
 function RaycastWeaponBase:get_use_data(character_setup)
 	return self._use_data[character_setup]
 end
 
--- Lines: 194 to 251
+-- Lines: 198 to 255
 function RaycastWeaponBase:setup(setup_data, damage_multiplier)
 	self._autoaim = setup_data.autoaim
 	local stats = tweak_data.weapon[self._name_id].stats
@@ -238,21 +243,21 @@ function RaycastWeaponBase:setup(setup_data, damage_multiplier)
 	end
 end
 
--- Lines: 256 to 257
+-- Lines: 260 to 261
 function RaycastWeaponBase:gadget_overrides_weapon_functions()
 	return false
 end
 
--- Lines: 260 to 261
+-- Lines: 264 to 265
 function RaycastWeaponBase:get_all_override_weapon_gadgets()
 	return {}
 end
 
--- Lines: 265 to 266
+-- Lines: 269 to 270
 function RaycastWeaponBase:gadget_function_override(func, ...)
 end
 
--- Lines: 269 to 276
+-- Lines: 273 to 280
 function RaycastWeaponBase:ammo_base()
 	local base = self.parent_weapon and self.parent_weapon:base() or self
 
@@ -263,7 +268,7 @@ function RaycastWeaponBase:ammo_base()
 	return base
 end
 
--- Lines: 280 to 285
+-- Lines: 284 to 289
 function RaycastWeaponBase:fire_mode()
 	if not self._fire_mode then
 		self._fire_mode = tweak_data.weapon[self._name_id].FIRE_MODE or "single"
@@ -272,22 +277,22 @@ function RaycastWeaponBase:fire_mode()
 	return self._fire_mode
 end
 
--- Lines: 289 to 290
+-- Lines: 293 to 294
 function RaycastWeaponBase:fire_on_release()
 	return false
 end
 
--- Lines: 293 to 295
+-- Lines: 297 to 299
 function RaycastWeaponBase:dryfire()
 	self:play_tweak_data_sound("dryfire")
 end
 
--- Lines: 299 to 300
+-- Lines: 303 to 304
 function RaycastWeaponBase:recoil_wait()
 	return tweak_data.weapon[self._name_id].FIRE_MODE == "auto" and self:weapon_tweak_data().fire_mode_data.fire_rate or nil
 end
 
--- Lines: 307 to 328
+-- Lines: 311 to 332
 function RaycastWeaponBase:_fire_sound()
 	if self:weapon_tweak_data().sounds.fire_ammo then
 		local fire_ammo = self:weapon_tweak_data().sounds.fire_ammo
@@ -311,7 +316,7 @@ function RaycastWeaponBase:_fire_sound()
 	self:play_tweak_data_sound(self:fire_mode() == "auto" and "fire_auto" or "fire_single", "fire")
 end
 
--- Lines: 333 to 338
+-- Lines: 337 to 342
 function RaycastWeaponBase:start_shooting_allowed()
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("start_shooting_allowed")
@@ -320,7 +325,7 @@ function RaycastWeaponBase:start_shooting_allowed()
 	return self._next_fire_allowed <= self._unit:timer():time()
 end
 
--- Lines: 342 to 346
+-- Lines: 346 to 350
 function RaycastWeaponBase:start_shooting()
 	self:_fire_sound()
 
@@ -328,7 +333,7 @@ function RaycastWeaponBase:start_shooting()
 	self._shooting = true
 end
 
--- Lines: 349 to 353
+-- Lines: 353 to 357
 function RaycastWeaponBase:stop_shooting()
 	self:play_tweak_data_sound("stop_fire")
 
@@ -336,13 +341,13 @@ function RaycastWeaponBase:stop_shooting()
 	self._kills_without_releasing_trigger = nil
 end
 
--- Lines: 355 to 358
+-- Lines: 359 to 362
 function RaycastWeaponBase:update_next_shooting_time()
 	local next_fire = (tweak_data.weapon[self._name_id].fire_mode_data and tweak_data.weapon[self._name_id].fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier()
 	self._next_fire_allowed = self._next_fire_allowed + next_fire
 end
 
--- Lines: 362 to 370
+-- Lines: 366 to 374
 function RaycastWeaponBase:trigger_pressed(...)
 	local fired = nil
 
@@ -355,11 +360,6 @@ function RaycastWeaponBase:trigger_pressed(...)
 	end
 
 	return fired
-end
-
--- Lines: 373 to 374
-function RaycastWeaponBase:categories()
-	return self:weapon_tweak_data().categories
 end
 
 -- Lines: 379 to 387

@@ -17,14 +17,20 @@ function DialogManager:init_finalize()
 	self:_load_dialogs()
 end
 
--- Lines: 22 to 60
+-- Lines: 22 to 65
 function DialogManager:queue_dialog(id, params)
 	if not params.skip_idle_check and managers.platform:presence() == "Idle" then
 		return
 	end
 
 	if not self._dialog_list[id] then
-		debug_pause("The dialog script tries to queue a dialog with id '" .. tostring(id) .. "' which doesn't seem to exist!")
+		local error_message = "The dialog script tries to queue a dialog with id '" .. tostring(id) .. "' which doesn't seem to exist!"
+
+		if Application:editor() then
+			managers.editor:output_error(error_message, false, true)
+		else
+			debug_pause(error_message)
+		end
 
 		return false
 	end
@@ -62,12 +68,12 @@ function DialogManager:queue_dialog(id, params)
 	return true
 end
 
--- Lines: 64 to 66
+-- Lines: 69 to 71
 function DialogManager:queue_narrator_dialog(id, params)
 	self:queue_dialog(self._narrator_prefix .. id, params)
 end
 
--- Lines: 68 to 75
+-- Lines: 73 to 80
 function DialogManager:set_narrator(narrator)
 	local narrator_codes = {
 		bain = "ban",
@@ -76,7 +82,7 @@ function DialogManager:set_narrator(narrator)
 	self._narrator_prefix = "Play_" .. narrator_codes[narrator] .. "_"
 end
 
--- Lines: 78 to 104
+-- Lines: 83 to 109
 function DialogManager:finished()
 	self:_stop_dialog()
 
@@ -105,7 +111,7 @@ function DialogManager:finished()
 	end
 end
 
--- Lines: 106 to 118
+-- Lines: 111 to 123
 function DialogManager:quit_dialog(no_done_cbk)
 	managers.subtitle:set_visible(false)
 	managers.subtitle:set_enabled(false)
@@ -119,7 +125,7 @@ function DialogManager:quit_dialog(no_done_cbk)
 	self._next_dialog = nil
 end
 
--- Lines: 120 to 126
+-- Lines: 125 to 131
 function DialogManager:conversation_names()
 	local t = {}
 
@@ -132,12 +138,12 @@ function DialogManager:conversation_names()
 	return t
 end
 
--- Lines: 129 to 131
+-- Lines: 134 to 136
 function DialogManager:on_simulation_ended()
 	self:quit_dialog(true)
 end
 
--- Lines: 133 to 165
+-- Lines: 138 to 170
 function DialogManager:_play_dialog(dialog, params, line)
 	local unit = params.on_unit or params.override_characters and managers.player:player_unit()
 
@@ -174,21 +180,21 @@ function DialogManager:_play_dialog(dialog, params, line)
 	end
 end
 
--- Lines: 167 to 171
+-- Lines: 172 to 176
 function DialogManager:_stop_dialog()
 	if self._current_dialog and self._current_dialog.unit then
 		self._current_dialog.unit:drama():stop_cue()
 	end
 end
 
--- Lines: 173 to 177
+-- Lines: 178 to 182
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
 	end
 end
 
--- Lines: 179 to 188
+-- Lines: 184 to 193
 function DialogManager:_load_dialogs()
 	local file_name = "gamedata/dialogs/index"
 	local data = PackageManager:script_data(Idstring("dialog_index"), file_name:id())
@@ -200,7 +206,7 @@ function DialogManager:_load_dialogs()
 	end
 end
 
--- Lines: 190 to 216
+-- Lines: 195 to 221
 function DialogManager:_load_dialog_data(name)
 	local file_name = "gamedata/dialogs/" .. name
 	local data = PackageManager:script_data(Idstring("dialog"), file_name:id())

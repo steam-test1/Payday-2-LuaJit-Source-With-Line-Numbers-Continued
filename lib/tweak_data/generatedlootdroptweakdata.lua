@@ -1,5 +1,5 @@
 
--- Lines: 6 to 119
+-- Lines: 44 to 233
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.flm = {
 		name_id = "bm_global_value_flm",

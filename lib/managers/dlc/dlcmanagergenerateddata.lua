@@ -1,35 +1,35 @@
 
--- Lines: 4 to 5
+-- Lines: 14 to 15
 function GenericDLCManager:has_flm()
 	return self:is_dlc_unlocked("flm")
 end
 
--- Lines: 9 to 10
+-- Lines: 24 to 25
 function GenericDLCManager:has_mmh()
 	return self:is_dlc_unlocked("mmh")
 end
 
--- Lines: 14 to 15
+-- Lines: 29 to 30
 function GenericDLCManager:has_sdm()
 	return self:is_dlc_unlocked("sdm")
 end
 
--- Lines: 19 to 20
+-- Lines: 39 to 40
 function GenericDLCManager:has_tam()
 	return self:is_dlc_unlocked("tam")
 end
 
--- Lines: 24 to 25
+-- Lines: 54 to 55
 function GenericDLCManager:has_tjp()
 	return self:is_dlc_unlocked("tjp")
 end
 
--- Lines: 29 to 30
+-- Lines: 59 to 60
 function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
--- Lines: 35 to 65
+-- Lines: 75 to 125
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.flm = {}
 	Global.dlc_manager.all_dlc_data.flm.app_id = "218620"
