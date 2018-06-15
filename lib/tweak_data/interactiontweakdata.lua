@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5815
+-- Lines: 3 to 5821
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -1251,6 +1251,12 @@ function InteractionTweakData:init(tweak_data)
 	self.circuit_breaker = {
 		icon = "interaction_powerbox",
 		text_id = "debug_interact_circuit_breaker",
+		start_active = false,
+		axis = "z"
+	}
+	self.circuit_breaker_off = {
+		icon = "interaction_powerbox",
+		text_id = "hud_int_hold_turn_off_power",
 		start_active = false,
 		axis = "z"
 	}

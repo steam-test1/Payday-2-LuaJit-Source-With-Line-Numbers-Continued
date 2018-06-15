@@ -4,7 +4,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines: 32 to 715
+-- Lines: 32 to 721
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {frag = {}}
 	self.projectiles.frag.name_id = "bm_grenade_frag"
@@ -44,6 +44,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		unit_dummy = "units/pd2_dlc_bbq/weapons/molotov_cocktail/wpn_molotov_husk",
 		icon = "molotov_grenade",
 		dlc = "bbq",
+		no_cheat_count = true,
 		impact_detonation = true,
 		time_cheat = 1,
 		throwable = true,
@@ -81,6 +82,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		local_unit = "units/pd2_dlc_turtles/weapons/wpn_prj_four/wpn_prj_four_local",
 		icon = "four_projectile",
 		throw_shout = true,
+		no_cheat_count = true,
 		impact_detonation = true,
 		client_authoritative = true,
 		add_trail_effect = true,
@@ -100,6 +102,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		local_unit = "units/pd2_dlc_cake/weapons/wpn_prj_ace/wpn_prj_ace_local",
 		icon = "ace_projectile",
 		throw_shout = true,
+		no_cheat_count = true,
 		impact_detonation = true,
 		client_authoritative = true,
 		add_trail_effect = true,
@@ -241,6 +244,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		local_unit = "units/pd2_dlc_steel/weapons/wpn_prj_jav/wpn_prj_jav_local",
 		icon = "jav_projectile",
 		throw_shout = true,
+		no_cheat_count = true,
 		impact_detonation = true,
 		client_authoritative = true,
 		add_trail_effect = true,
@@ -335,6 +339,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		local_unit = "units/pd2_dlc_born/weapons/wpn_fps_mel_hur/wpn_prj_hur_local",
 		icon = "throwing_axe",
 		throw_shout = true,
+		no_cheat_count = true,
 		impact_detonation = true,
 		client_authoritative = true,
 		add_trail_effect = true,
@@ -354,6 +359,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		local_unit = "units/pd2_dlc_pim/weapons/wpn_prj_target/wpn_prj_target_husk_local",
 		icon = "hobby_knife",
 		throw_shout = true,
+		no_cheat_count = true,
 		impact_detonation = true,
 		client_authoritative = true,
 		add_trail_effect = true,
@@ -564,12 +570,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines: 717 to 718
+-- Lines: 723 to 724
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines: 721 to 727
+-- Lines: 727 to 733
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -580,7 +586,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines: 730 to 731
+-- Lines: 736 to 737
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end
