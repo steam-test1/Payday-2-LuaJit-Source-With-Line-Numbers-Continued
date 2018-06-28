@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines: 6 to 2146
+-- Lines: 6 to 2168
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1659,6 +1659,22 @@ function LootDropTweakData:init(tweak_data)
 		category = "dlc",
 		ignore_ulti = true
 	}
+	self.global_values.ztm = {
+		name_id = "bm_global_value_ztm",
+		desc_id = "menu_l_global_value_ztm",
+		unlock_id = "bm_global_value_ztm_unlock",
+		color = dlc_color,
+		dlc = true,
+		hide_unavailable = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "dlc",
+		ignore_ulti = true
+	}
 
 	if SystemInfo:platform() == Idstring("PS3") then
 		self.global_values.sweettooth = {
@@ -1755,7 +1771,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 2148 to 2153
+-- Lines: 2170 to 2175
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

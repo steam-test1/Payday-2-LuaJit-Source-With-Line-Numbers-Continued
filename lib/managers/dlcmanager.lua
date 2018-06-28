@@ -594,6 +594,11 @@ function GenericDLCManager:has_gcm()
 	return self:is_dlc_unlocked("gcm")
 end
 
+-- Lines: 586 to 587
+function GenericDLCManager:has_ztm()
+	return self:is_dlc_unlocked("ztm")
+end
+
 -- Lines: 598 to 599
 function GenericDLCManager:has_fdm()
 	return self:is_dlc_unlocked("fdm")
@@ -1589,7 +1594,7 @@ end
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
--- Lines: 1796 to 2360
+-- Lines: 1796 to 2366
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
@@ -1935,6 +1940,10 @@ function WINDLCManager:init()
 				app_id = "218620",
 				no_install = true
 			},
+			ztm = {
+				app_id = "735640",
+				no_install = true
+			},
 			raidww2_clan = {source_id = "103582791460014708"},
 			fdm = {
 				app_id = "707620",
@@ -1999,7 +2008,7 @@ function WINDLCManager:init()
 	end
 end
 
--- Lines: 2362 to 2378
+-- Lines: 2368 to 2384
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -2016,7 +2025,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines: 2380 to 2392
+-- Lines: 2386 to 2398
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2025,7 +2034,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines: 2395 to 2405
+-- Lines: 2401 to 2411
 function WINDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2043,7 +2052,7 @@ function WINDLCManager:chk_vr_dlc()
 	return nil
 end
 
--- Lines: 2409 to 2416
+-- Lines: 2415 to 2422
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

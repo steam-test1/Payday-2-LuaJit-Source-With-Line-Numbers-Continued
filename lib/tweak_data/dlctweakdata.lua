@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines: 12 to 5464
+-- Lines: 12 to 5462
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -31,35 +31,36 @@ function DLCTweakData:init(tweak_data)
 			wild = true,
 			howl = 1,
 			rip = true,
+			ztm = true,
 			lxy = true,
-			cmt = true,
 			gage_pack_lmg = true,
 			dos = true,
-			dnm = true,
+			cmt = true,
 			paydaycon2016 = 1,
+			dnm = true,
 			wwh = true,
-			pic = true,
 			mdm = 1,
+			pic = true,
 			myh = true,
-			the_bomb = true,
 			fdm = true,
 			hoxton_revenge = 1,
 			ecp = true,
 			hl_miami = true,
-			tam = true,
+			the_bomb = true,
 			pn2 = true,
+			tam = true,
 			steel = true,
-			hlm2 = true,
 			pim = true,
 			cash = true,
-			alienware_alpha = true,
+			speedrunners = 1,
 			bbq = true,
-			humble_summer_2015 = 1,
+			alienware_alpha = true,
 			jigg = 1,
 			season_pass = true,
 			gage_pack_snp = true,
 			dlc1 = true,
-			speedrunners = 1,
+			humble_summer_2015 = 1,
+			hlm2 = true,
 			pd2_million = true,
 			mmh = true,
 			fgl = true,
@@ -6032,6 +6033,16 @@ function DLCTweakData:init(tweak_data)
 	self.gcm_bundle.content.loot_drops = {{
 		type_items = "masks",
 		item_entry = "gcm",
+		amount = 1
+	}}
+	self.ztm_bundle = {
+		dlc = "has_ztm",
+		content = {}
+	}
+	self.ztm_bundle.content.loot_global_value = "ztm"
+	self.ztm_bundle.content.loot_drops = {{
+		type_items = "masks",
+		item_entry = "ztm",
 		amount = 1
 	}}
 	self.wmp_bundle = {
