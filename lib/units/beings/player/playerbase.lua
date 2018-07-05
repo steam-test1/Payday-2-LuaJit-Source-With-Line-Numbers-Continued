@@ -386,3 +386,8 @@ function PlayerBase:upgrade_level(category, upgrade)
 	return managers.player:upgrade_level_nil(category, upgrade)
 end
 
+-- Lines: 443 to 444
+function PlayerBase:character_name()
+	return managers.criminals:character_name_by_unit(self._unit)
+end
+

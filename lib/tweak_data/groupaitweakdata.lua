@@ -191,7 +191,7 @@ function GroupAITweakData:_init_chatter_data()
 	}
 end
 
--- Lines: 132 to 1264
+-- Lines: 132 to 1288
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	local access_type_walk_only = {walk = true}
 	local access_type_all = {
@@ -271,7 +271,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		self.unit_categories.spooc = {
 			special_type = "spooc",
 			unit_types = {
-				america = {Idstring("units/payday2/characters/ene_spook_1/ene_spook_1")},
+				america = {Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_cloaker/ene_zeal_cloaker")},
 				russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")},
 				zombie = {Idstring("units/pd2_dlc_hvh/characters/ene_spook_hvh_1/ene_spook_hvh_1")}
 			},
@@ -402,15 +402,27 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		}
 	end
 
-	self.unit_categories.CS_tazer = {
-		special_type = "taser",
-		unit_types = {
-			america = {Idstring("units/payday2/characters/ene_tazer_1/ene_tazer_1")},
-			russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_tazer_ak47_ass/ene_akan_cs_tazer_ak47_ass")},
-			zombie = {Idstring("units/pd2_dlc_hvh/characters/ene_tazer_hvh_1/ene_tazer_hvh_1")}
-		},
-		access = access_type_all
-	}
+	if difficulty_index == 8 then
+		self.unit_categories.CS_tazer = {
+			special_type = "taser",
+			unit_types = {
+				america = {Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_tazer/ene_zeal_tazer")},
+				russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_tazer_ak47_ass/ene_akan_cs_tazer_ak47_ass")},
+				zombie = {Idstring("units/pd2_dlc_hvh/characters/ene_tazer_hvh_1/ene_tazer_hvh_1")}
+			},
+			access = access_type_all
+		}
+	else
+		self.unit_categories.CS_tazer = {
+			special_type = "taser",
+			unit_types = {
+				america = {Idstring("units/payday2/characters/ene_tazer_1/ene_tazer_1")},
+				russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_tazer_ak47_ass/ene_akan_cs_tazer_ak47_ass")},
+				zombie = {Idstring("units/pd2_dlc_hvh/characters/ene_tazer_hvh_1/ene_tazer_hvh_1")}
+			},
+			access = access_type_all
+		}
+	end
 
 	if difficulty_index == 8 then
 		self.unit_categories.CS_shield = {
@@ -769,7 +781,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 	}
 end
 
--- Lines: 1308 to 2016
+-- Lines: 1332 to 2040
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -2644,7 +2656,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
 end
 
--- Lines: 2020 to 2504
+-- Lines: 2044 to 2528
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -3859,7 +3871,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines: 2525 to 2531
+-- Lines: 2549 to 2555
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -3869,7 +3881,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines: 2535 to 2581
+-- Lines: 2559 to 2605
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

@@ -147,3 +147,8 @@ end
 function TeamAIBase:chk_freeze_anims()
 end
 
+-- Lines: 147 to 148
+function TeamAIBase:character_name()
+	return managers.criminals:character_name_by_unit(self._unit)
+end
+

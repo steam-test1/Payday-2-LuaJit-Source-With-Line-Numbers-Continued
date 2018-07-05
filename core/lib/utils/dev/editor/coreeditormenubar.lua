@@ -895,7 +895,7 @@ function CoreEditor:on_expert_mode(data)
 	Global.frame_panel:layout()
 end
 
--- Lines: 837 to 851
+-- Lines: 837 to 859
 function CoreEditor:on_reload_unit(quick)
 	local names = {}
 
@@ -911,34 +911,42 @@ function CoreEditor:on_reload_unit(quick)
 		end
 	end
 
-	self:reload_units(names, quick)
+	if quick == true then
+		self:reload_units(names, quick)
+	else
+		local choice = EWS:message_box(Global.frame_panel, "Sure you want to reload all units?", "Confirm", "YES_NO,YES_DEFAULT,ICON_EXCLAMATION", Vector3(-1, -1, 0))
+
+		if choice == "YES" then
+			self:reload_units(names, quick)
+		end
+	end
 end
 
--- Lines: 855 to 858
+-- Lines: 863 to 866
 function CoreEditor:on_profiler_main(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MAIN", not event_object:is_checked())
 	Application:console_command("stats main")
 end
 
--- Lines: 860 to 863
+-- Lines: 868 to 871
 function CoreEditor:on_profiler_mem(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MEM", not event_object:is_checked())
 	Application:console_command("stats mem")
 end
 
--- Lines: 865 to 868
+-- Lines: 873 to 876
 function CoreEditor:on_profiler_d3d(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_D3D", not event_object:is_checked())
 	Application:console_command("stats d3d")
 end
 
--- Lines: 870 to 873
+-- Lines: 878 to 881
 function CoreEditor:on_profiler_unit_profiler(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_UNIT_PROFILER", not event_object:is_checked())
 	Application:console_command("stats unit_profiler")
 end
 
--- Lines: 877 to 887
+-- Lines: 885 to 895
 function CoreEditor:on_add_workview()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new work view:", "Add work view", "", Vector3(-1, -1, 0), true)
 
@@ -953,12 +961,12 @@ function CoreEditor:on_add_workview()
 	end
 end
 
--- Lines: 889 to 891
+-- Lines: 897 to 899
 function CoreEditor:on_show_workview()
 	self:show_dialog("workview_by_name", "SelectWorkView")
 end
 
--- Lines: 894 to 928
+-- Lines: 902 to 936
 function CoreEditor:on_check_duality()
 	local units = {}
 	local collisions = {
@@ -1019,7 +1027,7 @@ function CoreEditor:on_check_duality()
 	self._unit_duality = UnitDuality:new(collisions, pos)
 end
 
--- Lines: 930 to 939
+-- Lines: 938 to 947
 function CoreEditor:on_make_screenshot()
 	local name = Application:date("%Y-%m-%d_%H.%M.%S") .. ".tga"
 
@@ -1027,18 +1035,18 @@ function CoreEditor:on_make_screenshot()
 	self:output("Screenshot created: " .. name .. ".")
 end
 
--- Lines: 941 to 943
+-- Lines: 949 to 951
 function CoreEditor:toggle_draw_occluders(data)
 	self._draw_occluders = data[1]:is_checked(data[2])
 end
 
--- Lines: 945 to 947
+-- Lines: 953 to 955
 function CoreEditor:on_show_unit_breakdown()
 	self:show_dialog("unit_breakdown", "UnitBreakdownView")
 end
 local leveltools_ids = Idstring("leveltools")
 
--- Lines: 953 to 978
+-- Lines: 961 to 986
 function CoreEditor:on_hide_helper_units(data)
 	local cache = {}
 
@@ -1071,28 +1079,28 @@ function CoreEditor:on_hide_helper_units(data)
 	cache = nil
 end
 
--- Lines: 980 to 982
+-- Lines: 988 to 990
 function CoreEditor:toggle_render_effects(data)
 	World:effect_manager():set_rendering_enabled(data[1]:is_checked(data[2]))
 end
 
--- Lines: 986 to 989
+-- Lines: 994 to 997
 function CoreEditor:toggle_show_markers(data)
 	self._marker_panel:set_visible(data[1]:is_checked(data[2]))
 	self._ews_editor_frame:layout()
 end
 
--- Lines: 993 to 995
+-- Lines: 1001 to 1003
 function CoreEditor:on_using_the_editor()
 	EWS:launch_url("https://intranet.starbreeze.com/wiki/index.php?title=Category:Level_Design")
 end
 
--- Lines: 997 to 999
+-- Lines: 1005 to 1007
 function CoreEditor:on_help()
 	EWS:launch_url("http://mondomonkey.com/MondoMonkeyWhiteB.jpg")
 end
 
--- Lines: 1001 to 1003
+-- Lines: 1009 to 1011
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
 
