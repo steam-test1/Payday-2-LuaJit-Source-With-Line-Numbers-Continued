@@ -236,7 +236,7 @@ end
 
 -- Lines: 212 to 226
 function CoreMaterialEditor:_find_selected_unit()
-	if managers.editor and managers.editor:selected_unit() and managers.editor:selected_unit() ~= self._selected_unit then
+	if managers.editor and managers.editor:selected_unit() and managers.editor:selected_unit() ~= self._selected_unit and not self._material_lock then
 		self._selected_unit = managers.editor:selected_unit()
 		self._live_update_parameter_list = {}
 		local unit_material_node, unit_material_path = self:_find_unit_material(self._selected_unit)

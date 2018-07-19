@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines: 3 to 5821
+-- Lines: 3 to 5828
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -2217,6 +2217,13 @@ function InteractionTweakData:init(tweak_data)
 		text_id = "hud_int_hold_open_vault",
 		action_text_id = "hud_action_opening_vault",
 		timer = 4,
+		axis = "y",
+		start_active = false
+	}
+	self.hold_open_vault_2s = {
+		text_id = "hud_int_hold_open_vault",
+		action_text_id = "hud_action_opening_vault",
+		timer = 2,
 		axis = "y",
 		start_active = false
 	}

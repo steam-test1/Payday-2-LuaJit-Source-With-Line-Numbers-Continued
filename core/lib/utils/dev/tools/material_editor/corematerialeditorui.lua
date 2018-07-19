@@ -3,9 +3,9 @@ require("core/lib/utils/dev/ews/tree_control/CoreManagedTreeControl")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
 
--- Lines: 8 to 217
+-- Lines: 8 to 219
 function CoreMaterialEditor:_create_main_frame()
-	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(450, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
+	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(650, 1200, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
 	self._main_frame:set_icon(self.FRAME_ICON)
 
@@ -16,6 +16,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame_tool_bar:add_tool("SAVE", "Save", self.SAVE_ICON, "Saves this material configuration.")
 	self._main_frame_tool_bar:add_separator()
 	self._main_frame_tool_bar:add_tool("RELOAD", "Reload Material Config", self.RELOAD_ICON, "Reloads this material config.")
+	self._main_frame_tool_bar:add_tool("LOCK", "Toggles Material Config Lock", self.LOCK_ICON, "Toggles lock on this material config.")
 	self._main_frame_tool_bar:add_separator()
 	self._main_frame_tool_bar:add_tool("PROBLEM_SOLVER", "Problem Solver", self.PROBLEM_SOLVER_ICON, "Do you need help?")
 	self._main_frame_tool_bar:realize()
@@ -70,6 +71,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:connect("EDIT_GLOBAL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_edit_global"), "")
 	self._main_frame:connect("REMOTE_COMPILER", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_change_remote_server"), "")
 	self._main_frame:connect("FEEDBACK", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_feedback"), "")
+	self._main_frame:connect("LOCK", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_toggle_lock"), "")
 	self._main_frame:connect("PROBLEM_SOLVER", "EVT_COMMAND_MENU_SELECTED", function ()
 		EWS:launch_url("http://mondomonkey.com/MondoMonkeyWhiteB.jpg")
 	end, "")
@@ -218,7 +220,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 219 to 236
+-- Lines: 221 to 238
 function CoreMaterialEditor:_build_shader_options()
 	local shader_name = self._compilable_shader_combo_box:get_value()
 
@@ -238,14 +240,14 @@ function CoreMaterialEditor:_build_shader_options()
 	end
 end
 
--- Lines: 238 to 241
+-- Lines: 240 to 243
 function CoreMaterialEditor:_set_shader_option_tooltip(node, item)
 	local tooltip = node:parameter("tooltip") or ""
 
 	self._shader_option_tree:set_tooltip(item, tooltip)
 end
 
--- Lines: 243 to 262
+-- Lines: 245 to 264
 function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	for child in node:children() do
 		local project = child:parameter("project")
@@ -273,7 +275,7 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	end
 end
 
--- Lines: 264 to 330
+-- Lines: 266 to 332
 function CoreMaterialEditor:_create_parameter_panel()
 	local progress_dialog = nil
 

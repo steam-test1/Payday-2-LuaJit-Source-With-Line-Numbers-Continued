@@ -181,7 +181,7 @@ function AssetsTweakData:_init_gage_assets(tweak_data)
 	}
 end
 
--- Lines: 199 to 1679
+-- Lines: 199 to 1695
 function AssetsTweakData:_init_assets(tweak_data)
 	self.safe_escape = {
 		name_id = "menu_asset_safe_escape",
@@ -1206,7 +1206,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 	}
 end
 
--- Lines: 1682 to 1729
+-- Lines: 1698 to 1745
 function AssetsTweakData:_init_debug_assets(tweak_data)
 	self.debug_1 = {
 		name_id = "debug_1",
@@ -1257,7 +1257,7 @@ function AssetsTweakData:_init_debug_assets(tweak_data)
 	}
 end
 
--- Lines: 1731 to 1768
+-- Lines: 1747 to 1784
 function AssetsTweakData:debug_assets()
 	local levels = {}
 
@@ -1265,7 +1265,7 @@ function AssetsTweakData:debug_assets()
 		levels[level_id] = 0
 	end
 
-	-- Lines: 1737 to 1745
+	-- Lines: 1753 to 1761
 	local function f(id)
 		if id == "all" then
 			for i, d in pairs(levels) do

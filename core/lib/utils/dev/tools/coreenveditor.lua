@@ -648,12 +648,18 @@ function CoreEnvEditor:write_sky(file)
 	file:print("\t\t</others>\n")
 end
 
--- Lines: 611 to 613
+-- Lines: 611 to 617
 function CoreEnvEditor:on_close()
+	local close_dialog = EWS:MessageDialog(self._main_frame, "Do you want to save environment changes?", "Save Changes?", "YES_NO")
+
+	if close_dialog:show_modal() == "ID_YES" then
+		self:on_save_file()
+	end
+
 	managers.toolhub:close("Environment Editor")
 end
 
--- Lines: 614 to 681
+-- Lines: 618 to 685
 function CoreEnvEditor:database_load_posteffect(post_effect_node)
 	for post_processor in post_effect_node:children() do
 		local post_pro = self._posteffect.post_processors[post_processor:name()]
@@ -725,7 +731,7 @@ function CoreEnvEditor:database_load_posteffect(post_effect_node)
 	self:set_title()
 end
 
--- Lines: 683 to 733
+-- Lines: 687 to 737
 function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 	if underlay_effect_node:name() == "underlay_effect" then
 		for material in underlay_effect_node:children() do
@@ -781,7 +787,7 @@ function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 	self:set_title()
 end
 
--- Lines: 735 to 745
+-- Lines: 739 to 749
 function CoreEnvEditor:database_load_environment_effects(effect_node)
 	for param in effect_node:children() do
 		if param:name() == "param" and param:parameter("key") and param:parameter("key") ~= "" and param:parameter("value") and param:parameter("value") ~= "" and param:parameter("key") == "effects" then
@@ -794,7 +800,7 @@ function CoreEnvEditor:database_load_environment_effects(effect_node)
 	self:set_title()
 end
 
--- Lines: 747 to 788
+-- Lines: 751 to 792
 function CoreEnvEditor:database_load_sky(sky_node)
 	if sky_node:name() == "others" then
 		for param in sky_node:children() do
@@ -839,7 +845,7 @@ function CoreEnvEditor:database_load_sky(sky_node)
 	self:set_title()
 end
 
--- Lines: 790 to 813
+-- Lines: 794 to 817
 function CoreEnvEditor:database_load_env(env_path)
 	local full_path = managers.database:entry_expanded_path("environment", env_path)
 	local env = managers.database:has(full_path) and managers.database:load_node(full_path)
@@ -870,7 +876,7 @@ function CoreEnvEditor:database_load_env(env_path)
 	return env
 end
 
--- Lines: 816 to 821
+-- Lines: 820 to 825
 function CoreEnvEditor:on_open_file()
 	local path = managers.database:open_file_dialog(self._main_frame, "Environments (*.environment)|*.environment")
 
@@ -879,12 +885,12 @@ function CoreEnvEditor:on_open_file()
 	end
 end
 
--- Lines: 823 to 825
+-- Lines: 827 to 829
 function CoreEnvEditor:on_save_file()
 	self:write_to_disk(managers.database:base_path() .. string.gsub(self._env_path, "/", "\\") .. ".environment")
 end
 
--- Lines: 827 to 833
+-- Lines: 831 to 837
 function CoreEnvEditor:on_save_file_as()
 	local path = managers.database:save_file_dialog(self._main_frame, false, "Environments (*.environment)|*.environment")
 
@@ -894,14 +900,14 @@ function CoreEnvEditor:on_save_file_as()
 	end
 end
 
--- Lines: 835 to 839
+-- Lines: 839 to 843
 function CoreEnvEditor:on_manager_flush()
 	if managers and managers.environment then
 		managers.environment:flush()
 	end
 end
 
--- Lines: 841 to 846
+-- Lines: 845 to 850
 function CoreEnvEditor:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -910,7 +916,7 @@ function CoreEnvEditor:destroy()
 	end
 end
 
--- Lines: 849 to 865
+-- Lines: 853 to 869
 function CoreEnvEditor:close()
 	self._main_frame:destroy()
 
@@ -932,12 +938,12 @@ function CoreEnvEditor:close()
 	managers.viewport:first_active_viewport():set_environment(managers.viewport:first_active_viewport():get_environment_path())
 end
 
--- Lines: 867 to 869
+-- Lines: 871 to 873
 function CoreEnvEditor:set_position(newpos)
 	self._main_frame:set_position(newpos)
 end
 
--- Lines: 873 to 909
+-- Lines: 877 to 913
 function CoreEnvEditor:update(t, dt)
 	self:sync()
 
@@ -979,7 +985,7 @@ function CoreEnvEditor:update(t, dt)
 	end
 end
 
--- Lines: 911 to 936
+-- Lines: 915 to 940
 function CoreEnvEditor:step()
 	local undo = self._undo[self._undo_index]
 
@@ -1008,7 +1014,7 @@ function CoreEnvEditor:step()
 	end
 end
 
--- Lines: 938 to 944
+-- Lines: 942 to 948
 function CoreEnvEditor:on_undo()
 	if self._undo_index > 1 then
 		self._undo_index = self._undo_index - 1
@@ -1019,7 +1025,7 @@ function CoreEnvEditor:on_undo()
 	end
 end
 
--- Lines: 946 to 952
+-- Lines: 950 to 956
 function CoreEnvEditor:on_redo()
 	if self._undo_index <= self._max_undo_index then
 		self._undo_index = self._undo_index + 1
@@ -1030,7 +1036,7 @@ function CoreEnvEditor:on_redo()
 	end
 end
 
--- Lines: 954 to 957
+-- Lines: 958 to 961
 function CoreEnvEditor:get_cursor_look_point(camera, dist)
 	local mouse_local = Vector3(0, 0, 0)
 	local cursor_pos = Vector3(mouse_local.x / self._screen_borders.x * 2 - 1, mouse_local.y / self._screen_borders.y * 2 - 1, dist)
@@ -1038,7 +1044,7 @@ function CoreEnvEditor:get_cursor_look_point(camera, dist)
 	return camera:screen_to_world(cursor_pos)
 end
 
--- Lines: 961 to 969
+-- Lines: 965 to 973
 function CoreEnvEditor:draw_cursor()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1051,7 +1057,7 @@ function CoreEnvEditor:draw_cursor()
 	end
 end
 
--- Lines: 972 to 986
+-- Lines: 976 to 990
 function CoreEnvEditor:pick_depth()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1072,7 +1078,7 @@ function CoreEnvEditor:pick_depth()
 	return 0
 end
 
--- Lines: 990 to 1003
+-- Lines: 994 to 1007
 function CoreEnvEditor:pick_height()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1091,7 +1097,7 @@ function CoreEnvEditor:pick_height()
 	return 0
 end
 
--- Lines: 1006 to 1015
+-- Lines: 1010 to 1019
 function CoreEnvEditor:sync()
 	local undo_struct = {}
 
@@ -1103,7 +1109,7 @@ function CoreEnvEditor:sync()
 	end
 end
 
--- Lines: 1017 to 1026
+-- Lines: 1021 to 1030
 function CoreEnvEditor:value_database_lookup(str)
 	local i = string.find(str, "#")
 	local db_key = string.sub(str, 1, i - 1)

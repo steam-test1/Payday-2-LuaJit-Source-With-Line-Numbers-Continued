@@ -14,6 +14,11 @@ function GenericDLCManager:has_sdm()
 	return self:is_dlc_unlocked("sdm")
 end
 
+-- Lines: 34 to 35
+function GenericDLCManager:has_sft()
+	return self:is_dlc_unlocked("sft")
+end
+
 -- Lines: 39 to 40
 function GenericDLCManager:has_tam()
 	return self:is_dlc_unlocked("tam")
@@ -29,7 +34,7 @@ function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
--- Lines: 75 to 125
+-- Lines: 80 to 135
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.flm = {}
 	Global.dlc_manager.all_dlc_data.flm.app_id = "218620"
@@ -40,6 +45,9 @@ function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.sdm = {}
 	Global.dlc_manager.all_dlc_data.sdm.app_id = "218620"
 	Global.dlc_manager.all_dlc_data.sdm.no_install = true
+	Global.dlc_manager.all_dlc_data.sft = {}
+	Global.dlc_manager.all_dlc_data.sft.app_id = "218620"
+	Global.dlc_manager.all_dlc_data.sft.no_install = true
 	Global.dlc_manager.all_dlc_data.tam = {}
 	Global.dlc_manager.all_dlc_data.tam.app_id = "218620"
 	Global.dlc_manager.all_dlc_data.tam.no_install = true

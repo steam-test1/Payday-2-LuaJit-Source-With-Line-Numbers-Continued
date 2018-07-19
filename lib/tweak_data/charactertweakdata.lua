@@ -15880,7 +15880,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5777 to 6322
+-- Lines: 5777 to 6323
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {
@@ -16315,6 +16315,7 @@ function CharacterTweakData:character_map()
 			list = {
 				"ene_bulldozer_medic",
 				"ene_bulldozer_minigun",
+				"ene_bulldozer_minigun_classic",
 				"ene_zeal_swat_heavy_sniper"
 			}
 		},
