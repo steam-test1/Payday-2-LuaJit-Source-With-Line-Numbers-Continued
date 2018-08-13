@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines: 29 to 868
+-- Lines: 29 to 870
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -269,6 +269,7 @@ function MoneyTweakData:init(tweak_data)
 		pn2 = 0,
 		max = 1,
 		dgm = 1,
+		joy = 1,
 		raidww2_clan = 1,
 		fdm = 0,
 		eng = 1,
@@ -361,6 +362,7 @@ function MoneyTweakData:init(tweak_data)
 		pn2 = 0,
 		max = 1,
 		dgm = 1,
+		joy = 1,
 		raidww2_clan = 1,
 		fdm = 1,
 		eng = 1,

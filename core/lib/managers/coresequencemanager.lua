@@ -6235,28 +6235,14 @@ function WwiseElement:activate_callback(env)
 	end
 end
 
--- Lines: 5818 to 5876
+-- Lines: 5818 to 5860
 function WwiseElement:play(env)
 	local source = self:run_parsed_func(env, self._source)
 	local object = self:run_parsed_func(env, self._object)
 	local event = self:run_parsed_func(env, self._event)
 	local skip_save = self:run_parsed_func(env, self._skip_save)
 	local switch = self:run_parsed_func(env, self._switch)
-	local sound_source = nil
-
-	if source then
-		sound_source = source == "" and env.dest_unit:sound_source() or env.dest_unit:sound_source(Idstring(source))
-
-		if not sound_source then
-			self:print_attribute_error("source", source, nil, true, env, nil)
-		end
-	elseif object then
-		sound_source = env.dest_unit:damage():get_sound_source(object)
-
-		if not sound_source then
-			self:print_attribute_error("object", object, nil, true, env, nil)
-		end
-	end
+	local sound_source = self:_get_sound_source(env)
 
 	if not event then
 		self:print_attribute_error("event", event, nil, true, env, nil)
@@ -6294,7 +6280,7 @@ function WwiseElement:play(env)
 	end
 end
 
--- Lines: 5878 to 5900
+-- Lines: 5862 to 5884
 function WwiseElement:stop(env)
 	local source = self:run_parsed_func(env, self._source)
 	local event = self:run_parsed_func(env, self._event)
@@ -6321,7 +6307,50 @@ function WwiseElement:stop(env)
 	end
 end
 
--- Lines: 5902 to 5913
+-- Lines: 5886 to 5901
+function WwiseElement:set_switch(env)
+	local switch = self:run_parsed_func(env, self._switch)
+	local sound_source = self:_get_sound_source(env)
+
+	if switch then
+		local switches = string.split(switch, " ")
+		local i = 1
+
+		while i < #switches do
+			local switch_name = switches[i]
+			local value = switches[i + 1]
+
+			sound_source:set_switch(switch_name, value)
+
+			i = i + 2
+		end
+	end
+end
+
+-- Lines: 5903 to 5924
+function WwiseElement:_get_sound_source(env)
+	local source = self:run_parsed_func(env, self._source)
+	local object = self:run_parsed_func(env, self._object)
+	local sound_source = nil
+
+	if source then
+		sound_source = source == "" and env.dest_unit:sound_source() or env.dest_unit:sound_source(Idstring(source))
+
+		if not sound_source then
+			self:print_attribute_error("source", source, nil, true, env, nil)
+		end
+	elseif object then
+		sound_source = env.dest_unit:damage():get_sound_source(object)
+
+		if not sound_source then
+			self:print_attribute_error("object", object, nil, true, env, nil)
+		end
+	end
+
+	return sound_source
+end
+
+-- Lines: 5927 to 5938
 function WwiseElement.load(unit, data)
 	for source, sub_data in pairs(data) do
 		local sound_source = unit:sound_source(source and Idstring(source))
@@ -6332,7 +6361,7 @@ end
 SoundElement = SoundElement or class(BaseElement)
 SoundElement.NAME = "sound"
 
--- Lines: 5919 to 5929
+-- Lines: 5944 to 5954
 function SoundElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6345,7 +6374,7 @@ function SoundElement:init(node, unit_element)
 	self._t = self:get("t")
 end
 
--- Lines: 5931 to 5938
+-- Lines: 5956 to 5963
 function SoundElement:activate_callback(env)
 	local func_name = self:run_parsed_func(env, self._action) or "play"
 	local func = self[func_name]
@@ -6355,7 +6384,7 @@ function SoundElement:activate_callback(env)
 	end
 end
 
--- Lines: 5940 to 5963
+-- Lines: 5965 to 5988
 function SoundElement:play(env)
 	local cue = self:run_parsed_func(env, self._cue)
 
@@ -6382,7 +6411,7 @@ function SoundElement:play(env)
 	end
 end
 
--- Lines: 5965 to 5973
+-- Lines: 5990 to 5998
 function SoundElement:stop(env)
 	local cue = self:run_parsed_func(env, self._cue)
 
@@ -6408,7 +6437,7 @@ SpawnUnitElement.SPAWN_UNIT_ATTRIBUTE_MAP = SpawnUnitElement.SPAWN_UNIT_ATTRIBUT
 	to_trigger = true
 }
 
--- Lines: 5984 to 6007
+-- Lines: 6009 to 6032
 function SpawnUnitElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6434,7 +6463,7 @@ function SpawnUnitElement:init(node, unit_element)
 	end
 end
 
--- Lines: 6009 to 6197
+-- Lines: 6034 to 6222
 function SpawnUnitElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local position = self:run_parsed_func(env, self._position)
@@ -6625,7 +6654,7 @@ function SpawnUnitElement:activate_callback(env)
 	end
 end
 
--- Lines: 6199 to 6208
+-- Lines: 6224 to 6233
 function SpawnUnitElement:get_params(env)
 	local params = CoreTable.clone(env.params)
 
@@ -6640,14 +6669,14 @@ end
 StopPhysicEffectElement = StopPhysicEffectElement or class(BaseElement)
 StopPhysicEffectElement.NAME = "stop_physic_effect"
 
--- Lines: 6215 to 6219
+-- Lines: 6240 to 6244
 function StopPhysicEffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._id = self:get("id")
 end
 
--- Lines: 6221 to 6229
+-- Lines: 6246 to 6254
 function StopPhysicEffectElement:activate_callback(env)
 	local id = self:run_parsed_func(env, self._id)
 
@@ -6660,7 +6689,7 @@ end
 StopEffectElement = StopEffectElement or class(BaseElement)
 StopEffectElement.NAME = "stop_effect"
 
--- Lines: 6235 to 6240
+-- Lines: 6260 to 6265
 function StopEffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6668,7 +6697,7 @@ function StopEffectElement:init(node, unit_element)
 	self._instant = self:get("instant")
 end
 
--- Lines: 6242 to 6270
+-- Lines: 6267 to 6295
 function StopEffectElement:activate_callback(env)
 	local id_list_var = self:run_parsed_func(env, self._id_list_var)
 
@@ -6701,14 +6730,14 @@ end
 TriggerElement = TriggerElement or class(BaseElement)
 TriggerElement.NAME = "trigger"
 
--- Lines: 6276 to 6280
+-- Lines: 6301 to 6305
 function TriggerElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._name = self:get("name")
 end
 
--- Lines: 6282 to 6306
+-- Lines: 6307 to 6331
 function TriggerElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local dest_unit_damage_ext = env.dest_unit:damage()

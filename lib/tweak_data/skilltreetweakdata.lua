@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines: 9 to 1683
+-- Lines: 9 to 1680
 function SkillTreeTweakData:init()
 
 	-- Lines: 9 to 10
@@ -4135,11 +4135,87 @@ function SkillTreeTweakData:init()
 			name_id = "menu_st_spec_20",
 			dlc = "ecp",
 			desc_id = "menu_st_spec_20_desc"
+		},
+		{
+			{
+				cost = 200,
+				texture_bundle_folder = "joy",
+				desc_id = "menu_deck21_1_desc",
+				name_id = "menu_deck21_1",
+				upgrades = {
+					"pocket_ecm_jammer",
+					"player_pocket_ecm_jammer_base"
+				},
+				icon_xy = {
+					0,
+					0
+				}
+			},
+			deck2,
+			{
+				cost = 400,
+				texture_bundle_folder = "joy",
+				desc_id = "menu_deck21_3_desc",
+				name_id = "menu_deck21_3",
+				upgrades = {
+					"player_passive_health_multiplier_1",
+					"player_passive_health_multiplier_2"
+				},
+				icon_xy = {
+					1,
+					0
+				}
+			},
+			deck4,
+			{
+				cost = 1000,
+				texture_bundle_folder = "joy",
+				desc_id = "menu_deck21_5_desc",
+				name_id = "menu_deck21_5",
+				upgrades = {
+					"player_pocket_ecm_heal_on_kill_1",
+					"player_passive_dodge_chance_1"
+				},
+				icon_xy = {
+					2,
+					0
+				}
+			},
+			deck6,
+			{
+				cost = 2400,
+				texture_bundle_folder = "joy",
+				desc_id = "menu_deck21_7_desc",
+				name_id = "menu_deck21_7",
+				upgrades = {"player_pocket_ecm_kill_dodge_1"},
+				icon_xy = {
+					3,
+					0
+				}
+			},
+			deck8,
+			{
+				cost = 4000,
+				texture_bundle_folder = "joy",
+				desc_id = "menu_deck21_9_desc",
+				name_id = "menu_deck21_9",
+				upgrades = {
+					"player_passive_loot_drop_multiplier",
+					"team_pocket_ecm_heal_on_kill_1",
+					"player_passive_dodge_chance_2"
+				},
+				icon_xy = {
+					0,
+					1
+				}
+			},
+			desc_id = "menu_st_spec_21_desc",
+			name_id = "menu_st_spec_21"
 		}
 	}
 end
 
--- Lines: 1685 to 1700
+-- Lines: 1682 to 1697
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -4160,7 +4236,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines: 1703 to 1711
+-- Lines: 1700 to 1708
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -4173,17 +4249,17 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines: 1714 to 1716
+-- Lines: 1711 to 1713
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines: 1719 to 1726
+-- Lines: 1716 to 1723
 function SkillTreeTweakData:get_tier_unlocks()
 
-	-- Lines: 1719 to 1720
+	-- Lines: 1716 to 1717
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4198,7 +4274,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines: 1729 to 1751
+-- Lines: 1726 to 1748
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

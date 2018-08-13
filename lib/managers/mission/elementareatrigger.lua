@@ -8,7 +8,7 @@ function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 end
 
--- Lines: 10 to 251
+-- Lines: 10 to 254
 function ElementAreaTrigger:project_instigators()
 	local instigators = {}
 
@@ -259,7 +259,7 @@ function ElementAreaTrigger:project_instigators()
 		if self._values.instigator_name ~= nil then
 			local all_found = World:find_units_quick("all", 14)
 
-			-- Lines: 232 to 236
+			-- Lines: 235 to 239
 			local function filter_func(unit)
 				if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then
 					return true
@@ -283,7 +283,7 @@ function ElementAreaTrigger:project_instigators()
 	return instigators
 end
 
--- Lines: 255 to 269
+-- Lines: 258 to 272
 function ElementAreaTrigger:project_amount_all()
 	if self._values.instigator == "criminals" or self._values.instigator == "local_criminals" then
 		local i = 0
@@ -306,7 +306,7 @@ function ElementAreaTrigger:project_amount_all()
 	return managers.network:session() and managers.network:session():amount_of_alive_players() or 0
 end
 
--- Lines: 272 to 294
+-- Lines: 275 to 297
 function ElementAreaTrigger:project_amount_inside()
 	local counter = #self._inside
 
@@ -338,7 +338,7 @@ function ElementAreaTrigger:project_amount_inside()
 	return counter
 end
 
--- Lines: 297 to 317
+-- Lines: 300 to 320
 function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._values.instigator == "vehicle_with_players" and unit then
 		local result = false

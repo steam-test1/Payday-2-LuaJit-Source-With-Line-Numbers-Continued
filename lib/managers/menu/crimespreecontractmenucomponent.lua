@@ -56,7 +56,7 @@ function CrimeSpreeContractMenuComponent:_setup()
 
 	if not is_win_32 then
 		width = 900
-		height = is_nextgen and 550 or 525
+		height = is_nextgen and 570 or 525
 	end
 
 	self._fullscreen_panel:rect({

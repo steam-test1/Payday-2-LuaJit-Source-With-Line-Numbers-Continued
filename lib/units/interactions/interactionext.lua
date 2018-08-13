@@ -3392,14 +3392,28 @@ function AccessPD2StashInteractionExt:interact(player)
 
 	return true
 end
+AccessBankInvadersInteractionExt = AccessBankInvadersInteractionExt or class(UseInteractionExt)
+
+-- Lines: 3163 to 3164
+function AccessBankInvadersInteractionExt:_interact_blocked(player)
+	return false
+end
+
+-- Lines: 3167 to 3170
+function AccessBankInvadersInteractionExt:interact(player)
+	AccessBankInvadersInteractionExt.super.super.interact(self, player)
+	Steam:overlay_activate("url", "http://www.overkillsoftware.com/bankinvaders2/")
+
+	return true
+end
 AccessSideJobsInteractionExt = AccessSideJobsInteractionExt or class(UseInteractionExt)
 
--- Lines: 3165 to 3166
+-- Lines: 3177 to 3178
 function AccessSideJobsInteractionExt:_interact_blocked(player)
 	return false
 end
 
--- Lines: 3169 to 3172
+-- Lines: 3181 to 3184
 function AccessSideJobsInteractionExt:interact(player)
 	AccessSideJobsInteractionExt.super.super.interact(self, player)
 	managers.custom_safehouse:enable_in_game_menu()
@@ -3408,7 +3422,7 @@ function AccessSideJobsInteractionExt:interact(player)
 end
 AccessWeaponMenuInteractionExt = AccessWeaponMenuInteractionExt or class(UseInteractionExt)
 
--- Lines: 3178 to 3182
+-- Lines: 3190 to 3194
 function AccessWeaponMenuInteractionExt:interact(player)
 	AccessWeaponMenuInteractionExt.super.super.interact(self, player)
 
@@ -3420,7 +3434,7 @@ function AccessWeaponMenuInteractionExt:interact(player)
 end
 AccessCrimeNetInteractionExt = AccessCrimeNetInteractionExt or class(UseInteractionExt)
 
--- Lines: 3190 to 3198
+-- Lines: 3202 to 3210
 function AccessCrimeNetInteractionExt:init(unit)
 	AccessCrimeNetInteractionExt.super.init(self, unit)
 
@@ -3435,7 +3449,7 @@ function AccessCrimeNetInteractionExt:init(unit)
 end
 local offs = Vector3(0, 0, 1) * 200
 
--- Lines: 3201 to 3217
+-- Lines: 3213 to 3229
 function AccessCrimeNetInteractionExt:update(unit, t, dt)
 	self._tick_t = self._tick_t + 1
 

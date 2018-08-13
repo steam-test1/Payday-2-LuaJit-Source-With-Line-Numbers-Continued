@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1249
+-- Lines: 4 to 1269
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -2206,6 +2206,15 @@ function GuiTweakData:init()
 				},
 				name_id = "menu_max",
 				id = "max"
+			},
+			{
+				{
+					desc_id = "menu_joy_desc_codex",
+					post_event = "pln_contact_joy",
+					videos = {"joy1"}
+				},
+				name_id = "menu_joy",
+				id = "joy"
 			},
 			{
 				{
@@ -4971,6 +4980,11 @@ function GuiTweakData:init()
 	self.new_heists = {limit = 5}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_icebreaker",
+		texture_path = "guis/textures/pd2/new_heists/icebreaker",
+		url = "https://www.overkillsoftware.com/games/icebreaker/"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_sft",
 		texture_path = "guis/textures/pd2/new_heists/menu_nh_sft",
 		url = "https://steamcommunity.com/games/218620/announcements/detail/2885003081979937951"
@@ -5107,7 +5121,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1251 to 1270
+-- Lines: 1271 to 1290
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5135,7 +5149,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1272 to 1340
+-- Lines: 1292 to 1360
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5211,15 +5225,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1343 to 1344
+-- Lines: 1363 to 1364
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1354 to 1355
+-- Lines: 1374 to 1375
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1357 to 1390
+-- Lines: 1377 to 1410
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5258,7 +5272,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1393 to 1517
+-- Lines: 1413 to 1537
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5381,12 +5395,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1520 to 1521
+-- Lines: 1540 to 1541
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1524 to 1530
+-- Lines: 1544 to 1550
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

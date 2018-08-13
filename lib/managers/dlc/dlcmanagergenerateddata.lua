@@ -34,7 +34,7 @@ function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
--- Lines: 80 to 135
+-- Lines: 75 to 125
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.flm = {}
 	Global.dlc_manager.all_dlc_data.flm.app_id = "218620"

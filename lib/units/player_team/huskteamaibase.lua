@@ -74,3 +74,8 @@ function HuskTeamAIBase:unregister()
 	TeamAIBase.unregister(self)
 end
 
+-- Lines: 87 to 88
+function HuskTeamAIBase:character_name()
+	return managers.criminals:character_name_by_unit(self._unit)
+end
+

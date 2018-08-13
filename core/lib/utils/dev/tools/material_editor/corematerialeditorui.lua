@@ -3,7 +3,7 @@ require("core/lib/utils/dev/ews/tree_control/CoreManagedTreeControl")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
 
--- Lines: 8 to 219
+-- Lines: 8 to 222
 function CoreMaterialEditor:_create_main_frame()
 	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(650, 1200, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -16,7 +16,8 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame_tool_bar:add_tool("SAVE", "Save", self.SAVE_ICON, "Saves this material configuration.")
 	self._main_frame_tool_bar:add_separator()
 	self._main_frame_tool_bar:add_tool("RELOAD", "Reload Material Config", self.RELOAD_ICON, "Reloads this material config.")
-	self._main_frame_tool_bar:add_tool("LOCK", "Toggles Material Config Lock", self.LOCK_ICON, "Toggles lock on this material config.")
+	self._main_frame_tool_bar:add_check_tool("LOCK", "Toggles Material Config Lock", self.LOCK_ICON, "Toggles lock on this material config.")
+	self._main_frame_tool_bar:set_tool_state("LOCK", false)
 	self._main_frame_tool_bar:add_separator()
 	self._main_frame_tool_bar:add_tool("PROBLEM_SOLVER", "Problem Solver", self.PROBLEM_SOLVER_ICON, "Do you need help?")
 	self._main_frame_tool_bar:realize()
@@ -220,7 +221,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 221 to 238
+-- Lines: 224 to 241
 function CoreMaterialEditor:_build_shader_options()
 	local shader_name = self._compilable_shader_combo_box:get_value()
 
@@ -240,14 +241,14 @@ function CoreMaterialEditor:_build_shader_options()
 	end
 end
 
--- Lines: 240 to 243
+-- Lines: 243 to 246
 function CoreMaterialEditor:_set_shader_option_tooltip(node, item)
 	local tooltip = node:parameter("tooltip") or ""
 
 	self._shader_option_tree:set_tooltip(item, tooltip)
 end
 
--- Lines: 245 to 264
+-- Lines: 248 to 267
 function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	for child in node:children() do
 		local project = child:parameter("project")
@@ -275,7 +276,7 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	end
 end
 
--- Lines: 266 to 332
+-- Lines: 269 to 335
 function CoreMaterialEditor:_create_parameter_panel()
 	local progress_dialog = nil
 

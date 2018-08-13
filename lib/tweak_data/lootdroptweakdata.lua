@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines: 6 to 2168
+-- Lines: 6 to 2145
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1492,6 +1492,20 @@ function LootDropTweakData:init(tweak_data)
 		dlc = true,
 		category = "dlc"
 	}
+	self.global_values.joy = {
+		name_id = "bm_global_value_joy",
+		desc_id = "menu_l_global_value_joy",
+		color = dlc_color,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		dlc = true,
+		category = "dlc",
+		unlock_id = "bm_global_value_joy_unlock"
+	}
 	self.global_values.raidww2_clan = {
 		name_id = "bm_global_value_raidww2_clan",
 		desc_id = "menu_l_global_value_raidww2_clan",
@@ -1758,6 +1772,7 @@ function LootDropTweakData:init(tweak_data)
 		"pn2",
 		"max",
 		"dgm",
+		"joy",
 		"fdm",
 		"ecp",
 		"cmo",
@@ -1771,7 +1786,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 2170 to 2175
+-- Lines: 2147 to 2152
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

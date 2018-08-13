@@ -35,7 +35,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines: 55 to 2500
+-- Lines: 55 to 2511
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -6971,7 +6971,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines: 2519 to 2545
+-- Lines: 2530 to 2556
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -6982,7 +6982,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines: 2528 to 2538
+	-- Lines: 2539 to 2549
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7012,7 +7012,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines: 2548 to 2552
+-- Lines: 2559 to 2563
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7025,7 +7025,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines: 2555 to 2562
+-- Lines: 2566 to 2573
 local function from_level(level)
 	if not level then
 		error()
@@ -7041,7 +7041,7 @@ local function from_level(level)
 	}
 end
 
--- Lines: 2565 to 2572
+-- Lines: 2576 to 2583
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7057,7 +7057,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines: 2575 to 2585
+-- Lines: 2586 to 2596
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7079,7 +7079,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines: 2593 to 2768
+-- Lines: 2604 to 2779
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -7226,7 +7226,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines: 2805 to 2982
+-- Lines: 2816 to 2993
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -7414,16 +7414,16 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines: 2919 to 2920
+	-- Lines: 2930 to 2931
 	local function dummy_progress()
 		return 0
 	end
 
-	-- Lines: 2922 to 2957
+	-- Lines: 2933 to 2968
 	local function from_mission_counter(counter, counter_total, inverted)
 		local counter_element, counter_total_element = nil
 
-		-- Lines: 2926 to 2940
+		-- Lines: 2937 to 2951
 		local function get_current()
 			counter_element = counter_element or managers.mission:get_mission_element_by_name(counter)
 
@@ -7441,7 +7441,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 			return current_count
 		end
 
-		-- Lines: 2943 to 2950
+		-- Lines: 2954 to 2961
 		local function get_max()
 			counter_total_element = counter_total_element or managers.mission:get_mission_element_by_name(counter_total)
 

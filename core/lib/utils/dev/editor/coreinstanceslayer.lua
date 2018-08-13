@@ -1391,8 +1391,10 @@ function InstancesLayer:_update_overlay_gui()
 	end
 end
 
--- Lines: 1330 to 1342
+-- Lines: 1331 to 1344
 function InstancesLayer:on_simulation_started()
+	self._stashed_instance_units = {}
+
 	for _, instance_data in ipairs(managers.world_instance:instance_data()) do
 		if instance_data.mission_placed then
 			local instance_units = self:get_instance_units_by_name(instance_data.name)
@@ -1408,7 +1410,7 @@ function InstancesLayer:on_simulation_started()
 	end
 end
 
--- Lines: 1344 to 1349
+-- Lines: 1346 to 1351
 function InstancesLayer:update_unit_settings(...)
 	InstancesLayer.super.update_unit_settings(self, ...)
 
@@ -1417,7 +1419,7 @@ function InstancesLayer:update_unit_settings(...)
 	end
 end
 
--- Lines: 1351 to 1356
+-- Lines: 1353 to 1358
 function InstancesLayer:activate()
 	InstancesLayer.super.activate(self)
 
@@ -1426,7 +1428,7 @@ function InstancesLayer:activate()
 	end
 end
 
--- Lines: 1358 to 1364
+-- Lines: 1360 to 1366
 function InstancesLayer:deactivate()
 	self._stashed_instance_units = {}
 
@@ -1437,7 +1439,7 @@ function InstancesLayer:deactivate()
 	end
 end
 
--- Lines: 1366 to 1371
+-- Lines: 1368 to 1373
 function InstancesLayer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -1445,12 +1447,12 @@ function InstancesLayer:add_triggers()
 	InstancesLayer.super.add_triggers(self)
 end
 
--- Lines: 1373 to 1374
+-- Lines: 1375 to 1376
 function InstancesLayer:selected_amount_string()
 	return string.format("Selected %s: %i", self._save_name, #self._selected_instances)
 end
 
--- Lines: 1378 to 1389
+-- Lines: 1380 to 1391
 function InstancesLayer:clear()
 	self._stashed_instance_units = {}
 	self._selected_instance = nil
@@ -1463,49 +1465,49 @@ function InstancesLayer:clear()
 end
 Reference = Reference or class()
 
--- Lines: 1392 to 1395
+-- Lines: 1394 to 1397
 function Reference:init(pos, rot)
 	self._pos = pos
 	self._rot = rot
 end
 
--- Lines: 1396 to 1397
+-- Lines: 1398 to 1399
 function Reference:position()
 	return self._pos
 end
 
--- Lines: 1399 to 1400
+-- Lines: 1401 to 1402
 function Reference:rotation()
 	return self._rot
 end
 Instance = Instance or class()
 
--- Lines: 1404 to 1406
+-- Lines: 1406 to 1408
 function Instance:init(data)
 	self._data = data
 end
 
--- Lines: 1407 to 1408
+-- Lines: 1409 to 1410
 function Instance:name()
 	return self._data.name
 end
 
--- Lines: 1410 to 1411
+-- Lines: 1412 to 1413
 function Instance:alive()
 	return true
 end
 
--- Lines: 1413 to 1414
+-- Lines: 1415 to 1416
 function Instance:data()
 	return self._data
 end
 
--- Lines: 1416 to 1417
+-- Lines: 1418 to 1419
 function Instance:position()
 	return self._data.position or Vector3()
 end
 
--- Lines: 1419 to 1420
+-- Lines: 1421 to 1422
 function Instance:rotation()
 	return self._data.rotation or Rotation()
 end
