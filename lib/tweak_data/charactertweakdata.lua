@@ -15904,7 +15904,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines: 5777 to 6327
+-- Lines: 5777 to 6328
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {
@@ -16405,6 +16405,22 @@ function CharacterTweakData:character_map()
 		tag = {
 			path = "units/pd2_dlc_tag/characters/",
 			list = {"ene_male_commissioner"}
+		},
+		sah = {
+			path = "units/pd2_dlc_sah/characters/",
+			list = {
+				"civ_male_gala_guest_03",
+				"civ_male_gala_guest_04",
+				"civ_male_gala_guest_05",
+				"civ_male_gala_guest_06",
+				"civ_male_auctioneer",
+				"civ_female_gala_guest_04",
+				"civ_female_gala_guest_05",
+				"civ_female_gala_guest_06",
+				"civ_male_shacklethorn_waiter_01",
+				"civ_male_shacklethorn_waiter_02",
+				"civ_male_maintenance_01"
+			}
 		}
 	}
 

@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines: 10 to 6553
+-- Lines: 10 to 6563
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {character_locked = {}}
 	self.masks.character_locked.name_id = "bm_msk_character_locked"
@@ -5646,6 +5646,10 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			bonnie = {
 				Vector3(0, 3.8934, -1.2342),
 				Rotation(0, 14.2953, 0)
+			},
+			joy = {
+				Vector3(0, 4.37038, -2.06892),
+				Rotation(0, 18.5881, 0)
 			}
 		}
 	}
@@ -5838,6 +5842,10 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			dragan = {
 				Vector3(0, 2.46244, -0.876458),
 				Rotation(0, 9.14383, 0)
+			},
+			joy = {
+				Vector3(0, 3.29716, -0.637965),
+				Rotation(0, 12.5781, 0)
 			}
 		}
 	}

@@ -1,12 +1,10 @@
 TeamAIMovement = TeamAIMovement or class(CopMovement)
-TeamAIMovement._char_name_to_index = HuskPlayerMovement._char_name_to_index
-TeamAIMovement._char_model_names = HuskPlayerMovement._char_model_names
 local mvec3_set = mvector3.set
 local mvec3_sub = mvector3.subtract
 local mvec3_norm = mvector3.normalize
 local mvec3_len = mvector3.length
 
--- Lines: 11 to 28
+-- Lines: 8 to 25
 function TeamAIMovement:_post_init()
 	if managers.groupai:state():whisper_mode() then
 		if not self._heat_listener_clbk and Network:is_server() then
@@ -27,7 +25,7 @@ function TeamAIMovement:_post_init()
 	self._last_position = Vector3()
 end
 
--- Lines: 32 to 48
+-- Lines: 29 to 45
 function TeamAIMovement:set_character_anim_variables()
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
 
@@ -46,11 +44,11 @@ function TeamAIMovement:set_character_anim_variables()
 	self._unit:inventory():preload_mask()
 end
 
--- Lines: 50 to 51
+-- Lines: 47 to 48
 function TeamAIMovement:check_visual_equipment()
 end
 
--- Lines: 55 to 76
+-- Lines: 52 to 73
 function TeamAIMovement:add_weapons()
 	if Network:is_server() then
 		local char_name = self._ext_base._tweak_table
@@ -73,24 +71,24 @@ function TeamAIMovement:add_weapons()
 	end
 end
 
--- Lines: 81 to 82
+-- Lines: 78 to 79
 function TeamAIMovement:m_detect_pos()
 	return self._m_head_pos
 end
 
--- Lines: 87 to 90
+-- Lines: 84 to 87
 function TeamAIMovement:set_position(pos)
 	CopMovement.set_position(self, pos)
 	self:_upd_location()
 end
 
--- Lines: 94 to 97
+-- Lines: 91 to 94
 function TeamAIMovement:set_m_pos(pos)
 	CopMovement.set_m_pos(self, pos)
 	self:_upd_location()
 end
 
--- Lines: 101 to 107
+-- Lines: 98 to 104
 function TeamAIMovement:_upd_location()
 	local nav_seg_id = self._nav_tracker:nav_segment()
 
@@ -101,26 +99,26 @@ function TeamAIMovement:_upd_location()
 	end
 end
 
--- Lines: 111 to 113
+-- Lines: 108 to 110
 function TeamAIMovement:get_location_id()
 	local metadata = managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id)
 
 	return metadata and metadata.location_id
 end
 
--- Lines: 118 to 122
+-- Lines: 115 to 119
 function TeamAIMovement:on_cuffed()
 	self._unit:brain():set_logic("surrender")
 	self._unit:network():send("arrested")
 	self._unit:character_damage():on_arrested()
 end
 
--- Lines: 126 to 128
+-- Lines: 123 to 125
 function TeamAIMovement:on_SPOOCed(enemy_unit)
 	self._unit:character_damage():on_incapacitated()
 end
 
--- Lines: 132 to 136
+-- Lines: 129 to 133
 function TeamAIMovement:is_SPOOC_attack_allowed()
 	if alive(self.vehicle_unit) then
 		return false
@@ -129,34 +127,34 @@ function TeamAIMovement:is_SPOOC_attack_allowed()
 	return true
 end
 
--- Lines: 141 to 145
+-- Lines: 138 to 142
 function TeamAIMovement:on_discovered()
 	if self._cool then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines: 149 to 151
+-- Lines: 146 to 148
 function TeamAIMovement:on_tase_ended()
 	self._unit:character_damage():on_tase_ended()
 end
 
--- Lines: 155 to 156
+-- Lines: 152 to 153
 function TeamAIMovement:tased()
 	return self._unit:anim_data().tased
 end
 
--- Lines: 161 to 162
+-- Lines: 158 to 159
 function TeamAIMovement:cool()
 	return self._cool
 end
 
--- Lines: 167 to 168
+-- Lines: 164 to 165
 function TeamAIMovement:downed()
 	return self._unit:interaction()._active
 end
 
--- Lines: 174 to 203
+-- Lines: 171 to 200
 function TeamAIMovement:set_cool(state)
 	state = state and true or false
 
@@ -189,16 +187,20 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
--- Lines: 207 to 211
+-- Lines: 204 to 208
 function TeamAIMovement:heat_clbk(state)
 	if self._cool and not state then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines: 215 to 238
+-- Lines: 212 to 238
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
+		if instant then
+			self._unit:inventory():set_visibility_state(true)
+		end
+
 		self._cool = false
 
 		return

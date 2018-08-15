@@ -1,55 +1,32 @@
 PlayerBodyBoneMergeBase = PlayerBodyBoneMergeBase or class(UnitBase)
 
--- Lines: 4 to 10
+-- Lines: 4 to 9
 function PlayerBodyBoneMergeBase:init(unit)
 	UnitBase.init(self, unit, false)
 
 	self._visibility_state = true
 	self._allow_invisible = true
 	self._is_in_original_material = true
-	self._lifetime = 0
 end
 
--- Lines: 12 to 17
-function PlayerBodyBoneMergeBase:on_unit_link_successful(parent_unit)
-	self._parent_unit = parent_unit
-
-	if self.bonemerge_success_sequence then
-		self._unit:set_extension_update_enabled(Idstring("base"), true)
-	end
-end
-
--- Lines: 20 to 28
-function PlayerBodyBoneMergeBase:update(unit, t, dt)
-	self._lifetime = self._lifetime + dt
-
-	if self._lifetime > 3 then
-		if self._parent_unit and self._parent_unit:damage() and self._parent_unit:damage():has_sequence(self.bonemerge_success_sequence) then
-			self._parent_unit:damage():run_sequence_simple(self.bonemerge_success_sequence)
-		end
-
-		self._unit:set_extension_update_enabled(Idstring("base"), false)
-	end
-end
-
--- Lines: 30 to 31
+-- Lines: 11 to 12
 function PlayerBodyBoneMergeBase:char_tweak()
 	return {}
 end
 
--- Lines: 34 to 35
+-- Lines: 15 to 16
 function PlayerBodyBoneMergeBase:is_in_original_material()
 	return self._is_in_original_material
 end
 
--- Lines: 38 to 42
+-- Lines: 19 to 23
 function PlayerBodyBoneMergeBase:set_material_state(original)
 	if original and not self._is_in_original_material or not original and self._is_in_original_material then
 		self:swap_material_config()
 	end
 end
 
--- Lines: 44 to 57
+-- Lines: 25 to 38
 function PlayerBodyBoneMergeBase:swap_material_config(material_applied_clbk)
 	local new_material = Idstring(self.contour_material)
 
@@ -67,7 +44,7 @@ function PlayerBodyBoneMergeBase:swap_material_config(material_applied_clbk)
 	end
 end
 
--- Lines: 60 to 75
+-- Lines: 41 to 56
 function PlayerBodyBoneMergeBase:on_material_applied(material_applied_clbk)
 	if not alive(self._unit) then
 		return
@@ -84,7 +61,7 @@ function PlayerBodyBoneMergeBase:on_material_applied(material_applied_clbk)
 	end
 end
 
--- Lines: 77 to 79
+-- Lines: 58 to 60
 function PlayerBodyBoneMergeBase:set_allow_invisible(allow)
 	self._allow_invisible = allow
 end

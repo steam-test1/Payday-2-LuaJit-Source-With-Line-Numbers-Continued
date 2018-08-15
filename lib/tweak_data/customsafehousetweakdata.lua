@@ -1292,6 +1292,15 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		desc_id = "trophy_device_parts_desc",
 		objectives = {self:_progress("trophy_device_parts", 1)}
 	})
+	table.insert(self.trophies, {
+		name_id = "trophy_black_plate",
+		image_id = "safehouse_trophies_preview_blackplate",
+		objective_id = "trophy_black_plate_completion_objective",
+		id = "trophy_black_plate",
+		gives_reward = false,
+		desc_id = "trophy_black_plate_desc",
+		objectives = {self:_achievement("sah_1")}
+	})
 end
 
 -- Lines: 1582 to 1588

@@ -9305,3 +9305,8 @@ function BlackMarketManager:has_unlocked_grip()
 	return true
 end
 
+-- Lines: 8860 to 8861
+function BlackMarketManager:has_unlocked_shock()
+	return managers.achievment:get_info("sah_11").awarded, "bm_menu_locked_shock"
+end
+
