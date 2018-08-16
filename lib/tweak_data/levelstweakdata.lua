@@ -1688,7 +1688,7 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		music_ext = "music_tag",
 		music_ext_start = "suspense_1",
-		max_bags = 0,
+		max_bags = 40,
 		ghost_bonus = 0.1,
 		ai_group_type = america,
 		narrator = "locke",

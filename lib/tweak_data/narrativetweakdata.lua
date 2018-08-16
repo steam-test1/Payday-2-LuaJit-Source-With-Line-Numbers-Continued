@@ -5350,8 +5350,8 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.jobs.sah.date_added = {
 		2018,
-		4,
-		23
+		8,
+		15
 	}
 	self._jobs_index = {
 		"jewelry_store",
