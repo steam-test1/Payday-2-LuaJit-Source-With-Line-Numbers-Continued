@@ -735,7 +735,7 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	end
 
 	managers.hud:remove_waypoint("wp_hostage_trade" .. tostring(dead_unit:key()))
-	managers.crime_spree:run_func("OnEnemyDied", dead_unit, damage_info)
+	managers.modifiers:run_func("OnEnemyDied", dead_unit, damage_info)
 end
 
 -- Lines: 771 to 787

@@ -1,5 +1,5 @@
 
--- Lines: 20 to 110
+-- Lines: 20 to 118
 function DLCTweakData:init_generated()
 	self.flm_bundle = {
 		free = true,
@@ -93,5 +93,11 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.skm_bundle = {
+		free = true,
+		content = {}
+	}
+	self.skm_bundle.content.loot_global_value = "skm"
+	self.skm_bundle.content.loot_drops = {}
 end
 

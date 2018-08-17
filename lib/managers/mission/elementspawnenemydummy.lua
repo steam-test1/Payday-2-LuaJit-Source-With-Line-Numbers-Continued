@@ -68,36 +68,22 @@ function ElementSpawnEnemyDummy:units()
 	return self._units
 end
 
--- Lines: 63 to 123
+-- Lines: 63 to 117
 function ElementSpawnEnemyDummy:produce(params)
 	if not managers.groupai:state():is_AI_enabled() then
 		return
 	end
 
+	local unit = nil
+
 	if params and params.name then
-		local unit = safe_spawn_unit(params.name, self:get_orientation())
-
-		unit:base():add_destroy_listener(self._unit_destroy_clbk_key, callback(self, self, "clbk_unit_destroyed"))
-
-		unit:unit_data().mission_element = self
+		unit = safe_spawn_unit(params.name, self:get_orientation())
 		local spawn_ai = self:_create_spawn_AI_parametric(params.stance, params.objective, self._values)
 
 		unit:brain():set_spawn_ai(spawn_ai)
-		table.insert(self._units, unit)
-		self:event("spawn", unit)
-
-		if self._values.force_pickup and self._values.force_pickup ~= "none" then
-			local pickup_name = self._values.force_pickup ~= "no_pickup" and self._values.force_pickup or nil
-
-			unit:character_damage():set_pickup(pickup_name)
-		end
 	else
 		local enemy_name = self:value("enemy") or self._enemy_name
-		local unit = safe_spawn_unit(enemy_name, self:get_orientation())
-
-		unit:base():add_destroy_listener(self._unit_destroy_clbk_key, callback(self, self, "clbk_unit_destroyed"))
-
-		unit:unit_data().mission_element = self
+		unit = safe_spawn_unit(enemy_name, self:get_orientation())
 		local objective = nil
 		local action = self._create_action_data(CopActionAct._act_redirects.enemy_spawn[self._values.spawn_action])
 		local stance = managers.groupai:state():enemy_weapons_hot() and "cbt" or "ntl"
@@ -128,21 +114,25 @@ function ElementSpawnEnemyDummy:produce(params)
 		if self._values.voice then
 			unit:sound():set_voice_prefix(self._values.voice)
 		end
-
-		table.insert(self._units, unit)
-		self:event("spawn", unit)
-
-		if self._values.force_pickup and self._values.force_pickup ~= "none" then
-			local pickup_name = self._values.force_pickup ~= "no_pickup" and self._values.force_pickup or nil
-
-			unit:character_damage():set_pickup(pickup_name)
-		end
 	end
 
-	return self._units[#self._units]
+	unit:base():add_destroy_listener(self._unit_destroy_clbk_key, callback(self, self, "clbk_unit_destroyed"))
+
+	unit:unit_data().mission_element = self
+
+	table.insert(self._units, unit)
+	self:event("spawn", unit)
+
+	if self._values.force_pickup and self._values.force_pickup ~= "none" then
+		local pickup_name = self._values.force_pickup ~= "no_pickup" and self._values.force_pickup or nil
+
+		unit:character_damage():set_pickup(pickup_name)
+	end
+
+	return unit
 end
 
--- Lines: 126 to 133
+-- Lines: 120 to 127
 function ElementSpawnEnemyDummy:clbk_unit_destroyed(unit)
 	local u_key = unit:key()
 
@@ -153,7 +143,7 @@ function ElementSpawnEnemyDummy:clbk_unit_destroyed(unit)
 	end
 end
 
--- Lines: 135 to 141
+-- Lines: 129 to 135
 function ElementSpawnEnemyDummy:event(name, unit)
 	if self._events[name] then
 		for _, callback in ipairs(self._events[name]) do
@@ -162,14 +152,14 @@ function ElementSpawnEnemyDummy:event(name, unit)
 	end
 end
 
--- Lines: 143 to 146
+-- Lines: 137 to 140
 function ElementSpawnEnemyDummy:add_event_callback(name, callback)
 	self._events[name] = self._events[name] or {}
 
 	table.insert(self._events[name], callback)
 end
 
--- Lines: 148 to 157
+-- Lines: 142 to 151
 function ElementSpawnEnemyDummy:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -184,7 +174,7 @@ function ElementSpawnEnemyDummy:on_executed(instigator)
 	ElementSpawnEnemyDummy.super.on_executed(self, unit)
 end
 
--- Lines: 159 to 169
+-- Lines: 153 to 163
 function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, spawn_properties)
 	local entry_action = self._create_action_data(CopActionAct._act_redirects.enemy_spawn[self._values.spawn_action])
 
@@ -205,7 +195,7 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 	}
 end
 
--- Lines: 172 to 178
+-- Lines: 166 to 172
 function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	if not anim_name or anim_name == "none" then
 		return {
@@ -229,7 +219,7 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	end
 end
 
--- Lines: 180 to 187
+-- Lines: 174 to 181
 function ElementSpawnEnemyDummy:unspawn_all_units()
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -239,7 +229,7 @@ function ElementSpawnEnemyDummy:unspawn_all_units()
 	end
 end
 
--- Lines: 189 to 195
+-- Lines: 183 to 189
 function ElementSpawnEnemyDummy:kill_all_units()
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -251,7 +241,7 @@ function ElementSpawnEnemyDummy:kill_all_units()
 	end
 end
 
--- Lines: 197 to 203
+-- Lines: 191 to 197
 function ElementSpawnEnemyDummy:execute_on_all_units(func)
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -260,7 +250,7 @@ function ElementSpawnEnemyDummy:execute_on_all_units(func)
 	end
 end
 
--- Lines: 205 to 206
+-- Lines: 199 to 200
 function ElementSpawnEnemyDummy:accessibility()
 	return self.ACCESSIBILITIES[self._values.accessibility]
 end

@@ -1,6 +1,6 @@
 CustomSafehouseTweakData = CustomSafehouseTweakData or class()
 
--- Lines: 5 to 51
+-- Lines: 5 to 37
 function CustomSafehouseTweakData:init(tweak_data)
 	self.prices = {
 		rooms = {
@@ -21,16 +21,6 @@ function CustomSafehouseTweakData:init(tweak_data)
 		experience_ratio = 1000000
 	}
 	self.level_limit = 25
-	self.combat = {waves = {
-		hard = 3,
-		overkill = 3,
-		overkill_145 = 3,
-		normal = 3,
-		easy_wish = 3,
-		overkill_290 = 3,
-		sm_wish = 3,
-		easy = 3
-	}}
 
 	self:_init_heisters(tweak_data)
 	self:_init_safehouse_contractors(tweak_data)
@@ -45,7 +35,7 @@ function CustomSafehouseTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 54 to 199
+-- Lines: 40 to 185
 function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters = {base = {}}
 	self.heisters.base.idle_line_dist = 500
@@ -180,7 +170,7 @@ function CustomSafehouseTweakData:_init_heisters(tweak_data)
 	self.heisters.vlad.idle_offset = 20
 end
 
--- Lines: 201 to 207
+-- Lines: 187 to 193
 function CustomSafehouseTweakData:get_voice(tweak_data, character_name)
 	for i, data in ipairs(tweak_data.criminals.characters) do
 		if data.name == character_name then
@@ -189,7 +179,7 @@ function CustomSafehouseTweakData:get_voice(tweak_data, character_name)
 	end
 end
 
--- Lines: 211 to 423
+-- Lines: 197 to 409
 function CustomSafehouseTweakData:_init_safehouse_contractors(tweak_data)
 	local heister_weighting = 98 / #tweak_data.criminals.character_names
 	local butler_weighting = 2
@@ -375,7 +365,7 @@ function CustomSafehouseTweakData:_init_safehouse_contractors(tweak_data)
 	})
 end
 
--- Lines: 426 to 729
+-- Lines: 412 to 715
 function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 	self.rooms = {}
 
@@ -657,7 +647,7 @@ function CustomSafehouseTweakData:_init_safehouse_rooms(tweak_data)
 	})
 end
 
--- Lines: 732 to 753
+-- Lines: 718 to 739
 function CustomSafehouseTweakData:_create_objective(data)
 	local save_values = {
 		"achievement_id",
@@ -688,7 +678,7 @@ function CustomSafehouseTweakData:_create_objective(data)
 	return obj
 end
 
--- Lines: 757 to 760
+-- Lines: 743 to 746
 function CustomSafehouseTweakData:_achievement(achievement_id, data)
 	data = data or {}
 	data.achievement_id = achievement_id
@@ -696,7 +686,7 @@ function CustomSafehouseTweakData:_achievement(achievement_id, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 763 to 767
+-- Lines: 749 to 753
 function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	data = data or {}
 	data.progress_id = progress_id
@@ -705,7 +695,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines: 771 to 1576
+-- Lines: 757 to 1562
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1299,7 +1289,7 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	})
 end
 
--- Lines: 1578 to 1584
+-- Lines: 1564 to 1570
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1310,7 +1300,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines: 1587 to 1596
+-- Lines: 1573 to 1582
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1324,7 +1314,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines: 1599 to 1948
+-- Lines: 1585 to 1934
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1568,7 +1558,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines: 1950 to 1956
+-- Lines: 1936 to 1942
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1577,7 +1567,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines: 1960 to 2177
+-- Lines: 1946 to 2163
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,

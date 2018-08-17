@@ -9,7 +9,7 @@ function VictoryState:init(game_state_machine, setup)
 	self._type = "victory"
 end
 
--- Lines: 12 to 24
+-- Lines: 12 to 30
 function VictoryState:at_enter(...)
 	self._success = true
 
@@ -24,9 +24,13 @@ function VictoryState:at_enter(...)
 			self._safehouse_raid_rewarded = true
 		end
 	end
+
+	if managers.skirmish:is_weekly_skirmish() then
+		managers.skirmish:on_weekly_completed()
+	end
 end
 
--- Lines: 26 to 31
+-- Lines: 32 to 37
 function VictoryState:at_exit(...)
 	if self._post_event then
 		self._post_event:stop()
@@ -35,14 +39,14 @@ function VictoryState:at_exit(...)
 	VictoryState.super.at_exit(self, ...)
 end
 
--- Lines: 33 to 37
+-- Lines: 39 to 43
 function VictoryState:_shut_down_network()
 	if managers.dlc:is_trial() then
 		VictoryState.super._shut_down_network(self)
 	end
 end
 
--- Lines: 39 to 44
+-- Lines: 45 to 50
 function VictoryState:_load_start_menu()
 	if managers.dlc:is_trial() then
 		Global.open_trial_buy = true
@@ -51,7 +55,7 @@ function VictoryState:_load_start_menu()
 	end
 end
 
--- Lines: 46 to 55
+-- Lines: 52 to 61
 function VictoryState:_set_continue_button_text()
 	local is_server_or_trial = Network:is_server() or managers.dlc:is_trial()
 	local text_id = not is_server_or_trial and "victory_client_waiting_for_server" or self._completion_bonus_done == false and "menu_es_calculating_experience" or managers.job:on_last_stage() and "menu_victory_goto_payday" or "menu_victory_goto_next_stage"
@@ -61,14 +65,14 @@ function VictoryState:_set_continue_button_text()
 	managers.menu_component:set_endscreen_continue_button_text(text, not is_server_or_trial or not self._completion_bonus_done)
 end
 
--- Lines: 57 to 61
+-- Lines: 63 to 67
 function VictoryState:_continue()
 	if Network:is_server() or managers.dlc:is_trial() then
 		self:continue()
 	end
 end
 
--- Lines: 63 to 84
+-- Lines: 69 to 90
 function VictoryState:continue()
 	if self:_continue_blocked() then
 		return

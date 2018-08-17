@@ -216,14 +216,16 @@ function WorldEditor:_project_init_slot_masks()
 	self._go_through_units_before_simulaton_mask = self._go_through_units_before_simulaton_mask + 15
 end
 
--- Lines: 195 to 199
+-- Lines: 195 to 201
 function WorldEditor:project_prestart_up(with_mission)
+	managers.job:on_simulation_started()
 	managers.navigation:on_simulation_started()
 	managers.groupai:on_simulation_started()
 	managers.enemy:on_simulation_started()
+	managers.hud:on_simulation_started()
 end
 
--- Lines: 203 to 232
+-- Lines: 205 to 234
 function WorldEditor:project_run_simulation(with_mission)
 	Global.game_settings.difficulty = self._mission_difficulty
 
@@ -257,11 +259,11 @@ function WorldEditor:project_run_simulation(with_mission)
 	managers.game_play_central:start_heist_timer()
 end
 
--- Lines: 235 to 236
+-- Lines: 237 to 238
 function WorldEditor:_project_check_unit(unit)
 end
 
--- Lines: 240 to 270
+-- Lines: 242 to 272
 function WorldEditor:project_stop_simulation()
 	managers.hud:on_simulation_ended()
 	managers.hud:clear_waypoints()
@@ -290,7 +292,7 @@ function WorldEditor:project_stop_simulation()
 	managers.dot:on_simulation_ended()
 end
 
--- Lines: 274 to 286
+-- Lines: 276 to 288
 function WorldEditor:project_clear_units()
 	managers.groupai:state():set_AI_enabled(false)
 
@@ -307,34 +309,34 @@ function WorldEditor:project_clear_units()
 	end
 end
 
--- Lines: 291 to 292
+-- Lines: 293 to 294
 function WorldEditor:project_clear_layers()
 end
 
--- Lines: 297 to 298
+-- Lines: 299 to 300
 function WorldEditor:project_recreate_layers()
 end
 
--- Lines: 301 to 304
+-- Lines: 303 to 306
 function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
 	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
 end
 
--- Lines: 306 to 309
+-- Lines: 308 to 311
 function WorldEditor:_open_inventory_icon_creator()
 	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
 
 	self._inventory_icon_creator:show_ews()
 end
 
--- Lines: 311 to 314
+-- Lines: 313 to 316
 function WorldEditor:open()
 	WorldEditor.super.open(self)
 	managers.menu_component:set_rev_visible(self._enable_revision_number)
 end
 
--- Lines: 316 to 320
+-- Lines: 318 to 322
 function WorldEditor:on_enable_revision_number(changed, value)
 	if changed then
 		managers.menu_component:set_rev_visible(value)

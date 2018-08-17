@@ -31,7 +31,27 @@ function FineText:set_text(...)
 end
 
 -- Lines: 30 to 31
+function FineText:set_color(...)
+	self._gui_obj:set_color(...)
+end
+
+-- Lines: 31 to 32
+function FineText:set_range_color(...)
+	self._gui_obj:set_range_color(...)
+end
+
+-- Lines: 32 to 33
+function FineText:clear_range_color(...)
+	self._gui_obj:clear_range_color(...)
+end
+
+-- Lines: 34 to 35
 function FineText:text()
-	self._gui_obj:text()
+	return self._gui_obj:text()
+end
+
+-- Lines: 35 to 36
+function FineText:color()
+	return self._gui_obj:color()
 end
 

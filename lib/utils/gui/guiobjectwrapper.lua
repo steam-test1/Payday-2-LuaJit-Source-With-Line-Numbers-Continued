@@ -341,32 +341,57 @@ function GUIObjectWrapper:set_y(...)
 end
 
 -- Lines: 75 to 76
+function GUIObjectWrapper:set_visible(...)
+	self._gui_obj:set_visible(...)
+end
+
+-- Lines: 77 to 78
+function GUIObjectWrapper:move(...)
+	self._gui_obj:move(...)
+end
+
+-- Lines: 78 to 79
+function GUIObjectWrapper:grow(...)
+	self._gui_obj:grow(...)
+end
+
+-- Lines: 80 to 81
+function GUIObjectWrapper:animate(...)
+	return self._gui_obj:animate(...)
+end
+
+-- Lines: 82 to 83
 function GUIObjectWrapper:layer(...)
 	return self._gui_obj:layer(...)
 end
 
--- Lines: 76 to 77
+-- Lines: 83 to 84
 function GUIObjectWrapper:set_layer(...)
 	self._gui_obj:set_layer(...)
 end
 
--- Lines: 77 to 78
+-- Lines: 84 to 85
 function GUIObjectWrapper:set_world_layer(...)
 	self._gui_obj:set_world_layer(...)
 end
 
--- Lines: 78 to 79
+-- Lines: 85 to 86
 function GUIObjectWrapper:world_layer(...)
 	return self._gui_obj:world_layer(...)
 end
 
--- Lines: 80 to 81
+-- Lines: 87 to 88
 function GUIObjectWrapper:inside(...)
 	return self._gui_obj:inside(...)
 end
 
--- Lines: 81 to 82
+-- Lines: 88 to 89
 function GUIObjectWrapper:outside(...)
 	return self._gui_obj:outside(...)
+end
+
+-- Lines: 90 to 91
+function GUIObjectWrapper:alive(...)
+	return self._gui_obj:alive(...)
 end
 

@@ -1,5 +1,5 @@
 
--- Lines: 44 to 233
+-- Lines: 44 to 252
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.flm = {
 		name_id = "bm_global_value_flm",
@@ -21,7 +21,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		name_id = "bm_global_value_mmh",
 		desc_id = "menu_l_global_value_infamous",
 		unlock_id = "bm_global_value_mmh_unlock",
-		color = tweak_data.screen_colors.infamous_color,
+		color = tweak_data.screen_colors.dlc_color,
 		dlc = true,
 		free = true,
 		chance = 1,
@@ -69,7 +69,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		name_id = "bm_global_value_tam",
 		desc_id = "menu_l_global_value_infamous",
 		unlock_id = "bm_global_value_tam_unlock",
-		color = tweak_data.screen_colors.infamous_color,
+		color = tweak_data.screen_colors.dlc_color,
 		dlc = true,
 		free = true,
 		chance = 1,
@@ -100,6 +100,22 @@ function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.toon = {
 		name_id = "bm_global_value_toon",
 		unlock_id = "bm_global_value_toon_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "normal",
+		ignore_ulti = true
+	}
+	self.global_values.skm = {
+		name_id = "bm_global_value_skm",
+		desc_id = "menu_l_global_value_skm",
+		unlock_id = "bm_global_value_skm_unlock",
 		color = tweak_data.screen_colors.dlc_color,
 		dlc = true,
 		free = true,

@@ -118,6 +118,8 @@ require("lib/managers/PromoUnlockManager")
 require("lib/managers/GenericSideJobsManager")
 require("lib/managers/SideJobGenericDLCManager")
 require("lib/managers/RaidJobsManager")
+require("lib/managers/ModifiersManager")
+require("lib/managers/SkirmishManager")
 require("lib/utils/StatisticsGenerator")
 require("lib/utils/Bitwise")
 require("lib/utils/WeightedSelector")
@@ -130,7 +132,7 @@ Setup = Setup or class(CoreSetup.CoreSetup)
 _next_update_funcs = _next_update_funcs or {}
 local next_update_funcs_busy = nil
 
--- Lines: 218 to 225
+-- Lines: 224 to 231
 function call_on_next_update(func, optional_key)
 	if not optional_key then
 		table.insert(_next_update_funcs, func)
@@ -140,7 +142,7 @@ function call_on_next_update(func, optional_key)
 	end
 end
 
--- Lines: 227 to 234
+-- Lines: 233 to 240
 function call_next_update_functions()
 	local current = _next_update_funcs
 	_next_update_funcs = {}
@@ -150,7 +152,7 @@ function call_next_update_functions()
 	end
 end
 
--- Lines: 239 to 288
+-- Lines: 245 to 294
 function Setup:init_category_print()
 	CoreSetup.CoreSetup.init_category_print(self)
 
@@ -191,7 +193,7 @@ function Setup:init_category_print()
 	catprint_load()
 end
 
--- Lines: 290 to 315
+-- Lines: 296 to 321
 function Setup:load_packages()
 	PackageManager:set_resource_loaded_clbk(Idstring("unit"), nil)
 	TextureCache:set_streaming_enabled(true)
@@ -219,7 +221,7 @@ function Setup:load_packages()
 	end
 end
 
--- Lines: 318 to 460
+-- Lines: 324 to 472
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
 		is_playing = false,
@@ -285,6 +287,7 @@ function Setup:init_managers(managers)
 	managers.vehicle = VehicleManager:new()
 	managers.fire = FireManager:new()
 	managers.sync = SyncManager:new()
+	managers.modifiers = ModifiersManager:new()
 	managers.multi_profile = MultiProfileManager:new()
 	managers.workshop = WorkshopManager:new()
 
@@ -292,6 +295,7 @@ function Setup:init_managers(managers)
 
 	managers.custom_safehouse = CustomSafehouseManager:new()
 	managers.ban_list = BanListManager:new()
+	managers.skirmish = SkirmishManager:new()
 	managers.mutators = MutatorsManager:new()
 	managers.butler_mirroring = ButlerMirroringManager:new()
 	managers.generic_side_jobs = GenericSideJobsManager:new()
@@ -306,7 +310,7 @@ function Setup:init_managers(managers)
 	game_state_machine = GameStateMachine:new()
 end
 
--- Lines: 464 to 474
+-- Lines: 476 to 486
 function Setup:start_boot_loading_screen()
 	if _G.IS_VR then
 		VRManager:fade_to_color(0, Color(1, 0, 0, 0), false)
@@ -321,12 +325,12 @@ function Setup:start_boot_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines: 476 to 478
+-- Lines: 488 to 490
 function Setup:start_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines: 480 to 497
+-- Lines: 492 to 509
 function Setup:stop_loading_screen()
 	if Global.is_loading then
 		cat_print("loading_environment", "[LoadingEnvironment] Stop.")
@@ -345,7 +349,7 @@ function Setup:stop_loading_screen()
 	end
 end
 
--- Lines: 499 to 691
+-- Lines: 511 to 703
 function Setup:_start_loading_screen()
 	if Global.is_loading then
 		Application:stack_dump_error("[LoadingEnvironment] Tried to start loading screen when it was already started.")
@@ -468,7 +472,7 @@ function Setup:_start_loading_screen()
 	Global.is_loading = true
 end
 
--- Lines: 693 to 778
+-- Lines: 705 to 790
 function Setup:_setup_loading_environment()
 	local env_map = {
 		deferred = {
@@ -506,7 +510,7 @@ function Setup:_setup_loading_environment()
 	Application:destroy_viewport(dummy_vp)
 end
 
--- Lines: 780 to 792
+-- Lines: 792 to 804
 function Setup:init_game()
 	if not Global.initialized then
 		Global.level_data = {}
@@ -521,7 +525,7 @@ function Setup:init_game()
 	return game_state_machine
 end
 
--- Lines: 795 to 819
+-- Lines: 807 to 834
 function Setup:init_finalize()
 	Setup.super.init_finalize(self)
 	game_state_machine:init_finilize()
@@ -547,9 +551,11 @@ function Setup:init_finalize()
 	if _G.IS_VR then
 		managers.vr:init_finalize()
 	end
+
+	managers.skirmish:init_finalize()
 end
 
--- Lines: 821 to 868
+-- Lines: 836 to 883
 function Setup:update(t, dt)
 	local main_t = TimerManager:main():time()
 	local main_dt = TimerManager:main():delta_time()
@@ -589,7 +595,7 @@ function Setup:update(t, dt)
 	TestAPIHelper.update(t, dt)
 end
 
--- Lines: 870 to 893
+-- Lines: 885 to 908
 function Setup:paused_update(t, dt)
 	self:_upd_unload_packages()
 
@@ -614,7 +620,7 @@ function Setup:paused_update(t, dt)
 	TestAPIHelper.update(t, dt)
 end
 
--- Lines: 896 to 906
+-- Lines: 911 to 921
 function Setup:end_update(t, dt)
 	if _G.IS_VR then
 		managers.vr:end_update(t, dt)
@@ -627,7 +633,7 @@ function Setup:end_update(t, dt)
 	end
 end
 
--- Lines: 909 to 919
+-- Lines: 924 to 934
 function Setup:paused_end_update(t, dt)
 	if _G.IS_VR then
 		managers.vr:end_update(t, dt)
@@ -640,45 +646,45 @@ function Setup:paused_end_update(t, dt)
 	end
 end
 
--- Lines: 922 to 926
+-- Lines: 937 to 941
 function Setup:pre_render()
 	if _G.IS_VR then
 		managers.vr:pre_render()
 	end
 end
 
--- Lines: 928 to 932
+-- Lines: 943 to 947
 function Setup:render()
 	if _G.IS_VR then
 		managers.vr:render()
 	end
 end
 
--- Lines: 936 to 940
+-- Lines: 951 to 955
 function Setup:end_frame(t, dt)
 	while self._end_frame_callbacks and #self._end_frame_callbacks > 0 do
 		table.remove(self._end_frame_callbacks)()
 	end
 end
 
--- Lines: 943 to 946
+-- Lines: 958 to 961
 function Setup:add_end_frame_callback(callback)
 	self._end_frame_callbacks = self._end_frame_callbacks or {}
 
 	table.insert(self._end_frame_callbacks, callback)
 end
 
--- Lines: 948 to 950
+-- Lines: 963 to 965
 function Setup:add_end_frame_clbk(func)
 	table.insert(self._end_frame_clbks, func)
 end
 
--- Lines: 952 to 954
+-- Lines: 967 to 969
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 end
 
--- Lines: 957 to 971
+-- Lines: 972 to 986
 function Setup:destroy()
 	if _G.IS_VR then
 		managers.vr:destroy()
@@ -694,7 +700,7 @@ function Setup:destroy()
 	end
 end
 
--- Lines: 974 to 997
+-- Lines: 989 to 1012
 function Setup:load_level(level, mission, world_setting, level_class_name, level_id)
 	if _G.IS_VR then
 		managers.vr:start_loading()
@@ -717,14 +723,14 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	self:exec(level)
 end
 
--- Lines: 999 to 1002
+-- Lines: 1014 to 1017
 function Setup:load_start_menu_lobby()
 	self:load_start_menu()
 
 	Global.load_start_menu_lobby = true
 end
 
--- Lines: 1005 to 1039
+-- Lines: 1020 to 1054
 function Setup:load_start_menu()
 	if _G.IS_VR then
 		self:set_main_thread_loading_screen_visible(true)
@@ -757,7 +763,7 @@ function Setup:load_start_menu()
 	managers.butler_mirroring = ButlerMirroringManager:new()
 end
 
--- Lines: 1041 to 1064
+-- Lines: 1056 to 1079
 function Setup:exec(context)
 	if managers.network then
 		if SystemInfo:platform() == Idstring("PS4") then
@@ -789,7 +795,7 @@ function Setup:exec(context)
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
--- Lines: 1066 to 1073
+-- Lines: 1081 to 1088
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
 
@@ -799,7 +805,7 @@ function Setup:quit()
 	end
 end
 
--- Lines: 1075 to 1082
+-- Lines: 1090 to 1097
 function Setup:restart()
 	local data = Global.level_data
 
@@ -810,7 +816,7 @@ function Setup:restart()
 	end
 end
 
--- Lines: 1084 to 1143
+-- Lines: 1099 to 1158
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -860,12 +866,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines: 1146 to 1147
+-- Lines: 1161 to 1162
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines: 1150 to 1156
+-- Lines: 1165 to 1171
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -875,14 +881,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines: 1158 to 1162
+-- Lines: 1173 to 1177
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines: 1164 to 1174
+-- Lines: 1179 to 1189
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -897,7 +903,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines: 1177 to 1178
+-- Lines: 1192 to 1193
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

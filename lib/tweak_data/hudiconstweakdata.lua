@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines: 9 to 2807
+-- Lines: 9 to 2813
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -10955,6 +10955,15 @@ function HudIconsTweakData:init()
 	self.sidebar_crimespree = self:create_next_icon(sidebar_atlas)
 	self.sidebar_filters = self:create_next_icon(sidebar_atlas)
 	self.sidebar_question = self:create_next_icon(sidebar_atlas)
+	self.sidebar_skirmish = {
+		texture = "guis/dlcs/skm/textures/pd2/crimenet/crimenet_sidebar_icon_skm",
+		texture_rect = {
+			0,
+			0,
+			64,
+			64
+		}
+	}
 	self.sidebar_side_jobs = {
 		texture = "guis/dlcs/sju/textures/pd2/crimenet_sidebar_sidejobs",
 		texture_rect = {
@@ -12797,7 +12806,7 @@ function HudIconsTweakData:init()
 end
 local atlas_data = nil
 
--- Lines: 2810 to 2813
+-- Lines: 2816 to 2819
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -12810,7 +12819,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines: 2815 to 2830
+-- Lines: 2821 to 2836
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -12836,7 +12845,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines: 2833 to 2837
+-- Lines: 2839 to 2843
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -12850,7 +12859,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines: 2840 to 2845
+-- Lines: 2846 to 2851
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -12861,7 +12870,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines: 2848 to 2853
+-- Lines: 2854 to 2859
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

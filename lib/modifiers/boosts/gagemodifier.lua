@@ -11,14 +11,3 @@ function GageModifier:init(modifier_tweak)
 	self._data = modifier_tweak.data
 end
 
--- Lines: 17 to 23
-function GageModifier:is_active()
-	for _, mod in ipairs(managers.crime_spree:active_gage_assets()) do
-		if mod._type == self._type then
-			return true
-		end
-	end
-
-	return false
-end
-

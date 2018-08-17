@@ -405,7 +405,7 @@ function MissionEndState:_load_start_menu(next_state)
 	setup:load_start_menu()
 end
 
--- Lines: 434 to 596
+-- Lines: 434 to 600
 function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_score, best_special_kills_peer_id, best_special_kills_score, best_accuracy_peer_id, best_accuracy_score, most_downs_peer_id, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	print("on_statistics_result begin")
 
@@ -443,7 +443,6 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 			local loose_cash = small_loot_payout or 0
 			local cleaner_cost = 0
 			local assets_cost = 0
-			local current_total_money = managers.money:total()
 
 			if job_payout > 0 then
 				local job_string = managers.localization:text("victory_stage_cash_summary_name_job", {
@@ -454,6 +453,14 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 			else
 				local stage_string = managers.localization:text("victory_stage_cash_summary_name", {stage_cash = managers.experience:cash_string(stage_payout)})
 				stage_cash_summary_string = stage_string
+			end
+
+			if managers.skirmish:is_skirmish() then
+				local skirmish_payout = payouts.skirmish_payout
+				stage_cash_summary_string = managers.localization:text("victory_stage_cash_summary_name_skirmish", {
+					wave = managers.skirmish:current_wave_number(),
+					skirmish_cash = managers.experience:cash_string(skirmish_payout)
+				})
 			end
 
 			if bonus_bags > 0 and bag_cash > 0 then
@@ -565,7 +572,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 	end
 end
 
--- Lines: 599 to 690
+-- Lines: 603 to 694
 function MissionEndState:generate_safehouse_statistics()
 	if not managers.custom_safehouse:unlocked() then
 		return
@@ -652,7 +659,7 @@ function MissionEndState:generate_safehouse_statistics()
 	self._statistics_data.stage_safehouse_summary = stage_safehouse_summary_string
 end
 
--- Lines: 692 to 698
+-- Lines: 696 to 702
 function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	if self._statistics_feeded then
 		self:generate_safehouse_statistics()
@@ -660,7 +667,7 @@ function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	end
 end
 
--- Lines: 701 to 727
+-- Lines: 705 to 731
 function MissionEndState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._mission_end_menu
 
@@ -691,12 +698,12 @@ function MissionEndState:_continue_blocked()
 	return false
 end
 
--- Lines: 730 to 732
+-- Lines: 734 to 736
 function MissionEndState:_continue()
 	self:continue()
 end
 
--- Lines: 734 to 750
+-- Lines: 738 to 754
 function MissionEndState:continue()
 	if self:_continue_blocked() then
 		return
@@ -715,7 +722,7 @@ function MissionEndState:continue()
 	end
 end
 
--- Lines: 752 to 760
+-- Lines: 756 to 764
 function MissionEndState:_clear_controller()
 	if not self._controller then
 		return
@@ -727,7 +734,7 @@ function MissionEndState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines: 762 to 774
+-- Lines: 766 to 778
 function MissionEndState:debug_continue()
 	if not self._success then
 		return
@@ -745,14 +752,14 @@ function MissionEndState:debug_continue()
 	end
 end
 
--- Lines: 776 to 779
+-- Lines: 780 to 783
 function MissionEndState:set_completion_bonus_done(done)
 	self._completion_bonus_done = done
 
 	self:_set_continue_button_text()
 end
 
--- Lines: 781 to 839
+-- Lines: 785 to 843
 function MissionEndState:update(t, dt)
 	managers.hud:update_endscreen_hud(t, dt)
 
@@ -813,27 +820,27 @@ function MissionEndState:update(t, dt)
 	self._in_focus = in_focus
 end
 
--- Lines: 841 to 842
+-- Lines: 845 to 846
 function MissionEndState:game_ended()
 	return true
 end
 
--- Lines: 845 to 847
+-- Lines: 849 to 851
 function MissionEndState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 849 to 851
+-- Lines: 853 to 855
 function MissionEndState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 853 to 855
+-- Lines: 857 to 859
 function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines: 858 to 1501
+-- Lines: 862 to 1505
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()

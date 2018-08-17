@@ -597,7 +597,7 @@ function GameSetup:init_finalize()
 	end
 end
 
--- Lines: 700 to 741
+-- Lines: 700 to 744
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -618,6 +618,7 @@ function GameSetup:update(t, dt)
 	managers.motion_path:update(t, dt)
 	managers.wait:update(t, dt)
 	managers.achievment:update(t, dt)
+	managers.skirmish:update(t, dt)
 
 	if script_data.level_script and script_data.level_script.update then
 		script_data.level_script:update(t, dt)
@@ -626,7 +627,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 743 to 753
+-- Lines: 746 to 756
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -638,7 +639,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 755 to 771
+-- Lines: 758 to 774
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -652,13 +653,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 773 to 778
+-- Lines: 776 to 781
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 780 to 804
+-- Lines: 783 to 810
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -681,9 +682,10 @@ function GameSetup:save(data)
 	managers.world_instance:sync_save(data)
 	managers.motion_path:save(data)
 	managers.crime_spree:sync_save(data)
+	managers.skirmish:sync_save(data)
 end
 
--- Lines: 806 to 831
+-- Lines: 812 to 840
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -707,9 +709,10 @@ function GameSetup:load(data)
 	managers.world_instance:sync_load(data)
 	managers.motion_path:load(data)
 	managers.crime_spree:sync_load(data)
+	managers.skirmish:sync_load(data)
 end
 
--- Lines: 864 to 865
+-- Lines: 873 to 874
 function GameSetup:_update_debug_input()
 end
 

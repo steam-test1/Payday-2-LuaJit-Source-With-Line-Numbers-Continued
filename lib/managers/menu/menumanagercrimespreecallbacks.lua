@@ -646,16 +646,7 @@ function MenuManager:show_gage_asset_desc(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 688 to 695
-function MenuCallbackHandler:choice_gamemode_filter(item)
-	Global.game_settings.gamemode_filter = item:value()
-
-	managers.user:set_setting("crimenet_gamemode_filter", item:value())
-	managers.menu:back()
-	managers.menu:open_node("crimenet_filters", {})
-end
-
--- Lines: 697 to 701
+-- Lines: 687 to 691
 function MenuCallbackHandler:choice_spree_difference_filter(item)
 	Global.game_settings.crime_spree_max_lobby_diff = item:value()
 
@@ -663,13 +654,13 @@ function MenuCallbackHandler:choice_spree_difference_filter(item)
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
--- Lines: 705 to 708
+-- Lines: 695 to 698
 function MenuCallbackHandler:debug_crime_spree_reset()
 	managers.crime_spree:reset_crime_spree()
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines: 711 to 730
+-- Lines: 701 to 720
 function MenuCallbackHandler:clear_crime_spree_record()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -692,14 +683,14 @@ function MenuCallbackHandler:clear_crime_spree_record()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 732 to 735
+-- Lines: 722 to 725
 function MenuCallbackHandler:_dialog_clear_crime_spree_record_yes()
 	Global.crime_spree.highest_level = nil
 
 	managers.savefile:save_progress()
 end
 
--- Lines: 737 to 738
+-- Lines: 727 to 728
 function MenuCallbackHandler:_dialog_clear_crime_spree_record_no()
 end
 

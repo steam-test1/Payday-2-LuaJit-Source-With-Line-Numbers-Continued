@@ -1488,7 +1488,38 @@ function JobManager:current_level_id()
 	return self:current_stage_data().level_id
 end
 
--- Lines: 1364 to 1373
+-- Lines: 1364 to 1365
+function JobManager:current_level_data()
+	return tweak_data.levels[self:current_level_id()]
+end
+
+-- Lines: 1369 to 1371
+function JobManager:current_level_wave_count()
+	local level_tweak = self:current_level_data()
+
+	return level_tweak and level_tweak.wave_count or math.huge
+end
+
+-- Lines: 1375 to 1390
+function JobManager:current_spawn_limit(special_type)
+	if not special_type then
+		return math.huge
+	end
+
+	local is_skirmish = self:current_level_data().group_ai_state == "skirmish"
+
+	if is_skirmish then
+		local limits_table = tweak_data.skirmish.special_unit_spawn_limits
+		local wave_number = managers.groupai:state():get_assault_number()
+		local limit_index = math.clamp(wave_number, 1, #limits_table)
+
+		return limits_table[limit_index][special_type] or math.huge
+	end
+
+	return tweak_data.group_ai.special_unit_spawn_limits[special_type] or math.huge
+end
+
+-- Lines: 1393 to 1402
 function JobManager:current_mission()
 	if not self._global.current_job then
 		return
@@ -1501,7 +1532,7 @@ function JobManager:current_mission()
 	return self:current_stage_data().mission or "none"
 end
 
--- Lines: 1376 to 1385
+-- Lines: 1405 to 1414
 function JobManager:current_world_setting()
 	if not self._global.current_job then
 		return
@@ -1514,7 +1545,7 @@ function JobManager:current_world_setting()
 	return self:current_stage_data().world_setting or nil
 end
 
--- Lines: 1388 to 1397
+-- Lines: 1417 to 1426
 function JobManager:current_briefing_dialog()
 	if not self._global.current_job then
 		return
@@ -1527,7 +1558,7 @@ function JobManager:current_briefing_dialog()
 	return managers.job:current_stage_data().briefing_dialog or managers.job:current_level_data().briefing_dialog
 end
 
--- Lines: 1400 to 1409
+-- Lines: 1429 to 1438
 function JobManager:current_briefing_id()
 	if not self._global.current_job then
 		return
@@ -1540,7 +1571,7 @@ function JobManager:current_briefing_id()
 	return managers.job:current_stage_data().briefing_id or managers.job:current_level_data().briefing_id
 end
 
--- Lines: 1412 to 1417
+-- Lines: 1441 to 1446
 function JobManager:current_mission_filter()
 	if not self._global.current_job then
 		return
@@ -1549,7 +1580,7 @@ function JobManager:current_mission_filter()
 	return self:current_stage_data().mission_filter
 end
 
--- Lines: 1420 to 1425
+-- Lines: 1449 to 1454
 function JobManager:current_level_data()
 	if not self._global.current_job then
 		return
@@ -1558,7 +1589,7 @@ function JobManager:current_level_data()
 	return tweak_data.levels[self:current_level_id()]
 end
 
--- Lines: 1428 to 1433
+-- Lines: 1457 to 1462
 function JobManager:current_contact_id()
 	if not self._global.current_job then
 		return
@@ -1567,7 +1598,7 @@ function JobManager:current_contact_id()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).contact
 end
 
--- Lines: 1436 to 1444
+-- Lines: 1465 to 1473
 function JobManager:current_contact_data()
 	if self._global.interupt_stage then
 		if tweak_data.levels[self._global.interupt_stage].bonus_escape then
@@ -1580,12 +1611,12 @@ function JobManager:current_contact_data()
 	return tweak_data.narrative.contacts[self:current_contact_id()]
 end
 
--- Lines: 1447 to 1448
+-- Lines: 1476 to 1477
 function JobManager:current_job_stars()
 	return math.ceil(tweak_data.narrative:job_data(self._global.current_job.job_id).jc / 10)
 end
 
--- Lines: 1451 to 1454
+-- Lines: 1480 to 1483
 function JobManager:current_difficulty_stars()
 	local difficulty = Global.game_settings.difficulty or "easy"
 	local difficulty_id = math.max(0, (tweak_data:difficulty_to_index(difficulty) or 0) - 2)
@@ -1593,7 +1624,7 @@ function JobManager:current_difficulty_stars()
 	return difficulty_id
 end
 
--- Lines: 1457 to 1460
+-- Lines: 1486 to 1489
 function JobManager:current_job_and_difficulty_stars()
 	local difficulty = Global.game_settings.difficulty or "easy"
 	local difficulty_id = math.max(0, (tweak_data:difficulty_to_index(difficulty) or 0) - 2)
@@ -1601,7 +1632,7 @@ function JobManager:current_job_and_difficulty_stars()
 	return math.clamp(self:current_job_stars() + difficulty_id, 1, 10)
 end
 
--- Lines: 1464 to 1472
+-- Lines: 1493 to 1501
 function JobManager:calculate_job_class(job_id, difficulty_id)
 	if job_id then
 		local job_jc = tweak_data.narrative:job_data(job_id).jc or 10
@@ -1615,7 +1646,7 @@ function JobManager:calculate_job_class(job_id, difficulty_id)
 	return 10
 end
 
--- Lines: 1475 to 1490
+-- Lines: 1504 to 1519
 function JobManager:get_min_jc_for_player()
 	local data = tweak_data.narrative.STARS[math.clamp(managers.experience:level_to_stars(), 1, 10)]
 
@@ -1638,7 +1669,7 @@ function JobManager:get_min_jc_for_player()
 	return min_jc
 end
 
--- Lines: 1493 to 1508
+-- Lines: 1522 to 1537
 function JobManager:get_max_jc_for_player()
 	local data = tweak_data.narrative.STARS[math.clamp(managers.experience:level_to_stars(), 1, 10)]
 
@@ -1661,14 +1692,14 @@ function JobManager:get_max_jc_for_player()
 	return max_jc
 end
 
--- Lines: 1514 to 1516
+-- Lines: 1543 to 1545
 function JobManager:is_forced()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 
 	return level_data and level_data.force_equipment
 end
 
--- Lines: 1522 to 1527
+-- Lines: 1551 to 1556
 function JobManager:is_current_job_competitive()
 	if not self._global.current_job then
 		return
@@ -1677,7 +1708,7 @@ function JobManager:is_current_job_competitive()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).competitive
 end
 
--- Lines: 1530 to 1535
+-- Lines: 1559 to 1564
 function JobManager:is_job_competitive_by_job_id(job_id)
 	if not job_id or not tweak_data.narrative.jobs[job_id] then
 		Application:error("[JobManager:is_job_competitive_by_job_id] no job id or no job", job_id)
@@ -1688,19 +1719,19 @@ function JobManager:is_job_competitive_by_job_id(job_id)
 	return tweak_data.narrative:job_data(job_id).competitive and true or false
 end
 
--- Lines: 1540 to 1543
+-- Lines: 1569 to 1572
 function JobManager:set_stage_success(success)
 	print("[JobManager:set_stage_success]", success, "on_last_stage", self:on_last_stage())
 
 	self._stage_success = success
 end
 
--- Lines: 1545 to 1546
+-- Lines: 1574 to 1575
 function JobManager:stage_success()
 	return self._stage_success
 end
 
--- Lines: 1551 to 1560
+-- Lines: 1580 to 1589
 function JobManager:check_ok_with_cooldown(job_id)
 	if not self._global.cooldown then
 		return true
@@ -1713,7 +1744,7 @@ function JobManager:check_ok_with_cooldown(job_id)
 	return self._global.cooldown[job_id] < TimerManager:wall_running():time()
 end
 
--- Lines: 1564 to 1573
+-- Lines: 1593 to 1602
 function JobManager:_check_add_to_cooldown()
 	if Network:is_server() and self._global.start_time then
 		local cooldown_time = (self._global.start_time + tweak_data.narrative.CONTRACT_COOLDOWN_TIME) - TimerManager:wall_running():time()
@@ -1725,13 +1756,13 @@ function JobManager:_check_add_to_cooldown()
 	end
 end
 
--- Lines: 1576 to 1580
+-- Lines: 1605 to 1609
 function JobManager:sync_save(data)
 	local state = {next_interupt_stage = self._global.next_interupt_stage}
 	data.JobManager = state
 end
 
--- Lines: 1583 to 1586
+-- Lines: 1612 to 1615
 function JobManager:sync_load(data)
 	local state = data.JobManager
 	self._global.next_interupt_stage = state.next_interupt_stage

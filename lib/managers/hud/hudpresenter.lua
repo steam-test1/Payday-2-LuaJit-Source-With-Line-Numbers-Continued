@@ -78,13 +78,13 @@ function HUDPresenter:present(params)
 	end
 end
 
--- Lines: 102 to 167
+-- Lines: 99 to 137
 function HUDPresenter:_present_information(params)
 	local present_panel = self._hud_panel:child("present_panel")
 	local title = self._bg_box:child("title")
 	local text = self._bg_box:child("text")
 
-	title:set_text(utf8.to_upper(params.title or "ERROR"))
+	title:set_text(utf8.to_upper(params.title or ""))
 	text:set_text(utf8.to_upper(params.text))
 	title:set_visible(false)
 	text:set_visible(false)
@@ -110,16 +110,19 @@ function HUDPresenter:_present_information(params)
 		managers.hud._sound_source:post_event(params.event)
 	end
 
-	present_panel:animate(callback(self, self, "_animate_present_information"), {
-		done_cb = callback(self, self, "_present_done"),
+	local callback_params = {
+		has_title = params.title ~= nil,
 		seconds = params.time or 4,
-		use_icon = params.icon
-	})
+		use_icon = params.icon,
+		done_cb = callback(self, self, "_present_done")
+	}
+
+	present_panel:animate(callback(self, self, "_animate_present_information"), callback_params)
 
 	self._presenting = true
 end
 
--- Lines: 171 to 180
+-- Lines: 141 to 150
 function HUDPresenter:_present_done()
 	self._presenting = false
 	local queued = table.remove(self._present_queue, 1)
@@ -129,12 +132,12 @@ function HUDPresenter:_present_done()
 	end
 end
 
--- Lines: 183 to 185
+-- Lines: 153 to 155
 function HUDPresenter:_do_it(queued)
 	self:_present_information(queued)
 end
 
--- Lines: 187 to 221
+-- Lines: 157 to 199
 function HUDPresenter:_animate_present_information(present_panel, params)
 	present_panel:set_visible(true)
 	present_panel:set_alpha(1)
@@ -142,16 +145,24 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 	local title = self._bg_box:child("title")
 	local text = self._bg_box:child("text")
 
-	-- Lines: 194 to 217
+	if params.has_title then
+		self._bg_box:set_height(68)
+		text:set_top(math.ceil(self._bg_box:height() / 2) - 2)
+	else
+		self._bg_box:set_height(34)
+		text:set_center_y(math.ceil(self._bg_box:height() / 2))
+	end
+
+	-- Lines: 172 to 195
 	local function open_done()
-		title:set_visible(true)
+		title:set_visible(params.has_title)
 		text:set_visible(true)
 		title:animate(callback(self, self, "_animate_show_text"), text)
 		wait(params.seconds)
 		title:animate(callback(self, self, "_animate_hide_text"), text)
 		wait(0.5)
 
-		-- Lines: 209 to 213
+		-- Lines: 187 to 191
 		local function close_done()
 			present_panel:set_visible(false)
 			self:_present_done()
@@ -164,7 +175,7 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 	self._bg_box:animate(callback(nil, _G, "HUDBGBox_animate_open_center"), nil, self._bg_box:w(), open_done)
 end
 
--- Lines: 223 to 237
+-- Lines: 201 to 215
 function HUDPresenter:_animate_show_text(title, text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T
@@ -182,7 +193,7 @@ function HUDPresenter:_animate_show_text(title, text)
 	text:set_alpha(1)
 end
 
--- Lines: 239 to 255
+-- Lines: 217 to 233
 function HUDPresenter:_animate_hide_text(title, text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T

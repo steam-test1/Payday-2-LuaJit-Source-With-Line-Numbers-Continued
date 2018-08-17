@@ -162,6 +162,7 @@ function MissionManager:init(...)
 		"keycard",
 		"start_assault",
 		"end_assault",
+		"end_assault_late",
 		"police_called",
 		"police_weapons_hot",
 		"civilian_killed",
@@ -425,7 +426,7 @@ CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines: 438 to 454
+-- Lines: 440 to 456
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)

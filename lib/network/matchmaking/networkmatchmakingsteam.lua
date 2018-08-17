@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = tweak_data.max_players
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "payday2_v1.92.670"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "payday2_v1.92.675"
 
 -- Lines: 71 to 80
 function NetworkMatchMakingSTEAM:init()
@@ -92,7 +92,7 @@ function NetworkMatchMakingSTEAM:_save_globals()
 	Global.steam.match.lobby_return_count = self._lobby_return_count
 end
 
--- Lines: 158 to 194
+-- Lines: 158 to 198
 function NetworkMatchMakingSTEAM:load_user_filters()
 	Global.game_settings.search_friends_only = managers.user:get_setting("crimenet_filter_friends_only")
 	Global.game_settings.search_appropriate_jobs = managers.user:get_setting("crimenet_filter_level_appopriate")
@@ -102,6 +102,8 @@ function NetworkMatchMakingSTEAM:load_user_filters()
 	Global.game_settings.search_one_down_lobbies = managers.user:get_setting("crimenet_filter_one_down")
 	Global.game_settings.gamemode_filter = managers.user:get_setting("crimenet_gamemode_filter")
 	Global.game_settings.crime_spree_max_lobby_diff = managers.user:get_setting("crime_spree_lobby_diff")
+	Global.game_settings.search_only_weekly_skirmish = managers.user:get_setting("crimenet_filter_weekly_skirmish")
+	Global.game_settings.skirmish_wave_filter = managers.user:get_setting("crimenet_filter_skirmish_wave")
 	local new_servers = managers.user:get_setting("crimenet_filter_new_servers_only")
 	local in_lobby = managers.user:get_setting("crimenet_filter_in_lobby")
 	local max_servers = managers.user:get_setting("crimenet_filter_max_servers")
@@ -121,7 +123,7 @@ function NetworkMatchMakingSTEAM:load_user_filters()
 	managers.network.matchmake:add_lobby_filter("job_plan", tactic, "equal")
 end
 
--- Lines: 197 to 226
+-- Lines: 201 to 234
 function NetworkMatchMakingSTEAM:reset_filters()
 	local usr = managers.user
 
@@ -132,6 +134,8 @@ function NetworkMatchMakingSTEAM:reset_filters()
 	usr:set_setting("crimenet_gamemode_filter", usr:get_default_setting("crimenet_gamemode_filter"))
 	usr:set_setting("crime_spree_lobby_diff", usr:get_default_setting("crime_spree_lobby_diff"))
 	usr:set_setting("crimenet_filter_modded", usr:get_default_setting("crimenet_filter_modded"))
+	usr:set_setting("crimenet_filter_weekly_skirmish", usr:get_default_setting("crimenet_filter_weekly_skirmish"))
+	usr:set_setting("crimenet_filter_skirmish_wave", usr:get_default_setting("crimenet_filter_skirmish_wave"))
 	usr:set_setting("crimenet_filter_one_down", usr:get_default_setting("crimenet_filter_one_down"))
 	usr:set_setting("crimenet_filter_new_servers_only", usr:get_default_setting("crimenet_filter_new_servers_only"))
 	usr:set_setting("crimenet_filter_in_lobby", usr:get_default_setting("crimenet_filter_in_lobby"))
@@ -144,12 +148,12 @@ function NetworkMatchMakingSTEAM:reset_filters()
 	self:load_user_filters()
 end
 
--- Lines: 228 to 230
+-- Lines: 236 to 238
 function NetworkMatchMakingSTEAM:set_join_invite_pending(lobby_id)
 	self._join_invite_pending = lobby_id
 end
 
--- Lines: 232 to 268
+-- Lines: 240 to 276
 function NetworkMatchMakingSTEAM:update()
 	Steam:update()
 
@@ -166,7 +170,7 @@ function NetworkMatchMakingSTEAM:update()
 
 			Application:error("RE-ENTERING LOBBY", self.lobby_handler:id())
 
-			-- Lines: 246 to 256
+			-- Lines: 254 to 264
 			local function _join_lobby_result_f(result, handler)
 				if result == "success" then
 					Application:error("SUCCESS!")
@@ -194,7 +198,7 @@ function NetworkMatchMakingSTEAM:update()
 	end
 end
 
--- Lines: 270 to 285
+-- Lines: 278 to 293
 function NetworkMatchMakingSTEAM:leave_game()
 	self._server_rpc = nil
 
@@ -212,26 +216,26 @@ function NetworkMatchMakingSTEAM:leave_game()
 	print("NetworkMatchMakingSTEAM:leave_game()")
 end
 
--- Lines: 288 to 289
+-- Lines: 296 to 297
 function NetworkMatchMakingSTEAM:_get_mutators_from_lobby(lobby)
 	return managers.mutators:get_mutators_from_lobby(lobby)
 end
 
--- Lines: 293 to 376
+-- Lines: 301 to 391
 function NetworkMatchMakingSTEAM:get_friends_lobbies()
 	local lobbies = {}
 	local num_updated_lobbies = 0
 
-	-- Lines: 297 to 298
+	-- Lines: 305 to 306
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
 	end
 
-	-- Lines: 300 to 301
+	-- Lines: 308 to 309
 	local function empty()
 	end
 
-	-- Lines: 302 to 348
+	-- Lines: 310 to 363
 	local function f(updated_lobby)
 		updated_lobby:setup_callback(empty)
 		print("NetworkMatchMakingSTEAM:get_friends_lobbies f")
@@ -278,6 +282,13 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 							attributes_data.one_down = tonumber(lobby_one_down)
 						end
 
+						local skirmish_key = lobby:key_value("skirmish")
+
+						if is_key_valid(skirmish_key) then
+							attributes_data.skirmish = tonumber(skirmish_key)
+							attributes_data.skirmish_wave = lobby:key_value("skirmish_wave")
+						end
+
 						table.insert(info.attribute_list, attributes_data)
 					end
 				end
@@ -318,47 +329,47 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 	end
 end
 
--- Lines: 378 to 379
+-- Lines: 393 to 394
 function NetworkMatchMakingSTEAM:search_friends_only()
 	return self._search_friends_only
 end
 
--- Lines: 382 to 383
+-- Lines: 397 to 398
 function NetworkMatchMakingSTEAM:distance_filter()
 	return self._distance_filter
 end
 
--- Lines: 386 to 388
+-- Lines: 401 to 403
 function NetworkMatchMakingSTEAM:set_distance_filter(filter)
 	self._distance_filter = filter
 end
 
--- Lines: 391 to 392
+-- Lines: 406 to 407
 function NetworkMatchMakingSTEAM:get_lobby_data()
 	return self.lobby_handler and self.lobby_handler:get_lobby_data()
 end
 
--- Lines: 395 to 396
+-- Lines: 410 to 411
 function NetworkMatchMakingSTEAM:get_lobby_return_count()
 	return self._lobby_return_count
 end
 
--- Lines: 399 to 401
+-- Lines: 414 to 416
 function NetworkMatchMakingSTEAM:set_lobby_return_count(lobby_return_count)
 	self._lobby_return_count = lobby_return_count
 end
 
--- Lines: 405 to 406
+-- Lines: 420 to 421
 function NetworkMatchMakingSTEAM:lobby_filters()
 	return self._lobby_filters
 end
 
--- Lines: 409 to 411
+-- Lines: 424 to 426
 function NetworkMatchMakingSTEAM:set_lobby_filters(filters)
 	self._lobby_filters = filters or {}
 end
 
--- Lines: 413 to 415
+-- Lines: 428 to 430
 function NetworkMatchMakingSTEAM:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
 		key = key,
@@ -367,22 +378,22 @@ function NetworkMatchMakingSTEAM:add_lobby_filter(key, value, comparision_type)
 	}
 end
 
--- Lines: 417 to 418
+-- Lines: 432 to 433
 function NetworkMatchMakingSTEAM:get_lobby_filter(key)
 	return self._lobby_filters[key] and self._lobby_filters[key].value or false
 end
 
--- Lines: 422 to 423
+-- Lines: 437 to 438
 function NetworkMatchMakingSTEAM:difficulty_filter()
 	return self._difficulty_filter
 end
 
--- Lines: 426 to 428
+-- Lines: 441 to 443
 function NetworkMatchMakingSTEAM:set_difficulty_filter(filter)
 	self._difficulty_filter = filter
 end
 
--- Lines: 430 to 583
+-- Lines: 445 to 620
 function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 	self._search_friends_only = friends_only
 
@@ -390,7 +401,7 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 		return
 	end
 
-	-- Lines: 437 to 438
+	-- Lines: 452 to 453
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
 	end
@@ -399,7 +410,7 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 		self:get_friends_lobbies()
 	else
 
-		-- Lines: 446 to 497
+		-- Lines: 461 to 519
 		local function refresh_lobby()
 			if not self.browser then
 				return
@@ -444,6 +455,13 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 							attributes_data.one_down = tonumber(lobby_one_down)
 						end
 
+						local skirmish_key = lobby:key_value("skirmish")
+
+						if is_key_valid(skirmish_key) then
+							attributes_data.skirmish = tonumber(skirmish_key)
+							attributes_data.skirmish_wave = lobby:key_value("skirmish_wave")
+						end
+
 						table.insert(info.attribute_list, attributes_data)
 					end
 				end
@@ -479,7 +497,7 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 
 		local use_filters = not no_filters
 
-		if Global.game_settings.gamemode_filter == GamemodeCrimeSpree.id then
+		if Global.game_settings.gamemode_filter ~= GamemodeStandard.id then
 			use_filters = false
 		end
 
@@ -507,6 +525,10 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 		end
 
 		if not no_filters then
+			if false then
+				-- Nothing
+			end
+
 			if Global.game_settings.gamemode_filter == GamemodeCrimeSpree.id then
 				local min_level = 0
 
@@ -516,8 +538,18 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 				end
 
 				self.browser:set_lobby_filter("crime_spree", min_level, "equalto_or_greater_than")
+			elseif Global.game_settings.gamemode_filter == "skirmish" then
+				local min = SkirmishManager.LOBBY_NORMAL
+
+				if Global.game_settings.search_only_weekly_skirmish then
+					min = SkirmishManager.LOBBY_WEEKLY
+				end
+
+				self.browser:set_lobby_filter("skirmish", min, "equalto_or_greater_than")
+				self.browser:set_lobby_filter("skirmish_wave", Global.game_settings.skirmish_wave_filter or 99, "equalto_less_than")
 			elseif Global.game_settings.gamemode_filter == GamemodeStandard.id then
 				self.browser:set_lobby_filter("crime_spree", -1, "equalto_less_than")
+				self.browser:set_lobby_filter("skirmish", 0, "equalto_less_than")
 			end
 		end
 
@@ -540,19 +572,19 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only, no_filters)
 	end
 end
 
--- Lines: 585 to 588
+-- Lines: 622 to 625
 function NetworkMatchMakingSTEAM:search_lobby_done()
 	managers.system_menu:close("find_server")
 
 	self.browser = nil
 end
 
--- Lines: 591 to 592
+-- Lines: 628 to 629
 function NetworkMatchMakingSTEAM:game_owner_name()
 	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_name")
 end
 
--- Lines: 605 to 690
+-- Lines: 642 to 727
 function NetworkMatchMakingSTEAM:is_server_ok(friends_only, room, attributes_list, is_invite)
 	local attributes_numbers = attributes_list.numbers
 	local attributes_mutators = attributes_list.mutators
@@ -619,17 +651,17 @@ function NetworkMatchMakingSTEAM:is_server_ok(friends_only, room, attributes_lis
 	return true
 end
 
--- Lines: 693 to 745
+-- Lines: 730 to 782
 function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 	managers.menu:show_joining_lobby_dialog()
 
 	local lobby = Steam:lobby(room_id)
 
-	-- Lines: 696 to 697
+	-- Lines: 733 to 734
 	local function empty()
 	end
 
-	-- Lines: 698 to 736
+	-- Lines: 735 to 773
 	local function f()
 		print("NetworkMatchMakingSTEAM:join_server_with_check f")
 		lobby:setup_callback(empty)
@@ -681,7 +713,7 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 	end
 end
 
--- Lines: 747 to 765
+-- Lines: 784 to 802
 function NetworkMatchMakingSTEAM._on_member_left(steam_id, status)
 	if not managers.network:session() then
 		return
@@ -706,7 +738,7 @@ function NetworkMatchMakingSTEAM._on_member_left(steam_id, status)
 	managers.network:session():on_peer_left_lobby(peer)
 end
 
--- Lines: 767 to 789
+-- Lines: 804 to 826
 function NetworkMatchMakingSTEAM._on_memberstatus_change(memberstatus)
 	print("[NetworkMatchMakingSTEAM._on_memberstatus_change]", memberstatus)
 
@@ -717,30 +749,30 @@ function NetworkMatchMakingSTEAM._on_memberstatus_change(memberstatus)
 	end
 end
 
--- Lines: 792 to 793
+-- Lines: 829 to 830
 function NetworkMatchMakingSTEAM._on_data_update(...)
 end
 
--- Lines: 795 to 798
+-- Lines: 832 to 835
 function NetworkMatchMakingSTEAM._on_chat_message(user, message)
 	print("[NetworkMatchMakingSTEAM._on_chat_message]", user, message)
 	NetworkMatchMakingSTEAM._handle_chat_message(user, message)
 end
 
--- Lines: 799 to 804
+-- Lines: 836 to 841
 function NetworkMatchMakingSTEAM._handle_chat_message(user, message)
 	local s = "" .. message
 
 	managers.chat:receive_message_by_name(ChatManager.GLOBAL, user:name(), s)
 end
 
--- Lines: 806 to 981
+-- Lines: 843 to 1021
 function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 	if not skip_showing_dialog then
 		managers.menu:show_joining_lobby_dialog()
 	end
 
-	-- Lines: 821 to 978
+	-- Lines: 858 to 1018
 	local function f(result, handler)
 		print("[NetworkMatchMakingSTEAM:join_server:f]", result, handler)
 		managers.system_menu:close("join_server")
@@ -783,7 +815,9 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 				end
 			end
 
-			-- Lines: 863 to 971
+			managers.skirmish:on_joined_server(lobby_data, self.lobby_handler:get_lobby_data())
+
+			-- Lines: 903 to 1011
 			local function joined_game(res, level_index, difficulty_index, state_index)
 				if res ~= "JOINED_LOBBY" and res ~= "JOINED_GAME" then
 					managers.crime_spree:disable_crime_spree_gamemode()
@@ -877,16 +911,16 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 	Steam:join_lobby(room_id, f)
 end
 
--- Lines: 984 to 985
+-- Lines: 1024 to 1025
 function NetworkMatchMakingSTEAM:send_join_invite(friend)
 end
 
--- Lines: 988 to 990
+-- Lines: 1028 to 1030
 function NetworkMatchMakingSTEAM:set_server_attributes(settings)
 	self:set_attributes(settings)
 end
 
--- Lines: 992 to 1029
+-- Lines: 1032 to 1069
 function NetworkMatchMakingSTEAM:create_lobby(settings)
 	self._num_players = nil
 	local dialog_data = {
@@ -898,7 +932,7 @@ function NetworkMatchMakingSTEAM:create_lobby(settings)
 
 	managers.system_menu:show(dialog_data)
 
-	-- Lines: 1005 to 1027
+	-- Lines: 1045 to 1067
 	local function f(result, handler)
 		print("Create lobby callback!!", result, handler)
 
@@ -931,7 +965,7 @@ function NetworkMatchMakingSTEAM:create_lobby(settings)
 	return Steam:create_lobby(f, NetworkMatchMakingSTEAM.OPEN_SLOTS, "invisible")
 end
 
--- Lines: 1032 to 1040
+-- Lines: 1072 to 1080
 function NetworkMatchMakingSTEAM:set_num_players(num)
 	print("NetworkMatchMakingSTEAM:set_num_players", num)
 
@@ -944,7 +978,7 @@ function NetworkMatchMakingSTEAM:set_num_players(num)
 	end
 end
 
--- Lines: 1054 to 1067
+-- Lines: 1094 to 1107
 function NetworkMatchMakingSTEAM:set_server_state(state)
 	if self._lobby_attributes then
 		local state_id = tweak_data:server_state_to_index(state)
@@ -960,7 +994,7 @@ function NetworkMatchMakingSTEAM:set_server_state(state)
 	end
 end
 
--- Lines: 1069 to 1076
+-- Lines: 1109 to 1116
 function NetworkMatchMakingSTEAM:set_server_joinable(state)
 	print("[NetworkMatchMakingSTEAM:set_server_joinable]", state)
 
@@ -971,17 +1005,17 @@ function NetworkMatchMakingSTEAM:set_server_joinable(state)
 	end
 end
 
--- Lines: 1078 to 1079
+-- Lines: 1118 to 1119
 function NetworkMatchMakingSTEAM:is_server_joinable()
 	return self._server_joinable
 end
 
--- Lines: 1082 to 1083
+-- Lines: 1122 to 1123
 function NetworkMatchMakingSTEAM:server_state_name()
 	return tweak_data:index_to_server_state(self._lobby_attributes.state)
 end
 
--- Lines: 1088 to 1112
+-- Lines: 1128 to 1152
 function NetworkMatchMakingSTEAM:build_mods_list()
 	if MenuCallbackHandler:is_modded_client() then
 		local mods = nil
@@ -998,7 +1032,7 @@ function NetworkMatchMakingSTEAM:build_mods_list()
 	end
 end
 
--- Lines: 1114 to 1122
+-- Lines: 1154 to 1162
 function NetworkMatchMakingSTEAM:get_modded_lobby_filter()
 	if MenuCallbackHandler:is_modded_client() then
 		return 0, "equalto_or_greater_than"
@@ -1010,7 +1044,7 @@ function NetworkMatchMakingSTEAM:get_modded_lobby_filter()
 	end
 end
 
--- Lines: 1124 to 1130
+-- Lines: 1164 to 1170
 function NetworkMatchMakingSTEAM:get_allow_mods_setting()
 	if MenuCallbackHandler:is_modded_client() then
 		return 1
@@ -1019,7 +1053,7 @@ function NetworkMatchMakingSTEAM:get_allow_mods_setting()
 	end
 end
 
--- Lines: 1132 to 1138
+-- Lines: 1172 to 1178
 function NetworkMatchMakingSTEAM:get_allow_mods_filter()
 	if MenuCallbackHandler:is_modded_client() then
 		return 1, "equal"
@@ -1028,7 +1062,7 @@ function NetworkMatchMakingSTEAM:get_allow_mods_filter()
 	end
 end
 
--- Lines: 1152 to 1201
+-- Lines: 1192 to 1244
 function NetworkMatchMakingSTEAM:set_attributes(settings)
 	if not self.lobby_handler then
 		return
@@ -1067,6 +1101,7 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 
 	managers.mutators:apply_matchmake_attributes(lobby_attributes)
 	managers.crime_spree:apply_matchmake_attributes(lobby_attributes)
+	managers.skirmish:apply_matchmake_attributes(lobby_attributes)
 
 	self._lobby_attributes = lobby_attributes
 
@@ -1074,7 +1109,7 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(permissions[settings.numbers[3]])
 end
 
--- Lines: 1203 to 1214
+-- Lines: 1246 to 1257
 function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
 	return {
 		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
@@ -1090,7 +1125,7 @@ function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
 	}
 end
 
--- Lines: 1217 to 1227
+-- Lines: 1260 to 1270
 function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingSTEAM::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
