@@ -93,8 +93,12 @@ function SkirmishManager:current_wave_number()
 	end
 end
 
--- Lines: 101 to 106
+-- Lines: 100 to 109
 function SkirmishManager:sync_start_assault(wave_number)
+	if not self:is_skirmish() then
+		return
+	end
+
 	for i = (self._synced_wave_number or 0) + 1, wave_number, 1 do
 		self:_apply_modifiers_for_wave(i)
 	end
@@ -102,7 +106,7 @@ function SkirmishManager:sync_start_assault(wave_number)
 	self._synced_wave_number = wave_number
 end
 
--- Lines: 108 to 112
+-- Lines: 111 to 115
 function SkirmishManager:on_start_assault()
 	local wave_number = managers.groupai:state():get_assault_number()
 
@@ -110,7 +114,7 @@ function SkirmishManager:on_start_assault()
 	self:update_matchmake_attributes()
 end
 
--- Lines: 114 to 121
+-- Lines: 117 to 124
 function SkirmishManager:on_end_assault()
 	local new_ransom_amount = tweak_data.skirmish.ransom_amounts[self:current_wave_number()]
 
@@ -121,7 +125,7 @@ function SkirmishManager:on_end_assault()
 	end
 end
 
--- Lines: 123 to 132
+-- Lines: 126 to 135
 function SkirmishManager:set_ransom_amount(amount)
 	self._current_ransom_amount = amount
 
@@ -132,12 +136,12 @@ function SkirmishManager:set_ransom_amount(amount)
 	})
 end
 
--- Lines: 134 to 135
+-- Lines: 137 to 138
 function SkirmishManager:current_ransom_amount()
 	return self._current_ransom_amount or 0
 end
 
--- Lines: 138 to 152
+-- Lines: 141 to 155
 function SkirmishManager:_has_players_in_custody()
 	local session = managers.network:session()
 	local all_peers = session and session:all_peers()
@@ -155,7 +159,7 @@ function SkirmishManager:_has_players_in_custody()
 	return false
 end
 
--- Lines: 155 to 160
+-- Lines: 158 to 163
 function SkirmishManager:check_gameover_conditions()
 	if not self:is_skirmish() or not self._game_over_delay then
 		return false
@@ -164,7 +168,7 @@ function SkirmishManager:check_gameover_conditions()
 	return self._game_over_delay < Application:time()
 end
 
--- Lines: 163 to 178
+-- Lines: 166 to 181
 function SkirmishManager:update()
 	if self:_has_players_in_custody() then
 		if not self._game_over_delay then
@@ -183,20 +187,20 @@ function SkirmishManager:update()
 	end
 end
 
--- Lines: 180 to 185
+-- Lines: 183 to 188
 function SkirmishManager:sync_save(data)
 	local state = {wave_number = self:current_wave_number()}
 	data.SkirmishManager = state
 end
 
--- Lines: 187 to 190
+-- Lines: 190 to 193
 function SkirmishManager:sync_load(data)
 	local state = data.SkirmishManager
 
 	self:sync_start_assault(state.wave_number)
 end
 
--- Lines: 192 to 199
+-- Lines: 195 to 202
 function SkirmishManager:apply_matchmake_attributes(lobby_attributes)
 	lobby_attributes.skirmish = 0
 
@@ -206,12 +210,12 @@ function SkirmishManager:apply_matchmake_attributes(lobby_attributes)
 	end
 end
 
--- Lines: 201 to 203
+-- Lines: 204 to 206
 function SkirmishManager:update_matchmake_attributes()
 	managers.network.matchmake:set_server_attributes(MenuCallbackHandler:get_matchmake_attributes())
 end
 
--- Lines: 205 to 210
+-- Lines: 208 to 213
 function SkirmishManager:on_joined_server(lobby_data)
 	if not lobby_data then
 		return
@@ -220,12 +224,12 @@ function SkirmishManager:on_joined_server(lobby_data)
 	Global.game_settings.weekly_skirmish = tonumber(lobby_data.skirmish) == SkirmishManager.LOBBY_WEEKLY
 end
 
--- Lines: 212 to 214
+-- Lines: 215 to 217
 function SkirmishManager:on_left_lobby()
 	Global.game_settings.weekly_skirmish = nil
 end
 
--- Lines: 216 to 227
+-- Lines: 219 to 230
 function SkirmishManager:save(data)
 	local save = {}
 
@@ -241,7 +245,7 @@ function SkirmishManager:save(data)
 	data.skirmish = save
 end
 
--- Lines: 229 to 242
+-- Lines: 232 to 245
 function SkirmishManager:load(data)
 	local load = data.skirmish
 
@@ -258,7 +262,7 @@ function SkirmishManager:load(data)
 	end
 end
 
--- Lines: 244 to 250
+-- Lines: 247 to 253
 function SkirmishManager:_do_load(data)
 	self._global.claimed_rewards = data.claimed_rewards
 
@@ -268,7 +272,7 @@ function SkirmishManager:_do_load(data)
 	end
 end
 
--- Lines: 252 to 287
+-- Lines: 255 to 290
 function SkirmishManager:activate_weekly_skirmish(weekly_skirmish_string, force)
 	local active_weekly = self._global.active_weekly or {}
 	local weekly_skirmish_key = Idstring(weekly_skirmish_string):key()
@@ -303,12 +307,12 @@ function SkirmishManager:activate_weekly_skirmish(weekly_skirmish_string, force)
 	end
 end
 
--- Lines: 289 to 290
+-- Lines: 292 to 293
 function SkirmishManager:active_weekly()
 	return self._global.active_weekly
 end
 
--- Lines: 293 to 299
+-- Lines: 296 to 302
 function SkirmishManager:weekly_time_left_params()
 	local diff = math.max(self:active_weekly().end_timestamp - os.time(), 0)
 
@@ -319,7 +323,7 @@ function SkirmishManager:weekly_time_left_params()
 	}
 end
 
--- Lines: 302 to 307
+-- Lines: 305 to 310
 function SkirmishManager:weekly_progress()
 	if not self._global.weekly_progress then
 		return 0
@@ -328,12 +332,12 @@ function SkirmishManager:weekly_progress()
 	return Application:digest_value(self._global.weekly_progress, false)
 end
 
--- Lines: 310 to 312
+-- Lines: 313 to 315
 function SkirmishManager:block_weekly_progress()
 	self._weekly_progress_blocked = true
 end
 
--- Lines: 314 to 323
+-- Lines: 317 to 326
 function SkirmishManager:on_weekly_completed()
 	if self._weekly_progress_blocked then
 		return
@@ -346,7 +350,7 @@ function SkirmishManager:on_weekly_completed()
 	end
 end
 
--- Lines: 325 to 334
+-- Lines: 328 to 337
 function SkirmishManager:unclaimed_rewards()
 	local tier_to_id = {
 		3,
@@ -364,7 +368,7 @@ function SkirmishManager:unclaimed_rewards()
 	return unclaimed
 end
 
--- Lines: 337 to 377
+-- Lines: 340 to 380
 function SkirmishManager:claim_reward(id)
 	local id_to_tier = {
 		[3.0] = 1,
@@ -405,7 +409,7 @@ function SkirmishManager:claim_reward(id)
 	managers.savefile:save_progress()
 end
 
--- Lines: 379 to 380
+-- Lines: 382 to 383
 function SkirmishManager:claimed_reward_by_id(id)
 	return self._global.weekly_rewards and self._global.weekly_rewards[id]
 end
