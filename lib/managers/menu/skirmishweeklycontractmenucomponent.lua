@@ -1,6 +1,6 @@
 SkirmishWeeklyContractMenuComponent = SkirmishWeeklyContractMenuComponent or class()
 
--- Lines: 3 to 199
+-- Lines: 3 to 200
 function SkirmishWeeklyContractMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -205,7 +205,8 @@ function SkirmishWeeklyContractMenuComponent:init(ws, fullscreen_ws, node)
 		h = (height - (reward_panel:bottom() + 10)) - 16
 	})
 	local show_progress_warning = job_data.state == tweak_data:server_state_to_index("in_game")
-	self._details_page = SkirmishWeeklyContractDetails:new(details_panel, show_progress_warning)
+	local modifiers = job_data.skirmish_weekly_modifiers and string.split(job_data.skirmish_weekly_modifiers, ";") or managers.skirmish:weekly_modifiers()
+	self._details_page = SkirmishWeeklyContractDetails:new(details_panel, show_progress_warning, modifiers)
 
 	managers.menu_component:disable_crimenet()
 	managers.menu:active_menu().input:deactivate_controller_mouse()
@@ -215,14 +216,14 @@ function SkirmishWeeklyContractMenuComponent:init(ws, fullscreen_ws, node)
 	end
 end
 
--- Lines: 201 to 205
+-- Lines: 202 to 206
 function SkirmishWeeklyContractMenuComponent:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 	managers.menu:active_menu().input:activate_controller_mouse()
 end
 
--- Lines: 207 to 212
+-- Lines: 208 to 213
 function SkirmishWeeklyContractMenuComponent:input_focus()
 	local input = managers.menu:active_menu().input
 
@@ -233,11 +234,11 @@ function SkirmishWeeklyContractMenuComponent:input_focus()
 	return false
 end
 
--- Lines: 215 to 222
+-- Lines: 216 to 223
 local function redirect_to_member(class, member_name, functions)
 	for _, name in pairs(functions) do
 
-		-- Lines: 217 to 219
+		-- Lines: 218 to 220
 		class[name] = function (self, ...)
 			local member = self[member_name]
 
@@ -260,12 +261,13 @@ redirect_to_member(SkirmishWeeklyContractMenuComponent, "_details_page", {
 
 SkirmishWeeklyContractDetails = SkirmishWeeklyContractDetails or class(MenuGuiComponentGeneric)
 
--- Lines: 234 to 249
-function SkirmishWeeklyContractDetails:init(panel, show_progress_warning)
+-- Lines: 235 to 251
+function SkirmishWeeklyContractDetails:init(panel, show_progress_warning, modifiers)
 	self._init_layer = panel:layer()
 	self.make_fine_text = BlackMarketGui.make_fine_text
 	self._rec_round_object = NewSkillTreeGui._rec_round_object
 	self._show_progress_warning = show_progress_warning
+	self._modifier_list = modifiers
 	self._panel = panel
 	self._tabs = {}
 	self._tabs_data = {}
@@ -275,7 +277,7 @@ function SkirmishWeeklyContractDetails:init(panel, show_progress_warning)
 	self:set_layer(10)
 end
 
--- Lines: 251 to 261
+-- Lines: 253 to 263
 function SkirmishWeeklyContractDetails:_setup()
 	self._panel:clear()
 	self:_add_panels()
@@ -284,7 +286,7 @@ function SkirmishWeeklyContractDetails:_setup()
 	self:set_active_page(1)
 end
 
--- Lines: 263 to 285
+-- Lines: 265 to 287
 function SkirmishWeeklyContractDetails:_add_panels()
 	local tab_h = tweak_data.menu.pd2_medium_font_size + 10
 	self._page_panel = self._panel:panel({
@@ -307,7 +309,7 @@ function SkirmishWeeklyContractDetails:_add_panels()
 	}})
 end
 
--- Lines: 287 to 296
+-- Lines: 289 to 298
 function SkirmishWeeklyContractDetails:populate_tabs_data(tabs_data)
 	table.insert(tabs_data, {
 		name_id = "menu_weekly_skirmish_tab_description",
@@ -319,11 +321,11 @@ function SkirmishWeeklyContractDetails:populate_tabs_data(tabs_data)
 	})
 end
 
--- Lines: 298 to 299
+-- Lines: 300 to 301
 function SkirmishWeeklyContractDetails:close()
 end
 
--- Lines: 301 to 349
+-- Lines: 303 to 351
 function SkirmishWeeklyContractDetails:set_active_page(new_index, play_sound)
 	if new_index == self._active_page or new_index <= 0 or #self._tabs < new_index then
 		return false
@@ -386,14 +388,14 @@ function SkirmishWeeklyContractDetails:set_active_page(new_index, play_sound)
 	return true
 end
 
--- Lines: 352 to 356
+-- Lines: 354 to 358
 function SkirmishWeeklyContractDetails:next_page()
 	if self._active_page ~= nil then
 		return self:set_active_page(self._active_page + 1)
 	end
 end
 
--- Lines: 358 to 362
+-- Lines: 360 to 364
 function SkirmishWeeklyContractDetails:previous_page()
 	if self._active_page ~= nil then
 		return self:set_active_page(self._active_page - 1)
@@ -401,49 +403,49 @@ function SkirmishWeeklyContractDetails:previous_page()
 end
 SkirmishWeeklyContractPage = SkirmishWeeklyContractPage or class()
 
--- Lines: 368 to 369
+-- Lines: 370 to 371
 function SkirmishWeeklyContractPage:init(page_id, page_panel, fullscreen_panel, gui)
 end
 
--- Lines: 371 to 372
+-- Lines: 373 to 374
 function SkirmishWeeklyContractPage:set_active(active)
 end
 
--- Lines: 374 to 375
+-- Lines: 376 to 377
 function SkirmishWeeklyContractPage:mouse_moved(button, x, y)
 end
 
--- Lines: 377 to 378
+-- Lines: 379 to 380
 function SkirmishWeeklyContractPage:mouse_pressed(button, x, y)
 end
 
--- Lines: 380 to 381
+-- Lines: 382 to 383
 function SkirmishWeeklyContractPage:mouse_released(button, x, y)
 end
 
--- Lines: 383 to 384
+-- Lines: 385 to 386
 function SkirmishWeeklyContractPage:mouse_wheel_up(x, y)
 end
 
--- Lines: 386 to 387
+-- Lines: 388 to 389
 function SkirmishWeeklyContractPage:mouse_wheel_down(x, y)
 end
 
--- Lines: 389 to 390
+-- Lines: 391 to 392
 function SkirmishWeeklyContractPage:mouse_clicked(o, button, x, y)
 end
 
--- Lines: 392 to 393
+-- Lines: 394 to 395
 function SkirmishWeeklyContractPage:update()
 end
 
--- Lines: 395 to 396
+-- Lines: 397 to 398
 function SkirmishWeeklyContractPage:get_legend()
 	return {}
 end
 SkirmishWeeklyContractDescriptionPage = SkirmishWeeklyContractDescriptionPage or class(SkirmishWeeklyContractPage)
 
--- Lines: 403 to 424
+-- Lines: 405 to 426
 function SkirmishWeeklyContractDescriptionPage:init(page_id, page_panel, fullscreen_panel, gui)
 	local desc_text = managers.localization:text("menu_weekly_skirmish_desc")
 	local color_start = nil
@@ -467,18 +469,18 @@ function SkirmishWeeklyContractDescriptionPage:init(page_id, page_panel, fullscr
 	managers.menu_component:make_color_text(self._desc, tweak_data.screen_colors.important_1)
 end
 
--- Lines: 426 to 428
+-- Lines: 428 to 430
 function SkirmishWeeklyContractDescriptionPage:set_active(active)
 	self._desc:set_visible(active)
 end
 SkirmishWeeklyContractModifiersPage = SkirmishWeeklyContractModifiersPage or class(SkirmishWeeklyContractPage)
 
--- Lines: 434 to 444
+-- Lines: 436 to 446
 function SkirmishWeeklyContractModifiersPage:init(page_id, page_panel, fullscreen_panel, gui)
 	self._gui = gui
 	self._modifier_list = SkirmishModifierList:new(page_panel, {
 		visible = false,
-		modifiers = managers.skirmish:active_weekly().modifiers
+		modifiers = gui._modifier_list
 	})
 
 	if not managers.menu:is_pc_controller() then
@@ -486,31 +488,31 @@ function SkirmishWeeklyContractModifiersPage:init(page_id, page_panel, fullscree
 	end
 end
 
--- Lines: 446 to 449
+-- Lines: 448 to 451
 function SkirmishWeeklyContractModifiersPage:_setup_controller_input(page_panel)
 	self._controller_scroll_input = 0
 
 	page_panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines: 451 to 455
+-- Lines: 453 to 457
 function SkirmishWeeklyContractModifiersPage:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("right") then
 		self._controller_scroll_input = axis_vector.y
 	end
 end
 
--- Lines: 457 to 459
+-- Lines: 459 to 461
 function SkirmishWeeklyContractModifiersPage:mouse_wheel_up(x, y)
 	self._modifier_list:scroll(x, y, 1)
 end
 
--- Lines: 461 to 463
+-- Lines: 463 to 465
 function SkirmishWeeklyContractModifiersPage:mouse_wheel_down(x, y)
 	self._modifier_list:scroll(x, y, -1)
 end
 
--- Lines: 465 to 472
+-- Lines: 467 to 474
 function SkirmishWeeklyContractModifiersPage:update(t, dt)
 	if not managers.menu:is_pc_controller() then
 		local y = self._controller_scroll_input
@@ -521,7 +523,7 @@ function SkirmishWeeklyContractModifiersPage:update(t, dt)
 	end
 end
 
--- Lines: 474 to 476
+-- Lines: 476 to 478
 function SkirmishWeeklyContractModifiersPage:set_active(active)
 	self._modifier_list:set_visible(active)
 end

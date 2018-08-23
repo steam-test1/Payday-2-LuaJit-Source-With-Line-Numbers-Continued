@@ -200,22 +200,26 @@ function SkirmishManager:sync_load(data)
 	self:sync_start_assault(state.wave_number)
 end
 
--- Lines: 195 to 202
+-- Lines: 195 to 206
 function SkirmishManager:apply_matchmake_attributes(lobby_attributes)
 	lobby_attributes.skirmish = 0
 
 	if self:is_skirmish() then
 		lobby_attributes.skirmish = self:is_weekly_skirmish() and SkirmishManager.LOBBY_WEEKLY or SkirmishManager.LOBBY_NORMAL
 		lobby_attributes.skirmish_wave = math.max(self:current_wave_number() or 0, 1)
+
+		if self:is_weekly_skirmish() then
+			lobby_attributes.skirmish_weekly_modifiers = string.join(";", self._global.active_weekly.modifiers)
+		end
 	end
 end
 
--- Lines: 204 to 206
+-- Lines: 208 to 210
 function SkirmishManager:update_matchmake_attributes()
 	managers.network.matchmake:set_server_attributes(MenuCallbackHandler:get_matchmake_attributes())
 end
 
--- Lines: 208 to 213
+-- Lines: 212 to 217
 function SkirmishManager:on_joined_server(lobby_data)
 	if not lobby_data then
 		return
@@ -224,12 +228,12 @@ function SkirmishManager:on_joined_server(lobby_data)
 	Global.game_settings.weekly_skirmish = tonumber(lobby_data.skirmish) == SkirmishManager.LOBBY_WEEKLY
 end
 
--- Lines: 215 to 217
+-- Lines: 219 to 221
 function SkirmishManager:on_left_lobby()
 	Global.game_settings.weekly_skirmish = nil
 end
 
--- Lines: 219 to 230
+-- Lines: 223 to 234
 function SkirmishManager:save(data)
 	local save = {}
 
@@ -245,7 +249,7 @@ function SkirmishManager:save(data)
 	data.skirmish = save
 end
 
--- Lines: 232 to 245
+-- Lines: 236 to 249
 function SkirmishManager:load(data)
 	local load = data.skirmish
 
@@ -262,7 +266,7 @@ function SkirmishManager:load(data)
 	end
 end
 
--- Lines: 247 to 253
+-- Lines: 251 to 257
 function SkirmishManager:_do_load(data)
 	self._global.claimed_rewards = data.claimed_rewards
 
@@ -272,7 +276,7 @@ function SkirmishManager:_do_load(data)
 	end
 end
 
--- Lines: 255 to 290
+-- Lines: 259 to 294
 function SkirmishManager:activate_weekly_skirmish(weekly_skirmish_string, force)
 	local active_weekly = self._global.active_weekly or {}
 	local weekly_skirmish_key = Idstring(weekly_skirmish_string):key()
@@ -307,12 +311,23 @@ function SkirmishManager:activate_weekly_skirmish(weekly_skirmish_string, force)
 	end
 end
 
--- Lines: 292 to 293
+-- Lines: 296 to 297
 function SkirmishManager:active_weekly()
 	return self._global.active_weekly
 end
 
--- Lines: 296 to 302
+-- Lines: 300 to 306
+function SkirmishManager:weekly_modifiers()
+	if self:is_weekly_skirmish() and Network:is_client() then
+		local modifiers_string = managers.network.matchmake.lobby_handler:get_lobby_data("skirmish_weekly_modifiers")
+
+		return string.split(modifiers_string, ";")
+	end
+
+	return self._global.active_weekly.modifiers
+end
+
+-- Lines: 309 to 315
 function SkirmishManager:weekly_time_left_params()
 	local diff = math.max(self:active_weekly().end_timestamp - os.time(), 0)
 
@@ -323,7 +338,7 @@ function SkirmishManager:weekly_time_left_params()
 	}
 end
 
--- Lines: 305 to 310
+-- Lines: 318 to 323
 function SkirmishManager:weekly_progress()
 	if not self._global.weekly_progress then
 		return 0
@@ -332,12 +347,12 @@ function SkirmishManager:weekly_progress()
 	return Application:digest_value(self._global.weekly_progress, false)
 end
 
--- Lines: 313 to 315
+-- Lines: 326 to 328
 function SkirmishManager:block_weekly_progress()
 	self._weekly_progress_blocked = true
 end
 
--- Lines: 317 to 326
+-- Lines: 330 to 339
 function SkirmishManager:on_weekly_completed()
 	if self._weekly_progress_blocked then
 		return
@@ -350,7 +365,7 @@ function SkirmishManager:on_weekly_completed()
 	end
 end
 
--- Lines: 328 to 337
+-- Lines: 341 to 350
 function SkirmishManager:unclaimed_rewards()
 	local tier_to_id = {
 		3,
@@ -368,7 +383,7 @@ function SkirmishManager:unclaimed_rewards()
 	return unclaimed
 end
 
--- Lines: 340 to 380
+-- Lines: 353 to 393
 function SkirmishManager:claim_reward(id)
 	local id_to_tier = {
 		[3.0] = 1,
@@ -409,7 +424,7 @@ function SkirmishManager:claim_reward(id)
 	managers.savefile:save_progress()
 end
 
--- Lines: 382 to 383
+-- Lines: 395 to 396
 function SkirmishManager:claimed_reward_by_id(id)
 	return self._global.weekly_rewards and self._global.weekly_rewards[id]
 end
