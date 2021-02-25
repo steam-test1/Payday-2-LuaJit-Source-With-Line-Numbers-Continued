@@ -282,7 +282,7 @@ end
 
 local mvec1 = Vector3()
 
--- Lines 312-372
+-- Lines 312-402
 function PlayerCamera:set_rotation(rot)
 	if _G.IS_VR then
 		self._camera_object:set_rotation(rot)
@@ -315,19 +315,36 @@ function PlayerCamera:set_rotation(rot)
 	end
 
 	sync_yaw = math.floor(255 * sync_yaw / 360)
-	local sync_pitch = math.clamp(rot:pitch(), -85, 85) + 85
+	local sync_pitch = nil
+
+	if _G.IS_VR then
+		sync_pitch = math.clamp(rot:pitch(), -30, 60) + 85
+	else
+		sync_pitch = math.clamp(rot:pitch(), -85, 85) + 85
+	end
+
 	sync_pitch = math.floor(127 * sync_pitch / 170)
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
 	if tweak_data.network then
 		local update_network = tweak_data.network.camera.network_sync_delta_t < sync_dt and angle_delta > 0 or tweak_data.network.camera.network_angle_delta < angle_delta
-
-		if self._forced_next_sync_t and t < self._forced_next_sync_t then
-			update_network = false
-		end
+		local locked_look_dir = self._locked_look_dir_t and t < self._locked_look_dir_t
 
 		if update_network then
-			self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+			if _G.IS_VR then
+				if locked_look_dir then
+					if self._unit:hand():arm_simulation_enabled() then
+						self._unit:hand():send_filtered("set_look_dir", sync_yaw, sync_pitch)
+						self._unit:hand():send_inv_filtered("set_look_dir", self._locked_yaw, self._locked_pitch)
+					else
+						self._unit:network():send("set_look_dir", self._locked_yaw, self._locked_pitch)
+					end
+				else
+					self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+				end
+			else
+				self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+			end
 
 			self._sync_dir.yaw = sync_yaw
 			self._sync_dir.pitch = sync_pitch
@@ -336,22 +353,24 @@ function PlayerCamera:set_rotation(rot)
 	end
 end
 
--- Lines 374-376
-function PlayerCamera:set_forced_sync_delay(t)
-	self._forced_next_sync_t = t
+-- Lines 404-408
+function PlayerCamera:set_timed_locked_look_dir(t, yaw, pitch)
+	self._locked_look_dir_t = t
+	self._locked_yaw = yaw
+	self._locked_pitch = pitch
 end
 
--- Lines 380-385
+-- Lines 412-417
 function PlayerCamera:set_FOV(fov_value)
 	self._camera_object:set_fov(fov_value)
 end
 
--- Lines 389-391
+-- Lines 421-423
 function PlayerCamera:viewport()
 	return self._vp
 end
 
--- Lines 395-405
+-- Lines 427-437
 function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	if not self._shakers then
 		return
@@ -362,7 +381,7 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	end
 end
 
--- Lines 409-416
+-- Lines 441-448
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	if _G.IS_VR then
 		return
@@ -371,12 +390,12 @@ function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	return self._shaker:play(effect, amplitude or 1, frequency or 1, offset or 0)
 end
 
--- Lines 418-420
+-- Lines 450-452
 function PlayerCamera:stop_shaker(id)
 	self._shaker:stop_immediately(id)
 end
 
--- Lines 422-424
+-- Lines 454-456
 function PlayerCamera:shaker()
 	return self._shaker
 end

@@ -2,12 +2,13 @@ require("lib/units/beings/player/PlayerHandStateMachine")
 require("lib/units/beings/player/PlayerWatch")
 require("lib/input/HandStateMachine")
 require("lib/input/HandStatesPlayer")
+require("lib/utils/ArmSimulator")
 
 PlayerHand = PlayerHand or class()
 PlayerHand.RIGHT = 1
 PlayerHand.LEFT = 2
 
--- Lines 13-19
+-- Lines 16-22
 function PlayerHand.hand_id(arg)
 	if arg == PlayerHand.RIGHT or string.lower(arg) == "right" then
 		return PlayerHand.RIGHT
@@ -16,12 +17,12 @@ function PlayerHand.hand_id(arg)
 	end
 end
 
--- Lines 21-23
+-- Lines 24-26
 function PlayerHand.other_hand_id(arg)
 	return 3 - PlayerHand.hand_id(arg)
 end
 
--- Lines 25-155
+-- Lines 28-34
 function PlayerHand:init(unit)
 	print("[PlayerHand] Init")
 
@@ -29,6 +30,12 @@ function PlayerHand:init(unit)
 		PackageManager:load("packages/vr_base")
 	end
 
+	self._unit = unit
+end
+
+-- Lines 36-174
+function PlayerHand:post_init()
+	local unit = self._unit
 	local camera = unit:camera()
 	local camera_unit = camera:camera_unit()
 	local controller = unit:base():controller()
@@ -57,7 +64,6 @@ function PlayerHand:init(unit)
 	self._vr_controller = controller:get_controller("vr")
 	local base_rotation = camera_unit:base():base_rotation()
 	self._base_rotation = base_rotation
-	self._unit = unit
 	self._unit_movement_ext = unit:movement()
 	self._camera_unit = camera_unit
 	self._belt_yaw = base_rotation:yaw()
@@ -146,9 +152,23 @@ function PlayerHand:init(unit)
 	self._belt_size_changed_clbk = callback(self, self, "on_belt_size_changed")
 
 	managers.vr:add_setting_changed_callback("belt_size", self._belt_size_changed_clbk)
+
+	self._default_weapon_hand_changed_clbk = callback(self, self, "on_default_weapon_hand_changed")
+
+	managers.vr:add_setting_changed_callback("default_weapon_hand", self._default_weapon_hand_changed_clbk)
+
+	self._arm_peer_filter = self._arm_peer_filter or {}
+	self._arm_simulator = ArmSimulator:new("gamedata/arms", self._vr_controller)
+	self._sync_listener_key = {}
+
+	managers.network:add_event_listener(self._sync_listener_key, "session_peer_sync_complete", callback(self, self, "on_peer_sync_complete"))
+
+	self._arm_animation_changed_clbk = callback(self, self, "on_arm_animation_changed")
+
+	managers.vr:add_setting_changed_callback("arm_animation", self._arm_animation_changed_clbk)
 end
 
--- Lines 157-167
+-- Lines 176-192
 function PlayerHand:destroy()
 	print("[PlayerHand] Destroy")
 
@@ -161,9 +181,59 @@ function PlayerHand:destroy()
 
 	managers.vr:remove_setting_changed_callback("default_tablet_hand", self._tablet_hand_changed_clbk)
 	managers.vr:remove_setting_changed_callback("belt_size", self._belt_size_changed_clbk)
+	managers.vr:remove_setting_changed_callback("default_weapon_hand", self._default_weapon_hand_changed_clbk)
+	managers.vr:remove_setting_changed_callback("arm_animation", self._arm_animation_changed_clbk)
+	managers.network:remove_event_listener(self._sync_listener_key)
 end
 
--- Lines 169-181
+-- Lines 196-199
+function PlayerHand:primary_hand_id()
+	local primary_hand_id = self:get_active_hand_id("weapon") or self:get_active_hand_id("melee") or self.hand_id(managers.vr:get_setting("default_weapon_hand") or "right")
+
+	return primary_hand_id
+end
+
+-- Lines 201-207
+function PlayerHand:sync_state()
+	local weapon_hand_id = self:primary_hand_id()
+
+	if self._weapon_hand_id ~= weapon_hand_id then
+		self._unit:network():send("set_primary_hand", weapon_hand_id - 1)
+
+		self._weapon_hand_id = weapon_hand_id
+	end
+end
+
+-- Lines 209-223
+function PlayerHand:on_peer_sync_complete(peer)
+	if self._arm_simulator:enabled() then
+		peer:send_queued_sync("set_arm_setting", self._unit, ArmSetting.SET_ARM_ANIMATOR_ENABLED, 1)
+
+		local weapon_hand_id = self:primary_hand_id()
+
+		peer:send_queued_sync("set_primary_hand", self._unit, weapon_hand_id - 1)
+
+		local melee_hand_id = self:get_active_hand_id("melee")
+
+		if melee_hand_id then
+			peer:send_queued_sync("sync_melee_start", self._unit, melee_hand_id)
+		end
+	end
+end
+
+-- Lines 226-230
+function PlayerHand:on_default_weapon_hand_changed(setting, old, new)
+	self:sync_state()
+end
+
+-- Lines 233-237
+function PlayerHand:on_arm_animation_changed(setting, old, new)
+	if new == false then
+		self._unit:network():send("set_arm_setting", ArmSetting.SET_ARM_ANIMATOR_ENABLED, 0)
+	end
+end
+
+-- Lines 240-252
 function PlayerHand:on_tablet_hand_changed(setting, old, new)
 	self:hand_unit(new):damage():run_sequence_simple("show_gadgets")
 	self:hand_unit(old):damage():run_sequence_simple("hide_gadgets")
@@ -180,29 +250,29 @@ function PlayerHand:on_tablet_hand_changed(setting, old, new)
 	end
 end
 
--- Lines 183-185
+-- Lines 254-256
 function PlayerHand:on_belt_size_changed(setting, old, new)
 	HUDManagerVR.link_belt(managers.hud:belt_workspace(), self._belt_unit)
 end
 
--- Lines 187-191
+-- Lines 258-262
 function PlayerHand:_set_hand_state(hand, state, params)
 	if self._hand_data[hand].state_machine:can_change_state_by_name(state) then
 		self._hand_data[hand].state_machine:change_state_by_name(state, params)
 	end
 end
 
--- Lines 193-195
+-- Lines 264-266
 function PlayerHand:_change_hand_to_default(hand, params)
 	self._hand_data[hand].state_machine:change_to_default(params)
 end
 
--- Lines 197-199
+-- Lines 268-270
 function PlayerHand:current_hand_state(hand)
 	return self._hand_data[hand].state_machine:current_state()
 end
 
--- Lines 201-207
+-- Lines 272-278
 function PlayerHand:get_default_hand_id(state)
 	for id, hand_data in ipairs(self._hand_data) do
 		if hand_data.state_machine:default_state_name() == state then
@@ -211,12 +281,12 @@ function PlayerHand:get_default_hand_id(state)
 	end
 end
 
--- Lines 209-211
+-- Lines 280-282
 function PlayerHand:set_default_state(hand, state, force_change)
 	self._hand_data[self.hand_id(hand)].state_machine:set_default_state(state, force_change)
 end
 
--- Lines 213-215
+-- Lines 284-286
 function PlayerHand:set_custom_belt_height_ratio(height)
 	self._custom_belt_height_ratio = height
 end
@@ -224,18 +294,18 @@ end
 local pen = Draw:pen()
 local prints = 20
 
--- Lines 220-223
+-- Lines 291-294
 function PlayerHand:set_precision_mode(precision_mode, length)
 	self._precision_mode = precision_mode
 	self._precision_mode_length = length
 end
 
--- Lines 225-227
+-- Lines 296-298
 function PlayerHand:precision_mode()
 	return self._precision_mode
 end
 
--- Lines 229-383
+-- Lines 300-454
 function PlayerHand:_update_controllers(t, dt)
 	local hmd_pos = VRManager:hmd_position()
 	local current_height = hmd_pos.z
@@ -399,9 +469,42 @@ end
 local tablet_normal = Vector3(-1, 0, 0)
 local rotated_tablet_normal = Vector3(0, 0, 0)
 
--- Lines 387-402
+-- Lines 459-486
+function PlayerHand:aim_target(hand, weapon, origin, melee_hand)
+	if weapon and hand ~= melee_hand then
+		local fo = weapon:base():fire_object()
+		local rotation = weapon:rotation()
+		local wa = (fo:position() - weapon:position()):rotate_with(rotation:inverse())
+		local weapon_id = alive(weapon) and weapon:base().name_id
+		local tweak = tweak_data.vr:get_offset_by_id(weapon_id)
+		local position = self._hand_data[hand].position
+		local fop = position
+		local fod = rotation:y()
+
+		if tweak and tweak.position then
+			fop = fop + tweak.position:rotate_with(rotation)
+		end
+
+		fop = fop + wa:rotate_with(rotation)
+		local target = fop + fod * 3000 - origin
+
+		return target, wa
+	end
+end
+
+-- Lines 489-492
+function PlayerHand:set_moving(moving, dir)
+	self._moving = moving
+	self._moving_dir = dir
+end
+
+-- Lines 495-549
 function PlayerHand:update(unit, t, dt)
 	if self._block_input then
+		if self._arm_simulator:enabled() then
+			self:_update_arms(t, dt)
+		end
+
 		return
 	end
 
@@ -417,9 +520,127 @@ function PlayerHand:update(unit, t, dt)
 	end
 
 	self:update_tablet(t, dt, hmd_forward)
+
+	local weapon_main = self._unit:inventory():equipped_unit()
+
+	if weapon_main then
+		local melee_hand = self:get_active_hand_id("melee")
+		local weapon_main_base = weapon_main:base()
+		local weapon_second = nil
+
+		if weapon_main_base.AKIMBO then
+			weapon_second = weapon_main_base._second_gun
+		end
+
+		local player_pos = self._unit:position() + Vector3(0, 0, 150)
+		local t1, a1 = self:aim_target(self._weapon_hand_id, weapon_main, player_pos, melee_hand)
+		local t2, a2 = self:aim_target(self.other_hand_id(self._weapon_hand_id), weapon_second, player_pos, melee_hand)
+		local target = nil
+
+		if weapon_main_base:enabled() then
+			if self._weapon_hand_id == 1 then
+				target = {
+					t1,
+					a1,
+					t2,
+					a2,
+					swap = false
+				}
+			else
+				target = {
+					t2,
+					a2,
+					t1,
+					a1,
+					swap = true
+				}
+			end
+		end
+
+		if self._arm_simulator:enabled() then
+			self._arm_simulator:update(t, dt, self._base_rotation, target, self._moving, self._moving_dir)
+			self:_update_arms(t, dt)
+		end
+	end
 end
 
--- Lines 404-461
+INV_ARM_SIMULATION_RATE = 1 / tweak_data.vr.arm_simulator.rate
+
+-- Lines 555-565
+function PlayerHand:send_filtered(message, ...)
+	local session = managers.network:session()
+
+	if session then
+		local peers = session:peers()
+
+		for peer_id, peer in pairs(peers) do
+			if self._arm_peer_filter and not self._arm_peer_filter[peer_id] then
+				peer:send_queued_sync(message, self._unit, ...)
+			end
+		end
+	end
+end
+
+-- Lines 567-577
+function PlayerHand:send_inv_filtered(message, ...)
+	local session = managers.network:session()
+
+	if session then
+		local peers = session:peers()
+
+		for peer_id, peer in pairs(peers) do
+			if self._arm_peer_filter and self._arm_peer_filter[peer_id] then
+				peer:send_queued_sync(message, self._unit, ...)
+			end
+		end
+	end
+end
+
+-- Lines 579-581
+function PlayerHand:arm_simulation_enabled()
+	return self._arm_simulator:enabled()
+end
+
+-- Lines 583-597
+function PlayerHand:_update_arms(t, dt)
+	self._next_sync_t = self._next_sync_t or 0
+
+	if self._next_sync_t < t then
+		local arm_sim = self._arm_simulator
+		local pose = arm_sim:pose()
+
+		if not pose then
+			return
+		end
+
+		self._arm_frame_index = self._arm_frame_index or 0
+
+		self:send_filtered("set_arm_pose", self._arm_frame_index, pose.shoulder[1], pose.arm[1], pose.fore_arm[1], pose.hand[1], pose.shoulder[2], pose.arm[2], pose.fore_arm[2], pose.hand[2])
+
+		self._arm_frame_index = (self._arm_frame_index + 1) % 256
+		self._next_sync_t = t + INV_ARM_SIMULATION_RATE
+	end
+end
+
+-- Lines 599-608
+function PlayerHand:set_arm_setting(peer_id, setting_id, setting_param)
+	if setting_id == ArmSetting.SET_ARM_ANIMATOR_PRESENT then
+		print("Peer ", peer_id, " requested arm sync ", setting_param > 0 and "enable" or "disable")
+
+		if setting_param > 0 then
+			self._arm_peer_filter[peer_id] = nil
+		else
+			self._arm_peer_filter[peer_id] = true
+		end
+	end
+end
+
+-- Lines 612-614
+function PlayerHand:arm_simulator()
+	return self._arm_simulator
+end
+
+-- Lines 616-673
 function PlayerHand:update_tablet(t, dt, hmd_forward)
 	local default_tablet_hand = self.hand_id(managers.vr:get_setting("default_tablet_hand") or "left")
 	local other_hand = self.other_hand_id(default_tablet_hand)
@@ -462,7 +683,7 @@ function PlayerHand:update_tablet(t, dt, hmd_forward)
 	end
 end
 
--- Lines 463-470
+-- Lines 675-682
 function PlayerHand:hand_position(hand)
 	if hand == 1 or hand == "right" then
 		return self._hand_data[PlayerHand.RIGHT].position
@@ -473,7 +694,7 @@ function PlayerHand:hand_position(hand)
 	return nil
 end
 
--- Lines 472-479
+-- Lines 684-691
 function PlayerHand:finger_position(hand)
 	if hand == 1 or hand == "right" then
 		return self._hand_data[PlayerHand.RIGHT].finger_position
@@ -484,7 +705,7 @@ function PlayerHand:finger_position(hand)
 	return nil
 end
 
--- Lines 481-488
+-- Lines 693-700
 function PlayerHand:hand_rotation(hand)
 	if hand == 1 or hand == "right" then
 		return self._hand_data[PlayerHand.RIGHT].rotation
@@ -495,7 +716,7 @@ function PlayerHand:hand_rotation(hand)
 	return nil
 end
 
--- Lines 490-497
+-- Lines 702-709
 function PlayerHand:raw_hand_rotation(hand)
 	if hand == 1 or hand == "right" then
 		return self._hand_data[PlayerHand.RIGHT].rotation_raw
@@ -506,7 +727,7 @@ function PlayerHand:raw_hand_rotation(hand)
 	return nil
 end
 
--- Lines 499-506
+-- Lines 711-718
 function PlayerHand:hand_unit(hand)
 	if hand == 1 or hand == "right" then
 		return self._hand_data[PlayerHand.RIGHT].unit
@@ -517,19 +738,19 @@ function PlayerHand:hand_unit(hand)
 	return nil
 end
 
--- Lines 508-511
+-- Lines 720-723
 function PlayerHand:mask_hand_id()
 	local default_tablet_hand = self.hand_id(managers.vr:get_setting("default_tablet_hand") or "left")
 
 	return self.other_hand_id(default_tablet_hand)
 end
 
--- Lines 513-515
+-- Lines 725-727
 function PlayerHand:mask_hand_unit()
 	return self:hand_unit(self:mask_hand_id())
 end
 
--- Lines 517-524
+-- Lines 729-736
 function PlayerHand:link_mask(mask_unit)
 	local default_weapon_hand = self.hand_id(managers.vr:get_setting("default_weapon_hand") or "right")
 
@@ -549,7 +770,7 @@ function PlayerHand:link_mask(mask_unit)
 	self._mask_unit = mask_unit
 end
 
--- Lines 526-538
+-- Lines 738-750
 function PlayerHand:unlink_mask(next_state)
 	local default_weapon_hand = self.hand_id(managers.vr:get_setting("default_weapon_hand") or "right")
 	self._mask_unit = nil
@@ -559,7 +780,7 @@ function PlayerHand:unlink_mask(next_state)
 	self:_change_hand_to_default(self.other_hand_id(default_weapon_hand))
 end
 
--- Lines 540-551
+-- Lines 752-763
 function PlayerHand:set_point_at_tablet(point)
 	local non_tablet_hand_id = self.other_hand_id(managers.vr:get_setting("default_tablet_hand") or "left")
 
@@ -576,7 +797,7 @@ function PlayerHand:set_point_at_tablet(point)
 	end
 end
 
--- Lines 553-568
+-- Lines 765-780
 function PlayerHand:set_belt_active(active, hand)
 	if not hand then
 		self:set_belt_active(active, PlayerHand.RIGHT)
@@ -596,17 +817,17 @@ function PlayerHand:set_belt_active(active, hand)
 	end
 end
 
--- Lines 570-572
+-- Lines 782-784
 function PlayerHand:warp()
 	return self._hand_data[PlayerHand.LEFT].unit:warp()
 end
 
--- Lines 574-576
+-- Lines 786-788
 function PlayerHand:watch()
 	return self._watch
 end
 
--- Lines 578-599
+-- Lines 790-811
 function PlayerHand:interaction_ids()
 	local weapon_hand_id = self:get_active_hand_id("weapon")
 
@@ -638,7 +859,7 @@ function PlayerHand:interaction_ids()
 	end
 end
 
--- Lines 601-607
+-- Lines 813-819
 function PlayerHand:interaction_units()
 	local units = {}
 
@@ -649,7 +870,7 @@ function PlayerHand:interaction_units()
 	return units
 end
 
--- Lines 609-616
+-- Lines 821-828
 function PlayerHand:start_show_intrest(blocked, hand)
 	if self:current_hand_state(hand):name() == "ready" then
 		self:current_hand_state(hand):set_blocked(blocked)
@@ -660,24 +881,24 @@ function PlayerHand:start_show_intrest(blocked, hand)
 	self._vr_controller:trigger_haptic_pulse(hand - 1, 0, 700)
 end
 
--- Lines 618-622
+-- Lines 830-834
 function PlayerHand:end_show_intrest(hand)
 	if self:current_hand_state(hand):name() == "ready" then
 		self:_change_hand_to_default(hand)
 	end
 end
 
--- Lines 624-626
+-- Lines 836-838
 function PlayerHand:intimidate(hand)
 	self:_set_hand_state(hand, "point")
 end
 
--- Lines 628-630
+-- Lines 840-842
 function PlayerHand:belt_unit()
 	return self._belt_unit
 end
 
--- Lines 632-659
+-- Lines 844-871
 function PlayerHand:set_carry(carry, skip_hand)
 	self._carry = carry
 
@@ -723,7 +944,7 @@ function PlayerHand:set_carry(carry, skip_hand)
 	end
 end
 
--- Lines 664-669
+-- Lines 876-881
 function PlayerHand:get_active_hand(item)
 	local id = self:get_active_hand_id(item)
 
@@ -732,7 +953,7 @@ function PlayerHand:get_active_hand(item)
 	end
 end
 
--- Lines 671-680
+-- Lines 883-892
 function PlayerHand:get_active_hand_id(item)
 	for i in ipairs(self._hand_data) do
 		local state = self:current_hand_state(i)
@@ -745,7 +966,7 @@ function PlayerHand:get_active_hand_id(item)
 	end
 end
 
--- Lines 682-691
+-- Lines 894-903
 function PlayerHand:apply_weapon_kick(amount, akimbo)
 	if self:precision_mode() then
 		amount = amount * tweak_data.vr.weapon_kick.precision_multiplier
@@ -758,7 +979,7 @@ function PlayerHand:apply_weapon_kick(amount, akimbo)
 	end
 end
 
--- Lines 693-702
+-- Lines 905-914
 function PlayerHand:set_cuffed(cuffed)
 	for hand in ipairs(self._hand_data) do
 		if cuffed then
@@ -769,17 +990,17 @@ function PlayerHand:set_cuffed(cuffed)
 	end
 end
 
--- Lines 704-706
+-- Lines 916-918
 function PlayerHand:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines 708-710
+-- Lines 920-922
 function PlayerHand:set_base_rotation(rot)
 	self._base_rotation = rot
 end
 
--- Lines 713-720
+-- Lines 925-932
 function PlayerHand:set_warping(warping)
 	for hand in ipairs(self._hand_data) do
 		local state = self:current_hand_state(hand)
@@ -790,7 +1011,7 @@ function PlayerHand:set_warping(warping)
 	end
 end
 
--- Lines 722-739
+-- Lines 934-951
 function PlayerHand:set_tased(tased)
 	if self._tase_effects then
 		for _, id in ipairs(self._tase_effects) do
@@ -812,7 +1033,7 @@ function PlayerHand:set_tased(tased)
 	end
 end
 
--- Lines 743-779
+-- Lines 955-991
 function PlayerHand:check_hand_through_wall(hand, custom_obj)
 	local hand_unit = self:hand_unit(hand)
 	local head_pos = self._unit_movement_ext:m_head_pos()
@@ -892,7 +1113,7 @@ function PlayerHand:check_hand_through_wall(hand, custom_obj)
 	return true
 end
 
--- Lines 781-784
+-- Lines 993-996
 function PlayerHand:warp_hand()
 	local hand_index = self._hand_state_machine:hand_from_connection("warp") or PlayerHand.other_hand_id(managers.vr:get_setting("default_weapon_hand"))
 

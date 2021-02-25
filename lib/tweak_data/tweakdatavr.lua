@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-4911
+-- Lines 4-5185
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -109,6 +109,262 @@ function TweakDataVR:init(tweak_data)
 				rotation = Rotation(0, -90, 0),
 				position = Vector3(0, 0, 0),
 				hit_point = Vector3(0, 0, 0)
+			},
+			fear = {
+				rotation = Rotation(180, 180, -90),
+				position = Vector3(0, 10, 0)
+			},
+			hauteur = {
+				rotation = Rotation(180, 90, 0),
+				position = Vector3(0, 0, 5),
+				hidden_objects = {
+					Idstring("g_sheet")
+				}
+			}
+		},
+		weapons_npc = {
+			pugio = {
+				position = Vector3(0, -1, 0)
+			},
+			tiger = {
+				right = {
+					rotation = Rotation(-180, -15, 0)
+				}
+			},
+			meter = {
+				position = Vector3(0, 10, 0)
+			},
+			selfie = {
+				position = Vector3(0, -2, 0)
+			},
+			boxing_gloves = {
+				left = {
+					rotation = Rotation(0, -10, 10)
+				},
+				right = {
+					rotation = Rotation(-180, -15, 0) * Rotation(0, -10, 10)
+				}
+			},
+			nin = {
+				rotation = Rotation(0, -75, 0),
+				position = Vector3(0, -2, 0)
+			},
+			clean = {
+				position = Vector3(0, -2, 0)
+			},
+			branding_iron = {
+				position = Vector3(0, 5, 0)
+			},
+			ostry = {
+				position = Vector3(0, -3, 0),
+				rotation = Rotation(0, 0, 90) * Rotation(-90, 0, 0)
+			},
+			morning = {
+				position = Vector3(0, -3, 0)
+			},
+			dingdong = {
+				position = Vector3(0, -15, 0),
+				rotation = Rotation(0, 0, 90)
+			},
+			boxcutter = {
+				position = Vector3(0, -2, 0)
+			},
+			baseballbat = {
+				position = Vector3(0, 10, 0)
+			},
+			happy = {
+				position = Vector3(0, -2, 0)
+			},
+			scoutknife = {
+				position = Vector3(0, -2, 0)
+			},
+			detector = {
+				position = Vector3(0, -5, 0)
+			},
+			sandsteel = {
+				position = Vector3(0, 5, 0)
+			},
+			cutters = {
+				position = Vector3(0, 5, 0),
+				rotation = Rotation(0, 0, 180)
+			},
+			poker = {
+				position = Vector3(0, -1, 0)
+			},
+			moneybundle = {
+				left = {
+					position = Vector3(3, 0, -2),
+					rotation = Rotation(0, 0, 40)
+				}
+			},
+			briefcase = {
+				rotation = Rotation(0, 0, 90) * Rotation(-90, 0, 0),
+				position = Vector3(0, 2, 0)
+			},
+			cleaver = {
+				position = Vector3(0, -2, 0)
+			},
+			taser = {
+				position = Vector3(0, -2, 0)
+			},
+			aziz = {
+				position = Vector3(0, 4, 0)
+			},
+			alien_maul = {
+				position = Vector3(0, 30, 0)
+			},
+			stick = {
+				position = Vector3(0, 20, 0)
+			},
+			switchblade = {
+				position = Vector3(0, -1, 0)
+			},
+			great = {
+				position = Vector3(0, 2, 0)
+			},
+			toothbrush = {
+				position = Vector3(0, -2, 0)
+			},
+			oldbaton = {
+				position = Vector3(0, -2, 0)
+			},
+			sap = {
+				position = Vector3(0, -2, 0)
+			},
+			push = {
+				left = {
+					position = Vector3(0, 2, -2),
+					rotation = Rotation(-10, 0, 0)
+				},
+				right = {
+					position = Vector3(0, 2, -2),
+					rotation = Rotation(10, 0, 0)
+				}
+			},
+			brass_knuckles = {
+				left = {
+					rotation = Rotation(0, 35, 45),
+					position = Vector3(0, 0.5, -0.5)
+				},
+				right = {
+					rotation = Rotation(0, 35, -45),
+					position = Vector3(0, 1, 0)
+				}
+			},
+			iceaxe = {
+				position = Vector3(0, -2, 0)
+			},
+			brick = {
+				left = {
+					position = Vector3(0, -2, 2),
+					rotation = Rotation(0, 0, -90)
+				},
+				right = {
+					position = Vector3(0, -2, 2),
+					rotation = Rotation(0, 0, 90)
+				}
+			},
+			microphone = {
+				position = Vector3(0, -4, 0)
+			},
+			mining_pick = {
+				position = Vector3(0, 5, 0)
+			},
+			cs = {
+				position = Vector3(0, 5, 0),
+				rotation = Rotation(0, -30, 0)
+			},
+			meat_cleaver = {
+				position = Vector3(0, -2, 0)
+			},
+			zeus = {
+				left = {
+					rotation = Rotation(-10, 10, 0),
+					position = Vector3(0, 1, 0)
+				},
+				right = {
+					rotation = Rotation(10, 10, 0),
+					position = Vector3(0, 1, 0)
+				}
+			},
+			pitchfork = {
+				position = Vector3(0, 20, 0)
+			},
+			fork = {
+				position = Vector3(0, -2, 0)
+			},
+			gator = {
+				position = Vector3(0, -4, 0)
+			},
+			barbedwire = {
+				position = Vector3(0, -7, 0)
+			},
+			slot_lever = {
+				position = Vector3(0, -2, 0)
+			},
+			bayonet = {
+				position = Vector3(0, -1, 0)
+			},
+			kabartanto = {
+				position = Vector3(0, -1, 0)
+			},
+			fairbair = {
+				position = Vector3(0, -1, 0),
+				rotation = Rotation(0, 0, 90)
+			},
+			hockey = {
+				position = Vector3(0, 20, 0)
+			},
+			beardy = {
+				position = Vector3(0, 20, 0)
+			},
+			buck = {
+				left = {
+					position = Vector3(-5.5, 0, -5),
+					rotation = Rotation(0, -50, 180)
+				},
+				right = {
+					position = Vector3(5, 0, -5),
+					rotation = Rotation(0, -45, 0)
+				}
+			},
+			fireaxe = {
+				position = Vector3(0, 5, 0)
+			},
+			freedom = {
+				position = Vector3(0, 35, 0)
+			},
+			bullseye = {
+				position = Vector3(0, -1, 0)
+			},
+			spatula = {
+				position = Vector3(0, -2, 0)
+			},
+			twins = {
+				position = Vector3(0, -4, 0)
+			},
+			croupier_rake = {
+				position = Vector3(0, 3, 0)
+			},
+			scalper = {
+				position = Vector3(0, 4, 0)
+			},
+			fear = {
+				left = {
+					rotation = Rotation(90, -90, 0),
+					position = Vector3(0, -2.5, -9)
+				},
+				right = {
+					rotation = Rotation(90, -90, 0),
+					position = Vector3(0, -2.5, -9)
+				}
+			},
+			hauteur = {
+				position = Vector3(0, 3.5, 0),
+				rotation = Rotation(180, 180, 0),
+				hidden_objects = {
+					Idstring("g_sheet")
+				}
 			}
 		},
 		bayonets = {
@@ -484,7 +740,8 @@ function TweakDataVR:init(tweak_data)
 			string_distance = {
 				10,
 				60
-			}
+			},
+			string_object = Idstring("a_string")
 		}
 	}
 	self.throwable_offsets = {
@@ -1021,17 +1278,13 @@ function TweakDataVR:init(tweak_data)
 	}
 	self.locked = {
 		melee_weapons = {
-			road = true,
 			weapon = true,
-			elastic = true
+			road = true
 		},
 		weapons = {
 			contraband = true,
-			elastic = true,
-			frankish = true,
-			long = true,
 			hunter = true,
-			plainsrider = true,
+			frankish = true,
 			arblast = true
 		}
 	}
@@ -8470,9 +8723,20 @@ function TweakDataVR:init(tweak_data)
 
 	self:init_specializations(tweak_data)
 	self:init_skills(tweak_data)
+
+	self.arm_simulator = {
+		rate = 15,
+		momentum_decay = 30,
+		momentum = 15
+	}
+	self.default_body_metrics = {
+		head_to_shoulder = 15,
+		shoulder_width = 44,
+		arm_length = 70
+	}
 end
 
--- Lines 4917-5028
+-- Lines 5191-5302
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -8687,7 +8951,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 5032-5092
+-- Lines 5306-5366
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -8767,7 +9031,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 5095-5107
+-- Lines 5369-5381
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -8788,7 +9052,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 5109-5135
+-- Lines 5383-5409
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -8809,14 +9073,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 5137-5141
+-- Lines 5411-5415
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 5143-5155
+-- Lines 5417-5429
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -8834,7 +9098,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 5157-5165
+-- Lines 5431-5439
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -8847,7 +9111,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 5167-5171
+-- Lines 5441-5445
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -8856,7 +9120,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5173-5181
+-- Lines 5447-5455
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -8871,7 +9135,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5183-5190
+-- Lines 5457-5464
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -8884,7 +9148,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5192-5199
+-- Lines 5466-5473
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

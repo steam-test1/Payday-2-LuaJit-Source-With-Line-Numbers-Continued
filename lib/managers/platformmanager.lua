@@ -90,44 +90,49 @@ function GenericPlatformManager:set_rich_presence(name)
 end
 
 -- Lines 80-82
+function GenericPlatformManager:refresh_rich_presence()
+	self:set_rich_presence(self._current_rich_presence)
+end
+
+-- Lines 84-86
 function GenericPlatformManager:rich_presence()
 	return self._current_rich_presence
 end
 
--- Lines 84-86
+-- Lines 88-90
 function GenericPlatformManager:translate_path(path)
 	return string.gsub(path, "/+([~/]*)", "\\%1")
 end
 
--- Lines 88-90
+-- Lines 92-94
 function GenericPlatformManager:set_playing(is_playing)
 	Global.game_settings.is_playing = is_playing
 end
 
--- Lines 92-93
+-- Lines 96-97
 function GenericPlatformManager:set_progress(progress)
 end
 
--- Lines 95-96
+-- Lines 99-100
 function GenericPlatformManager:set_feedback_color(color)
 end
 
 Xbox360PlatformManager = Xbox360PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("X360"):key()] = Xbox360PlatformManager
 
--- Lines 102-106
+-- Lines 106-110
 function Xbox360PlatformManager:init()
 	GenericPlatformManager.init(self)
 	XboxLive:set_callback(callback(self, self, "event"))
 end
 
--- Lines 108-112
+-- Lines 112-116
 function Xbox360PlatformManager:destroy_context()
 	GenericPlatformManager.destroy_context(self)
 	XboxLive:set_callback(nil)
 end
 
--- Lines 114-122
+-- Lines 118-126
 function Xbox360PlatformManager:set_rich_presence(name, callback)
 	print("Xbox360PlatformManager:set_rich_presence", name)
 	GenericPlatformManager.set_rich_presence(self, name)
@@ -140,7 +145,7 @@ function Xbox360PlatformManager:set_rich_presence(name, callback)
 	end
 end
 
--- Lines 124-135
+-- Lines 128-139
 function Xbox360PlatformManager:set_presence(name, callback)
 	GenericPlatformManager.set_presence(self, name)
 end
@@ -148,19 +153,19 @@ end
 XB1PlatformManager = XB1PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("XB1"):key()] = XB1PlatformManager
 
--- Lines 140-144
+-- Lines 144-148
 function XB1PlatformManager:init()
 	GenericPlatformManager.init(self)
 	XboxLive:set_callback(callback(self, self, "event"))
 end
 
--- Lines 146-150
+-- Lines 150-154
 function XB1PlatformManager:destroy_context()
 	GenericPlatformManager.destroy_context(self)
 	XboxLive:set_callback(nil)
 end
 
--- Lines 152-160
+-- Lines 156-164
 function XB1PlatformManager:set_rich_presence(name, callback)
 	print("XB1PlatformManager:set_rich_presence", name)
 	GenericPlatformManager.set_rich_presence(self, name)
@@ -173,12 +178,12 @@ function XB1PlatformManager:set_rich_presence(name, callback)
 	end
 end
 
--- Lines 162-173
+-- Lines 166-177
 function XB1PlatformManager:set_presence(name, callback)
 	GenericPlatformManager.set_presence(self, name)
 end
 
--- Lines 175-187
+-- Lines 179-191
 function XB1PlatformManager:set_playing(is_playing)
 	if not Global.game_settings.is_playing ~= not is_playing then
 		if not Global.game_settings.single_player then
@@ -195,7 +200,7 @@ function XB1PlatformManager:set_playing(is_playing)
 	end
 end
 
--- Lines 189-191
+-- Lines 193-195
 function XB1PlatformManager:set_progress(progress)
 	XboxLive:write_game_progress(progress * 100)
 end
@@ -203,7 +208,7 @@ end
 PS3PlatformManager = PS3PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS3"):key()] = PS3PlatformManager
 
--- Lines 197-201
+-- Lines 201-205
 function PS3PlatformManager:init(...)
 	PS3PlatformManager.super.init(self, ...)
 
@@ -211,12 +216,12 @@ function PS3PlatformManager:init(...)
 	self._psn_set_presence_time = 0
 end
 
--- Lines 203-205
+-- Lines 207-209
 function PS3PlatformManager:translate_path(path)
 	return string.gsub(path, "\\+([~\\]*)", "/%1")
 end
 
--- Lines 207-215
+-- Lines 211-219
 function PS3PlatformManager:update(t, dt)
 	PS3PlatformManager.super.update(self, t, dt)
 
@@ -229,7 +234,7 @@ function PS3PlatformManager:update(t, dt)
 	end
 end
 
--- Lines 217-220
+-- Lines 221-224
 function PS3PlatformManager:set_presence(name)
 	GenericPlatformManager.set_presence(self, name)
 end
@@ -237,7 +242,7 @@ end
 PS4PlatformManager = PS4PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS4"):key()] = PS4PlatformManager
 
--- Lines 225-229
+-- Lines 229-233
 function PS4PlatformManager:init(...)
 	PS4PlatformManager.super.init(self, ...)
 
@@ -245,19 +250,19 @@ function PS4PlatformManager:init(...)
 	self._psn_set_presence_time = 0
 end
 
--- Lines 231-236
+-- Lines 235-240
 function PS4PlatformManager:destroy_context()
 	GenericPlatformManager.destroy_context(self)
 	PSN:set_online_callback(nil)
 	self:set_feedback_color(nil)
 end
 
--- Lines 238-240
+-- Lines 242-244
 function PS4PlatformManager:translate_path(path)
 	return string.gsub(path, "\\+([~\\]*)", "/%1")
 end
 
--- Lines 242-250
+-- Lines 246-254
 function PS4PlatformManager:update(t, dt)
 	PS4PlatformManager.super.update(self, t, dt)
 
@@ -269,7 +274,7 @@ function PS4PlatformManager:update(t, dt)
 	end
 end
 
--- Lines 252-264
+-- Lines 256-268
 function PS4PlatformManager:set_playing(is_playing)
 	if not Global.game_settings.is_playing ~= not is_playing then
 		if not Global.game_settings.single_player then
@@ -284,19 +289,19 @@ function PS4PlatformManager:set_playing(is_playing)
 	end
 end
 
--- Lines 266-269
+-- Lines 270-273
 function PS4PlatformManager:set_presence(name)
 	GenericPlatformManager.set_presence(self, name)
 end
 
--- Lines 271-275
+-- Lines 275-279
 function PS4PlatformManager:set_rich_presence(name)
 	print("PS4PlatformManager:set_rich_presence", name)
 	GenericPlatformManager.set_rich_presence(self, name)
 	PSN:set_presence_info(managers.localization:text("ps4_presence_" .. name))
 end
 
--- Lines 278-306
+-- Lines 282-310
 function PS4PlatformManager:set_feedback_color(color)
 	local wrapper_index = managers.controller:get_default_wrapper_index()
 
@@ -332,84 +337,144 @@ end
 WinPlatformManager = WinPlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("WIN32"):key()] = WinPlatformManager
 
--- Lines 312-393
+-- Lines 316-411
 function WinPlatformManager:set_rich_presence(name)
 	self._current_rich_presence = name
 
 	if SystemInfo:distribution() == Idstring("STEAM") and not Global.game_settings.single_player then
-		local presence = ""
-
 		if name == "Idle" then
 			Steam:set_rich_presence("status", "")
 			Steam:set_rich_presence("steam_display", "")
-		else
-			if Global.game_settings.permission == "private" then
+		elseif managers.network.matchmake.lobby_handler then
+			local rich_presence_allowed = true
+			rich_presence_allowed = rich_presence_allowed and Global.game_settings.permission ~= "private"
+
+			if not rich_presence_allowed then
 				Steam:set_rich_presence("status", "")
 				Steam:set_rich_presence("steam_display", "")
 
 				return
 			end
 
-			local in_lobby = _G.game_state_machine and (_G.game_state_machine:current_state_name() == "ingame_lobby_menu" or _G.game_state_machine:current_state_name() == "menu_main")
-			local job_data = managers.job:current_job_data()
-			local job_name = job_data and managers.localization:text(job_data.name_id) or "no heist"
+			local in_lobby = _G.game_state_machine:verify_game_state(_G.GameStateFilters.lobby)
+			local is_multi_day = #(managers.job:current_job_chain_data() or {}) > 1
+			local job_tweak = managers.job:current_job_data()
+			local display_token = nil
+			local heist_token = job_tweak and job_tweak.name_id
+			local difficulty = nil
+			local heist_day = is_multi_day and tostring(managers.job:current_stage())
+			local peer_count = tostring(#managers.network:session():all_peers())
+			local max_peers = tostring(_G.tweak_data.max_players)
+			local lobby_id = managers.network.matchmake.lobby_handler:id()
+			local crime_spree_rank = nil
 
-			if managers.crime_spree and managers.crime_spree:is_active() then
+			if in_lobby and job_tweak then
+				display_token = "#in_lobby_heist"
+			elseif in_lobby then
+				display_token = "#in_lobby"
+			elseif job_tweak and is_multi_day then
+				display_token = "#in_heist_multi_day"
+			elseif job_tweak then
+				display_token = "#in_heist_one_day"
+			end
+
+			if managers.job:has_active_job() then
+				local difficulty_stars = managers.job:current_difficulty_stars()
+				difficulty = tostring(difficulty_stars)
+			end
+
+			if not in_lobby and managers.crime_spree and managers.crime_spree:is_active() then
 				local level_id = Global.game_settings.level_id
 				local name_id = level_id and _G.tweak_data.levels[level_id] and _G.tweak_data.levels[level_id].name_id
 
 				if name_id then
-					job_name = managers.localization:text(name_id) or job_name
+					heist_token = name_id or heist_token
 				end
+
+				display_token = display_token .. "_cs"
+				crime_spree_rank = managers.experience:cash_string(managers.crime_spree:spree_level(), "")
+				difficulty = nil
 			end
 
-			if in_lobby then
-				if job_data then
-					presence = presence .. managers.localization:text("steam_rp_in_lobby_heist", {
-						heist = job_name
-					})
-				else
-					presence = presence .. managers.localization:text("steam_rp_in_lobby")
-				end
-			elseif job_data then
-				if #(managers.job:current_job_chain_data() or {}) > 1 then
-					presence = presence .. managers.localization:text("steam_rp_current_heist_multi_day", {
-						heist = job_name,
-						day = tostring(managers.job:current_stage())
-					})
-				else
-					presence = presence .. managers.localization:text("steam_rp_current_heist_one_day", {
-						heist = job_name
-					})
-				end
+			local rp_pairs = {
+				day = heist_day or "",
+				difficulty = difficulty or "",
+				heist_token = heist_token or "",
+				max_peers = max_peers,
+				steam_display = display_token or "",
+				steam_player_group = lobby_id,
+				steam_player_group_size = peer_count,
+				crime_spree_rank = crime_spree_rank or "",
+				status = self:_build_legacy_presence_string()
+			}
+
+			for key, value in pairs(rp_pairs) do
+				Steam:set_rich_presence(key, value)
 			end
-
-			presence = presence .. "\n" .. managers.localization:text("steam_rp_current_players", {
-				current = tostring(#managers.network:session():all_peers()),
-				max = tostring(_G.tweak_data.max_players)
-			})
-
-			if managers.crime_spree and managers.crime_spree:is_active() then
-				presence = presence .. "\n" .. managers.localization:text("steam_rp_current_spree", {
-					level = managers.experience:cash_string(managers.crime_spree:spree_level(), "")
-				})
-			elseif managers.job:has_active_job() then
-				local difficulty_stars = managers.job:current_difficulty_stars()
-				local difficulty = _G.tweak_data.difficulties[managers.job:current_difficulty_stars() + 2] or 1
-				presence = presence .. "\n" .. managers.localization:text("steam_rp_current_difficulty", {
-					difficulty = managers.localization:to_upper_text(_G.tweak_data.difficulty_name_ids[difficulty])
-				})
-			end
-
-			Steam:set_rich_presence("status", presence)
-			Steam:set_rich_presence("steam_display", "#raw_status")
 		end
 	end
 
 	self:set_rich_presence_discord(name)
 end
 
--- Lines 396-417
+-- Lines 413-458
+function WinPlatformManager:_build_legacy_presence_string()
+	local presence = ""
+	local in_lobby = _G.game_state_machine and (_G.game_state_machine:current_state_name() == "ingame_lobby_menu" or _G.game_state_machine:current_state_name() == "menu_main")
+	local job_data = managers.job:current_job_data()
+	local job_name = job_data and managers.localization:text(job_data.name_id) or "no heist"
+
+	if managers.crime_spree and managers.crime_spree:is_active() then
+		local level_id = Global.game_settings.level_id
+		local name_id = level_id and _G.tweak_data.levels[level_id] and _G.tweak_data.levels[level_id].name_id
+
+		if name_id then
+			job_name = managers.localization:text(name_id) or job_name
+		end
+	end
+
+	if in_lobby then
+		if job_data then
+			presence = presence .. managers.localization:text("steam_rp_in_lobby_heist", {
+				heist = job_name
+			})
+		else
+			presence = presence .. managers.localization:text("steam_rp_in_lobby")
+		end
+	elseif job_data then
+		if #(managers.job:current_job_chain_data() or {}) > 1 then
+			presence = presence .. managers.localization:text("steam_rp_current_heist_multi_day", {
+				heist = job_name,
+				day = tostring(managers.job:current_stage())
+			})
+		else
+			presence = presence .. managers.localization:text("steam_rp_current_heist_one_day", {
+				heist = job_name
+			})
+		end
+	end
+
+	presence = presence .. "\n" .. managers.localization:text("steam_rp_current_players", {
+		current = tostring(#managers.network:session():all_peers()),
+		max = tostring(_G.tweak_data.max_players)
+	})
+
+	if managers.crime_spree and managers.crime_spree:is_active() then
+		presence = presence .. "\n" .. managers.localization:text("steam_rp_current_spree", {
+			level = managers.experience:cash_string(managers.crime_spree:spree_level(), "")
+		})
+	elseif managers.job:has_active_job() then
+		local difficulty_stars = managers.job:current_difficulty_stars()
+		local difficulty = _G.tweak_data.difficulties[managers.job:current_difficulty_stars() + 2] or 1
+		presence = presence .. "\n" .. managers.localization:text("steam_rp_current_difficulty", {
+			difficulty = managers.localization:to_upper_text(_G.tweak_data.difficulty_name_ids[difficulty])
+		})
+	end
+
+	return presence
+end
+
+-- Lines 461-482
 function WinPlatformManager:update_discord_party_size()
 	if Global.game_settings.permission == "private" then
 		return
@@ -425,7 +490,7 @@ function WinPlatformManager:update_discord_party_size()
 	end
 end
 
--- Lines 419-438
+-- Lines 484-503
 function WinPlatformManager:update_discord_character()
 	if Global.game_settings.permission == "private" then
 		return
@@ -439,7 +504,7 @@ function WinPlatformManager:update_discord_character()
 	print("[Discord] update_discord_character", small_image, character_name)
 end
 
--- Lines 440-491
+-- Lines 505-556
 function WinPlatformManager:update_discord_heist()
 	if Global.game_settings.permission == "private" then
 		return
@@ -487,7 +552,7 @@ function WinPlatformManager:update_discord_heist()
 	end
 end
 
--- Lines 493-603
+-- Lines 558-668
 function WinPlatformManager:set_rich_presence_discord(name)
 	Discord:set_status("", "")
 	Discord:set_start_time(0)

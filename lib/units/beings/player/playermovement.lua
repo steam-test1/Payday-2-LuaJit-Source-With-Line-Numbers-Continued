@@ -1238,35 +1238,37 @@ function PlayerMovement:_update_vr(unit, t, dt)
 	mvector3.set(self._hmd_pos, hmd_pos)
 end
 
--- Lines 1327-1332
+-- Lines 1327-1333
 function PlayerMovement:_post_init_vr()
 	self._ghost_position = mvector3.copy(self._m_pos)
 	self._hmd_pos = VRManager:hmd_position()
 	self._hmd_delta = Vector3()
+
+	self._unit:hand():post_init()
 end
 
--- Lines 1336-1338
+-- Lines 1337-1339
 function PlayerMovement:hmd_delta()
 	return self._hmd_delta
 end
 
--- Lines 1342-1344
+-- Lines 1343-1345
 function PlayerMovement:hmd_position()
 	return self._hmd_pos
 end
 
--- Lines 1348-1351
+-- Lines 1349-1352
 function PlayerMovement:set_ghost_position(pos, unit_position)
 	mvector3.set(self._ghost_position, pos)
 	self._unit:set_position(unit_position and unit_position or pos)
 end
 
--- Lines 1355-1357
+-- Lines 1356-1358
 function PlayerMovement:ghost_position()
 	return self._ghost_position
 end
 
--- Lines 1361-1367
+-- Lines 1362-1368
 function PlayerMovement:reset_ghost_position()
 	self:set_ghost_position(self._m_pos)
 
@@ -1275,38 +1277,38 @@ function PlayerMovement:reset_ghost_position()
 	end
 end
 
--- Lines 1371-1373
+-- Lines 1372-1374
 function PlayerMovement:warping()
 	return self._state_data.warping
 end
 
--- Lines 1375-1377
+-- Lines 1376-1378
 function PlayerMovement:on_zipline()
 	return self._state_data.on_zipline
 end
 
--- Lines 1379-1381
+-- Lines 1380-1382
 function PlayerMovement:activate_regeneration()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines 1383-1385
+-- Lines 1384-1386
 function PlayerMovement:stamina()
 	return self._stamina
 end
 
--- Lines 1389-1391
+-- Lines 1390-1392
 function PlayerMovement:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines 1393-1396
+-- Lines 1394-1397
 function PlayerMovement:reset_hmd_position()
 	mvector3.set(self._hmd_pos, VRManager:hmd_position())
 	mvector3.set_zero(self._hmd_delta)
 end
 
--- Lines 1401-1423
+-- Lines 1402-1424
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1330,7 +1332,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines 1425-1480
+-- Lines 1426-1481
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1384,12 +1386,16 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines 1482-1484
+-- Lines 1483-1485
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines 1486-1488
+-- Lines 1487-1489
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
+end
+
+-- Lines 1494-1495
+function PlayerMovement:on_weapon_add()
 end

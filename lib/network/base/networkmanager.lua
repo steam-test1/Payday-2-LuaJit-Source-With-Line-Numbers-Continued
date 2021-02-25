@@ -687,7 +687,7 @@ function NetworkManager:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines 682-706
+-- Lines 682-712
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 
@@ -715,5 +715,9 @@ function NetworkManager:on_peer_added(peer, peer_id)
 
 	if managers.statistics then
 		peer:set_is_dropin(managers.statistics:has_session_started())
+	end
+
+	if game_state_machine:verify_game_state(GameStateFilters.any_ingame) then
+		managers.custom_safehouse:uno_achievement_challenge():attempt_access_notification()
 	end
 end

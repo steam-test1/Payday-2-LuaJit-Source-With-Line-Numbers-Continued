@@ -317,7 +317,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines 348-472
+-- Lines 348-474
 function IngameWaitingForPlayersState:at_enter()
 	if _G.IS_VR then
 		managers.menu:open_menu("waiting_for_players")
@@ -412,6 +412,8 @@ function IngameWaitingForPlayersState:at_enter()
 		local rich_presence = is_safe_house and "SafeHousePlaying" or "SPPlaying"
 
 		managers.platform:set_rich_presence(rich_presence)
+	else
+		managers.platform:set_rich_presence("MPPlaying")
 	end
 
 	if Global.exe_argument_auto_enter_level then
@@ -421,7 +423,7 @@ function IngameWaitingForPlayersState:at_enter()
 	TestAPIHelper.on_event("start_job_loadout")
 end
 
--- Lines 476-507
+-- Lines 478-509
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -459,7 +461,7 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines 511-525
+-- Lines 513-527
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	if not self._skip_promt_shown and not self._file_streamer_max_workload and (not managers.menu:active_menu() or managers.menu:active_menu().name == "waiting_for_players") and managers.network:session() then
 		if managers.network:session():are_peers_done_streaming() then
@@ -476,7 +478,7 @@ function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	end
 end
 
--- Lines 527-534
+-- Lines 529-536
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -487,18 +489,18 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines 537-539
+-- Lines 539-541
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 end
 
--- Lines 541-543
+-- Lines 543-545
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines 545-642
-function IngameWaitingForPlayersState:at_exit()
+-- Lines 547-646
+function IngameWaitingForPlayersState:at_exit(next_state)
 	if _G.IS_VR then
 		managers.menu:close_menu("waiting_for_players")
 	end
@@ -561,7 +563,9 @@ function IngameWaitingForPlayersState:at_exit()
 	local is_safe_house = managers.job:current_job_data() and managers.job:current_job_id() == "safehouse"
 	local rich_presence = nil
 
-	if is_safe_house then
+	if not game_state_machine:verify_game_state(GameStateFilters.any_ingame, next_state:name()) then
+		rich_presence = "Idle"
+	elseif is_safe_house then
 		rich_presence = "SafeHousePlaying"
 	elseif Global.game_settings.single_player then
 		rich_presence = "SPPlaying"
@@ -588,7 +592,7 @@ function IngameWaitingForPlayersState:at_exit()
 	TestAPIHelper.on_event("start_job")
 end
 
--- Lines 644-657
+-- Lines 648-661
 function IngameWaitingForPlayersState:_get_cameras()
 	self._cameras = {}
 
@@ -619,7 +623,7 @@ function IngameWaitingForPlayersState:_get_cameras()
 	end
 end
 
--- Lines 659-672
+-- Lines 663-676
 function IngameWaitingForPlayersState:_next_camera()
 	self._camera_data.next_t = Application:time() + 8 + math.rand(4)
 	self._camera_data.index = self._camera_data.index + 1
@@ -633,17 +637,17 @@ function IngameWaitingForPlayersState:_next_camera()
 	self._cam_unit:camera():start(math.rand(30))
 end
 
--- Lines 674-676
+-- Lines 678-680
 function IngameWaitingForPlayersState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 678-680
+-- Lines 682-684
 function IngameWaitingForPlayersState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 682-684
+-- Lines 686-688
 function IngameWaitingForPlayersState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

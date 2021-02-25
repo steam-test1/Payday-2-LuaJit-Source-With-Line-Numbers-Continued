@@ -29,7 +29,7 @@ end
 function MissionEndState:set_controller_enabled(enabled)
 end
 
--- Lines 32-263
+-- Lines 32-271
 function MissionEndState:at_enter(old_state, params)
 	managers.environment_effects:stop_all()
 
@@ -38,7 +38,22 @@ function MissionEndState:at_enter(old_state, params)
 	managers.platform:set_presence("Mission_end")
 
 	if not is_safe_house then
-		managers.platform:set_rich_presence(Global.game_settings.single_player and "SPEnd" or "MPEnd")
+		local rp_state = nil
+
+		if table.contains({
+			"victoryscreen",
+			"gameoverscreen"
+		}, self:name()) then
+			if Global.game_settings.single_player then
+				rp_state = "SPEnd"
+			else
+				rp_state = "MPEnd"
+			end
+		else
+			rp_state = "Idle"
+		end
+
+		managers.platform:set_rich_presence(rp_state)
 	end
 
 	managers.platform:set_playing(false)
@@ -253,17 +268,17 @@ function MissionEndState:at_enter(old_state, params)
 	managers.music:on_mission_end()
 end
 
--- Lines 265-267
+-- Lines 273-275
 function MissionEndState:is_success()
 	return self._success
 end
 
--- Lines 271-273
+-- Lines 279-281
 function MissionEndState:_get_xp_dissected(success, num_winners, personal_win)
 	return managers.experience:get_xp_dissected(success, num_winners, personal_win)
 end
 
--- Lines 275-314
+-- Lines 283-322
 function MissionEndState:_get_contract_xp(success)
 	local has_active_job = managers.job:has_active_job()
 	local job_and_difficulty_stars = has_active_job and managers.job:current_job_and_difficulty_stars() or 1
@@ -299,14 +314,14 @@ function MissionEndState:_get_contract_xp(success)
 	return contract_xp
 end
 
--- Lines 316-320
+-- Lines 324-328
 function MissionEndState:set_continue_button_text()
 	if self._completion_bonus_done then
 		self:_set_continue_button_text()
 	end
 end
 
--- Lines 322-337
+-- Lines 330-345
 function MissionEndState:_set_continue_button_text()
 	local text_id = "failed_disconnected_continue"
 	local not_clickable = false
@@ -326,7 +341,7 @@ function MissionEndState:_set_continue_button_text()
 	managers.menu_component:set_endscreen_continue_button_text(text, not_clickable)
 end
 
--- Lines 339-356
+-- Lines 347-364
 function MissionEndState:play_finishing_sound(success)
 	if self._server_left then
 		return
@@ -343,13 +358,13 @@ function MissionEndState:play_finishing_sound(success)
 	end
 end
 
--- Lines 359-362
+-- Lines 367-370
 function MissionEndState:completion_bonus_done(total_xp_bonus)
 	self._total_xp_bonus = total_xp_bonus
 	self._completion_bonus_done = false
 end
 
--- Lines 364-409
+-- Lines 372-417
 function MissionEndState:at_exit(next_state)
 	managers.briefing:stop_event(true)
 	managers.hud:hide(self.GUI_ENDSCREEN)
@@ -393,7 +408,7 @@ function MissionEndState:at_exit(next_state)
 	managers.menu:close_menu("mission_end_menu")
 end
 
--- Lines 412-417
+-- Lines 420-425
 function MissionEndState:_shut_down_network()
 	Network:set_multiplayer(false)
 	managers.network:queue_stop_network()
@@ -401,7 +416,7 @@ function MissionEndState:_shut_down_network()
 	managers.network.voice_chat:destroy_voice()
 end
 
--- Lines 420-431
+-- Lines 428-439
 function MissionEndState:_load_start_menu(next_state)
 	if next_state:name() == "disconnected" then
 		return
@@ -415,7 +430,7 @@ function MissionEndState:_load_start_menu(next_state)
 	setup:load_start_menu()
 end
 
--- Lines 433-604
+-- Lines 441-612
 function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_score, best_special_kills_peer_id, best_special_kills_score, best_accuracy_peer_id, best_accuracy_score, most_downs_peer_id, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	print("on_statistics_result begin")
 
@@ -596,7 +611,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 	end
 end
 
--- Lines 607-698
+-- Lines 615-706
 function MissionEndState:generate_safehouse_statistics()
 	if not managers.custom_safehouse:unlocked() then
 		return
@@ -695,7 +710,7 @@ function MissionEndState:generate_safehouse_statistics()
 	self._statistics_data.stage_safehouse_summary = stage_safehouse_summary_string
 end
 
--- Lines 700-706
+-- Lines 708-714
 function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	if self._statistics_feeded then
 		self:generate_safehouse_statistics()
@@ -703,7 +718,7 @@ function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	end
 end
 
--- Lines 709-736
+-- Lines 717-744
 function MissionEndState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._mission_end_menu
 
@@ -734,12 +749,12 @@ function MissionEndState:_continue_blocked()
 	return false
 end
 
--- Lines 738-740
+-- Lines 746-748
 function MissionEndState:_continue()
 	self:continue()
 end
 
--- Lines 742-758
+-- Lines 750-766
 function MissionEndState:continue()
 	if self:_continue_blocked() then
 		return
@@ -758,7 +773,7 @@ function MissionEndState:continue()
 	end
 end
 
--- Lines 760-768
+-- Lines 768-776
 function MissionEndState:_clear_controller()
 	if not self._controller then
 		return
@@ -770,7 +785,7 @@ function MissionEndState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 770-782
+-- Lines 778-790
 function MissionEndState:debug_continue()
 	if not self._success then
 		return
@@ -788,14 +803,14 @@ function MissionEndState:debug_continue()
 	end
 end
 
--- Lines 784-787
+-- Lines 792-795
 function MissionEndState:set_completion_bonus_done(done)
 	self._completion_bonus_done = done
 
 	self:_set_continue_button_text()
 end
 
--- Lines 789-847
+-- Lines 797-855
 function MissionEndState:update(t, dt)
 	managers.hud:update_endscreen_hud(t, dt)
 
@@ -856,27 +871,27 @@ function MissionEndState:update(t, dt)
 	self._in_focus = in_focus
 end
 
--- Lines 849-851
+-- Lines 857-859
 function MissionEndState:game_ended()
 	return true
 end
 
--- Lines 853-855
+-- Lines 861-863
 function MissionEndState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 857-859
+-- Lines 865-867
 function MissionEndState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 861-863
+-- Lines 869-871
 function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines 866-1521
+-- Lines 874-1529
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()
