@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-2701
+-- Lines 76-2719
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -209,7 +209,10 @@ function AchievementsTweakData:init(tweak_data)
 		"ignominy_22",
 		"ignominy_23",
 		"ignominy_24",
-		"ignominy_25"
+		"ignominy_25",
+		[50] = "ignominy_50",
+		[75] = "ignominy_75",
+		[100] = "ignominy_100"
 	}
 	self.final_rule = {
 		heist = "nightclub",
@@ -253,11 +256,6 @@ function AchievementsTweakData:init(tweak_data)
 	self.cavity = {
 		award = "bulldog_4",
 		melee_type = "toothbrush"
-	}
-	self.double_trouble = {
-		award = "ovk_9",
-		converted_cops = 4,
-		difficulty = overkill_and_above
 	}
 	self.never_let_you_go = {
 		weapon_id = "m134",
@@ -307,6 +305,13 @@ function AchievementsTweakData:init(tweak_data)
 		carry_id = "goat",
 		award = "peta_4",
 		count = 1
+	}
+	self.convert_enemies = {
+		double_trouble = {
+			award = "ovk_9",
+			count = 4,
+			difficulty = overkill_and_above
+		}
 	}
 	self.weapons_owned = {
 		gage4_2 = {
@@ -1172,9 +1177,9 @@ function AchievementsTweakData:init(tweak_data)
 		},
 		bph_9 = {
 			melee_id = "toothbrush",
+			job = "bph",
 			result = "death",
 			stat = "bph_9_stat",
-			is_dropin = false,
 			difficulty = overkill_and_above
 		},
 		bex_9 = {
@@ -4912,6 +4917,47 @@ function AchievementsTweakData:init(tweak_data)
 			job = "pex",
 			difficulty = sm_wish_and_above
 		},
+		fex_1 = {
+			award = "fex_1",
+			job = "fex",
+			difficulty = normal_and_above
+		},
+		fex_2 = {
+			award = "fex_2",
+			job = "fex",
+			difficulty = hard_and_above
+		},
+		fex_3 = {
+			award = "fex_3",
+			job = "fex",
+			difficulty = veryhard_and_above
+		},
+		fex_4 = {
+			award = "fex_4",
+			job = "fex",
+			difficulty = overkill_and_above
+		},
+		fex_5 = {
+			award = "fex_5",
+			job = "fex",
+			difficulty = easywish_and_above
+		},
+		fex_6 = {
+			award = "fex_6",
+			job = "fex",
+			difficulty = deathwish_and_above
+		},
+		fex_7 = {
+			award = "fex_7",
+			job = "fex",
+			difficulty = sm_wish_and_above
+		},
+		fex_8 = {
+			award = "fex_8",
+			one_down = true,
+			job = "fex",
+			difficulty = sm_wish_and_above
+		},
 		uno_1 = {
 			award = "uno_1",
 			bag_loot_value = 400000,
@@ -7839,7 +7885,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2720-2747
+-- Lines 2738-2765
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -7850,7 +7896,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2729-2740
+	-- Lines 2747-2758
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7880,7 +7926,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2749-2754
+-- Lines 2767-2772
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7893,7 +7939,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2756-2764
+-- Lines 2774-2782
 local function from_level(level)
 	if not level then
 		error()
@@ -7909,7 +7955,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2766-2774
+-- Lines 2784-2792
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7925,7 +7971,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2776-2787
+-- Lines 2794-2805
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7947,7 +7993,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2792-2994
+-- Lines 2810-3012
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8104,7 +8150,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3029-3171
+-- Lines 3047-3189
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8295,7 +8341,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3149-3149
+	-- Lines 3167-3167
 	local function dummy_progress()
 		return 0
 	end

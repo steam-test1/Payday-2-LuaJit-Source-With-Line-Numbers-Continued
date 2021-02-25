@@ -723,7 +723,7 @@ function HUDManagerVR:destroy_vehicle_interaction_ws(id)
 	self._vehicle_interactions[id] = nil
 end
 
--- Lines 621-678
+-- Lines 621-685
 function HUDManagerVR:_add_name_label(data)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
 	local id = last_id + 1
@@ -738,7 +738,9 @@ function HUDManagerVR:_add_name_label(data)
 		rank = data.unit:network():peer():rank()
 
 		if level then
-			local experience = (rank > 0 and managers.experience:rank_string(rank) .. "-" or "") .. level
+			local color_range_offset = utf8.len(data.name) + 2
+			local experience, color_ranges = managers.experience:gui_string(level, rank, color_range_offset)
+			data.name_color_ranges = color_ranges
 			data.name = data.name .. " (" .. experience .. ")"
 		end
 	end
@@ -831,18 +833,25 @@ function HUDManagerVR:_add_name_label(data)
 	})
 
 	if rank > 0 then
-		local infamy_icon = tweak_data.hud_icons:get_icon_data("infamy_icon")
+		local texture, texture_rect = managers.experience:rank_icon_data(rank)
 
 		panel:bitmap({
 			name = "infamy",
-			h = 32,
+			h = 16,
+			visible = false,
 			w = 16,
-			depth_mode = "disabled",
-			render_template = "OverlayText",
 			layer = 0,
-			texture = infamy_icon,
+			depth_mode = "disabled",
+			y = 4,
+			render_template = "OverlayText",
+			texture = texture,
+			texture_rect = texture_rect,
 			color = crim_color
 		})
+	end
+
+	for _, color_range in ipairs(data.name_color_ranges or {}) do
+		text:set_range_color(color_range.start, color_range.stop, color_range.color)
 	end
 
 	self:align_teammate_name_label(panel, interact)
@@ -861,7 +870,7 @@ function HUDManagerVR:_add_name_label(data)
 	return id
 end
 
--- Lines 680-721
+-- Lines 687-728
 function HUDManager:add_vehicle_name_label(data)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
@@ -981,7 +990,7 @@ function HUDManager:add_vehicle_name_label(data)
 	return id
 end
 
--- Lines 723-762
+-- Lines 730-769
 function HUDManagerVR:_update_name_labels(t, dt)
 	if not alive(managers.player:player_unit()) then
 		return
@@ -1015,7 +1024,7 @@ function HUDManagerVR:_update_name_labels(t, dt)
 	end
 end
 
--- Lines 764-772
+-- Lines 771-779
 function HUDManagerVR:_remove_name_label(id)
 	for i, data in ipairs(self._hud.name_labels) do
 		if data.id == id then
@@ -1029,7 +1038,7 @@ end
 
 local __align_teammate_name_label = HUDManager.align_teammate_name_label
 
--- Lines 775-779
+-- Lines 782-786
 function HUDManagerVR:align_teammate_name_label(panel, interact)
 	__align_teammate_name_label(self, panel, interact)
 	panel:set_center_x(panel:parent():w() / 2)
@@ -1037,7 +1046,7 @@ end
 
 local __show_progress_timer = HUDManager.show_progress_timer
 
--- Lines 788-791
+-- Lines 795-798
 function HUDManagerVR:show_progress_timer(...)
 	__show_progress_timer(self, ...)
 	self._hud_interaction:remove_interact()
@@ -1045,13 +1054,13 @@ end
 
 local __remove_progress_timer = HUDManager.remove_progress_timer
 
--- Lines 794-797
+-- Lines 801-804
 function HUDManagerVR:remove_progress_timer()
 	__remove_progress_timer(self)
 	self._hud_interaction:show_interact()
 end
 
--- Lines 805-901
+-- Lines 812-908
 function HUDManager:add_waypoint(id, data)
 	if self._hud.waypoints[id] then
 		self:remove_waypoint(id)
@@ -1232,7 +1241,7 @@ function HUDManager:add_waypoint(id, data)
 	end
 end
 
--- Lines 903-917
+-- Lines 910-924
 function HUDManager:change_waypoint_icon(id, icon)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1257,7 +1266,7 @@ function HUDManager:change_waypoint_icon(id, icon)
 	wp_data.bitmap_world:set_size(rect[3], rect[4])
 end
 
--- Lines 919-929
+-- Lines 926-936
 function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1271,7 +1280,7 @@ function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	wp_data.bitmap_world:set_alpha(alpha)
 end
 
--- Lines 931-939
+-- Lines 938-946
 function HUDManager:change_waypoint_arrow_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1284,7 +1293,7 @@ function HUDManager:change_waypoint_arrow_color(id, color)
 	wp_data.arrow:set_color(color)
 end
 
--- Lines 941-958
+-- Lines 948-965
 function HUDManager:remove_waypoint(id)
 	self._hud.stored_waypoints[id] = nil
 
@@ -1315,7 +1324,7 @@ local wp_cam_forward = Vector3()
 local wp_onscreen_direction = Vector3()
 local wp_onscreen_target_pos = Vector3()
 
--- Lines 966-1140
+-- Lines 973-1147
 function HUDManager:_update_waypoints(t, dt)
 	local cam = managers.viewport:get_current_camera()
 

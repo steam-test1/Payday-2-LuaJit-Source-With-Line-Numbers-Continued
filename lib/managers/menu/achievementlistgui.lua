@@ -1925,7 +1925,7 @@ function AchievementListGui:connect_search_input()
 	self:update_caret()
 end
 
--- Lines 1574-1593
+-- Lines 1574-1591
 function AchievementListGui:disconnect_search_input()
 	if self._search_focus then
 		self._ws:disconnect_keyboard()
@@ -1944,12 +1944,12 @@ function AchievementListGui:disconnect_search_input()
 	end
 end
 
--- Lines 1595-1597
+-- Lines 1593-1595
 function AchievementListGui:_setup_change_search()
 	self:_redo_filter()
 end
 
--- Lines 1599-1688
+-- Lines 1597-1686
 function AchievementListGui:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -2039,7 +2039,7 @@ function AchievementListGui:search_key_press(o, k)
 	self:update_caret()
 end
 
--- Lines 1690-1695
+-- Lines 1688-1693
 function AchievementListGui:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -2048,7 +2048,7 @@ function AchievementListGui:search_key_release(o, k)
 	end
 end
 
--- Lines 1697-1751
+-- Lines 1695-1749
 function AchievementListGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -2110,7 +2110,7 @@ function AchievementListGui:update_key_down(o, k)
 	end
 end
 
--- Lines 1753-1786
+-- Lines 1751-1784
 function AchievementListGui:enter_text(o, s)
 	if self._skip_first then
 		self._skip_first = false
@@ -2142,19 +2142,19 @@ function AchievementListGui:enter_text(o, s)
 	self:_setup_change_search()
 end
 
--- Lines 1788-1790
+-- Lines 1786-1788
 function AchievementListGui:enter_key_callback()
 	self:_setup_change_search()
 end
 
--- Lines 1792-1796
+-- Lines 1790-1794
 function AchievementListGui:esc_key_callback()
 	call_on_next_update(function ()
 		self:disconnect_search_input()
 	end)
 end
 
--- Lines 1798-1805
+-- Lines 1796-1803
 function AchievementListGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -2164,7 +2164,7 @@ function AchievementListGui.blink(o)
 	end
 end
 
--- Lines 1807-1821
+-- Lines 1805-1819
 function AchievementListGui:set_blinking(b)
 	local caret = self._search.caret
 
@@ -2185,7 +2185,7 @@ function AchievementListGui:set_blinking(b)
 	end
 end
 
--- Lines 1823-1849
+-- Lines 1821-1847
 function AchievementListGui:update_caret()
 	local text = self._search.text
 	local caret = self._search.caret

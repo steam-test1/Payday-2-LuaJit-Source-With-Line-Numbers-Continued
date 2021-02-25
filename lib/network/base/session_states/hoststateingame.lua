@@ -8,8 +8,8 @@ function HostStateInGame:enter(data, enter_params)
 	self._new_peers = {}
 end
 
--- Lines 13-194
-function HostStateInGame:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, gameversion, join_attempt_identifier, auth_ticket, sender)
+-- Lines 13-195
+function HostStateInGame:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, auth_ticket, sender)
 	print("[HostStateInGame:on_join_request_received]", data, peer_name, client_preferred_character, dlcs, xuid, peer_level, gameversion, join_attempt_identifier, sender:ip_at_index(0))
 
 	local my_user_id = data.local_peer:user_id() or ""
@@ -169,11 +169,12 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	data.session:send_ok_to_load_level()
 	self:on_handshake_confirmation(data, new_peer, 1)
 	new_peer:set_rank(peer_rank)
+	new_peer:set_join_stinger_index(peer_stinger_index)
 
 	self._new_peers[new_peer_id] = true
 end
 
--- Lines 198-218
+-- Lines 199-216
 function HostStateInGame:on_peer_finished_loading(data, peer)
 	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
@@ -183,18 +184,15 @@ function HostStateInGame:on_peer_finished_loading(data, peer)
 	end
 
 	if self._new_peers[peer:id()] then
-		if peer:rank() > 0 then
-			managers.menu:post_event("infamous_player_join_stinger")
-		else
-			managers.menu:post_event("player_join")
-		end
+		local join_stinger_index = peer:join_stinger_index()
 
-		managers.network:session():send_to_peers_except(peer:id(), "peer_joined_sound", peer:rank() > 0)
+		managers.menu:play_join_stinger_by_index(join_stinger_index)
+		managers.network:session():send_to_peers_except(peer:id(), "peer_joined_sound", join_stinger_index)
 		managers.crime_spree:on_peer_finished_loading(peer)
 	end
 end
 
--- Lines 222-224
+-- Lines 220-222
 function HostStateInGame:is_joinable(data)
 	return not data.wants_to_load_level
 end

@@ -96,7 +96,7 @@ function MenuSceneManagerVR:_set_up_environments()
 	}
 end
 
--- Lines 94-177
+-- Lines 94-179
 function MenuSceneManagerVR:_set_up_templates()
 	local ref = self._bg_unit:get_object(Idstring("a_camera_reference"))
 	local c_ref = self._bg_unit:get_object(Idstring("a_reference"))
@@ -122,6 +122,7 @@ function MenuSceneManagerVR:_set_up_templates()
 	local cloned_templates = {
 		"blackmarket",
 		"blackmarket_mask",
+		"infamy_preview",
 		"blackmarket_item",
 		"character_customization",
 		"play_online",
@@ -162,6 +163,7 @@ function MenuSceneManagerVR:_set_up_templates()
 	local item_templates = {
 		"blackmarket_item",
 		"blackmarket_mask",
+		"infamy_preview",
 		"blackmarket_crafting",
 		"blackmarket_weapon_color"
 	}
@@ -173,7 +175,7 @@ end
 
 local __set_lobby_character_out_fit = MenuSceneManager.set_lobby_character_out_fit
 
--- Lines 180-188
+-- Lines 182-190
 function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 	__set_lobby_character_out_fit(self, i, outfit_string, rank)
 
@@ -187,7 +189,7 @@ end
 
 local __set_item_unit = MenuSceneManager._set_item_unit
 
--- Lines 191-213
+-- Lines 193-215
 function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, second_unit, custom_data)
 	__set_item_unit(self, unit, oobb_object, max_mod, type, second_unit, custom_data)
 
@@ -217,7 +219,7 @@ end
 
 local __remove_item = MenuSceneManager.remove_item
 
--- Lines 216-222
+-- Lines 218-224
 function MenuSceneManagerVR:remove_item()
 	__remove_item(self)
 
@@ -229,7 +231,7 @@ end
 
 local __set_scene_template = MenuSceneManager.set_scene_template
 
--- Lines 225-233
+-- Lines 227-235
 function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip_transition)
 	__set_scene_template(self, template, data, custom_name, skip_transition)
 
@@ -240,11 +242,11 @@ function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip
 	end
 end
 
--- Lines 235-236
+-- Lines 237-238
 function MenuSceneManagerVR:spawn_workbench_room()
 end
 
--- Lines 238-243
+-- Lines 240-245
 function MenuSceneManagerVR:get_henchmen_positioning(index)
 	local pos = Vector3(-180 + 50 * index, 340 + 30 * index, 0)
 	local rot = Rotation(180)
@@ -252,7 +254,7 @@ function MenuSceneManagerVR:get_henchmen_positioning(index)
 	return pos, rot
 end
 
--- Lines 246-264
+-- Lines 248-266
 function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	self._character_text_ws = self._character_text_ws or {}
 	local character = self._lobby_characters[peer_id]
@@ -279,7 +281,7 @@ function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	return panel, panel:center()
 end
 
--- Lines 266-274
+-- Lines 268-276
 function MenuSceneManagerVR:clear_character_text_panels()
 	if not self._character_text_ws then
 		return
@@ -290,7 +292,7 @@ function MenuSceneManagerVR:clear_character_text_panels()
 	end
 end
 
--- Lines 276-284
+-- Lines 278-286
 function MenuSceneManagerVR:_create_economy_safe_scene()
 	local pos = self._scene_templates.safe.character_pos + Vector3(50, 100, 0)
 	local rot = Rotation(30)
@@ -300,14 +302,14 @@ function MenuSceneManagerVR:_create_economy_safe_scene()
 	self:_start_safe_drill_sequence()
 end
 
--- Lines 286-288
+-- Lines 288-290
 function MenuSceneManagerVR:character_unit()
 	return self._character_unit
 end
 
 local __load_safe_result_content = MenuSceneManager.load_safe_result_content
 
--- Lines 291-297
+-- Lines 293-299
 function MenuSceneManagerVR:load_safe_result_content(...)
 	__load_safe_result_content(self, ...)
 

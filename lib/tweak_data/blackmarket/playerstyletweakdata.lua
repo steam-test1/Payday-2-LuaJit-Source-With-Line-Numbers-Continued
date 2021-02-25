@@ -1,4 +1,4 @@
--- Lines 1-1314
+-- Lines 1-1514
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -1596,9 +1596,277 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.continental.characters.ecp_male = continental_characters_male_fat
+	self.player_styles.gentleman = {
+		name_id = "bm_suit_gentleman",
+		desc_id = "bm_suit_gentleman_desc",
+		global_value = "pgo",
+		texture_bundle_folder = "pgo",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_fps_gentleman_male/pgo_acc_fps_gentleman_male",
+		material_variations = {}
+	}
+	self.player_styles.gentleman.material_variations.default = {
+		name_id = "bm_suit_var_gentleman_default",
+		global_value = "pgo",
+		desc_id = "bm_suit_var_gentleman_default_desc"
+	}
+	self.player_styles.gentleman.characters = {}
+	self.player_styles.gentleman.material_variations = {
+		default = {
+			name_id = "bm_suit_var_gentleman_default",
+			global_value = "pgo",
+			desc_id = "bm_suit_var_gentleman_default_desc"
+		},
+		father = {
+			desc_id = "bm_suit_var_gentleman_father_desc",
+			global_value = "pgo",
+			auto_aquire = true,
+			name_id = "bm_suit_var_gentleman_father",
+			third_material = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/shared_materials/pgo_acc_gentleman_father",
+			material = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/shared_materials/pgo_acc_fps_gentleman_father"
+		},
+		marine = {
+			desc_id = "bm_suit_var_gentleman_marine_desc",
+			global_value = "pgo",
+			auto_aquire = true,
+			name_id = "bm_suit_var_gentleman_marine",
+			third_material = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/shared_materials/pgo_acc_gentleman_marine",
+			material = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/shared_materials/pgo_acc_fps_gentleman_marine"
+		},
+		veteran = {
+			desc_id = "bm_suit_var_gentleman_veteran_desc",
+			global_value = "pgo",
+			auto_aquire = true,
+			name_id = "bm_suit_var_gentleman_veteran",
+			third_material = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/shared_materials/pgo_acc_gentleman_veteran",
+			material = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/shared_materials/pgo_acc_fps_gentleman_veteran"
+		}
+	}
+	local gentleman_characters_male = {
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_gentleman_male_average/pgo_acc_gentleman_male_average"
+	}
+
+	set_characters_data("gentleman", characters_male, gentleman_characters_male)
+
+	local gentleman_characters_male_big = {
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_gentleman_male_big/pgo_acc_gentleman_male_big"
+	}
+
+	set_characters_data("gentleman", characters_male_big, gentleman_characters_male_big)
+
+	local gentleman_characters_female = {
+		unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_fps_gentleman_female/pgo_acc_fps_gentleman_female",
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_gentleman_female_average/pgo_acc_gentleman_female_average"
+	}
+
+	set_characters_data("gentleman", characters_female, gentleman_characters_female)
+
+	local gentleman_characters_female_big = {
+		unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_fps_gentleman_female/pgo_acc_fps_gentleman_female",
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_gentleman_female_fat/pgo_acc_gentleman_female_fat"
+	}
+
+	set_characters_data("gentleman", characters_female_big, gentleman_characters_female_big)
+
+	local gentleman_characters_male_fat = {
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gentleman/pgo_acc_gentleman_male_fat/pgo_acc_gentleman_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.gentleman.characters.ecp_male = gentleman_characters_male_fat
+	self.player_styles.gunslinger = {
+		name_id = "bm_suit_gunslinger",
+		desc_id = "bm_suit_gunslinger_desc",
+		global_value = "pgo",
+		texture_bundle_folder = "pgo",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_fps_gunslinger_male/pgo_acc_fps_gunslinger_male",
+		material_variations = {}
+	}
+	self.player_styles.gunslinger.material_variations.default = {
+		name_id = "bm_suit_var_gunslinger_default",
+		global_value = "pgo",
+		desc_id = "bm_suit_var_gunslinger_default_desc"
+	}
+	self.player_styles.gunslinger.characters = {}
+	self.player_styles.gunslinger.material_variations = {
+		default = {
+			name_id = "bm_suit_var_gunslinger_default",
+			global_value = "pgo",
+			desc_id = "bm_suit_var_gunslinger_default_desc"
+		},
+		casual = {
+			desc_id = "bm_suit_var_gunslinger_casual_desc",
+			global_value = "pgo",
+			auto_aquire = true,
+			name_id = "bm_suit_var_gunslinger_casual",
+			third_material = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/shared_materials/pgo_acc_gunslinger_casual",
+			material = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/shared_materials/pgo_acc_fps_gunslinger_casual"
+		},
+		piro = {
+			desc_id = "bm_suit_var_gunslinger_piro_desc",
+			global_value = "pgo",
+			auto_aquire = true,
+			name_id = "bm_suit_var_gunslinger_piro",
+			third_material = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/shared_materials/pgo_acc_gunslinger_piro",
+			material = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/shared_materials/pgo_acc_fps_gunslinger_piro"
+		},
+		red = {
+			desc_id = "bm_suit_var_gunslinger_red_desc",
+			global_value = "pgo",
+			auto_aquire = true,
+			name_id = "bm_suit_var_gunslinger_red",
+			third_material = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/shared_materials/pgo_acc_gunslinger_red",
+			material = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/shared_materials/pgo_acc_fps_gunslinger_red"
+		}
+	}
+	local gunslinger_characters_male = {
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_gunslinger_male_average/pgo_acc_gunslinger_male_average"
+	}
+
+	set_characters_data("gunslinger", characters_male, gunslinger_characters_male)
+
+	local gunslinger_characters_male_big = {
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_gunslinger_male_big/pgo_acc_gunslinger_male_big"
+	}
+
+	set_characters_data("gunslinger", characters_male_big, gunslinger_characters_male_big)
+
+	local gunslinger_characters_female = {
+		unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_fps_gunslinger_female/pgo_acc_fps_gunslinger_female",
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_gunslinger_female_average/pgo_acc_gunslinger_female_average"
+	}
+
+	set_characters_data("gunslinger", characters_female, gunslinger_characters_female)
+
+	local gunslinger_characters_female_big = {
+		unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_fps_gunslinger_female/pgo_acc_fps_gunslinger_female",
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_gunslinger_female_fat/pgo_acc_gunslinger_female_fat"
+	}
+
+	set_characters_data("gunslinger", characters_female_big, gunslinger_characters_female_big)
+
+	local gunslinger_characters_male_fat = {
+		third_unit = "units/pd2_dlc_pgo/characters/pgo_acc_gunslinger/pgo_acc_gunslinger_male_fat/pgo_acc_gunslinger_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.gunslinger.characters.ecp_male = gunslinger_characters_male_fat
+	self.player_styles.t800 = {
+		name_id = "bm_suit_t800",
+		desc_id = "bm_suit_t800_desc",
+		global_value = "inf",
+		texture_bundle_folder = "inf",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_fps_t800_male/inf3_acc_fps_t800_male",
+		characters = {},
+		material_variations = {}
+	}
+	self.player_styles.t800.material_variations.default = {
+		name_id = "bm_suit_var_t800_default",
+		global_value = "inf",
+		desc_id = "bm_suit_var_t800_default_desc"
+	}
+	self.player_styles.t800.material_variations.cowboy = {
+		desc_id = "bm_suit_var_t800_cowboy_desc",
+		global_value = "inf",
+		name_id = "bm_suit_var_t800_cowboy",
+		third_material = "units/pd2_dlc_inf3/characters/inf3_acc_t800/shared_materials/inf3_acc_t800_cowboy",
+		material = "units/pd2_dlc_inf3/characters/inf3_acc_t800/shared_materials/inf3_acc_fps_t800_cowboy"
+	}
+	self.player_styles.t800.material_variations.toughboy = {
+		desc_id = "bm_suit_var_t800_toughboy_desc",
+		global_value = "inf",
+		name_id = "bm_suit_var_t800_toughboy",
+		third_material = "units/pd2_dlc_inf3/characters/inf3_acc_t800/shared_materials/inf3_acc_t800_toughboy",
+		material = "units/pd2_dlc_inf3/characters/inf3_acc_t800/shared_materials/inf3_acc_fps_t800_toughboy"
+	}
+	self.player_styles.t800.material_variations.red = {
+		desc_id = "bm_suit_var_t800_red_desc",
+		global_value = "inf",
+		name_id = "bm_suit_var_t800_red",
+		third_material = "units/pd2_dlc_inf3/characters/inf3_acc_t800/shared_materials/inf3_acc_t800_red",
+		material = "units/pd2_dlc_inf3/characters/inf3_acc_t800/shared_materials/inf3_acc_fps_t800_red"
+	}
+	local t800_characters_male = {
+		third_unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_t800_male_average/inf3_acc_t800_male_average"
+	}
+
+	set_characters_data("t800", characters_male, t800_characters_male)
+
+	local t800_characters_male_big = {
+		third_unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_t800_male_big/inf3_acc_t800_male_big"
+	}
+
+	set_characters_data("t800", characters_male_big, t800_characters_male_big)
+
+	local t800_characters_female = {
+		unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_fps_t800_female/inf3_acc_fps_t800_female",
+		third_unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_t800_female_average/inf3_acc_t800_female_average"
+	}
+
+	set_characters_data("t800", characters_female, t800_characters_female)
+
+	local t800_characters_female_big = {
+		unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_fps_t800_female/inf3_acc_fps_t800_female",
+		third_unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_t800_female_fat/inf3_acc_t800_female_fat"
+	}
+
+	set_characters_data("t800", characters_female_big, t800_characters_female_big)
+
+	local t800_characters_male_fat = {
+		third_unit = "units/pd2_dlc_inf3/characters/inf3_acc_t800/inf3_acc_t800_male_fat/inf3_acc_t800_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.t800.characters.ecp_male = t800_characters_male_fat
+	self.player_styles.cartelboss = {
+		name_id = "bm_suit_cartelboss",
+		desc_id = "bm_suit_cartelboss_desc",
+		texture_bundle_folder = "fex",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_fex/characters/fex_acc_cartelboss/fex_acc_fps_cartelboss_male/fex_acc_fps_cartelboss_male",
+		material_variations = {}
+	}
+	self.player_styles.cartelboss.material_variations.default = {
+		name_id = "bm_suit_var_cartelboss_default",
+		global_value = "fex",
+		desc_id = "bm_suit_var_cartelboss_default_desc"
+	}
+	self.player_styles.cartelboss.characters = {}
+	local cartelboss_characters_male = {
+		third_unit = "units/pd2_dlc_fex/characters/fex_acc_cartelboss/fex_acc_cartelboss_male_average/fex_acc_cartelboss_male_average"
+	}
+
+	set_characters_data("cartelboss", characters_male, cartelboss_characters_male)
+
+	local cartelboss_characters_male_big = {
+		third_unit = "units/pd2_dlc_fex/characters/fex_acc_cartelboss/fex_acc_cartelboss_male_big/fex_acc_cartelboss_male_big"
+	}
+
+	set_characters_data("cartelboss", characters_male_big, cartelboss_characters_male_big)
+
+	local cartelboss_characters_female = {
+		third_unit = "units/pd2_dlc_fex/characters/fex_acc_cartelboss/fex_acc_cartelboss_female_average/fex_acc_cartelboss_female_average"
+	}
+
+	set_characters_data("cartelboss", characters_female, cartelboss_characters_female)
+
+	local cartelboss_characters_female_big = {
+		third_unit = "units/pd2_dlc_fex/characters/fex_acc_cartelboss/fex_acc_cartelboss_female_fat/fex_acc_cartelboss_female_fat"
+	}
+
+	set_characters_data("cartelboss", characters_female_big, cartelboss_characters_female_big)
+
+	local cartelboss_characters_male_fat = {
+		third_unit = "units/pd2_dlc_fex/characters/fex_acc_cartelboss/fex_acc_cartelboss_male_fat/fex_acc_cartelboss_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.cartelboss.characters.ecp_male = cartelboss_characters_male_fat
 end
 
--- Lines 1316-1338
+-- Lines 1516-1538
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -1623,7 +1891,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 1340-1365
+-- Lines 1540-1565
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -1651,7 +1919,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 1367-1388
+-- Lines 1567-1588
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -1678,7 +1946,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 1390-1426
+-- Lines 1590-1626
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -1722,7 +1990,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 1429-1458
+-- Lines 1629-1658
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -1753,7 +2021,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 1460-1466
+-- Lines 1660-1666
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -1762,7 +2030,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 1468-1483
+-- Lines 1668-1683
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -1782,11 +2050,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 1485-1521
+-- Lines 1685-1721
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 1489-1518
+	-- Lines 1689-1718
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

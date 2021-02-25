@@ -498,7 +498,7 @@ function Telemetry:on_login()
 	end
 end
 
--- Lines 446-504
+-- Lines 446-506
 function Telemetry:send_on_player_logged_in()
 	if get_platform_name() ~= "WIN32" or not self._global._enabled then
 		return
@@ -527,7 +527,9 @@ function Telemetry:send_on_player_logged_in()
 		TotalPlayTime = total_playtime_hours,
 		TitleID = Global.dlc_manager.all_dlc_data.full_game.app_id,
 		Location = self._global._geolocation,
-		["Oldest Achievement"] = self._global._oldest_achievement_date
+		["Oldest Achievement"] = self._global._oldest_achievement_date,
+		PlayerLevel = managers.experience:current_level(),
+		InfamyLevel = managers.experience:current_rank()
 	}
 	local installed_dlc_list = {}
 
@@ -543,7 +545,7 @@ function Telemetry:send_on_player_logged_in()
 
 	telemetry_payload.InstalledDLCs = installed_dlc_list
 
-	-- Lines 485-499
+	-- Lines 487-501
 	local function login_callback(error_code, status_code, response_body)
 		if error_code == connection_errors.no_conn_error then
 			if status_code == 204 or status_code == 200 then
@@ -568,7 +570,7 @@ function Telemetry:send_on_player_logged_in()
 	self:send_telemetry_immediately("player_logged_in", telemetry_payload, nil, login_callback)
 end
 
--- Lines 506-517
+-- Lines 508-519
 function Telemetry:send_on_player_economy_event(event_origin, currency, amount, transaction_type)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -584,7 +586,7 @@ function Telemetry:send_on_player_economy_event(event_origin, currency, amount, 
 	self:send("player_economy", telemetry_payload)
 end
 
--- Lines 519-536
+-- Lines 521-538
 function Telemetry:send_on_player_logged_out()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -604,7 +606,7 @@ function Telemetry:send_on_player_logged_out()
 	self:send("player_logged_out", telemetry_payload)
 end
 
--- Lines 538-563
+-- Lines 540-565
 function Telemetry:on_start_heist()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -636,7 +638,7 @@ function Telemetry:on_start_heist()
 	self:send_batch_immediately()
 end
 
--- Lines 565-588
+-- Lines 567-590
 function Telemetry:on_end_heist(end_reason, total_exp_earned)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -663,7 +665,7 @@ function Telemetry:on_end_heist(end_reason, total_exp_earned)
 	self._heist_id = nil
 end
 
--- Lines 590-643
+-- Lines 592-645
 function Telemetry:send_on_player_heist_start()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -733,7 +735,7 @@ function Telemetry:send_on_player_heist_start()
 	self:send("player_heist_start", telemetry_payload)
 end
 
--- Lines 645-668
+-- Lines 647-670
 function Telemetry:send_on_player_heist_end()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -763,7 +765,7 @@ function Telemetry:send_on_player_heist_end()
 	self:send("player_heist_end", telemetry_payload)
 end
 
--- Lines 670-690
+-- Lines 672-692
 function Telemetry:send_on_heist_start()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -789,7 +791,7 @@ function Telemetry:send_on_heist_start()
 	self:send("heist_start", telemetry_payload)
 end
 
--- Lines 692-714
+-- Lines 694-716
 function Telemetry:send_on_heist_end(end_reason)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -817,7 +819,7 @@ function Telemetry:send_on_heist_end(end_reason)
 	self:send("heist_end", telemetry_payload)
 end
 
--- Lines 716-741
+-- Lines 718-743
 function Telemetry:send_on_player_heartbeat()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -850,7 +852,7 @@ function Telemetry:send_on_player_heartbeat()
 	self:send("player_heartbeat", telemetry_payload)
 end
 
--- Lines 743-774
+-- Lines 745-776
 function Telemetry:send_on_player_tutorial(id)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -890,7 +892,7 @@ function Telemetry:send_on_player_tutorial(id)
 	self:send_batch_immediately()
 end
 
--- Lines 776-791
+-- Lines 778-793
 function Telemetry:send_on_player_lobby_setting()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -911,7 +913,7 @@ function Telemetry:send_on_player_lobby_setting()
 	self:send("player_lobby_setting", telemetry_payload)
 end
 
--- Lines 793-802
+-- Lines 795-804
 function Telemetry:send_on_player_change_loadout(loadout)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return

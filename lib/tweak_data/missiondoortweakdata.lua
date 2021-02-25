@@ -1,6 +1,6 @@
 MissionDoorTweakData = MissionDoorTweakData or class()
 
--- Lines 3-524
+-- Lines 3-541
 function MissionDoorTweakData:init()
 	self.default = {
 		devices = {}
@@ -870,6 +870,34 @@ function MissionDoorTweakData:init()
 			timer = 120,
 			can_jam = false,
 			unit = Idstring("units/payday2/equipment/item_door_drill_small/item_door_drill_small")
+		}
+	}
+	self.safe_fex = {
+		devices = {}
+	}
+	self.safe_fex.devices.drill = {
+		{
+			align = "a_drill",
+			timer = 120,
+			can_jam = false,
+			unit = Idstring("units/payday2/equipment/item_door_drill_small/item_door_drill_small")
+		}
+	}
+	self.loot_safe_fex = {
+		devices = {}
+	}
+	self.loot_safe_fex.devices.drill = {
+		{
+			align = "a_drill",
+			timer = 120,
+			can_jam = false,
+			unit = Idstring("units/payday2/equipment/item_door_drill_small/item_door_drill_small")
+		}
+	}
+	self.loot_safe_fex.devices.c4 = {
+		{
+			align = "a_shp_charge",
+			unit = Idstring("units/payday2/equipment/gen_equipment_shape_charge/gen_equipment_shape_charge")
 		}
 	}
 end

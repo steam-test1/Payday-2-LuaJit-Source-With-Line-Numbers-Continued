@@ -1419,12 +1419,17 @@ function MoneyManager:on_unlock_skill_switch(selected_skill_switch)
 	self:deduct_from_offshore(offshore_cost)
 end
 
--- Lines 1502-1504
+-- Lines 1482-1488
+function MoneyManager:get_infamous_cost(rank)
+	return Application:digest_value(tweak_data.infamy.offshore_cost[rank] or tweak_data.infamy.offshore_cost[#tweak_data.infamy.offshore_cost], false)
+end
+
+-- Lines 1512-1514
 function MoneyManager:total()
 	return Application:digest_value(self._global.total, false)
 end
 
--- Lines 1506-1511
+-- Lines 1516-1521
 function MoneyManager:_set_total(value)
 	self._global.total = Application:digest_value(value, true)
 
@@ -1433,22 +1438,22 @@ function MoneyManager:_set_total(value)
 	end
 end
 
--- Lines 1513-1515
+-- Lines 1523-1525
 function MoneyManager:total_collected()
 	return Application:digest_value(self._global.total_collected, false)
 end
 
--- Lines 1517-1519
+-- Lines 1527-1529
 function MoneyManager:_set_total_collected(value)
 	self._global.total_collected = Application:digest_value(value, true)
 end
 
--- Lines 1521-1523
+-- Lines 1531-1533
 function MoneyManager:offshore()
 	return Application:digest_value(self._global.offshore, false)
 end
 
--- Lines 1525-1530
+-- Lines 1535-1540
 function MoneyManager:_set_offshore(value)
 	self._global.offshore = Application:digest_value(value, true)
 
@@ -1457,17 +1462,17 @@ function MoneyManager:_set_offshore(value)
 	end
 end
 
--- Lines 1532-1534
+-- Lines 1542-1544
 function MoneyManager:total_spent()
 	return Application:digest_value(self._global.total_spent, false)
 end
 
--- Lines 1536-1538
+-- Lines 1546-1548
 function MoneyManager:_set_total_spent(value)
 	self._global.total_spent = Application:digest_value(value, true)
 end
 
--- Lines 1540-1544
+-- Lines 1550-1554
 function MoneyManager:add_to_total(amount, reason)
 	amount = math.round(amount)
 
@@ -1475,7 +1480,7 @@ function MoneyManager:add_to_total(amount, reason)
 	self:_add_to_total(amount, nil, reason)
 end
 
--- Lines 1546-1571
+-- Lines 1556-1581
 function MoneyManager:_add_to_total(amount, params, reason)
 	local no_offshore = params and params.no_offshore
 	local offshore = math.round(no_offshore and 0 or amount * (1 - self:get_tweak_value("money_manager", "offshore_rate")))
@@ -1501,7 +1506,7 @@ function MoneyManager:_add_to_total(amount, params, reason)
 	end
 end
 
--- Lines 1573-1577
+-- Lines 1583-1587
 function MoneyManager:deduct_from_total(amount, reason)
 	amount = math.round(amount)
 
@@ -1509,7 +1514,7 @@ function MoneyManager:deduct_from_total(amount, reason)
 	self:_deduct_from_total(amount, reason)
 end
 
--- Lines 1579-1586
+-- Lines 1589-1596
 function MoneyManager:_deduct_from_total(amount, reason)
 	amount = math.min(amount, self:total())
 
@@ -1522,7 +1527,7 @@ function MoneyManager:_deduct_from_total(amount, reason)
 	Telemetry:send_on_player_economy_event(reason, "cash", amount, "spend")
 end
 
--- Lines 1588-1596
+-- Lines 1598-1606
 function MoneyManager:add_to_spending(amount)
 	amount = math.round(amount)
 
@@ -1535,7 +1540,7 @@ function MoneyManager:add_to_spending(amount)
 	end
 end
 
--- Lines 1598-1604
+-- Lines 1608-1614
 function MoneyManager:deduct_from_spending(amount)
 	amount = math.round(amount)
 
@@ -1547,7 +1552,7 @@ function MoneyManager:deduct_from_spending(amount)
 	self:_on_total_changed(0, -amount, 0)
 end
 
--- Lines 1606-1614
+-- Lines 1616-1624
 function MoneyManager:add_to_offshore(amount)
 	amount = math.round(amount)
 
@@ -1560,7 +1565,7 @@ function MoneyManager:add_to_offshore(amount)
 	end
 end
 
--- Lines 1616-1620
+-- Lines 1626-1630
 function MoneyManager:deduct_from_offshore(amount)
 	amount = math.round(amount)
 
@@ -1568,7 +1573,7 @@ function MoneyManager:deduct_from_offshore(amount)
 	self:_deduct_from_offshore(amount)
 end
 
--- Lines 1622-1626
+-- Lines 1632-1636
 function MoneyManager:_deduct_from_offshore(amount)
 	amount = math.min(amount, self:offshore())
 
@@ -1576,7 +1581,7 @@ function MoneyManager:_deduct_from_offshore(amount)
 	self:_on_total_changed(0, 0, -amount)
 end
 
--- Lines 1628-1647
+-- Lines 1638-1657
 function MoneyManager:_on_total_changed(amount, spending_cash, offshore)
 	self._heist_total = self._heist_total + amount
 	self._heist_offshore = self._heist_offshore + offshore
@@ -1594,22 +1599,22 @@ function MoneyManager:_on_total_changed(amount, spending_cash, offshore)
 	end
 end
 
--- Lines 1649-1651
+-- Lines 1659-1661
 function MoneyManager:heist_total()
 	return self._heist_total or 0
 end
 
--- Lines 1653-1655
+-- Lines 1663-1665
 function MoneyManager:heist_spending()
 	return self._heist_spending or 0
 end
 
--- Lines 1657-1659
+-- Lines 1667-1669
 function MoneyManager:heist_offshore()
 	return self._heist_offshore or 0
 end
 
--- Lines 1661-1676
+-- Lines 1671-1686
 function MoneyManager:get_payouts()
 	return {
 		stage_payout = self._stage_payout,
@@ -1623,37 +1628,37 @@ function MoneyManager:get_payouts()
 	}
 end
 
--- Lines 1678-1680
+-- Lines 1688-1690
 function MoneyManager:_set_stage_payout(amount)
 	self._stage_payout = amount
 end
 
--- Lines 1682-1684
+-- Lines 1692-1694
 function MoneyManager:_set_job_payout(amount)
 	self._job_payout = amount
 end
 
--- Lines 1686-1688
+-- Lines 1696-1698
 function MoneyManager:_set_bag_payout(amount)
 	self._bag_payout = amount
 end
 
--- Lines 1690-1692
+-- Lines 1700-1702
 function MoneyManager:_set_small_loot_payout(amount)
 	self._small_loot_payout = amount
 end
 
--- Lines 1694-1696
+-- Lines 1704-1706
 function MoneyManager:_set_crew_payout(amount)
 	self._crew_payout = amount
 end
 
--- Lines 1698-1700
+-- Lines 1708-1710
 function MoneyManager:_set_vehicle_payout(amount)
 	self._vehicle_payout = amount
 end
 
--- Lines 1702-1707
+-- Lines 1712-1717
 function MoneyManager:_add(amount)
 	amount = self:_check_multipliers(amount)
 	self._heist_total = self._heist_total + amount
@@ -1661,7 +1666,7 @@ function MoneyManager:_add(amount)
 	self:_present(amount)
 end
 
--- Lines 1709-1714
+-- Lines 1719-1724
 function MoneyManager:_check_multipliers(amount)
 	for _, multiplier in pairs(self._active_multipliers) do
 		amount = amount * multiplier
@@ -1670,7 +1675,7 @@ function MoneyManager:_check_multipliers(amount)
 	return math.round(amount)
 end
 
--- Lines 1716-1733
+-- Lines 1726-1743
 function MoneyManager:_present(amount)
 	local s_amount = tostring(amount)
 	local reverse = string.reverse(s_amount)
@@ -1689,7 +1694,7 @@ function MoneyManager:_present(amount)
 	end
 end
 
--- Lines 1736-1743
+-- Lines 1746-1753
 function MoneyManager:actions()
 	local t = {}
 
@@ -1702,7 +1707,7 @@ function MoneyManager:actions()
 	return t
 end
 
--- Lines 1746-1753
+-- Lines 1756-1763
 function MoneyManager:multipliers()
 	local t = {}
 
@@ -1715,14 +1720,14 @@ function MoneyManager:multipliers()
 	return t
 end
 
--- Lines 1755-1758
+-- Lines 1765-1768
 function MoneyManager:reset()
 	Global.money_manager = nil
 
 	self:_setup()
 end
 
--- Lines 1760-1769
+-- Lines 1770-1779
 function MoneyManager:save(data)
 	local state = {
 		total = self._global.total,
@@ -1733,7 +1738,7 @@ function MoneyManager:save(data)
 	data.MoneyManager = state
 end
 
--- Lines 1771-1782
+-- Lines 1781-1792
 function MoneyManager:load(data)
 	local state = data.MoneyManager
 	self._global.total = state.total and Application:digest_value(math.max(0, Application:digest_value(state.total, false)), true) or self._global.total

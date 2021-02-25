@@ -546,7 +546,7 @@ function UpgradesManager:_aquire_rep_upgrade(upgrade, id)
 	managers.skilltree:rep_upgrade(upgrade, id)
 end
 
--- Lines 559-636
+-- Lines 559-638
 function UpgradesManager:get_value(upgrade_id, ...)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
@@ -635,26 +635,28 @@ function UpgradesManager:get_value(upgrade_id, ...)
 		end
 
 		return is_default_weapon, grenade_level
+	elseif upgrade.category == "rep_upgrade" then
+		return upgrade.value
 	end
 
 	print("no value for", upgrade_id, upgrade.category)
 end
 
--- Lines 638-641
+-- Lines 640-643
 function UpgradesManager:get_category(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
 	return upgrade.category
 end
 
--- Lines 643-646
+-- Lines 645-648
 function UpgradesManager:get_upgrade_upgrade(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
 	return upgrade.upgrade
 end
 
--- Lines 648-651
+-- Lines 650-653
 function UpgradesManager:get_upgrade_locks(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
@@ -663,7 +665,7 @@ function UpgradesManager:get_upgrade_locks(upgrade_id)
 	}
 end
 
--- Lines 653-665
+-- Lines 655-667
 function UpgradesManager:is_upgrade_locked(upgrade_id)
 	local locks = self:get_upgrade_locks(upgrade_id)
 
@@ -676,7 +678,7 @@ function UpgradesManager:is_upgrade_locked(upgrade_id)
 	return false
 end
 
--- Lines 668-676
+-- Lines 670-678
 function UpgradesManager:is_locked(step)
 	local level = managers.experience:current_level()
 
@@ -689,7 +691,7 @@ function UpgradesManager:is_locked(step)
 	return false
 end
 
--- Lines 678-685
+-- Lines 680-687
 function UpgradesManager:get_level_from_step(step)
 	for i, d in ipairs(tweak_data.upgrades.itree_caps) do
 		if step == d.step then
@@ -700,7 +702,7 @@ function UpgradesManager:get_level_from_step(step)
 	return 0
 end
 
--- Lines 688-694
+-- Lines 690-696
 function UpgradesManager:progress()
 	if managers.dlc:is_dlc_unlocked("preorder") then
 		return {
@@ -718,12 +720,12 @@ function UpgradesManager:progress()
 	}
 end
 
--- Lines 696-698
+-- Lines 698-700
 function UpgradesManager:progress_by_tree(tree)
 	return self._global.progress[tree]
 end
 
--- Lines 700-708
+-- Lines 702-710
 function UpgradesManager:name(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get name from an upgrade that doesn't exist: " .. id .. "")
@@ -736,7 +738,7 @@ function UpgradesManager:name(id)
 	return managers.localization:text(upgrade.name_id)
 end
 
--- Lines 710-718
+-- Lines 712-720
 function UpgradesManager:title(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get title from an upgrade that doesn't exist: " .. id .. "")
@@ -749,7 +751,7 @@ function UpgradesManager:title(id)
 	return upgrade.title_id and managers.localization:text(upgrade.title_id) or nil
 end
 
--- Lines 720-728
+-- Lines 722-730
 function UpgradesManager:subtitle(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get subtitle from an upgrade that doesn't exist: " .. id .. "")
@@ -762,7 +764,7 @@ function UpgradesManager:subtitle(id)
 	return upgrade.subtitle_id and managers.localization:text(upgrade.subtitle_id) or nil
 end
 
--- Lines 730-750
+-- Lines 732-752
 function UpgradesManager:complete_title(id, type)
 	local title = self:title(id)
 
@@ -787,7 +789,7 @@ function UpgradesManager:complete_title(id, type)
 	return title .. "\n" .. subtitle
 end
 
--- Lines 752-760
+-- Lines 754-762
 function UpgradesManager:description(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get description from an upgrade that doesn't exist: " .. id .. "")
@@ -800,7 +802,7 @@ function UpgradesManager:description(id)
 	return upgrade.subtitle_id and managers.localization:text(upgrade.description_text_id or id) or nil
 end
 
--- Lines 763-769
+-- Lines 765-771
 function UpgradesManager:image(id)
 	local image = tweak_data.upgrades.definitions[id].image
 
@@ -811,7 +813,7 @@ function UpgradesManager:image(id)
 	return tweak_data.hud_icons:get_icon_data(image)
 end
 
--- Lines 771-777
+-- Lines 773-779
 function UpgradesManager:image_slice(id)
 	local image_slice = tweak_data.upgrades.definitions[id].image_slice
 
@@ -822,7 +824,7 @@ function UpgradesManager:image_slice(id)
 	return tweak_data.hud_icons:get_icon_data(image_slice)
 end
 
--- Lines 779-786
+-- Lines 781-788
 function UpgradesManager:icon(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to aquire an upgrade that doesn't exist: " .. id .. "")
@@ -833,7 +835,7 @@ function UpgradesManager:icon(id)
 	return tweak_data.upgrades.definitions[id].icon
 end
 
--- Lines 788-798
+-- Lines 790-800
 function UpgradesManager:aquired_by_category(category)
 	local t = {}
 
@@ -846,17 +848,17 @@ function UpgradesManager:aquired_by_category(category)
 	return t
 end
 
--- Lines 800-802
+-- Lines 802-804
 function UpgradesManager:aquired_features()
 	return self:aquired_by_category("feature")
 end
 
--- Lines 804-806
+-- Lines 806-808
 function UpgradesManager:aquired_weapons()
 	return self:aquired_by_category("weapon")
 end
 
--- Lines 810-828
+-- Lines 812-830
 function UpgradesManager:list_level_rewards(dlcs)
 	local t = {}
 	local tree_data = tweak_data.upgrades.level_tree
@@ -881,7 +883,7 @@ function UpgradesManager:list_level_rewards(dlcs)
 	return t
 end
 
--- Lines 834-840
+-- Lines 836-842
 function UpgradesManager:all_weapon_upgrades()
 	for id, data in pairs(tweak_data.upgrades.definitions) do
 		if data.category == "weapon" then
@@ -890,7 +892,7 @@ function UpgradesManager:all_weapon_upgrades()
 	end
 end
 
--- Lines 842-850
+-- Lines 844-852
 function UpgradesManager:weapon_upgrade_by_weapon_id(weapon_id)
 	for id, data in pairs(tweak_data.upgrades.definitions) do
 		if data.category == "weapon" and data.weapon_id == weapon_id then
@@ -899,7 +901,7 @@ function UpgradesManager:weapon_upgrade_by_weapon_id(weapon_id)
 	end
 end
 
--- Lines 852-860
+-- Lines 854-862
 function UpgradesManager:weapon_upgrade_by_factory_id(factory_id)
 	for id, data in pairs(tweak_data.upgrades.definitions) do
 		if data.category == "weapon" and data.factory_id == factory_id then
@@ -908,7 +910,7 @@ function UpgradesManager:weapon_upgrade_by_factory_id(factory_id)
 	end
 end
 
--- Lines 864-874
+-- Lines 866-876
 function UpgradesManager:print_aquired_tree()
 	local tree = {}
 
@@ -923,7 +925,7 @@ function UpgradesManager:print_aquired_tree()
 	end
 end
 
--- Lines 876-924
+-- Lines 878-926
 function UpgradesManager:analyze()
 	local not_placed = {}
 	local placed = {}
@@ -988,7 +990,7 @@ function UpgradesManager:analyze()
 	print("\nTotal upgrades " .. amount .. ".")
 end
 
--- Lines 926-940
+-- Lines 928-942
 function UpgradesManager:tree_stats()
 	local t = {
 		{
@@ -1019,7 +1021,7 @@ function UpgradesManager:tree_stats()
 	end
 end
 
--- Lines 966-983
+-- Lines 968-985
 function UpgradesManager:save(data)
 	local state = {
 		automanage = self._global.automanage,
@@ -1041,7 +1043,7 @@ function UpgradesManager:save(data)
 	data.UpgradesManager = state
 end
 
--- Lines 985-993
+-- Lines 987-995
 function UpgradesManager:load(data)
 	local state = data.UpgradesManager
 	self._global.automanage = state.automanage or self._global.automanage
@@ -1052,11 +1054,11 @@ function UpgradesManager:load(data)
 	self:_verify_loaded_data()
 end
 
--- Lines 996-1035
+-- Lines 998-1037
 function UpgradesManager:_verify_loaded_data()
 end
 
--- Lines 1037-1040
+-- Lines 1039-1042
 function UpgradesManager:reset()
 	Global.upgrades_manager = nil
 

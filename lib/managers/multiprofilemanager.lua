@@ -13,7 +13,7 @@ function MultiProfileManager:init()
 	self:_check_amount()
 end
 
--- Lines 13-51
+-- Lines 13-55
 function MultiProfileManager:save_current()
 	print("[MultiProfileManager:save_current] current profile:", self._global._current_profile)
 
@@ -42,13 +42,16 @@ function MultiProfileManager:save_current()
 		profile.preferred_henchmen[i] = blm:preferred_henchmen(i)
 	end
 
+	profile.join_stinger = managers.infamy:selected_join_stinger()
 	self._global._profiles[self._global._current_profile] = profile
 
 	print("[MultiProfileManager:save_current] done")
 end
 
--- Lines 53-106
+-- Lines 57-127
 function MultiProfileManager:load_current()
+	Global.block_update_outfit_information = true
+	Global.block_publish_equipped_to_steam = true
 	local profile = self:current_profile()
 	local blm = managers.blackmarket
 	local skt = managers.skilltree
@@ -85,6 +88,8 @@ function MultiProfileManager:load_current()
 		end
 	end
 
+	managers.infamy:select_join_stinger(profile.join_stinger)
+
 	local mcm = managers.menu_component
 
 	if mcm._player_inventory_gui then
@@ -101,9 +106,18 @@ function MultiProfileManager:load_current()
 		mcm:close_mission_briefing_gui()
 		mcm:create_mission_briefing_gui(node)
 	end
+
+	Global.block_update_outfit_information = nil
+	Global.block_publish_equipped_to_steam = nil
+
+	MenuCallbackHandler:_update_outfit_information()
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		managers.statistics:publish_equipped_to_steam()
+	end
 end
 
--- Lines 108-113
+-- Lines 129-134
 function MultiProfileManager:current_profile_name()
 	if not self:current_profile() then
 		return "Error"
@@ -112,12 +126,12 @@ function MultiProfileManager:current_profile_name()
 	return self:current_profile().name or "Profile " .. self._global._current_profile
 end
 
--- Lines 115-117
+-- Lines 136-138
 function MultiProfileManager:profile_count()
 	return math.max(#self._global._profiles, 1)
 end
 
--- Lines 119-132
+-- Lines 140-153
 function MultiProfileManager:set_current_profile(index)
 	if index < 0 or self:profile_count() < index then
 		return
@@ -135,43 +149,43 @@ function MultiProfileManager:set_current_profile(index)
 	print("[MultiProfileManager:set_current_profile] current profile:", self._global._current_profile)
 end
 
--- Lines 134-136
+-- Lines 155-157
 function MultiProfileManager:current_profile()
 	return self:profile(self._global._current_profile)
 end
 
--- Lines 138-140
+-- Lines 159-161
 function MultiProfileManager:profile(index)
 	return self._global._profiles[index]
 end
 
--- Lines 142-146
+-- Lines 163-167
 function MultiProfileManager:_add_profile(profile, index)
 	index = index or #self._global._profiles + 1
 	self._global._profiles[index] = profile
 end
 
--- Lines 148-150
+-- Lines 169-171
 function MultiProfileManager:next_profile()
 	self:set_current_profile(self._global._current_profile + 1)
 end
 
--- Lines 152-154
+-- Lines 173-175
 function MultiProfileManager:previous_profile()
 	self:set_current_profile(self._global._current_profile - 1)
 end
 
--- Lines 156-158
+-- Lines 177-179
 function MultiProfileManager:has_next()
 	return self._global._current_profile < self:profile_count()
 end
 
--- Lines 160-162
+-- Lines 181-183
 function MultiProfileManager:has_previous()
 	return self._global._current_profile > 1
 end
 
--- Lines 164-210
+-- Lines 185-231
 function MultiProfileManager:open_quick_select()
 	local dialog_data = {
 		title = "",
@@ -224,14 +238,14 @@ function MultiProfileManager:open_quick_select()
 	managers.system_menu:show_buttons(dialog_data)
 end
 
--- Lines 212-218
+-- Lines 233-239
 function MultiProfileManager:save(data)
 	local save_data = deep_clone(self._global._profiles)
 	save_data.current_profile = self._global._current_profile
 	data.multi_profile = save_data
 end
 
--- Lines 220-229
+-- Lines 241-250
 function MultiProfileManager:load(data)
 	if data.multi_profile then
 		for i, profile in ipairs(data.multi_profile) do
@@ -244,7 +258,7 @@ function MultiProfileManager:load(data)
 	self:_check_amount()
 end
 
--- Lines 231-243
+-- Lines 252-264
 function MultiProfileManager:reset()
 	local name = nil
 	local current_profile = self._global._current_profile
@@ -255,13 +269,20 @@ function MultiProfileManager:reset()
 
 		self:save_current()
 
-		self:current_profile().name = name
+		self:current_profile().name = nil
 	end
 
 	self._global._current_profile = current_profile
 end
 
--- Lines 245-265
+-- Lines 266-270
+function MultiProfileManager:infamy_reset()
+	for idx, profile in pairs(self._global._profiles) do
+		profile.skillset = 1
+	end
+end
+
+-- Lines 272-292
 function MultiProfileManager:_check_amount()
 	local wanted_amount = 15
 

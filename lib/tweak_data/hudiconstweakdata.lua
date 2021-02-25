@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3041
+-- Lines 7-3119
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -1621,6 +1621,51 @@ function HudIconsTweakData:init()
 			32
 		}
 	}
+	self.equipment_globe = {
+		texture = "guis/dlcs/fex/textures/pd2/hud_pickups_fex",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_scythe = {
+		texture = "guis/dlcs/fex/textures/pd2/hud_pickups_fex",
+		texture_rect = {
+			32,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_electrical = {
+		texture = "guis/dlcs/fex/textures/pd2/hud_pickups_fex",
+		texture_rect = {
+			64,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_fertilizer = {
+		texture = "guis/dlcs/fex/textures/pd2/hud_pickups_fex",
+		texture_rect = {
+			96,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_timer = {
+		texture = "guis/dlcs/fex/textures/pd2/hud_pickups_fex",
+		texture_rect = {
+			0,
+			32,
+			32,
+			32
+		}
+	}
 	self.interaction_free = {
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
@@ -2161,10 +2206,46 @@ function HudIconsTweakData:init()
 			142
 		}
 	}
-	self.infamy_icon = {
+	self.infamy_icon_1 = {
+		texture = "guis/textures/pd2/infamous_symbol",
+		texture_rect = {
+			32,
+			4,
+			16,
+			16
+		}
+	}
+	self.infamy_icon_2 = {
+		texture = "guis/textures/pd2/infamous_symbol",
+		texture_rect = {
+			48,
+			4,
+			16,
+			16
+		}
+	}
+	self.infamy_icon_3 = {
 		texture = "guis/textures/pd2/infamous_symbol",
 		texture_rect = {
 			0,
+			4,
+			16,
+			16
+		}
+	}
+	self.infamy_icon_4 = {
+		texture = "guis/textures/pd2/infamous_symbol",
+		texture_rect = {
+			16,
+			4,
+			16,
+			16
+		}
+	}
+	self.infamy_icon_5 = {
+		texture = "guis/textures/pd2/infamous_symbol",
+		texture_rect = {
+			64,
 			4,
 			16,
 			16
@@ -13682,6 +13763,105 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_Everything = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_Sugar = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_BulocsMansion_WeExpect = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_fex",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
 	self.C_Bain_H_Arena_Holdout_3 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
 		texture_rect = {
@@ -14006,6 +14186,33 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.Other_H_All_Infamy_50 = {
+		texture = "guis/dlcs/trk/atlases/inf_achievement",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
+	self.Other_H_All_Infamy_75 = {
+		texture = "guis/dlcs/trk/atlases/inf_achievement",
+		texture_rect = {
+			176,
+			2,
+			85,
+			85
+		}
+	}
+	self.Other_H_All_Infamy_C = {
+		texture = "guis/dlcs/trk/atlases/inf_achievement",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -14022,7 +14229,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3044-3047
+-- Lines 3122-3125
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -14035,7 +14242,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3049-3065
+-- Lines 3127-3143
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -14061,7 +14268,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3067-3072
+-- Lines 3145-3150
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -14075,7 +14282,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3074-3080
+-- Lines 3152-3158
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -14086,7 +14293,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3082-3088
+-- Lines 3160-3166
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

@@ -1981,7 +1981,7 @@ function VRBeltCustomization:init(is_start_menu)
 	self:set_mode("adjuster")
 end
 
--- Lines 1574-1597
+-- Lines 1574-1599
 function VRBeltCustomization:set_back_button_enabled(hand_id, enabled)
 	if self._back_button_enabled == enabled then
 		return
@@ -1997,13 +1997,15 @@ function VRBeltCustomization:set_back_button_enabled(hand_id, enabled)
 		player._hand_state_machine:enter_hand_state(hand_id, hand_id == player:primary_hand_index() and "laser" or "empty")
 	end
 
-	managers.menu:active_menu().input:focus(false)
-	managers.menu:active_menu().input:focus(true)
+	if managers.menu:active_menu() then
+		managers.menu:active_menu().input:focus(false)
+		managers.menu:active_menu().input:focus(true)
+	end
 
 	self._back_button_enabled = enabled
 end
 
--- Lines 1599-1610
+-- Lines 1601-1612
 function VRBeltCustomization:reset()
 	managers.vr:reset_setting("belt_height_ratio")
 	managers.vr:reset_setting("belt_distance")
@@ -2018,12 +2020,12 @@ function VRBeltCustomization:reset()
 	HUDManagerVR.link_belt(self._ws, self._belt_unit)
 end
 
--- Lines 1612-1614
+-- Lines 1614-1616
 function VRBeltCustomization:update_height()
 	self._height = managers.vr:get_setting("height")
 end
 
--- Lines 1616-1632
+-- Lines 1618-1634
 function VRBeltCustomization:save_grid()
 	local belt_layout = clone(managers.vr:get_setting("belt_layout"))
 
@@ -2048,13 +2050,13 @@ function VRBeltCustomization:save_grid()
 	managers.vr:set_setting("belt_box_sizes", belt_box_sizes)
 end
 
--- Lines 1634-1637
+-- Lines 1636-1639
 function VRBeltCustomization:reset_grid()
 	managers.vr:reset_setting("belt_layout")
 	managers.vr:reset_setting("belt_box_sizes")
 end
 
--- Lines 1639-1659
+-- Lines 1641-1661
 function VRBeltCustomization:destroy()
 	self._ws:gui():destroy_workspace(self._ws)
 
@@ -2075,7 +2077,7 @@ function VRBeltCustomization:destroy()
 	World:delete_unit(self._belt_unit)
 end
 
--- Lines 1661-1681
+-- Lines 1663-1683
 function VRBeltCustomization:set_mode(mode)
 	for _, adjuster in ipairs(self._adjusters) do
 		adjuster:set_visible(mode == "adjuster")
@@ -2100,12 +2102,12 @@ function VRBeltCustomization:set_mode(mode)
 	end
 end
 
--- Lines 1683-1685
+-- Lines 1685-1687
 function VRBeltCustomization:_update_grid(t, dt)
 	self:__update_grid(t, dt)
 end
 
--- Lines 1687-1769
+-- Lines 1689-1771
 function VRBeltCustomization:__update_grid(t, dt)
 	local player = managers.menu:player()
 	local hands = {
@@ -2203,7 +2205,7 @@ function VRBeltCustomization:__update_grid(t, dt)
 	end
 end
 
--- Lines 1771-1846
+-- Lines 1773-1848
 function VRBeltCustomization:_update_adjuster(t, dt)
 	local player = managers.menu:player()
 	local hands = {
@@ -2295,7 +2297,7 @@ function VRBeltCustomization:_update_adjuster(t, dt)
 	end
 end
 
--- Lines 1848-1852
+-- Lines 1850-1854
 function VRBeltCustomization:update(t, dt)
 	if self._updator then
 		self:_updator(t, dt)
@@ -2304,7 +2306,7 @@ end
 
 VRCalibrator = VRCalibrator or class()
 
--- Lines 1860-1955
+-- Lines 1862-1957
 function VRCalibrator:init(gui, menu, stop_clbk)
 	self._body_calibrator = VRBodyCalibrator:new(managers.controller:get_vr_controller())
 	self._gui = gui
@@ -2428,7 +2430,7 @@ function VRCalibrator:init(gui, menu, stop_clbk)
 	})
 end
 
--- Lines 1957-1969
+-- Lines 1959-1971
 function VRCalibrator:show_calibration_step(step)
 	self._gui:show_calibration_step(step)
 
@@ -2444,7 +2446,7 @@ function VRCalibrator:show_calibration_step(step)
 	end
 end
 
--- Lines 1971-1984
+-- Lines 1973-1986
 function VRCalibrator:start()
 	if managers.menu_scene then
 		self._prev_scene_template = managers.menu_scene:get_current_scene_template()
@@ -2466,7 +2468,7 @@ function VRCalibrator:start()
 	self._body_calibrator:start_calibration()
 end
 
--- Lines 1986-2004
+-- Lines 1988-2006
 function VRCalibrator:stop(succeeded)
 	if managers.menu_scene then
 		managers.menu_scene:set_scene_template(self._prev_scene_template)
@@ -2487,7 +2489,7 @@ function VRCalibrator:stop(succeeded)
 	end
 end
 
--- Lines 2006-2039
+-- Lines 2008-2041
 function VRCalibrator:update(t, dt)
 	if not self._enabled then
 		return

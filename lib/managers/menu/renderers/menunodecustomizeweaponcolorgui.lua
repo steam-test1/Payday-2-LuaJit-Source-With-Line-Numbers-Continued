@@ -768,7 +768,7 @@ function MenuNodeCustomizeWeaponColorGui:resolution_changed()
 	self:_set_info_shape()
 end
 
--- Lines 680-758
+-- Lines 680-762
 function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	node = node or self.node
 
@@ -829,6 +829,8 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 			unlock_id = "bm_menu_skirmish_content_reward"
 		elseif managers.dlc:is_content_crimespree_locked("weapon_skins", color_id) then
 			unlock_id = "bm_menu_crimespree_content_reward"
+		elseif managers.dlc:is_content_infamy_locked("weapon_skins", color_id) then
+			unlock_id = "menu_infamy_lock_info"
 		else
 			unlock_id = "bm_menu_dlc_locked"
 		end
@@ -849,7 +851,7 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	self:set_mini_info_with_color_range(info_string, color_range)
 end
 
--- Lines 760-768
+-- Lines 764-772
 function MenuNodeGui:set_mini_info_with_color_range(text, color_range)
 	self._mini_info_text:set_text(text)
 	self._mini_info_text:clear_range_color(0, utf8.len(self._mini_info_text:text()))
@@ -859,7 +861,7 @@ function MenuNodeGui:set_mini_info_with_color_range(text, color_range)
 	end
 end
 
--- Lines 770-783
+-- Lines 774-787
 function MenuNodeCustomizeWeaponColorGui:_clear_gui()
 	if alive(self.blur) then
 		self.start_blur = self.blur:alpha()
@@ -878,12 +880,12 @@ function MenuNodeCustomizeWeaponColorGui:_clear_gui()
 	self._tab_panel = nil
 end
 
--- Lines 785-787
+-- Lines 789-791
 function MenuNodeCustomizeWeaponColorGui:_setup_item_rows(node)
 	MenuNodeCustomizeWeaponColorGui.super._setup_item_rows(self, node)
 end
 
--- Lines 789-799
+-- Lines 793-803
 function MenuNodeCustomizeWeaponColorGui:reload_item(item)
 	MenuNodeCustomizeWeaponColorGui.super.reload_item(self, item)
 
@@ -895,13 +897,13 @@ function MenuNodeCustomizeWeaponColorGui:reload_item(item)
 	end
 end
 
--- Lines 801-804
+-- Lines 805-808
 function MenuNodeCustomizeWeaponColorGui:_align_marker(row_item)
 	MenuNodeCustomizeWeaponColorGui.super._align_marker(self, row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right() - self._align_line_padding)
 end
 
--- Lines 806-815
+-- Lines 810-819
 function MenuNodeCustomizeWeaponColorGui:close()
 	for _, row_item in ipairs(self.row_items) do
 		if row_item.item and type(row_item.item.close) == "function" then

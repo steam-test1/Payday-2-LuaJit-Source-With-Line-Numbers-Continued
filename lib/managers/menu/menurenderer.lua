@@ -25,14 +25,14 @@ require("lib/managers/menu/renderers/MenuNodeCustomizeWeaponColorGui")
 
 MenuRenderer = MenuRenderer or class(CoreMenuRenderer.Renderer)
 
--- Lines 40-44
+-- Lines 43-47
 function MenuRenderer:init(logic, ...)
 	MenuRenderer.super.init(self, logic, ...)
 
 	self._sound_source = SoundDevice:create_source("MenuRenderer")
 end
 
--- Lines 46-74
+-- Lines 49-77
 function MenuRenderer:show_node(node)
 	local gui_class = MenuNodeGui
 
@@ -63,7 +63,7 @@ function MenuRenderer:show_node(node)
 	end
 end
 
--- Lines 76-93
+-- Lines 79-96
 function MenuRenderer:open(...)
 	MenuRenderer.super.open(self, ...)
 	self:_create_framing()
@@ -75,7 +75,7 @@ function MenuRenderer:open(...)
 	self:_layout_menu_bg()
 end
 
--- Lines 95-101
+-- Lines 98-104
 function MenuRenderer:_create_framing()
 	local bh = CoreMenuRenderer.Renderer.border_height
 	local scaled_size = managers.gui_data:scaled_size()
@@ -94,7 +94,7 @@ function MenuRenderer:_create_framing()
 	MenuRenderer._create_bottom_text(self)
 end
 
--- Lines 103-115
+-- Lines 106-118
 function MenuRenderer:_create_bottom_text()
 	local scaled_size = managers.gui_data:scaled_size()
 	self._bottom_text = self._main_panel:text({
@@ -114,7 +114,7 @@ function MenuRenderer:_create_bottom_text()
 	self._bottom_text:set_right(self._bottom_text:parent():w())
 end
 
--- Lines 117-128
+-- Lines 120-131
 function MenuRenderer:set_bottom_text(id, localize)
 	if not alive(self._bottom_text) then
 		return
@@ -133,7 +133,7 @@ function MenuRenderer:set_bottom_text(id, localize)
 	self._bottom_text:set_h(h)
 end
 
--- Lines 130-138
+-- Lines 133-141
 function MenuRenderer:close(...)
 	MenuRenderer.super.close(self, ...)
 	managers.menu_component:close_newsfeed_gui()
@@ -145,7 +145,7 @@ function MenuRenderer:close(...)
 	end
 end
 
--- Lines 140-149
+-- Lines 143-152
 function MenuRenderer:_layout_menu_bg()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -157,7 +157,7 @@ function MenuRenderer:_layout_menu_bg()
 	end
 end
 
--- Lines 151-159
+-- Lines 154-162
 function MenuRenderer:_create_blackborders()
 	if alive(self._blackborder_workspace) then
 		managers.gui_data:destroy_workspace(self._blackborder_workspace)
@@ -170,7 +170,7 @@ function MenuRenderer:_create_blackborders()
 	BlackBorders:new(self._blackborder_workspace:panel())
 end
 
--- Lines 161-164
+-- Lines 164-167
 function MenuRenderer:update(t, dt)
 	MenuRenderer.super.update(self, t, dt)
 end
@@ -202,7 +202,7 @@ local mugshot_stencil = {
 	}
 }
 
--- Lines 175-188
+-- Lines 178-191
 function MenuRenderer:highlight_item(item, ...)
 	MenuRenderer.super.highlight_item(self, item, ...)
 
@@ -211,7 +211,7 @@ function MenuRenderer:highlight_item(item, ...)
 	end
 end
 
--- Lines 190-215
+-- Lines 193-218
 function MenuRenderer:trigger_item(item)
 	MenuRenderer.super.trigger_item(self, item)
 
@@ -240,7 +240,7 @@ function MenuRenderer:trigger_item(item)
 	end
 end
 
--- Lines 217-224
+-- Lines 220-227
 function MenuRenderer:post_event(event)
 	if _G.IS_VR then
 		managers.menu:post_event_vr(event)
@@ -249,14 +249,14 @@ function MenuRenderer:post_event(event)
 	self._sound_source:post_event(event)
 end
 
--- Lines 226-231
+-- Lines 229-234
 function MenuRenderer:navigate_back()
 	MenuRenderer.super.navigate_back(self)
 	self:active_node_gui():update_item_icon_visibility()
 	self:post_event("menu_exit")
 end
 
--- Lines 233-240
+-- Lines 236-243
 function MenuRenderer:resolution_changed(...)
 	MenuRenderer.super.resolution_changed(self, ...)
 	self:_layout_menu_bg()
@@ -268,15 +268,15 @@ function MenuRenderer:resolution_changed(...)
 	end
 end
 
--- Lines 242-244
+-- Lines 245-247
 function MenuRenderer:set_bg_visible(visible)
 end
 
--- Lines 246-261
+-- Lines 249-264
 function MenuRenderer:set_bg_area(area)
 end
 
--- Lines 263-277
+-- Lines 266-280
 function MenuRenderer:set_stencil_image(image)
 	if not self._menu_stencil then
 		return
@@ -295,12 +295,12 @@ function MenuRenderer:set_stencil_image(image)
 	self:set_stencil_align(self._menu_stencil_align, self._menu_stencil_align_percent)
 end
 
--- Lines 279-284
+-- Lines 282-287
 function MenuRenderer:refresh_theme()
 	self:set_stencil_image(self._menu_stencil_image_name)
 end
 
--- Lines 286-324
+-- Lines 289-327
 function MenuRenderer:set_stencil_align(align, percent)
 	if not self._menu_stencil then
 		return
@@ -343,7 +343,7 @@ function MenuRenderer:set_stencil_align(align, percent)
 	end
 end
 
--- Lines 327-341
+-- Lines 330-344
 function MenuRenderer:current_menu_text(topic_id)
 	local ids = {}
 
@@ -363,12 +363,12 @@ function MenuRenderer:current_menu_text(topic_id)
 	return s
 end
 
--- Lines 344-346
+-- Lines 347-349
 function MenuRenderer:accept_input(accept)
 	managers.menu_component:accept_input(accept)
 end
 
--- Lines 348-365
+-- Lines 351-368
 function MenuRenderer:input_focus()
 	if self:active_node_gui() and (self:active_node_gui().name == "crimenet_contract_crime_spree_join" or self:active_node_gui().name == "crimenet_crime_spree_contract_host" or self:active_node_gui().name == "crimenet_crime_spree_contract_singleplayer") then
 		return false
@@ -385,7 +385,7 @@ function MenuRenderer:input_focus()
 	return managers.menu_component:input_focus()
 end
 
--- Lines 367-379
+-- Lines 370-382
 function MenuRenderer:mouse_pressed(o, button, x, y)
 	if self:active_node_gui() and self:active_node_gui().mouse_pressed and self:active_node_gui():mouse_pressed(button, x, y) then
 		return true
@@ -400,7 +400,7 @@ function MenuRenderer:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 381-395
+-- Lines 384-398
 function MenuRenderer:mouse_released(o, button, x, y)
 	if self:active_node_gui() and self:active_node_gui().mouse_released and self:active_node_gui():mouse_released(button, x, y) then
 		return true
@@ -417,7 +417,7 @@ function MenuRenderer:mouse_released(o, button, x, y)
 	return false
 end
 
--- Lines 397-407
+-- Lines 400-410
 function MenuRenderer:mouse_clicked(o, button, x, y)
 	if self:active_node_gui() and self:active_node_gui().mouse_clicked and self:active_node_gui():mouse_clicked(button, x, y) then
 		return true
@@ -430,7 +430,7 @@ function MenuRenderer:mouse_clicked(o, button, x, y)
 	return false
 end
 
--- Lines 409-415
+-- Lines 412-418
 function MenuRenderer:mouse_double_click(o, button, x, y)
 	if managers.menu_component:mouse_double_click(o, button, x, y) then
 		return true
@@ -439,7 +439,7 @@ function MenuRenderer:mouse_double_click(o, button, x, y)
 	return false
 end
 
--- Lines 417-444
+-- Lines 420-447
 function MenuRenderer:mouse_moved(o, x, y)
 	local wanted_pointer = "arrow"
 
@@ -471,17 +471,17 @@ function MenuRenderer:mouse_moved(o, x, y)
 	return false, wanted_pointer
 end
 
--- Lines 446-448
+-- Lines 449-451
 function MenuRenderer:scroll_up()
 	return managers.menu_component:scroll_up()
 end
 
--- Lines 450-452
+-- Lines 453-455
 function MenuRenderer:scroll_down()
 	return managers.menu_component:scroll_down()
 end
 
--- Lines 454-459
+-- Lines 457-462
 function MenuRenderer:move_up()
 	if self:active_node_gui() and self:active_node_gui().move_up and self:active_node_gui():move_up() then
 		return true
@@ -490,7 +490,7 @@ function MenuRenderer:move_up()
 	return managers.menu_component:move_up()
 end
 
--- Lines 461-466
+-- Lines 464-469
 function MenuRenderer:move_down()
 	if self:active_node_gui() and self:active_node_gui().move_down and self:active_node_gui():move_down() then
 		return true
@@ -499,7 +499,7 @@ function MenuRenderer:move_down()
 	return managers.menu_component:move_down()
 end
 
--- Lines 468-473
+-- Lines 471-476
 function MenuRenderer:move_left()
 	if self:active_node_gui() and self:active_node_gui().move_left and self:active_node_gui():move_left() then
 		return true
@@ -508,7 +508,7 @@ function MenuRenderer:move_left()
 	return managers.menu_component:move_left()
 end
 
--- Lines 475-480
+-- Lines 478-483
 function MenuRenderer:move_right()
 	if self:active_node_gui() and self:active_node_gui().move_right and self:active_node_gui():move_right() then
 		return true
@@ -517,7 +517,7 @@ function MenuRenderer:move_right()
 	return managers.menu_component:move_right()
 end
 
--- Lines 482-487
+-- Lines 485-490
 function MenuRenderer:next_page()
 	if self:active_node_gui() and self:active_node_gui().next_page and self:active_node_gui():next_page() then
 		return true
@@ -526,7 +526,7 @@ function MenuRenderer:next_page()
 	return managers.menu_component:next_page()
 end
 
--- Lines 489-494
+-- Lines 492-497
 function MenuRenderer:previous_page()
 	if self:active_node_gui() and self:active_node_gui().previous_page and self:active_node_gui():previous_page() then
 		return true
@@ -535,7 +535,7 @@ function MenuRenderer:previous_page()
 	return managers.menu_component:previous_page()
 end
 
--- Lines 496-501
+-- Lines 499-504
 function MenuRenderer:confirm_pressed()
 	if self:active_node_gui() and self:active_node_gui().confirm_pressed and self:active_node_gui():confirm_pressed() then
 		return true
@@ -544,12 +544,12 @@ function MenuRenderer:confirm_pressed()
 	return managers.menu_component:confirm_pressed()
 end
 
--- Lines 503-505
+-- Lines 506-508
 function MenuRenderer:back_pressed()
 	return managers.menu_component:back_pressed()
 end
 
--- Lines 507-512
+-- Lines 510-515
 function MenuRenderer:special_btn_pressed(...)
 	if self:active_node_gui() and self:active_node_gui().special_btn_pressed and self:active_node_gui():special_btn_pressed(...) then
 		return true
@@ -558,7 +558,7 @@ function MenuRenderer:special_btn_pressed(...)
 	return managers.menu_component:special_btn_pressed(...)
 end
 
--- Lines 514-519
+-- Lines 517-522
 function MenuRenderer:special_btn_released(...)
 	if self:active_node_gui() and self:active_node_gui().special_btn_released and self:active_node_gui():special_btn_released(...) then
 		return true
@@ -567,7 +567,7 @@ function MenuRenderer:special_btn_released(...)
 	return managers.menu_component:special_btn_released(...)
 end
 
--- Lines 521-538
+-- Lines 524-541
 function MenuRenderer:ws_test()
 	if alive(self._test_safe) then
 		managers.gui_data:destroy_workspace(self._test_safe)

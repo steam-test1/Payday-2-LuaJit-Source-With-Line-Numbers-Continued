@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-875
+-- Lines 3-915
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -752,5 +752,37 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		icon = "equipment_rfid_tag_01",
 		text_id = "hud_equipment_loaded_card_lvl_2"
+	}
+	self.specials.globe = {
+		sync_possession = true,
+		icon = "equipment_globe",
+		text_id = "hud_equipment_globe"
+	}
+	self.specials.fertilizer = {
+		sync_possession = true,
+		icon = "equipment_fertilizer",
+		text_id = "hud_equipment_fertilizer"
+	}
+	self.specials.alarm_clock = {
+		sync_possession = true,
+		icon = "equipment_timer",
+		text_id = "hud_equipment_alarm_clock"
+	}
+	self.specials.scythe = {
+		sync_possession = true,
+		icon = "equipment_scythe",
+		text_id = "hud_equipment_scythe"
+	}
+	self.specials.wire = {
+		sync_possession = true,
+		icon = "equipment_electrical",
+		text_id = "hud_equipment_wire"
+	}
+	self.specials.diesel = {
+		sync_possession = true,
+		action_message = "diesel_obtained",
+		transfer_quantity = 4,
+		text_id = "hud_equipment_diesel",
+		icon = "equipment_gasoline"
 	}
 end

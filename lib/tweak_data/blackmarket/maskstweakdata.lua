@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-7756
+-- Lines 10-7770
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -7265,7 +7265,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		sort_number = 13,
-		dlc = "mex",
+		dlc = "dlc_achievement",
 		global_value = "mex",
 		texture_bundle_folder = "mex"
 	}
@@ -7279,6 +7279,18 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		dlc = "bex",
 		global_value = "bex",
 		texture_bundle_folder = "bex"
+	}
+	self.masks.buluc = {
+		unit = "units/pd2_dlc_fex/characters/msk_buluc/msk_buluc",
+		name_id = "bm_msk_buluc",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 13,
+		preview_oobb_object = "g_mask",
+		dlc = "dlc_achievement",
+		global_value = "fex",
+		texture_bundle_folder = "fex"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

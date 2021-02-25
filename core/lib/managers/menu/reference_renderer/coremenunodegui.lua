@@ -634,7 +634,7 @@ function NodeGui:_item_panel_height()
 	return height
 end
 
--- Lines 659-700
+-- Lines 659-713
 function NodeGui:_set_item_positions()
 	local total_height = self:_item_panel_height()
 	local current_y = self.height_padding
@@ -660,7 +660,21 @@ function NodeGui:_set_item_positions()
 			row_item.item:on_item_position(row_item, self)
 
 			if alive(row_item.icon) then
-				row_item.icon:set_left(row_item.gui_panel:right())
+				local left = row_item.gui_panel:left()
+				local right = row_item.gui_panel:right()
+
+				if row_item.gui_panel.set_text then
+					local x, y, w, h = row_item.gui_panel:text_rect()
+					left = x
+					right = x + w
+				end
+
+				if row_item.item:parameters().icon_align == "left" then
+					row_item.icon:set_right(left)
+				else
+					row_item.icon:set_left(right)
+				end
+
 				row_item.icon:set_center_y(row_item.gui_panel:center_y())
 				row_item.icon:set_color(row_item.gui_panel:color())
 			end
@@ -678,25 +692,25 @@ function NodeGui:_set_item_positions()
 	end
 end
 
--- Lines 702-708
+-- Lines 715-721
 function NodeGui:resolution_changed()
 	self:_setup_size()
 	self:_set_item_positions()
 	self:highlight_item(self._highlighted_item)
 end
 
--- Lines 710-712
+-- Lines 723-725
 function NodeGui:_setup_item_panel_parent(safe_rect)
 	self._item_panel_parent:set_shape(safe_rect.x, safe_rect.y, safe_rect.width, safe_rect.height)
 end
 
--- Lines 714-717
+-- Lines 727-730
 function NodeGui:_set_width_and_height(safe_rect)
 	self.width = safe_rect.width
 	self.height = safe_rect.height
 end
 
--- Lines 719-735
+-- Lines 732-748
 function NodeGui:_setup_item_panel(safe_rect, res)
 	local item_panel_offset = safe_rect.height * 0.5 - #self.row_items * 0.5 * (self.font_size + self.spacing)
 
@@ -708,12 +722,12 @@ function NodeGui:_setup_item_panel(safe_rect, res)
 	self.item_panel:set_w(safe_rect.width)
 end
 
--- Lines 737-739
+-- Lines 750-752
 function NodeGui:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines 741-802
+-- Lines 754-815
 function NodeGui:_setup_size()
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local scaled_size = managers.gui_data:scaled_size()
@@ -754,11 +768,11 @@ function NodeGui:_setup_size()
 	end
 end
 
--- Lines 804-805
+-- Lines 817-818
 function NodeGui:_setup_item_size(row_item)
 end
 
--- Lines 807-815
+-- Lines 820-828
 function NodeGui:mouse_pressed(button, x, y)
 	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and self:_mid_align() < x then
 		if button == Idstring("mouse wheel down") then

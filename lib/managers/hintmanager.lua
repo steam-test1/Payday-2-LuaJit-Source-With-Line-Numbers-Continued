@@ -87,13 +87,19 @@ function HintManager:show_hint(id, time, only_sync, params)
 	end
 end
 
--- Lines 83-114
+-- Lines 83-119
 function HintManager:_show_hint(id, time, params)
-	if self:hint(id).level and self:hint(id).level <= managers.experience:current_level() then
+	local hint = self:hint(id)
+
+	if not hint then
 		return
 	end
 
-	if self:hint(id).stop_at_level and managers.experience:current_level() < self:hint(id).stop_at_level then
+	if hint.level and hint.level <= managers.experience:current_level() then
+		return
+	end
+
+	if hint.stop_at_level and managers.experience:current_level() < hint.stop_at_level then
 		return
 	end
 
@@ -101,9 +107,9 @@ function HintManager:_show_hint(id, time, params)
 		return
 	end
 
-	if not self:hint(id).trigger_times or self:hint(id).trigger_times ~= self:hint(id).trigger_count then
+	if not hint.trigger_times or hint.trigger_times ~= hint.trigger_count then
 		self._cooldown[id] = Application:time() + 2
-		self:hint(id).trigger_count = self:hint(id).trigger_count + 1
+		hint.trigger_count = hint.trigger_count + 1
 		self._last_shown_id = id
 		params = params or {}
 		params.BTN_INTERACT = managers.localization:btn_macro("interact")
@@ -113,14 +119,14 @@ function HintManager:_show_hint(id, time, params)
 		params.BTN_SWITCH_WEAPON = managers.localization:btn_macro("switch_weapon")
 
 		managers.hud:show_hint({
-			text = managers.localization:text(self:hint(id).text_id, params),
-			event = self:hint(id).event,
+			text = managers.localization:text(hint.text_id, params),
+			event = hint.event,
 			time = time
 		})
 	end
 end
 
--- Lines 116-128
+-- Lines 121-133
 function HintManager:sync_show_hint(id)
 	local buttons = {
 		BTN_INTERACT = managers.localization:btn_macro("interact"),
@@ -133,12 +139,12 @@ function HintManager:sync_show_hint(id)
 	self:_show_hint(id, nil, buttons)
 end
 
--- Lines 130-132
+-- Lines 135-137
 function HintManager:last_shown_id()
 	return self._last_shown_id
 end
 
--- Lines 134-140
+-- Lines 139-145
 function HintManager:on_simulation_ended()
 	for _, hint in pairs(Global.hint_manager.hints) do
 		if hint.trigger_times then
@@ -147,7 +153,7 @@ function HintManager:on_simulation_ended()
 	end
 end
 
--- Lines 142-148
+-- Lines 147-153
 function HintManager:save(data)
 	local state = {
 		hints = deep_clone(Global.hint_manager.hints)
@@ -155,7 +161,7 @@ function HintManager:save(data)
 	data.HintManager = state
 end
 
--- Lines 150-154
+-- Lines 155-159
 function HintManager:load(data)
 	local state = data.HintManager
 	Global.hint_manager.hints = deep_clone(state.hints)

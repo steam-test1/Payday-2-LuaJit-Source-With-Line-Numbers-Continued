@@ -1443,7 +1443,7 @@ end
 
 -- Lines 1117-1133
 function AssetsItem:open_assets_buy_all()
-	if self._is_buy_all_dialog_open then
+	if self._is_buy_all_dialog_open and managers.assets:is_unlock_asset_allowed() then
 		return
 	end
 

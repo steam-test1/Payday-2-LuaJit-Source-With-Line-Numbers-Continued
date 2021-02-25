@@ -181,10 +181,9 @@ function HUDLootScreenSkirmish:init(hud, workspace, saved_lootdrop, saved_setup)
 	self:set_update("_update_flip_cards")
 end
 
--- Lines 188-319
+-- Lines 188-317
 function HUDLootScreenSkirmish:create_peers()
 	local max_peers = tweak_data.max_players
-	local infamy_icon = tweak_data.hud_icons:get_icon_data("infamy_icon")
 	local peer_panel_width = (self._panel:w() - PADDING * (max_peers - 1)) / max_peers
 	local peer_panel_height = self._panel:h() - PANEL_HEIGHT_SUB
 	self._peer_data = {}
@@ -219,11 +218,10 @@ function HUDLootScreenSkirmish:create_peers()
 		}))
 		player_infamy = peer_panel:bitmap({
 			visible = false,
-			h = 32,
+			h = 16,
 			w = 16,
 			x = player_text:x(),
-			y = player_text:y(),
-			texture = infamy_icon,
+			y = player_text:y() + 4,
 			color = peer_color
 		})
 		cards_panel = placer:add_row(GrowPanel:new(peer_panel, {
@@ -280,7 +278,7 @@ function HUDLootScreenSkirmish:create_peers()
 	end
 end
 
--- Lines 321-332
+-- Lines 319-330
 function HUDLootScreenSkirmish:set_num_visible(num)
 	if not alive(self._peers_panel) then
 		return
@@ -295,7 +293,7 @@ function HUDLootScreenSkirmish:set_num_visible(num)
 	self._peers_panel:set_center_x((self._panel:w() - (num - tweak_data.max_players) * (self._peer_width + PADDING)) / 2)
 end
 
--- Lines 334-396
+-- Lines 332-404
 function HUDLootScreenSkirmish:make_cards(peer, amount)
 	amount = math.min(amount, CARDS_PER_ROW * NUM_OF_ROWS)
 	local peer_id = peer and peer:id()
@@ -311,14 +309,28 @@ function HUDLootScreenSkirmish:make_cards(peer, amount)
 	local player_rank = is_local_peer and managers.experience:current_rank() or peer and peer:rank() or 0
 
 	if player_level then
-		local rank_string = (player_rank > 0 and managers.experience:rank_string(player_rank) .. "-" or "") .. player_level
+		local color_range_offset = utf8.len(peer_name_string) + 2
+		local rank_string, color_ranges = managers.experience:gui_string(player_level, player_rank, color_range_offset)
 
 		data.player_text:set_text(peer_name_string .. " (" .. rank_string .. ")")
+
+		for _, color_range in ipairs(color_ranges or {}) do
+			data.player_text:set_range_color(color_range.start, color_range.stop, color_range.color)
+		end
+
+		local infamy_texture, infamy_texture_rect = managers.experience:rank_icon_data(player_rank)
+
+		if infamy_texture then
+			local x, y, w, h = unpack(infamy_texture_rect)
+
+			data.player_infamy:set_image(infamy_texture, x, y, w, h)
+		end
+
 		data.player_infamy:set_visible(player_rank > 0)
 		data.player_text:set_x(player_rank > 0 and data.player_infamy:right() or data.player_infamy:left())
 	else
 		data.player_text:set_text(peer_name_string)
-		data.player_infamy:child("peer_infamy"):set_visible(false)
+		data.player_infamy:set_visible(false)
 		data.player_text:set_x(data.player_infamy:left())
 	end
 
@@ -357,7 +369,7 @@ function HUDLootScreenSkirmish:make_cards(peer, amount)
 	})
 end
 
--- Lines 398-513
+-- Lines 406-521
 function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 	local peer = lootdrop_data.peer
 	local peer_id = peer and peer:id()
@@ -479,17 +491,17 @@ function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 	self:set_num_visible(math.max(self._num_visible, peer_id))
 end
 
--- Lines 515-517
+-- Lines 523-525
 function HUDLootScreenSkirmish:add_callback(key, clbk)
 	self._callback_handler[key] = clbk
 end
 
--- Lines 519-521
+-- Lines 527-529
 function HUDLootScreenSkirmish:check_all_ready()
 	return not self:is_updating()
 end
 
--- Lines 523-531
+-- Lines 531-539
 function HUDLootScreenSkirmish:clear_other_peers(peer_id)
 	peer_id = peer_id or self:get_local_peer_id()
 
@@ -500,7 +512,7 @@ function HUDLootScreenSkirmish:clear_other_peers(peer_id)
 	end
 end
 
--- Lines 533-541
+-- Lines 541-549
 function HUDLootScreenSkirmish:remove_peer(peer_id, reason)
 	local data = self._peer_data[peer_id]
 
@@ -513,18 +525,18 @@ function HUDLootScreenSkirmish:remove_peer(peer_id, reason)
 	data.panel:hide()
 end
 
--- Lines 543-545
+-- Lines 551-553
 function HUDLootScreenSkirmish:is_updating()
 	return self._update_func ~= nil
 end
 
--- Lines 547-553
+-- Lines 555-561
 function HUDLootScreenSkirmish:set_update(func_name)
 	self._update_func = func_name and callback(self, self, func_name) or nil
 	self._update_t = 0
 end
 
--- Lines 555-565
+-- Lines 563-573
 function HUDLootScreenSkirmish:update(t, dt)
 	if self._wait_t > 0 then
 		self._wait_t = self._wait_t - dt
@@ -539,7 +551,7 @@ function HUDLootScreenSkirmish:update(t, dt)
 	end
 end
 
--- Lines 567-596
+-- Lines 575-604
 function HUDLootScreenSkirmish:_update_flip_cards(t, dt)
 	local data, card = nil
 	local card_index = 1
@@ -576,7 +588,7 @@ function HUDLootScreenSkirmish:_update_flip_cards(t, dt)
 	self:set_update("_update_show_reward_list")
 end
 
--- Lines 598-616
+-- Lines 606-624
 function HUDLootScreenSkirmish:_update_show_reward_list(t, dt)
 	local alpha = self._update_t / 0.5
 
@@ -600,22 +612,22 @@ function HUDLootScreenSkirmish:_update_show_reward_list(t, dt)
 	end
 end
 
--- Lines 618-620
+-- Lines 626-628
 function HUDLootScreenSkirmish:is_active()
 	return self._active
 end
 
--- Lines 622-624
+-- Lines 630-632
 function HUDLootScreenSkirmish:update_layout()
 	self._backdrop:_set_black_borders()
 end
 
--- Lines 626-628
+-- Lines 634-636
 function HUDLootScreenSkirmish:set_layer(layer)
 	self._backdrop:set_layer(layer)
 end
 
--- Lines 630-653
+-- Lines 638-661
 function HUDLootScreenSkirmish:hide()
 	if self._active then
 		return
@@ -644,7 +656,7 @@ function HUDLootScreenSkirmish:hide()
 	end
 end
 
--- Lines 655-690
+-- Lines 663-698
 function HUDLootScreenSkirmish:show()
 	self._backdrop:show()
 
@@ -688,7 +700,7 @@ function HUDLootScreenSkirmish:show()
 		color = Color.black
 	})
 
-	-- Lines 684-687
+	-- Lines 692-695
 	local function fade_out_anim(o)
 		over(0.5, function (p)
 			o:set_alpha(1 - p)
@@ -700,14 +712,14 @@ function HUDLootScreenSkirmish:show()
 	managers.menu_component:lootdrop_is_now_active()
 end
 
--- Lines 692-697
+-- Lines 700-705
 function HUDLootScreenSkirmish:reload()
 	self:close()
 	HUDLootScreenSkirmish.init(self, self._hud, self._workspace, self._lootdrops, self._setup)
 	self:show()
 end
 
--- Lines 699-705
+-- Lines 707-713
 function HUDLootScreenSkirmish:close()
 	self._active = false
 
@@ -717,7 +729,7 @@ function HUDLootScreenSkirmish:close()
 	self._backdrop = nil
 end
 
--- Lines 707-876
+-- Lines 715-884
 function HUDLootScreenSkirmish:_add_item_textures(lootdrop_data, panel)
 	local category = lootdrop_data.type_items
 	local item_id = lootdrop_data.item_entry
@@ -912,7 +924,7 @@ function HUDLootScreenSkirmish:_add_item_textures(lootdrop_data, panel)
 	end
 end
 
--- Lines 878-898
+-- Lines 886-906
 function HUDLootScreenSkirmish:_texture_loaded_clbk(params, texture_idstring)
 	local is_pattern = params.is_pattern
 	local panel = params.panel

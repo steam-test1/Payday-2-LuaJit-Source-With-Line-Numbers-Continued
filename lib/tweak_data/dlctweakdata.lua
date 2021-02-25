@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4562
+-- Lines 10-4595
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -212,6 +212,12 @@ function DLCTweakData:init(tweak_data)
 	self.starter_kit_mask.content.loot_drops = {
 		lootdrops
 	}
+	self.dlc_achievement = {
+		free = true,
+		content = {}
+	}
+	self.dlc_achievement.content.loot_global_value = "normal"
+	self.dlc_achievement.content.loot_drops = {}
 	self.pd2_clan = {
 		content = {}
 	}
@@ -8155,6 +8161,48 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "gloves",
 			item_entry = "mariatchi"
+		}
+	}
+	self.fex_starter_pack = {
+		free = true,
+		content = {}
+	}
+	self.fex_starter_pack.content.loot_global_value = "normal"
+	self.fex_starter_pack.content.loot_drops = {
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_fex_01",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_fex_02",
+			amount = 1
+		}
+	}
+	self.ach_wcc_fex_4 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "fex_4"
+	}
+	self.ach_wcc_fex_4.content.loot_global_value = "fex"
+	self.ach_wcc_fex_4.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "cartelboss"
+		}
+	}
+	self.ach_wcc_fex_11 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "fex_11"
+	}
+	self.ach_wcc_fex_11.content.loot_global_value = "fex"
+	self.ach_wcc_fex_11.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "buluc",
+			amount = 1
 		}
 	}
 end

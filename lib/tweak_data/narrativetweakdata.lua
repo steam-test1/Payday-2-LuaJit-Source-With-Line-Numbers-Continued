@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-4281
+-- Lines 3-4300
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -6103,6 +6103,79 @@ function NarrativeTweakData:init(tweak_data)
 		6,
 		24
 	}
+	self.stages.fex = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "fex",
+		mission_filter = {
+			1
+		}
+	}
+	self.jobs.fex = {
+		name_id = "heist_fex",
+		briefing_id = "heist_fex_crimenet",
+		contact = "vlad",
+		region = "street",
+		jc = 30,
+		dlc = "fex",
+		chain = {
+			self.stages.fex
+		},
+		briefing_event = "Play_vld_fex_cbf_01",
+		debrief_event = nil,
+		crimenet_callouts = {
+			"Play_vld_fex_cnc_01"
+		},
+		crimenet_videos = {
+			"codex/vlad1"
+		},
+		payout = {
+			50000,
+			125000,
+			250000,
+			550000,
+			700000,
+			700000,
+			700000
+		},
+		contract_cost = {
+			24000,
+			48000,
+			120000,
+			240000,
+			300000,
+			300000,
+			300000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.fex.contract_visuals.min_mission_xp = {
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200
+	}
+	self.jobs.fex.contract_visuals.max_mission_xp = {
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200
+	}
+	self.jobs.fex.contract_visuals.preview_image = {
+		id = "fex",
+		folder = "fex"
+	}
+	self.jobs.fex.date_added = {
+		2020,
+		11,
+		11
+	}
 	self.stages.lbe_lobby_end = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -6894,7 +6967,8 @@ function NarrativeTweakData:init(tweak_data)
 		"mex",
 		"mex_cooking",
 		"bex",
-		"pex"
+		"pex",
+		"fex"
 	}
 	self.forced_jobs = {
 		firestarter = true,
@@ -6961,7 +7035,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 4285-4300
+-- Lines 4304-4319
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -6980,22 +7054,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 4302-4304
+-- Lines 4321-4323
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 4306-4308
+-- Lines 4325-4327
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 4312-4314
+-- Lines 4331-4333
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 4318-4325
+-- Lines 4337-4344
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -7006,12 +7080,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 4329-4331
+-- Lines 4348-4350
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 4335-4351
+-- Lines 4354-4370
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -7028,7 +7102,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 4353-4363
+-- Lines 4372-4382
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -7041,7 +7115,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 4367-4418
+-- Lines 4386-4437
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -7098,7 +7172,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4422-4434
+-- Lines 4441-4453
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -7115,7 +7189,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4438-4453
+-- Lines 4457-4472
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

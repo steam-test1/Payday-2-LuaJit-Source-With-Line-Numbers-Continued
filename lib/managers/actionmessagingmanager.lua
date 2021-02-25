@@ -72,9 +72,16 @@ function ActionMessagingManager:show_message(id, instigator)
 	self:_show_message(id, instigator)
 end
 
--- Lines 71-95
+-- Lines 71-99
 function ActionMessagingManager:_show_message(id, instigator)
 	local msg_data = self:message(id)
+
+	if not msg_data then
+		debug_pause_unit(instigator, "ActionMessagingManager:_show_message: Missing action message with id", id)
+
+		return
+	end
+
 	local title = instigator:base():nick_name()
 	local icon = nil
 	local msg = ""
@@ -102,17 +109,17 @@ function ActionMessagingManager:_show_message(id, instigator)
 	end
 end
 
--- Lines 97-101
+-- Lines 101-105
 function ActionMessagingManager:sync_show_message(id, instigator)
 	if alive(instigator) and managers.network:session():peer_by_unit(instigator) then
 		self:_show_message(id, instigator)
 	end
 end
 
--- Lines 103-105
+-- Lines 107-109
 function ActionMessagingManager:save(data)
 end
 
--- Lines 107-109
+-- Lines 111-113
 function ActionMessagingManager:load(data)
 end

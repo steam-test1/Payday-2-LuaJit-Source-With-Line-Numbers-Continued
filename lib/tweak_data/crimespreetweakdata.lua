@@ -1,6 +1,6 @@
 CrimeSpreeTweakData = CrimeSpreeTweakData or class()
 
--- Lines 4-61
+-- Lines 4-64
 function CrimeSpreeTweakData:init(tweak_data)
 	self.unlock_level = 60
 	self.base_difficulty = "overkill_145"
@@ -16,6 +16,7 @@ function CrimeSpreeTweakData:init(tweak_data)
 	self.randomization_cost = 6
 	self.randomization_multiplier = 2
 	self.catchup_bonus = 0.035
+	self.catchup_min_level = 100
 	self.winning_streak = 0.005
 	self.winning_streak_reset_on_failure = false
 	self.continue_cost = {
@@ -33,7 +34,7 @@ function CrimeSpreeTweakData:init(tweak_data)
 	self:init_gui(tweak_data)
 end
 
--- Lines 64-444
+-- Lines 67-447
 function CrimeSpreeTweakData:init_missions(tweak_data)
 	local debug_short_add = 5
 	local debug_med_add = 7
@@ -398,7 +399,7 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 	}
 end
 
--- Lines 797-1153
+-- Lines 800-1156
 function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	local health_increase = 25
 	local damage_increase = 25
@@ -796,7 +797,7 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	}
 end
 
--- Lines 1155-1162
+-- Lines 1158-1165
 function CrimeSpreeTweakData:get_reward_icon(reward)
 	for _, data in ipairs(self.rewards) do
 		if data.id == reward then
@@ -807,7 +808,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return "downcard_overkill_deck"
 end
 
--- Lines 1164-1253
+-- Lines 1167-1256
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -932,7 +933,7 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 	}
 end
 
--- Lines 1255-1445
+-- Lines 1258-1448
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
@@ -1102,7 +1103,7 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 1447-1463
+-- Lines 1450-1466
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {
@@ -1123,12 +1124,12 @@ function CrimeSpreeTweakData:init_gui(tweak_data)
 	}
 end
 
--- Lines 1465-1473
+-- Lines 1468-1476
 function CrimeSpreeTweakData:get_mission_type_from_index(index)
 	return index
 end
 
--- Lines 1475-1494
+-- Lines 1478-1497
 function CrimeSpreeTweakData:get_index_from_id(level_id)
 	if level_id then
 		for i = 1, 3 do
@@ -1147,7 +1148,7 @@ function CrimeSpreeTweakData:get_index_from_id(level_id)
 	end
 end
 
--- Lines 1496-1510
+-- Lines 1499-1513
 function CrimeSpreeTweakData:get_id_from_index(merged_index)
 	local index_has_data = merged_index > 100
 

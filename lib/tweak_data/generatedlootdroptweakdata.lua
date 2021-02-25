@@ -46,7 +46,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "normal"
+		category = "dlc"
 	}
 	self.global_values.bex = {
 		name_id = "bm_global_value_bex",
@@ -80,6 +80,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		sort_number = 250,
 		category = "global_event"
 	}
+	self.global_values.fex = {
+		name_id = "bm_global_value_fex",
+		desc_id = "menu_l_global_value_fex",
+		unlock_id = "bm_global_value_fex_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "dlc"
+	}
 	self.global_values.flm = {
 		name_id = "bm_global_value_flm",
 		desc_id = "menu_l_global_value_sb18",
@@ -112,6 +128,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		sort_number = 333,
 		category = "pd2_clan"
 	}
+	self.global_values.gpo = {
+		name_id = "bm_global_value_gpo",
+		desc_id = "menu_l_global_value_gpo",
+		unlock_id = "bm_global_value_gpo_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 303,
+		category = "dlc"
+	}
 	self.global_values.hnd = {
 		name_id = "bm_global_value_hnd",
 		desc_id = "menu_l_global_value_hnd",
@@ -127,6 +159,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		track = true,
 		sort_number = 302,
 		category = "normal"
+	}
+	self.global_values.inf = {
+		name_id = "bm_global_value_inf",
+		desc_id = "menu_l_global_value_inf",
+		unlock_id = "bm_global_value_inf_unlock",
+		color = tweak_data.screen_colors.infamous_color,
+		dlc = true,
+		free = true,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 500,
+		category = "infamous"
 	}
 	self.global_values.maw = {
 		name_id = "bm_global_value_maw",
@@ -208,6 +256,38 @@ function LootDropTweakData:init_generated(tweak_data)
 		sort_number = 300,
 		category = "dlc"
 	}
+	self.global_values.mxw = {
+		name_id = "bm_global_value_mxw",
+		desc_id = "menu_l_global_value_mxw",
+		unlock_id = "bm_global_value_mxw_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "dlc"
+	}
+	self.global_values.ocp = {
+		name_id = "bm_global_value_ocp",
+		desc_id = "menu_l_global_value_ocp",
+		unlock_id = "bm_global_value_ocp_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 292,
+		category = "dlc"
+	}
 	self.global_values.pex = {
 		name_id = "bm_global_value_pex",
 		desc_id = "menu_l_global_value_pex",
@@ -222,6 +302,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 339,
+		category = "dlc"
+	}
+	self.global_values.pgo = {
+		name_id = "bm_global_value_pgo",
+		desc_id = "menu_l_global_value_pgo",
+		unlock_id = "bm_global_value_pgo_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 303,
 		category = "dlc"
 	}
 	self.global_values.scm = {
@@ -461,7 +557,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 291,
-		category = "normal"
+		category = "dlc"
 	}
 	self.global_values.wcc_s01 = {
 		name_id = "bm_global_value_wcc_s01",

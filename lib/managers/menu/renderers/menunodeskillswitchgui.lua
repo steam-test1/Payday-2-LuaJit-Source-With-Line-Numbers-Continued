@@ -22,7 +22,7 @@ function MenuNodeSkillSwitchGui:init(node, layer, parameters)
 	MenuNodeSkillSwitchGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 27-139
+-- Lines 27-144
 function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 	MenuNodeSkillSwitchGui.super._create_menu_item(self, row_item)
 
@@ -62,15 +62,22 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 		local distribution_after_text = false
 
 		if unlocked then
-			local points = managers.skilltree:points(gd)
-			distribution_text = distribution_text .. managers.localization:to_upper_text(points > 0 and "menu_st_points_unspent_skill_switch" or "menu_st_points_all_spent_skill_switch", {
-				points = string.format("%.3d", points)
-			})
-
-			if managers.skilltree:get_selected_skill_switch() == skill_switch then
-				status_text = managers.localization:to_upper_text("menu_st_active_skill_switch")
+			if managers.skilltree:is_skill_switch_suspended(gd) then
+				distribution_text = distribution_text .. managers.localization:to_upper_text("menu_st_suspended_points_skill_switch", {
+					Points = managers.skilltree:total_points_spent(gd)
+				})
+				status_text = managers.localization:to_upper_text("menu_st_unsuspend_skill_switch")
 			else
-				status_text = managers.localization:to_upper_text("menu_st_make_active_skill_switch")
+				local points = managers.skilltree:points(gd)
+				distribution_text = distribution_text .. managers.localization:to_upper_text(points > 0 and "menu_st_points_unspent_skill_switch" or "menu_st_points_all_spent_skill_switch", {
+					points = string.format("%.3d", points)
+				})
+
+				if managers.skilltree:get_selected_skill_switch() == skill_switch then
+					status_text = managers.localization:to_upper_text("menu_st_active_skill_switch")
+				else
+					status_text = managers.localization:to_upper_text("menu_st_make_active_skill_switch")
+				end
 			end
 		elseif can_unlock then
 			distribution_text = self:get_unlock_cost_text(skill_switch, true)
@@ -131,7 +138,7 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 	end
 end
 
--- Lines 141-154
+-- Lines 146-159
 function MenuNodeSkillSwitchGui:get_unlock_cost_text(skill_switch, include_free)
 	local spending_cost = managers.money:get_unlock_skill_switch_spending_cost(skill_switch)
 	local offshore_cost = managers.money:get_unlock_skill_switch_offshore_cost(skill_switch)
@@ -154,7 +161,7 @@ function MenuNodeSkillSwitchGui:get_unlock_cost_text(skill_switch, include_free)
 	end
 end
 
--- Lines 156-167
+-- Lines 161-172
 function MenuNodeSkillSwitchGui:_clear_gui()
 	for i, row_item in ipairs(self.row_items) do
 		if alive(row_item.skill_points_gui) then
@@ -169,7 +176,7 @@ function MenuNodeSkillSwitchGui:_clear_gui()
 	MenuNodeSkillSwitchGui.super._clear_gui(self)
 end
 
--- Lines 169-177
+-- Lines 174-182
 function MenuNodeSkillSwitchGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodeSkillSwitchGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -182,7 +189,7 @@ function MenuNodeSkillSwitchGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines 179-188
+-- Lines 184-193
 function MenuNodeSkillSwitchGui:_fade_row_item(row_item)
 	MenuNodeSkillSwitchGui.super._fade_row_item(self, row_item)
 
@@ -195,7 +202,7 @@ function MenuNodeSkillSwitchGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines 190-208
+-- Lines 195-213
 function MenuNodeSkillSwitchGui:_set_item_positions()
 	MenuNodeSkillSwitchGui.super._set_item_positions(self)
 
@@ -221,7 +228,7 @@ function MenuNodeSkillSwitchGui:_set_item_positions()
 	end
 end
 
--- Lines 210-234
+-- Lines 215-239
 function MenuNodeSkillSwitchGui:reload_item(item)
 	MenuNodeSkillSwitchGui.super.reload_item(self, item)
 
@@ -251,7 +258,7 @@ function MenuNodeSkillSwitchGui:reload_item(item)
 	end
 end
 
--- Lines 236-246
+-- Lines 241-251
 function MenuNodeSkillSwitchGui:_reload_item(item)
 	MenuNodeSkillSwitchGui.super._reload_item(self, item)
 
@@ -266,7 +273,7 @@ function MenuNodeSkillSwitchGui:_reload_item(item)
 	end
 end
 
--- Lines 248-264
+-- Lines 253-269
 function MenuNodeSkillSwitchGui:_align_marker(row_item)
 	MenuNodeSkillSwitchGui.super._align_marker(self, row_item)
 
@@ -286,7 +293,7 @@ function MenuNodeSkillSwitchGui:_align_marker(row_item)
 	end
 end
 
--- Lines 266-355
+-- Lines 271-360
 function MenuNodeSkillSwitchGui:_setup_item_panel(safe_rect, res)
 	MenuNodeSkillSwitchGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -393,7 +400,7 @@ function MenuNodeSkillSwitchGui:_setup_item_panel(safe_rect, res)
 	self:_layout_legends()
 end
 
--- Lines 357-366
+-- Lines 362-371
 function MenuNodeSkillSwitchGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -404,13 +411,13 @@ function MenuNodeSkillSwitchGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeSkillSwitchGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 368-371
+-- Lines 373-376
 function MenuNodeSkillSwitchGui:setup()
 	MenuNodeSkillSwitchGui.super.setup(self)
 	managers.menu_component:disable_skilltree_gui()
 end
 
--- Lines 373-379
+-- Lines 378-384
 function MenuNodeSkillSwitchGui:_layout_legends(...)
 	MenuNodeSkillSwitchGui.super._layout_legends(self, ...)
 
@@ -420,13 +427,13 @@ function MenuNodeSkillSwitchGui:_layout_legends(...)
 	end
 end
 
--- Lines 381-384
+-- Lines 386-389
 function MenuNodeSkillSwitchGui:close()
 	managers.menu_component:enable_skilltree_gui()
 	MenuNodeSkillSwitchGui.super.close(self)
 end
 
--- Lines 386-392
+-- Lines 391-397
 function MenuNodeSkillSwitchGui:mouse_moved(o, x, y)
 	local used, icon = MenuNodeSkillSwitchGui.super.mouse_moved(self, o, x, y)
 
