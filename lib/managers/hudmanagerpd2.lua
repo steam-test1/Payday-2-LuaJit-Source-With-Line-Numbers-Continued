@@ -2309,33 +2309,36 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 	end
 end
 
--- Lines 2186-2192
+-- Lines 2186-2194
 function HUDManager:achievement_popup(id)
 	if managers.network.account:signin_state() ~= "signed in" then
 		return
 	end
 
 	local d = tweak_data.achievement.visual[id]
+	local title = managers.localization:to_upper_text("hud_achieved_popup")
+	local text = d and managers.localization:to_upper_text(d.name_id) or id
+	local icon = d and d.icon_id or "placeholder_circle"
 
-	HudChallengeNotification.queue(managers.localization:to_upper_text("hud_achieved_popup"), managers.localization:to_upper_text(d.name_id), d.icon_id)
+	HudChallengeNotification.queue(title, text, icon)
 end
 
--- Lines 2195-2198
+-- Lines 2197-2200
 function HUDManager:challenge_popup(d)
 	HudChallengeNotification.queue(managers.localization:to_upper_text("hud_challenge_popup"), managers.localization:to_upper_text(d.name_id))
 end
 
--- Lines 2200-2203
+-- Lines 2202-2205
 function HUDManager:custom_ingame_popup(title_id, text_id, icon_id)
 	HudChallengeNotification.queue(managers.localization:to_upper_text(title_id), managers.localization:to_upper_text(text_id), icon_id)
 end
 
--- Lines 2205-2207
+-- Lines 2207-2209
 function HUDManager:custom_ingame_popup_text(title, text, icon_id)
 	HudChallengeNotification.queue(title, text, icon_id)
 end
 
--- Lines 2209-2230
+-- Lines 2211-2232
 function HUDManager:safe_house_challenge_popup(id, c_type)
 	local d = nil
 	local title_id = "hud_trophy_popup"
@@ -2358,7 +2361,7 @@ function HUDManager:safe_house_challenge_popup(id, c_type)
 	end
 end
 
--- Lines 2232-2237
+-- Lines 2234-2239
 function HUDManager:achievement_milestone_popup(id)
 	local milestone = managers.achievment:get_milestone(id)
 	local title = managers.localization:to_upper_text("hud_achievement_milestone_popup")
@@ -2369,7 +2372,7 @@ function HUDManager:achievement_milestone_popup(id)
 	HudChallengeNotification.queue(title, description, "milestone_trophy", milestone.rewards)
 end
 
--- Lines 2242-2250
+-- Lines 2244-2252
 function HUDManager:register_ingame_workspace(name, obj)
 	self._ingame_workspaces = self._ingame_workspaces or {}
 
@@ -2382,7 +2385,7 @@ function HUDManager:register_ingame_workspace(name, obj)
 	end
 end
 
--- Lines 2252-2254
+-- Lines 2254-2256
 function HUDManager:ingame_workspace(name)
 	return self._ingame_workspaces and self._ingame_workspaces[name]
 end

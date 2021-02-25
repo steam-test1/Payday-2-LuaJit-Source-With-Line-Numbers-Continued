@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 5-5483
+-- Lines 5-5494
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -52,24 +52,25 @@ function DLCTweakData:init(tweak_data)
 			sft = true,
 			pim = true,
 			cash = true,
-			ghm = true,
+			khp = true,
 			bbq = true,
-			steel = true,
+			ghm = true,
 			jigg = 1,
 			season_pass = true,
 			gage_pack_snp = true,
 			dlc1 = true,
+			hlm2 = true,
 			speedrunners = 1,
 			alienware_alpha = true,
-			humble_summer_2015 = 1,
 			pd2_million = true,
-			hlm2 = true,
+			humble_summer_2015 = 1,
 			mmh = true,
 			fgl = true,
 			pd2_hw_boxing = true,
-			apa = true,
+			steel = true,
 			infamous = 1,
 			pines = true,
+			apa = true,
 			born = true,
 			trk = true,
 			pmp = true,
@@ -90,6 +91,7 @@ function DLCTweakData:init(tweak_data)
 			tng = true,
 			pal = true,
 			favorite = true,
+			ktm = true,
 			mad = true,
 			turtles = true,
 			gage_pack_jobs = false,
@@ -7669,6 +7671,23 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "ghm",
+			amount = 1
+		}
+	}
+	self.khp_bundle = {
+		free = true,
+		content = {}
+	}
+	self.khp_bundle.content.loot_global_value = "normal"
+	self.khp_bundle.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_pis_legacy_b_threaded",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_pis_legacy_g_wood",
 			amount = 1
 		}
 	}

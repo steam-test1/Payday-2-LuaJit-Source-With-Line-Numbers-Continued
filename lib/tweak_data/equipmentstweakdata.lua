@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-784
+-- Lines 3-795
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -242,7 +242,7 @@ function EquipmentsTweakData:init()
 		},
 		keychain = {
 			sync_possession = true,
-			icon = "equipment_generic_key",
+			icon = "equipment_key_chain",
 			text_id = "hud_int_equipment_pickup_keychain"
 		},
 		chavez_key = {

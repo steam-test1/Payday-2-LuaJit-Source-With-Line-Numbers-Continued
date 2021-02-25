@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-3848
+-- Lines 3-3876
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -5671,6 +5671,75 @@ function NarrativeTweakData:init(tweak_data)
 		4,
 		29
 	}
+	self.stages.bph = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "bph"
+	}
+	self.jobs.bph = {
+		name_id = "heist_bph",
+		briefing_id = "heist_bph_crimenet",
+		contact = "locke",
+		region = "street",
+		jc = 30,
+		chain = {
+			self.stages.bph
+		},
+		briefing_event = "Play_loc_bph_cbf_01",
+		debrief_event = nil,
+		crimenet_callouts = {
+			"Play_loc_bph_cnc_01"
+		},
+		crimenet_videos = {
+			"contact_locke1"
+		},
+		payout = {
+			60000,
+			150000,
+			300000,
+			600000,
+			750000,
+			750000,
+			750000
+		},
+		contract_cost = {
+			24000,
+			48000,
+			120000,
+			240000,
+			300000,
+			300000,
+			300000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.bph.contract_visuals.min_mission_xp = {
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200
+	}
+	self.jobs.bph.contract_visuals.max_mission_xp = {
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200
+	}
+	self.jobs.bph.contract_visuals.preview_image = {
+		id = "bph",
+		folder = "bph"
+	}
+	self.jobs.bph.date_added = {
+		2018,
+		10,
+		26
+	}
 	self.stages.lbe_lobby_end = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -6155,7 +6224,8 @@ function NarrativeTweakData:init(tweak_data)
 		"skm_mus",
 		"skm_red2",
 		"skm_run",
-		"skm_watchdogs_stage2"
+		"skm_watchdogs_stage2",
+		"bph"
 	}
 	self.forced_jobs = {
 		firestarter = true,
@@ -6222,7 +6292,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 3852-3867
+-- Lines 3880-3895
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -6241,22 +6311,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 3869-3871
+-- Lines 3897-3899
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 3873-3875
+-- Lines 3901-3903
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 3879-3881
+-- Lines 3907-3909
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 3885-3892
+-- Lines 3913-3920
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -6267,12 +6337,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 3896-3898
+-- Lines 3924-3926
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 3902-3918
+-- Lines 3930-3946
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -6289,7 +6359,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 3920-3930
+-- Lines 3948-3958
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -6302,7 +6372,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 3934-3985
+-- Lines 3962-4013
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -6359,7 +6429,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 3989-4001
+-- Lines 4017-4029
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -6376,7 +6446,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4005-4020
+-- Lines 4033-4048
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

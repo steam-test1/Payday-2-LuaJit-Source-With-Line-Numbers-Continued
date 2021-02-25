@@ -1,11 +1,11 @@
 MusicManager = MusicManager or class(CoreMusicManager)
 
--- Lines 3-5
+-- Lines 3-9
 function MusicManager:init()
 	MusicManager.super.init(self)
 end
 
--- Lines 7-16
+-- Lines 11-20
 function MusicManager:init_globals(...)
 	MusicManager.super.init_globals(self, ...)
 
@@ -17,21 +17,21 @@ function MusicManager:init_globals(...)
 	self:_set_default_values()
 end
 
--- Lines 18-22
+-- Lines 22-26
 function MusicManager:on_steam_overlay_open()
 	if game_state_machine:current_state_name() == "menu_main" then
 		self:clbk_game_has_music_control(false)
 	end
 end
 
--- Lines 24-28
+-- Lines 28-32
 function MusicManager:on_steam_overlay_close()
 	if SystemInfo:platform() ~= Idstring("X360") then
 		self:clbk_game_has_music_control(true)
 	end
 end
 
--- Lines 30-47
+-- Lines 40-57
 function MusicManager:track_listen_start(event, track)
 	if self._current_track == track and self._current_event == event then
 		return
@@ -51,7 +51,7 @@ function MusicManager:track_listen_start(event, track)
 	self._current_event = event
 end
 
--- Lines 49-66
+-- Lines 59-76
 function MusicManager:track_listen_stop()
 	if self._current_event then
 		Global.music_manager.source:post_event("stop_all_music")
@@ -70,17 +70,17 @@ function MusicManager:track_listen_stop()
 	self._skip_play = nil
 end
 
--- Lines 68-70
+-- Lines 78-80
 function MusicManager:playlist()
 	return Global.music_manager.custom_playlist
 end
 
--- Lines 72-74
+-- Lines 82-84
 function MusicManager:playlist_add(track)
 	table.insert(Global.music_manager.custom_playlist, track)
 end
 
--- Lines 76-83
+-- Lines 86-93
 function MusicManager:playlist_remove(track)
 	for index, track_name in pairs(Global.music_manager.custom_playlist) do
 		if track == track_name then
@@ -91,27 +91,27 @@ function MusicManager:playlist_remove(track)
 	end
 end
 
--- Lines 85-87
+-- Lines 95-97
 function MusicManager:playlist_clear()
 	Global.music_manager.custom_playlist = {}
 end
 
--- Lines 89-91
+-- Lines 99-101
 function MusicManager:playlist_contains(track)
 	return table.contains(Global.music_manager.custom_playlist, track)
 end
 
--- Lines 93-95
+-- Lines 103-105
 function MusicManager:playlist_menu()
 	return Global.music_manager.custom_menu_playlist
 end
 
--- Lines 97-99
+-- Lines 107-109
 function MusicManager:playlist_menu_add(track)
 	table.insert(Global.music_manager.custom_menu_playlist, track)
 end
 
--- Lines 101-108
+-- Lines 111-118
 function MusicManager:playlist_menu_remove(track)
 	for index, track_name in pairs(Global.music_manager.custom_menu_playlist) do
 		if track == track_name then
@@ -122,42 +122,42 @@ function MusicManager:playlist_menu_remove(track)
 	end
 end
 
--- Lines 110-112
+-- Lines 120-122
 function MusicManager:playlist_menu_clear()
 	Global.music_manager.custom_menu_playlist = {}
 end
 
--- Lines 114-116
+-- Lines 124-126
 function MusicManager:playlist_menu_contains(track)
 	return table.contains(Global.music_manager.custom_menu_playlist, track)
 end
 
--- Lines 118-120
+-- Lines 128-130
 function MusicManager:track_attachment(name)
 	return Global.music_manager.track_attachment[name]
 end
 
--- Lines 122-124
+-- Lines 132-134
 function MusicManager:track_attachment_add(name, track)
 	Global.music_manager.track_attachment[name] = track
 end
 
--- Lines 126-128
+-- Lines 136-138
 function MusicManager:track_attachment_clear()
 	Global.music_manager.track_attachment = {}
 end
 
--- Lines 130-132
+-- Lines 140-142
 function MusicManager:unlock_track(name)
 	Global.music_manager.unlocked_tracks[name] = true
 end
 
--- Lines 134-136
+-- Lines 144-146
 function MusicManager:track_unlocked(name)
 	return Global.music_manager.unlocked_tracks[name]
 end
 
--- Lines 138-147
+-- Lines 148-157
 function MusicManager:save_settings(data)
 	local state = {
 		custom_playlist = Global.music_manager.custom_playlist,
@@ -168,7 +168,7 @@ function MusicManager:save_settings(data)
 	data.MusicManager = state
 end
 
--- Lines 149-171
+-- Lines 159-181
 function MusicManager:load_settings(data)
 	local state = data.MusicManager
 
@@ -193,7 +193,7 @@ function MusicManager:load_settings(data)
 	end
 end
 
--- Lines 173-179
+-- Lines 183-189
 function MusicManager:save_profile(data)
 	local state = {
 		loadout_selection = Global.music_manager.loadout_selection
@@ -201,7 +201,7 @@ function MusicManager:save_profile(data)
 	data.MusicManager = state
 end
 
--- Lines 181-187
+-- Lines 191-197
 function MusicManager:load_profile(data)
 	local state = data.MusicManager
 
@@ -210,7 +210,7 @@ function MusicManager:load_profile(data)
 	end
 end
 
--- Lines 189-196
+-- Lines 199-206
 function MusicManager:current_track_string()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 
@@ -221,7 +221,7 @@ function MusicManager:current_track_string()
 	return utf8.to_upper(managers.localization:text("menu_jukebox_" .. Global.music_manager.current_track))
 end
 
--- Lines 198-209
+-- Lines 208-219
 function MusicManager:jukebox_random_all()
 	local switches = {}
 	local track_list, track_locked = self:jukebox_music_tracks()
@@ -235,7 +235,7 @@ function MusicManager:jukebox_random_all()
 	return switches
 end
 
--- Lines 211-222
+-- Lines 221-232
 function MusicManager:jukebox_random_all_menu()
 	local switches = {}
 	local track_list, track_locked = self:jukebox_menu_tracks()
@@ -249,7 +249,7 @@ function MusicManager:jukebox_random_all_menu()
 	return switches
 end
 
--- Lines 224-246
+-- Lines 234-256
 function MusicManager:jukebox_set_defaults()
 	self:playlist_clear()
 
@@ -280,7 +280,7 @@ function MusicManager:jukebox_set_defaults()
 	end
 end
 
--- Lines 248-275
+-- Lines 258-285
 function MusicManager:jukebox_heist_specific()
 	if managers.job:interupt_stage() then
 		return self:track_attachment("escape") or "all"
@@ -311,7 +311,7 @@ function MusicManager:jukebox_heist_specific()
 	return "all"
 end
 
--- Lines 277-302
+-- Lines 287-312
 function MusicManager:_set_default_values()
 	if #Global.music_manager.custom_playlist == 0 then
 		local tracks_list, tracks_locked = self:jukebox_music_tracks()
@@ -342,7 +342,7 @@ function MusicManager:_set_default_values()
 	end
 end
 
--- Lines 304-316
+-- Lines 314-326
 function MusicManager:jukebox_menu_track(name)
 	local track = self:track_attachment(name)
 
@@ -359,7 +359,7 @@ function MusicManager:jukebox_menu_track(name)
 	end
 end
 
--- Lines 318-547
+-- Lines 328-560
 function MusicManager:jukebox_default_tracks()
 	local default_options = {
 		heist_friend = "all",
@@ -407,6 +407,7 @@ function MusicManager:jukebox_default_tracks()
 		credits = "criminals_ambition",
 		heist_run = "track_52",
 		heist_crojob1 = "all",
+		heist_bph = "track_62_lcv",
 		heist_sah = "track_61",
 		heist_firestarter3 = "track_02",
 		heist_alex1 = "track_08",
@@ -513,7 +514,7 @@ function MusicManager:jukebox_default_tracks()
 	return default_options
 end
 
--- Lines 549-634
+-- Lines 562-647
 function MusicManager:jukebox_music_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -552,7 +553,7 @@ function MusicManager:jukebox_music_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 636-689
+-- Lines 649-702
 function MusicManager:jukebox_menu_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -579,7 +580,7 @@ function MusicManager:jukebox_menu_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 691-693
+-- Lines 704-706
 function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end

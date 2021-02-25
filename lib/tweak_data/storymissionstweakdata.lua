@@ -147,7 +147,7 @@ function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines 131-707
+-- Lines 131-752
 function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 5
 	self.missions = {
@@ -845,6 +845,30 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 				{
 					self:_level_progress("story_very_hard_henrys_rock", 1, {
 						name_id = "menu_sm_very_hard_henrys_rock"
+					})
+				}
+			},
+			rewards = self:_default_reward()
+		}),
+		self:_mission("sm_50", {
+			reward_id = "menu_sm_default_reward",
+			voice_line = "Play_loc_stq_04",
+			objectives = {
+				{
+					self:_level_progress("story_very_hard_sah", 1, {
+						name_id = "menu_sm_very_hard_sah"
+					})
+				}
+			},
+			rewards = self:_default_reward()
+		}),
+		self:_mission("sm_51", {
+			reward_id = "menu_sm_default_reward",
+			voice_line = "Play_loc_stq_05",
+			objectives = {
+				{
+					self:_level_progress("story_very_hard_bph", 1, {
+						name_id = "menu_sm_very_hard_bph"
 					})
 				}
 			},
