@@ -33,6 +33,11 @@ function GenericDLCManager:has_smo()
 	return self:is_dlc_unlocked("smo")
 end
 
+-- Lines 64-66
+function GenericDLCManager:has_sms()
+	return self:is_dlc_unlocked("sms")
+end
+
 -- Lines 69-71
 function GenericDLCManager:has_tam()
 	return self:is_dlc_unlocked("tam")
@@ -80,6 +85,10 @@ function WINDLCManager:init_generated()
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.smo = {
+		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.sms = {
 		app_id = "218620",
 		no_install = true
 	}

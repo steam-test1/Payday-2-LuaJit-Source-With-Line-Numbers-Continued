@@ -1276,3 +1276,18 @@ function ConnectionNetworkHandler:sync_end_assault_skirmish(sender)
 
 	managers.skirmish:on_end_assault()
 end
+
+-- Lines 1266-1277
+function ConnectionNetworkHandler:uno_achievement_challenge_completed(sender)
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	managers.custom_safehouse:uno_achievement_challenge():set_peer_completed(peer:id(), true)
+end

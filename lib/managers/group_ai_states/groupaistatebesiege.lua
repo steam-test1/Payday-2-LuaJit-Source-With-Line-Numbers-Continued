@@ -164,6 +164,10 @@ end
 function GroupAIStateBesiege:_upd_police_activity()
 	self._police_upd_task_queued = false
 
+	if self._police_activity_blocked then
+		return
+	end
+
 	if self._ai_enabled then
 		self:_upd_SO()
 		self:_upd_grp_SO()
@@ -4350,4 +4354,9 @@ end
 -- Lines 4226-4228
 function GroupAIStateBesiege:get_assault_number()
 	return self._assault_number
+end
+
+-- Lines 4233-4235
+function GroupAIStateBesiege:terminate_assaults()
+	self._police_activity_blocked = true
 end

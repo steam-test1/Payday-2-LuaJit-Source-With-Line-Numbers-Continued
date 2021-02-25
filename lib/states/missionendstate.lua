@@ -249,6 +249,8 @@ function MissionEndState:at_enter(old_state, params)
 	if Network:is_server() then
 		managers.network:session():set_state("game_end")
 	end
+
+	managers.music:on_mission_end()
 end
 
 -- Lines 265-267

@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-7655
+-- Lines 10-7647
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -7168,6 +7168,84 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		global_value = "infamous",
 		texture_bundle_folder = "smo",
 		sort_number = 72
+	}
+	self.masks.sms_01 = {
+		unit = "units/pd2_dlc_sms/masks/sms_01/msk_sms_01",
+		name_id = "bm_msk_sms_01",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
+	}
+	self.masks.sms_02 = {
+		unit = "units/pd2_dlc_sms/masks/sms_02/msk_sms_02",
+		name_id = "bm_msk_sms_02",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
+	}
+	self.masks.sms_03 = {
+		unit = "units/pd2_dlc_sms/masks/sms_03/msk_sms_03",
+		name_id = "bm_msk_sms_03",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
+	}
+	self.masks.sms_04 = {
+		unit = "units/pd2_dlc_sms/masks/sms_04/msk_sms_04",
+		name_id = "bm_msk_sms_04",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
+	}
+	self.masks.sms_05 = {
+		unit = "units/pd2_dlc_sms/masks/sms_05/msk_sms_05",
+		name_id = "bm_msk_sms_05",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
+	}
+	self.masks.sms_06 = {
+		unit = "units/pd2_dlc_sms/masks/sms_06/msk_sms_06",
+		name_id = "bm_msk_sms_06",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73,
+		offsets = {
+			wild = {
+				Vector3(0, -0.399472, 0),
+				Rotation(-0, -0, -0)
+			},
+			joy = {
+				Vector3(0, 0, 0.316006),
+				Rotation(-0, -0, -0)
+			},
+			sydney = {
+				Vector3(0, -1.35344, 0),
+				Rotation(-0, -0, -0)
+			}
+		}
+	}
+	self.masks.sms_07 = {
+		unit = "units/pd2_dlc_sms/masks/sms_07/msk_sms_07",
+		name_id = "bm_msk_sms_07",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
+	}
+	self.masks.sms_08 = {
+		unit = "units/pd2_dlc_sms/masks/sms_08/msk_sms_08",
+		name_id = "bm_msk_sms_08",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "sms",
+		sort_number = 73
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

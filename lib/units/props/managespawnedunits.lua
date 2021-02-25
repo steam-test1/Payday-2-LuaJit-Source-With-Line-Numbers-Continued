@@ -208,10 +208,10 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 end
 
 -- Lines 261-269
-function ManageSpawnedUnits:remove_unit(unit_id)
+function ManageSpawnedUnits:remove_unit(unit_id, allow_client_removal)
 	local entry = self._spawned_units[unit_id]
 
-	if Network:is_server() and alive(entry.unit) then
+	if (Network:is_server() or allow_client_removal) and entry and alive(entry.unit) then
 		entry.unit:set_slot(0)
 	end
 

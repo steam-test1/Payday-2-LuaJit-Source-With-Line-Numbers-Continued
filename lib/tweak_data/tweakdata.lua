@@ -390,7 +390,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 412-2361
+-- Lines 412-2397
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1073,6 +1073,41 @@ function TweakData:init()
 			fade_in = 1,
 			fade_out = 1,
 			color = Color(1, 0, 0, 0),
+			timer = TimerManager:main()
+		},
+		white_fade_in = {
+			blend_mode = "add",
+			sustain = 0,
+			play_paused = true,
+			fade_in = 0,
+			fade_out = 3,
+			color = Color(1, 1, 1, 1),
+			timer = TimerManager:main()
+		},
+		white_fade_out = {
+			blend_mode = "add",
+			sustain = 30,
+			play_paused = true,
+			fade_in = 3,
+			fade_out = 0,
+			color = Color(1, 1, 1, 1),
+			timer = TimerManager:main()
+		},
+		white_fade_out_permanent = {
+			blend_mode = "add",
+			fade_out = 0,
+			play_paused = true,
+			fade_in = 1,
+			color = Color(1, 1, 1, 1),
+			timer = TimerManager:main()
+		},
+		white_fade_out_in = {
+			blend_mode = "add",
+			sustain = 1,
+			play_paused = true,
+			fade_in = 1,
+			fade_out = 1,
+			color = Color(1, 1, 1, 1),
 			timer = TimerManager:main()
 		},
 		element_fade_in = {
@@ -2631,7 +2666,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2365-2381
+-- Lines 2401-2417
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2649,7 +2684,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2386-2483
+-- Lines 2422-2519
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2728,19 +2763,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2487-2567
+-- Lines 2523-2603
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2571-2573
+-- Lines 2607-2609
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2577-2585
+-- Lines 2613-2621
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2751,7 +2786,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2589-2592
+-- Lines 2625-2628
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2761,7 +2796,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2596-2605
+-- Lines 2632-2641
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2774,7 +2809,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2609-2785
+-- Lines 2645-2821
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2963,7 +2998,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 2787-2960
+-- Lines 2823-2996
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3077,7 +3112,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 2962-3034
+-- Lines 2998-3070
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3150,7 +3185,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3037-3041
+-- Lines 3073-3077
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3168,7 +3203,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3058-3273
+-- Lines 3094-3309
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

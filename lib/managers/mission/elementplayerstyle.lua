@@ -42,9 +42,19 @@ function ElementPlayerStyle:load(data)
 	end
 end
 
--- Lines 38-41
+-- Lines 38-49
 function ElementPlayerStyle:_trigger_sequence()
-	local sequence = "spawn_prop_" .. self._values.style
+	if self._values.style == "none" then
+		local active_sequence = managers.criminals:active_player_sequence()
 
-	managers.criminals:set_active_player_sequence(sequence)
+		if active_sequence then
+			managers.criminals:set_active_player_sequence("de" .. active_sequence)
+
+			managers.criminals._player_sequence = nil
+		end
+	else
+		local sequence = "spawn_prop_" .. self._values.style
+
+		managers.criminals:set_active_player_sequence(sequence)
+	end
 end

@@ -2389,3 +2389,28 @@ end
 function HUDManager:ingame_workspace(name)
 	return self._ingame_workspaces and self._ingame_workspaces[name]
 end
+
+-- Lines 2588-2605
+function HUDManager:hide_panels(...)
+	-- Lines 2589-2594
+	local function fade_out(o)
+		for t, p, dt in seconds(1) do
+			o:set_alpha(1 - p)
+		end
+
+		o:set_visible(false)
+	end
+
+	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
+	local panels = {
+		...
+	}
+
+	for _, panel_name in ipairs(panels) do
+		local panel = hud.panel:child(panel_name)
+
+		if panel then
+			panel:animate(fade_out)
+		end
+	end
+end

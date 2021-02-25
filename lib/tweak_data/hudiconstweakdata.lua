@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-2888
+-- Lines 7-2892
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -1508,6 +1508,15 @@ function HudIconsTweakData:init()
 		texture = "guis/dlcs/des/textures/pd2/hud_pickups_des",
 		texture_rect = {
 			64,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_mayan_gold = {
+		texture = "guis/dlcs/uno/textures/pd2/hud_pickups_uno",
+		texture_rect = {
+			0,
 			0,
 			32,
 			32
@@ -13016,15 +13025,6 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Locke_H_WhiteHouse_AHeist = {
-		texture = "guis/dlcs/trk/atlases/achievement_atlas_vit",
-		texture_rect = {
-			176,
-			263,
-			85,
-			85
-		}
-	}
 	self.C_Locke_H_WhiteHouse_AllDiffs_D0 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_vit",
 		texture_rect = {
@@ -13102,6 +13102,15 @@ function HudIconsTweakData:init()
 		texture_rect = {
 			263,
 			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_WhiteHouse_HeistToRemember = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_vit",
+		texture_rect = {
+			176,
+			263,
 			85,
 			85
 		}
@@ -13196,6 +13205,15 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Locke_H_WhiteHouse_Finale = {
+		texture = "guis/dlcs/trk/atlases/fin_1",
+		texture_rect = {
+			0,
+			0,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -13212,7 +13230,7 @@ end
 
 local atlas_data = nil
 
--- Lines 2891-2894
+-- Lines 2895-2898
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -13225,7 +13243,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 2896-2912
+-- Lines 2900-2916
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -13251,7 +13269,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 2914-2919
+-- Lines 2918-2923
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -13265,7 +13283,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 2921-2927
+-- Lines 2925-2931
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -13276,7 +13294,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 2929-2935
+-- Lines 2933-2939
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

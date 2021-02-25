@@ -8,7 +8,7 @@ function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 end
 
--- Lines 10-255
+-- Lines 10-259
 function ElementAreaTrigger:project_instigators()
 	local instigators = {}
 
@@ -137,7 +137,7 @@ function ElementAreaTrigger:project_instigators()
 		local filter_func = nil
 
 		if self._values.instigator == "loot" then
-			-- Lines 139-213
+			-- Lines 139-217
 			function filter_func(carry_data)
 				local carry_id = carry_data:carry_id()
 				local carry_list = {
@@ -238,7 +238,8 @@ function ElementAreaTrigger:project_instigators()
 					"box_unknown_tag",
 					"battery",
 					"box_unknown",
-					"black_tablet"
+					"black_tablet",
+					"uno_gold"
 				}
 
 				if table.contains(carry_list, carry_id) then
@@ -246,7 +247,7 @@ function ElementAreaTrigger:project_instigators()
 				end
 			end
 		else
-			-- Lines 215-220
+			-- Lines 219-224
 			function filter_func(carry_data)
 				local carry_id = carry_data:carry_id()
 
@@ -267,7 +268,7 @@ function ElementAreaTrigger:project_instigators()
 		if self._values.instigator_name ~= nil then
 			local all_found = World:find_units_quick("all", 14)
 
-			-- Lines 235-239
+			-- Lines 239-243
 			local function filter_func(unit)
 				if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then
 					return true
@@ -291,7 +292,7 @@ function ElementAreaTrigger:project_instigators()
 	return instigators
 end
 
--- Lines 257-273
+-- Lines 261-277
 function ElementAreaTrigger:project_amount_all()
 	if self._values.instigator == "criminals" or self._values.instigator == "local_criminals" then
 		local i = 0
@@ -314,7 +315,7 @@ function ElementAreaTrigger:project_amount_all()
 	return managers.network:session() and managers.network:session():amount_of_alive_players() or 0
 end
 
--- Lines 275-298
+-- Lines 279-302
 function ElementAreaTrigger:project_amount_inside()
 	local counter = #self._inside
 
@@ -346,7 +347,7 @@ function ElementAreaTrigger:project_amount_inside()
 	return counter
 end
 
--- Lines 300-321
+-- Lines 304-325
 function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._values.instigator == "vehicle_with_players" and unit then
 		local result = false

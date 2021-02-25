@@ -130,6 +130,7 @@ require("lib/managers/mission/ElementVehicleSpawner")
 require("lib/managers/mission/ElementVehicleBoarding")
 require("lib/managers/mission/ElementEnvironmentOperator")
 require("lib/managers/mission/ElementAreaDespawn")
+require("lib/managers/mission/ElementTerminateAssault")
 
 MissionManager = MissionManager or class(CoreMissionManager.MissionManager)
 
@@ -229,7 +230,9 @@ function MissionManager:init(...)
 		"pku_jewelry_instant",
 		"pku_black_tablet",
 		"pku_german_folder",
-		"pku_old_wine"
+		"pku_old_wine",
+		"uno_access_granted",
+		"uno_access_denied"
 	})
 
 	self._mission_filter = {}
@@ -429,7 +432,7 @@ CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines 454-470
+-- Lines 471-487
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)
