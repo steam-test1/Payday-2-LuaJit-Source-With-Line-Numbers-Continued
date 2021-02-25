@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1491
+-- Lines 3-1514
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5074,13 +5074,33 @@ function GuiTweakData:init(tweak_data)
 		"bonus"
 	}
 	self.new_heists = {
-		limit = 4
+		limit = 5
 	}
 
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_faco",
+		texture_path = "guis/textures/pd2/new_heists/faco",
+		url = "https://ovk.af/JFSPSliderW"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_silkroad_collection",
+		texture_path = "guis/textures/pd2/new_heists/silkroad_collection",
+		url = "https://ovk.af/JFSPSlider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_in31",
+		texture_path = "guis/textures/pd2/new_heists/in31",
+		url = "https://ovk.af/JFSPSliderT"
+	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_ja21",
 		texture_path = "guis/dlcs/ja21/textures/pd2/new_heists/ja21",
 		url = "https://ovk.af/pd2bidenmask"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_inf",
+		texture_path = "guis/textures/pd2/new_heists/inf",
+		url = "https://ovk.af/FEXUpdateSlider"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_xm20",
@@ -5091,11 +5111,6 @@ function GuiTweakData:init(tweak_data)
 		name_id = "menu_nh_fex_bundle",
 		texture_path = "guis/textures/pd2/new_heists/fex_bundle",
 		url = "https://ovk.af/FEXBundleSlider"
-	})
-	table.insert(self.new_heists, {
-		name_id = "menu_nh_inf",
-		texture_path = "guis/textures/pd2/new_heists/inf",
-		url = "https://ovk.af/FEXUpdateSlider"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_legacy",
@@ -5329,7 +5344,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1493-1512
+-- Lines 1516-1535
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5357,7 +5372,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1514-1582
+-- Lines 1537-1605
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5435,15 +5450,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1584-1586
+-- Lines 1607-1609
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1588-1597
+-- Lines 1611-1620
 function GuiTweakData:print_locations()
 end
 
--- Lines 1599-1633
+-- Lines 1622-1656
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5482,7 +5497,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1635-1760
+-- Lines 1658-1783
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5605,12 +5620,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 1762-1764
+-- Lines 1785-1787
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 1766-1773
+-- Lines 1789-1796
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

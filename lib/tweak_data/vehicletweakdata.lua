@@ -18,7 +18,7 @@ end
 -- Lines 60-119
 function VehicleTweakData:_init_data_falcogini()
 	self.falcogini = {
-		name = "Falcogini",
+		name_id = "vhl_falcogini_name",
 		hud_label_offset = 140,
 		animations = {
 			passenger_front = "drive_falcogini_passanger",
@@ -78,7 +78,7 @@ end
 -- Lines 122-184
 function VehicleTweakData:_init_data_muscle()
 	self.muscle = {
-		name = "Longfellow",
+		name_id = "vhl_longfellow_name",
 		hud_label_offset = 150,
 		animations = {
 			passenger_back_right = "drive_muscle_back_right",
@@ -153,10 +153,10 @@ function VehicleTweakData:_init_data_muscle()
 	}
 end
 
--- Lines 187-244
+-- Lines 187-247
 function VehicleTweakData:_init_data_forklift()
 	self.forklift = {
-		name = "Forklift",
+		name_id = "vhl_forklift_name",
 		hud_label_offset = 220,
 		animations = {
 			passenger_front = "drive_forklift_passanger",
@@ -209,12 +209,14 @@ function VehicleTweakData:_init_data_forklift()
 		driver_camera_offset = Vector3(0, 0, 7.5),
 		fov = 70
 	}
+	self.forklift_3 = deep_clone(self.forklift)
+	self.forklift_3.max_loot_bags = 0
 end
 
--- Lines 247-304
+-- Lines 250-307
 function VehicleTweakData:_init_data_forklift_2()
 	self.forklift_2 = {
-		name = "Forklift",
+		name_id = "vhl_forklift_name",
 		hud_label_offset = 220,
 		animations = {
 			driver = "drive_forklift_driver",
@@ -262,10 +264,10 @@ function VehicleTweakData:_init_data_forklift_2()
 	}
 end
 
--- Lines 307-368
+-- Lines 310-371
 function VehicleTweakData:_init_data_box_truck_1()
 	self.box_truck_1 = {
-		name = "Truck",
+		name_id = "vhl_truck_name",
 		hud_label_offset = 325,
 		animations = {
 			passenger_back_right = "drive_truck_back_right",
@@ -336,10 +338,10 @@ function VehicleTweakData:_init_data_box_truck_1()
 	}
 end
 
--- Lines 557-613
+-- Lines 558-614
 function VehicleTweakData:_init_data_mower_1()
 	self.mower_1 = {
-		name = "Lawn Mower",
+		name_id = "vhl_lawn_mower_name",
 		hud_label_offset = 80,
 		animations = {
 			driver = "drive_mower_1_driver",
@@ -387,10 +389,10 @@ function VehicleTweakData:_init_data_mower_1()
 	}
 end
 
--- Lines 619-701
+-- Lines 620-702
 function VehicleTweakData:_init_data_boat_rib_1()
 	self.boat_rib_1 = {
-		name = "Rib Boat",
+		name_id = "vhl_rib_boat_name",
 		hud_label_offset = 1,
 		animations = {
 			passenger_back_right = "drive_boat_rib_1_back_right",
@@ -459,10 +461,10 @@ function VehicleTweakData:_init_data_boat_rib_1()
 	}
 end
 
--- Lines 707-795
+-- Lines 708-796
 function VehicleTweakData:_init_data_blackhawk_1()
 	self.blackhawk_1 = {
-		name = "Blackhawk",
+		name_id = "vhl_blackhawk_name",
 		hud_label_offset = 150,
 		animations = {
 			passenger_back_right = "drive_blackhawk_1_back_right",
@@ -534,13 +536,13 @@ function VehicleTweakData:_init_data_blackhawk_1()
 		fov = 75
 	}
 	self.blackhawk_2 = deep_clone(self.blackhawk_1)
-	self.blackhawk_2.name = nil
+	self.blackhawk_2.name_id = nil
 end
 
--- Lines 800-865
+-- Lines 801-866
 function VehicleTweakData:_init_data_bike_1()
 	self.bike_1 = {
-		name = "Bike",
+		name_id = "vhl_bike_name",
 		hud_label_offset = 220,
 		animations = {
 			driver = "drive_bike_1_driver",
@@ -591,10 +593,10 @@ function VehicleTweakData:_init_data_bike_1()
 	}
 end
 
--- Lines 867-932
+-- Lines 868-933
 function VehicleTweakData:_init_data_bike_2()
 	self.bike_2 = {
-		name = "Rust's bike",
+		name_id = "vhl_rust_bike_name",
 		hud_label_offset = 220,
 		animations = {
 			driver = "drive_bike_1_driver",
@@ -645,10 +647,9 @@ function VehicleTweakData:_init_data_bike_2()
 	}
 end
 
--- Lines 936-1018
+-- Lines 937-1018
 function VehicleTweakData:_init_data_wanker()
 	self.wanker = {
-		name = nil,
 		hud_label_offset = 150,
 		animations = {
 			passenger_back_right = "drive_wanker_back_right",

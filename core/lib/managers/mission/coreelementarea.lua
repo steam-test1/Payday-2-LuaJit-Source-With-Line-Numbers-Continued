@@ -301,7 +301,7 @@ function ElementAreaTrigger:_check_amount(unit)
 	end
 end
 
--- Lines 280-334
+-- Lines 280-344
 function ElementAreaTrigger:_should_trigger(unit)
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
@@ -310,7 +310,17 @@ function ElementAreaTrigger:_should_trigger(unit)
 		if unit:movement() then
 			inside = self:_is_inside(unit:movement():m_pos())
 		else
-			unit:m_position(tmp_vec1)
+			local object = nil
+
+			if self._values.substitute_object and self._values.substitute_object ~= "" then
+				object = unit:get_object(Idstring(self._values.substitute_object))
+			end
+
+			if object then
+				object:m_position(tmp_vec1)
+			else
+				unit:m_position(tmp_vec1)
+			end
 
 			inside = self:_is_inside(tmp_vec1)
 		end
@@ -351,7 +361,7 @@ function ElementAreaTrigger:_should_trigger(unit)
 	return false
 end
 
--- Lines 337-345
+-- Lines 347-355
 function ElementAreaTrigger:_check_instigator_rules(unit)
 	for _, element in ipairs(self._rules_elements) do
 		if not element:check_rules(self._values.instigator, unit) then
@@ -362,7 +372,7 @@ function ElementAreaTrigger:_check_instigator_rules(unit)
 	return true
 end
 
--- Lines 348-357
+-- Lines 358-367
 function ElementAreaTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -375,7 +385,7 @@ function ElementAreaTrigger:_clean_destroyed_units()
 	end
 end
 
--- Lines 360-386
+-- Lines 370-396
 function ElementAreaTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
 	local inside = self:_is_inside(unit:position())
@@ -393,7 +403,7 @@ function ElementAreaTrigger:_client_check_state(unit)
 	end
 end
 
--- Lines 389-395
+-- Lines 399-405
 function ElementAreaTrigger:operation_set_interval(interval)
 	self._values.interval = interval
 
@@ -404,24 +414,24 @@ function ElementAreaTrigger:operation_set_interval(interval)
 	end
 end
 
--- Lines 397-399
+-- Lines 407-409
 function ElementAreaTrigger:operation_set_use_disabled_shapes(use_disabled_shapes)
 	self._values.use_disabled_shapes = use_disabled_shapes
 end
 
--- Lines 401-403
+-- Lines 411-413
 function ElementAreaTrigger:operation_clear_inside()
 	self._inside = {}
 end
 
--- Lines 406-410
+-- Lines 416-420
 function ElementAreaTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.interval = self._values.interval
 	data.use_disabled_shapes = self._values.use_disabled_shapes
 end
 
--- Lines 412-419
+-- Lines 422-429
 function ElementAreaTrigger:load(data)
 	if not self._on_script_activated_done then
 		self:on_script_activated()
@@ -435,17 +445,17 @@ end
 
 ElementAreaOperator = ElementAreaOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 425-427
+-- Lines 435-437
 function ElementAreaOperator:init(...)
 	ElementAreaOperator.super.init(self, ...)
 end
 
--- Lines 429-431
+-- Lines 439-441
 function ElementAreaOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 433-455
+-- Lines 443-465
 function ElementAreaOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -474,7 +484,7 @@ end
 
 ElementAreaReportTrigger = ElementAreaReportTrigger or class(ElementAreaTrigger)
 
--- Lines 461-482
+-- Lines 471-492
 function ElementAreaReportTrigger:update_area()
 	if not self._values.enabled then
 		return
@@ -497,7 +507,7 @@ function ElementAreaReportTrigger:update_area()
 	end
 end
 
--- Lines 484-527
+-- Lines 494-537
 function ElementAreaReportTrigger:_check_state(unit)
 	self:_clean_destroyed_units()
 
@@ -541,7 +551,7 @@ function ElementAreaReportTrigger:_check_state(unit)
 	return false
 end
 
--- Lines 529-538
+-- Lines 539-548
 function ElementAreaReportTrigger:_add_inside(unit)
 	table.insert(self._inside, unit)
 
@@ -554,7 +564,7 @@ function ElementAreaReportTrigger:_add_inside(unit)
 	self:_check_on_executed_reached_amount(unit)
 end
 
--- Lines 540-549
+-- Lines 550-559
 function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	local amount = self._values.amount == "all" and self:project_amount_all()
 	amount = amount or tonumber(self._values.amount)
@@ -564,21 +574,21 @@ function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	end
 end
 
--- Lines 551-555
+-- Lines 561-565
 function ElementAreaReportTrigger:_while_inside(unit)
 	if self:_has_on_executed_alternative("while_inside") then
 		self:on_executed(unit, "while_inside")
 	end
 end
 
--- Lines 557-561
+-- Lines 567-571
 function ElementAreaReportTrigger:_rule_failed(unit)
 	if self:_has_on_executed_alternative("rule_failed") then
 		self:on_executed(unit, "rule_failed")
 	end
 end
 
--- Lines 563-570
+-- Lines 573-580
 function ElementAreaReportTrigger:_remove_inside(unit)
 	table.delete(self._inside, unit)
 	self:on_executed(unit, "leave")
@@ -590,7 +600,7 @@ function ElementAreaReportTrigger:_remove_inside(unit)
 	self:_check_on_executed_reached_amount(unit)
 end
 
--- Lines 572-579
+-- Lines 582-589
 function ElementAreaReportTrigger:_remove_inside_by_index(index)
 	table.remove(self._inside, index)
 	self:on_executed(nil, "leave")
@@ -602,7 +612,7 @@ function ElementAreaReportTrigger:_remove_inside_by_index(index)
 	self:_check_on_executed_reached_amount(nil)
 end
 
--- Lines 582-595
+-- Lines 592-605
 function ElementAreaReportTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -621,7 +631,7 @@ function ElementAreaReportTrigger:_clean_destroyed_units()
 	end
 end
 
--- Lines 598-625
+-- Lines 608-635
 function ElementAreaReportTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
 	local inside = self:_is_inside(unit:position())
@@ -647,22 +657,22 @@ function ElementAreaReportTrigger:_client_check_state(unit)
 	end
 end
 
--- Lines 628-630
+-- Lines 638-640
 function ElementAreaReportTrigger:sync_enter_area(unit)
 	self:_add_inside(unit)
 end
 
--- Lines 633-635
+-- Lines 643-645
 function ElementAreaReportTrigger:sync_exit_area(unit)
 	self:_remove_inside(unit)
 end
 
--- Lines 638-640
+-- Lines 648-650
 function ElementAreaReportTrigger:sync_while_in_area(unit)
 	self:_while_inside(unit)
 end
 
--- Lines 643-645
+-- Lines 653-655
 function ElementAreaReportTrigger:sync_rule_failed(unit)
 	self:_rule_failed(unit)
 end

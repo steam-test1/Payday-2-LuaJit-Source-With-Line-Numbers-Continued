@@ -4,7 +4,7 @@ GamemodeStandard._NAME = "Heist Gamemode"
 
 Gamemode.register(GamemodeStandard.id, GamemodeStandard)
 
--- Lines 7-441
+-- Lines 7-442
 function GamemodeStandard:setup_gsm(gsm, empty, setup_boot, setup_title)
 	local editor = EditorState:new(gsm)
 	local world_camera = WorldCameraState:new(gsm)
@@ -251,6 +251,7 @@ function GamemodeStandard:setup_gsm(gsm, empty, setup_boot, setup_title)
 	gsm:add_transition(ingame_electrified, gameoverscreen, ingame_electrified_func)
 	gsm:add_transition(ingame_electrified, disconnected, ingame_electrified_func)
 	gsm:add_transition(ingame_electrified, kicked, ingame_electrified_func)
+	gsm:add_transition(ingame_electrified, ingame_driving, ingame_electrified_func)
 	gsm:add_transition(ingame_incapacitated, editor, ingame_incapacitated_func)
 	gsm:add_transition(ingame_incapacitated, world_camera, ingame_incapacitated_func)
 	gsm:add_transition(ingame_incapacitated, ingame_standard, ingame_incapacitated_func)

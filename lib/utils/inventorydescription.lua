@@ -587,7 +587,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	return skill_stats
 end
 
--- Lines 529-670
+-- Lines 529-671
 function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
@@ -656,10 +656,11 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 
 			if mods_stats[stat.name].index and tweak_stats[stat_name] then
 				if stat_name == "reload" then
-					local chosen_index = base_stats[stat_name].index + mods_stats[stat_name].index
+					local chosen_index = math.clamp(base_stats[stat_name].index + mods_stats[stat_name].index, 1, #tweak_stats[stat_name])
+					local reload_time = managers.blackmarket:get_reload_time(name)
 					local mult = 1 / tweak_stats[stat_name][chosen_index]
-					mods_stats[stat_name].value = base_stats[stat_name].value * mult
-					mods_stats[stat.name].value = mods_stats[stat.name].value - base_stats[stat.name].value
+					local mod_value = reload_time * mult
+					mods_stats[stat.name].value = mod_value - base_stats[stat.name].value
 				else
 					if stat_name == "concealment" then
 						index = base_stats[stat.name].index + mods_stats[stat.name].index
@@ -734,7 +735,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	return mods_stats
 end
 
--- Lines 672-761
+-- Lines 673-762
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
 	local index = nil
@@ -826,7 +827,7 @@ function WeaponDescription._get_base_stats(name)
 	return base_stats
 end
 
--- Lines 763-807
+-- Lines 764-808
 function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local equipped_mods = nil
 	local silencer = false
@@ -870,7 +871,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 809-828
+-- Lines 810-829
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
 	local equipped_mods = nil
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
@@ -891,7 +892,7 @@ function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, sl
 	return WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 end
 
--- Lines 830-977
+-- Lines 831-980
 function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 	local tweak_stats = tweak_data.weapon.stats
 	local tweak_factory = tweak_data.weapon.factory.parts
@@ -950,8 +951,10 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 				elseif stat.name == "reload" then
 					local chosen_index = part_data.stats.reload or 0
 					chosen_index = math.clamp(base_stats[stat.name].index + chosen_index, 1, #tweak_stats[stat.name])
+					local reload_time = managers.blackmarket:get_reload_time(weapon_name)
 					local mult = 1 / tweak_data.weapon.stats[stat.name][chosen_index]
-					mod[stat.name] = base_stats[stat.name].value * mult - base_stats[stat.name].value
+					local mod_value = reload_time * mult
+					mod[stat.name] = mod_value - base_stats[stat.name].value
 				else
 					local chosen_index = part_data.stats[stat.name] or 0
 

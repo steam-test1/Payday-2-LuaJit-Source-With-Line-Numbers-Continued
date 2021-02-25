@@ -12,12 +12,18 @@ function ElementPointOfNoReturn:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 13-40
+-- Lines 13-20
 function ElementPointOfNoReturn:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
+	self:operation_add()
+	ElementPointOfNoReturn.super.on_executed(self, instigator)
+end
+
+-- Lines 22-41
+function ElementPointOfNoReturn:operation_add()
 	local diff = Global.game_settings and Global.game_settings.difficulty or "hard"
 
 	if diff == "easy" then
@@ -37,6 +43,9 @@ function ElementPointOfNoReturn:on_executed(instigator)
 	elseif diff == "sm_wish" then
 		managers.groupai:state():set_point_of_no_return_timer(self._values.time_sm_wish, self._id)
 	end
+end
 
-	ElementPointOfNoReturn.super.on_executed(self, instigator)
+-- Lines 43-45
+function ElementPointOfNoReturn:operation_remove()
+	managers.groupai:state():remove_point_of_no_return_timer(self._id)
 end

@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-2719
+-- Lines 76-2720
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -4749,7 +4749,8 @@ function AchievementsTweakData:init(tweak_data)
 				"obama",
 				"washington",
 				"win_donald",
-				"win_donald_mega"
+				"win_donald_mega",
+				"biden"
 			},
 			difficulty = overkill_and_above
 		},
@@ -7885,7 +7886,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2738-2765
+-- Lines 2739-2766
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -7896,7 +7897,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2747-2758
+	-- Lines 2748-2759
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7926,7 +7927,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2767-2772
+-- Lines 2768-2773
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7939,7 +7940,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2774-2782
+-- Lines 2775-2783
 local function from_level(level)
 	if not level then
 		error()
@@ -7955,7 +7956,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2784-2792
+-- Lines 2785-2793
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7971,7 +7972,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2794-2805
+-- Lines 2795-2806
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7993,7 +7994,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2810-3012
+-- Lines 2811-3013
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8150,7 +8151,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3047-3189
+-- Lines 3048-3190
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8341,7 +8342,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3167-3167
+	-- Lines 3168-3168
 	local function dummy_progress()
 		return 0
 	end

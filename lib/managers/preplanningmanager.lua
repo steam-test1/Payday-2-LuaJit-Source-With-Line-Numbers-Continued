@@ -66,17 +66,50 @@ function PrePlanningManager:open_rebuy_menu()
 	managers.menu:show_confirm_preplanning_rebuy(params)
 end
 
--- Lines 59-61
+-- Lines 59-94
 function PrePlanningManager:get_can_rebuy_assets()
-	return self._rebuy_assets and self._rebuy_assets.assets and #self._rebuy_assets.assets ~= 0 and self._rebuy_assets.level_id == managers.job:current_level_id()
+	local job_id = managers.job:current_level_id()
+	local location_data = self:_current_location_data()
+	local can_rebuy = self._rebuy_assets and self._rebuy_assets.level_id == job_id
+
+	if can_rebuy then
+		local has_assets = self._rebuy_assets.assets and #self._rebuy_assets.assets ~= 0
+		local has_votes = false
+		local mission_element = nil
+
+		for plan, type in pairs(location_data.default_plans) do
+			mission_element = self:get_default_plan_mission_element(type)
+			local matches = false
+
+			if mission_element then
+				for _, vote in ipairs(self._rebuy_assets.votes) do
+					if mission_element._id == vote.id then
+						matches = true
+
+						break
+					end
+				end
+			end
+
+			if mission_element and not matches then
+				has_votes = true
+
+				break
+			end
+		end
+
+		return can_rebuy and has_assets or has_votes
+	end
+
+	return can_rebuy
 end
 
--- Lines 63-65
+-- Lines 96-98
 function PrePlanningManager:reset_rebuy_assets()
 	Global.preplanning_manager.rebuy_assets = {}
 end
 
--- Lines 67-75
+-- Lines 100-108
 function PrePlanningManager:register_element(element)
 	for _, type in ipairs(element:value("allowed_types")) do
 		self._mission_elements_by_type[type] = self._mission_elements_by_type[type] or {}
@@ -85,7 +118,7 @@ function PrePlanningManager:register_element(element)
 	end
 end
 
--- Lines 77-84
+-- Lines 110-117
 function PrePlanningManager:unregister_element(element)
 	for _, type in ipairs(element:value("allowed_types")) do
 		table.delete(self._mission_elements_by_type[type], element)
@@ -96,12 +129,12 @@ function PrePlanningManager:unregister_element(element)
 	end
 end
 
--- Lines 86-88
+-- Lines 119-121
 function PrePlanningManager:is_type_disabled(type)
 	return not not self._disabled_types[type]
 end
 
--- Lines 90-97
+-- Lines 123-130
 function PrePlanningManager:_change_disabled_type(type, change)
 	self._disabled_types[type] = self._disabled_types[type] or 0
 	self._disabled_types[type] = self._disabled_types[type] + change
@@ -111,7 +144,7 @@ function PrePlanningManager:_change_disabled_type(type, change)
 	end
 end
 
--- Lines 99-115
+-- Lines 132-148
 function PrePlanningManager:activate_location_groups(location_groups)
 	for _, location_group in ipairs(location_groups) do
 		self._active_location_groups[location_group] = true
@@ -133,12 +166,12 @@ function PrePlanningManager:activate_location_groups(location_groups)
 	end)
 end
 
--- Lines 116-118
+-- Lines 149-151
 function PrePlanningManager:is_location_group_active(location_group)
 	return not next(self._active_location_groups) or self._active_location_groups[location_group]
 end
 
--- Lines 123-150
+-- Lines 156-183
 function PrePlanningManager:can_vote_on_plan(type, peer_id)
 	local current_budget, total_budget = self:get_current_budget()
 	local cost_mod = 0
@@ -163,7 +196,7 @@ function PrePlanningManager:can_vote_on_plan(type, peer_id)
 	return true
 end
 
--- Lines 152-162
+-- Lines 185-195
 function PrePlanningManager:vote_on_plan(type, id)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -175,7 +208,7 @@ function PrePlanningManager:vote_on_plan(type, id)
 	end
 end
 
--- Lines 164-177
+-- Lines 197-210
 function PrePlanningManager:client_vote_on_plan(type, id, peer_id)
 	local index = self:get_mission_element_index(id, type)
 	local plan = tweak_data:get_raw_value("preplanning", "types", type, "plan")
@@ -196,12 +229,12 @@ function PrePlanningManager:client_vote_on_plan(type, id, peer_id)
 	end
 end
 
--- Lines 179-181
+-- Lines 212-214
 function PrePlanningManager:server_vote_on_plan(type, id, peer_id)
 	self:_server_vote_on_plan(type, id, peer_id)
 end
 
--- Lines 183-193
+-- Lines 216-226
 function PrePlanningManager:mass_vote_on_plan(type, id)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -212,14 +245,14 @@ function PrePlanningManager:mass_vote_on_plan(type, id)
 	end
 end
 
--- Lines 195-199
+-- Lines 228-232
 function PrePlanningManager:server_mass_vote_on_plan(type, id)
 	for _, peer in pairs(managers.network:session():all_peers()) do
 		self:_server_vote_on_plan(type, id, peer:id())
 	end
 end
 
--- Lines 201-217
+-- Lines 234-250
 function PrePlanningManager:_server_vote_on_plan(type, id, peer_id)
 	local index = self:get_mission_element_index(id, type)
 	local plan = tweak_data:get_raw_value("preplanning", "types", type, "plan")
@@ -241,12 +274,12 @@ function PrePlanningManager:_server_vote_on_plan(type, id, peer_id)
 	end
 end
 
--- Lines 221-223
+-- Lines 254-256
 function PrePlanningManager:get_player_votes(peer_id)
 	return self._players_votes[peer_id]
 end
 
--- Lines 225-241
+-- Lines 258-274
 function PrePlanningManager:get_votes_on_element(plan, type, index)
 	local vote_council = self:get_vote_council()
 	local _plan = nil
@@ -272,7 +305,7 @@ function PrePlanningManager:get_votes_on_element(plan, type, index)
 	return t
 end
 
--- Lines 246-259
+-- Lines 279-292
 function PrePlanningManager:unreserve_mission_element(id)
 	if not managers.network:session() then
 		return
@@ -287,12 +320,12 @@ function PrePlanningManager:unreserve_mission_element(id)
 	end
 end
 
--- Lines 261-263
+-- Lines 294-296
 function PrePlanningManager:server_unreserve_mission_element(id, peer_id)
 	self:_server_unreserve_mission_element(id, peer_id)
 end
 
--- Lines 265-290
+-- Lines 298-323
 function PrePlanningManager:_server_unreserve_mission_element(id, peer_id)
 	local server_override = false
 
@@ -328,7 +361,7 @@ function PrePlanningManager:_server_unreserve_mission_element(id, peer_id)
 	end
 end
 
--- Lines 292-309
+-- Lines 325-342
 function PrePlanningManager:client_unreserve_mission_element(id, peer_id)
 	if self._reserved_mission_elements[id] then
 		local type, index = unpack(self._reserved_mission_elements[id].pack)
@@ -357,7 +390,7 @@ function PrePlanningManager:client_unreserve_mission_element(id, peer_id)
 	end
 end
 
--- Lines 314-318
+-- Lines 347-351
 function PrePlanningManager:on_peer_added(peer_id)
 	self._saved_majority_votes = nil
 	self._saved_vote_council = nil
@@ -365,7 +398,7 @@ function PrePlanningManager:on_peer_added(peer_id)
 	managers.menu_component:update_preplanning_element(nil, nil)
 end
 
--- Lines 320-347
+-- Lines 353-380
 function PrePlanningManager:on_peer_removed(peer_id)
 	local owned_by_peer = {}
 
@@ -398,7 +431,7 @@ function PrePlanningManager:on_peer_removed(peer_id)
 	managers.menu_component:update_preplanning_element(nil, nil)
 end
 
--- Lines 351-378
+-- Lines 384-411
 function PrePlanningManager:count_reserved_for_type(type, category, peer_id)
 	local type_player_count = 0
 	local type_total_count = 0
@@ -431,7 +464,7 @@ function PrePlanningManager:count_reserved_for_type(type, category, peer_id)
 	return type_player_count, type_total_count, category_player_count, category_total_count
 end
 
--- Lines 380-412
+-- Lines 413-445
 function PrePlanningManager:can_reserve_mission_element(type, peer_id)
 	local current_budget, total_budget = self:get_current_budget()
 
@@ -463,7 +496,7 @@ function PrePlanningManager:can_reserve_mission_element(type, peer_id)
 	return type_player_pass and type_total_pass and category_player_pass and category_total_pass, 4
 end
 
--- Lines 414-424
+-- Lines 447-457
 function PrePlanningManager:reserve_mission_element(type, id)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -475,12 +508,12 @@ function PrePlanningManager:reserve_mission_element(type, id)
 	end
 end
 
--- Lines 426-428
+-- Lines 459-461
 function PrePlanningManager:server_reserve_mission_element(type, id, peer_id)
 	self:_server_reserve_mission_element(type, id, peer_id)
 end
 
--- Lines 430-450
+-- Lines 463-483
 function PrePlanningManager:_server_reserve_mission_element(type, id, peer_id)
 	local index = self:get_mission_element_index(id, type)
 
@@ -513,7 +546,7 @@ function PrePlanningManager:_server_reserve_mission_element(type, id, peer_id)
 	end
 end
 
--- Lines 452-484
+-- Lines 485-517
 function PrePlanningManager:client_reserve_mission_element(type, id, peer_id)
 	local index = self:get_mission_element_index(id, type)
 
@@ -562,7 +595,7 @@ function PrePlanningManager:client_reserve_mission_element(type, id, peer_id)
 	end
 end
 
--- Lines 486-515
+-- Lines 519-548
 function PrePlanningManager:reserve_rebuy_mission_elements()
 	if not self._rebuy_assets then
 		return
@@ -592,7 +625,7 @@ function PrePlanningManager:reserve_rebuy_mission_elements()
 	end
 end
 
--- Lines 520-541
+-- Lines 553-574
 function PrePlanningManager:on_multi_profile_changed()
 	local upgrade_lock, upgrade_unlocked, type, index, type_data = nil
 	local peer_id = managers.network:session():local_peer():id()
@@ -615,22 +648,22 @@ function PrePlanningManager:on_multi_profile_changed()
 	end
 end
 
--- Lines 546-548
+-- Lines 579-581
 function PrePlanningManager:get_reserved_mission_element(id)
 	return self._reserved_mission_elements[id]
 end
 
--- Lines 550-552
+-- Lines 583-585
 function PrePlanningManager:get_reserved_mission_element_data(id)
 	return self._reserved_mission_elements[id] and self._reserved_mission_elements[id].pack
 end
 
--- Lines 557-559
+-- Lines 590-592
 function PrePlanningManager:get_type_cost(type)
 	return managers.money:get_preplanning_type_cost(type)
 end
 
--- Lines 561-570
+-- Lines 594-603
 function PrePlanningManager:get_reserved_local_cost()
 	local total_cost = 0
 	local peer_id = managers.network:session():local_peer():id()
@@ -644,12 +677,12 @@ function PrePlanningManager:get_reserved_local_cost()
 	return total_cost
 end
 
--- Lines 572-574
+-- Lines 605-607
 function PrePlanningManager:get_type_budget_cost(type, default)
 	return tweak_data:get_raw_value("preplanning", "types", type, "budget_cost") or default or 1
 end
 
--- Lines 576-594
+-- Lines 609-627
 function PrePlanningManager:get_current_budget()
 	local location_data = self:_current_location_data()
 
@@ -673,7 +706,7 @@ function PrePlanningManager:get_current_budget()
 	return total_cost, location_data.total_budget or 1
 end
 
--- Lines 596-653
+-- Lines 629-686
 function PrePlanningManager:on_execute_preplanning()
 	if self:has_current_level_preplanning() then
 		managers.money:on_buy_preplanning_types()
@@ -747,7 +780,7 @@ function PrePlanningManager:on_execute_preplanning()
 	self._executed_reserved_mission_elements = nil
 end
 
--- Lines 655-717
+-- Lines 688-750
 function PrePlanningManager:execute_reserved_mission_elements()
 	if Network:is_server() and not self._executed_reserved_mission_elements then
 		self._active_location_groups = {}
@@ -765,7 +798,7 @@ function PrePlanningManager:execute_reserved_mission_elements()
 		local location_group_converter = self:_get_location_groups_converter()
 		local location_group, location_index, element = nil
 
-		-- Lines 672-697
+		-- Lines 705-730
 		local function execute_func(type, index, finished_table)
 			if not self:is_type_disabled(type) then
 				current_budget = current_budget + self:get_type_budget_cost(type)
@@ -829,7 +862,7 @@ function PrePlanningManager:execute_reserved_mission_elements()
 	end
 end
 
--- Lines 719-756
+-- Lines 752-789
 function PrePlanningManager:get_current_preplan()
 	local type, index = nil
 	local current_budget, total_budget = self:get_current_budget()
@@ -837,7 +870,7 @@ function PrePlanningManager:get_current_preplan()
 	local location_group_converter = self:_get_location_groups_converter()
 	local location_group, category, element = nil
 
-	-- Lines 727-740
+	-- Lines 760-773
 	local function set_func(type, index, peer_id, current_table)
 		if not self:is_type_disabled(type) then
 			current_budget = current_budget + self:get_type_budget_cost(type)
@@ -882,7 +915,7 @@ function PrePlanningManager:get_current_preplan()
 	return current_votes, current_types
 end
 
--- Lines 758-793
+-- Lines 791-826
 function PrePlanningManager:_update_majority_votes()
 	local local_peer_id = managers.network:session():local_peer():id()
 	local vote_council = self:get_vote_council()
@@ -926,12 +959,12 @@ function PrePlanningManager:_update_majority_votes()
 	return self._saved_majority_votes
 end
 
--- Lines 795-797
+-- Lines 828-830
 function PrePlanningManager:get_current_majority_votes()
 	return self._saved_majority_votes or self:_update_majority_votes()
 end
 
--- Lines 799-832
+-- Lines 832-865
 function PrePlanningManager:_update_vote_council()
 	local location_data = self:_current_location_data()
 
@@ -979,12 +1012,12 @@ function PrePlanningManager:_update_vote_council()
 	return self._saved_vote_council
 end
 
--- Lines 834-836
+-- Lines 867-869
 function PrePlanningManager:get_vote_council()
 	return self._saved_vote_council or self:_update_vote_council()
 end
 
--- Lines 838-847
+-- Lines 871-880
 function PrePlanningManager:execute(type, element)
 	self:_check_spawn_deployable(type, element)
 	self:_check_spawn_unit(type, element)
@@ -992,7 +1025,7 @@ function PrePlanningManager:execute(type, element)
 	element:on_executed(nil, type)
 end
 
--- Lines 849-867
+-- Lines 882-900
 function PrePlanningManager:_check_spawn_deployable(type, element)
 	local type_data = tweak_data.preplanning.types[type]
 	local deployable_id = type_data.deployable_id
@@ -1017,7 +1050,7 @@ end
 local mvec = Vector3()
 local mrot = Rotation()
 
--- Lines 871-896
+-- Lines 904-929
 function PrePlanningManager:_check_spawn_unit(type, element)
 	local type_data = tweak_data.preplanning.types[type]
 	local unit_name = type_data.spawn_unit
@@ -1046,21 +1079,21 @@ function PrePlanningManager:_check_spawn_unit(type, element)
 	local unit = World:spawn_unit(Idstring(unit_name), mvec, mrot)
 end
 
--- Lines 901-903
+-- Lines 934-936
 function PrePlanningManager:can_edit_preplan()
 	return not self._finished_preplan
 end
 
--- Lines 905-907
+-- Lines 938-940
 function PrePlanningManager:get_finished_preplan()
 	return self._finished_preplan
 end
 
--- Lines 913-915
+-- Lines 946-948
 function PrePlanningManager:on_simulation_started()
 end
 
--- Lines 917-928
+-- Lines 950-961
 function PrePlanningManager:on_simulation_ended()
 	self._mission_elements_by_type = {}
 	self._reserved_mission_elements = {}
@@ -1073,12 +1106,12 @@ function PrePlanningManager:on_simulation_ended()
 	self._disabled_types = {}
 end
 
--- Lines 933-936
+-- Lines 966-969
 function PrePlanningManager:get_element_types(mission_element)
 	local allowed_types = mission_element:value("allowed_types")
 end
 
--- Lines 938-949
+-- Lines 971-982
 function PrePlanningManager:get_mission_element_index(id, type)
 	if not self._mission_elements_by_type[type] then
 		Application:error("[PrePlanningManager:get_mission_element_index] Mission element type do not exist", "type", type, inspect(self._mission_elements_by_type))
@@ -1093,12 +1126,12 @@ function PrePlanningManager:get_mission_element_index(id, type)
 	end
 end
 
--- Lines 951-953
+-- Lines 984-986
 function PrePlanningManager:get_mission_element_id(type, index)
 	return self._mission_elements_by_type[type] and self._mission_elements_by_type[type][index] and self._mission_elements_by_type[type][index]:id()
 end
 
--- Lines 955-962
+-- Lines 988-995
 function PrePlanningManager:get_default_plan_mission_element(type)
 	if not self._mission_elements_by_type[type] then
 		Application:error("[PrePlanningManager:get_default_plan_mission_element] Mission element type do not exist", "type", type, inspect(self._mission_elements_by_type))
@@ -1109,17 +1142,17 @@ function PrePlanningManager:get_default_plan_mission_element(type)
 	return self._mission_elements_by_type[type][1]
 end
 
--- Lines 967-969
+-- Lines 1000-1002
 function PrePlanningManager:get_element_name(element)
 	return managers.localization:text("menu_" .. tostring(element:editor_name()))
 end
 
--- Lines 971-973
+-- Lines 1004-1006
 function PrePlanningManager:get_element_name_by_type_index(type, index)
 	return managers.localization:text("menu_" .. self._mission_elements_by_type[type][index]:editor_name())
 end
 
--- Lines 975-981
+-- Lines 1008-1014
 function PrePlanningManager:get_type_name(type)
 	local type_data = tweak_data:get_raw_value("preplanning", "types", type)
 
@@ -1130,7 +1163,7 @@ function PrePlanningManager:get_type_name(type)
 	return name_id and managers.localization:text(name_id) or "MISSING NAME_ID: " .. type
 end
 
--- Lines 983-1000
+-- Lines 1016-1033
 function PrePlanningManager:get_type_desc(type)
 	local type_data = tweak_data:get_raw_value("preplanning", "types", type)
 
@@ -1154,7 +1187,7 @@ function PrePlanningManager:get_type_desc(type)
 	return text_string
 end
 
--- Lines 1002-1017
+-- Lines 1035-1050
 function PrePlanningManager:get_type_cost_text(type)
 	local type_data = tweak_data:get_raw_value("preplanning", "types", type)
 
@@ -1176,22 +1209,22 @@ function PrePlanningManager:get_type_cost_text(type)
 	return text_string
 end
 
--- Lines 1019-1021
+-- Lines 1052-1054
 function PrePlanningManager:get_category_name_by_type(type)
 	return self:get_category_name(tweak_data:get_raw_value("preplanning", "types", type, "category"))
 end
 
--- Lines 1023-1025
+-- Lines 1056-1058
 function PrePlanningManager:get_category_by_type(type)
 	return tweak_data:get_raw_value("preplanning", "types", type, "category")
 end
 
--- Lines 1027-1029
+-- Lines 1060-1062
 function PrePlanningManager:get_tweak_data_by_type(type)
 	return tweak_data:get_raw_value("preplanning", "types", type)
 end
 
--- Lines 1031-1037
+-- Lines 1064-1070
 function PrePlanningManager:get_category_name(category)
 	local category_data = tweak_data:get_raw_value("preplanning", "categories", category)
 
@@ -1202,7 +1235,7 @@ function PrePlanningManager:get_category_name(category)
 	return name_id and managers.localization:text(name_id) or "MISSING NAME_ID: " .. category
 end
 
--- Lines 1039-1045
+-- Lines 1072-1078
 function PrePlanningManager:get_category_desc(category)
 	local category_data = tweak_data:get_raw_value("preplanning", "categories", category)
 
@@ -1213,7 +1246,7 @@ function PrePlanningManager:get_category_desc(category)
 	return desc_id and managers.localization:text(desc_id) or "MISSING NAME_ID: " .. tostring(category)
 end
 
--- Lines 1048-1057
+-- Lines 1081-1090
 function PrePlanningManager:get_location_map_data_by_index(index)
 	local location_data = self:_get_location_by_index(index)
 	local texture = location_data.texture
@@ -1224,7 +1257,7 @@ function PrePlanningManager:get_location_map_data_by_index(index)
 	return texture, x, y, size
 end
 
--- Lines 1059-1069
+-- Lines 1092-1102
 function PrePlanningManager:get_location_shape_by_index(index)
 	local location_data = self:_get_location_by_index(index)
 	local x1 = location_data.x1
@@ -1237,7 +1270,7 @@ function PrePlanningManager:get_location_shape_by_index(index)
 	return x1, y1, math.abs(x2 - x1), math.abs(y2 - y1)
 end
 
--- Lines 1071-1077
+-- Lines 1104-1110
 function PrePlanningManager:get_location_shape_by_group(group)
 	for index, location_group in ipairs(tweak_data.preplanning.location_groups) do
 		if location_group == group then
@@ -1246,7 +1279,7 @@ function PrePlanningManager:get_location_shape_by_group(group)
 	end
 end
 
--- Lines 1079-1084
+-- Lines 1112-1117
 function PrePlanningManager:num_active_locations()
 	local location_data = self:_current_location_data()
 
@@ -1255,34 +1288,34 @@ function PrePlanningManager:num_active_locations()
 	return #location_data
 end
 
--- Lines 1086-1088
+-- Lines 1119-1121
 function PrePlanningManager:first_location_group()
 	return tweak_data.preplanning.location_groups[1]
 end
 
--- Lines 1090-1092
+-- Lines 1123-1125
 function PrePlanningManager:has_current_level_preplanning()
 	return not not self:_current_location_data()
 end
 
--- Lines 1094-1097
+-- Lines 1127-1130
 function PrePlanningManager:_current_location_data()
 	local level_id = managers.job:current_level_id()
 
 	return tweak_data.preplanning.locations[level_id]
 end
 
--- Lines 1099-1101
+-- Lines 1132-1134
 function PrePlanningManager:current_location_data()
 	return self:_current_location_data()
 end
 
--- Lines 1105-1107
+-- Lines 1138-1140
 function PrePlanningManager:get_location_by_index(index)
 	return self:_get_location_by_index(index)
 end
 
--- Lines 1109-1117
+-- Lines 1142-1150
 function PrePlanningManager:_get_location_by_index(index)
 	local current_data = self:_current_location_data()
 
@@ -1295,7 +1328,7 @@ function PrePlanningManager:_get_location_by_index(index)
 	return location_data
 end
 
--- Lines 1119-1125
+-- Lines 1152-1158
 function PrePlanningManager:get_location_group_by_index(index)
 	local location_data = self:_get_location_by_index(index)
 	local location_group = location_data.group
@@ -1305,7 +1338,7 @@ function PrePlanningManager:get_location_group_by_index(index)
 	return location_group
 end
 
--- Lines 1127-1132
+-- Lines 1160-1165
 function PrePlanningManager:get_location_rotation_by_index(index)
 	local location_data = self:_get_location_by_index(index)
 	local location_group = location_data.rotation
@@ -1313,7 +1346,7 @@ function PrePlanningManager:get_location_rotation_by_index(index)
 	return location_group
 end
 
--- Lines 1134-1140
+-- Lines 1167-1173
 function PrePlanningManager:get_location_name_by_index(index)
 	local location_data = self:_get_location_by_index(index)
 	local name_id = location_data.name_id
@@ -1323,7 +1356,7 @@ function PrePlanningManager:get_location_name_by_index(index)
 	return managers.localization:text(name_id)
 end
 
--- Lines 1144-1155
+-- Lines 1177-1188
 function PrePlanningManager:has_current_custom_points()
 	local current_data = self:_current_location_data()
 
@@ -1340,7 +1373,7 @@ function PrePlanningManager:has_current_custom_points()
 	return false
 end
 
--- Lines 1157-1168
+-- Lines 1190-1201
 function PrePlanningManager:get_current_custom_points()
 	local current_data = self:_current_location_data()
 
@@ -1357,7 +1390,7 @@ function PrePlanningManager:get_current_custom_points()
 	return t
 end
 
--- Lines 1172-1178
+-- Lines 1205-1211
 function PrePlanningManager:_create_empty_locations_table()
 	local locations = {}
 
@@ -1368,7 +1401,7 @@ function PrePlanningManager:_create_empty_locations_table()
 	return locations
 end
 
--- Lines 1180-1187
+-- Lines 1213-1220
 function PrePlanningManager:_get_location_groups_converter()
 	local location_groups_converter = {}
 
@@ -1379,7 +1412,7 @@ function PrePlanningManager:_get_location_groups_converter()
 	return location_groups_converter
 end
 
--- Lines 1189-1195
+-- Lines 1222-1228
 function PrePlanningManager:convert_location_group_to_index(group)
 	for index, location_group in ipairs(tweak_data.preplanning.location_groups) do
 		if location_group == group then
@@ -1388,12 +1421,12 @@ function PrePlanningManager:convert_location_group_to_index(group)
 	end
 end
 
--- Lines 1197-1199
+-- Lines 1230-1232
 function PrePlanningManager:convert_location_index_to_group(index)
 	return tweak_data.preplanning.location_groups[index]
 end
 
--- Lines 1201-1215
+-- Lines 1234-1248
 function PrePlanningManager:sort_mission_elements_into_locations(mission_elements)
 	local location_groups_converter = self:_get_location_groups_converter()
 	local locations = {}
@@ -1413,19 +1446,19 @@ function PrePlanningManager:sort_mission_elements_into_locations(mission_element
 	return locations
 end
 
--- Lines 1217-1220
+-- Lines 1250-1253
 function PrePlanningManager:is_type_position_important(type)
 	debug_assert(tweak_data.preplanning.types[type], "[PrePlanningManager:is_type_position_important] type do not exist in tweak data!", type)
 
 	return not tweak_data.preplanning.types[type].pos_not_important
 end
 
--- Lines 1224-1226
+-- Lines 1257-1259
 function PrePlanningManager:get_mission_elements_by_type(type)
 	return self._mission_elements_by_type[type]
 end
 
--- Lines 1228-1240
+-- Lines 1261-1273
 function PrePlanningManager:get_first_type_in_category(category)
 	local first_type, first_prio = nil
 
@@ -1439,7 +1472,7 @@ function PrePlanningManager:get_first_type_in_category(category)
 	return first_type
 end
 
--- Lines 1242-1274
+-- Lines 1275-1307
 function PrePlanningManager:types_with_mission_elements(optional_category, no_sort)
 	local t = {}
 
@@ -1478,7 +1511,7 @@ function PrePlanningManager:types_with_mission_elements(optional_category, no_so
 	return t
 end
 
--- Lines 1276-1327
+-- Lines 1309-1360
 function PrePlanningManager:get_mission_element_subgroups()
 	local t = {}
 	local plans = {}
@@ -1546,7 +1579,7 @@ function PrePlanningManager:get_mission_element_subgroups()
 	}
 end
 
--- Lines 1329-1336
+-- Lines 1362-1369
 function PrePlanningManager:types()
 	local t = {}
 
@@ -1559,7 +1592,7 @@ function PrePlanningManager:types()
 	return t
 end
 
--- Lines 1340-1351
+-- Lines 1373-1384
 function PrePlanningManager:sync_save(data)
 	local save_data = {}
 
@@ -1575,7 +1608,7 @@ function PrePlanningManager:sync_save(data)
 	data.PrePlanningManager = save_data
 end
 
--- Lines 1353-1376
+-- Lines 1386-1409
 function PrePlanningManager:sync_load(data)
 	if data.PrePlanningManager then
 		if data.PrePlanningManager.finished_preplan then

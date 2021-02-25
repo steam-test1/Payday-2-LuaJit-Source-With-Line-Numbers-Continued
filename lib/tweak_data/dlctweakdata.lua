@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4616
+-- Lines 10-4626
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8231,6 +8231,18 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_upg_o_tf90"
+		}
+	}
+	self.faco_free = {
+		free = true,
+		content = {}
+	}
+	self.faco_free.content.loot_global_value = "normal"
+	self.faco_free.content.loot_drops = {
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_faco_00",
+			amount = 1
 		}
 	}
 end

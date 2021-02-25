@@ -1,10 +1,12 @@
+require("lib/utils/accelbyte/Telemetry")
+
 ObjectivesManager = ObjectivesManager or class()
 ObjectivesManager.PATH = "gamedata/objectives"
 ObjectivesManager.FILE_EXTENSION = "objective"
 ObjectivesManager.FULL_PATH = ObjectivesManager.PATH .. "." .. ObjectivesManager.FILE_EXTENSION
 ObjectivesManager.REMINDER_INTERVAL = 240
 
--- Lines 7-18
+-- Lines 9-20
 function ObjectivesManager:init()
 	self._objectives = {}
 	self._active_objectives = {}
@@ -17,7 +19,7 @@ function ObjectivesManager:init()
 	self:_parse_objectives()
 end
 
--- Lines 20-30
+-- Lines 22-32
 function ObjectivesManager:_parse_objectives()
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 
@@ -30,7 +32,7 @@ function ObjectivesManager:_parse_objectives()
 	end
 end
 
--- Lines 32-66
+-- Lines 34-68
 function ObjectivesManager:_parse_objective(data)
 	local id = data.id
 	local text = managers.localization:text(data.text)
@@ -71,7 +73,7 @@ function ObjectivesManager:_parse_objective(data)
 	end
 end
 
--- Lines 70-88
+-- Lines 72-90
 function ObjectivesManager:update(t, dt)
 	for id, data in pairs(self._remind_objectives) do
 		if data.next_t < t then
@@ -94,7 +96,7 @@ function ObjectivesManager:update(t, dt)
 	end
 end
 
--- Lines 91-108
+-- Lines 93-110
 function ObjectivesManager:_remind_objetive(id, title_id)
 	if not Application:editor() and managers.platform:presence() ~= "Playing" then
 		return
@@ -120,7 +122,7 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 	managers.hud:remind_objective(id)
 end
 
--- Lines 112-118
+-- Lines 114-120
 function ObjectivesManager:get_stinger_id()
 	local job_tweak = tweak_data.narrative.jobs[managers.job:current_real_job_id()]
 
@@ -131,14 +133,14 @@ function ObjectivesManager:get_stinger_id()
 	return "stinger_objectivecomplete"
 end
 
--- Lines 121-123
+-- Lines 123-125
 function ObjectivesManager:update_objective(id, load_data)
 	self:activate_objective(id, load_data, {
 		title_message = managers.localization:text("mission_objective_updated")
 	})
 end
 
--- Lines 127-135
+-- Lines 129-137
 function ObjectivesManager:complete_and_activate_objective(id, load_data, data)
 	local delay_presentation = next(self._active_objectives) and true or nil
 
@@ -152,7 +154,7 @@ function ObjectivesManager:complete_and_activate_objective(id, load_data, data)
 	self:activate_objective(id, nil, data)
 end
 
--- Lines 139-147
+-- Lines 141-149
 function ObjectivesManager:remove_and_activate_objective(id, load_data, data)
 	local delay_presentation = next(self._active_objectives) and true or nil
 
@@ -166,7 +168,7 @@ function ObjectivesManager:remove_and_activate_objective(id, load_data, data)
 	self:activate_objective(id, nil, data)
 end
 
--- Lines 149-191
+-- Lines 151-194
 function ObjectivesManager:activate_objective(id, load_data, data)
 	if not id or not self._objectives[id] then
 		Application:stack_dump_error("Bad id to activate objective, " .. tostring(id) .. ".")
@@ -175,6 +177,7 @@ function ObjectivesManager:activate_objective(id, load_data, data)
 	end
 
 	Telemetry:send_on_player_tutorial(id)
+	Telemetry:on_start_objective(id)
 
 	local objective = self._objectives[id]
 
@@ -230,7 +233,7 @@ function ObjectivesManager:activate_objective(id, load_data, data)
 	}
 end
 
--- Lines 193-234
+-- Lines 196-237
 function ObjectivesManager:activate_objective_countdown(id, load_data, data)
 	if not id or not self._objectives[id] then
 		Application:stack_dump_error("Bad id to activate objective, " .. tostring(id) .. ".")
@@ -293,7 +296,7 @@ function ObjectivesManager:activate_objective_countdown(id, load_data, data)
 	}
 end
 
--- Lines 237-260
+-- Lines 240-263
 function ObjectivesManager:remove_objective(id, load_data)
 	if not load_data then
 		if not id or not self._objectives[id] then
@@ -323,7 +326,7 @@ function ObjectivesManager:remove_objective(id, load_data)
 	end
 end
 
--- Lines 262-311
+-- Lines 265-316
 function ObjectivesManager:complete_objective(id, load_data)
 	if not load_data then
 		if not id or not self._objectives[id] then
@@ -367,6 +370,7 @@ function ObjectivesManager:complete_objective(id, load_data)
 		objective.current_amount = 0
 	end
 
+	Telemetry:on_end_objective(id)
 	managers.hud:complete_objective({
 		id = id,
 		text = objective.text
@@ -385,7 +389,7 @@ function ObjectivesManager:complete_objective(id, load_data)
 	end
 end
 
--- Lines 313-351
+-- Lines 318-356
 function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 	if not load_data then
 		if not id or not self._objectives[id] then
@@ -438,7 +442,7 @@ function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 	end
 end
 
--- Lines 353-402
+-- Lines 358-407
 function ObjectivesManager:complete_objective_countdown(id, load_data)
 	if not load_data then
 		if not id or not self._objectives[id] then
@@ -500,22 +504,22 @@ function ObjectivesManager:complete_objective_countdown(id, load_data)
 	end
 end
 
--- Lines 404-406
+-- Lines 409-411
 function ObjectivesManager:objective_is_active(id)
 	return self._active_objectives[id]
 end
 
--- Lines 408-410
+-- Lines 413-415
 function ObjectivesManager:objective_is_completed(id)
 	return self._completed_objectives[id]
 end
 
--- Lines 412-414
+-- Lines 417-419
 function ObjectivesManager:get_objective(id)
 	return self._objectives[id]
 end
 
--- Lines 416-420
+-- Lines 421-425
 function ObjectivesManager:get_all_objectives()
 	local res = {}
 
@@ -524,22 +528,22 @@ function ObjectivesManager:get_all_objectives()
 	return res
 end
 
--- Lines 422-424
+-- Lines 427-429
 function ObjectivesManager:get_active_objectives()
 	return self._active_objectives
 end
 
--- Lines 426-428
+-- Lines 431-433
 function ObjectivesManager:get_completed_objectives()
 	return self._completed_objectives
 end
 
--- Lines 430-432
+-- Lines 435-437
 function ObjectivesManager:get_completed_objectives_ordered()
 	return self._completed_objectives_ordered
 end
 
--- Lines 434-441
+-- Lines 439-446
 function ObjectivesManager:objectives_by_name()
 	local t = {}
 
@@ -552,7 +556,7 @@ function ObjectivesManager:objectives_by_name()
 	return t
 end
 
--- Lines 443-453
+-- Lines 448-458
 function ObjectivesManager:sub_objectives_by_name(id)
 	local t = {}
 	local objective = self._objectives[id]
@@ -568,7 +572,7 @@ function ObjectivesManager:sub_objectives_by_name(id)
 	return t
 end
 
--- Lines 455-468
+-- Lines 460-473
 function ObjectivesManager:_get_xp(level_id, id)
 	if not self._objectives_level_id[level_id] then
 		Application:error("Had no xp for level", level_id)
@@ -587,14 +591,14 @@ function ObjectivesManager:_get_xp(level_id, id)
 	return math.round(xp_weight * tweak_data:get_value("experience_manager", "total_level_objectives"))
 end
 
--- Lines 471-475
+-- Lines 476-480
 function ObjectivesManager:_get_real_xp_weight(level_id, xp_weight)
 	local total_xp_weight = self:_total_xp_weight(level_id)
 
 	return xp_weight / total_xp_weight
 end
 
--- Lines 477-486
+-- Lines 482-491
 function ObjectivesManager:_total_xp_weight(level_id)
 	if not self._objectives_level_id[level_id] then
 		return 0
@@ -609,7 +613,7 @@ function ObjectivesManager:_total_xp_weight(level_id)
 	return xp_weight
 end
 
--- Lines 488-498
+-- Lines 493-503
 function ObjectivesManager:_check_xp_weight(level_id)
 	local total_xp = 0
 	local total_xp_weight = self:_total_xp_weight(level_id)
@@ -624,7 +628,7 @@ function ObjectivesManager:_check_xp_weight(level_id)
 	print("total", total_xp)
 end
 
--- Lines 501-510
+-- Lines 506-515
 function ObjectivesManager:total_objectives(level_id)
 	if not self._objectives_level_id[level_id] then
 		return 0
@@ -639,7 +643,7 @@ function ObjectivesManager:total_objectives(level_id)
 	return i
 end
 
--- Lines 512-552
+-- Lines 517-557
 function ObjectivesManager:save(data)
 	if next(self._active_objectives) or next(self._completed_objectives) or next(self._read_objectives) then
 		local state = {}
@@ -683,7 +687,7 @@ function ObjectivesManager:save(data)
 	end
 end
 
--- Lines 554-585
+-- Lines 559-590
 function ObjectivesManager:load(data)
 	local state = data.ObjectivesManager
 
@@ -724,7 +728,7 @@ function ObjectivesManager:load(data)
 	end
 end
 
--- Lines 587-594
+-- Lines 592-599
 function ObjectivesManager:reset()
 	self._active_objectives = {}
 	self._completed_objectives = {}
@@ -735,12 +739,12 @@ function ObjectivesManager:reset()
 	self:_parse_objectives()
 end
 
--- Lines 596-598
+-- Lines 601-603
 function ObjectivesManager:set_read(id, is_read)
 	self._read_objectives[id] = is_read
 end
 
--- Lines 599-601
+-- Lines 604-606
 function ObjectivesManager:is_read(id)
 	return self._read_objectives[id]
 end

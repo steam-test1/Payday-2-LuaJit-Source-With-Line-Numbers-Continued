@@ -5,15 +5,16 @@ function VehicleStateBlocked:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines 9-17
+-- Lines 9-19
 function VehicleStateBlocked:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
 	self:adjust_interactions()
 	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	self:remove_name_hud()
 end
 
--- Lines 21-38
+-- Lines 23-40
 function VehicleStateBlocked:adjust_interactions()
 	VehicleStateParked.super.adjust_interactions(self)
 
@@ -37,17 +38,22 @@ function VehicleStateBlocked:adjust_interactions()
 	end
 end
 
--- Lines 42-44
+-- Lines 44-46
 function VehicleStateBlocked:allow_exit()
 	return true
 end
 
--- Lines 48-50
+-- Lines 50-52
 function VehicleStateBlocked:stop_vehicle()
 	return true
 end
 
--- Lines 54-56
+-- Lines 56-58
 function VehicleStateBlocked:is_vulnerable()
 	return false
+end
+
+-- Lines 62-64
+function VehicleStateBlocked:exit()
+	self:create_name_hud()
 end

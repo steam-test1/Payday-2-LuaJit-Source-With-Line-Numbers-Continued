@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-915
+-- Lines 3-935
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),

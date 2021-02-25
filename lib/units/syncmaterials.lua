@@ -5,34 +5,39 @@ function SyncMaterials:init(unit)
 	self._unit = unit
 end
 
--- Lines 9-32
+-- Lines 9-36
 function SyncMaterials:save(data)
 	data.materials = {}
 
 	for _, name in pairs(self._materials) do
 		local material = self._unit:material(Idstring(name))
-		local serialized = {
-			time = material:time(),
-			playing_speed = material:is_playing() and material:playing_speed(),
-			diffuse_color = material:diffuse_color(),
-			diffuse_color_alpha = material:diffuse_color_alpha(),
-			glossiness = material:glossiness(),
-			render_template = material:render_template(),
-			variables = {}
-		}
 
-		for _, variable in ipairs(material:variables()) do
-			table.insert(serialized.variables, {
-				name = variable.name,
-				value = material:get_variable(variable.name)
-			})
+		if material then
+			local serialized = {
+				time = material:time(),
+				playing_speed = material:is_playing() and material:playing_speed(),
+				diffuse_color = material:diffuse_color(),
+				diffuse_color_alpha = material:diffuse_color_alpha(),
+				glossiness = material:glossiness(),
+				render_template = material:render_template(),
+				variables = {}
+			}
+
+			for _, variable in ipairs(material:variables()) do
+				table.insert(serialized.variables, {
+					name = variable.name,
+					value = material:get_variable(variable.name)
+				})
+			end
+
+			data.materials[name] = serialized
+		else
+			debug_pause("[SyncMaterials:save] Failed to find material with name " .. tostring(name) .. " in unit", self._unit)
 		end
-
-		data.materials[name] = serialized
 	end
 end
 
--- Lines 34-52
+-- Lines 38-58
 function SyncMaterials:load(data)
 	for name, serialized in pairs(data.materials) do
 		local material = self._unit:material(Idstring(name))
@@ -50,6 +55,8 @@ function SyncMaterials:load(data)
 			for _, variable in ipairs(serialized.variables) do
 				material:set_variable(variable.name, variable.value)
 			end
+		else
+			debug_pause("[SyncMaterials:load] Failed to find material with name " .. tostring(name) .. " in unit", self._unit)
 		end
 	end
 end

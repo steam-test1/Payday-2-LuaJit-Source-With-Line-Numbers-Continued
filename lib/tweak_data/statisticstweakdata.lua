@@ -46,7 +46,7 @@ function StatisticsTweakData:statistics_specializations()
 	return table.size(tweak_data.skilltree.specializations)
 end
 
--- Lines 41-320
+-- Lines 41-323
 function StatisticsTweakData:statistics_table()
 	if not self._level_list then
 		self._level_list = {}
@@ -278,7 +278,7 @@ function StatisticsTweakData:statistics_table()
 	return self._level_list, self._job_list, self._mask_list, self._weapon_list, self._melee_list, self._grenade_list, enemy_list, armor_list, character_list, deployable_list, self._suit_list, self._weapon_color_list, self._glove_list
 end
 
--- Lines 322-324
+-- Lines 325-327
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -297,7 +297,7 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines 326-328
+-- Lines 329-331
 function StatisticsTweakData:mission_statistics_table()
 	return {
 		"labrat"

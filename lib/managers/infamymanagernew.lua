@@ -201,7 +201,7 @@ function InfamyManager:get_all_join_stingers()
 end
 
 -- Lines 172-177
-function InfamyManager:get_join_stinger_name_id(stinger_index)
+function InfamyManager:get_join_stinger_name_id(stinger_name)
 	local item_id = string.format("infamy_stinger_%03d", stinger_name)
 	local item_tweak = tweak_data.infamy.items[item_id]
 

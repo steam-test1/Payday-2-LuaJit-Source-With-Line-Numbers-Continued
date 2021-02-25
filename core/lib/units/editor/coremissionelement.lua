@@ -1476,7 +1476,33 @@ function CoreMissionElement:_on_gui_value_combobox_toolbar_select_dialog(params)
 	end
 end
 
--- Lines 1378-1398
+-- Lines 1378-1396
+function CoreMissionElement:_build_value_string(panel, sizer, value_name, options, tooltip, custom_name)
+	local string_params = {
+		name = string.pretty(custom_name or value_name, true) .. ":",
+		panel = panel,
+		sizer = sizer,
+		value = self._hed[value_name],
+		tooltip = tooltip or "Set a string value",
+		name_proportions = options.name_proportions or 1,
+		ctrlr_proportions = options.ctrlr_proportions or 2,
+		sizer_proportions = options.sizer_proportions
+	}
+	local ctrlr = CoreEws.string_controller(string_params)
+
+	ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
+		ctrlr = ctrlr,
+		value = value_name
+	})
+	ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
+		ctrlr = ctrlr,
+		value = value_name
+	})
+
+	return ctrlr, string_params
+end
+
+-- Lines 1397-1417
 function CoreMissionElement:_build_value_number(panel, sizer, value_name, options, tooltip, custom_name)
 	local number_params = {
 		name = string.pretty(custom_name or value_name, true) .. ":",
@@ -1505,7 +1531,7 @@ function CoreMissionElement:_build_value_number(panel, sizer, value_name, option
 	return ctrlr, number_params
 end
 
--- Lines 1400-1409
+-- Lines 1419-1428
 function CoreMissionElement:_build_value_checkbox(panel, sizer, value_name, tooltip, custom_name)
 	local checkbox = EWS:CheckBox(panel, custom_name or string.pretty(value_name, true), "")
 
@@ -1520,7 +1546,7 @@ function CoreMissionElement:_build_value_checkbox(panel, sizer, value_name, tool
 	return checkbox
 end
 
--- Lines 1411-1452
+-- Lines 1430-1471
 function CoreMissionElement:_build_value_random_number(panel, sizer, value_name, options, tooltip, custom_name)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -1581,7 +1607,7 @@ function CoreMissionElement:_build_value_random_number(panel, sizer, value_name,
 	return ctrlr, number_params
 end
 
--- Lines 1454-1468
+-- Lines 1473-1487
 function CoreMissionElement:_set_random_number_element_data(data)
 	print("_set_random_number_element_data", inspect(data))
 
@@ -1594,7 +1620,7 @@ function CoreMissionElement:_set_random_number_element_data(data)
 	self._hed[data.value][data.index] = value
 end
 
--- Lines 1476-1488
+-- Lines 1495-1507
 function CoreMissionElement:_build_add_remove_unit_from_list(panel, sizer, elements, names, exact_names)
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -1612,12 +1638,12 @@ function CoreMissionElement:_build_add_remove_unit_from_list(panel, sizer, eleme
 	sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 1490-1535
+-- Lines 1509-1554
 function CoreMissionElement:_add_unit_list_btn(params)
 	local elements = params.elements or {}
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 1494-1514
+	-- Lines 1513-1533
 	local function f_correct_unit(unit)
 		if not params.names and not params.exact_names then
 			return true
@@ -1644,7 +1670,7 @@ function CoreMissionElement:_add_unit_list_btn(params)
 		return false
 	end
 
-	-- Lines 1516-1528
+	-- Lines 1535-1547
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -1672,11 +1698,11 @@ function CoreMissionElement:_add_unit_list_btn(params)
 	end
 end
 
--- Lines 1537-1545
+-- Lines 1556-1564
 function CoreMissionElement:_remove_unit_list_btn(params)
 	local elements = params.elements
 
-	-- Lines 1539-1539
+	-- Lines 1558-1558
 	local function f(unit)
 		return table.contains(elements, unit:unit_data().unit_id)
 	end
@@ -1690,7 +1716,7 @@ function CoreMissionElement:_remove_unit_list_btn(params)
 	end
 end
 
--- Lines 1551-1563
+-- Lines 1570-1582
 function CoreMissionElement:_build_add_remove_static_unit_from_list(panel, sizer, params)
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -1702,7 +1728,7 @@ function CoreMissionElement:_build_add_remove_static_unit_from_list(panel, sizer
 	sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 1565-1571
+-- Lines 1584-1590
 function CoreMissionElement:_add_static_unit_list_btn(params)
 	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Add Unit", params.add_filter)
 
@@ -1713,7 +1739,7 @@ function CoreMissionElement:_add_static_unit_list_btn(params)
 	end
 end
 
--- Lines 1573-1578
+-- Lines 1592-1597
 function CoreMissionElement:_remove_static_unit_list_btn(params)
 	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Remove Unit", params.remove_filter)
 
@@ -1722,7 +1748,7 @@ function CoreMissionElement:_remove_static_unit_list_btn(params)
 	end
 end
 
--- Lines 1582-1599
+-- Lines 1601-1618
 function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
 	if to_unit == self._unit then
 		for _, data in ipairs(self._hed.on_executed) do
@@ -1754,7 +1780,7 @@ function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
 	end
 end
 
--- Lines 1602-1613
+-- Lines 1621-1632
 function CoreMissionElement:_get_links_of_type_from_elements(elements, type, to_unit, links, all_units)
 	local links1 = type == "operator" and links.on_executed or type == "trigger" and links.executers or type == "filter" and links.executers or links.on_executed
 	local links2 = type == "operator" and links.executers or type == "trigger" and links.on_executed or type == "filter" and links.on_executed or links.executers

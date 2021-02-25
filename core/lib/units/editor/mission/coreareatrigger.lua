@@ -11,7 +11,7 @@ function AreaTriggerUnitElement:init(...)
 	CoreAreaTriggerUnitElement.init(self, ...)
 end
 
--- Lines 12-56
+-- Lines 12-58
 function CoreAreaTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -33,6 +33,7 @@ function CoreAreaTriggerUnitElement:init(unit)
 	self._hed.use_disabled_shapes = false
 	self._hed.rules_element_ids = nil
 	self._hed.unit_ids = nil
+	self._hed.substitute_object = ""
 
 	table.insert(self._save_values, "interval")
 	table.insert(self._save_values, "trigger_on")
@@ -49,9 +50,10 @@ function CoreAreaTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "use_disabled_shapes")
 	table.insert(self._save_values, "rules_element_ids")
 	table.insert(self._save_values, "unit_ids")
+	table.insert(self._save_values, "substitute_object")
 end
 
--- Lines 58-103
+-- Lines 60-105
 function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 
@@ -129,7 +131,7 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 105-123
+-- Lines 107-125
 function CoreAreaTriggerUnitElement:_check_removed_units(all_units)
 	if self._hed.use_shape_element_ids then
 		for _, id in ipairs(clone(self._hed.use_shape_element_ids)) do
@@ -152,11 +154,11 @@ function CoreAreaTriggerUnitElement:_check_removed_units(all_units)
 	end
 end
 
--- Lines 125-126
+-- Lines 127-128
 function CoreAreaTriggerUnitElement:update_editing()
 end
 
--- Lines 128-182
+-- Lines 130-184
 function CoreAreaTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -222,7 +224,7 @@ function CoreAreaTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 184-189
+-- Lines 186-191
 function CoreAreaTriggerUnitElement:_add_unit_id(id)
 	table.insert(self._hed.unit_ids, id)
 
@@ -231,7 +233,7 @@ function CoreAreaTriggerUnitElement:_add_unit_id(id)
 	end
 end
 
--- Lines 191-197
+-- Lines 193-199
 function CoreAreaTriggerUnitElement:_remove_unit_id(id)
 	table.delete(self._hed.unit_ids, id)
 
@@ -242,7 +244,7 @@ function CoreAreaTriggerUnitElement:_remove_unit_id(id)
 	end
 end
 
--- Lines 199-215
+-- Lines 201-217
 function CoreAreaTriggerUnitElement:update_selected(t, dt, selected_unit, all_units)
 	if not self._hed.use_shape_element_ids then
 		local shape = self:get_shape()
@@ -262,7 +264,7 @@ function CoreAreaTriggerUnitElement:update_selected(t, dt, selected_unit, all_un
 	end
 end
 
--- Lines 217-223
+-- Lines 219-225
 function CoreAreaTriggerUnitElement:get_shape()
 	if not self._shape then
 		self:_create_shapes()
@@ -271,18 +273,18 @@ function CoreAreaTriggerUnitElement:get_shape()
 	return self._hed.shape_type == "box" and self._shape or self._hed.shape_type == "cylinder" and self._cylinder_shape
 end
 
--- Lines 225-228
+-- Lines 227-230
 function CoreAreaTriggerUnitElement:set_shape_property(params)
 	self._shape:set_property(params.property, self._hed[params.value])
 	self._cylinder_shape:set_property(params.property, self._hed[params.value])
 end
 
--- Lines 231-233
+-- Lines 233-235
 function CoreAreaTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 235-253
+-- Lines 237-255
 function CoreAreaTriggerUnitElement:_set_shape_type()
 	local is_box = self._hed.shape_type == "box"
 	local is_cylinder = self._hed.shape_type == "cylinder"
@@ -302,7 +304,7 @@ function CoreAreaTriggerUnitElement:_set_shape_type()
 	self._sliders.radius:set_enabled(is_cylinder)
 end
 
--- Lines 255-261
+-- Lines 257-263
 function CoreAreaTriggerUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
 		width = self._hed.width,
@@ -320,7 +322,7 @@ function CoreAreaTriggerUnitElement:_create_shapes()
 	self._cylinder_shape:set_unit(self._unit)
 end
 
--- Lines 263-268
+-- Lines 265-270
 function CoreAreaTriggerUnitElement:_recreate_shapes()
 	self._shape = nil
 	self._cylinder_shape = nil
@@ -328,7 +330,7 @@ function CoreAreaTriggerUnitElement:_recreate_shapes()
 	self:_create_shapes()
 end
 
--- Lines 270-278
+-- Lines 272-280
 function CoreAreaTriggerUnitElement:set_element_data(params, ...)
 	CoreAreaTriggerUnitElement.super.set_element_data(self, params, ...)
 
@@ -341,7 +343,7 @@ function CoreAreaTriggerUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines 280-302
+-- Lines 282-308
 function CoreAreaTriggerUnitElement:create_values_ctrlrs(panel, panel_sizer, disable)
 	self:_build_value_number(panel, panel_sizer, "interval", {
 		floats = 2,
@@ -385,10 +387,14 @@ function CoreAreaTriggerUnitElement:create_values_ctrlrs(panel, panel_sizer, dis
 		}, "Select which units will trigger the area (equipment only)")
 	end
 
+	if not disable or not disable.substitute_object then
+		self:_build_value_string(panel, panel_sizer, "substitute_object", {}, "Named object's position will replace it's parent when checking against this trigger area")
+	end
+
 	self._use_disabled_shapes = self:_build_value_checkbox(panel, panel_sizer, "use_disabled_shapes")
 end
 
--- Lines 305-350
+-- Lines 311-356
 function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_params)
 	self:_create_panel()
 
@@ -485,7 +491,7 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	self:_set_shape_type()
 end
 
--- Lines 352-369
+-- Lines 358-375
 function CoreAreaTriggerUnitElement:scale_slider(panel, sizer, number_ctrlr_params, value, name)
 	local slider_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -520,7 +526,7 @@ function CoreAreaTriggerUnitElement:scale_slider(panel, sizer, number_ctrlr_para
 	self._sliders[value] = slider
 end
 
--- Lines 371-376
+-- Lines 377-382
 function CoreAreaTriggerUnitElement:set_size(params)
 	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
@@ -529,14 +535,14 @@ function CoreAreaTriggerUnitElement:set_size(params)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 
--- Lines 378-381
+-- Lines 384-387
 function CoreAreaTriggerUnitElement:size_release(params)
 	self._hed[params.value] = params.number_ctrlr_params.value
 
 	params.ctrlr:set_value(100)
 end
 
--- Lines 383-386
+-- Lines 389-392
 function CoreAreaTriggerUnitElement:clone_data(...)
 	CoreAreaTriggerUnitElement.super.clone_data(self, ...)
 	self:_recreate_shapes()
@@ -550,12 +556,12 @@ CoreAreaOperatorUnitElement.LINK_ELEMENTS = {
 }
 AreaOperatorUnitElement = AreaOperatorUnitElement or class(CoreAreaOperatorUnitElement)
 
--- Lines 397-399
+-- Lines 403-405
 function AreaOperatorUnitElement:init(...)
 	AreaOperatorUnitElement.super.init(self, ...)
 end
 
--- Lines 401-427
+-- Lines 407-433
 function CoreAreaOperatorUnitElement:init(unit)
 	CoreAreaOperatorUnitElement.super.init(self, unit)
 
@@ -584,7 +590,7 @@ function CoreAreaOperatorUnitElement:init(unit)
 	end
 end
 
--- Lines 429-438
+-- Lines 435-444
 function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreAreaOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -604,11 +610,11 @@ function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 440-441
+-- Lines 446-447
 function CoreAreaOperatorUnitElement:update_editing()
 end
 
--- Lines 443-456
+-- Lines 449-462
 function CoreAreaOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -626,12 +632,12 @@ function CoreAreaOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 459-461
+-- Lines 465-467
 function CoreAreaOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 463-484
+-- Lines 469-490
 function CoreAreaOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -674,14 +680,14 @@ CoreAreaReportTriggerUnitElement.ON_EXECUTED_ALTERNATIVES = {
 }
 AreaReportTriggerUnitElement = AreaReportTriggerUnitElement or class(CoreAreaReportTriggerUnitElement)
 
--- Lines 492-496
+-- Lines 498-502
 function AreaReportTriggerUnitElement:init(...)
 	AreaReportTriggerUnitElement.super.init(self, ...)
 
 	self._hed.trigger_on = nil
 end
 
--- Lines 498-500
+-- Lines 504-506
 function AreaReportTriggerUnitElement:_build_panel(panel, panel_sizer)
 	AreaReportTriggerUnitElement.super._build_panel(self, panel, panel_sizer, {
 		trigger_type = true

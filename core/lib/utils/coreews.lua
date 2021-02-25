@@ -242,7 +242,28 @@ function number_controller(params)
 	return params.number_ctrlr, params.name_ctrlr, params
 end
 
--- Lines 298-306
+-- Lines 296-316
+function string_controller(params)
+	params.value = params.value or 0
+	params.name_proportions = params.name_proportions or 1
+	params.ctrlr_proportions = params.ctrlr_proportions or 1
+	params.sizer_proportions = params.sizer_proportions or 0
+	params.floats = params.floats or 0
+	params.ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
+
+	_name_ctrlr(params)
+
+	params.number_ctrlr = EWS:TextCtrl(params.panel, params.value, "", "TE_PROCESS_ENTER")
+
+	params.number_ctrlr:set_tool_tip(params.tooltip)
+	params.ctrl_sizer:add(params.number_ctrlr, params.ctrlr_proportions, 0, "EXPAND")
+	params.sizer:add(params.ctrl_sizer, params.sizer_proportions, 0, "EXPAND")
+	_connect_events(params)
+
+	return params.number_ctrlr, params.name_ctrlr, params
+end
+
+-- Lines 320-328
 function verify_entered_number(params)
 	local value = tonumber(params.number_ctrlr:get_value()) or 0
 
@@ -261,7 +282,7 @@ function verify_entered_number(params)
 	params.number_ctrlr:set_selection(-1, -1)
 end
 
--- Lines 310-314
+-- Lines 332-336
 function change_entered_number(params, value)
 	local floats = params.floats or 0
 	params.value = value
@@ -269,7 +290,7 @@ function change_entered_number(params, value)
 	params.number_ctrlr:change_value(string.format("%." .. floats .. "f", params.value))
 end
 
--- Lines 316-320
+-- Lines 338-342
 function change_slider_and_number_value(params, value)
 	params.value = value
 
@@ -277,7 +298,7 @@ function change_slider_and_number_value(params, value)
 	change_entered_number(params, value)
 end
 
--- Lines 329-337
+-- Lines 351-359
 function _connect_events(params)
 	if not params.events then
 		return
@@ -288,7 +309,7 @@ function _connect_events(params)
 	end
 end
 
--- Lines 358-417
+-- Lines 380-439
 function combobox(params)
 	local name = params.name
 	local panel = params.panel
@@ -348,7 +369,7 @@ function combobox(params)
 	return ctrlr, name_ctrlr, params
 end
 
--- Lines 420-429
+-- Lines 442-451
 function _set_combobox_value(params)
 	params.value = params.ctrlr:get_value()
 	params.value = params.numbers and tonumber(params.value) or params.value
@@ -362,7 +383,7 @@ function _set_combobox_value(params)
 	end
 end
 
--- Lines 433-447
+-- Lines 455-469
 function update_combobox_options(params, options)
 	params.ctrlr:freeze()
 	params.ctrlr:clear()
@@ -384,7 +405,7 @@ function update_combobox_options(params, options)
 	params.ctrlr:thaw()
 end
 
--- Lines 450-460
+-- Lines 472-482
 function change_combobox_value(params, value)
 	params.value = value
 	params.value = params.numbers and tonumber(params.value) or params.value
@@ -400,7 +421,7 @@ function change_combobox_value(params, value)
 	end
 end
 
--- Lines 479-512
+-- Lines 501-534
 function slider_and_number_controller(params)
 	params.value = params.value or 0
 	params.name_proportions = params.name_proportions or 1
@@ -432,7 +453,7 @@ function slider_and_number_controller(params)
 	return params
 end
 
--- Lines 515-525
+-- Lines 537-547
 function _ctrlr_tooltip(params)
 	local max = params.max
 	local min = params.min
@@ -446,14 +467,14 @@ function _ctrlr_tooltip(params)
 	end
 end
 
--- Lines 528-531
+-- Lines 550-553
 function _slider_ctrlr(params)
 	params.slider_ctrlr = EWS:Slider(params.panel, params.value * params.slider_multiplier, params.min * params.slider_multiplier, params.max * params.slider_multiplier, "", "")
 
 	params.slider_ctrlr:set_tool_tip(params.tooltip)
 end
 
--- Lines 534-544
+-- Lines 556-566
 function _number_ctrlr(params)
 	if CoreClass.type_name(params.value) ~= "number" then
 		params.value = params.min or 0
@@ -467,7 +488,7 @@ function _number_ctrlr(params)
 	params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(nil, _M, "verify_entered_number"), params)
 end
 
--- Lines 547-552
+-- Lines 569-574
 function _name_ctrlr(params)
 	if params.name then
 		params.name_ctrlr = EWS:StaticText(params.panel, params.name, 0, "")
@@ -476,7 +497,7 @@ function _name_ctrlr(params)
 	end
 end
 
--- Lines 556-565
+-- Lines 578-587
 function verify_entered_number(params)
 	local ctrlr = params.ctrlr or params.number_ctrlr
 	local value = tonumber(ctrlr:get_value()) or 0
@@ -496,19 +517,19 @@ function verify_entered_number(params)
 	ctrlr:set_selection(-1, -1)
 end
 
--- Lines 567-569
+-- Lines 589-591
 function update_slider_from_number(params)
 	params.slider_ctrlr:set_value(params.value * params.slider_multiplier)
 end
 
--- Lines 571-574
+-- Lines 593-596
 function update_number_from_slider(params)
 	params.value = params.slider_ctrlr:get_value() / params.slider_multiplier
 
 	change_entered_number(params, params.value)
 end
 
--- Lines 576-580
+-- Lines 598-602
 function update_slider_and_number_controller_value(params, value)
 	params.value = value
 
@@ -516,12 +537,12 @@ function update_slider_and_number_controller_value(params, value)
 	update_slider_from_number(params)
 end
 
--- Lines 582-584
+-- Lines 604-606
 function change_slider_and_number_controller_range(params, min, max)
 	params.slider_ctrlr:set_range(min * params.slider_multiplier, max * params.slider_multiplier)
 end
 
--- Lines 600-654
+-- Lines 622-676
 function list_selector(params)
 	params.title = params.title or ""
 	params.options = params.options or {}
@@ -574,7 +595,7 @@ function list_selector(params)
 	return params
 end
 
--- Lines 656-673
+-- Lines 678-695
 function _list_selector_add_from_list(params)
 	local dialog = _G.SelectNameModal:new("Add", _list_selector_get_left_box_value(params), {
 		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
@@ -599,7 +620,7 @@ function _list_selector_add_from_list(params)
 	_list_selector_on_left_box(params)
 end
 
--- Lines 675-692
+-- Lines 697-714
 function _list_selector_remove_from_list(params)
 	local dialog = _G.SelectNameModal:new("Remove", _list_selector_get_value(params), {
 		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
@@ -624,7 +645,7 @@ function _list_selector_remove_from_list(params)
 	_list_selector_on_right_box(params)
 end
 
--- Lines 694-707
+-- Lines 716-729
 function _list_selector_on_left_box(params)
 	local selected_indices = params.left_list_box:selected_indices()
 
@@ -642,7 +663,7 @@ function _list_selector_on_left_box(params)
 	_list_selector_updated_callback(params)
 end
 
--- Lines 709-722
+-- Lines 731-744
 function _list_selector_on_right_box(params)
 	local selected_indices = params.right_list_box:selected_indices()
 
@@ -660,7 +681,7 @@ function _list_selector_on_right_box(params)
 	_list_selector_updated_callback(params)
 end
 
--- Lines 724-730
+-- Lines 746-752
 function _list_selector_get_left_box_value(params)
 	local value = {}
 
@@ -671,7 +692,7 @@ function _list_selector_get_left_box_value(params)
 	return value
 end
 
--- Lines 732-738
+-- Lines 754-760
 function _list_selector_get_value(params)
 	local value = {}
 
@@ -682,14 +703,14 @@ function _list_selector_get_value(params)
 	return value
 end
 
--- Lines 740-744
+-- Lines 762-766
 function _list_selector_updated_callback(params)
 	if params.updated_callback then
 		params.updated_callback(_list_selector_get_value(params))
 	end
 end
 
--- Lines 749-768
+-- Lines 771-790
 function combobox_and_list(params)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -713,7 +734,7 @@ function combobox_and_list(params)
 	return ctrlr, params
 end
 
--- Lines 771-779
+-- Lines 793-801
 function _on_gui_value_combobox_toolbar_select_dialog(params)
 	local dialog = _G.SelectNameModal:new("Select name", params.combobox_params.options)
 
@@ -726,13 +747,13 @@ function _on_gui_value_combobox_toolbar_select_dialog(params)
 	end
 end
 
--- Lines 781-784
+-- Lines 803-806
 function set_combobox_and_list_enabled(params, enabled)
 	params.ctrlr:set_enabled(enabled)
 	params.toolbar:set_enabled(enabled)
 end
 
--- Lines 789-797
+-- Lines 811-819
 function get_notebook_current_page_index(notebook)
 	local page = notebook:get_current_page()
 

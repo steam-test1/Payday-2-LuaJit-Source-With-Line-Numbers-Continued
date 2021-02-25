@@ -49,15 +49,7 @@ function VehicleStateInactive:is_vulnerable()
 	return true
 end
 
--- Lines 52-61
+-- Lines 52-54
 function VehicleStateInactive:exit()
-	local name = self._unit:vehicle_driving()._tweak_data.name
-
-	if name and self._unit:unit_data().name_label_id == nil then
-		local id = managers.hud:add_vehicle_name_label({
-			name = name,
-			unit = self._unit
-		})
-		self._unit:unit_data().name_label_id = id
-	end
+	self:create_name_hud()
 end

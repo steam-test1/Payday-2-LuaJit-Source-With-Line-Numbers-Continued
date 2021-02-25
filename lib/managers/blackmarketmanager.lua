@@ -8777,8 +8777,8 @@ end
 
 -- Lines 8630-9048
 function BlackMarketManager:_cleanup_blackmarket()
-	Application:error("[BlackMarketManager:_cleanup_blackmarket] STARTING BLACKMARKET CLEANUP")
-	Application:error("----------------------------------------------------------------------")
+	print("[BlackMarketManager:_cleanup_blackmarket] STARTING BLACKMARKET CLEANUP")
+	print("----------------------------------------------------------------------")
 
 	local crafted_items = self._global.crafted_items
 
@@ -9203,8 +9203,8 @@ function BlackMarketManager:_cleanup_blackmarket()
 		end
 	end
 
-	Application:error("----------------------------------------------------------------------")
-	Application:error("[BlackMarketManager:_cleanup_blackmarket] BLACKMARKET CLEANUP DONE")
+	print("----------------------------------------------------------------------")
+	print("[BlackMarketManager:_cleanup_blackmarket] BLACKMARKET CLEANUP DONE")
 end
 
 -- Lines 9050-9051

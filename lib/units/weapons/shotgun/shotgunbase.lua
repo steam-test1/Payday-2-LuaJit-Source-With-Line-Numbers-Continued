@@ -66,7 +66,7 @@ function ShotgunBase:run_and_shoot_allowed()
 	return allowed or managers.player:has_category_upgrade("shotgun", "hip_run_and_shoot")
 end
 
--- Lines 65-93
+-- Lines 65-104
 function ShotgunBase:_update_stats_values()
 	ShotgunBase.super._update_stats_values(self)
 	self:setup_default()
@@ -96,7 +96,7 @@ function ShotgunBase:_update_stats_values()
 	end
 end
 
--- Lines 97-108
+-- Lines 109-120
 function ShotgunBase:get_damage_falloff(damage, col_ray, user_unit)
 	local distance = col_ray.distance or mvector3.distance(col_ray.unit:position(), user_unit:position())
 	local inc_range_mul = 1
@@ -114,7 +114,7 @@ local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 114-375
+-- Lines 127-388
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local result = nil
 	local hit_enemies = {}
@@ -130,7 +130,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local weight = 0.1
 	local enemy_died = false
 
-	-- Lines 129-167
+	-- Lines 142-180
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then
 			local enemy_key = col_ray.unit:key()
@@ -370,7 +370,7 @@ end
 
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines 382-385
+-- Lines 395-398
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -379,7 +379,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines 395-410
+-- Lines 408-423
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {

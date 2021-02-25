@@ -267,19 +267,29 @@ function math.inverse_lerp(a, b, v)
 	return (v - a) / (b - a)
 end
 
--- Lines 239-242
+-- Lines 239-241
+function math.map_range(v, a, b, c, d)
+	return math.lerp(c, d, math.inverse_lerp(a, b, v))
+end
+
+-- Lines 243-245
+function math.map_range_clamped(v, a, b, c, d)
+	return math.lerp(c, d, math.clamp(math.inverse_lerp(a, b, v), 0, 1))
+end
+
+-- Lines 247-250
 function math.string_to_rotation(v)
 	local r = math.string_to_vector(v)
 
 	return Rotation(r.x, r.y, r.z)
 end
 
--- Lines 244-247
+-- Lines 252-255
 function math.vector_to_string(v)
 	return tostring(v.x) .. " " .. tostring(v.y) .. " " .. tostring(v.z)
 end
 
--- Lines 249-258
+-- Lines 257-266
 function math.spline(points, t)
 	local mu = t * t
 	local a0 = points[4] - points[3] - points[1] + points[2]
@@ -290,7 +300,7 @@ function math.spline(points, t)
 	return a0 * t * mu + a1 * mu + a2 * t + a3
 end
 
--- Lines 260-269
+-- Lines 268-277
 function math.spline_len(points, n)
 	local len = 0
 	local old_p = points[1]
@@ -304,7 +314,7 @@ function math.spline_len(points, n)
 	return len
 end
 
--- Lines 271-287
+-- Lines 279-295
 function math.bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -320,7 +330,7 @@ function math.bezier(points, t)
 	return a1 + a2 + a3 + a4
 end
 
--- Lines 289-294
+-- Lines 297-302
 function math.linear_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -328,7 +338,7 @@ function math.linear_bezier(points, t)
 	return p1 * (1 - t) + p2 * t
 end
 
--- Lines 296-302
+-- Lines 304-310
 function math.quadratic_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -337,7 +347,7 @@ function math.quadratic_bezier(points, t)
 	return p1 * (1 - t) * (1 - t) + p2 * 2 * t * (1 - t) + p3 * t * t
 end
 
--- Lines 305-314
+-- Lines 313-322
 function math.bezier_len(points, n)
 	local len = 0
 	local old_p = points[1]
@@ -351,7 +361,7 @@ function math.bezier_len(points, n)
 	return len
 end
 
--- Lines 318-327
+-- Lines 326-335
 function math.point_on_line(l1, l2, p)
 	local u = (p.x - l1.x) * (l2.x - l1.x) + (p.y - l1.y) * (l2.y - l1.y) + (p.z - l1.z) * (l2.z - l1.z)
 	local u = math.clamp(u / math.pow((l2 - l1):length(), 2), 0, 1)
@@ -362,14 +372,14 @@ function math.point_on_line(l1, l2, p)
 	return Vector3(x, y, z)
 end
 
--- Lines 331-334
+-- Lines 339-342
 function math.distance_to_line(l1, l2, p)
 	local closest_point = math.point_on_line(l1, l2, p)
 
 	return (closest_point - p):length(), closest_point
 end
 
--- Lines 337-344
+-- Lines 345-352
 function math.limitangle(angle)
 	local newangle = math.fmod(angle, 360)
 
@@ -380,7 +390,7 @@ function math.limitangle(angle)
 	return newangle
 end
 
--- Lines 346-354
+-- Lines 354-362
 function math.world_to_obj(obj, point)
 	if obj == nil then
 		return point
@@ -391,7 +401,7 @@ function math.world_to_obj(obj, point)
 	return vec:rotate_with(obj:rotation():inverse())
 end
 
--- Lines 356-365
+-- Lines 364-373
 function math.obj_to_world(obj, point)
 	if obj == nil then
 		return point
@@ -402,7 +412,7 @@ function math.obj_to_world(obj, point)
 	return vec + obj:position()
 end
 
--- Lines 367-369
+-- Lines 375-377
 function math.within(x, min, max)
 	return min <= x and x <= max
 end
