@@ -2,19 +2,21 @@ core:module("CoreSubtitlePresenter")
 
 OverlayPresenterVR = OverlayPresenterVR or class(OverlayPresenter)
 
--- Lines: 7 to 16
+-- Lines 7-16
 function OverlayPresenterVR:_clear_workspace()
 	if alive(self.__ws) then
 		managers.gui_data:destroy_workspace(self.__ws)
 	end
 
 	self.__ws = managers.gui_data:create_saferect_workspace("mid")
-	self.__subtitle_panel = self.__ws:panel():panel({layer = 150})
+	self.__subtitle_panel = self.__ws:panel():panel({
+		layer = 150
+	})
 
 	self:_on_resolution_changed()
 end
 
--- Lines: 18 to 38
+-- Lines 18-38
 function OverlayPresenterVR:_on_resolution_changed()
 	self:set_font(self.__font_name or self:_default_font_name(), self.__font_size or self:_default_font_size())
 
@@ -45,25 +47,27 @@ CoreClass.override_class(OverlayPresenter, OverlayPresenterVR)
 
 IngamePresenterVR = IngamePresenterVR or class(OverlayPresenter)
 
--- Lines: 44 to 47
+-- Lines 44-47
 function IngamePresenterVR:init(font_name, font_size, custom_ws)
 	self.__ws = custom_ws
 
 	IngamePresenterVR.super.init(self, font_name, font_size)
 end
 
--- Lines: 49 to 56
+-- Lines 49-56
 function IngamePresenterVR:_clear_workspace()
 	if alive(self.__ws) then
 		self.__ws:panel():clear()
 
-		self.__subtitle_panel = self.__ws:panel():panel({layer = 150})
+		self.__subtitle_panel = self.__ws:panel():panel({
+			layer = 150
+		})
 
 		self:_on_resolution_changed()
 	end
 end
 
--- Lines: 58 to 69
+-- Lines 58-69
 function IngamePresenterVR:destroy()
 	if self.__resolution_changed_id and managers.viewport then
 		managers.viewport:remove_resolution_changed_func(self.__resolution_changed_id)
@@ -79,7 +83,7 @@ function IngamePresenterVR:destroy()
 	self.__subtitle_panel = nil
 end
 
--- Lines: 72 to 86
+-- Lines 72-86
 function IngamePresenterVR:_on_resolution_changed()
 	self:set_font(self.__font_name or self:_default_font_name(), self.__font_size or self:_default_font_size())
 	self:set_width(self:_string_width("The quick brown fox jumped over the lazy dog bla bla bla bla bla bla bla bla bla blah blah blah blah blah ."))
@@ -99,10 +103,9 @@ function IngamePresenterVR:_on_resolution_changed()
 	end
 end
 
--- Lines: 88 to 94
+-- Lines 88-94
 function IngamePresenterVR:show_text(...)
 	IngamePresenterVR.super.show_text(self, ...)
 	_G.VRManagerPD2.overlay_helper(self.__subtitle_panel)
 	_G.VRManagerPD2.depth_disable_helper(self.__subtitle_panel)
 end
-

@@ -1,6 +1,6 @@
 TeammateCommentUnitElement = TeammateCommentUnitElement or class(MissionElement)
 
--- Lines: 3 to 16
+-- Lines 3-16
 function TeammateCommentUnitElement:init(unit)
 	TeammateCommentUnitElement.super.init(self, unit)
 
@@ -16,12 +16,12 @@ function TeammateCommentUnitElement:init(unit)
 	table.insert(self._save_values, "radius")
 end
 
--- Lines: 18 to 21
+-- Lines 18-21
 function TeammateCommentUnitElement:post_init(...)
 	TeammateCommentUnitElement.super.post_init(self, ...)
 end
 
--- Lines: 23 to 31
+-- Lines 23-31
 function TeammateCommentUnitElement:update_selected(t, dt)
 	if self._hed.radius ~= 0 then
 		local brush = Draw:brush()
@@ -35,7 +35,7 @@ function TeammateCommentUnitElement:update_selected(t, dt)
 	end
 end
 
--- Lines: 33 to 56
+-- Lines 33-56
 function TeammateCommentUnitElement:test_element()
 	if self._hed.comment then
 		managers.editor:set_wanted_mute(false)
@@ -51,7 +51,7 @@ function TeammateCommentUnitElement:test_element()
 		self._ss:set_orientation(self._unit:rotation())
 		self._ss:set_switch("int_ext", "third")
 
-		for i = self._hed.test_robber, 10, 1 do
+		for i = self._hed.test_robber, 10 do
 			self._ss:set_switch("robber", "rb" .. tostring(i))
 
 			if self._ss:post_event(self._hed.comment) then
@@ -61,7 +61,7 @@ function TeammateCommentUnitElement:test_element()
 	end
 end
 
--- Lines: 58 to 64
+-- Lines 58-64
 function TeammateCommentUnitElement:stop_test_element()
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
@@ -71,14 +71,16 @@ function TeammateCommentUnitElement:stop_test_element()
 	end
 end
 
--- Lines: 79 to 93
+-- Lines 79-93
 function TeammateCommentUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "comment", table.list_add({"none"}, managers.groupai:state().teammate_comment_names), "Select a comment")
+	self:_build_value_combobox(panel, panel_sizer, "comment", table.list_add({
+		"none"
+	}, managers.groupai:state().teammate_comment_names), "Select a comment")
 	self:_build_value_checkbox(panel, panel_sizer, "close_to_element", "Play close to element", "Play close to element")
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Play on instigator", "Play on instigator")
 	self:_build_value_number(panel, panel_sizer, "radius", {
@@ -92,9 +94,8 @@ function TeammateCommentUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("If \"Play close to element\" is checked, the comment will be played on a teammate close to the element position, otherwise close to the player.")
 end
 
--- Lines: 99 to 102
+-- Lines 99-102
 function TeammateCommentUnitElement:destroy()
 	self:stop_test_element()
 	TeammateCommentUnitElement.super.destroy(self)
 end
-

@@ -1,12 +1,12 @@
 PlayerFatal = PlayerFatal or class(PlayerStandard)
 PlayerFatal._update_movement = PlayerBleedOut._update_movement
 
--- Lines: 5 to 7
+-- Lines 5-7
 function PlayerFatal:init(unit)
 	PlayerFatal.super.init(self, unit)
 end
 
--- Lines: 11 to 50
+-- Lines 11-50
 function PlayerFatal:enter(state_data, enter_data)
 	PlayerFatal.super.enter(self, state_data, enter_data)
 	self:_interupt_action_steelsight()
@@ -23,7 +23,9 @@ function PlayerFatal:enter(state_data, enter_data)
 
 	self:_interupt_action_charging_weapon(managers.player:player_timer():time())
 	self:_start_action_dead(managers.player:player_timer():time())
-	self:_start_action_unequip_weapon(managers.player:player_timer():time(), {selection_wanted = 1})
+	self:_start_action_unequip_weapon(managers.player:player_timer():time(), {
+		selection_wanted = 1
+	})
 	self._unit:base():set_slot(self._unit, 4)
 	self._unit:camera():camera_unit():base():set_target_tilt(80)
 
@@ -46,18 +48,23 @@ function PlayerFatal:enter(state_data, enter_data)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), true, 1)
 end
 
--- Lines: 54 to 66
+-- Lines 54-66
 function PlayerFatal:_enter(enter_data)
 	local preset = nil
-	preset = managers.groupai:state():whisper_mode() and {
-		"pl_mask_on_friend_combatant_whisper_mode",
-		"pl_mask_on_friend_non_combatant_whisper_mode",
-		"pl_mask_on_foe_combatant_whisper_mode_crouch",
-		"pl_mask_on_foe_non_combatant_whisper_mode_crouch"
-	} or {
-		"pl_friend_combatant_cbt",
-		"pl_friend_non_combatant_cbt"
-	}
+
+	if managers.groupai:state():whisper_mode() then
+		preset = {
+			"pl_mask_on_friend_combatant_whisper_mode",
+			"pl_mask_on_friend_non_combatant_whisper_mode",
+			"pl_mask_on_foe_combatant_whisper_mode_crouch",
+			"pl_mask_on_foe_non_combatant_whisper_mode_crouch"
+		}
+	else
+		preset = {
+			"pl_friend_combatant_cbt",
+			"pl_friend_non_combatant_cbt"
+		}
+	end
 
 	self._ext_movement:set_attention_settings(preset)
 
@@ -66,7 +73,7 @@ function PlayerFatal:_enter(enter_data)
 	end
 end
 
--- Lines: 70 to 94
+-- Lines 70-95
 function PlayerFatal:exit(state_data, new_state_name)
 	PlayerFatal.super.exit(self, state_data, new_state_name)
 	self:_end_action_dead(managers.player:player_timer():time())
@@ -83,7 +90,9 @@ function PlayerFatal:exit(state_data, new_state_name)
 		managers.hud:hide_stats_screen()
 	end
 
-	local exit_data = {equip_weapon = self._reequip_weapon}
+	local exit_data = {
+		equip_weapon = self._reequip_weapon
+	}
 
 	if new_state_name == "standard" then
 		exit_data.wants_crouch = true
@@ -94,17 +103,17 @@ function PlayerFatal:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines: 99 to 100
+-- Lines 99-101
 function PlayerFatal:interaction_blocked()
 	return true
 end
 
--- Lines: 105 to 107
+-- Lines 105-107
 function PlayerFatal:update(t, dt)
 	PlayerFatal.super.update(self, t, dt)
 end
 
--- Lines: 116 to 150
+-- Lines 113-150
 function PlayerFatal:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -121,7 +130,7 @@ function PlayerFatal:_update_check_actions(t, dt)
 	self:_check_action_interact(t, input)
 end
 
--- Lines: 156 to 170
+-- Lines 156-170
 function PlayerFatal:_check_action_interact(t, input)
 	if input.btn_interact_press then
 		if _G.IS_VR then
@@ -138,7 +147,7 @@ function PlayerFatal:_check_action_interact(t, input)
 	end
 end
 
--- Lines: 173 to 181
+-- Lines 173-181
 function PlayerFatal:_start_action_dead(t)
 	self:_interupt_action_running(t)
 
@@ -150,7 +159,7 @@ function PlayerFatal:_start_action_dead(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
--- Lines: 185 to 196
+-- Lines 185-196
 function PlayerFatal:_end_action_dead(t)
 	if not self:_can_stand() then
 		return
@@ -164,17 +173,16 @@ function PlayerFatal:_end_action_dead(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines: 200 to 204
+-- Lines 200-204
 function PlayerFatal:pre_destroy(unit)
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end
 end
 
--- Lines: 208 to 212
+-- Lines 208-212
 function PlayerFatal:destroy()
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end
 end
-

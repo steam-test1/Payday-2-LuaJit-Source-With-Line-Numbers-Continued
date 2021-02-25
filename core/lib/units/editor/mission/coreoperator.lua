@@ -1,15 +1,17 @@
 CoreOperatorUnitElement = CoreOperatorUnitElement or class(MissionElement)
 CoreOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreOperatorUnitElement.SAVE_UNIT_ROTATION = false
-CoreOperatorUnitElement.LINK_ELEMENTS = {"elements"}
+CoreOperatorUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 OperatorUnitElement = OperatorUnitElement or class(CoreOperatorUnitElement)
 
--- Lines: 8 to 10
+-- Lines 8-10
 function OperatorUnitElement:init(...)
 	OperatorUnitElement.super.init(self, ...)
 end
 
--- Lines: 12 to 20
+-- Lines 12-20
 function CoreOperatorUnitElement:init(unit)
 	CoreOperatorUnitElement.super.init(self, unit)
 
@@ -20,7 +22,7 @@ function CoreOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 22 to 36
+-- Lines 22-36
 function CoreOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -45,17 +47,17 @@ function CoreOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 38 to 41
+-- Lines 38-41
 function CoreOperatorUnitElement:get_links_to_unit(...)
 	CoreOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 43 to 44
+-- Lines 43-44
 function CoreOperatorUnitElement:update_editing()
 end
 
--- Lines: 46 to 56
+-- Lines 46-56
 function CoreOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -73,12 +75,12 @@ function CoreOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 59 to 61
+-- Lines 59-61
 function CoreOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 63 to 75
+-- Lines 63-75
 function CoreOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -94,4 +96,3 @@ function CoreOperatorUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select an operation for the selected elements")
 	self:_add_help_text("Choose an operation to perform on the selected elements. An element might not have the selected operation implemented and will then generate error when executed.")
 end
-

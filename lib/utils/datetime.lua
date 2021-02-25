@@ -3,7 +3,7 @@ DateTime.days_per_week = 7
 DateTime.days_per_month = 31
 DateTime.months_per_year = 12
 
--- Lines: 16 to 65
+-- Lines 14-65
 function DateTime:init(date)
 	if type(date) == "string" and (date == "now" or date == "today") then
 		date = {
@@ -24,22 +24,22 @@ function DateTime:init(date)
 	self._value = self._value + self._date_table.day
 	local mt = getmetatable(self)
 
-	-- Lines: 37 to 38
+	-- Lines 37-39
 	function mt.__eq(a, b)
 		return a:value() == b:value()
 	end
 
-	-- Lines: 40 to 41
+	-- Lines 40-42
 	function mt.__lt(a, b)
 		return a:value() < b:value()
 	end
 
-	-- Lines: 43 to 44
+	-- Lines 43-45
 	function mt.__le(a, b)
 		return a:value() <= b:value()
 	end
 
-	-- Lines: 46 to 51
+	-- Lines 46-52
 	function mt.__add(a, b)
 		local f = {
 			year = (a._date_table.year or 0) + (b._date_table.year or 0),
@@ -50,7 +50,7 @@ function DateTime:init(date)
 		return DateTime:new(f)
 	end
 
-	-- Lines: 53 to 58
+	-- Lines 53-59
 	function mt.__sub(a, b)
 		local f = {
 			year = (a._date_table.year or 0) - (b._date_table.year or 0),
@@ -61,7 +61,7 @@ function DateTime:init(date)
 		return DateTime:new(f)
 	end
 
-	-- Lines: 60 to 61
+	-- Lines 60-62
 	function mt.__tostring(t)
 		return string.format("%i/%i/%i [%i]", t._date_table.year or -1, t._date_table.month or -1, t._date_table.day or -1, t:value())
 	end
@@ -69,13 +69,12 @@ function DateTime:init(date)
 	setmetatable(self, mt)
 end
 
--- Lines: 67 to 68
+-- Lines 67-69
 function DateTime:value()
 	return self._value
 end
 
--- Lines: 71 to 72
+-- Lines 71-73
 function DateTime:date()
 	return self._date_table
 end
-

@@ -1,6 +1,6 @@
 CoreParticleEditorInitializers = CoreParticleEditorInitializers or class()
 
--- Lines: 2 to 21
+-- Lines 2-22
 function CoreParticleEditorInitializers:create_boxrandomposition()
 	local initializer = CoreEffectStackMember:new("boxrandomposition", "initializer", "Position (Box Random)")
 
@@ -27,7 +27,7 @@ Positions are always offsetted with effect position.]]
 	return initializer
 end
 
--- Lines: 24 to 43
+-- Lines 24-44
 function CoreParticleEditorInitializers:create_boxrandomvelocity()
 	local initializer = CoreEffectStackMember:new("boxrandomvelocity", "initializer", "Velocity (Box Random)")
 
@@ -54,7 +54,7 @@ Velocities are always offsetted with effect spawn velocity.]]
 	return initializer
 end
 
--- Lines: 46 to 75
+-- Lines 46-76
 function CoreParticleEditorInitializers:create_centervelocity()
 	local initializer = CoreEffectStackMember:new("centervelocity", "initializer", "Velocity (To/From Center)")
 
@@ -93,7 +93,7 @@ function CoreParticleEditorInitializers:create_centervelocity()
 	return initializer
 end
 
--- Lines: 80 to 99
+-- Lines 80-100
 function CoreParticleEditorInitializers:create_boxevenposition()
 	local initializer = CoreEffectStackMember:new("boxevenposition", "initializer", "Position (Box Even Distribution)")
 
@@ -120,7 +120,7 @@ Positions are always offsetted with effect position.]]
 	return initializer
 end
 
--- Lines: 102 to 105
+-- Lines 102-106
 function CoreParticleEditorInitializers:create_trail()
 	local initializer = CoreEffectStackMember:new("trail", "initializer", "Trail")
 
@@ -129,7 +129,7 @@ function CoreParticleEditorInitializers:create_trail()
 	return initializer
 end
 
--- Lines: 108 to 128
+-- Lines 108-129
 function CoreParticleEditorInitializers:create_boxrandomrotation()
 	local initializer = CoreEffectStackMember:new("boxrandomrotation", "initializer", "Rotation (Box Random)")
 
@@ -153,7 +153,7 @@ function CoreParticleEditorInitializers:create_boxrandomrotation()
 	return initializer
 end
 
--- Lines: 131 to 140
+-- Lines 131-141
 function CoreParticleEditorInitializers:create_constantage()
 	local initializer = CoreEffectStackMember:new("constantage", "initializer", "Age (Constant)")
 
@@ -166,7 +166,7 @@ function CoreParticleEditorInitializers:create_constantage()
 	return initializer
 end
 
--- Lines: 143 to 150
+-- Lines 143-151
 function CoreParticleEditorInitializers:create_boxrandomage()
 	local initializer = CoreEffectStackMember:new("boxrandomage", "initializer", "Age (Box Random)")
 
@@ -177,7 +177,7 @@ function CoreParticleEditorInitializers:create_boxrandomage()
 	return initializer
 end
 
--- Lines: 154 to 164
+-- Lines 154-165
 function CoreParticleEditorInitializers:create_boxrandomcolor()
 	local initializer = CoreEffectStackMember:new("boxrandomcolor", "initializer", "Color (Box Random)")
 
@@ -194,7 +194,7 @@ function CoreParticleEditorInitializers:create_boxrandomcolor()
 	return initializer
 end
 
--- Lines: 167 to 180
+-- Lines 167-181
 function CoreParticleEditorInitializers:create_boxrandomcolorgradient()
 	local initializer = CoreEffectStackMember:new("boxrandomcolorgradient", "initializer", "Color (Box Random Gradient)")
 
@@ -215,7 +215,7 @@ function CoreParticleEditorInitializers:create_boxrandomcolorgradient()
 	return initializer
 end
 
--- Lines: 185 to 195
+-- Lines 185-196
 function CoreParticleEditorInitializers:create_localboxrandomposition()
 	local initializer = CoreEffectStackMember:new("localboxrandomposition", "initializer", "Local Position (Box Random)")
 
@@ -230,7 +230,7 @@ function CoreParticleEditorInitializers:create_localboxrandomposition()
 	return initializer
 end
 
--- Lines: 198 to 208
+-- Lines 198-209
 function CoreParticleEditorInitializers:create_boxrandomangle()
 	local initializer = CoreEffectStackMember:new("boxrandomangle", "initializer", "Angle (Box Random)")
 
@@ -247,7 +247,7 @@ function CoreParticleEditorInitializers:create_boxrandomangle()
 	return initializer
 end
 
--- Lines: 211 to 221
+-- Lines 211-222
 function CoreParticleEditorInitializers:create_boxrandomanglevelocity()
 	local initializer = CoreEffectStackMember:new("boxrandomanglevelocity", "initializer", "Angle Velocity (Box Random)")
 
@@ -264,7 +264,7 @@ function CoreParticleEditorInitializers:create_boxrandomanglevelocity()
 	return initializer
 end
 
--- Lines: 224 to 234
+-- Lines 224-235
 function CoreParticleEditorInitializers:create_boxrandomopacity()
 	local initializer = CoreEffectStackMember:new("boxrandomopacity", "initializer", "Opacity (Box Random)")
 
@@ -281,7 +281,7 @@ function CoreParticleEditorInitializers:create_boxrandomopacity()
 	return initializer
 end
 
--- Lines: 237 to 247
+-- Lines 237-248
 function CoreParticleEditorInitializers:create_boxrandomsize()
 	local initializer = CoreEffectStackMember:new("boxrandomsize", "initializer", "Size (Box Random)")
 
@@ -298,7 +298,7 @@ function CoreParticleEditorInitializers:create_boxrandomsize()
 	return initializer
 end
 
--- Lines: 251 to 264
+-- Lines 251-265
 function CoreParticleEditorInitializers:create_boxrandomaspectsize()
 	local initializer = CoreEffectStackMember:new("boxrandomaspectsize", "initializer", "Size (Box Random Aspect)")
 
@@ -319,7 +319,7 @@ function CoreParticleEditorInitializers:create_boxrandomaspectsize()
 	return initializer
 end
 
--- Lines: 268 to 276
+-- Lines 268-277
 function CoreParticleEditorInitializers:create_boxrandomuvoffset()
 	local initializer = CoreEffectStackMember:new("boxrandomuvoffset", "initializer", "UV Offset (Box Random Frame)")
 
@@ -333,7 +333,7 @@ function CoreParticleEditorInitializers:create_boxrandomuvoffset()
 	return initializer
 end
 
--- Lines: 279 to 286
+-- Lines 279-287
 function CoreParticleEditorInitializers:create_worldtransform()
 	local initializer = CoreEffectStackMember:new("worldtransform", "initializer", "Local -> World Transform")
 
@@ -346,7 +346,7 @@ function CoreParticleEditorInitializers:create_worldtransform()
 	return initializer
 end
 
--- Lines: 289 to 321
+-- Lines 289-322
 function CoreParticleEditorInitializers:create_lightcone()
 	local initializer = CoreEffectStackMember:new("lightcone", "initializer", "Light Cone")
 
@@ -395,4 +395,3 @@ function CoreParticleEditorInitializers:create_lightcone()
 
 	return initializer
 end
-

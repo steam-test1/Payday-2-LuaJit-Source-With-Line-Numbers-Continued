@@ -1,12 +1,12 @@
 CoreRumbleHubElement = CoreRumbleHubElement or class(HubElement)
 RumbleHubElement = RumbleHubElement or class(CoreRumbleHubElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function RumbleHubElement:init(...)
 	CoreRumbleHubElement.init(self, ...)
 end
 
--- Lines: 9 to 23
+-- Lines 9-23
 function CoreRumbleHubElement:init(unit)
 	HubElement.init(self, unit)
 
@@ -23,7 +23,7 @@ function CoreRumbleHubElement:init(unit)
 	table.insert(self._save_values, "rumble_release")
 end
 
--- Lines: 25 to 96
+-- Lines 25-96
 function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -119,4 +119,3 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	rumble_sizer:add(ctrlr_sizer, 2, 0, "EXPAND")
 	panel_sizer:add(rumble_sizer, 0, 0, "EXPAND")
 end
-

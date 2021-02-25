@@ -1,6 +1,6 @@
 core:module("CoreString")
 
--- Lines: 15 to 21
+-- Lines 15-21
 function utf8.find_char(text, char)
 	for i, c in ipairs(utf8.characters(text)) do
 		if c == char then
@@ -9,7 +9,7 @@ function utf8.find_char(text, char)
 	end
 end
 
--- Lines: 27 to 32
+-- Lines 27-33
 function string.begins(s, beginning)
 	if s and beginning then
 		return s:sub(1, #beginning) == beginning
@@ -18,7 +18,7 @@ function string.begins(s, beginning)
 	return false
 end
 
--- Lines: 35 to 40
+-- Lines 35-41
 function string.ends(s, ending)
 	if s and ending then
 		return #ending == 0 or s:sub(-(#ending)) == ending
@@ -27,12 +27,12 @@ function string.ends(s, ending)
 	return false
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function string.case_insensitive_compare(a, b)
 	return string.lower(a) < string.lower(b)
 end
 
--- Lines: 57 to 75
+-- Lines 57-76
 function string.split(s, separator_pattern, keep_empty, max_splits)
 	local result = {}
 	local pattern = "(.-)" .. separator_pattern .. "()"
@@ -58,7 +58,7 @@ function string.split(s, separator_pattern, keep_empty, max_splits)
 	return result
 end
 
--- Lines: 78 to 86
+-- Lines 78-87
 function string.join(separator, elements, keep_empty)
 	local strings = table.collect(elements, function (element)
 		local as_string = tostring(element)
@@ -71,40 +71,39 @@ function string.join(separator, elements, keep_empty)
 	return table.concat(strings, separator)
 end
 
--- Lines: 89 to 91
+-- Lines 89-92
 function string.trim(s, pattern)
 	pattern = pattern or "%s*"
 
 	return string.match(s, "^" .. pattern .. "(.-)" .. pattern .. "$")
 end
 
--- Lines: 94 to 95
+-- Lines 94-96
 function string.capitalize(s)
 	return string.gsub(s, "(%w)(%w*)", function (first_letter, remaining_letters)
 		return string.upper(first_letter) .. string.lower(remaining_letters)
 	end)
 end
 
--- Lines: 98 to 100
+-- Lines 98-101
 function string.pretty(s, capitalize)
 	local pretty = string.gsub(s, "%W", " ")
 
 	return capitalize and string.capitalize(pretty) or pretty
 end
 
--- Lines: 103 to 106
+-- Lines 103-107
 function string:rep(n)
 	local out = ""
 
-	for i = 1, n, 1 do
+	for i = 1, n do
 		out = out .. self
 	end
 
 	return out
 end
 
--- Lines: 109 to 110
+-- Lines 109-111
 function string:left(n)
-	return self .. " ":rep(n - self:len())
+	return self .. (" "):rep(n - self:len())
 end
-

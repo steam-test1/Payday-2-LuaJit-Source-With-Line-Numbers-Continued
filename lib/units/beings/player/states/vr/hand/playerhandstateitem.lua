@@ -2,7 +2,7 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateItem = PlayerHandStateItem or class(PlayerHandState)
 
--- Lines: 6 to 15
+-- Lines 6-15
 function PlayerHandStateItem:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateItem.super.init(self, name, hsm, hand_unit, sequence)
 
@@ -16,7 +16,7 @@ function PlayerHandStateItem:init(hsm, name, hand_unit, sequence)
 	end
 end
 
--- Lines: 17 to 49
+-- Lines 17-49
 function PlayerHandStateItem:_link_item(item_unit, body, offset)
 	self._item_unit = item_unit
 
@@ -56,7 +56,7 @@ function PlayerHandStateItem:_link_item(item_unit, body, offset)
 	self._item_unit:set_visible(true)
 end
 
--- Lines: 52 to 78
+-- Lines 51-78
 function PlayerHandStateItem:_prompt(prompt)
 	self._prompt_data = prompt
 
@@ -84,21 +84,23 @@ function PlayerHandStateItem:_prompt(prompt)
 	end
 
 	managers.hud:link_watch_prompt_as_hand(self._hand_unit, hand_id, offset)
-	managers.hud:show_interact({text = text})
+	managers.hud:show_interact({
+		text = text
+	})
 	managers.hud:watch_prompt_panel():show()
 end
 
--- Lines: 80 to 81
+-- Lines 80-82
 function PlayerHandStateItem:item_type()
 	return self._item_type
 end
 
--- Lines: 84 to 85
+-- Lines 84-86
 function PlayerHandStateItem:item_unit()
 	return self._item_unit
 end
 
--- Lines: 88 to 92
+-- Lines 88-92
 function PlayerHandStateItem:switch_hands()
 	self._switching_hands = true
 
@@ -110,7 +112,7 @@ function PlayerHandStateItem:switch_hands()
 	self:hsm():change_to_default()
 end
 
--- Lines: 94 to 163
+-- Lines 94-163
 function PlayerHandStateItem:at_enter(prev_state, params)
 	PlayerHandStateItem.super.at_enter(self, prev_state, params)
 
@@ -190,7 +192,7 @@ function PlayerHandStateItem:at_enter(prev_state, params)
 	end
 end
 
--- Lines: 165 to 189
+-- Lines 165-189
 function PlayerHandStateItem:at_exit(next_state, hide_item)
 	self:hsm():exit_controller_state(self._controller_state)
 
@@ -217,7 +219,7 @@ function PlayerHandStateItem:at_exit(next_state, hide_item)
 	self._switching_hands = false
 end
 
--- Lines: 191 to 204
+-- Lines 191-204
 function PlayerHandStateItem:_remove_unit()
 	if alive(self._item_unit) then
 		for _, linked_unit in ipairs(self._item_unit:children()) do
@@ -234,7 +236,7 @@ function PlayerHandStateItem:_remove_unit()
 	end
 end
 
--- Lines: 206 to 217
+-- Lines 206-217
 function PlayerHandStateItem:_hide_unit()
 	if alive(self._item_unit) then
 		for _, linked_unit in ipairs(self._item_unit:children()) do
@@ -249,7 +251,7 @@ function PlayerHandStateItem:_hide_unit()
 	end
 end
 
--- Lines: 219 to 228
+-- Lines 219-228
 function PlayerHandStateItem:set_warping(warping)
 	if not warping then
 		self._wants_dynamic = true
@@ -262,10 +264,10 @@ function PlayerHandStateItem:set_warping(warping)
 	end
 end
 
--- Lines: 230 to 243
+-- Lines 230-243
 function PlayerHandStateItem:set_bodies_dynamic(dynamic, ignore_body)
 	if alive(self._item_unit) then
-		for i = 0, self._item_unit:num_bodies() - 1, 1 do
+		for i = 0, self._item_unit:num_bodies() - 1 do
 			local body = self._item_unit:body(i)
 
 			if not ignore_body or body ~= ignore_body then
@@ -279,16 +281,16 @@ function PlayerHandStateItem:set_bodies_dynamic(dynamic, ignore_body)
 	end
 end
 
--- Lines: 245 to 251
+-- Lines 245-251
 function PlayerHandStateItem:set_bodies_colliding(colliding)
 	if alive(self._item_unit) then
-		for i = 0, self._item_unit:num_bodies() - 1, 1 do
+		for i = 0, self._item_unit:num_bodies() - 1 do
 			self._item_unit:body(i):set_collisions_enabled(colliding)
 		end
 	end
 end
 
--- Lines: 253 to 326
+-- Lines 253-326
 function PlayerHandStateItem:update(t, dt)
 	if self._wants_dynamic then
 		self._dynamic_t = t + 0.05
@@ -364,7 +366,7 @@ function PlayerHandStateItem:update(t, dt)
 	end
 end
 
--- Lines: 328 to 334
+-- Lines 328-334
 function PlayerHandStateItem:swipe_transition(next_state, params)
 	params.unit = alive(self._item_unit) and self._item_unit
 	params.type = self._item_type
@@ -373,4 +375,3 @@ function PlayerHandStateItem:swipe_transition(next_state, params)
 	self:at_exit(next_state, true)
 	next_state:at_enter(self, params)
 end
-

@@ -3,10 +3,12 @@ HintManager.PATH = "gamedata/hints"
 HintManager.FILE_EXTENSION = "hint"
 HintManager.FULL_PATH = HintManager.PATH .. "." .. HintManager.FILE_EXTENSION
 
--- Lines: 7 to 13
+-- Lines 7-13
 function HintManager:init()
 	if not Global.hint_manager then
-		Global.hint_manager = {hints = {}}
+		Global.hint_manager = {
+			hints = {}
+		}
 
 		self:_parse_hints()
 	end
@@ -14,7 +16,7 @@ function HintManager:init()
 	self._cooldown = {}
 end
 
--- Lines: 15 to 25
+-- Lines 15-25
 function HintManager:_parse_hints()
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 
@@ -27,7 +29,7 @@ function HintManager:_parse_hints()
 	end
 end
 
--- Lines: 27 to 43
+-- Lines 27-43
 function HintManager:_parse_hint(data)
 	local id = data.id
 	local text_id = data.text_id
@@ -45,7 +47,7 @@ function HintManager:_parse_hint(data)
 	}
 end
 
--- Lines: 46 to 52
+-- Lines 46-53
 function HintManager:ids()
 	local t = {}
 
@@ -58,17 +60,17 @@ function HintManager:ids()
 	return t
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function HintManager:hints()
 	return Global.hint_manager.hints
 end
 
--- Lines: 59 to 60
+-- Lines 59-61
 function HintManager:hint(id)
 	return Global.hint_manager.hints[id]
 end
 
--- Lines: 63 to 81
+-- Lines 63-81
 function HintManager:show_hint(id, time, only_sync, params)
 	if not id or not self:hint(id) then
 		Application:stack_dump_error("Bad id to show hint, " .. tostring(id) .. ".")
@@ -85,7 +87,7 @@ function HintManager:show_hint(id, time, only_sync, params)
 	end
 end
 
--- Lines: 84 to 114
+-- Lines 83-114
 function HintManager:_show_hint(id, time, params)
 	if self:hint(id).level and self:hint(id).level <= managers.experience:current_level() then
 		return
@@ -118,7 +120,7 @@ function HintManager:_show_hint(id, time, params)
 	end
 end
 
--- Lines: 116 to 128
+-- Lines 116-128
 function HintManager:sync_show_hint(id)
 	local buttons = {
 		BTN_INTERACT = managers.localization:btn_macro("interact"),
@@ -131,12 +133,12 @@ function HintManager:sync_show_hint(id)
 	self:_show_hint(id, nil, buttons)
 end
 
--- Lines: 130 to 131
+-- Lines 130-132
 function HintManager:last_shown_id()
 	return self._last_shown_id
 end
 
--- Lines: 134 to 140
+-- Lines 134-140
 function HintManager:on_simulation_ended()
 	for _, hint in pairs(Global.hint_manager.hints) do
 		if hint.trigger_times then
@@ -145,15 +147,16 @@ function HintManager:on_simulation_ended()
 	end
 end
 
--- Lines: 142 to 148
+-- Lines 142-148
 function HintManager:save(data)
-	local state = {hints = deep_clone(Global.hint_manager.hints)}
+	local state = {
+		hints = deep_clone(Global.hint_manager.hints)
+	}
 	data.HintManager = state
 end
 
--- Lines: 150 to 154
+-- Lines 150-154
 function HintManager:load(data)
 	local state = data.HintManager
 	Global.hint_manager.hints = deep_clone(state.hints)
 end
-

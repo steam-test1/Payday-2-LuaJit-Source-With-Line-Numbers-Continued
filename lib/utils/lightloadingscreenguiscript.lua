@@ -1,6 +1,6 @@
 LightLoadingScreenGuiScript = LightLoadingScreenGuiScript or class()
 
--- Lines: 4 to 46
+-- Lines 4-46
 function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, is_win32)
 	self._base_layer = base_layer
 	self._is_win32 = is_win32
@@ -73,7 +73,7 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	self:setup(res, progress)
 end
 
--- Lines: 48 to 57
+-- Lines 48-57
 function LightLoadingScreenGuiScript:layout_saferect()
 	local scaled_size = {
 		x = 0,
@@ -85,13 +85,13 @@ function LightLoadingScreenGuiScript:layout_saferect()
 	local h = scaled_size.height
 	local sh = math.min(self._safe_rect_pixels.height, self._safe_rect_pixels.width / (w / h))
 	local sw = math.min(self._safe_rect_pixels.width, self._safe_rect_pixels.height * w / h)
-	local x = math.round(self._res.x / 2 - (sh * w / h) / 2)
-	local y = math.round(self._res.y / 2 - (sw / (w / h)) / 2)
+	local x = math.round(self._res.x / 2 - sh * w / h / 2)
+	local y = math.round(self._res.y / 2 - sw / (w / h) / 2)
 
 	self._saferect:set_screen(w, h, x, y, sw)
 end
 
--- Lines: 60 to 63
+-- Lines 60-64
 function LightLoadingScreenGuiScript:get_safe_rect()
 	local a = self._is_win32 and 0.032 or 0.075
 	local b = 1 - a * 2
@@ -104,7 +104,7 @@ function LightLoadingScreenGuiScript:get_safe_rect()
 	}
 end
 
--- Lines: 68 to 77
+-- Lines 67-78
 function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	local safe_rect_scale = self:get_safe_rect()
 	local safe_rect_pixels = {
@@ -117,7 +117,7 @@ function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	return safe_rect_pixels
 end
 
--- Lines: 80 to 103
+-- Lines 80-103
 function LightLoadingScreenGuiScript:setup(res, progress)
 	self._gui_tweak_data = {
 		upper_saferect_border = 64,
@@ -142,7 +142,7 @@ function LightLoadingScreenGuiScript:setup(res, progress)
 	end
 end
 
--- Lines: 105 to 119
+-- Lines 105-119
 function LightLoadingScreenGuiScript:update(progress, dt)
 	self._indicator:rotate(180 * dt)
 
@@ -157,11 +157,11 @@ function LightLoadingScreenGuiScript:update(progress, dt)
 	end
 end
 
--- Lines: 126 to 127
+-- Lines 125-127
 function LightLoadingScreenGuiScript:set_text(text)
 end
 
--- Lines: 129 to 136
+-- Lines 129-136
 function LightLoadingScreenGuiScript:destroy()
 	if alive(self._ws) then
 		self._scene_gui:destroy_workspace(self._ws)
@@ -172,12 +172,12 @@ function LightLoadingScreenGuiScript:destroy()
 	end
 end
 
--- Lines: 138 to 139
+-- Lines 138-140
 function LightLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
--- Lines: 142 to 164
+-- Lines 142-164
 function LightLoadingScreenGuiScript:set_visible(visible, res)
 	if res then
 		self._res = res
@@ -199,4 +199,3 @@ function LightLoadingScreenGuiScript:set_visible(visible, res)
 		self._saferect:hide()
 	end
 end
-

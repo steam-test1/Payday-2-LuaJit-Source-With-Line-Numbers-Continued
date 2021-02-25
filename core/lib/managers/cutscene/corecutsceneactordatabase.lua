@@ -1,12 +1,12 @@
 CoreCutsceneActorDatabase = CoreCutsceneActorDatabase or class()
 CoreCutsceneActorDatabaseUnitTypeInfo = CoreCutsceneActorDatabaseUnitTypeInfo or class()
 
--- Lines: 8 to 9
+-- Lines 8-10
 function CoreCutsceneActorDatabase:unit_type_info(unit_type)
 	return unit_type and self._registered_unit_types and self._registered_unit_types[unit_type]
 end
 
--- Lines: 12 to 16
+-- Lines 12-16
 function CoreCutsceneActorDatabase:append_unit_info(unit)
 	self._registered_unit_types = self._registered_unit_types or {}
 	self._registered_unit_types[unit:name()] = self._registered_unit_types[unit:name()] or core_or_local("CutsceneActorDatabaseUnitTypeInfo", unit:name())
@@ -14,37 +14,37 @@ function CoreCutsceneActorDatabase:append_unit_info(unit)
 	self._registered_unit_types[unit:name()]:_append_unit_info(unit)
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function CoreCutsceneActorDatabaseUnitTypeInfo:init(unit_type)
 	self._unit_type = unit_type
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function CoreCutsceneActorDatabaseUnitTypeInfo:unit_type()
 	return self._unit_type
 end
 
--- Lines: 31 to 32
+-- Lines 31-33
 function CoreCutsceneActorDatabaseUnitTypeInfo:object_names()
 	return self._object_names or {}
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function CoreCutsceneActorDatabaseUnitTypeInfo:initial_object_visibility(object_name)
 	return self._object_visibilities and self._object_visibilities[object_name] or false
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function CoreCutsceneActorDatabaseUnitTypeInfo:extensions()
 	return self._extensions or {}
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function CoreCutsceneActorDatabaseUnitTypeInfo:animation_groups()
 	return self._animation_groups or {}
 end
 
--- Lines: 52 to 87
+-- Lines 52-87
 function CoreCutsceneActorDatabaseUnitTypeInfo:_append_unit_info(unit)
 	assert(self:unit_type() == unit:name())
 
@@ -92,7 +92,7 @@ function CoreCutsceneActorDatabaseUnitTypeInfo:_append_unit_info(unit)
 	freeze(self)
 end
 
--- Lines: 90 to 104
+-- Lines 89-105
 function CoreCutsceneActorDatabaseUnitTypeInfo:_argument_names_for_function(func)
 	if not Application:ews_enabled() then
 		return {}
@@ -111,7 +111,7 @@ function CoreCutsceneActorDatabaseUnitTypeInfo:_argument_names_for_function(func
 	return arg_list and string.split(arg_list, "[,%s]") or {}
 end
 
--- Lines: 107 to 115
+-- Lines 107-115
 function CoreCutsceneActorDatabaseUnitTypeInfo:_file_line(file, line)
 	while not file:at_end() do
 		local text = file:gets()
@@ -122,4 +122,3 @@ function CoreCutsceneActorDatabaseUnitTypeInfo:_file_line(file, line)
 		end
 	end
 end
-

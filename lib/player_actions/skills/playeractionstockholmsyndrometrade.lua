@@ -1,55 +1,54 @@
-PlayerAction.StockholmSyndromeTrade = {}
-PlayerAction.StockholmSyndromeTrade.Priority = 1
+PlayerAction.StockholmSyndromeTrade = {
+	Priority = 1,
+	Function = function (pos, peer_id)
+		managers.hint:show_hint("skill_stockholm_syndrome_trade")
 
--- Lines: 6 to 37
-PlayerAction.StockholmSyndromeTrade.Function = function (pos, peer_id)
-	managers.hint:show_hint("skill_stockholm_syndrome_trade")
+		local controller = managers.controller:create_controller("player_custody", nil, false)
 
-	local controller = managers.controller:create_controller("player_custody", nil, false)
+		controller:enable()
 
-	controller:enable()
+		local quit = false
+		local previous_state = game_state_machine:current_state_name()
+		local co = coroutine.running()
 
-	local quit = false
-	local previous_state = game_state_machine:current_state_name()
-	local co = coroutine.running()
+		while not quit do
+			if controller:get_input_pressed("jump") and not managers.hud:chat_focus() then
+				if Network:is_server() then
+					managers.player:init_auto_respawn_callback(pos, peer_id, true)
+					managers.player:change_stockholm_syndrome_count(-1)
+				else
+					managers.network:session():send_to_host("auto_respawn_player", pos, peer_id)
+					managers.network:session():send_to_host("sync_set_super_syndrome", peer_id, false)
+				end
 
-	while not quit do
-		if controller:get_input_pressed("jump") and not managers.hud:chat_focus() then
-			if Network:is_server() then
-				managers.player:init_auto_respawn_callback(pos, peer_id, true)
-				managers.player:change_stockholm_syndrome_count(-1)
-			else
-				managers.network:session():send_to_host("auto_respawn_player", pos, peer_id)
-				managers.network:session():send_to_host("sync_set_super_syndrome", peer_id, false)
+				quit = true
 			end
 
-			quit = true
+			local current_state = game_state_machine:current_state_name()
+
+			if previous_state == "ingame_waiting_for_respawn" and current_state ~= previous_state then
+				quit = true
+			end
+
+			previous_state = current_state
+
+			coroutine.yield(co)
 		end
 
-		local current_state = game_state_machine:current_state_name()
+		controller:destroy()
 
-		if previous_state == "ingame_waiting_for_respawn" and current_state ~= previous_state then
-			quit = true
-		end
-
-		previous_state = current_state
-
-		coroutine.yield(co)
+		controller = nil
 	end
-
-	controller:destroy()
-
-	controller = nil
-end
+}
 StockholmSyndromeTradeAction = StockholmSyndromeTradeAction or class()
 
--- Lines: 41 to 44
+-- Lines 41-44
 function StockholmSyndromeTradeAction:init(pos, peer_id)
 	self._pos = pos
 	self._peer_id = peer_id
 end
 
--- Lines: 46 to 59
+-- Lines 46-59
 function StockholmSyndromeTradeAction:on_enter()
 	self._controller = managers.controller:create_controller("player_custody", nil, false)
 
@@ -71,7 +70,7 @@ function StockholmSyndromeTradeAction:on_enter()
 	end
 end
 
--- Lines: 61 to 70
+-- Lines 61-70
 function StockholmSyndromeTradeAction:on_exit()
 	managers.player:unregister_message(Message.CanTradeHostage, "request_stockholm_syndrome")
 	self._controller:destroy()
@@ -84,7 +83,7 @@ function StockholmSyndromeTradeAction:on_exit()
 	self._request_hostage_trade = nil
 end
 
--- Lines: 72 to 105
+-- Lines 72-106
 function StockholmSyndromeTradeAction:update(t, dt)
 	local auto_activate = managers.groupai:state():num_alive_criminals() <= 0
 	local allowed, feedback_idx = StockholmSyndromeTradeAction.is_allowed()
@@ -123,13 +122,14 @@ function StockholmSyndromeTradeAction:update(t, dt)
 
 	return self._quit
 end
+
 local hint_feedback = {
 	"stockholm_syndrome_trade",
 	"stockholm_syndrome_stealth",
 	"stockholm_syndrome_no_hostages"
 }
 
--- Lines: 116 to 126
+-- Lines 116-126
 function StockholmSyndromeTradeAction:_request_stockholm_syndrome_results(can_trade, feedback_idx)
 	if can_trade then
 		self._quit = true
@@ -144,7 +144,7 @@ function StockholmSyndromeTradeAction:_request_stockholm_syndrome_results(can_tr
 	end
 end
 
--- Lines: 128 to 139
+-- Lines 128-140
 function StockholmSyndromeTradeAction.is_allowed()
 	local allowed, trade_in_progress, is_in_stealth, no_hostages = managers.trade:is_stockholm_syndrome_allowed()
 	local hint_id = 0
@@ -160,8 +160,7 @@ function StockholmSyndromeTradeAction.is_allowed()
 	return allowed, hint_id
 end
 
--- Lines: 142 to 144
+-- Lines 142-144
 function StockholmSyndromeTradeAction.on_failure(feedback_idx)
 	managers.hint:show_hint(hint_feedback[feedback_idx])
 end
-

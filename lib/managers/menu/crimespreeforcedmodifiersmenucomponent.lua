@@ -1,7 +1,7 @@
 CrimeSpreeForcedModifiersMenuComponent = CrimeSpreeForcedModifiersMenuComponent or class(MenuGuiComponentGeneric)
 local padding = 10
 
--- Lines: 7 to 15
+-- Lines 6-15
 function CrimeSpreeForcedModifiersMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -10,14 +10,14 @@ function CrimeSpreeForcedModifiersMenuComponent:init(ws, fullscreen_ws, node)
 	self:_setup()
 end
 
--- Lines: 17 to 21
+-- Lines 17-21
 function CrimeSpreeForcedModifiersMenuComponent:close()
 	self._ws:panel():remove(self._panel)
 	self._ws:panel():remove(self._text_header)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines: 24 to 151
+-- Lines 23-151
 function CrimeSpreeForcedModifiersMenuComponent:_setup()
 	local modifiers = self:get_modifers()
 	local parent = self._ws:panel()
@@ -26,8 +26,12 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 		parent:remove(self._panel)
 	end
 
-	self._panel = self._ws:panel():panel({layer = 51})
-	self._fullscreen_panel = self._fullscreen_ws:panel():panel({layer = 50})
+	self._panel = self._ws:panel():panel({
+		layer = 51
+	})
+	self._fullscreen_panel = self._fullscreen_ws:panel():panel({
+		layer = 50
+	})
 
 	self._fullscreen_panel:rect({
 		alpha = 0.75,
@@ -42,7 +46,7 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	-- Lines: 52 to 55
+	-- Lines 52-55
 	local function func(o)
 		local start_blur = 0
 
@@ -61,7 +65,9 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 	local info_text = FineText:new(self._panel, {
 		wrap = true,
 		word_wrap = true,
-		text = managers.localization:text(info_text_id, {count = #modifiers}),
+		text = managers.localization:text(info_text_id, {
+			count = #modifiers
+		}),
 		x = padding,
 		y = padding,
 		w = modifiers_width - padding * 2
@@ -127,19 +133,21 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 	self._text_header:set_size(self._panel:w(), h)
 	self._text_header:set_left(self._panel:left())
 	self._text_header:set_bottom(self._panel:top())
-	BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	if not managers.menu:is_pc_controller() then
 		self:_select_back_btn()
 	end
 end
 
--- Lines: 155 to 164
+-- Lines 155-164
 function CrimeSpreeForcedModifiersMenuComponent:get_modifers()
 	local count = managers.crime_spree:modifiers_to_select("forced", true)
 
@@ -152,7 +160,7 @@ function CrimeSpreeForcedModifiersMenuComponent:get_modifers()
 	end
 end
 
--- Lines: 166 to 179
+-- Lines 166-179
 function CrimeSpreeForcedModifiersMenuComponent:add_modifiers_to_spree(modifiers)
 	if Network:is_server() then
 		for _, modifier in ipairs(modifiers) do
@@ -165,12 +173,12 @@ function CrimeSpreeForcedModifiersMenuComponent:add_modifiers_to_spree(modifiers
 	end
 end
 
--- Lines: 183 to 185
+-- Lines 183-185
 function CrimeSpreeForcedModifiersMenuComponent:_on_back()
 	managers.menu:back(true)
 end
 
--- Lines: 189 to 196
+-- Lines 189-196
 function CrimeSpreeForcedModifiersMenuComponent:update(t, dt)
 	self._back_btn:update(t, dt)
 
@@ -181,22 +189,22 @@ function CrimeSpreeForcedModifiersMenuComponent:update(t, dt)
 	end
 end
 
--- Lines: 198 to 202
+-- Lines 198-202
 function CrimeSpreeForcedModifiersMenuComponent:confirm_pressed()
 	if self._selected_item and self._selected_item:callback() then
 		self._selected_item:callback()()
 	end
 end
 
--- Lines: 205 to 221
+-- Lines 204-222
 function CrimeSpreeForcedModifiersMenuComponent:mouse_moved(o, x, y)
 	if not managers.menu:is_pc_controller() then
 		return
 	end
 
 	local used = false
-	local pointer
-	pointer, self._selected_item = nil
+	local pointer = nil
+	self._selected_item = nil
 	used, pointer = self._modifiers_scroll:mouse_moved(nil, x, y)
 
 	self._back_btn:set_selected(self._back_btn:inside(x, y))
@@ -210,7 +218,7 @@ function CrimeSpreeForcedModifiersMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 224 to 230
+-- Lines 224-231
 function CrimeSpreeForcedModifiersMenuComponent:mouse_pressed(button, x, y)
 	if self._back_btn:is_selected() and self._back_btn:callback() then
 		self._back_btn:callback()()
@@ -221,22 +229,22 @@ function CrimeSpreeForcedModifiersMenuComponent:mouse_pressed(button, x, y)
 	return self._modifiers_scroll:mouse_pressed(button, x, y)
 end
 
--- Lines: 233 to 234
+-- Lines 233-235
 function CrimeSpreeForcedModifiersMenuComponent:mouse_released(button, x, y)
 	return self._modifiers_scroll:mouse_released(button, x, y)
 end
 
--- Lines: 237 to 238
+-- Lines 237-239
 function CrimeSpreeForcedModifiersMenuComponent:mouse_wheel_up(x, y)
 	return self._modifiers_scroll:scroll(x, y, 1)
 end
 
--- Lines: 241 to 242
+-- Lines 241-243
 function CrimeSpreeForcedModifiersMenuComponent:mouse_wheel_down(x, y)
 	return self._modifiers_scroll:scroll(x, y, -1)
 end
 
--- Lines: 245 to 248
+-- Lines 245-249
 function CrimeSpreeForcedModifiersMenuComponent:_select_back_btn()
 	self._back_btn:set_selected(true)
 
@@ -244,8 +252,8 @@ function CrimeSpreeForcedModifiersMenuComponent:_select_back_btn()
 
 	return true
 end
+
 CrimeSpreeForcedModifiersMenuComponent.move_up = CrimeSpreeForcedModifiersMenuComponent._select_back_btn
 CrimeSpreeForcedModifiersMenuComponent.move_down = CrimeSpreeForcedModifiersMenuComponent._select_back_btn
 CrimeSpreeForcedModifiersMenuComponent.move_left = CrimeSpreeForcedModifiersMenuComponent._select_back_btn
 CrimeSpreeForcedModifiersMenuComponent.move_right = CrimeSpreeForcedModifiersMenuComponent._select_back_btn
-

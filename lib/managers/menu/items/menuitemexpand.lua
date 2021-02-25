@@ -4,7 +4,7 @@ core:import("CoreMenuItemOption")
 MenuItemExpand = MenuItemExpand or class(CoreMenuItem.Item)
 MenuItemExpand.TYPE = "expand"
 
--- Lines: 7 to 37
+-- Lines 7-37
 function MenuItemExpand:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -37,20 +37,20 @@ function MenuItemExpand:init(data_node, parameters)
 	self:_show_items(nil)
 end
 
--- Lines: 39 to 42
+-- Lines 39-42
 function MenuItemExpand:set_enabled(enabled)
 	self._enabled = enabled
 
 	self:dirty()
 end
 
--- Lines: 44 to 47
+-- Lines 44-47
 function MenuItemExpand:set_callback_handler(callback_handler)
 	MenuItemExpand.super.set_callback_handler(self, callback_handler)
 	self:_show_items(callback_handler)
 end
 
--- Lines: 51 to 70
+-- Lines 49-70
 function MenuItemExpand:_show_items(callback_handler)
 	self._items = {}
 
@@ -73,14 +73,14 @@ function MenuItemExpand:_show_items(callback_handler)
 	end
 end
 
--- Lines: 72 to 75
+-- Lines 72-75
 function MenuItemExpand:add_item(item)
 	item:parameters().parent_item = self
 
 	table.insert(self._all_items, item)
 end
 
--- Lines: 77 to 83
+-- Lines 77-84
 function MenuItemExpand:get_item(name)
 	for _, item in ipairs(self._all_items) do
 		if item:parameters().name == name then
@@ -91,7 +91,7 @@ function MenuItemExpand:get_item(name)
 	return nil
 end
 
--- Lines: 86 to 89
+-- Lines 86-90
 function MenuItemExpand:visible_items()
 	for _, item in ipairs(self._items) do
 		-- Nothing
@@ -100,17 +100,17 @@ function MenuItemExpand:visible_items()
 	return self._items
 end
 
--- Lines: 92 to 93
+-- Lines 92-94
 function MenuItemExpand:items()
 	return self._items
 end
 
--- Lines: 96 to 97
+-- Lines 96-98
 function MenuItemExpand:expand_value()
 	return 20
 end
 
--- Lines: 101 to 109
+-- Lines 101-109
 function MenuItemExpand:update_expanded_items(node)
 	local row_item = node:row_item(self)
 
@@ -122,7 +122,7 @@ function MenuItemExpand:update_expanded_items(node)
 	node:highlight_item(self, false)
 end
 
--- Lines: 111 to 134
+-- Lines 111-135
 function MenuItemExpand:expand(node, row_item)
 	local need_repos = false
 
@@ -149,7 +149,7 @@ function MenuItemExpand:expand(node, row_item)
 	return need_repos
 end
 
--- Lines: 137 to 154
+-- Lines 137-155
 function MenuItemExpand:collaps(node, row_item)
 	local need_repos = false
 
@@ -171,7 +171,7 @@ function MenuItemExpand:collaps(node, row_item)
 	return need_repos
 end
 
--- Lines: 157 to 169
+-- Lines 157-170
 function MenuItemExpand:get_h(row_item, node)
 	local h = row_item.gui_panel:h()
 
@@ -188,7 +188,7 @@ function MenuItemExpand:get_h(row_item, node)
 	return nil
 end
 
--- Lines: 172 to 180
+-- Lines 172-180
 function MenuItemExpand:on_item_position(row_item, node)
 	row_item.expanded_indicator:set_position(row_item.gui_panel:position())
 	row_item.expanded_indicator:set_left(row_item.expanded_indicator:left() - node:align_line_padding())
@@ -197,7 +197,7 @@ function MenuItemExpand:on_item_position(row_item, node)
 	row_item.expand_line:set_left(row_item.expand_line:left() - node:align_line_padding())
 end
 
--- Lines: 182 to 188
+-- Lines 182-188
 function MenuItemExpand:_create_indicator(row_item, node)
 	row_item.expanded_indicator = row_item.gui_panel:parent():bitmap({
 		texture = "guis/textures/menu_selected",
@@ -208,10 +208,10 @@ function MenuItemExpand:_create_indicator(row_item, node)
 	})
 
 	row_item.expanded_indicator:set_w(row_item.gui_panel:w() + node:align_line_padding())
-	row_item.expanded_indicator:set_height((64 * row_item.gui_panel:height()) / 32)
+	row_item.expanded_indicator:set_height(64 * row_item.gui_panel:height() / 32)
 end
 
--- Lines: 190 to 207
+-- Lines 190-207
 function MenuItemExpand:reload(row_item, node)
 	if not row_item.expanded_indicator then
 		self:_create_indicator(row_item, node)
@@ -245,7 +245,7 @@ function MenuItemExpand:reload(row_item, node)
 	self:_set_row_item_state(node, row_item)
 end
 
--- Lines: 209 to 221
+-- Lines 209-221
 function MenuItemExpand:_set_row_item_state(node, row_item)
 	if self:expanded() or row_item.highlighted then
 		row_item.gui_panel:set_color(node.row_item_hightlight_color)
@@ -260,44 +260,44 @@ function MenuItemExpand:_set_row_item_state(node, row_item)
 	end
 end
 
--- Lines: 223 to 225
+-- Lines 223-226
 function MenuItemExpand:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 228 to 230
+-- Lines 228-231
 function MenuItemExpand:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 233 to 236
+-- Lines 233-236
 function MenuItemExpand:on_delete_row_item(row_item, ...)
 	MenuItemExpand.super.on_delete_row_item(self, row_item, ...)
 	row_item.gui_panel:parent():remove(row_item.expand_line)
 end
 
--- Lines: 238 to 239
+-- Lines 238-240
 function MenuItemExpand:selected_item()
 	return self._items[self._current_index]
 end
 
--- Lines: 242 to 243
+-- Lines 242-244
 function MenuItemExpand:current_index()
 	return self._current_index
 end
 
--- Lines: 246 to 249
+-- Lines 246-249
 function MenuItemExpand:set_current_index(index)
 	self._current_index = index
 
 	self:dirty()
 end
 
--- Lines: 251 to 259
+-- Lines 251-259
 function MenuItemExpand:set_value(value)
 	for i, item in ipairs(self._items) do
 		if item:parameters().value == value then
@@ -310,7 +310,7 @@ function MenuItemExpand:set_value(value)
 	self:dirty()
 end
 
--- Lines: 261 to 267
+-- Lines 261-268
 function MenuItemExpand:value()
 	local value = ""
 	local selected_item = self:selected_item()
@@ -322,7 +322,7 @@ function MenuItemExpand:value()
 	return value
 end
 
--- Lines: 271 to 278
+-- Lines 271-279
 function MenuItemExpand:_highest_item_index()
 	local index = 1
 
@@ -335,7 +335,7 @@ function MenuItemExpand:_highest_item_index()
 	return index
 end
 
--- Lines: 282 to 288
+-- Lines 282-288
 function MenuItemExpand:_lowest_item_index()
 	for i, item in ipairs(self._items) do
 		if not item:parameters().exclude then
@@ -344,22 +344,22 @@ function MenuItemExpand:_lowest_item_index()
 	end
 end
 
--- Lines: 290 to 291
+-- Lines 290-292
 function MenuItemExpand:expanded()
 	return self._expanded
 end
 
--- Lines: 294 to 295
+-- Lines 294-296
 function MenuItemExpand:can_expand()
 	return true
 end
 
--- Lines: 298 to 300
+-- Lines 298-300
 function MenuItemExpand:toggle()
 	self._expanded = not self._expanded
 end
 
--- Lines: 303 to 309
+-- Lines 303-310
 function MenuItemExpand:is_parent_to_item(child_item)
 	for i, item in ipairs(self._items) do
 		if child_item == item then
@@ -369,17 +369,20 @@ function MenuItemExpand:is_parent_to_item(child_item)
 
 	return false
 end
+
 MenuItemExpandAction = MenuItemExpandAction or class(CoreMenuItem.Item)
 
--- Lines: 367 to 369
+-- Lines 367-369
 function MenuItemExpandAction:init(data_node, parameters)
 	MenuItemExpandAction.super.init(self, data_node, parameters)
 end
 
--- Lines: 371 to 417
+-- Lines 371-418
 function MenuItemExpandAction:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.action_name = node:_text_item_part(row_item, row_item.gui_panel, node:align_line_padding())
 
 	row_item.action_name:set_font_size(22)
@@ -407,7 +410,7 @@ function MenuItemExpandAction:setup_gui(node, row_item)
 	row_item.action_icon:set_center(h / 2, h / 2)
 
 	if row_item.align == "right" then
-		row_item.action_name:set_right((row_item.gui_panel:w() - 10) - self._parameters.expand_value)
+		row_item.action_name:set_right(row_item.gui_panel:w() - 10 - self._parameters.expand_value)
 	else
 		row_item.action_name:set_left(h + 4)
 	end
@@ -439,7 +442,7 @@ function MenuItemExpandAction:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 422 to 445
+-- Lines 420-446
 function MenuItemExpandAction:reload(row_item, node)
 	MenuItemExpandAction.super.reload(self, row_item, node)
 	row_item.menu_unselected:set_color(node.row_item_hightlight_color)
@@ -465,7 +468,7 @@ function MenuItemExpandAction:reload(row_item, node)
 	return true
 end
 
--- Lines: 459 to 471
+-- Lines 459-471
 function MenuItemExpandAction:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		row_item.action_name:set_color(row_item.color)
@@ -481,32 +484,31 @@ function MenuItemExpandAction:_set_row_item_state(node, row_item)
 	end
 end
 
--- Lines: 474 to 476
+-- Lines 474-477
 function MenuItemExpandAction:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 480 to 482
+-- Lines 480-483
 function MenuItemExpandAction:fade_row_item(node, row_item)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 485 to 486
+-- Lines 485-487
 function MenuItemExpandAction:_max_condition()
 	return self:parameters().parent_item:_max_condition()
 end
 
--- Lines: 489 to 490
+-- Lines 489-491
 function MenuItemExpandAction:_at_max_condition()
 	return self:parameters().parent_item:_at_max_condition()
 end
 
--- Lines: 493 to 494
+-- Lines 493-495
 function MenuItemExpandAction:_repair_circle_color(...)
 	return self:parameters().parent_item:_repair_circle_color(...)
 end
-

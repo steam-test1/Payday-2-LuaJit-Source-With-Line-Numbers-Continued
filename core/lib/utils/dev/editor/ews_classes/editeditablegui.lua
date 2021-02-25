@@ -3,7 +3,7 @@ core:import("CoreEws")
 
 EditUnitEditableGui = EditUnitEditableGui or class(EditUnitBase)
 
--- Lines: 6 to 43
+-- Lines 6-43
 function EditUnitEditableGui:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Gui Text",
@@ -65,7 +65,7 @@ function EditUnitEditableGui:init(editor)
 	panel:set_enabled(false)
 end
 
--- Lines: 45 to 57
+-- Lines 45-57
 function EditUnitEditableGui:_create_color_button(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -81,7 +81,7 @@ function EditUnitEditableGui:_create_color_button(panel, sizer)
 	self._ctrls.color_button = color_button
 end
 
--- Lines: 59 to 70
+-- Lines 59-70
 function EditUnitEditableGui:_create_text_box(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -96,7 +96,7 @@ function EditUnitEditableGui:_create_text_box(panel, sizer)
 	self._ctrls.gui_text = gui_text
 end
 
--- Lines: 72 to 96
+-- Lines 72-96
 function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 	local horizontal_sizer = sizer
 	self._font_size_params = {
@@ -120,7 +120,7 @@ function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 	self._font_size_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_font_size"), nil)
 end
 
--- Lines: 100 to 120
+-- Lines 98-120
 function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -145,7 +145,7 @@ function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 	self._ctrls.font_list = ctrlr
 end
 
--- Lines: 122 to 160
+-- Lines 122-160
 function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -187,7 +187,7 @@ function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 	self._ctrls.align_vertical = ctrlr
 end
 
--- Lines: 162 to 191
+-- Lines 162-191
 function EditUnitEditableGui:_create_text_wrap_checkbox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -223,7 +223,7 @@ function EditUnitEditableGui:_create_text_wrap_checkbox(panel, sizer)
 	self._ctrls.debug = checkbox
 end
 
--- Lines: 195 to 233
+-- Lines 193-233
 function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -266,7 +266,7 @@ function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, 
 	self._ctrls.blend_list = ctrlr
 end
 
--- Lines: 235 to 259
+-- Lines 235-259
 function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 	local horizontal_sizer = sizer
 	self._alpha_params = {
@@ -290,7 +290,7 @@ function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 	self._alpha_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_alpha"), nil)
 end
 
--- Lines: 261 to 291
+-- Lines 261-291
 function EditUnitEditableGui:_create_shape_sliders(panel, sizer)
 	local horizontal_sizer = sizer
 
@@ -326,7 +326,7 @@ function EditUnitEditableGui:_create_shape_sliders(panel, sizer)
 	end
 end
 
--- Lines: 294 to 304
+-- Lines 294-304
 function EditUnitEditableGui:show_color_dialog()
 	local colordlg = EWS:ColourDialog(Global.frame, true, self._ctrls.color_button:background_colour() / 255)
 
@@ -341,7 +341,7 @@ function EditUnitEditableGui:show_color_dialog()
 	end
 end
 
--- Lines: 306 to 317
+-- Lines 306-317
 function EditUnitEditableGui:update_debug()
 	if self._no_event or not Application:production_build() then
 		return
@@ -356,7 +356,7 @@ function EditUnitEditableGui:update_debug()
 	end
 end
 
--- Lines: 320 to 330
+-- Lines 320-330
 function EditUnitEditableGui:update_shape()
 	if self._no_event then
 		return
@@ -376,7 +376,7 @@ function EditUnitEditableGui:update_shape()
 	end
 end
 
--- Lines: 332 to 341
+-- Lines 332-341
 function EditUnitEditableGui:update_alpha()
 	if self._no_event then
 		return
@@ -389,7 +389,7 @@ function EditUnitEditableGui:update_alpha()
 	end
 end
 
--- Lines: 343 to 355
+-- Lines 343-355
 function EditUnitEditableGui:update_render_template()
 	if self._no_event then
 		return
@@ -406,7 +406,7 @@ function EditUnitEditableGui:update_render_template()
 	end
 end
 
--- Lines: 357 to 368
+-- Lines 357-368
 function EditUnitEditableGui:update_blend_mode()
 	if self._no_event then
 		return
@@ -421,7 +421,7 @@ function EditUnitEditableGui:update_blend_mode()
 	end
 end
 
--- Lines: 370 to 383
+-- Lines 370-383
 function EditUnitEditableGui:update_text_wrap()
 	if self._no_event then
 		return
@@ -438,7 +438,7 @@ function EditUnitEditableGui:update_text_wrap()
 	end
 end
 
--- Lines: 385 to 396
+-- Lines 385-396
 function EditUnitEditableGui:update_text_word_wrap()
 	if self._no_event then
 		return
@@ -453,7 +453,7 @@ function EditUnitEditableGui:update_text_word_wrap()
 	end
 end
 
--- Lines: 398 to 409
+-- Lines 398-409
 function EditUnitEditableGui:update_align()
 	if self._no_event then
 		return
@@ -468,7 +468,7 @@ function EditUnitEditableGui:update_align()
 	end
 end
 
--- Lines: 411 to 422
+-- Lines 411-422
 function EditUnitEditableGui:update_vertical()
 	if self._no_event then
 		return
@@ -483,7 +483,7 @@ function EditUnitEditableGui:update_vertical()
 	end
 end
 
--- Lines: 424 to 435
+-- Lines 424-435
 function EditUnitEditableGui:update_font()
 	if self._no_event then
 		return
@@ -498,7 +498,7 @@ function EditUnitEditableGui:update_font()
 	end
 end
 
--- Lines: 437 to 447
+-- Lines 437-447
 function EditUnitEditableGui:update_gui_text(gui_text)
 	if self._no_event then
 		return
@@ -511,7 +511,7 @@ function EditUnitEditableGui:update_gui_text(gui_text)
 	end
 end
 
--- Lines: 449 to 458
+-- Lines 449-458
 function EditUnitEditableGui:update_font_size()
 	if self._no_event then
 		return
@@ -524,7 +524,7 @@ function EditUnitEditableGui:update_font_size()
 	end
 end
 
--- Lines: 460 to 506
+-- Lines 460-507
 function EditUnitEditableGui:is_editable(unit, units)
 	if alive(unit) and unit:editable_gui() then
 		self._ctrls.unit = unit
@@ -571,4 +571,3 @@ function EditUnitEditableGui:is_editable(unit, units)
 
 	return false
 end
-

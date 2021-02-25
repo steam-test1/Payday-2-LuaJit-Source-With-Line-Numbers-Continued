@@ -1,10 +1,12 @@
 RandomInstanceElement = RandomInstanceElement or class(MissionElement)
 RandomInstanceElement.SAVE_UNIT_POSITION = false
 RandomInstanceElement.SAVE_UNIT_ROTATION = false
-RandomInstanceElement.LINK_ELEMENTS = {"instances"}
+RandomInstanceElement.LINK_ELEMENTS = {
+	"instances"
+}
 RandomInstanceElement._type = "input"
 
--- Lines: 9 to 22
+-- Lines 8-22
 function RandomInstanceElement:init(unit)
 	RandomInstanceElement.super.init(self, unit)
 
@@ -19,7 +21,7 @@ function RandomInstanceElement:init(unit)
 	table.insert(self._save_values, "unique_instance")
 end
 
--- Lines: 24 to 29
+-- Lines 24-29
 function RandomInstanceElement:update_editing(t, dt)
 	local instance_name = self:_instance_name_raycast()
 
@@ -28,7 +30,7 @@ function RandomInstanceElement:update_editing(t, dt)
 	end
 end
 
--- Lines: 32 to 47
+-- Lines 31-47
 function RandomInstanceElement:draw_links_selected(t, dt, selected_unit)
 	RandomInstanceElement.super.draw_links_selected(self, t, dt, selected_unit)
 
@@ -45,11 +47,11 @@ function RandomInstanceElement:draw_links_selected(t, dt, selected_unit)
 	end
 end
 
--- Lines: 50 to 51
+-- Lines 49-51
 function RandomInstanceElement:draw_links_unselected(t, dt, selected_unit)
 end
 
--- Lines: 53 to 66
+-- Lines 53-66
 function RandomInstanceElement:_draw_instance_link(t, dt, instance_name, color_multiplier)
 	local r, g, b = self:get_link_color()
 
@@ -68,7 +70,7 @@ function RandomInstanceElement:_draw_instance_link(t, dt, instance_name, color_m
 	end
 end
 
--- Lines: 68 to 78
+-- Lines 68-79
 function RandomInstanceElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -91,7 +93,7 @@ function RandomInstanceElement:_instance_name_raycast()
 	return instance_data.script == self._unit:mission_element_data().script and instance_name or nil
 end
 
--- Lines: 81 to 87
+-- Lines 81-88
 function RandomInstanceElement:has_element(instance_name)
 	for i, instance_data in ipairs(self._hed.instances) do
 		if instance_data.instance == instance_name then
@@ -102,7 +104,7 @@ function RandomInstanceElement:has_element(instance_name)
 	return false
 end
 
--- Lines: 91 to 102
+-- Lines 90-102
 function RandomInstanceElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -120,7 +122,7 @@ function RandomInstanceElement:add_element()
 	end
 end
 
--- Lines: 104 to 111
+-- Lines 104-111
 function RandomInstanceElement:insert_element(instance_name)
 	local data = {
 		event = "",
@@ -131,7 +133,7 @@ function RandomInstanceElement:insert_element(instance_name)
 	self:_add_instance_item(data)
 end
 
--- Lines: 113 to 121
+-- Lines 113-121
 function RandomInstanceElement:remove_element(instance_name)
 	for i, instance_data in ipairs(self._hed.instances) do
 		if instance_data.instance == instance_name then
@@ -143,7 +145,7 @@ function RandomInstanceElement:remove_element(instance_name)
 	end
 end
 
--- Lines: 124 to 131
+-- Lines 123-131
 function RandomInstanceElement:on_instance_changed_name(old_name, new_name)
 	for i, instance_data in ipairs(self._hed.instances) do
 		if instance_data.instance == old_name then
@@ -152,34 +154,36 @@ function RandomInstanceElement:on_instance_changed_name(old_name, new_name)
 	end
 end
 
--- Lines: 134 to 136
+-- Lines 134-136
 function RandomInstanceElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 138 to 139
+-- Lines 138-140
 function RandomInstanceElement:_add_counter_filter(unit)
 	return unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter")
 end
 
--- Lines: 142 to 144
+-- Lines 142-144
 function RandomInstanceElement:_set_counter_id(unit)
 	self._hed.counter_id = unit:unit_data().unit_id
 end
 
--- Lines: 146 to 147
+-- Lines 146-148
 function RandomInstanceElement:_remove_counter_filter(unit)
 	return self._hed.counter_id == unit:unit_data().unit_id
 end
 
--- Lines: 150 to 152
+-- Lines 150-152
 function RandomInstanceElement:_remove_counter_id(unit)
 	self._hed.counter_id = nil
 end
 
--- Lines: 154 to 165
+-- Lines 154-165
 function RandomInstanceElement:_on_gui_select_instance_list()
-	local settings = {list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"}
+	local settings = {
+		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
+	}
 	local names = managers.world_instance:instance_names_by_script(self._unit:mission_element_data().script)
 	local dialog = SelectNameModal:new("Select instances", names, settings)
 
@@ -192,7 +196,7 @@ function RandomInstanceElement:_on_gui_select_instance_list()
 	end
 end
 
--- Lines: 167 to 190
+-- Lines 167-190
 function RandomInstanceElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -223,7 +227,7 @@ function RandomInstanceElement:_build_panel(panel, panel_sizer)
 	end
 end
 
--- Lines: 192 to 198
+-- Lines 192-198
 function RandomInstanceElement:_get_events(instance_name)
 	if self._type == "input" then
 		return managers.world_instance:get_mission_inputs_by_name(instance_name)
@@ -232,7 +236,7 @@ function RandomInstanceElement:_get_events(instance_name)
 	end
 end
 
--- Lines: 201 to 242
+-- Lines 200-244
 function RandomInstanceElement:_add_instance_item(data)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
@@ -281,13 +285,13 @@ function RandomInstanceElement:_add_instance_item(data)
 	return #self._gui_items
 end
 
--- Lines: 246 to 249
+-- Lines 246-249
 function RandomInstanceElement:_on_set_instance_event(data)
 	local event_combo = data.event
 	data.data.event = event_combo:get_value()
 end
 
--- Lines: 252 to 266
+-- Lines 251-266
 function RandomInstanceElement:_remove_instance_item(idx)
 	if self._gui_items[idx] then
 		self._gui_items[idx].event:destroy()
@@ -299,8 +303,8 @@ function RandomInstanceElement:_remove_instance_item(idx)
 
 	self._panel:layout()
 end
+
 RandomInstanceElementInputEvent = RandomInstanceElementInputEvent or class(RandomInstanceElement)
 RandomInstanceElementInputEvent._type = "input"
 RandomInstanceElementOutputEvent = RandomInstanceElementOutputEvent or class(RandomInstanceElement)
 RandomInstanceElementOutputEvent._type = "output"
-

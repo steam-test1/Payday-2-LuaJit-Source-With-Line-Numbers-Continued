@@ -13,7 +13,7 @@ CoreEnvEditor.TEMPLATE_IDENTIFIER = "template"
 CoreEnvEditor.MIX_MUL = 200
 CoreEnvEditor.REMOVE_DEPRECATED_DURING_LOAD = true
 
--- Lines: 18 to 80
+-- Lines 18-80
 function CoreEnvEditor:init(env_file_name)
 	managers.editor:enable_all_post_effects()
 
@@ -74,11 +74,11 @@ function CoreEnvEditor:init(env_file_name)
 	self:check_news(true)
 end
 
--- Lines: 83 to 84
+-- Lines 82-84
 function CoreEnvEditor:read_mode()
 end
 
--- Lines: 86 to 100
+-- Lines 86-100
 function CoreEnvEditor:read_templates()
 	for _, name in ipairs(managers.database:list_entries_of_type("environment")) do
 		if string.find(name, self.TEMPLATE_IDENTIFIER) then
@@ -95,40 +95,49 @@ function CoreEnvEditor:read_templates()
 	end
 end
 
--- Lines: 102 to 104
+-- Lines 102-104
 function CoreEnvEditor:on_check_news()
 	self:check_news()
 end
 
--- Lines: 106 to 108
+-- Lines 106-108
 function CoreEnvEditor:reg_mixer(widget)
 	table.insert(self._mixer_widgets, widget)
 end
 
--- Lines: 110 to 114
+-- Lines 110-114
 function CoreEnvEditor:update_mix(env1, env2, blend)
 	for _, widget in ipairs(self._mixer_widgets) do
 		widget:update_mix(env1, env2, blend)
 	end
 end
 
--- Lines: 116 to 136
+-- Lines 116-136
 function CoreEnvEditor:check_news(new_only)
 	local news = nil
-	news = new_only and managers.news:get_news("env_editor", self._main_frame) or managers.news:get_old_news("env_editor", self._main_frame)
+
+	if new_only then
+		news = managers.news:get_news("env_editor", self._main_frame)
+	else
+		news = managers.news:get_old_news("env_editor", self._main_frame)
+	end
 
 	if news then
 		local str = nil
 
 		for _, n in ipairs(news) do
-			str = not str and n or str .. "\n" .. n
+			if not str then
+				str = n
+			else
+				str = str .. "\n" .. n
+			end
 		end
 
 		EWS:MessageDialog(self._main_frame, str, "New Features!", "OK,ICON_INFORMATION"):show_modal()
 	end
 end
 
--- Lines: 139 to 167
+-- Lines 138-167
 function CoreEnvEditor:feed(handler, viewport, scene)
 	for postprocessor_name, post_processor in pairs(self._posteffect.post_processors) do
 		if postprocessor_name == "shadow_processor" then
@@ -161,7 +170,7 @@ function CoreEnvEditor:feed(handler, viewport, scene)
 	end
 end
 
--- Lines: 169 to 176
+-- Lines 169-176
 function CoreEnvEditor:set_data_path(data_path, handler, value)
 	local data_path_key = Idstring(data_path):key()
 
@@ -172,7 +181,7 @@ function CoreEnvEditor:set_data_path(data_path, handler, value)
 	end
 end
 
--- Lines: 178 to 227
+-- Lines 178-227
 function CoreEnvEditor:create_main_frame()
 	self._main_frame = EWS:Frame("", Vector3(250, 0, 0), Vector3(450, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -220,7 +229,7 @@ function CoreEnvEditor:create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 231 to 279
+-- Lines 230-280
 function CoreEnvEditor:add_post_processors_param(pro, effect, mod, param, gui)
 	if not self._posteffect.post_processors then
 		self._posteffect.post_processors = {}
@@ -275,7 +284,7 @@ function CoreEnvEditor:add_post_processors_param(pro, effect, mod, param, gui)
 	return gui
 end
 
--- Lines: 282 to 305
+-- Lines 282-306
 function CoreEnvEditor:add_underlay_param(mat, param, gui)
 	if not self._underlayeffect.materials then
 		self._underlayeffect.materials = {}
@@ -303,7 +312,7 @@ function CoreEnvEditor:add_underlay_param(mat, param, gui)
 	return gui
 end
 
--- Lines: 308 to 314
+-- Lines 308-315
 function CoreEnvEditor:add_sky_param(param, gui)
 	if not self._sky.params then
 		self._sky.params = {}
@@ -314,7 +323,7 @@ function CoreEnvEditor:add_sky_param(param, gui)
 	return gui
 end
 
--- Lines: 317 to 338
+-- Lines 317-338
 function CoreEnvEditor:retrive_posteffect_param(node, pro, mod, param)
 	for post_processor in node:children() do
 		if post_processor:parameter("name") == pro then
@@ -339,7 +348,7 @@ function CoreEnvEditor:retrive_posteffect_param(node, pro, mod, param)
 	end
 end
 
--- Lines: 340 to 357
+-- Lines 340-357
 function CoreEnvEditor:retrive_underlay_param(node, mat, param)
 	for material in node:children() do
 		if material:parameter("name") == mat then
@@ -360,7 +369,7 @@ function CoreEnvEditor:retrive_underlay_param(node, mat, param)
 	end
 end
 
--- Lines: 359 to 372
+-- Lines 359-372
 function CoreEnvEditor:retrive_sky_param(node, param)
 	for parameter in node:children() do
 		if parameter:parameter("key") == param then
@@ -377,9 +386,11 @@ function CoreEnvEditor:retrive_sky_param(node, param)
 	end
 end
 
--- Lines: 374 to 384
+-- Lines 374-384
 function CoreEnvEditor:flipp(...)
-	local v = {...}
+	local v = {
+		...
+	}
 
 	if #v > 1 then
 		local a = v[#v]
@@ -392,14 +403,16 @@ function CoreEnvEditor:flipp(...)
 	end
 end
 
--- Lines: 386 to 389
+-- Lines 386-389
 function CoreEnvEditor:add_gui_element(gui, tab, ...)
-	local list = {...}
+	local list = {
+		...
+	}
 
 	self:add_box(gui, self._tabs[tab], list, 1)
 end
 
--- Lines: 391 to 407
+-- Lines 391-407
 function CoreEnvEditor:create_tab(tab)
 	if not self._tabs[tab] then
 		self._tabs[tab] = {
@@ -420,7 +433,7 @@ function CoreEnvEditor:create_tab(tab)
 	end
 end
 
--- Lines: 409 to 420
+-- Lines 409-420
 function CoreEnvEditor:build_tab(tab)
 	if self._tabs[tab] then
 		self._tabs[tab].scrolled_window:set_sizer(self._tabs[tab].box)
@@ -432,19 +445,19 @@ function CoreEnvEditor:build_tab(tab)
 	end
 end
 
--- Lines: 422 to 426
+-- Lines 422-426
 function CoreEnvEditor:get_tab(tab)
 	if self._tabs[tab] then
 		return self._tabs[tab].scrolled_window
 	end
 end
 
--- Lines: 428 to 446
+-- Lines 428-446
 function CoreEnvEditor:add_box(gui, parent, list, index)
 	local this = parent.child[list[index]]
 
 	if not this then
-		local this = {
+		this = {
 			child = {},
 			box = EWS:StaticBoxSizer(parent.scrolled_window, "VERTICAL", list[index]),
 			scrolled_window = parent.scrolled_window
@@ -464,22 +477,22 @@ function CoreEnvEditor:add_box(gui, parent, list, index)
 	end
 end
 
--- Lines: 448 to 450
+-- Lines 448-450
 function CoreEnvEditor:set_title()
 	self._main_frame:set_title(self._env_name .. " - Environment Editor")
 end
 
--- Lines: 452 to 454
+-- Lines 452-454
 function CoreEnvEditor:value_is_changed()
 	self._value_is_changed = true
 end
 
--- Lines: 456 to 458
+-- Lines 456-458
 function CoreEnvEditor:add_updator(upd)
 	table.insert(self._updators, upd)
 end
 
--- Lines: 460 to 467
+-- Lines 460-467
 function CoreEnvEditor:get_child(node, name)
 	for child in node:children() do
 		if child:name() == name then
@@ -490,7 +503,7 @@ function CoreEnvEditor:get_child(node, name)
 	Application:error("Can't find child!")
 end
 
--- Lines: 469 to 479
+-- Lines 469-479
 function CoreEnvEditor:on_encode_parameters()
 	local current_env = self._env_path
 
@@ -505,7 +518,7 @@ function CoreEnvEditor:on_encode_parameters()
 	self:database_load_env(current_env)
 end
 
--- Lines: 481 to 499
+-- Lines 481-499
 function CoreEnvEditor:write_to_disk(path, new_name)
 	local file = SystemFS:open(path, "w")
 
@@ -527,14 +540,14 @@ function CoreEnvEditor:write_to_disk(path, new_name)
 	managers.viewport:editor_reload_environment(managers.database:entry_path(path))
 end
 
--- Lines: 501 to 505
+-- Lines 501-505
 function CoreEnvEditor:write_sky_orientation(file)
 	file:print("\t\t<sky_orientation>\n")
 	file:print("\t\t\t<param key=\"rotation\" value=\"0\" />\n")
 	file:print("\t\t</sky_orientation>\n")
 end
 
--- Lines: 507 to 542
+-- Lines 507-542
 function CoreEnvEditor:write_posteffect(file)
 	file:print("\t\t<post_effect>\n")
 
@@ -555,7 +568,12 @@ function CoreEnvEditor:write_posteffect(file)
 
 								for param_name, param in pairs(mod.params) do
 									local v = param:get_value()
-									v = getmetatable(v) == _G.Vector3 and "" .. param:get_value().x .. " " .. param:get_value().y .. " " .. param:get_value().z or tostring(param:get_value())
+
+									if getmetatable(v) == _G.Vector3 then
+										v = "" .. param:get_value().x .. " " .. param:get_value().y .. " " .. param:get_value().z
+									else
+										v = tostring(param:get_value())
+									end
 
 									file:print("\t\t\t\t\t\t<param key=\"" .. param_name .. "\" value=\"" .. v .. "\"/>\n")
 								end
@@ -576,7 +594,7 @@ function CoreEnvEditor:write_posteffect(file)
 	file:print("\t\t</post_effect>\n")
 end
 
--- Lines: 544 to 555
+-- Lines 544-555
 function CoreEnvEditor:write_environment_effects(file)
 	file:print("\t\t<environment_effects>\n")
 
@@ -594,7 +612,7 @@ function CoreEnvEditor:write_environment_effects(file)
 	file:print("\t\t</environment_effects>\n")
 end
 
--- Lines: 557 to 573
+-- Lines 557-573
 function CoreEnvEditor:write_shadow_params(file)
 	local params = self:shadow_feed_params({})
 
@@ -603,7 +621,12 @@ function CoreEnvEditor:write_shadow_params(file)
 
 	for param_name, param in pairs(params) do
 		local v = param
-		v = getmetatable(v) == _G.Vector3 and "" .. param.x .. " " .. param.y .. " " .. param.z or tostring(param)
+
+		if getmetatable(v) == _G.Vector3 then
+			v = "" .. param.x .. " " .. param.y .. " " .. param.z
+		else
+			v = tostring(param)
+		end
 
 		file:print("\t\t\t\t\t\t<param key=\"" .. param_name .. "\" value=\"" .. v .. "\"/>\n")
 	end
@@ -612,7 +635,7 @@ function CoreEnvEditor:write_shadow_params(file)
 	file:print("\t\t\t\t</shadow_rendering>\n")
 end
 
--- Lines: 575 to 594
+-- Lines 575-594
 function CoreEnvEditor:write_underlayeffect(file)
 	file:print("\t\t<underlay_effect>\n")
 
@@ -622,7 +645,12 @@ function CoreEnvEditor:write_underlayeffect(file)
 
 			for param_name, param in pairs(material.params) do
 				local v = param:get_value()
-				v = getmetatable(v) == _G.Vector3 and "" .. param:get_value().x .. " " .. param:get_value().y .. " " .. param:get_value().z or tostring(param:get_value())
+
+				if getmetatable(v) == _G.Vector3 then
+					v = "" .. param:get_value().x .. " " .. param:get_value().y .. " " .. param:get_value().z
+				else
+					v = tostring(param:get_value())
+				end
 
 				file:print("\t\t\t\t<param key=\"" .. param_name .. "\" value=\"" .. v .. "\"/>\n")
 			end
@@ -634,13 +662,18 @@ function CoreEnvEditor:write_underlayeffect(file)
 	file:print("\t\t</underlay_effect>\n")
 end
 
--- Lines: 596 to 609
+-- Lines 596-609
 function CoreEnvEditor:write_sky(file)
 	file:print("\t\t<others>\n")
 
 	for param_name, param in pairs(self._sky.params) do
 		local v = param:get_value()
-		v = getmetatable(v) == _G.Vector3 and "" .. param:get_value().x .. " " .. param:get_value().y .. " " .. param:get_value().z or tostring(param:get_value())
+
+		if getmetatable(v) == _G.Vector3 then
+			v = "" .. param:get_value().x .. " " .. param:get_value().y .. " " .. param:get_value().z
+		else
+			v = tostring(param:get_value())
+		end
 
 		file:print("\t\t\t<param key=\"" .. param_name .. "\" value=\"" .. v .. "\"/>\n")
 	end
@@ -648,7 +681,7 @@ function CoreEnvEditor:write_sky(file)
 	file:print("\t\t</others>\n")
 end
 
--- Lines: 611 to 617
+-- Lines 611-617
 function CoreEnvEditor:on_close()
 	local close_dialog = EWS:MessageDialog(self._main_frame, "Do you want to save environment changes?", "Save Changes?", "YES_NO")
 
@@ -659,7 +692,7 @@ function CoreEnvEditor:on_close()
 	managers.toolhub:close("Environment Editor")
 end
 
--- Lines: 618 to 685
+-- Lines 618-685
 function CoreEnvEditor:database_load_posteffect(post_effect_node)
 	for post_processor in post_effect_node:children() do
 		local post_pro = self._posteffect.post_processors[post_processor:name()]
@@ -731,7 +764,7 @@ function CoreEnvEditor:database_load_posteffect(post_effect_node)
 	self:set_title()
 end
 
--- Lines: 687 to 737
+-- Lines 687-737
 function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 	if underlay_effect_node:name() == "underlay_effect" then
 		for material in underlay_effect_node:children() do
@@ -787,7 +820,7 @@ function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 	self:set_title()
 end
 
--- Lines: 739 to 749
+-- Lines 739-749
 function CoreEnvEditor:database_load_environment_effects(effect_node)
 	for param in effect_node:children() do
 		if param:name() == "param" and param:parameter("key") and param:parameter("key") ~= "" and param:parameter("value") and param:parameter("value") ~= "" and param:parameter("key") == "effects" then
@@ -800,7 +833,7 @@ function CoreEnvEditor:database_load_environment_effects(effect_node)
 	self:set_title()
 end
 
--- Lines: 751 to 792
+-- Lines 751-792
 function CoreEnvEditor:database_load_sky(sky_node)
 	if sky_node:name() == "others" then
 		for param in sky_node:children() do
@@ -845,7 +878,7 @@ function CoreEnvEditor:database_load_sky(sky_node)
 	self:set_title()
 end
 
--- Lines: 794 to 817
+-- Lines 794-818
 function CoreEnvEditor:database_load_env(env_path)
 	local full_path = managers.database:entry_expanded_path("environment", env_path)
 	local env = managers.database:has(full_path) and managers.database:load_node(full_path)
@@ -876,7 +909,7 @@ function CoreEnvEditor:database_load_env(env_path)
 	return env
 end
 
--- Lines: 820 to 825
+-- Lines 820-825
 function CoreEnvEditor:on_open_file()
 	local path = managers.database:open_file_dialog(self._main_frame, "Environments (*.environment)|*.environment")
 
@@ -885,12 +918,12 @@ function CoreEnvEditor:on_open_file()
 	end
 end
 
--- Lines: 827 to 829
+-- Lines 827-829
 function CoreEnvEditor:on_save_file()
 	self:write_to_disk(managers.database:base_path() .. string.gsub(self._env_path, "/", "\\") .. ".environment")
 end
 
--- Lines: 831 to 837
+-- Lines 831-837
 function CoreEnvEditor:on_save_file_as()
 	local path = managers.database:save_file_dialog(self._main_frame, false, "Environments (*.environment)|*.environment")
 
@@ -900,14 +933,14 @@ function CoreEnvEditor:on_save_file_as()
 	end
 end
 
--- Lines: 839 to 843
+-- Lines 839-843
 function CoreEnvEditor:on_manager_flush()
 	if managers and managers.environment then
 		managers.environment:flush()
 	end
 end
 
--- Lines: 845 to 850
+-- Lines 845-850
 function CoreEnvEditor:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -916,7 +949,7 @@ function CoreEnvEditor:destroy()
 	end
 end
 
--- Lines: 853 to 869
+-- Lines 852-869
 function CoreEnvEditor:close()
 	self._main_frame:destroy()
 
@@ -938,12 +971,12 @@ function CoreEnvEditor:close()
 	managers.viewport:first_active_viewport():set_environment(managers.viewport:first_active_viewport():get_environment_path())
 end
 
--- Lines: 871 to 873
+-- Lines 871-873
 function CoreEnvEditor:set_position(newpos)
 	self._main_frame:set_position(newpos)
 end
 
--- Lines: 877 to 913
+-- Lines 875-913
 function CoreEnvEditor:update(t, dt)
 	self:sync()
 
@@ -985,7 +1018,7 @@ function CoreEnvEditor:update(t, dt)
 	end
 end
 
--- Lines: 915 to 940
+-- Lines 915-940
 function CoreEnvEditor:step()
 	local undo = self._undo[self._undo_index]
 
@@ -1014,7 +1047,7 @@ function CoreEnvEditor:step()
 	end
 end
 
--- Lines: 942 to 948
+-- Lines 942-948
 function CoreEnvEditor:on_undo()
 	if self._undo_index > 1 then
 		self._undo_index = self._undo_index - 1
@@ -1025,7 +1058,7 @@ function CoreEnvEditor:on_undo()
 	end
 end
 
--- Lines: 950 to 956
+-- Lines 950-956
 function CoreEnvEditor:on_redo()
 	if self._undo_index <= self._max_undo_index then
 		self._undo_index = self._undo_index + 1
@@ -1036,7 +1069,7 @@ function CoreEnvEditor:on_redo()
 	end
 end
 
--- Lines: 958 to 961
+-- Lines 958-962
 function CoreEnvEditor:get_cursor_look_point(camera, dist)
 	local mouse_local = Vector3(0, 0, 0)
 	local cursor_pos = Vector3(mouse_local.x / self._screen_borders.x * 2 - 1, mouse_local.y / self._screen_borders.y * 2 - 1, dist)
@@ -1044,7 +1077,7 @@ function CoreEnvEditor:get_cursor_look_point(camera, dist)
 	return camera:screen_to_world(cursor_pos)
 end
 
--- Lines: 965 to 973
+-- Lines 964-973
 function CoreEnvEditor:draw_cursor()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1057,7 +1090,7 @@ function CoreEnvEditor:draw_cursor()
 	end
 end
 
--- Lines: 976 to 990
+-- Lines 975-991
 function CoreEnvEditor:pick_depth()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1078,7 +1111,7 @@ function CoreEnvEditor:pick_depth()
 	return 0
 end
 
--- Lines: 994 to 1007
+-- Lines 993-1008
 function CoreEnvEditor:pick_height()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1097,7 +1130,7 @@ function CoreEnvEditor:pick_height()
 	return 0
 end
 
--- Lines: 1010 to 1019
+-- Lines 1010-1019
 function CoreEnvEditor:sync()
 	local undo_struct = {}
 
@@ -1109,7 +1142,7 @@ function CoreEnvEditor:sync()
 	end
 end
 
--- Lines: 1021 to 1030
+-- Lines 1021-1031
 function CoreEnvEditor:value_database_lookup(str)
 	local i = string.find(str, "#")
 	local db_key = string.sub(str, 1, i - 1)
@@ -1123,4 +1156,3 @@ function CoreEnvEditor:value_database_lookup(str)
 
 	return value
 end
-

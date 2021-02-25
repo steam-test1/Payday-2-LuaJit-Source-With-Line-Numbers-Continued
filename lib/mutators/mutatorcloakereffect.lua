@@ -8,18 +8,20 @@ MutatorCloakerEffect.reductions = {
 	exp = 0
 }
 MutatorCloakerEffect.disables_achievements = true
-MutatorCloakerEffect.categories = {"enemies"}
+MutatorCloakerEffect.categories = {
+	"enemies"
+}
 MutatorCloakerEffect.icon_coords = {
 	2,
 	2
 }
 
--- Lines: 17 to 19
+-- Lines 17-19
 function MutatorCloakerEffect:register_values(mutator_manager)
 	self:register_value("kick_effect", "explode", "ke")
 end
 
--- Lines: 21 to 28
+-- Lines 21-28
 function MutatorCloakerEffect:name(lobby_data)
 	local name = MutatorCloakerEffect.super.name(self)
 
@@ -30,12 +32,12 @@ function MutatorCloakerEffect:name(lobby_data)
 	end
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function MutatorCloakerEffect:kick_effect()
 	return self:value("kick_effect")
 end
 
--- Lines: 39 to 60
+-- Lines 38-62
 function MutatorCloakerEffect:setup_options_gui(node)
 	local params = {
 		callback = "_update_mutator_value",
@@ -77,12 +79,12 @@ function MutatorCloakerEffect:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 64 to 66
+-- Lines 64-66
 function MutatorCloakerEffect:_update_selected_effect(item)
 	self:set_value("kick_effect", item:value())
 end
 
--- Lines: 69 to 79
+-- Lines 68-79
 function MutatorCloakerEffect:reset_to_default()
 	self:clear_values()
 
@@ -95,7 +97,7 @@ function MutatorCloakerEffect:reset_to_default()
 	end
 end
 
--- Lines: 83 to 88
+-- Lines 83-88
 function MutatorCloakerEffect:OnPlayerCloakerKicked(cloaker_unit)
 	local effect_func = MutatorCloakerEffect["effect_" .. tostring(self:kick_effect())]
 
@@ -104,14 +106,14 @@ function MutatorCloakerEffect:OnPlayerCloakerKicked(cloaker_unit)
 	end
 end
 
--- Lines: 90 to 93
+-- Lines 90-93
 function MutatorCloakerEffect:effect_smoke(unit)
 	local smoke_grenade = World:spawn_unit(Idstring("units/weapons/smoke_grenade_quick/smoke_grenade_quick"), unit:position(), unit:rotation())
 
 	smoke_grenade:base():activate_immediately(unit:position(), tweak_data.group_ai.smoke_grenade_lifetime)
 end
 
--- Lines: 95 to 103
+-- Lines 95-103
 function MutatorCloakerEffect:effect_fire(unit)
 	local position = unit:position()
 	local rotation = unit:rotation()
@@ -124,7 +126,7 @@ function MutatorCloakerEffect:effect_fire(unit)
 	EnvironmentFire.spawn(position, rotation, data, math.UP, unit, 0, 1)
 end
 
--- Lines: 106 to 139
+-- Lines 105-139
 function MutatorCloakerEffect:effect_explode(unit)
 	local foot = unit:get_object(Idstring("RightFoot"))
 	local pos = foot and foot:position() or unit:position()
@@ -158,13 +160,14 @@ function MutatorCloakerEffect:effect_explode(unit)
 		managers.network:session():send_to_peers_synched("sync_explosion_to_client", unit, pos, normal, ply_damage, range, curve_pow)
 	end
 end
+
 MutatorCloakerEffect.random_effects = {
 	"effect_smoke",
 	"effect_fire",
 	"effect_explode"
 }
 
--- Lines: 175 to 180
+-- Lines 175-180
 function MutatorCloakerEffect:effect_random(unit)
 	local len = #self.random_effects
 	local rand = math.clamp(unit:id() % len + 1, 1, len)
@@ -173,7 +176,7 @@ function MutatorCloakerEffect:effect_random(unit)
 	self[effect](self, unit)
 end
 
--- Lines: 184 to 202
+-- Lines 184-203
 function MutatorCloakerEffect:cloaker_fire_large()
 	local params = {
 		sound_event = "molotov_impact",
@@ -202,7 +205,7 @@ function MutatorCloakerEffect:cloaker_fire_large()
 	return params
 end
 
--- Lines: 205 to 223
+-- Lines 205-224
 function MutatorCloakerEffect:cloaker_fire_small()
 	local params = {
 		sound_event = "molotov_impact",
@@ -230,4 +233,3 @@ function MutatorCloakerEffect:cloaker_fire_small()
 
 	return params
 end
-

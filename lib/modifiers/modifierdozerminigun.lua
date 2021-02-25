@@ -3,7 +3,7 @@ ModifierDozerMinigun._type = "ModifierDozerMinigun"
 ModifierDozerMinigun.name_id = "none"
 ModifierDozerMinigun.desc_id = "menu_cs_modifier_dozer_minigun"
 
--- Lines: 7 to 13
+-- Lines 7-13
 function ModifierDozerMinigun:init(data)
 	ModifierDozerMinigun.super.init(self, data)
 
@@ -13,4 +13,3 @@ function ModifierDozerMinigun:init(data)
 	table.insert(unit_types.america, unit_name)
 	table.insert(unit_types.russia, unit_name)
 end
-

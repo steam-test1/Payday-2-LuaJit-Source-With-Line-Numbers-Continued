@@ -1,6 +1,6 @@
 CivilianBase = CivilianBase or class(CopBase)
 
--- Lines: 3 to 29
+-- Lines 3-29
 function CivilianBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -30,7 +30,6 @@ function CivilianBase:post_init()
 	self:enable_leg_arm_hitbox()
 end
 
--- Lines: 32 to 33
+-- Lines 33-33
 function CivilianBase:default_weapon_name()
 end
-

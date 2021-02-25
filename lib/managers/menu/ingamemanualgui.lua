@@ -1,7 +1,7 @@
 IngameManualGui = IngameManualGui or class()
 IngameManualGui.PAGES = 8
 
--- Lines: 5 to 38
+-- Lines 5-38
 function IngameManualGui:init(ws, fullscreen_ws)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -16,7 +16,7 @@ function IngameManualGui:init(ws, fullscreen_ws)
 		color = Color.black
 	})
 
-	-- Lines: 16 to 18
+	-- Lines 16-18
 	local function fade_in_anim(o)
 		over(0.35, function (p)
 			o:set_alpha(p)
@@ -40,19 +40,19 @@ function IngameManualGui:init(ws, fullscreen_ws)
 		x = 0,
 		layer = 4,
 		w = width,
-		y = (self._manual_panel:h() - height) - 1
+		y = self._manual_panel:h() - height - 1
 	})
 	self._manual_panel:rect({
 		w = 1,
 		x = 0,
 		layer = 4,
-		h = (self._manual_panel:h() - height * 2) - 2,
+		h = self._manual_panel:h() - height * 2 - 2,
 		y = height + 1
 	})
 	self._manual_panel:rect({
 		w = 1,
 		layer = 4,
-		h = (self._manual_panel:h() - height * 2) - 2,
+		h = self._manual_panel:h() - height * 2 - 2,
 		x = self._manual_panel:w() - 1,
 		y = height + 1
 	})
@@ -70,7 +70,7 @@ function IngameManualGui:init(ws, fullscreen_ws)
 	self:open_manual_page(1)
 end
 
--- Lines: 40 to 46
+-- Lines 40-46
 function IngameManualGui:_setup_controller_input()
 	self._left_axis_vector = Vector3()
 	self._right_axis_vector = Vector3()
@@ -79,7 +79,7 @@ function IngameManualGui:_setup_controller_input()
 	self._fullscreen_panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines: 48 to 53
+-- Lines 48-53
 function IngameManualGui:_destroy_controller_input()
 	self._fullscreen_ws:disconnect_all_controllers()
 
@@ -88,7 +88,7 @@ function IngameManualGui:_destroy_controller_input()
 	end
 end
 
--- Lines: 55 to 61
+-- Lines 55-61
 function IngameManualGui:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._left_axis_vector, axis_vector)
@@ -97,7 +97,7 @@ function IngameManualGui:_axis_move(o, axis_name, axis_vector, controller)
 	end
 end
 
--- Lines: 63 to 89
+-- Lines 63-89
 function IngameManualGui:update(t, dt)
 	if managers.menu:is_pc_controller() then
 		return
@@ -110,7 +110,7 @@ function IngameManualGui:update(t, dt)
 	self:controller_zoom(right_y * dt)
 end
 
--- Lines: 91 to 103
+-- Lines 91-103
 function IngameManualGui:correct_position()
 	if self._page:left() > 0 then
 		self._page:set_left(0)
@@ -125,7 +125,7 @@ function IngameManualGui:correct_position()
 	end
 end
 
--- Lines: 105 to 116
+-- Lines 105-116
 function IngameManualGui:controller_move(x, y)
 	if self._loading then
 		return
@@ -141,7 +141,7 @@ function IngameManualGui:controller_move(x, y)
 	self:correct_position()
 end
 
--- Lines: 118 to 145
+-- Lines 118-145
 function IngameManualGui:controller_zoom(y)
 	if self._loading then
 		return
@@ -167,22 +167,22 @@ function IngameManualGui:controller_zoom(y)
 	self:correct_position()
 end
 
--- Lines: 147 to 149
+-- Lines 147-149
 function IngameManualGui:next_page()
 	self:open_manual_page(self._current_page + 1)
 end
 
--- Lines: 151 to 153
+-- Lines 151-153
 function IngameManualGui:previous_page()
 	self:open_manual_page(self._current_page - 1)
 end
 
--- Lines: 155 to 156
+-- Lines 155-157
 function IngameManualGui:input_focus()
 	return 1
 end
 
--- Lines: 160 to 216
+-- Lines 159-216
 function IngameManualGui:open_manual_page(page)
 	local new_page = math.clamp(page, 1, self.PAGES)
 
@@ -206,7 +206,7 @@ function IngameManualGui:open_manual_page(page)
 	self:create_page(new_page)
 end
 
--- Lines: 218 to 233
+-- Lines 218-233
 function IngameManualGui:remove_page(unretrieve_texture)
 	if alive(self._page_panel) then
 		self._page_panel:parent():remove(self._page_panel)
@@ -226,7 +226,7 @@ function IngameManualGui:remove_page(unretrieve_texture)
 	end
 end
 
--- Lines: 235 to 266
+-- Lines 235-266
 function IngameManualGui:create_page(texture_path)
 	self:remove_page(true)
 
@@ -250,7 +250,7 @@ function IngameManualGui:create_page(texture_path)
 	spinning_item:set_left(loading_text:right())
 	spinning_item:set_center_y(loading_text:center_y())
 
-	-- Lines: 248 to 255
+	-- Lines 248-255
 	local function spin_anim(o)
 		local dt = nil
 
@@ -278,7 +278,7 @@ function IngameManualGui:create_page(texture_path)
 	end
 end
 
--- Lines: 268 to 273
+-- Lines 268-273
 function IngameManualGui:unretrieve_texture()
 	if self._requested_texture then
 		managers.menu_component:unretrieve_texture(self._requested_texture.texture, self._requested_texture.texture_count)
@@ -287,9 +287,11 @@ function IngameManualGui:unretrieve_texture()
 	end
 end
 
--- Lines: 275 to 298
+-- Lines 275-298
 function IngameManualGui:texture_done_clbk(texture_ids)
-	local new_page_panel = self._manual_panel:panel({visible = false})
+	local new_page_panel = self._manual_panel:panel({
+		visible = false
+	})
 	local texture = new_page_panel:bitmap({
 		name = "texture",
 		layer = 1,
@@ -315,14 +317,13 @@ function IngameManualGui:texture_done_clbk(texture_ids)
 	self._loading = nil
 end
 
--- Lines: 301 to 302
+-- Lines 300-302
 function IngameManualGui:set_layer(layer)
 end
 
--- Lines: 305 to 309
+-- Lines 304-309
 function IngameManualGui:close()
 	self:remove_page(true)
 	self._ws:panel():remove(self._manual_panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
-

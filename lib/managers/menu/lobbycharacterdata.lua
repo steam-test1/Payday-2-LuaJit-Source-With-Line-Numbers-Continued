@@ -1,6 +1,6 @@
 LobbyCharacterData = LobbyCharacterData or class()
 
--- Lines: 5 to 105
+-- Lines 4-105
 function LobbyCharacterData:init(panel, peer)
 	self._parent = panel
 	self._peer = peer
@@ -56,7 +56,9 @@ function LobbyCharacterData:init(panel, peer)
 	self._state_text = state_text
 	self._infamy_icon = infamy_icon
 	local level = managers.crime_spree:get_peer_spree_level(peer:id())
-	local level_text = level >= 0 and managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(level, "")}) or ""
+	local level_text = level >= 0 and managers.localization:text("menu_cs_level", {
+		level = managers.experience:cash_string(level, "")
+	}) or ""
 	local spree_text = self._panel:text({
 		vertical = "top",
 		name = "spree_level",
@@ -77,29 +79,29 @@ function LobbyCharacterData:init(panel, peer)
 	end
 end
 
--- Lines: 107 to 111
+-- Lines 107-111
 function LobbyCharacterData:destroy()
 	if alive(self._parent) and alive(self._panel) then
 		self._parent:remove(self._panel)
 	end
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function LobbyCharacterData:panel()
 	return self._panel
 end
 
--- Lines: 117 to 118
+-- Lines 117-119
 function LobbyCharacterData:_can_update()
 	return self._peer and managers.network:session()
 end
 
--- Lines: 121 to 123
+-- Lines 121-123
 function LobbyCharacterData:set_alpha(new_alpha)
 	self._panel:set_alpha(new_alpha)
 end
 
--- Lines: 125 to 129
+-- Lines 125-129
 function LobbyCharacterData:update_peer_id(new_peer_id)
 	local peer = managers.network:session():peer(new_peer_id)
 	self._peer = peer
@@ -107,7 +109,7 @@ function LobbyCharacterData:update_peer_id(new_peer_id)
 	self:set_alpha(peer and 1 or 0)
 end
 
--- Lines: 132 to 192
+-- Lines 131-192
 function LobbyCharacterData:update_character()
 	if not self:_can_update() then
 		return
@@ -134,7 +136,9 @@ function LobbyCharacterData:update_character()
 		local level = managers.crime_spree:get_peer_spree_level(peer:id())
 
 		if level >= 0 then
-			local level_text = managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(level, "")})
+			local level_text = managers.localization:text("menu_cs_level", {
+				level = managers.experience:cash_string(level, "")
+			})
 
 			self._spree_text:set_text(level_text)
 		else
@@ -148,7 +152,7 @@ function LobbyCharacterData:update_character()
 	self:sort_text_and_reposition()
 end
 
--- Lines: 195 to 204
+-- Lines 194-204
 function LobbyCharacterData:update_character_menu_state(new_state)
 	if not self:_can_update() then
 		return
@@ -160,7 +164,7 @@ function LobbyCharacterData:update_character_menu_state(new_state)
 	self:sort_text_and_reposition()
 end
 
--- Lines: 207 to 215
+-- Lines 206-215
 function LobbyCharacterData:update_position()
 	if not self:_can_update() then
 		return
@@ -171,7 +175,7 @@ function LobbyCharacterData:update_position()
 	self._panel:set_center(pos.x, pos.y)
 end
 
--- Lines: 218 to 260
+-- Lines 217-260
 function LobbyCharacterData:sort_text_and_reposition()
 	local order = {
 		self._name_text,
@@ -208,7 +212,7 @@ function LobbyCharacterData:sort_text_and_reposition()
 	self:update_position()
 end
 
--- Lines: 262 to 266
+-- Lines 262-267
 function LobbyCharacterData:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -217,4 +221,3 @@ function LobbyCharacterData:make_fine_text(text)
 
 	return x, y, w, h
 end
-

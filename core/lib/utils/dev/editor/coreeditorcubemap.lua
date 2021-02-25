@@ -1,6 +1,6 @@
 core:import("CoreEditorUtils")
 
--- Lines: 4 to 72
+-- Lines 4-72
 function CoreEditor:create_projection_light(type)
 	if type == "all" then
 		local confirm = EWS:message_box(Global.frame_panel, "Rebuild all?", "Generate projection light", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -92,7 +92,7 @@ function CoreEditor:create_projection_light(type)
 	})
 end
 
--- Lines: 75 to 86
+-- Lines 75-86
 function CoreEditor:_create_cube_light(params)
 	if not self._lastdir then
 		return
@@ -109,7 +109,7 @@ function CoreEditor:_create_cube_light(params)
 	self:create_cube_map(params)
 end
 
--- Lines: 90 to 148
+-- Lines 90-148
 function CoreEditor:create_cube_map(params)
 	assert(self._vp:push_ref_fov(500))
 	self._vp:set_width_mul_enabled(false)
@@ -141,7 +141,9 @@ function CoreEditor:create_cube_map(params)
 	self._saved_show_center = self._show_center
 	self._show_center = false
 
-	self:on_hide_helper_units({vis = false})
+	self:on_hide_helper_units({
+		vis = false
+	})
 
 	self._saved_hidden_object = {}
 	self._saved_hidden_units = {}
@@ -177,7 +179,7 @@ function CoreEditor:create_cube_map(params)
 	self:next_cube()
 end
 
--- Lines: 150 to 170
+-- Lines 150-171
 function CoreEditor:next_cube()
 	if #self._cubes_que > 0 then
 		local cube = table.remove(self._cubes_que, 1)
@@ -208,7 +210,7 @@ function CoreEditor:next_cube()
 	return false
 end
 
--- Lines: 174 to 231
+-- Lines 174-231
 function CoreEditor:cube_map_done()
 	if self:next_cube() then
 		return
@@ -246,7 +248,9 @@ function CoreEditor:cube_map_done()
 
 	self._show_center = self._saved_show_center
 
-	self:on_hide_helper_units({vis = true})
+	self:on_hide_helper_units({
+		vis = true
+	})
 
 	for _, obj in ipairs(self._saved_hidden_object) do
 		obj:set_visibility(true)
@@ -274,4 +278,3 @@ function CoreEditor:cube_map_done()
 	self._vp:set_width_mul_enabled(true)
 	assert(self._vp:pop_ref_fov())
 end
-

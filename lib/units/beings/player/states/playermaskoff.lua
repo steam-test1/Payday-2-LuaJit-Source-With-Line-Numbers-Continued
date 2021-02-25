@@ -1,6 +1,6 @@
 PlayerMaskOff = PlayerMaskOff or class(PlayerStandard)
 
--- Lines: 3 to 6
+-- Lines 3-6
 function PlayerMaskOff:init(unit)
 	PlayerMaskOff.super.init(self, unit)
 
@@ -12,7 +12,7 @@ function PlayerMaskOff:init(unit)
 	}
 end
 
--- Lines: 9 to 15
+-- Lines 8-15
 function PlayerMaskOff:enter(state_data, enter_data)
 	if managers.groupai:state():enemy_weapons_hot() then
 		managers.player:set_player_state("standard")
@@ -21,8 +21,15 @@ function PlayerMaskOff:enter(state_data, enter_data)
 	end
 end
 
--- Lines: 17 to 43
+-- Lines 17-49
 function PlayerMaskOff:_enter(enter_data)
+	local equipped_weapon = self._unit:inventory():equipped_unit()
+
+	if equipped_weapon then
+		equipped_weapon:base():set_gadget_on(0, false)
+		self._unit:network():send("set_weapon_gadget_state", 0)
+	end
+
 	local equipped_selection = self._unit:inventory():equipped_selection()
 
 	if equipped_selection ~= 1 then
@@ -42,7 +49,9 @@ function PlayerMaskOff:_enter(enter_data)
 	if not managers.groupai:state():enemy_weapons_hot() then
 		self._enemy_weapons_hot_listen_id = "PlayerMaskOff" .. tostring(self._unit:key())
 
-		managers.groupai:state():add_listener(self._enemy_weapons_hot_listen_id, {"enemy_weapons_hot"}, callback(self, self, "clbk_enemy_weapons_hot"))
+		managers.groupai:state():add_listener(self._enemy_weapons_hot_listen_id, {
+			"enemy_weapons_hot"
+		}, callback(self, self, "clbk_enemy_weapons_hot"))
 	end
 
 	MenuCallbackHandler:_update_outfit_information()
@@ -51,7 +60,7 @@ function PlayerMaskOff:_enter(enter_data)
 	self._show_casing_t = Application:time() + 4
 end
 
--- Lines: 45 to 65
+-- Lines 51-77
 function PlayerMaskOff:exit(state_data, new_state_name)
 	PlayerMaskOff.super.exit(self, state_data)
 	managers.hud:hide_casing()
@@ -72,9 +81,13 @@ function PlayerMaskOff:exit(state_data, new_state_name)
 	end
 
 	self:_interupt_action_start_standard()
+
+	return {
+		was_unarmed = true
+	}
 end
 
--- Lines: 67 to 74
+-- Lines 79-86
 function PlayerMaskOff:update(t, dt)
 	PlayerMaskOff.super.update(self, t, dt)
 
@@ -85,7 +98,7 @@ function PlayerMaskOff:update(t, dt)
 	end
 end
 
--- Lines: 82 to 145
+-- Lines 91-157
 function PlayerMaskOff:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -124,7 +137,7 @@ function PlayerMaskOff:_update_check_actions(t, dt)
 	self:_check_action_change_equipment(t, input)
 end
 
--- Lines: 150 to 188
+-- Lines 162-201
 function PlayerMaskOff:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 
@@ -163,7 +176,7 @@ function PlayerMaskOff:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines: 191 to 203
+-- Lines 203-215
 function PlayerMaskOff:_start_action_interact(t, input, timer, interact_object)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -180,7 +193,7 @@ function PlayerMaskOff:_start_action_interact(t, input, timer, interact_object)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 1, true, self._interact_params.tweak_data, timer, false)
 end
 
--- Lines: 205 to 221
+-- Lines 217-233
 function PlayerMaskOff:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
@@ -199,18 +212,18 @@ function PlayerMaskOff:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines: 223 to 226
+-- Lines 235-238
 function PlayerMaskOff:_end_action_interact()
 	self:_interupt_action_interact(nil, nil, true)
 	managers.interaction:end_action_interact(self._unit)
 end
 
--- Lines: 230 to 232
+-- Lines 242-244
 function PlayerMaskOff:_upd_attention()
 	self._ext_movement:set_attention_settings(self._mask_off_attention_settings)
 end
 
--- Lines: 237 to 250
+-- Lines 249-262
 function PlayerMaskOff:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_press
@@ -228,7 +241,7 @@ function PlayerMaskOff:_check_use_item(t, input)
 	end
 end
 
--- Lines: 252 to 266
+-- Lines 264-278
 function PlayerMaskOff:_start_action_use_item(t)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -239,23 +252,27 @@ function PlayerMaskOff:_start_action_use_item(t)
 
 	managers.hud:show_progress_timer_bar(0, deploy_timer)
 
-	local text = managers.player:selected_equipment_deploying_text() or managers.localization:text("hud_deploying_equipment", {EQUIPMENT = managers.player:selected_equipment_name()})
+	local text = managers.player:selected_equipment_deploying_text() or managers.localization:text("hud_deploying_equipment", {
+		EQUIPMENT = managers.player:selected_equipment_name()
+	})
 
-	managers.hud:show_progress_timer({text = text})
+	managers.hud:show_progress_timer({
+		text = text
+	})
 
 	local equipment_id = managers.player:selected_equipment_id()
 
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 2, true, equipment_id, deploy_timer, false)
 end
 
--- Lines: 268 to 272
+-- Lines 280-284
 function PlayerMaskOff:_end_action_use_item(valid)
 	local result = managers.player:use_selected_equipment(self._unit)
 
 	self:_interupt_action_use_item(nil, nil, valid)
 end
 
--- Lines: 274 to 285
+-- Lines 286-297
 function PlayerMaskOff:_interupt_action_use_item(t, input, complete)
 	if self._use_item_expire_t then
 		self._use_item_expire_t = nil
@@ -267,7 +284,7 @@ function PlayerMaskOff:_interupt_action_use_item(t, input, complete)
 	end
 end
 
--- Lines: 290 to 298
+-- Lines 302-310
 function PlayerMaskOff:_update_start_standard_timers(t)
 	if self._start_standard_expire_t then
 		managers.hud:set_progress_timer_bar_width(tweak_data.player.put_on_mask_time - (self._start_standard_expire_t - t), tweak_data.player.put_on_mask_time)
@@ -280,16 +297,18 @@ function PlayerMaskOff:_update_start_standard_timers(t)
 	end
 end
 
--- Lines: 300 to 307
+-- Lines 312-319
 function PlayerMaskOff:_start_action_state_standard(t)
 	self._start_standard_expire_t = t + tweak_data.player.put_on_mask_time
 
 	managers.hud:show_progress_timer_bar(0, tweak_data.player.put_on_mask_time)
-	managers.hud:show_progress_timer({text = managers.localization:text("hud_starting_heist")})
+	managers.hud:show_progress_timer({
+		text = managers.localization:text("hud_starting_heist")
+	})
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 3, true, "mask_on_action", tweak_data.player.put_on_mask_time, false)
 end
 
--- Lines: 309 to 318
+-- Lines 321-330
 function PlayerMaskOff:_interupt_action_start_standard(t, input, complete)
 	if self._start_standard_expire_t then
 		self._start_standard_expire_t = nil
@@ -300,7 +319,7 @@ function PlayerMaskOff:_interupt_action_start_standard(t, input, complete)
 	end
 end
 
--- Lines: 320 to 327
+-- Lines 332-339
 function PlayerMaskOff:_end_action_start_standard()
 	self:_interupt_action_start_standard(nil, nil, true)
 	PlayerStandard.say_line(self, "a01x_any", true)
@@ -308,7 +327,7 @@ function PlayerMaskOff:_end_action_start_standard()
 	managers.achievment:award("no_one_cared_who_i_was")
 end
 
--- Lines: 332 to 365
+-- Lines 344-378
 function PlayerMaskOff:mark_units(line, t, no_gesture, skip_alert)
 	local mark_sec_camera = managers.player:has_category_upgrade("player", "sec_camera_highlight_mask_off")
 	local mark_special_enemies = managers.player:has_category_upgrade("player", "special_enemy_highlight_mask_off")
@@ -317,7 +336,12 @@ function PlayerMaskOff:mark_units(line, t, no_gesture, skip_alert)
 
 	if voice_type == "mark_cop" or voice_type == "mark_cop_quiet" then
 		interact_type = "cmd_point"
-		sound_name = voice_type == "mark_cop_quiet" and tweak_data.character[prime_target.unit:base()._tweak_table].silent_priority_shout .. "_any" or tweak_data.character[prime_target.unit:base()._tweak_table].priority_shout .. "x_any"
+
+		if voice_type == "mark_cop_quiet" then
+			sound_name = tweak_data.character[prime_target.unit:base()._tweak_table].silent_priority_shout .. "_any"
+		else
+			sound_name = tweak_data.character[prime_target.unit:base()._tweak_table].priority_shout .. "x_any"
+		end
 
 		if managers.player:has_category_upgrade("player", "special_enemy_highlight") then
 			prime_target.unit:contour():add(managers.player:get_contour_for_marked_enemy(), true, managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1))
@@ -338,28 +362,28 @@ function PlayerMaskOff:mark_units(line, t, no_gesture, skip_alert)
 	return mark_sec_camera or mark_special_enemies
 end
 
--- Lines: 370 to 374
+-- Lines 382-386
 function PlayerMaskOff:_check_action_jump(t, input)
 	if input.btn_duck_press then
 		managers.hint:show_hint("mask_off_block_interact")
 	end
 end
 
--- Lines: 376 to 380
+-- Lines 388-392
 function PlayerMaskOff:_check_action_duck(t, input)
 	if input.btn_jump_press then
 		managers.hint:show_hint("mask_off_block_interact")
 	end
 end
 
--- Lines: 382 to 386
+-- Lines 394-398
 function PlayerMaskOff:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.hint:show_hint("mask_off_block_interact")
 	end
 end
 
--- Lines: 388 to 394
+-- Lines 400-406
 function PlayerMaskOff:clbk_enemy_weapons_hot()
 	if self._enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
@@ -370,13 +394,12 @@ function PlayerMaskOff:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines: 396 to 397
+-- Lines 408-410
 function PlayerMaskOff:interaction_blocked()
 	return false
 end
 
--- Lines: 400 to 401
+-- Lines 412-414
 function PlayerMaskOff:_get_walk_headbob()
 	return 0.0125
 end
-

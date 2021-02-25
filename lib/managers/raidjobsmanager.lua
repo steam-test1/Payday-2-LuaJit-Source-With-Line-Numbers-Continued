@@ -5,10 +5,9 @@ RaidJobsManager.save_table_name = "raid_jobs"
 RaidJobsManager.category = "raid_jobs"
 RaidJobsManager.category_id = "menu_raid_jobs"
 
--- Lines: 9 to 12
+-- Lines 9-12
 function RaidJobsManager:init()
 	self._challenges_tweak_data = tweak_data.raid_jobs.challenges
 
 	self:_setup()
 end
-

@@ -6,7 +6,7 @@ WorkshopManager.FULL_PATH = Application:base_path() .. WorkshopManager.PATH
 WorkshopManager.STAGING_NAME = "temporary_staging"
 local UGC = Steam:ugc_handler()
 
--- Lines: 18 to 29
+-- Lines 18-29
 function WorkshopManager:init()
 	if self._initialized then
 		return
@@ -21,12 +21,12 @@ function WorkshopManager:init()
 	end
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function WorkshopManager:items()
 	return self._items
 end
 
--- Lines: 38 to 56
+-- Lines 38-57
 function WorkshopManager:create_item(type)
 	local path = self:_new_item_path()
 
@@ -50,7 +50,7 @@ function WorkshopManager:create_item(type)
 	return nil
 end
 
--- Lines: 60 to 66
+-- Lines 60-66
 function WorkshopManager:delete_item(item)
 	local path = item:path()
 
@@ -60,22 +60,22 @@ function WorkshopManager:delete_item(item)
 	end
 end
 
--- Lines: 68 to 69
+-- Lines 68-70
 function WorkshopManager:is_initialized()
 	return self._initialized
 end
 
--- Lines: 72 to 74
+-- Lines 72-74
 function WorkshopManager:set_enabled(enabled)
 	self._enabled = enabled
 end
 
--- Lines: 76 to 77
+-- Lines 76-78
 function WorkshopManager:enabled()
 	return self._enabled
 end
 
--- Lines: 80 to 100
+-- Lines 80-101
 function WorkshopManager:create_staging_directory()
 	local path = Application:create_temporary_folder()
 
@@ -97,7 +97,7 @@ function WorkshopManager:create_staging_directory()
 	return path .. "/"
 end
 
--- Lines: 106 to 116
+-- Lines 106-116
 function WorkshopManager:_setup()
 	if not SystemFS:exists(WorkshopManager.FULL_PATH) and not SystemFS:make_dir(WorkshopManager.FULL_PATH) then
 		return
@@ -108,7 +108,7 @@ function WorkshopManager:_setup()
 	self._initialized = true
 end
 
--- Lines: 119 to 138
+-- Lines 119-139
 function WorkshopManager:_new_item_path()
 	local date = Application:date()
 	date = date:gsub(":", "")
@@ -125,7 +125,7 @@ function WorkshopManager:_new_item_path()
 	return next_path .. "/"
 end
 
--- Lines: 142 to 163
+-- Lines 141-163
 function WorkshopManager:_init_items()
 	self._items = {}
 	local directories = SystemFS:list(WorkshopManager.FULL_PATH, true)
@@ -139,4 +139,3 @@ function WorkshopManager:_init_items()
 		end
 	end
 end
-

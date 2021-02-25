@@ -1,6 +1,6 @@
 PrePlanningUnitElement = PrePlanningUnitElement or class(MissionElement)
 
--- Lines: 5 to 23
+-- Lines 5-23
 function PrePlanningUnitElement:init(unit)
 	PrePlanningUnitElement.super.init(self, unit)
 
@@ -17,21 +17,23 @@ function PrePlanningUnitElement:init(unit)
 	table.insert(self._save_values, "dlc_lock")
 end
 
--- Lines: 25 to 30
+-- Lines 25-30
 function PrePlanningUnitElement:_create_dynamic_on_executed_alternatives()
-	PrePlanningUnitElement.ON_EXECUTED_ALTERNATIVES = {"any"}
+	PrePlanningUnitElement.ON_EXECUTED_ALTERNATIVES = {
+		"any"
+	}
 
 	for _, type in ipairs(managers.preplanning:types()) do
 		table.insert(PrePlanningUnitElement.ON_EXECUTED_ALTERNATIVES, type)
 	end
 end
 
--- Lines: 34 to 36
+-- Lines 34-36
 function PrePlanningUnitElement:_data_updated(value_type, value)
 	self._hed[value_type] = value
 end
 
--- Lines: 39 to 71
+-- Lines 39-71
 function PrePlanningUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -66,4 +68,3 @@ function PrePlanningUnitElement:_build_panel(panel, panel_sizer)
 
 	CoreEws.list_selector(disables_params)
 end
-

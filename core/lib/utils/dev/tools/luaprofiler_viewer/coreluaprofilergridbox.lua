@@ -12,7 +12,7 @@ local PLAIN = 2
 local DEFAULT_FORMAT = PERCENT
 LuaProfilerGridBox = LuaProfilerGridBox or CoreClass.class()
 
--- Lines: 26 to 51
+-- Lines 26-51
 function LuaProfilerGridBox:init(...)
 	local args = CoreKeywordArguments.KeywordArguments:new(...)
 	self._ews_parent = args:mandatory_object("parent")
@@ -47,12 +47,14 @@ function LuaProfilerGridBox:init(...)
 	self.panel:set_sizer(self.box_sizer)
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function LuaProfilerGridBox:set_treeview(...)
-	self._treeview = parse_kwargs({...}, "table:treeview")
+	self._treeview = parse_kwargs({
+		...
+	}, "table:treeview")
 end
 
--- Lines: 57 to 64
+-- Lines 57-64
 function LuaProfilerGridBox:destroy()
 	self._lpd = nil
 	self._item2fnid = {}
@@ -64,13 +66,15 @@ function LuaProfilerGridBox:destroy()
 	self._treeview = nil
 end
 
--- Lines: 66 to 85
+-- Lines 66-85
 function LuaProfilerGridBox:set_profilerdata(...)
-	self._lpd, self._displayformat = parse_kwargs({...}, "userdata:lpd", "number:displayformat")
+	self._lpd, self._displayformat = parse_kwargs({
+		...
+	}, "userdata:lpd", "number:displayformat")
 	self._highlightedfuncnode = nil
 	self._item2fnid = {}
 
-	for fnid = 0, self._lpd:numfuncnodes() - 1, 1 do
+	for fnid = 0, self._lpd:numfuncnodes() - 1 do
 		table.insert(self._item2fnid, fnid)
 	end
 
@@ -80,7 +84,7 @@ function LuaProfilerGridBox:set_profilerdata(...)
 		self._listctrl:append_column(n, "")
 	end
 
-	for i = 0, self._lpd:numheaders() - 1, 1 do
+	for i = 0, self._lpd:numheaders() - 1 do
 		local name = self._lpd:headername(i)
 
 		self._listctrl:append_column("Diff " .. string.capitalize(name), "")
@@ -90,18 +94,20 @@ function LuaProfilerGridBox:set_profilerdata(...)
 	self:_redraw()
 end
 
--- Lines: 88 to 104
+-- Lines 88-104
 function LuaProfilerGridBox:set_displayformat(...)
-	self._displayformat = parse_kwargs({...}, "number:displayformat")
+	self._displayformat = parse_kwargs({
+		...
+	}, "number:displayformat")
 
 	if self._lpd ~= nil then
 		local frametime = self._lpd:frametime()
 
 		for i, fnid in ipairs(self._item2fnid) do
 			if self._displayformat ~= SECONDS then
-				self._listctrl:set_item(i - 1, 3, string.format("%6.3f %%", (100 * self._lpd:fn_total_time(fnid)) / frametime))
-				self._listctrl:set_item(i - 1, 4, string.format("%6.3f %%", (100 * self._lpd:fn_local_time(fnid)) / frametime))
-				self._listctrl:set_item(i - 1, 5, string.format("%6.3f %%", (100 * self._lpd:fn_children_time(fnid)) / frametime))
+				self._listctrl:set_item(i - 1, 3, string.format("%6.3f %%", 100 * self._lpd:fn_total_time(fnid) / frametime))
+				self._listctrl:set_item(i - 1, 4, string.format("%6.3f %%", 100 * self._lpd:fn_local_time(fnid) / frametime))
+				self._listctrl:set_item(i - 1, 5, string.format("%6.3f %%", 100 * self._lpd:fn_children_time(fnid) / frametime))
 			else
 				self._listctrl:set_item(i - 1, 3, string.format("%8.3f ms", 1000 * self._lpd:fn_total_time(fnid)))
 				self._listctrl:set_item(i - 1, 4, string.format("%8.3f ms", 1000 * self._lpd:fn_local_time(fnid)))
@@ -111,7 +117,7 @@ function LuaProfilerGridBox:set_displayformat(...)
 	end
 end
 
--- Lines: 106 to 138
+-- Lines 106-138
 function LuaProfilerGridBox:_redraw()
 	if self._lpd ~= nil then
 		self:_sort_funcnodes()
@@ -125,9 +131,9 @@ function LuaProfilerGridBox:_redraw()
 			self._listctrl:set_item(i - 1, 2, self._lpd:fn_line(fnid))
 
 			if self._displayformat ~= SECONDS then
-				self._listctrl:set_item(i - 1, 3, string.format("%6.3f %%", (100 * self._lpd:fn_total_time(fnid)) / frametime))
-				self._listctrl:set_item(i - 1, 4, string.format("%6.3f %%", (100 * self._lpd:fn_local_time(fnid)) / frametime))
-				self._listctrl:set_item(i - 1, 5, string.format("%6.3f %%", (100 * self._lpd:fn_children_time(fnid)) / frametime))
+				self._listctrl:set_item(i - 1, 3, string.format("%6.3f %%", 100 * self._lpd:fn_total_time(fnid) / frametime))
+				self._listctrl:set_item(i - 1, 4, string.format("%6.3f %%", 100 * self._lpd:fn_local_time(fnid) / frametime))
+				self._listctrl:set_item(i - 1, 5, string.format("%6.3f %%", 100 * self._lpd:fn_children_time(fnid) / frametime))
 			else
 				self._listctrl:set_item(i - 1, 3, string.format("%8.3f ms", 1000 * self._lpd:fn_total_time(fnid)))
 				self._listctrl:set_item(i - 1, 4, string.format("%8.3f ms", 1000 * self._lpd:fn_local_time(fnid)))
@@ -139,7 +145,7 @@ function LuaProfilerGridBox:_redraw()
 
 			local j = 8
 
-			for k = 0, self._lpd:numheaders() - 1, 1 do
+			for k = 0, self._lpd:numheaders() - 1 do
 				self._listctrl:set_item(i - 1, j, string.format("%s", self._lpd:fn_diff(fnid, k)))
 				self._listctrl:set_item(i - 1, j + 1, string.format("%s", self._lpd:fn_peak(fnid, k)))
 
@@ -153,69 +159,68 @@ function LuaProfilerGridBox:_redraw()
 	end
 end
 
--- Lines: 140 to 196
+-- Lines 140-196
 function LuaProfilerGridBox:_sort_funcnodes()
 	local convert = nil
 
 	if self._sortcolumn == 1 then
-
-		-- Lines: 143 to 144
+		-- Lines 143-145
 		function convert(fnid)
 			return string.lower(self._lpd:fn_func(fnid))
 		end
 	elseif self._sortcolumn == 2 then
-
-		-- Lines: 147 to 148
+		-- Lines 147-149
 		function convert(fnid)
 			return string.lower(self._lpd:fn_file(fnid))
 		end
 	elseif self._sortcolumn == 3 then
-
-		-- Lines: 151 to 152
+		-- Lines 151-153
 		function convert(fnid)
 			return tonumber(self._lpd:fn_line(fnid))
 		end
 	elseif self._sortcolumn == 4 then
-
-		-- Lines: 155 to 156
+		-- Lines 155-157
 		function convert(fnid)
 			return self._lpd:fn_total_time(fnid)
 		end
 	elseif self._sortcolumn == 5 then
-
-		-- Lines: 159 to 160
+		-- Lines 159-161
 		function convert(fnid)
 			return self._lpd:fn_local_time(fnid)
 		end
 	elseif self._sortcolumn == 6 then
-
-		-- Lines: 163 to 164
+		-- Lines 163-165
 		function convert(fnid)
 			return self._lpd:fn_children_time(fnid)
 		end
 	elseif self._sortcolumn == 7 then
-
-		-- Lines: 167 to 168
+		-- Lines 167-169
 		function convert(fnid)
 			return self._lpd:fn_num_calls(fnid)
 		end
 	elseif self._sortcolumn == 8 then
-
-		-- Lines: 171 to 172
+		-- Lines 171-173
 		function convert(fnid)
 			return self._lpd:fn_num_sub_calls(fnid)
 		end
 	else
 		local i = self._sortcolumn - 9
 		local index = math.floor(i / 2)
-		convert = i % 2 == 0 and function (fnid)
-			return self._lpd:fn_diff(fnid, index)
-		end or function (fnid)
-			return self._lpd:fn_peak(fnid, index)
+
+		if i % 2 == 0 then
+			-- Lines 178-180
+			function convert(fnid)
+				return self._lpd:fn_diff(fnid, index)
+			end
+		else
+			-- Lines 182-184
+			function convert(fnid)
+				return self._lpd:fn_peak(fnid, index)
+			end
 		end
 	end
 
-	-- Lines: 188 to 194
+	-- Lines 188-194
 	function sort(fn1, fn2)
 		if self._sortreverse then
 			return convert(fn2) < convert(fn1)
@@ -227,15 +232,17 @@ function LuaProfilerGridBox:_sort_funcnodes()
 	table.sort(self._item2fnid, sort)
 end
 
--- Lines: 203 to 207
+-- Lines 203-207
 function LuaProfilerGridBox:deselect_and_highlight(...)
-	local fnid = parse_kwargs({...}, "number:fnid")
+	local fnid = parse_kwargs({
+		...
+	}, "number:fnid")
 
 	self._listctrl:set_item_selected(self._listctrl:selected_item(), false)
 	self:_highlight(fnid)
 end
 
--- Lines: 209 to 218
+-- Lines 209-218
 function LuaProfilerGridBox:_highlight(fnid)
 	self._highlightedfuncnode = fnid
 
@@ -248,22 +255,26 @@ function LuaProfilerGridBox:_highlight(fnid)
 	end
 end
 
--- Lines: 224 to 228
+-- Lines 224-228
 function LuaProfilerGridBox:_on_select()
 	local i = self._listctrl:selected_item()
 
-	self._treeview:deselect_and_highlight({fnid = self._item2fnid[i + 1]})
+	self._treeview:deselect_and_highlight({
+		fnid = self._item2fnid[i + 1]
+	})
 	self:_highlight(self._item2fnid[i + 1])
 end
 
--- Lines: 230 to 233
+-- Lines 230-233
 function LuaProfilerGridBox:_on_activate()
 	local i = self._listctrl:selected_item()
 
-	self._treeview:deselect_and_expand({fnid = self._item2fnid[i + 1]})
+	self._treeview:deselect_and_expand({
+		fnid = self._item2fnid[i + 1]
+	})
 end
 
--- Lines: 235 to 244
+-- Lines 235-244
 function LuaProfilerGridBox:_on_column(id, f)
 	local column = f:get_column() + 1
 
@@ -276,4 +287,3 @@ function LuaProfilerGridBox:_on_column(id, f)
 
 	self:_redraw()
 end
-

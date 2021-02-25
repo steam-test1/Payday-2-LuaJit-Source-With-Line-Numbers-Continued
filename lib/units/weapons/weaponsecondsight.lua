@@ -1,7 +1,7 @@
 WeaponSecondSight = WeaponSecondSight or class(WeaponGadgetBase)
 WeaponSecondSight.GADGET_TYPE = "second_sight"
 
--- Lines: 4 to 19
+-- Lines 4-19
 function WeaponSecondSight:init(unit)
 	WeaponSecondSight.super.init(self, unit)
 
@@ -19,7 +19,7 @@ function WeaponSecondSight:init(unit)
 	end
 end
 
--- Lines: 23 to 32
+-- Lines 23-32
 function WeaponSecondSight:_check_state(current_state)
 	if current_state and current_state.in_steelsight and current_state:in_steelsight() then
 		current_state:_start_action_steelsight(Application:time(), self._on)
@@ -34,12 +34,12 @@ function WeaponSecondSight:_check_state(current_state)
 	WeaponSecondSight.super._check_state(self, current_state)
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function WeaponSecondSight:toggle_requires_stance_update()
 	return true
 end
 
--- Lines: 38 to 46
+-- Lines 38-46
 function WeaponSecondSight:play_anim()
 	if not self._anim then
 		return
@@ -51,8 +51,7 @@ function WeaponSecondSight:play_anim()
 	self._unit:anim_play_to(self._anim, self._anim_state and length or 0, speed)
 end
 
--- Lines: 50 to 52
+-- Lines 50-52
 function WeaponSecondSight:destroy(unit)
 	WeaponSecondSight.super.destroy(self, unit)
 end
-

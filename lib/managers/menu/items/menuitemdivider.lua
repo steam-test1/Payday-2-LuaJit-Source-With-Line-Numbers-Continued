@@ -3,7 +3,7 @@ core:import("CoreMenuItem")
 MenuItemDivider = MenuItemDivider or class(CoreMenuItem.Item)
 MenuItemDivider.TYPE = "divider"
 
--- Lines: 6 to 12
+-- Lines 6-12
 function MenuItemDivider:init(data_node, parameters)
 	MenuItemDivider.super.init(self, data_node, parameters)
 
@@ -12,10 +12,12 @@ function MenuItemDivider:init(data_node, parameters)
 	self.no_select = true
 end
 
--- Lines: 16 to 34
+-- Lines 15-36
 function MenuItemDivider:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	local h = row_item.item:parameters().size or 10
 
 	if row_item.text then
@@ -34,7 +36,7 @@ function MenuItemDivider:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 64 to 71
+-- Lines 62-72
 function MenuItemDivider:reload(row_item, node)
 	MenuItemDivider.super.reload(self, row_item, node)
 	self:_set_row_item_state(node, row_item)
@@ -42,34 +44,33 @@ function MenuItemDivider:reload(row_item, node)
 	return true
 end
 
--- Lines: 75 to 77
+-- Lines 75-80
 function MenuItemDivider:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 83 to 85
+-- Lines 83-86
 function MenuItemDivider:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 89 to 97
+-- Lines 89-97
 function MenuItemDivider:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		-- Nothing
 	end
 end
 
--- Lines: 99 to 100
+-- Lines 99-101
 function MenuItemDivider:menu_unselected_visible()
 	return false
 end
 
--- Lines: 104 to 106
+-- Lines 104-106
 function MenuItemDivider:on_delete_row_item(row_item, ...)
 	MenuItemDivider.super.on_delete_row_item(self, row_item, ...)
 end
-

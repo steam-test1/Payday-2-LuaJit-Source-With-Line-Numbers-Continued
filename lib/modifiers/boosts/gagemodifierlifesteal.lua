@@ -2,7 +2,7 @@ GageModifierLifeSteal = GageModifierLifeSteal or class(GageModifier)
 GageModifierLifeSteal._type = "GageModifierLifeSteal"
 GageModifierLifeSteal.default_value = "cooldown"
 
--- Lines: 7 to 25
+-- Lines 6-25
 function GageModifierLifeSteal:OnPlayerManagerKillshot(player_unit, unit_tweak, variant)
 	local can_steal = not self._last_killshot_t or self._last_killshot_t + self:value("cooldown") < TimerManager:game():time()
 
@@ -22,4 +22,3 @@ function GageModifierLifeSteal:OnPlayerManagerKillshot(player_unit, unit_tweak, 
 		self._last_killshot_t = TimerManager:game():time()
 	end
 end
-

@@ -1,7 +1,7 @@
 ElementRandomInstance = ElementRandomInstance or class(CoreMissionScriptElement.MissionScriptElement)
 ElementRandomInstance._type = "input"
 
--- Lines: 5 to 10
+-- Lines 5-10
 function ElementRandomInstance:init(...)
 	ElementRandomInstance.super.init(self, ...)
 
@@ -9,11 +9,11 @@ function ElementRandomInstance:init(...)
 	self._unused_randoms = {}
 end
 
--- Lines: 13 to 14
+-- Lines 12-14
 function ElementRandomInstance:client_on_executed(...)
 end
 
--- Lines: 17 to 71
+-- Lines 16-71
 function ElementRandomInstance:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -45,7 +45,12 @@ function ElementRandomInstance:on_executed(instigator)
 
 	for i, instance_data in ipairs(self._instances) do
 		local elements = nil
-		elements = self._type == "input" and managers.world_instance:get_registered_input_elements(instance_data.instance, instance_data.event) or managers.world_instance:get_registered_output_event_elements(instance_data.instance, instance_data.event)
+
+		if self._type == "input" then
+			elements = managers.world_instance:get_registered_input_elements(instance_data.instance, instance_data.event)
+		else
+			elements = managers.world_instance:get_registered_output_event_elements(instance_data.instance, instance_data.event)
+		end
 
 		if elements then
 			for _, element in ipairs(elements) do
@@ -57,26 +62,26 @@ function ElementRandomInstance:on_executed(instigator)
 	ElementRandomInstance.super.on_executed(self, instigator)
 end
 
--- Lines: 73 to 78
+-- Lines 73-79
 function ElementRandomInstance:_calc_amount()
 	local amount = self._values.amount or 1
 
 	if self._values.amount_random and self._values.amount_random > 0 then
-		amount = (amount + math.random(self._values.amount_random + 1)) - 1
+		amount = amount + math.random(self._values.amount_random + 1) - 1
 	end
 
 	return amount
 end
 
--- Lines: 81 to 85
+-- Lines 81-86
 function ElementRandomInstance:_get_random_elements()
 	local t = {}
 	local rand = math.random(#self._unused_randoms)
 
 	return table.remove(self._unused_randoms, rand)
 end
+
 ElementRandomInstanceInputEvent = ElementRandomInstanceInputEvent or class(ElementRandomInstance)
 ElementRandomInstanceInputEvent._type = "input"
 ElementRandomInstanceOutputEvent = ElementRandomInstanceOutputEvent or class(ElementRandomInstance)
 ElementRandomInstanceOutputEvent._type = "output"
-

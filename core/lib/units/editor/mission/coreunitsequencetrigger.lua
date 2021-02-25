@@ -3,12 +3,12 @@ CoreUnitSequenceTriggerUnitElement.SAVE_UNIT_POSITION = false
 CoreUnitSequenceTriggerUnitElement.SAVE_UNIT_ROTATION = false
 UnitSequenceTriggerUnitElement = UnitSequenceTriggerUnitElement or class(CoreUnitSequenceTriggerUnitElement)
 
--- Lines: 7 to 9
+-- Lines 7-9
 function UnitSequenceTriggerUnitElement:init(...)
 	CoreUnitSequenceTriggerUnitElement.init(self, ...)
 end
 
--- Lines: 11 to 23
+-- Lines 11-23
 function CoreUnitSequenceTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -22,7 +22,7 @@ function CoreUnitSequenceTriggerUnitElement:init(unit)
 	self._sequence_units = {}
 end
 
--- Lines: 26 to 42
+-- Lines 26-42
 function CoreUnitSequenceTriggerUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -44,14 +44,14 @@ function CoreUnitSequenceTriggerUnitElement:layer_finished()
 	end
 end
 
--- Lines: 44 to 48
+-- Lines 44-48
 function CoreUnitSequenceTriggerUnitElement:load_unit(unit)
 	if unit then
 		self._sequence_units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 50 to 67
+-- Lines 50-67
 function CoreUnitSequenceTriggerUnitElement:update_selected()
 	for id, unit in pairs(self._sequence_units) do
 		if not alive(unit) then
@@ -73,12 +73,12 @@ function CoreUnitSequenceTriggerUnitElement:update_selected()
 	end
 end
 
--- Lines: 69 to 71
+-- Lines 69-71
 function CoreUnitSequenceTriggerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	self:_check_alive_units()
 end
 
--- Lines: 73 to 80
+-- Lines 73-80
 function CoreUnitSequenceTriggerUnitElement:_check_alive_units()
 	for id, unit in pairs(self._sequence_units) do
 		if not alive(unit) then
@@ -89,7 +89,7 @@ function CoreUnitSequenceTriggerUnitElement:_check_alive_units()
 	end
 end
 
--- Lines: 82 to 95
+-- Lines 82-95
 function CoreUnitSequenceTriggerUnitElement:draw_links_unselected(...)
 	CoreUnitSequenceTriggerUnitElement.super.draw_links_unselected(self, ...)
 
@@ -107,7 +107,7 @@ function CoreUnitSequenceTriggerUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 97 to 105
+-- Lines 97-105
 function CoreUnitSequenceTriggerUnitElement:get_links_to_unit(to_unit, links, all_units)
 	CoreUnitSequenceTriggerUnitElement.super.get_links_to_unit(self, to_unit, links, all_units)
 
@@ -121,7 +121,7 @@ function CoreUnitSequenceTriggerUnitElement:get_links_to_unit(to_unit, links, al
 	end
 end
 
--- Lines: 107 to 116
+-- Lines 107-116
 function CoreUnitSequenceTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -138,7 +138,7 @@ function CoreUnitSequenceTriggerUnitElement:update_editing()
 	end
 end
 
--- Lines: 119 to 136
+-- Lines 118-136
 function CoreUnitSequenceTriggerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -151,7 +151,7 @@ function CoreUnitSequenceTriggerUnitElement:select_unit()
 	end
 end
 
--- Lines: 138 to 148
+-- Lines 138-148
 function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	local sequences = managers.sequence:get_sequence_list(unit:name())
 
@@ -167,15 +167,14 @@ function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	end
 end
 
--- Lines: 150 to 152
+-- Lines 150-152
 function CoreUnitSequenceTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 161 to 168
+-- Lines 154-168
 function CoreUnitSequenceTriggerUnitElement:select_unit_list_btn()
-
-	-- Lines: 155 to 161
+	-- Lines 155-162
 	local function f(unit)
 		if not managers.editor:layer("Statics"):category_map()[unit:type():s()] then
 			return false
@@ -193,7 +192,7 @@ function CoreUnitSequenceTriggerUnitElement:select_unit_list_btn()
 	end
 end
 
--- Lines: 170 to 197
+-- Lines 170-197
 function CoreUnitSequenceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_check_alive_units()
 	self:_create_panel()
@@ -221,7 +220,7 @@ function CoreUnitSequenceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	end
 end
 
--- Lines: 199 to 217
+-- Lines 199-217
 function CoreUnitSequenceTriggerUnitElement:_remove_by_unit_id(unit_id)
 	local remove_entries = {}
 
@@ -244,7 +243,7 @@ function CoreUnitSequenceTriggerUnitElement:_remove_by_unit_id(unit_id)
 	self:_remove_from_sequence_list(unit_id)
 end
 
--- Lines: 219 to 242
+-- Lines 219-242
 function CoreUnitSequenceTriggerUnitElement:remove_entry(id)
 	local unit_id = self._guis[id].unit_id
 
@@ -272,7 +271,7 @@ function CoreUnitSequenceTriggerUnitElement:remove_entry(id)
 	self._sequence_units[unit_id] = nil
 end
 
--- Lines: 244 to 250
+-- Lines 244-250
 function CoreUnitSequenceTriggerUnitElement:_remove_from_sequence_list(unit_id)
 	for i, entry in pairs(clone(self._hed.sequence_list)) do
 		if type(entry) == "table" and entry.unit_id == unit_id or entry == unit_id then
@@ -281,7 +280,7 @@ function CoreUnitSequenceTriggerUnitElement:_remove_from_sequence_list(unit_id)
 	end
 end
 
--- Lines: 252 to 297
+-- Lines 252-297
 function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_list_data)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
@@ -331,7 +330,7 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel:layout()
 end
 
--- Lines: 299 to 307
+-- Lines 299-307
 function CoreUnitSequenceTriggerUnitElement:set_sequence_data(guis_id)
 	local sequence = self._guis[guis_id].sequence:get_value()
 
@@ -343,4 +342,3 @@ function CoreUnitSequenceTriggerUnitElement:set_sequence_data(guis_id)
 		end
 	end
 end
-

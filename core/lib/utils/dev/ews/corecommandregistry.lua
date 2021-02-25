@@ -3,12 +3,12 @@ CoreCommandRegistry.Wrapper = CoreCommandRegistry.Wrapper or class()
 CoreCommandRegistry.MenuWrapper = CoreCommandRegistry.MenuWrapper or class(CoreCommandRegistry.Wrapper)
 CoreCommandRegistry.ToolBarWrapper = CoreCommandRegistry.ToolBarWrapper or class(CoreCommandRegistry.Wrapper)
 
--- Lines: 11 to 13
+-- Lines 11-13
 function CoreCommandRegistry:init()
 	self._commands = {}
 end
 
--- Lines: 15 to 21
+-- Lines 15-21
 function CoreCommandRegistry:add(command_table)
 	assert(type(command_table) == "table", "Single table argument with keyword arguments expected.")
 	assert(type(command_table.id) == "string", "Command table must contain string member \"id\".")
@@ -18,25 +18,25 @@ function CoreCommandRegistry:add(command_table)
 	self._commands[command_table.id] = command_table
 end
 
--- Lines: 23 to 25
+-- Lines 23-26
 function CoreCommandRegistry:id(command_id)
 	assert(self._commands[command_id], "Command \"" .. command_id .. "\" not found.")
 
 	return command_id
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function CoreCommandRegistry:wrap_menu(menu)
 	return CoreCommandRegistry.MenuWrapper:new(menu, self._commands)
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function CoreCommandRegistry:wrap_tool_bar(tool_bar)
 	return CoreCommandRegistry.ToolBarWrapper:new(tool_bar, self._commands)
 end
 
--- Lines: 41 to 53
-CoreCommandRegistry.Wrapper.init = function (self, wrapped_object, commands)
+-- Lines 41-53
+function CoreCommandRegistry.Wrapper:init(wrapped_object, commands)
 	assert(type(commands) == "table", "Table argument with keyword arguments expected.")
 
 	for command_id, command_table in pairs(commands) do
@@ -50,13 +50,13 @@ CoreCommandRegistry.Wrapper.init = function (self, wrapped_object, commands)
 	self._commands = commands
 end
 
--- Lines: 55 to 56
-CoreCommandRegistry.Wrapper.wrapped_object = function (self)
+-- Lines 55-57
+function CoreCommandRegistry.Wrapper:wrapped_object()
 	return self._wrapped_object
 end
 
--- Lines: 59 to 72
-CoreCommandRegistry.Wrapper.__index = function (self, key)
+-- Lines 59-73
+function CoreCommandRegistry.Wrapper:__index(key)
 	local metatable = getmetatable(self)
 
 	while metatable do
@@ -76,38 +76,38 @@ CoreCommandRegistry.Wrapper.__index = function (self, key)
 	end
 end
 
--- Lines: 75 to 77
-CoreCommandRegistry.Wrapper.command = function (self, command_id)
+-- Lines 75-78
+function CoreCommandRegistry.Wrapper:command(command_id)
 	local command_table = assert(self._commands[command_id], "Command \"" .. command_id .. "\" not found.")
 
 	return command_table
 end
 
--- Lines: 85 to 88
-CoreCommandRegistry.MenuWrapper.make_args = function (self, command_id)
+-- Lines 85-89
+function CoreCommandRegistry.MenuWrapper:make_args(command_id)
 	local command = self:command(command_id)
 	local label = command.key and command.label .. "\t" .. command.key or command.label
 
 	return command.id, label, command.help or string.gsub(command.label, "&", "")
 end
 
--- Lines: 91 to 93
-CoreCommandRegistry.MenuWrapper.append_command = function (self, command_id)
+-- Lines 91-93
+function CoreCommandRegistry.MenuWrapper:append_command(command_id)
 	self:wrapped_object():append_item(self:make_args(command_id))
 end
 
--- Lines: 95 to 97
-CoreCommandRegistry.MenuWrapper.append_check_command = function (self, command_id)
+-- Lines 95-97
+function CoreCommandRegistry.MenuWrapper:append_check_command(command_id)
 	self:wrapped_object():append_check_item(self:make_args(command_id))
 end
 
--- Lines: 99 to 101
-CoreCommandRegistry.MenuWrapper.append_radio_command = function (self, command_id)
+-- Lines 99-101
+function CoreCommandRegistry.MenuWrapper:append_radio_command(command_id)
 	self:wrapped_object():append_radio_item(self:make_args(command_id))
 end
 
--- Lines: 108 to 115
-CoreCommandRegistry.ToolBarWrapper.make_args = function (self, command_id)
+-- Lines 108-116
+function CoreCommandRegistry.ToolBarWrapper:make_args(command_id)
 	local command = self:command(command_id)
 
 	assert(type(command.image) == "string", "Command table must contain string member \"image\".")
@@ -121,18 +121,17 @@ CoreCommandRegistry.ToolBarWrapper.make_args = function (self, command_id)
 	return command.id, label, CoreEWS.image_path(command.image), command.help or label
 end
 
--- Lines: 118 to 120
-CoreCommandRegistry.ToolBarWrapper.add_command = function (self, command_id)
+-- Lines 118-120
+function CoreCommandRegistry.ToolBarWrapper:add_command(command_id)
 	self:wrapped_object():add_tool(self:make_args(command_id))
 end
 
--- Lines: 122 to 124
-CoreCommandRegistry.ToolBarWrapper.add_check_command = function (self, command_id)
+-- Lines 122-124
+function CoreCommandRegistry.ToolBarWrapper:add_check_command(command_id)
 	self:wrapped_object():add_check_tool(self:make_args(command_id))
 end
 
--- Lines: 126 to 128
-CoreCommandRegistry.ToolBarWrapper.add_radio_command = function (self, command_id)
+-- Lines 126-128
+function CoreCommandRegistry.ToolBarWrapper:add_radio_command(command_id)
 	self:wrapped_object():add_radio_tool(self:make_args(command_id))
 end
-

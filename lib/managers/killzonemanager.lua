@@ -1,11 +1,11 @@
 KillzoneManager = KillzoneManager or class()
 
--- Lines: 3 to 5
+-- Lines 3-5
 function KillzoneManager:init()
 	self._units = {}
 end
 
--- Lines: 7 to 48
+-- Lines 7-48
 function KillzoneManager:update(t, dt)
 	for _, data in pairs(self._units) do
 		if alive(data.unit) then
@@ -53,7 +53,7 @@ function KillzoneManager:update(t, dt)
 	end
 end
 
--- Lines: 50 to 56
+-- Lines 50-56
 function KillzoneManager:set_unit(unit, type)
 	if self._units[unit:key()] then
 		self:_remove_unit(unit)
@@ -62,16 +62,18 @@ function KillzoneManager:set_unit(unit, type)
 	end
 end
 
--- Lines: 58 to 64
+-- Lines 58-64
 function KillzoneManager:_kill_unit(unit)
 	if unit:character_damage():need_revive() then
 		return
 	end
 
-	unit:character_damage():damage_killzone({instant_death = true})
+	unit:character_damage():damage_killzone({
+		instant_death = true
+	})
 end
 
--- Lines: 66 to 79
+-- Lines 66-79
 function KillzoneManager:_warning_shot(unit)
 	local rot = unit:camera():rotation()
 	rot = Rotation(rot:yaw(), 0, 0)
@@ -83,11 +85,13 @@ function KillzoneManager:_warning_shot(unit)
 	local col_ray = World:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("bullet_impact_targets"), "ignore_unit", unit)
 
 	if col_ray and col_ray.unit then
-		managers.game_play_central:play_impact_sound_and_effects({col_ray = col_ray})
+		managers.game_play_central:play_impact_sound_and_effects({
+			col_ray = col_ray
+		})
 	end
 end
 
--- Lines: 81 to 92
+-- Lines 81-92
 function KillzoneManager:_deal_damage(unit)
 	if unit:character_damage():need_revive() then
 		return
@@ -105,27 +109,31 @@ function KillzoneManager:_deal_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines: 94 to 97
+-- Lines 94-97
 function KillzoneManager:_deal_gas_damage(unit)
 	local attack_data = {
 		damage = 0.75,
-		col_ray = {ray = math.UP}
+		col_ray = {
+			ray = math.UP
+		}
 	}
 
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines: 99 to 102
+-- Lines 99-102
 function KillzoneManager:_deal_fire_damage(unit)
 	local attack_data = {
 		damage = 0.5,
-		col_ray = {ray = math.UP}
+		col_ray = {
+			ray = math.UP
+		}
 	}
 
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines: 105 to 119
+-- Lines 104-119
 function KillzoneManager:_add_unit(unit, type)
 	if type == "sniper" then
 		local next_shot = math.rand(1)
@@ -162,8 +170,7 @@ function KillzoneManager:_add_unit(unit, type)
 	end
 end
 
--- Lines: 121 to 123
+-- Lines 121-123
 function KillzoneManager:_remove_unit(unit)
 	self._units[unit:key()] = nil
 end
-

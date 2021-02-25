@@ -1,29 +1,29 @@
 NpcVehicleStatePlayerProximity = NpcVehicleStatePlayerProximity or class(NpcBaseVehicleState)
 
--- Lines: 3 to 6
+-- Lines 3-6
 function NpcVehicleStatePlayerProximity:init(unit)
 	NpcBaseVehicleState.init(self, unit)
 end
 
--- Lines: 11 to 12
+-- Lines 10-12
 function NpcVehicleStatePlayerProximity:on_enter(npc_driving_ext)
 end
 
--- Lines: 17 to 19
+-- Lines 15-19
 function NpcVehicleStatePlayerProximity:on_exit(npc_driving_ext)
 	managers.motion_path:reset_player_proximity_distance()
 end
 
--- Lines: 22 to 23
+-- Lines 22-23
 function NpcVehicleStatePlayerProximity:update(t, dt)
 end
 
--- Lines: 25 to 26
+-- Lines 25-27
 function NpcVehicleStatePlayerProximity:name()
 	return NpcVehicleDrivingExt.STATE_PLAYER_PROXIMITY
 end
 
--- Lines: 34 to 61
+-- Lines 31-61
 function NpcVehicleStatePlayerProximity:change_state(npc_driving_ext)
 	local player_unit = npc_driving_ext:_get_target_unit()
 
@@ -46,4 +46,3 @@ function NpcVehicleStatePlayerProximity:change_state(npc_driving_ext)
 		npc_driving_ext:set_state(NpcVehicleDrivingExt.STATE_PURSUIT)
 	end
 end
-

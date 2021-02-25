@@ -5,7 +5,7 @@ ModifierCivilianAlarm.desc_id = "menu_cs_modifier_civs"
 ModifierCivilianAlarm.default_value = "count"
 ModifierCivilianAlarm.stealth = true
 
--- Lines: 10 to 17
+-- Lines 9-17
 function ModifierCivilianAlarm:OnCivilianKilled()
 	self._body_count = (self._body_count or 0) + 1
 
@@ -15,4 +15,3 @@ function ModifierCivilianAlarm:OnCivilianKilled()
 		self._alarmed = true
 	end
 end
-

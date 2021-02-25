@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementEquipment = ElementEquipment or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementEquipment:init(...)
 	ElementEquipment.super.init(self, ...)
 end
 
--- Lines: 13 to 30
+-- Lines 13-30
 function ElementEquipment:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -35,4 +35,3 @@ function ElementEquipment:on_executed(instigator)
 
 	ElementEquipment.super.on_executed(self, instigator)
 end
-

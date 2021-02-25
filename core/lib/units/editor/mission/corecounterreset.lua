@@ -1,13 +1,15 @@
 CoreCounterResetUnitElement = CoreCounterResetUnitElement or class(MissionElement)
-CoreCounterResetUnitElement.LINK_ELEMENTS = {"elements"}
+CoreCounterResetUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 CounterResetUnitElement = CounterResetUnitElement or class(CoreCounterResetUnitElement)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function CounterResetUnitElement:init(...)
 	CoreCounterResetUnitElement.init(self, ...)
 end
 
--- Lines: 10 to 18
+-- Lines 10-18
 function CoreCounterResetUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -18,7 +20,7 @@ function CoreCounterResetUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 20 to 29
+-- Lines 20-29
 function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -38,11 +40,11 @@ function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 31 to 32
+-- Lines 31-32
 function CoreCounterResetUnitElement:update_editing()
 end
 
--- Lines: 34 to 44
+-- Lines 34-44
 function CoreCounterResetUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -60,18 +62,20 @@ function CoreCounterResetUnitElement:add_element()
 	end
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function CoreCounterResetUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 51 to 77
+-- Lines 51-77
 function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_counter/logic_counter"}
+	local names = {
+		"logic_counter/logic_counter"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 
@@ -98,4 +102,3 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = counter_target
 	})
 end
-

@@ -1,6 +1,6 @@
 CoreDBDialog = CoreDBDialog or class()
 
--- Lines: 3 to 9
+-- Lines 3-9
 function CoreDBDialog:init(type_to_pick, cb_self, cb, db)
 	self._browser_data = {
 		type_to_pick = type_to_pick,
@@ -10,7 +10,7 @@ function CoreDBDialog:init(type_to_pick, cb_self, cb, db)
 	self._window = CoreDatabaseBrowser:new(self._browser_data, db)
 end
 
--- Lines: 11 to 25
+-- Lines 11-25
 function CoreDBDialog:update(t, dt)
 	if self._window then
 		self._window:update(t, dt)
@@ -31,21 +31,22 @@ function CoreDBDialog:update(t, dt)
 	end
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function CoreDBDialog:get_value()
 	return self._browser_data.entry
 end
 
--- Lines: 31 to 35
+-- Lines 31-35
 function CoreDBDialog:destroy()
 	if self._window then
 		self._window:close()
 	end
 end
+
 CoreDatabaseBrowser = CoreDatabaseBrowser or class()
 CoreDatabaseBrowser.LC_BUGFIX = true
 
--- Lines: 44 to 66
+-- Lines 44-66
 function CoreDatabaseBrowser:init(browser_data, db)
 	min_exe_version("1.0.0.7607", "CoreDatabaseBrowser")
 
@@ -65,7 +66,7 @@ function CoreDatabaseBrowser:init(browser_data, db)
 	self:check_news(true)
 end
 
--- Lines: 68 to 78
+-- Lines 68-79
 function CoreDatabaseBrowser:check_open()
 	if open_editor and not self._browser_data then
 		local frame = EWS:Frame("", Vector3(0, 0, 0), Vector3(0, 0, 0), "")
@@ -82,7 +83,7 @@ function CoreDatabaseBrowser:check_open()
 	return false
 end
 
--- Lines: 81 to 320
+-- Lines 81-320
 function CoreDatabaseBrowser:create_main_frame()
 	local style = "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE"
 
@@ -300,7 +301,7 @@ function CoreDatabaseBrowser:create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 322 to 328
+-- Lines 322-328
 function CoreDatabaseBrowser:on_set_db(data, event)
 	self._db_menu:set_checked("DB_PROJECT", false)
 	self._db_menu:set_checked("DB_CORE", false)
@@ -311,28 +312,37 @@ function CoreDatabaseBrowser:on_set_db(data, event)
 	self:on_read_database()
 end
 
--- Lines: 330 to 332
+-- Lines 330-332
 function CoreDatabaseBrowser:on_check_news()
 	self:check_news()
 end
 
--- Lines: 334 to 354
+-- Lines 334-354
 function CoreDatabaseBrowser:check_news(new_only)
 	local news = nil
-	news = new_only and managers.news:get_news("database_browser", self._main_frame) or managers.news:get_old_news("database_browser", self._main_frame)
+
+	if new_only then
+		news = managers.news:get_news("database_browser", self._main_frame)
+	else
+		news = managers.news:get_old_news("database_browser", self._main_frame)
+	end
 
 	if news then
 		local str = nil
 
 		for _, n in ipairs(news) do
-			str = not str and n or str .. "\n" .. n
+			if not str then
+				str = n
+			else
+				str = str .. "\n" .. n
+			end
 		end
 
 		EWS:MessageDialog(self._main_frame, str, "New Features!", "OK,ICON_INFORMATION"):show_modal()
 	end
 end
 
--- Lines: 356 to 364
+-- Lines 356-364
 function CoreDatabaseBrowser:on_dirty_entrys()
 	if self._dirty_flag then
 		cat_print("debug", "The database is dirty and it needs to be reloaded. RELOADING!")
@@ -343,17 +353,17 @@ function CoreDatabaseBrowser:on_dirty_entrys()
 	self._dirty_flag = true
 end
 
--- Lines: 366 to 368
+-- Lines 366-368
 function CoreDatabaseBrowser:on_search_local_changes()
 	self:append_local_changes()
 end
 
--- Lines: 370 to 371
+-- Lines 370-372
 function CoreDatabaseBrowser:filter_local_changes(entry)
 	return string.find(entry:name(), self._local_box.search_text_ctrl:get_value()) ~= nil
 end
 
--- Lines: 374 to 410
+-- Lines 374-410
 function CoreDatabaseBrowser:append_local_changes()
 	local db_changes = self._active_database:local_changes()
 	local change_table = {}
@@ -395,7 +405,7 @@ function CoreDatabaseBrowser:append_local_changes()
 	end
 end
 
--- Lines: 412 to 417
+-- Lines 412-418
 function CoreDatabaseBrowser:format_comment(str)
 	local comment = ""
 
@@ -406,12 +416,12 @@ function CoreDatabaseBrowser:format_comment(str)
 	return comment
 end
 
--- Lines: 420 to 421
+-- Lines 420-422
 function CoreDatabaseBrowser:is_entry_raw(entry)
 	return entry:property("platform") == "raw" or entry:property("platform") == "ps3raw" or entry:property("platform") == "x360raw"
 end
 
--- Lines: 424 to 544
+-- Lines 424-544
 function CoreDatabaseBrowser:on_commit_btn()
 	local conversion_dialog = self._op_menu:is_checked("OP_AUTO_CONVERT_TEXTURES") and EWS:MessageDialog(self._main_frame, "The Image Exporter Tool will try to convert this texture(s) for all other platforms.", "Conversion", "OK,ICON_INFORMATION") or nil
 
@@ -531,7 +541,7 @@ function CoreDatabaseBrowser:on_commit_btn()
 	end
 end
 
--- Lines: 546 to 576
+-- Lines 546-576
 function CoreDatabaseBrowser:on_revert_btn()
 	if #self._local_box.list_box:selected_indices() > 0 and self._revert_dialog:show_modal() == "ID_YES" then
 		local flag = nil
@@ -570,14 +580,14 @@ function CoreDatabaseBrowser:on_revert_btn()
 	end
 end
 
--- Lines: 578 to 582
+-- Lines 578-582
 function CoreDatabaseBrowser:on_update_btn()
 	self._active_database:load()
 	self:append_local_changes()
 	self:on_read_database()
 end
 
--- Lines: 584 to 617
+-- Lines 584-617
 function CoreDatabaseBrowser:on_import_xml()
 	if not self._browser_data and self._open_xml_file_dialog:show_modal() then
 		local dialog_path = self._open_xml_file_dialog:get_path()
@@ -621,7 +631,7 @@ function CoreDatabaseBrowser:on_import_xml()
 	end
 end
 
--- Lines: 619 to 626
+-- Lines 619-626
 function CoreDatabaseBrowser:create_node(node, parent)
 	for key, value in pairs(parent:parameter_map()) do
 		node:set_parameter(key, value)
@@ -632,11 +642,11 @@ function CoreDatabaseBrowser:create_node(node, parent)
 	end
 end
 
--- Lines: 628 to 654
+-- Lines 628-654
 function CoreDatabaseBrowser:on_read_database()
 	self._entrys = {}
 
-	-- Lines: 631 to 635
+	-- Lines 631-636
 	local function apply_type_filter(type_combobox, dest_type_combobox)
 		local t = type_combobox:get_value()
 		local entries = t == "[all]" and self._active_database:all(false) or self._active_database:all(false, t)
@@ -664,7 +674,7 @@ function CoreDatabaseBrowser:on_read_database()
 	self:on_search()
 end
 
--- Lines: 656 to 661
+-- Lines 656-662
 function CoreDatabaseBrowser:create_unique_name(entry)
 	local str = entry:type() .. " - " .. entry:name()
 
@@ -675,13 +685,13 @@ function CoreDatabaseBrowser:create_unique_name(entry)
 	return str
 end
 
--- Lines: 664 to 674
+-- Lines 664-675
 function CoreDatabaseBrowser:get_meta_data(selected_type, selected)
 	local str = ""
 	local entry = self._entrys[selected]
 
 	if entry then
-		for i = 1, entry:num_metadatas(), 1 do
+		for i = 1, entry:num_metadatas() do
 			local meta_key = entry:metadata_key(i - 1)
 			local meta_value = entry:metadata_value(i - 1)
 			str = str .. meta_key .. "->" .. meta_value .. "\n"
@@ -691,13 +701,13 @@ function CoreDatabaseBrowser:get_meta_data(selected_type, selected)
 	return str
 end
 
--- Lines: 677 to 702
+-- Lines 677-702
 function CoreDatabaseBrowser:on_view_metadata()
 	local str = nil
 
 	if self._main_notebook:get_current_page() == self._main_notebook:get_page(0) then
 		if #self._search_box.list_box:selected_indices() > 0 then
-			for i = 1, #self._search_box.list_box:selected_indices(), 1 do
+			for i = 1, #self._search_box.list_box:selected_indices() do
 				local selected = self._search_box.list_box:get_string(self._search_box.list_box:selected_indices()[i])
 				local entry = self._active_database:lookup(self._entrys[selected]:type(), self._entrys[selected]:name(), self._entrys[selected]:properties())
 
@@ -710,7 +720,7 @@ function CoreDatabaseBrowser:on_view_metadata()
 		local ids = self._tree_box.tree_ctrl:selected_items()
 
 		if #ids > 0 then
-			for i = 1, #ids, 1 do
+			for i = 1, #ids do
 				local selected = self._tree_box.tree_ctrl:get_item_text(ids[i])
 				local entry = self._active_database:lookup(self._entrys[selected]:type(), self._entrys[selected]:name(), self._entrys[selected]:properties())
 
@@ -724,11 +734,11 @@ function CoreDatabaseBrowser:on_view_metadata()
 	EWS:MessageDialog(self._main_frame, str or "No metadata!", "Metadata", "OK,ICON_INFORMATION"):show_modal()
 end
 
--- Lines: 704 to 746
+-- Lines 704-746
 function CoreDatabaseBrowser:on_set_metadata()
 	if self._main_notebook:get_current_page() == self._main_notebook:get_page(0) then
 		if #self._search_box.list_box:selected_indices() > 0 and self._metadata_dialog:show_modal() then
-			for i = 1, #self._search_box.list_box:selected_indices(), 1 do
+			for i = 1, #self._search_box.list_box:selected_indices() do
 				local selected = self._search_box.list_box:get_string(self._search_box.list_box:selected_indices()[i])
 				local key, value = self._metadata_dialog:get_value()
 				local entry = self._active_database:lookup(self._entrys[selected]:type(), self._entrys[selected]:name(), self._entrys[selected]:properties())
@@ -752,7 +762,7 @@ function CoreDatabaseBrowser:on_set_metadata()
 		local ids = self._tree_box.tree_ctrl:selected_items()
 
 		if #ids > 0 and self._metadata_dialog:show_modal() then
-			for i = 1, #ids, 1 do
+			for i = 1, #ids do
 				local selected = self._tree_box.tree_ctrl:get_item_text(ids[i])
 				local key, value = self._metadata_dialog:get_value()
 				local entry = self._active_database:lookup(self._entrys[selected]:type(), self._entrys[selected]:name(), self._entrys[selected]:properties())
@@ -778,7 +788,7 @@ function CoreDatabaseBrowser:on_set_metadata()
 	self:on_read_database()
 end
 
--- Lines: 748 to 764
+-- Lines 748-764
 function CoreDatabaseBrowser:append_all_types(gui)
 	if self._browser_data and self._browser_data.type_to_pick ~= "" then
 		gui:append(self._browser_data.type_to_pick)
@@ -800,14 +810,14 @@ function CoreDatabaseBrowser:append_all_types(gui)
 	end
 end
 
--- Lines: 766 to 770
+-- Lines 766-770
 function CoreDatabaseBrowser:set_position(newpos)
 	if self._main_frame then
 		self._main_frame:set_position(newpos)
 	end
 end
 
--- Lines: 772 to 779
+-- Lines 772-779
 function CoreDatabaseBrowser:on_close(custom_data, event_object)
 	if self._browser_data then
 		self:close()
@@ -818,7 +828,7 @@ function CoreDatabaseBrowser:on_close(custom_data, event_object)
 	end
 end
 
--- Lines: 781 to 786
+-- Lines 781-786
 function CoreDatabaseBrowser:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -827,7 +837,7 @@ function CoreDatabaseBrowser:destroy()
 	end
 end
 
--- Lines: 788 to 795
+-- Lines 788-795
 function CoreDatabaseBrowser:close()
 	if self._main_frame then
 		self._main_frame:destroy()
@@ -838,7 +848,7 @@ function CoreDatabaseBrowser:close()
 	end
 end
 
--- Lines: 797 to 803
+-- Lines 797-803
 function CoreDatabaseBrowser:update(t, dt)
 	if self._search_flag then
 		self:on_read_database()
@@ -848,17 +858,17 @@ function CoreDatabaseBrowser:update(t, dt)
 	end
 end
 
--- Lines: 805 to 807
+-- Lines 805-807
 function CoreDatabaseBrowser:on_reload()
 	self:on_read_database()
 end
 
--- Lines: 809 to 811
+-- Lines 809-811
 function CoreDatabaseBrowser:on_notebook_changing()
 	self._search_flag = true
 end
 
--- Lines: 813 to 822
+-- Lines 813-822
 function CoreDatabaseBrowser:on_select()
 	if #self._search_box.list_box:selected_indices() == 1 then
 		local selected = self._search_box.list_box:get_string(self._search_box.list_box:selected_indices()[1])
@@ -871,7 +881,7 @@ function CoreDatabaseBrowser:on_select()
 	end
 end
 
--- Lines: 824 to 836
+-- Lines 824-836
 function CoreDatabaseBrowser:on_tree_ctrl_change()
 	if #self._tree_box.tree_ctrl:selected_items() > 0 then
 		local ids = self._tree_box.tree_ctrl:selected_items()
@@ -888,7 +898,7 @@ function CoreDatabaseBrowser:on_tree_ctrl_change()
 	end
 end
 
--- Lines: 838 to 844
+-- Lines 838-844
 function CoreDatabaseBrowser:get_node(node, name)
 	for n in node:children() do
 		if n:name() == name then
@@ -897,7 +907,7 @@ function CoreDatabaseBrowser:get_node(node, name)
 	end
 end
 
--- Lines: 846 to 852
+-- Lines 846-852
 function CoreDatabaseBrowser:find_node(node, name, key, value)
 	for n in node:children() do
 		if n:parameter(key) == value and (not name or n:name() == name) then
@@ -906,15 +916,14 @@ function CoreDatabaseBrowser:find_node(node, name, key, value)
 	end
 end
 
--- Lines: 856 to 924
+-- Lines 854-924
 function CoreDatabaseBrowser:update_preview(entry)
-
-	-- Lines: 855 to 856
+	-- Lines 855-857
 	local function valid_node(node)
 		return node and node:to_xml() ~= "</>\n"
 	end
 
-	-- Lines: 859 to 871
+	-- Lines 859-871
 	local function preview_model_xml(self, node, valid_node)
 		if valid_node(node) then
 			local diesel_node = self:get_node(node, "diesel")
@@ -987,7 +996,7 @@ function CoreDatabaseBrowser:update_preview(entry)
 	self._main_frame:refresh()
 end
 
--- Lines: 926 to 936
+-- Lines 926-936
 function CoreDatabaseBrowser:reset_preview()
 	self._main_frame:freeze()
 	self._preview_panel:set_visible(true)
@@ -998,7 +1007,7 @@ function CoreDatabaseBrowser:reset_preview()
 	self._main_frame:refresh()
 end
 
--- Lines: 938 to 948
+-- Lines 938-948
 function CoreDatabaseBrowser:hide_preview()
 	self._main_frame:freeze()
 	self._preview_panel:set_visible(false)
@@ -1009,7 +1018,7 @@ function CoreDatabaseBrowser:hide_preview()
 	self._main_frame:refresh()
 end
 
--- Lines: 950 to 963
+-- Lines 950-963
 function CoreDatabaseBrowser:on_move()
 	if self._main_notebook:get_current_page() ~= self._main_notebook:get_page(0) and self._move_dialog:show_modal() then
 		local path = self._move_dialog:get_value()
@@ -1028,7 +1037,7 @@ function CoreDatabaseBrowser:on_move()
 	end
 end
 
--- Lines: 965 to 971
+-- Lines 965-972
 function CoreDatabaseBrowser:check_path(path)
 	if path ~= "" and (string.sub(path, 1, 1) ~= "/" or string.sub(path, string.len(path), string.len(path)) == "/") then
 		return false
@@ -1037,7 +1046,7 @@ function CoreDatabaseBrowser:check_path(path)
 	return true
 end
 
--- Lines: 974 to 988
+-- Lines 974-988
 function CoreDatabaseBrowser:move_entry(path)
 	if #self._tree_box.tree_ctrl:selected_items() > 0 then
 		local ids = self:filter_folders(self._tree_box.tree_ctrl:selected_items())
@@ -1055,7 +1064,7 @@ function CoreDatabaseBrowser:move_entry(path)
 	end
 end
 
--- Lines: 990 to 997
+-- Lines 990-998
 function CoreDatabaseBrowser:filter_folders(ids)
 	local out_table = {}
 
@@ -1068,7 +1077,7 @@ function CoreDatabaseBrowser:filter_folders(ids)
 	return out_table
 end
 
--- Lines: 1000 to 1010
+-- Lines 1000-1011
 function CoreDatabaseBrowser:is_folder(folder_table, id)
 	for _, child in pairs(folder_table.children) do
 		if child.id == id then
@@ -1081,7 +1090,7 @@ function CoreDatabaseBrowser:is_folder(folder_table, id)
 	return false
 end
 
--- Lines: 1013 to 1028
+-- Lines 1013-1028
 function CoreDatabaseBrowser:build_tree(path)
 	local parent = self._folder_table
 
@@ -1102,7 +1111,7 @@ function CoreDatabaseBrowser:build_tree(path)
 	end
 end
 
--- Lines: 1030 to 1039
+-- Lines 1030-1040
 function CoreDatabaseBrowser:get_tree_id(path, expand)
 	local parent = self._folder_table
 
@@ -1119,7 +1128,7 @@ function CoreDatabaseBrowser:get_tree_id(path, expand)
 	return parent.id
 end
 
--- Lines: 1042 to 1101
+-- Lines 1042-1101
 function CoreDatabaseBrowser:on_search()
 	if self._main_notebook:get_current_page() == self._main_notebook:get_page(0) then
 		self._search_box.list_box:freeze()
@@ -1188,7 +1197,7 @@ function CoreDatabaseBrowser:on_search()
 	end
 end
 
--- Lines: 1103 to 1135
+-- Lines 1103-1135
 function CoreDatabaseBrowser:on_remove()
 	if not self._browser_data then
 		if self._main_notebook:get_current_page() == self._main_notebook:get_page(0) then
@@ -1233,7 +1242,7 @@ function CoreDatabaseBrowser:on_remove()
 	end
 end
 
--- Lines: 1137 to 1150
+-- Lines 1137-1150
 function CoreDatabaseBrowser:on_special_rename(new_entry, old_name)
 	if new_entry:type() == "unit" then
 		local node = self._active_database:load_node(new_entry)
@@ -1250,7 +1259,7 @@ function CoreDatabaseBrowser:on_special_rename(new_entry, old_name)
 	end
 end
 
--- Lines: 1152 to 1166
+-- Lines 1152-1167
 function CoreDatabaseBrowser:_rename_and_transfer_metadata(entry, new_name)
 	local old_name = entry:name()
 	local old_ref = self._active_database:lookup(entry:type(), old_name, entry:properties())
@@ -1269,7 +1278,7 @@ function CoreDatabaseBrowser:_rename_and_transfer_metadata(entry, new_name)
 	return new_ref
 end
 
--- Lines: 1169 to 1226
+-- Lines 1169-1226
 function CoreDatabaseBrowser:on_rename()
 	if not self._browser_data then
 		if self._main_notebook:get_current_page() == self._main_notebook:get_page(0) then
@@ -1330,7 +1339,7 @@ function CoreDatabaseBrowser:on_rename()
 	end
 end
 
--- Lines: 1228 to 1233
+-- Lines 1228-1234
 function CoreDatabaseBrowser:unpack_prop(in_table, target)
 	local str = " "
 
@@ -1341,7 +1350,7 @@ function CoreDatabaseBrowser:unpack_prop(in_table, target)
 	return str
 end
 
--- Lines: 1236 to 1266
+-- Lines 1236-1266
 function CoreDatabaseBrowser:convert_to_x360(entry)
 	if self._op_menu:is_checked("OP_AUTO_CONVERT_TEXTURES") then
 		local prop = entry:properties()
@@ -1376,7 +1385,7 @@ function CoreDatabaseBrowser:convert_to_x360(entry)
 	end
 end
 
--- Lines: 1268 to 1299
+-- Lines 1268-1299
 function CoreDatabaseBrowser:convert_to_ps3(entry)
 	if self._op_menu:is_checked("OP_AUTO_CONVERT_TEXTURES") then
 		local prop = entry:properties()
@@ -1396,7 +1405,12 @@ function CoreDatabaseBrowser:convert_to_ps3(entry)
 
 		prop.platform = "ps3"
 		local str = "imageexportertool -d \"" .. Application:base_path() .. "db\" -sn " .. raw_texture:name() .. self:unpack_prop(raw_texture:properties(), "sp") .. "-qpf A8L8"
-		str = Application:system(str, true, true) == 0 and "imageexportertool -d \"" .. Application:base_path() .. "db\" -sn " .. raw_texture:name() .. self:unpack_prop(raw_texture:properties(), "sp") .. "-dn " .. raw_texture:name() .. self:unpack_prop(prop, "dp") .. "-f gtf -p DXT5_NM" or "imageexportertool -d \"" .. Application:base_path() .. "db\" -sn " .. raw_texture:name() .. self:unpack_prop(raw_texture:properties(), "sp") .. "-dn " .. raw_texture:name() .. self:unpack_prop(prop, "dp") .. "-f gtf"
+
+		if Application:system(str, true, true) == 0 then
+			str = "imageexportertool -d \"" .. Application:base_path() .. "db\" -sn " .. raw_texture:name() .. self:unpack_prop(raw_texture:properties(), "sp") .. "-dn " .. raw_texture:name() .. self:unpack_prop(prop, "dp") .. "-f gtf -p DXT5_NM"
+		else
+			str = "imageexportertool -d \"" .. Application:base_path() .. "db\" -sn " .. raw_texture:name() .. self:unpack_prop(raw_texture:properties(), "sp") .. "-dn " .. raw_texture:name() .. self:unpack_prop(prop, "dp") .. "-f gtf"
+		end
 
 		cat_print("debug", "[CoreDatabaseBrowser] " .. str)
 		Application:system(str, true, true)
@@ -1405,9 +1419,10 @@ function CoreDatabaseBrowser:convert_to_ps3(entry)
 		return self._active_database:lookup("texture", raw_texture:name(), prop)
 	end
 end
+
 CoreDatabaseBrowserMoveDialog = CoreDatabaseBrowserMoveDialog or class()
 
--- Lines: 1305 to 1327
+-- Lines 1305-1327
 function CoreDatabaseBrowserMoveDialog:init(editor, p)
 	self._dialog = EWS:Dialog(p, "Move", "", Vector3(-1, -1, 0), Vector3(300, 75, 0), "CAPTION,SYSTEM_MENU,STAY_ON_TOP")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -1431,7 +1446,7 @@ function CoreDatabaseBrowserMoveDialog:init(editor, p)
 	self._text_ctrl:set_focus()
 end
 
--- Lines: 1329 to 1340
+-- Lines 1329-1341
 function CoreDatabaseBrowserMoveDialog:show_modal()
 	self._text_ctrl:set_value("")
 
@@ -1447,7 +1462,7 @@ function CoreDatabaseBrowserMoveDialog:show_modal()
 	return self._return_val
 end
 
--- Lines: 1343 to 1347
+-- Lines 1343-1347
 function CoreDatabaseBrowserMoveDialog:on_move_button()
 	self._done = true
 	self._resault = self._text_ctrl:get_value()
@@ -1455,7 +1470,7 @@ function CoreDatabaseBrowserMoveDialog:on_move_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1349 to 1353
+-- Lines 1349-1353
 function CoreDatabaseBrowserMoveDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -1463,13 +1478,14 @@ function CoreDatabaseBrowserMoveDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1355 to 1356
+-- Lines 1355-1357
 function CoreDatabaseBrowserMoveDialog:get_value()
 	return self._resault
 end
+
 CoreDatabaseBrowserImportDialog = CoreDatabaseBrowserImportDialog or class()
 
--- Lines: 1363 to 1390
+-- Lines 1363-1390
 function CoreDatabaseBrowserImportDialog:init(editor, p)
 	self._dialog = EWS:Dialog(p, "New Entry", "", Vector3(-1, -1, 0), Vector3(300, 86, 0), "CAPTION,SYSTEM_MENU,STAY_ON_TOP")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -1500,7 +1516,7 @@ function CoreDatabaseBrowserImportDialog:init(editor, p)
 	self._dialog:set_sizer(box)
 end
 
--- Lines: 1392 to 1405
+-- Lines 1392-1406
 function CoreDatabaseBrowserImportDialog:show_modal()
 	self._type_combobox:set_value("")
 	self._name_text_ctrl:set_value("")
@@ -1518,7 +1534,7 @@ function CoreDatabaseBrowserImportDialog:show_modal()
 	return self._return_val
 end
 
--- Lines: 1408 to 1413
+-- Lines 1408-1413
 function CoreDatabaseBrowserImportDialog:on_import_button()
 	self._done = true
 	self._type = self._type_combobox:get_value()
@@ -1527,7 +1543,7 @@ function CoreDatabaseBrowserImportDialog:on_import_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1415 to 1419
+-- Lines 1415-1419
 function CoreDatabaseBrowserImportDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -1535,13 +1551,14 @@ function CoreDatabaseBrowserImportDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1421 to 1422
+-- Lines 1421-1423
 function CoreDatabaseBrowserImportDialog:get_value()
 	return self._type, self._name
 end
+
 CoreDatabaseBrowserMetadataDialog = CoreDatabaseBrowserMetadataDialog or class()
 
--- Lines: 1429 to 1457
+-- Lines 1429-1457
 function CoreDatabaseBrowserMetadataDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Set Metadata", "", Vector3(-1, -1, 0), Vector3(300, 86, 0), "CAPTION,SYSTEM_MENU,STAY_ON_TOP")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -1572,7 +1589,7 @@ function CoreDatabaseBrowserMetadataDialog:init(p)
 	self._key_text_ctrl:set_focus()
 end
 
--- Lines: 1459 to 1472
+-- Lines 1459-1473
 function CoreDatabaseBrowserMetadataDialog:show_modal()
 	self._key_text_ctrl:set_value("")
 	self._value_text_ctrl:set_value("")
@@ -1590,7 +1607,7 @@ function CoreDatabaseBrowserMetadataDialog:show_modal()
 	return self._return_val
 end
 
--- Lines: 1475 to 1480
+-- Lines 1475-1480
 function CoreDatabaseBrowserMetadataDialog:on_set_button()
 	self._done = true
 	self._key = self._key_text_ctrl:get_value()
@@ -1599,7 +1616,7 @@ function CoreDatabaseBrowserMetadataDialog:on_set_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1482 to 1486
+-- Lines 1482-1486
 function CoreDatabaseBrowserMetadataDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -1607,13 +1624,14 @@ function CoreDatabaseBrowserMetadataDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1488 to 1489
+-- Lines 1488-1490
 function CoreDatabaseBrowserMetadataDialog:get_value()
 	return self._key, self._value
 end
+
 CoreDatabaseBrowserInputDialog = CoreDatabaseBrowserInputDialog or class()
 
--- Lines: 1496 to 1520
+-- Lines 1496-1520
 function CoreDatabaseBrowserInputDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Comment", "", Vector3(-1, -1, 0), Vector3(300, 86, 0), "CAPTION,SYSTEM_MENU,STAY_ON_TOP")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -1639,7 +1657,7 @@ function CoreDatabaseBrowserInputDialog:init(p)
 	self._key_text_ctrl:set_focus()
 end
 
--- Lines: 1522 to 1533
+-- Lines 1522-1534
 function CoreDatabaseBrowserInputDialog:show_modal()
 	self._key_text_ctrl:set_value("")
 
@@ -1655,7 +1673,7 @@ function CoreDatabaseBrowserInputDialog:show_modal()
 	return self._return_val
 end
 
--- Lines: 1536 to 1540
+-- Lines 1536-1540
 function CoreDatabaseBrowserInputDialog:on_ok_button()
 	self._done = true
 	self._key = self._key_text_ctrl:get_value()
@@ -1663,7 +1681,7 @@ function CoreDatabaseBrowserInputDialog:on_ok_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1542 to 1546
+-- Lines 1542-1546
 function CoreDatabaseBrowserInputDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -1671,13 +1689,14 @@ function CoreDatabaseBrowserInputDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1548 to 1549
+-- Lines 1548-1550
 function CoreDatabaseBrowserInputDialog:get_value()
 	return self._key
 end
+
 CoreDatabaseBrowserRenameDialog = CoreDatabaseBrowserRenameDialog or class()
 
--- Lines: 1556 to 1580
+-- Lines 1556-1580
 function CoreDatabaseBrowserRenameDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Rename", "", Vector3(-1, -1, 0), Vector3(300, 86, 0), "CAPTION,SYSTEM_MENU,STAY_ON_TOP")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -1703,7 +1722,7 @@ function CoreDatabaseBrowserRenameDialog:init(p)
 	self._key_text_ctrl:set_focus()
 end
 
--- Lines: 1582 to 1591
+-- Lines 1582-1592
 function CoreDatabaseBrowserRenameDialog:show_modal()
 	self._key = nil
 	self._done = false
@@ -1717,7 +1736,7 @@ function CoreDatabaseBrowserRenameDialog:show_modal()
 	return self._return_val
 end
 
--- Lines: 1594 to 1598
+-- Lines 1594-1598
 function CoreDatabaseBrowserRenameDialog:on_ok_button()
 	self._done = true
 	self._key = self._key_text_ctrl:get_value()
@@ -1725,7 +1744,7 @@ function CoreDatabaseBrowserRenameDialog:on_ok_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1600 to 1604
+-- Lines 1600-1604
 function CoreDatabaseBrowserRenameDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -1733,13 +1752,12 @@ function CoreDatabaseBrowserRenameDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 1606 to 1607
+-- Lines 1606-1608
 function CoreDatabaseBrowserRenameDialog:get_value()
 	return self._key
 end
 
--- Lines: 1610 to 1612
+-- Lines 1610-1612
 function CoreDatabaseBrowserRenameDialog:set_value(str)
 	self._key_text_ctrl:set_value(str)
 end
-

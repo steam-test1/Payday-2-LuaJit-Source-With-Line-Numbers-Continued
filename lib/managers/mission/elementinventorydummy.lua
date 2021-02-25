@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementInventoryDummy = ElementInventoryDummy or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 10
+-- Lines 5-10
 function ElementInventoryDummy:init(...)
 	ElementInventoryDummy.super.init(self, ...)
 
@@ -11,11 +11,11 @@ function ElementInventoryDummy:init(...)
 	end
 end
 
--- Lines: 13 to 14
+-- Lines 12-14
 function ElementInventoryDummy:client_on_executed(...)
 end
 
--- Lines: 16 to 32
+-- Lines 16-32
 function ElementInventoryDummy:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -32,7 +32,7 @@ function ElementInventoryDummy:on_executed(instigator)
 	ElementInventoryDummy.super.on_executed(self, instigator)
 end
 
--- Lines: 36 to 54
+-- Lines 34-54
 function ElementInventoryDummy:_spawn_weapon(category, slot, position, rotation)
 	if not Network:is_server() then
 		return
@@ -56,7 +56,7 @@ function ElementInventoryDummy:_spawn_weapon(category, slot, position, rotation)
 	managers.sync:add_synced_weapon_blueprint(self._id, slot_data.factory_id, slot_data.blueprint)
 end
 
--- Lines: 57 to 72
+-- Lines 56-72
 function ElementInventoryDummy:assemble_weapon(factory_id, blueprint, position, rotation)
 	position = position or self._values.position
 	rotation = rotation or self._values.rotation
@@ -70,7 +70,7 @@ function ElementInventoryDummy:assemble_weapon(factory_id, blueprint, position, 
 	self._weapon_unit:set_moving(true)
 end
 
--- Lines: 74 to 78
+-- Lines 74-78
 function ElementInventoryDummy:_assemble_completed(parts, blueprint)
 	self._parts = parts
 	self._blueprint = blueprint
@@ -78,7 +78,7 @@ function ElementInventoryDummy:_assemble_completed(parts, blueprint)
 	self._weapon_unit:set_moving(true)
 end
 
--- Lines: 84 to 102
+-- Lines 82-102
 function ElementInventoryDummy:_spawn_mask(category, slot, position, rotation)
 	if not Network:is_server() then
 		return
@@ -102,7 +102,7 @@ function ElementInventoryDummy:_spawn_mask(category, slot, position, rotation)
 	managers.sync:add_synced_mask_blueprint(self._id, slot_data.mask_id, slot_data.blueprint)
 end
 
--- Lines: 105 to 125
+-- Lines 104-125
 function ElementInventoryDummy:assemble_mask(mask_id, blueprint, position, rotation)
 	position = position or self._values.position
 	rotation = rotation or self._values.rotation
@@ -122,14 +122,14 @@ function ElementInventoryDummy:assemble_mask(mask_id, blueprint, position, rotat
 	self._mask_unit:set_moving(true)
 end
 
--- Lines: 129 to 133
+-- Lines 129-133
 function ElementInventoryDummy:pre_destroy()
 	ElementInventoryDummy.super.pre_destroy(self)
 	self:_destroy_weapon()
 	self:_destroy_mask()
 end
 
--- Lines: 135 to 145
+-- Lines 135-145
 function ElementInventoryDummy:_destroy_weapon()
 	if alive(self._weapon_unit) then
 		managers.weapon_factory:disassemble(self._parts)
@@ -142,7 +142,7 @@ function ElementInventoryDummy:_destroy_weapon()
 	end
 end
 
--- Lines: 147 to 157
+-- Lines 147-157
 function ElementInventoryDummy:_destroy_mask()
 	if alive(self._mask_unit) then
 		for _, linked_unit in ipairs(self._mask_unit:children()) do
@@ -156,4 +156,3 @@ function ElementInventoryDummy:_destroy_mask()
 		managers.dyn_resource:unload(Idstring("unit"), name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
 end
-

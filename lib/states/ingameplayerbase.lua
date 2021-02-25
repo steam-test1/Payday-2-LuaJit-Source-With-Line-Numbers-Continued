@@ -2,12 +2,12 @@ require("lib/states/GameState")
 
 IngamePlayerBaseState = IngamePlayerBaseState or class(GameState)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function IngamePlayerBaseState:init(...)
 	GameState.init(self, ...)
 end
 
--- Lines: 9 to 31
+-- Lines 9-31
 function IngamePlayerBaseState:set_controller_enabled(enabled)
 	local players = managers.player:players()
 
@@ -30,4 +30,3 @@ function IngamePlayerBaseState:set_controller_enabled(enabled)
 		end
 	end
 end
-

@@ -11,7 +11,7 @@ local REWARD_SIZE = 100
 local MAX_REWARDS_DISPLAYED = 2
 CustomSafehouseGuiPageTrophies = CustomSafehouseGuiPageTrophies or class(CustomSafehouseGuiPage)
 
--- Lines: 19 to 29
+-- Lines 18-29
 function CustomSafehouseGuiPageTrophies:init(page_id, page_panel, fullscreen_panel, gui)
 	CustomSafehouseGuiPageTrophies.super.init(self, page_id, page_panel, fullscreen_panel, gui)
 
@@ -23,17 +23,21 @@ function CustomSafehouseGuiPageTrophies:init(page_id, page_panel, fullscreen_pan
 	self:_setup_trophies_list()
 end
 
--- Lines: 32 to 76
+-- Lines 31-76
 function CustomSafehouseGuiPageTrophies:_setup_trophies_list()
 	self._trophies = {}
-	local scroll = ScrollablePanel:new(self:panel(), "TrophiesPanel", {padding = 0})
+	local scroll = ScrollablePanel:new(self:panel(), "TrophiesPanel", {
+		padding = 0
+	})
 
-	BoxGuiObject:new(scroll:panel(), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(scroll:panel(), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self._trophies_scroll = scroll
 
@@ -77,10 +81,14 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_list()
 	end
 end
 
--- Lines: 80 to 326
+-- Lines 78-326
 function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
-	local buttons_panel = self:info_panel():panel({name = "buttons_panel"})
-	local trophy_panel = self:info_panel():panel({name = "trophy_panel"})
+	local buttons_panel = self:info_panel():panel({
+		name = "buttons_panel"
+	})
+	local trophy_panel = self:info_panel():panel({
+		name = "trophy_panel"
+	})
 	local buttons = {}
 	local button_panel_h = nil
 
@@ -125,7 +133,7 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 	end
 
 	if button_panel_h > 0 then
-		trophy_panel:set_h((self:info_panel():h() - button_panel_h) - PANEL_PADDING)
+		trophy_panel:set_h(self:info_panel():h() - button_panel_h - PANEL_PADDING)
 	else
 		trophy_panel:set_h(self:info_panel():h())
 	end
@@ -133,22 +141,26 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 	buttons_panel:set_h(button_panel_h)
 	buttons_panel:set_bottom(self:info_panel():bottom())
 
-	self._buttons_box_panel = BoxGuiObject:new(buttons_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._buttons_box_panel = BoxGuiObject:new(buttons_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	local scroll = ScrollablePanel:new(trophy_panel, "TrophyInfoPanel")
 
 	scroll:on_canvas_updated_callback(callback(self, self, "update_info_panel_width"))
 
-	self._trophy_box_panel = BoxGuiObject:new(scroll:panel(), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._trophy_box_panel = BoxGuiObject:new(scroll:panel(), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	self._info_scroll = scroll
 
 	table.insert(self._scrollable_panels, scroll)
@@ -205,12 +217,14 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 		y = image_panel:h() * 2 * -1
 	})
 	self._scanline_effect = image_scanlines
-	self._image_outline = BoxGuiObject:new(image_panel, {sides = {
-		2,
-		2,
-		2,
-		2
-	}})
+	self._image_outline = BoxGuiObject:new(image_panel, {
+		sides = {
+			2,
+			2,
+			2,
+			2
+		}
+	})
 
 	self._image_outline:set_color(Color(0.2, 1, 1, 1))
 	self._image_outline:set_blend_mode("add")
@@ -329,7 +343,9 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 		font_size = small_font_size,
 		font = small_font,
 		color = tweak_data.screen_colors.title,
-		text = managers.localization:text("bm_cs_continental_coin_cost", {cost = tweak_data.safehouse.rewards.challenge}),
+		text = managers.localization:text("bm_cs_continental_coin_cost", {
+			cost = tweak_data.safehouse.rewards.challenge
+		}),
 		w = scroll:canvas():w()
 	})
 
@@ -357,7 +373,7 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_info()
 	scroll:update_canvas_size()
 end
 
--- Lines: 328 to 352
+-- Lines 328-352
 function CustomSafehouseGuiPageTrophies:_setup_trophies_counter()
 	local total = 0
 	local completed = 0
@@ -388,14 +404,14 @@ function CustomSafehouseGuiPageTrophies:_setup_trophies_counter()
 	self._trophy_counter:set_right(self._gui._panel:w())
 end
 
--- Lines: 354 to 356
+-- Lines 354-357
 function CustomSafehouseGuiPageTrophies:set_active(active)
 	self._trophy_counter:set_visible(active)
 
 	return CustomSafehouseGuiPageTrophies.super.set_active(self, active)
 end
 
--- Lines: 360 to 388
+-- Lines 359-388
 function CustomSafehouseGuiPageTrophies:update_info_panel_width(new_width)
 	local info_panel = self._info_scroll:canvas()
 	local desc_text = info_panel:child("DescText")
@@ -410,12 +426,14 @@ function CustomSafehouseGuiPageTrophies:update_info_panel_width(new_width)
 	image_panel:set_h(new_width / 2)
 	self._image_outline:close()
 
-	self._image_outline = BoxGuiObject:new(image_panel, {sides = {
-		2,
-		2,
-		2,
-		2
-	}})
+	self._image_outline = BoxGuiObject:new(image_panel, {
+		sides = {
+			2,
+			2,
+			2,
+			2
+		}
+	})
 
 	self._image_outline:set_color(Color(0.2, 1, 1, 1))
 	self._image_outline:set_blend_mode("add")
@@ -431,7 +449,7 @@ function CustomSafehouseGuiPageTrophies:update_info_panel_width(new_width)
 	end
 end
 
--- Lines: 391 to 499
+-- Lines 390-499
 function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 	local info_panel = self._info_scroll:canvas()
 	local title_text = info_panel:child("TitleText")
@@ -540,7 +558,7 @@ function CustomSafehouseGuiPageTrophies:set_trophy_info(trophy, update_size)
 	end
 end
 
--- Lines: 501 to 507
+-- Lines 501-507
 function CustomSafehouseGuiPageTrophies:_show_all_trophies()
 	for i, trophy in ipairs(self._trophies) do
 		managers.custom_safehouse:set_trophy_displayed(trophy:trophy_data().id, true)
@@ -550,7 +568,7 @@ function CustomSafehouseGuiPageTrophies:_show_all_trophies()
 	self:refresh()
 end
 
--- Lines: 509 to 515
+-- Lines 509-515
 function CustomSafehouseGuiPageTrophies:_hide_all_trophies()
 	for i, trophy in ipairs(self._trophies) do
 		managers.custom_safehouse:set_trophy_displayed(trophy:trophy_data().id, false)
@@ -560,7 +578,7 @@ function CustomSafehouseGuiPageTrophies:_hide_all_trophies()
 	self:refresh()
 end
 
--- Lines: 518 to 558
+-- Lines 517-558
 function CustomSafehouseGuiPageTrophies:_set_selected(trophy, skip_sound)
 	if not trophy then
 		return false
@@ -603,13 +621,13 @@ function CustomSafehouseGuiPageTrophies:_set_selected(trophy, skip_sound)
 	end
 end
 
--- Lines: 560 to 563
+-- Lines 560-563
 function CustomSafehouseGuiPageTrophies:refresh()
 	CustomSafehouseGuiPageTrophies.super.refresh(self)
 	self:_set_selected(self._selected_trophy, true)
 end
 
--- Lines: 566 to 606
+-- Lines 565-606
 function CustomSafehouseGuiPageTrophies:update_info_panel_size()
 	local active_buttons = 0
 	local button_panel_h = 0
@@ -630,7 +648,7 @@ function CustomSafehouseGuiPageTrophies:update_info_panel_size()
 	local buttons_panel = self:info_panel():child("buttons_panel")
 
 	if button_panel_h > 0 then
-		trophy_panel:set_h((self:info_panel():h() - button_panel_h) - PANEL_PADDING)
+		trophy_panel:set_h(self:info_panel():h() - button_panel_h - PANEL_PADDING)
 	else
 		trophy_panel:set_h(self:info_panel():h())
 	end
@@ -651,21 +669,25 @@ function CustomSafehouseGuiPageTrophies:update_info_panel_size()
 		self._trophy_box_panel = nil
 	end
 
-	self._buttons_box_panel = BoxGuiObject:new(buttons_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
-	self._trophy_box_panel = BoxGuiObject:new(self._info_scroll:panel(), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._buttons_box_panel = BoxGuiObject:new(buttons_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
+	self._trophy_box_panel = BoxGuiObject:new(self._info_scroll:panel(), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 end
 
--- Lines: 611 to 625
+-- Lines 610-625
 function CustomSafehouseGuiPageTrophies:update(t, dt)
 	local cx, cy = managers.menu_component:get_right_controller_axis()
 
@@ -684,7 +706,7 @@ function CustomSafehouseGuiPageTrophies:update(t, dt)
 	end
 end
 
--- Lines: 628 to 665
+-- Lines 627-667
 function CustomSafehouseGuiPageTrophies:mouse_moved(button, x, y)
 	if not self._active then
 		return
@@ -692,7 +714,9 @@ function CustomSafehouseGuiPageTrophies:mouse_moved(button, x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:mouse_moved(button, x, y)}
+			local values = {
+				panel:mouse_moved(button, x, y)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -728,7 +752,7 @@ function CustomSafehouseGuiPageTrophies:mouse_moved(button, x, y)
 	return used, pointer
 end
 
--- Lines: 671 to 691
+-- Lines 669-691
 function CustomSafehouseGuiPageTrophies:confirm_pressed()
 	if Global.game_settings.is_playing then
 		return
@@ -749,7 +773,7 @@ function CustomSafehouseGuiPageTrophies:confirm_pressed()
 	end
 end
 
--- Lines: 694 to 724
+-- Lines 693-724
 function CustomSafehouseGuiPageTrophies:mouse_pressed(button, x, y)
 	if not self._active then
 		return
@@ -757,7 +781,9 @@ function CustomSafehouseGuiPageTrophies:mouse_pressed(button, x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:mouse_pressed(button, x, y)}
+			local values = {
+				panel:mouse_pressed(button, x, y)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -784,7 +810,7 @@ function CustomSafehouseGuiPageTrophies:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 727 to 742
+-- Lines 726-742
 function CustomSafehouseGuiPageTrophies:mouse_released(button, x, y)
 	if not self._active then
 		return
@@ -792,7 +818,9 @@ function CustomSafehouseGuiPageTrophies:mouse_released(button, x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:mouse_released(button, x, y)}
+			local values = {
+				panel:mouse_released(button, x, y)
+			}
 
 			if values[1] ~= nil then
 				self._prevent_click = (self._prevent_click or 0) + 1
@@ -803,7 +831,7 @@ function CustomSafehouseGuiPageTrophies:mouse_released(button, x, y)
 	end
 end
 
--- Lines: 745 to 759
+-- Lines 744-759
 function CustomSafehouseGuiPageTrophies:mouse_wheel_up(x, y)
 	if not self._active then
 		return
@@ -811,7 +839,9 @@ function CustomSafehouseGuiPageTrophies:mouse_wheel_up(x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:scroll(x, y, 1)}
+			local values = {
+				panel:scroll(x, y, 1)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -820,7 +850,7 @@ function CustomSafehouseGuiPageTrophies:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines: 762 to 776
+-- Lines 761-776
 function CustomSafehouseGuiPageTrophies:mouse_wheel_down(x, y)
 	if not self._active then
 		return
@@ -828,7 +858,9 @@ function CustomSafehouseGuiPageTrophies:mouse_wheel_down(x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:scroll(x, y, -1)}
+			local values = {
+				panel:scroll(x, y, -1)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -837,7 +869,7 @@ function CustomSafehouseGuiPageTrophies:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines: 778 to 783
+-- Lines 778-783
 function CustomSafehouseGuiPageTrophies:move_up()
 	if self._selected_trophy then
 		self:_set_selected(self._selected_trophy:get_linked("up"))
@@ -845,7 +877,7 @@ function CustomSafehouseGuiPageTrophies:move_up()
 	end
 end
 
--- Lines: 785 to 790
+-- Lines 785-790
 function CustomSafehouseGuiPageTrophies:move_down()
 	if self._selected_trophy then
 		self:_set_selected(self._selected_trophy:get_linked("down"))
@@ -853,7 +885,7 @@ function CustomSafehouseGuiPageTrophies:move_down()
 	end
 end
 
--- Lines: 792 to 799
+-- Lines 792-800
 function CustomSafehouseGuiPageTrophies:get_legend()
 	local legend = {}
 
@@ -867,9 +899,10 @@ function CustomSafehouseGuiPageTrophies:get_legend()
 
 	return legend
 end
+
 CustomSafehouseGuiTrophyItem = CustomSafehouseGuiTrophyItem or class(CustomSafehouseGuiItem)
 
--- Lines: 807 to 869
+-- Lines 806-869
 function CustomSafehouseGuiTrophyItem:init(panel, data, x, priority)
 	CustomSafehouseGuiTrophyItem.super.init(self, panel, data)
 
@@ -935,12 +968,12 @@ function CustomSafehouseGuiTrophyItem:init(panel, data, x, priority)
 	self:refresh()
 end
 
--- Lines: 871 to 872
+-- Lines 871-873
 function CustomSafehouseGuiTrophyItem:trophy_data()
 	return self._data
 end
 
--- Lines: 875 to 881
+-- Lines 875-881
 function CustomSafehouseGuiTrophyItem:set_text(text)
 	self._btn_text:set_text(utf8.to_upper(text))
 
@@ -951,12 +984,12 @@ function CustomSafehouseGuiTrophyItem:set_text(text)
 	self._btn_text:set_top(10)
 end
 
--- Lines: 883 to 884
+-- Lines 883-885
 function CustomSafehouseGuiTrophyItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 888 to 899
+-- Lines 887-899
 function CustomSafehouseGuiTrophyItem:show()
 	self._select_rect:set_visible(true)
 	self._complete_checkbox_highlight:set_visible(true)
@@ -969,7 +1002,7 @@ function CustomSafehouseGuiTrophyItem:show()
 	end
 end
 
--- Lines: 902 to 914
+-- Lines 901-914
 function CustomSafehouseGuiTrophyItem:hide()
 	self._select_rect:set_visible(false)
 	self._complete_checkbox_highlight:set_visible(false)
@@ -983,22 +1016,22 @@ function CustomSafehouseGuiTrophyItem:hide()
 	end
 end
 
--- Lines: 916 to 917
+-- Lines 916-918
 function CustomSafehouseGuiTrophyItem:top()
 	return self._panel:top()
 end
 
--- Lines: 920 to 921
+-- Lines 920-922
 function CustomSafehouseGuiTrophyItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines: 924 to 925
+-- Lines 924-926
 function CustomSafehouseGuiTrophyItem:visible()
 	return self._select_rect:visible()
 end
 
--- Lines: 928 to 934
+-- Lines 928-934
 function CustomSafehouseGuiTrophyItem:refresh()
 	if self._selected then
 		self:show()
@@ -1007,31 +1040,31 @@ function CustomSafehouseGuiTrophyItem:refresh()
 	end
 end
 
--- Lines: 936 to 938
+-- Lines 936-938
 function CustomSafehouseGuiTrophyItem:_update_position()
 	self._panel:set_y((self._scroll_offset or 0) + (self._priority - 1) * large_font_size + self._priority)
 end
 
--- Lines: 940 to 943
+-- Lines 940-943
 function CustomSafehouseGuiTrophyItem:set_position(i)
 	self._priority = i
 
 	self:_update_position()
 end
 
--- Lines: 945 to 948
+-- Lines 945-948
 function CustomSafehouseGuiTrophyItem:set_scroll_offset(offset)
 	self._scroll_offset = offset
 
 	self:_update_position()
 end
 
--- Lines: 950 to 951
+-- Lines 950-952
 function CustomSafehouseGuiTrophyItem:priority()
 	return self._priority
 end
 
--- Lines: 954 to 966
+-- Lines 954-966
 function CustomSafehouseGuiTrophyItem:complete()
 	if not self._is_complete then
 		self._is_complete = true
@@ -1042,12 +1075,12 @@ function CustomSafehouseGuiTrophyItem:complete()
 	end
 end
 
--- Lines: 968 to 969
+-- Lines 968-970
 function CustomSafehouseGuiTrophyItem:is_complete()
 	return self._is_complete
 end
 
--- Lines: 972 to 977
+-- Lines 972-977
 function CustomSafehouseGuiTrophyItem:link(up, down)
 	self._links = {
 		up = up,
@@ -1055,12 +1088,12 @@ function CustomSafehouseGuiTrophyItem:link(up, down)
 	}
 end
 
--- Lines: 979 to 980
+-- Lines 979-981
 function CustomSafehouseGuiTrophyItem:get_linked(link)
 	return self._links and self._links[link]
 end
 
--- Lines: 983 to 991
+-- Lines 983-991
 function CustomSafehouseGuiTrophyItem:trigger(parent)
 	if not Global.game_settings.is_playing then
 		managers.custom_safehouse:set_trophy_displayed(self:trophy_data().id, not self:trophy_data().displayed)
@@ -1071,10 +1104,11 @@ function CustomSafehouseGuiTrophyItem:trigger(parent)
 		end
 	end
 end
+
 CustomSafehouseGuiProgressItem = CustomSafehouseGuiProgressItem or class(CustomSafehouseGuiItem)
 CustomSafehouseGuiProgressItem.h = small_font_size * 1.3
 
--- Lines: 999 to 1076
+-- Lines 998-1076
 function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 	self._parent = parent_panel
 	self._objective = trophy_objective
@@ -1103,12 +1137,14 @@ function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 			w = self._panel:w(),
 			h = self._panel:h()
 		})
-		self._progress_outline = BoxGuiObject:new(self._progress_panel, {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		self._progress_outline = BoxGuiObject:new(self._progress_panel, {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 		local color = trophy_objective.completed and tweak_data.screen_colors.challenge_completed_color or tweak_data.screen_colors.button_stage_3
 		self._progress_fill = self._progress_panel:rect({
 			w = self._panel:w() * trophy_objective.progress / trophy_objective.max_progress,
@@ -1134,6 +1170,7 @@ function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 			x = PANEL_PADDING
 		})
 	else
+		local texture = "guis/textures/menu_tickbox"
 		local texture_rect = {
 			trophy_objective.completed and 24 or 0,
 			0,
@@ -1146,7 +1183,7 @@ function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 			visible = true,
 			valign = "scale",
 			halign = "scale",
-			texture = "guis/textures/menu_tickbox",
+			texture = texture,
 			texture_rect = texture_rect
 		})
 
@@ -1155,32 +1192,32 @@ function CustomSafehouseGuiProgressItem:init(parent_panel, trophy_objective)
 	end
 end
 
--- Lines: 1078 to 1080
+-- Lines 1078-1080
 function CustomSafehouseGuiProgressItem:destroy()
 	self._parent:remove(self._panel)
 end
 
--- Lines: 1082 to 1083
+-- Lines 1082-1084
 function CustomSafehouseGuiProgressItem:top()
 	return self._panel:top()
 end
 
--- Lines: 1086 to 1087
+-- Lines 1086-1088
 function CustomSafehouseGuiProgressItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines: 1090 to 1091
+-- Lines 1090-1092
 function CustomSafehouseGuiProgressItem:set_top(y)
 	return self._panel:set_top(y)
 end
 
--- Lines: 1094 to 1095
+-- Lines 1094-1096
 function CustomSafehouseGuiProgressItem:set_bottom(y)
 	return self._panel:set_bottom(y)
 end
 
--- Lines: 1099 to 1114
+-- Lines 1098-1114
 function CustomSafehouseGuiProgressItem:set_w(w)
 	self._panel:set_w(w)
 
@@ -1190,16 +1227,17 @@ function CustomSafehouseGuiProgressItem:set_w(w)
 		self._progress_text:set_w(self._panel:w() - PANEL_PADDING * 2)
 		self._progress_outline:close()
 
-		self._progress_outline = BoxGuiObject:new(self._progress_panel, {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		self._progress_outline = BoxGuiObject:new(self._progress_panel, {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 	end
 
 	if alive(self._checkbox) then
 		self._checkbox:set_right(self._panel:w())
 	end
 end
-

@@ -2,12 +2,12 @@ HuskTeamAIBase = HuskTeamAIBase or class(HuskCopBase)
 HuskTeamAIBase.set_loadout = TeamAIBase.set_loadout
 HuskTeamAIBase.remove_upgrades = TeamAIBase.remove_upgrades
 
--- Lines: 8 to 9
+-- Lines 8-10
 function HuskTeamAIBase:default_weapon_name()
 	return TeamAIBase.default_weapon_name(self)
 end
 
--- Lines: 14 to 23
+-- Lines 14-23
 function HuskTeamAIBase:post_init()
 	self._ext_anim = self._unit:anim_data()
 
@@ -21,19 +21,19 @@ function HuskTeamAIBase:post_init()
 	managers.occlusion:remove_occlusion(self._unit)
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function HuskTeamAIBase:nick_name()
 	return TeamAIBase.nick_name(self)
 end
 
--- Lines: 33 to 37
+-- Lines 33-37
 function HuskTeamAIBase:on_death_exit()
 	HuskTeamAIBase.super.on_death_exit(self)
 	TeamAIBase.unregister(self)
 	self:set_slot(self._unit, 0)
 end
 
--- Lines: 42 to 49
+-- Lines 41-49
 function HuskTeamAIBase:pre_destroy(unit)
 	self:remove_upgrades()
 	unit:movement():pre_destroy()
@@ -42,7 +42,7 @@ function HuskTeamAIBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines: 53 to 72
+-- Lines 53-72
 function HuskTeamAIBase:load(data)
 	self._tweak_table = data.base.tweak_table or self._tweak_table
 	local character_name = self._tweak_table
@@ -65,17 +65,16 @@ function HuskTeamAIBase:load(data)
 	end
 end
 
--- Lines: 76 to 77
+-- Lines 76-77
 function HuskTeamAIBase:chk_freeze_anims()
 end
 
--- Lines: 81 to 83
+-- Lines 81-83
 function HuskTeamAIBase:unregister()
 	TeamAIBase.unregister(self)
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function HuskTeamAIBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end
-

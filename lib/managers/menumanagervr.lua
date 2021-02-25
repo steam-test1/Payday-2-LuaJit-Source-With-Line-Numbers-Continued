@@ -10,7 +10,7 @@ local __open_menu = MenuManager.open_menu
 local __close_menu = MenuManager.close_menu
 local __post_event = MenuManager.post_event
 
--- Lines: 17 to 103
+-- Lines 17-103
 function MenuManagerVR:init(is_start_menu)
 	print("[MenuManagerVR] Init")
 
@@ -98,7 +98,7 @@ function MenuManagerVR:init(is_start_menu)
 	end
 end
 
--- Lines: 105 to 128
+-- Lines 105-128
 function MenuManagerVR:_setup_ingame_viewport()
 	if not self._is_start_menu then
 		self._ingame_camera_object = World:create_camera()
@@ -125,7 +125,7 @@ function MenuManagerVR:_setup_ingame_viewport()
 	end
 end
 
--- Lines: 130 to 134
+-- Lines 130-134
 function MenuManagerVR:set_override_ingame_camera(camera_object)
 	self._override_camera = camera_object
 	camera_object = camera_object or self._ingame_camera_object
@@ -133,7 +133,7 @@ function MenuManagerVR:set_override_ingame_camera(camera_object)
 	self._ingame_viewport:set_camera(camera_object)
 end
 
--- Lines: 139 to 149
+-- Lines 139-149
 function MenuManagerVR:init_finalize()
 	if not self._is_start_menu then
 		managers.system_menu:add_active_changed_callback(callback(self, self, "dialog_active_changed_callback"))
@@ -146,19 +146,19 @@ function MenuManagerVR:init_finalize()
 	self:init_customization_gui()
 end
 
--- Lines: 153 to 155
+-- Lines 153-155
 function MenuManagerVR:init_customization_gui()
 	self._customization_gui = self._customization_gui or VRCustomizationGui:new(self._is_start_menu)
 end
 
--- Lines: 157 to 161
+-- Lines 157-161
 function MenuManagerVR:initialize_customization_gui()
 	if self._customization_gui then
 		self._customization_gui:initialize()
 	end
 end
 
--- Lines: 172 to 189
+-- Lines 172-189
 function MenuManagerVR:update(t, dt)
 	__update(self, t, dt)
 
@@ -182,7 +182,7 @@ function MenuManagerVR:update(t, dt)
 	end
 end
 
--- Lines: 193 to 201
+-- Lines 193-201
 function MenuManagerVR:destroy()
 	print("[MenuManagerVR] Destroy")
 	managers.gui_data:set_scene_gui(nil)
@@ -196,12 +196,12 @@ function MenuManagerVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 206 to 207
+-- Lines 206-208
 function MenuManagerVR:is_pc_controller()
 	return true
 end
 
--- Lines: 213 to 231
+-- Lines 213-231
 function MenuManagerVR:open_menu(menu_name, ...)
 	managers.vr:set_force_disable_low_adaptive_quality(true)
 
@@ -223,7 +223,7 @@ function MenuManagerVR:open_menu(menu_name, ...)
 	print("[MenuManagerVR] Open ", menu_name)
 end
 
--- Lines: 236 to 259
+-- Lines 236-259
 function MenuManagerVR:close_menu(menu_name)
 	managers.vr:set_force_disable_low_adaptive_quality(false)
 
@@ -248,7 +248,7 @@ function MenuManagerVR:close_menu(menu_name)
 	print("[MenuManagerVR] Close ", menu_name)
 end
 
--- Lines: 264 to 273
+-- Lines 264-273
 function MenuManagerVR:_load_scene()
 	self._menu_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/menu/vr_menu"), Vector3(), Rotation())
 
@@ -263,7 +263,7 @@ function MenuManagerVR:_load_scene()
 	assert(WorldHolder:new(t):create_world("world", "statics", Vector3()), "Cant load the level!")
 end
 
--- Lines: 275 to 309
+-- Lines 275-309
 function MenuManagerVR:_setup_workspaces(is_start_menu)
 	if is_start_menu then
 		managers.gui_data:set_scene_gui(World:gui())
@@ -305,7 +305,7 @@ function MenuManagerVR:_setup_workspaces(is_start_menu)
 	end
 end
 
--- Lines: 311 to 317
+-- Lines 311-317
 function MenuManagerVR:dialog_active_changed_callback(active)
 	if active then
 		managers.menu:open_menu("system_menu")
@@ -314,17 +314,17 @@ function MenuManagerVR:dialog_active_changed_callback(active)
 	end
 end
 
--- Lines: 319 to 320
+-- Lines 319-321
 function MenuManagerVR:screen(screen_id)
 	return self._menu_screens[screen_id]
 end
 
--- Lines: 323 to 324
+-- Lines 323-325
 function MenuManagerVR:menu_unit()
 	return self._menu_unit
 end
 
--- Lines: 327 to 332
+-- Lines 327-332
 function MenuManagerVR:set_primary_hand(hand)
 	self._hand_index = hand == "right" and 0 or 1
 
@@ -333,24 +333,25 @@ function MenuManagerVR:set_primary_hand(hand)
 	end
 end
 
--- Lines: 334 to 337
+-- Lines 334-337
 function MenuManagerVR:post_event(event)
 	__post_event(self, event)
 	self:post_event_vr(event)
 end
+
 local medium_pulse_events = {
 	highlight = true,
 	menu_skill_investment = true
 }
 
--- Lines: 344 to 350
+-- Lines 344-350
 function MenuManagerVR:post_event_vr(event)
 	if event and medium_pulse_events[event] then
 		self._vr_controller:trigger_haptic_pulse(self._hand_index, 0, 200)
 	end
 end
 
--- Lines: 352 to 365
+-- Lines 352-365
 function MenuManagerVR:_enter_menu_room()
 	if not self._player:is_active() then
 		self._hand_index = managers.vr:get_setting("default_weapon_hand") == "right" and 0 or 1
@@ -366,7 +367,7 @@ function MenuManagerVR:_enter_menu_room()
 	end
 end
 
--- Lines: 367 to 387
+-- Lines 367-387
 function MenuManagerVR:_exit_menu_room()
 	if self._player:is_active() then
 		self._player:stop()
@@ -389,28 +390,32 @@ function MenuManagerVR:_exit_menu_room()
 	end
 end
 
--- Lines: 389 to 399
+-- Lines 389-399
 function MenuManagerVR:set_ingame_subtitle_presenter(ingame)
 	local presenter = nil
-	presenter = ingame and CoreSubtitlePresenter.IngamePresenterVR:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size, managers.hud:subtitle_workspace()) or CoreSubtitlePresenter.OverlayPresenter:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size)
+
+	if ingame then
+		presenter = CoreSubtitlePresenter.IngamePresenterVR:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size, managers.hud:subtitle_workspace())
+	else
+		presenter = CoreSubtitlePresenter.OverlayPresenter:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size)
+	end
 
 	managers.subtitle:set_presenter(presenter)
 	presenter:show()
 end
 
--- Lines: 401 to 402
+-- Lines 401-403
 function MenuManagerVR:player()
 	return self._player
 end
 
--- Lines: 407 to 410
+-- Lines 406-410
 function MenuManagerVR:on_enter_menu_disable_ingame_camera()
 	self._ingame_camera_bm:set_visible(false)
 	self._ingame_viewport:set_active(false)
 end
 
--- Lines: 413 to 415
+-- Lines 412-415
 function MenuManagerVR:on_enter_menu_disable_ingame_camera_active_bg()
 	self._ingame_viewport:set_active(false)
 end
-

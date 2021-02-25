@@ -1,25 +1,32 @@
 FlamethrowerEffectExtension = FlamethrowerEffectExtension or class(NewRaycastWeaponBase)
 
--- Lines: 3 to 8
+-- Lines 3-8
 function FlamethrowerEffectExtension:init(...)
 	FlamethrowerEffectExtension.super.init(self, ...)
 	self:setup_default()
 	self._unit:set_extension_update_enabled(Idstring("flamethrower_effect_extension"), true)
 end
 
--- Lines: 11 to 28
+-- Lines 10-28
 function FlamethrowerEffectExtension:setup_default()
-	self._flame_effect = {effect = Idstring("effects/payday2/particles/explosions/flamethrower")}
-	self._nozzle_effect = {effect = Idstring("effects/payday2/particles/explosions/flamethrower_nosel")}
-	self._pilot_light = {effect = Idstring("effects/payday2/particles/explosions/flamethrower_pilot")}
+	self._flame_effect = {
+		effect = Idstring("effects/payday2/particles/explosions/flamethrower")
+	}
+	self._nozzle_effect = {
+		effect = Idstring("effects/payday2/particles/explosions/flamethrower_nosel")
+	}
+	self._pilot_light = {
+		effect = Idstring("effects/payday2/particles/explosions/flamethrower_pilot")
+	}
 	self._flame_max_range = tweak_data.weapon[self._name_id].flame_max_range
 	self._single_flame_effect_duration = tweak_data.weapon[self._name_id].single_flame_effect_duration
 	self._distance_to_gun_tip = 50
 	self._flamethrower_effect_collection = {}
 end
+
 local mvec1 = Vector3()
 
--- Lines: 62 to 141
+-- Lines 31-141
 function FlamethrowerEffectExtension:update(unit, t, dt)
 	if self._flamethrower_effect_collection ~= nil then
 		local flame_effect_dt = self._single_flame_effect_duration / dt
@@ -61,7 +68,7 @@ function FlamethrowerEffectExtension:update(unit, t, dt)
 	end
 end
 
--- Lines: 144 to 172
+-- Lines 144-172
 function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 	local from = from_pos + direction * self._distance_to_gun_tip
 	local nozzle_obj = self._unit:get_object(Idstring("fire"))
@@ -81,4 +88,3 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 		direction = direction
 	})
 end
-

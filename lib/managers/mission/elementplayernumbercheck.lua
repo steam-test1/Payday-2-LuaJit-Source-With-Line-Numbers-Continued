@@ -2,17 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementPlayerNumberCheck = ElementPlayerNumberCheck or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementPlayerNumberCheck:init(...)
 	ElementPlayerNumberCheck.super.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function ElementPlayerNumberCheck:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 13 to 24
+-- Lines 13-24
 function ElementPlayerNumberCheck:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -26,4 +26,3 @@ function ElementPlayerNumberCheck:on_executed(instigator)
 
 	ElementPlayerNumberCheck.super.on_executed(self, instigator)
 end
-

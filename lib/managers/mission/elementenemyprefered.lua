@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementEnemyPreferedAdd = ElementEnemyPreferedAdd or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 11
+-- Lines 5-11
 function ElementEnemyPreferedAdd:init(...)
 	ElementEnemyPreferedAdd.super.init(self, ...)
 end
 
--- Lines: 14 to 42
+-- Lines 13-42
 function ElementEnemyPreferedAdd:on_script_activated()
 	self._values.spawn_points = self._values.spawn_points or self._values.elements
 
@@ -38,7 +38,7 @@ function ElementEnemyPreferedAdd:on_script_activated()
 	end
 end
 
--- Lines: 45 to 57
+-- Lines 44-57
 function ElementEnemyPreferedAdd:add()
 	if not self._group_data then
 		return
@@ -53,12 +53,12 @@ function ElementEnemyPreferedAdd:add()
 	end
 end
 
--- Lines: 59 to 61
+-- Lines 59-61
 function ElementEnemyPreferedAdd:remove()
 	managers.groupai:state():remove_preferred_spawn_points(self._id)
 end
 
--- Lines: 63 to 71
+-- Lines 63-71
 function ElementEnemyPreferedAdd:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -67,14 +67,15 @@ function ElementEnemyPreferedAdd:on_executed(instigator)
 	self:add()
 	ElementEnemyPreferedAdd.super.on_executed(self, instigator)
 end
+
 ElementEnemyPreferedRemove = ElementEnemyPreferedRemove or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 77 to 79
+-- Lines 77-79
 function ElementEnemyPreferedRemove:init(...)
 	ElementEnemyPreferedRemove.super.init(self, ...)
 end
 
--- Lines: 81 to 94
+-- Lines 81-94
 function ElementEnemyPreferedRemove:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -90,4 +91,3 @@ function ElementEnemyPreferedRemove:on_executed(instigator)
 
 	ElementEnemyPreferedRemove.super.on_executed(self, instigator)
 end
-

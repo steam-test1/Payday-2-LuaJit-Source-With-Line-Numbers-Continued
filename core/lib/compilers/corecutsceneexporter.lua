@@ -3,7 +3,7 @@ require("core/lib/managers/cutscene/CoreCutsceneKeys")
 
 CoreCutsceneExporter = CoreCutsceneExporter or class()
 
--- Lines: 6 to 10
+-- Lines 6-10
 function CoreCutsceneExporter:init()
 	self.__clips = {}
 	self.__cutscene_keys = {}
@@ -11,14 +11,14 @@ function CoreCutsceneExporter:init()
 	assert(type(self.export_to_path) == "function" or type(self.export_to_compile_destination) == "function", "Subclasses of CoreCutsceneExporter must define either export_to_compile_destination() or export_to_path().")
 end
 
--- Lines: 12 to 16
+-- Lines 12-16
 function CoreCutsceneExporter:free_cached_animations()
 	self.__final_animation_cache = nil
 	self.__joined_animation_cache = nil
 	self.__footage_animation_cache = nil
 end
 
--- Lines: 18 to 21
+-- Lines 18-21
 function CoreCutsceneExporter:add_clip(clip)
 	table.insert_sorted(self.__clips, clip, function (a, b)
 		return a:start_time() < b:start_time()
@@ -26,7 +26,7 @@ function CoreCutsceneExporter:add_clip(clip)
 	self:_clear_cached_lists()
 end
 
--- Lines: 23 to 26
+-- Lines 23-26
 function CoreCutsceneExporter:add_key(cutscene_key)
 	table.insert_sorted(self.__cutscene_keys, cutscene_key, function (a, b)
 		return a:frame() < b:frame()
@@ -34,7 +34,7 @@ function CoreCutsceneExporter:add_key(cutscene_key)
 	self:_clear_cached_lists()
 end
 
--- Lines: 28 to 34
+-- Lines 28-34
 function CoreCutsceneExporter:add_animation_patch(unit_name, blend_set, animation_name)
 	if unit_name and blend_set and animation_name then
 		self.__animation_patches = self.__animation_patches or {}
@@ -43,7 +43,7 @@ function CoreCutsceneExporter:add_animation_patch(unit_name, blend_set, animatio
 	end
 end
 
--- Lines: 36 to 39
+-- Lines 36-40
 function CoreCutsceneExporter:frame_count()
 	local last_clip_end_time = #self.__clips > 0 and self.__clips[#self.__clips]:end_time() or 0
 	local last_key_time = #self.__cutscene_keys > 0 and self.__cutscene_keys[#self.__cutscene_keys]:frame() or 0
@@ -51,37 +51,37 @@ function CoreCutsceneExporter:frame_count()
 	return math.max(last_clip_end_time, last_key_time)
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function CoreCutsceneExporter:contains_optimized_footage()
 	return table.find_value(self.__clips, function (clip)
 		return clip:metadata():footage()._cutscene:is_optimized()
 	end) ~= nil
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function CoreCutsceneExporter:contains_unoptimized_footage()
 	return table.find_value(self.__clips, function (clip)
 		return not clip:metadata():footage()._cutscene:is_optimized()
 	end) ~= nil
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function CoreCutsceneExporter:is_valid()
 	return #self:problems() == 0
 end
 
--- Lines: 54 to 56
+-- Lines 54-57
 function CoreCutsceneExporter:problems()
 	self.__problems = self.__problems or table.map_keys(self:_problem_map())
 
 	return self.__problems
 end
 
--- Lines: 59 to 109
+-- Lines 59-110
 function CoreCutsceneExporter:_problem_map()
 	local problem_map = {}
 
-	-- Lines: 60 to 61
+	-- Lines 61-61
 	local function add_problem(problem)
 		problem_map[problem] = true
 	end
@@ -92,7 +92,9 @@ function CoreCutsceneExporter:_problem_map()
 		local previous_clip = responder_map({
 			end_time = 0,
 			start_time = 0,
-			metadata = responder_map({is_valid = true})
+			metadata = responder_map({
+				is_valid = true
+			})
 		})
 
 		for _, clip in ipairs(self.__clips) do
@@ -137,7 +139,7 @@ function CoreCutsceneExporter:_problem_map()
 	return problem_map
 end
 
--- Lines: 112 to 118
+-- Lines 112-119
 function CoreCutsceneExporter:_has_cameras()
 	for unit_name, _ in pairs(self:_all_controlled_unit_types(true)) do
 		if string.begins(unit_name, "camera") then
@@ -148,7 +150,7 @@ function CoreCutsceneExporter:_has_cameras()
 	return false
 end
 
--- Lines: 121 to 131
+-- Lines 121-132
 function CoreCutsceneExporter:_all_controlled_unit_types(include_cameras)
 	if self.__all_controlled_unit_types == nil then
 		self.__all_controlled_unit_types = {}
@@ -165,14 +167,16 @@ function CoreCutsceneExporter:_all_controlled_unit_types(include_cameras)
 	end)
 end
 
--- Lines: 134 to 135
+-- Lines 134-136
 function CoreCutsceneExporter:_all_controlled_unit_names(include_cameras)
 	return table.map_keys(self:_all_controlled_unit_types(include_cameras))
 end
 
--- Lines: 138 to 183
+-- Lines 138-184
 function CoreCutsceneExporter:_get_final_animation(unit_name)
-	self.__final_animation_cache = self.__final_animation_cache or setmetatable({}, {__mode = "v"})
+	self.__final_animation_cache = self.__final_animation_cache or setmetatable({}, {
+		__mode = "v"
+	})
 	local final_animation = self.__final_animation_cache[unit_name]
 
 	if not alive(final_animation) then
@@ -221,9 +225,11 @@ function CoreCutsceneExporter:_get_final_animation(unit_name)
 	return final_animation or nil
 end
 
--- Lines: 186 to 199
+-- Lines 186-200
 function CoreCutsceneExporter:_get_joined_animation(unit_name_or_func)
-	self.__joined_animation_cache = self.__joined_animation_cache or setmetatable({}, {__mode = "v"})
+	self.__joined_animation_cache = self.__joined_animation_cache or setmetatable({}, {
+		__mode = "v"
+	})
 	local unit_name_func = type(unit_name_or_func) ~= "function" and function ()
 		return tostring(unit_name_or_func)
 	end or unit_name_or_func
@@ -241,16 +247,18 @@ function CoreCutsceneExporter:_get_joined_animation(unit_name_or_func)
 	return joined_animation or nil
 end
 
--- Lines: 202 to 203
+-- Lines 202-204
 function CoreCutsceneExporter:_get_joined_camera_animation()
 	return self:_get_joined_animation(function (clip)
 		return clip and clip:metadata():camera()
 	end)
 end
 
--- Lines: 206 to 227
+-- Lines 206-228
 function CoreCutsceneExporter:_get_footage_animation(cutscene, unit_name)
-	self.__footage_animation_cache = self.__footage_animation_cache or setmetatable({}, {__mode = "v"})
+	self.__footage_animation_cache = self.__footage_animation_cache or setmetatable({}, {
+		__mode = "v"
+	})
 	local key = cutscene:name() .. ":" .. unit_name
 	local footage_animation = self.__footage_animation_cache[key]
 
@@ -273,7 +281,7 @@ function CoreCutsceneExporter:_get_footage_animation(cutscene, unit_name)
 	return footage_animation or nil
 end
 
--- Lines: 230 to 252
+-- Lines 230-252
 function CoreCutsceneExporter:_get_animatable_set_name_for_unit_type(unit_type)
 	local unit_data = CoreEngineAccess._editor_unit_data(unit_type:id())
 	local model_filename = unit_data:model()
@@ -301,7 +309,7 @@ function CoreCutsceneExporter:_get_animatable_set_name_for_unit_type(unit_type)
 	error(string.format("Unit \"%s\" - Model XML is missing animation_set name.", unit_type))
 end
 
--- Lines: 254 to 293
+-- Lines 254-294
 function CoreCutsceneExporter:_join_animations(unit_name_func)
 	local joined_animation = nil
 
@@ -346,7 +354,7 @@ function CoreCutsceneExporter:_join_animations(unit_name_func)
 	return joined_animation
 end
 
--- Lines: 298 to 302
+-- Lines 297-302
 function CoreCutsceneExporter:_clear_cached_lists()
 	self.__problems = nil
 	self.__all_controlled_unit_types = nil
@@ -354,7 +362,7 @@ function CoreCutsceneExporter:_clear_cached_lists()
 	self:free_cached_animations()
 end
 
--- Lines: 304 to 307
+-- Lines 304-308
 function CoreCutsceneExporter:_process_animation(animation_cutter_method_name, animation, ...)
 	local result = AnimationCutter[animation_cutter_method_name](AnimationCutter, animation, ...)
 
@@ -363,7 +371,7 @@ function CoreCutsceneExporter:_process_animation(animation_cutter_method_name, a
 	return result
 end
 
--- Lines: 310 to 315
+-- Lines 310-315
 function CoreCutsceneExporter:_assert_is_valid()
 	local problems = self:problems()
 
@@ -371,4 +379,3 @@ function CoreCutsceneExporter:_assert_is_valid()
 		error("Cutscene project is invalid: ", string.join(" ", problems))
 	end
 end
-

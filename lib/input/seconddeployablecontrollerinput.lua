@@ -1,12 +1,12 @@
 SecondDeployableControllerInput = SecondDeployableControllerInput or class()
 
--- Lines: 6 to 9
+-- Lines 6-9
 function SecondDeployableControllerInput:init()
 	self._secondary_deployable_t = 0
 	self._secondary_deployable_waiting = true
 end
 
--- Lines: 12 to 34
+-- Lines 12-34
 function SecondDeployableControllerInput:update(t, dt, controller, input, current_state_name)
 	if current_state_name == "carry" then
 		return
@@ -32,4 +32,3 @@ function SecondDeployableControllerInput:update(t, dt, controller, input, curren
 		end
 	end
 end
-

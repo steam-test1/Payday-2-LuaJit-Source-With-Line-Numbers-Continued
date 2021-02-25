@@ -2,7 +2,7 @@ core:module("CoreInputContext")
 
 Context = Context or class()
 
--- Lines: 5 to 15
+-- Lines 5-15
 function Context:init(input_context_description, input_context_stack)
 	self._input_data = {}
 
@@ -15,14 +15,14 @@ function Context:init(input_context_description, input_context_stack)
 	self._input_context_stack:push_input_context(self)
 end
 
--- Lines: 17 to 20
+-- Lines 17-20
 function Context:destroy()
 	self._input_context_stack:pop_input_context(self)
 
 	self._input_source = nil
 end
 
--- Lines: 22 to 27
+-- Lines 22-28
 function Context:create_context(context_name)
 	local context_description = self._input_context_description:context_description(context_name)
 
@@ -33,17 +33,17 @@ function Context:create_context(context_name)
 	return context
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function Context:input()
 	return self._input_data
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function Context:_context_description()
 	return self._input_context_description
 end
 
--- Lines: 38 to 49
+-- Lines 38-49
 function Context:_construct_input_data(input_context_description)
 	for name, input_target in pairs(input_context_description:input_targets()) do
 		local type_name = input_target:target_type_name()
@@ -57,4 +57,3 @@ function Context:_construct_input_data(input_context_description)
 		end
 	end
 end
-

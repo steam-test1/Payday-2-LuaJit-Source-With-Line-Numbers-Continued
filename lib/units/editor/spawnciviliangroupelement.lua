@@ -1,7 +1,9 @@
 SpawnCivilianGroupUnitElement = SpawnCivilianGroupUnitElement or class(MissionElement)
-SpawnCivilianGroupUnitElement.LINK_ELEMENTS = {"elements"}
+SpawnCivilianGroupUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 18
+-- Lines 4-18
 function SpawnCivilianGroupUnitElement:init(unit)
 	SpawnCivilianGroupUnitElement.super.init(self, unit)
 
@@ -18,16 +20,16 @@ function SpawnCivilianGroupUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function SpawnCivilianGroupUnitElement:draw_links(t, dt, selected_unit, all_units)
 	SpawnCivilianGroupUnitElement.super.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 24 to 25
+-- Lines 24-25
 function SpawnCivilianGroupUnitElement:update_editing()
 end
 
--- Lines: 27 to 35
+-- Lines 27-35
 function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -45,7 +47,7 @@ function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all
 	end
 end
 
--- Lines: 37 to 47
+-- Lines 37-47
 function SpawnCivilianGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -63,24 +65,26 @@ function SpawnCivilianGroupUnitElement:add_element()
 	end
 end
 
--- Lines: 49 to 52
+-- Lines 49-52
 function SpawnCivilianGroupUnitElement:get_links_to_unit(...)
 	SpawnCivilianGroupUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
 end
 
--- Lines: 55 to 57
+-- Lines 55-57
 function SpawnCivilianGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 60 to 73
+-- Lines 60-73
 function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"ai_spawn_civilian"}
+	local names = {
+		"ai_spawn_civilian"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_checkbox(panel, panel_sizer, "random", "Select spawn points randomly")
@@ -89,6 +93,7 @@ function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 		floats = 0,
 		min = 0
 	}, "Specify amount of civilians to spawn from group")
-	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({"default"}, tweak_data.levels:get_team_names_indexed()), "Select the group's team (overrides character team).")
+	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
+		"default"
+	}, tweak_data.levels:get_team_names_indexed()), "Select the group's team (overrides character team).")
 end
-

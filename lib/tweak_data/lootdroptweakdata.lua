@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines: 6 to 2145
+-- Lines 5-2145
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -42,46 +42,66 @@ function LootDropTweakData:init(tweak_data)
 		0.95
 	}
 	self.STARS = {
-		{pcs = {
-			10,
-			10
-		}},
-		{pcs = {
-			20,
-			20
-		}},
-		{pcs = {
-			30,
-			30
-		}},
-		{pcs = {
-			40,
-			40
-		}},
-		{pcs = {
-			40,
-			40
-		}},
-		{pcs = {
-			40,
-			40
-		}},
-		{pcs = {
-			40,
-			40
-		}},
-		{pcs = {
-			40,
-			40
-		}},
-		{pcs = {
-			40,
-			40
-		}},
-		{pcs = {
-			40,
-			40
-		}}
+		{
+			pcs = {
+				10,
+				10
+			}
+		},
+		{
+			pcs = {
+				20,
+				20
+			}
+		},
+		{
+			pcs = {
+				30,
+				30
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		},
+		{
+			pcs = {
+				40,
+				40
+			}
+		}
 	}
 	self.STARS_CURVES = {
 		1,
@@ -150,34 +170,38 @@ function LootDropTweakData:init(tweak_data)
 
 	self.DEFAULT_WEIGHT = 1
 	self.got_item_weight_mod = 0.5
-	self.type_weight_mod_funcs = {weapon_mods = function (global_value, category, id)
-		local weapons = managers.weapon_factory:get_weapons_uses_part(id) or {}
-		local primaries = managers.blackmarket:get_crafted_category("primaries") or {}
-		local secondaries = managers.blackmarket:get_crafted_category("secondaries") or {}
-		local crafted_weapons = {}
+	self.type_weight_mod_funcs = {
+		weapon_mods = function (global_value, category, id)
+			local weapons = managers.weapon_factory:get_weapons_uses_part(id) or {}
+			local primaries = managers.blackmarket:get_crafted_category("primaries") or {}
+			local secondaries = managers.blackmarket:get_crafted_category("secondaries") or {}
+			local crafted_weapons = {}
 
-		for _, weapon in pairs(primaries) do
-			table.insert(crafted_weapons, weapon.factory_id)
-		end
-
-		for _, weapon in pairs(secondaries) do
-			table.insert(crafted_weapons, weapon.factory_id)
-		end
-
-		table.list_union(crafted_weapons)
-
-		for _, factory_id in pairs(weapons) do
-			if table.contains(crafted_weapons, factory_id) then
-				return 2
+			for _, weapon in pairs(primaries) do
+				table.insert(crafted_weapons, weapon.factory_id)
 			end
-		end
 
-		return 1
-	end}
+			for _, weapon in pairs(secondaries) do
+				table.insert(crafted_weapons, weapon.factory_id)
+			end
+
+			table.list_union(crafted_weapons)
+
+			for _, factory_id in pairs(weapons) do
+				if table.contains(crafted_weapons, factory_id) then
+					return 2
+				end
+			end
+
+			return 1
+		end
+	}
 	local dlc_color = Color(255, 255, 212, 0) / 255
 	local community_color = Color(255, 59, 174, 254) / 255
 	local event_color = Color(255, 255, 145, 0) / 255
-	self.global_value_category = {normal = {}}
+	self.global_value_category = {
+		normal = {}
+	}
 	self.global_value_category.normal.name_id = "bm_global_value_normal"
 	self.global_value_category.normal.sort_number = 0
 	self.global_value_category.dlc = {
@@ -196,7 +220,9 @@ function LootDropTweakData:init(tweak_data)
 		name_id = "bm_global_value_collaboration",
 		sort_number = 25
 	}
-	self.global_values = {normal = {}}
+	self.global_values = {
+		normal = {}
+	}
 	self.global_values.normal.name_id = "bm_global_value_normal"
 	self.global_values.normal.desc_id = "menu_l_global_value_normal"
 	self.global_values.normal.color = Color.white
@@ -1673,6 +1699,22 @@ function LootDropTweakData:init(tweak_data)
 		category = "dlc",
 		ignore_ulti = true
 	}
+	self.global_values.ghm = {
+		name_id = "bm_global_value_ghm",
+		desc_id = "menu_l_global_value_ghm",
+		unlock_id = "bm_global_value_ghm_unlock",
+		color = dlc_color,
+		dlc = true,
+		free = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "dlc",
+		ignore_ulti = true
+	}
 	self.global_values.ztm = {
 		name_id = "bm_global_value_ztm",
 		desc_id = "menu_l_global_value_ztm",
@@ -1779,14 +1821,15 @@ function LootDropTweakData:init(tweak_data)
 		"cmt",
 		"pbm",
 		"eng",
-		"fgl"
+		"fgl",
+		"ghm"
 	}
 
 	self:init_generated(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines: 2147 to 2152
+-- Lines 2147-2152
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 
@@ -1794,4 +1837,3 @@ function LootDropTweakData:_create_global_value_list_map()
 		self.global_value_list_map[d] = i
 	end
 end
-

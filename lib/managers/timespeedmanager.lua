@@ -1,6 +1,6 @@
 TimeSpeedManager = TimeSpeedManager or class()
 
--- Lines: 3 to 11
+-- Lines 3-11
 function TimeSpeedManager:init()
 	self._pausable_timer = TimerManager:pausable()
 	self._game_timer = TimerManager:game()
@@ -8,14 +8,14 @@ function TimeSpeedManager:init()
 	self._game_speed_rtpc = 1
 end
 
--- Lines: 15 to 19
+-- Lines 15-19
 function TimeSpeedManager:update()
 	if self._playing_effects then
 		self:_update_playing_effects()
 	end
 end
 
--- Lines: 23 to 101
+-- Lines 23-101
 function TimeSpeedManager:_update_playing_effects()
 	local slowest_speed = nil
 	local playing_effects = self._playing_effects
@@ -34,11 +34,11 @@ function TimeSpeedManager:_update_playing_effects()
 			if time < effect.fade_in_delay_end_t then
 				-- Nothing
 			elseif time < effect.fade_in_end_t then
-				effect_speed = math.lerp(1, effect.desc.speed, ((time - effect.fade_in_delay_end_t) / effect.desc.fade_in) ^ 0.5)
+				effect_speed = math.lerp(1, effect.desc.speed, ((time - effect.fade_in_delay_end_t) / effect.desc.fade_in)^0.5)
 			elseif not effect.sustain_end_t or time < effect.sustain_end_t then
 				effect_speed = effect.desc.speed
 			elseif time < effect.effect_end_t then
-				effect_speed = math.lerp(effect.desc.speed, 1, ((time - effect.sustain_end_t) / effect.desc.fade_out) ^ 0.5)
+				effect_speed = math.lerp(effect.desc.speed, 1, ((time - effect.sustain_end_t) / effect.desc.fade_out)^0.5)
 			else
 				self:_on_effect_expired(effect_id)
 			end
@@ -87,7 +87,7 @@ function TimeSpeedManager:_update_playing_effects()
 	end
 end
 
--- Lines: 127 to 179
+-- Lines 116-179
 function TimeSpeedManager:play_effect(id, effect_desc)
 	local effect = {
 		desc = effect_desc,
@@ -109,7 +109,9 @@ function TimeSpeedManager:play_effect(id, effect_desc)
 			end
 		else
 			local timer = TimerManager:timer(Idstring(effect_desc.affect_timer))
-			effect.affect_timers = {[timer:key()] = timer}
+			effect.affect_timers = {
+				[timer:key()] = timer
+			}
 		end
 	else
 		effect.affect_timers = {
@@ -152,7 +154,7 @@ function TimeSpeedManager:play_effect(id, effect_desc)
 	end
 end
 
--- Lines: 183 to 213
+-- Lines 183-213
 function TimeSpeedManager:stop_effect(id, fade_out_duration)
 	if not self._playing_effects then
 		return
@@ -163,7 +165,12 @@ function TimeSpeedManager:stop_effect(id, fade_out_duration)
 
 		if effect_instance and effect_instance.desc.sync then
 			local sync_fade_out_duration = nil
-			sync_fade_out_duration = fade_out_duration and fade_out_duration ~= 0 and fade_out_duration or 0
+
+			if fade_out_duration and fade_out_duration ~= 0 then
+				sync_fade_out_duration = fade_out_duration
+			else
+				sync_fade_out_duration = 0
+			end
 
 			managers.network:session():send_to_peers_synched("start_timespeed_effect", id, sync_fade_out_duration)
 		end
@@ -184,7 +191,7 @@ function TimeSpeedManager:stop_effect(id, fade_out_duration)
 	end
 end
 
--- Lines: 217 to 235
+-- Lines 217-235
 function TimeSpeedManager:_on_effect_expired(effect_id)
 	local effect = self._playing_effects[effect_id]
 
@@ -208,12 +215,12 @@ function TimeSpeedManager:_on_effect_expired(effect_id)
 	end
 end
 
--- Lines: 239 to 240
+-- Lines 239-241
 function TimeSpeedManager:in_effect()
 	return self._playing_effects and true
 end
 
--- Lines: 245 to 252
+-- Lines 245-252
 function TimeSpeedManager:destroy()
 	while self._playing_effects do
 		local eff_id, eff = next(self._playing_effects)
@@ -223,4 +230,3 @@ function TimeSpeedManager:destroy()
 
 	SoundDevice:set_rtpc("game_speed", 1)
 end
-

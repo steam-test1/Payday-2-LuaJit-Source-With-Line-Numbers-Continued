@@ -25,7 +25,7 @@ local material_variables = {
 	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 }
 
--- Lines: 38 to 42
+-- Lines 38-42
 function MenuArmourBase:init(unit, update_enabled)
 	MenuArmourBase.super.init(self, unit, true)
 	self:set_armor_id("level_1")
@@ -33,7 +33,7 @@ function MenuArmourBase:init(unit, update_enabled)
 	self._character_name = "dallas"
 end
 
--- Lines: 44 to 49
+-- Lines 44-49
 function MenuArmourBase:update(unit, t, dt)
 	if self._request_update then
 		self:_apply_cosmetics()
@@ -42,7 +42,7 @@ function MenuArmourBase:update(unit, t, dt)
 	end
 end
 
--- Lines: 51 to 58
+-- Lines 51-58
 function MenuArmourBase:set_armor_id(armor_id)
 	local data = tweak_data.blackmarket.armors[armor_id]
 
@@ -53,7 +53,7 @@ function MenuArmourBase:set_armor_id(armor_id)
 	end
 end
 
--- Lines: 60 to 67
+-- Lines 60-67
 function MenuArmourBase:armor_level()
 	if self._level then
 		return self._level
@@ -64,17 +64,17 @@ function MenuArmourBase:armor_level()
 	end
 end
 
--- Lines: 69 to 70
+-- Lines 69-71
 function MenuArmourBase:character_name()
 	return self._character_name
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function MenuArmourBase:mask_id()
 	return self._mask_id
 end
 
--- Lines: 77 to 85
+-- Lines 77-85
 function MenuArmourBase:set_character_name(name)
 	self._character_name = name
 	self._special_material = self:_pick_special_material()
@@ -82,14 +82,14 @@ function MenuArmourBase:set_character_name(name)
 	self:request_cosmetics_update()
 end
 
--- Lines: 87 to 90
+-- Lines 87-90
 function MenuArmourBase:set_mask_id(id)
 	self._mask_id = id
 
 	self:request_cosmetics_update()
 end
 
--- Lines: 94 to 110
+-- Lines 93-110
 function MenuArmourBase:set_armor_skin_id(id)
 	if not id then
 		self._cosmetics_id = nil
@@ -109,37 +109,37 @@ function MenuArmourBase:set_armor_skin_id(id)
 	self:request_cosmetics_update()
 end
 
--- Lines: 112 to 114
+-- Lines 112-114
 function MenuArmourBase:set_cosmetics_data(armor_skin_id)
 	self:set_armor_skin_id(armor_skin_id)
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function MenuArmourBase:request_cosmetics_update()
 	self._request_update = true
 end
 
--- Lines: 122 to 123
+-- Lines 122-124
 function MenuArmourBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines: 126 to 127
+-- Lines 126-128
 function MenuArmourBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines: 130 to 131
+-- Lines 130-132
 function MenuArmourBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines: 134 to 135
+-- Lines 134-136
 function MenuArmourBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines: 139 to 222
+-- Lines 139-222
 function MenuArmourBase:_apply_cosmetics(clbks)
 	local sequence = managers.blackmarket:character_sequence_by_character_name(self._character_name)
 
@@ -233,7 +233,7 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 	self:_chk_load_complete(clbks.done)
 end
 
--- Lines: 225 to 237
+-- Lines 224-237
 function MenuArmourBase:_check_character_mask_sequence(character_unit, mask_id, character_name)
 	if tweak_data.blackmarket.masks[mask_id].skip_mask_on_sequence then
 		local mask_off_sequence = managers.blackmarket:character_mask_off_sequence_by_character_name(character_name)
@@ -250,7 +250,7 @@ function MenuArmourBase:_check_character_mask_sequence(character_unit, mask_id, 
 	end
 end
 
--- Lines: 241 to 256
+-- Lines 240-256
 function MenuArmourBase:clbk_texture_loaded(clbks, tex_name)
 	if not alive(self._unit) then
 		return
@@ -270,7 +270,7 @@ function MenuArmourBase:clbk_texture_loaded(clbks, tex_name)
 	end)
 end
 
--- Lines: 259 to 276
+-- Lines 258-276
 function MenuArmourBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -289,7 +289,7 @@ function MenuArmourBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines: 279 to 313
+-- Lines 278-313
 function MenuArmourBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 
@@ -330,7 +330,7 @@ function MenuArmourBase:_set_material_textures()
 	end
 end
 
--- Lines: 316 to 345
+-- Lines 316-346
 function MenuArmourBase:_pick_special_material()
 	local character_id = managers.blackmarket:get_character_id_by_character_name(self:character_name())
 	local special_materials = tweak_data.blackmarket.characters[character_id].special_materials
@@ -365,7 +365,7 @@ function MenuArmourBase:_pick_special_material()
 	return special_material
 end
 
--- Lines: 350 to 356
+-- Lines 349-357
 function MenuArmourBase:_get_cc_material_config()
 	if self._special_material then
 		return Idstring(self._special_material .. "_cc")
@@ -376,7 +376,7 @@ function MenuArmourBase:_get_cc_material_config()
 	return tweak_data.economy.character_cc_configs[character_name]
 end
 
--- Lines: 360 to 366
+-- Lines 359-367
 function MenuArmourBase:_get_original_material_config()
 	if self._special_material then
 		return Idstring(self._special_material)
@@ -387,7 +387,7 @@ function MenuArmourBase:_get_original_material_config()
 	return tweak_data.economy.armor_skins_configs_map[cc_config_key]
 end
 
--- Lines: 369 to 387
+-- Lines 369-387
 function MenuArmourBase:_update_materials()
 	local material_config_ids = Idstring("material_config")
 	self._materials = {}
@@ -407,11 +407,10 @@ function MenuArmourBase:_update_materials()
 	end
 end
 
--- Lines: 389 to 392
+-- Lines 389-393
 function MenuArmourBase:use_cc()
 	local ignored_by_armor_skin = self._cosmetics_data and self._cosmetics_data.ignore_cc
 	local no_armor_skin = not self._cosmetics_id or self._cosmetics_id == "none"
 
 	return not ignored_by_armor_skin and not no_armor_skin
 end
-

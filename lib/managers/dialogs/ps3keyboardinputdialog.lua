@@ -3,7 +3,7 @@ require("lib/managers/dialogs/KeyboardInputDialog")
 
 PS3KeyboardInputDialog = PS3KeyboardInputDialog or class(KeyboardInputDialog)
 
--- Lines: 7 to 23
+-- Lines 7-24
 function PS3KeyboardInputDialog:show()
 	local data = {
 		title = self:title(),
@@ -24,8 +24,7 @@ function PS3KeyboardInputDialog:show()
 	return success
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function PS3KeyboardInputDialog:done_callback(input_text, success)
 	KeyboardInputDialog.done_callback(self, success, input_text)
 end
-

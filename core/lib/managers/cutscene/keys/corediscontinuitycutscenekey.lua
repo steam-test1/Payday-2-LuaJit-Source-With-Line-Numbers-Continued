@@ -10,17 +10,17 @@ CoreDiscontinuityCutsceneKey.refresh_control_for_description = CoreCutsceneKeyBa
 CoreDiscontinuityCutsceneKey.label_for_description = CoreCutsceneKeyBase.VOID
 CoreDiscontinuityCutsceneKey.is_valid_description = CoreCutsceneKeyBase.TRUE
 
--- Lines: 11 to 12
+-- Lines 11-13
 function CoreDiscontinuityCutsceneKey:__tostring()
 	return "Notifies a discontinuity in linear time."
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function CoreDiscontinuityCutsceneKey:play(player, undo, fast_forward)
 	player:_notify_discontinuity()
 end
 
--- Lines: 19 to 24
+-- Lines 19-25
 function CoreDiscontinuityCutsceneKey:control_for_description(parent_frame)
 	local text = "Discontinuity keys signify a break in linear time. They enable us to dampen physics, etc. during rapid actor movement.\n\nDiscontinuity keys are inserted by the optimizer as the cutscene is exported to the game, but you can also insert them yourself."
 	local control = EWS:TextCtrl(parent_frame, text, "", "NO_BORDER,TE_RICH,TE_MULTILINE,TE_READONLY")
@@ -31,7 +31,7 @@ function CoreDiscontinuityCutsceneKey:control_for_description(parent_frame)
 	return control
 end
 
--- Lines: 27 to 33
+-- Lines 27-34
 function CoreDiscontinuityCutsceneKey:validate_control_for_attribute(attribute_name)
 	if attribute_name ~= "description" then
 		return self.super.validate_control_for_attribute(self, attribute_name)
@@ -39,4 +39,3 @@ function CoreDiscontinuityCutsceneKey:validate_control_for_attribute(attribute_n
 
 	return true
 end
-

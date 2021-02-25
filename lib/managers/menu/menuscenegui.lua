@@ -1,6 +1,6 @@
 MenuSceneGui = MenuSceneGui or class()
 
--- Lines: 3 to 15
+-- Lines 3-15
 function MenuSceneGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -13,7 +13,7 @@ function MenuSceneGui:init(ws, fullscreen_ws, node)
 	end
 end
 
--- Lines: 19 to 25
+-- Lines 19-25
 function MenuSceneGui:_setup_controller_input()
 	self._left_axis_vector = Vector3()
 	self._right_axis_vector = Vector3()
@@ -22,7 +22,7 @@ function MenuSceneGui:_setup_controller_input()
 	self._panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines: 27 to 32
+-- Lines 27-32
 function MenuSceneGui:_destroy_controller_input()
 	self._ws:disconnect_all_controllers()
 
@@ -31,7 +31,7 @@ function MenuSceneGui:_destroy_controller_input()
 	end
 end
 
--- Lines: 34 to 42
+-- Lines 34-42
 function MenuSceneGui:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._left_axis_vector, axis_vector)
@@ -40,7 +40,7 @@ function MenuSceneGui:_axis_move(o, axis_name, axis_vector, controller)
 	end
 end
 
--- Lines: 44 to 87
+-- Lines 44-87
 function MenuSceneGui:update(t, dt)
 	if self._shown_infamy_text_t then
 		if self._shown_infamy_text_t <= t then
@@ -50,7 +50,9 @@ function MenuSceneGui:update(t, dt)
 				vertical = "top",
 				align = "center",
 				layer = 1,
-				text = managers.localization:to_upper_text(current_rank == 0 and "menu_infamy_rank_reached" or "menu_infamy_rank_increased", {infamy_rank = tostring(current_rank + 1)}),
+				text = managers.localization:to_upper_text(current_rank == 0 and "menu_infamy_rank_reached" or "menu_infamy_rank_increased", {
+					infamy_rank = tostring(current_rank + 1)
+				}),
 				font = tweak_data.menu.pd2_large_font,
 				font_size = tweak_data.menu.pd2_large_font_size
 			})
@@ -88,7 +90,7 @@ function MenuSceneGui:update(t, dt)
 	end
 end
 
--- Lines: 91 to 105
+-- Lines 91-105
 function MenuSceneGui:close()
 	self:_destroy_controller_input()
 
@@ -104,4 +106,3 @@ function MenuSceneGui:close()
 		self._fullscreen_panel = nil
 	end
 end
-

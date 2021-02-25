@@ -3,12 +3,12 @@ DebugUnitElement = DebugUnitElement or class(CoreDebugUnitElement)
 DebugUnitElement.SAVE_UNIT_POSITION = false
 DebugUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 7 to 9
+-- Lines 7-9
 function DebugUnitElement:init(...)
 	CoreDebugUnitElement.init(self, ...)
 end
 
--- Lines: 11 to 25
+-- Lines 11-25
 function CoreDebugUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -23,7 +23,7 @@ function CoreDebugUnitElement:init(unit)
 	table.insert(self._save_values, "color")
 end
 
--- Lines: 27 to 61
+-- Lines 27-61
 function CoreDebugUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -43,4 +43,3 @@ function CoreDebugUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "as_subtitle", "Show as subtitle")
 	self:_build_value_checkbox(panel, panel_sizer, "show_instigator", "Show instigator")
 end
-

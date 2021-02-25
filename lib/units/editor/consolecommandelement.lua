@@ -1,6 +1,6 @@
 ConsoleCommandUnitElement = ConsoleCommandUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function ConsoleCommandUnitElement:init(unit)
 	ConsoleCommandUnitElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function ConsoleCommandUnitElement:init(unit)
 	table.insert(self._save_values, "cmd")
 end
 
--- Lines: 11 to 23
+-- Lines 11-23
 function ConsoleCommandUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -27,4 +27,3 @@ function ConsoleCommandUnitElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(text, 1, 0, "EXPAND")
 end
-

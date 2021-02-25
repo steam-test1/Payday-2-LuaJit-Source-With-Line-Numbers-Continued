@@ -1,9 +1,6 @@
-
--- Lines: 2 to 9
+-- Lines 2-10
 local function redirect_to_member(class, member_name, functions)
 	for _, name in pairs(functions) do
-
-		-- Lines: 4 to 6
 		class[name] = function (self, ...)
 			local member = self[member_name]
 
@@ -14,16 +11,14 @@ local function redirect_to_member(class, member_name, functions)
 	return class
 end
 
--- Lines: 16 to 27
+-- Lines 16-27
 local function redirect_to_panel(class, blacklist)
 	local old_index = class.__index
 
-	-- Lines: 18 to 25
+	-- Lines 18-26
 	function class.__index(table, key)
 		for k, func in pairs(Panel) do
 			if not blacklist[k] and not rawget(class, k) then
-
-				-- Lines: 20 to 21
 				class[k] = function (self, ...)
 					return func(self._panel, ...)
 				end
@@ -156,7 +151,7 @@ ExtendedPanel = ExtendedPanel or redirect_to_member(class(), "_panel", {
 	"set_world_top"
 })
 
--- Lines: 71 to 84
+-- Lines 71-84
 function ExtendedPanel:init(parent_or_me, config)
 	self._panel = config and config.use_given and parent_or_me or parent_or_me:panel(config)
 	self._input_components_set = {}
@@ -172,13 +167,13 @@ function ExtendedPanel:init(parent_or_me, config)
 	end
 end
 
--- Lines: 86 to 89
+-- Lines 86-89
 function ExtendedPanel:clear()
 	self:clear_input_components()
 	self._panel:clear()
 end
 
--- Lines: 91 to 100
+-- Lines 91-100
 function ExtendedPanel:remove_self()
 	if alive(self._panel) then
 		self:parent():remove(self._panel)
@@ -191,7 +186,7 @@ function ExtendedPanel:remove_self()
 	end
 end
 
--- Lines: 102 to 106
+-- Lines 102-107
 function ExtendedPanel.make_fine_text(text, keep_w, keep_h)
 	local x, y, w, h = text:text_rect()
 
@@ -201,7 +196,7 @@ function ExtendedPanel.make_fine_text(text, keep_w, keep_h)
 	return text
 end
 
--- Lines: 109 to 131
+-- Lines 109-131
 function ExtendedPanel.limit_text_rows(text, limit, make_fine, ...)
 	local line_breaks = text:line_breaks()
 	local str = text:text()
@@ -229,7 +224,7 @@ function ExtendedPanel.limit_text_rows(text, limit, make_fine, ...)
 	ExtendedPanel.make_fine_text(text, ...)
 end
 
--- Lines: 133 to 149
+-- Lines 133-150
 function ExtendedPanel.scale_font_to_fit(text, w_limit, h_limit, smallest_allowed)
 	smallest_allowed = smallest_allowed or 8
 	local size = text:font_size()
@@ -250,7 +245,7 @@ function ExtendedPanel.scale_font_to_fit(text, w_limit, h_limit, smallest_allowe
 	return true
 end
 
--- Lines: 152 to 158
+-- Lines 152-159
 function ExtendedPanel:fine_text(config)
 	config.w = config.w or type(config.keep_w) == "number" and config.keep_w or nil
 	config.h = config.h or type(config.keep_h) == "number" and config.keep_h or nil
@@ -261,7 +256,7 @@ function ExtendedPanel:fine_text(config)
 	return rtn
 end
 
--- Lines: 161 to 170
+-- Lines 161-171
 function ExtendedPanel:fit_bitmap(config, target_w, target_h)
 	target_w = target_w or config.w or config.width
 	target_h = target_h or config.h or config.height
@@ -276,7 +271,7 @@ function ExtendedPanel:fit_bitmap(config, target_w, target_h)
 	return rtn
 end
 
--- Lines: 173 to 188
+-- Lines 173-188
 function ExtendedPanel.make_bitmap_fit(bitmap, target_w, target_h)
 	local start_width = bitmap:w()
 	local start_height = bitmap:h()
@@ -291,7 +286,7 @@ function ExtendedPanel.make_bitmap_fit(bitmap, target_w, target_h)
 	bitmap:set_size(math.round(dw * target_w), math.round(dh * target_h))
 end
 
--- Lines: 193 to 198
+-- Lines 193-198
 function ExtendedPanel:add_input_component(component)
 	self._input_components_set[component] = true
 
@@ -300,7 +295,7 @@ function ExtendedPanel:add_input_component(component)
 	end
 end
 
--- Lines: 200 to 205
+-- Lines 200-205
 function ExtendedPanel:remove_input_component(component, dont_change_input_parents)
 	self._input_components_set[component] = nil
 
@@ -309,17 +304,17 @@ function ExtendedPanel:remove_input_component(component, dont_change_input_paren
 	end
 end
 
--- Lines: 207 to 209
+-- Lines 207-209
 function ExtendedPanel:clear_input_components()
 	self._input_components_set = {}
 end
 
--- Lines: 211 to 212
+-- Lines 211-213
 function ExtendedPanel:allow_input()
 	return alive(self._panel) and self._panel:visible()
 end
 
--- Lines: 215 to 222
+-- Lines 215-222
 local function call_on_all_exists(set, func_name, ...)
 	for v, _ in pairs(set) do
 		if v:allow_input() then
@@ -332,7 +327,7 @@ local function call_on_all_exists(set, func_name, ...)
 	end
 end
 
--- Lines: 224 to 233
+-- Lines 224-233
 local function call_return_b_on_all_exists(set, func_name, ...)
 	for v, _ in pairs(set) do
 		if v:allow_input() then
@@ -345,7 +340,7 @@ local function call_return_b_on_all_exists(set, func_name, ...)
 	end
 end
 
--- Lines: 256 to 269
+-- Lines 256-270
 function ExtendedPanel:mouse_moved(o, x, y)
 	if not self:allow_input() then
 		return
@@ -367,7 +362,7 @@ function ExtendedPanel:mouse_moved(o, x, y)
 	return hover, cursor_type
 end
 
--- Lines: 273 to 277
+-- Lines 273-277
 function ExtendedPanel:mouse_released(button, x, y)
 	if not self:allow_input() then
 		return
@@ -376,7 +371,7 @@ function ExtendedPanel:mouse_released(button, x, y)
 	call_on_all_exists(self._input_components_set, "mouse_released", button, x, y)
 end
 
--- Lines: 280 to 282
+-- Lines 280-283
 function ExtendedPanel:mouse_clicked(o, button, x, y)
 	if not self:allow_input() then
 		return
@@ -385,7 +380,7 @@ function ExtendedPanel:mouse_clicked(o, button, x, y)
 	return call_return_b_on_all_exists(self._input_components_set, "mouse_clicked", o, button, x, y)
 end
 
--- Lines: 285 to 287
+-- Lines 285-288
 function ExtendedPanel:mouse_double_click(o, button, x, y)
 	if not self:allow_input() then
 		return
@@ -394,7 +389,7 @@ function ExtendedPanel:mouse_double_click(o, button, x, y)
 	return call_return_b_on_all_exists(self._input_components_set, "mouse_double_click", o, button, x, y)
 end
 
--- Lines: 290 to 292
+-- Lines 290-293
 function ExtendedPanel:mouse_pressed(button, x, y)
 	if not self:allow_input() then
 		return
@@ -403,7 +398,7 @@ function ExtendedPanel:mouse_pressed(button, x, y)
 	return call_return_b_on_all_exists(self._input_components_set, "mouse_pressed", button, x, y)
 end
 
--- Lines: 295 to 297
+-- Lines 295-298
 function ExtendedPanel:mouse_wheel_up(x, y)
 	if not self:allow_input() then
 		return
@@ -412,7 +407,7 @@ function ExtendedPanel:mouse_wheel_up(x, y)
 	return call_return_b_on_all_exists(self._input_components_set, "mouse_wheel_up", x, y)
 end
 
--- Lines: 300 to 302
+-- Lines 300-303
 function ExtendedPanel:mouse_wheel_down(x, y)
 	if not self:allow_input() then
 		return
@@ -421,7 +416,7 @@ function ExtendedPanel:mouse_wheel_down(x, y)
 	return call_return_b_on_all_exists(self._input_components_set, "mouse_wheel_down", x, y)
 end
 
--- Lines: 305 to 307
+-- Lines 305-308
 function ExtendedPanel:special_btn_pressed(button)
 	if not self:allow_input() then
 		return
@@ -430,7 +425,7 @@ function ExtendedPanel:special_btn_pressed(button)
 	return call_return_b_on_all_exists(self._input_components_set, "special_btn_pressed", button)
 end
 
--- Lines: 310 to 312
+-- Lines 310-313
 function ExtendedPanel:move_up()
 	if not self:allow_input() then
 		return
@@ -439,7 +434,7 @@ function ExtendedPanel:move_up()
 	return call_return_b_on_all_exists(self._input_components_set, "move_up")
 end
 
--- Lines: 315 to 317
+-- Lines 315-318
 function ExtendedPanel:move_down()
 	if not self:allow_input() then
 		return
@@ -448,7 +443,7 @@ function ExtendedPanel:move_down()
 	return call_return_b_on_all_exists(self._input_components_set, "move_down")
 end
 
--- Lines: 320 to 322
+-- Lines 320-323
 function ExtendedPanel:move_left()
 	if not self:allow_input() then
 		return
@@ -457,7 +452,7 @@ function ExtendedPanel:move_left()
 	return call_return_b_on_all_exists(self._input_components_set, "move_left")
 end
 
--- Lines: 325 to 327
+-- Lines 325-328
 function ExtendedPanel:move_right()
 	if not self:allow_input() then
 		return
@@ -466,7 +461,7 @@ function ExtendedPanel:move_right()
 	return call_return_b_on_all_exists(self._input_components_set, "move_right")
 end
 
--- Lines: 330 to 332
+-- Lines 330-333
 function ExtendedPanel:previous_page()
 	if not self:allow_input() then
 		return
@@ -475,7 +470,7 @@ function ExtendedPanel:previous_page()
 	return call_return_b_on_all_exists(self._input_components_set, "previous_page")
 end
 
--- Lines: 335 to 337
+-- Lines 335-338
 function ExtendedPanel:next_page()
 	if not self:allow_input() then
 		return
@@ -484,7 +479,7 @@ function ExtendedPanel:next_page()
 	return call_return_b_on_all_exists(self._input_components_set, "next_page")
 end
 
--- Lines: 340 to 342
+-- Lines 340-343
 function ExtendedPanel:confirm_pressed()
 	if not self:allow_input() then
 		return
@@ -493,7 +488,7 @@ function ExtendedPanel:confirm_pressed()
 	return call_return_b_on_all_exists(self._input_components_set, "confirm_pressed")
 end
 
--- Lines: 345 to 347
+-- Lines 345-348
 function ExtendedPanel:back_pressed()
 	if not self:allow_input() then
 		return
@@ -501,4 +496,3 @@ function ExtendedPanel:back_pressed()
 
 	return call_return_b_on_all_exists(self._input_components_set, "back_pressed")
 end
-

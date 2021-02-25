@@ -2,30 +2,30 @@ core:import("CoreEditorUtils")
 
 CoreEditorGroups = CoreEditorGroups or class()
 
--- Lines: 6 to 9
+-- Lines 5-9
 function CoreEditorGroups:init()
 	self._groups = {}
 	self._group_names = {}
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function CoreEditorGroups:groups()
 	return self._groups
 end
 
--- Lines: 15 to 16
+-- Lines 15-17
 function CoreEditorGroups:group_names()
 	return self._group_names
 end
 
--- Lines: 19 to 23
+-- Lines 19-23
 function CoreEditorGroups:update(t, dt)
 	for _, group in pairs(self._groups) do
 		group:draw(t, dt)
 	end
 end
 
--- Lines: 25 to 31
+-- Lines 25-32
 function CoreEditorGroups:create(name, reference, units)
 	if not table.contains(self._group_names, name) then
 		table.insert(self._group_names, name)
@@ -37,14 +37,14 @@ function CoreEditorGroups:create(name, reference, units)
 	return group
 end
 
--- Lines: 34 to 37
+-- Lines 34-37
 function CoreEditorGroups:add(name, units)
 	local group = self._groups[name]
 
 	group:add(units)
 end
 
--- Lines: 39 to 43
+-- Lines 39-43
 function CoreEditorGroups:remove(name)
 	table.delete(self._group_names, name)
 	self._groups[name]:remove()
@@ -52,11 +52,11 @@ function CoreEditorGroups:remove(name)
 	self._groups[name] = nil
 end
 
--- Lines: 47 to 48
+-- Lines 45-48
 function CoreEditorGroups:clear()
 end
 
--- Lines: 58 to 67
+-- Lines 58-68
 function CoreEditorGroups:group_name()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new group:", "Create Group", self:new_group_name(), Vector3(-1, -1, 0), true)
 
@@ -71,7 +71,7 @@ function CoreEditorGroups:group_name()
 	return nil
 end
 
--- Lines: 70 to 77
+-- Lines 70-78
 function CoreEditorGroups:new_group_name()
 	local s = "Group0"
 	local i = 1
@@ -87,7 +87,7 @@ function CoreEditorGroups:new_group_name()
 	return s .. i
 end
 
--- Lines: 81 to 104
+-- Lines 80-104
 function CoreEditorGroups:save()
 	for _, name in ipairs(self._group_names) do
 		local group = self._groups[name]
@@ -115,7 +115,7 @@ function CoreEditorGroups:save()
 	end
 end
 
--- Lines: 106 to 146
+-- Lines 106-146
 function CoreEditorGroups:load(world_holder, offset)
 	local load_data = world_holder:create_world("world", "editor_groups", offset)
 	local group_names = load_data.group_names
@@ -164,7 +164,7 @@ function CoreEditorGroups:load(world_holder, offset)
 	end
 end
 
--- Lines: 148 to 153
+-- Lines 148-153
 function CoreEditorGroups:load_group()
 	local path = managers.database:open_file_dialog(Global.frame, "XML-file (*.xml)|*.xml")
 
@@ -173,7 +173,7 @@ function CoreEditorGroups:load_group()
 	end
 end
 
--- Lines: 155 to 203
+-- Lines 155-203
 function CoreEditorGroups:load_group_file(path)
 	local name = self:group_name()
 
@@ -229,7 +229,7 @@ function CoreEditorGroups:load_group_file(path)
 	end
 end
 
--- Lines: 206 to 221
+-- Lines 206-221
 function CoreEditorGroups:parse_light(unit, node)
 	local light = unit:get_object(Idstring(node:parameter("name")))
 
@@ -249,7 +249,7 @@ function CoreEditorGroups:parse_light(unit, node)
 	end
 end
 
--- Lines: 224 to 230
+-- Lines 224-230
 function CoreEditorGroups:parse_variation(unit, node)
 	local variation = node:parameter("value")
 
@@ -260,7 +260,7 @@ function CoreEditorGroups:parse_variation(unit, node)
 	end
 end
 
--- Lines: 233 to 239
+-- Lines 233-239
 function CoreEditorGroups:parse_material_variation(unit, node)
 	local material_variation = node:parameter("value")
 
@@ -271,7 +271,7 @@ function CoreEditorGroups:parse_material_variation(unit, node)
 	end
 end
 
--- Lines: 242 to 255
+-- Lines 242-255
 function CoreEditorGroups:parse_editable_gui(unit, node)
 	unit:editable_gui():set_text(node:parameter("text"))
 	unit:editable_gui():set_font_color(math.string_to_vector(node:parameter("font_color")))
@@ -286,9 +286,10 @@ function CoreEditorGroups:parse_editable_gui(unit, node)
 	unit:editable_gui():set_alpha(tonumber(node:parameter("alpha")))
 	unit:editable_gui():set_shape(string.split(node:parameter("shape"), " "))
 end
+
 CoreEditorGroup = CoreEditorGroup or class()
 
--- Lines: 259 to 269
+-- Lines 259-269
 function CoreEditorGroup:init(name, reference, units)
 	self._name = name
 	self._reference = reference
@@ -302,46 +303,46 @@ function CoreEditorGroup:init(name, reference, units)
 	self._closed = true
 end
 
--- Lines: 271 to 272
+-- Lines 271-273
 function CoreEditorGroup:closed()
 	return self._closed
 end
 
--- Lines: 275 to 277
+-- Lines 275-277
 function CoreEditorGroup:set_closed(closed)
 	self._closed = closed
 end
 
--- Lines: 279 to 280
+-- Lines 279-281
 function CoreEditorGroup:name()
 	return self._name
 end
 
--- Lines: 283 to 284
+-- Lines 283-285
 function CoreEditorGroup:units()
 	return self._units
 end
 
--- Lines: 287 to 288
+-- Lines 287-289
 function CoreEditorGroup:continent()
 	return self._continent
 end
 
--- Lines: 291 to 293
+-- Lines 291-293
 function CoreEditorGroup:set_continent(continent)
 	self._continent = continent
 end
 
--- Lines: 295 to 296
+-- Lines 295-297
 function CoreEditorGroup:continent_name()
 	return tostring(self._continent and self._continent:name())
 end
 
--- Lines: 300 to 301
+-- Lines 299-301
 function CoreEditorGroup:add(units)
 end
 
--- Lines: 303 to 310
+-- Lines 303-310
 function CoreEditorGroup:add_unit(unit)
 	if not unit then
 		return
@@ -354,7 +355,7 @@ function CoreEditorGroup:add_unit(unit)
 	table.insert(unit:unit_data().editor_groups, self)
 end
 
--- Lines: 312 to 322
+-- Lines 312-322
 function CoreEditorGroup:remove_unit(unit)
 	table.delete(self._units, unit)
 	table.delete(unit:unit_data().editor_groups, self)
@@ -368,24 +369,24 @@ function CoreEditorGroup:remove_unit(unit)
 	end
 end
 
--- Lines: 324 to 329
+-- Lines 324-329
 function CoreEditorGroup:remove()
 	for _, unit in ipairs(self._units) do
 		table.delete(unit:unit_data().editor_groups, self)
 	end
 end
 
--- Lines: 331 to 332
+-- Lines 331-333
 function CoreEditorGroup:reference()
 	return self._reference
 end
 
--- Lines: 335 to 337
+-- Lines 335-337
 function CoreEditorGroup:set_reference(reference)
 	self._reference = reference
 end
 
--- Lines: 348 to 381
+-- Lines 339-381
 function CoreEditorGroup:save_to_file()
 	local path = managers.database:save_file_dialog(Global.frame, true, "XML-file (*.xml)|*.xml", self:name())
 
@@ -422,14 +423,14 @@ function CoreEditorGroup:save_to_file()
 	end
 end
 
--- Lines: 383 to 387
+-- Lines 383-387
 function CoreEditorGroup:save_edited_settings(...)
 	self:save_lights(...)
 	self:save_variation(...)
 	self:save_editable_gui(...)
 end
 
--- Lines: 389 to 402
+-- Lines 389-402
 function CoreEditorGroup:save_lights(file, t, unit, data_table)
 	local lights = CoreEditorUtils.get_editable_lights(unit) or {}
 
@@ -444,7 +445,7 @@ function CoreEditorGroup:save_lights(file, t, unit, data_table)
 	end
 end
 
--- Lines: 404 to 413
+-- Lines 404-413
 function CoreEditorGroup:save_variation(file, t, unit, data_table)
 	if unit:unit_data().mesh_variation and #managers.sequence:get_editable_state_sequence_list(unit:name()) > 0 then
 		file:puts(t .. "<variation value=\"" .. unit:unit_data().mesh_variation .. "\"/>")
@@ -455,7 +456,7 @@ function CoreEditorGroup:save_variation(file, t, unit, data_table)
 	end
 end
 
--- Lines: 415 to 433
+-- Lines 415-433
 function CoreEditorGroup:save_editable_gui(file, t, unit, data_table)
 	if unit:editable_gui() then
 		local text = unit:editable_gui():text()
@@ -475,7 +476,7 @@ function CoreEditorGroup:save_editable_gui(file, t, unit, data_table)
 	end
 end
 
--- Lines: 435 to 451
+-- Lines 435-451
 function CoreEditorGroup:draw(t, dt)
 	local i = 0.25
 
@@ -495,9 +496,10 @@ function CoreEditorGroup:draw(t, dt)
 
 	Application:draw(self._reference, 0, 1 * i, 0)
 end
+
 GroupPresetsDialog = GroupPresetsDialog or class(CoreEditorEwsDialog)
 
--- Lines: 457 to 499
+-- Lines 457-499
 function GroupPresetsDialog:init(files, path)
 	self._path = path
 
@@ -543,7 +545,7 @@ function GroupPresetsDialog:init(files, path)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 501 to 507
+-- Lines 501-507
 function GroupPresetsDialog:select_group()
 	local i = self._list:selected_index()
 
@@ -553,7 +555,7 @@ function GroupPresetsDialog:select_group()
 	end
 end
 
--- Lines: 508 to 515
+-- Lines 508-515
 function GroupPresetsDialog:create_group()
 	if self._file then
 		if self._hide_on_create then
@@ -564,8 +566,7 @@ function GroupPresetsDialog:create_group()
 	end
 end
 
--- Lines: 516 to 518
+-- Lines 516-518
 function GroupPresetsDialog:hide_on_create(hide)
 	self._hide_on_create = hide:get_value()
 end
-

@@ -4,7 +4,7 @@ core:import("CoreEditorUtils")
 
 DynamicsLayer = DynamicsLayer or class(CoreDynamicLayer.DynamicLayer)
 
--- Lines: 10 to 14
+-- Lines 10-14
 function DynamicsLayer:init(owner)
 	local types = CoreEditorUtils.layer_type("dynamics")
 
@@ -12,4 +12,3 @@ function DynamicsLayer:init(owner)
 
 	self._uses_continents = true
 end
-

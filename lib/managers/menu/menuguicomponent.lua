@@ -1,98 +1,97 @@
 MenuGuiComponent = MenuGuiComponent or class()
 
--- Lines: 4 to 5
+-- Lines 4-5
 function MenuGuiComponent:init(...)
 end
 
--- Lines: 7 to 8
+-- Lines 7-8
 function MenuGuiComponent:close(...)
 end
 
--- Lines: 10 to 11
+-- Lines 10-11
 function MenuGuiComponent:refresh()
 end
 
--- Lines: 13 to 14
+-- Lines 13-14
 function MenuGuiComponent:update(t, dt)
 end
 
--- Lines: 16 to 17
+-- Lines 16-17
 function MenuGuiComponent:accept_input(accept)
 end
 
--- Lines: 19 to 20
+-- Lines 19-20
 function MenuGuiComponent:input_focus()
 end
 
--- Lines: 22 to 23
+-- Lines 22-23
 function MenuGuiComponent:scroll_up()
 end
 
--- Lines: 25 to 26
+-- Lines 25-26
 function MenuGuiComponent:scroll_down()
 end
 
--- Lines: 28 to 29
+-- Lines 28-29
 function MenuGuiComponent:move_up()
 end
 
--- Lines: 31 to 32
+-- Lines 31-32
 function MenuGuiComponent:move_down()
 end
 
--- Lines: 34 to 35
+-- Lines 34-35
 function MenuGuiComponent:move_left()
 end
 
--- Lines: 37 to 38
+-- Lines 37-38
 function MenuGuiComponent:move_right()
 end
 
--- Lines: 40 to 41
+-- Lines 40-41
 function MenuGuiComponent:next_page()
 end
 
--- Lines: 43 to 44
+-- Lines 43-44
 function MenuGuiComponent:previous_page()
 end
 
--- Lines: 46 to 47
+-- Lines 46-47
 function MenuGuiComponent:confirm_pressed()
 end
 
--- Lines: 49 to 50
+-- Lines 49-50
 function MenuGuiComponent:back_pressed()
 end
 
--- Lines: 52 to 53
+-- Lines 52-53
 function MenuGuiComponent:special_btn_pressed(...)
 end
 
--- Lines: 55 to 56
+-- Lines 55-56
 function MenuGuiComponent:mouse_pressed(o, button, x, y)
 end
 
--- Lines: 58 to 59
+-- Lines 58-59
 function MenuGuiComponent:mouse_released(o, button, x, y)
 end
 
--- Lines: 61 to 62
+-- Lines 61-62
 function MenuGuiComponent:mouse_wheel_up(x, y)
 end
 
--- Lines: 64 to 65
+-- Lines 64-65
 function MenuGuiComponent:mouse_wheel_down(x, y)
 end
 
--- Lines: 67 to 68
+-- Lines 67-68
 function MenuGuiComponent:mouse_clicked(o, button, x, y)
 end
 
--- Lines: 70 to 71
+-- Lines 70-71
 function MenuGuiComponent:mouse_double_click(o, button, x, y)
 end
 
--- Lines: 73 to 74
+-- Lines 73-74
 function MenuGuiComponent:mouse_moved(o, x, y)
 end
-

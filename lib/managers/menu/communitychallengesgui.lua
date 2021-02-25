@@ -3,7 +3,7 @@ require("lib/utils/gui/FineText")
 
 Tween = Tween or class()
 
--- Lines: 9 to 20
+-- Lines 9-20
 function Tween:init(target, name, opts)
 	opts = opts or {}
 	self._target = target
@@ -17,7 +17,7 @@ function Tween:init(target, name, opts)
 	self._finished = false
 end
 
--- Lines: 22 to 34
+-- Lines 22-34
 function Tween:update(t, dt)
 	if not self._finished then
 		self._time = self._time + dt
@@ -33,22 +33,22 @@ function Tween:update(t, dt)
 	end
 end
 
--- Lines: 36 to 37
+-- Lines 36-38
 function Tween:finished()
 	return self._finished
 end
 
--- Lines: 40 to 41
+-- Lines 40-42
 function Tween.ease_linear(from, to, t)
 	return from * (1 - t) + to * t
 end
 
--- Lines: 44 to 45
+-- Lines 44-46
 function Tween.ease_out(from, to, t)
 	return (from - to) * t * (t - 2) + from
 end
 
--- Lines: 52 to 72
+-- Lines 52-73
 local function make_value_string(number, additional_zeroes)
 	if number == 0 then
 		return "0"
@@ -72,7 +72,7 @@ local function make_value_string(number, additional_zeroes)
 	return result
 end
 
--- Lines: 75 to 133
+-- Lines 75-134
 local function make_roman_numerals(number)
 	number = math.floor(number)
 
@@ -152,7 +152,7 @@ end
 
 CommunityChallengeProgressBar = CommunityChallengeProgressBar or class(GUIObjectWrapper)
 
--- Lines: 142 to 198
+-- Lines 142-198
 function CommunityChallengeProgressBar:init(parent, config)
 	local panel = parent:panel()
 
@@ -184,7 +184,9 @@ function CommunityChallengeProgressBar:init(parent, config)
 	})
 	self._stage_text = FineText:new(panel, {
 		blend_mode = "add",
-		text = managers.localization:to_upper_text("menu_community_challenges_stage", {stage = "I"}),
+		text = managers.localization:to_upper_text("menu_community_challenges_stage", {
+			stage = "I"
+		}),
 		font = font,
 		font_size = font_size,
 		color = color_emphasis
@@ -195,7 +197,9 @@ function CommunityChallengeProgressBar:init(parent, config)
 		font_size = font_size,
 		color = color_muted
 	})
-	self._exp_icon = panel:bitmap({texture = "guis/textures/pd2/community_challenges/experience_bonus_icon"})
+	self._exp_icon = panel:bitmap({
+		texture = "guis/textures/pd2/community_challenges/experience_bonus_icon"
+	})
 	self._progress_fill = panel:rect({
 		blend_mode = "add",
 		layer = -1,
@@ -205,7 +209,7 @@ function CommunityChallengeProgressBar:init(parent, config)
 	self:layout()
 end
 
--- Lines: 200 to 217
+-- Lines 200-217
 function CommunityChallengeProgressBar:config(config)
 	self._target_value = config.target_value or 0
 	self._additional_zeroes = config.additional_zeroes or 0
@@ -218,20 +222,22 @@ function CommunityChallengeProgressBar:config(config)
 	})
 
 	local stage_roman = make_roman_numerals(config.stage or 1)
-	local stage_text = managers.localization:to_upper_text("menu_community_challenges_stage", {stage = stage_roman})
+	local stage_text = managers.localization:to_upper_text("menu_community_challenges_stage", {
+		stage = stage_roman
+	})
 
 	self._stage_text:set_text(stage_text)
 	self._progress_text:set_text(self:_make_progress_text())
 	self:layout()
 end
 
--- Lines: 219 to 230
+-- Lines 219-230
 function CommunityChallengeProgressBar:layout()
 	self._title_text:set_lefttop(5, 1)
 	self._progress_text:set_leftbottom(5, self._height - 1)
 	self._stage_text:set_lefttop(self._title_text:right() + 5, 1)
 
-	local fill_max_width = (self._width - self._exp_icon:width()) - 10
+	local fill_max_width = self._width - self._exp_icon:width() - 10
 	local fill_ratio = self._target_value > 0 and self._current_value / self._target_value or 1
 
 	self._progress_fill:set_width(fill_max_width * fill_ratio)
@@ -239,7 +245,7 @@ function CommunityChallengeProgressBar:layout()
 	self._exp_icon:set_center_y(math.round(self._height * 0.5))
 end
 
--- Lines: 232 to 239
+-- Lines 232-239
 function CommunityChallengeProgressBar:update(t, dt)
 	if not self._value_tween:finished() then
 		self._value_tween:update(t, dt)
@@ -251,7 +257,7 @@ function CommunityChallengeProgressBar:update(t, dt)
 	end
 end
 
--- Lines: 241 to 244
+-- Lines 241-245
 function CommunityChallengeProgressBar:_make_progress_text()
 	local current = make_value_string(self._current_value, self._additional_zeroes)
 	local target = make_value_string(self._target_value, self._additional_zeroes)
@@ -259,13 +265,14 @@ function CommunityChallengeProgressBar:_make_progress_text()
 	return current .. " / " .. target
 end
 
--- Lines: 247 to 248
+-- Lines 247-249
 function CommunityChallengeProgressBar:get_statistic_id()
 	return self._statistic_id
 end
+
 CommunityChallengeProgressTotal = CommunityChallengeProgressTotal or class(GUIObjectWrapper)
 
--- Lines: 257 to 301
+-- Lines 257-301
 function CommunityChallengeProgressTotal:init(parent, config)
 	local panel = parent:panel()
 
@@ -295,7 +302,9 @@ function CommunityChallengeProgressTotal:init(parent, config)
 	})
 	self._stage_text = FineText:new(panel, {
 		blend_mode = "add",
-		text = managers.localization:to_upper_text("menu_community_challenges_stage", {stage = "I"}),
+		text = managers.localization:to_upper_text("menu_community_challenges_stage", {
+			stage = "I"
+		}),
 		font = font,
 		font_size = font_size,
 		color = color_emphasis
@@ -310,43 +319,46 @@ function CommunityChallengeProgressTotal:init(parent, config)
 	self:layout()
 end
 
--- Lines: 303 to 314
+-- Lines 303-314
 function CommunityChallengeProgressTotal:config(config)
 	self._total_value = config.total_value or 0
 	self._additional_zeroes = config.additional_zeroes or 0
 	local stage_roman = make_roman_numerals(config.stage or 1)
-	local stage_text = managers.localization:to_upper_text("menu_community_challenges_stage", {stage = stage_roman})
+	local stage_text = managers.localization:to_upper_text("menu_community_challenges_stage", {
+		stage = stage_roman
+	})
 
 	self._stage_text:set_text(stage_text)
 	self._progress_text:set_text(self:_make_progress_text())
 	self:layout()
 end
 
--- Lines: 316 to 320
+-- Lines 316-320
 function CommunityChallengeProgressTotal:layout()
 	self._title_text:set_lefttop(5, 1)
 	self._progress_text:set_leftbottom(5, self._height - 1)
 	self._stage_text:set_lefttop(self._title_text:right() + 5, 1)
 end
 
--- Lines: 322 to 323
+-- Lines 322-323
 function CommunityChallengeProgressTotal:update(t, dt)
 end
 
--- Lines: 325 to 327
+-- Lines 325-328
 function CommunityChallengeProgressTotal:_make_progress_text()
 	local total = make_value_string(self._total_value, self._additional_zeroes)
 
 	return "Total: " .. total
 end
 
--- Lines: 330 to 331
+-- Lines 330-332
 function CommunityChallengeProgressTotal:get_statistic_id()
 	return self._statistic_id
 end
+
 CommunityChallengesGui = CommunityChallengesGui or class(GUIObjectWrapper)
 
--- Lines: 340 to 426
+-- Lines 340-426
 function CommunityChallengesGui:init(parent)
 	local panel = parent:panel()
 
@@ -384,13 +396,17 @@ function CommunityChallengesGui:init(parent)
 
 	local active_bonus = managers.community_challenges:get_active_experience_bonus()
 	self._total_bonus_text = FineText:new(self._stats_container, {
-		text = managers.localization:to_upper_text("menu_community_challenges_active_bonus", {bonus = active_bonus * 100}),
+		text = managers.localization:to_upper_text("menu_community_challenges_active_bonus", {
+			bonus = active_bonus * 100
+		}),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		color = color_text
 	})
 	self._info_text = FineText:new(self._stats_container, {
-		text = managers.localization:to_upper_text("menu_community_challenges_info_ended", {bonus = CommunityChallengesManager.PER_CHALLENGE_BONUS * 100}),
+		text = managers.localization:to_upper_text("menu_community_challenges_info_ended", {
+			bonus = CommunityChallengesManager.PER_CHALLENGE_BONUS * 100
+		}),
 		font = tweak_data.menu.pd2_tiny_font,
 		font_size = tweak_data.menu.pd2_tiny_font_size,
 		color = color_muted
@@ -402,12 +418,14 @@ function CommunityChallengesGui:init(parent)
 		layer = -1,
 		color = Color(0.3, 0, 0, 0)
 	})
-	self._bg_box = BoxGuiObject:new(self._stats_container, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._bg_box = BoxGuiObject:new(self._stats_container, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	local challenge_data = managers.community_challenges:get_challenge_data()
 
 	if challenge_data then
@@ -418,7 +436,7 @@ function CommunityChallengesGui:init(parent)
 	managers.community_challenges:fetch_community_challenge_data()
 end
 
--- Lines: 428 to 437
+-- Lines 428-437
 function CommunityChallengesGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -429,7 +447,7 @@ function CommunityChallengesGui:close()
 	managers.community_challenges:remove_event_listener(Message.OnCommunityChallengeDataReceived, "CommunityChallengesGui:consume_community_challenges_data")
 end
 
--- Lines: 439 to 457
+-- Lines 439-457
 function CommunityChallengesGui:layout()
 	for i, pbar in ipairs(self._progress_bars) do
 		local zi = i - 1
@@ -451,21 +469,21 @@ function CommunityChallengesGui:layout()
 	self._panel:set_height(full_height)
 end
 
--- Lines: 459 to 463
+-- Lines 459-463
 function CommunityChallengesGui:update(t, dt)
 	for _, pbar in ipairs(self._progress_bars) do
 		pbar:update(t, dt)
 	end
 end
 
--- Lines: 468 to 472
+-- Lines 465-472
 function CommunityChallengesGui:add_progress_bar(config)
 	local progress_bar = CommunityChallengeProgressTotal:new(self._stats_container, config)
 
 	table.insert(self._progress_bars, progress_bar)
 end
 
--- Lines: 474 to 488
+-- Lines 474-488
 function CommunityChallengesGui:consume_community_challenges_data(data)
 	for i, pbar in ipairs(self._progress_bars) do
 		local challenge = data[pbar:get_statistic_id()]
@@ -480,7 +498,8 @@ function CommunityChallengesGui:consume_community_challenges_data(data)
 
 	local active_bonus = managers.community_challenges:get_active_experience_bonus()
 
-	self._total_bonus_text:set_text(managers.localization:to_upper_text("menu_community_challenges_active_bonus", {bonus = math.round(active_bonus * 100)}))
+	self._total_bonus_text:set_text(managers.localization:to_upper_text("menu_community_challenges_active_bonus", {
+		bonus = math.round(active_bonus * 100)
+	}))
 	self:layout()
 end
-

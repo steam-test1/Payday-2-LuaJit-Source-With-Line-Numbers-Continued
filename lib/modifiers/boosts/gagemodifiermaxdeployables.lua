@@ -2,12 +2,12 @@ GageModifierMaxDeployables = GageModifierMaxDeployables or class(GageModifier)
 GageModifierMaxDeployables._type = "GageModifierMaxDeployables"
 GageModifierMaxDeployables.default_value = "deployables"
 
--- Lines: 6 to 7
+-- Lines 6-8
 function GageModifierMaxDeployables:get_amount_multiplier()
 	return 1 + self:value() / 100
 end
 
--- Lines: 10 to 16
+-- Lines 10-17
 function GageModifierMaxDeployables:modify_value(id, value)
 	if id == "PlayerManager:GetEquipmentMaxAmount" and value > 0 then
 		local new_val = math.floor(value * self:get_amount_multiplier())
@@ -18,4 +18,3 @@ function GageModifierMaxDeployables:modify_value(id, value)
 
 	return value
 end
-

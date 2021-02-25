@@ -1,6 +1,6 @@
 SpawnDeployableUnitElement = SpawnDeployableUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function SpawnDeployableUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -9,7 +9,7 @@ function SpawnDeployableUnitElement:init(unit)
 	table.insert(self._save_values, "deployable_id")
 end
 
--- Lines: 14 to 21
+-- Lines 14-21
 function SpawnDeployableUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -24,4 +24,3 @@ function SpawnDeployableUnitElement:_build_panel(panel, panel_sizer)
 		"bodybags_bag"
 	}, "Select a deployable_id to be spawned.")
 end
-

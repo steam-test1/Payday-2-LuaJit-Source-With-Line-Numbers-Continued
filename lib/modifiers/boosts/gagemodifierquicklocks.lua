@@ -2,12 +2,12 @@ GageModifierQuickLocks = GageModifierQuickLocks or class(GageModifier)
 GageModifierQuickLocks._type = "GageModifierQuickLocks"
 GageModifierQuickLocks.default_value = "speed"
 
--- Lines: 6 to 7
+-- Lines 6-8
 function GageModifierQuickLocks:get_speed_divisor()
 	return 1 + self:value() / 100
 end
 
--- Lines: 10 to 18
+-- Lines 10-19
 function GageModifierQuickLocks:modify_value(id, value, interact_object)
 	if id == "PlayerStandard:OnStartInteraction" then
 		local tweak_id = interact_object:interaction().tweak_data
@@ -20,4 +20,3 @@ function GageModifierQuickLocks:modify_value(id, value, interact_object)
 
 	return value
 end
-

@@ -1,38 +1,38 @@
 HandMelee = HandMelee or class()
 
--- Lines: 4 to 6
+-- Lines 4-6
 function HandMelee:init(hand_unit)
 	self._hand_unit = hand_unit
 end
 
--- Lines: 8 to 9
+-- Lines 8-10
 function HandMelee:has_weapon()
 	return self._entry == "weapon" and alive(self._weapon_unit) and self._weapon_unit:enabled() and self._weapon_unit:visible()
 end
 
--- Lines: 12 to 13
+-- Lines 12-14
 function HandMelee:has_melee_weapon()
 	return self._entry ~= "weapon" and alive(self._melee_unit) and not self:has_custom_weapon()
 end
 
--- Lines: 16 to 17
+-- Lines 16-18
 function HandMelee:has_custom_weapon()
 	return alive(self._custom_unit)
 end
 
--- Lines: 20 to 23
+-- Lines 20-23
 function HandMelee:set_melee_unit(unit)
 	self._melee_unit = unit
 	self._entry = alive(unit) and managers.blackmarket:equipped_melee_weapon() or self:has_custom_weapon() and "custom" or "weapon"
 end
 
--- Lines: 25 to 28
+-- Lines 25-28
 function HandMelee:set_fist(entry)
 	self._melee_unit = self._hand_unit
 	self._entry = entry
 end
 
--- Lines: 30 to 42
+-- Lines 30-42
 function HandMelee:set_weapon_unit(unit)
 	self._weapon_unit = unit
 
@@ -47,7 +47,7 @@ function HandMelee:set_weapon_unit(unit)
 	self._weapon_id = weapon_base.name_id
 end
 
--- Lines: 44 to 51
+-- Lines 44-51
 function HandMelee:set_custom_unit(unit, id)
 	self._custom_unit = unit
 
@@ -59,7 +59,7 @@ function HandMelee:set_custom_unit(unit, id)
 	self._custom_id = id
 end
 
--- Lines: 53 to 59
+-- Lines 53-59
 function HandMelee:unit()
 	if self:has_weapon() then
 		return self._weapon_unit
@@ -67,10 +67,11 @@ function HandMelee:unit()
 		return self._melee_unit
 	end
 end
+
 local ray_vec = Vector3(0, 0, 0)
 local ray_pen = Draw:pen()
 
--- Lines: 63 to 99
+-- Lines 63-99
 function HandMelee:_get_hitpoint()
 	if self:has_weapon() then
 		if alive(self._bayonet_unit) then
@@ -113,10 +114,11 @@ function HandMelee:_get_hitpoint()
 		return hit_point
 	end
 end
+
 local mvec_delta = Vector3()
 local mvec_bayonet_dir = Vector3()
 
--- Lines: 103 to 207
+-- Lines 103-207
 function HandMelee:update(unit, t, dt)
 	if not self:has_melee_weapon() and not self:has_weapon() and not self:has_custom_weapon() then
 		if alive(self._weapon_unit) then
@@ -222,12 +224,12 @@ function HandMelee:update(unit, t, dt)
 	end
 end
 
--- Lines: 209 to 210
+-- Lines 209-211
 function HandMelee:charge_start_t()
 	return self._charge_start_t
 end
 
--- Lines: 213 to 228
+-- Lines 213-228
 function HandMelee:set_charge_start_t(t)
 	if self._next_full_hit_t and t and t < self._next_full_hit_t then
 		return
@@ -247,4 +249,3 @@ function HandMelee:set_charge_start_t(t)
 		self._charge_sound = nil
 	end
 end
-

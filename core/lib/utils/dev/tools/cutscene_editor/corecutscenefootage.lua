@@ -4,32 +4,32 @@ require("core/lib/managers/cutscene/CoreCutsceneKeys")
 local CAMERA_ICON_IMAGE_COUNT = 30
 CoreCutsceneFootage = CoreCutsceneFootage or class()
 
--- Lines: 8 to 10
+-- Lines 8-10
 function CoreCutsceneFootage:init(cutscene)
 	self._cutscene = cutscene
 end
 
--- Lines: 12 to 13
+-- Lines 12-14
 function CoreCutsceneFootage:name()
 	return self._cutscene:name()
 end
 
--- Lines: 16 to 17
+-- Lines 16-18
 function CoreCutsceneFootage:controlled_unit_types()
 	return self._cutscene:controlled_unit_types()
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function CoreCutsceneFootage:camera_names()
 	return self._cutscene:camera_names()
 end
 
--- Lines: 24 to 25
+-- Lines 24-26
 function CoreCutsceneFootage:keys()
 	return self._cutscene:_all_keys_sorted_by_time()
 end
 
--- Lines: 28 to 37
+-- Lines 28-37
 function CoreCutsceneFootage:add_clips_to_track(track, time)
 	time = time or 0
 
@@ -42,7 +42,7 @@ function CoreCutsceneFootage:add_clips_to_track(track, time)
 	track:thaw()
 end
 
--- Lines: 39 to 48
+-- Lines 39-48
 function CoreCutsceneFootage:add_cameras_to_list_ctrl(list_ctrl)
 	list_ctrl:freeze()
 	list_ctrl:delete_all_items()
@@ -57,7 +57,7 @@ function CoreCutsceneFootage:add_cameras_to_list_ctrl(list_ctrl)
 	list_ctrl:thaw()
 end
 
--- Lines: 50 to 61
+-- Lines 50-62
 function CoreCutsceneFootage:create_clip(start_frame, end_frame, camera)
 	local clip = EWS:SequencerCroppedClip()
 	local metadata = core_or_local("CutsceneClipMetadata", self, camera)
@@ -72,12 +72,12 @@ function CoreCutsceneFootage:create_clip(start_frame, end_frame, camera)
 	return clip
 end
 
--- Lines: 64 to 65
+-- Lines 64-66
 function CoreCutsceneFootage:frame_count()
 	return self._cutscene:frame_count()
 end
 
--- Lines: 68 to 87
+-- Lines 68-88
 function CoreCutsceneFootage:colour()
 	if self._colour == nil then
 		local precision = 255
@@ -87,7 +87,7 @@ function CoreCutsceneFootage:colour()
 		local name = self._cutscene:name()
 		local len = string.len(name)
 
-		for i = 1, len, 1 do
+		for i = 1, len do
 			local byte = string.byte(name, i)
 			r = math.fmod(r * 33 + byte, precision + 1)
 			g = math.fmod(g * 33 + byte, precision + 1)
@@ -102,7 +102,7 @@ function CoreCutsceneFootage:colour()
 	return self._colour
 end
 
--- Lines: 90 to 100
+-- Lines 90-101
 function CoreCutsceneFootage:camera_icon_index(camera_name, image_count)
 	image_count = image_count or CAMERA_ICON_IMAGE_COUNT + 1
 	local name_without_prefix = string.match(camera_name, "camera_(.+)")
@@ -115,7 +115,7 @@ function CoreCutsceneFootage:camera_icon_index(camera_name, image_count)
 	return icon_index
 end
 
--- Lines: 103 to 110
+-- Lines 103-111
 function CoreCutsceneFootage:_camera_cuts()
 	local cuts = self:_camera_cut_list()
 	local index = 0
@@ -127,14 +127,13 @@ function CoreCutsceneFootage:_camera_cuts()
 	end
 end
 
--- Lines: 113 to 134
+-- Lines 113-135
 function CoreCutsceneFootage:_camera_cut_list()
 	if self._camera_cut_cache == nil then
 		self._camera_cut_cache = {}
 
 		if self._cutscene:has_cameras() then
-
-			-- Lines: 118 to 122
+			-- Lines 118-122
 			local function add_camera_cut(start_frame, end_frame, camera)
 				if start_frame < end_frame then
 					table.insert(self._camera_cut_cache, {
@@ -163,8 +162,7 @@ function CoreCutsceneFootage:_camera_cut_list()
 	return self._camera_cut_cache
 end
 
--- Lines: 137 to 139
+-- Lines 137-139
 function CoreCutsceneFootage:prime_cast(cast)
 	cast:prime(self._cutscene)
 end
-

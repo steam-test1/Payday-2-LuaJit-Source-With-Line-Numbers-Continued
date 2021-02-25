@@ -2,14 +2,14 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneFrameVisitor")
 
 CoreCutsceneFrameExporter = CoreCutsceneFrameExporter or class(CoreCutsceneFrameVisitor)
 
--- Lines: 4 to 7
+-- Lines 4-7
 function CoreCutsceneFrameExporter:init(parent_window, cutscene_editor, start_frame, end_frame, collection_name)
 	self.super.init(self, parent_window, cutscene_editor, start_frame, end_frame)
 
 	self.__collection_name = assert(tostring(collection_name))
 end
 
--- Lines: 9 to 24
+-- Lines 9-24
 function CoreCutsceneFrameExporter:begin()
 	self.super.begin(self)
 
@@ -28,30 +28,30 @@ function CoreCutsceneFrameExporter:begin()
 	self:_disable_visual_aids()
 end
 
--- Lines: 26 to 27
+-- Lines 26-28
 function CoreCutsceneFrameExporter:_progress_message(frame)
 	return "Writing image " .. self:_image_file_name(frame)
 end
 
--- Lines: 30 to 33
+-- Lines 30-33
 function CoreCutsceneFrameExporter:_visit_frame(frame)
 	local file_path = string.format("/frames/%s/%s", self.__collection_name, self:_image_file_name(frame))
 
 	Application:screenshot(file_path)
 end
 
--- Lines: 35 to 38
+-- Lines 35-38
 function CoreCutsceneFrameExporter:_cleanup()
 	self:_enable_visual_aids()
 	self.super._cleanup(self)
 end
 
--- Lines: 40 to 41
+-- Lines 40-42
 function CoreCutsceneFrameExporter:_image_file_name(frame)
 	return string.format("%08i.tga", frame)
 end
 
--- Lines: 44 to 66
+-- Lines 44-66
 function CoreCutsceneFrameExporter:_enable_visual_aids()
 	if self.__cutscene_editor_camera_was_enabled ~= nil then
 		self.__cutscene_editor:set_cutscene_camera_enabled(self.__cutscene_editor_camera_was_enabled)
@@ -76,7 +76,7 @@ function CoreCutsceneFrameExporter:_enable_visual_aids()
 	end
 end
 
--- Lines: 68 to 82
+-- Lines 68-82
 function CoreCutsceneFrameExporter:_disable_visual_aids()
 	self.__cutscene_editor_camera_was_enabled = self.__cutscene_editor:cutscene_camera_enabled()
 
@@ -95,4 +95,3 @@ function CoreCutsceneFrameExporter:_disable_visual_aids()
 		managers.editor._show_center = false
 	end
 end
-

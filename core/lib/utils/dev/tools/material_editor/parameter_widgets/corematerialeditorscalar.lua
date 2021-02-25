@@ -3,7 +3,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorScalar = CoreMaterialEditorScalar or class(CoreMaterialEditorParameter)
 
--- Lines: 8 to 20
+-- Lines 8-20
 function CoreMaterialEditorScalar:init(parent, editor, parameter_info, parameter_node)
 	CoreMaterialEditorParameter.init(self, parent, editor, parameter_info, parameter_node)
 
@@ -20,17 +20,17 @@ function CoreMaterialEditorScalar:init(parent, editor, parameter_info, parameter
 	self._right_box:add(self._text_ctrl, 0, 4, "ALL,EXPAND")
 end
 
--- Lines: 22 to 24
+-- Lines 22-24
 function CoreMaterialEditorScalar:update(t, dt)
 	CoreMaterialEditorParameter.update(self, t, dt)
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function CoreMaterialEditorScalar:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
--- Lines: 30 to 41
+-- Lines 30-41
 function CoreMaterialEditorScalar:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -42,7 +42,7 @@ function CoreMaterialEditorScalar:on_toggle_customize()
 	self:update_live()
 end
 
--- Lines: 45 to 50
+-- Lines 45-50
 function CoreMaterialEditorScalar:_on_slider()
 	self._value = self:from_slider_range(self._slider:get_value(), self._parameter_info.min, self._parameter_info.step)
 
@@ -51,7 +51,7 @@ function CoreMaterialEditorScalar:_on_slider()
 	self:update_live()
 end
 
--- Lines: 52 to 58
+-- Lines 52-58
 function CoreMaterialEditorScalar:_on_text_ctrl()
 	self._value = tonumber(self._text_ctrl:get_value()) or 0
 

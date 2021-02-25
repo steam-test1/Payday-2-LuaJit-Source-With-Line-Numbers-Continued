@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateWeaponAssist = PlayerHandStateWeaponAssist or class(PlayerHandState)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerHandStateWeaponAssist:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeaponAssist.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 29
+-- Lines 10-29
 function PlayerHandStateWeaponAssist:at_enter(prev_state)
 	local weapon_unit = self:hsm():other_hand():current_state()._weapon_unit
 	local weapon_tweak = alive(weapon_unit) and tweak_data.vr.weapon_assist.weapons[weapon_unit:base().name_id]
@@ -28,7 +28,7 @@ function PlayerHandStateWeaponAssist:at_enter(prev_state)
 	managers.player:player_unit():movement():current_state()._start_intimidate = nil
 end
 
--- Lines: 31 to 40
+-- Lines 31-40
 function PlayerHandStateWeaponAssist:update(t, dt)
 	local weapon_unit = self:hsm():other_hand():current_state()._weapon_unit
 
@@ -37,4 +37,3 @@ function PlayerHandStateWeaponAssist:update(t, dt)
 		self._hand_unit:set_moving(2)
 	end
 end
-

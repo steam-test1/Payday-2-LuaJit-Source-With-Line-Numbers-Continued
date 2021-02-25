@@ -25,7 +25,7 @@ local material_variables = {
 	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 }
 
--- Lines: 38 to 42
+-- Lines 38-42
 function ArmorSkinExt:init(unit, update_enabled)
 	self._unit = unit
 
@@ -33,7 +33,7 @@ function ArmorSkinExt:init(unit, update_enabled)
 	self:set_armor_id("level_1")
 end
 
--- Lines: 44 to 49
+-- Lines 44-49
 function ArmorSkinExt:update(unit, t, dt)
 	if self._request_update then
 		self:_apply_cosmetics()
@@ -42,7 +42,7 @@ function ArmorSkinExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 51 to 58
+-- Lines 51-58
 function ArmorSkinExt:set_armor_id(armor_id)
 	local data = tweak_data.blackmarket.armors[armor_id]
 
@@ -53,7 +53,7 @@ function ArmorSkinExt:set_armor_id(armor_id)
 	end
 end
 
--- Lines: 60 to 67
+-- Lines 60-67
 function ArmorSkinExt:armor_level()
 	if self._level then
 		return self._level
@@ -64,7 +64,7 @@ function ArmorSkinExt:armor_level()
 	end
 end
 
--- Lines: 70 to 86
+-- Lines 69-86
 function ArmorSkinExt:set_cosmetics_data(cosmetics_id, request_update)
 	if not cosmetics_id then
 		self._cosmetics_id = nil
@@ -83,27 +83,27 @@ function ArmorSkinExt:set_cosmetics_data(cosmetics_id, request_update)
 	self._request_update = request_update
 end
 
--- Lines: 88 to 89
+-- Lines 88-90
 function ArmorSkinExt:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines: 92 to 93
+-- Lines 92-94
 function ArmorSkinExt:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines: 96 to 97
+-- Lines 96-98
 function ArmorSkinExt:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines: 100 to 101
+-- Lines 100-102
 function ArmorSkinExt:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines: 105 to 186
+-- Lines 104-186
 function ArmorSkinExt:_apply_cosmetics(clbks)
 	self:_update_materials()
 
@@ -195,7 +195,7 @@ function ArmorSkinExt:_apply_cosmetics(clbks)
 	self:_chk_load_complete(clbks.done)
 end
 
--- Lines: 189 to 204
+-- Lines 188-204
 function ArmorSkinExt:clbk_texture_loaded(clbks, tex_name)
 	if not alive(self._unit) then
 		return
@@ -215,7 +215,7 @@ function ArmorSkinExt:clbk_texture_loaded(clbks, tex_name)
 	end)
 end
 
--- Lines: 207 to 227
+-- Lines 206-227
 function ArmorSkinExt:_chk_load_complete(async_clbk)
 	print("[ArmorSkinExt] _chk_load_complete")
 
@@ -238,7 +238,7 @@ function ArmorSkinExt:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines: 230 to 265
+-- Lines 229-265
 function ArmorSkinExt:_set_material_textures()
 	print("[ArmorSkinExt] _set_material_textures")
 
@@ -279,7 +279,7 @@ function ArmorSkinExt:_set_material_textures()
 	end
 end
 
--- Lines: 267 to 274
+-- Lines 267-274
 function ArmorSkinExt:_get_cc_material_config()
 	local ids_config_key = self._unit:material_config():key()
 
@@ -290,7 +290,7 @@ function ArmorSkinExt:_get_cc_material_config()
 	end
 end
 
--- Lines: 276 to 283
+-- Lines 276-283
 function ArmorSkinExt:_get_original_material_config()
 	local ids_config_key = self._unit:material_config():key()
 
@@ -301,7 +301,7 @@ function ArmorSkinExt:_get_original_material_config()
 	end
 end
 
--- Lines: 285 to 290
+-- Lines 285-290
 function ArmorSkinExt:set_character(character_name)
 	local char_config = tweak_data.economy.character_cc_configs[character_name]
 
@@ -310,7 +310,7 @@ function ArmorSkinExt:set_character(character_name)
 	end
 end
 
--- Lines: 293 to 325
+-- Lines 292-325
 function ArmorSkinExt:_update_materials()
 	local use = self:use_cc()
 	local use_cc_material_config = use and self._cosmetics_data and not self._cosmetics_data.ignore_cc and true or false
@@ -340,8 +340,7 @@ function ArmorSkinExt:_update_materials()
 	end
 end
 
--- Lines: 330 to 331
+-- Lines 327-333
 function ArmorSkinExt:use_cc()
 	return true
 end
-

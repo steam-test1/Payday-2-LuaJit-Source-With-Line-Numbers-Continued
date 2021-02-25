@@ -4,7 +4,7 @@ core:import("CoreMenuItemOption")
 MenuItemMultiChoice = MenuItemMultiChoice or class(CoreMenuItem.Item)
 MenuItemMultiChoice.TYPE = "multi_choice"
 
--- Lines: 7 to 34
+-- Lines 7-34
 function MenuItemMultiChoice:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -36,26 +36,26 @@ function MenuItemMultiChoice:init(data_node, parameters)
 	self:_show_options(nil)
 end
 
--- Lines: 36 to 39
+-- Lines 36-39
 function MenuItemMultiChoice:set_enabled(enabled)
 	self._enabled = enabled
 
 	self:dirty()
 end
 
--- Lines: 41 to 44
+-- Lines 41-44
 function MenuItemMultiChoice:set_callback_handler(callback_handler)
 	MenuItemMultiChoice.super.set_callback_handler(self, callback_handler)
 end
 
--- Lines: 46 to 48
+-- Lines 46-49
 function MenuItemMultiChoice:visible(...)
 	self:_show_options(self._callback_handler)
 
 	return MenuItemMultiChoice.super.visible(self, ...)
 end
 
--- Lines: 51 to 80
+-- Lines 51-80
 function MenuItemMultiChoice:_show_options(callback_handler)
 	local selected_value = self:selected_option() and self:selected_option():value()
 	self._options = {}
@@ -88,40 +88,40 @@ function MenuItemMultiChoice:_show_options(callback_handler)
 	end
 end
 
--- Lines: 83 to 86
+-- Lines 83-86
 function MenuItemMultiChoice:add_option(option)
 	table.insert(self._all_options, option)
 	table.insert(self._options, option)
 end
 
--- Lines: 88 to 90
+-- Lines 88-90
 function MenuItemMultiChoice:clear_options()
 	self._all_options = {}
 end
 
--- Lines: 92 to 93
+-- Lines 92-94
 function MenuItemMultiChoice:options()
 	return self._options
 end
 
--- Lines: 96 to 97
+-- Lines 96-98
 function MenuItemMultiChoice:selected_option()
 	return self._options[self._current_index]
 end
 
--- Lines: 100 to 101
+-- Lines 100-102
 function MenuItemMultiChoice:current_index()
 	return self._current_index
 end
 
--- Lines: 104 to 107
+-- Lines 104-107
 function MenuItemMultiChoice:set_current_index(index)
 	self._current_index = index
 
 	self:dirty()
 end
 
--- Lines: 109 to 117
+-- Lines 109-117
 function MenuItemMultiChoice:set_value(value)
 	for i, option in ipairs(self._options) do
 		if option:parameters().value == value then
@@ -134,7 +134,7 @@ function MenuItemMultiChoice:set_value(value)
 	self:dirty()
 end
 
--- Lines: 119 to 125
+-- Lines 119-126
 function MenuItemMultiChoice:value()
 	local value = ""
 	local selected_option = self:selected_option()
@@ -146,7 +146,7 @@ function MenuItemMultiChoice:value()
 	return value
 end
 
--- Lines: 129 to 136
+-- Lines 129-137
 function MenuItemMultiChoice:_highest_option_index()
 	local index = 1
 
@@ -159,7 +159,7 @@ function MenuItemMultiChoice:_highest_option_index()
 	return index
 end
 
--- Lines: 140 to 146
+-- Lines 140-146
 function MenuItemMultiChoice:_lowest_option_index()
 	for i, option in ipairs(self._options) do
 		if not option:parameters().exclude then
@@ -168,7 +168,7 @@ function MenuItemMultiChoice:_lowest_option_index()
 	end
 end
 
--- Lines: 149 to 166
+-- Lines 149-167
 function MenuItemMultiChoice:next()
 	if not self._enabled then
 		return
@@ -189,7 +189,7 @@ function MenuItemMultiChoice:next()
 	return true
 end
 
--- Lines: 169 to 186
+-- Lines 169-187
 function MenuItemMultiChoice:previous()
 	if not self._enabled then
 		return
@@ -210,31 +210,35 @@ function MenuItemMultiChoice:previous()
 	return true
 end
 
--- Lines: 189 to 190
+-- Lines 189-191
 function MenuItemMultiChoice:left_arrow_visible()
 	return self:_lowest_option_index() < self._current_index and self._enabled
 end
 
--- Lines: 193 to 194
+-- Lines 193-195
 function MenuItemMultiChoice:right_arrow_visible()
 	return self._current_index < self:_highest_option_index() and self._enabled
 end
 
--- Lines: 197 to 198
+-- Lines 197-199
 function MenuItemMultiChoice:arrow_visible()
 	return #self._options > 1
 end
 
--- Lines: 203 to 245
+-- Lines 203-246
 function MenuItemMultiChoice:setup_gui(node, row_item)
 	local right_align = node:_right_align()
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
 
 	row_item.gui_text:set_wrap(true)
 	row_item.gui_text:set_word_wrap(true)
 
-	row_item.choice_panel = row_item.gui_panel:panel({w = node.item_panel:w()})
+	row_item.choice_panel = row_item.gui_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.choice_text = row_item.choice_panel:text({
 		vertical = "center",
 		y = 0,
@@ -295,7 +299,7 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 248 to 267
+-- Lines 248-267
 local function scroll_text(text, clone)
 	while true do
 		local t = 0
@@ -321,7 +325,7 @@ local function scroll_text(text, clone)
 	end
 end
 
--- Lines: 269 to 350
+-- Lines 269-351
 function MenuItemMultiChoice:reload(row_item, node)
 	if not row_item then
 		return
@@ -409,7 +413,7 @@ function MenuItemMultiChoice:reload(row_item, node)
 	return true
 end
 
--- Lines: 353 to 377
+-- Lines 353-378
 function MenuItemMultiChoice:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.choice_text:set_color(not self._enabled and row_item.disabled_color or self:selected_option():parameters().color or node.row_item_hightlight_color)
@@ -432,7 +436,7 @@ function MenuItemMultiChoice:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 380 to 405
+-- Lines 380-406
 function MenuItemMultiChoice:fade_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.choice_text:set_color(not self._enabled and row_item.disabled_color or self:selected_option():parameters().color or node.row_item_hightlight_color)
@@ -454,9 +458,10 @@ function MenuItemMultiChoice:fade_row_item(node, row_item, mouse_over)
 
 	return true
 end
+
 local xl_pad = 64
 
--- Lines: 409 to 499
+-- Lines 409-500
 function MenuItemMultiChoice:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local right_align = node:_right_align()
@@ -534,16 +539,17 @@ function MenuItemMultiChoice:_layout(node, row_item)
 
 	return true
 end
+
 MenuItemMultiChoiceWithIcon = MenuItemMultiChoiceWithIcon or class(MenuItemMultiChoice)
 
--- Lines: 506 to 510
+-- Lines 506-510
 function MenuItemMultiChoiceWithIcon:init(data_node, parameters, ...)
 	MenuItemMultiChoiceWithIcon.super.init(self, data_node, parameters, ...)
 
 	self._icon_texture = parameters and parameters.icon
 end
 
--- Lines: 512 to 522
+-- Lines 512-523
 function MenuItemMultiChoiceWithIcon:setup_gui(node, row_item, ...)
 	MenuItemMultiChoiceWithIcon.super.setup_gui(self, node, row_item, ...)
 
@@ -565,12 +571,12 @@ function MenuItemMultiChoiceWithIcon:setup_gui(node, row_item, ...)
 	return true
 end
 
--- Lines: 525 to 527
+-- Lines 525-527
 function MenuItemMultiChoiceWithIcon:set_icon_visible(state)
 	self._icon:set_visible(state)
 end
 
--- Lines: 532 to 579
+-- Lines 531-579
 function MenuItemMultiChoice:popup_choice(row_item)
 	local dialog_data = {
 		title = row_item.gui_text:text(),
@@ -622,4 +628,3 @@ function MenuItemMultiChoice:popup_choice(row_item)
 
 	managers.system_menu:show_buttons(dialog_data)
 end
-

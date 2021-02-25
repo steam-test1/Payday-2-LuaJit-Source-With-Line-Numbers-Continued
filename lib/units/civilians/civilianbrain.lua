@@ -19,7 +19,7 @@ CivilianBrain._logics = {
 	trade = CivilianLogicTrade
 }
 
--- Lines: 24 to 39
+-- Lines 24-39
 function CivilianBrain:init(unit)
 	self._unit = unit
 	self._timer = TimerManager:game()
@@ -34,7 +34,7 @@ function CivilianBrain:init(unit)
 	CopBrain._reload_clbks[unit:key()] = callback(self, self, "on_reload")
 end
 
--- Lines: 43 to 53
+-- Lines 43-53
 function CivilianBrain:update(unit, t, dt)
 	local logic = self._current_logic
 
@@ -47,7 +47,7 @@ function CivilianBrain:update(unit, t, dt)
 	end
 end
 
--- Lines: 57 to 62
+-- Lines 57-62
 function CivilianBrain:_reset_logic_data()
 	CopBrain._reset_logic_data(self)
 
@@ -56,12 +56,12 @@ function CivilianBrain:_reset_logic_data()
 	self._logic_data.objective_failed_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_civilian_objective_failed")
 end
 
--- Lines: 66 to 67
+-- Lines 66-68
 function CivilianBrain:is_available_for_assignment(objective)
 	return self._current_logic.is_available_for_assignment(self._logic_data, objective)
 end
 
--- Lines: 72 to 77
+-- Lines 72-77
 function CivilianBrain:cancel_trade()
 	if not self._active then
 		return
@@ -70,14 +70,14 @@ function CivilianBrain:cancel_trade()
 	self:set_logic("surrender")
 end
 
--- Lines: 81 to 85
+-- Lines 81-85
 function CivilianBrain:on_rescue_allowed_state(state)
 	if self._current_logic.on_rescue_allowed_state then
 		self._current_logic.on_rescue_allowed_state(self._logic_data, state)
 	end
 end
 
--- Lines: 89 to 97
+-- Lines 89-97
 function CivilianBrain:wants_rescue()
 	if self._dont_rescue then
 		return false
@@ -88,7 +88,7 @@ function CivilianBrain:wants_rescue()
 	end
 end
 
--- Lines: 101 to 122
+-- Lines 101-122
 function CivilianBrain:on_cool_state_changed(state)
 	if self._logic_data then
 		self._logic_data.cool = state
@@ -115,13 +115,15 @@ function CivilianBrain:on_cool_state_changed(state)
 		}
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
-		alert_types = {bullet = true}
+		alert_types = {
+			bullet = true
+		}
 	end
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, alert_types, self._unit:movement():m_head_pos())
 end
 
--- Lines: 126 to 232
+-- Lines 126-233
 function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 	if not self._logic_data.is_tied then
 		return
@@ -249,7 +251,7 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 	return true
 end
 
--- Lines: 237 to 245
+-- Lines 237-245
 function CivilianBrain:on_hostage_follow_objective_failed(unit)
 	if not unit:character_damage():dead() then
 		if not self._logic_data.objective or self._logic_data.objective.is_default or self._logic_data.objective.type == "surrender" then
@@ -260,12 +262,12 @@ function CivilianBrain:on_hostage_follow_objective_failed(unit)
 	end
 end
 
--- Lines: 249 to 250
+-- Lines 249-251
 function CivilianBrain:is_tied()
 	return self._logic_data.is_tied
 end
 
--- Lines: 255 to 262
+-- Lines 255-262
 function CivilianBrain:save(save_data)
 	CivilianBrain.super.save(self, save_data)
 
@@ -275,4 +277,3 @@ function CivilianBrain:save(save_data)
 		my_save_data.following_hostage_contour = true
 	end
 end
-

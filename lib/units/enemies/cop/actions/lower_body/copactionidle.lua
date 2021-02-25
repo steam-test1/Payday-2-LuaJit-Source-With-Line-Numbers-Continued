@@ -10,7 +10,7 @@ local idstr_look_upper_body = Idstring("look_upper_body")
 local idstr_look_head = Idstring("look_head")
 local idstr_head = Idstring("Head")
 
--- Lines: 20 to 82
+-- Lines 18-83
 function CopActionIdle:init(action_desc, common_data)
 	if action_desc.non_persistent then
 		return
@@ -42,7 +42,11 @@ function CopActionIdle:init(action_desc, common_data)
 			print("[CopActionIdle:init] state", state_name, "failed in", self._machine:segment_state(Idstring("base")), common_data.unit)
 		end
 	elseif not self._ext_anim.idle then
-		res = self._common_data.stance.code == 1 and self._ext_movement:play_redirect("exit") or self._ext_movement:play_redirect("idle")
+		if self._common_data.stance.code == 1 then
+			res = self._ext_movement:play_redirect("exit")
+		else
+			res = self._ext_movement:play_redirect("idle")
+		end
 
 		self._ext_movement:enable_update()
 	end
@@ -79,7 +83,7 @@ function CopActionIdle:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 85 to 95
+-- Lines 85-95
 function CopActionIdle:_init_ik()
 	if managers.job:current_level_id() == "chill" then
 		self._look_vec = mvector3.copy(self._common_data.fwd)
@@ -90,12 +94,12 @@ function CopActionIdle:_init_ik()
 	end
 end
 
--- Lines: 97 to 99
+-- Lines 97-99
 function CopActionIdle:_ik_update_func(t)
 	CopActionAct._ik_update_func(self, t)
 end
 
--- Lines: 101 to 120
+-- Lines 101-120
 function CopActionIdle:_update_ik_type()
 	local new_ik_type = self._ext_anim.ik_type
 
@@ -120,7 +124,7 @@ function CopActionIdle:_update_ik_type()
 	end
 end
 
--- Lines: 124 to 132
+-- Lines 124-132
 function CopActionIdle:on_exit()
 	if self._modifier_on then
 		self._modifier_on = nil
@@ -133,7 +137,7 @@ function CopActionIdle:on_exit()
 	end
 end
 
--- Lines: 136 to 216
+-- Lines 136-216
 function CopActionIdle:update(t)
 	if self._ik_update then
 		self._ik_update(t)
@@ -228,12 +232,12 @@ function CopActionIdle:update(t)
 	end
 end
 
--- Lines: 220 to 221
+-- Lines 220-222
 function CopActionIdle:type()
 	return "idle"
 end
 
--- Lines: 226 to 268
+-- Lines 226-268
 function CopActionIdle:on_attention(attention)
 	if self._body_part ~= 1 and self._body_part ~= 3 then
 		return
@@ -291,12 +295,12 @@ function CopActionIdle:on_attention(attention)
 	self._ext_movement:enable_update()
 end
 
--- Lines: 272 to 273
+-- Lines 272-274
 function CopActionIdle:need_upd()
 	return self._attention and (self._attention.unit or self._look_trans) and true or false
 end
 
--- Lines: 278 to 288
+-- Lines 278-288
 function CopActionIdle:save(save_data)
 	if self._body_part == 1 then
 		save_data.is_save = true
@@ -307,4 +311,3 @@ function CopActionIdle:save(save_data)
 		save_data.anim = state_index
 	end
 end
-

@@ -1,12 +1,11 @@
 core:import("CoreSequenceManager")
-core:import("CoreCode")
 
 CoreUnitDamage = CoreUnitDamage or class()
 CoreUnitDamage.ALL_TRIGGERS = "*"
 UnitDamage = UnitDamage or class(CoreUnitDamage)
 local ids_damage = Idstring("damage")
 
--- Lines: 10 to 188
+-- Lines 9-187
 function CoreUnitDamage:init(unit, default_body_extension_class, body_extension_class_map, ignore_body_collisions, ignore_mover_collisions, mover_collision_ignore_duration)
 	self._unit = unit
 	self._unit_element = managers.sequence:get(unit:name(), false, true)
@@ -68,7 +67,9 @@ function CoreUnitDamage:init(unit, default_body_extension_class, body_extension_
 				if inflict_updator_damage_type_map[damage_type] then
 					body_key = body_key or body:key()
 					self._added_inflict_updator_damage_type_map = self._added_inflict_updator_damage_type_map or {}
-					self._added_inflict_updator_damage_type_map[damage_type] = {[body_key] = body_ext}
+					self._added_inflict_updator_damage_type_map[damage_type] = {
+						[body_key] = body_ext
+					}
 
 					managers.sequence:add_inflict_updator_body(damage_type, unit_key, body_key, body_ext)
 				end
@@ -109,7 +110,7 @@ function CoreUnitDamage:init(unit, default_body_extension_class, body_extension_
 	end
 end
 
--- Lines: 190 to 207
+-- Lines 189-207
 function CoreUnitDamage:get_sound_source(object)
 	self._sound_sources = self._sound_sources or {}
 	local sound_source = self._sound_sources[object]
@@ -130,7 +131,7 @@ function CoreUnitDamage:get_sound_source(object)
 	return sound_source
 end
 
--- Lines: 211 to 234
+-- Lines 210-233
 function CoreUnitDamage:destroy()
 	if self._added_inflict_updator_damage_type_map then
 		local unit_key = self._unit:key()
@@ -157,7 +158,7 @@ function CoreUnitDamage:destroy()
 	end
 end
 
--- Lines: 236 to 245
+-- Lines 235-244
 function CoreUnitDamage:update(unit, t, dt)
 	if self._update_func_map then
 		for func_name, data in pairs(self._update_func_map) do
@@ -169,7 +170,7 @@ function CoreUnitDamage:update(unit, t, dt)
 	end
 end
 
--- Lines: 248 to 272
+-- Lines 247-271
 function CoreUnitDamage:set_update_callback(func_name, data)
 	if data then
 		self._update_func_map = self._update_func_map or {}
@@ -198,7 +199,7 @@ function CoreUnitDamage:set_update_callback(func_name, data)
 	end
 end
 
--- Lines: 274 to 286
+-- Lines 273-285
 function CoreUnitDamage:populate_proximity_range_data(data, sub_data_name, element)
 	if element then
 		data[sub_data_name] = {
@@ -214,7 +215,7 @@ function CoreUnitDamage:populate_proximity_range_data(data, sub_data_name, eleme
 	end
 end
 
--- Lines: 288 to 310
+-- Lines 287-309
 function CoreUnitDamage:set_proximity_enabled(name, enabled)
 	local data = self._proximity_map and self._proximity_map[name]
 
@@ -241,11 +242,11 @@ function CoreUnitDamage:set_proximity_enabled(name, enabled)
 	end
 end
 
--- Lines: 312 to 367
+-- Lines 311-366
 function CoreUnitDamage:update_proximity_list(unit, t, dt)
 	if managers.sequence:is_proximity_enabled() then
 		for name, data in pairs(self._proximity_map) do
-			if data.enabled and data.last_check_time + data.interval <= t then
+			if data.enabled and t >= data.last_check_time + data.interval then
 				local range_data, reversed, range_data_string = nil
 
 				if data.is_within then
@@ -274,7 +275,7 @@ function CoreUnitDamage:update_proximity_list(unit, t, dt)
 
 				data.last_check_time = t
 
-				if self:check_proximity_activation_count(data) and range_data.last_check_time + range_data.delay <= t and self:update_proximity(unit, t, dt, data, range_data) ~= reversed then
+				if self:check_proximity_activation_count(data) and t >= range_data.last_check_time + range_data.delay and self:update_proximity(unit, t, dt, data, range_data) ~= reversed then
 					range_data.last_check_time = t
 					data.is_within = not data.is_within
 
@@ -291,14 +292,14 @@ function CoreUnitDamage:update_proximity_list(unit, t, dt)
 	end
 end
 
--- Lines: 369 to 372
+-- Lines 368-371
 function CoreUnitDamage:_do_proximity_activation(range_data)
 	self._proximity_env = self._proximity_env or CoreSequenceManager.SequenceEnvironment:new("proximity", self._unit, self._unit, nil, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), 0, Vector3(0, 0, 0), nil, self._unit_element)
 
 	range_data.element:activate_elements(self._proximity_env)
 end
 
--- Lines: 374 to 380
+-- Lines 373-379
 function CoreUnitDamage:_check_send_sync_proximity_activation(name, range_data_string)
 	if not Network:is_server() or self._unit:id() == -1 then
 		return
@@ -307,7 +308,7 @@ function CoreUnitDamage:_check_send_sync_proximity_activation(name, range_data_s
 	managers.network:session():send_to_peers_synched("sync_proximity_activation", self._unit, name, range_data_string)
 end
 
--- Lines: 382 to 386
+-- Lines 381-385
 function CoreUnitDamage:sync_proximity_activation(name, range_data_string)
 	local data = self._proximity_map[name]
 	local range_data = data[range_data_string]
@@ -315,12 +316,12 @@ function CoreUnitDamage:sync_proximity_activation(name, range_data_string)
 	self:_do_proximity_activation(range_data)
 end
 
--- Lines: 388 to 389
+-- Lines 387-389
 function CoreUnitDamage:is_proximity_range_active(range_data)
 	return range_data and (range_data.max_activation_count < 0 or range_data.activation_count < range_data.max_activation_count)
 end
 
--- Lines: 392 to 399
+-- Lines 391-398
 function CoreUnitDamage:check_proximity_activation_count(data)
 	if not self:is_proximity_range_active(data.within_data) and not self:is_proximity_range_active(data.outside_data) then
 		self:set_proximity_enabled(data.name, false)
@@ -331,10 +332,16 @@ function CoreUnitDamage:check_proximity_activation_count(data)
 	end
 end
 
--- Lines: 401 to 432
+-- Lines 400-431
 function CoreUnitDamage:update_proximity(unit, t, dt, data, range_data)
 	local pos = nil
-	pos = data.ref_object and data.ref_object:position() or self._unit:position()
+
+	if data.ref_object then
+		pos = data.ref_object:position()
+	else
+		pos = self._unit:position()
+	end
+
 	local unit_list = {}
 	local units = self._unit:find_units_quick("all", data.slotmask)
 
@@ -351,32 +358,32 @@ function CoreUnitDamage:update_proximity(unit, t, dt, data, range_data)
 	end
 end
 
--- Lines: 434 to 435
+-- Lines 433-435
 function CoreUnitDamage:get_proximity_map()
 	return self._proximity_map or {}
 end
 
--- Lines: 438 to 440
+-- Lines 437-439
 function CoreUnitDamage:set_proximity_slotmask(name, slotmask)
 	self._proximity_map[name].slotmask = slotmask
 end
 
--- Lines: 442 to 444
+-- Lines 441-443
 function CoreUnitDamage:set_proximity_ref_obj_name(name, ref_obj_name)
 	self._proximity_map[name].ref_object = ref_obj_name and self._unit:get_object(Idstring(ref_obj_name))
 end
 
--- Lines: 446 to 448
+-- Lines 445-447
 function CoreUnitDamage:set_proximity_interval(name, interval)
 	self._proximity_map[name].interval = interval
 end
 
--- Lines: 450 to 452
+-- Lines 449-451
 function CoreUnitDamage:set_proximity_is_within(name, is_within)
 	self._proximity_map[name].is_within = is_within
 end
 
--- Lines: 454 to 461
+-- Lines 453-460
 function CoreUnitDamage:set_proximity_within_activations(name, activations)
 	local data = self._proximity_map[name]
 	local within_data = data.within_data
@@ -388,7 +395,7 @@ function CoreUnitDamage:set_proximity_within_activations(name, activations)
 	end
 end
 
--- Lines: 463 to 470
+-- Lines 462-469
 function CoreUnitDamage:set_proximity_within_max_activations(name, max_activations)
 	local data = self._proximity_map[name]
 	local within_data = data.within_data
@@ -400,7 +407,7 @@ function CoreUnitDamage:set_proximity_within_max_activations(name, max_activatio
 	end
 end
 
--- Lines: 472 to 477
+-- Lines 471-476
 function CoreUnitDamage:set_proximity_within_delay(name, delay)
 	local within_data = self._proximity_map[name].within_data
 
@@ -409,7 +416,7 @@ function CoreUnitDamage:set_proximity_within_delay(name, delay)
 	end
 end
 
--- Lines: 479 to 484
+-- Lines 478-483
 function CoreUnitDamage:set_proximity_within_range(name, range)
 	local within_data = self._proximity_map[name].within_data
 
@@ -418,7 +425,7 @@ function CoreUnitDamage:set_proximity_within_range(name, range)
 	end
 end
 
--- Lines: 486 to 491
+-- Lines 485-490
 function CoreUnitDamage:set_proximity_inside_count(name, count)
 	local within_data = self._proximity_map[name].within_data
 
@@ -427,7 +434,7 @@ function CoreUnitDamage:set_proximity_inside_count(name, count)
 	end
 end
 
--- Lines: 493 to 500
+-- Lines 492-499
 function CoreUnitDamage:set_proximity_outside_activations(name, activations)
 	local data = self._proximity_map[name]
 	local outside_data = data.outside_data
@@ -439,7 +446,7 @@ function CoreUnitDamage:set_proximity_outside_activations(name, activations)
 	end
 end
 
--- Lines: 502 to 509
+-- Lines 501-508
 function CoreUnitDamage:set_proximity_outside_max_activations(name, max_activations)
 	local data = self._proximity_map[name]
 	local outside_data = data.outside_data
@@ -451,7 +458,7 @@ function CoreUnitDamage:set_proximity_outside_max_activations(name, max_activati
 	end
 end
 
--- Lines: 511 to 516
+-- Lines 510-515
 function CoreUnitDamage:set_proximity_outside_delay(name, delay)
 	local outside_data = self._proximity_map[name].outside_data
 
@@ -460,7 +467,7 @@ function CoreUnitDamage:set_proximity_outside_delay(name, delay)
 	end
 end
 
--- Lines: 518 to 523
+-- Lines 517-522
 function CoreUnitDamage:set_proximity_outside_range(name, range)
 	local outside_data = self._proximity_map[name].outside_data
 
@@ -469,7 +476,7 @@ function CoreUnitDamage:set_proximity_outside_range(name, range)
 	end
 end
 
--- Lines: 525 to 530
+-- Lines 524-529
 function CoreUnitDamage:set_proximity_outside_range(name, range)
 	local outside_data = self._proximity_map[name].outside_data
 
@@ -478,12 +485,12 @@ function CoreUnitDamage:set_proximity_outside_range(name, range)
 	end
 end
 
--- Lines: 532 to 533
+-- Lines 531-533
 function CoreUnitDamage:get_water_check_map()
 	return self._water_check_map
 end
 
--- Lines: 536 to 563
+-- Lines 535-562
 function CoreUnitDamage:set_water_check(name, enabled, interval, ref_object_name, ref_body_name, body_depth, physic_effect)
 	self._water_check_map = self._water_check_map or {}
 	local water_check = self._water_check_map[name]
@@ -512,7 +519,7 @@ function CoreUnitDamage:set_water_check(name, enabled, interval, ref_object_name
 	end
 end
 
--- Lines: 565 to 574
+-- Lines 564-573
 function CoreUnitDamage:remove_water_check(name)
 	if self._water_check_map then
 		local water_check = self._water_check_map[name]
@@ -525,17 +532,17 @@ function CoreUnitDamage:remove_water_check(name)
 	end
 end
 
--- Lines: 576 to 577
+-- Lines 575-577
 function CoreUnitDamage:exists_water_check(name)
 	return self._water_check_map and self._water_check_map[name] ~= nil
 end
 
--- Lines: 580 to 581
+-- Lines 579-581
 function CoreUnitDamage:is_water_check_active(name)
 	return self._active_water_check_map and self._active_water_check_map[name] ~= nil
 end
 
--- Lines: 584 to 614
+-- Lines 583-613
 function CoreUnitDamage:set_water_check_active(name, active)
 	local water_check = self._water_check_map and self._water_check_map[name]
 
@@ -569,41 +576,45 @@ function CoreUnitDamage:set_water_check_active(name, active)
 	end
 end
 
--- Lines: 616 to 620
+-- Lines 615-619
 function CoreUnitDamage:update_water_checks(t, dt)
 	for name, water_check in pairs(self._active_water_check_map) do
 		water_check:update(t, dt)
 	end
 end
 
--- Lines: 622 to 629
+-- Lines 621-628
 function CoreUnitDamage:water_check_enter(name, water_check, src_unit, body, normal, position, direction, damage, velocity, water_depth)
 	local element = self._water_check_element_map[name]
 
 	if element then
-		local env = CoreSequenceManager.SequenceEnvironment:new("water", src_unit, self._unit, body, normal, position, direction, damage, velocity, {water_depth = water_depth}, self._unit_element)
+		local env = CoreSequenceManager.SequenceEnvironment:new("water", src_unit, self._unit, body, normal, position, direction, damage, velocity, {
+			water_depth = water_depth
+		}, self._unit_element)
 
 		element:activate_enter(env)
 	end
 end
 
--- Lines: 631 to 638
+-- Lines 630-637
 function CoreUnitDamage:water_check_exit(name, water_check, src_unit, body, normal, position, direction, damage, velocity, water_depth)
 	local element = self._water_check_element_map[name]
 
 	if element then
-		local env = CoreSequenceManager.SequenceEnvironment:new("water", src_unit, self._unit, body, normal, position, direction, damage, velocity, {water_depth = water_depth}, self._unit_element)
+		local env = CoreSequenceManager.SequenceEnvironment:new("water", src_unit, self._unit, body, normal, position, direction, damage, velocity, {
+			water_depth = water_depth
+		}, self._unit_element)
 
 		element:activate_exit(env)
 	end
 end
 
--- Lines: 640 to 641
+-- Lines 639-641
 function CoreUnitDamage:get_unit_element()
 	return self._unit_element
 end
 
--- Lines: 644 to 771
+-- Lines 643-770
 function CoreUnitDamage:save(data)
 	local state = {}
 	local changed = false
@@ -736,7 +747,7 @@ function CoreUnitDamage:save(data)
 	end
 end
 
--- Lines: 773 to 875
+-- Lines 772-874
 function CoreUnitDamage:load(data)
 	local state = data.CoreUnitDamage
 
@@ -840,7 +851,7 @@ function CoreUnitDamage:load(data)
 	self:_process_sequence_queue()
 end
 
--- Lines: 877 to 890
+-- Lines 876-889
 function CoreUnitDamage:run_startup_sequences()
 	local nil_vector = Vector3(0, 0, 0)
 
@@ -857,7 +868,7 @@ function CoreUnitDamage:run_startup_sequences()
 	end
 end
 
--- Lines: 892 to 905
+-- Lines 891-904
 function CoreUnitDamage:run_editor_startup_sequences()
 	local nil_vector = Vector3(0, 0, 0)
 
@@ -874,7 +885,7 @@ function CoreUnitDamage:run_editor_startup_sequences()
 	end
 end
 
--- Lines: 907 to 926
+-- Lines 906-925
 function CoreUnitDamage:add_trigger_callback(trigger_name, callback_func)
 	if not trigger_name or trigger_name == self.ALL_TRIGGERS then
 		for next_trigger_name in pairs(self._unit_element:get_trigger_name_map()) do
@@ -898,7 +909,7 @@ function CoreUnitDamage:add_trigger_callback(trigger_name, callback_func)
 	table.insert(callback_list, callback_func)
 end
 
--- Lines: 928 to 956
+-- Lines 927-955
 function CoreUnitDamage:remove_trigger_callback(trigger_name, callback_func)
 	if not trigger_name or trigger_name == self.ALL_TRIGGERS then
 		for next_trigger_name in pairs(self._unit_element:get_trigger_name_map()) do
@@ -931,7 +942,7 @@ function CoreUnitDamage:remove_trigger_callback(trigger_name, callback_func)
 	end
 end
 
--- Lines: 958 to 976
+-- Lines 957-975
 function CoreUnitDamage:on_trigger_callback(trigger_name, env)
 	if not self._trigger_callback_map_list then
 		return
@@ -954,7 +965,7 @@ function CoreUnitDamage:on_trigger_callback(trigger_name, env)
 	self._current_trigger_callback_index = nil
 end
 
--- Lines: 979 to 988
+-- Lines 978-987
 function CoreUnitDamage:remove_trigger_data(trigger_name, id)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for index, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -967,7 +978,7 @@ function CoreUnitDamage:remove_trigger_data(trigger_name, id)
 	end
 end
 
--- Lines: 991 to 999
+-- Lines 990-998
 function CoreUnitDamage:get_trigger_data(trigger_name, id)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for index, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -978,7 +989,7 @@ function CoreUnitDamage:get_trigger_data(trigger_name, id)
 	end
 end
 
--- Lines: 1001 to 1030
+-- Lines 1000-1030
 function CoreUnitDamage:add_trigger_sequence(trigger_name, notify_unit_sequence, notify_unit, start_time, repeat_nr, params, is_editor)
 	if not trigger_name or not self._unit_element:has_trigger_name(trigger_name) then
 		Application:stack_dump_error("Trigger \"" .. tostring(trigger_name) .. "\" doesn't exist. Only the following triggers are available: " .. managers.sequence:get_keys_as_string(self._unit_element:get_trigger_name_map(), "[None]", true))
@@ -1012,7 +1023,7 @@ function CoreUnitDamage:add_trigger_sequence(trigger_name, notify_unit_sequence,
 	return self._last_trigger_id
 end
 
--- Lines: 1034 to 1044
+-- Lines 1033-1044
 function CoreUnitDamage:set_trigger_sequence_name(id, trigger_name, notify_unit_sequence)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for _, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -1027,7 +1038,7 @@ function CoreUnitDamage:set_trigger_sequence_name(id, trigger_name, notify_unit_
 	return nil
 end
 
--- Lines: 1048 to 1058
+-- Lines 1047-1058
 function CoreUnitDamage:set_trigger_sequence_unit(id, trigger_name, notify_unit)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for _, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -1042,7 +1053,7 @@ function CoreUnitDamage:set_trigger_sequence_unit(id, trigger_name, notify_unit)
 	return nil
 end
 
--- Lines: 1062 to 1072
+-- Lines 1061-1072
 function CoreUnitDamage:set_trigger_sequence_time(id, trigger_name, start_time)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for _, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -1057,7 +1068,7 @@ function CoreUnitDamage:set_trigger_sequence_time(id, trigger_name, start_time)
 	return nil
 end
 
--- Lines: 1076 to 1086
+-- Lines 1075-1086
 function CoreUnitDamage:set_trigger_sequence_repeat_nr(id, trigger_name, repeat_nr)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for _, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -1072,7 +1083,7 @@ function CoreUnitDamage:set_trigger_sequence_repeat_nr(id, trigger_name, repeat_
 	return nil
 end
 
--- Lines: 1090 to 1100
+-- Lines 1089-1100
 function CoreUnitDamage:set_trigger_sequence_params(id, trigger_name, params)
 	if self._trigger_data_map and self._trigger_data_map[trigger_name] then
 		for _, data in ipairs(self._trigger_data_map[trigger_name]) do
@@ -1087,12 +1098,12 @@ function CoreUnitDamage:set_trigger_sequence_params(id, trigger_name, params)
 	return nil
 end
 
--- Lines: 1103 to 1104
+-- Lines 1102-1104
 function CoreUnitDamage:get_trigger_name_list()
 	return self._trigger_name_list
 end
 
--- Lines: 1107 to 1130
+-- Lines 1106-1129
 function CoreUnitDamage:get_trigger_data_list(trigger_name)
 	if self._trigger_data_map then
 		local trigger_data_list = self._trigger_data_map[trigger_name]
@@ -1118,7 +1129,7 @@ function CoreUnitDamage:get_trigger_data_list(trigger_name)
 	end
 end
 
--- Lines: 1132 to 1145
+-- Lines 1131-1145
 function CoreUnitDamage:inflict_damage(damage_type, src_body, source_body, normal, position, direction, velocity)
 	local damage = nil
 	local body_ext = source_body:extension()
@@ -1135,52 +1146,52 @@ function CoreUnitDamage:inflict_damage(damage_type, src_body, source_body, norma
 	return nil, false
 end
 
--- Lines: 1148 to 1149
+-- Lines 1147-1149
 function CoreUnitDamage:damage_damage(attack_unit, dest_body, normal, position, direction, damage, unevadable)
 	return self:add_damage("damage", attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0), unevadable)
 end
 
--- Lines: 1152 to 1153
+-- Lines 1151-1153
 function CoreUnitDamage:damage_bullet(attack_unit, dest_body, normal, position, direction, damage, unevadable)
 	return self:add_damage("bullet", attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0), unevadable)
 end
 
--- Lines: 1156 to 1157
+-- Lines 1155-1157
 function CoreUnitDamage:damage_bullet_type(type, attack_unit, dest_body, normal, position, direction, damage, unevadable)
 	return self:add_damage("bullet_" .. type, attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0), unevadable)
 end
 
--- Lines: 1160 to 1161
+-- Lines 1159-1161
 function CoreUnitDamage:damage_lock(attack_unit, dest_body, normal, position, direction, damage, unevadable)
 	return self:add_damage("lock", attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0), unevadable)
 end
 
--- Lines: 1164 to 1165
+-- Lines 1163-1165
 function CoreUnitDamage:damage_explosion(attack_unit, dest_body, normal, position, direction, damage)
 	return self:add_damage("explosion", attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 1168 to 1169
+-- Lines 1167-1169
 function CoreUnitDamage:damage_collision(attack_unit, dest_body, normal, position, direction, damage, velocity)
 	return self:add_damage("collision", attack_unit, dest_body, normal, position, direction, damage, velocity)
 end
 
--- Lines: 1172 to 1173
+-- Lines 1171-1173
 function CoreUnitDamage:damage_melee(attack_unit, dest_body, normal, position, direction, damage)
 	return self:add_damage("melee", attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 1176 to 1177
+-- Lines 1175-1177
 function CoreUnitDamage:damage_electricity(attack_unit, dest_body, normal, position, direction, damage)
 	return self:add_damage("electricity", attack_unit, dest_body, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 1180 to 1181
+-- Lines 1179-1181
 function CoreUnitDamage:damage_fire(attack_unit, dest_body, normal, position, direction, damage, velocity)
 	return self:add_damage("fire", attack_unit, dest_body, normal, position, direction, damage, velocity)
 end
 
--- Lines: 1184 to 1193
+-- Lines 1183-1192
 function CoreUnitDamage:damage_by_area(endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
 	local damage_func = self["damage_" .. endurance_type]
 
@@ -1193,7 +1204,7 @@ function CoreUnitDamage:damage_by_area(endurance_type, attack_unit, dest_body, n
 	end
 end
 
--- Lines: 1195 to 1207
+-- Lines 1194-1206
 function CoreUnitDamage:add_damage(endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
 	if self._unit_element then
 		self._damage = self._damage + damage
@@ -1208,41 +1219,36 @@ function CoreUnitDamage:add_damage(endurance_type, attack_unit, dest_body, norma
 	end
 end
 
--- Lines: 1209 to 1210
+-- Lines 1208-1209
 function CoreUnitDamage:damage_effect(effect_type, attack_unit, dest_body, normal, position, direction, velocity, params)
 end
 
--- Lines: 1212 to 1214
+-- Lines 1211-1213
 function CoreUnitDamage:run_sequence_simple(name, params)
 	self:run_sequence_simple2(name, "", params)
 end
 
--- Lines: 1216 to 1218
+-- Lines 1215-1217
 function CoreUnitDamage:run_sequence_simple2(name, endurance_type, params)
 	self:run_sequence_simple3(name, endurance_type, self._unit, params)
 end
 
--- Lines: 1220 to 1222
+-- Lines 1219-1221
 function CoreUnitDamage:run_sequence_simple3(name, endurance_type, source_unit, params)
 	self:run_sequence(name, endurance_type, source_unit, nil, Vector3(0, 0, 1), self._unit:position(), Vector3(0, 0, -1), 0, Vector3(0, 0, 0), params)
 end
 
--- Lines: 1224 to 1230
+-- Lines 1223-1225
 function CoreUnitDamage:run_sequence(name, endurance_type, source_unit, dest_body, normal, position, direction, damage, velocity, params)
-	if name == "explode" then
-		print("[Debug] CoreUnitDamage:run_sequence: explode")
-		CoreCode.tag_print("Debug", Application:stack())
-	end
-
 	self._unit_element:run_sequence(name, endurance_type, source_unit, self._unit, dest_body, normal, position, direction, damage, velocity, params)
 end
 
--- Lines: 1232 to 1233
+-- Lines 1227-1229
 function CoreUnitDamage:get_damage()
 	return self._damage
 end
 
--- Lines: 1236 to 1242
+-- Lines 1231-1237
 function CoreUnitDamage:get_endurance()
 	if self._unit_element then
 		return self._unit_element:get_endurance()
@@ -1251,7 +1257,7 @@ function CoreUnitDamage:get_endurance()
 	end
 end
 
--- Lines: 1244 to 1250
+-- Lines 1239-1245
 function CoreUnitDamage:get_damage_ratio()
 	if self._unit_element and self._unit_element:get_endurance() > 0 then
 		return self._damage / self._unit_element:get_endurance()
@@ -1260,7 +1266,7 @@ function CoreUnitDamage:get_damage_ratio()
 	end
 end
 
--- Lines: 1252 to 1274
+-- Lines 1247-1269
 function CoreUnitDamage:update_inflict_damage(t, dt)
 	if self._inflict_dest_body then
 		for damage_type, dest_body in pairs(self._inflict_dest_body) do
@@ -1285,7 +1291,7 @@ function CoreUnitDamage:update_inflict_damage(t, dt)
 	self._inflict_done = nil
 end
 
--- Lines: 1276 to 1304
+-- Lines 1271-1300
 function CoreUnitDamage:check_inflict_damage(damage_type, src_body, dest_body, normal, pos, dir, velocity)
 	local can_inflict, delayed = self:can_receive_inflict_damage(damage_type, dest_body)
 	self._inflict_done = self._inflict_done or {}
@@ -1314,7 +1320,7 @@ function CoreUnitDamage:check_inflict_damage(damage_type, src_body, dest_body, n
 	return false, nil
 end
 
--- Lines: 1307 to 1320
+-- Lines 1302-1316
 function CoreUnitDamage:can_receive_inflict_damage(damage_type, dest_body)
 	if alive(dest_body) then
 		local body_ext = dest_body:extension()
@@ -1331,32 +1337,32 @@ function CoreUnitDamage:can_receive_inflict_damage(damage_type, dest_body)
 	return false, false
 end
 
--- Lines: 1323 to 1324
+-- Lines 1318-1320
 function CoreUnitDamage:enter_inflict_damage(damage_type, src_body, dest_body, normal, position, direction, velocity)
 	return dest_body:extension().damage:enter_inflict_damage(damage_type, self._unit, src_body, normal, position, direction, velocity)
 end
 
--- Lines: 1327 to 1328
+-- Lines 1322-1324
 function CoreUnitDamage:inflict_damage(damage_type, src_body, dest_body, normal, position, direction, velocity)
 	return dest_body:extension().damage:inflict_damage(damage_type, self._unit, src_body, normal, position, direction, velocity)
 end
 
--- Lines: 1331 to 1333
+-- Lines 1326-1328
 function CoreUnitDamage:exit_inflict_damage(damage_type, src_body, dest_body, normal, pos, dir, velocity)
 	dest_body:extension().damage:exit_inflict_damage(damage_type, src_body, normal, pos, dir, velocity)
 end
 
--- Lines: 1335 to 1337
+-- Lines 1330-1332
 function CoreUnitDamage:set_direct_attack_unit(direct_attack_unit)
 	self._direct_attack_unit = direct_attack_unit
 end
 
--- Lines: 1339 to 1340
+-- Lines 1334-1336
 function CoreUnitDamage:get_direct_attack_unit()
 	return self._direct_attack_unit
 end
 
--- Lines: 1346 to 1350
+-- Lines 1341-1346
 function CoreUnitDamage:add_body_collision_callback(func)
 	self._last_body_collision_callback_id = (self._last_body_collision_callback_id or 0) + 1
 	self._body_collision_callback_list = self._body_collision_callback_list or {}
@@ -1365,14 +1371,14 @@ function CoreUnitDamage:add_body_collision_callback(func)
 	return self._last_body_collision_callback_id
 end
 
--- Lines: 1353 to 1357
+-- Lines 1348-1352
 function CoreUnitDamage:remove_body_collision_callback(id)
 	if self._body_collision_callback_list then
 		self._body_collision_callback_list[id] = nil
 	end
 end
 
--- Lines: 1359 to 1363
+-- Lines 1354-1359
 function CoreUnitDamage:add_mover_collision_callback(func)
 	self._last_mover_collision_callback_id = (self._last_mover_collision_callback_id or 0) + 1
 	self._mover_collision_callback_list = self._mover_collision_callback_list or {}
@@ -1381,47 +1387,47 @@ function CoreUnitDamage:add_mover_collision_callback(func)
 	return self._last_mover_collision_callback_id
 end
 
--- Lines: 1366 to 1370
+-- Lines 1361-1365
 function CoreUnitDamage:remove_mover_collision_callback(id)
 	if self._mover_collision_callback_list then
 		self._mover_collision_callback_list[id] = nil
 	end
 end
 
--- Lines: 1372 to 1375
+-- Lines 1367-1370
 function CoreUnitDamage:set_ignore_mover_collision_unit(unit_key, time)
 	self._ignore_mover_collision_unit_map = self._ignore_mover_collision_unit_map or {}
 	self._ignore_mover_collision_unit_map[unit_key] = time
 end
 
--- Lines: 1377 to 1380
+-- Lines 1372-1375
 function CoreUnitDamage:set_ignore_mover_collision_body(body_key, time)
 	self._ignore_mover_collision_body_map = self._ignore_mover_collision_body_map or {}
 	self._ignore_mover_collision_body_map[body_key] = time
 end
 
--- Lines: 1382 to 1384
+-- Lines 1377-1379
 function CoreUnitDamage:clear_ignore_mover_collision_units()
 	self._ignore_mover_collision_unit_map = nil
 end
 
--- Lines: 1386 to 1388
+-- Lines 1381-1383
 function CoreUnitDamage:clear_ignore_mover_collision_bodies()
 	self._ignore_mover_collision_body_map = nil
 end
 
--- Lines: 1390 to 1393
+-- Lines 1385-1388
 function CoreUnitDamage:set_ignore_body_collision_unit(unit_key, time)
 	self._ignore_body_collision_unit_map = self._ignore_body_collision_unit_map or {}
 	self._ignore_body_collision_unit_map[unit_key] = time
 end
 
--- Lines: 1395 to 1397
+-- Lines 1390-1392
 function CoreUnitDamage:clear_ignore_body_collision_units()
 	self._ignore_body_collision_unit_map = nil
 end
 
--- Lines: 1399 to 1405
+-- Lines 1394-1400
 function CoreUnitDamage:set_ignore_mover_on_mover_collisions(ignore)
 	if ignore then
 		self._ignore_mover_on_mover_collisions = true
@@ -1430,72 +1436,72 @@ function CoreUnitDamage:set_ignore_mover_on_mover_collisions(ignore)
 	end
 end
 
--- Lines: 1407 to 1408
+-- Lines 1402-1404
 function CoreUnitDamage:get_ignore_mover_on_mover_collisions()
 	return not not self._ignore_mover_on_mover_collisions
 end
 
--- Lines: 1411 to 1412
+-- Lines 1406-1408
 function CoreUnitDamage:give_body_collision_velocity()
 	return not self._skip_give_body_collision_velocity
 end
 
--- Lines: 1415 to 1417
+-- Lines 1410-1412
 function CoreUnitDamage:set_give_body_collision_velocity(give_body_velocity)
 	self._skip_give_body_collision_velocity = not give_body_velocity
 end
 
--- Lines: 1419 to 1420
+-- Lines 1414-1416
 function CoreUnitDamage:give_mover_collision_velocity()
 	return not self._skip_give_mover_collision_velocity
 end
 
--- Lines: 1423 to 1425
+-- Lines 1418-1420
 function CoreUnitDamage:set_give_mover_collision_velocity(give_mover_velocity)
 	self._skip_give_mover_collision_velocity = not give_mover_velocity
 end
 
--- Lines: 1427 to 1428
+-- Lines 1422-1424
 function CoreUnitDamage:give_body_collision_damage()
 	return not self._skip_give_body_collision_damage
 end
 
--- Lines: 1431 to 1433
+-- Lines 1426-1428
 function CoreUnitDamage:set_give_body_collision_damage(give_body_damage)
 	self._skip_give_body_collision_damage = not give_body_damage
 end
 
--- Lines: 1435 to 1436
+-- Lines 1430-1432
 function CoreUnitDamage:give_mover_collision_damage()
 	return not self._skip_give_mover_collision_damage
 end
 
--- Lines: 1439 to 1441
+-- Lines 1434-1436
 function CoreUnitDamage:set_give_mover_collision_damage(give_mover_damage)
 	self._skip_give_mover_collision_damage = not give_mover_damage
 end
 
--- Lines: 1443 to 1444
+-- Lines 1438-1440
 function CoreUnitDamage:receive_body_collision_damage()
 	return not self._skip_receive_body_collision_damage
 end
 
--- Lines: 1447 to 1449
+-- Lines 1442-1444
 function CoreUnitDamage:set_receive_body_collision_damage(receive_body_damage)
 	self._skip_receive_body_collision_damage = not receive_body_damage
 end
 
--- Lines: 1451 to 1452
+-- Lines 1446-1448
 function CoreUnitDamage:receive_mover_collision_damage()
 	return not self._skip_receive_mover_collision_damage
 end
 
--- Lines: 1455 to 1457
+-- Lines 1450-1452
 function CoreUnitDamage:set_receive_mover_collision_damage(receive_mover_damage)
 	self._skip_receive_mover_collision_damage = not receive_mover_damage
 end
 
--- Lines: 1459 to 1464
+-- Lines 1454-1460
 function CoreUnitDamage:can_mover_collide(time, unit, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	local alive_other_body = alive(other_body)
 	local damage_ext = other_unit:damage()
@@ -1503,14 +1509,14 @@ function CoreUnitDamage:can_mover_collide(time, unit, other_unit, other_body, po
 	return (not damage_ext or damage_ext:give_mover_collision_damage()) and not self._skip_receive_mover_collision_damage and self._unit:mover() and (alive_other_body or not self._ignore_mover_on_mover_collisions) and managers.sequence:is_collisions_enabled() and (not self._ignore_mover_collision_unit_map or not self._ignore_mover_collision_unit_map[other_unit:key()] or self._ignore_mover_collision_unit_map[other_unit:key()] < time) and (not alive_other_body or not self._ignore_mover_collision_body_map or not self._ignore_mover_collision_body_map[other_body:key()] or self._ignore_mover_collision_body_map[other_body:key()] < time)
 end
 
--- Lines: 1467 to 1470
+-- Lines 1462-1466
 function CoreUnitDamage:can_body_collide(time, tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	local damage_ext = other_unit:damage()
 
 	return (not damage_ext or damage_ext:give_body_collision_damage()) and not self._skip_receive_body_collision_damage and managers.sequence:is_collisions_enabled() and (not self._ignore_body_collision_unit_map or not self._ignore_body_collision_unit_map[other_unit:key()] or self._ignore_body_collision_unit_map[other_unit:key()] < time)
 end
 
--- Lines: 1473 to 1505
+-- Lines 1468-1501
 function CoreUnitDamage:get_collision_velocity(position, body, other_body, other_unit, collision_velocity, normal, is_mover, velocity, other_velocity)
 	local damage_ext = other_unit:damage()
 	local is_other_mover = not alive(other_body)
@@ -1546,30 +1552,30 @@ function CoreUnitDamage:get_collision_velocity(position, body, other_body, other
 	return self:add_angular_velocity(position, direction, body, other_body, other_unit, collision_velocity, is_mover)
 end
 
--- Lines: 1508 to 1522
+-- Lines 1503-1518
 function CoreUnitDamage:add_angular_velocity(position, direction, body, other_body, other_unit, collision_velocity, is_mover)
 	local angular_velocity_addition = Vector3()
 
 	if alive(body) then
 		local body_ang_vel = body:angular_velocity()
-		angular_velocity_addition = (direction * 200 * body_ang_vel:length() * (1 + math.abs(math.dot(body_ang_vel:normalized(), direction)))) / (10 * math.pi)
+		angular_velocity_addition = direction * 200 * body_ang_vel:length() * (1 + math.abs(math.dot(body_ang_vel:normalized(), direction))) / (10 * math.pi)
 	end
 
 	if alive(other_body) then
 		local other_body_ang_vel = other_body:angular_velocity()
-		angular_velocity_addition = angular_velocity_addition + (direction * 200 * other_body_ang_vel:length() * (1 + math.abs(math.dot(other_body_ang_vel:normalized(), direction)))) / (10 * math.pi)
+		angular_velocity_addition = angular_velocity_addition + direction * 200 * other_body_ang_vel:length() * (1 + math.abs(math.dot(other_body_ang_vel:normalized(), direction))) / (10 * math.pi)
 		angular_velocity_addition = direction * math.clamp(angular_velocity_addition:length(), 0, 200)
 	end
 
 	return collision_velocity + angular_velocity_addition, direction
 end
 
--- Lines: 1525 to 1526
+-- Lines 1520-1522
 function CoreUnitDamage:get_collision_damage(tag, body, other_unit, other_body, position, normal, collision_velocity, is_mover_collision)
 	return math.clamp((collision_velocity:length() - 400) / 100, 0, 75)
 end
 
--- Lines: 1529 to 1545
+-- Lines 1524-1540
 function CoreUnitDamage:body_collision_callback(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	local time = TimerManager:game():time()
 	local new_velocity, direction, damage = nil
@@ -1588,7 +1594,7 @@ function CoreUnitDamage:body_collision_callback(tag, unit, body, other_unit, oth
 	end
 end
 
--- Lines: 1547 to 1577
+-- Lines 1542-1572
 function CoreUnitDamage:mover_collision_callback(unit, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	local time = TimerManager:game():time()
 	local new_velocity, direction, damage = nil
@@ -1621,7 +1627,7 @@ function CoreUnitDamage:mover_collision_callback(unit, other_unit, other_body, p
 	end
 end
 
--- Lines: 1579 to 1591
+-- Lines 1574-1586
 function CoreUnitDamage:collision(tag, unit, body, other_unit, other_body, position, normal, direction, damage, collision_velocity, is_mover_collision)
 	if damage > 0 then
 		if body then
@@ -1636,24 +1642,24 @@ function CoreUnitDamage:collision(tag, unit, body, other_unit, other_body, posit
 	end
 end
 
--- Lines: 1593 to 1596
+-- Lines 1588-1591
 function CoreUnitDamage:toggle_debug_collision_all()
 	self:toggle_debug_collision_body()
 	self:toggle_debug_collision_mover()
 end
 
--- Lines: 1598 to 1601
+-- Lines 1593-1596
 function CoreUnitDamage:set_debug_collision_all(enabled)
 	self:toggle_debug_collision_body(enabled)
 	self:toggle_debug_collision_mover(enabled)
 end
 
--- Lines: 1603 to 1605
+-- Lines 1598-1600
 function CoreUnitDamage:toggle_debug_collision_body()
 	self:set_debug_collision_body(not self._debug_collision_body_id)
 end
 
--- Lines: 1607 to 1619
+-- Lines 1602-1614
 function CoreUnitDamage:set_debug_collision_body(enabled)
 	if not self._debug_collision_body_id ~= not enabled then
 		if enabled then
@@ -1668,12 +1674,12 @@ function CoreUnitDamage:set_debug_collision_body(enabled)
 	end
 end
 
--- Lines: 1621 to 1623
+-- Lines 1616-1618
 function CoreUnitDamage:toggle_debug_collision_mover()
 	self:set_debug_collision_mover(not self._debug_collision_mover_id)
 end
 
--- Lines: 1625 to 1637
+-- Lines 1620-1632
 function CoreUnitDamage:set_debug_collision_mover(enabled)
 	if not self._debug_collision_mover_id ~= not enabled then
 		if enabled then
@@ -1688,7 +1694,7 @@ function CoreUnitDamage:set_debug_collision_mover(enabled)
 	end
 end
 
--- Lines: 1639 to 1659
+-- Lines 1634-1654
 function CoreUnitDamage:debug_collision_body(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage)
 	local time = TimerManager:game():time()
 
@@ -1708,7 +1714,7 @@ function CoreUnitDamage:debug_collision_body(tag, unit, body, other_unit, other_
 	end
 end
 
--- Lines: 1661 to 1681
+-- Lines 1656-1676
 function CoreUnitDamage:debug_collision_mover(unit, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage)
 	local time = TimerManager:game():time()
 
@@ -1728,7 +1734,7 @@ function CoreUnitDamage:debug_collision_mover(unit, other_unit, other_body, posi
 	end
 end
 
--- Lines: 1683 to 1692
+-- Lines 1678-1687
 function CoreUnitDamage:debug_draw_velocity(index, label, position, velocity, red, green, blue)
 	managers.debug.gui:set_color(index, red, green, blue)
 
@@ -1742,14 +1748,14 @@ function CoreUnitDamage:debug_draw_velocity(index, label, position, velocity, re
 	managers.debug.pos:set(2, position + Vector3(0, 0, index - 2) + (velocity or Vector3()), "debug_collision_body_" .. index - 1, red, green, blue)
 end
 
--- Lines: 1694 to 1698
+-- Lines 1689-1693
 function CoreUnitDamage:outside_worlds_bounding_box()
 	if alive(self._unit) then
 		self:kill("collision", self._unit, nil, math.UP, self._unit:position(), math.DOWN, 0, self._unit:sampled_velocity())
 	end
 end
 
--- Lines: 1700 to 1711
+-- Lines 1695-1706
 function CoreUnitDamage:report_enemy_killed()
 	if not self._enemy_killed_reported then
 		local enemy_data = self._unit:enemy_data()
@@ -1766,14 +1772,14 @@ function CoreUnitDamage:report_enemy_killed()
 	end
 end
 
--- Lines: 1713 to 1717
+-- Lines 1708-1712
 function CoreUnitDamage:kill(endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
 	if alive(self._unit) then
 		self:report_enemy_killed()
 	end
 end
 
--- Lines: 1719 to 1724
+-- Lines 1714-1719
 function CoreUnitDamage:remove()
 	if alive(self._unit) then
 		self:report_enemy_killed()
@@ -1781,19 +1787,19 @@ function CoreUnitDamage:remove()
 	end
 end
 
--- Lines: 1726 to 1729
+-- Lines 1721-1724
 function CoreUnitDamage:add_inherit_destroy_unit(unit)
 	self._inherit_destroy_unit_list = self._inherit_destroy_unit_list or {}
 
 	table.insert(self._inherit_destroy_unit_list, unit)
 end
 
--- Lines: 1731 to 1732
+-- Lines 1726-1728
 function CoreUnitDamage:has_sequence(sequence_name)
 	return self._unit_element and self._unit_element:has_sequence(sequence_name)
 end
 
--- Lines: 1735 to 1738
+-- Lines 1730-1734
 function CoreUnitDamage:set_variable(key, val)
 	self._variables = self._variables or {}
 	self._variables[key] = val
@@ -1801,14 +1807,14 @@ function CoreUnitDamage:set_variable(key, val)
 	return self._variables
 end
 
--- Lines: 1741 to 1745
+-- Lines 1736-1740
 function CoreUnitDamage:anim_clbk_set_sequence_block_state(unit, state)
 	state = state == "true" and true or false
 
 	self:set_sequence_block_state(state)
 end
 
--- Lines: 1748 to 1753
+-- Lines 1742-1748
 function CoreUnitDamage:set_sequence_block_state(state)
 	self._sequence_block_state = state
 
@@ -1817,7 +1823,7 @@ function CoreUnitDamage:set_sequence_block_state(state)
 	end
 end
 
--- Lines: 1756 to 1770
+-- Lines 1750-1765
 function CoreUnitDamage:_process_sequence_queue()
 	if self._sequence_block_state or not self._queued_sequences then
 		return
@@ -1834,7 +1840,7 @@ function CoreUnitDamage:_process_sequence_queue()
 	end
 end
 
--- Lines: 1773 to 1782
+-- Lines 1767-1777
 function CoreUnitDamage:add_queued_sequence(name, params)
 	if not self._sequence_block_state then
 		self:run_sequence_simple(name, params)
@@ -1850,9 +1856,10 @@ function CoreUnitDamage:add_queued_sequence(name, params)
 
 	table.insert(self._queued_sequences, new_entry)
 end
+
 CoreBodyDamage = CoreBodyDamage or class()
 
--- Lines: 1790 to 1858
+-- Lines 1785-1853
 function CoreBodyDamage:init(unit, unit_extension, body, body_element)
 	self._unit = unit
 	self._unit_extension = unit_extension
@@ -1916,7 +1923,7 @@ function CoreBodyDamage:init(unit, unit_extension, body, body_element)
 	end
 end
 
--- Lines: 1860 to 1870
+-- Lines 1855-1865
 function CoreBodyDamage:set_damage(damage_type, damage)
 	self._damage[damage_type] = damage
 	local element = self._body_element._first_endurance[damage_type]
@@ -1928,27 +1935,27 @@ function CoreBodyDamage:set_damage(damage_type, damage)
 	self._endurance[damage_type] = element
 end
 
--- Lines: 1872 to 1873
+-- Lines 1867-1869
 function CoreBodyDamage:get_body()
 	return self._body
 end
 
--- Lines: 1876 to 1877
+-- Lines 1871-1873
 function CoreBodyDamage:get_inflict_updator_map()
 	return self._inflict_updator_map
 end
 
--- Lines: 1880 to 1881
+-- Lines 1875-1877
 function CoreBodyDamage:get_endurance_map()
 	return self._endurance
 end
 
--- Lines: 1884 to 1885
+-- Lines 1879-1881
 function CoreBodyDamage:get_inflict_time(damage_type, src_unit)
 	return self._inflict_time[damage_type][src_unit]
 end
 
--- Lines: 1888 to 1900
+-- Lines 1883-1896
 function CoreBodyDamage:can_inflict_damage(damage_type, src_unit)
 	if self._inflict and self._inflict[damage_type] and self._inflict[damage_type].enabled then
 		local last_time = self._inflict_time[damage_type][src_unit:key()]
@@ -1965,7 +1972,7 @@ function CoreBodyDamage:can_inflict_damage(damage_type, src_unit)
 	return false, false
 end
 
--- Lines: 1903 to 1918
+-- Lines 1898-1913
 function CoreBodyDamage:enter_inflict_damage(damage_type, src_unit, src_body, normal, position, direction, velocity)
 	local unit_key = src_unit:key()
 	local list = self._inflict_time[damage_type]
@@ -1983,7 +1990,7 @@ function CoreBodyDamage:enter_inflict_damage(damage_type, src_unit, src_body, no
 	end
 end
 
--- Lines: 1920 to 1935
+-- Lines 1915-1930
 function CoreBodyDamage:exit_inflict_damage(damage_type, src_body, normal, pos, dir, velocity)
 	if alive(src_body) then
 		local src_unit = src_body:unit()
@@ -2002,7 +2009,7 @@ function CoreBodyDamage:exit_inflict_damage(damage_type, src_body, normal, pos, 
 	end
 end
 
--- Lines: 1937 to 1947
+-- Lines 1932-1943
 function CoreBodyDamage:inflict_damage(damage_type, src_unit, src_body, normal, position, direction, velocity)
 	local unit_key = src_unit:key()
 	self._inflict_time[damage_type][unit_key] = TimerManager:game():time()
@@ -2016,70 +2023,70 @@ function CoreBodyDamage:inflict_damage(damage_type, src_unit, src_body, normal, 
 	return damage_ext["damage_" .. damage_type](damage_ext, self._unit, normal, position, direction, damage, velocity)
 end
 
--- Lines: 1950 to 1952
+-- Lines 1945-1948
 function CoreBodyDamage:damage_damage(attack_unit, normal, position, direction, damage, unevadable)
 	damage = self:damage_endurance("damage", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return self._unit_extension:damage_damage(attack_unit, self._body, normal, position, direction, damage, unevadable)
 end
 
--- Lines: 1955 to 1957
+-- Lines 1950-1953
 function CoreBodyDamage:damage_bullet(attack_unit, normal, position, direction, damage, unevadable)
 	damage = self:damage_endurance("bullet", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return self._unit_extension:damage_bullet(attack_unit, self._body, normal, position, direction, damage, unevadable)
 end
 
--- Lines: 1960 to 1962
+-- Lines 1955-1958
 function CoreBodyDamage:damage_bullet_type(type, attack_unit, normal, position, direction, damage, unevadable)
 	damage = self:damage_endurance("bullet_" .. type, attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return self._unit_extension:damage_bullet_type(type, attack_unit, self._body, normal, position, direction, damage, unevadable)
 end
 
--- Lines: 1965 to 1967
+-- Lines 1960-1963
 function CoreBodyDamage:damage_lock(attack_unit, normal, position, direction, damage, unevadable)
 	damage = self:damage_endurance("lock", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return self._unit_extension:damage_lock(attack_unit, self._body, normal, position, direction, damage, unevadable)
 end
 
--- Lines: 1970 to 1972
+-- Lines 1965-1968
 function CoreBodyDamage:damage_explosion(attack_unit, normal, position, direction, damage)
 	damage = self:damage_endurance("explosion", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return false, 0
 end
 
--- Lines: 1975 to 1977
+-- Lines 1970-1973
 function CoreBodyDamage:damage_collision(attack_unit, normal, position, direction, damage, velocity)
 	damage = self:damage_endurance("collision", attack_unit, normal, position, direction, damage, velocity)
 
 	return self._unit_extension:damage_collision(attack_unit, self._body, normal, position, direction, damage, velocity)
 end
 
--- Lines: 1980 to 1982
+-- Lines 1975-1978
 function CoreBodyDamage:damage_melee(attack_unit, normal, position, direction, damage)
 	damage = self:damage_endurance("melee", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return self._unit_extension:damage_melee(attack_unit, self._body, normal, position, direction, damage)
 end
 
--- Lines: 1985 to 1987
+-- Lines 1980-1983
 function CoreBodyDamage:damage_electricity(attack_unit, normal, position, direction, damage)
 	damage = self:damage_endurance("electricity", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 
 	return self._unit_extension:damage_electricity(attack_unit, self._body, normal, position, direction, damage)
 end
 
--- Lines: 1990 to 1992
+-- Lines 1985-1988
 function CoreBodyDamage:damage_fire(attack_unit, normal, position, direction, damage, velocity)
 	damage = self:damage_endurance("fire", attack_unit, normal, position, direction, damage, velocity)
 
 	return self._unit_extension:damage_fire(attack_unit, self._body, normal, position, direction, damage, velocity)
 end
 
--- Lines: 1995 to 2004
+-- Lines 1990-1999
 function CoreBodyDamage:damage_by_area(endurance_type, attack_unit, normal, position, direction, damage, velocity)
 	local damage_func = self["damage_" .. endurance_type]
 
@@ -2092,17 +2099,17 @@ function CoreBodyDamage:damage_by_area(endurance_type, attack_unit, normal, posi
 	end
 end
 
--- Lines: 2006 to 2007
+-- Lines 2001-2003
 function CoreBodyDamage:damage_effect(effect_type, attack_unit, normal, position, direction, velocity, params)
 	return self._unit_extension:damage_effect(effect_type, attack_unit, self._body, normal, position, direction, velocity, params)
 end
 
--- Lines: 2010 to 2011
+-- Lines 2005-2007
 function CoreBodyDamage:endurance_exists(endurance_type)
 	return self._endurance[endurance_type] ~= nil
 end
 
--- Lines: 2014 to 2024
+-- Lines 2009-2020
 function CoreBodyDamage:damage_endurance(endurance_type, attack_unit, normal, position, direction, damage, velocity)
 	if self._body_element then
 		damage = damage * self._body_element._damage_multiplier
@@ -2117,7 +2124,7 @@ function CoreBodyDamage:damage_endurance(endurance_type, attack_unit, normal, po
 	return damage
 end
 
--- Lines: 2027 to 2033
+-- Lines 2022-2028
 function CoreBodyDamage:get_body_param(param_name)
 	if self._body_element then
 		return self._body_element:get_body_param(param_name)
@@ -2126,47 +2133,47 @@ function CoreBodyDamage:get_body_param(param_name)
 	end
 end
 
--- Lines: 2035 to 2037
+-- Lines 2030-2032
 function CoreBodyDamage:set_inflict_damage(damage_type, damage)
 	self:set_inflict_attribute(damage_type, "damage", damage)
 end
 
--- Lines: 2039 to 2041
+-- Lines 2034-2036
 function CoreBodyDamage:set_inflict_interval(damage_type, interval)
 	self:set_inflict_attribute(damage_type, "interval", interval)
 end
 
--- Lines: 2043 to 2045
+-- Lines 2038-2040
 function CoreBodyDamage:set_inflict_instant(damage_type, instant)
 	self:set_inflict_attribute(damage_type, "instant", instant)
 end
 
--- Lines: 2047 to 2049
+-- Lines 2042-2044
 function CoreBodyDamage:set_inflict_enabled(damage_type, enabled)
 	self:set_inflict_attribute(damage_type, "enabled", enabled)
 end
 
--- Lines: 2051 to 2052
+-- Lines 2046-2048
 function CoreBodyDamage:get_inflict_damage(damage_type)
 	return self:get_inflict_attribute(damage_type, "damage")
 end
 
--- Lines: 2055 to 2056
+-- Lines 2050-2052
 function CoreBodyDamage:get_inflict_interval(damage_type)
 	return self:get_inflict_attribute(damage_type, "interval")
 end
 
--- Lines: 2059 to 2060
+-- Lines 2054-2056
 function CoreBodyDamage:get_inflict_instant(damage_type)
 	return self:get_inflict_attribute(damage_type, "instant")
 end
 
--- Lines: 2063 to 2064
+-- Lines 2058-2060
 function CoreBodyDamage:get_inflict_enabled(damage_type)
 	return self:get_inflict_attribute(damage_type, "enabled")
 end
 
--- Lines: 2067 to 2086
+-- Lines 2062-2081
 function CoreBodyDamage:set_inflict_attribute(damage_type, attribute, attribute_value)
 	local inflict = self._inflict and self._inflict[damage_type]
 
@@ -2189,7 +2196,7 @@ function CoreBodyDamage:set_inflict_attribute(damage_type, attribute, attribute_
 	end
 end
 
--- Lines: 2088 to 2103
+-- Lines 2083-2099
 function CoreBodyDamage:get_inflict_attribute(damage_type, attribute)
 	local inflict = self._inflict and self._inflict[damage_type]
 
@@ -2208,7 +2215,7 @@ function CoreBodyDamage:get_inflict_attribute(damage_type, attribute)
 	return nil
 end
 
--- Lines: 2106 to 2150
+-- Lines 2101-2146
 function CoreBodyDamage:save(data)
 	local state = {}
 	local changed = false
@@ -2258,7 +2265,7 @@ function CoreBodyDamage:save(data)
 	return changed
 end
 
--- Lines: 2154 to 2184
+-- Lines 2148-2179
 function CoreBodyDamage:load(data)
 	local state = data[self._body_index]
 
@@ -2291,54 +2298,56 @@ function CoreBodyDamage:load(data)
 		end
 	end
 end
+
 CoreAfroBodyDamage = CoreAfroBodyDamage or class(CoreBodyDamage)
 
--- Lines: 2190 to 2192
+-- Lines 2185-2187
 function CoreAfroBodyDamage:init(unit, unit_extension, body, body_element)
 	CoreBodyDamage.init(self, unit, unit_extension, body, body_element)
 end
 
--- Lines: 2194 to 2195
+-- Lines 2189-2191
 function CoreAfroBodyDamage:damage_bullet(attack_unit, normal, position, direction, damage)
 	return self:damage("bullet", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 2198 to 2199
+-- Lines 2193-2195
 function CoreAfroBodyDamage:damage_explosion(attack_unit, normal, position, direction, damage)
 	return self:damage("explosion", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 2202 to 2203
+-- Lines 2197-2199
 function CoreAfroBodyDamage:damage_collision(attack_unit, normal, position, direction, damage, velocity)
 	return self:damage("collision", attack_unit, normal, position, direction, damage, velocity)
 end
 
--- Lines: 2206 to 2207
+-- Lines 2201-2203
 function CoreAfroBodyDamage:damage_melee(attack_unit, normal, position, direction, damage)
 	return self:damage("melee", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 2210 to 2211
+-- Lines 2205-2207
 function CoreAfroBodyDamage:damage_electricity(attack_unit, normal, position, direction, damage)
 	return self:damage("electricity", attack_unit, normal, position, direction, damage, Vector3(0, 0, 0))
 end
 
--- Lines: 2214 to 2215
+-- Lines 2209-2211
 function CoreAfroBodyDamage:damage_fire(attack_unit, normal, position, direction, damage, velocity)
 	return self:damage("fire", attack_unit, normal, position, direction, damage, velocity)
 end
 
--- Lines: 2218 to 2220
+-- Lines 2213-2216
 function CoreAfroBodyDamage:damage(endurance_type, attack_unit, normal, position, direction, damage, velocity)
 	damage = self:damage_endurance(endurance_type, attack_unit, normal, position, direction, damage, velocity)
 
 	return false, 0
 end
+
 CoreDamageWaterCheck = CoreDamageWaterCheck or class()
 CoreDamageWaterCheck.MIN_INTERVAL = 0.2
 CoreDamageWaterCheck.DEFAULT_PHYSIC_EFFECT = "water_box"
 
--- Lines: 2229 to 2249
+-- Lines 2224-2244
 function CoreDamageWaterCheck:init(unit, damage_ext, name, interval, ref_object, ref_body, body_depth, physic_effect)
 	self._unit = unit
 	self._damage_ext = damage_ext
@@ -2359,12 +2368,12 @@ function CoreDamageWaterCheck:init(unit, damage_ext, name, interval, ref_object,
 	self._enter_water = false
 end
 
--- Lines: 2251 to 2252
+-- Lines 2246-2248
 function CoreDamageWaterCheck:is_valid()
 	return self._ref_object or self._ref_body
 end
 
--- Lines: 2255 to 2269
+-- Lines 2250-2264
 function CoreDamageWaterCheck:update(t, dt)
 	if self._check_time <= t and self:check_active_body() then
 		local enter_water = self._in_water_check_func()
@@ -2381,10 +2390,15 @@ function CoreDamageWaterCheck:update(t, dt)
 	end
 end
 
--- Lines: 2271 to 2301
+-- Lines 2266-2297
 function CoreDamageWaterCheck:get_env_variables(enter_water)
 	local normal, position, velocity, water_depth = nil
-	normal = enter_water and Vector3(0, 0, 1) or Vector3(0, 0, -1)
+
+	if enter_water then
+		normal = Vector3(0, 0, 1)
+	else
+		normal = Vector3(0, 0, -1)
+	end
 
 	if self._ref_object then
 		position = self._ref_object:position()
@@ -2399,13 +2413,18 @@ function CoreDamageWaterCheck:get_env_variables(enter_water)
 	else
 		velocity = self._unit:velocity()
 		water_depth = 0
-		position = alive(self._ref_body) and self._ref_body:position() or self._unit:position()
+
+		if alive(self._ref_body) then
+			position = self._ref_body:position()
+		else
+			position = self._unit:position()
+		end
 	end
 
 	return self._unit, self._ref_body, normal, position, velocity:normalized(), 0, velocity, water_depth
 end
 
--- Lines: 2304 to 2310
+-- Lines 2299-2305
 function CoreDamageWaterCheck:set_update_variables()
 	if self._ref_object then
 		self._in_water_check_func = callback(self, self, "is_ref_object_in_water")
@@ -2414,7 +2433,7 @@ function CoreDamageWaterCheck:set_update_variables()
 	end
 end
 
--- Lines: 2312 to 2322
+-- Lines 2307-2318
 function CoreDamageWaterCheck:check_active_body()
 	self._check_time = self._check_time + self._interval
 	self._current_ref_body_depth = alive(self._ref_body) and self._ref_body:in_water()
@@ -2429,7 +2448,7 @@ function CoreDamageWaterCheck:check_active_body()
 	return true
 end
 
--- Lines: 2325 to 2338
+-- Lines 2320-2333
 function CoreDamageWaterCheck:set_activation_callbacks_enabled(enabled)
 	if self._activation_callbacks_enabled ~= enabled then
 		self._activation_callbacks_enabled = enabled
@@ -2446,7 +2465,7 @@ function CoreDamageWaterCheck:set_activation_callbacks_enabled(enabled)
 	end
 end
 
--- Lines: 2340 to 2346
+-- Lines 2335-2341
 function CoreDamageWaterCheck:set_activation_listener_enabled(enabled)
 	if self._activation_listener_enabled ~= enabled then
 		self._activation_listener_enabled = enabled
@@ -2456,32 +2475,32 @@ function CoreDamageWaterCheck:set_activation_listener_enabled(enabled)
 	end
 end
 
--- Lines: 2348 to 2349
+-- Lines 2343-2345
 function CoreDamageWaterCheck:is_ref_object_in_water()
 	return World:in_physic_effect(self._physic_effect, self._ref_object:position())
 end
 
--- Lines: 2352 to 2353
+-- Lines 2347-2349
 function CoreDamageWaterCheck:is_ref_body_in_water_depth()
 	return self._current_ref_body_depth and body_depth < self._current_ref_body_depth
 end
 
--- Lines: 2356 to 2357
+-- Lines 2351-2353
 function CoreDamageWaterCheck:get_interval()
 	return self._interval
 end
 
--- Lines: 2360 to 2362
+-- Lines 2355-2357
 function CoreDamageWaterCheck:set_interval(interval)
 	self._interval = math.max(interval or self.MIN_INTERVAL, self.MIN_INTERVAL)
 end
 
--- Lines: 2364 to 2365
+-- Lines 2359-2361
 function CoreDamageWaterCheck:get_ref_object()
 	return self._ref_object
 end
 
--- Lines: 2368 to 2372
+-- Lines 2363-2367
 function CoreDamageWaterCheck:set_ref_object(ref_object)
 	self._ref_object = ref_object
 
@@ -2489,12 +2508,12 @@ function CoreDamageWaterCheck:set_ref_object(ref_object)
 	self:set_update_variables()
 end
 
--- Lines: 2374 to 2375
+-- Lines 2369-2371
 function CoreDamageWaterCheck:get_ref_body()
 	return self._ref_body
 end
 
--- Lines: 2378 to 2399
+-- Lines 2373-2394
 function CoreDamageWaterCheck:set_ref_body(ref_body)
 	self._ref_body = ref_body
 
@@ -2521,39 +2540,40 @@ function CoreDamageWaterCheck:set_ref_body(ref_body)
 	self:set_update_variables()
 end
 
--- Lines: 2401 to 2402
+-- Lines 2396-2398
 function CoreDamageWaterCheck:get_body_depth()
 	return self._body_depth
 end
 
--- Lines: 2405 to 2407
+-- Lines 2400-2402
 function CoreDamageWaterCheck:set_body_depth(body_depth)
 	self._body_depth = math.max(body_depth or 0, 0)
 end
 
--- Lines: 2409 to 2413
+-- Lines 2404-2408
 function CoreDamageWaterCheck:water_collision(tag, unit, body, surface, enter, position, normal, velocity)
 	if not enter ~= not self._enter_water and body:key() == self._ref_body_key then
 		self:set_activation_listener_enabled(false)
 	end
 end
 
--- Lines: 2415 to 2419
+-- Lines 2410-2414
 function CoreDamageWaterCheck:body_activated(tag, unit, body, activated)
 	if activated and body:key() == self._ref_body_key then
 		self:set_activation_listener_enabled(false)
 	end
 end
 
--- Lines: 2421 to 2422
+-- Lines 2416-2418
 function CoreDamageWaterCheck:to_string()
 	return string.format("[Unit: %s, Name: %s, Enabled: %s, Interval: %g, Object: %s, Body: %s, Body depth: %g]", self._unit:name(), self._name, tostring(self._damage_ext:is_water_check_active(self._name)), self._interval, tostring(alive(self._ref_object) and self._ref_object:name() or nil), tostring(alive(self._ref_body) and self._ref_body:name() or nil), self._body_depth)
 end
+
 CoreInflictUpdator = CoreInflictUpdator or class()
 CoreInflictUpdator.INFLICT_UPDATOR_DAMAGE_TYPE_MAP = CoreInflictUpdator.INFLICT_UPDATOR_DAMAGE_TYPE_MAP or {}
 CoreInflictUpdator.MIN_INTERVAL = 0.2
 
--- Lines: 2430 to 2463
+-- Lines 2425-2458
 function CoreInflictUpdator:init(unit, body, body_damage_ext, inflict_element, unit_element)
 	self._unit = unit
 	self._body = body
@@ -2595,17 +2615,17 @@ function CoreInflictUpdator:init(unit, body, body_damage_ext, inflict_element, u
 	}
 end
 
--- Lines: 2465 to 2466
+-- Lines 2460-2462
 function CoreInflictUpdator:is_valid()
 	return true
 end
 
--- Lines: 2469 to 2471
+-- Lines 2464-2466
 function CoreInflictUpdator:set_damage(damage)
 	self._damage = damage or self._damage
 end
 
--- Lines: 2473 to 2480
+-- Lines 2468-2475
 function CoreInflictUpdator:set_interval(interval)
 	local old_interval = self._interval
 	self._interval = math.max(interval or self._interval, self.MIN_INTERVAL)
@@ -2615,12 +2635,12 @@ function CoreInflictUpdator:set_interval(interval)
 	end
 end
 
--- Lines: 2482 to 2484
+-- Lines 2477-2479
 function CoreInflictUpdator:set_instant(instant)
 	self._instant = not not instant
 end
 
--- Lines: 2486 to 2500
+-- Lines 2481-2495
 function CoreInflictUpdator:set_enabled(enabled)
 	enabled = not not enabled
 
@@ -2638,7 +2658,7 @@ function CoreInflictUpdator:set_enabled(enabled)
 	end
 end
 
--- Lines: 2502 to 2527
+-- Lines 2497-2523
 function CoreInflictUpdator:save(data)
 	local state = {}
 	local changed = false
@@ -2670,7 +2690,7 @@ function CoreInflictUpdator:save(data)
 	return changed
 end
 
--- Lines: 2530 to 2543
+-- Lines 2525-2538
 function CoreInflictUpdator:load(data)
 	local state = data.CoreInflictUpdator
 
@@ -2688,7 +2708,7 @@ function CoreInflictUpdator:load(data)
 	end
 end
 
--- Lines: 2545 to 2554
+-- Lines 2540-2549
 function CoreInflictUpdator:update(t, dt)
 	if self._check_time <= t then
 		if alive(self._unit) then
@@ -2701,7 +2721,7 @@ function CoreInflictUpdator:update(t, dt)
 	end
 end
 
--- Lines: 2556 to 2566
+-- Lines 2551-2562
 function CoreInflictUpdator:set_attribute(attribute, attribute_value)
 	if attribute_value ~= nil then
 		local func = self._set_attribute_func_map[attribute]
@@ -2716,7 +2736,7 @@ function CoreInflictUpdator:set_attribute(attribute, attribute_value)
 	return false
 end
 
--- Lines: 2569 to 2579
+-- Lines 2564-2575
 function CoreInflictUpdator:get_attribute(attribute)
 	if attribute then
 		local func = self._get_attribute_func_map[attribute]
@@ -2730,13 +2750,14 @@ function CoreInflictUpdator:get_attribute(attribute)
 
 	return nil
 end
+
 CoreInflictFireUpdator = CoreInflictFireUpdator or class(CoreInflictUpdator)
 CoreInflictUpdator.INFLICT_UPDATOR_DAMAGE_TYPE_MAP.fire = CoreInflictFireUpdator
 CoreInflictFireUpdator.SPHERE_CHECK_SLOTMASK = "fire_damage"
 CoreInflictFireUpdator.SPHERE_CHECK_PADDING = 100
 CoreInflictFireUpdator.DAMAGE_TYPE = "fire"
 
--- Lines: 2589 to 2619
+-- Lines 2584-2614
 function CoreInflictFireUpdator:init(unit, body, body_damage_ext, inflict_element, unit_element)
 	CoreInflictUpdator.init(self, unit, body, body_damage_ext, inflict_element, unit_element)
 
@@ -2762,33 +2783,33 @@ function CoreInflictFireUpdator:init(unit, body, body_damage_ext, inflict_elemen
 	self._set_attribute_func_map.velocity = callback(self, self, "set_velocity")
 	self._set_attribute_func_map.falloff = callback(self, self, "set_falloff")
 
-	-- Lines: 2614 to 2615
-	self._get_attribute_func_map.fire_object = function ()
+	-- Lines 2610-2610
+	function self._get_attribute_func_map.fire_object()
 		return self._fire_object
 	end
 
-	-- Lines: 2615 to 2616
-	self._get_attribute_func_map.fire_height = function ()
+	-- Lines 2611-2611
+	function self._get_attribute_func_map.fire_height()
 		return self._fire_height
 	end
 
-	-- Lines: 2616 to 2617
-	self._get_attribute_func_map.velocity = function ()
+	-- Lines 2612-2612
+	function self._get_attribute_func_map.velocity()
 		return self._velocity
 	end
 
-	-- Lines: 2617 to 2618
-	self._get_attribute_func_map.falloff = function ()
+	-- Lines 2613-2613
+	function self._get_attribute_func_map.falloff()
 		return self._falloff
 	end
 end
 
--- Lines: 2621 to 2622
+-- Lines 2616-2618
 function CoreInflictFireUpdator:is_valid()
 	return CoreInflictUpdator.is_valid(self) and self._fire_object ~= nil
 end
 
--- Lines: 2625 to 2638
+-- Lines 2620-2633
 function CoreInflictFireUpdator:set_fire_object_name(name)
 	self._fire_object = name and self._unit:get_object(Idstring(name))
 
@@ -2808,23 +2829,23 @@ function CoreInflictFireUpdator:set_fire_object_name(name)
 	self:set_fire_height(self._fire_height)
 end
 
--- Lines: 2640 to 2643
+-- Lines 2635-2638
 function CoreInflictFireUpdator:set_fire_height(height)
 	self._fire_height = height
 	self._sphere_check_range = (self._fire_object:oobb():size() / 2):length() + self._fire_height + self.SPHERE_CHECK_PADDING
 end
 
--- Lines: 2645 to 2647
+-- Lines 2640-2642
 function CoreInflictFireUpdator:set_velocity(velocity)
 	self._velocity = velocity
 end
 
--- Lines: 2649 to 2651
+-- Lines 2644-2646
 function CoreInflictFireUpdator:set_falloff(falloff)
 	self._falloff = falloff
 end
 
--- Lines: 2653 to 2678
+-- Lines 2648-2674
 function CoreInflictFireUpdator:save(data)
 	local state = {}
 	local changed = CoreInflictUpdator.save(self, data)
@@ -2856,7 +2877,7 @@ function CoreInflictFireUpdator:save(data)
 	return changed
 end
 
--- Lines: 2681 to 2695
+-- Lines 2676-2690
 function CoreInflictFireUpdator:load(data)
 	CoreInflictUpdator.load(self, data)
 
@@ -2875,11 +2896,12 @@ function CoreInflictFireUpdator:load(data)
 		self._falloff = state.falloff or self._falloff
 	end
 end
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
 
--- Lines: 2700 to 2801
+-- Lines 2695-2796
 function CoreInflictFireUpdator:check_damage(t, dt)
 	local oobb = self._fire_object:oobb()
 	local oobb_center = oobb:center()
@@ -2943,7 +2965,9 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 								self._is_inflicting = true
 
 								if self._enter_element_func then
-									local env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, normal, position, direction, damage, self._velocity, {distance = distance}, self._unit_element)
+									local env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, normal, position, direction, damage, self._velocity, {
+										distance = distance
+									}, self._unit_element)
 
 									self._enter_element_func(env)
 								end
@@ -2951,7 +2975,9 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 
 							if was_inflicting or self._instant then
 								if self._damage_element_func then
-									local env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, normal, position, direction, damage, self._velocity, {distance = distance}, self._unit_element)
+									local env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, normal, position, direction, damage, self._velocity, {
+										distance = distance
+									}, self._unit_element)
 
 									self._damage_element_func(env)
 								end
@@ -2963,7 +2989,9 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 								end
 							end
 						elseif self._exit_element_func and not exit_inflict_env then
-							exit_inflict_env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, -direction, body_center, direction, damage, self._velocity, {distance = distance}, self._unit_element)
+							exit_inflict_env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, -direction, body_center, direction, damage, self._velocity, {
+								distance = distance
+							}, self._unit_element)
 						end
 					else
 						managers.sequence:remove_inflict_updator_body(self.DAMAGE_TYPE, unit_key, body_key)
@@ -2981,4 +3009,3 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 		end
 	end
 end
-

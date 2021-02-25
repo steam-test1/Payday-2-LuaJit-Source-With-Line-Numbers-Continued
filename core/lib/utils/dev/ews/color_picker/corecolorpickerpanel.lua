@@ -6,35 +6,35 @@ core:import("CoreColorPickerFields")
 
 ColorPickerPanel = ColorPickerPanel or CoreClass.mixin(CoreClass.class(), CoreEvent.BasicEventHandling)
 
--- Lines: 9 to 12
+-- Lines 9-12
 function ColorPickerPanel:init(parent_frame, enable_alpha, orientation, enable_value)
 	assert(orientation == "HORIZONTAL" or orientation == "VERTICAL")
 	self:_create_panel(parent_frame, enable_alpha, orientation, enable_value)
 end
 
--- Lines: 14 to 15
+-- Lines 14-16
 function ColorPickerPanel:panel()
 	return self._panel
 end
 
--- Lines: 18 to 19
+-- Lines 18-20
 function ColorPickerPanel:color()
 	return self._fields:color()
 end
 
--- Lines: 22 to 25
+-- Lines 22-25
 function ColorPickerPanel:set_color(color)
 	self._draggables:set_color(color)
 	self._fields:set_color(color)
 end
 
--- Lines: 27 to 30
+-- Lines 27-30
 function ColorPickerPanel:update(time, delta_time)
 	self._draggables:update(time, delta_time)
 	self._fields:update(time, delta_time)
 end
 
--- Lines: 32 to 48
+-- Lines 32-48
 function ColorPickerPanel:_create_panel(parent_frame, enable_alpha, orientation, enable_value)
 	self._panel = EWS:Panel(parent_frame)
 	local panel_sizer = EWS:BoxSizer(orientation)
@@ -52,7 +52,7 @@ function ColorPickerPanel:_create_panel(parent_frame, enable_alpha, orientation,
 	panel_sizer:add(self._fields:panel(), 1, 0, "EXPAND")
 end
 
--- Lines: 50 to 53
+-- Lines 50-53
 function ColorPickerPanel:_on_color_updated(sender, color)
 	table.exclude({
 		self._draggables,
@@ -61,8 +61,7 @@ function ColorPickerPanel:_on_color_updated(sender, color)
 	self:_send_event("EVT_COLOR_UPDATED", color)
 end
 
--- Lines: 55 to 57
+-- Lines 55-57
 function ColorPickerPanel:_on_color_changed(sender, color)
 	self:_send_event("EVT_COLOR_CHANGED", color)
 end
-

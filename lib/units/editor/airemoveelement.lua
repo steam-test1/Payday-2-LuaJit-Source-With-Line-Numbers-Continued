@@ -1,7 +1,9 @@
 AIRemoveUnitElement = AIRemoveUnitElement or class(MissionElement)
-AIRemoveUnitElement.LINK_ELEMENTS = {"elements"}
+AIRemoveUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 18
+-- Lines 4-18
 function AIRemoveUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -18,16 +20,16 @@ function AIRemoveUnitElement:init(unit)
 	table.insert(self._save_values, "backup_so")
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function AIRemoveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 24 to 25
+-- Lines 24-25
 function AIRemoveUnitElement:update_editing()
 end
 
--- Lines: 27 to 42
+-- Lines 27-42
 function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -60,7 +62,7 @@ function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 44 to 63
+-- Lines 44-63
 function AIRemoveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -88,12 +90,12 @@ function AIRemoveUnitElement:add_element()
 	end
 end
 
--- Lines: 66 to 68
+-- Lines 66-68
 function AIRemoveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 71 to 94
+-- Lines 71-94
 function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -133,4 +135,3 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(force_ragdoll, 0, 0, "EXPAND")
 end
-

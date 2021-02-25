@@ -1,16 +1,16 @@
 PlayerEquipment = PlayerEquipment or class()
 
--- Lines: 5 to 7
+-- Lines 5-7
 function PlayerEquipment:init(unit)
 	self._unit = unit
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function PlayerEquipment:_m_deploy_rot()
 	return self._unit:movement():m_head_rot()
 end
 
--- Lines: 17 to 22
+-- Lines 17-22
 function PlayerEquipment:on_deploy_interupted()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)
@@ -19,7 +19,7 @@ function PlayerEquipment:on_deploy_interupted()
 	end
 end
 
--- Lines: 25 to 44
+-- Lines 25-45
 function PlayerEquipment:valid_look_at_placement(equipment_data)
 	local from = self._unit:movement():m_head_pos()
 	local to = from + self._unit:movement():m_head_rot():y() * 200
@@ -46,7 +46,7 @@ function PlayerEquipment:valid_look_at_placement(equipment_data)
 	return ray
 end
 
--- Lines: 47 to 63
+-- Lines 47-64
 function PlayerEquipment:use_trip_mine()
 	local ray = self:valid_look_at_placement()
 
@@ -70,7 +70,7 @@ function PlayerEquipment:use_trip_mine()
 	return false
 end
 
--- Lines: 67 to 83
+-- Lines 67-84
 function PlayerEquipment:valid_placement(equipment_data)
 	local valid = not self._unit:movement():current_state():in_air()
 	local pos = self._unit:movement():m_pos()
@@ -94,11 +94,12 @@ function PlayerEquipment:valid_placement(equipment_data)
 
 	return valid
 end
+
 local ids_contour_color = Idstring("contour_color")
 local ids_contour_opacity = Idstring("contour_opacity")
 local ids_material = Idstring("material")
 
--- Lines: 89 to 96
+-- Lines 89-96
 function PlayerEquipment:_disable_contour(unit)
 	local materials = unit:get_objects_by_type(ids_material)
 
@@ -107,7 +108,7 @@ function PlayerEquipment:_disable_contour(unit)
 	end
 end
 
--- Lines: 98 to 118
+-- Lines 98-119
 function PlayerEquipment:use_ammo_bag()
 	local ray = self:valid_shape_placement("ammo_bag")
 
@@ -134,7 +135,7 @@ function PlayerEquipment:use_ammo_bag()
 	return false
 end
 
--- Lines: 122 to 157
+-- Lines 121-158
 function PlayerEquipment:use_doctor_bag()
 	local ray = self:valid_shape_placement("doctor_bag")
 
@@ -170,7 +171,7 @@ function PlayerEquipment:use_doctor_bag()
 	return false
 end
 
--- Lines: 160 to 183
+-- Lines 160-184
 function PlayerEquipment:use_first_aid_kit()
 	local ray = self:valid_shape_placement("first_aid_kit")
 
@@ -198,10 +199,9 @@ function PlayerEquipment:use_first_aid_kit()
 	return false
 end
 
--- Lines: 196 to 198
+-- Lines 186-199
 function PlayerEquipment:use_armor_kit()
-
-	-- Lines: 187 to 197
+	-- Lines 187-197
 	local function redirect()
 		if Network:is_client() then
 			managers.network:session():send_to_host("used_deployable")
@@ -217,14 +217,14 @@ function PlayerEquipment:use_armor_kit()
 	return true, redirect
 end
 
--- Lines: 201 to 203
+-- Lines 201-204
 function PlayerEquipment:use_armor_kit_dropin_penalty()
 	MenuCallbackHandler:_update_outfit_information()
 
 	return true
 end
 
--- Lines: 207 to 230
+-- Lines 206-231
 function PlayerEquipment:use_bodybags_bag()
 	local ray = self:valid_shape_placement("bodybags_bag")
 
@@ -251,7 +251,7 @@ function PlayerEquipment:use_bodybags_bag()
 	return false
 end
 
--- Lines: 233 to 261
+-- Lines 233-262
 function PlayerEquipment:use_ecm_jammer()
 	if self._ecm_jammer_placement_requested then
 		return
@@ -289,12 +289,12 @@ function PlayerEquipment:use_ecm_jammer()
 	return false
 end
 
--- Lines: 264 to 266
+-- Lines 264-266
 function PlayerEquipment:from_server_ecm_jammer_placement_result()
 	self._ecm_jammer_placement_requested = nil
 end
 
--- Lines: 268 to 279
+-- Lines 268-280
 function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 	if alive(self._dummy_unit) then
 		return self._dummy_unit
@@ -302,14 +302,14 @@ function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 
 	self._dummy_unit = World:spawn_unit(Idstring(dummy_name), pos, rot)
 
-	for i = 0, self._dummy_unit:num_bodies() - 1, 1 do
+	for i = 0, self._dummy_unit:num_bodies() - 1 do
 		self._dummy_unit:body(i):set_enabled(false)
 	end
 
 	return self._dummy_unit
 end
 
--- Lines: 282 to 330
+-- Lines 282-331
 function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	local from = self._unit:movement():m_head_pos()
 	local to = from + self._unit:movement():m_head_rot():y() * 220
@@ -365,7 +365,7 @@ function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
--- Lines: 334 to 350
+-- Lines 334-351
 function PlayerEquipment:_can_place(eq_id)
 	if eq_id == "sentry_gun" then
 		local equipment_data = managers.player:selected_equipment()
@@ -389,7 +389,7 @@ function PlayerEquipment:_can_place(eq_id)
 	return true
 end
 
--- Lines: 354 to 372
+-- Lines 354-372
 function PlayerEquipment:_sentry_gun_ammo_cost(sentry_uid)
 	local equipment_data = managers.player:selected_equipment()
 
@@ -420,7 +420,7 @@ function PlayerEquipment:_sentry_gun_ammo_cost(sentry_uid)
 	end
 end
 
--- Lines: 374 to 379
+-- Lines 374-380
 function PlayerEquipment:get_sentry_deployement_cost(sentry_uid)
 	if self._sentry_ammo_cost and self._sentry_ammo_cost[sentry_uid] then
 		return self._sentry_ammo_cost[sentry_uid]
@@ -429,14 +429,14 @@ function PlayerEquipment:get_sentry_deployement_cost(sentry_uid)
 	return nil
 end
 
--- Lines: 382 to 386
+-- Lines 382-386
 function PlayerEquipment:remove_sentry_deployement_cost(sentry_uid)
 	if self._sentry_ammo_cost and self._sentry_ammo_cost[sentry_uid] then
 		self._sentry_ammo_cost[sentry_uid] = nil
 	end
 end
 
--- Lines: 388 to 424
+-- Lines 388-425
 function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	if self._sentrygun_placement_requested then
 		return
@@ -482,28 +482,28 @@ function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	return false
 end
 
--- Lines: 429 to 431
+-- Lines 428-432
 function PlayerEquipment:use_flash_grenade()
 	self._grenade_name = "units/weapons/flash_grenade/flash_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines: 434 to 436
+-- Lines 434-437
 function PlayerEquipment:use_smoke_grenade()
 	self._grenade_name = "units/weapons/smoke_grenade/smoke_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines: 439 to 441
+-- Lines 439-442
 function PlayerEquipment:use_frag_grenade()
 	self._grenade_name = "units/weapons/frag_grenade/frag_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines: 445 to 457
+-- Lines 445-457
 function PlayerEquipment:throw_flash_grenade()
 	if not self._grenade_name then
 		Application:error("Tried to throw a grenade with no name")
@@ -521,7 +521,7 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
--- Lines: 459 to 487
+-- Lines 459-487
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
@@ -551,7 +551,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines: 489 to 509
+-- Lines 489-509
 function PlayerEquipment:throw_grenade()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
@@ -575,7 +575,7 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
--- Lines: 513 to 516
+-- Lines 513-517
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -584,7 +584,7 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
--- Lines: 521 to 526
+-- Lines 521-526
 function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	if self._sentrygun_placement_requested then
 		self:_sentry_gun_ammo_cost(sentry_gun_id)
@@ -593,7 +593,7 @@ function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	self._sentrygun_placement_requested = nil
 end
 
--- Lines: 530 to 535
+-- Lines 530-535
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)
@@ -605,4 +605,3 @@ end
 if _G.IS_VR then
 	require("lib/units/beings/player/PlayerEquipmentVR")
 end
-

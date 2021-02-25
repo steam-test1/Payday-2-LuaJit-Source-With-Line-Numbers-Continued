@@ -1,12 +1,12 @@
 CoreWorldCameraUnitElement = CoreWorldCameraUnitElement or class(MissionElement)
 WorldCameraUnitElement = WorldCameraUnitElement or class(CoreWorldCameraUnitElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function WorldCameraUnitElement:init(...)
 	CoreWorldCameraUnitElement.init(self, ...)
 end
 
--- Lines: 9 to 17
+-- Lines 9-17
 function CoreWorldCameraUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -17,7 +17,7 @@ function CoreWorldCameraUnitElement:init(unit)
 	table.insert(self._save_values, "worldcamera_sequence")
 end
 
--- Lines: 19 to 25
+-- Lines 19-25
 function CoreWorldCameraUnitElement:test_element()
 	if self._hed.worldcamera_sequence ~= "none" then
 		managers.worldcamera:play_world_camera_sequence(self._hed.worldcamera_sequence)
@@ -26,7 +26,7 @@ function CoreWorldCameraUnitElement:test_element()
 	end
 end
 
--- Lines: 29 to 42
+-- Lines 29-42
 function CoreWorldCameraUnitElement:selected()
 	MissionElement.selected(self)
 	self:_populate_worldcameras()
@@ -46,7 +46,7 @@ function CoreWorldCameraUnitElement:selected()
 	end
 end
 
--- Lines: 44 to 51
+-- Lines 44-51
 function CoreWorldCameraUnitElement:_populate_worldcameras()
 	self._worldcameras:clear()
 	self._worldcameras:append("none")
@@ -58,7 +58,7 @@ function CoreWorldCameraUnitElement:_populate_worldcameras()
 	self._worldcameras:set_value(self._hed.worldcamera)
 end
 
--- Lines: 53 to 60
+-- Lines 53-60
 function CoreWorldCameraUnitElement:_populate_sequences()
 	self._sequences:clear()
 	self._sequences:append("none")
@@ -70,7 +70,7 @@ function CoreWorldCameraUnitElement:_populate_sequences()
 	self._sequences:set_value(self._hed.worldcamera_sequence)
 end
 
--- Lines: 62 to 68
+-- Lines 62-69
 function CoreWorldCameraUnitElement:_sorted_worldcameras()
 	local t = {}
 
@@ -83,7 +83,7 @@ function CoreWorldCameraUnitElement:_sorted_worldcameras()
 	return t
 end
 
--- Lines: 71 to 77
+-- Lines 71-78
 function CoreWorldCameraUnitElement:_sorted_worldcamera_sequences()
 	local t = {}
 
@@ -96,7 +96,7 @@ function CoreWorldCameraUnitElement:_sorted_worldcamera_sequences()
 	return t
 end
 
--- Lines: 80 to 89
+-- Lines 80-89
 function CoreWorldCameraUnitElement:select_camera_btn()
 	local dialog = SelectNameModal:new("Select camera", self:_sorted_worldcameras())
 
@@ -111,7 +111,7 @@ function CoreWorldCameraUnitElement:select_camera_btn()
 	end
 end
 
--- Lines: 91 to 100
+-- Lines 91-100
 function CoreWorldCameraUnitElement:select_sequence_btn()
 	local dialog = SelectNameModal:new("Select sequence", self:_sorted_worldcamera_sequences())
 
@@ -126,7 +126,7 @@ function CoreWorldCameraUnitElement:select_sequence_btn()
 	end
 end
 
--- Lines: 102 to 143
+-- Lines 102-143
 function CoreWorldCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -176,4 +176,3 @@ function CoreWorldCameraUnitElement:_build_panel(panel, panel_sizer)
 	worldcamera_sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 	self._panel_sizer:add(worldcamera_sizer, 0, 0, "EXPAND")
 end
-

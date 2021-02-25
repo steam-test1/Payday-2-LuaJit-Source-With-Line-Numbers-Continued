@@ -1,6 +1,6 @@
 CopInventory = CopInventory or class(PlayerInventory)
 
--- Lines: 3 to 19
+-- Lines 3-19
 function CopInventory:init(unit)
 	CopInventory.super.init(self, unit)
 
@@ -23,7 +23,7 @@ function CopInventory:init(unit)
 	self._listener_id = "CopInventory" .. tostring(unit:key())
 end
 
--- Lines: 23 to 44
+-- Lines 23-44
 function CopInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 
@@ -54,7 +54,7 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 	self:add_unit(new_unit, equip)
 end
 
--- Lines: 48 to 56
+-- Lines 48-56
 function CopInventory:_chk_spawn_shield(weapon_unit)
 	if self._shield_unit_name and not alive(self._shield_unit) then
 		local align_name = self._shield_align_name or Idstring("a_weapon_left_front")
@@ -66,19 +66,19 @@ function CopInventory:_chk_spawn_shield(weapon_unit)
 	end
 end
 
--- Lines: 60 to 64
+-- Lines 60-64
 function CopInventory:add_unit(new_unit, equip)
 	CopInventory.super.add_unit(self, new_unit, equip)
 	new_unit:set_enabled(true)
 	new_unit:set_visible(true)
 end
 
--- Lines: 68 to 70
+-- Lines 68-70
 function CopInventory:get_sync_data(sync_data)
 	MPPlayerInventory.get_sync_data(self, sync_data)
 end
 
--- Lines: 74 to 77
+-- Lines 74-78
 function CopInventory:get_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -86,7 +86,7 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines: 82 to 100
+-- Lines 82-100
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -110,7 +110,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines: 104 to 114
+-- Lines 104-114
 function CopInventory:drop_shield()
 	if alive(self._shield_unit) then
 		self._shield_unit:unlink()
@@ -122,7 +122,7 @@ function CopInventory:drop_shield()
 	end
 end
 
--- Lines: 118 to 133
+-- Lines 118-133
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -140,7 +140,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines: 137 to 146
+-- Lines 137-146
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 
@@ -151,4 +151,3 @@ function CopInventory:destroy_all_items()
 		self._shield_unit = nil
 	end
 end
-

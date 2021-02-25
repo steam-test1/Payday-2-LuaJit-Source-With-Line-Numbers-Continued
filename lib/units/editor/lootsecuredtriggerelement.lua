@@ -2,7 +2,7 @@ LootSecuredTriggerUnitElement = LootSecuredTriggerUnitElement or class(MissionEl
 LootSecuredTriggerUnitElement.SAVE_UNIT_POSITION = false
 LootSecuredTriggerUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 18
+-- Lines 6-18
 function LootSecuredTriggerUnitElement:init(unit)
 	LootSecuredTriggerUnitElement.super.init(self, unit)
 
@@ -16,7 +16,7 @@ function LootSecuredTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "report_only")
 end
 
--- Lines: 23 to 32
+-- Lines 23-32
 function LootSecuredTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -30,4 +30,3 @@ function LootSecuredTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "include_instant_cash")
 	self:_build_value_checkbox(panel, panel_sizer, "report_only")
 end
-

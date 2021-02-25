@@ -5,7 +5,7 @@ core:import("CoreUnit")
 
 ElementUnitSequence = ElementUnitSequence or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 8 to 12
+-- Lines 8-12
 function ElementUnitSequence:init(...)
 	ElementUnitSequence.super.init(self, ...)
 
@@ -14,17 +14,17 @@ function ElementUnitSequence:init(...)
 	managers.worlddefinition:add_trigger_sequence(self._unit, self._values.trigger_list)
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function ElementUnitSequence:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 18 to 20
+-- Lines 18-20
 function ElementUnitSequence:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 22 to 39
+-- Lines 22-39
 function ElementUnitSequence:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -43,13 +43,12 @@ function ElementUnitSequence:on_executed(instigator)
 	ElementUnitSequence.super.on_executed(self, instigator)
 end
 
--- Lines: 41 to 43
+-- Lines 41-43
 function ElementUnitSequence:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 45 to 47
+-- Lines 45-47
 function ElementUnitSequence:load(data)
 	self:set_enabled(data.enabled)
 end
-

@@ -1,6 +1,6 @@
 TipsTweakData = TipsTweakData or class()
 
--- Lines: 5 to 309
+-- Lines 5-309
 function TipsTweakData:init()
 	self.tips = {
 		{
@@ -1765,7 +1765,7 @@ function TipsTweakData:init()
 	end
 end
 
--- Lines: 322 to 347
+-- Lines 322-348
 function TipsTweakData:get_a_tip()
 	local tip = self.tips[math.random(#self.tips)]
 	local image_exists = DB:has(Idstring("texture"), "guis/textures/loading/hints/" .. tip.image)
@@ -1787,4 +1787,3 @@ function TipsTweakData:get_a_tip()
 		text = managers.localization:text(text_id)
 	}
 end
-

@@ -8,7 +8,7 @@ VehicleTriggerUnitElement.events = {
 	VehicleTriggerUnitElement.ON_ALL_INSIDE
 }
 
--- Lines: 13 to 21
+-- Lines 13-21
 function VehicleTriggerUnitElement:init(unit)
 	Application:debug("VehicleTriggerUnitElement:init")
 	VehicleTriggerUnitElement.super.init(self, unit)
@@ -19,7 +19,7 @@ function VehicleTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "event")
 end
 
--- Lines: 23 to 33
+-- Lines 23-33
 function VehicleTriggerUnitElement:_build_panel(panel, panel_sizer)
 	Application:debug("VehicleTriggerUnitElement:_build_panel")
 	self:_create_panel()
@@ -30,4 +30,3 @@ function VehicleTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "event", VehicleTriggerUnitElement.events, "Select an event from the combobox")
 	self:_add_help_text("Set the vehicle event the element should trigger on.")
 end
-

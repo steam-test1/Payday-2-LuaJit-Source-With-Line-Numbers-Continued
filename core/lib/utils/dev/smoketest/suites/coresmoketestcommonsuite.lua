@@ -4,7 +4,7 @@ core:import("CoreSmoketestSuite")
 
 Substep = Substep or CoreClass.class()
 
--- Lines: 12 to 16
+-- Lines 12-16
 function Substep:init(suite, step_arguments)
 	self._suite = suite
 	self._step_arguments = step_arguments
@@ -12,72 +12,79 @@ function Substep:init(suite, step_arguments)
 	self:start()
 end
 
--- Lines: 18 to 19
+-- Lines 18-20
 function Substep:has_failed()
 	return self._fail == true
 end
 
--- Lines: 22 to 23
+-- Lines 22-24
 function Substep:is_done()
 	return self._done
 end
 
--- Lines: 26 to 29
+-- Lines 26-29
 function Substep:_set_done()
 	self._done = true
 	self._fail = false
 end
 
--- Lines: 31 to 33
+-- Lines 31-33
 function Substep:_set_fail()
 	self._fail = true
 end
 
--- Lines: 36 to 38
+-- Lines 36-38
 function Substep:start()
 	assert(false, "Not implemented")
 end
 
--- Lines: 41 to 42
+-- Lines 41-42
 function Substep:update(t, dt)
 end
+
 CallAndDoneSubstep = CallAndDoneSubstep or CoreClass.class(Substep)
 
--- Lines: 50 to 53
+-- Lines 50-54
 function CallAndDoneSubstep.step_arguments(callback)
-	local step_arguments = {callback = callback}
+	local step_arguments = {
+		callback = callback
+	}
 
 	return step_arguments
 end
 
--- Lines: 56 to 59
+-- Lines 56-59
 function CallAndDoneSubstep:start()
 	self._step_arguments.callback()
 	self:_set_done()
 end
+
 WaitEventSubstep = WaitEventSubstep or CoreClass.class(Substep)
 
--- Lines: 67 to 70
+-- Lines 67-71
 function WaitEventSubstep.step_arguments(event_id)
-	local step_arguments = {event_id = event_id}
+	local step_arguments = {
+		event_id = event_id
+	}
 
 	return step_arguments
 end
 
--- Lines: 73 to 75
+-- Lines 73-75
 function WaitEventSubstep:start()
 	self._event_listener = EventManager:register_listener(self._step_arguments.event_id, function ()
 		self:_set_done()
 	end, nil)
 end
 
--- Lines: 77 to 79
+-- Lines 77-79
 function WaitEventSubstep:destroy()
 	EventManager:unregister_listener(self._event_listener)
 end
+
 CallAndWaitEventSubstep = CallAndWaitEventSubstep or CoreClass.class(Substep)
 
--- Lines: 87 to 91
+-- Lines 87-92
 function CallAndWaitEventSubstep.step_arguments(callback, event_id)
 	local step_arguments = {
 		callback = callback,
@@ -87,7 +94,7 @@ function CallAndWaitEventSubstep.step_arguments(callback, event_id)
 	return step_arguments
 end
 
--- Lines: 94 to 97
+-- Lines 94-97
 function CallAndWaitEventSubstep:start()
 	self._event_listener = EventManager:register_listener(self._step_arguments.event_id, function ()
 		self:_set_done()
@@ -96,25 +103,28 @@ function CallAndWaitEventSubstep:start()
 	self._step_arguments.callback()
 end
 
--- Lines: 99 to 101
+-- Lines 99-101
 function CallAndWaitEventSubstep:destroy()
 	EventManager:unregister_listener(self._event_listener)
 end
+
 DelaySubstep = DelaySubstep or CoreClass.class(Substep)
 
--- Lines: 109 to 112
+-- Lines 109-113
 function DelaySubstep.step_arguments(seconds)
-	local step_arguments = {seconds = seconds}
+	local step_arguments = {
+		seconds = seconds
+	}
 
 	return step_arguments
 end
 
--- Lines: 115 to 117
+-- Lines 115-117
 function DelaySubstep:start()
 	self._seconds_left = self._step_arguments.seconds
 end
 
--- Lines: 119 to 124
+-- Lines 119-124
 function DelaySubstep:update(t, dt)
 	self._seconds_left = self._seconds_left - dt
 
@@ -122,14 +132,15 @@ function DelaySubstep:update(t, dt)
 		self:_set_done()
 	end
 end
+
 CommonSuite = CommonSuite or CoreClass.class(CoreSmoketestSuite.Suite)
 
--- Lines: 132 to 134
+-- Lines 132-134
 function CommonSuite:init()
 	self._step_list = {}
 end
 
--- Lines: 136 to 142
+-- Lines 136-142
 function CommonSuite:add_step(name, class, params)
 	local step_entry = {
 		name = name,
@@ -140,7 +151,7 @@ function CommonSuite:add_step(name, class, params)
 	table.insert(self._step_list, step_entry)
 end
 
--- Lines: 144 to 151
+-- Lines 144-151
 function CommonSuite:start(session_state, reporter, suite_arguments)
 	self._suite_arguments = suite_arguments
 	self._session_state = session_state
@@ -151,12 +162,12 @@ function CommonSuite:start(session_state, reporter, suite_arguments)
 	self:next_step()
 end
 
--- Lines: 153 to 154
+-- Lines 153-155
 function CommonSuite:is_done()
 	return self._is_done
 end
 
--- Lines: 157 to 171
+-- Lines 157-171
 function CommonSuite:update(t, dt)
 	if self._current_step then
 		self._current_step:update(t, dt)
@@ -175,7 +186,7 @@ function CommonSuite:update(t, dt)
 	end
 end
 
--- Lines: 173 to 190
+-- Lines 173-190
 function CommonSuite:next_step()
 	if self._current_step then
 		if self._current_step.destroy then
@@ -200,10 +211,9 @@ function CommonSuite:next_step()
 	end
 end
 
--- Lines: 192 to 194
+-- Lines 192-195
 function CommonSuite:get_argument(name)
 	assert(self._suite_arguments[name], "Suite argument '" .. name .. "' was not defined")
 
 	return self._suite_arguments[name]
 end
-

@@ -1,6 +1,6 @@
 MenuNodeLobbyCountdownGui = MenuNodeLobbyCountdownGui or class(MenuNodeGui)
 
--- Lines: 4 to 18
+-- Lines 4-18
 function MenuNodeLobbyCountdownGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -15,11 +15,11 @@ function MenuNodeLobbyCountdownGui:init(node, layer, parameters)
 	self:setup(node)
 end
 
--- Lines: 20 to 21
+-- Lines 20-21
 function MenuNodeLobbyCountdownGui:setup(node)
 end
 
--- Lines: 23 to 27
+-- Lines 23-28
 function MenuNodeLobbyCountdownGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -29,7 +29,7 @@ function MenuNodeLobbyCountdownGui:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 31 to 225
+-- Lines 30-225
 function MenuNodeLobbyCountdownGui:_setup_item_panel(safe_rect, res)
 	MenuNodeLobbyCountdownGui.super._setup_item_panel(self, safe_rect, res)
 	self.item_panel:set_w(safe_rect.width * (1 - self._align_line_proportions))
@@ -221,19 +221,21 @@ function MenuNodeLobbyCountdownGui:_setup_item_panel(safe_rect, res)
 		max_name_w = math.max(max_name_w, w)
 	end
 
-	local name_expand_w = math.max((max_name_w - self._countdown_panel:w()) - 30, 0)
+	local name_expand_w = math.max(max_name_w - self._countdown_panel:w() - 30, 0)
 
 	self.box_panel:grow(name_expand_w, 0)
 	self._peers_panel:grow(name_expand_w, 0)
 	self.box_panel:set_center(self.box_panel:parent():w() * 0.5, self.box_panel:parent():h() * 0.5)
 	self.item_panel:set_right(self.box_panel:right() - 10)
 
-	self.boxgui = BoxGuiObject:new(self.box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self.boxgui = BoxGuiObject:new(self.box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
@@ -244,7 +246,7 @@ function MenuNodeLobbyCountdownGui:_setup_item_panel(safe_rect, res)
 	})
 end
 
--- Lines: 227 to 231
+-- Lines 227-231
 function MenuNodeLobbyCountdownGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -252,7 +254,7 @@ function MenuNodeLobbyCountdownGui:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 233 to 241
+-- Lines 233-241
 function MenuNodeLobbyCountdownGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -263,7 +265,7 @@ function MenuNodeLobbyCountdownGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeLobbyCountdownGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines: 243 to 251
+-- Lines 243-251
 function MenuNodeLobbyCountdownGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -276,12 +278,12 @@ function MenuNodeLobbyCountdownGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 253 to 255
+-- Lines 253-255
 function MenuNodeLobbyCountdownGui:_setup_item_rows(node)
 	MenuNodeLobbyCountdownGui.super._setup_item_rows(self, node)
 end
 
--- Lines: 257 to 266
+-- Lines 257-266
 function MenuNodeLobbyCountdownGui:reload_item(item)
 	MenuNodeLobbyCountdownGui.super.reload_item(self, item)
 
@@ -293,7 +295,7 @@ function MenuNodeLobbyCountdownGui:reload_item(item)
 	end
 end
 
--- Lines: 268 to 276
+-- Lines 268-276
 function MenuNodeLobbyCountdownGui:_align_marker(row_item)
 	MenuNodeLobbyCountdownGui.super._align_marker(self, row_item)
 
@@ -306,12 +308,12 @@ function MenuNodeLobbyCountdownGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines: 278 to 280
+-- Lines 278-280
 function MenuNodeLobbyCountdownGui:close()
 	MenuNodeLobbyCountdownGui.super.close(self)
 end
 
--- Lines: 283 to 322
+-- Lines 282-322
 function MenuNodeLobbyCountdownGui:update(t, dt)
 	MenuNodeLobbyCountdownGui.super.update(self, t, dt)
 
@@ -355,16 +357,15 @@ function MenuNodeLobbyCountdownGui:update(t, dt)
 	end
 end
 
--- Lines: 325 to 337
+-- Lines 324-337
 function MenuNodeLobbyCountdownGui.animate_flash_text(text)
 	local dur = 0.5
 	local t = 0
 
-	while t < dur do
+	while dur > t do
 		local dt = coroutine.yield()
 		t = t + dt
 
 		text:set_color(math.lerp(tweak_data.screen_colors.button_stage_2, tweak_data.screen_colors.text, t / dur))
 	end
 end
-

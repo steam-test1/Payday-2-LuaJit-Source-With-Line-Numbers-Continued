@@ -5,7 +5,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneFootage")
 
 CoreCutsceneCompiler = CoreCutsceneCompiler or class()
 
--- Lines: 8 to 36
+-- Lines 8-37
 function CoreCutsceneCompiler:compile(file, dest, force_recompile)
 	if file.type ~= "cutscene" then
 		return false
@@ -38,7 +38,7 @@ function CoreCutsceneCompiler:compile(file, dest, force_recompile)
 	return true
 end
 
--- Lines: 39 to 45
+-- Lines 39-46
 function CoreCutsceneCompiler:_load_project(path)
 	if managers.database:has(path) then
 		local project = CoreCutsceneEditorProject:new()
@@ -51,7 +51,7 @@ function CoreCutsceneCompiler:_load_project(path)
 	return nil
 end
 
--- Lines: 48 to 68
+-- Lines 48-69
 function CoreCutsceneCompiler:_create_optimizer_for_project(project)
 	local optimizer = CoreCutsceneOptimizer:new()
 
@@ -80,7 +80,7 @@ function CoreCutsceneCompiler:_create_optimizer_for_project(project)
 	return optimizer
 end
 
--- Lines: 71 to 76
+-- Lines 71-77
 function CoreCutsceneCompiler:_create_clip(clip_descriptor)
 	local cutscene = managers.cutscene:get_cutscene(clip_descriptor.cutscene)
 	local footage = assert(CoreCutsceneFootage:new(cutscene), "Cutscene \"" .. clip_descriptor.cutscene .. "\" does not exist.")
@@ -90,4 +90,3 @@ function CoreCutsceneCompiler:_create_clip(clip_descriptor)
 
 	return clip
 end
-

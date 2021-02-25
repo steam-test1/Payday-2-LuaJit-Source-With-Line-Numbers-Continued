@@ -2,17 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementUnloadStatic = ElementUnloadStatic or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementUnloadStatic:init(...)
 	ElementUnloadStatic.super.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function ElementUnloadStatic:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 13 to 19
+-- Lines 13-19
 function ElementUnloadStatic:_get_unit(unit_id)
 	if Application:editor() then
 		return managers.editor:unit_with_id(unit_id)
@@ -21,7 +21,7 @@ function ElementUnloadStatic:_get_unit(unit_id)
 	end
 end
 
--- Lines: 21 to 37
+-- Lines 21-37
 function ElementUnloadStatic:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -40,4 +40,3 @@ function ElementUnloadStatic:on_executed(instigator)
 
 	ElementUnloadStatic.super.on_executed(self, instigator)
 end
-

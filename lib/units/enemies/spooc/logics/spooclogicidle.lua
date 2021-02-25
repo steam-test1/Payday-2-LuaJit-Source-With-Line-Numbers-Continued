@@ -1,6 +1,6 @@
 SpoocLogicIdle = class(CopLogicIdle)
 
--- Lines: 7 to 49
+-- Lines 7-50
 function SpoocLogicIdle._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -50,7 +50,7 @@ function SpoocLogicIdle._upd_enemy_detection(data)
 	return delay
 end
 
--- Lines: 54 to 61
+-- Lines 54-62
 function SpoocLogicIdle.damage_clbk(data, damage_info)
 	local res = SpoocLogicIdle.super.damage_clbk(data, damage_info)
 
@@ -61,7 +61,7 @@ function SpoocLogicIdle.damage_clbk(data, damage_info)
 	return res
 end
 
--- Lines: 67 to 70
+-- Lines 66-70
 function SpoocLogicIdle._exit_hiding(data)
 	data.unit:set_objective({
 		type = "act",
@@ -84,7 +84,7 @@ function SpoocLogicIdle._exit_hiding(data)
 	})
 end
 
--- Lines: 74 to 89
+-- Lines 74-89
 function SpoocLogicIdle._chk_exit_hiding(data)
 	if data.attention_obj and AIAttentionObject.REACT_SHOOT <= data.attention_obj.reaction and data.unit:anim_data().hide_loop then
 		if data.attention_obj.dis < 1500 and data.attention_obj.verified then
@@ -103,4 +103,3 @@ function SpoocLogicIdle._chk_exit_hiding(data)
 		end
 	end
 end
-

@@ -3,7 +3,7 @@ require("core/lib/utils/dev/ews/tree_control/CoreManagedTreeControl")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
 
--- Lines: 8 to 222
+-- Lines 8-222
 function CoreMaterialEditor:_create_main_frame()
 	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(650, 1200, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -221,7 +221,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 224 to 241
+-- Lines 224-241
 function CoreMaterialEditor:_build_shader_options()
 	local shader_name = self._compilable_shader_combo_box:get_value()
 
@@ -241,14 +241,14 @@ function CoreMaterialEditor:_build_shader_options()
 	end
 end
 
--- Lines: 243 to 246
+-- Lines 243-246
 function CoreMaterialEditor:_set_shader_option_tooltip(node, item)
 	local tooltip = node:parameter("tooltip") or ""
 
 	self._shader_option_tree:set_tooltip(item, tooltip)
 end
 
--- Lines: 248 to 267
+-- Lines 248-267
 function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	for child in node:children() do
 		local project = child:parameter("project")
@@ -276,7 +276,7 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	end
 end
 
--- Lines: 269 to 335
+-- Lines 269-335
 function CoreMaterialEditor:_create_parameter_panel()
 	local progress_dialog = nil
 
@@ -300,7 +300,13 @@ function CoreMaterialEditor:_create_parameter_panel()
 
 	for i, param in ipairs(self._current_render_template:variables()) do
 		local node = nil
-		node = param.type == "texture" and self:_get_node(self._current_material_node, param.name:s()) or self:_find_node(self._current_material_node, "variable", "name", param.name:s())
+
+		if param.type == "texture" then
+			node = self:_get_node(self._current_material_node, param.name:s())
+		else
+			node = self:_find_node(self._current_material_node, "variable", "name", param.name:s())
+		end
+
 		local widget_class = self._parameter_widgets[param.ui_type:s()]
 
 		if not widget_class then
@@ -346,4 +352,3 @@ function CoreMaterialEditor:_create_parameter_panel()
 		progress_dialog:update_bar(100)
 	end
 end
-

@@ -1,7 +1,7 @@
 SpecializationBoxGui = SpecializationBoxGui or class(TextBoxGui)
 SpecializationBoxGui.TEXT = ""
 
--- Lines: 5 to 11
+-- Lines 5-11
 function SpecializationBoxGui:init(...)
 	local ws, title, text, content_data, config = ...
 	config.forced_h = 210
@@ -11,7 +11,7 @@ function SpecializationBoxGui:init(...)
 	SpecializationBoxGui.super.init(self, ...)
 end
 
--- Lines: 13 to 21
+-- Lines 13-21
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -24,7 +24,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 23 to 155
+-- Lines 23-155
 function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local panel = SpecializationBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 	local xp_present = content_data.xp_present
@@ -59,7 +59,7 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	})
 
 	progress_bg:set_position(progress_text:right() + 4, progress_text:top())
-	progress_bg:set_w((self._scroll_panel:w() - progress_bg:left()) - 5)
+	progress_bg:set_w(self._scroll_panel:w() - progress_bg:left() - 5)
 
 	local progress_bar = self._scroll_panel:rect({
 		alpha = 1,
@@ -89,23 +89,29 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 
 	local conversion_rate_text = self._scroll_panel:text(small_text)
 
-	conversion_rate_text:set_text(managers.localization:to_upper_text("menu_st_spec_xp_conversion", {rate = string.format("%i:1", conversion_rate_number)}))
+	conversion_rate_text:set_text(managers.localization:to_upper_text("menu_st_spec_xp_conversion", {
+		rate = string.format("%i:1", conversion_rate_number)
+	}))
 	make_fine_text(conversion_rate_text)
 	conversion_rate_text:set_position(progress_bg:left(), progress_bg:bottom() + 2)
 
 	local w = progress_bg:right() - progress_text:left()
-	local exp_panel = self._scroll_panel:panel({layer = 2})
+	local exp_panel = self._scroll_panel:panel({
+		layer = 2
+	})
 
 	exp_panel:set_left(progress_text:left())
 	exp_panel:set_w(w / 2 - 10)
 	exp_panel:set_top(conversion_rate_text:bottom() + 20)
-	exp_panel:set_h((self._scroll_panel:h() - exp_panel:top()) - 10)
-	BoxGuiObject:new(exp_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	exp_panel:set_h(self._scroll_panel:h() - exp_panel:top() - 10)
+	BoxGuiObject:new(exp_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local exp_title_text = exp_panel:text(small_text)
 
@@ -122,18 +128,22 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	exp_count_text:set_text(managers.money:add_decimal_marks_to_string(tostring(xp_present)))
 	make_fine_text(exp_count_text)
 
-	local points_panel = self._scroll_panel:panel({layer = 2})
+	local points_panel = self._scroll_panel:panel({
+		layer = 2
+	})
 
 	points_panel:set_w(w / 2 - 10)
 	points_panel:set_right(progress_bg:right())
 	points_panel:set_top(exp_panel:top())
 	points_panel:set_h(exp_panel:h())
-	BoxGuiObject:new(points_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(points_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local points_gained_title_text = points_panel:text(small_text)
 
@@ -186,7 +196,7 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local conversion_rate_number = math.round(xp_present / points_present)
 end
 
--- Lines: 157 to 163
+-- Lines 157-164
 function SpecializationBoxGui:chk_close()
 	if not self._anim_data or self._anim_data.conversion_ended then
 		return true
@@ -197,7 +207,7 @@ function SpecializationBoxGui:chk_close()
 	return false
 end
 
--- Lines: 166 to 213
+-- Lines 166-213
 function SpecializationBoxGui._update(o, self)
 	local init_done = false
 
@@ -245,4 +255,3 @@ function SpecializationBoxGui._update(o, self)
 
 	self._anim_data.conversion_ended = true
 end
-

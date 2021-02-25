@@ -9,52 +9,52 @@ SubtitlePresenter = SubtitlePresenter or CoreClass.class()
 DebugPresenter = DebugPresenter or CoreClass.class(SubtitlePresenter)
 OverlayPresenter = OverlayPresenter or CoreClass.class(SubtitlePresenter)
 
--- Lines: 18 to 19
+-- Lines 17-19
 function SubtitlePresenter:destroy()
 end
 
--- Lines: 22 to 23
+-- Lines 21-23
 function SubtitlePresenter:update(time, delta_time)
 end
 
--- Lines: 26 to 27
+-- Lines 25-27
 function SubtitlePresenter:show()
 end
 
--- Lines: 30 to 31
+-- Lines 29-31
 function SubtitlePresenter:hide()
 end
 
--- Lines: 35 to 36
+-- Lines 33-36
 function SubtitlePresenter:show_text(text, duration)
 end
 
--- Lines: 40 to 41
+-- Lines 38-42
 function SubtitlePresenter:preprocess_sequence(sequence)
 	return sequence
 end
 
--- Lines: 49 to 51
+-- Lines 49-51
 function DebugPresenter:destroy()
 	CoreDebug.cat_print("subtitle_manager", string.format("SubtitlePresenter is destroyed."))
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function DebugPresenter:show()
 	CoreDebug.cat_print("subtitle_manager", string.format("SubtitlePresenter is shown."))
 end
 
--- Lines: 57 to 59
+-- Lines 57-59
 function DebugPresenter:hide()
 	CoreDebug.cat_print("subtitle_manager", string.format("SubtitlePresenter hides."))
 end
 
--- Lines: 61 to 63
+-- Lines 61-63
 function DebugPresenter:show_text(text, duration)
 	CoreDebug.cat_print("subtitle_manager", string.format("SubtitlePresenter displays \"%s\" %s.", text, duration and string.format("for %g seconds", duration) or "until further notice"))
 end
 
--- Lines: 69 to 73
+-- Lines 69-73
 function OverlayPresenter:init(font_name, font_size)
 	self:set_font(font_name or self:_default_font_name(), font_size or self:_default_font_size())
 	self:_clear_workspace()
@@ -62,7 +62,7 @@ function OverlayPresenter:init(font_name, font_size)
 	self.__resolution_changed_id = managers.viewport:add_resolution_changed_func(CoreEvent.callback(self, self, "_on_resolution_changed"))
 end
 
--- Lines: 75 to 91
+-- Lines 75-91
 function OverlayPresenter:destroy()
 	if self.__resolution_changed_id and managers.viewport then
 		managers.viewport:remove_resolution_changed_func(self.__resolution_changed_id)
@@ -84,24 +84,24 @@ function OverlayPresenter:destroy()
 	self.__ws = nil
 end
 
--- Lines: 93 to 95
+-- Lines 93-95
 function OverlayPresenter:show()
 	self.__ws:show()
 end
 
--- Lines: 97 to 99
+-- Lines 97-99
 function OverlayPresenter:hide()
 	self.__ws:hide()
 end
 
--- Lines: 101 to 105
+-- Lines 101-105
 function OverlayPresenter:set_debug(enabled)
 	if self.__ws then
 		self.__ws:panel():set_debug(enabled)
 	end
 end
 
--- Lines: 107 to 129
+-- Lines 107-129
 function OverlayPresenter:set_font(font_name, font_size)
 	self.__font_name = assert(tostring(font_name), "Invalid font name parameter.")
 	self.__font_size = assert(tonumber(font_size), "Invalid font size parameter.")
@@ -129,7 +129,7 @@ function OverlayPresenter:set_font(font_name, font_size)
 	end
 end
 
--- Lines: 132 to 139
+-- Lines 131-139
 function OverlayPresenter:set_width(pixels)
 	local safe_width = self:_gui_width()
 	self.__width = math.min(pixels, safe_width)
@@ -139,7 +139,7 @@ function OverlayPresenter:set_width(pixels)
 	end
 end
 
--- Lines: 141 to 146
+-- Lines 141-146
 function OverlayPresenter:show_text(text, duration)
 	local label = self.__subtitle_panel:child("label") or self.__subtitle_panel:text({
 		name = "label",
@@ -173,7 +173,7 @@ function OverlayPresenter:show_text(text, duration)
 	shadow:set_text(text)
 end
 
--- Lines: 148 to 166
+-- Lines 148-167
 function OverlayPresenter:preprocess_sequence(sequence)
 	local new_sequence = CoreSubtitleSequence.SubtitleSequence:new()
 
@@ -200,24 +200,26 @@ function OverlayPresenter:preprocess_sequence(sequence)
 	return new_sequence
 end
 
--- Lines: 169 to 179
+-- Lines 169-179
 function OverlayPresenter:_clear_workspace()
 	if CoreCode.alive(self.__ws) then
 		managers.gui_data:destroy_workspace(self.__ws)
 	end
 
 	self.__ws = managers.gui_data:create_saferect_workspace("screen", Overlay:gui())
-	self.__subtitle_panel = self.__ws:panel():panel({layer = 150})
+	self.__subtitle_panel = self.__ws:panel():panel({
+		layer = 150
+	})
 
 	self:_on_resolution_changed()
 end
 
--- Lines: 183 to 184
+-- Lines 181-185
 function OverlayPresenter:_split_string_into_lines(subtitle_string, owning_sequence)
 	return self:_auto_word_wrap_string(subtitle_string)
 end
 
--- Lines: 187 to 200
+-- Lines 187-201
 function OverlayPresenter:_auto_word_wrap_string(subtitle_string)
 	local layout_text_field = self:_layout_text_field()
 
@@ -228,7 +230,7 @@ function OverlayPresenter:_auto_word_wrap_string(subtitle_string)
 	end)
 	local wrapped_lines = {}
 
-	for line = 1, #line_breaks, 1 do
+	for line = 1, #line_breaks do
 		local range_start = line_breaks[line]
 		local range_end = line_breaks[line + 1]
 		local string_range = utf8.sub(subtitle_string, range_start, (range_end or 0) - 1)
@@ -239,7 +241,7 @@ function OverlayPresenter:_auto_word_wrap_string(subtitle_string)
 	return wrapped_lines
 end
 
--- Lines: 203 to 205
+-- Lines 203-206
 function OverlayPresenter:_layout_text_field()
 	assert(self.__subtitle_panel)
 
@@ -256,7 +258,7 @@ function OverlayPresenter:_layout_text_field()
 	})
 end
 
--- Lines: 208 to 212
+-- Lines 208-213
 function OverlayPresenter:_string_width(subtitle_string)
 	local string_width_measure_text_field = self.__ws:panel():child("string_width") or self.__ws:panel():text({
 		name = "string_width",
@@ -273,7 +275,7 @@ function OverlayPresenter:_string_width(subtitle_string)
 	return width
 end
 
--- Lines: 215 to 246
+-- Lines 215-246
 function OverlayPresenter:_on_resolution_changed()
 	self:set_font(self.__font_name or self:_default_font_name(), self.__font_size or self:_default_font_size())
 
@@ -303,23 +305,22 @@ function OverlayPresenter:_on_resolution_changed()
 	end
 end
 
--- Lines: 248 to 249
+-- Lines 248-250
 function OverlayPresenter:_gui_width()
 	return self.__subtitle_panel:width()
 end
 
--- Lines: 253 to 254
+-- Lines 252-255
 function OverlayPresenter:_gui_height()
 	return self.__subtitle_panel:width()
 end
 
--- Lines: 257 to 258
+-- Lines 257-259
 function OverlayPresenter:_default_font_name()
 	return "core/fonts/system_font"
 end
 
--- Lines: 261 to 262
+-- Lines 261-263
 function OverlayPresenter:_default_font_size()
 	return 22
 end
-

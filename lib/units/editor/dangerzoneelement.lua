@@ -1,6 +1,6 @@
 DangerZoneUnitElement = DangerZoneUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function DangerZoneUnitElement:init(unit)
 	DangerZoneUnitElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function DangerZoneUnitElement:init(unit)
 	table.insert(self._save_values, "level")
 end
 
--- Lines: 11 to 35
+-- Lines 11-35
 function DangerZoneUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -38,4 +38,3 @@ function DangerZoneUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = level
 	})
 end
-

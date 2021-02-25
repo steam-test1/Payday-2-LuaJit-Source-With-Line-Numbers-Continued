@@ -2,14 +2,14 @@ core:module("CoreSessionDebug")
 
 SessionDebug = SessionDebug or class()
 
--- Lines: 5 to 8
+-- Lines 5-8
 function SessionDebug:init(session_state)
 	self._session_state = session_state
 
 	self:_parse_standard_arguments()
 end
 
--- Lines: 10 to 26
+-- Lines 10-26
 function SessionDebug:_parse_standard_arguments()
 	local level = nil
 	local args = Application:argv()
@@ -29,4 +29,3 @@ function SessionDebug:_parse_standard_arguments()
 		end
 	end
 end
-

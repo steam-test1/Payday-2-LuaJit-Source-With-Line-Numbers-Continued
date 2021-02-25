@@ -17,7 +17,7 @@ ModifierHeavySniper.heavy_units = {
 	Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_heavy_r870/ene_akan_fbi_heavy_r870")
 }
 
--- Lines: 26 to 33
+-- Lines 26-34
 function ModifierHeavySniper:modify_value(id, value)
 	if id == "GroupAIStateBesiege:SpawningUnit" then
 		local is_heavy = table.contains(ModifierHeavySniper.heavy_units, value)
@@ -29,4 +29,3 @@ function ModifierHeavySniper:modify_value(id, value)
 
 	return value
 end
-

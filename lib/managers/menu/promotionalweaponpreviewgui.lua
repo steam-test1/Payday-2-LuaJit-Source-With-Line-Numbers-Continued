@@ -1,7 +1,7 @@
 PromotionalWeaponPreviewGui = PromotionalWeaponPreviewGui or class(MenuGuiComponent)
 local padding = 10
 
--- Lines: 5 to 9
+-- Lines 5-9
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -9,7 +9,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 12 to 21
+-- Lines 11-21
 function PromotionalWeaponPreviewGui:init(ws, fullscreen_ws, node)
 	self._ws = managers.gui_data:create_saferect_workspace()
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
@@ -19,7 +19,7 @@ function PromotionalWeaponPreviewGui:init(ws, fullscreen_ws, node)
 	self:setup()
 end
 
--- Lines: 23 to 32
+-- Lines 23-32
 function PromotionalWeaponPreviewGui:close()
 	if alive(self._ws) then
 		managers.gui_data:destroy_workspace(self._ws)
@@ -34,7 +34,7 @@ function PromotionalWeaponPreviewGui:close()
 	end
 end
 
--- Lines: 35 to 140
+-- Lines 34-140
 function PromotionalWeaponPreviewGui:setup()
 	local menu_component_data = self._node:parameters().menu_component_data
 	local item_td, unlocked = nil
@@ -79,12 +79,16 @@ function PromotionalWeaponPreviewGui:setup()
 		w = self._panel:w(),
 		h = self._panel:h()
 	})
-	BoxGuiObject:new(self._panel:panel({layer = 100}), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._panel:panel({
+		layer = 100
+	}), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local img_size = self._panel:h() - padding * 2
 	local img_panel = nil
@@ -98,12 +102,16 @@ function PromotionalWeaponPreviewGui:setup()
 			h = img_size
 		})
 
-		BoxGuiObject:new(img_panel:panel({layer = 100}), {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		BoxGuiObject:new(img_panel:panel({
+			layer = 100
+		}), {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 		img_panel:bitmap({
 			layer = 1,
 			y = 0,
@@ -139,8 +147,7 @@ function PromotionalWeaponPreviewGui:setup()
 		color = tweak_data.screen_colors.text,
 		x = (img_panel and img_panel:right() or 0) + padding,
 		y = name:bottom(),
-		w = (self._panel:w() - name:left()) - padding,
+		w = self._panel:w() - name:left() - padding,
 		h = self._panel:h() - name:bottom()
 	})
 end
-

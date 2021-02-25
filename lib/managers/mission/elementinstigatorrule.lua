@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementInstigatorRule = ElementInstigatorRule or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 22
+-- Lines 5-22
 function ElementInstigatorRule:init(...)
 	ElementInstigatorRule.super.init(self, ...)
 
@@ -23,18 +23,18 @@ function ElementInstigatorRule:init(...)
 	end
 end
 
--- Lines: 24 to 27
+-- Lines 24-27
 function ElementInstigatorRule:on_script_activated(...)
 	ElementInstigatorRule.super.on_script_activated(self, ...)
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 29 to 31
+-- Lines 29-31
 function ElementInstigatorRule:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 34 to 69
+-- Lines 33-70
 function ElementInstigatorRule:check_rules(instigator_type, instigator)
 	if not self._values.enabled then
 		return true
@@ -71,7 +71,7 @@ function ElementInstigatorRule:check_rules(instigator_type, instigator)
 	return check_result
 end
 
--- Lines: 74 to 100
+-- Lines 73-101
 function ElementInstigatorRule:_check_player_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "carry_ids" then
@@ -102,7 +102,7 @@ function ElementInstigatorRule:_check_player_rules(rules, instigator)
 	return true
 end
 
--- Lines: 105 to 121
+-- Lines 104-122
 function ElementInstigatorRule:_check_enemies_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "enemy_names" and not data[instigator:name():key()] then
@@ -117,7 +117,7 @@ function ElementInstigatorRule:_check_enemies_rules(rules, instigator)
 	return true
 end
 
--- Lines: 126 to 142
+-- Lines 125-143
 function ElementInstigatorRule:_check_civilians_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "civilian_names" and not data[instigator:name():key()] then
@@ -132,7 +132,7 @@ function ElementInstigatorRule:_check_civilians_rules(rules, instigator)
 	return true
 end
 
--- Lines: 147 to 156
+-- Lines 146-157
 function ElementInstigatorRule:_check_loot_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "carry_ids" and not data[instigator:carry_data():carry_id()] then
@@ -143,7 +143,7 @@ function ElementInstigatorRule:_check_loot_rules(rules, instigator)
 	return true
 end
 
--- Lines: 161 to 170
+-- Lines 160-171
 function ElementInstigatorRule:_check_vehicle_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "vehicle_names" and not data[instigator:name():key()] then
@@ -154,7 +154,7 @@ function ElementInstigatorRule:_check_vehicle_rules(rules, instigator)
 	return true
 end
 
--- Lines: 173 to 179
+-- Lines 173-179
 function ElementInstigatorRule:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -163,13 +163,12 @@ function ElementInstigatorRule:on_executed(instigator)
 	ElementInstigatorRule.super.on_executed(self, instigator)
 end
 
--- Lines: 182 to 184
+-- Lines 182-184
 function ElementInstigatorRule:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 186 to 188
+-- Lines 186-188
 function ElementInstigatorRule:load(data)
 	self:set_enabled(data.enabled)
 end
-

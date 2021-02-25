@@ -3,7 +3,7 @@ core:import("CoreEws")
 
 EditLadder = EditLadder or class(EditUnitBase)
 
--- Lines: 6 to 56
+-- Lines 6-56
 function EditLadder:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Ladder",
@@ -71,7 +71,7 @@ function EditLadder:init(editor)
 	panel:set_enabled(false)
 end
 
--- Lines: 58 to 64
+-- Lines 58-64
 function EditLadder:update(t, dt)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -80,7 +80,7 @@ function EditLadder:update(t, dt)
 	end
 end
 
--- Lines: 66 to 72
+-- Lines 66-72
 function EditLadder:_update_width(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -89,7 +89,7 @@ function EditLadder:_update_width(params)
 	end
 end
 
--- Lines: 74 to 80
+-- Lines 74-80
 function EditLadder:_update_height(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -98,7 +98,7 @@ function EditLadder:_update_height(params)
 	end
 end
 
--- Lines: 82 to 88
+-- Lines 82-88
 function EditLadder:set_pc_disabled()
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -107,7 +107,7 @@ function EditLadder:set_pc_disabled()
 	end
 end
 
--- Lines: 90 to 96
+-- Lines 90-96
 function EditLadder:set_vr_disabled()
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -116,7 +116,7 @@ function EditLadder:set_vr_disabled()
 	end
 end
 
--- Lines: 98 to 117
+-- Lines 98-118
 function EditLadder:is_editable(unit, units)
 	if alive(unit) and unit:ladder() then
 		self._reference_unit = unit
@@ -137,4 +137,3 @@ function EditLadder:is_editable(unit, units)
 
 	return false
 end
-

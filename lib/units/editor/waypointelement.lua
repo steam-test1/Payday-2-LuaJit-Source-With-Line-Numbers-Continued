@@ -1,6 +1,6 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 
--- Lines: 3 to 21
+-- Lines 3-21
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
 	self:_add_wp_options()
@@ -45,7 +45,7 @@ function WaypointUnitElement:init(unit)
 	table.insert(self._save_values, "only_on_instigator")
 end
 
--- Lines: 24 to 35
+-- Lines 23-35
 function WaypointUnitElement:_add_text_options_from_file(path)
 	local xml = SystemFS:parse_xml(Application:base_path() .. "../../assets/" .. path)
 
@@ -60,19 +60,21 @@ function WaypointUnitElement:_add_text_options_from_file(path)
 	end
 end
 
--- Lines: 37 to 40
+-- Lines 37-40
 function WaypointUnitElement:_add_wp_options()
-	self._text_options = {"debug_none"}
+	self._text_options = {
+		"debug_none"
+	}
 
 	self:_add_text_options_from_file("strings/system_text.strings")
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function WaypointUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
--- Lines: 46 to 51
+-- Lines 46-51
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
@@ -81,7 +83,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 53 to 71
+-- Lines 53-71
 function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -102,4 +104,3 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	text_sizer:add(self._text, 2, 2, "RIGHT,TOP,EXPAND")
 	panel_sizer:add(text_sizer, 1, 0, "EXPAND")
 end
-

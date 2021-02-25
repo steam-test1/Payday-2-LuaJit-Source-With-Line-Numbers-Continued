@@ -1,12 +1,12 @@
 CoreUnitSequenceUnitElement = CoreUnitSequenceUnitElement or class(MissionElement)
 UnitSequenceUnitElement = UnitSequenceUnitElement or class(CoreUnitSequenceUnitElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function UnitSequenceUnitElement:init(...)
 	CoreUnitSequenceUnitElement.init(self, ...)
 end
 
--- Lines: 9 to 17
+-- Lines 9-17
 function CoreUnitSequenceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -17,20 +17,20 @@ function CoreUnitSequenceUnitElement:init(unit)
 	table.insert(self._save_values, "only_for_local_player")
 end
 
--- Lines: 19 to 22
+-- Lines 19-22
 function CoreUnitSequenceUnitElement:update_unselected(...)
 	MissionElement.update_unselected(self, ...)
 	self:verify_trigger_units()
 end
 
--- Lines: 24 to 28
+-- Lines 24-28
 function CoreUnitSequenceUnitElement:update_selected(...)
 	MissionElement.update_selected(self, ...)
 	self:verify_trigger_units()
 	self:_draw_trigger_units(0, 1, 1)
 end
 
--- Lines: 31 to 39
+-- Lines 30-39
 function CoreUnitSequenceUnitElement:verify_trigger_units()
 	for i = #self._hed.trigger_list, 1, -1 do
 		local unit = managers.editor:unit_with_id(self._hed.trigger_list[i].notify_unit)
@@ -41,7 +41,7 @@ function CoreUnitSequenceUnitElement:verify_trigger_units()
 	end
 end
 
--- Lines: 41 to 49
+-- Lines 41-49
 function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units)
 	CoreUnitSequenceUnitElement.super.get_links_to_unit(self, to_unit, links, all_units)
 
@@ -55,13 +55,13 @@ function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units
 	end
 end
 
--- Lines: 51 to 54
+-- Lines 51-54
 function CoreUnitSequenceUnitElement:draw_links_unselected(...)
 	CoreUnitSequenceUnitElement.super.draw_links_unselected(self, ...)
 	self:_draw_trigger_units(0, 0.75, 0.75)
 end
 
--- Lines: 56 to 71
+-- Lines 56-72
 function CoreUnitSequenceUnitElement:_get_sequence_units()
 	local units = {}
 	local trigger_name_list = self._unit:damage():get_trigger_name_list()
@@ -83,7 +83,7 @@ function CoreUnitSequenceUnitElement:_get_sequence_units()
 	return units
 end
 
--- Lines: 74 to 86
+-- Lines 74-86
 function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	for _, unit in ipairs(self:_get_sequence_units()) do
 		local params = {
@@ -99,20 +99,20 @@ function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	end
 end
 
--- Lines: 88 to 90
+-- Lines 88-91
 function CoreUnitSequenceUnitElement:new_save_values(...)
 	self:_set_trigger_list()
 
 	return MissionElement.new_save_values(self, ...)
 end
 
--- Lines: 93 to 96
+-- Lines 93-96
 function CoreUnitSequenceUnitElement:save_values(...)
 	self:_set_trigger_list()
 	MissionElement.save_values(self, ...)
 end
 
--- Lines: 98 to 124
+-- Lines 98-124
 function CoreUnitSequenceUnitElement:_set_trigger_list()
 	self._hed.trigger_list = {}
 	local triggers = managers.sequence:get_trigger_list(self._unit:name())
@@ -142,7 +142,7 @@ function CoreUnitSequenceUnitElement:_set_trigger_list()
 	end
 end
 
--- Lines: 126 to 140
+-- Lines 126-140
 function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -160,7 +160,7 @@ function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
--- Lines: 142 to 145
+-- Lines 142-145
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "core/units/run_sequence_dummy/run_sequence_dummy",
@@ -173,4 +173,3 @@ function CoreUnitSequenceUnitElement:add_to_mission_package()
 		continent = self._unit:unit_data().continent
 	})
 end
-

@@ -2,7 +2,7 @@ core:module("CoreInputDeviceLayoutDescription")
 
 DeviceLayoutDescription = DeviceLayoutDescription or class()
 
--- Lines: 5 to 9
+-- Lines 5-9
 function DeviceLayoutDescription:init(device_type)
 	assert(device_type == "xbox_controller" or device_type == "ps3_controller" or device_type == "win32_mouse")
 
@@ -10,12 +10,12 @@ function DeviceLayoutDescription:init(device_type)
 	self._binds = {}
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function DeviceLayoutDescription:device_type()
 	return self._device_type
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function DeviceLayoutDescription:add_bind_button(hardware_button_name, input_target_description)
 	self._binds[hardware_button_name] = {
 		type_name = "button",
@@ -23,7 +23,7 @@ function DeviceLayoutDescription:add_bind_button(hardware_button_name, input_tar
 	}
 end
 
--- Lines: 19 to 21
+-- Lines 19-21
 function DeviceLayoutDescription:add_bind_axis(hardware_axis_name, input_target_description)
 	self._binds[hardware_axis_name] = {
 		type_name = "axis",
@@ -31,8 +31,7 @@ function DeviceLayoutDescription:add_bind_axis(hardware_axis_name, input_target_
 	}
 end
 
--- Lines: 23 to 24
+-- Lines 23-25
 function DeviceLayoutDescription:binds()
 	return self._binds
 end
-

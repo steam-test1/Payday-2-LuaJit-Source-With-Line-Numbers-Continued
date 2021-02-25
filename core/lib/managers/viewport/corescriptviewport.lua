@@ -12,7 +12,7 @@ DEFAULT_NETWORK_LSPORT = 31255
 NETWORK_SLAVE_RECEIVER = Idstring("scriptviewport_slave")
 NETWORK_MASTER_RECEIVER = Idstring("scriptviewport_master")
 
--- Lines: 24 to 40
+-- Lines 24-40
 function _ScriptViewport:init(x, y, width, height, vpm, name)
 	_ScriptViewport.super.init(self, vpm, name)
 
@@ -36,27 +36,29 @@ function _ScriptViewport:init(x, y, width, height, vpm, name)
 	self._init_trace = debug.traceback()
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function _ScriptViewport:enable_slave(port)
 	Application:stack_dump_error("Deprecated call")
 end
 
--- Lines: 46 to 48
+-- Lines 46-48
 function _ScriptViewport:enable_master(host_name, port, master_listener_port, net_pump)
 	Application:stack_dump_error("Deprecated call")
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function _ScriptViewport:render_params()
 	return self._render_params
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function _ScriptViewport:set_render_params(...)
-	self._render_params = {...}
+	self._render_params = {
+		...
+	}
 end
 
--- Lines: 58 to 66
+-- Lines 58-66
 function _ScriptViewport:destroy()
 	self:set_active(false)
 
@@ -70,74 +72,75 @@ function _ScriptViewport:destroy()
 	self._env_handler:destroy()
 end
 
--- Lines: 68 to 70
+-- Lines 68-70
 function _ScriptViewport:set_width_mul_enabled(b)
 	self._width_mul_enabled = b
 end
 
--- Lines: 72 to 73
+-- Lines 72-74
 function _ScriptViewport:width_mul_enabled()
 	return self._width_mul_enabled
 end
 
--- Lines: 76 to 78
+-- Lines 76-78
 function _ScriptViewport:set_first_viewport(set_first_viewport)
 	self._env_handler:set_first_viewport(set_first_viewport)
 end
 
--- Lines: 80 to 81
+-- Lines 80-82
 function _ScriptViewport:get_environment_value(data_path_key)
 	return self._env_handler:get_value(data_path_key)
 end
 
--- Lines: 84 to 85
+-- Lines 84-86
 function _ScriptViewport:get_environment_default_value(data_path_key)
 	return self._env_handler:get_default_value(data_path_key)
 end
 
--- Lines: 88 to 89
+-- Lines 88-90
 function _ScriptViewport:get_environment_path()
 	return self._env_handler:get_path()
 end
 
--- Lines: 92 to 94
+-- Lines 92-94
 function _ScriptViewport:set_environment(environment_path, blend_duration, blend_bezier_curve, filter_list, unfiltered_environment_path)
 	self._env_handler:set_environment(environment_path, blend_duration, blend_bezier_curve, filter_list, unfiltered_environment_path)
 end
 
--- Lines: 96 to 98
+-- Lines 96-98
 function _ScriptViewport:on_default_environment_changed(environment_path, blend_duration, blend_bezier_curve)
 	self._env_handler:on_default_environment_changed(environment_path, blend_duration, blend_bezier_curve)
 end
 
--- Lines: 100 to 102
+-- Lines 100-102
 function _ScriptViewport:on_override_environment_changed(environment_path, blend_duration, blend_bezier_curve)
 	self._env_handler:on_override_environment_changed(environment_path, blend_duration, blend_bezier_curve)
 end
 
--- Lines: 104 to 105
+-- Lines 104-106
 function _ScriptViewport:create_environment_modifier(data_path_key, is_override, modifier_func)
 	return self._env_handler:create_modifier(data_path_key, is_override, modifier_func)
 end
 
--- Lines: 108 to 110
+-- Lines 108-110
 function _ScriptViewport:destroy_environment_modifier(data_path_key)
 	self._env_handler:destroy_modifier(data_path_key)
 end
 
--- Lines: 112 to 114
+-- Lines 112-114
 function _ScriptViewport:force_apply_feeders()
 	self._env_handler:force_apply_feeders()
 end
 
--- Lines: 116 to 117
+-- Lines 116-118
 function _ScriptViewport:update_environment_value(data_path_key)
 	return self._env_handler:update_value(data_path_key)
 end
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
--- Lines: 122 to 136
+-- Lines 122-136
 function _ScriptViewport:update_environment_area(area_list, position_offset)
 	local camera = self._vp:camera()
 
@@ -155,43 +158,43 @@ function _ScriptViewport:update_environment_area(area_list, position_offset)
 	self._env_handler:update_environment_area(check_pos, area_list)
 end
 
--- Lines: 138 to 140
+-- Lines 138-140
 function _ScriptViewport:on_environment_area_removed(area)
 	self._env_handler:on_environment_area_removed(area)
 end
 
--- Lines: 142 to 145
+-- Lines 142-145
 function _ScriptViewport:set_camera(camera)
 	self._vp:set_camera(camera)
 	self:_set_width_multiplier()
 end
 
--- Lines: 147 to 148
+-- Lines 147-149
 function _ScriptViewport:camera()
 	return self._vp:camera()
 end
 
--- Lines: 151 to 152
+-- Lines 151-153
 function _ScriptViewport:director()
 	return self._vp:director()
 end
 
--- Lines: 155 to 156
+-- Lines 155-157
 function _ScriptViewport:shaker()
 	return self:director():shaker()
 end
 
--- Lines: 159 to 160
+-- Lines 159-161
 function _ScriptViewport:vp()
 	return self._vp
 end
 
--- Lines: 163 to 164
+-- Lines 163-165
 function _ScriptViewport:alive()
 	return CoreCode.alive(self._vp)
 end
 
--- Lines: 167 to 177
+-- Lines 167-178
 function _ScriptViewport:reference_fov()
 	local scene = self._render_params[1]
 	local fov = -1
@@ -208,7 +211,7 @@ function _ScriptViewport:reference_fov()
 	return fov
 end
 
--- Lines: 180 to 195
+-- Lines 180-196
 function _ScriptViewport:push_ref_fov(fov)
 	local scene = self._render_params[1]
 
@@ -232,7 +235,7 @@ function _ScriptViewport:push_ref_fov(fov)
 	return false
 end
 
--- Lines: 198 to 212
+-- Lines 198-213
 function _ScriptViewport:pop_ref_fov()
 	local scene = self._render_params[1]
 	local sh_pro = self._vp:get_post_processor_effect(scene, Idstring("shadow_processor"), Idstring("shadow_rendering"))
@@ -255,7 +258,7 @@ function _ScriptViewport:pop_ref_fov()
 	return false
 end
 
--- Lines: 215 to 230
+-- Lines 215-230
 function _ScriptViewport:set_visualization_mode(effect_name)
 	local scene = self._render_params[1]
 	local hdr_effect_interface = self._vp:get_post_processor_effect(scene, Idstring("hdr_post_processor"))
@@ -273,7 +276,7 @@ function _ScriptViewport:set_visualization_mode(effect_name)
 	self._vp:set_post_processor_effect(scene, Idstring("deferred"), Idstring(effect_name)):set_visibility(true)
 end
 
--- Lines: 232 to 238
+-- Lines 232-239
 function _ScriptViewport:is_rendering_scene(scene_name)
 	for _, param in ipairs(self:render_params()) do
 		if param == scene_name then
@@ -284,11 +287,11 @@ function _ScriptViewport:is_rendering_scene(scene_name)
 	return false
 end
 
--- Lines: 244 to 245
+-- Lines 241-245
 function _ScriptViewport:set_dof(clamp, near_focus_distance_min, near_focus_distance_max, far_focus_distance_min, far_focus_distance_max)
 end
 
--- Lines: 248 to 252
+-- Lines 248-252
 function _ScriptViewport:replace_engine_vp(vp)
 	self:destroy()
 
@@ -296,22 +299,22 @@ function _ScriptViewport:replace_engine_vp(vp)
 	self._vp = vp
 end
 
--- Lines: 254 to 256
+-- Lines 254-256
 function _ScriptViewport:set_environment_editor_callback(env_editor_callback)
 	self._env_editor_callback = env_editor_callback
 end
 
--- Lines: 259 to 261
+-- Lines 259-261
 function _ScriptViewport:set_enable_adaptive_quality(enable)
 	self._enable_adaptive_quality = enable
 end
 
--- Lines: 263 to 264
+-- Lines 263-265
 function _ScriptViewport:use_adaptive_quality()
 	return self._enable_adaptive_quality
 end
 
--- Lines: 274 to 287
+-- Lines 274-287
 function _ScriptViewport:_update(nr, t, dt)
 	local is_first_viewport = nr == 1
 	local scene = self._render_params[1]
@@ -327,19 +330,19 @@ function _ScriptViewport:_update(nr, t, dt)
 	self._env_handler:apply(is_first_viewport, self._vp, scene)
 end
 
--- Lines: 289 to 294
+-- Lines 289-294
 function _ScriptViewport:_render(nr)
 	if Global.render_debug.render_world then
 		Application:render(unpack(self._render_params))
 	end
 end
 
--- Lines: 296 to 298
+-- Lines 296-298
 function _ScriptViewport:_resolution_changed()
 	self:_set_width_multiplier()
 end
 
--- Lines: 300 to 315
+-- Lines 300-315
 function _ScriptViewport:_set_width_multiplier()
 	local camera = self:camera()
 
@@ -357,7 +360,7 @@ function _ScriptViewport:_set_width_multiplier()
 	end
 end
 
--- Lines: 317 to 322
+-- Lines 317-322
 function _ScriptViewport:set_active(state)
 	_ScriptViewport.super.set_active(self, state)
 
@@ -365,4 +368,3 @@ function _ScriptViewport:set_active(state)
 		self._vp:set_LOD_active(state)
 	end
 end
-

@@ -2,16 +2,16 @@ core:import("CoreMissionScriptElement")
 
 ElementProfileFilter = ElementProfileFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementProfileFilter:init(...)
 	ElementProfileFilter.super.init(self, ...)
 end
 
--- Lines: 10 to 11
+-- Lines 9-11
 function ElementProfileFilter:client_on_executed(...)
 end
 
--- Lines: 13 to 40
+-- Lines 13-40
 function ElementProfileFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -36,32 +36,32 @@ function ElementProfileFilter:on_executed(instigator)
 	ElementProfileFilter.super.on_executed(self, instigator)
 end
 
--- Lines: 42 to 45
+-- Lines 42-46
 function ElementProfileFilter:_check_player_lvl()
 	local pass = self._values.player_lvl <= managers.experience:current_level()
 
 	return pass
 end
 
--- Lines: 48 to 51
+-- Lines 48-52
 function ElementProfileFilter:_check_total_money_earned()
-	local pass = self._values.money_earned * 1000 <= managers.money:total_collected()
+	local pass = managers.money:total_collected() >= self._values.money_earned * 1000
 
 	return pass
 end
 
--- Lines: 54 to 60
+-- Lines 54-61
 function ElementProfileFilter:_check_total_money_offshore()
 	if not self._values.money_offshore then
 		return false
 	end
 
-	local pass = self._values.money_offshore * 1000 <= managers.money:offshore()
+	local pass = managers.money:offshore() >= self._values.money_offshore * 1000
 
 	return pass
 end
 
--- Lines: 63 to 71
+-- Lines 63-72
 function ElementProfileFilter:_check_achievement()
 	if self._values.achievement == "none" then
 		return true
@@ -72,4 +72,3 @@ function ElementProfileFilter:_check_achievement()
 
 	return pass
 end
-

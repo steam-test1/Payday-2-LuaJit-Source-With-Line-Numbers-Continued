@@ -27,7 +27,7 @@ LaserTriggerUnitElement.COLORS = {
 	}
 }
 
--- Lines: 10 to 48
+-- Lines 10-48
 function LaserTriggerUnitElement:init(unit)
 	LaserTriggerUnitElement.super.init(self, unit)
 
@@ -60,7 +60,7 @@ function LaserTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "connections")
 end
 
--- Lines: 50 to 57
+-- Lines 50-57
 function LaserTriggerUnitElement:update_editing(...)
 	local ray = self:_raycast()
 
@@ -71,12 +71,12 @@ function LaserTriggerUnitElement:update_editing(...)
 	end
 end
 
--- Lines: 59 to 61
+-- Lines 59-61
 function LaserTriggerUnitElement:begin_editing(...)
 	self._dummy_unit = World:spawn_unit(self._dummy_unit_name, Vector3(), Rotation())
 end
 
--- Lines: 63 to 68
+-- Lines 63-68
 function LaserTriggerUnitElement:end_editing(...)
 	LaserTriggerUnitElement.super.end_editing(self, ...)
 	World:delete_unit(self._dummy_unit)
@@ -84,13 +84,13 @@ function LaserTriggerUnitElement:end_editing(...)
 	self:_break_moving_point()
 end
 
--- Lines: 70 to 74
+-- Lines 70-74
 function LaserTriggerUnitElement:update_selected(t, dt, selected_unit, all_units)
 	LaserTriggerUnitElement.super.update_selected(self, t, dt, selected_unit, all_units)
 	self:_draw_selected()
 end
 
--- Lines: 76 to 91
+-- Lines 76-91
 function LaserTriggerUnitElement:_draw_selected()
 	for _, point in pairs(self._hed.points) do
 		self:_draw_point(point.pos, point.rot, 0, 0.5, 0)
@@ -109,7 +109,7 @@ function LaserTriggerUnitElement:_draw_selected()
 	end
 end
 
--- Lines: 93 to 119
+-- Lines 93-120
 function LaserTriggerUnitElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -147,7 +147,7 @@ function LaserTriggerUnitElement:_raycast()
 	return nil
 end
 
--- Lines: 122 to 128
+-- Lines 122-129
 function LaserTriggerUnitElement:_get_close_point(points, pos)
 	for i, point in pairs(points) do
 		if (point.pos - pos):length() < self.CLOSE_DISTANCE then
@@ -158,7 +158,7 @@ function LaserTriggerUnitElement:_get_close_point(points, pos)
 	return nil, nil
 end
 
--- Lines: 131 to 141
+-- Lines 131-141
 function LaserTriggerUnitElement:_draw_point(pos, rot, r, g, b)
 	r = r or 1
 	g = g or 1
@@ -172,7 +172,7 @@ function LaserTriggerUnitElement:_draw_point(pos, rot, r, g, b)
 	Application:draw_arrow(pos, pos + rot:z() * len, 0, 0, 1, scale)
 end
 
--- Lines: 143 to 150
+-- Lines 143-151
 function LaserTriggerUnitElement:_remove_any_close_point(pos)
 	local index, point = self:_get_close_point(self._hed.points, pos)
 
@@ -187,7 +187,7 @@ function LaserTriggerUnitElement:_remove_any_close_point(pos)
 	return false
 end
 
--- Lines: 153 to 158
+-- Lines 153-158
 function LaserTriggerUnitElement:_break_creating_connection()
 	if alive(self._dummy_unit) then
 		self._dummy_unit:set_enabled(true)
@@ -196,13 +196,13 @@ function LaserTriggerUnitElement:_break_creating_connection()
 	self._creating_connection = nil
 end
 
--- Lines: 160 to 163
+-- Lines 160-163
 function LaserTriggerUnitElement:_break_moving_point()
 	self._moving_point = nil
 	self._moving_point_undo = nil
 end
 
--- Lines: 167 to 193
+-- Lines 166-193
 function LaserTriggerUnitElement:_rmb()
 	if self._moving_point then
 		self._hed.points[self._moving_point] = self._moving_point_undo
@@ -239,7 +239,7 @@ function LaserTriggerUnitElement:_rmb()
 	})
 end
 
--- Lines: 196 to 235
+-- Lines 196-235
 function LaserTriggerUnitElement:_lmb()
 	print("LaserTriggerUnitElement:_lmb()")
 
@@ -290,7 +290,7 @@ function LaserTriggerUnitElement:_lmb()
 	end
 end
 
--- Lines: 238 to 268
+-- Lines 238-268
 function LaserTriggerUnitElement:_emb()
 	if self._creating_connection then
 		return
@@ -318,7 +318,7 @@ function LaserTriggerUnitElement:_emb()
 	self._moving_point = index
 end
 
--- Lines: 270 to 275
+-- Lines 270-275
 function LaserTriggerUnitElement:_release_emb()
 	print("LaserTriggerUnitElement:_release_emb()")
 
@@ -327,7 +327,7 @@ function LaserTriggerUnitElement:_release_emb()
 	end
 end
 
--- Lines: 277 to 291
+-- Lines 277-291
 function LaserTriggerUnitElement:_check_remove_index(index)
 	for i, connection in ipairs(clone(self._hed.connections)) do
 		if connection.from == index or connection.to == index then
@@ -344,7 +344,7 @@ function LaserTriggerUnitElement:_check_remove_index(index)
 	end
 end
 
--- Lines: 293 to 305
+-- Lines 293-316
 function LaserTriggerUnitElement:_check_remove_connection(i1, i2)
 	for i, connection in ipairs(clone(self._hed.connections)) do
 		if connection.from == i1 and connection.to == i2 or connection.from == i2 and connection.to == i1 then
@@ -362,7 +362,7 @@ function LaserTriggerUnitElement:_check_remove_connection(i1, i2)
 	return false
 end
 
--- Lines: 319 to 326
+-- Lines 319-326
 function LaserTriggerUnitElement:add_triggers(vc)
 	LaserTriggerUnitElement.super.add_triggers(self, vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
@@ -371,7 +371,7 @@ function LaserTriggerUnitElement:add_triggers(vc)
 	vc:add_release_trigger(Idstring("emb"), callback(self, self, "_release_emb"))
 end
 
--- Lines: 328 to 338
+-- Lines 328-338
 function LaserTriggerUnitElement:_on_clicked_connections_box()
 	print("LaserTriggerUnitElement:_on_clicked_connections_box()")
 
@@ -388,7 +388,7 @@ function LaserTriggerUnitElement:_on_clicked_connections_box()
 	self._selected_connection = tonumber(self._connections_box:get_string(selected_index))
 end
 
--- Lines: 340 to 345
+-- Lines 340-345
 function LaserTriggerUnitElement:_fill_connections_box()
 	self._connections_box:clear()
 
@@ -397,7 +397,7 @@ function LaserTriggerUnitElement:_fill_connections_box()
 	end
 end
 
--- Lines: 347 to 358
+-- Lines 347-358
 function LaserTriggerUnitElement:_move_connection_up()
 	print("LaserTriggerUnitElement:_move_connection_up()")
 
@@ -413,7 +413,7 @@ function LaserTriggerUnitElement:_move_connection_up()
 	self:_on_clicked_connections_box()
 end
 
--- Lines: 360 to 371
+-- Lines 360-371
 function LaserTriggerUnitElement:_move_connection_down()
 	print("LaserTriggerUnitElement:_move_connection_down()")
 
@@ -429,7 +429,7 @@ function LaserTriggerUnitElement:_move_connection_down()
 	self:_on_clicked_connections_box()
 end
 
--- Lines: 373 to 378
+-- Lines 373-378
 function LaserTriggerUnitElement:set_element_data(params, ...)
 	LaserTriggerUnitElement.super.set_element_data(self, params, ...)
 
@@ -438,7 +438,7 @@ function LaserTriggerUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 381 to 437
+-- Lines 381-437
 function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -496,7 +496,7 @@ function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_fill_connections_box()
 end
 
--- Lines: 439 to 447
+-- Lines 439-447
 function LaserTriggerUnitElement:add_to_mission_package()
 	local unit_name = self._dummy_unit_name
 
@@ -519,4 +519,3 @@ function LaserTriggerUnitElement:add_to_mission_package()
 		})
 	end
 end
-

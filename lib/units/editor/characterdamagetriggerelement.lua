@@ -1,6 +1,6 @@
 CharacterDamageTriggerUnitElement = CharacterDamageTriggerUnitElement or class(MissionElement)
 
--- Lines: 5 to 15
+-- Lines 4-15
 function CharacterDamageTriggerUnitElement:init(unit)
 	CharacterDamageTriggerUnitElement.super.init(self, unit)
 
@@ -13,7 +13,7 @@ function CharacterDamageTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "percentage")
 end
 
--- Lines: 17 to 26
+-- Lines 17-26
 function CharacterDamageTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -33,17 +33,17 @@ function CharacterDamageTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 	end
 end
 
--- Lines: 28 to 31
+-- Lines 28-31
 function CharacterDamageTriggerUnitElement:get_links_to_unit(...)
 	CharacterDamageTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 33 to 34
+-- Lines 33-34
 function CharacterDamageTriggerUnitElement:update_editing()
 end
 
--- Lines: 36 to 46
+-- Lines 36-46
 function CharacterDamageTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -61,7 +61,7 @@ function CharacterDamageTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 48 to 55
+-- Lines 48-56
 function CharacterDamageTriggerUnitElement:_correct_unit(u_name)
 	local names = {
 		"ai_spawn_enemy",
@@ -80,12 +80,12 @@ function CharacterDamageTriggerUnitElement:_correct_unit(u_name)
 	return false
 end
 
--- Lines: 58 to 60
+-- Lines 58-60
 function CharacterDamageTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 63 to 92
+-- Lines 62-92
 function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -122,4 +122,3 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 		sizer = panel_sizer
 	})
 end
-

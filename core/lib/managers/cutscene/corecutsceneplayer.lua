@@ -10,12 +10,12 @@ CoreCutscenePlayer.BLACK_BAR_GUI_LAYER = 29
 CoreCutscenePlayer.BLACK_BAR_TOP_GUI_NAME = "__CutscenePlayer__black_bar_top"
 CoreCutscenePlayer.BLACK_BAR_BOTTOM_GUI_NAME = "__CutscenePlayer__black_bar_bottom"
 
--- Lines: 13 to 14
+-- Lines 13-15
 function CoreCutscenePlayer:_all_keys_sorted_by_time()
 	return self._owned_cutscene_keys
 end
 
--- Lines: 17 to 34
+-- Lines 17-34
 function CoreCutscenePlayer:init(cutscene, optional_shared_viewport, optional_shared_cast)
 	self._cutscene = assert(cutscene, "No cutscene supplied.")
 	self._viewport = optional_shared_viewport or self:_create_viewport()
@@ -35,7 +35,7 @@ function CoreCutscenePlayer:init(cutscene, optional_shared_viewport, optional_sh
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "_configure_viewport"))
 end
 
--- Lines: 36 to 43
+-- Lines 36-43
 function CoreCutscenePlayer:_create_future_camera()
 	self._future_camera_locator = World:spawn_unit(Idstring("core/units/locator/locator"), Vector3(0, 0, 0), Rotation())
 	self._future_camera = World:create_camera()
@@ -46,7 +46,7 @@ function CoreCutscenePlayer:_create_future_camera()
 	self._cast:_reparent_to_locator_unit(self._cast:_root_unit(), self._future_camera_locator)
 end
 
--- Lines: 45 to 59
+-- Lines 45-59
 function CoreCutscenePlayer:add_keys(key_collection)
 	key_collection = key_collection or self._cutscene
 
@@ -63,19 +63,19 @@ function CoreCutscenePlayer:add_keys(key_collection)
 	end
 end
 
--- Lines: 61 to 62
+-- Lines 61-63
 function CoreCutscenePlayer:_is_driving_sound_key(cutscene_key)
 	return cutscene_key.ELEMENT_NAME == CoreSoundCutsceneKey.ELEMENT_NAME and cutscene_key:frame() == 0 and cutscene_key:sync_to_video()
 end
 
--- Lines: 65 to 68
+-- Lines 65-68
 function CoreCutscenePlayer:_set_driving_sound_from_key(cutscene_key)
 	cat_print("cutscene", string.format("[CoreCutscenePlayer] Using sound cue \"%s/%s\" to drive the playhead.", cutscene_key:bank(), cutscene_key:cue()))
 
 	self._driving_sound = assert(Sound:make_bank(cutscene_key:bank(), cutscene_key:cue()), string.format("Driving sound cue \"%s/%s\" not found.", cutscene_key:bank(), cutscene_key:cue()))
 end
 
--- Lines: 70 to 81
+-- Lines 70-81
 function CoreCutscenePlayer:set_timer(timer)
 	self._cast:set_timer(timer)
 
@@ -90,22 +90,22 @@ function CoreCutscenePlayer:set_timer(timer)
 	end
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function CoreCutscenePlayer:viewport()
 	return self._viewport
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function CoreCutscenePlayer:cutscene_name()
 	return self._cutscene:name()
 end
 
--- Lines: 91 to 92
+-- Lines 91-93
 function CoreCutscenePlayer:cutscene_duration()
 	return self._cutscene:duration()
 end
 
--- Lines: 95 to 110
+-- Lines 95-111
 function CoreCutscenePlayer:camera_attributes()
 	local camera = self:_camera()
 	local attributes = {
@@ -124,12 +124,12 @@ function CoreCutscenePlayer:camera_attributes()
 	return attributes
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function CoreCutscenePlayer:depth_of_field_attributes()
 	return self._dof_attributes
 end
 
--- Lines: 117 to 140
+-- Lines 117-140
 function CoreCutscenePlayer:prime()
 	if not self._primed then
 		self._cast:prime(self._cutscene)
@@ -157,12 +157,12 @@ function CoreCutscenePlayer:prime()
 	end
 end
 
--- Lines: 142 to 143
+-- Lines 142-144
 function CoreCutscenePlayer:is_primed()
 	return self._primed == true
 end
 
--- Lines: 146 to 168
+-- Lines 146-169
 function CoreCutscenePlayer:_driving_sound_offset()
 	if alive(self._driving_sound_instance) then
 		local master_sound_instance = self:_master_driving_sound_instance(self._driving_sound_instance)
@@ -187,30 +187,35 @@ function CoreCutscenePlayer:_driving_sound_offset()
 	return nil
 end
 
--- Lines: 171 to 184
+-- Lines 171-185
 function CoreCutscenePlayer:_master_driving_sound_instance(sound_instance)
 	self._driving_sound_instance_map = self._driving_sound_instance_map or {}
 	local master_instance = self._driving_sound_instance_map[sound_instance]
 
 	if master_instance == nil then
-		master_instance = sound_instance.playing_instances and sound_instance:playing_instances()[1] or sound_instance
+		if sound_instance.playing_instances then
+			master_instance = sound_instance:playing_instances()[1]
+		else
+			master_instance = sound_instance
+		end
+
 		self._driving_sound_instance_map[sound_instance] = master_instance
 	end
 
 	return master_instance
 end
 
--- Lines: 187 to 188
+-- Lines 187-189
 function CoreCutscenePlayer:is_presentable()
 	return self._cast:is_ready(self._cutscene) and (self:_driving_sound_offset() or 1) > 0
 end
 
--- Lines: 191 to 192
+-- Lines 191-193
 function CoreCutscenePlayer:is_viewport_enabled()
 	return managers.viewport and self._viewport and self._viewport:active()
 end
 
--- Lines: 195 to 206
+-- Lines 195-206
 function CoreCutscenePlayer:unload()
 	self:stop()
 
@@ -223,7 +228,7 @@ function CoreCutscenePlayer:unload()
 	end
 end
 
--- Lines: 208 to 259
+-- Lines 208-259
 function CoreCutscenePlayer:destroy()
 	cat_print("cutscene", string.format("[CoreCutscenePlayer] Destroying CutscenePlayer for \"%s\".", self:cutscene_name()))
 	self:set_viewport_enabled(false)
@@ -284,7 +289,7 @@ function CoreCutscenePlayer:destroy()
 	self._future_camera_locator = nil
 end
 
--- Lines: 261 to 285
+-- Lines 261-286
 function CoreCutscenePlayer:update(time, delta_time)
 	local done = false
 
@@ -312,7 +317,7 @@ function CoreCutscenePlayer:update(time, delta_time)
 	return not done
 end
 
--- Lines: 289 to 295
+-- Lines 288-295
 function CoreCutscenePlayer:refresh()
 	if self:_camera_has_cut() and managers.environment then
 		managers.environment:clear_luminance()
@@ -321,7 +326,7 @@ function CoreCutscenePlayer:refresh()
 	self:_update_future_camera()
 end
 
--- Lines: 297 to 307
+-- Lines 297-307
 function CoreCutscenePlayer:evaluate_current_frame()
 	self._last_evaluated_time = self._last_evaluated_time or -1
 
@@ -336,7 +341,7 @@ function CoreCutscenePlayer:evaluate_current_frame()
 	self._last_evaluated_time = self._time
 end
 
--- Lines: 309 to 319
+-- Lines 309-319
 function CoreCutscenePlayer:preroll_cutscene_keys()
 	if self._time > 0 then
 		return
@@ -353,12 +358,12 @@ function CoreCutscenePlayer:preroll_cutscene_keys()
 	end
 end
 
--- Lines: 321 to 322
+-- Lines 321-323
 function CoreCutscenePlayer:is_playing()
 	return self._playing or false
 end
 
--- Lines: 325 to 333
+-- Lines 325-333
 function CoreCutscenePlayer:play()
 	self._playing = true
 
@@ -369,7 +374,7 @@ function CoreCutscenePlayer:play()
 	end
 end
 
--- Lines: 335 to 343
+-- Lines 335-343
 function CoreCutscenePlayer:pause()
 	self._playing = nil
 
@@ -380,7 +385,7 @@ function CoreCutscenePlayer:pause()
 	end
 end
 
--- Lines: 345 to 349
+-- Lines 345-349
 function CoreCutscenePlayer:stop()
 	self._playing = nil
 	self._driving_sound_instance = nil
@@ -388,7 +393,7 @@ function CoreCutscenePlayer:stop()
 	self:_set_visible(false)
 end
 
--- Lines: 351 to 364
+-- Lines 351-364
 function CoreCutscenePlayer:skip_to_end()
 	for key in self:keys_between(self._time, math.huge) do
 		if key.skip then
@@ -404,7 +409,7 @@ function CoreCutscenePlayer:skip_to_end()
 	self._time = self:cutscene_duration()
 end
 
--- Lines: 366 to 371
+-- Lines 366-372
 function CoreCutscenePlayer:seek(time, skip_evaluation)
 	self._time = math.min(math.max(0, time), self:cutscene_duration())
 
@@ -415,7 +420,7 @@ function CoreCutscenePlayer:seek(time, skip_evaluation)
 	return self._time == time
 end
 
--- Lines: 374 to 377
+-- Lines 374-378
 function CoreCutscenePlayer:distance_from_camera(unit_name, object_name)
 	local object = self:_actor_object(unit_name, object_name)
 	local distance = object and self:_camera():world_to_screen(object:position()).z
@@ -423,14 +428,14 @@ function CoreCutscenePlayer:distance_from_camera(unit_name, object_name)
 	return distance
 end
 
--- Lines: 380 to 383
+-- Lines 380-383
 function CoreCutscenePlayer:set_camera(camera)
 	assert(camera == nil or string.begins(camera, "camera"))
 
 	self._camera_name = camera
 end
 
--- Lines: 385 to 390
+-- Lines 385-390
 function CoreCutscenePlayer:set_camera_attribute(attribute_name, value)
 	local camera = self:_camera()
 	local func = assert(camera["set_" .. attribute_name], "Invalid camera attribute.")
@@ -439,7 +444,7 @@ function CoreCutscenePlayer:set_camera_attribute(attribute_name, value)
 	func(self._future_camera, value)
 end
 
--- Lines: 392 to 399
+-- Lines 392-399
 function CoreCutscenePlayer:set_camera_depth_of_field(near, far)
 	local range = far - near
 	self._dof_attributes = self._dof_attributes or {}
@@ -449,7 +454,7 @@ function CoreCutscenePlayer:set_camera_depth_of_field(near, far)
 	self._dof_attributes.far_focus_distance_max = far + range * 0.67
 end
 
--- Lines: 401 to 403
+-- Lines 401-404
 function CoreCutscenePlayer:play_camera_shake(shake_name, amplitude, frequency, offset)
 	local shake_id = self._viewport:director():shaker():play(shake_name, amplitude, frequency, offset)
 
@@ -458,12 +463,12 @@ function CoreCutscenePlayer:play_camera_shake(shake_name, amplitude, frequency, 
 	end
 end
 
--- Lines: 406 to 407
+-- Lines 406-408
 function CoreCutscenePlayer:has_gui(gui_name)
 	return self._owned_gui_objects ~= nil and self._owned_gui_objects[gui_name] ~= nil
 end
 
--- Lines: 410 to 415
+-- Lines 410-415
 function CoreCutscenePlayer:load_gui(gui_name)
 	local preload = true
 
@@ -472,7 +477,7 @@ function CoreCutscenePlayer:load_gui(gui_name)
 	self:set_gui_visible(gui_name, false)
 end
 
--- Lines: 417 to 424
+-- Lines 417-424
 function CoreCutscenePlayer:set_gui_visible(gui_name, visible)
 	local panel = self:_gui_panel(gui_name)
 
@@ -482,7 +487,7 @@ function CoreCutscenePlayer:set_gui_visible(gui_name, visible)
 	end
 end
 
--- Lines: 426 to 442
+-- Lines 426-442
 function CoreCutscenePlayer:invoke_callback_in_gui(gui_name, function_name, ...)
 	local gui_object = self._owned_gui_objects and self._owned_gui_objects[gui_name]
 
@@ -496,7 +501,7 @@ function CoreCutscenePlayer:invoke_callback_in_gui(gui_name, function_name, ...)
 	end
 end
 
--- Lines: 444 to 458
+-- Lines 444-459
 function CoreCutscenePlayer:_gui_panel(gui_name, preloading)
 	local panel = self._workspace:panel():child(gui_name)
 
@@ -524,7 +529,7 @@ function CoreCutscenePlayer:_gui_panel(gui_name, preloading)
 	return panel
 end
 
--- Lines: 461 to 478
+-- Lines 461-478
 function CoreCutscenePlayer:set_viewport_enabled(enabled)
 	local is_enabled = self._viewport:active()
 
@@ -546,19 +551,19 @@ function CoreCutscenePlayer:set_viewport_enabled(enabled)
 	end
 end
 
--- Lines: 480 to 483
+-- Lines 480-483
 function CoreCutscenePlayer:set_widescreen(enabled)
 	self._widescreen = enabled or nil
 
 	self:_configure_viewport()
 end
 
--- Lines: 488 to 490
+-- Lines 485-490
 function CoreCutscenePlayer:set_key_handler(delegate)
 	self._key_handler = delegate
 end
 
--- Lines: 497 to 504
+-- Lines 497-504
 function CoreCutscenePlayer:prime_cutscene_key(key, cast)
 	local delegate = self._key_handler
 
@@ -569,7 +574,7 @@ function CoreCutscenePlayer:prime_cutscene_key(key, cast)
 	end
 end
 
--- Lines: 506 to 513
+-- Lines 506-513
 function CoreCutscenePlayer:evaluate_cutscene_key(key, time, last_evaluated_time)
 	local delegate = self._key_handler
 
@@ -580,7 +585,7 @@ function CoreCutscenePlayer:evaluate_cutscene_key(key, time, last_evaluated_time
 	end
 end
 
--- Lines: 515 to 522
+-- Lines 515-522
 function CoreCutscenePlayer:revert_cutscene_key(key, time, last_evaluated_time)
 	local delegate = self._key_handler
 
@@ -591,7 +596,7 @@ function CoreCutscenePlayer:revert_cutscene_key(key, time, last_evaluated_time)
 	end
 end
 
--- Lines: 524 to 531
+-- Lines 524-531
 function CoreCutscenePlayer:update_cutscene_key(key, time, last_evaluated_time)
 	local delegate = self._key_handler
 
@@ -602,7 +607,7 @@ function CoreCutscenePlayer:update_cutscene_key(key, time, last_evaluated_time)
 	end
 end
 
--- Lines: 533 to 540
+-- Lines 533-540
 function CoreCutscenePlayer:skip_cutscene_key(key)
 	local delegate = self._key_handler
 
@@ -613,7 +618,7 @@ function CoreCutscenePlayer:skip_cutscene_key(key)
 	end
 end
 
--- Lines: 542 to 549
+-- Lines 542-549
 function CoreCutscenePlayer:time_in_relation_to_cutscene_key(key)
 	local delegate = self._key_handler
 
@@ -624,12 +629,12 @@ function CoreCutscenePlayer:time_in_relation_to_cutscene_key(key)
 	end
 end
 
--- Lines: 556 to 558
+-- Lines 556-558
 function CoreCutscenePlayer:_set_visible(visible)
 	self._cast:set_cutscene_visible(self._cutscene, visible)
 end
 
--- Lines: 560 to 571
+-- Lines 560-571
 function CoreCutscenePlayer:_set_listener_enabled(enabled)
 	if enabled then
 		if not self._listener_activation_id then
@@ -644,7 +649,7 @@ function CoreCutscenePlayer:_set_listener_enabled(enabled)
 	end
 end
 
--- Lines: 573 to 580
+-- Lines 573-580
 function CoreCutscenePlayer:_set_depth_of_field_enabled(enabled)
 	if enabled then
 		managers.environment:disable_dof()
@@ -654,12 +659,12 @@ function CoreCutscenePlayer:_set_depth_of_field_enabled(enabled)
 	end
 end
 
--- Lines: 582 to 583
+-- Lines 582-584
 function CoreCutscenePlayer:_viewport_rect()
 	return self._widescreen and self:_wide_viewport_rect() or self:_full_viewport_rect()
 end
 
--- Lines: 586 to 588
+-- Lines 586-589
 function CoreCutscenePlayer:_full_viewport_rect()
 	local resolution = RenderSettings.resolution
 
@@ -675,7 +680,7 @@ function CoreCutscenePlayer:_full_viewport_rect()
 	}
 end
 
--- Lines: 591 to 606
+-- Lines 591-607
 function CoreCutscenePlayer:_wide_viewport_rect()
 	local resolution = RenderSettings.resolution
 	local resolution_aspect = 1 / managers.viewport:aspect_ratio()
@@ -698,24 +703,24 @@ function CoreCutscenePlayer:_wide_viewport_rect()
 	return rect
 end
 
--- Lines: 609 to 610
+-- Lines 609-611
 function CoreCutscenePlayer:_camera()
 	return self._viewport:camera() or self:_create_camera()
 end
 
--- Lines: 613 to 615
+-- Lines 613-616
 function CoreCutscenePlayer:_camera_controller()
 	local controller = self._viewport:director():camera()
 
 	return controller or self:_create_camera_controller()
 end
 
--- Lines: 618 to 619
+-- Lines 618-620
 function CoreCutscenePlayer:_camera_object()
 	return self._camera_name and self:_actor_object(self._camera_name, "locator")
 end
 
--- Lines: 622 to 628
+-- Lines 622-629
 function CoreCutscenePlayer:_actor_object(unit_name, object_name)
 	local unit = self._cast:actor_unit(unit_name, self._cutscene)
 
@@ -726,7 +731,7 @@ function CoreCutscenePlayer:_actor_object(unit_name, object_name)
 	return unit and unit:get_object(object_name)
 end
 
--- Lines: 631 to 644
+-- Lines 631-644
 function CoreCutscenePlayer:_clear_workspace()
 	if alive(self._workspace) then
 		Overlay:newgui():destroy_workspace(self._workspace)
@@ -752,7 +757,7 @@ function CoreCutscenePlayer:_clear_workspace()
 	self:_configure_viewport()
 end
 
--- Lines: 646 to 649
+-- Lines 646-650
 function CoreCutscenePlayer:_create_viewport()
 	assert(self._owned_viewport == nil)
 
@@ -761,7 +766,7 @@ function CoreCutscenePlayer:_create_viewport()
 	return self._owned_viewport
 end
 
--- Lines: 652 to 678
+-- Lines 652-678
 function CoreCutscenePlayer:_configure_viewport()
 	self:set_camera_attribute("aspect_ratio", managers.viewport:aspect_ratio())
 
@@ -809,7 +814,7 @@ function CoreCutscenePlayer:_configure_viewport()
 	end
 end
 
--- Lines: 680 to 685
+-- Lines 680-686
 function CoreCutscenePlayer:_create_camera()
 	assert(self._owned_camera == nil)
 
@@ -821,7 +826,7 @@ function CoreCutscenePlayer:_create_camera()
 	return self._owned_camera
 end
 
--- Lines: 688 to 693
+-- Lines 688-693
 function CoreCutscenePlayer:_initialize_camera(camera)
 	camera:set_fov(CoreZoomCameraCutsceneKey.DEFAULT_CAMERA_FOV)
 	camera:set_near_range(7.5)
@@ -829,7 +834,7 @@ function CoreCutscenePlayer:_initialize_camera(camera)
 	camera:set_width_multiplier(1)
 end
 
--- Lines: 695 to 700
+-- Lines 695-701
 function CoreCutscenePlayer:_create_camera_controller()
 	assert(self._owned_camera_controller == nil)
 
@@ -841,7 +846,7 @@ function CoreCutscenePlayer:_create_camera_controller()
 	return self._owned_camera_controller
 end
 
--- Lines: 703 to 706
+-- Lines 703-707
 function CoreCutscenePlayer:_create_cast()
 	assert(self._owned_cast == nil)
 
@@ -850,17 +855,17 @@ function CoreCutscenePlayer:_create_cast()
 	return self._owned_cast
 end
 
--- Lines: 709 to 711
+-- Lines 709-711
 function CoreCutscenePlayer:_evaluate_animations()
 	self._cast:evaluate_cutscene_at_time(self._cutscene, self._time)
 end
 
--- Lines: 713 to 726
+-- Lines 713-726
 function CoreCutscenePlayer:_notify_discontinuity()
 	for unit_name, _ in pairs(self._cutscene:controlled_unit_types()) do
 		local unit = self._cast:actor_unit(unit_name, self._cutscene)
 
-		for index = 0, unit:num_bodies() - 1, 1 do
+		for index = 0, unit:num_bodies() - 1 do
 			local body = unit:body(index)
 
 			if body:dynamic() and body:enabled() then
@@ -874,7 +879,7 @@ function CoreCutscenePlayer:_notify_discontinuity()
 	end
 end
 
--- Lines: 728 to 735
+-- Lines 728-735
 function CoreCutscenePlayer:_resume_discontinuity()
 	if self._disabled_bodies then
 		for _, body in ipairs(self._disabled_bodies) do
@@ -885,14 +890,14 @@ function CoreCutscenePlayer:_resume_discontinuity()
 	end
 end
 
--- Lines: 737 to 741
+-- Lines 737-741
 function CoreCutscenePlayer:_process_discontinuity_cutscene_keys_between(start_time, end_time)
 	for key in self:keys_between(start_time, end_time, CoreDiscontinuityCutsceneKey.ELEMENT_NAME) do
 		self:evaluate_cutscene_key(key, end_time, start_time)
 	end
 end
 
--- Lines: 743 to 755
+-- Lines 743-755
 function CoreCutscenePlayer:_process_camera_cutscene_keys_between(start_time, end_time)
 	for key in self:keys_between(start_time, end_time, CoreChangeCameraCutsceneKey.ELEMENT_NAME) do
 		if start_time < end_time then
@@ -907,7 +912,7 @@ function CoreCutscenePlayer:_process_camera_cutscene_keys_between(start_time, en
 	end
 end
 
--- Lines: 757 to 773
+-- Lines 757-773
 function CoreCutscenePlayer:_process_non_camera_cutscene_keys_between(start_time, end_time)
 	for key in self:keys_between(start_time, end_time) do
 		if key.ELEMENT_NAME ~= CoreChangeCameraCutsceneKey.ELEMENT_NAME and key.ELEMENT_NAME ~= CoreDiscontinuityCutsceneKey.ELEMENT_NAME then
@@ -926,7 +931,7 @@ function CoreCutscenePlayer:_process_non_camera_cutscene_keys_between(start_time
 	end
 end
 
--- Lines: 780 to 793
+-- Lines 775-793
 function CoreCutscenePlayer:_reparent_camera()
 	local camera_object = self._camera_name and assert(self:_camera_object(), string.format("Camera \"%s\" not found in cutscene \"%s\".", self._camera_name, self:cutscene_name()))
 
@@ -941,7 +946,7 @@ function CoreCutscenePlayer:_reparent_camera()
 	end
 end
 
--- Lines: 795 to 802
+-- Lines 795-802
 function CoreCutscenePlayer:_update_future_camera()
 	if self._cutscene:is_optimized() then
 		local position, rotation = self._cast:evaluate_object_at_time(self._cutscene, "camera", "locator", self._time + 0.16666666666666666)
@@ -952,7 +957,7 @@ function CoreCutscenePlayer:_update_future_camera()
 	end
 end
 
--- Lines: 804 to 819
+-- Lines 804-820
 function CoreCutscenePlayer:_camera_has_cut()
 	self._last_frame_camera_position = self._last_frame_camera_position or Vector3(0, 0, 0)
 	self._last_frame_camera_rotation = self._last_frame_camera_rotation or Rotation()
@@ -968,4 +973,3 @@ function CoreCutscenePlayer:_camera_has_cut()
 
 	return position_threshold_reached or rotation_threshold_reached
 end
-

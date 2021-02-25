@@ -1,10 +1,10 @@
 MoneyTweakData = MoneyTweakData or class()
 
--- Lines: 3 to 26
+-- Lines 3-27
 function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	local t = {}
 
-	for i = 1, table_size, 1 do
+	for i = 1, table_size do
 		local v = math.lerp(min, max, math.pow((i - 1) / (table_size - 1), curve and curve or 1))
 
 		if v > 999 then
@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines: 29 to 870
+-- Lines 29-870
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -53,7 +53,7 @@ function MoneyTweakData:init(tweak_data)
 	self.cut_difficulty = 4
 	self.max_mission_bags = 6
 	self.cut_lootbag_bonus = self.cashout_without_player_alive * 0.3
-	self.cut_lootbag_bonus = (self.cut_lootbag_bonus / self.max_mission_bags) / self.cut_difficulty
+	self.cut_lootbag_bonus = self.cut_lootbag_bonus / self.max_mission_bags / self.cut_difficulty
 	self.max_days = 3
 	self.cut_stage_complete = self.cashout_without_player_alive * 0.55
 	self.cut_stage_complete = self.cut_stage_complete / self.cut_difficulty * 0.7
@@ -115,9 +115,9 @@ function MoneyTweakData:init(tweak_data)
 		red_diamond = 10000,
 		old_wine = 2000
 	}
-	self.bag_value_multiplier = self._create_value_table(((self.cut_lootbag_bonus / 5) / self.offshore_rate) / self.bag_values.default, (self.cut_lootbag_bonus / self.offshore_rate) / self.bag_values.default, 7, true, 0.85)
-	self.stage_completion = self._create_value_table((self.cut_stage_complete / 7) / self.offshore_rate, self.cut_stage_complete / self.offshore_rate, 7, true, 1)
-	self.job_completion = self._create_value_table((self.cut_job_complete / 7) / self.offshore_rate, self.cut_job_complete / self.offshore_rate, 7, true, 1)
+	self.bag_value_multiplier = self._create_value_table(self.cut_lootbag_bonus / 5 / self.offshore_rate / self.bag_values.default, self.cut_lootbag_bonus / self.offshore_rate / self.bag_values.default, 7, true, 0.85)
+	self.stage_completion = self._create_value_table(self.cut_stage_complete / 7 / self.offshore_rate, self.cut_stage_complete / self.offshore_rate, 7, true, 1)
+	self.job_completion = self._create_value_table(self.cut_job_complete / 7 / self.offshore_rate, self.cut_job_complete / self.offshore_rate, 7, true, 1)
 	self.flat_stage_completion = math.round(10000 / self.offshore_rate)
 	self.flat_job_completion = 0
 	self.level_limit = {
@@ -707,7 +707,9 @@ function MoneyTweakData:init(tweak_data)
 	end
 
 	self.max_small_loot_value = 2800000
-	self.skilltree = {respec = {}}
+	self.skilltree = {
+		respec = {}
+	}
 	self.skilltree.respec.base_cost = 200
 	self.skilltree.respec.profile_cost_increaser_multiplier = {
 		1,
@@ -756,4 +758,3 @@ function MoneyTweakData:init(tweak_data)
 	self.unlock_new_mask_slot_value = self.biggest_cashout
 	self.unlock_new_weapon_slot_value = self.biggest_cashout
 end
-

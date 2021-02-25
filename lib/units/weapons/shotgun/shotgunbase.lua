@@ -1,6 +1,6 @@
 ShotgunBase = ShotgunBase or class(NewRaycastWeaponBase)
 
--- Lines: 3 to 7
+-- Lines 3-7
 function ShotgunBase:init(...)
 	ShotgunBase.super.init(self, ...)
 	self:setup_default()
@@ -8,7 +8,7 @@ function ShotgunBase:init(...)
 	self._hip_fire_rate_inc = 0
 end
 
--- Lines: 9 to 25
+-- Lines 9-25
 function ShotgunBase:setup_default()
 	self._damage_near = tweak_data.weapon[self._name_id].damage_near
 	self._damage_far = tweak_data.weapon[self._name_id].damage_far
@@ -26,19 +26,23 @@ function ShotgunBase:setup_default()
 	end
 end
 
--- Lines: 29 to 39
+-- Lines 29-39
 function ShotgunBase:_create_use_setups()
 	local use_data = {}
 	local player_setup = {
 		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
-		equip = {align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"},
-		unequip = {align_place = "back"}
+		equip = {
+			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
+		},
+		unequip = {
+			align_place = "back"
+		}
 	}
 	use_data.player = player_setup
 	self._use_data = use_data
 end
 
--- Lines: 41 to 54
+-- Lines 41-55
 function ShotgunBase:fire_rate_multiplier()
 	local fire_rate_mul = self._fire_rate_multiplier
 
@@ -55,14 +59,14 @@ function ShotgunBase:fire_rate_multiplier()
 	return fire_rate_mul
 end
 
--- Lines: 57 to 59
+-- Lines 57-60
 function ShotgunBase:run_and_shoot_allowed()
 	local allowed = ShotgunBase.super.run_and_shoot_allowed(self)
 
 	return allowed or managers.player:has_category_upgrade("shotgun", "hip_run_and_shoot")
 end
 
--- Lines: 65 to 93
+-- Lines 65-93
 function ShotgunBase:_update_stats_values()
 	ShotgunBase.super._update_stats_values(self)
 	self:setup_default()
@@ -92,7 +96,7 @@ function ShotgunBase:_update_stats_values()
 	end
 end
 
--- Lines: 97 to 107
+-- Lines 97-108
 function ShotgunBase:get_damage_falloff(damage, col_ray, user_unit)
 	local distance = col_ray.distance or mvector3.distance(col_ray.unit:position(), user_unit:position())
 	local inc_range_mul = 1
@@ -104,12 +108,13 @@ function ShotgunBase:get_damage_falloff(damage, col_ray, user_unit)
 
 	return (1 - math.min(1, math.max(0, distance - self._damage_near * inc_range_mul) / (self._damage_far * inc_range_mul))) * damage
 end
+
 local mvec_temp = Vector3()
 local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines: 114 to 374
+-- Lines 114-375
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local result = nil
 	local hit_enemies = {}
@@ -125,7 +130,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local weight = 0.1
 	local enemy_died = false
 
-	-- Lines: 129 to 167
+	-- Lines 129-167
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then
 			local enemy_key = col_ray.unit:key()
@@ -156,7 +161,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 
 	mvector3.set(mvec_direction, direction)
 
-	for i = 1, shoot_through_data and 1 or self._rays, 1 do
+	for i = 1, shoot_through_data and 1 or self._rays do
 		local theta = math.random() * 360
 		local ax = math.sin(theta) * math.random() * spread_x * (spread_mul or 1)
 		local ay = math.cos(theta) * math.random() * spread_y * (spread_mul or 1)
@@ -260,7 +265,13 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 		if damage > 0 then
 			local my_result = nil
 			local add_shoot_through_bullet = self._can_shoot_through_shield or self._can_shoot_through_enemy or self._can_shoot_through_wall
-			my_result = add_shoot_through_bullet and ShotgunBase.super._fire_raycast(self, user_unit, from_pos, col_ray.ray, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, shoot_through_data) or self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
+
+			if add_shoot_through_bullet then
+				my_result = ShotgunBase.super._fire_raycast(self, user_unit, from_pos, col_ray.ray, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, shoot_through_data)
+			else
+				my_result = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
+			end
+
 			my_result = managers.mutators:modify_value("ShotgunBase:_fire_raycast", my_result)
 
 			if my_result and my_result.type == "death" then
@@ -286,7 +297,9 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	end
 
 	if not result then
-		local result = {hit_enemy = next(hit_enemies) and true or false}
+		result = {
+			hit_enemy = next(hit_enemies) and true or false
+		}
 
 		if self._alert_events then
 			result.rays = #col_rays > 0 and col_rays
@@ -354,17 +367,19 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 
 	return result
 end
+
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines: 382 to 385
+-- Lines 382-385
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
 	self._use_shotgun_reload = false
 end
+
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines: 395 to 409
+-- Lines 395-410
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {
@@ -381,4 +396,3 @@ function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user
 
 	return defense_data
 end
-

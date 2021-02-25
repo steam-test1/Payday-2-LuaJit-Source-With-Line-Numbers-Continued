@@ -2,22 +2,22 @@ core:import("CoreMissionScriptElement")
 
 ElementAwardAchievment = ElementAwardAchievment or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementAwardAchievment:init(...)
 	ElementAwardAchievment.super.init(self, ...)
 end
 
--- Lines: 10 to 12
+-- Lines 10-12
 function ElementAwardAchievment:client_on_executed_end_screen(...)
 	self:on_executed(...)
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function ElementAwardAchievment:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 18 to 50
+-- Lines 18-50
 function ElementAwardAchievment:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -29,11 +29,15 @@ function ElementAwardAchievment:on_executed(instigator)
 		local local_player = managers.player:local_player()
 		award_achievement = alive(local_player) and local_player == instigator
 
-		if not award_achievement and instigator:vehicle_driving() then
-			local seat = instigator:vehicle_driving():find_seat_for_player(local_player)
+		if not award_achievement then
+			if instigator:vehicle_driving() then
+				local seat = instigator:vehicle_driving():find_seat_for_player(local_player)
 
-			if seat and seat.driving then
-				award_achievement = true
+				if seat and seat.driving then
+					award_achievement = true
+				end
+			elseif false then
+				-- Nothing
 			end
 		end
 	end
@@ -49,4 +53,3 @@ function ElementAwardAchievment:on_executed(instigator)
 
 	ElementAwardAchievment.super.on_executed(self, instigator)
 end
-

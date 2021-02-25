@@ -9,17 +9,17 @@ CoreVideoCutsceneKey:register_serialized_attribute("gui_layer", 2, tonumber)
 CoreVideoCutsceneKey:register_serialized_attribute("loop", 0, tonumber)
 CoreVideoCutsceneKey:register_serialized_attribute("speed", 1, tonumber)
 
--- Lines: 11 to 12
+-- Lines 11-13
 function CoreVideoCutsceneKey:__tostring()
 	return string.format("Play video \"%s\".", self:video())
 end
 
--- Lines: 15 to 16
+-- Lines 15-17
 function CoreVideoCutsceneKey:can_evaluate_with_player(player)
 	return true
 end
 
--- Lines: 19 to 43
+-- Lines 19-43
 function CoreVideoCutsceneKey:play(player, undo, fast_forward)
 	local video_ws = managers.cutscene:video_workspace()
 	local was_paused = self._paused
@@ -46,19 +46,19 @@ function CoreVideoCutsceneKey:play(player, undo, fast_forward)
 	end
 end
 
--- Lines: 45 to 47
+-- Lines 45-47
 function CoreVideoCutsceneKey:unload(player)
 	self:_stop()
 end
 
--- Lines: 49 to 53
+-- Lines 49-53
 function CoreVideoCutsceneKey:update(player, time)
 	if self.is_in_cutscene_editor then
 		self:_handle_cutscene_editor_scrubbing(time)
 	end
 end
 
--- Lines: 55 to 61
+-- Lines 55-61
 function CoreVideoCutsceneKey:is_valid_video(value)
 	if self.is_in_cutscene_editor then
 		return value ~= nil and value ~= "" and SystemFS:exists(value) and not SystemFS:is_dir(value)
@@ -67,12 +67,12 @@ function CoreVideoCutsceneKey:is_valid_video(value)
 	end
 end
 
--- Lines: 63 to 65
+-- Lines 63-65
 function CoreVideoCutsceneKey:on_attribute_changed(attribute_name, value, previous_value)
 	self:_stop()
 end
 
--- Lines: 67 to 85
+-- Lines 67-85
 function CoreVideoCutsceneKey:_handle_cutscene_editor_scrubbing(time)
 	if self._last_evaluated_time then
 		if time == self._last_evaluated_time then
@@ -97,7 +97,7 @@ function CoreVideoCutsceneKey:_handle_cutscene_editor_scrubbing(time)
 	self._last_evaluated_time = time
 end
 
--- Lines: 87 to 105
+-- Lines 87-105
 function CoreVideoCutsceneKey:_play_video(video_ws)
 	if not alive(self._video_object) or self:video() ~= self._video_played or self:loop() ~= self._loop_played or self:speed() ~= self._speed_played then
 		video_ws:panel():clear()
@@ -127,7 +127,7 @@ function CoreVideoCutsceneKey:_play_video(video_ws)
 	self._video_object:play()
 end
 
--- Lines: 107 to 115
+-- Lines 107-115
 function CoreVideoCutsceneKey:_stop()
 	if alive(self._video_object) then
 		local video_ws = managers.cutscene:video_workspace()
@@ -141,7 +141,7 @@ function CoreVideoCutsceneKey:_stop()
 	self._last_evaluated_time = nil
 end
 
--- Lines: 118 to 123
+-- Lines 118-123
 function CoreVideoCutsceneKey:pause()
 	if not self._paused and alive(self._video_object) then
 		self._video_object:pause()
@@ -150,7 +150,7 @@ function CoreVideoCutsceneKey:pause()
 	end
 end
 
--- Lines: 125 to 130
+-- Lines 125-130
 function CoreVideoCutsceneKey:resume()
 	if self._paused and alive(self._video_object) then
 		self._video_object:play()
@@ -158,4 +158,3 @@ function CoreVideoCutsceneKey:resume()
 		self._paused = false
 	end
 end
-

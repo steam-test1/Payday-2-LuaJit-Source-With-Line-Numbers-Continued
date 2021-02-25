@@ -5,7 +5,7 @@ core:import("CoreEws")
 
 StaticsLayer = StaticsLayer or class(CoreStaticLayer.StaticLayer)
 
--- Lines: 11 to 15
+-- Lines 11-15
 function StaticsLayer:init(owner)
 	local types = CoreEditorUtils.layer_type("statics")
 
@@ -14,21 +14,21 @@ function StaticsLayer:init(owner)
 	self._uses_continents = true
 end
 
--- Lines: 17 to 19
+-- Lines 17-20
 function StaticsLayer:build_panel(notebook)
 	StaticsLayer.super.build_panel(self, notebook)
 
 	return self._ews_panel, true
 end
 
--- Lines: 22 to 27
+-- Lines 22-27
 function StaticsLayer:add_btns_to_toolbar(...)
 	StaticsLayer.super.add_btns_to_toolbar(self, ...)
 	self._btn_toolbar:add_tool("MOVE_TO_CONTINENT", "Move to continent", CoreEws.image_path("toolbar\\copy_folder_16x16.png"), "Move to continent")
 	self._btn_toolbar:connect("MOVE_TO_CONTINENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_move_to_continent"), nil)
 end
 
--- Lines: 29 to 50
+-- Lines 29-50
 function StaticsLayer:_on_gui_move_to_continent()
 	if #self._selected_units == 0 then
 		return
@@ -56,7 +56,7 @@ function StaticsLayer:_on_gui_move_to_continent()
 	self:move_to_continent(continent)
 end
 
--- Lines: 52 to 56
+-- Lines 52-57
 function StaticsLayer:set_enabled(enabled)
 	if not enabled then
 		managers.editor:output_warning("Don't want to disable Statics layer since it would cause all dynamics to fall.")
@@ -64,4 +64,3 @@ function StaticsLayer:set_enabled(enabled)
 
 	return false
 end
-

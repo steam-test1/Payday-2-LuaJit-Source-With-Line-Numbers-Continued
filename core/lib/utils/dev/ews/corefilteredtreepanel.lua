@@ -2,24 +2,24 @@ require("core/lib/utils/dev/ews/tree_control/CoreFilteredTreeControl")
 
 CoreFilteredTreePanel = CoreFilteredTreePanel or class()
 
--- Lines: 4 to 7
+-- Lines 4-7
 function CoreFilteredTreePanel:init(parent_frame)
 	self:_create_panel(parent_frame)
 
 	self._tree_refresh_timeout = 0
 end
 
--- Lines: 9 to 10
+-- Lines 9-11
 function CoreFilteredTreePanel:add_to_sizer(sizer, proportion, border, flags)
 	return sizer:add(self._panel, proportion, border, flags)
 end
 
--- Lines: 13 to 14
+-- Lines 13-15
 function CoreFilteredTreePanel:connect(event_type, script_callback, script_data)
 	return self:_tree_control():connect(event_type, script_callback, script_data)
 end
 
--- Lines: 18 to 26
+-- Lines 17-26
 function CoreFilteredTreePanel:update(time, delta_time)
 	if self._tree_refresh_timeout > 0 then
 		self._tree_refresh_timeout = self._tree_refresh_timeout - delta_time
@@ -32,12 +32,12 @@ function CoreFilteredTreePanel:update(time, delta_time)
 	end
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function CoreFilteredTreePanel:_tree_control()
 	return self._filtered_tree_control
 end
 
--- Lines: 32 to 46
+-- Lines 32-46
 function CoreFilteredTreePanel:_create_panel(parent_frame)
 	self._panel = EWS:Panel(parent_frame, "", "")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -58,7 +58,7 @@ function CoreFilteredTreePanel:_create_panel(parent_frame)
 	filter_text_ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_on_filter_enter_pressed"))
 end
 
--- Lines: 48 to 59
+-- Lines 48-60
 function CoreFilteredTreePanel:_create_filter_bar_panel(parent_frame)
 	local panel = EWS:Panel(parent_frame, "", "")
 	local panel_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -76,12 +76,12 @@ function CoreFilteredTreePanel:_create_filter_bar_panel(parent_frame)
 	return panel, filter_text_ctrl
 end
 
--- Lines: 62 to 64
+-- Lines 62-64
 function CoreFilteredTreePanel:_on_filter_text_updated()
 	self._tree_refresh_timeout = 0.25
 end
 
--- Lines: 67 to 74
+-- Lines 66-74
 function CoreFilteredTreePanel:_on_filter_enter_pressed()
 	if self._tree_refresh_timeout > 0 then
 		self._tree_refresh_timeout = 0
@@ -91,4 +91,3 @@ function CoreFilteredTreePanel:_on_filter_enter_pressed()
 
 	self:_tree_control():expand(true)
 end
-

@@ -15,7 +15,7 @@ local _butler_idle_anims = {
 	Idstring("so_butler_watch_look_calm")
 }
 
--- Lines: 26 to 49
+-- Lines 25-49
 function ButlerSound:init(unit)
 	ButlerSound.super.init(self, unit)
 	self._unit:set_extension_update_enabled(Idstring("sound"), false)
@@ -25,7 +25,7 @@ function ButlerSound:init(unit)
 	self._raid_idle_count = 0
 end
 
--- Lines: 51 to 66
+-- Lines 51-66
 function ButlerSound:_mirroring_clbk()
 	if not alive(self._unit) then
 		return
@@ -44,7 +44,7 @@ function ButlerSound:_mirroring_clbk()
 	end
 end
 
--- Lines: 68 to 74
+-- Lines 68-74
 function ButlerSound:_mirroring_sound_callback()
 	local count = #_butler_idle_anims
 	local rnd_idx = math.random(1, count)
@@ -54,7 +54,7 @@ function ButlerSound:_mirroring_sound_callback()
 	self:_randomize_speech_time()
 end
 
--- Lines: 76 to 89
+-- Lines 76-89
 function ButlerSound:_sound_start_mirroring()
 	local snd_event, debug = managers.butler_mirroring:get_sound_event()
 
@@ -66,7 +66,7 @@ function ButlerSound:_sound_start_mirroring()
 	end
 end
 
--- Lines: 92 to 122
+-- Lines 92-122
 function ButlerSound:_sound_start_muttering()
 	local override_sound = nil
 
@@ -77,4 +77,3 @@ function ButlerSound:_sound_start_muttering()
 
 	ButlerSound.super._sound_start_muttering(self, override_sound)
 end
-

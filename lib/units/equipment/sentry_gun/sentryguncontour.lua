@@ -1,13 +1,15 @@
 SentryGunContour = SentryGunContour or class()
 
--- Lines: 6 to 9
+-- Lines 6-9
 function SentryGunContour:init(unit)
 	self._unit = unit
 
-	unit:event_listener():add("SentryGunContour_on_setup_event", {"on_setup"}, callback(self, self, "_on_setup_event"))
+	unit:event_listener():add("SentryGunContour_on_setup_event", {
+		"on_setup"
+	}, callback(self, self, "_on_setup_event"))
 end
 
--- Lines: 11 to 21
+-- Lines 11-21
 function SentryGunContour:_on_setup_event(is_owner)
 	local event_listener = self._unit:event_listener()
 
@@ -15,15 +17,21 @@ function SentryGunContour:_on_setup_event(is_owner)
 		self._current_contour_id = self:standard_contour_id()
 
 		self:_set_contour(self._current_contour_id)
-		event_listener:add("SentryGunContour_on_switch_fire_mode_event", {"on_switch_fire_mode"}, callback(self, self, "_on_switch_fire_mode_event"))
-		event_listener:add("SentryGunContour_on_out_of_ammo_event", {"on_out_of_ammo"}, callback(self, self, "_on_out_of_ammo_event"))
-		event_listener:add("SentryGunContour_on_death_event", {"on_death"}, callback(self, self, "_on_death_event"))
+		event_listener:add("SentryGunContour_on_switch_fire_mode_event", {
+			"on_switch_fire_mode"
+		}, callback(self, self, "_on_switch_fire_mode_event"))
+		event_listener:add("SentryGunContour_on_out_of_ammo_event", {
+			"on_out_of_ammo"
+		}, callback(self, self, "_on_out_of_ammo_event"))
+		event_listener:add("SentryGunContour_on_death_event", {
+			"on_death"
+		}, callback(self, self, "_on_death_event"))
 	end
 
 	event_listener:remove("SentryGunContour_on_setup_event")
 end
 
--- Lines: 23 to 29
+-- Lines 23-29
 function SentryGunContour:_on_switch_fire_mode_event(ap_bullets)
 	if ap_bullets then
 		self:_set_contour(self:ap_contour_id())
@@ -32,32 +40,32 @@ function SentryGunContour:_on_switch_fire_mode_event(ap_bullets)
 	end
 end
 
--- Lines: 31 to 33
+-- Lines 31-33
 function SentryGunContour:_on_out_of_ammo_event()
 	self:_set_contour(self:out_of_ammo_contour_id())
 end
 
--- Lines: 35 to 37
+-- Lines 35-37
 function SentryGunContour:_on_death_event()
 	self:_remove_contour()
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function SentryGunContour:standard_contour_id()
 	return self._standard_contour_id or "deployable_active"
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function SentryGunContour:ap_contour_id()
 	return self._ap_contour_id or "deployable_interactable"
 end
 
--- Lines: 47 to 48
+-- Lines 47-49
 function SentryGunContour:out_of_ammo_contour_id()
 	return self._no_ammo_contour_id or "deployable_disabled"
 end
 
--- Lines: 51 to 61
+-- Lines 51-61
 function SentryGunContour:_set_contour(contour_id)
 	local contour = self._unit:contour()
 
@@ -72,7 +80,7 @@ function SentryGunContour:_set_contour(contour_id)
 	end
 end
 
--- Lines: 63 to 69
+-- Lines 63-69
 function SentryGunContour:_remove_contour()
 	local contour = self._unit:contour()
 
@@ -82,4 +90,3 @@ function SentryGunContour:_remove_contour()
 		self._current_contour_id = nil
 	end
 end
-

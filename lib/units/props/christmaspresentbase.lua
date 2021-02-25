@@ -1,6 +1,6 @@
 ChristmasPresentBase = ChristmasPresentBase or class(UnitBase)
 
--- Lines: 5 to 16
+-- Lines 5-16
 function ChristmasPresentBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -9,7 +9,7 @@ function ChristmasPresentBase:init(unit)
 	self._unit:set_slot(0)
 end
 
--- Lines: 20 to 31
+-- Lines 20-31
 function ChristmasPresentBase:take_money(unit)
 	local params = {
 		effect = Idstring("effects/particles/environment/player_snowflakes"),
@@ -23,11 +23,10 @@ function ChristmasPresentBase:take_money(unit)
 	self._unit:set_slot(0)
 end
 
--- Lines: 36 to 37
+-- Lines 35-37
 function ChristmasPresentBase:update(unit, t, dt)
 end
 
--- Lines: 42 to 43
+-- Lines 41-43
 function ChristmasPresentBase:destroy()
 end
-

@@ -1,6 +1,6 @@
 core:import("CoreEngineAccess")
 
--- Lines: 3 to 12
+-- Lines 3-13
 function CoreEditor:build_lower_panel(parent)
 	self._lower_panel = EWS:Panel(Global.frame_panel, "", "TAB_TRAVERSAL")
 	local lower_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -13,7 +13,7 @@ function CoreEditor:build_lower_panel(parent)
 	return self._lower_panel
 end
 
--- Lines: 16 to 48
+-- Lines 16-48
 function CoreEditor:add_edit_buttons(edit_btn_sizer)
 	cat_print("editor", " CoreEditor:add_edit_buttons( edit_btn_sizer )")
 
@@ -24,7 +24,7 @@ function CoreEditor:add_edit_buttons(edit_btn_sizer)
 	end
 end
 
--- Lines: 50 to 91
+-- Lines 50-92
 function CoreEditor:build_info_frame(parent)
 	self._info_frame = EWS:Panel(parent, "Info Frame", "TAB_TRAVERSAL")
 	self._info_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -69,24 +69,38 @@ function CoreEditor:build_info_frame(parent)
 	return self._info_frame
 end
 
--- Lines: 94 to 129
+-- Lines 94-129
 function CoreEditor:add_open_unit_file_buttons()
 	self._open_unit_file_buttons = {}
 
 	self._unit_info_toolbar:add_tool("LTB_OPEN_UNIT_XML", "Open unit file", CoreEWS.image_path("world_editor\\unit_file_unit_16x16.png"), "Open unit file")
-	self._unit_info_toolbar:connect("LTB_OPEN_UNIT_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "unit"})
+	self._unit_info_toolbar:connect("LTB_OPEN_UNIT_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "unit"
+	})
 	self._unit_info_toolbar:add_tool("LTB_OPEN_OBJECT_XML", "Open object file", CoreEWS.image_path("world_editor\\unit_file_object_16x16.png"), "Open unit file")
-	self._unit_info_toolbar:connect("LTB_OPEN_OBJECT_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "object"})
+	self._unit_info_toolbar:connect("LTB_OPEN_OBJECT_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "object"
+	})
 	self._unit_info_toolbar:add_tool("LTB_OPEN_MATERIAL_XML", "Open material file", CoreEWS.image_path("world_editor\\unit_file_material_16x16.png"), "Open material file")
-	self._unit_info_toolbar:connect("LTB_OPEN_MATERIAL_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "material_config"})
+	self._unit_info_toolbar:connect("LTB_OPEN_MATERIAL_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "material_config"
+	})
 	self._unit_info_toolbar:add_tool("LTB_OPEN_SEQUECNCE_XML", "Open sequence file", CoreEWS.image_path("world_editor\\unit_file_sequence_16x16.png"), "Open sequence file")
-	self._unit_info_toolbar:connect("LTB_OPEN_SEQUECNCE_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "sequence_manager"})
+	self._unit_info_toolbar:connect("LTB_OPEN_SEQUECNCE_XML", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "sequence_manager"
+	})
 	self._unit_info_toolbar:add_tool("LTB_OPEN_LAST_EXPORTED", "Open source file", CoreEWS.image_path("world_editor\\unit_file_max_16x16.png"), "Open source 3Dsmax file")
-	self._unit_info_toolbar:connect("LTB_OPEN_LAST_EXPORTED", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "max"})
+	self._unit_info_toolbar:connect("LTB_OPEN_LAST_EXPORTED", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "max"
+	})
 	self._unit_info_toolbar:add_tool("LTB_OPEN_FOLDER_EXPORTED", "Open content folder", CoreEWS.image_path("folder_open_16x16.png"), "Open content folder")
-	self._unit_info_toolbar:connect("LTB_OPEN_FOLDER_EXPORTED", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "folder"})
+	self._unit_info_toolbar:connect("LTB_OPEN_FOLDER_EXPORTED", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "folder"
+	})
 	self._unit_info_toolbar:add_tool("LTB_OPEN_FOLDER_SOURCE", "Open source folder", CoreEWS.image_path("folder_open_source_16x16.png"), "Open source folder")
-	self._unit_info_toolbar:connect("LTB_OPEN_FOLDER_SOURCE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {type = "folder_source"})
+	self._unit_info_toolbar:connect("LTB_OPEN_FOLDER_SOURCE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_open_unit_file"), {
+		type = "folder_source"
+	})
 	table.insert(self._open_unit_file_buttons, "LTB_OPEN_UNIT_XML")
 	table.insert(self._open_unit_file_buttons, "LTB_OPEN_OBJECT_XML")
 	table.insert(self._open_unit_file_buttons, "LTB_OPEN_MATERIAL_XML")
@@ -100,11 +114,11 @@ function CoreEditor:add_open_unit_file_buttons()
 	end
 end
 
--- Lines: 131 to 132
+-- Lines 131-132
 function CoreEditor:_change_unit_info(notebook)
 end
 
--- Lines: 134 to 176
+-- Lines 134-176
 function CoreEditor:on_open_unit_file(data)
 	if alive(self:selected_unit()) then
 		local unit = self:selected_unit()
@@ -156,12 +170,17 @@ function CoreEditor:on_open_unit_file(data)
 	end
 end
 
--- Lines: 178 to 196
+-- Lines 178-197
 function CoreEditor:sequence_file(unit)
 	if alive(unit) then
 		local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
 		local node = nil
-		node = DB:has("object", object_file) and DB:load_node("object", object_file) or SystemFS:parse_xml("data/objects" .. object_file:s())
+
+		if DB:has("object", object_file) then
+			node = DB:load_node("object", object_file)
+		else
+			node = SystemFS:parse_xml("data/objects" .. object_file:s())
+		end
 
 		for child in node:children() do
 			if child:name() == "sequence_manager" then
@@ -175,7 +194,7 @@ function CoreEditor:sequence_file(unit)
 	return false
 end
 
--- Lines: 199 to 222
+-- Lines 199-223
 function CoreEditor:build_edit_frame(parent)
 	self._edit_panel = EWS:Panel(parent, "Edit Panel", "TAB_TRAVERSAL")
 	local main_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -186,7 +205,7 @@ function CoreEditor:build_edit_frame(parent)
 	return self._edit_panel, main_sizer
 end
 
--- Lines: 229 to 235
+-- Lines 229-235
 function CoreEditor:show_edit(data)
 	self[data.panel]:set_visible(self._left_toolbar:tool_state(data.btn))
 	self._info_frame:set_visible(not self:check_edit_buttons())
@@ -195,7 +214,7 @@ function CoreEditor:show_edit(data)
 	self._lower_panel:layout()
 end
 
--- Lines: 237 to 242
+-- Lines 237-243
 function CoreEditor:check_edit_buttons()
 	local value = false
 
@@ -206,13 +225,13 @@ function CoreEditor:check_edit_buttons()
 	return value
 end
 
--- Lines: 246 to 249
+-- Lines 246-249
 function CoreEditor:layout_edit_panel()
 	self._edit_panel:layout()
 	self._lower_panel:layout()
 end
 
--- Lines: 252 to 308
+-- Lines 252-308
 function CoreEditor:unit_output(unit)
 	if alive(unit) then
 		local n = "\n"
@@ -239,13 +258,13 @@ function CoreEditor:unit_output(unit)
 		models_text = models_text .. "Models:" .. t .. unit:nr_models() .. n
 		models_text = models_text .. "Name" .. t .. t .. t .. t .. t .. "Instanced" .. t .. "Vertecies" .. t .. "Triangles" .. t .. "Atoms" .. n
 
-		for i = 0, unit:nr_models() - 1, 1 do
+		for i = 0, unit:nr_models() - 1 do
 			if unit:is_visible(i) then
 				local len = string.len(unit:model_name(i):s())
 				local tabs = 5 - math.floor(len / 7)
 				local tab = ""
 
-				for j = 1, tabs, 1 do
+				for j = 1, tabs do
 					tab = tab .. t
 				end
 
@@ -275,7 +294,7 @@ function CoreEditor:unit_output(unit)
 	end
 end
 
--- Lines: 311 to 318
+-- Lines 311-319
 function CoreEditor:_unit_materials(unit)
 	local names = {}
 
@@ -287,4 +306,3 @@ function CoreEditor:_unit_materials(unit)
 
 	return names
 end
-

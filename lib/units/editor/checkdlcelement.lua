@@ -1,6 +1,6 @@
 CheckDLCUnitElement = CheckDLCUnitElement or class(MissionElement)
 
--- Lines: 5 to 16
+-- Lines 4-16
 function CheckDLCUnitElement:init(unit)
 	CheckDLCUnitElement.super.init(self, unit)
 
@@ -13,17 +13,17 @@ function CheckDLCUnitElement:init(unit)
 	table.insert(self._save_values, "invert")
 end
 
--- Lines: 18 to 20
+-- Lines 18-20
 function CheckDLCUnitElement:toggle_require_all()
 	self._hed.require_all = self._toggle_require_all:get_value()
 end
 
--- Lines: 22 to 24
+-- Lines 22-24
 function CheckDLCUnitElement:toggle_invert()
 	self._hed.invert = self._toggle_invert:get_value()
 end
 
--- Lines: 27 to 38
+-- Lines 26-38
 function CheckDLCUnitElement:toggle_dlc(dlc_id)
 	if not self._dlc_toggles[dlc_id] then
 		return
@@ -36,7 +36,7 @@ function CheckDLCUnitElement:toggle_dlc(dlc_id)
 	end
 end
 
--- Lines: 40 to 86
+-- Lines 40-86
 function CheckDLCUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -90,4 +90,3 @@ function CheckDLCUnitElement:_build_panel(panel, panel_sizer)
 		end
 	end
 end
-

@@ -1,6 +1,6 @@
 NetworkFriendsPSN = NetworkFriendsPSN or class()
 
--- Lines: 55 to 73
+-- Lines 55-73
 function NetworkFriendsPSN:init()
 	cat_print("lobby", "friends = NetworkFriendsPSN")
 
@@ -19,14 +19,14 @@ function NetworkFriendsPSN:init()
 	PSN:update_async_friends(true, 20)
 end
 
--- Lines: 75 to 78
+-- Lines 75-78
 function NetworkFriendsPSN:destroy()
 	PSN:set_matchmaking_callback("friends_updated", function ()
 	end)
 	PSN:update_async_friends(false, 20)
 end
 
--- Lines: 80 to 86
+-- Lines 80-86
 function NetworkFriendsPSN:set_visible(set)
 	if set == true then
 		PSN:update_async_friends(true, 5)
@@ -35,7 +35,7 @@ function NetworkFriendsPSN:set_visible(set)
 	end
 end
 
--- Lines: 88 to 94
+-- Lines 88-94
 function NetworkFriendsPSN:call_callback(func, ...)
 	if self._callback[func] then
 		self._callback[func](...)
@@ -44,14 +44,14 @@ function NetworkFriendsPSN:call_callback(func, ...)
 	end
 end
 
--- Lines: 95 to 99
+-- Lines 95-99
 function NetworkFriendsPSN:call_silent_callback(func, ...)
 	if self._callback[func] then
 		self._callback[func](...)
 	end
 end
 
--- Lines: 102 to 113
+-- Lines 101-114
 function NetworkFriendsPSN:get_friends_list()
 	return self._friends
 
@@ -65,7 +65,7 @@ function NetworkFriendsPSN:get_friends_list()
 	return npids
 end
 
--- Lines: 116 to 132
+-- Lines 116-133
 function NetworkFriendsPSN:get_names_friends_list()
 	if not self._updated_list_friends then
 		self._updated_list_friends = PSN:update_list_friends()
@@ -87,7 +87,7 @@ function NetworkFriendsPSN:get_names_friends_list()
 	return names
 end
 
--- Lines: 135 to 147
+-- Lines 135-148
 function NetworkFriendsPSN:get_npid_friends_list()
 	local npids = {}
 	local friends = PSN:get_list_friends()
@@ -105,7 +105,7 @@ function NetworkFriendsPSN:get_npid_friends_list()
 	return npids
 end
 
--- Lines: 150 to 213
+-- Lines 150-213
 function NetworkFriendsPSN:get_friends()
 	cat_print("lobby", "NetworkFriendsPSN:get_friends()")
 
@@ -155,47 +155,47 @@ function NetworkFriendsPSN:get_friends()
 	end
 end
 
--- Lines: 215 to 217
+-- Lines 215-217
 function NetworkFriendsPSN:register_callback(event, callback)
 	self._callback[event] = callback
 end
 
--- Lines: 219 to 220
+-- Lines 219-220
 function NetworkFriendsPSN:send_friend_request(nickname)
 end
 
--- Lines: 222 to 223
+-- Lines 222-223
 function NetworkFriendsPSN:remove_friend(id)
 end
 
--- Lines: 225 to 226
+-- Lines 225-227
 function NetworkFriendsPSN:has_builtin_screen()
 	return false
 end
 
--- Lines: 229 to 230
+-- Lines 229-230
 function NetworkFriendsPSN:accept_friend_request(player_id)
 end
 
--- Lines: 232 to 233
+-- Lines 232-233
 function NetworkFriendsPSN:ignore_friend_request(player_id)
 end
 
--- Lines: 235 to 236
+-- Lines 235-237
 function NetworkFriendsPSN:num_pending_friend_requests()
 	return 0
 end
 
--- Lines: 239 to 240
+-- Lines 239-240
 function NetworkFriendsPSN:debug_update(t, dt)
 end
 
--- Lines: 244 to 246
+-- Lines 244-246
 function NetworkFriendsPSN:psn_disconnected()
 	self._updated_list_friends = false
 end
 
--- Lines: 249 to 284
+-- Lines 248-284
 function NetworkFriendsPSN:psn_update_friends()
 	local friends = PSN:get_list_friends() or {}
 
@@ -237,7 +237,7 @@ function NetworkFriendsPSN:psn_update_friends()
 	end
 end
 
--- Lines: 287 to 298
+-- Lines 286-299
 function NetworkFriendsPSN:is_friend(id)
 	local friends = PSN:get_list_friends()
 
@@ -254,7 +254,7 @@ function NetworkFriendsPSN:is_friend(id)
 	return false
 end
 
--- Lines: 301 to 307
+-- Lines 301-307
 function NetworkFriendsPSN:_fill_li_friends_map(friends)
 	self._last_info.friends_map = {}
 
@@ -263,7 +263,7 @@ function NetworkFriendsPSN:_fill_li_friends_map(friends)
 	end
 end
 
--- Lines: 309 to 321
+-- Lines 309-321
 function NetworkFriendsPSN:_fill_li_friends_status_map(friends)
 	self._last_info.friends_status_map = {}
 
@@ -278,7 +278,7 @@ function NetworkFriendsPSN:_fill_li_friends_status_map(friends)
 	end
 end
 
--- Lines: 323 to 378
+-- Lines 323-379
 function NetworkFriendsPSN:_count_online(friends)
 	local name = managers.network.account:player_id()
 	local status_changed = false
@@ -302,4 +302,3 @@ function NetworkFriendsPSN:_count_online(friends)
 
 	return true
 end
-

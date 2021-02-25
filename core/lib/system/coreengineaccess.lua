@@ -1,6 +1,6 @@
 core:module("CoreEngineAccess")
 
--- Lines: 15 to 22
+-- Lines 15-22
 local function get_class_table(engine_class_name)
 	local class_table = rawget(_G, engine_class_name)
 
@@ -11,7 +11,7 @@ local function get_class_table(engine_class_name)
 	end
 end
 
--- Lines: 24 to 44
+-- Lines 24-45
 local function get_method_table(engine_class_name)
 	local class_table, problem = get_class_table(engine_class_name)
 
@@ -38,11 +38,11 @@ local function get_method_table(engine_class_name)
 	return method_table, nil
 end
 
--- Lines: 47 to 73
+-- Lines 47-74
 local function hide_static_engine_method(engine_class_name, method_name, message)
 	assert(engine_class_name and method_name, "Invalid argument list.")
 
-	-- Lines: 52 to 53
+	-- Lines 50-54
 	local function failure_func(failure_message)
 		return function (...)
 			error(string.format("Failed to call hidden method %s:%s(...). %s", engine_class_name, method_name, failure_message))
@@ -61,10 +61,10 @@ local function hide_static_engine_method(engine_class_name, method_name, message
 		return failure_func("Method not found.")
 	end
 
-	-- Lines: 66 to 68
 	method_table[method_name] = function ()
 		error(string.format("%s:%s(...) has been hidden by core. %s", engine_class_name, method_name, message or "You should not call it directly."))
 	end
+
 	local class_table = assert(get_class_table(engine_class_name))
 
 	return function (...)
@@ -82,4 +82,3 @@ if not __required then
 	_editor_reload_node = hide_static_engine_method("PackageManager", "editor_reload_node")
 	_editor_unit_data = hide_static_engine_method("PackageManager", "editor_unit_data")
 end
-

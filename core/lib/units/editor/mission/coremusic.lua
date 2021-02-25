@@ -1,19 +1,19 @@
 CoreMusicUnitElement = CoreMusicUnitElement or class(MissionElement)
 MusicUnitElement = MusicUnitElement or class(CoreMusicUnitElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function MusicUnitElement:init(...)
 	CoreMusicUnitElement.init(self, ...)
 end
 
--- Lines: 9 to 14
+-- Lines 9-14
 function CoreMusicUnitElement:init(unit)
 	MissionElement.init(self, unit)
 	table.insert(self._save_values, "music_event")
 	table.insert(self._save_values, "use_instigator")
 end
 
--- Lines: 16 to 21
+-- Lines 16-21
 function CoreMusicUnitElement:test_element()
 	if self._hed.music_event then
 		managers.editor:set_wanted_mute(false)
@@ -21,13 +21,13 @@ function CoreMusicUnitElement:test_element()
 	end
 end
 
--- Lines: 23 to 26
+-- Lines 23-26
 function CoreMusicUnitElement:stop_test_element()
 	managers.editor:set_wanted_mute(true)
 	managers.music:stop()
 end
 
--- Lines: 28 to 33
+-- Lines 28-33
 function CoreMusicUnitElement:_set_category(params)
 	local value = params.value
 
@@ -37,7 +37,7 @@ function CoreMusicUnitElement:_set_category(params)
 	self._hed.music_event = self._music_params.value
 end
 
--- Lines: 35 to 70
+-- Lines 35-70
 function CoreMusicUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -74,4 +74,3 @@ function CoreMusicUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator")
 end
-

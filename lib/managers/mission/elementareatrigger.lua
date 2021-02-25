@@ -3,12 +3,12 @@ core:import("CoreClass")
 
 ElementAreaTrigger = ElementAreaTrigger or class(CoreElementArea.ElementAreaTrigger)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 end
 
--- Lines: 10 to 254
+-- Lines 10-255
 function ElementAreaTrigger:project_instigators()
 	local instigators = {}
 
@@ -135,117 +135,124 @@ function ElementAreaTrigger:project_instigators()
 	elseif self._values.instigator == "loot" or self._values.instigator == "unique_loot" then
 		local all_found = World:find_units_quick("all", 14)
 		local filter_func = nil
-		filter_func = self._values.instigator == "loot" and function (carry_data)
-			local carry_id = carry_data:carry_id()
-			local carry_list = {
-				"gold",
-				"money",
-				"coke",
-				"coke_pure",
-				"sandwich",
-				"weapon",
-				"painting",
-				"circuit",
-				"diamonds",
-				"meth",
-				"lance_bag",
-				"lance_bag_large",
-				"grenades",
-				"engine_01",
-				"engine_02",
-				"engine_03",
-				"engine_04",
-				"engine_05",
-				"engine_06",
-				"engine_07",
-				"engine_08",
-				"engine_09",
-				"engine_10",
-				"engine_11",
-				"engine_12",
-				"ammo",
-				"cage_bag",
-				"turret",
-				"artifact_statue",
-				"samurai_suit",
-				"equipment_bag",
-				"cro_loot1",
-				"cro_loot2",
-				"ladder_bag",
-				"hope_diamond",
-				"mus_artifact",
-				"mus_artifact_paint",
-				"winch_part",
-				"winch_part_e3",
-				"fireworks",
-				"evidence_bag",
-				"watertank_empty",
-				"watertank_full",
-				"warhead",
-				"paper_roll",
-				"counterfeit_money",
-				"unknown",
-				"safe_wpn",
-				"safe_ovk",
-				"nail_muriatic_acid",
-				"nail_caustic_soda",
-				"nail_hydrogen_chloride",
-				"nail_euphadrine_pills",
-				"safe_secure_dummy",
-				"din_pig",
-				"meth_half",
-				"parachute",
-				"equipment_bag_global_event",
-				"prototype",
-				"master_server",
-				"lost_artifact",
-				"breaching_charges",
-				"masterpiece_painting",
-				"drk_bomb_part",
-				"goat",
-				"present",
-				"mad_master_server_value_1",
-				"mad_master_server_value_2",
-				"mad_master_server_value_3",
-				"mad_master_server_value_4",
-				"drk_bomb_part",
-				"weapon_glock",
-				"weapon_scar",
-				"bike_part_light",
-				"bike_part_heavy",
-				"toothbrush",
-				"drone_control_helmet",
-				"chl_puck",
-				"cloaker_gold",
-				"cloaker_money",
-				"cloaker_cocaine",
-				"robot_toy",
-				"ordinary_wine",
-				"expensive_vine",
-				"women_shoes",
-				"vr_headset",
-				"diamond_necklace",
-				"yayo",
-				"rubies",
-				"red_diamond",
-				"diamonds_dah",
-				"old_wine",
-				"winch_part_2",
-				"winch_part_3",
-				"box_unknown_tag",
-				"battery",
-				"box_unknown",
-				"black_tablet"
-			}
 
-			if table.contains(carry_list, carry_id) then
-				return true
+		if self._values.instigator == "loot" then
+			-- Lines 139-213
+			function filter_func(carry_data)
+				local carry_id = carry_data:carry_id()
+				local carry_list = {
+					"gold",
+					"money",
+					"coke",
+					"coke_pure",
+					"sandwich",
+					"weapon",
+					"painting",
+					"circuit",
+					"diamonds",
+					"meth",
+					"lance_bag",
+					"lance_bag_large",
+					"grenades",
+					"engine_01",
+					"engine_02",
+					"engine_03",
+					"engine_04",
+					"engine_05",
+					"engine_06",
+					"engine_07",
+					"engine_08",
+					"engine_09",
+					"engine_10",
+					"engine_11",
+					"engine_12",
+					"ammo",
+					"cage_bag",
+					"turret",
+					"artifact_statue",
+					"samurai_suit",
+					"equipment_bag",
+					"cro_loot1",
+					"cro_loot2",
+					"ladder_bag",
+					"hope_diamond",
+					"mus_artifact",
+					"mus_artifact_paint",
+					"winch_part",
+					"winch_part_e3",
+					"fireworks",
+					"evidence_bag",
+					"watertank_empty",
+					"watertank_full",
+					"warhead",
+					"paper_roll",
+					"counterfeit_money",
+					"unknown",
+					"safe_wpn",
+					"safe_ovk",
+					"nail_muriatic_acid",
+					"nail_caustic_soda",
+					"nail_hydrogen_chloride",
+					"nail_euphadrine_pills",
+					"safe_secure_dummy",
+					"din_pig",
+					"meth_half",
+					"parachute",
+					"equipment_bag_global_event",
+					"prototype",
+					"master_server",
+					"lost_artifact",
+					"breaching_charges",
+					"masterpiece_painting",
+					"drk_bomb_part",
+					"goat",
+					"present",
+					"mad_master_server_value_1",
+					"mad_master_server_value_2",
+					"mad_master_server_value_3",
+					"mad_master_server_value_4",
+					"drk_bomb_part",
+					"weapon_glock",
+					"weapon_scar",
+					"bike_part_light",
+					"bike_part_heavy",
+					"toothbrush",
+					"drone_control_helmet",
+					"chl_puck",
+					"cloaker_gold",
+					"cloaker_money",
+					"cloaker_cocaine",
+					"robot_toy",
+					"ordinary_wine",
+					"expensive_vine",
+					"women_shoes",
+					"vr_headset",
+					"diamond_necklace",
+					"yayo",
+					"rubies",
+					"red_diamond",
+					"diamonds_dah",
+					"old_wine",
+					"winch_part_2",
+					"winch_part_3",
+					"box_unknown_tag",
+					"battery",
+					"box_unknown",
+					"black_tablet"
+				}
+
+				if table.contains(carry_list, carry_id) then
+					return true
+				end
 			end
-		end or function (carry_data)
-			local carry_id = carry_data:carry_id()
+		else
+			-- Lines 215-220
+			function filter_func(carry_data)
+				local carry_id = carry_data:carry_id()
 
-			if tweak_data.carry[carry_id].is_unique_loot then
-				return true
+				if tweak_data.carry[carry_id].is_unique_loot then
+					return true
+				end
 			end
 		end
 
@@ -260,7 +267,7 @@ function ElementAreaTrigger:project_instigators()
 		if self._values.instigator_name ~= nil then
 			local all_found = World:find_units_quick("all", 14)
 
-			-- Lines: 235 to 239
+			-- Lines 235-239
 			local function filter_func(unit)
 				if unit:base() and unit:base().get_name_id and unit:base():get_name_id() == self._values.instigator_name then
 					return true
@@ -284,7 +291,7 @@ function ElementAreaTrigger:project_instigators()
 	return instigators
 end
 
--- Lines: 258 to 272
+-- Lines 257-273
 function ElementAreaTrigger:project_amount_all()
 	if self._values.instigator == "criminals" or self._values.instigator == "local_criminals" then
 		local i = 0
@@ -307,7 +314,7 @@ function ElementAreaTrigger:project_amount_all()
 	return managers.network:session() and managers.network:session():amount_of_alive_players() or 0
 end
 
--- Lines: 275 to 297
+-- Lines 275-298
 function ElementAreaTrigger:project_amount_inside()
 	local counter = #self._inside
 
@@ -339,7 +346,7 @@ function ElementAreaTrigger:project_amount_inside()
 	return counter
 end
 
--- Lines: 300 to 320
+-- Lines 300-321
 function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._values.instigator == "vehicle_with_players" and unit then
 		local result = false
@@ -368,4 +375,3 @@ function ElementAreaTrigger:is_instigator_valid(unit)
 end
 
 CoreClass.override_class(CoreElementArea.ElementAreaTrigger, ElementAreaTrigger)
-

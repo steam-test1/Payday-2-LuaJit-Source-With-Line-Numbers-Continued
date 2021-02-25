@@ -4,7 +4,7 @@ core:import("CoreInputSettingsReader")
 
 InputManager = InputManager or class()
 
--- Lines: 7 to 12
+-- Lines 7-12
 function InputManager:init()
 	local settings_reader = CoreInputSettingsReader.SettingsReader:new()
 	self._layer_descriptions = settings_reader:layer_descriptions()
@@ -12,23 +12,23 @@ function InputManager:init()
 	self._input_provider_to_feeder = {}
 end
 
--- Lines: 14 to 15
+-- Lines 14-15
 function InputManager:destroy()
 end
 
--- Lines: 17 to 21
+-- Lines 17-21
 function InputManager:update(t, dt)
 	for _, feeder in pairs(self._feeders) do
 		feeder:update()
 	end
 end
 
--- Lines: 23 to 35
+-- Lines 23-36
 function InputManager:input_provider_id_that_presses_start()
 	local layer_description_ids = {}
 	local count = Input:num_real_controllers()
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		local controller = Input:controller(i)
 
 		if controller:connected() and controller:pressed(Idstring("start")) then
@@ -39,12 +39,12 @@ function InputManager:input_provider_id_that_presses_start()
 	return layer_description_ids
 end
 
--- Lines: 38 to 56
+-- Lines 38-57
 function InputManager:debug_primary_input_provider_id()
 	local count = Input:num_real_controllers()
 	local best_controller = nil
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		local controller = Input:controller(i)
 
 		if controller:connected() then
@@ -63,7 +63,7 @@ function InputManager:debug_primary_input_provider_id()
 	return best_controller
 end
 
--- Lines: 60 to 68
+-- Lines 60-69
 function InputManager:_create_input_provider_for_controller(engine_controller)
 	local feeder = CoreInputContextFeeder.Feeder:new(engine_controller, self._layer_descriptions)
 	local input_provider = feeder:input_provider()
@@ -73,9 +73,8 @@ function InputManager:_create_input_provider_for_controller(engine_controller)
 	return input_provider
 end
 
--- Lines: 71 to 74
+-- Lines 71-74
 function InputManager:_destroy_input_provider(input_provider)
 	local feeder = self._input_provider_to_feeder[input_provider]
 	self._feeders[feeder] = nil
 end
-

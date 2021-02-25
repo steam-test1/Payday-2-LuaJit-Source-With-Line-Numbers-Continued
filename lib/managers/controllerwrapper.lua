@@ -2,14 +2,14 @@ core:import("CoreControllerWrapper")
 
 ControllerWrapper = ControllerWrapper or class(CoreControllerWrapper.ControllerWrapper)
 
--- Lines: 7 to 11
+-- Lines 7-11
 function ControllerWrapper:init(...)
 	self._input_released_cache = {}
 
 	ControllerWrapper.super.init(self, ...)
 end
 
--- Lines: 13 to 21
+-- Lines 13-21
 function ControllerWrapper:reset_cache(check_time)
 	local reset_cache_time = TimerManager:wall_running():time()
 
@@ -20,7 +20,7 @@ function ControllerWrapper:reset_cache(check_time)
 	ControllerWrapper.super.reset_cache(self, check_time)
 end
 
--- Lines: 23 to 38
+-- Lines 23-39
 function ControllerWrapper:get_input_released(connection_name)
 	local cache = self._input_released_cache[connection_name]
 
@@ -40,7 +40,7 @@ function ControllerWrapper:get_input_released(connection_name)
 	return cache
 end
 
--- Lines: 41 to 48
+-- Lines 41-48
 function ControllerWrapper:clear_input_pressed_state(connection_name)
 	self._input_pressed_cache[connection_name] = false
 	self._input_released_cache[connection_name] = false
@@ -49,4 +49,3 @@ function ControllerWrapper:clear_input_pressed_state(connection_name)
 end
 
 CoreClass.override_class(CoreControllerWrapper.ControllerWrapper, ControllerWrapper)
-

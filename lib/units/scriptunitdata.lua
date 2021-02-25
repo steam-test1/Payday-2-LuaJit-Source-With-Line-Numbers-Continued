@@ -1,6 +1,6 @@
 ScriptUnitData = ScriptUnitData or class(CoreScriptUnitData)
 
--- Lines: 4 to 10
+-- Lines 4-10
 function ScriptUnitData:init(unit)
 	CoreScriptUnitData.init(self)
 
@@ -9,7 +9,7 @@ function ScriptUnitData:init(unit)
 	end
 end
 
--- Lines: 12 to 20
+-- Lines 12-20
 function ScriptUnitData:destroy(unit)
 	if managers.occlusion and self.skip_occlusion then
 		managers.occlusion:add_occlusion(unit)
@@ -20,14 +20,14 @@ function ScriptUnitData:destroy(unit)
 	end
 end
 
--- Lines: 22 to 25
+-- Lines 22-25
 function ScriptUnitData:add_destroy_listener(key, clbk)
 	self._destroy_listener_holder = self._destroy_listener_holder or ListenerHolder:new()
 
 	self._destroy_listener_holder:add(key, clbk)
 end
 
--- Lines: 27 to 33
+-- Lines 27-33
 function ScriptUnitData:remove_destroy_listener(key)
 	self._destroy_listener_holder:remove(key)
 
@@ -35,4 +35,3 @@ function ScriptUnitData:remove_destroy_listener(key)
 		self._destroy_listener_holder = nil
 	end
 end
-

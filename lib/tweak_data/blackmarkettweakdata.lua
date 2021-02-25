@@ -10,7 +10,7 @@ require("lib/tweak_data/blackmarket/WeaponSkinsTweakData")
 
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 
--- Lines: 24 to 45
+-- Lines 24-45
 function BlackMarketTweakData:init(tweak_data)
 	self:_init_colors(tweak_data)
 	self:_init_materials(tweak_data)
@@ -28,11 +28,11 @@ function BlackMarketTweakData:init(tweak_data)
 	self:_init_weapon_mods(tweak_data)
 end
 
--- Lines: 78 to 79
+-- Lines 49-79
 function BlackMarketTweakData:print_missing_strings(skip_print_id)
 end
 
--- Lines: 81 to 90
+-- Lines 81-90
 function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	for id, data in pairs(tweak_data) do
 		if data.name_id and not data.desc_id then
@@ -45,7 +45,7 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
--- Lines: 95 to 119
+-- Lines 94-119
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	if self.weapon_skins then
 		tweak_data.weapon.factory:create_bonuses(tweak_data, self.weapon_skins)
@@ -79,9 +79,11 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self:_add_desc_from_name_macro(self.weapon_mods)
 end
 
--- Lines: 123 to 392
+-- Lines 123-392
 function BlackMarketTweakData:_init_characters(tweak_data)
-	self.characters = {locked = {}}
+	self.characters = {
+		locked = {}
+	}
 	self.characters.locked.fps_unit = "units/payday2/characters/fps_mover/fps_mover"
 	self.characters.locked.npc_unit = "units/payday2/characters/npc_criminals_suit_1/npc_criminals_suit_1"
 	self.characters.locked.menu_unit = "units/payday2/characters/npc_criminals_suit_1/npc_criminals_suit_1_menu"
@@ -369,9 +371,11 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines: 396 to 472
+-- Lines 396-472
 function BlackMarketTweakData:_init_cash()
-	self.cash = {cash10 = {}}
+	self.cash = {
+		cash10 = {}
+	}
 	self.cash.cash10.name_id = "bm_csh_cash10"
 	self.cash.cash10.value_id = "cash10"
 	self.cash.cash10.multiplier = 1
@@ -483,9 +487,11 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines: 476 to 538
+-- Lines 476-538
 function BlackMarketTweakData:_init_xp()
-	self.xp = {xp10 = {}}
+	self.xp = {
+		xp10 = {}
+	}
 	self.xp.xp10.name_id = "bm_exp_xp10"
 	self.xp.xp10.value_id = "xp10"
 	self.xp.xp10.multiplier = 1
@@ -583,9 +589,11 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines: 542 to 581
+-- Lines 542-581
 function BlackMarketTweakData:_init_armors()
-	self.armors = {level_1 = {}}
+	self.armors = {
+		level_1 = {}
+	}
 	self.armors.level_1.name_id = "bm_armor_level_1"
 	self.armors.level_1.sequence = "var_model_01"
 	self.armors.level_1.upgrade_level = 1
@@ -623,23 +631,41 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines: 585 to 617
+-- Lines 585-617
 function BlackMarketTweakData:_init_deployables(tweak_data)
-	self.deployables = {doctor_bag = {}}
+	self.deployables = {
+		doctor_bag = {}
+	}
 	self.deployables.doctor_bag.name_id = "bm_equipment_doctor_bag"
-	self.deployables.ammo_bag = {name_id = "bm_equipment_ammo_bag"}
-	self.deployables.ecm_jammer = {name_id = "bm_equipment_ecm_jammer"}
-	self.deployables.sentry_gun = {name_id = "bm_equipment_sentry_gun"}
-	self.deployables.sentry_gun_silent = {name_id = "bm_equipment_sentry_gun_silent"}
-	self.deployables.trip_mine = {name_id = "bm_equipment_trip_mine"}
-	self.deployables.armor_kit = {name_id = "bm_equipment_armor_kit"}
-	self.deployables.first_aid_kit = {name_id = "bm_equipment_first_aid_kit"}
-	self.deployables.bodybags_bag = {name_id = "bm_equipment_bodybags_bag"}
+	self.deployables.ammo_bag = {
+		name_id = "bm_equipment_ammo_bag"
+	}
+	self.deployables.ecm_jammer = {
+		name_id = "bm_equipment_ecm_jammer"
+	}
+	self.deployables.sentry_gun = {
+		name_id = "bm_equipment_sentry_gun"
+	}
+	self.deployables.sentry_gun_silent = {
+		name_id = "bm_equipment_sentry_gun_silent"
+	}
+	self.deployables.trip_mine = {
+		name_id = "bm_equipment_trip_mine"
+	}
+	self.deployables.armor_kit = {
+		name_id = "bm_equipment_armor_kit"
+	}
+	self.deployables.first_aid_kit = {
+		name_id = "bm_equipment_first_aid_kit"
+	}
+	self.deployables.bodybags_bag = {
+		name_id = "bm_equipment_bodybags_bag"
+	}
 
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines: 619 to 626
+-- Lines 619-627
 function BlackMarketTweakData:get_mask_icon(mask_id)
 	local guis_catalog = "guis/"
 	local bundle_folder = tweak_data.blackmarket.masks[mask_id] and tweak_data.blackmarket.masks[mask_id].texture_bundle_folder
@@ -651,7 +677,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines: 629 to 639
+-- Lines 629-640
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"
@@ -664,4 +690,3 @@ function BlackMarketTweakData:get_character_icon(character)
 
 	return guis_catalog .. "textures/pd2/blackmarket/icons/characters/" .. character_name
 end
-

@@ -10,7 +10,7 @@ ObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	}
 }
 
--- Lines: 4 to 18
+-- Lines 4-18
 function ObjectiveUnitElement:init(unit)
 	ObjectiveUnitElement.super.init(self, unit)
 
@@ -27,16 +27,18 @@ function ObjectiveUnitElement:init(unit)
 	table.insert(self._save_values, "countdown")
 end
 
--- Lines: 20 to 25
+-- Lines 20-25
 function ObjectiveUnitElement:update_sub_objectives()
-	local sub_objectives = table.list_add({"none"}, managers.objectives:sub_objectives_by_name(self._hed.objective))
+	local sub_objectives = table.list_add({
+		"none"
+	}, managers.objectives:sub_objectives_by_name(self._hed.objective))
 	self._hed.sub_objective = "none"
 
 	CoreEws.update_combobox_options(self._sub_objective_params, sub_objectives)
 	CoreEws.change_combobox_value(self._sub_objective_params, self._hed.sub_objective)
 end
 
--- Lines: 27 to 32
+-- Lines 27-32
 function ObjectiveUnitElement:set_element_data(params, ...)
 	ObjectiveUnitElement.super.set_element_data(self, params, ...)
 
@@ -45,7 +47,7 @@ function ObjectiveUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 34 to 56
+-- Lines 34-56
 function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -60,10 +62,14 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		"complete_and_activate",
 		"remove_and_activate"
 	})
-	self:_build_value_combobox(panel, panel_sizer, "objective", table.list_add({"none"}, managers.objectives:objectives_by_name()))
+	self:_build_value_combobox(panel, panel_sizer, "objective", table.list_add({
+		"none"
+	}, managers.objectives:objectives_by_name()))
 
 	local options = self._hed.objective ~= "none" and managers.objectives:sub_objectives_by_name(self._hed.objective) or {}
-	local _, params = self:_build_value_combobox(panel, panel_sizer, "sub_objective", table.list_add({"none"}, options), "Select a sub objective from the combobox (if availible)")
+	local _, params = self:_build_value_combobox(panel, panel_sizer, "sub_objective", table.list_add({
+		"none"
+	}, options), "Select a sub objective from the combobox (if availible)")
 	self._sub_objective_params = params
 
 	self:_build_value_number(panel, panel_sizer, "amount", {
@@ -81,4 +87,3 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

@@ -1,9 +1,11 @@
 NavFieldBuilder = NavFieldBuilder or class()
 NavFieldBuilder._VERSION = 5
 
--- Lines: 5 to 42
+-- Lines 4-42
 function NavFieldBuilder:init()
-	self._door_access_types = {walk = 1}
+	self._door_access_types = {
+		walk = 1
+	}
 	self._opposite_side_str = {
 		x_neg = "x_pos",
 		y_pos = "y_neg",
@@ -71,7 +73,7 @@ function NavFieldBuilder:init()
 	self._geog_segment_offset = nil
 end
 
--- Lines: 47 to 67
+-- Lines 46-67
 function NavFieldBuilder:clear()
 	self._geog_segments = {}
 	self._nr_geog_segments = nil
@@ -89,7 +91,7 @@ function NavFieldBuilder:clear()
 	self._new_blockers = nil
 end
 
--- Lines: 72 to 84
+-- Lines 71-84
 function NavFieldBuilder:update(t, dt)
 	if self._building then
 		if self._progress_dialog_cancel then
@@ -105,7 +107,7 @@ function NavFieldBuilder:update(t, dt)
 	end
 end
 
--- Lines: 89 to 95
+-- Lines 88-95
 function NavFieldBuilder:_create_build_progress_bar(title, num_divistions)
 	if not self._progress_dialog then
 		self._progress_dialog = EWS:ProgressDialog(Global.frame_panel, title, "", num_divistions, "PD_AUTO_HIDE,PD_SMOOTH,PD_CAN_ABORT,PD_ELAPSED_TIME,PD_ESTIMATED_TIME,PD_REMAINING_TIME")
@@ -115,7 +117,7 @@ function NavFieldBuilder:_create_build_progress_bar(title, num_divistions)
 	end
 end
 
--- Lines: 100 to 105
+-- Lines 99-105
 function NavFieldBuilder:_destroy_progress_bar()
 	if self._progress_dialog then
 		self._progress_dialog:destroy()
@@ -124,19 +126,19 @@ function NavFieldBuilder:_destroy_progress_bar()
 	end
 end
 
--- Lines: 109 to 113
+-- Lines 109-113
 function NavFieldBuilder:set_field_data(data)
 	for i, k in pairs(data) do
 		self[i] = k
 	end
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function NavFieldBuilder:set_segment_state(id, state)
 	self._nav_segments[id].no_access = not state and true or nil
 end
 
--- Lines: 123 to 141
+-- Lines 123-141
 function NavFieldBuilder:build_nav_segments(build_settings, complete_clbk)
 	self._build_complete_clbk = complete_clbk
 	local all_vis_groups = self._visibility_groups
@@ -156,7 +158,7 @@ function NavFieldBuilder:build_nav_segments(build_settings, complete_clbk)
 	self:start_build_nav_segment(build_settings, 1)
 end
 
--- Lines: 146 to 224
+-- Lines 145-224
 function NavFieldBuilder:build_visibility_graph(complete_clbk, all_visible, ray_dis, pos_filter, neg_filter)
 	local all_rooms = self._rooms
 	local all_vis_groups = self._visibility_groups
@@ -188,7 +190,9 @@ function NavFieldBuilder:build_visibility_graph(complete_clbk, all_visible, ray_
 
 			nr_vis_groups = nr_vis_groups + 1
 			seg_to_vis_group_map[nav_seg_id] = nr_vis_groups
-			nav_seg.vis_groups = {nr_vis_groups}
+			nav_seg.vis_groups = {
+				nr_vis_groups
+			}
 		end
 
 		if nr_vis_groups > 1 then
@@ -250,7 +254,7 @@ function NavFieldBuilder:build_visibility_graph(complete_clbk, all_visible, ray_
 	self._building.stage = self._building.stage or 2
 end
 
--- Lines: 228 to 235
+-- Lines 228-236
 function NavFieldBuilder:_chk_room_vis_filter(room_a, room_b, pos_filter, neg_filter)
 	local seg_low, seg_high = math.min_max(room_a.segment, room_b.segment)
 
@@ -263,7 +267,7 @@ function NavFieldBuilder:_chk_room_vis_filter(room_a, room_b, pos_filter, neg_fi
 	return nil
 end
 
--- Lines: 240 to 303
+-- Lines 240-303
 function NavFieldBuilder:delete_segment(id)
 	local all_vis_groups = self._visibility_groups
 	local all_rooms = self._rooms
@@ -331,7 +335,7 @@ function NavFieldBuilder:delete_segment(id)
 	end
 end
 
--- Lines: 307 to 347
+-- Lines 307-347
 function NavFieldBuilder:_destroy_vis_group(i_vis_group)
 	local all_rooms = self._rooms
 	local all_nav_segments = self._nav_segments
@@ -371,7 +375,7 @@ function NavFieldBuilder:_destroy_vis_group(i_vis_group)
 	end
 end
 
--- Lines: 352 to 406
+-- Lines 351-406
 function NavFieldBuilder:start_build_nav_segment(build_settings, segment_index)
 	self:_create_build_progress_bar("Building Navigation Segments", 6)
 
@@ -436,7 +440,7 @@ function NavFieldBuilder:start_build_nav_segment(build_settings, segment_index)
 	self:_analyse_room("x_pos", start_pos_rounded:with_z(ground_ray.position.z))
 end
 
--- Lines: 411 to 464
+-- Lines 410-464
 function NavFieldBuilder:_commence_nav_field_build()
 	if self._building.stage == 1 then
 		self:_expand_rooms()
@@ -497,11 +501,11 @@ function NavFieldBuilder:_commence_nav_field_build()
 	end
 end
 
--- Lines: 468 to 546
+-- Lines 468-546
 function NavFieldBuilder:_expand_rooms()
 	local progress = nil
 
-	-- Lines: 472 to 480
+	-- Lines 472-480
 	local function can_room_expand(expansion_data)
 		if expansion_data then
 			for side, seg_list in pairs(expansion_data) do
@@ -512,7 +516,7 @@ function NavFieldBuilder:_expand_rooms()
 		end
 	end
 
-	-- Lines: 482 to 524
+	-- Lines 482-525
 	local function expand_room(room)
 		local expansion_data = room.expansion_segments
 		local progress = nil
@@ -587,10 +591,9 @@ function NavFieldBuilder:_expand_rooms()
 	end
 end
 
--- Lines: 559 to 757
+-- Lines 550-759
 function NavFieldBuilder:_merge_rooms()
-
-	-- Lines: 553 to 560
+	-- Lines 553-560
 	local function _remove_room_from_sorted_list(i_room, sorted_rooms)
 		for sort_index, sorted_i_room in ipairs(sorted_rooms) do
 			if sorted_i_room == i_room then
@@ -601,7 +604,7 @@ function NavFieldBuilder:_merge_rooms()
 		end
 	end
 
-	-- Lines: 564 to 583
+	-- Lines 564-583
 	local function _dispose_trash_rooms(trash_rooms, sorted_rooms)
 		for i, i_room in pairs(trash_rooms) do
 			self:_destroy_room(i_room)
@@ -622,7 +625,7 @@ function NavFieldBuilder:_merge_rooms()
 		end
 	end
 
-	-- Lines: 587 to 611
+	-- Lines 587-612
 	local function _find_walls_on_side(room, side)
 		local all_doors = self._room_doors
 		local borders = room.borders
@@ -637,10 +640,12 @@ function NavFieldBuilder:_merge_rooms()
 		mvector3["set_" .. along_dim](right_corner, borders[self._perp_pos_dir_str_map[side]])
 		mvector3["set_" .. perp_dim](right_corner, fwd_border)
 
-		local walls = {{
-			left_corner,
-			right_corner
-		}}
+		local walls = {
+			{
+				left_corner,
+				right_corner
+			}
+		}
 
 		for _, neighbour_data in ipairs(room.neighbours[side]) do
 			walls = self:_remove_seg_from_seg_list(walls, neighbour_data.overlap, along_dim)
@@ -649,7 +654,7 @@ function NavFieldBuilder:_merge_rooms()
 		return walls
 	end
 
-	-- Lines: 616 to 657
+	-- Lines 616-658
 	local function _get_room_expandable_borders(room)
 		local expandable_sides = {}
 		local neighbours = room.neighbours
@@ -685,7 +690,7 @@ function NavFieldBuilder:_merge_rooms()
 		return expandable_sides
 	end
 
-	-- Lines: 662 to 671
+	-- Lines 662-672
 	local function _is_larger_than_neighbours(room, dir_str)
 		local area = room.area
 
@@ -761,7 +766,16 @@ function NavFieldBuilder:_merge_rooms()
 				exp_border = next(expandable_borders)
 			else
 				expandable_borders[exp_border] = nil
-				exp_border = expandable_borders[self._opposite_side_str[exp_border]] and self._opposite_side_str[exp_border] or expandable_borders[self._perp_neg_dir_str_map[exp_border]] and self._perp_neg_dir_str_map[exp_border] or expandable_borders[self._perp_pos_dir_str_map[exp_border]] and self._perp_pos_dir_str_map[exp_border] or nil
+
+				if expandable_borders[self._opposite_side_str[exp_border]] then
+					exp_border = self._opposite_side_str[exp_border]
+				elseif expandable_borders[self._perp_neg_dir_str_map[exp_border]] then
+					exp_border = self._perp_neg_dir_str_map[exp_border]
+				elseif expandable_borders[self._perp_pos_dir_str_map[exp_border]] then
+					exp_border = self._perp_pos_dir_str_map[exp_border]
+				else
+					exp_border = nil
+				end
 			end
 		end
 
@@ -773,7 +787,7 @@ function NavFieldBuilder:_merge_rooms()
 	return true
 end
 
--- Lines: 812 to 840
+-- Lines 811-840
 function NavFieldBuilder:_sort_room_by_area(i_room, room_list, resort)
 	if resort then
 		for sort_index, i_sorted_room in ipairs(room_list) do
@@ -804,7 +818,7 @@ function NavFieldBuilder:_sort_room_by_area(i_room, room_list, resort)
 	table.insert(room_list, search_i + 1, i_room)
 end
 
--- Lines: 845 to 857
+-- Lines 844-857
 function NavFieldBuilder:_update_progress_bar(percent_complete, text)
 	if self._progress_dialog then
 		local result = self._progress_dialog:update_bar(percent_complete, text)
@@ -823,7 +837,7 @@ function NavFieldBuilder:_update_progress_bar(percent_complete, text)
 	end
 end
 
--- Lines: 861 to 871
+-- Lines 861-872
 function NavFieldBuilder:_get_border_segment(height, borders, side)
 	local seg = {
 		Vector3(),
@@ -846,7 +860,7 @@ function NavFieldBuilder:_get_border_segment(height, borders, side)
 	return seg
 end
 
--- Lines: 877 to 975
+-- Lines 876-976
 function NavFieldBuilder:_expand_room_over_neighbours(i_room, exp_border, clip_size)
 	local room = self._rooms[i_room]
 	local neighbours = room.neighbours[exp_border]
@@ -952,14 +966,14 @@ function NavFieldBuilder:_expand_room_over_neighbours(i_room, exp_border, clip_s
 	return new_rooms, trash_rooms, shrunk_rooms
 end
 
--- Lines: 981 to 991
+-- Lines 980-992
 function NavFieldBuilder:_room_expansion_space_at_side(borders, exp_border)
 	local length_size = math.abs(borders[exp_border] - borders[self._opposite_side_str[exp_border]])
 
 	return length_size
 end
 
--- Lines: 997 to 1050
+-- Lines 996-1051
 function NavFieldBuilder:_room_retract_space_at_side(room, side, border_line)
 	local borders = room.borders
 	local expansion = room.expansion
@@ -994,12 +1008,23 @@ function NavFieldBuilder:_room_retract_space_at_side(room, side, border_line)
 	end
 
 	local clamp_length = nil
-	clamp_length = self._neg_dir_str_map[side] and (min_obstacle and min_obstacle - borders[side] or borders[self._opposite_side_str[side]] - borders[side]) or max_obstacle and borders[side] - max_obstacle or borders[side] - borders[self._opposite_side_str[side]]
+
+	if self._neg_dir_str_map[side] then
+		if min_obstacle then
+			clamp_length = min_obstacle - borders[side]
+		else
+			clamp_length = borders[self._opposite_side_str[side]] - borders[side]
+		end
+	elseif max_obstacle then
+		clamp_length = borders[side] - max_obstacle
+	else
+		clamp_length = borders[side] - borders[self._opposite_side_str[side]]
+	end
 
 	return clamp_length
 end
 
--- Lines: 1055 to 1072
+-- Lines 1055-1072
 function NavFieldBuilder:_split_room_for_retraction(i_room, side, clip_segment)
 	local room = self._rooms[i_room]
 	local borders = room.borders
@@ -1021,7 +1046,7 @@ function NavFieldBuilder:_split_room_for_retraction(i_room, side, clip_segment)
 	end
 end
 
--- Lines: 1077 to 1230
+-- Lines 1076-1231
 function NavFieldBuilder:_clip_room_border(i_room, side, clip_amount, clip_segment, want_neg_data, want_pos_data)
 	local room = self._rooms[i_room]
 	local borders = room.borders
@@ -1133,7 +1158,9 @@ function NavFieldBuilder:_clip_room_border(i_room, side, clip_amount, clip_segme
 		end
 
 		local mid_space = self:_get_border_segment(room.height, room.borders, side)
-		expansion[side].spaces = {mid_space}
+		expansion[side].spaces = {
+			mid_space
+		}
 		local retract_vec = self._dir_str_to_vec[opp_side] * clip_amount
 
 		for neighbour_index, neighbour_data in pairs(neighbours[side]) do
@@ -1194,7 +1221,7 @@ function NavFieldBuilder:_clip_room_border(i_room, side, clip_amount, clip_segme
 	return false, new_data
 end
 
--- Lines: 1236 to 1344
+-- Lines 1235-1345
 function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	local room = self._rooms[i_room]
 	local borders = room.borders
@@ -1251,7 +1278,9 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	mvector3.set_z(space[2], pos_z)
 
 	new_room.expansion[split_side] = {
-		spaces = {space},
+		spaces = {
+			space
+		},
 		walls = {},
 		stairs = {},
 		cliffs = {},
@@ -1259,22 +1288,26 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	}
 	new_room.expansion[split_opp_side] = room.expansion[split_opp_side]
 	expansion[split_opp_side] = {
-		spaces = {{
-			space[1],
-			space[2]
-		}},
+		spaces = {
+			{
+				space[1],
+				space[2]
+			}
+		},
 		walls = {},
 		stairs = {},
 		cliffs = {},
 		unsorted = {}
 	}
-	new_room.neighbours[split_side] = {{
-		room = i_room,
-		overlap = {
-			space[1],
-			space[2]
+	new_room.neighbours[split_side] = {
+		{
+			room = i_room,
+			overlap = {
+				space[1],
+				space[2]
+			}
 		}
-	}}
+	}
 	local i_new_room = #self._rooms + 1
 
 	for neighbour_index, neighbour_data in pairs(room.neighbours[split_opp_side]) do
@@ -1294,13 +1327,15 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	end
 
 	new_room.neighbours[split_opp_side] = room.neighbours[split_opp_side]
-	room.neighbours[split_opp_side] = {{
-		room = i_new_room,
-		overlap = {
-			space[1],
-			space[2]
+	room.neighbours[split_opp_side] = {
+		{
+			room = i_new_room,
+			overlap = {
+				space[1],
+				space[2]
+			}
 		}
-	}}
+	}
 	new_room.borders[split_side] = split_pos_along_dim
 	new_room.borders[split_opp_side] = room.borders[split_opp_side]
 	new_room.borders[split_perp_neg_side] = room.borders[split_perp_neg_side]
@@ -1374,7 +1409,7 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	return i_new_room
 end
 
--- Lines: 1349 to 1366
+-- Lines 1349-1368
 function NavFieldBuilder:_create_empty_room()
 	local room = {
 		neighbours = {},
@@ -1401,7 +1436,7 @@ function NavFieldBuilder:_create_empty_room()
 	return room
 end
 
--- Lines: 1372 to 1381
+-- Lines 1372-1381
 function NavFieldBuilder:_cleanup_room_data()
 	for i_room, room in ipairs(self._rooms) do
 		local clean_room = {
@@ -1414,14 +1449,14 @@ function NavFieldBuilder:_cleanup_room_data()
 	end
 end
 
--- Lines: 1385 to 1389
+-- Lines 1385-1389
 function NavFieldBuilder:_cleanup_room_data_1()
 	for i_room, room in ipairs(self._rooms) do
 		room.segment = nil
 	end
 end
 
--- Lines: 1393 to 1405
+-- Lines 1393-1405
 function NavFieldBuilder:_calculate_door_heights()
 	for i_door, door in ipairs(self._room_doors) do
 		local room_1 = self._rooms[door.rooms[1]]
@@ -1435,7 +1470,7 @@ function NavFieldBuilder:_calculate_door_heights()
 	end
 end
 
--- Lines: 1409 to 1421
+-- Lines 1409-1422
 function NavFieldBuilder:_calculate_geographic_segment_borders(i_seg)
 	local seg_borders = {}
 	local nr_seg_x = self._nr_geog_segments.x
@@ -1453,7 +1488,7 @@ function NavFieldBuilder:_calculate_geographic_segment_borders(i_seg)
 	return seg_borders
 end
 
--- Lines: 1426 to 1526
+-- Lines 1426-1526
 function NavFieldBuilder:_generate_geographic_segments()
 	self:_update_progress_bar(8, "Creating geographic segments")
 
@@ -1535,7 +1570,7 @@ function NavFieldBuilder:_generate_geographic_segments()
 	end
 end
 
--- Lines: 1530 to 1537
+-- Lines 1530-1538
 function NavFieldBuilder:_round_pos_to_grid_center(pos)
 	local rounded_pos = Vector3()
 
@@ -1552,7 +1587,7 @@ function NavFieldBuilder:_round_pos_to_grid_center(pos)
 	return rounded_pos
 end
 
--- Lines: 1542 to 1548
+-- Lines 1542-1548
 function NavFieldBuilder:_add_room(room)
 	if not room.area then
 		debug_pause("[NavFieldBuilder:_add_room] missing area", inspect(room))
@@ -1563,7 +1598,7 @@ function NavFieldBuilder:_add_room(room)
 	table.insert(self._rooms, room)
 end
 
--- Lines: 1552 to 1596
+-- Lines 1552-1596
 function NavFieldBuilder:_trash_room(i_room)
 	local room = self._rooms[i_room]
 
@@ -1611,7 +1646,7 @@ function NavFieldBuilder:_trash_room(i_room)
 	end
 end
 
--- Lines: 1602 to 1620
+-- Lines 1600-1620
 function NavFieldBuilder:_destroy_room(i_room)
 	table.remove(self._rooms, i_room)
 
@@ -1628,14 +1663,14 @@ function NavFieldBuilder:_destroy_room(i_room)
 	end
 end
 
--- Lines: 1624 to 1626
+-- Lines 1624-1627
 function NavFieldBuilder:_add_door(door)
 	table.insert(self._room_doors, door)
 
 	return #self._room_doors
 end
 
--- Lines: 1633 to 1647
+-- Lines 1631-1647
 function NavFieldBuilder:_destroy_door(i_door)
 	table.remove(self._room_doors, i_door)
 
@@ -1650,7 +1685,7 @@ function NavFieldBuilder:_destroy_door(i_door)
 	end
 end
 
--- Lines: 1657 to 1713
+-- Lines 1651-1714
 function NavFieldBuilder:_analyse_room(enter_dir_str, enter_pos)
 	local opp_dir_str_map = self._opposite_side_str
 	local perp_pos_dir_str_map = self._perp_pos_dir_str_map
@@ -1658,7 +1693,9 @@ function NavFieldBuilder:_analyse_room(enter_dir_str, enter_pos)
 	local neg_dir_str_map = self._neg_dir_str_map
 	local x_dir_str_map = self._x_dir_str_map
 	local dir_vec_map = self._dir_str_to_vec
-	local room = {neighbours = {}}
+	local room = {
+		neighbours = {}
+	}
 	local expansion = {}
 	room.expansion = expansion
 	local borders = {}
@@ -1710,7 +1747,7 @@ function NavFieldBuilder:_analyse_room(enter_dir_str, enter_pos)
 	return i_room
 end
 
--- Lines: 1718 to 1731
+-- Lines 1718-1731
 function NavFieldBuilder:_fill_room_expansion_segments(expansion, expansion_segments, neighbours)
 	for side, obs_types in pairs(expansion) do
 		local perp_dim = self._perp_dim_str_map[side]
@@ -1735,7 +1772,7 @@ function NavFieldBuilder:_fill_room_expansion_segments(expansion, expansion_segm
 	end
 end
 
--- Lines: 1736 to 1782
+-- Lines 1735-1782
 function NavFieldBuilder:_create_room_doors(i_room)
 	local room = self._rooms[i_room]
 	local neighbours = room.neighbours
@@ -1784,7 +1821,7 @@ function NavFieldBuilder:_create_room_doors(i_room)
 	end
 end
 
--- Lines: 1786 to 2079
+-- Lines 1786-2079
 function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_sides_map, i_room)
 	local opp_dir_str_map = self._opposite_side_str
 	local perp_pos_dir_str_map = self._perp_pos_dir_str_map
@@ -2093,7 +2130,7 @@ function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_s
 	end
 end
 
--- Lines: 2083 to 2106
+-- Lines 2083-2106
 function NavFieldBuilder:_append_neighbour(neighbours, new_neighbour, dir_str)
 	local appended = nil
 	local along_dim = self._perp_dim_str_map[dir_str]
@@ -2119,7 +2156,7 @@ function NavFieldBuilder:_append_neighbour(neighbours, new_neighbour, dir_str)
 	end
 end
 
--- Lines: 2114 to 2127
+-- Lines 2110-2127
 function NavFieldBuilder:_update_neighbour_data(i_room, i_neighbour, new_data, dir_str)
 	if self._rooms[i_room].neighbours then
 		local along_dim = self._perp_dim_str_map[dir_str]
@@ -2137,7 +2174,7 @@ function NavFieldBuilder:_update_neighbour_data(i_room, i_neighbour, new_data, d
 	end
 end
 
--- Lines: 2132 to 2161
+-- Lines 2131-2163
 function NavFieldBuilder:_split_side_neighbours(neighbours_list, split_pos, seg_dim)
 	local low_seg_list = {}
 	local high_seg_list = {}
@@ -2185,16 +2222,16 @@ function NavFieldBuilder:_split_side_neighbours(neighbours_list, split_pos, seg_
 	return low_seg_list, high_seg_list
 end
 
--- Lines: 2167 to 2173
+-- Lines 2167-2175
 function NavFieldBuilder:_chk_room_side_too_long(borders, dir_str)
 	local exp_side_len = math.abs(borders[dir_str] - borders[self._opposite_side_str[dir_str]])
 	local perp_side_len = borders[self._perp_pos_dir_str_map[dir_str]] - borders[self._perp_neg_dir_str_map[dir_str]]
 	local room_dim_ratio = exp_side_len / perp_side_len
 
-	return room_dim_ratio >= 2 and self._grid_size * 4 <= exp_side_len, room_dim_ratio > 1
+	return room_dim_ratio >= 2 and exp_side_len >= self._grid_size * 4, room_dim_ratio > 1
 end
 
--- Lines: 2180 to 2227
+-- Lines 2179-2227
 function NavFieldBuilder:_append_seg_to_seg_list(seg_list, seg, seg_dim)
 	local appended, i_app_seg = nil
 
@@ -2246,7 +2283,7 @@ function NavFieldBuilder:_append_seg_to_seg_list(seg_list, seg, seg_dim)
 	end
 end
 
--- Lines: 2232 to 2266
+-- Lines 2231-2267
 function NavFieldBuilder:_remove_seg_from_seg_list(seg_list, seg, seg_dim)
 	local new_seg_list = {}
 
@@ -2266,11 +2303,13 @@ function NavFieldBuilder:_remove_seg_from_seg_list(seg_list, seg, seg_dim)
 				seg[2],
 				test_seg[2]
 			}
-		else
-			new_segment1 = seg[1][seg_dim] <= test_seg[1][seg_dim] and {
+		elseif seg[1][seg_dim] <= test_seg[1][seg_dim] then
+			new_segment1 = {
 				seg[2],
 				test_seg[2]
-			} or {
+			}
+		else
+			new_segment1 = {
 				test_seg[1],
 				seg[1]
 			}
@@ -2288,7 +2327,7 @@ function NavFieldBuilder:_remove_seg_from_seg_list(seg_list, seg, seg_dim)
 	return new_seg_list
 end
 
--- Lines: 2272 to 2299
+-- Lines 2271-2300
 function NavFieldBuilder:_split_segment_list_at_position(seg_list, split_pos, seg_dim)
 	local low_seg_list = {}
 	local high_seg_list = {}
@@ -2322,7 +2361,7 @@ function NavFieldBuilder:_split_segment_list_at_position(seg_list, split_pos, se
 	return low_seg_list, high_seg_list
 end
 
--- Lines: 2304 to 2313
+-- Lines 2304-2313
 function NavFieldBuilder:_seg_to_seg_list_intersection_bool(seg_list, seg, seg_dim)
 	local seg_min = seg[1][seg_dim]
 	local seg_max = seg[2][seg_dim]
@@ -2334,7 +2373,7 @@ function NavFieldBuilder:_seg_to_seg_list_intersection_bool(seg_list, seg, seg_d
 	end
 end
 
--- Lines: 2318 to 2521
+-- Lines 2317-2523
 function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space, inclination)
 	local x_dir_str_map = self._x_dir_str_map
 	local expand_dim = self._dim_str_map[dir_str]
@@ -2392,13 +2431,13 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 
 		if not air_ray then
 			local air_from_pos = air_to_pos - dir_vec * (gnd_ray_rad + 2)
-			local air_to_pos = air_from_pos - along_vec_inclination:normalized() * ((padding_wall + grid_size * 0.5) - 1)
+			local air_to_pos = air_from_pos - along_vec_inclination:normalized() * (padding_wall + grid_size * 0.5 - 1)
 			air_ray = self:_bundle_ray(air_from_pos, air_to_pos, air_ray_rad * 0.8)
 		end
 
 		if not air_ray then
 			local air_from_pos = air_to_pos - dir_vec * (gnd_ray_rad + 2)
-			local air_to_pos = air_from_pos + along_vec_inclination:normalized() * ((padding_wall + grid_size * 0.5) - 1)
+			local air_to_pos = air_from_pos + along_vec_inclination:normalized() * (padding_wall + grid_size * 0.5 - 1)
 			air_ray = self:_bundle_ray(air_from_pos, air_to_pos, air_ray_rad * 0.8)
 		end
 
@@ -2411,27 +2450,25 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 		else
 			local void_ray_rad = grid_size * 0.5
 			local ray_rad_dif = gnd_ray_rad - void_ray_rad
-			local front_air_pos = (air_pos + dir_vec * grid_size * 2) - step_vec * 1.5
+			local front_air_pos = air_pos + dir_vec * grid_size * 2 - step_vec * 1.5
 			local front_ray = self:_bundle_ray(air_pos, front_air_pos, air_ray_rad)
 			local front_gnd_pos = math.step(front_air_pos, air_pos, void_ray_rad + 1)
 			local front_ground_ray = not front_ray and self:_sphere_ray(front_gnd_pos + self._up_vec, front_gnd_pos + self._down_vec, void_ray_rad)
 
-			if front_ray or front_ground_ray and math.abs((front_ground_ray.position.z + ray_rad_dif) - back_ground_ray.position.z) < 40 then
+			if front_ray or front_ground_ray and math.abs(front_ground_ray.position.z + ray_rad_dif - back_ground_ray.position.z) < 40 then
 				front_air_pos = air_pos + dir_vec * grid_size * 2
 				front_ray = self:_bundle_ray(air_pos, front_air_pos, air_ray_rad)
 				front_gnd_pos = math.step(front_air_pos, air_pos, void_ray_rad + 1)
 				front_ground_ray = not front_ray and self:_sphere_ray(front_gnd_pos + self._up_vec, front_gnd_pos + self._down_vec, void_ray_rad)
 
-				if front_ray or front_ground_ray and math.abs((front_ground_ray.position.z + ray_rad_dif) - back_ground_ray.position.z) < 40 then
+				if front_ray or front_ground_ray and math.abs(front_ground_ray.position.z + ray_rad_dif - back_ground_ray.position.z) < 40 then
 					front_air_pos = air_pos + dir_vec * grid_size * 2 + step_vec * 1.5
 					front_ray = self:_bundle_ray(air_pos, front_air_pos, air_ray_rad)
 					front_gnd_pos = math.step(front_air_pos, air_pos, void_ray_rad + 1)
 					front_ground_ray = not front_ray and self:_sphere_ray(front_gnd_pos + self._up_vec, front_gnd_pos + self._down_vec, void_ray_rad)
 
 					if not front_ray then
-						if front_ground_ray and math.abs((front_ground_ray.position.z + ray_rad_dif) - back_ground_ray.position.z) < 40 then
-							-- Nothing
-						else
+						if not front_ground_ray or math.abs(front_ground_ray.position.z + ray_rad_dif - back_ground_ray.position.z) >= 40 then
 							obstacle_found = "cliffs"
 						end
 					end
@@ -2495,7 +2532,9 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 				mvector3.set_z(measured_seg[2], ground_ray.position.z)
 				table.insert(res_expansion[obstacle_found], measured_seg)
 			else
-				local new_seg = {pos_along_border - along_vec}
+				local new_seg = {
+					pos_along_border - along_vec
+				}
 				local ground_ray = self:_sphere_ray(pos_along_border + self._up_vec, pos_along_border + self._down_vec, gnd_ray_rad)
 
 				mvector3.set_z(new_seg[1], ground_ray.position.z)
@@ -2513,7 +2552,7 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 	return res_expansion, next(res_expansion.walls) or next(res_expansion.stairs) or next(res_expansion.cliffs)
 end
 
--- Lines: 2527 to 2582
+-- Lines 2527-2583
 function NavFieldBuilder:_expansion_check_neighbours(dir_str, exp_space)
 	local opp_dir_str_map = self._opposite_side_str
 	local perp_pos_dir_str_map = self._perp_pos_dir_str_map
@@ -2564,9 +2603,7 @@ function NavFieldBuilder:_expansion_check_neighbours(dir_str, exp_space)
 				local min_h_diff = 150
 
 				if min_h_diff >= z1_test_room - z1_exp_room or min_h_diff >= z2_test_room - z2_exp_room then
-					if z1_test_room - z1_exp_room < -min_h_diff and z2_test_room - z2_exp_room < -min_h_diff then
-						-- Nothing
-					else
+					if z1_test_room - z1_exp_room >= -min_h_diff or z2_test_room - z2_exp_room >= -min_h_diff then
 						mvector3.set_z(overlap_seg[1], (z1_test_room + z1_exp_room) * 0.5)
 						mvector3.set_z(overlap_seg[2], (z2_test_room + z2_exp_room) * 0.5)
 						table.insert(neighbours, {
@@ -2582,13 +2619,13 @@ function NavFieldBuilder:_expansion_check_neighbours(dir_str, exp_space)
 	return next(neighbours) and neighbours
 end
 
--- Lines: 2587 to 2590
+-- Lines 2587-2590
 function NavFieldBuilder:_on_helper_hit(unit)
 	local unit_id = unit:unit_data().unit_id
 	self._new_blockers[unit_id] = unit
 end
 
--- Lines: 2594 to 2599
+-- Lines 2594-2599
 function NavFieldBuilder:_set_new_blockers_used()
 	for unit_id, unit in pairs(self._new_blockers) do
 		self._helper_blockers[unit_id] = self._building.id
@@ -2597,7 +2634,7 @@ function NavFieldBuilder:_set_new_blockers_used()
 	self._new_blockers = nil
 end
 
--- Lines: 2603 to 2607
+-- Lines 2603-2607
 function NavFieldBuilder:_disable_blocker(unit)
 	local u_id = unit:unit_data().unit_id
 	self._disabled_blockers[u_id] = unit
@@ -2605,7 +2642,7 @@ function NavFieldBuilder:_disable_blocker(unit)
 	unit:set_enabled(false)
 end
 
--- Lines: 2611 to 2615
+-- Lines 2611-2615
 function NavFieldBuilder:_enable_blocker(unit)
 	local u_id = unit:unit_data().unit_id
 	self._disabled_blockers[u_id] = nil
@@ -2613,7 +2650,7 @@ function NavFieldBuilder:_enable_blocker(unit)
 	unit:set_enabled(true)
 end
 
--- Lines: 2619 to 2628
+-- Lines 2619-2628
 function NavFieldBuilder:_reenable_all_blockers()
 	if self._disabled_blockers then
 		for _, blocker_unit in pairs(self._disabled_blockers) do
@@ -2626,7 +2663,7 @@ function NavFieldBuilder:_reenable_all_blockers()
 	self._disabled_blockers = nil
 end
 
--- Lines: 2632 to 2638
+-- Lines 2632-2638
 function NavFieldBuilder:_disable_all_blockers()
 	local all_blockers = World:find_units_quick("all", 15)
 	self._disabled_blockers = self._disabled_blockers or {}
@@ -2636,7 +2673,7 @@ function NavFieldBuilder:_disable_all_blockers()
 	end
 end
 
--- Lines: 2642 to 2645
+-- Lines 2642-2646
 function NavFieldBuilder:_chk_line_overlap(line1, line2)
 	local overlap_max = math.min(line1[2], line2[2])
 	local overlap_min = math.max(line1[1], line2[1])
@@ -2647,7 +2684,7 @@ function NavFieldBuilder:_chk_line_overlap(line1, line2)
 	}
 end
 
--- Lines: 2651 to 2721
+-- Lines 2650-2721
 function NavFieldBuilder:_measure_init_room_expansion(room, enter_pos)
 	local perp_pos_dir_str_map = self._perp_pos_dir_str_map
 	local perp_neg_dir_str_map = self._perp_neg_dir_str_map
@@ -2712,12 +2749,12 @@ function NavFieldBuilder:_measure_init_room_expansion(room, enter_pos)
 	inclination.y = (z_y_pos - z_y_neg) / self._grid_size
 end
 
--- Lines: 2725 to 2726
+-- Lines 2725-2727
 function NavFieldBuilder:_calculate_expanded_border(dir_str, border, grid_step)
 	return self._neg_dir_str_map[dir_str] and border - grid_step or border + grid_step
 end
 
--- Lines: 2731 to 2762
+-- Lines 2731-2762
 function NavFieldBuilder:_find_room_height_from_expansion(expansion, height, side)
 	local y_max, y_min = nil
 
@@ -2752,7 +2789,7 @@ function NavFieldBuilder:_find_room_height_from_expansion(expansion, height, sid
 	end
 end
 
--- Lines: 2766 to 2773
+-- Lines 2766-2774
 function NavFieldBuilder._get_room_height_at_pos(height, borders, pos)
 	local lerp_x = (pos.x - borders.x_neg) / (borders.x_pos - borders.x_neg)
 	local lerp_y = (pos.y - borders.y_neg) / (borders.y_pos - borders.y_neg)
@@ -2763,22 +2800,22 @@ function NavFieldBuilder._get_room_height_at_pos(height, borders, pos)
 	return plane_z
 end
 
--- Lines: 2778 to 2779
+-- Lines 2778-2780
 function NavFieldBuilder:_ground_ray(air_pos)
 	return World:raycast("ray", air_pos, air_pos + self._down_vec, "slot_mask", self._slotmask, "ray_type", "walk")
 end
 
--- Lines: 2784 to 2785
+-- Lines 2784-2786
 function NavFieldBuilder:_sphere_ray(from, to, raycast_radius)
 	return World:raycast("ray", from, to, "slot_mask", self._slotmask, "sphere_cast_radius", raycast_radius, "ray_type", "walk")
 end
 
--- Lines: 2790 to 2791
+-- Lines 2790-2792
 function NavFieldBuilder:_bundle_ray(from, to, raycast_radius)
 	return World:raycast("ray", from, to, "slot_mask", self._slotmask, "sphere_cast_radius", raycast_radius, "bundle", math.max(3, math.ceil(raycast_radius)), "ray_type", "walk")
 end
 
--- Lines: 2797 to 2831
+-- Lines 2796-2833
 function NavFieldBuilder:_check_line_z_overlap_bool(overlap_room_borders, ext_room_borders, overlap_room_height, ext_room_height, dir_str, clamp_a, segment)
 	local is_x = dir_str == "x_pos" or dir_str == "x_neg"
 	local seg_pos_1, seg_pos_2 = nil
@@ -2808,12 +2845,12 @@ function NavFieldBuilder:_check_line_z_overlap_bool(overlap_room_borders, ext_ro
 	return true
 end
 
--- Lines: 2837 to 2838
+-- Lines 2837-2839
 function NavFieldBuilder._check_room_overlap_bool(rect_1, rect_2)
 	return rect_2.y_pos >= rect_1.y_neg and rect_1.y_pos >= rect_2.y_neg and rect_1.x_pos >= rect_2.x_neg and rect_2.x_pos >= rect_1.x_neg
 end
 
--- Lines: 2868 to 2907
+-- Lines 2866-2907
 function NavFieldBuilder:_commence_vis_graph_build()
 	if self._building.stage == 1 then
 		local i_room_a = self._building.current_i_room_a
@@ -2859,7 +2896,7 @@ function NavFieldBuilder:_commence_vis_graph_build()
 	end
 end
 
--- Lines: 2911 to 2978
+-- Lines 2911-2978
 function NavFieldBuilder:_create_room_to_room_visibility_data(build_data)
 	local i_room_a = build_data.current_i_room_a
 	local i_room_b = build_data.current_i_room_b
@@ -2936,7 +2973,7 @@ function NavFieldBuilder:_create_room_to_room_visibility_data(build_data)
 	build_data.current_i_room_b = i_room_b
 end
 
--- Lines: 2983 to 3055
+-- Lines 2982-3057
 function NavFieldBuilder:_chk_room_to_room_visibility(room_a, room_b, old_rays_x_a, old_rays_y_a, old_rays_x_b, old_rays_y_b, nr_raycasts_allowed, ray_dis)
 	local borders_a = room_a.borders
 	local borders_b = room_b.borders
@@ -3008,7 +3045,7 @@ function NavFieldBuilder:_chk_room_to_room_visibility(room_a, room_b, old_rays_x
 	return false, nr_rays
 end
 
--- Lines: 3061 to 3071
+-- Lines 3061-3071
 function NavFieldBuilder:_set_rooms_visible(i_room_a, i_room_b)
 	local room_a = self._rooms[i_room_a]
 	local room_b = self._rooms[i_room_b]
@@ -3018,7 +3055,7 @@ function NavFieldBuilder:_set_rooms_visible(i_room_a, i_room_b)
 	self._room_visibility_data[i_room_b][i_room_a] = true
 end
 
--- Lines: 3076 to 3128
+-- Lines 3075-3128
 function NavFieldBuilder:_create_visibility_groups(nav_seg_id)
 	local all_rooms = self._rooms
 	local nav_segments = self._nav_segments
@@ -3040,7 +3077,9 @@ function NavFieldBuilder:_create_visibility_groups(nav_seg_id)
 		local search_i = sorted_vis_list[search_index].i_room
 
 		if not self._rooms[search_i].vis_group then
-			local search_stack = {search_i}
+			local search_stack = {
+				search_i
+			}
 			local searched_rooms = {}
 			local room = all_rooms[search_i]
 			local pos = self:_calculate_room_center(room)
@@ -3075,7 +3114,7 @@ function NavFieldBuilder:_create_visibility_groups(nav_seg_id)
 	end
 end
 
--- Lines: 3132 to 3156
+-- Lines 3132-3156
 function NavFieldBuilder:_add_visible_neighbours_to_stack(i_room, search_stack, searched_rooms, vip_list, rooms_in_group, node_pos)
 	local rooms = self._rooms
 	local room = rooms[i_room]
@@ -3106,7 +3145,7 @@ function NavFieldBuilder:_add_visible_neighbours_to_stack(i_room, search_stack, 
 	end
 end
 
--- Lines: 3160 to 3182
+-- Lines 3160-3184
 function NavFieldBuilder:_sort_rooms_according_to_visibility()
 	local sorted_vis_list = {}
 
@@ -3129,12 +3168,12 @@ function NavFieldBuilder:_sort_rooms_according_to_visibility()
 	return sorted_vis_list
 end
 
--- Lines: 3188 to 3189
+-- Lines 3188-3190
 function NavFieldBuilder:_calc_room_area(borders)
 	return (borders.x_pos - borders.x_neg) * (borders.y_pos - borders.y_neg)
 end
 
--- Lines: 3194 to 3199
+-- Lines 3194-3200
 function NavFieldBuilder:_calculate_room_center(room)
 	local borders = room.borders
 	local pos = Vector3((borders.x_pos + borders.x_neg) * 0.5, (borders.y_pos + borders.y_neg) * 0.5, 0)
@@ -3145,7 +3184,7 @@ function NavFieldBuilder:_calculate_room_center(room)
 	return pos
 end
 
--- Lines: 3205 to 3217
+-- Lines 3205-3217
 function NavFieldBuilder:_link_visibility_groups()
 	for i_group, group in ipairs(self._visibility_groups) do
 		for i_room, _ in pairs(group.rooms) do
@@ -3162,7 +3201,7 @@ function NavFieldBuilder:_link_visibility_groups()
 	end
 end
 
--- Lines: 3221 to 3267
+-- Lines 3221-3267
 function NavFieldBuilder:_generate_coarse_navigation_graph()
 	local neg_dir_str = self._neg_dir_str_map
 	local all_vis_groups = self._visibility_groups
@@ -3218,7 +3257,7 @@ function NavFieldBuilder:_generate_coarse_navigation_graph()
 	end
 end
 
--- Lines: 3271 to 3282
+-- Lines 3271-3282
 function NavFieldBuilder:set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 	if not self._nav_segments then
 		return
@@ -3232,4 +3271,3 @@ function NavFieldBuilder:set_nav_seg_metadata(nav_seg_id, param_name, param_valu
 
 	nav_seg[param_name] = param_value
 end
-

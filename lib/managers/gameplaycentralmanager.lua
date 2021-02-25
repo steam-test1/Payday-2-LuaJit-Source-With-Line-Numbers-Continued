@@ -21,7 +21,7 @@ local mvec3_dist = mvector3.distance
 local mvec3_dot = mvector3.dot
 GamePlayCentralManager = GamePlayCentralManager or class()
 
--- Lines: 26 to 65
+-- Lines 26-65
 function GamePlayCentralManager:init()
 	self._bullet_hits = {}
 	self._play_effects = {}
@@ -63,7 +63,7 @@ function GamePlayCentralManager:init()
 	self._block_blood_decals = is_x360
 end
 
--- Lines: 67 to 75
+-- Lines 67-75
 function GamePlayCentralManager:setup_effects(level_id)
 	local lvl_id = level_id or Global.level_data and Global.level_data.level_id
 	local lvl_tweak_data = Global.level_data and tweak_data.levels[lvl_id]
@@ -75,7 +75,7 @@ function GamePlayCentralManager:setup_effects(level_id)
 	end
 end
 
--- Lines: 79 to 86
+-- Lines 79-86
 function GamePlayCentralManager:restart_portal_effects()
 	if not self._portal_effects_restarted then
 		self._portal_effects_restarted = true
@@ -86,21 +86,21 @@ function GamePlayCentralManager:restart_portal_effects()
 	end
 end
 
--- Lines: 88 to 94
+-- Lines 88-94
 function GamePlayCentralManager:_init_impact_sources()
 	self._impact_sounds = {
 		index = 1,
 		sources = {}
 	}
 
-	for i = 1, 20, 1 do
+	for i = 1, 20 do
 		table.insert(self._impact_sounds.sources, SoundDevice:create_source("impact_sound" .. i))
 	end
 
 	self._impact_sounds.max_index = #self._impact_sounds.sources
 end
 
--- Lines: 96 to 99
+-- Lines 96-100
 function GamePlayCentralManager:_get_impact_source()
 	local source = self._impact_sounds.sources[self._impact_sounds.index]
 	self._impact_sounds.index = self._impact_sounds.index < self._impact_sounds.max_index and self._impact_sounds.index + 1 or 1
@@ -108,7 +108,7 @@ function GamePlayCentralManager:_get_impact_source()
 	return source
 end
 
--- Lines: 104 to 109
+-- Lines 104-109
 function GamePlayCentralManager:test_current_weapon_cycle(limited, manual)
 	local unit = managers.player:player_unit()
 	local weapon = unit:inventory():equipped_unit()
@@ -117,7 +117,7 @@ function GamePlayCentralManager:test_current_weapon_cycle(limited, manual)
 	self:test_weapon_cycle(weapon, blueprints, manual)
 end
 
--- Lines: 111 to 119
+-- Lines 111-119
 function GamePlayCentralManager:test_weapon_cycle(weapon, blueprints, manual)
 	self._test_weapon = weapon
 	self._test_weapon_force_gadget = not manual
@@ -128,12 +128,12 @@ function GamePlayCentralManager:test_weapon_cycle(weapon, blueprints, manual)
 	self._pause_weapon_cycle = false
 end
 
--- Lines: 121 to 123
+-- Lines 121-123
 function GamePlayCentralManager:toggle_pause_weapon_cycle()
 	self._pause_weapon_cycle = not self._pause_weapon_cycle
 end
 
--- Lines: 125 to 142
+-- Lines 125-142
 function GamePlayCentralManager:next_weapon()
 	if alive(self._test_weapon) then
 		local blueprint = self._blueprint_random and self._blueprints[math.random(#self._blueprints)] or self._blueprints[self._blueprint_i]
@@ -146,7 +146,7 @@ function GamePlayCentralManager:next_weapon()
 
 		self._blueprint_i = self._blueprint_i + 1
 
-		if #self._blueprints < self._blueprint_i then
+		if self._blueprint_i > #self._blueprints then
 			self._blueprint_i = 1
 		end
 
@@ -156,12 +156,12 @@ function GamePlayCentralManager:next_weapon()
 	end
 end
 
--- Lines: 144 to 146
+-- Lines 144-146
 function GamePlayCentralManager:stop_test_weapon_cycle()
 	self._test_weapon = nil
 end
 
--- Lines: 150 to 222
+-- Lines 150-222
 function GamePlayCentralManager:update(t, dt)
 	if alive(self._test_weapon) and self._blueprint_t and self._blueprint_t < t then
 		self._blueprint_t = Application:time() + 0.1
@@ -225,7 +225,7 @@ function GamePlayCentralManager:update(t, dt)
 	self:_update_projectile_trails(t, dt)
 end
 
--- Lines: 228 to 245
+-- Lines 224-245
 function GamePlayCentralManager:end_update(t, dt)
 	self._camera_pos = managers.viewport:get_current_camera_position()
 
@@ -236,7 +236,7 @@ function GamePlayCentralManager:end_update(t, dt)
 	self:_flush_queue_fire_raycast()
 end
 
--- Lines: 261 to 316
+-- Lines 255-316
 function GamePlayCentralManager:play_impact_sound_and_effects(params)
 	if params.immediate then
 		self:_play_bullet_hit(params)
@@ -245,7 +245,7 @@ function GamePlayCentralManager:play_impact_sound_and_effects(params)
 	end
 end
 
--- Lines: 318 to 327
+-- Lines 318-327
 function GamePlayCentralManager:request_play_footstep(unit, m_pos)
 	if self._camera_pos then
 		local dis = mvec3_dist_sq(self._camera_pos, m_pos)
@@ -259,7 +259,7 @@ function GamePlayCentralManager:request_play_footstep(unit, m_pos)
 	end
 end
 
--- Lines: 329 to 365
+-- Lines 329-365
 function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 	local unit = col_ray.unit
 	push_multiplier = push_multiplier or 1
@@ -273,7 +273,7 @@ function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 			local nr_bodies = unit:num_bodies()
 			local i_body = 0
 
-			while i_body < nr_bodies do
+			while nr_bodies > i_body do
 				local test_body = unit:body(i_body)
 
 				if test_body:enabled() and test_body:dynamic() then
@@ -308,7 +308,7 @@ function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 	end
 end
 
--- Lines: 367 to 389
+-- Lines 367-389
 function GamePlayCentralManager:play_impact_flesh(params)
 	local col_ray = params.col_ray
 
@@ -333,7 +333,7 @@ function GamePlayCentralManager:play_impact_flesh(params)
 	end
 end
 
--- Lines: 392 to 415
+-- Lines 392-415
 function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	local splatter_from = from
 	local splatter_to = from + dir * 1000
@@ -365,7 +365,7 @@ function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	sound_source:post_event("bullet_hit")
 end
 
--- Lines: 418 to 424
+-- Lines 418-425
 function GamePlayCentralManager:material_name(idstring)
 	local material = tweak_data.materials[idstring:key()]
 
@@ -378,7 +378,7 @@ function GamePlayCentralManager:material_name(idstring)
 	return material
 end
 
--- Lines: 431 to 438
+-- Lines 427-438
 function GamePlayCentralManager:spawn_pickup(params)
 	if not tweak_data.pickups[params.name] then
 		Application:error("No pickup definition for " .. tostring(params.name))
@@ -391,29 +391,30 @@ function GamePlayCentralManager:spawn_pickup(params)
 	World:spawn_unit(unit_name, params.position, params.rotation)
 end
 
--- Lines: 457 to 461
+-- Lines 456-461
 function GamePlayCentralManager:_flush_bullet_hits()
 	if #self._bullet_hits > 0 then
 		self:_play_bullet_hit(table.remove(self._bullet_hits, 1))
 	end
 end
 
--- Lines: 464 to 468
+-- Lines 464-468
 function GamePlayCentralManager:_flush_play_effects()
 	while #self._play_effects > 0 do
 		self._effect_manager:spawn(table.remove(self._play_effects, 1))
 	end
 end
 
--- Lines: 470 to 474
+-- Lines 470-474
 function GamePlayCentralManager:_flush_play_sounds()
 	while #self._play_sounds > 0 do
 		self:_play_sound(table.remove(self._play_sounds, 1))
 	end
 end
+
 local zero_vector = Vector3()
 
--- Lines: 481 to 558
+-- Lines 477-558
 function GamePlayCentralManager:_play_bullet_hit(params)
 	local hit_pos = params.col_ray.position
 	local need_sound = not params.no_sound and World:in_view_with_options(hit_pos, 4000, 0, 0)
@@ -452,7 +453,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	mvec3_spread(effect_normal, 10)
 
 	local material_name, pos, norm = World:pick_decal_material(col_ray.unit, decal_ray_from, decal_ray_to, slot_mask)
-	material_name = material_name ~= empty_idstr and false
+	material_name = material_name ~= empty_idstr and material_name
 	local effect = params.effect
 
 	if material_name then
@@ -504,7 +505,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	end
 end
 
--- Lines: 560 to 567
+-- Lines 560-567
 function GamePlayCentralManager:_play_sound(params)
 	local sound_source = self:_get_impact_source()
 
@@ -514,7 +515,7 @@ function GamePlayCentralManager:_play_sound(params)
 	sound_source:post_event(params.event)
 end
 
--- Lines: 569 to 608
+-- Lines 569-608
 function GamePlayCentralManager:_flush_footsteps()
 	local footstep = table.remove(self._footsteps, 1)
 
@@ -540,7 +541,7 @@ function GamePlayCentralManager:_flush_footsteps()
 				material_name, pos, norm = World:pick_decal_material(decal_ray_from, decal_ray_to, self._slotmask_footstep)
 			end
 
-			material_name = material_name ~= empty_idstr and false
+			material_name = material_name ~= empty_idstr and material_name
 
 			if material_name then
 				sound_switch_name = material_name
@@ -561,7 +562,7 @@ function GamePlayCentralManager:_flush_footsteps()
 	end
 end
 
--- Lines: 612 to 624
+-- Lines 612-624
 function GamePlayCentralManager:weapon_dropped(weapon)
 	local flashlight_data = weapon:base():flashlight_data()
 
@@ -585,7 +586,7 @@ function GamePlayCentralManager:weapon_dropped(weapon)
 	})
 end
 
--- Lines: 626 to 636
+-- Lines 626-636
 function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	if self._flashlights_on == flashlights_on then
 		return
@@ -599,19 +600,19 @@ function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	end
 end
 
--- Lines: 638 to 639
+-- Lines 638-640
 function GamePlayCentralManager:flashlights_on()
 	return self._flashlights_on
 end
 
--- Lines: 642 to 646
+-- Lines 642-646
 function GamePlayCentralManager:on_simulation_ended()
 	self:set_flashlights_on(false)
 	self:set_flashlights_on_player_on(false)
 	self:stop_heist_timer()
 end
 
--- Lines: 648 to 658
+-- Lines 648-658
 function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_player_on)
 	if self._flashlights_on_player_on == flashlights_on_player_on then
 		return
@@ -625,12 +626,12 @@ function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_play
 	end
 end
 
--- Lines: 660 to 661
+-- Lines 660-662
 function GamePlayCentralManager:flashlights_on_player_on()
 	return self._flashlights_on_player_on
 end
 
--- Lines: 665 to 679
+-- Lines 665-679
 function GamePlayCentralManager:mission_disable_unit(unit)
 	if alive(unit) then
 		if unit:name() == Idstring("units/payday2/vehicles/air_vehicle_blackhawk/helicopter_cops_ref") then
@@ -651,7 +652,7 @@ function GamePlayCentralManager:mission_disable_unit(unit)
 	end
 end
 
--- Lines: 682 to 696
+-- Lines 682-696
 function GamePlayCentralManager:mission_enable_unit(unit)
 	if alive(unit) then
 		if unit:name() == Idstring("units/payday2/vehicles/air_vehicle_blackhawk/helicopter_cops_ref") then
@@ -672,12 +673,12 @@ function GamePlayCentralManager:mission_enable_unit(unit)
 	end
 end
 
--- Lines: 699 to 700
+-- Lines 699-701
 function GamePlayCentralManager:get_heist_timer()
 	return self._heist_timer and Application:time() - (self._heist_timer.start_time or 0) + (self._heist_timer.offset_time or 0) or 0
 end
 
--- Lines: 705 to 715
+-- Lines 704-715
 function GamePlayCentralManager:start_heist_timer()
 	if self._heist_timer and self._heist_timer.inverted then
 		return
@@ -689,7 +690,7 @@ function GamePlayCentralManager:start_heist_timer()
 	self._heist_timer.next_sync = Application:time() + 10
 end
 
--- Lines: 718 to 728
+-- Lines 718-728
 function GamePlayCentralManager:start_inverted_heist_timer(time)
 	self._heist_timer.running = true
 	self._heist_timer.start_time = Application:time() + time
@@ -698,25 +699,25 @@ function GamePlayCentralManager:start_inverted_heist_timer(time)
 	self._heist_timer.inverted = true
 end
 
--- Lines: 730 to 733
+-- Lines 730-733
 function GamePlayCentralManager:modify_heist_timer(time)
 	self._heist_timer.start_time = self._heist_timer.start_time + time
 
 	managers.hud:modify_heist_time(time)
 end
 
--- Lines: 737 to 739
+-- Lines 737-739
 function GamePlayCentralManager:stop_heist_timer()
 	self._heist_timer.running = false
 end
 
--- Lines: 742 to 745
+-- Lines 741-745
 function GamePlayCentralManager:sync_heist_time(heist_time)
 	self._heist_timer.offset_time = heist_time
 	self._heist_timer.start_time = Application:time()
 end
 
--- Lines: 749 to 757
+-- Lines 749-757
 function GamePlayCentralManager:restart_the_game()
 	managers.criminals:save_current_character_names()
 	managers.job:stop_sounds()
@@ -726,7 +727,7 @@ function GamePlayCentralManager:restart_the_game()
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines: 759 to 771
+-- Lines 759-771
 function GamePlayCentralManager:stop_the_game()
 	managers.job:stop_sounds()
 	managers.statistics:stop_session()
@@ -742,19 +743,21 @@ function GamePlayCentralManager:stop_the_game()
 	end
 end
 
--- Lines: 775 to 779
+-- Lines 775-779
 function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	self._queue_fire_raycast = self._queue_fire_raycast or {}
 	local data = {
 		expire_t = expire_t,
 		weapon_unit = weapon_unit,
-		data = {...}
+		data = {
+			...
+		}
 	}
 
 	table.insert(self._queue_fire_raycast, data)
 end
 
--- Lines: 781 to 799
+-- Lines 781-799
 function GamePlayCentralManager:_flush_queue_fire_raycast()
 	local i = 1
 
@@ -776,7 +779,7 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 	end
 end
 
--- Lines: 805 to 830
+-- Lines 805-831
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
 
@@ -806,7 +809,7 @@ function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	return true
 end
 
--- Lines: 835 to 840
+-- Lines 835-841
 function GamePlayCentralManager:get_shotgun_push_range()
 	local range = 500
 	range = managers.mutators:modify_value("GamePlayCentralManager:get_shotgun_push_range", range)
@@ -814,7 +817,7 @@ function GamePlayCentralManager:get_shotgun_push_range()
 	return range
 end
 
--- Lines: 844 to 856
+-- Lines 843-856
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if self:get_shotgun_push_range() < distance then
 		return
@@ -827,7 +830,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, at
 	self:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 end
 
--- Lines: 859 to 885
+-- Lines 858-885
 function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if unit:movement()._active_actions[1] and unit:movement()._active_actions[1]:type() == "hurt" then
 		unit:movement()._active_actions[1]:force_ragdoll()
@@ -841,22 +844,23 @@ function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, a
 	local nr_u_bodies = unit:num_bodies()
 	local i_u_body = 0
 
-	while i_u_body < nr_u_bodies do
+	while nr_u_bodies > i_u_body do
 		local u_body = unit:body(i_u_body)
 
 		if u_body:enabled() and u_body:dynamic() then
 			local body_mass = u_body:mass()
 
-			World:play_physic_effect(Idstring("physic_effects/shotgun_hit"), u_body, Vector3(dir.x, dir.y, dir.z + 0.5) * 600 * scale, (4 * body_mass) / math.random(2), rot_acc, rot_time)
+			World:play_physic_effect(Idstring("physic_effects/shotgun_hit"), u_body, Vector3(dir.x, dir.y, dir.z + 0.5) * 600 * scale, 4 * body_mass / math.random(2), rot_acc, rot_time)
 			managers.mutators:notify(Message.OnShotgunPush, unit, hit_pos, dir, distance, attacker)
 		end
 
 		i_u_body = i_u_body + 1
 	end
 end
+
 local default_projectile_trail = Idstring("effects/payday2/particles/weapons/arrow_trail")
 
--- Lines: 890 to 897
+-- Lines 890-897
 function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	if self._projectile_trails[unit:key()] then
 		return
@@ -867,10 +871,12 @@ function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 		effect = effect_ids,
 		parent = object
 	})
-	self._projectile_trails[unit:key()] = {effect = effect}
+	self._projectile_trails[unit:key()] = {
+		effect = effect
+	}
 end
 
--- Lines: 899 to 911
+-- Lines 899-911
 function GamePlayCentralManager:remove_projectile_trail(unit)
 	local data = self._projectile_trails[unit:key()]
 
@@ -885,11 +891,12 @@ function GamePlayCentralManager:remove_projectile_trail(unit)
 	data.total_t = 0.5
 	data.t = data.total_t
 end
+
 local atom_ids = Idstring("Trail - Straight")
 local simulator_ids = Idstring("opacity_1")
 local opacity_ids = Idstring("opacity")
 
--- Lines: 917 to 929
+-- Lines 917-929
 function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	for unit_key, data in pairs(self._projectile_trails) do
 		if data.t then
@@ -907,7 +914,7 @@ function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	end
 end
 
--- Lines: 933 to 939
+-- Lines 933-939
 function GamePlayCentralManager:announcer_say(event)
 	if not self._announcer_sound_source then
 		self._announcer_sound_source = SoundDevice:create_source("announcer")
@@ -916,7 +923,7 @@ function GamePlayCentralManager:announcer_say(event)
 	self._announcer_sound_source:post_event(event)
 end
 
--- Lines: 943 to 952
+-- Lines 943-952
 function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
@@ -928,7 +935,7 @@ function GamePlayCentralManager:save(data)
 	data.GamePlayCentralManager = state
 end
 
--- Lines: 954 to 968
+-- Lines 954-968
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
 
@@ -948,17 +955,19 @@ function GamePlayCentralManager:load(data)
 	end
 end
 
--- Lines: 976 to 1032
+-- Lines 976-1032
 function GamePlayCentralManager:debug_weapon()
 	managers.debug:set_enabled(true)
-	managers.debug:set_systems_enabled(true, {"gui"})
+	managers.debug:set_systems_enabled(true, {
+		"gui"
+	})
 
 	local gui = managers.debug._system_list.gui
 	local tweak_data = tweak_data.weapon.stats
 
 	gui:clear()
 
-	-- Lines: 983 to 1027
+	-- Lines 983-1028
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
 			return ""
@@ -969,7 +978,7 @@ function GamePlayCentralManager:debug_weapon()
 		local blueprint = weapon:base()._blueprint
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
-		-- Lines: 993 to 994
+		-- Lines 993-995
 		local function add_line(text, s)
 			return text .. s .. "\n"
 		end
@@ -1011,4 +1020,3 @@ function GamePlayCentralManager:debug_weapon()
 	gui:set_func(1, add_func)
 	gui:set_color(1, 1, 1, 1)
 end
-

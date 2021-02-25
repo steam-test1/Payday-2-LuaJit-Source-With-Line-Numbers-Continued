@@ -1,6 +1,6 @@
 SkirmishBriefingProgress = SkirmishBriefingProgress or class(GUIObjectWrapper)
 
--- Lines: 3 to 10
+-- Lines 3-10
 function SkirmishBriefingProgress:init(parent, config)
 	local panel = parent:panel(config)
 
@@ -12,7 +12,7 @@ function SkirmishBriefingProgress:init(parent, config)
 	panel:animate(callback(self, self, "_sniff_for_wave_change"))
 end
 
--- Lines: 12 to 22
+-- Lines 12-22
 function SkirmishBriefingProgress:_sniff_for_wave_change()
 	local last_sniffed_wave = nil
 
@@ -29,7 +29,7 @@ function SkirmishBriefingProgress:_sniff_for_wave_change()
 	end
 end
 
--- Lines: 24 to 72
+-- Lines 24-72
 function SkirmishBriefingProgress:redraw()
 	if self._canvas then
 		self._gui_obj:remove(self._canvas)
@@ -53,10 +53,10 @@ function SkirmishBriefingProgress:redraw()
 	progress_bar:set_center_x(self._canvas:width() * 0.5)
 	progress_bar:set_center_y(self._canvas:height() * 0.5)
 
-	for i = 0, wave_diff, 1 do
+	for i = 0, wave_diff do
 		local wave_number = start_wave + i
 		local wave_progress = i / wave_diff
-		local color = wave_progress <= progress and tweak_data.screen_colors.skirmish_color or tweak_data.screen_colors.text:with_alpha(0.4)
+		local color = progress >= wave_progress and tweak_data.screen_colors.skirmish_color or tweak_data.screen_colors.text:with_alpha(0.4)
 		local wave_indicator = nil
 
 		if wave_number == start_wave or wave_number == end_wave or wave_number == current_wave then
@@ -79,9 +79,10 @@ function SkirmishBriefingProgress:redraw()
 		wave_indicator:set_center_x(progress_bar:x() + progress_bar:width() * wave_progress)
 	end
 end
+
 SkirmishProgressWaveNumber = SkirmishProgressWaveNumber or class(GUIObjectWrapper)
 
--- Lines: 76 to 107
+-- Lines 76-107
 function SkirmishProgressWaveNumber:init(parent, config)
 	local panel = parent:panel()
 
@@ -112,4 +113,3 @@ function SkirmishProgressWaveNumber:init(parent, config)
 	panel:set_width(width)
 	panel:set_height(arrow:bottom())
 end
-

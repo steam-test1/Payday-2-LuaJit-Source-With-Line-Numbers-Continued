@@ -1,7 +1,7 @@
 ConcussionGrenade = ConcussionGrenade or class(GrenadeBase)
 ConcussionGrenade._PLAYER_FLASH_RANGE = 500
 
--- Lines: 7 to 29
+-- Lines 7-29
 function ConcussionGrenade:_setup_from_tweak_data()
 	local grenade_entry = self._tweak_projectile_entry or "concussion"
 	local tweak_entry = tweak_data.projectiles[grenade_entry]
@@ -22,7 +22,7 @@ function ConcussionGrenade:_setup_from_tweak_data()
 	}
 end
 
--- Lines: 37 to 43
+-- Lines 31-43
 function ConcussionGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if other_unit and other_unit:vehicle() and other_unit:vehicle():is_active() then
 		return
@@ -31,7 +31,7 @@ function ConcussionGrenade:clbk_impact(tag, unit, body, other_unit, other_body, 
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines: 51 to 57
+-- Lines 45-57
 function ConcussionGrenade:_on_collision(col_ray)
 	if col_ray and col_ray.unit:vehicle() and col_ray.unit:vehicle():is_active() then
 		return
@@ -40,7 +40,7 @@ function ConcussionGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines: 60 to 83
+-- Lines 60-83
 function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -67,7 +67,7 @@ function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, po
 	self._unit:set_slot(0)
 end
 
--- Lines: 87 to 100
+-- Lines 85-100
 function ConcussionGrenade:_can_stun_unit(unit)
 	local can_stun = false
 	local unit_name = nil
@@ -83,7 +83,7 @@ function ConcussionGrenade:_can_stun_unit(unit)
 	end
 end
 
--- Lines: 104 to 109
+-- Lines 104-109
 function ConcussionGrenade:_detonate_on_client()
 	local pos = self._unit:position()
 	local range = self._range
@@ -92,7 +92,7 @@ function ConcussionGrenade:_detonate_on_client()
 	self:_flash_player()
 end
 
--- Lines: 111 to 120
+-- Lines 111-120
 function ConcussionGrenade:_flash_player()
 	local detonate_pos = self._unit:position() + math.UP * 100
 	local range = self._PLAYER_FLASH_RANGE
@@ -107,7 +107,7 @@ function ConcussionGrenade:_flash_player()
 	end
 end
 
--- Lines: 124 to 131
+-- Lines 124-131
 function ConcussionGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -117,4 +117,3 @@ function ConcussionGrenade:bullet_hit()
 
 	self:_detonate()
 end
-

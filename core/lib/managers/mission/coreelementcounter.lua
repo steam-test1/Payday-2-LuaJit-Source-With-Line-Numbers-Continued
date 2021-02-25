@@ -4,7 +4,7 @@ core:import("CoreClass")
 
 ElementCounter = ElementCounter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 7 to 13
+-- Lines 7-13
 function ElementCounter:init(...)
 	ElementCounter.super.init(self, ...)
 
@@ -12,7 +12,7 @@ function ElementCounter:init(...)
 	self._triggers = {}
 end
 
--- Lines: 15 to 40
+-- Lines 15-40
 function ElementCounter:on_script_activated()
 	self._values.counter_target = self:value("counter_target")
 	self._original_value = self._values.counter_target
@@ -40,13 +40,13 @@ function ElementCounter:on_script_activated()
 	end
 end
 
--- Lines: 42 to 45
+-- Lines 42-45
 function ElementCounter:_load_unit(unit)
 	table.insert(self._digital_gui_units, unit)
 	unit:digital_gui():number_set(self._values.counter_target)
 end
 
--- Lines: 47 to 66
+-- Lines 47-66
 function ElementCounter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -69,14 +69,14 @@ function ElementCounter:on_executed(instigator)
 	end
 end
 
--- Lines: 68 to 71
+-- Lines 68-71
 function ElementCounter:reset_counter_target(counter_target)
 	self._values.counter_target = counter_target
 
 	self:_update_digital_guis_number()
 end
 
--- Lines: 74 to 79
+-- Lines 73-79
 function ElementCounter:counter_operation_add(amount)
 	self._values.counter_target = self._values.counter_target + amount
 
@@ -85,7 +85,7 @@ function ElementCounter:counter_operation_add(amount)
 	self:_check_triggers("value")
 end
 
--- Lines: 82 to 87
+-- Lines 81-87
 function ElementCounter:counter_operation_subtract(amount)
 	self._values.counter_target = self._values.counter_target - amount
 
@@ -94,7 +94,7 @@ function ElementCounter:counter_operation_subtract(amount)
 	self:_check_triggers("value")
 end
 
--- Lines: 90 to 95
+-- Lines 89-95
 function ElementCounter:counter_operation_reset(amount)
 	self._values.counter_target = self._original_value
 
@@ -103,7 +103,7 @@ function ElementCounter:counter_operation_reset(amount)
 	self:_check_triggers("value")
 end
 
--- Lines: 98 to 103
+-- Lines 97-103
 function ElementCounter:counter_operation_set(amount)
 	self._values.counter_target = amount
 
@@ -112,7 +112,7 @@ function ElementCounter:counter_operation_set(amount)
 	self:_check_triggers("value")
 end
 
--- Lines: 106 to 113
+-- Lines 105-113
 function ElementCounter:apply_job_value(amount)
 	local type = CoreClass.type_name(amount)
 
@@ -125,7 +125,7 @@ function ElementCounter:apply_job_value(amount)
 	self:counter_operation_set(amount)
 end
 
--- Lines: 115 to 119
+-- Lines 115-119
 function ElementCounter:add_trigger(id, type, amount, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -134,12 +134,12 @@ function ElementCounter:add_trigger(id, type, amount, callback)
 	}
 end
 
--- Lines: 121 to 122
+-- Lines 121-123
 function ElementCounter:counter_value()
 	return self._values.counter_target
 end
 
--- Lines: 129 to 135
+-- Lines 129-135
 function ElementCounter:_update_digital_guis_number()
 	for _, unit in ipairs(self._digital_gui_units) do
 		if alive(unit) then
@@ -148,7 +148,7 @@ function ElementCounter:_update_digital_guis_number()
 	end
 end
 
--- Lines: 138 to 149
+-- Lines 137-149
 function ElementCounter:_check_triggers(type)
 	if not self._triggers[type] then
 		return
@@ -160,14 +160,15 @@ function ElementCounter:_check_triggers(type)
 		end
 	end
 end
+
 ElementCounterReset = ElementCounterReset or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 155 to 157
+-- Lines 155-157
 function ElementCounterReset:init(...)
 	ElementCounterReset.super.init(self, ...)
 end
 
--- Lines: 159 to 176
+-- Lines 159-176
 function ElementCounterReset:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -187,18 +188,19 @@ function ElementCounterReset:on_executed(instigator)
 
 	ElementCounterReset.super.on_executed(self, instigator)
 end
+
 ElementCounterOperator = ElementCounterOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 182 to 184
+-- Lines 182-184
 function ElementCounterOperator:init(...)
 	ElementCounterOperator.super.init(self, ...)
 end
 
--- Lines: 187 to 188
+-- Lines 186-188
 function ElementCounterOperator:client_on_executed(...)
 end
 
--- Lines: 190 to 213
+-- Lines 190-213
 function ElementCounterOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -224,14 +226,15 @@ function ElementCounterOperator:on_executed(instigator)
 
 	ElementCounterOperator.super.on_executed(self, instigator)
 end
+
 ElementCounterTrigger = ElementCounterTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 219 to 221
+-- Lines 219-221
 function ElementCounterTrigger:init(...)
 	ElementCounterTrigger.super.init(self, ...)
 end
 
--- Lines: 223 to 228
+-- Lines 223-228
 function ElementCounterTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -240,11 +243,11 @@ function ElementCounterTrigger:on_script_activated()
 	end
 end
 
--- Lines: 231 to 232
+-- Lines 230-232
 function ElementCounterTrigger:client_on_executed(...)
 end
 
--- Lines: 234 to 240
+-- Lines 234-240
 function ElementCounterTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -252,22 +255,23 @@ function ElementCounterTrigger:on_executed(instigator)
 
 	ElementCounterTrigger.super.on_executed(self, instigator)
 end
+
 ElementCounterFilter = ElementCounterFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 246 to 248
+-- Lines 246-248
 function ElementCounterFilter:init(...)
 	ElementCounterFilter.super.init(self, ...)
 end
 
--- Lines: 251 to 252
+-- Lines 250-252
 function ElementCounterFilter:on_script_activated()
 end
 
--- Lines: 255 to 256
+-- Lines 254-256
 function ElementCounterFilter:client_on_executed(...)
 end
 
--- Lines: 258 to 268
+-- Lines 258-268
 function ElementCounterFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -280,7 +284,7 @@ function ElementCounterFilter:on_executed(instigator)
 	ElementCounterFilter.super.on_executed(self, instigator)
 end
 
--- Lines: 271 to 288
+-- Lines 270-288
 function ElementCounterFilter:_values_ok()
 	if self._values.check_type == "counters_equal" then
 		return self:_all_counter_values_equal()
@@ -299,7 +303,7 @@ function ElementCounterFilter:_values_ok()
 	end
 end
 
--- Lines: 290 to 300
+-- Lines 290-301
 function ElementCounterFilter:_all_counter_values_equal()
 	local test_value = nil
 
@@ -315,7 +319,7 @@ function ElementCounterFilter:_all_counter_values_equal()
 	return true
 end
 
--- Lines: 303 to 309
+-- Lines 303-310
 function ElementCounterFilter:_all_counters_ok()
 	for _, id in ipairs(self._values.elements) do
 		if not self:_check_type(self:get_mission_element(id)) then
@@ -326,7 +330,7 @@ function ElementCounterFilter:_all_counters_ok()
 	return true
 end
 
--- Lines: 312 to 318
+-- Lines 312-319
 function ElementCounterFilter:_any_counters_ok()
 	for _, id in ipairs(self._values.elements) do
 		if self:_check_type(self:get_mission_element(id)) then
@@ -337,7 +341,7 @@ function ElementCounterFilter:_any_counters_ok()
 	return false
 end
 
--- Lines: 321 to 342
+-- Lines 321-342
 function ElementCounterFilter:_check_type(element)
 	if not self._values.check_type or self._values.check_type == "equal" then
 		return element:counter_value() == self._values.value
@@ -359,4 +363,3 @@ function ElementCounterFilter:_check_type(element)
 		return self._values.value < element:counter_value()
 	end
 end
-

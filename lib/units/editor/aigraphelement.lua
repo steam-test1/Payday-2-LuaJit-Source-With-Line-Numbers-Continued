@@ -1,7 +1,9 @@
 AIGraphUnitElement = AIGraphUnitElement or class(MissionElement)
-AIGraphUnitElement.LINK_ELEMENTS = {"elements"}
+AIGraphUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 14
+-- Lines 4-14
 function AIGraphUnitElement:init(unit)
 	EnemyPreferedRemoveUnitElement.super.init(self, unit)
 
@@ -14,16 +16,16 @@ function AIGraphUnitElement:init(unit)
 	table.insert(self._save_values, "filter_group")
 end
 
--- Lines: 16 to 18
+-- Lines 16-18
 function AIGraphUnitElement:draw_links(t, dt, selected_unit, all_units)
 	EnemyPreferedRemoveUnitElement.super.draw_links(self, t, dt, selected_unit)
 end
 
--- Lines: 20 to 21
+-- Lines 20-21
 function AIGraphUnitElement:update_editing()
 end
 
--- Lines: 23 to 29
+-- Lines 23-30
 function AIGraphUnitElement:_get_unit(id)
 	for _, unit in ipairs(managers.editor:layer("Ai"):created_units()) do
 		if unit:unit_data().unit_id == id then
@@ -32,7 +34,7 @@ function AIGraphUnitElement:_get_unit(id)
 	end
 end
 
--- Lines: 32 to 41
+-- Lines 32-41
 function AIGraphUnitElement:update_selected(t, dt)
 	managers.editor:layer("Ai"):external_draw(t, dt)
 
@@ -51,7 +53,7 @@ function AIGraphUnitElement:update_selected(t, dt)
 	end
 end
 
--- Lines: 43 to 50
+-- Lines 43-50
 function AIGraphUnitElement:update_unselected()
 	for _, id in ipairs(self._hed.graph_ids) do
 		local unit = self:_get_unit(id)
@@ -62,7 +64,7 @@ function AIGraphUnitElement:update_unselected()
 	end
 end
 
--- Lines: 52 to 57
+-- Lines 52-57
 function AIGraphUnitElement:_add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -74,7 +76,7 @@ function AIGraphUnitElement:_add_element()
 	end
 end
 
--- Lines: 59 to 65
+-- Lines 59-65
 function AIGraphUnitElement:_add_or_remove_graph(id)
 	if table.contains(self._hed.graph_ids, id) then
 		table.delete(self._hed.graph_ids, id)
@@ -83,10 +85,9 @@ function AIGraphUnitElement:_add_or_remove_graph(id)
 	end
 end
 
--- Lines: 67 to 73
+-- Lines 67-73
 function AIGraphUnitElement:add_unit_list_btn()
-
-	-- Lines: 67 to 68
+	-- Lines 68-68
 	local function f(unit)
 		return unit:type() == Idstring("ai")
 	end
@@ -98,12 +99,12 @@ function AIGraphUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 76 to 78
+-- Lines 76-78
 function AIGraphUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_add_element"))
 end
 
--- Lines: 80 to 86
+-- Lines 80-86
 function AIGraphUnitElement:set_element_data(data)
 	AIGraphUnitElement.super.set_element_data(self, data)
 
@@ -112,7 +113,7 @@ function AIGraphUnitElement:set_element_data(data)
 	end
 end
 
--- Lines: 89 to 133
+-- Lines 89-137
 function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -125,6 +126,7 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 	self._btn_toolbar:realize()
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 
+	local operation_options = table.list_add(NavigationManager.nav_states, NavigationManager.nav_meta_operations)
 	local operations_params = {
 		name = "Operation:",
 		name_proportions = 1,
@@ -133,7 +135,7 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = panel_sizer,
-		options = NavigationManager.nav_states,
+		options = operation_options,
 		value = self._hed.operation
 	}
 	local operations = CoreEWS.combobox(operations_params)
@@ -143,7 +145,9 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = operations
 	})
 
-	self._filter_group_element = self:_build_value_combobox(panel, panel_sizer, "filter_group", table.list_add({"none"}, clone(ElementSpecialObjective._AI_GROUPS)), "Select a custom filter group.")
+	self._filter_group_element = self:_build_value_combobox(panel, panel_sizer, "filter_group", table.list_add({
+		"none"
+	}, clone(ElementSpecialObjective._AI_GROUPS)), "Select a custom filter group.")
 
 	self._filter_group_element:set_enabled(self._hed.operation == "forbid_custom")
 
@@ -155,4 +159,3 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

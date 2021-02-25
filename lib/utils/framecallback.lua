@@ -1,11 +1,11 @@
 FrameCallback = FrameCallback or class()
 
--- Lines: 6 to 8
+-- Lines 6-8
 function FrameCallback:init()
 	self._callbacks = {}
 end
 
--- Lines: 10 to 17
+-- Lines 10-17
 function FrameCallback:update()
 	for i, obj in pairs(self._callbacks) do
 		obj.current = obj.current + 1
@@ -16,7 +16,7 @@ function FrameCallback:update()
 	end
 end
 
--- Lines: 19 to 24
+-- Lines 19-24
 function FrameCallback:add(key, clbk, target)
 	self._callbacks = self._callbacks or {}
 
@@ -29,7 +29,7 @@ function FrameCallback:add(key, clbk, target)
 	end
 end
 
--- Lines: 26 to 34
+-- Lines 26-34
 function FrameCallback:remove(key)
 	self._callbacks = self._callbacks or {}
 
@@ -41,7 +41,7 @@ function FrameCallback:remove(key)
 	end
 end
 
--- Lines: 36 to 41
+-- Lines 36-41
 function FrameCallback:reset_counter(key)
 	self._callbacks = self._callbacks or {}
 
@@ -49,4 +49,3 @@ function FrameCallback:reset_counter(key)
 		self._callbacks[key].current = 0
 	end
 end
-

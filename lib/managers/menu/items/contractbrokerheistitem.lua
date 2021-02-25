@@ -1,6 +1,6 @@
 local padding = 10
 
--- Lines: 3 to 7
+-- Lines 3-7
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -10,7 +10,7 @@ end
 
 ContractBrokerHeistItem = ContractBrokerHeistItem or class()
 
--- Lines: 12 to 301
+-- Lines 11-301
 function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self._parent = parent_panel
 	self._job_data = job_data
@@ -102,12 +102,16 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 			font = tweak_data.menu.pd2_large_font,
 			font_size = tweak_data.menu.pd2_small_font_size
 		})
-		BoxGuiObject:new(self._image_panel:panel({layer = 100}), {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		BoxGuiObject:new(self._image_panel:panel({
+			layer = 100
+		}), {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 	end
 
 	local job_name = self._panel:text({
@@ -279,22 +283,22 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self:refresh()
 end
 
--- Lines: 303 to 305
+-- Lines 303-305
 function ContractBrokerHeistItem:destroy()
 	self._parent:remove(self._panel)
 end
 
--- Lines: 307 to 308
+-- Lines 307-309
 function ContractBrokerHeistItem:top()
 	return self._panel:top()
 end
 
--- Lines: 311 to 312
+-- Lines 311-313
 function ContractBrokerHeistItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines: 316 to 343
+-- Lines 315-345
 function ContractBrokerHeistItem:get_last_played_text()
 	local current_date = DateTime:new("now")
 	local last_played_date = managers.crimenet:get_last_played_job(self._job_data.job_id)
@@ -306,26 +310,40 @@ function ContractBrokerHeistItem:get_last_played_text()
 		if diff == 0 then
 			time_str = managers.localization:to_upper_text("menu_time_today")
 		elseif diff == 1 then
-			time_str = managers.localization:to_upper_text("menu_time_day_ago", {time = diff})
+			time_str = managers.localization:to_upper_text("menu_time_day_ago", {
+				time = diff
+			})
 		elseif diff < DateTime.days_per_week then
-			time_str = managers.localization:to_upper_text("menu_time_days_ago", {time = diff})
+			time_str = managers.localization:to_upper_text("menu_time_days_ago", {
+				time = diff
+			})
 		elseif diff < DateTime.days_per_week * 2 then
-			time_str = managers.localization:to_upper_text("menu_time_week_ago", {time = math.floor(diff / DateTime.days_per_week)})
+			time_str = managers.localization:to_upper_text("menu_time_week_ago", {
+				time = math.floor(diff / DateTime.days_per_week)
+			})
 		elseif diff < DateTime.days_per_month then
-			time_str = managers.localization:to_upper_text("menu_time_weeks_ago", {time = math.floor(diff / DateTime.days_per_week)})
+			time_str = managers.localization:to_upper_text("menu_time_weeks_ago", {
+				time = math.floor(diff / DateTime.days_per_week)
+			})
 		elseif diff < DateTime.days_per_month * 2 then
-			time_str = managers.localization:to_upper_text("menu_time_month_ago", {time = math.floor(diff / DateTime.days_per_month)})
+			time_str = managers.localization:to_upper_text("menu_time_month_ago", {
+				time = math.floor(diff / DateTime.days_per_month)
+			})
 		elseif diff < DateTime.days_per_month * DateTime.months_per_year then
-			time_str = managers.localization:to_upper_text("menu_time_months_ago", {time = math.floor(diff / DateTime.days_per_month)})
-		elseif DateTime.days_per_month * DateTime.months_per_year <= diff then
+			time_str = managers.localization:to_upper_text("menu_time_months_ago", {
+				time = math.floor(diff / DateTime.days_per_month)
+			})
+		elseif diff >= DateTime.days_per_month * DateTime.months_per_year then
 			time_str = managers.localization:to_upper_text("menu_time_year_over")
 		end
 	end
 
-	return managers.localization:to_upper_text("menu_broker_last_played", {time = time_str})
+	return managers.localization:to_upper_text("menu_broker_last_played", {
+		time = time_str
+	})
 end
 
--- Lines: 348 to 375
+-- Lines 347-377
 function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	local dlc_name = ""
 	local dlc_color = Color(1, 0, 1)
@@ -351,7 +369,7 @@ function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	return dlc_name, dlc_color
 end
 
--- Lines: 380 to 394
+-- Lines 379-396
 function ContractBrokerHeistItem:is_stealthable()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -371,7 +389,7 @@ function ContractBrokerHeistItem:is_stealthable()
 	return false
 end
 
--- Lines: 398 to 406
+-- Lines 398-406
 function ContractBrokerHeistItem:_job_num_days()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -384,18 +402,22 @@ function ContractBrokerHeistItem:_job_num_days()
 	end
 end
 
--- Lines: 408 to 415
+-- Lines 408-415
 function ContractBrokerHeistItem:get_heist_day_text()
 	local days = self:_job_num_days()
 
 	if days == 1 then
-		return managers.localization:to_upper_text("menu_broker_day", {days = days})
+		return managers.localization:to_upper_text("menu_broker_day", {
+			days = days
+		})
 	else
-		return managers.localization:to_upper_text("menu_broker_days", {days = days})
+		return managers.localization:to_upper_text("menu_broker_days", {
+			days = days
+		})
 	end
 end
 
--- Lines: 417 to 426
+-- Lines 417-426
 function ContractBrokerHeistItem:get_heist_day_icon()
 	local days = self:_job_num_days()
 
@@ -408,12 +430,12 @@ function ContractBrokerHeistItem:get_heist_day_icon()
 	end
 end
 
--- Lines: 430 to 432
+-- Lines 430-432
 function ContractBrokerHeistItem:refresh()
 	self._favourite:set_color(managers.crimenet:is_job_favourite(self._job_data.job_id) and Color.yellow or Color.white)
 end
 
--- Lines: 434 to 443
+-- Lines 434-443
 function ContractBrokerHeistItem:select()
 	if not self._selected then
 		self._selected = true
@@ -428,7 +450,7 @@ function ContractBrokerHeistItem:select()
 	end
 end
 
--- Lines: 445 to 453
+-- Lines 445-453
 function ContractBrokerHeistItem:deselect()
 	if self._selected then
 		self._selected = false
@@ -441,7 +463,7 @@ function ContractBrokerHeistItem:deselect()
 	end
 end
 
--- Lines: 456 to 480
+-- Lines 455-482
 function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	local used = used
 	local pointer = nil
@@ -475,7 +497,7 @@ function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	return used, pointer
 end
 
--- Lines: 485 to 496
+-- Lines 484-496
 function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	if self._favourite:inside(x, y) then
 		self:toggle_favourite()
@@ -490,7 +512,7 @@ function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines: 499 to 524
+-- Lines 498-524
 function ContractBrokerHeistItem:trigger()
 	if self._job_data and not self._job_data.enabled then
 		managers.menu:post_event("menu_error")
@@ -504,18 +526,20 @@ function ContractBrokerHeistItem:trigger()
 	local is_professional = job_tweak and job_tweak.professional or false
 	local is_competitive = job_tweak and job_tweak.competitive or false
 
-	managers.menu:open_node(Global.game_settings.single_player and "crimenet_contract_singleplayer" or "crimenet_contract_host", {{
-		customize_contract = true,
-		job_id = self._job_data.job_id,
-		difficulty = is_professional and "hard" or "normal",
-		difficulty_id = is_professional and 3 or 2,
-		professional = is_professional,
-		competitive = is_competitive,
-		contract_visuals = job_tweak.contract_visuals
-	}})
+	managers.menu:open_node(Global.game_settings.single_player and "crimenet_contract_singleplayer" or "crimenet_contract_host", {
+		{
+			customize_contract = true,
+			job_id = self._job_data.job_id,
+			difficulty = is_professional and "hard" or "normal",
+			difficulty_id = is_professional and 3 or 2,
+			professional = is_professional,
+			competitive = is_competitive,
+			contract_visuals = job_tweak.contract_visuals
+		}
+	})
 end
 
--- Lines: 526 to 531
+-- Lines 526-531
 function ContractBrokerHeistItem:toggle_favourite()
 	local is_fav = managers.crimenet:is_job_favourite(self._job_data.job_id)
 
@@ -523,4 +547,3 @@ function ContractBrokerHeistItem:toggle_favourite()
 	managers.menu:post_event("menu_enter")
 	self:refresh()
 end
-

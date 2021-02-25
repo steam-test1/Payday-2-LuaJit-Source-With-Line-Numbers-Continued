@@ -1,6 +1,6 @@
 LookAtTriggerUnitElement = LookAtTriggerUnitElement or class(MissionElement)
 
--- Lines: 3 to 16
+-- Lines 3-16
 function LookAtTriggerUnitElement:init(unit)
 	LookAtTriggerUnitElement.super.init(self, unit)
 
@@ -16,7 +16,7 @@ function LookAtTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "in_front")
 end
 
--- Lines: 18 to 31
+-- Lines 18-31
 function LookAtTriggerUnitElement:update_selected(t, dt)
 	if self._hed.distance ~= 0 then
 		local brush = Draw:brush()
@@ -35,7 +35,7 @@ function LookAtTriggerUnitElement:update_selected(t, dt)
 	end
 end
 
--- Lines: 34 to 66
+-- Lines 34-66
 function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -85,4 +85,3 @@ function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "in_front", "Only in front")
 	self:_add_help_text("Interval defines how offen the check should be done. Sensitivity defines how precise the look angle must be. A sensitivity of 0.999 means that you need to look almost directly at it, 0.5 means that you will get the trigger somewhere at the edge of the screen (might be outside or inside). \n\nDistance(in meters) can be used as a filter to the trigger (0 means no distance filtering)")
 end
-

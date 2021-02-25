@@ -1,24 +1,24 @@
 CoroutineManager = CoroutineManager or class()
 CoroutineManager.Size = 16
 
--- Lines: 7 to 14
+-- Lines 7-14
 function CoroutineManager:init()
 	self._coroutines = {}
 	self._buffer = {}
 	local size = CoroutineManager.Size
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		table.insert(self._coroutines, {})
 	end
 end
 
--- Lines: 16 to 33
+-- Lines 16-33
 function CoroutineManager:update(t, dt)
 	self:_add()
 
 	local size = #self._coroutines
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		for key, value in pairs(self._coroutines[i]) do
 			if value then
 				local result, error_msg = coroutine.resume(value.co, unpack(value.arg))
@@ -36,12 +36,14 @@ function CoroutineManager:update(t, dt)
 	end
 end
 
--- Lines: 35 to 41
+-- Lines 35-41
 function CoroutineManager:add_coroutine(name, func, ...)
 	local priority = func.Priority
 
 	if not self._coroutines[priority][name] and not self._buffer[name] then
-		local arg = {...}
+		local arg = {
+			...
+		}
 		self._buffer[name] = {
 			name = name,
 			func = func,
@@ -50,9 +52,11 @@ function CoroutineManager:add_coroutine(name, func, ...)
 	end
 end
 
--- Lines: 44 to 55
+-- Lines 44-55
 function CoroutineManager:add_and_run_coroutine(name, func, ...)
-	local arg = {...}
+	local arg = {
+		...
+	}
 	local co = coroutine.create(func.Function)
 	local result, error_msg = coroutine.resume(co, unpack(arg))
 	local status = coroutine.status(co)
@@ -69,7 +73,7 @@ function CoroutineManager:add_and_run_coroutine(name, func, ...)
 	end
 end
 
--- Lines: 57 to 65
+-- Lines 57-65
 function CoroutineManager:_add()
 	for key, value in pairs(self._buffer) do
 		local co = coroutine.create(value.func.Function)
@@ -84,7 +88,7 @@ function CoroutineManager:_add()
 	self._buffer = {}
 end
 
--- Lines: 67 to 73
+-- Lines 67-74
 function CoroutineManager:is_running(name)
 	if self._buffer[name] then
 		return true
@@ -92,7 +96,7 @@ function CoroutineManager:is_running(name)
 
 	local size = #self._coroutines
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		if self._coroutines[i][name] then
 			return true
 		end
@@ -101,7 +105,7 @@ function CoroutineManager:is_running(name)
 	return false
 end
 
--- Lines: 78 to 90
+-- Lines 78-90
 function CoroutineManager:remove_coroutine(name)
 	if self._buffer[name] then
 		self._buffer[name] = nil
@@ -109,7 +113,7 @@ function CoroutineManager:remove_coroutine(name)
 
 	local size = #self._coroutines
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		if self._coroutines[i][name] then
 			self._coroutines[i][name] = nil
 
@@ -118,8 +122,7 @@ function CoroutineManager:remove_coroutine(name)
 	end
 end
 
--- Lines: 92 to 94
+-- Lines 92-94
 function CoroutineManager:clear()
 	self:init()
 end
-

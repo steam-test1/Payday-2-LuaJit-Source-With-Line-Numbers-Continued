@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementDangerZone = ElementDangerZone or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementDangerZone:init(...)
 	ElementDangerZone.super.init(self, ...)
 end
 
--- Lines: 13 to 28
+-- Lines 13-28
 function ElementDangerZone:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -28,4 +28,3 @@ function ElementDangerZone:on_executed(instigator)
 
 	ElementDangerZone.super.on_executed(self, self._unit or instigator)
 end
-

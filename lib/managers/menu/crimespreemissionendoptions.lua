@@ -2,7 +2,7 @@ local padding = 10
 local large_padding = 32
 CrimeSpreeMissionEndOptions = CrimeSpreeMissionEndOptions or class(MenuGuiComponentGeneric)
 
--- Lines: 8 to 31
+-- Lines 7-31
 function CrimeSpreeMissionEndOptions:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -26,14 +26,14 @@ function CrimeSpreeMissionEndOptions:init(ws, fullscreen_ws, node)
 	end
 end
 
--- Lines: 33 to 37
+-- Lines 33-37
 function CrimeSpreeMissionEndOptions:close()
 	WalletGuiObject.close_wallet(self._ws:panel())
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines: 41 to 169
+-- Lines 39-169
 function CrimeSpreeMissionEndOptions:_setup()
 	local parent = self._ws:panel()
 
@@ -41,7 +41,9 @@ function CrimeSpreeMissionEndOptions:_setup()
 		parent:remove(self._panel)
 	end
 
-	self._panel = parent:panel({layer = self._init_layer})
+	self._panel = parent:panel({
+		layer = self._init_layer
+	})
 	self._button_panel = self._panel:panel({})
 	local buttons = {
 		{
@@ -153,58 +155,58 @@ function CrimeSpreeMissionEndOptions:_setup()
 	end
 end
 
--- Lines: 173 to 175
+-- Lines 173-175
 function CrimeSpreeMissionEndOptions:perform_edit()
 	managers.menu:open_node("edit_game_settings", {})
 end
 
--- Lines: 177 to 179
+-- Lines 177-179
 function CrimeSpreeMissionEndOptions:perform_return()
 	MenuCallbackHandler:return_to_crime_spree_lobby()
 end
 
--- Lines: 181 to 183
+-- Lines 181-183
 function CrimeSpreeMissionEndOptions:perform_select()
 	MenuCallbackHandler:crime_spree_select_modifier()
 end
 
--- Lines: 185 to 187
+-- Lines 185-187
 function CrimeSpreeMissionEndOptions:perform_start()
 	MenuCallbackHandler:crime_spree_start_game()
 end
 
--- Lines: 189 to 191
+-- Lines 189-191
 function CrimeSpreeMissionEndOptions:perform_reroll()
 	MenuCallbackHandler:crime_spree_reroll()
 end
 
--- Lines: 193 to 195
+-- Lines 193-195
 function CrimeSpreeMissionEndOptions:perform_continue()
 	MenuCallbackHandler:crime_spree_continue()
 end
 
--- Lines: 199 to 203
+-- Lines 199-203
 function CrimeSpreeMissionEndOptions:update(t, dt)
 	for idx, btn in ipairs(self._buttons) do
 		btn:update(t, dt)
 	end
 end
 
--- Lines: 205 to 209
+-- Lines 205-209
 function CrimeSpreeMissionEndOptions:confirm_pressed()
 	if self._selected_item and self._selected_item:callback() then
 		self._selected_item:callback()()
 	end
 end
 
--- Lines: 212 to 229
+-- Lines 211-231
 function CrimeSpreeMissionEndOptions:mouse_moved(o, x, y)
 	if not managers.menu:is_pc_controller() then
 		return
 	end
 
-	local used, pointer
-	used, pointer, self._selected_item = nil
+	local used, pointer = nil
+	self._selected_item = nil
 
 	for idx, btn in ipairs(self._buttons) do
 		btn:set_selected(btn:inside(x, y))
@@ -220,7 +222,7 @@ function CrimeSpreeMissionEndOptions:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 234 to 242
+-- Lines 233-242
 function CrimeSpreeMissionEndOptions:mouse_pressed(o, button, x, y)
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
@@ -231,17 +233,17 @@ function CrimeSpreeMissionEndOptions:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 244 to 246
+-- Lines 244-246
 function CrimeSpreeMissionEndOptions:move_up()
 	self:_move_selection(-1)
 end
 
--- Lines: 248 to 250
+-- Lines 248-250
 function CrimeSpreeMissionEndOptions:move_down()
 	self:_move_selection(1)
 end
 
--- Lines: 252 to 275
+-- Lines 252-275
 function CrimeSpreeMissionEndOptions:_move_selection(dir)
 	if dir and dir ~= 0 then
 		if self._selected_idx and self._buttons[self._selected_idx] then
@@ -254,7 +256,7 @@ function CrimeSpreeMissionEndOptions:_move_selection(dir)
 			self._selected_idx = #self._buttons
 		end
 
-		if #self._buttons < self._selected_idx then
+		if self._selected_idx > #self._buttons then
 			self._selected_idx = 1
 		end
 
@@ -265,4 +267,3 @@ function CrimeSpreeMissionEndOptions:_move_selection(dir)
 		end
 	end
 end
-

@@ -2,17 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementEnableSoundEnvironment = ElementEnableSoundEnvironment or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementEnableSoundEnvironment:init(...)
 	ElementEnableSoundEnvironment.super.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function ElementEnableSoundEnvironment:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 13 to 23
+-- Lines 13-23
 function ElementEnableSoundEnvironment:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -24,4 +24,3 @@ function ElementEnableSoundEnvironment:on_executed(instigator)
 
 	ElementEnableSoundEnvironment.super.on_executed(self, instigator)
 end
-

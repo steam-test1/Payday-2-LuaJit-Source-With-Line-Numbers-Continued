@@ -1,12 +1,12 @@
 SpecialEquipmentPickup = SpecialEquipmentPickup or class(Pickup)
 
--- Lines: 3 to 6
+-- Lines 3-6
 function SpecialEquipmentPickup:init(unit)
 	SpecialEquipmentPickup.super.init(self, unit)
 	managers.occlusion:remove_occlusion(unit)
 end
 
--- Lines: 8 to 29
+-- Lines 8-30
 function SpecialEquipmentPickup:_pickup(unit)
 	local equipment = unit:equipment()
 
@@ -33,9 +33,8 @@ function SpecialEquipmentPickup:_pickup(unit)
 	return false
 end
 
--- Lines: 32 to 35
+-- Lines 32-35
 function SpecialEquipmentPickup:destroy(...)
 	managers.occlusion:add_occlusion(self._unit)
 	SpecialEquipmentPickup.super.destroy(self, ...)
 end
-

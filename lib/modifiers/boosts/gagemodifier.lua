@@ -4,10 +4,9 @@ GageModifier.name_id = "none"
 GageModifier.desc_id = "none"
 GageModifier.default_value = nil
 
--- Lines: 10 to 15
+-- Lines 8-15
 function GageModifier:init(modifier_tweak)
 	self.name_id = modifier_tweak.name_id
 	self.desc_id = modifier_tweak.unlock_desc_id
 	self._data = modifier_tweak.data
 end
-

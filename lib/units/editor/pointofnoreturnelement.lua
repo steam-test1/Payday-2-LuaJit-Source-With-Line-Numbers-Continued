@@ -1,7 +1,9 @@
 PointOfNoReturnElement = PointOfNoReturnElement or class(MissionElement)
-PointOfNoReturnElement.LINK_ELEMENTS = {"elements"}
+PointOfNoReturnElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 26
+-- Lines 4-26
 function PointOfNoReturnElement:init(unit)
 	PointOfNoReturnElement.super.init(self, unit)
 
@@ -26,7 +28,7 @@ function PointOfNoReturnElement:init(unit)
 	table.insert(self._save_values, "time_sm_wish")
 end
 
--- Lines: 28 to 38
+-- Lines 28-38
 function PointOfNoReturnElement:post_init(...)
 	PointOfNoReturnElement.super.post_init(self, ...)
 
@@ -39,13 +41,15 @@ function PointOfNoReturnElement:post_init(...)
 	end
 end
 
--- Lines: 42 to 208
+-- Lines 42-208
 function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local exact_names = {"core/units/mission_elements/trigger_area/trigger_area"}
+	local exact_names = {
+		"core/units/mission_elements/trigger_area/trigger_area"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 
@@ -226,16 +230,16 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 end
 
--- Lines: 217 to 219
+-- Lines 217-219
 function PointOfNoReturnElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 221 to 222
+-- Lines 221-222
 function PointOfNoReturnElement:update_editing()
 end
 
--- Lines: 225 to 233
+-- Lines 225-233
 function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -253,7 +257,7 @@ function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 235 to 245
+-- Lines 235-245
 function PointOfNoReturnElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -271,8 +275,7 @@ function PointOfNoReturnElement:add_element()
 	end
 end
 
--- Lines: 248 to 250
+-- Lines 248-250
 function PointOfNoReturnElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
-

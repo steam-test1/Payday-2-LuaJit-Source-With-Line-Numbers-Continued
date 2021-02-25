@@ -1,6 +1,6 @@
 PlayerStyleElement = PlayerStyleElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function PlayerStyleElement:init(unit)
 	PlayerStyleElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function PlayerStyleElement:init(unit)
 	table.insert(self._save_values, "style")
 end
 
--- Lines: 11 to 47
+-- Lines 11-47
 function PlayerStyleElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -29,7 +29,9 @@ function PlayerStyleElement:_build_panel(panel, panel_sizer)
 		sorted = true,
 		panel = panel,
 		sizer = style_sizer,
-		options = {"scrub"},
+		options = {
+			"scrub"
+		},
 		value = self._hed.style
 	}
 	local style = CoreEWS.combobox(self._style_params)
@@ -47,4 +49,3 @@ function PlayerStyleElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

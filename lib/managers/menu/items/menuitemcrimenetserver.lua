@@ -3,14 +3,14 @@ core:import("CoreMenuItem")
 MenuItemCrimeNetServer = MenuItemCrimeNetServer or class(CoreMenuItem.Item)
 MenuItemCrimeNetServer.TYPE = "crimenet_server"
 
--- Lines: 6 to 10
+-- Lines 6-10
 function MenuItemCrimeNetServer:init(data_node, parameters)
 	MenuItemCrimeNetServer.super.init(self, data_node, parameters)
 
 	self._type = MenuItemCrimeNetServer.TYPE
 end
 
--- Lines: 14 to 168
+-- Lines 13-170
 function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
 	local color = Color.white
@@ -51,7 +51,9 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 		end
 	end
 
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	local server_panel = row_item.gui_panel:panel({
 		name = "server",
 		h = 64,
@@ -72,7 +74,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	})
 	local cx, cy = nil
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		cx = 5 + 6 * (i - 1)
 		cy = 30
 		local player_marker = server_panel:bitmap({
@@ -89,7 +91,9 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 		player_marker:set_position(cx, cy)
 	end
 
-	local side_panel = server_panel:panel({x = 36})
+	local side_panel = server_panel:panel({
+		x = 36
+	})
 	local host_name = side_panel:text({
 		name = "host_name",
 		vertical = "center",
@@ -131,7 +135,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	local x = 0
 	local y = 0
 
-	for i = start_difficulty, num_difficulties, 1 do
+	for i = start_difficulty, num_difficulties do
 		local skull = difficulty_panel:bitmap({
 			texture = "guis/textures/pd2/cn_miniskull",
 			h = 16,
@@ -166,7 +170,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 173 to 176
+-- Lines 173-177
 function MenuItemCrimeNetServer:reload(row_item, node)
 	MenuItemCrimeNetServer.super.reload(self, row_item, node)
 	self:_set_row_item_state(node, row_item)
@@ -174,34 +178,33 @@ function MenuItemCrimeNetServer:reload(row_item, node)
 	return true
 end
 
--- Lines: 180 to 182
+-- Lines 180-183
 function MenuItemCrimeNetServer:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 186 to 188
+-- Lines 186-189
 function MenuItemCrimeNetServer:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines: 192 to 196
+-- Lines 192-196
 function MenuItemCrimeNetServer:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		-- Nothing
 	end
 end
 
--- Lines: 198 to 199
+-- Lines 198-200
 function MenuItemCrimeNetServer:menu_unselected_visible()
 	return false
 end
 
--- Lines: 203 to 205
+-- Lines 203-205
 function MenuItemCrimeNetServer:on_delete_row_item(row_item, ...)
 	MenuItemCrimeNetServer.super.on_delete_row_item(self, row_item, ...)
 end
-

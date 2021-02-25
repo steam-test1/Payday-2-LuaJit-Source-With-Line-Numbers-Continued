@@ -13,20 +13,20 @@ MutatorShotgunTweak.icon_coords = {
 	1
 }
 
--- Lines: 15 to 18
+-- Lines 15-18
 function MutatorShotgunTweak:register_values(mutator_manager)
 	self:register_value("pull_strength", 3, "ps")
 	self:register_value("mothership", false, "ms")
 end
 
--- Lines: 20 to 23
+-- Lines 20-23
 function MutatorShotgunTweak:setup(mutator_manager)
 	mutator_manager:register_message(Message.OnShotgunPush, "ShotgunTweak", callback(self, self, "_on_shotgun_push"))
 
 	self._sound_device = SoundDevice:create_source("MutatorShotgunTweak")
 end
 
--- Lines: 25 to 34
+-- Lines 25-34
 function MutatorShotgunTweak:name()
 	local name = MutatorShotgunTweak.super.name(self)
 
@@ -39,7 +39,7 @@ function MutatorShotgunTweak:name()
 	end
 end
 
--- Lines: 38 to 44
+-- Lines 38-44
 function MutatorShotgunTweak:get_pull_strength()
 	if self:get_to_the_mothership() then
 		return self:to_the_mothership_strength()
@@ -48,7 +48,7 @@ function MutatorShotgunTweak:get_pull_strength()
 	end
 end
 
--- Lines: 46 to 53
+-- Lines 46-53
 function MutatorShotgunTweak:get_to_the_mothership()
 	local value = self:value("mothership")
 
@@ -59,12 +59,12 @@ function MutatorShotgunTweak:get_to_the_mothership()
 	end
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function MutatorShotgunTweak:to_the_mothership_strength()
 	return 0.01
 end
 
--- Lines: 62 to 83
+-- Lines 61-83
 function MutatorShotgunTweak:_on_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if alive(unit) and alive(attacker) then
 		local str = self:get_pull_strength()
@@ -86,7 +86,7 @@ function MutatorShotgunTweak:_on_shotgun_push(unit, hit_pos, dir, distance, atta
 	end
 end
 
--- Lines: 85 to 108
+-- Lines 85-108
 function MutatorShotgunTweak:modify_value(id, value)
 	if id == "GamePlayCentralManager:get_shotgun_push_range" then
 		return math.huge
@@ -109,24 +109,24 @@ function MutatorShotgunTweak:modify_value(id, value)
 	end
 end
 
--- Lines: 110 to 114
+-- Lines 110-114
 function MutatorShotgunTweak:OnEnemyKilledByExplosion(unit, was_shotgun)
 	if was_shotgun then
 		self:_on_shotgun_push(unit, nil, nil, nil, managers.player:player_unit())
 	end
 end
 
--- Lines: 118 to 119
+-- Lines 118-120
 function MutatorShotgunTweak:_min_strength()
 	return 1
 end
 
--- Lines: 122 to 123
+-- Lines 122-124
 function MutatorShotgunTweak:_max_strength()
 	return 5
 end
 
--- Lines: 127 to 162
+-- Lines 126-164
 function MutatorShotgunTweak:setup_options_gui(node)
 	local params = {
 		name = "pull_strength_slider",
@@ -194,12 +194,12 @@ function MutatorShotgunTweak:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 166 to 168
+-- Lines 166-168
 function MutatorShotgunTweak:_update_pull_strength(item)
 	self:set_value("pull_strength", item:value())
 end
 
--- Lines: 170 to 182
+-- Lines 170-182
 function MutatorShotgunTweak:_update_mothership_toggle(item)
 	local value = item:value() == "on" and true or false
 
@@ -218,7 +218,7 @@ function MutatorShotgunTweak:_update_mothership_toggle(item)
 	end
 end
 
--- Lines: 185 to 203
+-- Lines 184-203
 function MutatorShotgunTweak:reset_to_default()
 	self:clear_values()
 
@@ -238,8 +238,7 @@ function MutatorShotgunTweak:reset_to_default()
 	end
 end
 
--- Lines: 205 to 206
+-- Lines 205-207
 function MutatorShotgunTweak:options_fill()
 	return self:_get_percentage_fill(self:_min_strength(), self:_max_strength(), self:get_pull_strength())
 end
-

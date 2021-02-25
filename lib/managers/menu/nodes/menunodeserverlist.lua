@@ -5,17 +5,17 @@ core:import("CoreMenuItemToggle")
 
 MenuNodeServerList = MenuNodeServerList or class(MenuNodeTable)
 
--- Lines: 8 to 10
+-- Lines 8-10
 function MenuNodeServerList:init(data_node)
 	MenuNodeServerList.super.init(self, data_node)
 end
 
--- Lines: 12 to 15
+-- Lines 12-15
 function MenuNodeServerList:update(t, dt)
 	MenuNodeServerList.super.update(self, t, dt)
 end
 
--- Lines: 19 to 25
+-- Lines 18-25
 function MenuNodeServerList:_setup_columns()
 	self:_add_column({
 		proportions = 1.9,
@@ -38,4 +38,3 @@ function MenuNodeServerList:_setup_columns()
 		text = string.upper("")
 	})
 end
-

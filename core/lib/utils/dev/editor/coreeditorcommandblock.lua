@@ -3,19 +3,19 @@ core:import("CoreEditorCommand")
 
 CoreEditorCommandBlock = CoreEditorCommandBlock or class()
 
--- Lines: 17 to 20
+-- Lines 16-20
 function CoreEditorCommandBlock:init()
 	self._actions = {}
 end
 
--- Lines: 22 to 26
+-- Lines 22-26
 function CoreEditorCommandBlock:execute()
-	for i = 1, #self._actions, 1 do
+	for i = 1, #self._actions do
 		self._actions[i]:execute()
 	end
 end
 
--- Lines: 30 to 46
+-- Lines 28-46
 function CoreEditorCommandBlock:undo()
 	local sorted_actions = _G.clone(self._actions)
 
@@ -36,13 +36,12 @@ function CoreEditorCommandBlock:undo()
 	end
 end
 
--- Lines: 48 to 50
+-- Lines 48-50
 function CoreEditorCommandBlock:add_command(action)
 	table.insert(self._actions, action)
 end
 
--- Lines: 52 to 53
+-- Lines 52-54
 function CoreEditorCommandBlock:__tostring()
 	return string.format("[CoreEditorCommandBlock actions: %s]", tostring(#self._actions))
 end
-

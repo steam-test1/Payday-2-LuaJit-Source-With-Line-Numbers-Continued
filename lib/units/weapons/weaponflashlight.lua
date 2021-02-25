@@ -1,7 +1,7 @@
 WeaponFlashLight = WeaponFlashLight or class(WeaponGadgetBase)
 WeaponFlashLight.GADGET_TYPE = "flashlight"
 
--- Lines: 4 to 47
+-- Lines 4-47
 function WeaponFlashLight:init(unit)
 	WeaponFlashLight.super.init(self, unit)
 
@@ -32,7 +32,7 @@ function WeaponFlashLight:init(unit)
 	World:effect_manager():set_hidden(self._light_effect, true)
 end
 
--- Lines: 49 to 52
+-- Lines 49-53
 function WeaponFlashLight:is_haunted()
 	local job_id = managers.job and managers.job:current_job_id()
 	local tweak = job_id and tweak_data.narrative.jobs[job_id]
@@ -40,7 +40,7 @@ function WeaponFlashLight:is_haunted()
 	return tweak and tweak.is_halloween_level
 end
 
--- Lines: 57 to 73
+-- Lines 57-73
 function WeaponFlashLight:set_npc()
 	if self._light_effect then
 		World:effect_manager():kill(self._light_effect)
@@ -59,7 +59,7 @@ function WeaponFlashLight:set_npc()
 	self._is_npc = true
 end
 
--- Lines: 75 to 82
+-- Lines 75-82
 function WeaponFlashLight:_check_state(current_state)
 	WeaponFlashLight.super._check_state(self, current_state)
 	self._light:set_enable(self._on)
@@ -71,7 +71,7 @@ function WeaponFlashLight:_check_state(current_state)
 	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
 end
 
--- Lines: 86 to 96
+-- Lines 86-96
 function WeaponFlashLight:destroy(unit)
 	WeaponFlashLight.super.destroy(self, unit)
 
@@ -85,6 +85,7 @@ function WeaponFlashLight:destroy(unit)
 		self._light_effect = nil
 	end
 end
+
 local mvec1 = Vector3()
 local mrot1 = Rotation()
 local mrot2 = Rotation()
@@ -94,7 +95,7 @@ WeaponFlashLight.HALLOWEEN_FROZEN = 3
 WeaponFlashLight.HALLOWEEN_SPOOC = 4
 WeaponFlashLight.HALLOWEEN_WARP = 5
 
--- Lines: 109 to 136
+-- Lines 109-136
 function WeaponFlashLight:sync_net_event(event_id)
 	if not self:is_haunted() then
 		return
@@ -123,7 +124,7 @@ function WeaponFlashLight:sync_net_event(event_id)
 	end
 end
 
--- Lines: 138 to 195
+-- Lines 138-195
 function WeaponFlashLight:update(unit, t, dt)
 	mrotation.set_xyz(mrot1, self._a_flashlight_obj:rotation():z(), -self._a_flashlight_obj:rotation():x(), -self._a_flashlight_obj:rotation():y())
 
@@ -182,12 +183,12 @@ function WeaponFlashLight:update(unit, t, dt)
 	end
 end
 
--- Lines: 198 to 200
+-- Lines 197-200
 function WeaponFlashLight:run_net_event(event_id)
 	self:sync_net_event(event_id)
 end
 
--- Lines: 202 to 220
+-- Lines 202-220
 function WeaponFlashLight:update_flicker(t, dt)
 	if self._flicker_t then
 		self._flicker_t = math.max(0, self._flicker_t - dt)
@@ -206,7 +207,7 @@ function WeaponFlashLight:update_flicker(t, dt)
 	end
 end
 
--- Lines: 222 to 241
+-- Lines 222-241
 function WeaponFlashLight:update_laughter(t, dt)
 	if self._laughter_t then
 		self._laughter_t = math.max(0, self._laughter_t - dt)
@@ -227,7 +228,7 @@ function WeaponFlashLight:update_laughter(t, dt)
 	end
 end
 
--- Lines: 243 to 252
+-- Lines 243-252
 function WeaponFlashLight:update_frozen(t, dt)
 	if self._frozen_t and self._frozen_t <= t then
 		local obj = self._unit:get_object(Idstring("a_flashlight"))
@@ -239,11 +240,12 @@ function WeaponFlashLight:update_frozen(t, dt)
 		self._frozen_t = nil
 	end
 end
+
 WeaponFlashLight.EFFECT_OPACITY_MAX = 16
 WeaponFlashLight.NPC_GLOW_OPACITY_MAX = 100
 WeaponFlashLight.NPC_CONE_OPACITY_MAX = 8
 
--- Lines: 262 to 300
+-- Lines 260-300
 function WeaponFlashLight:set_color(color)
 	if self:is_haunted() then
 		return
@@ -276,10 +278,9 @@ function WeaponFlashLight:set_color(color)
 	end
 end
 
--- Lines: 302 to 304
+-- Lines 302-305
 function WeaponFlashLight:color()
 	local col = self._light:color()
 
 	return Color(col.x, col.y, col.z)
 end
-

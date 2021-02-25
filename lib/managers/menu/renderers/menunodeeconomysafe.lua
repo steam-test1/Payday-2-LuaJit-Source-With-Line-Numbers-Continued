@@ -1,14 +1,13 @@
 MenuNodeEconomySafe = MenuNodeEconomySafe or class(MenuNodeBaseGui)
 
--- Lines: 3 to 30
+-- Lines 3-30
 function MenuNodeEconomySafe:init(node, layer, parameters)
 	MenuNodeEconomySafe.super.init(self, node, layer, parameters)
 
 	local safe_entry = node:parameters().safe_entry
 
 	if node:parameters().debug then
-
-		-- Lines: 12 to 14
+		-- Lines 11-14
 		local function f()
 			self:_test_start_open_economy_safe(safe_entry)
 		end
@@ -30,13 +29,13 @@ function MenuNodeEconomySafe:init(node, layer, parameters)
 	end
 end
 
--- Lines: 33 to 40
+-- Lines 32-40
 function MenuNodeEconomySafe:_test_start_open_economy_safe(safe_entry)
 	MenuNodeEconomySafe.reward_unlock_request_id = (MenuNodeEconomySafe.reward_unlock_request_id or 0) + 1
 
 	managers.network.account:inventory_reward_unlock(safe_entry, nil, nil, callback(self, self, "_test_safe_result_recieved", MenuNodeEconomySafe.reward_unlock_request_id))
 
-	-- Lines: 36 to 38
+	-- Lines 36-38
 	local function ready_clbk()
 		print("ECONOMY SAFE READY CALLBACK")
 	end
@@ -44,7 +43,7 @@ function MenuNodeEconomySafe:_test_start_open_economy_safe(safe_entry)
 	managers.menu_scene:start_open_economy_safe(safe_entry, ready_clbk)
 end
 
--- Lines: 42 to 50
+-- Lines 42-50
 function MenuNodeEconomySafe:_test_safe_result_recieved(request_id, ...)
 	if request_id ~= MenuNodeEconomySafe.reward_unlock_request_id then
 		return
@@ -57,12 +56,12 @@ function MenuNodeEconomySafe:_test_safe_result_recieved(request_id, ...)
 	self:_safe_result_recieved(...)
 end
 
--- Lines: 54 to 104
+-- Lines 54-104
 function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_removed)
 	if error then
 		managers.menu:set_cash_safe_scene_done(true)
 
-		-- Lines: 56 to 57
+		-- Lines 57-57
 		local function ok_func()
 			managers.menu:back(true)
 		end
@@ -89,7 +88,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 	managers.mission:call_global_event(Message.OnSafeOpened, result)
 	print("B: RESULT RECIEVED", result.weapon_skin, Application:time())
 
-	-- Lines: 76 to 101
+	-- Lines 76-101
 	local function ready_clbk()
 		if not alive(self._raffle_panel) then
 			return
@@ -97,7 +96,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 
 		print("READY CALLBACK")
 
-		-- Lines: 82 to 87
+		-- Lines 82-87
 		local function stopped_clbk()
 			print("stopped_clbk")
 
@@ -119,7 +118,7 @@ function MenuNodeEconomySafe:_safe_result_recieved(error, items_new, items_remov
 	managers.menu_scene:load_safe_result_content(result, ready_clbk)
 end
 
--- Lines: 106 to 129
+-- Lines 106-129
 function MenuNodeEconomySafe:_find_replace_raffle_panel()
 	local i, _ = self:_current_raffle_panel()
 	local max_steps = 7 + math.random(5)
@@ -129,7 +128,7 @@ function MenuNodeEconomySafe:_find_replace_raffle_panel()
 	while steps <= max_steps do
 		i = i + 1
 
-		if #self._raffle_panels < i then
+		if i > #self._raffle_panels then
 			i = 1
 		end
 
@@ -151,7 +150,7 @@ function MenuNodeEconomySafe:_find_replace_raffle_panel()
 	end
 end
 
--- Lines: 131 to 179
+-- Lines 131-180
 function MenuNodeEconomySafe._item_probability_list(item_list)
 	local rarity_list = {}
 
@@ -230,7 +229,7 @@ function MenuNodeEconomySafe._item_probability_list(item_list)
 	return probability_list
 end
 
--- Lines: 183 to 239
+-- Lines 182-239
 function MenuNodeEconomySafe:_build_raffle_panel(safe_entry)
 	local safe_data = tweak_data.economy.safes[safe_entry]
 	local drill_data = tweak_data.economy.drills[safe_data.drill]
@@ -323,7 +322,7 @@ function MenuNodeEconomySafe:_build_raffle_panel(safe_entry)
 	end
 end
 
--- Lines: 242 to 258
+-- Lines 241-259
 function MenuNodeEconomySafe:_create_random_item_list(item_list)
 	local list = {}
 
@@ -331,7 +330,7 @@ function MenuNodeEconomySafe:_create_random_item_list(item_list)
 		if data.category ~= "contents" then
 			local amount = math.ceil(data.ratio / 1)
 
-			for j = 1, amount, 1 do
+			for j = 1, amount do
 				table.insert(list, data)
 			end
 		end
@@ -340,7 +339,7 @@ function MenuNodeEconomySafe:_create_random_item_list(item_list)
 	return list
 end
 
--- Lines: 261 to 331
+-- Lines 261-331
 function MenuNodeEconomySafe:_create_raffle_panel(x, data, index)
 	local p = self._raffle_panel:panel({
 		h = 108,
@@ -378,7 +377,9 @@ function MenuNodeEconomySafe:_create_raffle_panel(x, data, index)
 		local entry_data = tweak_data.blackmarket[data.category][data.entry]
 		local weapon_id = entry_data.weapon_id or entry_data.weapons[1]
 		is_legendary = entry_data.rarity == "legendary"
-		texture_name = is_legendary and "guis/dlcs/cash/textures/pd2/safe_raffle/icon_legendary" or managers.blackmarket:get_weapon_icon_path(weapon_id, {id = data.entry})
+		texture_name = is_legendary and "guis/dlcs/cash/textures/pd2/safe_raffle/icon_legendary" or managers.blackmarket:get_weapon_icon_path(weapon_id, {
+			id = data.entry
+		})
 		name_id = entry_data.name_id
 		rarity_color = tweak_data.economy.rarities[entry_data.rarity].color
 		texture_rarity_name = tweak_data.economy.rarities[entry_data.rarity].header_col
@@ -456,7 +457,7 @@ function MenuNodeEconomySafe:_create_raffle_panel(x, data, index)
 	self:request_texture(texture_name, image_panel, true)
 end
 
--- Lines: 333 to 338
+-- Lines 333-338
 function MenuNodeEconomySafe:_replace_raffle_panel_at(index, data)
 	local removed = table.remove(self._raffle_panels, index)
 	local x = removed:x()
@@ -465,18 +466,18 @@ function MenuNodeEconomySafe:_replace_raffle_panel_at(index, data)
 	removed:parent():remove(removed)
 end
 
--- Lines: 340 to 342
+-- Lines 340-342
 function MenuNodeEconomySafe:set_raffle_speed(speed)
 	self._raffle_speed = speed
 end
 
--- Lines: 344 to 367
+-- Lines 344-367
 function MenuNodeEconomySafe:stop_at(at, offset, stopped_clbk)
 	self._stop_data = {
 		max_speed = self._raffle_speed,
 		lerp_value = 0,
 		at = at,
-		decc = ((0 - self._raffle_speed * self._raffle_speed) / 2) / 1000,
+		decc = (0 - self._raffle_speed * self._raffle_speed) / 2 / 1000,
 		start_time = Application:time(),
 		distance = 0,
 		stopped_clbk = stopped_clbk
@@ -496,7 +497,7 @@ function MenuNodeEconomySafe:stop_at(at, offset, stopped_clbk)
 	self._raffle_panels[at]:child("number"):set_color(Color.green)
 end
 
--- Lines: 369 to 376
+-- Lines 369-376
 function MenuNodeEconomySafe:_current_raffle_panel()
 	local needle_x = self._needle_panel:center_x()
 
@@ -507,7 +508,7 @@ function MenuNodeEconomySafe:_current_raffle_panel()
 	end
 end
 
--- Lines: 378 to 482
+-- Lines 378-482
 function MenuNodeEconomySafe:update(t, dt)
 	MenuNodeEconomySafe.super.update(self, t, dt)
 
@@ -590,7 +591,7 @@ function MenuNodeEconomySafe:update(t, dt)
 	end
 end
 
--- Lines: 484 to 542
+-- Lines 484-542
 function MenuNodeEconomySafe:_build_result_panel()
 	if not alive(self._raffle_panel) then
 		return
@@ -666,7 +667,9 @@ function MenuNodeEconomySafe:_build_result_panel()
 			end
 
 			local bonus_value = bonus_data.exp_multiplier and bonus_data.exp_multiplier * 100 - 100 .. "%" or bonus_data.money_multiplier and bonus_data.money_multiplier * 100 - 100 .. "%"
-			local bonus_title = bonus_data and managers.localization:to_upper_text(bonus_data.name_id, {team_bonus = bonus_value}) or ""
+			local bonus_title = bonus_data and managers.localization:to_upper_text(bonus_data.name_id, {
+				team_bonus = bonus_value
+			}) or ""
 			local bonus_text = self._result_panel:text({
 				halign = "left",
 				vertical = "bottom",
@@ -687,17 +690,17 @@ function MenuNodeEconomySafe:_build_result_panel()
 	end
 end
 
--- Lines: 544 to 546
+-- Lines 544-546
 function MenuNodeEconomySafe:_setup_panels(node)
 	MenuNodeEconomySafe.super._setup_panels(self, node)
 end
 
--- Lines: 548 to 550
+-- Lines 548-550
 function MenuNodeEconomySafe:set_visible(visible)
 	MenuNodeEconomySafe.super.set_visible(self, visible)
 end
 
--- Lines: 552 to 557
+-- Lines 552-557
 function MenuNodeEconomySafe:close(...)
 	MenuNodeEconomySafe.super.close(self, ...)
 	managers.environment_controller:set_dof_distance(10, false)
@@ -705,7 +708,7 @@ function MenuNodeEconomySafe:close(...)
 	managers.menu_component:set_blackmarket_disable_fetching(false)
 end
 
--- Lines: 559 to 569
+-- Lines 559-616
 function MenuNodeEconomySafe:_test_textures()
 	local t = {}
 
@@ -721,4 +724,3 @@ function MenuNodeEconomySafe:_test_textures()
 
 	return t
 end
-

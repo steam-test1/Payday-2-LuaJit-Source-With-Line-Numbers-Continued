@@ -1,6 +1,6 @@
 MissionElementTimeline = MissionElementTimeline or class(CoreEditorEwsDialog)
 
--- Lines: 3 to 76
+-- Lines 3-76
 function MissionElementTimeline:init(caption)
 	CoreEditorEwsDialog.init(self, nil, "Element - " .. caption, "", Vector3(25, 602, 0), Vector3(1000, 200, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -70,12 +70,12 @@ function MissionElementTimeline:init(caption)
 	self._sequence_track:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 end
 
--- Lines: 78 to 80
+-- Lines 78-80
 function MissionElementTimeline:on_focus()
 	managers.editor:select_unit(self._mission_unit)
 end
 
--- Lines: 82 to 87
+-- Lines 82-87
 function MissionElementTimeline:_zoom_button(sizer, name, seconds)
 	local btn = EWS:Button(self._panel, name, "", "BU_EXACTFIT")
 
@@ -84,7 +84,7 @@ function MissionElementTimeline:_zoom_button(sizer, name, seconds)
 	btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 end
 
--- Lines: 89 to 104
+-- Lines 89-104
 function MissionElementTimeline:on_btn_zoom(seconds)
 	self._ruler:set_major_divisions((self:size().x - 40) / seconds, self._ruler:units_per_major_division())
 	self._sequence_track:set_units((self:size().x - 40) / seconds, self._multiplier)
@@ -102,14 +102,14 @@ function MissionElementTimeline:on_btn_zoom(seconds)
 	self._scrolled_area:scroll(Vector3(scroll_offset / self._scrolled_area:scroll_pixels_per_unit().x, -1, 0))
 end
 
--- Lines: 106 to 109
+-- Lines 106-109
 function MissionElementTimeline:set_mission_unit(unit)
 	self._mission_unit = unit
 
 	self:update_timeline()
 end
 
--- Lines: 111 to 117
+-- Lines 111-117
 function MissionElementTimeline:update_timeline()
 	self._sequence_track:remove_all_clips()
 
@@ -120,7 +120,7 @@ function MissionElementTimeline:update_timeline()
 	end
 end
 
--- Lines: 119 to 128
+-- Lines 119-128
 function MissionElementTimeline:delay_updated(params)
 	for _, clip in ipairs(self._sequence_track:clips()) do
 		if clip:metadata().params == params then
@@ -134,12 +134,12 @@ function MissionElementTimeline:delay_updated(params)
 	end
 end
 
--- Lines: 131 to 133
+-- Lines 131-133
 function MissionElementTimeline:add_element(unit, params)
 	self:_add_unit(unit, params)
 end
 
--- Lines: 136 to 143
+-- Lines 136-143
 function MissionElementTimeline:select_element(params)
 	for _, clip in ipairs(self._sequence_track:clips()) do
 		if clip:metadata().params == params then
@@ -150,7 +150,7 @@ function MissionElementTimeline:select_element(params)
 	end
 end
 
--- Lines: 146 to 154
+-- Lines 146-154
 function MissionElementTimeline:_select_clip(clip)
 	self._element_name:set_value(clip and clip:metadata().unit:unit_data().name_id or "")
 	self._element_delay:set_value(clip and string.format("%.2f", clip:metadata().params.delay) or "")
@@ -161,7 +161,7 @@ function MissionElementTimeline:_select_clip(clip)
 	end
 end
 
--- Lines: 157 to 164
+-- Lines 157-164
 function MissionElementTimeline:remove_element(params)
 	for _, clip in ipairs(self._sequence_track:clips()) do
 		if clip:metadata().params == params then
@@ -172,7 +172,7 @@ function MissionElementTimeline:remove_element(params)
 	end
 end
 
--- Lines: 167 to 172
+-- Lines 167-173
 function MissionElementTimeline:_add_unit(unit, params)
 	local key = EWS:SequencerKey()
 
@@ -188,7 +188,7 @@ function MissionElementTimeline:_add_unit(unit, params)
 	return self._sequence_track:add_clip(key, params.delay * self._multiplier)
 end
 
--- Lines: 176 to 181
+-- Lines 176-182
 function MissionElementTimeline:_get_color(unit)
 	local color = unit:mission_element():timeline_color()
 
@@ -199,7 +199,7 @@ function MissionElementTimeline:_get_color(unit)
 	return math.rand(1), math.rand(1), math.rand(1)
 end
 
--- Lines: 184 to 192
+-- Lines 184-192
 function MissionElementTimeline:_connect_mouse_events(component)
 	component:connect("EVT_LEFT_DOWN", callback(self, self, "_on_mouse_left_down"), component)
 	component:connect("EVT_RIGHT_DOWN", callback(self, self, "_on_mouse_right_down"), component)
@@ -208,7 +208,7 @@ function MissionElementTimeline:_connect_mouse_events(component)
 	component:connect("EVT_LEFT_UP", callback(self, self, "_on_mouse_left_up"), component)
 end
 
--- Lines: 194 to 203
+-- Lines 194-203
 function MissionElementTimeline:_on_mouse_left_down(sender, event)
 	self._dragging = true
 	local key = self._sequence_track:clip_at_event(event)
@@ -221,12 +221,12 @@ function MissionElementTimeline:_on_mouse_left_down(sender, event)
 	self:_select_clip(key)
 end
 
--- Lines: 205 to 207
+-- Lines 205-207
 function MissionElementTimeline:_on_mouse_left_up(sender, event)
 	self._dragging = false
 end
 
--- Lines: 209 to 217
+-- Lines 209-217
 function MissionElementTimeline:_on_mouse_right_down(sender, event)
 	local key = self._sequence_track:clip_at_event(event)
 
@@ -239,7 +239,7 @@ function MissionElementTimeline:_on_mouse_right_down(sender, event)
 	self:_select_clip(key)
 end
 
--- Lines: 219 to 233
+-- Lines 219-233
 function MissionElementTimeline:_on_mouse_motion(sender, event)
 	if not self._dragging then
 		return
@@ -259,7 +259,7 @@ function MissionElementTimeline:_on_mouse_motion(sender, event)
 	end
 end
 
--- Lines: 235 to 244
+-- Lines 235-244
 function MissionElementTimeline:_on_mousewheel(track, event)
 	local clip = self._sequence_track:selected_clips()[1]
 
@@ -272,7 +272,7 @@ function MissionElementTimeline:_on_mousewheel(track, event)
 	self:zoom_around(clip:start_time(), self._panel:get_size().x / 2, delta)
 end
 
--- Lines: 246 to 257
+-- Lines 246-257
 function MissionElementTimeline:zoom_around(time, offset_in_window, delta)
 	self._scrolled_area:freeze()
 
@@ -286,4 +286,3 @@ function MissionElementTimeline:zoom_around(time, offset_in_window, delta)
 	self._scrolled_area:scroll(Vector3(scroll_offset / self._scrolled_area:scroll_pixels_per_unit().x, -1, 0))
 	self._scrolled_area:thaw()
 end
-

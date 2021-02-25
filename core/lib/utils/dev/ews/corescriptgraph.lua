@@ -5,28 +5,28 @@ core:import("CoreEvent")
 ScriptGraph = ScriptGraph or CoreClass.class()
 CONFIG_VERSION = "1"
 
--- Lines: 10 to 13
+-- Lines 10-13
 function ScriptGraph:init(parent, id, style)
 	assert(style == "FLOW" or not style, "[ScriptGraph] Currently the only supported graph view type is 'FLOW'.")
 	self:_create_panel(parent, id, style)
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function ScriptGraph:update(t, dt)
 	self._graph_view:update_graph(dt)
 end
 
--- Lines: 19 to 20
+-- Lines 19-21
 function ScriptGraph:window()
 	return self._graph_view
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function ScriptGraph:destroy()
 	self._graph_view:destroy()
 end
 
--- Lines: 27 to 32
+-- Lines 27-33
 function ScriptGraph:selected_nodes()
 	local t = {}
 
@@ -37,38 +37,38 @@ function ScriptGraph:selected_nodes()
 	return t
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function ScriptGraph:last_selected_node()
 	return self._graph_view:last_selected_node()
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function ScriptGraph:nodes()
 	return self._graph_view:nodes()
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function ScriptGraph:graph_metadata()
 	return self._graph_metadata
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function ScriptGraph:set_graph_metadata(data)
 	self._graph_metadata = data
 end
 
--- Lines: 51 to 54
+-- Lines 51-54
 function ScriptGraph:add_node(node)
 	assert(node:type() == "FlowNode", "[ScriptGraph] The only supported node type is 'flow_node'.")
 	self._graph:add_node(node)
 end
 
--- Lines: 56 to 58
+-- Lines 56-58
 function ScriptGraph:connect(id, event_type, cb, data)
 	self._graph_view:connect(id, event_type, cb, data)
 end
 
--- Lines: 60 to 110
+-- Lines 60-111
 function ScriptGraph:save(id_map)
 	local new_id_map = id_map or {}
 	local config = Node("graph")
@@ -120,7 +120,7 @@ function ScriptGraph:save(id_map)
 	return config, new_id_map
 end
 
--- Lines: 113 to 181
+-- Lines 113-182
 function ScriptGraph:load(config_root)
 	assert(config_root, "[ScriptGraph] Could not open: " .. tostring(config_root))
 	assert(config_root:parameter("version") == CONFIG_VERSION, "[ScriptGraph] Bad version!")
@@ -196,7 +196,7 @@ function ScriptGraph:load(config_root)
 	return self._id_map
 end
 
--- Lines: 184 to 228
+-- Lines 184-229
 function ScriptGraph:_load_node_info(node)
 	local info = {}
 
@@ -220,7 +220,9 @@ function ScriptGraph:_load_node_info(node)
 
 				table.insert(info.in_slot_names, name)
 
-				info.in_slots[name] = {col = color}
+				info.in_slots[name] = {
+					col = color
+				}
 			else
 				info.out_slots = info.out_slots or {}
 				info.out_slot_names = info.out_slot_names or {}
@@ -265,7 +267,7 @@ function ScriptGraph:_load_node_info(node)
 	return info
 end
 
--- Lines: 231 to 237
+-- Lines 231-237
 function ScriptGraph:_create_panel(parent, id, style, window_style)
 	self._graph = EWS:Graph()
 	self._graph_view = EWS:GraphView(parent, id or "", self._graph, "FLOW")
@@ -274,14 +276,14 @@ function ScriptGraph:_create_panel(parent, id, style, window_style)
 	self._graph_view:toggle_style(window_style or "SUNKEN_BORDER")
 end
 
--- Lines: 239 to 241
+-- Lines 239-242
 function ScriptGraph:_find_node_with_id(nodes, id)
 	local node = assert(nodes[id], "[ScriptGraph] The graph is corrupt! Can't find node id: " .. tostring(id))
 
 	return node.cnode
 end
 
--- Lines: 244 to 251
+-- Lines 244-251
 function ScriptGraph:_find_id_with_node(id_map, node)
 	for id, n in pairs(id_map) do
 		if n == node then
@@ -292,7 +294,7 @@ function ScriptGraph:_find_id_with_node(id_map, node)
 	error("[ScriptGraph] Could not find node: " .. tostring(node))
 end
 
--- Lines: 253 to 263
+-- Lines 253-263
 function ScriptGraph:_write_icon(cfg_node, node)
 	if node:icon() ~= "" then
 		local icon = Node("icon")
@@ -303,7 +305,7 @@ function ScriptGraph:_write_icon(cfg_node, node)
 	end
 end
 
--- Lines: 265 to 279
+-- Lines 265-279
 function ScriptGraph:_write_connections(slot_node, slot, node, id_map)
 	local con_info = node:connection_info(slot)
 
@@ -323,18 +325,18 @@ function ScriptGraph:_write_connections(slot_node, slot, node, id_map)
 	end
 end
 
--- Lines: 281 to 284
+-- Lines 281-284
 function ScriptGraph:_write_output_color(slot_node, slot, node)
 	local r, g, b = node:output_colour(slot)
 
 	self:_write_output_color_to_node(slot_node, Node("color"), r, g, b)
 end
 
--- Lines: 288 to 289
+-- Lines 286-289
 function ScriptGraph:_write_input_color(slot_node, slot, node)
 end
 
--- Lines: 291 to 296
+-- Lines 291-296
 function ScriptGraph:_write_output_color_to_node(slot_node, color_node, r, g, b)
 	color_node:set_parameter("r", tostring(assert(r)))
 	color_node:set_parameter("g", tostring(assert(g)))
@@ -342,7 +344,7 @@ function ScriptGraph:_write_output_color_to_node(slot_node, color_node, r, g, b)
 	slot_node:add_child(color_node)
 end
 
--- Lines: 298 to 304
+-- Lines 298-304
 function ScriptGraph:_write_node_color(cfg_node, node)
 	local color_node = Node("color")
 
@@ -352,7 +354,7 @@ function ScriptGraph:_write_node_color(cfg_node, node)
 	cfg_node:add_child(color_node)
 end
 
--- Lines: 306 to 327
+-- Lines 306-327
 function ScriptGraph:_write_slots(cfg_node, node, id_map)
 	if node:type() == "FlowNode" then
 		for _, slot in ipairs(node:inputs()) do
@@ -376,4 +378,3 @@ function ScriptGraph:_write_slots(cfg_node, node, id_map)
 		end
 	end
 end
-

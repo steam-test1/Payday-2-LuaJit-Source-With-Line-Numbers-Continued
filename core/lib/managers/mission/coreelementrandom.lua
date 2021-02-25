@@ -4,18 +4,18 @@ core:import("CoreTable")
 
 ElementRandom = ElementRandom or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 7 to 11
+-- Lines 7-11
 function ElementRandom:init(...)
 	ElementRandom.super.init(self, ...)
 
 	self._original_on_executed = CoreTable.clone(self._values.on_executed)
 end
 
--- Lines: 14 to 15
+-- Lines 13-15
 function ElementRandom:client_on_executed(...)
 end
 
--- Lines: 17 to 40
+-- Lines 17-40
 function ElementRandom:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -37,29 +37,28 @@ function ElementRandom:on_executed(instigator)
 		amount = element:counter_value()
 	end
 
-	for i = 1, math.min(amount, #self._original_on_executed), 1 do
+	for i = 1, math.min(amount, #self._original_on_executed) do
 		table.insert(self._values.on_executed, self._original_on_executed[self:_get_random_elements()])
 	end
 
 	ElementRandom.super.on_executed(self, instigator)
 end
 
--- Lines: 42 to 47
+-- Lines 42-48
 function ElementRandom:_calc_amount()
 	local amount = self._values.amount or 1
 
 	if self._values.amount_random and self._values.amount_random > 0 then
-		amount = (amount + math.random(self._values.amount_random + 1)) - 1
+		amount = amount + math.random(self._values.amount_random + 1) - 1
 	end
 
 	return amount
 end
 
--- Lines: 50 to 54
+-- Lines 50-55
 function ElementRandom:_get_random_elements()
 	local t = {}
 	local rand = math.random(#self._unused_randoms)
 
 	return table.remove(self._unused_randoms, rand)
 end
-

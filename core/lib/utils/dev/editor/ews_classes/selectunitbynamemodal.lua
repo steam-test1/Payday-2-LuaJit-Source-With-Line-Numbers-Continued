@@ -1,12 +1,12 @@
 SelectUnitByNameModal = SelectUnitByNameModal or class(UnitByName)
 
--- Lines: 3 to 6
+-- Lines 3-6
 function SelectUnitByNameModal:init(name, unit_filter_function, ...)
 	UnitByName.init(self, name, unit_filter_function, ...)
 	self:show_modal()
 end
 
--- Lines: 8 to 15
+-- Lines 8-15
 function SelectUnitByNameModal:_build_buttons(panel, sizer)
 	local select_btn = EWS:Button(panel, "Select", "", "BU_BOTTOM")
 
@@ -16,32 +16,32 @@ function SelectUnitByNameModal:_build_buttons(panel, sizer)
 	UnitByName._build_buttons(self, panel, sizer)
 end
 
--- Lines: 17 to 19
+-- Lines 17-19
 function SelectUnitByNameModal:_on_select_unit()
 	self:end_modal()
 end
 
--- Lines: 26 to 29
+-- Lines 26-29
 function SelectUnitByNameModal:on_cancel()
 	self._cancelled = true
 
 	self:end_modal()
 end
 
--- Lines: 31 to 33
+-- Lines 31-33
 function SelectUnitByNameModal:end_modal()
 	self._dialog:end_modal("hello")
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function SelectUnitByNameModal:cancelled()
 	return self._cancelled
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function SelectUnitByNameModal:selected_units()
 	return self:_selected_item_units()
 end
+
 SingleSelectUnitByNameModal = SingleSelectUnitByNameModal or class(SelectUnitByNameModal)
 SingleSelectUnitByNameModal.STYLE = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL"
-

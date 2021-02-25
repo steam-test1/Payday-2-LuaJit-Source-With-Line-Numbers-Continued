@@ -1,6 +1,6 @@
 BikeDrivingExt = BikeDrivingExt or class(VehicleDrivingExt)
 
--- Lines: 5 to 23
+-- Lines 3-23
 function BikeDrivingExt:init(unit)
 	BikeDrivingExt.super.init(self, unit)
 
@@ -19,7 +19,7 @@ function BikeDrivingExt:init(unit)
 	end
 end
 
--- Lines: 27 to 113
+-- Lines 25-113
 function BikeDrivingExt:update(unit, t, dt)
 	BikeDrivingExt.super.update(self, unit, t, dt)
 
@@ -95,4 +95,3 @@ function BikeDrivingExt:update(unit, t, dt)
 		end
 	end
 end
-

@@ -8,7 +8,7 @@ SetupSlaveSetup = SetupSlaveSetup or class(CoreSetup.CoreSetup)
 SetupSlaveSetup.SLAVE_ARG_NAME = "-slave"
 SetupSlaveSetup.SLAVE_LSP_ARG_NAME = "-slavelsport"
 
--- Lines: 13 to 38
+-- Lines 13-39
 function SetupSlaveSetup:init_game()
 	self._viewport = managers.viewport:new_vp(0, 0, 1, 1, "slave")
 	self._camera = World:create_camera()
@@ -40,16 +40,16 @@ function SetupSlaveSetup:init_game()
 	return slave_state_machine
 end
 
--- Lines: 41 to 43
+-- Lines 41-43
 function SetupSlaveSetup:update(t, dt)
 	slave_state_machine:update(t, dt)
 end
 
--- Lines: 45 to 47
+-- Lines 45-47
 function SetupSlaveSetup:paused_update(t, dt)
 	slave_state_machine:update(t, dt)
 end
+
 slave_setup = slave_setup or SetupSlaveSetup:new()
 
 slave_setup:make_entrypoint()
-

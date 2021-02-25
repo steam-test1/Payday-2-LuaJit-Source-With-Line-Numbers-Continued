@@ -2,14 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementCustomSafehouseFilter = ElementCustomSafehouseFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 6 to 9
+-- Lines 6-9
 function ElementCustomSafehouseFilter:init(...)
 	ElementCustomSafehouseFilter.super.init(self, ...)
 
 	self._tier_value = tonumber(self:value("room_tier")) or 1
 end
 
--- Lines: 11 to 16
+-- Lines 11-16
 function ElementCustomSafehouseFilter:on_script_activated()
 	ElementCustomSafehouseFilter.super.on_script_activated(self)
 
@@ -18,7 +18,7 @@ function ElementCustomSafehouseFilter:on_script_activated()
 	end
 end
 
--- Lines: 19 to 36
+-- Lines 18-36
 function ElementCustomSafehouseFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -39,7 +39,7 @@ function ElementCustomSafehouseFilter:on_executed(instigator)
 	end
 end
 
--- Lines: 38 to 55
+-- Lines 38-55
 function ElementCustomSafehouseFilter:_check_value(value)
 	local check_type = self:value("check_type")
 
@@ -63,9 +63,10 @@ function ElementCustomSafehouseFilter:_check_value(value)
 		return self._tier_value < value
 	end
 end
+
 ElementCustomSafehouseTrophyFilter = ElementCustomSafehouseTrophyFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 61 to 66
+-- Lines 61-66
 function ElementCustomSafehouseTrophyFilter:on_script_activated()
 	ElementCustomSafehouseTrophyFilter.super.on_script_activated(self)
 
@@ -74,7 +75,7 @@ function ElementCustomSafehouseTrophyFilter:on_script_activated()
 	end
 end
 
--- Lines: 69 to 87
+-- Lines 68-87
 function ElementCustomSafehouseTrophyFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -95,19 +96,20 @@ function ElementCustomSafehouseTrophyFilter:on_executed(instigator)
 		ElementCustomSafehouseTrophyFilter.super.on_executed(self, self._unit or instigator)
 	end
 end
+
 ElementCustomSafehouseAwardTrophy = ElementCustomSafehouseAwardTrophy or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 93 to 95
+-- Lines 93-95
 function ElementCustomSafehouseAwardTrophy:client_on_executed_end_screen(...)
 	self:on_executed(...)
 end
 
--- Lines: 97 to 99
+-- Lines 97-99
 function ElementCustomSafehouseAwardTrophy:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 102 to 136
+-- Lines 101-136
 function ElementCustomSafehouseAwardTrophy:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -119,11 +121,15 @@ function ElementCustomSafehouseAwardTrophy:on_executed(instigator)
 		local local_player = managers.player:local_player()
 		award_trophy = alive(local_player) and local_player == instigator
 
-		if not award_trophy and instigator:vehicle_driving() then
-			local seat = instigator:vehicle_driving():find_seat_for_player(local_player)
+		if not award_trophy then
+			if instigator:vehicle_driving() then
+				local seat = instigator:vehicle_driving():find_seat_for_player(local_player)
 
-			if seat and seat.driving then
-				award_trophy = true
+				if seat and seat.driving then
+					award_trophy = true
+				end
+			elseif false then
+				-- Nothing
 			end
 		end
 	end
@@ -138,4 +144,3 @@ function ElementCustomSafehouseAwardTrophy:on_executed(instigator)
 
 	ElementCustomSafehouseAwardTrophy.super.on_executed(self, self._unit or instigator)
 end
-

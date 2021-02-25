@@ -4,7 +4,7 @@ core:import("CoreMath")
 
 ShapeManager = ShapeManager or class()
 
--- Lines: 8 to 15
+-- Lines 8-15
 function ShapeManager:init()
 	self._shapes = {}
 	self._shape_types = {
@@ -15,14 +15,14 @@ function ShapeManager:init()
 	}
 end
 
--- Lines: 17 to 21
+-- Lines 17-21
 function ShapeManager:update(t, dt)
 	for _, shape in ipairs(self._shapes) do
 		shape:draw(t, dt, 0.8, 0.8)
 	end
 end
 
--- Lines: 23 to 27
+-- Lines 23-28
 function ShapeManager:add_shape(type, params)
 	params.type = type
 	local shape = self._shape_types[type]:new(params)
@@ -32,29 +32,29 @@ function ShapeManager:add_shape(type, params)
 	return shape
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function ShapeManager:shape_type(type)
 	return self._shape_types[type]
 end
 
--- Lines: 34 to 37
+-- Lines 34-37
 function ShapeManager:remove_shape(shape)
 	shape:destroy()
 	table.delete(self._shapes, shape)
 end
 
--- Lines: 39 to 43
+-- Lines 39-43
 function ShapeManager:clear_shapes()
 	for _, shape in ipairs(clone(self._shapes)) do
 		self:remove_shape(shape)
 	end
 end
 
--- Lines: 46 to 47
+-- Lines 45-47
 function ShapeManager:save()
 end
 
--- Lines: 49 to 59
+-- Lines 49-60
 function ShapeManager:parse(shape)
 	local t = {
 		type = shape:parameter("type"),
@@ -70,13 +70,14 @@ function ShapeManager:parse(shape)
 
 	return t
 end
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
 local mposition = Vector3()
 Shape = Shape or class()
 
--- Lines: 69 to 84
+-- Lines 69-84
 function Shape:init(params)
 	self._name = params.name or ""
 	self._type = params.type or "none"
@@ -91,7 +92,7 @@ function Shape:init(params)
 	end
 end
 
--- Lines: 86 to 98
+-- Lines 86-98
 function Shape:build_dialog()
 	if not Application:editor() then
 		return
@@ -104,56 +105,56 @@ function Shape:build_dialog()
 	self:build_properties_ctrls()
 end
 
--- Lines: 101 to 102
+-- Lines 100-102
 function Shape:build_properties_ctrls()
 end
 
--- Lines: 104 to 105
+-- Lines 104-106
 function Shape:name()
 	return self._unit and self._unit:unit_data().name_id or self._name
 end
 
--- Lines: 108 to 109
+-- Lines 108-110
 function Shape:unit()
 	return self._unit
 end
 
--- Lines: 112 to 114
+-- Lines 112-114
 function Shape:set_unit(unit)
 	self._unit = unit
 end
 
--- Lines: 116 to 117
+-- Lines 116-118
 function Shape:position()
 	return self._unit and self._unit:position() or self._position
 end
 
--- Lines: 120 to 122
+-- Lines 120-122
 function Shape:set_position(position)
 	self._position = position
 end
 
--- Lines: 124 to 125
+-- Lines 124-126
 function Shape:rotation()
 	return self._unit and self._unit:rotation() or self._rotation
 end
 
--- Lines: 128 to 130
+-- Lines 128-130
 function Shape:set_rotation(rotation)
 	self._rotation = rotation
 end
 
--- Lines: 132 to 133
+-- Lines 132-134
 function Shape:properties()
 	return self._properties
 end
 
--- Lines: 136 to 137
+-- Lines 136-138
 function Shape:property(property)
 	return self._properties[property]
 end
 
--- Lines: 140 to 154
+-- Lines 140-154
 function Shape:set_property(property, value)
 	if not self._properties[property] then
 		return
@@ -169,16 +170,16 @@ function Shape:set_property(property, value)
 	end
 end
 
--- Lines: 156 to 158
+-- Lines 156-158
 function Shape:set_property_string(property, value)
 	self._properties[property] = value
 end
 
--- Lines: 161 to 162
+-- Lines 160-162
 function Shape:scale()
 end
 
--- Lines: 164 to 169
+-- Lines 164-169
 function Shape:set_dialog_visible(visible)
 	if not self._dialog then
 		self:build_dialog()
@@ -187,7 +188,7 @@ function Shape:set_dialog_visible(visible)
 	self._dialog:set_visible(visible)
 end
 
--- Lines: 171 to 175
+-- Lines 171-176
 function Shape:panel(panel, sizer)
 	if not self._panel and panel and sizer then
 		self:create_panel(panel, sizer)
@@ -196,11 +197,13 @@ function Shape:panel(panel, sizer)
 	return self._panel
 end
 
--- Lines: 178 to 185
+-- Lines 178-185
 function Shape:create_panel(parent, sizer)
 	self._panel = EWS:Panel(parent, "", "TAB_TRAVERSAL")
 
-	self._panel:set_extension({alive = true})
+	self._panel:set_extension({
+		alive = true
+	})
 
 	self._panel_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -208,7 +211,7 @@ function Shape:create_panel(parent, sizer)
 	sizer:add(self._panel, 0, 0, "EXPAND")
 end
 
--- Lines: 187 to 221
+-- Lines 187-222
 function Shape:_create_size_ctrl(name, property, value, parent, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -267,7 +270,7 @@ function Shape:_create_size_ctrl(name, property, value, parent, sizer)
 	return ctrl
 end
 
--- Lines: 224 to 229
+-- Lines 224-229
 function Shape:connect_event(name, event, callback, params)
 	local ctrls = self._properties_ctrls[name] or {}
 
@@ -276,7 +279,7 @@ function Shape:connect_event(name, event, callback, params)
 	end
 end
 
--- Lines: 231 to 235
+-- Lines 231-235
 function Shape:update_size(data)
 	local value = data.ctrl:get_value()
 
@@ -284,14 +287,14 @@ function Shape:update_size(data)
 	data.ctrl:set_selection(-1, -1)
 end
 
--- Lines: 237 to 240
+-- Lines 237-240
 function Shape:update_size_spin(data)
 	local value = data.ctrl:get_value() + data.step
 
 	self:set_property(data.property, value * 100)
 end
 
--- Lines: 242 to 247
+-- Lines 242-247
 function Shape:update_slider_size(data)
 	data.start_value = data.start_value or data.ctrl:get_value()
 	local value = data.start_value
@@ -299,7 +302,7 @@ function Shape:update_slider_size(data)
 	self:set_property(data.property, value * data.slider:get_value() / 100 * 100)
 end
 
--- Lines: 249 to 255
+-- Lines 249-255
 function Shape:update_slider_release(data)
 	local value = data.start_value
 
@@ -310,19 +313,19 @@ function Shape:update_slider_release(data)
 	data.slider:set_value(100)
 end
 
--- Lines: 257 to 258
+-- Lines 257-258
 function Shape:draw(t, dt, r, g, b)
 end
 
--- Lines: 260 to 261
+-- Lines 260-261
 function Shape:is_inside(pos)
 end
 
--- Lines: 263 to 264
+-- Lines 263-264
 function Shape:is_outside(pos)
 end
 
--- Lines: 267 to 276
+-- Lines 267-277
 function Shape:save(t)
 	local t = t or ""
 	local s = t
@@ -335,7 +338,7 @@ function Shape:save(t)
 	return s
 end
 
--- Lines: 280 to 288
+-- Lines 280-289
 function Shape:save_level_data()
 	local t = {
 		type = self._type,
@@ -350,7 +353,7 @@ function Shape:save_level_data()
 	return t
 end
 
--- Lines: 291 to 299
+-- Lines 291-299
 function Shape:destroy()
 	if self._panel then
 		self._panel:extension().alive = false
@@ -362,9 +365,10 @@ function Shape:destroy()
 		self._dialog:destroy()
 	end
 end
+
 ShapeBox = ShapeBox or class(Shape)
 
--- Lines: 305 to 313
+-- Lines 305-313
 function ShapeBox:init(params)
 	Shape.init(self, params)
 
@@ -373,7 +377,7 @@ function ShapeBox:init(params)
 	self._properties.height = params.height or 1000
 end
 
--- Lines: 315 to 323
+-- Lines 315-324
 function ShapeBox:create_panel(parent, sizer)
 	Shape.create_panel(self, parent, sizer)
 
@@ -386,7 +390,7 @@ function ShapeBox:create_panel(parent, sizer)
 	return width, depth, height
 end
 
--- Lines: 326 to 336
+-- Lines 326-336
 function ShapeBox:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -398,47 +402,47 @@ function ShapeBox:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 90, 0))
 end
 
--- Lines: 338 to 339
+-- Lines 338-340
 function ShapeBox:size()
 	return Vector3(self._properties.width, self._properties.depth, self._properties.height)
 end
 
--- Lines: 342 to 343
+-- Lines 342-344
 function ShapeBox:width()
 	return self._properties.width
 end
 
--- Lines: 346 to 348
+-- Lines 346-348
 function ShapeBox:set_width(width)
 	self:set_property("width", width)
 end
 
--- Lines: 350 to 351
+-- Lines 350-352
 function ShapeBox:depth()
 	return self._properties.depth
 end
 
--- Lines: 354 to 356
+-- Lines 354-356
 function ShapeBox:set_depth(depth)
 	self:set_property("depth", depth)
 end
 
--- Lines: 358 to 359
+-- Lines 358-360
 function ShapeBox:height()
 	return self._properties.height
 end
 
--- Lines: 362 to 364
+-- Lines 362-364
 function ShapeBox:set_height(height)
 	self:set_property("height", height)
 end
 
--- Lines: 366 to 367
+-- Lines 366-368
 function ShapeBox:still_inside(pos)
 	return self:is_inside(pos)
 end
 
--- Lines: 375 to 396
+-- Lines 370-398
 function ShapeBox:is_inside(pos)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self:position())
@@ -468,7 +472,7 @@ function ShapeBox:is_inside(pos)
 	return false
 end
 
--- Lines: 400 to 409
+-- Lines 400-409
 function ShapeBox:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -476,26 +480,27 @@ function ShapeBox:draw(t, dt, r, g, b)
 
 	local pos = self:position()
 	local rot = self:rotation()
-	pos = pos + (rot:x() * self._properties.width) / 2 + (rot:y() * self._properties.depth) / 2 + (rot:z() * self._properties.height) / 2
+	pos = pos + rot:x() * self._properties.width / 2 + rot:y() * self._properties.depth / 2 + rot:z() * self._properties.height / 2
 
-	brush:box(pos, (rot:x() * self._properties.width) / 2, (rot:y() * self._properties.depth) / 2, (rot:z() * self._properties.height) / 2)
+	brush:box(pos, rot:x() * self._properties.width / 2, rot:y() * self._properties.depth / 2, rot:z() * self._properties.height / 2)
 	self:draw_outline(t, dt, r, g, b)
 end
 
--- Lines: 411 to 414
+-- Lines 411-414
 function ShapeBox:draw_outline(t, dt, r, g, b)
 	local rot = self:rotation()
 
 	Application:draw_box_rotation(self:position(), rot, self._properties.width, self._properties.depth, self._properties.height, r, g, b)
 end
+
 ShapeBoxMiddle = ShapeBoxMiddle or class(ShapeBox)
 
--- Lines: 420 to 422
+-- Lines 420-422
 function ShapeBoxMiddle:init(params)
 	ShapeBox.init(self, params)
 end
 
--- Lines: 429 to 472
+-- Lines 424-474
 function ShapeBoxMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local x = mvec1
@@ -543,7 +548,7 @@ function ShapeBoxMiddle:is_inside(pos)
 	return false
 end
 
--- Lines: 476 to 487
+-- Lines 476-487
 function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 	local brush = Draw:brush()
 
@@ -552,25 +557,26 @@ function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 	local pos = self:position()
 	local rot = self:rotation()
 
-	brush:box(pos, (rot:x() * self._properties.width) / 2, (rot:y() * self._properties.depth) / 2, (rot:z() * self._properties.height) / 2)
+	brush:box(pos, rot:x() * self._properties.width / 2, rot:y() * self._properties.depth / 2, rot:z() * self._properties.height / 2)
 
-	local c1 = ((self:position() - (rot:x() * self._properties.width) / 2) - (rot:y() * self._properties.depth) / 2) - (rot:z() * self._properties.height) / 2
+	local c1 = self:position() - rot:x() * self._properties.width / 2 - rot:y() * self._properties.depth / 2 - rot:z() * self._properties.height / 2
 
 	Application:draw_box_rotation(c1, rot, self._properties.width, self._properties.depth, self._properties.height, r, g, b)
 end
+
 ShapeBoxMiddleBottom = ShapeBoxMiddleBottom or class(ShapeBox)
 
--- Lines: 493 to 495
+-- Lines 493-495
 function ShapeBoxMiddleBottom:init(params)
 	ShapeBox.init(self, params)
 end
 
--- Lines: 498 to 516
+-- Lines 497-517
 function ShapeBoxMiddleBottom:is_inside(pos)
 	local rot = self:rotation()
-	local x = (rot:x() * self._properties.width) / 2
-	local y = (rot:y() * self._properties.depth) / 2
-	local position = (self:position() - x) - y
+	local x = rot:x() * self._properties.width / 2
+	local y = rot:y() * self._properties.depth / 2
+	local position = self:position() - x - y
 	local pos_dir = pos - position
 	local inside = rot:x():dot(pos_dir)
 
@@ -589,7 +595,7 @@ function ShapeBoxMiddleBottom:is_inside(pos)
 	return false
 end
 
--- Lines: 519 to 531
+-- Lines 519-531
 function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -597,24 +603,25 @@ function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 
 	local pos = self:position()
 	local rot = self:rotation()
-	pos = pos + (rot:z() * self._properties.height) / 2
+	pos = pos + rot:z() * self._properties.height / 2
 
-	brush:box(pos, (rot:x() * self._properties.width) / 2, (rot:y() * self._properties.depth) / 2, (rot:z() * self._properties.height) / 2)
+	brush:box(pos, rot:x() * self._properties.width / 2, rot:y() * self._properties.depth / 2, rot:z() * self._properties.height / 2)
 
-	local c1 = (self:position() - (rot:x() * self._properties.width) / 2) - (rot:y() * self._properties.depth) / 2
+	local c1 = self:position() - rot:x() * self._properties.width / 2 - rot:y() * self._properties.depth / 2
 
 	Application:draw_box_rotation(c1, rot, self._properties.width, self._properties.depth, self._properties.height, r, g, b)
 end
+
 ShapeSphere = ShapeSphere or class(Shape)
 
--- Lines: 537 to 543
+-- Lines 537-543
 function ShapeSphere:init(params)
 	Shape.init(self, params)
 
 	self._properties.radius = params.radius or 1000
 end
 
--- Lines: 545 to 553
+-- Lines 545-553
 function ShapeSphere:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -624,22 +631,22 @@ function ShapeSphere:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 50, 0))
 end
 
--- Lines: 555 to 556
+-- Lines 555-557
 function ShapeSphere:radius()
 	return self._properties.radius
 end
 
--- Lines: 559 to 561
+-- Lines 559-561
 function ShapeSphere:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
--- Lines: 563 to 564
+-- Lines 563-565
 function ShapeSphere:is_inside(pos)
 	return (pos - self:position()):length() < self._properties.radius
 end
 
--- Lines: 567 to 572
+-- Lines 567-572
 function ShapeSphere:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -647,9 +654,10 @@ function ShapeSphere:draw(t, dt, r, g, b)
 	brush:sphere(self:position(), self._properties.radius, 4)
 	Application:draw_sphere(self:position(), self._properties.radius, r, g, b)
 end
+
 ShapeCylinder = ShapeCylinder or class(Shape)
 
--- Lines: 578 to 585
+-- Lines 578-585
 function ShapeCylinder:init(params)
 	Shape.init(self, params)
 
@@ -657,7 +665,7 @@ function ShapeCylinder:init(params)
 	self._properties.height = params.height or 1000
 end
 
--- Lines: 587 to 596
+-- Lines 587-596
 function ShapeCylinder:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -668,27 +676,27 @@ function ShapeCylinder:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 70, 0))
 end
 
--- Lines: 598 to 599
+-- Lines 598-600
 function ShapeCylinder:radius()
 	return self._properties.radius
 end
 
--- Lines: 602 to 604
+-- Lines 602-604
 function ShapeCylinder:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
--- Lines: 606 to 607
+-- Lines 606-608
 function ShapeCylinder:height()
 	return self._properties.height
 end
 
--- Lines: 610 to 612
+-- Lines 610-612
 function ShapeCylinder:set_height(height)
 	self:set_property("height", height)
 end
 
--- Lines: 614 to 621
+-- Lines 614-621
 function ShapeCylinder:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -701,7 +709,7 @@ function ShapeCylinder:draw(t, dt, r, g, b)
 	Application:draw_cylinder(pos, pos + rot:z() * self._properties.height, self._properties.radius, r, g, b)
 end
 
--- Lines: 628 to 641
+-- Lines 623-643
 function ShapeCylinder:is_inside(pos)
 	local pos_dir = pos - self:position()
 	local rot = self:rotation()
@@ -718,14 +726,15 @@ function ShapeCylinder:is_inside(pos)
 
 	return false
 end
+
 ShapeCylinderMiddle = ShapeCylinderMiddle or class(ShapeCylinder)
 
--- Lines: 647 to 649
+-- Lines 647-649
 function ShapeCylinderMiddle:init(params)
 	ShapeCylinderMiddle.super.init(self, params)
 end
 
--- Lines: 651 to 679
+-- Lines 651-691
 function ShapeCylinderMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local z = mvec3
@@ -762,7 +771,7 @@ function ShapeCylinderMiddle:is_inside(pos)
 	return false
 end
 
--- Lines: 693 to 702
+-- Lines 693-702
 function ShapeCylinderMiddle:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -770,10 +779,9 @@ function ShapeCylinderMiddle:draw(t, dt, r, g, b)
 
 	local pos = self:position()
 	local rot = self:rotation()
-	local from = pos - (rot:z() * self._properties.height) / 2
-	local to = pos + (rot:z() * self._properties.height) / 2
+	local from = pos - rot:z() * self._properties.height / 2
+	local to = pos + rot:z() * self._properties.height / 2
 
 	brush:cylinder(from, to, self._properties.radius, 100)
 	Application:draw_cylinder(from, to, self._properties.radius, r, g, b)
 end
-

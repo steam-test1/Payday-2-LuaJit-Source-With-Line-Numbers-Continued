@@ -1,14 +1,14 @@
 NetworkVoiceChatXBL = NetworkVoiceChatXBL or class()
 NetworkVoiceChatXBL._NUM_PEERS = 4
 
--- Lines: 35 to 41
+-- Lines 35-41
 function NetworkVoiceChatXBL:init()
 	self.DEFAULT_TEAM = 1
 	self._paused = true
 	self._userid_callback_id = managers.user:add_user_state_changed_callback(callback(self, self, "user_id_update"))
 end
 
--- Lines: 44 to 81
+-- Lines 43-81
 function NetworkVoiceChatXBL:open_session()
 	if self._paused == false then
 		Application:throw_exception("Trying to re-initialize voice chat")
@@ -42,14 +42,14 @@ function NetworkVoiceChatXBL:open_session()
 	self._profile_callback_id = managers.platform:add_event_callback("profile_setting_changed", callback(self, self, "user_update"))
 end
 
--- Lines: 83 to 88
+-- Lines 83-88
 function NetworkVoiceChatXBL:pause()
 	cat_print("lobby", "NetworkVoiceChatXBL:pause")
 
 	self._paused = true
 end
 
--- Lines: 90 to 110
+-- Lines 90-110
 function NetworkVoiceChatXBL:resume()
 	cat_print("lobby", "NetworkVoiceChatXBL:resume")
 
@@ -58,7 +58,7 @@ function NetworkVoiceChatXBL:resume()
 	self:_update_all()
 end
 
--- Lines: 116 to 169
+-- Lines 116-169
 function NetworkVoiceChatXBL:open_channel_to(player_info, context)
 	print("Opening Voice Channel to ", inspect(player_info))
 
@@ -108,12 +108,12 @@ function NetworkVoiceChatXBL:open_channel_to(player_info, context)
 	XboxVoice:send_to(player_index, peer_info.xuid, peer_info.rpc)
 end
 
--- Lines: 171 to 172
+-- Lines 171-173
 function NetworkVoiceChatXBL:playerid_to_name(player_id)
 	return self._peers[tostring(player_id)].name
 end
 
--- Lines: 175 to 181
+-- Lines 175-181
 function NetworkVoiceChatXBL:ip_to_name(ip)
 	for k, v in pairs(self._peers) do
 		if v.rpc and ip == tostring(v.rpc:ip_at_index(0)) then
@@ -122,7 +122,7 @@ function NetworkVoiceChatXBL:ip_to_name(ip)
 	end
 end
 
--- Lines: 183 to 196
+-- Lines 183-196
 function NetworkVoiceChatXBL:close_channel_to(player_info)
 	cat_print("lobby", "Closing Voice Channel to ", tostring(player_info.name))
 
@@ -137,7 +137,7 @@ function NetworkVoiceChatXBL:close_channel_to(player_info)
 	end
 end
 
--- Lines: 199 to 217
+-- Lines 198-217
 function NetworkVoiceChatXBL:lost_peer(peer)
 	if self._peers == nil then
 		return
@@ -158,7 +158,7 @@ function NetworkVoiceChatXBL:lost_peer(peer)
 	end
 end
 
--- Lines: 219 to 237
+-- Lines 219-237
 function NetworkVoiceChatXBL:close_all()
 	cat_print("lobby", "Voice: Close all channels ")
 
@@ -171,7 +171,7 @@ function NetworkVoiceChatXBL:close_all()
 	self._team = self.DEFAULT_TEAM
 end
 
--- Lines: 240 to 250
+-- Lines 240-250
 function NetworkVoiceChatXBL:set_team(team)
 	cat_print("lobby", "Voice: set_team ", team)
 
@@ -186,7 +186,7 @@ function NetworkVoiceChatXBL:set_team(team)
 	self:_update_all()
 end
 
--- Lines: 253 to 261
+-- Lines 253-261
 function NetworkVoiceChatXBL:peer_team(xuid, team, rpc)
 	for k, v in pairs(self._peers) do
 		if v.player_id == tostring(xuid) then
@@ -199,7 +199,7 @@ function NetworkVoiceChatXBL:peer_team(xuid, team, rpc)
 	end
 end
 
--- Lines: 264 to 273
+-- Lines 264-273
 function NetworkVoiceChatXBL:clear_team()
 	cat_print("lobby", "Voice: clear_team, eveyone can now speak to each other ")
 
@@ -212,7 +212,7 @@ function NetworkVoiceChatXBL:clear_team()
 	self:_update_all()
 end
 
--- Lines: 275 to 320
+-- Lines 275-320
 function NetworkVoiceChatXBL:update(time)
 	if self._paused == true then
 		return
@@ -242,7 +242,7 @@ function NetworkVoiceChatXBL:update(time)
 	end
 end
 
--- Lines: 326 to 334
+-- Lines 326-334
 function NetworkVoiceChatXBL:_close_peer(peer)
 	local player_index = managers.user:get_platform_id()
 
@@ -252,15 +252,15 @@ function NetworkVoiceChatXBL:_close_peer(peer)
 	peer.rpc = nil
 end
 
--- Lines: 337 to 338
+-- Lines 337-338
 function NetworkVoiceChatXBL:_peer_update(peer_info)
 end
 
--- Lines: 341 to 342
+-- Lines 341-342
 function NetworkVoiceChatXBL:_peer_flags(peer_info)
 end
 
--- Lines: 344 to 353
+-- Lines 344-353
 function NetworkVoiceChatXBL:_update_all()
 	if self._paused == true then
 		return
@@ -272,19 +272,20 @@ function NetworkVoiceChatXBL:_update_all()
 	end
 end
 
--- Lines: 356 to 366
+-- Lines 356-366
 function NetworkVoiceChatXBL:_save_globals()
 	cat_print("lobby", "Voice: NetworkVoiceChatXBL:_save_globals ")
 
 	Global.xvoice = nil
-	Global.xvoice = {}
-	Global.xvoice.peers = self._peers
-	Global.xvoice.team = self._team
+	Global.xvoice = {
+		peers = self._peers,
+		team = self._team
+	}
 
 	self:pause()
 end
 
--- Lines: 368 to 382
+-- Lines 368-382
 function NetworkVoiceChatXBL:_load_globals()
 	cat_print("lobby", "Voice: NetworkVoiceChatXBL:_load_globals ")
 
@@ -301,7 +302,7 @@ function NetworkVoiceChatXBL:_load_globals()
 	Global.xvoice = nil
 end
 
--- Lines: 384 to 395
+-- Lines 384-395
 function NetworkVoiceChatXBL:_update_numberofusers()
 	self._number_of_users = 0
 	local xuids = XboxLive:all_user_XUIDs()
@@ -315,7 +316,7 @@ function NetworkVoiceChatXBL:_update_numberofusers()
 	cat_print("lobby", "   Voice: Number of users = ", self._number_of_users)
 end
 
--- Lines: 434 to 451
+-- Lines 434-452
 function NetworkVoiceChatXBL:_get_privilege(userindex)
 	local cancommunicate = true
 	local friendsonly = false
@@ -334,7 +335,7 @@ function NetworkVoiceChatXBL:_get_privilege(userindex)
 	return cancommunicate, friendsonly
 end
 
--- Lines: 455 to 486
+-- Lines 455-487
 function NetworkVoiceChatXBL:_check_privilege()
 	local cancommunicate = true
 	local friendsonly = false
@@ -374,62 +375,62 @@ function NetworkVoiceChatXBL:_check_privilege()
 	return flagsupdate
 end
 
--- Lines: 489 to 490
+-- Lines 489-491
 function NetworkVoiceChatXBL:num_peers()
 	return true
 end
 
--- Lines: 493 to 512
+-- Lines 493-512
 function NetworkVoiceChatXBL:destroy_voice(disconnected)
 	self._paused = true
 
 	XboxVoice:stop()
 end
 
--- Lines: 514 to 516
+-- Lines 514-516
 function NetworkVoiceChatXBL:set_volume(new_value)
 	print("new_value", new_value)
 end
 
--- Lines: 518 to 520
+-- Lines 518-521
 function NetworkVoiceChatXBL:is_muted(xuid)
 	local player_index = managers.user:get_platform_id()
 
 	return XboxVoice:muted(xuid)
 end
 
--- Lines: 523 to 526
+-- Lines 523-526
 function NetworkVoiceChatXBL:set_muted(xuid, state)
 	local player_index = managers.user:get_platform_id()
 
 	XboxVoice:set_muted(xuid, state)
 end
 
--- Lines: 531 to 532
+-- Lines 531-532
 function NetworkVoiceChatXBL:user_id_update(id, changed_player_map)
 end
 
--- Lines: 534 to 538
+-- Lines 534-538
 function NetworkVoiceChatXBL:mute_callback()
 	cat_print("lobby", "Voice: Mute list changed")
 	print("Voice: Mute list changed")
 	self:_update_all()
 end
 
--- Lines: 540 to 543
+-- Lines 540-543
 function NetworkVoiceChatXBL:voicechat_away(b)
 	cat_print("lobby", "Voice: voicechat_away: ", tostring(b))
 	print("Voice: voicechat_away: ", tostring(b))
 end
 
--- Lines: 545 to 549
+-- Lines 545-549
 function NetworkVoiceChatXBL:friends_update(id)
 	cat_print("lobby", "Voice: Friends update: ")
 	print("Voice: Friends update: ")
 	self:_update_all()
 end
 
--- Lines: 551 to 555
+-- Lines 551-555
 function NetworkVoiceChatXBL:user_update()
 	cat_print("lobby", "Voice: NetworkVoiceChatXBL:user_update")
 	print("Voice: NetworkVoiceChatXBL:user_update")
@@ -437,13 +438,13 @@ function NetworkVoiceChatXBL:user_update()
 	self._user_changed = true
 end
 
--- Lines: 560 to 563
+-- Lines 560-563
 function NetworkVoiceChatXBL:info()
 	self:info_script()
 	self:info_engine()
 end
 
--- Lines: 566 to 584
+-- Lines 566-584
 function NetworkVoiceChatXBL:info_script()
 	cat_print("lobby", "Voice Script Info")
 	cat_print("lobby", "\tActive Player:     ", self._current_player_index)
@@ -464,7 +465,7 @@ function NetworkVoiceChatXBL:info_script()
 	end
 end
 
--- Lines: 587 to 619
+-- Lines 587-619
 function NetworkVoiceChatXBL:info_engine()
 	cat_print("lobby", "Voice Engine Info")
 	cat_print("lobby", "   Registred Talkers")
@@ -473,7 +474,12 @@ function NetworkVoiceChatXBL:info_engine()
 
 	for k, v in pairs(talkers) do
 		local info = nil
-		info = type(v) == "number" and "      " .. tostring(v) .. " - Local Player" or "      " .. tostring(v) .. " - " .. self:playerid_to_name(v)
+
+		if type(v) == "number" then
+			info = "      " .. tostring(v) .. " - Local Player"
+		else
+			info = "      " .. tostring(v) .. " - " .. self:playerid_to_name(v)
+		end
 
 		cat_print("lobby", info)
 	end
@@ -489,7 +495,7 @@ function NetworkVoiceChatXBL:info_engine()
 
 		local PeerNumber = 0
 
-		while PeerNumber < num_peers do
+		while num_peers > PeerNumber do
 			local ip = v:ip_at_index(PeerNumber)
 
 			cat_print("lobby", "         " .. tostring(ip) .. " - " .. self:ip_to_name(ip))
@@ -498,4 +504,3 @@ function NetworkVoiceChatXBL:info_engine()
 		end
 	end
 end
-

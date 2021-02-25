@@ -4,7 +4,7 @@ NewsFeedGui.SUSTAIN_TIME = 6
 NewsFeedGui.REMOVE_TIME = 0.5
 NewsFeedGui.MAX_NEWS = 5
 
--- Lines: 7 to 11
+-- Lines 7-11
 function NewsFeedGui:init(ws)
 	self._ws = ws
 
@@ -12,7 +12,7 @@ function NewsFeedGui:init(ws)
 	self:make_news_request()
 end
 
--- Lines: 13 to 96
+-- Lines 13-96
 function NewsFeedGui:update(t, dt)
 	if not self._titles then
 		return
@@ -27,7 +27,7 @@ function NewsFeedGui:update(t, dt)
 			self._next = nil
 			self._news.i = self._news.i + 1
 
-			if #self._titles < self._news.i then
+			if self._news.i > #self._titles then
 				self._news.i = 1
 			end
 
@@ -73,7 +73,7 @@ function NewsFeedGui:update(t, dt)
 	end
 end
 
--- Lines: 98 to 103
+-- Lines 98-103
 function NewsFeedGui:make_news_request()
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		print("make_news_request()")
@@ -81,7 +81,7 @@ function NewsFeedGui:make_news_request()
 	end
 end
 
--- Lines: 105 to 124
+-- Lines 105-124
 function NewsFeedGui:news_result(success, body)
 	print("news_result()", success)
 
@@ -92,14 +92,16 @@ function NewsFeedGui:news_result(success, body)
 	if success then
 		self._titles = self:_get_text_block(body, "<title>", "</title>", self.MAX_NEWS)
 		self._links = self:_get_text_block(body, "<link><![CDATA[", "]]></link>", self.MAX_NEWS)
-		self._news = {i = 0}
+		self._news = {
+			i = 0
+		}
 		self._next = true
 
 		self._panel:child("title_announcement"):set_visible(#self._titles > 0)
 	end
 end
 
--- Lines: 126 to 145
+-- Lines 126-145
 function NewsFeedGui:_create_gui()
 	local size = managers.gui_data:scaled_size()
 	self._panel = self._ws:panel():panel({
@@ -152,13 +154,13 @@ function NewsFeedGui:_create_gui()
 	self._panel:set_bottom(self._panel:parent():h())
 end
 
--- Lines: 147 to 189
+-- Lines 147-190
 function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	local result = {}
 	local len = string.len(s)
 	local i = 1
 
-	-- Lines: 153 to 160
+	-- Lines 153-160
 	local function f(s, sp, ep, max_results)
 		local s1, e1 = string.find(s, sp, 1, true)
 
@@ -171,7 +173,7 @@ function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 		table.insert(result, string.sub(s, e1 + 1, s2 - 1))
 	end
 
-	while i < len and #result < max_results do
+	while i < len and max_results > #result do
 		local s1, e1 = string.find(s, "<item>", i, true)
 
 		if not e1 then
@@ -189,7 +191,7 @@ function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	return result
 end
 
--- Lines: 192 to 196
+-- Lines 192-197
 function NewsFeedGui:mouse_moved(x, y)
 	local inside = self._panel:inside(x, y)
 	self._mouse_over = inside
@@ -197,7 +199,7 @@ function NewsFeedGui:mouse_moved(x, y)
 	return inside, inside and "link"
 end
 
--- Lines: 199 to 214
+-- Lines 199-214
 function NewsFeedGui:mouse_pressed(button, x, y)
 	if not self._news then
 		return
@@ -214,10 +216,9 @@ function NewsFeedGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 216 to 220
+-- Lines 216-220
 function NewsFeedGui:close()
 	if alive(self._panel) then
 		self._ws:panel():remove(self._panel)
 	end
 end
-

@@ -3,24 +3,24 @@ Quickhull = Quickhull or class()
 Quickhull._points = {}
 Quickhull._final_points = {}
 
--- Lines: 9 to 12
+-- Lines 9-12
 function Quickhull:init(points)
 	self._points = points
 
 	self:clear()
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function Quickhull:clear()
 	self._final_points = {}
 end
 
--- Lines: 18 to 19
+-- Lines 18-20
 function Quickhull:hull()
 	return self._final_points
 end
 
--- Lines: 23 to 53
+-- Lines 22-55
 function Quickhull:compute()
 	self:clear()
 
@@ -38,7 +38,7 @@ function Quickhull:compute()
 	return self._final_points
 end
 
--- Lines: 58 to 100
+-- Lines 57-100
 function Quickhull:sort()
 	local centre_point = Vector3()
 
@@ -78,11 +78,11 @@ function Quickhull:sort()
 		local bz = b.z - centre_point.z
 		local blen = bx * bx + by * by + bz * bz
 
-		return blen < alen
+		return alen > blen
 	end)
 end
 
--- Lines: 104 to 116
+-- Lines 103-118
 function Quickhull:get_initial_line(points)
 	local line = {}
 
@@ -99,7 +99,7 @@ function Quickhull:get_initial_line(points)
 	return line
 end
 
--- Lines: 122 to 136
+-- Lines 121-138
 function Quickhull:divide_point_cloud(points, dividing_line)
 	local above = {}
 	local below = {}
@@ -118,7 +118,7 @@ function Quickhull:divide_point_cloud(points, dividing_line)
 	return above, below
 end
 
--- Lines: 143 to 170
+-- Lines 142-170
 function Quickhull:process_hull(points, dividing_line, winding)
 	if #points < 1 then
 		return
@@ -152,7 +152,7 @@ function Quickhull:process_hull(points, dividing_line, winding)
 	end
 end
 
--- Lines: 173 to 189
+-- Lines 172-189
 function Quickhull:shrink(points)
 	local i = 2
 
@@ -165,7 +165,7 @@ function Quickhull:shrink(points)
 		self:shrink_segment(points, line)
 
 		i = i + 1
-	until #self._final_points - 1 <= i
+	until i >= #self._final_points - 1
 
 	local line = {
 		self._final_points[1],
@@ -175,7 +175,7 @@ function Quickhull:shrink(points)
 	self:shrink_segment(points, line)
 end
 
--- Lines: 192 to 220
+-- Lines 191-220
 function Quickhull:shrink_segment(points, line)
 	local shrink_factor = 2
 	local length = (line[2] - line[1]):length()
@@ -193,7 +193,7 @@ function Quickhull:shrink_segment(points, line)
 	end
 end
 
--- Lines: 223 to 227
+-- Lines 223-228
 function Quickhull:position_relative_to_line(line, point)
 	local min = line[1]
 	local max = line[2]
@@ -202,7 +202,7 @@ function Quickhull:position_relative_to_line(line, point)
 	return math.sign(res)
 end
 
--- Lines: 231 to 240
+-- Lines 230-242
 function Quickhull:get_furthest_point(points, dividing_line)
 	local max_dist, max_point = nil
 
@@ -218,7 +218,7 @@ function Quickhull:get_furthest_point(points, dividing_line)
 	return max_point
 end
 
--- Lines: 245 to 254
+-- Lines 244-256
 function Quickhull:get_points_within_distance_to_line(points, dividing_line, distance)
 	local ps = {}
 
@@ -233,14 +233,14 @@ function Quickhull:get_points_within_distance_to_line(points, dividing_line, dis
 	return ps
 end
 
--- Lines: 259 to 261
+-- Lines 259-262
 function Quickhull:distance_to_line(point, line)
 	local dist = self:_distance_to_segment_sqr(point, line[1], line[2])
 
 	return math.sqrt(dist)
 end
 
--- Lines: 266 to 282
+-- Lines 264-284
 function Quickhull:_distance_to_segment_sqr(point, a, b)
 	local l = self:_dist(a, b)
 
@@ -261,18 +261,18 @@ function Quickhull:_distance_to_segment_sqr(point, a, b)
 	return r
 end
 
--- Lines: 286 to 287
+-- Lines 286-288
 function Quickhull:_dist(a, b)
 	return math.pow(a.x - b.x, 2) + math.pow(a.y - b.y, 2) + math.pow(a.z - b.z, 2)
 end
 
--- Lines: 292 to 318
+-- Lines 291-318
 function Quickhull.test()
 	local extent = 500
 	local extent_z = 0
 	local points = {}
 
-	for i = 1, 64, 1 do
+	for i = 1, 64 do
 		table.insert(points, Vector3(math.random(-extent, extent), math.random(-extent, extent), math.random(-extent_z, extent_z)))
 	end
 
@@ -286,10 +286,9 @@ function Quickhull.test()
 	local final_points = hull:compute()
 	local brush = Draw:brush(Color(1, 1, 0, 1), TEST_DURATION)
 
-	for i = 1, #final_points - 1, 1 do
+	for i = 1, #final_points - 1 do
 		brush:line(final_points[i], final_points[i + 1], 8)
 	end
 
 	brush:line(final_points[1], final_points[#final_points], 8)
 end
-

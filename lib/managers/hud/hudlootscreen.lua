@@ -2,7 +2,7 @@ require("lib/managers/menu/MenuBackdropGUI")
 
 HUDLootScreen = HUDLootScreen or class()
 
--- Lines: 5 to 149
+-- Lines 5-149
 function HUDLootScreen:init(hud, workspace, saved_lootdrop, saved_selected, saved_chosen, saved_setup)
 	self._backdrop = MenuBackdropGUI:new(workspace)
 
@@ -69,12 +69,12 @@ function HUDLootScreen:init(hud, workspace, saved_lootdrop, saved_selected, save
 	self._hud_panel = self._foreground_layer_safe:panel()
 
 	self._hud_panel:set_y(25)
-	self._hud_panel:set_h((self._hud_panel:h() - 25) - 150)
+	self._hud_panel:set_h(self._hud_panel:h() - 25 - 150)
 
 	self._peer_data = {}
 	self._peers_panel = self._hud_panel:panel({})
 
-	for i = 1, tweak_data.max_players, 1 do
+	for i = 1, tweak_data.max_players do
 		self:create_peer(self._peers_panel, i)
 	end
 
@@ -131,7 +131,7 @@ function HUDLootScreen:init(hud, workspace, saved_lootdrop, saved_selected, save
 	panel:child("card_info"):hide()
 end
 
--- Lines: 151 to 254
+-- Lines 151-254
 function HUDLootScreen:create_peer(peers_panel, peer_id)
 	local massive_font = tweak_data.menu.pd2_massive_font
 	local large_font = tweak_data.menu.pd2_large_font
@@ -252,10 +252,10 @@ function HUDLootScreen:create_peer(peers_panel, peer_id)
 	card_info_panel:set_h(main_text:bottom())
 	card_info_panel:set_center_y(panel:h() * 0.5)
 
-	local total_cards_w = ((panel:w() - peer_info_panel:w()) - card_info_panel:w()) - 10
+	local total_cards_w = panel:w() - peer_info_panel:w() - card_info_panel:w() - 10
 	local card_w = math.round((total_cards_w - 10) / 3)
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local card_panel = panel:panel({
 			halign = "scale",
 			y = 10,
@@ -315,12 +315,14 @@ function HUDLootScreen:create_peer(peers_panel, peer_id)
 		x = peer_info_panel:right() + 5,
 		w = total_cards_w,
 		h = panel:h() - 10
-	}), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	}), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	if not is_local_peer then
 		box:set_color(tweak_data.screen_colors.item_stage_2)
@@ -331,11 +333,11 @@ function HUDLootScreen:create_peer(peers_panel, peer_id)
 	panel:set_alpha(0)
 end
 
--- Lines: 256 to 268
+-- Lines 256-268
 function HUDLootScreen:set_num_visible(peers_num)
 	self._num_visible = math.max(self._num_visible, peers_num)
 
-	for i = 1, tweak_data.max_players, 1 do
+	for i = 1, tweak_data.max_players do
 		self._peers_panel:child("peer" .. i):set_visible(i <= self._num_visible)
 	end
 
@@ -347,7 +349,7 @@ function HUDLootScreen:set_num_visible(peers_num)
 	end
 end
 
--- Lines: 270 to 275
+-- Lines 270-275
 function HUDLootScreen:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -355,7 +357,7 @@ function HUDLootScreen:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 277 to 295
+-- Lines 277-296
 function HUDLootScreen:create_selected_panel(peer_id)
 	local panel = self._peers_panel:child("peer" .. peer_id)
 	local selected_panel = panel:panel({
@@ -386,11 +388,11 @@ function HUDLootScreen:create_selected_panel(peer_id)
 	glow_circle:set_center(selected_panel:w() * 0.5, selected_panel:h() * 0.5)
 	glow_stretch:set_center(selected_panel:w() * 0.5, selected_panel:h() * 0.5)
 
-	-- Lines: 287 to 293
+	-- Lines 287-293
 	local function anim_func(o)
 		while true do
 			over(1, function (p)
-				o:set_alpha(math.sin((p * 180) % 180) * 0.2 + 0.6)
+				o:set_alpha(math.sin(p * 180 % 180) * 0.2 + 0.6)
 			end)
 		end
 	end
@@ -400,7 +402,7 @@ function HUDLootScreen:create_selected_panel(peer_id)
 	return selected_panel
 end
 
--- Lines: 298 to 323
+-- Lines 298-323
 function HUDLootScreen:set_selected(peer_id, selected)
 	local panel = self._peers_panel:child("peer" .. peer_id)
 	local selected_panel = panel:child("selected_panel") or self:create_selected_panel(peer_id)
@@ -412,7 +414,7 @@ function HUDLootScreen:set_selected(peer_id, selected)
 	local is_local_peer = peer_id == self:get_local_peer_id()
 	local aspect = 0.7111111111111111
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local card_panel = panel:child("card" .. i)
 		local downcard = card_panel:child("downcard")
 		local bg = card_panel:child("bg")
@@ -428,27 +430,27 @@ function HUDLootScreen:set_selected(peer_id, selected)
 	end
 end
 
--- Lines: 325 to 327
+-- Lines 325-327
 function HUDLootScreen:add_callback(key, clbk)
 	self._callback_handler[key] = clbk
 end
 
--- Lines: 329 to 337
+-- Lines 329-337
 function HUDLootScreen:clear_other_peers(peer_id)
 	peer_id = peer_id or self:get_local_peer_id()
 
-	for i = 1, tweak_data.max_players, 1 do
+	for i = 1, tweak_data.max_players do
 		if i ~= peer_id then
 			self:remove_peer(i)
 		end
 	end
 end
 
--- Lines: 339 to 346
+-- Lines 339-347
 function HUDLootScreen:check_all_ready()
 	local ready = true
 
-	for i = 1, tweak_data.max_players, 1 do
+	for i = 1, tweak_data.max_players do
 		if self._peer_data[i].active then
 			ready = ready and self._peer_data[i].ready
 		end
@@ -457,7 +459,7 @@ function HUDLootScreen:check_all_ready()
 	return ready
 end
 
--- Lines: 349 to 373
+-- Lines 349-373
 function HUDLootScreen:remove_peer(peer_id, reason)
 	Application:debug("HUDLootScreen:remove_peer( peer_id, reason )", peer_id, reason)
 
@@ -482,10 +484,12 @@ function HUDLootScreen:remove_peer(peer_id, reason)
 		panel:child("selected_panel"):hide()
 	end
 
-	self._peer_data[peer_id] = {active = false}
+	self._peer_data[peer_id] = {
+		active = false
+	}
 end
 
--- Lines: 375 to 398
+-- Lines 375-398
 function HUDLootScreen:hide()
 	if self._active then
 		return
@@ -514,11 +518,17 @@ function HUDLootScreen:hide()
 	end
 end
 
--- Lines: 400 to 436
+-- Lines 400-436
 function HUDLootScreen:show()
 	if not self._video and SystemInfo:platform() ~= Idstring("X360") then
 		local variant = nil
-		variant = managers.dlc:is_installing() and 1 or math.random(8)
+
+		if managers.dlc:is_installing() then
+			variant = 1
+		else
+			variant = math.random(8)
+		end
+
 		self._video = self._baselayer_two:video({
 			blend_mode = "add",
 			speed = 1,
@@ -552,7 +562,7 @@ function HUDLootScreen:show()
 		color = Color.black
 	})
 
-	-- Lines: 430 to 433
+	-- Lines 430-433
 	local function fade_out_anim(o)
 		over(0.5, function (p)
 			o:set_alpha(1 - p)
@@ -564,17 +574,17 @@ function HUDLootScreen:show()
 	managers.menu_component:lootdrop_is_now_active()
 end
 
--- Lines: 438 to 439
+-- Lines 438-440
 function HUDLootScreen:is_active()
 	return self._active
 end
 
--- Lines: 442 to 444
+-- Lines 442-444
 function HUDLootScreen:update_layout()
 	self._backdrop:_set_black_borders()
 end
 
--- Lines: 446 to 521
+-- Lines 446-521
 function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	if not self:is_active() then
 		self:show()
@@ -605,7 +615,9 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 		peer_info_panel:child("peer_infamy"):set_visible(false)
 	end
 
-	max_quality:set_text(managers.localization:to_upper_text("menu_l_max_quality", {quality = max_pc}))
+	max_quality:set_text(managers.localization:to_upper_text("menu_l_max_quality", {
+		quality = max_pc
+	}))
 	self:make_fine_text(peer_name)
 	self:make_fine_text(max_quality)
 	peer_name:set_right(peer_info_panel:w())
@@ -619,11 +631,11 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	peer_info_panel:show()
 	panel:child("card_info"):show()
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		panel:child("card" .. i):show()
 	end
 
-	-- Lines: 507 to 509
+	-- Lines 507-509
 	local function anim_fadein(o)
 		over(1, function (p)
 			o:set_alpha(p)
@@ -649,7 +661,7 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	end
 end
 
--- Lines: 523 to 628
+-- Lines 523-628
 function HUDLootScreen:make_lootdrop(lootdrop_data)
 	local peer = lootdrop_data[1]
 	local peer_id = peer and peer:id() or 1
@@ -775,7 +787,9 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 			TextureCache:request(texture_path, "NORMAL", texture_loaded_clbk, 100)
 		else
 			Application:error("[HUDLootScreen]", "Texture not in DB", texture_path, peer_id)
-			item_panel:rect({color = Color.red})
+			item_panel:rect({
+				color = Color.red
+			})
 		end
 	end
 
@@ -784,7 +798,7 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 	end
 end
 
--- Lines: 630 to 682
+-- Lines 630-682
 function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	if not alive(self._peers_panel) then
 		TextureCache:unretrieve(texture_idstring)
@@ -846,7 +860,7 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	end
 end
 
--- Lines: 684 to 794
+-- Lines 684-794
 function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	if not self._peer_data[peer_id].active then
 		self._peer_data[peer_id].delayed_card_id = card_id
@@ -866,7 +880,9 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	local card_info_panel = panel:child("card_info")
 	local main_text = card_info_panel:child("main_text")
 
-	main_text:set_text(managers.localization:to_upper_text(wait_for_lootdrop and "menu_l_choose_card_waiting" or "menu_l_choose_card_chosen", {time = 5}))
+	main_text:set_text(managers.localization:to_upper_text(wait_for_lootdrop and "menu_l_choose_card_waiting" or "menu_l_choose_card_chosen", {
+		time = 5
+	}))
 
 	local _, _, _, hh = main_text:text_rect()
 
@@ -961,7 +977,7 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	self._peer_data[peer_id].wait_for_choice = nil
 end
 
--- Lines: 796 to 838
+-- Lines 796-838
 function HUDLootScreen:begin_flip_card(peer_id)
 	self._peer_data[peer_id].wait_t = 5
 	local type_to_card = {
@@ -1003,7 +1019,9 @@ function HUDLootScreen:begin_flip_card(peer_id)
 	local card_info_panel = panel:child("card_info")
 	local main_text = card_info_panel:child("main_text")
 
-	main_text:set_text(managers.localization:to_upper_text("menu_l_choose_card_chosen", {time = 5}))
+	main_text:set_text(managers.localization:to_upper_text("menu_l_choose_card_chosen", {
+		time = 5
+	}))
 
 	local _, _, _, hh = main_text:text_rect()
 
@@ -1028,14 +1046,14 @@ function HUDLootScreen:begin_flip_card(peer_id)
 	self._peer_data[peer_id].chosen_card_id = nil
 end
 
--- Lines: 840 to 843
+-- Lines 840-843
 function HUDLootScreen:debug_flip()
 	local card = self._peers_panel:child("peer1"):child("card1")
 
 	card:animate(callback(self, self, "flipcard"), 1.5)
 end
 
--- Lines: 845 to 980
+-- Lines 845-980
 function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	local downcard = card_panel:child("downcard")
 	local upcard = card_panel:child("upcard")
@@ -1177,7 +1195,7 @@ function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	end)
 end
 
--- Lines: 982 to 1079
+-- Lines 982-1079
 function HUDLootScreen:show_item(peer_id)
 	if not self._peer_data[peer_id].active then
 		return
@@ -1193,7 +1211,7 @@ function HUDLootScreen:show_item(peer_id)
 			child:set_center(panel:child("item"):w() * 0.5, panel:child("item"):h() * 0.5)
 		end
 
-		-- Lines: 995 to 997
+		-- Lines 995-997
 		local function anim_fadein(o)
 			over(1, function (p)
 				o:set_alpha(p)
@@ -1232,7 +1250,9 @@ function HUDLootScreen:show_item(peer_id)
 			}))
 		end
 
-		quality_text:set_text(managers.localization:to_upper_text("menu_l_quality", {quality = item_pc == 0 and "?" or item_pc}))
+		quality_text:set_text(managers.localization:to_upper_text("menu_l_quality", {
+			quality = item_pc == 0 and "?" or item_pc
+		}))
 
 		if global_value and global_value ~= "normal" then
 			local gv_tweak_data = tweak_data.lootdrop.global_values[global_value] or {}
@@ -1285,16 +1305,18 @@ function HUDLootScreen:show_item(peer_id)
 	end
 end
 
--- Lines: 1082 to 1111
+-- Lines 1081-1111
 function HUDLootScreen:update(t, dt)
-	for peer_id = 1, tweak_data.max_players, 1 do
+	for peer_id = 1, tweak_data.max_players do
 		if self._peer_data[peer_id].wait_t then
 			self._peer_data[peer_id].wait_t = math.max(self._peer_data[peer_id].wait_t - dt, 0)
 			local panel = self._peers_panel:child("peer" .. tostring(peer_id))
 			local card_info_panel = panel:child("card_info")
 			local main_text = card_info_panel:child("main_text")
 
-			main_text:set_text(managers.localization:to_upper_text("menu_l_choose_card_chosen", {time = math.ceil(self._peer_data[peer_id].wait_t)}))
+			main_text:set_text(managers.localization:to_upper_text("menu_l_choose_card_chosen", {
+				time = math.ceil(self._peer_data[peer_id].wait_t)
+			}))
 
 			local _, _, _, hh = main_text:text_rect()
 
@@ -1315,12 +1337,12 @@ function HUDLootScreen:update(t, dt)
 	end
 end
 
--- Lines: 1113 to 1114
+-- Lines 1113-1115
 function HUDLootScreen:fetch_local_lootdata()
 	return self._peer_data[self:get_local_peer_id()].lootdrops
 end
 
--- Lines: 1117 to 1268
+-- Lines 1117-1268
 function HUDLootScreen:create_stars_giving_animation()
 	local lootdrops = self:fetch_local_lootdata()
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
@@ -1359,14 +1381,14 @@ function HUDLootScreen:create_stars_giving_animation()
 	star_reason_text:set_h(tweak_data.menu.pd2_medium_font_size)
 	star_reason_text:set_world_center_y(math.round(self._foreground_layer_safe:child("loot_text"):world_center_y()) + 2)
 
-	-- Lines: 1158 to 1263
+	-- Lines 1158-1263
 	local function animation_func(o)
 		local texture, rect = tweak_data.hud_icons:get_icon_data("risk_pd")
 		local latest_star = 0
 
 		wait(1.35)
 
-		for i = 1, max_number_of_stars, 1 do
+		for i = 1, max_number_of_stars do
 			wait(0.1)
 
 			local star = self._stars_panel:bitmap({
@@ -1376,7 +1398,7 @@ function HUDLootScreen:create_stars_giving_animation()
 				name = "star_" .. tostring(i),
 				texture = texture,
 				texture_rect = rect,
-				color = max_number_of_stars - difficulty_stars < i and tweak_data.screen_colors.risk or tweak_data.screen_colors.text
+				color = i > max_number_of_stars - difficulty_stars and tweak_data.screen_colors.risk or tweak_data.screen_colors.text
 			})
 			local star_color = star:color()
 
@@ -1401,18 +1423,18 @@ function HUDLootScreen:create_stars_giving_animation()
 	self._stars_panel:animate(animation_func)
 end
 
--- Lines: 1270 to 1271
+-- Lines 1270-1272
 function HUDLootScreen:get_local_peer_id()
 	return Global.game_settings.single_player and 1 or managers.network:session() and managers.network:session():local_peer():id() or 1
 end
 
--- Lines: 1274 to 1286
+-- Lines 1274-1286
 function HUDLootScreen:check_inside_local_peer(x, y)
 	local peer_id = self:get_local_peer_id()
 	local panel = self._peers_panel:child("peer" .. tostring(peer_id))
 	x, y = managers.gui_data:safe_to_full_16_9(x, y)
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local inside_check_card = panel:child("inside_check_card" .. tostring(i))
 
 		if inside_check_card:inside(x, y) then
@@ -1421,12 +1443,12 @@ function HUDLootScreen:check_inside_local_peer(x, y)
 	end
 end
 
--- Lines: 1288 to 1290
+-- Lines 1288-1290
 function HUDLootScreen:set_layer(layer)
 	self._backdrop:set_layer(layer)
 end
 
--- Lines: 1292 to 1308
+-- Lines 1292-1308
 function HUDLootScreen:reload()
 	self._backdrop:close()
 
@@ -1435,7 +1457,7 @@ function HUDLootScreen:reload()
 	HUDLootScreen.init(self, self._hud, self._workspace)
 end
 
--- Lines: 1310 to 1316
+-- Lines 1310-1316
 function HUDLootScreen:close()
 	self._active = false
 
@@ -1444,4 +1466,3 @@ function HUDLootScreen:close()
 
 	self._backdrop = nil
 end
-

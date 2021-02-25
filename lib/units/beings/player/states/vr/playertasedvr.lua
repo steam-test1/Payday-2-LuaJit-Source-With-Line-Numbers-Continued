@@ -4,7 +4,7 @@ local __enter = PlayerTased.enter
 local __exit = PlayerTased.exit
 local __destroy = PlayerTased.destroy
 
--- Lines: 9 to 15
+-- Lines 9-15
 function PlayerTasedVR:enter(...)
 	__enter(self, ...)
 
@@ -14,7 +14,7 @@ function PlayerTasedVR:enter(...)
 	self:set_belt_and_hands_enabled(false)
 end
 
--- Lines: 17 to 34
+-- Lines 17-34
 function PlayerTasedVR:exit(...)
 	__exit(self, ...)
 
@@ -36,7 +36,7 @@ function PlayerTasedVR:exit(...)
 	self:set_belt_and_hands_enabled(true)
 end
 
--- Lines: 36 to 43
+-- Lines 36-43
 function PlayerTasedVR:destroy()
 	if managers.network:session() then
 		self:set_belt_and_hands_enabled(true)
@@ -44,11 +44,12 @@ function PlayerTasedVR:destroy()
 
 	__destroy(self)
 end
+
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 local mvec_hmd_pos = Vector3()
 
--- Lines: 50 to 66
+-- Lines 49-66
 function PlayerTasedVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 
@@ -69,7 +70,7 @@ function PlayerTasedVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new, self._unit:position())
 end
 
--- Lines: 72 to 116
+-- Lines 70-116
 function PlayerTasedVR:_check_action_shock(t, input)
 	local has_akimbo = alive(self._equipped_unit) and self._equipped_unit:base().akimbo
 	local use_akimbo = has_akimbo and math.random() > 0.5
@@ -117,7 +118,7 @@ function PlayerTasedVR:_check_action_shock(t, input)
 	end
 end
 
--- Lines: 122 to 172
+-- Lines 122-173
 function PlayerTasedVR:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
@@ -157,7 +158,7 @@ function PlayerTasedVR:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines: 175 to 297
+-- Lines 175-298
 function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_base, akimbo)
 	if not held then
 		return false
@@ -290,7 +291,7 @@ function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_b
 	return new_action
 end
 
--- Lines: 300 to 326
+-- Lines 300-326
 function PlayerTasedVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		local belt_states = {
@@ -323,4 +324,3 @@ function PlayerTasedVR:set_belt_and_hands_enabled(enabled)
 		end
 	end
 end
-

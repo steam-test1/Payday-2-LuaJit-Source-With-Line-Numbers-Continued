@@ -3,7 +3,7 @@ core:import("CoreUnit")
 
 NodeGui = NodeGui or class()
 
--- Lines: 7 to 65
+-- Lines 7-65
 function NodeGui:init(node, layer, parameters)
 	self.node = node
 	self.name = node:parameters().name
@@ -14,9 +14,15 @@ function NodeGui:init(node, layer, parameters)
 	self.height_padding = 0
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 	self.ws = managers.gui_data:create_saferect_workspace()
-	self._item_panel_parent = self.ws:panel():panel({name = "item_panel_parent"})
-	self.item_panel = self._item_panel_parent:panel({name = "item_panel"})
-	self.safe_rect_panel = self.ws:panel():panel({name = "safe_rect_panel"})
+	self._item_panel_parent = self.ws:panel():panel({
+		name = "item_panel_parent"
+	})
+	self.item_panel = self._item_panel_parent:panel({
+		name = "item_panel"
+	})
+	self.safe_rect_panel = self.ws:panel():panel({
+		name = "safe_rect_panel"
+	})
 	self.corner_items = {}
 
 	self.ws:show()
@@ -53,16 +59,16 @@ function NodeGui:init(node, layer, parameters)
 	self:_setup_item_rows(node)
 end
 
--- Lines: 67 to 68
+-- Lines 67-69
 function NodeGui:item_panel_parent()
 	return self._item_panel_parent
 end
 
--- Lines: 71 to 72
+-- Lines 71-72
 function NodeGui:_setup_panels(node)
 end
 
--- Lines: 74 to 161
+-- Lines 74-161
 function NodeGui:_setup_item_rows(node)
 	local items = node:items()
 	local i = 0
@@ -93,11 +99,19 @@ function NodeGui:_setup_item_rows(node)
 			local params = item:parameters()
 
 			if params.text_id then
-				item_text = self.localize_strings and params.localize ~= false and params.localize ~= "false" and managers.localization:text(params.text_id) or params.text_id
+				if self.localize_strings and params.localize ~= false and params.localize ~= "false" then
+					item_text = managers.localization:text(params.text_id)
+				else
+					item_text = params.text_id
+				end
 			end
 
 			if params.help_id then
-				help_text = self.localize_strings and params.localize_help ~= false and params.localize_help ~= "false" and managers.localization:text(params.help_id) or params.help_id
+				if self.localize_strings and params.localize_help ~= false and params.localize_help ~= "false" then
+					help_text = managers.localization:text(params.help_id)
+				else
+					help_text = params.help_id
+				end
 			end
 
 			local row_item = {}
@@ -143,7 +157,7 @@ function NodeGui:_setup_item_rows(node)
 	self._highlighted_item = nil
 end
 
--- Lines: 164 to 220
+-- Lines 163-220
 function NodeGui:_insert_row_item(item, node, i)
 	if item:visible() then
 		item:parameters().gui_node = self
@@ -153,11 +167,19 @@ function NodeGui:_insert_row_item(item, node, i)
 		local params = item:parameters()
 
 		if params.text_id then
-			item_text = self.localize_strings and params.localize ~= false and params.localize ~= "false" and managers.localization:text(params.text_id) or params.text_id
+			if self.localize_strings and params.localize ~= false and params.localize ~= "false" then
+				item_text = managers.localization:text(params.text_id)
+			else
+				item_text = params.text_id
+			end
 		end
 
 		if params.help_id then
-			help_text = self.localize_strings and params.localize_help ~= false and params.localize_help ~= "false" and managers.localization:text(params.help_id) or params.help_id
+			if self.localize_strings and params.localize_help ~= false and params.localize_help ~= "false" then
+				help_text = managers.localization:text(params.help_id)
+			else
+				help_text = params.help_id
+			end
 		end
 
 		local row_item = {}
@@ -190,7 +212,7 @@ function NodeGui:_insert_row_item(item, node, i)
 	end
 end
 
--- Lines: 222 to 236
+-- Lines 222-236
 function NodeGui:_delete_row_item(item)
 	for i, row_item in ipairs(self.row_items) do
 		if row_item.item == item then
@@ -207,17 +229,17 @@ function NodeGui:_delete_row_item(item)
 	end
 end
 
--- Lines: 238 to 241
+-- Lines 238-241
 function NodeGui:refresh_gui(node)
 	self:_clear_gui()
 	self:_setup_item_rows(node)
 end
 
--- Lines: 244 to 268
+-- Lines 243-268
 function NodeGui:_clear_gui()
 	local to = #self.row_items
 
-	for i = 1, to, 1 do
+	for i = 1, to do
 		local row_item = self.row_items[i]
 
 		if alive(row_item.gui_panel) then
@@ -246,19 +268,19 @@ function NodeGui:_clear_gui()
 	self.row_items = {}
 end
 
--- Lines: 270 to 273
+-- Lines 270-273
 function NodeGui:close()
 	managers.gui_data:destroy_workspace(self.ws)
 
 	self.ws = nil
 end
 
--- Lines: 275 to 276
+-- Lines 275-277
 function NodeGui:layer()
 	return self.layers.last
 end
 
--- Lines: 281 to 287
+-- Lines 279-287
 function NodeGui:set_visible(visible)
 	if visible then
 		self.ws:show()
@@ -267,7 +289,7 @@ function NodeGui:set_visible(visible)
 	end
 end
 
--- Lines: 289 to 306
+-- Lines 289-306
 function NodeGui:reload_item(item)
 	local type = item:type()
 
@@ -284,7 +306,7 @@ function NodeGui:reload_item(item)
 	end
 end
 
--- Lines: 308 to 325
+-- Lines 308-325
 function NodeGui:_reload_item(item)
 	local row_item = self:row_item(item)
 	local params = item:parameters()
@@ -307,11 +329,11 @@ function NodeGui:_reload_item(item)
 	end
 end
 
--- Lines: 365 to 366
+-- Lines 343-366
 function NodeGui:_create_menu_item(row_item)
 end
 
--- Lines: 372 to 481
+-- Lines 372-481
 function NodeGui:_reposition_items(highlighted_row_item)
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local dy = 0
@@ -324,7 +346,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 		local prev_item, first_item = nil
 		local num_dividers_top = 0
 
-		for i = 1, #self.row_items, 1 do
+		for i = 1, #self.row_items do
 			first_item = self.row_items[i]
 
 			if first_item.type ~= "divider" and not first_item.item:parameters().back and not first_item.item:parameters().pd2_corner then
@@ -366,7 +388,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 				end
 
 				if not last then
-					for index = i + 1, #self.row_items, 1 do
+					for index = i + 1, #self.row_items do
 						row_item = self.row_items[index]
 
 						if row_item.type ~= "divider" and not row_item.item:parameters().back and not row_item.item:parameters().pd2_corner then
@@ -385,18 +407,18 @@ function NodeGui:_reposition_items(highlighted_row_item)
 		local offset = first and h * num_dividers_top or last and h * num_dividers_bottom or h
 		offset = offset + self.height_padding
 
-		if highlighted_row_item.gui_panel:world_y() - (offset + (prev_item and math.abs(prev_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h or 0)) < self._item_panel_parent:world_y() then
+		if self._item_panel_parent:world_y() > highlighted_row_item.gui_panel:world_y() - (offset + (prev_item and math.abs(prev_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h or 0)) then
 			if prev_item then
-				offset = (offset + math.abs(prev_item.gui_panel:y() - highlighted_row_item.gui_panel:y())) - h
+				offset = offset + math.abs(prev_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h
 			end
 
-			dy = -((highlighted_row_item.gui_panel:world_y() - self._item_panel_parent:world_y()) - offset)
+			dy = -(highlighted_row_item.gui_panel:world_y() - self._item_panel_parent:world_y() - offset)
 		elseif self._item_panel_parent:world_y() + self._item_panel_parent:h() < highlighted_row_item.gui_panel:world_y() + highlighted_row_item.gui_panel:h() + offset + (next_item and math.abs(next_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h or 0) then
 			if next_item then
-				offset = (offset + math.abs(next_item.gui_panel:y() - highlighted_row_item.gui_panel:y())) - h
+				offset = offset + math.abs(next_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h
 			end
 
-			dy = -((highlighted_row_item.gui_panel:world_y() + highlighted_row_item.gui_panel:h()) - (self._item_panel_parent:world_y() + self._item_panel_parent:h()) + offset)
+			dy = -(highlighted_row_item.gui_panel:world_y() + highlighted_row_item.gui_panel:h() - (self._item_panel_parent:world_y() + self._item_panel_parent:h()) + offset)
 		end
 
 		local old_dy = self._scroll_data.dy_left
@@ -414,7 +436,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 	self:scroll_start(dy)
 end
 
--- Lines: 483 to 489
+-- Lines 483-489
 function NodeGui:scroll_setup()
 	self._scroll_data = {
 		max_scroll_duration = 0.5,
@@ -424,7 +446,7 @@ function NodeGui:scroll_setup()
 	}
 end
 
--- Lines: 491 to 503
+-- Lines 491-503
 function NodeGui:scroll_start(dy)
 	local speed = self._scroll_data.scroll_speed
 
@@ -439,14 +461,20 @@ function NodeGui:scroll_start(dy)
 	self:scroll_update(TimerManager:main():delta_time())
 end
 
--- Lines: 505 to 527
+-- Lines 505-527
 function NodeGui:scroll_update(dt)
 	local dy_left = self._scroll_data.dy_left
 
 	if dy_left ~= 0 then
 		local speed = self._scroll_data.speed
 		local dy = nil
-		dy = speed <= 0 and dy_left or math.lerp(0, dy_left, math.clamp((math.sign(dy_left) * speed * dt) / dy_left, 0, 1))
+
+		if speed <= 0 then
+			dy = dy_left
+		else
+			dy = math.lerp(0, dy_left, math.clamp(math.sign(dy_left) * speed * dt / dy_left, 0, 1))
+		end
+
 		self._scroll_data.dy_left = self._scroll_data.dy_left - dy
 
 		if self._item_panel_y and self._item_panel_y.target then
@@ -461,7 +489,7 @@ function NodeGui:scroll_update(dt)
 	end
 end
 
--- Lines: 530 to 553
+-- Lines 529-554
 function NodeGui:wheel_scroll_start(dy)
 	local speed = 30
 
@@ -488,7 +516,7 @@ function NodeGui:wheel_scroll_start(dy)
 	return true
 end
 
--- Lines: 556 to 565
+-- Lines 556-565
 function NodeGui:highlight_item(item, mouse_over)
 	if not item then
 		return
@@ -503,7 +531,7 @@ function NodeGui:highlight_item(item, mouse_over)
 	self._highlighted_item = item
 end
 
--- Lines: 567 to 573
+-- Lines 567-573
 function NodeGui:_highlight_row_item(row_item, mouse_over)
 	if row_item then
 		row_item.highlighted = true
@@ -513,7 +541,7 @@ function NodeGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines: 575 to 579
+-- Lines 575-579
 function NodeGui:fade_item(item)
 	local item_name = item:parameters().name
 	local row_item = self:row_item(item)
@@ -521,7 +549,7 @@ function NodeGui:fade_item(item)
 	self:_fade_row_item(row_item)
 end
 
--- Lines: 581 to 587
+-- Lines 581-587
 function NodeGui:_fade_row_item(row_item)
 	if row_item then
 		row_item.highlighted = false
@@ -531,7 +559,7 @@ function NodeGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines: 589 to 596
+-- Lines 589-597
 function NodeGui:row_item(item)
 	local item_name = item:parameters().name
 
@@ -544,7 +572,7 @@ function NodeGui:row_item(item)
 	return nil
 end
 
--- Lines: 599 to 605
+-- Lines 599-606
 function NodeGui:row_item_by_name(item_name)
 	for _, row_item in ipairs(self.row_items) do
 		if row_item.name == item_name then
@@ -555,7 +583,7 @@ function NodeGui:row_item_by_name(item_name)
 	return nil
 end
 
--- Lines: 608 to 631
+-- Lines 608-631
 function NodeGui:update(t, dt)
 	local scrolled = self:scroll_update(dt)
 
@@ -575,11 +603,11 @@ function NodeGui:update(t, dt)
 	end
 end
 
--- Lines: 633 to 634
+-- Lines 633-634
 function NodeGui:_set_topic_position()
 end
 
--- Lines: 636 to 644
+-- Lines 636-645
 function NodeGui:_item_panel_height()
 	local height = self.height_padding * 2
 
@@ -593,7 +621,7 @@ function NodeGui:_item_panel_height()
 	return height
 end
 
--- Lines: 647 to 688
+-- Lines 647-688
 function NodeGui:_set_item_positions()
 	local total_height = self:_item_panel_height()
 	local current_y = self.height_padding
@@ -606,7 +634,7 @@ function NodeGui:_set_item_positions()
 
 			row_item.gui_panel:set_y(row_item.position.y)
 			row_item.menu_unselected:set_left(self:_mid_align() + (row_item.item:parameters().expand_value or 0))
-			row_item.menu_unselected:set_h((64 * row_item.gui_panel:h()) / 32)
+			row_item.menu_unselected:set_h(64 * row_item.gui_panel:h() / 32)
 			row_item.menu_unselected:set_center_y(row_item.gui_panel:center_y())
 			row_item.menu_unselected:set_w(scaled_size.width - row_item.menu_unselected:x())
 
@@ -637,25 +665,25 @@ function NodeGui:_set_item_positions()
 	end
 end
 
--- Lines: 690 to 696
+-- Lines 690-696
 function NodeGui:resolution_changed()
 	self:_setup_size()
 	self:_set_item_positions()
 	self:highlight_item(self._highlighted_item)
 end
 
--- Lines: 698 to 700
+-- Lines 698-700
 function NodeGui:_setup_item_panel_parent(safe_rect)
 	self._item_panel_parent:set_shape(safe_rect.x, safe_rect.y, safe_rect.width, safe_rect.height)
 end
 
--- Lines: 702 to 705
+-- Lines 702-705
 function NodeGui:_set_width_and_height(safe_rect)
 	self.width = safe_rect.width
 	self.height = safe_rect.height
 end
 
--- Lines: 707 to 723
+-- Lines 707-723
 function NodeGui:_setup_item_panel(safe_rect, res)
 	local item_panel_offset = safe_rect.height * 0.5 - #self.row_items * 0.5 * (self.font_size + self.spacing)
 
@@ -667,12 +695,12 @@ function NodeGui:_setup_item_panel(safe_rect, res)
 	self.item_panel:set_w(safe_rect.width)
 end
 
--- Lines: 725 to 726
+-- Lines 725-727
 function NodeGui:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines: 729 to 790
+-- Lines 729-790
 function NodeGui:_setup_size()
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local scaled_size = managers.gui_data:scaled_size()
@@ -697,7 +725,7 @@ function NodeGui:_setup_size()
 			row_item.gui_panel:set_w(24)
 			row_item.gui_panel:set_h(24)
 			row_item.gui_panel:set_right(self:_mid_align())
-			row_item.unselected:set_h((64 * row_item.gui_panel:h()) / 32)
+			row_item.unselected:set_h(64 * row_item.gui_panel:h() / 32)
 			row_item.unselected:set_center_y(row_item.gui_panel:h() / 2)
 			row_item.selected:set_shape(row_item.unselected:shape())
 			row_item.shadow:set_w(row_item.gui_panel:w())
@@ -713,11 +741,11 @@ function NodeGui:_setup_size()
 	end
 end
 
--- Lines: 792 to 793
+-- Lines 792-793
 function NodeGui:_setup_item_size(row_item)
 end
 
--- Lines: 795 to 803
+-- Lines 795-803
 function NodeGui:mouse_pressed(button, x, y)
 	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and self:_mid_align() < x then
 		if button == Idstring("mouse wheel down") then
@@ -727,4 +755,3 @@ function NodeGui:mouse_pressed(button, x, y)
 		end
 	end
 end
-

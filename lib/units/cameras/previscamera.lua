@@ -1,6 +1,6 @@
 PrevisCamera = PrevisCamera or class()
 
--- Lines: 3 to 19
+-- Lines 3-19
 function PrevisCamera:init(unit)
 	self._unit = unit
 	self._camera = World:create_camera()
@@ -20,7 +20,7 @@ function PrevisCamera:init(unit)
 	self._camera_controller:set_both(self._unit:get_object(Idstring("g_camera")) or self._unit:get_object(Idstring("g_camtest")))
 end
 
--- Lines: 22 to 34
+-- Lines 21-34
 function PrevisCamera:start()
 	if game_state_machine:current_state_name() ~= "editor" then
 		self._old_game_state_name = game_state_machine:current_state_name()
@@ -35,7 +35,7 @@ function PrevisCamera:start()
 	self._viewport:set_active(true)
 end
 
--- Lines: 36 to 48
+-- Lines 36-48
 function PrevisCamera:stop()
 	self._viewport:set_active(false)
 	self._unit:anim_stop(Idstring("camera_animation"))
@@ -50,7 +50,7 @@ function PrevisCamera:stop()
 	self._playing = false
 end
 
--- Lines: 55 to 67
+-- Lines 55-67
 function PrevisCamera:update(unit, t, dt)
 	if self._playing then
 		if self._wait_t then
@@ -65,7 +65,7 @@ function PrevisCamera:update(unit, t, dt)
 	end
 end
 
--- Lines: 69 to 79
+-- Lines 69-79
 function PrevisCamera:destroy()
 	if self._viewport then
 		self._viewport:destroy()
@@ -79,4 +79,3 @@ function PrevisCamera:destroy()
 		self._camera = nil
 	end
 end
-

@@ -3,7 +3,7 @@ TouchMovementInputStateMachine.STATE_WARP_ZONE = 1
 TouchMovementInputStateMachine.STATE_DEAD_ZONE = 2
 TouchMovementInputStateMachine.STATE_LOCAL_WARP_ZONE = 3
 
--- Lines: 11 to 31
+-- Lines 11-31
 function TouchMovementInputStateMachine:init(default_controls)
 	self._warp_zone = 0.4
 	self._dead_zone = 0.25
@@ -11,8 +11,12 @@ function TouchMovementInputStateMachine:init(default_controls)
 	self._warp_in_dead_zone = true
 	self._default_controls = default_controls
 	self._states = {
-		[TouchMovementInputStateMachine.STATE_WARP_ZONE] = {update = callback(self, self, "_update_warp_zone")},
-		[TouchMovementInputStateMachine.STATE_DEAD_ZONE] = {update = callback(self, self, "_update_dead_zone")},
+		[TouchMovementInputStateMachine.STATE_WARP_ZONE] = {
+			update = callback(self, self, "_update_warp_zone")
+		},
+		[TouchMovementInputStateMachine.STATE_DEAD_ZONE] = {
+			update = callback(self, self, "_update_dead_zone")
+		},
 		[TouchMovementInputStateMachine.STATE_LOCAL_WARP_ZONE] = {
 			enter = callback(self, self, "_enter_warp_zone_local"),
 			update = callback(self, self, "_update_warp_zone_local")
@@ -22,29 +26,29 @@ function TouchMovementInputStateMachine:init(default_controls)
 	self:change_state(TouchMovementInputStateMachine.STATE_WARP_ZONE)
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function TouchMovementInputStateMachine:current_dead_zone()
 	return self._dead_zone
 end
 
--- Lines: 41 to 43
+-- Lines 41-43
 function TouchMovementInputStateMachine:set_warp_zone(value)
 	self._warp_zone = value
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function TouchMovementInputStateMachine:set_dead_zone(value)
 	self._dead_zone = value
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function TouchMovementInputStateMachine:set_warp_in_dead_zone(value)
 	self._warp_in_dead_zone = value
 end
 
--- Lines: 61 to 82
+-- Lines 59-82
 function TouchMovementInputStateMachine:change_state(state, ...)
-	if state < 1 or #self._states < state then
+	if state < 1 or state > #self._states then
 		return
 	end
 
@@ -70,7 +74,7 @@ function TouchMovementInputStateMachine:change_state(state, ...)
 	self._update_dead_zone_func = self._states[self._current_state].update
 end
 
--- Lines: 87 to 104
+-- Lines 86-105
 function TouchMovementInputStateMachine:update(move_length, warp_target)
 	if self._default_controls then
 		if warp_target == false then
@@ -91,7 +95,7 @@ function TouchMovementInputStateMachine:update(move_length, warp_target)
 	return self._update_dead_zone_func and self._update_dead_zone_func(move_length) or false
 end
 
--- Lines: 110 to 120
+-- Lines 110-121
 function TouchMovementInputStateMachine:_update_warp_zone(move_length)
 	local warp_zone_length = math.max(self._warp_zone, self._dead_zone)
 
@@ -108,7 +112,7 @@ function TouchMovementInputStateMachine:_update_warp_zone(move_length)
 	return false
 end
 
--- Lines: 125 to 129
+-- Lines 125-130
 function TouchMovementInputStateMachine:_update_dead_zone(move_length)
 	if self._warp_in_dead_zone and move_length < self._dead_zone then
 		return true
@@ -117,13 +121,16 @@ function TouchMovementInputStateMachine:_update_dead_zone(move_length)
 	return false
 end
 
--- Lines: 134 to 139
+-- Lines 134-139
 function TouchMovementInputStateMachine:_enter_warp_zone_local(move_length)
 	self._warp_zone_local = math.max(self._dead_zone, move_length) + self._dead_zone_local_th
-	self._warp_zone_local = self._default_controls and math.min(self._warp_zone_local, self._warp_zone + 0.025)
+
+	if self._default_controls then
+		self._warp_zone_local = math.min(self._warp_zone_local, self._warp_zone + 0.025)
+	end
 end
 
--- Lines: 141 to 146
+-- Lines 141-147
 function TouchMovementInputStateMachine:_update_warp_zone_local(move_length)
 	if move_length < self._warp_zone_local then
 		return true
@@ -134,13 +141,14 @@ function TouchMovementInputStateMachine:_update_warp_zone_local(move_length)
 	return false
 end
 
--- Lines: 151 to 152
+-- Lines 151-153
 function TouchMovementInputStateMachine:_update_dead_zone_none()
 	return false
 end
+
 PlayerMovementInputVR = PlayerMovementInputVR or class()
 
--- Lines: 159 to 191
+-- Lines 159-191
 function PlayerMovementInputVR:init(controller)
 	self._default_controls = managers.vr:is_default_hmd()
 
@@ -186,14 +194,14 @@ function PlayerMovementInputVR:init(controller)
 	self._debug_brush = Draw:brush(Color(1, 1, 1, 1))
 end
 
--- Lines: 193 to 197
+-- Lines 193-197
 function PlayerMovementInputVR:refresh_settings()
 	for _, setting in ipairs(self._settings) do
 		setting.clbk(setting.name, nil, managers.vr:get_setting(setting.name))
 	end
 end
 
--- Lines: 199 to 205
+-- Lines 199-205
 function PlayerMovementInputVR:_add_setting_callback(setting_name, method)
 	local clbk = callback(self, self, method)
 
@@ -208,7 +216,7 @@ function PlayerMovementInputVR:_add_setting_callback(setting_name, method)
 	})
 end
 
--- Lines: 207 to 263
+-- Lines 207-263
 function PlayerMovementInputVR:update(t, dt, hand_rotation)
 	self._state.warp_target = self._controller:get_input_touch_bool("warp_target")
 	local run = self._controller:get_input_bool("run")
@@ -231,7 +239,7 @@ function PlayerMovementInputVR:update(t, dt, hand_rotation)
 		self._state.move_length = m
 		local unscaled_edge = self._default_controls and 0.25 or 0.3
 
-		if raw_move_length - dz < unscaled_edge then
+		if unscaled_edge > raw_move_length - dz then
 			local edge = unscaled_edge / (1 - dz)
 			local x = m / (2 * edge)
 			x = x * x * (3 - 2 * x)
@@ -266,48 +274,47 @@ function PlayerMovementInputVR:update(t, dt, hand_rotation)
 	end
 end
 
--- Lines: 265 to 267
+-- Lines 265-267
 function PlayerMovementInputVR:stop_running()
 	self._state.run = false
 end
 
--- Lines: 269 to 270
+-- Lines 269-271
 function PlayerMovementInputVR:state()
 	return self._state
 end
 
--- Lines: 273 to 274
+-- Lines 273-275
 function PlayerMovementInputVR:is_movement_warp()
 	return self._is_movement_warp
 end
 
--- Lines: 277 to 278
+-- Lines 277-279
 function PlayerMovementInputVR:is_movement_walk()
 	return not self._is_movement_warp and self._state.move_length_scaled > 0
 end
 
--- Lines: 282 to 284
+-- Lines 282-284
 function PlayerMovementInputVR:_movement_type_changed(setting, old, new)
 	self._warp_only_mode = new == "warp"
 end
 
--- Lines: 286 to 288
+-- Lines 286-288
 function PlayerMovementInputVR:_enable_dead_zone_warp_changed(setting, old, new)
 	self._input:set_warp_in_dead_zone(new)
 end
 
--- Lines: 290 to 293
+-- Lines 290-293
 function PlayerMovementInputVR:_warp_zone_size_changed(setting, old, new)
 	local warp_zone_size = math.lerp(self._default_warp_zone_size.min, self._default_warp_zone_size.max, new * 0.01)
 
 	self._input:set_warp_zone(warp_zone_size)
 end
 
--- Lines: 295 to 299
+-- Lines 295-299
 function PlayerMovementInputVR:_dead_zone_size_changed(setting, old, new)
 	local dead_zone_size = math.lerp(self._default_dead_zone_size.min, self._default_dead_zone_size.max, new * 0.01)
 	self._dead_zone = dead_zone_size
 
 	self._input:set_dead_zone(self._dead_zone)
 end
-

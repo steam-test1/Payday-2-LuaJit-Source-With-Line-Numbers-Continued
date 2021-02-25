@@ -2,9 +2,9 @@ SafehouseMoneyStack = SafehouseMoneyStack or class(UnitBase)
 SafehouseMoneyStack.SMALL_MAX_SUM = 1000000
 SafehouseMoneyStack.STEPS = 743
 SafehouseMoneyStack.SMALL_STEPS = 85
-SafehouseMoneyStack.MAX_SUM = (SafehouseMoneyStack.SMALL_MAX_SUM * (SafehouseMoneyStack.STEPS + 1) + SafehouseMoneyStack.SMALL_MAX_SUM) - 20
+SafehouseMoneyStack.MAX_SUM = SafehouseMoneyStack.SMALL_MAX_SUM * (SafehouseMoneyStack.STEPS + 1) + SafehouseMoneyStack.SMALL_MAX_SUM - 20
 
--- Lines: 9 to 14
+-- Lines 9-14
 function SafehouseMoneyStack:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -13,11 +13,11 @@ function SafehouseMoneyStack:init(unit)
 	self:_setup()
 end
 
--- Lines: 16 to 40
+-- Lines 16-40
 function SafehouseMoneyStack:_setup()
 	self._small_sequences = {}
 
-	for i = 1, SafehouseMoneyStack.SMALL_STEPS, 1 do
+	for i = 1, SafehouseMoneyStack.SMALL_STEPS do
 		local post_fix = (i < 10 and "0" or "") .. i
 
 		table.insert(self._small_sequences, "var_small_money_grow_" .. post_fix)
@@ -26,7 +26,7 @@ function SafehouseMoneyStack:_setup()
 	self._sequences = {}
 	self._big_steps = {}
 
-	for i = 1, SafehouseMoneyStack.STEPS, 1 do
+	for i = 1, SafehouseMoneyStack.STEPS do
 		local post_fix = (i < 10 and "0" or "") .. i
 
 		table.insert(self._sequences, "var_money_grow_" .. post_fix)
@@ -41,7 +41,7 @@ function SafehouseMoneyStack:_setup()
 	self:_run_sequences(money)
 end
 
--- Lines: 42 to 71
+-- Lines 42-71
 function SafehouseMoneyStack:_run_sequences(money)
 	print("money", money)
 
@@ -61,13 +61,13 @@ function SafehouseMoneyStack:_run_sequences(money)
 
 	print("where large", where, step_index)
 
-	for i = 1, step_index, 1 do
+	for i = 1, step_index do
 		self._big_steps[i].object:set_visibility(true)
 		self._big_steps[i].body:set_enabled(true)
 	end
 end
 
--- Lines: 75 to 80
+-- Lines 75-80
 function SafehouseMoneyStack:debug_test()
 	self:_hide()
 
@@ -76,7 +76,7 @@ function SafehouseMoneyStack:debug_test()
 	self._unit:set_extension_update_enabled(Idstring("base"), true)
 end
 
--- Lines: 82 to 87
+-- Lines 82-87
 function SafehouseMoneyStack:_hide()
 	for _, data in ipairs(self._big_steps) do
 		data.object:set_visibility(false)
@@ -84,7 +84,7 @@ function SafehouseMoneyStack:_hide()
 	end
 end
 
--- Lines: 89 to 97
+-- Lines 89-97
 function SafehouseMoneyStack:update()
 	if self._test_money then
 		self:_run_sequences(self._test_money)
@@ -97,7 +97,6 @@ function SafehouseMoneyStack:update()
 	end
 end
 
--- Lines: 100 to 101
+-- Lines 99-101
 function SafehouseMoneyStack:destroy()
 end
-

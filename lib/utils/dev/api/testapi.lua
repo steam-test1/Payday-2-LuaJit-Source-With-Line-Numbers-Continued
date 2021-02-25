@@ -4,7 +4,7 @@ Global.test_api.commands = Global.test_api.commands or {}
 local print = make_tag_print("TestAPI")
 TestAPIHelper = TestAPIHelper or class()
 
--- Lines: 21 to 33
+-- Lines 21-33
 function TestAPIHelper.on_event(id)
 	if Global.test_api["response_string_" .. id] then
 		print(tostring(Global.test_api["response_string_" .. id]))
@@ -21,17 +21,17 @@ function TestAPIHelper.on_event(id)
 	end
 end
 
--- Lines: 35 to 37
+-- Lines 35-37
 function TestAPIHelper.register_event(id, string)
 	Global.test_api["response_string_" .. id] = string
 end
 
--- Lines: 39 to 41
+-- Lines 39-41
 function TestAPIHelper.register_event_callback(id, clbk)
 	Global.test_api["callback_" .. id] = clbk
 end
 
--- Lines: 43 to 62
+-- Lines 43-63
 local function parse_to_var(str)
 	if type(str) ~= "string" then
 		return str
@@ -56,7 +56,7 @@ local function parse_to_var(str)
 	return ret
 end
 
--- Lines: 71 to 129
+-- Lines 65-129
 function TestAPIHelper.register_API_function(name, category, args_str, func, desc, async)
 	local args = {}
 
@@ -76,7 +76,6 @@ function TestAPIHelper.register_API_function(name, category, args_str, func, des
 		TestAPI[category] = {}
 	end
 
-	-- Lines: 85 to 123
 	TestAPI[category][name] = function (response_string, arg_tbl)
 		TestAPIHelper.register_event(name, response_string)
 
@@ -102,11 +101,15 @@ function TestAPIHelper.register_API_function(name, category, args_str, func, des
 				locals[arg_name] = arg_val
 			end
 
-			ret = {func()}
+			ret = {
+				func()
+			}
 
 			setmetatable(_G, old_mt)
 		else
-			ret = {func()}
+			ret = {
+				func()
+			}
 		end
 
 		if not async then
@@ -115,6 +118,7 @@ function TestAPIHelper.register_API_function(name, category, args_str, func, des
 
 		return unpack(ret)
 	end
+
 	Global.test_api.commands = Global.test_api.commands or {}
 	Global.test_api.commands[category] = Global.test_api.commands[category] or {}
 	Global.test_api.commands[category][name] = {
@@ -123,7 +127,7 @@ function TestAPIHelper.register_API_function(name, category, args_str, func, des
 	}
 end
 
--- Lines: 131 to 140
+-- Lines 131-140
 function TestAPIHelper.queue_call(category_and_or_func_name, response_string, args)
 	local cat_func = string.split(category_and_or_func_name, "%.")
 	local category = cat_func[1]
@@ -140,7 +144,7 @@ function TestAPIHelper.queue_call(category_and_or_func_name, response_string, ar
 	})
 end
 
--- Lines: 142 to 149
+-- Lines 142-149
 function TestAPIHelper.call_next()
 	if Global.test_api.queued_calls and #Global.test_api.queued_calls > 0 then
 		local call = table.remove(Global.test_api.queued_calls, 1)
@@ -151,7 +155,7 @@ function TestAPIHelper.call_next()
 	end
 end
 
--- Lines: 151 to 159
+-- Lines 151-159
 function TestAPIHelper.update(t, dt)
 	if Global.test_api.delayed_callbacks then
 		for _, delayed in ipairs(Global.test_api.delayed_callbacks) do
@@ -161,6 +165,7 @@ function TestAPIHelper.update(t, dt)
 		end
 	end
 end
+
 Global.test_api.commands = Global.test_api.commands or {}
 Global.test_api.commands.internal = Global.test_api.commands.internal or {}
 Global.test_api.commands.internal.setup_call_queue = {
@@ -168,7 +173,7 @@ Global.test_api.commands.internal.setup_call_queue = {
 	desc = "Sets up an internal call queue for quick, in-game testing"
 }
 
--- Lines: 172 to 178
+-- Lines 172-178
 function TestAPI.setup_call_queue(call_queue)
 	for _, call in ipairs(call_queue) do
 		TestAPIHelper.queue_call(unpack(call))
@@ -177,7 +182,7 @@ function TestAPI.setup_call_queue(call_queue)
 	TestAPIHelper.call_next()
 end
 
--- Lines: 180 to 185
+-- Lines 180-186
 local function get_max_padding_from_table_keys(tbl)
 	local padding = 0
 
@@ -188,7 +193,7 @@ local function get_max_padding_from_table_keys(tbl)
 	return padding + 1
 end
 
--- Lines: 190 to 195
+-- Lines 190-196
 local function get_max_padding_from_table(tbl, func)
 	local padding = 0
 
@@ -199,17 +204,17 @@ local function get_max_padding_from_table(tbl, func)
 	return padding + 1
 end
 
--- Lines: 198 to 203
+-- Lines 198-204
 local function center(text, w, delimeter)
 	delimeter = delimeter or " "
 	local mid = w / 2
 	local offset = math.ceil(string.len(text) / 2)
-	local ret = string.rep(delimeter, (mid - offset) - 1) .. " " .. text
+	local ret = string.rep(delimeter, mid - offset - 1) .. " " .. text
 
-	return ret .. " " .. string.rep(delimeter, (w - string.len(ret)) - 1)
+	return ret .. " " .. string.rep(delimeter, w - string.len(ret) - 1)
 end
 
--- Lines: 206 to 226
+-- Lines 206-226
 function TestAPI.help()
 	local padding = 0
 	local arg_padding = 0
@@ -253,10 +258,12 @@ TestAPIHelper.register_API_function("get_jobs", "jobs", "", function ()
 		})
 	end
 
-	return {jobs = jobs}
+	return {
+		jobs = jobs
+	}
 end, "Returns a table with all available jobs.")
 
--- Lines: 243 to 268
+-- Lines 243-269
 local function start(job_id, difficulty, stage)
 	assert(not not tweak_data.narrative.jobs[job_id], string.format("invalid job: %s", job_id))
 
@@ -326,7 +333,7 @@ TestAPIHelper.register_API_function("delay", "internal", "time = 1", function ()
 	table.insert(Global.test_api.delayed_callbacks, delayed)
 end, "Delays queued calls by the given time (seconds).", true)
 
--- Lines: 315 to 345
+-- Lines 315-345
 local function equip_weapon_in_game(category, slot)
 	assert(category == "primaries" or category == "secondaries", string.format("invalid category: %s", category))
 	assert(slot and slot <= #Global.blackmarket_manager.crafted_items[category], string.format("invalid slot: %d", slot))
@@ -334,7 +341,7 @@ local function equip_weapon_in_game(category, slot)
 	local primary = category == "primaries"
 	local first_time = true
 
-	-- Lines: 322 to 334
+	-- Lines 322-335
 	local function clbk()
 		if first_time then
 			managers.blackmarket:equip_weapon(category, slot)
@@ -402,7 +409,9 @@ TestAPIHelper.register_API_function("exit_to_menu", "ingame", "", function ()
 
 	managers.platform:set_playing(false)
 	managers.job:clear_saved_ghost_bonus()
-	managers.statistics:stop_session({quit = true})
+	managers.statistics:stop_session({
+		quit = true
+	})
 	managers.savefile:save_progress()
 	managers.job:deactivate_current_job()
 	managers.gage_assignment:deactivate_assignments()
@@ -442,7 +451,8 @@ TestAPIHelper.register_API_function("fire", "ingame", "", function ()
 		state:force_input({
 			btn_primary_attack_state = true,
 			btn_primary_attack_press = true
-		}, {btn_primary_attack_release = true})
+		}, {
+			btn_primary_attack_release = true
+		})
 	end
 end, "Fires the equipped weapon once.")
-

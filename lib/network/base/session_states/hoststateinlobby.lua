@@ -1,6 +1,6 @@
 HostStateInLobby = HostStateInLobby or class(HostStateBase)
 
--- Lines: 4 to 196
+-- Lines 4-196
 function HostStateInLobby:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, gameversion, join_attempt_identifier, auth_ticket, sender)
 	print("HostStateInLobby:on_join_request_received peer_level", peer_level, join_attempt_identifier, gameversion)
 
@@ -65,7 +65,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, client_prefe
 		return
 	end
 
-	if tweak_data.max_players - 1 <= table.size(data.peers) then
+	if table.size(data.peers) >= tweak_data.max_players - 1 then
 		print("server is full")
 		self:_send_request_denied(sender, 5, my_user_id)
 
@@ -96,7 +96,12 @@ function HostStateInLobby:on_join_request_received(data, peer_name, client_prefe
 	new_peer:set_join_attempt_identifier(join_attempt_identifier)
 
 	local new_peer_rpc = nil
-	new_peer_rpc = managers.network:protocol_type() == "TCP_IP" and managers.network:session():resolve_new_peer_rpc(new_peer, sender) or sender
+
+	if managers.network:protocol_type() == "TCP_IP" then
+		new_peer_rpc = managers.network:session():resolve_new_peer_rpc(new_peer, sender)
+	else
+		new_peer_rpc = sender
+	end
 
 	new_peer:set_rpc(new_peer_rpc)
 	new_peer:set_ip_verified(true)
@@ -171,8 +176,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, client_prefe
 	managers.crime_spree:on_peer_finished_loading(new_peer)
 end
 
--- Lines: 200 to 201
+-- Lines 200-202
 function HostStateInLobby:is_joinable(data)
 	return not data.wants_to_load_level
 end
-

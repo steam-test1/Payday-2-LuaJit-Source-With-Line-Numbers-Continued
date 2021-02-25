@@ -1,10 +1,14 @@
 AnimationTweakData = AnimationTweakData or class()
 
--- Lines: 5 to 25
+-- Lines 4-25
 function AnimationTweakData:init()
 	self.hold_types = {
-		bullpup = {weight = 1000},
-		uzi = {weight = 1001}
+		bullpup = {
+			weight = 1000
+		},
+		uzi = {
+			weight = 1001
+		}
 	}
 	self.animation_redirects = {
 		mp5 = "new_mp5",
@@ -17,4 +21,3 @@ function AnimationTweakData:init()
 		g17 = "glock_17"
 	}
 end
-

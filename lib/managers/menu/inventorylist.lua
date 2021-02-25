@@ -12,14 +12,13 @@ local large_font_size = tweak_data.menu.pd2_large_font_size
 local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 
--- Lines: 19 to 26
+-- Lines 19-26
 function InventoryList:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._panel = ws:panel():panel()
 end
 
--- Lines: 28 to 30
+-- Lines 28-30
 function InventoryList:close()
 	self._ws:panel():remove(self._panel)
 end
-

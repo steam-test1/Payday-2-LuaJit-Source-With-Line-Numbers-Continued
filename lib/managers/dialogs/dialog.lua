@@ -3,7 +3,7 @@ require("lib/managers/dialogs/BaseDialog")
 
 Dialog = Dialog or class(BaseDialog)
 
--- Lines: 8 to 14
+-- Lines 8-14
 function Dialog:init(manager, data)
 	BaseDialog.init(self, manager, data)
 
@@ -12,7 +12,7 @@ function Dialog:init(manager, data)
 	self:init_button_text_list()
 end
 
--- Lines: 16 to 33
+-- Lines 16-33
 function Dialog:init_button_text_list()
 	local button_list = self._data.button_list
 
@@ -33,22 +33,22 @@ function Dialog:init_button_text_list()
 	end
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function Dialog:title()
 	return self._data.title
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function Dialog:text()
 	return self._data.text
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function Dialog:focus_button()
 	return self._data.focus_button
 end
 
--- Lines: 47 to 68
+-- Lines 47-68
 function Dialog:button_pressed(button_index)
 	cat_print("dialog_manager", "[SystemMenuManager] Button index pressed: " .. tostring(button_index))
 
@@ -71,12 +71,12 @@ function Dialog:button_pressed(button_index)
 	end
 end
 
--- Lines: 70 to 71
+-- Lines 70-72
 function Dialog:button_text_list()
 	return self._button_text_list
 end
 
--- Lines: 74 to 84
+-- Lines 74-85
 function Dialog:to_string()
 	local buttons = ""
 
@@ -89,8 +89,7 @@ function Dialog:to_string()
 	return string.format("%s, Title: %s, Text: %s, Buttons: %s", tostring(BaseDialog.to_string(self)), tostring(self._data.title), tostring(self:_strip_to_string_text(self._data.text)), buttons)
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function Dialog:_strip_to_string_text(text)
 	return string.gsub(tostring(text), "\n", "\\n")
 end
-

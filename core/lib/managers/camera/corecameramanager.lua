@@ -13,7 +13,7 @@ core:import("CoreUnit")
 
 CameraBase = CameraBase or CoreClass.class()
 
--- Lines: 16 to 22
+-- Lines 16-22
 function CameraBase:init()
 	self._nodes = {}
 	self._name_to_nodes = {}
@@ -22,7 +22,7 @@ function CameraBase:init()
 	self._blend_table = {}
 end
 
--- Lines: 24 to 30
+-- Lines 24-30
 function CameraBase:destroy()
 	for index, node in ipairs(self._nodes) do
 		node:destroy()
@@ -32,40 +32,41 @@ function CameraBase:destroy()
 	self._setup = nil
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function CameraBase:name()
 	return self._setup._name
 end
 
--- Lines: 36 to 37
+-- Lines 36-38
 function CameraBase:transition_blend(from_camera)
 	return self._blend_table[from_camera:name()]
 end
 
--- Lines: 40 to 41
+-- Lines 40-42
 function CameraBase:default_blend()
 	return self._default_blend
 end
 
--- Lines: 44 to 45
+-- Lines 44-46
 function CameraBase:node(node_name)
 	return self._name_to_nodes[node_name]
 end
 
--- Lines: 48 to 49
+-- Lines 48-50
 function CameraBase:nodes()
 	return self._nodes
 end
+
 CameraManager = CameraManager or CoreClass.class()
 
--- Lines: 54 to 57
+-- Lines 54-57
 function CameraManager:init(templates)
 	self._layers = {}
 
 	self:create_layers(templates)
 end
 
--- Lines: 59 to 64
+-- Lines 59-64
 function CameraManager:destroy()
 	for index, mixer in ipairs(self._layers) do
 		mixer:destroy()
@@ -74,7 +75,7 @@ function CameraManager:destroy()
 	self._layers = {}
 end
 
--- Lines: 66 to 83
+-- Lines 66-83
 function CameraManager:create_layers(templates)
 	for index, mixer in ipairs(self._layers) do
 		mixer:destroy()
@@ -94,7 +95,7 @@ function CameraManager:create_layers(templates)
 	end
 end
 
--- Lines: 85 to 107
+-- Lines 85-108
 function CameraManager:view_camera(camera_name, force_new_camera)
 	local layer_name = self:get_camera_layer(camera_name)
 	local mixer = self._name_to_layer[layer_name]
@@ -119,26 +120,31 @@ function CameraManager:view_camera(camera_name, force_new_camera)
 	return camera
 end
 
--- Lines: 110 to 114
+-- Lines 110-114
 function CameraManager:stop_all_layers()
 	for index, layer in ipairs(self._layers) do
 		layer:stop()
 	end
 end
 
--- Lines: 116 to 124
+-- Lines 116-124
 function CameraManager:stop_layer(layer_name)
 	local mixer = nil
-	mixer = layer_name and self._name_to_layer[layer_name] or self._layers[1]
+
+	if layer_name then
+		mixer = self._name_to_layer[layer_name]
+	else
+		mixer = self._layers[1]
+	end
 
 	mixer:stop()
 end
 
--- Lines: 127 to 146
+-- Lines 127-147
 function CameraManager:get_camera_layer(name)
 	local camera_setups = self._templates._setups
 
-	-- Lines: 130 to 142
+	-- Lines 130-142
 	local function get_camera_layer(name)
 		local camera_setup = camera_setups[name]
 
@@ -164,14 +170,14 @@ function CameraManager:get_camera_layer(name)
 	return layer_name
 end
 
--- Lines: 149 to 214
+-- Lines 149-215
 function CameraManager:create_camera(name)
 	local templates = self._templates
 	local camera_setups = templates._setups
 	local camera_node_setups = templates._node_setups
 	local camera_list = {}
 
-	-- Lines: 156 to 166
+	-- Lines 156-166
 	local function get_camera_chain(name, cam_list)
 		local camera_setup = camera_setups[name]
 
@@ -243,7 +249,7 @@ function CameraManager:create_camera(name)
 	return camera
 end
 
--- Lines: 219 to 233
+-- Lines 218-233
 function CameraManager:update(time, dt)
 	self._interpreter:reset()
 
@@ -260,12 +266,12 @@ function CameraManager:update(time, dt)
 	end
 end
 
--- Lines: 235 to 236
+-- Lines 235-237
 function CameraManager:interpreter()
 	return self._interpreter
 end
 
--- Lines: 239 to 247
+-- Lines 239-247
 function CameraManager:print_cameras()
 	for index, mixer in ipairs(self._layers) do
 		cat_print("debug", "layer: '" .. mixer._name .. "'")
@@ -277,11 +283,12 @@ function CameraManager:print_cameras()
 		end
 	end
 end
+
 CameraTemplateManager = CameraTemplateManager or CoreClass.class()
 CameraTemplateManager.camera_db_type = "camera"
 CameraTemplateManager.camera_db_path = "cameras/cameras"
 
--- Lines: 255 to 268
+-- Lines 254-268
 function CameraTemplateManager:init()
 	self._camera_space = {}
 	self._parse_func_table = {
@@ -296,7 +303,7 @@ function CameraTemplateManager:init()
 	self:load_cameras()
 end
 
--- Lines: 270 to 274
+-- Lines 270-275
 function CameraTemplateManager:create_camera_manager(camera_space)
 	local camera_space = self._camera_space[camera_space]
 	local cm = CameraManager:new(camera_space)
@@ -306,7 +313,7 @@ function CameraTemplateManager:create_camera_manager(camera_space)
 	return cm
 end
 
--- Lines: 277 to 297
+-- Lines 277-297
 function CameraTemplateManager:load_cameras()
 	self:clear()
 
@@ -329,7 +336,7 @@ function CameraTemplateManager:load_cameras()
 	end
 end
 
--- Lines: 299 to 321
+-- Lines 299-321
 function CameraTemplateManager:load_camera_file(file_name)
 	if DB:has(CameraTemplateManager.camera_db_type, file_name) then
 		local xml_node = DB:load_node(CameraTemplateManager.camera_db_type, file_name)
@@ -356,32 +363,32 @@ function CameraTemplateManager:load_camera_file(file_name)
 	end
 end
 
--- Lines: 323 to 325
+-- Lines 323-325
 function CameraTemplateManager:clear()
 	self._camera_space = {}
 end
 
--- Lines: 327 to 329
+-- Lines 327-330
 function CameraTemplateManager:get_layers(camera_space)
 	local space = self._camera_space[camera_space]
 
 	return space._layers
 end
 
--- Lines: 332 to 335
+-- Lines 332-335
 function CameraTemplateManager:parse_layer(xml_node, space)
 	local layer_name = xml_node:parameter("name")
 
 	table.insert(space._layers, layer_name)
 end
 
--- Lines: 337 to 340
+-- Lines 337-340
 function CameraTemplateManager:parse_interpreter(xml_node, space)
 	local interpreter_class = xml_node:parameter("class")
 	space._interpreter_class = rawget(_G, interpreter_class)
 end
 
--- Lines: 343 to 412
+-- Lines 342-412
 function CameraTemplateManager:parse_camera(xml_node, space)
 	local camera_setups = space._setups
 	local setup = {}
@@ -402,9 +409,11 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 	setup._blend_table = {}
 	camera_setups[name] = setup
 
-	-- Lines: 363 to 380
+	-- Lines 363-380
 	local function parse_node(xml_node)
-		local node = {_node_name = xml_node:parameter("node_name")}
+		local node = {
+			_node_name = xml_node:parameter("node_name")
+		}
 
 		assert(node._node_name)
 
@@ -423,14 +432,14 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 		table.insert(setup._camera_nodes, node)
 	end
 
-	-- Lines: 382 to 386
+	-- Lines 382-386
 	local function parse_default_blend(xml_node)
 		if xml_node:has_parameter("blend") then
 			setup._default_blend = tonumber(xml_node:parameter("blend"))
 		end
 	end
 
-	-- Lines: 388 to 397
+	-- Lines 388-397
 	local function parse_from_blend(xml_node)
 		if xml_node:has_parameter("name") then
 			local name = xml_node:parameter("name")
@@ -460,10 +469,9 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 	end
 end
 
--- Lines: 421 to 451
+-- Lines 414-451
 function CameraTemplateManager:parse_camera_node(xml_node, space)
-
-	-- Lines: 416 to 421
+	-- Lines 416-422
 	local function split_string(str)
 		local strings = {}
 
@@ -505,7 +513,7 @@ function CameraTemplateManager:parse_camera_node(xml_node, space)
 	end
 end
 
--- Lines: 453 to 461
+-- Lines 453-461
 function CameraTemplateManager:parse_depends_on(xml_node, space)
 	if Application:editor() then
 		if xml_node:has_parameter("unit") then
@@ -516,10 +524,9 @@ function CameraTemplateManager:parse_depends_on(xml_node, space)
 	end
 end
 
--- Lines: 463 to 467
+-- Lines 463-467
 function CameraTemplateManager:update(t, dt)
 	for index, cam_man in ipairs(self._camera_managers) do
 		cam_man:update(t, dt)
 	end
 end
-

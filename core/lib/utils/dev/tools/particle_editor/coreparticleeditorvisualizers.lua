@@ -1,6 +1,6 @@
 CoreParticleEditorVisualizers = CoreParticleEditorVisualizers or class()
 
--- Lines: 3 to 232
+-- Lines 3-233
 function CoreParticleEditorVisualizers:create_billboard()
 	local visualizer = CoreEffectStackMember:new("billboard", "visualizer", "Billboard")
 
@@ -348,7 +348,7 @@ channel - read from channel]]
 	return visualizer
 end
 
--- Lines: 236 to 428
+-- Lines 236-429
 function CoreParticleEditorVisualizers:create_trail()
 	local visualizer = CoreEffectStackMember:new("trail", "visualizer", "Trail")
 
@@ -567,7 +567,7 @@ channel - read from channel]]
 	return visualizer
 end
 
--- Lines: 432 to 491
+-- Lines 432-492
 function CoreParticleEditorVisualizers:create_light()
 	local visualizer = CoreEffectStackMember:new("light", "visualizer", "Light")
 
@@ -651,7 +651,7 @@ channel - read from channel]]
 	return visualizer
 end
 
--- Lines: 494 to 507
+-- Lines 494-508
 function CoreParticleEditorVisualizers:create_model()
 	local visualizer = CoreEffectStackMember:new("model", "visualizer", "Model")
 
@@ -671,4 +671,3 @@ function CoreParticleEditorVisualizers:create_model()
 
 	return visualizer
 end
-

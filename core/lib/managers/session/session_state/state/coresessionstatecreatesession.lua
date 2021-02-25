@@ -3,7 +3,7 @@ core:import("CoreSessionStateInSession")
 
 CreateSession = CreateSession or class()
 
--- Lines: 6 to 20
+-- Lines 6-20
 function CreateSession:init()
 	local session_info = self.session_state._session_info
 	local player_slots = self.session_state._player_slots
@@ -17,8 +17,7 @@ function CreateSession:init()
 	end
 end
 
--- Lines: 22 to 23
+-- Lines 22-24
 function CreateSession:transition()
 	return CoreSessionStateInSession.InSession, self._session
 end
-

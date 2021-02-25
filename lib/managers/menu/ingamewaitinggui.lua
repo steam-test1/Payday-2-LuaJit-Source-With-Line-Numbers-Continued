@@ -5,7 +5,7 @@ local text_font_size = tweak_data.menu.pd2_medium_font_size
 local font_color_highlighted = tweak_data.screen_colors.button_stage_2
 local font_color_rest = tweak_data.screen_colors.button_stage_3
 
--- Lines: 11 to 15
+-- Lines 11-15
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -13,7 +13,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 17 to 122
+-- Lines 17-122
 function IngameWaitingGui:init(ws)
 	self._panel = ws:panel()
 	self._current_btn = {}
@@ -127,41 +127,53 @@ function IngameWaitingGui:init(ws)
 		y = self._loadout_bottom + PADDING,
 		h = text_font_size
 	})
-	self._peer_btns_panel = self._button_panel:panel({w = 0})
+	self._peer_btns_panel = self._button_panel:panel({
+		w = 0
+	})
 	self._peer_btns = {
 		self:add_button(self._peer_btns_panel, "hud_waiting_accept", "drop_in_accept", "spawn", 30),
 		self:add_button(self._peer_btns_panel, "hud_waiting_return", "drop_in_return", "return_back", 30),
 		self:add_button(self._peer_btns_panel, "hud_waiting_kick", "drop_in_kick", "kick")
 	}
-	self._left_btns_panel = self._button_panel:panel({w = 0})
-	self._left_btns = {self:add_button(self._left_btns_panel, "hud_waiting_ok", "drop_in_accept", "left_ok")}
+	self._left_btns_panel = self._button_panel:panel({
+		w = 0
+	})
+	self._left_btns = {
+		self:add_button(self._left_btns_panel, "hud_waiting_ok", "drop_in_accept", "left_ok")
+	}
 
 	self._content_panel:set_h(self._button_panel:bottom() + PADDING)
 	self._content_panel:set_w(self._loadout_width + PADDING * 2)
-	BoxGuiObject:new(self._content_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._content_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self._prev_panel = self._content_panel:panel()
 	self._next_panel = self._content_panel:panel()
 	self._prev_arrow = IngameWaitingButton:new(self._prev_panel, "<", nil, callback(self, self, "next_page"))
 	self._next_arrow = IngameWaitingButton:new(self._next_panel, ">", nil, callback(self, self, "prev_page"))
 
-	BoxGuiObject:new(self._prev_panel, {sides = {
-		2,
-		0,
-		0,
-		0
-	}})
-	BoxGuiObject:new(self._next_panel, {sides = {
-		0,
-		2,
-		0,
-		0
-	}})
+	BoxGuiObject:new(self._prev_panel, {
+		sides = {
+			2,
+			0,
+			0,
+			0
+		}
+	})
+	BoxGuiObject:new(self._next_panel, {
+		sides = {
+			0,
+			2,
+			0,
+			0
+		}
+	})
 	self._prev_arrow:panel():set_top(self._button_panel:top())
 	self._next_arrow:panel():set_top(self._button_panel:top())
 	self._prev_arrow:panel():set_left(PADDING)
@@ -182,7 +194,7 @@ function IngameWaitingGui:init(ws)
 	self:try_get_dummy()
 end
 
--- Lines: 124 to 129
+-- Lines 124-129
 function IngameWaitingGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:remove(self._content_panel)
@@ -190,7 +202,7 @@ function IngameWaitingGui:close()
 	end
 end
 
--- Lines: 131 to 148
+-- Lines 131-149
 function IngameWaitingGui:calc_next(current)
 	current = current or self._current_slot
 
@@ -200,7 +212,7 @@ function IngameWaitingGui:calc_next(current)
 
 	current = current + 1
 
-	for id = current, CriminalsManager.MAX_NR_CRIMINALS, 1 do
+	for id = current, CriminalsManager.MAX_NR_CRIMINALS do
 		local peer = managers.network:session():peer(id)
 
 		if peer and managers.wait:is_waiting(id) then
@@ -215,7 +227,7 @@ function IngameWaitingGui:calc_next(current)
 	return nil
 end
 
--- Lines: 151 to 168
+-- Lines 151-169
 function IngameWaitingGui:calc_prev(current)
 	current = current or self._current_slot
 
@@ -240,7 +252,7 @@ function IngameWaitingGui:calc_prev(current)
 	return nil
 end
 
--- Lines: 171 to 176
+-- Lines 171-176
 function IngameWaitingGui:left_ok()
 	if not self._current_slot then
 		return
@@ -249,7 +261,7 @@ function IngameWaitingGui:left_ok()
 	self:check_remove_panel(self._current_slot)
 end
 
--- Lines: 178 to 184
+-- Lines 178-184
 function IngameWaitingGui:kick()
 	if not self._peer then
 		return
@@ -258,7 +270,7 @@ function IngameWaitingGui:kick()
 	managers.vote:message_host_kick(self._peer)
 end
 
--- Lines: 186 to 192
+-- Lines 186-192
 function IngameWaitingGui:return_back()
 	if not self._peer then
 		return
@@ -268,7 +280,7 @@ function IngameWaitingGui:return_back()
 	self:check_remove_panel(self._peer:id())
 end
 
--- Lines: 194 to 200
+-- Lines 194-200
 function IngameWaitingGui:spawn()
 	if not self._peer then
 		return
@@ -278,7 +290,7 @@ function IngameWaitingGui:spawn()
 	self:check_remove_panel(self._peer:id())
 end
 
--- Lines: 202 to 213
+-- Lines 202-213
 function IngameWaitingGui:check_remove_panel(slot_id)
 	self._saved_names[slot_id] = nil
 
@@ -293,9 +305,11 @@ function IngameWaitingGui:check_remove_panel(slot_id)
 	end
 end
 
--- Lines: 215 to 222
+-- Lines 215-223
 function IngameWaitingGui:add_button(panel, text, binding, func_name, padding)
-	local params = {MY_BTN = managers.localization:btn_macro(binding, true, true) or ""}
+	local params = {
+		MY_BTN = managers.localization:btn_macro(binding, true, true) or ""
+	}
 	text = managers.localization:text(text, params)
 	local btn, btn_panel = IngameWaitingButton:new(panel, text, binding, callback(self, self, func_name))
 
@@ -305,13 +319,13 @@ function IngameWaitingGui:add_button(panel, text, binding, func_name, padding)
 	return btn
 end
 
--- Lines: 225 to 228
+-- Lines 225-228
 function IngameWaitingGui:set_layer(layer)
 	self._content_panel:set_layer(layer)
 	self._text_panel:set_layer(layer)
 end
 
--- Lines: 230 to 248
+-- Lines 230-249
 function IngameWaitingGui:try_get_dummy()
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -332,12 +346,13 @@ function IngameWaitingGui:try_get_dummy()
 
 	return self._dummy_item
 end
+
 IngameWaitingGui.game_state_blacklist = {
 	victoryscreen = true,
 	gameoverscreen = true
 }
 
--- Lines: 253 to 281
+-- Lines 253-281
 function IngameWaitingGui:update(t, dt)
 	if not self._dummy_item then
 		self:try_get_dummy()
@@ -368,7 +383,7 @@ function IngameWaitingGui:update(t, dt)
 	self._prev_panel:set_visible(self:calc_prev())
 end
 
--- Lines: 283 to 294
+-- Lines 283-294
 function IngameWaitingGui:set_enabled(enabled)
 	enabled = not not enabled
 
@@ -382,7 +397,7 @@ function IngameWaitingGui:set_enabled(enabled)
 	end
 end
 
--- Lines: 296 to 418
+-- Lines 296-419
 function IngameWaitingGui:set_panel_for(peer_id)
 	self._current_slot = peer_id
 	self._peer = managers.network:session():peer(peer_id)
@@ -401,7 +416,9 @@ function IngameWaitingGui:set_panel_for(peer_id)
 
 	if not self._peer or not managers.wait:is_waiting(self._peer:id()) and not peer_id == 1 then
 		local name = self._saved_names[peer_id] or "N/A"
-		local str = managers.localization:text("menu_waiting_peer_left", {name = name})
+		local str = managers.localization:text("menu_waiting_peer_left", {
+			name = name
+		})
 		self._loadout_panel = self._content_panel:panel()
 
 		self._detection:set_visible(false)
@@ -515,17 +532,19 @@ function IngameWaitingGui:set_panel_for(peer_id)
 	deploy_panel:set_lefttop(throw_panel:righttop())
 	self._loadout_panel:set_w(deploy_panel:right())
 	self._loadout_panel:set_h(primary_panel:bottom())
-	BoxGuiObject:new(self._loadout_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._loadout_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	return true
 end
 
--- Lines: 421 to 437
+-- Lines 421-437
 function IngameWaitingGui:create_item(panel, outfit_item, tweak_data, folder)
 	local w = panel:w()
 	local h = panel:h()
@@ -549,12 +568,12 @@ function IngameWaitingGui:create_item(panel, outfit_item, tweak_data, folder)
 	end
 end
 
--- Lines: 439 to 440
+-- Lines 439-441
 function IngameWaitingGui:create_melee(panel, outfit, ...)
 	return self:create_item(panel, outfit.melee_weapon, ...)
 end
 
--- Lines: 443 to 450
+-- Lines 443-450
 function IngameWaitingGui:create_empty(panel)
 	local empty_bitmap = panel:bitmap({
 		texture = "guis/textures/pd2/none_icon",
@@ -568,7 +587,7 @@ function IngameWaitingGui:create_empty(panel)
 	empty_bitmap:set_center_x(panel:center_x())
 end
 
--- Lines: 452 to 554
+-- Lines 452-554
 function IngameWaitingGui:create_weapon(weapon, panel)
 	local w = panel:w()
 	local h = panel:h()
@@ -651,7 +670,12 @@ function IngameWaitingGui:create_weapon(weapon, panel)
 			stats = factory[part_id] and factory[part_id].stats or false
 			custom_stats = factory[part_id] and factory[part_id].custom_stats or false
 			has_stat = stats and table.size(stats) > 1 and true or false
-			has_team = custom_stats and (custom_stats.exp_multiplier or custom_stats.money_multiplier) and true or false
+
+			if custom_stats and (custom_stats.exp_multiplier or custom_stats.money_multiplier) then
+				has_team = true
+			else
+				has_team = false
+			end
 
 			if has_stat then
 				table.insert(textures, "guis/textures/pd2/blackmarket/inv_mod_bonus_stats")
@@ -694,13 +718,13 @@ function IngameWaitingGui:create_weapon(weapon, panel)
 	end
 end
 
--- Lines: 556 to 560
+-- Lines 556-560
 function IngameWaitingGui:dummy_trigger()
 	local btn = self._current_btn.button
 	local _ = btn and btn:trigger()
 end
 
--- Lines: 562 to 575
+-- Lines 562-575
 function IngameWaitingGui:dummy_set_highlight(highlight)
 	if self._highlighted == highlight then
 		return
@@ -719,7 +743,7 @@ function IngameWaitingGui:dummy_set_highlight(highlight)
 	btn:set_highlighted(highlight)
 end
 
--- Lines: 577 to 586
+-- Lines 577-586
 function IngameWaitingGui:move_left()
 	if not self._highlighted then
 		return
@@ -732,7 +756,7 @@ function IngameWaitingGui:move_left()
 	end
 end
 
--- Lines: 588 to 598
+-- Lines 588-598
 function IngameWaitingGui:move_right()
 	if not self._highlighted then
 		return
@@ -745,7 +769,7 @@ function IngameWaitingGui:move_right()
 	end
 end
 
--- Lines: 600 to 606
+-- Lines 600-607
 function IngameWaitingGui:prev_page()
 	local page = self:calc_prev()
 
@@ -757,9 +781,10 @@ function IngameWaitingGui:prev_page()
 
 	return false
 end
+
 IngameWaitingGui.previous_page = IngameWaitingGui.prev_page
 
--- Lines: 611 to 617
+-- Lines 611-618
 function IngameWaitingGui:next_page()
 	local page = self:calc_next()
 
@@ -772,7 +797,7 @@ function IngameWaitingGui:next_page()
 	return false
 end
 
--- Lines: 620 to 649
+-- Lines 620-649
 function IngameWaitingGui:mouse_moved(o, x, y)
 	if not self._content_panel:visible() then
 		return
@@ -806,7 +831,7 @@ function IngameWaitingGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines: 651 to 658
+-- Lines 651-658
 function IngameWaitingGui:special_btn_pressed(button)
 	print(button)
 
@@ -817,7 +842,7 @@ function IngameWaitingGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 660 to 678
+-- Lines 660-678
 function IngameWaitingGui:mouse_pressed(button, x, y)
 	if not self._content_panel:visible() or button ~= Idstring("0") then
 		return
@@ -839,7 +864,7 @@ function IngameWaitingGui:mouse_pressed(button, x, y)
 	local t = self._prev_arrow:panel():inside(x, y) and self:prev_page()
 end
 
--- Lines: 680 to 690
+-- Lines 680-690
 function IngameWaitingGui:set_current_button(index)
 	index = math.clamp(1, index or 1, #self._buttons)
 	local current = self._current_btn.button
@@ -851,9 +876,10 @@ function IngameWaitingGui:set_current_button(index)
 	local t1 = current and current:set_highlighted(false)
 	local t0 = target and target:set_highlighted(self._highlighted)
 end
+
 IngameWaitingButton = IngameWaitingButton or class()
 
--- Lines: 696 to 707
+-- Lines 696-708
 function IngameWaitingButton:init(parent_panel, text, binding, callback)
 	self._panel = parent_panel:panel()
 	self._callback = callback
@@ -871,22 +897,21 @@ function IngameWaitingButton:init(parent_panel, text, binding, callback)
 	return self._panel
 end
 
--- Lines: 710 to 713
+-- Lines 710-713
 function IngameWaitingButton:set_highlighted(highlighted)
 	self._highlighted = highlighted
 
 	self._text:set_color(highlighted and font_color_highlighted or font_color_rest)
 end
 
--- Lines: 715 to 716
+-- Lines 715-717
 function IngameWaitingButton:panel()
 	return self._panel
 end
 
--- Lines: 719 to 723
+-- Lines 719-723
 function IngameWaitingButton:trigger()
 	if self._callback then
 		self._callback()
 	end
 end
-

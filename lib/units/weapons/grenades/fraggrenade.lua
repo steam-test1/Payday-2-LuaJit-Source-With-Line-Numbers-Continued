@@ -1,6 +1,6 @@
 FragGrenade = FragGrenade or class(GrenadeBase)
 
--- Lines: 5 to 28
+-- Lines 5-29
 function FragGrenade:_setup_from_tweak_data()
 	local grenade_entry = self._tweak_projectile_entry or "frag"
 	local tweak_entry = tweak_data.projectiles[grenade_entry]
@@ -24,12 +24,12 @@ function FragGrenade:_setup_from_tweak_data()
 	return tweak_entry
 end
 
--- Lines: 33 to 35
+-- Lines 33-35
 function FragGrenade:update(unit, t, dt)
 	FragGrenade.super.update(self, unit, t, dt)
 end
 
--- Lines: 47 to 57
+-- Lines 40-57
 function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local reflect = other_unit and other_unit:vehicle() and other_unit:vehicle():is_active()
 	reflect = managers.modifiers:modify_value("FragGrenade:ShouldReflect", reflect, other_unit, self._unit)
@@ -41,7 +41,7 @@ function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, positi
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines: 69 to 79
+-- Lines 59-79
 function FragGrenade:_on_collision(col_ray)
 	local reflect = col_ray and col_ray.unit:vehicle() and col_ray.unit:vehicle():is_active()
 	reflect = managers.modifiers:modify_value("FragGrenade:ShouldReflect", reflect, col_ray and col_ray.unit, self._unit)
@@ -53,7 +53,7 @@ function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines: 82 to 107
+-- Lines 82-107
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -80,7 +80,7 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	self._unit:set_slot(0)
 end
 
--- Lines: 111 to 116
+-- Lines 111-116
 function FragGrenade:_detonate_on_client()
 	local pos = self._unit:position()
 	local range = self._range
@@ -89,7 +89,7 @@ function FragGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines: 120 to 127
+-- Lines 120-127
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -101,4 +101,3 @@ function FragGrenade:bullet_hit()
 
 	self:_detonate()
 end
-

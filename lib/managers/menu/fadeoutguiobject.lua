@@ -1,6 +1,6 @@
 FadeoutGuiObject = FadeoutGuiObject or class()
 
--- Lines: 3 to 62
+-- Lines 3-62
 function FadeoutGuiObject:init(params)
 	Global.FadeoutObjects = Global.FadeoutObjects or {}
 
@@ -9,7 +9,11 @@ function FadeoutGuiObject:init(params)
 	params = params or {}
 	local sustain = params.sustain
 	self._fade_out_duration = params.fade_out or 0
-	self._fade_out_duration = sustain or nil
+
+	if not sustain then
+		self._fade_out_duration = nil
+	end
+
 	local fade_color = params.color or Color.black
 	local show_loding_icon = params.show_loading_icon or true
 	local loading_texture = params.loading_texture or "guis/textures/icon_loading"
@@ -27,7 +31,7 @@ function FadeoutGuiObject:init(params)
 		loading_icon:set_position(managers.gui_data:safe_to_full(0, 0))
 		loading_icon:set_center_y(self._panel:h() / 2)
 
-		-- Lines: 32 to 38
+		-- Lines 32-38
 		local function spin_forever_animation(o)
 			local dt = nil
 
@@ -41,7 +45,7 @@ function FadeoutGuiObject:init(params)
 		loading_icon:animate(spin_forever_animation)
 	end
 
-	-- Lines: 43 to 58
+	-- Lines 43-58
 	local function fade_out_animation(panel)
 		local loading_icon = panel:child("loading_icon")
 
@@ -65,8 +69,7 @@ function FadeoutGuiObject:init(params)
 	self._panel:animate(fade_out_animation)
 end
 
--- Lines: 64 to 66
+-- Lines 64-66
 function FadeoutGuiObject:fade_out(duration)
 	self._fade_out_duration = duration
 end
-

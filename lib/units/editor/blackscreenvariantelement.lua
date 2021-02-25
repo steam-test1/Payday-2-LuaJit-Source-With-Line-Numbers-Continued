@@ -1,6 +1,6 @@
 BlackscreenVariantElement = BlackscreenVariantElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function BlackscreenVariantElement:init(unit)
 	BlackscreenVariantElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function BlackscreenVariantElement:init(unit)
 	table.insert(self._save_values, "variant")
 end
 
--- Lines: 12 to 29
+-- Lines 12-29
 function BlackscreenVariantElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -32,7 +32,7 @@ function BlackscreenVariantElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
--- Lines: 31 to 46
+-- Lines 31-47
 function BlackscreenVariantElement:_get_params(panel, panel_sizer)
 	local bscreen_params = {
 		default = "0",
@@ -80,14 +80,15 @@ function BlackscreenVariantElement:_get_params(panel, panel_sizer)
 
 	return bscreen_params
 end
+
 EndscreenVariantElement = EndscreenVariantElement or class(BlackscreenVariantElement)
 
--- Lines: 54 to 56
+-- Lines 54-56
 function EndscreenVariantElement:init(unit)
 	EndscreenVariantElement.super.init(self, unit)
 end
 
--- Lines: 58 to 73
+-- Lines 58-74
 function EndscreenVariantElement:_get_params(panel, panel_sizer)
 	local bscreen_params = {
 		default = "0",
@@ -135,4 +136,3 @@ function EndscreenVariantElement:_get_params(panel, panel_sizer)
 
 	return bscreen_params
 end
-

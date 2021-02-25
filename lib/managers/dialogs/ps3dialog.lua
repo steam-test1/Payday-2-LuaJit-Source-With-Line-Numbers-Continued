@@ -8,7 +8,7 @@ PS3Dialog.BUTTON_TYPE_LIST = {
 	"yes-no-back"
 }
 
--- Lines: 8 to 34
+-- Lines 8-35
 function PS3Dialog:show()
 	local focus_button = self:focus_button()
 	local button_text_list = self:button_text_list()
@@ -38,8 +38,7 @@ function PS3Dialog:show()
 	return true
 end
 
--- Lines: 37 to 39
+-- Lines 37-39
 function PS3Dialog:button_pressed(button_index)
 	Dialog.button_pressed(self, button_index + 1)
 end
-

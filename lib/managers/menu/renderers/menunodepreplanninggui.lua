@@ -2,7 +2,7 @@ require("lib/managers/menu/renderers/MenuNodeBaseGui")
 
 MenuNodePrePlanningGui = MenuNodePrePlanningGui or class(MenuNodeBaseGui)
 
--- Lines: 5 to 27
+-- Lines 5-27
 function MenuNodePrePlanningGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -25,7 +25,7 @@ function MenuNodePrePlanningGui:init(node, layer, parameters)
 	MenuNodePrePlanningGui.super.init(self, node, layer, parameters)
 end
 
--- Lines: 29 to 35
+-- Lines 29-35
 function MenuNodePrePlanningGui:setup()
 	MenuNodePrePlanningGui.super.setup(self)
 
@@ -42,7 +42,7 @@ function MenuNodePrePlanningGui:setup()
 	end
 end
 
--- Lines: 37 to 59
+-- Lines 37-59
 function MenuNodePrePlanningGui:_setup_item_panel_parent(safe_rect, shape)
 	local res = RenderSettings.resolution
 	shape = shape or {}
@@ -64,7 +64,7 @@ function MenuNodePrePlanningGui:_setup_item_panel_parent(safe_rect, shape)
 	self._legends_panel:set_bottom(self.ws:panel():bottom() - 5)
 end
 
--- Lines: 61 to 117
+-- Lines 61-117
 function MenuNodePrePlanningGui:_setup_item_panel(safe_rect, res)
 	local extra = 14
 
@@ -89,12 +89,14 @@ function MenuNodePrePlanningGui:_setup_item_panel(safe_rect, res)
 	self.box_panel:move(-10, -0)
 	self.box_panel:set_layer(self.layers.background)
 
-	self.boxgui = BoxGuiObject:new(self.box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self.boxgui = BoxGuiObject:new(self.box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(self.layers.last)
@@ -120,7 +122,9 @@ function MenuNodePrePlanningGui:_setup_item_panel(safe_rect, res)
 		self._icon_panel = nil
 	end
 
-	self._icon_panel = self._item_panel_parent:panel({name = "icons"})
+	self._icon_panel = self._item_panel_parent:panel({
+		name = "icons"
+	})
 
 	self._align_data.panel:set_left(self.box_panel:left())
 	self:_create_tooltip()
@@ -141,12 +145,12 @@ function MenuNodePrePlanningGui:_setup_item_panel(safe_rect, res)
 	end
 end
 
--- Lines: 120 to 122
+-- Lines 119-122
 function MenuNodePrePlanningGui:_set_topic_position()
 	self._icon_panel:set_shape(self.item_panel:shape())
 end
 
--- Lines: 124 to 149
+-- Lines 124-150
 function MenuNodePrePlanningGui:scroll_update(dt)
 	local scrolled = MenuNodePrePlanningGui.super.super.scroll_update(self, dt)
 	local scroll_top = self.item_panel:top() < 0
@@ -175,7 +179,7 @@ function MenuNodePrePlanningGui:scroll_update(dt)
 	return scrolled
 end
 
--- Lines: 152 to 213
+-- Lines 152-213
 function MenuNodePrePlanningGui:_create_tooltip()
 	if alive(self._tooltip) then
 		self._tooltip:parent():remove(self._tooltip)
@@ -183,7 +187,9 @@ function MenuNodePrePlanningGui:_create_tooltip()
 		self._tooltip = nil
 	end
 
-	self._tooltip = self.ws:panel():panel({layer = self.layers.items})
+	self._tooltip = self.ws:panel():panel({
+		layer = self.layers.items
+	})
 
 	self._tooltip:set_w(self.box_panel:w())
 	self._tooltip:set_top(self.box_panel:bottom() + self._item_panel_parent:top() + 5)
@@ -232,7 +238,7 @@ function MenuNodePrePlanningGui:_create_tooltip()
 
 	description:set_top(icon:top())
 	description:set_left(icon:right() + 5)
-	description:set_width((self._tooltip:w() - 10) - description:left())
+	description:set_width(self._tooltip:w() - 10 - description:left())
 	description:set_kern(description:kern())
 
 	local x, y, w, h = description:text_rect()
@@ -254,7 +260,7 @@ function MenuNodePrePlanningGui:_create_tooltip()
 
 	error_text:set_top(description:bottom() + 5)
 	error_text:set_left(icon:right() + 5)
-	error_text:set_width((self._tooltip:w() - 10) - error_text:left())
+	error_text:set_width(self._tooltip:w() - 10 - error_text:left())
 	error_text:set_kern(error_text:kern())
 
 	local x, y, w, h = error_text:text_rect()
@@ -265,12 +271,14 @@ function MenuNodePrePlanningGui:_create_tooltip()
 
 	self._tooltip:set_h(bottom)
 
-	local boxgui = BoxGuiObject:new(self._tooltip, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	local boxgui = BoxGuiObject:new(self._tooltip, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	boxgui:set_clipping(false)
 	boxgui:set_layer(1000)
@@ -297,7 +305,7 @@ function MenuNodePrePlanningGui:_create_tooltip()
 	})
 end
 
--- Lines: 215 to 276
+-- Lines 215-276
 function MenuNodePrePlanningGui:_update_tooltip(item)
 	if not item then
 		if alive(self._tooltip) then
@@ -355,12 +363,14 @@ function MenuNodePrePlanningGui:_update_tooltip(item)
 			local bottom = math.max(title:bottom(), icon:bottom(), description:bottom(), error_text:bottom()) + 10
 
 			self._tooltip:set_h(bottom)
-			self._tooltip_boxgui:create_sides(self._tooltip, {sides = {
-				1,
-				1,
-				1,
-				1
-			}})
+			self._tooltip_boxgui:create_sides(self._tooltip, {
+				sides = {
+					1,
+					1,
+					1,
+					1
+				}
+			})
 			self._tooltip:show()
 		else
 			self._tooltip:hide()
@@ -368,7 +378,7 @@ function MenuNodePrePlanningGui:_update_tooltip(item)
 	end
 end
 
--- Lines: 278 to 297
+-- Lines 278-297
 function MenuNodePrePlanningGui:_align_marker(row_item)
 	if self.marker_color then
 		self._marker_data.gradient:set_color(row_item.item:enabled() and self.marker_color or self.marker_disabled_color or row_item.disabled_color)
@@ -376,7 +386,7 @@ function MenuNodePrePlanningGui:_align_marker(row_item)
 
 	self._marker_data.marker:show()
 	self._marker_data.marker:set_width(self:_scaled_size().width - self._marker_data.marker:left())
-	self._marker_data.marker:set_height((64 * row_item.gui_panel:height()) / 32)
+	self._marker_data.marker:set_height(64 * row_item.gui_panel:height() / 32)
 	self._marker_data.marker:set_center_y(row_item.gui_panel:center_y())
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 	self._marker_data.gradient:show()
@@ -389,7 +399,7 @@ function MenuNodePrePlanningGui:_align_marker(row_item)
 	end
 end
 
--- Lines: 299 to 307
+-- Lines 299-307
 function MenuNodePrePlanningGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -402,7 +412,7 @@ function MenuNodePrePlanningGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 309 to 318
+-- Lines 309-318
 function MenuNodePrePlanningGui:reload_item(item)
 	MenuNodePrePlanningGui.super.reload_item(self, item)
 
@@ -414,7 +424,7 @@ function MenuNodePrePlanningGui:reload_item(item)
 	end
 end
 
--- Lines: 320 to 328
+-- Lines 320-328
 function MenuNodePrePlanningGui:highlight_item(item, mouse_over)
 	MenuNodePrePlanningGui.super.highlight_item(self, item, mouse_over)
 	managers.menu_component:set_preplanning_selected_element_item(item)
@@ -425,14 +435,14 @@ function MenuNodePrePlanningGui:highlight_item(item, mouse_over)
 	end
 end
 
--- Lines: 330 to 337
+-- Lines 330-337
 function MenuNodePrePlanningGui:trigger_item(item)
 	if item and item:enabled() then
 		-- Nothing
 	end
 end
 
--- Lines: 339 to 344
+-- Lines 339-344
 function MenuNodePrePlanningGui:_fade_row_item(row_item)
 	MenuNodePrePlanningGui.super._fade_row_item(self, row_item)
 
@@ -441,7 +451,7 @@ function MenuNodePrePlanningGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines: 346 to 351
+-- Lines 346-351
 function MenuNodePrePlanningGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodePrePlanningGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -450,12 +460,12 @@ function MenuNodePrePlanningGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines: 353 to 356
+-- Lines 353-356
 function MenuNodePrePlanningGui:refresh_gui(node)
 	MenuNodePrePlanningGui.super.refresh_gui(self, node)
 end
 
--- Lines: 358 to 425
+-- Lines 358-425
 function MenuNodePrePlanningGui:_set_item_positions()
 	MenuNodePrePlanningGui.super._set_item_positions(self)
 	self._icon_panel:clear()
@@ -545,7 +555,7 @@ function MenuNodePrePlanningGui:_set_item_positions()
 					end
 				end
 
-				for i = 1, managers.criminals.MAX_NR_CRIMINALS - num_votes, 1 do
+				for i = 1, managers.criminals.MAX_NR_CRIMINALS - num_votes do
 					new_icon = self._icon_panel:bitmap({
 						texture = "guis/dlcs/big_bank/textures/pd2/pre_planning/preplan_voting",
 						blend_mode = "add",
@@ -570,19 +580,21 @@ function MenuNodePrePlanningGui:_set_item_positions()
 	end
 end
 
--- Lines: 428 to 430
+-- Lines 428-430
 function MenuNodePrePlanningGui:test_clbk(...)
-	print(inspect({...}))
+	print(inspect({
+		...
+	}))
 end
 
--- Lines: 434 to 436
+-- Lines 434-437
 function MenuNodePrePlanningGui:mouse_moved(o, x, y)
 	local used, icon = MenuNodePrePlanningGui.super.mouse_moved(self, o, x, y)
 
 	return used, icon
 end
 
--- Lines: 440 to 456
+-- Lines 439-456
 function MenuNodePrePlanningGui:mouse_pressed(button, x, y)
 	if button == Idstring("0") or button == Idstring("1") then
 		for _, row_item in pairs(self.row_items) do
@@ -599,50 +611,49 @@ function MenuNodePrePlanningGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 466 to 470
+-- Lines 458-470
 function MenuNodePrePlanningGui:mouse_released(button, x, y)
 	if MenuNodePrePlanningGui.super.mouse_released(self, button, x, y) then
 		return true
 	end
 end
 
--- Lines: 472 to 474
+-- Lines 472-474
 function MenuNodePrePlanningGui:confirm_pressed()
 	MenuNodePrePlanningGui.super.confirm_pressed(self)
 end
 
--- Lines: 476 to 478
+-- Lines 476-478
 function MenuNodePrePlanningGui:previous_page()
 	MenuNodePrePlanningGui.super.previous_page(self)
 end
 
--- Lines: 480 to 482
+-- Lines 480-482
 function MenuNodePrePlanningGui:next_page()
 	MenuNodePrePlanningGui.super.next_page(self)
 end
 
--- Lines: 484 to 486
+-- Lines 484-486
 function MenuNodePrePlanningGui:move_up()
 	MenuNodePrePlanningGui.super.move_up(self)
 end
 
--- Lines: 488 to 490
+-- Lines 488-490
 function MenuNodePrePlanningGui:move_down()
 	MenuNodePrePlanningGui.super.move_down(self)
 end
 
--- Lines: 492 to 494
+-- Lines 492-494
 function MenuNodePrePlanningGui:move_left()
 	MenuNodePrePlanningGui.super.move_left(self)
 end
 
--- Lines: 496 to 498
+-- Lines 496-498
 function MenuNodePrePlanningGui:move_right()
 	MenuNodePrePlanningGui.super.move_right(self)
 end
 
--- Lines: 502 to 504
+-- Lines 502-504
 function MenuNodePrePlanningGui:close()
 	MenuNodePrePlanningGui.super.close(self)
 end
-

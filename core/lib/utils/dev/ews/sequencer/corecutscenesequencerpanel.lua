@@ -3,7 +3,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneFootage")
 
 CoreCutsceneSequencerPanel = CoreCutsceneSequencerPanel or mixin(class(), BasicEventHandling)
 
--- Lines: 6 to 11
+-- Lines 6-11
 function CoreCutsceneSequencerPanel:init(parent_frame)
 	self:_create_panel(parent_frame)
 
@@ -13,7 +13,7 @@ function CoreCutsceneSequencerPanel:init(parent_frame)
 	self._track_behaviour:set_delegate(self)
 end
 
--- Lines: 13 to 26
+-- Lines 13-26
 function CoreCutsceneSequencerPanel:update(time, delta_time)
 	local current_mouse_event = EWS:MouseEvent("EVT_MOTION")
 	self._previous_mouse_event = self._previous_mouse_event or current_mouse_event
@@ -29,12 +29,12 @@ function CoreCutsceneSequencerPanel:update(time, delta_time)
 	self._previous_mouse_event = current_mouse_event
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function CoreCutsceneSequencerPanel:panel()
 	return self._panel
 end
 
--- Lines: 32 to 39
+-- Lines 32-39
 function CoreCutsceneSequencerPanel:freeze()
 	self._ruler:freeze()
 	self:audio_track():freeze()
@@ -45,7 +45,7 @@ function CoreCutsceneSequencerPanel:freeze()
 	end
 end
 
--- Lines: 41 to 48
+-- Lines 41-48
 function CoreCutsceneSequencerPanel:thaw()
 	self._ruler:thaw()
 	self:audio_track():thaw()
@@ -56,27 +56,27 @@ function CoreCutsceneSequencerPanel:thaw()
 	end
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function CoreCutsceneSequencerPanel:ruler()
 	return self._ruler
 end
 
--- Lines: 54 to 55
+-- Lines 54-56
 function CoreCutsceneSequencerPanel:audio_track()
 	return self._audio_track
 end
 
--- Lines: 58 to 59
+-- Lines 58-60
 function CoreCutsceneSequencerPanel:key_track()
 	return self._key_track
 end
 
--- Lines: 62 to 63
+-- Lines 62-64
 function CoreCutsceneSequencerPanel:film_tracks()
 	return self._film_tracks
 end
 
--- Lines: 66 to 76
+-- Lines 66-77
 function CoreCutsceneSequencerPanel:tracks()
 	if self._tracks == nil then
 		self._tracks = {}
@@ -91,24 +91,24 @@ function CoreCutsceneSequencerPanel:tracks()
 	return self._tracks
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function CoreCutsceneSequencerPanel:track_at_screen_position(screen_position)
 	return table.find_value(self:tracks(), function (track)
 		return track:point_is_inside(screen_position)
 	end)
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function CoreCutsceneSequencerPanel:pixels_per_division()
 	return self._ruler:pixels_per_major_division()
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function CoreCutsceneSequencerPanel:units_per_division()
 	return self._ruler:units_per_major_division()
 end
 
--- Lines: 91 to 99
+-- Lines 91-99
 function CoreCutsceneSequencerPanel:set_units(pixels_per_division, units_per_division)
 	self._ruler:set_major_divisions(pixels_per_division, units_per_division)
 	self:audio_track():set_units_from_ruler(self._ruler)
@@ -119,12 +119,12 @@ function CoreCutsceneSequencerPanel:set_units(pixels_per_division, units_per_div
 	end
 end
 
--- Lines: 101 to 102
+-- Lines 101-103
 function CoreCutsceneSequencerPanel:active_film_track()
 	return self._active_film_track
 end
 
--- Lines: 105 to 111
+-- Lines 105-111
 function CoreCutsceneSequencerPanel:set_active_film_track(active_track)
 	self._active_film_track = active_track
 
@@ -132,41 +132,43 @@ function CoreCutsceneSequencerPanel:set_active_film_track(active_track)
 		track:set_background_colour(self:_track_background_colour(track == self._active_film_track):unpack())
 	end
 
-	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {position = function ()
-		return position
-	end})
+	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
+		position = function ()
+			return position
+		end
+	})
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function CoreCutsceneSequencerPanel:film_clips()
 	return table.inject(self:film_tracks(), {}, function (accumulated, track)
 		return table.list_union(accumulated, track:clips())
 	end)
 end
 
--- Lines: 117 to 118
+-- Lines 117-119
 function CoreCutsceneSequencerPanel:selected_items()
 	return table.list_union(self:selected_film_clips(), self:selected_audio_clips(), self:selected_keys())
 end
 
--- Lines: 121 to 122
+-- Lines 121-123
 function CoreCutsceneSequencerPanel:selected_film_clips()
 	return table.inject(self:film_tracks(), {}, function (accumulated, track)
 		return table.list_union(accumulated, track:selected_clips())
 	end)
 end
 
--- Lines: 125 to 126
+-- Lines 125-127
 function CoreCutsceneSequencerPanel:selected_audio_clips()
 	return self:audio_track():selected_clips()
 end
 
--- Lines: 129 to 130
+-- Lines 129-131
 function CoreCutsceneSequencerPanel:selected_keys()
 	return self:key_track():selected_clips()
 end
 
--- Lines: 133 to 137
+-- Lines 133-138
 function CoreCutsceneSequencerPanel:add_film_clip(track_index, offset, cutscene_id, from, to, camera)
 	local track = assert(self:film_tracks()[track_index], "Film track index out of bounds.")
 	local footage = assert(core_or_local("CutsceneFootage", managers.cutscene:get_cutscene(cutscene_id)), "Cutscene \"" .. cutscene_id .. "\" does not exist.")
@@ -175,11 +177,11 @@ function CoreCutsceneSequencerPanel:add_film_clip(track_index, offset, cutscene_
 	return track:add_clip(clip, offset - from)
 end
 
--- Lines: 141 to 142
+-- Lines 140-142
 function CoreCutsceneSequencerPanel:add_audio_clip(offset, sound)
 end
 
--- Lines: 144 to 149
+-- Lines 144-150
 function CoreCutsceneSequencerPanel:add_cutscene_key(cutscene_key)
 	local sequencer_key = EWS:SequencerKey()
 
@@ -190,7 +192,7 @@ function CoreCutsceneSequencerPanel:add_cutscene_key(cutscene_key)
 	return self:key_track():add_clip(sequencer_key)
 end
 
--- Lines: 152 to 172
+-- Lines 152-173
 function CoreCutsceneSequencerPanel:remove_items(clip_list)
 	self:freeze()
 
@@ -213,14 +215,16 @@ function CoreCutsceneSequencerPanel:remove_items(clip_list)
 	end
 
 	self:thaw()
-	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {position = function ()
-		return position
-	end})
+	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
+		position = function ()
+			return position
+		end
+	})
 
 	return removed_count
 end
 
--- Lines: 175 to 197
+-- Lines 175-197
 function CoreCutsceneSequencerPanel:remove_all_items()
 	self:freeze()
 
@@ -244,19 +248,21 @@ function CoreCutsceneSequencerPanel:remove_all_items()
 		track:remove_all_clips()
 	end
 
-	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {position = function ()
-		return position
-	end})
+	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
+		position = function ()
+			return position
+		end
+	})
 	self:thaw()
 end
 
--- Lines: 199 to 202
+-- Lines 199-202
 function CoreCutsceneSequencerPanel:set_item_selected(item, selected)
 	item:set_selected(selected)
 	self:_send_event("EVT_SELECTION_CHANGED")
 end
 
--- Lines: 204 to 211
+-- Lines 204-211
 function CoreCutsceneSequencerPanel:select_all_clips()
 	self:audio_track():select_all_clips()
 	self:key_track():select_all_clips()
@@ -268,7 +274,7 @@ function CoreCutsceneSequencerPanel:select_all_clips()
 	self:_send_event("EVT_SELECTION_CHANGED")
 end
 
--- Lines: 213 to 220
+-- Lines 213-220
 function CoreCutsceneSequencerPanel:deselect_all_items()
 	self:audio_track():deselect_all_clips()
 	self:key_track():deselect_all_clips()
@@ -280,12 +286,12 @@ function CoreCutsceneSequencerPanel:deselect_all_items()
 	self:_send_event("EVT_SELECTION_CHANGED")
 end
 
--- Lines: 222 to 223
+-- Lines 222-224
 function CoreCutsceneSequencerPanel:playhead_position()
 	return self._ruler:playhead_position()
 end
 
--- Lines: 226 to 236
+-- Lines 226-236
 function CoreCutsceneSequencerPanel:set_playhead_position(position)
 	local current_position = self:playhead_position()
 	position = math.max(position, 0)
@@ -301,19 +307,21 @@ function CoreCutsceneSequencerPanel:set_playhead_position(position)
 	end
 end
 
--- Lines: 238 to 240
+-- Lines 238-240
 function CoreCutsceneSequencerPanel:_evaluate_frame_at_playhead()
-	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {position = function ()
-		return self:playhead_position()
-	end})
+	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
+		position = function ()
+			return self:playhead_position()
+		end
+	})
 end
 
--- Lines: 242 to 244
+-- Lines 242-244
 function CoreCutsceneSequencerPanel:_signal_drag(dragged_clip, drag_mode)
 	self:_send_event("EVT_DRAG_ITEM", dragged_clip, drag_mode)
 end
 
--- Lines: 246 to 253
+-- Lines 246-253
 function CoreCutsceneSequencerPanel:zoom_around(time, offset_in_window, delta)
 	self._scrolled_area:freeze()
 
@@ -327,7 +335,7 @@ function CoreCutsceneSequencerPanel:zoom_around(time, offset_in_window, delta)
 	self._scrolled_area:thaw()
 end
 
--- Lines: 255 to 312
+-- Lines 255-312
 function CoreCutsceneSequencerPanel:_create_panel(parent_frame)
 	self._panel = EWS:Panel(parent_frame)
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -370,7 +378,7 @@ function CoreCutsceneSequencerPanel:_create_panel(parent_frame)
 
 	self._film_tracks = {}
 
-	for i = 1, 10, 1 do
+	for i = 1, 10 do
 		local track = EWS:SequencerTrack(self._scrolled_area)
 
 		track:set_icon_bitmap(CoreEWS.image_path("sequencer\\track_icon_film.bmp"), 7)
@@ -385,7 +393,7 @@ function CoreCutsceneSequencerPanel:_create_panel(parent_frame)
 	self:set_playhead_position(0)
 end
 
--- Lines: 314 to 321
+-- Lines 314-321
 function CoreCutsceneSequencerPanel:_create_ornaments_for_track(track)
 	local playhead_ornament = EWS:SequencerLineOrnament()
 
@@ -397,7 +405,7 @@ function CoreCutsceneSequencerPanel:_create_ornaments_for_track(track)
 	table.insert(self._box_selection_ornaments, track:add_ornament(box_selection_ornament))
 end
 
--- Lines: 323 to 328
+-- Lines 323-329
 function CoreCutsceneSequencerPanel:_track_background_colour(active)
 	local colour = EWS:get_system_colour("3DFACE")
 
@@ -408,7 +416,7 @@ function CoreCutsceneSequencerPanel:_track_background_colour(active)
 	return colour
 end
 
--- Lines: 331 to 337
+-- Lines 331-337
 function CoreCutsceneSequencerPanel:_show_film_track_context_menu(track, event)
 	local clip_below_cursor = track:clip_at_event(event)
 
@@ -419,7 +427,7 @@ function CoreCutsceneSequencerPanel:_show_film_track_context_menu(track, event)
 	end
 end
 
--- Lines: 339 to 359
+-- Lines 339-360
 function CoreCutsceneSequencerPanel:_camera_menu(clip)
 	local metadata = clip:metadata()
 
@@ -447,7 +455,7 @@ function CoreCutsceneSequencerPanel:_camera_menu(clip)
 	return menu
 end
 
--- Lines: 362 to 369
+-- Lines 362-369
 function CoreCutsceneSequencerPanel:_on_set_camera_for_film_clip(clip, event)
 	if clip and clip:metadata() then
 		clip:metadata():set_camera(event:get_id())
@@ -457,7 +465,7 @@ function CoreCutsceneSequencerPanel:_on_set_camera_for_film_clip(clip, event)
 	end
 end
 
--- Lines: 371 to 377
+-- Lines 371-377
 function CoreCutsceneSequencerPanel:_connect_mouse_events(component)
 	component:connect("EVT_LEFT_DOWN", callback(self, self, "_on_mouse_left_down"), component)
 	component:connect("EVT_RIGHT_UP", callback(self, self, "_on_mouse_right_up"), component)
@@ -466,7 +474,7 @@ function CoreCutsceneSequencerPanel:_connect_mouse_events(component)
 	self:connect("EVT_SYSTEM_WIDE_LEFT_UP", callback(self, self, "_on_mouse_left_up"), component)
 end
 
--- Lines: 379 to 392
+-- Lines 379-392
 function CoreCutsceneSequencerPanel:_propagate_event_to_all_components(behaviour_func_name, sender, event)
 	local behaviour = self._track_behaviour
 	local callback_func = behaviour[behaviour_func_name]
@@ -484,7 +492,7 @@ function CoreCutsceneSequencerPanel:_propagate_event_to_all_components(behaviour
 	end
 end
 
--- Lines: 394 to 401
+-- Lines 394-401
 function CoreCutsceneSequencerPanel:_on_mouse_left_down(sender, event)
 	self._previous_mouse_event = EWS:MouseEvent("EVT_LEFT_DOWN")
 
@@ -495,17 +503,17 @@ function CoreCutsceneSequencerPanel:_on_mouse_left_down(sender, event)
 	self:_propagate_event_to_all_components("on_mouse_left_down", sender, event)
 end
 
--- Lines: 403 to 405
+-- Lines 403-405
 function CoreCutsceneSequencerPanel:_on_mouse_left_up(sender, event)
 	self:_propagate_event_to_all_components("on_mouse_left_up", self:track_at_screen_position(event:get_position_on_screen()) or sender, event)
 end
 
--- Lines: 407 to 409
+-- Lines 407-409
 function CoreCutsceneSequencerPanel:_on_mouse_motion(sender, event)
 	self:_propagate_event_to_all_components("on_mouse_motion", self:track_at_screen_position(event:get_position_on_screen()) or sender, event)
 end
 
--- Lines: 411 to 421
+-- Lines 411-421
 function CoreCutsceneSequencerPanel:_on_mouse_right_up(sender, event)
 	if sender == self._ruler then
 		return
@@ -518,12 +526,12 @@ function CoreCutsceneSequencerPanel:_on_mouse_right_up(sender, event)
 	end
 end
 
--- Lines: 423 to 425
+-- Lines 423-425
 function CoreCutsceneSequencerPanel:_on_mousewheel(track, event)
 	self:_send_event("EVT_TRACK_MOUSEWHEEL", event, track)
 end
 
--- Lines: 427 to 434
+-- Lines 427-434
 function CoreCutsceneSequencerPanel:_on_start_box_selection(event)
 	for _, selection_box in ipairs(self._box_selection_ornaments) do
 		local cursor_position = event:get_position_on_screen()
@@ -534,7 +542,7 @@ function CoreCutsceneSequencerPanel:_on_start_box_selection(event)
 	end
 end
 
--- Lines: 436 to 452
+-- Lines 436-452
 function CoreCutsceneSequencerPanel:_on_drag_box_selection(event)
 	local all_clips_within_box = {}
 
@@ -555,7 +563,7 @@ function CoreCutsceneSequencerPanel:_on_drag_box_selection(event)
 	self._all_clips_within_box_at_last_update = all_clips_within_box
 end
 
--- Lines: 454 to 460
+-- Lines 454-460
 function CoreCutsceneSequencerPanel:_on_commit_box_selection(event)
 	for _, selection_box in ipairs(self._box_selection_ornaments) do
 		selection_box:set_visible(false)
@@ -566,7 +574,7 @@ function CoreCutsceneSequencerPanel:_on_commit_box_selection(event)
 	self:_send_event("EVT_SELECTION_CHANGED")
 end
 
--- Lines: 463 to 467
+-- Lines 462-467
 function CoreCutsceneSequencerPanel:_on_scrolled_area_paint(data, event)
 	local x_offset = self._scrolled_area:calc_scrolled_position(Vector3(0, 0, 0)).x
 
@@ -574,8 +582,7 @@ function CoreCutsceneSequencerPanel:_on_scrolled_area_paint(data, event)
 	event:skip()
 end
 
--- Lines: 470 to 472
+-- Lines 470-472
 function CoreCutsceneSequencerPanel:change_track_behaviour(new_behaviour)
 	self._track_behaviour = new_behaviour
 end
-

@@ -1,11 +1,11 @@
 MenuNodeTableGui = MenuNodeTableGui or class(MenuNodeGui)
 
--- Lines: 4 to 6
+-- Lines 4-6
 function MenuNodeTableGui:init(node, layer, parameters)
 	MenuNodeTableGui.super.init(self, node, layer, parameters)
 end
 
--- Lines: 8 to 34
+-- Lines 8-34
 function MenuNodeTableGui:_setup_panels(node)
 	MenuNodeTableGui.super._setup_panels(self, node)
 
@@ -43,12 +43,12 @@ function MenuNodeTableGui:_setup_panels(node)
 	self._mini_info_text = mini_text
 end
 
--- Lines: 36 to 38
+-- Lines 36-38
 function MenuNodeTableGui:set_mini_info(text)
 	self._mini_info_text:set_text(text)
 end
 
--- Lines: 40 to 149
+-- Lines 40-149
 function MenuNodeTableGui:_create_menu_item(row_item)
 	if row_item.type == "column" then
 		local columns = row_item.node:columns()
@@ -278,7 +278,7 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 	end
 end
 
--- Lines: 151 to 231
+-- Lines 151-231
 function MenuNodeTableGui:_align_server_column(row_item)
 	local safe_rect = self:_scaled_size()
 
@@ -344,25 +344,24 @@ function MenuNodeTableGui:_align_server_column(row_item)
 	row_item.heist_briefing:set_position(math.round(row_item.heist_briefing:x()), math.round(row_item.heist_briefing:y()))
 end
 
--- Lines: 233 to 235
+-- Lines 233-235
 function MenuNodeTableGui:_setup_item_panel_parent(safe_rect)
 	MenuNodeTableGui.super._setup_item_panel_parent(self, safe_rect)
 end
 
--- Lines: 237 to 241
+-- Lines 237-241
 function MenuNodeTableGui:_set_width_and_height(safe_rect)
 	MenuNodeTableGui.super._set_width_and_height(self, safe_rect)
 end
 
--- Lines: 243 to 248
+-- Lines 243-248
 function MenuNodeTableGui:_setup_item_panel(safe_rect, res)
 	MenuNodeTableGui.super._setup_item_panel(self, safe_rect, res)
 end
 
--- Lines: 250 to 254
+-- Lines 250-254
 function MenuNodeTableGui:resolution_changed()
 	MenuNodeTableGui.super.resolution_changed(self)
 
 	local safe_rect_pixels = self:_scaled_size()
 end
-

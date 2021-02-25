@@ -1,62 +1,62 @@
 NetworkAccount = NetworkAccount or class()
 
--- Lines: 3 to 6
+-- Lines 3-6
 function NetworkAccount:init()
 	self._postprocess_username = callback(self, self, "_standard_username")
 
 	self:set_lightfx()
 end
 
--- Lines: 8 to 9
+-- Lines 8-9
 function NetworkAccount:update()
 end
 
--- Lines: 11 to 12
+-- Lines 11-12
 function NetworkAccount:create_account(name, password, email)
 end
 
--- Lines: 14 to 15
+-- Lines 14-15
 function NetworkAccount:reset_password(name, email)
 end
 
--- Lines: 17 to 18
+-- Lines 17-18
 function NetworkAccount:login(name, password, cdkey)
 end
 
--- Lines: 20 to 21
+-- Lines 20-21
 function NetworkAccount:logout()
 end
 
--- Lines: 23 to 24
+-- Lines 23-24
 function NetworkAccount:register_callback(event, callback)
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function NetworkAccount:register_post_username(cb)
 	self._postprocess_username = cb
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function NetworkAccount:username()
 	return self._postprocess_username(self:username_id())
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function NetworkAccount:username_id()
 	return 0
 end
 
--- Lines: 38 to 39
+-- Lines 38-40
 function NetworkAccount:username_by_id()
 	return ""
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function NetworkAccount:signin_state()
 	return "not signed in"
 end
 
--- Lines: 46 to 60
+-- Lines 46-60
 function NetworkAccount:set_lightfx()
 	if SystemInfo:platform() ~= Idstring("WIN32") then
 		return
@@ -75,12 +75,12 @@ function NetworkAccount:set_lightfx()
 	end
 end
 
--- Lines: 62 to 63
+-- Lines 62-64
 function NetworkAccount:has_alienware()
 	return self._has_alienware
 end
 
--- Lines: 66 to 70
+-- Lines 66-71
 function NetworkAccount:clan_tag()
 	if managers.save.get_profile_setting and managers.save:get_profile_setting("clan_tag") and string.len(managers.save:get_profile_setting("clan_tag")) > 0 then
 		return "[" .. managers.save:get_profile_setting("clan_tag") .. "]"
@@ -89,67 +89,66 @@ function NetworkAccount:clan_tag()
 	return ""
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function NetworkAccount:_standard_username(name)
 	return name
 end
 
--- Lines: 77 to 78
+-- Lines 77-78
 function NetworkAccount:set_playing(state)
 end
 
--- Lines: 80 to 81
+-- Lines 80-81
 function NetworkAccount:_load_globals()
 end
 
--- Lines: 83 to 84
+-- Lines 83-84
 function NetworkAccount:_save_globals()
 end
 
--- Lines: 86 to 87
+-- Lines 86-87
 function NetworkAccount:inventory_load()
 end
 
--- Lines: 89 to 90
+-- Lines 89-90
 function NetworkAccount:inventory_is_loading()
 end
 
--- Lines: 92 to 93
+-- Lines 92-94
 function NetworkAccount:inventory_reward(item)
 	return false
 end
 
--- Lines: 96 to 97
+-- Lines 96-97
 function NetworkAccount:inventory_reward_dlc()
 end
 
--- Lines: 99 to 100
+-- Lines 99-100
 function NetworkAccount:inventory_reward_unlock(box, key)
 end
 
--- Lines: 102 to 103
+-- Lines 102-103
 function NetworkAccount:inventory_reward_open(item)
 end
 
--- Lines: 105 to 106
+-- Lines 105-106
 function NetworkAccount:inventory_outfit_refresh()
 end
 
--- Lines: 108 to 109
+-- Lines 108-109
 function NetworkAccount:inventory_outfit_verify(id, outfit_data, outfit_callback)
 end
 
--- Lines: 111 to 112
+-- Lines 111-113
 function NetworkAccount:inventory_outfit_signature()
 	return ""
 end
 
--- Lines: 115 to 116
+-- Lines 115-116
 function NetworkAccount:inventory_repair_list(list)
 end
 
--- Lines: 118 to 119
+-- Lines 118-120
 function NetworkAccount:is_ready_to_close()
 	return true
 end
-

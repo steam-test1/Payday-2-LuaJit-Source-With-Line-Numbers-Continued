@@ -1,13 +1,15 @@
 CopLogicTrade = class(CopLogicBase)
 CopLogicTrade.butchers_traded = 0
 
--- Lines: 10 to 38
+-- Lines 10-38
 function CopLogicTrade.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
-	local my_data = {unit = data.unit}
+	local my_data = {
+		unit = data.unit
+	}
 	data.internal_data = my_data
 
 	data.unit:movement():set_allow_fire(false)
@@ -19,10 +21,12 @@ function CopLogicTrade.enter(data, new_logic_name, enter_params)
 	data.unit:network():send("hostage_trade", true, false, skip_hint)
 	CopLogicTrade.hostage_trade(data.unit, true, false, skip_hint)
 	data.unit:brain():set_update_enabled_state(true)
-	data.unit:brain():set_attention_settings({peaceful = true})
+	data.unit:brain():set_attention_settings({
+		peaceful = true
+	})
 end
 
--- Lines: 42 to 90
+-- Lines 42-90
 function CopLogicTrade.hostage_trade(unit, enable, trade_success, skip_hint)
 	local wp_id = "wp_hostage_trade" .. tostring(unit:key())
 
@@ -105,7 +109,7 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success, skip_hint)
 	end
 end
 
--- Lines: 94 to 109
+-- Lines 94-109
 function CopLogicTrade.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -122,7 +126,7 @@ function CopLogicTrade.exit(data, new_logic_name, enter_params)
 	data.unit:network():send("set_unit_invulnerable", false)
 end
 
--- Lines: 113 to 195
+-- Lines 113-195
 function CopLogicTrade.on_trade(data, pos, rotation, free_criminal)
 	if not data.internal_data._trade_enabled then
 		return
@@ -176,7 +180,7 @@ function CopLogicTrade.on_trade(data, pos, rotation, free_criminal)
 
 		iterations = iterations + 1
 
-		if iterations < max_attempts then
+		if max_attempts > iterations then
 			flee_pos = managers.groupai:state():flee_point(data.unit:movement():nav_tracker():nav_segment(), ignore_segments)
 
 			if not flee_pos then
@@ -218,7 +222,7 @@ function CopLogicTrade.on_trade(data, pos, rotation, free_criminal)
 	end
 end
 
--- Lines: 200 to 219
+-- Lines 199-219
 function CopLogicTrade.update(data)
 	local my_data = data.internal_data
 
@@ -240,7 +244,7 @@ function CopLogicTrade.update(data)
 	end
 end
 
--- Lines: 223 to 238
+-- Lines 223-238
 function CopLogicTrade._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -260,7 +264,7 @@ function CopLogicTrade._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines: 241 to 250
+-- Lines 241-250
 function CopLogicTrade._chk_request_action_walk_to_flee_pos(data, my_data, end_rot)
 	local new_action_data = {
 		type = "walk",
@@ -272,7 +276,7 @@ function CopLogicTrade._chk_request_action_walk_to_flee_pos(data, my_data, end_r
 	my_data.walking_to_flee_pos = data.unit:brain():action_request(new_action_data)
 end
 
--- Lines: 252 to 262
+-- Lines 252-262
 function CopLogicTrade.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -285,28 +289,29 @@ function CopLogicTrade.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 266 to 267
+-- Lines 266-268
 function CopLogicTrade.can_activate()
 	return false
 end
 
--- Lines: 272 to 273
+-- Lines 272-274
 function CopLogicTrade.is_available_for_assignment(data)
 	return false
 end
 
--- Lines: 278 to 281
+-- Lines 278-282
 function CopLogicTrade._get_all_paths(data)
-	return {flee_path = data.internal_data.flee_path}
+	return {
+		flee_path = data.internal_data.flee_path
+	}
 end
 
--- Lines: 286 to 288
+-- Lines 286-288
 function CopLogicTrade._set_verified_paths(data, verified_paths)
 	data.internal_data.flee_path = verified_paths.flee_path
 end
 
--- Lines: 292 to 294
+-- Lines 292-294
 function CopLogicTrade.pre_destroy(data)
 	managers.trade:change_hostage()
 end
-

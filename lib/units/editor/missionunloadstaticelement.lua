@@ -2,7 +2,7 @@ MissionUnloadStaticElement = MissionUnloadStaticElement or class(MissionElement)
 MissionUnloadStaticElement.SAVE_UNIT_POSITION = false
 MissionUnloadStaticElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 13
+-- Lines 5-13
 function MissionUnloadStaticElement:init(unit)
 	MissionUnloadStaticElement.super.init(self, unit)
 
@@ -12,7 +12,7 @@ function MissionUnloadStaticElement:init(unit)
 	table.insert(self._save_values, "unit_ids")
 end
 
--- Lines: 16 to 23
+-- Lines 16-23
 function MissionUnloadStaticElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -23,14 +23,14 @@ function MissionUnloadStaticElement:layer_finished()
 	end
 end
 
--- Lines: 25 to 29
+-- Lines 25-29
 function MissionUnloadStaticElement:save_unit_data(unit)
 	if unit then
 		self._units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 31 to 54
+-- Lines 31-54
 function MissionUnloadStaticElement:update_selected()
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -60,7 +60,7 @@ function MissionUnloadStaticElement:update_selected()
 	end
 end
 
--- Lines: 56 to 69
+-- Lines 56-69
 function MissionUnloadStaticElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -79,7 +79,7 @@ function MissionUnloadStaticElement:update_unselected(t, dt, selected_unit, all_
 	end
 end
 
--- Lines: 71 to 84
+-- Lines 71-84
 function MissionUnloadStaticElement:draw_links_unselected(...)
 	MissionUnloadStaticElement.super.draw_links_unselected(self, ...)
 
@@ -97,7 +97,7 @@ function MissionUnloadStaticElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 86 to 91
+-- Lines 86-91
 function MissionUnloadStaticElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -110,7 +110,7 @@ function MissionUnloadStaticElement:update_editing()
 	end
 end
 
--- Lines: 93 to 105
+-- Lines 93-105
 function MissionUnloadStaticElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -129,28 +129,27 @@ function MissionUnloadStaticElement:select_unit()
 	end
 end
 
--- Lines: 107 to 110
+-- Lines 107-110
 function MissionUnloadStaticElement:_remove_unit(unit)
 	self._units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 112 to 115
+-- Lines 112-115
 function MissionUnloadStaticElement:_add_unit(unit)
 	self:save_unit_data(unit)
 	table.insert(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function MissionUnloadStaticElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 127 to 136
+-- Lines 121-136
 function MissionUnloadStaticElement:add_unit_list_btn()
-
-	-- Lines: 122 to 127
+	-- Lines 122-128
 	local function filter_p(unit)
 		if self._units[unit:unit_data().unit_id] then
 			return false
@@ -168,10 +167,9 @@ function MissionUnloadStaticElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 140 to 149
+-- Lines 138-149
 function MissionUnloadStaticElement:remove_unit_list_btn()
-
-	-- Lines: 139 to 140
+	-- Lines 139-141
 	local function filter_p(unit)
 		return self._units[unit:unit_data().unit_id]
 	end
@@ -185,7 +183,7 @@ function MissionUnloadStaticElement:remove_unit_list_btn()
 	end
 end
 
--- Lines: 151 to 168
+-- Lines 151-168
 function MissionUnloadStaticElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -200,4 +198,3 @@ function MissionUnloadStaticElement:_build_panel(panel, panel_sizer)
 	self._btn_toolbar:realize()
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
-

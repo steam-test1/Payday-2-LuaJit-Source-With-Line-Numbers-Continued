@@ -1,6 +1,6 @@
 ModifyPlayerElement = ModifyPlayerElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function ModifyPlayerElement:init(unit)
 	ModifyPlayerElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function ModifyPlayerElement:init(unit)
 	table.insert(self._save_values, "invulnerable")
 end
 
--- Lines: 13 to 23
+-- Lines 13-23
 function ModifyPlayerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -22,4 +22,3 @@ function ModifyPlayerElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "invulnerable", "Player cannot be hurt", "Invulnerable")
 	self:_add_help_text("Modifies player properties. The changes are only applied to a player as instigator and cannot be used as a global state")
 end
-

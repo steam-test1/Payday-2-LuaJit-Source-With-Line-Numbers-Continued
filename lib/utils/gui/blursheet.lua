@@ -1,6 +1,6 @@
 BlurSheet = BlurSheet or class(GUIObjectWrapper)
 
--- Lines: 3 to 41
+-- Lines 3-41
 function BlurSheet:init(parent, config)
 	config = config or {}
 	config.texture = config.texture or "guis/textures/test_blur_df"
@@ -30,4 +30,3 @@ function BlurSheet:init(parent, config)
 	})
 	BlurSheet.super.init(self, gui_obj)
 end
-

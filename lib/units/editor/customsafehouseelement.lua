@@ -1,6 +1,6 @@
 CustomSafehouseFilterUnitElement = CustomSafehouseFilterUnitElement or class(MissionElement)
 
--- Lines: 5 to 18
+-- Lines 4-18
 function CustomSafehouseFilterUnitElement:init(unit)
 	CustomSafehouseFilterUnitElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function CustomSafehouseFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines: 21 to 46
+-- Lines 20-46
 function CustomSafehouseFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -39,7 +39,7 @@ function CustomSafehouseFilterUnitElement:_build_panel(panel, panel_sizer)
 
 	local tiers = {}
 
-	for i = 1, #tweak_data.safehouse.prices.rooms, 1 do
+	for i = 1, #tweak_data.safehouse.prices.rooms do
 		table.insert(tiers, tostring(i))
 	end
 
@@ -59,7 +59,7 @@ function CustomSafehouseFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Will only execute if the current/highest unlocked tier of the characters room is <operator> the specified tier.")
 end
 
--- Lines: 49 to 67
+-- Lines 48-67
 function CustomSafehouseFilterUnitElement:set_element_data(data)
 	CustomSafehouseFilterUnitElement.super.set_element_data(self, data)
 
@@ -71,16 +71,17 @@ function CustomSafehouseFilterUnitElement:set_element_data(data)
 		local num_tiers = managers.custom_safehouse:get_room_max_tier(self._character_box:get_value())
 		local tiers = {}
 
-		for i = 1, num_tiers, 1 do
+		for i = 1, num_tiers do
 			self._tier_box:append(tostring(i))
 		end
 
 		self._tier_box:set_selection(math.clamp(current_selection, 0, num_tiers))
 	end
 end
+
 CustomSafehouseTrophyFilterUnitElement = CustomSafehouseTrophyFilterUnitElement or class(MissionElement)
 
--- Lines: 74 to 83
+-- Lines 73-83
 function CustomSafehouseTrophyFilterUnitElement:init(unit)
 	CustomSafehouseTrophyFilterUnitElement.super.init(self, unit)
 
@@ -91,7 +92,7 @@ function CustomSafehouseTrophyFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines: 86 to 101
+-- Lines 85-101
 function CustomSafehouseTrophyFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -112,9 +113,10 @@ function CustomSafehouseTrophyFilterUnitElement:_build_panel(panel, panel_sizer)
 		"locked"
 	}, "Check if the trophy is unlocked or locked")
 end
+
 CustomSafehouseAwardTrophyUnitElement = CustomSafehouseAwardTrophyUnitElement or class(MissionElement)
 
--- Lines: 108 to 121
+-- Lines 107-121
 function CustomSafehouseAwardTrophyUnitElement:init(unit)
 	CustomSafehouseAwardTrophyUnitElement.super.init(self, unit)
 
@@ -129,7 +131,7 @@ function CustomSafehouseAwardTrophyUnitElement:init(unit)
 	table.insert(self._save_values, "players_from_start")
 end
 
--- Lines: 124 to 162
+-- Lines 123-162
 function CustomSafehouseAwardTrophyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -148,7 +150,9 @@ function CustomSafehouseAwardTrophyUnitElement:_build_panel(panel, panel_sizer)
 		end
 	end
 
-	local objectives = {"select a trophy"}
+	local objectives = {
+		"select a trophy"
+	}
 
 	if self._hed.trophy then
 		local id = self._hed.trophy
@@ -178,7 +182,7 @@ function CustomSafehouseAwardTrophyUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Awards a Safehouse Trophy.")
 end
 
--- Lines: 165 to 181
+-- Lines 164-181
 function CustomSafehouseAwardTrophyUnitElement:set_element_data(data)
 	CustomSafehouseAwardTrophyUnitElement.super.set_element_data(self, data)
 
@@ -195,4 +199,3 @@ function CustomSafehouseAwardTrophyUnitElement:set_element_data(data)
 		self._objective_box:set_selection(0)
 	end
 end
-

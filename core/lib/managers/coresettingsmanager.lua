@@ -3,7 +3,7 @@ core:import("CoreClass")
 
 SettingsManager = SettingsManager or CoreClass.class()
 
--- Lines: 38 to 51
+-- Lines 38-51
 function SettingsManager:init(settings_file_path)
 	assert(type(settings_file_path) == "string")
 
@@ -20,12 +20,12 @@ function SettingsManager:init(settings_file_path)
 	self.__settings = script and loadstring(script)() or {}
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function SettingsManager:destroy()
 	self:save()
 end
 
--- Lines: 57 to 63
+-- Lines 57-63
 function SettingsManager:save()
 	local file = SystemFS:open(self.__path, "w")
 
@@ -35,14 +35,14 @@ function SettingsManager:save()
 	managers.database:recompile(file)
 end
 
--- Lines: 65 to 67
+-- Lines 65-68
 function SettingsManager:get(category)
 	self.__settings[category] = self.__settings[category] or {}
 
 	return self.__settings[category]
 end
 
--- Lines: 75 to 94
+-- Lines 75-94
 function SettingsManager:_serialize(value, file, indentation)
 	indentation = indentation or 1
 	local t = type(value)
@@ -67,7 +67,7 @@ function SettingsManager:_serialize(value, file, indentation)
 	end
 end
 
--- Lines: 96 to 105
+-- Lines 96-105
 function SettingsManager:_inspect(value)
 	local t = type(value)
 
@@ -79,4 +79,3 @@ function SettingsManager:_inspect(value)
 		error("Unable to inspect type \"" .. t .. "\".")
 	end
 end
-

@@ -1,6 +1,6 @@
 EquipmentUnitElement = EquipmentUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function EquipmentUnitElement:init(unit)
 	EquipmentUnitElement.super.init(self, unit)
 
@@ -11,17 +11,18 @@ function EquipmentUnitElement:init(unit)
 	table.insert(self._save_values, "amount")
 end
 
--- Lines: 13 to 21
+-- Lines 13-21
 function EquipmentUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "equipment", table.list_add({"none"}, table.map_keys(tweak_data.equipments.specials)))
+	self:_build_value_combobox(panel, panel_sizer, "equipment", table.list_add({
+		"none"
+	}, table.map_keys(tweak_data.equipments.specials)))
 	self:_build_value_number(panel, panel_sizer, "amount", {
 		floats = 0,
 		min = 1
 	}, "Specifies how many of this equipment to recieve (only work on those who has a max_amount set in their tweak data).")
 end
-

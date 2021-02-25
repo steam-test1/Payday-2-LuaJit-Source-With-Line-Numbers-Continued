@@ -2,20 +2,22 @@ core:import("CoreMissionScriptElement")
 
 ElementNavObstacle = ElementNavObstacle or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function ElementNavObstacle:init(...)
 	ElementDisableUnit.super.init(self, ...)
 
 	self._obstacle_units = {}
 end
 
--- Lines: 13 to 33
+-- Lines 11-33
 function ElementNavObstacle:on_script_activated()
 	if not self._values.obstacle_list then
-		self._values.obstacle_list = {{
-			unit_id = self._values.obstacle_unit_id,
-			obj_name = self._values.obstacle_obj_name
-		}}
+		self._values.obstacle_list = {
+			{
+				unit_id = self._values.obstacle_unit_id,
+				obj_name = self._values.obstacle_obj_name
+			}
+		}
 	end
 
 	for _, data in ipairs(self._values.obstacle_list) do
@@ -41,7 +43,7 @@ function ElementNavObstacle:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 36 to 38
+-- Lines 35-38
 function ElementNavObstacle:_load_unit(obj_name, unit)
 	table.insert(self._obstacle_units, {
 		unit = unit,
@@ -49,12 +51,12 @@ function ElementNavObstacle:_load_unit(obj_name, unit)
 	})
 end
 
--- Lines: 40 to 42
+-- Lines 40-42
 function ElementNavObstacle:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 44 to 65
+-- Lines 44-65
 function ElementNavObstacle:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -75,15 +77,14 @@ function ElementNavObstacle:on_executed(instigator)
 	ElementNavObstacle.super.on_executed(self, instigator)
 end
 
--- Lines: 67 to 69
+-- Lines 67-69
 function ElementNavObstacle:save(data)
 	data.save_me = true
 end
 
--- Lines: 72 to 76
+-- Lines 71-76
 function ElementNavObstacle:load(data)
 	if not self._has_fetched_units then
 		self:on_script_activated()
 	end
 end
-

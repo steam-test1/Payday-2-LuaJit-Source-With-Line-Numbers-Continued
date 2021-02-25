@@ -1,12 +1,11 @@
-
--- Lines: 2 to 30
+-- Lines 2-30
 local function init_cac_2()
 	local state_changed_key = {}
 	local enemy_killed_key = {}
 	local kill_count = 0
 	local target_count = 20
 
-	-- Lines: 8 to 13
+	-- Lines 8-13
 	local function on_enemy_killed(...)
 		kill_count = kill_count + 1
 
@@ -15,7 +14,7 @@ local function init_cac_2()
 		end
 	end
 
-	-- Lines: 15 to 23
+	-- Lines 15-23
 	local function on_player_state_changed(state_name)
 		kill_count = 0
 
@@ -30,18 +29,19 @@ local function init_cac_2()
 
 	local progress_tweak = tweak_data.achievement.visual.cac_2.progress
 
-	-- Lines: 27 to 28
+	-- Lines 28-28
 	function progress_tweak.get()
 		return kill_count
 	end
+
 	progress_tweak.max = target_count
 end
 
--- Lines: 34 to 45
+-- Lines 34-45
 local function init_cac_3()
 	local listener_key = {}
 
-	-- Lines: 37 to 42
+	-- Lines 37-42
 	local function on_flash_grenade_destroyed(attacker_unit)
 		local local_player = managers.player:player_unit()
 
@@ -53,11 +53,11 @@ local function init_cac_3()
 	managers.player:register_message("flash_grenade_destroyed", listener_key, on_flash_grenade_destroyed)
 end
 
--- Lines: 49 to 57
+-- Lines 49-57
 local function init_cac_7()
 	local listener_key = {}
 
-	-- Lines: 52 to 54
+	-- Lines 52-54
 	local function on_casino_fee_paid(amount)
 		managers.achievment:award_progress("cac_7_stats", amount)
 	end
@@ -65,11 +65,11 @@ local function init_cac_7()
 	managers.money:add_event_listener(listener_key, "casino_fee_paid", on_casino_fee_paid)
 end
 
--- Lines: 61 to 89
+-- Lines 61-89
 local function init_cac_11_34()
 	local listener_key = {}
 
-	-- Lines: 64 to 86
+	-- Lines 64-86
 	local function on_cop_converted(converted_unit, converting_unit)
 		if not alive(converting_unit) then
 			return
@@ -96,13 +96,13 @@ local function init_cac_11_34()
 	managers.player:register_message("cop_converted", listener_key, on_cop_converted)
 end
 
--- Lines: 93 to 110
+-- Lines 93-110
 local function init_cac_15()
 	local trip_mine_count = 0
 	local target_count = 40
 	local listener_key = {}
 
-	-- Lines: 98 to 107
+	-- Lines 98-107
 	local function on_trip_mine_placed()
 		if not Global.statistics_manager.playing_from_start then
 			return
@@ -118,7 +118,7 @@ local function init_cac_15()
 	managers.player:register_message("trip_mine_placed", listener_key, on_trip_mine_placed)
 end
 
--- Lines: 114 to 138
+-- Lines 114-138
 local function init_cac_20()
 	local masks = {
 		"sds_01",
@@ -130,7 +130,7 @@ local function init_cac_20()
 		"sds_07"
 	}
 
-	-- Lines: 117 to 127
+	-- Lines 117-127
 	local function attempt_award()
 		for _, mask_id in ipairs(masks) do
 			local has_in_inventory = managers.blackmarket:has_item("halloween", "masks", mask_id)
@@ -146,7 +146,7 @@ local function init_cac_20()
 
 	local listener_key = {}
 
-	-- Lines: 130 to 134
+	-- Lines 130-134
 	local function on_item_added_to_inventory(id)
 		if table.contains(masks, id) then
 			attempt_award()
@@ -157,12 +157,12 @@ local function init_cac_20()
 	managers.savefile:add_load_sequence_done_callback_handler(attempt_award)
 end
 
--- Lines: 142 to 178
+-- Lines 142-178
 local function init_cac_28()
 	local lobby_listener_key = {}
 	local sync_listener_key = {}
 
-	-- Lines: 146 to 151
+	-- Lines 146-151
 	local function attempt_infection(peer)
 		local is_infected = managers.achievment.achievments.cac_28.awarded
 
@@ -171,7 +171,7 @@ local function init_cac_28()
 		end
 	end
 
-	-- Lines: 153 to 158
+	-- Lines 153-158
 	local function on_peer_entered_lobby(peer)
 		local local_peer = managers.network:session():local_peer()
 
@@ -180,7 +180,7 @@ local function init_cac_28()
 		end
 	end
 
-	-- Lines: 160 to 166
+	-- Lines 160-166
 	local function on_peer_added(peer)
 		local local_peer = managers.network:session():local_peer()
 		local in_lobby = game_state_machine:verify_game_state(GameStateFilters.lobby) and local_peer:in_lobby()
@@ -190,7 +190,7 @@ local function init_cac_28()
 		end
 	end
 
-	-- Lines: 168 to 173
+	-- Lines 168-173
 	local function on_peer_sync_complete(peer)
 		local local_peer = managers.network:session():local_peer()
 
@@ -204,7 +204,7 @@ local function init_cac_28()
 	managers.network:add_event_listener(sync_listener_key, "session_peer_sync_complete", on_peer_sync_complete)
 end
 
--- Lines: 182 to 190
+-- Lines 182-190
 function AchievmentManager:init_cac_custom_achievements()
 	init_cac_2()
 	init_cac_3()
@@ -214,4 +214,3 @@ function AchievmentManager:init_cac_custom_achievements()
 	init_cac_20()
 	init_cac_28()
 end
-

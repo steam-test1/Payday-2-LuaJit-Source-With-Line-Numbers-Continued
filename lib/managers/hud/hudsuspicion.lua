@@ -1,6 +1,6 @@
 HUDSuspicion = HUDSuspicion or class()
 
--- Lines: 3 to 56
+-- Lines 3-56
 function HUDSuspicion:init(hud, sound_source)
 	self._hud_panel = hud.panel
 	self._sound_source = sound_source
@@ -16,7 +16,9 @@ function HUDSuspicion:init(hud, sound_source)
 		visible = false,
 		valign = "center"
 	})
-	self._misc_panel = self._suspicion_panel:panel({name = "misc_panel"})
+	self._misc_panel = self._suspicion_panel:panel({
+		name = "misc_panel"
+	})
 
 	self._suspicion_panel:set_size(200, 200)
 	self._suspicion_panel:set_center(self._suspicion_panel:parent():w() / 2, self._suspicion_panel:parent():h() / 2)
@@ -123,7 +125,7 @@ function HUDSuspicion:init(hud, sound_source)
 	self._hud_timeout = 0
 end
 
--- Lines: 58 to 227
+-- Lines 58-227
 function HUDSuspicion:animate_eye()
 	if self._eye_animation then
 		return
@@ -133,7 +135,7 @@ function HUDSuspicion:animate_eye()
 	self._discovered = nil
 	self._back_to_stealth = nil
 
-	-- Lines: 67 to 223
+	-- Lines 67-223
 	local function animate_func(o, self)
 		local wanted_value = 0
 		local value = wanted_value
@@ -142,7 +144,7 @@ function HUDSuspicion:animate_eye()
 		local suspicion_detected = o:child("suspicion_detected")
 		local misc_panel = o:child("misc_panel")
 
-		-- Lines: 78 to 94
+		-- Lines 78-94
 		local function animate_hide_misc(o)
 			local hud_stealthmeter_bg = o:child("hud_stealthmeter_bg")
 			local hud_stealth_eye = o:child("hud_stealth_eye")
@@ -155,7 +157,7 @@ function HUDSuspicion:animate_eye()
 			end)
 		end
 
-		-- Lines: 96 to 111
+		-- Lines 96-111
 		local function animate_show_misc(o)
 			local hud_stealthmeter_bg = o:child("hud_stealthmeter_bg")
 			local hud_stealth_eye = o:child("hud_stealth_eye")
@@ -197,7 +199,7 @@ function HUDSuspicion:animate_eye()
 
 					self._sound_source:post_event("hud_suspicion_discovered")
 
-					-- Lines: 141 to 157
+					-- Lines 141-157
 					local function animate_detect_text(o)
 						local c = 0
 						local s = 0
@@ -283,13 +285,13 @@ function HUDSuspicion:animate_eye()
 	self._eye_animation = self._suspicion_panel:animate(animate_func, self)
 end
 
--- Lines: 229 to 232
+-- Lines 229-232
 function HUDSuspicion:show()
 	self:animate_eye()
 	self._suspicion_panel:set_visible(true)
 end
 
--- Lines: 255 to 279
+-- Lines 255-279
 function HUDSuspicion:hide()
 	if self._eye_animation then
 		self._eye_animation:stop()
@@ -317,7 +319,7 @@ function HUDSuspicion:hide()
 	end
 end
 
--- Lines: 281 to 290
+-- Lines 281-290
 function HUDSuspicion:feed_value(value)
 	self:show()
 
@@ -325,7 +327,7 @@ function HUDSuspicion:feed_value(value)
 	self._hud_timeout = 5
 end
 
--- Lines: 292 to 299
+-- Lines 292-299
 function HUDSuspicion:back_to_stealth()
 	self._back_to_stealth = true
 
@@ -334,7 +336,7 @@ function HUDSuspicion:back_to_stealth()
 	end
 end
 
--- Lines: 301 to 304
+-- Lines 301-304
 function HUDSuspicion:discovered()
 	self._discovered = true
 end
@@ -342,4 +344,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDSuspicionVR")
 end
-

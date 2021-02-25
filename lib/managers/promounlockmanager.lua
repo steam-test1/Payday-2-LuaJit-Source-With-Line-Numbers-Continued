@@ -1,7 +1,7 @@
 PromoUnlockManager = PromoUnlockManager or class()
 PromoUnlockManager.save_version = 1
 
--- Lines: 10 to 21
+-- Lines 9-21
 function PromoUnlockManager:init()
 	self._items = {}
 
@@ -13,11 +13,11 @@ function PromoUnlockManager:init()
 	end
 end
 
--- Lines: 50 to 51
+-- Lines 23-51
 function PromoUnlockManager:check_unlocks()
 end
 
--- Lines: 53 to 60
+-- Lines 53-60
 function PromoUnlockManager:_check_achievement(achievement_id)
 	for item_id, item in pairs(self._items) do
 		if item.achievement == achievement_id then
@@ -28,7 +28,7 @@ function PromoUnlockManager:_check_achievement(achievement_id)
 	end
 end
 
--- Lines: 62 to 68
+-- Lines 62-69
 function PromoUnlockManager:_get_item(id)
 	for item_id, item in pairs(self._items) do
 		if item_id == id then
@@ -39,7 +39,7 @@ function PromoUnlockManager:_get_item(id)
 	return nil
 end
 
--- Lines: 71 to 77
+-- Lines 71-77
 function PromoUnlockManager:_unlock_item(id)
 	local item = self:_get_item(id)
 
@@ -50,12 +50,12 @@ function PromoUnlockManager:_unlock_item(id)
 	end
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function PromoUnlockManager:has_unlocked(item_id)
 	return self._items[item_id] and self._items[item_id].unlocked
 end
 
--- Lines: 83 to 89
+-- Lines 83-90
 function PromoUnlockManager:get_data_for_weapon(weapon_id)
 	for item_id, item in pairs(self._items) do
 		if item.weapon_id and item.weapon_id == weapon_id then
@@ -66,7 +66,7 @@ function PromoUnlockManager:get_data_for_weapon(weapon_id)
 	return nil
 end
 
--- Lines: 93 to 104
+-- Lines 92-104
 function PromoUnlockManager:save(cache)
 	local data = {
 		version = self.save_version,
@@ -80,7 +80,7 @@ function PromoUnlockManager:save(cache)
 	cache.promo_unlocks = data
 end
 
--- Lines: 107 to 119
+-- Lines 106-119
 function PromoUnlockManager:load(cache, version)
 	local data = cache.promo_unlocks
 
@@ -92,4 +92,3 @@ function PromoUnlockManager:load(cache, version)
 		end
 	end
 end
-

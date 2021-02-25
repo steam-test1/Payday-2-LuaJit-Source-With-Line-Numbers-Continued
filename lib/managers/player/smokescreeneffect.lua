@@ -1,6 +1,6 @@
 SmokeScreenEffect = SmokeScreenEffect or class()
 
--- Lines: 5 to 24
+-- Lines 4-24
 function SmokeScreenEffect:init(position, normal, time, has_dodge_bonus, grenade_unit)
 	self._timer = time
 	self._position = position
@@ -21,37 +21,37 @@ function SmokeScreenEffect:init(position, normal, time, has_dodge_bonus, grenade
 	self._mine = grenade_unit and grenade_unit:base():thrower_unit() == managers.player:player_unit()
 end
 
--- Lines: 26 to 27
+-- Lines 26-28
 function SmokeScreenEffect:variant()
 	return self._variant
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function SmokeScreenEffect:dodge_bonus()
 	return self._dodge_bonus
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function SmokeScreenEffect:position()
 	return self._position
 end
 
--- Lines: 38 to 39
+-- Lines 38-40
 function SmokeScreenEffect:alive()
 	return not not self._timer
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function SmokeScreenEffect:is_in_smoke(unit)
 	return self._unit_list[unit:key()], self._variant
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function SmokeScreenEffect:mine()
 	return self._mine
 end
 
--- Lines: 50 to 71
+-- Lines 50-71
 function SmokeScreenEffect:update(t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -61,7 +61,9 @@ function SmokeScreenEffect:update(t, dt)
 
 			if not self._sound_killed then
 				self._sound_source:post_event("lung_loop_end")
-				managers.enemy:add_delayed_clbk("SmokeScreenEffect", callback(ProjectileBase, ProjectileBase, "_dispose_of_sound", {sound_source = self._sound_source}), TimerManager:game():time() + 4)
+				managers.enemy:add_delayed_clbk("SmokeScreenEffect", callback(ProjectileBase, ProjectileBase, "_dispose_of_sound", {
+					sound_source = self._sound_source
+				}), TimerManager:game():time() + 4)
 
 				self._sound_killed = true
 			end
@@ -80,10 +82,9 @@ function SmokeScreenEffect:update(t, dt)
 	end
 end
 
--- Lines: 73 to 77
+-- Lines 73-77
 function SmokeScreenEffect:destroy()
 	if self._effect then
 		World:effect_manager():kill(self._effect)
 	end
 end
-

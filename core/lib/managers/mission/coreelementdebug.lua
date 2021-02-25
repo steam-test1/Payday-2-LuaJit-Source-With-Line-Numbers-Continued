@@ -3,17 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementDebug = ElementDebug or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function ElementDebug:init(...)
 	ElementDebug.super.init(self, ...)
 end
 
--- Lines: 10 to 12
+-- Lines 10-12
 function ElementDebug:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 14 to 31
+-- Lines 14-31
 function ElementDebug:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -31,4 +31,3 @@ function ElementDebug:on_executed(instigator)
 	managers.mission:add_fading_debug_output(text, color, self._values.as_subtitle)
 	ElementDebug.super.on_executed(self, instigator)
 end
-

@@ -1,6 +1,6 @@
 PlayerProfileGuiObject = PlayerProfileGuiObject or class()
 
--- Lines: 3 to 244
+-- Lines 3-244
 function PlayerProfileGuiObject:init(ws)
 	local panel = ws:panel():panel()
 	local next_level_data = managers.experience:next_level_data() or {}
@@ -42,7 +42,7 @@ function PlayerProfileGuiObject:init(ws)
 	})
 
 	self:_make_fine_text(level_text)
-	level_text:set_font_size(level_text:font_size() * math.min((font_size * 2) / level_text:w(), 1))
+	level_text:set_font_size(level_text:font_size() * math.min(font_size * 2 / level_text:w(), 1))
 	level_text:set_center(exp_ring:center())
 
 	max_left_len = math.max(max_left_len, level_text:w())
@@ -59,7 +59,9 @@ function PlayerProfileGuiObject:init(ws)
 
 	max_left_len = math.max(max_left_len, player_text:w())
 	local money_text = panel:text({
-		text = self:get_text("menu_cash", {money = managers.money:total_string()}),
+		text = self:get_text("menu_cash", {
+			money = managers.money:total_string()
+		}),
 		font_size = font_size,
 		font = font,
 		color = tweak_data.screen_colors.text
@@ -88,7 +90,9 @@ function PlayerProfileGuiObject:init(ws)
 	if skillpoints > 0 then
 		skill_text = panel:text({
 			layer = 1,
-			text = self:get_text("menu_spendable_skill_points", {points = tostring(skillpoints)}),
+			text = self:get_text("menu_spendable_skill_points", {
+				points = tostring(skillpoints)
+			}),
 			font_size = font_size,
 			font = font,
 			color = tweak_data.screen_colors.text
@@ -211,12 +215,14 @@ function PlayerProfileGuiObject:init(ws)
 
 	self._panel:set_size(exp_ring:w() + max_left_len + 15 + max_right_len + 10, math.max(skill_text and skill_text:bottom() or total_money_text:bottom(), hoxton_text:bottom()) + 8)
 	self._panel:set_bottom(self._panel:parent():h() - 60)
-	BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	mastermind_text:set_right(self._panel:w() - 10)
 	enforcer_text:set_right(self._panel:w() - 10)
 	technician_text:set_right(self._panel:w() - 10)
@@ -227,8 +233,7 @@ function PlayerProfileGuiObject:init(ws)
 	level_text:set_center(exp_ring:center())
 
 	if skill_glow then
-
-		-- Lines: 231 to 237
+		-- Lines 231-237
 		local function animate_new_skillpoints(o)
 			while true do
 				over(1, function (p)
@@ -245,7 +250,7 @@ function PlayerProfileGuiObject:init(ws)
 	self:_rec_round_object(panel)
 end
 
--- Lines: 246 to 255
+-- Lines 246-255
 function PlayerProfileGuiObject:_rec_round_object(object)
 	local x, y, w, h = object:shape()
 
@@ -258,12 +263,12 @@ function PlayerProfileGuiObject:_rec_round_object(object)
 	end
 end
 
--- Lines: 257 to 258
+-- Lines 257-259
 function PlayerProfileGuiObject:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines: 261 to 266
+-- Lines 261-266
 function PlayerProfileGuiObject:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -271,7 +276,7 @@ function PlayerProfileGuiObject:_make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 268 to 273
+-- Lines 268-273
 function PlayerProfileGuiObject:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -279,4 +284,3 @@ function PlayerProfileGuiObject:close()
 		self._panel = nil
 	end
 end
-

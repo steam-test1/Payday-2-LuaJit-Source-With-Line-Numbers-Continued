@@ -8,7 +8,7 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 InGameHeisterInteractionInitiator = InGameHeisterInteractionInitiator or class()
 
--- Lines: 15 to 37
+-- Lines 15-38
 function InGameHeisterInteractionInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -33,12 +33,12 @@ function InGameHeisterInteractionInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines: 40 to 41
+-- Lines 40-42
 function InGameHeisterInteractionInitiator:refresh_node(node)
 	return node
 end
 
--- Lines: 44 to 48
+-- Lines 44-48
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -52,7 +52,7 @@ InGameHeisterInteractionGui.HEIGHT = 400
 InGameHeisterInteractionGui.MENU_WIDTH = 220
 InGameHeisterInteractionGui.PADDING = 10
 
--- Lines: 57 to 76
+-- Lines 57-76
 function InGameHeisterInteractionGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -77,11 +77,11 @@ function InGameHeisterInteractionGui:init(node, layer, parameters)
 	managers.menu_component:post_event("pop_up_safehouse")
 end
 
--- Lines: 78 to 89
+-- Lines 78-89
 function InGameHeisterInteractionGui:_setup_item_panel_parent(safe_rect, shape)
-	local x = (safe_rect.x + safe_rect.width / 2) - self.WIDTH / 2 + self.PADDING
-	local y = (safe_rect.y + safe_rect.height / 2) - self.HEIGHT / 2 + self.PADDING
-	local shape = {
+	local x = safe_rect.x + safe_rect.width / 2 - self.WIDTH / 2 + self.PADDING
+	local y = safe_rect.y + safe_rect.height / 2 - self.HEIGHT / 2 + self.PADDING
+	shape = {
 		x = x,
 		y = y,
 		w = self.WIDTH,
@@ -91,11 +91,11 @@ function InGameHeisterInteractionGui:_setup_item_panel_parent(safe_rect, shape)
 	InGameHeisterInteractionGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines: 91 to 92
+-- Lines 91-92
 function InGameHeisterInteractionGui:set_contact_info(id, name, files, override_file, sub_text)
 end
 
--- Lines: 94 to 109
+-- Lines 94-109
 function InGameHeisterInteractionGui:mouse_moved(button, x, y)
 	local button_highlighted = false
 
@@ -116,7 +116,7 @@ function InGameHeisterInteractionGui:mouse_moved(button, x, y)
 	end
 end
 
--- Lines: 111 to 118
+-- Lines 111-118
 function InGameHeisterInteractionGui:mouse_pressed(button, x, y)
 	for idx, button in pairs(self._reward_buttons or {}) do
 		if button:inside(x, y) then
@@ -127,7 +127,7 @@ function InGameHeisterInteractionGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 120 to 132
+-- Lines 120-132
 function InGameHeisterInteractionGui:mouse_released(button, x, y)
 	if self._file_pressed and self._file_pressed ~= self._current_file then
 		local files_menu = self._files_menu
@@ -145,27 +145,27 @@ function InGameHeisterInteractionGui:mouse_released(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines: 134 to 136
+-- Lines 134-136
 function InGameHeisterInteractionGui:previous_page()
 	self:change_file(-1)
 end
 
--- Lines: 138 to 140
+-- Lines 138-140
 function InGameHeisterInteractionGui:next_page()
 	self:change_file(1)
 end
 
--- Lines: 142 to 143
+-- Lines 142-144
 function InGameHeisterInteractionGui:input_focus()
 	return false
 end
 
--- Lines: 146 to 148
+-- Lines 146-148
 function InGameHeisterInteractionGui:_setup_item_panel(safe_rect, res)
 	InGameHeisterInteractionGui.super._setup_item_panel(self, safe_rect, res)
 end
 
--- Lines: 150 to 169
+-- Lines 150-169
 function InGameHeisterInteractionGui:_setup_menu()
 	if not self._init_finish then
 		return
@@ -191,7 +191,7 @@ function InGameHeisterInteractionGui:_setup_menu()
 	self._setup_menu_done = true
 end
 
--- Lines: 171 to 176
+-- Lines 171-176
 function InGameHeisterInteractionGui:_fade_row_item(row_item)
 	InGameHeisterInteractionGui.super._fade_row_item(self, row_item)
 
@@ -200,7 +200,7 @@ function InGameHeisterInteractionGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines: 178 to 183
+-- Lines 178-183
 function InGameHeisterInteractionGui:_highlight_row_item(row_item, mouse_over)
 	InGameHeisterInteractionGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -209,14 +209,15 @@ function InGameHeisterInteractionGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines: 185 to 186
+-- Lines 185-187
 function InGameHeisterInteractionGui:refresh_gui(node)
 	return node
 end
+
 local header_text_desc_height = 80
 local obj_text_desc_height = 60
 
--- Lines: 192 to 227
+-- Lines 192-227
 function InGameHeisterInteractionGui:_setup_default()
 	local daily_challenge = managers.custom_safehouse:get_daily_challenge()
 	local daily_info = tweak_data.safehouse:get_daily_data(daily_challenge.id)
@@ -232,9 +233,13 @@ function InGameHeisterInteractionGui:_setup_default()
 		ws:panel():remove(ws:panel():child("main_panel"))
 	end
 
-	local main_panel = ws:panel():panel({name = "main_panel"})
+	local main_panel = ws:panel():panel({
+		name = "main_panel"
+	})
 	self._main_panel = main_panel
-	self._fullscreen_panel = mc_full_ws:panel():panel({layer = 0})
+	self._fullscreen_panel = mc_full_ws:panel():panel({
+		layer = 0
+	})
 	local width = self.WIDTH
 	local height = self.HEIGHT
 	self._panel = main_panel:panel({
@@ -249,12 +254,14 @@ function InGameHeisterInteractionGui:_setup_default()
 		layer = 0,
 		color = Color.black
 	})
-	BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local txt = managers.localization:to_upper_text("menu_cs_div_safehouse_daily") .. ": "
 	local header_panel = self._panel:panel({
@@ -290,7 +297,7 @@ function InGameHeisterInteractionGui:_setup_default()
 	make_fine_text(header_text_desc)
 end
 
--- Lines: 229 to 329
+-- Lines 229-329
 function InGameHeisterInteractionGui:_setup_layout()
 	self._reward_buttons = {}
 	local daily_challenge = managers.custom_safehouse:get_daily_challenge()
@@ -301,15 +308,17 @@ function InGameHeisterInteractionGui:_setup_layout()
 	local width = self.WIDTH
 	local height = self.HEIGHT
 	self._scroll_panel = self._panel:panel({
-		h = (height - small_font_size * 3) - self.PADDING * 2,
+		h = height - small_font_size * 3 - self.PADDING * 2,
 		w = width - self.PADDING * 2
 	})
-	self._anim_box = BoxGuiObject:new(self._scroll_panel, {sides = {
-		0,
-		0,
-		0,
-		2
-	}})
+	self._anim_box = BoxGuiObject:new(self._scroll_panel, {
+		sides = {
+			0,
+			0,
+			0,
+			2
+		}
+	})
 
 	self._scroll_panel:move(self.PADDING, self.PADDING + small_font_size)
 
@@ -386,7 +395,9 @@ function InGameHeisterInteractionGui:_setup_layout()
 	})
 
 	expire_panel:move(self.PADDING * 0.5, expire_panel_pos)
-	expire_panel:rect({color = tweak_data.screen_colors.important_2:with_alpha(0.2)})
+	expire_panel:rect({
+		color = tweak_data.screen_colors.important_2:with_alpha(0.2)
+	})
 
 	local expire_text = expire_panel:text({
 		blend_mode = "add",
@@ -428,7 +439,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 	for idx, reward in ipairs(daily_challenge.rewards) do
 		local reward_item = CustomSafehouseGuiRewardItem:new(self, reward_panel, idx, reward, daily_info.id, true)
 
-		reward_item._panel:move((self._scroll_panel:w() - self.PADDING * 2) - 128 * idx, 0)
+		reward_item._panel:move(self._scroll_panel:w() - self.PADDING * 2 - 128 * idx, 0)
 		table.insert(self._reward_buttons, reward_item)
 
 		if not managers.menu:is_pc_controller() then
@@ -463,7 +474,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 	self:set_animation_state("_update_daily")
 end
 
--- Lines: 331 to 423
+-- Lines 331-423
 function InGameHeisterInteractionGui:_setup_daily_complete()
 	self._reward_buttons = {}
 	local width = self.WIDTH
@@ -494,7 +505,7 @@ function InGameHeisterInteractionGui:_setup_daily_complete()
 
 	make_fine_text(header)
 	header:set_center_x(self._daily_complete_panel:center_x())
-	header:set_y((self._daily_complete_panel:center_y() - medium_font_size * 3) - y_offs)
+	header:set_y(self._daily_complete_panel:center_y() - medium_font_size * 3 - y_offs)
 
 	local timer_panel = self._daily_complete_panel:panel({
 		name = "DailyRenewPanel",
@@ -504,7 +515,9 @@ function InGameHeisterInteractionGui:_setup_daily_complete()
 
 	timer_panel:set_left(self._daily_complete_panel:panel():w() * 0.5 - timer_panel:w() * 0.5)
 	timer_panel:set_top(header:bottom() + self.PADDING)
-	timer_panel:rect({color = tweak_data.screen_colors.challenge_title:with_alpha(0.4)})
+	timer_panel:rect({
+		color = tweak_data.screen_colors.challenge_title:with_alpha(0.4)
+	})
 
 	self._complete_timer_panel = timer_panel
 	local timer_text = timer_panel:text({
@@ -551,17 +564,17 @@ function InGameHeisterInteractionGui:_setup_daily_complete()
 	self:_setup_menu()
 end
 
--- Lines: 425 to 427
+-- Lines 425-427
 function InGameHeisterInteractionGui:update(t, dt)
 	self:_update_animation(t, dt)
 end
 
--- Lines: 429 to 431
+-- Lines 429-431
 function InGameHeisterInteractionGui:set_animation_state(state)
 	self._anim_state = state
 end
 
--- Lines: 433 to 447
+-- Lines 433-447
 function InGameHeisterInteractionGui:_update_daily(t, dt)
 	if alive(self._expire_time_text) then
 		local expire_string = ""
@@ -577,7 +590,7 @@ function InGameHeisterInteractionGui:_update_daily(t, dt)
 	end
 end
 
--- Lines: 449 to 469
+-- Lines 449-469
 function InGameHeisterInteractionGui:_update_hide_daily(t, dt)
 	self._complete_t = (self._complete_t or 0) + dt
 
@@ -598,17 +611,19 @@ function InGameHeisterInteractionGui:_update_hide_daily(t, dt)
 			self._scroll_panel:clear()
 			self:_setup_daily_complete()
 		else
-			self._anim_box = BoxGuiObject:new(self._scroll_panel, {sides = {
-				0,
-				0,
-				0,
-				2
-			}})
+			self._anim_box = BoxGuiObject:new(self._scroll_panel, {
+				sides = {
+					0,
+					0,
+					0,
+					2
+				}
+			})
 		end
 	end
 end
 
--- Lines: 471 to 494
+-- Lines 471-494
 function InGameHeisterInteractionGui:_update_show_complete(t, dt)
 	self._complete_t = (self._complete_t or 0) + dt
 	local base_time = 0.8
@@ -619,19 +634,19 @@ function InGameHeisterInteractionGui:_update_show_complete(t, dt)
 		managers.menu_component:post_event("box_tick")
 	end
 
-	if base_time + step_time < self._complete_t and self._complete_info and not self._complete_info:visible() then
+	if self._complete_t > base_time + step_time and self._complete_info and not self._complete_info:visible() then
 		self._complete_info:set_visible(true)
 		managers.menu_component:post_event("box_tick")
 	end
 
-	if base_time + step_time * 2 < self._complete_t and self._complete_timer_panel and not self._complete_timer_panel:visible() then
+	if self._complete_t > base_time + step_time * 2 and self._complete_timer_panel and not self._complete_timer_panel:visible() then
 		self._complete_timer_panel:set_visible(true)
 		managers.menu_component:post_event("box_tick")
 		self:set_animation_state("_update_renew_daily")
 	end
 end
 
--- Lines: 496 to 509
+-- Lines 496-509
 function InGameHeisterInteractionGui:_update_renew_daily(t, dt)
 	if alive(self._renew_timer) then
 		local challenge = managers.custom_safehouse:get_daily_challenge()
@@ -644,19 +659,19 @@ function InGameHeisterInteractionGui:_update_renew_daily(t, dt)
 	end
 end
 
--- Lines: 511 to 515
+-- Lines 511-515
 function InGameHeisterInteractionGui:_update_animation(t, dt)
 	if self._anim_state and self[self._anim_state] then
 		self[self._anim_state](self, t, dt)
 	end
 end
 
--- Lines: 517 to 519
+-- Lines 517-519
 function InGameHeisterInteractionGui:close()
 	MenuNodeCrimenetContactChillGui.super.close(self)
 end
 
--- Lines: 521 to 553
+-- Lines 521-553
 function InGameHeisterInteractionGui:move_reward_button(dir)
 	if not self._reward_buttons or #self._reward_buttons == 0 then
 		return
@@ -685,7 +700,7 @@ function InGameHeisterInteractionGui:move_reward_button(dir)
 
 	local next_button = current_button + dir
 
-	if #self._reward_buttons < next_button then
+	if next_button > #self._reward_buttons then
 		next_button = 1
 	elseif next_button < 1 then
 		next_button = #self._reward_buttons
@@ -694,7 +709,7 @@ function InGameHeisterInteractionGui:move_reward_button(dir)
 	self._reward_buttons[next_button]:set_selected(true)
 end
 
--- Lines: 555 to 562
+-- Lines 555-562
 function InGameHeisterInteractionGui:special_btn_pressed(button)
 	if button == Idstring("menu_modify_item") then
 		for _, btn in pairs(self._reward_buttons) do
@@ -703,17 +718,16 @@ function InGameHeisterInteractionGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 564 to 566
+-- Lines 564-566
 function InGameHeisterInteractionGui:move_left()
 	self:move_reward_button(-1)
 end
 
--- Lines: 568 to 570
+-- Lines 568-570
 function InGameHeisterInteractionGui:move_right()
 	self:move_reward_button(1)
 end
 
--- Lines: 573 to 574
+-- Lines 572-574
 function InGameHeisterInteractionGui:_update_buttons()
 end
-

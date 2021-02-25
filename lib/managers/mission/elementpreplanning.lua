@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementPrePlanning = ElementPrePlanning or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 8
+-- Lines 5-8
 function ElementPrePlanning:init(...)
 	ElementPrePlanning.super.init(self, ...)
 end
 
--- Lines: 11 to 17
+-- Lines 10-17
 function ElementPrePlanning:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 
@@ -18,7 +18,7 @@ function ElementPrePlanning:on_script_activated()
 	end
 end
 
--- Lines: 20 to 29
+-- Lines 20-29
 function ElementPrePlanning:set_enabled(enabled)
 	ElementPrePlanning.super.set_enabled(self, enabled)
 
@@ -33,7 +33,7 @@ function ElementPrePlanning:set_enabled(enabled)
 	end
 end
 
--- Lines: 31 to 40
+-- Lines 31-40
 function ElementPrePlanning:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -42,13 +42,12 @@ function ElementPrePlanning:on_executed(instigator, ...)
 	ElementPrePlanning.super.on_executed(self, instigator, ...)
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function ElementPrePlanning:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 46 to 48
+-- Lines 46-48
 function ElementPrePlanning:load(data)
 	self:set_enabled(data.enabled)
 end
-

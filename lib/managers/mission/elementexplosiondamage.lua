@@ -2,17 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementExplosionDamage = ElementExplosionDamage or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementExplosionDamage:init(...)
 	ElementExplosionDamage.super.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function ElementExplosionDamage:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 13 to 24
+-- Lines 13-24
 function ElementExplosionDamage:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -30,4 +30,3 @@ function ElementExplosionDamage:on_executed(instigator)
 
 	ElementExplosionDamage.super.on_executed(self, instigator)
 end
-

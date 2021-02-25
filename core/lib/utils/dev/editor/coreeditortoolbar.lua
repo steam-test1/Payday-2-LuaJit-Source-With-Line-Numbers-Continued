@@ -1,5 +1,4 @@
-
--- Lines: 1 to 124
+-- Lines 1-124
 function CoreEditor:build_toolbar()
 	local icons_path = managers.database:base_path() .. "core\\lib\\utils\\dev\\editor\\icons\\"
 	self._toolbar = EWS:ToolBar(Global.frame, "", "TB_FLAT,TB_NODIVIDER")
@@ -81,7 +80,9 @@ function CoreEditor:build_toolbar()
 
 	self._toolbar:add_separator()
 	self._toolbar:add_check_tool("TB_USING_GROUPS", "Using groups (" .. self:ctrl_binding("using_group_toggle") .. ")", CoreEWS.image_path("world_editor\\using_groups_16x16.png"), "Toggle using groups on and off")
-	self._toolbar:connect("TB_USING_GROUPS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {value = "_using_groups"})
+	self._toolbar:connect("TB_USING_GROUPS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
+		value = "_using_groups"
+	})
 
 	self._ews_triggers.using_group_toggle = callback(self, self, "toolbar_toggle_trg", {
 		value = "_using_groups",
@@ -99,11 +100,17 @@ function CoreEditor:build_toolbar()
 	self._toolbar:add_separator()
 	self:build_snap_rotations()
 	self._toolbar:add_radio_tool("TB_SNAPROTATE_X", "Snap rotate axis X", CoreEWS.image_path("world_editor\\snap_rotation_x_16x16.png"), "Snap rotate axis X")
-	Global.frame:connect("TB_SNAPROTATE_X", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_snap_rotation_axis"), {axis = "x"})
+	Global.frame:connect("TB_SNAPROTATE_X", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_snap_rotation_axis"), {
+		axis = "x"
+	})
 	self._toolbar:add_radio_tool("TB_SNAPROTATE_Y", "Snap rotate axis Y", CoreEWS.image_path("world_editor\\snap_rotation_y_16x16.png"), "Snap rotate axis Y")
-	Global.frame:connect("TB_SNAPROTATE_Y", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_snap_rotation_axis"), {axis = "y"})
+	Global.frame:connect("TB_SNAPROTATE_Y", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_snap_rotation_axis"), {
+		axis = "y"
+	})
 	self._toolbar:add_radio_tool("TB_SNAPROTATE_Z", "Snap rotate axis Z", CoreEWS.image_path("world_editor\\snap_rotation_z_16x16.png"), "Snap rotate axis Z")
-	Global.frame:connect("TB_SNAPROTATE_Z", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_snap_rotation_axis"), {axis = "z"})
+	Global.frame:connect("TB_SNAPROTATE_Z", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_snap_rotation_axis"), {
+		axis = "z"
+	})
 
 	if self._snap_rotation_axis == "x" then
 		self._toolbar:set_tool_state("TB_SNAPROTATE_X", true)
@@ -135,7 +142,7 @@ function CoreEditor:build_toolbar()
 	self._toolbar:realize()
 end
 
--- Lines: 126 to 137
+-- Lines 126-137
 function CoreEditor:set_widget(data, event)
 	local id = event:get_id()
 
@@ -150,7 +157,7 @@ function CoreEditor:set_widget(data, event)
 	self._current_layer:use_rotate_widget(self._use_rotate_widget)
 end
 
--- Lines: 139 to 144
+-- Lines 139-144
 function CoreEditor:set_snap_rotation_axis(data, event)
 	local id = event:get_id()
 
@@ -160,7 +167,7 @@ function CoreEditor:set_snap_rotation_axis(data, event)
 	self._snap_rotation_axis = data.axis
 end
 
--- Lines: 146 to 160
+-- Lines 146-160
 function CoreEditor:change_snaprot_axis(data)
 	if self._snap_rotation_axis == "x" then
 		self._snap_rotation_axis = "y"
@@ -180,22 +187,22 @@ function CoreEditor:change_snaprot_axis(data)
 	end
 end
 
--- Lines: 162 to 164
+-- Lines 162-164
 function CoreEditor:on_move_transform_type_in()
 	self._move_transform_type_in:set_visible(true)
 end
 
--- Lines: 166 to 168
+-- Lines 166-168
 function CoreEditor:on_rotate_transform_type_in()
 	self._rotate_transform_type_in:set_visible(true)
 end
 
--- Lines: 170 to 172
+-- Lines 170-172
 function CoreEditor:on_camera_transform_type_in()
 	self._camera_transform_type_in:set_visible(true)
 end
 
--- Lines: 174 to 188
+-- Lines 174-188
 function CoreEditor:build_ref_coordinate_system()
 	self._ref_coordinate_system = EWS:ComboBox(self._toolbar, "", "", "CB_DROPDOWN,CB_READONLY")
 
@@ -227,7 +234,7 @@ function CoreEditor:build_ref_coordinate_system()
 	})
 end
 
--- Lines: 190 to 211
+-- Lines 190-211
 function CoreEditor:build_grid_sizes(icons_path)
 	local tip = "Grid Sizes (" .. self:ctrl_binding("change_grid_size") .. ")"
 	local grid_icon = EWS:BitmapButton(self._toolbar, CoreEWS.image_path("world_editor\\grid_sizes_10x16.png"), "", "NO_BORDER")
@@ -267,7 +274,7 @@ function CoreEditor:build_grid_sizes(icons_path)
 	})
 end
 
--- Lines: 213 to 234
+-- Lines 213-234
 function CoreEditor:build_snap_rotations()
 	local tip = "Snap Rotations (" .. self:ctrl_binding("change_snaprot") .. ")"
 	local snap_icon = EWS:BitmapButton(self._toolbar, CoreEWS.image_path("world_editor\\snap_rotations_10x16.png"), "", "NO_BORDER")
@@ -307,7 +314,7 @@ function CoreEditor:build_snap_rotations()
 	})
 end
 
--- Lines: 236 to 253
+-- Lines 236-253
 function CoreEditor:build_rotation_speed()
 	local tip = "Free rotation speed (+/-)"
 	local speed_icon = EWS:BitmapButton(self._toolbar, CoreEWS.image_path("world_editor\\rotation_speed_10x16.png"), "", "NO_BORDER")
@@ -334,19 +341,19 @@ function CoreEditor:build_rotation_speed()
 	self._toolbar:add_control(rot_speed)
 end
 
--- Lines: 256 to 258
+-- Lines 256-258
 function CoreEditor:update_rot_speed(rotation_speed)
 	self._rotation_speed = rotation_speed:get_value()
 end
 
--- Lines: 261 to 264
+-- Lines 261-264
 function CoreEditor:update_rot_speed_trg(data)
 	data.ctrlr:set_value(data.ctrlr:get_value() + data.value)
 
 	self._rotation_speed = data.ctrlr:get_value()
 end
 
--- Lines: 266 to 277
+-- Lines 266-277
 function CoreEditor:change_combo_box(data)
 	if tonumber(self[data.value]) then
 		self[data.value] = tonumber(data.combobox:get_value())
@@ -365,13 +372,29 @@ function CoreEditor:change_combo_box(data)
 	end
 end
 
--- Lines: 279 to 306
+-- Lines 279-306
 function CoreEditor:change_combo_box_trg(data)
 	local next_i = nil
 
-	for i = 1, #self[data.t], 1 do
+	for i = 1, #self[data.t] do
 		if self[data.value] == self[data.t][i] then
-			next_i = ctrl() and (i == 1 and #self[data.t] or 1) or shift() and (i == 1 and #self[data.t] or i - 1) or i == #self[data.t] and 1 or i + 1
+			if ctrl() then
+				if i == 1 then
+					next_i = #self[data.t]
+				else
+					next_i = 1
+				end
+			elseif shift() then
+				if i == 1 then
+					next_i = #self[data.t]
+				else
+					next_i = i - 1
+				end
+			elseif i == #self[data.t] then
+				next_i = 1
+			else
+				next_i = i + 1
+			end
 		end
 	end
 
@@ -379,7 +402,7 @@ function CoreEditor:change_combo_box_trg(data)
 	self:change_combo_box(data)
 end
 
--- Lines: 308 to 315
+-- Lines 308-315
 function CoreEditor:set_combobox_value(data, event)
 	if data.choice then
 		data.combobox:set_value(data.choice)
@@ -390,22 +413,22 @@ function CoreEditor:set_combobox_value(data, event)
 	self:change_combo_box(data)
 end
 
--- Lines: 318 to 320
+-- Lines 318-320
 function CoreEditor:on_select_by_name()
 	self:show_dialog("select_by_name", "SelectByName")
 end
 
--- Lines: 322 to 324
+-- Lines 322-324
 function CoreEditor:on_unit_tree_browser()
 	self:show_dialog("unit_tree_browser", "UnitTreeBrowser")
 end
 
--- Lines: 326 to 328
+-- Lines 326-328
 function CoreEditor:on_global_select_unit()
 	self:show_dialog("global_select_unit", "GlobalSelectUnit")
 end
 
--- Lines: 330 to 336
+-- Lines 330-336
 function CoreEditor:on_unit_list()
 	if not self._unit_list then
 		self._unit_list = UnitList:new()
@@ -414,7 +437,7 @@ function CoreEditor:on_unit_list()
 	end
 end
 
--- Lines: 338 to 344
+-- Lines 338-344
 function CoreEditor:on_unit_duplicate_id_list()
 	if not self._duplicate_id_list then
 		self._duplicate_id_list = UnitDuplicateIdList:new()
@@ -423,17 +446,17 @@ function CoreEditor:on_unit_duplicate_id_list()
 	end
 end
 
--- Lines: 347 to 349
+-- Lines 347-349
 function CoreEditor:on_unhide_by_name()
 	self:show_dialog("unhide_by_name", "UnhideByName")
 end
 
--- Lines: 351 to 353
+-- Lines 351-353
 function CoreEditor:on_hide_by_name()
 	self:show_dialog("hide_by_name", "HideByName")
 end
 
--- Lines: 357 to 376
+-- Lines 357-376
 function CoreEditor:build_widgets_icons(panel, sizer, icons_path)
 	local select = EWSRadioBitmapButton:new(panel, icons_path .. "widget_select_checked.bmp", "", "")
 
@@ -456,4 +479,3 @@ function CoreEditor:build_widgets_icons(panel, sizer, icons_path)
 	rotate:button():set_tool_tip("Select and Rotate (3)")
 	sizer:add(rotate:button(), 0, 5, "EXPAND,LEFT")
 end
-

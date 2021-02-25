@@ -1,6 +1,6 @@
 StatisticsTweakData = StatisticsTweakData or class()
 
--- Lines: 4 to 35
+-- Lines 3-35
 function StatisticsTweakData:init()
 	self.session = {}
 	self.killed = {
@@ -41,12 +41,12 @@ function StatisticsTweakData:init()
 	}
 end
 
--- Lines: 37 to 38
+-- Lines 37-39
 function StatisticsTweakData:statistics_specializations()
 	return table.size(tweak_data.skilltree.specializations)
 end
 
--- Lines: 43 to 281
+-- Lines 41-282
 function StatisticsTweakData:statistics_table()
 	if not self._level_list then
 		self._level_list = {}
@@ -62,7 +62,7 @@ function StatisticsTweakData:statistics_table()
 		self._job_list = {}
 		self._level_list = {}
 
-		-- Lines: 58 to 63
+		-- Lines 58-63
 		local function add_level_id(level_id)
 			local level_tweak = tweak_data.levels[level_id]
 
@@ -76,13 +76,20 @@ function StatisticsTweakData:statistics_table()
 			local contact = job_tweak.contact
 			local contact_tweak = contact and tweak_data.narrative.contacts[contact]
 			local allow_job = not contact or contact ~= "wip" and contact ~= "tests"
-			allow_job = not job_tweak.competitive and false
-			allow_job = not job_tweak.job_wrapper and false
-			allow_job = not job_tweak.hidden and false
-			allow_job = not job_tweak.ignore_statistics and false
+			allow_job = not job_tweak.competitive and allow_job
+
+			if job_tweak.job_wrapper then
+				allow_job = false
+			end
+
+			if job_tweak.hidden then
+				allow_job = false
+			end
+
+			allow_job = not job_tweak.ignore_statistics and allow_job
 
 			if contact_tweak then
-				allow_job = not contact_tweak.ignore_statistics and false
+				allow_job = not contact_tweak.ignore_statistics and allow_job
 			end
 
 			if allow_job then
@@ -254,7 +261,7 @@ function StatisticsTweakData:statistics_table()
 	return self._level_list, self._job_list, self._mask_list, self._weapon_list, self._melee_list, self._grenade_list, enemy_list, armor_list, character_list, deployable_list
 end
 
--- Lines: 284 to 285
+-- Lines 284-286
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -273,8 +280,9 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines: 288 to 289
+-- Lines 288-290
 function StatisticsTweakData:mission_statistics_table()
-	return {"labrat"}
+	return {
+		"labrat"
+	}
 end
-

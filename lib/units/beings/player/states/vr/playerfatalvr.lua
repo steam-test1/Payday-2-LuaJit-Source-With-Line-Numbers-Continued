@@ -6,13 +6,13 @@ local __enter = PlayerFatal.enter
 local __exit = PlayerFatal.exit
 local __destroy = PlayerFatal.destroy
 
--- Lines: 12 to 16
+-- Lines 12-16
 function PlayerFatalVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("incapacitated", self._unit:position())
 end
 
--- Lines: 18 to 25
+-- Lines 18-26
 function PlayerFatalVR:exit(state_data, new_state_name)
 	self._ext_movement:set_orientation_state("none")
 
@@ -25,7 +25,7 @@ function PlayerFatalVR:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines: 28 to 35
+-- Lines 28-35
 function PlayerFatalVR:destroy()
 	if managers.network:session() then
 		self:set_belt_and_hands_enabled(true)
@@ -34,7 +34,7 @@ function PlayerFatalVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 37 to 82
+-- Lines 37-82
 function PlayerFatalVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		self._weapon_hand_id = self._unit:hand():get_active_hand_id("weapon")
@@ -90,4 +90,3 @@ function PlayerFatalVR:set_belt_and_hands_enabled(enabled)
 		end
 	end
 end
-

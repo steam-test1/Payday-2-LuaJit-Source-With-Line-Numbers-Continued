@@ -1,6 +1,6 @@
 UnhideByName = UnhideByName or class(CoreEditorEwsDialog)
 
--- Lines: 4 to 135
+-- Lines 3-135
 function UnhideByName:init(...)
 	CoreEditorEwsDialog.init(self, nil, self.TITLE or "Unhide by name", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
 	self:create_panel("VERTICAL")
@@ -120,7 +120,7 @@ function UnhideByName:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 137 to 154
+-- Lines 137-154
 function UnhideByName:build_continent_cbs()
 	self._continents_cbs = {}
 	local continents = managers.editor:continents()
@@ -148,12 +148,12 @@ function UnhideByName:build_continent_cbs()
 	end
 end
 
--- Lines: 156 to 158
+-- Lines 156-158
 function UnhideByName:on_continent_cb()
 	self:fill_unit_list()
 end
 
--- Lines: 160 to 165
+-- Lines 160-165
 function UnhideByName:on_all_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(true)
@@ -162,7 +162,7 @@ function UnhideByName:on_all_layers()
 	self:fill_unit_list()
 end
 
--- Lines: 167 to 172
+-- Lines 167-172
 function UnhideByName:on_none_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(false)
@@ -171,7 +171,7 @@ function UnhideByName:on_none_layers()
 	self:fill_unit_list()
 end
 
--- Lines: 174 to 179
+-- Lines 174-179
 function UnhideByName:on_invert_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(not cb:get_value())
@@ -180,7 +180,7 @@ function UnhideByName:on_invert_layers()
 	self:fill_unit_list()
 end
 
--- Lines: 181 to 186
+-- Lines 181-186
 function UnhideByName:on_all_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(true)
@@ -189,7 +189,7 @@ function UnhideByName:on_all_continents()
 	self:fill_unit_list()
 end
 
--- Lines: 188 to 193
+-- Lines 188-193
 function UnhideByName:on_none_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(false)
@@ -198,7 +198,7 @@ function UnhideByName:on_none_continents()
 	self:fill_unit_list()
 end
 
--- Lines: 195 to 200
+-- Lines 195-200
 function UnhideByName:on_invert_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(not cb:get_value())
@@ -207,7 +207,7 @@ function UnhideByName:on_invert_continents()
 	self:fill_unit_list()
 end
 
--- Lines: 211 to 216
+-- Lines 211-216
 function UnhideByName:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -216,17 +216,17 @@ function UnhideByName:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines: 218 to 220
+-- Lines 218-220
 function UnhideByName:on_layer_cb(data)
 	self:fill_unit_list()
 end
 
--- Lines: 222 to 224
+-- Lines 222-224
 function UnhideByName:on_cancel()
 	self._dialog:set_visible(false)
 end
 
--- Lines: 226 to 236
+-- Lines 226-236
 function UnhideByName:on_unhide()
 	managers.editor:freeze_gui_lists()
 
@@ -241,7 +241,7 @@ function UnhideByName:on_unhide()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 238 to 244
+-- Lines 238-244
 function UnhideByName:on_delete()
 	managers.editor:freeze_gui_lists()
 
@@ -252,11 +252,11 @@ function UnhideByName:on_delete()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 249 to 250
+-- Lines 246-250
 function UnhideByName:on_mark_unit()
 end
 
--- Lines: 262 to 268
+-- Lines 262-269
 function UnhideByName:_selected_item_units()
 	local units = {}
 
@@ -269,7 +269,7 @@ function UnhideByName:_selected_item_units()
 	return units
 end
 
--- Lines: 272 to 277
+-- Lines 272-277
 function UnhideByName:_selected_item_unit()
 	local index = self._list:selected_item()
 
@@ -278,17 +278,17 @@ function UnhideByName:_selected_item_unit()
 	end
 end
 
--- Lines: 279 to 281
+-- Lines 279-281
 function UnhideByName:select_unit(unit)
 	managers.editor:select_unit(unit)
 end
 
--- Lines: 284 to 286
+-- Lines 284-286
 function UnhideByName:hid_unit(unit)
 	self:_append_unit_to_list(unit)
 end
 
--- Lines: 288 to 294
+-- Lines 288-294
 function UnhideByName:_append_unit_to_list(unit)
 	local i = self._list:append_item(unit:unit_data().name_id)
 	local j = #self._units + 1
@@ -297,14 +297,14 @@ function UnhideByName:_append_unit_to_list(unit)
 	self._list:set_item_data(i, j)
 end
 
--- Lines: 297 to 299
+-- Lines 297-299
 function UnhideByName:unhid_unit(unit)
 	self:_remove_unit_from_list(unit)
 end
 
--- Lines: 301 to 309
+-- Lines 301-309
 function UnhideByName:_remove_unit_from_list(unit)
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
 			self._list:delete_item(i)
 
@@ -313,9 +313,9 @@ function UnhideByName:_remove_unit_from_list(unit)
 	end
 end
 
--- Lines: 312 to 340
+-- Lines 312-340
 function UnhideByName:unit_name_changed(unit)
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
 			self._list:set_item(i, 0, unit:unit_data().name_id)
 
@@ -334,7 +334,7 @@ function UnhideByName:unit_name_changed(unit)
 			if sort then
 				self:fill_unit_list()
 
-				for i = 0, self._list:item_count() - 1, 1 do
+				for i = 0, self._list:item_count() - 1 do
 					if self._units[self._list:get_item_data(i)] == unit then
 						self._list:set_item_selected(i, true)
 						self._list:ensure_visible(i)
@@ -349,12 +349,12 @@ function UnhideByName:unit_name_changed(unit)
 	end
 end
 
--- Lines: 342 to 344
+-- Lines 342-344
 function UnhideByName:update_filter()
 	self:fill_unit_list()
 end
 
--- Lines: 348 to 377
+-- Lines 348-377
 function UnhideByName:fill_unit_list()
 	self._list:freeze()
 	self._list:delete_all_items()
@@ -388,7 +388,7 @@ function UnhideByName:fill_unit_list()
 	self._list:thaw()
 end
 
--- Lines: 379 to 384
+-- Lines 379-385
 function UnhideByName:_continent_ok(unit)
 	local continent = unit:unit_data().continent
 
@@ -399,22 +399,22 @@ function UnhideByName:_continent_ok(unit)
 	return self._continents_cbs[continent:name()] and self._continents_cbs[continent:name()]:get_value()
 end
 
--- Lines: 387 to 389
+-- Lines 387-389
 function UnhideByName:reset()
 	self:fill_unit_list()
 end
 
--- Lines: 391 to 393
+-- Lines 391-393
 function UnhideByName:freeze()
 	self._list:freeze()
 end
 
--- Lines: 395 to 397
+-- Lines 395-397
 function UnhideByName:thaw()
 	self._list:thaw()
 end
 
--- Lines: 399 to 407
+-- Lines 399-407
 function UnhideByName:recreate()
 	for name, cb in pairs(self._continents_cbs) do
 		self._continents_sizer:detach(cb)
@@ -425,33 +425,33 @@ function UnhideByName:recreate()
 	self:fill_unit_list()
 	self._panel:layout()
 end
+
 HideByName = HideByName or class(UnhideByName)
 HideByName.TITLE = "Hide by Name"
 HideByName.BTN_NAME = "Hide"
 HideByName.IS_HIDE_BY_NAME = true
 
--- Lines: 416 to 418
+-- Lines 416-418
 function HideByName:init(...)
 	HideByName.super.init(self, ...)
 end
 
--- Lines: 420 to 422
+-- Lines 420-422
 function HideByName:hid_unit(unit)
 	self:_remove_unit_from_list(unit)
 end
 
--- Lines: 424 to 426
+-- Lines 424-426
 function HideByName:unhid_unit(unit)
 	self:_append_unit_to_list(unit)
 end
 
--- Lines: 428 to 430
+-- Lines 428-430
 function HideByName:spawned_unit(unit)
 	self:_append_unit_to_list(unit)
 end
 
--- Lines: 432 to 434
+-- Lines 432-434
 function HideByName:deleted_unit(unit)
 	self:_remove_unit_from_list(unit)
 end
-

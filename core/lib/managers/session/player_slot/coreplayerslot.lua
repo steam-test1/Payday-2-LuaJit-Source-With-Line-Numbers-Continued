@@ -6,7 +6,7 @@ core:import("CorePlayer")
 
 PlayerSlot = PlayerSlot or class()
 
--- Lines: 9 to 18
+-- Lines 9-18
 function PlayerSlot:init(player_slots_parent, local_user_manager)
 	self._perform_local_user_binding = CoreRequester.Requester:new()
 	self._perform_debug_local_user_binding = CoreRequester.Requester:new()
@@ -16,7 +16,7 @@ function PlayerSlot:init(player_slots_parent, local_user_manager)
 	self._local_user_manager = local_user_manager
 end
 
--- Lines: 20 to 25
+-- Lines 20-25
 function PlayerSlot:destroy()
 	self._player_slots_parent:_remove_player_slot(self)
 
@@ -25,7 +25,7 @@ function PlayerSlot:destroy()
 	end
 end
 
--- Lines: 27 to 32
+-- Lines 27-32
 function PlayerSlot:clear_session()
 	if self._player then
 		self._player:destroy()
@@ -34,12 +34,12 @@ function PlayerSlot:clear_session()
 	end
 end
 
--- Lines: 34 to 36
+-- Lines 34-36
 function PlayerSlot:remove()
 	self:destroy()
 end
 
--- Lines: 39 to 45
+-- Lines 38-45
 function PlayerSlot:_release_user_from_slot()
 	if self._assigned_user then
 		self._assigned_user:_player_slot_lost(self)
@@ -50,32 +50,32 @@ function PlayerSlot:_release_user_from_slot()
 	self._init:request()
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function PlayerSlot:request_local_user_binding()
 	self._perform_local_user_binding:request()
 end
 
--- Lines: 51 to 53
+-- Lines 51-53
 function PlayerSlot:stop_local_user_binding()
 	self._perform_local_user_binding:cancel_request()
 end
 
--- Lines: 55 to 57
+-- Lines 55-57
 function PlayerSlot:request_debug_local_user_binding()
 	self._perform_debug_local_user_binding:request()
 end
 
--- Lines: 59 to 60
+-- Lines 59-61
 function PlayerSlot:has_assigned_user()
 	return self._assigned_user ~= nil
 end
 
--- Lines: 63 to 64
+-- Lines 63-65
 function PlayerSlot:assigned_user()
 	return self._assigned_user
 end
 
--- Lines: 67 to 72
+-- Lines 67-72
 function PlayerSlot:assign_local_user(local_user)
 	assert(local_user, "Must specify a valid user")
 	assert(self._assigned_user == nil, "A user has already been assigned to this slot")
@@ -85,12 +85,12 @@ function PlayerSlot:assign_local_user(local_user)
 	self._assigned_user:_player_slot_assigned(self)
 end
 
--- Lines: 74 to 76
+-- Lines 74-76
 function PlayerSlot:transition()
 	self._user_state:transition()
 end
 
--- Lines: 78 to 91
+-- Lines 78-91
 function PlayerSlot:create_player()
 	assert(self._player == nil, "Player already created for this slot")
 
@@ -104,7 +104,7 @@ function PlayerSlot:create_player()
 	end
 end
 
--- Lines: 93 to 99
+-- Lines 93-99
 function PlayerSlot:remove_player()
 	if self._assigned_user then
 		self._assigned_user:release_player(self._player)
@@ -115,13 +115,12 @@ function PlayerSlot:remove_player()
 	self._player = nil
 end
 
--- Lines: 101 to 102
+-- Lines 101-103
 function PlayerSlot:has_player()
 	return self._player ~= nil
 end
 
--- Lines: 105 to 106
+-- Lines 105-107
 function PlayerSlot:player()
 	return self._player
 end
-

@@ -1,12 +1,12 @@
 CoreAreaHubElement = CoreAreaHubElement or class(HubElement)
 AreaHubElement = AreaHubElement or class(CoreAreaHubElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function AreaHubElement:init(...)
 	CoreAreaHubElement.init(self, ...)
 end
 
--- Lines: 9 to 33
+-- Lines 9-33
 function CoreAreaHubElement:init(unit)
 	HubElement.init(self, unit)
 
@@ -39,7 +39,7 @@ function CoreAreaHubElement:init(unit)
 	table.insert(self._hed.action_types, "deactivate")
 end
 
--- Lines: 36 to 41
+-- Lines 36-41
 function CoreAreaHubElement:populate_shapes_list()
 	self._shapes_list:clear()
 
@@ -48,12 +48,12 @@ function CoreAreaHubElement:populate_shapes_list()
 	end
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function CoreAreaHubElement:set_shape_type(types)
 	self._shape_type = types:get_value()
 end
 
--- Lines: 49 to 55
+-- Lines 49-55
 function CoreAreaHubElement:selected_shape(shapes)
 	local i = shapes:selected_index()
 
@@ -64,7 +64,7 @@ function CoreAreaHubElement:selected_shape(shapes)
 	end
 end
 
--- Lines: 58 to 63
+-- Lines 58-63
 function CoreAreaHubElement:set_start_altitude()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].position = self._hed.shapes[self._current_shape].position:with_z(self._start_altitude:get_value())
@@ -73,7 +73,7 @@ function CoreAreaHubElement:set_start_altitude()
 	self:set_shape_values()
 end
 
--- Lines: 65 to 77
+-- Lines 65-77
 function CoreAreaHubElement:set_altitude_text(data)
 	if not self._current_shape then
 		return
@@ -90,7 +90,7 @@ function CoreAreaHubElement:set_altitude_text(data)
 	self:set_shape_values()
 end
 
--- Lines: 79 to 92
+-- Lines 79-92
 function CoreAreaHubElement:set_altitude_spin(data)
 	if not self._current_shape then
 		return
@@ -106,7 +106,7 @@ function CoreAreaHubElement:set_altitude_spin(data)
 	self:set_shape_values()
 end
 
--- Lines: 95 to 100
+-- Lines 95-100
 function CoreAreaHubElement:set_height()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].height = self._height:get_value()
@@ -115,7 +115,7 @@ function CoreAreaHubElement:set_height()
 	self:set_shape_values()
 end
 
--- Lines: 103 to 109
+-- Lines 103-109
 function CoreAreaHubElement:set_2d()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].position = self._hed.shapes[self._current_shape].position:with_z(0)
@@ -125,14 +125,14 @@ function CoreAreaHubElement:set_2d()
 	self:set_shape_values()
 end
 
--- Lines: 112 to 116
+-- Lines 112-116
 function CoreAreaHubElement:set_size()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].size_mul = math.pow(self._size:get_value() / 10, 2)
 	end
 end
 
--- Lines: 119 to 133
+-- Lines 119-133
 function CoreAreaHubElement:size_release()
 	local current_shape = self._hed.shapes[self._current_shape]
 
@@ -152,7 +152,7 @@ function CoreAreaHubElement:size_release()
 	end
 end
 
--- Lines: 137 to 170
+-- Lines 137-170
 function CoreAreaHubElement:set_shape_values()
 	local current_shape = self._hed.shapes[self._current_shape]
 
@@ -185,7 +185,7 @@ function CoreAreaHubElement:set_shape_values()
 	end
 end
 
--- Lines: 173 to 180
+-- Lines 173-180
 function CoreAreaHubElement:update_selected(time)
 	for _, shape in pairs(self._hed.shapes) do
 		self:draw(shape, 0, 0.5 + (1 + math.sin(time * 100)) * 0.5 * 0.5, 0)
@@ -196,7 +196,7 @@ function CoreAreaHubElement:update_selected(time)
 	end
 end
 
--- Lines: 183 to 231
+-- Lines 183-231
 function CoreAreaHubElement:draw(shape, r, g, b)
 	local start_z = -20000
 	local height = 40000
@@ -217,7 +217,7 @@ function CoreAreaHubElement:draw(shape, r, g, b)
 		local start = position + Vector3(0, 0, start_z)
 		local center = (start + start + Vector3(shape.width * shape.size_mul, shape.length * shape.size_mul, height)) / 2
 
-		self._brush:box(center, Vector3((shape.width * shape.size_mul) / 2, 0, 0), Vector3(0, (shape.length * shape.size_mul) / 2, 0), Vector3(0, 0, height / 2))
+		self._brush:box(center, Vector3(shape.width * shape.size_mul / 2, 0, 0), Vector3(0, shape.length * shape.size_mul / 2, 0), Vector3(0, 0, height / 2))
 		Application:draw_box(position + Vector3(0, 0, start_z), position + Vector3(shape.width * shape.size_mul, shape.length * shape.size_mul, height + start_z), r, g, b)
 	elseif shape.type == "plane" then
 		local start = position + Vector3(0, 0, start_z)
@@ -241,15 +241,15 @@ function CoreAreaHubElement:draw(shape, r, g, b)
 
 			Application:draw_line(pos, pos + shape.rotation:y() * 500, 0, 1, 0)
 			Application:draw_line(pos + shape.rotation:x() * width, pos + shape.rotation:x() * width + shape.rotation:y() * 500, 0, 1, 0)
-			Application:draw_line(pos + (shape.rotation:x() * width) / 2, pos + (shape.rotation:x() * width) / 2 + shape.rotation:y() * 500, 0, 1, 0)
+			Application:draw_line(pos + shape.rotation:x() * width / 2, pos + shape.rotation:x() * width / 2 + shape.rotation:y() * 500, 0, 1, 0)
 			Application:draw_line(pos, pos + shape.rotation:y() * -500, 1, 0, 0)
 			Application:draw_line(pos + shape.rotation:x() * width, pos + shape.rotation:x() * width + shape.rotation:y() * -500, 1, 0, 0)
-			Application:draw_line(pos + (shape.rotation:x() * width) / 2, pos + (shape.rotation:x() * width) / 2 + shape.rotation:y() * -500, 1, 0, 0)
+			Application:draw_line(pos + shape.rotation:x() * width / 2, pos + shape.rotation:x() * width / 2 + shape.rotation:y() * -500, 1, 0, 0)
 		end
 	end
 end
 
--- Lines: 233 to 300
+-- Lines 233-300
 function CoreAreaHubElement:update_editing(t, dt)
 	local p1 = managers.editor:get_cursor_look_point(0)
 	local p2 = managers.editor:get_cursor_look_point(100)
@@ -317,7 +317,7 @@ function CoreAreaHubElement:update_editing(t, dt)
 	Application:draw_rotation(self._current_pos, self._unit:rotation())
 end
 
--- Lines: 303 to 325
+-- Lines 303-325
 function CoreAreaHubElement:load_data(data)
 	if not data then
 		return
@@ -346,12 +346,12 @@ function CoreAreaHubElement:load_data(data)
 	end
 end
 
--- Lines: 328 to 329
+-- Lines 328-330
 function CoreAreaHubElement:round_position(p)
 	return Vector3(math.round(p.x / self._grid_size) * self._grid_size, math.round(p.y / self._grid_size) * self._grid_size, 0)
 end
 
--- Lines: 334 to 352
+-- Lines 333-352
 function CoreAreaHubElement:create_shape()
 	local p1 = managers.editor:get_cursor_look_point(0)
 	local p2 = managers.editor:get_cursor_look_point(100)
@@ -373,9 +373,9 @@ function CoreAreaHubElement:create_shape()
 	self:set_shape_values()
 end
 
--- Lines: 355 to 362
+-- Lines 355-362
 function CoreAreaHubElement:new_shape_name()
-	for i = 1, 100, 1 do
+	for i = 1, 100 do
 		local name = "shape" .. i
 
 		if not self._hed.shapes[name] then
@@ -384,7 +384,7 @@ function CoreAreaHubElement:new_shape_name()
 	end
 end
 
--- Lines: 366 to 384
+-- Lines 366-385
 function CoreAreaHubElement:set_shape_properties(type, pos, end_pos)
 	local t = {
 		type = type,
@@ -410,7 +410,7 @@ function CoreAreaHubElement:set_shape_properties(type, pos, end_pos)
 	return t
 end
 
--- Lines: 388 to 395
+-- Lines 388-395
 function CoreAreaHubElement:delete()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape] = nil
@@ -421,12 +421,12 @@ function CoreAreaHubElement:delete()
 	self:set_shape_values()
 end
 
--- Lines: 398 to 400
+-- Lines 398-400
 function CoreAreaHubElement:create_shape_release()
 	self._creating = false
 end
 
--- Lines: 403 to 409
+-- Lines 403-409
 function CoreAreaHubElement:move_shape()
 	self._grab_shape = true
 
@@ -437,7 +437,7 @@ function CoreAreaHubElement:move_shape()
 	self._move_all_shapes = shift()
 end
 
--- Lines: 412 to 418
+-- Lines 412-418
 function CoreAreaHubElement:release_shape()
 	self._grab_shape = false
 	self._move_all_shapes = false
@@ -447,7 +447,7 @@ function CoreAreaHubElement:release_shape()
 	end
 end
 
--- Lines: 421 to 427
+-- Lines 421-427
 function CoreAreaHubElement:add_triggers(vc)
 	vc:add_trigger("lmb", callback(self, self, "create_shape"))
 	vc:add_release_trigger("lmb", callback(self, self, "create_shape_release"))
@@ -456,12 +456,12 @@ function CoreAreaHubElement:add_triggers(vc)
 	vc:add_trigger("destroy", callback(self, self, "delete"))
 end
 
--- Lines: 430 to 432
+-- Lines 430-432
 function CoreAreaHubElement:save_mission_trigger(file, tab)
 	file:puts(tab .. "<trigger type=\"UnitInArea\" name=\"area" .. self._unit:unit_data().unit_id .. "\"/>")
 end
 
--- Lines: 434 to 439
+-- Lines 434-439
 function CoreAreaHubElement:set_interval(data)
 	local value = tonumber(data.ctrlr:get_value())
 	value = math.clamp(value, 0, 1000000)
@@ -470,7 +470,7 @@ function CoreAreaHubElement:set_interval(data)
 	data.ctrlr:change_value(string.format("%.2f", self._hed.area_interval))
 end
 
--- Lines: 442 to 540
+-- Lines 442-540
 function CoreAreaHubElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -484,8 +484,12 @@ function CoreAreaHubElement:_build_panel(panel, panel_sizer)
 
 	interval_ctrlr:set_tool_tip("Set the check interval in seconds (set to 0 for every frame).")
 	interval_ctrlr:connect("EVT_CHAR", callback(nil, _G, "verify_number"), interval_ctrlr)
-	interval_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_interval"), {ctrlr = interval_ctrlr})
-	interval_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_interval"), {ctrlr = interval_ctrlr})
+	interval_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_interval"), {
+		ctrlr = interval_ctrlr
+	})
+	interval_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_interval"), {
+		ctrlr = interval_ctrlr
+	})
 	interval_sizer:add(interval_ctrlr, 3, 0, "EXPAND")
 	panel_sizer:add(interval_sizer, 0, 0, "EXPAND")
 
@@ -572,7 +576,7 @@ function CoreAreaHubElement:_build_panel(panel, panel_sizer)
 	self:set_shape_values()
 end
 
--- Lines: 543 to 564
+-- Lines 543-565
 function CoreAreaHubElement:_altitude_ctrlr(panel, name, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -610,7 +614,6 @@ function CoreAreaHubElement:_altitude_ctrlr(panel, name, value, type, sizer)
 	return ctrl, spin
 end
 
--- Lines: 568 to 569
+-- Lines 567-569
 function CoreAreaHubElement:destroy()
 end
-

@@ -6,7 +6,7 @@ HuskServerSyncedCivilianDamage._RESULT_NAME_TABLE = {
 	"death"
 }
 
--- Lines: 9 to 45
+-- Lines 9-45
 function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_offset_height, result_index)
 	if self._dead or self._fatal then
 		return
@@ -50,7 +50,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 49 to 85
+-- Lines 49-85
 function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, result_index)
 	if self._dead or self._fatal then
 		return
@@ -94,7 +94,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 89 to 125
+-- Lines 89-125
 function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_index)
 	if self._dead or self._fatal then
 		return
@@ -138,7 +138,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 129 to 166
+-- Lines 129-166
 function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacker_unit, hit_offset_height, result_index)
 	if self._dead or self._fatal then
 		return
@@ -184,7 +184,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 171 to 188
+-- Lines 171-188
 function HuskServerSyncedCivilianDamage:damage_bullet(attack_data)
 	if self._dead or self._fatal then
 		return
@@ -205,7 +205,7 @@ function HuskServerSyncedCivilianDamage:damage_bullet(attack_data)
 	end
 end
 
--- Lines: 192 to 209
+-- Lines 192-209
 function HuskServerSyncedCivilianDamage:damage_explosion(attack_data)
 	if self._dead or self._fatal then
 		return
@@ -225,7 +225,7 @@ function HuskServerSyncedCivilianDamage:damage_explosion(attack_data)
 	end
 end
 
--- Lines: 213 to 231
+-- Lines 213-231
 function HuskServerSyncedCivilianDamage:damage_fire(attack_data)
 	if self._dead or self._fatal then
 		return
@@ -246,7 +246,7 @@ function HuskServerSyncedCivilianDamage:damage_fire(attack_data)
 	end
 end
 
--- Lines: 235 to 253
+-- Lines 235-253
 function HuskServerSyncedCivilianDamage:damage_melee(attack_data)
 	if self._dead or self._fatal then
 		return
@@ -267,7 +267,7 @@ function HuskServerSyncedCivilianDamage:damage_melee(attack_data)
 	end
 end
 
--- Lines: 257 to 261
+-- Lines 257-262
 function HuskServerSyncedCivilianDamage:_clamp_health_percentage(health_abs)
 	local damage = math.clamp(health_abs, self._HEALTH_INIT_PRECENT, self._HEALTH_INIT)
 	local damage_percent = math.ceil(damage / self._HEALTH_INIT_PRECENT)
@@ -275,4 +275,3 @@ function HuskServerSyncedCivilianDamage:_clamp_health_percentage(health_abs)
 
 	return damage, damage_percent
 end
-

@@ -1,7 +1,7 @@
 LootPileUnitElement = LootPileUnitElement or class(MissionElement)
 LootPileUnitElement.USES_POINT_ORIENTATION = true
 
--- Lines: 6 to 19
+-- Lines 5-19
 function LootPileUnitElement:init(unit)
 	LootPileUnitElement.super.init(self, unit)
 
@@ -16,16 +16,23 @@ function LootPileUnitElement:init(unit)
 	table.insert(self._save_values, "reissue_delay")
 end
 
--- Lines: 22 to 33
+-- Lines 21-33
 function LootPileUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_number(panel, panel_sizer, "max_loot", {min = -1}, "The maximum number of bags that can be picked up from this loot pile. -1 for unlimited.")
-	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({"none"}, tweak_data.carry:get_carry_ids()), "Select a carry_id to be created.")
-	self:_build_value_number(panel, panel_sizer, "retry_delay", {min = 1}, "The time in seconds after failing to find a suitable drop off point that the AI system will try again.")
-	self:_build_value_number(panel, panel_sizer, "reissue_delay", {min = 1}, "The time in seconds after sending the SO to grab a bag that the system will reissue the SO.")
+	self:_build_value_number(panel, panel_sizer, "max_loot", {
+		min = -1
+	}, "The maximum number of bags that can be picked up from this loot pile. -1 for unlimited.")
+	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({
+		"none"
+	}, tweak_data.carry:get_carry_ids()), "Select a carry_id to be created.")
+	self:_build_value_number(panel, panel_sizer, "retry_delay", {
+		min = 1
+	}, "The time in seconds after failing to find a suitable drop off point that the AI system will try again.")
+	self:_build_value_number(panel, panel_sizer, "reissue_delay", {
+		min = 1
+	}, "The time in seconds after sending the SO to grab a bag that the system will reissue the SO.")
 end
-

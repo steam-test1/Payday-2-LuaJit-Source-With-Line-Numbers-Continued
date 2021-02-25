@@ -2,14 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementSecurityCamera = ElementSecurityCamera or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function ElementSecurityCamera:init(...)
 	ElementSecurityCamera.super.init(self, ...)
 
 	self._triggers = {}
 end
 
--- Lines: 13 to 43
+-- Lines 13-43
 function ElementSecurityCamera:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -46,28 +46,33 @@ function ElementSecurityCamera:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
--- Lines: 48 to 49
+-- Lines 47-49
 function ElementSecurityCamera:client_on_executed(...)
 end
 
--- Lines: 53 to 60
+-- Lines 53-61
 function ElementSecurityCamera:_fetch_unit_by_unit_id(unit_id)
 	local unit = nil
-	unit = Application:editor() and managers.editor:unit_with_id(tonumber(unit_id)) or managers.worlddefinition:get_unit_on_load(tonumber(unit_id), callback(self, self, "_load_unit"))
+
+	if Application:editor() then
+		unit = managers.editor:unit_with_id(tonumber(unit_id))
+	else
+		unit = managers.worlddefinition:get_unit_on_load(tonumber(unit_id), callback(self, self, "_load_unit"))
+	end
 
 	return unit
 end
 
--- Lines: 65 to 66
+-- Lines 65-66
 function ElementSecurityCamera._load_unit(unit)
 end
 
--- Lines: 70 to 72
+-- Lines 70-72
 function ElementSecurityCamera:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 76 to 82
+-- Lines 76-82
 function ElementSecurityCamera:on_destroyed()
 	if not self._values.enabled then
 		return
@@ -78,7 +83,7 @@ function ElementSecurityCamera:on_destroyed()
 	self:check_triggers("destroyed")
 end
 
--- Lines: 86 to 92
+-- Lines 86-92
 function ElementSecurityCamera:on_alarm()
 	if not self._values.enabled then
 		return
@@ -89,20 +94,22 @@ function ElementSecurityCamera:on_alarm()
 	self:check_triggers("alarm")
 end
 
--- Lines: 96 to 99
+-- Lines 96-99
 function ElementSecurityCamera:add_trigger(id, type, callback)
 	self._triggers[type] = self._triggers[type] or {}
-	self._triggers[type][id] = {callback = callback}
+	self._triggers[type][id] = {
+		callback = callback
+	}
 end
 
--- Lines: 103 to 107
+-- Lines 103-107
 function ElementSecurityCamera:remove_trigger(id, type)
 	if self._triggers[type] then
 		self._triggers[type][id] = nil
 	end
 end
 
--- Lines: 112 to 120
+-- Lines 111-120
 function ElementSecurityCamera:check_triggers(type, instigator)
 	if not self._triggers[type] then
 		return
@@ -113,16 +120,15 @@ function ElementSecurityCamera:check_triggers(type, instigator)
 	end
 end
 
--- Lines: 125 to 128
+-- Lines 125-128
 function ElementSecurityCamera:save(data)
 	data.enabled = self._values.enabled
 	data.destroyed = self._values.destroyed
 end
 
--- Lines: 132 to 135
+-- Lines 132-135
 function ElementSecurityCamera:load(data)
 	self:set_enabled(data.enabled)
 
 	self._values.destroyed = data.destroyed
 end
-

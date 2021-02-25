@@ -1,11 +1,11 @@
 MenuNodeDoubleColumnGui = MenuNodeDoubleColumnGui or class(MenuNodeGui)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function MenuNodeDoubleColumnGui:init(node, layer, parameters)
 	MenuNodeDoubleColumnGui.super.init(self, node, layer, parameters)
 end
 
--- Lines: 8 to 39
+-- Lines 7-39
 function MenuNodeDoubleColumnGui:_setup_size(node)
 	MenuNodeDoubleColumnGui.super._setup_size(self)
 
@@ -37,7 +37,7 @@ function MenuNodeDoubleColumnGui:_setup_size(node)
 	end
 end
 
--- Lines: 42 to 152
+-- Lines 41-152
 function MenuNodeDoubleColumnGui:_set_item_positions()
 	local total_height = self:_item_panel_height()
 	local current_y = self.height_padding
@@ -59,7 +59,7 @@ function MenuNodeDoubleColumnGui:_set_item_positions()
 
 			row_item.gui_panel:set_y(row_item.position.y)
 			row_item.menu_unselected:set_left(item_left)
-			row_item.menu_unselected:set_h((64 * row_item.gui_panel:h()) / 32)
+			row_item.menu_unselected:set_h(64 * row_item.gui_panel:h() / 32)
 			row_item.menu_unselected:set_center_y(row_item.gui_panel:center_y())
 			row_item.menu_unselected:set_width(item_width)
 			row_item.gui_panel:set_right(row_item.menu_unselected:right())
@@ -101,7 +101,7 @@ function MenuNodeDoubleColumnGui:_set_item_positions()
 
 			row_item.gui_panel:set_y(row_item.position.y)
 			row_item.menu_unselected:set_left(item_left)
-			row_item.menu_unselected:set_h((64 * row_item.gui_panel:h()) / 32)
+			row_item.menu_unselected:set_h(64 * row_item.gui_panel:h() / 32)
 			row_item.menu_unselected:set_center_y(row_item.gui_panel:center_y())
 			row_item.menu_unselected:set_width(item_width)
 			row_item.gui_panel:set_right(row_item.menu_unselected:right())
@@ -149,7 +149,7 @@ function MenuNodeDoubleColumnGui:_set_item_positions()
 	end
 end
 
--- Lines: 154 to 250
+-- Lines 154-250
 function MenuNodeDoubleColumnGui:_setup_item_rows(node)
 	if node:parameters().title and not self.safe_rect_panel:child("primary_title") then
 		self._primary_title = self.safe_rect_panel:text({
@@ -190,11 +190,19 @@ function MenuNodeDoubleColumnGui:_setup_item_rows(node)
 			local params = item:parameters()
 
 			if params.text_id then
-				item_text = self.localize_strings and params.localize ~= false and params.localize ~= "false" and managers.localization:text(params.text_id) or params.text_id
+				if self.localize_strings and params.localize ~= false and params.localize ~= "false" then
+					item_text = managers.localization:text(params.text_id)
+				else
+					item_text = params.text_id
+				end
 			end
 
 			if params.help_id then
-				help_text = self.localize_strings and params.localize_help ~= false and params.localize_help ~= "false" and managers.localization:text(params.help_id) or params.help_id
+				if self.localize_strings and params.localize_help ~= false and params.localize_help ~= "false" then
+					help_text = managers.localization:text(params.help_id)
+				else
+					help_text = params.help_id
+				end
 			end
 
 			local row_item = {}
@@ -259,7 +267,7 @@ function MenuNodeDoubleColumnGui:_setup_item_rows(node)
 	self:highlight_item(node:selected_item())
 end
 
--- Lines: 252 to 259
+-- Lines 252-259
 function MenuNodeDoubleColumnGui:_align_marker(row_item)
 	MenuNodeDoubleColumnGui.super._align_marker(self, row_item)
 	self._marker_data.marker:set_width(row_item.menu_unselected:width())
@@ -269,7 +277,7 @@ function MenuNodeDoubleColumnGui:_align_marker(row_item)
 	end
 end
 
--- Lines: 261 to 267
+-- Lines 261-268
 function MenuNodeDoubleColumnGui:left_active()
 	local selected_item = self._highlighted_item or self.node:selected_item()
 
@@ -282,7 +290,7 @@ function MenuNodeDoubleColumnGui:left_active()
 	return false
 end
 
--- Lines: 270 to 283
+-- Lines 270-284
 function MenuNodeDoubleColumnGui:row_item(item)
 	local item_name = item:name()
 
@@ -301,7 +309,7 @@ function MenuNodeDoubleColumnGui:row_item(item)
 	return nil
 end
 
--- Lines: 286 to 310
+-- Lines 286-310
 function MenuNodeDoubleColumnGui:_clear_column(column)
 	for i, row_item in ipairs(column) do
 		if alive(row_item.gui_panel) then
@@ -334,13 +342,13 @@ function MenuNodeDoubleColumnGui:_clear_column(column)
 	column = {}
 end
 
--- Lines: 312 to 315
+-- Lines 312-315
 function MenuNodeDoubleColumnGui:_clear_gui()
 	self:_clear_column(self.primary_row_items)
 	self:_clear_column(self.secondary_row_items)
 end
 
--- Lines: 317 to 334
+-- Lines 317-335
 function MenuNodeDoubleColumnGui:_item_panel_height()
 	local primary_height = self.height_padding * 2
 
@@ -363,19 +371,19 @@ function MenuNodeDoubleColumnGui:_item_panel_height()
 	return secondary_height < primary_height and primary_height or secondary_height
 end
 
--- Lines: 337 to 340
+-- Lines 337-340
 function MenuNodeDoubleColumnGui:highlight_item(item, mouse_over)
 	local column = self:get_item_index(item)
 
 	MenuNodeDoubleColumnGui.super.highlight_item(self, item, mouse_over)
 end
 
--- Lines: 342 to 343
+-- Lines 342-344
 function MenuNodeDoubleColumnGui:input_focus()
 	return 1
 end
 
--- Lines: 346 to 365
+-- Lines 346-365
 function MenuNodeDoubleColumnGui:update(t, dt)
 	MenuNodeDoubleColumnGui.super.update(self, t, dt)
 
@@ -396,7 +404,7 @@ function MenuNodeDoubleColumnGui:update(t, dt)
 	end
 end
 
--- Lines: 371 to 386
+-- Lines 371-387
 function MenuNodeDoubleColumnGui:move_up()
 	local selected_item = self.node:selected_item() or self._highlighted_item or self.node:item(self.node:default_item_name())
 	local column, index = self:get_item_index(selected_item)
@@ -418,7 +426,7 @@ function MenuNodeDoubleColumnGui:move_up()
 	return true
 end
 
--- Lines: 389 to 403
+-- Lines 389-404
 function MenuNodeDoubleColumnGui:move_down()
 	local selected_item = self.node:selected_item() or self._highlighted_item or self.node:item(self.node:default_item_name())
 	local column, index = self:get_item_index(selected_item)
@@ -440,7 +448,7 @@ function MenuNodeDoubleColumnGui:move_down()
 	return true
 end
 
--- Lines: 406 to 421
+-- Lines 406-422
 function MenuNodeDoubleColumnGui:move_left()
 	local selected_item = self.node:selected_item() or self._highlighted_item or self.node:item(self.node:default_item_name())
 	local column, index = self:get_item_index(selected_item)
@@ -464,12 +472,12 @@ function MenuNodeDoubleColumnGui:move_left()
 	return true
 end
 
--- Lines: 424 to 425
+-- Lines 424-426
 function MenuNodeDoubleColumnGui:move_right()
 	return self:move_left()
 end
 
--- Lines: 428 to 438
+-- Lines 428-439
 function MenuNodeDoubleColumnGui:confirm_pressed()
 	local selected_item = self.node:selected_item()
 	local column = "primary"
@@ -484,7 +492,7 @@ function MenuNodeDoubleColumnGui:confirm_pressed()
 	return true
 end
 
--- Lines: 443 to 475
+-- Lines 443-475
 function MenuNodeDoubleColumnGui:get_item_index(item)
 	local index, primary = nil
 
@@ -522,4 +530,3 @@ function MenuNodeDoubleColumnGui:get_item_index(item)
 
 	Application:error("[MenuNodeDoubleColumnGui:get_item_index] Item index could not be found!")
 end
-

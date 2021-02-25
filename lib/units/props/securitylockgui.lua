@@ -1,6 +1,6 @@
 SecurityLockGui = SecurityLockGui or class()
 
--- Lines: 9 to 35
+-- Lines 9-35
 function SecurityLockGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -23,14 +23,14 @@ function SecurityLockGui:init(unit)
 	self._update_enabled = false
 end
 
--- Lines: 37 to 41
+-- Lines 37-41
 function SecurityLockGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(0, 0, gui_object, Vector3(0, 0, 0))
 	self._gui = self._ws:panel():gui(Idstring("guis/security_lock_gui"))
 	self._gui_script = self._gui:script()
 end
 
--- Lines: 43 to 116
+-- Lines 43-116
 function SecurityLockGui:setup()
 	self._gui_script.working_text:set_render_template(Idstring("VertexColorTextured"))
 	self._gui_script.time_header_text:set_render_template(Idstring("VertexColorTextured"))
@@ -41,7 +41,7 @@ function SecurityLockGui:setup()
 	local pad = 64
 	local bar_pad = 16
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local icon = self._gui_script["timer_icon" .. i]
 		local timer_bg = self._gui_script["timer" .. i .. "_background"]
 		local timer = self._gui_script["timer" .. i]
@@ -62,7 +62,9 @@ function SecurityLockGui:setup()
 		timer_bg:set_h(h / 2)
 		timer:set_h(timer_bg:h() - 8)
 		title:set_h(h / 2)
-		title:set_text(managers.localization:text("prop_security_lock_title", {NR = i}))
+		title:set_text(managers.localization:text("prop_security_lock_title", {
+			NR = i
+		}))
 		title:set_font_size(h / 2 * self._size_multiplier)
 		title:set_top(icon:top())
 		title:set_left(icon:right() + pad)
@@ -100,7 +102,7 @@ function SecurityLockGui:setup()
 	end
 end
 
--- Lines: 118 to 144
+-- Lines 118-144
 function SecurityLockGui:_start(bar, timer, current_timer)
 	self._current_bar = bar
 	self._started = true
@@ -125,12 +127,12 @@ function SecurityLockGui:_start(bar, timer, current_timer)
 	end
 end
 
--- Lines: 162 to 164
+-- Lines 162-164
 function SecurityLockGui:restart(bar, timer)
 	self:start(bar, timer, true)
 end
 
--- Lines: 171 to 182
+-- Lines 166-182
 function SecurityLockGui:start(bar, timer, restart)
 	if not restart and self._started then
 		return
@@ -143,12 +145,12 @@ function SecurityLockGui:start(bar, timer, restart)
 	end
 end
 
--- Lines: 184 to 186
+-- Lines 184-186
 function SecurityLockGui:sync_start(bar, timer)
 	self:_start(bar, timer)
 end
 
--- Lines: 193 to 227
+-- Lines 188-227
 function SecurityLockGui:update(unit, t, dt)
 	if not self._powered then
 		return
@@ -178,19 +180,19 @@ function SecurityLockGui:update(unit, t, dt)
 	end
 end
 
--- Lines: 229 to 232
+-- Lines 229-232
 function SecurityLockGui:set_visible(visible)
 	self._visible = visible
 
 	self._gui:set_visible(visible)
 end
 
--- Lines: 279 to 281
+-- Lines 277-281
 function SecurityLockGui:set_powered(powered)
 	self:_set_powered(powered)
 end
 
--- Lines: 283 to 297
+-- Lines 283-297
 function SecurityLockGui:_set_powered(powered)
 	self._powered = powered
 
@@ -208,7 +210,7 @@ function SecurityLockGui:_set_powered(powered)
 	end
 end
 
--- Lines: 299 to 306
+-- Lines 299-306
 function SecurityLockGui:done()
 	self:_set_done()
 
@@ -219,7 +221,7 @@ function SecurityLockGui:done()
 	self:post_event(self._done_event)
 end
 
--- Lines: 308 to 324
+-- Lines 308-324
 function SecurityLockGui:_set_done(bar)
 	bar = bar or self._current_bar
 	self._done_bars[bar] = true
@@ -240,7 +242,7 @@ function SecurityLockGui:_set_done(bar)
 	self._gui_script.time_text:set_visible(false)
 end
 
--- Lines: 326 to 331
+-- Lines 326-331
 function SecurityLockGui:post_event(event)
 	if not event then
 		return
@@ -249,13 +251,13 @@ function SecurityLockGui:post_event(event)
 	self._unit:sound_source():post_event(event)
 end
 
--- Lines: 333 to 336
+-- Lines 333-336
 function SecurityLockGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines: 338 to 344
+-- Lines 338-344
 function SecurityLockGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -265,7 +267,7 @@ function SecurityLockGui:destroy()
 	end
 end
 
--- Lines: 346 to 359
+-- Lines 346-359
 function SecurityLockGui:save(data)
 	local state = {
 		update_enabled = self._update_enabled,
@@ -280,7 +282,7 @@ function SecurityLockGui:save(data)
 	data.SecurityLockGui = state
 end
 
--- Lines: 361 to 377
+-- Lines 361-377
 function SecurityLockGui:load(data)
 	local state = data.SecurityLockGui
 
@@ -298,4 +300,3 @@ function SecurityLockGui:load(data)
 
 	self:set_visible(state.visible)
 end
-

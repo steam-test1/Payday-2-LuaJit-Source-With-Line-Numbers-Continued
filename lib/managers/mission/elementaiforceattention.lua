@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementAIForceAttention = ElementAIForceAttention or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementAIForceAttention:init(...)
 	ElementAIForceAttention.super.init(self, ...)
 end
 
--- Lines: 11 to 17
+-- Lines 11-17
 function ElementAIForceAttention:_get_unit(unit_id)
 	if Global.running_simulation then
 		return managers.editor:unit_with_id(unit_id)
@@ -16,7 +16,7 @@ function ElementAIForceAttention:_get_unit(unit_id)
 	end
 end
 
--- Lines: 21 to 78
+-- Lines 21-78
 function ElementAIForceAttention:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -71,7 +71,7 @@ function ElementAIForceAttention:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
--- Lines: 80 to 85
+-- Lines 80-85
 function ElementAIForceAttention:_register_force_attention_unit(unit)
 	managers.groupai:state():set_force_attention({
 		unit = unit,
@@ -79,4 +79,3 @@ function ElementAIForceAttention:_register_force_attention_unit(unit)
 		include_all_force_spawns = self._values.include_all_force_spawns
 	})
 end
-

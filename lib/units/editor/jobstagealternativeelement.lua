@@ -2,7 +2,7 @@ JobStageAlternativeUnitElement = JobStageAlternativeUnitElement or class(Mission
 JobStageAlternativeUnitElement.SAVE_UNIT_POSITION = false
 JobStageAlternativeUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 13
+-- Lines 5-13
 function JobStageAlternativeUnitElement:init(unit)
 	JobStageAlternativeUnitElement.super.init(self, unit)
 
@@ -13,7 +13,7 @@ function JobStageAlternativeUnitElement:init(unit)
 	table.insert(self._save_values, "interupt")
 end
 
--- Lines: 15 to 23
+-- Lines 15-23
 function JobStageAlternativeUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -24,6 +24,7 @@ function JobStageAlternativeUnitElement:_build_panel(panel, panel_sizer)
 		floats = 0,
 		min = 1
 	}, "Sets the next job stage alternative")
-	self:_build_value_combobox(panel, panel_sizer, "interupt", table.list_add({"none"}, tweak_data.levels.escape_levels), "Select an escape level to be loaded between stages")
+	self:_build_value_combobox(panel, panel_sizer, "interupt", table.list_add({
+		"none"
+	}, tweak_data.levels.escape_levels), "Select an escape level to be loaded between stages")
 end
-

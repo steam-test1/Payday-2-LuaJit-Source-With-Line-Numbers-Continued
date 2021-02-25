@@ -9,7 +9,7 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 
--- Lines: 15 to 34
+-- Lines 15-35
 local function HUDBGBox_create_ex(panel, config)
 	local box_panel = panel
 	local color = config and config.color
@@ -92,7 +92,7 @@ end
 
 local box_speed = 1500
 
--- Lines: 40 to 57
+-- Lines 40-57
 local function animate_open(panel, done_cb)
 	local target_w = panel:w()
 
@@ -116,7 +116,7 @@ local function animate_open(panel, done_cb)
 	done_cb()
 end
 
--- Lines: 59 to 74
+-- Lines 59-74
 local function animate_close(panel, done_cb)
 	local speed = box_speed
 	local cw = panel:w()
@@ -136,11 +136,11 @@ local function animate_close(panel, done_cb)
 	done_cb()
 end
 
--- Lines: 76 to 83
+-- Lines 76-83
 local function wait_global(seconds)
 	local t = 0
 
-	while t < seconds do
+	while seconds > t do
 		coroutine.yield()
 
 		local dt = TimerManager:main():delta_time()
@@ -153,7 +153,7 @@ HudChallengeNotification.ICON_SIZE = 80
 HudChallengeNotification.BOX_MAX_W = 400
 HudChallengeNotification.default_queue = HudChallengeNotification.default_queue or {}
 
--- Lines: 93 to 104
+-- Lines 93-104
 function HudChallengeNotification.queue(title, text, icon, rewards, queue)
 	if Application:editor() then
 		return
@@ -174,7 +174,7 @@ function HudChallengeNotification.queue(title, text, icon, rewards, queue)
 	end
 end
 
--- Lines: 107 to 221
+-- Lines 106-221
 function HudChallengeNotification:init(title, text, icon, rewards, queue)
 	if _G.IS_VR then
 		HudChallengeNotification.super.init(self, managers.hud:prompt_panel())
@@ -274,7 +274,7 @@ function HudChallengeNotification:init(title, text, icon, rewards, queue)
 	self:set_w(total_w)
 	self:set_h(self._box:bottom())
 	self:set_center_x(self:parent():w() / 2)
-	self:set_bottom((self:parent():h() * 5) / 7)
+	self:set_bottom(self:parent():h() * 5 / 7)
 
 	self._box_bg = self:panel()
 
@@ -291,7 +291,7 @@ function HudChallengeNotification:init(title, text, icon, rewards, queue)
 	end)
 end
 
--- Lines: 223 to 239
+-- Lines 223-239
 function HudChallengeNotification:close()
 	self:remove_self()
 
@@ -307,4 +307,3 @@ function HudChallengeNotification:close()
 		HudChallengeNotification:new(unpack(self._queue[1]))
 	end
 end
-

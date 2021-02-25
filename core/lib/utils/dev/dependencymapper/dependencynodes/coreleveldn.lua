@@ -7,7 +7,9 @@ UNIT = CoreDependencyNode.UNIT
 LEVEL_BASE = "./data/levels/"
 LEVEL_FILE = "./data/levels/%s/world.xml"
 MISSION_FILE = "./data/levels/%s/mission.xml"
-LEVEL_CONVERT = {player_start = "player"}
+LEVEL_CONVERT = {
+	player_start = "player"
+}
 LEVEL_SKIP = {
 	unit_sequence = true,
 	hub = true,
@@ -25,12 +27,12 @@ LEVEL_SKIP = {
 }
 LevelDependencyNode = LevelDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 32 to 34
+-- Lines 32-34
 function LevelDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, LEVEL, nil, name, get_dn_cb, database)
 end
 
--- Lines: 36 to 45
+-- Lines 36-46
 function LevelDependencyNode:_parse()
 	local file = string.format(LEVEL_FILE, self._name)
 	local f = File:open(file, "r")
@@ -50,7 +52,7 @@ function LevelDependencyNode:_parse()
 	}
 end
 
--- Lines: 48 to 70
+-- Lines 48-70
 function LevelDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 
@@ -87,4 +89,3 @@ function LevelDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

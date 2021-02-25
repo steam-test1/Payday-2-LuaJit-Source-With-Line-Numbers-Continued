@@ -1,11 +1,11 @@
 ValueModifier = ValueModifier or class()
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ValueModifier:init()
 	self._modifiers = {}
 end
 
--- Lines: 9 to 14
+-- Lines 9-15
 function ValueModifier:add_modifier(type, callback)
 	local key = {}
 	local modifiers = self._modifiers[type] or {}
@@ -15,7 +15,7 @@ function ValueModifier:add_modifier(type, callback)
 	return key
 end
 
--- Lines: 17 to 25
+-- Lines 17-25
 function ValueModifier:remove_modifier(type, key)
 	local modifiers = self._modifiers[type] or {}
 
@@ -26,7 +26,7 @@ function ValueModifier:remove_modifier(type, key)
 	modifiers[key] = nil
 end
 
--- Lines: 27 to 37
+-- Lines 27-38
 function ValueModifier:modify_value(type, base_value, ...)
 	local modifiers = self._modifiers[type]
 	local new_value = base_value
@@ -39,4 +39,3 @@ function ValueModifier:modify_value(type, base_value, ...)
 
 	return new_value
 end
-

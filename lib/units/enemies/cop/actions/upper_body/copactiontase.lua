@@ -2,7 +2,7 @@ CopActionTase = CopActionTase or class()
 local temp_vec1 = Vector3()
 local temp_vec2 = Vector3()
 
--- Lines: 8 to 38
+-- Lines 7-39
 function CopActionTase:init(action_desc, common_data)
 	self._common_data = common_data
 	self._unit = common_data.unit
@@ -35,12 +35,12 @@ function CopActionTase:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function CopActionTase:expired()
 	return self._expired
 end
 
--- Lines: 49 to 132
+-- Lines 49-132
 function CopActionTase:on_attention(attention)
 	if self._expired then
 		self._attention = attention
@@ -132,13 +132,13 @@ function CopActionTase:on_attention(attention)
 	end
 end
 
--- Lines: 136 to 139
+-- Lines 136-139
 function CopActionTase:save(save_data)
 	save_data.type = "tase"
 	save_data.body_part = self._body_part
 end
 
--- Lines: 143 to 176
+-- Lines 143-176
 function CopActionTase:on_exit()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -183,7 +183,7 @@ function CopActionTase:on_exit()
 	end
 end
 
--- Lines: 178 to 187
+-- Lines 178-187
 function CopActionTase:on_destroy()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -196,7 +196,7 @@ function CopActionTase:on_destroy()
 	end
 end
 
--- Lines: 191 to 291
+-- Lines 191-291
 function CopActionTase:update(t)
 	if self._expired then
 		return
@@ -294,7 +294,9 @@ function CopActionTase:update(t)
 					if not vis_ray then
 						self._common_data.ext_network:send("action_tase_event", 3)
 
-						local attack_data = {attacker_unit = self._unit}
+						local attack_data = {
+							attacker_unit = self._unit
+						}
 
 						self._attention.unit:character_damage():damage_tase(attack_data)
 						CopDamage._notify_listeners("on_criminal_tased", self._unit, self._attention.unit)
@@ -328,31 +330,31 @@ function CopActionTase:update(t)
 	end
 end
 
--- Lines: 295 to 296
+-- Lines 295-297
 function CopActionTase:type()
 	return "tase"
 end
 
--- Lines: 301 to 303
+-- Lines 301-303
 function CopActionTase:fire_taser()
 	self._shoot_t = 0
 end
 
--- Lines: 307 to 308
+-- Lines 307-309
 function CopActionTase:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines: 313 to 314
+-- Lines 313-314
 function CopActionTase:_upd_empty(t)
 end
 
--- Lines: 318 to 319
+-- Lines 318-320
 function CopActionTase:need_upd()
 	return true
 end
 
--- Lines: 324 to 330
+-- Lines 324-331
 function CopActionTase:get_husk_interrupt_desc()
 	local action_desc = {
 		block_type = "action",
@@ -363,7 +365,7 @@ function CopActionTase:get_husk_interrupt_desc()
 	return action_desc
 end
 
--- Lines: 335 to 356
+-- Lines 335-356
 function CopActionTase:clbk_malfunction()
 	self._malfunction_clbk_id = nil
 
@@ -391,4 +393,3 @@ function CopActionTase:clbk_malfunction()
 
 	self._unit:character_damage():damage_melee(action_data)
 end
-

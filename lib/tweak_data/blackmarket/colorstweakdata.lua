@@ -1,5 +1,4 @@
-
--- Lines: 1 to 1551
+-- Lines 1-1551
 function BlackMarketTweakData:_init_colors(tweak_data)
 	self.colors = {}
 	local white = Color.white
@@ -3488,4 +3487,3 @@ function BlackMarketTweakData:_init_colors(tweak_data)
 		end
 	end
 end
-

@@ -9,7 +9,7 @@ WarpTargetMarker.SEQUENCES = {
 	move = "warp_blue"
 }
 
--- Lines: 10 to 16
+-- Lines 10-16
 function WarpTargetMarker:init(unit_name)
 	self._unit = World:spawn_unit(unit_name, Vector3(), Rotation())
 
@@ -20,7 +20,7 @@ function WarpTargetMarker:init(unit_name)
 	self._sequence = nil
 end
 
--- Lines: 19 to 33
+-- Lines 18-33
 function WarpTargetMarker:show(marker_type)
 	local sequence = self.SEQUENCES[marker_type] or "warp_blue"
 
@@ -39,7 +39,7 @@ function WarpTargetMarker:show(marker_type)
 	end
 end
 
--- Lines: 35 to 40
+-- Lines 35-40
 function WarpTargetMarker:hide()
 	if self._enabled then
 		self._unit:set_visible(false)
@@ -48,27 +48,28 @@ function WarpTargetMarker:hide()
 	end
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function WarpTargetMarker:enabled()
 	return self._enabled
 end
 
--- Lines: 46 to 50
+-- Lines 46-50
 function WarpTargetMarker:set_orientation(position, rotation)
 	self._unit:set_position(position)
 	self._unit:set_rotation(rotation)
 	self._unit:set_moving(2)
 end
+
 PlayerWarp = PlayerWarp or class()
 local MAX_MOVEMENT_DISTANCE = 500
 local MAX_JUMP_DISTANCE = 450
 local MAX_TARGET_TO_RAY_DISTANCE = 600
 local MAX_JUMP_HEIGHT_THRESHOLD = 120
 local MIN_JUMP_TARGET_TO_WARP_THRESHOLD = 25
-local MAX_JUMP_HEIGHT = (tweak_data.player.movement_state.standard.movement.jump_velocity.z * tweak_data.player.movement_state.standard.movement.jump_velocity.z) / 1964
+local MAX_JUMP_HEIGHT = tweak_data.player.movement_state.standard.movement.jump_velocity.z * tweak_data.player.movement_state.standard.movement.jump_velocity.z / 1964
 PlayerWarp.TARGET_TYPE = 0
 
--- Lines: 65 to 109
+-- Lines 65-109
 function PlayerWarp:init(hand_unit)
 	self._unit = hand_unit
 	self._targeting = false
@@ -104,7 +105,7 @@ function PlayerWarp:init(hand_unit)
 	self._range = MAX_MOVEMENT_DISTANCE
 	self._max_range = MAX_MOVEMENT_DISTANCE
 	self._max_jump_distance = MAX_JUMP_DISTANCE
-	self._jump_move_speed = MAX_JUMP_DISTANCE / ((2 * tweak_data.player.movement_state.standard.movement.jump_velocity.z) / 982)
+	self._jump_move_speed = MAX_JUMP_DISTANCE / (2 * tweak_data.player.movement_state.standard.movement.jump_velocity.z / 982)
 	self._enable_jump = false
 	self._dynamic_geometries = {
 		move = hand_unit:get_object(Idstring("g_dyn_move")),
@@ -120,11 +121,11 @@ function PlayerWarp:init(hand_unit)
 	self._ladder_markers = {}
 end
 
--- Lines: 111 to 140
+-- Lines 111-140
 function PlayerWarp:show_ladder_marker(key, active)
 	local ladder_data = self._ladders[key]
 
-	if ladder_data.active and (self._active_ladder_key == key) == active then
+	if ladder_data.active and self._active_ladder_key == key == active then
 		return
 	end
 
@@ -152,7 +153,7 @@ function PlayerWarp:show_ladder_marker(key, active)
 	ladder_marker:damage():run_sequence_simple("ladder_" .. (ladder_data.going_down and "down" or "up") .. (active and "" or "_idle"))
 end
 
--- Lines: 142 to 151
+-- Lines 142-151
 function PlayerWarp:hide_ladder_marker(key)
 	if self._ladders[key] and self._ladders[key].active then
 		self._ladders[key].active = nil
@@ -165,9 +166,9 @@ function PlayerWarp:hide_ladder_marker(key)
 	end
 end
 
--- Lines: 153 to 162
+-- Lines 153-162
 function PlayerWarp:hide_markers()
-	for i = 1, #self._warp_markers, 1 do
+	for i = 1, #self._warp_markers do
 		self._warp_markers[i]:hide()
 	end
 
@@ -178,12 +179,14 @@ function PlayerWarp:hide_markers()
 	self._prev_geo = nil
 end
 
--- Lines: 164 to 175
+-- Lines 164-175
 function PlayerWarp:show_markers(...)
-	local args = {...}
+	local args = {
+		...
+	}
 	local nr_args = #args
 
-	for i = 1, #self._warp_markers, 1 do
+	for i = 1, #self._warp_markers do
 		if i <= nr_args then
 			self._warp_markers[i]:show(args[i].name)
 			self._warp_markers[i]:set_orientation(args[i].position, args[i].rotation)
@@ -193,12 +196,12 @@ function PlayerWarp:show_markers(...)
 	end
 end
 
--- Lines: 177 to 179
+-- Lines 177-179
 function PlayerWarp:set_player_unit(player_unit)
 	self._player_unit = player_unit
 end
 
--- Lines: 181 to 217
+-- Lines 181-217
 function PlayerWarp:update_ladder_targeting()
 	if self._ladders_enabled and self._targeting and #Ladder.active_ladders > 0 then
 		for _, ladder in ipairs(Ladder.active_ladders) do
@@ -213,7 +216,9 @@ function PlayerWarp:update_ladder_targeting()
 				local ladder_pos = going_down and ladder:ladder():top() or ladder:ladder():bottom()
 				local dis = mvector3.distance_sq(self._unit:position(), ladder_pos)
 				local ray = self._unit:raycast("ray", self._unit:position(), ladder_pos, "slot_mask", self._slotmask, "ray_type", "body walk")
-				self._ladders[ladder:key()] = self._ladders[ladder:key()] or {ladder = ladder}
+				self._ladders[ladder:key()] = self._ladders[ladder:key()] or {
+					ladder = ladder
+				}
 
 				if (not ray or mvector3.distance_sq(ray.position, ladder_pos) < 400) and (going_down or mvector3.dot(self._unit:rotation():y(), ladder:ladder():normal()) < 0) then
 					self._ladders[ladder:key()].going_down = going_down
@@ -238,12 +243,12 @@ function PlayerWarp:update_ladder_targeting()
 	end
 end
 
--- Lines: 219 to 221
+-- Lines 219-221
 function PlayerWarp:set_ladders_enabled(enabled)
 	self._ladders_enabled = enabled
 end
 
--- Lines: 223 to 228
+-- Lines 223-228
 function PlayerWarp:set_targeting(enabled)
 	self._targeting = enabled
 
@@ -252,27 +257,27 @@ function PlayerWarp:set_targeting(enabled)
 	end
 end
 
--- Lines: 230 to 231
+-- Lines 230-232
 function PlayerWarp:target_position()
 	return self._target.position
 end
 
--- Lines: 234 to 235
+-- Lines 234-236
 function PlayerWarp:target_type()
 	return self._target.type
 end
 
--- Lines: 238 to 239
+-- Lines 238-240
 function PlayerWarp:target_data()
 	return self._target.data
 end
 
--- Lines: 242 to 244
+-- Lines 242-244
 function PlayerWarp:clear_snap_points()
 	self._snap_points = {}
 end
 
--- Lines: 246 to 248
+-- Lines 246-248
 function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	table.insert(self._snap_points, {
 		position = position,
@@ -282,13 +287,15 @@ function PlayerWarp:add_snap_point(position, type, tolerance, data)
 	})
 end
 
--- Lines: 250 to 264
+-- Lines 250-264
 local function brush_debug_print(brush, position, ysize, text_data)
 	local ypos = 0
 	local t = text_data
 
 	if type(t) == "string" then
-		t = {text_data}
+		t = {
+			text_data
+		}
 	end
 
 	for _, text in ipairs(t) do
@@ -302,7 +309,7 @@ end
 
 local jump_vec = Vector3()
 
--- Lines: 268 to 368
+-- Lines 268-368
 function PlayerWarp:update(unit, t, dt)
 	if self._targeting then
 		self._target.position = nil
@@ -403,7 +410,7 @@ function PlayerWarp:update(unit, t, dt)
 
 			mvector3.cross(right, dir, math.UP)
 
-			local text_pos = (ppos + dir * math.min(distance, 200)) - right * 10 + dir * 30
+			local text_pos = ppos + dir * math.min(distance, 200) - right * 10 + dir * 30
 
 			mvector3.set_z(text_pos, self._target.position.z + 50)
 			brush_debug_print(self._brush_text, text_pos - right * 10, 5, info)
@@ -413,38 +420,38 @@ function PlayerWarp:update(unit, t, dt)
 	self:update_ladder_targeting()
 end
 
--- Lines: 370 to 372
+-- Lines 370-372
 function PlayerWarp:set_range(range)
 	self._range = math.min(range, self._max_range)
 end
 
--- Lines: 374 to 377
+-- Lines 374-377
 function PlayerWarp:set_max_range(max_range)
 	self._max_range = max_range
 	self._range = math.min(self._range, max_range)
 end
 
--- Lines: 379 to 381
+-- Lines 379-381
 function PlayerWarp:set_enable_jump(enabled)
 	self._enable_jump = enabled
 end
 
--- Lines: 383 to 385
+-- Lines 383-385
 function PlayerWarp:set_max_jump_distance(max_jump_distance)
 	self._max_jump_distance = max_jump_distance
 end
 
--- Lines: 387 to 389
+-- Lines 387-389
 function PlayerWarp:set_jump_move_speed(speed)
 	self._jump_move_speed = speed
 end
 
--- Lines: 391 to 393
+-- Lines 391-393
 function PlayerWarp:set_blocked(blocked)
 	self._blocked = blocked
 end
 
--- Lines: 395 to 435
+-- Lines 395-435
 function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 	local line_segments = {}
 	local v = target - source
@@ -478,7 +485,7 @@ function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 
 	local n = #line_segments
 
-	for i = 1, n - 1, 1 do
+	for i = 1, n - 1 do
 		local p1 = source + v * line_segments[i][1]
 
 		mvector3.set_z(p1, line_segments[i][2])
@@ -492,7 +499,7 @@ function PlayerWarp:_draw_bezier(brush, source, target, tangent)
 	end
 end
 
--- Lines: 437 to 476
+-- Lines 437-476
 function PlayerWarp:_draw(brush, geo, unit_pos)
 	local yaw = self._player_unit:camera():rotation():yaw()
 
@@ -546,7 +553,7 @@ function PlayerWarp:_draw(brush, geo, unit_pos)
 	end
 end
 
--- Lines: 478 to 520
+-- Lines 478-520
 function PlayerWarp:_find_warp_position(player_position, pos, forward)
 	local warp_target, jump_target = self:_find_target(player_position, pos, forward)
 	self._target.type = "move"
@@ -583,7 +590,7 @@ function PlayerWarp:_find_warp_position(player_position, pos, forward)
 	end
 end
 
--- Lines: 527 to 562
+-- Lines 522-563
 function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_target, jump_target)
 	if not self._enable_jump then
 		return false
@@ -618,7 +625,7 @@ function PlayerWarp:_is_jump_candidate(player_position, warp_position, warp_targ
 	return true
 end
 
--- Lines: 565 to 570
+-- Lines 565-571
 local function clip_line_to_sphere(origin, radius, position, direction)
 	local o_c = position - origin
 	local p = mvector3.dot(o_c, direction)
@@ -628,7 +635,7 @@ local function clip_line_to_sphere(origin, radius, position, direction)
 	return length > 0 and length or 0
 end
 
--- Lines: 575 to 652
+-- Lines 573-653
 function PlayerWarp:_find_target(player_position, position, forward)
 	if mvector3.dot(forward, math.UP) > 0.8 then
 		return nil
@@ -693,7 +700,7 @@ function PlayerWarp:_find_target(player_position, position, forward)
 	return warp_target, jump_target
 end
 
--- Lines: 655 to 670
+-- Lines 655-671
 function PlayerWarp:_check_snap_point(position, forward, sp)
 	local dir = mvector3.copy(sp.position)
 
@@ -715,4 +722,3 @@ function PlayerWarp:_check_snap_point(position, forward, sp)
 
 	return false
 end
-

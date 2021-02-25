@@ -4,14 +4,16 @@ CivilianLogicSurrender.on_new_objective = CivilianLogicIdle.on_new_objective
 CivilianLogicSurrender.on_rescue_allowed_state = CivilianLogicFlee.on_rescue_allowed_state
 CivilianLogicSurrender.wants_rescue = CivilianLogicFlee.wants_rescue
 
--- Lines: 15 to 110
+-- Lines 15-110
 function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local force_lie_down = enter_params and enter_params.force_lie_down or false
 	local old_internal_data = data.internal_data
-	local my_data = {unit = data.unit}
+	local my_data = {
+		unit = data.unit
+	}
 	data.internal_data = my_data
 
 	if data.is_tied then
@@ -115,7 +117,7 @@ function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 114 to 154
+-- Lines 114-154
 function CivilianLogicSurrender.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -159,7 +161,7 @@ function CivilianLogicSurrender.exit(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 159 to 181
+-- Lines 158-181
 function CivilianLogicSurrender.queued_update(rubbish, data)
 	local my_data = data.internal_data
 
@@ -194,7 +196,7 @@ function CivilianLogicSurrender.queued_update(rubbish, data)
 	end
 end
 
--- Lines: 185 to 256
+-- Lines 185-256
 function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee)
 	local my_data = data.internal_data
 
@@ -276,7 +278,9 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee
 			CivilianLogicFlee._chk_add_delayed_rescue_SO(data, my_data)
 
 			if aggressor_unit == managers.player:player_unit() then
-				managers.statistics:tied({name = data.unit:base()._tweak_table})
+				managers.statistics:tied({
+					name = data.unit:base()._tweak_table
+				})
 			else
 				aggressor_unit:network():send_to_unit({
 					"statistics_tied",
@@ -289,7 +293,7 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee
 	end
 end
 
--- Lines: 260 to 270
+-- Lines 260-270
 function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, initial_act)
 	local my_data = data.internal_data
 	local adj_sumbission = amount * data.char_tweak.submission_intimidate
@@ -306,7 +310,7 @@ function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, in
 	data.unit:brain():action_request(action_data)
 end
 
--- Lines: 274 to 284
+-- Lines 274-284
 function CivilianLogicSurrender.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -318,7 +322,7 @@ function CivilianLogicSurrender.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 288 to 310
+-- Lines 288-310
 function CivilianLogicSurrender.on_intimidated(data, amount, aggressor_unit, skip_delay)
 	if data.is_tied then
 		return
@@ -350,7 +354,7 @@ function CivilianLogicSurrender.on_intimidated(data, amount, aggressor_unit, ski
 	end
 end
 
--- Lines: 314 to 361
+-- Lines 314-361
 function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 	local data = params[1]
 	local my_data = data.internal_data
@@ -421,7 +425,7 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 	end
 end
 
--- Lines: 366 to 442
+-- Lines 365-442
 function CivilianLogicSurrender.on_alert(data, alert_data)
 	local alert_type = alert_data[1]
 
@@ -515,7 +519,7 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 	end
 end
 
--- Lines: 446 to 545
+-- Lines 446-532
 function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -523,8 +527,8 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	local delta_t = t - my_data.last_upd_t
 	local my_pos = data.unit:movement():m_head_pos()
 	local enemies = managers.groupai:state():all_criminals()
-	local visible, closest_dis, closest_enemy
-	visible, closest_dis, closest_enemy, my_data.inside_intimidate_aura = nil
+	local visible, closest_dis, closest_enemy = nil
+	my_data.inside_intimidate_aura = nil
 	local my_tracker = data.unit:movement():nav_tracker()
 	local chk_vis_func = my_tracker.check_visibility
 
@@ -572,7 +576,9 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 		CopLogicBase._reset_attention(data)
 	end
 
-	if my_data.inside_intimidate_aura then
+	if managers.navigation:get_nav_seg_metadata(my_tracker:nav_segment()).force_civ_submission then
+		my_data.submission_meter = my_data.submission_max
+	elseif my_data.inside_intimidate_aura then
 		my_data.submission_meter = my_data.submission_max
 	elseif visible then
 		my_data.submission_meter = math.min(my_data.submission_max, my_data.submission_meter + delta_t)
@@ -592,7 +598,7 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	my_data.last_upd_t = t
 end
 
--- Lines: 549 to 554
+-- Lines 536-542
 function CivilianLogicSurrender.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -600,4 +606,3 @@ function CivilianLogicSurrender.is_available_for_assignment(data, objective)
 
 	return not data.unit:anim_data().tied and (objective and objective.type == "revive" or data.t - data.internal_data.state_enter_t > 5 and data.internal_data.submission_meter / data.internal_data.submission_max < 0.95)
 end
-

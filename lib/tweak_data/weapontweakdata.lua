@@ -15,7 +15,7 @@ local SELECTION = {
 }
 WeaponTweakData = WeaponTweakData or class()
 
--- Lines: 21 to 386
+-- Lines 21-391
 function WeaponTweakData:init(tweak_data)
 	self:_create_table_structure()
 	self:_init_data_npc_melee()
@@ -40,6 +40,7 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_sentry_gun_npc()
 	self:_init_data_swat_van_turret_module_npc()
 	self:_init_data_aa_turret_module_npc()
+	self:_init_data_crate_turret_module_npc()
 	self:_init_data_ceiling_turret_module_npc()
 	self:_init_data_s552_npc()
 	self:_init_data_scar_npc()
@@ -212,14 +213,19 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_x_rota_crew()
 	self:_init_data_shuno_crew()
 	self:_init_data_system_crew()
+	self:_init_data_komodo_crew()
+	self:_init_data_elastic_crew()
+	self:_init_data_legacy_crew()
+	self:_init_data_x_legacy_crew()
+	self:_init_data_coach_crew()
 	self:_precalculate_values()
 end
 
--- Lines: 389 to 390
+-- Lines 393-395
 function WeaponTweakData:_set_easy()
 end
 
--- Lines: 393 to 419
+-- Lines 397-429
 function WeaponTweakData:_set_normal()
 	self.swat_van_turret_module.HEALTH_INIT = 3500
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 70
@@ -241,9 +247,12 @@ function WeaponTweakData:_set_normal()
 	self.aa_turret_module.HEALTH_INIT = 4500
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 70
 	self.aa_turret_module.DAMAGE = 0.2
+	self.crate_turret_module.HEALTH_INIT = 875
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 2
+	self.crate_turret_module.DAMAGE = 0.2
 end
 
--- Lines: 422 to 442
+-- Lines 431-460
 function WeaponTweakData:_set_hard()
 	self.swat_van_turret_module.HEALTH_INIT = 3500
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 70
@@ -259,9 +268,12 @@ function WeaponTweakData:_set_hard()
 	self.aa_turret_module.HEALTH_INIT = 4500
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 70
 	self.aa_turret_module.DAMAGE = 0.2
+	self.crate_turret_module.HEALTH_INIT = 875
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 70
+	self.crate_turret_module.DAMAGE = 0.2
 end
 
--- Lines: 445 to 459
+-- Lines 462-482
 function WeaponTweakData:_set_overkill()
 	self.swat_van_turret_module.HEALTH_INIT = 12500
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 300
@@ -272,9 +284,12 @@ function WeaponTweakData:_set_overkill()
 	self.aa_turret_module.HEALTH_INIT = 13500
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 300
 	self.aa_turret_module.DAMAGE = 1.3
+	self.crate_turret_module.HEALTH_INIT = 6250
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 150
+	self.crate_turret_module.DAMAGE = 1.3
 end
 
--- Lines: 461 to 478
+-- Lines 484-506
 function WeaponTweakData:_set_overkill_145()
 	self.ak47_ass_npc.DAMAGE = 2
 	self.swat_van_turret_module.HEALTH_INIT = 25000
@@ -286,9 +301,12 @@ function WeaponTweakData:_set_overkill_145()
 	self.aa_turret_module.HEALTH_INIT = 26000
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 500
 	self.aa_turret_module.DAMAGE = 2
+	self.crate_turret_module.HEALTH_INIT = 12500
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 500
+	self.crate_turret_module.DAMAGE = 2
 end
 
--- Lines: 480 to 501
+-- Lines 508-538
 function WeaponTweakData:_set_easy_wish()
 	self.ak47_ass_npc.DAMAGE = 2.5
 	self.g36_npc.DAMAGE = 1
@@ -304,9 +322,13 @@ function WeaponTweakData:_set_easy_wish()
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 700
 	self.aa_turret_module.DAMAGE = 3.5
 	self.aa_turret_module.CLIP_SIZE = 800
+	self.crate_turret_module.HEALTH_INIT = 20000
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 700
+	self.crate_turret_module.DAMAGE = 3.5
+	self.crate_turret_module.CLIP_SIZE = 800
 end
 
--- Lines: 503 to 523
+-- Lines 540-566
 function WeaponTweakData:_set_overkill_290()
 	self.ak47_ass_npc.DAMAGE = 3
 	self.swat_van_turret_module.HEALTH_INIT = 40000
@@ -321,9 +343,13 @@ function WeaponTweakData:_set_overkill_290()
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 700
 	self.aa_turret_module.DAMAGE = 3.5
 	self.aa_turret_module.CLIP_SIZE = 800
+	self.crate_turret_module.HEALTH_INIT = 20000
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 700
+	self.crate_turret_module.DAMAGE = 3.5
+	self.crate_turret_module.CLIP_SIZE = 800
 end
 
--- Lines: 526 to 550
+-- Lines 568-602
 function WeaponTweakData:_set_sm_wish()
 	self.ak47_ass_npc.DAMAGE = 3
 	self.m4_npc.DAMAGE = 3
@@ -342,11 +368,17 @@ function WeaponTweakData:_set_sm_wish()
 	self.aa_turret_module.SHIELD_HEALTH_INIT = 700
 	self.aa_turret_module.DAMAGE = 3.5
 	self.aa_turret_module.CLIP_SIZE = 800
+	self.crate_turret_module.HEALTH_INIT = 20000
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 350
+	self.crate_turret_module.DAMAGE = 3.5
+	self.crate_turret_module.CLIP_SIZE = 800
 end
 
--- Lines: 554 to 591
+-- Lines 606-643
 function WeaponTweakData:_init_data_npc_melee()
-	self.npc_melee = {baton = {}}
+	self.npc_melee = {
+		baton = {}
+	}
 	self.npc_melee.baton.unit_name = Idstring("units/payday2/characters/ene_acc_baton/ene_acc_baton")
 	self.npc_melee.baton.damage = 10
 	self.npc_melee.baton.animation_param = "melee_baton"
@@ -371,16 +403,18 @@ function WeaponTweakData:_init_data_npc_melee()
 	}
 end
 
--- Lines: 593 to 597
+-- Lines 645-649
 function WeaponTweakData:_set_npc_weapon_damage_multiplier(mul)
 	for name, data in pairs(self.npc_melee) do
 		data.damage = data.damage * mul
 	end
 end
 
--- Lines: 601 to 623
+-- Lines 653-675
 function WeaponTweakData:_init_data_c45_npc()
-	self.c45_npc.categories = {"pistol"}
+	self.c45_npc.categories = {
+		"pistol"
+	}
 	self.c45_npc.sounds.prefix = "c45_npc"
 	self.c45_npc.use_data.selection_index = SELECTION.SECONDARY
 	self.c45_npc.DAMAGE = 1
@@ -397,7 +431,7 @@ function WeaponTweakData:_init_data_c45_npc()
 	self.colt_1911_primary_npc.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 627 to 646
+-- Lines 679-698
 function WeaponTweakData:_init_data_x_c45_npc()
 	self.x_c45_npc.categories = {
 		"akimbo",
@@ -417,7 +451,7 @@ function WeaponTweakData:_init_data_x_c45_npc()
 	self.x_c45_npc.FIRE_MODE = "single"
 end
 
--- Lines: 650 to 669
+-- Lines 702-721
 function WeaponTweakData:_init_data_beretta92_npc()
 	self.beretta92_npc.categories = clone(self.b92fs.categories)
 	self.beretta92_npc.sounds.prefix = "beretta_npc"
@@ -434,7 +468,7 @@ function WeaponTweakData:_init_data_beretta92_npc()
 	self.beretta92_npc.FIRE_MODE = "single"
 end
 
--- Lines: 671 to 693
+-- Lines 723-745
 function WeaponTweakData:_init_data_glock_18_npc()
 	self.glock_18_npc.categories = clone(self.glock_18c.categories)
 	self.glock_18_npc.sounds.prefix = "g18c_npc"
@@ -446,13 +480,15 @@ function WeaponTweakData:_init_data_glock_18_npc()
 	self.glock_18_npc.CLIP_AMMO_MAX = 20
 	self.glock_18_npc.NR_CLIPS_MAX = 8
 	self.glock_18_npc.hold = "pistol"
-	self.glock_18_npc.auto = {fire_rate = 0.092}
+	self.glock_18_npc.auto = {
+		fire_rate = 0.092
+	}
 	self.glock_18_npc.alert_size = 2500
 	self.glock_18_npc.suppression = 0.45
 	self.glock_18_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 696 to 715
+-- Lines 748-767
 function WeaponTweakData:_init_data_raging_bull_npc()
 	self.raging_bull_npc.categories = clone(self.new_raging_bull.categories)
 	self.raging_bull_npc.sounds.prefix = "rbull_npc"
@@ -469,7 +505,7 @@ function WeaponTweakData:_init_data_raging_bull_npc()
 	self.raging_bull_npc.FIRE_MODE = "single"
 end
 
--- Lines: 719 to 746
+-- Lines 771-798
 function WeaponTweakData:_init_data_m4_npc()
 	self.m4_npc.categories = clone(self.new_m4.categories)
 	self.m4_npc.sounds.prefix = "m4_npc"
@@ -487,7 +523,7 @@ function WeaponTweakData:_init_data_m4_npc()
 	self.ak47_ass_npc = deep_clone(self.m4_npc)
 end
 
--- Lines: 748 to 771
+-- Lines 800-823
 function WeaponTweakData:_init_data_m4_yellow_npc()
 	self.m4_yellow_npc.categories = clone(self.new_m4.categories)
 	self.m4_yellow_npc.sounds.prefix = "m4_npc"
@@ -504,9 +540,11 @@ function WeaponTweakData:_init_data_m4_yellow_npc()
 	self.m4_yellow_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 773 to 797
+-- Lines 825-849
 function WeaponTweakData:_init_data_ak47_npc()
-	self.ak47_npc.categories = {"assault_rifle"}
+	self.ak47_npc.categories = {
+		"assault_rifle"
+	}
 	self.ak47_npc.sounds.prefix = "akm_npc"
 	self.ak47_npc.use_data.selection_index = SELECTION.PRIMARY
 	self.ak47_npc.DAMAGE = 3
@@ -521,7 +559,7 @@ function WeaponTweakData:_init_data_ak47_npc()
 	self.ak47_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 801 to 821
+-- Lines 853-873
 function WeaponTweakData:_init_data_m14_npc()
 	self.m14_npc.categories = clone(self.new_m14.categories)
 	self.m14_npc.sounds.prefix = "m14_npc"
@@ -538,9 +576,11 @@ function WeaponTweakData:_init_data_m14_npc()
 	self.ak47_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 825 to 856
+-- Lines 877-908
 function WeaponTweakData:_init_data_m14_sniper_npc()
-	self.m14_sniper_npc.categories = {"snp"}
+	self.m14_sniper_npc.categories = {
+		"snp"
+	}
 	self.m14_sniper_npc.sounds.prefix = "sniper_npc"
 	self.m14_sniper_npc.use_data.selection_index = SELECTION.PRIMARY
 	self.m14_sniper_npc.DAMAGE = 2
@@ -560,7 +600,7 @@ function WeaponTweakData:_init_data_m14_sniper_npc()
 	self.heavy_snp_npc.sounds.prefix = "zsniper_npc"
 end
 
--- Lines: 861 to 890
+-- Lines 913-942
 function WeaponTweakData:_init_data_r870_npc()
 	self.r870_npc.categories = clone(self.r870.categories)
 	self.r870_npc.sounds.prefix = "remington_npc"
@@ -580,9 +620,11 @@ function WeaponTweakData:_init_data_r870_npc()
 	self.benelli_npc = deep_clone(self.r870_npc)
 end
 
--- Lines: 894 to 916
+-- Lines 946-968
 function WeaponTweakData:_init_data_mossberg_npc()
-	self.mossberg_npc.categories = {"shotgun"}
+	self.mossberg_npc.categories = {
+		"shotgun"
+	}
 	self.mossberg_npc.sounds.prefix = "mossberg_npc"
 	self.mossberg_npc.use_data.selection_index = SELECTION.PRIMARY
 	self.mossberg_npc.DAMAGE = 6
@@ -599,7 +641,7 @@ function WeaponTweakData:_init_data_mossberg_npc()
 	self.mossberg_npc.spread = 3
 end
 
--- Lines: 920 to 953
+-- Lines 972-1005
 function WeaponTweakData:_init_data_mp5_npc()
 	self.mp5_npc.categories = clone(self.new_mp5.categories)
 	self.mp5_npc.sounds.prefix = "mp5_npc"
@@ -623,9 +665,11 @@ function WeaponTweakData:_init_data_mp5_npc()
 	self.asval_smg_npc.has_suppressor = "suppressed_a"
 end
 
--- Lines: 957 to 978
+-- Lines 1009-1030
 function WeaponTweakData:_init_data_mac11_npc()
-	self.mac11_npc.categories = {"smg"}
+	self.mac11_npc.categories = {
+		"smg"
+	}
 	self.mac11_npc.sounds.prefix = "mp5_npc"
 	self.mac11_npc.use_data.selection_index = SELECTION.SECONDARY
 	self.mac11_npc.DAMAGE = 1
@@ -644,7 +688,7 @@ function WeaponTweakData:_init_data_mac11_npc()
 	self.mac11_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 981 to 1006
+-- Lines 1033-1058
 function WeaponTweakData:_init_data_g36_npc()
 	self.g36_npc.categories = clone(self.g36.categories)
 	self.g36_npc.sounds.prefix = "g36_npc"
@@ -661,7 +705,7 @@ function WeaponTweakData:_init_data_g36_npc()
 	self.g36_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 1008 to 1032
+-- Lines 1087-1111
 function WeaponTweakData:_init_data_mp9_npc()
 	self.mp9_npc.categories = clone(self.mp9.categories)
 	self.mp9_npc.sounds.prefix = "mp9_npc"
@@ -680,7 +724,7 @@ function WeaponTweakData:_init_data_mp9_npc()
 	self.sr2_smg_npc = deep_clone(self.mp9_npc)
 end
 
--- Lines: 1034 to 1057
+-- Lines 1113-1136
 function WeaponTweakData:_init_data_saiga_npc()
 	self.saiga_npc.categories = clone(self.saiga.categories)
 	self.saiga_npc.sounds.prefix = "saiga_npc"
@@ -700,7 +744,7 @@ function WeaponTweakData:_init_data_saiga_npc()
 	self.saiga_npc.spread = 3
 end
 
--- Lines: 1067 to 1110
+-- Lines 1140-1189
 function WeaponTweakData:_init_data_sentry_gun_npc()
 	self.sentry_gun.categories = {}
 	self.sentry_gun.name_id = "debug_sentry_gun"
@@ -759,7 +803,7 @@ function WeaponTweakData:_init_data_sentry_gun_npc()
 	self.sentry_gun.suppression = 0.8
 end
 
--- Lines: 1114 to 1185
+-- Lines 1193-1264
 function WeaponTweakData:_init_data_swat_van_turret_module_npc()
 	self.swat_van_turret_module.name_id = "debug_sentry_gun"
 	self.swat_van_turret_module.DAMAGE = 3
@@ -865,7 +909,7 @@ function WeaponTweakData:_init_data_swat_van_turret_module_npc()
 	self.swat_van_turret_module.suppression = 0.8
 end
 
--- Lines: 1188 to 1253
+-- Lines 1267-1332
 function WeaponTweakData:_init_data_aa_turret_module_npc()
 	self.aa_turret_module.name_id = "debug_sentry_gun"
 	self.aa_turret_module.DAMAGE = 3
@@ -959,7 +1003,101 @@ function WeaponTweakData:_init_data_aa_turret_module_npc()
 	self.aa_turret_module.suppression = 0.8
 end
 
--- Lines: 1255 to 1336
+-- Lines 1336-1401
+function WeaponTweakData:_init_data_crate_turret_module_npc()
+	self.crate_turret_module.name_id = "debug_sentry_gun"
+	self.crate_turret_module.DAMAGE = 3
+	self.crate_turret_module.DAMAGE_MUL_RANGE = {
+		{
+			800,
+			4
+		},
+		{
+			1000,
+			1.1
+		},
+		{
+			1500,
+			1
+		}
+	}
+	self.crate_turret_module.SUPPRESSION = 1
+	self.crate_turret_module.SPREAD = 0.5
+	self.crate_turret_module.FIRE_RANGE = 30000
+	self.crate_turret_module.DETECTION_RANGE = self.crate_turret_module.FIRE_RANGE
+	self.crate_turret_module.CLIP_SIZE = 400
+	self.crate_turret_module.AUTO_RELOAD = true
+	self.crate_turret_module.AUTO_RELOAD_DURATION = 8
+	self.crate_turret_module.CAN_GO_IDLE = false
+	self.crate_turret_module.IDLE_WAIT_TIME = 5
+	self.crate_turret_module.AUTO_REPAIR = true
+	self.crate_turret_module.AUTO_REPAIR_MAX_COUNT = math.huge
+	self.crate_turret_module.AUTO_REPAIR_DURATION = 30
+	self.crate_turret_module.ECM_HACKABLE = true
+	self.crate_turret_module.HACKABLE_WITH_ECM = true
+	self.crate_turret_module.VELOCITY_COMPENSATION = {
+		OVERCOMPENSATION = 50,
+		SNAPSHOT_INTERVAL = 0.3
+	}
+	self.crate_turret_module.muzzleflash = "effects/payday2/particles/weapons/big_762_auto"
+	self.crate_turret_module.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556_lmg"
+	self.crate_turret_module.auto.fire_rate = 0.06
+	self.crate_turret_module.alert_size = 2500
+	self.crate_turret_module.headshot_dmg_mul = 4
+	self.crate_turret_module.EXPLOSION_DMG_MUL = 7
+	self.crate_turret_module.FIRE_DMG_MUL = 0.1
+	self.crate_turret_module.BAG_DMG_MUL = 100
+	self.crate_turret_module.SHIELD_DMG_MUL = 1
+	self.crate_turret_module.HEALTH_INIT = 5000
+	self.crate_turret_module.SHIELD_HEALTH_INIT = 1000
+	self.crate_turret_module.SHIELD_DAMAGE_CLAMP = 350
+	self.crate_turret_module.BODY_DAMAGE_CLAMP = 4200
+	self.crate_turret_module.DEATH_VERIFICATION = {
+		0.4,
+		0.75
+	}
+	self.crate_turret_module.DETECTION_RANGE = 8000
+	self.crate_turret_module.DETECTION_DELAY = {
+		{
+			900,
+			0.3
+		},
+		{
+			3500,
+			1.5
+		}
+	}
+	self.crate_turret_module.KEEP_FIRE_ANGLE = 0.9
+	self.crate_turret_module.MAX_VEL_SPIN = 72
+	self.crate_turret_module.MIN_VEL_SPIN = self.crate_turret_module.MAX_VEL_SPIN * 0.05
+	self.crate_turret_module.SLOWDOWN_ANGLE_SPIN = 30
+	self.crate_turret_module.ACC_SPIN = self.crate_turret_module.MAX_VEL_SPIN * 5
+	self.crate_turret_module.MAX_VEL_PITCH = 60
+	self.crate_turret_module.MIN_VEL_PITCH = self.crate_turret_module.MAX_VEL_PITCH * 0.05
+	self.crate_turret_module.SLOWDOWN_ANGLE_PITCH = 20
+	self.crate_turret_module.ACC_PITCH = self.crate_turret_module.MAX_VEL_PITCH * 5
+	self.crate_turret_module.recoil = {
+		horizontal = {
+			1,
+			1.5,
+			1,
+			1
+		},
+		vertical = {
+			1,
+			1.5,
+			1,
+			1
+		}
+	}
+	self.crate_turret_module.challenges = {
+		group = "sentry_gun",
+		weapon = "sentry_gun"
+	}
+	self.crate_turret_module.suppression = 0.8
+end
+
+-- Lines 1404-1485
 function WeaponTweakData:_init_data_ceiling_turret_module_npc()
 	self.ceiling_turret_module.name_id = "debug_sentry_gun"
 	self.ceiling_turret_module.DAMAGE = 3
@@ -1071,7 +1209,7 @@ function WeaponTweakData:_init_data_ceiling_turret_module_npc()
 	self.ceiling_turret_module_longer_range.DETECTION_RANGE = self.ceiling_turret_module_longer_range.FIRE_RANGE
 end
 
--- Lines: 1339 to 1360
+-- Lines 1488-1509
 function WeaponTweakData:_init_data_s552_npc()
 	self.s552_npc.categories = clone(self.s552.categories)
 	self.s552_npc.sounds.prefix = "sig552_npc"
@@ -1088,7 +1226,7 @@ function WeaponTweakData:_init_data_s552_npc()
 	self.s552_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 1365 to 1385
+-- Lines 1514-1534
 function WeaponTweakData:_init_data_scar_npc()
 	self.scar_npc.categories = clone(self.scar.categories)
 	self.scar_npc.sounds.prefix = "scar_npc"
@@ -1105,7 +1243,7 @@ function WeaponTweakData:_init_data_scar_npc()
 	self.scar_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 1389 to 1409
+-- Lines 1538-1558
 function WeaponTweakData:_init_data_hk21_npc()
 	self.hk21_npc.categories = clone(self.hk21.categories)
 	self.hk21_npc.sounds.prefix = "hk23e_npc"
@@ -1122,7 +1260,7 @@ function WeaponTweakData:_init_data_hk21_npc()
 	self.hk21_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 1412 to 1438
+-- Lines 1561-1587
 function WeaponTweakData:_init_data_m249_npc()
 	self.m249_npc.categories = clone(self.m249.categories)
 	self.m249_npc.sounds.prefix = "m249_npc"
@@ -1140,7 +1278,7 @@ function WeaponTweakData:_init_data_m249_npc()
 	self.rpk_lmg_npc = deep_clone(self.m249_npc)
 end
 
--- Lines: 1440 to 1462
+-- Lines 1589-1611
 function WeaponTweakData:_init_data_mini_npc()
 	self.mini_npc.categories = clone(self.m134.categories)
 	self.mini_npc.sounds.prefix = "minigun_npc"
@@ -1157,7 +1295,7 @@ function WeaponTweakData:_init_data_mini_npc()
 	self.mini_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 1466 to 1508
+-- Lines 1615-1657
 function WeaponTweakData:_init_data_contraband_npc()
 	self.contraband_npc.categories = clone(self.contraband.categories)
 	self.contraband_npc.sounds.prefix = "contraband_npc"
@@ -1188,9 +1326,11 @@ function WeaponTweakData:_init_data_contraband_npc()
 	self.contraband_m203_npc.FIRE_MODE = "auto"
 end
 
--- Lines: 1513 to 1536
+-- Lines 1662-1685
 function WeaponTweakData:_init_data_c45_crew()
-	self.c45_crew.categories = {"pistol"}
+	self.c45_crew.categories = {
+		"pistol"
+	}
 	self.c45_crew.sounds.prefix = "c45_npc"
 	self.c45_crew.use_data.selection_index = SELECTION.SECONDARY
 	self.c45_crew.DAMAGE = 1
@@ -1208,7 +1348,7 @@ function WeaponTweakData:_init_data_c45_crew()
 	self.colt_1911_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 1540 to 1559
+-- Lines 1689-1708
 function WeaponTweakData:_init_data_x_c45_crew()
 	self.x_c45_crew.categories = {
 		"akimbo",
@@ -1228,7 +1368,7 @@ function WeaponTweakData:_init_data_x_c45_crew()
 	self.x_c45_crew.FIRE_MODE = "single"
 end
 
--- Lines: 1563 to 1586
+-- Lines 1712-1735
 function WeaponTweakData:_init_data_beretta92_crew()
 	self.beretta92_crew.categories = clone(self.b92fs.categories)
 	self.beretta92_crew.sounds.prefix = "beretta_npc"
@@ -1248,7 +1388,7 @@ function WeaponTweakData:_init_data_beretta92_crew()
 	self.beretta92_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 1588 to 1614
+-- Lines 1737-1763
 function WeaponTweakData:_init_data_glock_18_crew()
 	self.glock_18_crew.categories = clone(self.glock_18c.categories)
 	self.glock_18_crew.sounds.prefix = "g18c_npc"
@@ -1261,7 +1401,9 @@ function WeaponTweakData:_init_data_glock_18_crew()
 	self.glock_18_crew.NR_CLIPS_MAX = 8
 	self.glock_18_crew.pull_magazine_during_reload = "pistol"
 	self.glock_18_crew.hold = "pistol"
-	self.glock_18_crew.auto = {fire_rate = 0.066}
+	self.glock_18_crew.auto = {
+		fire_rate = 0.066
+	}
 	self.glock_18_crew.alert_size = 2500
 	self.glock_18_crew.suppression = 0.45
 	self.glock_18_crew.FIRE_MODE = "auto"
@@ -1269,7 +1411,7 @@ function WeaponTweakData:_init_data_glock_18_crew()
 	self.glock_18c_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 1617 to 1640
+-- Lines 1766-1789
 function WeaponTweakData:_init_data_raging_bull_crew()
 	self.raging_bull_crew.categories = clone(self.new_raging_bull.categories)
 	self.raging_bull_crew.sounds.prefix = "rbull_npc"
@@ -1289,7 +1431,7 @@ function WeaponTweakData:_init_data_raging_bull_crew()
 	self.raging_bull_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 1644 to 1675
+-- Lines 1793-1824
 function WeaponTweakData:_init_data_m4_crew()
 	self.m4_crew.categories = clone(self.new_m4.categories)
 	self.m4_crew.sounds.prefix = "m4_npc"
@@ -1310,9 +1452,11 @@ function WeaponTweakData:_init_data_m4_crew()
 	self.ak47_ass_crew = deep_clone(self.m4_crew)
 end
 
--- Lines: 1677 to 1701
+-- Lines 1826-1850
 function WeaponTweakData:_init_data_ak47_crew()
-	self.ak47_crew.categories = {"assault_rifle"}
+	self.ak47_crew.categories = {
+		"assault_rifle"
+	}
 	self.ak47_crew.sounds.prefix = "akm_npc"
 	self.ak47_crew.use_data.selection_index = SELECTION.PRIMARY
 	self.ak47_crew.DAMAGE = 3
@@ -1327,7 +1471,7 @@ function WeaponTweakData:_init_data_ak47_crew()
 	self.ak47_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 1705 to 1726
+-- Lines 1854-1875
 function WeaponTweakData:_init_data_m14_crew()
 	self.m14_crew.categories = clone(self.new_m14.categories)
 	self.m14_crew.sounds.prefix = "m14_npc"
@@ -1345,7 +1489,7 @@ function WeaponTweakData:_init_data_m14_crew()
 	self.m14_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 1730 to 1752
+-- Lines 1879-1901
 function WeaponTweakData:_init_data_r870_crew()
 	self.r870_crew.categories = clone(self.r870.categories)
 	self.r870_crew.sounds.prefix = "remington_npc"
@@ -1363,9 +1507,11 @@ function WeaponTweakData:_init_data_r870_crew()
 	self.benelli_crew = deep_clone(self.r870_crew)
 end
 
--- Lines: 1756 to 1776
+-- Lines 1905-1925
 function WeaponTweakData:_init_data_mossberg_crew()
-	self.mossberg_crew.categories = {"shotgun"}
+	self.mossberg_crew.categories = {
+		"shotgun"
+	}
 	self.mossberg_crew.sounds.prefix = "mossberg_npc"
 	self.mossberg_crew.use_data.selection_index = SELECTION.PRIMARY
 	self.mossberg_crew.DAMAGE = 6
@@ -1380,7 +1526,7 @@ function WeaponTweakData:_init_data_mossberg_crew()
 	self.mossberg_crew.is_shotgun = true
 end
 
--- Lines: 1780 to 1803
+-- Lines 1929-1952
 function WeaponTweakData:_init_data_mp5_crew()
 	self.mp5_crew.categories = clone(self.new_mp5.categories)
 	self.mp5_crew.sounds.prefix = "mp5_npc"
@@ -1399,7 +1545,7 @@ function WeaponTweakData:_init_data_mp5_crew()
 	self.mp5_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 1806 to 1832
+-- Lines 1955-1981
 function WeaponTweakData:_init_data_g36_crew()
 	self.g36_crew.categories = clone(self.g36.categories)
 	self.g36_crew.sounds.prefix = "g36_npc"
@@ -1417,7 +1563,7 @@ function WeaponTweakData:_init_data_g36_crew()
 	self.g36_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 1835 to 1855
+-- Lines 1984-2004
 function WeaponTweakData:_init_data_g17_crew()
 	self.g17_crew.categories = clone(self.glock_17.categories)
 	self.g17_crew.sounds.prefix = "g17_npc"
@@ -1435,7 +1581,7 @@ function WeaponTweakData:_init_data_g17_crew()
 	self.g17_crew.FIRE_MODE = "single"
 end
 
--- Lines: 1857 to 1878
+-- Lines 2006-2027
 function WeaponTweakData:_init_data_mp9_crew()
 	self.mp9_crew.categories = clone(self.mp9.categories)
 	self.mp9_crew.sounds.prefix = "mp9_npc"
@@ -1458,7 +1604,7 @@ function WeaponTweakData:_init_data_mp9_crew()
 	self.mp9_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 1880 to 1904
+-- Lines 2029-2053
 function WeaponTweakData:_init_data_olympic_crew()
 	self.olympic_crew.categories = clone(self.olympic.categories)
 	self.olympic_crew.sounds.prefix = "m4_olympic_npc"
@@ -1479,7 +1625,7 @@ function WeaponTweakData:_init_data_olympic_crew()
 	self.olympic_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 1906 to 1926
+-- Lines 2055-2075
 function WeaponTweakData:_init_data_m16_crew()
 	self.m16_crew.categories = clone(self.m16.categories)
 	self.m16_crew.sounds.prefix = "m16_npc"
@@ -1497,7 +1643,7 @@ function WeaponTweakData:_init_data_m16_crew()
 	self.m16_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 1928 to 1951
+-- Lines 2077-2100
 function WeaponTweakData:_init_data_aug_crew()
 	self.aug_crew.categories = clone(self.aug.categories)
 	self.aug_crew.sounds.prefix = "aug_npc"
@@ -1520,7 +1666,7 @@ function WeaponTweakData:_init_data_aug_crew()
 	self.aug_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 1953 to 1977
+-- Lines 2102-2126
 function WeaponTweakData:_init_data_ak74_crew()
 	self.ak74_crew.categories = clone(self.ak74.categories)
 	self.ak74_crew.sounds.prefix = "ak74_npc"
@@ -1540,7 +1686,7 @@ function WeaponTweakData:_init_data_ak74_crew()
 	self.ak74_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 1979 to 1999
+-- Lines 2128-2148
 function WeaponTweakData:_init_data_ak5_crew()
 	self.ak5_crew.categories = clone(self.ak5.categories)
 	self.ak5_crew.sounds.prefix = "ak5_npc"
@@ -1558,7 +1704,7 @@ function WeaponTweakData:_init_data_ak5_crew()
 	self.ak5_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2001 to 2024
+-- Lines 2150-2173
 function WeaponTweakData:_init_data_p90_crew()
 	self.p90_crew.categories = clone(self.p90.categories)
 	self.p90_crew.sounds.prefix = "p90_npc"
@@ -1581,7 +1727,7 @@ function WeaponTweakData:_init_data_p90_crew()
 	self.p90_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2026 to 2047
+-- Lines 2175-2196
 function WeaponTweakData:_init_data_amcar_crew()
 	self.amcar_crew.categories = clone(self.amcar.categories)
 	self.amcar_crew.sounds.prefix = "amcar_npc"
@@ -1599,7 +1745,7 @@ function WeaponTweakData:_init_data_amcar_crew()
 	self.amcar_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2049 to 2070
+-- Lines 2198-2219
 function WeaponTweakData:_init_data_mac10_crew()
 	self.mac10_crew.categories = clone(self.mac10.categories)
 	self.mac10_crew.sounds.prefix = "mac10_npc"
@@ -1618,7 +1764,7 @@ function WeaponTweakData:_init_data_mac10_crew()
 	self.mac10_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2072 to 2096
+-- Lines 2221-2245
 function WeaponTweakData:_init_data_akmsu_crew()
 	self.akmsu_crew.categories = clone(self.akmsu.categories)
 	self.akmsu_crew.sounds.prefix = "akmsu_npc"
@@ -1639,7 +1785,7 @@ function WeaponTweakData:_init_data_akmsu_crew()
 	self.akmsu_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 2098 to 2118
+-- Lines 2247-2267
 function WeaponTweakData:_init_data_akm_crew()
 	self.akm_crew.categories = clone(self.akm.categories)
 	self.akm_crew.sounds.prefix = "akm_npc"
@@ -1657,7 +1803,7 @@ function WeaponTweakData:_init_data_akm_crew()
 	self.akm_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2120 to 2140
+-- Lines 2269-2289
 function WeaponTweakData:_init_data_akm_gold_crew()
 	self.akm_gold_crew.categories = clone(self.akm_gold.categories)
 	self.akm_gold_crew.sounds.prefix = "akm_npc"
@@ -1675,7 +1821,7 @@ function WeaponTweakData:_init_data_akm_gold_crew()
 	self.akm_gold_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2142 to 2164
+-- Lines 2291-2313
 function WeaponTweakData:_init_data_deagle_crew()
 	self.deagle_crew.categories = clone(self.deagle.categories)
 	self.deagle_crew.sounds.prefix = "deagle_npc"
@@ -1695,7 +1841,7 @@ function WeaponTweakData:_init_data_deagle_crew()
 	self.deagle_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines: 2166 to 2185
+-- Lines 2315-2334
 function WeaponTweakData:_init_data_serbu_crew()
 	self.serbu_crew.categories = clone(self.serbu.categories)
 	self.serbu_crew.sounds.prefix = "serbu_npc"
@@ -1712,7 +1858,7 @@ function WeaponTweakData:_init_data_serbu_crew()
 	self.serbu_crew.is_shotgun = true
 end
 
--- Lines: 2187 to 2209
+-- Lines 2336-2358
 function WeaponTweakData:_init_data_saiga_crew()
 	self.saiga_crew.categories = clone(self.saiga.categories)
 	self.saiga_crew.sounds.prefix = "saiga_npc"
@@ -1731,7 +1877,7 @@ function WeaponTweakData:_init_data_saiga_crew()
 	self.saiga_crew.is_shotgun = true
 end
 
--- Lines: 2211 to 2231
+-- Lines 2360-2380
 function WeaponTweakData:_init_data_huntsman_crew()
 	self.huntsman_crew.categories = clone(self.huntsman.categories)
 	self.huntsman_crew.sounds.prefix = "huntsman_npc"
@@ -1749,7 +1895,7 @@ function WeaponTweakData:_init_data_huntsman_crew()
 	self.huntsman_crew.is_shotgun = true
 end
 
--- Lines: 2233 to 2255
+-- Lines 2382-2404
 function WeaponTweakData:_init_data_saw_crew()
 	self.saw_crew.categories = clone(self.saw.categories)
 	self.saw_crew.sounds.prefix = "saw_npc"
@@ -1772,7 +1918,7 @@ function WeaponTweakData:_init_data_saw_crew()
 	self.saw_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 2257 to 2280
+-- Lines 2406-2429
 function WeaponTweakData:_init_data_usp_crew()
 	self.usp_crew.categories = clone(self.usp.categories)
 	self.usp_crew.sounds.prefix = "usp45_npc"
@@ -1791,7 +1937,7 @@ function WeaponTweakData:_init_data_usp_crew()
 	self.usp_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2282 to 2305
+-- Lines 2431-2454
 function WeaponTweakData:_init_data_g22c_crew()
 	self.g22c_crew.categories = clone(self.g22c.categories)
 	self.g22c_crew.sounds.prefix = "g22_npc"
@@ -1810,7 +1956,7 @@ function WeaponTweakData:_init_data_g22c_crew()
 	self.g22c_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2307 to 2327
+-- Lines 2456-2476
 function WeaponTweakData:_init_data_judge_crew()
 	self.judge_crew.categories = clone(self.judge.categories)
 	self.judge_crew.sounds.prefix = "judge_npc"
@@ -1828,7 +1974,7 @@ function WeaponTweakData:_init_data_judge_crew()
 	self.judge_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2331 to 2353
+-- Lines 2480-2502
 function WeaponTweakData:_init_data_m45_crew()
 	self.m45_crew.categories = clone(self.m45.categories)
 	self.m45_crew.sounds.prefix = "m45_npc"
@@ -1846,7 +1992,7 @@ function WeaponTweakData:_init_data_m45_crew()
 	self.m45_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2355 to 2379
+-- Lines 2504-2528
 function WeaponTweakData:_init_data_s552_crew()
 	self.s552_crew.categories = clone(self.s552.categories)
 	self.s552_crew.sounds.prefix = "sig552_npc"
@@ -1866,7 +2012,7 @@ function WeaponTweakData:_init_data_s552_crew()
 	self.s552_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 2381 to 2402
+-- Lines 2530-2551
 function WeaponTweakData:_init_data_ppk_crew()
 	self.ppk_crew.categories = clone(self.ppk.categories)
 	self.ppk_crew.sounds.prefix = "w_ppk_npc"
@@ -1884,7 +2030,7 @@ function WeaponTweakData:_init_data_ppk_crew()
 	self.ppk_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2407 to 2429
+-- Lines 2556-2578
 function WeaponTweakData:_init_data_mp7_crew()
 	self.mp7_crew.categories = clone(self.mp7.categories)
 	self.mp7_crew.sounds.prefix = "mp7_npc"
@@ -1907,7 +2053,7 @@ function WeaponTweakData:_init_data_mp7_crew()
 	self.mp7_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2431 to 2453
+-- Lines 2580-2602
 function WeaponTweakData:_init_data_scar_crew()
 	self.scar_crew.categories = clone(self.scar.categories)
 	self.scar_crew.sounds.prefix = "scar_npc"
@@ -1925,7 +2071,7 @@ function WeaponTweakData:_init_data_scar_crew()
 	self.scar_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2455 to 2476
+-- Lines 2604-2625
 function WeaponTweakData:_init_data_p226_crew()
 	self.p226_crew.categories = clone(self.p226.categories)
 	self.p226_crew.sounds.prefix = "p226r_npc"
@@ -1943,7 +2089,7 @@ function WeaponTweakData:_init_data_p226_crew()
 	self.p226_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2482 to 2503
+-- Lines 2631-2652
 function WeaponTweakData:_init_data_hk21_crew()
 	self.hk21_crew.categories = clone(self.hk21.categories)
 	self.hk21_crew.sounds.prefix = "hk23e_npc"
@@ -1960,7 +2106,7 @@ function WeaponTweakData:_init_data_hk21_crew()
 	self.hk21_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2506 to 2527
+-- Lines 2655-2676
 function WeaponTweakData:_init_data_m249_crew()
 	self.m249_crew.categories = clone(self.m249.categories)
 	self.m249_crew.sounds.prefix = "m249_npc"
@@ -1977,7 +2123,7 @@ function WeaponTweakData:_init_data_m249_crew()
 	self.m249_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2529 to 2550
+-- Lines 2678-2699
 function WeaponTweakData:_init_data_rpk_crew()
 	self.rpk_crew.categories = clone(self.rpk.categories)
 	self.rpk_crew.sounds.prefix = "rpk_npc"
@@ -1994,7 +2140,7 @@ function WeaponTweakData:_init_data_rpk_crew()
 	self.rpk_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2558 to 2580
+-- Lines 2707-2729
 function WeaponTweakData:_init_data_m95_crew()
 	self.m95_crew.categories = clone(self.m95.categories)
 	self.m95_crew.sounds.prefix = "barrett_npc"
@@ -2013,7 +2159,7 @@ function WeaponTweakData:_init_data_m95_crew()
 	self.m95_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2583 to 2604
+-- Lines 2732-2753
 function WeaponTweakData:_init_data_msr_crew()
 	self.msr_crew.categories = clone(self.msr.categories)
 	self.msr_crew.sounds.prefix = "msr_npc"
@@ -2031,7 +2177,7 @@ function WeaponTweakData:_init_data_msr_crew()
 	self.msr_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2606 to 2627
+-- Lines 2755-2776
 function WeaponTweakData:_init_data_r93_crew()
 	self.r93_crew.categories = clone(self.r93.categories)
 	self.r93_crew.sounds.prefix = "blazer_npc"
@@ -2049,7 +2195,7 @@ function WeaponTweakData:_init_data_r93_crew()
 	self.r93_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2637 to 2659
+-- Lines 2786-2808
 function WeaponTweakData:_init_data_fal_crew()
 	self.fal_crew.categories = clone(self.fal.categories)
 	self.fal_crew.sounds.prefix = "fn_fal_npc"
@@ -2067,9 +2213,11 @@ function WeaponTweakData:_init_data_fal_crew()
 	self.fal_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2664 to 2688
+-- Lines 2813-2837
 function WeaponTweakData:_init_data_ben_crew()
-	self.ben_crew.categories = {"shotgun"}
+	self.ben_crew.categories = {
+		"shotgun"
+	}
 	self.ben_crew.sounds.prefix = "benelli_m4_npc"
 	self.ben_crew.use_data.selection_index = SELECTION.PRIMARY
 	self.ben_crew.DAMAGE = 2.1
@@ -2087,7 +2235,7 @@ function WeaponTweakData:_init_data_ben_crew()
 	self.ben_crew.is_shotgun = true
 end
 
--- Lines: 2690 to 2713
+-- Lines 2839-2862
 function WeaponTweakData:_init_data_striker_crew()
 	self.striker_crew.categories = clone(self.striker.categories)
 	self.striker_crew.sounds.prefix = "striker_npc"
@@ -2109,7 +2257,7 @@ function WeaponTweakData:_init_data_striker_crew()
 	self.striker_crew.is_shotgun = true
 end
 
--- Lines: 2715 to 2736
+-- Lines 2864-2885
 function WeaponTweakData:_init_data_ksg_crew()
 	self.ksg_crew.categories = clone(self.ksg.categories)
 	self.ksg_crew.sounds.prefix = "keltec_npc"
@@ -2127,7 +2275,7 @@ function WeaponTweakData:_init_data_ksg_crew()
 	self.ksg_crew.is_shotgun = true
 end
 
--- Lines: 2741 to 2764
+-- Lines 2890-2913
 function WeaponTweakData:_init_data_gre_m79_crew()
 	self.gre_m79_crew.categories = clone(self.gre_m79.categories)
 	self.gre_m79_crew.sounds.prefix = "gl40_npc"
@@ -2147,7 +2295,7 @@ function WeaponTweakData:_init_data_gre_m79_crew()
 	self.gre_m79_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2767 to 2789
+-- Lines 2916-2938
 function WeaponTweakData:_init_data_g3_crew()
 	self.g3_crew.categories = clone(self.g3.categories)
 	self.g3_crew.sounds.prefix = "g3_npc"
@@ -2165,7 +2313,7 @@ function WeaponTweakData:_init_data_g3_crew()
 	self.g3_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2791 to 2813
+-- Lines 2940-2962
 function WeaponTweakData:_init_data_galil_crew()
 	self.galil_crew.categories = clone(self.galil.categories)
 	self.galil_crew.sounds.prefix = "galil_npc"
@@ -2183,7 +2331,7 @@ function WeaponTweakData:_init_data_galil_crew()
 	self.galil_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2815 to 2837
+-- Lines 2964-2986
 function WeaponTweakData:_init_data_famas_crew()
 	self.famas_crew.categories = clone(self.famas.categories)
 	self.famas_crew.sounds.prefix = "famas_npc"
@@ -2204,7 +2352,7 @@ function WeaponTweakData:_init_data_famas_crew()
 	self.famas_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2841 to 2863
+-- Lines 2990-3012
 function WeaponTweakData:_init_data_scorpion_crew()
 	self.scorpion_crew.categories = clone(self.scorpion.categories)
 	self.scorpion_crew.sounds.prefix = "skorpion_npc"
@@ -2223,7 +2371,7 @@ function WeaponTweakData:_init_data_scorpion_crew()
 	self.scorpion_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2865 to 2887
+-- Lines 3014-3036
 function WeaponTweakData:_init_data_tec9_crew()
 	self.tec9_crew.categories = clone(self.tec9.categories)
 	self.tec9_crew.sounds.prefix = "tec9_npc"
@@ -2242,7 +2390,7 @@ function WeaponTweakData:_init_data_tec9_crew()
 	self.tec9_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2889 to 2911
+-- Lines 3038-3060
 function WeaponTweakData:_init_data_uzi_crew()
 	self.uzi_crew.categories = clone(self.uzi.categories)
 	self.uzi_crew.sounds.prefix = "uzi_npc"
@@ -2265,7 +2413,7 @@ function WeaponTweakData:_init_data_uzi_crew()
 	self.uzi_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 2913 to 2931
+-- Lines 3062-3080
 function WeaponTweakData:_init_data_jowi_crew()
 	self.jowi_crew.categories = clone(self.jowi.categories)
 	self.jowi_crew.sounds.prefix = "g17_npc"
@@ -2282,7 +2430,7 @@ function WeaponTweakData:_init_data_jowi_crew()
 	self.jowi_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2934 to 2952
+-- Lines 3083-3101
 function WeaponTweakData:_init_data_x_1911_crew()
 	self.x_1911_crew.categories = clone(self.x_1911.categories)
 	self.x_1911_crew.sounds.prefix = "c45_npc"
@@ -2299,7 +2447,7 @@ function WeaponTweakData:_init_data_x_1911_crew()
 	self.x_1911_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2955 to 2973
+-- Lines 3104-3122
 function WeaponTweakData:_init_data_x_b92fs_crew()
 	self.x_b92fs_crew.categories = clone(self.x_b92fs.categories)
 	self.x_b92fs_crew.sounds.prefix = "beretta_npc"
@@ -2316,7 +2464,7 @@ function WeaponTweakData:_init_data_x_b92fs_crew()
 	self.x_b92fs_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2976 to 2994
+-- Lines 3125-3143
 function WeaponTweakData:_init_data_x_deagle_crew()
 	self.x_deagle_crew.categories = clone(self.x_deagle.categories)
 	self.x_deagle_crew.sounds.prefix = "deagle_npc"
@@ -2333,7 +2481,7 @@ function WeaponTweakData:_init_data_x_deagle_crew()
 	self.x_deagle_crew.FIRE_MODE = "single"
 end
 
--- Lines: 2996 to 3015
+-- Lines 3145-3164
 function WeaponTweakData:_init_data_g26_crew()
 	self.g26_crew.categories = clone(self.g26.categories)
 	self.g26_crew.sounds.prefix = "g17_npc"
@@ -2351,7 +2499,7 @@ function WeaponTweakData:_init_data_g26_crew()
 	self.g26_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3017 to 3039
+-- Lines 3166-3188
 function WeaponTweakData:_init_data_spas12_crew()
 	self.spas12_crew.categories = clone(self.spas12.categories)
 	self.spas12_crew.sounds.prefix = "spas_npc"
@@ -2369,7 +2517,7 @@ function WeaponTweakData:_init_data_spas12_crew()
 	self.spas12_crew.is_shotgun = true
 end
 
--- Lines: 3041 to 3064
+-- Lines 3190-3213
 function WeaponTweakData:_init_data_mg42_crew()
 	self.mg42_crew.categories = clone(self.mg42.categories)
 	self.mg42_crew.sounds.prefix = "mg42_npc"
@@ -2389,7 +2537,7 @@ function WeaponTweakData:_init_data_mg42_crew()
 	self.mg42_secondary_crew.armor_piercing = true
 end
 
--- Lines: 3066 to 3084
+-- Lines 3215-3233
 function WeaponTweakData:_init_data_c96_crew()
 	self.c96_crew.categories = clone(self.c96.categories)
 	self.c96_crew.sounds.prefix = "c96_npc"
@@ -2406,7 +2554,7 @@ function WeaponTweakData:_init_data_c96_crew()
 	self.c96_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3086 to 3107
+-- Lines 3235-3256
 function WeaponTweakData:_init_data_sterling_crew()
 	self.sterling_crew.categories = clone(self.sterling.categories)
 	self.sterling_crew.sounds.prefix = "sterling_npc"
@@ -2424,7 +2572,7 @@ function WeaponTweakData:_init_data_sterling_crew()
 	self.sterling_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3109 to 3131
+-- Lines 3258-3280
 function WeaponTweakData:_init_data_mosin_crew()
 	self.mosin_crew.categories = clone(self.mosin.categories)
 	self.mosin_crew.sounds.prefix = "nagant_npc"
@@ -2443,7 +2591,7 @@ function WeaponTweakData:_init_data_mosin_crew()
 	self.mosin_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 3133 to 3155
+-- Lines 3282-3304
 function WeaponTweakData:_init_data_m1928_crew()
 	self.m1928_crew.categories = clone(self.m1928.categories)
 	self.m1928_crew.sounds.prefix = "m1928_npc"
@@ -2462,7 +2610,7 @@ function WeaponTweakData:_init_data_m1928_crew()
 	self.m1928_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3157 to 3180
+-- Lines 3306-3329
 function WeaponTweakData:_init_data_l85a2_crew()
 	self.l85a2_crew.categories = clone(self.l85a2.categories)
 	self.l85a2_crew.sounds.prefix = "l85_npc"
@@ -2482,7 +2630,7 @@ function WeaponTweakData:_init_data_l85a2_crew()
 	self.l85a2_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3182 to 3204
+-- Lines 3331-3353
 function WeaponTweakData:_init_data_vhs_crew()
 	self.vhs_crew.categories = clone(self.vhs.categories)
 	self.vhs_crew.sounds.prefix = "vhs_npc"
@@ -2504,7 +2652,7 @@ function WeaponTweakData:_init_data_vhs_crew()
 	self.vhs_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3206 to 3229
+-- Lines 3355-3378
 function WeaponTweakData:_init_data_m134_crew()
 	self.m134_crew.categories = clone(self.m134.categories)
 	self.m134_crew.sounds.prefix = "minigun_npc"
@@ -2520,10 +2668,12 @@ function WeaponTweakData:_init_data_m134_crew()
 	self.m134_crew.suppression = 1
 	self.m134_crew.FIRE_MODE = "auto"
 	self.m134_crew.has_fire_animation = true
-	self.m134_crew.animations = {thq_align_anim = "thq"}
+	self.m134_crew.animations = {
+		thq_align_anim = "thq"
+	}
 end
 
--- Lines: 3231 to 3253
+-- Lines 3380-3402
 function WeaponTweakData:_init_data_rpg7_crew()
 	self.rpg7_crew.categories = clone(self.rpg7.categories)
 	self.rpg7_crew.sounds.prefix = "rpg_npc"
@@ -2542,7 +2692,7 @@ function WeaponTweakData:_init_data_rpg7_crew()
 	self.rpg7_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3255 to 3275
+-- Lines 3404-3424
 function WeaponTweakData:_init_data_hs2000_crew()
 	self.hs2000_crew.categories = clone(self.hs2000.categories)
 	self.hs2000_crew.sounds.prefix = "p226r_npc"
@@ -2560,7 +2710,7 @@ function WeaponTweakData:_init_data_hs2000_crew()
 	self.hs2000_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3277 to 3299
+-- Lines 3426-3448
 function WeaponTweakData:_init_data_cobray_crew()
 	self.cobray_crew.categories = clone(self.cobray.categories)
 	self.cobray_crew.sounds.prefix = "cobray_npc"
@@ -2583,7 +2733,7 @@ function WeaponTweakData:_init_data_cobray_crew()
 	self.cobray_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3301 to 3321
+-- Lines 3450-3470
 function WeaponTweakData:_init_data_b682_crew()
 	self.b682_crew.categories = clone(self.b682.categories)
 	self.b682_crew.sounds.prefix = "b682_npc"
@@ -2601,7 +2751,7 @@ function WeaponTweakData:_init_data_b682_crew()
 	self.b682_crew.is_shotgun = true
 end
 
--- Lines: 3322 to 3340
+-- Lines 3471-3489
 function WeaponTweakData:_init_data_x_g22c_crew()
 	self.x_g22c_crew.categories = clone(self.x_g22c.categories)
 	self.x_g22c_crew.sounds.prefix = "g22_npc"
@@ -2618,7 +2768,7 @@ function WeaponTweakData:_init_data_x_g22c_crew()
 	self.x_g22c_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3341 to 3359
+-- Lines 3490-3508
 function WeaponTweakData:_init_data_x_g17_crew()
 	self.x_g17_crew.categories = clone(self.x_g17.categories)
 	self.x_g17_crew.sounds.prefix = "g17_npc"
@@ -2635,7 +2785,7 @@ function WeaponTweakData:_init_data_x_g17_crew()
 	self.x_g17_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3360 to 3378
+-- Lines 3509-3527
 function WeaponTweakData:_init_data_x_usp_crew()
 	self.x_usp_crew.categories = clone(self.x_usp.categories)
 	self.x_usp_crew.sounds.prefix = "usp45_npc"
@@ -2652,7 +2802,7 @@ function WeaponTweakData:_init_data_x_usp_crew()
 	self.x_usp_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3380 to 3405
+-- Lines 3529-3554
 function WeaponTweakData:_init_data_flamethrower_mk2_crew()
 	self.flamethrower_mk2_crew.categories = clone(self.flamethrower_mk2.categories)
 	self.flamethrower_mk2_crew.sounds.prefix = "flamethrower_npc"
@@ -2677,7 +2827,7 @@ function WeaponTweakData:_init_data_flamethrower_mk2_crew()
 	self.flamethrower_mk2_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3407 to 3430
+-- Lines 3556-3579
 function WeaponTweakData:_init_data_m32_crew()
 	self.m32_crew.categories = clone(self.m32.categories)
 	self.m32_crew.sounds.prefix = "mgl_npc"
@@ -2697,7 +2847,7 @@ function WeaponTweakData:_init_data_m32_crew()
 	self.m32_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3432 to 3454
+-- Lines 3581-3603
 function WeaponTweakData:_init_data_aa12_crew()
 	self.aa12_crew.categories = clone(self.aa12.categories)
 	self.aa12_crew.sounds.prefix = "aa12_npc"
@@ -2716,7 +2866,7 @@ function WeaponTweakData:_init_data_aa12_crew()
 	self.aa12_crew.is_shotgun = true
 end
 
--- Lines: 3456 to 3477
+-- Lines 3605-3626
 function WeaponTweakData:_init_data_peacemaker_crew()
 	self.peacemaker_crew.categories = clone(self.peacemaker.categories)
 	self.peacemaker_crew.sounds.prefix = "pmkr45_npc"
@@ -2735,7 +2885,7 @@ function WeaponTweakData:_init_data_peacemaker_crew()
 	self.peacemaker_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3479 to 3502
+-- Lines 3628-3651
 function WeaponTweakData:_init_data_winchester1874_crew()
 	self.winchester1874_crew.categories = clone(self.winchester1874.categories)
 	self.winchester1874_crew.sounds.prefix = "m1873_npc"
@@ -2755,7 +2905,7 @@ function WeaponTweakData:_init_data_winchester1874_crew()
 	self.winchester1874_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 3504 to 3529
+-- Lines 3653-3678
 function WeaponTweakData:_init_data_plainsrider_crew()
 	self.plainsrider_crew.categories = clone(self.plainsrider.categories)
 	self.plainsrider_crew.sounds.prefix = "bow_npc"
@@ -2776,7 +2926,7 @@ function WeaponTweakData:_init_data_plainsrider_crew()
 	self.plainsrider_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3531 to 3551
+-- Lines 3680-3700
 function WeaponTweakData:_init_data_mateba_crew()
 	self.mateba_crew.categories = clone(self.mateba.categories)
 	self.mateba_crew.sounds.prefix = "mateba_npc"
@@ -2794,7 +2944,7 @@ function WeaponTweakData:_init_data_mateba_crew()
 	self.mateba_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3553 to 3573
+-- Lines 3702-3722
 function WeaponTweakData:_init_data_asval_crew()
 	self.asval_crew.categories = clone(self.asval.categories)
 	self.asval_crew.sounds.prefix = "val_npc"
@@ -2812,7 +2962,7 @@ function WeaponTweakData:_init_data_asval_crew()
 	self.asval_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3575 to 3596
+-- Lines 3724-3745
 function WeaponTweakData:_init_data_sub2000_crew()
 	self.sub2000_crew.categories = clone(self.sub2000.categories)
 	self.sub2000_crew.sounds.prefix = "sub2k_npc"
@@ -2831,7 +2981,7 @@ function WeaponTweakData:_init_data_sub2000_crew()
 	self.sub2000_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3599 to 3621
+-- Lines 3748-3770
 function WeaponTweakData:_init_data_wa2000_crew()
 	self.wa2000_crew.categories = clone(self.wa2000.categories)
 	self.wa2000_crew.sounds.prefix = "lakner_npc"
@@ -2853,7 +3003,7 @@ function WeaponTweakData:_init_data_wa2000_crew()
 	self.wa2000_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3624 to 3647
+-- Lines 3773-3796
 function WeaponTweakData:_init_data_polymer_crew()
 	self.polymer_crew.categories = clone(self.polymer.categories)
 	self.polymer_crew.sounds.prefix = "polymer_npc"
@@ -2876,7 +3026,7 @@ function WeaponTweakData:_init_data_polymer_crew()
 	self.polymer_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3649 to 3672
+-- Lines 3798-3821
 function WeaponTweakData:_init_data_hunter_crew()
 	self.hunter_crew.categories = clone(self.hunter.categories)
 	self.hunter_crew.sounds.prefix = "hunter_npc"
@@ -2896,7 +3046,7 @@ function WeaponTweakData:_init_data_hunter_crew()
 	self.hunter_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3674 to 3696
+-- Lines 3823-3845
 function WeaponTweakData:_init_data_baka_crew()
 	self.baka_crew.categories = clone(self.baka.categories)
 	self.baka_crew.sounds.prefix = "baka_npc"
@@ -2915,7 +3065,7 @@ function WeaponTweakData:_init_data_baka_crew()
 	self.baka_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3699 to 3722
+-- Lines 3848-3871
 function WeaponTweakData:_init_data_arblast_crew()
 	self.arblast_crew.categories = clone(self.arblast.categories)
 	self.arblast_crew.sounds.prefix = "arblast_npc"
@@ -2935,7 +3085,7 @@ function WeaponTweakData:_init_data_arblast_crew()
 	self.arblast_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3724 to 3747
+-- Lines 3873-3896
 function WeaponTweakData:_init_data_frankish_crew()
 	self.frankish_crew.categories = clone(self.frankish.categories)
 	self.frankish_crew.sounds.prefix = "frankish_npc"
@@ -2955,7 +3105,7 @@ function WeaponTweakData:_init_data_frankish_crew()
 	self.frankish_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3750 to 3775
+-- Lines 3899-3924
 function WeaponTweakData:_init_data_long_crew()
 	self.long_crew.categories = clone(self.long.categories)
 	self.long_crew.sounds.prefix = "bow_npc"
@@ -2976,7 +3126,7 @@ function WeaponTweakData:_init_data_long_crew()
 	self.long_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3778 to 3802
+-- Lines 3927-3951
 function WeaponTweakData:_init_data_par_crew()
 	self.par_crew.categories = clone(self.par.categories)
 	self.par_crew.sounds.prefix = "svinet_npc"
@@ -2996,7 +3146,7 @@ function WeaponTweakData:_init_data_par_crew()
 	self.par_secondary_crew.armor_piercing = true
 end
 
--- Lines: 3805 to 3825
+-- Lines 3954-3974
 function WeaponTweakData:_init_data_sparrow_crew()
 	self.sparrow_crew.categories = clone(self.sparrow.categories)
 	self.sparrow_crew.sounds.prefix = "sparrow_npc"
@@ -3014,7 +3164,7 @@ function WeaponTweakData:_init_data_sparrow_crew()
 	self.sparrow_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3826 to 3848
+-- Lines 3975-3997
 function WeaponTweakData:_init_data_model70_crew()
 	self.model70_crew.categories = clone(self.model70.categories)
 	self.model70_crew.sounds.prefix = "model70_npc"
@@ -3033,7 +3183,7 @@ function WeaponTweakData:_init_data_model70_crew()
 	self.model70_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 3876 to 3898
+-- Lines 4025-4047
 function WeaponTweakData:_init_data_m37_crew()
 	self.m37_crew.categories = clone(self.m37.categories)
 	self.m37_crew.sounds.prefix = "m37_npc"
@@ -3052,7 +3202,7 @@ function WeaponTweakData:_init_data_m37_crew()
 	self.m37_crew.is_shotgun = true
 end
 
--- Lines: 3902 to 3924
+-- Lines 4051-4073
 function WeaponTweakData:_init_data_china_crew()
 	self.china_crew.categories = clone(self.china.categories)
 	self.china_crew.sounds.prefix = "china_npc"
@@ -3072,7 +3222,7 @@ function WeaponTweakData:_init_data_china_crew()
 	self.china_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3928 to 3950
+-- Lines 4077-4099
 function WeaponTweakData:_init_data_sr2_crew()
 	self.sr2_crew.categories = clone(self.sr2.categories)
 	self.sr2_crew.sounds.prefix = "sr2_npc"
@@ -3095,7 +3245,7 @@ function WeaponTweakData:_init_data_sr2_crew()
 	self.sr2_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3951 to 3969
+-- Lines 4100-4118
 function WeaponTweakData:_init_data_x_sr2_crew()
 	self.x_sr2_crew.categories = clone(self.x_sr2.categories)
 	self.x_sr2_crew.sounds.prefix = "sr2_x_npc"
@@ -3112,7 +3262,7 @@ function WeaponTweakData:_init_data_x_sr2_crew()
 	self.x_sr2_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 3972 to 3992
+-- Lines 4121-4141
 function WeaponTweakData:_init_data_pl14_crew()
 	self.pl14_crew.categories = clone(self.pl14.categories)
 	self.pl14_crew.sounds.prefix = "pl14_npc"
@@ -3130,7 +3280,7 @@ function WeaponTweakData:_init_data_pl14_crew()
 	self.pl14_crew.FIRE_MODE = "single"
 end
 
--- Lines: 3996 to 4014
+-- Lines 4145-4163
 function WeaponTweakData:_init_data_x_mp5_crew()
 	self.x_mp5_crew.categories = clone(self.x_mp5.categories)
 	self.x_mp5_crew.sounds.prefix = "mp5_x_npc"
@@ -3147,7 +3297,7 @@ function WeaponTweakData:_init_data_x_mp5_crew()
 	self.x_mp5_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4016 to 4034
+-- Lines 4165-4183
 function WeaponTweakData:_init_data_x_akmsu_crew()
 	self.x_akmsu_crew.categories = clone(self.x_akmsu.categories)
 	self.x_akmsu_crew.sounds.prefix = "akmsu_x_npc"
@@ -3164,7 +3314,7 @@ function WeaponTweakData:_init_data_x_akmsu_crew()
 	self.x_akmsu_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4038 to 4053
+-- Lines 4187-4202
 function WeaponTweakData:_init_data_tecci_crew()
 	self.tecci_crew.categories = clone(self.tecci.categories)
 	self.tecci_crew.sounds.prefix = "tecci_npc"
@@ -3182,7 +3332,7 @@ function WeaponTweakData:_init_data_tecci_crew()
 	self.tecci_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4057 to 4079
+-- Lines 4206-4228
 function WeaponTweakData:_init_data_hajk_crew()
 	self.hajk_crew.categories = clone(self.hajk.categories)
 	self.hajk_crew.sounds.prefix = "hajk_npc"
@@ -3201,7 +3351,7 @@ function WeaponTweakData:_init_data_hajk_crew()
 	self.hajk_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4083 to 4104
+-- Lines 4232-4253
 function WeaponTweakData:_init_data_boot_crew()
 	self.boot_crew.categories = clone(self.boot.categories)
 	self.boot_crew.sounds.prefix = "boot_npc"
@@ -3219,7 +3369,7 @@ function WeaponTweakData:_init_data_boot_crew()
 	self.boot_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4108 to 4128
+-- Lines 4257-4277
 function WeaponTweakData:_init_data_packrat_crew()
 	self.packrat_crew.categories = clone(self.packrat.categories)
 	self.packrat_crew.sounds.prefix = "packrat_npc"
@@ -3237,7 +3387,7 @@ function WeaponTweakData:_init_data_packrat_crew()
 	self.packrat_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4130 to 4153
+-- Lines 4279-4302
 function WeaponTweakData:_init_data_schakal_crew()
 	self.schakal_crew.categories = clone(self.schakal.categories)
 	self.schakal_crew.sounds.prefix = "schakal_npc"
@@ -3260,7 +3410,7 @@ function WeaponTweakData:_init_data_schakal_crew()
 	self.schakal_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4155 to 4179
+-- Lines 4304-4328
 function WeaponTweakData:_init_data_desertfox_crew()
 	self.desertfox_crew.categories = clone(self.desertfox.categories)
 	self.desertfox_crew.sounds.prefix = "desertfox_npc"
@@ -3281,7 +3431,7 @@ function WeaponTweakData:_init_data_desertfox_crew()
 	self.desertfox_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines: 4181 to 4199
+-- Lines 4330-4348
 function WeaponTweakData:_init_data_x_packrat_crew()
 	self.x_packrat_crew.categories = clone(self.x_packrat.categories)
 	self.x_packrat_crew.sounds.prefix = "packrat_npc"
@@ -3298,7 +3448,7 @@ function WeaponTweakData:_init_data_x_packrat_crew()
 	self.x_packrat_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4203 to 4224
+-- Lines 4352-4373
 function WeaponTweakData:_init_data_rota_crew()
 	self.rota_crew.categories = clone(self.rota.categories)
 	self.rota_crew.sounds.prefix = "rota_npc"
@@ -3319,7 +3469,7 @@ function WeaponTweakData:_init_data_rota_crew()
 	self.rota_crew.is_shotgun = true
 end
 
--- Lines: 4228 to 4252
+-- Lines 4377-4401
 function WeaponTweakData:_init_data_arbiter_crew()
 	self.arbiter_crew.categories = clone(self.arbiter.categories)
 	self.arbiter_crew.sounds.prefix = "mgl_npc"
@@ -3340,7 +3490,7 @@ function WeaponTweakData:_init_data_arbiter_crew()
 	self.arbiter_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4256 to 4299
+-- Lines 4405-4448
 function WeaponTweakData:_init_data_contraband_crew()
 	self.contraband_crew.categories = clone(self.contraband.categories)
 	self.contraband_crew.sounds.prefix = "contraband_npc"
@@ -3378,7 +3528,7 @@ function WeaponTweakData:_init_data_contraband_crew()
 	self.contraband_m203_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4303 to 4328
+-- Lines 4452-4477
 function WeaponTweakData:_init_data_ray_crew()
 	self.ray_crew.categories = clone(self.ray.categories)
 	self.ray_crew.sounds.prefix = "ray_npc"
@@ -3392,13 +3542,15 @@ function WeaponTweakData:_init_data_ray_crew()
 	self.ray_crew.NR_CLIPS_MAX = 1
 	self.ray_crew.auto.fire_rate = 0.1
 	self.ray_crew.hold = "rifle"
-	self.ray_crew.animations = {thq_align_anim = "thq"}
+	self.ray_crew.animations = {
+		thq_align_anim = "thq"
+	}
 	self.ray_crew.alert_size = 2800
 	self.ray_crew.suppression = 1
 	self.ray_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4332 to 4354
+-- Lines 4481-4503
 function WeaponTweakData:_init_data_tti_crew()
 	self.tti_crew.categories = clone(self.tti.categories)
 	self.tti_crew.sounds.prefix = "tti_npc"
@@ -3417,7 +3569,7 @@ function WeaponTweakData:_init_data_tti_crew()
 	self.tti_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4359 to 4380
+-- Lines 4508-4529
 function WeaponTweakData:_init_data_siltstone_crew()
 	self.siltstone_crew.categories = clone(self.siltstone.categories)
 	self.siltstone_crew.sounds.prefix = "siltstone_npc"
@@ -3435,7 +3587,7 @@ function WeaponTweakData:_init_data_siltstone_crew()
 	self.siltstone_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4383 to 4403
+-- Lines 4532-4552
 function WeaponTweakData:_init_data_flint_crew()
 	self.flint_crew.categories = clone(self.flint.categories)
 	self.flint_crew.sounds.prefix = "flint_npc"
@@ -3453,7 +3605,7 @@ function WeaponTweakData:_init_data_flint_crew()
 	self.flint_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4405 to 4426
+-- Lines 4554-4575
 function WeaponTweakData:_init_data_coal_crew()
 	self.coal_crew.categories = clone(self.coal.categories)
 	self.coal_crew.sounds.prefix = "coal_npc"
@@ -3472,7 +3624,7 @@ function WeaponTweakData:_init_data_coal_crew()
 	self.coal_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4432 to 4452
+-- Lines 4581-4601
 function WeaponTweakData:_init_data_lemming_crew()
 	self.lemming_crew.categories = clone(self.lemming.categories)
 	self.lemming_crew.sounds.prefix = "lemming_npc"
@@ -3490,7 +3642,7 @@ function WeaponTweakData:_init_data_lemming_crew()
 	self.lemming_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4457 to 4476
+-- Lines 4606-4625
 function WeaponTweakData:_init_data_chinchilla_crew()
 	self.chinchilla_crew.categories = clone(self.chinchilla.categories)
 	self.chinchilla_crew.sounds.prefix = "chinchilla_npc"
@@ -3507,7 +3659,7 @@ function WeaponTweakData:_init_data_chinchilla_crew()
 	self.chinchilla_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4478 to 4496
+-- Lines 4627-4645
 function WeaponTweakData:_init_data_x_chinchilla_crew()
 	self.x_chinchilla_crew.categories = clone(self.x_chinchilla.categories)
 	self.x_chinchilla_crew.sounds.prefix = "chinchilla_npc"
@@ -3524,7 +3676,7 @@ function WeaponTweakData:_init_data_x_chinchilla_crew()
 	self.x_chinchilla_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4499 to 4520
+-- Lines 4648-4669
 function WeaponTweakData:_init_data_shepheard_crew()
 	self.shepheard_crew.categories = clone(self.shepheard.categories)
 	self.shepheard_crew.sounds.prefix = "shepheard_npc"
@@ -3543,7 +3695,7 @@ function WeaponTweakData:_init_data_shepheard_crew()
 	self.shepheard_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4521 to 4540
+-- Lines 4670-4689
 function WeaponTweakData:_init_data_x_shepheard_crew()
 	self.x_shepheard_crew.categories = clone(self.x_shepheard.categories)
 	self.x_shepheard_crew.sounds.prefix = "shepheard_x_npc"
@@ -3561,7 +3713,7 @@ function WeaponTweakData:_init_data_x_shepheard_crew()
 	self.x_shepheard_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4543 to 4563
+-- Lines 4692-4712
 function WeaponTweakData:_init_data_breech_crew()
 	self.breech_crew.categories = clone(self.breech.categories)
 	self.breech_crew.sounds.prefix = "breech_npc"
@@ -3579,7 +3731,7 @@ function WeaponTweakData:_init_data_breech_crew()
 	self.breech_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4565 to 4589
+-- Lines 4714-4738
 function WeaponTweakData:_init_data_ching_crew()
 	self.ching_crew.categories = clone(self.ching.categories)
 	self.ching_crew.sounds.prefix = "ching_npc"
@@ -3599,7 +3751,7 @@ function WeaponTweakData:_init_data_ching_crew()
 	self.ching_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4591 to 4614
+-- Lines 4740-4763
 function WeaponTweakData:_init_data_erma_crew()
 	self.erma_crew.categories = clone(self.erma.categories)
 	self.erma_crew.sounds.prefix = "erma_npc"
@@ -3619,7 +3771,7 @@ function WeaponTweakData:_init_data_erma_crew()
 	self.erma_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4617 to 4640
+-- Lines 4766-4789
 function WeaponTweakData:_init_data_ecp_crew()
 	self.ecp_crew.categories = clone(self.ecp.categories)
 	self.ecp_crew.sounds.prefix = "ecp_npc"
@@ -3642,7 +3794,7 @@ function WeaponTweakData:_init_data_ecp_crew()
 	self.ecp_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4643 to 4663
+-- Lines 4792-4812
 function WeaponTweakData:_init_data_shrew_crew()
 	self.shrew_crew.categories = clone(self.shrew.categories)
 	self.shrew_crew.sounds.prefix = "shrew_npc"
@@ -3660,7 +3812,7 @@ function WeaponTweakData:_init_data_shrew_crew()
 	self.shrew_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4664 to 4682
+-- Lines 4813-4831
 function WeaponTweakData:_init_data_x_shrew_crew()
 	self.x_shrew_crew.categories = clone(self.x_shrew.categories)
 	self.x_shrew_crew.sounds.prefix = "shrew_npc"
@@ -3677,7 +3829,7 @@ function WeaponTweakData:_init_data_x_shrew_crew()
 	self.x_shrew_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4685 to 4707
+-- Lines 4834-4856
 function WeaponTweakData:_init_data_basset_crew()
 	self.basset_crew.categories = clone(self.basset.categories)
 	self.basset_crew.sounds.prefix = "basset_npc"
@@ -3699,7 +3851,7 @@ function WeaponTweakData:_init_data_basset_crew()
 	self.basset_crew.is_shotgun = true
 end
 
--- Lines: 4709 to 4731
+-- Lines 4858-4880
 function WeaponTweakData:_init_data_x_basset_crew()
 	self.x_basset_crew.categories = clone(self.x_basset.categories)
 	self.x_basset_crew.sounds.prefix = "basset_x_npc"
@@ -3717,7 +3869,7 @@ function WeaponTweakData:_init_data_x_basset_crew()
 	self.x_basset_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4734 to 4756
+-- Lines 4883-4905
 function WeaponTweakData:_init_data_corgi_crew()
 	self.corgi_crew.categories = clone(self.corgi.categories)
 	self.corgi_crew.sounds.prefix = "corgi_npc"
@@ -3739,7 +3891,7 @@ function WeaponTweakData:_init_data_corgi_crew()
 	self.corgi_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4760 to 4784
+-- Lines 4909-4933
 function WeaponTweakData:_init_data_slap_crew()
 	self.slap_crew.categories = clone(self.slap.categories)
 	self.slap_crew.sounds.prefix = "slap_npc"
@@ -3763,7 +3915,7 @@ function WeaponTweakData:_init_data_slap_crew()
 	self.slap_crew.FIRE_MODE = "single"
 end
 
--- Lines: 4835 to 4853
+-- Lines 4984-5002
 function WeaponTweakData:_init_data_x_coal_crew()
 	self.x_coal_crew.categories = clone(self.x_coal.categories)
 	self.x_coal_crew.sounds.prefix = "coal_x_npc"
@@ -3780,7 +3932,7 @@ function WeaponTweakData:_init_data_x_coal_crew()
 	self.x_coal_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4856 to 4874
+-- Lines 5005-5023
 function WeaponTweakData:_init_data_x_baka_crew()
 	self.x_baka_crew.categories = clone(self.x_baka.categories)
 	self.x_baka_crew.sounds.prefix = "baka_x_npc"
@@ -3797,7 +3949,7 @@ function WeaponTweakData:_init_data_x_baka_crew()
 	self.x_baka_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4877 to 4895
+-- Lines 5026-5044
 function WeaponTweakData:_init_data_x_cobray_crew()
 	self.x_cobray_crew.categories = clone(self.x_cobray.categories)
 	self.x_cobray_crew.sounds.prefix = "cobray_x_npc"
@@ -3814,7 +3966,7 @@ function WeaponTweakData:_init_data_x_cobray_crew()
 	self.x_cobray_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4898 to 4916
+-- Lines 5047-5065
 function WeaponTweakData:_init_data_x_erma_crew()
 	self.x_erma_crew.categories = clone(self.x_erma.categories)
 	self.x_erma_crew.sounds.prefix = "erma_x_npc"
@@ -3831,7 +3983,7 @@ function WeaponTweakData:_init_data_x_erma_crew()
 	self.x_erma_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4919 to 4937
+-- Lines 5068-5086
 function WeaponTweakData:_init_data_x_hajk_crew()
 	self.x_hajk_crew.categories = clone(self.x_hajk.categories)
 	self.x_hajk_crew.sounds.prefix = "hajk_x_npc"
@@ -3848,7 +4000,7 @@ function WeaponTweakData:_init_data_x_hajk_crew()
 	self.x_hajk_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4940 to 4958
+-- Lines 5089-5107
 function WeaponTweakData:_init_data_x_m45_crew()
 	self.x_m45_crew.categories = clone(self.x_m45.categories)
 	self.x_m45_crew.sounds.prefix = "m45_x_npc"
@@ -3865,7 +4017,7 @@ function WeaponTweakData:_init_data_x_m45_crew()
 	self.x_m45_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4961 to 4979
+-- Lines 5110-5128
 function WeaponTweakData:_init_data_x_m1928_crew()
 	self.x_m1928_crew.categories = clone(self.x_m1928.categories)
 	self.x_m1928_crew.sounds.prefix = "m1928_x_npc"
@@ -3882,7 +4034,7 @@ function WeaponTweakData:_init_data_x_m1928_crew()
 	self.x_m1928_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 4982 to 5000
+-- Lines 5131-5149
 function WeaponTweakData:_init_data_x_mac10_crew()
 	self.x_mac10_crew.categories = clone(self.x_mac10.categories)
 	self.x_mac10_crew.sounds.prefix = "mac10_x_npc"
@@ -3899,7 +4051,7 @@ function WeaponTweakData:_init_data_x_mac10_crew()
 	self.x_mac10_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5003 to 5021
+-- Lines 5152-5170
 function WeaponTweakData:_init_data_x_mp7_crew()
 	self.x_mp7_crew.categories = clone(self.x_mp7.categories)
 	self.x_mp7_crew.sounds.prefix = "mp7_x_npc"
@@ -3916,7 +4068,7 @@ function WeaponTweakData:_init_data_x_mp7_crew()
 	self.x_mp7_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5024 to 5042
+-- Lines 5173-5191
 function WeaponTweakData:_init_data_x_mp9_crew()
 	self.x_mp9_crew.categories = clone(self.x_mp9.categories)
 	self.x_mp9_crew.sounds.prefix = "mp9_x_npc"
@@ -3933,7 +4085,7 @@ function WeaponTweakData:_init_data_x_mp9_crew()
 	self.x_mp9_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5045 to 5063
+-- Lines 5194-5212
 function WeaponTweakData:_init_data_x_olympic_crew()
 	self.x_olympic_crew.categories = clone(self.x_olympic.categories)
 	self.x_olympic_crew.sounds.prefix = "m4_olympic_x_npc"
@@ -3950,7 +4102,7 @@ function WeaponTweakData:_init_data_x_olympic_crew()
 	self.x_olympic_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5066 to 5084
+-- Lines 5215-5233
 function WeaponTweakData:_init_data_x_p90_crew()
 	self.x_p90_crew.categories = clone(self.x_p90.categories)
 	self.x_p90_crew.sounds.prefix = "p90_x_npc"
@@ -3967,7 +4119,7 @@ function WeaponTweakData:_init_data_x_p90_crew()
 	self.x_p90_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5087 to 5105
+-- Lines 5236-5254
 function WeaponTweakData:_init_data_x_polymer_crew()
 	self.x_polymer_crew.categories = clone(self.x_polymer.categories)
 	self.x_polymer_crew.sounds.prefix = "polymer_x_npc"
@@ -3984,7 +4136,7 @@ function WeaponTweakData:_init_data_x_polymer_crew()
 	self.x_polymer_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5108 to 5126
+-- Lines 5257-5275
 function WeaponTweakData:_init_data_x_schakal_crew()
 	self.x_schakal_crew.categories = clone(self.x_schakal.categories)
 	self.x_schakal_crew.sounds.prefix = "schakal_x_npc"
@@ -4001,7 +4153,7 @@ function WeaponTweakData:_init_data_x_schakal_crew()
 	self.x_schakal_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5129 to 5147
+-- Lines 5278-5296
 function WeaponTweakData:_init_data_x_scorpion_crew()
 	self.x_scorpion_crew.categories = clone(self.x_scorpion.categories)
 	self.x_scorpion_crew.sounds.prefix = "skorpion_x_npc"
@@ -4018,7 +4170,7 @@ function WeaponTweakData:_init_data_x_scorpion_crew()
 	self.x_scorpion_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5150 to 5168
+-- Lines 5299-5317
 function WeaponTweakData:_init_data_x_sterling_crew()
 	self.x_sterling_crew.categories = clone(self.x_sterling.categories)
 	self.x_sterling_crew.sounds.prefix = "sterling_x_npc"
@@ -4035,7 +4187,7 @@ function WeaponTweakData:_init_data_x_sterling_crew()
 	self.x_sterling_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5171 to 5189
+-- Lines 5320-5338
 function WeaponTweakData:_init_data_x_tec9_crew()
 	self.x_tec9_crew.categories = clone(self.x_tec9.categories)
 	self.x_tec9_crew.sounds.prefix = "tec9_x_npc"
@@ -4052,7 +4204,7 @@ function WeaponTweakData:_init_data_x_tec9_crew()
 	self.x_tec9_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5192 to 5210
+-- Lines 5341-5359
 function WeaponTweakData:_init_data_x_uzi_crew()
 	self.x_uzi_crew.categories = clone(self.x_uzi.categories)
 	self.x_uzi_crew.sounds.prefix = "uzi_x_npc"
@@ -4069,7 +4221,7 @@ function WeaponTweakData:_init_data_x_uzi_crew()
 	self.x_uzi_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5214 to 5232
+-- Lines 5363-5381
 function WeaponTweakData:_init_data_x_2006m_crew()
 	self.x_2006m_crew.categories = clone(self.x_2006m.categories)
 	self.x_2006m_crew.sounds.prefix = "mateba_npc"
@@ -4086,7 +4238,7 @@ function WeaponTweakData:_init_data_x_2006m_crew()
 	self.x_2006m_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5234 to 5252
+-- Lines 5383-5401
 function WeaponTweakData:_init_data_x_breech_crew()
 	self.x_breech_crew.categories = clone(self.x_breech.categories)
 	self.x_breech_crew.sounds.prefix = "breech_npc"
@@ -4103,7 +4255,7 @@ function WeaponTweakData:_init_data_x_breech_crew()
 	self.x_breech_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5254 to 5272
+-- Lines 5403-5421
 function WeaponTweakData:_init_data_x_c96_crew()
 	self.x_c96_crew.categories = clone(self.x_c96.categories)
 	self.x_c96_crew.sounds.prefix = "c96_npc"
@@ -4120,7 +4272,7 @@ function WeaponTweakData:_init_data_x_c96_crew()
 	self.x_c96_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5274 to 5292
+-- Lines 5423-5441
 function WeaponTweakData:_init_data_x_g18c_crew()
 	self.x_g18c_crew.categories = clone(self.x_g18c.categories)
 	self.x_g18c_crew.sounds.prefix = "g18c_x_npc"
@@ -4137,7 +4289,7 @@ function WeaponTweakData:_init_data_x_g18c_crew()
 	self.x_g18c_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5294 to 5312
+-- Lines 5443-5461
 function WeaponTweakData:_init_data_x_hs2000_crew()
 	self.x_hs2000_crew.categories = clone(self.x_hs2000.categories)
 	self.x_hs2000_crew.sounds.prefix = "p226r_npc"
@@ -4154,7 +4306,7 @@ function WeaponTweakData:_init_data_x_hs2000_crew()
 	self.x_hs2000_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5314 to 5332
+-- Lines 5463-5481
 function WeaponTweakData:_init_data_x_p226_crew()
 	self.x_p226_crew.categories = clone(self.x_p226.categories)
 	self.x_p226_crew.sounds.prefix = "p226r_npc"
@@ -4171,7 +4323,7 @@ function WeaponTweakData:_init_data_x_p226_crew()
 	self.x_p226_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5334 to 5352
+-- Lines 5483-5501
 function WeaponTweakData:_init_data_x_pl14_crew()
 	self.x_pl14_crew.categories = clone(self.x_pl14.categories)
 	self.x_pl14_crew.sounds.prefix = "pl14_npc"
@@ -4188,7 +4340,7 @@ function WeaponTweakData:_init_data_x_pl14_crew()
 	self.x_pl14_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5354 to 5372
+-- Lines 5503-5521
 function WeaponTweakData:_init_data_x_ppk_crew()
 	self.x_ppk_crew.categories = clone(self.x_ppk.categories)
 	self.x_ppk_crew.sounds.prefix = "w_ppk_npc"
@@ -4205,7 +4357,7 @@ function WeaponTweakData:_init_data_x_ppk_crew()
 	self.x_ppk_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5375 to 5393
+-- Lines 5524-5542
 function WeaponTweakData:_init_data_x_rage_crew()
 	self.x_rage_crew.categories = clone(self.x_rage.categories)
 	self.x_rage_crew.sounds.prefix = "rbull_npc"
@@ -4222,7 +4374,7 @@ function WeaponTweakData:_init_data_x_rage_crew()
 	self.x_rage_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5395 to 5413
+-- Lines 5544-5562
 function WeaponTweakData:_init_data_x_sparrow_crew()
 	self.x_sparrow_crew.categories = clone(self.x_sparrow.categories)
 	self.x_sparrow_crew.sounds.prefix = "sparrow_npc"
@@ -4239,7 +4391,7 @@ function WeaponTweakData:_init_data_x_sparrow_crew()
 	self.x_sparrow_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5415 to 5434
+-- Lines 5564-5583
 function WeaponTweakData:_init_data_x_judge_crew()
 	self.x_judge_crew.categories = clone(self.x_judge.categories)
 	self.x_judge_crew.sounds.prefix = "judge_x_npc"
@@ -4257,7 +4409,7 @@ function WeaponTweakData:_init_data_x_judge_crew()
 	self.x_judge_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5436 to 5455
+-- Lines 5585-5604
 function WeaponTweakData:_init_data_x_rota_crew()
 	self.x_rota_crew.categories = clone(self.x_rota.categories)
 	self.x_rota_crew.sounds.prefix = "rota_x_npc"
@@ -4275,7 +4427,7 @@ function WeaponTweakData:_init_data_x_rota_crew()
 	self.x_rota_crew.FIRE_MODE = "single"
 end
 
--- Lines: 5503 to 5523
+-- Lines 5652-5672
 function WeaponTweakData:_init_data_shuno_crew()
 	self.shuno_crew.categories = clone(self.shuno.categories)
 	self.shuno_crew.sounds.prefix = "shuno_npc"
@@ -4293,7 +4445,7 @@ function WeaponTweakData:_init_data_shuno_crew()
 	self.shuno_crew.has_fire_animation = true
 end
 
--- Lines: 5527 to 5553
+-- Lines 5676-5702
 function WeaponTweakData:_init_data_system_crew()
 	self.system_crew.categories = clone(self.system.categories)
 	self.system_crew.sounds.prefix = "system_npc"
@@ -4319,7 +4471,102 @@ function WeaponTweakData:_init_data_system_crew()
 	self.system_crew.FIRE_MODE = "auto"
 end
 
--- Lines: 5684 to 5888
+-- Lines 5707-5729
+function WeaponTweakData:_init_data_komodo_crew()
+	self.komodo_crew.categories = clone(self.komodo.categories)
+	self.komodo_crew.sounds.prefix = "komodo_npc"
+	self.komodo_crew.use_data.selection_index = 2
+	self.komodo_crew.DAMAGE = 1.05
+	self.komodo_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.komodo_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.komodo_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.komodo_crew.CLIP_AMMO_MAX = 30
+	self.komodo_crew.NR_CLIPS_MAX = 5
+	self.komodo_crew.pull_magazine_during_reload = "rifle"
+	self.komodo_crew.auto.fire_rate = 0.07
+	self.komodo_crew.hold = {
+		"bullpup",
+		"rifle"
+	}
+	self.komodo_crew.alert_size = 5000
+	self.komodo_crew.suppression = 1
+	self.komodo_crew.FIRE_MODE = "auto"
+end
+
+-- Lines 5734-5759
+function WeaponTweakData:_init_data_elastic_crew()
+	self.elastic_crew.categories = clone(self.elastic.categories)
+	self.elastic_crew.sounds.prefix = "elastic_npc"
+	self.elastic_crew.use_data.selection_index = SELECTION.PRIMARY
+	self.elastic_crew.use_data.align_place = "left_hand"
+	self.elastic_crew.DAMAGE = 2
+	self.elastic_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.elastic_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.elastic_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.elastic_crew.no_trail = true
+	self.elastic_crew.CLIP_AMMO_MAX = 1
+	self.elastic_crew.NR_CLIPS_MAX = 4
+	self.elastic_crew.auto.fire_rate = 0.1
+	self.elastic_crew.hold = "bow"
+	self.elastic_crew.has_fire_animation = true
+	self.elastic_crew.alert_size = 2800
+	self.elastic_crew.suppression = 1
+	self.elastic_crew.FIRE_MODE = "single"
+end
+
+-- Lines 5764-5784
+function WeaponTweakData:_init_data_legacy_crew()
+	self.legacy_crew.categories = clone(self.legacy.categories)
+	self.legacy_crew.sounds.prefix = "legacy_npc"
+	self.legacy_crew.use_data.selection_index = SELECTION.SECONDARY
+	self.legacy_crew.DAMAGE = 1
+	self.legacy_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.legacy_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.legacy_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.legacy_crew.CLIP_AMMO_MAX = 10
+	self.legacy_crew.NR_CLIPS_MAX = 5
+	self.legacy_crew.pull_magazine_during_reload = "pistol"
+	self.legacy_crew.hold = "pistol"
+	self.legacy_crew.alert_size = 2500
+	self.legacy_crew.suppression = 1
+	self.legacy_crew.FIRE_MODE = "single"
+end
+
+-- Lines 5786-5805
+function WeaponTweakData:_init_data_x_legacy_crew()
+	self.x_legacy_crew.categories = clone(self.x_legacy.categories)
+	self.x_legacy_crew.sounds.prefix = "legacy_npc"
+	self.x_legacy_crew.use_data.selection_index = SELECTION.PRIMARY
+	self.x_legacy_crew.DAMAGE = 1
+	self.x_legacy_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.x_legacy_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.x_legacy_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.x_legacy_crew.CLIP_AMMO_MAX = 10
+	self.x_legacy_crew.NR_CLIPS_MAX = 5
+	self.x_legacy_crew.hold = "akimbo_pistol"
+	self.x_legacy_crew.alert_size = 2500
+	self.x_legacy_crew.suppression = 1
+	self.x_legacy_crew.FIRE_MODE = "single"
+end
+
+-- Lines 5809-5829
+function WeaponTweakData:_init_data_coach_crew()
+	self.coach_crew.categories = clone(self.coach.categories)
+	self.coach_crew.sounds.prefix = "coach_npc"
+	self.coach_crew.use_data.selection_index = SELECTION.SECONDARY
+	self.coach_crew.DAMAGE = 16
+	self.coach_crew.muzzleflash = "effects/payday2/particles/weapons/762_auto"
+	self.coach_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.coach_crew.CLIP_AMMO_MAX = 2
+	self.coach_crew.NR_CLIPS_MAX = 4
+	self.coach_crew.hold = "rifle"
+	self.coach_crew.alert_size = 4500
+	self.coach_crew.suppression = 1.8
+	self.coach_crew.FIRE_MODE = "single"
+	self.coach_crew.is_shotgun = true
+end
+
+-- Lines 5833-6037
 function WeaponTweakData:_init_data_player_weapons(tweak_data)
 	local autohit_rifle_default, autohit_pistol_default, autohit_shotgun_default, autohit_lmg_default, autohit_snp_default, autohit_smg_default, autohit_minigun_default, aim_assist_rifle_default, aim_assist_pistol_default, aim_assist_shotgun_default, aim_assist_lmg_default, aim_assist_snp_default, aim_assist_smg_default, aim_assist_minigun_default = nil
 
@@ -4512,7 +4759,7 @@ function WeaponTweakData:_init_data_player_weapons(tweak_data)
 	end
 end
 
--- Lines: 5890 to 5978
+-- Lines 6039-6127
 function WeaponTweakData:_init_stats()
 	self.stats = {
 		alert_size = {
@@ -4782,8 +5029,11 @@ function WeaponTweakData:_init_stats()
 			30,
 			25,
 			20
-		},
-		zoom = _G.IS_VR and {
+		}
+	}
+
+	if _G.IS_VR then
+		self.stats.zoom = {
 			30,
 			30,
 			30,
@@ -4794,137 +5044,138 @@ function WeaponTweakData:_init_stats()
 			20,
 			20,
 			20
-		},
-		spread = {
-			2,
-			1.92,
-			1.84,
-			1.76,
-			1.68,
-			1.6,
-			1.52,
-			1.44,
-			1.36,
-			1.28,
-			1.2,
-			1.12,
-			1.04,
-			0.96,
-			0.88,
-			0.8,
-			0.72,
-			0.64,
-			0.56,
-			0.48,
-			0.4,
-			0.32,
-			0.24,
-			0.16,
-			0.08,
-			0
-		},
-		spread_moving = {
-			2.5,
-			2.42,
-			2.34,
-			2.26,
-			2.18,
-			2.1,
-			2.02,
-			1.94,
-			1.86,
-			1.78,
-			1.7,
-			1.62,
-			1.54,
-			1.46,
-			1.38,
-			1.3,
-			1.22,
-			1.14,
-			1.06,
-			0.98,
-			0.9,
-			0.82,
-			0.74,
-			0.66,
-			0.58,
-			0.5
-		},
-		recoil = {
-			3,
-			2.9,
-			2.8,
-			2.7,
-			2.6,
-			2.5,
-			2.4,
-			2.3,
-			2.2,
-			2.1,
-			2,
-			1.9,
-			1.8,
-			1.7,
-			1.6,
-			1.5,
-			1.4,
-			1.3,
-			1.2,
-			1.1,
-			1,
-			0.9,
-			0.8,
-			0.7,
-			0.6,
-			0.5
-		},
-		value = {
-			1,
-			2,
-			3,
-			4,
-			5,
-			6,
-			7,
-			8,
-			9,
-			10
-		},
-		concealment = {
-			0.3,
-			0.4,
-			0.5,
-			0.6,
-			0.65,
-			0.7,
-			0.75,
-			0.8,
-			0.825,
-			0.85,
-			1,
-			1.05,
-			1.1,
-			1.15,
-			1.2,
-			1.225,
-			1.25,
-			1.275,
-			1.3,
-			1.325,
-			1.35,
-			1.375,
-			1.4,
-			1.425,
-			1.45,
-			1.475,
-			1.5,
-			1.525,
-			1.55,
-			1.6
-		},
-		extra_ammo = {}
+		}
+	end
+
+	self.stats.spread = {
+		2,
+		1.92,
+		1.84,
+		1.76,
+		1.68,
+		1.6,
+		1.52,
+		1.44,
+		1.36,
+		1.28,
+		1.2,
+		1.12,
+		1.04,
+		0.96,
+		0.88,
+		0.8,
+		0.72,
+		0.64,
+		0.56,
+		0.48,
+		0.4,
+		0.32,
+		0.24,
+		0.16,
+		0.08,
+		0
 	}
+	self.stats.spread_moving = {
+		2.5,
+		2.42,
+		2.34,
+		2.26,
+		2.18,
+		2.1,
+		2.02,
+		1.94,
+		1.86,
+		1.78,
+		1.7,
+		1.62,
+		1.54,
+		1.46,
+		1.38,
+		1.3,
+		1.22,
+		1.14,
+		1.06,
+		0.98,
+		0.9,
+		0.82,
+		0.74,
+		0.66,
+		0.58,
+		0.5
+	}
+	self.stats.recoil = {
+		3,
+		2.9,
+		2.8,
+		2.7,
+		2.6,
+		2.5,
+		2.4,
+		2.3,
+		2.2,
+		2.1,
+		2,
+		1.9,
+		1.8,
+		1.7,
+		1.6,
+		1.5,
+		1.4,
+		1.3,
+		1.2,
+		1.1,
+		1,
+		0.9,
+		0.8,
+		0.7,
+		0.6,
+		0.5
+	}
+	self.stats.value = {
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10
+	}
+	self.stats.concealment = {
+		0.3,
+		0.4,
+		0.5,
+		0.6,
+		0.65,
+		0.7,
+		0.75,
+		0.8,
+		0.825,
+		0.85,
+		1,
+		1.05,
+		1.1,
+		1.15,
+		1.2,
+		1.225,
+		1.25,
+		1.275,
+		1.3,
+		1.325,
+		1.35,
+		1.375,
+		1.4,
+		1.425,
+		1.45,
+		1.475,
+		1.5,
+		1.525,
+		1.55,
+		1.6
+	}
+	self.stats.extra_ammo = {}
 
 	for i = -100, 100, 2 do
 		table.insert(self.stats.extra_ammo, i)
@@ -4945,7 +5196,7 @@ function WeaponTweakData:_init_stats()
 	end
 end
 
--- Lines: 5981 to 6030
+-- Lines 6129-6181
 function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
 	local low, high = nil
 
@@ -4995,7 +5246,7 @@ function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
 	}
 end
 
--- Lines: 6035 to 6294
+-- Lines 6183-6443
 function WeaponTweakData:_init_new_weapons(weapon_data)
 	weapon_data.total_damage_primary = 300
 	weapon_data.total_damage_secondary = 150
@@ -5163,12 +5414,19 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_x_rota(weapon_data)
 	self:_init_shuno(weapon_data)
 	self:_init_system(weapon_data)
+	self:_init_komodo(weapon_data)
+	self:_init_elastic(weapon_data)
+	self:_init_legacy(weapon_data)
+	self:_init_x_legacy(weapon_data)
+	self:_init_coach(weapon_data)
 end
 
--- Lines: 6297 to 6413
+-- Lines 6445-6562
 function WeaponTweakData:_init_new_m4(weapon_data)
 	self.new_m4 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5192,28 +5450,38 @@ function WeaponTweakData:_init_new_m4(weapon_data)
 	self.new_m4.description_id = "des_m4"
 	self.new_m4.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.new_m4.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.new_m4.use_data = {selection_index = SELECTION.PRIMARY}
+	self.new_m4.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.new_m4.DAMAGE = 1
 	self.new_m4.CLIP_AMMO_MAX = 30
 	self.new_m4.NR_CLIPS_MAX = 5
 	self.new_m4.AMMO_MAX = self.new_m4.CLIP_AMMO_MAX * self.new_m4.NR_CLIPS_MAX
 	self.new_m4.AMMO_PICKUP = self:_pickup_chance(self.new_m4.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.new_m4.FIRE_MODE = "auto"
-	self.new_m4.fire_mode_data = {fire_rate = 0.1}
+	self.new_m4.fire_mode_data = {
+		fire_rate = 0.1
+	}
 	self.new_m4.CAN_TOGGLE_FIREMODE = true
-	self.new_m4.auto = {fire_rate = 0.1}
-	self.new_m4.spread = {standing = 3}
+	self.new_m4.auto = {
+		fire_rate = 0.1
+	}
+	self.new_m4.spread = {
+		standing = 3
+	}
 	self.new_m4.spread.crouching = self.new_m4.spread.standing * 0.4
 	self.new_m4.spread.steelsight = self.new_m4.spread.standing * 0.4
 	self.new_m4.spread.moving_standing = self.new_m4.spread.standing
 	self.new_m4.spread.moving_crouching = self.new_m4.spread.standing
 	self.new_m4.spread.moving_steelsight = self.new_m4.spread.steelsight
-	self.new_m4.kick = {standing = {
-		0.6,
-		0.8,
-		-1,
-		1
-	}}
+	self.new_m4.kick = {
+		standing = {
+			0.6,
+			0.8,
+			-1,
+			1
+		}
+	}
 	self.new_m4.kick.crouching = self.new_m4.kick.standing
 	self.new_m4.kick.steelsight = self.new_m4.kick.standing
 	self.new_m4.crosshair = {
@@ -5263,10 +5531,12 @@ function WeaponTweakData:_init_new_m4(weapon_data)
 	}
 end
 
--- Lines: 6416 to 6528
+-- Lines 6564-6677
 function WeaponTweakData:_init_glock_17(weapon_data)
 	self.glock_17 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5277,8 +5547,12 @@ function WeaponTweakData:_init_glock_17(weapon_data)
 	self.glock_17.sounds.leave_steelsight = "pistol_steel_sight_exit"
 	self.glock_17.sounds.magazine_empty = "wp_pistol_slide_lock"
 	self.glock_17.FIRE_MODE = "single"
-	self.glock_17.fire_mode_data = {fire_rate = 0.125}
-	self.glock_17.single = {fire_rate = 0.125}
+	self.glock_17.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.glock_17.single = {
+		fire_rate = 0.125
+	}
 	self.glock_17.timers = {
 		reload_not_empty = 1.47,
 		reload_empty = 2.12,
@@ -5291,7 +5565,9 @@ function WeaponTweakData:_init_glock_17(weapon_data)
 	self.glock_17.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.glock_17.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.glock_17.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.glock_17.use_data = {selection_index = SELECTION.SECONDARY}
+	self.glock_17.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.glock_17.DAMAGE = 1
 	self.glock_17.CLIP_AMMO_MAX = 17
 	self.glock_17.NR_CLIPS_MAX = 9
@@ -5305,12 +5581,14 @@ function WeaponTweakData:_init_glock_17(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.glock_17.kick = {standing = {
-		1.2,
-		1.8,
-		-0.5,
-		0.5
-	}}
+	self.glock_17.kick = {
+		standing = {
+			1.2,
+			1.8,
+			-0.5,
+			0.5
+		}
+	}
 	self.glock_17.kick.crouching = self.glock_17.kick.standing
 	self.glock_17.kick.steelsight = self.glock_17.kick.standing
 	self.glock_17.crosshair = {
@@ -5358,10 +5636,12 @@ function WeaponTweakData:_init_glock_17(weapon_data)
 	}
 end
 
--- Lines: 6531 to 6645
+-- Lines 6679-6794
 function WeaponTweakData:_init_mp9(weapon_data)
 	self.mp9 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5385,16 +5665,22 @@ function WeaponTweakData:_init_mp9(weapon_data)
 	self.mp9.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.mp9.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.mp9.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.mp9.use_data = {selection_index = SELECTION.SECONDARY}
+	self.mp9.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.mp9.DAMAGE = 1
 	self.mp9.CLIP_AMMO_MAX = 30
 	self.mp9.NR_CLIPS_MAX = 7
 	self.mp9.AMMO_MAX = self.mp9.CLIP_AMMO_MAX * self.mp9.NR_CLIPS_MAX
 	self.mp9.AMMO_PICKUP = self:_pickup_chance(self.mp9.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.mp9.FIRE_MODE = "auto"
-	self.mp9.fire_mode_data = {fire_rate = 0.063}
+	self.mp9.fire_mode_data = {
+		fire_rate = 0.063
+	}
 	self.mp9.CAN_TOGGLE_FIREMODE = true
-	self.mp9.auto = {fire_rate = 0.063}
+	self.mp9.auto = {
+		fire_rate = 0.063
+	}
 	self.mp9.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5403,12 +5689,14 @@ function WeaponTweakData:_init_mp9(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.mp9.kick = {standing = {
-		-1.2,
-		1.2,
-		-1,
-		1
-	}}
+	self.mp9.kick = {
+		standing = {
+			-1.2,
+			1.2,
+			-1,
+			1
+		}
+	}
 	self.mp9.kick.crouching = self.mp9.kick.standing
 	self.mp9.kick.steelsight = self.mp9.kick.standing
 	self.mp9.crosshair = {
@@ -5454,10 +5742,12 @@ function WeaponTweakData:_init_mp9(weapon_data)
 	}
 end
 
--- Lines: 6648 to 6758
+-- Lines 6796-6907
 function WeaponTweakData:_init_r870(weapon_data)
 	self.r870 = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5488,8 +5778,12 @@ function WeaponTweakData:_init_r870(weapon_data)
 	self.r870.AMMO_MAX = self.r870.CLIP_AMMO_MAX * self.r870.NR_CLIPS_MAX
 	self.r870.AMMO_PICKUP = self:_pickup_chance(self.r870.AMMO_MAX, PICKUP.OTHER)
 	self.r870.FIRE_MODE = "single"
-	self.r870.fire_mode_data = {fire_rate = 0.575}
-	self.r870.single = {fire_rate = 0.575}
+	self.r870.fire_mode_data = {
+		fire_rate = 0.575
+	}
+	self.r870.single = {
+		fire_rate = 0.575
+	}
 	self.r870.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5498,12 +5792,14 @@ function WeaponTweakData:_init_r870(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.r870.kick = {standing = {
-		1.9,
-		2,
-		-0.2,
-		0.2
-	}}
+	self.r870.kick = {
+		standing = {
+			1.9,
+			2,
+			-0.2,
+			0.2
+		}
+	}
 	self.r870.kick.crouching = self.r870.kick.standing
 	self.r870.kick.steelsight = {
 		1.5,
@@ -5554,10 +5850,12 @@ function WeaponTweakData:_init_r870(weapon_data)
 	}
 end
 
--- Lines: 6761 to 6884
+-- Lines 6909-7033
 function WeaponTweakData:_init_glock_18c(weapon_data)
 	self.glock_18c = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5582,16 +5880,22 @@ function WeaponTweakData:_init_glock_18c(weapon_data)
 	self.glock_18c.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.glock_18c.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.glock_18c.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.glock_18c.use_data = {selection_index = SELECTION.SECONDARY}
+	self.glock_18c.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.glock_18c.DAMAGE = 1
 	self.glock_18c.CLIP_AMMO_MAX = 20
 	self.glock_18c.NR_CLIPS_MAX = 8
 	self.glock_18c.AMMO_MAX = self.glock_18c.CLIP_AMMO_MAX * self.glock_18c.NR_CLIPS_MAX
 	self.glock_18c.AMMO_PICKUP = self:_pickup_chance(self.glock_18c.AMMO_MAX, PICKUP.OTHER)
 	self.glock_18c.FIRE_MODE = "auto"
-	self.glock_18c.fire_mode_data = {fire_rate = 0.066}
+	self.glock_18c.fire_mode_data = {
+		fire_rate = 0.066
+	}
 	self.glock_18c.CAN_TOGGLE_FIREMODE = true
-	self.glock_18c.auto = {fire_rate = 0.066}
+	self.glock_18c.auto = {
+		fire_rate = 0.066
+	}
 	self.glock_18c.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5600,12 +5904,14 @@ function WeaponTweakData:_init_glock_18c(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.glock_18c.kick = {standing = {
-		0.3,
-		0.4,
-		-0.3,
-		0.3
-	}}
+	self.glock_18c.kick = {
+		standing = {
+			0.3,
+			0.4,
+			-0.3,
+			0.3
+		}
+	}
 	self.glock_18c.kick.crouching = self.glock_18c.kick.standing
 	self.glock_18c.kick.steelsight = self.glock_18c.kick.standing
 	self.glock_18c.crosshair = {
@@ -5660,10 +5966,12 @@ function WeaponTweakData:_init_glock_18c(weapon_data)
 	}
 end
 
--- Lines: 6887 to 7002
+-- Lines 7035-7151
 function WeaponTweakData:_init_amcar(weapon_data)
 	self.amcar = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5687,16 +5995,22 @@ function WeaponTweakData:_init_amcar(weapon_data)
 	self.amcar.description_id = "des_m4"
 	self.amcar.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.amcar.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.amcar.use_data = {selection_index = SELECTION.PRIMARY}
+	self.amcar.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.amcar.DAMAGE = 1
 	self.amcar.CLIP_AMMO_MAX = 20
 	self.amcar.NR_CLIPS_MAX = 11
 	self.amcar.AMMO_MAX = self.amcar.CLIP_AMMO_MAX * self.amcar.NR_CLIPS_MAX
 	self.amcar.AMMO_PICKUP = self:_pickup_chance(self.amcar.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.amcar.FIRE_MODE = "auto"
-	self.amcar.fire_mode_data = {fire_rate = 0.11}
+	self.amcar.fire_mode_data = {
+		fire_rate = 0.11
+	}
 	self.amcar.CAN_TOGGLE_FIREMODE = true
-	self.amcar.auto = {fire_rate = 0.11}
+	self.amcar.auto = {
+		fire_rate = 0.11
+	}
 	self.amcar.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5705,7 +6019,9 @@ function WeaponTweakData:_init_amcar(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.amcar.kick = {standing = self.new_m4.kick.standing}
+	self.amcar.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.amcar.kick.crouching = self.amcar.kick.standing
 	self.amcar.kick.steelsight = self.amcar.kick.standing
 	self.amcar.crosshair = {
@@ -5754,10 +6070,12 @@ function WeaponTweakData:_init_amcar(weapon_data)
 	}
 end
 
--- Lines: 7005 to 7120
+-- Lines 7153-7269
 function WeaponTweakData:_init_m16(weapon_data)
 	self.m16 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5781,16 +6099,22 @@ function WeaponTweakData:_init_m16(weapon_data)
 	self.m16.description_id = "des_m4"
 	self.m16.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.m16.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.m16.use_data = {selection_index = SELECTION.PRIMARY}
+	self.m16.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.m16.DAMAGE = 1
 	self.m16.CLIP_AMMO_MAX = 30
 	self.m16.NR_CLIPS_MAX = 3
 	self.m16.AMMO_MAX = self.m16.CLIP_AMMO_MAX * self.m16.NR_CLIPS_MAX
 	self.m16.AMMO_PICKUP = self:_pickup_chance(self.m16.AMMO_MAX, PICKUP.OTHER)
 	self.m16.FIRE_MODE = "auto"
-	self.m16.fire_mode_data = {fire_rate = 0.07}
+	self.m16.fire_mode_data = {
+		fire_rate = 0.07
+	}
 	self.m16.CAN_TOGGLE_FIREMODE = true
-	self.m16.auto = {fire_rate = 0.07}
+	self.m16.auto = {
+		fire_rate = 0.07
+	}
 	self.m16.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5799,7 +6123,9 @@ function WeaponTweakData:_init_m16(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.m16.kick = {standing = self.new_m4.kick.standing}
+	self.m16.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.m16.kick.crouching = self.m16.kick.standing
 	self.m16.kick.steelsight = self.m16.kick.standing
 	self.m16.crosshair = {
@@ -5848,10 +6174,12 @@ function WeaponTweakData:_init_m16(weapon_data)
 	}
 end
 
--- Lines: 7123 to 7238
+-- Lines 7271-7387
 function WeaponTweakData:_init_olympic(weapon_data)
 	self.olympic = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5875,16 +6203,22 @@ function WeaponTweakData:_init_olympic(weapon_data)
 	self.olympic.description_id = "des_m4"
 	self.olympic.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.olympic.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.olympic.use_data = {selection_index = SELECTION.SECONDARY}
+	self.olympic.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.olympic.DAMAGE = 1
 	self.olympic.CLIP_AMMO_MAX = 25
 	self.olympic.NR_CLIPS_MAX = 6
 	self.olympic.AMMO_MAX = self.olympic.CLIP_AMMO_MAX * self.olympic.NR_CLIPS_MAX
 	self.olympic.AMMO_PICKUP = self:_pickup_chance(self.olympic.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.olympic.FIRE_MODE = "auto"
-	self.olympic.fire_mode_data = {fire_rate = 0.088}
+	self.olympic.fire_mode_data = {
+		fire_rate = 0.088
+	}
 	self.olympic.CAN_TOGGLE_FIREMODE = true
-	self.olympic.auto = {fire_rate = 0.088}
+	self.olympic.auto = {
+		fire_rate = 0.088
+	}
 	self.olympic.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5893,7 +6227,9 @@ function WeaponTweakData:_init_olympic(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.olympic.kick = {standing = self.new_m4.kick.standing}
+	self.olympic.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.olympic.kick.crouching = self.olympic.kick.standing
 	self.olympic.kick.steelsight = self.olympic.kick.standing
 	self.olympic.crosshair = {
@@ -5942,10 +6278,12 @@ function WeaponTweakData:_init_olympic(weapon_data)
 	}
 end
 
--- Lines: 7241 to 7355
+-- Lines 7389-7504
 function WeaponTweakData:_init_ak74(weapon_data)
 	self.ak74 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -5968,16 +6306,22 @@ function WeaponTweakData:_init_ak74(weapon_data)
 	self.ak74.description_id = "des_ak47"
 	self.ak74.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.ak74.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.ak74.use_data = {selection_index = SELECTION.PRIMARY}
+	self.ak74.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.ak74.DAMAGE = 1
 	self.ak74.CLIP_AMMO_MAX = 30
 	self.ak74.NR_CLIPS_MAX = 5
 	self.ak74.AMMO_MAX = self.ak74.CLIP_AMMO_MAX * self.ak74.NR_CLIPS_MAX
 	self.ak74.AMMO_PICKUP = self:_pickup_chance(self.ak74.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.ak74.FIRE_MODE = "auto"
-	self.ak74.fire_mode_data = {fire_rate = 0.092}
+	self.ak74.fire_mode_data = {
+		fire_rate = 0.092
+	}
 	self.ak74.CAN_TOGGLE_FIREMODE = true
-	self.ak74.auto = {fire_rate = 0.092}
+	self.ak74.auto = {
+		fire_rate = 0.092
+	}
 	self.ak74.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -5986,7 +6330,9 @@ function WeaponTweakData:_init_ak74(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.ak74.kick = {standing = self.new_m4.kick.standing}
+	self.ak74.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.ak74.kick.crouching = self.ak74.kick.standing
 	self.ak74.kick.steelsight = self.ak74.kick.standing
 	self.ak74.crosshair = {
@@ -6036,10 +6382,12 @@ function WeaponTweakData:_init_ak74(weapon_data)
 	}
 end
 
--- Lines: 7358 to 7472
+-- Lines 7506-7621
 function WeaponTweakData:_init_akm(weapon_data)
 	self.akm = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6062,16 +6410,22 @@ function WeaponTweakData:_init_akm(weapon_data)
 	self.akm.description_id = "des_ak47"
 	self.akm.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.akm.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.akm.use_data = {selection_index = SELECTION.PRIMARY}
+	self.akm.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.akm.DAMAGE = 1.25
 	self.akm.CLIP_AMMO_MAX = 30
 	self.akm.NR_CLIPS_MAX = 3
 	self.akm.AMMO_MAX = self.akm.CLIP_AMMO_MAX * self.akm.NR_CLIPS_MAX
 	self.akm.AMMO_PICKUP = self:_pickup_chance(self.akm.AMMO_MAX, PICKUP.OTHER)
 	self.akm.FIRE_MODE = "auto"
-	self.akm.fire_mode_data = {fire_rate = 0.107}
+	self.akm.fire_mode_data = {
+		fire_rate = 0.107
+	}
 	self.akm.CAN_TOGGLE_FIREMODE = true
-	self.akm.auto = {fire_rate = 0.107}
+	self.akm.auto = {
+		fire_rate = 0.107
+	}
 	self.akm.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6080,7 +6434,9 @@ function WeaponTweakData:_init_akm(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.akm.kick = {standing = self.new_m4.kick.standing}
+	self.akm.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.akm.kick.crouching = self.akm.kick.standing
 	self.akm.kick.steelsight = self.akm.kick.standing
 	self.akm.crosshair = {
@@ -6130,10 +6486,12 @@ function WeaponTweakData:_init_akm(weapon_data)
 	}
 end
 
--- Lines: 7475 to 7591
+-- Lines 7623-7740
 function WeaponTweakData:_init_akm_gold(weapon_data)
 	self.akm_gold = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6156,16 +6514,22 @@ function WeaponTweakData:_init_akm_gold(weapon_data)
 	self.akm_gold.description_id = "des_ak47"
 	self.akm_gold.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.akm_gold.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.akm_gold.use_data = {selection_index = SELECTION.PRIMARY}
+	self.akm_gold.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.akm_gold.DAMAGE = 1.25
 	self.akm_gold.CLIP_AMMO_MAX = 30
 	self.akm_gold.NR_CLIPS_MAX = 3
 	self.akm_gold.AMMO_MAX = self.akm_gold.CLIP_AMMO_MAX * self.akm_gold.NR_CLIPS_MAX
 	self.akm_gold.AMMO_PICKUP = self:_pickup_chance(self.akm_gold.AMMO_MAX, PICKUP.OTHER)
 	self.akm_gold.FIRE_MODE = "auto"
-	self.akm_gold.fire_mode_data = {fire_rate = 0.107}
+	self.akm_gold.fire_mode_data = {
+		fire_rate = 0.107
+	}
 	self.akm_gold.CAN_TOGGLE_FIREMODE = true
-	self.akm_gold.auto = {fire_rate = 0.107}
+	self.akm_gold.auto = {
+		fire_rate = 0.107
+	}
 	self.akm_gold.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6174,7 +6538,9 @@ function WeaponTweakData:_init_akm_gold(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.akm_gold.kick = {standing = self.new_m4.kick.standing}
+	self.akm_gold.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.akm_gold.kick.crouching = self.akm_gold.kick.standing
 	self.akm_gold.kick.steelsight = self.akm_gold.kick.standing
 	self.akm_gold.crosshair = {
@@ -6225,10 +6591,12 @@ function WeaponTweakData:_init_akm_gold(weapon_data)
 	}
 end
 
--- Lines: 7594 to 7708
+-- Lines 7742-7857
 function WeaponTweakData:_init_akmsu(weapon_data)
 	self.akmsu = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6251,16 +6619,22 @@ function WeaponTweakData:_init_akmsu(weapon_data)
 	self.akmsu.description_id = "des_ak47"
 	self.akmsu.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.akmsu.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.akmsu.use_data = {selection_index = SELECTION.SECONDARY}
+	self.akmsu.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.akmsu.DAMAGE = 1
 	self.akmsu.CLIP_AMMO_MAX = 30
 	self.akmsu.NR_CLIPS_MAX = 3
 	self.akmsu.AMMO_MAX = self.akmsu.CLIP_AMMO_MAX * self.akmsu.NR_CLIPS_MAX
 	self.akmsu.AMMO_PICKUP = self:_pickup_chance(self.akmsu.AMMO_MAX, PICKUP.OTHER)
 	self.akmsu.FIRE_MODE = "auto"
-	self.akmsu.fire_mode_data = {fire_rate = 0.073}
+	self.akmsu.fire_mode_data = {
+		fire_rate = 0.073
+	}
 	self.akmsu.CAN_TOGGLE_FIREMODE = true
-	self.akmsu.auto = {fire_rate = 0.073}
+	self.akmsu.auto = {
+		fire_rate = 0.073
+	}
 	self.akmsu.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6269,7 +6643,9 @@ function WeaponTweakData:_init_akmsu(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.akmsu.kick = {standing = self.new_m4.kick.standing}
+	self.akmsu.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.akmsu.kick.crouching = self.akmsu.kick.standing
 	self.akmsu.kick.steelsight = self.akmsu.kick.standing
 	self.akmsu.crosshair = {
@@ -6319,10 +6695,12 @@ function WeaponTweakData:_init_akmsu(weapon_data)
 	}
 end
 
--- Lines: 7711 to 7826
+-- Lines 7859-7975
 function WeaponTweakData:_init_saiga(weapon_data)
 	self.saiga = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		has_magazine = true,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -6357,9 +6735,13 @@ function WeaponTweakData:_init_saiga(weapon_data)
 	self.saiga.AMMO_MAX = self.saiga.CLIP_AMMO_MAX * self.saiga.NR_CLIPS_MAX
 	self.saiga.AMMO_PICKUP = self:_pickup_chance(self.saiga.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
 	self.saiga.FIRE_MODE = "auto"
-	self.saiga.fire_mode_data = {fire_rate = 0.18}
+	self.saiga.fire_mode_data = {
+		fire_rate = 0.18
+	}
 	self.saiga.CAN_TOGGLE_FIREMODE = true
-	self.saiga.auto = {fire_rate = 0.18}
+	self.saiga.auto = {
+		fire_rate = 0.18
+	}
 	self.saiga.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -6368,7 +6750,9 @@ function WeaponTweakData:_init_saiga(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.saiga.kick = {standing = self.r870.kick.standing}
+	self.saiga.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.saiga.kick.crouching = self.saiga.kick.standing
 	self.saiga.kick.steelsight = self.r870.kick.steelsight
 	self.saiga.crosshair = {
@@ -6414,10 +6798,12 @@ function WeaponTweakData:_init_saiga(weapon_data)
 	}
 end
 
--- Lines: 7829 to 7941
+-- Lines 7977-8090
 function WeaponTweakData:_init_ak5(weapon_data)
 	self.ak5 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6441,16 +6827,22 @@ function WeaponTweakData:_init_ak5(weapon_data)
 	self.ak5.description_id = "des_m4"
 	self.ak5.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.ak5.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.ak5.use_data = {selection_index = SELECTION.PRIMARY}
+	self.ak5.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.ak5.DAMAGE = 1
 	self.ak5.CLIP_AMMO_MAX = 30
 	self.ak5.NR_CLIPS_MAX = 5
 	self.ak5.AMMO_MAX = self.ak5.CLIP_AMMO_MAX * self.ak5.NR_CLIPS_MAX
 	self.ak5.AMMO_PICKUP = self:_pickup_chance(self.ak5.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.ak5.FIRE_MODE = "auto"
-	self.ak5.fire_mode_data = {fire_rate = 0.085}
+	self.ak5.fire_mode_data = {
+		fire_rate = 0.085
+	}
 	self.ak5.CAN_TOGGLE_FIREMODE = true
-	self.ak5.auto = {fire_rate = 0.085}
+	self.ak5.auto = {
+		fire_rate = 0.085
+	}
 	self.ak5.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6459,7 +6851,9 @@ function WeaponTweakData:_init_ak5(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.ak5.kick = {standing = self.new_m4.kick.standing}
+	self.ak5.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.ak5.kick.crouching = self.ak5.kick.standing
 	self.ak5.kick.steelsight = self.ak5.kick.standing
 	self.ak5.crosshair = {
@@ -6507,10 +6901,12 @@ function WeaponTweakData:_init_ak5(weapon_data)
 	}
 end
 
--- Lines: 7944 to 8053
+-- Lines 8092-8202
 function WeaponTweakData:_init_aug(weapon_data)
 	self.aug = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6533,16 +6929,22 @@ function WeaponTweakData:_init_aug(weapon_data)
 	self.aug.description_id = "des_aug"
 	self.aug.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.aug.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.aug.use_data = {selection_index = SELECTION.PRIMARY}
+	self.aug.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.aug.DAMAGE = 1
 	self.aug.CLIP_AMMO_MAX = 30
 	self.aug.NR_CLIPS_MAX = 5
 	self.aug.AMMO_MAX = self.aug.CLIP_AMMO_MAX * self.aug.NR_CLIPS_MAX
 	self.aug.AMMO_PICKUP = self:_pickup_chance(self.aug.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.aug.FIRE_MODE = "auto"
-	self.aug.fire_mode_data = {fire_rate = 0.08}
+	self.aug.fire_mode_data = {
+		fire_rate = 0.08
+	}
 	self.aug.CAN_TOGGLE_FIREMODE = true
-	self.aug.auto = {fire_rate = 0.08}
+	self.aug.auto = {
+		fire_rate = 0.08
+	}
 	self.aug.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6551,7 +6953,9 @@ function WeaponTweakData:_init_aug(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.aug.kick = {standing = self.new_m4.kick.standing}
+	self.aug.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.aug.kick.crouching = self.aug.kick.standing
 	self.aug.kick.steelsight = self.aug.kick.standing
 	self.aug.crosshair = {
@@ -6596,10 +7000,12 @@ function WeaponTweakData:_init_aug(weapon_data)
 	}
 end
 
--- Lines: 8056 to 8165
+-- Lines 8204-8314
 function WeaponTweakData:_init_g36(weapon_data)
 	self.g36 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6623,16 +7029,22 @@ function WeaponTweakData:_init_g36(weapon_data)
 	self.g36.description_id = "des_m4"
 	self.g36.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.g36.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.g36.use_data = {selection_index = SELECTION.PRIMARY}
+	self.g36.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.g36.DAMAGE = 1
 	self.g36.CLIP_AMMO_MAX = 30
 	self.g36.NR_CLIPS_MAX = 8
 	self.g36.AMMO_MAX = self.g36.CLIP_AMMO_MAX * self.g36.NR_CLIPS_MAX
 	self.g36.AMMO_PICKUP = self:_pickup_chance(self.g36.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.g36.FIRE_MODE = "auto"
-	self.g36.fire_mode_data = {fire_rate = 0.085}
+	self.g36.fire_mode_data = {
+		fire_rate = 0.085
+	}
 	self.g36.CAN_TOGGLE_FIREMODE = true
-	self.g36.auto = {fire_rate = 0.085}
+	self.g36.auto = {
+		fire_rate = 0.085
+	}
 	self.g36.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6641,7 +7053,9 @@ function WeaponTweakData:_init_g36(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.g36.kick = {standing = self.new_m4.kick.standing}
+	self.g36.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.g36.kick.crouching = self.g36.kick.standing
 	self.g36.kick.steelsight = self.g36.kick.standing
 	self.g36.crosshair = {
@@ -6686,10 +7100,12 @@ function WeaponTweakData:_init_g36(weapon_data)
 	}
 end
 
--- Lines: 8168 to 8278
+-- Lines 8316-8427
 function WeaponTweakData:_init_p90(weapon_data)
 	self.p90 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6712,16 +7128,22 @@ function WeaponTweakData:_init_p90(weapon_data)
 	self.p90.description_id = "des_p90"
 	self.p90.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.p90.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.p90.use_data = {selection_index = SELECTION.SECONDARY}
+	self.p90.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.p90.DAMAGE = 1
 	self.p90.CLIP_AMMO_MAX = 50
 	self.p90.NR_CLIPS_MAX = 3
 	self.p90.AMMO_MAX = self.p90.CLIP_AMMO_MAX * self.p90.NR_CLIPS_MAX
 	self.p90.AMMO_PICKUP = self:_pickup_chance(self.p90.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.p90.FIRE_MODE = "auto"
-	self.p90.fire_mode_data = {fire_rate = 0.066}
+	self.p90.fire_mode_data = {
+		fire_rate = 0.066
+	}
 	self.p90.CAN_TOGGLE_FIREMODE = true
-	self.p90.auto = {fire_rate = 0.066}
+	self.p90.auto = {
+		fire_rate = 0.066
+	}
 	self.p90.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6730,7 +7152,9 @@ function WeaponTweakData:_init_p90(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.p90.kick = {standing = self.new_m4.kick.standing}
+	self.p90.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.p90.kick.crouching = self.p90.kick.standing
 	self.p90.kick.steelsight = self.p90.kick.standing
 	self.p90.crosshair = {
@@ -6775,10 +7199,12 @@ function WeaponTweakData:_init_p90(weapon_data)
 	}
 end
 
--- Lines: 8281 to 8391
+-- Lines 8429-8540
 function WeaponTweakData:_init_new_m14(weapon_data)
 	self.new_m14 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6801,16 +7227,22 @@ function WeaponTweakData:_init_new_m14(weapon_data)
 	self.new_m14.description_id = "des_m14"
 	self.new_m14.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.new_m14.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.new_m14.use_data = {selection_index = SELECTION.PRIMARY}
+	self.new_m14.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.new_m14.DAMAGE = 2
 	self.new_m14.CLIP_AMMO_MAX = 10
 	self.new_m14.NR_CLIPS_MAX = 7
 	self.new_m14.AMMO_MAX = self.new_m14.CLIP_AMMO_MAX * self.new_m14.NR_CLIPS_MAX
 	self.new_m14.AMMO_PICKUP = self:_pickup_chance(self.new_m14.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.new_m14.FIRE_MODE = "single"
-	self.new_m14.fire_mode_data = {fire_rate = 0.085}
+	self.new_m14.fire_mode_data = {
+		fire_rate = 0.085
+	}
 	self.new_m14.CAN_TOGGLE_FIREMODE = true
-	self.new_m14.single = {fire_rate = 0.085}
+	self.new_m14.single = {
+		fire_rate = 0.085
+	}
 	self.new_m14.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6819,7 +7251,9 @@ function WeaponTweakData:_init_new_m14(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.new_m14.kick = {standing = self.new_m4.kick.standing}
+	self.new_m14.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.new_m14.kick.crouching = self.new_m14.kick.standing
 	self.new_m14.kick.steelsight = self.new_m14.kick.standing
 	self.new_m14.crosshair = {
@@ -6865,10 +7299,12 @@ function WeaponTweakData:_init_new_m14(weapon_data)
 	}
 end
 
--- Lines: 8394 to 8503
+-- Lines 8542-8652
 function WeaponTweakData:_init_deagle(weapon_data)
 	self.deagle = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6879,8 +7315,12 @@ function WeaponTweakData:_init_deagle(weapon_data)
 	self.deagle.sounds.leave_steelsight = "pistol_steel_sight_exit"
 	self.deagle.sounds.magazine_empty = "wp_pistol_slide_lock"
 	self.deagle.FIRE_MODE = "single"
-	self.deagle.fire_mode_data = {fire_rate = 0.25}
-	self.deagle.single = {fire_rate = 0.25}
+	self.deagle.fire_mode_data = {
+		fire_rate = 0.25
+	}
+	self.deagle.single = {
+		fire_rate = 0.25
+	}
 	self.deagle.timers = {
 		reload_not_empty = 1.85,
 		reload_empty = 3.1,
@@ -6892,7 +7332,9 @@ function WeaponTweakData:_init_deagle(weapon_data)
 	self.deagle.description_id = "des_deagle"
 	self.deagle.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.deagle.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.deagle.use_data = {selection_index = SELECTION.SECONDARY}
+	self.deagle.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.deagle.DAMAGE = 2
 	self.deagle.CLIP_AMMO_MAX = 10
 	self.deagle.NR_CLIPS_MAX = 5
@@ -6906,7 +7348,9 @@ function WeaponTweakData:_init_deagle(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.deagle.kick = {standing = self.glock_17.kick.standing}
+	self.deagle.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.deagle.kick.crouching = self.deagle.kick.standing
 	self.deagle.kick.steelsight = self.deagle.kick.standing
 	self.deagle.crosshair = {
@@ -6952,10 +7396,12 @@ function WeaponTweakData:_init_deagle(weapon_data)
 	}
 end
 
--- Lines: 8506 to 8617
+-- Lines 8654-8766
 function WeaponTweakData:_init_new_mp5(weapon_data)
 	self.new_mp5 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -6979,16 +7425,22 @@ function WeaponTweakData:_init_new_mp5(weapon_data)
 	self.new_mp5.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.new_mp5.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.new_mp5.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.new_mp5.use_data = {selection_index = SELECTION.SECONDARY}
+	self.new_mp5.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.new_mp5.DAMAGE = 1
 	self.new_mp5.CLIP_AMMO_MAX = 30
 	self.new_mp5.NR_CLIPS_MAX = 7
 	self.new_mp5.AMMO_MAX = self.new_mp5.CLIP_AMMO_MAX * self.new_mp5.NR_CLIPS_MAX
 	self.new_mp5.AMMO_PICKUP = self:_pickup_chance(self.new_mp5.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.new_mp5.FIRE_MODE = "auto"
-	self.new_mp5.fire_mode_data = {fire_rate = 0.08}
+	self.new_mp5.fire_mode_data = {
+		fire_rate = 0.08
+	}
 	self.new_mp5.CAN_TOGGLE_FIREMODE = true
-	self.new_mp5.auto = {fire_rate = 0.08}
+	self.new_mp5.auto = {
+		fire_rate = 0.08
+	}
 	self.new_mp5.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -6997,7 +7449,9 @@ function WeaponTweakData:_init_new_mp5(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.new_mp5.kick = {standing = self.new_m4.kick.standing}
+	self.new_mp5.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.new_mp5.kick.crouching = self.new_mp5.kick.standing
 	self.new_mp5.kick.steelsight = self.new_mp5.kick.standing
 	self.new_mp5.crosshair = {
@@ -7043,10 +7497,12 @@ function WeaponTweakData:_init_new_mp5(weapon_data)
 	}
 end
 
--- Lines: 8620 to 8731
+-- Lines 8768-8880
 function WeaponTweakData:_init_colt_1911(weapon_data)
 	self.colt_1911 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7057,8 +7513,12 @@ function WeaponTweakData:_init_colt_1911(weapon_data)
 	self.colt_1911.sounds.leave_steelsight = "pistol_steel_sight_exit"
 	self.colt_1911.sounds.magazine_empty = "wp_pistol_slide_lock"
 	self.colt_1911.FIRE_MODE = "single"
-	self.colt_1911.fire_mode_data = {fire_rate = 0.166}
-	self.colt_1911.single = {fire_rate = 0.166}
+	self.colt_1911.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.colt_1911.single = {
+		fire_rate = 0.166
+	}
 	self.colt_1911.timers = {
 		reload_not_empty = 1.47,
 		reload_empty = 2.12,
@@ -7071,7 +7531,9 @@ function WeaponTweakData:_init_colt_1911(weapon_data)
 	self.colt_1911.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.colt_1911.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.colt_1911.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.colt_1911.use_data = {selection_index = SELECTION.SECONDARY}
+	self.colt_1911.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.colt_1911.DAMAGE = 1
 	self.colt_1911.CLIP_AMMO_MAX = 10
 	self.colt_1911.NR_CLIPS_MAX = 9
@@ -7085,7 +7547,9 @@ function WeaponTweakData:_init_colt_1911(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.colt_1911.kick = {standing = self.glock_17.kick.standing}
+	self.colt_1911.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.colt_1911.kick.crouching = self.colt_1911.kick.standing
 	self.colt_1911.kick.steelsight = self.colt_1911.kick.standing
 	self.colt_1911.crosshair = {
@@ -7132,10 +7596,12 @@ function WeaponTweakData:_init_colt_1911(weapon_data)
 	}
 end
 
--- Lines: 8734 to 8847
+-- Lines 8882-8996
 function WeaponTweakData:_init_mac10(weapon_data)
 	self.mac10 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7159,16 +7625,22 @@ function WeaponTweakData:_init_mac10(weapon_data)
 	self.mac10.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.mac10.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.mac10.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.mac10.use_data = {selection_index = SELECTION.SECONDARY}
+	self.mac10.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.mac10.DAMAGE = 1
 	self.mac10.CLIP_AMMO_MAX = 40
 	self.mac10.NR_CLIPS_MAX = 4
 	self.mac10.AMMO_MAX = self.mac10.CLIP_AMMO_MAX * self.mac10.NR_CLIPS_MAX
 	self.mac10.AMMO_PICKUP = self:_pickup_chance(self.mac10.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.mac10.FIRE_MODE = "auto"
-	self.mac10.fire_mode_data = {fire_rate = 0.06}
+	self.mac10.fire_mode_data = {
+		fire_rate = 0.06
+	}
 	self.mac10.CAN_TOGGLE_FIREMODE = true
-	self.mac10.auto = {fire_rate = 0.06}
+	self.mac10.auto = {
+		fire_rate = 0.06
+	}
 	self.mac10.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -7177,7 +7649,9 @@ function WeaponTweakData:_init_mac10(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.mac10.kick = {standing = self.mp9.kick.standing}
+	self.mac10.kick = {
+		standing = self.mp9.kick.standing
+	}
 	self.mac10.kick.crouching = self.mac10.kick.standing
 	self.mac10.kick.steelsight = self.mac10.kick.standing
 	self.mac10.crosshair = {
@@ -7223,10 +7697,12 @@ function WeaponTweakData:_init_mac10(weapon_data)
 	}
 end
 
--- Lines: 8850 to 8960
+-- Lines 8998-9109
 function WeaponTweakData:_init_serbu(weapon_data)
 	self.serbu = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7257,8 +7733,12 @@ function WeaponTweakData:_init_serbu(weapon_data)
 	self.serbu.AMMO_MAX = self.serbu.CLIP_AMMO_MAX * self.serbu.NR_CLIPS_MAX
 	self.serbu.AMMO_PICKUP = self:_pickup_chance(self.serbu.AMMO_MAX, PICKUP.OTHER)
 	self.serbu.FIRE_MODE = "single"
-	self.serbu.fire_mode_data = {fire_rate = 0.375}
-	self.serbu.single = {fire_rate = 0.375}
+	self.serbu.fire_mode_data = {
+		fire_rate = 0.375
+	}
+	self.serbu.single = {
+		fire_rate = 0.375
+	}
 	self.serbu.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -7267,7 +7747,9 @@ function WeaponTweakData:_init_serbu(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.serbu.kick = {standing = self.r870.kick.standing}
+	self.serbu.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.serbu.kick.crouching = self.serbu.kick.standing
 	self.serbu.kick.steelsight = self.serbu.kick.standing
 	self.serbu.crosshair = {
@@ -7313,11 +7795,17 @@ function WeaponTweakData:_init_serbu(weapon_data)
 	}
 end
 
--- Lines: 8963 to 9077
+-- Lines 9111-9226
 function WeaponTweakData:_init_huntsman(weapon_data)
 	self.huntsman = {
-		categories = {"shotgun"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"shotgun"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7326,7 +7814,9 @@ function WeaponTweakData:_init_huntsman(weapon_data)
 	self.huntsman.sounds.dryfire = "shotgun_dryfire"
 	self.huntsman.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.huntsman.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.huntsman.timers = {reload_not_empty = 2.5}
+	self.huntsman.timers = {
+		reload_not_empty = 2.5
+	}
 	self.huntsman.timers.reload_empty = self.huntsman.timers.reload_not_empty
 	self.huntsman.timers.unequip = 0.6
 	self.huntsman.timers.equip = 0.6
@@ -7348,8 +7838,12 @@ function WeaponTweakData:_init_huntsman(weapon_data)
 	self.huntsman.AMMO_MAX = self.huntsman.CLIP_AMMO_MAX * self.huntsman.NR_CLIPS_MAX
 	self.huntsman.AMMO_PICKUP = self:_pickup_chance(self.huntsman.AMMO_MAX, PICKUP.OTHER)
 	self.huntsman.FIRE_MODE = "single"
-	self.huntsman.fire_mode_data = {fire_rate = 0.12}
-	self.huntsman.single = {fire_rate = 0.12}
+	self.huntsman.fire_mode_data = {
+		fire_rate = 0.12
+	}
+	self.huntsman.single = {
+		fire_rate = 0.12
+	}
 	self.huntsman.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -7358,12 +7852,14 @@ function WeaponTweakData:_init_huntsman(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.huntsman.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.huntsman.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.huntsman.kick.crouching = self.huntsman.kick.standing
 	self.huntsman.kick.steelsight = self.huntsman.kick.standing
 	self.huntsman.crosshair = {
@@ -7408,13 +7904,17 @@ function WeaponTweakData:_init_huntsman(weapon_data)
 		suppression = 2,
 		concealment = 7
 	}
-	self.huntsman.stats_modifiers = {damage = 1}
+	self.huntsman.stats_modifiers = {
+		damage = 1
+	}
 end
 
--- Lines: 9080 to 9191
+-- Lines 9228-9340
 function WeaponTweakData:_init_b92fs(weapon_data)
 	self.b92fs = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7436,15 +7936,21 @@ function WeaponTweakData:_init_b92fs(weapon_data)
 	self.b92fs.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.b92fs.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.b92fs.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.b92fs.use_data = {selection_index = SELECTION.SECONDARY}
+	self.b92fs.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.b92fs.DAMAGE = 1
 	self.b92fs.CLIP_AMMO_MAX = 14
 	self.b92fs.NR_CLIPS_MAX = 11
 	self.b92fs.AMMO_MAX = self.b92fs.CLIP_AMMO_MAX * self.b92fs.NR_CLIPS_MAX
 	self.b92fs.AMMO_PICKUP = self:_pickup_chance(self.b92fs.AMMO_MAX, PICKUP.OTHER)
 	self.b92fs.FIRE_MODE = "single"
-	self.b92fs.fire_mode_data = {fire_rate = 0.125}
-	self.b92fs.single = {fire_rate = 0.125}
+	self.b92fs.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.b92fs.single = {
+		fire_rate = 0.125
+	}
 	self.b92fs.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -7453,7 +7959,9 @@ function WeaponTweakData:_init_b92fs(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.b92fs.kick = {standing = self.glock_17.kick.standing}
+	self.b92fs.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.b92fs.kick.crouching = self.b92fs.kick.standing
 	self.b92fs.kick.steelsight = self.b92fs.kick.standing
 	self.b92fs.crosshair = {
@@ -7500,14 +8008,18 @@ function WeaponTweakData:_init_b92fs(weapon_data)
 	}
 end
 
--- Lines: 9194 to 9301
+-- Lines 9342-9450
 function WeaponTweakData:_init_new_raging_bull(weapon_data)
 	self.new_raging_bull = {
 		categories = {
 			"pistol",
 			"revolver"
 		},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7523,14 +8035,20 @@ function WeaponTweakData:_init_new_raging_bull(weapon_data)
 		equip = 0.45
 	}
 	self.new_raging_bull.FIRE_MODE = "single"
-	self.new_raging_bull.fire_mode_data = {fire_rate = 0.166}
-	self.new_raging_bull.single = {fire_rate = 0.166}
+	self.new_raging_bull.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.new_raging_bull.single = {
+		fire_rate = 0.166
+	}
 	self.new_raging_bull.name_id = "bm_w_raging_bull"
 	self.new_raging_bull.desc_id = "bm_w_raging_bull_desc"
 	self.new_raging_bull.description_id = "des_new_raging_bull"
 	self.new_raging_bull.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.new_raging_bull.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.new_raging_bull.use_data = {selection_index = SELECTION.SECONDARY}
+	self.new_raging_bull.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.new_raging_bull.DAMAGE = 2
 	self.new_raging_bull.CLIP_AMMO_MAX = 6
 	self.new_raging_bull.NR_CLIPS_MAX = 9
@@ -7544,7 +8062,9 @@ function WeaponTweakData:_init_new_raging_bull(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.new_raging_bull.kick = {standing = self.glock_17.kick.standing}
+	self.new_raging_bull.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.new_raging_bull.kick.crouching = self.new_raging_bull.kick.standing
 	self.new_raging_bull.kick.steelsight = self.new_raging_bull.kick.standing
 	self.new_raging_bull.crosshair = {
@@ -7590,11 +8110,17 @@ function WeaponTweakData:_init_new_raging_bull(weapon_data)
 	}
 end
 
--- Lines: 9304 to 9422
+-- Lines 9452-9571
 function WeaponTweakData:_init_saw(weapon_data)
 	self.saw = {
-		categories = {"saw"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"saw"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7615,7 +8141,9 @@ function WeaponTweakData:_init_saw(weapon_data)
 	self.saw.description_id = "des_mp5"
 	self.saw.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.saw.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
-	self.saw.use_data = {selection_index = SELECTION.PRIMARY}
+	self.saw.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.saw.DAMAGE = 0.2
 	self.saw.CLIP_AMMO_MAX = 150
 	self.saw.NR_CLIPS_MAX = 2
@@ -7625,8 +8153,12 @@ function WeaponTweakData:_init_saw(weapon_data)
 		0
 	}
 	self.saw.FIRE_MODE = "auto"
-	self.saw.fire_mode_data = {fire_rate = 0.15}
-	self.saw.auto = {fire_rate = 0.15}
+	self.saw.fire_mode_data = {
+		fire_rate = 0.15
+	}
+	self.saw.auto = {
+		fire_rate = 0.15
+	}
 	self.saw.spread = {
 		standing = 1,
 		crouching = 0.71,
@@ -7706,10 +8238,12 @@ function WeaponTweakData:_init_saw(weapon_data)
 	self.saw_secondary.weapon_hold = "saw"
 end
 
--- Lines: 9425 to 9537
+-- Lines 9573-9686
 function WeaponTweakData:_init_usp(weapon_data)
 	self.usp = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7732,11 +8266,17 @@ function WeaponTweakData:_init_usp(weapon_data)
 	self.usp.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.usp.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.usp.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.usp.use_data = {selection_index = SELECTION.SECONDARY}
+	self.usp.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.usp.DAMAGE = 1
 	self.usp.FIRE_MODE = "single"
-	self.usp.fire_mode_data = {fire_rate = 0.166}
-	self.usp.single = {fire_rate = 0.166}
+	self.usp.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.usp.single = {
+		fire_rate = 0.166
+	}
 	self.usp.CLIP_AMMO_MAX = 13
 	self.usp.NR_CLIPS_MAX = 7
 	self.usp.AMMO_MAX = self.usp.CLIP_AMMO_MAX * self.usp.NR_CLIPS_MAX
@@ -7803,10 +8343,12 @@ function WeaponTweakData:_init_usp(weapon_data)
 	}
 end
 
--- Lines: 9540 to 9653
+-- Lines 9688-9802
 function WeaponTweakData:_init_g22c(weapon_data)
 	self.g22c = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7829,11 +8371,17 @@ function WeaponTweakData:_init_g22c(weapon_data)
 	self.g22c.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.g22c.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.g22c.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.g22c.use_data = {selection_index = SELECTION.SECONDARY}
+	self.g22c.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.g22c.DAMAGE = 1
 	self.g22c.FIRE_MODE = "single"
-	self.g22c.fire_mode_data = {fire_rate = 0.166}
-	self.g22c.single = {fire_rate = 0.166}
+	self.g22c.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.g22c.single = {
+		fire_rate = 0.166
+	}
 	self.g22c.CLIP_AMMO_MAX = 16
 	self.g22c.NR_CLIPS_MAX = 6
 	self.g22c.AMMO_MAX = self.g22c.CLIP_AMMO_MAX * self.g22c.NR_CLIPS_MAX
@@ -7900,11 +8448,17 @@ function WeaponTweakData:_init_g22c(weapon_data)
 	}
 end
 
--- Lines: 9656 to 9770
+-- Lines 9804-9919
 function WeaponTweakData:_init_judge(weapon_data)
 	self.judge = {
-		categories = {"shotgun"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"shotgun"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -7920,8 +8474,12 @@ function WeaponTweakData:_init_judge(weapon_data)
 		equip = 0.45
 	}
 	self.judge.FIRE_MODE = "single"
-	self.judge.fire_mode_data = {fire_rate = 0.12}
-	self.judge.single = {fire_rate = 0.21}
+	self.judge.fire_mode_data = {
+		fire_rate = 0.12
+	}
+	self.judge.single = {
+		fire_rate = 0.21
+	}
 	self.judge.name_id = "bm_w_judge"
 	self.judge.desc_id = "bm_w_judge_desc"
 	self.judge.description_id = "des_judge"
@@ -7949,12 +8507,14 @@ function WeaponTweakData:_init_judge(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.judge.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.judge.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.judge.kick.crouching = self.judge.kick.standing
 	self.judge.kick.steelsight = self.judge.kick.standing
 	self.judge.crosshair = {
@@ -8000,10 +8560,12 @@ function WeaponTweakData:_init_judge(weapon_data)
 	}
 end
 
--- Lines: 9773 to 9885
+-- Lines 9921-10034
 function WeaponTweakData:_init_m45(weapon_data)
 	self.m45 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8029,15 +8591,21 @@ function WeaponTweakData:_init_m45(weapon_data)
 	self.m45.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.m45.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.m45.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.m45.use_data = {selection_index = SELECTION.SECONDARY}
+	self.m45.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.m45.DAMAGE = 1
 	self.m45.CLIP_AMMO_MAX = 40
 	self.m45.NR_CLIPS_MAX = 2
 	self.m45.AMMO_MAX = self.m45.CLIP_AMMO_MAX * self.m45.NR_CLIPS_MAX
 	self.m45.AMMO_PICKUP = self:_pickup_chance(self.m45.AMMO_MAX, PICKUP.OTHER)
 	self.m45.FIRE_MODE = "auto"
-	self.m45.fire_mode_data = {fire_rate = 0.1}
-	self.m45.auto = {fire_rate = 0.1}
+	self.m45.fire_mode_data = {
+		fire_rate = 0.1
+	}
+	self.m45.auto = {
+		fire_rate = 0.1
+	}
 	self.m45.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8046,7 +8614,9 @@ function WeaponTweakData:_init_m45(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.m45.kick = {standing = self.mp9.kick.standing}
+	self.m45.kick = {
+		standing = self.mp9.kick.standing
+	}
 	self.m45.kick.crouching = self.m45.kick.standing
 	self.m45.kick.steelsight = self.m45.kick.standing
 	self.m45.crosshair = {
@@ -8092,10 +8662,12 @@ function WeaponTweakData:_init_m45(weapon_data)
 	}
 end
 
--- Lines: 9888 to 10002
+-- Lines 10036-10151
 function WeaponTweakData:_init_s552(weapon_data)
 	self.s552 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8120,16 +8692,22 @@ function WeaponTweakData:_init_s552(weapon_data)
 	self.s552.texture_bundle_folder = "dlc1"
 	self.s552.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.s552.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.s552.use_data = {selection_index = SELECTION.PRIMARY}
+	self.s552.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.s552.DAMAGE = 1
 	self.s552.CLIP_AMMO_MAX = 30
 	self.s552.NR_CLIPS_MAX = 8
 	self.s552.AMMO_MAX = self.s552.CLIP_AMMO_MAX * self.s552.NR_CLIPS_MAX
 	self.s552.AMMO_PICKUP = self:_pickup_chance(self.s552.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.s552.FIRE_MODE = "auto"
-	self.s552.fire_mode_data = {fire_rate = 0.084}
+	self.s552.fire_mode_data = {
+		fire_rate = 0.084
+	}
 	self.s552.CAN_TOGGLE_FIREMODE = true
-	self.s552.auto = {fire_rate = 0.084}
+	self.s552.auto = {
+		fire_rate = 0.084
+	}
 	self.s552.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8138,7 +8716,9 @@ function WeaponTweakData:_init_s552(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.s552.kick = {standing = self.new_m4.kick.standing}
+	self.s552.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.s552.kick.crouching = self.s552.kick.standing
 	self.s552.kick.steelsight = self.s552.kick.standing
 	self.s552.crosshair = {
@@ -8184,10 +8764,12 @@ function WeaponTweakData:_init_s552(weapon_data)
 	}
 end
 
--- Lines: 10005 to 10117
+-- Lines 10153-10266
 function WeaponTweakData:_init_ppk(weapon_data)
 	self.ppk = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8211,15 +8793,21 @@ function WeaponTweakData:_init_ppk(weapon_data)
 	self.ppk.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.ppk.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.ppk.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.ppk.use_data = {selection_index = SELECTION.SECONDARY}
+	self.ppk.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.ppk.DAMAGE = 1
 	self.ppk.CLIP_AMMO_MAX = 14
 	self.ppk.NR_CLIPS_MAX = 11
 	self.ppk.AMMO_MAX = self.ppk.CLIP_AMMO_MAX * self.ppk.NR_CLIPS_MAX
 	self.ppk.AMMO_PICKUP = self:_pickup_chance(self.ppk.AMMO_MAX, PICKUP.OTHER)
 	self.ppk.FIRE_MODE = "single"
-	self.ppk.fire_mode_data = {fire_rate = 0.125}
-	self.ppk.single = {fire_rate = 0.125}
+	self.ppk.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.ppk.single = {
+		fire_rate = 0.125
+	}
 	self.ppk.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8228,7 +8816,9 @@ function WeaponTweakData:_init_ppk(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.ppk.kick = {standing = self.glock_17.kick.standing}
+	self.ppk.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.ppk.kick.crouching = self.ppk.kick.standing
 	self.ppk.kick.steelsight = self.ppk.kick.standing
 	self.ppk.crosshair = {
@@ -8275,10 +8865,12 @@ function WeaponTweakData:_init_ppk(weapon_data)
 	}
 end
 
--- Lines: 10120 to 10236
+-- Lines 10268-10385
 function WeaponTweakData:_init_mp7(weapon_data)
 	self.mp7 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8304,16 +8896,22 @@ function WeaponTweakData:_init_mp7(weapon_data)
 	self.mp7.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.mp7.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.mp7.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.mp7.use_data = {selection_index = SELECTION.SECONDARY}
+	self.mp7.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.mp7.DAMAGE = 1
 	self.mp7.CLIP_AMMO_MAX = 20
 	self.mp7.NR_CLIPS_MAX = 8
 	self.mp7.AMMO_MAX = self.mp7.CLIP_AMMO_MAX * self.mp7.NR_CLIPS_MAX
 	self.mp7.AMMO_PICKUP = self:_pickup_chance(self.mp7.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.mp7.FIRE_MODE = "auto"
-	self.mp7.fire_mode_data = {fire_rate = 0.063}
+	self.mp7.fire_mode_data = {
+		fire_rate = 0.063
+	}
 	self.mp7.CAN_TOGGLE_FIREMODE = true
-	self.mp7.auto = {fire_rate = 0.063}
+	self.mp7.auto = {
+		fire_rate = 0.063
+	}
 	self.mp7.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8322,7 +8920,9 @@ function WeaponTweakData:_init_mp7(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.mp7.kick = {standing = self.new_m4.kick.standing}
+	self.mp7.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.mp7.kick.crouching = self.mp7.kick.standing
 	self.mp7.kick.steelsight = self.mp7.kick.standing
 	self.mp7.crosshair = {
@@ -8369,10 +8969,12 @@ function WeaponTweakData:_init_mp7(weapon_data)
 	}
 end
 
--- Lines: 10239 to 10353
+-- Lines 10387-10502
 function WeaponTweakData:_init_scar(weapon_data)
 	self.scar = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8397,16 +8999,22 @@ function WeaponTweakData:_init_scar(weapon_data)
 	self.scar.texture_bundle_folder = "gage_pack"
 	self.scar.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.scar.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.scar.use_data = {selection_index = SELECTION.PRIMARY}
+	self.scar.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.scar.DAMAGE = 1
 	self.scar.CLIP_AMMO_MAX = 20
 	self.scar.NR_CLIPS_MAX = 5
 	self.scar.AMMO_MAX = self.scar.CLIP_AMMO_MAX * self.scar.NR_CLIPS_MAX
 	self.scar.AMMO_PICKUP = self:_pickup_chance(self.scar.AMMO_MAX, PICKUP.OTHER)
 	self.scar.FIRE_MODE = "auto"
-	self.scar.fire_mode_data = {fire_rate = 0.098}
+	self.scar.fire_mode_data = {
+		fire_rate = 0.098
+	}
 	self.scar.CAN_TOGGLE_FIREMODE = true
-	self.scar.auto = {fire_rate = 0.098}
+	self.scar.auto = {
+		fire_rate = 0.098
+	}
 	self.scar.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8415,7 +9023,9 @@ function WeaponTweakData:_init_scar(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.scar.kick = {standing = self.new_m4.kick.standing}
+	self.scar.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.scar.kick.crouching = self.scar.kick.standing
 	self.scar.kick.steelsight = self.scar.kick.standing
 	self.scar.crosshair = {
@@ -8461,10 +9071,12 @@ function WeaponTweakData:_init_scar(weapon_data)
 	}
 end
 
--- Lines: 10356 to 10468
+-- Lines 10504-10617
 function WeaponTweakData:_init_p226(weapon_data)
 	self.p226 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8488,15 +9100,21 @@ function WeaponTweakData:_init_p226(weapon_data)
 	self.p226.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.p226.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.p226.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.p226.use_data = {selection_index = SELECTION.SECONDARY}
+	self.p226.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.p226.DAMAGE = 1
 	self.p226.CLIP_AMMO_MAX = 12
 	self.p226.NR_CLIPS_MAX = 7
 	self.p226.AMMO_MAX = self.p226.CLIP_AMMO_MAX * self.p226.NR_CLIPS_MAX
 	self.p226.AMMO_PICKUP = self:_pickup_chance(self.p226.AMMO_MAX, PICKUP.OTHER)
 	self.p226.FIRE_MODE = "single"
-	self.p226.fire_mode_data = {fire_rate = 0.166}
-	self.p226.single = {fire_rate = 0.166}
+	self.p226.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.p226.single = {
+		fire_rate = 0.166
+	}
 	self.p226.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8505,7 +9123,9 @@ function WeaponTweakData:_init_p226(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.p226.kick = {standing = self.glock_17.kick.standing}
+	self.p226.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.p226.kick.crouching = self.p226.kick.standing
 	self.p226.kick.steelsight = self.p226.kick.standing
 	self.p226.crosshair = {
@@ -8552,10 +9172,12 @@ function WeaponTweakData:_init_p226(weapon_data)
 	}
 end
 
--- Lines: 10471 to 10597
+-- Lines 10619-10746
 function WeaponTweakData:_init_hk21(weapon_data)
 	self.hk21 = {
-		categories = {"lmg"},
+		categories = {
+			"lmg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8585,16 +9207,22 @@ function WeaponTweakData:_init_hk21(weapon_data)
 	self.hk21.texture_bundle_folder = "gage_pack_lmg"
 	self.hk21.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.hk21.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556_lmg"
-	self.hk21.use_data = {selection_index = SELECTION.PRIMARY}
+	self.hk21.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.hk21.DAMAGE = 1
 	self.hk21.CLIP_AMMO_MAX = 150
 	self.hk21.NR_CLIPS_MAX = 2
 	self.hk21.AMMO_MAX = self.hk21.CLIP_AMMO_MAX * self.hk21.NR_CLIPS_MAX
 	self.hk21.AMMO_PICKUP = self:_pickup_chance(self.hk21.AMMO_MAX, PICKUP.OTHER)
 	self.hk21.FIRE_MODE = "auto"
-	self.hk21.fire_mode_data = {fire_rate = 0.083}
+	self.hk21.fire_mode_data = {
+		fire_rate = 0.083
+	}
 	self.hk21.CAN_TOGGLE_FIREMODE = false
-	self.hk21.auto = {fire_rate = 0.083}
+	self.hk21.auto = {
+		fire_rate = 0.083
+	}
 	self.hk21.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8604,12 +9232,14 @@ function WeaponTweakData:_init_hk21(weapon_data)
 		moving_steelsight = self.new_m4.spread.moving_steelsight,
 		bipod = weapon_data.default_bipod_spread
 	}
-	self.hk21.kick = {standing = {
-		-0.2,
-		0.8,
-		-0.8,
-		1
-	}}
+	self.hk21.kick = {
+		standing = {
+			-0.2,
+			0.8,
+			-0.8,
+			1
+		}
+	}
 	self.hk21.kick.crouching = self.hk21.kick.standing
 	self.hk21.kick.steelsight = self.hk21.kick.standing
 	self.hk21.crosshair = {
@@ -8661,10 +9291,12 @@ function WeaponTweakData:_init_hk21(weapon_data)
 	}
 end
 
--- Lines: 10600 to 10726
+-- Lines 10748-10875
 function WeaponTweakData:_init_m249(weapon_data)
 	self.m249 = {
-		categories = {"lmg"},
+		categories = {
+			"lmg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8694,16 +9326,22 @@ function WeaponTweakData:_init_m249(weapon_data)
 	self.m249.texture_bundle_folder = "gage_pack_lmg"
 	self.m249.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.m249.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556_lmg"
-	self.m249.use_data = {selection_index = SELECTION.PRIMARY}
+	self.m249.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.m249.DAMAGE = 1
 	self.m249.CLIP_AMMO_MAX = 200
 	self.m249.NR_CLIPS_MAX = 2
 	self.m249.AMMO_MAX = self.m249.CLIP_AMMO_MAX * self.m249.NR_CLIPS_MAX
 	self.m249.AMMO_PICKUP = self:_pickup_chance(self.m249.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.m249.FIRE_MODE = "auto"
-	self.m249.fire_mode_data = {fire_rate = 0.066}
+	self.m249.fire_mode_data = {
+		fire_rate = 0.066
+	}
 	self.m249.CAN_TOGGLE_FIREMODE = false
-	self.m249.auto = {fire_rate = 0.076}
+	self.m249.auto = {
+		fire_rate = 0.076
+	}
 	self.m249.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8713,12 +9351,14 @@ function WeaponTweakData:_init_m249(weapon_data)
 		moving_steelsight = self.new_m4.spread.moving_steelsight,
 		bipod = weapon_data.default_bipod_spread
 	}
-	self.m249.kick = {standing = {
-		-0.2,
-		0.8,
-		-1,
-		1.4
-	}}
+	self.m249.kick = {
+		standing = {
+			-0.2,
+			0.8,
+			-1,
+			1.4
+		}
+	}
 	self.m249.kick.crouching = self.m249.kick.standing
 	self.m249.kick.steelsight = self.m249.kick.standing
 	self.m249.crosshair = {
@@ -8770,10 +9410,12 @@ function WeaponTweakData:_init_m249(weapon_data)
 	}
 end
 
--- Lines: 10729 to 10856
+-- Lines 10877-11005
 function WeaponTweakData:_init_rpk(weapon_data)
 	self.rpk = {
-		categories = {"lmg"},
+		categories = {
+			"lmg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8803,16 +9445,22 @@ function WeaponTweakData:_init_rpk(weapon_data)
 	self.rpk.texture_bundle_folder = "gage_pack_lmg"
 	self.rpk.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.rpk.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.rpk.use_data = {selection_index = SELECTION.PRIMARY}
+	self.rpk.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.rpk.DAMAGE = 1
 	self.rpk.CLIP_AMMO_MAX = 100
 	self.rpk.NR_CLIPS_MAX = 3
 	self.rpk.AMMO_MAX = self.rpk.CLIP_AMMO_MAX * self.rpk.NR_CLIPS_MAX
 	self.rpk.AMMO_PICKUP = self:_pickup_chance(self.rpk.AMMO_MAX, PICKUP.OTHER)
 	self.rpk.FIRE_MODE = "auto"
-	self.rpk.fire_mode_data = {fire_rate = 0.08}
+	self.rpk.fire_mode_data = {
+		fire_rate = 0.08
+	}
 	self.rpk.CAN_TOGGLE_FIREMODE = false
-	self.rpk.auto = {fire_rate = 0.08}
+	self.rpk.auto = {
+		fire_rate = 0.08
+	}
 	self.rpk.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8822,12 +9470,14 @@ function WeaponTweakData:_init_rpk(weapon_data)
 		moving_steelsight = self.new_m4.spread.moving_steelsight,
 		bipod = weapon_data.default_bipod_spread
 	}
-	self.rpk.kick = {standing = {
-		-0.2,
-		0.8,
-		-1,
-		1.4
-	}}
+	self.rpk.kick = {
+		standing = {
+			-0.2,
+			0.8,
+			-1,
+			1.4
+		}
+	}
 	self.rpk.kick.crouching = self.rpk.kick.standing
 	self.rpk.kick.steelsight = self.rpk.kick.standing
 	self.rpk.crosshair = {
@@ -8879,11 +9529,17 @@ function WeaponTweakData:_init_rpk(weapon_data)
 	}
 end
 
--- Lines: 10859 to 10974
+-- Lines 11007-11123
 function WeaponTweakData:_init_m95(weapon_data)
 	self.m95 = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -8905,7 +9561,9 @@ function WeaponTweakData:_init_m95(weapon_data)
 	self.m95.texture_bundle_folder = "gage_pack_snp"
 	self.m95.muzzleflash = "effects/payday2/particles/weapons/50cal_auto_fps"
 	self.m95.shell_ejection = "effects/payday2/particles/weapons/shells/shell_sniper_m95"
-	self.m95.use_data = {selection_index = SELECTION.PRIMARY}
+	self.m95.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.m95.DAMAGE = 1
 	self.m95.CLIP_AMMO_MAX = 5
 	self.m95.NR_CLIPS_MAX = 3
@@ -8915,9 +9573,13 @@ function WeaponTweakData:_init_m95(weapon_data)
 		0.65
 	}
 	self.m95.FIRE_MODE = "single"
-	self.m95.fire_mode_data = {fire_rate = 1.5}
+	self.m95.fire_mode_data = {
+		fire_rate = 1.5
+	}
 	self.m95.CAN_TOGGLE_FIREMODE = false
-	self.m95.single = {fire_rate = 20}
+	self.m95.single = {
+		fire_rate = 20
+	}
 	self.m95.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -8926,12 +9588,14 @@ function WeaponTweakData:_init_m95(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.m95.kick = {standing = {
-		3,
-		3.8,
-		-0.5,
-		0.5
-	}}
+	self.m95.kick = {
+		standing = {
+			3,
+			3.8,
+			-0.5,
+			0.5
+		}
+	}
 	self.m95.kick.crouching = self.m95.kick.standing
 	self.m95.kick.steelsight = self.m95.kick.standing
 	self.m95.crosshair = {
@@ -8978,14 +9642,22 @@ function WeaponTweakData:_init_m95(weapon_data)
 		concealment = 1
 	}
 	self.m95.armor_piercing_chance = 1
-	self.m95.stats_modifiers = {damage = 35}
+	self.m95.stats_modifiers = {
+		damage = 35
+	}
 end
 
--- Lines: 10977 to 11096
+-- Lines 11125-11245
 function WeaponTweakData:_init_msr(weapon_data)
 	self.msr = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9017,9 +9689,13 @@ function WeaponTweakData:_init_msr(weapon_data)
 	self.msr.AMMO_MAX = self.msr.CLIP_AMMO_MAX * self.msr.NR_CLIPS_MAX
 	self.msr.AMMO_PICKUP = self:_pickup_chance(self.msr.AMMO_MAX, PICKUP.SNIPER_LOW_DAMAGE)
 	self.msr.FIRE_MODE = "single"
-	self.msr.fire_mode_data = {fire_rate = 1}
+	self.msr.fire_mode_data = {
+		fire_rate = 1
+	}
 	self.msr.CAN_TOGGLE_FIREMODE = false
-	self.msr.single = {fire_rate = 20}
+	self.msr.single = {
+		fire_rate = 20
+	}
 	self.msr.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -9028,12 +9704,14 @@ function WeaponTweakData:_init_msr(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.msr.kick = {standing = {
-		3,
-		4.8,
-		-0.3,
-		0.3
-	}}
+	self.msr.kick = {
+		standing = {
+			3,
+			4.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.msr.kick.crouching = self.msr.kick.standing
 	self.msr.kick.steelsight = self.msr.kick.standing
 	self.msr.crosshair = {
@@ -9081,14 +9759,22 @@ function WeaponTweakData:_init_msr(weapon_data)
 		concealment = 5
 	}
 	self.msr.armor_piercing_chance = 1
-	self.msr.stats_modifiers = {damage = 2}
+	self.msr.stats_modifiers = {
+		damage = 2
+	}
 end
 
--- Lines: 11099 to 11217
+-- Lines 11247-11366
 function WeaponTweakData:_init_r93(weapon_data)
 	self.r93 = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9123,9 +9809,13 @@ function WeaponTweakData:_init_r93(weapon_data)
 		1
 	}
 	self.r93.FIRE_MODE = "single"
-	self.r93.fire_mode_data = {fire_rate = 1.2}
+	self.r93.fire_mode_data = {
+		fire_rate = 1.2
+	}
 	self.r93.CAN_TOGGLE_FIREMODE = false
-	self.r93.single = {fire_rate = 20}
+	self.r93.single = {
+		fire_rate = 20
+	}
 	self.r93.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -9134,12 +9824,14 @@ function WeaponTweakData:_init_r93(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.r93.kick = {standing = {
-		3,
-		3.8,
-		-0.1,
-		0.1
-	}}
+	self.r93.kick = {
+		standing = {
+			3,
+			3.8,
+			-0.1,
+			0.1
+		}
+	}
 	self.r93.kick.crouching = self.r93.kick.standing
 	self.r93.kick.steelsight = self.r93.kick.standing
 	self.r93.crosshair = {
@@ -9187,13 +9879,17 @@ function WeaponTweakData:_init_r93(weapon_data)
 		concealment = 5
 	}
 	self.r93.armor_piercing_chance = 1
-	self.r93.stats_modifiers = {damage = 4}
+	self.r93.stats_modifiers = {
+		damage = 4
+	}
 end
 
--- Lines: 11220 to 11333
+-- Lines 11368-11482
 function WeaponTweakData:_init_fal(weapon_data)
 	self.fal = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9218,16 +9914,22 @@ function WeaponTweakData:_init_fal(weapon_data)
 	self.fal.texture_bundle_folder = "big_bank"
 	self.fal.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.fal.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.fal.use_data = {selection_index = SELECTION.PRIMARY}
+	self.fal.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.fal.DAMAGE = 1
 	self.fal.CLIP_AMMO_MAX = 20
 	self.fal.NR_CLIPS_MAX = 5
 	self.fal.AMMO_MAX = self.fal.CLIP_AMMO_MAX * self.fal.NR_CLIPS_MAX
 	self.fal.AMMO_PICKUP = self:_pickup_chance(self.fal.AMMO_MAX, PICKUP.OTHER)
 	self.fal.FIRE_MODE = "auto"
-	self.fal.fire_mode_data = {fire_rate = 0.086}
+	self.fal.fire_mode_data = {
+		fire_rate = 0.086
+	}
 	self.fal.CAN_TOGGLE_FIREMODE = true
-	self.fal.auto = {fire_rate = 0.086}
+	self.fal.auto = {
+		fire_rate = 0.086
+	}
 	self.fal.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -9236,7 +9938,9 @@ function WeaponTweakData:_init_fal(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.fal.kick = {standing = self.new_m4.kick.standing}
+	self.fal.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.fal.kick.crouching = self.fal.kick.standing
 	self.fal.kick.steelsight = self.fal.kick.standing
 	self.fal.crosshair = {
@@ -9281,10 +9985,12 @@ function WeaponTweakData:_init_fal(weapon_data)
 	}
 end
 
--- Lines: 11336 to 11448
+-- Lines 11484-11597
 function WeaponTweakData:_init_benelli(weapon_data)
 	self.benelli = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9318,9 +10024,13 @@ function WeaponTweakData:_init_benelli(weapon_data)
 	self.benelli.AMMO_MAX = self.benelli.CLIP_AMMO_MAX * self.benelli.NR_CLIPS_MAX
 	self.benelli.AMMO_PICKUP = self:_pickup_chance(self.benelli.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
 	self.benelli.FIRE_MODE = "single"
-	self.benelli.fire_mode_data = {fire_rate = 0.14}
+	self.benelli.fire_mode_data = {
+		fire_rate = 0.14
+	}
 	self.benelli.CAN_TOGGLE_FIREMODE = false
-	self.benelli.single = {fire_rate = 0.14}
+	self.benelli.single = {
+		fire_rate = 0.14
+	}
 	self.benelli.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -9329,7 +10039,9 @@ function WeaponTweakData:_init_benelli(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.benelli.kick = {standing = self.r870.kick.standing}
+	self.benelli.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.benelli.kick.crouching = self.benelli.kick.standing
 	self.benelli.kick.steelsight = self.r870.kick.steelsight
 	self.benelli.crosshair = {
@@ -9374,10 +10086,12 @@ function WeaponTweakData:_init_benelli(weapon_data)
 	}
 end
 
--- Lines: 11451 to 11569
+-- Lines 11599-11718
 function WeaponTweakData:_init_striker(weapon_data)
 	self.striker = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9416,9 +10130,13 @@ function WeaponTweakData:_init_striker(weapon_data)
 	self.striker.AMMO_MAX = self.striker.CLIP_AMMO_MAX * self.striker.NR_CLIPS_MAX
 	self.striker.AMMO_PICKUP = self:_pickup_chance(self.striker.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
 	self.striker.FIRE_MODE = "single"
-	self.striker.fire_mode_data = {fire_rate = 0.14}
+	self.striker.fire_mode_data = {
+		fire_rate = 0.14
+	}
 	self.striker.CAN_TOGGLE_FIREMODE = false
-	self.striker.single = {fire_rate = 0.14}
+	self.striker.single = {
+		fire_rate = 0.14
+	}
 	self.striker.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -9427,7 +10145,9 @@ function WeaponTweakData:_init_striker(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.striker.kick = {standing = self.r870.kick.standing}
+	self.striker.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.striker.kick.crouching = self.striker.kick.standing
 	self.striker.kick.steelsight = self.r870.kick.steelsight
 	self.striker.crosshair = {
@@ -9454,7 +10174,9 @@ function WeaponTweakData:_init_striker(weapon_data)
 	self.striker.animations = {
 		equip_id = "equip_r870_shotgun",
 		recoil_steelsight = true,
-		reload_shell_data = {align = "right"}
+		reload_shell_data = {
+			align = "right"
+		}
 	}
 	self.striker.panic_suppression_chance = 0.2
 	self.striker.stats = {
@@ -9473,10 +10195,12 @@ function WeaponTweakData:_init_striker(weapon_data)
 	}
 end
 
--- Lines: 11572 to 11684
+-- Lines 11720-11833
 function WeaponTweakData:_init_ksg(weapon_data)
 	self.ksg = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9509,8 +10233,12 @@ function WeaponTweakData:_init_ksg(weapon_data)
 	self.ksg.AMMO_MAX = self.ksg.CLIP_AMMO_MAX * self.ksg.NR_CLIPS_MAX
 	self.ksg.AMMO_PICKUP = self:_pickup_chance(self.ksg.AMMO_MAX, PICKUP.OTHER)
 	self.ksg.FIRE_MODE = "single"
-	self.ksg.fire_mode_data = {fire_rate = 0.575}
-	self.ksg.single = {fire_rate = 0.575}
+	self.ksg.fire_mode_data = {
+		fire_rate = 0.575
+	}
+	self.ksg.single = {
+		fire_rate = 0.575
+	}
 	self.ksg.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -9519,12 +10247,14 @@ function WeaponTweakData:_init_ksg(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.ksg.kick = {standing = {
-		1.9,
-		2,
-		-0.2,
-		0.2
-	}}
+	self.ksg.kick = {
+		standing = {
+			1.9,
+			2,
+			-0.2,
+			0.2
+		}
+	}
 	self.ksg.kick.crouching = self.ksg.kick.standing
 	self.ksg.kick.steelsight = {
 		1.5,
@@ -9575,11 +10305,17 @@ function WeaponTweakData:_init_ksg(weapon_data)
 	}
 end
 
--- Lines: 11687 to 11806
+-- Lines 11835-11955
 function WeaponTweakData:_init_gre_m79(weapon_data)
 	self.gre_m79 = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9588,7 +10324,9 @@ function WeaponTweakData:_init_gre_m79(weapon_data)
 	self.gre_m79.sounds.dryfire = "shotgun_dryfire"
 	self.gre_m79.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.gre_m79.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.gre_m79.timers = {reload_not_empty = 3.1}
+	self.gre_m79.timers = {
+		reload_not_empty = 3.1
+	}
 	self.gre_m79.timers.reload_empty = self.gre_m79.timers.reload_not_empty
 	self.gre_m79.timers.unequip = 0.6
 	self.gre_m79.timers.equip = 0.6
@@ -9608,15 +10346,19 @@ function WeaponTweakData:_init_gre_m79(weapon_data)
 	self.gre_m79.damage_far = 3000
 	self.gre_m79.rays = 6
 	self.gre_m79.CLIP_AMMO_MAX = 1
-	self.gre_m79.NR_CLIPS_MAX = math.round((weapon_data.total_damage_primary / 50) / self.gre_m79.CLIP_AMMO_MAX)
+	self.gre_m79.NR_CLIPS_MAX = math.round(weapon_data.total_damage_primary / 50 / self.gre_m79.CLIP_AMMO_MAX)
 	self.gre_m79.AMMO_MAX = self.gre_m79.CLIP_AMMO_MAX * self.gre_m79.NR_CLIPS_MAX
 	self.gre_m79.AMMO_PICKUP = {
 		0.05,
 		0.65
 	}
 	self.gre_m79.FIRE_MODE = "single"
-	self.gre_m79.fire_mode_data = {fire_rate = 2}
-	self.gre_m79.single = {fire_rate = 2}
+	self.gre_m79.fire_mode_data = {
+		fire_rate = 2
+	}
+	self.gre_m79.single = {
+		fire_rate = 2
+	}
 	self.gre_m79.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -9625,12 +10367,14 @@ function WeaponTweakData:_init_gre_m79(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.gre_m79.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.gre_m79.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.gre_m79.kick.crouching = self.gre_m79.kick.standing
 	self.gre_m79.kick.steelsight = self.gre_m79.kick.standing
 	self.gre_m79.crosshair = {
@@ -9676,13 +10420,17 @@ function WeaponTweakData:_init_gre_m79(weapon_data)
 		suppression = 2,
 		concealment = 18
 	}
-	self.gre_m79.stats_modifiers = {damage = 10}
+	self.gre_m79.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 11809 to 11922
+-- Lines 11957-12071
 function WeaponTweakData:_init_g3(weapon_data)
 	self.g3 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9707,16 +10455,22 @@ function WeaponTweakData:_init_g3(weapon_data)
 	self.g3.texture_bundle_folder = "gage_pack_assault"
 	self.g3.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.g3.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.g3.use_data = {selection_index = SELECTION.PRIMARY}
+	self.g3.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.g3.DAMAGE = 1
 	self.g3.CLIP_AMMO_MAX = 20
 	self.g3.NR_CLIPS_MAX = 5
 	self.g3.AMMO_MAX = self.g3.CLIP_AMMO_MAX * self.g3.NR_CLIPS_MAX
 	self.g3.AMMO_PICKUP = self:_pickup_chance(self.g3.AMMO_MAX, PICKUP.OTHER)
 	self.g3.FIRE_MODE = "auto"
-	self.g3.fire_mode_data = {fire_rate = 0.092}
+	self.g3.fire_mode_data = {
+		fire_rate = 0.092
+	}
 	self.g3.CAN_TOGGLE_FIREMODE = true
-	self.g3.auto = {fire_rate = 0.092}
+	self.g3.auto = {
+		fire_rate = 0.092
+	}
 	self.g3.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -9725,7 +10479,9 @@ function WeaponTweakData:_init_g3(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.g3.kick = {standing = self.new_m4.kick.standing}
+	self.g3.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.g3.kick.crouching = self.g3.kick.standing
 	self.g3.kick.steelsight = self.g3.kick.standing
 	self.g3.crosshair = {
@@ -9770,10 +10526,12 @@ function WeaponTweakData:_init_g3(weapon_data)
 	}
 end
 
--- Lines: 11925 to 12040
+-- Lines 12073-12189
 function WeaponTweakData:_init_galil(weapon_data)
 	self.galil = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9798,16 +10556,22 @@ function WeaponTweakData:_init_galil(weapon_data)
 	self.galil.texture_bundle_folder = "gage_pack_assault"
 	self.galil.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.galil.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.galil.use_data = {selection_index = SELECTION.PRIMARY}
+	self.galil.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.galil.DAMAGE = 1
 	self.galil.CLIP_AMMO_MAX = 30
 	self.galil.NR_CLIPS_MAX = 5
 	self.galil.AMMO_MAX = self.galil.CLIP_AMMO_MAX * self.galil.NR_CLIPS_MAX
 	self.galil.AMMO_PICKUP = self:_pickup_chance(self.galil.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.galil.FIRE_MODE = "auto"
-	self.galil.fire_mode_data = {fire_rate = 0.071}
+	self.galil.fire_mode_data = {
+		fire_rate = 0.071
+	}
 	self.galil.CAN_TOGGLE_FIREMODE = true
-	self.galil.auto = {fire_rate = 0.071}
+	self.galil.auto = {
+		fire_rate = 0.071
+	}
 	self.galil.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -9816,7 +10580,9 @@ function WeaponTweakData:_init_galil(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.galil.kick = {standing = self.new_m4.kick.standing}
+	self.galil.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.galil.kick.crouching = self.galil.kick.standing
 	self.galil.kick.steelsight = self.galil.kick.standing
 	self.galil.crosshair = {
@@ -9863,10 +10629,12 @@ function WeaponTweakData:_init_galil(weapon_data)
 	}
 end
 
--- Lines: 12043 to 12155
+-- Lines 12191-12304
 function WeaponTweakData:_init_famas(weapon_data)
 	self.famas = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9891,16 +10659,22 @@ function WeaponTweakData:_init_famas(weapon_data)
 	self.famas.texture_bundle_folder = "gage_pack_assault"
 	self.famas.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.famas.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.famas.use_data = {selection_index = SELECTION.PRIMARY}
+	self.famas.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.famas.DAMAGE = 1
 	self.famas.CLIP_AMMO_MAX = 30
 	self.famas.NR_CLIPS_MAX = 8
 	self.famas.AMMO_MAX = self.famas.CLIP_AMMO_MAX * self.famas.NR_CLIPS_MAX
 	self.famas.AMMO_PICKUP = self:_pickup_chance(self.famas.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.famas.FIRE_MODE = "auto"
-	self.famas.fire_mode_data = {fire_rate = 0.06}
+	self.famas.fire_mode_data = {
+		fire_rate = 0.06
+	}
 	self.famas.CAN_TOGGLE_FIREMODE = true
-	self.famas.auto = {fire_rate = 0.06}
+	self.famas.auto = {
+		fire_rate = 0.06
+	}
 	self.famas.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -9909,7 +10683,9 @@ function WeaponTweakData:_init_famas(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.famas.kick = {standing = self.new_m4.kick.standing}
+	self.famas.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.famas.kick.crouching = self.famas.kick.standing
 	self.famas.kick.steelsight = self.famas.kick.standing
 	self.famas.crosshair = {
@@ -9954,10 +10730,12 @@ function WeaponTweakData:_init_famas(weapon_data)
 	}
 end
 
--- Lines: 12158 to 12271
+-- Lines 12306-12420
 function WeaponTweakData:_init_scorpion(weapon_data)
 	self.scorpion = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -9983,16 +10761,22 @@ function WeaponTweakData:_init_scorpion(weapon_data)
 	self.scorpion.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.scorpion.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.scorpion.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.scorpion.use_data = {selection_index = SELECTION.SECONDARY}
+	self.scorpion.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.scorpion.DAMAGE = 1
 	self.scorpion.CLIP_AMMO_MAX = 20
 	self.scorpion.NR_CLIPS_MAX = 11
 	self.scorpion.AMMO_MAX = self.scorpion.CLIP_AMMO_MAX * self.scorpion.NR_CLIPS_MAX
 	self.scorpion.AMMO_PICKUP = self:_pickup_chance(self.scorpion.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.scorpion.FIRE_MODE = "auto"
-	self.scorpion.fire_mode_data = {fire_rate = 0.06}
+	self.scorpion.fire_mode_data = {
+		fire_rate = 0.06
+	}
 	self.scorpion.CAN_TOGGLE_FIREMODE = true
-	self.scorpion.auto = {fire_rate = 0.06}
+	self.scorpion.auto = {
+		fire_rate = 0.06
+	}
 	self.scorpion.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10001,7 +10785,9 @@ function WeaponTweakData:_init_scorpion(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.scorpion.kick = {standing = self.new_m4.kick.standing}
+	self.scorpion.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.scorpion.kick.crouching = self.scorpion.kick.standing
 	self.scorpion.kick.steelsight = self.scorpion.kick.standing
 	self.scorpion.crosshair = {
@@ -10047,10 +10833,12 @@ function WeaponTweakData:_init_scorpion(weapon_data)
 	}
 end
 
--- Lines: 12274 to 12387
+-- Lines 12422-12536
 function WeaponTweakData:_init_tec9(weapon_data)
 	self.tec9 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -10076,16 +10864,22 @@ function WeaponTweakData:_init_tec9(weapon_data)
 	self.tec9.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.tec9.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.tec9.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.tec9.use_data = {selection_index = SELECTION.SECONDARY}
+	self.tec9.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.tec9.DAMAGE = 1
 	self.tec9.CLIP_AMMO_MAX = 20
 	self.tec9.NR_CLIPS_MAX = 11
 	self.tec9.AMMO_MAX = self.tec9.CLIP_AMMO_MAX * self.tec9.NR_CLIPS_MAX
 	self.tec9.AMMO_PICKUP = self:_pickup_chance(self.tec9.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.tec9.FIRE_MODE = "auto"
-	self.tec9.fire_mode_data = {fire_rate = 0.067}
+	self.tec9.fire_mode_data = {
+		fire_rate = 0.067
+	}
 	self.tec9.CAN_TOGGLE_FIREMODE = true
-	self.tec9.auto = {fire_rate = 0.067}
+	self.tec9.auto = {
+		fire_rate = 0.067
+	}
 	self.tec9.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10094,7 +10888,9 @@ function WeaponTweakData:_init_tec9(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.tec9.kick = {standing = self.new_m4.kick.standing}
+	self.tec9.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.tec9.kick.crouching = self.tec9.kick.standing
 	self.tec9.kick.steelsight = self.tec9.kick.standing
 	self.tec9.crosshair = {
@@ -10140,10 +10936,12 @@ function WeaponTweakData:_init_tec9(weapon_data)
 	}
 end
 
--- Lines: 12390 to 12504
+-- Lines 12538-12653
 function WeaponTweakData:_init_uzi(weapon_data)
 	self.uzi = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -10169,16 +10967,22 @@ function WeaponTweakData:_init_uzi(weapon_data)
 	self.uzi.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.uzi.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.uzi.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.uzi.use_data = {selection_index = SELECTION.SECONDARY}
+	self.uzi.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.uzi.DAMAGE = 1
 	self.uzi.CLIP_AMMO_MAX = 40
 	self.uzi.NR_CLIPS_MAX = 5
 	self.uzi.AMMO_MAX = self.uzi.CLIP_AMMO_MAX * self.uzi.NR_CLIPS_MAX
 	self.uzi.AMMO_PICKUP = self:_pickup_chance(self.uzi.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.uzi.FIRE_MODE = "auto"
-	self.uzi.fire_mode_data = {fire_rate = 0.086}
+	self.uzi.fire_mode_data = {
+		fire_rate = 0.086
+	}
 	self.uzi.CAN_TOGGLE_FIREMODE = true
-	self.uzi.auto = {fire_rate = 0.086}
+	self.uzi.auto = {
+		fire_rate = 0.086
+	}
 	self.uzi.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10187,7 +10991,9 @@ function WeaponTweakData:_init_uzi(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.uzi.kick = {standing = self.new_m4.kick.standing}
+	self.uzi.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.uzi.kick.crouching = self.uzi.kick.standing
 	self.uzi.kick.steelsight = self.uzi.kick.standing
 	self.uzi.crosshair = {
@@ -10233,7 +11039,7 @@ function WeaponTweakData:_init_uzi(weapon_data)
 	}
 end
 
--- Lines: 12507 to 12618
+-- Lines 12655-12767
 function WeaponTweakData:_init_jowi(weapon_data)
 	self.jowi = {
 		categories = {
@@ -10261,15 +11067,21 @@ function WeaponTweakData:_init_jowi(weapon_data)
 	self.jowi.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.jowi.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.jowi.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.jowi.use_data = {selection_index = SELECTION.PRIMARY}
+	self.jowi.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.jowi.DAMAGE = 1
 	self.jowi.CLIP_AMMO_MAX = 20
 	self.jowi.NR_CLIPS_MAX = 8
 	self.jowi.AMMO_MAX = self.jowi.CLIP_AMMO_MAX * self.jowi.NR_CLIPS_MAX
 	self.jowi.AMMO_PICKUP = self:_pickup_chance(self.jowi.AMMO_MAX, PICKUP.OTHER)
 	self.jowi.FIRE_MODE = "single"
-	self.jowi.fire_mode_data = {fire_rate = 0.09}
-	self.jowi.single = {fire_rate = 0.09}
+	self.jowi.fire_mode_data = {
+		fire_rate = 0.09
+	}
+	self.jowi.single = {
+		fire_rate = 0.09
+	}
 	self.jowi.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10278,12 +11090,14 @@ function WeaponTweakData:_init_jowi(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.jowi.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.jowi.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.jowi.kick.crouching = self.jowi.kick.standing
 	self.jowi.kick.steelsight = self.jowi.kick.standing
 	self.jowi.crosshair = {
@@ -10334,7 +11148,7 @@ function WeaponTweakData:_init_jowi(weapon_data)
 	}
 end
 
--- Lines: 12621 to 12732
+-- Lines 12769-12881
 function WeaponTweakData:_init_x_1911(weapon_data)
 	self.x_1911 = {
 		categories = {
@@ -10362,15 +11176,21 @@ function WeaponTweakData:_init_x_1911(weapon_data)
 	self.x_1911.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_1911.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_1911.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_1911.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_1911.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_1911.DAMAGE = 1
 	self.x_1911.CLIP_AMMO_MAX = 20
 	self.x_1911.NR_CLIPS_MAX = 5
 	self.x_1911.AMMO_MAX = self.x_1911.CLIP_AMMO_MAX * self.x_1911.NR_CLIPS_MAX
 	self.x_1911.AMMO_PICKUP = self:_pickup_chance(self.x_1911.AMMO_MAX, PICKUP.OTHER)
 	self.x_1911.FIRE_MODE = "single"
-	self.x_1911.fire_mode_data = {fire_rate = 0.166}
-	self.x_1911.single = {fire_rate = 0.166}
+	self.x_1911.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_1911.single = {
+		fire_rate = 0.166
+	}
 	self.x_1911.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -10379,12 +11199,14 @@ function WeaponTweakData:_init_x_1911(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_1911.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_1911.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_1911.kick.crouching = self.x_1911.kick.standing
 	self.x_1911.kick.steelsight = self.x_1911.kick.standing
 	self.x_1911.crosshair = {
@@ -10435,7 +11257,7 @@ function WeaponTweakData:_init_x_1911(weapon_data)
 	}
 end
 
--- Lines: 12735 to 12846
+-- Lines 12883-12995
 function WeaponTweakData:_init_x_b92fs(weapon_data)
 	self.x_b92fs = {
 		categories = {
@@ -10463,15 +11285,21 @@ function WeaponTweakData:_init_x_b92fs(weapon_data)
 	self.x_b92fs.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_b92fs.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_b92fs.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_b92fs.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_b92fs.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_b92fs.DAMAGE = 1
 	self.x_b92fs.CLIP_AMMO_MAX = 28
 	self.x_b92fs.NR_CLIPS_MAX = 6
 	self.x_b92fs.AMMO_MAX = self.x_b92fs.CLIP_AMMO_MAX * self.x_b92fs.NR_CLIPS_MAX
 	self.x_b92fs.AMMO_PICKUP = self:_pickup_chance(self.x_b92fs.AMMO_MAX, PICKUP.OTHER)
 	self.x_b92fs.FIRE_MODE = "single"
-	self.x_b92fs.fire_mode_data = {fire_rate = 0.09}
-	self.x_b92fs.single = {fire_rate = 0.09}
+	self.x_b92fs.fire_mode_data = {
+		fire_rate = 0.09
+	}
+	self.x_b92fs.single = {
+		fire_rate = 0.09
+	}
 	self.x_b92fs.spread = {
 		standing = self.b92fs.spread.standing,
 		crouching = self.b92fs.spread.crouching,
@@ -10537,7 +11365,7 @@ function WeaponTweakData:_init_x_b92fs(weapon_data)
 	}
 end
 
--- Lines: 12849 to 12960
+-- Lines 12997-13109
 function WeaponTweakData:_init_x_deagle(weapon_data)
 	self.x_deagle = {
 		categories = {
@@ -10565,15 +11393,21 @@ function WeaponTweakData:_init_x_deagle(weapon_data)
 	self.x_deagle.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.x_deagle.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_deagle.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_deagle.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_deagle.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_deagle.DAMAGE = 1
 	self.x_deagle.CLIP_AMMO_MAX = 20
 	self.x_deagle.NR_CLIPS_MAX = 3
 	self.x_deagle.AMMO_MAX = self.x_deagle.CLIP_AMMO_MAX * self.x_deagle.NR_CLIPS_MAX
 	self.x_deagle.AMMO_PICKUP = self:_pickup_chance(self.x_deagle.AMMO_MAX, PICKUP.OTHER)
 	self.x_deagle.FIRE_MODE = "single"
-	self.x_deagle.fire_mode_data = {fire_rate = 0.25}
-	self.x_deagle.single = {fire_rate = 0.25}
+	self.x_deagle.fire_mode_data = {
+		fire_rate = 0.25
+	}
+	self.x_deagle.single = {
+		fire_rate = 0.25
+	}
 	self.x_deagle.spread = {
 		standing = self.deagle.spread.standing,
 		crouching = self.deagle.spread.crouching,
@@ -10582,12 +11416,14 @@ function WeaponTweakData:_init_x_deagle(weapon_data)
 		moving_crouching = self.deagle.spread.moving_crouching,
 		moving_steelsight = self.deagle.spread.moving_steelsight
 	}
-	self.x_deagle.kick = {standing = {
-		1,
-		0.9,
-		-0.3,
-		0.3
-	}}
+	self.x_deagle.kick = {
+		standing = {
+			1,
+			0.9,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_deagle.kick.crouching = self.x_deagle.kick.standing
 	self.x_deagle.kick.steelsight = self.x_deagle.kick.standing
 	self.x_deagle.crosshair = {
@@ -10637,10 +11473,12 @@ function WeaponTweakData:_init_x_deagle(weapon_data)
 	}
 end
 
--- Lines: 12963 to 13074
+-- Lines 13111-13223
 function WeaponTweakData:_init_g26(weapon_data)
 	self.g26 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -10663,15 +11501,21 @@ function WeaponTweakData:_init_g26(weapon_data)
 	self.g26.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.g26.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.g26.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.g26.use_data = {selection_index = SELECTION.SECONDARY}
+	self.g26.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.g26.DAMAGE = 1
 	self.g26.CLIP_AMMO_MAX = 10
 	self.g26.NR_CLIPS_MAX = 15
 	self.g26.AMMO_MAX = self.g26.CLIP_AMMO_MAX * self.g26.NR_CLIPS_MAX
 	self.g26.AMMO_PICKUP = self:_pickup_chance(self.g26.AMMO_MAX, PICKUP.OTHER)
 	self.g26.FIRE_MODE = "single"
-	self.g26.fire_mode_data = {fire_rate = 0.125}
-	self.g26.single = {fire_rate = 0.125}
+	self.g26.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.g26.single = {
+		fire_rate = 0.125
+	}
 	self.g26.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10680,7 +11524,9 @@ function WeaponTweakData:_init_g26(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.g26.kick = {standing = self.glock_17.kick.standing}
+	self.g26.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.g26.kick.crouching = self.g26.kick.standing
 	self.g26.kick.steelsight = self.g26.kick.standing
 	self.g26.crosshair = {
@@ -10727,10 +11573,12 @@ function WeaponTweakData:_init_g26(weapon_data)
 	}
 end
 
--- Lines: 13077 to 13188
+-- Lines 13225-13337
 function WeaponTweakData:_init_spas12(weapon_data)
 	self.spas12 = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -10763,9 +11611,13 @@ function WeaponTweakData:_init_spas12(weapon_data)
 	self.spas12.AMMO_MAX = self.spas12.CLIP_AMMO_MAX * self.spas12.NR_CLIPS_MAX
 	self.spas12.AMMO_PICKUP = self:_pickup_chance(self.spas12.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
 	self.spas12.FIRE_MODE = "single"
-	self.spas12.fire_mode_data = {fire_rate = 0.2}
+	self.spas12.fire_mode_data = {
+		fire_rate = 0.2
+	}
 	self.spas12.CAN_TOGGLE_FIREMODE = false
-	self.spas12.single = {fire_rate = 0.2}
+	self.spas12.single = {
+		fire_rate = 0.2
+	}
 	self.spas12.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -10774,12 +11626,14 @@ function WeaponTweakData:_init_spas12(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.spas12.kick = {standing = {
-		1.8,
-		1.5,
-		-0.5,
-		0.8
-	}}
+	self.spas12.kick = {
+		standing = {
+			1.8,
+			1.5,
+			-0.5,
+			0.8
+		}
+	}
 	self.spas12.kick.crouching = self.spas12.kick.standing
 	self.spas12.kick.steelsight = self.spas12.kick.standing
 	self.spas12.crosshair = {
@@ -10824,10 +11678,12 @@ function WeaponTweakData:_init_spas12(weapon_data)
 	}
 end
 
--- Lines: 13191 to 13318
+-- Lines 13339-13467
 function WeaponTweakData:_init_mg42(weapon_data)
 	self.mg42 = {
-		categories = {"lmg"},
+		categories = {
+			"lmg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -10857,16 +11713,22 @@ function WeaponTweakData:_init_mg42(weapon_data)
 	self.mg42.texture_bundle_folder = "gage_pack_historical"
 	self.mg42.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.mg42.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556_lmg"
-	self.mg42.use_data = {selection_index = SELECTION.PRIMARY}
+	self.mg42.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.mg42.DAMAGE = 1
 	self.mg42.CLIP_AMMO_MAX = 150
 	self.mg42.NR_CLIPS_MAX = 3
 	self.mg42.AMMO_MAX = self.mg42.CLIP_AMMO_MAX * self.mg42.NR_CLIPS_MAX
 	self.mg42.AMMO_PICKUP = self:_pickup_chance(self.mg42.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.mg42.FIRE_MODE = "auto"
-	self.mg42.fire_mode_data = {fire_rate = 0.05}
+	self.mg42.fire_mode_data = {
+		fire_rate = 0.05
+	}
 	self.mg42.CAN_TOGGLE_FIREMODE = false
-	self.mg42.auto = {fire_rate = 0.05}
+	self.mg42.auto = {
+		fire_rate = 0.05
+	}
 	self.mg42.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10876,12 +11738,14 @@ function WeaponTweakData:_init_mg42(weapon_data)
 		moving_steelsight = self.new_m4.spread.moving_steelsight,
 		bipod = weapon_data.default_bipod_spread
 	}
-	self.mg42.kick = {standing = {
-		-0.2,
-		0.8,
-		-1,
-		1.4
-	}}
+	self.mg42.kick = {
+		standing = {
+			-0.2,
+			0.8,
+			-1,
+			1.4
+		}
+	}
 	self.mg42.kick.crouching = self.mg42.kick.standing
 	self.mg42.kick.steelsight = self.mg42.kick.standing
 	self.mg42.crosshair = {
@@ -10933,10 +11797,12 @@ function WeaponTweakData:_init_mg42(weapon_data)
 	}
 end
 
--- Lines: 13321 to 13433
+-- Lines 13469-13582
 function WeaponTweakData:_init_c96(weapon_data)
 	self.c96 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -10960,15 +11826,21 @@ function WeaponTweakData:_init_c96(weapon_data)
 	self.c96.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.c96.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.c96.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.c96.use_data = {selection_index = SELECTION.SECONDARY}
+	self.c96.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.c96.DAMAGE = 1
 	self.c96.CLIP_AMMO_MAX = 10
 	self.c96.NR_CLIPS_MAX = 9
 	self.c96.AMMO_MAX = self.c96.CLIP_AMMO_MAX * self.c96.NR_CLIPS_MAX
 	self.c96.AMMO_PICKUP = self:_pickup_chance(self.c96.AMMO_MAX, PICKUP.OTHER)
 	self.c96.FIRE_MODE = "single"
-	self.c96.fire_mode_data = {fire_rate = 0.166}
-	self.c96.single = {fire_rate = 0.166}
+	self.c96.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.c96.single = {
+		fire_rate = 0.166
+	}
 	self.c96.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -10977,7 +11849,9 @@ function WeaponTweakData:_init_c96(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.c96.kick = {standing = self.glock_17.kick.standing}
+	self.c96.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.c96.kick.crouching = self.c96.kick.standing
 	self.c96.kick.steelsight = self.c96.kick.standing
 	self.c96.crosshair = {
@@ -11024,10 +11898,12 @@ function WeaponTweakData:_init_c96(weapon_data)
 	}
 end
 
--- Lines: 13436 to 13552
+-- Lines 13584-13701
 function WeaponTweakData:_init_sterling(weapon_data)
 	self.sterling = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11053,16 +11929,22 @@ function WeaponTweakData:_init_sterling(weapon_data)
 	self.sterling.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.sterling.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.sterling.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.sterling.use_data = {selection_index = SELECTION.SECONDARY}
+	self.sterling.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.sterling.DAMAGE = 1
 	self.sterling.CLIP_AMMO_MAX = 20
 	self.sterling.NR_CLIPS_MAX = 11
 	self.sterling.AMMO_MAX = self.sterling.CLIP_AMMO_MAX * self.sterling.NR_CLIPS_MAX
 	self.sterling.AMMO_PICKUP = self:_pickup_chance(self.sterling.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.sterling.FIRE_MODE = "auto"
-	self.sterling.fire_mode_data = {fire_rate = 0.11}
+	self.sterling.fire_mode_data = {
+		fire_rate = 0.11
+	}
 	self.sterling.CAN_TOGGLE_FIREMODE = true
-	self.sterling.auto = {fire_rate = 0.11}
+	self.sterling.auto = {
+		fire_rate = 0.11
+	}
 	self.sterling.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11071,7 +11953,9 @@ function WeaponTweakData:_init_sterling(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.sterling.kick = {standing = self.new_m4.kick.standing}
+	self.sterling.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.sterling.kick.crouching = self.sterling.kick.standing
 	self.sterling.kick.steelsight = self.sterling.kick.standing
 	self.sterling.crosshair = {
@@ -11118,11 +12002,17 @@ function WeaponTweakData:_init_sterling(weapon_data)
 	}
 end
 
--- Lines: 13555 to 13673
+-- Lines 13703-13822
 function WeaponTweakData:_init_mosin(weapon_data)
 	self.mosin = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11157,9 +12047,13 @@ function WeaponTweakData:_init_mosin(weapon_data)
 		1
 	}
 	self.mosin.FIRE_MODE = "single"
-	self.mosin.fire_mode_data = {fire_rate = 1}
+	self.mosin.fire_mode_data = {
+		fire_rate = 1
+	}
 	self.mosin.CAN_TOGGLE_FIREMODE = false
-	self.mosin.single = {fire_rate = 20}
+	self.mosin.single = {
+		fire_rate = 20
+	}
 	self.mosin.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11168,12 +12062,14 @@ function WeaponTweakData:_init_mosin(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.mosin.kick = {standing = {
-		3,
-		4.8,
-		-0.3,
-		0.3
-	}}
+	self.mosin.kick = {
+		standing = {
+			3,
+			4.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.mosin.kick.crouching = self.mosin.kick.standing
 	self.mosin.kick.steelsight = self.mosin.kick.standing
 	self.mosin.crosshair = {
@@ -11221,13 +12117,17 @@ function WeaponTweakData:_init_mosin(weapon_data)
 		concealment = 6
 	}
 	self.mosin.armor_piercing_chance = 1
-	self.mosin.stats_modifiers = {damage = 4}
+	self.mosin.stats_modifiers = {
+		damage = 4
+	}
 end
 
--- Lines: 13676 to 13791
+-- Lines 13824-13940
 function WeaponTweakData:_init_m1928(weapon_data)
 	self.m1928 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11253,16 +12153,22 @@ function WeaponTweakData:_init_m1928(weapon_data)
 	self.m1928.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.m1928.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.m1928.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.m1928.use_data = {selection_index = SELECTION.SECONDARY}
+	self.m1928.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.m1928.DAMAGE = 1
 	self.m1928.CLIP_AMMO_MAX = 50
 	self.m1928.NR_CLIPS_MAX = 3
 	self.m1928.AMMO_MAX = self.m1928.CLIP_AMMO_MAX * self.m1928.NR_CLIPS_MAX
 	self.m1928.AMMO_PICKUP = self:_pickup_chance(self.m1928.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.m1928.FIRE_MODE = "auto"
-	self.m1928.fire_mode_data = {fire_rate = 0.083}
+	self.m1928.fire_mode_data = {
+		fire_rate = 0.083
+	}
 	self.m1928.CAN_TOGGLE_FIREMODE = true
-	self.m1928.auto = {fire_rate = 0.083}
+	self.m1928.auto = {
+		fire_rate = 0.083
+	}
 	self.m1928.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11271,12 +12177,14 @@ function WeaponTweakData:_init_m1928(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.m1928.kick = {standing = {
-		0.3,
-		1.5,
-		-1.2,
-		1.2
-	}}
+	self.m1928.kick = {
+		standing = {
+			0.3,
+			1.5,
+			-1.2,
+			1.2
+		}
+	}
 	self.m1928.kick.crouching = self.m1928.kick.standing
 	self.m1928.kick.steelsight = self.m1928.kick.standing
 	self.m1928.crosshair = {
@@ -11322,10 +12230,12 @@ function WeaponTweakData:_init_m1928(weapon_data)
 	}
 end
 
--- Lines: 13794 to 13909
+-- Lines 13942-14058
 function WeaponTweakData:_init_l85a2(weapon_data)
 	self.l85a2 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11350,16 +12260,22 @@ function WeaponTweakData:_init_l85a2(weapon_data)
 	self.l85a2.texture_bundle_folder = "character_pack_clover"
 	self.l85a2.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.l85a2.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.l85a2.use_data = {selection_index = SELECTION.PRIMARY}
+	self.l85a2.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.l85a2.DAMAGE = 1
 	self.l85a2.CLIP_AMMO_MAX = 30
 	self.l85a2.NR_CLIPS_MAX = 5
 	self.l85a2.AMMO_MAX = self.l85a2.CLIP_AMMO_MAX * self.l85a2.NR_CLIPS_MAX
 	self.l85a2.AMMO_PICKUP = self:_pickup_chance(self.l85a2.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.l85a2.FIRE_MODE = "auto"
-	self.l85a2.fire_mode_data = {fire_rate = 0.083}
+	self.l85a2.fire_mode_data = {
+		fire_rate = 0.083
+	}
 	self.l85a2.CAN_TOGGLE_FIREMODE = true
-	self.l85a2.auto = {fire_rate = 0.083}
+	self.l85a2.auto = {
+		fire_rate = 0.083
+	}
 	self.l85a2.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11368,12 +12284,14 @@ function WeaponTweakData:_init_l85a2(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.l85a2.kick = {standing = {
-		0.8,
-		1.1,
-		-1.2,
-		1.2
-	}}
+	self.l85a2.kick = {
+		standing = {
+			0.8,
+			1.1,
+			-1.2,
+			1.2
+		}
+	}
 	self.l85a2.kick.crouching = self.l85a2.kick.standing
 	self.l85a2.kick.steelsight = self.l85a2.kick.standing
 	self.l85a2.crosshair = {
@@ -11419,10 +12337,12 @@ function WeaponTweakData:_init_l85a2(weapon_data)
 	}
 end
 
--- Lines: 13912 to 14025
+-- Lines 14060-14174
 function WeaponTweakData:_init_vhs(weapon_data)
 	self.vhs = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11447,16 +12367,22 @@ function WeaponTweakData:_init_vhs(weapon_data)
 	self.vhs.texture_bundle_folder = "character_pack_dragan"
 	self.vhs.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.vhs.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.vhs.use_data = {selection_index = SELECTION.PRIMARY}
+	self.vhs.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.vhs.DAMAGE = 1
 	self.vhs.CLIP_AMMO_MAX = 30
 	self.vhs.NR_CLIPS_MAX = 5
 	self.vhs.AMMO_MAX = self.vhs.CLIP_AMMO_MAX * self.vhs.NR_CLIPS_MAX
 	self.vhs.AMMO_PICKUP = self:_pickup_chance(self.vhs.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.vhs.FIRE_MODE = "auto"
-	self.vhs.fire_mode_data = {fire_rate = 0.07}
+	self.vhs.fire_mode_data = {
+		fire_rate = 0.07
+	}
 	self.vhs.CAN_TOGGLE_FIREMODE = true
-	self.vhs.auto = {fire_rate = 0.07}
+	self.vhs.auto = {
+		fire_rate = 0.07
+	}
 	self.vhs.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11465,12 +12391,14 @@ function WeaponTweakData:_init_vhs(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.vhs.kick = {standing = {
-		0.6,
-		0.8,
-		-1,
-		1
-	}}
+	self.vhs.kick = {
+		standing = {
+			0.6,
+			0.8,
+			-1,
+			1
+		}
+	}
 	self.vhs.kick.crouching = self.vhs.kick.standing
 	self.vhs.kick.steelsight = self.vhs.kick.standing
 	self.vhs.crosshair = {
@@ -11516,10 +12444,12 @@ function WeaponTweakData:_init_vhs(weapon_data)
 	}
 end
 
--- Lines: 14028 to 14140
+-- Lines 14176-14289
 function WeaponTweakData:_init_hs2000(weapon_data)
 	self.hs2000 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11543,15 +12473,21 @@ function WeaponTweakData:_init_hs2000(weapon_data)
 	self.hs2000.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.hs2000.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.hs2000.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.hs2000.use_data = {selection_index = SELECTION.SECONDARY}
+	self.hs2000.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.hs2000.DAMAGE = 1
 	self.hs2000.CLIP_AMMO_MAX = 19
 	self.hs2000.NR_CLIPS_MAX = 5
 	self.hs2000.AMMO_MAX = self.hs2000.CLIP_AMMO_MAX * self.hs2000.NR_CLIPS_MAX
 	self.hs2000.AMMO_PICKUP = self:_pickup_chance(self.hs2000.AMMO_MAX, PICKUP.OTHER)
 	self.hs2000.FIRE_MODE = "single"
-	self.hs2000.fire_mode_data = {fire_rate = 0.166}
-	self.hs2000.single = {fire_rate = 0.166}
+	self.hs2000.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.hs2000.single = {
+		fire_rate = 0.166
+	}
 	self.hs2000.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11560,7 +12496,9 @@ function WeaponTweakData:_init_hs2000(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.hs2000.kick = {standing = self.glock_17.kick.standing}
+	self.hs2000.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.hs2000.kick.crouching = self.hs2000.kick.standing
 	self.hs2000.kick.steelsight = self.hs2000.kick.standing
 	self.hs2000.crosshair = {
@@ -11607,10 +12545,12 @@ function WeaponTweakData:_init_hs2000(weapon_data)
 	}
 end
 
--- Lines: 14143 to 14260
+-- Lines 14291-14409
 function WeaponTweakData:_init_m134(weapon_data)
 	self.m134 = {
-		categories = {"minigun"},
+		categories = {
+			"minigun"
+		},
 		has_description = false,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -11646,9 +12586,13 @@ function WeaponTweakData:_init_m134(weapon_data)
 	self.m134.AMMO_MAX = self.m134.CLIP_AMMO_MAX * self.m134.NR_CLIPS_MAX
 	self.m134.AMMO_PICKUP = self:_pickup_chance(self.m134.CLIP_AMMO_MAX, PICKUP.OTHER)
 	self.m134.FIRE_MODE = "auto"
-	self.m134.fire_mode_data = {fire_rate = 0.02}
+	self.m134.fire_mode_data = {
+		fire_rate = 0.02
+	}
 	self.m134.CAN_TOGGLE_FIREMODE = false
-	self.m134.auto = {fire_rate = 0.05}
+	self.m134.auto = {
+		fire_rate = 0.05
+	}
 	self.m134.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11657,12 +12601,14 @@ function WeaponTweakData:_init_m134(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.m134.kick = {standing = {
-		-0.05,
-		0.1,
-		-0.15,
-		0.2
-	}}
+	self.m134.kick = {
+		standing = {
+			-0.05,
+			0.1,
+			-0.15,
+			0.2
+		}
+	}
 	self.m134.kick.crouching = self.m134.kick.standing
 	self.m134.kick.steelsight = self.m134.kick.standing
 	self.m134.crosshair = {
@@ -11709,11 +12655,17 @@ function WeaponTweakData:_init_m134(weapon_data)
 	}
 end
 
--- Lines: 14263 to 14383
+-- Lines 14411-14532
 function WeaponTweakData:_init_rpg7(weapon_data)
 	self.rpg7 = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		has_description = true,
 		projectile_type = "rocket_frag",
 		damage_melee = weapon_data.damage_melee_default,
@@ -11724,7 +12676,9 @@ function WeaponTweakData:_init_rpg7(weapon_data)
 	self.rpg7.sounds.dryfire = "shotgun_dryfire"
 	self.rpg7.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.rpg7.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.rpg7.timers = {reload_not_empty = 4.7}
+	self.rpg7.timers = {
+		reload_not_empty = 4.7
+	}
 	self.rpg7.timers.reload_empty = self.rpg7.timers.reload_not_empty
 	self.rpg7.timers.unequip = 0.85
 	self.rpg7.timers.equip = 0.85
@@ -11748,8 +12702,12 @@ function WeaponTweakData:_init_rpg7(weapon_data)
 	self.rpg7.AMMO_MAX = self.rpg7.CLIP_AMMO_MAX * self.rpg7.NR_CLIPS_MAX
 	self.rpg7.AMMO_PICKUP = self:_pickup_chance(0, PICKUP.OTHER)
 	self.rpg7.FIRE_MODE = "single"
-	self.rpg7.fire_mode_data = {fire_rate = 2}
-	self.rpg7.single = {fire_rate = 2}
+	self.rpg7.fire_mode_data = {
+		fire_rate = 2
+	}
+	self.rpg7.single = {
+		fire_rate = 2
+	}
 	self.rpg7.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -11758,12 +12716,14 @@ function WeaponTweakData:_init_rpg7(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.rpg7.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.rpg7.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.rpg7.kick.crouching = self.rpg7.kick.standing
 	self.rpg7.kick.steelsight = self.rpg7.kick.standing
 	self.rpg7.crosshair = {
@@ -11809,13 +12769,17 @@ function WeaponTweakData:_init_rpg7(weapon_data)
 		suppression = 2,
 		concealment = 5
 	}
-	self.rpg7.stats_modifiers = {damage = 100}
+	self.rpg7.stats_modifiers = {
+		damage = 100
+	}
 end
 
--- Lines: 14386 to 14502
+-- Lines 14534-14651
 function WeaponTweakData:_init_cobray(weapon_data)
 	self.cobray = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11841,16 +12805,22 @@ function WeaponTweakData:_init_cobray(weapon_data)
 	self.cobray.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.cobray.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.cobray.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.cobray.use_data = {selection_index = SELECTION.SECONDARY}
+	self.cobray.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.cobray.DAMAGE = 1
 	self.cobray.CLIP_AMMO_MAX = 32
 	self.cobray.NR_CLIPS_MAX = 5
 	self.cobray.AMMO_MAX = self.cobray.CLIP_AMMO_MAX * self.cobray.NR_CLIPS_MAX
 	self.cobray.AMMO_PICKUP = self:_pickup_chance(self.cobray.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.cobray.FIRE_MODE = "auto"
-	self.cobray.fire_mode_data = {fire_rate = 0.05}
+	self.cobray.fire_mode_data = {
+		fire_rate = 0.05
+	}
 	self.cobray.CAN_TOGGLE_FIREMODE = true
-	self.cobray.auto = {fire_rate = 0.05}
+	self.cobray.auto = {
+		fire_rate = 0.05
+	}
 	self.cobray.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -11859,12 +12829,14 @@ function WeaponTweakData:_init_cobray(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.cobray.kick = {standing = {
-		-0.6,
-		1.2,
-		-1,
-		1
-	}}
+	self.cobray.kick = {
+		standing = {
+			-0.6,
+			1.2,
+			-1,
+			1
+		}
+	}
 	self.cobray.kick.crouching = self.cobray.kick.standing
 	self.cobray.kick.steelsight = self.cobray.kick.standing
 	self.cobray.crosshair = {
@@ -11911,11 +12883,17 @@ function WeaponTweakData:_init_cobray(weapon_data)
 	}
 end
 
--- Lines: 14505 to 14621
+-- Lines 14653-14770
 function WeaponTweakData:_init_b682(weapon_data)
 	self.b682 = {
-		categories = {"shotgun"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"shotgun"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -11950,8 +12928,12 @@ function WeaponTweakData:_init_b682(weapon_data)
 	self.b682.AMMO_MAX = self.b682.CLIP_AMMO_MAX * self.b682.NR_CLIPS_MAX
 	self.b682.AMMO_PICKUP = self:_pickup_chance(self.b682.AMMO_MAX, PICKUP.OTHER)
 	self.b682.FIRE_MODE = "single"
-	self.b682.fire_mode_data = {fire_rate = 0.12}
-	self.b682.single = {fire_rate = 0.12}
+	self.b682.fire_mode_data = {
+		fire_rate = 0.12
+	}
+	self.b682.single = {
+		fire_rate = 0.12
+	}
 	self.b682.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -11960,12 +12942,14 @@ function WeaponTweakData:_init_b682(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.b682.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.b682.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.b682.kick.crouching = self.b682.kick.standing
 	self.b682.kick.steelsight = self.b682.kick.standing
 	self.b682.crosshair = {
@@ -12010,10 +12994,12 @@ function WeaponTweakData:_init_b682(weapon_data)
 		suppression = 2,
 		concealment = 5
 	}
-	self.b682.stats_modifiers = {damage = 1}
+	self.b682.stats_modifiers = {
+		damage = 1
+	}
 end
 
--- Lines: 14624 to 14736
+-- Lines 14772-14885
 function WeaponTweakData:_init_x_g22c(weapon_data)
 	self.x_g22c = {
 		categories = {
@@ -12042,15 +13028,21 @@ function WeaponTweakData:_init_x_g22c(weapon_data)
 	self.x_g22c.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_g22c.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_g22c.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_g22c.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_g22c.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_g22c.DAMAGE = 1
 	self.x_g22c.CLIP_AMMO_MAX = 32
 	self.x_g22c.NR_CLIPS_MAX = 3
 	self.x_g22c.AMMO_MAX = self.x_g22c.CLIP_AMMO_MAX * self.x_g22c.NR_CLIPS_MAX
 	self.x_g22c.AMMO_PICKUP = self:_pickup_chance(self.x_g22c.AMMO_MAX, PICKUP.OTHER)
 	self.x_g22c.FIRE_MODE = "single"
-	self.x_g22c.fire_mode_data = {fire_rate = 0.166}
-	self.x_g22c.single = {fire_rate = 0.166}
+	self.x_g22c.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_g22c.single = {
+		fire_rate = 0.166
+	}
 	self.x_g22c.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -12059,12 +13051,14 @@ function WeaponTweakData:_init_x_g22c(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_g22c.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_g22c.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_g22c.kick.crouching = self.x_g22c.kick.standing
 	self.x_g22c.kick.steelsight = self.x_g22c.kick.standing
 	self.x_g22c.crosshair = {
@@ -12115,7 +13109,7 @@ function WeaponTweakData:_init_x_g22c(weapon_data)
 	}
 end
 
--- Lines: 14739 to 14851
+-- Lines 14887-15000
 function WeaponTweakData:_init_x_g17(weapon_data)
 	self.x_g17 = {
 		categories = {
@@ -12144,15 +13138,21 @@ function WeaponTweakData:_init_x_g17(weapon_data)
 	self.x_g17.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_g17.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_g17.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_g17.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_g17.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_g17.DAMAGE = 1
 	self.x_g17.CLIP_AMMO_MAX = 34
 	self.x_g17.NR_CLIPS_MAX = 5
 	self.x_g17.AMMO_MAX = self.x_g17.CLIP_AMMO_MAX * self.x_g17.NR_CLIPS_MAX
 	self.x_g17.AMMO_PICKUP = self:_pickup_chance(self.x_g17.AMMO_MAX, PICKUP.OTHER)
 	self.x_g17.FIRE_MODE = "single"
-	self.x_g17.fire_mode_data = {fire_rate = 0.125}
-	self.x_g17.single = {fire_rate = 0.125}
+	self.x_g17.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.x_g17.single = {
+		fire_rate = 0.125
+	}
 	self.x_g17.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -12161,12 +13161,14 @@ function WeaponTweakData:_init_x_g17(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_g17.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_g17.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_g17.kick.crouching = self.x_g17.kick.standing
 	self.x_g17.kick.steelsight = self.x_g17.kick.standing
 	self.x_g17.crosshair = {
@@ -12217,7 +13219,7 @@ function WeaponTweakData:_init_x_g17(weapon_data)
 	}
 end
 
--- Lines: 14854 to 14966
+-- Lines 15002-15115
 function WeaponTweakData:_init_x_usp(weapon_data)
 	self.x_usp = {
 		categories = {
@@ -12246,15 +13248,21 @@ function WeaponTweakData:_init_x_usp(weapon_data)
 	self.x_usp.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_usp.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_usp.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_usp.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_usp.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_usp.DAMAGE = 1
 	self.x_usp.CLIP_AMMO_MAX = 26
 	self.x_usp.NR_CLIPS_MAX = 4
 	self.x_usp.AMMO_MAX = self.x_usp.CLIP_AMMO_MAX * self.x_usp.NR_CLIPS_MAX
 	self.x_usp.AMMO_PICKUP = self:_pickup_chance(self.x_usp.AMMO_MAX, PICKUP.OTHER)
 	self.x_usp.FIRE_MODE = "single"
-	self.x_usp.fire_mode_data = {fire_rate = 0.166}
-	self.x_usp.single = {fire_rate = 0.166}
+	self.x_usp.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_usp.single = {
+		fire_rate = 0.166
+	}
 	self.x_usp.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -12263,12 +13271,14 @@ function WeaponTweakData:_init_x_usp(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_usp.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_usp.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_usp.kick.crouching = self.x_usp.kick.standing
 	self.x_usp.kick.steelsight = self.x_usp.kick.standing
 	self.x_usp.crosshair = {
@@ -12319,10 +13329,12 @@ function WeaponTweakData:_init_x_usp(weapon_data)
 	}
 end
 
--- Lines: 14969 to 15086
+-- Lines 15117-15235
 function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 	self.flamethrower_mk2 = {
-		categories = {"flamethrower"},
+		categories = {
+			"flamethrower"
+		},
 		has_description = false,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -12333,7 +13345,9 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 	self.flamethrower_mk2.sounds.dryfire = "flamethrower_dryfire"
 	self.flamethrower_mk2.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.flamethrower_mk2.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.flamethrower_mk2.timers = {reload_not_empty = 8.5}
+	self.flamethrower_mk2.timers = {
+		reload_not_empty = 8.5
+	}
 	self.flamethrower_mk2.timers.reload_empty = self.flamethrower_mk2.timers.reload_not_empty
 	self.flamethrower_mk2.timers.unequip = 0.85
 	self.flamethrower_mk2.timers.equip = 0.85
@@ -12355,8 +13369,12 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 	self.flamethrower_mk2.AMMO_MAX = self.flamethrower_mk2.CLIP_AMMO_MAX * self.flamethrower_mk2.NR_CLIPS_MAX
 	self.flamethrower_mk2.AMMO_PICKUP = self:_pickup_chance(self.flamethrower_mk2.CLIP_AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.flamethrower_mk2.FIRE_MODE = "auto"
-	self.flamethrower_mk2.fire_mode_data = {fire_rate = 0.03}
-	self.flamethrower_mk2.auto = {fire_rate = 0.05}
+	self.flamethrower_mk2.fire_mode_data = {
+		fire_rate = 0.03
+	}
+	self.flamethrower_mk2.auto = {
+		fire_rate = 0.05
+	}
 	self.flamethrower_mk2.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -12365,12 +13383,14 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.flamethrower_mk2.kick = {standing = {
-		0,
-		0,
-		0,
-		0
-	}}
+	self.flamethrower_mk2.kick = {
+		standing = {
+			0,
+			0,
+			0,
+			0
+		}
+	}
 	self.flamethrower_mk2.kick.crouching = self.flamethrower_mk2.kick.standing
 	self.flamethrower_mk2.kick.steelsight = self.flamethrower_mk2.kick.standing
 	self.flamethrower_mk2.crosshair = {
@@ -12426,13 +13446,21 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 	}
 end
 
--- Lines: 15089 to 15212
+-- Lines 15237-15361
 function WeaponTweakData:_init_m32(weapon_data)
 	self.m32 = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		projectile_type = "launcher_frag_m32",
-		projectile_types = {launcher_incendiary = "launcher_incendiary_m32"},
+		projectile_types = {
+			launcher_incendiary = "launcher_incendiary_m32"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -12473,8 +13501,12 @@ function WeaponTweakData:_init_m32(weapon_data)
 		0.65
 	}
 	self.m32.FIRE_MODE = "single"
-	self.m32.fire_mode_data = {fire_rate = 1}
-	self.m32.single = {fire_rate = 1.1}
+	self.m32.fire_mode_data = {
+		fire_rate = 1
+	}
+	self.m32.single = {
+		fire_rate = 1.1
+	}
 	self.m32.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -12483,12 +13515,14 @@ function WeaponTweakData:_init_m32(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.m32.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.m32.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.m32.kick.crouching = self.m32.kick.standing
 	self.m32.kick.steelsight = self.m32.kick.standing
 	self.m32.crosshair = {
@@ -12534,13 +13568,17 @@ function WeaponTweakData:_init_m32(weapon_data)
 		suppression = 2,
 		concealment = 10
 	}
-	self.m32.stats_modifiers = {damage = 10}
+	self.m32.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 15215 to 15333
+-- Lines 15363-15482
 function WeaponTweakData:_init_aa12(weapon_data)
 	self.aa12 = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		has_magazine = true,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -12579,9 +13617,13 @@ function WeaponTweakData:_init_aa12(weapon_data)
 	self.aa12.AMMO_MAX = self.aa12.CLIP_AMMO_MAX * self.aa12.NR_CLIPS_MAX
 	self.aa12.AMMO_PICKUP = self:_pickup_chance(self.aa12.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
 	self.aa12.FIRE_MODE = "auto"
-	self.aa12.fire_mode_data = {fire_rate = 0.2}
+	self.aa12.fire_mode_data = {
+		fire_rate = 0.2
+	}
 	self.aa12.CAN_TOGGLE_FIREMODE = true
-	self.aa12.auto = {fire_rate = 0.2}
+	self.aa12.auto = {
+		fire_rate = 0.2
+	}
 	self.aa12.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -12590,7 +13632,9 @@ function WeaponTweakData:_init_aa12(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.aa12.kick = {standing = self.r870.kick.standing}
+	self.aa12.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.aa12.kick.crouching = self.aa12.kick.standing
 	self.aa12.kick.steelsight = self.r870.kick.steelsight
 	self.aa12.crosshair = {
@@ -12636,14 +13680,18 @@ function WeaponTweakData:_init_aa12(weapon_data)
 	}
 end
 
--- Lines: 15336 to 15454
+-- Lines 15484-15603
 function WeaponTweakData:_init_peacemaker(weapon_data)
 	self.peacemaker = {
 		categories = {
 			"pistol",
 			"revolver"
 		},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		use_shotgun_reload = true,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -12663,10 +13711,16 @@ function WeaponTweakData:_init_peacemaker(weapon_data)
 		equip = 0.65
 	}
 	self.peacemaker.FIRE_MODE = "single"
-	self.peacemaker.fire_mode_data = {fire_rate = 0.25}
+	self.peacemaker.fire_mode_data = {
+		fire_rate = 0.25
+	}
 	self.peacemaker.CAN_TOGGLE_FIREMODE = false
-	self.peacemaker.single = {fire_rate = 0.166}
-	self.peacemaker.auto = {fire_rate = 0.166}
+	self.peacemaker.single = {
+		fire_rate = 0.166
+	}
+	self.peacemaker.auto = {
+		fire_rate = 0.166
+	}
 	self.peacemaker.name_id = "bm_w_peacemaker"
 	self.peacemaker.desc_id = "bm_w_peacemaker_desc"
 	self.peacemaker.description_id = "des_peacemaker"
@@ -12674,7 +13728,9 @@ function WeaponTweakData:_init_peacemaker(weapon_data)
 	self.peacemaker.texture_bundle_folder = "west"
 	self.peacemaker.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.peacemaker.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.peacemaker.use_data = {selection_index = SELECTION.SECONDARY}
+	self.peacemaker.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.peacemaker.DAMAGE = 6
 	self.peacemaker.CLIP_AMMO_MAX = 6
 	self.peacemaker.NR_CLIPS_MAX = 9
@@ -12688,12 +13744,14 @@ function WeaponTweakData:_init_peacemaker(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.peacemaker.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.peacemaker.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.peacemaker.kick.crouching = self.peacemaker.kick.standing
 	self.peacemaker.kick.steelsight = self.peacemaker.kick.standing
 	self.peacemaker.crosshair = {
@@ -12736,14 +13794,22 @@ function WeaponTweakData:_init_peacemaker(weapon_data)
 		suppression = 5,
 		concealment = 26
 	}
-	self.peacemaker.stats_modifiers = {damage = 1}
+	self.peacemaker.stats_modifiers = {
+		damage = 1
+	}
 end
 
--- Lines: 15457 to 15578
+-- Lines 15605-15727
 function WeaponTweakData:_init_winchester1874(weapon_data)
 	self.winchester1874 = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		use_shotgun_reload = true,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -12779,9 +13845,13 @@ function WeaponTweakData:_init_winchester1874(weapon_data)
 	self.winchester1874.AMMO_MAX = self.winchester1874.CLIP_AMMO_MAX * self.winchester1874.NR_CLIPS_MAX
 	self.winchester1874.AMMO_PICKUP = self:_pickup_chance(self.winchester1874.AMMO_MAX, PICKUP.SNIPER_LOW_DAMAGE)
 	self.winchester1874.FIRE_MODE = "single"
-	self.winchester1874.fire_mode_data = {fire_rate = 0.7}
+	self.winchester1874.fire_mode_data = {
+		fire_rate = 0.7
+	}
 	self.winchester1874.CAN_TOGGLE_FIREMODE = false
-	self.winchester1874.single = {fire_rate = 0.7}
+	self.winchester1874.single = {
+		fire_rate = 0.7
+	}
 	self.winchester1874.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -12790,12 +13860,14 @@ function WeaponTweakData:_init_winchester1874(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.winchester1874.kick = {standing = {
-		3,
-		4.8,
-		-0.3,
-		0.3
-	}}
+	self.winchester1874.kick = {
+		standing = {
+			3,
+			4.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.winchester1874.kick.crouching = self.winchester1874.kick.standing
 	self.winchester1874.kick.steelsight = self.winchester1874.kick.standing
 	self.winchester1874.crosshair = {
@@ -12842,14 +13914,22 @@ function WeaponTweakData:_init_winchester1874(weapon_data)
 		concealment = 12
 	}
 	self.winchester1874.armor_piercing_chance = 1
-	self.winchester1874.stats_modifiers = {damage = 2}
+	self.winchester1874.stats_modifiers = {
+		damage = 2
+	}
 end
 
--- Lines: 15581 to 15701
+-- Lines 15729-15850
 function WeaponTweakData:_init_plainsider(weapon_data)
 	self.plainsrider = {
-		categories = {"bow"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"bow"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		projectile_type = "west_arrow",
 		not_allowed_in_bleedout = true,
 		damage_melee = weapon_data.damage_melee_default,
@@ -12862,12 +13942,16 @@ function WeaponTweakData:_init_plainsider(weapon_data)
 	self.plainsrider.sounds.charge_cancel = "bow_charge_cancel"
 	self.plainsrider.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.plainsrider.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.plainsrider.timers = {reload_not_empty = 1}
+	self.plainsrider.timers = {
+		reload_not_empty = 1
+	}
 	self.plainsrider.timers.reload_empty = self.plainsrider.timers.reload_not_empty
 	self.plainsrider.timers.unequip = 0.55
 	self.plainsrider.timers.equip = 0.55
 	self.plainsrider.bow_reload_speed_multiplier = 3
-	self.plainsrider.charge_data = {max_t = 1}
+	self.plainsrider.charge_data = {
+		max_t = 1
+	}
 	self.plainsrider.name_id = "bm_w_plainsrider"
 	self.plainsrider.desc_id = "bm_w_plainsrider_desc"
 	self.plainsrider.description_id = "des_plainsrider"
@@ -12885,8 +13969,12 @@ function WeaponTweakData:_init_plainsider(weapon_data)
 	self.plainsrider.AMMO_MAX = self.plainsrider.CLIP_AMMO_MAX * self.plainsrider.NR_CLIPS_MAX
 	self.plainsrider.AMMO_PICKUP = self:_pickup_chance(0, self.plainsrider.use_data.selection_index)
 	self.plainsrider.FIRE_MODE = "single"
-	self.plainsrider.fire_mode_data = {fire_rate = 0.2}
-	self.plainsrider.single = {fire_rate = 0.2}
+	self.plainsrider.fire_mode_data = {
+		fire_rate = 0.2
+	}
+	self.plainsrider.single = {
+		fire_rate = 0.2
+	}
 	self.plainsrider.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -12895,12 +13983,14 @@ function WeaponTweakData:_init_plainsider(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.plainsrider.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.plainsrider.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.plainsrider.kick.crouching = self.plainsrider.kick.standing
 	self.plainsrider.kick.steelsight = self.plainsrider.kick.standing
 	self.plainsrider.crosshair = {
@@ -12943,17 +14033,23 @@ function WeaponTweakData:_init_plainsider(weapon_data)
 		suppression = 2,
 		concealment = 30
 	}
-	self.plainsrider.stats_modifiers = {damage = 10}
+	self.plainsrider.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 15704 to 15815
+-- Lines 15852-15964
 function WeaponTweakData:_init_mateba(weapon_data)
 	self.mateba = {
 		categories = {
 			"pistol",
 			"revolver"
 		},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -12969,8 +14065,12 @@ function WeaponTweakData:_init_mateba(weapon_data)
 		equip = 0.45
 	}
 	self.mateba.FIRE_MODE = "single"
-	self.mateba.fire_mode_data = {fire_rate = 0.166}
-	self.mateba.single = {fire_rate = 0.166}
+	self.mateba.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.mateba.single = {
+		fire_rate = 0.166
+	}
 	self.mateba.name_id = "bm_w_mateba"
 	self.mateba.desc_id = "bm_w_mateba_desc"
 	self.mateba.description_id = "des_mateba"
@@ -12978,7 +14078,9 @@ function WeaponTweakData:_init_mateba(weapon_data)
 	self.mateba.texture_bundle_folder = "dlc_arena"
 	self.mateba.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.mateba.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.mateba.use_data = {selection_index = SELECTION.SECONDARY}
+	self.mateba.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.mateba.DAMAGE = 2
 	self.mateba.CLIP_AMMO_MAX = 6
 	self.mateba.NR_CLIPS_MAX = 9
@@ -12992,7 +14094,9 @@ function WeaponTweakData:_init_mateba(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.mateba.kick = {standing = self.glock_17.kick.standing}
+	self.mateba.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.mateba.kick.crouching = self.mateba.kick.standing
 	self.mateba.kick.steelsight = self.mateba.kick.standing
 	self.mateba.crosshair = {
@@ -13038,10 +14142,12 @@ function WeaponTweakData:_init_mateba(weapon_data)
 	}
 end
 
--- Lines: 15818 to 15935
+-- Lines 15966-16084
 function WeaponTweakData:_init_asval(weapon_data)
 	self.asval = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13066,16 +14172,22 @@ function WeaponTweakData:_init_asval(weapon_data)
 	self.asval.texture_bundle_folder = "character_pack_sokol"
 	self.asval.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.asval.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.asval.use_data = {selection_index = SELECTION.PRIMARY}
+	self.asval.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.asval.DAMAGE = 1
 	self.asval.CLIP_AMMO_MAX = 20
 	self.asval.NR_CLIPS_MAX = 11
 	self.asval.AMMO_MAX = self.asval.CLIP_AMMO_MAX * self.asval.NR_CLIPS_MAX
 	self.asval.AMMO_PICKUP = self:_pickup_chance(self.asval.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.asval.FIRE_MODE = "auto"
-	self.asval.fire_mode_data = {fire_rate = 0.067}
+	self.asval.fire_mode_data = {
+		fire_rate = 0.067
+	}
 	self.asval.CAN_TOGGLE_FIREMODE = true
-	self.asval.auto = {fire_rate = 0.067}
+	self.asval.auto = {
+		fire_rate = 0.067
+	}
 	self.asval.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -13084,7 +14196,9 @@ function WeaponTweakData:_init_asval(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.asval.kick = {standing = self.new_m4.kick.standing}
+	self.asval.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.asval.kick.crouching = self.asval.kick.standing
 	self.asval.kick.steelsight = self.asval.kick.standing
 	self.asval.crosshair = {
@@ -13134,10 +14248,12 @@ function WeaponTweakData:_init_asval(weapon_data)
 	}
 end
 
--- Lines: 15938 to 16047
+-- Lines 16086-16196
 function WeaponTweakData:_init_sub2000(weapon_data)
 	self.sub2000 = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13160,16 +14276,22 @@ function WeaponTweakData:_init_sub2000(weapon_data)
 	self.sub2000.texture_bundle_folder = "kenaz"
 	self.sub2000.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.sub2000.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.sub2000.use_data = {selection_index = SELECTION.PRIMARY}
+	self.sub2000.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.sub2000.DAMAGE = 2
 	self.sub2000.CLIP_AMMO_MAX = 33
 	self.sub2000.NR_CLIPS_MAX = 2
 	self.sub2000.AMMO_MAX = self.sub2000.CLIP_AMMO_MAX * self.sub2000.NR_CLIPS_MAX
 	self.sub2000.AMMO_PICKUP = self:_pickup_chance(self.sub2000.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.sub2000.FIRE_MODE = "single"
-	self.sub2000.fire_mode_data = {fire_rate = 0.085}
+	self.sub2000.fire_mode_data = {
+		fire_rate = 0.085
+	}
 	self.sub2000.CAN_TOGGLE_FIREMODE = false
-	self.sub2000.single = {fire_rate = 0.085}
+	self.sub2000.single = {
+		fire_rate = 0.085
+	}
 	self.sub2000.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -13178,7 +14300,9 @@ function WeaponTweakData:_init_sub2000(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.sub2000.kick = {standing = self.new_m4.kick.standing}
+	self.sub2000.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.sub2000.kick.crouching = self.sub2000.kick.standing
 	self.sub2000.kick.steelsight = self.sub2000.kick.standing
 	self.sub2000.crosshair = {
@@ -13224,11 +14348,17 @@ function WeaponTweakData:_init_sub2000(weapon_data)
 	}
 end
 
--- Lines: 16050 to 16166
+-- Lines 16198-16315
 function WeaponTweakData:_init_wa2000(weapon_data)
 	self.wa2000 = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13250,16 +14380,22 @@ function WeaponTweakData:_init_wa2000(weapon_data)
 	self.wa2000.texture_bundle_folder = "turtles"
 	self.wa2000.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.wa2000.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.wa2000.use_data = {selection_index = SELECTION.PRIMARY}
+	self.wa2000.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.wa2000.DAMAGE = 1
 	self.wa2000.CLIP_AMMO_MAX = 10
 	self.wa2000.NR_CLIPS_MAX = 4
 	self.wa2000.AMMO_MAX = self.wa2000.CLIP_AMMO_MAX * self.wa2000.NR_CLIPS_MAX
 	self.wa2000.AMMO_PICKUP = self:_pickup_chance(self.wa2000.AMMO_MAX, PICKUP.SNIPER_LOW_DAMAGE)
 	self.wa2000.FIRE_MODE = "single"
-	self.wa2000.fire_mode_data = {fire_rate = 0.4}
+	self.wa2000.fire_mode_data = {
+		fire_rate = 0.4
+	}
 	self.wa2000.CAN_TOGGLE_FIREMODE = false
-	self.wa2000.single = {fire_rate = 0.4}
+	self.wa2000.single = {
+		fire_rate = 0.4
+	}
 	self.wa2000.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -13268,12 +14404,14 @@ function WeaponTweakData:_init_wa2000(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.wa2000.kick = {standing = {
-		3,
-		4.8,
-		-0.3,
-		0.3
-	}}
+	self.wa2000.kick = {
+		standing = {
+			3,
+			4.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.wa2000.kick.crouching = self.wa2000.kick.standing
 	self.wa2000.kick.steelsight = self.wa2000.kick.standing
 	self.wa2000.crosshair = {
@@ -13321,13 +14459,17 @@ function WeaponTweakData:_init_wa2000(weapon_data)
 		concealment = 16
 	}
 	self.wa2000.armor_piercing_chance = 1
-	self.wa2000.stats_modifiers = {damage = 1}
+	self.wa2000.stats_modifiers = {
+		damage = 1
+	}
 end
 
--- Lines: 16169 to 16283
+-- Lines 16317-16432
 function WeaponTweakData:_init_polymer(weapon_data)
 	self.polymer = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13353,16 +14495,22 @@ function WeaponTweakData:_init_polymer(weapon_data)
 	self.polymer.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.polymer.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.polymer.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.polymer.use_data = {selection_index = SELECTION.SECONDARY}
+	self.polymer.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.polymer.DAMAGE = 1
 	self.polymer.CLIP_AMMO_MAX = 30
 	self.polymer.NR_CLIPS_MAX = 5
 	self.polymer.AMMO_MAX = self.polymer.CLIP_AMMO_MAX * self.polymer.NR_CLIPS_MAX
 	self.polymer.AMMO_PICKUP = self:_pickup_chance(self.polymer.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.polymer.FIRE_MODE = "auto"
-	self.polymer.fire_mode_data = {fire_rate = 0.05}
+	self.polymer.fire_mode_data = {
+		fire_rate = 0.05
+	}
 	self.polymer.CAN_TOGGLE_FIREMODE = true
-	self.polymer.auto = {fire_rate = 0.05}
+	self.polymer.auto = {
+		fire_rate = 0.05
+	}
 	self.polymer.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -13371,12 +14519,14 @@ function WeaponTweakData:_init_polymer(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.polymer.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.polymer.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.polymer.kick.crouching = self.polymer.kick.standing
 	self.polymer.kick.steelsight = self.polymer.kick.standing
 	self.polymer.crosshair = {
@@ -13422,12 +14572,18 @@ function WeaponTweakData:_init_polymer(weapon_data)
 	}
 end
 
--- Lines: 16286 to 16402
+-- Lines 16434-16551
 function WeaponTweakData:_init_hunter(weapon_data)
 	self.hunter = {
-		categories = {"crossbow"},
+		categories = {
+			"crossbow"
+		},
 		projectile_type = "crossbow_arrow",
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13451,16 +14607,22 @@ function WeaponTweakData:_init_hunter(weapon_data)
 	self.hunter.texture_bundle_folder = "turtles"
 	self.hunter.muzzleflash = "effects/payday2/particles/weapons/shells/shell_empty"
 	self.hunter.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.hunter.use_data = {selection_index = SELECTION.SECONDARY}
+	self.hunter.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.hunter.DAMAGE = 1
 	self.hunter.CLIP_AMMO_MAX = 1
 	self.hunter.NR_CLIPS_MAX = 25
 	self.hunter.AMMO_MAX = self.hunter.CLIP_AMMO_MAX * self.hunter.NR_CLIPS_MAX
 	self.hunter.AMMO_PICKUP = self:_pickup_chance(0, PICKUP.OTHER)
 	self.hunter.FIRE_MODE = "single"
-	self.hunter.fire_mode_data = {fire_rate = 1.2}
+	self.hunter.fire_mode_data = {
+		fire_rate = 1.2
+	}
 	self.hunter.CAN_TOGGLE_FIREMODE = false
-	self.hunter.single = {fire_rate = 0.05}
+	self.hunter.single = {
+		fire_rate = 0.05
+	}
 	self.hunter.spread = {
 		standing = self.new_m4.spread.standing * 0.7,
 		crouching = self.new_m4.spread.standing * 0.7,
@@ -13469,12 +14631,14 @@ function WeaponTweakData:_init_hunter(weapon_data)
 		moving_crouching = self.new_m4.spread.standing * 0.7,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.hunter.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.hunter.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.hunter.kick.crouching = self.hunter.kick.standing
 	self.hunter.kick.steelsight = self.hunter.kick.standing
 	self.hunter.crosshair = {
@@ -13519,13 +14683,17 @@ function WeaponTweakData:_init_hunter(weapon_data)
 		suppression = 14,
 		concealment = 26
 	}
-	self.hunter.stats_modifiers = {damage = 10}
+	self.hunter.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 16405 to 16518
+-- Lines 16553-16667
 function WeaponTweakData:_init_baka(weapon_data)
 	self.baka = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13551,16 +14719,22 @@ function WeaponTweakData:_init_baka(weapon_data)
 	self.baka.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.baka.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.baka.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.baka.use_data = {selection_index = SELECTION.SECONDARY}
+	self.baka.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.baka.DAMAGE = 1
 	self.baka.CLIP_AMMO_MAX = 32
 	self.baka.NR_CLIPS_MAX = 7
 	self.baka.AMMO_MAX = self.baka.CLIP_AMMO_MAX * self.baka.NR_CLIPS_MAX
 	self.baka.AMMO_PICKUP = self:_pickup_chance(self.baka.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.baka.FIRE_MODE = "auto"
-	self.baka.fire_mode_data = {fire_rate = 0.05}
+	self.baka.fire_mode_data = {
+		fire_rate = 0.05
+	}
 	self.baka.CAN_TOGGLE_FIREMODE = true
-	self.baka.auto = {fire_rate = 0.05}
+	self.baka.auto = {
+		fire_rate = 0.05
+	}
 	self.baka.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -13569,12 +14743,14 @@ function WeaponTweakData:_init_baka(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.baka.kick = {standing = {
-		-0.1,
-		0.6,
-		-1.2,
-		1.2
-	}}
+	self.baka.kick = {
+		standing = {
+			-0.1,
+			0.6,
+			-1.2,
+			1.2
+		}
+	}
 	self.baka.kick.crouching = self.baka.kick.standing
 	self.baka.kick.steelsight = self.baka.kick.standing
 	self.baka.crosshair = {
@@ -13620,12 +14796,18 @@ function WeaponTweakData:_init_baka(weapon_data)
 	}
 end
 
--- Lines: 16521 to 16636
+-- Lines 16669-16785
 function WeaponTweakData:_init_arblast(weapon_data)
 	self.arblast = {
-		categories = {"crossbow"},
+		categories = {
+			"crossbow"
+		},
 		projectile_type = "arblast_arrow",
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13649,16 +14831,22 @@ function WeaponTweakData:_init_arblast(weapon_data)
 	self.arblast.texture_bundle_folder = "steel"
 	self.arblast.muzzleflash = "effects/payday2/particles/weapons/shells/shell_empty"
 	self.arblast.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.arblast.use_data = {selection_index = SELECTION.PRIMARY}
+	self.arblast.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.arblast.DAMAGE = 1
 	self.arblast.CLIP_AMMO_MAX = 1
 	self.arblast.NR_CLIPS_MAX = 35
 	self.arblast.AMMO_MAX = self.arblast.CLIP_AMMO_MAX * self.arblast.NR_CLIPS_MAX
 	self.arblast.AMMO_PICKUP = self:_pickup_chance(0, PICKUP.OTHER)
 	self.arblast.FIRE_MODE = "single"
-	self.arblast.fire_mode_data = {fire_rate = 2.9}
+	self.arblast.fire_mode_data = {
+		fire_rate = 2.9
+	}
 	self.arblast.CAN_TOGGLE_FIREMODE = false
-	self.arblast.single = {fire_rate = 0.05}
+	self.arblast.single = {
+		fire_rate = 0.05
+	}
 	self.arblast.spread = {
 		standing = self.new_m4.spread.standing * 0.7,
 		crouching = self.new_m4.spread.standing * 0.7,
@@ -13667,12 +14855,14 @@ function WeaponTweakData:_init_arblast(weapon_data)
 		moving_crouching = self.new_m4.spread.standing * 0.7,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.arblast.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.arblast.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.arblast.kick.crouching = self.arblast.kick.standing
 	self.arblast.kick.steelsight = self.arblast.kick.standing
 	self.arblast.crosshair = {
@@ -13717,15 +14907,23 @@ function WeaponTweakData:_init_arblast(weapon_data)
 		suppression = 14,
 		concealment = 28
 	}
-	self.arblast.stats_modifiers = {damage = 100}
+	self.arblast.stats_modifiers = {
+		damage = 100
+	}
 end
 
--- Lines: 16639 to 16755
+-- Lines 16787-16904
 function WeaponTweakData:_init_frankish(weapon_data)
 	self.frankish = {
-		categories = {"crossbow"},
+		categories = {
+			"crossbow"
+		},
 		projectile_type = "frankish_arrow",
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13749,16 +14947,22 @@ function WeaponTweakData:_init_frankish(weapon_data)
 	self.frankish.texture_bundle_folder = "steel"
 	self.frankish.muzzleflash = "effects/payday2/particles/weapons/shells/shell_empty"
 	self.frankish.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.frankish.use_data = {selection_index = SELECTION.PRIMARY}
+	self.frankish.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.frankish.DAMAGE = 1
 	self.frankish.CLIP_AMMO_MAX = 1
 	self.frankish.NR_CLIPS_MAX = 50
 	self.frankish.AMMO_MAX = self.frankish.CLIP_AMMO_MAX * self.frankish.NR_CLIPS_MAX
 	self.frankish.AMMO_PICKUP = self:_pickup_chance(0, PICKUP.OTHER)
 	self.frankish.FIRE_MODE = "single"
-	self.frankish.fire_mode_data = {fire_rate = 1.5}
+	self.frankish.fire_mode_data = {
+		fire_rate = 1.5
+	}
 	self.frankish.CAN_TOGGLE_FIREMODE = false
-	self.frankish.single = {fire_rate = 0.05}
+	self.frankish.single = {
+		fire_rate = 0.05
+	}
 	self.frankish.spread = {
 		standing = self.new_m4.spread.standing * 0.7,
 		crouching = self.new_m4.spread.standing * 0.7,
@@ -13767,12 +14971,14 @@ function WeaponTweakData:_init_frankish(weapon_data)
 		moving_crouching = self.new_m4.spread.standing * 0.7,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.frankish.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.frankish.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.frankish.kick.crouching = self.frankish.kick.standing
 	self.frankish.kick.steelsight = self.frankish.kick.standing
 	self.frankish.crosshair = {
@@ -13817,14 +15023,22 @@ function WeaponTweakData:_init_frankish(weapon_data)
 		suppression = 14,
 		concealment = 29
 	}
-	self.frankish.stats_modifiers = {damage = 10}
+	self.frankish.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 16758 to 16875
+-- Lines 16906-17024
 function WeaponTweakData:_init_long(weapon_data)
 	self.long = {
-		categories = {"bow"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"bow"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		projectile_type = "long_arrow",
 		not_allowed_in_bleedout = true,
 		damage_melee = weapon_data.damage_melee_default,
@@ -13837,11 +15051,15 @@ function WeaponTweakData:_init_long(weapon_data)
 	self.long.sounds.charge_cancel = "bow_charge_cancel"
 	self.long.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.long.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.long.timers = {reload_not_empty = 1.5}
+	self.long.timers = {
+		reload_not_empty = 1.5
+	}
 	self.long.timers.reload_empty = self.long.timers.reload_not_empty
 	self.long.timers.unequip = 0.85
 	self.long.timers.equip = 0.85
-	self.long.charge_data = {max_t = 1.5}
+	self.long.charge_data = {
+		max_t = 1.5
+	}
 	self.long.name_id = "bm_w_long"
 	self.long.desc_id = "bm_w_long_desc"
 	self.long.description_id = "des_long"
@@ -13859,8 +15077,12 @@ function WeaponTweakData:_init_long(weapon_data)
 	self.long.AMMO_MAX = self.long.CLIP_AMMO_MAX * self.long.NR_CLIPS_MAX
 	self.long.AMMO_PICKUP = self:_pickup_chance(0, self.long.use_data.selection_index)
 	self.long.FIRE_MODE = "single"
-	self.long.fire_mode_data = {fire_rate = 0.2}
-	self.long.single = {fire_rate = 0.2}
+	self.long.fire_mode_data = {
+		fire_rate = 0.2
+	}
+	self.long.single = {
+		fire_rate = 0.2
+	}
 	self.long.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -13869,12 +15091,14 @@ function WeaponTweakData:_init_long(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.long.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.long.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.long.kick.crouching = self.long.kick.standing
 	self.long.kick.steelsight = self.long.kick.standing
 	self.long.crosshair = {
@@ -13917,13 +15141,17 @@ function WeaponTweakData:_init_long(weapon_data)
 		suppression = 2,
 		concealment = 29
 	}
-	self.long.stats_modifiers = {damage = 100}
+	self.long.stats_modifiers = {
+		damage = 100
+	}
 end
 
--- Lines: 16878 to 17003
+-- Lines 17026-17152
 function WeaponTweakData:_init_par(weapon_data)
 	self.par = {
-		categories = {"lmg"},
+		categories = {
+			"lmg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -13952,16 +15180,22 @@ function WeaponTweakData:_init_par(weapon_data)
 	self.par.texture_bundle_folder = "par"
 	self.par.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.par.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556_lmg"
-	self.par.use_data = {selection_index = SELECTION.PRIMARY}
+	self.par.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.par.DAMAGE = 1
 	self.par.CLIP_AMMO_MAX = 200
 	self.par.NR_CLIPS_MAX = 2
 	self.par.AMMO_MAX = self.par.CLIP_AMMO_MAX * self.par.NR_CLIPS_MAX
 	self.par.AMMO_PICKUP = self:_pickup_chance(self.par.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.par.FIRE_MODE = "auto"
-	self.par.fire_mode_data = {fire_rate = 0.066}
+	self.par.fire_mode_data = {
+		fire_rate = 0.066
+	}
 	self.par.CAN_TOGGLE_FIREMODE = false
-	self.par.auto = {fire_rate = 0.076}
+	self.par.auto = {
+		fire_rate = 0.076
+	}
 	self.par.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -13971,12 +15205,14 @@ function WeaponTweakData:_init_par(weapon_data)
 		moving_steelsight = self.new_m4.spread.moving_steelsight,
 		bipod = weapon_data.default_bipod_spread
 	}
-	self.par.kick = {standing = {
-		-0.2,
-		0.8,
-		-1,
-		1.4
-	}}
+	self.par.kick = {
+		standing = {
+			-0.2,
+			0.8,
+			-1,
+			1.4
+		}
+	}
 	self.par.kick.crouching = self.par.kick.standing
 	self.par.kick.steelsight = self.par.kick.standing
 	self.par.crosshair = {
@@ -14028,10 +15264,12 @@ function WeaponTweakData:_init_par(weapon_data)
 	}
 end
 
--- Lines: 17006 to 17118
+-- Lines 17154-17267
 function WeaponTweakData:_init_sparrow(weapon_data)
 	self.sparrow = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14055,15 +15293,21 @@ function WeaponTweakData:_init_sparrow(weapon_data)
 	self.sparrow.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.sparrow.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.sparrow.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.sparrow.use_data = {selection_index = SELECTION.SECONDARY}
+	self.sparrow.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.sparrow.DAMAGE = 1
 	self.sparrow.CLIP_AMMO_MAX = 12
 	self.sparrow.NR_CLIPS_MAX = 5
 	self.sparrow.AMMO_MAX = self.sparrow.CLIP_AMMO_MAX * self.sparrow.NR_CLIPS_MAX
 	self.sparrow.AMMO_PICKUP = self:_pickup_chance(self.sparrow.AMMO_MAX, PICKUP.OTHER)
 	self.sparrow.FIRE_MODE = "single"
-	self.sparrow.fire_mode_data = {fire_rate = 0.25}
-	self.sparrow.single = {fire_rate = 0.25}
+	self.sparrow.fire_mode_data = {
+		fire_rate = 0.25
+	}
+	self.sparrow.single = {
+		fire_rate = 0.25
+	}
 	self.sparrow.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -14072,7 +15316,9 @@ function WeaponTweakData:_init_sparrow(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.sparrow.kick = {standing = self.glock_17.kick.standing}
+	self.sparrow.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.sparrow.kick.crouching = self.sparrow.kick.standing
 	self.sparrow.kick.steelsight = self.sparrow.kick.standing
 	self.sparrow.crosshair = {
@@ -14119,11 +15365,17 @@ function WeaponTweakData:_init_sparrow(weapon_data)
 	}
 end
 
--- Lines: 17121 to 17238
+-- Lines 17269-17387
 function WeaponTweakData:_init_model70(weapon_data)
 	self.model70 = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14157,9 +15409,13 @@ function WeaponTweakData:_init_model70(weapon_data)
 		1
 	}
 	self.model70.FIRE_MODE = "single"
-	self.model70.fire_mode_data = {fire_rate = 1}
+	self.model70.fire_mode_data = {
+		fire_rate = 1
+	}
 	self.model70.CAN_TOGGLE_FIREMODE = false
-	self.model70.single = {fire_rate = 20}
+	self.model70.single = {
+		fire_rate = 20
+	}
 	self.model70.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -14168,12 +15424,14 @@ function WeaponTweakData:_init_model70(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.model70.kick = {standing = {
-		3,
-		4.8,
-		-0.3,
-		0.3
-	}}
+	self.model70.kick = {
+		standing = {
+			3,
+			4.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.model70.kick.crouching = self.model70.kick.standing
 	self.model70.kick.steelsight = self.model70.kick.standing
 	self.model70.crosshair = {
@@ -14221,13 +15479,17 @@ function WeaponTweakData:_init_model70(weapon_data)
 		concealment = 6
 	}
 	self.model70.armor_piercing_chance = 1
-	self.model70.stats_modifiers = {damage = 4}
+	self.model70.stats_modifiers = {
+		damage = 4
+	}
 end
 
--- Lines: 17361 to 17478
+-- Lines 17509-17627
 function WeaponTweakData:_init_m37(weapon_data)
 	self.m37 = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14265,8 +15527,12 @@ function WeaponTweakData:_init_m37(weapon_data)
 	self.m37.AMMO_MAX = self.m37.CLIP_AMMO_MAX * self.m37.NR_CLIPS_MAX
 	self.m37.AMMO_PICKUP = self:_pickup_chance(self.m37.AMMO_MAX, PICKUP.OTHER)
 	self.m37.FIRE_MODE = "single"
-	self.m37.fire_mode_data = {fire_rate = 0.575}
-	self.m37.single = {fire_rate = 0.575}
+	self.m37.fire_mode_data = {
+		fire_rate = 0.575
+	}
+	self.m37.single = {
+		fire_rate = 0.575
+	}
 	self.m37.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -14275,12 +15541,14 @@ function WeaponTweakData:_init_m37(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.m37.kick = {standing = {
-		1.9,
-		2,
-		-0.2,
-		0.2
-	}}
+	self.m37.kick = {
+		standing = {
+			1.9,
+			2,
+			-0.2,
+			0.2
+		}
+	}
 	self.m37.kick.crouching = self.m37.kick.standing
 	self.m37.kick.steelsight = {
 		1.5,
@@ -14331,13 +15599,21 @@ function WeaponTweakData:_init_m37(weapon_data)
 	}
 end
 
--- Lines: 17483 to 17605
+-- Lines 17631-17754
 function WeaponTweakData:_init_china(weapon_data)
 	self.china = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		projectile_type = "launcher_frag_china",
-		projectile_types = {launcher_incendiary = "launcher_incendiary_china"},
+		projectile_types = {
+			launcher_incendiary = "launcher_incendiary_china"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14378,8 +15654,12 @@ function WeaponTweakData:_init_china(weapon_data)
 		0.65
 	}
 	self.china.FIRE_MODE = "single"
-	self.china.fire_mode_data = {fire_rate = 1.2}
-	self.china.single = {fire_rate = 1.2}
+	self.china.fire_mode_data = {
+		fire_rate = 1.2
+	}
+	self.china.single = {
+		fire_rate = 1.2
+	}
 	self.china.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -14388,12 +15668,14 @@ function WeaponTweakData:_init_china(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.china.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.china.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.china.kick.crouching = self.china.kick.standing
 	self.china.kick.steelsight = self.china.kick.standing
 	self.china.crosshair = {
@@ -14439,13 +15721,17 @@ function WeaponTweakData:_init_china(weapon_data)
 		suppression = 2,
 		concealment = 18
 	}
-	self.china.stats_modifiers = {damage = 10}
+	self.china.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 17610 to 17721
+-- Lines 17758-17870
 function WeaponTweakData:_init_sr2(weapon_data)
 	self.sr2 = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14470,16 +15756,22 @@ function WeaponTweakData:_init_sr2(weapon_data)
 	self.sr2.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.sr2.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.sr2.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.sr2.use_data = {selection_index = SELECTION.SECONDARY}
+	self.sr2.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.sr2.DAMAGE = 1
 	self.sr2.CLIP_AMMO_MAX = 32
 	self.sr2.NR_CLIPS_MAX = 5
 	self.sr2.AMMO_MAX = self.cobray.CLIP_AMMO_MAX * self.cobray.NR_CLIPS_MAX
 	self.sr2.AMMO_PICKUP = self:_pickup_chance(self.cobray.AMMO_MAX, PICKUP.AR_MED_CAPACITY)
 	self.sr2.FIRE_MODE = "auto"
-	self.sr2.fire_mode_data = {fire_rate = 0.08}
+	self.sr2.fire_mode_data = {
+		fire_rate = 0.08
+	}
 	self.sr2.CAN_TOGGLE_FIREMODE = true
-	self.sr2.auto = {fire_rate = 0.08}
+	self.sr2.auto = {
+		fire_rate = 0.08
+	}
 	self.sr2.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -14540,7 +15832,7 @@ function WeaponTweakData:_init_sr2(weapon_data)
 	}
 end
 
--- Lines: 17724 to 17837
+-- Lines 17872-17986
 function WeaponTweakData:_init_x_sr2(weapon_data)
 	self.x_sr2 = {
 		categories = {
@@ -14572,15 +15864,21 @@ function WeaponTweakData:_init_x_sr2(weapon_data)
 	self.x_sr2.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_sr2.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_sr2.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_sr2.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_sr2.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_sr2.DAMAGE = 1
 	self.x_sr2.CLIP_AMMO_MAX = 64
 	self.x_sr2.NR_CLIPS_MAX = 3
 	self.x_sr2.AMMO_MAX = self.x_sr2.CLIP_AMMO_MAX * self.x_sr2.NR_CLIPS_MAX
 	self.x_sr2.AMMO_PICKUP = self:_pickup_chance(self.x_sr2.AMMO_MAX, PICKUP.OTHER)
 	self.x_sr2.FIRE_MODE = "auto"
-	self.x_sr2.fire_mode_data = {fire_rate = 0.08}
-	self.x_sr2.single = {fire_rate = 0.08}
+	self.x_sr2.fire_mode_data = {
+		fire_rate = 0.08
+	}
+	self.x_sr2.single = {
+		fire_rate = 0.08
+	}
 	self.x_sr2.CAN_TOGGLE_FIREMODE = true
 	self.x_sr2.spread = {
 		standing = self.new_m4.spread.standing,
@@ -14590,12 +15888,14 @@ function WeaponTweakData:_init_x_sr2(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_sr2.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.x_sr2.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_sr2.kick.crouching = self.x_sr2.kick.standing
 	self.x_sr2.kick.steelsight = self.x_sr2.kick.standing
 	self.x_sr2.crosshair = {
@@ -14645,10 +15945,12 @@ function WeaponTweakData:_init_x_sr2(weapon_data)
 	}
 end
 
--- Lines: 17843 to 17957
+-- Lines 17991-18106
 function WeaponTweakData:_init_pl14(weapon_data)
 	self.pl14 = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14671,15 +15973,21 @@ function WeaponTweakData:_init_pl14(weapon_data)
 	self.pl14.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.pl14.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.pl14.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.pl14.use_data = {selection_index = SELECTION.SECONDARY}
+	self.pl14.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.pl14.DAMAGE = 1
 	self.pl14.CLIP_AMMO_MAX = 12
 	self.pl14.NR_CLIPS_MAX = 5
 	self.pl14.AMMO_MAX = self.pl14.CLIP_AMMO_MAX * self.pl14.NR_CLIPS_MAX
 	self.pl14.AMMO_PICKUP = self:_pickup_chance(self.pl14.AMMO_MAX, PICKUP.OTHER)
 	self.pl14.FIRE_MODE = "single"
-	self.pl14.fire_mode_data = {fire_rate = 0.25}
-	self.pl14.single = {fire_rate = 0.25}
+	self.pl14.fire_mode_data = {
+		fire_rate = 0.25
+	}
+	self.pl14.single = {
+		fire_rate = 0.25
+	}
 	self.pl14.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -14688,7 +15996,9 @@ function WeaponTweakData:_init_pl14(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.pl14.kick = {standing = self.glock_17.kick.standing}
+	self.pl14.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.pl14.kick.crouching = self.pl14.kick.standing
 	self.pl14.kick.steelsight = self.pl14.kick.standing
 	self.pl14.crosshair = {
@@ -14735,7 +16045,7 @@ function WeaponTweakData:_init_pl14(weapon_data)
 	}
 end
 
--- Lines: 17963 to 18075
+-- Lines 18111-18224
 function WeaponTweakData:_init_x_mp5(weapon_data)
 	self.x_mp5 = {
 		categories = {
@@ -14767,15 +16077,21 @@ function WeaponTweakData:_init_x_mp5(weapon_data)
 	self.x_mp5.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_mp5.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_mp5.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_mp5.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_mp5.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_mp5.DAMAGE = 1
 	self.x_mp5.CLIP_AMMO_MAX = 60
 	self.x_mp5.NR_CLIPS_MAX = 4
 	self.x_mp5.AMMO_MAX = self.x_mp5.CLIP_AMMO_MAX * self.x_mp5.NR_CLIPS_MAX
 	self.x_mp5.AMMO_PICKUP = self:_pickup_chance(self.x_mp5.AMMO_MAX, PICKUP.OTHER)
 	self.x_mp5.FIRE_MODE = "auto"
-	self.x_mp5.fire_mode_data = {fire_rate = 0.08}
-	self.x_mp5.single = {fire_rate = 0.08}
+	self.x_mp5.fire_mode_data = {
+		fire_rate = 0.08
+	}
+	self.x_mp5.single = {
+		fire_rate = 0.08
+	}
 	self.x_mp5.CAN_TOGGLE_FIREMODE = true
 	self.x_mp5.spread = {
 		standing = self.new_m4.spread.standing,
@@ -14785,12 +16101,14 @@ function WeaponTweakData:_init_x_mp5(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_mp5.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.x_mp5.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_mp5.kick.crouching = self.x_mp5.kick.standing
 	self.x_mp5.kick.steelsight = self.x_mp5.kick.standing
 	self.x_mp5.crosshair = {
@@ -14836,7 +16154,7 @@ function WeaponTweakData:_init_x_mp5(weapon_data)
 	}
 end
 
--- Lines: 18078 to 18190
+-- Lines 18226-18339
 function WeaponTweakData:_init_x_akmsu(weapon_data)
 	self.x_akmsu = {
 		categories = {
@@ -14868,15 +16186,21 @@ function WeaponTweakData:_init_x_akmsu(weapon_data)
 	self.x_akmsu.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.x_akmsu.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_akmsu.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.x_akmsu.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_akmsu.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_akmsu.DAMAGE = 1
 	self.x_akmsu.CLIP_AMMO_MAX = 60
 	self.x_akmsu.NR_CLIPS_MAX = 2
 	self.x_akmsu.AMMO_MAX = self.x_akmsu.CLIP_AMMO_MAX * self.x_akmsu.NR_CLIPS_MAX
 	self.x_akmsu.AMMO_PICKUP = self:_pickup_chance(self.x_akmsu.AMMO_MAX, PICKUP.OTHER)
 	self.x_akmsu.FIRE_MODE = "auto"
-	self.x_akmsu.fire_mode_data = {fire_rate = 0.073}
-	self.x_akmsu.single = {fire_rate = 0.073}
+	self.x_akmsu.fire_mode_data = {
+		fire_rate = 0.073
+	}
+	self.x_akmsu.single = {
+		fire_rate = 0.073
+	}
 	self.x_akmsu.CAN_TOGGLE_FIREMODE = true
 	self.x_akmsu.spread = {
 		standing = self.new_m4.spread.standing,
@@ -14886,12 +16210,14 @@ function WeaponTweakData:_init_x_akmsu(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_akmsu.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.x_akmsu.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_akmsu.kick.crouching = self.x_akmsu.kick.standing
 	self.x_akmsu.kick.steelsight = self.x_akmsu.kick.standing
 	self.x_akmsu.crosshair = {
@@ -14937,10 +16263,12 @@ function WeaponTweakData:_init_x_akmsu(weapon_data)
 	}
 end
 
--- Lines: 18196 to 18309
+-- Lines 18344-18458
 function WeaponTweakData:_init_tecci(weapon_data)
 	self.tecci = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -14966,28 +16294,38 @@ function WeaponTweakData:_init_tecci(weapon_data)
 	self.tecci.texture_bundle_folder = "opera"
 	self.tecci.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.tecci.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.tecci.use_data = {selection_index = SELECTION.PRIMARY}
+	self.tecci.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.tecci.DAMAGE = 1
 	self.tecci.CLIP_AMMO_MAX = 100
 	self.tecci.NR_CLIPS_MAX = 2
 	self.tecci.AMMO_MAX = self.tecci.CLIP_AMMO_MAX * self.tecci.NR_CLIPS_MAX
 	self.tecci.AMMO_PICKUP = self:_pickup_chance(self.tecci.AMMO_MAX, PICKUP.AR_HIGH_CAPACITY)
 	self.tecci.FIRE_MODE = "auto"
-	self.tecci.fire_mode_data = {fire_rate = 0.09}
+	self.tecci.fire_mode_data = {
+		fire_rate = 0.09
+	}
 	self.tecci.CAN_TOGGLE_FIREMODE = true
-	self.tecci.auto = {fire_rate = 0.1}
-	self.tecci.spread = {standing = 3}
+	self.tecci.auto = {
+		fire_rate = 0.1
+	}
+	self.tecci.spread = {
+		standing = 3
+	}
 	self.tecci.spread.crouching = self.tecci.spread.standing * 0.4
 	self.tecci.spread.steelsight = self.tecci.spread.standing * 0.4
 	self.tecci.spread.moving_standing = self.tecci.spread.standing
 	self.tecci.spread.moving_crouching = self.tecci.spread.standing
 	self.tecci.spread.moving_steelsight = self.tecci.spread.steelsight
-	self.tecci.kick = {standing = {
-		0.6,
-		0.8,
-		-1,
-		1
-	}}
+	self.tecci.kick = {
+		standing = {
+			0.6,
+			0.8,
+			-1,
+			1
+		}
+	}
 	self.tecci.kick.crouching = self.tecci.kick.standing
 	self.tecci.kick.steelsight = self.tecci.kick.standing
 	self.tecci.crosshair = {
@@ -15033,10 +16371,12 @@ function WeaponTweakData:_init_tecci(weapon_data)
 	}
 end
 
--- Lines: 18315 to 18430
+-- Lines 18463-18579
 function WeaponTweakData:_init_hajk(weapon_data)
 	self.hajk = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15062,16 +16402,22 @@ function WeaponTweakData:_init_hajk(weapon_data)
 	self.hajk.global_value = "born"
 	self.hajk.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.hajk.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.hajk.use_data = {selection_index = SELECTION.SECONDARY}
+	self.hajk.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.hajk.DAMAGE = 1
 	self.hajk.CLIP_AMMO_MAX = 30
 	self.hajk.NR_CLIPS_MAX = 3
 	self.hajk.AMMO_MAX = self.hajk.CLIP_AMMO_MAX * self.hajk.NR_CLIPS_MAX
 	self.hajk.AMMO_PICKUP = self:_pickup_chance(self.hajk.AMMO_MAX, PICKUP.OTHER)
 	self.hajk.FIRE_MODE = "auto"
-	self.hajk.fire_mode_data = {fire_rate = 0.08}
+	self.hajk.fire_mode_data = {
+		fire_rate = 0.08
+	}
 	self.hajk.CAN_TOGGLE_FIREMODE = true
-	self.hajk.auto = {fire_rate = 0.08}
+	self.hajk.auto = {
+		fire_rate = 0.08
+	}
 	self.hajk.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -15080,12 +16426,14 @@ function WeaponTweakData:_init_hajk(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.hajk.kick = {standing = {
-		-0.6,
-		1.2,
-		-1,
-		1
-	}}
+	self.hajk.kick = {
+		standing = {
+			-0.6,
+			1.2,
+			-1,
+			1
+		}
+	}
 	self.hajk.kick.crouching = self.hajk.kick.standing
 	self.hajk.kick.steelsight = self.hajk.kick.standing
 	self.hajk.crosshair = {
@@ -15131,10 +16479,12 @@ function WeaponTweakData:_init_hajk(weapon_data)
 	}
 end
 
--- Lines: 18436 to 18553
+-- Lines 18584-18702
 function WeaponTweakData:_init_boot(weapon_data)
 	self.boot = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15172,8 +16522,12 @@ function WeaponTweakData:_init_boot(weapon_data)
 	self.boot.AMMO_MAX = self.boot.CLIP_AMMO_MAX * self.boot.NR_CLIPS_MAX
 	self.boot.AMMO_PICKUP = self:_pickup_chance(self.boot.AMMO_MAX, PICKUP.OTHER)
 	self.boot.FIRE_MODE = "single"
-	self.boot.fire_mode_data = {fire_rate = 0.75}
-	self.boot.single = {fire_rate = 0.75}
+	self.boot.fire_mode_data = {
+		fire_rate = 0.75
+	}
+	self.boot.single = {
+		fire_rate = 0.75
+	}
 	self.boot.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -15182,12 +16536,14 @@ function WeaponTweakData:_init_boot(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.boot.kick = {standing = {
-		1.9,
-		2,
-		-0.2,
-		0.2
-	}}
+	self.boot.kick = {
+		standing = {
+			1.9,
+			2,
+			-0.2,
+			0.2
+		}
+	}
 	self.boot.kick.crouching = self.boot.kick.standing
 	self.boot.kick.steelsight = {
 		1.5,
@@ -15238,10 +16594,12 @@ function WeaponTweakData:_init_boot(weapon_data)
 	}
 end
 
--- Lines: 18560 to 18672
+-- Lines 18708-18821
 function WeaponTweakData:_init_packrat(weapon_data)
 	self.packrat = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15265,15 +16623,21 @@ function WeaponTweakData:_init_packrat(weapon_data)
 	self.packrat.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.packrat.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.packrat.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.packrat.use_data = {selection_index = SELECTION.SECONDARY}
+	self.packrat.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.packrat.DAMAGE = 1
 	self.packrat.CLIP_AMMO_MAX = 15
 	self.packrat.NR_CLIPS_MAX = 6
 	self.packrat.AMMO_MAX = self.packrat.CLIP_AMMO_MAX * self.packrat.NR_CLIPS_MAX
 	self.packrat.AMMO_PICKUP = self:_pickup_chance(self.packrat.AMMO_MAX, PICKUP.OTHER)
 	self.packrat.FIRE_MODE = "single"
-	self.packrat.fire_mode_data = {fire_rate = 0.166}
-	self.packrat.single = {fire_rate = 0.166}
+	self.packrat.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.packrat.single = {
+		fire_rate = 0.166
+	}
 	self.packrat.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -15282,7 +16646,9 @@ function WeaponTweakData:_init_packrat(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.packrat.kick = {standing = self.glock_17.kick.standing}
+	self.packrat.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.packrat.kick.crouching = self.packrat.kick.standing
 	self.packrat.kick.steelsight = self.packrat.kick.standing
 	self.packrat.crosshair = {
@@ -15329,10 +16695,12 @@ function WeaponTweakData:_init_packrat(weapon_data)
 	}
 end
 
--- Lines: 18675 to 18792
+-- Lines 18823-18941
 function WeaponTweakData:_init_schakal(weapon_data)
 	self.schakal = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15358,16 +16726,22 @@ function WeaponTweakData:_init_schakal(weapon_data)
 	self.schakal.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.schakal.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.schakal.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.schakal.use_data = {selection_index = SELECTION.SECONDARY}
+	self.schakal.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.schakal.DAMAGE = 1
 	self.schakal.CLIP_AMMO_MAX = 30
 	self.schakal.NR_CLIPS_MAX = 3
 	self.schakal.AMMO_MAX = self.schakal.CLIP_AMMO_MAX * self.schakal.NR_CLIPS_MAX
 	self.schakal.AMMO_PICKUP = self:_pickup_chance(self.schakal.AMMO_MAX, PICKUP.OTHER)
 	self.schakal.FIRE_MODE = "auto"
-	self.schakal.fire_mode_data = {fire_rate = 0.092}
+	self.schakal.fire_mode_data = {
+		fire_rate = 0.092
+	}
 	self.schakal.CAN_TOGGLE_FIREMODE = true
-	self.schakal.auto = {fire_rate = 0.092}
+	self.schakal.auto = {
+		fire_rate = 0.092
+	}
 	self.schakal.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -15376,12 +16750,14 @@ function WeaponTweakData:_init_schakal(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.schakal.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.schakal.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.schakal.kick.crouching = self.schakal.kick.standing
 	self.schakal.kick.steelsight = self.schakal.kick.standing
 	self.schakal.crosshair = {
@@ -15428,11 +16804,17 @@ function WeaponTweakData:_init_schakal(weapon_data)
 	}
 end
 
--- Lines: 18795 to 18913
+-- Lines 18943-19062
 function WeaponTweakData:_init_desertfox(weapon_data)
 	self.desertfox = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15467,9 +16849,13 @@ function WeaponTweakData:_init_desertfox(weapon_data)
 		1
 	}
 	self.desertfox.FIRE_MODE = "single"
-	self.desertfox.fire_mode_data = {fire_rate = 1}
+	self.desertfox.fire_mode_data = {
+		fire_rate = 1
+	}
 	self.desertfox.CAN_TOGGLE_FIREMODE = false
-	self.desertfox.single = {fire_rate = 20}
+	self.desertfox.single = {
+		fire_rate = 20
+	}
 	self.desertfox.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -15478,12 +16864,14 @@ function WeaponTweakData:_init_desertfox(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.desertfox.kick = {standing = {
-		3,
-		4.8,
-		-0.3,
-		0.3
-	}}
+	self.desertfox.kick = {
+		standing = {
+			3,
+			4.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.desertfox.kick.crouching = self.desertfox.kick.standing
 	self.desertfox.kick.steelsight = self.desertfox.kick.standing
 	self.desertfox.crosshair = {
@@ -15531,10 +16919,12 @@ function WeaponTweakData:_init_desertfox(weapon_data)
 		concealment = 19
 	}
 	self.desertfox.armor_piercing_chance = 1
-	self.desertfox.stats_modifiers = {damage = 4}
+	self.desertfox.stats_modifiers = {
+		damage = 4
+	}
 end
 
--- Lines: 18916 to 19029
+-- Lines 19064-19178
 function WeaponTweakData:_init_x_packrat(weapon_data)
 	self.x_packrat = {
 		categories = {
@@ -15564,15 +16954,21 @@ function WeaponTweakData:_init_x_packrat(weapon_data)
 	self.x_packrat.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_packrat.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_packrat.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_packrat.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_packrat.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_packrat.DAMAGE = 1
 	self.x_packrat.CLIP_AMMO_MAX = 30
 	self.x_packrat.NR_CLIPS_MAX = 3
 	self.x_packrat.AMMO_MAX = self.x_packrat.CLIP_AMMO_MAX * self.x_packrat.NR_CLIPS_MAX
 	self.x_packrat.AMMO_PICKUP = self:_pickup_chance(self.x_packrat.AMMO_MAX, PICKUP.OTHER)
 	self.x_packrat.FIRE_MODE = "single"
-	self.x_packrat.fire_mode_data = {fire_rate = 0.166}
-	self.x_packrat.single = {fire_rate = 0.166}
+	self.x_packrat.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_packrat.single = {
+		fire_rate = 0.166
+	}
 	self.x_packrat.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -15581,12 +16977,14 @@ function WeaponTweakData:_init_x_packrat(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_packrat.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_packrat.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_packrat.kick.crouching = self.x_packrat.kick.standing
 	self.x_packrat.kick.steelsight = self.x_packrat.kick.standing
 	self.x_packrat.crosshair = {
@@ -15637,10 +17035,12 @@ function WeaponTweakData:_init_x_packrat(weapon_data)
 	}
 end
 
--- Lines: 19035 to 19149
+-- Lines 19183-19298
 function WeaponTweakData:_init_rota(weapon_data)
 	self.rota = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		has_magazine = true,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -15676,9 +17076,13 @@ function WeaponTweakData:_init_rota(weapon_data)
 	self.rota.AMMO_MAX = self.rota.CLIP_AMMO_MAX * self.rota.NR_CLIPS_MAX
 	self.rota.AMMO_PICKUP = self:_pickup_chance(self.rota.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
 	self.rota.FIRE_MODE = "single"
-	self.rota.fire_mode_data = {fire_rate = 0.18}
+	self.rota.fire_mode_data = {
+		fire_rate = 0.18
+	}
 	self.rota.CAN_TOGGLE_FIREMODE = false
-	self.rota.single = {fire_rate = 0.18}
+	self.rota.single = {
+		fire_rate = 0.18
+	}
 	self.rota.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -15687,7 +17091,9 @@ function WeaponTweakData:_init_rota(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.rota.kick = {standing = self.r870.kick.standing}
+	self.rota.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.rota.kick.crouching = self.rota.kick.standing
 	self.rota.kick.steelsight = self.r870.kick.steelsight
 	self.rota.crosshair = {
@@ -15733,12 +17139,16 @@ function WeaponTweakData:_init_rota(weapon_data)
 	}
 end
 
--- Lines: 19154 to 19274
+-- Lines 19302-19423
 function WeaponTweakData:_init_arbiter(weapon_data)
 	self.arbiter = {
-		categories = {"grenade_launcher"},
+		categories = {
+			"grenade_launcher"
+		},
 		projectile_type = "launcher_frag_arbiter",
-		projectile_types = {launcher_incendiary = "launcher_incendiary_arbiter"},
+		projectile_types = {
+			launcher_incendiary = "launcher_incendiary_arbiter"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15776,8 +17186,12 @@ function WeaponTweakData:_init_arbiter(weapon_data)
 		0.65
 	}
 	self.arbiter.FIRE_MODE = "single"
-	self.arbiter.fire_mode_data = {fire_rate = 0.75}
-	self.arbiter.single = {fire_rate = 1}
+	self.arbiter.fire_mode_data = {
+		fire_rate = 0.75
+	}
+	self.arbiter.single = {
+		fire_rate = 1
+	}
 	self.arbiter.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -15786,12 +17200,14 @@ function WeaponTweakData:_init_arbiter(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.arbiter.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.arbiter.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.arbiter.kick.crouching = self.arbiter.kick.standing
 	self.arbiter.kick.steelsight = self.arbiter.kick.standing
 	self.arbiter.crosshair = {
@@ -15837,14 +17253,18 @@ function WeaponTweakData:_init_arbiter(weapon_data)
 		suppression = 2,
 		concealment = 18
 	}
-	self.arbiter.stats_modifiers = {damage = 10}
+	self.arbiter.stats_modifiers = {
+		damage = 10
+	}
 	self.arbiter.unlock_func = "has_unlocked_arbiter"
 end
 
--- Lines: 19279 to 19510
+-- Lines 19427-19659
 function WeaponTweakData:_init_contraband(weapon_data)
 	self.contraband = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15869,16 +17289,22 @@ function WeaponTweakData:_init_contraband(weapon_data)
 	self.contraband.texture_bundle_folder = "chico"
 	self.contraband.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.contraband.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.contraband.use_data = {selection_index = SELECTION.PRIMARY}
+	self.contraband.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.contraband.DAMAGE = 1
 	self.contraband.CLIP_AMMO_MAX = 20
 	self.contraband.NR_CLIPS_MAX = 2
 	self.contraband.AMMO_MAX = self.contraband.CLIP_AMMO_MAX * self.contraband.NR_CLIPS_MAX
 	self.contraband.AMMO_PICKUP = self:_pickup_chance(self.contraband.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.contraband.FIRE_MODE = "single"
-	self.contraband.fire_mode_data = {fire_rate = 0.098}
+	self.contraband.fire_mode_data = {
+		fire_rate = 0.098
+	}
 	self.contraband.CAN_TOGGLE_FIREMODE = true
-	self.contraband.auto = {fire_rate = 0.098}
+	self.contraband.auto = {
+		fire_rate = 0.098
+	}
 	self.contraband.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -15887,7 +17313,9 @@ function WeaponTweakData:_init_contraband(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.contraband.kick = {standing = self.new_m4.kick.standing}
+	self.contraband.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.contraband.kick.crouching = self.contraband.kick.standing
 	self.contraband.kick.steelsight = self.contraband.kick.standing
 	self.contraband.crosshair = {
@@ -15932,8 +17360,14 @@ function WeaponTweakData:_init_contraband(weapon_data)
 		concealment = 8
 	}
 	self.contraband_m203 = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -15970,8 +17404,12 @@ function WeaponTweakData:_init_contraband(weapon_data)
 	self.contraband_m203.AMMO_MAX = self.contraband_m203.CLIP_AMMO_MAX * self.contraband_m203.NR_CLIPS_MAX
 	self.contraband_m203.AMMO_PICKUP = self:_pickup_chance(20, PICKUP.OTHER)
 	self.contraband_m203.FIRE_MODE = "single"
-	self.contraband_m203.fire_mode_data = {fire_rate = 0.75}
-	self.contraband_m203.single = {fire_rate = 0.75}
+	self.contraband_m203.fire_mode_data = {
+		fire_rate = 0.75
+	}
+	self.contraband_m203.single = {
+		fire_rate = 0.75
+	}
 	self.contraband_m203.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -15980,12 +17418,14 @@ function WeaponTweakData:_init_contraband(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.contraband_m203.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.contraband_m203.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.contraband_m203.kick.crouching = self.contraband_m203.kick.standing
 	self.contraband_m203.kick.steelsight = self.contraband_m203.kick.standing
 	self.contraband_m203.crosshair = {
@@ -16031,14 +17471,22 @@ function WeaponTweakData:_init_contraband(weapon_data)
 		suppression = 2,
 		concealment = 18
 	}
-	self.contraband_m203.stats_modifiers = {damage = 10}
+	self.contraband_m203.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 19515 to 19637
+-- Lines 19663-19786
 function WeaponTweakData:_init_ray(weapon_data)
 	self.ray = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		has_description = true,
 		projectile_type = "rocket_ray_frag",
 		damage_melee = weapon_data.damage_melee_default,
@@ -16075,8 +17523,12 @@ function WeaponTweakData:_init_ray(weapon_data)
 	self.ray.AMMO_MAX = self.ray.CLIP_AMMO_MAX * self.ray.NR_CLIPS_MAX
 	self.ray.AMMO_PICKUP = self:_pickup_chance(0, PICKUP.OTHER)
 	self.ray.FIRE_MODE = "single"
-	self.ray.fire_mode_data = {fire_rate = 1}
-	self.ray.single = {fire_rate = 0.1}
+	self.ray.fire_mode_data = {
+		fire_rate = 1
+	}
+	self.ray.single = {
+		fire_rate = 0.1
+	}
 	self.ray.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -16085,12 +17537,14 @@ function WeaponTweakData:_init_ray(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.ray.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.ray.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.ray.kick.crouching = self.ray.kick.standing
 	self.ray.kick.steelsight = self.ray.kick.standing
 	self.ray.crosshair = {
@@ -16114,7 +17568,9 @@ function WeaponTweakData:_init_ray(weapon_data)
 		fire_multiplier = 2,
 		fire_steelsight_multiplier = 2
 	}
-	self.ray.headbob = {multiplier = 0.3}
+	self.ray.headbob = {
+		multiplier = 0.3
+	}
 	self.ray.autohit = weapon_data.autohit_shotgun_default
 	self.ray.aim_assist = weapon_data.aim_assist_shotgun_default
 	self.ray.animations = {
@@ -16138,14 +17594,22 @@ function WeaponTweakData:_init_ray(weapon_data)
 		suppression = 2,
 		concealment = 5
 	}
-	self.ray.stats_modifiers = {damage = 100}
+	self.ray.stats_modifiers = {
+		damage = 100
+	}
 end
 
--- Lines: 19642 to 19758
+-- Lines 19790-19907
 function WeaponTweakData:_init_tti(weapon_data)
 	self.tti = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16167,16 +17631,22 @@ function WeaponTweakData:_init_tti(weapon_data)
 	self.tti.texture_bundle_folder = "spa"
 	self.tti.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.tti.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.tti.use_data = {selection_index = SELECTION.PRIMARY}
+	self.tti.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.tti.DAMAGE = 1
 	self.tti.CLIP_AMMO_MAX = 20
 	self.tti.NR_CLIPS_MAX = 2
 	self.tti.AMMO_MAX = self.tti.CLIP_AMMO_MAX * self.tti.NR_CLIPS_MAX
 	self.tti.AMMO_PICKUP = self:_pickup_chance(self.tti.AMMO_MAX, PICKUP.SNIPER_LOW_DAMAGE)
 	self.tti.FIRE_MODE = "single"
-	self.tti.fire_mode_data = {fire_rate = 0.4}
+	self.tti.fire_mode_data = {
+		fire_rate = 0.4
+	}
 	self.tti.CAN_TOGGLE_FIREMODE = false
-	self.tti.single = {fire_rate = 0.4}
+	self.tti.single = {
+		fire_rate = 0.4
+	}
 	self.tti.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -16185,12 +17655,14 @@ function WeaponTweakData:_init_tti(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.tti.kick = {standing = {
-		2,
-		3.8,
-		-0.3,
-		0.3
-	}}
+	self.tti.kick = {
+		standing = {
+			2,
+			3.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.tti.kick.crouching = self.tti.kick.standing
 	self.tti.kick.steelsight = self.tti.kick.standing
 	self.tti.crosshair = {
@@ -16238,14 +17710,22 @@ function WeaponTweakData:_init_tti(weapon_data)
 		concealment = 16
 	}
 	self.tti.armor_piercing_chance = 1
-	self.tti.stats_modifiers = {damage = 1}
+	self.tti.stats_modifiers = {
+		damage = 1
+	}
 end
 
--- Lines: 19763 to 19879
+-- Lines 19911-20028
 function WeaponTweakData:_init_grv(weapon_data)
 	self.siltstone = {
-		categories = {"snp"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"snp"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16267,16 +17747,22 @@ function WeaponTweakData:_init_grv(weapon_data)
 	self.siltstone.texture_bundle_folder = "grv"
 	self.siltstone.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.siltstone.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.siltstone.use_data = {selection_index = SELECTION.PRIMARY}
+	self.siltstone.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.siltstone.DAMAGE = 1
 	self.siltstone.CLIP_AMMO_MAX = 10
 	self.siltstone.NR_CLIPS_MAX = 4
 	self.siltstone.AMMO_MAX = self.siltstone.CLIP_AMMO_MAX * self.siltstone.NR_CLIPS_MAX
 	self.siltstone.AMMO_PICKUP = self:_pickup_chance(self.siltstone.AMMO_MAX, PICKUP.SNIPER_LOW_DAMAGE)
 	self.siltstone.FIRE_MODE = "single"
-	self.siltstone.fire_mode_data = {fire_rate = 0.4}
+	self.siltstone.fire_mode_data = {
+		fire_rate = 0.4
+	}
 	self.siltstone.CAN_TOGGLE_FIREMODE = false
-	self.siltstone.single = {fire_rate = 0.4}
+	self.siltstone.single = {
+		fire_rate = 0.4
+	}
 	self.siltstone.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -16285,12 +17771,14 @@ function WeaponTweakData:_init_grv(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.siltstone.kick = {standing = {
-		2,
-		3.8,
-		-0.3,
-		0.3
-	}}
+	self.siltstone.kick = {
+		standing = {
+			2,
+			3.8,
+			-0.3,
+			0.3
+		}
+	}
 	self.siltstone.kick.crouching = self.siltstone.kick.standing
 	self.siltstone.kick.steelsight = self.siltstone.kick.standing
 	self.siltstone.crosshair = {
@@ -16338,13 +17826,17 @@ function WeaponTweakData:_init_grv(weapon_data)
 		concealment = 16
 	}
 	self.siltstone.armor_piercing_chance = 1
-	self.siltstone.stats_modifiers = {damage = 1}
+	self.siltstone.stats_modifiers = {
+		damage = 1
+	}
 end
 
--- Lines: 19882 to 19994
+-- Lines 20030-20143
 function WeaponTweakData:_init_flint(weapon_data)
 	self.flint = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16369,16 +17861,22 @@ function WeaponTweakData:_init_flint(weapon_data)
 	self.flint.texture_bundle_folder = "grv"
 	self.flint.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.flint.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.flint.use_data = {selection_index = SELECTION.PRIMARY}
+	self.flint.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.flint.DAMAGE = 1
 	self.flint.CLIP_AMMO_MAX = 35
 	self.flint.NR_CLIPS_MAX = 3
 	self.flint.AMMO_MAX = self.flint.CLIP_AMMO_MAX * self.flint.NR_CLIPS_MAX
 	self.flint.AMMO_PICKUP = self:_pickup_chance(self.flint.AMMO_MAX, PICKUP.OTHER)
 	self.flint.FIRE_MODE = "auto"
-	self.flint.fire_mode_data = {fire_rate = 0.092}
+	self.flint.fire_mode_data = {
+		fire_rate = 0.092
+	}
 	self.flint.CAN_TOGGLE_FIREMODE = true
-	self.flint.auto = {fire_rate = 0.092}
+	self.flint.auto = {
+		fire_rate = 0.092
+	}
 	self.flint.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -16436,10 +17934,12 @@ function WeaponTweakData:_init_flint(weapon_data)
 	}
 end
 
--- Lines: 19997 to 20110
+-- Lines 20145-20259
 function WeaponTweakData:_init_coal(weapon_data)
 	self.coal = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16465,16 +17965,22 @@ function WeaponTweakData:_init_coal(weapon_data)
 	self.coal.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.coal.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.coal.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.coal.use_data = {selection_index = SELECTION.SECONDARY}
+	self.coal.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.coal.DAMAGE = 1
 	self.coal.CLIP_AMMO_MAX = 64
 	self.coal.NR_CLIPS_MAX = 2
 	self.coal.AMMO_MAX = self.coal.CLIP_AMMO_MAX * self.coal.NR_CLIPS_MAX
 	self.coal.AMMO_PICKUP = self:_pickup_chance(self.coal.AMMO_MAX, PICKUP.OTHER)
 	self.coal.FIRE_MODE = "auto"
-	self.coal.fire_mode_data = {fire_rate = 0.092}
+	self.coal.fire_mode_data = {
+		fire_rate = 0.092
+	}
 	self.coal.CAN_TOGGLE_FIREMODE = true
-	self.coal.auto = {fire_rate = 0.092}
+	self.coal.auto = {
+		fire_rate = 0.092
+	}
 	self.coal.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -16483,12 +17989,14 @@ function WeaponTweakData:_init_coal(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.coal.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.coal.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.coal.kick.crouching = self.coal.kick.standing
 	self.coal.kick.steelsight = self.coal.kick.standing
 	self.coal.crosshair = {
@@ -16534,10 +18042,12 @@ function WeaponTweakData:_init_coal(weapon_data)
 	}
 end
 
--- Lines: 20115 to 20232
+-- Lines 20263-20381
 function WeaponTweakData:_init_lemming(weapon_data)
 	self.lemming = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16561,15 +18071,21 @@ function WeaponTweakData:_init_lemming(weapon_data)
 	self.lemming.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.lemming.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.lemming.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.lemming.use_data = {selection_index = SELECTION.SECONDARY}
+	self.lemming.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.lemming.DAMAGE = 1
 	self.lemming.CLIP_AMMO_MAX = 15
 	self.lemming.NR_CLIPS_MAX = 3
 	self.lemming.AMMO_MAX = self.lemming.CLIP_AMMO_MAX * self.lemming.NR_CLIPS_MAX
 	self.lemming.AMMO_PICKUP = self:_pickup_chance(self.lemming.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.lemming.FIRE_MODE = "single"
-	self.lemming.fire_mode_data = {fire_rate = 0.1}
-	self.lemming.single = {fire_rate = 0.1}
+	self.lemming.fire_mode_data = {
+		fire_rate = 0.1
+	}
+	self.lemming.single = {
+		fire_rate = 0.1
+	}
 	self.lemming.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -16578,7 +18094,9 @@ function WeaponTweakData:_init_lemming(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.lemming.kick = {standing = self.glock_17.kick.standing}
+	self.lemming.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.lemming.kick.crouching = self.lemming.kick.standing
 	self.lemming.kick.steelsight = self.lemming.kick.standing
 	self.lemming.crosshair = {
@@ -16629,14 +18147,18 @@ function WeaponTweakData:_init_lemming(weapon_data)
 	self.lemming.armor_piercing_chance = 1
 end
 
--- Lines: 20237 to 20345
+-- Lines 20385-20494
 function WeaponTweakData:_init_chinchilla(weapon_data)
 	self.chinchilla = {
 		categories = {
 			"pistol",
 			"revolver"
 		},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16652,15 +18174,21 @@ function WeaponTweakData:_init_chinchilla(weapon_data)
 		equip = 0.45
 	}
 	self.chinchilla.FIRE_MODE = "single"
-	self.chinchilla.fire_mode_data = {fire_rate = 0.166}
-	self.chinchilla.single = {fire_rate = 0.166}
+	self.chinchilla.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.chinchilla.single = {
+		fire_rate = 0.166
+	}
 	self.chinchilla.name_id = "bm_w_chinchilla"
 	self.chinchilla.desc_id = "bm_w_chinchilla_desc"
 	self.chinchilla.description_id = "des_chinchilla"
 	self.chinchilla.texture_bundle_folder = "max"
 	self.chinchilla.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.chinchilla.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.chinchilla.use_data = {selection_index = SELECTION.SECONDARY}
+	self.chinchilla.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.chinchilla.DAMAGE = 2
 	self.chinchilla.CLIP_AMMO_MAX = 6
 	self.chinchilla.NR_CLIPS_MAX = 9
@@ -16674,7 +18202,9 @@ function WeaponTweakData:_init_chinchilla(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.chinchilla.kick = {standing = self.glock_17.kick.standing}
+	self.chinchilla.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.chinchilla.kick.crouching = self.chinchilla.kick.standing
 	self.chinchilla.kick.steelsight = self.chinchilla.kick.standing
 	self.chinchilla.crosshair = {
@@ -16720,7 +18250,7 @@ function WeaponTweakData:_init_chinchilla(weapon_data)
 	}
 end
 
--- Lines: 20348 to 20456
+-- Lines 20496-20605
 function WeaponTweakData:_init_x_chinchilla(weapon_data)
 	self.x_chinchilla = {
 		categories = {
@@ -16728,7 +18258,11 @@ function WeaponTweakData:_init_x_chinchilla(weapon_data)
 			"pistol",
 			"revolver"
 		},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16749,15 +18283,21 @@ function WeaponTweakData:_init_x_chinchilla(weapon_data)
 	self.x_chinchilla.texture_bundle_folder = "max"
 	self.x_chinchilla.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_chinchilla.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.x_chinchilla.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_chinchilla.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_chinchilla.DAMAGE = 1
 	self.x_chinchilla.CLIP_AMMO_MAX = 12
 	self.x_chinchilla.NR_CLIPS_MAX = 6
 	self.x_chinchilla.AMMO_MAX = self.x_chinchilla.CLIP_AMMO_MAX * self.x_chinchilla.NR_CLIPS_MAX
 	self.x_chinchilla.AMMO_PICKUP = self:_pickup_chance(self.x_chinchilla.AMMO_MAX, PICKUP.OTHER)
 	self.x_chinchilla.FIRE_MODE = "single"
-	self.x_chinchilla.fire_mode_data = {fire_rate = 0.166}
-	self.x_chinchilla.single = {fire_rate = 0.166}
+	self.x_chinchilla.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_chinchilla.single = {
+		fire_rate = 0.166
+	}
 	self.x_chinchilla.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -16766,12 +18306,14 @@ function WeaponTweakData:_init_x_chinchilla(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_chinchilla.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_chinchilla.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_chinchilla.kick.crouching = self.x_chinchilla.kick.standing
 	self.x_chinchilla.kick.steelsight = self.x_chinchilla.kick.standing
 	self.x_chinchilla.crosshair = {
@@ -16821,10 +18363,12 @@ function WeaponTweakData:_init_x_chinchilla(weapon_data)
 	}
 end
 
--- Lines: 20461 to 20580
+-- Lines 20609-20729
 function WeaponTweakData:_init_shepheard(weapon_data)
 	self.shepheard = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -16843,8 +18387,12 @@ function WeaponTweakData:_init_shepheard(weapon_data)
 		equip = 0.5
 	}
 	self.shepheard.FIRE_MODE = "single"
-	self.shepheard.fire_mode_data = {fire_rate = 0.08}
-	self.shepheard.single = {fire_rate = 0.08}
+	self.shepheard.fire_mode_data = {
+		fire_rate = 0.08
+	}
+	self.shepheard.single = {
+		fire_rate = 0.08
+	}
 	self.shepheard.name_id = "bm_w_shepheard"
 	self.shepheard.desc_id = "bm_w_shepheard_desc"
 	self.shepheard.description_id = "des_shepheard"
@@ -16852,16 +18400,22 @@ function WeaponTweakData:_init_shepheard(weapon_data)
 	self.shepheard.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.shepheard.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.shepheard.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.shepheard.use_data = {selection_index = SELECTION.SECONDARY}
+	self.shepheard.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.shepheard.DAMAGE = 1
 	self.shepheard.CLIP_AMMO_MAX = 20
 	self.shepheard.NR_CLIPS_MAX = 10
 	self.shepheard.AMMO_MAX = self.shepheard.CLIP_AMMO_MAX * self.shepheard.NR_CLIPS_MAX
 	self.shepheard.AMMO_PICKUP = self:_pickup_chance(self.shepheard.AMMO_MAX, PICKUP.OTHER)
 	self.shepheard.FIRE_MODE = "auto"
-	self.shepheard.fire_mode_data = {fire_rate = 0.08}
+	self.shepheard.fire_mode_data = {
+		fire_rate = 0.08
+	}
 	self.shepheard.CAN_TOGGLE_FIREMODE = true
-	self.shepheard.auto = {fire_rate = 0.08}
+	self.shepheard.auto = {
+		fire_rate = 0.08
+	}
 	self.shepheard.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -16870,12 +18424,14 @@ function WeaponTweakData:_init_shepheard(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.shepheard.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.shepheard.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.shepheard.kick.crouching = self.shepheard.kick.standing
 	self.shepheard.kick.steelsight = self.shepheard.kick.standing
 	self.shepheard.crosshair = {
@@ -16921,7 +18477,7 @@ function WeaponTweakData:_init_shepheard(weapon_data)
 	}
 end
 
--- Lines: 20583 to 20695
+-- Lines 20731-20844
 function WeaponTweakData:_init_x_shepheard(weapon_data)
 	self.x_shepheard = {
 		categories = {
@@ -16953,15 +18509,21 @@ function WeaponTweakData:_init_x_shepheard(weapon_data)
 	self.x_shepheard.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_shepheard.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_shepheard.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_shepheard.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_shepheard.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_shepheard.DAMAGE = 1
 	self.x_shepheard.CLIP_AMMO_MAX = 40
 	self.x_shepheard.NR_CLIPS_MAX = 6
 	self.x_shepheard.AMMO_MAX = self.x_shepheard.CLIP_AMMO_MAX * self.x_shepheard.NR_CLIPS_MAX
 	self.x_shepheard.AMMO_PICKUP = self:_pickup_chance(self.x_shepheard.AMMO_MAX, PICKUP.OTHER)
 	self.x_shepheard.FIRE_MODE = "auto"
-	self.x_shepheard.fire_mode_data = {fire_rate = 0.08}
-	self.x_shepheard.single = {fire_rate = 0.08}
+	self.x_shepheard.fire_mode_data = {
+		fire_rate = 0.08
+	}
+	self.x_shepheard.single = {
+		fire_rate = 0.08
+	}
 	self.x_shepheard.CAN_TOGGLE_FIREMODE = true
 	self.x_shepheard.spread = {
 		standing = self.new_m4.spread.standing,
@@ -16971,12 +18533,14 @@ function WeaponTweakData:_init_x_shepheard(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_shepheard.kick = {standing = {
-		1,
-		0.8,
-		-0.5,
-		0.5
-	}}
+	self.x_shepheard.kick = {
+		standing = {
+			1,
+			0.8,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_shepheard.kick.crouching = self.x_shepheard.kick.standing
 	self.x_shepheard.kick.steelsight = self.x_shepheard.kick.standing
 	self.x_shepheard.crosshair = {
@@ -17022,10 +18586,12 @@ function WeaponTweakData:_init_x_shepheard(weapon_data)
 	}
 end
 
--- Lines: 20701 to 20812
+-- Lines 20849-20961
 function WeaponTweakData:_init_breech(weapon_data)
 	self.breech = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17048,15 +18614,21 @@ function WeaponTweakData:_init_breech(weapon_data)
 	self.breech.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.breech.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.breech.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.breech.use_data = {selection_index = SELECTION.SECONDARY}
+	self.breech.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.breech.DAMAGE = 1
 	self.breech.CLIP_AMMO_MAX = 8
 	self.breech.NR_CLIPS_MAX = 7
 	self.breech.AMMO_MAX = self.breech.CLIP_AMMO_MAX * self.breech.NR_CLIPS_MAX
 	self.breech.AMMO_PICKUP = self:_pickup_chance(self.breech.AMMO_MAX, PICKUP.OTHER)
 	self.breech.FIRE_MODE = "single"
-	self.breech.fire_mode_data = {fire_rate = 0.166}
-	self.breech.single = {fire_rate = 0.166}
+	self.breech.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.breech.single = {
+		fire_rate = 0.166
+	}
 	self.breech.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -17065,7 +18637,9 @@ function WeaponTweakData:_init_breech(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.breech.kick = {standing = self.glock_17.kick.standing}
+	self.breech.kick = {
+		standing = self.glock_17.kick.standing
+	}
 	self.breech.kick.crouching = self.breech.kick.standing
 	self.breech.kick.steelsight = self.breech.kick.standing
 	self.breech.crosshair = {
@@ -17113,10 +18687,12 @@ function WeaponTweakData:_init_breech(weapon_data)
 	self.breech.unlock_func = "has_unlocked_breech"
 end
 
--- Lines: 20815 to 20932
+-- Lines 20963-21081
 function WeaponTweakData:_init_ching(weapon_data)
 	self.ching = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17139,20 +18715,28 @@ function WeaponTweakData:_init_ching(weapon_data)
 	self.ching.texture_bundle_folder = "old"
 	self.ching.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
 	self.ching.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.ching.effects = {magazine_empty = {
-		parent = "a_shell",
-		effect = "effects/payday2/particles/weapons/magazine/ching_clip"
-	}}
-	self.ching.use_data = {selection_index = SELECTION.PRIMARY}
+	self.ching.effects = {
+		magazine_empty = {
+			parent = "a_shell",
+			effect = "effects/payday2/particles/weapons/magazine/ching_clip"
+		}
+	}
+	self.ching.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.ching.DAMAGE = 2
 	self.ching.CLIP_AMMO_MAX = 8
 	self.ching.NR_CLIPS_MAX = 9
 	self.ching.AMMO_MAX = self.ching.CLIP_AMMO_MAX * self.ching.NR_CLIPS_MAX
 	self.ching.AMMO_PICKUP = self:_pickup_chance(self.ching.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.ching.FIRE_MODE = "single"
-	self.ching.fire_mode_data = {fire_rate = 0.1}
+	self.ching.fire_mode_data = {
+		fire_rate = 0.1
+	}
 	self.ching.CAN_TOGGLE_FIREMODE = false
-	self.ching.single = {fire_rate = 0.1}
+	self.ching.single = {
+		fire_rate = 0.1
+	}
 	self.ching.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -17161,7 +18745,9 @@ function WeaponTweakData:_init_ching(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.ching.kick = {standing = self.new_m4.kick.standing}
+	self.ching.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.ching.kick.crouching = self.ching.kick.standing
 	self.ching.kick.steelsight = self.ching.kick.standing
 	self.ching.crosshair = {
@@ -17209,10 +18795,12 @@ function WeaponTweakData:_init_ching(weapon_data)
 	self.ching.unlock_func = "has_unlocked_ching"
 end
 
--- Lines: 20935 to 21049
+-- Lines 21083-21198
 function WeaponTweakData:_init_erma(weapon_data)
 	self.erma = {
-		categories = {"smg"},
+		categories = {
+			"smg"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17238,15 +18826,21 @@ function WeaponTweakData:_init_erma(weapon_data)
 	self.erma.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.erma.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.erma.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.erma.use_data = {selection_index = SELECTION.SECONDARY}
+	self.erma.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.erma.DAMAGE = 1
 	self.erma.CLIP_AMMO_MAX = 40
 	self.erma.NR_CLIPS_MAX = 2
 	self.erma.AMMO_MAX = self.erma.CLIP_AMMO_MAX * self.erma.NR_CLIPS_MAX
 	self.erma.AMMO_PICKUP = self:_pickup_chance(self.erma.AMMO_MAX, PICKUP.OTHER)
 	self.erma.FIRE_MODE = "auto"
-	self.erma.fire_mode_data = {fire_rate = 0.1}
-	self.erma.auto = {fire_rate = 0.1}
+	self.erma.fire_mode_data = {
+		fire_rate = 0.1
+	}
+	self.erma.auto = {
+		fire_rate = 0.1
+	}
 	self.erma.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -17255,7 +18849,9 @@ function WeaponTweakData:_init_erma(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.erma.kick = {standing = self.mp9.kick.standing}
+	self.erma.kick = {
+		standing = self.mp9.kick.standing
+	}
 	self.erma.kick.crouching = self.erma.kick.standing
 	self.erma.kick.steelsight = self.erma.kick.standing
 	self.erma.crosshair = {
@@ -17303,12 +18899,18 @@ function WeaponTweakData:_init_erma(weapon_data)
 	self.erma.unlock_func = "has_unlocked_erma"
 end
 
--- Lines: 21054 to 21170
+-- Lines 21202-21319
 function WeaponTweakData:_init_ecp(weapon_data)
 	self.ecp = {
-		categories = {"crossbow"},
+		categories = {
+			"crossbow"
+		},
 		projectile_type = "ecp_arrow",
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17330,16 +18932,22 @@ function WeaponTweakData:_init_ecp(weapon_data)
 	self.ecp.description_id = "des_ecp"
 	self.ecp.muzzleflash = "effects/payday2/particles/weapons/air_pressure"
 	self.ecp.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.ecp.use_data = {selection_index = SELECTION.PRIMARY}
+	self.ecp.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.ecp.DAMAGE = 1
 	self.ecp.CLIP_AMMO_MAX = 6
 	self.ecp.NR_CLIPS_MAX = 5
 	self.ecp.AMMO_MAX = self.ecp.CLIP_AMMO_MAX * self.ecp.NR_CLIPS_MAX
 	self.ecp.AMMO_PICKUP = self:_pickup_chance(0, 1)
 	self.ecp.FIRE_MODE = "single"
-	self.ecp.fire_mode_data = {fire_rate = 0.5}
+	self.ecp.fire_mode_data = {
+		fire_rate = 0.5
+	}
 	self.ecp.CAN_TOGGLE_FIREMODE = false
-	self.ecp.single = {fire_rate = 0.5}
+	self.ecp.single = {
+		fire_rate = 0.5
+	}
 	self.ecp.spread = {
 		standing = self.new_m4.spread.standing * 0.7,
 		crouching = self.new_m4.spread.standing * 0.7,
@@ -17348,12 +18956,14 @@ function WeaponTweakData:_init_ecp(weapon_data)
 		moving_crouching = self.new_m4.spread.standing * 0.7,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.ecp.kick = {standing = {
-		-0.2,
-		0.4,
-		-1,
-		1
-	}}
+	self.ecp.kick = {
+		standing = {
+			-0.2,
+			0.4,
+			-1,
+			1
+		}
+	}
 	self.ecp.kick.crouching = self.ecp.kick.standing
 	self.ecp.kick.steelsight = self.ecp.kick.standing
 	self.ecp.crosshair = {
@@ -17400,13 +19010,17 @@ function WeaponTweakData:_init_ecp(weapon_data)
 		suppression = 14,
 		concealment = 5
 	}
-	self.ecp.stats_modifiers = {damage = 10}
+	self.ecp.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 21176 to 21290
+-- Lines 21323-21439
 function WeaponTweakData:_init_shrew(weapon_data)
 	self.shrew = {
-		categories = {"pistol"},
+		categories = {
+			"pistol"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17417,8 +19031,12 @@ function WeaponTweakData:_init_shrew(weapon_data)
 	self.shrew.sounds.leave_steelsight = "pistol_steel_sight_exit"
 	self.shrew.sounds.magazine_empty = "wp_pistol_slide_lock"
 	self.shrew.FIRE_MODE = "single"
-	self.shrew.fire_mode_data = {fire_rate = 0.125}
-	self.shrew.single = {fire_rate = 0.125}
+	self.shrew.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.shrew.single = {
+		fire_rate = 0.125
+	}
 	self.shrew.timers = {
 		reload_not_empty = 1.47,
 		reload_empty = 2.12,
@@ -17431,7 +19049,9 @@ function WeaponTweakData:_init_shrew(weapon_data)
 	self.shrew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.shrew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.shrew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.shrew.use_data = {selection_index = SELECTION.SECONDARY}
+	self.shrew.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
 	self.shrew.DAMAGE = 1
 	self.shrew.CLIP_AMMO_MAX = 17
 	self.shrew.NR_CLIPS_MAX = 9
@@ -17445,12 +19065,14 @@ function WeaponTweakData:_init_shrew(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.shrew.kick = {standing = {
-		1.2,
-		1.8,
-		-0.5,
-		0.5
-	}}
+	self.shrew.kick = {
+		standing = {
+			1.2,
+			1.8,
+			-0.5,
+			0.5
+		}
+	}
 	self.shrew.kick.crouching = self.shrew.kick.standing
 	self.shrew.kick.steelsight = self.shrew.kick.standing
 	self.shrew.crosshair = {
@@ -17499,7 +19121,7 @@ function WeaponTweakData:_init_shrew(weapon_data)
 	}
 end
 
--- Lines: 21293 to 21404
+-- Lines 21441-21553
 function WeaponTweakData:_init_x_shrew(weapon_data)
 	self.x_shrew = {
 		categories = {
@@ -17527,15 +19149,21 @@ function WeaponTweakData:_init_x_shrew(weapon_data)
 	self.x_shrew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_shrew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_shrew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_shrew.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_shrew.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_shrew.DAMAGE = 1
 	self.x_shrew.CLIP_AMMO_MAX = 34
 	self.x_shrew.NR_CLIPS_MAX = 5
 	self.x_shrew.AMMO_MAX = self.x_shrew.CLIP_AMMO_MAX * self.x_shrew.NR_CLIPS_MAX
 	self.x_shrew.AMMO_PICKUP = self:_pickup_chance(self.x_shrew.AMMO_MAX, 1)
 	self.x_shrew.FIRE_MODE = "single"
-	self.x_shrew.fire_mode_data = {fire_rate = 0.09}
-	self.x_shrew.single = {fire_rate = 0.09}
+	self.x_shrew.fire_mode_data = {
+		fire_rate = 0.09
+	}
+	self.x_shrew.single = {
+		fire_rate = 0.09
+	}
 	self.x_shrew.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -17544,12 +19172,14 @@ function WeaponTweakData:_init_x_shrew(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_shrew.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_shrew.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_shrew.kick.crouching = self.x_shrew.kick.standing
 	self.x_shrew.kick.steelsight = self.x_shrew.kick.standing
 	self.x_shrew.crosshair = {
@@ -17601,10 +19231,12 @@ function WeaponTweakData:_init_x_shrew(weapon_data)
 	}
 end
 
--- Lines: 21409 to 21526
+-- Lines 21557-21675
 function WeaponTweakData:_init_basset(weapon_data)
 	self.basset = {
-		categories = {"shotgun"},
+		categories = {
+			"shotgun"
+		},
 		has_magazine = true,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -17640,9 +19272,13 @@ function WeaponTweakData:_init_basset(weapon_data)
 	self.basset.AMMO_MAX = self.basset.CLIP_AMMO_MAX * self.basset.NR_CLIPS_MAX
 	self.basset.AMMO_PICKUP = self:_pickup_chance(self.basset.AMMO_MAX, 4)
 	self.basset.FIRE_MODE = "auto"
-	self.basset.fire_mode_data = {fire_rate = 0.2}
+	self.basset.fire_mode_data = {
+		fire_rate = 0.2
+	}
 	self.basset.CAN_TOGGLE_FIREMODE = true
-	self.basset.auto = {fire_rate = 0.2}
+	self.basset.auto = {
+		fire_rate = 0.2
+	}
 	self.basset.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -17651,7 +19287,9 @@ function WeaponTweakData:_init_basset(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.basset.kick = {standing = self.r870.kick.standing}
+	self.basset.kick = {
+		standing = self.r870.kick.standing
+	}
 	self.basset.kick.crouching = self.basset.kick.standing
 	self.basset.kick.steelsight = self.r870.kick.steelsight
 	self.basset.crosshair = {
@@ -17698,7 +19336,7 @@ function WeaponTweakData:_init_basset(weapon_data)
 	}
 end
 
--- Lines: 21529 to 21648
+-- Lines 21677-21797
 function WeaponTweakData:_init_x_basset(weapon_data)
 	self.x_basset = {
 		categories = {
@@ -17730,7 +19368,9 @@ function WeaponTweakData:_init_x_basset(weapon_data)
 	self.x_basset.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.x_basset.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_basset.shell_ejection = "effects/payday2/particles/weapons/shells/shell_slug"
-	self.x_basset.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_basset.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_basset.DAMAGE = 4
 	self.x_basset.damage_near = 2000
 	self.x_basset.damage_far = 3000
@@ -17741,8 +19381,12 @@ function WeaponTweakData:_init_x_basset(weapon_data)
 	self.x_basset.AMMO_MAX = self.x_basset.CLIP_AMMO_MAX * self.x_basset.NR_CLIPS_MAX
 	self.x_basset.AMMO_PICKUP = self:_pickup_chance(self.x_basset.AMMO_MAX, 4)
 	self.x_basset.FIRE_MODE = "auto"
-	self.x_basset.fire_mode_data = {fire_rate = 0.18}
-	self.x_basset.single = {fire_rate = 0.18}
+	self.x_basset.fire_mode_data = {
+		fire_rate = 0.18
+	}
+	self.x_basset.single = {
+		fire_rate = 0.18
+	}
 	self.x_basset.CAN_TOGGLE_FIREMODE = true
 	self.x_basset.spread = {
 		standing = self.r870.spread.standing,
@@ -17752,12 +19396,14 @@ function WeaponTweakData:_init_x_basset(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.x_basset.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.x_basset.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_basset.kick.crouching = self.x_basset.kick.standing
 	self.x_basset.kick.steelsight = self.x_basset.kick.standing
 	self.x_basset.crosshair = {
@@ -17804,10 +19450,12 @@ function WeaponTweakData:_init_x_basset(weapon_data)
 	}
 end
 
--- Lines: 21655 to 21770
+-- Lines 21802-21919
 function WeaponTweakData:_init_corgi(weapon_data)
 	self.corgi = {
-		categories = {"assault_rifle"},
+		categories = {
+			"assault_rifle"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17830,16 +19478,22 @@ function WeaponTweakData:_init_corgi(weapon_data)
 	self.corgi.description_id = "des_corgi"
 	self.corgi.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
 	self.corgi.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.corgi.use_data = {selection_index = SELECTION.PRIMARY}
+	self.corgi.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.corgi.DAMAGE = 1
 	self.corgi.CLIP_AMMO_MAX = 30
 	self.corgi.NR_CLIPS_MAX = 5
 	self.corgi.AMMO_MAX = self.corgi.CLIP_AMMO_MAX * self.corgi.NR_CLIPS_MAX
 	self.corgi.AMMO_PICKUP = self:_pickup_chance(self.corgi.AMMO_MAX, 3)
 	self.corgi.FIRE_MODE = "auto"
-	self.corgi.fire_mode_data = {fire_rate = 0.07}
+	self.corgi.fire_mode_data = {
+		fire_rate = 0.07
+	}
 	self.corgi.CAN_TOGGLE_FIREMODE = true
-	self.corgi.auto = {fire_rate = 0.07}
+	self.corgi.auto = {
+		fire_rate = 0.07
+	}
 	self.corgi.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -17848,7 +19502,9 @@ function WeaponTweakData:_init_corgi(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.corgi.kick = {standing = self.new_m4.kick.standing}
+	self.corgi.kick = {
+		standing = self.new_m4.kick.standing
+	}
 	self.corgi.kick.crouching = self.corgi.kick.standing
 	self.corgi.kick.steelsight = self.corgi.kick.standing
 	self.corgi.crosshair = {
@@ -17896,13 +19552,21 @@ function WeaponTweakData:_init_corgi(weapon_data)
 	}
 end
 
--- Lines: 21776 to 21899
+-- Lines 21924-22048
 function WeaponTweakData:_init_slap(weapon_data)
 	self.slap = {
-		categories = {"grenade_launcher"},
-		upgrade_blocks = {weapon = {"clip_ammo_increase"}},
+		categories = {
+			"grenade_launcher"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
 		projectile_type = "launcher_frag_slap",
-		projectile_types = {launcher_incendiary = "launcher_incendiary_slap"},
+		projectile_types = {
+			launcher_incendiary = "launcher_incendiary_slap"
+		},
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
 		sounds = {}
@@ -17911,7 +19575,9 @@ function WeaponTweakData:_init_slap(weapon_data)
 	self.slap.sounds.dryfire = "shotgun_dryfire"
 	self.slap.sounds.enter_steelsight = "secondary_steel_sight_enter"
 	self.slap.sounds.leave_steelsight = "secondary_steel_sight_exit"
-	self.slap.timers = {reload_not_empty = 2.5}
+	self.slap.timers = {
+		reload_not_empty = 2.5
+	}
 	self.slap.timers.reload_empty = self.slap.timers.reload_not_empty
 	self.slap.timers.unequip = 0.6
 	self.slap.timers.equip = 0.6
@@ -17929,15 +19595,19 @@ function WeaponTweakData:_init_slap(weapon_data)
 	self.slap.damage_far = 3000
 	self.slap.rays = 6
 	self.slap.CLIP_AMMO_MAX = 1
-	self.slap.NR_CLIPS_MAX = math.round((weapon_data.total_damage_primary / 50) / self.slap.CLIP_AMMO_MAX)
+	self.slap.NR_CLIPS_MAX = math.round(weapon_data.total_damage_primary / 50 / self.slap.CLIP_AMMO_MAX)
 	self.slap.AMMO_MAX = self.slap.CLIP_AMMO_MAX * self.slap.NR_CLIPS_MAX
 	self.slap.AMMO_PICKUP = {
 		0.05,
 		0.65
 	}
 	self.slap.FIRE_MODE = "single"
-	self.slap.fire_mode_data = {fire_rate = 2}
-	self.slap.single = {fire_rate = 2}
+	self.slap.fire_mode_data = {
+		fire_rate = 2
+	}
+	self.slap.single = {
+		fire_rate = 2
+	}
 	self.slap.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -17946,12 +19616,14 @@ function WeaponTweakData:_init_slap(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.slap.kick = {standing = {
-		2.9,
-		3,
-		-0.5,
-		0.5
-	}}
+	self.slap.kick = {
+		standing = {
+			2.9,
+			3,
+			-0.5,
+			0.5
+		}
+	}
 	self.slap.kick.crouching = self.slap.kick.standing
 	self.slap.kick.steelsight = self.slap.kick.standing
 	self.slap.crosshair = {
@@ -17998,10 +19670,12 @@ function WeaponTweakData:_init_slap(weapon_data)
 		suppression = 2,
 		concealment = 22
 	}
-	self.slap.stats_modifiers = {damage = 10}
+	self.slap.stats_modifiers = {
+		damage = 10
+	}
 end
 
--- Lines: 22140 to 22252
+-- Lines 22288-22401
 function WeaponTweakData:_init_x_coal(weapon_data)
 	self.x_coal = {
 		categories = {
@@ -18033,15 +19707,21 @@ function WeaponTweakData:_init_x_coal(weapon_data)
 	self.x_coal.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_coal.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_coal.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_coal.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_coal.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_coal.DAMAGE = 1
 	self.x_coal.CLIP_AMMO_MAX = 128
 	self.x_coal.NR_CLIPS_MAX = 1
 	self.x_coal.AMMO_MAX = self.x_coal.CLIP_AMMO_MAX * self.x_coal.NR_CLIPS_MAX
 	self.x_coal.AMMO_PICKUP = self:_pickup_chance(self.x_coal.AMMO_MAX, PICKUP.OTHER)
 	self.x_coal.FIRE_MODE = "auto"
-	self.x_coal.fire_mode_data = {fire_rate = 0.092}
-	self.x_coal.single = {fire_rate = 0.092}
+	self.x_coal.fire_mode_data = {
+		fire_rate = 0.092
+	}
+	self.x_coal.single = {
+		fire_rate = 0.092
+	}
 	self.x_coal.CAN_TOGGLE_FIREMODE = true
 	self.x_coal.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18051,12 +19731,14 @@ function WeaponTweakData:_init_x_coal(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_coal.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_coal.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_coal.kick.crouching = self.x_coal.kick.standing
 	self.x_coal.kick.steelsight = self.x_coal.kick.standing
 	self.x_coal.crosshair = {
@@ -18102,7 +19784,7 @@ function WeaponTweakData:_init_x_coal(weapon_data)
 	}
 end
 
--- Lines: 22256 to 22369
+-- Lines 22404-22518
 function WeaponTweakData:_init_x_baka(weapon_data)
 	self.x_baka = {
 		categories = {
@@ -18134,15 +19816,21 @@ function WeaponTweakData:_init_x_baka(weapon_data)
 	self.x_baka.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_baka.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_baka.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_baka.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_baka.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_baka.DAMAGE = 1
 	self.x_baka.CLIP_AMMO_MAX = 64
 	self.x_baka.NR_CLIPS_MAX = 4
 	self.x_baka.AMMO_MAX = self.x_baka.CLIP_AMMO_MAX * self.x_baka.NR_CLIPS_MAX
 	self.x_baka.AMMO_PICKUP = self:_pickup_chance(self.x_baka.AMMO_MAX, PICKUP.OTHER)
 	self.x_baka.FIRE_MODE = "auto"
-	self.x_baka.fire_mode_data = {fire_rate = 0.05}
-	self.x_baka.single = {fire_rate = 0.05}
+	self.x_baka.fire_mode_data = {
+		fire_rate = 0.05
+	}
+	self.x_baka.single = {
+		fire_rate = 0.05
+	}
 	self.x_baka.CAN_TOGGLE_FIREMODE = true
 	self.x_baka.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18152,12 +19840,14 @@ function WeaponTweakData:_init_x_baka(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_baka.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_baka.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_baka.kick.crouching = self.x_baka.kick.standing
 	self.x_baka.kick.steelsight = self.x_baka.kick.standing
 	self.x_baka.crosshair = {
@@ -18203,7 +19893,7 @@ function WeaponTweakData:_init_x_baka(weapon_data)
 	}
 end
 
--- Lines: 22374 to 22489
+-- Lines 22522-22638
 function WeaponTweakData:_init_x_cobray(weapon_data)
 	self.x_cobray = {
 		categories = {
@@ -18235,15 +19925,21 @@ function WeaponTweakData:_init_x_cobray(weapon_data)
 	self.x_cobray.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_cobray.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_cobray.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_cobray.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_cobray.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_cobray.DAMAGE = 1
 	self.x_cobray.CLIP_AMMO_MAX = 64
 	self.x_cobray.NR_CLIPS_MAX = 3
 	self.x_cobray.AMMO_MAX = self.x_cobray.CLIP_AMMO_MAX * self.x_cobray.NR_CLIPS_MAX
 	self.x_cobray.AMMO_PICKUP = self:_pickup_chance(self.x_cobray.AMMO_MAX, PICKUP.OTHER)
 	self.x_cobray.FIRE_MODE = "auto"
-	self.x_cobray.fire_mode_data = {fire_rate = 0.05}
-	self.x_cobray.single = {fire_rate = 0.05}
+	self.x_cobray.fire_mode_data = {
+		fire_rate = 0.05
+	}
+	self.x_cobray.single = {
+		fire_rate = 0.05
+	}
 	self.x_cobray.CAN_TOGGLE_FIREMODE = true
 	self.x_cobray.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18253,12 +19949,14 @@ function WeaponTweakData:_init_x_cobray(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_cobray.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_cobray.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_cobray.kick.crouching = self.x_cobray.kick.standing
 	self.x_cobray.kick.steelsight = self.x_cobray.kick.standing
 	self.x_cobray.crosshair = {
@@ -18305,7 +20003,7 @@ function WeaponTweakData:_init_x_cobray(weapon_data)
 	}
 end
 
--- Lines: 22494 to 22608
+-- Lines 22642-22757
 function WeaponTweakData:_init_x_erma(weapon_data)
 	self.x_erma = {
 		categories = {
@@ -18337,15 +20035,21 @@ function WeaponTweakData:_init_x_erma(weapon_data)
 	self.x_erma.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_erma.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_erma.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_erma.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_erma.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_erma.DAMAGE = 1
 	self.x_erma.CLIP_AMMO_MAX = 80
 	self.x_erma.NR_CLIPS_MAX = 1
 	self.x_erma.AMMO_MAX = self.x_erma.CLIP_AMMO_MAX * self.x_erma.NR_CLIPS_MAX
 	self.x_erma.AMMO_PICKUP = self:_pickup_chance(self.x_erma.AMMO_MAX, PICKUP.OTHER)
 	self.x_erma.FIRE_MODE = "auto"
-	self.x_erma.fire_mode_data = {fire_rate = 0.1}
-	self.x_erma.single = {fire_rate = 0.1}
+	self.x_erma.fire_mode_data = {
+		fire_rate = 0.1
+	}
+	self.x_erma.single = {
+		fire_rate = 0.1
+	}
 	self.x_erma.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -18354,12 +20058,14 @@ function WeaponTweakData:_init_x_erma(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_erma.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_erma.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_erma.kick.crouching = self.x_erma.kick.standing
 	self.x_erma.kick.steelsight = self.x_erma.kick.standing
 	self.x_erma.crosshair = {
@@ -18407,7 +20113,7 @@ function WeaponTweakData:_init_x_erma(weapon_data)
 	self.x_erma.unlock_func = "has_unlocked_erma"
 end
 
--- Lines: 22613 to 22728
+-- Lines 22761-22877
 function WeaponTweakData:_init_x_hajk(weapon_data)
 	self.x_hajk = {
 		categories = {
@@ -18439,15 +20145,21 @@ function WeaponTweakData:_init_x_hajk(weapon_data)
 	self.x_hajk.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_hajk.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_hajk.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.x_hajk.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_hajk.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_hajk.DAMAGE = 1
 	self.x_hajk.CLIP_AMMO_MAX = 60
 	self.x_hajk.NR_CLIPS_MAX = 2
 	self.x_hajk.AMMO_MAX = self.x_hajk.CLIP_AMMO_MAX * self.x_hajk.NR_CLIPS_MAX
 	self.x_hajk.AMMO_PICKUP = self:_pickup_chance(self.x_hajk.AMMO_MAX, PICKUP.OTHER)
 	self.x_hajk.FIRE_MODE = "auto"
-	self.x_hajk.fire_mode_data = {fire_rate = 0.08}
-	self.x_hajk.single = {fire_rate = 0.08}
+	self.x_hajk.fire_mode_data = {
+		fire_rate = 0.08
+	}
+	self.x_hajk.single = {
+		fire_rate = 0.08
+	}
 	self.x_hajk.CAN_TOGGLE_FIREMODE = true
 	self.x_hajk.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18457,12 +20169,14 @@ function WeaponTweakData:_init_x_hajk(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_hajk.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_hajk.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_hajk.kick.crouching = self.x_hajk.kick.standing
 	self.x_hajk.kick.steelsight = self.x_hajk.kick.standing
 	self.x_hajk.crosshair = {
@@ -18509,7 +20223,7 @@ function WeaponTweakData:_init_x_hajk(weapon_data)
 	}
 end
 
--- Lines: 22732 to 22843
+-- Lines 22880-22992
 function WeaponTweakData:_init_x_m45(weapon_data)
 	self.x_m45 = {
 		categories = {
@@ -18541,15 +20255,21 @@ function WeaponTweakData:_init_x_m45(weapon_data)
 	self.x_m45.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_m45.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_m45.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_m45.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_m45.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_m45.DAMAGE = 1
 	self.x_m45.CLIP_AMMO_MAX = 80
 	self.x_m45.NR_CLIPS_MAX = 1
 	self.x_m45.AMMO_MAX = self.x_m45.CLIP_AMMO_MAX * self.x_m45.NR_CLIPS_MAX
 	self.x_m45.AMMO_PICKUP = self:_pickup_chance(self.x_m45.AMMO_MAX, PICKUP.OTHER)
 	self.x_m45.FIRE_MODE = "auto"
-	self.x_m45.fire_mode_data = {fire_rate = 0.1}
-	self.x_m45.single = {fire_rate = 0.1}
+	self.x_m45.fire_mode_data = {
+		fire_rate = 0.1
+	}
+	self.x_m45.single = {
+		fire_rate = 0.1
+	}
 	self.x_m45.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -18558,12 +20278,14 @@ function WeaponTweakData:_init_x_m45(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_m45.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_m45.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_m45.kick.crouching = self.x_m45.kick.standing
 	self.x_m45.kick.steelsight = self.x_m45.kick.standing
 	self.x_m45.crosshair = {
@@ -18609,7 +20331,7 @@ function WeaponTweakData:_init_x_m45(weapon_data)
 	}
 end
 
--- Lines: 22847 to 22959
+-- Lines 22995-23108
 function WeaponTweakData:_init_x_m1928(weapon_data)
 	self.x_m1928 = {
 		categories = {
@@ -18641,15 +20363,21 @@ function WeaponTweakData:_init_x_m1928(weapon_data)
 	self.x_m1928.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_m1928.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_m1928.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_m1928.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_m1928.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_m1928.DAMAGE = 1
 	self.x_m1928.CLIP_AMMO_MAX = 100
 	self.x_m1928.NR_CLIPS_MAX = 2
 	self.x_m1928.AMMO_MAX = self.x_m1928.CLIP_AMMO_MAX * self.x_m1928.NR_CLIPS_MAX
 	self.x_m1928.AMMO_PICKUP = self:_pickup_chance(self.x_m1928.AMMO_MAX, PICKUP.OTHER)
 	self.x_m1928.FIRE_MODE = "auto"
-	self.x_m1928.fire_mode_data = {fire_rate = 0.083}
-	self.x_m1928.single = {fire_rate = 0.083}
+	self.x_m1928.fire_mode_data = {
+		fire_rate = 0.083
+	}
+	self.x_m1928.single = {
+		fire_rate = 0.083
+	}
 	self.x_m1928.CAN_TOGGLE_FIREMODE = true
 	self.x_m1928.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18659,12 +20387,14 @@ function WeaponTweakData:_init_x_m1928(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_m1928.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_m1928.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_m1928.kick.crouching = self.x_m1928.kick.standing
 	self.x_m1928.kick.steelsight = self.x_m1928.kick.standing
 	self.x_m1928.crosshair = {
@@ -18710,7 +20440,7 @@ function WeaponTweakData:_init_x_m1928(weapon_data)
 	}
 end
 
--- Lines: 22963 to 23075
+-- Lines 23111-23224
 function WeaponTweakData:_init_x_mac10(weapon_data)
 	self.x_mac10 = {
 		categories = {
@@ -18742,15 +20472,21 @@ function WeaponTweakData:_init_x_mac10(weapon_data)
 	self.x_mac10.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_mac10.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_mac10.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_mac10.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_mac10.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_mac10.DAMAGE = 1
 	self.x_mac10.CLIP_AMMO_MAX = 80
 	self.x_mac10.NR_CLIPS_MAX = 2
 	self.x_mac10.AMMO_MAX = self.x_mac10.CLIP_AMMO_MAX * self.x_mac10.NR_CLIPS_MAX
 	self.x_mac10.AMMO_PICKUP = self:_pickup_chance(self.x_mac10.AMMO_MAX, PICKUP.OTHER)
 	self.x_mac10.FIRE_MODE = "auto"
-	self.x_mac10.fire_mode_data = {fire_rate = 0.06}
-	self.x_mac10.single = {fire_rate = 0.06}
+	self.x_mac10.fire_mode_data = {
+		fire_rate = 0.06
+	}
+	self.x_mac10.single = {
+		fire_rate = 0.06
+	}
 	self.x_mac10.CAN_TOGGLE_FIREMODE = true
 	self.x_mac10.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18760,12 +20496,14 @@ function WeaponTweakData:_init_x_mac10(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_mac10.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_mac10.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_mac10.kick.crouching = self.x_mac10.kick.standing
 	self.x_mac10.kick.steelsight = self.x_mac10.kick.standing
 	self.x_mac10.crosshair = {
@@ -18811,7 +20549,7 @@ function WeaponTweakData:_init_x_mac10(weapon_data)
 	}
 end
 
--- Lines: 23079 to 23194
+-- Lines 23227-23343
 function WeaponTweakData:_init_x_mp7(weapon_data)
 	self.x_mp7 = {
 		categories = {
@@ -18843,15 +20581,21 @@ function WeaponTweakData:_init_x_mp7(weapon_data)
 	self.x_mp7.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_mp7.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_mp7.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_mp7.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_mp7.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_mp7.DAMAGE = 1
 	self.x_mp7.CLIP_AMMO_MAX = 40
 	self.x_mp7.NR_CLIPS_MAX = 5
 	self.x_mp7.AMMO_MAX = self.x_mp7.CLIP_AMMO_MAX * self.x_mp7.NR_CLIPS_MAX
 	self.x_mp7.AMMO_PICKUP = self:_pickup_chance(self.x_mp7.AMMO_MAX, PICKUP.OTHER)
 	self.x_mp7.FIRE_MODE = "auto"
-	self.x_mp7.fire_mode_data = {fire_rate = 0.063}
-	self.x_mp7.single = {fire_rate = 0.063}
+	self.x_mp7.fire_mode_data = {
+		fire_rate = 0.063
+	}
+	self.x_mp7.single = {
+		fire_rate = 0.063
+	}
 	self.x_mp7.CAN_TOGGLE_FIREMODE = true
 	self.x_mp7.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18861,12 +20605,14 @@ function WeaponTweakData:_init_x_mp7(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_mp7.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_mp7.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_mp7.kick.crouching = self.x_mp7.kick.standing
 	self.x_mp7.kick.steelsight = self.x_mp7.kick.standing
 	self.x_mp7.crosshair = {
@@ -18913,7 +20659,7 @@ function WeaponTweakData:_init_x_mp7(weapon_data)
 	}
 end
 
--- Lines: 23198 to 23313
+-- Lines 23346-23462
 function WeaponTweakData:_init_x_mp9(weapon_data)
 	self.x_mp9 = {
 		categories = {
@@ -18945,15 +20691,21 @@ function WeaponTweakData:_init_x_mp9(weapon_data)
 	self.x_mp9.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_mp9.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_mp9.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_mp9.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_mp9.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_mp9.DAMAGE = 1
 	self.x_mp9.CLIP_AMMO_MAX = 60
 	self.x_mp9.NR_CLIPS_MAX = 4
 	self.x_mp9.AMMO_MAX = self.x_mp9.CLIP_AMMO_MAX * self.x_mp9.NR_CLIPS_MAX
 	self.x_mp9.AMMO_PICKUP = self:_pickup_chance(self.x_mp9.AMMO_MAX, PICKUP.OTHER)
 	self.x_mp9.FIRE_MODE = "auto"
-	self.x_mp9.fire_mode_data = {fire_rate = 0.063}
-	self.x_mp9.single = {fire_rate = 0.063}
+	self.x_mp9.fire_mode_data = {
+		fire_rate = 0.063
+	}
+	self.x_mp9.single = {
+		fire_rate = 0.063
+	}
 	self.x_mp9.CAN_TOGGLE_FIREMODE = true
 	self.x_mp9.spread = {
 		standing = self.new_m4.spread.standing,
@@ -18963,12 +20715,14 @@ function WeaponTweakData:_init_x_mp9(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_mp9.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_mp9.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_mp9.kick.crouching = self.x_mp9.kick.standing
 	self.x_mp9.kick.steelsight = self.x_mp9.kick.standing
 	self.x_mp9.crosshair = {
@@ -19015,7 +20769,7 @@ function WeaponTweakData:_init_x_mp9(weapon_data)
 	}
 end
 
--- Lines: 23317 to 23432
+-- Lines 23465-23581
 function WeaponTweakData:_init_x_olympic(weapon_data)
 	self.x_olympic = {
 		categories = {
@@ -19047,15 +20801,21 @@ function WeaponTweakData:_init_x_olympic(weapon_data)
 	self.x_olympic.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_olympic.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_olympic.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_olympic.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_olympic.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_olympic.DAMAGE = 1
 	self.x_olympic.CLIP_AMMO_MAX = 50
 	self.x_olympic.NR_CLIPS_MAX = 4
 	self.x_olympic.AMMO_MAX = self.x_olympic.CLIP_AMMO_MAX * self.x_olympic.NR_CLIPS_MAX
 	self.x_olympic.AMMO_PICKUP = self:_pickup_chance(self.x_olympic.AMMO_MAX, PICKUP.OTHER)
 	self.x_olympic.FIRE_MODE = "auto"
-	self.x_olympic.fire_mode_data = {fire_rate = 0.088}
-	self.x_olympic.single = {fire_rate = 0.088}
+	self.x_olympic.fire_mode_data = {
+		fire_rate = 0.088
+	}
+	self.x_olympic.single = {
+		fire_rate = 0.088
+	}
 	self.x_olympic.CAN_TOGGLE_FIREMODE = true
 	self.x_olympic.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19065,12 +20825,14 @@ function WeaponTweakData:_init_x_olympic(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_olympic.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_olympic.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_olympic.kick.crouching = self.x_olympic.kick.standing
 	self.x_olympic.kick.steelsight = self.x_olympic.kick.standing
 	self.x_olympic.crosshair = {
@@ -19117,7 +20879,7 @@ function WeaponTweakData:_init_x_olympic(weapon_data)
 	}
 end
 
--- Lines: 23436 to 23549
+-- Lines 23584-23698
 function WeaponTweakData:_init_x_p90(weapon_data)
 	self.x_p90 = {
 		categories = {
@@ -19149,15 +20911,21 @@ function WeaponTweakData:_init_x_p90(weapon_data)
 	self.x_p90.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_p90.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_p90.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_p90.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_p90.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_p90.DAMAGE = 1
 	self.x_p90.CLIP_AMMO_MAX = 100
 	self.x_p90.NR_CLIPS_MAX = 2
 	self.x_p90.AMMO_MAX = self.x_p90.CLIP_AMMO_MAX * self.x_p90.NR_CLIPS_MAX
 	self.x_p90.AMMO_PICKUP = self:_pickup_chance(self.x_p90.AMMO_MAX, PICKUP.OTHER)
 	self.x_p90.FIRE_MODE = "auto"
-	self.x_p90.fire_mode_data = {fire_rate = 0.066}
-	self.x_p90.single = {fire_rate = 0.066}
+	self.x_p90.fire_mode_data = {
+		fire_rate = 0.066
+	}
+	self.x_p90.single = {
+		fire_rate = 0.066
+	}
 	self.x_p90.CAN_TOGGLE_FIREMODE = true
 	self.x_p90.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19167,12 +20935,14 @@ function WeaponTweakData:_init_x_p90(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_p90.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_p90.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_p90.kick.crouching = self.x_p90.kick.standing
 	self.x_p90.kick.steelsight = self.x_p90.kick.standing
 	self.x_p90.crosshair = {
@@ -19218,7 +20988,7 @@ function WeaponTweakData:_init_x_p90(weapon_data)
 	}
 end
 
--- Lines: 23553 to 23665
+-- Lines 23701-23814
 function WeaponTweakData:_init_x_polymer(weapon_data)
 	self.x_polymer = {
 		categories = {
@@ -19250,15 +21020,21 @@ function WeaponTweakData:_init_x_polymer(weapon_data)
 	self.x_polymer.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_polymer.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_polymer.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_polymer.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_polymer.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_polymer.DAMAGE = 1
 	self.x_polymer.CLIP_AMMO_MAX = 60
 	self.x_polymer.NR_CLIPS_MAX = 3
 	self.x_polymer.AMMO_MAX = self.x_polymer.CLIP_AMMO_MAX * self.x_polymer.NR_CLIPS_MAX
 	self.x_polymer.AMMO_PICKUP = self:_pickup_chance(self.x_polymer.AMMO_MAX, PICKUP.OTHER)
 	self.x_polymer.FIRE_MODE = "auto"
-	self.x_polymer.fire_mode_data = {fire_rate = 0.05}
-	self.x_polymer.single = {fire_rate = 0.05}
+	self.x_polymer.fire_mode_data = {
+		fire_rate = 0.05
+	}
+	self.x_polymer.single = {
+		fire_rate = 0.05
+	}
 	self.x_polymer.CAN_TOGGLE_FIREMODE = true
 	self.x_polymer.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19268,12 +21044,14 @@ function WeaponTweakData:_init_x_polymer(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_polymer.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_polymer.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_polymer.kick.crouching = self.x_polymer.kick.standing
 	self.x_polymer.kick.steelsight = self.x_polymer.kick.standing
 	self.x_polymer.crosshair = {
@@ -19319,7 +21097,7 @@ function WeaponTweakData:_init_x_polymer(weapon_data)
 	}
 end
 
--- Lines: 23669 to 23784
+-- Lines 23817-23933
 function WeaponTweakData:_init_x_schakal(weapon_data)
 	self.x_schakal = {
 		categories = {
@@ -19351,15 +21129,21 @@ function WeaponTweakData:_init_x_schakal(weapon_data)
 	self.x_schakal.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_schakal.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_schakal.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_schakal.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_schakal.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_schakal.DAMAGE = 1
 	self.x_schakal.CLIP_AMMO_MAX = 60
 	self.x_schakal.NR_CLIPS_MAX = 2
 	self.x_schakal.AMMO_MAX = self.x_schakal.CLIP_AMMO_MAX * self.x_schakal.NR_CLIPS_MAX
 	self.x_schakal.AMMO_PICKUP = self:_pickup_chance(self.x_schakal.AMMO_MAX, PICKUP.OTHER)
 	self.x_schakal.FIRE_MODE = "auto"
-	self.x_schakal.fire_mode_data = {fire_rate = 0.092}
-	self.x_schakal.single = {fire_rate = 0.092}
+	self.x_schakal.fire_mode_data = {
+		fire_rate = 0.092
+	}
+	self.x_schakal.single = {
+		fire_rate = 0.092
+	}
 	self.x_schakal.CAN_TOGGLE_FIREMODE = true
 	self.x_schakal.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19369,12 +21153,14 @@ function WeaponTweakData:_init_x_schakal(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_schakal.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_schakal.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_schakal.kick.crouching = self.x_schakal.kick.standing
 	self.x_schakal.kick.steelsight = self.x_schakal.kick.standing
 	self.x_schakal.crosshair = {
@@ -19421,7 +21207,7 @@ function WeaponTweakData:_init_x_schakal(weapon_data)
 	}
 end
 
--- Lines: 23788 to 23900
+-- Lines 23936-24049
 function WeaponTweakData:_init_x_scorpion(weapon_data)
 	self.x_scorpion = {
 		categories = {
@@ -19453,15 +21239,21 @@ function WeaponTweakData:_init_x_scorpion(weapon_data)
 	self.x_scorpion.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_scorpion.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_scorpion.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_scorpion.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_scorpion.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_scorpion.DAMAGE = 1
 	self.x_scorpion.CLIP_AMMO_MAX = 40
 	self.x_scorpion.NR_CLIPS_MAX = 6
 	self.x_scorpion.AMMO_MAX = self.x_scorpion.CLIP_AMMO_MAX * self.x_scorpion.NR_CLIPS_MAX
 	self.x_scorpion.AMMO_PICKUP = self:_pickup_chance(self.x_scorpion.AMMO_MAX, PICKUP.OTHER)
 	self.x_scorpion.FIRE_MODE = "auto"
-	self.x_scorpion.fire_mode_data = {fire_rate = 0.06}
-	self.x_scorpion.single = {fire_rate = 0.06}
+	self.x_scorpion.fire_mode_data = {
+		fire_rate = 0.06
+	}
+	self.x_scorpion.single = {
+		fire_rate = 0.06
+	}
 	self.x_scorpion.CAN_TOGGLE_FIREMODE = true
 	self.x_scorpion.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19471,12 +21263,14 @@ function WeaponTweakData:_init_x_scorpion(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_scorpion.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_scorpion.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_scorpion.kick.crouching = self.x_scorpion.kick.standing
 	self.x_scorpion.kick.steelsight = self.x_scorpion.kick.standing
 	self.x_scorpion.crosshair = {
@@ -19522,7 +21316,7 @@ function WeaponTweakData:_init_x_scorpion(weapon_data)
 	}
 end
 
--- Lines: 23904 to 24019
+-- Lines 24052-24168
 function WeaponTweakData:_init_x_sterling(weapon_data)
 	self.x_sterling = {
 		categories = {
@@ -19554,15 +21348,21 @@ function WeaponTweakData:_init_x_sterling(weapon_data)
 	self.x_sterling.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_sterling.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_sterling.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_sterling.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_sterling.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_sterling.DAMAGE = 1
 	self.x_sterling.CLIP_AMMO_MAX = 40
 	self.x_sterling.NR_CLIPS_MAX = 6
 	self.x_sterling.AMMO_MAX = self.x_sterling.CLIP_AMMO_MAX * self.x_sterling.NR_CLIPS_MAX
 	self.x_sterling.AMMO_PICKUP = self:_pickup_chance(self.x_sterling.AMMO_MAX, PICKUP.OTHER)
 	self.x_sterling.FIRE_MODE = "auto"
-	self.x_sterling.fire_mode_data = {fire_rate = 0.11}
-	self.x_sterling.single = {fire_rate = 0.11}
+	self.x_sterling.fire_mode_data = {
+		fire_rate = 0.11
+	}
+	self.x_sterling.single = {
+		fire_rate = 0.11
+	}
 	self.x_sterling.CAN_TOGGLE_FIREMODE = true
 	self.x_sterling.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19572,12 +21372,14 @@ function WeaponTweakData:_init_x_sterling(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_sterling.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_sterling.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_sterling.kick.crouching = self.x_sterling.kick.standing
 	self.x_sterling.kick.steelsight = self.x_sterling.kick.standing
 	self.x_sterling.crosshair = {
@@ -19624,7 +21426,7 @@ function WeaponTweakData:_init_x_sterling(weapon_data)
 	}
 end
 
--- Lines: 24023 to 24135
+-- Lines 24171-24284
 function WeaponTweakData:_init_x_tec9(weapon_data)
 	self.x_tec9 = {
 		categories = {
@@ -19656,15 +21458,21 @@ function WeaponTweakData:_init_x_tec9(weapon_data)
 	self.x_tec9.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_tec9.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_tec9.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_tec9.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_tec9.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_tec9.DAMAGE = 1
 	self.x_tec9.CLIP_AMMO_MAX = 40
 	self.x_tec9.NR_CLIPS_MAX = 6
 	self.x_tec9.AMMO_MAX = self.x_tec9.CLIP_AMMO_MAX * self.x_tec9.NR_CLIPS_MAX
 	self.x_tec9.AMMO_PICKUP = self:_pickup_chance(self.x_tec9.AMMO_MAX, PICKUP.OTHER)
 	self.x_tec9.FIRE_MODE = "auto"
-	self.x_tec9.fire_mode_data = {fire_rate = 0.067}
-	self.x_tec9.single = {fire_rate = 0.067}
+	self.x_tec9.fire_mode_data = {
+		fire_rate = 0.067
+	}
+	self.x_tec9.single = {
+		fire_rate = 0.067
+	}
 	self.x_tec9.CAN_TOGGLE_FIREMODE = true
 	self.x_tec9.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19674,12 +21482,14 @@ function WeaponTweakData:_init_x_tec9(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_tec9.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_tec9.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_tec9.kick.crouching = self.x_tec9.kick.standing
 	self.x_tec9.kick.steelsight = self.x_tec9.kick.standing
 	self.x_tec9.crosshair = {
@@ -19725,7 +21535,7 @@ function WeaponTweakData:_init_x_tec9(weapon_data)
 	}
 end
 
--- Lines: 24139 to 24251
+-- Lines 24287-24400
 function WeaponTweakData:_init_x_uzi(weapon_data)
 	self.x_uzi = {
 		categories = {
@@ -19757,15 +21567,21 @@ function WeaponTweakData:_init_x_uzi(weapon_data)
 	self.x_uzi.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_uzi.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_uzi.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_uzi.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_uzi.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_uzi.DAMAGE = 1
 	self.x_uzi.CLIP_AMMO_MAX = 80
 	self.x_uzi.NR_CLIPS_MAX = 3
 	self.x_uzi.AMMO_MAX = self.x_uzi.CLIP_AMMO_MAX * self.x_uzi.NR_CLIPS_MAX
 	self.x_uzi.AMMO_PICKUP = self:_pickup_chance(self.x_uzi.AMMO_MAX, PICKUP.OTHER)
 	self.x_uzi.FIRE_MODE = "auto"
-	self.x_uzi.fire_mode_data = {fire_rate = 0.086}
-	self.x_uzi.single = {fire_rate = 0.086}
+	self.x_uzi.fire_mode_data = {
+		fire_rate = 0.086
+	}
+	self.x_uzi.single = {
+		fire_rate = 0.086
+	}
 	self.x_uzi.CAN_TOGGLE_FIREMODE = true
 	self.x_uzi.spread = {
 		standing = self.new_m4.spread.standing,
@@ -19775,12 +21591,14 @@ function WeaponTweakData:_init_x_uzi(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.x_uzi.kick = {standing = {
-		0.8,
-		1,
-		-0.5,
-		0.5
-	}}
+	self.x_uzi.kick = {
+		standing = {
+			0.8,
+			1,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_uzi.kick.crouching = self.x_uzi.kick.standing
 	self.x_uzi.kick.steelsight = self.x_uzi.kick.standing
 	self.x_uzi.crosshair = {
@@ -19826,7 +21644,7 @@ function WeaponTweakData:_init_x_uzi(weapon_data)
 	}
 end
 
--- Lines: 24258 to 24365
+-- Lines 24406-24514
 function WeaponTweakData:_init_x_2006m(weapon_data)
 	self.x_2006m = {
 		categories = {
@@ -19856,15 +21674,21 @@ function WeaponTweakData:_init_x_2006m(weapon_data)
 	self.x_2006m.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_2006m.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_2006m.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.x_2006m.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_2006m.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_2006m.DAMAGE = 1
 	self.x_2006m.CLIP_AMMO_MAX = 12
 	self.x_2006m.NR_CLIPS_MAX = 5
 	self.x_2006m.AMMO_MAX = self.x_2006m.CLIP_AMMO_MAX * self.x_2006m.NR_CLIPS_MAX
 	self.x_2006m.AMMO_PICKUP = self:_pickup_chance(self.x_2006m.AMMO_MAX, PICKUP.OTHER)
 	self.x_2006m.FIRE_MODE = "single"
-	self.x_2006m.fire_mode_data = {fire_rate = 0.166}
-	self.x_2006m.single = {fire_rate = 0.166}
+	self.x_2006m.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_2006m.single = {
+		fire_rate = 0.166
+	}
 	self.x_2006m.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -19873,12 +21697,14 @@ function WeaponTweakData:_init_x_2006m(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_2006m.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_2006m.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_2006m.kick.crouching = self.x_2006m.kick.standing
 	self.x_2006m.kick.steelsight = self.x_2006m.kick.standing
 	self.x_2006m.crosshair = {
@@ -19924,7 +21750,7 @@ function WeaponTweakData:_init_x_2006m(weapon_data)
 	}
 end
 
--- Lines: 24370 to 24483
+-- Lines 24518-24632
 function WeaponTweakData:_init_x_breech(weapon_data)
 	self.x_breech = {
 		categories = {
@@ -19953,15 +21779,21 @@ function WeaponTweakData:_init_x_breech(weapon_data)
 	self.x_breech.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_breech.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_breech.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_breech.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_breech.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_breech.DAMAGE = 1
 	self.x_breech.CLIP_AMMO_MAX = 16
 	self.x_breech.NR_CLIPS_MAX = 4
 	self.x_breech.AMMO_MAX = self.x_breech.CLIP_AMMO_MAX * self.x_breech.NR_CLIPS_MAX
 	self.x_breech.AMMO_PICKUP = self:_pickup_chance(self.x_breech.AMMO_MAX, PICKUP.OTHER)
 	self.x_breech.FIRE_MODE = "single"
-	self.x_breech.fire_mode_data = {fire_rate = 0.166}
-	self.x_breech.single = {fire_rate = 0.166}
+	self.x_breech.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_breech.single = {
+		fire_rate = 0.166
+	}
 	self.x_breech.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -19970,12 +21802,14 @@ function WeaponTweakData:_init_x_breech(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_breech.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_breech.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_breech.kick.crouching = self.x_breech.kick.standing
 	self.x_breech.kick.steelsight = self.x_breech.kick.standing
 	self.x_breech.crosshair = {
@@ -20027,7 +21861,7 @@ function WeaponTweakData:_init_x_breech(weapon_data)
 	self.x_breech.unlock_func = "has_unlocked_breech"
 end
 
--- Lines: 24488 to 24600
+-- Lines 24636-24749
 function WeaponTweakData:_init_x_c96(weapon_data)
 	self.x_c96 = {
 		categories = {
@@ -20056,15 +21890,21 @@ function WeaponTweakData:_init_x_c96(weapon_data)
 	self.x_c96.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_c96.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_c96.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_c96.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_c96.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_c96.DAMAGE = 1
 	self.x_c96.CLIP_AMMO_MAX = 20
 	self.x_c96.NR_CLIPS_MAX = 5
 	self.x_c96.AMMO_MAX = self.x_c96.CLIP_AMMO_MAX * self.x_c96.NR_CLIPS_MAX
 	self.x_c96.AMMO_PICKUP = self:_pickup_chance(self.x_c96.AMMO_MAX, PICKUP.OTHER)
 	self.x_c96.FIRE_MODE = "single"
-	self.x_c96.fire_mode_data = {fire_rate = 0.166}
-	self.x_c96.single = {fire_rate = 0.166}
+	self.x_c96.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_c96.single = {
+		fire_rate = 0.166
+	}
 	self.x_c96.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20073,12 +21913,14 @@ function WeaponTweakData:_init_x_c96(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_c96.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_c96.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_c96.kick.crouching = self.x_c96.kick.standing
 	self.x_c96.kick.steelsight = self.x_c96.kick.standing
 	self.x_c96.crosshair = {
@@ -20129,7 +21971,7 @@ function WeaponTweakData:_init_x_c96(weapon_data)
 	}
 end
 
--- Lines: 24603 to 24721
+-- Lines 24751-24870
 function WeaponTweakData:_init_x_g18c(weapon_data)
 	self.x_g18c = {
 		categories = {
@@ -20162,16 +22004,22 @@ function WeaponTweakData:_init_x_g18c(weapon_data)
 	self.x_g18c.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_g18c.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_g18c.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_g18c.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_g18c.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_g18c.DAMAGE = 1
 	self.x_g18c.CLIP_AMMO_MAX = 40
 	self.x_g18c.NR_CLIPS_MAX = 5
 	self.x_g18c.AMMO_MAX = self.x_g18c.CLIP_AMMO_MAX * self.x_g18c.NR_CLIPS_MAX
 	self.x_g18c.AMMO_PICKUP = self:_pickup_chance(self.x_g18c.AMMO_MAX, PICKUP.OTHER)
 	self.x_g18c.FIRE_MODE = "auto"
-	self.x_g18c.fire_mode_data = {fire_rate = 0.066}
+	self.x_g18c.fire_mode_data = {
+		fire_rate = 0.066
+	}
 	self.x_g18c.CAN_TOGGLE_FIREMODE = true
-	self.x_g18c.single = {fire_rate = 0.166}
+	self.x_g18c.single = {
+		fire_rate = 0.166
+	}
 	self.x_g18c.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20180,12 +22028,14 @@ function WeaponTweakData:_init_x_g18c(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_g18c.kick = {standing = {
-		0.5,
-		0.8,
-		-0.6,
-		0.6
-	}}
+	self.x_g18c.kick = {
+		standing = {
+			0.5,
+			0.8,
+			-0.6,
+			0.6
+		}
+	}
 	self.x_g18c.kick.crouching = self.x_g18c.kick.standing
 	self.x_g18c.kick.steelsight = self.x_g18c.kick.standing
 	self.x_g18c.crosshair = {
@@ -20236,7 +22086,7 @@ function WeaponTweakData:_init_x_g18c(weapon_data)
 	}
 end
 
--- Lines: 24724 to 24836
+-- Lines 24872-24985
 function WeaponTweakData:_init_x_hs2000(weapon_data)
 	self.x_hs2000 = {
 		categories = {
@@ -20265,15 +22115,21 @@ function WeaponTweakData:_init_x_hs2000(weapon_data)
 	self.x_hs2000.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_hs2000.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_hs2000.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_hs2000.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_hs2000.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_hs2000.DAMAGE = 1
 	self.x_hs2000.CLIP_AMMO_MAX = 38
 	self.x_hs2000.NR_CLIPS_MAX = 3
 	self.x_hs2000.AMMO_MAX = self.x_hs2000.CLIP_AMMO_MAX * self.x_hs2000.NR_CLIPS_MAX
 	self.x_hs2000.AMMO_PICKUP = self:_pickup_chance(self.x_hs2000.AMMO_MAX, PICKUP.OTHER)
 	self.x_hs2000.FIRE_MODE = "single"
-	self.x_hs2000.fire_mode_data = {fire_rate = 0.166}
-	self.x_hs2000.single = {fire_rate = 0.166}
+	self.x_hs2000.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_hs2000.single = {
+		fire_rate = 0.166
+	}
 	self.x_hs2000.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20282,12 +22138,14 @@ function WeaponTweakData:_init_x_hs2000(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_hs2000.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_hs2000.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_hs2000.kick.crouching = self.x_hs2000.kick.standing
 	self.x_hs2000.kick.steelsight = self.x_hs2000.kick.standing
 	self.x_hs2000.crosshair = {
@@ -20338,7 +22196,7 @@ function WeaponTweakData:_init_x_hs2000(weapon_data)
 	}
 end
 
--- Lines: 24841 to 24953
+-- Lines 24989-25102
 function WeaponTweakData:_init_x_p226(weapon_data)
 	self.x_p226 = {
 		categories = {
@@ -20367,15 +22225,21 @@ function WeaponTweakData:_init_x_p226(weapon_data)
 	self.x_p226.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_p226.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_p226.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_p226.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_p226.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_p226.DAMAGE = 1
 	self.x_p226.CLIP_AMMO_MAX = 24
 	self.x_p226.NR_CLIPS_MAX = 4
 	self.x_p226.AMMO_MAX = self.x_p226.CLIP_AMMO_MAX * self.x_p226.NR_CLIPS_MAX
 	self.x_p226.AMMO_PICKUP = self:_pickup_chance(self.x_p226.AMMO_MAX, PICKUP.OTHER)
 	self.x_p226.FIRE_MODE = "single"
-	self.x_p226.fire_mode_data = {fire_rate = 0.166}
-	self.x_p226.single = {fire_rate = 0.166}
+	self.x_p226.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_p226.single = {
+		fire_rate = 0.166
+	}
 	self.x_p226.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20384,12 +22248,14 @@ function WeaponTweakData:_init_x_p226(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_p226.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_p226.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_p226.kick.crouching = self.x_p226.kick.standing
 	self.x_p226.kick.steelsight = self.x_p226.kick.standing
 	self.x_p226.crosshair = {
@@ -20440,7 +22306,7 @@ function WeaponTweakData:_init_x_p226(weapon_data)
 	}
 end
 
--- Lines: 24957 to 25069
+-- Lines 25105-25218
 function WeaponTweakData:_init_x_pl14(weapon_data)
 	self.x_pl14 = {
 		categories = {
@@ -20469,15 +22335,21 @@ function WeaponTweakData:_init_x_pl14(weapon_data)
 	self.x_pl14.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_pl14.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_pl14.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_pl14.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_pl14.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_pl14.DAMAGE = 1
 	self.x_pl14.CLIP_AMMO_MAX = 24
 	self.x_pl14.NR_CLIPS_MAX = 3
 	self.x_pl14.AMMO_MAX = self.x_pl14.CLIP_AMMO_MAX * self.x_pl14.NR_CLIPS_MAX
 	self.x_pl14.AMMO_PICKUP = self:_pickup_chance(self.x_pl14.AMMO_MAX, PICKUP.OTHER)
 	self.x_pl14.FIRE_MODE = "single"
-	self.x_pl14.fire_mode_data = {fire_rate = 0.166}
-	self.x_pl14.single = {fire_rate = 0.166}
+	self.x_pl14.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_pl14.single = {
+		fire_rate = 0.166
+	}
 	self.x_pl14.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20486,12 +22358,14 @@ function WeaponTweakData:_init_x_pl14(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_pl14.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_pl14.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_pl14.kick.crouching = self.x_pl14.kick.standing
 	self.x_pl14.kick.steelsight = self.x_pl14.kick.standing
 	self.x_pl14.crosshair = {
@@ -20542,7 +22416,7 @@ function WeaponTweakData:_init_x_pl14(weapon_data)
 	}
 end
 
--- Lines: 25073 to 25185
+-- Lines 25221-25334
 function WeaponTweakData:_init_x_ppk(weapon_data)
 	self.x_ppk = {
 		categories = {
@@ -20571,15 +22445,21 @@ function WeaponTweakData:_init_x_ppk(weapon_data)
 	self.x_ppk.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_ppk.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_ppk.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_ppk.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_ppk.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_ppk.DAMAGE = 1
 	self.x_ppk.CLIP_AMMO_MAX = 28
 	self.x_ppk.NR_CLIPS_MAX = 6
 	self.x_ppk.AMMO_MAX = self.x_ppk.CLIP_AMMO_MAX * self.x_ppk.NR_CLIPS_MAX
 	self.x_ppk.AMMO_PICKUP = self:_pickup_chance(self.x_ppk.AMMO_MAX, PICKUP.OTHER)
 	self.x_ppk.FIRE_MODE = "single"
-	self.x_ppk.fire_mode_data = {fire_rate = 0.166}
-	self.x_ppk.single = {fire_rate = 0.166}
+	self.x_ppk.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_ppk.single = {
+		fire_rate = 0.166
+	}
 	self.x_ppk.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20588,12 +22468,14 @@ function WeaponTweakData:_init_x_ppk(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_ppk.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_ppk.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_ppk.kick.crouching = self.x_ppk.kick.standing
 	self.x_ppk.kick.steelsight = self.x_ppk.kick.standing
 	self.x_ppk.crosshair = {
@@ -20644,7 +22526,7 @@ function WeaponTweakData:_init_x_ppk(weapon_data)
 	}
 end
 
--- Lines: 25188 to 25300
+-- Lines 25336-25449
 function WeaponTweakData:_init_x_rage(weapon_data)
 	self.x_rage = {
 		categories = {
@@ -20674,15 +22556,21 @@ function WeaponTweakData:_init_x_rage(weapon_data)
 	self.x_rage.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_rage.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_rage.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.x_rage.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_rage.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_rage.DAMAGE = 1
 	self.x_rage.CLIP_AMMO_MAX = 12
 	self.x_rage.NR_CLIPS_MAX = 6
 	self.x_rage.AMMO_MAX = self.x_rage.CLIP_AMMO_MAX * self.x_rage.NR_CLIPS_MAX
 	self.x_rage.AMMO_PICKUP = self:_pickup_chance(self.x_rage.AMMO_MAX, PICKUP.OTHER)
 	self.x_rage.FIRE_MODE = "single"
-	self.x_rage.fire_mode_data = {fire_rate = 0.166}
-	self.x_rage.single = {fire_rate = 0.166}
+	self.x_rage.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_rage.single = {
+		fire_rate = 0.166
+	}
 	self.x_rage.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20691,12 +22579,14 @@ function WeaponTweakData:_init_x_rage(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_rage.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_rage.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_rage.kick.crouching = self.x_rage.kick.standing
 	self.x_rage.kick.steelsight = self.x_rage.kick.standing
 	self.x_rage.crosshair = {
@@ -20747,7 +22637,7 @@ function WeaponTweakData:_init_x_rage(weapon_data)
 	}
 end
 
--- Lines: 25303 to 25415
+-- Lines 25451-25564
 function WeaponTweakData:_init_x_sparrow(weapon_data)
 	self.x_sparrow = {
 		categories = {
@@ -20776,15 +22666,21 @@ function WeaponTweakData:_init_x_sparrow(weapon_data)
 	self.x_sparrow.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
 	self.x_sparrow.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_sparrow.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
-	self.x_sparrow.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_sparrow.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_sparrow.DAMAGE = 1
 	self.x_sparrow.CLIP_AMMO_MAX = 24
 	self.x_sparrow.NR_CLIPS_MAX = 3
 	self.x_sparrow.AMMO_MAX = self.x_sparrow.CLIP_AMMO_MAX * self.x_sparrow.NR_CLIPS_MAX
 	self.x_sparrow.AMMO_PICKUP = self:_pickup_chance(self.x_sparrow.AMMO_MAX, PICKUP.OTHER)
 	self.x_sparrow.FIRE_MODE = "single"
-	self.x_sparrow.fire_mode_data = {fire_rate = 0.166}
-	self.x_sparrow.single = {fire_rate = 0.166}
+	self.x_sparrow.fire_mode_data = {
+		fire_rate = 0.166
+	}
+	self.x_sparrow.single = {
+		fire_rate = 0.166
+	}
 	self.x_sparrow.spread = {
 		standing = self.colt_1911.spread.standing,
 		crouching = self.colt_1911.spread.crouching,
@@ -20793,12 +22689,14 @@ function WeaponTweakData:_init_x_sparrow(weapon_data)
 		moving_crouching = self.colt_1911.spread.moving_crouching,
 		moving_steelsight = self.colt_1911.spread.moving_steelsight
 	}
-	self.x_sparrow.kick = {standing = {
-		1.6,
-		1.3,
-		-0.3,
-		0.3
-	}}
+	self.x_sparrow.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
 	self.x_sparrow.kick.crouching = self.x_sparrow.kick.standing
 	self.x_sparrow.kick.steelsight = self.x_sparrow.kick.standing
 	self.x_sparrow.crosshair = {
@@ -20849,7 +22747,7 @@ function WeaponTweakData:_init_x_sparrow(weapon_data)
 	}
 end
 
--- Lines: 25418 to 25533
+-- Lines 25566-25682
 function WeaponTweakData:_init_x_judge(weapon_data)
 	self.x_judge = {
 		categories = {
@@ -20877,7 +22775,9 @@ function WeaponTweakData:_init_x_judge(weapon_data)
 	self.x_judge.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.x_judge.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_judge.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.x_judge.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_judge.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_judge.DAMAGE = 4
 	self.x_judge.damage_near = 2000
 	self.x_judge.damage_far = 3000
@@ -20888,8 +22788,12 @@ function WeaponTweakData:_init_x_judge(weapon_data)
 	self.x_judge.AMMO_MAX = self.x_judge.CLIP_AMMO_MAX * self.x_judge.NR_CLIPS_MAX
 	self.x_judge.AMMO_PICKUP = self:_pickup_chance(self.x_judge.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.x_judge.FIRE_MODE = "single"
-	self.x_judge.fire_mode_data = {fire_rate = 0.12}
-	self.x_judge.single = {fire_rate = 0.21}
+	self.x_judge.fire_mode_data = {
+		fire_rate = 0.12
+	}
+	self.x_judge.single = {
+		fire_rate = 0.21
+	}
 	self.x_judge.CAN_TOGGLE_FIREMODE = false
 	self.x_judge.spread = {
 		standing = self.r870.spread.standing,
@@ -20899,12 +22803,14 @@ function WeaponTweakData:_init_x_judge(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.x_judge.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.x_judge.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_judge.kick.crouching = self.x_judge.kick.standing
 	self.x_judge.kick.steelsight = self.x_judge.kick.standing
 	self.x_judge.crosshair = {
@@ -20951,7 +22857,7 @@ function WeaponTweakData:_init_x_judge(weapon_data)
 	}
 end
 
--- Lines: 25537 to 25653
+-- Lines 25685-25802
 function WeaponTweakData:_init_x_rota(weapon_data)
 	self.x_rota = {
 		categories = {
@@ -20980,7 +22886,9 @@ function WeaponTweakData:_init_x_rota(weapon_data)
 	self.x_rota.muzzleflash = "effects/payday2/particles/weapons/big_762_auto_fps"
 	self.x_rota.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
 	self.x_rota.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
-	self.x_rota.use_data = {selection_index = SELECTION.PRIMARY}
+	self.x_rota.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
 	self.x_rota.DAMAGE = 4
 	self.x_rota.damage_near = 2000
 	self.x_rota.damage_far = 3000
@@ -20991,8 +22899,12 @@ function WeaponTweakData:_init_x_rota(weapon_data)
 	self.x_rota.AMMO_MAX = self.x_rota.CLIP_AMMO_MAX * self.x_rota.NR_CLIPS_MAX
 	self.x_rota.AMMO_PICKUP = self:_pickup_chance(self.x_rota.AMMO_MAX, 4)
 	self.x_rota.FIRE_MODE = "single"
-	self.x_rota.fire_mode_data = {fire_rate = 0.18}
-	self.x_rota.single = {fire_rate = 0.18}
+	self.x_rota.fire_mode_data = {
+		fire_rate = 0.18
+	}
+	self.x_rota.single = {
+		fire_rate = 0.18
+	}
 	self.x_rota.CAN_TOGGLE_FIREMODE = false
 	self.x_rota.spread = {
 		standing = self.r870.spread.standing,
@@ -21002,12 +22914,14 @@ function WeaponTweakData:_init_x_rota(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.x_rota.kick = {standing = {
-		1.4,
-		1.2,
-		-0.5,
-		0.5
-	}}
+	self.x_rota.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
 	self.x_rota.kick.crouching = self.x_rota.kick.standing
 	self.x_rota.kick.steelsight = self.x_rota.kick.standing
 	self.x_rota.crosshair = {
@@ -21054,10 +22968,12 @@ function WeaponTweakData:_init_x_rota(weapon_data)
 	}
 end
 
--- Lines: 25892 to 26008
+-- Lines 26040-26157
 function WeaponTweakData:_init_shuno(weapon_data)
 	self.shuno = {
-		categories = {"minigun"},
+		categories = {
+			"minigun"
+		},
 		has_description = false,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -21092,9 +23008,13 @@ function WeaponTweakData:_init_shuno(weapon_data)
 	self.shuno.AMMO_MAX = self.shuno.CLIP_AMMO_MAX * self.shuno.NR_CLIPS_MAX
 	self.shuno.AMMO_PICKUP = self:_pickup_chance(self.shuno.CLIP_AMMO_MAX, PICKUP.OTHER)
 	self.shuno.FIRE_MODE = "auto"
-	self.shuno.fire_mode_data = {fire_rate = 0.03}
+	self.shuno.fire_mode_data = {
+		fire_rate = 0.03
+	}
 	self.shuno.CAN_TOGGLE_FIREMODE = false
-	self.shuno.auto = {fire_rate = 0.05}
+	self.shuno.auto = {
+		fire_rate = 0.05
+	}
 	self.shuno.spread = {
 		standing = self.new_m4.spread.standing,
 		crouching = self.new_m4.spread.crouching,
@@ -21103,12 +23023,14 @@ function WeaponTweakData:_init_shuno(weapon_data)
 		moving_crouching = self.new_m4.spread.moving_crouching,
 		moving_steelsight = self.new_m4.spread.moving_steelsight
 	}
-	self.shuno.kick = {standing = {
-		-0.05,
-		0.1,
-		-0.15,
-		0.2
-	}}
+	self.shuno.kick = {
+		standing = {
+			-0.05,
+			0.1,
+			-0.15,
+			0.2
+		}
+	}
 	self.shuno.kick.crouching = self.shuno.kick.standing
 	self.shuno.kick.steelsight = self.shuno.kick.standing
 	self.shuno.crosshair = {
@@ -21155,10 +23077,12 @@ function WeaponTweakData:_init_shuno(weapon_data)
 	}
 end
 
--- Lines: 26016 to 26135
+-- Lines 26164-26284
 function WeaponTweakData:_init_system(weapon_data)
 	self.system = {
-		categories = {"flamethrower"},
+		categories = {
+			"flamethrower"
+		},
 		has_description = false,
 		damage_melee = weapon_data.damage_melee_default,
 		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
@@ -21192,8 +23116,12 @@ function WeaponTweakData:_init_system(weapon_data)
 	self.system.AMMO_MAX = self.system.CLIP_AMMO_MAX * self.system.NR_CLIPS_MAX
 	self.system.AMMO_PICKUP = self:_pickup_chance(self.system.CLIP_AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
 	self.system.FIRE_MODE = "auto"
-	self.system.fire_mode_data = {fire_rate = 0.03}
-	self.system.auto = {fire_rate = 0.05}
+	self.system.fire_mode_data = {
+		fire_rate = 0.03
+	}
+	self.system.auto = {
+		fire_rate = 0.05
+	}
 	self.system.spread = {
 		standing = self.r870.spread.standing,
 		crouching = self.r870.spread.crouching,
@@ -21202,12 +23130,14 @@ function WeaponTweakData:_init_system(weapon_data)
 		moving_crouching = self.r870.spread.moving_crouching,
 		moving_steelsight = self.r870.spread.moving_steelsight
 	}
-	self.system.kick = {standing = {
-		0,
-		0,
-		0,
-		0
-	}}
+	self.system.kick = {
+		standing = {
+			0,
+			0,
+			0,
+			0
+		}
+	}
 	self.system.kick.crouching = self.system.kick.standing
 	self.system.kick.steelsight = self.system.kick.standing
 	self.system.crosshair = {
@@ -21263,7 +23193,559 @@ function WeaponTweakData:_init_system(weapon_data)
 	}
 end
 
--- Lines: 26751 to 27123
+-- Lines 26289-26411
+function WeaponTweakData:_init_komodo(weapon_data)
+	self.komodo = {
+		categories = {
+			"assault_rifle"
+		},
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.komodo.sounds.fire = "komodo_fire_fire_single"
+	self.komodo.sounds.fire_single = "komodo_fire_fire_single"
+	self.komodo.sounds.fire_auto = "komodo_fire"
+	self.komodo.sounds.stop_fire = "komodo_stop"
+	self.komodo.sounds.dryfire = "primary_dryfire"
+	self.komodo.sounds.enter_steelsight = "primary_steel_sight_enter"
+	self.komodo.sounds.leave_steelsight = "primary_steel_sight_exit"
+	self.komodo.timers = {
+		reload_not_empty = 2.35,
+		reload_empty = 3.35,
+		unequip = 0.65,
+		equip = 0.6
+	}
+	self.komodo.name_id = "bm_w_komodo"
+	self.komodo.desc_id = "bm_w_komodo_desc"
+	self.komodo.description_id = "des_komodo"
+	self.komodo.muzzleflash = "effects/payday2/particles/weapons/556_auto_fps"
+	self.komodo.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
+	self.komodo.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
+	self.komodo.DAMAGE = 1
+	self.komodo.CLIP_AMMO_MAX = 30
+	self.komodo.NR_CLIPS_MAX = 5
+	self.komodo.AMMO_MAX = self.corgi.CLIP_AMMO_MAX * self.corgi.NR_CLIPS_MAX
+	self.komodo.AMMO_PICKUP = self:_pickup_chance(self.corgi.AMMO_MAX, 3)
+	self.komodo.FIRE_MODE = "auto"
+	self.komodo.fire_mode_data = {
+		fire_rate = 0.075
+	}
+	self.komodo.CAN_TOGGLE_FIREMODE = true
+	self.komodo.auto = {
+		fire_rate = 0.075
+	}
+	self.komodo.spread = {
+		standing = self.new_m4.spread.standing,
+		crouching = self.new_m4.spread.crouching,
+		steelsight = self.new_m4.spread.steelsight,
+		moving_standing = self.new_m4.spread.moving_standing,
+		moving_crouching = self.new_m4.spread.moving_crouching,
+		moving_steelsight = self.new_m4.spread.moving_steelsight
+	}
+	self.komodo.kick = {
+		standing = self.new_m4.kick.standing,
+		crouching = self.corgi.kick.standing,
+		steelsight = self.corgi.kick.standing
+	}
+	self.komodo.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.komodo.crosshair.standing.offset = 0.16
+	self.komodo.crosshair.standing.moving_offset = 1
+	self.komodo.crosshair.standing.kick_offset = 0.8
+	self.komodo.crosshair.crouching.offset = 0.1
+	self.komodo.crosshair.crouching.moving_offset = 0.6
+	self.komodo.crosshair.crouching.kick_offset = 0.4
+	self.komodo.crosshair.steelsight.hidden = true
+	self.komodo.crosshair.steelsight.offset = 0
+	self.komodo.crosshair.steelsight.moving_offset = 0
+	self.komodo.crosshair.steelsight.kick_offset = 0.14
+	self.komodo.shake = {
+		fire_multiplier = 0.3,
+		fire_steelsight_multiplier = -0.3
+	}
+	self.komodo.autohit = weapon_data.autohit_rifle_default
+	self.komodo.aim_assist = weapon_data.aim_assist_rifle_default
+	self.komodo.weapon_hold = "komodo"
+	self.komodo.animations = {
+		equip_id = "equip_komodo",
+		recoil_steelsight = true
+	}
+	self.komodo.global_value = "normal"
+	self.komodo.texture_bundle_folder = "tar"
+	self.komodo.panic_suppression_chance = 0.2
+	self.komodo.stats = {
+		zoom = 1,
+		total_ammo_mod = 21,
+		damage = 58,
+		alert_size = 8,
+		spread = 16,
+		spread_moving = 15,
+		recoil = 14,
+		value = 9,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 12,
+		concealment = 26
+	}
+end
+
+-- Lines 26417-26536
+function WeaponTweakData:_init_elastic(weapon_data)
+	self.elastic = {
+		categories = {
+			"bow"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
+		projectile_type = "elastic_arrow",
+		not_allowed_in_bleedout = true,
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.elastic.sounds.charge_release = "elastic_release"
+	self.elastic.sounds.charge_release_fail = "elastic_release_fail"
+	self.elastic.sounds.charge = "elastic_charge"
+	self.elastic.sounds.charge_cancel = "elastic_charge_cancel"
+	self.elastic.sounds.enter_steelsight = "secondary_steel_sight_enter"
+	self.elastic.sounds.leave_steelsight = "secondary_steel_sight_exit"
+	self.elastic.timers = {
+		reload_not_empty = 1.3
+	}
+	self.elastic.timers.reload_empty = self.elastic.timers.reload_not_empty
+	self.elastic.timers.unequip = 0.85
+	self.elastic.timers.equip = 0.85
+	self.elastic.charge_data = {
+		max_t = 1.5
+	}
+	self.elastic.name_id = "bm_w_elastic"
+	self.elastic.desc_id = "bm_w_elastic_desc"
+	self.elastic.description_id = "des_elastic"
+	self.elastic.global_value = "normal"
+	self.elastic.texture_bundle_folder = "ram"
+	self.elastic.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
+	self.elastic.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.elastic.use_data = {
+		selection_index = SELECTION.PRIMARY,
+		align_place = "left_hand"
+	}
+	self.elastic.DAMAGE = 6
+	self.elastic.CLIP_AMMO_MAX = 1
+	self.elastic.NR_CLIPS_MAX = 30
+	self.elastic.AMMO_MAX = self.elastic.CLIP_AMMO_MAX * self.elastic.NR_CLIPS_MAX
+	self.elastic.AMMO_PICKUP = self:_pickup_chance(0, self.elastic.use_data.selection_index)
+	self.elastic.FIRE_MODE = "single"
+	self.elastic.fire_mode_data = {
+		fire_rate = 0.2
+	}
+	self.elastic.single = {
+		fire_rate = 0.2
+	}
+	self.elastic.spread = {
+		standing = self.r870.spread.standing,
+		crouching = self.r870.spread.crouching,
+		steelsight = self.r870.spread.steelsight,
+		moving_standing = self.r870.spread.moving_standing,
+		moving_crouching = self.r870.spread.moving_crouching,
+		moving_steelsight = self.r870.spread.moving_steelsight
+	}
+	self.elastic.kick = {
+		standing = {
+			1.8,
+			2,
+			-0.2,
+			0.2
+		}
+	}
+	self.elastic.kick.crouching = self.elastic.kick.standing
+	self.elastic.kick.steelsight = self.elastic.kick.standing
+	self.elastic.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.elastic.crosshair.standing.offset = 0.16
+	self.elastic.crosshair.standing.moving_offset = 0.7
+	self.elastic.crosshair.crouching.offset = 0.07
+	self.elastic.crosshair.crouching.moving_offset = 0.7
+	self.elastic.crosshair.crouching.kick_offset = 0.3
+	self.elastic.crosshair.steelsight.hidden = true
+	self.elastic.crosshair.steelsight.offset = 0
+	self.elastic.crosshair.steelsight.moving_offset = 0
+	self.elastic.crosshair.steelsight.kick_offset = 0.1
+	self.elastic.shake = {
+		fire_multiplier = 2,
+		fire_steelsight_multiplier = 2
+	}
+	self.elastic.autohit = weapon_data.autohit_shotgun_default
+	self.elastic.aim_assist = weapon_data.aim_assist_shotgun_default
+	self.elastic.animations = {
+		equip_id = "equip_elastic"
+	}
+	self.elastic.weapon_hold = "elastic"
+	self.elastic.animations.recoil_steelsight = false
+	self.elastic.panic_suppression_chance = 0.2
+	self.elastic.ignore_damage_upgrades = true
+	self.elastic.stats = {
+		zoom = 5,
+		total_ammo_mod = 21,
+		damage = 20,
+		alert_size = 7,
+		spread = 25,
+		spread_moving = 25,
+		recoil = 25,
+		value = 1,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 2,
+		concealment = 27
+	}
+	self.elastic.stats_modifiers = {
+		damage = 100
+	}
+end
+
+-- Lines 26541-26654
+function WeaponTweakData:_init_legacy(weapon_data)
+	self.legacy = {
+		categories = {
+			"pistol"
+		},
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.legacy.sounds.fire = "legacy_fire"
+	self.legacy.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.legacy.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.legacy.sounds.dryfire = "secondary_dryfire"
+	self.legacy.sounds.magazine_empty = "wp_pistol_slide_lock"
+	self.legacy.timers = {
+		reload_not_empty = 1.5,
+		reload_empty = 2.15,
+		unequip = 0.5,
+		equip = 0.35
+	}
+	self.legacy.name_id = "bm_w_legacy"
+	self.legacy.desc_id = "bm_w_legacy_desc"
+	self.legacy.description_id = "des_legacy"
+	self.legacy.global_value = "normal"
+	self.legacy.texture_bundle_folder = "khp"
+	self.legacy.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
+	self.legacy.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.legacy.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.legacy.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
+	self.legacy.DAMAGE = 1
+	self.legacy.CLIP_AMMO_MAX = 13
+	self.legacy.NR_CLIPS_MAX = 12
+	self.legacy.AMMO_MAX = self.legacy.CLIP_AMMO_MAX * self.legacy.NR_CLIPS_MAX
+	self.legacy.AMMO_PICKUP = self:_pickup_chance(self.legacy.AMMO_MAX, PICKUP.OTHER)
+	self.legacy.FIRE_MODE = "single"
+	self.legacy.fire_mode_data = {
+		fire_rate = 0.11
+	}
+	self.legacy.single = {
+		fire_rate = 0.11
+	}
+	self.legacy.spread = {
+		standing = self.new_m4.spread.standing,
+		crouching = self.new_m4.spread.crouching,
+		steelsight = self.new_m4.spread.steelsight,
+		moving_standing = self.new_m4.spread.moving_standing,
+		moving_crouching = self.new_m4.spread.moving_crouching,
+		moving_steelsight = self.new_m4.spread.moving_steelsight
+	}
+	self.legacy.kick = {
+		standing = self.glock_17.kick.standing
+	}
+	self.legacy.kick.crouching = self.legacy.kick.standing
+	self.legacy.kick.steelsight = self.legacy.kick.standing
+	self.legacy.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.legacy.crosshair.standing.offset = 0.2
+	self.legacy.crosshair.standing.moving_offset = 0.4
+	self.legacy.crosshair.standing.kick_offset = 0.3
+	self.legacy.crosshair.crouching.offset = 0.1
+	self.legacy.crosshair.crouching.moving_offset = 0.5
+	self.legacy.crosshair.crouching.kick_offset = 0.2
+	self.legacy.crosshair.steelsight.hidden = true
+	self.legacy.crosshair.steelsight.offset = 0
+	self.legacy.crosshair.steelsight.moving_offset = 0
+	self.legacy.crosshair.steelsight.kick_offset = 0.1
+	self.legacy.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.legacy.autohit = weapon_data.autohit_pistol_default
+	self.legacy.aim_assist = weapon_data.aim_assist_pistol_default
+	self.legacy.weapon_hold = "packrat"
+	self.legacy.animations = {
+		equip_id = "equip_packrat",
+		recoil_steelsight = true,
+		magazine_empty = "last_recoil"
+	}
+	self.legacy.panic_suppression_chance = 0.2
+	self.legacy.stats = {
+		zoom = 3,
+		total_ammo_mod = 21,
+		damage = 37,
+		alert_size = 7,
+		spread = 12,
+		spread_moving = 12,
+		recoil = 13,
+		value = 4,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 15,
+		concealment = 30
+	}
+end
+
+-- Lines 26657-26771
+function WeaponTweakData:_init_x_legacy(weapon_data)
+	self.x_legacy = {
+		categories = {
+			"akimbo",
+			"pistol"
+		},
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.x_legacy.sounds.fire = "legacy_fire"
+	self.x_legacy.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.x_legacy.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.x_legacy.sounds.dryfire = "secondary_dryfire"
+	self.x_legacy.sounds.magazine_empty = "wp_akimbo_pistol_slide_lock"
+	self.x_legacy.timers = {
+		reload_not_empty = 3.17,
+		reload_empty = 4,
+		unequip = 0.5,
+		equip = 0.5
+	}
+	self.x_legacy.name_id = "bm_w_x_legacy"
+	self.x_legacy.desc_id = "bm_w_x_legacy_desc"
+	self.x_legacy.description_id = "des_x_legacy"
+	self.x_legacy.global_value = "normal"
+	self.x_legacy.texture_bundle_folder = "khp"
+	self.x_legacy.muzzleflash = "effects/payday2/particles/weapons/9mm_auto_fps"
+	self.x_legacy.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.x_legacy.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.x_legacy.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
+	self.x_legacy.DAMAGE = 1
+	self.x_legacy.CLIP_AMMO_MAX = 26
+	self.x_legacy.NR_CLIPS_MAX = 6
+	self.x_legacy.AMMO_MAX = self.x_legacy.CLIP_AMMO_MAX * self.x_legacy.NR_CLIPS_MAX
+	self.x_legacy.AMMO_PICKUP = self:_pickup_chance(self.x_legacy.AMMO_MAX, PICKUP.OTHER)
+	self.x_legacy.FIRE_MODE = "single"
+	self.x_legacy.fire_mode_data = {
+		fire_rate = 0.11
+	}
+	self.x_legacy.single = {
+		fire_rate = 0.11
+	}
+	self.x_legacy.spread = {
+		standing = self.colt_1911.spread.standing,
+		crouching = self.colt_1911.spread.crouching,
+		steelsight = self.colt_1911.spread.steelsight,
+		moving_standing = self.colt_1911.spread.moving_standing,
+		moving_crouching = self.colt_1911.spread.moving_crouching,
+		moving_steelsight = self.colt_1911.spread.moving_steelsight
+	}
+	self.x_legacy.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
+	self.x_legacy.kick.crouching = self.x_legacy.kick.standing
+	self.x_legacy.kick.steelsight = self.x_legacy.kick.standing
+	self.x_legacy.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.x_legacy.crosshair.standing.offset = 0.2
+	self.x_legacy.crosshair.standing.moving_offset = 0.6
+	self.x_legacy.crosshair.standing.kick_offset = 0.4
+	self.x_legacy.crosshair.crouching.offset = 0.1
+	self.x_legacy.crosshair.crouching.moving_offset = 0.6
+	self.x_legacy.crosshair.crouching.kick_offset = 0.3
+	self.x_legacy.crosshair.steelsight.hidden = true
+	self.x_legacy.crosshair.steelsight.offset = 0
+	self.x_legacy.crosshair.steelsight.moving_offset = 0
+	self.x_legacy.crosshair.steelsight.kick_offset = 0.1
+	self.x_legacy.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.x_legacy.autohit = weapon_data.autohit_pistol_default
+	self.x_legacy.aim_assist = weapon_data.aim_assist_pistol_default
+	self.x_legacy.weapon_hold = "jowi_pistol"
+	self.x_legacy.animations = {
+		second_gun_versions = {
+			reload_not_empty = "reload_not_empty_left",
+			reload = "reload_left"
+		},
+		has_steelsight_stance = true,
+		recoil_steelsight = true,
+		magazine_empty = "last_recoil"
+	}
+	self.x_legacy.panic_suppression_chance = 0.2
+	self.x_legacy.stats = {
+		zoom = 3,
+		total_ammo_mod = 21,
+		damage = 37,
+		alert_size = 7,
+		spread = 12,
+		spread_moving = 12,
+		recoil = 13,
+		value = 4,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 15,
+		concealment = 30
+	}
+end
+
+-- Lines 26775-26900
+function WeaponTweakData:_init_coach(weapon_data)
+	self.coach = {
+		categories = {
+			"shotgun"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.coach.sounds.fire = "coach_fire"
+	self.coach.sounds.dryfire = "shotgun_dryfire"
+	self.coach.sounds.enter_steelsight = "primary_steel_sight_enter"
+	self.coach.sounds.leave_steelsight = "primary_steel_sight_exit"
+	self.coach.timers = {
+		reload_not_empty = 2.2
+	}
+	self.coach.timers.reload_empty = self.coach.timers.reload_not_empty
+	self.coach.timers.unequip = 0.6
+	self.coach.timers.equip = 0.4
+	self.coach.name_id = "bm_w_coach"
+	self.coach.desc_id = "bm_w_coach_desc"
+	self.coach.description_id = "des_coach"
+	self.coach.texture_bundle_folder = "sdb"
+	self.coach.global_value = "normal"
+	self.coach.muzzleflash = "effects/payday2/particles/weapons/762_auto_fps"
+	self.coach.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.coach.use_data = {
+		selection_index = SELECTION.SECONDARY,
+		align_place = "right_hand"
+	}
+	self.coach.DAMAGE = 4
+	self.coach.damage_near = 2000
+	self.coach.damage_far = 3000
+	self.coach.rays = 12
+	self.coach.CLIP_AMMO_MAX = 2
+	self.coach.NR_CLIPS_MAX = 22
+	self.coach.AMMO_MAX = self.coach.CLIP_AMMO_MAX * self.coach.NR_CLIPS_MAX
+	self.coach.AMMO_PICKUP = self:_pickup_chance(self.coach.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
+	self.coach.FIRE_MODE = "single"
+	self.coach.fire_mode_data = {
+		fire_rate = 0.12
+	}
+	self.coach.single = {
+		fire_rate = 0.12
+	}
+	self.coach.CAN_TOGGLE_FIREMODE = false
+	self.coach.spread = {
+		standing = self.r870.spread.standing,
+		crouching = self.r870.spread.crouching,
+		steelsight = self.r870.spread.steelsight,
+		moving_standing = self.r870.spread.moving_standing,
+		moving_crouching = self.r870.spread.moving_crouching,
+		moving_steelsight = self.r870.spread.moving_steelsight
+	}
+	self.coach.kick = {
+		standing = {
+			1.7,
+			1.8,
+			-0.4,
+			0.3
+		}
+	}
+	self.coach.kick.crouching = self.coach.kick.standing
+	self.coach.kick.steelsight = {
+		1.4,
+		1.5,
+		-0.2,
+		0.2
+	}
+	self.coach.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.coach.crosshair.standing.offset = 0.7
+	self.coach.crosshair.standing.moving_offset = 0.7
+	self.coach.crosshair.standing.kick_offset = 0.8
+	self.coach.crosshair.crouching.offset = 0.65
+	self.coach.crosshair.crouching.moving_offset = 0.65
+	self.coach.crosshair.crouching.kick_offset = 0.75
+	self.coach.crosshair.steelsight.hidden = true
+	self.coach.crosshair.steelsight.offset = 0
+	self.coach.crosshair.steelsight.moving_offset = 0
+	self.coach.crosshair.steelsight.kick_offset = 0
+	self.coach.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.coach.autohit = weapon_data.autohit_shotgun_default
+	self.coach.aim_assist = weapon_data.aim_assist_shotgun_default
+	self.coach.weapon_hold = "coach"
+	self.coach.animations = {
+		equip_id = "equip_coach",
+		recoil_steelsight = true,
+		magazine_empty = "last_recoil"
+	}
+	self.coach.panic_suppression_chance = 0.2
+	self.coach.stats = {
+		zoom = 3,
+		total_ammo_mod = 21,
+		damage = 155,
+		alert_size = 7,
+		spread = 15,
+		spread_moving = 12,
+		recoil = 12,
+		value = 3,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 5,
+		concealment = 10
+	}
+end
+
+-- Lines 26911-27288
 function WeaponTweakData:_create_table_structure()
 	self.c45_npc = {
 		usage = "is_pistol",
@@ -21380,6 +23862,10 @@ function WeaponTweakData:_create_table_structure()
 		auto = {}
 	}
 	self.aa_turret_module = {
+		sounds = {},
+		auto = {}
+	}
+	self.crate_turret_module = {
 		sounds = {},
 		auto = {}
 	}
@@ -22446,13 +24932,43 @@ function WeaponTweakData:_create_table_structure()
 		use_data = {},
 		auto = {}
 	}
+	self.komodo_crew = {
+		usage = "is_rifle",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.elastic_crew = {
+		usage = "bow",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.legacy_crew = {
+		usage = "is_pistol",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.x_legacy_crew = {
+		usage = "akimbo_pistol",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.coach_crew = {
+		usage = "is_shotgun_pump",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
 end
 
--- Lines: 27127 to 27128
+-- Lines 27292-27293
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines: 27131 to 27138
+-- Lines 27295-27303
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then
@@ -22460,4 +24976,3 @@ function WeaponTweakData:_precalculate_values()
 		end
 	end
 end
-

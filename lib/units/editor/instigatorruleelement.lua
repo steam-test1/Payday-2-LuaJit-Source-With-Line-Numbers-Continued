@@ -2,7 +2,7 @@ InstigatorRuleUnitElement = InstigatorRuleUnitElement or class(MissionElement)
 InstigatorRuleUnitElement.SAVE_UNIT_POSITION = false
 InstigatorRuleUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 17
+-- Lines 5-17
 function InstigatorRuleUnitElement:init(unit)
 	InstigatorRuleUnitElement.super.init(self, unit)
 
@@ -15,24 +15,24 @@ function InstigatorRuleUnitElement:init(unit)
 	table.insert(self._save_values, "invert")
 end
 
--- Lines: 19 to 22
+-- Lines 19-22
 function InstigatorRuleUnitElement:destroy(unit)
 	managers.vehicle:remove_listener(unit:name():s())
 	InstigatorRuleUnitElement.super.destroy(self, unit)
 end
 
--- Lines: 24 to 27
+-- Lines 24-27
 function InstigatorRuleUnitElement:_rule_updated(category, value)
 	self._hed.rules[self._hed.instigator] = self._hed.rules[self._hed.instigator] or {}
 	self._hed.rules[self._hed.instigator][category] = #value > 0 and value or nil
 end
 
--- Lines: 29 to 31
+-- Lines 29-31
 function InstigatorRuleUnitElement:_instigator_changed(params)
 	self:_update_rules_panel()
 end
 
--- Lines: 33 to 69
+-- Lines 33-69
 function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -55,7 +55,9 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 		value = "instigator",
 		ctrlr = instigator
 	})
-	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_instigator_changed"), {ctrlr = instigator})
+	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_instigator_changed"), {
+		ctrlr = instigator
+	})
 	self:_build_value_checkbox(panel, panel_sizer, "invert", "Check this to have the rule inverted, i.e. exclude one unit from triggering the connected element", "Invert rule")
 
 	self._rules_panel = EWS:Panel(panel, "rules_panel", "TAB_TRAVERSAL")
@@ -71,7 +73,7 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	}, callback(self, self, "_update_rules_panel"))
 end
 
--- Lines: 71 to 202
+-- Lines 71-202
 function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	panel = self._rules_panel
 	panel_sizer = self._rules_panel_sizer
@@ -195,4 +197,3 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	self._panel:layout()
 	managers.editor:layer("Mission"):do_layout()
 end
-

@@ -1,11 +1,11 @@
 VehicleStateLocked = VehicleStateLocked or class(BaseVehicleState)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function VehicleStateLocked:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines: 10 to 17
+-- Lines 9-17
 function VehicleStateLocked:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
@@ -13,18 +13,17 @@ function VehicleStateLocked:enter(state_data, enter_data)
 	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
 end
 
--- Lines: 21 to 22
+-- Lines 21-23
 function VehicleStateLocked:allow_exit()
 	return true
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function VehicleStateLocked:stop_vehicle()
 	return true
 end
 
--- Lines: 33 to 34
+-- Lines 33-35
 function VehicleStateLocked:is_vulnerable()
 	return false
 end
-

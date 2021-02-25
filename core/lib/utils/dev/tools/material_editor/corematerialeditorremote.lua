@@ -2,12 +2,12 @@ CoreMaterialEditorRemote = CoreMaterialEditorRemote or class()
 CoreMaterialEditorRemote.PORT = 11332
 CoreMaterialEditorRemote.TEMP_PATH = "core/temp/"
 
--- Lines: 6 to 8
+-- Lines 6-8
 function CoreMaterialEditorRemote:init()
 	Network:bind(self.PORT, self)
 end
 
--- Lines: 10 to 29
+-- Lines 10-29
 function CoreMaterialEditorRemote:reload_shader_libs()
 	Application:update_filesystem_index(self.TEMP_PATH .. "temp_rt.xml")
 	Application:load_render_templates(self.TEMP_PATH .. "temp_rt.xml")
@@ -28,4 +28,3 @@ function CoreMaterialEditorRemote:reload_shader_libs()
 		Application:load_shader_config(self.TEMP_PATH .. "temp_lib_ps3")
 	end
 end
-

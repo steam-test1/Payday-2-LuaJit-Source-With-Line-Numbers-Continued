@@ -1,7 +1,7 @@
 HUDTempVR = HUDTemp
 HUDTempVR.old_init = HUDTemp.init
 
--- Lines: 6 to 14
+-- Lines 6-14
 function HUDTempVR:init(hud)
 	self._tablet_panel = managers.hud:tablet_page("right_page")
 	hud.old_panel = hud.panel
@@ -16,4 +16,3 @@ function HUDTempVR:init(hud)
 	hud.panel = hud.old_panel
 	hud.old_panel = nil
 end
-

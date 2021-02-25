@@ -3,7 +3,7 @@ core:module("CoreClass")
 __overrides = {}
 __everyclass = {}
 
--- Lines: 16 to 39
+-- Lines 16-40
 function class(...)
 	local super = ...
 
@@ -23,7 +23,7 @@ function class(...)
 
 	setmetatable(class_table, __overrides[super] or super)
 
-	-- Lines: 31 to 37
+	-- Lines 31-38
 	function class_table.new(klass, ...)
 		local object = {}
 
@@ -39,7 +39,7 @@ function class(...)
 	return class_table
 end
 
--- Lines: 42 to 51
+-- Lines 42-51
 function override_class(old_class, new_class)
 	assert(__everyclass, "Too late to override class now.")
 
@@ -54,12 +54,12 @@ function override_class(old_class, new_class)
 	__overrides[old_class] = new_class
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function close_override()
 	__everyclass = nil
 end
 
--- Lines: 62 to 67
+-- Lines 62-68
 function type_name(value)
 	local name = type(value)
 
@@ -70,9 +70,11 @@ function type_name(value)
 	return name
 end
 
--- Lines: 74 to 82
+-- Lines 74-83
 function mixin(res, ...)
-	for _, t in ipairs({...}) do
+	for _, t in ipairs({
+		...
+	}) do
 		for k, v in pairs(t) do
 			if k ~= "new" and k ~= "__index" then
 				rawset(res, k, v)
@@ -83,14 +85,16 @@ function mixin(res, ...)
 	return res
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function mix(...)
 	return mixin({}, ...)
 end
 
--- Lines: 89 to 93
+-- Lines 89-94
 function mixin_add(res, ...)
-	for _, t in ipairs({...}) do
+	for _, t in ipairs({
+		...
+	}) do
 		for k, v in pairs(t) do
 			table.insert(res, v)
 		end
@@ -99,12 +103,12 @@ function mixin_add(res, ...)
 	return res
 end
 
--- Lines: 96 to 97
+-- Lines 96-98
 function mix_add(...)
 	return mixin_add({}, ...)
 end
 
--- Lines: 104 to 119
+-- Lines 104-119
 function hijack_func(instance_or_meta, func_name, func)
 	local meta = getmetatable(instance_or_meta) or instance_or_meta
 
@@ -123,7 +127,7 @@ function hijack_func(instance_or_meta, func_name, func)
 	end
 end
 
--- Lines: 121 to 134
+-- Lines 121-134
 function unhijack_func(instance_or_meta, func_name)
 	local meta = getmetatable(instance_or_meta) or instance_or_meta
 
@@ -143,14 +147,18 @@ __frozen__newindex = __frozen__newindex or function (self, key, value)
 	error(string.format("Attempt to set %s = %s in frozen %s.", tostring(key), tostring(value), type_or_class_name(self)))
 end
 
--- Lines: 140 to 151
+-- Lines 140-152
 function freeze(...)
-	for _, instance in ipairs({...}) do
+	for _, instance in ipairs({
+		...
+	}) do
 		if not is_frozen(instance) then
 			local metatable = getmetatable(instance)
 
 			if metatable == nil then
-				setmetatable(instance, {__newindex = __frozen__newindex})
+				setmetatable(instance, {
+					__newindex = __frozen__newindex
+				})
 			else
 				setmetatable(instance, {
 					__index = metatable.__index,
@@ -164,19 +172,19 @@ function freeze(...)
 	return ...
 end
 
--- Lines: 154 to 156
+-- Lines 154-157
 function is_frozen(instance)
 	local metatable = debug.getmetatable(instance)
 
 	return metatable and metatable.__newindex == __frozen__newindex
 end
 
--- Lines: 159 to 166
+-- Lines 159-167
 function frozen_class(...)
 	local class_table = class(...)
 	local new = class_table.new
 
-	-- Lines: 162 to 164
+	-- Lines 162-165
 	function class_table.new(klass, ...)
 		local instance, ret = new(klass, ...)
 
@@ -186,34 +194,38 @@ function frozen_class(...)
 	return class_table
 end
 
--- Lines: 177 to 180
+-- Lines 177-181
 function responder(...)
-	local response = {...}
+	local response = {
+		...
+	}
 
-	-- Lines: 178 to 179
+	-- Lines 179-179
 	local function responder_function()
 		return unpack(response)
 	end
 
-	return setmetatable({}, {__index = function ()
-		return responder_function
-	end})
+	return setmetatable({}, {
+		__index = function ()
+			return responder_function
+		end
+	})
 end
 
--- Lines: 190 to 199
+-- Lines 190-200
 function responder_map(response_table)
 	local responder = {}
 
 	for key, value in pairs(response_table) do
 		if key == "default" then
-			setmetatable(responder, {__index = function ()
-				return function ()
-					return value
+			setmetatable(responder, {
+				__index = function ()
+					return function ()
+						return value
+					end
 				end
-			end})
+			})
 		else
-
-			-- Lines: 195 to 196
 			responder[key] = function ()
 				return value
 			end
@@ -225,20 +237,17 @@ end
 
 GetSet = GetSet or class()
 
--- Lines: 209 to 215
+-- Lines 209-215
 function GetSet:init(t)
 	for k, v in pairs(t) do
 		self["_" .. k] = v
 
-		-- Lines: 211 to 212
 		self[k] = function (self)
 			return self["_" .. k]
 		end
 
-		-- Lines: 212 to 213
 		self["set_" .. k] = function (self, v)
 			self["_" .. k] = v
 		end
 	end
 end
-

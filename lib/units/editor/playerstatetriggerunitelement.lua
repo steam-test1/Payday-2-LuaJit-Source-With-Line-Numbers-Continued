@@ -1,6 +1,6 @@
 PlayerStateTriggerUnitElement = PlayerStateTriggerUnitElement or class(MissionElement)
 
--- Lines: 3 to 10
+-- Lines 3-10
 function PlayerStateTriggerUnitElement:init(unit)
 	PlayerStateTriggerUnitElement.super.init(self, unit)
 
@@ -10,7 +10,7 @@ function PlayerStateTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
--- Lines: 12 to 21
+-- Lines 12-21
 function PlayerStateTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -20,4 +20,3 @@ function PlayerStateTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "state", managers.player:player_states(), "Select a state from the combobox")
 	self:_add_help_text("Set the player state the element should trigger on.")
 end
-

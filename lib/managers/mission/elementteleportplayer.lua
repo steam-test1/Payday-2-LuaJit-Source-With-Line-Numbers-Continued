@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementTeleportPlayer = ElementTeleportPlayer or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementTeleportPlayer:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 9 to 35
+-- Lines 9-35
 function ElementTeleportPlayer:on_executed(instigator)
 	ElementTeleportPlayer.super.on_executed(self, instigator)
 
@@ -36,4 +36,3 @@ function ElementTeleportPlayer:on_executed(instigator)
 		end
 	end
 end
-

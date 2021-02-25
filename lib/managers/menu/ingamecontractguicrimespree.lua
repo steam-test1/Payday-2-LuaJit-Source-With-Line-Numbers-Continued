@@ -1,6 +1,6 @@
 IngameContractGuiCrimeSpree = IngameContractGuiCrimeSpree or class()
 
--- Lines: 5 to 116
+-- Lines 4-116
 function IngameContractGuiCrimeSpree:init(ws, node)
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
 	self._ws = ws
@@ -9,7 +9,7 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 		h = math.round(ws:panel():h() * 1)
 	})
 
-	self._panel:set_y((CoreMenuRenderer.Renderer.border_height + tweak_data.menu.pd2_large_font_size) - 5)
+	self._panel:set_y(CoreMenuRenderer.Renderer.border_height + tweak_data.menu.pd2_large_font_size - 5)
 	self._panel:grow(0, -(self._panel:y() + tweak_data.menu.pd2_medium_font_size))
 
 	self._node = node
@@ -31,7 +31,9 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 		color = tweak_data.screen_colors.text
 	})
 
-	contract_text:set_text(self:get_text("cn_crime_spree_level", {level = managers.experience:cash_string(managers.crime_spree:server_spree_level(), "")}))
+	contract_text:set_text(self:get_text("cn_crime_spree_level", {
+		level = managers.experience:cash_string(managers.crime_spree:server_spree_level(), "")
+	}))
 
 	local range = {
 		from = utf8.len(managers.localization:text("cn_crime_spree_level_no_num")),
@@ -105,7 +107,7 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 
 	self._modifiers_panel = self._panel:panel({
 		w = self._panel:w() - padding * 2,
-		h = (self._panel:h() - padding * 2) - modifiers_title:bottom(),
+		h = self._panel:h() - padding * 2 - modifiers_title:bottom(),
 		x = padding,
 		y = modifiers_title:bottom() + padding
 	})
@@ -116,19 +118,21 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 
 	self:_rec_round_object(self._panel)
 
-	self._sides = BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._sides = BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	if not managers.menu:is_pc_controller() then
 		self:_setup_controller_input()
 	end
 end
 
--- Lines: 118 to 126
+-- Lines 118-126
 function IngameContractGuiCrimeSpree:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -141,44 +145,44 @@ function IngameContractGuiCrimeSpree:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 128 to 132
+-- Lines 128-132
 function IngameContractGuiCrimeSpree:set_layer(layer)
 	if self._panel and alive(self._panel) then
 		self._panel:set_layer(layer)
 	end
 end
 
--- Lines: 134 to 135
+-- Lines 134-136
 function IngameContractGuiCrimeSpree:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines: 138 to 141
+-- Lines 138-141
 function IngameContractGuiCrimeSpree:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
 	text:set_size(w, h)
 end
 
--- Lines: 143 to 144
+-- Lines 143-144
 function IngameContractGuiCrimeSpree:mouse_moved(o, x, y)
 end
 
--- Lines: 146 to 147
+-- Lines 146-147
 function IngameContractGuiCrimeSpree:mouse_pressed(button, x, y)
 end
 
--- Lines: 149 to 151
+-- Lines 149-151
 function IngameContractGuiCrimeSpree:mouse_wheel_up(x, y)
 	self._scroll:scroll(x, y, 1)
 end
 
--- Lines: 153 to 155
+-- Lines 153-155
 function IngameContractGuiCrimeSpree:mouse_wheel_down(x, y)
 	self._scroll:scroll(x, y, -1)
 end
 
--- Lines: 157 to 162
+-- Lines 157-163
 function IngameContractGuiCrimeSpree:special_btn_pressed(button)
 	if button == Idstring("menu_modify_item") then
 		self:_toggle_potential_rewards()
@@ -187,22 +191,22 @@ function IngameContractGuiCrimeSpree:special_btn_pressed(button)
 	return false
 end
 
--- Lines: 165 to 167
+-- Lines 165-167
 function IngameContractGuiCrimeSpree:_setup_controller_input()
 	CrimeSpreeContractMenuComponent._setup_controller_input(self)
 end
 
--- Lines: 169 to 171
+-- Lines 169-171
 function IngameContractGuiCrimeSpree:_axis_move(o, axis_name, axis_vector, controller)
 	CrimeSpreeContractMenuComponent._axis_move(self, o, axis_name, axis_vector, controller)
 end
 
--- Lines: 173 to 175
+-- Lines 173-175
 function IngameContractGuiCrimeSpree:update(t, dt)
 	CrimeSpreeContractMenuComponent.update(self, t, dt)
 end
 
--- Lines: 177 to 182
+-- Lines 177-182
 function IngameContractGuiCrimeSpree:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -210,4 +214,3 @@ function IngameContractGuiCrimeSpree:close()
 		self._panel = nil
 	end
 end
-

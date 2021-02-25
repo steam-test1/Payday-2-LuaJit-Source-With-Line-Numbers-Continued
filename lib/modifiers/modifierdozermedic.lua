@@ -3,7 +3,7 @@ ModifierDozerMedic._type = "ModifierDozerMedic"
 ModifierDozerMedic.name_id = "none"
 ModifierDozerMedic.desc_id = "menu_cs_modifier_dozer_medic"
 
--- Lines: 7 to 13
+-- Lines 7-13
 function ModifierDozerMedic:init(data)
 	ModifierDozerMedic.super.init(self, data)
 
@@ -13,4 +13,3 @@ function ModifierDozerMedic:init(data)
 	table.insert(unit_types.america, unit_name)
 	table.insert(unit_types.russia, unit_name)
 end
-

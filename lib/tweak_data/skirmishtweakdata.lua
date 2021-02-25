@@ -1,6 +1,6 @@
 SkirmishTweakData = SkirmishTweakData or class()
 
--- Lines: 4 to 20
+-- Lines 4-20
 function SkirmishTweakData:init(tweak_data)
 	self:_init_special_unit_spawn_limits()
 	self:_init_group_ai_data(tweak_data)
@@ -16,7 +16,7 @@ function SkirmishTweakData:init(tweak_data)
 	self.custody_game_over_delay = 10
 end
 
--- Lines: 22 to 46
+-- Lines 22-46
 function SkirmishTweakData:_init_special_unit_spawn_limits()
 	self.special_unit_spawn_limits = {
 		{
@@ -169,20 +169,22 @@ function SkirmishTweakData:_init_special_unit_spawn_limits()
 	}
 end
 
--- Lines: 48 to 53
+-- Lines 48-53
 function SkirmishTweakData:_init_group_ai_data(tweak_data)
 	local skirmish_data = deep_clone(tweak_data.group_ai.besiege)
 	skirmish_data.assault.groups = nil
 	tweak_data.group_ai.skirmish = skirmish_data
 end
 
--- Lines: 55 to 65
+-- Lines 55-65
 function SkirmishTweakData:_init_wave_phase_durations(tweak_data)
 	local skirmish_data = tweak_data.group_ai.skirmish
-	skirmish_data.assault.anticipation_duration = {{
-		15,
-		1
-	}}
+	skirmish_data.assault.anticipation_duration = {
+		{
+			15,
+			1
+		}
+	}
 	skirmish_data.assault.build_duration = 15
 	skirmish_data.assault.sustain_duration_min = {
 		120,
@@ -208,7 +210,7 @@ function SkirmishTweakData:_init_wave_phase_durations(tweak_data)
 	}
 end
 
--- Lines: 67 to 151
+-- Lines 67-151
 function SkirmishTweakData:_init_spawn_group_weights(tweak_data)
 	local nice_human_readable_table = {
 		{
@@ -511,7 +513,9 @@ function SkirmishTweakData:_init_spawn_group_weights(tweak_data)
 		end
 	end
 
-	self.assault = {groups = {}}
+	self.assault = {
+		groups = {}
+	}
 
 	for i, src_weights in ipairs(nice_human_readable_table) do
 		local dst_weights = {}
@@ -528,21 +532,23 @@ function SkirmishTweakData:_init_spawn_group_weights(tweak_data)
 		self.assault.groups[i] = dst_weights
 	end
 
-	local skirmish_assault_meta = {__index = function (t, key)
-		if key == "groups" then
-			local current_wave = managers.skirmish:current_wave_number()
-			local current_wave_index = math.clamp(current_wave, 1, #self.assault.groups)
+	local skirmish_assault_meta = {
+		__index = function (t, key)
+			if key == "groups" then
+				local current_wave = managers.skirmish:current_wave_number()
+				local current_wave_index = math.clamp(current_wave, 1, #self.assault.groups)
 
-			return self.assault.groups[current_wave_index]
-		else
-			return rawget(t, key)
+				return self.assault.groups[current_wave_index]
+			else
+				return rawget(t, key)
+			end
 		end
-	end}
+	}
 
 	setmetatable(tweak_data.group_ai.skirmish.assault, skirmish_assault_meta)
 end
 
--- Lines: 153 to 215
+-- Lines 153-215
 function SkirmishTweakData:_init_wave_modifiers()
 	self.wave_modifiers = {}
 	local health_damage_multipliers = {
@@ -634,20 +640,40 @@ function SkirmishTweakData:_init_wave_modifiers()
 	self.wave_modifiers[1] = {
 		{
 			class = "ModifierEnemyHealthAndDamageByWave",
-			data = {waves = health_damage_multipliers}
+			data = {
+				waves = health_damage_multipliers
+			}
 		},
-		{class = "ModifierCloakerArrest"}
+		{
+			class = "ModifierCloakerArrest"
+		}
 	}
-	self.wave_modifiers[3] = {{class = "ModifierSkulldozers"}}
-	self.wave_modifiers[5] = {{
-		class = "ModifierHeavySniper",
-		data = {spawn_chance = 5}
-	}}
-	self.wave_modifiers[7] = {{class = "ModifierDozerMedic"}}
-	self.wave_modifiers[9] = {{class = "ModifierDozerMinigun"}}
+	self.wave_modifiers[3] = {
+		{
+			class = "ModifierSkulldozers"
+		}
+	}
+	self.wave_modifiers[5] = {
+		{
+			class = "ModifierHeavySniper",
+			data = {
+				spawn_chance = 5
+			}
+		}
+	}
+	self.wave_modifiers[7] = {
+		{
+			class = "ModifierDozerMedic"
+		}
+	}
+	self.wave_modifiers[9] = {
+		{
+			class = "ModifierDozerMinigun"
+		}
+	}
 end
 
--- Lines: 217 to 293
+-- Lines 217-293
 function SkirmishTweakData:_init_weekly_modifiers()
 	self.weekly_modifiers = {
 		wsm01 = {
@@ -662,27 +688,37 @@ function SkirmishTweakData:_init_weekly_modifiers()
 		wsm02 = {
 			icon = "crime_spree_dozer_rage",
 			class = "ModifierDozerRage",
-			data = {damage = 100}
+			data = {
+				damage = 100
+			}
 		},
 		wsm03 = {
 			icon = "crime_spree_medic_speed",
 			class = "ModifierHealSpeed",
-			data = {speed = 40}
+			data = {
+				speed = 40
+			}
 		},
 		wsm04 = {
 			icon = "crime_spree_medic_rage",
 			class = "ModifierMedicRage",
-			data = {damage = 20}
+			data = {
+				damage = 20
+			}
 		},
 		wsm05 = {
 			icon = "crime_spree_medic_adrenaline",
 			class = "ModifierMedicAdrenaline",
-			data = {damage = 100}
+			data = {
+				damage = 100
+			}
 		},
 		wsm06 = {
 			icon = "crime_spree_more_dozers",
 			class = "ModifierMoreDozers",
-			data = {inc = 4}
+			data = {
+				inc = 4
+			}
 		},
 		wsm07 = {
 			icon = "crime_spree_shield_phalanx",
@@ -707,33 +743,35 @@ function SkirmishTweakData:_init_weekly_modifiers()
 	}
 end
 
--- Lines: 297 to 354
+-- Lines 295-370
 function SkirmishTweakData:_init_weekly_rewards()
 	self.weekly_rewards = {
-		{textures = {
-			"barbedwire",
-			"catface",
-			"clutter",
-			"facecollage",
-			"facename",
-			"frankenstein",
-			"knife",
-			"lovehate",
-			"predator_billy",
-			"predator_blain",
-			"predator_dillan",
-			"predator_dutch",
-			"predator_hawkins",
-			"predator_mac",
-			"predator_poncho",
-			"shades_3d",
-			"shades_80s",
-			"shades_band",
-			"shades_punk",
-			"shades_shutter",
-			"shades_sport",
-			"wavewarning"
-		}},
+		{
+			textures = {
+				"barbedwire",
+				"catface",
+				"clutter",
+				"facecollage",
+				"facename",
+				"frankenstein",
+				"knife",
+				"lovehate",
+				"predator_billy",
+				"predator_blain",
+				"predator_dillan",
+				"predator_dutch",
+				"predator_hawkins",
+				"predator_mac",
+				"predator_poncho",
+				"shades_3d",
+				"shades_80s",
+				"shades_band",
+				"shades_punk",
+				"shades_shutter",
+				"shades_sport",
+				"wavewarning"
+			}
+		},
 		{
 			textures = {
 				"bloodhand",
@@ -751,19 +789,33 @@ function SkirmishTweakData:_init_weekly_rewards()
 				"skm_01",
 				"skm_02",
 				"skm_03",
-				"skm_04"
+				"skm_04",
+				"smo_01",
+				"smo_02",
+				"smo_03",
+				"smo_04",
+				"smo_05",
+				"smo_06"
 			}
 		},
-		{masks = {
-			"skm_05",
-			"skm_06",
-			"skm_07",
-			"skm_08"
-		}}
+		{
+			masks = {
+				"skm_05",
+				"skm_06",
+				"skm_07",
+				"skm_08",
+				"smo_07",
+				"smo_08",
+				"smo_09",
+				"smo_10",
+				"smo_11",
+				"smo_12"
+			}
+		}
 	}
 end
 
--- Lines: 356 to 386
+-- Lines 372-402
 function SkirmishTweakData:_init_ransom_amounts()
 	self.ransom_amounts = {
 		1600000,
@@ -782,7 +834,7 @@ function SkirmishTweakData:_init_ransom_amounts()
 	end
 end
 
--- Lines: 388 to 400
+-- Lines 404-416
 function SkirmishTweakData:_init_job_list(tweak_data)
 	self.job_list = {}
 
@@ -798,8 +850,11 @@ function SkirmishTweakData:_init_job_list(tweak_data)
 	end
 end
 
--- Lines: 402 to 405
+-- Lines 418-421
 function SkirmishTweakData:_init_briefing()
-	self.random_skirmish = {crimenet_videos = {"contact_locke1"}}
+	self.random_skirmish = {
+		crimenet_videos = {
+			"contact_locke1"
+		}
+	}
 end
-

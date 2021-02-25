@@ -2,7 +2,7 @@ AssetTriggerUnitElement = AssetTriggerUnitElement or class(MissionElement)
 AssetTriggerUnitElement.SAVE_UNIT_POSITION = false
 AssetTriggerUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 13
+-- Lines 6-13
 function AssetTriggerUnitElement:init(unit)
 	AssetTriggerUnitElement.super.init(self, unit)
 
@@ -12,7 +12,7 @@ function AssetTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "id")
 end
 
--- Lines: 18 to 27
+-- Lines 18-27
 function AssetTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -22,4 +22,3 @@ function AssetTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "id", managers.assets:get_every_asset_ids(), "Select an asset id from the combobox")
 	self:_add_help_text("Set the asset that the element should trigger on.")
 end
-

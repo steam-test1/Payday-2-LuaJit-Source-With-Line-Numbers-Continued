@@ -4,23 +4,23 @@ PlayerBipod._shoulder_pos = nil
 PlayerBipod._camera_pos = nil
 PlayerBipod._default_spread_modifier = 1.6
 
--- Lines: 7 to 10
+-- Lines 7-10
 function PlayerBipod:init(unit)
 	PlayerBipod.super.init(self, unit)
 end
 
--- Lines: 14 to 17
+-- Lines 14-17
 function PlayerBipod:set_camera_positions(bipod_pos, camera_pos)
 	self._shoulder_pos = Vector3(bipod_pos.x, bipod_pos.y, bipod_pos.z)
 	self._camera_pos = Vector3(camera_pos.x, camera_pos.y, camera_pos.z)
 end
 
--- Lines: 19 to 21
+-- Lines 19-21
 function PlayerBipod:enter(state_data, enter_data)
 	PlayerBipod.super.enter(self, state_data, enter_data)
 end
 
--- Lines: 26 to 71
+-- Lines 25-71
 function PlayerBipod:_enter(enter_data)
 	local player = managers.player:player_unit()
 
@@ -57,7 +57,7 @@ function PlayerBipod:_enter(enter_data)
 	end
 end
 
--- Lines: 73 to 78
+-- Lines 73-79
 function PlayerBipod:get_movement_modifier(weapon_spread)
 	if not weapon_spread.bipod then
 		Application:debug("[PlayerBipod:get_movement_modifier] Unable to get bipod spread modifier, did you forget to add this value for the current weapon? Returning default spread modifier")
@@ -68,12 +68,12 @@ function PlayerBipod:get_movement_modifier(weapon_spread)
 	return weapon_spread.bipod
 end
 
--- Lines: 83 to 84
+-- Lines 82-85
 function PlayerBipod:get_movement_state()
 	return "crouching"
 end
 
--- Lines: 90 to 117
+-- Lines 89-118
 function PlayerBipod:exit(state_data, new_state_name)
 	PlayerBipod.super.exit(self, state_data or self._state_data, new_state_name)
 
@@ -90,7 +90,9 @@ function PlayerBipod:exit(state_data, new_state_name)
 	self._unit:camera():camera_unit():base():remove_limits()
 
 	self._unit:camera():camera_unit():base().bipod_location = nil
-	local exit_data = {skip_equip = true}
+	local exit_data = {
+		skip_equip = true
+	}
 	self._dye_risk = nil
 
 	self:set_animation_state("standard")
@@ -99,14 +101,16 @@ function PlayerBipod:exit(state_data, new_state_name)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 
 	Application:trace("PlayerBipod:exit: ", peer_id)
-	managers.player:set_bipod_data_for_peer({peer_id = peer_id})
+	managers.player:set_bipod_data_for_peer({
+		peer_id = peer_id
+	})
 
 	self._state_data.previous_state = "bipod"
 
 	return exit_data
 end
 
--- Lines: 123 to 142
+-- Lines 122-142
 function PlayerBipod:_husk_bipod_data()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local weapon = self._unit:inventory():equipped_unit()
@@ -131,7 +135,7 @@ function PlayerBipod:_husk_bipod_data()
 	managers.network:session():send_to_peers_synched("sync_bipod", bipod_pos, body_pos)
 end
 
--- Lines: 147 to 161
+-- Lines 147-161
 function PlayerBipod:update(t, dt)
 	PlayerBipod.super.update(self, t, dt)
 
@@ -144,11 +148,11 @@ function PlayerBipod:update(t, dt)
 	end
 end
 
--- Lines: 165 to 166
+-- Lines 163-166
 function PlayerBipod:set_tweak_data(name)
 end
 
--- Lines: 176 to 259
+-- Lines 173-259
 function PlayerBipod:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -196,16 +200,16 @@ function PlayerBipod:_update_check_actions(t, dt)
 	self:_find_pickups(t)
 end
 
--- Lines: 261 to 262
+-- Lines 261-263
 function PlayerBipod:interaction_blocked()
 	return true
 end
 
--- Lines: 265 to 266
+-- Lines 265-266
 function PlayerBipod:_check_step(t)
 end
 
--- Lines: 268 to 281
+-- Lines 268-283
 function PlayerBipod:_check_action_reload(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_reload_press
@@ -221,7 +225,7 @@ function PlayerBipod:_check_action_reload(t, input)
 	return new_action
 end
 
--- Lines: 285 to 301
+-- Lines 285-302
 function PlayerBipod:_check_action_intimidate(t, input)
 	if not input.btn_interact_press then
 		return
@@ -236,7 +240,7 @@ function PlayerBipod:_check_action_intimidate(t, input)
 	return self:_start_action_intimidate(t)
 end
 
--- Lines: 306 to 311
+-- Lines 306-312
 function PlayerBipod:_check_action_unmount_bipod(t, input)
 	if not input.btn_deploy_bipod then
 		return false
@@ -247,7 +251,7 @@ function PlayerBipod:_check_action_unmount_bipod(t, input)
 	return true
 end
 
--- Lines: 314 to 323
+-- Lines 314-323
 function PlayerBipod:_unmount_bipod()
 	local weapon = self._equipped_unit:base()
 	local bipod_part = managers.weapon_factory:get_parts_from_weapon_by_perk("bipod", weapon._parts)
@@ -261,7 +265,7 @@ function PlayerBipod:_unmount_bipod()
 	end
 end
 
--- Lines: 327 to 337
+-- Lines 327-338
 function PlayerBipod:_check_action_jump(t, input)
 	if input.btn_jump_press then
 		self:_unmount_bipod()
@@ -278,7 +282,7 @@ function PlayerBipod:_check_action_jump(t, input)
 	return false
 end
 
--- Lines: 340 to 354
+-- Lines 340-355
 function PlayerBipod:_check_action_run(t, input)
 	if self._state_data.previous_state and self._state_data.previous_state == "carry" then
 		return
@@ -301,7 +305,7 @@ function PlayerBipod:_check_action_run(t, input)
 	return false
 end
 
--- Lines: 357 to 367
+-- Lines 357-368
 function PlayerBipod:_check_change_weapon(t, input)
 	if input.btn_switch_weapon_press or input.btn_primary_choice == 1 then
 		self:_unmount_bipod()
@@ -319,7 +323,7 @@ function PlayerBipod:_check_change_weapon(t, input)
 	return false
 end
 
--- Lines: 370 to 379
+-- Lines 370-380
 function PlayerBipod:_check_use_item(t, input)
 	if input.btn_use_item_press then
 		self:_unmount_bipod()
@@ -336,7 +340,7 @@ function PlayerBipod:_check_use_item(t, input)
 	return false
 end
 
--- Lines: 398 to 409
+-- Lines 398-410
 function PlayerBipod:_check_action_throw_grenade(t, input)
 	local action_forbidden = not PlayerBase.USE_GRENADES or self._unit:base():stats_screen_visible()
 
@@ -355,7 +359,7 @@ function PlayerBipod:_check_action_throw_grenade(t, input)
 	return false
 end
 
--- Lines: 418 to 442
+-- Lines 412-443
 function PlayerBipod:_check_action_throw_projectile(t, input)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
@@ -382,7 +386,7 @@ function PlayerBipod:_check_action_throw_projectile(t, input)
 	return false
 end
 
--- Lines: 445 to 461
+-- Lines 445-462
 function PlayerBipod:_check_action_equip(t, input)
 	local new_action = nil
 	local selection_wanted = input.btn_primary_choice
@@ -403,28 +407,27 @@ function PlayerBipod:_check_action_equip(t, input)
 	return new_action
 end
 
--- Lines: 464 to 465
+-- Lines 464-465
 function PlayerBipod:_check_action_steelsight(t, input)
 end
 
--- Lines: 469 to 470
+-- Lines 469-470
 function PlayerBipod:_update_movement(t, dt)
 end
 
--- Lines: 474 to 475
+-- Lines 474-475
 function PlayerBipod:_start_action_jump(...)
 end
 
--- Lines: 477 to 478
+-- Lines 477-478
 function PlayerBipod:_perform_jump(jump_vec)
 end
 
--- Lines: 482 to 483
+-- Lines 482-483
 function PlayerBipod:_get_max_walk_speed(...)
 end
 
--- Lines: 485 to 486
+-- Lines 485-487
 function PlayerBipod:_get_walk_headbob(...)
 	return 0
 end
-

@@ -2,14 +2,14 @@ core:import("CoreMenuItemToggle")
 
 MenuItemToggleWithIcon = MenuItemToggleWithIcon or class(CoreMenuItemToggle.ItemToggle)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function MenuItemToggleWithIcon:init(data_node, parameters, ...)
 	MenuItemToggleWithIcon.super.init(self, data_node, parameters, ...)
 
 	self._icon_texture = parameters and parameters.icon
 end
 
--- Lines: 11 to 17
+-- Lines 11-18
 function MenuItemToggleWithIcon:setup_gui(node, row_item, ...)
 	MenuItemToggleWithIcon.super.setup_gui(self, node, row_item, ...)
 
@@ -28,7 +28,7 @@ function MenuItemToggleWithIcon:setup_gui(node, row_item, ...)
 	return true
 end
 
--- Lines: 20 to 26
+-- Lines 20-27
 function MenuItemToggleWithIcon:reload(row_item, node, ...)
 	MenuItemToggleWithIcon.super.reload(self, row_item, node, ...)
 	self._icon:set_right(row_item.gui_panel:w())
@@ -37,7 +37,7 @@ function MenuItemToggleWithIcon:reload(row_item, node, ...)
 	return true
 end
 
--- Lines: 29 to 34
+-- Lines 29-35
 function MenuItemToggleWithIcon:highlight_row_item(node, row_item, mouse_over, ...)
 	MenuItemToggleWithIcon.super.highlight_row_item(self, node, row_item, mouse_over, ...)
 	self._icon:set_color(row_item.color)
@@ -45,7 +45,7 @@ function MenuItemToggleWithIcon:highlight_row_item(node, row_item, mouse_over, .
 	return true
 end
 
--- Lines: 37 to 42
+-- Lines 37-43
 function MenuItemToggleWithIcon:fade_row_item(node, row_item, ...)
 	MenuItemToggleWithIcon.super.fade_row_item(self, node, row_item, ...)
 	self._icon:set_color(row_item.color)
@@ -53,8 +53,7 @@ function MenuItemToggleWithIcon:fade_row_item(node, row_item, ...)
 	return true
 end
 
--- Lines: 45 to 47
+-- Lines 45-47
 function MenuItemToggleWithIcon:set_icon_visible(state)
 	self._icon:set_visible(state)
 end
-

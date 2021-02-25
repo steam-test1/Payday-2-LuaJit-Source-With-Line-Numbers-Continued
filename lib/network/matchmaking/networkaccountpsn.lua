@@ -2,12 +2,12 @@ require("lib/network/matchmaking/NetworkAccount")
 
 NetworkAccountPSN = NetworkAccountPSN or class(NetworkAccount)
 
--- Lines: 39 to 43
+-- Lines 39-43
 function NetworkAccountPSN:init()
 	NetworkAccount.init(self)
 end
 
--- Lines: 45 to 49
+-- Lines 45-50
 function NetworkAccountPSN:signin_state()
 	if PSN:is_online() == true then
 		return "signed in"
@@ -16,7 +16,7 @@ function NetworkAccountPSN:signin_state()
 	return "not signed in"
 end
 
--- Lines: 52 to 63
+-- Lines 52-64
 function NetworkAccountPSN:local_signin_state()
 	if not PSN:cable_connected() then
 		return false
@@ -35,12 +35,12 @@ function NetworkAccountPSN:local_signin_state()
 	return true
 end
 
--- Lines: 66 to 68
+-- Lines 66-68
 function NetworkAccountPSN:show_signin_ui()
 	PSN:display_online_connection()
 end
 
--- Lines: 70 to 84
+-- Lines 70-85
 function NetworkAccountPSN:username_id()
 	local online_name = PSN:get_npid_user()
 
@@ -57,7 +57,7 @@ function NetworkAccountPSN:username_id()
 	return managers.localization:text("menu_mp_player")
 end
 
--- Lines: 91 to 103
+-- Lines 87-104
 function NetworkAccountPSN:player_id()
 	if PSN:get_npid_user() == nil then
 		local n = PSN:get_localinfo()
@@ -74,17 +74,17 @@ function NetworkAccountPSN:player_id()
 	return PSN:get_npid_user()
 end
 
--- Lines: 106 to 107
+-- Lines 106-108
 function NetworkAccountPSN:is_connected()
 	return true
 end
 
--- Lines: 110 to 111
+-- Lines 110-112
 function NetworkAccountPSN:lan_connection()
 	return PSN:cable_connected()
 end
 
--- Lines: 116 to 121
+-- Lines 116-122
 function NetworkAccountPSN:_lan_ip()
 	local l = PSN:get_lan_info()
 
@@ -95,24 +95,23 @@ function NetworkAccountPSN:_lan_ip()
 	return "player_lan"
 end
 
--- Lines: 125 to 128
+-- Lines 125-128
 function NetworkAccountPSN:publish_statistics(stats, force_store)
 	Application:error("NetworkAccountPSN:publish_statistics( stats, force_store )")
 	Application:stack_dump()
 end
 
--- Lines: 130 to 132
+-- Lines 130-132
 function NetworkAccountPSN:achievements_fetched()
 	self._achievements_fetched = true
 end
 
--- Lines: 134 to 136
+-- Lines 134-136
 function NetworkAccountPSN:challenges_loaded()
 	self._challenges_loaded = true
 end
 
--- Lines: 138 to 140
+-- Lines 138-140
 function NetworkAccountPSN:experience_loaded()
 	self._experience_loaded = true
 end
-

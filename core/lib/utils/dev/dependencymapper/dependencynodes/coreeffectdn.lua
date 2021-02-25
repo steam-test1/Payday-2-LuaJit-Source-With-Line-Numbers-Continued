@@ -6,12 +6,12 @@ TEXTURE = CoreDependencyNode.TEXTURE
 EFFECT = CoreDependencyNode.EFFECT
 EffectDependencyNode = EffectDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 13 to 15
+-- Lines 13-15
 function EffectDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, EFFECT, "effect", name, get_dn_cb, database)
 end
 
--- Lines: 17 to 26
+-- Lines 17-26
 function EffectDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local texture_name = xmlnode:parameter("texture")
 
@@ -28,4 +28,3 @@ function EffectDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

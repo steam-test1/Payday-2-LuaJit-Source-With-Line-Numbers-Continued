@@ -1,5 +1,4 @@
-
--- Lines: 2 to 6
+-- Lines 2-6
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -9,7 +8,7 @@ end
 
 GageAssetsItem = GageAssetsItem or class(MissionBriefingTabItem)
 
--- Lines: 10 to 41
+-- Lines 10-41
 function GageAssetsItem.animate_select(o, center_helper, instant)
 	o:set_layer(2)
 
@@ -48,7 +47,7 @@ function GageAssetsItem.animate_select(o, center_helper, instant)
 	end)
 end
 
--- Lines: 43 to 65
+-- Lines 43-65
 function GageAssetsItem.animate_deselect(o, center_helper)
 	o:set_layer(1)
 
@@ -76,7 +75,7 @@ function GageAssetsItem.animate_deselect(o, center_helper)
 	end)
 end
 
--- Lines: 68 to 77
+-- Lines 67-77
 function GageAssetsItem:init(panel, text, i)
 	GageAssetsItem.super.init(self, panel, text, i)
 
@@ -87,11 +86,11 @@ function GageAssetsItem:init(panel, text, i)
 	self:create_assets()
 end
 
--- Lines: 80 to 93
+-- Lines 79-93
 function GageAssetsItem:post_init()
 	self:select_asset(1, true)
 
-	for i = 1, #self._assets_list, 1 do
+	for i = 1, #self._assets_list do
 		self._panel:child("asset_" .. tostring(i)):set_rotation(0)
 	end
 
@@ -102,22 +101,22 @@ function GageAssetsItem:post_init()
 	end
 end
 
--- Lines: 95 to 97
+-- Lines 95-97
 function GageAssetsItem:select(no_sound)
 	GageAssetsItem.super.select(self, no_sound)
 end
 
--- Lines: 99 to 101
+-- Lines 99-101
 function GageAssetsItem:deselect()
 	GageAssetsItem.super.deselect(self)
 end
 
--- Lines: 103 to 104
+-- Lines 103-105
 function GageAssetsItem:get_requested_textures()
 	return self._requested_textures
 end
 
--- Lines: 108 to 255
+-- Lines 107-255
 function GageAssetsItem:create_assets()
 	self._panel:clear()
 
@@ -166,25 +165,30 @@ function GageAssetsItem:create_assets()
 			local center_y = self._panel:h() * (i % 2 > 0 and 0.295 or 0.815)
 			local asset = nil
 			local texture, texture_rect = tweak_data.hud_icons:get_icon_data(asset_data.data.icon)
-			asset = texture and DB:has(Idstring("texture"), texture) and self._panel:bitmap({
-				h = 65,
-				layer = 1,
-				w = 65,
-				valign = "top",
-				name = "asset_" .. tostring(i),
-				texture = texture,
-				texture_rect = texture_rect,
-				rotation = math.random(2) - 1.5
-			}) or self._panel:bitmap({
-				texture = "guis/textures/pd2/endscreen/what_is_this",
-				h = 65,
-				w = 65,
-				alpha = 0,
-				valign = "top",
-				layer = 1,
-				name = "asset_" .. tostring(i),
-				rotation = math.random(2) - 1.5
-			})
+
+			if texture and DB:has(Idstring("texture"), texture) then
+				asset = self._panel:bitmap({
+					h = 65,
+					layer = 1,
+					w = 65,
+					valign = "top",
+					name = "asset_" .. tostring(i),
+					texture = texture,
+					texture_rect = texture_rect,
+					rotation = math.random(2) - 1.5
+				})
+			else
+				asset = self._panel:bitmap({
+					texture = "guis/textures/pd2/endscreen/what_is_this",
+					h = 65,
+					w = 65,
+					alpha = 0,
+					valign = "top",
+					layer = 1,
+					name = "asset_" .. tostring(i),
+					rotation = math.random(2) - 1.5
+				})
+			end
 
 			rect:set_center(center_x, center_y)
 			rect:set_position(math.round(rect:x()), math.round(rect:y()))
@@ -281,18 +285,20 @@ function GageAssetsItem:create_assets()
 
 		self._select_box_panel:set_shape(first_rect:shape())
 
-		self._select_box = BoxGuiObject:new(self._select_box_panel, {sides = {
-			2,
-			2,
-			2,
-			2
-		}})
+		self._select_box = BoxGuiObject:new(self._select_box_panel, {
+			sides = {
+				2,
+				2,
+				2,
+				2
+			}
+		})
 	end
 
 	self:post_init()
 end
 
--- Lines: 257 to 261
+-- Lines 257-261
 function GageAssetsItem:move_assets_left()
 	self._my_left_i = math.max(self._my_left_i - 1, 1)
 
@@ -300,7 +306,7 @@ function GageAssetsItem:move_assets_left()
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines: 263 to 267
+-- Lines 263-267
 function GageAssetsItem:move_assets_right()
 	self._my_left_i = math.min(self._my_left_i + 1, math.ceil(#self._assets_list / self._num_items))
 
@@ -308,7 +314,7 @@ function GageAssetsItem:move_assets_right()
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines: 269 to 288
+-- Lines 269-288
 function GageAssetsItem:update_asset_positions_and_text()
 	self:update_asset_positions()
 
@@ -322,7 +328,7 @@ function GageAssetsItem:update_asset_positions_and_text()
 			if asset_text:world_left() < 10 then
 				asset_text:set_world_left(10)
 				asset_text:set_align("left")
-			elseif self._panel:w() - 10 < asset_text:world_right() then
+			elseif asset_text:world_right() > self._panel:w() - 10 then
 				asset_text:set_world_right(self._panel:w() - 10)
 				asset_text:set_align("right")
 			else
@@ -332,7 +338,7 @@ function GageAssetsItem:update_asset_positions_and_text()
 	end
 end
 
--- Lines: 291 to 312
+-- Lines 290-312
 function GageAssetsItem:update_asset_positions()
 	local w = self._my_asset_space
 
@@ -358,7 +364,7 @@ function GageAssetsItem:update_asset_positions()
 	end
 end
 
--- Lines: 315 to 435
+-- Lines 314-435
 function GageAssetsItem:select_asset(i, instant)
 	if self._num_items < #self._assets_list then
 		if i then
@@ -396,17 +402,21 @@ function GageAssetsItem:select_asset(i, instant)
 
 	if rect then
 		self._select_box_panel:set_shape(rect:shape())
-		self._select_box:create_sides(self._select_box_panel, {sides = {
-			2,
-			2,
-			2,
-			2
-		}})
+		self._select_box:create_sides(self._select_box_panel, {
+			sides = {
+				2,
+				2,
+				2,
+				2
+			}
+		})
 	end
 
 	if self._assets_list[i].locked then
 		local can_unlock, reason = managers.crime_spree:can_unlock_asset()
-		extra_string = managers.localization:text("bm_cs_continental_coin_cost", {cost = managers.experience:cash_string(self._assets_list[i].data.cost, "")})
+		extra_string = managers.localization:text("bm_cs_continental_coin_cost", {
+			cost = managers.experience:cash_string(self._assets_list[i].data.cost, "")
+		})
 		local coins = 0
 		coins = managers.custom_safehouse:coins()
 
@@ -476,8 +486,8 @@ function GageAssetsItem:select_asset(i, instant)
 
 			if a_left + asset_text:left() < 12 then
 				asset_text:set_left(12 - a_left)
-			elseif self._panel:w() - 12 < a_left + asset_text:right() then
-				asset_text:set_right((self._panel:w() - 12) - a_left)
+			elseif a_left + asset_text:right() > self._panel:w() - 12 then
+				asset_text:set_right(self._panel:w() - 12 - a_left)
 			end
 		end
 	end
@@ -491,7 +501,7 @@ function GageAssetsItem:select_asset(i, instant)
 	end
 end
 
--- Lines: 437 to 445
+-- Lines 437-445
 function GageAssetsItem:check_deselect_item()
 	if self._asset_selected and self._assets_list[self._asset_selected] then
 		self._assets_list[self._asset_selected].asset:stop()
@@ -502,7 +512,7 @@ function GageAssetsItem:check_deselect_item()
 	self._asset_selected = nil
 end
 
--- Lines: 447 to 509
+-- Lines 447-510
 function GageAssetsItem:mouse_moved(x, y)
 	if alive(self._move_left_rect) and alive(self._move_right_rect) then
 		if self._move_left_rect:visible() and self._move_left_rect:inside(x, y) then
@@ -578,7 +588,7 @@ function GageAssetsItem:mouse_moved(x, y)
 	return selected, highlighted
 end
 
--- Lines: 512 to 533
+-- Lines 512-534
 function GageAssetsItem:mouse_pressed(button, x, y)
 	local inside = GageAssetsItem.super.mouse_pressed(self, button, x, y)
 
@@ -607,7 +617,7 @@ function GageAssetsItem:mouse_pressed(button, x, y)
 	return inside
 end
 
--- Lines: 536 to 563
+-- Lines 536-563
 function GageAssetsItem:move(x, y)
 	if #self._assets_list == 0 then
 		return
@@ -621,7 +631,7 @@ function GageAssetsItem:move(x, y)
 		local step = 2 * x + (is_top and math.max(y, 0) or math.min(y, 0))
 		new_selected = asset_selected + step
 
-		if #self._assets_list < new_selected then
+		if new_selected > #self._assets_list then
 			local old_page = math.ceil(asset_selected / self._num_items)
 			local new_page = math.ceil(new_selected / self._num_items)
 
@@ -638,7 +648,7 @@ function GageAssetsItem:move(x, y)
 	end
 end
 
--- Lines: 565 to 576
+-- Lines 565-576
 function GageAssetsItem:move_left()
 	self:move(-1, 0)
 
@@ -654,17 +664,17 @@ function GageAssetsItem:move_left()
 	self:select_asset(new_selected)
 end
 
--- Lines: 578 to 580
+-- Lines 578-580
 function GageAssetsItem:move_up()
 	self:move(0, -1)
 end
 
--- Lines: 582 to 584
+-- Lines 582-584
 function GageAssetsItem:move_down()
 	self:move(0, 1)
 end
 
--- Lines: 586 to 597
+-- Lines 586-597
 function GageAssetsItem:move_right()
 	self:move(1, 0)
 
@@ -680,17 +690,17 @@ function GageAssetsItem:move_right()
 	self:select_asset(new_selected)
 end
 
--- Lines: 599 to 600
+-- Lines 599-601
 function GageAssetsItem:confirm_pressed()
 	return self:_return_asset_info(self._asset_selected)
 end
 
--- Lines: 603 to 604
+-- Lines 603-605
 function GageAssetsItem:something_selected()
 	return self._asset_selected and true or false
 end
 
--- Lines: 607 to 629
+-- Lines 607-630
 function GageAssetsItem:_return_asset_info(i)
 	if not i or not self._assets_list[i] then
 		return nil
@@ -702,18 +712,23 @@ function GageAssetsItem:_return_asset_info(i)
 		local cost = self._assets_list[i].data.cost
 		local coins = 0
 		coins = managers.custom_safehouse:coins()
-		asset_cost = cost <= coins and cost or true
+
+		if cost <= coins then
+			asset_cost = cost
+		else
+			asset_cost = true
+		end
 	end
 
 	return i, asset_cost
 end
 
--- Lines: 632 to 633
+-- Lines 632-634
 function GageAssetsItem:get_asset_id(i)
 	return self._assets_list[i].id, true, self._assets_list[i].locked
 end
 
--- Lines: 637 to 646
+-- Lines 636-646
 function GageAssetsItem:unlock_asset_by_id(id)
 	for i, data in ipairs(self._assets_list) do
 		if Idstring(data.id) == Idstring(id) then
@@ -724,7 +739,7 @@ function GageAssetsItem:unlock_asset_by_id(id)
 	self:select_asset(self._asset_selected, true)
 end
 
--- Lines: 648 to 656
+-- Lines 648-656
 function GageAssetsItem:_unlock_asset(i, asset_data)
 	asset_data.locked = false
 
@@ -736,4 +751,3 @@ function GageAssetsItem:_unlock_asset(i, asset_data)
 		self._panel:remove(lock)
 	end
 end
-

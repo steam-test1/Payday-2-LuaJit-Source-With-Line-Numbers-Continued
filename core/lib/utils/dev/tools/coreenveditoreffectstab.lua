@@ -2,12 +2,12 @@ core:import("CoreEnvironmentFeeder")
 
 CoreEnvEditor = CoreEnvEditor or class()
 
--- Lines: 5 to 7
+-- Lines 5-7
 function CoreEnvEditor:init_effects_tab()
 	self:create_effects_tab()
 end
 
--- Lines: 9 to 15
+-- Lines 9-15
 local function popuplate_list(list, items)
 	list:clear_all()
 
@@ -18,7 +18,7 @@ local function popuplate_list(list, items)
 	end
 end
 
--- Lines: 17 to 71
+-- Lines 17-71
 function CoreEnvEditor:create_effects_tab()
 	self:create_tab("Effects")
 
@@ -75,13 +75,13 @@ function CoreEnvEditor:create_effects_tab()
 	self:build_tab("Effects")
 end
 
--- Lines: 73 to 96
+-- Lines 73-96
 function CoreEnvEditor:_move_selected_items(src, dst, valid_items)
 	local items = src:selected_items()
 	local dst_items = {}
 	local count = dst:item_count()
 
-	for i = 0, count - 1, 1 do
+	for i = 0, count - 1 do
 		table.insert(dst_items, dst:get_item_data(i))
 	end
 
@@ -104,12 +104,12 @@ function CoreEnvEditor:_move_selected_items(src, dst, valid_items)
 	self:_refresh_effect_list()
 end
 
--- Lines: 98 to 107
+-- Lines 98-107
 function CoreEnvEditor:_refresh_effect_list()
 	local active_effects = {}
 	local count = self._active_effect_list:item_count()
 
-	for i = 0, count - 1, 1 do
+	for i = 0, count - 1 do
 		table.insert(active_effects, self._active_effect_list:get_item_data(i))
 	end
 
@@ -119,7 +119,7 @@ function CoreEnvEditor:_refresh_effect_list()
 	managers.environment_effects:set_active_effects(self._environment_effects)
 end
 
--- Lines: 109 to 115
+-- Lines 109-115
 function CoreEnvEditor:set_effect_data(active_effects)
 	local all_effects = managers.environment_effects:effects_names()
 
@@ -131,13 +131,12 @@ function CoreEnvEditor:set_effect_data(active_effects)
 	popuplate_list(self._active_effect_list, active_effects)
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function CoreEnvEditor:add_effect()
 	self:_move_selected_items(self._effect_list, self._active_effect_list)
 end
 
--- Lines: 121 to 123
+-- Lines 121-123
 function CoreEnvEditor:remove_effect()
 	self:_move_selected_items(self._active_effect_list, self._effect_list, managers.environment_effects:effects_names())
 end
-

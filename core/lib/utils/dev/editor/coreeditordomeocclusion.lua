@@ -1,6 +1,6 @@
 core:import("CoreEditorUtils")
 
--- Lines: 4 to 22
+-- Lines 4-22
 function CoreEditor:init_create_dome_occlusion(shape, res)
 	print("CoreEditor:init_create_dome_occlusion()")
 	managers.editor:disable_all_post_effects(true)
@@ -20,7 +20,7 @@ function CoreEditor:init_create_dome_occlusion(shape, res)
 	self:_create_dome_occlusion(params)
 end
 
--- Lines: 25 to 129
+-- Lines 25-129
 function CoreEditor:_create_dome_occlusion(params)
 	self._dome_occlusion_params = params
 
@@ -45,7 +45,9 @@ function CoreEditor:_create_dome_occlusion(params)
 	self._saved_show_center = self._show_center
 	self._show_center = false
 
-	self:on_hide_helper_units({vis = false})
+	self:on_hide_helper_units({
+		vis = false
+	})
 
 	self._saved_hidden_object = {}
 	self._saved_hidden_units = {}
@@ -82,7 +84,7 @@ function CoreEditor:_create_dome_occlusion(params)
 	local x = corner.x + w / 2
 	local y = corner.y - d / 2
 	local fov = 4
-	local far_range = (math.max(w, d) / 2) / math.tan(fov / 2)
+	local far_range = math.max(w, d) / 2 / math.tan(fov / 2)
 	local z = corner.z + far_range
 
 	self:set_camera_far_range(far_range + 10000)
@@ -126,7 +128,7 @@ function CoreEditor:_create_dome_occlusion(params)
 	self:generate_dome_occlusion(path .. "\\")
 end
 
--- Lines: 131 to 140
+-- Lines 131-140
 function CoreEditor:_tick_generate_dome_occlusion(t, dt)
 	if self._dome_occlusion_params then
 		self._dome_occlusion_params.step = self._dome_occlusion_params.step + 1
@@ -139,14 +141,14 @@ function CoreEditor:_tick_generate_dome_occlusion(t, dt)
 	end
 end
 
--- Lines: 142 to 145
+-- Lines 142-145
 function CoreEditor:generate_dome_occlusion(path)
 	local x1, y1, x2, y2 = self._camera_controller:_get_screen_size()
 
 	Application:screenshot(path .. self._dome_occlusion_params.file_name .. ".tga", x1, y1, x2, y2)
 end
 
--- Lines: 147 to 162
+-- Lines 147-162
 function CoreEditor:_convert_dome_occlusion()
 	local path = self._dome_occlusion_params.output_path .. "\\"
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/spotmapgen.bat "
@@ -162,7 +164,7 @@ function CoreEditor:_convert_dome_occlusion()
 	self._camera_controller:_add_meta_data(output_path, "colormap_no_alpha_no_mips")
 end
 
--- Lines: 165 to 218
+-- Lines 165-218
 function CoreEditor:dome_occlusion_done()
 	if not self._dome_occlusion_params then
 		Application:error("CoreEditor:dome_occlusion_done. Generate has not been started")
@@ -184,7 +186,9 @@ function CoreEditor:dome_occlusion_done()
 
 	self._show_center = self._saved_show_center
 
-	self:on_hide_helper_units({vis = true})
+	self:on_hide_helper_units({
+		vis = true
+	})
 
 	for _, obj in ipairs(self._saved_hidden_object) do
 		obj:set_visibility(true)
@@ -210,4 +214,3 @@ function CoreEditor:dome_occlusion_done()
 
 	self._dome_occlusion_params = nil
 end
-

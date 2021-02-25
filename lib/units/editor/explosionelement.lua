@@ -1,6 +1,6 @@
 ExplosionUnitElement = ExplosionUnitElement or class(FeedbackUnitElement)
 
--- Lines: 3 to 17
+-- Lines 3-17
 function ExplosionUnitElement:init(unit)
 	ExplosionUnitElement.super.init(self, unit)
 
@@ -17,12 +17,12 @@ function ExplosionUnitElement:init(unit)
 	table.insert(self._save_values, "sound_event")
 end
 
--- Lines: 25 to 27
+-- Lines 25-27
 function ExplosionUnitElement:update_selected(...)
 	ExplosionUnitElement.super.update_selected(self, ...)
 end
 
--- Lines: 29 to 42
+-- Lines 29-42
 function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -37,7 +37,9 @@ function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 		floats = 0,
 		min = 0
 	}, "The player damage from the explosion")
-	self:_build_value_combobox(panel, panel_sizer, "explosion_effect", table.list_add({"none"}, self:_effect_options()), "Select and explosion effect")
+	self:_build_value_combobox(panel, panel_sizer, "explosion_effect", table.list_add({
+		"none"
+	}, self:_effect_options()), "Select and explosion effect")
 	self:_build_value_combobox(panel, panel_sizer, "sound_event", {
 		"no_sound",
 		"trip_mine_explode"
@@ -46,7 +48,7 @@ function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 	ExplosionUnitElement.super._build_panel(self, panel, panel_sizer)
 end
 
--- Lines: 44 to 49
+-- Lines 44-49
 function ExplosionUnitElement:add_to_mission_package()
 	ExplosionUnitElement.super.add_to_mission_package(self)
 
@@ -58,4 +60,3 @@ function ExplosionUnitElement:add_to_mission_package()
 		})
 	end
 end
-

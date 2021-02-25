@@ -16,7 +16,7 @@ CoreLuaPreprocessor._OR_OPERATOR = "or"
 CoreLuaPreprocessor._OPENING_BRACKET = "{"
 CoreLuaPreprocessor._CLOSING_BRACKET = "}"
 
--- Lines: 33 to 48
+-- Lines 26-49
 function CoreLuaPreprocessor:preprocess(path, constants_table, code)
 	self._source_path = path
 	local c = self:_apply_preprocessor_1(constants_table, code)
@@ -24,9 +24,11 @@ function CoreLuaPreprocessor:preprocess(path, constants_table, code)
 	return c
 end
 
--- Lines: 171 to 184
+-- Lines 167-185
 function CoreLuaPreprocessor:_apply_preprocessor_1(constants_table, source_str)
-	local params = {output_str = ""}
+	local params = {
+		output_str = ""
+	}
 	local source_len = string.len(source_str)
 	local current_pos = 1
 
@@ -37,7 +39,7 @@ function CoreLuaPreprocessor:_apply_preprocessor_1(constants_table, source_str)
 	return params.output_str
 end
 
--- Lines: 190 to 226
+-- Lines 188-227
 function CoreLuaPreprocessor:_parse_next_block(constants_table, current_pos, source_str, source_len, params)
 	local statements_list = {}
 
@@ -79,7 +81,7 @@ function CoreLuaPreprocessor:_parse_next_block(constants_table, current_pos, sou
 	return statements_list[#statements_list].bracket_close_pos + 1
 end
 
--- Lines: 238 to 306
+-- Lines 237-307
 function CoreLuaPreprocessor:_parse_next_conditional_statement(source_str, source_len, start_pos, constants_table, statements_list)
 	local statement_info, is_last_statement = nil
 
@@ -146,7 +148,7 @@ function CoreLuaPreprocessor:_parse_next_conditional_statement(source_str, sourc
 	return true, is_last_statement
 end
 
--- Lines: 310 to 336
+-- Lines 310-337
 function CoreLuaPreprocessor:_parse_statement(source_str, source_len, start_pos, constants_table)
 	local statement_info = {}
 	local constants_end_pos = nil
@@ -172,7 +174,7 @@ function CoreLuaPreprocessor:_parse_statement(source_str, source_len, start_pos,
 	return statement_info
 end
 
--- Lines: 341 to 357
+-- Lines 340-358
 function CoreLuaPreprocessor:_extract_constants(source_str, start_pos)
 	local bracket_open_pos = string.find(source_str, self._OPENING_BRACKET, start_pos, true)
 
@@ -194,7 +196,7 @@ function CoreLuaPreprocessor:_extract_constants(source_str, start_pos)
 	return constants_statement_table_out, bracket_open_pos - 1
 end
 
--- Lines: 361 to 366
+-- Lines 361-367
 function CoreLuaPreprocessor:_cleanup_constant(constant)
 	for whitespace_char, _ in pairs(self._WHITESPACE_CHARACTERS) do
 		constant = string.gsub(constant, whitespace_char, "")
@@ -203,7 +205,7 @@ function CoreLuaPreprocessor:_cleanup_constant(constant)
 	return constant
 end
 
--- Lines: 371 to 386
+-- Lines 371-387
 function CoreLuaPreprocessor:_find_bracket_block(source_str, source_len, start_pos)
 	local bracket_open_pos = string.find(source_str, self._OPENING_BRACKET, start_pos, true)
 
@@ -224,7 +226,7 @@ function CoreLuaPreprocessor:_find_bracket_block(source_str, source_len, start_p
 	return bracket_open_pos, bracket_close_pos
 end
 
--- Lines: 390 to 409
+-- Lines 390-410
 function CoreLuaPreprocessor:_find_corresponding_closing_bracket(source_str, source_len, bracket_open_pos)
 	local current_pos = bracket_open_pos + 1
 	local nr_open_brackets = 1
@@ -246,7 +248,7 @@ function CoreLuaPreprocessor:_find_corresponding_closing_bracket(source_str, sou
 	return nr_open_brackets == 0 and current_pos - 1
 end
 
--- Lines: 413 to 429
+-- Lines 413-430
 function CoreLuaPreprocessor:_count_opening_brackets(source_str, search_start_pos, search_end_pos)
 	local search_pos = search_start_pos
 	local nr_opening_brackets = 0
@@ -267,7 +269,7 @@ function CoreLuaPreprocessor:_count_opening_brackets(source_str, search_start_po
 	return nr_opening_brackets
 end
 
--- Lines: 433 to 449
+-- Lines 433-450
 function CoreLuaPreprocessor:_line_number_at_pos(source_str, end_pos)
 	local search_pos = 1
 	local nr_newlines = 0
@@ -288,7 +290,7 @@ function CoreLuaPreprocessor:_line_number_at_pos(source_str, end_pos)
 	return nr_newlines + 1
 end
 
--- Lines: 453 to 466
+-- Lines 453-467
 function CoreLuaPreprocessor:_is_whitespace(source_str, start_pos, end_pos)
 	end_pos = end_pos or start_pos
 	local search_pos = start_pos
@@ -306,7 +308,7 @@ function CoreLuaPreprocessor:_is_whitespace(source_str, start_pos, end_pos)
 	return true
 end
 
--- Lines: 469 to 482
+-- Lines 469-483
 function CoreLuaPreprocessor:_is_whitespace_or_singleline_comment(source_str, start_pos)
 	if self:_is_whitespace(source_str, start_pos) then
 		return true
@@ -323,7 +325,7 @@ function CoreLuaPreprocessor:_is_whitespace_or_singleline_comment(source_str, st
 	return false
 end
 
--- Lines: 486 to 501
+-- Lines 486-502
 function CoreLuaPreprocessor:_get_only_newlines(source_str, start_pos, end_pos)
 	local out = ""
 	local search_pos = start_pos
@@ -344,7 +346,7 @@ function CoreLuaPreprocessor:_get_only_newlines(source_str, start_pos, end_pos)
 	return out
 end
 
--- Lines: 504 to 510
+-- Lines 504-510
 function CoreLuaPreprocessor:_test_constants_truth(constants_statement_table, constants_table)
 	for key, constant in pairs(constants_statement_table) do
 		if constants_table[constant] then
@@ -353,8 +355,7 @@ function CoreLuaPreprocessor:_test_constants_truth(constants_statement_table, co
 	end
 end
 
--- Lines: 512 to 514
+-- Lines 512-514
 function CoreLuaPreprocessor:print_error(text)
 	print("\n[ERROR] " .. text .. "\n")
 end
-

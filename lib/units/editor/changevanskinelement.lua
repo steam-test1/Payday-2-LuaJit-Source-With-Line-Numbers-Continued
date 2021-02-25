@@ -1,6 +1,6 @@
 ChangeVanSkinUnitElement = ChangeVanSkinUnitElement or class(MissionElement)
 
--- Lines: 5 to 20
+-- Lines 4-20
 function ChangeVanSkinUnitElement:init(unit)
 	ChangeVanSkinUnitElement.super.init(self, unit)
 
@@ -22,7 +22,7 @@ function ChangeVanSkinUnitElement:init(unit)
 	table.insert(self._save_values, "target_skin")
 end
 
--- Lines: 22 to 47
+-- Lines 22-47
 function ChangeVanSkinUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -47,7 +47,7 @@ function ChangeVanSkinUnitElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
--- Lines: 49 to 58
+-- Lines 49-58
 function ChangeVanSkinUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -60,14 +60,14 @@ function ChangeVanSkinUnitElement:layer_finished()
 	end
 end
 
--- Lines: 60 to 64
+-- Lines 60-64
 function ChangeVanSkinUnitElement:load_unit(unit)
 	if unit then
 		self._units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 66 to 89
+-- Lines 66-89
 function ChangeVanSkinUnitElement:update_selected()
 	for _, id in pairs(self._hed.unit_ids or {}) do
 		if not alive(self._units[id]) then
@@ -97,7 +97,7 @@ function ChangeVanSkinUnitElement:update_selected()
 	end
 end
 
--- Lines: 91 to 104
+-- Lines 91-104
 function ChangeVanSkinUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.unit_ids or {}) do
 		if not alive(self._units[id]) then
@@ -116,7 +116,7 @@ function ChangeVanSkinUnitElement:update_unselected(t, dt, selected_unit, all_un
 	end
 end
 
--- Lines: 106 to 119
+-- Lines 106-119
 function ChangeVanSkinUnitElement:draw_links_unselected(...)
 	ChangeVanSkinUnitElement.super.draw_links_unselected(self, ...)
 
@@ -134,7 +134,7 @@ function ChangeVanSkinUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 121 to 126
+-- Lines 121-126
 function ChangeVanSkinUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -147,7 +147,7 @@ function ChangeVanSkinUnitElement:update_editing()
 	end
 end
 
--- Lines: 128 to 140
+-- Lines 128-140
 function ChangeVanSkinUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -166,36 +166,35 @@ function ChangeVanSkinUnitElement:select_unit()
 	end
 end
 
--- Lines: 142 to 145
+-- Lines 142-145
 function ChangeVanSkinUnitElement:_remove_unit(unit)
 	self._units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 147 to 150
+-- Lines 147-150
 function ChangeVanSkinUnitElement:_add_unit(unit)
 	self._units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 152 to 154
+-- Lines 152-154
 function ChangeVanSkinUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 156 to 158
+-- Lines 156-159
 function ChangeVanSkinUnitElement:can_select_unit(unit)
 	local default_sequence = (tweak_data.van.skins[tweak_data.van.default_skin_id] or {}).sequence_name
 
 	return unit and unit.damage and unit:damage() and unit:damage():has_sequence(default_sequence)
 end
 
--- Lines: 167 to 177
+-- Lines 161-177
 function ChangeVanSkinUnitElement:add_unit_list_btn()
-
-	-- Lines: 163 to 167
+	-- Lines 163-168
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
 			return false
@@ -213,10 +212,9 @@ function ChangeVanSkinUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 182 to 192
+-- Lines 179-192
 function ChangeVanSkinUnitElement:remove_unit_list_btn()
-
-	-- Lines: 181 to 182
+	-- Lines 181-183
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]
 	end
@@ -229,4 +227,3 @@ function ChangeVanSkinUnitElement:remove_unit_list_btn()
 		end
 	end
 end
-

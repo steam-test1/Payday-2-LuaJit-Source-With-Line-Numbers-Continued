@@ -1,6 +1,6 @@
 EnvironmentControllerManager = EnvironmentControllerManager or class(CoreEnvironmentControllerManager)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function EnvironmentControllerManager:init()
 	EnvironmentControllerManager.super.init(self)
 
@@ -9,7 +9,7 @@ function EnvironmentControllerManager:init()
 	end
 end
 
--- Lines: 14 to 21
+-- Lines 13-21
 function EnvironmentControllerManager:set_dof_setting(setting)
 	if _G.IS_VR then
 		setting = "none"
@@ -19,4 +19,3 @@ function EnvironmentControllerManager:set_dof_setting(setting)
 end
 
 CoreClass.override_class(CoreEnvironmentControllerManager, EnvironmentControllerManager)
-

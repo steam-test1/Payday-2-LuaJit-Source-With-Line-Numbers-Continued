@@ -1,6 +1,6 @@
 HeatUnitElement = HeatUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function HeatUnitElement:init(unit)
 	HeatUnitElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function HeatUnitElement:init(unit)
 	table.insert(self._save_values, "level")
 end
 
--- Lines: 13 to 61
+-- Lines 13-61
 function HeatUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -69,9 +69,10 @@ function HeatUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
+
 HeatTriggerUnitElement = HeatTriggerUnitElement or class(MissionElement)
 
--- Lines: 67 to 74
+-- Lines 67-74
 function HeatTriggerUnitElement:init(unit)
 	HeatTriggerUnitElement.super.init(self, unit)
 
@@ -81,7 +82,7 @@ function HeatTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "stage")
 end
 
--- Lines: 76 to 106
+-- Lines 76-106
 function HeatTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -118,4 +119,3 @@ function HeatTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

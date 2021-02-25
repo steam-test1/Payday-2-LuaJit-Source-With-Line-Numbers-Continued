@@ -1,6 +1,6 @@
 NavObstacleElement = NavObstacleElement or class(MissionElement)
 
--- Lines: 3 to 23
+-- Lines 3-23
 function NavObstacleElement:init(unit)
 	NavObstacleElement.super.init(self, unit)
 
@@ -14,7 +14,7 @@ function NavObstacleElement:init(unit)
 	table.insert(self._save_values, "operation")
 end
 
--- Lines: 26 to 57
+-- Lines 26-57
 function NavObstacleElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -34,24 +34,24 @@ function NavObstacleElement:layer_finished()
 	end
 end
 
--- Lines: 59 to 80
+-- Lines 59-80
 function NavObstacleElement:load_unit(unit)
 	if unit then
 		self._obstacle_units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 82 to 107
+-- Lines 82-107
 function NavObstacleElement:update_selected(t, dt, selected_unit, all_units)
 	self:_check_alive_units_and_draw("selected", selected_unit, all_units)
 end
 
--- Lines: 109 to 119
+-- Lines 109-119
 function NavObstacleElement:update_unselected(t, dt, selected_unit, all_units)
 	self:_check_alive_units_and_draw("unselected", selected_unit, all_units)
 end
 
--- Lines: 121 to 150
+-- Lines 121-150
 function NavObstacleElement:_check_alive_units_and_draw(type, selected_unit, all_units)
 	local r = type == "selected" and 1 or 0.5
 	local g = 0
@@ -87,17 +87,17 @@ function NavObstacleElement:_check_alive_units_and_draw(type, selected_unit, all
 	end
 end
 
--- Lines: 152 to 177
+-- Lines 152-177
 function NavObstacleElement:draw_links_unselected(...)
 	NavObstacleElement.super.draw_links_unselected(self, ...)
 end
 
--- Lines: 188 to 189
+-- Lines 188-190
 function NavObstacleElement:_select_unit_mask()
 	return managers.slot:get_mask("all") - managers.slot:get_mask("mission_elements")
 end
 
--- Lines: 192 to 197
+-- Lines 192-197
 function NavObstacleElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -110,7 +110,7 @@ function NavObstacleElement:update_editing()
 	end
 end
 
--- Lines: 199 to 231
+-- Lines 199-231
 function NavObstacleElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -123,7 +123,7 @@ function NavObstacleElement:select_unit()
 	end
 end
 
--- Lines: 233 to 241
+-- Lines 233-241
 function NavObstacleElement:_check_add_unit(unit)
 	local all_object_names = self:_get_objects_by_unit(unit)
 	self._obstacle_units[unit:unit_data().unit_id] = unit
@@ -136,7 +136,7 @@ function NavObstacleElement:_check_add_unit(unit)
 	self:_add_unit(unit, all_object_names, obstacle_list_data)
 end
 
--- Lines: 243 to 261
+-- Lines 243-261
 function NavObstacleElement:_remove_by_unit_id(unit_id)
 	local remove_entries = {}
 
@@ -159,7 +159,7 @@ function NavObstacleElement:_remove_by_unit_id(unit_id)
 	self:_remove_from_obstacle_list(unit_id)
 end
 
--- Lines: 263 to 286
+-- Lines 263-286
 function NavObstacleElement:remove_entry(id)
 	local unit_id = self._guis[id].unit_id
 
@@ -187,7 +187,7 @@ function NavObstacleElement:remove_entry(id)
 	self._obstacle_units[unit_id] = nil
 end
 
--- Lines: 288 to 294
+-- Lines 288-294
 function NavObstacleElement:_remove_from_obstacle_list(unit_id)
 	for i, entry in pairs(clone(self._hed.obstacle_list)) do
 		if entry.unit_id == unit_id then
@@ -196,7 +196,7 @@ function NavObstacleElement:_remove_from_obstacle_list(unit_id)
 	end
 end
 
--- Lines: 296 to 338
+-- Lines 296-338
 function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
@@ -245,7 +245,7 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 	panel:layout()
 end
 
--- Lines: 340 to 348
+-- Lines 340-348
 function NavObstacleElement:set_obj_name_data(guis_id)
 	local obj_name = self._guis[guis_id].obj_names:get_value()
 
@@ -258,15 +258,14 @@ function NavObstacleElement:set_obj_name_data(guis_id)
 	end
 end
 
--- Lines: 350 to 352
+-- Lines 350-352
 function NavObstacleElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 359 to 366
+-- Lines 354-366
 function NavObstacleElement:select_unit_list_btn()
-
-	-- Lines: 355 to 359
+	-- Lines 355-360
 	local function f(unit)
 		if not managers.editor:layer("Statics"):category_map()[unit:type():s()] then
 			return false
@@ -282,7 +281,7 @@ function NavObstacleElement:select_unit_list_btn()
 	end
 end
 
--- Lines: 369 to 414
+-- Lines 368-414
 function NavObstacleElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -317,7 +316,7 @@ function NavObstacleElement:_build_panel(panel, panel_sizer)
 	end
 end
 
--- Lines: 416 to 447
+-- Lines 416-448
 function NavObstacleElement:_get_objects_by_unit(unit)
 	local all_object_names = {}
 
@@ -327,11 +326,11 @@ function NavObstacleElement:_get_objects_by_unit(unit)
 		local tree_depth = 1
 		local _process_object_tree = nil
 
-		-- Lines: 425 to 437
+		-- Lines 425-437
 		function _process_object_tree(obj, depth)
 			local indented_name = obj:name():s()
 
-			for i = 1, depth, 1 do
+			for i = 1, depth do
 				indented_name = "-" .. indented_name
 			end
 
@@ -350,7 +349,7 @@ function NavObstacleElement:_get_objects_by_unit(unit)
 	return all_object_names
 end
 
--- Lines: 508 to 512
+-- Lines 508-513
 function NavObstacleElement._unindent_obj_name(obj_name)
 	while string.sub(obj_name, 1, 1) == "-" do
 		obj_name = string.sub(obj_name, 2)
@@ -359,7 +358,7 @@ function NavObstacleElement._unindent_obj_name(obj_name)
 	return obj_name
 end
 
--- Lines: 515 to 524
+-- Lines 515-525
 function NavObstacleElement._get_indented_obj_name(obj, parent, obj_name)
 	if parent then
 		obj = parent:get_object(obj_name) or obj
@@ -374,4 +373,3 @@ function NavObstacleElement._get_indented_obj_name(obj, parent, obj_name)
 
 	return obj_name
 end
-

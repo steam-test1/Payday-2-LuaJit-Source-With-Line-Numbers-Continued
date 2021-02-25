@@ -1,12 +1,12 @@
 CoreEnvironmentEffectHubElement = CoreEnvironmentEffectHubElement or class(HubElement)
 EnvironmentEffectHubElement = EnvironmentEffectHubElement or class(CoreEnvironmentEffectHubElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function EnvironmentEffectHubElement:init(...)
 	CoreEnvironmentEffectHubElement.init(self, ...)
 end
 
--- Lines: 9 to 18
+-- Lines 9-18
 function CoreEnvironmentEffectHubElement:init(unit)
 	HubElement.init(self, unit)
 
@@ -17,7 +17,7 @@ function CoreEnvironmentEffectHubElement:init(unit)
 	table.insert(self._hed.action_types, "stop")
 end
 
--- Lines: 20 to 40
+-- Lines 20-40
 function CoreEnvironmentEffectHubElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -43,4 +43,3 @@ function CoreEnvironmentEffectHubElement:_build_panel(panel, panel_sizer)
 	effect_sizer:add(effects, 3, 0, "EXPAND")
 	self._panel_sizer:add(effect_sizer, 0, 0, "EXPAND")
 end
-

@@ -1,6 +1,6 @@
 HUDPresenter = HUDPresenter or class()
 
--- Lines: 3 to 78
+-- Lines 3-78
 function HUDPresenter:init(hud)
 	self._hud_panel = hud.panel
 
@@ -63,7 +63,7 @@ function HUDPresenter:init(hud)
 	text:set_top(math.ceil(self._bg_box:h() / 2) - 2)
 end
 
--- Lines: 81 to 97
+-- Lines 80-97
 function HUDPresenter:present(params)
 	self._present_queue = self._present_queue or {}
 
@@ -78,7 +78,7 @@ function HUDPresenter:present(params)
 	end
 end
 
--- Lines: 99 to 137
+-- Lines 99-137
 function HUDPresenter:_present_information(params)
 	local present_panel = self._hud_panel:child("present_panel")
 	local title = self._bg_box:child("title")
@@ -122,7 +122,7 @@ function HUDPresenter:_present_information(params)
 	self._presenting = true
 end
 
--- Lines: 141 to 150
+-- Lines 139-150
 function HUDPresenter:_present_done()
 	self._presenting = false
 	local queued = table.remove(self._present_queue, 1)
@@ -132,12 +132,12 @@ function HUDPresenter:_present_done()
 	end
 end
 
--- Lines: 153 to 155
+-- Lines 152-155
 function HUDPresenter:_do_it(queued)
 	self:_present_information(queued)
 end
 
--- Lines: 157 to 199
+-- Lines 157-199
 function HUDPresenter:_animate_present_information(present_panel, params)
 	present_panel:set_visible(true)
 	present_panel:set_alpha(1)
@@ -153,7 +153,7 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 		text:set_center_y(math.ceil(self._bg_box:height() / 2))
 	end
 
-	-- Lines: 172 to 195
+	-- Lines 172-195
 	local function open_done()
 		title:set_visible(params.has_title)
 		text:set_visible(true)
@@ -162,7 +162,7 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 		title:animate(callback(self, self, "_animate_hide_text"), text)
 		wait(0.5)
 
-		-- Lines: 187 to 191
+		-- Lines 187-191
 		local function close_done()
 			present_panel:set_visible(false)
 			self:_present_done()
@@ -175,7 +175,7 @@ function HUDPresenter:_animate_present_information(present_panel, params)
 	self._bg_box:animate(callback(nil, _G, "HUDBGBox_animate_open_center"), nil, self._bg_box:w(), open_done)
 end
 
--- Lines: 201 to 215
+-- Lines 201-215
 function HUDPresenter:_animate_show_text(title, text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T
@@ -193,7 +193,7 @@ function HUDPresenter:_animate_show_text(title, text)
 	text:set_alpha(1)
 end
 
--- Lines: 217 to 233
+-- Lines 217-233
 function HUDPresenter:_animate_hide_text(title, text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T
@@ -216,4 +216,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDPresenterVR")
 end
-

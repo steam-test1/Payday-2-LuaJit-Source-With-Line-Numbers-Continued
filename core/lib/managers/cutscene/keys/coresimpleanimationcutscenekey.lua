@@ -10,12 +10,12 @@ CoreSimpleAnimationCutsceneKey:attribute_affects("unit_name", "group")
 
 CoreSimpleAnimationCutsceneKey.control_for_group = CoreCutsceneKeyBase.standard_combo_box_control
 
--- Lines: 11 to 12
+-- Lines 11-13
 function CoreSimpleAnimationCutsceneKey:__tostring()
 	return "Trigger simple animation \"" .. self:group() .. "\" on \"" .. self:unit_name() .. "\"."
 end
 
--- Lines: 15 to 21
+-- Lines 15-21
 function CoreSimpleAnimationCutsceneKey:skip(player)
 	local unit = self:_unit(self:unit_name())
 	local group = self:group()
@@ -24,12 +24,12 @@ function CoreSimpleAnimationCutsceneKey:skip(player)
 	unit:anim_set_time(group, unit:anim_length(group))
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function CoreSimpleAnimationCutsceneKey:evaluate(player, fast_forward)
 	self:_unit(self:unit_name()):anim_play(self:group(), 0)
 end
 
--- Lines: 27 to 35
+-- Lines 27-35
 function CoreSimpleAnimationCutsceneKey:revert(player)
 	local unit = self:_unit(self:unit_name())
 	local group = self:group()
@@ -40,22 +40,22 @@ function CoreSimpleAnimationCutsceneKey:revert(player)
 	end
 end
 
--- Lines: 37 to 39
+-- Lines 37-39
 function CoreSimpleAnimationCutsceneKey:update(player, time)
 	self:_unit(self:unit_name()):anim_set_time(self:group(), time)
 end
 
--- Lines: 41 to 42
+-- Lines 41-43
 function CoreSimpleAnimationCutsceneKey:is_valid_unit_name(unit_name)
 	return self.super.is_valid_unit_name(self, unit_name) and #self:_unit_animation_groups(unit_name) > 0
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function CoreSimpleAnimationCutsceneKey:is_valid_group(group)
 	return table.contains(self:_unit_animation_groups(self:unit_name()), group)
 end
 
--- Lines: 49 to 66
+-- Lines 49-66
 function CoreSimpleAnimationCutsceneKey:refresh_control_for_group(control)
 	control:freeze()
 	control:clear()
@@ -80,4 +80,3 @@ function CoreSimpleAnimationCutsceneKey:refresh_control_for_group(control)
 
 	control:thaw()
 end
-

@@ -3,7 +3,7 @@ ModifierShieldPhalanx._type = "ModifierShieldPhalanx"
 ModifierShieldPhalanx.name_id = "none"
 ModifierShieldPhalanx.desc_id = "menu_cs_modifier_shield_phalanx"
 
--- Lines: 7 to 11
+-- Lines 7-11
 function ModifierShieldPhalanx:init(data)
 	ModifierShieldPhalanx.super.init(data)
 
@@ -11,7 +11,7 @@ function ModifierShieldPhalanx:init(data)
 	tweak_data.group_ai.unit_categories.FBI_shield = tweak_data.group_ai.unit_categories.Phalanx_minion
 end
 
--- Lines: 13 to 24
+-- Lines 13-25
 function ModifierShieldPhalanx:modify_value(id, value, unit)
 	if id ~= "PlayerStandart:_start_action_intimidate" then
 		return value
@@ -29,4 +29,3 @@ function ModifierShieldPhalanx:modify_value(id, value, unit)
 
 	return "f31x_any"
 end
-

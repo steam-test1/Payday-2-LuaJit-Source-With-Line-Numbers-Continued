@@ -1,6 +1,6 @@
 MedicActionHeal = MedicActionHeal or class()
 
--- Lines: 3 to 22
+-- Lines 3-23
 function MedicActionHeal:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_movement = common_data.ext_movement
@@ -22,14 +22,14 @@ function MedicActionHeal:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 25 to 29
+-- Lines 25-29
 function MedicActionHeal:on_exit()
 	if self._unit:contour() then
 		self._unit:contour():remove("medic_healing", true)
 	end
 end
 
--- Lines: 31 to 37
+-- Lines 31-37
 function MedicActionHeal:update(t)
 	if not self._unit:anim_data().healing then
 		self._done = true
@@ -42,17 +42,17 @@ function MedicActionHeal:update(t)
 	end
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function MedicActionHeal:type()
 	return "heal"
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function MedicActionHeal:expired()
 	return self._expired
 end
 
--- Lines: 47 to 51
+-- Lines 47-52
 function MedicActionHeal:chk_block(action_type, t)
 	if action_type == "heavy_hurt" or action_type == "hurt" or action_type == "death" then
 		return false
@@ -61,22 +61,22 @@ function MedicActionHeal:chk_block(action_type, t)
 	return not self._done
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function MedicActionHeal:on_attention(attention)
 	self._attention = attention
 end
 
--- Lines: 58 to 59
+-- Lines 58-60
 function MedicActionHeal:body_part()
 	return self._body_part
 end
 
--- Lines: 62 to 63
+-- Lines 62-64
 function MedicActionHeal:need_upd()
 	return true
 end
 
--- Lines: 66 to 72
+-- Lines 66-72
 function MedicActionHeal:save(save_data)
 	for i, k in pairs(self._action_desc) do
 		if type_name(k) ~= "Unit" or alive(k) then
@@ -85,7 +85,7 @@ function MedicActionHeal:save(save_data)
 	end
 end
 
--- Lines: 78 to 100
+-- Lines 77-100
 function MedicActionHeal:check_achievements()
 	local total_healed = (managers.job:get_memory("medic_heal_total", true) or 0) + 1
 
@@ -107,4 +107,3 @@ function MedicActionHeal:check_achievements()
 		end
 	end
 end
-

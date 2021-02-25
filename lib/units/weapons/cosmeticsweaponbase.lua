@@ -2,14 +2,14 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
 
--- Lines: 23 to 26
+-- Lines 23-26
 function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	self:set_cosmetics_data(cosmetics)
 	self:_apply_cosmetics(async_clbk or function ()
 	end)
 end
 
--- Lines: 31 to 45
+-- Lines 29-45
 function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	if not cosmetics then
 		self._cosmetics_id = nil
@@ -26,27 +26,27 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	self._cosmetics_data = self._cosmetics_id and tweak_data.blackmarket.weapon_skins[self._cosmetics_id]
 end
 
--- Lines: 47 to 48
+-- Lines 47-49
 function NewRaycastWeaponBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function NewRaycastWeaponBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function NewRaycastWeaponBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines: 59 to 60
+-- Lines 59-61
 function NewRaycastWeaponBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines: 64 to 90
+-- Lines 63-91
 function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_material_config, force_third_person)
 	force_third_person = force_third_person or _G.IS_VR
 
@@ -72,7 +72,7 @@ function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_m
 	return Idstring(unit_name .. "_cc")
 end
 
--- Lines: 93 to 148
+-- Lines 93-148
 function NewRaycastWeaponBase:_update_materials()
 	if not self._parts then
 		return
@@ -131,6 +131,7 @@ function NewRaycastWeaponBase:_update_materials()
 		self._materials = nil
 	end
 end
+
 local material_defaults = {
 	diffuse_layer1_texture = Idstring("units/payday2_cash/safes/default/base_gradient/base_default_df"),
 	diffuse_layer2_texture = Idstring("units/payday2_cash/safes/default/pattern_gradient/gradient_default_df"),
@@ -152,7 +153,7 @@ local material_variables = {
 	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 }
 
--- Lines: 178 to 276
+-- Lines 177-276
 function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	material_variables.wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 
@@ -238,7 +239,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines: 278 to 289
+-- Lines 278-289
 function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -253,7 +254,7 @@ function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines: 291 to 316
+-- Lines 291-316
 function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -272,7 +273,7 @@ function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines: 318 to 351
+-- Lines 318-351
 function NewRaycastWeaponBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 
@@ -312,7 +313,7 @@ function NewRaycastWeaponBase:_set_material_textures()
 	end
 end
 
--- Lines: 556 to 650
+-- Lines 556-651
 function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets)
 	local mag_data = nil
 	local mag_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("magazine", self._factory_id, self._blueprint)
@@ -344,7 +345,7 @@ function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets)
 	if hide_bullets and part_data.bullet_objects then
 		local prefix = part_data.bullet_objects.prefix
 
-		for i = 1, part_data.bullet_objects.amount, 1 do
+		for i = 1, part_data.bullet_objects.amount do
 			local target_object = mag_unit:get_object(Idstring(prefix .. i))
 			local ref_object = part_data.unit:get_object(Idstring(prefix .. i))
 
@@ -406,6 +407,7 @@ function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets)
 
 	return mag_unit
 end
+
 NewRaycastWeaponBase.magazine_collisions = {
 	small = {
 		Idstring("units/payday2/weapons/box_collision/box_collision_small_pistol"),
@@ -448,7 +450,7 @@ local mvec3_add = mvector3.add
 local mvec3_sub = mvector3.subtract
 local mvec3_mul = mvector3.multiply
 
--- Lines: 674 to 714
+-- Lines 673-714
 function NewRaycastWeaponBase:drop_magazine_object()
 	if not self._name_id then
 		return
@@ -490,4 +492,3 @@ function NewRaycastWeaponBase:drop_magazine_object()
 		end
 	end
 end
-

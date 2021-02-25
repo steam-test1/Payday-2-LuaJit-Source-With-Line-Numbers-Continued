@@ -3,7 +3,7 @@ core:import("CoreMenuItem")
 MenuItemDummy = MenuItemDummy or class(CoreMenuItem.Item)
 MenuItemDummy.TYPE = "dummy"
 
--- Lines: 6 to 11
+-- Lines 6-11
 function MenuItemDummy:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -11,7 +11,7 @@ function MenuItemDummy:init(data_node, parameters)
 	self.hide_highlight = true
 end
 
--- Lines: 19 to 29
+-- Lines 16-31
 function MenuItemDummy:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
 		w = 0,
@@ -27,7 +27,7 @@ function MenuItemDummy:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 34 to 40
+-- Lines 34-40
 function MenuItemDummy:trigger()
 	MenuItemDummy.super.trigger(self)
 
@@ -36,7 +36,7 @@ function MenuItemDummy:trigger()
 	end
 end
 
--- Lines: 42 to 49
+-- Lines 42-49
 function MenuItemDummy:set_actual_item(item)
 	self._actual_item = item
 	self.no_select = nil
@@ -46,7 +46,7 @@ function MenuItemDummy:set_actual_item(item)
 	end
 end
 
--- Lines: 51 to 56
+-- Lines 51-57
 function MenuItemDummy:highlight_row_item(node, row_item, mouse_over)
 	self._highlighted = true
 
@@ -57,7 +57,7 @@ function MenuItemDummy:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 59 to 64
+-- Lines 59-65
 function MenuItemDummy:fade_row_item(node, row_item, mouse_over)
 	self._highlighted = false
 
@@ -68,18 +68,17 @@ function MenuItemDummy:fade_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 67 to 68
+-- Lines 67-69
 function MenuItemDummy:is_highlighted()
 	return self._highlighted
 end
 
--- Lines: 71 to 72
+-- Lines 71-73
 function MenuItemDummy:reload()
 	return true
 end
 
--- Lines: 75 to 76
+-- Lines 75-77
 function MenuItemDummy:menu_unselected_visible()
 	return false
 end
-

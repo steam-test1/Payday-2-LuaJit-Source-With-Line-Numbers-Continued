@@ -1,6 +1,6 @@
 CoreEditableGui = CoreEditableGui or class()
 
--- Lines: 3 to 44
+-- Lines 3-44
 function CoreEditableGui:init(unit)
 	self._unit = unit
 	self._text = self._text or "Default Text"
@@ -29,7 +29,7 @@ function CoreEditableGui:init(unit)
 	if self._sides == 1 then
 		self:add_workspace(self._unit:get_object(Idstring(self._gui_object)))
 	else
-		for i = 1, self._sides, 1 do
+		for i = 1, self._sides do
 			self:add_workspace(self._unit:get_object(Idstring(self._gui_object .. i)))
 		end
 	end
@@ -42,7 +42,7 @@ function CoreEditableGui:init(unit)
 	self._font_color = Vector3(text_object:color().red, text_object:color().green, text_object:color().blue)
 end
 
--- Lines: 46 to 66
+-- Lines 46-66
 function CoreEditableGui:add_workspace(gui_object)
 	local ws = self._gui:create_object_workspace(0, 0, gui_object, Vector3(0, 0, 0))
 	local gui = ws:panel():gui(Idstring("core/guis/core_editable_gui"))
@@ -65,12 +65,12 @@ function CoreEditableGui:add_workspace(gui_object)
 	})
 end
 
--- Lines: 68 to 69
+-- Lines 68-70
 function CoreEditableGui:text()
 	return self._text
 end
 
--- Lines: 72 to 83
+-- Lines 72-83
 function CoreEditableGui:set_text(text)
 	text = text or ""
 	self._text = text
@@ -84,17 +84,17 @@ function CoreEditableGui:set_text(text)
 	end
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function CoreEditableGui:default_font()
 	return self._default_font
 end
 
--- Lines: 89 to 90
+-- Lines 89-91
 function CoreEditableGui:font()
 	return self._font
 end
 
--- Lines: 93 to 99
+-- Lines 93-99
 function CoreEditableGui:set_font(font)
 	self._font = font or self._font
 
@@ -105,26 +105,26 @@ function CoreEditableGui:set_font(font)
 	self:set_font_size(self._font_size)
 end
 
--- Lines: 101 to 102
+-- Lines 101-103
 function CoreEditableGui:font_size()
 	return self._font_size
 end
 
--- Lines: 105 to 110
+-- Lines 105-110
 function CoreEditableGui:set_font_size(font_size)
 	self._font_size = font_size or self._font_size
 
 	for _, gui in ipairs(self._guis) do
-		gui.gui:child("std_text"):set_font_size(self._font_size * (10 * gui.gui:child("std_text"):height()) / 100)
+		gui.gui:child("std_text"):set_font_size(self._font_size * 10 * gui.gui:child("std_text"):height() / 100)
 	end
 end
 
--- Lines: 112 to 113
+-- Lines 112-114
 function CoreEditableGui:font_color()
 	return self._font_color
 end
 
--- Lines: 116 to 121
+-- Lines 116-121
 function CoreEditableGui:set_font_color(font_color)
 	self._font_color = font_color or self._font_color
 
@@ -133,12 +133,12 @@ function CoreEditableGui:set_font_color(font_color)
 	end
 end
 
--- Lines: 123 to 124
+-- Lines 123-125
 function CoreEditableGui:align()
 	return self._align
 end
 
--- Lines: 127 to 132
+-- Lines 127-132
 function CoreEditableGui:set_align(align)
 	self._align = align or self._align
 
@@ -147,12 +147,12 @@ function CoreEditableGui:set_align(align)
 	end
 end
 
--- Lines: 134 to 135
+-- Lines 134-136
 function CoreEditableGui:vertical()
 	return self._vertical
 end
 
--- Lines: 138 to 143
+-- Lines 138-143
 function CoreEditableGui:set_vertical(vertical)
 	self._vertical = vertical or self._vertical
 
@@ -161,7 +161,7 @@ function CoreEditableGui:set_vertical(vertical)
 	end
 end
 
--- Lines: 145 to 150
+-- Lines 145-150
 function CoreEditableGui:set_blend_mode(blend_mode)
 	self._blend_mode = blend_mode or self._blend_mode
 
@@ -170,12 +170,12 @@ function CoreEditableGui:set_blend_mode(blend_mode)
 	end
 end
 
--- Lines: 152 to 153
+-- Lines 152-154
 function CoreEditableGui:blend_mode()
 	return self._blend_mode
 end
 
--- Lines: 156 to 161
+-- Lines 156-161
 function CoreEditableGui:set_render_template(render_template)
 	self._render_template = render_template or self._render_template
 
@@ -184,12 +184,12 @@ function CoreEditableGui:set_render_template(render_template)
 	end
 end
 
--- Lines: 163 to 164
+-- Lines 163-165
 function CoreEditableGui:render_template()
 	return self._render_template
 end
 
--- Lines: 168 to 177
+-- Lines 168-177
 function CoreEditableGui:set_wrap(wrap)
 	if wrap == nil then
 		return
@@ -202,12 +202,12 @@ function CoreEditableGui:set_wrap(wrap)
 	end
 end
 
--- Lines: 179 to 180
+-- Lines 179-181
 function CoreEditableGui:wrap()
 	return self._wrap
 end
 
--- Lines: 183 to 192
+-- Lines 183-192
 function CoreEditableGui:set_word_wrap(word_wrap)
 	if word_wrap == nil then
 		return
@@ -220,12 +220,12 @@ function CoreEditableGui:set_word_wrap(word_wrap)
 	end
 end
 
--- Lines: 194 to 195
+-- Lines 194-196
 function CoreEditableGui:word_wrap()
 	return self._word_wrap
 end
 
--- Lines: 198 to 203
+-- Lines 198-203
 function CoreEditableGui:set_alpha(alpha)
 	self._alpha = alpha or self._alpha
 
@@ -234,12 +234,12 @@ function CoreEditableGui:set_alpha(alpha)
 	end
 end
 
--- Lines: 205 to 206
+-- Lines 205-207
 function CoreEditableGui:alpha()
 	return self._alpha
 end
 
--- Lines: 209 to 216
+-- Lines 209-216
 function CoreEditableGui:set_shape(shape)
 	self._shape = shape or self._shape
 
@@ -250,16 +250,16 @@ function CoreEditableGui:set_shape(shape)
 	self:set_font_size()
 end
 
--- Lines: 218 to 219
+-- Lines 218-220
 function CoreEditableGui:shape()
 	return self._shape
 end
 
--- Lines: 230 to 231
+-- Lines 223-231
 function CoreEditableGui:set_debug(enabled)
 end
 
--- Lines: 234 to 242
+-- Lines 234-242
 function CoreEditableGui:on_unit_set_enabled(enabled)
 	for _, gui in ipairs(self._guis) do
 		if enabled then
@@ -270,7 +270,7 @@ function CoreEditableGui:on_unit_set_enabled(enabled)
 	end
 end
 
--- Lines: 244 to 249
+-- Lines 244-249
 function CoreEditableGui:lock_gui()
 	for _, gui in ipairs(self._guis) do
 		gui.workspace:set_cull_distance(self._cull_distance)
@@ -278,7 +278,7 @@ function CoreEditableGui:lock_gui()
 	end
 end
 
--- Lines: 251 to 258
+-- Lines 251-258
 function CoreEditableGui:destroy()
 	for _, gui in ipairs(self._guis) do
 		if alive(self._gui) and alive(gui.workspace) then
@@ -288,4 +288,3 @@ function CoreEditableGui:destroy()
 
 	self._guis = nil
 end
-

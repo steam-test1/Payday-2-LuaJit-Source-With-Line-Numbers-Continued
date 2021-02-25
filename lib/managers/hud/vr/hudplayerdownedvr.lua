@@ -1,6 +1,6 @@
 HUDPlayerDownedVR = HUDPlayerDowned
 
--- Lines: 4 to 68
+-- Lines 4-68
 function HUDPlayerDownedVR:init(hud)
 	hud.panel = managers.hud:watch_panel():panel({})
 	self._hud = hud
@@ -10,7 +10,9 @@ function HUDPlayerDownedVR:init(hud)
 		self._hud_panel:remove(self._hud_panel:child("downed_panel"))
 	end
 
-	local downed_panel = self._hud_panel:panel({name = "downed_panel"})
+	local downed_panel = self._hud_panel:panel({
+		name = "downed_panel"
+	})
 	local timer_msg = downed_panel:text({
 		text = "BLEH BLEH IN",
 		vertical = "center",
@@ -61,16 +63,15 @@ function HUDPlayerDownedVR:init(hud)
 	hud_component.panel:set_script(hud)
 	managers.hud:hide(PlayerBase.PLAYER_DOWNED_HUD)
 
-	-- Lines: 59 to 61
-	self._hud.show = function ()
+	-- Lines 59-61
+	function self._hud.show()
 		managers.hud._hud_heist_timer:hide()
 	end
 
-	-- Lines: 63 to 65
-	self._hud.hide = function ()
+	-- Lines 63-65
+	function self._hud.hide()
 		managers.hud._hud_heist_timer:show()
 	end
 
 	VRManagerPD2.overlay_helper(self._hud_panel)
 end
-

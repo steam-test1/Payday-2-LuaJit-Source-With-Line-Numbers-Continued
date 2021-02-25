@@ -1,7 +1,9 @@
 NewFlamethrowerBase = NewFlamethrowerBase or class(NewRaycastWeaponBase)
-NewFlamethrowerBase.EVENT_IDS = {flamethrower_effect = 1}
+NewFlamethrowerBase.EVENT_IDS = {
+	flamethrower_effect = 1
+}
 
--- Lines: 7 to 11
+-- Lines 7-11
 function NewFlamethrowerBase:init(...)
 	NewFlamethrowerBase.super.init(self, ...)
 	self:setup_default()
@@ -9,7 +11,7 @@ function NewFlamethrowerBase:init(...)
 	self.flamethrower = true
 end
 
--- Lines: 14 to 25
+-- Lines 13-25
 function NewFlamethrowerBase:setup_default()
 	self._rays = tweak_data.weapon[self._name_id].rays or 6
 	self._range = tweak_data.weapon[self._name_id].flame_max_range or 1000
@@ -20,19 +22,23 @@ function NewFlamethrowerBase:setup_default()
 	self._blank_slotmask = self._bullet_class:blank_slotmask()
 end
 
--- Lines: 30 to 41
+-- Lines 29-41
 function NewFlamethrowerBase:_create_use_setups()
 	local use_data = {}
 	local player_setup = {
 		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
-		equip = {align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"},
-		unequip = {align_place = "back"}
+		equip = {
+			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
+		},
+		unequip = {
+			align_place = "back"
+		}
 	}
 	use_data.player = player_setup
 	self._use_data = use_data
 end
 
--- Lines: 46 to 55
+-- Lines 46-55
 function NewFlamethrowerBase:_update_stats_values()
 	NewFlamethrowerBase.super._update_stats_values(self)
 	self:setup_default()
@@ -42,19 +48,20 @@ function NewFlamethrowerBase:_update_stats_values()
 	end
 end
 
--- Lines: 59 to 60
+-- Lines 59-60
 function NewFlamethrowerBase:get_damage_falloff(damage, col_ray, user_unit)
 end
 
--- Lines: 62 to 64
+-- Lines 62-64
 function NewFlamethrowerBase:_spawn_muzzle_effect(from_pos, direction)
 	self._unit:flamethrower_effect_extension():_spawn_muzzle_effect(from_pos, direction)
 end
+
 local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines: 73 to 153
+-- Lines 70-155
 function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	if self._rays == 1 then
 		local result = NewFlamethrowerBase.super._fire_raycast(self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
@@ -113,7 +120,11 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 	result.hit_enemy = hit_enemies > 0 and true or false
 
 	if self._alert_events then
-		result.rays = {{position = from_pos}}
+		result.rays = {
+			{
+				position = from_pos
+			}
+		}
 	end
 
 	managers.statistics:shot_fired({
@@ -121,7 +132,7 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 		weapon_unit = self._unit
 	})
 
-	for i = 1, hit_enemies, 1 do
+	for i = 1, hit_enemies do
 		managers.statistics:shot_fired({
 			skip_bullet_count = true,
 			hit = true,
@@ -132,18 +143,17 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 	return result
 end
 
--- Lines: 369 to 370
+-- Lines 369-371
 function NewFlamethrowerBase:reload_interuptable()
 	return false
 end
 
--- Lines: 374 to 375
+-- Lines 373-376
 function NewFlamethrowerBase:calculate_vertical_recoil_kick()
 	return 0
 end
 
--- Lines: 378 to 379
+-- Lines 378-380
 function NewFlamethrowerBase:third_person_important()
 	return true
 end
-

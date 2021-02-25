@@ -2,7 +2,7 @@ core:module("CoreDOFManager")
 
 DOFManager = DOFManager or class()
 
--- Lines: 7 to 20
+-- Lines 7-20
 function DOFManager:init()
 	self._queued_effects = {}
 	self._sorted_effect_list = {}
@@ -27,15 +27,17 @@ function DOFManager:init()
 	self._clamp_prev_frame = 0
 end
 
--- Lines: 24 to 30
+-- Lines 24-30
 function DOFManager:save(data)
 	if next(self._queued_effects) then
-		local state = {queued_effects = clone(self._queued_effects)}
+		local state = {
+			queued_effects = clone(self._queued_effects)
+		}
 		data.DOFManager = state
 	end
 end
 
--- Lines: 34 to 44
+-- Lines 34-44
 function DOFManager:load(data)
 	local state = data.DOFManager
 
@@ -48,7 +50,7 @@ function DOFManager:load(data)
 	end
 end
 
--- Lines: 48 to 73
+-- Lines 48-73
 function DOFManager:update(t, dt)
 	self:remove_expired_effects(t, dt)
 
@@ -78,24 +80,24 @@ function DOFManager:update(t, dt)
 	end
 end
 
--- Lines: 77 to 79
+-- Lines 77-79
 function DOFManager:update_world_camera(t, dt, effect)
 	managers.worldcamera:update_dof(t, dt, effect)
 end
 
--- Lines: 83 to 85
+-- Lines 83-85
 function DOFManager:paused_update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines: 89 to 91
+-- Lines 89-92
 function DOFManager:modifier_callback(interface)
 	self._modifier_output = interface:parameters()
 
 	return assert(self._modifier_input)
 end
 
--- Lines: 97 to 106
+-- Lines 97-106
 function DOFManager:feed_dof(near_min, near_max, far_min, far_max, clamp)
 	self._modifier_input = {
 		near_focus_distance_min = near_min,
@@ -106,19 +108,19 @@ function DOFManager:feed_dof(near_min, near_max, far_min, far_max, clamp)
 	}
 end
 
--- Lines: 111 to 112
+-- Lines 111-113
 function DOFManager:get_dof_parameters()
 	return self._current_effect and self._queued_effects[self._current_effect].prog_data.cur_values
 end
 
--- Lines: 117 to 119
+-- Lines 117-120
 function DOFManager:get_dof_values()
 	assert(self._modifier_output)
 
 	return self._modifier_output.near_focus_distance_min, self._modifier_output.near_focus_distance_max, self._modifier_output.far_focus_distance_min, self._modifier_output.far_focus_distance_max, self._modifier_output.clamp
 end
 
--- Lines: 126 to 135
+-- Lines 125-135
 function DOFManager:debug_draw_feed(near_max, near_min, far_min, far_max, clamp)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -132,7 +134,7 @@ function DOFManager:debug_draw_feed(near_max, near_min, far_min, far_max, clamp)
 	end
 end
 
--- Lines: 139 to 151
+-- Lines 139-151
 function DOFManager:remove_expired_effects(t, dt)
 	local id, effect = next(self._queued_effects)
 
@@ -149,7 +151,7 @@ function DOFManager:remove_expired_effects(t, dt)
 	end
 end
 
--- Lines: 155 to 174
+-- Lines 155-174
 function DOFManager:update_effect(t, dt, id)
 	local effect = self._queued_effects[id]
 	local preset = effect.preset
@@ -171,7 +173,7 @@ function DOFManager:update_effect(t, dt, id)
 	end
 end
 
--- Lines: 179 to 197
+-- Lines 178-197
 function DOFManager:calculate_current_parameters_fade_in(t, dt, effect)
 	local next_eff_sort = effect.prog_data.sort_index + 1
 	local next_eff_id = self._sorted_effect_list[next_eff_sort]
@@ -196,7 +198,7 @@ function DOFManager:calculate_current_parameters_fade_in(t, dt, effect)
 	effect.prog_data.dirty = true
 end
 
--- Lines: 201 to 215
+-- Lines 201-215
 function DOFManager:calculate_current_parameters_sustain(t, dt, effect)
 	if effect.prog_data.peak_reached then
 		effect.prog_data.dirty = nil
@@ -214,7 +216,7 @@ function DOFManager:calculate_current_parameters_sustain(t, dt, effect)
 	end
 end
 
--- Lines: 220 to 238
+-- Lines 219-238
 function DOFManager:calculate_current_parameters_fade_out(t, dt, effect, id)
 	local next_eff_sort = effect.prog_data.sort_index + 1
 	local next_eff_id = self._sorted_effect_list[next_eff_sort]
@@ -239,7 +241,7 @@ function DOFManager:calculate_current_parameters_fade_out(t, dt, effect, id)
 	effect.prog_data.dirty = true
 end
 
--- Lines: 242 to 280
+-- Lines 242-281
 function DOFManager:play(dof_data, amplitude_multiplier)
 	self._last_id = self._last_id + 1
 	local new_data = {}
@@ -254,19 +256,25 @@ function DOFManager:play(dof_data, amplitude_multiplier)
 	prog_data.start_t = t
 	local cur_values = nil
 	local near_min, near_max, far_min, far_max, clamp = self:get_dof_values()
-	cur_values = clamp > 0 and {
-		near_min = near_min,
-		near_max = near_max,
-		far_min = far_min,
-		far_max = far_max,
-		clamp = clamp
-	} or {
-		clamp = 0,
-		far_min = 0,
-		far_max = 0,
-		near_max = 0,
-		near_min = 0
-	}
+
+	if clamp > 0 then
+		cur_values = {
+			near_min = near_min,
+			near_max = near_max,
+			far_min = far_min,
+			far_max = far_max,
+			clamp = clamp
+		}
+	else
+		cur_values = {
+			clamp = 0,
+			far_min = 0,
+			far_max = 0,
+			near_max = 0,
+			near_min = 0
+		}
+	end
+
 	local target_values = {}
 
 	for _, v in pairs(self._var_map) do
@@ -284,7 +292,7 @@ function DOFManager:play(dof_data, amplitude_multiplier)
 	return self._last_id
 end
 
--- Lines: 285 to 303
+-- Lines 285-303
 function DOFManager:add_to_sorted_list(new_id, prio)
 	local allocated = nil
 
@@ -307,7 +315,7 @@ function DOFManager:add_to_sorted_list(new_id, prio)
 	end
 end
 
--- Lines: 307 to 319
+-- Lines 307-319
 function DOFManager:remove_from_sorted_list(id)
 	for index, eff_id in ipairs(self._sorted_effect_list) do
 		if eff_id == id then
@@ -322,7 +330,7 @@ function DOFManager:remove_from_sorted_list(id)
 	end
 end
 
--- Lines: 324 to 338
+-- Lines 324-338
 function DOFManager:stop(id, instant)
 	local effect = self._queued_effects[id]
 
@@ -341,7 +349,7 @@ function DOFManager:stop(id, instant)
 	end
 end
 
--- Lines: 342 to 354
+-- Lines 342-354
 function DOFManager:stop_all(instant)
 	self._queued_effects = {}
 	self._sorted_effect_list = {}
@@ -357,29 +365,29 @@ function DOFManager:stop_all(instant)
 	end
 end
 
--- Lines: 358 to 361
+-- Lines 358-361
 function DOFManager:intern_remove_effect(id)
 	self._queued_effects[id] = nil
 
 	self:remove_from_sorted_list(id)
 end
 
--- Lines: 365 to 366
+-- Lines 365-367
 function DOFManager:check_dof_allowed()
 	return self._enabled
 end
 
--- Lines: 371 to 373
+-- Lines 371-373
 function DOFManager:set_enabled(state)
 	self._enabled = state
 end
 
--- Lines: 377 to 378
+-- Lines 377-379
 function DOFManager:is_effect_playing(id)
 	return id and self._queued_effects[id] and true
 end
 
--- Lines: 383 to 390
+-- Lines 383-390
 function DOFManager:from_env_mgr_set_env_dof(env_data)
 	local env_param = self._environment_parameters
 	env_param.near_min = env_data.near_focus_distance_min
@@ -389,7 +397,7 @@ function DOFManager:from_env_mgr_set_env_dof(env_data)
 	env_param.clamp = env_data.clamp
 end
 
--- Lines: 394 to 405
+-- Lines 394-405
 function DOFManager:clbk_environment_change()
 	local env_data = managers.environment:get_posteffect()
 	env_data = env_data and env_data._post_processors
@@ -409,7 +417,7 @@ function DOFManager:clbk_environment_change()
 	end
 end
 
--- Lines: 410 to 428
+-- Lines 410-428
 function DOFManager:set_effect_parameters(id, params, clamp)
 	if self._queued_effects[id] then
 		if params then
@@ -427,4 +435,3 @@ function DOFManager:set_effect_parameters(id, params, clamp)
 		return true
 	end
 end
-

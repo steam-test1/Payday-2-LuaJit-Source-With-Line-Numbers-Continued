@@ -1,13 +1,13 @@
 PlayerParachuting = PlayerParachuting or class(PlayerStandard)
 
--- Lines: 5 to 10
+-- Lines 5-10
 function PlayerParachuting:init(unit)
 	PlayerParachuting.super.init(self, unit)
 
 	self._tweak_data = tweak_data.player.parachute
 end
 
--- Lines: 14 to 27
+-- Lines 14-27
 function PlayerParachuting:enter(state_data, enter_data)
 	print("[PlayerParachuting:enter]", "Enter parachuting state")
 	PlayerParachuting.super.enter(self, state_data, enter_data)
@@ -24,7 +24,7 @@ function PlayerParachuting:enter(state_data, enter_data)
 	self.parachuting = true
 end
 
--- Lines: 32 to 47
+-- Lines 31-47
 function PlayerParachuting:_enter(enter_data)
 	if not self._unit:camera():anim_data().equipped then
 		self._unit:camera():play_redirect(self:get_animation("equip"))
@@ -37,7 +37,7 @@ function PlayerParachuting:_enter(enter_data)
 	self:_set_camera_limits()
 end
 
--- Lines: 51 to 63
+-- Lines 51-63
 function PlayerParachuting:exit(state_data, new_state_name)
 	print("[PlayerParachuting:exit]", "Exiting parachuting state")
 	PlayerParachuting.super.exit(self, state_data)
@@ -51,22 +51,22 @@ function PlayerParachuting:exit(state_data, new_state_name)
 	self.parachuting = false
 end
 
--- Lines: 67 to 68
+-- Lines 67-69
 function PlayerParachuting:interaction_blocked()
 	return true
 end
 
--- Lines: 71 to 72
+-- Lines 71-73
 function PlayerParachuting:bleed_out_blocked()
 	return true
 end
 
--- Lines: 78 to 81
+-- Lines 76-81
 function PlayerParachuting:update(t, dt)
 	PlayerParachuting.super.update(self, t, dt)
 end
 
--- Lines: 85 to 119
+-- Lines 84-119
 function PlayerParachuting:_update_movement(t, dt)
 	local direction = self._controller:get_input_axis("move")
 
@@ -98,7 +98,7 @@ function PlayerParachuting:_update_movement(t, dt)
 	self:_update_network_position(t, dt, self._unit:position())
 end
 
--- Lines: 127 to 211
+-- Lines 124-211
 function PlayerParachuting:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -154,18 +154,18 @@ function PlayerParachuting:_update_check_actions(t, dt)
 	self:_check_action_steelsight(t, input)
 end
 
--- Lines: 215 to 216
+-- Lines 215-217
 function PlayerParachuting:_get_walk_headbob()
 	return 0
 end
 
--- Lines: 221 to 224
+-- Lines 221-224
 function PlayerParachuting:_set_camera_limits()
 	self._camera_unit:base():set_pitch(self._tweak_data.camera.target_pitch)
 	self._camera_unit:base():set_limits(self._tweak_data.camera.limits.spin, self._tweak_data.camera.limits.pitch)
 end
 
--- Lines: 228 to 232
+-- Lines 228-232
 function PlayerParachuting:_remove_camera_limits()
 	self._camera_unit:base()._p_exit = true
 
@@ -173,7 +173,7 @@ function PlayerParachuting:_remove_camera_limits()
 	self._camera_unit:base():set_target_tilt(0)
 end
 
--- Lines: 238 to 249
+-- Lines 237-250
 function PlayerParachuting:_check_action_interact(t, input)
 	local new_action = nil
 	local interaction_wanted = input.btn_interact_press
@@ -188,12 +188,13 @@ function PlayerParachuting:_check_action_interact(t, input)
 
 	return new_action
 end
+
 local tmp_ground_from_vec = Vector3()
 local tmp_ground_to_vec = Vector3()
 local up_offset_vec = math.UP * 30
 local down_offset_vec = math.UP * -40
 
--- Lines: 258 to 273
+-- Lines 258-273
 function PlayerParachuting:_update_ground_ray()
 	local hips_pos = tmp_ground_from_vec
 	local down_pos = tmp_ground_to_vec
@@ -211,7 +212,7 @@ function PlayerParachuting:_update_ground_ray()
 	end
 end
 
--- Lines: 278 to 286
+-- Lines 277-286
 function PlayerParachuting:_update_foley(t, input)
 	if self._gnd_ray then
 		self._camera_unit:base():set_target_tilt(0)
@@ -221,10 +222,9 @@ function PlayerParachuting:_update_foley(t, input)
 	end
 end
 
--- Lines: 290 to 293
+-- Lines 290-293
 function PlayerParachuting:_pitch_up()
 	local t = Application:time()
 
 	self._camera_unit:base():animate_pitch(t, nil, self._tweak_data.camera.target_pitch, 1.7)
 end
-

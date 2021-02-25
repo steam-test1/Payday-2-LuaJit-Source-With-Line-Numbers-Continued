@@ -2,18 +2,18 @@ core:import("CoreSubtitlePresenter")
 
 DramaExt = DramaExt or class()
 
--- Lines: 5 to 8
+-- Lines 5-8
 function DramaExt:init(unit)
 	self._unit = unit
 	self._cue = nil
 end
 
--- Lines: 10 to 11
+-- Lines 10-12
 function DramaExt:name()
 	return self.character_name
 end
 
--- Lines: 14 to 26
+-- Lines 14-26
 function DramaExt:play_sound(sound, sound_source)
 	self._cue = self._cue or {}
 	self._cue.sound = sound
@@ -27,7 +27,7 @@ function DramaExt:play_sound(sound, sound_source)
 	end
 end
 
--- Lines: 28 to 40
+-- Lines 28-40
 function DramaExt:play_subtitle(string_id, duration)
 	self._cue = self._cue or {}
 	self._cue.string_id = string_id
@@ -42,7 +42,7 @@ function DramaExt:play_subtitle(string_id, duration)
 	end
 end
 
--- Lines: 42 to 60
+-- Lines 42-60
 function DramaExt:stop_cue()
 	if self._cue then
 		if self._cue.string_id then
@@ -58,7 +58,7 @@ function DramaExt:stop_cue()
 	end
 end
 
--- Lines: 62 to 79
+-- Lines 62-79
 function DramaExt:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
 	if event_type == "end_of_event" then
 		managers.subtitle:set_visible(false)
@@ -67,11 +67,11 @@ function DramaExt:sound_callback(instance, event_type, unit, sound_source, label
 	elseif event_type == "marker" and sound_source then
 		managers.subtitle:set_visible(true)
 		managers.subtitle:set_enabled(true)
-		managers.subtitle:show_subtitle(sound_source, DramaExt:_subtitle_len(sound_source))
+		managers.subtitle:show_subtitle(sound_source, DramaExt._subtitle_len(DramaExt, sound_source))
 	end
 end
 
--- Lines: 82 to 91
+-- Lines 81-92
 function DramaExt:_subtitle_len(id)
 	local duration = self:_length_from_tweak(id)
 
@@ -87,7 +87,7 @@ function DramaExt:_subtitle_len(id)
 	return duration
 end
 
--- Lines: 94 to 99
+-- Lines 94-100
 function DramaExt:_length_from_tweak(id)
 	local subtitles_tweak = tweak_data.subtitles.jobs[managers.job:current_real_job_id()]
 
@@ -97,4 +97,3 @@ function DramaExt:_length_from_tweak(id)
 
 	return nil
 end
-

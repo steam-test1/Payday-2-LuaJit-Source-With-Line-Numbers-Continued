@@ -1,16 +1,16 @@
 HandState = HandState or class()
 
--- Lines: 7 to 9
+-- Lines 7-9
 function HandState:init(level)
 	self._level = level or 0
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function HandState:level()
 	return self._level
 end
 
--- Lines: 15 to 25
+-- Lines 15-26
 function HandState:connnection_names()
 	local names = {}
 
@@ -25,12 +25,12 @@ function HandState:connnection_names()
 	return names
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function HandState:disabled(connection_name)
 	return self._disabled_connections and table.contains(self._disabled_connections, connection_name)
 end
 
--- Lines: 32 to 70
+-- Lines 32-70
 function HandState:apply(hand, key_map)
 	if not self._connections then
 		return
@@ -76,4 +76,3 @@ function HandState:apply(hand, key_map)
 		end
 	end
 end
-

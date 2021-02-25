@@ -3,7 +3,7 @@ core:import("CoreDebug")
 
 ToolHub = ToolHub or class()
 
--- Lines: 7 to 25
+-- Lines 7-25
 function ToolHub:init()
 	self._main_frame = nil
 	self._shed = {}
@@ -22,7 +22,7 @@ function ToolHub:init()
 	self:create()
 end
 
--- Lines: 27 to 39
+-- Lines 27-39
 function ToolHub:destroy()
 	if alive(self._main_frame) then
 		for _, tool in pairs(self._tools) do
@@ -37,7 +37,7 @@ function ToolHub:destroy()
 	end
 end
 
--- Lines: 41 to 73
+-- Lines 41-73
 function ToolHub:update(time, rel_time)
 	local kb = Input:keyboard()
 
@@ -74,7 +74,7 @@ function ToolHub:update(time, rel_time)
 	self._closelist = {}
 end
 
--- Lines: 75 to 81
+-- Lines 75-81
 function ToolHub:end_update(time, delta_time)
 	for key, value in pairs(self._tools) do
 		if value.end_update then
@@ -83,12 +83,12 @@ function ToolHub:end_update(time, delta_time)
 	end
 end
 
--- Lines: 83 to 85
+-- Lines 83-85
 function ToolHub:paused_update(time, rel_time)
 	self:update(time, rel_time)
 end
 
--- Lines: 88 to 99
+-- Lines 87-99
 function ToolHub:create()
 	self._main_frame = EWS:Frame("Tool Hub", Vector3(-1, -1, 0), Vector3(800, 55, 0), "CAPTION,SYSTEM_MENU,MINIMIZE_BOX,CLOSE_BOX")
 
@@ -103,7 +103,7 @@ function ToolHub:create()
 	self._main_frame:set_position(self:getscreenpos(self._startscreen))
 end
 
--- Lines: 101 to 114
+-- Lines 101-115
 function ToolHub:get_tool_menu(frame)
 	local sortkeys = {}
 
@@ -123,7 +123,7 @@ function ToolHub:get_tool_menu(frame)
 	return tool_menu
 end
 
--- Lines: 117 to 245
+-- Lines 117-245
 function ToolHub:buildmenu()
 	local menu_bar = EWS:MenuBar()
 	local file_menu = EWS:Menu("")
@@ -239,29 +239,29 @@ function ToolHub:buildmenu()
 	end
 end
 
--- Lines: 247 to 251
+-- Lines 247-251
 function ToolHub:change_visualization(viz)
 	for _, vp in ipairs(managers.viewport:viewports()) do
 		vp:set_visualization_mode(viz)
 	end
 end
 
--- Lines: 253 to 255
+-- Lines 253-255
 function ToolHub:toggle_fullscreen()
 	managers.viewport:set_fullscreen(not RenderSettings.fullscreen)
 end
 
--- Lines: 257 to 259
+-- Lines 257-259
 function ToolHub:change_resolution(custom_data, event_object)
 	managers.viewport:set_resolution(custom_data)
 end
 
--- Lines: 261 to 263
+-- Lines 261-263
 function ToolHub:change_aspect_ratio(custom_data, event_object)
 	managers.viewport:set_aspect_ratio(custom_data)
 end
 
--- Lines: 265 to 303
+-- Lines 265-303
 function ToolHub:menu_showcommands()
 	self:register_showcommand("show_gui", "show_gui")
 	self:register_showcommand("show_gui_sprites", "show_gui_sprites")
@@ -301,7 +301,7 @@ function ToolHub:menu_showcommands()
 	self:register_showcommand("show_shadow_projection", "show_shadow_projection")
 end
 
--- Lines: 305 to 324
+-- Lines 305-324
 function ToolHub:menu_statsommands()
 	self:register_statscommands("atombatcher", "atombatcher")
 	self:register_statscommands("cullingmanager", "cullingmanager")
@@ -323,44 +323,44 @@ function ToolHub:menu_statsommands()
 	self:register_statscommands("unit_profiler", "unit_profiler")
 end
 
--- Lines: 326 to 329
+-- Lines 326-329
 function ToolHub:register_statscommands(commandname, text)
 	self._statsmenu:append_check_item("TB_" .. commandname, text, "")
 	self._main_frame:connect("TB_" .. commandname, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_stats"), "")
 end
 
--- Lines: 331 to 334
+-- Lines 331-334
 function ToolHub:register_showcommand(commandname, text)
 	self._dbgmenu:append_check_item("TB_" .. commandname, text, "")
 	self._main_frame:connect("TB_" .. commandname, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_gaaa"), "")
 end
 
--- Lines: 336 to 339
+-- Lines 336-339
 function ToolHub:hide()
 	self._main_frame:set_visible(false)
 
 	self._show = false
 end
 
--- Lines: 341 to 344
+-- Lines 341-344
 function ToolHub:show()
 	self._main_frame:set_visible(true)
 
 	self._show = true
 end
 
--- Lines: 346 to 348
+-- Lines 346-348
 function ToolHub:on_close()
 	self:hide()
 end
 
--- Lines: 350 to 353
+-- Lines 350-353
 function ToolHub:add(name, tool_class, init_args)
 	self._shed[name] = tool_class
 	self._init[name] = init_args or {}
 end
 
--- Lines: 355 to 364
+-- Lines 355-364
 function ToolHub:open(name)
 	local tool = self._tools[name]
 
@@ -372,14 +372,14 @@ function ToolHub:open(name)
 	end
 end
 
--- Lines: 366 to 369
+-- Lines 366-369
 function ToolHub:close(name)
 	self._closelist[name] = true
 
 	cat_print("debug", "ToolHub: Tool '" .. name .. "' added to close down list.")
 end
 
--- Lines: 371 to 379
+-- Lines 371-380
 function ToolHub:prepare(name)
 	local tool_class = self._shed[name]
 
@@ -392,13 +392,13 @@ function ToolHub:prepare(name)
 	return nil
 end
 
--- Lines: 382 to 385
+-- Lines 382-385
 function ToolHub:on_opentool(gaa, commandevent)
 	cat_print("debug", "Should Open Toool: " .. commandevent:get_id())
 	self:open(commandevent:get_id())
 end
 
--- Lines: 387 to 391
+-- Lines 387-391
 function ToolHub:on_stats(gaa, commandevent)
 	local cmdname = string.sub(commandevent:get_id(), 4)
 
@@ -406,7 +406,7 @@ function ToolHub:on_stats(gaa, commandevent)
 	cat_print("debug", "stats " .. cmdname)
 end
 
--- Lines: 393 to 403
+-- Lines 393-403
 function ToolHub:on_gaaa(gaa, commandevent)
 	local ischecked = self._dbgmenu:is_checked(commandevent:get_id())
 	local cmdname = string.sub(commandevent:get_id(), 4)
@@ -418,7 +418,7 @@ function ToolHub:on_gaaa(gaa, commandevent)
 	end
 end
 
--- Lines: 405 to 414
+-- Lines 405-414
 function ToolHub:on_catprint(gaa, commandevent)
 	cat_print("debug", "Should Toogle Catprint: " .. commandevent:get_id())
 
@@ -431,13 +431,13 @@ function ToolHub:on_catprint(gaa, commandevent)
 	end
 end
 
--- Lines: 416 to 419
+-- Lines 416-419
 function ToolHub:on_catprint_save(gaa, commandevent)
 	cat_print("debug", "Should Save Catprint")
 	CoreDebug.catprint_save()
 end
 
--- Lines: 421 to 428
+-- Lines 421-428
 function ToolHub:on_catprint_drawdebug(gaa, commandevent)
 	if Global.render_debug == nil then
 		return
@@ -448,7 +448,7 @@ function ToolHub:on_catprint_drawdebug(gaa, commandevent)
 	cat_print("debug", "Toggle draw of debug info: " .. tostring(Global.render_debug.draw_enabled))
 end
 
--- Lines: 430 to 444
+-- Lines 430-444
 function ToolHub:set_screen(gaa, commandevent)
 	cat_print("debug", "Should set_screen: " .. commandevent:get_id())
 
@@ -465,7 +465,7 @@ function ToolHub:set_screen(gaa, commandevent)
 	end
 end
 
--- Lines: 446 to 458
+-- Lines 446-458
 function ToolHub:getscreenpos(screen)
 	if screen == "primary" then
 		return Vector3(100, 100, 0)
@@ -479,4 +479,3 @@ function ToolHub:getscreenpos(screen)
 		return Vector3(1800, 100, 0)
 	end
 end
-

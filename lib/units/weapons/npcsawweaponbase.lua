@@ -1,6 +1,6 @@
 NPCSawWeaponBase = NPCSawWeaponBase or class(NewNPCRaycastWeaponBase)
 
--- Lines: 3 to 8
+-- Lines 3-8
 function NPCSawWeaponBase:init(unit)
 	NPCSawWeaponBase.super.init(self, unit, false)
 
@@ -12,17 +12,17 @@ function NPCSawWeaponBase:init(unit)
 	}
 end
 
--- Lines: 12 to 14
+-- Lines 12-14
 function NPCSawWeaponBase:_play_sound_sawing()
 	self:play_sound("Play_npc_saw_handheld_grind_generic")
 end
 
--- Lines: 16 to 18
+-- Lines 16-18
 function NPCSawWeaponBase:_play_sound_idle()
 	self:play_sound("Play_npc_saw_handheld_loop_idle")
 end
 
--- Lines: 20 to 29
+-- Lines 20-29
 function NPCSawWeaponBase:update(unit, t, dt)
 	if self._check_shooting_expired and self._check_shooting_expired.check_t < t then
 		self._check_shooting_expired = nil
@@ -33,22 +33,25 @@ function NPCSawWeaponBase:update(unit, t, dt)
 	end
 end
 
--- Lines: 31 to 34
+-- Lines 31-34
 function NPCSawWeaponBase:change_fire_object(new_obj)
 	NPCSawWeaponBase.super.change_fire_object(self, new_obj)
 
 	self._active_effect_table.parent = new_obj
 end
+
 local mto = Vector3()
 local mfrom = Vector3()
 
--- Lines: 39 to 63
+-- Lines 38-63
 function NPCSawWeaponBase:fire_blank(direction, impact)
 	if not self._check_shooting_expired then
 		self:play_tweak_data_sound("fire")
 	end
 
-	self._check_shooting_expired = {check_t = Application:time() + 0.5}
+	self._check_shooting_expired = {
+		check_t = Application:time() + 0.5
+	}
 
 	self._unit:set_extension_update_enabled(Idstring("base"), true)
 	self._obj_fire:m_position(mfrom)
@@ -69,7 +72,7 @@ function NPCSawWeaponBase:fire_blank(direction, impact)
 	end
 end
 
--- Lines: 66 to 73
+-- Lines 66-73
 function NPCSawWeaponBase:_sound_autofire_start(nr_shots)
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 
@@ -79,21 +82,20 @@ function NPCSawWeaponBase:_sound_autofire_start(nr_shots)
 	sound = sound or self._sound_fire:post_event(tweak_sound.fire)
 end
 
--- Lines: 75 to 81
+-- Lines 75-81
 function NPCSawWeaponBase:_sound_autofire_end()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 	local sound = self._sound_fire:post_event(tweak_sound.stop_fire)
 	sound = sound or self._sound_fire:post_event(tweak_sound.stop_fire)
 end
 
--- Lines: 84 to 85
+-- Lines 84-86
 function NPCSawWeaponBase:third_person_important()
 	return SawWeaponBase.third_person_important(self)
 end
 
--- Lines: 88 to 91
+-- Lines 88-91
 function NPCSawWeaponBase:destroy(...)
 	NPCSawWeaponBase.super.destroy(self, ...)
 	SawWeaponBase._stop_sawing_effect(self)
 end
-

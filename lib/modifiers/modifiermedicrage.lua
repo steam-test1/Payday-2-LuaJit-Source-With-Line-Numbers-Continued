@@ -3,7 +3,7 @@ ModifierMedicRage._type = "ModifierMedicRage"
 ModifierMedicRage.name_id = "none"
 ModifierMedicRage.desc_id = "menu_cs_modifier_medic_rage"
 
--- Lines: 7 to 23
+-- Lines 7-23
 function ModifierMedicRage:OnEnemyDied(unit)
 	if Network:is_client() then
 		return
@@ -23,4 +23,3 @@ function ModifierMedicRage:OnEnemyDied(unit)
 		end
 	end
 end
-

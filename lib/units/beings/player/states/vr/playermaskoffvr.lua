@@ -3,7 +3,7 @@ local __enter_default = PlayerMaskOff._enter
 local __exit_default = PlayerMaskOff.exit
 local __check_use_item_default = PlayerMaskOff._check_use_item
 
--- Lines: 8 to 79
+-- Lines 8-79
 function PlayerMaskOffVR:_enter(enter_data)
 	__enter_default(self, enter_data)
 
@@ -27,13 +27,13 @@ function PlayerMaskOffVR:_enter(enter_data)
 	local mtr_bloom_glow_id_string = Idstring("mtr_bloom_glow")
 	local glow_id_strings = {}
 
-	for i = 1, 5, 1 do
+	for i = 1, 5 do
 		glow_id_strings[Idstring("glow" .. tostring(i)):key()] = true
 	end
 
 	local sweep_id_strings = {}
 
-	for i = 1, 5, 1 do
+	for i = 1, 5 do
 		sweep_id_strings[Idstring("sweep" .. tostring(i)):key()] = true
 	end
 
@@ -79,7 +79,7 @@ function PlayerMaskOffVR:_enter(enter_data)
 	managers.hud:belt():set_visible(false)
 end
 
--- Lines: 81 to 102
+-- Lines 81-103
 function PlayerMaskOffVR:exit(state_data, new_state_name)
 	if alive(self._mask_unit) then
 		for _, linked_unit in ipairs(self._mask_unit:children()) do
@@ -106,7 +106,7 @@ function PlayerMaskOffVR:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines: 107 to 128
+-- Lines 107-129
 function PlayerMaskOffVR:_check_use_item(t, input)
 	if input.btn_use_item_press then
 		local action_forbidden = self._use_item_expire_t or self:_changing_weapon() or self:_interacting()
@@ -134,26 +134,26 @@ function PlayerMaskOffVR:_check_use_item(t, input)
 
 	return __check_use_item_default(self, t, input)
 end
+
 local __start_action_state_standard = PlayerMaskOff._start_action_state_standard
 
--- Lines: 132 to 136
+-- Lines 132-136
 function PlayerMaskOffVR:_start_action_state_standard(...)
 	managers.hud:link_interaction_hud(self._unit:hand():mask_hand_unit())
 	__start_action_state_standard(self, ...)
 end
 
--- Lines: 138 to 139
+-- Lines 138-140
 function PlayerMaskOffVR:_can_run()
 	return false
 end
 
--- Lines: 142 to 143
+-- Lines 142-144
 function PlayerMaskOffVR:_can_jump()
 	return false
 end
 
--- Lines: 146 to 147
+-- Lines 146-148
 function PlayerMaskOffVR:_can_duck()
 	return false
 end
-

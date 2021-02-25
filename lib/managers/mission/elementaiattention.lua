@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementAIAttention = ElementAIAttention or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementAIAttention:init(...)
 	ElementAIAttention.super.init(self, ...)
 end
 
--- Lines: 11 to 39
+-- Lines 11-39
 function ElementAIAttention:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -37,11 +37,11 @@ function ElementAIAttention:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
--- Lines: 44 to 45
+-- Lines 43-45
 function ElementAIAttention:operation_remove()
 end
 
--- Lines: 49 to 72
+-- Lines 49-73
 function ElementAIAttention:_select_units_from_spawners()
 	local candidates = {}
 
@@ -56,11 +56,17 @@ function ElementAIAttention:_select_units_from_spawners()
 	end
 
 	local wanted_nr_units = nil
-	wanted_nr_units = self._values.trigger_times <= 0 and 1 or self._values.trigger_times
+
+	if self._values.trigger_times <= 0 then
+		wanted_nr_units = 1
+	else
+		wanted_nr_units = self._values.trigger_times
+	end
+
 	wanted_nr_units = math.min(wanted_nr_units, #candidates)
 	local chosen_units = {}
 
-	for i = 1, wanted_nr_units, 1 do
+	for i = 1, wanted_nr_units do
 		local chosen_unit = table.remove(candidates, math.random(#candidates))
 
 		table.insert(chosen_units, chosen_unit)
@@ -69,12 +75,12 @@ function ElementAIAttention:_select_units_from_spawners()
 	return chosen_units
 end
 
--- Lines: 77 to 78
+-- Lines 77-79
 function ElementAIAttention:_get_attention_handler_from_unit(unit)
 	return alive(unit) and (unit:movement() and unit:movement():attention_handler() or unit:brain() and unit:brain():attention_handler())
 end
 
--- Lines: 83 to 95
+-- Lines 83-95
 function ElementAIAttention:_create_attention_settings()
 	local preset = self._values.preset
 
@@ -93,7 +99,7 @@ function ElementAIAttention:_create_attention_settings()
 	end
 end
 
--- Lines: 99 to 121
+-- Lines 99-121
 function ElementAIAttention:_create_override_attention_settings(unit)
 	local preset = self._values.override
 
@@ -105,7 +111,12 @@ function ElementAIAttention:_create_override_attention_settings(unit)
 
 	if setting_desc then
 		local clbk_receiver_class = nil
-		clbk_receiver_class = (unit:base().is_local_player or unit:base().is_husk_player) and unit:movement() or unit:brain()
+
+		if unit:base().is_local_player or unit:base().is_husk_player then
+			clbk_receiver_class = unit:movement()
+		else
+			clbk_receiver_class = unit:brain()
+		end
 
 		if not clbk_receiver_class then
 			debug_pause_unit(unit, "[ElementAIAttention:_create_override_attention_settings] cannot override attention for:", unit)
@@ -121,7 +132,7 @@ function ElementAIAttention:_create_override_attention_settings(unit)
 	end
 end
 
--- Lines: 125 to 157
+-- Lines 124-157
 function ElementAIAttention:_apply_attention_on_unit(unit, handler)
 	local handler = handler or self:_get_attention_handler_from_unit(unit)
 
@@ -160,7 +171,7 @@ function ElementAIAttention:_apply_attention_on_unit(unit, handler)
 	end
 end
 
--- Lines: 161 to 174
+-- Lines 161-174
 function ElementAIAttention:_chk_link_att_object(unit, handler)
 	if not self._values.parent_u_id then
 		return
@@ -177,15 +188,19 @@ function ElementAIAttention:_chk_link_att_object(unit, handler)
 	handler:link(parent_unit, self._values.parent_obj_name, self._values.local_pos)
 end
 
--- Lines: 178 to 185
+-- Lines 178-186
 function ElementAIAttention:_fetch_unit_by_unit_id(unit_id)
 	local unit = nil
-	unit = Application:editor() and managers.editor:unit_with_id(tonumber(unit_id)) or managers.worlddefinition:get_unit_on_load(tonumber(unit_id), callback(self, self, "_load_unit"))
+
+	if Application:editor() then
+		unit = managers.editor:unit_with_id(tonumber(unit_id))
+	else
+		unit = managers.worlddefinition:get_unit_on_load(tonumber(unit_id), callback(self, self, "_load_unit"))
+	end
 
 	return unit
 end
 
--- Lines: 190 to 191
+-- Lines 190-191
 function ElementAIAttention._load_unit(unit)
 end
-

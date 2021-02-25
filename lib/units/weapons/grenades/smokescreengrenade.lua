@@ -1,6 +1,6 @@
 SmokeScreenGrenade = SmokeScreenGrenade or class(FragGrenade)
 
--- Lines: 6 to 12
+-- Lines 6-12
 function SmokeScreenGrenade:_setup_server_data(...)
 	SmokeScreenGrenade.super._setup_server_data(self, ...)
 
@@ -9,14 +9,14 @@ function SmokeScreenGrenade:_setup_server_data(...)
 	end
 end
 
--- Lines: 14 to 17
+-- Lines 14-17
 function SmokeScreenGrenade:set_thrower_unit(unit)
 	SmokeScreenGrenade.super.set_thrower_unit(self, unit)
 
 	self._has_dodge_bonus = self._thrower_unit ~= managers.player:player_unit() and self._thrower_unit:base():upgrade_value("player", "sicario_multiplier")
 end
 
--- Lines: 19 to 31
+-- Lines 19-31
 function SmokeScreenGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -36,16 +36,16 @@ function SmokeScreenGrenade:_detonate(tag, unit, body, other_unit, other_body, p
 	})
 end
 
--- Lines: 34 to 35
+-- Lines 33-35
 function SmokeScreenGrenade:bullet_hit()
 end
 
--- Lines: 39 to 41
+-- Lines 39-41
 function SmokeScreenGrenade:_detonate_on_client()
 	self:_detonate()
 end
 
--- Lines: 45 to 55
+-- Lines 45-55
 function SmokeScreenGrenade:update(unit, t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -59,4 +59,3 @@ function SmokeScreenGrenade:update(unit, t, dt)
 
 	ProjectileBase.update(self, unit, t, dt)
 end
-

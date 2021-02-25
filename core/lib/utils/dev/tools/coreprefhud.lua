@@ -4,7 +4,7 @@ PrefHud = PrefHud or class()
 PrefHud.CONFIG_FILE_PATH = "core/settings/prefhud"
 PrefHud.CONFIG_FILE_EXTENSION = "prefhud"
 
--- Lines: 7 to 20
+-- Lines 7-20
 function PrefHud:init()
 	self._const = {
 		_bar_y = 14,
@@ -20,17 +20,17 @@ function PrefHud:init()
 	self:hide()
 end
 
--- Lines: 22 to 24
+-- Lines 22-24
 function PrefHud:remove_counter(name)
 	self._counters[name] = nil
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function PrefHud:remove_all_counters()
 	self._counters = {}
 end
 
--- Lines: 30 to 44
+-- Lines 30-44
 function PrefHud:add_counter(name, sort, min, mid, max, precision, inv, inv_colors, call_str)
 	self._counters[name] = {
 		_current_value = 0,
@@ -47,7 +47,7 @@ function PrefHud:add_counter(name, sort, min, mid, max, precision, inv, inv_colo
 	}
 end
 
--- Lines: 46 to 66
+-- Lines 46-66
 function PrefHud:load_config()
 	assert(DB:has(self.CONFIG_FILE_EXTENSION, self.CONFIG_FILE_PATH), "[CorePrefHud] Can't open \"" .. tostring(self.CONFIG_FILE_PATH) .. "." .. tostring(self.CONFIG_FILE_EXTENSION) .. "\".")
 
@@ -61,7 +61,7 @@ function PrefHud:load_config()
 	end
 end
 
--- Lines: 69 to 118
+-- Lines 68-118
 function PrefHud:build_gui()
 	if self._workspace then
 		Overlay:newgui():destroy_workspace(self._workspace)
@@ -114,21 +114,21 @@ function PrefHud:build_gui()
 	end
 end
 
--- Lines: 120 to 123
+-- Lines 120-123
 function PrefHud:show()
 	self._workspace:show()
 
 	self._visible = true
 end
 
--- Lines: 125 to 128
+-- Lines 125-128
 function PrefHud:hide()
 	self._workspace:hide()
 
 	self._visible = false
 end
 
--- Lines: 130 to 136
+-- Lines 130-136
 function PrefHud:toggle()
 	if self._visible then
 		self:hide()
@@ -137,7 +137,7 @@ function PrefHud:toggle()
 	end
 end
 
--- Lines: 138 to 192
+-- Lines 138-192
 function PrefHud:update_bars(t, dt)
 	if self._upd_interval <= (self._prev_upd or self._upd_interval) then
 		self._prev_upd = 0
@@ -194,16 +194,17 @@ function PrefHud:update_bars(t, dt)
 		self._prev_upd = self._prev_upd + dt
 	end
 end
+
 local ids_win32 = Idstring("WIN32")
 local ids_left_ctrl = Idstring("left ctrl")
 local ids_f1 = Idstring("f1")
 local is_win32 = SystemInfo:platform() == ids_win32
 
--- Lines: 205 to 206
+-- Lines 198-206
 function PrefHud:update_keys()
 end
 
--- Lines: 208 to 213
+-- Lines 208-213
 function PrefHud:update(t, dt)
 	if self._visible then
 		self:update_bars(t, dt)
@@ -212,15 +213,14 @@ function PrefHud:update(t, dt)
 	self:update_keys()
 end
 
--- Lines: 215 to 217
+-- Lines 215-217
 function PrefHud:paused_update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines: 219 to 223
+-- Lines 219-223
 function PrefHud:destroy()
 	if alive(self._workspace) then
 		Overlay:newgui():destroy_workspace(self._workspace)
 	end
 end
-

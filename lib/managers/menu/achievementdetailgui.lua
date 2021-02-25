@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 HalfCircleProgressBar = HalfCircleProgressBar or class(ExtendedPanel)
 
--- Lines: 17 to 42
+-- Lines 17-42
 function HalfCircleProgressBar:init(parent, config, progress)
 	HalfCircleProgressBar.super.init(self, parent, config)
 
@@ -51,18 +51,18 @@ function HalfCircleProgressBar:init(parent, config, progress)
 	end
 end
 
--- Lines: 44 to 47
+-- Lines 44-47
 function HalfCircleProgressBar:set_progress(value)
 	self._right:set_color(self._color:with_red(value * 0.5))
 	self._left:set_color(self._color:with_red(0.5 + value * 0.5))
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 local function create_tag_text(str)
 	return "menu_achievements_" .. str
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 local function get_tag_category(tag)
 	return string.split(tag, "_", nil, 1)[1]
 end
@@ -77,12 +77,12 @@ local difficulty_translate = {
 	difficulty_mayhem = "menu_difficulty_easy_wish"
 }
 
--- Lines: 64 to 65
+-- Lines 64-66
 local function create_difficulty_text(str)
 	return difficulty_translate[str]
 end
 
--- Lines: 68 to 75
+-- Lines 68-76
 local function create_contract_text(str)
 	local id = string.sub(str, 11)
 	local data = tweak_data.narrative.contacts[id]
@@ -96,7 +96,7 @@ end
 
 AchievementDetailGui = AchievementDetailGui or class(GrowPanel)
 
--- Lines: 82 to 279
+-- Lines 82-279
 function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback)
 	AchievementDetailGui.super.init(self, parent, {
 		padding = 10,
@@ -118,7 +118,9 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	print(self._id)
 
 	if not managers.menu:is_pc_controller() then
-		self._legends = TextLegendsBar:new(parent, nil, {layer = self:layer()})
+		self._legends = TextLegendsBar:new(parent, nil, {
+			layer = self:layer()
+		})
 
 		self._legends:add_items({
 			"menu_legend_back",
@@ -146,10 +148,12 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	if not self._info.awarded then
 		bitmap:set_color(Color.white:with_alpha(0.1))
 
-		local lock = self:bitmap({texture = "guis/dlcs/trk/textures/pd2/lock"})
+		local lock = self:bitmap({
+			texture = "guis/dlcs/trk/textures/pd2/lock"
+		})
 		local cx, cy = bitmap:center()
 
-		lock:set_center(math.round((cx + bitmap:w() * 0.5) - 10), math.round((cy + bitmap:h() * 0.5) - 10))
+		lock:set_center(math.round(cx + bitmap:w() * 0.5 - 10), math.round(cy + bitmap:h() * 0.5 - 10))
 	end
 
 	placer:add_right(nil)
@@ -164,7 +168,9 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 
 	if unlock_date then
 		placer:add_bottom(self:fine_text({
-			text = managers.localization:text("menu_achievement_unlock_date", {DATE = os.date("%d %b %Y %H:%M", unlock_date)}),
+			text = managers.localization:text("menu_achievement_unlock_date", {
+				DATE = os.date("%d %b %Y %H:%M", unlock_date)
+			}),
 			font = small_font,
 			font_size = small_font_size,
 			color = grey_color
@@ -187,7 +193,9 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 		scrollbar_padding = 5,
 		h = 300,
 		input = true
-	}, {padding = 10}))
+	}, {
+		padding = 10
+	}))
 
 	detail:add_lines_and_static_down_indicator()
 
@@ -201,9 +209,22 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	for _, tag in pairs(self._visual.tags) do
 		local category = get_tag_category(tag)
 		local id = nil
-		id = category == "contracts" and create_contract_text(tag) or category == "difficulty" and create_difficulty_text(tag) or create_tag_text(tag)
+
+		if category == "contracts" then
+			id = create_contract_text(tag)
+		elseif category == "difficulty" then
+			id = create_difficulty_text(tag)
+		else
+			id = create_tag_text(tag)
+		end
+
 		local str = managers.localization:text("menu_achievements_" .. category) .. ": " .. managers.localization:text(id)
-		tag_str = not tag_str and managers.localization:text("menu_achievements_tags_intro") .. str or tag_str .. ", " .. str
+
+		if not tag_str then
+			tag_str = managers.localization:text("menu_achievements_tags_intro") .. str
+		else
+			tag_str = tag_str .. ", " .. str
+		end
 	end
 
 	if tag_str then
@@ -222,9 +243,11 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	local friend_list = placer:add_right(ScrollableList:new(self, {
 		scrollbar_padding = 5,
 		input = true,
-		w = (self:w() - self._detail:right()) - 5,
+		w = self:w() - self._detail:right() - 5,
 		h = self._detail:h()
-	}, {padding = 0}), 0)
+	}, {
+		padding = 0
+	}), 0)
 
 	friend_list:add_lines_and_static_down_indicator()
 
@@ -249,7 +272,9 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 	self._num_friend_text = placer:add_top_ralign(self:fine_text({
 		keep_w = true,
 		align = "right",
-		text = managers.localization:text("menu_achievement_friends_unlocked", {COUNT = ""}),
+		text = managers.localization:text("menu_achievement_friends_unlocked", {
+			COUNT = ""
+		}),
 		font = small_font,
 		font_size = small_font_size,
 		color = grey_color
@@ -269,8 +294,12 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 
 	placer:push()
 
-	local f_text = managers.localization:text("menu_achievement_friends_unlocked_percent", {COUNT = string.format("%.1f", friend_p * 100)})
-	local g_text = managers.localization:text("menu_achievement_global_unlocked_percent", {COUNT = string.format("%.1f", global_p * 100)})
+	local f_text = managers.localization:text("menu_achievement_friends_unlocked_percent", {
+		COUNT = string.format("%.1f", friend_p * 100)
+	})
+	local g_text = managers.localization:text("menu_achievement_global_unlocked_percent", {
+		COUNT = string.format("%.1f", global_p * 100)
+	})
 	local friend_p_text = placer:add_top_ralign(self:fine_text({
 		text = f_text,
 		font = small_font,
@@ -325,7 +354,9 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 
 			if friend == true then
 				print("[Ach]", "\tDONE!")
-				self._num_friend_text:set_text(managers.localization:text("menu_achievement_friends_unlocked", {COUNT = #unlocked_friends}))
+				self._num_friend_text:set_text(managers.localization:text("menu_achievement_friends_unlocked", {
+					COUNT = #unlocked_friends
+				}))
 
 				return
 			elseif friend == false then
@@ -340,7 +371,9 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 			local friend_p = #unlocked_friends / #total_friends
 
 			friend_circle:set_progress(friend_p)
-			friend_p_text:set_text(managers.localization:text("menu_achievement_friends_unlocked_percent", {COUNT = string.format("%.1f", friend_p * 100)}))
+			friend_p_text:set_text(managers.localization:text("menu_achievement_friends_unlocked_percent", {
+				COUNT = string.format("%.1f", friend_p * 100)
+			}))
 			self.make_fine_text(friend_p_text)
 			Steam:friend_avatar(Steam.SMALL_AVATAR, friend:id(), function (texture)
 				if alive(friend_list) then
@@ -363,22 +396,28 @@ function AchievementDetailGui:init(parent, achievement_data_or_id, back_callback
 		end)
 	end
 
-	local back_panel = self:panel({layer = -1})
+	local back_panel = self:panel({
+		layer = -1
+	})
 
-	back_panel:rect({color = Color.black:with_alpha(0.8)})
-	BoxGuiObject:new(back_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	back_panel:rect({
+		color = Color.black:with_alpha(0.8)
+	})
+	BoxGuiObject:new(back_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self._back = back_panel
 
 	self:set_center(parent:w() / 2, parent:h() / 2)
 end
 
--- Lines: 281 to 284
+-- Lines 281-284
 function AchievementDetailGui:close()
 	self:remove_self()
 
@@ -387,7 +426,7 @@ function AchievementDetailGui:close()
 	end
 end
 
--- Lines: 286 to 300
+-- Lines 286-300
 function AchievementDetailGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -404,10 +443,9 @@ function AchievementDetailGui:update(...)
 	end
 end
 
--- Lines: 302 to 304
+-- Lines 302-305
 function AchievementDetailGui:back_pressed()
 	self._back_callback()
 
 	return true
 end
-

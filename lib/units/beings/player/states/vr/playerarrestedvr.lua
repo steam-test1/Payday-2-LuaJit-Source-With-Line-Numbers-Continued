@@ -3,7 +3,7 @@ local __enter = PlayerArrested.enter
 local __exit = PlayerArrested.exit
 local __destroy = PlayerArrested.destroy
 
--- Lines: 8 to 14
+-- Lines 8-14
 function PlayerArrestedVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("cuffed", self._unit:position())
@@ -11,7 +11,7 @@ function PlayerArrestedVR:enter(...)
 	self:set_belt_and_hands_enabled(false)
 end
 
--- Lines: 16 to 22
+-- Lines 16-22
 function PlayerArrestedVR:exit(...)
 	__exit(self, ...)
 	self._ext_movement:set_orientation_state("none")
@@ -19,7 +19,7 @@ function PlayerArrestedVR:exit(...)
 	self:set_belt_and_hands_enabled(true)
 end
 
--- Lines: 24 to 31
+-- Lines 24-31
 function PlayerArrestedVR:destroy()
 	if managers.network:session() then
 		self:set_belt_and_hands_enabled(true)
@@ -27,10 +27,11 @@ function PlayerArrestedVR:destroy()
 
 	__destroy(self)
 end
+
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 
--- Lines: 36 to 47
+-- Lines 36-47
 function PlayerArrestedVR:_update_movement(t, dt)
 	local pos_new = mvec_pos_new
 
@@ -45,7 +46,7 @@ function PlayerArrestedVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new)
 end
 
--- Lines: 54 to 93
+-- Lines 51-93
 function PlayerArrestedVR:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -69,7 +70,7 @@ function PlayerArrestedVR:_update_check_actions(t, dt)
 		self._equip_weapon_expire_t = nil
 	end
 
-	if self._unequip_weapon_expire_t and self._unequip_weapon_expire_t + 0.5 <= t then
+	if self._unequip_weapon_expire_t and t >= self._unequip_weapon_expire_t + 0.5 then
 		self._unequip_weapon_expire_t = nil
 	end
 
@@ -78,7 +79,7 @@ function PlayerArrestedVR:_update_check_actions(t, dt)
 	local new_action = self:_check_action_interact(t, input)
 end
 
--- Lines: 95 to 121
+-- Lines 95-121
 function PlayerArrestedVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		local belt_states = {
@@ -111,4 +112,3 @@ function PlayerArrestedVR:set_belt_and_hands_enabled(enabled)
 		end
 	end
 end
-

@@ -1,7 +1,9 @@
 EnemyDummyTriggerUnitElement = EnemyDummyTriggerUnitElement or class(MissionElement)
-EnemyDummyTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+EnemyDummyTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 12
+-- Lines 4-12
 function EnemyDummyTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -12,7 +14,7 @@ function EnemyDummyTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 14 to 23
+-- Lines 14-23
 function EnemyDummyTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -32,17 +34,17 @@ function EnemyDummyTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines: 25 to 28
+-- Lines 25-28
 function EnemyDummyTriggerUnitElement:get_links_to_unit(...)
 	EnemyDummyTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 30 to 31
+-- Lines 30-31
 function EnemyDummyTriggerUnitElement:update_editing()
 end
 
--- Lines: 33 to 43
+-- Lines 33-43
 function EnemyDummyTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -60,7 +62,7 @@ function EnemyDummyTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 45 to 52
+-- Lines 45-53
 function EnemyDummyTriggerUnitElement:_correct_unit(u_name)
 	local names = {
 		"ai_spawn_enemy",
@@ -78,12 +80,12 @@ function EnemyDummyTriggerUnitElement:_correct_unit(u_name)
 	return false
 end
 
--- Lines: 56 to 58
+-- Lines 56-58
 function EnemyDummyTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 61 to 94
+-- Lines 61-94
 function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -123,4 +125,3 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "event", options)
 end
-

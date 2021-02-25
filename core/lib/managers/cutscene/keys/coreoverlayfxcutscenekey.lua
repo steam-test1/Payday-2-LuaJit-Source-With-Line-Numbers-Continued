@@ -18,12 +18,12 @@ CoreOverlayFXCutsceneKey:register_serialized_attribute("fade_out", 0, tonumber)
 CoreOverlayFXCutsceneKey.control_for_blend_mode = CoreCutsceneKeyBase.standard_combo_box_control
 CoreOverlayFXCutsceneKey.refresh_control_for_blend_mode = CoreCutsceneKeyBase:standard_combo_box_control_refresh("blend_mode", CoreOverlayFXCutsceneKey.VALID_BLEND_MODES)
 
--- Lines: 16 to 17
+-- Lines 16-18
 function CoreOverlayFXCutsceneKey:__tostring()
 	return "Trigger overlay effect."
 end
 
--- Lines: 20 to 30
+-- Lines 20-30
 function CoreOverlayFXCutsceneKey:preroll(player)
 	if self:fade_in() == 0 then
 		local effect_data = self:_effect_data()
@@ -35,7 +35,7 @@ function CoreOverlayFXCutsceneKey:preroll(player)
 	end
 end
 
--- Lines: 32 to 43
+-- Lines 32-43
 function CoreOverlayFXCutsceneKey:skip(player)
 	local full_intensity_start = self:time() + self:fade_in()
 	local full_intensity_end = full_intensity_start + self:sustain()
@@ -50,7 +50,7 @@ function CoreOverlayFXCutsceneKey:skip(player)
 	end
 end
 
--- Lines: 45 to 48
+-- Lines 45-48
 function CoreOverlayFXCutsceneKey:evaluate(player, fast_forward)
 	local effect_data = table.remap(self:attribute_names(), function (_, attribute_name)
 		return attribute_name, self:attribute_value(attribute_name)
@@ -59,39 +59,39 @@ function CoreOverlayFXCutsceneKey:evaluate(player, fast_forward)
 	managers.cutscene:play_overlay_effect(effect_data)
 end
 
--- Lines: 50 to 52
+-- Lines 50-52
 function CoreOverlayFXCutsceneKey:revert(player)
 	self:_stop()
 end
 
--- Lines: 54 to 58
+-- Lines 54-58
 function CoreOverlayFXCutsceneKey:update_gui(time, delta_time, player)
 	if self.__color_picker_dialog then
 		self.__color_picker_dialog:update(time, delta_time)
 	end
 end
 
--- Lines: 60 to 61
+-- Lines 60-62
 function CoreOverlayFXCutsceneKey:is_valid_blend_mode(value)
 	return table.contains(self.VALID_BLEND_MODES, value)
 end
 
--- Lines: 64 to 65
+-- Lines 64-66
 function CoreOverlayFXCutsceneKey:is_valid_fade_in(value)
 	return value >= 0
 end
 
--- Lines: 68 to 69
+-- Lines 68-70
 function CoreOverlayFXCutsceneKey:is_valid_sustain(value)
 	return value >= 0
 end
 
--- Lines: 72 to 73
+-- Lines 72-74
 function CoreOverlayFXCutsceneKey:is_valid_fade_out(value)
 	return value >= 0
 end
 
--- Lines: 76 to 82
+-- Lines 76-83
 function CoreOverlayFXCutsceneKey:control_for_color(parent_frame)
 	local control = EWS:ColorWell(parent_frame, "")
 
@@ -103,7 +103,7 @@ function CoreOverlayFXCutsceneKey:control_for_color(parent_frame)
 	return control
 end
 
--- Lines: 85 to 100
+-- Lines 85-100
 function CoreOverlayFXCutsceneKey:_on_pick_color(sender)
 	if self.__color_picker_dialog == nil then
 		local cutscene_editor_window = self:_top_level_window(sender)
@@ -124,20 +124,19 @@ function CoreOverlayFXCutsceneKey:_on_pick_color(sender)
 	end
 end
 
--- Lines: 102 to 103
+-- Lines 102-104
 function CoreOverlayFXCutsceneKey:_effect_data()
 	return table.remap(self:attribute_names(), function (_, attribute_name)
 		return attribute_name, self:attribute_value(attribute_name)
 	end)
 end
 
--- Lines: 106 to 108
+-- Lines 106-108
 function CoreOverlayFXCutsceneKey:_stop()
 	managers.cutscene:stop_overlay_effect()
 end
 
--- Lines: 110 to 111
+-- Lines 110-112
 function CoreOverlayFXCutsceneKey:_top_level_window(window)
 	return (type_name(window) == "EWSFrame" or type_name(window) == "EWSDialog") and window or self:_top_level_window(assert(window:parent()))
 end
-

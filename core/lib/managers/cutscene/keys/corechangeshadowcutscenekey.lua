@@ -6,7 +6,7 @@ CoreChangeShadowCutsceneKey.NAME = "Shadow Change"
 
 CoreChangeShadowCutsceneKey:register_serialized_attribute("name", "")
 
--- Lines: 8 to 23
+-- Lines 8-23
 function CoreChangeShadowCutsceneKey:init(keycollection)
 	self.super.init(self, keycollection)
 
@@ -25,7 +25,7 @@ function CoreChangeShadowCutsceneKey:init(keycollection)
 	for _, var in ipairs(list) do
 		local data_path_key = Idstring(suffix .. var):key()
 
-		-- Lines: 17 to 18
+		-- Lines 17-19
 		local function func()
 			return managers.viewport:get_environment_value(self:name(), data_path_key), true
 		end
@@ -34,12 +34,12 @@ function CoreChangeShadowCutsceneKey:init(keycollection)
 	end
 end
 
--- Lines: 25 to 26
+-- Lines 25-27
 function CoreChangeShadowCutsceneKey:__tostring()
 	return "Change shadow settings to \"" .. self:name() .. "\"."
 end
 
--- Lines: 29 to 38
+-- Lines 29-38
 function CoreChangeShadowCutsceneKey:evaluate(player, fast_forward)
 	local preceeding_key = self:preceeding_key({
 		unit_name = self.unit_name and self:unit_name(),
@@ -57,28 +57,29 @@ function CoreChangeShadowCutsceneKey:evaluate(player, fast_forward)
 	end
 end
 
--- Lines: 40 to 42
+-- Lines 40-42
 function CoreChangeShadowCutsceneKey:revert()
 	self:_reset_interface()
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function CoreChangeShadowCutsceneKey:unload()
 	self:_reset_interface()
 end
 
--- Lines: 48 to 49
+-- Lines 48-50
 function CoreChangeShadowCutsceneKey:can_evaluate_with_player(player)
 	return true
 end
 
--- Lines: 52 to 53
+-- Lines 52-54
 function CoreChangeShadowCutsceneKey:is_valid_name(name)
 	return name and DB:has("environment", name)
 end
+
 CoreChangeShadowCutsceneKey.control_for_name = CoreCutsceneKeyBase.standard_combo_box_control
 
--- Lines: 58 to 69
+-- Lines 58-69
 function CoreChangeShadowCutsceneKey:refresh_control_for_name(control)
 	control:freeze()
 	control:clear()
@@ -96,7 +97,7 @@ function CoreChangeShadowCutsceneKey:refresh_control_for_name(control)
 	control:thaw()
 end
 
--- Lines: 71 to 79
+-- Lines 71-79
 function CoreChangeShadowCutsceneKey:_reset_interface()
 	if self._shadow_interface_id_map then
 		for data_path_key, id in pairs(self._shadow_interface_id_map) do
@@ -106,4 +107,3 @@ function CoreChangeShadowCutsceneKey:_reset_interface()
 		self._shadow_interface_id_map = nil
 	end
 end
-

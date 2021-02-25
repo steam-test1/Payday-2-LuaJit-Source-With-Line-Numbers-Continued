@@ -2,7 +2,7 @@ require("lib/units/enemies/cop/logics/CopLogicBase")
 
 CivilianLogicBase = class(CopLogicBase)
 
--- Lines: 9 to 17
+-- Lines 9-17
 function CivilianLogicBase.on_objective_unit_destroyed(data, unit)
 	if not alive(data.unit) then
 		debug_pause("dead unit did not remove destroy listener", data.debug_name, inspect(data.objective), data.name)
@@ -15,4 +15,3 @@ function CivilianLogicBase.on_objective_unit_destroyed(data, unit)
 
 	data.objective_failed_clbk(data.unit, data.objective)
 end
-

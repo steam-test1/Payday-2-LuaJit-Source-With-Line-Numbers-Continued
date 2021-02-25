@@ -1,7 +1,8 @@
-
--- Lines: 1 to 1794
+-- Lines 1-1794
 function BlackMarketTweakData:_init_materials(tweak_data)
-	self.materials = {plastic = {}}
+	self.materials = {
+		plastic = {}
+	}
 	self.materials.plastic.name_id = "bm_mtl_plastic"
 	self.materials.plastic.texture = "units/payday2/matcaps/matcap_plastic_df"
 	self.materials.plastic.value = 0
@@ -1978,4 +1979,3 @@ function BlackMarketTweakData:_init_materials(tweak_data)
 		end
 	end
 end
-

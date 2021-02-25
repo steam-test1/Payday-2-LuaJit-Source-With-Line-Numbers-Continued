@@ -1,7 +1,7 @@
 MultiProfileItemGui = MultiProfileItemGui or class()
 MultiProfileItemGui.quick_panel_h = 24
 
--- Lines: 5 to 48
+-- Lines 5-48
 function MultiProfileItemGui:init(ws, panel)
 	self._ws = ws
 	self._panel = self._panel or panel:panel({
@@ -25,12 +25,14 @@ function MultiProfileItemGui:init(ws, panel)
 	})
 
 	self._box_panel = self._profile_panel:panel()
-	self._box = BoxGuiObject:new(self._box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._box = BoxGuiObject:new(self._box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	if managers.menu:is_pc_controller() then
 		self._panel:set_w(self._panel:w() + self._profile_panel:h())
@@ -109,12 +111,14 @@ function MultiProfileItemGui:init(ws, panel)
 			layer = -100,
 			color = Color.black
 		})
-		BoxGuiObject:new(self._quick_select_panel:panel(), {sides = {
-			0,
-			1,
-			4,
-			4
-		}})
+		BoxGuiObject:new(self._quick_select_panel:panel(), {
+			sides = {
+				0,
+				1,
+				4,
+				4
+			}
+		})
 	end
 
 	self._caret = self._profile_panel:rect({
@@ -132,22 +136,22 @@ function MultiProfileItemGui:init(ws, panel)
 	self:update()
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function MultiProfileItemGui:panel()
 	return self._panel
 end
 
--- Lines: 54 to 55
+-- Lines 54-56
 function MultiProfileItemGui:profile_panel()
 	return self._profile_panel
 end
 
--- Lines: 58 to 60
+-- Lines 58-60
 function MultiProfileItemGui:set_name_editing_enabled(enabled)
 	self._name_editing_enabled = enabled
 end
 
--- Lines: 62 to 90
+-- Lines 62-90
 function MultiProfileItemGui:update()
 	local mult = managers.multi_profile
 	local name = mult:current_profile_name()
@@ -206,10 +210,9 @@ function MultiProfileItemGui:update()
 	self:_update_caret()
 end
 
--- Lines: 101 to 175
+-- Lines 92-176
 function MultiProfileItemGui:mouse_moved(x, y)
-
-	-- Lines: 93 to 102
+	-- Lines 93-102
 	local function anim_func(o, large)
 		local current_width = o:w()
 		local current_height = o:h()
@@ -305,7 +308,7 @@ function MultiProfileItemGui:mouse_moved(x, y)
 	return used, pointer
 end
 
--- Lines: 178 to 198
+-- Lines 178-198
 function MultiProfileItemGui:mouse_pressed(button, x, y)
 	if button == Idstring("0") then
 		if self:arrow_selection() == "left" then
@@ -331,12 +334,12 @@ function MultiProfileItemGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 200 to 201
+-- Lines 200-202
 function MultiProfileItemGui:arrow_selection()
 	return self._arrow_selection
 end
 
--- Lines: 206 to 243
+-- Lines 206-243
 function MultiProfileItemGui:set_editing(editing)
 	if not self._name_editing_enabled then
 		return
@@ -368,7 +371,7 @@ function MultiProfileItemGui:set_editing(editing)
 	end
 end
 
--- Lines: 245 to 252
+-- Lines 245-252
 function MultiProfileItemGui.blink(o)
 	while true do
 		o:set_color(Color(0.05, 1, 1, 1))
@@ -378,7 +381,7 @@ function MultiProfileItemGui.blink(o)
 	end
 end
 
--- Lines: 254 to 261
+-- Lines 254-261
 function MultiProfileItemGui:set_blinking(b)
 	local caret = self._caret
 
@@ -399,7 +402,7 @@ function MultiProfileItemGui:set_blinking(b)
 	end
 end
 
--- Lines: 263 to 280
+-- Lines 263-280
 function MultiProfileItemGui:_update_caret()
 	local text = self._name_text
 	local caret = self._caret
@@ -426,7 +429,7 @@ function MultiProfileItemGui:_update_caret()
 	self:set_blinking(s == e and self._editing)
 end
 
--- Lines: 282 to 289
+-- Lines 282-289
 function MultiProfileItemGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -437,7 +440,7 @@ function MultiProfileItemGui:update_key_down(o, k)
 	end
 end
 
--- Lines: 291 to 304
+-- Lines 291-304
 function MultiProfileItemGui:key_press(o, k)
 	if not self._editing then
 		return
@@ -452,7 +455,7 @@ function MultiProfileItemGui:key_press(o, k)
 	self:_update_caret()
 end
 
--- Lines: 306 to 317
+-- Lines 306-317
 function MultiProfileItemGui:key_release(o, k)
 	if not self._editing then
 		return
@@ -466,7 +469,7 @@ function MultiProfileItemGui:key_release(o, k)
 	self:_update_caret()
 end
 
--- Lines: 319 to 331
+-- Lines 319-331
 function MultiProfileItemGui:trigger()
 	if not self._editing then
 		self:set_editing(true)
@@ -483,7 +486,7 @@ function MultiProfileItemGui:trigger()
 	self:_update_caret()
 end
 
--- Lines: 333 to 349
+-- Lines 333-349
 function MultiProfileItemGui:enter_text(o, s)
 	if not self._editing then
 		return
@@ -495,7 +498,7 @@ function MultiProfileItemGui:enter_text(o, s)
 	self._name_text:replace_text(s)
 end
 
--- Lines: 351 to 394
+-- Lines 351-394
 function MultiProfileItemGui:handle_key(k, pressed)
 	local text = self._name_text
 	local s, e = text:selection()
@@ -539,4 +542,3 @@ function MultiProfileItemGui:handle_key(k, pressed)
 		self:set_editing(false)
 	end
 end
-

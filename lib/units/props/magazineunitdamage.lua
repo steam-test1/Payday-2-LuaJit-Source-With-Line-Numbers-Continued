@@ -5,7 +5,7 @@ local empty_idstr = Idstring("")
 local idstr_concrete = Idstring("concrete")
 local idstr_no_material = Idstring("no_material")
 
--- Lines: 12 to 40
+-- Lines 10-40
 function MagazineUnitDamage:play_collision_sfx(other_unit, position, normal, collision_velocity)
 	mvector3.set(ray_from, position)
 	mvector3.set(ray_to, normal)
@@ -20,8 +20,14 @@ function MagazineUnitDamage:play_collision_sfx(other_unit, position, normal, col
 		material_name = World:pick_decal_material(collision_ray.unit, ray_from, ray_to, slot_mask)
 	end
 
-	material_name = material_name ~= empty_idstr and false
-	sound_switch_name = material_name and material_name or idstr_concrete
+	material_name = material_name ~= empty_idstr and material_name
+
+	if material_name then
+		sound_switch_name = material_name
+	else
+		sound_switch_name = idstr_concrete
+	end
+
 	local ss = SoundDevice:create_source("collision")
 
 	ss:set_position(position)
@@ -29,7 +35,7 @@ function MagazineUnitDamage:play_collision_sfx(other_unit, position, normal, col
 	ss:post_event(self._collision_event)
 end
 
--- Lines: 42 to 48
+-- Lines 42-49
 function MagazineUnitDamage:material_name(idstring)
 	local material = tweak_data.materials[idstring:key()]
 
@@ -41,4 +47,3 @@ function MagazineUnitDamage:material_name(idstring)
 
 	return material
 end
-

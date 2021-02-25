@@ -2,7 +2,7 @@ VariableElement = VariableElement or class(MissionElement)
 VariableElement.SAVE_UNIT_POSITION = false
 VariableElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 15
+-- Lines 6-15
 function VariableElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -14,7 +14,7 @@ function VariableElement:init(unit)
 	table.insert(self._save_values, "activated")
 end
 
--- Lines: 20 to 45
+-- Lines 20-45
 function VariableElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -40,4 +40,3 @@ function VariableElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(text_sizer, 0, 0, "EXPAND")
 	self:_build_value_checkbox(panel, panel_sizer, "activated", "Set if the variable is active and uncheck if the variable is disabled.")
 end
-

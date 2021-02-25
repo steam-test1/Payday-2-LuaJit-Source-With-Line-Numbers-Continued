@@ -4,7 +4,7 @@ core:import("CoreMenuStateInEditor")
 
 None = None or class()
 
--- Lines: 7 to 16
+-- Lines 7-16
 function None:transition()
 	local state = self.menu_state._game_state
 
@@ -16,4 +16,3 @@ function None:transition()
 		end
 	end
 end
-

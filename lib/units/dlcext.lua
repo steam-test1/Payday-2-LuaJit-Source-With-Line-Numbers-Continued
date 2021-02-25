@@ -1,6 +1,6 @@
 DLCExt = DLCExt or class()
 
--- Lines: 3 to 15
+-- Lines 3-15
 function DLCExt:init(unit)
 	self._unit = unit
 
@@ -13,4 +13,3 @@ function DLCExt:init(unit)
 		end
 	end
 end
-

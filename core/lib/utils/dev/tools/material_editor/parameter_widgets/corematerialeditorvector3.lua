@@ -3,7 +3,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorVector3 = CoreMaterialEditorVector3 or class(CoreMaterialEditorParameter)
 
--- Lines: 8 to 52
+-- Lines 8-52
 function CoreMaterialEditorVector3:init(parent, editor, parameter_info, parameter_node)
 	CoreMaterialEditorParameter.init(self, parent, editor, parameter_info, parameter_node)
 
@@ -58,17 +58,17 @@ function CoreMaterialEditorVector3:init(parent, editor, parameter_info, paramete
 	self._right_box:add(main_box, 1, 0, "EXPAND")
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function CoreMaterialEditorVector3:update(t, dt)
 	CoreMaterialEditorParameter.update(self, t, dt)
 end
 
--- Lines: 58 to 60
+-- Lines 58-60
 function CoreMaterialEditorVector3:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
--- Lines: 62 to 80
+-- Lines 62-80
 function CoreMaterialEditorVector3:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -87,7 +87,7 @@ function CoreMaterialEditorVector3:on_toggle_customize()
 	self:update_live()
 end
 
--- Lines: 84 to 97
+-- Lines 84-97
 function CoreMaterialEditorVector3:_on_slider()
 	self._value = self:_from_slider_range(Vector3(self._x_slider:get_value(), self._y_slider:get_value(), self._z_slider:get_value()))
 
@@ -98,7 +98,7 @@ function CoreMaterialEditorVector3:_on_slider()
 	self._z_text_ctrl:set_value(string.format("%.3f", self._value.z))
 end
 
--- Lines: 99 to 115
+-- Lines 99-115
 function CoreMaterialEditorVector3:_on_text_ctrl()
 	self._value = Vector3(tonumber(self._x_text_ctrl:get_value()) or 0, tonumber(self._y_text_ctrl:get_value()) or 0, tonumber(self._z_text_ctrl:get_value()) or 0)
 
@@ -113,7 +113,7 @@ function CoreMaterialEditorVector3:_on_text_ctrl()
 	self._editor:_update_output()
 end
 
--- Lines: 118 to 138
+-- Lines 117-139
 function CoreMaterialEditorVector3:_to_slider_range(v)
 	local step_x = self._parameter_info.step.x
 
@@ -136,7 +136,7 @@ function CoreMaterialEditorVector3:_to_slider_range(v)
 	return Vector3(CoreMaterialEditorParameter.to_slider_range(self, v.x, self._parameter_info.min.x, step_x), CoreMaterialEditorParameter.to_slider_range(self, v.y, self._parameter_info.min.y, step_y), CoreMaterialEditorParameter.to_slider_range(self, v.z, self._parameter_info.min.z, step_z))
 end
 
--- Lines: 142 to 162
+-- Lines 141-163
 function CoreMaterialEditorVector3:_from_slider_range(v)
 	local step_x = self._parameter_info.step.x
 

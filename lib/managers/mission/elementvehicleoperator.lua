@@ -1,16 +1,16 @@
 ElementVehicleOperator = ElementVehicleOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function ElementVehicleOperator:init(...)
 	ElementVehicleOperator.super.init(self, ...)
 end
 
--- Lines: 7 to 9
+-- Lines 7-9
 function ElementVehicleOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 12 to 19
+-- Lines 12-19
 function ElementVehicleOperator:_get_unit(unit_id)
 	if Global.running_simulation then
 		return managers.editor:unit_with_id(unit_id)
@@ -19,7 +19,7 @@ function ElementVehicleOperator:_get_unit(unit_id)
 	end
 end
 
--- Lines: 22 to 38
+-- Lines 22-38
 function ElementVehicleOperator:_apply_opreator(unit)
 	if unit then
 		local extension = unit:npc_vehicle_driving() or unit:vehicle_driving()
@@ -40,7 +40,7 @@ function ElementVehicleOperator:_apply_opreator(unit)
 	end
 end
 
--- Lines: 41 to 59
+-- Lines 41-59
 function ElementVehicleOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -60,4 +60,3 @@ function ElementVehicleOperator:on_executed(instigator)
 
 	ElementVehicleOperator.super.on_executed(self, instigator)
 end
-

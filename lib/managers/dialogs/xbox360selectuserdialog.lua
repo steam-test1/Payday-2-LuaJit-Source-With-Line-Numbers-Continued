@@ -3,7 +3,7 @@ require("lib/managers/dialogs/SelectUserDialog")
 
 Xbox360SelectUserDialog = Xbox360SelectUserDialog or class(SelectUserDialog)
 
--- Lines: 7 to 22
+-- Lines 7-22
 function Xbox360SelectUserDialog:init(manager, data)
 	SelectUserDialog.init(self, manager, data)
 
@@ -18,7 +18,7 @@ function Xbox360SelectUserDialog:init(manager, data)
 	end
 end
 
--- Lines: 24 to 36
+-- Lines 24-37
 function Xbox360SelectUserDialog:show()
 	self._manager:event_dialog_shown(self)
 
@@ -37,17 +37,16 @@ function Xbox360SelectUserDialog:show()
 	return true
 end
 
--- Lines: 39 to 43
+-- Lines 39-43
 function Xbox360SelectUserDialog:update(t, dt)
 	if self._show_time and self._show_time ~= t and not XboxLive:is_showing_user_dialog() and not self._manager:_is_engine_delaying_signin_change() then
 		self:done_callback()
 	end
 end
 
--- Lines: 45 to 49
+-- Lines 45-49
 function Xbox360SelectUserDialog:done_callback()
 	self._show_time = nil
 
 	SelectUserDialog.done_callback(self)
 end
-

@@ -2,12 +2,12 @@ require("lib/states/GameState")
 
 IngameArrestedState = IngameArrestedState or class(IngamePlayerBaseState)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function IngameArrestedState:init(game_state_machine)
 	IngameArrestedState.super.init(self, "ingame_arrested", game_state_machine)
 end
 
--- Lines: 9 to 17
+-- Lines 9-17
 function IngameArrestedState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -18,7 +18,7 @@ function IngameArrestedState:update(t, dt)
 	player:character_damage():update_arrested(t, dt)
 end
 
--- Lines: 19 to 41
+-- Lines 19-41
 function IngameArrestedState:at_enter()
 	local players = managers.player:players()
 
@@ -32,7 +32,9 @@ function IngameArrestedState:at_enter()
 		end
 	end
 
-	managers.statistics:downed({bleed_out = true})
+	managers.statistics:downed({
+		bleed_out = true
+	})
 
 	local player = managers.player:player_unit()
 
@@ -45,7 +47,7 @@ function IngameArrestedState:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 44 to 53
+-- Lines 44-53
 function IngameArrestedState:at_exit()
 	local player = managers.player:player_unit()
 
@@ -58,18 +60,17 @@ function IngameArrestedState:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_DOWNED_HUD)
 end
 
--- Lines: 55 to 57
+-- Lines 55-57
 function IngameArrestedState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 59 to 61
+-- Lines 59-61
 function IngameArrestedState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 63 to 65
+-- Lines 63-65
 function IngameArrestedState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
-

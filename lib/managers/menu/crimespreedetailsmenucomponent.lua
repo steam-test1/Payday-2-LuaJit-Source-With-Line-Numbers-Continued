@@ -9,7 +9,7 @@ CrimeSpreeDetailsMenuComponent.disallowed_menus = {
 	"mission_end_menu"
 }
 
--- Lines: 15 to 28
+-- Lines 14-28
 function CrimeSpreeDetailsMenuComponent:init(...)
 	CrimeSpreeDetailsMenuComponent.super.init(self, ...)
 	self._fullscreen_panel:set_layer(tweak_data.gui.MENU_LAYER)
@@ -23,23 +23,25 @@ function CrimeSpreeDetailsMenuComponent:init(...)
 	end
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function CrimeSpreeDetailsMenuComponent:_is_in_preplanning()
 	return managers.menu:active_menu().id == "kit_menu"
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function CrimeSpreeDetailsMenuComponent:_is_in_game()
 	return table.contains(CrimeSpreeDetailsMenuComponent.disallowed_menus, managers.menu:active_menu().id)
 end
 
--- Lines: 40 to 60
+-- Lines 38-60
 function CrimeSpreeDetailsMenuComponent:_setup(is_start_page, component_data)
 	component_data = self:_start_page_data()
 
 	CrimeSpreeDetailsMenuComponent.super._setup(self, is_start_page, component_data)
 
-	self._safe_panel = self._ws:panel():panel({layer = self._init_layer})
+	self._safe_panel = self._ws:panel():panel({
+		layer = self._init_layer
+	})
 	local is_host = Network:is_server() or Global.game_settings.single_player
 
 	if not is_host and managers.crime_spree:in_progress() then
@@ -52,7 +54,7 @@ function CrimeSpreeDetailsMenuComponent:_setup(is_start_page, component_data)
 	end
 end
 
--- Lines: 62 to 69
+-- Lines 62-69
 function CrimeSpreeDetailsMenuComponent:close()
 	if alive(self._modifier_panel) then
 		self._fullscreen_panel:remove(self._modifier_panel)
@@ -64,11 +66,13 @@ function CrimeSpreeDetailsMenuComponent:close()
 	CrimeSpreeDetailsMenuComponent.super.close(self)
 end
 
--- Lines: 72 to 112
+-- Lines 71-114
 function CrimeSpreeDetailsMenuComponent:_start_page_data()
 	local data = {}
 	local topic_id = "cn_crime_spree_level"
-	local topic_params = {level = managers.experience:cash_string(tonumber(managers.crime_spree:server_spree_level() or 0), "")}
+	local topic_params = {
+		level = managers.experience:cash_string(tonumber(managers.crime_spree:server_spree_level() or 0), "")
+	}
 
 	if not managers.crime_spree:in_progress() then
 		topic_id = "cn_crime_spree"
@@ -82,7 +86,9 @@ function CrimeSpreeDetailsMenuComponent:_start_page_data()
 		color = tweak_data.screen_colors.crime_spree_risk
 	}
 	data.subtopic_id = "cn_crime_spree_my_level"
-	data.subtopic_params = {level = managers.experience:cash_string(managers.crime_spree:spree_level(), "")}
+	data.subtopic_params = {
+		level = managers.experience:cash_string(managers.crime_spree:spree_level(), "")
+	}
 	data.subtopic_range_color = {
 		from = utf8.len(managers.localization:text("cn_crime_spree_my_level_no_num")),
 		to = utf8.len(managers.localization:text(data.subtopic_id, data.subtopic_params)),
@@ -103,7 +109,7 @@ function CrimeSpreeDetailsMenuComponent:_start_page_data()
 	return data
 end
 
--- Lines: 116 to 121
+-- Lines 116-121
 function CrimeSpreeDetailsMenuComponent:update(t, dt)
 	CrimeSpreeDetailsMenuComponent.super.update(self, t, dt)
 
@@ -112,7 +118,7 @@ function CrimeSpreeDetailsMenuComponent:update(t, dt)
 	end
 end
 
--- Lines: 124 to 168
+-- Lines 123-168
 function CrimeSpreeDetailsMenuComponent:_add_page_right_title()
 	if alive(self._safe_panel:child("title_right_text")) then
 		self._safe_panel:remove(self._safe_panel:child("title_right_text"))
@@ -159,7 +165,7 @@ function CrimeSpreeDetailsMenuComponent:_add_page_right_title()
 	end
 end
 
--- Lines: 171 to 195
+-- Lines 170-195
 function CrimeSpreeDetailsMenuComponent:_add_page_subtitle()
 	if alive(self._safe_panel:child("subtitle_text")) then
 		self._safe_panel:remove(self._safe_panel:child("subtitle_text"))
@@ -185,7 +191,7 @@ function CrimeSpreeDetailsMenuComponent:_add_page_subtitle()
 	end
 end
 
--- Lines: 197 to 204
+-- Lines 197-204
 function CrimeSpreeDetailsMenuComponent:_setup_panel_size()
 	local w = 0.5
 
@@ -197,7 +203,7 @@ function CrimeSpreeDetailsMenuComponent:_setup_panel_size()
 	self._panel:set_h(self._ws:panel():h() * w)
 end
 
--- Lines: 206 to 219
+-- Lines 206-219
 function CrimeSpreeDetailsMenuComponent:populate_tabs_data(tabs_data)
 	table.insert(tabs_data, {
 		name_id = "menu_cs_modifiers",
@@ -214,11 +220,11 @@ function CrimeSpreeDetailsMenuComponent:populate_tabs_data(tabs_data)
 	end
 end
 
--- Lines: 222 to 223
+-- Lines 221-223
 function CrimeSpreeDetailsMenuComponent:input_focus()
 end
 
--- Lines: 226 to 233
+-- Lines 225-233
 function CrimeSpreeDetailsMenuComponent:_setup_controller_input()
 	self._left_axis_vector = Vector3()
 	self._right_axis_vector = Vector3()
@@ -227,7 +233,7 @@ function CrimeSpreeDetailsMenuComponent:_setup_controller_input()
 	self._panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines: 235 to 240
+-- Lines 235-240
 function CrimeSpreeDetailsMenuComponent:_destroy_controller_input()
 	self._ws:disconnect_all_controllers()
 
@@ -236,7 +242,7 @@ function CrimeSpreeDetailsMenuComponent:_destroy_controller_input()
 	end
 end
 
--- Lines: 242 to 248
+-- Lines 242-248
 function CrimeSpreeDetailsMenuComponent:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._left_axis_vector, axis_vector)
@@ -245,7 +251,7 @@ function CrimeSpreeDetailsMenuComponent:_axis_move(o, axis_name, axis_vector, co
 	end
 end
 
--- Lines: 252 to 270
+-- Lines 251-270
 function CrimeSpreeDetailsMenuComponent:perform_update()
 	local is_host = Network:is_server() or Global.game_settings.single_player
 	self._data = self:_start_page_data()
@@ -262,7 +268,7 @@ function CrimeSpreeDetailsMenuComponent:perform_update()
 	end
 end
 
--- Lines: 275 to 361
+-- Lines 274-361
 function CrimeSpreeDetailsMenuComponent:show_new_modifier(modifier_id)
 	local modifier = managers.crime_spree:get_modifier(modifier_id)
 	local modifier_class = _G[modifier.class] or {}
@@ -298,12 +304,14 @@ function CrimeSpreeDetailsMenuComponent:show_new_modifier(modifier_id)
 		halign = "scale",
 		color = Color.black
 	})
-	BoxGuiObject:new(self._modifier_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._modifier_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local title = self._modifier_panel:text({
 		name = "title",
@@ -343,7 +351,7 @@ function CrimeSpreeDetailsMenuComponent:show_new_modifier(modifier_id)
 		font_size = tweak_data.menu.pd2_small_font_size,
 		font = tweak_data.menu.pd2_small_font,
 		color = tweak_data.screen_colors.text,
-		w = (self._modifier_panel:w() - padding * 3) - image:w()
+		w = self._modifier_panel:w() - padding * 3 - image:w()
 	})
 
 	self:make_fine_text(desc)
@@ -352,7 +360,7 @@ function CrimeSpreeDetailsMenuComponent:show_new_modifier(modifier_id)
 	self._modifier_panel:animate(callback(self, self, "animate_modifier"))
 end
 
--- Lines: 363 to 369
+-- Lines 363-369
 function CrimeSpreeDetailsMenuComponent:animate_modifier(o)
 	managers.menu:post_event(tweak_data.crime_spree.announce_modifier_stinger)
 	wait(0.5)
@@ -361,7 +369,7 @@ function CrimeSpreeDetailsMenuComponent:animate_modifier(o)
 	self:fade_out_modifier(o)
 end
 
--- Lines: 371 to 378
+-- Lines 371-378
 function CrimeSpreeDetailsMenuComponent:fade_in_modifier(o)
 	local start_y = o:y() - 40
 	local end_y = o:y()
@@ -372,7 +380,7 @@ function CrimeSpreeDetailsMenuComponent:fade_in_modifier(o)
 	end)
 end
 
--- Lines: 380 to 387
+-- Lines 380-387
 function CrimeSpreeDetailsMenuComponent:fade_out_modifier(o)
 	local start_y = o:y()
 	local end_y = o:y() + 40
@@ -382,9 +390,10 @@ function CrimeSpreeDetailsMenuComponent:fade_out_modifier(o)
 		o:set_y(math.lerp(start_y, end_y, p))
 	end)
 end
+
 CrimeSpreeDetailsPage = CrimeSpreeDetailsPage or class(CustomSafehouseGuiPage)
 
--- Lines: 394 to 401
+-- Lines 393-401
 function CrimeSpreeDetailsPage:init(...)
 	CrimeSpreeDetailsPage.super.init(self, ...)
 
@@ -394,12 +403,11 @@ function CrimeSpreeDetailsPage:init(...)
 	self:panel():grow(w, 0)
 end
 
--- Lines: 403 to 404
+-- Lines 403-405
 function CrimeSpreeDetailsPage:get_legend()
 	return {}
 end
 
--- Lines: 408 to 409
+-- Lines 407-409
 function CrimeSpreeDetailsPage:perform_update()
 end
-

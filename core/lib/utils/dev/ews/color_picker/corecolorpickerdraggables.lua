@@ -5,13 +5,13 @@ core:import("CoreMath")
 
 ColorPickerDraggables = ColorPickerDraggables or CoreClass.mixin(CoreClass.class(), CoreEvent.BasicEventHandling)
 
--- Lines: 8 to 11
+-- Lines 8-11
 function ColorPickerDraggables:init(parent_frame, enable_alpha, enable_value)
 	self:_create_panel(parent_frame, enable_alpha, enable_value)
 	self:set_color(Color.white)
 end
 
--- Lines: 13 to 26
+-- Lines 13-26
 function ColorPickerDraggables:update(time, delta_time)
 	local current_mouse_event = EWS:MouseEvent("EVT_MOTION")
 	self._previous_mouse_event = self._previous_mouse_event or current_mouse_event
@@ -27,17 +27,17 @@ function ColorPickerDraggables:update(time, delta_time)
 	self._previous_mouse_event = current_mouse_event
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function ColorPickerDraggables:panel()
 	return self._panel
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function ColorPickerDraggables:color()
 	return (self._alpha_slider or self._value_slider or self._spectrum):color()
 end
 
--- Lines: 36 to 52
+-- Lines 36-52
 function ColorPickerDraggables:set_color(color)
 	hue, saturation, value = CoreMath.rgb_to_hsv(color.red, color.green, color.blue)
 
@@ -56,7 +56,7 @@ function ColorPickerDraggables:set_color(color)
 	self:_update_ui_except(self._spectrum)
 end
 
--- Lines: 54 to 91
+-- Lines 54-91
 function ColorPickerDraggables:_create_panel(parent_frame, enable_alpha, enable_value)
 	if enable_alpha == nil then
 		enable_alpha = true
@@ -104,7 +104,7 @@ function ColorPickerDraggables:_create_panel(parent_frame, enable_alpha, enable_
 	self._spectrum:set_min_size(spectrum_size)
 end
 
--- Lines: 93 to 109
+-- Lines 93-109
 function ColorPickerDraggables:_update_ui_except(sender)
 	if self._value_slider ~= nil then
 		if sender ~= self._spectrum then
@@ -124,7 +124,7 @@ function ColorPickerDraggables:_update_ui_except(sender)
 	end
 end
 
--- Lines: 111 to 123
+-- Lines 111-123
 function ColorPickerDraggables:_process_color_update_event(sender, event)
 	local event_position_in_sender = event:get_position(sender)
 
@@ -139,13 +139,13 @@ function ColorPickerDraggables:_process_color_update_event(sender, event)
 	self:_send_event("EVT_COLOR_UPDATED", self:color())
 end
 
--- Lines: 125 to 128
+-- Lines 125-128
 function ColorPickerDraggables:_process_color_change_event(sender, event)
 	self:_process_color_update_event(sender, event)
 	self:_send_event("EVT_COLOR_CHANGED", self:color())
 end
 
--- Lines: 130 to 134
+-- Lines 130-134
 function ColorPickerDraggables:_on_drag_start(sender, event)
 	self._previous_mouse_event = EWS:MouseEvent("EVT_LEFT_DOWN")
 	self._dragged_control = sender
@@ -153,15 +153,14 @@ function ColorPickerDraggables:_on_drag_start(sender, event)
 	self:_process_color_update_event(sender, event)
 end
 
--- Lines: 136 to 138
+-- Lines 136-138
 function ColorPickerDraggables:_on_dragging(sender, event)
 	self:_process_color_update_event(sender, event)
 end
 
--- Lines: 140 to 143
+-- Lines 140-143
 function ColorPickerDraggables:_on_drag_stop(sender, event)
 	self:_process_color_change_event(sender, event)
 
 	self._dragged_control = nil
 end
-

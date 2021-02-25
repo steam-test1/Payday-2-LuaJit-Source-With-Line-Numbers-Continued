@@ -12,9 +12,11 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 MenuNodeAchievementFilterCreator = MenuNodeAchievementFilterCreator or class(MenuInitiatorBase)
 
--- Lines: 21 to 27
+-- Lines 21-28
 function MenuNodeAchievementFilterCreator:create_item(node, item_type, params)
-	local data_node = {type = item_type}
+	local data_node = {
+		type = item_type
+	}
 	local new_item = node:create_item(data_node, params)
 
 	new_item:set_enabled(params.enabled)
@@ -23,12 +25,14 @@ function MenuNodeAchievementFilterCreator:create_item(node, item_type, params)
 	return new_item
 end
 
--- Lines: 30 to 39
+-- Lines 30-40
 function MenuNodeAchievementFilterCreator:create_divider(node, params)
 	params = params or {}
 	params.no_text = not params.text_id
 	params.size = params.size or 8
-	local data_node = {type = "MenuItemDivider"}
+	local data_node = {
+		type = "MenuItemDivider"
+	}
 	local new_item = node:create_item(data_node, params)
 
 	node:add_item(new_item)
@@ -36,7 +40,7 @@ function MenuNodeAchievementFilterCreator:create_divider(node, params)
 	return new_item
 end
 
--- Lines: 42 to 62
+-- Lines 42-63
 function MenuNodeAchievementFilterCreator:create_tags_option(node, category_name, text_func, sort_func)
 	Global.achievements_filters = Global.achievements_filters or {}
 	local filters = Global.achievements_filters
@@ -85,7 +89,7 @@ function MenuNodeAchievementFilterCreator:create_tags_option(node, category_name
 	return rtn
 end
 
--- Lines: 67 to 68
+-- Lines 67-69
 local function create_tag_text(str)
 	return "menu_achievements_" .. str
 end
@@ -100,12 +104,12 @@ local difficulty_order = {
 	"difficulty_death_sentence"
 }
 
--- Lines: 76 to 77
+-- Lines 75-78
 local function difficulty_sort(lhs, rhs)
 	return (table.index_of(difficulty_order, lhs) or 999) < (table.index_of(difficulty_order, rhs) or 998)
 end
 
--- Lines: 80 to 81
+-- Lines 80-82
 local function alphabetical_sort(lhs, rhs)
 	return lhs < rhs
 end
@@ -120,12 +124,12 @@ local difficulty_translate = {
 	difficulty_mayhem = "menu_difficulty_easy_wish"
 }
 
--- Lines: 89 to 90
+-- Lines 89-91
 local function create_difficulty_text(str)
 	return difficulty_translate[str]
 end
 
--- Lines: 93 to 100
+-- Lines 93-101
 local function create_contract_text(str)
 	local id = string.sub(str, 11)
 	local data = tweak_data.narrative.contacts[id]
@@ -139,7 +143,7 @@ end
 
 MenuNodeAchievementFilterGui = MenuNodeAchievementFilterGui or class(MenuNodeGui)
 
--- Lines: 107 to 196
+-- Lines 107-196
 function MenuNodeAchievementFilterGui:init(node, layer, parameters)
 	Global.achievements_filters = Global.achievements_filters or {}
 	local filters = Global.achievements_filters
@@ -241,7 +245,9 @@ function MenuNodeAchievementFilterGui:init(node, layer, parameters)
 	self._calc_filter_num = create_params.calc_filter_num or function ()
 		return 0
 	end
-	self._extra_panel = ExtendedPanel:new(self.item_panel, {layer = 151})
+	self._extra_panel = ExtendedPanel:new(self.item_panel, {
+		layer = 151
+	})
 	local title_dummy = self:row_item_by_name("title_dummy").gui_panel
 	self._title_help = LeftRightText:new(self._extra_panel, {
 		font = medium_font,
@@ -263,12 +269,14 @@ function MenuNodeAchievementFilterGui:init(node, layer, parameters)
 	corners:set_h(bot_div:y() - top_div:y())
 	corners:set_lefttop(top_div:lefttop())
 	corners:move(0, 12)
-	BoxGuiObject:new(corners, {sides = {
-		1,
-		1,
-		2,
-		2
-	}})
+	BoxGuiObject:new(corners, {
+		sides = {
+			1,
+			1,
+			2,
+			2
+		}
+	})
 
 	if managers.menu:is_pc_controller() then
 		local buttons_div = self:row_item_by_name("buttons_div").gui_panel
@@ -297,20 +305,20 @@ function MenuNodeAchievementFilterGui:init(node, layer, parameters)
 	end
 end
 
--- Lines: 198 to 202
+-- Lines 198-202
 function MenuNodeAchievementFilterGui:close(...)
 	MenuNodeAchievementFilterGui.super.close(self, ...)
 	self._on_filters_clbk()
 end
 
--- Lines: 204 to 208
+-- Lines 204-208
 function MenuNodeAchievementFilterGui:_clear_tags()
 	for _, item in pairs(self._tags_bidnings) do
 		item:set_value(nil)
 	end
 end
 
--- Lines: 210 to 224
+-- Lines 210-224
 function MenuNodeAchievementFilterGui:update(...)
 	MenuNodeAchievementFilterGui.super.update(self, ...)
 
@@ -323,10 +331,12 @@ function MenuNodeAchievementFilterGui:update(...)
 		Global.achievements_filters.tags[k] = item:value()
 	end
 
-	self._title_help:set_left(managers.localization:text("menu_filter_achievement_count", {COUNT = self._calc_filter_num()}))
+	self._title_help:set_left(managers.localization:text("menu_filter_achievement_count", {
+		COUNT = self._calc_filter_num()
+	}))
 end
 
--- Lines: 226 to 232
+-- Lines 226-232
 function MenuNodeAchievementFilterGui:_set_help_text(text_id, localize)
 	local text = text_id or ""
 
@@ -337,7 +347,7 @@ function MenuNodeAchievementFilterGui:_set_help_text(text_id, localize)
 	self._title_help:set_right(text)
 end
 
--- Lines: 234 to 271
+-- Lines 234-271
 function MenuNodeAchievementFilterGui:_setup_item_panel(safe_rect, res)
 	MenuNodeAchievementFilterGui.super._setup_item_panel(self, safe_rect, res)
 	self.item_panel:set_w(safe_rect.width * (1 - self._align_line_proportions))
@@ -367,12 +377,14 @@ function MenuNodeAchievementFilterGui:_setup_item_panel(safe_rect, res)
 	self.box_panel:move(-10, -10)
 	self.box_panel:set_layer(151)
 
-	self.boxgui = BoxGuiObject:new(self.box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self.boxgui = BoxGuiObject:new(self.box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self.boxgui:set_layer(self.item_panel:layer() + 50)
 	self.box_panel:rect({
@@ -382,7 +394,7 @@ function MenuNodeAchievementFilterGui:_setup_item_panel(safe_rect, res)
 	self:_set_topic_position()
 end
 
--- Lines: 273 to 282
+-- Lines 273-282
 function MenuNodeAchievementFilterGui:reload_item(item)
 	MenuNodeAchievementFilterGui.super.reload_item(self, item)
 
@@ -394,7 +406,7 @@ function MenuNodeAchievementFilterGui:reload_item(item)
 	end
 end
 
--- Lines: 284 to 292
+-- Lines 284-292
 function MenuNodeAchievementFilterGui:_align_marker(row_item)
 	MenuNodeAchievementFilterGui.super._align_marker(self, row_item)
 
@@ -407,18 +419,17 @@ function MenuNodeAchievementFilterGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines: 296 to 297
+-- Lines 296-298
 function MenuNodeAchievementFilterGui:mouse_moved(o, x, y)
 	return self._extra_panel:mouse_moved(o, x, y)
 end
 
--- Lines: 300 to 301
+-- Lines 300-302
 function MenuNodeAchievementFilterGui:mouse_clicked(button, x, y)
 	return self._extra_panel:mouse_clicked(nil, button, x, y)
 end
 
--- Lines: 304 to 305
+-- Lines 304-306
 function MenuNodeAchievementFilterGui:special_btn_pressed(...)
 	return self._extra_panel:special_btn_pressed(...)
 end
-

@@ -1,6 +1,6 @@
 UnitByName = UnitByName or class(CoreEditorEwsDialog)
 
--- Lines: 3 to 108
+-- Lines 3-108
 function UnitByName:init(name, unit_filter_function, ...)
 	self._dialog_name = self._dialog_name or name or "UnitByName"
 	self._unit_filter_function = unit_filter_function
@@ -40,7 +40,7 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self._filter_buttons = {}
 
-	-- Lines: 39 to 42
+	-- Lines 39-42
 	local function add_filter_button(id, name)
 		self._filter_buttons[id] = EWS:RadioButton(panel, name, "filter_type", "")
 
@@ -117,7 +117,7 @@ function UnitByName:init(name, unit_filter_function, ...)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 110 to 115
+-- Lines 110-115
 function UnitByName:_build_buttons(panel, sizer)
 	local cancel_btn = EWS:Button(panel, "Cancel", "", "")
 
@@ -126,12 +126,12 @@ function UnitByName:_build_buttons(panel, sizer)
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function UnitByName:_on_set_filter()
 	self:fill_unit_list()
 end
 
--- Lines: 121 to 127
+-- Lines 121-127
 function UnitByName:_get_filter_type()
 	for name, ctrlr in pairs(self._filter_buttons) do
 		if ctrlr:get_value() then
@@ -140,7 +140,7 @@ function UnitByName:_get_filter_type()
 	end
 end
 
--- Lines: 129 to 134
+-- Lines 129-134
 function UnitByName:on_all_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(true)
@@ -149,7 +149,7 @@ function UnitByName:on_all_layers()
 	self:fill_unit_list()
 end
 
--- Lines: 136 to 141
+-- Lines 136-141
 function UnitByName:on_none_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(false)
@@ -158,7 +158,7 @@ function UnitByName:on_none_layers()
 	self:fill_unit_list()
 end
 
--- Lines: 143 to 148
+-- Lines 143-148
 function UnitByName:on_invert_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(not cb:get_value())
@@ -167,7 +167,7 @@ function UnitByName:on_invert_layers()
 	self:fill_unit_list()
 end
 
--- Lines: 150 to 155
+-- Lines 150-155
 function UnitByName:key_delete(ctrlr, event)
 	event:skip()
 
@@ -176,7 +176,7 @@ function UnitByName:key_delete(ctrlr, event)
 	end
 end
 
--- Lines: 157 to 162
+-- Lines 157-162
 function UnitByName:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -185,29 +185,29 @@ function UnitByName:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines: 164 to 166
+-- Lines 164-166
 function UnitByName:on_layer_cb(data)
 	self:fill_unit_list()
 end
 
--- Lines: 168 to 170
+-- Lines 168-170
 function UnitByName:on_cancel()
 	self._dialog:set_visible(false)
 end
 
--- Lines: 173 to 174
+-- Lines 172-174
 function UnitByName:_on_delete()
 end
 
--- Lines: 177 to 178
+-- Lines 176-178
 function UnitByName:_on_mark_unit()
 end
 
--- Lines: 181 to 182
+-- Lines 180-182
 function UnitByName:_on_select_unit()
 end
 
--- Lines: 185 to 197
+-- Lines 185-198
 function UnitByName:_selected_item_units()
 	if self._cancelled then
 		return {}
@@ -226,7 +226,7 @@ function UnitByName:_selected_item_units()
 	return units
 end
 
--- Lines: 201 to 206
+-- Lines 201-206
 function UnitByName:_selected_item_unit()
 	local index = self._list:selected_item()
 
@@ -235,9 +235,9 @@ function UnitByName:_selected_item_unit()
 	end
 end
 
--- Lines: 209 to 216
+-- Lines 209-216
 function UnitByName:deleted_unit(unit)
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
 			self._list:delete_item(i)
 
@@ -246,7 +246,7 @@ function UnitByName:deleted_unit(unit)
 	end
 end
 
--- Lines: 219 to 224
+-- Lines 219-224
 function UnitByName:spawned_unit(unit)
 	local i = self._list:append_item(unit:unit_data().name_id)
 	local j = #self._units + 1
@@ -255,13 +255,13 @@ function UnitByName:spawned_unit(unit)
 	self._list:set_item_data(i, j)
 end
 
--- Lines: 227 to 239
+-- Lines 227-239
 function UnitByName:selected_unit(unit)
 	for _, i in ipairs(self._list:selected_items()) do
 		self._list:set_item_selected(i, false)
 	end
 
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
 			self._list:set_item_selected(i, true)
 			self._list:ensure_visible(i)
@@ -271,7 +271,7 @@ function UnitByName:selected_unit(unit)
 	end
 end
 
--- Lines: 242 to 268
+-- Lines 242-268
 function UnitByName:selected_units(units)
 	if self._blocked then
 		return
@@ -291,7 +291,7 @@ function UnitByName:selected_units(units)
 
 	local ensure_visible_key = #units > 0 and units[#units]:key()
 
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		local ukey = self._units[self._list:get_item_data(i)]:key()
 
 		if ukeys[ukey] then
@@ -306,9 +306,9 @@ function UnitByName:selected_units(units)
 	self._list:thaw()
 end
 
--- Lines: 271 to 299
+-- Lines 271-299
 function UnitByName:unit_name_changed(unit)
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
 			self._list:set_item(i, 0, unit:unit_data().name_id)
 
@@ -327,7 +327,7 @@ function UnitByName:unit_name_changed(unit)
 			if sort then
 				self:fill_unit_list()
 
-				for i = 0, self._list:item_count() - 1, 1 do
+				for i = 0, self._list:item_count() - 1 do
 					if self._units[self._list:get_item_data(i)] == unit then
 						self._list:set_item_selected(i, true)
 						self._list:ensure_visible(i)
@@ -342,7 +342,7 @@ function UnitByName:unit_name_changed(unit)
 	end
 end
 
--- Lines: 302 to 324
+-- Lines 302-324
 function UnitByName:update()
 	if not self._units_to_append then
 		return
@@ -370,12 +370,12 @@ function UnitByName:update()
 	end
 end
 
--- Lines: 326 to 328
+-- Lines 326-328
 function UnitByName:update_filter()
 	self:fill_unit_list()
 end
 
--- Lines: 332 to 356
+-- Lines 332-356
 function UnitByName:fill_unit_list()
 	self._list:delete_all_items()
 
@@ -410,7 +410,7 @@ function UnitByName:fill_unit_list()
 	end)
 end
 
--- Lines: 358 to 369
+-- Lines 358-369
 function UnitByName:_get_filter_string(unit)
 	local filter = self:_get_filter_type()
 
@@ -427,7 +427,7 @@ function UnitByName:_get_filter_string(unit)
 	end
 end
 
--- Lines: 371 to 376
+-- Lines 371-377
 function UnitByName:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -438,7 +438,7 @@ function UnitByName:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
--- Lines: 379 to 383
+-- Lines 379-384
 function UnitByName:_unit_condition(unit)
 	if self._unit_filter_function then
 		return self._unit_filter_function(unit)
@@ -447,18 +447,17 @@ function UnitByName:_unit_condition(unit)
 	return not unit:unit_data().instance
 end
 
--- Lines: 386 to 388
+-- Lines 386-388
 function UnitByName:reset()
 	self:fill_unit_list()
 end
 
--- Lines: 390 to 392
+-- Lines 390-392
 function UnitByName:freeze()
 	self._list:freeze()
 end
 
--- Lines: 394 to 396
+-- Lines 394-396
 function UnitByName:thaw()
 	self._list:thaw()
 end
-

@@ -52,17 +52,17 @@ ElementDialogue.MutedDialogs = {
 	"play_com_"
 }
 
--- Lines: 33 to 35
+-- Lines 33-35
 function ElementDialogue:init(...)
 	ElementDialogue.super.init(self, ...)
 end
 
--- Lines: 37 to 39
+-- Lines 37-39
 function ElementDialogue:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 41 to 72
+-- Lines 41-72
 function ElementDialogue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -105,12 +105,12 @@ function ElementDialogue:on_executed(instigator)
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
 end
 
--- Lines: 74 to 76
+-- Lines 74-76
 function ElementDialogue:_done_callback(instigator, reason)
 	ElementDialogue.super._trigger_execute_on_executed(self, instigator)
 end
 
--- Lines: 79 to 100
+-- Lines 78-100
 function ElementDialogue:_can_play()
 	if managers.user:get_setting("mute_heist_vo") and not self._values.can_not_be_muted then
 		local dialog_str = string.lower(self._values.dialogue)
@@ -128,4 +128,3 @@ function ElementDialogue:_can_play()
 		return true
 	end
 end
-

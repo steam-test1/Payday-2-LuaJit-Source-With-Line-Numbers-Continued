@@ -9,7 +9,7 @@ INVALID_COLOR = {
 }
 FloatSpinCtrl = FloatSpinCtrl or CoreClass.mixin(CoreClass.class(), CoreEvent.BasicEventHandling)
 
--- Lines: 19 to 49
+-- Lines 19-49
 function FloatSpinCtrl:init(parent, min, max, step, value, dec, style)
 	assert(parent)
 
@@ -44,31 +44,31 @@ function FloatSpinCtrl:init(parent, min, max, step, value, dec, style)
 	self:_update_text()
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function FloatSpinCtrl:window()
 	return self._panel
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function FloatSpinCtrl:get_value()
 	return self._value
 end
 
--- Lines: 59 to 62
+-- Lines 59-62
 function FloatSpinCtrl:set_value(value)
 	self._value = math.clamp(value, self._min, self._max)
 
 	self:_update_text(true)
 end
 
--- Lines: 64 to 67
+-- Lines 64-67
 function FloatSpinCtrl:change_value(value)
 	self._value = math.clamp(value, self._min, self._max)
 
 	self:_update_text()
 end
 
--- Lines: 69 to 75
+-- Lines 69-75
 function FloatSpinCtrl:_btn_up_cb()
 	self._value = math.clamp(self._value + self._step, self._min, self._max)
 
@@ -78,7 +78,7 @@ function FloatSpinCtrl:_btn_up_cb()
 	self:_send_event("EVT_FLOAT_SPIN_CTRL_UPDATED", self:get_value())
 end
 
--- Lines: 77 to 83
+-- Lines 77-83
 function FloatSpinCtrl:_btn_down_cb()
 	self._value = math.clamp(self._value - self._step, self._min, self._max)
 
@@ -88,7 +88,7 @@ function FloatSpinCtrl:_btn_down_cb()
 	self:_send_event("EVT_FLOAT_SPIN_CTRL_UPDATED", self:get_value())
 end
 
--- Lines: 85 to 95
+-- Lines 85-95
 function FloatSpinCtrl:_text_update_cb(data, event)
 	local value = tonumber(event:get_string())
 
@@ -104,7 +104,7 @@ function FloatSpinCtrl:_text_update_cb(data, event)
 	end
 end
 
--- Lines: 97 to 103
+-- Lines 97-103
 function FloatSpinCtrl:_text_enter_cb(data, event)
 	self._value = math.clamp(tonumber(event:get_string()) or 0, self._min, self._max)
 
@@ -114,7 +114,7 @@ function FloatSpinCtrl:_text_enter_cb(data, event)
 	self:_send_event("EVT_FLOAT_SPIN_CTRL_UPDATED", self:get_value())
 end
 
--- Lines: 105 to 112
+-- Lines 105-112
 function FloatSpinCtrl:_update_text(send_event)
 	local str = string.format("%0." .. tostring(self._dec) .. "f", self._value)
 
@@ -125,7 +125,7 @@ function FloatSpinCtrl:_update_text(send_event)
 	end
 end
 
--- Lines: 114 to 123
+-- Lines 114-123
 function FloatSpinCtrl:_set_valid(valid)
 	if self._use_colors then
 		if valid then
@@ -138,8 +138,7 @@ function FloatSpinCtrl:_set_valid(valid)
 	end
 end
 
--- Lines: 125 to 127
+-- Lines 125-127
 function FloatSpinCtrl:_add_style(style)
 	self._sp_style = self._sp_style and self._sp_style .. "," .. style or style
 end
-

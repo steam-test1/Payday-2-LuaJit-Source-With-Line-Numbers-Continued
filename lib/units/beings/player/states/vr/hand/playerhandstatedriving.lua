@@ -3,7 +3,7 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 PlayerHandStateDriving = PlayerHandStateDriving or class(PlayerHandState)
 PlayerHandStateDriving.DEBUG = false
 
--- Lines: 8 to 14
+-- Lines 8-14
 function PlayerHandStateDriving:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateDriving.super.init(self, name, hsm, hand_unit, sequence)
 
@@ -13,12 +13,12 @@ function PlayerHandStateDriving:init(hsm, name, hand_unit, sequence)
 	managers.vr:add_setting_changed_callback("grip_toggle", self._grip_toggle_clbk)
 end
 
--- Lines: 16 to 18
+-- Lines 16-18
 function PlayerHandStateDriving:on_grip_toggle_setting_changed(setting, old, new)
 	self._grip_toggle_setting = new
 end
 
--- Lines: 20 to 40
+-- Lines 20-40
 function PlayerHandStateDriving:at_enter(prev_state, params)
 	PlayerHandStateDriving.super.at_enter(self, prev_state)
 	self:hsm():enter_controller_state("driving")
@@ -39,20 +39,21 @@ function PlayerHandStateDriving:at_enter(prev_state, params)
 	self._grip_toggle = nil
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function PlayerHandStateDriving:at_exit(next_state)
 	PlayerHandStateDriving.super.at_exit(self, next_state)
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function PlayerHandStateDriving:gripping_steering()
 	return self._gripping_steering
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function PlayerHandStateDriving:gripping_throttle()
 	return self._gripping_throttle
 end
+
 local pen = Draw:pen()
 local offset = Vector3()
 local middle = Vector3()
@@ -61,10 +62,9 @@ local throttle_vec = Vector3()
 local throttle_rot = Rotation()
 local exit = Vector3()
 
--- Lines: 68 to 303
+-- Lines 61-303
 function PlayerHandStateDriving:update(t, dt)
-
-	-- Lines: 62 to 69
+	-- Lines 62-69
 	local function offset_to_world(output, offset)
 		mvector3.set(output, offset)
 		mvector3.rotate_with(output, self._vehicle.vehicle_unit:rotation())
@@ -340,4 +340,3 @@ function PlayerHandStateDriving:update(t, dt)
 		end
 	end
 end
-

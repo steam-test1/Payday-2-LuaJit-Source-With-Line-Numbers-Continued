@@ -6,7 +6,7 @@ core:import("CoreFloatSpinCtrl")
 NAME = "generic"
 InteractionEditorGenericPanel = InteractionEditorGenericPanel or CoreClass.class()
 
--- Lines: 12 to 26
+-- Lines 12-26
 function InteractionEditorGenericPanel:init(parent, box, owner)
 	self._scrolled_window = EWS:ScrolledWindow(parent, "", "HSCROLL")
 
@@ -22,12 +22,12 @@ function InteractionEditorGenericPanel:init(parent, box, owner)
 	self._list_box_update_cb = callback(self, self, "on_list_box_update")
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function InteractionEditorGenericPanel:window()
 	return self._scrolled_window
 end
 
--- Lines: 32 to 42
+-- Lines 32-42
 function InteractionEditorGenericPanel:set_visible(b, desc, node)
 	if b then
 		self:_disconnect_events()
@@ -43,7 +43,7 @@ function InteractionEditorGenericPanel:set_visible(b, desc, node)
 	self._scrolled_window:set_visible(b)
 end
 
--- Lines: 46 to 48
+-- Lines 46-49
 function InteractionEditorGenericPanel:_new_pattern_name()
 	local name = EWS:get_text_from_user(self._scrolled_window, "New instance name:", "Instance", "", Vector3(-1, -1, -1), true)
 
@@ -54,26 +54,26 @@ function InteractionEditorGenericPanel:_new_pattern_name()
 	return name
 end
 
--- Lines: 51 to 53
+-- Lines 51-53
 function InteractionEditorGenericPanel:_could_not_add_pat(name)
 	EWS:message_box(self._scrolled_window, name and "Could not instance: " .. name or "Could not instance!", "Instance", "OK,ICON_ERROR", Vector3(-1, -1, -1))
 end
 
--- Lines: 55 to 59
+-- Lines 55-59
 function InteractionEditorGenericPanel:_disconnect_events()
 	for _, v in ipairs(self._events) do
 		v.widget:disconnect(v.t, v.cb)
 	end
 end
 
--- Lines: 61 to 65
+-- Lines 61-65
 function InteractionEditorGenericPanel:_connect_events()
 	for _, v in ipairs(self._events) do
 		v.widget:connect(v.t, v.cb, v)
 	end
 end
 
--- Lines: 67 to 281
+-- Lines 67-281
 function InteractionEditorGenericPanel:_build_ui(desc, node)
 	self._prop_box = EWS:BoxSizer("VERTICAL")
 	local properties = desc:node_properties(node)
@@ -299,15 +299,22 @@ function InteractionEditorGenericPanel:_build_ui(desc, node)
 	self._scrolled_window:set_sizer(self._prop_box)
 end
 
--- Lines: 283 to 293
+-- Lines 283-293
 function InteractionEditorGenericPanel:on_update_prop(data, event)
 	local v = nil
-	v = data.dtype == "number" and tonumber(data.widget:get_value()) or data.dtype == "string" and tostring(data.widget:get_value()) or data.widget:get_value()
+
+	if data.dtype == "number" then
+		v = tonumber(data.widget:get_value())
+	elseif data.dtype == "string" then
+		v = tostring(data.widget:get_value())
+	else
+		v = data.widget:get_value()
+	end
 
 	assert(data.desc:property_set(data.node, data.prop, v))
 end
 
--- Lines: 295 to 332
+-- Lines 295-332
 function InteractionEditorGenericPanel:on_add_pat(data, event)
 	local system = assert(self._owner:active_system())
 	local pat = data.combo_box:get_value()
@@ -350,7 +357,7 @@ function InteractionEditorGenericPanel:on_add_pat(data, event)
 	self._owner:ui():rebuild_prop_panel(data.desc, data.node)
 end
 
--- Lines: 334 to 395
+-- Lines 334-395
 function InteractionEditorGenericPanel:on_remove_pat(data, event)
 	local idx = data.list_box:selected_index()
 
@@ -376,8 +383,7 @@ function InteractionEditorGenericPanel:on_remove_pat(data, event)
 	end
 end
 
--- Lines: 397 to 399
+-- Lines 397-399
 function InteractionEditorGenericPanel:on_list_box_update(data, event)
 	data.remove_btn:set_enabled(true)
 end
-

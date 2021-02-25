@@ -7,7 +7,7 @@ CoreShaderLibCompiler.SHADER_PATH = "core\\shader_sources\\"
 CoreShaderLibCompiler.RT_PATH = "shaders\\"
 CoreShaderLibCompiler.ROOT_PATH = "..\\"
 
--- Lines: 11 to 65
+-- Lines 11-66
 function CoreShaderLibCompiler:compile(file, dest, force_recompile, force_skip)
 	if file.name ~= "shaders/base" or file.type ~= "render_template_database" then
 		return false
@@ -17,9 +17,15 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile, force_skip)
 		dest:skip_update("render_template_database", file.name, file.properties)
 
 		if target() == "win32" then
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {"d3d9"})
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {"d3d11"})
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {"ogl"})
+			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {
+				"d3d9"
+			})
+			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {
+				"d3d11"
+			})
+			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {
+				"ogl"
+			})
 		elseif target() == "ps3" then
 			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {})
 		elseif target() == "ps4" then
@@ -44,9 +50,15 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile, force_skip)
 	self:run_compiler()
 
 	if target() == "win32" then
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d9.win32.shaders", "core/temp/" .. self.SHADER_NAME, {"d3d9"}, dest)
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d11.win32.shaders", "core/temp/" .. self.SHADER_NAME, {"d3d11"}, dest)
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".ogl.win32.shaders", "core/temp/" .. self.SHADER_NAME, {"ogl"}, dest)
+		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d9.win32.shaders", "core/temp/" .. self.SHADER_NAME, {
+			"d3d9"
+		}, dest)
+		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d11.win32.shaders", "core/temp/" .. self.SHADER_NAME, {
+			"d3d11"
+		}, dest)
+		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".ogl.win32.shaders", "core/temp/" .. self.SHADER_NAME, {
+			"ogl"
+		}, dest)
 	elseif target() == "ps3" then
 		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".ps3.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
 	elseif target() == "xb1" then
@@ -66,7 +78,7 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile, force_skip)
 	return false
 end
 
--- Lines: 68 to 81
+-- Lines 68-81
 function CoreShaderLibCompiler:cleanup(params)
 	cat_print("debug", "[CoreShaderLibCompiler] Cleaning...")
 	os.remove(params.win32d3d9)
@@ -82,17 +94,17 @@ function CoreShaderLibCompiler:cleanup(params)
 	os.remove(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".render_template_database")
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function CoreShaderLibCompiler:base_path()
 	return self:root_path() .. "assets\\"
 end
 
--- Lines: 87 to 98
+-- Lines 87-99
 function CoreShaderLibCompiler:root_path()
 	local path = data_path_abs() .. self.ROOT_PATH
 	local f = nil
 
-	-- Lines: 90 to 91
+	-- Lines 91-91
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.\\", "\\")
 
@@ -108,12 +120,12 @@ function CoreShaderLibCompiler:root_path()
 	return out_path
 end
 
--- Lines: 101 to 104
+-- Lines 101-105
 function CoreShaderLibCompiler:up_to_date(file, dest)
 	return dest:up_to_date(file.path, "render_template_database", file.name, file.properties) and dest:up_to_date("core\\shader_sources\\base", "shader_source", "core/shader_sources/base", {}) and dest:up_to_date("core\\shader_sources\\common_include", "shader_source", "core/shader_sources/common_include", {})
 end
 
--- Lines: 107 to 122
+-- Lines 107-122
 function CoreShaderLibCompiler:copy_file(from, to, properties, dest)
 	local from_file = io.open(from, "rb")
 
@@ -131,7 +143,7 @@ function CoreShaderLibCompiler:copy_file(from, to, properties, dest)
 	end
 end
 
--- Lines: 124 to 140
+-- Lines 124-141
 function CoreShaderLibCompiler:create_make_file()
 	local make_params = self:get_make_params()
 	local file = assert(io.open(self:base_path() .. self.TEMP_PATH .. "make.xml", "w+"))
@@ -151,7 +163,7 @@ function CoreShaderLibCompiler:create_make_file()
 	return make_params
 end
 
--- Lines: 143 to 147
+-- Lines 143-147
 function CoreShaderLibCompiler:run_compiler()
 	local cmd = string.format("%saux_assets\\engine\\bin\\shaderdev\\shaderdev -m \"%s%smake.xml\"", self:root_path(), self:base_path(), self.TEMP_PATH)
 	local file = assert(io.popen(cmd, "r"), cmd)
@@ -161,7 +173,7 @@ function CoreShaderLibCompiler:run_compiler()
 	end
 end
 
--- Lines: 149 to 222
+-- Lines 149-223
 function CoreShaderLibCompiler:get_make_params()
 	local rt = self:base_path() .. self.RT_PATH .. self.SHADER_NAME
 	local src = self:base_path() .. self.SHADER_PATH .. self.SHADER_NAME
@@ -238,4 +250,3 @@ function CoreShaderLibCompiler:get_make_params()
 
 	return make_params
 end
-

@@ -1,9 +1,11 @@
 CharacterSequenceElement = SequenceCharacterElement or class(MissionElement)
 CharacterSequenceElement.SAVE_UNIT_POSITION = false
 CharacterSequenceElement.SAVE_UNIT_ROTATION = false
-CharacterSequenceElement.LINK_ELEMENTS = {"elements"}
+CharacterSequenceElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 7 to 16
+-- Lines 7-16
 function CharacterSequenceElement:init(unit)
 	CharacterSequenceElement.super.init(self, unit)
 
@@ -15,7 +17,7 @@ function CharacterSequenceElement:init(unit)
 	table.insert(self._save_values, "sequence")
 end
 
--- Lines: 19 to 35
+-- Lines 19-35
 function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -42,7 +44,7 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(text, 0, 0, "EXPAND")
 end
 
--- Lines: 37 to 46
+-- Lines 37-46
 function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 	CharacterSequenceElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -62,7 +64,7 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 48 to 61
+-- Lines 48-61
 function CharacterSequenceElement:on_lmb()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -80,12 +82,11 @@ function CharacterSequenceElement:on_lmb()
 	end
 end
 
--- Lines: 64 to 66
+-- Lines 64-66
 function CharacterSequenceElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "on_lmb"))
 end
 
--- Lines: 68 to 69
+-- Lines 68-69
 function CharacterSequenceElement:update_editing()
 end
-

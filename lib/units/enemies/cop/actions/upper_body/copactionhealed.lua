@@ -1,7 +1,7 @@
 CopActionHealed = CopActionHealed or class()
 local tmp_vec1 = Vector3()
 
--- Lines: 5 to 31
+-- Lines 5-32
 function CopActionHealed:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_movement = common_data.ext_movement
@@ -29,11 +29,11 @@ function CopActionHealed:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 35 to 36
+-- Lines 34-36
 function CopActionHealed:on_exit()
 end
 
--- Lines: 38 to 44
+-- Lines 38-44
 function CopActionHealed:update(t)
 	if not self._unit:anim_data().heal then
 		self._healed = true
@@ -46,17 +46,17 @@ function CopActionHealed:update(t)
 	end
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function CopActionHealed:type()
 	return "healed"
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function CopActionHealed:expired()
 	return self._expired
 end
 
--- Lines: 54 to 58
+-- Lines 54-59
 function CopActionHealed:chk_block(action_type, t)
 	if action_type == "heavy_hurt" or action_type == "hurt" or action_type == "death" then
 		return false
@@ -65,22 +65,22 @@ function CopActionHealed:chk_block(action_type, t)
 	return not self._healed
 end
 
--- Lines: 61 to 63
+-- Lines 61-63
 function CopActionHealed:on_attention(attention)
 	self._attention = attention
 end
 
--- Lines: 65 to 66
+-- Lines 65-67
 function CopActionHealed:body_part()
 	return self._body_part
 end
 
--- Lines: 69 to 70
+-- Lines 69-71
 function CopActionHealed:need_upd()
 	return true
 end
 
--- Lines: 73 to 79
+-- Lines 73-79
 function CopActionHealed:save(save_data)
 	for i, k in pairs(self._action_desc) do
 		if type_name(k) ~= "Unit" or alive(k) then
@@ -88,4 +88,3 @@ function CopActionHealed:save(save_data)
 		end
 	end
 end
-

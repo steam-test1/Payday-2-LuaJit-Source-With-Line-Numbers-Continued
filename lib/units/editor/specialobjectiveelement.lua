@@ -1,8 +1,10 @@
 SpecialObjectiveUnitElement = SpecialObjectiveUnitElement or class(MissionElement)
-SpecialObjectiveUnitElement.INSTANCE_VAR_NAMES = {{
-	value = "so_action",
-	type = "special_objective_action"
-}}
+SpecialObjectiveUnitElement.INSTANCE_VAR_NAMES = {
+	{
+		value = "so_action",
+		type = "special_objective_action"
+	}
+}
 SpecialObjectiveUnitElement._AI_SO_types = {
 	"AI_defend",
 	"AI_security",
@@ -14,7 +16,7 @@ SpecialObjectiveUnitElement._AI_SO_types = {
 	"AI_phalanx"
 }
 
--- Lines: 6 to 83
+-- Lines 6-83
 function SpecialObjectiveUnitElement:init(unit)
 	SpecialObjectiveUnitElement.super.init(self, unit)
 
@@ -83,7 +85,7 @@ function SpecialObjectiveUnitElement:init(unit)
 	table.insert(self._save_values, "interrupt_objective")
 end
 
--- Lines: 85 to 92
+-- Lines 85-92
 function SpecialObjectiveUnitElement:post_init(...)
 	SpecialObjectiveUnitElement.super.post_init(self, ...)
 
@@ -94,13 +96,13 @@ function SpecialObjectiveUnitElement:post_init(...)
 	end
 end
 
--- Lines: 94 to 97
+-- Lines 94-97
 function SpecialObjectiveUnitElement:destroy(...)
 	SpecialObjectiveUnitElement.super.destroy(self, ...)
 	self:stop_test_element()
 end
 
--- Lines: 99 to 163
+-- Lines 99-163
 function SpecialObjectiveUnitElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -169,7 +171,9 @@ function SpecialObjectiveUnitElement:test_element()
 	t.values.followup_elements = nil
 	t.values.trigger_on = "none"
 	t.values.spawn_instigator_ids = nil
-	self._script = MissionScript:new({elements = {}})
+	self._script = MissionScript:new({
+		elements = {}
+	})
 	self._so_class = ElementSpecialObjective:new(self._script, t)
 	self._so_class._values.align_position = nil
 	self._so_class._values.align_rotation = nil
@@ -179,7 +183,7 @@ function SpecialObjectiveUnitElement:test_element()
 	self._start_test_t = Application:time()
 end
 
--- Lines: 165 to 176
+-- Lines 165-176
 function SpecialObjectiveUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		if alive(enemy) then
@@ -196,13 +200,13 @@ function SpecialObjectiveUnitElement:stop_test_element()
 	self._enemies = {}
 end
 
--- Lines: 178 to 181
+-- Lines 178-181
 function SpecialObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	SpecialObjectiveUnitElement.super.draw_links(self, t, dt, selected_unit)
 	self:_draw_follow_up(selected_unit, all_units)
 end
 
--- Lines: 183 to 210
+-- Lines 183-210
 function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	if self._hed.patrol_path ~= "none" then
 		managers.editor:layer("Ai"):draw_patrol_path_externaly(self._hed.patrol_path)
@@ -240,7 +244,7 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 	self:_highlight_if_outside_the_nav_field(t)
 end
 
--- Lines: 212 to 231
+-- Lines 212-231
 function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 	if managers.navigation:is_data_ready() then
 		local my_pos = self._unit:position()
@@ -250,7 +254,13 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 			local t1 = t % 0.5
 			local t2 = t % 1
 			local alpha = nil
-			alpha = t2 > 0.5 and t1 or 0.5 - t1
+
+			if t2 > 0.5 then
+				alpha = t1
+			else
+				alpha = 0.5 - t1
+			end
+
 			alpha = math.lerp(0.1, 0.5, alpha)
 			local nav_color = Color(alpha, 1, 0, 0)
 
@@ -261,7 +271,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 	end
 end
 
--- Lines: 233 to 263
+-- Lines 233-263
 function SpecialObjectiveUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	if self._hed.followup_elements then
 		local followup_elements = self._hed.followup_elements
@@ -302,7 +312,7 @@ function SpecialObjectiveUnitElement:update_unselected(t, dt, selected_unit, all
 	end
 end
 
--- Lines: 265 to 275
+-- Lines 265-275
 function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 	if self._hed.followup_elements then
 		for _, element_id in ipairs(self._hed.followup_elements) do
@@ -322,14 +332,14 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 	end
 end
 
--- Lines: 277 to 281
+-- Lines 277-281
 function SpecialObjectiveUnitElement:update_editing()
 	self:_so_raycast()
 	self:_spawn_raycast()
 	self:_raycast()
 end
 
--- Lines: 283 to 290
+-- Lines 283-291
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -347,7 +357,7 @@ function SpecialObjectiveUnitElement:_so_raycast()
 	return nil
 end
 
--- Lines: 293 to 309
+-- Lines 293-310
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -369,7 +379,7 @@ function SpecialObjectiveUnitElement:_spawn_raycast()
 	return id
 end
 
--- Lines: 312 to 320
+-- Lines 312-321
 function SpecialObjectiveUnitElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -384,7 +394,7 @@ function SpecialObjectiveUnitElement:_raycast()
 	return nil
 end
 
--- Lines: 324 to 365
+-- Lines 323-365
 function SpecialObjectiveUnitElement:_lmb()
 	local id = self:_so_raycast()
 
@@ -437,12 +447,12 @@ function SpecialObjectiveUnitElement:_lmb()
 	self._hed.search_position = self:_raycast() or self._hed.search_position
 end
 
--- Lines: 367 to 369
+-- Lines 367-369
 function SpecialObjectiveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
--- Lines: 373 to 381
+-- Lines 373-381
 function SpecialObjectiveUnitElement:selected()
 	SpecialObjectiveUnitElement.super.selected(self)
 
@@ -450,11 +460,13 @@ function SpecialObjectiveUnitElement:selected()
 		self._hed.patrol_path = "none"
 	end
 
-	CoreEws.update_combobox_options(self._patrol_path_params, table.list_add({"none"}, managers.ai_data:patrol_path_names()))
+	CoreEws.update_combobox_options(self._patrol_path_params, table.list_add({
+		"none"
+	}, managers.ai_data:patrol_path_names()))
 	CoreEws.change_combobox_value(self._patrol_path_params, self._hed.patrol_path)
 end
 
--- Lines: 383 to 397
+-- Lines 383-397
 function SpecialObjectiveUnitElement:_apply_preset(params)
 	local value = params.ctrlr:get_value()
 	local confirm = EWS:message_box(Global.frame_panel, "Apply preset " .. value .. "?", "Special objective", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -472,7 +484,7 @@ function SpecialObjectiveUnitElement:_apply_preset(params)
 	end
 end
 
--- Lines: 399 to 404
+-- Lines 399-404
 function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
@@ -483,7 +495,7 @@ function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	end
 end
 
--- Lines: 406 to 411
+-- Lines 406-411
 function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
@@ -494,7 +506,7 @@ function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	end
 end
 
--- Lines: 413 to 424
+-- Lines 413-424
 function SpecialObjectiveUnitElement:_toggle_nav_link_filter_value(data)
 	local adding = data.ctrlr:get_value()
 
@@ -511,7 +523,7 @@ function SpecialObjectiveUnitElement:_toggle_nav_link_filter_value(data)
 	self._hed.SO_access = managers.navigation:convert_access_filter_to_string(self._nav_link_filter)
 end
 
--- Lines: 427 to 435
+-- Lines 426-435
 function SpecialObjectiveUnitElement:set_element_data(data)
 	SpecialObjectiveUnitElement.super.set_element_data(self, data)
 
@@ -521,7 +533,7 @@ function SpecialObjectiveUnitElement:set_element_data(data)
 	end
 end
 
--- Lines: 437 to 537
+-- Lines 437-537
 function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -545,7 +557,9 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	}
 	local filter_preset = CoreEWS.combobox(filter_preset_params)
 
-	filter_preset:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_apply_preset"), {ctrlr = filter_preset})
+	filter_preset:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_apply_preset"), {
+		ctrlr = filter_preset
+	})
 
 	local filter_sizer = EWS:BoxSizer("HORIZONTAL")
 	local opt1_sizer = EWS:BoxSizer("VERTICAL")
@@ -580,7 +594,9 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	filter_sizer:add(opt3_sizer, 1, 0, "EXPAND")
 	opt_sizer:add(filter_sizer, 1, 0, "EXPAND")
 	panel_sizer:add(opt_sizer, 0, 0, "EXPAND")
-	self:_build_value_combobox(panel, panel_sizer, "ai_group", table.list_add({"none"}, clone(ElementSpecialObjective._AI_GROUPS)), "Select an ai group.")
+	self:_build_value_combobox(panel, panel_sizer, "ai_group", table.list_add({
+		"none"
+	}, clone(ElementSpecialObjective._AI_GROUPS)), "Select an ai group.")
 	self:_build_value_checkbox(panel, panel_sizer, "is_navigation_link", "Navigation link", "Navigation link")
 	self:_build_value_checkbox(panel, panel_sizer, "align_rotation", "Align rotation")
 	self:_build_value_checkbox(panel, panel_sizer, "align_position", "Align position")
@@ -597,22 +613,40 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		min = 0
 	}, "Used to specify the distance to use when searching for an AI")
 
-	local options = table.list_add({"none"}, clone(CopActionAct._act_redirects.SO))
+	local options = table.list_add({
+		"none"
+	}, clone(CopActionAct._act_redirects.SO))
 	options = table.list_add(options, self._AI_SO_types)
 
 	table.sort(options)
 	self:_build_value_combobox(panel, panel_sizer, "so_action", options, "Select a action that the unit should start with.")
 
-	local ctrlr, params = self:_build_value_combobox(panel, panel_sizer, "patrol_path", table.list_add({"none"}, managers.ai_data:patrol_path_names()), "Select a patrol path to use from the spawn point. Different objectives and behaviors will interpet the path different.")
+	local ctrlr, params = self:_build_value_combobox(panel, panel_sizer, "patrol_path", table.list_add({
+		"none"
+	}, managers.ai_data:patrol_path_names()), "Select a patrol path to use from the spawn point. Different objectives and behaviors will interpet the path different.")
 	self._patrol_path_params = params
 
-	self:_build_value_combobox(panel, panel_sizer, "path_style", table.list_add({"none"}, ElementSpecialObjective._PATHING_STYLES), "Specifies how the patrol path should be used.")
-	self:_build_value_combobox(panel, panel_sizer, "path_haste", table.list_add({"none"}, ElementSpecialObjective._HASTES), "Select path haste to use.")
-	self:_build_value_combobox(panel, panel_sizer, "path_stance", table.list_add({"none"}, ElementSpecialObjective._STANCES), "Select path stance to use.")
-	self:_build_value_combobox(panel, panel_sizer, "pose", table.list_add({"none"}, ElementSpecialObjective._POSES), "Select pose to use.")
-	self:_build_value_combobox(panel, panel_sizer, "attitude", table.list_add({"none"}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
-	self:_build_value_combobox(panel, panel_sizer, "trigger_on", table.list_add({"none"}, ElementSpecialObjective._TRIGGER_ON), "Select when to trigger objective.")
-	self:_build_value_combobox(panel, panel_sizer, "interaction_voice", table.list_add({"none"}, ElementSpecialObjective._INTERACTION_VOICES), "Select what voice to use when interacting with the character.")
+	self:_build_value_combobox(panel, panel_sizer, "path_style", table.list_add({
+		"none"
+	}, ElementSpecialObjective._PATHING_STYLES), "Specifies how the patrol path should be used.")
+	self:_build_value_combobox(panel, panel_sizer, "path_haste", table.list_add({
+		"none"
+	}, ElementSpecialObjective._HASTES), "Select path haste to use.")
+	self:_build_value_combobox(panel, panel_sizer, "path_stance", table.list_add({
+		"none"
+	}, ElementSpecialObjective._STANCES), "Select path stance to use.")
+	self:_build_value_combobox(panel, panel_sizer, "pose", table.list_add({
+		"none"
+	}, ElementSpecialObjective._POSES), "Select pose to use.")
+	self:_build_value_combobox(panel, panel_sizer, "attitude", table.list_add({
+		"none"
+	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
+	self:_build_value_combobox(panel, panel_sizer, "trigger_on", table.list_add({
+		"none"
+	}, ElementSpecialObjective._TRIGGER_ON), "Select when to trigger objective.")
+	self:_build_value_combobox(panel, panel_sizer, "interaction_voice", table.list_add({
+		"none"
+	}, ElementSpecialObjective._INTERACTION_VOICES), "Select what voice to use when interacting with the character.")
 	self:_build_value_number(panel, panel_sizer, "interrupt_dis", {
 		floats = 1,
 		min = -1
@@ -650,7 +684,6 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "test_unit", test_units, "Select the unit to be used when testing.")
 end
 
--- Lines: 541 to 542
+-- Lines 539-542
 function SpecialObjectiveUnitElement:add_to_mission_package()
 end
-

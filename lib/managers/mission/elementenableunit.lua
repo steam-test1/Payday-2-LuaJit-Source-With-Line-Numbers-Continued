@@ -2,14 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementEnableUnit = ElementEnableUnit or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function ElementEnableUnit:init(...)
 	ElementEnableUnit.super.init(self, ...)
 
 	self._units = {}
 end
 
--- Lines: 12 to 46
+-- Lines 11-46
 function ElementEnableUnit:on_script_activated()
 	local elementBroken = false
 
@@ -46,17 +46,17 @@ function ElementEnableUnit:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 50 to 52
+-- Lines 48-52
 function ElementEnableUnit:_load_unit(unit)
 	table.insert(self._units, unit)
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function ElementEnableUnit:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 58 to 69
+-- Lines 58-69
 function ElementEnableUnit:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -69,13 +69,13 @@ function ElementEnableUnit:on_executed(instigator)
 	ElementEnableUnit.super.on_executed(self, instigator)
 end
 
--- Lines: 71 to 74
+-- Lines 71-74
 function ElementEnableUnit:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 end
 
--- Lines: 77 to 82
+-- Lines 76-82
 function ElementEnableUnit:load(data)
 	if not self._has_fetched_units then
 		self:on_script_activated()
@@ -83,4 +83,3 @@ function ElementEnableUnit:load(data)
 
 	self:set_enabled(data.enabled)
 end
-

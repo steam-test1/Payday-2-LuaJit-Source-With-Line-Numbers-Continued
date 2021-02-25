@@ -4,7 +4,7 @@ core:import("CoreGameStateInGame")
 
 LoadingGame = LoadingGame or class()
 
--- Lines: 7 to 32
+-- Lines 7-32
 function LoadingGame:init()
 	self._debug_time = self.game_state._session_manager:_debug_time()
 
@@ -31,16 +31,15 @@ function LoadingGame:init()
 	local_user_manager:enter_level_handler(self._level_handler)
 end
 
--- Lines: 35 to 36
+-- Lines 34-36
 function LoadingGame:destroy()
 end
 
--- Lines: 38 to 43
+-- Lines 38-43
 function LoadingGame:transition()
 	local current_time = self.game_state._session_manager:_debug_time()
 
-	if self._debug_time + 2 < current_time then
+	if current_time > self._debug_time + 2 then
 		return CoreGameStateInGame.InGame, self._level_handler
 	end
 end
-

@@ -5,7 +5,7 @@ core:import("CoreMissionScriptElement")
 ElementPlayEffect = ElementPlayEffect or class(CoreMissionScriptElement.MissionScriptElement)
 ElementPlayEffect.IDS_EFFECT = Idstring("effect")
 
--- Lines: 8 to 18
+-- Lines 8-18
 function ElementPlayEffect:init(...)
 	ElementPlayEffect.super.init(self, ...)
 
@@ -18,12 +18,12 @@ function ElementPlayEffect:init(...)
 	end
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function ElementPlayEffect:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 24 to 32
+-- Lines 24-32
 function ElementPlayEffect:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -33,10 +33,12 @@ function ElementPlayEffect:on_executed(instigator)
 	ElementPlayEffect.super.on_executed(self, instigator)
 end
 
--- Lines: 34 to 48
+-- Lines 34-48
 function ElementPlayEffect:play_effect()
 	if self._values.effect ~= "none" then
-		local params = {effect = Idstring(self._values.effect)}
+		local params = {
+			effect = Idstring(self._values.effect)
+		}
 		local pos, rot = self:get_orientation()
 		params.position = self._values.screen_space and Vector3() or pos
 		params.rotation = self._values.screen_space and Rotation() or rot
@@ -50,28 +52,29 @@ function ElementPlayEffect:play_effect()
 	end
 end
 
--- Lines: 50 to 52
+-- Lines 50-52
 function ElementPlayEffect:kill()
 	managers.environment_effects:kill_mission_effect(self._id)
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function ElementPlayEffect:fade_kill()
 	managers.environment_effects:fade_kill_mission_effect(self._id)
 end
+
 ElementStopEffect = ElementStopEffect or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 62 to 64
+-- Lines 62-64
 function ElementStopEffect:init(...)
 	ElementStopEffect.super.init(self, ...)
 end
 
--- Lines: 66 to 68
+-- Lines 66-68
 function ElementStopEffect:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 70 to 87
+-- Lines 70-87
 function ElementStopEffect:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -91,4 +94,3 @@ function ElementStopEffect:on_executed(instigator)
 
 	ElementStopEffect.super.on_executed(self, instigator)
 end
-

@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementAIForceAttentionOperator = ElementAIForceAttentionOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementAIForceAttentionOperator:init(...)
 	ElementAIForceAttentionOperator.super.init(self, ...)
 end
 
--- Lines: 11 to 27
+-- Lines 11-27
 function ElementAIForceAttentionOperator:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -25,4 +25,3 @@ function ElementAIForceAttentionOperator:on_executed(instigator)
 
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
-

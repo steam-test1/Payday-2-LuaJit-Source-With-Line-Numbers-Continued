@@ -1,4 +1,6 @@
-local access_type_walk_only = {walk = true}
+local access_type_walk_only = {
+	walk = true
+}
 local access_type_all = {
 	acrobatic = true,
 	walk = true
@@ -17,19 +19,23 @@ MutatorEnemyReplacer.reductions = {
 	exp = 0.35
 }
 MutatorEnemyReplacer.disables_achievements = true
-MutatorEnemyReplacer.categories = {"enemies"}
-MutatorEnemyReplacer.incompatibility_tags = {"replaces_units"}
+MutatorEnemyReplacer.categories = {
+	"enemies"
+}
+MutatorEnemyReplacer.incompatibility_tags = {
+	"replaces_units"
+}
 MutatorEnemyReplacer.icon_coords = {
 	6,
 	1
 }
 
--- Lines: 25 to 27
+-- Lines 25-27
 function MutatorEnemyReplacer:register_values(mutator_manager)
 	self:register_value("override_enemy", self:default_override_enemy(), "oe")
 end
 
--- Lines: 30 to 37
+-- Lines 29-37
 function MutatorEnemyReplacer:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -38,7 +44,7 @@ function MutatorEnemyReplacer:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines: 39 to 46
+-- Lines 39-46
 function MutatorEnemyReplacer:name(lobby_data)
 	local name = MutatorEnemyReplacer.super.name(self)
 
@@ -49,17 +55,17 @@ function MutatorEnemyReplacer:name(lobby_data)
 	end
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function MutatorEnemyReplacer:get_override_enemy()
 	return self:value("override_enemy")
 end
 
--- Lines: 54 to 55
+-- Lines 54-56
 function MutatorEnemyReplacer:default_override_enemy()
 	return "tank"
 end
 
--- Lines: 61 to 85
+-- Lines 60-87
 function MutatorEnemyReplacer:setup_options_gui(node)
 	local params = {
 		callback = "_update_mutator_value",
@@ -106,12 +112,12 @@ function MutatorEnemyReplacer:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 89 to 91
+-- Lines 89-91
 function MutatorEnemyReplacer:_update_selected_enemy(item)
 	self:set_value("override_enemy", item:value())
 end
 
--- Lines: 94 to 104
+-- Lines 93-104
 function MutatorEnemyReplacer:reset_to_default()
 	self:clear_values()
 
@@ -124,7 +130,7 @@ function MutatorEnemyReplacer:reset_to_default()
 	end
 end
 
--- Lines: 110 to 128
+-- Lines 108-128
 function MutatorEnemyReplacer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	for key, value in pairs(group_ai_tweak.special_unit_spawn_limits) do
 		if key == self:get_override_enemy() then
@@ -145,7 +151,7 @@ function MutatorEnemyReplacer:modify_unit_categories(group_ai_tweak, difficulty_
 	end
 end
 
--- Lines: 130 to 193
+-- Lines 130-194
 function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	if not self._groups.tank then
 		if difficulty_index < 6 then
@@ -201,7 +207,7 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	return self._groups.tank
 end
 
--- Lines: 196 to 237
+-- Lines 196-238
 function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	if not self._groups.shield then
 		if difficulty_index <= 7 then
@@ -223,8 +229,12 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 			self._groups.shield = {
 				special_type = "shield",
 				unit_types = {
-					america = {Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_swat_shield/ene_zeal_swat_shield")},
-					russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_dw_sr2_smg/ene_akan_fbi_shield_dw_sr2_smg")}
+					america = {
+						Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_swat_shield/ene_zeal_swat_shield")
+					},
+					russia = {
+						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_dw_sr2_smg/ene_akan_fbi_shield_dw_sr2_smg")
+					}
 				},
 				access = access_type_all
 			}
@@ -234,14 +244,18 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	return self._groups.shield
 end
 
--- Lines: 240 to 258
+-- Lines 240-259
 function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	if not self._groups.taser then
 		self._groups.taser = {
 			special_type = "taser",
 			unit_types = {
-				america = {Idstring("units/payday2/characters/ene_tazer_1/ene_tazer_1")},
-				russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_tazer_ak47_ass/ene_akan_cs_tazer_ak47_ass")}
+				america = {
+					Idstring("units/payday2/characters/ene_tazer_1/ene_tazer_1")
+				},
+				russia = {
+					Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_tazer_ak47_ass/ene_akan_cs_tazer_ak47_ass")
+				}
 			},
 			access = access_type_all
 		}
@@ -250,15 +264,19 @@ function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	return self._groups.taser
 end
 
--- Lines: 261 to 299
+-- Lines 261-300
 function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	if not self._groups.spooc then
 		if difficulty_index <= 7 then
 			self._groups.spooc = {
 				special_type = "spooc",
 				unit_types = {
-					america = {Idstring("units/payday2/characters/ene_spook_1/ene_spook_1")},
-					russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")}
+					america = {
+						Idstring("units/payday2/characters/ene_spook_1/ene_spook_1")
+					},
+					russia = {
+						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")
+					}
 				},
 				access = access_type_all
 			}
@@ -266,8 +284,12 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 			self._groups.spooc = {
 				special_type = "spooc",
 				unit_types = {
-					america = {Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_cloaker/ene_zeal_cloaker")},
-					russia = {Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")}
+					america = {
+						Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_cloaker/ene_zeal_cloaker")
+					},
+					russia = {
+						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")
+					}
 				},
 				access = access_type_all
 			}
@@ -277,7 +299,7 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	return self._groups.spooc
 end
 
--- Lines: 303 to 323
+-- Lines 303-324
 function MutatorEnemyReplacer:_get_unit_group_medic(difficulty_index)
 	if not self._groups.medic then
 		self._groups.medic = {
@@ -298,6 +320,7 @@ function MutatorEnemyReplacer:_get_unit_group_medic(difficulty_index)
 
 	return self._groups.medic
 end
+
 MutatorMediDozer = MutatorMediDozer or class(BaseMutator)
 MutatorMediDozer._type = "MutatorMediDozer"
 MutatorMediDozer.name_id = "mutator_medidozer"
@@ -307,14 +330,18 @@ MutatorMediDozer.reductions = {
 	exp = 0
 }
 MutatorMediDozer.disables_achievements = true
-MutatorMediDozer.categories = {"enemies"}
-MutatorMediDozer.incompatibility_tags = {"replaces_units"}
+MutatorMediDozer.categories = {
+	"enemies"
+}
+MutatorMediDozer.incompatibility_tags = {
+	"replaces_units"
+}
 MutatorMediDozer.icon_coords = {
 	8,
 	1
 }
 
--- Lines: 345 to 352
+-- Lines 344-352
 function MutatorMediDozer:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -323,7 +350,7 @@ function MutatorMediDozer:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines: 358 to 419
+-- Lines 356-419
 function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits = {
 		shield = 0,
@@ -375,6 +402,7 @@ function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_inde
 		end
 	end
 end
+
 MutatorTitandozers = MutatorTitandozers or class(BaseMutator)
 MutatorTitandozers._type = "MutatorTitandozers"
 MutatorTitandozers.name_id = "mutator_titandozers"
@@ -384,7 +412,9 @@ MutatorTitandozers.reductions = {
 	exp = 0
 }
 MutatorTitandozers.disables_achievements = true
-MutatorTitandozers.categories = {"enemies"}
+MutatorTitandozers.categories = {
+	"enemies"
+}
 MutatorTitandozers.incompatibility_tags = {}
 MutatorTitandozers.icon_coords = {
 	1,
@@ -392,7 +422,7 @@ MutatorTitandozers.icon_coords = {
 }
 MutatorTitandozers.load_priority = -10
 
--- Lines: 440 to 447
+-- Lines 439-447
 function MutatorTitandozers:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -401,7 +431,7 @@ function MutatorTitandozers:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines: 453 to 465
+-- Lines 451-465
 function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits.tank = math.huge
 	local unit_group = self:_get_unit_group_titandozer(difficulty_index)
@@ -415,14 +445,18 @@ function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_in
 	end
 end
 
--- Lines: 467 to 485
+-- Lines 467-486
 function MutatorTitandozers:_get_unit_group_titandozer(difficulty_index)
 	if not self._groups.tank then
 		self._groups.tank = {
 			special_type = "tank",
 			unit_types = {
-				america = {Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")},
-				russia = {Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")}
+				america = {
+					Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
+				},
+				russia = {
+					Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
+				}
 			},
 			access = access_type_all
 		}
@@ -430,4 +464,3 @@ function MutatorTitandozers:_get_unit_group_titandozer(difficulty_index)
 
 	return self._groups.tank
 end
-

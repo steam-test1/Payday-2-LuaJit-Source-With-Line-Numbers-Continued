@@ -8,18 +8,20 @@ MutatorFriendlyFire.reductions = {
 	exp = 0
 }
 MutatorFriendlyFire.disables_achievements = true
-MutatorFriendlyFire.categories = {"gameplay"}
+MutatorFriendlyFire.categories = {
+	"gameplay"
+}
 MutatorFriendlyFire.icon_coords = {
 	3,
 	1
 }
 
--- Lines: 17 to 19
+-- Lines 17-19
 function MutatorFriendlyFire:register_values(mutator_manager)
 	self:register_value("damage_multiplier", 1, "dm")
 end
 
--- Lines: 21 to 28
+-- Lines 21-28
 function MutatorFriendlyFire:name()
 	local name = MutatorFriendlyFire.super.name(self)
 
@@ -30,19 +32,19 @@ function MutatorFriendlyFire:name()
 	end
 end
 
--- Lines: 33 to 39
+-- Lines 32-39
 function MutatorFriendlyFire:setup(mutator_manager)
 	MutatorFriendlyFire.super.setup(mutator_manager)
 
 	managers.slot._masks.bullet_impact_targets = managers.slot._masks.bullet_impact_targets_ff
 end
 
--- Lines: 41 to 42
+-- Lines 41-43
 function MutatorFriendlyFire:get_friendly_fire_damage_multiplier()
 	return self:value("damage_multiplier")
 end
 
--- Lines: 45 to 53
+-- Lines 45-53
 function MutatorFriendlyFire:modify_value(id, value)
 	if id == "PlayerDamage:FriendlyFire" then
 		return false
@@ -53,17 +55,17 @@ function MutatorFriendlyFire:modify_value(id, value)
 	end
 end
 
--- Lines: 57 to 58
+-- Lines 57-59
 function MutatorFriendlyFire:_min_damage()
 	return 0.25
 end
 
--- Lines: 61 to 62
+-- Lines 61-63
 function MutatorFriendlyFire:_max_damage()
 	return 3
 end
 
--- Lines: 66 to 86
+-- Lines 65-88
 function MutatorFriendlyFire:setup_options_gui(node)
 	local params = {
 		name = "ff_damage_slider",
@@ -89,12 +91,12 @@ function MutatorFriendlyFire:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 90 to 92
+-- Lines 90-92
 function MutatorFriendlyFire:_update_damage_multiplier(item)
 	self:set_value("damage_multiplier", item:value())
 end
 
--- Lines: 95 to 105
+-- Lines 94-105
 function MutatorFriendlyFire:reset_to_default()
 	self:clear_values()
 
@@ -107,8 +109,7 @@ function MutatorFriendlyFire:reset_to_default()
 	end
 end
 
--- Lines: 107 to 108
+-- Lines 107-109
 function MutatorFriendlyFire:options_fill()
 	return self:_get_percentage_fill(self:_min_damage(), self:_max_damage(), self:get_friendly_fire_damage_multiplier())
 end
-

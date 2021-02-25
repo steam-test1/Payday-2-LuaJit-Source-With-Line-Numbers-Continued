@@ -1,6 +1,6 @@
 SpawnTeamAIUnitElement = SpawnTeamAIUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function SpawnTeamAIUnitElement:init(unit)
 	SpawnTeamAIUnitElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function SpawnTeamAIUnitElement:init(unit)
 	table.insert(self._save_values, "character")
 end
 
--- Lines: 11 to 25
+-- Lines 11-25
 function SpawnTeamAIUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -21,7 +21,8 @@ function SpawnTeamAIUnitElement:_build_panel(panel, panel_sizer)
 		table.insert(characters, data.name)
 	end
 
-	self:_build_value_combobox(panel, panel_sizer, "character", table.list_add({"any"}, characters))
+	self:_build_value_combobox(panel, panel_sizer, "character", table.list_add({
+		"any"
+	}, characters))
 	self:_add_help_text("Spawns a team AI if possible. NOTE: If a character is provided and it's not available it will not be spawned at all!")
 end
-

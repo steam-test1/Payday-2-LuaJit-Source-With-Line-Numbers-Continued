@@ -1,9 +1,11 @@
 DebugDrawFonts = DebugDrawFonts or class()
 
--- Lines: 3 to 69
+-- Lines 3-69
 function DebugDrawFonts:init(ws)
 	self._ws = ws
-	self._panel = ws:panel():panel({layer = 1000})
+	self._panel = ws:panel():panel({
+		layer = 1000
+	})
 	self._toggle = false
 	local massive_font = tweak_data.menu.pd2_massive_font
 	local large_font = tweak_data.menu.pd2_large_font
@@ -44,7 +46,7 @@ function DebugDrawFonts:init(ws)
 		h = self._panel:h()
 	})
 
-	-- Lines: 38 to 40
+	-- Lines 38-40
 	local function func(o)
 		over(0.6, function (p)
 			o:set_alpha(p)
@@ -125,26 +127,25 @@ function DebugDrawFonts:init(ws)
 	end
 end
 
--- Lines: 71 to 74
+-- Lines 71-74
 function DebugDrawFonts:toggle_debug()
 	self._toggle = not self._toggle
 
 	self._panel:set_debug(self._toggle)
 end
 
--- Lines: 76 to 79
+-- Lines 76-79
 function DebugDrawFonts:reload()
 	self:close()
 	self:init(self._ws)
 end
 
--- Lines: 81 to 83
+-- Lines 81-83
 function DebugDrawFonts:set_enabled(enabled)
 	self._panel:set_visible(enabled)
 end
 
--- Lines: 85 to 87
+-- Lines 85-87
 function DebugDrawFonts:close()
 	self._panel:parent():remove(self._panel)
 end
-

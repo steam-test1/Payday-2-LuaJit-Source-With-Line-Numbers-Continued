@@ -3,7 +3,7 @@ require("lib/managers/menu/PlayerInventoryGui")
 local IS_WIN_32 = SystemInfo:platform() == Idstring("WIN32")
 local NOT_WIN_32 = not IS_WIN_32
 
--- Lines: 6 to 10
+-- Lines 6-10
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -11,14 +11,14 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 12 to 13
+-- Lines 12-14
 local function format_round(num, round_value)
 	return round_value and tostring(math.round(num)) or string.format("%.1f", num):gsub("%.?0+$", "")
 end
 
 MainMenuGui = MainMenuGui or class(PlayerInventoryGui)
 
--- Lines: 20 to 69
+-- Lines 20-69
 function MainMenuGui:init(ws, fullscreen_ws, node)
 	self._ws = managers.gui_data:create_saferect_workspace()
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
@@ -84,14 +84,14 @@ function MainMenuGui:init(ws, fullscreen_ws, node)
 	MenuCallbackHandler:leave_blackmarket()
 end
 
--- Lines: 71 to 73
+-- Lines 71-74
 function MainMenuGui:_get_current_box_layout(override_layout)
 	local layout_name = "new_menu"
 
 	return tweak_data.gui:get_main_menu_layout_by_name("main_menu_layout_" .. layout_name, self._panel:w(), self._panel:h())
 end
 
--- Lines: 77 to 125
+-- Lines 77-125
 function MainMenuGui:layout_boxes(layout)
 	local box, align_box, right_align, left_align, top_align, bottom_align, x_offset, y_offset = nil
 
@@ -141,7 +141,7 @@ function MainMenuGui:layout_boxes(layout)
 	end
 end
 
--- Lines: 127 to 138
+-- Lines 127-138
 function MainMenuGui:set_state(state, selected)
 	if state ~= self._data.current_state then
 		self._data.current_state = state
@@ -156,6 +156,7 @@ function MainMenuGui:set_state(state, selected)
 		managers.menu:active_menu().renderer:disable_input(0.2)
 	end
 end
+
 local box_objects = {
 	"text_object",
 	"info_text_object",
@@ -164,7 +165,7 @@ local box_objects = {
 	"bg_object"
 }
 
--- Lines: 142 to 443
+-- Lines 142-444
 function MainMenuGui:create_box(params, index)
 	local x = params.x or 0
 	local y = params.y or 0
@@ -314,7 +315,9 @@ function MainMenuGui:create_box(params, index)
 			unselected_text = unselected_text,
 			selected_color = selected_color,
 			unselected_color = unselected_color,
-			shape = {gui_object:shape()}
+			shape = {
+				gui_object:shape()
+			}
 		}
 	end
 
@@ -353,16 +356,22 @@ function MainMenuGui:create_box(params, index)
 			unselected_text = info_text,
 			selected_color = selected_color,
 			unselected_color = unselected_color,
-			shape = {gui_object:shape()}
+			shape = {
+				gui_object:shape()
+			}
 		}
 	end
 
-	select_object = select_area and panel:panel(select_area) or panel:panel({
-		halign = "scale",
-		align = "scale",
-		vertical = "scale",
-		valign = "scale"
-	})
+	if select_area then
+		select_object = panel:panel(select_area)
+	else
+		select_object = panel:panel({
+			halign = "scale",
+			align = "scale",
+			vertical = "scale",
+			valign = "scale"
+		})
+	end
 
 	if images then
 		local text_vertical = params.text_vertical or "top"
@@ -439,7 +448,9 @@ function MainMenuGui:create_box(params, index)
 					selected_color = selected_color,
 					unselected_color = unselected_color,
 					params = params,
-					shape = {image_panel:shape()}
+					shape = {
+						image_panel:shape()
+					}
 				})
 			end
 		end
@@ -545,14 +556,14 @@ function MainMenuGui:create_box(params, index)
 	return panel, box
 end
 
--- Lines: 446 to 448
+-- Lines 446-449
 function MainMenuGui:_box_in_state(box, state)
 	state = state or self._data.current_state
 
 	return box.states and not not box.states[state]
 end
 
--- Lines: 451 to 506
+-- Lines 451-506
 function MainMenuGui:update_box(box, params, skip_update_other)
 	if not box or not box.params then
 		return
@@ -618,7 +629,7 @@ function MainMenuGui:update_box(box, params, skip_update_other)
 	end
 end
 
--- Lines: 508 to 561
+-- Lines 508-561
 function MainMenuGui:texture_loaded_clbk(params, texture_idstring)
 	local box_name = params.box_name
 	local box = self._boxes_by_name[box_name]
@@ -677,7 +688,7 @@ function MainMenuGui:texture_loaded_clbk(params, texture_idstring)
 	end
 end
 
--- Lines: 563 to 578
+-- Lines 563-578
 function MainMenuGui:update(t, dt)
 	if not self._panel:visible() then
 		return false, "arrow"
@@ -698,7 +709,7 @@ function MainMenuGui:update(t, dt)
 	end
 end
 
--- Lines: 580 to 589
+-- Lines 580-589
 function MainMenuGui:next_page()
 	if not self._panel:visible() then
 		return false, "arrow"
@@ -711,7 +722,7 @@ function MainMenuGui:next_page()
 	MainMenuGui.super.next_page(self)
 end
 
--- Lines: 591 to 600
+-- Lines 591-600
 function MainMenuGui:previous_page()
 	if not self._panel:visible() then
 		return false, "arrow"
@@ -724,7 +735,7 @@ function MainMenuGui:previous_page()
 	MainMenuGui.super.previous_page(self)
 end
 
--- Lines: 603 to 616
+-- Lines 603-616
 function MainMenuGui:confirm_pressed()
 	if not self._panel:visible() then
 		return false
@@ -742,12 +753,12 @@ function MainMenuGui:confirm_pressed()
 	end
 end
 
--- Lines: 621 to 622
+-- Lines 621-623
 function MainMenuGui:input_focus()
 	return self._enabled and self._panel:visible() and self._input_focus
 end
 
--- Lines: 628 to 650
+-- Lines 628-650
 function MainMenuGui:_set_variables_on_gui_hierarchy(gui, variables)
 	if not alive(gui) then
 		return
@@ -772,11 +783,11 @@ function MainMenuGui:_set_variables_on_gui_hierarchy(gui, variables)
 	end
 end
 
--- Lines: 698 to 796
+-- Lines 698-796
 function MainMenuGui:_update_box_status(box, selected)
 	local box_object = nil
 
-	-- Lines: 701 to 710
+	-- Lines 701-710
 	local function _update_box_object(object)
 		local variables = {
 			color = selected and object.selected_color or object.unselected_color or nil,
@@ -877,7 +888,7 @@ function MainMenuGui:_update_box_status(box, selected)
 	end
 end
 
--- Lines: 801 to 810
+-- Lines 801-810
 function MainMenuGui:back_pressed(button)
 	if not self._panel:visible() then
 		return false, "arrow"
@@ -890,7 +901,7 @@ function MainMenuGui:back_pressed(button)
 	self:set_state("default", "play")
 end
 
--- Lines: 812 to 826
+-- Lines 812-826
 function MainMenuGui:special_btn_pressed(button)
 	if not self._panel:visible() then
 		return false, "arrow"
@@ -909,7 +920,7 @@ function MainMenuGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 829 to 864
+-- Lines 829-864
 function MainMenuGui:_update_legends(name)
 	local box = self._boxes_by_name[name]
 
@@ -919,16 +930,24 @@ function MainMenuGui:_update_legends(name)
 
 		if not managers.menu:is_pc_controller() then
 			local legends = {
-				[#legends + 1] = {string_id = "menu_legend_rotate"},
-				[#legends + 1] = {string_id = "menu_legend_preview_move"}
+				[#legends + 1] = {
+					string_id = "menu_legend_rotate"
+				},
+				[#legends + 1] = {
+					string_id = "menu_legend_preview_move"
+				}
 			}
 
 			if show_select then
-				legends[#legends + 1] = {string_id = "menu_legend_select"}
+				legends[#legends + 1] = {
+					string_id = "menu_legend_select"
+				}
 			end
 
 			if show_back then
-				legends[#legends + 1] = {string_id = "menu_legend_back"}
+				legends[#legends + 1] = {
+					string_id = "menu_legend_back"
+				}
 			end
 
 			local legend_text = ""
@@ -946,7 +965,7 @@ function MainMenuGui:_update_legends(name)
 	end
 end
 
--- Lines: 866 to 891
+-- Lines 866-891
 function MainMenuGui:set_selected_box(selected)
 	if self._data.selected_box ~= selected then
 		local new_box = self._boxes_by_name[selected]
@@ -976,7 +995,7 @@ function MainMenuGui:set_selected_box(selected)
 	end
 end
 
--- Lines: 893 to 919
+-- Lines 893-919
 function MainMenuGui:_move(dir, box)
 	if not self._panel:visible() then
 		return false, "arrow"
@@ -1008,7 +1027,7 @@ function MainMenuGui:_move(dir, box)
 	end
 end
 
--- Lines: 923 to 985
+-- Lines 923-986
 function MainMenuGui:mouse_moved(o, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -1079,7 +1098,7 @@ function MainMenuGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 988 to 1018
+-- Lines 988-1018
 function MainMenuGui:mouse_pressed(button, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -1113,7 +1132,7 @@ function MainMenuGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 1022 to 1027
+-- Lines 1022-1027
 function MainMenuGui:set_video(video)
 	if alive(self._video) then
 		self._video:parent():remove(self._video)
@@ -1122,7 +1141,7 @@ function MainMenuGui:set_video(video)
 	self._video = video
 end
 
--- Lines: 1029 to 1056
+-- Lines 1029-1056
 function MainMenuGui:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -1153,7 +1172,7 @@ function MainMenuGui:set_enabled(enabled)
 	end
 end
 
--- Lines: 1058 to 1070
+-- Lines 1058-1070
 function MainMenuGui:unretrieve_box_textures(box)
 	local object = nil
 
@@ -1161,7 +1180,7 @@ function MainMenuGui:unretrieve_box_textures(box)
 		object = box[object_name]
 
 		if object and object.requested_textures then
-			for i = 1, #object.requested_textures, 1 do
+			for i = 1, #object.requested_textures do
 				if object.requested_indices[i] then
 					managers.menu_component:unretrieve_texture(object.requested_textures[i], object.requested_indices[i])
 				end
@@ -1170,7 +1189,7 @@ function MainMenuGui:unretrieve_box_textures(box)
 	end
 end
 
--- Lines: 1072 to 1090
+-- Lines 1072-1090
 function MainMenuGui:close()
 	for _, box in ipairs(self._boxes) do
 		self:unretrieve_box_textures(box)
@@ -1193,9 +1212,8 @@ function MainMenuGui:close()
 	self._boxes_by_layer = {}
 end
 
--- Lines: 1092 to 1095
+-- Lines 1092-1095
 function MainMenuGui:reload()
 	self:close()
 	self:init(self._ws, self._fullscreen_ws, self._node)
 end
-

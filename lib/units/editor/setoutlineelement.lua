@@ -1,7 +1,9 @@
 SetOutlineElement = SetOutlineElement or class(MissionElement)
-SetOutlineElement.LINK_ELEMENTS = {"elements"}
+SetOutlineElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 16
+-- Lines 4-16
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
 
@@ -16,7 +18,7 @@ function SetOutlineElement:init(unit)
 	table.insert(self._save_values, "clear_previous")
 end
 
--- Lines: 20 to 36
+-- Lines 20-36
 function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -41,16 +43,16 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "clear_previous", "Clears any previously set outlines (fixes issue with escorts)")
 end
 
--- Lines: 40 to 42
+-- Lines 40-42
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 44 to 45
+-- Lines 44-45
 function SetOutlineElement:update_editing()
 end
 
--- Lines: 48 to 56
+-- Lines 48-56
 function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -68,7 +70,7 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 58 to 70
+-- Lines 58-70
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -86,8 +88,7 @@ function SetOutlineElement:add_element()
 	end
 end
 
--- Lines: 73 to 75
+-- Lines 73-75
 function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
-

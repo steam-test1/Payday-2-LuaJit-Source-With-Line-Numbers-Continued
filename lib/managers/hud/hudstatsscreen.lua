@@ -1,7 +1,7 @@
 HUDStatsScreen = HUDStatsScreen or class()
 local padding = 10
 
--- Lines: 6 to 220
+-- Lines 5-220
 function HUDStatsScreen:init()
 	self._full_hud_panel = managers.hud:script(managers.hud.STATS_SCREEN_FULLSCREEN).panel
 
@@ -151,7 +151,9 @@ function HUDStatsScreen:init()
 		font = tweak_data.hud_stats.objectives_font
 	})
 
-	mission_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {MONEY = managers.experience:cash_string(0)})))
+	mission_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {
+		MONEY = managers.experience:cash_string(0)
+	})))
 	mission_bags_payout:set_position(mission_bags_title:left(), mission_bags_panel:bottom())
 	managers.hud:make_fine_text(mission_bags_payout)
 	mission_bags_payout:set_w(loot_wrapper_panel:w())
@@ -200,7 +202,9 @@ function HUDStatsScreen:init()
 		font = tweak_data.hud_stats.objectives_font
 	})
 
-	bonus_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {MONEY = managers.experience:cash_string(0)})))
+	bonus_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {
+		MONEY = managers.experience:cash_string(0)
+	})))
 	bonus_bags_payout:set_position(bonus_bags_title:left(), bonus_bags_panel:bottom())
 	managers.hud:make_fine_text(bonus_bags_payout)
 	bonus_bags_payout:set_w(loot_wrapper_panel:w())
@@ -403,7 +407,7 @@ function HUDStatsScreen:init()
 	})
 
 	day_wrapper_panel:set_position(days_title:x() + pad, days_title:bottom())
-	day_wrapper_panel:set_w((right_panel:w() - x) - day_wrapper_panel:x())
+	day_wrapper_panel:set_w(right_panel:w() - x - day_wrapper_panel:x())
 
 	local day_title = day_wrapper_panel:text({
 		vertical = "top",
@@ -446,7 +450,9 @@ function HUDStatsScreen:init()
 		local difficulty_color = tweak_data.screen_colors.risk
 
 		if managers.crime_spree:is_active() then
-			difficulty_string = managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(managers.crime_spree:server_spree_level(), "")})
+			difficulty_string = managers.localization:text("menu_cs_level", {
+				level = managers.experience:cash_string(managers.crime_spree:server_spree_level(), "")
+			})
 			difficulty_color = tweak_data.screen_colors.crime_spree_risk
 		end
 
@@ -482,7 +488,9 @@ function HUDStatsScreen:init()
 		font = tweak_data.hud_stats.objectives_font
 	})
 
-	day_payout:set_text(utf8.to_upper(managers.localization:text("hud_day_payout", {MONEY = managers.experience:cash_string(0)})))
+	day_payout:set_text(utf8.to_upper(managers.localization:text("hud_day_payout", {
+		MONEY = managers.experience:cash_string(0)
+	})))
 	managers.hud:make_fine_text(day_payout)
 	day_payout:set_w(day_wrapper_panel:w())
 	day_payout:set_y(math.round(paygrade_title:bottom()))
@@ -568,7 +576,7 @@ function HUDStatsScreen:init()
 		w = left_panel:w()
 	})
 
-	ext_inventory_panel:set_w((right_panel:w() - x) - ext_inventory_panel:x())
+	ext_inventory_panel:set_w(right_panel:w() - x - ext_inventory_panel:x())
 
 	local _, by = managers.gui_data:corner_safe_to_full(0, managers.gui_data:corner_scaled_size().height)
 
@@ -591,7 +599,7 @@ function HUDStatsScreen:init()
 		w = left_panel:w()
 	})
 
-	mutators_panel:set_w((right_panel:w() - x) - mutators_panel:x())
+	mutators_panel:set_w(right_panel:w() - x - mutators_panel:x())
 	mutators_panel:set_bottom(ext_inventory_panel:top())
 	mutators_panel:set_valign({
 		by / managers.gui_data:full_scaled_size().h,
@@ -607,7 +615,7 @@ function HUDStatsScreen:init()
 		},
 		x = x_margine,
 		y = y_margine,
-		h = math.round((bottom_panel:h() - y) - y_margine),
+		h = math.round(bottom_panel:h() - y - y_margine),
 		w = bottom_panel:w() - x_margine * 2
 	})
 
@@ -616,7 +624,7 @@ function HUDStatsScreen:init()
 	self:_rec_round_object(bottom_panel)
 end
 
--- Lines: 222 to 230
+-- Lines 222-230
 function HUDStatsScreen:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -629,7 +637,7 @@ function HUDStatsScreen:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 233 to 262
+-- Lines 232-262
 function HUDStatsScreen:show()
 	local safe = managers.hud.STATS_SCREEN_SAFERECT
 	local full = managers.hud.STATS_SCREEN_FULLSCREEN
@@ -659,11 +667,13 @@ function HUDStatsScreen:show()
 	if managers.groupai:state() and not self._whisper_listener then
 		self._whisper_listener = "HUDStatsScreen_whisper_mode"
 
-		managers.groupai:state():add_listener(self._whisper_listener, {"whisper_mode"}, callback(self, self, "on_whisper_mode_changed"))
+		managers.groupai:state():add_listener(self._whisper_listener, {
+			"whisper_mode"
+		}, callback(self, self, "on_whisper_mode_changed"))
 	end
 end
 
--- Lines: 264 to 288
+-- Lines 264-288
 function HUDStatsScreen:hide()
 	self._showing_stats_screen = false
 	local safe = managers.hud.STATS_SCREEN_SAFERECT
@@ -694,7 +704,7 @@ function HUDStatsScreen:hide()
 	end
 end
 
--- Lines: 291 to 309
+-- Lines 290-309
 function HUDStatsScreen:_create_stats_screen_objectives(panel)
 	panel:clear()
 
@@ -747,7 +757,7 @@ function HUDStatsScreen:_create_stats_screen_objectives(panel)
 	end
 end
 
--- Lines: 312 to 369
+-- Lines 311-369
 function HUDStatsScreen:_create_stats_screen_profile(profile_wrapper_panel)
 	profile_wrapper_panel:stop()
 	profile_wrapper_panel:clear()
@@ -776,7 +786,7 @@ function HUDStatsScreen:_create_stats_screen_profile(profile_wrapper_panel)
 
 	local gain_xp = managers.experience:get_xp_dissected(true, 0, true)
 	local at_max_level = managers.experience:current_level() == managers.experience:level_cap()
-	local can_lvl_up = not at_max_level and next_level_data.points - next_level_data.current_points <= gain_xp
+	local can_lvl_up = not at_max_level and gain_xp >= next_level_data.points - next_level_data.current_points
 	local progress = (next_level_data.current_points or 1) / (next_level_data.points or 1)
 	local gain_progress = (gain_xp or 1) / (next_level_data.points or 1)
 	local exp_gain_ring = profile_wrapper_panel:bitmap({
@@ -832,7 +842,9 @@ function HUDStatsScreen:_create_stats_screen_profile(profile_wrapper_panel)
 		next_level_in:set_left(math.round(exp_ring:right() + 4))
 		next_level_in:set_center_y(math.round(exp_ring:center_y()) - 20)
 
-		local text = managers.localization:to_upper_text("hud_potential_xp", {XP = managers.money:add_decimal_marks_to_string(tostring(gain_xp))})
+		local text = managers.localization:to_upper_text("hud_potential_xp", {
+			XP = managers.money:add_decimal_marks_to_string(tostring(gain_xp))
+		})
 		local gain_xp_text = profile_wrapper_panel:text({
 			name = "gain_xp_text",
 			text = text,
@@ -880,7 +892,7 @@ function HUDStatsScreen:_create_stats_screen_profile(profile_wrapper_panel)
 	managers.hud:make_fine_text(track_text)
 end
 
--- Lines: 371 to 384
+-- Lines 371-384
 function HUDStatsScreen:on_whisper_mode_changed()
 	local is_level_ghostable = managers.job:is_level_ghostable(managers.job:current_level_id()) and managers.groupai and managers.groupai:state():whisper_mode()
 	local right_panel = self._full_hud_panel:child("right_panel")
@@ -894,7 +906,7 @@ function HUDStatsScreen:on_whisper_mode_changed()
 	end
 end
 
--- Lines: 386 to 397
+-- Lines 386-397
 function HUDStatsScreen:on_ext_inventory_changed()
 	local right_panel = self._full_hud_panel:child("right_panel")
 
@@ -911,24 +923,26 @@ function HUDStatsScreen:on_ext_inventory_changed()
 	self:_create_stats_ext_inventory(ext_inventory_panel)
 end
 
--- Lines: 399 to 435
+-- Lines 399-435
 function HUDStatsScreen:_create_stats_ext_inventory(ext_inventory_panel)
 	ext_inventory_panel:clear()
 
 	local eq_h = 64 / (PlayerBase.USE_GRENADES and 3 or 2)
 	local eq_w = 48
-	local equipment = {{
-		icon = "equipment_body_bag",
-		text = managers.localization:to_upper_text("hud_body_bags"),
-		amount = managers.player:get_body_bags_amount()
-	}}
+	local equipment = {
+		{
+			icon = "equipment_body_bag",
+			text = managers.localization:to_upper_text("hud_body_bags"),
+			amount = managers.player:get_body_bags_amount()
+		}
+	}
 
 	ext_inventory_panel:set_h(#equipment * eq_h + tweak_data.hud_stats.loot_title_size + 4)
 
 	local y = nil
 
 	for i, eq in ipairs(equipment) do
-		y = (ext_inventory_panel:h() - eq_h * i) - 2 * (i - 1)
+		y = ext_inventory_panel:h() - eq_h * i - 2 * (i - 1)
 		local panel = ext_inventory_panel:panel({
 			layer = 1,
 			name = "panel" .. i,
@@ -1006,7 +1020,7 @@ function HUDStatsScreen:_create_stats_ext_inventory(ext_inventory_panel)
 	})
 
 	managers.hud:make_fine_text(title)
-	title:set_y((y - title:h()) - 4)
+	title:set_y(y - title:h() - 4)
 	title:set_right(math.round(ext_inventory_panel:w()))
 
 	local _, by = managers.gui_data:corner_safe_to_full(0, managers.gui_data:corner_scaled_size().height)
@@ -1018,7 +1032,7 @@ function HUDStatsScreen:_create_stats_ext_inventory(ext_inventory_panel)
 	})
 end
 
--- Lines: 437 to 441
+-- Lines 437-441
 function HUDStatsScreen:_set_amount_string(text, amount)
 	local zero = amount < 10 and "0" or ""
 
@@ -1026,7 +1040,7 @@ function HUDStatsScreen:_set_amount_string(text, amount)
 	text:set_range_color(0, string.len(amount == 0 and text:text() or zero), Color.white:with_alpha(0.5))
 end
 
--- Lines: 445 to 501
+-- Lines 444-501
 function HUDStatsScreen:_create_mutators_list(mutators_panel)
 	mutators_panel:clear()
 
@@ -1087,7 +1101,7 @@ function HUDStatsScreen:_create_mutators_list(mutators_panel)
 	end
 end
 
--- Lines: 504 to 528
+-- Lines 504-528
 function HUDStatsScreen:_animate_text_pulse(text, exp_gain_ring, exp_ring)
 	local t = 0
 	local c = text:color()
@@ -1110,7 +1124,7 @@ function HUDStatsScreen:_animate_text_pulse(text, exp_gain_ring, exp_ring)
 	end
 end
 
--- Lines: 531 to 622
+-- Lines 530-622
 function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 	local mandatory_bags_data = managers.loot:get_mandatory_bags_data()
 	local secured_amount = managers.loot:get_secured_mandatory_bags_amount()
@@ -1164,7 +1178,7 @@ function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 			local x = 0
 			local y = 0
 
-			for i = 1, mandatory_bags_data.amount, 1 do
+			for i = 1, mandatory_bags_data.amount do
 				local alpha = i <= secured_amount and 1 or 0.25
 
 				mission_bags_panel:bitmap({
@@ -1215,7 +1229,7 @@ function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 		bag_text:set_left(bag:right())
 		bag_text:set_center_y(math.round(bag:center_y()))
 	else
-		for i = 1, bonus_amount, 1 do
+		for i = 1, bonus_amount do
 			local x = (i - 1) * 32
 
 			bonus_bags_panel:bitmap({
@@ -1231,13 +1245,17 @@ function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 	local mission_bags_payout = loot_wrapper_panel:child("mission_bags_payout")
 
 	mission_bags_payout:set_visible(mission_vis)
-	mission_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {MONEY = managers.experience:cash_string(mandatory_cash)})))
+	mission_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {
+		MONEY = managers.experience:cash_string(mandatory_cash)
+	})))
 
 	local bonus_cash = managers.money:get_secured_bonus_bags_money()
 	local bonus_bags_payout = loot_wrapper_panel:child("bonus_bags_payout")
 
 	bonus_bags_payout:set_visible(bonus_vis)
-	bonus_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {MONEY = managers.experience:cash_string(bonus_cash)})))
+	bonus_bags_payout:set_text(utf8.to_upper(managers.localization:text("hud_bonus_bags_payout", {
+		MONEY = managers.experience:cash_string(bonus_cash)
+	})))
 
 	local instant_cash = managers.loot:get_real_total_small_loot_value()
 	local instant_vis = instant_cash > 0
@@ -1251,7 +1269,7 @@ function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 	instant_cash_text:set_alpha(instant_vis and 1 or 0.5)
 end
 
--- Lines: 625 to 732
+-- Lines 624-732
 function HUDStatsScreen:_update_stats_screen_day(right_panel)
 	local job_data = managers.job:current_job_data()
 	local stage_data = managers.job:current_stage_data()
@@ -1284,7 +1302,9 @@ function HUDStatsScreen:_update_stats_screen_day(right_panel)
 		local payout = managers.money:get_potential_payout_from_current_stage()
 		local day_payout = day_wrapper_panel:child("day_payout")
 
-		day_payout:set_text(utf8.to_upper(managers.localization:text("hud_day_payout", {MONEY = managers.experience:cash_string(payout)})))
+		day_payout:set_text(utf8.to_upper(managers.localization:text("hud_day_payout", {
+			MONEY = managers.experience:cash_string(payout)
+		})))
 
 		local level_data = managers.job:current_level_data()
 
@@ -1322,12 +1342,14 @@ function HUDStatsScreen:_update_stats_screen_day(right_panel)
 					self._box_gui = nil
 				end
 
-				self._box_gui = BoxGuiObject:new(day_wrapper_panel, {sides = {
-					0,
-					0,
-					0,
-					2
-				}})
+				self._box_gui = BoxGuiObject:new(day_wrapper_panel, {
+					sides = {
+						0,
+						0,
+						0,
+						2
+					}
+				})
 			end
 
 			local _, _, _, h = day_description:text_rect()
@@ -1362,7 +1384,7 @@ function HUDStatsScreen:_update_stats_screen_day(right_panel)
 	end
 end
 
--- Lines: 736 to 740
+-- Lines 736-740
 function HUDStatsScreen:loot_value_updated()
 	local right_panel = self._full_hud_panel:child("right_panel")
 	local left_panel = self._full_hud_panel:child("left_panel")
@@ -1370,14 +1392,14 @@ function HUDStatsScreen:loot_value_updated()
 	self:_update_stats_screen_loot(left_panel:child("loot_wrapper_panel"))
 end
 
--- Lines: 745 to 786
+-- Lines 744-786
 function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
 	local TOTAL_T = 0.33 * start_x / -left_panel:w()
 	local t = 0
 
-	while t < TOTAL_T do
+	while TOTAL_T > t do
 		local dt = coroutine.yield() * 1 / TimerManager:game():multiplier()
 		t = t + dt
 		local a = math.lerp(start_a, 1, t / TOTAL_T)
@@ -1410,14 +1432,14 @@ function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, 
 	self:_rec_round_object(bottom_panel)
 end
 
--- Lines: 789 to 826
+-- Lines 788-826
 function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
 	local TOTAL_T = 0.33 * (1 - start_x / -left_panel:w())
 	local t = 0
 
-	while t < TOTAL_T do
+	while TOTAL_T > t do
 		local dt = coroutine.yield() * 1 / TimerManager:game():multiplier()
 		t = t + dt
 		local a = math.lerp(start_a, 0, t / TOTAL_T)
@@ -1446,4 +1468,3 @@ function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, 
 	bottom_panel:set_alpha(0)
 	bottom_panel:set_y(bottom_panel:parent():h())
 end
-

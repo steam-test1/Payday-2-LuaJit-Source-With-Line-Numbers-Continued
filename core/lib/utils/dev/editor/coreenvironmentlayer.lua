@@ -9,9 +9,11 @@ core:import("CoreEnvironmentFeeder")
 EnvironmentLayer = EnvironmentLayer or class(CoreStaticLayer.StaticLayer)
 EnvironmentLayer.ENABLE_PERMANENT = false
 
--- Lines: 13 to 50
+-- Lines 13-50
 function EnvironmentLayer:init(owner)
-	EnvironmentLayer.super.init(self, owner, "environment", {"environment"}, "environment_layer")
+	EnvironmentLayer.super.init(self, owner, "environment", {
+		"environment"
+	}, "environment_layer")
 
 	self._environment_values = {}
 
@@ -103,12 +105,12 @@ function EnvironmentLayer:init(owner)
 	end)
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function EnvironmentLayer:get_layer_name()
 	return "Environment"
 end
 
--- Lines: 55 to 80
+-- Lines 55-81
 function EnvironmentLayer:load(world_holder, offset)
 	local environment = world_holder:create_world("world", self._save_name, offset)
 
@@ -136,7 +138,7 @@ function EnvironmentLayer:load(world_holder, offset)
 	return environment
 end
 
--- Lines: 83 to 100
+-- Lines 83-100
 function EnvironmentLayer:_load_wind(wind)
 	self._wind_rot = Rotation(wind.angle, 0, wind.tilt)
 	self._wind_dir_var = wind.angle_var
@@ -154,7 +156,7 @@ function EnvironmentLayer:_load_wind(wind)
 	self:set_wind()
 end
 
--- Lines: 102 to 110
+-- Lines 102-110
 function EnvironmentLayer:_load_effects(effects)
 	for _, effect in ipairs(effects) do
 		local unit = self:do_spawn_unit(self._effect_unit, effect.position, effect.rotation)
@@ -167,7 +169,7 @@ function EnvironmentLayer:_load_effects(effects)
 	end
 end
 
--- Lines: 112 to 121
+-- Lines 112-121
 function EnvironmentLayer:_load_environment_areas()
 	for _, area in ipairs(managers.environment_area:areas()) do
 		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
@@ -180,7 +182,7 @@ function EnvironmentLayer:_load_environment_areas()
 	end
 end
 
--- Lines: 123 to 133
+-- Lines 123-133
 function EnvironmentLayer:_load_dome_occ_shapes(dome_occ_shapes)
 	if not dome_occ_shapes then
 		return
@@ -194,7 +196,7 @@ function EnvironmentLayer:_load_dome_occ_shapes(dome_occ_shapes)
 	end
 end
 
--- Lines: 136 to 195
+-- Lines 136-196
 function EnvironmentLayer:old_load(environment)
 	if not environment._values then
 		return false
@@ -256,7 +258,7 @@ function EnvironmentLayer:old_load(environment)
 	return environment
 end
 
--- Lines: 198 to 267
+-- Lines 198-267
 function EnvironmentLayer:save()
 	local effects = {}
 	local environment_areas = {}
@@ -335,7 +337,7 @@ function EnvironmentLayer:save()
 	end
 end
 
--- Lines: 269 to 273
+-- Lines 269-273
 function EnvironmentLayer:_save_to_world_package(category, name)
 	if name and name ~= "none" then
 		managers.editor:add_to_world_package({
@@ -345,7 +347,7 @@ function EnvironmentLayer:_save_to_world_package(category, name)
 	end
 end
 
--- Lines: 275 to 319
+-- Lines 275-319
 function EnvironmentLayer:update(t, dt)
 	EnvironmentLayer.super.update(self, t, dt)
 
@@ -399,7 +401,7 @@ function EnvironmentLayer:update(t, dt)
 	end
 end
 
--- Lines: 321 to 330
+-- Lines 321-330
 function EnvironmentLayer:draw_wind(pos)
 	local rot = Rotation(self._wind_rot:yaw(), self._wind_rot:pitch(), self._wind_rot:roll() * -1)
 
@@ -410,7 +412,7 @@ function EnvironmentLayer:draw_wind(pos)
 	self._wind_pen:arc(pos, pos + rot:x() * 100, -self._wind_tilt_var, rot:y(), 32)
 end
 
--- Lines: 333 to 345
+-- Lines 332-345
 function EnvironmentLayer:_build_environment_combobox_and_list()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
 		name = "Default",
@@ -427,7 +429,7 @@ function EnvironmentLayer:_build_environment_combobox_and_list()
 	managers.viewport:editor_add_environment_created_callback(callback(self, self, "on_environment_list_changed"))
 end
 
--- Lines: 347 to 356
+-- Lines 347-356
 function EnvironmentLayer:on_environment_list_changed()
 	local list = managers.database:list_entries_of_type("environment")
 	local selected_value = self._environments_combobox.ctrlr:get_value()
@@ -439,7 +441,7 @@ function EnvironmentLayer:on_environment_list_changed()
 	end
 end
 
--- Lines: 358 to 640
+-- Lines 358-641
 function EnvironmentLayer:build_panel(notebook)
 	EnvironmentLayer.super.build_panel(self, notebook)
 	cat_print("editor", "EnvironmentLayer:build_panel")
@@ -727,7 +729,7 @@ function EnvironmentLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines: 643 to 653
+-- Lines 643-653
 function EnvironmentLayer:populate_unit_effects()
 	self._unit_effects:clear()
 	self._unit_effects:append("none")
@@ -742,7 +744,7 @@ function EnvironmentLayer:populate_unit_effects()
 	self:update_unit_settings()
 end
 
--- Lines: 655 to 671
+-- Lines 655-671
 function EnvironmentLayer:create_cube_map(type)
 	local cubes = {}
 
@@ -772,14 +774,14 @@ function EnvironmentLayer:create_cube_map(type)
 	managers.editor:create_cube_map(params)
 end
 
--- Lines: 673 to 677
+-- Lines 673-677
 function EnvironmentLayer:change_environment(ctrlr)
 	self._environment_values.environment = ctrlr:get_value()
 
 	managers.viewport:set_default_environment(self._environment_values.environment, nil, nil)
 end
 
--- Lines: 680 to 685
+-- Lines 679-685
 function EnvironmentLayer:change_color_grading(ctrlr)
 	self._environment_values.color_grading = ctrlr:get_value()
 
@@ -787,21 +789,21 @@ function EnvironmentLayer:change_color_grading(ctrlr)
 	managers.environment_controller:refresh_render_settings()
 end
 
--- Lines: 687 to 690
+-- Lines 687-690
 function EnvironmentLayer:set_environment_area()
 	local area = self._selected_unit:unit_data().environment_area
 
 	area:set_environment(self._environment_area_ctrls.environment_combobox.value)
 end
 
--- Lines: 692 to 695
+-- Lines 692-695
 function EnvironmentLayer:set_permanent()
 	local area = self._selected_unit:unit_data().environment_area
 
 	area:set_permanent(self._environment_area_ctrls.permanent_cb:get_value())
 end
 
--- Lines: 697 to 703
+-- Lines 697-703
 function EnvironmentLayer:set_transition_time()
 	local area = self._selected_unit:unit_data().environment_area
 	local value = tonumber(self._environment_area_ctrls.transition_time:get_value())
@@ -811,7 +813,7 @@ function EnvironmentLayer:set_transition_time()
 	area:set_transition_time(value)
 end
 
--- Lines: 705 to 711
+-- Lines 705-711
 function EnvironmentLayer:set_prio()
 	local area = self._selected_unit:unit_data().environment_area
 	local value = tonumber(self._environment_area_ctrls.prio:get_value())
@@ -821,7 +823,7 @@ function EnvironmentLayer:set_prio()
 	area:set_prio(value)
 end
 
--- Lines: 713 to 727
+-- Lines 713-727
 function EnvironmentLayer:set_env_filter(name)
 	local area = self._selected_unit:unit_data().environment_area
 	local filter_list = {}
@@ -838,7 +840,7 @@ function EnvironmentLayer:set_env_filter(name)
 	area:set_filter_list(filter_list)
 end
 
--- Lines: 729 to 754
+-- Lines 729-754
 function EnvironmentLayer:_update_filter_list(area)
 	local filter_list = area:filter_list()
 	local filter_map = managers.viewport:get_predefined_environment_filter_map()
@@ -865,7 +867,7 @@ function EnvironmentLayer:_update_filter_list(area)
 	area:set_filter_list(new_list)
 end
 
--- Lines: 756 to 771
+-- Lines 756-771
 function EnvironmentLayer:generate_dome_occ()
 	local shape = nil
 
@@ -888,12 +890,12 @@ function EnvironmentLayer:generate_dome_occ()
 	managers.editor:init_create_dome_occlusion(shape, res)
 end
 
--- Lines: 773 to 775
+-- Lines 773-775
 function EnvironmentLayer:set_dome_occ_resolution()
 	self._environment_values.dome_occ_resolution = tonumber(self._dome_occ_resolution_ctrlr:get_value())
 end
 
--- Lines: 777 to 781
+-- Lines 777-781
 function EnvironmentLayer:update_wind_direction(wind_direction)
 	local dir = wind_direction:get_value()
 	self._wind_rot = Rotation(dir, 0, self._wind_rot:roll())
@@ -901,7 +903,7 @@ function EnvironmentLayer:update_wind_direction(wind_direction)
 	self:set_wind()
 end
 
--- Lines: 783 to 788
+-- Lines 783-788
 function EnvironmentLayer:set_wind()
 	Wind:set_direction(self._wind_rot:yaw(), self._wind_dir_var, 5)
 	Wind:set_tilt(self._wind_rot:roll(), self._wind_tilt_var, 5)
@@ -909,14 +911,14 @@ function EnvironmentLayer:set_wind()
 	Wind:set_enabled(true)
 end
 
--- Lines: 790 to 793
+-- Lines 790-793
 function EnvironmentLayer:update_wind_variation(wind_variation)
 	self._wind_dir_var = wind_variation:get_value()
 
 	self:set_wind()
 end
 
--- Lines: 795 to 799
+-- Lines 795-799
 function EnvironmentLayer:update_tilt_angle(tilt_angle)
 	local dir = tilt_angle:get_value()
 	self._wind_rot = Rotation(self._wind_rot:yaw(), 0, dir)
@@ -924,19 +926,19 @@ function EnvironmentLayer:update_tilt_angle(tilt_angle)
 	self:set_wind()
 end
 
--- Lines: 801 to 804
+-- Lines 801-804
 function EnvironmentLayer:update_tilt_variation(tilt_variation)
 	self._wind_tilt_var = tilt_variation:get_value()
 
 	self:set_wind()
 end
 
--- Lines: 806 to 808
+-- Lines 806-808
 function EnvironmentLayer:on_wind_speed_help()
 	EWS:launch_url("http://en.wikipedia.org/wiki/Beaufort_scale")
 end
 
--- Lines: 810 to 814
+-- Lines 810-814
 function EnvironmentLayer:update_wind_speed(wind_speed)
 	self._wind_speed = wind_speed:get_value() / 10
 
@@ -944,7 +946,7 @@ function EnvironmentLayer:update_wind_speed(wind_speed)
 	self:set_wind()
 end
 
--- Lines: 816 to 820
+-- Lines 816-820
 function EnvironmentLayer:update_wind_speed_variation(wind_speed_variation)
 	self._wind_speed_variation = wind_speed_variation:get_value() / 10
 
@@ -952,7 +954,7 @@ function EnvironmentLayer:update_wind_speed_variation(wind_speed_variation)
 	self:set_wind()
 end
 
--- Lines: 822 to 827
+-- Lines 822-827
 function EnvironmentLayer:update_wind_speed_labels()
 	self._speed_text:set_value(string.format("%.3g", self._wind_speed) .. " m/s")
 	self._speed_beaufort:set_value("Beaufort: " .. self:wind_beaufort(self._wind_speed))
@@ -960,24 +962,24 @@ function EnvironmentLayer:update_wind_speed_labels()
 	self._speed_variation_text:set_value(string.format("%.3g", self._wind_speed_variation) .. " m/s")
 end
 
--- Lines: 829 to 830
+-- Lines 829-831
 function EnvironmentLayer:sky_rotation_modifier()
 	return self._environment_values.sky_rot, true
 end
 
--- Lines: 833 to 836
+-- Lines 833-836
 function EnvironmentLayer:change_sky_rotation(ctrlr)
 	self._environment_values.sky_rot = ctrlr:get_value()
 
 	managers.viewport:update_global_environment_value(CoreEnvironmentFeeder.SkyRotationFeeder.DATA_PATH_KEY)
 end
 
--- Lines: 838 to 841
+-- Lines 838-842
 function EnvironmentLayer:unit_ok(unit)
 	return unit:name() == Idstring(self._effect_unit) or unit:name() == Idstring(self._cubemap_unit) or unit:name() == Idstring(self._environment_area_unit) or unit:name() == Idstring(self._dome_occ_shape_unit)
 end
 
--- Lines: 844 to 868
+-- Lines 844-869
 function EnvironmentLayer:do_spawn_unit(...)
 	local unit = EnvironmentLayer.super.do_spawn_unit(self, ...)
 
@@ -1010,7 +1012,7 @@ function EnvironmentLayer:do_spawn_unit(...)
 	return unit
 end
 
--- Lines: 871 to 889
+-- Lines 871-889
 function EnvironmentLayer:clone_edited_values(unit, source)
 	EnvironmentLayer.super.clone_edited_values(self, unit, source)
 
@@ -1034,7 +1036,7 @@ function EnvironmentLayer:clone_edited_values(unit, source)
 	end
 end
 
--- Lines: 892 to 916
+-- Lines 892-916
 function EnvironmentLayer:delete_unit(unit)
 	self:kill_effect(unit)
 
@@ -1063,7 +1065,7 @@ function EnvironmentLayer:delete_unit(unit)
 	EnvironmentLayer.super.delete_unit(self, unit)
 end
 
--- Lines: 918 to 924
+-- Lines 918-924
 function EnvironmentLayer:play_effect(unit, effect)
 	unit:unit_data().effect = effect
 
@@ -1078,7 +1080,7 @@ function EnvironmentLayer:play_effect(unit, effect)
 	end
 end
 
--- Lines: 926 to 933
+-- Lines 926-933
 function EnvironmentLayer:kill_effect(unit)
 	if unit:name() == Idstring(self._effect_unit) and unit:unit_data().current_effect then
 		World:effect_manager():kill(unit:unit_data().current_effect)
@@ -1087,13 +1089,13 @@ function EnvironmentLayer:kill_effect(unit)
 	end
 end
 
--- Lines: 935 to 938
+-- Lines 935-938
 function EnvironmentLayer:change_unit_effect()
 	self:kill_effect(self._selected_unit)
 	self:play_effect(self._selected_unit, self._unit_effects:get_value())
 end
 
--- Lines: 940 to 950
+-- Lines 940-950
 function EnvironmentLayer:update_unit_settings()
 	EnvironmentLayer.super.update_unit_settings(self)
 	self._unit_effects:set_enabled(false)
@@ -1106,7 +1108,7 @@ function EnvironmentLayer:update_unit_settings()
 	self:set_environment_area_parameters()
 end
 
--- Lines: 952 to 1004
+-- Lines 952-1004
 function EnvironmentLayer:set_environment_area_parameters()
 	CoreEws.set_combobox_and_list_enabled(self._environment_area_ctrls.environment_combobox, false)
 	self._environment_area_ctrls.permanent_cb:set_enabled(false)
@@ -1162,7 +1164,7 @@ function EnvironmentLayer:set_environment_area_parameters()
 	self._ews_panel:refresh()
 end
 
--- Lines: 1007 to 1015
+-- Lines 1007-1016
 function EnvironmentLayer:wind_description(speed)
 	local description = nil
 
@@ -1177,7 +1179,7 @@ function EnvironmentLayer:wind_description(speed)
 	return description
 end
 
--- Lines: 1018 to 1026
+-- Lines 1018-1027
 function EnvironmentLayer:wind_beaufort(speed)
 	local beaufort = nil
 
@@ -1192,7 +1194,7 @@ function EnvironmentLayer:wind_beaufort(speed)
 	return beaufort
 end
 
--- Lines: 1029 to 1038
+-- Lines 1029-1038
 function EnvironmentLayer:reset_environment_values()
 	self._environment_values.environment = managers.viewport:game_default_environment()
 	self._environment_values.sky_rot = 0
@@ -1203,7 +1205,7 @@ function EnvironmentLayer:reset_environment_values()
 	self._environment_values.dome_occ_resolution = 256
 end
 
--- Lines: 1040 to 1083
+-- Lines 1040-1083
 function EnvironmentLayer:clear()
 	managers.viewport:editor_reset_environment()
 	self:reset_environment_values()
@@ -1241,13 +1243,12 @@ function EnvironmentLayer:clear()
 	self:set_environment_area_parameters()
 end
 
--- Lines: 1085 to 1087
+-- Lines 1085-1087
 function EnvironmentLayer:add_triggers()
 	EnvironmentLayer.super.add_triggers(self)
 end
 
--- Lines: 1089 to 1091
+-- Lines 1089-1091
 function EnvironmentLayer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end
-

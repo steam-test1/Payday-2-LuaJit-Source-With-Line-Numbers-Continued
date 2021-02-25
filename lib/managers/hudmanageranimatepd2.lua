@@ -1,6 +1,6 @@
 core:import("CoreEvent")
 
--- Lines: 145 to 153
+-- Lines 145-153
 function HUDManager:_animate_test_circle()
 	local t = 2
 
@@ -12,7 +12,7 @@ function HUDManager:_animate_test_circle()
 	print("done")
 end
 
--- Lines: 155 to 167
+-- Lines 155-167
 function HUDManager:_animate_ammo_test(panel)
 	local t = 3
 
@@ -29,4 +29,3 @@ function HUDManager:_animate_ammo_test(panel)
 
 	panel:set_alpha(0)
 end
-

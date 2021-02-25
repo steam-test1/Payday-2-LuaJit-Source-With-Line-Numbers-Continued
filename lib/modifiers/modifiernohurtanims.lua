@@ -11,7 +11,7 @@ ModifierNoHurtAnims.IgnoredHurtTypes = {
 	"light_hurt"
 }
 
--- Lines: 16 to 20
+-- Lines 16-21
 function ModifierNoHurtAnims:modify_value(id, value)
 	if id == "CopMovement:HurtType" and table.contains(ModifierNoHurtAnims.IgnoredHurtTypes, value) then
 		return nil, true
@@ -19,4 +19,3 @@ function ModifierNoHurtAnims:modify_value(id, value)
 
 	return value
 end
-

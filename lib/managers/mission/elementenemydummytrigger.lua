@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementEnemyDummyTrigger = ElementEnemyDummyTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementEnemyDummyTrigger:init(...)
 	ElementEnemyDummyTrigger.super.init(self, ...)
 end
 
--- Lines: 9 to 14
+-- Lines 9-14
 function ElementEnemyDummyTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -16,7 +16,7 @@ function ElementEnemyDummyTrigger:on_script_activated()
 	end
 end
 
--- Lines: 16 to 22
+-- Lines 16-22
 function ElementEnemyDummyTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -25,7 +25,6 @@ function ElementEnemyDummyTrigger:on_executed(instigator)
 	ElementEnemyDummyTrigger.super.on_executed(self, instigator)
 end
 
--- Lines: 24 to 25
+-- Lines 24-25
 function ElementEnemyDummyTrigger:load()
 end
-

@@ -7,12 +7,12 @@ MODEL = CoreDependencyNode.MODEL
 MATERIAL_CONFIG = CoreDependencyNode.MATERIAL_CONFIG
 ObjectDependencyNode = ObjectDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 14 to 16
+-- Lines 14-16
 function ObjectDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, OBJECT, "object", name, get_dn_cb, database)
 end
 
--- Lines: 18 to 38
+-- Lines 18-38
 function ObjectDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 
@@ -48,4 +48,3 @@ function ObjectDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

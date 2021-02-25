@@ -2,7 +2,7 @@ core:import("CoreEditorUtils")
 
 EditUnitDialog = EditUnitDialog or class(CoreEditorEwsDialog)
 
--- Lines: 5 to 18
+-- Lines 5-18
 function EditUnitDialog:init(toolbar, btn)
 	CoreEditorEwsDialog.init(self, nil, "Edit Unit", "", Vector3(300, 150, 0), Vector3(550, 450, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX")
 	self:create_panel("VERTICAL")
@@ -17,7 +17,7 @@ function EditUnitDialog:init(toolbar, btn)
 	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
 end
 
--- Lines: 20 to 36
+-- Lines 20-37
 function EditUnitDialog:add_page(data)
 	local name = data.name
 	local start_page = data.start_page
@@ -43,7 +43,7 @@ function EditUnitDialog:add_page(data)
 	return panel, sizer
 end
 
--- Lines: 39 to 47
+-- Lines 39-47
 function EditUnitDialog:set_enabled(unit, units)
 	for _, page in ipairs(self._pages) do
 		if page.class then
@@ -54,7 +54,7 @@ function EditUnitDialog:set_enabled(unit, units)
 	end
 end
 
--- Lines: 49 to 54
+-- Lines 49-54
 function EditUnitDialog:update(t, dt)
 	local current_page = self:_current_page()
 
@@ -63,7 +63,7 @@ function EditUnitDialog:update(t, dt)
 	end
 end
 
--- Lines: 56 to 66
+-- Lines 56-66
 function EditUnitDialog:_current_page()
 	if not self._dialog:visible() then
 		return nil
@@ -76,7 +76,7 @@ function EditUnitDialog:_current_page()
 	end
 end
 
--- Lines: 72 to 79
+-- Lines 72-79
 function EditUnitDialog:dialog_closed(data, event)
 	for _, page in ipairs(self._pages) do
 		if page.class then
@@ -86,25 +86,25 @@ function EditUnitDialog:dialog_closed(data, event)
 
 	event:skip()
 end
+
 EditUnitBase = EditUnitBase or class()
 
--- Lines: 85 to 89
+-- Lines 85-89
 function EditUnitBase:init()
 	self._debug = false
 	self._brush = Draw:brush()
 	self._pen = Draw:pen()
 end
 
--- Lines: 92 to 93
+-- Lines 91-93
 function EditUnitBase:update()
 end
 
--- Lines: 96 to 97
+-- Lines 95-97
 function EditUnitBase:dialog_closed()
 end
 
--- Lines: 99 to 101
+-- Lines 99-101
 function EditUnitBase:update_debug(ctrlr)
 	self._debug = ctrlr:get_value()
 end
-

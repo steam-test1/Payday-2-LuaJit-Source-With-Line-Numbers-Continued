@@ -1,6 +1,6 @@
 SelectWorkView = SelectWorkView or class(CoreEditorEwsDialog)
 
--- Lines: 5 to 99
+-- Lines 5-99
 function SelectWorkView:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Workviews", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -92,7 +92,7 @@ function SelectWorkView:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 101 to 118
+-- Lines 101-118
 function SelectWorkView:build_cbs()
 	self._continents_cbs = {}
 	local continents = managers.editor:continents()
@@ -120,7 +120,7 @@ function SelectWorkView:build_cbs()
 	end
 end
 
--- Lines: 120 to 125
+-- Lines 120-125
 function SelectWorkView:key_delete(ctrlr, event)
 	event:skip()
 
@@ -129,7 +129,7 @@ function SelectWorkView:key_delete(ctrlr, event)
 	end
 end
 
--- Lines: 127 to 132
+-- Lines 127-132
 function SelectWorkView:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -138,12 +138,12 @@ function SelectWorkView:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines: 134 to 136
+-- Lines 134-136
 function SelectWorkView:on_continent_cb()
 	self:fill_views_list()
 end
 
--- Lines: 138 to 143
+-- Lines 138-143
 function SelectWorkView:on_all_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(true)
@@ -152,7 +152,7 @@ function SelectWorkView:on_all_continents()
 	self:fill_views_list()
 end
 
--- Lines: 145 to 150
+-- Lines 145-150
 function SelectWorkView:on_none_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(false)
@@ -161,7 +161,7 @@ function SelectWorkView:on_none_continents()
 	self:fill_views_list()
 end
 
--- Lines: 152 to 157
+-- Lines 152-157
 function SelectWorkView:on_invert_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(not cb:get_value())
@@ -170,7 +170,7 @@ function SelectWorkView:on_invert_continents()
 	self:fill_views_list()
 end
 
--- Lines: 159 to 171
+-- Lines 159-171
 function SelectWorkView:on_delete()
 	local index = self._list:selected_item()
 
@@ -186,7 +186,7 @@ function SelectWorkView:on_delete()
 	self:fill_views_list()
 end
 
--- Lines: 173 to 182
+-- Lines 173-182
 function SelectWorkView:on_set_info()
 	local index = self._list:selected_item()
 
@@ -199,7 +199,7 @@ function SelectWorkView:on_set_info()
 	view.text = self._info_ctrlr:get_value()
 end
 
--- Lines: 184 to 189
+-- Lines 184-189
 function SelectWorkView:on_mark_view()
 	local index = self._list:selected_item()
 	local j = self._list:get_item_data_ref(index)
@@ -208,12 +208,12 @@ function SelectWorkView:on_mark_view()
 	self._info_ctrlr:change_value(view.text or "")
 end
 
--- Lines: 191 to 193
+-- Lines 191-193
 function SelectWorkView:on_select_view()
 	self:on_goto()
 end
 
--- Lines: 195 to 203
+-- Lines 195-203
 function SelectWorkView:on_goto()
 	local index = self._list:selected_item()
 
@@ -226,22 +226,22 @@ function SelectWorkView:on_goto()
 	managers.editor:goto_workview(self._views[j].view)
 end
 
--- Lines: 205 to 207
+-- Lines 205-207
 function SelectWorkView:on_add()
 	managers.editor:on_add_workview()
 end
 
--- Lines: 209 to 211
+-- Lines 209-211
 function SelectWorkView:update_filter()
 	self:fill_views_list()
 end
 
--- Lines: 214 to 216
+-- Lines 214-216
 function SelectWorkView:workview_added()
 	self:fill_views_list()
 end
 
--- Lines: 219 to 247
+-- Lines 219-247
 function SelectWorkView:fill_views_list()
 	self._list:delete_all_items()
 
@@ -280,22 +280,22 @@ function SelectWorkView:fill_views_list()
 	self._list:autosize_column(0)
 end
 
--- Lines: 249 to 251
+-- Lines 249-251
 function SelectWorkView:reset()
 	self:fill_views_list()
 end
 
--- Lines: 253 to 255
+-- Lines 253-255
 function SelectWorkView:freeze()
 	self._list:freeze()
 end
 
--- Lines: 257 to 259
+-- Lines 257-259
 function SelectWorkView:thaw()
 	self._list:thaw()
 end
 
--- Lines: 261 to 270
+-- Lines 261-270
 function SelectWorkView:recreate()
 	for name, cb in pairs(self._continents_cbs) do
 		self._continents_sizer:detach(cb)
@@ -307,4 +307,3 @@ function SelectWorkView:recreate()
 	self:fill_views_list()
 	self._panel:layout()
 end
-

@@ -2,19 +2,19 @@ core:import("CoreMissionScriptElement")
 
 ElementJobValue = ElementJobValue or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementJobValue:init(...)
 	ElementJobValue.super.init(self, ...)
 end
 
--- Lines: 10 to 14
+-- Lines 9-14
 function ElementJobValue:client_on_executed(...)
 	if self._values.save then
 		self:on_executed(...)
 	end
 end
 
--- Lines: 16 to 33
+-- Lines 16-33
 function ElementJobValue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -32,25 +32,31 @@ function ElementJobValue:on_executed(instigator)
 
 	ElementJobValue.super.on_executed(self, instigator)
 end
+
 ElementJobValueFilter = ElementJobValueFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 39 to 41
+-- Lines 39-41
 function ElementJobValueFilter:init(...)
 	ElementJobValueFilter.super.init(self, ...)
 end
 
--- Lines: 44 to 45
+-- Lines 43-45
 function ElementJobValueFilter:client_on_executed(...)
 end
 
--- Lines: 47 to 64
+-- Lines 47-64
 function ElementJobValueFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
 	local value = nil
-	value = self._values.save and managers.mission:get_saved_job_value(self._values.key) or managers.mission:get_job_value(self._values.key)
+
+	if self._values.save then
+		value = managers.mission:get_saved_job_value(self._values.key)
+	else
+		value = managers.mission:get_job_value(self._values.key)
+	end
 
 	if not self:_check_value(value) then
 		return
@@ -59,7 +65,7 @@ function ElementJobValueFilter:on_executed(instigator)
 	ElementJobValueFilter.super.on_executed(self, instigator)
 end
 
--- Lines: 66 to 100
+-- Lines 66-100
 function ElementJobValueFilter:_check_value(value)
 	if self._values.check_type == "not_has_key" then
 		return not value
@@ -93,25 +99,31 @@ function ElementJobValueFilter:_check_value(value)
 		return self._values.value < value
 	end
 end
+
 ElementApplyJobValue = ElementApplyJobValue or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 106 to 108
+-- Lines 106-108
 function ElementApplyJobValue:init(...)
 	ElementApplyJobValue.super.init(self, ...)
 end
 
--- Lines: 113 to 114
+-- Lines 110-114
 function ElementApplyJobValue:client_on_executed(...)
 end
 
--- Lines: 116 to 136
+-- Lines 116-136
 function ElementApplyJobValue:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
 	local value = nil
-	value = self._values.save and managers.mission:get_saved_job_value(self._values.key) or managers.mission:get_job_value(self._values.key)
+
+	if self._values.save then
+		value = managers.mission:get_saved_job_value(self._values.key)
+	else
+		value = managers.mission:get_job_value(self._values.key)
+	end
 
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -123,4 +135,3 @@ function ElementApplyJobValue:on_executed(instigator)
 
 	ElementApplyJobValue.super.on_executed(self, instigator)
 end
-

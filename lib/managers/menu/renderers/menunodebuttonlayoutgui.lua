@@ -1,19 +1,19 @@
 MenuNodeButtonLayoutGui = MenuNodeButtonLayoutGui or class(MenuNodeGui)
 
--- Lines: 3 to 7
+-- Lines 3-7
 function MenuNodeButtonLayoutGui:init(node, layer, parameters)
 	MenuNodeButtonLayoutGui.super.init(self, node, layer, parameters)
 	self:_setup(node)
 end
 
--- Lines: 9 to 13
+-- Lines 9-13
 function MenuNodeButtonLayoutGui:_setup_panels(node)
 	MenuNodeButtonLayoutGui.super._setup_panels(self, node)
 
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 end
 
--- Lines: 15 to 89
+-- Lines 15-89
 function MenuNodeButtonLayoutGui:_setup()
 	self._coords = tweak_data:get_controller_help_coords() or {}
 	self._categories = {}
@@ -56,7 +56,7 @@ function MenuNodeButtonLayoutGui:_setup()
 		color = Color.black
 	})
 
-	-- Lines: 80 to 83
+	-- Lines 80-83
 	local function func(o)
 		local start_blur = 0
 
@@ -82,7 +82,7 @@ function MenuNodeButtonLayoutGui:_setup()
 	self:_layout()
 end
 
--- Lines: 91 to 130
+-- Lines 91-130
 function MenuNodeButtonLayoutGui:_layout()
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 	local res = RenderSettings.resolution
@@ -127,38 +127,37 @@ function MenuNodeButtonLayoutGui:_layout()
 	end
 end
 
--- Lines: 132 to 134
+-- Lines 132-134
 function MenuNodeButtonLayoutGui:_create_menu_item(row_item)
 	MenuNodeButtonLayoutGui.super._create_menu_item(self, row_item)
 end
 
--- Lines: 136 to 138
+-- Lines 136-138
 function MenuNodeButtonLayoutGui:_setup_item_panel_parent(safe_rect)
 	MenuNodeButtonLayoutGui.super._setup_item_panel_parent(self, safe_rect)
 end
 
--- Lines: 140 to 142
+-- Lines 140-142
 function MenuNodeButtonLayoutGui:_setup_item_panel(safe_rect, res)
 	MenuNodeButtonLayoutGui.super._setup_item_panel(self, safe_rect, res)
 end
 
--- Lines: 144 to 147
+-- Lines 144-147
 function MenuNodeButtonLayoutGui:set_current_category(category)
 	self._current_category = category
 
 	self:_layout()
 end
 
--- Lines: 149 to 153
+-- Lines 149-153
 function MenuNodeButtonLayoutGui:resolution_changed()
 	MenuNodeButtonLayoutGui.super.resolution_changed(self)
 	self:_layout()
 end
 
--- Lines: 155 to 160
+-- Lines 155-160
 function MenuNodeButtonLayoutGui:close(...)
 	self._bg:parent():remove(self._bg)
 	self._blur:parent():remove(self._blur)
 	MenuNodeButtonLayoutGui.super.close(self, ...)
 end
-

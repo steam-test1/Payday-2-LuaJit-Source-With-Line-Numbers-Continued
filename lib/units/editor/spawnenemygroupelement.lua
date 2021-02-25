@@ -1,10 +1,14 @@
 SpawnEnemyGroupUnitElement = SpawnEnemyGroupUnitElement or class(MissionElement)
 SpawnEnemyGroupUnitElement.SAVE_UNIT_POSITION = false
 SpawnEnemyGroupUnitElement.SAVE_UNIT_ROTATION = false
-SpawnEnemyGroupUnitElement.RANDOMS = {"amount"}
-SpawnEnemyGroupUnitElement.LINK_ELEMENTS = {"elements"}
+SpawnEnemyGroupUnitElement.RANDOMS = {
+	"amount"
+}
+SpawnEnemyGroupUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 8 to 26
+-- Lines 8-26
 function SpawnEnemyGroupUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -27,7 +31,7 @@ function SpawnEnemyGroupUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
--- Lines: 29 to 49
+-- Lines 29-49
 function SpawnEnemyGroupUnitElement:post_init(...)
 	SpawnEnemyGroupUnitElement.super.post_init(self, ...)
 
@@ -53,16 +57,16 @@ function SpawnEnemyGroupUnitElement:post_init(...)
 	end
 end
 
--- Lines: 51 to 53
+-- Lines 51-53
 function SpawnEnemyGroupUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 55 to 56
+-- Lines 55-56
 function SpawnEnemyGroupUnitElement:update_editing()
 end
 
--- Lines: 58 to 66
+-- Lines 58-66
 function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -80,7 +84,7 @@ function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_un
 	end
 end
 
--- Lines: 68 to 78
+-- Lines 68-78
 function SpawnEnemyGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -98,27 +102,31 @@ function SpawnEnemyGroupUnitElement:add_element()
 	end
 end
 
--- Lines: 80 to 83
+-- Lines 80-83
 function SpawnEnemyGroupUnitElement:get_links_to_unit(...)
 	SpawnEnemyGroupUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
 end
 
--- Lines: 86 to 88
+-- Lines 86-88
 function SpawnEnemyGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 91 to 145
+-- Lines 91-145
 function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"ai_spawn_enemy"}
+	local names = {
+		"ai_spawn_enemy"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
-	self:_build_value_combobox(panel, panel_sizer, "spawn_type", table.list_add({"ordered"}, {
+	self:_build_value_combobox(panel, panel_sizer, "spawn_type", table.list_add({
+		"ordered"
+	}, {
 		"random",
 		"group",
 		"group_guaranteed"
@@ -132,7 +140,9 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 		floats = 0,
 		min = 0
 	}, "Used to specify how often this spawn can be used. 0 means no interval")
-	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({"default"}, tweak_data.levels:get_team_names_indexed()), "Select the group's team (overrides character team).")
+	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
+		"default"
+	}, tweak_data.levels:get_team_names_indexed()), "Select the group's team (overrides character team).")
 
 	local opt_sizer = panel_sizer
 	local filter_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -174,7 +184,7 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	opt_sizer:add(filter_sizer, 1, 0, "EXPAND")
 end
 
--- Lines: 150 to 158
+-- Lines 149-158
 function SpawnEnemyGroupUnitElement:set_element_data(data)
 	SpecialObjectiveUnitElement.super.set_element_data(self, data)
 
@@ -184,7 +194,7 @@ function SpawnEnemyGroupUnitElement:set_element_data(data)
 	end
 end
 
--- Lines: 162 to 178
+-- Lines 160-178
 function SpawnEnemyGroupUnitElement:on_preferred_spawn_groups_checkbox_changed(params)
 	local value = params.ctrlr:get_value()
 
@@ -204,4 +214,3 @@ function SpawnEnemyGroupUnitElement:on_preferred_spawn_groups_checkbox_changed(p
 		end
 	end
 end
-

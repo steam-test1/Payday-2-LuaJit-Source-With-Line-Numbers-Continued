@@ -4,21 +4,21 @@ core:import("CoreEvent")
 
 UnitCamera = UnitCamera or CoreClass.class()
 
--- Lines: 7 to 10
+-- Lines 7-10
 function UnitCamera:init(unit)
 	self._unit = unit
 	self._active_count = 0
 end
 
--- Lines: 12 to 13
+-- Lines 12-13
 function UnitCamera:destroy()
 end
 
--- Lines: 15 to 16
+-- Lines 15-16
 function UnitCamera:create_layers()
 end
 
--- Lines: 18 to 24
+-- Lines 18-24
 function UnitCamera:activate()
 	local is_deactivated = self._active_count == 0
 	self._active_count = self._active_count + 1
@@ -28,7 +28,7 @@ function UnitCamera:activate()
 	end
 end
 
--- Lines: 26 to 33
+-- Lines 26-34
 function UnitCamera:deactivate()
 	assert(self._active_count > 0)
 
@@ -42,16 +42,15 @@ function UnitCamera:deactivate()
 	return should_deactivate
 end
 
--- Lines: 36 to 37
+-- Lines 36-37
 function UnitCamera:on_activate(active)
 end
 
--- Lines: 39 to 40
+-- Lines 39-41
 function UnitCamera:is_active()
 	return self._active_count > 0
 end
 
--- Lines: 49 to 50
+-- Lines 48-50
 function UnitCamera:apply_camera(camera_manager)
 end
-

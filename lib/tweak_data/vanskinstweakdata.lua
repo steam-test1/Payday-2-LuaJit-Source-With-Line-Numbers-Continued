@@ -1,6 +1,6 @@
 VanSkinsTweakData = VanSkinsTweakData or class()
 
--- Lines: 5 to 63
+-- Lines 4-63
 function VanSkinsTweakData:init(tweak_data)
 	self.skins = {}
 	self.default_skin_id = "default"
@@ -45,4 +45,3 @@ function VanSkinsTweakData:init(tweak_data)
 		sequence_name = "mat_chill_halloween"
 	}
 end
-

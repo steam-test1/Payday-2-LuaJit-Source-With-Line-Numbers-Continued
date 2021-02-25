@@ -1,12 +1,12 @@
 PlayerTased = PlayerTased or class(PlayerStandard)
 PlayerTased._update_movement = PlayerBleedOut._update_movement
 
--- Lines: 7 to 9
+-- Lines 7-9
 function PlayerTased:init(unit)
 	PlayerTased.super.init(self, unit)
 end
 
--- Lines: 11 to 72
+-- Lines 11-72
 function PlayerTased:enter(state_data, enter_data)
 	PlayerTased.super.enter(self, state_data, enter_data)
 	self:_start_action_tased(managers.player:player_timer():time(), state_data.non_lethal_electrocution)
@@ -71,7 +71,7 @@ function PlayerTased:enter(state_data, enter_data)
 
 		managers.player:add_coroutine("escape_tase", PlayerAction.EscapeTase, managers.player, Application:time() + target_time)
 
-		-- Lines: 67 to 68
+		-- Lines 68-68
 		local function clbk()
 			self:give_shock_to_taser_no_damage()
 		end
@@ -79,10 +79,12 @@ function PlayerTased:enter(state_data, enter_data)
 		managers.player:register_message(Message.EscapeTase, "escape_tase", clbk)
 	end
 
-	CopDamage.register_listener("on_criminal_tased", {"on_criminal_tased"}, callback(self, self, "_on_tased_event"))
+	CopDamage.register_listener("on_criminal_tased", {
+		"on_criminal_tased"
+	}, callback(self, self, "_on_tased_event"))
 end
 
--- Lines: 76 to 86
+-- Lines 76-86
 function PlayerTased:_enter(enter_data)
 	self._unit:base():set_slot(self._unit, 2)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
@@ -98,7 +100,7 @@ function PlayerTased:_enter(enter_data)
 	end
 end
 
--- Lines: 90 to 122
+-- Lines 90-122
 function PlayerTased:exit(state_data, enter_data)
 	PlayerTased.super.exit(self, state_data, enter_data)
 
@@ -135,17 +137,17 @@ function PlayerTased:exit(state_data, enter_data)
 	CopDamage.unregister_listener("on_criminal_tased")
 end
 
--- Lines: 126 to 127
+-- Lines 126-128
 function PlayerTased:interaction_blocked()
 	return true
 end
 
--- Lines: 132 to 134
+-- Lines 132-134
 function PlayerTased:update(t, dt)
 	PlayerTased.super.update(self, t, dt)
 end
 
--- Lines: 143 to 190
+-- Lines 140-190
 function PlayerTased:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -186,7 +188,7 @@ function PlayerTased:_update_check_actions(t, dt)
 	local new_action = nil
 end
 
--- Lines: 194 to 227
+-- Lines 194-227
 function PlayerTased:_check_action_shock(t, input)
 	if self._next_shock < t then
 		self._num_shocks = self._num_shocks + 1
@@ -226,7 +228,7 @@ function PlayerTased:_check_action_shock(t, input)
 	end
 end
 
--- Lines: 231 to 371
+-- Lines 231-372
 function PlayerTased:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
@@ -372,7 +374,7 @@ function PlayerTased:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines: 378 to 388
+-- Lines 378-388
 function PlayerTased:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) and not alive(self._counter_taser_unit) then
 		if _G.IS_VR then
@@ -385,7 +387,7 @@ function PlayerTased:_check_action_interact(t, input)
 	end
 end
 
--- Lines: 392 to 417
+-- Lines 392-417
 function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, false, true, false)
 	local interact_type, queue_name = nil
@@ -413,7 +415,7 @@ function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	end
 end
 
--- Lines: 421 to 428
+-- Lines 421-428
 function PlayerTased:_start_action_tased(t, non_lethal)
 	self:_interupt_action_running(t)
 	self:_stance_entered()
@@ -423,14 +425,14 @@ function PlayerTased:_start_action_tased(t, non_lethal)
 	managers.hint:show_hint(non_lethal and "hint_been_electrocuted" or "hint_been_tasered")
 end
 
--- Lines: 432 to 435
+-- Lines 432-435
 function PlayerTased:_start_action_counter_tase(t, prime_target)
 	self._counter_taser_unit = prime_target.unit
 
 	self._unit:camera():play_redirect(self:get_animation("tased_counter"))
 end
 
--- Lines: 439 to 466
+-- Lines 439-466
 function PlayerTased:_register_revive_SO()
 	if self._SO_id or not managers.navigation:is_data_ready() then
 		return
@@ -460,14 +462,14 @@ function PlayerTased:_register_revive_SO()
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
 end
 
--- Lines: 470 to 473
+-- Lines 470-473
 function PlayerTased:clbk_exit_to_fatal()
 	self._fatal_delayed_clbk = nil
 
 	managers.player:set_player_state("incapacitated")
 end
 
--- Lines: 477 to 485
+-- Lines 477-485
 function PlayerTased:clbk_exit_to_std()
 	self._recover_delayed_clbk = nil
 
@@ -480,7 +482,7 @@ function PlayerTased:clbk_exit_to_std()
 	end
 end
 
--- Lines: 489 to 502
+-- Lines 489-502
 function PlayerTased:on_tase_ended()
 	self._tase_ended = true
 
@@ -501,14 +503,14 @@ function PlayerTased:on_tase_ended()
 	self._taser_unit = nil
 end
 
--- Lines: 506 to 510
+-- Lines 506-510
 function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	if self._unit == tased_unit then
 		self._taser_unit = taser_unit
 	end
 end
 
--- Lines: 514 to 521
+-- Lines 514-521
 function PlayerTased:give_shock_to_taser()
 	if not alive(self._counter_taser_unit) then
 		return
@@ -519,7 +521,7 @@ function PlayerTased:give_shock_to_taser()
 	self:_give_shock_to_taser(self._counter_taser_unit)
 end
 
--- Lines: 523 to 537
+-- Lines 523-537
 function PlayerTased:_give_shock_to_taser(taser_unit)
 	return
 
@@ -538,7 +540,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	taser_unit:character_damage():damage_melee(action_data)
 end
 
--- Lines: 541 to 559
+-- Lines 541-559
 function PlayerTased:give_shock_to_taser_no_damage()
 	if not alive(self._taser_unit) then
 		return
@@ -560,7 +562,7 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	self._unit:sound():play("tase_counter_attack")
 end
 
--- Lines: 562 to 582
+-- Lines 562-582
 function PlayerTased:_on_malfunction_to_taser_event()
 	if not alive(self._taser_unit) then
 		return
@@ -586,4 +588,3 @@ function PlayerTased:_on_malfunction_to_taser_event()
 
 	self._taser_unit:character_damage():damage_melee(action_data)
 end
-

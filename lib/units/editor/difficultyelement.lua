@@ -1,6 +1,6 @@
 DifficultyUnitElement = DifficultyUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function DifficultyUnitElement:init(unit)
 	DifficultyUnitElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function DifficultyUnitElement:init(unit)
 	table.insert(self._save_values, "difficulty")
 end
 
--- Lines: 11 to 42
+-- Lines 11-42
 function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -46,4 +46,3 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

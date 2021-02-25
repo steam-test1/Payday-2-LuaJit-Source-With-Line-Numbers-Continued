@@ -2,12 +2,12 @@ require("lib/states/GameState")
 
 IngameStandardState = IngameStandardState or class(IngamePlayerBaseState)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function IngameStandardState:init(game_state_machine)
 	IngameStandardState.super.init(self, "ingame_standard", game_state_machine)
 end
 
--- Lines: 9 to 30
+-- Lines 9-30
 function IngameStandardState:at_enter()
 	local players = managers.player:players()
 
@@ -32,7 +32,7 @@ function IngameStandardState:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 43 to 54
+-- Lines 32-54
 function IngameStandardState:at_exit()
 	managers.environment_controller:set_dof_distance()
 	managers.hud:hide(PlayerBase.PLAYER_HUD)
@@ -46,18 +46,17 @@ function IngameStandardState:at_exit()
 	end
 end
 
--- Lines: 56 to 58
+-- Lines 56-58
 function IngameStandardState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 60 to 62
+-- Lines 60-62
 function IngameStandardState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 64 to 66
+-- Lines 64-66
 function IngameStandardState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
-

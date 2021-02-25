@@ -3,7 +3,7 @@ ModifierShieldReflect._type = "ModifierShieldReflect"
 ModifierShieldReflect.name_id = "none"
 ModifierShieldReflect.desc_id = "menu_cs_modifier_shield_reflect"
 
--- Lines: 7 to 14
+-- Lines 7-15
 function ModifierShieldReflect:modify_value(id, value, hit_unit, unit)
 	if id == "FragGrenade:ShouldReflect" then
 		local is_shield = hit_unit:in_slot(8)
@@ -15,4 +15,3 @@ function ModifierShieldReflect:modify_value(id, value, hit_unit, unit)
 
 	return value
 end
-

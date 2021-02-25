@@ -1,6 +1,6 @@
 AreaMinPoliceForceUnitElement = AreaMinPoliceForceUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function AreaMinPoliceForceUnitElement:init(unit)
 	AreaMinPoliceForceUnitElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function AreaMinPoliceForceUnitElement:init(unit)
 	table.insert(self._save_values, "amount")
 end
 
--- Lines: 11 to 34
+-- Lines 11-34
 function AreaMinPoliceForceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -37,4 +37,3 @@ function AreaMinPoliceForceUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = amount_points
 	})
 end
-

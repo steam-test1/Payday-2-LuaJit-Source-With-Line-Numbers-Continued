@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementAlertTrigger = ElementAlertTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 16
+-- Lines 5-16
 function ElementAlertTrigger:init(...)
 	ElementAlertTrigger.super.init(self, ...)
 
@@ -16,16 +16,16 @@ function ElementAlertTrigger:init(...)
 	end
 end
 
--- Lines: 19 to 20
+-- Lines 18-20
 function ElementAlertTrigger:client_on_executed(...)
 end
 
--- Lines: 22 to 24
+-- Lines 22-24
 function ElementAlertTrigger:on_executed(instigator)
 	ElementAlertTrigger.super.on_executed(self, instigator)
 end
 
--- Lines: 26 to 32
+-- Lines 26-32
 function ElementAlertTrigger:do_synced_execute(instigator)
 	if Network:is_server() then
 		self:on_executed(instigator)
@@ -34,7 +34,7 @@ function ElementAlertTrigger:do_synced_execute(instigator)
 	end
 end
 
--- Lines: 34 to 40
+-- Lines 34-40
 function ElementAlertTrigger:operation_add()
 	if self._added then
 		return
@@ -45,7 +45,7 @@ function ElementAlertTrigger:operation_add()
 	managers.groupai:state():add_alert_listener(self._id, callback(self, self, "on_alert"), self._filter, self._alert_types_map, self._values.position)
 end
 
--- Lines: 42 to 48
+-- Lines 42-48
 function ElementAlertTrigger:operation_remove()
 	if not self._added then
 		return
@@ -56,10 +56,9 @@ function ElementAlertTrigger:operation_remove()
 	managers.groupai:state():remove_alert_listener(self._id)
 end
 
--- Lines: 50 to 53
+-- Lines 50-53
 function ElementAlertTrigger:on_alert(alert_data)
 	local instigator = alert_data[5]
 
 	self:do_synced_execute(instigator)
 end
-

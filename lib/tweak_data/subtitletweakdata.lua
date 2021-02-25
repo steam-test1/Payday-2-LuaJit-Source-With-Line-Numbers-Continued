@@ -1,6 +1,6 @@
 SubtitleTweakData = SubtitleTweakData or class()
 
--- Lines: 6 to 16
+-- Lines 4-16
 function SubtitleTweakData:init(tweak_data)
 	self.additional_time = 1
 	self.jobs = {}
@@ -8,7 +8,7 @@ function SubtitleTweakData:init(tweak_data)
 	self:_init_moon()
 end
 
--- Lines: 20 to 164
+-- Lines 19-164
 function SubtitleTweakData:_init_moon()
 	self.jobs.moon = {
 		vld_moon_02_03 = 4.12,
@@ -153,4 +153,3 @@ function SubtitleTweakData:_init_moon()
 		vld_moon_32_03 = 4.02
 	}
 end
-

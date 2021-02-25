@@ -4,7 +4,7 @@ core:import("CoreGameStatePrepareLoadingGame")
 
 PrepareStartSimulation = PrepareStartSimulation or class(CoreGameStatePrepareLoadingGame.PrepareLoadingGame)
 
--- Lines: 7 to 19
+-- Lines 7-19
 function PrepareStartSimulation:init()
 	PrepareStartSimulation.super.init(self)
 
@@ -19,10 +19,9 @@ function PrepareStartSimulation:init()
 	self._level_handler:set_player_slots(self.game_state:player_slots())
 end
 
--- Lines: 21 to 25
+-- Lines 21-25
 function PrepareStartSimulation:transition()
 	if self.game_state._session_manager:all_systems_are_stable_for_loading() then
 		return CoreGameStateInEditorSimulation.Simulation, self._level_handler
 	end
 end
-

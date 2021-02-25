@@ -2,16 +2,16 @@ core:import("CoreMissionScriptElement")
 
 ElementPickup = ElementPickup or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementPickup:init(...)
 	ElementPickup.super.init(self, ...)
 end
 
--- Lines: 10 to 11
+-- Lines 9-11
 function ElementPickup:client_on_executed(...)
 end
 
--- Lines: 13 to 33
+-- Lines 13-33
 function ElementPickup:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -34,4 +34,3 @@ function ElementPickup:on_executed(instigator)
 
 	ElementPickup.super.on_executed(self, instigator)
 end
-

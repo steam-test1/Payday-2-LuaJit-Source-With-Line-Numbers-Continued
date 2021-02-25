@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateSwipe = PlayerHandStateSwipe or class(PlayerHandState)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerHandStateSwipe:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeapon.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 16
+-- Lines 10-16
 function PlayerHandStateSwipe:at_enter(prev_state, params)
 	PlayerHandStateSwipe.super.at_enter(self, prev_state)
 
@@ -18,23 +18,25 @@ function PlayerHandStateSwipe:at_enter(prev_state, params)
 	self:hsm():enter_controller_state("tablet")
 end
 
--- Lines: 18 to 22
+-- Lines 18-22
 function PlayerHandStateSwipe:at_exit(next_state)
 	managers.hud:on_touch(false, Vector3(0, 0, 0))
 	PlayerHandStateSwipe.super.at_exit(self, next_state)
 
 	self._flick_callback = nil
 end
+
 local ids_tablet = Idstring("tablet")
 
--- Lines: 25 to 27
+-- Lines 25-27
 function PlayerHandStateSwipe:post_event(event)
 	self._hand_unit:base():other_hand_base():post_event(event, ids_tablet)
 end
+
 local tmp_vec = Vector3(0, 0, 0)
 local tmp_vec2 = Vector3(0, 0, 0)
 
--- Lines: 34 to 104
+-- Lines 32-104
 function PlayerHandStateSwipe:update(t, dt)
 	local hand_base = self._hand_unit:base()
 	local hand_rotation = hand_base:rotation()
@@ -104,9 +106,10 @@ function PlayerHandStateSwipe:update(t, dt)
 		end
 	end
 end
+
 local dir_vec = Vector3(0, 0, 0)
 
--- Lines: 107 to 128
+-- Lines 107-128
 function PlayerHandStateSwipe:_check_flick(t, pos, x)
 	local length = math.abs(self._current_swipe - self._start_swipe)
 	local tablet = tweak_data.vr.tablet
@@ -128,10 +131,9 @@ function PlayerHandStateSwipe:_check_flick(t, pos, x)
 	end
 end
 
--- Lines: 130 to 133
+-- Lines 130-133
 function PlayerHandStateSwipe:item_transition(next_state, params)
 	params = self._params
 
 	self:default_transition(next_state, params)
 end
-

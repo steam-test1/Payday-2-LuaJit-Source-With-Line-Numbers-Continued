@@ -4,7 +4,7 @@ core:import("CoreSessionStateInSessionEnd")
 
 InSessionStarted = InSessionStarted or class()
 
--- Lines: 7 to 11
+-- Lines 7-11
 function InSessionStarted:init(session)
 	assert(session)
 
@@ -13,11 +13,11 @@ function InSessionStarted:init(session)
 	self._session._session_handler:session_started()
 end
 
--- Lines: 13 to 14
+-- Lines 13-14
 function InSessionStarted:destroy()
 end
 
--- Lines: 16 to 25
+-- Lines 16-25
 function InSessionStarted:transition()
 	if self.session_state._quit_session_requester:is_requested() then
 		return CoreSessionStateQuitSession.Quit, self._session
@@ -28,8 +28,7 @@ function InSessionStarted:transition()
 	end
 end
 
--- Lines: 27 to 29
+-- Lines 27-29
 function InSessionStarted:end_session()
 	self._end_session = true
 end
-

@@ -3,7 +3,7 @@ core:import("CoreMenuStatePrepareLoadingFrontEnd")
 
 InGame = InGame or class()
 
--- Lines: 6 to 13
+-- Lines 6-13
 function InGame:transition()
 	local game_state = self.menu_state._game_state
 
@@ -11,4 +11,3 @@ function InGame:transition()
 		return CoreMenuStatePrepareLoadingFrontEnd.PrepareLoadingFrontEnd
 	end
 end
-

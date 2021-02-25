@@ -1,6 +1,6 @@
 HeistTimerOperatorUnitElement = HeistTimerOperatorUnitElement or class(TimerOperatorUnitElement)
 
--- Lines: 3 to 17
+-- Lines 3-17
 function HeistTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -17,9 +17,10 @@ function HeistTimerOperatorUnitElement:add_element()
 		end
 	end
 end
+
 HeistTimerTriggerUnitElement = HeistTimerTriggerUnitElement or class(TimerTriggerUnitElement)
 
--- Lines: 22 to 36
+-- Lines 22-36
 function HeistTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -36,4 +37,3 @@ function HeistTimerTriggerUnitElement:add_element()
 		end
 	end
 end
-

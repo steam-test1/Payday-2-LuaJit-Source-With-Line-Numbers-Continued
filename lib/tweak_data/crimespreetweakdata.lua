@@ -1,6 +1,6 @@
 CrimeSpreeTweakData = CrimeSpreeTweakData or class()
 
--- Lines: 6 to 57
+-- Lines 4-57
 function CrimeSpreeTweakData:init(tweak_data)
 	self.unlock_level = 60
 	self.base_difficulty = "overkill_145"
@@ -33,7 +33,7 @@ function CrimeSpreeTweakData:init(tweak_data)
 	self:init_gui(tweak_data)
 end
 
--- Lines: 61 to 440
+-- Lines 60-440
 function CrimeSpreeTweakData:init_missions(tweak_data)
 	local debug_short_add = 5
 	local debug_med_add = 7
@@ -398,7 +398,7 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 	}
 end
 
--- Lines: 795 to 1131
+-- Lines 793-1131
 function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	local health_increase = 25
 	local damage_increase = 25
@@ -409,22 +409,24 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 		stealth = 26
 	}
 	self.modifiers = {
-		forced = {{
-			class = "ModifierEnemyHealthAndDamage",
-			id = "damage_health_1",
-			icon = "crime_spree_health",
-			level = 50,
-			data = {
-				health = {
-					20,
-					"add"
-				},
-				damage = {
-					15,
-					"add"
+		forced = {
+			{
+				class = "ModifierEnemyHealthAndDamage",
+				id = "damage_health_1",
+				icon = "crime_spree_health",
+				level = 50,
+				data = {
+					health = {
+						20,
+						"add"
+					},
+					damage = {
+						15,
+						"add"
+					}
 				}
 			}
-		}},
+		},
 		loud = {
 			{
 				id = "shield_reflect",
@@ -436,19 +438,23 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "cloaker_smoke",
 				icon = "crime_spree_cloaker_smoke",
 				class = "ModifierCloakerKick",
-				data = {effect = {
-					"smoke",
-					"none"
-				}}
+				data = {
+					effect = {
+						"smoke",
+						"none"
+					}
+				}
 			},
 			{
 				id = "medic_heal_1",
 				icon = "crime_spree_medic_speed",
 				class = "ModifierHealSpeed",
-				data = {speed = {
-					20,
-					"add"
-				}}
+				data = {
+					speed = {
+						20,
+						"add"
+					}
+				}
 			},
 			{
 				id = "no_hurt",
@@ -460,10 +466,12 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "taser_overcharge",
 				icon = "crime_spree_taser_overcharge",
 				class = "ModifierTaserOvercharge",
-				data = {speed = {
-					50,
-					"add"
-				}}
+				data = {
+					speed = {
+						50,
+						"add"
+					}
+				}
 			},
 			{
 				id = "heavies",
@@ -475,28 +483,34 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "medic_1",
 				icon = "crime_spree_more_medics",
 				class = "ModifierMoreMedics",
-				data = {inc = {
-					2,
-					"add"
-				}}
+				data = {
+					inc = {
+						2,
+						"add"
+					}
+				}
 			},
 			{
 				id = "heavy_sniper",
 				icon = "crime_spree_heavy_sniper",
 				class = "ModifierHeavySniper",
-				data = {spawn_chance = {
-					5,
-					"add"
-				}}
+				data = {
+					spawn_chance = {
+						5,
+						"add"
+					}
+				}
 			},
 			{
 				id = "dozer_rage",
 				icon = "crime_spree_dozer_rage",
 				class = "ModifierDozerRage",
-				data = {damage = {
-					100,
-					"add"
-				}}
+				data = {
+					damage = {
+						100,
+						"add"
+					}
+				}
 			},
 			{
 				id = "cloaker_tear_gas",
@@ -521,19 +535,23 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "dozer_1",
 				icon = "crime_spree_more_dozers",
 				class = "ModifierMoreDozers",
-				data = {inc = {
-					2,
-					"add"
-				}}
+				data = {
+					inc = {
+						2,
+						"add"
+					}
+				}
 			},
 			{
 				id = "medic_heal_2",
 				icon = "crime_spree_medic_speed",
 				class = "ModifierHealSpeed",
-				data = {speed = {
-					20,
-					"add"
-				}}
+				data = {
+					speed = {
+						20,
+						"add"
+					}
+				}
 			},
 			{
 				id = "dozer_lmg",
@@ -545,10 +563,12 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "medic_adrenaline",
 				icon = "crime_spree_medic_adrenaline",
 				class = "ModifierMedicAdrenaline",
-				data = {damage = {
-					100,
-					"add"
-				}}
+				data = {
+					damage = {
+						100,
+						"add"
+					}
+				}
 			},
 			{
 				id = "shield_phalanx",
@@ -560,10 +580,12 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "dozer_2",
 				icon = "crime_spree_more_dozers",
 				class = "ModifierMoreDozers",
-				data = {inc = {
-					2,
-					"add"
-				}}
+				data = {
+					inc = {
+						2,
+						"add"
+					}
+				}
 			},
 			{
 				id = "medic_deathwish",
@@ -581,10 +603,12 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "medic_2",
 				icon = "crime_spree_more_medics",
 				class = "ModifierMoreMedics",
-				data = {inc = {
-					2,
-					"add"
-				}}
+				data = {
+					inc = {
+						2,
+						"add"
+					}
+				}
 			},
 			{
 				id = "dozer_immunity",
@@ -631,10 +655,12 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "medic_rage",
 				icon = "crime_spree_medic_rage",
 				class = "ModifierMedicRage",
-				data = {damage = {
-					20,
-					"add"
-				}}
+				data = {
+					damage = {
+						20,
+						"add"
+					}
+				}
 			}
 		},
 		stealth = {
@@ -643,112 +669,134 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 				id = "pagers_1",
 				icon = "crime_spree_pager",
 				level = 26,
-				data = {count = {
-					1,
-					"max"
-				}}
+				data = {
+					count = {
+						1,
+						"max"
+					}
+				}
 			},
 			{
 				class = "ModifierCivilianAlarm",
 				id = "civs_1",
 				icon = "crime_spree_civs_killed",
 				level = 26,
-				data = {count = {
-					10,
-					"min"
-				}}
+				data = {
+					count = {
+						10,
+						"min"
+					}
+				}
 			},
 			{
 				class = "ModifierLessConcealment",
 				id = "conceal_1",
 				icon = "crime_spree_concealment",
 				level = 26,
-				data = {conceal = {
-					3,
-					"add"
-				}}
+				data = {
+					conceal = {
+						3,
+						"add"
+					}
+				}
 			},
 			{
 				class = "ModifierCivilianAlarm",
 				id = "civs_2",
 				icon = "crime_spree_civs_killed",
 				level = 52,
-				data = {count = {
-					7,
-					"min"
-				}}
+				data = {
+					count = {
+						7,
+						"min"
+					}
+				}
 			},
 			{
 				class = "ModifierLessPagers",
 				id = "pagers_2",
 				icon = "crime_spree_pager",
 				level = 78,
-				data = {count = {
-					2,
-					"max"
-				}}
+				data = {
+					count = {
+						2,
+						"max"
+					}
+				}
 			},
 			{
 				class = "ModifierLessConcealment",
 				id = "conceal_2",
 				icon = "crime_spree_concealment",
 				level = 104,
-				data = {conceal = {
-					3,
-					"add"
-				}}
+				data = {
+					conceal = {
+						3,
+						"add"
+					}
+				}
 			},
 			{
 				class = "ModifierLessPagers",
 				id = "pagers_3",
 				icon = "crime_spree_pager",
 				level = 130,
-				data = {count = {
-					3,
-					"max"
-				}}
+				data = {
+					count = {
+						3,
+						"max"
+					}
+				}
 			},
 			{
 				class = "ModifierCivilianAlarm",
 				id = "civs_3",
 				icon = "crime_spree_civs_killed",
 				level = 156,
-				data = {count = {
-					4,
-					"min"
-				}}
+				data = {
+					count = {
+						4,
+						"min"
+					}
+				}
 			},
 			{
 				class = "ModifierLessPagers",
 				id = "pagers_4",
 				icon = "crime_spree_pager",
 				level = 182,
-				data = {count = {
-					4,
-					"max"
-				}}
+				data = {
+					count = {
+						4,
+						"max"
+					}
+				}
 			}
 		}
 	}
-	self.repeating_modifiers = {forced = {{
-		class = "ModifierEnemyHealthAndDamage",
-		id = "damage_health_rpt_",
-		icon = "crime_spree_health",
-		level = 5,
-		data = {
-			health = {
-				20,
-				"add"
-			},
-			damage = {
-				15,
-				"add"
+	self.repeating_modifiers = {
+		forced = {
+			{
+				class = "ModifierEnemyHealthAndDamage",
+				id = "damage_health_rpt_",
+				icon = "crime_spree_health",
+				level = 5,
+				data = {
+					health = {
+						20,
+						"add"
+					},
+					damage = {
+						15,
+						"add"
+					}
+				}
 			}
 		}
-	}}}
+	}
 end
 
--- Lines: 1133 to 1139
+-- Lines 1133-1140
 function CrimeSpreeTweakData:get_reward_icon(reward)
 	for _, data in ipairs(self.rewards) do
 		if data.id == reward then
@@ -759,7 +807,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return "downcard_overkill_deck"
 end
 
--- Lines: 1143 to 1227
+-- Lines 1142-1227
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -876,23 +924,29 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 	}
 end
 
--- Lines: 1230 to 1419
+-- Lines 1229-1419
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
-	self.assets = {increased_health = {}}
+	self.assets = {
+		increased_health = {}
+	}
 	self.assets.increased_health.name_id = "menu_cs_ga_increased_health"
 	self.assets.increased_health.unlock_desc_id = "menu_cs_ga_increased_health_desc"
 	self.assets.increased_health.icon = "csb_health"
 	self.assets.increased_health.cost = asset_cost
-	self.assets.increased_health.data = {health = 10}
+	self.assets.increased_health.data = {
+		health = 10
+	}
 	self.assets.increased_health.class = "GageModifierMaxHealth"
 	self.assets.increased_armor = {
 		name_id = "menu_cs_ga_increased_armor",
 		unlock_desc_id = "menu_cs_ga_increased_armor_desc",
 		icon = "csb_armor",
 		cost = asset_cost,
-		data = {armor = 10},
+		data = {
+			armor = 10
+		},
 		class = "GageModifierMaxArmor"
 	}
 	self.assets.increased_stamina = {
@@ -900,7 +954,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_stamina_desc",
 		icon = "csb_stamina",
 		cost = asset_cost,
-		data = {stamina = 100},
+		data = {
+			stamina = 100
+		},
 		class = "GageModifierMaxStamina"
 	}
 	self.assets.increased_ammo = {
@@ -908,7 +964,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_ammo_desc",
 		icon = "csb_ammo",
 		cost = asset_cost,
-		data = {ammo = 15},
+		data = {
+			ammo = 15
+		},
 		class = "GageModifierMaxAmmo"
 	}
 	self.assets.increased_lives = {
@@ -916,7 +974,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_lives_desc",
 		icon = "csb_lives",
 		cost = asset_cost,
-		data = {lives = 1},
+		data = {
+			lives = 1
+		},
 		class = "GageModifierMaxLives"
 	}
 	self.assets.increased_throwables = {
@@ -924,7 +984,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_throwables_desc",
 		icon = "csb_throwables",
 		cost = asset_cost,
-		data = {throwables = 70},
+		data = {
+			throwables = 70
+		},
 		class = "GageModifierMaxThrowables"
 	}
 	self.assets.increased_deployables = {
@@ -932,7 +994,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_deployables_desc",
 		icon = "csb_deployables",
 		cost = asset_cost,
-		data = {deployables = 50},
+		data = {
+			deployables = 50
+		},
 		class = "GageModifierMaxDeployables"
 	}
 	self.assets.increased_absorption = {
@@ -940,7 +1004,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_absorption_desc",
 		icon = "csb_absorb",
 		cost = asset_cost,
-		data = {absorption = 0.5},
+		data = {
+			absorption = 0.5
+		},
 		class = "GageModifierDamageAbsorption"
 	}
 	self.assets.quick_reload = {
@@ -948,7 +1014,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_quick_reload_desc",
 		icon = "csb_reload",
 		cost = asset_cost,
-		data = {speed = 25},
+		data = {
+			speed = 25
+		},
 		class = "GageModifierQuickReload"
 	}
 	self.assets.quick_switch = {
@@ -956,7 +1024,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_quick_switch_desc",
 		icon = "csb_switch",
 		cost = asset_cost,
-		data = {speed = 50},
+		data = {
+			speed = 50
+		},
 		class = "GageModifierQuickSwitch"
 	}
 	self.assets.melee_invulnerability = {
@@ -964,7 +1034,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_melee_invulnerability_desc",
 		icon = "csb_melee",
 		cost = asset_cost,
-		data = {time = 5},
+		data = {
+			time = 5
+		},
 		class = "GageModifierMeleeInvincibility"
 	}
 	self.assets.explosion_immunity = {
@@ -992,7 +1064,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_quick_pagers_desc",
 		icon = "csb_pagers",
 		cost = asset_cost,
-		data = {speed = 50},
+		data = {
+			speed = 50
+		},
 		stealth = true,
 		class = "GageModifierQuickPagers"
 	}
@@ -1001,7 +1075,9 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_increased_body_bags_desc",
 		icon = "csb_bodybags",
 		cost = asset_cost,
-		data = {bags = 2},
+		data = {
+			bags = 2
+		},
 		stealth = true,
 		class = "GageModifierMaxBodyBags"
 	}
@@ -1010,13 +1086,15 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 		unlock_desc_id = "menu_cs_ga_quick_locks_desc",
 		icon = "csb_locks",
 		cost = asset_cost,
-		data = {speed = 25},
+		data = {
+			speed = 25
+		},
 		stealth = true,
 		class = "GageModifierQuickLocks"
 	}
 end
 
--- Lines: 1422 to 1437
+-- Lines 1421-1437
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {
@@ -1037,3 +1115,34 @@ function CrimeSpreeTweakData:init_gui(tweak_data)
 	}
 end
 
+-- Lines 1439-1457
+function CrimeSpreeTweakData:get_index_from_id(level_id)
+	if level_id then
+		for i = 1, 3 do
+			for index, mission in ipairs(self.missions[i]) do
+				if mission.id == level_id then
+					local merged_index = i * 100 + index
+
+					return merged_index
+				end
+			end
+		end
+	else
+		return -1
+	end
+end
+
+-- Lines 1459-1473
+function CrimeSpreeTweakData:get_id_from_index(merged_index)
+	local index_has_data = merged_index > 100
+
+	if index_has_data then
+		local mission_type = math.floor(merged_index / 100)
+		local mission_index = merged_index % 100
+		local mission_id = self.missions[mission_type][mission_index].id
+
+		return mission_id
+	else
+		return -1
+	end
+end

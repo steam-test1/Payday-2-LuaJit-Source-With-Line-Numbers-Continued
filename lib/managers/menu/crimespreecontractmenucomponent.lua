@@ -1,7 +1,7 @@
 CrimeSpreeContractMenuComponent = CrimeSpreeContractMenuComponent or class(MenuGuiComponentGeneric)
 local padding = 10
 
--- Lines: 7 to 18
+-- Lines 6-18
 function CrimeSpreeContractMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -13,7 +13,7 @@ function CrimeSpreeContractMenuComponent:init(ws, fullscreen_ws, node)
 	self:_setup()
 end
 
--- Lines: 20 to 26
+-- Lines 20-26
 function CrimeSpreeContractMenuComponent:close()
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:activate_controller_mouse()
@@ -23,17 +23,17 @@ function CrimeSpreeContractMenuComponent:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function CrimeSpreeContractMenuComponent:_is_host()
 	return self._hosting
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function CrimeSpreeContractMenuComponent:_host_spree_level()
 	return tonumber(self._data.crime_spree or 0)
 end
 
--- Lines: 38 to 155
+-- Lines 36-155
 function CrimeSpreeContractMenuComponent:_setup()
 	local parent = self._ws:panel()
 
@@ -41,8 +41,12 @@ function CrimeSpreeContractMenuComponent:_setup()
 		parent:remove(self._panel)
 	end
 
-	self._panel = self._ws:panel():panel({layer = 51})
-	self._fullscreen_panel = self._fullscreen_ws:panel():panel({layer = 50})
+	self._panel = self._ws:panel():panel({
+		layer = 51
+	})
+	self._fullscreen_panel = self._fullscreen_ws:panel():panel({
+		layer = 50
+	})
 
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:deactivate_controller_mouse()
@@ -73,7 +77,7 @@ function CrimeSpreeContractMenuComponent:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	-- Lines: 81 to 84
+	-- Lines 81-84
 	local function func(o)
 		local start_blur = 0
 
@@ -91,7 +95,9 @@ function CrimeSpreeContractMenuComponent:_setup()
 		vertical = "top",
 		align = "left",
 		layer = 1,
-		text = managers.localization:to_upper_text(spree_text, {level = managers.experience:cash_string(spree_level, "")}),
+		text = managers.localization:to_upper_text(spree_text, {
+			level = managers.experience:cash_string(spree_level, "")
+		}),
 		font_size = tweak_data.menu.pd2_large_font_size,
 		font = tweak_data.menu.pd2_large_font,
 		color = tweak_data.screen_colors.text
@@ -121,12 +127,14 @@ function CrimeSpreeContractMenuComponent:_setup()
 
 	self._contract_panel:set_center_y(self._panel:h() * 0.5)
 	self._contact_text_header:set_bottom(self._contract_panel:top())
-	BoxGuiObject:new(self._contract_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._contract_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local w = is_win_32 and 389 or 356
 	local text_w = width - w
@@ -158,7 +166,7 @@ function CrimeSpreeContractMenuComponent:_setup()
 	end
 end
 
--- Lines: 159 to 348
+-- Lines 157-348
 function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 	self._coins_panel = self._contract_panel:panel({
 		x = padding,
@@ -186,7 +194,7 @@ function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 	self._levels_panel = self._contract_panel:panel({
 		layer = 1,
 		x = padding,
-		y = ((self._contract_panel:h() - h) - padding * 2) - tweak_data.menu.pd2_medium_font_size,
+		y = self._contract_panel:h() - h - padding * 2 - tweak_data.menu.pd2_medium_font_size,
 		w = text_w,
 		h = h
 	})
@@ -332,7 +340,7 @@ function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 	end
 end
 
--- Lines: 352 to 358
+-- Lines 352-358
 function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, text_h)
 	if self:_is_host() then
 		self:_setup_continue_host(text_w, text_h)
@@ -341,7 +349,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, tex
 	end
 end
 
--- Lines: 361 to 420
+-- Lines 360-420
 function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	local modifiers = managers.crime_spree:active_modifiers()
 	local next_modifiers_h = tweak_data.menu.pd2_small_font_size * 2
@@ -351,7 +359,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 		x = padding,
 		y = self._desc_text:bottom() + padding + tweak_data.menu.pd2_medium_font_size,
 		w = text_w,
-		h = ((self._contract_panel:h() - text_h) - padding * 2) - tweak_data.menu.pd2_medium_font_size
+		h = self._contract_panel:h() - text_h - padding * 2 - tweak_data.menu.pd2_medium_font_size
 	})
 
 	CrimeSpreeModifierDetailsPage.add_modifiers_panel(self, self._modifiers_panel, managers.crime_spree:active_modifiers(), false)
@@ -398,13 +406,13 @@ function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	self._scroll:update_canvas_size()
 end
 
--- Lines: 423 to 491
+-- Lines 422-491
 function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	self._info_panel = self._contract_panel:panel({
 		x = padding,
 		y = self._desc_text:bottom() + padding + tweak_data.menu.pd2_medium_font_size,
 		w = text_w,
-		h = ((self._contract_panel:h() - text_h) - padding * 3) - tweak_data.menu.pd2_medium_font_size
+		h = self._contract_panel:h() - text_h - padding * 3 - tweak_data.menu.pd2_medium_font_size
 	})
 	local text = self._contract_panel:text({
 		vertical = "top",
@@ -471,7 +479,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	end
 end
 
--- Lines: 495 to 501
+-- Lines 495-502
 function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	for idx, btn in ipairs(self._buttons) do
 		if button == btn then
@@ -482,7 +490,7 @@ function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	return 1
 end
 
--- Lines: 504 to 515
+-- Lines 504-515
 function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	if btn:can_activate() then
 		for idx, btn in ipairs(self._buttons) do
@@ -498,7 +506,7 @@ function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	end
 end
 
--- Lines: 520 to 530
+-- Lines 519-532
 function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	local used, pointer = nil
 
@@ -514,7 +522,7 @@ function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 535 to 543
+-- Lines 534-543
 function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
@@ -525,21 +533,21 @@ function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 545 to 549
+-- Lines 545-549
 function CrimeSpreeContractMenuComponent:mouse_wheel_up(x, y)
 	if alive(self._scroll) then
 		self._scroll:scroll(x, y, 1)
 	end
 end
 
--- Lines: 551 to 555
+-- Lines 551-555
 function CrimeSpreeContractMenuComponent:mouse_wheel_down(x, y)
 	if alive(self._scroll) then
 		self._scroll:scroll(x, y, -1)
 	end
 end
 
--- Lines: 558 to 580
+-- Lines 557-580
 function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	local change = 0
 
@@ -554,7 +562,7 @@ function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	if change ~= 0 then
 		local new_index = (self._selected_index or 0) + change
 
-		if #self._buttons < new_index then
+		if new_index > #self._buttons then
 			new_index = 1
 		end
 
@@ -568,7 +576,7 @@ function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines: 583 to 591
+-- Lines 582-591
 function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._gui = {
 		_left_axis_vector = Vector3(),
@@ -579,7 +587,7 @@ function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines: 593 to 599
+-- Lines 593-599
 function CrimeSpreeContractMenuComponent:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._gui._left_axis_vector, axis_vector)
@@ -588,7 +596,7 @@ function CrimeSpreeContractMenuComponent:_axis_move(o, axis_name, axis_vector, c
 	end
 end
 
--- Lines: 603 to 612
+-- Lines 601-612
 function CrimeSpreeContractMenuComponent:update(t, dt)
 	if not managers.menu:is_pc_controller() and self._gui and self._gui._right_axis_vector and alive(self._scroll) and not mvector3.is_zero(self._gui._right_axis_vector) then
 		local x = mvector3.x(self._gui._right_axis_vector)
@@ -597,10 +605,13 @@ function CrimeSpreeContractMenuComponent:update(t, dt)
 		self._scroll:perform_scroll(ScrollablePanel.SCROLL_SPEED * dt * 24, y)
 	end
 end
-CrimeSpreeStartingLevelItem = CrimeSpreeStartingLevelItem or class(MenuGuiItem)
-CrimeSpreeStartingLevelItem.size = {h = 140}
 
--- Lines: 622 to 746
+CrimeSpreeStartingLevelItem = CrimeSpreeStartingLevelItem or class(MenuGuiItem)
+CrimeSpreeStartingLevelItem.size = {
+	h = 140
+}
+
+-- Lines 621-746
 function CrimeSpreeStartingLevelItem:init(parent, data)
 	self._parent = parent
 	self._level = data.level or 0
@@ -617,12 +628,14 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 		y = data.y or y
 	})
 
-	BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self._bg = self._panel:rect({
 		alpha = 0.4,
@@ -659,7 +672,9 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 		align = "center",
 		x = 0,
 		valign = "center",
-		text = data.text or managers.localization:text("menu_cs_level", {level = self._level}),
+		text = data.text or managers.localization:text("menu_cs_level", {
+			level = self._level
+		}),
 		y = self._panel:h() * 0.25,
 		h = tweak_data.menu.pd2_large_font_size,
 		color = tweak_data.screen_colors.crime_spree_risk,
@@ -672,8 +687,10 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 		halign = "center",
 		align = "center",
 		valign = "center",
-		text = data.cost_text or managers.localization:text("menu_cs_coin_cost", {coins = managers.experience:cash_string(math.floor(self._start_cost), "")}),
-		y = (self._panel:h() - padding * 2) - tweak_data.menu.pd2_medium_font_size,
+		text = data.cost_text or managers.localization:text("menu_cs_coin_cost", {
+			coins = managers.experience:cash_string(math.floor(self._start_cost), "")
+		}),
+		y = self._panel:h() - padding * 2 - tweak_data.menu.pd2_medium_font_size,
 		h = tweak_data.menu.pd2_medium_font_size,
 		color = Color.white,
 		font = tweak_data.menu.pd2_medium_font,
@@ -689,7 +706,7 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 			align = "center",
 			valign = "center",
 			text = managers.localization:to_upper_text("menu_cs_maximum"),
-			y = (self._text:top() - tweak_data.menu.pd2_medium_font_size) - 5,
+			y = self._text:top() - tweak_data.menu.pd2_medium_font_size - 5,
 			h = tweak_data.menu.pd2_medium_font_size,
 			color = Color.white,
 			font = tweak_data.menu.pd2_medium_font,
@@ -708,16 +725,18 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 
 	self._outline_panel = self._panel:panel({})
 
-	BoxGuiObject:new(self._outline_panel, {sides = {
-		2,
-		2,
-		2,
-		2
-	}})
+	BoxGuiObject:new(self._outline_panel, {
+		sides = {
+			2,
+			2,
+			2,
+			2
+		}
+	})
 	self:refresh()
 end
 
--- Lines: 749 to 772
+-- Lines 748-772
 function CrimeSpreeStartingLevelItem:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(not self:is_active() and self:is_selected())
@@ -736,42 +755,41 @@ function CrimeSpreeStartingLevelItem:refresh()
 	end
 end
 
--- Lines: 778 to 779
+-- Lines 774-782
 function CrimeSpreeStartingLevelItem:can_activate()
 	return self._start_cost < managers.custom_safehouse:coins()
 end
 
--- Lines: 784 to 785
+-- Lines 784-786
 function CrimeSpreeStartingLevelItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 788 to 789
+-- Lines 788-790
 function CrimeSpreeStartingLevelItem:callback()
 	return self._callback
 end
 
--- Lines: 792 to 794
+-- Lines 792-794
 function CrimeSpreeStartingLevelItem:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines: 796 to 797
+-- Lines 796-798
 function CrimeSpreeStartingLevelItem:level()
 	return self._level
 end
 
--- Lines: 800 to 801
+-- Lines 800-802
 function CrimeSpreeStartingLevelItem:panel()
 	return self._panel
 end
+
 MenuCrimeNetCrimeSpreeContractInitiator = MenuCrimeNetCrimeSpreeContractInitiator or class()
 
--- Lines: 807 to 863
+-- Lines 807-865
 function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
-
-	print("MenuCrimeNetCrimeSpreeContractInitiator:modify_node", original_node, data)
 
 	if Global.game_settings.single_player then
 		node:item("toggle_ai"):set_value(Global.game_settings.team_ai and Global.game_settings.team_ai_option or 0)
@@ -803,6 +821,8 @@ function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data
 		end
 	end
 
+	node:item("accept_contract"):set_enabled(managers.crime_spree:unlocked())
+
 	if data and data.back_callback then
 		table.insert(node:parameters().back_callback, data.back_callback)
 	end
@@ -811,4 +831,3 @@ function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data
 
 	return node
 end
-

@@ -40,7 +40,7 @@ commands:add({
 	help = "Closes this window"
 })
 
--- Lines: 15 to 51
+-- Lines 15-51
 function CoreCutsceneBatchOptimizerDialog:init(parent_window)
 	self.__window = EWS:Frame("Batch Export to Game", Vector3(100, 500, 0), Vector3(400, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,FRAME_FLOAT_ON_PARENT", parent_window)
 
@@ -49,7 +49,7 @@ function CoreCutsceneBatchOptimizerDialog:init(parent_window)
 	self.__window:set_background_colour((EWS:get_system_colour("3DFACE") * 255):unpack())
 	self.__window:connect("EVT_CLOSE_WINDOW", callback(self, self, "_on_exit"))
 
-	-- Lines: 22 to 26
+	-- Lines 22-26
 	local function connect_command(command_id, callback_name, callback_data)
 		callback_name = callback_name or "_on_" .. string.lower(command_id)
 		callback_data = callback_data or ""
@@ -83,7 +83,7 @@ function CoreCutsceneBatchOptimizerDialog:init(parent_window)
 	self.__window:set_visible(true)
 end
 
--- Lines: 53 to 74
+-- Lines 53-75
 function CoreCutsceneBatchOptimizerDialog:update(time, delta_time)
 	if not self.__window then
 		return true
@@ -106,7 +106,7 @@ function CoreCutsceneBatchOptimizerDialog:update(time, delta_time)
 	return false
 end
 
--- Lines: 77 to 89
+-- Lines 77-90
 function CoreCutsceneBatchOptimizerDialog:_create_menu_bar()
 	local file_menu = commands:wrap_menu(EWS:Menu(""))
 
@@ -125,7 +125,7 @@ function CoreCutsceneBatchOptimizerDialog:_create_menu_bar()
 	return menu_bar
 end
 
--- Lines: 92 to 106
+-- Lines 92-107
 function CoreCutsceneBatchOptimizerDialog:_create_buttons_panel(parent)
 	local panel = EWS:Panel(parent)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
@@ -145,7 +145,7 @@ function CoreCutsceneBatchOptimizerDialog:_create_buttons_panel(parent)
 	return panel
 end
 
--- Lines: 109 to 126
+-- Lines 109-126
 function CoreCutsceneBatchOptimizerDialog:_destroy()
 	if alive(self.__progress_dialog) then
 		self.__progress_dialog:destroy()
@@ -167,12 +167,12 @@ function CoreCutsceneBatchOptimizerDialog:_destroy()
 	self.__batch = nil
 end
 
--- Lines: 128 to 129
+-- Lines 128-130
 function CoreCutsceneBatchOptimizerDialog:_progress_message(project)
 	return project == nil and "Done!" or string.format("Exporting %s", project)
 end
 
--- Lines: 132 to 136
+-- Lines 132-136
 function CoreCutsceneBatchOptimizerDialog:_open_job_list(input_path)
 	local mappings = read_lua_representation_from_path(input_path)
 
@@ -181,7 +181,7 @@ function CoreCutsceneBatchOptimizerDialog:_open_job_list(input_path)
 	self.__current_job_list_path = input_path
 end
 
--- Lines: 138 to 142
+-- Lines 138-142
 function CoreCutsceneBatchOptimizerDialog:_save_job_list(output_path)
 	local mappings = self.__projects:mappings()
 
@@ -190,7 +190,7 @@ function CoreCutsceneBatchOptimizerDialog:_save_job_list(output_path)
 	self.__current_job_list_path = output_path
 end
 
--- Lines: 144 to 147
+-- Lines 144-148
 function CoreCutsceneBatchOptimizerDialog:_default_mappings_for_all_projects()
 	local project_names = managers.database:list_entries_of_type("cutscene_project")
 	local mappings = table.remap(project_entries, function (_, name)
@@ -200,26 +200,26 @@ function CoreCutsceneBatchOptimizerDialog:_default_mappings_for_all_projects()
 	return mappings
 end
 
--- Lines: 150 to 151
+-- Lines 150-152
 function CoreCutsceneBatchOptimizerDialog:_default_optimized_cutscene_name(project_name)
 	return "optimized_" .. string.gsub(string.gsub(project_name, "^story_", ""), "^optimized_", "")
 end
 
--- Lines: 154 to 156
+-- Lines 154-157
 function CoreCutsceneBatchOptimizerDialog:_request_input_file_from_user(message, wildcard)
 	local dialog = EWS:FileDialog(self.__window, message, "", "", assert(wildcard, "Must supply a wildcard spec. Check wxWidgets docs."), "OPEN,FILE_MUST_EXIST")
 
 	return dialog:show_modal() and dialog:get_path() or nil
 end
 
--- Lines: 159 to 161
+-- Lines 159-162
 function CoreCutsceneBatchOptimizerDialog:_request_output_file_from_user(message, wildcard, default_file)
 	local dialog = EWS:FileDialog(self.__window, message, "", default_file or "", assert(wildcard, "Must supply a wildcard spec. Check wxWidgets docs."), "SAVE,OVERWRITE_PROMPT")
 
 	return dialog:show_modal() and dialog:get_path() or nil
 end
 
--- Lines: 164 to 175
+-- Lines 164-175
 function CoreCutsceneBatchOptimizerDialog:_on_export_button_clicked(sender)
 	local projects_to_export = self.__projects:mappings()
 
@@ -236,7 +236,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_export_button_clicked(sender)
 	end
 end
 
--- Lines: 177 to 184
+-- Lines 177-185
 function CoreCutsceneBatchOptimizerDialog:_on_new_job_list()
 	local ok_to_proceed = self:_verify_user_intent("clearing")
 
@@ -249,7 +249,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_new_job_list()
 	return ok_to_proceed
 end
 
--- Lines: 187 to 192
+-- Lines 187-192
 function CoreCutsceneBatchOptimizerDialog:_on_default_job_list()
 	local ok_to_proceed = self:_on_new_job_list()
 
@@ -258,7 +258,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_default_job_list()
 	end
 end
 
--- Lines: 194 to 202
+-- Lines 194-202
 function CoreCutsceneBatchOptimizerDialog:_on_open_job_list()
 	local ok_to_proceed = self:_verify_user_intent("opening")
 
@@ -271,7 +271,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_open_job_list()
 	end
 end
 
--- Lines: 204 to 211
+-- Lines 204-211
 function CoreCutsceneBatchOptimizerDialog:_on_save_job_list()
 	if self.__current_job_list_path then
 		self:_save_job_list(self.__current_job_list_path)
@@ -282,7 +282,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_save_job_list()
 	end
 end
 
--- Lines: 213 to 219
+-- Lines 213-220
 function CoreCutsceneBatchOptimizerDialog:_on_save_job_list_as()
 	local output_path = self:_request_output_file_from_user("Save Job List", JOB_LIST_FILE_SPEC, "untitled.boj")
 
@@ -293,7 +293,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_save_job_list_as()
 	return output_path ~= nil
 end
 
--- Lines: 222 to 228
+-- Lines 222-229
 function CoreCutsceneBatchOptimizerDialog:_on_exit()
 	local ok_to_proceed = self:_verify_user_intent("closing")
 
@@ -304,7 +304,7 @@ function CoreCutsceneBatchOptimizerDialog:_on_exit()
 	return ok_to_proceed
 end
 
--- Lines: 231 to 243
+-- Lines 231-244
 function CoreCutsceneBatchOptimizerDialog:_verify_user_intent(operation)
 	if table.empty(self.__projects:mappings()) then
 		return true
@@ -322,4 +322,3 @@ function CoreCutsceneBatchOptimizerDialog:_verify_user_intent(operation)
 
 	return true
 end
-

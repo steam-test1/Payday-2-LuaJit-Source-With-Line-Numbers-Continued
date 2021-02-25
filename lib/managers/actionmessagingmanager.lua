@@ -3,14 +3,14 @@ ActionMessagingManager.PATH = "gamedata/action_messages"
 ActionMessagingManager.FILE_EXTENSION = "action_message"
 ActionMessagingManager.FULL_PATH = ActionMessagingManager.PATH .. "." .. ActionMessagingManager.FILE_EXTENSION
 
--- Lines: 6 to 9
+-- Lines 6-9
 function ActionMessagingManager:init()
 	self._messages = {}
 
 	self:_parse_messages()
 end
 
--- Lines: 11 to 21
+-- Lines 11-21
 function ActionMessagingManager:_parse_messages()
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 
@@ -23,7 +23,7 @@ function ActionMessagingManager:_parse_messages()
 	end
 end
 
--- Lines: 23 to 41
+-- Lines 23-41
 function ActionMessagingManager:_parse_message(data)
 	local id = data.id
 	local text_id = data.text_id
@@ -38,7 +38,7 @@ function ActionMessagingManager:_parse_message(data)
 	}
 end
 
--- Lines: 44 to 50
+-- Lines 44-51
 function ActionMessagingManager:ids()
 	local t = {}
 
@@ -51,17 +51,17 @@ function ActionMessagingManager:ids()
 	return t
 end
 
--- Lines: 53 to 54
+-- Lines 53-55
 function ActionMessagingManager:messages()
 	return self._messages
 end
 
--- Lines: 57 to 58
+-- Lines 57-59
 function ActionMessagingManager:message(id)
 	return self._messages[id]
 end
 
--- Lines: 61 to 69
+-- Lines 61-69
 function ActionMessagingManager:show_message(id, instigator)
 	if not id or not self:message(id) then
 		Application:stack_dump_error("Bad id to show message, " .. tostring(id) .. ".")
@@ -72,7 +72,7 @@ function ActionMessagingManager:show_message(id, instigator)
 	self:_show_message(id, instigator)
 end
 
--- Lines: 71 to 95
+-- Lines 71-95
 function ActionMessagingManager:_show_message(id, instigator)
 	local msg_data = self:message(id)
 	local title = instigator:base():nick_name()
@@ -102,18 +102,17 @@ function ActionMessagingManager:_show_message(id, instigator)
 	end
 end
 
--- Lines: 97 to 101
+-- Lines 97-101
 function ActionMessagingManager:sync_show_message(id, instigator)
 	if alive(instigator) and managers.network:session():peer_by_unit(instigator) then
 		self:_show_message(id, instigator)
 	end
 end
 
--- Lines: 104 to 105
+-- Lines 103-105
 function ActionMessagingManager:save(data)
 end
 
--- Lines: 108 to 109
+-- Lines 107-109
 function ActionMessagingManager:load(data)
 end
-

@@ -1,12 +1,14 @@
 SpoocLogicAttack = class(CopLogicAttack)
 
--- Lines: 7 to 63
+-- Lines 7-63
 function SpoocLogicAttack.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
-	local my_data = {unit = data.unit}
+	local my_data = {
+		unit = data.unit
+	}
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
 
@@ -48,10 +50,12 @@ function SpoocLogicAttack.enter(data, new_logic_name, enter_params)
 	my_data.cover_test_step = 1
 	data.spooc_attack_timeout_t = data.spooc_attack_timeout_t or 0
 
-	data.unit:brain():set_attention_settings({cbt = true})
+	data.unit:brain():set_attention_settings({
+		cbt = true
+	})
 end
 
--- Lines: 67 to 86
+-- Lines 67-86
 function SpoocLogicAttack.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -73,7 +77,7 @@ function SpoocLogicAttack.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 end
 
--- Lines: 91 to 154
+-- Lines 90-154
 function SpoocLogicAttack.queued_update(data)
 	local t = TimerManager:game():time()
 	data.t = t
@@ -148,7 +152,7 @@ function SpoocLogicAttack.queued_update(data)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines: 158 to 200
+-- Lines 158-200
 function SpoocLogicAttack.action_complete_clbk(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -199,7 +203,7 @@ function SpoocLogicAttack.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 204 to 209
+-- Lines 204-209
 function SpoocLogicAttack._cancel_spooc_attempt(data, my_data)
 	if my_data.spooc_attack then
 		local new_action = {
@@ -211,7 +215,7 @@ function SpoocLogicAttack._cancel_spooc_attempt(data, my_data)
 	end
 end
 
--- Lines: 213 to 260
+-- Lines 213-260
 function SpoocLogicAttack._upd_spooc_attack(data, my_data)
 	local focus_enemy = data.attention_obj
 
@@ -258,7 +262,7 @@ function SpoocLogicAttack._upd_spooc_attack(data, my_data)
 	end
 end
 
--- Lines: 264 to 294
+-- Lines 264-295
 function SpoocLogicAttack._chk_request_action_spooc_attack(data, my_data, flying_strike)
 	if data.unit:anim_data().crouch then
 		CopLogicAttack._chk_request_action_stand(data)
@@ -297,19 +301,19 @@ function SpoocLogicAttack._chk_request_action_spooc_attack(data, my_data, flying
 	return action
 end
 
--- Lines: 299 to 300
+-- Lines 299-301
 function SpoocLogicAttack.chk_should_turn(data, my_data)
 	return not my_data.spooc_attack and CopLogicAttack.chk_should_turn(data, my_data)
 end
 
--- Lines: 305 to 308
+-- Lines 305-308
 function SpoocLogicAttack.damage_clbk(data, damage_info)
 	data.internal_data.last_dmg_t = TimerManager:game():time()
 
 	CopLogicIdle.damage_clbk(data, damage_info)
 end
 
--- Lines: 312 to 316
+-- Lines 312-317
 function SpoocLogicAttack.is_available_for_assignment(data, objective)
 	if data.internal_data.spooc_attack then
 		return
@@ -318,17 +322,17 @@ function SpoocLogicAttack.is_available_for_assignment(data, objective)
 	return CopLogicAttack.is_available_for_assignment(data, objective)
 end
 
--- Lines: 321 to 322
+-- Lines 321-323
 function SpoocLogicAttack.action_taken(data, my_data)
 	return CopLogicAttack.action_taken(data, my_data) or my_data.spooc_attack
 end
 
--- Lines: 327 to 328
+-- Lines 327-329
 function SpoocLogicAttack._chk_exit_attack_logic(data, new_reaction)
 	return not data.internal_data.spooc_attack and CopLogicAttack._chk_exit_attack_logic(data, new_reaction)
 end
 
--- Lines: 333 to 342
+-- Lines 333-342
 function SpoocLogicAttack._upd_aim(data, my_data)
 	if my_data.spooc_attack then
 		if my_data.attention_unit ~= my_data.spooc_attack.target_u_data.u_key then
@@ -341,7 +345,7 @@ function SpoocLogicAttack._upd_aim(data, my_data)
 	end
 end
 
--- Lines: 346 to 354
+-- Lines 346-355
 function SpoocLogicAttack._is_last_standing_criminal(focus_enemy)
 	local all_criminals = managers.groupai:state():all_char_criminals()
 
@@ -353,4 +357,3 @@ function SpoocLogicAttack._is_last_standing_criminal(focus_enemy)
 
 	return true
 end
-

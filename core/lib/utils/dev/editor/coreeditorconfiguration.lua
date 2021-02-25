@@ -1,5 +1,4 @@
-
--- Lines: 1 to 34
+-- Lines 1-34
 function CoreEditor:build_configuration()
 	self._config = {}
 	local frame_size_height = 400
@@ -37,7 +36,7 @@ function CoreEditor:build_configuration()
 	notebook:fit()
 end
 
--- Lines: 37 to 83
+-- Lines 36-83
 function CoreEditor:_add_general_page(notebook)
 	local page_general = EWS:Panel(notebook, "_general", "")
 	local general_sizer = EWS:StaticBoxSizer(page_general, "VERTICAL", "")
@@ -101,7 +100,7 @@ function CoreEditor:_add_general_page(notebook)
 	notebook:add_page(page_general, "General", true)
 end
 
--- Lines: 86 to 104
+-- Lines 85-104
 function CoreEditor:_add_backup_page(notebook)
 	local page_backup = EWS:Panel(notebook, "_backup", "")
 	local backup_sizer = EWS:BoxSizer("VERTICAL")
@@ -122,7 +121,7 @@ function CoreEditor:_add_backup_page(notebook)
 	notebook:add_page(page_backup, "Backup", false)
 end
 
--- Lines: 107 to 144
+-- Lines 106-144
 function CoreEditor:_add_edit_page(notebook)
 	local page_edit = EWS:Panel(notebook, "_edit", "")
 	local edit_sizer = EWS:StaticBoxSizer(page_edit, "VERTICAL", "")
@@ -171,7 +170,7 @@ function CoreEditor:_add_edit_page(notebook)
 	notebook:add_page(page_edit, "Edit", false)
 end
 
--- Lines: 147 to 158
+-- Lines 146-158
 function CoreEditor:_add_notes_page(notebook)
 	local page_notes = EWS:Panel(notebook, "_notes", "")
 	local notes_sizer = EWS:StaticBoxSizer(page_notes, "VERTICAL", "")
@@ -185,7 +184,7 @@ function CoreEditor:_add_notes_page(notebook)
 	notebook:add_page(page_notes, "Notes", false)
 end
 
--- Lines: 161 to 196
+-- Lines 160-196
 function CoreEditor:_add_slave_page(notebook)
 	local page_slave = EWS:Panel(notebook, "_slave", "")
 	local slave_page_sizer = EWS:BoxSizer("VERTICAL")
@@ -229,13 +228,13 @@ function CoreEditor:_add_slave_page(notebook)
 	notebook:add_page(page_slave, "Slave System", false)
 end
 
--- Lines: 198 to 201
+-- Lines 198-201
 function CoreEditor:on_configuration_ok()
 	self:on_configuration_apply()
 	self._configuration:end_modal()
 end
 
--- Lines: 203 to 209
+-- Lines 203-209
 function CoreEditor:on_configuration_cancel()
 	for value, data in pairs(self._config) do
 		local ctrlr = data.ctrlr or data
@@ -246,12 +245,19 @@ function CoreEditor:on_configuration_cancel()
 	self._configuration:end_modal()
 end
 
--- Lines: 211 to 231
+-- Lines 211-231
 function CoreEditor:on_configuration_apply()
 	for value, data in pairs(self._config) do
 		local ctrlr = data.ctrlr or data
 		local changed = false
-		self[value] = type(self[value]) == "number" and (self[value] ~= tonumber(ctrlr:get_value()) or tonumber(ctrlr:get_value())) or self[value] ~= ctrlr:get_value() or ctrlr:get_value()
+
+		if type(self[value]) == "number" then
+			changed = self[value] ~= tonumber(ctrlr:get_value())
+			self[value] = tonumber(ctrlr:get_value())
+		else
+			changed = self[value] ~= ctrlr:get_value()
+			self[value] = ctrlr:get_value()
+		end
 
 		if data.callback then
 			data.callback(changed, self[value])
@@ -264,4 +270,3 @@ function CoreEditor:on_configuration_apply()
 		managers.slave:set_batch_count(self._slave_num_batches)
 	end
 end
-

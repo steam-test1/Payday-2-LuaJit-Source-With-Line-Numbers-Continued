@@ -1,6 +1,6 @@
 GageAssignmentTweakData = GageAssignmentTweakData or class()
 
--- Lines: 3 to 152
+-- Lines 3-152
 function GageAssignmentTweakData:init(tweak_data)
 	self.MAX_ACTIVE_ASSIGNMENTS = true
 	self.NUM_ASSIGNMENT_UNITS = {
@@ -13,7 +13,9 @@ function GageAssignmentTweakData:init(tweak_data)
 		10
 	}
 	self.EXPERIENCE_MULTIPLIER = 0.05
-	self.assignments = {green_mantis = {}}
+	self.assignments = {
+		green_mantis = {}
+	}
 	self.assignments.green_mantis.unit = Idstring("units/pd2_dlc_gage_jobs/pickups/gen_pku_gage_green/gen_pku_gage_green")
 	self.assignments.green_mantis.name_id = "menu_gage_green_mantis"
 	self.assignments.green_mantis.desc_id = "menu_gage_green_mantis_desc"
@@ -232,22 +234,22 @@ function GageAssignmentTweakData:init(tweak_data)
 	end
 end
 
--- Lines: 155 to 156
+-- Lines 155-157
 function GageAssignmentTweakData:get_experience_multiplier(ratio)
 	return 1 + self.EXPERIENCE_MULTIPLIER * math.clamp(ratio or 0, 0, 1)
 end
 
--- Lines: 159 to 160
+-- Lines 159-161
 function GageAssignmentTweakData:exists(assignment)
 	return self.assignments[assignment] and true or false
 end
 
--- Lines: 163 to 164
+-- Lines 163-165
 function GageAssignmentTweakData:get_value(assignment, value)
 	return self.assignments[assignment] and self.assignments[assignment][value] or false
 end
 
--- Lines: 167 to 172
+-- Lines 167-173
 function GageAssignmentTweakData:get_max_aquire()
 	local max_aquire = 0
 
@@ -258,7 +260,7 @@ function GageAssignmentTweakData:get_max_aquire()
 	return max_aquire
 end
 
--- Lines: 175 to 196
+-- Lines 175-197
 function GageAssignmentTweakData:fetch_new_assignments(level_id)
 	local max_assignments = self.MAX_ACTIVE_ASSIGNMENTS
 	local assignments = {}
@@ -276,7 +278,7 @@ function GageAssignmentTweakData:fetch_new_assignments(level_id)
 	if max_assignments and max_assignments ~= true then
 		local num_to_remove = #assignments - max_assignments
 
-		for i = 1, num_to_remove, 1 do
+		for i = 1, num_to_remove do
 			table.remove(assignments, math.random(#assignments))
 		end
 	end
@@ -284,12 +286,12 @@ function GageAssignmentTweakData:fetch_new_assignments(level_id)
 	return assignments
 end
 
--- Lines: 199 to 200
+-- Lines 199-201
 function GageAssignmentTweakData:get_assignments()
 	return self.assignments
 end
 
--- Lines: 203 to 227
+-- Lines 203-228
 function GageAssignmentTweakData:get_num_assignment_units()
 	if not self.NUM_ASSIGNMENT_UNITS then
 		return 1
@@ -298,7 +300,7 @@ function GageAssignmentTweakData:get_num_assignment_units()
 	local num_assignment_units = self.NUM_ASSIGNMENT_UNITS
 	local difficulty = managers.job:current_difficulty_stars() + 1
 
-	if difficulty < 1 or #self.NUM_ASSIGNMENT_UNITS < difficulty then
+	if difficulty < 1 or difficulty > #self.NUM_ASSIGNMENT_UNITS then
 		debug_pause("GageAssignmentTweakData:get_num_assignment_units() difficulty out of bound", difficulty, inspect(self.NUM_ASSIGNMENT_UNITS))
 
 		difficulty = math.clamp(difficulty, 1, #self.NUM_ASSIGNMENT_UNITS)
@@ -317,4 +319,3 @@ function GageAssignmentTweakData:get_num_assignment_units()
 
 	return num_assignment_units[difficulty] or 1
 end
-

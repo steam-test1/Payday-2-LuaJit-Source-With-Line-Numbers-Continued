@@ -1,12 +1,12 @@
 CopActionWarp = CopActionWarp or class()
 
--- Lines: 6 to 57
+-- Lines 4-58
 function CopActionWarp:init(action_desc, common_data)
 	self._unit = common_data.unit
 	self._dynamic_bodies = {}
 	local nr_bodies = self._unit:num_bodies()
 
-	for i = 0, nr_bodies - 1, 1 do
+	for i = 0, nr_bodies - 1 do
 		local body = self._unit:body(i)
 
 		if body:dynamic() then
@@ -46,7 +46,7 @@ function CopActionWarp:init(action_desc, common_data)
 				yaw = 360 + yaw
 			end
 
-			sync_yaw = 1 + math.ceil((yaw * 254) / 360)
+			sync_yaw = 1 + math.ceil(yaw * 254 / 360)
 		else
 			has_rotation = false
 		end
@@ -59,7 +59,7 @@ function CopActionWarp:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 62 to 73
+-- Lines 62-73
 function CopActionWarp:update(t)
 	if self._i_update < 1 then
 		self._i_update = self._i_update + 1
@@ -74,22 +74,22 @@ function CopActionWarp:update(t)
 	end
 end
 
--- Lines: 77 to 78
+-- Lines 77-79
 function CopActionWarp:type()
 	return "warp"
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function CopActionWarp:expired()
 	return self._expired
 end
 
--- Lines: 89 to 90
+-- Lines 89-91
 function CopActionWarp:need_upd()
 	return true
 end
 
--- Lines: 95 to 100
+-- Lines 95-101
 function CopActionWarp:chk_block(action_type, t)
 	if action_type == "death" then
 		return false
@@ -97,4 +97,3 @@ function CopActionWarp:chk_block(action_type, t)
 
 	return true
 end
-

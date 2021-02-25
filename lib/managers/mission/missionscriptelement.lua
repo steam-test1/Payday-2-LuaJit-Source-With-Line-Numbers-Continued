@@ -3,16 +3,16 @@ core:import("CoreClass")
 
 MissionScriptElement = MissionScriptElement or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function MissionScriptElement:init(...)
 	MissionScriptElement.super.init(self, ...)
 end
 
--- Lines: 11 to 12
+-- Lines 10-12
 function MissionScriptElement:client_on_executed()
 end
 
--- Lines: 14 to 19
+-- Lines 14-19
 function MissionScriptElement:on_executed(...)
 	if Network:is_client() then
 		return
@@ -21,7 +21,7 @@ function MissionScriptElement:on_executed(...)
 	MissionScriptElement.super.on_executed(self, ...)
 end
 
--- Lines: 21 to 28
+-- Lines 21-28
 function MissionScriptElement:_override_element_type_group(element, expected_id, group_table, variable_name, new_value)
 	for i, data in pairs(group_table) do
 		if (not expected_id or data._id == expected_id) and element._values then
@@ -30,7 +30,7 @@ function MissionScriptElement:_override_element_type_group(element, expected_id,
 	end
 end
 
--- Lines: 32 to 47
+-- Lines 30-47
 function MissionScriptElement:_override_group_element(element_id, element_type, variable_name, new_value)
 	local element = self:get_mission_element(element_id)
 
@@ -47,17 +47,19 @@ function MissionScriptElement:_override_group_element(element_id, element_type, 
 	end
 end
 
--- Lines: 50 to 55
+-- Lines 49-55
 function MissionScriptElement:override_value_on_element_type(element_type, variable_name, new_value)
 	for _, params in ipairs(self._values.on_executed) do
 		self:_override_group_element(params.id, element_type, variable_name, new_value)
 	end
 end
 
--- Lines: 59 to 71
+-- Lines 57-71
 function MissionScriptElement:override_value_on_element(element_ids, variable_name, new_value)
 	if type(element_ids) ~= "table" then
-		element_ids = {element_ids}
+		element_ids = {
+			element_ids
+		}
 	end
 
 	for _, params in ipairs(self._values.on_executed) do
@@ -68,4 +70,3 @@ function MissionScriptElement:override_value_on_element(element_ids, variable_na
 end
 
 CoreClass.override_class(CoreMissionScriptElement.MissionScriptElement, MissionScriptElement)
-

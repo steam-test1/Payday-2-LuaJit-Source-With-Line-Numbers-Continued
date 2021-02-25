@@ -1,7 +1,7 @@
 PromotionalMenuButton = PromotionalMenuButton or class()
 local padding = 10
 
--- Lines: 5 to 9
+-- Lines 5-9
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -9,7 +9,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines: 12 to 30
+-- Lines 11-30
 function PromotionalMenuButton:init(parent_gui, panel, params, theme)
 	self._gui = parent_gui
 	self._theme = theme
@@ -24,7 +24,7 @@ function PromotionalMenuButton:init(parent_gui, panel, params, theme)
 	self:refresh()
 end
 
--- Lines: 32 to 41
+-- Lines 32-41
 function PromotionalMenuButton:_setup_panel(panel, params)
 	self._panel = panel:panel({
 		x = params.x,
@@ -36,7 +36,7 @@ function PromotionalMenuButton:_setup_panel(panel, params)
 	})
 end
 
--- Lines: 43 to 48
+-- Lines 43-48
 function PromotionalMenuButton:setup(parent_gui, panel, params, theme)
 	self:_setup_selection(parent_gui, panel, params, theme)
 	self:_setup_titles(parent_gui, panel, params, theme)
@@ -44,7 +44,7 @@ function PromotionalMenuButton:setup(parent_gui, panel, params, theme)
 	self:_setup_overlay(parent_gui, panel, params, theme)
 end
 
--- Lines: 52 to 61
+-- Lines 50-61
 function PromotionalMenuButton:_setup_selection(parent_gui, panel, params, theme)
 	self._corner_rects = {}
 	local corner_size = 2
@@ -74,15 +74,19 @@ function PromotionalMenuButton:_setup_selection(parent_gui, panel, params, theme
 		h = corner_size
 	}))
 
-	self._selection_outline = BoxGuiObject:new(self._panel:panel({layer = 100}), theme.selection_outline_sides or {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._selection_outline = BoxGuiObject:new(self._panel:panel({
+		layer = 100
+	}), theme.selection_outline_sides or {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 end
 
--- Lines: 65 to 117
+-- Lines 63-117
 function PromotionalMenuButton:_setup_titles(parent_gui, panel, params, theme)
 	if params.title then
 		local title_font = theme.font[params.title.font or "medium"]
@@ -130,7 +134,7 @@ function PromotionalMenuButton:_setup_titles(parent_gui, panel, params, theme)
 	end
 end
 
--- Lines: 121 to 151
+-- Lines 119-151
 function PromotionalMenuButton:_setup_background(parent_gui, panel, params, theme)
 	if params.background then
 		if params.background.color then
@@ -164,7 +168,7 @@ function PromotionalMenuButton:_setup_background(parent_gui, panel, params, them
 	end
 end
 
--- Lines: 154 to 197
+-- Lines 153-197
 function PromotionalMenuButton:_setup_overlay(parent_gui, panel, params, theme)
 	if params.overlay then
 		if params.overlay.color then
@@ -210,7 +214,7 @@ function PromotionalMenuButton:_setup_overlay(parent_gui, panel, params, theme)
 	end
 end
 
--- Lines: 201 to 217
+-- Lines 199-217
 function PromotionalMenuButton:refresh()
 	if self._corner_rects then
 		for _, rect in ipairs(self._corner_rects) do
@@ -229,22 +233,22 @@ function PromotionalMenuButton:refresh()
 	self:set_selected(self._selected, true)
 end
 
--- Lines: 221 to 222
+-- Lines 221-223
 function PromotionalMenuButton:position()
 	return self._position
 end
 
--- Lines: 225 to 226
+-- Lines 225-227
 function PromotionalMenuButton:size()
 	return self._size
 end
 
--- Lines: 229 to 230
+-- Lines 229-231
 function PromotionalMenuButton:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 233 to 239
+-- Lines 233-239
 function PromotionalMenuButton:can_be_selected()
 	if self._parameters.can_be_selected ~= nil then
 		return self._parameters.can_be_selected
@@ -253,7 +257,7 @@ function PromotionalMenuButton:can_be_selected()
 	end
 end
 
--- Lines: 242 to 272
+-- Lines 241-272
 function PromotionalMenuButton:set_selected(selected, force)
 	if self._selected == selected and not force then
 		return
@@ -278,10 +282,11 @@ function PromotionalMenuButton:set_selected(selected, force)
 	end
 
 	if alive(self._bg_image) then
+		local w = self._bg_image_size[1]
 		local h = self._bg_image_size[2]
 
 		if selected then
-			local w = self._bg_image_size[1] * self._zoom_factor
+			w = w * self._zoom_factor
 			h = h * self._zoom_factor
 		end
 
@@ -290,7 +295,7 @@ function PromotionalMenuButton:set_selected(selected, force)
 	end
 end
 
--- Lines: 274 to 281
+-- Lines 274-281
 function PromotionalMenuButton:trigger()
 	if self._parameters and self._parameters.callback then
 		self._gui[self._parameters.callback](self._gui)
@@ -301,7 +306,7 @@ function PromotionalMenuButton:trigger()
 	managers.menu:post_event("menu_enter")
 end
 
--- Lines: 285 to 293
+-- Lines 285-293
 function PromotionalMenuButton:animate_image_size(img, target_w, target_h, duration)
 	local orig_w = img:w()
 	local orig_h = img:h()
@@ -312,28 +317,36 @@ function PromotionalMenuButton:animate_image_size(img, target_w, target_h, durat
 		img:set_center(self._panel:w() * 0.5, self._panel:h() * 0.5)
 	end)
 end
+
 RaidPromotionalMenuButton = RaidPromotionalMenuButton or class(PromotionalMenuButton)
 
--- Lines: 301 to 310
+-- Lines 300-310
 function RaidPromotionalMenuButton:_setup_selection(parent_gui, panel, params, theme)
 	self._corner_rects = {}
 
 	if not theme.selection_outline_sides then
-		local config = {sides = {
-			1,
-			1,
-			1,
-			1
-		}}
+		local config = {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		}
 	end
 
 	config.texture = "guis/textures/test_blur_df"
-	local unselected_outline = BoxGuiObject:new(self._panel:panel({layer = 99}), config)
-	self._selection_outline = BoxGuiObject:new(self._panel:panel({layer = 100}), config)
+	local unselected_outline = BoxGuiObject:new(self._panel:panel({
+		layer = 99
+	}), config)
+	self._selection_outline = BoxGuiObject:new(self._panel:panel({
+		layer = 100
+	}), config)
 end
+
 RaidPromotionalMenuFloatingButton = RaidPromotionalMenuFloatingButton or class(PromotionalMenuButton)
 
--- Lines: 318 to 337
+-- Lines 317-337
 function RaidPromotionalMenuFloatingButton:_setup_panel(panel, params)
 	local x = params.x
 	local y = params.y
@@ -358,35 +371,37 @@ function RaidPromotionalMenuFloatingButton:_setup_panel(panel, params)
 	})
 end
 
--- Lines: 340 to 341
+-- Lines 339-341
 function RaidPromotionalMenuFloatingButton:_setup_selection(parent_gui, panel, params, theme)
 end
+
 PromotionalMenuUnselectableButton = PromotionalMenuUnselectableButton or class(PromotionalMenuButton)
 
--- Lines: 349 to 350
+-- Lines 348-350
 function PromotionalMenuUnselectableButton:_setup_selection(parent_gui, panel, params, theme)
 end
 
--- Lines: 352 to 353
+-- Lines 352-354
 function PromotionalMenuUnselectableButton:inside()
 	return false
 end
 
--- Lines: 356 to 357
+-- Lines 356-358
 function PromotionalMenuUnselectableButton:can_be_selected()
 	return false
 end
 
--- Lines: 361 to 362
+-- Lines 360-362
 function PromotionalMenuUnselectableButton:set_selected()
 end
 
--- Lines: 365 to 366
+-- Lines 364-366
 function PromotionalMenuUnselectableButton:trigger()
 end
+
 PromotionalMenuSeperatorRaid = PromotionalMenuSeperatorRaid or class(PromotionalMenuButton)
 
--- Lines: 375 to 417
+-- Lines 373-417
 function PromotionalMenuSeperatorRaid:setup(parent_gui, panel, params, theme)
 	local title_font = theme.font[params.title.font or "medium"]
 	local title_font_size = theme.font_size[params.title.font_size or "medium"]
@@ -431,27 +446,26 @@ function PromotionalMenuSeperatorRaid:setup(parent_gui, panel, params, theme)
 	self._bottom_line = bottom_line
 end
 
--- Lines: 420 to 424
+-- Lines 419-424
 function PromotionalMenuSeperatorRaid:refresh()
 	self._underline:set_color(self._theme.selection_outline)
 	self._bottom_line:set_color(self._theme.background_unselected)
 end
 
--- Lines: 426 to 427
+-- Lines 426-428
 function PromotionalMenuSeperatorRaid:inside()
 	return false
 end
 
--- Lines: 430 to 431
+-- Lines 430-432
 function PromotionalMenuSeperatorRaid:can_be_selected()
 	return false
 end
 
--- Lines: 435 to 436
+-- Lines 434-436
 function PromotionalMenuSeperatorRaid:set_selected()
 end
 
--- Lines: 439 to 440
+-- Lines 438-440
 function PromotionalMenuSeperatorRaid:trigger()
 end
-

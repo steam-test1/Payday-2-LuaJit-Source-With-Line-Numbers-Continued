@@ -1,6 +1,6 @@
 WaitingForPlayersCamera = WaitingForPlayersCamera or class()
 
--- Lines: 3 to 22
+-- Lines 3-22
 function WaitingForPlayersCamera:init(unit)
 	self._unit = unit
 	self._camera = World:create_camera()
@@ -20,11 +20,13 @@ function WaitingForPlayersCamera:init(unit)
 	self._camera_controller:set_both(self._unit:get_object(Idstring("a_camera")))
 end
 
--- Lines: 24 to 34
+-- Lines 24-34
 function WaitingForPlayersCamera:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("wait_camera", self._camera, self._camera, nil, false)
 
-	managers.listener:add_set("wait_camera", {"wait_camera"})
+	managers.listener:add_set("wait_camera", {
+		"wait_camera"
+	})
 
 	self._listener_activation_id = managers.listener:activate_set("main", "wait_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
@@ -34,7 +36,7 @@ function WaitingForPlayersCamera:_setup_sound_listener()
 	})
 end
 
--- Lines: 37 to 48
+-- Lines 36-48
 function WaitingForPlayersCamera:start(time)
 	if _G.IS_VR then
 		return
@@ -48,7 +50,7 @@ function WaitingForPlayersCamera:start(time)
 	self._viewport:set_active(true)
 end
 
--- Lines: 50 to 56
+-- Lines 50-56
 function WaitingForPlayersCamera:stop()
 	self._viewport:set_active(false)
 	self._unit:anim_stop(Idstring("camera_animation"))
@@ -57,7 +59,7 @@ function WaitingForPlayersCamera:stop()
 	self._playing = false
 end
 
--- Lines: 58 to 70
+-- Lines 58-70
 function WaitingForPlayersCamera:update(unit, t, dt)
 	if self._playing then
 		if self._wait_t then
@@ -72,7 +74,7 @@ function WaitingForPlayersCamera:update(unit, t, dt)
 	end
 end
 
--- Lines: 72 to 89
+-- Lines 72-89
 function WaitingForPlayersCamera:destroy()
 	if self._viewport then
 		self._viewport:destroy()
@@ -94,4 +96,3 @@ function WaitingForPlayersCamera:destroy()
 		self._listener_id = nil
 	end
 end
-

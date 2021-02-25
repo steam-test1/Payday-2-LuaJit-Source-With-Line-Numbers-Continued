@@ -16,22 +16,22 @@ CoreSubtitleCutsceneKey.control_for_category = CoreCutsceneKeyBase.standard_comb
 CoreSubtitleCutsceneKey.control_for_string_id = CoreCutsceneKeyBase.standard_combo_box_control
 CoreSubtitleCutsceneKey.control_for_divider = CoreCutsceneKeyBase.standard_divider_control
 
--- Lines: 17 to 18
+-- Lines 17-19
 function CoreSubtitleCutsceneKey:__tostring()
 	return "Display subtitle \"" .. self:string_id() .. "\"."
 end
 
--- Lines: 21 to 22
+-- Lines 21-23
 function CoreSubtitleCutsceneKey:can_evaluate_with_player(player)
 	return true
 end
 
--- Lines: 25 to 27
+-- Lines 25-27
 function CoreSubtitleCutsceneKey:unload(player)
 	managers.subtitle:clear_subtitle()
 end
 
--- Lines: 29 to 35
+-- Lines 29-35
 function CoreSubtitleCutsceneKey:play(player, undo, fast_forward)
 	if undo then
 		managers.subtitle:clear_subtitle()
@@ -40,22 +40,22 @@ function CoreSubtitleCutsceneKey:play(player, undo, fast_forward)
 	end
 end
 
--- Lines: 37 to 38
+-- Lines 37-39
 function CoreSubtitleCutsceneKey:is_valid_category(value)
 	return value and value ~= ""
 end
 
--- Lines: 41 to 42
+-- Lines 41-43
 function CoreSubtitleCutsceneKey:is_valid_string_id(value)
 	return value and value ~= ""
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function CoreSubtitleCutsceneKey:is_valid_duration(value)
 	return value and value > 0
 end
 
--- Lines: 49 to 53
+-- Lines 49-54
 function CoreSubtitleCutsceneKey:control_for_localized_text(parent_frame)
 	local control = EWS:TextCtrl(parent_frame, "", "", "NO_BORDER,TE_RICH,TE_MULTILINE,TE_READONLY")
 
@@ -65,7 +65,7 @@ function CoreSubtitleCutsceneKey:control_for_localized_text(parent_frame)
 	return control
 end
 
--- Lines: 56 to 73
+-- Lines 56-73
 function CoreSubtitleCutsceneKey:refresh_control_for_category(control)
 	control:freeze()
 	control:clear()
@@ -91,7 +91,7 @@ function CoreSubtitleCutsceneKey:refresh_control_for_category(control)
 	control:thaw()
 end
 
--- Lines: 75 to 92
+-- Lines 75-92
 function CoreSubtitleCutsceneKey:refresh_control_for_string_id(control)
 	control:freeze()
 	control:clear()
@@ -117,7 +117,7 @@ function CoreSubtitleCutsceneKey:refresh_control_for_string_id(control)
 	control:thaw()
 end
 
--- Lines: 94 to 100
+-- Lines 94-100
 function CoreSubtitleCutsceneKey:refresh_control_for_localized_text(control)
 	if self:is_valid_category(self:category()) and self:is_valid_string_id(self:string_id()) then
 		control:set_value(managers.localization:text(self:string_id()))
@@ -126,7 +126,7 @@ function CoreSubtitleCutsceneKey:refresh_control_for_localized_text(control)
 	end
 end
 
--- Lines: 102 to 108
+-- Lines 102-109
 function CoreSubtitleCutsceneKey:validate_control_for_attribute(attribute_name)
 	if attribute_name ~= "localized_text" then
 		return self.super.validate_control_for_attribute(self, attribute_name)
@@ -134,4 +134,3 @@ function CoreSubtitleCutsceneKey:validate_control_for_attribute(attribute_name)
 
 	return true
 end
-

@@ -3,14 +3,14 @@ core:import("CoreMenuItem")
 MenuItemColoredDivider = MenuItemColoredDivider or class(MenuItemDivider)
 MenuItemColoredDivider.TYPE = "divider"
 
--- Lines: 7 to 11
+-- Lines 7-11
 function MenuItemColoredDivider:init(data_node, parameters)
 	MenuItemColoredDivider.super.init(self, data_node, parameters)
 
 	self._type = MenuItemColoredDivider.TYPE
 end
 
--- Lines: 15 to 24
+-- Lines 14-26
 function MenuItemColoredDivider:setup_gui(node, row_item)
 	MenuItemColoredDivider.super.setup_gui(self, node, row_item)
 
@@ -23,7 +23,7 @@ function MenuItemColoredDivider:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 28 to 33
+-- Lines 28-33
 function MenuItemColoredDivider:set_color(color)
 	self._color = color
 
@@ -31,4 +31,3 @@ function MenuItemColoredDivider:set_color(color)
 		self._rect:set_color(self._color)
 	end
 end
-

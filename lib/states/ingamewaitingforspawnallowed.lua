@@ -4,14 +4,14 @@ require("lib/states/GameState")
 IngameWaitingForSpawnAllowed = IngameWaitingForSpawnAllowed or class(IngameWaitingForRespawnState)
 IngameWaitingForSpawnAllowed.STATE_STRING = "ingame_waiting_for_spawn_allowed"
 
--- Lines: 11 to 15
+-- Lines 10-15
 function IngameWaitingForSpawnAllowed:_begin_game_enter_transition()
 	local overlay_effect_desc = tweak_data.overlay_effects.spectator
 	local fade_in_duration = overlay_effect_desc.fade_in
 	self._fade_in_overlay_eff_id = managers.overlay_effect:play_effect(overlay_effect_desc)
 end
 
--- Lines: 21 to 51
+-- Lines 19-51
 function IngameWaitingForSpawnAllowed.spawn_waiting_player(peer_to_spawn)
 	if managers.groupai and managers.groupai:state():whisper_mode() and not managers.wait:check_waiting_allowed_spawn(peer_to_spawn) then
 		return
@@ -45,12 +45,12 @@ function IngameWaitingForSpawnAllowed.spawn_waiting_player(peer_to_spawn)
 	end
 end
 
--- Lines: 55 to 57
+-- Lines 55-57
 function IngameWaitingForSpawnAllowed:update(t, dt)
 	self:_upd_watch(t, dt)
 end
 
--- Lines: 62 to 116
+-- Lines 61-116
 function IngameWaitingForSpawnAllowed:at_enter()
 	if _G.IS_VR then
 		managers.menu:open_menu("custody")
@@ -107,7 +107,7 @@ function IngameWaitingForSpawnAllowed:at_enter()
 	})
 end
 
--- Lines: 121 to 146
+-- Lines 120-146
 function IngameWaitingForSpawnAllowed:at_exit(data)
 	if _G.IS_VR then
 		managers.menu:close_menu("custody")
@@ -137,19 +137,19 @@ function IngameWaitingForSpawnAllowed:at_exit(data)
 	managers.hud:set_player_condition("mugshot_normal", "")
 end
 
--- Lines: 152 to 153
+-- Lines 152-153
 function IngameWaitingForSpawnAllowed:trade_death(respawn_delay, hostages_killed)
 end
 
--- Lines: 155 to 156
+-- Lines 155-156
 function IngameWaitingForSpawnAllowed:finish_trade()
 end
 
--- Lines: 158 to 159
+-- Lines 158-159
 function IngameWaitingForSpawnAllowed:begin_trade()
 end
 
--- Lines: 161 to 162
+-- Lines 161-162
 function IngameWaitingForSpawnAllowed:cancel_trade()
 end
 
@@ -158,4 +158,3 @@ add_prints("IngameWaitingForSpawnAllowed", {
 	"_upd_watch",
 	"_refresh_teammate_list"
 })
-

@@ -1,7 +1,7 @@
 HUDHintVR = HUDHint
 HUDHintVR.old_init = HUDHint.init
 
--- Lines: 6 to 14
+-- Lines 6-14
 function HUDHintVR:init(hud)
 	hud.old_panel = hud.panel
 	hud.panel = managers.hud:prompt_panel()
@@ -13,4 +13,3 @@ function HUDHintVR:init(hud)
 
 	VRManagerPD2.overlay_helper(managers.hud:prompt_panel())
 end
-

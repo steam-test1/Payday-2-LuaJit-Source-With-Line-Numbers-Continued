@@ -1,15 +1,16 @@
 PlayerParachutingVR = PlayerParachuting or Application:error("PlayerParachutingVR needs PlayerParachuting!")
 local __init = PlayerParachuting.init
 
--- Lines: 5 to 9
+-- Lines 5-9
 function PlayerParachutingVR:init(...)
 	__init(self, ...)
 
 	self._comfort_screen_setting_changed_clbk = callback(self, self, "_on_comfort_screen_setting_changed")
 end
+
 local __enter = PlayerParachuting.enter
 
--- Lines: 12 to 26
+-- Lines 12-26
 function PlayerParachutingVR:enter(...)
 	__enter(self, ...)
 
@@ -27,9 +28,10 @@ function PlayerParachutingVR:enter(...)
 	self._parachute_unit:damage():run_sequence_simple("animation_unfold")
 	self._unit:link(self._unit:orientation_object():name(), self._parachute_unit)
 end
+
 local __exit = PlayerParachuting.exit
 
--- Lines: 29 to 42
+-- Lines 29-42
 function PlayerParachutingVR:exit(...)
 	__exit(self, ...)
 
@@ -45,15 +47,16 @@ function PlayerParachutingVR:exit(...)
 	World:delete_unit(self._parachute_unit)
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function PlayerParachutingVR:_update_variables(t, dt)
 	self._current_height = self._ext_movement:hmd_position().z
 end
+
 local __update_movement = PlayerParachuting._update_movement
 local hmd_delta = Vector3()
 local ghost_pos = Vector3()
 
--- Lines: 51 to 63
+-- Lines 51-63
 function PlayerParachutingVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 	mvector3.set(hmd_delta, self._unit:movement():hmd_delta())
@@ -65,7 +68,7 @@ function PlayerParachutingVR:_update_movement(t, dt)
 	self._unit:movement():set_ghost_position(ghost_pos, self._unit:position())
 end
 
--- Lines: 65 to 75
+-- Lines 65-75
 function PlayerParachutingVR:_on_comfort_screen_setting_changed(setting, old, new)
 	if new then
 		self._camera_unit:base():set_hmd_tracking(false)
@@ -79,4 +82,3 @@ function PlayerParachutingVR:_on_comfort_screen_setting_changed(setting, old, ne
 		self._comfort_screen_active = false
 	end
 end
-

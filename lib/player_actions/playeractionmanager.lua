@@ -1,12 +1,12 @@
 PlayerActionManager = PlayerActionManager or class()
 
--- Lines: 5 to 8
+-- Lines 5-8
 function PlayerActionManager:init()
 	self._actions = {}
 	self._buffer = {}
 end
 
--- Lines: 10 to 22
+-- Lines 10-22
 function PlayerActionManager:update(t, dt)
 	self:_add()
 
@@ -21,14 +21,14 @@ function PlayerActionManager:update(t, dt)
 	end
 end
 
--- Lines: 24 to 28
+-- Lines 24-28
 function PlayerActionManager:add_action(name, action)
 	if not self._buffer[name] and not self._actions[name] then
 		self._buffer[name] = action
 	end
 end
 
--- Lines: 30 to 40
+-- Lines 30-40
 function PlayerActionManager:_add()
 	for key, value in pairs(self._buffer) do
 		if value.on_enter then
@@ -43,8 +43,7 @@ function PlayerActionManager:_add()
 	self._buffer = {}
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function PlayerActionManager:is_running(name)
 	return self._actions[name]
 end
-

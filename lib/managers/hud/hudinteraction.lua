@@ -1,6 +1,6 @@
 HUDInteraction = HUDInteraction or class()
 
--- Lines: 3 to 26
+-- Lines 3-26
 function HUDInteraction:init(hud, child_name)
 	self._hud_panel = hud.panel
 	self._circle_radius = 64
@@ -46,7 +46,7 @@ function HUDInteraction:init(hud, child_name)
 	invalid_text:set_center_y(interact_text:center_y())
 end
 
--- Lines: 28 to 33
+-- Lines 28-33
 function HUDInteraction:show_interact(data)
 	self:remove_interact()
 
@@ -56,7 +56,7 @@ function HUDInteraction:show_interact(data)
 	self._hud_panel:child(self._child_name_text):set_text(text)
 end
 
--- Lines: 35 to 41
+-- Lines 35-41
 function HUDInteraction:remove_interact()
 	if not alive(self._hud_panel) then
 		return
@@ -66,7 +66,7 @@ function HUDInteraction:remove_interact()
 	self._hud_panel:child(self._child_ivalid_name_text):set_visible(false)
 end
 
--- Lines: 43 to 53
+-- Lines 43-53
 function HUDInteraction:show_interaction_bar(current, total)
 	if self._interact_circle then
 		self._interact_circle:remove()
@@ -88,7 +88,7 @@ function HUDInteraction:show_interaction_bar(current, total)
 	self._interact_circle:set_position(self._hud_panel:w() / 2 - self._circle_radius, self._hud_panel:h() / 2 - self._circle_radius)
 end
 
--- Lines: 55 to 62
+-- Lines 55-62
 function HUDInteraction:set_interaction_bar_width(current, total)
 	if not self._interact_circle then
 		return
@@ -97,7 +97,7 @@ function HUDInteraction:set_interaction_bar_width(current, total)
 	self._interact_circle:set_current(math.clamp(current / total, 0, 1))
 end
 
--- Lines: 65 to 82
+-- Lines 64-82
 function HUDInteraction:hide_interaction_bar(complete)
 	if complete then
 		local bitmap = self._hud_panel:bitmap({
@@ -132,7 +132,7 @@ function HUDInteraction:hide_interaction_bar(complete)
 	end
 end
 
--- Lines: 86 to 98
+-- Lines 84-98
 function HUDInteraction:set_bar_valid(valid, text_id)
 	local texture = valid and "guis/textures/pd2/hud_progress_active" or "guis/textures/pd2/hud_progress_invalid"
 
@@ -148,7 +148,7 @@ function HUDInteraction:set_bar_valid(valid, text_id)
 	invalid_text:set_visible(not valid)
 end
 
--- Lines: 100 to 107
+-- Lines 100-107
 function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text))
 	self._hud_panel:remove(self._hud_panel:child(self._child_ivalid_name_text))
@@ -160,7 +160,7 @@ function HUDInteraction:destroy()
 	end
 end
 
--- Lines: 111 to 134
+-- Lines 111-134
 function HUDInteraction:_animate_interaction_complete(bitmap, circle)
 	local TOTAL_T = 0.6
 	local t = TOTAL_T
@@ -189,4 +189,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDInteractionVR")
 end
-

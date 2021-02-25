@@ -1,16 +1,20 @@
 SpawnManager = SpawnManager or class()
 
--- Lines: 3 to 5
+-- Lines 3-5
 function SpawnManager:init()
 	self._spawn_requests = {}
 end
 
--- Lines: 9 to 31
+-- Lines 9-32
 function SpawnManager:spawn_enemy_group_in_vis_group(event, i_vis_group)
-	local spawn_request = {groups = {}}
+	local spawn_request = {
+		groups = {}
+	}
 
 	for unit_name, unit_data in pairs(event.groups) do
-		spawn_request.groups[unit_name] = {amount = unit_data.amount}
+		spawn_request.groups[unit_name] = {
+			amount = unit_data.amount
+		}
 	end
 
 	spawn_request.ai = event.ai
@@ -37,12 +41,16 @@ function SpawnManager:spawn_enemy_group_in_vis_group(event, i_vis_group)
 	return self:_spawn_units()
 end
 
--- Lines: 36 to 89
+-- Lines 36-90
 function SpawnManager:spawn_enemy_group(event)
-	local spawn_request = {groups = {}}
+	local spawn_request = {
+		groups = {}
+	}
 
 	for unit_name, unit_data in pairs(event.groups) do
-		spawn_request.groups[unit_name] = {amount = unit_data.amount}
+		spawn_request.groups[unit_name] = {
+			amount = unit_data.amount
+		}
 	end
 
 	spawn_request.ai = event.ai
@@ -55,7 +63,9 @@ function SpawnManager:spawn_enemy_group(event)
 			table.insert(hide_from_trackers, criminal_unit:movement():nav_tracker())
 		end
 
-		local vis_group_pos, i_vis_group = managers.navigation:find_hide_position({trackers = hide_from_trackers})
+		local vis_group_pos, i_vis_group = managers.navigation:find_hide_position({
+			trackers = hide_from_trackers
+		})
 
 		if i_vis_group then
 			for unit_name, unit_data in pairs(spawn_request.groups) do
@@ -103,11 +113,11 @@ function SpawnManager:spawn_enemy_group(event)
 	return self:_spawn_units()
 end
 
--- Lines: 94 to 95
+-- Lines 94-95
 function SpawnManager:update(unit, t, dt)
 end
 
--- Lines: 99 to 148
+-- Lines 99-148
 function SpawnManager:_spawn_units()
 	if self._spawn_requests then
 		local units_spawned = {}
@@ -165,4 +175,3 @@ function SpawnManager:_spawn_units()
 		return units_spawned
 	end
 end
-

@@ -31,7 +31,7 @@ CUTSCENE = CoreDependencyNode.CUTSCENE
 EFFECT = CoreDependencyNode.EFFECT
 DependencyParser = DependencyParser or CoreClass.class()
 
--- Lines: 46 to 61
+-- Lines 46-61
 function DependencyParser:init(db)
 	self._database = db or Database
 	self._dn_cb = CoreEvent.callback(self, self, "_dn")
@@ -49,26 +49,28 @@ function DependencyParser:init(db)
 	self:_make_nodes_from_db(CoreEffectDn.EffectDependencyNode, "effect")
 end
 
--- Lines: 63 to 64
+-- Lines 63-65
 function DependencyParser:_key(type_, name)
 	return string.format("%s:%s", type_, name)
 end
 
--- Lines: 67 to 70
+-- Lines 67-71
 function DependencyParser:_dn(...)
-	local name, type_ = parse_kwargs({...}, "string:name", "number:type_")
+	local name, type_ = parse_kwargs({
+		...
+	}, "string:name", "number:type_")
 	local key = self:_key(type_, name)
 
 	return self._key2node[key]
 end
 
--- Lines: 73 to 76
+-- Lines 73-76
 function DependencyParser:_make_game_node()
 	local key = self:_key(GAME, "Game")
 	self._key2node[key] = CoreGameDn.GameDependencyNode:new("Game", self._dn_cb, self._database)
 end
 
--- Lines: 78 to 86
+-- Lines 78-86
 function DependencyParser:_make_level_nodes()
 	for _, dir in ipairs(File:list(CoreLevelDn.LEVEL_BASE, true)) do
 		local file = string.format(CoreLevelDn.LEVEL_FILE, dir)
@@ -80,13 +82,13 @@ function DependencyParser:_make_level_nodes()
 	end
 end
 
--- Lines: 88 to 91
+-- Lines 88-91
 function DependencyParser:_make_materialfile_node()
 	local key = self:_key(MATERIALS_FILE, "Materialsfile")
 	self._key2node[key] = CoreMaterialfileDn.MaterialsfileDependencyNode:new("Materialsfile", self._dn_cb, self._database)
 end
 
--- Lines: 93 to 99
+-- Lines 93-99
 function DependencyParser:_make_nodes_from_db(dn_class, db_type)
 	for _, name in ipairs(managers.database:list_entries_of_type(db_type)) do
 		local dn = dn_class:new(name, self._dn_cb, self._database)
@@ -95,7 +97,7 @@ function DependencyParser:_make_nodes_from_db(dn_class, db_type)
 	end
 end
 
--- Lines: 103 to 110
+-- Lines 103-111
 function DependencyParser:nodes(pattern)
 	local dn_list = {}
 
@@ -108,7 +110,7 @@ function DependencyParser:nodes(pattern)
 	return dn_list
 end
 
--- Lines: 113 to 116
+-- Lines 113-117
 function DependencyParser:complement(dn_list, pattern)
 	local all_dn = self:nodes()
 	local list = set_difference(all_dn, dn_list)
@@ -116,7 +118,7 @@ function DependencyParser:complement(dn_list, pattern)
 	return filter(list, pattern)
 end
 
--- Lines: 119 to 124
+-- Lines 119-125
 function DependencyParser:reached(start_dn_list, pattern)
 	local reached_dn = {}
 
@@ -127,7 +129,7 @@ function DependencyParser:reached(start_dn_list, pattern)
 	return filter(reached_dn, pattern)
 end
 
--- Lines: 127 to 130
+-- Lines 127-131
 function DependencyParser:not_reached(start_dn_list, pattern)
 	local reached_dn = self:reached(start_dn_list)
 	local not_reached_dn = self:complement(reached_dn)
@@ -135,7 +137,7 @@ function DependencyParser:not_reached(start_dn_list, pattern)
 	return filter(not_reached_dn, pattern)
 end
 
--- Lines: 141 to 146
+-- Lines 141-147
 function _set2list(set)
 	local list = {}
 
@@ -146,7 +148,7 @@ function _set2list(set)
 	return list
 end
 
--- Lines: 149 to 154
+-- Lines 149-155
 function _list2set(list)
 	local set = {}
 
@@ -157,7 +159,7 @@ function _list2set(list)
 	return set
 end
 
--- Lines: 157 to 165
+-- Lines 157-166
 function union(A_list, B_list)
 	local set = {}
 
@@ -172,7 +174,7 @@ function union(A_list, B_list)
 	return _set2list(set)
 end
 
--- Lines: 168 to 176
+-- Lines 168-177
 function intersect(A_list, B_list)
 	local b_set = _list2set(B_list)
 	local c_set = {}
@@ -186,7 +188,7 @@ function intersect(A_list, B_list)
 	return _set2list(c_set)
 end
 
--- Lines: 179 to 184
+-- Lines 179-185
 function set_difference(A_list, B_list)
 	local set = _list2set(A_list)
 
@@ -197,7 +199,7 @@ function set_difference(A_list, B_list)
 	return _set2list(set)
 end
 
--- Lines: 187 to 193
+-- Lines 187-194
 function names(A_list)
 	local names = {}
 
@@ -210,7 +212,7 @@ function names(A_list)
 	return names
 end
 
--- Lines: 196 to 203
+-- Lines 196-204
 function filter(dn_list, pattern)
 	res_list = {}
 
@@ -223,7 +225,7 @@ function filter(dn_list, pattern)
 	return res_list
 end
 
--- Lines: 211 to 315
+-- Lines 211-315
 function generate_report(filepath, protected_list, dp)
 	local workbook = CoreWorkbook.Workbook:new()
 	local dp = dp or DependencyParser:new(ProjectDatabase)
@@ -236,7 +238,7 @@ function generate_report(filepath, protected_list, dp)
 
 	local not_reached = dp:complement(reached)
 
-	-- Lines: 222 to 246
+	-- Lines 222-247
 	function make_first_worksheet()
 		local ws = CoreWorksheet.Worksheet:new("README")
 
@@ -266,7 +268,7 @@ function generate_report(filepath, protected_list, dp)
 		return ws
 	end
 
-	-- Lines: 249 to 258
+	-- Lines 249-259
 	function make_worksheet(type_, name)
 		local ws = CoreWorksheet.Worksheet:new(name)
 
@@ -285,7 +287,7 @@ function generate_report(filepath, protected_list, dp)
 		return ws
 	end
 
-	-- Lines: 261 to 288
+	-- Lines 261-289
 	function make_protected_worksheet()
 		local ws = CoreWorksheet.Worksheet:new("Protected Assets")
 
@@ -302,7 +304,7 @@ function generate_report(filepath, protected_list, dp)
 		local effects = names(filter(protected_list, EFFECT))
 		local size = math.max(#levels, #units, #objects, #models, #mtrlcfgs, #textures, #cutscenes, #effects)
 
-		for i = 1, size, 1 do
+		for i = 1, size do
 			ws:add_row(CoreSsRow.Row:new(levels[i] or "", units[i] or "", objects[i] or "", models[i] or "", mtrlcfgs[i] or "", textures[i] or "", cutscenes[i] or "", effects[i] or ""))
 		end
 
@@ -337,7 +339,7 @@ function generate_report(filepath, protected_list, dp)
 	end
 end
 
--- Lines: 317 to 338
+-- Lines 317-338
 function generate_BC_report(filepath)
 	local dp = dp or DependencyParser:new(ProjectDatabase)
 	local units = dp:nodes(UNIT)
@@ -360,7 +362,7 @@ function generate_BC_report(filepath)
 	generate_report(filepath, prot, dp)
 end
 
--- Lines: 340 to 362
+-- Lines 340-362
 function generate_FAITH_report(filepath)
 	local dp = dp or DependencyParser:new(ProjectDatabase)
 	local levels = dp:nodes(LEVEL)
@@ -375,4 +377,3 @@ function generate_FAITH_report(filepath)
 
 	generate_report(filepath, prot, dp)
 end
-

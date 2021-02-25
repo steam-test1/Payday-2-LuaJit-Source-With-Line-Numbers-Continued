@@ -1,6 +1,6 @@
 HUDStageEndCrimeSpreeScreen = HUDStageEndCrimeSpreeScreen or class()
 
--- Lines: 5 to 58
+-- Lines 4-58
 function HUDStageEndCrimeSpreeScreen:init(hud, workspace)
 	self._backdrop = MenuBackdropGUI:new(workspace)
 
@@ -66,53 +66,52 @@ function HUDStageEndCrimeSpreeScreen:init(hud, workspace)
 	self._backdrop:animate_bg_text(bg_text)
 end
 
--- Lines: 60 to 62
+-- Lines 60-62
 function HUDStageEndCrimeSpreeScreen:hide()
 	self._backdrop:hide()
 end
 
--- Lines: 64 to 66
+-- Lines 64-66
 function HUDStageEndCrimeSpreeScreen:show()
 	self._backdrop:show()
 end
 
--- Lines: 70 to 71
+-- Lines 70-71
 function HUDStageEndCrimeSpreeScreen:update(t, dt)
 end
 
--- Lines: 73 to 75
+-- Lines 73-75
 function HUDStageEndCrimeSpreeScreen:update_layout()
 	self._backdrop:_set_black_borders()
 end
 
--- Lines: 77 to 79
+-- Lines 77-79
 function HUDStageEndCrimeSpreeScreen:set_success(success, server_left)
 	HUDStageEndScreen.set_success(self, success, server_left)
 end
 
--- Lines: 81 to 82
+-- Lines 81-82
 function HUDStageEndCrimeSpreeScreen:set_continue_button_text(text)
 end
 
--- Lines: 84 to 86
+-- Lines 84-86
 function HUDStageEndCrimeSpreeScreen:set_statistics(criminals_completed, success)
 	HUDStageEndScreen.set_statistics(self, criminals_completed, success)
 end
 
--- Lines: 88 to 89
+-- Lines 88-89
 function HUDStageEndCrimeSpreeScreen:set_special_packages(params)
 end
 
--- Lines: 91 to 92
+-- Lines 91-92
 function HUDStageEndCrimeSpreeScreen:set_speed_up(multiplier)
 end
 
--- Lines: 94 to 96
+-- Lines 94-96
 function HUDStageEndCrimeSpreeScreen:set_group_statistics(...)
 	HUDStageEndScreen.set_group_statistics(self, ...)
 end
 
--- Lines: 98 to 99
+-- Lines 98-99
 function HUDStageEndCrimeSpreeScreen:send_xp_data(data, done_clbk)
 end
-

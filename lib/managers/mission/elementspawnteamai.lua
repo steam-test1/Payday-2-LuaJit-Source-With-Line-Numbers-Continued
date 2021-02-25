@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementSpawnTeamAI = ElementSpawnTeamAI or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 14
+-- Lines 5-14
 function ElementSpawnTeamAI:on_executed(instigator)
 	ElementSpawnTeamAI.super.on_executed(self, instigator)
 
@@ -14,4 +14,3 @@ function ElementSpawnTeamAI:on_executed(instigator)
 
 	managers.groupai:state():spawn_one_teamAI(false, char_name, self._values.position, self._values.rotation)
 end
-

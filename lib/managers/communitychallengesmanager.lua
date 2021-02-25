@@ -2,7 +2,7 @@ CommunityChallengesManager = CommunityChallengesManager or class()
 CommunityChallengesManager.FULL_CREW_COUNT = 4
 CommunityChallengesManager.PER_CHALLENGE_BONUS = 0.01
 
--- Lines: 8 to 23
+-- Lines 8-23
 function CommunityChallengesManager:init()
 	self._full_crew_start = nil
 	self._full_crew_time = 0
@@ -14,18 +14,20 @@ function CommunityChallengesManager:init()
 		self._challenges[challenge.challenge_id] = challenge
 	end
 
-	self._global = Global.community_challenges_manager or {active_bonus = 0}
+	self._global = Global.community_challenges_manager or {
+		active_bonus = 0
+	}
 	Global.community_challenges_manager = self._global
 
 	self:fetch_community_challenge_data()
 end
 
--- Lines: 25 to 27
+-- Lines 25-27
 function CommunityChallengesManager:update(t, dt)
 	self._message_system:update()
 end
 
--- Lines: 29 to 45
+-- Lines 29-45
 function CommunityChallengesManager:fetch_community_challenge_data()
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		local now = Application:time()
@@ -43,7 +45,7 @@ function CommunityChallengesManager:fetch_community_challenge_data()
 	end
 end
 
--- Lines: 47 to 93
+-- Lines 47-93
 function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	if not success then
 		return
@@ -52,7 +54,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._global.challenge_data = {}
 	self._global.active_bonus = 0
 
-	-- Lines: 55 to 60
+	-- Lines 55-61
 	local function get_60_day_stat(stat_name)
 		local stat_value = 0
 
@@ -63,7 +65,7 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 		return stat_value > 0 and stat_value or 0
 	end
 
-	-- Lines: 63 to 70
+	-- Lines 63-70
 	local function better_ceil(number)
 		local mod = number % 1
 
@@ -95,23 +97,22 @@ function CommunityChallengesManager:_on_global_stats_refresh_complete(success)
 	self._message_system:notify(Message.OnCommunityChallengeDataReceived, nil, self._global.challenge_data)
 end
 
--- Lines: 95 to 96
+-- Lines 95-97
 function CommunityChallengesManager:get_challenge_data()
 	return self._global.challenge_data
 end
 
--- Lines: 99 to 100
+-- Lines 99-101
 function CommunityChallengesManager:get_active_experience_bonus()
 	return self._global.active_bonus
 end
 
--- Lines: 171 to 173
+-- Lines 171-173
 function CommunityChallengesManager:add_event_listener(message, uid, func)
 	self._message_system:register(message, uid, func)
 end
 
--- Lines: 175 to 177
+-- Lines 175-177
 function CommunityChallengesManager:remove_event_listener(message, uid)
 	self._message_system:unregister(message, uid)
 end
-

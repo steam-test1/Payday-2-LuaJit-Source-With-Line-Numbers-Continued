@@ -1,13 +1,13 @@
 ProfileBoxGui = ProfileBoxGui or class(TextBoxGui)
 
--- Lines: 3 to 22
+-- Lines 3-22
 function ProfileBoxGui:init(ws, title, text, content_data, config)
 	config = config or {}
 	config.h = config.h or 260
 	config.w = config.w or 280
 	local x, y = ws:size()
 	config.x = config.x or 0
-	config.y = config.y or (y - config.h) - CoreMenuRenderer.Renderer.border_height
+	config.y = config.y or y - config.h - CoreMenuRenderer.Renderer.border_height
 	config.no_close_legend = true
 	config.no_scroll_legend = true
 	config.use_minimize_legend = true
@@ -19,17 +19,17 @@ function ProfileBoxGui:init(ws, title, text, content_data, config)
 	self:set_layer(10)
 end
 
--- Lines: 24 to 25
+-- Lines 24-26
 function ProfileBoxGui:_profile_name()
 	return managers.network.account:username()
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function ProfileBoxGui:_profile_level()
 	return "" .. managers.experience:current_level()
 end
 
--- Lines: 32 to 48
+-- Lines 32-48
 function ProfileBoxGui:update(t, dt)
 	local name_panel = self._scroll_panel:child("profile_panel"):child("name_panel")
 	local name = name_panel:child("name")
@@ -49,7 +49,7 @@ function ProfileBoxGui:update(t, dt)
 	end
 end
 
--- Lines: 50 to 98
+-- Lines 50-98
 function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 	ProfileBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 
@@ -96,7 +96,7 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 
 	local name_panel = profile_panel:panel({
 		name = "name_panel",
-		w = (self._panel:w() - (avatar:right() + 16)) - 64
+		w = self._panel:w() - (avatar:right() + 16) - 64
 	})
 
 	name_panel:set_left(avatar:right() + 16)
@@ -166,7 +166,7 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self:_set_scroll_indicator()
 end
 
--- Lines: 100 to 106
+-- Lines 100-106
 function ProfileBoxGui:_add_statistics()
 	self:_add_stats({
 		name = "achievements",
@@ -198,7 +198,7 @@ function ProfileBoxGui:_add_statistics()
 	})
 end
 
--- Lines: 108 to 165
+-- Lines 108-165
 function ProfileBoxGui:_add_stats(params)
 	local y = 64
 
@@ -304,7 +304,7 @@ function ProfileBoxGui:_add_stats(params)
 	table.insert(self._stats_items, panel)
 end
 
--- Lines: 167 to 189
+-- Lines 167-189
 function ProfileBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() then
 		return
@@ -330,22 +330,22 @@ function ProfileBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 191 to 193
+-- Lines 191-193
 function ProfileBoxGui:_trigger_stats()
 	Steam:overlay_activate("game", "Stats")
 end
 
--- Lines: 195 to 198
+-- Lines 195-198
 function ProfileBoxGui:_trigger_profile()
 	Steam:user(managers.network.account:player_id()):open_overlay("steamid")
 end
 
--- Lines: 200 to 202
+-- Lines 200-202
 function ProfileBoxGui:_trigger_achievements()
 	Steam:overlay_activate("game", "Achievements")
 end
 
--- Lines: 204 to 239
+-- Lines 204-240
 function ProfileBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() then
 		return
@@ -390,37 +390,38 @@ function ProfileBoxGui:mouse_moved(x, y)
 	return false, pointer
 end
 
--- Lines: 242 to 244
+-- Lines 242-244
 function ProfileBoxGui:_check_scroll_indicator_states()
 	ProfileBoxGui.super._check_scroll_indicator_states(self)
 end
 
--- Lines: 246 to 249
+-- Lines 246-249
 function ProfileBoxGui:set_size(x, y)
 	ProfileBoxGui.super.set_size(self, x, y)
 
 	local profile_panel = self._scroll_panel:child("profile_panel")
 end
 
--- Lines: 251 to 253
+-- Lines 251-253
 function ProfileBoxGui:set_visible(visible)
 	ProfileBoxGui.super.set_visible(self, visible)
 end
 
--- Lines: 255 to 257
+-- Lines 255-257
 function ProfileBoxGui:close()
 	ProfileBoxGui.super.close(self)
 end
+
 LobbyProfileBoxGui = LobbyProfileBoxGui or class(ProfileBoxGui)
 
--- Lines: 261 to 264
+-- Lines 261-264
 function LobbyProfileBoxGui:init(ws, title, text, content_data, config, peer_id)
 	self._peer_id = peer_id
 
 	LobbyProfileBoxGui.super.init(self, ws, title, text, content_data, config)
 end
 
--- Lines: 266 to 270
+-- Lines 266-270
 function LobbyProfileBoxGui:_trigger_stats()
 	local peer = managers.network:session():peer(self._peer_id)
 	local user = Steam:user(peer:ip())
@@ -428,7 +429,7 @@ function LobbyProfileBoxGui:_trigger_stats()
 	user:open_overlay("stats")
 end
 
--- Lines: 272 to 276
+-- Lines 272-276
 function LobbyProfileBoxGui:_trigger_profile()
 	local peer = managers.network:session():peer(self._peer_id)
 	local user = Steam:user(peer:ip())
@@ -436,7 +437,7 @@ function LobbyProfileBoxGui:_trigger_profile()
 	user:open_overlay("steamid")
 end
 
--- Lines: 278 to 282
+-- Lines 278-282
 function LobbyProfileBoxGui:_trigger_achievements()
 	local peer = managers.network:session():peer(self._peer_id)
 	local user = Steam:user(peer:ip())
@@ -444,12 +445,12 @@ function LobbyProfileBoxGui:_trigger_achievements()
 	user:open_overlay("achievements")
 end
 
--- Lines: 284 to 285
+-- Lines 284-286
 function LobbyProfileBoxGui:_profile_name()
 	return managers.network:session():peer(self._peer_id):name()
 end
 
--- Lines: 288 to 291
+-- Lines 288-292
 function LobbyProfileBoxGui:_profile_level()
 	local peer = managers.network:session():peer(self._peer_id)
 	local user = Steam:user(peer:ip())
@@ -457,44 +458,44 @@ function LobbyProfileBoxGui:_profile_level()
 	return "" .. (peer:profile("level") or user:rich_presence("level"))
 end
 
--- Lines: 295 to 296
+-- Lines 294-296
 function LobbyProfileBoxGui:_add_statistics()
 end
+
 ViewCharacterProfileBoxGui = ViewCharacterProfileBoxGui or class(ProfileBoxGui)
 
--- Lines: 301 to 304
+-- Lines 301-304
 function ViewCharacterProfileBoxGui:init(ws, title, text, content_data, config, user)
 	self._user = user
 
 	ViewCharacterProfileBoxGui.super.init(self, ws, title, text, content_data, config)
 end
 
--- Lines: 306 to 308
+-- Lines 306-308
 function ViewCharacterProfileBoxGui:_trigger_stats()
 	self._user:open_overlay("stats")
 end
 
--- Lines: 310 to 312
+-- Lines 310-312
 function ViewCharacterProfileBoxGui:_trigger_profile()
 	self._user:open_overlay("steamid")
 end
 
--- Lines: 314 to 316
+-- Lines 314-316
 function ViewCharacterProfileBoxGui:_trigger_achievements()
 	self._user:open_overlay("achievements")
 end
 
--- Lines: 318 to 319
+-- Lines 318-320
 function ViewCharacterProfileBoxGui:_profile_name()
 	return self._user:name()
 end
 
--- Lines: 322 to 323
+-- Lines 322-324
 function ViewCharacterProfileBoxGui:_profile_level()
 	return "" .. self._user:rich_presence("level")
 end
 
--- Lines: 327 to 328
+-- Lines 326-328
 function ViewCharacterProfileBoxGui:_add_statistics()
 end
-

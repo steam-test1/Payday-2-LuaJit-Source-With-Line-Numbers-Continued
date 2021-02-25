@@ -9,7 +9,7 @@ local crime_spree_button = {
 	pc_btn = "menu_respec_tree_all"
 }
 
--- Lines: 9 to 19
+-- Lines 8-19
 function CrimeSpreeMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -20,13 +20,13 @@ function CrimeSpreeMenuComponent:init(ws, fullscreen_ws, node)
 	self:_setup()
 end
 
--- Lines: 21 to 24
+-- Lines 21-24
 function CrimeSpreeMenuComponent:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines: 28 to 65
+-- Lines 26-65
 function CrimeSpreeMenuComponent:_setup()
 	local parent = self._ws:panel()
 
@@ -34,7 +34,9 @@ function CrimeSpreeMenuComponent:_setup()
 		parent:remove(self._panel)
 	end
 
-	self._panel = parent:panel({layer = self._init_layer})
+	self._panel = parent:panel({
+		layer = self._init_layer
+	})
 
 	self._panel:set_size(unpack(button_size))
 	self._panel:set_bottom(parent:bottom() - padding * 2)
@@ -48,7 +50,9 @@ function CrimeSpreeMenuComponent:_setup()
 
 		if managers.crime_spree:in_progress() then
 			btn:set_text("")
-			btn:set_level_text(managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(managers.crime_spree:spree_level(), "")}))
+			btn:set_level_text(managers.localization:text("menu_cs_level", {
+				level = managers.experience:cash_string(managers.crime_spree:spree_level(), "")
+			}))
 			btn:set_callback(callback(self, self, "_continue_crime_spree"))
 		else
 			btn:set_text(managers.localization:to_upper_text("cn_crime_spree_start"))
@@ -59,7 +63,7 @@ function CrimeSpreeMenuComponent:_setup()
 	end
 end
 
--- Lines: 67 to 74
+-- Lines 67-75
 function CrimeSpreeMenuComponent:can_show_crime_spree()
 	if not managers.crime_spree:unlocked() then
 		return false
@@ -72,7 +76,7 @@ function CrimeSpreeMenuComponent:can_show_crime_spree()
 	return true
 end
 
--- Lines: 80 to 94
+-- Lines 79-96
 function CrimeSpreeMenuComponent:mouse_moved(o, x, y)
 	if not self:can_show_crime_spree() then
 		return
@@ -92,7 +96,7 @@ function CrimeSpreeMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines: 99 to 111
+-- Lines 98-111
 function CrimeSpreeMenuComponent:mouse_pressed(o, button, x, y)
 	if not self:can_show_crime_spree() then
 		return
@@ -107,7 +111,7 @@ function CrimeSpreeMenuComponent:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 114 to 121
+-- Lines 113-121
 function CrimeSpreeMenuComponent:confirm_pressed()
 	if not self:can_show_crime_spree() then
 		return
@@ -116,7 +120,7 @@ function CrimeSpreeMenuComponent:confirm_pressed()
 	self:mouse_pressed()
 end
 
--- Lines: 123 to 136
+-- Lines 123-136
 function CrimeSpreeMenuComponent:special_btn_pressed(button)
 	if not self:can_show_crime_spree() then
 		return
@@ -131,32 +135,35 @@ function CrimeSpreeMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines: 141 to 158
+-- Lines 140-158
 function CrimeSpreeMenuComponent:_open_crime_spree_contract()
 	managers.menu_component:post_event("menu_enter")
 
 	local node = Global.game_settings.single_player and "crimenet_crime_spree_contract_singleplayer" or "crimenet_crime_spree_contract_host"
-	local data = {{
-		job_id = "crime_spree",
-		customize_contract = false,
-		competitive = false,
-		professional = false,
-		difficulty = tweak_data.crime_spree.base_difficulty,
-		difficulty_id = tweak_data.crime_spree.base_difficulty_index,
-		contract_visuals = {}
-	}}
+	local data = {
+		{
+			job_id = "crime_spree",
+			customize_contract = false,
+			competitive = false,
+			professional = false,
+			difficulty = tweak_data.crime_spree.base_difficulty,
+			difficulty_id = tweak_data.crime_spree.base_difficulty_index,
+			contract_visuals = {}
+		}
+	}
 
 	managers.menu:open_node(node, data)
 end
 
--- Lines: 160 to 162
+-- Lines 160-162
 function CrimeSpreeMenuComponent:_continue_crime_spree()
 	self:_open_crime_spree_contract()
 end
+
 CrimeSpreeStartButton = CrimeSpreeStartButton or class(MenuGuiItem)
 CrimeSpreeStartButton._type = "CrimeSpreeStartButton"
 
--- Lines: 171 to 234
+-- Lines 169-234
 function CrimeSpreeStartButton:init(parent)
 	self._panel = parent:panel({
 		layer = 1000,
@@ -210,54 +217,55 @@ function CrimeSpreeStartButton:init(parent)
 		h = self._panel:h()
 	})
 
-	BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	self:refresh()
 end
 
--- Lines: 236 to 239
+-- Lines 236-239
 function CrimeSpreeStartButton:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(self:is_selected())
 end
 
--- Lines: 241 to 242
+-- Lines 241-243
 function CrimeSpreeStartButton:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 245 to 246
+-- Lines 245-247
 function CrimeSpreeStartButton:callback()
 	return self._callback
 end
 
--- Lines: 249 to 251
+-- Lines 249-251
 function CrimeSpreeStartButton:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines: 253 to 255
+-- Lines 253-255
 function CrimeSpreeStartButton:set_button(btn)
 	self._btn = btn
 end
 
--- Lines: 257 to 260
+-- Lines 257-260
 function CrimeSpreeStartButton:set_text(text)
 	local prefix = text ~= "" and (not managers.menu:is_pc_controller() and self._btn and managers.localization:get_default_macro(self._btn) or "") or ""
 
 	self._text:set_text(prefix .. text)
 end
 
--- Lines: 262 to 264
+-- Lines 262-264
 function CrimeSpreeStartButton:set_level_text(text)
 	self._level_text:set_text(text)
 end
 
--- Lines: 266 to 267
+-- Lines 266-267
 function CrimeSpreeStartButton:update(t, dt)
 end
-

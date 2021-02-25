@@ -1,12 +1,12 @@
 TangoManager = TangoManager or class()
 TangoManager.SAVE_DATA_VERSION = 2
 
--- Lines: 6 to 8
+-- Lines 6-8
 function TangoManager:init()
 	self:_setup()
 end
 
--- Lines: 11 to 21
+-- Lines 10-21
 function TangoManager:_setup()
 	if not Global.tango then
 		Global.tango = {}
@@ -17,7 +17,7 @@ function TangoManager:_setup()
 	self._global = Global.tango
 end
 
--- Lines: 23 to 30
+-- Lines 23-30
 function TangoManager:_setup_challenges()
 	Global.tango.challenges = {}
 
@@ -26,7 +26,7 @@ function TangoManager:_setup_challenges()
 	end
 end
 
--- Lines: 33 to 66
+-- Lines 32-66
 function TangoManager:save(cache)
 	local challenges = {}
 
@@ -64,7 +64,7 @@ function TangoManager:save(cache)
 	cache.Tango = save_data
 end
 
--- Lines: 69 to 124
+-- Lines 68-124
 function TangoManager:load(cache, version)
 	local state = cache.Tango
 
@@ -113,7 +113,7 @@ function TangoManager:load(cache, version)
 	end
 end
 
--- Lines: 126 to 131
+-- Lines 126-131
 function TangoManager:reset()
 	Global.tango = nil
 
@@ -124,18 +124,18 @@ function TangoManager:reset()
 	self:_setup()
 end
 
--- Lines: 133 to 136
+-- Lines 133-136
 function TangoManager:_reset_feature()
 	managers.features._global.announcements.tango_weapon_unlocked = 1
 	managers.features._global.announced.tango_weapon_unlocked = false
 end
 
--- Lines: 140 to 141
+-- Lines 140-142
 function TangoManager:challenges()
 	return self._global.challenges
 end
 
--- Lines: 144 to 150
+-- Lines 144-150
 function TangoManager:get_challenge(id)
 	for idx, challenge in pairs(self._global.challenges) do
 		if challenge.id == id then
@@ -144,12 +144,12 @@ function TangoManager:get_challenge(id)
 	end
 end
 
--- Lines: 154 to 155
+-- Lines 154-156
 function TangoManager:can_progress()
 	return managers.dlc:has_tango()
 end
 
--- Lines: 159 to 169
+-- Lines 158-171
 function TangoManager:is_mission_complete(challenge_id)
 	if not self:can_progress() then
 		return false
@@ -164,7 +164,7 @@ function TangoManager:is_mission_complete(challenge_id)
 	return false
 end
 
--- Lines: 174 to 190
+-- Lines 173-192
 function TangoManager:is_objective_complete(challenge_id, objective_id)
 	if not self:can_progress() then
 		return false
@@ -183,7 +183,7 @@ function TangoManager:is_objective_complete(challenge_id, objective_id)
 	return false
 end
 
--- Lines: 201 to 211
+-- Lines 195-213
 function TangoManager:has_unlocked_arbiter()
 	if not self:can_progress() then
 		return nil
@@ -198,7 +198,7 @@ function TangoManager:has_unlocked_arbiter()
 	return true
 end
 
--- Lines: 218 to 228
+-- Lines 217-228
 function TangoManager:award(id)
 	if not self:can_progress() then
 		return
@@ -211,7 +211,7 @@ function TangoManager:award(id)
 	end
 end
 
--- Lines: 231 to 259
+-- Lines 230-259
 function TangoManager:_update_challenge_progress(challenge, key, id, amount, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if not objective.completed and objective[key] == id then
@@ -240,7 +240,7 @@ function TangoManager:_update_challenge_progress(challenge, key, id, amount, com
 	end
 end
 
--- Lines: 261 to 273
+-- Lines 261-273
 function TangoManager:completed_challenge(challenge_or_id)
 	local challenge = type(challenge_or_id) == "table" and challenge_or_id or self:get_challenge(challenge_or_id)
 
@@ -254,7 +254,7 @@ function TangoManager:completed_challenge(challenge_or_id)
 	end
 end
 
--- Lines: 276 to 297
+-- Lines 275-299
 function TangoManager:has_already_claimed_reward(challenge_id, reward_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -287,7 +287,7 @@ function TangoManager:has_already_claimed_reward(challenge_id, reward_id)
 	return false
 end
 
--- Lines: 302 to 347
+-- Lines 301-347
 function TangoManager:claim_reward(challenge_id, reward_id)
 	if not self:can_progress() then
 		return
@@ -310,7 +310,7 @@ function TangoManager:claim_reward(challenge_id, reward_id)
 		local entry = tweak_data:get_raw_value("blackmarket", reward.type_items, reward.item_entry)
 
 		if entry then
-			for i = 1, reward.amount or 1, 1 do
+			for i = 1, reward.amount or 1 do
 				local global_value = reward.global_value or entry.infamous and "infamous" or entry.global_value or entry.dlc or entry.dlcs and entry.dlcs[math.random(#entry.dlcs)] or "normal"
 
 				managers.blackmarket:add_to_inventory(global_value, reward.type_items, reward.item_entry)
@@ -337,24 +337,30 @@ function TangoManager:claim_reward(challenge_id, reward_id)
 	end
 end
 
--- Lines: 350 to 355
+-- Lines 349-355
 function TangoManager:attempt_announce_tango_weapon()
 	if game_state_machine:current_state_name() == "menu_main" and managers.features:can_announce("tango_weapon_unlocked") and self:has_unlocked_arbiter() then
 		managers.features:announce_feature("tango_weapon_unlocked")
 	end
 end
 
--- Lines: 358 to 378
+-- Lines 357-378
 function TangoManager:announce_tango_weapon()
 	local weapon_id = tweak_data.tango.arbiter_data.weapon_id
 	local weapon_tweak = tweak_data.weapon[weapon_id]
 	local category = weapon_tweak.selection_index == 2 and "secondaries" or "primaries"
 	local dialog_data = {
 		title = managers.localization:text("dialog_new_unlock_title"),
-		text = managers.localization:text("dialog_tango_complete_desc", {weapon = managers.localization:text(weapon_tweak.name_id)})
+		text = managers.localization:text("dialog_tango_complete_desc", {
+			weapon = managers.localization:text(weapon_tweak.name_id)
+		})
 	}
-	local ok_button = {text = managers.localization:text("dialog_ok")}
-	dialog_data.button_list = {ok_button}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
 	local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(tweak_data.tango.arbiter_data.factory_id)
 
 	if weapon_id then
@@ -364,8 +370,7 @@ function TangoManager:announce_tango_weapon()
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines: 381 to 382
+-- Lines 381-383
 function TangoManager:any_challenge_completed()
 	return self._has_completed_mission
 end
-

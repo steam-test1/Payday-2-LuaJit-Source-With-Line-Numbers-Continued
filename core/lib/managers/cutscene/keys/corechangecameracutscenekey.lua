@@ -6,12 +6,12 @@ CoreChangeCameraCutsceneKey.NAME = "Camera Change"
 
 CoreChangeCameraCutsceneKey:register_serialized_attribute("camera", nil)
 
--- Lines: 8 to 9
+-- Lines 8-10
 function CoreChangeCameraCutsceneKey:__tostring()
 	return "Change camera to \"" .. self:camera() .. "\"."
 end
 
--- Lines: 12 to 19
+-- Lines 12-19
 function CoreChangeCameraCutsceneKey:load(key_node, loading_class)
 	self.super.load(self, key_node, loading_class)
 
@@ -20,13 +20,12 @@ function CoreChangeCameraCutsceneKey:load(key_node, loading_class)
 	end
 end
 
--- Lines: 21 to 23
+-- Lines 21-23
 function CoreChangeCameraCutsceneKey:evaluate(player, fast_forward)
 	player:set_camera(self:camera())
 end
 
--- Lines: 25 to 26
+-- Lines 25-27
 function CoreChangeCameraCutsceneKey:is_valid_camera(camera)
 	return self.super.is_valid_unit_name(self, camera) and string.begins(camera, "camera")
 end
-

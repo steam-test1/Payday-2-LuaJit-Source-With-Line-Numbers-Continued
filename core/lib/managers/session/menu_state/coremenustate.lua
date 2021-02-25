@@ -5,7 +5,7 @@ core:import("CoreMenuStateNone")
 
 MenuState = MenuState or class(CoreSessionGenericState.State)
 
--- Lines: 8 to 14
+-- Lines 8-14
 function MenuState:init(game_state, menu_handler, player_slots)
 	self._game_state = game_state
 
@@ -16,28 +16,27 @@ function MenuState:init(game_state, menu_handler, player_slots)
 	self._state = CoreFiniteStateMachine.FiniteStateMachine:new(CoreMenuStateNone.None, "menu_state", self)
 end
 
--- Lines: 16 to 18
+-- Lines 16-18
 function MenuState:set_debug(debug_on)
 	self._state:set_debug(debug_on)
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function MenuState.default_data(data)
 	data.start_state = "CoreMenuStateNone.None"
 end
 
--- Lines: 24 to 26
+-- Lines 24-26
 function MenuState:save(data)
 	self._state:save(data.start_state)
 end
 
--- Lines: 28 to 30
+-- Lines 28-30
 function MenuState:transition()
 	self._state:transition()
 end
 
--- Lines: 32 to 33
+-- Lines 32-34
 function MenuState:game_state()
 	return self._game_state
 end
-

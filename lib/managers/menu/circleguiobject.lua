@@ -1,6 +1,6 @@
 CircleGuiObject = CircleGuiObject or class()
 
--- Lines: 12 to 34
+-- Lines 3-34
 function CircleGuiObject:init(panel, config)
 	self._panel = panel
 	self._radius = config.radius or 20
@@ -12,9 +12,9 @@ function CircleGuiObject:init(panel, config)
 	self._circle = self._panel:polygon(config)
 end
 
--- Lines: 36 to 49
+-- Lines 36-50
 function CircleGuiObject:_create_triangles(config)
-	local amount = (360 * (config.current or 1)) / (config.total or 1)
+	local amount = 360 * (config.current or 1) / (config.total or 1)
 	local s = self._radius
 	local triangles = {}
 	local step = 360 / self._sides
@@ -30,7 +30,7 @@ function CircleGuiObject:_create_triangles(config)
 	return triangles
 end
 
--- Lines: 52 to 56
+-- Lines 52-56
 function CircleGuiObject:set_current(current)
 	local triangles = self:_create_triangles({
 		current = current,
@@ -41,12 +41,12 @@ function CircleGuiObject:set_current(current)
 	self._circle:add_triangles(triangles)
 end
 
--- Lines: 58 to 60
+-- Lines 58-60
 function CircleGuiObject:set_position(x, y)
 	self._circle:set_position(x, y)
 end
 
--- Lines: 62 to 66
+-- Lines 62-66
 function CircleGuiObject:set_align(h, v)
 	v = v or h
 
@@ -54,23 +54,24 @@ function CircleGuiObject:set_align(h, v)
 	self._circle:set_valign(v)
 end
 
--- Lines: 68 to 70
+-- Lines 68-70
 function CircleGuiObject:set_layer(layer)
 	self._circle:set_layer(layer)
 end
 
--- Lines: 72 to 73
+-- Lines 72-74
 function CircleGuiObject:layer()
 	return self._circle:layer()
 end
 
--- Lines: 76 to 78
+-- Lines 76-78
 function CircleGuiObject:remove()
 	self._panel:remove(self._circle)
 end
+
 CircleBitmapGuiObject = CircleBitmapGuiObject or class()
 
--- Lines: 84 to 108
+-- Lines 84-108
 function CircleBitmapGuiObject:init(panel, config)
 	self._panel = panel
 	self._radius = config.radius or 20
@@ -98,12 +99,12 @@ function CircleBitmapGuiObject:init(panel, config)
 	end
 end
 
--- Lines: 110 to 111
+-- Lines 110-112
 function CircleBitmapGuiObject:radius()
 	return self._radius
 end
 
--- Lines: 114 to 120
+-- Lines 114-120
 function CircleBitmapGuiObject:set_current(current)
 	local j = math.mod(math.floor(current), 8)
 	local i = math.floor(current / 8)
@@ -111,12 +112,12 @@ function CircleBitmapGuiObject:set_current(current)
 	self._circle:set_color(Color(self._alpha, current, self._circle:color().blue, self._circle:color().green))
 end
 
--- Lines: 122 to 123
+-- Lines 122-124
 function CircleBitmapGuiObject:position()
 	return self._circle:position()
 end
 
--- Lines: 126 to 134
+-- Lines 126-134
 function CircleBitmapGuiObject:set_align(h, v)
 	v = v or h
 
@@ -129,7 +130,7 @@ function CircleBitmapGuiObject:set_align(h, v)
 	end
 end
 
--- Lines: 136 to 141
+-- Lines 136-141
 function CircleBitmapGuiObject:set_position(x, y)
 	self._circle:set_position(x, y)
 
@@ -138,7 +139,7 @@ function CircleBitmapGuiObject:set_position(x, y)
 	end
 end
 
--- Lines: 143 to 148
+-- Lines 143-148
 function CircleBitmapGuiObject:set_visible(visible)
 	self._circle:set_visible(visible)
 
@@ -147,42 +148,42 @@ function CircleBitmapGuiObject:set_visible(visible)
 	end
 end
 
--- Lines: 150 to 151
+-- Lines 150-152
 function CircleBitmapGuiObject:visible()
 	return self._circle:visible()
 end
 
--- Lines: 154 to 156
+-- Lines 154-156
 function CircleBitmapGuiObject:set_alpha(alpha)
 	self._circle:set_alpha(alpha)
 end
 
--- Lines: 158 to 160
+-- Lines 158-160
 function CircleBitmapGuiObject:alpha()
 	self._circle:alpha()
 end
 
--- Lines: 162 to 164
+-- Lines 162-164
 function CircleBitmapGuiObject:set_color(color)
 	self._circle:set_color(color)
 end
 
--- Lines: 166 to 167
+-- Lines 166-168
 function CircleBitmapGuiObject:color()
 	return self._circle:color()
 end
 
--- Lines: 170 to 171
+-- Lines 170-172
 function CircleBitmapGuiObject:size()
 	return self._circle:size()
 end
 
--- Lines: 174 to 176
+-- Lines 174-176
 function CircleBitmapGuiObject:set_image(texture)
 	self._circle:set_image(texture)
 end
 
--- Lines: 178 to 183
+-- Lines 178-183
 function CircleBitmapGuiObject:set_layer(layer)
 	self._circle:set_layer(layer)
 
@@ -191,12 +192,12 @@ function CircleBitmapGuiObject:set_layer(layer)
 	end
 end
 
--- Lines: 185 to 186
+-- Lines 185-187
 function CircleBitmapGuiObject:layer()
 	return self._circle:layer()
 end
 
--- Lines: 189 to 195
+-- Lines 189-195
 function CircleBitmapGuiObject:remove()
 	self._panel:remove(self._circle)
 
@@ -207,12 +208,15 @@ function CircleBitmapGuiObject:remove()
 	self._panel = nil
 end
 
--- Lines: 197 to 202
+-- Lines 197-202
 function CircleBitmapGuiObject:set_depth_mode(mode)
-	self._circle:configure({depth_mode = mode})
+	self._circle:configure({
+		depth_mode = mode
+	})
 
 	if self._bg_circle then
-		self._bg_circle:configure({depth_mode = mode})
+		self._bg_circle:configure({
+			depth_mode = mode
+		})
 	end
 end
-

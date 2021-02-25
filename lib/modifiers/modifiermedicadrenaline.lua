@@ -3,8 +3,7 @@ ModifierMedicAdrenaline._type = "ModifierMedicAdrenaline"
 ModifierMedicAdrenaline.name_id = "none"
 ModifierMedicAdrenaline.desc_id = "menu_cs_modifier_medic_adrenaline"
 
--- Lines: 7 to 9
+-- Lines 7-9
 function ModifierMedicAdrenaline:OnEnemyHealed(medic, target)
 	target:base():add_buff("base_damage", self:value("damage") * 0.01)
 end
-

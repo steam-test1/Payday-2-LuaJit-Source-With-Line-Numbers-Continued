@@ -5,7 +5,7 @@ local empty_idstr = Idstring("")
 local molotov_effect = "effects/payday2/particles/explosions/molotov_grenade"
 local tmp_vec3 = Vector3()
 
--- Lines: 11 to 22
+-- Lines 11-22
 function FireManager:init()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}
@@ -14,18 +14,18 @@ function FireManager:init()
 	self._fire_dot_tick_period = 1
 end
 
--- Lines: 24 to 58
+-- Lines 24-58
 function FireManager:update(t, dt)
 	for index = #self._doted_enemies, 1, -1 do
 		local dot_info = self._doted_enemies[index]
 
-		if dot_info.fire_damage_received_time + self._fire_dot_grace_period < t and dot_info.fire_dot_counter >= 0.5 then
+		if t > dot_info.fire_damage_received_time + self._fire_dot_grace_period and dot_info.fire_dot_counter >= 0.5 then
 			self:_damage_fire_dot(dot_info)
 
 			dot_info.fire_dot_counter = 0
 		end
 
-		if dot_info.fire_damage_received_time + dot_info.dot_length < t then
+		if t > dot_info.fire_damage_received_time + dot_info.dot_length then
 			if dot_info.fire_effects then
 				for _, fire_effect_id in ipairs(dot_info.fire_effects) do
 					World:effect_manager():fade_kill(fire_effect_id)
@@ -45,7 +45,7 @@ function FireManager:update(t, dt)
 	end
 end
 
--- Lines: 60 to 111
+-- Lines 60-111
 function FireManager:check_achievemnts(unit, t)
 	if not unit and not alive(unit) then
 		return
@@ -95,12 +95,12 @@ function FireManager:check_achievemnts(unit, t)
 	end
 end
 
--- Lines: 115 to 117
+-- Lines 114-117
 function FireManager:remove_dead_dozer_from_overgrill(dozer_id)
 	self._dozers_on_fire[dozer_id] = nil
 end
 
--- Lines: 121 to 127
+-- Lines 121-128
 function FireManager:is_set_on_fire(unit)
 	for key, dot_info in ipairs(self._doted_enemies) do
 		if dot_info.enemy_unit == unit then
@@ -111,7 +111,7 @@ function FireManager:is_set_on_fire(unit)
 	return false
 end
 
--- Lines: 132 to 151
+-- Lines 131-151
 function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, is_molotov)
 	local contains = false
 
@@ -144,7 +144,7 @@ function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, wea
 	end
 end
 
--- Lines: 154 to 159
+-- Lines 154-159
 function FireManager:sync_add_fire_dot(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, is_molotov)
 	if enemy_unit then
 		local t = TimerManager:game():time()
@@ -153,14 +153,14 @@ function FireManager:sync_add_fire_dot(enemy_unit, fire_damage_received_time, we
 	end
 end
 
--- Lines: 161 to 164
+-- Lines 161-164
 function FireManager:add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, is_molotov)
 	local dot_info = self:_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, is_molotov)
 
 	managers.network:session():send_to_peers_synched("sync_add_doted_enemy", enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, is_molotov)
 end
 
--- Lines: 168 to 179
+-- Lines 168-179
 function FireManager:_remove_flame_effects_from_doted_unit(enemy_unit)
 	if self._doted_enemies then
 		for _, dot_info in ipairs(self._doted_enemies) do
@@ -173,7 +173,7 @@ function FireManager:_remove_flame_effects_from_doted_unit(enemy_unit)
 	end
 end
 
--- Lines: 182 to 191
+-- Lines 182-191
 function FireManager:start_burn_body_sound(dot_info, delay)
 	local sound_loop_burn_body = SoundDevice:create_source("FireBurnBody")
 
@@ -183,22 +183,25 @@ function FireManager:start_burn_body_sound(dot_info, delay)
 	dot_info.sound_source = sound_loop_burn_body
 
 	if delay then
-		managers.enemy:add_delayed_clbk("FireBurnBody", callback(self, self, "_stop_burn_body_sound", sound_loop_burn_body), (TimerManager:game():time() + delay) - 0.5)
+		managers.enemy:add_delayed_clbk("FireBurnBody", callback(self, self, "_stop_burn_body_sound", sound_loop_burn_body), TimerManager:game():time() + delay - 0.5)
 	end
 end
 
--- Lines: 193 to 196
+-- Lines 193-196
 function FireManager:_stop_burn_body_sound(sound_source)
 	sound_source:post_event("burn_loop_body_stop")
-	managers.enemy:add_delayed_clbk("FireBurnBodyFade", callback(self, self, "_release_sound_source", {sound_source = sound_source}), TimerManager:game():time() + 0.5)
+	managers.enemy:add_delayed_clbk("FireBurnBodyFade", callback(self, self, "_release_sound_source", {
+		sound_source = sound_source
+	}), TimerManager:game():time() + 0.5)
 end
 
--- Lines: 198 to 199
+-- Lines 198-199
 function FireManager:_release_sound_source(...)
 end
+
 local tmp_used_flame_objects = nil
 
--- Lines: 205 to 245
+-- Lines 204-245
 function FireManager:_start_enemy_fire_effect(dot_info)
 	local num_objects = #tweak_data.fire.fire_bones
 	local num_effects = math.random(3, num_objects)
@@ -215,7 +218,7 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 	local effect_id = nil
 	local effects_table = {}
 
-	for i = 1, num_effects, 1 do
+	for i = 1, num_effects do
 		while tmp_used_flame_objects[idx] do
 			idx = math.random(1, num_objects)
 		end
@@ -242,11 +245,13 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 	end
 end
 
--- Lines: 277 to 291
+-- Lines 276-291
 function FireManager:_damage_fire_dot(dot_info)
 	if dot_info.user_unit and dot_info.user_unit == managers.player:player_unit() or not dot_info.user_unit and Network:is_server() then
 		local attacker_unit = managers.player:player_unit()
-		local col_ray = {unit = dot_info.enemy_unit}
+		local col_ray = {
+			unit = dot_info.enemy_unit
+		}
 		local damage = dot_info.dot_damage
 		local ignite_character = false
 		local variant = "fire"
@@ -258,7 +263,7 @@ function FireManager:_damage_fire_dot(dot_info)
 	end
 end
 
--- Lines: 294 to 299
+-- Lines 294-299
 function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	local player = managers.player:player_unit()
 
@@ -273,7 +278,7 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	end
 end
 
--- Lines: 302 to 542
+-- Lines 302-543
 function FireManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -323,7 +328,9 @@ function FireManager:detect_and_give_dmg(params)
 		alert_unit
 	})
 
-	local splinters = {mvector3.copy(hit_pos)}
+	local splinters = {
+		mvector3.copy(hit_pos)
+	}
 	local dirs = {
 		Vector3(range, 0, 0),
 		Vector3(-range, 0, 0),
@@ -339,7 +346,13 @@ function FireManager:detect_and_give_dmg(params)
 		mvector3.add(pos, hit_pos)
 
 		local splinter_ray = nil
-		splinter_ray = ignore_unit and World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask) or World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+
+		if ignore_unit then
+			splinter_ray = World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask)
+		else
+			splinter_ray = World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+		end
+
 		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
 		local near_splinter = false
 
@@ -412,9 +425,7 @@ function FireManager:detect_and_give_dmg(params)
 					elseif CopDamage.is_gangster(type) then
 						count_gangsters = count_gangsters + 1
 					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" and type ~= "american" and type ~= "jowi" then
-						if type == "hoxton" then
-							-- Nothing
-						else
+						if type ~= "hoxton" then
 							count_cops = count_cops + 1
 						end
 					end
@@ -465,9 +476,7 @@ function FireManager:detect_and_give_dmg(params)
 					elseif CopDamage.is_gangster(type) then
 						count_gangster_kills = count_gangster_kills + 1
 					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" then
-						if type == "american" then
-							-- Nothing
-						else
+						if type ~= "american" then
 							count_cop_kills = count_cop_kills + 1
 						end
 					end
@@ -492,11 +501,11 @@ function FireManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines: 546 to 547
+-- Lines 545-547
 function FireManager:units_to_push(units_to_push, hit_pos, range)
 end
 
--- Lines: 549 to 601
+-- Lines 549-601
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -540,13 +549,13 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 	end
 end
 
--- Lines: 603 to 606
+-- Lines 603-606
 function FireManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines: 608 to 628
+-- Lines 608-628
 function FireManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -568,19 +577,20 @@ function FireManager:client_damage_and_push(position, normal, user_unit, dmg, ra
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines: 630 to 634
+-- Lines 630-634
 function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table, custom_params.sound_event_burning, custom_params.sound_event_impact_duration or 0, custom_params.sound_event_duration or 0)
 end
 
--- Lines: 637 to 638
+-- Lines 636-638
 function FireManager:player_feedback(position, normal, range, custom_params)
 end
+
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines: 643 to 702
+-- Lines 642-702
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration, sound_event_duration)
 	effect_name = effect_name or "effects/payday2/particles/explosions/molotov_grenade"
 	local effect_id = nil
@@ -640,17 +650,19 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 			sound_event_duration = sound_event_duration,
 			sound_event_impact_duration = sound_event_impact_duration
 		}), TimerManager:game():time() + sound_event_impact_duration)
-		managers.enemy:add_delayed_clbk("MolotovImpact", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", {sound_source = sound_source}), TimerManager:game():time() + sound_event_impact_duration)
+		managers.enemy:add_delayed_clbk("MolotovImpact", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", {
+			sound_source = sound_source
+		}), TimerManager:game():time() + sound_event_impact_duration)
 	end
 
 	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
--- Lines: 705 to 706
+-- Lines 704-706
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 end
 
--- Lines: 709 to 717
+-- Lines 709-717
 function FireManager:_dispose_of_impact_sound(custom_params)
 	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
 
@@ -663,10 +675,10 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	managers.enemy:add_delayed_clbk("MolotovBurning", callback(FireManager, FireManager, "_fade_out_burn_loop_sound", {
 		position = custom_params.position,
 		sound_source = sound_source_burning_loop
-	}), (TimerManager:game():time() + t) - custom_params.sound_event_impact_duration)
+	}), TimerManager:game():time() + t - custom_params.sound_event_impact_duration)
 end
 
--- Lines: 720 to 724
+-- Lines 720-724
 function FireManager:_fade_out_burn_loop_sound(custom_params)
 	local fade_duration = 2
 
@@ -674,9 +686,8 @@ function FireManager:_fade_out_burn_loop_sound(custom_params)
 	managers.enemy:add_delayed_clbk("MolotovFading", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", custom_params), TimerManager:game():time() + fade_duration)
 end
 
--- Lines: 727 to 730
+-- Lines 727-730
 function FireManager:on_simulation_ended()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}
 end
-

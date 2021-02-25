@@ -1,6 +1,6 @@
 CoreParticleEditorSimulators = CoreParticleEditorSimulators or class()
 
--- Lines: 3 to 16
+-- Lines 3-17
 function CoreParticleEditorSimulators:create_velocityintegrator()
 	local simulator = CoreEffectStackMember:new("velocityintegrator", "simulator", "Velocity Integrator")
 
@@ -16,7 +16,7 @@ function CoreParticleEditorSimulators:create_velocityintegrator()
 	return simulator
 end
 
--- Lines: 19 to 33
+-- Lines 19-34
 function CoreParticleEditorSimulators:create_trail()
 	local simulator = CoreEffectStackMember:new("trail", "simulator", "Trail")
 
@@ -32,7 +32,7 @@ function CoreParticleEditorSimulators:create_trail()
 	return simulator
 end
 
--- Lines: 36 to 59
+-- Lines 36-60
 function CoreParticleEditorSimulators:create_scaledvelocityintegrator()
 	local simulator = CoreEffectStackMember:new("scaledvelocityintegrator", "simulator", "Velocity Integrator (scaled)")
 
@@ -63,7 +63,7 @@ function CoreParticleEditorSimulators:create_scaledvelocityintegrator()
 	return simulator
 end
 
--- Lines: 62 to 72
+-- Lines 62-73
 function CoreParticleEditorSimulators:create_eventtick()
 	local simulator = CoreEffectStackMember:new("eventtick", "simulator", "Event Tick")
 
@@ -76,7 +76,7 @@ function CoreParticleEditorSimulators:create_eventtick()
 	return simulator
 end
 
--- Lines: 75 to 80
+-- Lines 75-81
 function CoreParticleEditorSimulators:create_particleworldcollision()
 	local simulator = CoreEffectStackMember:new("particleworldcollision", "simulator", "Particle <-> World Collision")
 
@@ -87,7 +87,7 @@ function CoreParticleEditorSimulators:create_particleworldcollision()
 	return simulator
 end
 
--- Lines: 84 to 87
+-- Lines 84-88
 function CoreParticleEditorSimulators:create_anglevelocityintegrator()
 	local simulator = CoreEffectStackMember:new("anglevelocityintegrator", "simulator", "Angle Velocity Integrator")
 
@@ -96,7 +96,7 @@ function CoreParticleEditorSimulators:create_anglevelocityintegrator()
 	return simulator
 end
 
--- Lines: 91 to 120
+-- Lines 91-121
 function CoreParticleEditorSimulators:create_planecollision()
 	local simulator = CoreEffectStackMember:new("planecollision", "simulator", "Plane Collision")
 
@@ -133,7 +133,7 @@ Parameter is runtime modifiable by script by referencing effect/atom name/simula
 	return simulator
 end
 
--- Lines: 123 to 143
+-- Lines 123-144
 function CoreParticleEditorSimulators:create_constantacceleration()
 	local simulator = CoreEffectStackMember:new("constantacceleration", "simulator", "Constant Acceleration")
 
@@ -160,7 +160,7 @@ use this for local position effects where acceleration is still expressed in wor
 	return simulator
 end
 
--- Lines: 147 to 159
+-- Lines 147-160
 function CoreParticleEditorSimulators:create_windacceleration()
 	local simulator = CoreEffectStackMember:new("windacceleration", "simulator", "Wind Acceleration")
 
@@ -177,7 +177,7 @@ function CoreParticleEditorSimulators:create_windacceleration()
 	return simulator
 end
 
--- Lines: 162 to 183
+-- Lines 162-184
 function CoreParticleEditorSimulators:create_intervalrandomvelocity()
 	local simulator = CoreEffectStackMember:new("intervalrandomvelocity", "simulator", "Interval Random Velocity")
 
@@ -205,7 +205,7 @@ Velocities are always offsetted with effect spawn velocity.]]
 	return simulator
 end
 
--- Lines: 187 to 208
+-- Lines 187-209
 function CoreParticleEditorSimulators:create_variableacceleration()
 	local simulator = CoreEffectStackMember:new("variableacceleration", "simulator", "Variable Acceleration")
 
@@ -233,7 +233,7 @@ use this for local position effects where acceleration is still expressed in wor
 	return simulator
 end
 
--- Lines: 211 to 219
+-- Lines 211-220
 function CoreParticleEditorSimulators:create_variablesize()
 	local simulator = CoreEffectStackMember:new("variablesize", "simulator", "Variable Size")
 
@@ -247,7 +247,7 @@ function CoreParticleEditorSimulators:create_variablesize()
 	return simulator
 end
 
--- Lines: 222 to 230
+-- Lines 222-231
 function CoreParticleEditorSimulators:create_variableopacity()
 	local simulator = CoreEffectStackMember:new("variableopacity", "simulator", "Variable Opacity")
 
@@ -261,7 +261,7 @@ function CoreParticleEditorSimulators:create_variableopacity()
 	return simulator
 end
 
--- Lines: 233 to 241
+-- Lines 233-242
 function CoreParticleEditorSimulators:create_rotationbyvelocity()
 	local simulator = CoreEffectStackMember:new("rotationbyvelocity", "simulator", "Rotation By Velocity")
 
@@ -274,7 +274,7 @@ function CoreParticleEditorSimulators:create_rotationbyvelocity()
 	return simulator
 end
 
--- Lines: 246 to 421
+-- Lines 246-422
 function CoreParticleEditorSimulators:create_teleporter()
 	local simulator = CoreEffectStackMember:new("teleporter", "simulator", "Teleporter")
 
@@ -296,7 +296,7 @@ keys - use key curve over time]]
 
 	constant_lifetime:set_can_be_infinite(true)
 
-	-- Lines: 264 to 271
+	-- Lines 264-272
 	local function validate_lifetime(p)
 		local ret = {
 			message = "",
@@ -474,7 +474,7 @@ keys - use key curve over time]]
 	return simulator
 end
 
--- Lines: 425 to 429
+-- Lines 425-430
 function CoreParticleEditorSimulators:create_ager()
 	local simulator = CoreEffectStackMember:new("ager", "simulator", "Ager")
 
@@ -483,7 +483,7 @@ function CoreParticleEditorSimulators:create_ager()
 	return simulator
 end
 
--- Lines: 432 to 447
+-- Lines 432-448
 function CoreParticleEditorSimulators:create_particleparticlecollision()
 	local simulator = CoreEffectStackMember:new("particleparticlecollision", "simulator", "Particle <-> Particle Collision")
 
@@ -504,7 +504,7 @@ function CoreParticleEditorSimulators:create_particleparticlecollision()
 	return simulator
 end
 
--- Lines: 451 to 458
+-- Lines 451-459
 function CoreParticleEditorSimulators:create_worldtransform()
 	local simulator = CoreEffectStackMember:new("worldtransform", "simulator", "Local -> World Transform")
 
@@ -516,4 +516,3 @@ function CoreParticleEditorSimulators:create_worldtransform()
 
 	return simulator
 end
-

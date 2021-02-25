@@ -1,6 +1,6 @@
 TangoTweakData = TangoTweakData or class()
 
--- Lines: 6 to 136
+-- Lines 5-136
 function TangoTweakData:init(tweak_data)
 	self.arbiter_data = {
 		weapon_id = "arbiter",
@@ -41,7 +41,9 @@ function TangoTweakData:init(tweak_data)
 				item_entry = "facepaint",
 				type_items = "textures"
 			},
-			{tango_weapon_part = true}
+			{
+				tango_weapon_part = true
+			}
 		}
 	})
 	table.insert(self.challenges, {
@@ -77,7 +79,9 @@ function TangoTweakData:init(tweak_data)
 				item_entry = "sight",
 				type_items = "textures"
 			},
-			{tango_weapon_part = true}
+			{
+				tango_weapon_part = true
+			}
 		}
 	})
 	table.insert(self.challenges, {
@@ -113,7 +117,9 @@ function TangoTweakData:init(tweak_data)
 				item_entry = "bullets",
 				type_items = "textures"
 			},
-			{tango_weapon_part = true}
+			{
+				tango_weapon_part = true
+			}
 		}
 	})
 	table.insert(self.challenges, {
@@ -149,8 +155,9 @@ function TangoTweakData:init(tweak_data)
 				item_entry = "stripes",
 				type_items = "textures"
 			},
-			{tango_weapon_part = true}
+			{
+				tango_weapon_part = true
+			}
 		}
 	})
 end
-

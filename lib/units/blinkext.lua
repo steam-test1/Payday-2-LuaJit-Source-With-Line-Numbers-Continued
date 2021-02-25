@@ -1,6 +1,6 @@
 BlinkExt = BlinkExt or class()
 
--- Lines: 3 to 21
+-- Lines 3-21
 function BlinkExt:init(unit)
 	self._object_list = {}
 
@@ -23,7 +23,7 @@ function BlinkExt:init(unit)
 	end
 end
 
--- Lines: 23 to 58
+-- Lines 23-58
 function BlinkExt:update(unit, t, dt)
 	if self._delay_current and self._delay_current < t then
 		if self._state == "cycle" then
@@ -72,7 +72,7 @@ function BlinkExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 60 to 133
+-- Lines 60-133
 function BlinkExt:set_state(state, delay)
 	self._state = state
 	self._delay = delay
@@ -172,7 +172,7 @@ function BlinkExt:set_state(state, delay)
 	end
 end
 
--- Lines: 135 to 139
+-- Lines 135-139
 function BlinkExt:save(data)
 	data.BlinkExt = {
 		state = self._state,
@@ -180,7 +180,7 @@ function BlinkExt:save(data)
 	}
 end
 
--- Lines: 141 to 147
+-- Lines 141-147
 function BlinkExt:load(data)
 	local state = data.BlinkExt
 	self._state = data.BlinkExt.state
@@ -188,4 +188,3 @@ function BlinkExt:load(data)
 
 	self:set_state(self._state, self._delay)
 end
-

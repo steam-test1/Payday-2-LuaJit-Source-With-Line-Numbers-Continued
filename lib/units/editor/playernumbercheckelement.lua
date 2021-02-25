@@ -1,6 +1,6 @@
 PlayerNumberCheckElement = PlayerNumberCheckElement or class(MissionElement)
 
--- Lines: 3 to 15
+-- Lines 3-15
 function PlayerNumberCheckElement:init(unit)
 	PlayerNumberCheckElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function PlayerNumberCheckElement:init(unit)
 	table.insert(self._save_values, "num4")
 end
 
--- Lines: 18 to 56
+-- Lines 18-56
 function PlayerNumberCheckElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -65,4 +65,3 @@ function PlayerNumberCheckElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

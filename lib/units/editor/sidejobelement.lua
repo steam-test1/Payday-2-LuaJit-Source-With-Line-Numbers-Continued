@@ -1,6 +1,6 @@
 SideJobAwardElement = SideJobAwardElement or class(MissionElement)
 
--- Lines: 8 to 21
+-- Lines 7-21
 function SideJobAwardElement:init(unit)
 	SideJobAwardElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function SideJobAwardElement:init(unit)
 	table.insert(self._save_values, "players_from_start")
 end
 
--- Lines: 24 to 62
+-- Lines 23-62
 function SideJobAwardElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -32,7 +32,9 @@ function SideJobAwardElement:_build_panel(panel, panel_sizer)
 		end
 	end
 
-	local objectives = {"all"}
+	local objectives = {
+		"all"
+	}
 
 	if self._hed.challenge then
 		local id = self._hed.challenge
@@ -60,7 +62,7 @@ function SideJobAwardElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Awards an objective from any DLC that uses generic side jobs.")
 end
 
--- Lines: 65 to 81
+-- Lines 64-81
 function SideJobAwardElement:set_element_data(data)
 	SideJobAwardElement.super.set_element_data(self, data)
 
@@ -77,9 +79,10 @@ function SideJobAwardElement:set_element_data(data)
 		self._objective_box:set_selection(0)
 	end
 end
+
 SideJobFilterElement = SideJobFilterElement or class(MissionElement)
 
--- Lines: 89 to 100
+-- Lines 88-100
 function SideJobFilterElement:init(unit)
 	SideJobFilterElement.super.init(self, unit)
 
@@ -92,7 +95,7 @@ function SideJobFilterElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines: 103 to 138
+-- Lines 102-138
 function SideJobFilterElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -109,7 +112,9 @@ function SideJobFilterElement:_build_panel(panel, panel_sizer)
 		end
 	end
 
-	local objectives = {"all"}
+	local objectives = {
+		"all"
+	}
 
 	if self._hed.challenge then
 		local id = self._hed.challenge
@@ -138,7 +143,7 @@ function SideJobFilterElement:_build_panel(panel, panel_sizer)
 	}, "Check if the challenge is completed or incomplete")
 end
 
--- Lines: 141 to 158
+-- Lines 140-158
 function SideJobFilterElement:set_element_data(data)
 	SideJobFilterElement.super.set_element_data(self, data)
 
@@ -156,4 +161,3 @@ function SideJobFilterElement:set_element_data(data)
 		self._objective_box:set_selection(0)
 	end
 end
-

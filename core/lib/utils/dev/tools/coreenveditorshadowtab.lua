@@ -2,28 +2,29 @@ core:import("CoreEnvironmentFeeder")
 
 ShadowBlock = ShadowBlock or CoreClass.class()
 
--- Lines: 7 to 9
+-- Lines 7-9
 function ShadowBlock:init()
 	self._parameters = {}
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function ShadowBlock:map()
 	return self._parameters
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function ShadowBlock:set(key, value)
 	self._parameters[key] = value
 end
 
--- Lines: 19 to 20
+-- Lines 19-21
 function ShadowBlock:get(key)
 	return self._parameters[key]
 end
+
 CoreEnvEditor = CoreEnvEditor or class()
 
--- Lines: 27 to 39
+-- Lines 27-39
 function CoreEnvEditor:init_shadow_tab()
 	self._shadow_blocks = {}
 	self._shadow_params = {}
@@ -34,7 +35,7 @@ function CoreEnvEditor:init_shadow_tab()
 	self._debug_pen = Draw:pen()
 end
 
--- Lines: 42 to 50
+-- Lines 42-50
 function CoreEnvEditor:load_shadow_data(block)
 	for k, v in pairs(block:map()) do
 		local param = self._shadow_params[k]
@@ -45,7 +46,7 @@ function CoreEnvEditor:load_shadow_data(block)
 	end
 end
 
--- Lines: 52 to 64
+-- Lines 52-64
 function CoreEnvEditor:parse_shadow_data()
 	local values = {
 		slice0 = managers.viewport:get_environment_value(self._env_path, CoreEnvironmentFeeder.PostShadowSlice0Feeder.DATA_PATH_KEY),
@@ -61,7 +62,7 @@ function CoreEnvEditor:parse_shadow_data()
 	self:load_shadow_data(block)
 end
 
--- Lines: 67 to 72
+-- Lines 67-72
 function CoreEnvEditor:set_params_enabled(b)
 	for _, v in pairs(self._shadow_params) do
 		cat_print("debug", "enabling " .. _)
@@ -69,21 +70,21 @@ function CoreEnvEditor:set_params_enabled(b)
 	end
 end
 
--- Lines: 74 to 79
+-- Lines 74-79
 function CoreEnvEditor:clear_param_sliders()
 	for k, v in pairs(self._shadow_params) do
 		v:set_value(1)
 	end
 end
 
--- Lines: 81 to 85
+-- Lines 81-85
 function CoreEnvEditor:serialize(str)
 	for k, v in pairs(self._shadow_params) do
 		self._shadow_blocks[str]:set(k, v:get_value())
 	end
 end
 
--- Lines: 87 to 98
+-- Lines 87-99
 function CoreEnvEditor:convert_to_block(values)
 	local block = ShadowBlock:new()
 
@@ -98,7 +99,7 @@ function CoreEnvEditor:convert_to_block(values)
 	return block
 end
 
--- Lines: 101 to 130
+-- Lines 101-131
 function CoreEnvEditor:shadow_feed_params(feed_params)
 	local interface_params = self._posteffect.post_processors.shadow_processor.effects.shadow_rendering.modifiers.shadow_modifier.params
 	local fov_ratio = managers.environment_controller:fov_ratio()
@@ -125,7 +126,7 @@ function CoreEnvEditor:shadow_feed_params(feed_params)
 	return feed_params
 end
 
--- Lines: 133 to 187
+-- Lines 133-187
 function CoreEnvEditor:create_shadow_tab()
 	local panel = EWS:Panel(self._main_notebook, "", "")
 	local panel_box = EWS:BoxSizer("VERTICAL")
@@ -176,4 +177,3 @@ function CoreEnvEditor:create_shadow_tab()
 	panel:set_sizer(panel_box)
 	self._main_notebook:add_page(panel, "Shadow slices", false)
 end
-

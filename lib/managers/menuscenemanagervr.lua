@@ -4,40 +4,40 @@ local __update = MenuSceneManager.update
 local __destroy = MenuSceneManager.destroy
 local ids_unit = Idstring("unit")
 
--- Lines: 12 to 16
+-- Lines 12-16
 function MenuSceneManagerVR:init()
 	__init(self)
 	print("[MenuSceneManagerVR] Init")
 	self:_use_environment("standard")
 end
 
--- Lines: 18 to 20
+-- Lines 18-20
 function MenuSceneManagerVR:destroy()
 	__destroy(self)
 end
 
--- Lines: 22 to 23
+-- Lines 22-23
 function MenuSceneManagerVR:_set_dimensions()
 end
 
--- Lines: 25 to 26
+-- Lines 25-26
 function MenuSceneManagerVR:_set_camera_position()
 end
 
--- Lines: 28 to 29
+-- Lines 28-29
 function MenuSceneManagerVR:_set_target_position()
 end
 
--- Lines: 31 to 32
+-- Lines 31-32
 function MenuSceneManagerVR:mouse_pressed()
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function MenuSceneManagerVR:character_screen_position()
 	return Vector3(0, 0, 0)
 end
 
--- Lines: 38 to 48
+-- Lines 38-48
 function MenuSceneManagerVR:setup_camera()
 	self._camera_values = {
 		camera_pos_current = Vector3(0, 0, 0),
@@ -52,17 +52,17 @@ function MenuSceneManagerVR:setup_camera()
 	self:_use_environment("standard")
 end
 
--- Lines: 50 to 53
+-- Lines 50-53
 function MenuSceneManagerVR:update(t, dt)
 	self:_update_vr(t, dt)
 	__update(self, t, dt)
 end
 
--- Lines: 56 to 57
+-- Lines 55-57
 function MenuSceneManagerVR:_update_vr(t, dt)
 end
 
--- Lines: 59 to 72
+-- Lines 59-72
 function MenuSceneManagerVR:_setup_bg()
 	self._bg_unit = managers.menu:menu_unit()
 
@@ -76,9 +76,11 @@ function MenuSceneManagerVR:_setup_bg()
 	self:_setup_henchmen_characters()
 end
 
--- Lines: 74 to 91
+-- Lines 74-91
 function MenuSceneManagerVR:_set_up_environments()
-	self._environments = {standard = {}}
+	self._environments = {
+		standard = {}
+	}
 	self._environments.standard.environment = "environments/pd2_menu_vr/pd2_menu_vr"
 	self._environments.standard.color_grading = "color_off"
 	self._environments.standard.angle = 0
@@ -94,13 +96,15 @@ function MenuSceneManagerVR:_set_up_environments()
 	}
 end
 
--- Lines: 94 to 165
+-- Lines 94-166
 function MenuSceneManagerVR:_set_up_templates()
 	local ref = self._bg_unit:get_object(Idstring("a_camera_reference"))
 	local c_ref = self._bg_unit:get_object(Idstring("a_reference"))
 	local target_pos = Vector3(0, 0, ref:position().z)
 	local offset = Vector3(ref:position().x, ref:position().y, 0)
-	self._scene_templates = {standard = {}}
+	self._scene_templates = {
+		standard = {}
+	}
 	self._scene_templates.standard.use_character_grab = false
 	self._scene_templates.standard.character_visible = true
 	self._scene_templates.standard.camera_pos = ref:position()
@@ -137,7 +141,8 @@ function MenuSceneManagerVR:_set_up_templates()
 		"blackmarket_screenshot",
 		"crime_spree_lobby",
 		"crew_management",
-		"blackmarket_item"
+		"blackmarket_item",
+		"movie_theater"
 	}
 
 	for _, template in ipairs(cloned_templates) do
@@ -159,9 +164,10 @@ function MenuSceneManagerVR:_set_up_templates()
 		self._scene_templates[template].allow_item = true
 	end
 end
+
 local __set_lobby_character_out_fit = MenuSceneManager.set_lobby_character_out_fit
 
--- Lines: 168 to 176
+-- Lines 169-177
 function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 	__set_lobby_character_out_fit(self, i, outfit_string, rank)
 
@@ -172,9 +178,10 @@ function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 	unit:set_position(pos)
 	unit:set_rotation(Rotation:look_at(Vector3(0, 100, 0) - pos, math.UP))
 end
+
 local __set_item_unit = MenuSceneManager._set_item_unit
 
--- Lines: 179 to 201
+-- Lines 180-202
 function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, second_unit, custom_data)
 	__set_item_unit(self, unit, oobb_object, max_mod, type, second_unit, custom_data)
 
@@ -201,9 +208,10 @@ function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, sec
 
 	hand_unit:set_visible(false)
 end
+
 local __remove_item = MenuSceneManager.remove_item
 
--- Lines: 204 to 210
+-- Lines 205-211
 function MenuSceneManagerVR:remove_item()
 	__remove_item(self)
 
@@ -212,9 +220,10 @@ function MenuSceneManagerVR:remove_item()
 
 	hand_unit:set_visible(true)
 end
+
 local __set_scene_template = MenuSceneManager.set_scene_template
 
--- Lines: 214 to 221
+-- Lines 214-222
 function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip_transition)
 	__set_scene_template(self, template, data, custom_name, skip_transition)
 
@@ -225,11 +234,11 @@ function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip
 	end
 end
 
--- Lines: 223 to 224
+-- Lines 224-225
 function MenuSceneManagerVR:spawn_workbench_room()
 end
 
--- Lines: 226 to 230
+-- Lines 227-232
 function MenuSceneManagerVR:get_henchmen_positioning(index)
 	local pos = Vector3(-180 + 50 * index, 340 + 30 * index, 0)
 	local rot = Rotation(180)
@@ -237,7 +246,7 @@ function MenuSceneManagerVR:get_henchmen_positioning(index)
 	return pos, rot
 end
 
--- Lines: 234 to 251
+-- Lines 235-253
 function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	self._character_text_ws = self._character_text_ws or {}
 	local character = self._lobby_characters[peer_id]
@@ -264,7 +273,7 @@ function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	return panel, panel:center()
 end
 
--- Lines: 254 to 262
+-- Lines 255-263
 function MenuSceneManagerVR:clear_character_text_panels()
 	if not self._character_text_ws then
 		return
@@ -275,7 +284,7 @@ function MenuSceneManagerVR:clear_character_text_panels()
 	end
 end
 
--- Lines: 264 to 272
+-- Lines 265-273
 function MenuSceneManagerVR:_create_economy_safe_scene()
 	local pos = self._scene_templates.safe.character_pos + Vector3(50, 100, 0)
 	local rot = Rotation(30)
@@ -284,9 +293,10 @@ function MenuSceneManagerVR:_create_economy_safe_scene()
 
 	self:_start_safe_drill_sequence()
 end
+
 local __load_safe_result_content = MenuSceneManager.load_safe_result_content
 
--- Lines: 275 to 281
+-- Lines 276-282
 function MenuSceneManagerVR:load_safe_result_content(...)
 	__load_safe_result_content(self, ...)
 
@@ -294,4 +304,3 @@ function MenuSceneManagerVR:load_safe_result_content(...)
 		self._economy_character:set_position(Vector3(-40, 320, 0))
 	end
 end
-

@@ -4,7 +4,7 @@ core:import("CoreEws")
 
 WorldCameraLayer = WorldCameraLayer or class(CoreLayer.Layer)
 
--- Lines: 8 to 19
+-- Lines 8-19
 function WorldCameraLayer:init(owner)
 	WorldCameraLayer.super.init(self, owner, "world_camera")
 
@@ -19,25 +19,27 @@ function WorldCameraLayer:init(owner)
 	self._time_precision = 10000
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function WorldCameraLayer:get_layer_name()
 	return "WorldCamera"
 end
 
--- Lines: 24 to 28
+-- Lines 24-28
 function WorldCameraLayer:load(world_holder, offset)
 	world_holder:create_world("world", self._save_name, offset)
 	self:update_camera_list()
 	self:update_sequence_list()
 end
 
--- Lines: 31 to 47
+-- Lines 30-47
 function WorldCameraLayer:save(save_params)
 	local file_name = "world_cameras"
 	local t = {
 		single_data_block = true,
 		entry = self._save_name,
-		data = {file = file_name}
+		data = {
+			file = file_name
+		}
 	}
 
 	self:_add_project_save_data(t.data)
@@ -49,7 +51,7 @@ function WorldCameraLayer:save(save_params)
 	SystemFS:close(file)
 end
 
--- Lines: 49 to 54
+-- Lines 49-54
 function WorldCameraLayer:toggle_show_framing_gui(layer_toolbar, event)
 	local visible = layer_toolbar:tool_state(event:get_id())
 	self._forced_show_framing_gui = visible
@@ -58,7 +60,7 @@ function WorldCameraLayer:toggle_show_framing_gui(layer_toolbar, event)
 	self:set_gui_visible(visible)
 end
 
--- Lines: 56 to 65
+-- Lines 56-65
 function WorldCameraLayer:set_gui_visible(visible, external_forced)
 	if self._gui_visible ~= visible or self._forced_show_framing_gui then
 		if visible and (self._forced_show_framing_gui or managers.worldcamera:use_gui() or external_forced) then
@@ -71,7 +73,7 @@ function WorldCameraLayer:set_gui_visible(visible, external_forced)
 	end
 end
 
--- Lines: 67 to 105
+-- Lines 67-105
 function WorldCameraLayer:update(t, dt)
 	if not managers.worldcamera._current_world_camera and not self._look_through_camera and self._current_world_camera then
 		self._current_world_camera:debug_draw_editor()
@@ -110,7 +112,7 @@ function WorldCameraLayer:update(t, dt)
 	end
 end
 
--- Lines: 107 to 428
+-- Lines 107-429
 function WorldCameraLayer:build_panel(notebook)
 	cat_print("editor", "WorldCameraLayer:build_panel")
 
@@ -462,7 +464,7 @@ function WorldCameraLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines: 433 to 513
+-- Lines 433-513
 function WorldCameraLayer:build_sequence()
 	local sequences_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Sequences")
 	local sequence_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -538,7 +540,7 @@ function WorldCameraLayer:build_sequence()
 	self._sizer:add(sequences_sizer, 0, 0, "EXPAND")
 end
 
--- Lines: 517 to 538
+-- Lines 517-538
 function WorldCameraLayer:select_camera()
 	local name = self:selected_camera()
 	self._current_point = nil
@@ -565,7 +567,7 @@ function WorldCameraLayer:select_camera()
 	end
 end
 
--- Lines: 540 to 556
+-- Lines 540-556
 function WorldCameraLayer:create_new()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new camera:", "Create Camera", "new_camera", Vector3(-1, -1, 0), true)
 
@@ -576,7 +578,7 @@ function WorldCameraLayer:create_new()
 			managers.worldcamera:create_world_camera(name)
 			self:update_camera_list()
 
-			for i = 0, self._camera_list:nr_items() - 1, 1 do
+			for i = 0, self._camera_list:nr_items() - 1 do
 				if self._camera_list:get_string(i) == name then
 					self._camera_list:select_index(i)
 				end
@@ -587,7 +589,7 @@ function WorldCameraLayer:create_new()
 	end
 end
 
--- Lines: 558 to 580
+-- Lines 558-580
 function WorldCameraLayer:delete_camera()
 	local name = self:selected_camera()
 
@@ -615,7 +617,7 @@ function WorldCameraLayer:delete_camera()
 	end
 end
 
--- Lines: 582 to 589
+-- Lines 582-589
 function WorldCameraLayer:test_camera()
 	local name = self:selected_camera()
 
@@ -628,7 +630,7 @@ function WorldCameraLayer:test_camera()
 	end
 end
 
--- Lines: 591 to 597
+-- Lines 591-597
 function WorldCameraLayer:test_done()
 	self:force_editor_state()
 	managers.editor:sound_check_object_active(true)
@@ -638,13 +640,13 @@ function WorldCameraLayer:test_done()
 	end
 end
 
--- Lines: 599 to 602
+-- Lines 599-602
 function WorldCameraLayer:stop_camera()
 	managers.worldcamera:stop_world_camera()
 	self:force_editor_state()
 end
 
--- Lines: 604 to 610
+-- Lines 604-610
 function WorldCameraLayer:select_point()
 	local point = self:selected_point()
 	local name = self:selected_camera()
@@ -654,7 +656,7 @@ function WorldCameraLayer:select_point()
 	end
 end
 
--- Lines: 612 to 622
+-- Lines 612-622
 function WorldCameraLayer:add_point()
 	local name = self:selected_camera()
 
@@ -670,7 +672,7 @@ function WorldCameraLayer:add_point()
 	end
 end
 
--- Lines: 624 to 632
+-- Lines 624-632
 function WorldCameraLayer:move_point()
 	local point = self:selected_point()
 	local name = self:selected_camera()
@@ -684,7 +686,7 @@ function WorldCameraLayer:move_point()
 	self:select_point()
 end
 
--- Lines: 634 to 645
+-- Lines 634-645
 function WorldCameraLayer:delete_point()
 	local point = self:selected_point()
 	local name = self:selected_camera()
@@ -702,7 +704,7 @@ function WorldCameraLayer:delete_point()
 	end
 end
 
--- Lines: 647 to 655
+-- Lines 647-655
 function WorldCameraLayer:goto_point()
 	local point = self:selected_point()
 	local name = self:selected_camera()
@@ -715,7 +717,7 @@ function WorldCameraLayer:goto_point()
 	end
 end
 
--- Lines: 657 to 666
+-- Lines 657-666
 function WorldCameraLayer:change_acc(type)
 	local name = self:selected_camera()
 
@@ -728,7 +730,7 @@ function WorldCameraLayer:change_acc(type)
 	end
 end
 
--- Lines: 668 to 673
+-- Lines 668-673
 function WorldCameraLayer:set_duration(params)
 	local name = self:selected_camera()
 
@@ -737,7 +739,7 @@ function WorldCameraLayer:set_duration(params)
 	end
 end
 
--- Lines: 675 to 680
+-- Lines 675-680
 function WorldCameraLayer:set_delay(params)
 	local name = self:selected_camera()
 
@@ -746,7 +748,7 @@ function WorldCameraLayer:set_delay(params)
 	end
 end
 
--- Lines: 682 to 687
+-- Lines 682-687
 function WorldCameraLayer:set_dof_padding(params)
 	local name = self:selected_camera()
 
@@ -755,7 +757,7 @@ function WorldCameraLayer:set_dof_padding(params)
 	end
 end
 
--- Lines: 689 to 694
+-- Lines 689-694
 function WorldCameraLayer:set_dof_clamp(params)
 	local name = self:selected_camera()
 
@@ -764,7 +766,7 @@ function WorldCameraLayer:set_dof_clamp(params)
 	end
 end
 
--- Lines: 696 to 703
+-- Lines 696-703
 function WorldCameraLayer:update_camera_list()
 	self._camera_list:clear()
 	self._availible_sequence_camera_list:clear()
@@ -775,7 +777,7 @@ function WorldCameraLayer:update_camera_list()
 	end
 end
 
--- Lines: 705 to 710
+-- Lines 705-711
 function WorldCameraLayer:selected_camera()
 	local index = self._camera_list:selected_index()
 
@@ -786,7 +788,7 @@ function WorldCameraLayer:selected_camera()
 	return nil
 end
 
--- Lines: 713 to 718
+-- Lines 713-719
 function WorldCameraLayer:selected_world_camera()
 	local index = self._camera_list:selected_index()
 
@@ -797,7 +799,7 @@ function WorldCameraLayer:selected_world_camera()
 	return nil
 end
 
--- Lines: 721 to 726
+-- Lines 721-727
 function WorldCameraLayer:selected_point()
 	local index = self._point_list:selected_index()
 
@@ -808,7 +810,7 @@ function WorldCameraLayer:selected_point()
 	return nil
 end
 
--- Lines: 731 to 744
+-- Lines 731-744
 function WorldCameraLayer:look_through_camera(data, event)
 	self._look_through_camera = self._keys_toolbar:tool_state(event:get_id())
 
@@ -821,7 +823,7 @@ function WorldCameraLayer:look_through_camera(data, event)
 	end
 end
 
--- Lines: 746 to 750
+-- Lines 746-750
 function WorldCameraLayer:set_time(data)
 	self._current_time = data.slider:get_value() / self._time_precision
 	local floats = math.log10(self._time_precision)
@@ -829,7 +831,7 @@ function WorldCameraLayer:set_time(data)
 	data.text:set_value(string.format("%." .. floats .. "f", self._current_time))
 end
 
--- Lines: 753 to 759
+-- Lines 753-759
 function WorldCameraLayer:add_key()
 	local camera = self:selected_world_camera()
 
@@ -840,7 +842,7 @@ function WorldCameraLayer:add_key()
 	end
 end
 
--- Lines: 762 to 773
+-- Lines 762-773
 function WorldCameraLayer:delete_key()
 	local camera = self:selected_world_camera()
 
@@ -859,12 +861,12 @@ function WorldCameraLayer:delete_key()
 	self:populate_keys()
 end
 
--- Lines: 775 to 777
+-- Lines 775-777
 function WorldCameraLayer:select_key()
 	self:set_key(tonumber(self._keys:get_value()))
 end
 
--- Lines: 779 to 786
+-- Lines 779-786
 function WorldCameraLayer:on_key_time()
 	local camera = self:selected_world_camera()
 
@@ -876,7 +878,7 @@ function WorldCameraLayer:on_key_time()
 	end
 end
 
--- Lines: 788 to 795
+-- Lines 788-795
 function WorldCameraLayer:on_key_fov()
 	local camera = self:selected_world_camera()
 
@@ -888,7 +890,7 @@ function WorldCameraLayer:on_key_fov()
 	end
 end
 
--- Lines: 797 to 807
+-- Lines 797-807
 function WorldCameraLayer:on_key_near_dof()
 	local camera = self:selected_world_camera()
 
@@ -904,7 +906,7 @@ function WorldCameraLayer:on_key_near_dof()
 	end
 end
 
--- Lines: 809 to 819
+-- Lines 809-819
 function WorldCameraLayer:on_key_far_dof()
 	local camera = self:selected_world_camera()
 
@@ -920,7 +922,7 @@ function WorldCameraLayer:on_key_far_dof()
 	end
 end
 
--- Lines: 821 to 831
+-- Lines 821-831
 function WorldCameraLayer:on_set_roll()
 	local camera = self:selected_world_camera()
 
@@ -931,7 +933,7 @@ function WorldCameraLayer:on_set_roll()
 	end
 end
 
--- Lines: 833 to 842
+-- Lines 833-842
 function WorldCameraLayer:set_near_dof()
 	local camera = self:selected_world_camera()
 
@@ -946,7 +948,7 @@ function WorldCameraLayer:set_near_dof()
 	end
 end
 
--- Lines: 844 to 853
+-- Lines 844-853
 function WorldCameraLayer:set_far_dof()
 	local camera = self:selected_world_camera()
 
@@ -961,7 +963,7 @@ function WorldCameraLayer:set_far_dof()
 	end
 end
 
--- Lines: 855 to 872
+-- Lines 855-872
 function WorldCameraLayer:populate_keys(index)
 	self._keys:clear()
 
@@ -985,7 +987,7 @@ function WorldCameraLayer:populate_keys(index)
 	self:set_key_values(time, fov, near_dof, far_dof, roll)
 end
 
--- Lines: 874 to 889
+-- Lines 874-889
 function WorldCameraLayer:set_key(index)
 	local camera = self:selected_world_camera()
 
@@ -1007,7 +1009,7 @@ function WorldCameraLayer:set_key(index)
 	end
 end
 
--- Lines: 891 to 918
+-- Lines 891-918
 function WorldCameraLayer:set_key_values(time, fov, near_dof, far_dof, roll)
 	for _, ctrl in pairs(self._key_types) do
 		(ctrl.number_ctrlr or ctrl):set_enabled(false)
@@ -1044,7 +1046,7 @@ function WorldCameraLayer:set_key_values(time, fov, near_dof, far_dof, roll)
 	end
 end
 
--- Lines: 920 to 926
+-- Lines 920-926
 function WorldCameraLayer:next_key()
 	local camera = self:selected_world_camera()
 
@@ -1055,7 +1057,7 @@ function WorldCameraLayer:next_key()
 	end
 end
 
--- Lines: 928 to 934
+-- Lines 928-934
 function WorldCameraLayer:prev_key()
 	local camera = self:selected_world_camera()
 
@@ -1066,7 +1068,7 @@ function WorldCameraLayer:prev_key()
 	end
 end
 
--- Lines: 936 to 941
+-- Lines 936-941
 function WorldCameraLayer:key_types_set_enabled(enabled)
 	for _, ctrl in pairs(self._key_types) do
 		local c = ctrl.number_ctrlr or ctrl
@@ -1075,12 +1077,12 @@ function WorldCameraLayer:key_types_set_enabled(enabled)
 	end
 end
 
--- Lines: 945 to 947
+-- Lines 945-947
 function WorldCameraLayer:on_select_sequence()
 	self:select_sequence()
 end
 
--- Lines: 949 to 965
+-- Lines 949-965
 function WorldCameraLayer:on_create_new_sequence()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new sequence:", "Create Sequence", "new_sequence", Vector3(-1, -1, 0), true)
 
@@ -1091,7 +1093,7 @@ function WorldCameraLayer:on_create_new_sequence()
 			managers.worldcamera:create_world_camera_sequence(name)
 			self:update_sequence_list()
 
-			for i = 0, self._sequence_list:nr_items() - 1, 1 do
+			for i = 0, self._sequence_list:nr_items() - 1 do
 				if self._sequence_list:get_string(i) == name then
 					self._sequence_list:select_index(i)
 				end
@@ -1102,7 +1104,7 @@ function WorldCameraLayer:on_create_new_sequence()
 	end
 end
 
--- Lines: 967 to 974
+-- Lines 967-974
 function WorldCameraLayer:on_delete_sequence()
 	local name = self:selected_sequence_name()
 
@@ -1113,7 +1115,7 @@ function WorldCameraLayer:on_delete_sequence()
 	end
 end
 
--- Lines: 976 to 983
+-- Lines 976-983
 function WorldCameraLayer:on_test_sequence()
 	local name = self:selected_sequence_name()
 
@@ -1125,18 +1127,18 @@ function WorldCameraLayer:on_test_sequence()
 	end
 end
 
--- Lines: 985 to 988
+-- Lines 985-988
 function WorldCameraLayer:sequence_test_done()
 	self:force_editor_state()
 	managers.editor:sound_check_object_active(true)
 end
 
--- Lines: 990 to 992
+-- Lines 990-992
 function WorldCameraLayer:on_stop_sequence()
 	managers.worldcamera:stop_world_camera()
 end
 
--- Lines: 994 to 1006
+-- Lines 994-1006
 function WorldCameraLayer:on_add_camera_to_sequence()
 	local name = self:selected_sequence_name()
 
@@ -1154,7 +1156,7 @@ function WorldCameraLayer:on_add_camera_to_sequence()
 	end
 end
 
--- Lines: 1008 to 1020
+-- Lines 1008-1020
 function WorldCameraLayer:on_remove_camera_from_sequence()
 	local name = self:selected_sequence_name()
 
@@ -1172,7 +1174,7 @@ function WorldCameraLayer:on_remove_camera_from_sequence()
 	end
 end
 
--- Lines: 1022 to 1037
+-- Lines 1022-1037
 function WorldCameraLayer:on_move_camera_in_sequence(dir)
 	local name = self:selected_sequence_name()
 
@@ -1193,7 +1195,7 @@ function WorldCameraLayer:on_move_camera_in_sequence(dir)
 	end
 end
 
--- Lines: 1039 to 1045
+-- Lines 1039-1045
 function WorldCameraLayer:on_select_sequence_camera()
 	local sequence_camera = self:selected_sequence_camera()
 
@@ -1203,7 +1205,7 @@ function WorldCameraLayer:on_select_sequence_camera()
 	end
 end
 
--- Lines: 1047 to 1055
+-- Lines 1047-1055
 function WorldCameraLayer:on_sequence_camera_start()
 	local value = tonumber(self._camera_sequence_settings.start:get_value())
 	value = math.clamp(value, 0, 1)
@@ -1217,7 +1219,7 @@ function WorldCameraLayer:on_sequence_camera_start()
 	end
 end
 
--- Lines: 1057 to 1065
+-- Lines 1057-1065
 function WorldCameraLayer:on_sequence_camera_stop()
 	local value = tonumber(self._camera_sequence_settings.stop:get_value())
 	value = math.clamp(value, 0, 1)
@@ -1231,7 +1233,7 @@ function WorldCameraLayer:on_sequence_camera_stop()
 	end
 end
 
--- Lines: 1067 to 1072
+-- Lines 1067-1072
 function WorldCameraLayer:update_sequence_list()
 	self._sequence_list:clear()
 
@@ -1240,7 +1242,7 @@ function WorldCameraLayer:update_sequence_list()
 	end
 end
 
--- Lines: 1074 to 1095
+-- Lines 1074-1095
 function WorldCameraLayer:select_sequence()
 	local name = self:selected_sequence_name()
 
@@ -1249,7 +1251,7 @@ function WorldCameraLayer:select_sequence()
 	end
 end
 
--- Lines: 1097 to 1102
+-- Lines 1097-1103
 function WorldCameraLayer:selected_sequence_name()
 	local index = self._sequence_list:selected_index()
 
@@ -1260,7 +1262,7 @@ function WorldCameraLayer:selected_sequence_name()
 	return nil
 end
 
--- Lines: 1105 to 1110
+-- Lines 1105-1111
 function WorldCameraLayer:selected_sequence()
 	local index = self._sequence_list:selected_index()
 
@@ -1271,7 +1273,7 @@ function WorldCameraLayer:selected_sequence()
 	return nil
 end
 
--- Lines: 1113 to 1118
+-- Lines 1113-1119
 function WorldCameraLayer:selected_sequence_camera_name()
 	local index = self._sequence_camera_list:selected_index()
 
@@ -1282,7 +1284,7 @@ function WorldCameraLayer:selected_sequence_camera_name()
 	return nil
 end
 
--- Lines: 1121 to 1130
+-- Lines 1121-1131
 function WorldCameraLayer:selected_sequence_camera()
 	local index = self._sequence_camera_list:selected_index()
 
@@ -1298,7 +1300,7 @@ function WorldCameraLayer:selected_sequence_camera()
 	return nil
 end
 
--- Lines: 1133 to 1148
+-- Lines 1133-1148
 function WorldCameraLayer:update_sequence_camera_list(index)
 	self._sequence_camera_list:clear()
 
@@ -1317,11 +1319,11 @@ function WorldCameraLayer:update_sequence_camera_list(index)
 	end
 end
 
--- Lines: 1151 to 1152
+-- Lines 1150-1152
 function WorldCameraLayer:deselect()
 end
 
--- Lines: 1154 to 1163
+-- Lines 1154-1163
 function WorldCameraLayer:add_triggers()
 	WorldCameraLayer.super.add_triggers(self)
 
@@ -1333,14 +1335,14 @@ function WorldCameraLayer:add_triggers()
 	vc:add_trigger(Idstring("set_world_camera_near_dof"), callback(self, self, "set_near_dof"))
 end
 
--- Lines: 1165 to 1169
+-- Lines 1165-1169
 function WorldCameraLayer:activate()
 	managers.editor:layer("Mission"):hide_all()
 	WorldCameraLayer.super.activate(self)
 	self:set_gui_visible(true)
 end
 
--- Lines: 1171 to 1177
+-- Lines 1171-1177
 function WorldCameraLayer:deactivate()
 	managers.editor:layer("Mission"):unhide_all()
 	WorldCameraLayer.super.deactivate(self)
@@ -1349,7 +1351,7 @@ function WorldCameraLayer:deactivate()
 	managers.editor:set_camera_roll(0)
 end
 
--- Lines: 1179 to 1196
+-- Lines 1179-1196
 function WorldCameraLayer:clear()
 	WorldCameraLayer.super.clear(self)
 
@@ -1370,7 +1372,7 @@ function WorldCameraLayer:clear()
 	managers.editor:set_camera_roll(0)
 end
 
--- Lines: 1198 to 1203
+-- Lines 1198-1204
 function WorldCameraLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -1379,4 +1381,3 @@ function WorldCameraLayer:get_help(text)
 
 	return text
 end
-

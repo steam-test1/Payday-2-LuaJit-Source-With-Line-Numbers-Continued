@@ -1,18 +1,20 @@
 CoreCounterUnitElement = CoreCounterUnitElement or class(MissionElement)
 CoreCounterUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterUnitElement.SAVE_UNIT_ROTATION = false
-CoreCounterUnitElement.INSTANCE_VAR_NAMES = {{
-	value = "counter_target",
-	type = "number"
-}}
+CoreCounterUnitElement.INSTANCE_VAR_NAMES = {
+	{
+		value = "counter_target",
+		type = "number"
+	}
+}
 CounterUnitElement = CounterUnitElement or class(CoreCounterUnitElement)
 
--- Lines: 8 to 10
+-- Lines 8-10
 function CounterUnitElement:init(...)
 	CoreCounterUnitElement.init(self, ...)
 end
 
--- Lines: 12 to 22
+-- Lines 12-22
 function CoreCounterUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -24,7 +26,7 @@ function CoreCounterUnitElement:init(unit)
 	table.insert(self._save_values, "digital_gui_unit_ids")
 end
 
--- Lines: 25 to 34
+-- Lines 25-34
 function CoreCounterUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -37,14 +39,14 @@ function CoreCounterUnitElement:layer_finished()
 	end
 end
 
--- Lines: 36 to 40
+-- Lines 36-40
 function CoreCounterUnitElement:load_unit(unit)
 	if unit then
 		self._digital_gui_units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 42 to 65
+-- Lines 42-65
 function CoreCounterUnitElement:update_selected()
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -74,7 +76,7 @@ function CoreCounterUnitElement:update_selected()
 	end
 end
 
--- Lines: 67 to 80
+-- Lines 67-80
 function CoreCounterUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -93,7 +95,7 @@ function CoreCounterUnitElement:update_unselected(t, dt, selected_unit, all_unit
 	end
 end
 
--- Lines: 82 to 95
+-- Lines 82-95
 function CoreCounterUnitElement:draw_links_unselected(...)
 	CoreCounterUnitElement.super.draw_links_unselected(self, ...)
 
@@ -111,7 +113,7 @@ function CoreCounterUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 97 to 102
+-- Lines 97-102
 function CoreCounterUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -124,7 +126,7 @@ function CoreCounterUnitElement:update_editing()
 	end
 end
 
--- Lines: 104 to 116
+-- Lines 104-116
 function CoreCounterUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -143,26 +145,26 @@ function CoreCounterUnitElement:select_unit()
 	end
 end
 
--- Lines: 118 to 121
+-- Lines 118-121
 function CoreCounterUnitElement:_remove_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 123 to 126
+-- Lines 123-126
 function CoreCounterUnitElement:_add_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 128 to 130
+-- Lines 128-130
 function CoreCounterUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 132 to 136
+-- Lines 132-137
 function CoreCounterUnitElement:_add_unit_filter(unit)
 	if self._digital_gui_units[unit:unit_data().unit_id] then
 		return false
@@ -171,12 +173,12 @@ function CoreCounterUnitElement:_add_unit_filter(unit)
 	return unit:digital_gui() and unit:digital_gui():is_number()
 end
 
--- Lines: 139 to 140
+-- Lines 139-141
 function CoreCounterUnitElement:_remove_unit_filter(unit)
 	return self._digital_gui_units[unit:unit_data().unit_id]
 end
 
--- Lines: 143 to 157
+-- Lines 143-157
 function CoreCounterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -195,22 +197,27 @@ function CoreCounterUnitElement:_build_panel(panel, panel_sizer)
 	}, "Specifies how many times the counter should be executed before running its on executed")
 	self:_add_help_text("Units with number gui extension can have their value updated from a counter.")
 end
+
 CoreCounterOperatorUnitElement = CoreCounterOperatorUnitElement or class(MissionElement)
 CoreCounterOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterOperatorUnitElement.SAVE_UNIT_ROTATION = false
-CoreCounterOperatorUnitElement.INSTANCE_VAR_NAMES = {{
-	value = "amount",
-	type = "number"
-}}
-CoreCounterOperatorUnitElement.LINK_ELEMENTS = {"elements"}
+CoreCounterOperatorUnitElement.INSTANCE_VAR_NAMES = {
+	{
+		value = "amount",
+		type = "number"
+	}
+}
+CoreCounterOperatorUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 CounterOperatorUnitElement = CounterOperatorUnitElement or class(CoreCounterOperatorUnitElement)
 
--- Lines: 169 to 171
+-- Lines 169-171
 function CounterOperatorUnitElement:init(...)
 	CounterOperatorUnitElement.super.init(self, ...)
 end
 
--- Lines: 173 to 183
+-- Lines 173-183
 function CoreCounterOperatorUnitElement:init(unit)
 	CoreCounterOperatorUnitElement.super.init(self, unit)
 
@@ -223,7 +230,7 @@ function CoreCounterOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 185 to 194
+-- Lines 185-194
 function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreCounterOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -243,17 +250,17 @@ function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_uni
 	end
 end
 
--- Lines: 196 to 199
+-- Lines 196-199
 function CoreCounterOperatorUnitElement:get_links_to_unit(...)
 	CoreCounterOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 201 to 202
+-- Lines 201-202
 function CoreCounterOperatorUnitElement:update_editing()
 end
 
--- Lines: 204 to 217
+-- Lines 204-217
 function CoreCounterOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -271,18 +278,20 @@ function CoreCounterOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 220 to 222
+-- Lines 220-222
 function CoreCounterOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 224 to 237
+-- Lines 224-237
 function CoreCounterOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_counter/logic_counter"}
+	local names = {
+		"logic_counter/logic_counter"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "operation", {
@@ -298,18 +307,21 @@ function CoreCounterOperatorUnitElement:_build_panel(panel, panel_sizer)
 	}, "Amount to add, subtract or set to the counters.")
 	self:_add_help_text("This element can modify logic_counter element. Select counters to modify using insert and clicking on the elements.")
 end
+
 CoreCounterTriggerUnitElement = CoreCounterTriggerUnitElement or class(MissionElement)
 CoreCounterTriggerUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterTriggerUnitElement.SAVE_UNIT_ROTATION = false
-CoreCounterTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+CoreCounterTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 CounterTriggerUnitElement = CounterTriggerUnitElement or class(CoreCounterTriggerUnitElement)
 
--- Lines: 248 to 250
+-- Lines 248-250
 function CounterTriggerUnitElement:init(...)
 	CounterTriggerUnitElement.super.init(self, ...)
 end
 
--- Lines: 252 to 262
+-- Lines 252-262
 function CoreCounterTriggerUnitElement:init(unit)
 	CoreCounterTriggerUnitElement.super.init(self, unit)
 
@@ -322,7 +334,7 @@ function CoreCounterTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 264 to 273
+-- Lines 264-273
 function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreCounterTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -342,17 +354,17 @@ function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_unit
 	end
 end
 
--- Lines: 275 to 278
+-- Lines 275-278
 function CoreCounterTriggerUnitElement:get_links_to_unit(...)
 	CoreCounterTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 280 to 281
+-- Lines 280-281
 function CoreCounterTriggerUnitElement:update_editing()
 end
 
--- Lines: 283 to 296
+-- Lines 283-296
 function CoreCounterTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -370,18 +382,20 @@ function CoreCounterTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 299 to 301
+-- Lines 299-301
 function CoreCounterTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 303 to 316
+-- Lines 303-316
 function CoreCounterTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_counter/logic_counter"}
+	local names = {
+		"logic_counter/logic_counter"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "trigger_type", {
@@ -392,21 +406,26 @@ function CoreCounterTriggerUnitElement:_build_panel(panel, panel_sizer)
 		"reset",
 		"set"
 	}, "Select a trigger type for the selected elements")
-	self:_build_value_number(panel, panel_sizer, "amount", {floats = 0}, "Specify value to trigger on.")
+	self:_build_value_number(panel, panel_sizer, "amount", {
+		floats = 0
+	}, "Specify value to trigger on.")
 	self:_add_help_text("This element is a trigger to logic_counter element.")
 end
+
 CoreCounterFilterUnitElement = CoreCounterFilterUnitElement or class(MissionElement)
 CoreCounterFilterUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterFilterUnitElement.SAVE_UNIT_ROTATION = false
-CoreCounterFilterUnitElement.LINK_ELEMENTS = {"elements"}
+CoreCounterFilterUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 CounterFilterUnitElement = CounterFilterUnitElement or class(CoreCounterFilterUnitElement)
 
--- Lines: 327 to 329
+-- Lines 327-329
 function CounterFilterUnitElement:init(...)
 	CounterFilterUnitElement.super.init(self, ...)
 end
 
--- Lines: 331 to 343
+-- Lines 331-343
 function CoreCounterFilterUnitElement:init(unit)
 	CoreCounterFilterUnitElement.super.init(self, unit)
 
@@ -421,7 +440,7 @@ function CoreCounterFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines: 345 to 354
+-- Lines 345-354
 function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreCounterFilterUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -441,17 +460,17 @@ function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines: 356 to 359
+-- Lines 356-359
 function CoreCounterFilterUnitElement:get_links_to_unit(...)
 	CoreCounterFilterUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "filter", ...)
 end
 
--- Lines: 361 to 362
+-- Lines 361-362
 function CoreCounterFilterUnitElement:update_editing()
 end
 
--- Lines: 364 to 377
+-- Lines 364-377
 function CoreCounterFilterUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -469,25 +488,29 @@ function CoreCounterFilterUnitElement:add_element()
 	end
 end
 
--- Lines: 380 to 382
+-- Lines 380-382
 function CoreCounterFilterUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 384 to 398
+-- Lines 384-398
 function CoreCounterFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_counter/logic_counter"}
+	local names = {
+		"logic_counter/logic_counter"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "needed_to_execute", {
 		"all",
 		"any"
 	}, "Select how many elements are needed to execute")
-	self:_build_value_number(panel, panel_sizer, "value", {floats = 0}, "Specify value to trigger on.")
+	self:_build_value_number(panel, panel_sizer, "value", {
+		floats = 0
+	}, "Specify value to trigger on.")
 	self:_build_value_combobox(panel, panel_sizer, "check_type", {
 		"equal",
 		"less_than",
@@ -499,4 +522,3 @@ function CoreCounterFilterUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select which check operation to perform")
 	self:_add_help_text("This element is a filter to logic_counter element.")
 end
-

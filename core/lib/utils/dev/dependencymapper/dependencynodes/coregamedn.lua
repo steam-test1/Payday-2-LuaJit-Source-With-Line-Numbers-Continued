@@ -7,22 +7,24 @@ LEVEL = CoreDependencyNode.LEVEL
 LEVELS_FILE = "./dev/build_info/levels.xml"
 GameDependencyNode = GameDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 15 to 17
+-- Lines 15-17
 function GameDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, GAME, nil, name, get_dn_cb, database)
 end
 
--- Lines: 19 to 23
+-- Lines 19-24
 function GameDependencyNode:_parse()
 	local f = File:open(LEVELS_FILE, "r")
 	local xmlnode = Node.from_xml(f:read())
 
 	f:close()
 
-	return {xmlnode}
+	return {
+		xmlnode
+	}
 end
 
--- Lines: 26 to 37
+-- Lines 26-37
 function GameDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 	local name = xmlnode:parameter("name")
@@ -41,4 +43,3 @@ function GameDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

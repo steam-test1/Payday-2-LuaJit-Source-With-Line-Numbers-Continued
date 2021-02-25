@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 local MilestoneItem = MilestoneItem or class(GrowPanel)
 
--- Lines: 17 to 74
+-- Lines 17-74
 function MilestoneItem:init(parent, data, black_bg)
 	MilestoneItem.super.init(self, parent, {
 		border = 10,
@@ -42,11 +42,13 @@ function MilestoneItem:init(parent, data, black_bg)
 		})
 		local cx, cy = icon:center()
 
-		lock:set_center(math.round((cx + icon:w() * 0.5) - 10), math.round((cy + icon:h() * 0.5) - 10))
+		lock:set_center(math.round(cx + icon:w() * 0.5 - 10), math.round(cy + icon:h() * 0.5 - 10))
 	end
 
 	placer:add_right(self:fine_text({
-		text = managers.localization:text("menu_milestone_item_title", {AT = data.at}),
+		text = managers.localization:text("menu_milestone_item_title", {
+			AT = data.at
+		}),
 		font = small_font,
 		font_size = small_font_size,
 		color = color
@@ -56,7 +58,7 @@ function MilestoneItem:init(parent, data, black_bg)
 	if is_current then
 		local total = managers.achievment:total_unlocked()
 
-		-- Lines: 50 to 51
+		-- Lines 50-52
 		local function func(o, at, max)
 			return string.format(" %d", at + data.last_at)
 		end
@@ -123,9 +125,10 @@ function MilestoneItem:init(parent, data, black_bg)
 
 	self._passed = passed
 end
+
 AchievementMilestoneGui = AchievementMilestoneGui or class(GrowPanel)
 
--- Lines: 81 to 126
+-- Lines 80-126
 function AchievementMilestoneGui:init(parent, back_callback)
 	AchievementMilestoneGui.super.init(self, parent, {
 		padding = 10,
@@ -183,22 +186,28 @@ function AchievementMilestoneGui:init(parent, back_callback)
 		self._list:scroll_to_show_item_at_world(last_passed, self._list:world_y())
 	end
 
-	local back_panel = self:panel({layer = -1})
+	local back_panel = self:panel({
+		layer = -1
+	})
 
-	back_panel:rect({color = Color.black:with_alpha(0.8)})
-	BoxGuiObject:new(back_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	back_panel:rect({
+		color = Color.black:with_alpha(0.8)
+	})
+	BoxGuiObject:new(back_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self._back = back_panel
 
 	self:set_center(parent:w() / 2, parent:h() / 2)
 end
 
--- Lines: 128 to 131
+-- Lines 128-131
 function AchievementMilestoneGui:close()
 	self:remove_self()
 
@@ -207,7 +216,7 @@ function AchievementMilestoneGui:close()
 	end
 end
 
--- Lines: 133 to 142
+-- Lines 133-142
 function AchievementMilestoneGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -218,10 +227,9 @@ function AchievementMilestoneGui:update(...)
 	end
 end
 
--- Lines: 144 to 146
+-- Lines 144-147
 function AchievementMilestoneGui:back_pressed()
 	self._back_callback()
 
 	return true
 end
-

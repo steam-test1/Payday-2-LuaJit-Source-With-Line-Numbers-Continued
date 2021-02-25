@@ -1,6 +1,6 @@
 CoreEffectStackMember = CoreEffectStackMember or class(CoreEffectPropertyContainer)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function CoreEffectStackMember:init(name, stacktype, ui_name)
 	self.super.init(self, name)
 
@@ -8,14 +8,14 @@ function CoreEffectStackMember:init(name, stacktype, ui_name)
 	self._ui_name = ui_name
 end
 
--- Lines: 11 to 14
+-- Lines 11-14
 function CoreEffectStackMember:save(node)
 	local n = node:make_child(self:name())
 
 	self:save_properties(n)
 end
 
--- Lines: 16 to 37
+-- Lines 16-38
 function CoreEffectStackMember:access()
 	local ret = {}
 
@@ -44,7 +44,7 @@ function CoreEffectStackMember:access()
 	return ret
 end
 
--- Lines: 40 to 62
+-- Lines 40-63
 function CoreEffectStackMember:reads_writes()
 	local reads = {}
 	local writes = {}
@@ -70,35 +70,36 @@ function CoreEffectStackMember:reads_writes()
 
 	return reads, writes
 end
+
 CoreEffectStack = CoreEffectStack or class()
 
--- Lines: 68 to 71
+-- Lines 68-71
 function CoreEffectStack:init(stacktype)
 	self._type = stacktype
 	self._stack = {}
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function CoreEffectStack:stack()
 	return self._stack
 end
 
--- Lines: 78 to 79
+-- Lines 78-80
 function CoreEffectStack:member(i)
 	return self._stack[i]
 end
 
--- Lines: 82 to 84
+-- Lines 82-84
 function CoreEffectStack:add_member(member)
 	table.insert(self._stack, member)
 end
 
--- Lines: 86 to 88
+-- Lines 86-88
 function CoreEffectStack:insert_member(member, i)
 	table.insert(self._stack, i, member)
 end
 
--- Lines: 90 to 95
+-- Lines 90-95
 function CoreEffectStack:move_down(idx)
 	if idx == #self._stack then
 		return
@@ -110,7 +111,7 @@ function CoreEffectStack:move_down(idx)
 	table.insert(self._stack, idx + 1, e)
 end
 
--- Lines: 97 to 102
+-- Lines 97-102
 function CoreEffectStack:move_up(idx)
 	if idx == 1 then
 		return
@@ -122,12 +123,12 @@ function CoreEffectStack:move_up(idx)
 	table.insert(self._stack, idx - 1, e)
 end
 
--- Lines: 104 to 106
+-- Lines 104-106
 function CoreEffectStack:remove(idx)
 	table.remove(self._stack, idx)
 end
 
--- Lines: 109 to 182
+-- Lines 109-183
 function CoreEffectStack:validate(channels)
 	local ret = {
 		valid = true,
@@ -211,7 +212,7 @@ function CoreEffectStack:validate(channels)
 	return ret
 end
 
--- Lines: 185 to 191
+-- Lines 185-191
 function CoreEffectStack:save(node)
 	local stack = node:make_child(self._type .. "stack")
 
@@ -220,7 +221,7 @@ function CoreEffectStack:save(node)
 	end
 end
 
--- Lines: 193 to 206
+-- Lines 193-206
 function CoreEffectStack:load(node)
 	for child1 in node:children() do
 		if child1:name() == self._type .. "stack" then
@@ -239,9 +240,10 @@ function CoreEffectStack:load(node)
 		end
 	end
 end
+
 CoreEffectAtom = CoreEffectAtom or class(CoreEffectPropertyContainer)
 
--- Lines: 212 to 453
+-- Lines 211-453
 function CoreEffectAtom:init(name)
 	self.super.init(self, name)
 
@@ -429,7 +431,7 @@ the effect will be culled while still visible]]
 	help = "Internal event listeners - these are listeners capable of handling events spawned by the simulators with a fixed behaviour.\nFor more advanced event handling, script callbacks can be registered with effect instances at runtime."
 	p = CoreEffectProperty:new("event_listeners", "list_objects", "", help)
 
-	-- Lines: 394 to 400
+	-- Lines 394-401
 	local function create_event_types()
 		local event_types = CoreEffectProperty:new("event", "value_list", "collision", "Type of event that handler should respond to")
 
@@ -441,7 +443,7 @@ the effect will be culled while still visible]]
 		return event_types
 	end
 
-	-- Lines: 404 to 411
+	-- Lines 404-412
 	local function create_effect_spawn_property()
 		local effect_spawn_property = CoreEffectProperty:new("effect_spawn", "compound", "", "")
 
@@ -456,7 +458,7 @@ the effect will be culled while still visible]]
 		return effect_spawn_property
 	end
 
-	-- Lines: 415 to 422
+	-- Lines 415-423
 	local function create_effect_spawn_once_property()
 		local effect_spawn_once_property = CoreEffectProperty:new("effect_spawn_once_drag", "compound", "", "")
 
@@ -471,7 +473,7 @@ the effect will be culled while still visible]]
 		return effect_spawn_once_property
 	end
 
-	-- Lines: 426 to 437
+	-- Lines 426-438
 	local function create_play_sound_property()
 		local play_sound = CoreEffectProperty:new("play_sound", "compound", "", "")
 
@@ -509,11 +511,11 @@ the effect will be culled while still visible]]
 	}
 end
 
--- Lines: 455 to 482
+-- Lines 455-483
 function CoreEffectAtom:collect_stack_time_events()
 	local ret = {}
 
-	-- Lines: 457 to 471
+	-- Lines 457-471
 	local function traverse_property(pref, ret, p)
 		if p._type == "time" then
 			table.insert(ret, {
@@ -551,7 +553,7 @@ function CoreEffectAtom:collect_stack_time_events()
 	return ret
 end
 
--- Lines: 486 to 505
+-- Lines 486-506
 function CoreEffectAtom:collect_time_events()
 	local start_time = self:get_property("random_start_time")._variants.false
 	local lifetime = self:get_property("lifetime")
@@ -560,7 +562,9 @@ function CoreEffectAtom:collect_time_events()
 	for _, e in ipairs(ret) do
 		local name = e[1]
 		local t = tonumber(e[2][e[3]]) + tonumber(start_time._value)
-		e[2] = {t}
+		e[2] = {
+			t
+		}
 		e[3] = 1
 	end
 
@@ -573,7 +577,9 @@ function CoreEffectAtom:collect_time_events()
 	if tonumber(lifetime._value) >= 0 then
 		table.insert(ret, {
 			"end_time",
-			{tonumber(start_time._value) + tonumber(lifetime._value)},
+			{
+				tonumber(start_time._value) + tonumber(lifetime._value)
+			},
 			1
 		})
 	end
@@ -581,7 +587,7 @@ function CoreEffectAtom:collect_time_events()
 	return ret
 end
 
--- Lines: 508 to 549
+-- Lines 508-549
 function CoreEffectAtom:scale_timeline(istart, iend, tstart, tend)
 	local events = self:collect_stack_time_events()
 	local start_time = self:get_property("random_start_time")._variants.false
@@ -613,9 +619,9 @@ function CoreEffectAtom:scale_timeline(istart, iend, tstart, tend)
 		local t = tonumber(e[2][e[3]])
 
 		if t <= istart then
-			t = (t + tstart) - istart
+			t = t + tstart - istart
 		elseif iend <= t then
-			t = (t + tend) - iend
+			t = t + tend - iend
 		else
 			local rel = 0
 
@@ -638,7 +644,7 @@ function CoreEffectAtom:scale_timeline(istart, iend, tstart, tend)
 	end
 end
 
--- Lines: 551 to 587
+-- Lines 551-587
 function CoreEffectAtom:extend_timeline(istart, iend, tstart, tend)
 	local events = self:collect_stack_time_events()
 	local start_time = self:get_property("random_start_time")._variants.false
@@ -670,9 +676,9 @@ function CoreEffectAtom:extend_timeline(istart, iend, tstart, tend)
 		local t = tonumber(e[2][e[3]])
 
 		if t <= istart then
-			t = (t + tstart) - istart
+			t = t + tstart - istart
 		elseif iend <= t then
-			t = (t + tend) - iend
+			t = t + tend - iend
 		end
 
 		e[2][e[3]] = t
@@ -687,7 +693,7 @@ function CoreEffectAtom:extend_timeline(istart, iend, tstart, tend)
 	end
 end
 
--- Lines: 589 to 636
+-- Lines 589-637
 function CoreEffectAtom:validate()
 	local ret = {
 		valid = true,
@@ -747,12 +753,12 @@ function CoreEffectAtom:validate()
 	return ret
 end
 
--- Lines: 639 to 640
+-- Lines 639-641
 function CoreEffectAtom:stack(stacktype)
 	return self._stacks[stacktype]
 end
 
--- Lines: 643 to 650
+-- Lines 643-650
 function CoreEffectAtom:save(node)
 	local a = node:make_child("atom")
 
@@ -763,7 +769,7 @@ function CoreEffectAtom:save(node)
 	self._stacks.visualizer:save(a)
 end
 
--- Lines: 652 to 658
+-- Lines 652-658
 function CoreEffectAtom:load(node)
 	self._name = node:parameter("name")
 
@@ -772,9 +778,10 @@ function CoreEffectAtom:load(node)
 	self._stacks.simulator:load(node)
 	self._stacks.visualizer:load(node)
 end
+
 CoreEffectDefinition = CoreEffectDefinition or class(CoreEffectPropertyContainer)
 
--- Lines: 663 to 695
+-- Lines 662-695
 function CoreEffectDefinition:init()
 	self.super.init(self, "")
 
@@ -811,7 +818,7 @@ function CoreEffectDefinition:init()
 	self:add_property(CoreEffectProperty:new("force_synch", "boolean", "false", "If set, effect will play on the main thread without frame lag\nThis is useful for parented effects where a frame lag is very noticeable.\nThe CPU cost for for effects with this flag set will end up on the main thread, so use only where required."))
 end
 
--- Lines: 697 to 703
+-- Lines 697-704
 function CoreEffectDefinition:find_atom(name)
 	for _, atom in ipairs(self._atoms) do
 		if atom:name() == name then
@@ -822,17 +829,17 @@ function CoreEffectDefinition:find_atom(name)
 	return nil
 end
 
--- Lines: 706 to 708
+-- Lines 706-708
 function CoreEffectDefinition:add_atom(atom)
 	table.insert(self._atoms, atom)
 end
 
--- Lines: 710 to 712
+-- Lines 710-712
 function CoreEffectDefinition:remove_atom(atom)
 	table.delete(self._atoms, atom)
 end
 
--- Lines: 715 to 736
+-- Lines 714-737
 function CoreEffectDefinition:validate()
 	local ret = {
 		valid = true,
@@ -863,7 +870,7 @@ function CoreEffectDefinition:validate()
 	return ret
 end
 
--- Lines: 739 to 746
+-- Lines 739-746
 function CoreEffectDefinition:save(n)
 	self:save_properties(n)
 
@@ -872,7 +879,7 @@ function CoreEffectDefinition:save(n)
 	end
 end
 
--- Lines: 748 to 757
+-- Lines 748-757
 function CoreEffectDefinition:load(n)
 	self:load_properties(n)
 
@@ -885,4 +892,3 @@ function CoreEffectDefinition:load(n)
 		end
 	end
 end
-

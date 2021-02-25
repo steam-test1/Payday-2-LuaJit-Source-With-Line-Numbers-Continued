@@ -2,12 +2,12 @@ InstigatorUnitElement = InstigatorUnitElement or class(MissionElement)
 InstigatorUnitElement.SAVE_UNIT_POSITION = false
 InstigatorUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 7
+-- Lines 5-7
 function InstigatorUnitElement:init(unit)
 	InstigatorUnitElement.super.init(self, unit)
 end
 
--- Lines: 10 to 17
+-- Lines 10-17
 function InstigatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -16,12 +16,15 @@ function InstigatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_add_help_text("This element is a storage for an instigator. It can be used, set, etc from logic_instigator_operator.")
 end
+
 InstigatorOperatorUnitElement = InstigatorOperatorUnitElement or class(MissionElement)
 InstigatorOperatorUnitElement.SAVE_UNIT_POSITION = false
 InstigatorOperatorUnitElement.SAVE_UNIT_ROTATION = false
-InstigatorOperatorUnitElement.LINK_ELEMENTS = {"elements"}
+InstigatorOperatorUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 26 to 36
+-- Lines 26-36
 function InstigatorOperatorUnitElement:init(unit)
 	InstigatorOperatorUnitElement.super.init(self, unit)
 
@@ -34,7 +37,7 @@ function InstigatorOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "keep_on_use")
 end
 
--- Lines: 38 to 47
+-- Lines 38-47
 function InstigatorOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	InstigatorOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -54,17 +57,17 @@ function InstigatorOperatorUnitElement:draw_links(t, dt, selected_unit, all_unit
 	end
 end
 
--- Lines: 49 to 52
+-- Lines 49-52
 function InstigatorOperatorUnitElement:get_links_to_unit(...)
 	InstigatorOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 54 to 55
+-- Lines 54-55
 function InstigatorOperatorUnitElement:update_editing()
 end
 
--- Lines: 57 to 70
+-- Lines 57-70
 function InstigatorOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -82,18 +85,20 @@ function InstigatorOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 73 to 75
+-- Lines 73-75
 function InstigatorOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 77 to 90
+-- Lines 77-90
 function InstigatorOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local exact_names = {"units/dev_tools/mission_elements/logic_instigator/logic_instigator"}
+	local exact_names = {
+		"units/dev_tools/mission_elements/logic_instigator/logic_instigator"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 	self:_build_value_combobox(panel, panel_sizer, "operation", {
@@ -110,12 +115,15 @@ function InstigatorOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "keep_on_use")
 	self:_add_help_text("This element is an operator to logic_instigator element.")
 end
+
 InstigatorTriggerUnitElement = InstigatorTriggerUnitElement or class(MissionElement)
 InstigatorTriggerUnitElement.SAVE_UNIT_POSITION = false
 InstigatorTriggerUnitElement.SAVE_UNIT_ROTATION = false
-InstigatorTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+InstigatorTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 99 to 107
+-- Lines 99-107
 function InstigatorTriggerUnitElement:init(unit)
 	InstigatorTriggerUnitElement.super.init(self, unit)
 
@@ -126,7 +134,7 @@ function InstigatorTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 109 to 118
+-- Lines 109-118
 function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	InstigatorTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -146,17 +154,17 @@ function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines: 120 to 123
+-- Lines 120-123
 function InstigatorTriggerUnitElement:get_links_to_unit(...)
 	InstigatorTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 125 to 126
+-- Lines 125-126
 function InstigatorTriggerUnitElement:update_editing()
 end
 
--- Lines: 128 to 141
+-- Lines 128-141
 function InstigatorTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -174,18 +182,20 @@ function InstigatorTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 144 to 146
+-- Lines 144-146
 function InstigatorTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 148 to 160
+-- Lines 148-160
 function InstigatorTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local exact_names = {"units/dev_tools/mission_elements/logic_instigator/logic_instigator"}
+	local exact_names = {
+		"units/dev_tools/mission_elements/logic_instigator/logic_instigator"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 	self:_build_value_combobox(panel, panel_sizer, "trigger_type", {
@@ -196,4 +206,3 @@ function InstigatorTriggerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select a trigger type for the selected elements")
 	self:_add_help_text("This element is a trigger to logic_instigator element.")
 end
-

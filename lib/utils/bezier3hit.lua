@@ -3,16 +3,16 @@ local distance2 = require("lib/utils/Bezier3Point").distance2
 local min = math.min
 local max = math.max
 local curve_recursion_limit = 64
-local curve_flatness_epsilon = 1 * 2 ^ (-curve_recursion_limit - 1)
+local curve_flatness_epsilon = 1 * 2^(-curve_recursion_limit - 1)
 local bezier3_to_bezier5, bezier5_roots, bezier5_crossing_count, bezier5_flat_enough, bezier5_split_in_half = nil
 
--- Lines: 23 to 49
+-- Lines 21-50
 function bezier3.hit(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	local ax1, ay1, ax2, ay2, ax3, ay3, ax4, ay4, ax5, ay5, ax6, ay6 = bezier3_to_bezier5(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	local mind = inf
 	local minx, miny, mint = nil
 
-	-- Lines: 29 to 36
+	-- Lines 29-36
 	local function test_solution(t)
 		assert(t >= 0 and t <= 1)
 
@@ -49,6 +49,7 @@ function bezier3.hit(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 
 	return mind, minx, miny, mint
 end
+
 local cubicz11 = 1
 local cubicz12 = 0.6
 local cubicz13 = 0.3
@@ -62,12 +63,12 @@ local cubicz32 = 0.3
 local cubicz33 = 0.6
 local cubicz34 = 1
 
--- Lines: 60 to 61
+-- Lines 60-62
 local function dot_product(ax, ay, bx, by)
 	return ax * bx + ay * by
 end
 
--- Lines: 65 to 107
+-- Lines 64-108
 function bezier3_to_bezier5(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	local c1x = x1 - x0
 	local c1y = y1 - y0
@@ -105,7 +106,7 @@ function bezier3_to_bezier5(x0, y0, x1, y1, x2, y2, x3, y3, x4, y4)
 	return 0, y1, 0.2, y2, 0.4, y3, 0.6, y4, 0.8, y5, 1, y6
 end
 
--- Lines: 111 to 133
+-- Lines 111-133
 function bezier5_roots(write, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, depth)
 	local switch = bezier5_crossing_count(y1, y2, y3, y4, y5, y6)
 
@@ -131,7 +132,7 @@ function bezier5_roots(write, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, de
 	bezier5_roots(write, x123456, y123456, x23456, y23456, x3456, y3456, x456, y456, x56, y56, x6, y6, depth + 1)
 end
 
--- Lines: 136 to 169
+-- Lines 136-170
 function bezier5_split_in_half(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
 	local x12 = (x1 + x2) / 2
 	local y12 = (y1 + y2) / 2
@@ -167,12 +168,12 @@ function bezier5_split_in_half(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
 	return x1, y1, x12, y12, x123, y123, x1234, y1234, x12345, y12345, x123456, y123456, x123456, y123456, x23456, y23456, x3456, y3456, x456, y456, x56, y56, x6, y6
 end
 
--- Lines: 175 to 180
+-- Lines 174-181
 function bezier5_crossing_count(y1, y2, y3, y4, y5, y6)
-	return (y1 < 0 ~= y2 < 0 and 1 or 0) + (y2 < 0 ~= y3 < 0 and 1 or 0) + (y3 < 0 ~= y4 < 0 and 1 or 0) + (y4 < 0 ~= y5 < 0 and 1 or 0) + (y5 < 0 ~= y6 < 0 and 1 or 0)
+	return (y1 < 0 ~= (y2 < 0) and 1 or 0) + (y2 < 0 ~= (y3 < 0) and 1 or 0) + (y3 < 0 ~= (y4 < 0) and 1 or 0) + (y4 < 0 ~= (y5 < 0) and 1 or 0) + (y5 < 0 ~= (y6 < 0) and 1 or 0)
 end
 
--- Lines: 186 to 222
+-- Lines 184-223
 function bezier5_flat_enough(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
 	local a = y1 - y6
 	local b = x6 - x1
@@ -203,7 +204,7 @@ function bezier5_flat_enough(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6)
 	return error < curve_flatness_epsilon
 end
 
--- Lines: 226 to 236
+-- Lines 226-237
 function bezier5_xintercept(x1, y1, x6, y6)
 	local XLK = 1
 	local YLK = 0
@@ -217,4 +218,3 @@ function bezier5_xintercept(x1, y1, x6, y6)
 
 	return X
 end
-

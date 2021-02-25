@@ -1,6 +1,6 @@
 AiGlobalEventUnitElement = AiGlobalEventUnitElement or class(MissionElement)
 
--- Lines: 3 to 14
+-- Lines 3-14
 function AiGlobalEventUnitElement:init(unit)
 	AiGlobalEventUnitElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function AiGlobalEventUnitElement:init(unit)
 	table.insert(self._save_values, "blame")
 end
 
--- Lines: 16 to 22
+-- Lines 16-22
 function AiGlobalEventUnitElement:post_init(...)
 	AiGlobalEventUnitElement.super.post_init(self, ...)
 
@@ -21,7 +21,7 @@ function AiGlobalEventUnitElement:post_init(...)
 	end
 end
 
--- Lines: 24 to 33
+-- Lines 24-33
 function AiGlobalEventUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -32,4 +32,3 @@ function AiGlobalEventUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "AI_event", ElementAiGlobalEvent._AI_events)
 	self:_build_value_combobox(panel, panel_sizer, "blame", ElementAiGlobalEvent._blames)
 end
-

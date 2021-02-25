@@ -2,7 +2,7 @@ ExperienceUnitElement = ExperienceUnitElement or class(MissionElement)
 ExperienceUnitElement.SAVE_UNIT_POSITION = false
 ExperienceUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 13
+-- Lines 6-13
 function ExperienceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -12,7 +12,7 @@ function ExperienceUnitElement:init(unit)
 	table.insert(self._save_values, "amount")
 end
 
--- Lines: 18 to 25
+-- Lines 18-25
 function ExperienceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -24,4 +24,3 @@ function ExperienceUnitElement:_build_panel(panel, panel_sizer)
 		min = 0
 	}, "Specify the amount of experience given.")
 end
-

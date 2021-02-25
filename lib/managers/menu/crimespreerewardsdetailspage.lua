@@ -1,7 +1,7 @@
 CrimeSpreeRewardsDetailsPage = CrimeSpreeRewardsDetailsPage or class(CrimeSpreeDetailsPage)
 local padding = 10
 
--- Lines: 7 to 175
+-- Lines 6-175
 function CrimeSpreeRewardsDetailsPage:init(...)
 	CrimeSpreeRewardsDetailsPage.super.init(self, ...)
 	self:panel():bitmap({
@@ -23,12 +23,14 @@ function CrimeSpreeRewardsDetailsPage:init(...)
 
 	local outline_panel = self:panel():panel({})
 
-	BoxGuiObject:new(outline_panel, {sides = {
-		4,
-		4,
-		2,
-		1
-	}})
+	BoxGuiObject:new(outline_panel, {
+		sides = {
+			4,
+			4,
+			2,
+			1
+		}
+	})
 
 	local w = (self:panel():w() - padding) / #tweak_data.crime_spree.rewards
 	local count = 0
@@ -45,7 +47,7 @@ function CrimeSpreeRewardsDetailsPage:init(...)
 			local num_cards = math.clamp(math.floor(amount / (data.card_inc or 1)), 1, data.max_cards)
 			local upcard = self:create_card(panel, data.icon, card_layer, 10, 0, num_cards > 1)
 
-			for i = 1, num_cards - 1, 1 do
+			for i = 1, num_cards - 1 do
 				self:create_card(panel, data.icon, card_layer - i * 2, 10, 6, true)
 			end
 
@@ -112,7 +114,9 @@ function CrimeSpreeRewardsDetailsPage:init(...)
 
 	if warning_title then
 		local level_layer = 50
-		local level_panel = self:panel():panel({layer = level_layer})
+		local level_panel = self:panel():panel({
+			layer = level_layer
+		})
 
 		level_panel:bitmap({
 			texture = "guis/textures/pd2/cs_warning_background",
@@ -165,7 +169,7 @@ function CrimeSpreeRewardsDetailsPage:init(...)
 	end
 end
 
--- Lines: 177 to 181
+-- Lines 177-182
 function CrimeSpreeRewardsDetailsPage:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -175,7 +179,7 @@ function CrimeSpreeRewardsDetailsPage:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 185 to 202
+-- Lines 184-204
 function CrimeSpreeRewardsDetailsPage:create_card(panel, icon, layer, rotation_amt, wiggle_amt, outline)
 	local rotation = math.rand(-rotation_amt, rotation_amt)
 	local wiggle_x = math.rand(-wiggle_amt, wiggle_amt)
@@ -198,7 +202,7 @@ function CrimeSpreeRewardsDetailsPage:create_card(panel, icon, layer, rotation_a
 	return upcard
 end
 
--- Lines: 207 to 231
+-- Lines 206-233
 function CrimeSpreeRewardsDetailsPage:_create_card(panel, icon, scale, layer, rotation, wiggle_x, wiggle_y)
 	local texture, rect, coords = tweak_data.hud_icons:get_icon_data(icon or "downcard_overkill_deck")
 	local upcard = panel:bitmap({
@@ -228,4 +232,3 @@ function CrimeSpreeRewardsDetailsPage:_create_card(panel, icon, scale, layer, ro
 
 	return upcard
 end
-

@@ -1,6 +1,6 @@
 LootDropScreenGui = LootDropScreenGui or class()
 
--- Lines: 3 to 61
+-- Lines 3-61
 function LootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, saved_state)
 	self._safe_workspace = saferect_ws
 	self._full_workspace = fullrect_ws
@@ -93,7 +93,7 @@ function LootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, saved_
 	self:_set_selected_and_sync(2)
 end
 
--- Lines: 65 to 89
+-- Lines 65-89
 function LootDropScreenGui:set_state(state)
 	local id_state = Idstring(state)
 
@@ -110,14 +110,18 @@ function LootDropScreenGui:set_state(state)
 		self._is_alone = true
 
 		self:close_network()
-		managers.menu:show_peer_kicked_dialog({ok_func = callback(self, self, "on_server_left_ok_pressed")})
+		managers.menu:show_peer_kicked_dialog({
+			ok_func = callback(self, self, "on_server_left_ok_pressed")
+		})
 	elseif id_state == Idstring("on_disconnected") then
 		self._lootscreen_hud:clear_other_peers(self._id)
 
 		self._is_alone = true
 
 		self:close_network()
-		managers.menu:show_mp_disconnected_internet_dialog({ok_func = callback(self, self, "on_server_left_ok_pressed")})
+		managers.menu:show_mp_disconnected_internet_dialog({
+			ok_func = callback(self, self, "on_server_left_ok_pressed")
+		})
 	else
 		Application:error("LootDropScreenGui:set_state: unrecognizable state", state)
 	end
@@ -127,12 +131,12 @@ function LootDropScreenGui:set_state(state)
 	managers.menu_component:post_event("menu_exit")
 end
 
--- Lines: 91 to 93
+-- Lines 91-93
 function LootDropScreenGui:on_server_left_ok_pressed()
 	self:check_all_ready()
 end
 
--- Lines: 95 to 109
+-- Lines 95-109
 function LootDropScreenGui:close_network()
 	if Network:multiplayer() then
 		Network:set_multiplayer(false)
@@ -146,12 +150,12 @@ function LootDropScreenGui:close_network()
 	end
 end
 
--- Lines: 111 to 113
+-- Lines 111-113
 function LootDropScreenGui:choose_card(id, selected)
 	self._lootscreen_hud:begin_choose_card(id, selected or 2)
 end
 
--- Lines: 117 to 122
+-- Lines 117-122
 function LootDropScreenGui:hide()
 	self._enabled = false
 
@@ -159,7 +163,7 @@ function LootDropScreenGui:hide()
 	self._fullscreen_panel:set_alpha(0.5)
 end
 
--- Lines: 124 to 129
+-- Lines 124-129
 function LootDropScreenGui:show()
 	self._enabled = true
 
@@ -167,7 +171,7 @@ function LootDropScreenGui:show()
 	self._fullscreen_panel:set_alpha(1)
 end
 
--- Lines: 131 to 174
+-- Lines 131-174
 function LootDropScreenGui:check_all_ready()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) then
 		Application:error("[LootDropScreenGui:check_all_ready] GUI panel is dead!", self._panel, self._fullscreen_panel)
@@ -195,7 +199,9 @@ function LootDropScreenGui:check_all_ready()
 		end
 
 		local continue_button = managers.menu:is_pc_controller() and "[ENTER]" or nil
-		local text = managers.localization:to_upper_text(text_id, {CONTINUE = continue_button})
+		local text = managers.localization:to_upper_text(text_id, {
+			CONTINUE = continue_button
+		})
 
 		self._continue_button:set_text(text)
 
@@ -218,7 +224,7 @@ function LootDropScreenGui:check_all_ready()
 	end
 end
 
--- Lines: 176 to 183
+-- Lines 176-183
 function LootDropScreenGui:on_peer_removed(peer, reason)
 	if peer then
 		self._lootscreen_hud:remove_peer(peer:id(), reason)
@@ -227,7 +233,7 @@ function LootDropScreenGui:on_peer_removed(peer, reason)
 	self:check_all_ready()
 end
 
--- Lines: 185 to 229
+-- Lines 185-229
 function LootDropScreenGui:update(t, dt)
 	self._lootscreen_hud:update(t, dt)
 
@@ -246,7 +252,10 @@ function LootDropScreenGui:update(t, dt)
 			end
 		elseif self._time_left then
 			self._time_left = math.max(self._time_left - dt, 0)
-			self._time_left = self._card_chosen and 0
+
+			if self._card_chosen then
+				self._time_left = 0
+			end
 
 			if self._time_left > 10 then
 				self._time_left_text:set_text(string.format("%1d", self._time_left))
@@ -277,7 +286,7 @@ function LootDropScreenGui:update(t, dt)
 	end
 end
 
--- Lines: 231 to 236
+-- Lines 231-236
 function LootDropScreenGui:continue_to_lobby()
 	if game_state_machine:current_state()._continue_cb then
 		managers.menu_component:post_event("menu_enter")
@@ -285,7 +294,7 @@ function LootDropScreenGui:continue_to_lobby()
 	end
 end
 
--- Lines: 238 to 268
+-- Lines 238-268
 function LootDropScreenGui:mouse_pressed(button, x, y)
 	if self._no_loot_for_me then
 		return
@@ -323,7 +332,7 @@ function LootDropScreenGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 270 to 301
+-- Lines 270-301
 function LootDropScreenGui:mouse_moved(x, y)
 	if self._no_loot_for_me then
 		return false
@@ -365,12 +374,12 @@ function LootDropScreenGui:mouse_moved(x, y)
 	end
 end
 
--- Lines: 303 to 304
+-- Lines 303-305
 function LootDropScreenGui:input_focus()
 	return self._enabled
 end
 
--- Lines: 307 to 318
+-- Lines 307-318
 function LootDropScreenGui:scroll_up()
 	if self._no_loot_for_me then
 		return
@@ -387,7 +396,7 @@ function LootDropScreenGui:scroll_up()
 	self:_set_selected_and_sync(self._selected - 1)
 end
 
--- Lines: 320 to 331
+-- Lines 320-331
 function LootDropScreenGui:scroll_down()
 	if self._no_loot_for_me then
 		return
@@ -404,15 +413,15 @@ function LootDropScreenGui:scroll_down()
 	self:_set_selected_and_sync(self._selected + 1)
 end
 
--- Lines: 334 to 335
+-- Lines 333-335
 function LootDropScreenGui:move_up()
 end
 
--- Lines: 338 to 339
+-- Lines 337-339
 function LootDropScreenGui:move_down()
 end
 
--- Lines: 341 to 351
+-- Lines 341-352
 function LootDropScreenGui:set_selected(selected)
 	local new_selected = math.clamp(selected, 1, 3)
 
@@ -428,14 +437,14 @@ function LootDropScreenGui:set_selected(selected)
 	return false
 end
 
--- Lines: 354 to 358
+-- Lines 354-358
 function LootDropScreenGui:_set_selected_and_sync(selected)
 	if self:set_selected(selected) and not Global.game_settings.single_player and managers.network:session() then
 		managers.network:session():send_to_peers("set_selected_lootcard", self._selected)
 	end
 end
 
--- Lines: 360 to 372
+-- Lines 360-372
 function LootDropScreenGui:move_left()
 	if self._no_loot_for_me then
 		return
@@ -452,7 +461,7 @@ function LootDropScreenGui:move_left()
 	self:_set_selected_and_sync(self._selected - 1)
 end
 
--- Lines: 374 to 386
+-- Lines 374-386
 function LootDropScreenGui:move_right()
 	if self._no_loot_for_me then
 		return
@@ -469,17 +478,17 @@ function LootDropScreenGui:move_right()
 	self:_set_selected_and_sync(self._selected + 1)
 end
 
--- Lines: 388 to 390
+-- Lines 388-390
 function LootDropScreenGui:next_tab()
 	self:_set_selected_and_sync(self._selected + 1)
 end
 
--- Lines: 392 to 394
+-- Lines 392-394
 function LootDropScreenGui:prev_tab()
 	self:_set_selected_and_sync(self._selected - 1)
 end
 
--- Lines: 397 to 418
+-- Lines 397-419
 function LootDropScreenGui:confirm_pressed()
 	if self._no_loot_for_me then
 		return
@@ -511,7 +520,7 @@ function LootDropScreenGui:confirm_pressed()
 	return true
 end
 
--- Lines: 421 to 428
+-- Lines 421-428
 function LootDropScreenGui:back_pressed()
 	if self._no_loot_for_me then
 		return
@@ -522,7 +531,7 @@ function LootDropScreenGui:back_pressed()
 	end
 end
 
--- Lines: 430 to 441
+-- Lines 430-441
 function LootDropScreenGui:next_page()
 	if self._no_loot_for_me then
 		return
@@ -539,7 +548,7 @@ function LootDropScreenGui:next_page()
 	self:next_tab()
 end
 
--- Lines: 443 to 454
+-- Lines 443-454
 function LootDropScreenGui:previous_page()
 	if self._no_loot_for_me then
 		return
@@ -556,7 +565,7 @@ function LootDropScreenGui:previous_page()
 	self:prev_tab()
 end
 
--- Lines: 457 to 464
+-- Lines 457-464
 function LootDropScreenGui:special_btn_pressed(button)
 	if self._no_loot_for_me then
 		return
@@ -567,7 +576,7 @@ function LootDropScreenGui:special_btn_pressed(button)
 	end
 end
 
--- Lines: 470 to 477
+-- Lines 470-477
 function LootDropScreenGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -578,14 +587,15 @@ function LootDropScreenGui:close()
 	end
 end
 
--- Lines: 480 to 484
+-- Lines 480-484
 function LootDropScreenGui:reload()
 	self:close()
 	LootDropScreenGui.init(self, self._safe_workspace, self._full_workspace, self._lootscreen_hud)
 end
+
 CasinoLootDropScreenGui = CasinoLootDropScreenGui or class(LootDropScreenGui)
 
--- Lines: 490 to 500
+-- Lines 490-500
 function CasinoLootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, saved_state)
 	CasinoLootDropScreenGui.super.init(self, saferect_ws, fullrect_ws, lootscreen_hud, saved_state)
 
@@ -597,26 +607,25 @@ function CasinoLootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, 
 	managers.music:stop()
 end
 
--- Lines: 502 to 505
+-- Lines 502-505
 function CasinoLootDropScreenGui:continue_to_lobby()
 	managers.menu:active_menu().logic:navigate_back(true)
 	managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
 end
 
--- Lines: 507 to 508
+-- Lines 507-509
 function CasinoLootDropScreenGui:card_chosen()
 	return not self._button_not_clickable
 end
 
--- Lines: 511 to 514
+-- Lines 511-514
 function CasinoLootDropScreenGui:choose_card(id, selected)
 	CasinoLootDropScreenGui.super.choose_card(self, id, selected)
 	managers.savefile:save_progress()
 end
 
--- Lines: 516 to 519
+-- Lines 516-519
 function CasinoLootDropScreenGui:set_layer(layer)
 	self._fullscreen_panel:set_layer(layer)
 	self._panel:set_layer(layer)
 end
-

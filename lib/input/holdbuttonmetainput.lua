@@ -1,6 +1,6 @@
 HoldButtonMetaInput = HoldButtonMetaInput or class()
 
--- Lines: 4 to 10
+-- Lines 4-10
 function HoldButtonMetaInput:init(name, subject_name, subject_key, delay)
 	self._press_key = "btn_" .. name .. "_press"
 	self._subject_name = subject_name
@@ -9,7 +9,7 @@ function HoldButtonMetaInput:init(name, subject_name, subject_key, delay)
 	self._trigger_time = nil
 end
 
--- Lines: 14 to 34
+-- Lines 13-34
 function HoldButtonMetaInput:update(t, dt, controller, input)
 	local subject_down = input.any_input_downed and controller:get_input_bool(self._subject_name)
 	local subject_pressed = input.any_input_pressed and controller:get_input_pressed(self._subject_name)
@@ -30,4 +30,3 @@ function HoldButtonMetaInput:update(t, dt, controller, input)
 		input[self._subject_press_key] = true
 	end
 end
-

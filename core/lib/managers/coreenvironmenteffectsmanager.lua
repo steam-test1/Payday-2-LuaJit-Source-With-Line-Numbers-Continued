@@ -3,7 +3,7 @@ core:import("CoreTable")
 
 EnvironmentEffectsManager = EnvironmentEffectsManager or class()
 
--- Lines: 13 to 18
+-- Lines 13-18
 function EnvironmentEffectsManager:init()
 	self._effects = {}
 	self._current_effects = {}
@@ -11,7 +11,7 @@ function EnvironmentEffectsManager:init()
 	self._repeat_mission_effects = {}
 end
 
--- Lines: 22 to 27
+-- Lines 22-27
 function EnvironmentEffectsManager:add_effect(name, effect)
 	self._effects[name] = effect
 
@@ -20,17 +20,17 @@ function EnvironmentEffectsManager:add_effect(name, effect)
 	end
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function EnvironmentEffectsManager:effect(name)
 	return self._effects[name]
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function EnvironmentEffectsManager:effects()
 	return self._effects
 end
 
--- Lines: 40 to 48
+-- Lines 40-49
 function EnvironmentEffectsManager:effects_names()
 	local t = {}
 
@@ -45,7 +45,7 @@ function EnvironmentEffectsManager:effects_names()
 	return t
 end
 
--- Lines: 52 to 62
+-- Lines 52-62
 function EnvironmentEffectsManager:use(effect)
 	if self._effects[effect] then
 		if not table.contains(self._current_effects, self._effects[effect]) then
@@ -58,14 +58,14 @@ function EnvironmentEffectsManager:use(effect)
 	end
 end
 
--- Lines: 65 to 69
+-- Lines 65-69
 function EnvironmentEffectsManager:load_effects(effect)
 	if self._effects[effect] then
 		self._effects[effect]:load_effects()
 	end
 end
 
--- Lines: 72 to 77
+-- Lines 72-77
 function EnvironmentEffectsManager:stop(effect)
 	if self._effects[effect] then
 		self._effects[effect]:stop()
@@ -73,7 +73,7 @@ function EnvironmentEffectsManager:stop(effect)
 	end
 end
 
--- Lines: 80 to 85
+-- Lines 80-85
 function EnvironmentEffectsManager:stop_all()
 	for _, effect in ipairs(self._current_effects) do
 		effect:stop()
@@ -82,7 +82,7 @@ function EnvironmentEffectsManager:stop_all()
 	self._current_effects = {}
 end
 
--- Lines: 88 to 108
+-- Lines 88-108
 function EnvironmentEffectsManager:update(t, dt)
 	for _, effect in ipairs(self._current_effects) do
 		effect:update(t, dt)
@@ -106,14 +106,14 @@ function EnvironmentEffectsManager:update(t, dt)
 	end
 end
 
--- Lines: 110 to 112
+-- Lines 110-113
 function EnvironmentEffectsManager:gravity_and_wind_dir()
 	local wind_importance = 0.5
 
 	return Vector3(0, 0, -982) + Wind:wind_at(Vector3()) * wind_importance
 end
 
--- Lines: 118 to 133
+-- Lines 116-133
 function EnvironmentEffectsManager:spawn_mission_effect(name, params)
 	if params.base_time > 0 or params.random_time > 0 then
 		if self._repeat_mission_effects[name] then
@@ -133,7 +133,7 @@ function EnvironmentEffectsManager:spawn_mission_effect(name, params)
 	table.insert(self._mission_effects[name], params)
 end
 
--- Lines: 136 to 150
+-- Lines 136-150
 function EnvironmentEffectsManager:kill_all_mission_effects()
 	for _, params in pairs(self._repeat_mission_effects) do
 		if params.effect_id then
@@ -152,17 +152,17 @@ function EnvironmentEffectsManager:kill_all_mission_effects()
 	self._mission_effects = {}
 end
 
--- Lines: 153 to 155
+-- Lines 153-155
 function EnvironmentEffectsManager:kill_mission_effect(name)
 	self:_kill_mission_effect(name, "kill")
 end
 
--- Lines: 158 to 160
+-- Lines 158-160
 function EnvironmentEffectsManager:fade_kill_mission_effect(name)
 	self:_kill_mission_effect(name, "fade_kill")
 end
 
--- Lines: 163 to 185
+-- Lines 163-185
 function EnvironmentEffectsManager:_kill_mission_effect(name, type)
 	local kill = callback(World:effect_manager(), World:effect_manager(), type)
 	local params = self._repeat_mission_effects[name]
@@ -190,9 +190,11 @@ function EnvironmentEffectsManager:_kill_mission_effect(name, type)
 	self._mission_effects[name] = nil
 end
 
--- Lines: 188 to 199
+-- Lines 187-199
 function EnvironmentEffectsManager:save(data)
-	local state = {mission_effects = {}}
+	local state = {
+		mission_effects = {}
+	}
 
 	for name, effects in pairs(self._mission_effects) do
 		state.mission_effects[name] = {}
@@ -207,7 +209,7 @@ function EnvironmentEffectsManager:save(data)
 	data.EnvironmentEffectsManager = state
 end
 
--- Lines: 201 to 208
+-- Lines 201-208
 function EnvironmentEffectsManager:load(data)
 	local state = data.EnvironmentEffectsManager
 
@@ -217,31 +219,31 @@ function EnvironmentEffectsManager:load(data)
 		end
 	end
 end
+
 EnvironmentEffect = EnvironmentEffect or class()
 
--- Lines: 214 to 217
+-- Lines 214-217
 function EnvironmentEffect:init(default)
 	self._default = default
 end
 
--- Lines: 222 to 223
+-- Lines 221-223
 function EnvironmentEffect:load_effects()
 end
 
--- Lines: 226 to 227
+-- Lines 225-227
 function EnvironmentEffect:update(t, dt)
 end
 
--- Lines: 231 to 232
+-- Lines 230-232
 function EnvironmentEffect:start()
 end
 
--- Lines: 236 to 237
+-- Lines 235-237
 function EnvironmentEffect:stop()
 end
 
--- Lines: 239 to 240
+-- Lines 239-241
 function EnvironmentEffect:default()
 	return self._default
 end
-

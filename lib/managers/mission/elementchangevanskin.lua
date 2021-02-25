@@ -2,14 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementChangeVanSkin = ElementChangeVanSkin or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 8
+-- Lines 5-8
 function ElementChangeVanSkin:init(...)
 	ElementChangeVanSkin.super.init(self, ...)
 
 	self._units = {}
 end
 
--- Lines: 11 to 42
+-- Lines 10-42
 function ElementChangeVanSkin:on_script_activated()
 	local elementBroken = false
 
@@ -44,12 +44,12 @@ function ElementChangeVanSkin:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function ElementChangeVanSkin:_load_unit(unit)
 	table.insert(self._units, unit)
 end
 
--- Lines: 49 to 72
+-- Lines 48-72
 function ElementChangeVanSkin:on_executed(instigator)
 	if not self._values.enabled or not self._values.target_skin then
 		return
@@ -74,17 +74,17 @@ function ElementChangeVanSkin:on_executed(instigator)
 	ElementChangeVanSkin.super.on_executed(self, instigator)
 end
 
--- Lines: 74 to 76
+-- Lines 74-76
 function ElementChangeVanSkin:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 78 to 80
+-- Lines 78-80
 function ElementChangeVanSkin:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 82 to 87
+-- Lines 82-87
 function ElementChangeVanSkin:load(data)
 	if not self._has_fetched_units and managers.blackmarket:equipped_van_skin() == self._values.target_skin then
 		self:on_script_activated()
@@ -92,4 +92,3 @@ function ElementChangeVanSkin:load(data)
 
 	self:set_enabled(data.enabled)
 end
-

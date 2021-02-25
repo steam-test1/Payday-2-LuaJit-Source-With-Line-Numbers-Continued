@@ -9,7 +9,7 @@ core:import("CoreSessionGenericState")
 
 SessionState = SessionState or class(CoreSessionGenericState.State)
 
--- Lines: 12 to 25
+-- Lines 12-25
 function SessionState:init(factory, player_slots, game_state)
 	self._factory = factory
 	self._session_creator = CorePortableSessionCreator.Creator:new(self)
@@ -24,38 +24,37 @@ function SessionState:init(factory, player_slots, game_state)
 	self:_set_stable_for_loading()
 end
 
--- Lines: 27 to 29
+-- Lines 27-29
 function SessionState:transition()
 	self._state:transition()
 end
 
--- Lines: 31 to 32
+-- Lines 31-33
 function SessionState:player_slots()
 	return self._player_slots
 end
 
--- Lines: 35 to 37
+-- Lines 35-37
 function SessionState:join_standard_session()
 	self._join_session_requester:request()
 end
 
--- Lines: 39 to 41
+-- Lines 39-41
 function SessionState:start_session()
 	self._state:state():start_session()
 end
 
--- Lines: 43 to 45
+-- Lines 43-45
 function SessionState:quit_session()
 	self._quit_session_requester:request()
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function SessionState:end_session()
 	self._state:state():end_session()
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function SessionState:session_info()
 	return self._session_info
 end
-

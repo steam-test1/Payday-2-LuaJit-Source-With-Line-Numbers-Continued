@@ -5,7 +5,7 @@ ModifierLessPagers.desc_id = "menu_cs_modifier_pagers"
 ModifierLessPagers.default_value = "count"
 ModifierLessPagers.stealth = true
 
--- Lines: 10 to 35
+-- Lines 9-35
 function ModifierLessPagers:init(data)
 	ModifierLessPagers.super.init(self, data)
 
@@ -20,7 +20,7 @@ function ModifierLessPagers:init(data)
 	max_pagers = max_pagers - self:value()
 	local new_pagers_data = {}
 
-	for i = 1, max_pagers, 1 do
+	for i = 1, max_pagers do
 		table.insert(new_pagers_data, 1)
 	end
 
@@ -29,4 +29,3 @@ function ModifierLessPagers:init(data)
 	tweak_data.player.alarm_pager.bluff_success_chance = new_pagers_data
 	tweak_data.player.alarm_pager.bluff_success_chance_w_skill = new_pagers_data
 end
-

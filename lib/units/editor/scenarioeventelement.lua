@@ -1,6 +1,6 @@
 ScenarioEventUnitElement = ScenarioEventUnitElement or class(MissionElement)
 
--- Lines: 3 to 15
+-- Lines 3-15
 function ScenarioEventUnitElement:init(unit)
 	ScenarioEventUnitElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function ScenarioEventUnitElement:init(unit)
 	table.insert(self._save_values, "chance_inc")
 end
 
--- Lines: 17 to 93
+-- Lines 17-93
 function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -108,4 +108,3 @@ function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = chance_inc
 	})
 end
-

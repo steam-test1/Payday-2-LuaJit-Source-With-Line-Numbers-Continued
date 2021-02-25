@@ -4,12 +4,12 @@ IngameDriving = IngameDriving or class(IngamePlayerBaseState)
 IngameDriving.DRIVING_GUI_SAFERECT = Idstring("guis/driving_saferect")
 IngameDriving.DRIVING_GUI_FULLSCREEN = Idstring("guis/driving_fullrect")
 
--- Lines: 7 to 9
+-- Lines 7-9
 function IngameDriving:init(game_state_machine)
 	IngameDriving.super.init(self, "ingame_driving", game_state_machine)
 end
 
--- Lines: 12 to 25
+-- Lines 12-25
 function IngameDriving:_update_driving_hud()
 	local vehicle = managers.player:get_vehicle().vehicle_unit:vehicle()
 	local vehicle_state = vehicle:get_state()
@@ -26,20 +26,20 @@ function IngameDriving:_update_driving_hud()
 	managers.hud:set_driving_vehicle_state(speed, rpm, gear)
 end
 
--- Lines: 35 to 36
+-- Lines 27-36
 function IngameDriving:update(t, dt)
 end
 
--- Lines: 39 to 40
+-- Lines 38-40
 function IngameDriving:update_player_stamina(t, dt)
 end
 
--- Lines: 43 to 45
+-- Lines 43-45
 function IngameDriving:_player_damage(info)
 	print("IngameDriving:_player_damage()")
 end
 
--- Lines: 48 to 96
+-- Lines 48-96
 function IngameDriving:at_enter(old_state, ...)
 	print("IngameDriving:at_enter()")
 
@@ -88,7 +88,7 @@ function IngameDriving:at_enter(old_state, ...)
 	end
 end
 
--- Lines: 102 to 118
+-- Lines 99-118
 function IngameDriving:at_exit()
 	local player = managers.player:player_unit()
 
@@ -101,18 +101,17 @@ function IngameDriving:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 120 to 122
+-- Lines 120-122
 function IngameDriving:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 124 to 126
+-- Lines 124-126
 function IngameDriving:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 128 to 130
+-- Lines 128-130
 function IngameDriving:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
-

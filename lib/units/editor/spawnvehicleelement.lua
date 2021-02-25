@@ -1,6 +1,6 @@
 SpawnVehicleElement = SpawnVehicleElement or class(MissionElement)
 
--- Lines: 3 to 12
+-- Lines 3-12
 function SpawnVehicleElement:init(unit)
 	Application:trace("SpawnVehicleElement:init", unit)
 	MissionElement.init(self, unit)
@@ -12,7 +12,7 @@ function SpawnVehicleElement:init(unit)
 	table.insert(self._save_values, "vehicle")
 end
 
--- Lines: 14 to 36
+-- Lines 14-36
 function SpawnVehicleElement:_build_panel(panel, panel_sizer)
 	Application:trace("SpawnVehicleElement:_build_panel")
 	self:_create_panel()
@@ -29,8 +29,7 @@ function SpawnVehicleElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("The vehicle that will be spawned")
 end
 
--- Lines: 38 to 41
+-- Lines 38-41
 function SpawnVehicleElement:add_to_mission_package()
 	Application:trace("SpawnVehicleElement:add_to_mission_package")
 end
-

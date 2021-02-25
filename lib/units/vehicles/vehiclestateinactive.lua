@@ -1,15 +1,15 @@
 VehicleStateInactive = VehicleStateInactive or class(BaseVehicleState)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function VehicleStateInactive:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines: 9 to 10
+-- Lines 9-10
 function VehicleStateInactive:update(t, dt)
 end
 
--- Lines: 15 to 21
+-- Lines 14-21
 function VehicleStateInactive:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 
@@ -20,7 +20,7 @@ function VehicleStateInactive:enter(state_data, enter_data)
 	self:adjust_interactions()
 end
 
--- Lines: 25 to 42
+-- Lines 25-42
 function VehicleStateInactive:adjust_interactions()
 	VehicleStateInactive.super.adjust_interactions(self)
 
@@ -44,19 +44,20 @@ function VehicleStateInactive:adjust_interactions()
 	end
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function VehicleStateInactive:is_vulnerable()
 	return true
 end
 
--- Lines: 52 to 57
+-- Lines 52-61
 function VehicleStateInactive:exit()
-	if self._unit:unit_data().name_label_id == nil then
+	local name = self._unit:vehicle_driving()._tweak_data.name
+
+	if name and self._unit:unit_data().name_label_id == nil then
 		local id = managers.hud:add_vehicle_name_label({
-			name = self._unit:vehicle_driving()._tweak_data.name,
+			name = name,
 			unit = self._unit
 		})
 		self._unit:unit_data().name_label_id = id
 	end
 end
-

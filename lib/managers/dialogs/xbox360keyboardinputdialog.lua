@@ -3,7 +3,7 @@ require("lib/managers/dialogs/KeyboardInputDialog")
 
 Xbox360KeyboardInputDialog = Xbox360KeyboardInputDialog or class(KeyboardInputDialog)
 
--- Lines: 7 to 17
+-- Lines 7-18
 function Xbox360KeyboardInputDialog:show()
 	self._manager:event_dialog_shown(self)
 
@@ -16,8 +16,7 @@ function Xbox360KeyboardInputDialog:show()
 	return true
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function Xbox360KeyboardInputDialog:done_callback(input_text)
 	KeyboardInputDialog.done_callback(self, true, input_text)
 end
-

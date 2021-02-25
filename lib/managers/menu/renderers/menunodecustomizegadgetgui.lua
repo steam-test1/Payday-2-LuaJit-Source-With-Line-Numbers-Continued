@@ -1,7 +1,7 @@
 MenuNodeCustomizeGadgetGui = MenuNodeCustomizeGadgetGui or class(MenuNodeGui)
 local padding = 10
 
--- Lines: 6 to 20
+-- Lines 6-20
 function MenuNodeCustomizeGadgetGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -16,7 +16,7 @@ function MenuNodeCustomizeGadgetGui:init(node, layer, parameters)
 	self:setup(node)
 end
 
--- Lines: 23 to 52
+-- Lines 22-52
 function MenuNodeCustomizeGadgetGui:setup(node)
 	local l_hue = node:item("laser_hue")
 	local l_sat = node:item("laser_sat")
@@ -47,7 +47,7 @@ function MenuNodeCustomizeGadgetGui:setup(node)
 	self:update_node_colors()
 end
 
--- Lines: 54 to 58
+-- Lines 54-59
 function MenuNodeCustomizeGadgetGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -57,7 +57,7 @@ function MenuNodeCustomizeGadgetGui:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 61 to 169
+-- Lines 61-169
 function MenuNodeCustomizeGadgetGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCustomizeGadgetGui.super._setup_item_panel(self, safe_rect, res)
 	self.item_panel:set_w(safe_rect.width * (1 - self._align_line_proportions))
@@ -104,8 +104,8 @@ function MenuNodeCustomizeGadgetGui:_setup_item_panel(safe_rect, res)
 	if mod_td.adds then
 		for _, part_id in ipairs(mod_td.adds) do
 			local sub_type = tweak_data.weapon.factory.parts[part_id].sub_type
-			show_laser = sub_type == "laser" or false
-			show_flashlight = sub_type == "flashlight" or false
+			show_laser = sub_type == "laser" or show_laser
+			show_flashlight = sub_type == "flashlight" or show_flashlight
 		end
 	end
 
@@ -150,12 +150,14 @@ function MenuNodeCustomizeGadgetGui:_setup_item_panel(safe_rect, res)
 
 	self:update_node_colors()
 
-	self.boxgui = BoxGuiObject:new(self.box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self.boxgui = BoxGuiObject:new(self.box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
@@ -178,7 +180,7 @@ function MenuNodeCustomizeGadgetGui:_setup_item_panel(safe_rect, res)
 	self:_set_topic_position()
 end
 
--- Lines: 173 to 205
+-- Lines 172-207
 function MenuNodeCustomizeGadgetGui:update_node_colors(node)
 	node = node or self.node
 
@@ -221,7 +223,7 @@ function MenuNodeCustomizeGadgetGui:update_node_colors(node)
 	return colors
 end
 
--- Lines: 209 to 216
+-- Lines 209-216
 function MenuNodeCustomizeGadgetGui:_unretrieve_texture()
 	if self._texture then
 		managers.menu_component:unretrieve_texture(self._texture, self._texture_index)
@@ -232,7 +234,7 @@ function MenuNodeCustomizeGadgetGui:_unretrieve_texture()
 	end
 end
 
--- Lines: 218 to 223
+-- Lines 218-223
 function MenuNodeCustomizeGadgetGui:_texture_done_callback(texture_ids)
 	if self and alive(self._texture_panel) then
 		self._texture_panel:bitmap({
@@ -246,12 +248,12 @@ function MenuNodeCustomizeGadgetGui:_texture_done_callback(texture_ids)
 	end
 end
 
--- Lines: 225 to 226
+-- Lines 225-227
 function MenuNodeCustomizeGadgetGui:get_recticle_texture_ids()
 	return self._texture_ids
 end
 
--- Lines: 229 to 237
+-- Lines 229-237
 function MenuNodeCustomizeGadgetGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -262,7 +264,7 @@ function MenuNodeCustomizeGadgetGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeCustomizeGadgetGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines: 239 to 247
+-- Lines 239-247
 function MenuNodeCustomizeGadgetGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -275,12 +277,12 @@ function MenuNodeCustomizeGadgetGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 249 to 251
+-- Lines 249-251
 function MenuNodeCustomizeGadgetGui:_setup_item_rows(node)
 	MenuNodeCustomizeGadgetGui.super._setup_item_rows(self, node)
 end
 
--- Lines: 253 to 262
+-- Lines 253-262
 function MenuNodeCustomizeGadgetGui:reload_item(item)
 	MenuNodeCustomizeGadgetGui.super.reload_item(self, item)
 
@@ -292,7 +294,7 @@ function MenuNodeCustomizeGadgetGui:reload_item(item)
 	end
 end
 
--- Lines: 264 to 272
+-- Lines 264-272
 function MenuNodeCustomizeGadgetGui:_align_marker(row_item)
 	MenuNodeCustomizeGadgetGui.super._align_marker(self, row_item)
 
@@ -305,9 +307,8 @@ function MenuNodeCustomizeGadgetGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines: 274 to 277
+-- Lines 274-277
 function MenuNodeCustomizeGadgetGui:close()
 	self:_unretrieve_texture()
 	MenuNodeCustomizeGadgetGui.super.close(self)
 end
-

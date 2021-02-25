@@ -2,16 +2,16 @@ core:import("CoreMenuNodeGui")
 
 MenuPauseRenderer = MenuPauseRenderer or class(MenuRenderer)
 
--- Lines: 4 to 6
+-- Lines 4-6
 function MenuPauseRenderer:init(logic)
 	MenuRenderer.init(self, logic)
 end
 
--- Lines: 8 to 9
+-- Lines 8-9
 function MenuPauseRenderer:_setup_bg()
 end
 
--- Lines: 11 to 42
+-- Lines 11-42
 function MenuPauseRenderer:show_node(node)
 	local gui_class = MenuNodeGui
 
@@ -40,7 +40,7 @@ function MenuPauseRenderer:show_node(node)
 	MenuPauseRenderer.super.super.show_node(self, node, parameters)
 end
 
--- Lines: 44 to 57
+-- Lines 44-57
 function MenuPauseRenderer:open(...)
 	MenuPauseRenderer.super.super.open(self, ...)
 
@@ -97,11 +97,11 @@ function MenuPauseRenderer:open(...)
 	MenuRenderer._create_framing(self)
 end
 
--- Lines: 59 to 60
+-- Lines 59-60
 function MenuPauseRenderer:_layout_menu_bg()
 end
 
--- Lines: 62 to 71
+-- Lines 62-71
 function MenuPauseRenderer:update(t, dt)
 	MenuPauseRenderer.super.update(self, t, dt)
 
@@ -119,18 +119,18 @@ function MenuPauseRenderer:update(t, dt)
 	})
 end
 
--- Lines: 73 to 75
+-- Lines 73-75
 function MenuPauseRenderer:resolution_changed(...)
 	MenuPauseRenderer.super.resolution_changed(self, ...)
 end
 
--- Lines: 77 to 80
+-- Lines 77-80
 function MenuPauseRenderer:set_bg_visible(visible)
 	self._menu_bg:set_visible(visible)
 	self._blur_bg:set_visible(visible)
 end
 
--- Lines: 82 to 99
+-- Lines 82-99
 function MenuPauseRenderer:set_bg_area(area)
 	if self._menu_bg then
 		if area == "full" then
@@ -151,8 +151,7 @@ function MenuPauseRenderer:set_bg_area(area)
 	end
 end
 
--- Lines: 101 to 103
+-- Lines 101-103
 function MenuPauseRenderer:close(...)
 	MenuPauseRenderer.super.close(self, ...)
 end
-

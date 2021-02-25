@@ -8,7 +8,7 @@ core:import("CoreEnvironmentManager")
 
 ViewportManager = ViewportManager or class(CoreManagerBase.ManagerBase)
 
--- Lines: 16 to 29
+-- Lines 16-29
 function ViewportManager:init(aspect_ratio)
 	ViewportManager.super.init(self, "viewport")
 	assert(type(aspect_ratio) == "number")
@@ -24,26 +24,26 @@ function ViewportManager:init(aspect_ratio)
 	end
 end
 
--- Lines: 31 to 35
+-- Lines 31-35
 function ViewportManager:update(t, dt)
 	for i, svp in ipairs(self:_all_really_active()) do
 		svp:_update(i, t, dt)
 	end
 end
 
--- Lines: 37 to 39
+-- Lines 37-39
 function ViewportManager:paused_update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines: 41 to 45
+-- Lines 41-45
 function ViewportManager:render()
 	for i, svp in ipairs(self:_all_really_active()) do
 		svp:_render(i)
 	end
 end
 
--- Lines: 47 to 68
+-- Lines 47-68
 function ViewportManager:end_frame(t, dt)
 	if self._render_settings_change_map then
 		local is_resolution_changed = self._render_settings_change_map.resolution ~= nil
@@ -67,7 +67,7 @@ function ViewportManager:end_frame(t, dt)
 	self._current_camera_rotation = nil
 end
 
--- Lines: 70 to 78
+-- Lines 70-78
 function ViewportManager:destroy()
 	local _, svp = next(self:_all_ao())
 
@@ -80,7 +80,7 @@ function ViewportManager:destroy()
 	self._env_manager:destroy()
 end
 
--- Lines: 84 to 89
+-- Lines 84-90
 function ViewportManager:new_vp(x, y, width, height, name, priority)
 	local name = name or ""
 	local prio = priority or CoreManagerBase.PRIO_DEFAULT
@@ -91,51 +91,51 @@ function ViewportManager:new_vp(x, y, width, height, name, priority)
 	return svp
 end
 
--- Lines: 92 to 93
+-- Lines 92-94
 function ViewportManager:vp_by_name(name)
 	return self:_ao_by_name(name)
 end
 
--- Lines: 96 to 97
+-- Lines 96-98
 function ViewportManager:active_viewports()
 	return self:_all_active_requested_by_prio(CoreManagerBase.PRIO_DEFAULT)
 end
 
--- Lines: 100 to 101
+-- Lines 100-102
 function ViewportManager:all_really_active_viewports()
 	return self:_all_really_active()
 end
 
--- Lines: 104 to 105
+-- Lines 104-106
 function ViewportManager:num_active_viewports()
 	return #self:active_viewports()
 end
 
--- Lines: 108 to 110
+-- Lines 108-111
 function ViewportManager:first_active_viewport()
 	local all_active = self:_all_really_active()
 
 	return #all_active > 0 and all_active[1] or nil
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function ViewportManager:viewports()
 	return self:_all_ao()
 end
 
--- Lines: 117 to 119
+-- Lines 117-120
 function ViewportManager:add_resolution_changed_func(func)
 	self._resolution_changed_event_handler:add(func)
 
 	return func
 end
 
--- Lines: 122 to 124
+-- Lines 122-124
 function ViewportManager:remove_resolution_changed_func(func)
 	self._resolution_changed_event_handler:remove(func)
 end
 
--- Lines: 126 to 137
+-- Lines 126-137
 function ViewportManager:resolution_changed()
 	managers.gui_data:resolution_changed()
 
@@ -150,42 +150,42 @@ function ViewportManager:resolution_changed()
 	self._resolution_changed_event_handler:dispatch()
 end
 
--- Lines: 139 to 141
+-- Lines 139-141
 function ViewportManager:editor_reload_environment(name)
 	self._env_manager:editor_reload(name)
 end
 
--- Lines: 143 to 145
+-- Lines 143-145
 function ViewportManager:editor_add_environment_created_callback(func)
 	self._env_manager:editor_add_created_callback(func)
 end
 
--- Lines: 147 to 149
+-- Lines 147-149
 function ViewportManager:preload_environment(name)
 	self._env_manager:preload_environment(name)
 end
 
--- Lines: 151 to 152
+-- Lines 151-153
 function ViewportManager:get_predefined_environment_filter_map()
 	return self._env_manager:get_predefined_environment_filter_map()
 end
 
--- Lines: 155 to 156
+-- Lines 155-157
 function ViewportManager:get_environment_value(path, data_path_key)
 	return self._env_manager:get_value(path, data_path_key)
 end
 
--- Lines: 159 to 160
+-- Lines 159-161
 function ViewportManager:has_data_path_key(data_path_key)
 	return self._env_manager:has_data_path_key(data_path_key)
 end
 
--- Lines: 163 to 164
+-- Lines 163-165
 function ViewportManager:is_deprecated_data_path(data_path)
 	return self._env_manager:is_deprecated_data_path(data_path)
 end
 
--- Lines: 167 to 174
+-- Lines 167-175
 function ViewportManager:create_global_environment_modifier(data_path_key, is_override, modifier_func)
 	for _, vp in ipairs(self:viewports()) do
 		vp:create_environment_modifier(data_path_key, is_override, modifier_func)
@@ -196,7 +196,7 @@ function ViewportManager:create_global_environment_modifier(data_path_key, is_ov
 	return data_path_key
 end
 
--- Lines: 177 to 183
+-- Lines 177-183
 function ViewportManager:destroy_global_environment_modifier(data_path_key)
 	for _, vp in ipairs(self:viewports()) do
 		vp:destroy_environment_modifier(data_path_key)
@@ -205,14 +205,14 @@ function ViewportManager:destroy_global_environment_modifier(data_path_key)
 	self._env_manager:set_global_environment_modifier(data_path_key, nil, nil)
 end
 
--- Lines: 185 to 189
+-- Lines 185-189
 function ViewportManager:update_global_environment_value(data_path_key)
 	for _, vp in ipairs(self:viewports()) do
 		vp:update_environment_value(data_path_key)
 	end
 end
 
--- Lines: 191 to 197
+-- Lines 191-197
 function ViewportManager:set_default_environment(default_environment_path, blend_duration, blend_bezier_curve)
 	self._env_manager:set_default_environment(default_environment_path)
 
@@ -221,24 +221,24 @@ function ViewportManager:set_default_environment(default_environment_path, blend
 	end
 end
 
--- Lines: 199 to 200
+-- Lines 199-201
 function ViewportManager:default_environment()
 	return self._env_manager:default_environment()
 end
 
--- Lines: 203 to 204
+-- Lines 203-205
 function ViewportManager:game_default_environment()
 	return self._env_manager:game_default_environment()
 end
 
--- Lines: 208 to 212
+-- Lines 208-212
 function ViewportManager:editor_reset_environment()
 	for _, vp in ipairs(self:active_viewports()) do
 		vp:set_environment(self:game_default_environment(), nil, nil, nil, nil)
 	end
 end
 
--- Lines: 214 to 219
+-- Lines 214-219
 function ViewportManager:set_override_environment(environment_path, blend_duration, blend_bezier_curve)
 	self._env_manager:set_override_environment(environment_path)
 
@@ -247,24 +247,24 @@ function ViewportManager:set_override_environment(environment_path, blend_durati
 	end
 end
 
--- Lines: 222 to 224
+-- Lines 222-224
 function ViewportManager:move_to_front(vp)
 	self:_move_ao_to_front(vp)
 end
 
--- Lines: 230 to 233
+-- Lines 230-233
 function ViewportManager:_viewport_destroyed(vp)
 	self:_del_accessobj(vp)
 
 	self._current_camera = nil
 end
 
--- Lines: 235 to 236
+-- Lines 235-237
 function ViewportManager:_get_environment_manager()
 	return self._env_manager
 end
 
--- Lines: 239 to 255
+-- Lines 239-255
 function ViewportManager:_prioritize_and_activate()
 	local old_first_vp = self:first_active_viewport()
 
@@ -283,7 +283,7 @@ function ViewportManager:_prioritize_and_activate()
 	end
 end
 
--- Lines: 262 to 268
+-- Lines 262-268
 function ViewportManager:first_active_world_viewport()
 	for _, vp in ipairs(self:active_viewports()) do
 		if vp:is_rendering_scene("World") then
@@ -292,7 +292,7 @@ function ViewportManager:first_active_world_viewport()
 	end
 end
 
--- Lines: 270 to 277
+-- Lines 270-278
 function ViewportManager:get_current_camera()
 	if self._current_camera then
 		return self._current_camera
@@ -304,7 +304,7 @@ function ViewportManager:get_current_camera()
 	return self._current_camera
 end
 
--- Lines: 280 to 289
+-- Lines 280-290
 function ViewportManager:get_current_camera_position()
 	if self._current_camera_position_updated then
 		return self._current_camera_position
@@ -319,7 +319,7 @@ function ViewportManager:get_current_camera_position()
 	return self._current_camera_position
 end
 
--- Lines: 292 to 298
+-- Lines 292-299
 function ViewportManager:get_current_camera_rotation()
 	if self._current_camera_rotation then
 		return self._current_camera_rotation
@@ -330,22 +330,23 @@ function ViewportManager:get_current_camera_rotation()
 	return self._current_camera_rotation
 end
 
--- Lines: 301 to 302
+-- Lines 301-303
 function ViewportManager:get_active_vp()
 	return self:active_vp():vp()
 end
 
--- Lines: 305 to 307
+-- Lines 305-308
 function ViewportManager:active_vp()
 	local vps = self:active_viewports()
 
 	return #vps > 0 and vps[1]
 end
+
 local is_win32 = SystemInfo:platform() == Idstring("WIN32")
 local is_ps4 = SystemInfo:platform() == Idstring("PS4")
 local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 
--- Lines: 314 to 317
+-- Lines 313-318
 function ViewportManager:get_safe_rect()
 	local a = is_win32 and 0.032 or (is_ps4 or is_xb1) and 0.05 or 0.075
 	local b = 1 - a * 2
@@ -358,7 +359,7 @@ function ViewportManager:get_safe_rect()
 	}
 end
 
--- Lines: 320 to 330
+-- Lines 320-331
 function ViewportManager:get_safe_rect_pixels()
 	local res = RenderSettings.resolution
 	local safe_rect_scale = self:get_safe_rect()
@@ -372,7 +373,7 @@ function ViewportManager:get_safe_rect_pixels()
 	return safe_rect_pixels
 end
 
--- Lines: 333 to 338
+-- Lines 333-338
 function ViewportManager:set_resolution(resolution)
 	if RenderSettings.resolution ~= resolution or self._render_settings_change_map and self._render_settings_change_map.resolution ~= resolution then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -380,7 +381,7 @@ function ViewportManager:set_resolution(resolution)
 	end
 end
 
--- Lines: 340 to 346
+-- Lines 340-346
 function ViewportManager:is_fullscreen()
 	if self._render_settings_change_map and self._render_settings_change_map.fullscreen ~= nil then
 		return self._render_settings_change_map.fullscreen
@@ -389,7 +390,7 @@ function ViewportManager:is_fullscreen()
 	end
 end
 
--- Lines: 348 to 353
+-- Lines 348-353
 function ViewportManager:set_fullscreen(fullscreen)
 	if not RenderSettings.fullscreen ~= not fullscreen or self._render_settings_change_map and not self._render_settings_change_map.fullscreen ~= not fullscreen then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -397,7 +398,7 @@ function ViewportManager:set_fullscreen(fullscreen)
 	end
 end
 
--- Lines: 355 to 361
+-- Lines 355-361
 function ViewportManager:set_aspect_ratio(aspect_ratio)
 	if RenderSettings.aspect_ratio ~= aspect_ratio or self._render_settings_change_map and self._render_settings_change_map.aspect_ratio ~= aspect_ratio then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -406,7 +407,7 @@ function ViewportManager:set_aspect_ratio(aspect_ratio)
 	end
 end
 
--- Lines: 363 to 369
+-- Lines 363-369
 function ViewportManager:set_vsync(vsync)
 	if RenderSettings.v_sync ~= vsync or self._render_settings_change_map and self._render_settings_change_map.v_sync ~= vsync then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -415,7 +416,7 @@ function ViewportManager:set_vsync(vsync)
 	end
 end
 
--- Lines: 371 to 376
+-- Lines 371-376
 function ViewportManager:set_adapter_index(adapter_index)
 	if RenderSettings.adapter_index ~= adapter_index or self._render_settings_change_map and self._render_settings_change_map.adapter_index ~= adapter_index then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -423,7 +424,7 @@ function ViewportManager:set_adapter_index(adapter_index)
 	end
 end
 
--- Lines: 378 to 389
+-- Lines 378-389
 function ViewportManager:reset_viewport_settings()
 	Application:reset_render_settings({
 		"adapter_index",
@@ -438,13 +439,12 @@ function ViewportManager:reset_viewport_settings()
 	self:resolution_changed()
 end
 
--- Lines: 393 to 394
+-- Lines 393-395
 function ViewportManager:aspect_ratio()
 	return self._aspect_ratio
 end
 
--- Lines: 397 to 399
+-- Lines 397-399
 function ViewportManager:set_aspect_ratio2(aspect_ratio)
 	self._aspect_ratio = aspect_ratio
 end
-

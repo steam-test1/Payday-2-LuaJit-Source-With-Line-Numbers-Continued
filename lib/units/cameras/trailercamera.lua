@@ -3,7 +3,7 @@ core:import("CoreEws")
 TrailerCamera = TrailerCamera or class()
 TrailerCamera.GAME_MULTIPLIER = 0.01
 
--- Lines: 6 to 37
+-- Lines 6-37
 function TrailerCamera:init(unit)
 	print("TrailerCamera:init")
 
@@ -36,13 +36,13 @@ function TrailerCamera:init(unit)
 	self:_set_actions()
 end
 
--- Lines: 39 to 42
+-- Lines 39-42
 function TrailerCamera:_set_interpolation_type(type)
 	self._camera_controller:set_interpolation_type(Idstring("cam"), Idstring(type))
 	self._camera_controller:set_interpolation_type(Idstring("tar"), Idstring(type))
 end
 
--- Lines: 44 to 53
+-- Lines 44-53
 function TrailerCamera:_set_actions()
 	self._actions = {}
 
@@ -64,7 +64,7 @@ function TrailerCamera:_set_actions()
 	print(inspect(self._actions))
 end
 
--- Lines: 58 to 78
+-- Lines 55-78
 function TrailerCamera:start()
 	if game_state_machine:current_state_name() ~= "editor" then
 		self._old_game_state_name = game_state_machine:current_state_name()
@@ -84,24 +84,24 @@ function TrailerCamera:start()
 	self._viewport:set_active(true)
 end
 
--- Lines: 80 to 83
+-- Lines 80-83
 function TrailerCamera:pause()
 	self._unit:anim_set_time(self._anim_name, self._unit:anim_time(self._anim_name))
 	self._unit:anim_play(self._anim_name, 0)
 end
 
--- Lines: 85 to 87
+-- Lines 85-87
 function TrailerCamera:set_speed(speed)
 	self._unit:anim_play_to(self._anim_name, self._unit:anim_length(self._anim_name), speed)
 end
 
--- Lines: 89 to 92
+-- Lines 89-92
 function TrailerCamera:goto(time)
 	self._unit:anim_set_time(self._anim_name, time)
 	self._unit:anim_play(self._anim_name, 0)
 end
 
--- Lines: 94 to 109
+-- Lines 94-109
 function TrailerCamera:stop()
 	self._viewport:set_active(false)
 	self._unit:anim_stop(self._anim_name)
@@ -119,7 +119,7 @@ function TrailerCamera:stop()
 	self._playing = false
 end
 
--- Lines: 116 to 192
+-- Lines 116-192
 function TrailerCamera:create_ews()
 	self:close_ews()
 
@@ -168,10 +168,18 @@ function TrailerCamera:create_ews()
 	}
 
 	CoreEws.slider_and_number_controller(slider_params)
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_time"), {slider_params = slider_params})
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_time"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_time"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_time"), {slider_params = slider_params})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
 
 	self._time_slider = slider_params
 	local slider_sizer = EWS:StaticBoxSizer(self._main_panel, "VERTICAL", "")
@@ -191,10 +199,18 @@ function TrailerCamera:create_ews()
 	}
 
 	CoreEws.slider_and_number_controller(slider_params)
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
 
 	self._speed_slider = slider_params
 
@@ -203,17 +219,17 @@ function TrailerCamera:create_ews()
 	print("done")
 end
 
--- Lines: 194 to 196
+-- Lines 194-196
 function TrailerCamera:update_slider_time(data)
 	self:goto(data.slider_params.value)
 end
 
--- Lines: 198 to 200
+-- Lines 198-200
 function TrailerCamera:update_slider_speed(data)
 	self:set_speed(data.slider_params.value)
 end
 
--- Lines: 202 to 207
+-- Lines 202-207
 function TrailerCamera:close_ews()
 	if self._main_frame then
 		self._main_frame:destroy()
@@ -222,7 +238,7 @@ function TrailerCamera:close_ews()
 	end
 end
 
--- Lines: 209 to 242
+-- Lines 209-242
 function TrailerCamera:update(unit, t, dt)
 	if self._playing then
 		if self._main_frame then
@@ -245,7 +261,7 @@ function TrailerCamera:update(unit, t, dt)
 	end
 end
 
--- Lines: 244 to 258
+-- Lines 244-258
 function TrailerCamera:set_depth_mode(depth_mode)
 	self._locked_far_range = depth_mode and 5000 or nil
 	local viz = depth_mode and "depth_visualization" or "deferred_lighting"
@@ -265,7 +281,7 @@ function TrailerCamera:set_depth_mode(depth_mode)
 	end
 end
 
--- Lines: 260 to 272
+-- Lines 260-272
 function TrailerCamera:destroy()
 	if self._viewport then
 		self._viewport:destroy()
@@ -275,25 +291,26 @@ function TrailerCamera:destroy()
 
 	self:close_ews()
 end
+
 TrailerCameraAction = TrailerCameraAction or class()
 
--- Lines: 276 to 277
+-- Lines 276-277
 function TrailerCameraAction:init()
 end
 
--- Lines: 279 to 280
+-- Lines 279-280
 function TrailerCameraAction:execute()
 end
+
 TrailerCameraElementAction = TrailerCameraElementAction or class(TrailerCameraAction)
 
--- Lines: 284 to 286
+-- Lines 284-286
 function TrailerCameraElementAction:init(name)
 	self._name = name
 end
 
--- Lines: 288 to 291
+-- Lines 288-291
 function TrailerCameraElementAction:execute()
 	print("TrailerCameraElementAction:execute()", self._name)
 	managers.mission:debug_execute_mission_element_by_name(self._name)
 end
-

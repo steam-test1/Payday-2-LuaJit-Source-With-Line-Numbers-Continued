@@ -1,6 +1,6 @@
 PlayerCharacterTriggerUnitElement = PlayerCharacterTriggerUnitElement or class(MissionElement)
 
--- Lines: 5 to 13
+-- Lines 4-13
 function PlayerCharacterTriggerUnitElement:init(unit)
 	PlayerCharacterTriggerUnitElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function PlayerCharacterTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "trigger_on_left")
 end
 
--- Lines: 16 to 30
+-- Lines 15-30
 function PlayerCharacterTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -30,9 +30,10 @@ function PlayerCharacterTriggerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(checkbox_leave, 0, 0, "EXPAND")
 	self:_add_help_text("Set the character that the element should trigger on. Can alternatively fire when the character is removed from the game.")
 end
+
 PlayerCharacterFilterUnitElement = PlayerCharacterFilterUnitElement or class(MissionElement)
 
--- Lines: 37 to 48
+-- Lines 36-48
 function PlayerCharacterFilterUnitElement:init(unit)
 	PlayerCharacterFilterUnitElement.super.init(self, unit)
 
@@ -45,7 +46,7 @@ function PlayerCharacterFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_instigator")
 end
 
--- Lines: 51 to 70
+-- Lines 50-70
 function PlayerCharacterFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -73,4 +74,3 @@ function PlayerCharacterFilterUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(checkbox_instigator, 0, 0, "EXPAND")
 	self:_add_help_text("Will only execute if the character is/is not in the game.")
 end
-

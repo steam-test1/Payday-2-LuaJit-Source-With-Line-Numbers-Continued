@@ -1,7 +1,7 @@
 LootBagUnitElement = LootBagUnitElement or class(MissionElement)
 LootBagUnitElement.USES_POINT_ORIENTATION = true
 
--- Lines: 4 to 14
+-- Lines 4-14
 function LootBagUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -12,7 +12,7 @@ function LootBagUnitElement:init(unit)
 	self._hed.from_respawn = false
 end
 
--- Lines: 18 to 26
+-- Lines 18-26
 function LootBagUnitElement:save(list)
 	if self._hed.push_multiplier ~= 0 then
 		list.spawn_dir = self._hed.spawn_dir
@@ -23,7 +23,7 @@ function LootBagUnitElement:save(list)
 	list.from_respawn = self._hed.from_respawn
 end
 
--- Lines: 28 to 40
+-- Lines 28-40
 function LootBagUnitElement:test_element()
 	local unit_name = "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 	local throw_distance_multiplier = 1
@@ -43,7 +43,7 @@ function LootBagUnitElement:test_element()
 	unit:push(100, 600 * push_value * throw_distance_multiplier)
 end
 
--- Lines: 42 to 49
+-- Lines 42-49
 function LootBagUnitElement:stop_test_element()
 	for _, unit in ipairs(self._test_units) do
 		if alive(unit) then
@@ -54,12 +54,12 @@ function LootBagUnitElement:stop_test_element()
 	self._test_units = {}
 end
 
--- Lines: 51 to 53
+-- Lines 51-53
 function LootBagUnitElement:update_selected(time, rel_time)
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._hed.spawn_dir * 50, 0.75, 0.75, 0.75, 0.1)
 end
 
--- Lines: 55 to 78
+-- Lines 55-78
 function LootBagUnitElement:update_editing(time, rel_time)
 	local kb = Input:keyboard()
 	local speed = 60 * rel_time
@@ -93,7 +93,7 @@ function LootBagUnitElement:update_editing(time, rel_time)
 	end
 end
 
--- Lines: 81 to 90
+-- Lines 81-90
 function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -104,15 +104,20 @@ function LootBagUnitElement:_build_panel(panel, panel_sizer)
 		floats = 1,
 		min = 0
 	}, "Use this to add a velocity to a physic push on the spawned unit")
-	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({"none"}, tweak_data.carry:get_carry_ids()), "Select a carry_id to be created.")
+	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({
+		"none"
+	}, tweak_data.carry:get_carry_ids()), "Select a carry_id to be created.")
 	self:_build_value_checkbox(panel, panel_sizer, "from_respawn")
 end
+
 LootBagTriggerUnitElement = LootBagTriggerUnitElement or class(MissionElement)
 LootBagTriggerUnitElement.SAVE_UNIT_POSITION = false
 LootBagTriggerUnitElement.SAVE_UNIT_ROTATION = false
-LootBagTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+LootBagTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 99 to 107
+-- Lines 99-107
 function LootBagTriggerUnitElement:init(unit)
 	LootBagTriggerUnitElement.super.init(self, unit)
 
@@ -123,7 +128,7 @@ function LootBagTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "trigger_type")
 end
 
--- Lines: 109 to 118
+-- Lines 109-118
 function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	LootBagTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -143,11 +148,11 @@ function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 120 to 121
+-- Lines 120-121
 function LootBagTriggerUnitElement:update_editing()
 end
 
--- Lines: 123 to 136
+-- Lines 123-136
 function LootBagTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -165,18 +170,20 @@ function LootBagTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 139 to 141
+-- Lines 139-141
 function LootBagTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 143 to 154
+-- Lines 143-154
 function LootBagTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"point_loot_bag/point_loot_bag"}
+	local names = {
+		"point_loot_bag/point_loot_bag"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "trigger_type", {
@@ -185,4 +192,3 @@ function LootBagTriggerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select a trigger type for the selected elements")
 	self:_add_help_text("This element is a trigger to point_loot_bag element.")
 end
-

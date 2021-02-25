@@ -1,7 +1,7 @@
 require("lib/managers/HUDManager")
 require("lib/managers/HUDManagerVR")
 
--- Lines: 5 to 9
+-- Lines 5-9
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -17,7 +17,7 @@ local TEXT_LAYER = 50
 local TEXT_LAYER1 = 51
 VRGuiObject = VRGuiObject or class()
 
--- Lines: 29 to 43
+-- Lines 29-43
 function VRGuiObject:init(panel, id, params)
 	self._id = id
 	self._panel = panel:panel({
@@ -32,29 +32,29 @@ function VRGuiObject:init(panel, id, params)
 	self._desc_data = params.desc_data
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function VRGuiObject:id()
 	return self._id
 end
 
--- Lines: 49 to 50
+-- Lines 49-51
 function VRGuiObject:parent_menu()
 	return self._parent_menu
 end
 
--- Lines: 53 to 56
+-- Lines 53-56
 function VRGuiObject:set_enabled(enabled)
 	self._enabled = enabled
 
 	self._panel:set_visible(enabled)
 end
 
--- Lines: 58 to 59
+-- Lines 58-60
 function VRGuiObject:enabled()
 	return self._enabled
 end
 
--- Lines: 63 to 74
+-- Lines 63-75
 function VRGuiObject:set_selected(selected)
 	if self._selected == selected then
 		return
@@ -69,22 +69,23 @@ function VRGuiObject:set_selected(selected)
 	return true
 end
 
--- Lines: 77 to 78
+-- Lines 77-78
 function VRGuiObject:moved(x, y)
 end
 
--- Lines: 80 to 81
+-- Lines 80-81
 function VRGuiObject:pressed(x, y)
 end
 
--- Lines: 83 to 84
+-- Lines 83-84
 function VRGuiObject:released(x, y)
 end
 
--- Lines: 86 to 87
+-- Lines 86-88
 function VRGuiObject:desc_data()
 	return self._desc_data
 end
+
 local overrides = {
 	"inside",
 	"x",
@@ -113,8 +114,6 @@ local overrides = {
 }
 
 for _, func in ipairs(overrides) do
-
-	-- Lines: 91 to 92
 	VRGuiObject[func] = function (self, ...)
 		return self._panel[func](self._panel, ...)
 	end
@@ -125,7 +124,7 @@ local selected_color = Color.black:with_alpha(0.7)
 local text_padding = 8
 VRButton = VRButton or class(VRGuiObject)
 
--- Lines: 103 to 121
+-- Lines 103-121
 function VRButton:init(panel, id, params)
 	params.w = params.w or 170
 	params.h = params.h or 43
@@ -148,21 +147,22 @@ function VRButton:init(panel, id, params)
 	make_fine_text(self._text)
 end
 
--- Lines: 123 to 127
+-- Lines 123-127
 function VRButton:set_selected(selected)
 	if VRButton.super.set_selected(self, selected) then
 		self._bg:set_color(selected and selected_color or unselected_color)
 	end
 end
 
--- Lines: 129 to 132
+-- Lines 129-132
 function VRButton:set_text(text_id, skip_localization)
 	self._text:set_text(not skip_localization and managers.localization:to_upper_text(text_id) or text_id)
 	make_fine_text(self._text)
 end
+
 VRSlider = VRSlider or class(VRGuiObject)
 
--- Lines: 137 to 177
+-- Lines 137-177
 function VRSlider:init(panel, id, params)
 	params.w = params.w or 294
 	params.h = params.h or 43
@@ -205,22 +205,22 @@ function VRSlider:init(panel, id, params)
 	self:_update_position()
 end
 
--- Lines: 179 to 180
+-- Lines 179-181
 function VRSlider:value()
 	return self._value
 end
 
--- Lines: 183 to 184
+-- Lines 183-185
 function VRSlider:value_ratio()
 	return (self._value - self._min) / (self._max - self._min)
 end
 
--- Lines: 187 to 188
+-- Lines 187-189
 function VRSlider:value_from_ratio(ratio)
 	return math.clamp((self._max - self._min) * ratio + self._min, self._min, self._max)
 end
 
--- Lines: 191 to 195
+-- Lines 191-195
 function VRSlider:set_value(value)
 	self._value = math.clamp(value, self._min, self._max)
 
@@ -228,7 +228,7 @@ function VRSlider:set_value(value)
 	self:_update_position()
 end
 
--- Lines: 197 to 201
+-- Lines 197-201
 function VRSlider:_update_position()
 	local value_ratio = self:value_ratio()
 	local w = self._panel:w() - self._mid_piece:w()
@@ -236,21 +236,21 @@ function VRSlider:_update_position()
 	self._mid_piece:set_center_x(value_ratio * w + self._mid_piece:w() / 2)
 end
 
--- Lines: 203 to 207
+-- Lines 203-207
 function VRSlider:set_selected(selected)
 	if VRButton.super.set_selected(self, selected) then
 		self._bg:set_color(selected and selected_color or unselected_color)
 	end
 end
 
--- Lines: 209 to 213
+-- Lines 209-213
 function VRSlider:set_text(text)
 	self._text:set_text(tostring(text))
 	make_fine_text(self._text)
 	self._text:set_center_x(self._mid_piece:w() / 2)
 end
 
--- Lines: 215 to 223
+-- Lines 215-223
 function VRSlider:pressed(x, y)
 	if not self._selected then
 		return
@@ -261,7 +261,7 @@ function VRSlider:pressed(x, y)
 	self._pressed = true
 end
 
--- Lines: 225 to 231
+-- Lines 225-231
 function VRSlider:released(x, y)
 	if self._pressed and self._value_clbk then
 		self._value_clbk(self._value)
@@ -270,7 +270,7 @@ function VRSlider:released(x, y)
 	self._pressed = nil
 end
 
--- Lines: 233 to 244
+-- Lines 233-244
 function VRSlider:moved(x, y)
 	if self._pressed then
 		local diff = x - self._start_x
@@ -284,9 +284,10 @@ function VRSlider:moved(x, y)
 		end
 	end
 end
+
 VRSettingButton = VRSettingButton or class(VRGuiObject)
 
--- Lines: 250 to 300
+-- Lines 250-300
 function VRSettingButton:init(panel, id, params)
 	if not params.setting then
 		Application:error("Tried to add a setting button without a setting!")
@@ -345,7 +346,7 @@ function VRSettingButton:init(panel, id, params)
 	self:setting_changed()
 end
 
--- Lines: 302 to 310
+-- Lines 302-310
 function VRSettingButton:_get_setting_text(value)
 	if type(value) == "boolean" then
 		return value and "menu_vr_on" or "menu_vr_off"
@@ -356,7 +357,7 @@ function VRSettingButton:_get_setting_text(value)
 	end
 end
 
--- Lines: 312 to 319
+-- Lines 312-319
 function VRSettingButton:setting_changed()
 	local new_value = managers.vr:get_setting(self._setting)
 
@@ -367,14 +368,14 @@ function VRSettingButton:setting_changed()
 	self._parent_menu:update_desc()
 end
 
--- Lines: 321 to 325
+-- Lines 321-325
 function VRSettingButton:set_selected(selected)
 	if VRButton.super.set_selected(self, selected) then
 		self._bg:set_color(selected and selected_color or unselected_color)
 	end
 end
 
--- Lines: 327 to 336
+-- Lines 327-336
 function VRSettingButton:desc_data()
 	if self._desc_data and self._desc_data.use_setting then
 		local ret = clone(self._desc_data)
@@ -386,9 +387,10 @@ function VRSettingButton:desc_data()
 		return self._desc_data
 	end
 end
+
 VRSettingSlider = VRSettingSlider or class(VRSlider)
 
--- Lines: 342 to 358
+-- Lines 342-358
 function VRSettingSlider:init(panel, id, params)
 	if not params.setting then
 		Application:error("Tried to add a setting slider without a setting!")
@@ -409,15 +411,16 @@ function VRSettingSlider:init(panel, id, params)
 	self._setting = params.setting
 end
 
--- Lines: 360 to 363
+-- Lines 360-363
 function VRSettingSlider:setting_changed()
 	local new_value = managers.vr:get_setting(self._setting)
 
 	self:set_value(new_value)
 end
+
 VRSettingTrigger = VRSettingTrigger or class(VRButton)
 
--- Lines: 367 to 372
+-- Lines 367-372
 function VRSettingTrigger:init(panel, id, params)
 	VRSettingTrigger.super.init(self, panel, id, params)
 
@@ -425,23 +428,26 @@ function VRSettingTrigger:init(panel, id, params)
 	self._change_clbk = params.change_clbk
 end
 
--- Lines: 374 to 378
+-- Lines 374-378
 function VRSettingTrigger:setting_changed()
 	if self._change_clbk then
 		self:_change_clbk(managers.vr:get_setting(self._setting))
 	end
 end
+
 VRMenu = VRMenu or class()
 
--- Lines: 384 to 389
+-- Lines 384-389
 function VRMenu:init()
 	self._buttons = {}
-	self._button_sets = {main = {}}
+	self._button_sets = {
+		main = {}
+	}
 	self._sub_menus = {}
 	self._objects = {}
 end
 
--- Lines: 391 to 398
+-- Lines 391-398
 function VRMenu:set_selected(index)
 	if self._selected and self._selected ~= index then
 		self._buttons[self._selected].button:set_selected(false)
@@ -454,12 +460,12 @@ function VRMenu:set_selected(index)
 	self._selected = index
 end
 
--- Lines: 400 to 401
+-- Lines 400-402
 function VRMenu:selected()
 	return self._selected and self._buttons[self._selected]
 end
 
--- Lines: 404 to 421
+-- Lines 404-421
 function VRMenu:mouse_moved(o, x, y)
 	if self:enabled() then
 		local selected = nil
@@ -480,7 +486,7 @@ function VRMenu:mouse_moved(o, x, y)
 	end
 end
 
--- Lines: 423 to 437
+-- Lines 423-437
 function VRMenu:mouse_pressed(o, button, x, y)
 	if button ~= Idstring("0") then
 		return
@@ -497,7 +503,7 @@ function VRMenu:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines: 439 to 453
+-- Lines 439-453
 function VRMenu:mouse_released(o, button, x, y)
 	if button ~= Idstring("0") then
 		return
@@ -514,7 +520,7 @@ function VRMenu:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines: 455 to 466
+-- Lines 455-466
 function VRMenu:mouse_clicked(o, button, x, y)
 	if self:enabled() and self:selected() and self:selected().clbk then
 		self:selected().clbk(self:selected().button)
@@ -526,12 +532,12 @@ function VRMenu:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines: 468 to 470
+-- Lines 468-470
 function VRMenu:add_object(id, obj)
 	self._objects[id] = obj
 end
 
--- Lines: 472 to 477
+-- Lines 472-477
 function VRMenu:remove_object(id)
 	if self._objects[id].destroy then
 		self._objects[id]:destroy()
@@ -540,26 +546,26 @@ function VRMenu:remove_object(id)
 	self._objects[id] = nil
 end
 
--- Lines: 479 to 480
+-- Lines 479-481
 function VRMenu:object(id)
 	return self._objects[id]
 end
 
--- Lines: 483 to 487
+-- Lines 483-487
 function VRMenu:clear_objects()
 	for id in pairs(self._objects) do
 		self:remove_object(id)
 	end
 end
 
--- Lines: 489 to 493
+-- Lines 489-493
 function VRMenu:update(t, dt)
 	for id, obj in pairs(self._objects) do
 		obj:update(t, dt)
 	end
 end
 
--- Lines: 495 to 502
+-- Lines 495-502
 function VRMenu:set_enabled(enabled)
 	if not enabled then
 		self:set_selected(nil)
@@ -568,13 +574,14 @@ function VRMenu:set_enabled(enabled)
 	self._enabled = enabled
 end
 
--- Lines: 504 to 505
+-- Lines 504-506
 function VRMenu:enabled()
 	return self._enabled
 end
+
 VRSubMenu = VRSubMenu or class(VRMenu)
 
--- Lines: 512 to 529
+-- Lines 512-529
 function VRSubMenu:init(parent, panel, id)
 	VRSubMenu.super.init(self)
 
@@ -599,7 +606,7 @@ function VRSubMenu:init(parent, panel, id)
 	make_fine_text(self._title)
 end
 
--- Lines: 531 to 570
+-- Lines 531-570
 function VRSubMenu:add_desc(desc_data)
 	self:clear_desc()
 
@@ -643,7 +650,7 @@ function VRSubMenu:add_desc(desc_data)
 	})
 end
 
--- Lines: 572 to 577
+-- Lines 572-577
 function VRSubMenu:clear_desc()
 	if alive(self._desc_panel) then
 		self._panel:remove(self._desc_panel)
@@ -652,12 +659,12 @@ function VRSubMenu:clear_desc()
 	end
 end
 
--- Lines: 579 to 580
+-- Lines 579-581
 function VRSubMenu:setting(id)
 	return self._settings and self._settings[id]
 end
 
--- Lines: 583 to 650
+-- Lines 583-650
 function VRSubMenu:add_setting(type, text_id, setting, params)
 	local y_offset = self._title:bottom() + PADDING
 	self._settings = self._settings or {}
@@ -678,7 +685,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			parent_menu = self
 		}, params))
 
-		-- Lines: 601 to 609
+		-- Lines 601-609
 		function clbk(btn)
 			local new_value = not managers.vr:get_setting(setting)
 
@@ -690,8 +697,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			end
 		end
 	elseif type == "slider" then
-
-		-- Lines: 610 to 611
+		-- Lines 611-611
 		local function clbk(value)
 			managers.vr:set_setting(setting, value)
 		end
@@ -704,7 +710,9 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 		if not params.options then
 			Application:error("Tried to add a multi_button setting without options: " .. setting)
 
-			params.options = {"error"}
+			params.options = {
+				"error"
+			}
 		end
 
 		local option_count = #params.options
@@ -713,7 +721,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			parent_menu = self
 		}, params))
 
-		-- Lines: 623 to 633
+		-- Lines 623-633
 		function clbk(btn)
 			local current_index = table.index_of(params.options, managers.vr:get_setting(setting))
 			local new_index = current_index % option_count + 1
@@ -733,7 +741,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 			parent_menu = self
 		}, params))
 
-		-- Lines: 637 to 640
+		-- Lines 637-640
 		function clbk(btn)
 			local value = params.value_clbk(btn)
 
@@ -743,7 +751,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 
 	setting_item:set_y(setting_text:y())
 	setting_item:set_right(self._panel:w() / 2 - PADDING)
-	setting_text:set_w((self._panel:w() - setting_item:w()) - PADDING * 2)
+	setting_text:set_w(self._panel:w() - setting_item:w() - PADDING * 2)
 	make_fine_text(setting_text)
 	table.insert(self._buttons, {
 		button = setting_item,
@@ -760,7 +768,7 @@ function VRSubMenu:add_setting(type, text_id, setting, params)
 	}
 end
 
--- Lines: 652 to 659
+-- Lines 652-659
 function VRSubMenu:set_setting_enabled(setting, enabled)
 	local item = self:setting(setting)
 
@@ -771,7 +779,7 @@ function VRSubMenu:set_setting_enabled(setting, enabled)
 	end
 end
 
--- Lines: 661 to 684
+-- Lines 661-684
 function VRSubMenu:add_button_set(id, text_id, buttons)
 	local y_offset = self._title:bottom() + PADDING
 	self._settings = self._settings or {}
@@ -805,7 +813,7 @@ function VRSubMenu:add_button_set(id, text_id, buttons)
 	}
 end
 
--- Lines: 686 to 697
+-- Lines 686-698
 function VRSubMenu:add_button(id, text, clbk, custom_params)
 	custom_params = custom_params or {}
 	local buttons = custom_params.set and self._button_sets[custom_params.set] or self._button_sets.main
@@ -815,8 +823,8 @@ function VRSubMenu:add_button(id, text, clbk, custom_params)
 	}, custom_params))
 	local start_x = custom_params.start_x or self._panel:w()
 
-	button:set_x(custom_params.x or ((buttons[#buttons] and buttons[#buttons].button:left() or start_x) - button:w()) - PADDING)
-	button:set_y(custom_params.y or (self._panel:h() - button:h()) - PADDING)
+	button:set_x(custom_params.x or (buttons[#buttons] and buttons[#buttons].button:left() or start_x) - button:w() - PADDING)
+	button:set_y(custom_params.y or self._panel:h() - button:h() - PADDING)
 
 	local button_data = {
 		button = button,
@@ -830,7 +838,7 @@ function VRSubMenu:add_button(id, text, clbk, custom_params)
 	return button
 end
 
--- Lines: 700 to 707
+-- Lines 700-707
 function VRSubMenu:set_button_enabled(id, enabled)
 	for _, button in ipairs(self._buttons) do
 		if button.button:id() == id then
@@ -841,7 +849,7 @@ function VRSubMenu:set_button_enabled(id, enabled)
 	self:layout_buttons()
 end
 
--- Lines: 709 to 722
+-- Lines 709-722
 function VRSubMenu:layout_buttons()
 	for _, button_set in pairs(self._button_sets) do
 		local last_x = nil
@@ -850,7 +858,7 @@ function VRSubMenu:layout_buttons()
 			last_x = last_x or button.custom_params.start_x or self._panel:w()
 
 			if button.button:enabled() and not button.custom_params.x then
-				button.button:set_x((last_x - button.button:w()) - PADDING)
+				button.button:set_x(last_x - button.button:w() - PADDING)
 
 				last_x = button.button:x()
 			end
@@ -858,7 +866,7 @@ function VRSubMenu:layout_buttons()
 	end
 end
 
--- Lines: 724 to 751
+-- Lines 724-751
 function VRSubMenu:add_image(params)
 	if not params or not params.texture then
 		Application:error("[VRSubMenu:add_image] tried to add missing image!")
@@ -891,22 +899,22 @@ function VRSubMenu:add_image(params)
 	end
 end
 
--- Lines: 753 to 754
+-- Lines 753-755
 function VRSubMenu:id()
 	return self._id
 end
 
--- Lines: 757 to 759
+-- Lines 757-759
 function VRSubMenu:add_back_button()
 	self:add_button("back", "menu_vr_back", callback(self._parent, self._parent, "close_sub_menu"))
 end
 
--- Lines: 761 to 763
+-- Lines 761-763
 function VRSubMenu:set_enabled_clbk(clbk)
 	self._enabled_clbk = clbk
 end
 
--- Lines: 765 to 773
+-- Lines 765-773
 function VRSubMenu:set_enabled(enabled)
 	if self._enabled_clbk then
 		self:_enabled_clbk(enabled)
@@ -916,7 +924,7 @@ function VRSubMenu:set_enabled(enabled)
 	self._panel:set_visible(enabled)
 end
 
--- Lines: 775 to 783
+-- Lines 775-783
 function VRSubMenu:set_selected(index)
 	local prev_selection = self._selected
 
@@ -927,7 +935,7 @@ function VRSubMenu:set_selected(index)
 	end
 end
 
--- Lines: 785 to 795
+-- Lines 785-795
 function VRSubMenu:update_desc()
 	if not self._selected then
 		return
@@ -940,9 +948,10 @@ function VRSubMenu:update_desc()
 		self:add_desc(desc_data)
 	end
 end
+
 VRCustomizationGui = VRCustomizationGui or class(VRMenu)
 
--- Lines: 801 to 818
+-- Lines 801-818
 function VRCustomizationGui:init(is_start_menu)
 	VRCustomizationGui.super.init(self)
 
@@ -964,20 +973,22 @@ function VRCustomizationGui:init(is_start_menu)
 	end
 end
 
--- Lines: 820 to 823
+-- Lines 820-823
 function VRCustomizationGui:_calibrate_height()
 	local hmd_pos = VRManager:hmd_position()
 
 	managers.vr:set_setting("height", hmd_pos.z)
 end
 
--- Lines: 825 to 842
+-- Lines 825-842
 function VRCustomizationGui:initialize()
 	if not self._initialized then
 		self:_setup_gui()
 
 		if not managers.vr:has_set_height() then
-			managers.menu:show_vr_settings_dialog({ok_func = callback(self, self, "_calibrate_height")})
+			managers.menu:show_vr_settings_dialog({
+				ok_func = callback(self, self, "_calibrate_height")
+			})
 		end
 
 		self._ws:show()
@@ -986,13 +997,15 @@ function VRCustomizationGui:initialize()
 	end
 end
 
--- Lines: 844 to 897
+-- Lines 844-897
 function VRCustomizationGui:_setup_gui()
 	if alive(self._panel) then
 		self._panel:clear()
 	end
 
-	self._panel = self._ws:panel():panel({layer = BG_LAYER})
+	self._panel = self._ws:panel():panel({
+		layer = BG_LAYER
+	})
 	self._main_buttons_panel = self._panel:panel({
 		w = 342,
 		name = "main_buttons"
@@ -1048,7 +1061,7 @@ function VRCustomizationGui:_setup_gui()
 	self:_show_main()
 end
 
--- Lines: 899 to 907
+-- Lines 899-907
 function VRCustomizationGui:_hide_main()
 	self._main_buttons_panel:set_visible(false)
 
@@ -1059,7 +1072,7 @@ function VRCustomizationGui:_hide_main()
 	self:set_enabled(false)
 end
 
--- Lines: 909 to 925
+-- Lines 909-925
 function VRCustomizationGui:_show_main()
 	self._main_buttons_panel:set_visible(true)
 
@@ -1067,9 +1080,15 @@ function VRCustomizationGui:_show_main()
 	local movement_type = managers.vr:get_setting("movement_type") or "warp"
 
 	if managers.vr:is_oculus() then
-		image_key = movement_type == "warp_walk" and "touch_dash_walk" or "touch_dash"
+		if movement_type == "warp_walk" then
+			image_key = "touch_dash_walk"
+		else
+			image_key = "touch_dash"
+		end
+	elseif movement_type == "warp_walk" then
+		image_key = "vive_dash_walk"
 	else
-		image_key = movement_type == "warp_walk" and "vive_dash_walk" or "vive_dash"
+		image_key = "vive_dash"
 	end
 
 	for key, image in pairs(self._controls_images) do
@@ -1079,7 +1098,7 @@ function VRCustomizationGui:_show_main()
 	self:set_enabled(true)
 end
 
--- Lines: 927 to 1100
+-- Lines 927-1100
 function VRCustomizationGui:_setup_sub_menus()
 	self._sub_menus = {}
 	self._open_menu = nil
@@ -1104,7 +1123,9 @@ function VRCustomizationGui:_setup_sub_menus()
 
 					managers.vr:set_setting("height", hmd_pos.z)
 				end,
-				desc_data = {text_id = "menu_vr_height_desc"}
+				desc_data = {
+					text_id = "menu_vr_height_desc"
+				}
 			}
 		},
 		{
@@ -1113,7 +1134,9 @@ function VRCustomizationGui:_setup_sub_menus()
 			text_id = "menu_vr_belt_snap",
 			params = {
 				snap = 15,
-				desc_data = {text_id = "menu_vr_belt_snap_desc"}
+				desc_data = {
+					text_id = "menu_vr_belt_snap_desc"
+				}
 			}
 		},
 		{
@@ -1131,7 +1154,11 @@ function VRCustomizationGui:_setup_sub_menus()
 							belt:reset_grid()
 						end
 					end,
-					params = {desc_data = {text_id = "menu_vr_belt_layout_desc"}}
+					params = {
+						desc_data = {
+							text_id = "menu_vr_belt_layout_desc"
+						}
+					}
 				},
 				{
 					text = "menu_vr_belt_grid_mode",
@@ -1147,7 +1174,11 @@ function VRCustomizationGui:_setup_sub_menus()
 							btn:parent_menu():set_button_enabled("reset_belt", false)
 						end
 					end,
-					params = {desc_data = {text_id = "menu_vr_belt_layout_desc"}}
+					params = {
+						desc_data = {
+							text_id = "menu_vr_belt_layout_desc"
+						}
+					}
 				},
 				{
 					text = "menu_vr_belt_save_grid",
@@ -1165,7 +1196,11 @@ function VRCustomizationGui:_setup_sub_menus()
 							btn:parent_menu():set_button_enabled("reset_belt", true)
 						end
 					end,
-					params = {desc_data = {text_id = "menu_vr_belt_layout_desc"}}
+					params = {
+						desc_data = {
+							text_id = "menu_vr_belt_layout_desc"
+						}
+					}
 				}
 			}
 		}
@@ -1187,7 +1222,11 @@ function VRCustomizationGui:_setup_sub_menus()
 			setting = "auto_reload",
 			type = "button",
 			text_id = "menu_vr_auto_reload_text",
-			params = {desc_data = {text_id = "menu_vr_auto_reload_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_auto_reload_desc"
+				}
+			}
 		},
 		{
 			setting = "default_weapon_hand",
@@ -1201,7 +1240,9 @@ function VRCustomizationGui:_setup_sub_menus()
 				clbk = function (value)
 					managers.menu:set_primary_hand(value)
 				end,
-				desc_data = {text_id = "menu_vr_default_weapon_hand_desc"}
+				desc_data = {
+					text_id = "menu_vr_default_weapon_hand_desc"
+				}
 			}
 		},
 		{
@@ -1213,14 +1254,20 @@ function VRCustomizationGui:_setup_sub_menus()
 					"left",
 					"right"
 				},
-				desc_data = {text_id = "menu_vr_default_tablet_hand_desc"}
+				desc_data = {
+					text_id = "menu_vr_default_tablet_hand_desc"
+				}
 			}
 		},
 		{
 			setting = "weapon_precision_mode",
 			type = "button",
 			text_id = "menu_vr_weapon_precision_mode",
-			params = {desc_data = {text_id = "menu_vr_weapon_precision_mode_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_weapon_precision_mode_desc"
+				}
+			}
 		},
 		{
 			type = "multi_button",
@@ -1234,14 +1281,20 @@ function VRCustomizationGui:_setup_sub_menus()
 					45,
 					90
 				},
-				desc_data = {text_id = "menu_vr_rotate_player_angle_desc"}
+				desc_data = {
+					text_id = "menu_vr_rotate_player_angle_desc"
+				}
 			}
 		},
 		{
 			setting = "keep_items_in_hand",
 			type = "button",
 			text_id = "menu_vr_keep_items_in_hand",
-			params = {desc_data = {text_id = "menu_vr_keep_items_in_hand_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_keep_items_in_hand_desc"
+				}
+			}
 		}
 	})
 	self:add_settings_menu("controls", {
@@ -1270,7 +1323,9 @@ function VRCustomizationGui:_setup_sub_menus()
 			end,
 			params = {
 				snap = 5,
-				desc_data = {text_id = "menu_vr_warp_zone_size_desc"}
+				desc_data = {
+					text_id = "menu_vr_warp_zone_size_desc"
+				}
 			}
 		},
 		{
@@ -1289,7 +1344,11 @@ function VRCustomizationGui:_setup_sub_menus()
 			setting = "enable_dead_zone_warp",
 			type = "button",
 			text_id = "menu_vr_enable_dead_zone_warp",
-			params = {desc_data = {text_id = "menu_vr_enable_dead_zone_warp_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_enable_dead_zone_warp_desc"
+				}
+			}
 		},
 		{
 			setting = "autowarp_length",
@@ -1311,7 +1370,11 @@ function VRCustomizationGui:_setup_sub_menus()
 			setting = "grip_toggle",
 			type = "button",
 			text_id = "menu_vr_grip_toggle",
-			params = {desc_data = {text_id = "menu_vr_enable_grip_toggle_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_enable_grip_toggle_desc"
+				}
+			}
 		}
 	})
 	self:add_settings_menu("advanced", {
@@ -1319,7 +1382,11 @@ function VRCustomizationGui:_setup_sub_menus()
 			setting = "zipline_screen",
 			type = "button",
 			text_id = "menu_vr_zipline_screen",
-			params = {desc_data = {text_id = "menu_vr_zipline_screen_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_zipline_screen_desc"
+				}
+			}
 		},
 		{
 			setting = "fadeout_type",
@@ -1341,17 +1408,21 @@ function VRCustomizationGui:_setup_sub_menus()
 			setting = "collision_instant_teleport",
 			type = "button",
 			text_id = "menu_vr_collision_instant_teleport",
-			params = {desc_data = {text_id = "menu_vr_collision_instant_teleport_desc"}}
+			params = {
+				desc_data = {
+					text_id = "menu_vr_collision_instant_teleport_desc"
+				}
+			}
 		}
 	})
 end
 
--- Lines: 1102 to 1103
+-- Lines 1102-1104
 function VRCustomizationGui:sub_menu(id)
 	return self._sub_menus[id]
 end
 
--- Lines: 1106 to 1154
+-- Lines 1106-1154
 function VRCustomizationGui:add_settings_menu(id, settings, clbk)
 	local menu = VRSubMenu:new(self, self._panel, id)
 
@@ -1381,7 +1452,7 @@ function VRCustomizationGui:add_settings_menu(id, settings, clbk)
 
 	for _, setting in ipairs(settings) do
 		local visible = setting.visible == nil
-		visible = visible or type(setting.visible) == "function" and setting.visible() or not not setting.visible
+		visible = visible or (type(setting.visible) ~= "function" or setting.visible()) and not not setting.visible
 
 		if visible then
 			if setting.setting then
@@ -1403,7 +1474,7 @@ function VRCustomizationGui:add_settings_menu(id, settings, clbk)
 	self:add_menu_button(id)
 end
 
--- Lines: 1156 to 1162
+-- Lines 1156-1162
 function VRCustomizationGui:add_image_menu(id, params, clbk)
 	local menu = VRSubMenu:new(self, self._panel, id)
 
@@ -1415,7 +1486,7 @@ function VRCustomizationGui:add_image_menu(id, params, clbk)
 	self:add_menu_button(id)
 end
 
--- Lines: 1164 to 1174
+-- Lines 1164-1174
 function VRCustomizationGui:open_sub_menu(id)
 	self:close_sub_menu()
 	self:_hide_main()
@@ -1429,7 +1500,7 @@ function VRCustomizationGui:open_sub_menu(id)
 	self._open_menu:set_enabled(true)
 end
 
--- Lines: 1176 to 1183
+-- Lines 1176-1183
 function VRCustomizationGui:close_sub_menu()
 	if self._open_menu then
 		self._open_menu:set_enabled(false)
@@ -1440,7 +1511,7 @@ function VRCustomizationGui:close_sub_menu()
 	end
 end
 
--- Lines: 1185 to 1191
+-- Lines 1185-1191
 function VRCustomizationGui:add_menu_button(id)
 	local x = PADDING * 5
 	local last_y = self._buttons[#self._buttons] and self._buttons[#self._buttons].button:bottom() or self._title:bottom() + PADDING
@@ -1457,14 +1528,14 @@ function VRCustomizationGui:add_menu_button(id)
 	})
 end
 
--- Lines: 1193 to 1197
+-- Lines 1193-1197
 function VRCustomizationGui:update(t, dt)
 	if self._open_menu then
 		self._open_menu:update(t, dt)
 	end
 end
 
--- Lines: 1199 to 1209
+-- Lines 1199-1209
 function VRCustomizationGui:activate()
 	local clbks = {
 		mouse_move = callback(self, self, "mouse_moved"),
@@ -1479,14 +1550,14 @@ function VRCustomizationGui:activate()
 	self._active = true
 end
 
--- Lines: 1211 to 1214
+-- Lines 1211-1214
 function VRCustomizationGui:deactivate()
 	managers.mouse_pointer:remove_mouse(self._id)
 
 	self._active = false
 end
 
--- Lines: 1216 to 1226
+-- Lines 1216-1226
 function VRCustomizationGui:exit_menu()
 	for _, menu in pairs(self._sub_menus) do
 		menu:clear_objects()
@@ -1498,9 +1569,10 @@ function VRCustomizationGui:exit_menu()
 
 	self:_setup_gui()
 end
+
 VRBeltAdjuster = VRBeltAdjuster or class()
 
--- Lines: 1232 to 1290
+-- Lines 1232-1290
 function VRBeltAdjuster:init(scene, belt, params)
 	local offset = params.offset or Vector3()
 	local up = params.up or math.Z
@@ -1565,9 +1637,9 @@ function VRBeltAdjuster:init(scene, belt, params)
 	self._offset = offset
 
 	if params.horizontal then
-		self._center = (self._offset + Vector3(20, 0, 0)) - up * 5
+		self._center = self._offset + Vector3(20, 0, 0) - up * 5
 	else
-		self._center = (self._offset + Vector3(10, 0, 0)) - up * 12.25
+		self._center = self._offset + Vector3(10, 0, 0) - up * 12.25
 	end
 
 	self:set_help_state("inactive")
@@ -1577,36 +1649,36 @@ function VRBeltAdjuster:init(scene, belt, params)
 	self._save_func = params.save_func
 end
 
--- Lines: 1292 to 1294
+-- Lines 1292-1294
 function VRBeltAdjuster:destroy()
 	self._ws:gui():destroy_workspace(self._ws)
 end
 
--- Lines: 1296 to 1297
+-- Lines 1296-1298
 function VRBeltAdjuster:center()
 	return self._obj:position() + self._center:rotate_with(self._obj:rotation())
 end
 
--- Lines: 1300 to 1301
+-- Lines 1300-1302
 function VRBeltAdjuster:stationary()
 	return self._stationary
 end
 
--- Lines: 1304 to 1308
+-- Lines 1304-1308
 function VRBeltAdjuster:update(pos)
 	if self._update_func then
 		self._update_func(pos)
 	end
 end
 
--- Lines: 1310 to 1314
+-- Lines 1310-1314
 function VRBeltAdjuster:save()
 	if self._save_func then
 		self._save_func()
 	end
 end
 
--- Lines: 1316 to 1336
+-- Lines 1316-1336
 function VRBeltAdjuster:set_help_state(state)
 	if state == self._state then
 		return
@@ -1627,13 +1699,14 @@ function VRBeltAdjuster:set_help_state(state)
 	self._text:set_center_x(self._ws:panel():w() / 2)
 end
 
--- Lines: 1338 to 1340
+-- Lines 1338-1340
 function VRBeltAdjuster:set_visible(visible)
 	self._ws[visible and "show" or "hide"](self._ws)
 end
+
 VRBeltCustomization = VRBeltCustomization or class()
 
--- Lines: 1345 to 1424
+-- Lines 1345-1424
 function VRBeltCustomization:init(is_start_menu)
 	local scene = is_start_menu and World or MenuRoom
 	local player = managers.menu:player()
@@ -1726,7 +1799,7 @@ function VRBeltCustomization:init(is_start_menu)
 	self:set_mode("adjuster")
 end
 
--- Lines: 1426 to 1449
+-- Lines 1426-1449
 function VRBeltCustomization:set_back_button_enabled(hand_id, enabled)
 	if self._back_button_enabled == enabled then
 		return
@@ -1748,7 +1821,7 @@ function VRBeltCustomization:set_back_button_enabled(hand_id, enabled)
 	self._back_button_enabled = enabled
 end
 
--- Lines: 1451 to 1462
+-- Lines 1451-1462
 function VRBeltCustomization:reset()
 	managers.vr:reset_setting("belt_height_ratio")
 	managers.vr:reset_setting("belt_distance")
@@ -1763,17 +1836,19 @@ function VRBeltCustomization:reset()
 	HUDManagerVR.link_belt(self._ws, self._belt_unit)
 end
 
--- Lines: 1464 to 1466
+-- Lines 1464-1466
 function VRBeltCustomization:update_height()
 	self._height = managers.vr:get_setting("height")
 end
 
--- Lines: 1468 to 1484
+-- Lines 1468-1484
 function VRBeltCustomization:save_grid()
 	local belt_layout = clone(managers.vr:get_setting("belt_layout"))
 
 	for id in pairs(belt_layout) do
-		local new_pos = {self._belt:pos_on_grid(id)}
+		local new_pos = {
+			self._belt:pos_on_grid(id)
+		}
 		belt_layout[id] = new_pos
 	end
 
@@ -1782,20 +1857,22 @@ function VRBeltCustomization:save_grid()
 	local belt_box_sizes = clone(managers.vr:get_setting("belt_box_sizes"))
 
 	for id in pairs(belt_box_sizes) do
-		local new_size = {self._belt:grid_size(id)}
+		local new_size = {
+			self._belt:grid_size(id)
+		}
 		belt_box_sizes[id] = new_size
 	end
 
 	managers.vr:set_setting("belt_box_sizes", belt_box_sizes)
 end
 
--- Lines: 1486 to 1489
+-- Lines 1486-1489
 function VRBeltCustomization:reset_grid()
 	managers.vr:reset_setting("belt_layout")
 	managers.vr:reset_setting("belt_box_sizes")
 end
 
--- Lines: 1491 to 1511
+-- Lines 1491-1511
 function VRBeltCustomization:destroy()
 	self._ws:gui():destroy_workspace(self._ws)
 
@@ -1816,7 +1893,7 @@ function VRBeltCustomization:destroy()
 	World:delete_unit(self._belt_unit)
 end
 
--- Lines: 1513 to 1533
+-- Lines 1513-1533
 function VRBeltCustomization:set_mode(mode)
 	for _, adjuster in ipairs(self._adjusters) do
 		adjuster:set_visible(mode == "adjuster")
@@ -1841,12 +1918,12 @@ function VRBeltCustomization:set_mode(mode)
 	end
 end
 
--- Lines: 1535 to 1537
+-- Lines 1535-1537
 function VRBeltCustomization:_update_grid(t, dt)
 	self:__update_grid(t, dt)
 end
 
--- Lines: 1539 to 1621
+-- Lines 1539-1621
 function VRBeltCustomization:__update_grid(t, dt)
 	local player = managers.menu:player()
 	local hands = {
@@ -1884,7 +1961,9 @@ function VRBeltCustomization:__update_grid(t, dt)
 
 			if managers.menu:get_controller():get_input_pressed(interact_btn) and interaction then
 				self._current_interaction = interaction
-				self._prev_grid_pos = {self._belt:pos_on_grid(self._current_interaction)}
+				self._prev_grid_pos = {
+					self._belt:pos_on_grid(self._current_interaction)
+				}
 				self._grip_offset = self._belt:world_pos(self._current_interaction) - hand:position()
 
 				self._belt:set_alpha(self._belt_alpha + 0.4, self._current_interaction)
@@ -1914,8 +1993,10 @@ function VRBeltCustomization:__update_grid(t, dt)
 			if managers.menu:get_controller():get_input_pressed(interact_btn) then
 				self._sizing_hand_id = i
 				local size = self._belt:world_size(self._current_interaction)
-				self._sizing_grip_offset = ((self._belt:world_pos(self._current_interaction) + size) - self._grip_offset) - hand:position()
-				self._prev_grid_size = {self._belt:grid_size(self._current_interaction)}
+				self._sizing_grip_offset = self._belt:world_pos(self._current_interaction) + size - self._grip_offset - hand:position()
+				self._prev_grid_size = {
+					self._belt:grid_size(self._current_interaction)
+				}
 			end
 
 			local held = managers.menu:get_controller():get_input_bool(interact_btn)
@@ -1940,7 +2021,7 @@ function VRBeltCustomization:__update_grid(t, dt)
 	end
 end
 
--- Lines: 1623 to 1698
+-- Lines 1623-1698
 function VRBeltCustomization:_update_adjuster(t, dt)
 	local player = managers.menu:player()
 	local hands = {
@@ -2032,10 +2113,9 @@ function VRBeltCustomization:_update_adjuster(t, dt)
 	end
 end
 
--- Lines: 1700 to 1704
+-- Lines 1700-1704
 function VRBeltCustomization:update(t, dt)
 	if self._updator then
 		self:_updator(t, dt)
 	end
 end
-

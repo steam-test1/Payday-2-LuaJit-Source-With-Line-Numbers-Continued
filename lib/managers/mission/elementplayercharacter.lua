@@ -2,31 +2,35 @@ core:import("CoreMissionScriptElement")
 
 ElementPlayerCharacterTrigger = ElementPlayerCharacterTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementPlayerCharacterTrigger:init(...)
 	ElementPlayerCharacterTrigger.super.init(self, ...)
 end
 
--- Lines: 9 to 16
+-- Lines 9-16
 function ElementPlayerCharacterTrigger:on_script_activated()
 	ElementPlayerCharacterTrigger.super.on_script_activated(self)
 
 	local is_host = Network:is_server() or Global.game_settings.single_player
 
 	if is_host then
-		managers.criminals:add_listener(string.format("add_criminal_event_%s", tostring(self._id)), {"on_criminal_added"}, callback(self, self, "on_criminal_added"))
-		managers.criminals:add_listener(string.format("rmv_criminal_event_%s", tostring(self._id)), {"on_criminal_removed"}, callback(self, self, "on_criminal_removed"))
+		managers.criminals:add_listener(string.format("add_criminal_event_%s", tostring(self._id)), {
+			"on_criminal_added"
+		}, callback(self, self, "on_criminal_added"))
+		managers.criminals:add_listener(string.format("rmv_criminal_event_%s", tostring(self._id)), {
+			"on_criminal_removed"
+		}, callback(self, self, "on_criminal_removed"))
 	end
 end
 
--- Lines: 18 to 22
+-- Lines 18-22
 function ElementPlayerCharacterTrigger:on_criminal_added(name, unit, peer_id, ai)
 	if not self:value("trigger_on_left") and self:value("character") == name then
 		self:on_executed()
 	end
 end
 
--- Lines: 24 to 29
+-- Lines 24-29
 function ElementPlayerCharacterTrigger:on_criminal_removed(data)
 	local name = data.name
 
@@ -35,7 +39,7 @@ function ElementPlayerCharacterTrigger:on_criminal_removed(data)
 	end
 end
 
--- Lines: 31 to 36
+-- Lines 31-36
 function ElementPlayerCharacterTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -43,14 +47,15 @@ function ElementPlayerCharacterTrigger:on_executed(instigator)
 
 	ElementPlayerStateTrigger.super.on_executed(self, self._unit or instigator)
 end
+
 ElementPlayerCharacterFilter = ElementPlayerCharacterFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 42 to 44
+-- Lines 42-44
 function ElementPlayerCharacterFilter:init(...)
 	ElementPlayerCharacterFilter.super.init(self, ...)
 end
 
--- Lines: 46 to 51
+-- Lines 46-51
 function ElementPlayerCharacterFilter:on_script_activated()
 	ElementPlayerCharacterFilter.super.on_script_activated(self)
 
@@ -59,7 +64,7 @@ function ElementPlayerCharacterFilter:on_script_activated()
 	end
 end
 
--- Lines: 54 to 67
+-- Lines 53-67
 function ElementPlayerCharacterFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -75,7 +80,7 @@ function ElementPlayerCharacterFilter:on_executed(instigator)
 	ElementPlayerStateTrigger.super.on_executed(self, self._unit or instigator)
 end
 
--- Lines: 69 to 75
+-- Lines 69-75
 function ElementPlayerCharacterFilter:is_character_taken(instigator)
 	if self:value("check_instigator") then
 		return managers.criminals:character_name_by_unit(instigator) == self:value("character")
@@ -83,4 +88,3 @@ function ElementPlayerCharacterFilter:is_character_taken(instigator)
 		return managers.criminals:is_taken(self:value("character"))
 	end
 end
-

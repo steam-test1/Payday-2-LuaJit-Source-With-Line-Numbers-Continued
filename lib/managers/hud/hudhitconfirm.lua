@@ -1,6 +1,6 @@
 HUDHitConfirm = HUDHitConfirm or class()
 
--- Lines: 3 to 25
+-- Lines 3-25
 function HUDHitConfirm:init(hud)
 	self._hud_panel = hud.panel
 
@@ -43,25 +43,25 @@ function HUDHitConfirm:init(hud)
 	self._crit_confirm:set_center(self._hud_panel:w() / 2, self._hud_panel:h() / 2)
 end
 
--- Lines: 27 to 30
+-- Lines 27-30
 function HUDHitConfirm:on_hit_confirmed()
 	self._hit_confirm:stop()
 	self._hit_confirm:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
 end
 
--- Lines: 32 to 35
+-- Lines 32-35
 function HUDHitConfirm:on_headshot_confirmed()
 	self._hit_confirm:stop()
 	self._hit_confirm:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
 end
 
--- Lines: 37 to 40
+-- Lines 37-40
 function HUDHitConfirm:on_crit_confirmed()
 	self._crit_confirm:stop()
 	self._crit_confirm:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
 end
 
--- Lines: 42 to 53
+-- Lines 42-53
 function HUDHitConfirm:_animate_show(hint_confirm, done_cb, seconds)
 	hint_confirm:set_visible(true)
 	hint_confirm:set_alpha(1)
@@ -79,11 +79,10 @@ function HUDHitConfirm:_animate_show(hint_confirm, done_cb, seconds)
 	done_cb()
 end
 
--- Lines: 57 to 58
+-- Lines 56-58
 function HUDHitConfirm:show_done()
 end
 
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDHitConfirmVR")
 end
-

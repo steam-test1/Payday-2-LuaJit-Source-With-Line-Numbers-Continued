@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateAkimbo = PlayerHandStateAkimbo or class(PlayerHandState)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerHandStateAkimbo:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateAkimbo.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 22
+-- Lines 10-22
 function PlayerHandStateAkimbo:_link_weapon(weapon_unit)
 	if not alive(self._weapon_unit) then
 		self._weapon_unit = weapon_unit
@@ -24,7 +24,7 @@ function PlayerHandStateAkimbo:_link_weapon(weapon_unit)
 	end
 end
 
--- Lines: 24 to 31
+-- Lines 24-31
 function PlayerHandStateAkimbo:_unlink_weapon()
 	if alive(self._weapon_unit) then
 		self._weapon_unit:set_visible(false)
@@ -35,7 +35,7 @@ function PlayerHandStateAkimbo:_unlink_weapon()
 	end
 end
 
--- Lines: 33 to 64
+-- Lines 33-64
 function PlayerHandStateAkimbo:at_enter(prev_state)
 	PlayerHandStateAkimbo.super.at_enter(self, prev_state)
 
@@ -67,7 +67,7 @@ function PlayerHandStateAkimbo:at_enter(prev_state)
 	end
 end
 
--- Lines: 66 to 74
+-- Lines 66-74
 function PlayerHandStateAkimbo:at_exit(next_state)
 	self:hsm():exit_controller_state("akimbo")
 	self._hand_unit:melee():set_weapon_unit()
@@ -75,12 +75,12 @@ function PlayerHandStateAkimbo:at_exit(next_state)
 	PlayerHandStateAkimbo.super.at_exit(self, next_state)
 end
 
--- Lines: 76 to 78
+-- Lines 76-78
 function PlayerHandStateAkimbo:set_wanted_weapon_kick(amount)
 	self._wanted_weapon_kick = math.min((self._wanted_weapon_kick or 0) + amount * tweak_data.vr.weapon_kick.kick_mul, tweak_data.vr.weapon_kick.max_kick)
 end
 
--- Lines: 80 to 94
+-- Lines 80-94
 function PlayerHandStateAkimbo:update(t, dt)
 	if self._weapon_kick then
 		self._hand_unit:set_position(self:hsm():position() - self._hand_unit:rotation():y() * self._weapon_kick)
@@ -97,4 +97,3 @@ function PlayerHandStateAkimbo:update(t, dt)
 		end
 	end
 end
-

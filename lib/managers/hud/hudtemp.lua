@@ -1,6 +1,6 @@
 HUDTemp = HUDTemp or class()
 
--- Lines: 3 to 60
+-- Lines 3-60
 function HUDTemp:init(hud)
 	self._hud_panel = hud.panel
 
@@ -152,17 +152,19 @@ function HUDTemp:init(hud)
 	self._stamina_panel:set_center_y(self._temp_panel:center_y())
 end
 
--- Lines: 62 to 64
+-- Lines 62-64
 function HUDTemp:set_throw_bag_text()
-	self._temp_panel:child("throw_instruction"):set_text(utf8.to_upper(managers.localization:text("hud_instruct_throw_bag", {BTN_USE_ITEM = managers.localization:btn_macro("use_item")})))
+	self._temp_panel:child("throw_instruction"):set_text(utf8.to_upper(managers.localization:text("hud_instruct_throw_bag", {
+		BTN_USE_ITEM = managers.localization:btn_macro("use_item")
+	})))
 end
 
--- Lines: 66 to 67
+-- Lines 66-68
 function HUDTemp:_bag_panel_bottom()
 	return self._temp_panel:h() - managers.hud:teampanels_height()
 end
 
--- Lines: 70 to 91
+-- Lines 70-91
 function HUDTemp:show_carry_bag(carry_id, value)
 	local bag_panel = self._temp_panel:child("bag_panel")
 	local carry_data = tweak_data.carry[carry_id]
@@ -183,7 +185,7 @@ function HUDTemp:show_carry_bag(carry_id, value)
 	bag_panel:animate(callback(self, self, "_animate_show_bag_panel"))
 end
 
--- Lines: 93 to 99
+-- Lines 93-99
 function HUDTemp:hide_carry_bag()
 	local bag_panel = self._temp_panel:child("bag_panel")
 
@@ -192,7 +194,7 @@ function HUDTemp:hide_carry_bag()
 	bag_panel:animate(callback(self, self, "_animate_hide_bag_panel"))
 end
 
--- Lines: 102 to 115
+-- Lines 101-115
 function HUDTemp:_animate_hide_bag_panel(bag_panel)
 	local bag_text = self._bg_box:child("bag_text")
 
@@ -200,7 +202,7 @@ function HUDTemp:_animate_hide_bag_panel(bag_panel)
 	bag_text:animate(callback(self, self, "_animate_hide_text"))
 	wait(0.5)
 
-	-- Lines: 109 to 111
+	-- Lines 109-111
 	local function close_done()
 		bag_panel:set_visible(false)
 	end
@@ -208,7 +210,7 @@ function HUDTemp:_animate_hide_bag_panel(bag_panel)
 	self._bg_box:animate(callback(nil, _G, "HUDBGBox_animate_close_left"), close_done)
 end
 
--- Lines: 117 to 166
+-- Lines 117-166
 function HUDTemp:_animate_show_bag_panel(bag_panel)
 	local w = self._bag_panel_w
 	local h = self._bag_panel_h
@@ -220,7 +222,7 @@ function HUDTemp:_animate_show_bag_panel(bag_panel)
 	local center_y = bag_panel:center_y()
 	local bag_text = self._bg_box:child("bag_text")
 
-	-- Lines: 132 to 136
+	-- Lines 132-136
 	local function open_done()
 		bag_text:stop()
 		bag_text:set_visible(true)
@@ -251,7 +253,7 @@ function HUDTemp:_animate_show_bag_panel(bag_panel)
 	bag_panel:set_center_y(ecy)
 end
 
--- Lines: 168 to 232
+-- Lines 168-232
 function HUDTemp:_animate_show_bag_panel_old(bag_panel)
 	local w = self._bag_panel_w
 	local h = self._bag_panel_h
@@ -311,7 +313,7 @@ function HUDTemp:_animate_show_bag_panel_old(bag_panel)
 	bag_text:set_font_size(font_size)
 end
 
--- Lines: 234 to 245
+-- Lines 234-245
 function HUDTemp:_animate_show_text(text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T
@@ -327,7 +329,7 @@ function HUDTemp:_animate_show_text(text)
 	text:set_alpha(1)
 end
 
--- Lines: 247 to 260
+-- Lines 247-260
 function HUDTemp:_animate_hide_text(text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T
@@ -344,7 +346,7 @@ function HUDTemp:_animate_hide_text(text)
 	text:set_visible(false)
 end
 
--- Lines: 264 to 275
+-- Lines 264-275
 function HUDTemp:set_stamina_value(value)
 	self._curr_stamina = value
 
@@ -359,14 +361,14 @@ function HUDTemp:set_stamina_value(value)
 	end
 end
 
--- Lines: 277 to 281
+-- Lines 277-281
 function HUDTemp:set_max_stamina(value)
 	self._max_stamina = value
 
 	self._stamina_panel:child("stamina_threshold"):set_center_y(self._stamina_panel:h() - tweak_data.player.movement_state.stamina.MIN_STAMINA_THRESHOLD / math.max(1, self._max_stamina) * self._stamina_panel:h())
 end
 
--- Lines: 284 to 292
+-- Lines 284-292
 function HUDTemp:_animate_low_stamina(input_panel)
 	local low_stamina_bar = input_panel:child("low_stamina_bar")
 
@@ -382,4 +384,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDTempVR")
 end
-

@@ -3,14 +3,14 @@ require("lib/states/GameState")
 IngameMaskOffState = IngameMaskOffState or class(IngamePlayerBaseState)
 IngameMaskOffState.immortal = true
 
--- Lines: 6 to 10
+-- Lines 6-10
 function IngameMaskOffState:init(game_state_machine)
 	IngameMaskOffState.super.init(self, "ingame_mask_off", game_state_machine)
 
 	self._MASK_OFF_HUD = Idstring("guis/mask_off_hud")
 end
 
--- Lines: 12 to 43
+-- Lines 12-43
 function IngameMaskOffState:at_enter()
 	local players = managers.player:players()
 
@@ -42,7 +42,7 @@ function IngameMaskOffState:at_enter()
 	end
 end
 
--- Lines: 56 to 66
+-- Lines 45-66
 function IngameMaskOffState:at_exit()
 	local player = managers.player:player_unit()
 
@@ -55,18 +55,17 @@ function IngameMaskOffState:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 68 to 70
+-- Lines 68-70
 function IngameMaskOffState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 72 to 74
+-- Lines 72-74
 function IngameMaskOffState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 76 to 78
+-- Lines 76-78
 function IngameMaskOffState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
-

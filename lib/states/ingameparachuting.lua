@@ -2,12 +2,12 @@ require("lib/states/GameState")
 
 IngameParachuting = IngameParachuting or class(IngamePlayerBaseState)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function IngameParachuting:init(game_state_machine)
 	IngameParachuting.super.init(self, "ingame_parachuting", game_state_machine)
 end
 
--- Lines: 9 to 30
+-- Lines 9-30
 function IngameParachuting:at_enter()
 	local players = managers.player:players()
 
@@ -32,7 +32,7 @@ function IngameParachuting:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 33 to 44
+-- Lines 32-44
 function IngameParachuting:at_exit()
 	local player = managers.player:player_unit()
 
@@ -48,18 +48,17 @@ function IngameParachuting:at_exit()
 	unit:damage():run_sequence_simple("make_dynamic")
 end
 
--- Lines: 46 to 48
+-- Lines 46-48
 function IngameParachuting:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 50 to 52
+-- Lines 50-52
 function IngameParachuting:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function IngameParachuting:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
-

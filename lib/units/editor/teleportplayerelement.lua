@@ -1,6 +1,6 @@
 TeleportPlayerUnitElement = TeleportPlayerUnitElement or class(MissionElement)
 
--- Lines: 3 to 19
+-- Lines 3-19
 function TeleportPlayerUnitElement:init(unit)
 	TeleportPlayerUnitElement.super.init(self, unit)
 
@@ -19,7 +19,7 @@ function TeleportPlayerUnitElement:init(unit)
 	table.insert(self._save_values, "fade_out")
 end
 
--- Lines: 21 to 36
+-- Lines 21-36
 function TeleportPlayerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -46,4 +46,3 @@ function TeleportPlayerUnitElement:_build_panel(panel, panel_sizer)
 	})
 	self:_build_value_checkbox(panel, panel_sizer, "refill", "Refills the player's ammo and health after teleport")
 end
-

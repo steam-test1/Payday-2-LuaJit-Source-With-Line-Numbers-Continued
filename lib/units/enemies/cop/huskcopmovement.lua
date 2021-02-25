@@ -1,6 +1,6 @@
 HuskCopMovement = HuskCopMovement or class(CopMovement)
 
--- Lines: 3 to 8
+-- Lines 3-8
 function HuskCopMovement:init(unit)
 	CopMovement.init(self, unit)
 
@@ -8,17 +8,17 @@ function HuskCopMovement:init(unit)
 	self._m_host_stop_pos = mvector3.copy(self._m_pos)
 end
 
--- Lines: 12 to 15
+-- Lines 12-15
 function HuskCopMovement:_upd_actions(t)
 	CopMovement._upd_actions(self, t)
 	self:_chk_start_queued_action()
 end
 
--- Lines: 23 to 51
+-- Lines 19-51
 function HuskCopMovement:action_request(action_desc)
 	self:enable_update(false)
 
-	-- Lines: 26 to 30
+	-- Lines 26-31
 	local function _chk_would_interrupt(b_part)
 		if self._active_actions[1] and self._active_actions[1]:type() == "idle" then
 			return
@@ -48,7 +48,7 @@ function HuskCopMovement:action_request(action_desc)
 	end
 end
 
--- Lines: 55 to 71
+-- Lines 55-71
 function HuskCopMovement:chk_action_forbidden(action_desc)
 	local t = TimerManager:game():time()
 	local block_type = action_desc.block_type or action_desc.type
@@ -65,4 +65,3 @@ function HuskCopMovement:chk_action_forbidden(action_desc)
 		end
 	end
 end
-

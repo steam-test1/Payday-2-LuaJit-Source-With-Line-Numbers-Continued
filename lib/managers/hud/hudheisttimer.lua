@@ -1,6 +1,6 @@
 HUDHeistTimer = HUDHeistTimer or class()
 
--- Lines: 3 to 21
+-- Lines 3-21
 function HUDHeistTimer:init(hud, tweak_hud)
 	self._hud_panel = hud.panel
 
@@ -36,7 +36,7 @@ function HUDHeistTimer:init(hud, tweak_hud)
 	end
 end
 
--- Lines: 24 to 51
+-- Lines 23-51
 function HUDHeistTimer:set_time(time)
 	local inverted = false
 
@@ -62,12 +62,12 @@ function HUDHeistTimer:set_time(time)
 	self._timer_text:set_text(text)
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function HUDHeistTimer:modify_time(time)
 	self:set_time(self._last_time + time)
 end
 
--- Lines: 57 to 59
+-- Lines 57-59
 function HUDHeistTimer:reset()
 	self._last_time = 0
 end
@@ -75,4 +75,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDHeistTimerVR")
 end
-

@@ -2,7 +2,7 @@ TeamRelationElement = TeamRelationElement or class(MissionElement)
 TeamRelationElement.SAVE_UNIT_POSITION = false
 TeamRelationElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 18
+-- Lines 6-18
 function TeamRelationElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -17,7 +17,7 @@ function TeamRelationElement:init(unit)
 	table.insert(self._save_values, "mutual")
 end
 
--- Lines: 21 to 31
+-- Lines 21-31
 function TeamRelationElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -25,12 +25,15 @@ function TeamRelationElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_checkbox(panel, panel_sizer, "mutual")
-	self:_build_value_combobox(panel, panel_sizer, "team1", table.list_add({""}, tweak_data.levels:get_team_names_indexed()), "Select the team that will change attitude.")
-	self:_build_value_combobox(panel, panel_sizer, "team2", table.list_add({""}, tweak_data.levels:get_team_names_indexed()), "Select the team that will change attitude.")
+	self:_build_value_combobox(panel, panel_sizer, "team1", table.list_add({
+		""
+	}, tweak_data.levels:get_team_names_indexed()), "Select the team that will change attitude.")
+	self:_build_value_combobox(panel, panel_sizer, "team2", table.list_add({
+		""
+	}, tweak_data.levels:get_team_names_indexed()), "Select the team that will change attitude.")
 	self:_build_value_combobox(panel, panel_sizer, "relation", {
 		"friend",
 		"foe",
 		"neutral"
 	}, "Select the new relation.")
 end
-

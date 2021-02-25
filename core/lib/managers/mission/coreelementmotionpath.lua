@@ -3,17 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementMotionPathOperator = ElementMotionPathOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 8 to 10
+-- Lines 8-10
 function ElementMotionPathOperator:init(...)
 	ElementMotionPathOperator.super.init(self, ...)
 end
 
--- Lines: 12 to 14
+-- Lines 12-14
 function ElementMotionPathOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 16 to 49
+-- Lines 16-49
 function ElementMotionPathOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -45,14 +45,15 @@ function ElementMotionPathOperator:on_executed(instigator)
 
 	ElementMotionPathOperator.super.on_executed(self, instigator)
 end
+
 ElementMotionPathTrigger = ElementMotionPathTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 55 to 57
+-- Lines 55-57
 function ElementMotionPathTrigger:init(...)
 	ElementMotionPathTrigger.super.init(self, ...)
 end
 
--- Lines: 59 to 64
+-- Lines 59-64
 function ElementMotionPathTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -61,11 +62,11 @@ function ElementMotionPathTrigger:on_script_activated()
 	end
 end
 
--- Lines: 67 to 68
+-- Lines 66-68
 function ElementMotionPathTrigger:client_on_executed(...)
 end
 
--- Lines: 70 to 76
+-- Lines 70-76
 function ElementMotionPathTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -73,4 +74,3 @@ function ElementMotionPathTrigger:on_executed(instigator)
 
 	ElementMotionPathTrigger.super.on_executed(self, instigator)
 end
-

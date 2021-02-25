@@ -1,6 +1,6 @@
 QuickCsGrenade = QuickCsGrenade or class(GrenadeBase)
 
--- Lines: 5 to 11
+-- Lines 5-11
 function QuickCsGrenade:init(unit)
 	self._unit = unit
 	self._state = 0
@@ -9,7 +9,7 @@ function QuickCsGrenade:init(unit)
 	self:_setup_from_tweak_data()
 end
 
--- Lines: 13 to 21
+-- Lines 13-21
 function QuickCsGrenade:_setup_from_tweak_data()
 	local grenade_entry = self._tweak_projectile_entry or "cs_grenade_quick"
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -19,7 +19,7 @@ function QuickCsGrenade:_setup_from_tweak_data()
 	self._damage_per_tick = self._tweak_data.damage_per_tick or 0.75
 end
 
--- Lines: 23 to 50
+-- Lines 23-50
 function QuickCsGrenade:update(unit, t, dt)
 	if self._remove_t and self._remove_t < t then
 		self._unit:set_slot(0)
@@ -42,14 +42,14 @@ function QuickCsGrenade:update(unit, t, dt)
 
 			self:detonate()
 		end
-	elseif self._state == 3 and (not self._last_damage_tick or self._last_damage_tick + self._damage_tick_period < t) then
+	elseif self._state == 3 and (not self._last_damage_tick or t > self._last_damage_tick + self._damage_tick_period) then
 		self:_do_damage()
 
 		self._last_damage_tick = t
 	end
 end
 
--- Lines: 54 to 61
+-- Lines 54-61
 function QuickCsGrenade:activate(position, duration)
 	self._state = 1
 	self._timer = 0.5
@@ -59,27 +59,29 @@ function QuickCsGrenade:activate(position, duration)
 	self:_play_sound_and_effects()
 end
 
--- Lines: 65 to 68
+-- Lines 65-68
 function QuickCsGrenade:detonate()
 	self:_play_sound_and_effects()
 
 	self._remove_t = TimerManager:game():time() + self._duration
 end
 
--- Lines: 72 to 75
+-- Lines 72-75
 function QuickCsGrenade:preemptive_kill()
 	self._unit:sound_source():post_event("grenade_gas_stop")
 	self._unit:set_slot(0)
 end
 
--- Lines: 79 to 92
+-- Lines 79-92
 function QuickCsGrenade:_do_damage()
 	local player_unit = managers.player:player_unit()
 
 	if player_unit and mvector3.distance_sq(self._unit:position(), player_unit:position()) < self._tweak_data.radius * self._tweak_data.radius then
 		local attack_data = {
 			damage = self._damage_per_tick,
-			col_ray = {ray = math.UP}
+			col_ray = {
+				ray = math.UP
+			}
 		}
 
 		player_unit:character_damage():damage_killzone(attack_data)
@@ -92,7 +94,7 @@ function QuickCsGrenade:_do_damage()
 	end
 end
 
--- Lines: 96 to 125
+-- Lines 96-125
 function QuickCsGrenade:_play_sound_and_effects()
 	if self._state == 1 then
 		local sound_source = SoundDevice:create_source("grenade_fire_source")
@@ -127,7 +129,7 @@ function QuickCsGrenade:_play_sound_and_effects()
 	end
 end
 
--- Lines: 129 to 135
+-- Lines 129-135
 function QuickCsGrenade:destroy()
 	if self._smoke_effect then
 		World:effect_manager():fade_kill(self._smoke_effect)
@@ -135,4 +137,3 @@ function QuickCsGrenade:destroy()
 
 	managers.environment_controller:set_blurzone(self._unit:key(), 0)
 end
-

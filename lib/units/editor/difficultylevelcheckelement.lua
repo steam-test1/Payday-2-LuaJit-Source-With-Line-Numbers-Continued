@@ -1,6 +1,6 @@
 DifficultyLevelCheckElement = DifficultyLevelCheckElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function DifficultyLevelCheckElement:init(unit)
 	DifficultyLevelCheckElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function DifficultyLevelCheckElement:init(unit)
 	table.insert(self._save_values, "difficulty")
 end
 
--- Lines: 12 to 43
+-- Lines 12-43
 function DifficultyLevelCheckElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -46,4 +46,3 @@ function DifficultyLevelCheckElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

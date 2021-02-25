@@ -1,7 +1,7 @@
 FleePointElement = FleePointElement or class(MissionElement)
 FleePointElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 11
+-- Lines 5-11
 function FleePointElement:init(unit)
 	FleePointElement.super.init(self, unit)
 
@@ -10,7 +10,7 @@ function FleePointElement:init(unit)
 	table.insert(self._save_values, "functionality")
 end
 
--- Lines: 15 to 22
+-- Lines 15-22
 function FleePointElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -22,4 +22,3 @@ function FleePointElement:_build_panel(panel, panel_sizer)
 		"loot_drop"
 	}, "Select the functionality of the point")
 end
-

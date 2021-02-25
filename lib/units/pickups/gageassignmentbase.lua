@@ -1,13 +1,13 @@
 GageAssignmentBase = GageAssignmentBase or class(Pickup)
 
--- Lines: 3 to 8
+-- Lines 3-8
 function GageAssignmentBase:init(unit)
 	assert(managers.gage_assignment, "GageAssignmentManager not yet created!")
 	GageAssignmentBase.super.init(self, unit)
 	managers.gage_assignment:on_unit_spawned(unit)
 end
 
--- Lines: 10 to 30
+-- Lines 10-30
 function GageAssignmentBase:sync_pickup(peer)
 	if not alive(self._unit) then
 		return
@@ -32,7 +32,7 @@ function GageAssignmentBase:sync_pickup(peer)
 	end
 end
 
--- Lines: 32 to 46
+-- Lines 32-47
 function GageAssignmentBase:_pickup(unit)
 	if self._picked_up then
 		return
@@ -51,7 +51,7 @@ function GageAssignmentBase:_pickup(unit)
 	return true
 end
 
--- Lines: 49 to 55
+-- Lines 49-55
 function GageAssignmentBase:show_pickup_msg(peer_id)
 	local peer = managers.network:session() and managers.network:session():peer(peer_id or 1)
 
@@ -60,7 +60,7 @@ function GageAssignmentBase:show_pickup_msg(peer_id)
 	end
 end
 
--- Lines: 57 to 63
+-- Lines 57-63
 function GageAssignmentBase:sync_net_event(event_id)
 	if Network:is_client() then
 		local peer_id = event_id or 1
@@ -70,20 +70,19 @@ function GageAssignmentBase:sync_net_event(event_id)
 	end
 end
 
--- Lines: 65 to 66
+-- Lines 65-67
 function GageAssignmentBase:assignment()
 	return self._assignment
 end
 
--- Lines: 69 to 73
+-- Lines 69-73
 function GageAssignmentBase:delete_unit()
 	if alive(self._unit) then
 		self._unit:set_slot(0)
 	end
 end
 
--- Lines: 75 to 76
+-- Lines 75-77
 function GageAssignmentBase:interact_blocked()
 	return false
 end
-

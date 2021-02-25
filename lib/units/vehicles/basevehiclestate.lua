@@ -1,11 +1,11 @@
 BaseVehicleState = BaseVehicleState or class()
 
--- Lines: 11 to 13
+-- Lines 11-13
 function BaseVehicleState:init(unit)
 	self._unit = unit
 end
 
--- Lines: 17 to 23
+-- Lines 17-23
 function BaseVehicleState:update(t, dt)
 	self._unit:vehicle_driving():_wake_nearby_dynamics()
 	self._unit:vehicle_driving():_detect_npc_collisions()
@@ -14,15 +14,15 @@ function BaseVehicleState:update(t, dt)
 	self._unit:vehicle_driving():_play_sound_events(t, dt)
 end
 
--- Lines: 28 to 29
+-- Lines 27-29
 function BaseVehicleState:enter(state_data, enter_data)
 end
 
--- Lines: 34 to 35
+-- Lines 33-35
 function BaseVehicleState:exit(state_data)
 end
 
--- Lines: 40 to 67
+-- Lines 39-68
 function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 	local locator_name = locator:name()
 
@@ -53,14 +53,14 @@ function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 	return VehicleDrivingExt.INTERACT_INVALID
 end
 
--- Lines: 72 to 76
+-- Lines 72-76
 function BaseVehicleState:adjust_interactions()
 	if not self._unit:vehicle_driving():is_interaction_allowed() then
 		self:disable_interactions()
 	end
 end
 
--- Lines: 80 to 91
+-- Lines 80-91
 function BaseVehicleState:disable_interactions()
 	if self._unit:damage() and self._unit:damage():has_sequence(VehicleDrivingExt.INTERACT_ENTRY_ENABLED) then
 		self._unit:damage():run_sequence_simple(VehicleDrivingExt.INTERACT_ENTRY_DISABLED)
@@ -75,18 +75,17 @@ function BaseVehicleState:disable_interactions()
 	end
 end
 
--- Lines: 95 to 96
+-- Lines 95-97
 function BaseVehicleState:allow_exit()
 	return true
 end
 
--- Lines: 101 to 102
+-- Lines 101-103
 function BaseVehicleState:is_vulnerable()
 	return false
 end
 
--- Lines: 107 to 108
+-- Lines 107-109
 function BaseVehicleState:stop_vehicle()
 	return false
 end
-

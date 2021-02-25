@@ -1,28 +1,28 @@
 ModifierEnemyHealthAndDamageByWave = ModifierEnemyHealthAndDamageByWave or class(BaseModifier)
 ModifierEnemyHealthAndDamageByWave._type = "ModifierEnemyHealthAndDamageByWave"
 
--- Lines: 5 to 9
+-- Lines 5-9
 function ModifierEnemyHealthAndDamageByWave:init(data)
 	ModifierEnemyHealthAndDamageByWave.super.init(self, data)
 
 	self._waves = data.waves
 end
 
--- Lines: 11 to 13
+-- Lines 11-14
 function ModifierEnemyHealthAndDamageByWave:get_health_multiplier()
 	local current_wave = managers.skirmish:current_wave_number()
 
 	return self._waves[current_wave].health
 end
 
--- Lines: 16 to 18
+-- Lines 16-19
 function ModifierEnemyHealthAndDamageByWave:get_damage_multiplier()
 	local current_wave = managers.skirmish:current_wave_number()
 
 	return self._waves[current_wave].damage
 end
 
--- Lines: 21 to 34
+-- Lines 21-35
 function ModifierEnemyHealthAndDamageByWave:modify_value(id, value, ...)
 	if id == "PlayerDamage:TakeDamageBullet" then
 		return value * self:get_damage_multiplier()
@@ -39,4 +39,3 @@ function ModifierEnemyHealthAndDamageByWave:modify_value(id, value, ...)
 
 	return value
 end
-

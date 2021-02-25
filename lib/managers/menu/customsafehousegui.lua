@@ -1,6 +1,6 @@
 CustomSafehouseGui = CustomSafehouseGui or class(MenuGuiComponentGeneric)
 
--- Lines: 4 to 21
+-- Lines 4-21
 function CustomSafehouseGui:init(...)
 	self._in_game = Global.game_settings.is_playing
 
@@ -27,19 +27,21 @@ function CustomSafehouseGui:init(...)
 	end
 end
 
--- Lines: 23 to 26
+-- Lines 23-27
 function CustomSafehouseGui:_start_page_data()
-	local data = {topic_id = "menu_custom_safehouse"}
+	local data = {
+		topic_id = "menu_custom_safehouse"
+	}
 
 	return data
 end
 
--- Lines: 29 to 31
+-- Lines 29-31
 function CustomSafehouseGui:_setup(is_start_page, component_data)
 	CustomSafehouseGui.super._setup(self, is_start_page, self:_start_page_data())
 end
 
--- Lines: 33 to 51
+-- Lines 33-51
 function CustomSafehouseGui:populate_tabs_data(tabs_data)
 	if not self._in_game then
 		table.insert(tabs_data, {
@@ -53,4 +55,3 @@ function CustomSafehouseGui:populate_tabs_data(tabs_data)
 		page_class = "CustomSafehouseGuiPageTrophies"
 	})
 end
-

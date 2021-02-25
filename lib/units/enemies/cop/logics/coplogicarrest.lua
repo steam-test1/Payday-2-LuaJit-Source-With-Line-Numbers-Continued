@@ -3,13 +3,15 @@ CopLogicArrest.on_alert = CopLogicIdle.on_alert
 CopLogicArrest.on_intimidated = CopLogicIdle.on_intimidated
 CopLogicArrest.on_new_objective = CopLogicIdle.on_new_objective
 
--- Lines: 12 to 70
+-- Lines 12-70
 function CopLogicArrest.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
-	local my_data = {unit = data.unit}
+	local my_data = {
+		unit = data.unit
+	}
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.guard
 	my_data.arrest_targets = {}
@@ -53,7 +55,9 @@ function CopLogicArrest.enter(data, new_logic_name, enter_params)
 	end
 
 	CopLogicIdle._chk_has_old_action(data, my_data)
-	data.unit:brain():set_attention_settings({cbt = true})
+	data.unit:brain():set_attention_settings({
+		cbt = true
+	})
 
 	my_data.next_action_delay_t = data.t + math.lerp(2, 2.5, math.random())
 	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
@@ -63,7 +67,7 @@ function CopLogicArrest.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 74 to 110
+-- Lines 74-110
 function CopLogicArrest.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -104,7 +108,7 @@ function CopLogicArrest.exit(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 114 to 202
+-- Lines 114-202
 function CopLogicArrest.queued_update(data)
 	data.t = TimerManager:game():time()
 	local my_data = data.internal_data
@@ -188,7 +192,7 @@ function CopLogicArrest.queued_update(data)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines: 206 to 294
+-- Lines 206-294
 function CopLogicArrest._upd_advance(data, my_data, attention_obj, arrest_data)
 	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk")
 
@@ -276,7 +280,7 @@ function CopLogicArrest._upd_advance(data, my_data, attention_obj, arrest_data)
 	end
 end
 
--- Lines: 298 to 319
+-- Lines 298-319
 function CopLogicArrest._upd_cover(data)
 	local my_data = data.internal_data
 
@@ -304,7 +308,7 @@ function CopLogicArrest._upd_cover(data)
 	end
 end
 
--- Lines: 330 to 409
+-- Lines 323-409
 function CopLogicArrest._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -332,7 +336,9 @@ function CopLogicArrest._upd_enemy_detection(data)
 	end
 
 	if should_arrest and not my_data.arrest_targets[new_attention.u_key] then
-		my_data.arrest_targets[new_attention.u_key] = {attention_obj = new_attention}
+		my_data.arrest_targets[new_attention.u_key] = {
+			attention_obj = new_attention
+		}
 
 		managers.groupai:state():on_arrest_start(data.key, new_attention.u_key)
 	end
@@ -392,7 +398,7 @@ function CopLogicArrest._upd_enemy_detection(data)
 	end
 end
 
--- Lines: 413 to 453
+-- Lines 413-454
 function CopLogicArrest._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -437,7 +443,7 @@ function CopLogicArrest._chk_reaction_to_attention_object(data, attention_data, 
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
--- Lines: 458 to 491
+-- Lines 458-491
 function CopLogicArrest._verify_arrest_targets(data, my_data)
 	local all_attention_objects = data.detected_attention_objects
 	local arrest_targets = my_data.arrest_targets
@@ -452,7 +458,7 @@ function CopLogicArrest._verify_arrest_targets(data, my_data)
 		elseif arrest_data.intro_pos and mvector3.distance_sq(arrest_data.attention_obj.m_pos, arrest_data.intro_pos) > 28900 then
 			drop = true
 			penalty = true
-		elseif arrest_data.intro_t and record.assault_t and arrest_data.intro_t + 0.6 < record.assault_t then
+		elseif arrest_data.intro_t and record.assault_t and record.assault_t > arrest_data.intro_t + 0.6 then
 			drop = true
 			penalty = true
 		elseif record.status or data.t < record.arrest_timeout then
@@ -477,7 +483,7 @@ function CopLogicArrest._verify_arrest_targets(data, my_data)
 	end
 end
 
--- Lines: 495 to 521
+-- Lines 495-521
 function CopLogicArrest.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -508,7 +514,7 @@ function CopLogicArrest.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 525 to 543
+-- Lines 525-543
 function CopLogicArrest.damage_clbk(data, damage_info)
 	local my_data = data.internal_data
 
@@ -534,11 +540,11 @@ function CopLogicArrest.damage_clbk(data, damage_info)
 	end
 end
 
--- Lines: 547 to 548
+-- Lines 547-548
 function CopLogicArrest.on_detected_enemy_destroyed(data, enemy_unit)
 end
 
--- Lines: 552 to 556
+-- Lines 552-557
 function CopLogicArrest.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -547,7 +553,7 @@ function CopLogicArrest.is_available_for_assignment(data, objective)
 	return false
 end
 
--- Lines: 561 to 575
+-- Lines 561-575
 function CopLogicArrest.on_criminal_neutralized(data, criminal_key)
 	local record = managers.groupai:state():criminal_record(criminal_key)
 	local my_data = data.internal_data
@@ -564,7 +570,7 @@ function CopLogicArrest.on_criminal_neutralized(data, criminal_key)
 	end
 end
 
--- Lines: 579 to 597
+-- Lines 579-597
 function CopLogicArrest._call_the_police(data, my_data, paniced)
 	local action = {
 		variant = "arrest_call",
@@ -585,7 +591,7 @@ function CopLogicArrest._call_the_police(data, my_data, paniced)
 	CopLogicArrest._say_call_the_police(data, my_data)
 end
 
--- Lines: 602 to 741
+-- Lines 601-742
 function CopLogicArrest._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or CopLogicArrest._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -714,7 +720,7 @@ function CopLogicArrest._get_priority_attention(data, attention_objects, reactio
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines: 746 to 761
+-- Lines 746-761
 function CopLogicArrest._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		for path_id, path in pairs(data.pathing_results) do
@@ -734,7 +740,7 @@ function CopLogicArrest._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines: 765 to 786
+-- Lines 765-786
 function CopLogicArrest._cancel_advance(data, my_data)
 	if my_data.processing_path then
 		if data.active_searches[my_data.path_search_id] then
@@ -763,7 +769,7 @@ function CopLogicArrest._cancel_advance(data, my_data)
 	my_data.in_position = false
 end
 
--- Lines: 790 to 821
+-- Lines 790-822
 function CopLogicArrest._get_att_obj_close_pos(data, my_data)
 	local nav_manager = managers.navigation
 	local my_nav_tracker = data.unit:movement():nav_tracker()
@@ -780,7 +786,7 @@ function CopLogicArrest._get_att_obj_close_pos(data, my_data)
 	local my_dis = mvector3.distance(data.m_pos, att_obj_pos)
 	local optimal_dis = 150 + math.random() * 150
 
-	if optimal_dis * 0.8 < my_dis and my_dis < optimal_dis * 1.2 then
+	if my_dis > optimal_dis * 0.8 and my_dis < optimal_dis * 1.2 then
 		if destroy_att_nav_tracker then
 			nav_manager:destroy_nav_tracker(att_nav_tracker)
 		end
@@ -793,7 +799,7 @@ function CopLogicArrest._get_att_obj_close_pos(data, my_data)
 	return pos_on_wall
 end
 
--- Lines: 826 to 834
+-- Lines 826-834
 function CopLogicArrest._say_scary_stuff_discovered(data)
 	if not data.attention_obj then
 		return
@@ -805,7 +811,7 @@ function CopLogicArrest._say_scary_stuff_discovered(data)
 	end
 end
 
--- Lines: 839 to 852
+-- Lines 838-852
 function CopLogicArrest.death_clbk(data, damage_info)
 	if not alive(damage_info.attacker_unit) then
 		return
@@ -824,7 +830,7 @@ function CopLogicArrest.death_clbk(data, damage_info)
 	end
 end
 
--- Lines: 856 to 885
+-- Lines 856-885
 function CopLogicArrest._mark_call_in_event(data, my_data, attention_obj)
 	if not attention_obj then
 		return
@@ -856,7 +862,7 @@ function CopLogicArrest._mark_call_in_event(data, my_data, attention_obj)
 	end
 end
 
--- Lines: 889 to 899
+-- Lines 889-899
 function CopLogicArrest._chk_say_discovery(data, my_data, attention_obj)
 	if not attention_obj then
 		return
@@ -869,16 +875,16 @@ function CopLogicArrest._chk_say_discovery(data, my_data, attention_obj)
 	end
 end
 
--- Lines: 903 to 904
+-- Lines 903-904
 function CopLogicArrest._chk_say_approach(data, my_data, attention_obj)
 end
 
--- Lines: 908 to 910
+-- Lines 908-910
 function CopLogicArrest.on_police_call_success(data)
 	data.internal_data.called_the_police = true
 end
 
--- Lines: 914 to 933
+-- Lines 914-933
 function CopLogicArrest._say_call_the_police(data, my_data)
 	if data.SO_access_str == "taser" then
 		return
@@ -900,4 +906,3 @@ function CopLogicArrest._say_call_the_police(data, my_data)
 
 	data.unit:sound():say(blame_list[my_data.call_in_event] or "a23", true)
 end
-

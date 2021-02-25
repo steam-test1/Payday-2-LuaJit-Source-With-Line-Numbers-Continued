@@ -1,6 +1,6 @@
 TextureCorrectionTweakData = TextureCorrectionTweakData or class()
 
--- Lines: 4 to 29
+-- Lines 4-29
 function TextureCorrectionTweakData:init(hud_icons)
 	self:take_middle_128(hud_icons, "guis/dlcs/big_bank/textures/pd2/blackmarket/icons/mods/wpn_fps_ass_fal_g_01")
 	self:take_middle_128(hud_icons, "guis/dlcs/dlc_akm4/textures/pd2/blackmarket/icons/mods/wpn_fps_upg_m4_m_l5")
@@ -18,7 +18,7 @@ function TextureCorrectionTweakData:init(hud_icons)
 	self:take_middle_128(hud_icons, "guis/dlcs/gage_pack_assault/textures/pd2/blackmarket/icons/mods/wpn_fps_ass_famas_g_retro")
 end
 
--- Lines: 31 to 33
+-- Lines 31-33
 function TextureCorrectionTweakData:take_middle_128(hud_icons, str)
 	self:set(hud_icons, str, {
 		64,
@@ -28,11 +28,10 @@ function TextureCorrectionTweakData:take_middle_128(hud_icons, str)
 	})
 end
 
--- Lines: 35 to 37
+-- Lines 35-37
 function TextureCorrectionTweakData:set(hud_icons, str, rect)
 	hud_icons[str] = {
 		texture = str,
 		texture_rect = rect
 	}
 end
-

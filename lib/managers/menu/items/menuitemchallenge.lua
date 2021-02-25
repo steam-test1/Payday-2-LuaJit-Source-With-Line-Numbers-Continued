@@ -3,7 +3,7 @@ core:import("CoreMenuItem")
 MenuItemChallenge = MenuItemChallenge or class(CoreMenuItem.Item)
 MenuItemChallenge.TYPE = "challenge"
 
--- Lines: 6 to 12
+-- Lines 6-12
 function MenuItemChallenge:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -12,16 +12,20 @@ function MenuItemChallenge:init(data_node, parameters)
 	self._type = MenuItemChallenge.TYPE
 end
 
--- Lines: 16 to 86
+-- Lines 16-87
 function MenuItemChallenge:setup_gui(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local challenge_data = {
 		count = 0,
 		xp = 0
 	}
-	local progress_data = {amount = 0}
+	local progress_data = {
+		amount = 0
+	}
 	local chl_color = self:parameter("awarded") and tweak_data.menu.awarded_challenge_color or row_item.color
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.challenge_name = node:_text_item_part(row_item, row_item.gui_panel, node:_right_align())
 
 	row_item.challenge_name:set_layer(node.layers.items + 1)
@@ -66,7 +70,9 @@ function MenuItemChallenge:setup_gui(node, row_item)
 		w = node:_left_align(),
 		h = node._item_panel_parent:h()
 	})
-	local text = managers.localization:text("menu_reward_xp", {XP = managers.experience:cash_string(challenge_data.xp)})
+	local text = managers.localization:text("menu_reward_xp", {
+		XP = managers.experience:cash_string(challenge_data.xp)
+	})
 	row_item.reward_text = row_item.reward_panel:text({
 		vertical = "left",
 		align = "left",
@@ -109,7 +115,7 @@ function MenuItemChallenge:setup_gui(node, row_item)
 			},
 			x = node:_left_align() - bar_w + 2,
 			y = bg_bar:y() + 2,
-			w = ((safe_rect.width - node:_mid_align()) - 0) * progress_data.amount / challenge_data.count,
+			w = (safe_rect.width - node:_mid_align() - 0) * progress_data.amount / challenge_data.count,
 			h = bg_bar:h() - 4,
 			color = node.color,
 			layer = node.layers.items
@@ -139,7 +145,7 @@ function MenuItemChallenge:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 89 to 101
+-- Lines 89-102
 function MenuItemChallenge:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_info_panel:set_visible(true)
 	row_item.challenge_name:set_color(row_item.color)
@@ -159,7 +165,7 @@ function MenuItemChallenge:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 104 to 118
+-- Lines 104-119
 function MenuItemChallenge:fade_row_item(node, row_item)
 	local chl_color = self:parameter("awarded") and tweak_data.menu.awarded_challenge_color or row_item.color
 
@@ -180,9 +186,10 @@ function MenuItemChallenge:fade_row_item(node, row_item)
 
 	return true
 end
+
 local xl_pad = 64
 
--- Lines: 122 to 186
+-- Lines 122-186
 function MenuItemChallenge:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 
@@ -233,4 +240,3 @@ function MenuItemChallenge:_layout(node, row_item)
 	row_item.description_text:set_x(0)
 	row_item.description_text:set_top(row_item.reward_panel:bottom() + tweak_data.menu.info_padding)
 end
-

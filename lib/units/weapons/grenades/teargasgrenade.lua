@@ -1,6 +1,6 @@
 TearGasGrenade = TearGasGrenade or class()
 
--- Lines: 3 to 8
+-- Lines 3-8
 function TearGasGrenade:init(unit)
 	self._unit = unit
 	self.radius = 0
@@ -8,14 +8,14 @@ function TearGasGrenade:init(unit)
 	self.damage = 0
 end
 
--- Lines: 10 to 14
+-- Lines 10-14
 function TearGasGrenade:destroy()
 	if self._smoke_effect then
 		World:effect_manager():fade_kill(self._smoke_effect)
 	end
 end
 
--- Lines: 16 to 29
+-- Lines 16-29
 function TearGasGrenade:set_properties(props)
 	self.radius = props.radius or 0
 	self.duration = props.duration or 0
@@ -26,7 +26,7 @@ function TearGasGrenade:set_properties(props)
 	end
 end
 
--- Lines: 31 to 50
+-- Lines 31-50
 function TearGasGrenade:update(unit, t, dt)
 	if Network:is_server() and self._remove_t and self._remove_t < t then
 		self._unit:set_slot(0)
@@ -44,13 +44,15 @@ function TearGasGrenade:update(unit, t, dt)
 			player:character_damage():damage_killzone({
 				variant = "killzone",
 				damage = self.damage,
-				col_ray = {ray = math.UP}
+				col_ray = {
+					ray = math.UP
+				}
 			})
 		end
 	end
 end
 
--- Lines: 52 to 77
+-- Lines 52-77
 function TearGasGrenade:detonate()
 	local now = TimerManager:game():time()
 	self._remove_t = now + self.duration
@@ -76,4 +78,3 @@ function TearGasGrenade:detonate()
 		managers.network:session():send_to_peers("sync_tear_gas_grenade_detonate", self._unit)
 	end
 end
-

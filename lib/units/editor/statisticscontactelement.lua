@@ -2,7 +2,7 @@ StatisticsContactElement = StatisticsContactElement or class(MissionElement)
 StatisticsContactElement.SAVE_UNIT_POSITION = false
 StatisticsContactElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 21
+-- Lines 6-21
 function StatisticsContactElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -20,7 +20,7 @@ function StatisticsContactElement:init(unit)
 	table.insert(self._save_values, "required")
 end
 
--- Lines: 26 to 52
+-- Lines 26-52
 function StatisticsContactElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -58,4 +58,3 @@ function StatisticsContactElement:_build_panel(panel, panel_sizer)
 		min = 1
 	}, "Type the required amount that is needed.")
 end
-

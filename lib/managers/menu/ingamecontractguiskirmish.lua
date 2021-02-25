@@ -1,6 +1,6 @@
 IngameContractGuiSkirmish = IngameContractGuiSkirmish or class()
 
--- Lines: 3 to 112
+-- Lines 3-112
 function IngameContractGuiSkirmish:init(ws, node)
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
 	self._panel = ws:panel():panel({
@@ -8,7 +8,7 @@ function IngameContractGuiSkirmish:init(ws, node)
 		h = math.round(ws:panel():h() * 1)
 	})
 
-	self._panel:set_y((CoreMenuRenderer.Renderer.border_height + tweak_data.menu.pd2_large_font_size) - 5)
+	self._panel:set_y(CoreMenuRenderer.Renderer.border_height + tweak_data.menu.pd2_large_font_size - 5)
 	self._panel:grow(0, -(self._panel:y() + tweak_data.menu.pd2_medium_font_size))
 
 	self._node = node
@@ -86,7 +86,9 @@ function IngameContractGuiSkirmish:init(ws, node)
 	local current_ransom = managers.skirmish:current_ransom_amount()
 	local ransom_string = managers.experience:cash_string(math.round(current_ransom))
 	local ransom_text = FineText:new(text_panel, {
-		text = managers.localization:to_upper_text("menu_skirmish_ransom", {money = ransom_string}),
+		text = managers.localization:to_upper_text("menu_skirmish_ransom", {
+			money = ransom_string
+		}),
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_large_font_size,
 		color = tweak_data.screen_colors.text
@@ -107,7 +109,7 @@ function IngameContractGuiSkirmish:init(ws, node)
 			modifiers = managers.skirmish:weekly_modifiers(),
 			y = modifiers_title:bottom(),
 			w = self._panel:width() - padding * 2,
-			h = (ransom_text:top() - modifiers_title:bottom()) - padding
+			h = ransom_text:top() - modifiers_title:bottom() - padding
 		})
 	end
 
@@ -115,15 +117,17 @@ function IngameContractGuiSkirmish:init(ws, node)
 
 	self:_rec_round_object(self._panel)
 
-	self._sides = BoxGuiObject:new(self._panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self._sides = BoxGuiObject:new(self._panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 end
 
--- Lines: 114 to 122
+-- Lines 114-122
 function IngameContractGuiSkirmish:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -136,12 +140,12 @@ function IngameContractGuiSkirmish:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 124 to 126
+-- Lines 124-126
 function IngameContractGuiSkirmish:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines: 128 to 133
+-- Lines 128-133
 function IngameContractGuiSkirmish:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -150,7 +154,7 @@ function IngameContractGuiSkirmish:close()
 	end
 end
 
--- Lines: 135 to 140
+-- Lines 135-140
 function IngameContractGuiSkirmish:mouse_wheel_up(x, y)
 	if not self._modifier_list then
 		return
@@ -159,7 +163,7 @@ function IngameContractGuiSkirmish:mouse_wheel_up(x, y)
 	self._modifier_list:scroll(x, y, 1)
 end
 
--- Lines: 142 to 147
+-- Lines 142-147
 function IngameContractGuiSkirmish:mouse_wheel_down(x, y)
 	if not self._modifier_list then
 		return
@@ -167,4 +171,3 @@ function IngameContractGuiSkirmish:mouse_wheel_down(x, y)
 
 	self._modifier_list:scroll(x, y, -1)
 end
-

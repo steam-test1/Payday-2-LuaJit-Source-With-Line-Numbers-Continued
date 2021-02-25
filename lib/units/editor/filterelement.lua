@@ -1,6 +1,6 @@
 FilterUnitElement = FilterUnitElement or class(MissionElement)
 
--- Lines: 3 to 45
+-- Lines 3-45
 function FilterUnitElement:init(unit)
 	FilterUnitElement.super.init(self, unit)
 
@@ -39,13 +39,13 @@ function FilterUnitElement:init(unit)
 	table.insert(self._save_values, "mode_control")
 end
 
--- Lines: 47 to 50
+-- Lines 47-50
 function FilterUnitElement:post_init(...)
 	FilterUnitElement.super.post_init(self, ...)
 	self:_check_convertion()
 end
 
--- Lines: 53 to 65
+-- Lines 52-65
 function FilterUnitElement:_check_convertion()
 	if self._hed.difficulty_overkill_290 == nil then
 		self._hed.difficulty_overkill_290 = self._hed.difficulty_overkill_145
@@ -60,7 +60,7 @@ function FilterUnitElement:_check_convertion()
 	end
 end
 
--- Lines: 68 to 171
+-- Lines 68-171
 function FilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_check_convertion()
 	self:_create_panel()
@@ -231,4 +231,3 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	mode_sizer:add(mode_assault, 0, 0, "EXPAND")
 end
-

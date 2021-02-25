@@ -3,7 +3,7 @@ ModifierCloakerTearGas._type = "ModifierCloakerTearGas"
 ModifierCloakerTearGas.name_id = "none"
 ModifierCloakerTearGas.desc_id = "menu_cs_modifier_cloaker_tear_gas"
 
--- Lines: 7 to 21
+-- Lines 7-21
 function ModifierCloakerTearGas:OnEnemyDied(unit, damage_info)
 	if Network:is_client() then
 		return
@@ -20,4 +20,3 @@ function ModifierCloakerTearGas:OnEnemyDied(unit, damage_info)
 		grenade:base():detonate()
 	end
 end
-

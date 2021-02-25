@@ -1,6 +1,6 @@
 CoreXMLEditor = CoreXMLEditor or class()
 
--- Lines: 8 to 13
+-- Lines 3-13
 function CoreXMLEditor:init()
 	self._active_database = ProjectDatabase
 	self._current_prop = {}
@@ -9,28 +9,37 @@ function CoreXMLEditor:init()
 	self:check_news(true)
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function CoreXMLEditor:on_check_news()
 	self:check_news()
 end
 
--- Lines: 19 to 39
+-- Lines 19-39
 function CoreXMLEditor:check_news(new_only)
 	local news = nil
-	news = new_only and managers.news:get_news("xml_editor", self._main_frame_table._main_frame) or managers.news:get_old_news("xml_editor", self._main_frame_table._main_frame)
+
+	if new_only then
+		news = managers.news:get_news("xml_editor", self._main_frame_table._main_frame)
+	else
+		news = managers.news:get_old_news("xml_editor", self._main_frame_table._main_frame)
+	end
 
 	if news then
 		local str = nil
 
 		for _, n in ipairs(news) do
-			str = not str and n or str .. "\n" .. n
+			if not str then
+				str = n
+			else
+				str = str .. "\n" .. n
+			end
 		end
 
 		EWS:MessageDialog(self._main_frame_table._main_frame, str, "New Features!", "OK,ICON_INFORMATION"):show_modal()
 	end
 end
 
--- Lines: 41 to 51
+-- Lines 41-52
 function CoreXMLEditor:check_open()
 	if open_editor then
 		local frame = EWS:Frame("", Vector3(0, 0, 0), Vector3(0, 0, 0), "")
@@ -47,9 +56,11 @@ function CoreXMLEditor:check_open()
 	return false
 end
 
--- Lines: 54 to 114
+-- Lines 54-114
 function CoreXMLEditor:create_main_frame()
-	self._main_frame_table = {_main_frame = EWS:Frame("XML Editor", Vector3(-1, -1, 0), Vector3(1000, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)}
+	self._main_frame_table = {
+		_main_frame = EWS:Frame("XML Editor", Vector3(-1, -1, 0), Vector3(1000, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
+	}
 
 	self._main_frame_table._main_frame:set_icon(CoreEWS.image_path("xml_editor_16x16.png"))
 
@@ -99,7 +110,7 @@ function CoreXMLEditor:create_main_frame()
 	self._new_dialog = CoreXMLEditorNewDialog:new(self._main_frame_table._main_frame)
 end
 
--- Lines: 116 to 125
+-- Lines 116-125
 function CoreXMLEditor:on_set_db(data, event)
 	self._db_menu:set_checked("DB_PROJECT", false)
 	self._db_menu:set_checked("DB_CORE", false)
@@ -114,7 +125,7 @@ function CoreXMLEditor:on_set_db(data, event)
 	self._current_prop = {}
 end
 
--- Lines: 127 to 138
+-- Lines 127-138
 function CoreXMLEditor:on_new()
 	if self._main_frame_table._edit_text_ctrl:get_value() ~= "" and self._save_prev_dialog:show_modal() == "ID_YES" then
 		self:on_save()
@@ -129,12 +140,12 @@ function CoreXMLEditor:on_new()
 	self:update_title()
 end
 
--- Lines: 140 to 142
+-- Lines 140-142
 function CoreXMLEditor:on_open()
 	self._browse = CoreDBDialog:new("", self, self.openfile, self._active_database)
 end
 
--- Lines: 144 to 164
+-- Lines 144-164
 function CoreXMLEditor:on_save()
 	if not self._current_node or not self._current_entry then
 		self:on_save_as()
@@ -154,7 +165,7 @@ function CoreXMLEditor:on_save()
 	end
 end
 
--- Lines: 166 to 191
+-- Lines 166-191
 function CoreXMLEditor:on_save_as()
 	local test_node = Node("new_node")
 
@@ -183,7 +194,7 @@ function CoreXMLEditor:on_save_as()
 	end
 end
 
--- Lines: 193 to 212
+-- Lines 193-212
 function CoreXMLEditor:openfile()
 	local node = self._active_database:load_node(self._browse:get_value())
 
@@ -207,7 +218,7 @@ function CoreXMLEditor:openfile()
 	end
 end
 
--- Lines: 214 to 220
+-- Lines 214-220
 function CoreXMLEditor:update_title()
 	if self._current_entry and self._current_entry:valid() then
 		self._main_frame_table._main_frame:set_title(self._current_entry:name() .. " - XML Editor")
@@ -216,7 +227,7 @@ function CoreXMLEditor:update_title()
 	end
 end
 
--- Lines: 222 to 231
+-- Lines 222-231
 function CoreXMLEditor:update(t, dt)
 	if self._browse and self._browse:update(t, dt) then
 		self._main_frame_table._main_frame:set_focus()
@@ -225,20 +236,20 @@ function CoreXMLEditor:update(t, dt)
 	end
 end
 
--- Lines: 233 to 237
+-- Lines 233-237
 function CoreXMLEditor:set_position(newpos)
 	if self._main_frame_table and self._main_frame_table._main_frame then
 		self._main_frame_table._main_frame:set_position(newpos)
 	end
 end
 
--- Lines: 239 to 242
+-- Lines 239-242
 function CoreXMLEditor:on_close()
 	self:close()
 	managers.toolhub:close("XML Editor")
 end
 
--- Lines: 244 to 254
+-- Lines 244-254
 function CoreXMLEditor:destroy()
 	if self._main_frame_table and alive(self._main_frame_table._main_frame) then
 		self._main_frame_table._main_frame:destroy()
@@ -253,7 +264,7 @@ function CoreXMLEditor:destroy()
 	end
 end
 
--- Lines: 256 to 266
+-- Lines 256-266
 function CoreXMLEditor:close()
 	if self._main_frame_table and self._main_frame_table._main_frame then
 		self._main_frame_table._main_frame:destroy()
@@ -267,9 +278,10 @@ function CoreXMLEditor:close()
 		self._browse = nil
 	end
 end
+
 CoreXMLEditorNewDialog = CoreXMLEditorNewDialog or class()
 
--- Lines: 272 to 298
+-- Lines 272-298
 function CoreXMLEditorNewDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Create New Entry", "", Vector3(-1, -1, 0), Vector3(200, 86, 0), "CAPTION,SYSTEM_MENU")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -299,7 +311,7 @@ function CoreXMLEditorNewDialog:init(p)
 	self._dialog:set_sizer(box)
 end
 
--- Lines: 300 to 312
+-- Lines 300-313
 function CoreXMLEditorNewDialog:show_modal()
 	self._type_text_ctrl:set_value("[type]")
 	self._name_text_ctrl:set_value("[name]")
@@ -316,7 +328,7 @@ function CoreXMLEditorNewDialog:show_modal()
 	return self._return_val
 end
 
--- Lines: 315 to 320
+-- Lines 315-320
 function CoreXMLEditorNewDialog:on_set_button()
 	self._done = true
 	self._type = self._type_text_ctrl:get_value()
@@ -325,7 +337,7 @@ function CoreXMLEditorNewDialog:on_set_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 322 to 326
+-- Lines 322-326
 function CoreXMLEditorNewDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -333,8 +345,7 @@ function CoreXMLEditorNewDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
--- Lines: 328 to 329
+-- Lines 328-330
 function CoreXMLEditorNewDialog:get_value()
 	return self._type, self._name
 end
-

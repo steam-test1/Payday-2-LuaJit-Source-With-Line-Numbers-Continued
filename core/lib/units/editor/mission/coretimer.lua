@@ -1,19 +1,23 @@
 CoreTimerUnitElement = CoreTimerUnitElement or class(MissionElement)
 CoreTimerUnitElement.SAVE_UNIT_POSITION = false
 CoreTimerUnitElement.SAVE_UNIT_ROTATION = false
-CoreTimerUnitElement.INSTANCE_VAR_NAMES = {{
-	value = "timer",
-	type = "number"
-}}
-CoreTimerUnitElement.RANDOMS = {"timer"}
+CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
+	{
+		value = "timer",
+		type = "number"
+	}
+}
+CoreTimerUnitElement.RANDOMS = {
+	"timer"
+}
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
 
--- Lines: 9 to 11
+-- Lines 9-11
 function TimerUnitElement:init(...)
 	TimerUnitElement.super.init(self, ...)
 end
 
--- Lines: 13 to 23
+-- Lines 13-23
 function CoreTimerUnitElement:init(unit)
 	CoreTimerUnitElement.super.init(self, unit)
 
@@ -28,7 +32,7 @@ function CoreTimerUnitElement:init(unit)
 	table.insert(self._save_values, "digital_gui_unit_ids")
 end
 
--- Lines: 26 to 35
+-- Lines 26-35
 function CoreTimerUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -41,14 +45,14 @@ function CoreTimerUnitElement:layer_finished()
 	end
 end
 
--- Lines: 37 to 41
+-- Lines 37-41
 function CoreTimerUnitElement:load_unit(unit)
 	if unit then
 		self._digital_gui_units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 43 to 66
+-- Lines 43-66
 function CoreTimerUnitElement:update_selected()
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -78,7 +82,7 @@ function CoreTimerUnitElement:update_selected()
 	end
 end
 
--- Lines: 68 to 81
+-- Lines 68-81
 function CoreTimerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -97,7 +101,7 @@ function CoreTimerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 83 to 96
+-- Lines 83-96
 function CoreTimerUnitElement:draw_links_unselected(...)
 	CoreTimerUnitElement.super.draw_links_unselected(self, ...)
 
@@ -115,7 +119,7 @@ function CoreTimerUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 98 to 103
+-- Lines 98-103
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -128,7 +132,7 @@ function CoreTimerUnitElement:update_editing()
 	end
 end
 
--- Lines: 105 to 117
+-- Lines 105-117
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -147,26 +151,26 @@ function CoreTimerUnitElement:select_unit()
 	end
 end
 
--- Lines: 119 to 122
+-- Lines 119-122
 function CoreTimerUnitElement:_remove_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 124 to 127
+-- Lines 124-127
 function CoreTimerUnitElement:_add_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 129 to 131
+-- Lines 129-131
 function CoreTimerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 133 to 137
+-- Lines 133-138
 function CoreTimerUnitElement:_add_unit_filter(unit)
 	if self._digital_gui_units[unit:unit_data().unit_id] then
 		return false
@@ -175,12 +179,12 @@ function CoreTimerUnitElement:_add_unit_filter(unit)
 	return unit:digital_gui() and unit:digital_gui():is_timer()
 end
 
--- Lines: 140 to 141
+-- Lines 140-142
 function CoreTimerUnitElement:_remove_unit_filter(unit)
 	return self._digital_gui_units[unit:unit_data().unit_id]
 end
 
--- Lines: 144 to 158
+-- Lines 144-158
 function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -199,17 +203,22 @@ function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Specifies how long time (in seconds) to wait before execute")
 	self:_add_help_text("Creates a timer element. When the timer runs out, execute will be run. The timer element can be operated on using the logic_timer_operator")
 end
+
 CoreTimerOperatorUnitElement = CoreTimerOperatorUnitElement or class(MissionElement)
-CoreTimerOperatorUnitElement.RANDOMS = {"time"}
-CoreTimerOperatorUnitElement.LINK_ELEMENTS = {"elements"}
+CoreTimerOperatorUnitElement.RANDOMS = {
+	"time"
+}
+CoreTimerOperatorUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 TimerOperatorUnitElement = TimerOperatorUnitElement or class(CoreTimerOperatorUnitElement)
 
--- Lines: 168 to 170
+-- Lines 168-170
 function TimerOperatorUnitElement:init(...)
 	TimerOperatorUnitElement.super.init(self, ...)
 end
 
--- Lines: 172 to 182
+-- Lines 172-182
 function CoreTimerOperatorUnitElement:init(unit)
 	CoreTimerOperatorUnitElement.super.init(self, unit)
 
@@ -225,7 +234,7 @@ function CoreTimerOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 184 to 193
+-- Lines 184-193
 function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreTimerOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -245,17 +254,17 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines: 195 to 198
+-- Lines 195-198
 function CoreTimerOperatorUnitElement:get_links_to_unit(...)
 	CoreTimerOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 200 to 201
+-- Lines 200-201
 function CoreTimerOperatorUnitElement:update_editing()
 end
 
--- Lines: 203 to 217
+-- Lines 203-217
 function CoreTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -273,18 +282,20 @@ function CoreTimerOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 220 to 222
+-- Lines 220-222
 function CoreTimerOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 224 to 237
+-- Lines 224-237
 function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_timer/logic_timer"}
+	local names = {
+		"logic_timer/logic_timer"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "operation", {
@@ -302,16 +313,19 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 	}, "Amount of time to add, subtract or set to the timers.")
 	self:_add_help_text("This element can modify logic_timer element. Select timers to modify using insert and clicking on the elements.")
 end
+
 CoreTimerTriggerUnitElement = CoreTimerTriggerUnitElement or class(MissionElement)
-CoreTimerTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+CoreTimerTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 TimerTriggerUnitElement = TimerTriggerUnitElement or class(CoreTimerTriggerUnitElement)
 
--- Lines: 246 to 248
+-- Lines 246-248
 function TimerTriggerUnitElement:init(...)
 	TimerTriggerUnitElement.super.init(self, ...)
 end
 
--- Lines: 250 to 258
+-- Lines 250-258
 function CoreTimerTriggerUnitElement:init(unit)
 	CoreTimerTriggerUnitElement.super.init(self, unit)
 
@@ -322,7 +336,7 @@ function CoreTimerTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 260 to 269
+-- Lines 260-269
 function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreTimerTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -342,17 +356,17 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 271 to 274
+-- Lines 271-274
 function CoreTimerTriggerUnitElement:get_links_to_unit(...)
 	CoreTimerTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 276 to 277
+-- Lines 276-277
 function CoreTimerTriggerUnitElement:update_editing()
 end
 
--- Lines: 279 to 293
+-- Lines 279-293
 function CoreTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -370,18 +384,20 @@ function CoreTimerTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 296 to 298
+-- Lines 296-298
 function CoreTimerTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 300 to 312
+-- Lines 300-312
 function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_timer/logic_timer"}
+	local names = {
+		"logic_timer/logic_timer"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_number(panel, panel_sizer, "time", {
@@ -390,4 +406,3 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Specify how much time should be left on the timer to trigger.")
 	self:_add_help_text("This element is a trigger to logic_timer element.")
 end
-

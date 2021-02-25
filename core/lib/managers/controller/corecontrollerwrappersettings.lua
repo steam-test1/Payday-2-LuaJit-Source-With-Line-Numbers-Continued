@@ -2,7 +2,7 @@ core:module("CoreControllerWrapperSettings")
 
 ControllerWrapperSettings = ControllerWrapperSettings or class()
 
--- Lines: 5 to 92
+-- Lines 5-92
 function ControllerWrapperSettings:init(wrapper_type, node, core_setting, debug_path)
 	self._wrapper_type = wrapper_type
 	self._connection_list = {}
@@ -90,7 +90,7 @@ function ControllerWrapperSettings:init(wrapper_type, node, core_setting, debug_
 	self:validate()
 end
 
--- Lines: 94 to 113
+-- Lines 94-113
 function ControllerWrapperSettings:merge(setting, overwrite)
 	for name, connection in pairs(setting:get_connection_map()) do
 		if overwrite or not self._connection_map[name] then
@@ -111,7 +111,7 @@ function ControllerWrapperSettings:merge(setting, overwrite)
 	end
 end
 
--- Lines: 115 to 145
+-- Lines 115-145
 function ControllerWrapperSettings:validate()
 	for connection_name, editable_connection in pairs(self._editable_connection_map) do
 		local connection = self._connection_map[connection_name]
@@ -128,7 +128,12 @@ function ControllerWrapperSettings:validate()
 
 				if unselectable_input then
 					local invalid = nil
-					invalid = #input_name_list > 1 and not connection:get_any_input() and unselectable_input:get_multi() or unselectable_input:get_single()
+
+					if #input_name_list > 1 and not connection:get_any_input() then
+						invalid = unselectable_input:get_multi()
+					else
+						invalid = unselectable_input:get_single()
+					end
 
 					if invalid then
 						self._editable_connection_map[connection_name] = nil
@@ -141,14 +146,16 @@ function ControllerWrapperSettings:validate()
 	end
 end
 
--- Lines: 147 to 181
+-- Lines 147-181
 function ControllerWrapperSettings:populate_data(data)
 	local sub_data = {}
 	local connection_list = nil
 
 	for _, connection in pairs(self._connection_map) do
 		if not connection_list then
-			connection_list = {_meta = "connections"}
+			connection_list = {
+				_meta = "connections"
+			}
 
 			table.insert(sub_data, connection_list)
 		end
@@ -160,7 +167,9 @@ function ControllerWrapperSettings:populate_data(data)
 
 	for _, editable in pairs(self._editable_connection_map) do
 		if not editable_list then
-			editable_list = {_meta = "editable"}
+			editable_list = {
+				_meta = "editable"
+			}
 
 			table.insert(sub_data, editable_list)
 		end
@@ -172,7 +181,9 @@ function ControllerWrapperSettings:populate_data(data)
 
 	for _, unselectable in pairs(self._unselectable_input_map) do
 		if not unselectable_list then
-			unselectable_list = {_meta = "unselectable"}
+			unselectable_list = {
+				_meta = "unselectable"
+			}
 
 			table.insert(sub_data, unselectable_list)
 		end
@@ -183,64 +194,64 @@ function ControllerWrapperSettings:populate_data(data)
 	data[self._wrapper_type] = sub_data
 end
 
--- Lines: 183 to 184
+-- Lines 183-185
 function ControllerWrapperSettings:wrapper_type()
 	return self._wrapper_type
 end
 
--- Lines: 187 to 188
+-- Lines 187-189
 function ControllerWrapperSettings:get_connection_list()
 	return self._connection_list
 end
 
--- Lines: 191 to 192
+-- Lines 191-193
 function ControllerWrapperSettings:get_connection_map()
 	return self._connection_map
 end
 
--- Lines: 195 to 196
+-- Lines 195-197
 function ControllerWrapperSettings:get_connection(name)
 	return self._connection_map[name]
 end
 
--- Lines: 199 to 202
+-- Lines 199-202
 function ControllerWrapperSettings:set_connection(name, connection)
 	self._connection_map[name] = connection
 
 	table.insert(self._connection_list, name)
 end
 
--- Lines: 204 to 205
+-- Lines 204-206
 function ControllerWrapperSettings:get_editable_connection_map()
 	return self._editable_connection_map
 end
 
--- Lines: 208 to 209
+-- Lines 208-210
 function ControllerWrapperSettings:get_editable_connection(name)
 	return self._editable_connection_map[name]
 end
 
--- Lines: 212 to 214
+-- Lines 212-214
 function ControllerWrapperSettings:set_editable_connection(name, editable)
 	self._editable_connection_map[name] = editable
 end
 
--- Lines: 216 to 217
+-- Lines 216-218
 function ControllerWrapperSettings:get_unselectable_input_map()
 	return self._unselectable_input_map
 end
 
--- Lines: 220 to 221
+-- Lines 220-222
 function ControllerWrapperSettings:get_unselectable_input(input_name)
 	return self._unselectable_input_map[input_name]
 end
 
--- Lines: 224 to 226
+-- Lines 224-226
 function ControllerWrapperSettings:set_unselectable_input(input_name, unselectable)
 	self._unselectable_input_map[input_name] = unselectable
 end
 
--- Lines: 228 to 234
+-- Lines 228-234
 function ControllerWrapperSettings:get_origin(debug_path)
 	if debug_path then
 		return string.format("[Controller][File: %s]", tostring(debug_path))
@@ -248,6 +259,7 @@ function ControllerWrapperSettings:get_origin(debug_path)
 		return "[Controller]"
 	end
 end
+
 ControllerWrapperConnection = ControllerWrapperConnection or class()
 ControllerWrapperConnection.TYPE = "generic"
 ControllerWrapperConnection.DEFAULT_MIN_SRC_RANGE = 0
@@ -257,7 +269,7 @@ ControllerWrapperConnection.DEFAULT_MAX_DEST_RANGE = 1
 ControllerWrapperConnection.DEFAULT_CONNECT_SRC_TYPE = "button"
 ControllerWrapperConnection.DEFAULT_CONNECT_DEST_TYPE = "button"
 
--- Lines: 254 to 306
+-- Lines 247-306
 function ControllerWrapperConnection:init(node)
 	if node then
 		self._name = node.name
@@ -315,17 +327,17 @@ function ControllerWrapperConnection:init(node)
 	end
 end
 
--- Lines: 308 to 310
+-- Lines 308-310
 function ControllerWrapperConnection:set_name(name)
 	self._name = name
 end
 
--- Lines: 312 to 313
+-- Lines 312-314
 function ControllerWrapperConnection:get_name()
 	return self._name
 end
 
--- Lines: 316 to 322
+-- Lines 316-322
 function ControllerWrapperConnection:set_input_name_list(input_name_list)
 	if input_name_list and next(input_name_list) then
 		self._input_name_list = input_name_list
@@ -334,22 +346,22 @@ function ControllerWrapperConnection:set_input_name_list(input_name_list)
 	end
 end
 
--- Lines: 324 to 325
+-- Lines 324-326
 function ControllerWrapperConnection:get_input_name_list()
 	return self._input_name_list or {}
 end
 
--- Lines: 328 to 329
+-- Lines 328-330
 function ControllerWrapperConnection:get_controller_id()
 	return self._controller_id
 end
 
--- Lines: 332 to 334
+-- Lines 332-334
 function ControllerWrapperConnection:set_controller_id(controller_id)
 	self._controller_id = controller_id
 end
 
--- Lines: 336 to 342
+-- Lines 336-342
 function ControllerWrapperConnection:set_debug(debug)
 	if debug then
 		self._debug = true
@@ -358,12 +370,12 @@ function ControllerWrapperConnection:set_debug(debug)
 	end
 end
 
--- Lines: 344 to 345
+-- Lines 344-346
 function ControllerWrapperConnection:get_debug()
 	return self._debug
 end
 
--- Lines: 348 to 354
+-- Lines 348-354
 function ControllerWrapperConnection:set_enabled(enabled)
 	if not enabled then
 		self._disabled = true
@@ -372,12 +384,12 @@ function ControllerWrapperConnection:set_enabled(enabled)
 	end
 end
 
--- Lines: 356 to 357
+-- Lines 356-358
 function ControllerWrapperConnection:get_enabled()
 	return not self._disabled
 end
 
--- Lines: 360 to 366
+-- Lines 360-366
 function ControllerWrapperConnection:set_any_input(any_input)
 	if not any_input then
 		self._single_input = true
@@ -386,12 +398,12 @@ function ControllerWrapperConnection:set_any_input(any_input)
 	end
 end
 
--- Lines: 368 to 369
+-- Lines 368-370
 function ControllerWrapperConnection:get_any_input()
 	return not self._single_input
 end
 
--- Lines: 372 to 378
+-- Lines 372-378
 function ControllerWrapperConnection:set_delay(delay)
 	if self._delay ~= 0 then
 		self._delay = delay
@@ -400,12 +412,12 @@ function ControllerWrapperConnection:set_delay(delay)
 	end
 end
 
--- Lines: 380 to 381
+-- Lines 380-382
 function ControllerWrapperConnection:get_delay()
 	return self._delay or 0
 end
 
--- Lines: 384 to 390
+-- Lines 384-390
 function ControllerWrapperConnection:set_delay_connection_list(delay_connection_list)
 	if self._delay_connection_list and next(self._delay_connection_list) then
 		self._delay_connection_list = delay_connection_list
@@ -414,12 +426,12 @@ function ControllerWrapperConnection:set_delay_connection_list(delay_connection_
 	end
 end
 
--- Lines: 392 to 393
+-- Lines 392-394
 function ControllerWrapperConnection:get_delay_connection_list()
 	return self._delay_connection_list or {}
 end
 
--- Lines: 396 to 420
+-- Lines 396-420
 function ControllerWrapperConnection:set_range(min_src, max_src, min_dest, max_dest)
 	if min_src ~= self.DEFAULT_MIN_SRC_RANGE then
 		self._min_src_range = min_src
@@ -446,12 +458,12 @@ function ControllerWrapperConnection:set_range(min_src, max_src, min_dest, max_d
 	end
 end
 
--- Lines: 422 to 426
+-- Lines 422-427
 function ControllerWrapperConnection:get_range()
 	return self._min_src_range or self.DEFAULT_MIN_SRC_RANGE, self._max_src_range or self.DEFAULT_MAX_SRC_RANGE, self._min_dest_range or self.DEFAULT_MIN_DEST_RANGE, self._max_dest_range or self.DEFAULT_MAX_DEST_RANGE
 end
 
--- Lines: 429 to 435
+-- Lines 429-435
 function ControllerWrapperConnection:set_connect_src_type(connect_src_type)
 	if self._connect_src_type ~= self.DEFAULT_CONNECT_SRC_TYPE then
 		self._connect_src_type = connect_src_type
@@ -460,12 +472,12 @@ function ControllerWrapperConnection:set_connect_src_type(connect_src_type)
 	end
 end
 
--- Lines: 437 to 438
+-- Lines 437-439
 function ControllerWrapperConnection:get_connect_src_type()
 	return self._connect_src_type or self.DEFAULT_CONNECT_SRC_TYPE
 end
 
--- Lines: 441 to 447
+-- Lines 441-447
 function ControllerWrapperConnection:set_connect_dest_type(connect_dest_type)
 	if self._connect_dest_type ~= self.DEFAULT_CONNECT_DEST_TYPE then
 		self._connect_dest_type = connect_dest_type
@@ -474,14 +486,16 @@ function ControllerWrapperConnection:set_connect_dest_type(connect_dest_type)
 	end
 end
 
--- Lines: 449 to 450
+-- Lines 449-451
 function ControllerWrapperConnection:get_connect_dest_type()
 	return self._connect_dest_type or self.DEFAULT_CONNECT_DEST_TYPE
 end
 
--- Lines: 453 to 465
+-- Lines 453-465
 function ControllerWrapperConnection:populate_data(data)
-	local sub_data = {_meta = self.TYPE}
+	local sub_data = {
+		_meta = self.TYPE
+	}
 
 	self:populate_data_attributes(sub_data)
 
@@ -494,7 +508,7 @@ function ControllerWrapperConnection:populate_data(data)
 	table.insert(data, sub_data)
 end
 
--- Lines: 467 to 501
+-- Lines 467-501
 function ControllerWrapperConnection:populate_data_attributes(sub_data)
 	sub_data.name = self._name
 	sub_data.controller = self._controller_id
@@ -531,27 +545,29 @@ function ControllerWrapperConnection:populate_data_attributes(sub_data)
 	end
 end
 
--- Lines: 503 to 504
+-- Lines 503-505
 function ControllerWrapperConnection:get_unique()
 	return self._unique
 end
 
--- Lines: 507 to 508
+-- Lines 507-509
 function ControllerWrapperConnection:__tostring(additional_info)
 	return string.format("[Controller][Connection][Type: %s, Name: %s, Input: %s, Controller: %s, Debug: %s, Enabled: %s, Any input: %s, Delay: %s%s]", tostring(self.TYPE), tostring(self._name), self._input_name_list and table.concat_map(self._input_name_list, true, "N/A") or "", tostring(self._controller_id), tostring(self._debug), tostring(not self._disabled), tostring(not self._single_input), tostring(self._delay), tostring(additional_info or ""))
 end
+
 ControllerWrapperButton = ControllerWrapperButton or class(ControllerWrapperConnection)
 ControllerWrapperButton.TYPE = "button"
 
--- Lines: 516 to 518
+-- Lines 516-518
 function ControllerWrapperButton:init(node)
 	ControllerWrapperButton.super.init(self, node)
 end
 
--- Lines: 520 to 521
+-- Lines 520-522
 function ControllerWrapperButton:__tostring(additional_info)
 	return ControllerWrapperConnection.__tostring(self, additional_info)
 end
+
 ControllerWrapperAxis = ControllerWrapperAxis or class(ControllerWrapperConnection)
 ControllerWrapperAxis.TYPE = "axis"
 ControllerWrapperAxis.IS_AXIS = true
@@ -563,7 +579,7 @@ ControllerWrapperAxis.DEFAULT_CONNECT_SRC_TYPE = "axis"
 ControllerWrapperAxis.DEFAULT_CONNECT_DEST_TYPE = "axis"
 ControllerWrapperAxis.ONE_VECTOR = Vector3(1, 1, 1)
 
--- Lines: 537 to 581
+-- Lines 537-581
 function ControllerWrapperAxis:init(node)
 	ControllerWrapperAxis.super.init(self, node)
 
@@ -617,7 +633,7 @@ function ControllerWrapperAxis:init(node)
 	end
 end
 
--- Lines: 583 to 601
+-- Lines 583-601
 function ControllerWrapperAxis:read_axis_btns(node)
 	for _, child in ipairs(node) do
 		local child_name = child._meta
@@ -643,7 +659,7 @@ function ControllerWrapperAxis:read_axis_btns(node)
 	end
 end
 
--- Lines: 603 to 617
+-- Lines 603-617
 function ControllerWrapperAxis:print_output(output, indent)
 	output:print(string.rep("\t", indent) .. "<" .. self.TYPE .. self:get_output_attributes() .. "")
 
@@ -660,7 +676,7 @@ function ControllerWrapperAxis:print_output(output, indent)
 	end
 end
 
--- Lines: 618 to 626
+-- Lines 618-626
 function ControllerWrapperAxis:print_output_axis_btns(output, indent)
 	for btn, con in pairs(self._btn_connections) do
 		if con.type == "button" then
@@ -671,67 +687,67 @@ function ControllerWrapperAxis:print_output_axis_btns(output, indent)
 	end
 end
 
--- Lines: 628 to 630
+-- Lines 628-630
 function ControllerWrapperAxis:set_multiplier(multiplier)
 	self._multiplier = multiplier or self.ONE_VECTOR
 end
 
--- Lines: 632 to 633
+-- Lines 632-634
 function ControllerWrapperAxis:get_multiplier()
 	return self._multiplier
 end
 
--- Lines: 636 to 638
+-- Lines 636-638
 function ControllerWrapperAxis:set_lerp(lerp)
 	self._lerp = lerp and math.clamp(lerp, 0, 1)
 end
 
--- Lines: 640 to 641
+-- Lines 640-642
 function ControllerWrapperAxis:get_lerp()
 	return self._lerp
 end
 
--- Lines: 644 to 646
+-- Lines 644-646
 function ControllerWrapperAxis:set_init_lerp_axis(init_lerp_axis)
 	self._init_lerp_axis = init_lerp_axis
 end
 
--- Lines: 648 to 649
+-- Lines 648-650
 function ControllerWrapperAxis:get_init_lerp_axis()
 	return self._init_lerp_axis
 end
 
--- Lines: 652 to 654
+-- Lines 652-654
 function ControllerWrapperAxis:set_pad_bottom(pad_bottom)
 	self._pad_bottom = pad_bottom and math.clamp(pad_bottom, 0, 1)
 end
 
--- Lines: 656 to 657
+-- Lines 656-658
 function ControllerWrapperAxis:get_pad_bottom()
 	return self._pad_bottom
 end
 
--- Lines: 660 to 662
+-- Lines 660-662
 function ControllerWrapperAxis:set_pad_top(pad_top)
 	self._pad_top = pad_top and math.clamp(pad_top, 0, 1)
 end
 
--- Lines: 664 to 665
+-- Lines 664-666
 function ControllerWrapperAxis:get_pad_top()
 	return self._pad_top
 end
 
--- Lines: 668 to 670
+-- Lines 668-670
 function ControllerWrapperAxis:set_soft_top(soft_top)
 	self._soft_top = soft_top and math.clamp(soft_top, 0, 1)
 end
 
--- Lines: 672 to 673
+-- Lines 672-674
 function ControllerWrapperAxis:get_soft_top()
 	return self._soft_top
 end
 
--- Lines: 676 to 682
+-- Lines 676-682
 function ControllerWrapperAxis:set_no_limit(no_limit)
 	if no_limit then
 		self._no_limit = true
@@ -740,28 +756,28 @@ function ControllerWrapperAxis:set_no_limit(no_limit)
 	end
 end
 
--- Lines: 684 to 685
+-- Lines 684-686
 function ControllerWrapperAxis:get_no_limit()
 	return self._no_limit
 end
 
--- Lines: 688 to 694
+-- Lines 688-694
 function ControllerWrapperAxis:set_inversion(inversion)
 	self._inversion_unmodified = inversion or self.ONE_VECTOR
 	self._inversion = Vector3(self._inversion_unmodified.x * self._INVERSION_MODIFIER.x, self._inversion_unmodified.y * self._INVERSION_MODIFIER.y, self._inversion_unmodified.z * self._INVERSION_MODIFIER.z)
 end
 
--- Lines: 696 to 697
+-- Lines 696-698
 function ControllerWrapperAxis:get_inversion_unmodified()
 	return self._inversion_unmodified
 end
 
--- Lines: 700 to 701
+-- Lines 700-702
 function ControllerWrapperAxis:get_inversion()
 	return self._inversion
 end
 
--- Lines: 704 to 738
+-- Lines 704-739
 function ControllerWrapperAxis:get_output_attributes()
 	local additional_attributes = ""
 
@@ -800,34 +816,37 @@ function ControllerWrapperAxis:get_output_attributes()
 	return ControllerWrapperConnection.get_output_attributes(self) .. additional_attributes
 end
 
--- Lines: 741 to 742
+-- Lines 741-743
 function ControllerWrapperAxis:__tostring(additional_info)
 	return ControllerWrapperConnection.__tostring(self, tostring(additional_info or "") .. ", Multiplier: " .. tostring(self._multiplier) .. ", Lerp: " .. tostring(self._lerp) .. ", Initial lerp axis: " .. tostring(self._init_lerp_axis) .. ", Pad bottom: " .. tostring(self._pad_bottom) .. ", Pad top: " .. tostring(self._pad_top) .. ", Soft top: " .. tostring(self._soft_top) .. ", No limit: " .. tostring(self._no_limit) .. ", Inversion: " .. tostring(self._inversion))
 end
+
 ControllerWrapperDelayConnection = ControllerWrapperDelayConnection or class()
 ControllerWrapperDelayConnection.TYPE = "delay"
 
--- Lines: 750 to 754
+-- Lines 750-754
 function ControllerWrapperDelayConnection:init(node)
 	if node then
 		self._name = node.name
 	end
 end
 
--- Lines: 756 to 758
+-- Lines 756-758
 function ControllerWrapperDelayConnection:set_name(name)
 	self._name = name
 end
 
--- Lines: 760 to 761
+-- Lines 760-762
 function ControllerWrapperDelayConnection:get_name()
 	return self._name
 end
 
--- Lines: 764 to 776
+-- Lines 764-776
 function ControllerWrapperDelayConnection:populate_data(data)
 	local list = data.connections
-	local sub_data = {_meta = self.TYPE}
+	local sub_data = {
+		_meta = self.TYPE
+	}
 
 	if not list then
 		list = {}
@@ -839,51 +858,52 @@ function ControllerWrapperDelayConnection:populate_data(data)
 	table.insert(list, sub_data)
 end
 
--- Lines: 778 to 779
+-- Lines 778-780
 function ControllerWrapperDelayConnection:__tostring(additional_info)
 	return string.format("[Controller][DelayConnection][Name: %s%s]", tostring(self._name), tostring(additional_info))
 end
+
 ControllerWrapperEditable = ControllerWrapperEditable or class()
 ControllerWrapperEditable.TYPE = "connection"
 
--- Lines: 787 to 791
+-- Lines 787-791
 function ControllerWrapperEditable:init(node)
 	self._connection_name = node.name
 	self._caption = node.caption or self._connection_name
 	self._locale_id = node.locale_id
 end
 
--- Lines: 793 to 794
+-- Lines 793-795
 function ControllerWrapperEditable:get_connection_name()
 	return self._connection_name
 end
 
--- Lines: 797 to 799
+-- Lines 797-799
 function ControllerWrapperEditable:set_connection_name(connection_name)
 	self._connection_name = connection_name
 end
 
--- Lines: 801 to 802
+-- Lines 801-803
 function ControllerWrapperEditable:get_caption()
 	return self._caption
 end
 
--- Lines: 805 to 807
+-- Lines 805-807
 function ControllerWrapperEditable:set_caption(caption)
 	self._caption = caption or self._connection_name
 end
 
--- Lines: 809 to 810
+-- Lines 809-811
 function ControllerWrapperEditable:get_locale_id()
 	return self._locale_id
 end
 
--- Lines: 813 to 815
+-- Lines 813-815
 function ControllerWrapperEditable:set_locale_id(locale_id)
 	self._locale_id = locale_id
 end
 
--- Lines: 817 to 825
+-- Lines 817-825
 function ControllerWrapperEditable:populate_data(data)
 	local sub_data = {
 		_meta = self.TYPE,
@@ -895,14 +915,15 @@ function ControllerWrapperEditable:populate_data(data)
 	table.insert(data, sub_data)
 end
 
--- Lines: 827 to 828
+-- Lines 827-829
 function ControllerWrapperEditable:__tostring(additional_info)
 	return string.format("[Editable connection name: %s, Caption: %s, Locale id: %s]", tostring(self._connection_name), tostring(self._caption), tostring(self._locale_id))
 end
+
 ControllerWrapperUnselectable = ControllerWrapperUnselectable or class()
 ControllerWrapperUnselectable.TYPE = "input"
 
--- Lines: 836 to 846
+-- Lines 836-846
 function ControllerWrapperUnselectable:init(node)
 	self._input_name = node.name
 
@@ -915,22 +936,22 @@ function ControllerWrapperUnselectable:init(node)
 	end
 end
 
--- Lines: 848 to 849
+-- Lines 848-850
 function ControllerWrapperUnselectable:get_input_name()
 	return self._input_name
 end
 
--- Lines: 852 to 854
+-- Lines 852-854
 function ControllerWrapperUnselectable:set_input_name(input_name)
 	self._input_name = input_name
 end
 
--- Lines: 856 to 857
+-- Lines 856-858
 function ControllerWrapperUnselectable:get_single()
 	return self._single
 end
 
--- Lines: 860 to 866
+-- Lines 860-866
 function ControllerWrapperUnselectable:set_single(single)
 	if single then
 		self._single = true
@@ -939,12 +960,12 @@ function ControllerWrapperUnselectable:set_single(single)
 	end
 end
 
--- Lines: 868 to 869
+-- Lines 868-870
 function ControllerWrapperUnselectable:get_multi()
 	return self._multi
 end
 
--- Lines: 872 to 878
+-- Lines 872-878
 function ControllerWrapperUnselectable:set_multi(multi)
 	if multi then
 		self._multi = true
@@ -953,7 +974,7 @@ function ControllerWrapperUnselectable:set_multi(multi)
 	end
 end
 
--- Lines: 880 to 894
+-- Lines 880-894
 function ControllerWrapperUnselectable:populate_data(data)
 	local sub_data = {
 		_meta = self.TYPE,
@@ -971,8 +992,7 @@ function ControllerWrapperUnselectable:populate_data(data)
 	table.insert(data, sub_data)
 end
 
--- Lines: 896 to 897
+-- Lines 896-898
 function ControllerWrapperUnselectable:__tostring(additional_info)
 	return string.format("[Unselectable input name: \"%s\"]", tostring(self._input_name))
 end
-

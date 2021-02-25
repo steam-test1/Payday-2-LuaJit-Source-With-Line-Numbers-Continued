@@ -5,7 +5,7 @@ EnvironmentOperatorElement.ACTIONS = {
 	"disable_global_override"
 }
 
--- Lines: 8 to 21
+-- Lines 8-21
 function EnvironmentOperatorElement:init(unit)
 	EnvironmentOperatorElement.super.init(self, unit)
 
@@ -21,12 +21,12 @@ function EnvironmentOperatorElement:init(unit)
 	self._actions = EnvironmentOperatorElement.ACTIONS
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function EnvironmentOperatorElement:clear(...)
 	Application:trace("EnvironmentOperatorElement:clear !!!!!!!!!!!!!!!!!!!   ", self._old_default_environment)
 end
 
--- Lines: 27 to 37
+-- Lines 27-37
 function EnvironmentOperatorElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -40,4 +40,3 @@ function EnvironmentOperatorElement:_build_panel(panel, panel_sizer)
 		min = 0
 	}, "How long this environment should blend in over")
 end
-

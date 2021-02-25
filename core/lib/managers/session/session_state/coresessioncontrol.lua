@@ -2,15 +2,14 @@ core:module("CoreSessionControl")
 
 Control = Control or class()
 
--- Lines: 5 to 6
+-- Lines 5-6
 function Control:start_session()
 end
 
--- Lines: 8 to 9
+-- Lines 8-9
 function Control:quit_session()
 end
 
--- Lines: 11 to 12
+-- Lines 11-12
 function Control:end_session()
 end
-

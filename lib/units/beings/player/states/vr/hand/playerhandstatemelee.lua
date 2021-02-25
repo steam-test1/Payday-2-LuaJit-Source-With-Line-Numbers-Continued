@@ -2,24 +2,30 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateMelee = PlayerHandStateMelee or class(PlayerHandState)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerHandStateMelee:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateWeapon.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 87
+-- Lines 10-87
 function PlayerHandStateMelee:_spawn_melee_unit()
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
 	self._melee_entry = melee_entry
 	local unit_name = tweak_data.blackmarket.melee_weapons[melee_entry].unit
 
 	if unit_name then
-		local aligns = tweak_data.blackmarket.melee_weapons[melee_entry].align_objects or {"a_weapon_left"}
+		local aligns = tweak_data.blackmarket.melee_weapons[melee_entry].align_objects or {
+			"a_weapon_left"
+		}
 		local graphic_objects = tweak_data.blackmarket.melee_weapons[melee_entry].graphic_objects or {}
 		local align = nil
 
 		if #aligns > 1 then
-			align = self._hsm:hand_id() == 1 and "a_weapon_right" or "a_weapon_left"
+			if self._hsm:hand_id() == 1 then
+				align = "a_weapon_right"
+			else
+				align = "a_weapon_left"
+			end
 
 			if not table.contains(aligns, align) then
 				Application:error("[PlayerHandStateMelee:_spawn_melee_unit] can't spawn melee weapon in this hand", melee_entry, self._hand_unit)
@@ -95,7 +101,7 @@ function PlayerHandStateMelee:_spawn_melee_unit()
 	end
 end
 
--- Lines: 89 to 105
+-- Lines 89-105
 function PlayerHandStateMelee:at_enter(prev_state, params)
 	PlayerHandStateWeapon.super.at_enter(self, prev_state)
 	managers.player:player_unit():movement():current_state():_interupt_action_reload()
@@ -111,7 +117,7 @@ function PlayerHandStateMelee:at_enter(prev_state, params)
 	managers.hud:belt():set_state("melee", "active")
 end
 
--- Lines: 107 to 118
+-- Lines 107-118
 function PlayerHandStateMelee:at_exit(next_state)
 	PlayerHandStateMelee.super.at_exit(self, next_state)
 	self:hsm():exit_controller_state("item")
@@ -123,7 +129,7 @@ function PlayerHandStateMelee:at_exit(next_state)
 	end
 end
 
--- Lines: 120 to 143
+-- Lines 120-143
 function PlayerHandStateMelee:update(t, dt)
 	local controller = managers.vr:hand_state_machine():controller()
 
@@ -146,4 +152,3 @@ function PlayerHandStateMelee:update(t, dt)
 		managers.controller:get_vr_controller():trigger_haptic_pulse(self:hsm():hand_id() - 1, 0, charge_value * 1000 + 500)
 	end
 end
-

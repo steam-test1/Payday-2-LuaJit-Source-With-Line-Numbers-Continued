@@ -1,11 +1,12 @@
 AmmoClip = AmmoClip or class(Pickup)
-AmmoClip.EVENT_IDS = {}
-AmmoClip.EVENT_IDS.bonnie_share_ammo = 1
-AmmoClip.EVENT_IDS.register_grenade = 16
+AmmoClip.EVENT_IDS = {
+	bonnie_share_ammo = 1,
+	register_grenade = 16
+}
 local CABLE_TIE_GET_CHANCE = 0.2
 local CABLE_TIE_GET_AMOUNT = 1
 
--- Lines: 11 to 22
+-- Lines 11-22
 function AmmoClip:init(unit)
 	AmmoClip.super.init(self, unit)
 
@@ -17,7 +18,7 @@ function AmmoClip:init(unit)
 	end
 end
 
--- Lines: 25 to 33
+-- Lines 25-33
 function AmmoClip:reload_contour()
 	if self._ammo_box and self._unit:contour() then
 		if managers.user:get_setting("ammo_contour") then
@@ -28,7 +29,7 @@ function AmmoClip:reload_contour()
 	end
 end
 
--- Lines: 36 to 139
+-- Lines 36-140
 function AmmoClip:_pickup(unit)
 	if self._picked_up then
 		return
@@ -147,7 +148,7 @@ function AmmoClip:_pickup(unit)
 	return false
 end
 
--- Lines: 142 to 182
+-- Lines 142-182
 function AmmoClip:sync_net_event(event, peer)
 	local player = managers.player:local_player()
 
@@ -193,4 +194,3 @@ function AmmoClip:sync_net_event(event, peer)
 		end
 	end
 end
-

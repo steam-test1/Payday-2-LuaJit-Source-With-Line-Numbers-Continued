@@ -1,16 +1,16 @@
 ElementSideJobAward = ElementSideJobAward or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 7 to 9
+-- Lines 7-9
 function ElementSideJobAward:client_on_executed_end_screen(...)
 	self:on_executed(...)
 end
 
--- Lines: 11 to 13
+-- Lines 11-13
 function ElementSideJobAward:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 16 to 50
+-- Lines 15-50
 function ElementSideJobAward:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -22,11 +22,15 @@ function ElementSideJobAward:on_executed(instigator)
 		local local_player = managers.player:local_player()
 		award_trophy = alive(local_player) and local_player == instigator
 
-		if not award_trophy and instigator:vehicle_driving() then
-			local seat = instigator:vehicle_driving():find_seat_for_player(local_player)
+		if not award_trophy then
+			if instigator:vehicle_driving() then
+				local seat = instigator:vehicle_driving():find_seat_for_player(local_player)
 
-			if seat and seat.driving then
-				award_trophy = true
+				if seat and seat.driving then
+					award_trophy = true
+				end
+			elseif false then
+				-- Nothing
 			end
 		end
 	end
@@ -41,9 +45,10 @@ function ElementSideJobAward:on_executed(instigator)
 
 	ElementSideJobAward.super.on_executed(self, self._unit or instigator)
 end
+
 ElementSideJobFilter = ElementSideJobFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 58 to 63
+-- Lines 58-63
 function ElementSideJobFilter:on_script_activated()
 	ElementSideJobFilter.super.on_script_activated(self)
 
@@ -52,7 +57,7 @@ function ElementSideJobFilter:on_script_activated()
 	end
 end
 
--- Lines: 66 to 103
+-- Lines 65-103
 function ElementSideJobFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -88,4 +93,3 @@ function ElementSideJobFilter:on_executed(instigator)
 		ElementSideJobFilter.super.on_executed(self, self._unit or instigator)
 	end
 end
-

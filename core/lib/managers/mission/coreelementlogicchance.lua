@@ -3,7 +3,7 @@ core:import("CoreMissionScriptElement")
 
 ElementLogicChance = ElementLogicChance or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 6 to 10
+-- Lines 6-10
 function ElementLogicChance:init(...)
 	ElementLogicChance.super.init(self, ...)
 
@@ -11,11 +11,11 @@ function ElementLogicChance:init(...)
 	self._triggers = {}
 end
 
--- Lines: 13 to 14
+-- Lines 12-14
 function ElementLogicChance:client_on_executed(...)
 end
 
--- Lines: 16 to 32
+-- Lines 16-32
 function ElementLogicChance:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -33,27 +33,27 @@ function ElementLogicChance:on_executed(instigator)
 	ElementLogicChance.super.on_executed(self, instigator)
 end
 
--- Lines: 34 to 36
+-- Lines 34-36
 function ElementLogicChance:chance_operation_add_chance(chance)
 	self._chance = self._chance + chance
 end
 
--- Lines: 38 to 40
+-- Lines 38-40
 function ElementLogicChance:chance_operation_subtract_chance(chance)
 	self._chance = self._chance - chance
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function ElementLogicChance:chance_operation_reset()
 	self._chance = self._values.chance
 end
 
--- Lines: 46 to 48
+-- Lines 46-48
 function ElementLogicChance:chance_operation_set_chance(chance)
 	self._chance = chance
 end
 
--- Lines: 50 to 52
+-- Lines 50-52
 function ElementLogicChance:add_trigger(id, outcome, callback)
 	self._triggers[id] = {
 		outcome = outcome,
@@ -61,12 +61,12 @@ function ElementLogicChance:add_trigger(id, outcome, callback)
 	}
 end
 
--- Lines: 54 to 56
+-- Lines 54-56
 function ElementLogicChance:remove_trigger(id)
 	self._triggers[id] = nil
 end
 
--- Lines: 58 to 64
+-- Lines 58-64
 function ElementLogicChance:_trigger_outcome(outcome)
 	for _, data in pairs(self._triggers) do
 		if data.outcome == outcome then
@@ -74,18 +74,19 @@ function ElementLogicChance:_trigger_outcome(outcome)
 		end
 	end
 end
+
 ElementLogicChanceOperator = ElementLogicChanceOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 70 to 72
+-- Lines 70-72
 function ElementLogicChanceOperator:init(...)
 	ElementLogicChanceOperator.super.init(self, ...)
 end
 
--- Lines: 75 to 76
+-- Lines 74-76
 function ElementLogicChanceOperator:client_on_executed(...)
 end
 
--- Lines: 78 to 99
+-- Lines 78-99
 function ElementLogicChanceOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -109,14 +110,15 @@ function ElementLogicChanceOperator:on_executed(instigator)
 
 	ElementLogicChanceOperator.super.on_executed(self, instigator)
 end
+
 ElementLogicChanceTrigger = ElementLogicChanceTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 105 to 107
+-- Lines 105-107
 function ElementLogicChanceTrigger:init(...)
 	ElementLogicChanceTrigger.super.init(self, ...)
 end
 
--- Lines: 109 to 114
+-- Lines 109-114
 function ElementLogicChanceTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -125,11 +127,11 @@ function ElementLogicChanceTrigger:on_script_activated()
 	end
 end
 
--- Lines: 117 to 118
+-- Lines 116-118
 function ElementLogicChanceTrigger:client_on_executed(...)
 end
 
--- Lines: 120 to 126
+-- Lines 120-126
 function ElementLogicChanceTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -137,4 +139,3 @@ function ElementLogicChanceTrigger:on_executed(instigator)
 
 	ElementLogicChanceTrigger.super.on_executed(self, instigator)
 end
-

@@ -3,7 +3,7 @@ core:import("CoreMissionScriptElement")
 ElementFeedback = ElementFeedback or class(CoreMissionScriptElement.MissionScriptElement)
 ElementFeedback.IDS_EFFECT = Idstring("effect")
 
--- Lines: 6 to 15
+-- Lines 6-15
 function ElementFeedback:init(...)
 	ElementFeedback.super.init(self, ...)
 
@@ -14,12 +14,12 @@ function ElementFeedback:init(...)
 	end
 end
 
--- Lines: 17 to 19
+-- Lines 17-19
 function ElementFeedback:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 21 to 58
+-- Lines 21-58
 function ElementFeedback:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -47,7 +47,7 @@ function ElementFeedback:on_executed(instigator)
 		self:_check_value(params, "rumble", "attack", self._values.rumble_attack)
 		self:_check_value(params, "rumble", "sustain", self._values.rumble_sustain)
 		self:_check_value(params, "rumble", "release", self._values.rumble_release)
-		self._feedback:set_enabled("above_camera_effect", 1 - self._values.above_camera_effect_distance <= multiplier)
+		self._feedback:set_enabled("above_camera_effect", multiplier >= 1 - self._values.above_camera_effect_distance)
 		table.insert(params, "above_camera_effect")
 		table.insert(params, "effect")
 		table.insert(params, self._values.above_camera_effect)
@@ -57,7 +57,7 @@ function ElementFeedback:on_executed(instigator)
 	ElementFeedback.super.on_executed(self, instigator)
 end
 
--- Lines: 60 to 70
+-- Lines 60-70
 function ElementFeedback:_check_value(params, cat, setting, value)
 	if not value then
 		return
@@ -70,7 +70,7 @@ function ElementFeedback:_check_value(params, cat, setting, value)
 	end
 end
 
--- Lines: 72 to 80
+-- Lines 72-81
 function ElementFeedback:_calc_multiplier(player)
 	if self._values.range == 0 then
 		return 1
@@ -82,4 +82,3 @@ function ElementFeedback:_calc_multiplier(player)
 
 	return mul
 end
-

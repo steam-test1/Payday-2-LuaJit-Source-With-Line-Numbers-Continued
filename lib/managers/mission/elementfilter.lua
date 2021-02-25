@@ -2,17 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementFilter = ElementFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementFilter:init(...)
 	ElementFilter.super.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function ElementFilter:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 13 to 35
+-- Lines 13-35
 function ElementFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -36,13 +36,14 @@ function ElementFilter:on_executed(instigator)
 
 	ElementFilter.super.on_executed(self, instigator)
 end
+
 local win32 = Idstring("WIN32")
 local ps3 = Idstring("PS3")
 local x360 = Idstring("X360")
 local ps4 = Idstring("PS4")
 local xb1 = Idstring("XB1")
 
--- Lines: 42 to 51
+-- Lines 42-52
 function ElementFilter:_check_platform()
 	local platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
 	platform = platform or SystemInfo:platform()
@@ -58,7 +59,7 @@ function ElementFilter:_check_platform()
 	return false
 end
 
--- Lines: 54 to 82
+-- Lines 54-83
 function ElementFilter:_check_difficulty()
 	local diff = Global.game_settings and Global.game_settings.difficulty or "hard"
 
@@ -99,7 +100,7 @@ function ElementFilter:_check_difficulty()
 	return false
 end
 
--- Lines: 85 to 103
+-- Lines 85-104
 function ElementFilter:_check_players()
 	local players = Global.running_simulation and managers.editor:mission_player()
 	players = players or managers.network:session() and managers.network:session():amount_of_players()
@@ -127,7 +128,7 @@ function ElementFilter:_check_players()
 	return false
 end
 
--- Lines: 107 to 120
+-- Lines 107-121
 function ElementFilter:_check_mode()
 	if self._values.mode_control == nil or self._values.mode_assault == nil then
 		return true
@@ -143,4 +144,3 @@ function ElementFilter:_check_mode()
 
 	return false
 end
-

@@ -13,7 +13,7 @@ SpawnEnemyUnitElement.INSTANCE_VAR_NAMES = {
 	}
 }
 
--- Lines: 9 to 33
+-- Lines 9-33
 function SpawnEnemyUnitElement:init(unit)
 	SpawnEnemyUnitElement.super.init(self, unit)
 
@@ -39,13 +39,13 @@ function SpawnEnemyUnitElement:init(unit)
 	table.insert(self._save_values, "voice")
 end
 
--- Lines: 35 to 38
+-- Lines 35-38
 function SpawnEnemyUnitElement:post_init(...)
 	SpawnEnemyUnitElement.super.post_init(self, ...)
 	self:_load_pickup()
 end
 
--- Lines: 41 to 62
+-- Lines 41-62
 function SpawnEnemyUnitElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -74,12 +74,12 @@ function SpawnEnemyUnitElement:test_element()
 	end
 end
 
--- Lines: 64 to 65
+-- Lines 64-66
 function SpawnEnemyUnitElement:get_spawn_anim()
 	return self._hed.spawn_action
 end
 
--- Lines: 68 to 73
+-- Lines 68-73
 function SpawnEnemyUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		enemy:set_slot(0)
@@ -88,7 +88,7 @@ function SpawnEnemyUnitElement:stop_test_element()
 	self._enemies = {}
 end
 
--- Lines: 75 to 80
+-- Lines 75-80
 function SpawnEnemyUnitElement:set_element_data(params, ...)
 	SpawnEnemyUnitElement.super.set_element_data(self, params, ...)
 
@@ -97,16 +97,18 @@ function SpawnEnemyUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 82 to 87
+-- Lines 82-87
 function SpawnEnemyUnitElement:_reload_unit_list_btn()
 	self:stop_test_element()
 
 	if self._hed.enemy ~= "none" then
-		managers.editor:reload_units({Idstring(self._hed.enemy)}, true, true)
+		managers.editor:reload_units({
+			Idstring(self._hed.enemy)
+		}, true, true)
 	end
 end
 
--- Lines: 89 to 128
+-- Lines 89-128
 function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -115,7 +117,9 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	local enemy_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	panel_sizer:add(enemy_sizer, 0, 0, "EXPAND")
-	self:_build_value_combobox(panel, enemy_sizer, "enemy", self._options, nil, nil, {horizontal_sizer_proportions = 1})
+	self:_build_value_combobox(panel, enemy_sizer, "enemy", self._options, nil, nil, {
+		horizontal_sizer_proportions = 1
+	})
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -153,10 +157,12 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	table.insert(pickups, "none")
 	table.insert(pickups, "no_pickup")
 	self:_build_value_combobox(panel, panel_sizer, "force_pickup", pickups)
-	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({"default"}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
+	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
+		"default"
+	}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
 end
 
--- Lines: 130 to 135
+-- Lines 130-135
 function SpawnEnemyUnitElement:_load_pickup()
 	if self._hed.force_pickup ~= "none" and self._hed.force_pickup ~= "no_pickup" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -165,7 +171,7 @@ function SpawnEnemyUnitElement:_load_pickup()
 	end
 end
 
--- Lines: 139 to 149
+-- Lines 137-149
 function SpawnEnemyUnitElement:add_to_mission_package()
 	if self._hed.force_pickup ~= "none" and self._hed.force_pickup ~= "no_pickup" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -191,7 +197,7 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 	end
 end
 
--- Lines: 151 to 157
+-- Lines 151-157
 function SpawnEnemyUnitElement:_resolve_team(unit)
 	if self._hed.team == "default" then
 		return tweak_data.levels:get_default_team_ID(unit:base():char_tweak().access == "gangster" and "gangster" or "combatant")
@@ -200,9 +206,8 @@ function SpawnEnemyUnitElement:_resolve_team(unit)
 	end
 end
 
--- Lines: 159 to 162
+-- Lines 159-162
 function SpawnEnemyUnitElement:destroy(...)
 	SpawnEnemyUnitElement.super.destroy(self, ...)
 	self:stop_test_element()
 end
-

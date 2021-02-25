@@ -1,6 +1,6 @@
 PlayerEquipmentVR = PlayerEquipment
 
--- Lines: 7 to 13
+-- Lines 7-14
 function PlayerEquipmentVR:_m_deploy_rot()
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -11,12 +11,12 @@ function PlayerEquipmentVR:_m_deploy_rot()
 	return active_hand:rotation()
 end
 
--- Lines: 17 to 18
+-- Lines 17-19
 function PlayerEquipmentVR:dummy_unit()
 	return alive(self._dummy_unit) and self._dummy_unit
 end
 
--- Lines: 21 to 45
+-- Lines 21-46
 function PlayerEquipmentVR:valid_look_at_placement(equipment_data)
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -49,7 +49,7 @@ function PlayerEquipmentVR:valid_look_at_placement(equipment_data)
 	return ray
 end
 
--- Lines: 48 to 101
+-- Lines 48-102
 function PlayerEquipmentVR:valid_shape_placement(equipment_id, equipment_data)
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -111,7 +111,7 @@ function PlayerEquipmentVR:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
--- Lines: 104 to 137
+-- Lines 104-137
 function PlayerEquipment:throw_projectile()
 	local active_hand = self._unit:hand():get_active_hand("throwable") or self._unit:hand():get_active_hand("weapon")
 
@@ -147,7 +147,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines: 139 to 161
+-- Lines 139-161
 function PlayerEquipment:throw_grenade()
 	local active_hand = self._unit:hand():get_active_hand("throwable") or self._unit:hand():get_active_hand("weapon")
 
@@ -173,4 +173,3 @@ function PlayerEquipment:throw_grenade()
 
 	managers.player:on_throw_grenade()
 end
-

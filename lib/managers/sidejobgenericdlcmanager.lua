@@ -5,14 +5,14 @@ SideJobGenericDLCManager.save_table_name = "Tango"
 SideJobGenericDLCManager.category = "tango"
 SideJobGenericDLCManager.category_id = "tango"
 
--- Lines: 11 to 16
+-- Lines 9-16
 function SideJobGenericDLCManager:init()
 	self._challenges_tweak_data = tweak_data.tango.challenges
 
 	self:_setup()
 end
 
--- Lines: 19 to 28
+-- Lines 18-28
 function SideJobGenericDLCManager:_setup()
 	if not Global[self.global_table_name] then
 		Global[self.global_table_name] = {}
@@ -25,7 +25,7 @@ function SideJobGenericDLCManager:_setup()
 	managers.generic_side_jobs:register(self)
 end
 
--- Lines: 31 to 43
+-- Lines 30-43
 function SideJobGenericDLCManager:_setup_challenges()
 	if not self._challenges_tweak_data then
 		error("Can't setup a SideJobGenericDLCManager if challenges tweak data is defined!")
@@ -42,7 +42,7 @@ function SideJobGenericDLCManager:_setup_challenges()
 	Global[self.global_table_name].challenges = challenges
 end
 
--- Lines: 45 to 49
+-- Lines 45-49
 function SideJobGenericDLCManager:reset()
 	Global[self.global_table_name] = nil
 	self._global = nil
@@ -50,7 +50,7 @@ function SideJobGenericDLCManager:reset()
 	self:_setup()
 end
 
--- Lines: 60 to 93
+-- Lines 53-93
 function SideJobGenericDLCManager:save(cache)
 	local challenges = {}
 
@@ -88,7 +88,7 @@ function SideJobGenericDLCManager:save(cache)
 	cache[self.save_table_name] = save_data
 end
 
--- Lines: 96 to 153
+-- Lines 95-153
 function SideJobGenericDLCManager:load(cache, version)
 	local state = cache[self.save_table_name]
 
@@ -139,22 +139,22 @@ function SideJobGenericDLCManager:load(cache, version)
 	end
 end
 
--- Lines: 157 to 158
+-- Lines 157-159
 function SideJobGenericDLCManager:name()
 	return "Replace name"
 end
 
--- Lines: 162 to 163
+-- Lines 162-164
 function SideJobGenericDLCManager:can_progress()
 	return true
 end
 
--- Lines: 168 to 169
+-- Lines 168-170
 function SideJobGenericDLCManager:challenges()
 	return self._global.challenges
 end
 
--- Lines: 172 to 178
+-- Lines 172-178
 function SideJobGenericDLCManager:get_challenge(id)
 	for idx, challenge in pairs(self._global.challenges) do
 		if challenge.id == id then
@@ -163,7 +163,7 @@ function SideJobGenericDLCManager:get_challenge(id)
 	end
 end
 
--- Lines: 181 to 191
+-- Lines 180-193
 function SideJobGenericDLCManager:is_mission_complete(challenge_id)
 	if not self:can_progress() then
 		return false
@@ -178,7 +178,7 @@ function SideJobGenericDLCManager:is_mission_complete(challenge_id)
 	return false
 end
 
--- Lines: 196 to 212
+-- Lines 195-214
 function SideJobGenericDLCManager:is_objective_complete(challenge_id, objective_id)
 	if not self:can_progress() then
 		return false
@@ -197,7 +197,7 @@ function SideJobGenericDLCManager:is_objective_complete(challenge_id, objective_
 	return false
 end
 
--- Lines: 217 to 226
+-- Lines 216-226
 function SideJobGenericDLCManager:award(id)
 	if not self:can_progress() then
 		return
@@ -208,7 +208,7 @@ function SideJobGenericDLCManager:award(id)
 	end
 end
 
--- Lines: 229 to 265
+-- Lines 228-265
 function SideJobGenericDLCManager:_update_challenge_progress(challenge, key, id, amount, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if objective[key] == id then
@@ -243,7 +243,7 @@ function SideJobGenericDLCManager:_update_challenge_progress(challenge, key, id,
 	end
 end
 
--- Lines: 267 to 281
+-- Lines 267-281
 function SideJobGenericDLCManager:completed_challenge(challenge_or_id)
 	local challenge = type(challenge_or_id) == "table" and challenge_or_id or self:get_challenge(challenge_or_id)
 
@@ -257,7 +257,7 @@ function SideJobGenericDLCManager:completed_challenge(challenge_or_id)
 	end
 end
 
--- Lines: 284 to 305
+-- Lines 283-307
 function SideJobGenericDLCManager:has_already_claimed_reward(challenge_id, reward_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -290,7 +290,7 @@ function SideJobGenericDLCManager:has_already_claimed_reward(challenge_id, rewar
 	return false
 end
 
--- Lines: 310 to 336
+-- Lines 309-336
 function SideJobGenericDLCManager:claim_reward(challenge_id, reward_id)
 	if not self:can_progress() then
 		return
@@ -323,13 +323,13 @@ function SideJobGenericDLCManager:claim_reward(challenge_id, reward_id)
 	end
 end
 
--- Lines: 338 to 350
+-- Lines 338-350
 function SideJobGenericDLCManager:_award_reward(reward)
 	if reward.item_entry then
 		local entry = tweak_data:get_raw_value("blackmarket", reward.type_items, reward.item_entry)
 
 		if entry then
-			for i = 1, reward.amount or 1, 1 do
+			for i = 1, reward.amount or 1 do
 				local global_value = reward.global_value or entry.infamous and "infamous" or entry.global_value or entry.dlc or entry.dlcs and entry.dlcs[math.random(#entry.dlcs)] or "normal"
 
 				managers.blackmarket:add_to_inventory(global_value, reward.type_items, reward.item_entry)
@@ -340,7 +340,7 @@ function SideJobGenericDLCManager:_award_reward(reward)
 	end
 end
 
--- Lines: 353 to 369
+-- Lines 352-371
 function SideJobGenericDLCManager:has_completed_and_claimed_rewards(challenge_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -363,8 +363,7 @@ function SideJobGenericDLCManager:has_completed_and_claimed_rewards(challenge_id
 	return true
 end
 
--- Lines: 374 to 375
+-- Lines 374-376
 function SideJobGenericDLCManager:any_challenge_completed()
 	return self._has_completed_mission
 end
-

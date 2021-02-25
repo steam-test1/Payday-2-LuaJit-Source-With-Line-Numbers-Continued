@@ -1,6 +1,6 @@
 CoreWorldInstanceManager = CoreWorldInstanceManager or class()
 
--- Lines: 3 to 9
+-- Lines 3-9
 function CoreWorldInstanceManager:init()
 	self._instance_data = {}
 	self._registered_input_elements = {}
@@ -9,17 +9,17 @@ function CoreWorldInstanceManager:init()
 	self._start_offset_index = 30000
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function CoreWorldInstanceManager:start_offset_index()
 	return self._start_offset_index
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function CoreWorldInstanceManager:add_instance_data(data)
 	table.insert(self._instance_data, data)
 end
 
--- Lines: 19 to 25
+-- Lines 19-26
 function CoreWorldInstanceManager:get_instance_data_by_name(name)
 	for _, instance_data in ipairs(self._instance_data) do
 		if instance_data.name == name then
@@ -30,7 +30,7 @@ function CoreWorldInstanceManager:get_instance_data_by_name(name)
 	return false
 end
 
--- Lines: 28 to 34
+-- Lines 28-35
 function CoreWorldInstanceManager:has_instance(name)
 	for _, instance_data in ipairs(self._instance_data) do
 		if instance_data.name == name then
@@ -41,7 +41,7 @@ function CoreWorldInstanceManager:has_instance(name)
 	return false
 end
 
--- Lines: 38 to 74
+-- Lines 38-74
 function CoreWorldInstanceManager:get_safe_name(instance_name, name)
 	local start_number = 1
 
@@ -70,7 +70,7 @@ function CoreWorldInstanceManager:get_safe_name(instance_name, name)
 		names[instance_data.name] = true
 	end
 
-	for i = start_number, 10000, 1 do
+	for i = start_number, 10000 do
 		i = (i < 10 and "00" or i < 100 and "0" or "") .. i
 		local name_id = name .. i
 
@@ -80,7 +80,7 @@ function CoreWorldInstanceManager:get_safe_name(instance_name, name)
 	end
 end
 
--- Lines: 76 to 108
+-- Lines 76-109
 function CoreWorldInstanceManager:get_safe_start_index(index_size, continent)
 	local start_indices = {}
 	local end_indices = {}
@@ -88,7 +88,7 @@ function CoreWorldInstanceManager:get_safe_start_index(index_size, continent)
 	for _, instance_data in ipairs(self._instance_data) do
 		if instance_data.continent == continent then
 			table.insert(start_indices, instance_data.start_index)
-			table.insert(end_indices, (instance_data.start_index + (instance_data.index_size or 600)) - 1)
+			table.insert(end_indices, instance_data.start_index + (instance_data.index_size or 600) - 1)
 		end
 	end
 
@@ -114,7 +114,7 @@ function CoreWorldInstanceManager:get_safe_start_index(index_size, continent)
 	return 0
 end
 
--- Lines: 111 to 125
+-- Lines 111-126
 function CoreWorldInstanceManager:get_used_indices(continent)
 	local start_indices = {}
 	local end_indices = {}
@@ -122,7 +122,7 @@ function CoreWorldInstanceManager:get_used_indices(continent)
 	for _, instance_data in ipairs(self._instance_data) do
 		if instance_data.continent == continent then
 			table.insert(start_indices, instance_data.start_index)
-			table.insert(end_indices, (instance_data.start_index + (instance_data.index_size or 600)) - 1)
+			table.insert(end_indices, instance_data.start_index + (instance_data.index_size or 600) - 1)
 		end
 	end
 
@@ -132,7 +132,7 @@ function CoreWorldInstanceManager:get_used_indices(continent)
 	return start_indices, end_indices
 end
 
--- Lines: 128 to 133
+-- Lines 128-133
 function CoreWorldInstanceManager:rename_instance(name, new_name)
 	local data = self:get_instance_data_by_name(name)
 
@@ -141,12 +141,12 @@ function CoreWorldInstanceManager:rename_instance(name, new_name)
 	end
 end
 
--- Lines: 135 to 136
+-- Lines 135-137
 function CoreWorldInstanceManager:instance_data()
 	return self._instance_data
 end
 
--- Lines: 139 to 147
+-- Lines 139-148
 function CoreWorldInstanceManager:instance_names_by_script(script)
 	local names = {}
 
@@ -161,7 +161,7 @@ function CoreWorldInstanceManager:instance_names_by_script(script)
 	return names
 end
 
--- Lines: 150 to 158
+-- Lines 150-159
 function CoreWorldInstanceManager:instance_names(continent)
 	local names = {}
 
@@ -176,7 +176,7 @@ function CoreWorldInstanceManager:instance_names(continent)
 	return names
 end
 
--- Lines: 161 to 168
+-- Lines 161-169
 function CoreWorldInstanceManager:instances_data_by_continent(continent)
 	local instances = {}
 
@@ -189,7 +189,7 @@ function CoreWorldInstanceManager:instances_data_by_continent(continent)
 	return instances
 end
 
--- Lines: 171 to 175
+-- Lines 171-176
 function CoreWorldInstanceManager:packages_by_instance(instance)
 	local folder = instance.folder
 	local package = folder .. "/" .. "world"
@@ -201,7 +201,7 @@ function CoreWorldInstanceManager:packages_by_instance(instance)
 	}
 end
 
--- Lines: 178 to 212
+-- Lines 178-212
 function CoreWorldInstanceManager:custom_create_instance(instance_name, custom_data)
 	local instance = self:get_instance_data_by_name(instance_name)
 	local continent_data = managers.worlddefinition._continents[instance.continent]
@@ -235,7 +235,7 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, custom_d
 	managers.mission:script(instance.script):external_create_instance_elements(prepare_mission_data)
 end
 
--- Lines: 214 to 224
+-- Lines 214-225
 function CoreWorldInstanceManager:_get_instance_continent_data(path)
 	if Application:editor() then
 		return self:_serialize_to_script("continent", path)
@@ -252,14 +252,14 @@ function CoreWorldInstanceManager:_get_instance_continent_data(path)
 	return deep_clone(self._instance_continent_data[path])
 end
 
--- Lines: 227 to 258
+-- Lines 227-259
 function CoreWorldInstanceManager:prepare_unit_data(instance, continent_data)
 	local start_index = instance.start_index
 	local folder = instance.folder
 	local path = folder .. "/" .. "world"
 	local instance_data = self:_get_instance_continent_data(path)
 
-	-- Lines: 236 to 253
+	-- Lines 236-253
 	local function _prepare_entries(entries)
 		if not entries then
 			return
@@ -284,12 +284,12 @@ function CoreWorldInstanceManager:prepare_unit_data(instance, continent_data)
 	return instance_data
 end
 
--- Lines: 261 to 262
+-- Lines 261-263
 function CoreWorldInstanceManager:_get_mod_id(id)
 	return math.mod(id, 100000)
 end
 
--- Lines: 266 to 271
+-- Lines 266-271
 function CoreWorldInstanceManager:prepare_serialized_instance_data(instance)
 	local folder = instance.folder
 	local path = folder .. "/" .. "world"
@@ -298,14 +298,14 @@ function CoreWorldInstanceManager:prepare_serialized_instance_data(instance)
 	self:_get_instance_continent_data(path)
 end
 
--- Lines: 273 to 303
+-- Lines 273-304
 function CoreWorldInstanceManager:check_highest_id(instance)
 	local folder = instance.folder
 	local highest_id = 0
 	local amount = 0
 	local type_amount = {}
 
-	-- Lines: 280 to 289
+	-- Lines 280-290
 	local function compare(datas)
 		if not datas then
 			return 0
@@ -334,14 +334,14 @@ function CoreWorldInstanceManager:check_highest_id(instance)
 	return highest_id, amount, type_amount
 end
 
--- Lines: 306 to 308
+-- Lines 306-309
 function CoreWorldInstanceManager:prepare_mission_data_by_name(name)
 	local instance_data = self:get_instance_data_by_name(name)
 
 	return self:prepare_mission_data(instance_data)
 end
 
--- Lines: 311 to 321
+-- Lines 311-322
 function CoreWorldInstanceManager:_get_instance_mission_data(path)
 	if Application:editor() then
 		return self:_serialize_to_script("mission", path)
@@ -358,7 +358,7 @@ function CoreWorldInstanceManager:_get_instance_mission_data(path)
 	return deep_clone(self._instance_mission_data[path])
 end
 
--- Lines: 324 to 378
+-- Lines 324-379
 function CoreWorldInstanceManager:prepare_mission_data(instance)
 	local start_index = instance.start_index
 	local folder = instance.folder
@@ -409,7 +409,7 @@ function CoreWorldInstanceManager:prepare_mission_data(instance)
 	return instance_data
 end
 
--- Lines: 381 to 399
+-- Lines 381-399
 function CoreWorldInstanceManager:_convert_table(convert_list, convert_table, continent_data, start_index)
 	for key, value in pairs(convert_table) do
 		if type_name(value) == "table" then
@@ -424,14 +424,14 @@ function CoreWorldInstanceManager:_convert_table(convert_list, convert_table, co
 	end
 end
 
--- Lines: 401 to 403
+-- Lines 401-404
 function CoreWorldInstanceManager:get_mission_inputs_by_name(name)
 	local instance_data = self:get_instance_data_by_name(name)
 
 	return self:get_mission_inputs(instance_data)
 end
 
--- Lines: 406 to 428
+-- Lines 406-429
 function CoreWorldInstanceManager:get_mission_inputs(instance)
 	local start_index = instance.start_index
 	local folder = instance.folder
@@ -454,14 +454,14 @@ function CoreWorldInstanceManager:get_mission_inputs(instance)
 	return mission_inputs
 end
 
--- Lines: 431 to 433
+-- Lines 431-434
 function CoreWorldInstanceManager:get_mission_outputs_by_name(name)
 	local instance_data = self:get_instance_data_by_name(name)
 
 	return self:get_mission_outputs(instance_data)
 end
 
--- Lines: 436 to 458
+-- Lines 436-459
 function CoreWorldInstanceManager:get_mission_outputs(instance)
 	local start_index = instance.start_index
 	local folder = instance.folder
@@ -484,14 +484,14 @@ function CoreWorldInstanceManager:get_mission_outputs(instance)
 	return mission_inputs
 end
 
--- Lines: 461 to 463
+-- Lines 461-464
 function CoreWorldInstanceManager:get_instance_params_by_name(name)
 	local instance_data = self:get_instance_data_by_name(name)
 
 	return self:get_instance_params(instance_data)
 end
 
--- Lines: 466 to 488
+-- Lines 466-489
 function CoreWorldInstanceManager:get_instance_params(instance)
 	local folder = instance.folder
 	local path = folder .. "/" .. "world"
@@ -511,7 +511,7 @@ function CoreWorldInstanceManager:get_instance_params(instance)
 	return instance_params
 end
 
--- Lines: 491 to 500
+-- Lines 491-500
 function CoreWorldInstanceManager:_serialize_to_script(type, name)
 	if Application:editor() then
 		return PackageManager:editor_load_script_data(type:id(), name:id())
@@ -524,7 +524,7 @@ function CoreWorldInstanceManager:_serialize_to_script(type, name)
 	end
 end
 
--- Lines: 502 to 506
+-- Lines 502-506
 function CoreWorldInstanceManager:register_input_element(instance_name, instance_input, mission_element)
 	self._registered_input_elements[instance_name] = self._registered_input_elements[instance_name] or {}
 	self._registered_input_elements[instance_name][instance_input] = self._registered_input_elements[instance_name][instance_input] or {}
@@ -532,7 +532,7 @@ function CoreWorldInstanceManager:register_input_element(instance_name, instance
 	table.insert(self._registered_input_elements[instance_name][instance_input], mission_element)
 end
 
--- Lines: 508 to 517
+-- Lines 508-518
 function CoreWorldInstanceManager:get_registered_input_elements(instance_name, instance_input)
 	if not self._registered_input_elements[instance_name] then
 		return nil
@@ -545,7 +545,7 @@ function CoreWorldInstanceManager:get_registered_input_elements(instance_name, i
 	return self._registered_input_elements[instance_name][instance_input]
 end
 
--- Lines: 520 to 524
+-- Lines 520-524
 function CoreWorldInstanceManager:register_output_event_element(instance_name, instance_output, mission_element)
 	self._registered_output_event_elements[instance_name] = self._registered_output_event_elements[instance_name] or {}
 	self._registered_output_event_elements[instance_name][instance_output] = self._registered_output_event_elements[instance_name][instance_output] or {}
@@ -553,7 +553,7 @@ function CoreWorldInstanceManager:register_output_event_element(instance_name, i
 	table.insert(self._registered_output_event_elements[instance_name][instance_output], mission_element)
 end
 
--- Lines: 526 to 535
+-- Lines 526-536
 function CoreWorldInstanceManager:get_registered_output_event_elements(instance_name, instance_output)
 	if not self._registered_output_event_elements[instance_name] then
 		return nil
@@ -566,12 +566,12 @@ function CoreWorldInstanceManager:get_registered_output_event_elements(instance_
 	return self._registered_output_event_elements[instance_name][instance_output]
 end
 
--- Lines: 538 to 540
+-- Lines 538-540
 function CoreWorldInstanceManager:set_instance_params(instance_name, params)
 	self._instance_params[instance_name] = params
 end
 
--- Lines: 542 to 547
+-- Lines 542-548
 function CoreWorldInstanceManager:get_instance_param(instance_name, var_name)
 	if not self._instance_params[instance_name] then
 		return nil
@@ -580,13 +580,15 @@ function CoreWorldInstanceManager:get_instance_param(instance_name, var_name)
 	return self._instance_params[instance_name][var_name]
 end
 
--- Lines: 583 to 589
+-- Lines 583-589
 function CoreWorldInstanceManager:sync_save(data)
-	local state = {instance_params = self._instance_params}
+	local state = {
+		instance_params = self._instance_params
+	}
 	data.CoreWorldInstanceManager = state
 end
 
--- Lines: 591 to 596
+-- Lines 591-596
 function CoreWorldInstanceManager:sync_load(data)
 	local state = data.CoreWorldInstanceManager
 
@@ -595,15 +597,14 @@ function CoreWorldInstanceManager:sync_load(data)
 	end
 end
 
--- Lines: 598 to 602
+-- Lines 598-602
 function CoreWorldInstanceManager:on_simulation_ended()
 	self._registered_input_elements = {}
 	self._registered_output_event_elements = {}
 	self._instance_params = {}
 end
 
--- Lines: 605 to 607
+-- Lines 604-607
 function CoreWorldInstanceManager:clear()
 	self._instance_data = {}
 end
-

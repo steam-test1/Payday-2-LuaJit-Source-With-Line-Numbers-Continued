@@ -2,7 +2,7 @@ require("lib/utils/VRLoadingEnvironment")
 
 VRViewport = VRViewport or class()
 
--- Lines: 6 to 12
+-- Lines 6-12
 function VRViewport:init(x, y, width, height, name, prio)
 	self._vp = Application:create_world_viewport(x, y, width, height)
 	self._use_adaptive_quality = true
@@ -11,63 +11,66 @@ function VRViewport:init(x, y, width, height, name, prio)
 	self._pre_render = false
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function VRViewport:set_camera(camera)
 	self._vp:set_camera(camera)
 end
 
--- Lines: 18 to 20
+-- Lines 18-20
 function VRViewport:set_pre_render(pre_render)
 	self._pre_render = pre_render
 end
 
--- Lines: 22 to 23
+-- Lines 22-24
 function VRViewport:pre_render()
 	return self._pre_render
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function VRViewport:set_active(active)
 	self._active = active
 end
 
--- Lines: 30 to 31
+-- Lines 30-32
 function VRViewport:vp()
 	return self._vp
 end
 
--- Lines: 34 to 36
+-- Lines 34-36
 function VRViewport:set_render_params(...)
-	self._render_params = {...}
+	self._render_params = {
+		...
+	}
 end
 
--- Lines: 38 to 39
+-- Lines 38-40
 function VRViewport:use_adaptive_quality()
 	return self._use_adaptive_quality
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function VRViewport:set_enable_adaptive_quality(enable)
 	self._use_adaptive_quality = enable
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function VRViewport:active()
 	return self._active
 end
 
--- Lines: 50 to 51
+-- Lines 50-51
 function VRViewport:destroy()
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function VRViewport:render()
 	Application:render(unpack(self._render_params))
 end
+
 VRManagerPD2 = VRManagerPD2 or class()
 VRManagerPD2.DISABLE_ADAPTIVE_QUALITY = false
 
--- Lines: 60 to 167
+-- Lines 60-167
 function VRManagerPD2:init()
 	print("[VRManagerPD2] init")
 
@@ -233,7 +236,7 @@ function VRManagerPD2:init()
 	MenuRoom:load("units/pd2_dlc_vr/menu/vr_menu_mini", false)
 end
 
--- Lines: 169 to 192
+-- Lines 169-192
 function VRManagerPD2:init_finalize()
 	print("[VRManagerPD2] init_finalize")
 
@@ -250,17 +253,17 @@ function VRManagerPD2:init_finalize()
 	managers.statistics:publish_custom_stat_to_steam("info_playing_vr")
 end
 
--- Lines: 194 to 195
+-- Lines 194-196
 function VRManagerPD2:is_default_hmd()
 	return self._is_default_hmd
 end
 
--- Lines: 198 to 199
+-- Lines 198-200
 function VRManagerPD2:is_oculus()
 	return self._is_oculus
 end
 
--- Lines: 202 to 232
+-- Lines 202-232
 function VRManagerPD2:apply_arcade_settings()
 	print("[VRManagerPD2] Apply arcade settings")
 	managers.user:set_setting("video_ao", "off")
@@ -283,53 +286,53 @@ function VRManagerPD2:apply_arcade_settings()
 	end
 end
 
--- Lines: 234 to 237
+-- Lines 234-237
 function VRManagerPD2:force_start_loading()
 	print("[VRManagerPD2] Force start loading")
 	self._vr_loading_environment:force_start()
 end
 
--- Lines: 239 to 242
+-- Lines 239-242
 function VRManagerPD2:start_loading()
 	print("[VRManagerPD2] Start loading")
 	self._vr_loading_environment:start()
 end
 
--- Lines: 244 to 247
+-- Lines 244-247
 function VRManagerPD2:start_end_screen()
 	print("[VRManagerPD2] Start end screen")
 	self._vr_loading_environment:start("end")
 end
 
--- Lines: 249 to 252
+-- Lines 249-252
 function VRManagerPD2:stop_loading()
 	print("[VRManagerPD2] Stop loading")
 	self._vr_loading_environment:stop()
 end
 
--- Lines: 254 to 257
+-- Lines 254-257
 function VRManagerPD2:destroy()
 	managers.user:remove_setting_changed_callback("adaptive_quality", self._adaptive_quality_setting_changed_clbk)
 	print("[VRManagerPD2] destroy")
 end
 
--- Lines: 262 to 266
+-- Lines 259-266
 function VRManagerPD2:update(t, dt)
 	self:_update_adaptive_quality_level(t)
 	self._vr_loading_environment:update(t, dt)
 end
 
--- Lines: 268 to 271
+-- Lines 268-271
 function VRManagerPD2:paused_update(t, dt)
 	self:_update_adaptive_quality_level(t)
 	self._vr_loading_environment:update(t, dt)
 end
 
--- Lines: 290 to 291
+-- Lines 273-291
 function VRManagerPD2:end_update(t, dt)
 end
 
--- Lines: 293 to 296
+-- Lines 293-297
 function VRManagerPD2:new_vp(x, y, width, height, name, prio)
 	local vp = VRViewport:new(x, y, width, height, name, prio)
 
@@ -338,7 +341,7 @@ function VRManagerPD2:new_vp(x, y, width, height, name, prio)
 	return vp
 end
 
--- Lines: 304 to 311
+-- Lines 300-311
 function VRManagerPD2:pre_render()
 	for _, vp in ipairs(self._viewports) do
 		if vp:active() and vp:pre_render() then
@@ -347,7 +350,7 @@ function VRManagerPD2:pre_render()
 	end
 end
 
--- Lines: 317 to 323
+-- Lines 313-323
 function VRManagerPD2:render()
 	for _, vp in ipairs(self._viewports) do
 		if vp:active() and not vp:pre_render() then
@@ -356,17 +359,17 @@ function VRManagerPD2:render()
 	end
 end
 
--- Lines: 325 to 327
+-- Lines 325-327
 function VRManagerPD2:set_hand_state_machine(hsm)
 	self._hsm = hsm
 end
 
--- Lines: 329 to 330
+-- Lines 329-331
 function VRManagerPD2:hand_state_machine()
 	return self._hsm
 end
 
--- Lines: 333 to 342
+-- Lines 333-342
 function VRManagerPD2:_on_adaptive_quality_setting_changed(setting, old, new)
 	local setting = new and true or false
 	self._use_adaptive_quality = setting
@@ -379,12 +382,12 @@ function VRManagerPD2:_on_adaptive_quality_setting_changed(setting, old, new)
 	end
 end
 
--- Lines: 344 to 346
+-- Lines 344-346
 function VRManagerPD2:set_force_disable_low_adaptive_quality(disable)
 	self._force_disable_low_adaptive_quality = disable
 end
 
--- Lines: 349 to 411
+-- Lines 348-411
 function VRManagerPD2:_update_adaptive_quality_level(t)
 	if self._update_super_sample_scale_t and self._update_super_sample_scale_t < t then
 		self._update_super_sample_scale_t = nil
@@ -445,12 +448,12 @@ function VRManagerPD2:_update_adaptive_quality_level(t)
 	end
 end
 
--- Lines: 413 to 414
+-- Lines 413-415
 function VRManagerPD2:block_exec()
 	return self._vr_loading_environment:block_exec()
 end
 
--- Lines: 421 to 436
+-- Lines 421-436
 function VRManagerPD2:save(data)
 	data.vr = {}
 
@@ -461,7 +464,7 @@ function VRManagerPD2:save(data)
 	data.vr.has_set_height = self._global.has_set_height
 end
 
--- Lines: 443 to 462
+-- Lines 438-462
 function VRManagerPD2:load(data)
 	if not data.vr then
 		return
@@ -476,7 +479,7 @@ function VRManagerPD2:load(data)
 	end
 end
 
--- Lines: 466 to 470
+-- Lines 466-470
 function VRManagerPD2:add_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map = self._setting_callback_handler_map or {}
 	self._setting_callback_handler_map[setting] = self._setting_callback_handler_map[setting] or CoreEvent.CallbackEventHandler:new()
@@ -484,7 +487,7 @@ function VRManagerPD2:add_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map[setting]:add(callback)
 end
 
--- Lines: 472 to 478
+-- Lines 472-478
 function VRManagerPD2:remove_setting_changed_callback(setting, callback)
 	self._setting_callback_handler_map = self._setting_callback_handler_map or {}
 	self._setting_callback_handler_map[setting] = self._setting_callback_handler_map[setting]
@@ -494,7 +497,7 @@ function VRManagerPD2:remove_setting_changed_callback(setting, callback)
 	end
 end
 
--- Lines: 482 to 487
+-- Lines 482-487
 function VRManagerPD2:setting_limits(setting)
 	local limits = self._limits[setting]
 
@@ -503,12 +506,12 @@ function VRManagerPD2:setting_limits(setting)
 	end
 end
 
--- Lines: 491 to 492
+-- Lines 491-493
 function VRManagerPD2:has_set_height()
 	return self._global.has_set_height
 end
 
--- Lines: 495 to 518
+-- Lines 495-518
 function VRManagerPD2:set_setting(setting, value)
 	if type(value) == "number" then
 		local limits = self._limits[setting]
@@ -535,20 +538,21 @@ function VRManagerPD2:set_setting(setting, value)
 	end
 end
 
--- Lines: 520 to 522
+-- Lines 520-522
 function VRManagerPD2:reset_setting(setting)
 	self:set_setting(setting, self._default[setting])
 end
 
--- Lines: 524 to 525
+-- Lines 524-526
 function VRManagerPD2:get_setting(setting)
 	return self._global[setting]
 end
 
--- Lines: 528 to 529
+-- Lines 528-530
 function VRManagerPD2:walking_mode()
 	return self:get_setting("movement_type") == "warp_walk"
 end
+
 local rt_swap = {
 	{
 		Idstring("Text"),
@@ -580,9 +584,11 @@ local rt_swap = {
 	}
 }
 
--- Lines: 563 to 586
+-- Lines 563-586
 function VRManagerPD2.overlay_helper(panel)
-	local objects = {panel}
+	local objects = {
+		panel
+	}
 	local i = 1
 
 	while #objects > 0 do
@@ -603,16 +609,19 @@ function VRManagerPD2.overlay_helper(panel)
 			for _, s in ipairs(rt_swap) do
 				if s[1] == rt then
 					object:set_render_template(s[2])
-					goto label_0
+
+					break
 				end
 			end
 		end
 	end
 end
 
--- Lines: 589 to 604
+-- Lines 589-604
 function VRManagerPD2.depth_disable_helper(panel)
-	local objects = {panel}
+	local objects = {
+		panel
+	}
 	local i = 1
 
 	while #objects > 0 do
@@ -625,8 +634,9 @@ function VRManagerPD2.depth_disable_helper(panel)
 				table.insert(objects, o)
 			end
 		else
-			object:configure({depth_mode = "disabled"})
+			object:configure({
+				depth_mode = "disabled"
+			})
 		end
 	end
 end
-

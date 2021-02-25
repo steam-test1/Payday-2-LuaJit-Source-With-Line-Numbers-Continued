@@ -1,6 +1,6 @@
 SpawnPlayerElement = SpawnPlayerElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function SpawnPlayerElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -9,7 +9,7 @@ function SpawnPlayerElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
--- Lines: 11 to 19
+-- Lines 11-19
 function SpawnPlayerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -20,7 +20,6 @@ function SpawnPlayerElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("The state defines how the player will be spawned")
 end
 
--- Lines: 22 to 23
+-- Lines 21-23
 function SpawnPlayerElement:add_to_mission_package()
 end
-

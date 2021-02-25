@@ -1,11 +1,11 @@
 VehicleStateParked = VehicleStateParked or class(BaseVehicleState)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function VehicleStateParked:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines: 9 to 19
+-- Lines 9-19
 function VehicleStateParked:enter(state_data, enter_data)
 	if not self._unit:vehicle():is_active() then
 		self._unit:vehicle_driving():activate_vehicle()
@@ -17,7 +17,7 @@ function VehicleStateParked:enter(state_data, enter_data)
 	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
 end
 
--- Lines: 23 to 40
+-- Lines 23-40
 function VehicleStateParked:adjust_interactions()
 	VehicleStateParked.super.adjust_interactions(self)
 
@@ -41,13 +41,12 @@ function VehicleStateParked:adjust_interactions()
 	end
 end
 
--- Lines: 44 to 45
+-- Lines 44-46
 function VehicleStateParked:is_vulnerable()
 	return true
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function VehicleStateParked:stop_vehicle()
 	return true
 end
-

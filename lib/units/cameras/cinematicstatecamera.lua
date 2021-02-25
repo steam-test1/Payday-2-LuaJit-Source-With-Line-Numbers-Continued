@@ -3,7 +3,7 @@ core:import("CoreEws")
 CinematicStateCamera = CinematicStateCamera or class()
 CinematicStateCamera.GAME_MULTIPLIER = 0.01
 
--- Lines: 8 to 35
+-- Lines 8-35
 function CinematicStateCamera:init(unit)
 	self._unit = unit
 
@@ -31,14 +31,15 @@ function CinematicStateCamera:init(unit)
 	self._camera_controller:set_both(self._ref_camera)
 end
 
--- Lines: 37 to 40
+-- Lines 37-40
 function CinematicStateCamera:_set_interpolation_type(type)
 	self._camera_controller:set_interpolation_type(Idstring("cam"), Idstring(type))
 	self._camera_controller:set_interpolation_type(Idstring("tar"), Idstring(type))
 end
+
 CinematicStateCamera.IDS_NOSTRING = Idstring("")
 
--- Lines: 45 to 56
+-- Lines 43-57
 function CinematicStateCamera:play_redirect(redirect_name, speed, offset_time)
 	local result = self._unit:play_redirect(redirect_name, offset_time)
 
@@ -56,7 +57,7 @@ function CinematicStateCamera:play_redirect(redirect_name, speed, offset_time)
 	return result
 end
 
--- Lines: 59 to 65
+-- Lines 59-66
 function CinematicStateCamera:_get_state_length(state_name)
 	local animation_set = AnimationManager:animation_set(Idstring("anims/units/cinematic/cinematic"))
 	local len = 0
@@ -68,7 +69,7 @@ function CinematicStateCamera:_get_state_length(state_name)
 	return len
 end
 
--- Lines: 68 to 76
+-- Lines 68-76
 function CinematicStateCamera:set_current_state_name(state_name)
 	self._current_state_name = Idstring(state_name)
 	self._length = self:_get_state_length(self._current_state_name)
@@ -81,7 +82,7 @@ function CinematicStateCamera:set_current_state_name(state_name)
 	end
 end
 
--- Lines: 78 to 83
+-- Lines 78-83
 function CinematicStateCamera:play_state(state_name, speed, offset_time)
 	self._unit:play_state(state_name, offset_time)
 
@@ -90,12 +91,12 @@ function CinematicStateCamera:play_state(state_name, speed, offset_time)
 	end
 end
 
--- Lines: 85 to 87
+-- Lines 85-87
 function CinematicStateCamera:set_mission_element(mission_element)
 	self._mission_element = mission_element
 end
 
--- Lines: 90 to 97
+-- Lines 89-97
 function CinematicStateCamera:anim_clbk_done()
 	local entered_empty = self._unit:anim_state_machine():is_playing(Idstring("std/empty"))
 
@@ -104,12 +105,12 @@ function CinematicStateCamera:anim_clbk_done()
 	end
 end
 
--- Lines: 99 to 101
+-- Lines 99-101
 function CinematicStateCamera:anim_clbk_set_fov(unit, fov, transition_t)
 	self:set_fov(fov, transition_t)
 end
 
--- Lines: 103 to 115
+-- Lines 103-115
 function CinematicStateCamera:set_fov(fov, transition_t)
 	self._fov_transition_data = nil
 
@@ -127,7 +128,7 @@ function CinematicStateCamera:set_fov(fov, transition_t)
 	}
 end
 
--- Lines: 119 to 151
+-- Lines 117-151
 function CinematicStateCamera:start()
 	if game_state_machine:current_state_name() ~= "editor" then
 		self._old_game_state_name = game_state_machine:current_state_name()
@@ -161,14 +162,14 @@ function CinematicStateCamera:start()
 	end
 end
 
--- Lines: 155 to 159
+-- Lines 153-159
 function CinematicStateCamera:pause()
 	if self._current_state_name then
 		self:set_speed(0)
 	end
 end
 
--- Lines: 161 to 166
+-- Lines 161-166
 function CinematicStateCamera:set_speed(speed)
 	self._speed = speed
 
@@ -177,7 +178,7 @@ function CinematicStateCamera:set_speed(speed)
 	end
 end
 
--- Lines: 168 to 176
+-- Lines 168-176
 function CinematicStateCamera:goto(time)
 	if self._current_redirect_name then
 		self:play_redirect(self._current_redirect_name, 0, time)
@@ -188,7 +189,7 @@ function CinematicStateCamera:goto(time)
 	end
 end
 
--- Lines: 178 to 197
+-- Lines 178-197
 function CinematicStateCamera:stop()
 	self._viewport:set_active(false)
 	managers.enemy:set_gfx_lod_enabled(true)
@@ -209,7 +210,7 @@ function CinematicStateCamera:stop()
 	self._playing = false
 end
 
--- Lines: 199 to 274
+-- Lines 199-274
 function CinematicStateCamera:create_ews()
 	self:close_ews()
 
@@ -258,10 +259,18 @@ function CinematicStateCamera:create_ews()
 	}
 
 	CoreEws.slider_and_number_controller(slider_params)
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_time"), {slider_params = slider_params})
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_time"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_time"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_time"), {slider_params = slider_params})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_time"), {
+		slider_params = slider_params
+	})
 
 	self._time_slider = slider_params
 	local slider_sizer = EWS:StaticBoxSizer(self._main_panel, "VERTICAL", "")
@@ -281,10 +290,18 @@ function CinematicStateCamera:create_ews()
 	}
 
 	CoreEws.slider_and_number_controller(slider_params)
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
-	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
-	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_speed"), {slider_params = slider_params})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
+	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
+	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider_speed"), {
+		slider_params = slider_params
+	})
 
 	self._speed_slider = slider_params
 
@@ -292,17 +309,17 @@ function CinematicStateCamera:create_ews()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 276 to 278
+-- Lines 276-278
 function CinematicStateCamera:update_slider_time(data)
 	self:goto(data.slider_params.value)
 end
 
--- Lines: 280 to 282
+-- Lines 280-282
 function CinematicStateCamera:update_slider_speed(data)
 	self:set_speed(data.slider_params.value)
 end
 
--- Lines: 284 to 289
+-- Lines 284-289
 function CinematicStateCamera:close_ews()
 	if self._main_frame then
 		self._main_frame:destroy()
@@ -311,7 +328,7 @@ function CinematicStateCamera:close_ews()
 	end
 end
 
--- Lines: 292 to 348
+-- Lines 291-348
 function CinematicStateCamera:update(unit, t, dt)
 	dt = dt * self._speed
 
@@ -350,7 +367,7 @@ function CinematicStateCamera:update(unit, t, dt)
 	end
 end
 
--- Lines: 350 to 364
+-- Lines 350-364
 function CinematicStateCamera:set_depth_mode(depth_mode)
 	self._locked_far_range = depth_mode and 5000 or nil
 	local viz = depth_mode and "depth_visualization" or "deferred_lighting"
@@ -370,7 +387,7 @@ function CinematicStateCamera:set_depth_mode(depth_mode)
 	end
 end
 
--- Lines: 366 to 377
+-- Lines 366-377
 function CinematicStateCamera:destroy()
 	if self._playing then
 		self:stop()
@@ -384,4 +401,3 @@ function CinematicStateCamera:destroy()
 
 	self:close_ews()
 end
-

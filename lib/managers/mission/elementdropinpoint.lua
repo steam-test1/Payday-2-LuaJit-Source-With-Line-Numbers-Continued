@@ -2,13 +2,13 @@ core:import("CoreMissionScriptElement")
 
 ElementDropInPoint = ElementDropInPoint or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function ElementDropInPoint:on_script_activated()
 	ElementDropInPoint.super.on_script_activated(self)
 	self:on_set_enabled()
 end
 
--- Lines: 11 to 17
+-- Lines 11-17
 function ElementDropInPoint:on_set_enabled()
 	if self._values.enabled then
 		managers.criminals:add_custom_drop_in_point(self:id(), self._values.position, self._values.rotation)
@@ -17,7 +17,7 @@ function ElementDropInPoint:on_set_enabled()
 	end
 end
 
--- Lines: 19 to 30
+-- Lines 19-30
 function ElementDropInPoint:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -31,4 +31,3 @@ function ElementDropInPoint:on_executed(instigator)
 
 	ElementDropInPoint.super.on_executed(self, instigator)
 end
-

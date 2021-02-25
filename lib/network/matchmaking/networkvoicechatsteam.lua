@@ -1,18 +1,18 @@
 NetworkVoiceChatSTEAM = NetworkVoiceChatSTEAM or class()
 
--- Lines: 29 to 34
+-- Lines 29-34
 function NetworkVoiceChatSTEAM:init()
 	self.handler = Steam:voip_handler()
 	self._enabled = false
 	self._users_talking = {}
 end
 
--- Lines: 36 to 38
+-- Lines 36-38
 function NetworkVoiceChatSTEAM:set_volume(volume)
 	self.handler:set_out_volume(volume)
 end
 
--- Lines: 40 to 51
+-- Lines 40-51
 function NetworkVoiceChatSTEAM:open()
 	self._push_to_talk = managers.user:get_setting("push_to_talk")
 
@@ -27,7 +27,7 @@ function NetworkVoiceChatSTEAM:open()
 	end
 end
 
--- Lines: 53 to 59
+-- Lines 53-59
 function NetworkVoiceChatSTEAM:destroy_voice(disconnected)
 	if self._enabled then
 		self.handler:stop_recording()
@@ -37,7 +37,7 @@ function NetworkVoiceChatSTEAM:destroy_voice(disconnected)
 	end
 end
 
--- Lines: 62 to 69
+-- Lines 62-69
 function NetworkVoiceChatSTEAM:_load_globals()
 	if Global.steam and Global.steam.voip then
 		self.handler = Global.steam.voip.handler
@@ -45,22 +45,23 @@ function NetworkVoiceChatSTEAM:_load_globals()
 	end
 end
 
--- Lines: 70 to 78
+-- Lines 70-78
 function NetworkVoiceChatSTEAM:_save_globals()
 	if not Global.steam then
 		Global.steam = {}
 	end
 
-	Global.steam.voip = {}
-	Global.steam.voip.handler = self.handler
+	Global.steam.voip = {
+		handler = self.handler
+	}
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function NetworkVoiceChatSTEAM:enabled()
 	return managers.user:get_setting("voice_chat")
 end
 
--- Lines: 85 to 95
+-- Lines 85-95
 function NetworkVoiceChatSTEAM:set_recording(enabled)
 	if not self._push_to_talk then
 		return
@@ -73,7 +74,7 @@ function NetworkVoiceChatSTEAM:set_recording(enabled)
 	end
 end
 
--- Lines: 98 to 133
+-- Lines 98-133
 function NetworkVoiceChatSTEAM:update()
 	self.handler:update()
 
@@ -82,7 +83,9 @@ function NetworkVoiceChatSTEAM:update()
 
 	for id, pl in pairs(playing) do
 		if not self._users_talking[id] then
-			self._users_talking[id] = {time = 0}
+			self._users_talking[id] = {
+				time = 0
+			}
 		end
 
 		if pl then
@@ -115,25 +118,24 @@ function NetworkVoiceChatSTEAM:update()
 	end
 end
 
--- Lines: 135 to 139
+-- Lines 135-139
 function NetworkVoiceChatSTEAM:on_member_added(peer, mute)
 	if peer:rpc() then
 		self.handler:add_receiver(peer:id(), peer:rpc(), mute)
 	end
 end
 
--- Lines: 141 to 143
+-- Lines 141-143
 function NetworkVoiceChatSTEAM:on_member_removed(peer)
 	self.handler:remove_receiver(peer:id())
 end
 
--- Lines: 146 to 148
+-- Lines 146-148
 function NetworkVoiceChatSTEAM:mute_player(peer, mute)
 	self.handler:mute_voice_receiver(peer:id(), mute)
 end
 
--- Lines: 151 to 152
+-- Lines 151-153
 function NetworkVoiceChatSTEAM:is_muted(peer)
 	return self.handler:is_voice_receiver_muted(peer:id())
 end
-

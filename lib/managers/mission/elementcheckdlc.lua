@@ -2,19 +2,24 @@ core:import("CoreMissionScriptElement")
 
 ElementCheckDLC = ElementCheckDLC or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementCheckDLC:init(...)
 	ElementCheckDLC.super.init(self, ...)
 end
 
--- Lines: 10 to 29
+-- Lines 9-29
 function ElementCheckDLC:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
 	local can_execute = nil
-	can_execute = self._values.require_all and self:check_all_dlcs_owned(self._values.dlc_ids) or self:check_any_dlc_owned(self._values.dlc_ids)
+
+	if self._values.require_all then
+		can_execute = self:check_all_dlcs_owned(self._values.dlc_ids)
+	else
+		can_execute = self:check_any_dlc_owned(self._values.dlc_ids)
+	end
 
 	if self._values.invert then
 		can_execute = not can_execute
@@ -25,11 +30,11 @@ function ElementCheckDLC:on_executed(instigator)
 	end
 end
 
--- Lines: 32 to 33
+-- Lines 31-33
 function ElementCheckDLC:client_on_executed(...)
 end
 
--- Lines: 35 to 41
+-- Lines 35-42
 function ElementCheckDLC:check_any_dlc_owned(dlc_list)
 	for i, dlc in ipairs(dlc_list) do
 		if managers.dlc:is_dlc_unlocked(dlc) then
@@ -40,7 +45,7 @@ function ElementCheckDLC:check_any_dlc_owned(dlc_list)
 	return false
 end
 
--- Lines: 44 to 50
+-- Lines 44-51
 function ElementCheckDLC:check_all_dlcs_owned(dlc_list)
 	for i, dlc in ipairs(dlc_list) do
 		if not managers.dlc:is_dlc_unlocked(dlc) then
@@ -50,4 +55,3 @@ function ElementCheckDLC:check_all_dlcs_owned(dlc_list)
 
 	return true
 end
-

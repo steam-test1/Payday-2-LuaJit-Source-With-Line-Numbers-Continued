@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 HudTrackedAchievement = HudTrackedAchievement or class(GrowPanel)
 
--- Lines: 17 to 50
+-- Lines 17-50
 function HudTrackedAchievement:init(parent, id, black_bg)
 	HudTrackedAchievement.super.init(self, parent, {
 		border = 10,
@@ -84,7 +84,7 @@ function HudTrackedAchievement:init(parent, id, black_bg)
 	end
 end
 
--- Lines: 52 to 61
+-- Lines 52-61
 function HudTrackedAchievement:update_progress()
 	if self._bar then
 		if self._info.awarded then
@@ -96,11 +96,14 @@ function HudTrackedAchievement:update_progress()
 		end
 	end
 end
+
 HUDStatsScreen = HUDStatsScreen or class(ExtendedPanel)
 
--- Lines: 67 to 86
+-- Lines 67-86
 function HUDStatsScreen:init()
-	HUDStatsScreen.super.init(self, managers.hud:script(managers.hud.STATS_SCREEN_FULLSCREEN).panel, {use_given = true})
+	HUDStatsScreen.super.init(self, managers.hud:script(managers.hud.STATS_SCREEN_FULLSCREEN).panel, {
+		use_given = true
+	})
 	self:clear()
 
 	local padding = 10
@@ -128,7 +131,7 @@ function HUDStatsScreen:init()
 	self:recreate_right()
 end
 
--- Lines: 88 to 254
+-- Lines 88-254
 function HUDStatsScreen:recreate_left()
 	self._left:clear()
 	self._left:bitmap({
@@ -180,7 +183,9 @@ function HUDStatsScreen:recreate_left()
 				color = tweak_data.screen_colors.text
 			}), 8, 0)
 
-			local str = managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(managers.crime_spree:server_spree_level(), "")})
+			local str = managers.localization:text("menu_cs_level", {
+				level = managers.experience:cash_string(managers.crime_spree:server_spree_level(), "")
+			})
 
 			placer:add_right(self._left:fine_text({
 				font = medium_font,
@@ -262,7 +267,9 @@ function HUDStatsScreen:recreate_left()
 
 			placer:new_row(8, 0)
 
-			local payout = managers.localization:text("hud_day_payout", {MONEY = managers.experience:cash_string(managers.money:get_potential_payout_from_current_stage())})
+			local payout = managers.localization:text("hud_day_payout", {
+				MONEY = managers.experience:cash_string(managers.money:get_potential_payout_from_current_stage())
+			})
 
 			placer:add_bottom(self._left:fine_text({
 				keep_w = true,
@@ -307,7 +314,9 @@ function HUDStatsScreen:recreate_left()
 		}), 0)
 	end
 
-	local loot_panel = ExtendedPanel:new(self._left, {w = (self._left:w() - 16) - 8})
+	local loot_panel = ExtendedPanel:new(self._left, {
+		w = self._left:w() - 16 - 8
+	})
 	placer = UiPlacer:new(16, 0, 8, 4)
 	local mandatory_bags_data = managers.loot:get_mandatory_bags_data()
 	local mandatory_amount = mandatory_bags_data and mandatory_bags_data.amount
@@ -409,7 +418,7 @@ function HUDStatsScreen:recreate_left()
 	loot_panel:set_leftbottom(0, self._left:h() - 16)
 end
 
--- Lines: 256 to 277
+-- Lines 256-277
 function HUDStatsScreen:recreate_right()
 	self._right:clear()
 	self._right:bitmap({
@@ -445,7 +454,7 @@ function HUDStatsScreen:recreate_right()
 	track_text:set_leftbottom(10, self._right:h() - 10)
 end
 
--- Lines: 280 to 299
+-- Lines 280-299
 function HUDStatsScreen:_create_tracked_list(panel)
 	local placer = UiPlacer:new(10, 10, 0, 8)
 
@@ -486,7 +495,7 @@ function HUDStatsScreen:_create_tracked_list(panel)
 	end
 end
 
--- Lines: 303 to 312
+-- Lines 303-312
 function HUDStatsScreen:_create_mutators_list(panel)
 	local placer = UiPlacer:new(10, 10)
 
@@ -505,7 +514,7 @@ function HUDStatsScreen:_create_mutators_list(panel)
 	end
 end
 
--- Lines: 316 to 326
+-- Lines 316-326
 function HUDStatsScreen:hide()
 	local left_panel = self._left
 	local right_panel = self._right
@@ -520,7 +529,7 @@ function HUDStatsScreen:hide()
 	left_panel:animate(callback(self, self, "_animate_hide_stats_left_panel"), right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 end
 
--- Lines: 328 to 345
+-- Lines 328-345
 function HUDStatsScreen:show()
 	self:recreate_left()
 	self:recreate_right()
@@ -543,17 +552,17 @@ function HUDStatsScreen:show()
 	left_panel:animate(callback(self, self, "_animate_show_stats_left_panel"), right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 end
 
--- Lines: 348 to 350
+-- Lines 348-350
 function HUDStatsScreen:loot_value_updated()
 	self:recreate_left()
 end
 
--- Lines: 352 to 354
+-- Lines 352-354
 function HUDStatsScreen:on_ext_inventory_changed()
 	self:recreate_left()
 end
 
--- Lines: 356 to 364
+-- Lines 356-364
 function HUDStatsScreen:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -566,14 +575,14 @@ function HUDStatsScreen:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 379 to 421
+-- Lines 378-421
 function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
 	local TOTAL_T = 0.33 * start_x / -left_panel:w()
 	local t = 0
 
-	while t < TOTAL_T do
+	while TOTAL_T > t do
 		local dt = coroutine.yield() * 1 / TimerManager:game():multiplier()
 		t = t + dt
 		local a = math.lerp(start_a, 1, t / TOTAL_T)
@@ -606,14 +615,14 @@ function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, 
 	self:_rec_round_object(bottom_panel)
 end
 
--- Lines: 423 to 459
+-- Lines 423-459
 function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
 	local TOTAL_T = 0.33 * (1 - start_x / -left_panel:w())
 	local t = 0
 
-	while t < TOTAL_T do
+	while TOTAL_T > t do
 		local dt = coroutine.yield() * 1 / TimerManager:game():multiplier()
 		t = t + dt
 		local a = math.lerp(start_a, 0, t / TOTAL_T)
@@ -643,10 +652,9 @@ function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, 
 	bottom_panel:set_y(bottom_panel:parent():h())
 end
 
--- Lines: 461 to 465
+-- Lines 461-465
 function HUDStatsScreen:update(t, dt)
 	for _, v in pairs(self._tracked_items or {}) do
 		v:update_progress()
 	end
 end
-

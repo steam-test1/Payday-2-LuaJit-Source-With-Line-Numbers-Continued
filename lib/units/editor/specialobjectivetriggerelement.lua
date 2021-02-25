@@ -1,7 +1,9 @@
 SpecialObjectiveTriggerUnitElement = SpecialObjectiveTriggerUnitElement or class(MissionElement)
-SpecialObjectiveTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+SpecialObjectiveTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 30
+-- Lines 4-30
 function SpecialObjectiveTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -29,7 +31,7 @@ function SpecialObjectiveTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 32 to 41
+-- Lines 32-41
 function SpecialObjectiveTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -49,11 +51,11 @@ function SpecialObjectiveTriggerUnitElement:draw_links(t, dt, selected_unit, all
 	end
 end
 
--- Lines: 43 to 44
+-- Lines 43-44
 function SpecialObjectiveTriggerUnitElement:update_editing()
 end
 
--- Lines: 46 to 56
+-- Lines 46-56
 function SpecialObjectiveTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -71,7 +73,7 @@ function SpecialObjectiveTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 58 to 65
+-- Lines 58-66
 function SpecialObjectiveTriggerUnitElement:_correct_unit(u_name)
 	local names = {
 		"point_special_objective",
@@ -87,12 +89,12 @@ function SpecialObjectiveTriggerUnitElement:_correct_unit(u_name)
 	return false
 end
 
--- Lines: 69 to 71
+-- Lines 69-71
 function SpecialObjectiveTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 74 to 84
+-- Lines 74-84
 function SpecialObjectiveTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -106,4 +108,3 @@ function SpecialObjectiveTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "event", self._options, "Select an event from the combobox")
 end
-

@@ -1,5 +1,4 @@
-
--- Lines: 1 to 377
+-- Lines 1-377
 function TweakData:_init_pd2()
 	print("TweakData:_init_pd2()")
 
@@ -38,7 +37,9 @@ function TweakData:_init_pd2()
 		noreturn_size = 24,
 		numhostages_size = 24
 	}
-	self.hud_downed = {timer_message_size = 24}
+	self.hud_downed = {
+		timer_message_size = 24
+	}
 	self.hud_custody = {
 		custody_font = "fonts/font_medium_mf",
 		custody_font_large = "fonts/font_large_mf",
@@ -685,4 +686,3 @@ function TweakData:_init_pd2()
 		}
 	}
 end
-

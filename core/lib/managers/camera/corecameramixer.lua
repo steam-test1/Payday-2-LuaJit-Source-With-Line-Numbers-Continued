@@ -10,7 +10,7 @@ local mrotation_mul = mrotation.multiply
 local mrotation_slerp = mrotation.slerp
 local mrotation_set_zero = mrotation.set_zero
 
--- Lines: 13 to 17
+-- Lines 13-18
 local function safe_divide(a, b)
 	if b == 0 then
 		return 1
@@ -21,13 +21,13 @@ end
 
 CameraMixer = CameraMixer or CoreClass.class()
 
--- Lines: 22 to 25
+-- Lines 22-25
 function CameraMixer:init(name)
 	self._name = name
 	self._cameras = {}
 end
 
--- Lines: 27 to 32
+-- Lines 27-32
 function CameraMixer:destroy()
 	for index, camera in ipairs(self._cameras) do
 		camera.camera:destroy()
@@ -36,7 +36,7 @@ function CameraMixer:destroy()
 	self._cameras = {}
 end
 
--- Lines: 34 to 41
+-- Lines 34-41
 function CameraMixer:add_camera(camera, blend_time)
 	table.insert(self._cameras, {
 		time = 0,
@@ -45,7 +45,7 @@ function CameraMixer:add_camera(camera, blend_time)
 	})
 end
 
--- Lines: 43 to 48
+-- Lines 43-48
 function CameraMixer:stop()
 	for index, camera in ipairs(self._cameras) do
 		camera.camera:destroy()
@@ -54,7 +54,7 @@ function CameraMixer:stop()
 	self._cameras = {}
 end
 
--- Lines: 51 to 93
+-- Lines 50-93
 function CameraMixer:update(cud, cud_class, time, dt)
 	for index, camera in ipairs(self._cameras) do
 		local _camera = camera.camera
@@ -78,7 +78,12 @@ function CameraMixer:update(cud, cud_class, time, dt)
 	for index, _camera in ipairs(self._cameras) do
 		_camera.time = _camera.time + dt
 		local factor = nil
-		factor = index > 1 and math.sin(math.clamp(safe_divide(_camera.time, _camera.blend_time), 0, 1) * 90) or 1
+
+		if index > 1 then
+			factor = math.sin(math.clamp(safe_divide(_camera.time, _camera.blend_time), 0, 1) * 90)
+		else
+			factor = 1
+		end
 
 		cud:interpolate_to_target(_camera.cam_data, factor)
 
@@ -87,7 +92,7 @@ function CameraMixer:update(cud, cud_class, time, dt)
 		end
 	end
 
-	for i = 1, full_blend_index - 1, 1 do
+	for i = 1, full_blend_index - 1 do
 		self._cameras[1].camera:destroy()
 		table.remove(self._cameras, 1)
 	end
@@ -97,7 +102,7 @@ function CameraMixer:update(cud, cud_class, time, dt)
 	end
 end
 
--- Lines: 95 to 108
+-- Lines 95-108
 function CameraMixer:debug_render(t, dt)
 	local pen = Draw:pen(Color(0.05, 0, 0, 1))
 
@@ -117,7 +122,7 @@ function CameraMixer:debug_render(t, dt)
 	end
 end
 
--- Lines: 110 to 115
+-- Lines 110-116
 function CameraMixer:active_camera()
 	local camera_count = #self._cameras
 
@@ -128,7 +133,7 @@ function CameraMixer:active_camera()
 	return self._cameras[camera_count].camera
 end
 
--- Lines: 118 to 123
+-- Lines 118-124
 function CameraMixer:cameras()
 	local cameras = {}
 
@@ -138,4 +143,3 @@ function CameraMixer:cameras()
 
 	return cameras
 end
-

@@ -3,17 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementWorldCamera = ElementWorldCamera or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function ElementWorldCamera:init(...)
 	ElementWorldCamera.super.init(self, ...)
 end
 
--- Lines: 10 to 12
+-- Lines 10-12
 function ElementWorldCamera:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 14 to 28
+-- Lines 14-28
 function ElementWorldCamera:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -29,9 +29,10 @@ function ElementWorldCamera:on_executed(instigator)
 
 	ElementWorldCamera.super.on_executed(self, instigator)
 end
+
 ElementWorldCameraTrigger = ElementWorldCameraTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 32 to 42
+-- Lines 32-42
 function ElementWorldCameraTrigger:init(...)
 	ElementWorldCameraTrigger.super.init(self, ...)
 
@@ -44,7 +45,7 @@ function ElementWorldCameraTrigger:init(...)
 	end
 end
 
--- Lines: 44 to 60
+-- Lines 44-60
 function ElementWorldCameraTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -54,4 +55,3 @@ function ElementWorldCameraTrigger:on_executed(instigator)
 
 	ElementWorldCameraTrigger.super.on_executed(self, instigator)
 end
-

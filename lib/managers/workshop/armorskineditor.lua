@@ -8,26 +8,27 @@ ArmorSkinEditor.texture_types = {
 	"sticker"
 }
 
--- Lines: 12 to 18
+-- Lines 12-18
 function ArmorSkinEditor:init()
-	Global.armor_skin_editor = {}
-	Global.armor_skin_editor.skins = {}
+	Global.armor_skin_editor = {
+		skins = {}
+	}
 	self._global = Global.armor_skin_editor
 	self._current_skin = 1
 	self._active = false
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function ArmorSkinEditor:active()
 	return self._active
 end
 
--- Lines: 24 to 26
+-- Lines 24-26
 function ArmorSkinEditor:set_active(active)
 	self._active = active
 end
 
--- Lines: 28 to 38
+-- Lines 28-38
 function ArmorSkinEditor:init_items()
 	self._global.skins = {}
 	self._current_skin = 1
@@ -41,7 +42,7 @@ function ArmorSkinEditor:init_items()
 	end
 end
 
--- Lines: 41 to 48
+-- Lines 40-50
 function ArmorSkinEditor:create_new_skin(data)
 	local local_skin_id = #self._global.skins + 1
 	local new_skin = managers.workshop:create_item()
@@ -53,14 +54,14 @@ function ArmorSkinEditor:create_new_skin(data)
 	return local_skin_id
 end
 
--- Lines: 52 to 55
+-- Lines 52-55
 function ArmorSkinEditor:_append_skin(skin)
 	self._global.skins = self._global.skins or {}
 
 	table.insert(self._global.skins, skin)
 end
 
--- Lines: 58 to 70
+-- Lines 57-70
 function ArmorSkinEditor:delete_current()
 	local skin = self:get_current_skin()
 
@@ -77,7 +78,7 @@ function ArmorSkinEditor:delete_current()
 	managers.menu:active_menu().logic:get_node(ArmorSkinEditor.menu_node_name)
 end
 
--- Lines: 73 to 103
+-- Lines 72-103
 function ArmorSkinEditor:select_skin(local_skin_id)
 	local is_reload = self._current_skin == local_skin_id
 	self._current_skin = local_skin_id
@@ -96,7 +97,7 @@ function ArmorSkinEditor:select_skin(local_skin_id)
 	local new_cosmetics_data = deep_clone(skin:config().data)
 	new_cosmetics_data.id = skin:config().data.name_id or "skin_default"
 
-	-- Lines: 90 to 98
+	-- Lines 90-98
 	local function cb()
 		managers.menu_scene._disable_item_updates = false
 
@@ -114,12 +115,12 @@ function ArmorSkinEditor:select_skin(local_skin_id)
 	self:apply_changes_to_character(new_cosmetics_data)
 end
 
--- Lines: 105 to 107
+-- Lines 105-107
 function ArmorSkinEditor:reload_current_skin()
 	self:select_skin(self._current_skin)
 end
 
--- Lines: 110 to 130
+-- Lines 109-130
 function ArmorSkinEditor:save_skin(skin, name, data)
 	skin:config().name = name or skin:config().name
 	skin:config().data = data or skin:config().data
@@ -140,42 +141,43 @@ function ArmorSkinEditor:save_skin(skin, name, data)
 	self._unsaved = false
 end
 
--- Lines: 132 to 134
+-- Lines 132-134
 function ArmorSkinEditor:save_current_skin(name, data)
 	self:save_skin(self:get_current_skin(), name, data)
 end
 
--- Lines: 136 to 137
+-- Lines 136-138
 function ArmorSkinEditor:skins()
 	return self._global.skins
 end
 
--- Lines: 140 to 141
+-- Lines 140-142
 function ArmorSkinEditor:skin_count()
 	return #self._global.skins
 end
 
--- Lines: 144 to 146
+-- Lines 144-147
 function ArmorSkinEditor:get_skin(local_skin_id)
 	self._global.skins = self._global.skins or {}
 
 	return self._global.skins[local_skin_id]
 end
 
--- Lines: 149 to 150
+-- Lines 149-151
 function ArmorSkinEditor:get_current_skin()
 	return self:get_skin(self._current_skin)
 end
 
--- Lines: 153 to 154
+-- Lines 153-155
 function ArmorSkinEditor:unsaved()
 	return self._unsaved and not self._ignore_unsaved
 end
 
--- Lines: 157 to 159
+-- Lines 157-159
 function ArmorSkinEditor:set_ignore_unsaved(ignore)
 	self._ignore_unsaved = ignore
 end
+
 ArmorSkinEditor.get_texture_list = SkinEditor.get_texture_list
 ArmorSkinEditor.get_texture_list_by_type = SkinEditor.get_texture_list_by_type
 ArmorSkinEditor.load_textures = SkinEditor.load_textures
@@ -187,7 +189,7 @@ ArmorSkinEditor.check_texture_db = SkinEditor.check_texture_db
 ArmorSkinEditor.check_texture_disk = SkinEditor.check_texture_disk
 ArmorSkinEditor.check_texture = SkinEditor.check_texture
 
--- Lines: 176 to 197
+-- Lines 175-197
 function ArmorSkinEditor:apply_changes(cosmetics_data)
 	local skin = self:get_current_skin()
 
@@ -209,7 +211,7 @@ function ArmorSkinEditor:apply_changes(cosmetics_data)
 	self:apply_changes_to_character(cosmetics_data)
 end
 
--- Lines: 199 to 205
+-- Lines 199-205
 function ArmorSkinEditor:apply_changes_to_character(data)
 	local character = managers.menu_scene._character_unit
 
@@ -219,6 +221,7 @@ function ArmorSkinEditor:apply_changes_to_character(data)
 		character:base():_apply_cosmetics({})
 	end
 end
+
 ArmorSkinEditor.remove_texture_by_name = SkinEditor.remove_texture_by_name
 ArmorSkinEditor.get_all_applied_textures = SkinEditor.get_all_applied_textures
 ArmorSkinEditor.remove_literal_paths = SkinEditor.remove_literal_paths
@@ -226,12 +229,12 @@ ArmorSkinEditor.add_literal_paths = SkinEditor.add_literal_paths
 ArmorSkinEditor.setup_texture_folders = SkinEditor.setup_texture_folders
 ArmorSkinEditor.has_texture_folders = SkinEditor.has_texture_folders
 
--- Lines: 214 to 215
+-- Lines 214-216
 function ArmorSkinEditor:get_texture_types()
 	return ArmorSkinEditor.texture_types
 end
 
--- Lines: 218 to 224
+-- Lines 218-224
 function ArmorSkinEditor:clear_current_skin()
 	local skin = self:get_current_skin()
 
@@ -242,7 +245,7 @@ function ArmorSkinEditor:clear_current_skin()
 	self:reload_current_skin()
 end
 
--- Lines: 226 to 229
+-- Lines 226-230
 function ArmorSkinEditor:get_current_item_tags()
 	local tags = {}
 
@@ -250,6 +253,7 @@ function ArmorSkinEditor:get_current_item_tags()
 
 	return tags
 end
+
 ArmorSkinEditor.hide_screenshot_bg = SkinEditor.hide_screenshot_bg
 ArmorSkinEditor.leave_screenshot_mode = SkinEditor.leave_screenshot_mode
 ArmorSkinEditor.get_screenshot_name = SkinEditor.get_screenshot_name
@@ -258,7 +262,7 @@ ArmorSkinEditor.has_screenshots = SkinEditor.has_screenshots
 ArmorSkinEditor.get_screenshot_path = SkinEditor.get_screenshot_path
 ArmorSkinEditor.get_screenshot_list = SkinEditor.get_screenshot_list
 
--- Lines: 244 to 264
+-- Lines 242-264
 function ArmorSkinEditor:enter_screenshot_mode()
 	local vp = managers.environment_controller._vp:vp()
 	self._old_bloom_setting = vp:get_post_processor_effect_name("World", Idstring("bloom_combine_post_processor"))
@@ -282,7 +286,7 @@ function ArmorSkinEditor:enter_screenshot_mode()
 	end
 end
 
--- Lines: 267 to 281
+-- Lines 266-281
 function ArmorSkinEditor:_spawn_screenshot_background()
 	managers.menu_scene._bg_unit:set_visible(false)
 
@@ -302,7 +306,7 @@ function ArmorSkinEditor:_spawn_screenshot_background()
 	self:hide_screenshot_bg()
 end
 
--- Lines: 283 to 288
+-- Lines 283-288
 function ArmorSkinEditor:set_screenshot_color(color)
 	managers.menu_scene._bg_unit:set_visible(false)
 	self._screenshot_ws:show()
@@ -310,20 +314,20 @@ function ArmorSkinEditor:set_screenshot_color(color)
 	managers.menu_scene:delete_workbench_room()
 end
 
--- Lines: 290 to 294
+-- Lines 290-294
 function ArmorSkinEditor:hide_screenshot_bg()
 	managers.menu_scene._bg_unit:set_visible(true)
 	managers.menu_scene:spawn_workbench_room()
 	self._screenshot_ws:hide()
 end
 
--- Lines: 299 to 411
+-- Lines 298-411
 function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 	if skin:is_submitting() then
 		return
 	end
 
-	-- Lines: 304 to 339
+	-- Lines 304-339
 	local function cb(result)
 		if result == "success" then
 			local id = managers.blackmarket:skin_editor():get_current_skin():id()
@@ -332,11 +336,17 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 				Steam:overlay_activate("url", "steam://url/CommunityFilePage/" .. id)
 			end
 		else
-			local dialog_data = {title = managers.localization:text("dialog_error_title")}
+			local dialog_data = {
+				title = managers.localization:text("dialog_error_title")
+			}
 			local result_text = managers.localization:exists(result) and managers.localization:text(result) or result
 			dialog_data.text = managers.localization:text("debug_wskn_submit_failed") .. "\n" .. result_text
-			local ok_button = {text = managers.localization:text("dialog_ok")}
-			dialog_data.button_list = {ok_button}
+			local ok_button = {
+				text = managers.localization:text("dialog_ok")
+			}
+			dialog_data.button_list = {
+				ok_button
+			}
 
 			managers.system_menu:show(dialog_data)
 		end
@@ -395,7 +405,7 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		table.insert(copy_data, pair)
 	end
 
-	-- Lines: 369 to 394
+	-- Lines 369-394
 	local function copy_cb(success, message)
 		if success then
 			if skin:submit(changelog, cb) then
@@ -414,7 +424,7 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 
 				self._publish_bar:set_position(0, panel:h() - bar_radius * 2)
 
-				-- Lines: 377 to 387
+				-- Lines 377-387
 				local function update_publish(o)
 					local current = 0
 					local skin_editor = managers.blackmarket:skin_editor()
@@ -440,7 +450,7 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		end
 	end
 
-	-- Lines: 396 to 403
+	-- Lines 396-403
 	local function sub(result)
 		if result == "success" then
 			skin:set_staging_path(staging)
@@ -456,4 +466,3 @@ function ArmorSkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		sub("success")
 	end
 end
-

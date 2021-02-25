@@ -1,6 +1,6 @@
 CubeMapCreator = CubeMapCreator or class()
 
--- Lines: 3 to 14
+-- Lines 3-14
 function CubeMapCreator:init()
 	self._camera = World:create_camera()
 	self._vp = Application:create_world_viewport(0, 0, 1, 1)
@@ -14,7 +14,7 @@ function CubeMapCreator:init()
 	self._creating_cube_map = false
 end
 
--- Lines: 16 to 21
+-- Lines 16-21
 function CubeMapCreator:destroy()
 	if self._vp then
 		Application:destroy_viewport(self._vp)
@@ -23,7 +23,7 @@ function CubeMapCreator:destroy()
 	end
 end
 
--- Lines: 23 to 27
+-- Lines 23-27
 function CubeMapCreator:set_camera_rot(rot)
 	local yaw = rot:yaw()
 	local pitch = rot:pitch()
@@ -31,7 +31,7 @@ function CubeMapCreator:set_camera_rot(rot)
 	self._camera:set_rotation(Rotation(yaw, pitch, 0))
 end
 
--- Lines: 29 to 34
+-- Lines 29-34
 function CubeMapCreator:render()
 	if self._creating_cube_map then
 		self._creating_cube_map = false
@@ -40,14 +40,14 @@ function CubeMapCreator:render()
 	end
 end
 
--- Lines: 36 to 39
+-- Lines 36-39
 function CubeMapCreator:start_cube_map(pos)
 	self._camera:set_position(pos)
 
 	self._creating_cube_map = true
 end
 
--- Lines: 42 to 68
+-- Lines 41-68
 function CubeMapCreator:create_cube_map()
 	local ypos = Application:create_texture("render_target", 512, 512)
 	local xneg = Application:create_texture("render_target", 512, 512)
@@ -69,4 +69,3 @@ function CubeMapCreator:create_cube_map()
 	self:set_camera_rot(Rotation(Vector3(0, 0, -1), Vector3(1, 0, 0)))
 	Application:render("World", self._vp, zneg)
 end
-

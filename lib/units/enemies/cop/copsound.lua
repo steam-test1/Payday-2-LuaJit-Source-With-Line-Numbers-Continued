@@ -1,6 +1,6 @@
 CopSound = CopSound or class()
 
--- Lines: 3 to 18
+-- Lines 3-18
 function CopSound:init(unit)
 	self._unit = unit
 	self._speak_expire_t = 0
@@ -18,14 +18,14 @@ function CopSound:init(unit)
 	unit:base():post_init()
 end
 
--- Lines: 22 to 26
+-- Lines 22-26
 function CopSound:destroy(unit)
 	if alive(unit) and unit:base() then
 		unit:base():pre_destroy(unit)
 	end
 end
 
--- Lines: 30 to 39
+-- Lines 30-39
 function CopSound:set_voice_prefix(index)
 	local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 	local nr_variations = char_tweak.speech_prefix_count
@@ -37,7 +37,7 @@ function CopSound:set_voice_prefix(index)
 	self._prefix = (char_tweak.speech_prefix_p1 or "") .. (nr_variations and tostring(index or math.random(nr_variations)) or "") .. (char_tweak.speech_prefix_p2 or "") .. "_"
 end
 
--- Lines: 43 to 56
+-- Lines 43-57
 function CopSound:_play(sound_name, source_name, clbk)
 	local source = nil
 
@@ -46,12 +46,17 @@ function CopSound:_play(sound_name, source_name, clbk)
 	end
 
 	local event = nil
-	event = clbk and self._unit:sound_source(source):post_event(sound_name, clbk, nil, "end_of_event") or self._unit:sound_source(source):post_event(sound_name)
+
+	if clbk then
+		event = self._unit:sound_source(source):post_event(sound_name, clbk, nil, "end_of_event")
+	else
+		event = self._unit:sound_source(source):post_event(sound_name)
+	end
 
 	return event
 end
 
--- Lines: 62 to 77
+-- Lines 61-78
 function CopSound:play(sound_name, source_name, sync)
 	local event_id = nil
 
@@ -72,7 +77,7 @@ function CopSound:play(sound_name, source_name, sync)
 	return event
 end
 
--- Lines: 83 to 105
+-- Lines 82-106
 function CopSound:corpse_play(sound_name, source_name, sync, important, clbk)
 	local event_id = nil
 
@@ -101,7 +106,7 @@ function CopSound:corpse_play(sound_name, source_name, sync, important, clbk)
 	return event
 end
 
--- Lines: 110 to 116
+-- Lines 110-116
 function CopSound:stop(source_name)
 	local source = nil
 
@@ -112,14 +117,20 @@ function CopSound:stop(source_name)
 	self._unit:sound_source(source):stop()
 end
 
--- Lines: 121 to 151
+-- Lines 120-151
 function CopSound:say(sound_name, sync, skip_prefix, important, callback)
 	if self._last_speech then
 		self._last_speech:stop()
 	end
 
 	local full_sound = nil
-	full_sound = skip_prefix and sound_name or self._prefix .. sound_name
+
+	if skip_prefix then
+		full_sound = sound_name
+	else
+		full_sound = self._prefix .. sound_name
+	end
+
 	local event_id = nil
 
 	if type(full_sound) == "number" then
@@ -142,7 +153,7 @@ function CopSound:say(sound_name, sync, skip_prefix, important, callback)
 	self._speak_expire_t = TimerManager:game():time() + 2
 end
 
--- Lines: 155 to 160
+-- Lines 155-160
 function CopSound:sync_say_str(full_sound)
 	if self._last_speech then
 		self._last_speech:stop()
@@ -151,17 +162,17 @@ function CopSound:sync_say_str(full_sound)
 	self._last_speech = self:play(full_sound)
 end
 
--- Lines: 164 to 165
+-- Lines 164-166
 function CopSound:speaking(t)
 	return t < self._speak_expire_t
 end
 
--- Lines: 170 to 172
+-- Lines 170-172
 function CopSound:anim_clbk_play_sound(unit, queue_name)
 	self:_play(queue_name)
 end
 
--- Lines: 176 to 183
+-- Lines 176-183
 function CopSound:anim_clbk_stop_sound(unit, source_name)
 	if source_name and source_name == Idstring("") then
 		self:stop()
@@ -171,4 +182,3 @@ function CopSound:anim_clbk_stop_sound(unit, source_name)
 
 	self:stop(source_name)
 end
-

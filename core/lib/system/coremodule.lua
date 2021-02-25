@@ -59,7 +59,9 @@ local CoreModule = {
 
 			assert(m, "Can't import. Please check statement core:module('" .. module_name .. "') in: " .. fp)
 
-			for _, name in ipairs({...}) do
+			for _, name in ipairs({
+				...
+			}) do
 				local v = assert(m[name], "Can't import name '" .. tostring(name) .. "' from module '" .. module_name .. "'")
 
 				rawset(getfenv(2), name, v)
@@ -70,7 +72,7 @@ local CoreModule = {
 	end
 }
 
--- Lines: 77 to 85
+-- Lines 77-85
 function CoreModule:module(module_name)
 	local M = nil
 	M = self.__modules[module_name] or {}
@@ -78,18 +80,20 @@ function CoreModule:module(module_name)
 	M._M = M
 	M._NAME = module_name
 
-	setmetatable(M, {__index = self.__pristine_G})
+	setmetatable(M, {
+		__index = self.__pristine_G
+	})
 	setfenv(2, M)
 end
 
--- Lines: 87 to 91
+-- Lines 87-91
 function CoreModule:_add_to_pristine_and_global(key, value)
 	assert(not self.__pristine_closed)
 	rawset(self.__pristine_G, key, value)
 	rawset(_G, key, value)
 end
 
--- Lines: 93 to 99
+-- Lines 93-99
 function CoreModule:_copy_module_to_global(module_name)
 	assert(not self.__pristine_closed)
 
@@ -100,12 +104,12 @@ function CoreModule:_copy_module_to_global(module_name)
 	end
 end
 
--- Lines: 101 to 103
+-- Lines 101-103
 function CoreModule:_close_pristine_namespace(module_name)
 	self.__pristine_closed = true
 end
 
--- Lines: 105 to 115
+-- Lines 105-116
 function CoreModule:_get_module_name(module_file_path)
 	assert(type(module_file_path) == "string")
 
@@ -124,19 +128,18 @@ function CoreModule:_get_module_name(module_file_path)
 	return module_name
 end
 
--- Lines: 118 to 121
+-- Lines 118-121
 function CoreModule:_prepare_reload()
 	self.__filepaths = {}
 	self.__pristine_closed = false
 end
 
--- Lines: 123 to 139
+-- Lines 123-140
 function CoreModule:_lookup(object)
 	assert(Application:production_build(), "core:_lookup(...) is for debugging only!")
 
 	if not self.__obj2nametable[object] then
-
-		-- Lines: 126 to 133
+		-- Lines 126-133
 		local function find(o, n, t)
 			for k, v in pairs(t) do
 				if v == o then
@@ -163,7 +166,7 @@ function CoreModule:_lookup(object)
 	})
 end
 
--- Lines: 142 to 153
+-- Lines 142-154
 function CoreModule:_name_to_module(module_name)
 	if not self.__modules[module_name] then
 		if self.__filepaths[module_name] ~= nil then
@@ -182,7 +185,7 @@ function CoreModule:_name_to_module(module_name)
 	return self.__modules[module_name]
 end
 
--- Lines: 156 to 163
+-- Lines 156-163
 function CoreModule:_module_to_name(module)
 	for n, m in pairs(self.__modules) do
 		if m == module then
@@ -198,4 +201,3 @@ if _G.core == nil then
 else
 	_G.core:_prepare_reload()
 end
-

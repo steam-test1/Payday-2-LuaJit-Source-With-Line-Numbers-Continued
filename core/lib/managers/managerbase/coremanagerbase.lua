@@ -12,7 +12,7 @@ PRIO_GAMEPLAY = 40
 PRIO_DEFAULT = PRIO_GAMEPLAY
 ManagerBase = ManagerBase or class()
 
--- Lines: 20 to 27
+-- Lines 20-27
 function ManagerBase:init(name)
 	self.__name = name
 	self.__aos = {}
@@ -22,7 +22,7 @@ function ManagerBase:init(name)
 	self.__changed = false
 end
 
--- Lines: 30 to 36
+-- Lines 30-36
 function ManagerBase:_add_accessobj(accessobj, prio)
 	assert(accessobj:active_requested() == false)
 	assert(accessobj:really_active() == false)
@@ -33,7 +33,7 @@ function ManagerBase:_add_accessobj(accessobj, prio)
 	table.insert(self.__aos, accessobj)
 end
 
--- Lines: 39 to 45
+-- Lines 39-45
 function ManagerBase:_del_accessobj(accessobj)
 	self.__ao2prio[accessobj] = nil
 
@@ -43,12 +43,12 @@ function ManagerBase:_del_accessobj(accessobj)
 	accessobj:_really_deactivate()
 end
 
--- Lines: 47 to 48
+-- Lines 47-49
 function ManagerBase:_all_ao()
 	return self.__aos
 end
 
--- Lines: 51 to 59
+-- Lines 51-59
 function ManagerBase:_move_ao_to_front(ao)
 	for i, v in ipairs(self.__aos) do
 		if v == ao then
@@ -60,45 +60,45 @@ function ManagerBase:_move_ao_to_front(ao)
 	end
 end
 
--- Lines: 61 to 62
+-- Lines 61-63
 function ManagerBase:_all_really_active()
 	return self.__really_active
 end
 
--- Lines: 65 to 66
+-- Lines 65-67
 function ManagerBase:_all_active_requested()
 	return self.__active_requested
 end
 
--- Lines: 69 to 70
+-- Lines 69-71
 function ManagerBase:_ao_by_name(name)
 	return table.find_value(self.__aos, function (ao)
 		return ao:name() == name
 	end)
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function ManagerBase:_all_ao_by_prio(prio)
 	return table.find_all_values(self.__aos, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
--- Lines: 77 to 78
+-- Lines 77-79
 function ManagerBase:_all_really_active_by_prio(prio)
 	return table.find_all_values(self.__really_active, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function ManagerBase:_all_active_requested_by_prio(prio)
 	return table.find_all_values(self.__active_requested, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
--- Lines: 86 to 116
+-- Lines 86-116
 function ManagerBase:_prioritize_and_activate()
 	self.__active_requested = table.find_all_values(self.__aos, function (ao)
 		return ao:active_requested()
@@ -135,7 +135,7 @@ function ManagerBase:_prioritize_and_activate()
 	self.__changed = true
 end
 
--- Lines: 118 to 134
+-- Lines 118-134
 function ManagerBase:end_update(t, dt)
 	if self.__changed then
 		local p2aos = {}
@@ -158,4 +158,3 @@ function ManagerBase:end_update(t, dt)
 		self.__changed = false
 	end
 end
-

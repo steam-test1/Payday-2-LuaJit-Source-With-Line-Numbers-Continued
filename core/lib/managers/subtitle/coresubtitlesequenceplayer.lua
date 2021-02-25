@@ -3,7 +3,7 @@ core:import("CoreClass")
 
 SubtitleSequencePlayer = SubtitleSequencePlayer or CoreClass.class()
 
--- Lines: 6 to 12
+-- Lines 6-12
 function SubtitleSequencePlayer:init(sequence, presenter)
 	assert(sequence, "Invalid sequence.")
 	assert(presenter, "Invalid presenter.")
@@ -12,19 +12,19 @@ function SubtitleSequencePlayer:init(sequence, presenter)
 	self.__sequence = self.__presenter:preprocess_sequence(sequence)
 end
 
--- Lines: 14 to 15
+-- Lines 14-16
 function SubtitleSequencePlayer:is_done()
 	return self.__sequence:duration() <= (self.__time or 0)
 end
 
--- Lines: 18 to 21
+-- Lines 18-21
 function SubtitleSequencePlayer:update(time, delta_time)
 	self.__time = (self.__time or 0) + delta_time
 
 	self:evaluate_at_time(self.__time)
 end
 
--- Lines: 23 to 33
+-- Lines 23-33
 function SubtitleSequencePlayer:evaluate_at_time(time)
 	if time ~= self._last_evaluated_time then
 		local subtitle = table.inject(self.__sequence:subtitles(), nil, function (latest, subtitle)
@@ -40,4 +40,3 @@ function SubtitleSequencePlayer:evaluate_at_time(time)
 		self._last_evaluated_time = time
 	end
 end
-

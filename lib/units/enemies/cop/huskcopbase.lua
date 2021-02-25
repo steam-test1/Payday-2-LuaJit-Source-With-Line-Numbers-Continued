@@ -1,6 +1,6 @@
 HuskCopBase = HuskCopBase or class(CopBase)
 
--- Lines: 5 to 21
+-- Lines 5-21
 function HuskCopBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -16,7 +16,7 @@ function HuskCopBase:post_init()
 	self:enable_leg_arm_hitbox()
 end
 
--- Lines: 25 to 36
+-- Lines 25-36
 function HuskCopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)
@@ -31,4 +31,3 @@ function HuskCopBase:pre_destroy(unit)
 
 	UnitBase.pre_destroy(self, unit)
 end
-

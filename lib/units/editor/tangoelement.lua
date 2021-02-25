@@ -1,6 +1,6 @@
 TangoAwardElement = TangoAwardElement or class(MissionElement)
 
--- Lines: 8 to 21
+-- Lines 7-21
 function TangoAwardElement:init(unit)
 	TangoAwardElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function TangoAwardElement:init(unit)
 	table.insert(self._save_values, "players_from_start")
 end
 
--- Lines: 24 to 59
+-- Lines 23-59
 function TangoAwardElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -30,7 +30,9 @@ function TangoAwardElement:_build_panel(panel, panel_sizer)
 		end
 	end
 
-	local objectives = {"select a challenge"}
+	local objectives = {
+		"select a challenge"
+	}
 
 	if self._hed.challenge then
 		local id = self._hed.challenge
@@ -60,7 +62,7 @@ function TangoAwardElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Awards a weapon-part objective from the Gage Spec Ops (Tango) DLC.")
 end
 
--- Lines: 62 to 78
+-- Lines 61-78
 function TangoAwardElement:set_element_data(data)
 	TangoAwardElement.super.set_element_data(self, data)
 
@@ -77,9 +79,10 @@ function TangoAwardElement:set_element_data(data)
 		self._objective_box:set_selection(0)
 	end
 end
+
 TangoFilterElement = TangoFilterElement or class(MissionElement)
 
--- Lines: 86 to 97
+-- Lines 85-97
 function TangoFilterElement:init(unit)
 	TangoFilterElement.super.init(self, unit)
 
@@ -92,7 +95,7 @@ function TangoFilterElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines: 100 to 131
+-- Lines 99-131
 function TangoFilterElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -107,7 +110,9 @@ function TangoFilterElement:_build_panel(panel, panel_sizer)
 		end
 	end
 
-	local objectives = {"all"}
+	local objectives = {
+		"all"
+	}
 
 	if self._hed.challenge then
 		local id = self._hed.challenge
@@ -136,7 +141,7 @@ function TangoFilterElement:_build_panel(panel, panel_sizer)
 	}, "Check if the challenge is completed or incomplete")
 end
 
--- Lines: 134 to 151
+-- Lines 133-151
 function TangoFilterElement:set_element_data(data)
 	TangoFilterElement.super.set_element_data(self, data)
 
@@ -154,4 +159,3 @@ function TangoFilterElement:set_element_data(data)
 		self._objective_box:set_selection(0)
 	end
 end
-

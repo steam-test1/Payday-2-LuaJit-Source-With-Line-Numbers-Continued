@@ -3,7 +3,7 @@ require("core/lib/utils/dev/ews/CoreAnimationStateTreePanel")
 CorePuppeteer = CorePuppeteer or class()
 CorePuppeteer.EDITOR_TITLE = "Puppeteer"
 
--- Lines: 5 to 24
+-- Lines 5-24
 function CorePuppeteer:init(unit)
 	if not unit and managers.editor then
 		unit = managers.editor:selected_unit()
@@ -19,7 +19,7 @@ function CorePuppeteer:init(unit)
 	end
 end
 
--- Lines: 26 to 39
+-- Lines 26-40
 function CorePuppeteer:_create_window(unit)
 	self._window = EWS:Frame(CorePuppeteer.EDITOR_TITLE, Vector3(100, 500, 0), Vector3(255, 450, 0), "STAY_ON_TOP,RESIZE_BORDER,CLOSE_BOX,CAPTION,SYSTEM_MENU,CLIP_CHILDREN")
 
@@ -38,7 +38,7 @@ function CorePuppeteer:_create_window(unit)
 	return self._window
 end
 
--- Lines: 42 to 58
+-- Lines 42-59
 function CorePuppeteer:_create_options_panel()
 	local panel = EWS:Panel(self._window, "", "")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -61,17 +61,17 @@ function CorePuppeteer:_create_options_panel()
 	return panel
 end
 
--- Lines: 61 to 63
+-- Lines 61-63
 function CorePuppeteer:set_position(newpos)
 	self._window:set_position(newpos)
 end
 
--- Lines: 65 to 67
+-- Lines 65-67
 function CorePuppeteer:update(time, delta_time)
 	self._state_tree_panel:update(time, delta_time)
 end
 
--- Lines: 69 to 74
+-- Lines 69-74
 function CorePuppeteer:destroy()
 	if alive(self._window) then
 		self._window:destroy()
@@ -80,7 +80,7 @@ function CorePuppeteer:destroy()
 	end
 end
 
--- Lines: 76 to 81
+-- Lines 76-81
 function CorePuppeteer:close()
 	if managers.editor and self._selected_unit_callback then
 		managers.editor:remove_selected_unit_callback(self._selected_unit_callback)
@@ -89,19 +89,19 @@ function CorePuppeteer:close()
 	self._window:destroy()
 end
 
--- Lines: 83 to 87
+-- Lines 83-87
 function CorePuppeteer:unit()
 	if self._state_tree_panel then
 		return self._state_tree_panel:unit()
 	end
 end
 
--- Lines: 89 to 91
+-- Lines 89-91
 function CorePuppeteer:_on_close()
 	managers.toolhub:close(CorePuppeteer.EDITOR_TITLE)
 end
 
--- Lines: 93 to 98
+-- Lines 93-98
 function CorePuppeteer:_on_tree_item_activated(data, event)
 	local tree_node = event:get_item()
 
@@ -110,7 +110,7 @@ function CorePuppeteer:_on_tree_item_activated(data, event)
 	end
 end
 
--- Lines: 100 to 103
+-- Lines 100-103
 function CorePuppeteer:_on_drive_movement_checkbox_clicked(data, event)
 	if not self:unit() then
 		return
@@ -119,12 +119,12 @@ function CorePuppeteer:_on_drive_movement_checkbox_clicked(data, event)
 	self:unit():set_driving(iff(event:is_checked(), "animation", "script"))
 end
 
--- Lines: 105 to 107
+-- Lines 105-107
 function CorePuppeteer:_on_time_multiplier_slider_updated(slider, event)
 	TimerManager:game_animation():set_multiplier(slider:get_value() / 100)
 end
 
--- Lines: 109 to 118
+-- Lines 109-118
 function CorePuppeteer:_on_selected_unit_changed(selected_unit)
 	if selected_unit == self:unit() then
 		return
@@ -138,4 +138,3 @@ function CorePuppeteer:_on_selected_unit_changed(selected_unit)
 		self._drive_movement_checkbox:set_value(selected_unit and selected_unit:driving() == "animation")
 	end
 end
-

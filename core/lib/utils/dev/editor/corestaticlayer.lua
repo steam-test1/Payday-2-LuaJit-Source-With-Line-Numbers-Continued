@@ -9,7 +9,7 @@ core:import("CoreUnit")
 
 StaticLayer = StaticLayer or class(CoreLayer.Layer)
 
--- Lines: 13 to 31
+-- Lines 13-31
 function StaticLayer:init(owner, save_name, units_vector, slot_mask)
 	StaticLayer.super.init(self, owner, save_name)
 	self:load_unit_map_from_vector(units_vector)
@@ -34,7 +34,7 @@ function StaticLayer:init(owner, save_name, units_vector, slot_mask)
 	self._ews_triggers = {}
 end
 
--- Lines: 33 to 38
+-- Lines 33-38
 function StaticLayer:clone_unit()
 	if self:ctrl() then
 		self:clone()
@@ -42,7 +42,7 @@ function StaticLayer:clone_unit()
 	end
 end
 
--- Lines: 40 to 50
+-- Lines 40-50
 function StaticLayer:move_to_continent(name)
 	local delete_units = self._selected_units
 
@@ -58,7 +58,7 @@ function StaticLayer:move_to_continent(name)
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 52 to 81
+-- Lines 52-81
 function StaticLayer:clone(to_continent)
 	managers.editor:freeze_gui_lists()
 
@@ -93,14 +93,14 @@ function StaticLayer:clone(to_continent)
 	self:_cloning_done()
 end
 
--- Lines: 83 to 87
+-- Lines 83-87
 function StaticLayer:spawn_unit()
 	if not self._grab and not self:condition() then
 		self:do_spawn_unit(self._unit_name)
 	end
 end
 
--- Lines: 89 to 96
+-- Lines 89-97
 function StaticLayer:do_spawn_unit(...)
 	local unit = StaticLayer.super.do_spawn_unit(self, ...)
 
@@ -111,24 +111,24 @@ function StaticLayer:do_spawn_unit(...)
 	return unit
 end
 
--- Lines: 99 to 110
+-- Lines 99-110
 function StaticLayer:set_bodies_keyframed(unit)
 	local bodies = unit:num_bodies()
 
-	for i = 0, bodies - 1, 1 do
+	for i = 0, bodies - 1 do
 		if unit:body(i):keyframed() then
 			return
 		end
 	end
 
-	for i = 0, bodies - 1, 1 do
+	for i = 0, bodies - 1 do
 		local body = unit:body(i)
 
 		body:set_keyframed()
 	end
 end
 
--- Lines: 112 to 118
+-- Lines 112-118
 function StaticLayer:use_grab_info()
 	StaticLayer.super.use_grab_info(self)
 
@@ -139,7 +139,7 @@ function StaticLayer:use_grab_info()
 	end
 end
 
--- Lines: 121 to 138
+-- Lines 120-138
 function StaticLayer:set_unit_positions(pos)
 	if not self._grab then
 		managers.editor:set_grid_altitude(pos.z)
@@ -160,7 +160,7 @@ function StaticLayer:set_unit_positions(pos)
 	end
 end
 
--- Lines: 140 to 146
+-- Lines 140-146
 function StaticLayer:set_unit_position(unit, pos, rot)
 	local new_pos = pos + (rot and unit:unit_data().local_pos:rotate_with(rot) or Vector3())
 
@@ -172,7 +172,7 @@ function StaticLayer:set_unit_position(unit, pos, rot)
 	unit:set_moving()
 end
 
--- Lines: 149 to 162
+-- Lines 148-162
 function StaticLayer:set_unit_rotations(rot)
 	if not self:verify_selected_units() then
 		return
@@ -189,7 +189,7 @@ function StaticLayer:set_unit_rotations(rot)
 	end
 end
 
--- Lines: 164 to 168
+-- Lines 164-168
 function StaticLayer:set_unit_rotation(unit, rot)
 	local rot = rot * unit:unit_data().local_rot
 
@@ -197,7 +197,7 @@ function StaticLayer:set_unit_rotation(unit, rot)
 	self:_on_unit_rotated(unit, rot)
 end
 
--- Lines: 170 to 178
+-- Lines 170-178
 function StaticLayer:_on_unit_moved(unit, pos)
 	if unit:ladder() then
 		unit:set_position(pos)
@@ -209,7 +209,7 @@ function StaticLayer:_on_unit_moved(unit, pos)
 	end
 end
 
--- Lines: 180 to 185
+-- Lines 180-185
 function StaticLayer:_on_unit_rotated(unit, rot)
 	if unit:ladder() then
 		unit:set_rotation(rot)
@@ -217,7 +217,7 @@ function StaticLayer:_on_unit_rotated(unit, rot)
 	end
 end
 
--- Lines: 188 to 198
+-- Lines 187-198
 function StaticLayer:move_unit(btn, pressed)
 	if self._selected_unit then
 		self._grab = true
@@ -229,7 +229,7 @@ function StaticLayer:move_unit(btn, pressed)
 	end
 end
 
--- Lines: 201 to 214
+-- Lines 200-214
 function StaticLayer:release_unit()
 	if self._grab then
 		self._grab = false
@@ -243,7 +243,7 @@ function StaticLayer:release_unit()
 	end
 end
 
--- Lines: 216 to 221
+-- Lines 216-221
 function StaticLayer:reset_grab_info()
 	self._grab = false
 	self._grab_info = nil
@@ -251,7 +251,7 @@ function StaticLayer:reset_grab_info()
 	self._offset_move_vec = Vector3(0, 0, 0)
 end
 
--- Lines: 223 to 251
+-- Lines 223-251
 function StaticLayer:rotate_unit(btn, pressed)
 	if self._selected_unit and not self:condition() then
 		local rot_axis = nil
@@ -285,7 +285,7 @@ function StaticLayer:rotate_unit(btn, pressed)
 	end
 end
 
--- Lines: 253 to 262
+-- Lines 253-262
 function StaticLayer:position_as()
 	if self._selected_unit and not self:condition() then
 		local data = {
@@ -302,7 +302,7 @@ function StaticLayer:position_as()
 	end
 end
 
--- Lines: 264 to 272
+-- Lines 264-272
 function StaticLayer:set_select_unit(unit)
 	StaticLayer.super.set_select_unit(self, unit)
 
@@ -315,7 +315,7 @@ function StaticLayer:set_select_unit(unit)
 	end
 end
 
--- Lines: 274 to 290
+-- Lines 274-290
 function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:freeze_gui_lists()
 
@@ -338,7 +338,7 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 292 to 298
+-- Lines 292-298
 function StaticLayer:create_marker(marker)
 	if self._selected_unit then
 		marker:set_pos(self._selected_unit:position())
@@ -348,7 +348,7 @@ function StaticLayer:create_marker(marker)
 	end
 end
 
--- Lines: 299 to 304
+-- Lines 299-304
 function StaticLayer:use_marker(marker)
 	if self._selected_unit then
 		self:set_unit_positions(marker._pos)
@@ -356,7 +356,7 @@ function StaticLayer:use_marker(marker)
 	end
 end
 
--- Lines: 306 to 311
+-- Lines 306-311
 function StaticLayer:reset_rotation()
 	if self._selected_unit then
 		local yaw = not self:shift() and self._selected_unit:rotation():yaw() or 0
@@ -365,7 +365,7 @@ function StaticLayer:reset_rotation()
 	end
 end
 
--- Lines: 313 to 371
+-- Lines 313-371
 function StaticLayer:update(t, dt)
 	self:draw_units(t, dt)
 	self:draw_rotation(t, dt)
@@ -427,14 +427,19 @@ function StaticLayer:update(t, dt)
 	end
 end
 
--- Lines: 373 to 392
+-- Lines 373-392
 function StaticLayer:draw_marker(t, dt)
 	if not managers.editor:layer_draw_marker() then
 		return
 	end
 
 	local ray = nil
-	ray = alive(self._selected_unit) and self._selected_unit:raycast(self._current_pos + Vector3(0, 0, 2000), self._current_pos + Vector3(0, 0, -500), nil, self._slot_mask) or World:raycast(self._current_pos + Vector3(0, 0, 2000), self._current_pos + Vector3(0, 0, -500), nil, self._slot_mask)
+
+	if alive(self._selected_unit) then
+		ray = self._selected_unit:raycast(self._current_pos + Vector3(0, 0, 2000), self._current_pos + Vector3(0, 0, -500), nil, self._slot_mask)
+	else
+		ray = World:raycast(self._current_pos + Vector3(0, 0, 2000), self._current_pos + Vector3(0, 0, -500), nil, self._slot_mask)
+	end
 
 	if ray and ray.unit then
 		Application:draw_line(self._current_pos - Vector3(0, 0, 2000), self._current_pos + Vector3(0, 0, 2000), 1, 0, 0)
@@ -445,7 +450,7 @@ function StaticLayer:draw_marker(t, dt)
 	end
 end
 
--- Lines: 395 to 424
+-- Lines 395-424
 function StaticLayer:update_move_triggers(t, dt)
 	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
@@ -477,7 +482,7 @@ function StaticLayer:update_move_triggers(t, dt)
 	end
 end
 
--- Lines: 427 to 458
+-- Lines 427-458
 function StaticLayer:update_rotate_triggers(t, dt)
 	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
@@ -513,7 +518,7 @@ function StaticLayer:update_rotate_triggers(t, dt)
 	end
 end
 
--- Lines: 460 to 471
+-- Lines 460-471
 function StaticLayer:draw_rotation(t, dt)
 	if not alive(self._selected_unit) then
 		return
@@ -528,7 +533,7 @@ function StaticLayer:draw_rotation(t, dt)
 	end
 end
 
--- Lines: 474 to 493
+-- Lines 473-493
 function StaticLayer:draw_units(t, dt)
 	if self._selected_units then
 		for _, unit in ipairs(self._selected_units) do
@@ -546,7 +551,7 @@ function StaticLayer:draw_units(t, dt)
 	Application:draw(self._selected_unit, 0, 1, 0)
 end
 
--- Lines: 495 to 525
+-- Lines 495-526
 function StaticLayer:build_panel(notebook, settings)
 	cat_print("editor", "StaticLayer:build_panel")
 
@@ -576,11 +581,11 @@ function StaticLayer:build_panel(notebook, settings)
 	return self._ews_panel
 end
 
--- Lines: 529 to 530
+-- Lines 528-530
 function StaticLayer:build_btn_toolbar()
 end
 
--- Lines: 532 to 538
+-- Lines 532-538
 function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:add_tool("HIDE_ALL", "Hide All", CoreEws.image_path("toolbar\\hide_16x16.png"), "Hide All")
 	self._btn_toolbar:connect("HIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "hide_all"), nil)
@@ -588,7 +593,7 @@ function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:connect("UNHIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "unhide_all"), nil)
 end
 
--- Lines: 540 to 559
+-- Lines 540-560
 function StaticLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -612,12 +617,12 @@ function StaticLayer:get_help(text)
 	return text
 end
 
--- Lines: 562 to 564
+-- Lines 562-564
 function StaticLayer:deactivate()
 	StaticLayer.super.deactivate(self)
 end
 
--- Lines: 566 to 586
+-- Lines 566-586
 function StaticLayer:add_triggers()
 	StaticLayer.super.add_triggers(self)
 
@@ -639,4 +644,3 @@ function StaticLayer:add_triggers()
 		vc:add_trigger(Idstring(k), cb)
 	end
 end
-

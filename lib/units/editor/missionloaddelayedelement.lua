@@ -2,7 +2,7 @@ MissionLoadDelayedElement = MissionLoadDelayedElement or class(MissionElement)
 MissionLoadDelayedElement.SAVE_UNIT_POSITION = false
 MissionLoadDelayedElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 13
+-- Lines 5-13
 function MissionLoadDelayedElement:init(unit)
 	MissionLoadDelayedElement.super.init(self, unit)
 
@@ -12,7 +12,7 @@ function MissionLoadDelayedElement:init(unit)
 	table.insert(self._save_values, "unit_ids")
 end
 
--- Lines: 16 to 23
+-- Lines 16-23
 function MissionLoadDelayedElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -23,14 +23,14 @@ function MissionLoadDelayedElement:layer_finished()
 	end
 end
 
--- Lines: 25 to 29
+-- Lines 25-29
 function MissionLoadDelayedElement:save_unit_data(unit)
 	if unit then
 		self._units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 31 to 54
+-- Lines 31-54
 function MissionLoadDelayedElement:update_selected()
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -60,7 +60,7 @@ function MissionLoadDelayedElement:update_selected()
 	end
 end
 
--- Lines: 56 to 69
+-- Lines 56-69
 function MissionLoadDelayedElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -79,7 +79,7 @@ function MissionLoadDelayedElement:update_unselected(t, dt, selected_unit, all_u
 	end
 end
 
--- Lines: 71 to 84
+-- Lines 71-84
 function MissionLoadDelayedElement:draw_links_unselected(...)
 	MissionLoadDelayedElement.super.draw_links_unselected(self, ...)
 
@@ -97,7 +97,7 @@ function MissionLoadDelayedElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 86 to 91
+-- Lines 86-91
 function MissionLoadDelayedElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -110,7 +110,7 @@ function MissionLoadDelayedElement:update_editing()
 	end
 end
 
--- Lines: 93 to 105
+-- Lines 93-105
 function MissionLoadDelayedElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -129,28 +129,27 @@ function MissionLoadDelayedElement:select_unit()
 	end
 end
 
--- Lines: 107 to 110
+-- Lines 107-110
 function MissionLoadDelayedElement:_remove_unit(unit)
 	self._units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 112 to 115
+-- Lines 112-115
 function MissionLoadDelayedElement:_add_unit(unit)
 	self:save_unit_data(unit)
 	table.insert(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function MissionLoadDelayedElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 130 to 139
+-- Lines 121-139
 function MissionLoadDelayedElement:add_unit_list_btn()
-
-	-- Lines: 122 to 130
+	-- Lines 122-131
 	local function filter_p(unit)
 		if self._units[unit:unit_data().unit_id] then
 			return false
@@ -172,10 +171,9 @@ function MissionLoadDelayedElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 143 to 152
+-- Lines 141-152
 function MissionLoadDelayedElement:remove_unit_list_btn()
-
-	-- Lines: 142 to 143
+	-- Lines 142-144
 	local function filter_p(unit)
 		return self._units[unit:unit_data().unit_id]
 	end
@@ -189,7 +187,7 @@ function MissionLoadDelayedElement:remove_unit_list_btn()
 	end
 end
 
--- Lines: 154 to 171
+-- Lines 154-171
 function MissionLoadDelayedElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -204,4 +202,3 @@ function MissionLoadDelayedElement:_build_panel(panel, panel_sizer)
 	self._btn_toolbar:realize()
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
-

@@ -1,6 +1,6 @@
 CoreCutsceneCast = CoreCutsceneCast or class()
 
--- Lines: 3 to 8
+-- Lines 3-8
 function CoreCutsceneCast:prime(cutscene)
 	assert(cutscene and cutscene:is_valid(), "Attempting to prime invalid cutscene.")
 
@@ -10,7 +10,7 @@ function CoreCutsceneCast:prime(cutscene)
 	self:_animation_blob_controller(cutscene, preload)
 end
 
--- Lines: 11 to 36
+-- Lines 10-36
 function CoreCutsceneCast:unload()
 	for _, blob_controller in pairs(self._animation_blob_controllers or {}) do
 		if blob_controller ~= false and alive(blob_controller) then
@@ -41,14 +41,14 @@ function CoreCutsceneCast:unload()
 	self.__root_unit = nil
 end
 
--- Lines: 38 to 40
+-- Lines 38-41
 function CoreCutsceneCast:is_ready(cutscene)
 	local blob_controller = cutscene and self:_animation_blob_controller(cutscene)
 
 	return blob_controller == nil or blob_controller:ready()
 end
 
--- Lines: 43 to 50
+-- Lines 43-50
 function CoreCutsceneCast:set_timer(timer)
 	for _, unit in pairs(self._spawned_units or {}) do
 		if alive(unit) then
@@ -58,7 +58,7 @@ function CoreCutsceneCast:set_timer(timer)
 	end
 end
 
--- Lines: 52 to 58
+-- Lines 52-58
 function CoreCutsceneCast:set_cutscene_visible(cutscene, visible)
 	for unit_name, unit in pairs(self._spawned_units or {}) do
 		if cutscene:has_unit(unit_name, true) then
@@ -67,7 +67,7 @@ function CoreCutsceneCast:set_cutscene_visible(cutscene, visible)
 	end
 end
 
--- Lines: 60 to 73
+-- Lines 60-73
 function CoreCutsceneCast:set_unit_visible(unit_name, visible)
 	visible = not not visible
 	self._hidden_units = self._hidden_units or {}
@@ -83,17 +83,17 @@ function CoreCutsceneCast:set_unit_visible(unit_name, visible)
 	end
 end
 
--- Lines: 75 to 76
+-- Lines 75-77
 function CoreCutsceneCast:unit_visible(unit_name)
 	return (self._hidden_units and self._hidden_units[unit_name]) == nil
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function CoreCutsceneCast:unit(unit_name)
 	return self._spawned_units and self._spawned_units[unit_name]
 end
 
--- Lines: 83 to 90
+-- Lines 83-90
 function CoreCutsceneCast:actor_unit(unit_name, cutscene)
 	local unit = self:unit(unit_name)
 
@@ -104,12 +104,12 @@ function CoreCutsceneCast:actor_unit(unit_name, cutscene)
 	end
 end
 
--- Lines: 92 to 93
+-- Lines 92-94
 function CoreCutsceneCast:unit_names()
 	return self._spawned_units and table.map_keys(self._spawned_units) or {}
 end
 
--- Lines: 96 to 143
+-- Lines 96-143
 function CoreCutsceneCast:evaluate_cutscene_at_time(cutscene, time)
 	self._last_evaluated_cutscene = self._last_evaluated_cutscene or cutscene
 
@@ -165,7 +165,7 @@ function CoreCutsceneCast:evaluate_cutscene_at_time(cutscene, time)
 	self._last_evaluated_cutscene = cutscene
 end
 
--- Lines: 145 to 155
+-- Lines 145-155
 function CoreCutsceneCast:evaluate_object_at_time(cutscene, unit_name, object_name, time)
 	assert(cutscene:is_optimized(), "Currently only supported with optimized cutscenes.")
 
@@ -180,7 +180,7 @@ function CoreCutsceneCast:evaluate_object_at_time(cutscene, unit_name, object_na
 	end
 end
 
--- Lines: 157 to 185
+-- Lines 157-185
 function CoreCutsceneCast:spawn_unit(unit_name, unit_type)
 	if DB:has("unit", unit_type) then
 		cat_print("cutscene", string.format("[CoreCutsceneCast] Spawning \"%s\" named \"%s\".", unit_type, unit_name))
@@ -214,7 +214,7 @@ function CoreCutsceneCast:spawn_unit(unit_name, unit_type)
 	end
 end
 
--- Lines: 187 to 202
+-- Lines 187-203
 function CoreCutsceneCast:delete_unit(unit_name)
 	local unit = self:unit(unit_name)
 
@@ -235,7 +235,7 @@ function CoreCutsceneCast:delete_unit(unit_name)
 	return unit ~= nil
 end
 
--- Lines: 205 to 218
+-- Lines 205-219
 function CoreCutsceneCast:rename_unit(unit_name, new_unit_name)
 	local unit = self:unit(unit_name)
 
@@ -254,7 +254,7 @@ function CoreCutsceneCast:rename_unit(unit_name, new_unit_name)
 	return false
 end
 
--- Lines: 226 to 238
+-- Lines 226-238
 function CoreCutsceneCast:_stop_animations_on_actor_units_in_cutscene(cutscene)
 	local blob_controller = self:_animation_blob_controller(cutscene)
 
@@ -271,7 +271,7 @@ function CoreCutsceneCast:_stop_animations_on_actor_units_in_cutscene(cutscene)
 	end
 end
 
--- Lines: 240 to 242
+-- Lines 240-243
 function CoreCutsceneCast:_state_machine_is_playing_raw_animation(machine, animation)
 	local state_names = table.collect(machine:config():states(), function (state)
 		return state:name()
@@ -280,7 +280,7 @@ function CoreCutsceneCast:_state_machine_is_playing_raw_animation(machine, anima
 	return table.contains(state_names, animation) and machine:is_playing(animation)
 end
 
--- Lines: 245 to 249
+-- Lines 245-249
 function CoreCutsceneCast:_reparent_to_locator_unit(parent, child)
 	local parent_locator = assert(parent:get_object("locator"), "Parent does not have an Object named \"locator\".")
 
@@ -288,7 +288,7 @@ function CoreCutsceneCast:_reparent_to_locator_unit(parent, child)
 	parent:link(parent_locator:name(), child, child:orientation_object():name())
 end
 
--- Lines: 251 to 261
+-- Lines 251-261
 function CoreCutsceneCast:_set_unit_and_children_visible(unit, visible, excluded_units)
 	unit:set_visible(visible)
 	unit:set_enabled(visible)
@@ -304,7 +304,7 @@ function CoreCutsceneCast:_set_unit_and_children_visible(unit, visible, excluded
 	end
 end
 
--- Lines: 263 to 278
+-- Lines 263-279
 function CoreCutsceneCast:_animation_blob_controller(cutscene, preloading)
 	if cutscene:animation_blobs() == nil then
 		return nil
@@ -325,7 +325,7 @@ function CoreCutsceneCast:_animation_blob_controller(cutscene, preloading)
 	return blob_controller
 end
 
--- Lines: 281 to 299
+-- Lines 281-300
 function CoreCutsceneCast:_actor_units_in_cutscene(cutscene)
 	self._spawned_units = self._spawned_units or {}
 	local result = {}
@@ -349,7 +349,7 @@ function CoreCutsceneCast:_actor_units_in_cutscene(cutscene)
 	return result
 end
 
--- Lines: 302 to 307
+-- Lines 302-308
 function CoreCutsceneCast:_root_unit()
 	if self.__root_unit == nil then
 		self.__root_unit = World:spawn_unit(Idstring("core/units/locator/locator"), Vector3(0, 0, 0), Rotation())
@@ -357,4 +357,3 @@ function CoreCutsceneCast:_root_unit()
 
 	return self.__root_unit
 end
-

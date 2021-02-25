@@ -1,13 +1,15 @@
 CoreMotionPathOperatorUnitElement = CoreMotionPathOperatorUnitElement or class(MissionElement)
-CoreMotionPathOperatorUnitElement.LINK_ELEMENTS = {"elements"}
+CoreMotionPathOperatorUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 MotionPathOperatorUnitElement = MotionPathOperatorUnitElement or class(CoreMotionPathOperatorUnitElement)
 
--- Lines: 33 to 35
+-- Lines 33-35
 function MotionPathOperatorUnitElement:init(...)
 	MotionPathOperatorUnitElement.super.init(self, ...)
 end
 
--- Lines: 37 to 50
+-- Lines 37-50
 function CoreMotionPathOperatorUnitElement:init(unit)
 	CoreMotionPathOperatorUnitElement.super.init(self, unit)
 
@@ -22,7 +24,7 @@ function CoreMotionPathOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "marker_ids")
 end
 
--- Lines: 52 to 73
+-- Lines 52-73
 function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreMotionPathOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -57,13 +59,13 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 	end
 end
 
--- Lines: 75 to 78
+-- Lines 75-78
 function CoreMotionPathOperatorUnitElement:get_links_to_unit(...)
 	CoreMotionPathOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 80 to 85
+-- Lines 80-85
 function CoreMotionPathOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -76,12 +78,12 @@ function CoreMotionPathOperatorUnitElement:update_editing()
 	end
 end
 
--- Lines: 87 to 89
+-- Lines 87-89
 function CoreMotionPathOperatorUnitElement:update_selected()
 	Application:draw_cone(self._unit:position(), self._unit:position() + self._unit:rotation():y() * 75, 35, 1, 1, 1)
 end
 
--- Lines: 91 to 104
+-- Lines 91-104
 function CoreMotionPathOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -99,15 +101,17 @@ function CoreMotionPathOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 107 to 109
+-- Lines 107-109
 function CoreMotionPathOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 111 to 121
+-- Lines 111-122
 function CoreMotionPathOperatorUnitElement:_motion_path_markers()
 	self._hed.marker_ids = {}
-	local motion_path_markers = {"none"}
+	local motion_path_markers = {
+		"none"
+	}
 	local mission_elements = managers.worlddefinition._mission_element_units
 
 	for _, me in pairs(mission_elements) do
@@ -121,7 +125,7 @@ function CoreMotionPathOperatorUnitElement:_motion_path_markers()
 	return motion_path_markers
 end
 
--- Lines: 124 to 136
+-- Lines 124-136
 function CoreMotionPathOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -146,7 +150,7 @@ function CoreMotionPathOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element can modify motion path marker elements. Select motion path marker elements to modify using insert and clicking on the elements.")
 end
 
--- Lines: 138 to 143
+-- Lines 138-143
 function CoreMotionPathOperatorUnitElement:on_executed_marker_selected()
 	Application:debug("CoreMotionPathOperatorUnitElement:_build_panel( panel, panel_sizer ): ", self._hed.marker, self._hed.marker_ids[self._hed.marker])
 
@@ -154,16 +158,19 @@ function CoreMotionPathOperatorUnitElement:on_executed_marker_selected()
 		self._hed.marker = nil
 	end
 end
+
 CoreMotionPathTriggerUnitElement = CoreMotionPathTriggerUnitElement or class(MissionElement)
-CoreMotionPathTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+CoreMotionPathTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 MotionPathTriggerUnitElement = MotionPathTriggerUnitElement or class(CoreMotionPathTriggerUnitElement)
 
--- Lines: 152 to 154
+-- Lines 152-154
 function MotionPathTriggerUnitElement:init(...)
 	MotionPathTriggerUnitElement.super.init(self, ...)
 end
 
--- Lines: 156 to 164
+-- Lines 156-164
 function CoreMotionPathTriggerUnitElement:init(unit)
 	CoreMotionPathTriggerUnitElement.super.init(self, unit)
 
@@ -174,7 +181,7 @@ function CoreMotionPathTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 166 to 175
+-- Lines 166-175
 function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreMotionPathTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -194,13 +201,13 @@ function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_u
 	end
 end
 
--- Lines: 177 to 180
+-- Lines 177-180
 function CoreMotionPathTriggerUnitElement:get_links_to_unit(...)
 	CoreMotionPathTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 182 to 187
+-- Lines 182-187
 function CoreMotionPathTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -213,7 +220,7 @@ function CoreMotionPathTriggerUnitElement:update_editing()
 	end
 end
 
--- Lines: 189 to 202
+-- Lines 189-202
 function CoreMotionPathTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -231,19 +238,20 @@ function CoreMotionPathTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 205 to 207
+-- Lines 205-207
 function CoreMotionPathTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 209 to 218
+-- Lines 209-218
 function CoreMotionPathTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "outcome", {"marker_reached"}, "Select an outcome to trigger on")
+	self:_build_value_combobox(panel, panel_sizer, "outcome", {
+		"marker_reached"
+	}, "Select an outcome to trigger on")
 	self:_add_help_text("This element is a trigger on motion path marker element.")
 end
-

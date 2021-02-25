@@ -3,7 +3,7 @@ core:import("CoreLinkedStackMap")
 
 ListenerManager = ListenerManager or class()
 
--- Lines: 10 to 25
+-- Lines 10-25
 function ListenerManager:init()
 	self._set_map = {}
 	self._category_map = {}
@@ -20,7 +20,7 @@ function ListenerManager:init()
 	self:add_stack("main")
 end
 
--- Lines: 27 to 33
+-- Lines 27-33
 function ListenerManager:active_listener_obj()
 	for id, listener_data in pairs(self._listener_map) do
 		if listener_data.active then
@@ -29,7 +29,7 @@ function ListenerManager:active_listener_obj()
 	end
 end
 
--- Lines: 36 to 52
+-- Lines 36-53
 function ListenerManager:get_closest_listener_position(position)
 	Application:error("ListenerManager:get_closest_listener_position dont function in wwise yet")
 
@@ -54,7 +54,7 @@ function ListenerManager:get_closest_listener_position(position)
 	return closest_position, closest_distance
 end
 
--- Lines: 55 to 63
+-- Lines 55-63
 function ListenerManager:set_enabled(enabled)
 	enabled = not not enabled
 
@@ -67,7 +67,7 @@ function ListenerManager:set_enabled(enabled)
 	end
 end
 
--- Lines: 65 to 85
+-- Lines 65-85
 function ListenerManager:callback_on_all_active_listeners(func)
 	local done_set_map = {}
 	local done_category_map = {}
@@ -91,22 +91,22 @@ function ListenerManager:callback_on_all_active_listeners(func)
 	end
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function ListenerManager:has_stack(stack_id)
 	return self._active_set_stack_map[stack_id] ~= nil
 end
 
--- Lines: 91 to 92
+-- Lines 91-93
 function ListenerManager:has_set(set_id)
 	return self._set_map[set_id] ~= nil
 end
 
--- Lines: 95 to 96
+-- Lines 95-97
 function ListenerManager:has_category(category_id)
 	return self._category_map[category_id] ~= nil
 end
 
--- Lines: 99 to 106
+-- Lines 99-106
 function ListenerManager:add_stack(stack_id)
 	if not self._active_set_stack_map[stack_id] then
 		self._active_set_stack_map[stack_id] = CoreLinkedStackMap.LinkedStackMap:new()
@@ -116,7 +116,7 @@ function ListenerManager:add_stack(stack_id)
 	end
 end
 
--- Lines: 108 to 122
+-- Lines 108-122
 function ListenerManager:remove_stack(stack_id)
 	local active_set_stack = self._active_set_stack_map[stack_id]
 
@@ -133,7 +133,7 @@ function ListenerManager:remove_stack(stack_id)
 	end
 end
 
--- Lines: 124 to 137
+-- Lines 124-137
 function ListenerManager:add_set(set_id, category_id_list)
 	if not self._set_map[set_id] then
 		self._set_map[set_id] = {}
@@ -149,7 +149,7 @@ function ListenerManager:add_set(set_id, category_id_list)
 	end
 end
 
--- Lines: 139 to 156
+-- Lines 139-156
 function ListenerManager:remove_set(set_id)
 	local category_map = self._set_map[set_id]
 
@@ -169,7 +169,7 @@ function ListenerManager:remove_set(set_id)
 	end
 end
 
--- Lines: 158 to 174
+-- Lines 158-174
 function ListenerManager:add_set_category(set_id, category_id)
 	local category_map = self._set_map[set_id]
 
@@ -188,7 +188,7 @@ function ListenerManager:add_set_category(set_id, category_id)
 	end
 end
 
--- Lines: 176 to 188
+-- Lines 176-188
 function ListenerManager:remove_set_category(set_id, category_id)
 	local category_map = self._set_map[set_id]
 
@@ -203,7 +203,7 @@ function ListenerManager:remove_set_category(set_id, category_id)
 	end
 end
 
--- Lines: 190 to 197
+-- Lines 190-197
 function ListenerManager:add_category(category_id)
 	if not self._category_map[category_id] then
 		self._category_map[category_id] = {}
@@ -213,7 +213,7 @@ function ListenerManager:add_category(category_id)
 	end
 end
 
--- Lines: 199 to 212
+-- Lines 199-212
 function ListenerManager:remove_category(category_id)
 	if self._category_map[category_id] then
 		for set_id, category_map in pairs(self._set_map) do
@@ -229,7 +229,7 @@ function ListenerManager:remove_category(category_id)
 	end
 end
 
--- Lines: 221 to 253
+-- Lines 221-254
 function ListenerManager:add_listener(category_id, distance_obj, orientation_obj, occlusion_obj, disabled)
 	if not self._category_map[category_id] then
 		self:add_category(category_id)
@@ -267,7 +267,7 @@ function ListenerManager:add_listener(category_id, distance_obj, orientation_obj
 	return key
 end
 
--- Lines: 256 to 278
+-- Lines 256-278
 function ListenerManager:remove_listener(listener_id)
 	local listener = self._listener_map[listener_id]
 
@@ -291,7 +291,7 @@ function ListenerManager:remove_listener(listener_id)
 	end
 end
 
--- Lines: 280 to 307
+-- Lines 280-307
 function ListenerManager:set_listener(listener_id, distance_obj, orientation_obj, occlusion_obj)
 	local listener = self._listener_map[listener_id]
 
@@ -323,7 +323,7 @@ function ListenerManager:set_listener(listener_id, distance_obj, orientation_obj
 	end
 end
 
--- Lines: 309 to 322
+-- Lines 309-322
 function ListenerManager:set_listener_enabled(listener_id, enabled)
 	local data = self._listener_map[listener_id]
 
@@ -338,7 +338,7 @@ function ListenerManager:set_listener_enabled(listener_id, enabled)
 	end
 end
 
--- Lines: 324 to 333
+-- Lines 324-333
 function ListenerManager:get_listener_enabled(listener_id)
 	local listener = self._listener_map[listener_id]
 
@@ -351,7 +351,7 @@ function ListenerManager:get_listener_enabled(listener_id)
 	end
 end
 
--- Lines: 335 to 366
+-- Lines 335-367
 function ListenerManager:activate_set(stack_id, set_id)
 	local active_set_stack = self._active_set_stack_map[stack_id]
 
@@ -389,7 +389,7 @@ function ListenerManager:activate_set(stack_id, set_id)
 	return -1
 end
 
--- Lines: 369 to 396
+-- Lines 369-396
 function ListenerManager:deactivate_set(activation_id)
 	local activation = self._activation_map[activation_id]
 
@@ -419,7 +419,7 @@ function ListenerManager:deactivate_set(activation_id)
 	end
 end
 
--- Lines: 398 to 410
+-- Lines 398-410
 function ListenerManager:_activate_set(set_id)
 	local active_set_count = self._active_set_count_map[set_id]
 
@@ -431,7 +431,7 @@ function ListenerManager:_activate_set(set_id)
 	self._active_set_count_map[set_id] = active_set_count + 1
 end
 
--- Lines: 412 to 423
+-- Lines 412-423
 function ListenerManager:_deactivate_set(set_id)
 	local active_set_count = self._active_set_count_map[set_id]
 	active_set_count = active_set_count - 1
@@ -445,7 +445,7 @@ function ListenerManager:_deactivate_set(set_id)
 	self._active_set_count_map[set_id] = active_set_count
 end
 
--- Lines: 425 to 435
+-- Lines 425-435
 function ListenerManager:_set_listener_set_active(set_id, active)
 	for category_id, listener_map in pairs(self._set_map[set_id]) do
 		self._active_category_map[category_id] = active
@@ -458,10 +458,9 @@ function ListenerManager:_set_listener_set_active(set_id, active)
 	end
 end
 
--- Lines: 437 to 441
+-- Lines 437-441
 function ListenerManager:debug_print()
 	for stack_id, stack in pairs(self._active_set_stack_map) do
 		cat_debug("debug", tostring(stack_id) .. ": " .. tostring(stack:to_string()))
 	end
 end
-

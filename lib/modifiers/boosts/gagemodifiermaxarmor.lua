@@ -2,7 +2,7 @@ GageModifierMaxArmor = GageModifierMaxArmor or class(GageModifier)
 GageModifierMaxArmor._type = "GageModifierMaxArmor"
 GageModifierMaxArmor.default_value = "armor"
 
--- Lines: 7 to 15
+-- Lines 6-15
 function GageModifierMaxArmor:init(data)
 	GageModifierMaxArmor.super.init(self, data)
 
@@ -11,12 +11,12 @@ function GageModifierMaxArmor:init(data)
 	end
 end
 
--- Lines: 17 to 18
+-- Lines 17-19
 function GageModifierMaxArmor:get_armor_multiplier()
 	return 1 + self:value() / 100
 end
 
--- Lines: 21 to 25
+-- Lines 21-26
 function GageModifierMaxArmor:modify_value(id, value)
 	if id == "PlayerDamage:GetMaxArmor" then
 		return value * self:get_armor_multiplier()
@@ -24,4 +24,3 @@ function GageModifierMaxArmor:modify_value(id, value)
 
 	return value
 end
-

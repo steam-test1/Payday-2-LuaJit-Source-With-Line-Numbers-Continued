@@ -1,6 +1,6 @@
 SelectGroupByName = SelectGroupByName or class(CoreEditorEwsDialog)
 
--- Lines: 3 to 64
+-- Lines 3-64
 function SelectGroupByName:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -57,7 +57,7 @@ function SelectGroupByName:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines: 66 to 71
+-- Lines 66-71
 function SelectGroupByName:key_delete(ctrlr, event)
 	event:skip()
 
@@ -66,7 +66,7 @@ function SelectGroupByName:key_delete(ctrlr, event)
 	end
 end
 
--- Lines: 73 to 78
+-- Lines 73-78
 function SelectGroupByName:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -75,7 +75,7 @@ function SelectGroupByName:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines: 80 to 89
+-- Lines 80-89
 function SelectGroupByName:on_delete()
 	managers.editor:freeze_gui_lists()
 
@@ -90,11 +90,11 @@ function SelectGroupByName:on_delete()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 92 to 93
+-- Lines 91-93
 function SelectGroupByName:on_mark_group()
 end
 
--- Lines: 95 to 100
+-- Lines 95-100
 function SelectGroupByName:on_ungroup()
 	local groups = self:_selected_item_groups()
 
@@ -103,7 +103,7 @@ function SelectGroupByName:on_ungroup()
 	end
 end
 
--- Lines: 102 to 113
+-- Lines 102-113
 function SelectGroupByName:on_select_group()
 	local group = self:_selected_item_group()
 
@@ -119,7 +119,7 @@ function SelectGroupByName:on_select_group()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 116 to 122
+-- Lines 116-123
 function SelectGroupByName:_selected_item_groups()
 	local groups = {}
 
@@ -132,7 +132,7 @@ function SelectGroupByName:_selected_item_groups()
 	return groups
 end
 
--- Lines: 126 to 131
+-- Lines 126-131
 function SelectGroupByName:_selected_item_group()
 	local index = self._list:selected_item()
 
@@ -141,9 +141,9 @@ function SelectGroupByName:_selected_item_group()
 	end
 end
 
--- Lines: 134 to 141
+-- Lines 134-141
 function SelectGroupByName:group_removed(group)
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._groups[self._list:get_item_data(i)] == group then
 			self._list:delete_item(i)
 
@@ -152,7 +152,7 @@ function SelectGroupByName:group_removed(group)
 	end
 end
 
--- Lines: 144 to 149
+-- Lines 144-149
 function SelectGroupByName:group_created(group)
 	local i = self._list:append_item(group:name())
 	local j = #self._groups + 1
@@ -161,13 +161,13 @@ function SelectGroupByName:group_created(group)
 	self._list:set_item_data(i, j)
 end
 
--- Lines: 152 to 164
+-- Lines 152-164
 function SelectGroupByName:group_selected(group)
 	for _, i in ipairs(self._list:selected_items()) do
 		self._list:set_item_selected(i, false)
 	end
 
-	for i = 0, self._list:item_count() - 1, 1 do
+	for i = 0, self._list:item_count() - 1 do
 		if self._groups[self._list:get_item_data(i)] == group then
 			self._list:set_item_selected(i, true)
 			self._list:ensure_visible(i)
@@ -177,12 +177,12 @@ function SelectGroupByName:group_selected(group)
 	end
 end
 
--- Lines: 166 to 168
+-- Lines 166-168
 function SelectGroupByName:update_filter()
 	self:fill_group_list()
 end
 
--- Lines: 172 to 189
+-- Lines 172-189
 function SelectGroupByName:fill_group_list()
 	self._list:delete_all_items()
 
@@ -208,18 +208,17 @@ function SelectGroupByName:fill_group_list()
 	self._list:autosize_column(0)
 end
 
--- Lines: 191 to 193
+-- Lines 191-193
 function SelectGroupByName:reset()
 	self:fill_group_list()
 end
 
--- Lines: 195 to 197
+-- Lines 195-197
 function SelectGroupByName:freeze()
 	self._list:freeze()
 end
 
--- Lines: 199 to 201
+-- Lines 199-201
 function SelectGroupByName:thaw()
 	self._list:thaw()
 end
-

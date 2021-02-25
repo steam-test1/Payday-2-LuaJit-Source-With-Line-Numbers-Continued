@@ -2,7 +2,7 @@ require("lib/states/GameState")
 
 BootupState = BootupState or class(GameState)
 
--- Lines: 5 to 21
+-- Lines 5-21
 function BootupState:init(game_state_machine, setup)
 	GameState.init(self, "bootup", game_state_machine)
 
@@ -13,7 +13,7 @@ function BootupState:init(game_state_machine, setup)
 	end
 end
 
--- Lines: 23 to 36
+-- Lines 23-36
 function BootupState:old()
 	self._play_data_list = {
 		{
@@ -83,7 +83,7 @@ function BootupState:old()
 	}
 end
 
--- Lines: 38 to 45
+-- Lines 38-45
 function BootupState:on_savefile_loaded(slot, success, is_setting_slot, cache_only)
 	if is_setting_slot then
 		self._bootup_volume = (managers.user:get_setting("sfx_volume") or 100) / 100
@@ -94,7 +94,7 @@ function BootupState:on_savefile_loaded(slot, success, is_setting_slot, cache_on
 	end
 end
 
--- Lines: 47 to 111
+-- Lines 47-111
 function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -167,7 +167,7 @@ function BootupState:setup()
 
 	self._controller_list = {}
 
-	for index = 1, managers.controller:get_wrapper_count(), 1 do
+	for index = 1, managers.controller:get_wrapper_count() do
 		local con = managers.controller:create_controller("boot_" .. index, index, false)
 
 		con:enable()
@@ -176,7 +176,7 @@ function BootupState:setup()
 	end
 end
 
--- Lines: 114 to 128
+-- Lines 113-128
 function BootupState:setup_intro_videos()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -219,7 +219,7 @@ function BootupState:setup_intro_videos()
 	})
 end
 
--- Lines: 130 to 164
+-- Lines 130-164
 function BootupState:at_enter()
 	managers.menu:input_enabled(false)
 
@@ -254,14 +254,14 @@ function BootupState:at_enter()
 	end
 end
 
--- Lines: 166 to 170
+-- Lines 166-170
 function BootupState:clbk_game_has_music_control(status)
 	if self._play_data and self._play_data.video then
 		self._gui_obj:set_volume_gain(status and self._bootup_volume or 0)
 	end
 end
 
--- Lines: 174 to 191
+-- Lines 172-191
 function BootupState:update(t, dt)
 	if self._wait_for_textures then
 		if TextureCache:check_textures_loaded() then
@@ -284,7 +284,7 @@ function BootupState:update(t, dt)
 	end
 end
 
--- Lines: 193 to 205
+-- Lines 193-205
 function BootupState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -300,7 +300,7 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines: 207 to 245
+-- Lines 207-245
 function BootupState:update_fades()
 	local time, duration = nil
 
@@ -341,7 +341,7 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines: 247 to 259
+-- Lines 247-259
 function BootupState:apply_fade()
 	if self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
@@ -356,7 +356,7 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines: 261 to 268
+-- Lines 261-269
 function BootupState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -367,7 +367,7 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines: 271 to 281
+-- Lines 271-281
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
@@ -380,7 +380,7 @@ function BootupState:is_playing()
 	end
 end
 
--- Lines: 283 to 387
+-- Lines 283-387
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -426,9 +426,9 @@ function BootupState:play_next(is_skipped)
 		local padding = self._play_data.padding or 0
 
 		if self._play_data.gui then
-			if res.x / res.y < self._play_data.width / self._play_data.height then
+			if self._play_data.width / self._play_data.height > res.x / res.y then
 				width = res.x - padding * 2
-				height = (self._play_data.height * width) / self._play_data.width
+				height = self._play_data.height * width / self._play_data.width
 			else
 				height = self._play_data.height
 				width = self._play_data.width
@@ -495,7 +495,7 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines: 389 to 434
+-- Lines 389-434
 function BootupState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
@@ -542,4 +542,3 @@ function BootupState:at_exit()
 		PackageManager:unload("packages/boot_screen")
 	end
 end
-

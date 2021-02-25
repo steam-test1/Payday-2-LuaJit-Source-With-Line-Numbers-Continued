@@ -8,17 +8,17 @@ CoreLightGroupCutsceneKey:register_serialized_attribute("group", "")
 CoreLightGroupCutsceneKey:register_serialized_attribute("enable", false, toboolean)
 CoreLightGroupCutsceneKey:attribute_affects("group", "enable")
 
--- Lines: 10 to 11
+-- Lines 10-12
 function CoreLightGroupCutsceneKey:__tostring()
 	return string.format("Change light group, %s stateto %s.", self:group(), tostring(self:enable()))
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function CoreLightGroupCutsceneKey:prime()
 	self:_build_group_cache()
 end
 
--- Lines: 18 to 23
+-- Lines 18-23
 function CoreLightGroupCutsceneKey:evaluate()
 	local group = assert(self:_light_groups()[self:group()], "Could not find group!")
 
@@ -27,9 +27,11 @@ function CoreLightGroupCutsceneKey:evaluate()
 	end
 end
 
--- Lines: 25 to 35
+-- Lines 25-35
 function CoreLightGroupCutsceneKey:revert()
-	local prev_key = self:preceeding_key({group = self:group()})
+	local prev_key = self:preceeding_key({
+		group = self:group()
+	})
 
 	if prev_key then
 		prev_key:evaluate()
@@ -42,7 +44,7 @@ function CoreLightGroupCutsceneKey:revert()
 	end
 end
 
--- Lines: 37 to 43
+-- Lines 37-43
 function CoreLightGroupCutsceneKey:unload()
 	for group_name, group in pairs(self:_light_groups()) do
 		for _, unit in ipairs(group) do
@@ -51,12 +53,12 @@ function CoreLightGroupCutsceneKey:unload()
 	end
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function CoreLightGroupCutsceneKey:can_evaluate_with_player(player)
 	return true
 end
 
--- Lines: 49 to 55
+-- Lines 49-55
 function CoreLightGroupCutsceneKey:is_valid_group(name)
 	for group_name, _ in pairs(self:_light_groups()) do
 		if group_name == name then
@@ -65,19 +67,19 @@ function CoreLightGroupCutsceneKey:is_valid_group(name)
 	end
 end
 
--- Lines: 57 to 58
+-- Lines 57-59
 function CoreLightGroupCutsceneKey:is_valid_enable()
 	return true
 end
 
--- Lines: 61 to 65
+-- Lines 61-65
 function CoreLightGroupCutsceneKey:on_attribute_changed(attribute_name, value, previous_value)
 	if attribute_name == "group" or attribute_name == "enable" and not value then
 		self:_eval_prev_group()
 	end
 end
 
--- Lines: 67 to 71
+-- Lines 67-72
 function CoreLightGroupCutsceneKey:_light_groups()
 	if not self._light_groups_cache then
 		self:_build_group_cache()
@@ -86,7 +88,7 @@ function CoreLightGroupCutsceneKey:_light_groups()
 	return self._light_groups_cache
 end
 
--- Lines: 74 to 81
+-- Lines 74-81
 function CoreLightGroupCutsceneKey:_enable_lights(unit, enabled)
 	local lights = unit:get_objects_by_type("light")
 
@@ -99,7 +101,7 @@ function CoreLightGroupCutsceneKey:_enable_lights(unit, enabled)
 	end
 end
 
--- Lines: 83 to 96
+-- Lines 83-96
 function CoreLightGroupCutsceneKey:_build_group_cache()
 	self._light_groups_cache = {}
 
@@ -117,9 +119,11 @@ function CoreLightGroupCutsceneKey:_build_group_cache()
 	end
 end
 
--- Lines: 98 to 105
+-- Lines 98-105
 function CoreLightGroupCutsceneKey:_eval_prev_group()
-	local prev_key = self:preceeding_key({group = self:group()})
+	local prev_key = self:preceeding_key({
+		group = self:group()
+	})
 
 	if prev_key then
 		prev_key:evaluate()
@@ -128,7 +132,7 @@ function CoreLightGroupCutsceneKey:_eval_prev_group()
 	end
 end
 
--- Lines: 107 to 118
+-- Lines 107-118
 function CoreLightGroupCutsceneKey:refresh_control_for_group(control)
 	control:freeze()
 	control:clear()
@@ -146,7 +150,7 @@ function CoreLightGroupCutsceneKey:refresh_control_for_group(control)
 	control:thaw()
 end
 
--- Lines: 120 to 124
+-- Lines 120-125
 function CoreLightGroupCutsceneKey:check_box_control(parent_frame, callback_func)
 	local control = EWS:CheckBox(parent_frame, "Enable", "", "")
 
@@ -156,10 +160,10 @@ function CoreLightGroupCutsceneKey:check_box_control(parent_frame, callback_func
 	return control
 end
 
--- Lines: 127 to 129
+-- Lines 127-129
 function CoreLightGroupCutsceneKey:refresh_control_for_enable(control)
 	control:set_value(self:enable())
 end
+
 CoreLightGroupCutsceneKey.control_for_group = CoreCutsceneKeyBase.standard_combo_box_control
 CoreLightGroupCutsceneKey.control_for_enable = CoreLightGroupCutsceneKey.check_box_control
-

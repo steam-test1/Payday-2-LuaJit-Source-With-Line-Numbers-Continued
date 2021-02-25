@@ -2,22 +2,22 @@ core:import("CoreMissionScriptElement")
 
 ElementObjective = ElementObjective or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementObjective:init(...)
 	ElementObjective.super.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function ElementObjective:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 13 to 15
+-- Lines 13-15
 function ElementObjective:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 17 to 55
+-- Lines 17-55
 function ElementObjective:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -30,12 +30,18 @@ function ElementObjective:on_executed(instigator)
 	if objective ~= "none" then
 		if self._values.state == "activate" then
 			if self._values.countdown then
-				managers.objectives:activate_objective_countdown(objective, nil, {amount = amount})
+				managers.objectives:activate_objective_countdown(objective, nil, {
+					amount = amount
+				})
 			else
-				managers.objectives:activate_objective(objective, nil, {amount = amount})
+				managers.objectives:activate_objective(objective, nil, {
+					amount = amount
+				})
 			end
 		elseif self._values.state == "complete_and_activate" then
-			managers.objectives:complete_and_activate_objective(objective, nil, {amount = amount})
+			managers.objectives:complete_and_activate_objective(objective, nil, {
+				amount = amount
+			})
 		elseif self._values.state == "complete" then
 			if self._values.sub_objective and self._values.sub_objective ~= "none" then
 				managers.objectives:complete_sub_objective(objective, self._values.sub_objective)
@@ -49,7 +55,9 @@ function ElementObjective:on_executed(instigator)
 		elseif self._values.state == "remove" then
 			managers.objectives:remove_objective(objective)
 		elseif self._values.state == "remove_and_activate" then
-			managers.objectives:remove_and_activate_objective(objective, nil, {amount = amount})
+			managers.objectives:remove_and_activate_objective(objective, nil, {
+				amount = amount
+			})
 		end
 	elseif Application:editor() then
 		managers.editor:output_error("Cant operate on objective " .. objective .. " in element " .. self._editor_name .. ".")
@@ -58,7 +66,7 @@ function ElementObjective:on_executed(instigator)
 	ElementObjective.super.on_executed(self, instigator)
 end
 
--- Lines: 57 to 64
+-- Lines 57-64
 function ElementObjective:apply_job_value(amount)
 	local type = CoreClass.type_name(amount)
 
@@ -71,13 +79,12 @@ function ElementObjective:apply_job_value(amount)
 	self._values.amount = amount
 end
 
--- Lines: 66 to 68
+-- Lines 66-68
 function ElementObjective:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 70 to 72
+-- Lines 70-72
 function ElementObjective:load(data)
 	self:set_enabled(data.enabled)
 end
-

@@ -1,6 +1,6 @@
 VehicleCamera = VehicleCamera or class()
 
--- Lines: 3 to 37
+-- Lines 3-37
 function VehicleCamera:init(unit)
 	self._unit = unit
 	self._camera = World:create_camera()
@@ -35,11 +35,13 @@ function VehicleCamera:init(unit)
 	end
 end
 
--- Lines: 39 to 49
+-- Lines 39-49
 function VehicleCamera:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("access_camera", self._camera, self._camera, nil, false)
 
-	managers.listener:add_set("access_camera", {"access_camera"})
+	managers.listener:add_set("access_camera", {
+		"access_camera"
+	})
 
 	self._listener_activation_id = managers.listener:activate_set("main", "access_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
@@ -48,10 +50,11 @@ function VehicleCamera:_setup_sound_listener()
 		object = self._unit:orientation_object()
 	})
 end
+
 local pos = Vector3()
 local target = Vector3()
 
--- Lines: 53 to 70
+-- Lines 53-70
 function VehicleCamera:update_camera()
 	if not self._active then
 		return
@@ -69,7 +72,7 @@ function VehicleCamera:update_camera()
 	self._camera_controller:set_default_up(target)
 end
 
--- Lines: 72 to 78
+-- Lines 72-78
 function VehicleCamera:activate(player_unit)
 	self._active = true
 
@@ -80,7 +83,7 @@ function VehicleCamera:activate(player_unit)
 	end
 end
 
--- Lines: 80 to 87
+-- Lines 80-87
 function VehicleCamera:deactivate(player_unit)
 	self._active = false
 
@@ -93,7 +96,7 @@ function VehicleCamera:deactivate(player_unit)
 	end
 end
 
--- Lines: 90 to 105
+-- Lines 90-105
 function VehicleCamera:show_next(player_unit)
 	if #self._camera_list == 0 then
 		return
@@ -104,7 +107,7 @@ function VehicleCamera:show_next(player_unit)
 		self._active_camera_object = self._camera_list[self._camera_list_i]
 
 		self:activate(player_unit)
-	elseif #self._camera_list <= self._camera_list_i then
+	elseif self._camera_list_i >= #self._camera_list then
 		self:deactivate(player_unit)
 	else
 		self._camera_list_i = self._camera_list_i + 1
@@ -112,7 +115,7 @@ function VehicleCamera:show_next(player_unit)
 	end
 end
 
--- Lines: 107 to 129
+-- Lines 107-129
 function VehicleCamera:set_rear_cam_active(active, player_unit)
 	if not self._back_camera_object then
 		return
@@ -140,12 +143,12 @@ function VehicleCamera:set_rear_cam_active(active, player_unit)
 	end
 end
 
--- Lines: 131 to 132
+-- Lines 131-133
 function VehicleCamera:rear_cam_active()
 	return self._rear_cam_active
 end
 
--- Lines: 135 to 153
+-- Lines 135-153
 function VehicleCamera:destroy()
 	if self._viewport then
 		self:deactivate()
@@ -168,4 +171,3 @@ function VehicleCamera:destroy()
 		self._listener_id = nil
 	end
 end
-

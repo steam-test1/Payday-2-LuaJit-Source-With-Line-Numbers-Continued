@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementUnitDamage = ElementUnitDamage or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 6 to 23
+-- Lines 6-23
 function ElementUnitDamage:init(...)
 	ElementUnitDamage.super.init(self, ...)
 
@@ -19,15 +19,15 @@ function ElementUnitDamage:init(...)
 	end
 end
 
--- Lines: 25 to 26
+-- Lines 25-26
 function ElementUnitDamage:destroy()
 end
 
--- Lines: 28 to 29
+-- Lines 28-29
 function MissionScriptElement:on_created()
 end
 
--- Lines: 32 to 62
+-- Lines 31-62
 function ElementUnitDamage:on_script_activated()
 	local elementBroken = false
 
@@ -62,20 +62,22 @@ function ElementUnitDamage:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines: 64 to 69
+-- Lines 64-69
 function ElementUnitDamage:_load_unit(unit)
 	if unit.damage then
-		unit:damage():add_listener("element_unit_damage" .. self._id, {"on_take_damage"}, callback(self, self, "clbk_linked_unit_took_damage"))
+		unit:damage():add_listener("element_unit_damage" .. self._id, {
+			"on_take_damage"
+		}, callback(self, self, "clbk_linked_unit_took_damage"))
 		table.insert(self._units, unit)
 	end
 end
 
--- Lines: 71 to 73
+-- Lines 71-73
 function ElementUnitDamage:clbk_linked_unit_took_damage(unit, attacker, damage_type, damage)
 	self:on_executed(attacker, damage_type, damage)
 end
 
--- Lines: 76 to 92
+-- Lines 75-92
 function ElementUnitDamage:on_executed(instigator, damage_type, damage)
 	if not self._values.enabled then
 		return
@@ -95,17 +97,16 @@ function ElementUnitDamage:on_executed(instigator, damage_type, damage)
 	end
 end
 
--- Lines: 95 to 96
+-- Lines 94-96
 function ElementUnitDamage:client_on_executed(...)
 end
 
--- Lines: 98 to 100
+-- Lines 98-100
 function ElementUnitDamage:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines: 102 to 104
+-- Lines 102-104
 function ElementUnitDamage:load(data)
 	self:set_enabled(data.enabled)
 end
-

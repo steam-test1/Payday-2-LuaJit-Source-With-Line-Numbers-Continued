@@ -1,6 +1,6 @@
 WeaponAmmo = WeaponAmmo or class()
 
--- Lines: 4 to 9
+-- Lines 4-9
 function WeaponAmmo:init(weapon_id, ammo_max_per_clip, ammo_max)
 	self._name_id = weapon_id
 
@@ -9,12 +9,12 @@ function WeaponAmmo:init(weapon_id, ammo_max_per_clip, ammo_max)
 	self:replenish()
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function WeaponAmmo:weapon_tweak_data()
 	return tweak_data.weapon[self._name_id]
 end
 
--- Lines: 15 to 21
+-- Lines 15-21
 function WeaponAmmo:digest_value(value, digest)
 	if self._digest_values then
 		return Application:digest_value(value, digest)
@@ -23,7 +23,7 @@ function WeaponAmmo:digest_value(value, digest)
 	end
 end
 
--- Lines: 26 to 46
+-- Lines 25-46
 function WeaponAmmo:replenish()
 	local ammo_max_multiplier = managers.player:upgrade_value("player", "extra_ammo_multiplier", 1)
 
@@ -44,7 +44,7 @@ function WeaponAmmo:replenish()
 	self._ammo_pickup = self:weapon_tweak_data().AMMO_PICKUP
 end
 
--- Lines: 48 to 59
+-- Lines 48-60
 function WeaponAmmo:calculate_ammo_max_per_clip()
 	local ammo = self:weapon_tweak_data().CLIP_AMMO_MAX
 	ammo = ammo + managers.player:upgrade_value(self._name_id, "clip_ammo_increase")
@@ -62,7 +62,7 @@ function WeaponAmmo:calculate_ammo_max_per_clip()
 	return ammo
 end
 
--- Lines: 62 to 69
+-- Lines 62-70
 function WeaponAmmo:upgrade_blocked(category, upgrade)
 	if not self:weapon_tweak_data().upgrade_blocks then
 		return false
@@ -75,7 +75,7 @@ function WeaponAmmo:upgrade_blocked(category, upgrade)
 	return table.contains(self:weapon_tweak_data().upgrade_blocks[category], upgrade)
 end
 
--- Lines: 74 to 85
+-- Lines 74-85
 function WeaponAmmo:set_ammo_max_per_clip(ammo_max_per_clip)
 	if self._ammo_max_per_clip then
 		if self._ammo_max_per_clip2 then
@@ -90,12 +90,12 @@ function WeaponAmmo:set_ammo_max_per_clip(ammo_max_per_clip)
 	end
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function WeaponAmmo:get_ammo_max_per_clip()
 	return self._ammo_max_per_clip and self:digest_value(self._ammo_max_per_clip, false) or self:digest_value(self._ammo_max_per_clip2, false)
 end
 
--- Lines: 91 to 102
+-- Lines 91-102
 function WeaponAmmo:set_ammo_max(ammo_max)
 	if self._ammo_max then
 		if self._ammo_max2 then
@@ -110,17 +110,17 @@ function WeaponAmmo:set_ammo_max(ammo_max)
 	end
 end
 
--- Lines: 104 to 105
+-- Lines 104-106
 function WeaponAmmo:get_ammo_max()
 	return self._ammo_max and self:digest_value(self._ammo_max, false) or self:digest_value(self._ammo_max2, false)
 end
 
--- Lines: 108 to 110
+-- Lines 108-110
 function WeaponAmmo:set_ammo_total(ammo_total)
 	self._ammo_total = self:digest_value(ammo_total, true)
 end
 
--- Lines: 113 to 124
+-- Lines 113-124
 function WeaponAmmo:add_ammo_to_pool(ammo, index)
 	local max_ammo = self:get_ammo_max()
 	local current_ammo = self:get_ammo_total()
@@ -134,12 +134,12 @@ function WeaponAmmo:add_ammo_to_pool(ammo, index)
 	managers.hud:set_ammo_amount(index, self:ammo_info())
 end
 
--- Lines: 126 to 127
+-- Lines 126-128
 function WeaponAmmo:get_ammo_total()
 	return self._ammo_total and self:digest_value(self._ammo_total, false) or self:digest_value(self._ammo_total2, false)
 end
 
--- Lines: 130 to 133
+-- Lines 130-134
 function WeaponAmmo:get_ammo_ratio()
 	local ammo_max = self:get_ammo_max()
 	local ammo_total = self:get_ammo_total()
@@ -147,7 +147,7 @@ function WeaponAmmo:get_ammo_ratio()
 	return ammo_total / math.max(ammo_max, 1)
 end
 
--- Lines: 137 to 144
+-- Lines 137-145
 function WeaponAmmo:get_ammo_ratio_excluding_clip()
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local max_ammo = self:get_ammo_max() - ammo_in_clip
@@ -160,7 +160,7 @@ function WeaponAmmo:get_ammo_ratio_excluding_clip()
 	return current_ammo / max_ammo
 end
 
--- Lines: 147 to 150
+-- Lines 147-151
 function WeaponAmmo:get_max_ammo_excluding_clip()
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local max_ammo = self:get_ammo_max() - ammo_in_clip
@@ -168,7 +168,7 @@ function WeaponAmmo:get_max_ammo_excluding_clip()
 	return max_ammo
 end
 
--- Lines: 153 to 161
+-- Lines 153-161
 function WeaponAmmo:remove_ammo_from_pool(percent)
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local current_ammo = self:get_ammo_total() - ammo_in_clip
@@ -181,7 +181,7 @@ function WeaponAmmo:remove_ammo_from_pool(percent)
 	end
 end
 
--- Lines: 163 to 172
+-- Lines 163-173
 function WeaponAmmo:remove_ammo(percent)
 	local total_ammo = self:get_ammo_total()
 	local ammo = math.floor(total_ammo * percent)
@@ -197,7 +197,7 @@ function WeaponAmmo:remove_ammo(percent)
 	return total_ammo - ammo
 end
 
--- Lines: 175 to 186
+-- Lines 175-186
 function WeaponAmmo:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	if self._ammo_remaining_in_clip then
 		if self._ammo_remaining_in_clip2 then
@@ -212,8 +212,7 @@ function WeaponAmmo:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	end
 end
 
--- Lines: 188 to 189
+-- Lines 188-190
 function WeaponAmmo:get_ammo_remaining_in_clip()
 	return self._ammo_remaining_in_clip and self:digest_value(self._ammo_remaining_in_clip, false) or self:digest_value(self._ammo_remaining_in_clip2, false)
 end
-

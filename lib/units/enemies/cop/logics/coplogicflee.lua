@@ -1,6 +1,6 @@
 CopLogicFlee = class(CopLogicBase)
 
--- Lines: 7 to 57
+-- Lines 7-57
 function CopLogicFlee.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -54,10 +54,12 @@ function CopLogicFlee.enter(data, new_logic_name, enter_params)
 		return
 	end
 
-	data.unit:brain():set_attention_settings({cbt = true})
+	data.unit:brain():set_attention_settings({
+		cbt = true
+	})
 end
 
--- Lines: 61 to 78
+-- Lines 61-78
 function CopLogicFlee.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -77,7 +79,7 @@ function CopLogicFlee.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines: 82 to 221
+-- Lines 82-221
 function CopLogicFlee.update(data)
 	local exit_state = nil
 	local unit = data.unit
@@ -195,7 +197,9 @@ function CopLogicFlee.update(data)
 
 							managers.navigation:reserve_cover(cover, data.pos_rsrv_id)
 
-							my_data.moving_to_cover = {cover}
+							my_data.moving_to_cover = {
+								cover
+							}
 							my_data.best_cover = my_data.moving_to_cover
 							to_pos = cover[1]
 						else
@@ -236,7 +240,7 @@ function CopLogicFlee.update(data)
 	end
 end
 
--- Lines: 225 to 268
+-- Lines 225-268
 function CopLogicFlee._update_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -276,13 +280,17 @@ function CopLogicFlee._update_enemy_detection(data)
 		my_data.want_cover = nil
 	end
 
-	delay = data.important and 0 or 0.5 + delay * 1.5
+	if data.important then
+		delay = 0
+	else
+		delay = 0.5 + delay * 1.5
+	end
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicFlee._update_enemy_detection, data, data.t + delay)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines: 272 to 305
+-- Lines 272-305
 function CopLogicFlee._upd_shoot(data, my_data)
 	local shoot = nil
 	local focus_enemy = data.attention_obj
@@ -322,7 +330,7 @@ function CopLogicFlee._upd_shoot(data, my_data)
 	data.unit:movement():set_allow_fire(focus_enemy.verified and true or false)
 end
 
--- Lines: 309 to 348
+-- Lines 309-348
 function CopLogicFlee._update_pathing(data, my_data)
 	if data.pathing_results then
 		local path = my_data.flee_path_search_id and data.pathing_results[my_data.flee_path_search_id]
@@ -365,7 +373,7 @@ function CopLogicFlee._update_pathing(data, my_data)
 	end
 end
 
--- Lines: 352 to 370
+-- Lines 352-370
 function CopLogicFlee._update_cover_pathing(data, my_data)
 	if data.pathing_results then
 		local path = data.pathing_results[my_data.cover_path_search_id]
@@ -388,7 +396,7 @@ function CopLogicFlee._update_cover_pathing(data, my_data)
 	end
 end
 
--- Lines: 374 to 434
+-- Lines 374-435
 function CopLogicFlee._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -449,7 +457,7 @@ function CopLogicFlee._chk_reaction_to_attention_object(data, attention_data, st
 	return AIAttentionObject.REACT_IDLE
 end
 
--- Lines: 440 to 491
+-- Lines 439-491
 function CopLogicFlee.action_complete_clbk(data, action)
 	local action_type = action:type()
 
@@ -513,7 +521,7 @@ function CopLogicFlee.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 496 to 550
+-- Lines 495-550
 function CopLogicFlee._update_cover(data)
 	local my_data = data.internal_data
 	local cover_release_dis = 100
@@ -537,7 +545,9 @@ function CopLogicFlee._update_cover(data)
 				local found_cover = managers.navigation:find_cover_near_pos_1(data.m_pos, threat_pos, max_near_dis, min_threat_dis)
 
 				if found_cover then
-					better_cover = {found_cover}
+					better_cover = {
+						found_cover
+					}
 				end
 			end
 
@@ -571,7 +581,7 @@ function CopLogicFlee._update_cover(data)
 	CopLogicBase.queue_task(my_data, my_data.cover_update_task_key, CopLogicFlee._update_cover, data, data.t + delay)
 end
 
--- Lines: 554 to 565
+-- Lines 554-565
 function CopLogicFlee._cancel_cover_pathing(data, my_data)
 	if my_data.cover_pathing then
 		if data.active_searches[my_data.cover_path_search_id] then
@@ -588,7 +598,7 @@ function CopLogicFlee._cancel_cover_pathing(data, my_data)
 	my_data.cover_path = nil
 end
 
--- Lines: 569 to 589
+-- Lines 569-589
 function CopLogicFlee._cancel_flee_pathing(data, my_data)
 	if my_data.flee_path_search_id then
 		if data.active_searches[my_data.flee_path_search_id] then
@@ -613,27 +623,27 @@ function CopLogicFlee._cancel_flee_pathing(data, my_data)
 	end
 end
 
--- Lines: 593 to 595
+-- Lines 593-595
 function CopLogicFlee.damage_clbk(data, damage_info)
 	CopLogicIdle.damage_clbk(data, damage_info)
 end
 
--- Lines: 599 to 601
+-- Lines 599-601
 function CopLogicFlee.death_clbk(data, damage_info)
 	CopLogicAttack.death_clbk(data, damage_info)
 end
 
--- Lines: 605 to 607
+-- Lines 605-607
 function CopLogicFlee.on_detected_enemy_destroyed(data, enemy_unit)
 	CopLogicAttack.on_detected_enemy_destroyed(data, enemy_unit)
 end
 
--- Lines: 611 to 613
+-- Lines 611-613
 function CopLogicFlee.on_criminal_neutralized(data, criminal_key)
 	CopLogicAttack.on_criminal_neutralized(data, criminal_key)
 end
 
--- Lines: 617 to 621
+-- Lines 617-622
 function CopLogicFlee.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -642,28 +652,29 @@ function CopLogicFlee.is_available_for_assignment(data, objective)
 	return false
 end
 
--- Lines: 626 to 628
+-- Lines 626-628
 function CopLogicFlee.on_alert(...)
 	CopLogicIdle.on_alert(...)
 end
 
--- Lines: 632 to 633
+-- Lines 632-634
 function CopLogicFlee._flee_coarse_path_verify_clbk(shait, nav_seg)
 	return managers.groupai:state():is_nav_seg_safe(nav_seg)
 end
 
--- Lines: 640 to 642
+-- Lines 638-642
 function CopLogicFlee.on_intimidated(data, amount, aggressor_unit)
 	CopLogicIdle._surrender(data, amount)
 end
 
--- Lines: 646 to 649
+-- Lines 646-650
 function CopLogicFlee._get_all_paths(data)
-	return {flee_path = data.internal_data.flee_path}
+	return {
+		flee_path = data.internal_data.flee_path
+	}
 end
 
--- Lines: 654 to 656
+-- Lines 654-656
 function CopLogicFlee._set_verified_paths(data, verified_paths)
 	data.internal_data.flee_path = verified_paths.flee_path
 end
-

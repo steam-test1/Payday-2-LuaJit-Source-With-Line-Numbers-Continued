@@ -1,7 +1,7 @@
 MenuItemTextBox = MenuItemTextBox or class(MenuItemInput)
 MenuItemTextBox.TYPE = "textbox"
 
--- Lines: 4 to 15
+-- Lines 4-15
 function MenuItemTextBox:init(data_node, parameters)
 	MenuItemTextBox.super.init(self, data_node, parameters)
 
@@ -14,14 +14,14 @@ function MenuItemTextBox:init(data_node, parameters)
 	self._scroll_pos = 0
 end
 
--- Lines: 17 to 19
+-- Lines 17-20
 function MenuItemTextBox:_ctrl()
 	local k = Input:keyboard()
 
 	return k:down(Idstring("left ctrl")) or k:down(Idstring("right ctrl")) or k:has_button(Idstring("ctrl")) and k:down(Idstring("ctrl"))
 end
 
--- Lines: 22 to 36
+-- Lines 22-37
 function MenuItemTextBox:setup_gui(node, row_item)
 	local right_align = node:_right_align()
 	row_item.gui_panel = node.item_panel:panel({
@@ -61,7 +61,7 @@ function MenuItemTextBox:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 39 to 60
+-- Lines 39-60
 function MenuItemTextBox:_layout_gui(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local right_align = node:_right_align()
@@ -87,7 +87,7 @@ function MenuItemTextBox:_layout_gui(node, row_item)
 	self:_layout(row_item)
 end
 
--- Lines: 62 to 87
+-- Lines 62-88
 function MenuItemTextBox:_layout(row_item)
 	local w = row_item.gui_panel:w()
 
@@ -118,7 +118,7 @@ function MenuItemTextBox:_layout(row_item)
 	return true
 end
 
--- Lines: 90 to 95
+-- Lines 90-95
 function MenuItemTextBox:_update_input_bg(row_item)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -127,7 +127,7 @@ function MenuItemTextBox:_update_input_bg(row_item)
 	row_item.input_bg:set_alpha(self._editing and 0.6 or 0)
 end
 
--- Lines: 97 to 102
+-- Lines 97-103
 function MenuItemTextBox:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.title_text:set_color(row_item.color)
@@ -136,7 +136,7 @@ function MenuItemTextBox:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 105 to 110
+-- Lines 105-111
 function MenuItemTextBox:fade_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.title_text:set_color(row_item.color)
@@ -145,7 +145,7 @@ function MenuItemTextBox:fade_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 113 to 121
+-- Lines 113-121
 function MenuItemTextBox:esc_key_released_callback(row_item)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -156,7 +156,7 @@ function MenuItemTextBox:esc_key_released_callback(row_item)
 	self:_layout(row_item)
 end
 
--- Lines: 123 to 144
+-- Lines 123-144
 function MenuItemTextBox:enter_key_released_callback(row_item)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -183,14 +183,14 @@ function MenuItemTextBox:enter_key_released_callback(row_item)
 	self:_layout(row_item)
 end
 
--- Lines: 146 to 149
+-- Lines 146-149
 function MenuItemTextBox:_insert_line_break(row_item)
 	local text = row_item.gui_text
 
 	text:replace_text("\n")
 end
 
--- Lines: 151 to 167
+-- Lines 151-167
 function MenuItemTextBox:_set_enabled(enabled)
 	if not self:enabled() then
 		return
@@ -211,7 +211,7 @@ function MenuItemTextBox:_set_enabled(enabled)
 	end
 end
 
--- Lines: 169 to 177
+-- Lines 169-177
 function MenuItemTextBox:_animate_input_bg(input_bg)
 	local t = 0
 
@@ -224,7 +224,7 @@ function MenuItemTextBox:_animate_input_bg(input_bg)
 	end
 end
 
--- Lines: 179 to 187
+-- Lines 179-187
 function MenuItemTextBox:trigger()
 	if type(self._enter_released_callback) ~= "number" then
 		self._enter_released_callback()
@@ -235,7 +235,7 @@ function MenuItemTextBox:trigger()
 	end
 end
 
--- Lines: 189 to 213
+-- Lines 189-213
 function MenuItemTextBox:_on_focus(row_item)
 	if self._focus then
 		return
@@ -260,7 +260,7 @@ function MenuItemTextBox:_on_focus(row_item)
 	self:_layout(row_item)
 end
 
--- Lines: 215 to 254
+-- Lines 215-255
 function MenuItemTextBox:_loose_focus(row_item)
 	if not self._focus then
 		return false
@@ -303,7 +303,7 @@ function MenuItemTextBox:_loose_focus(row_item)
 	return true
 end
 
--- Lines: 257 to 296
+-- Lines 257-296
 function MenuItemTextBox:_update_caret(row_item)
 	local text = row_item.gui_text
 	local caret = row_item.caret
@@ -311,7 +311,14 @@ function MenuItemTextBox:_update_caret(row_item)
 	local x, y, w, h = text:selection_rect()
 
 	if s == 0 and e == 0 then
-		x = text:align() == "center" and text:world_x() + text:w() / 2 or text:align() == "right" and text:world_right() or text:world_left()
+		if text:align() == "center" then
+			x = text:world_x() + text:w() / 2
+		elseif text:align() == "right" then
+			x = text:world_right()
+		else
+			x = text:world_left()
+		end
+
 		y = text:world_y()
 	end
 
@@ -352,7 +359,7 @@ function MenuItemTextBox:_update_caret(row_item)
 	self:set_blinking(s == e and self._editing, row_item)
 end
 
--- Lines: 298 to 313
+-- Lines 298-314
 function MenuItemTextBox:_get_current_line(text)
 	local line_breaks = text:line_breaks()
 
@@ -372,7 +379,7 @@ function MenuItemTextBox:_get_current_line(text)
 	return #line_breaks
 end
 
--- Lines: 317 to 340
+-- Lines 317-340
 function MenuItemTextBox:enter_text(row_item, o, s)
 	if not row_item or not alive(row_item.gui_text) or not self._editing or self:_ctrl() then
 		return
@@ -397,7 +404,7 @@ function MenuItemTextBox:enter_text(row_item, o, s)
 	self:_layout(row_item)
 end
 
--- Lines: 343 to 355
+-- Lines 343-355
 function MenuItemTextBox:update_key_down(row_item, o, k)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -412,7 +419,7 @@ function MenuItemTextBox:update_key_down(row_item, o, k)
 	end
 end
 
--- Lines: 357 to 373
+-- Lines 357-373
 function MenuItemTextBox:key_release(row_item, o, k)
 	if not row_item or not alive(row_item.gui_text) or not self._editing then
 		return
@@ -433,7 +440,7 @@ function MenuItemTextBox:key_release(row_item, o, k)
 	end
 end
 
--- Lines: 376 to 391
+-- Lines 376-391
 function MenuItemTextBox:key_press(row_item, o, k)
 	if not row_item or not alive(row_item.gui_text) or not self._editing then
 		return
@@ -448,19 +455,19 @@ function MenuItemTextBox:key_press(row_item, o, k)
 	self:_layout(row_item)
 end
 
--- Lines: 393 to 395
+-- Lines 393-396
 function MenuItemTextBox:find_first_non_letter(str)
 	local latin_str = utf8.to_latin1(str)
 
-	return string.find(latin_str, utf8.to_latin1("[^A-Za-z0-9≈ƒ÷Â‰ˆ¡…”⁄Õ›·ÈÛ˙Ì˝¬ €Œ‘‚Í˚ÓÙ√’—„ıÒ‹À¸Î]"))
+	return string.find(latin_str, utf8.to_latin1("[^A-Za-z0-9√Ö√Ñ√ñ√•√§√∂√Å√â√ì√ö√ç√ù√°√©√≥√∫√≠√Ω√Ç√ä√õ√é√î√¢√™√ª√Æ√¥√É√ï√ë√£√µ√±√ú√ã√º√´]"))
 end
 
--- Lines: 398 to 399
+-- Lines 398-400
 function MenuItemTextBox:find_last_non_letter(str)
 	return self:find_first_non_letter(utf8.reverse(str))
 end
 
--- Lines: 402 to 570
+-- Lines 402-570
 function MenuItemTextBox:handle_key(row_item, o, k)
 	local text = row_item.gui_text
 	local s, e = text:selection()
@@ -472,7 +479,12 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 			if self:_ctrl() then
 				local prev_text = utf8.sub(text:text(), 1, s)
 				local index = self:find_last_non_letter(prev_text)
-				index = index and index - 1 or s
+
+				if index then
+					index = index - 1
+				else
+					index = s
+				end
 
 				if index == 0 then
 					index = index + 1
@@ -490,7 +502,12 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 			if self:_ctrl() then
 				local next_text = utf8.sub(text:text(), s + 1)
 				local index = self:find_first_non_letter(next_text)
-				index = index and index - 1 or n - s
+
+				if index then
+					index = index - 1
+				else
+					index = n - s
+				end
 
 				if index == 0 then
 					index = index + 1
@@ -518,7 +535,12 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 			if self:_ctrl() then
 				local prev_text = utf8.sub(text:text(), 1, s)
 				local index = self:find_last_non_letter(prev_text)
-				index = index and index - 1 or s
+
+				if index then
+					index = index - 1
+				else
+					index = s
+				end
 
 				if index == 0 then
 					index = index + 1
@@ -536,7 +558,12 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 			if self:_ctrl() then
 				local next_text = utf8.sub(text:text(), s + 1)
 				local index = self:find_first_non_letter(next_text)
-				index = index and index - 1 or n - s
+
+				if index then
+					index = index - 1
+				else
+					index = n - s
+				end
 
 				if index == 0 then
 					index = index + 1
@@ -561,7 +588,7 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 				if e <= lb then
 					local line_end = line_breaks[i - 1]
 					local prev_line_end = line_breaks[i - 2]
-					local new_index = math.min((prev_line_end + e) - line_end, line_end)
+					local new_index = math.min(prev_line_end + e - line_end, line_end)
 
 					text:set_selection(new_index, new_index)
 
@@ -641,7 +668,7 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 	end
 end
 
--- Lines: 572 to 582
+-- Lines 572-582
 function MenuItemTextBox:mouse_press(row_item, o, k, x, y)
 	if k ~= Idstring("mouse wheel up") and k ~= Idstring("mouse wheel down") then
 		return
@@ -654,22 +681,22 @@ function MenuItemTextBox:mouse_press(row_item, o, k, x, y)
 	end
 end
 
--- Lines: 584 to 586
+-- Lines 584-586
 function MenuItemTextBox:scroll(row_item, amount)
 	self:set_scroll_pos(row_item, self._scroll_pos + amount)
 end
 
--- Lines: 588 to 612
+-- Lines 588-612
 function MenuItemTextBox:scroll_to_line(row_item, line, direction)
 	local scroll_pos_abs = math.abs(self._scroll_pos)
-	direction = direction or line * row_item.gui_text:line_height() < scroll_pos_abs and "up" or "down"
+	direction = direction or scroll_pos_abs > line * row_item.gui_text:line_height() and "up" or "down"
 
 	print(direction)
 
 	if direction == "up" then
 		local scroll_pos = line * row_item.gui_text:line_height()
 
-		if scroll_pos < scroll_pos_abs then
+		if scroll_pos_abs > scroll_pos then
 			self:set_scroll_pos(row_item, -scroll_pos)
 		end
 	elseif direction == "down" then
@@ -681,7 +708,7 @@ function MenuItemTextBox:scroll_to_line(row_item, line, direction)
 	end
 end
 
--- Lines: 614 to 628
+-- Lines 614-629
 function MenuItemTextBox:is_line_visible(row_item, line)
 	local text = row_item.gui_text
 
@@ -700,7 +727,7 @@ function MenuItemTextBox:is_line_visible(row_item, line)
 	return false
 end
 
--- Lines: 631 to 642
+-- Lines 631-642
 function MenuItemTextBox:set_scroll_pos(row_item, pos)
 	local text = row_item.gui_text
 	local max_scroll = math.max(text:number_of_lines() - self._row_count, 0) * text:line_height() * -1
@@ -715,4 +742,3 @@ function MenuItemTextBox:set_scroll_pos(row_item, pos)
 
 	self:_layout(row_item)
 end
-

@@ -3,7 +3,7 @@ core:module("CoreMenuItem")
 Item = Item or class()
 Item.TYPE = "item"
 
--- Lines: 6 to 74
+-- Lines 6-74
 function Item:init(data_node, parameters)
 	self._type = ""
 	local params = parameters or {}
@@ -17,7 +17,9 @@ function Item:init(data_node, parameters)
 		end
 	end
 
-	local required_params = {"name"}
+	local required_params = {
+		"name"
+	}
 
 	for _, p_name in ipairs(required_params) do
 		if not params[p_name] then
@@ -64,54 +66,54 @@ function Item:init(data_node, parameters)
 	self._enabled = true
 end
 
--- Lines: 76 to 79
+-- Lines 76-79
 function Item:set_enabled(enabled)
 	self._enabled = enabled
 
 	self:dirty()
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function Item:enabled()
 	return self._enabled
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function Item:type()
 	return self._type
 end
 
--- Lines: 89 to 90
+-- Lines 89-91
 function Item:name()
 	return self._parameters.name
 end
 
--- Lines: 93 to 94
+-- Lines 93-95
 function Item:info_panel()
 	return self._parameters.info_panel
 end
 
--- Lines: 97 to 98
+-- Lines 97-99
 function Item:parameters()
 	return self._parameters
 end
 
--- Lines: 101 to 102
+-- Lines 101-103
 function Item:parameter(name)
 	return self._parameters[name]
 end
 
--- Lines: 105 to 107
+-- Lines 105-107
 function Item:set_parameter(name, value)
 	self._parameters[name] = value
 end
 
--- Lines: 109 to 111
+-- Lines 109-111
 function Item:set_parameters(parameters)
 	self._parameters = parameters
 end
 
--- Lines: 113 to 146
+-- Lines 113-146
 function Item:set_callback_handler(callback_handler)
 	self._callback_handler = callback_handler
 
@@ -154,26 +156,26 @@ function Item:set_callback_handler(callback_handler)
 	end
 end
 
--- Lines: 148 to 152
+-- Lines 148-152
 function Item:trigger()
 	for _, callback in pairs((self:enabled() or self:parameters().ignore_disabled) and self:parameters().callback or self:parameters().callback_disabled) do
 		callback(self)
 	end
 end
 
--- Lines: 154 to 158
+-- Lines 154-158
 function Item:dirty()
 	if self.dirty_callback then
 		self:dirty_callback()
 	end
 end
 
--- Lines: 160 to 162
+-- Lines 160-162
 function Item:set_visible(visible)
 	self._visible = visible
 end
 
--- Lines: 164 to 175
+-- Lines 164-176
 function Item:visible()
 	if self._visible == false then
 		return false
@@ -190,11 +192,11 @@ function Item:visible()
 	return true
 end
 
--- Lines: 179 to 180
+-- Lines 178-180
 function Item:on_delete_row_item()
 end
 
--- Lines: 182 to 187
+-- Lines 182-187
 function Item:on_delete_item()
 	self._parameters.callback = {}
 	self._parameters.callback_disabled = {}
@@ -202,45 +204,45 @@ function Item:on_delete_item()
 	self._icon_visible_callback_list = nil
 end
 
--- Lines: 189 to 190
+-- Lines 189-190
 function Item:on_item_position(row_item, node)
 end
 
--- Lines: 192 to 193
+-- Lines 192-193
 function Item:on_item_positions_done(row_item, node)
 end
 
--- Lines: 195 to 196
+-- Lines 195-197
 function Item:get_h(row_item)
 	return nil
 end
 
--- Lines: 203 to 204
+-- Lines 203-205
 function Item:setup_gui(node, row_item)
 	return false
 end
 
--- Lines: 208 to 209
+-- Lines 208-210
 function Item:reload(row_item)
 	return false
 end
 
--- Lines: 213 to 214
+-- Lines 213-215
 function Item:highlight_row_item(node, row_item, mouse_over)
 	return false
 end
 
--- Lines: 218 to 219
+-- Lines 218-220
 function Item:fade_row_item(node, row_item)
 	return false
 end
 
--- Lines: 222 to 223
+-- Lines 222-224
 function Item:menu_unselected_visible()
 	return true
 end
 
--- Lines: 226 to 234
+-- Lines 226-235
 function Item:icon_visible()
 	if self._icon_visible_callback_list then
 		for _, visible_callback in pairs(self._icon_visible_callback_list) do
@@ -252,4 +254,3 @@ function Item:icon_visible()
 
 	return true
 end
-

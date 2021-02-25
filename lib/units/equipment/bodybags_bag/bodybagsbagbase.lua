@@ -1,6 +1,6 @@
 BodyBagsBagBase = BodyBagsBagBase or class(UnitBase)
 
--- Lines: 3 to 9
+-- Lines 3-10
 function BodyBagsBagBase.spawn(pos, rot, upgrade_lvl, peer_id)
 	local unit_name = "units/payday2/equipment/gen_equipment_bodybags_bag/gen_equipment_bodybags_bag"
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
@@ -11,19 +11,21 @@ function BodyBagsBagBase.spawn(pos, rot, upgrade_lvl, peer_id)
 	return unit
 end
 
--- Lines: 15 to 18
+-- Lines 15-18
 function BodyBagsBagBase:set_server_information(peer_id)
-	self._server_information = {owner_peer_id = peer_id}
+	self._server_information = {
+		owner_peer_id = peer_id
+	}
 
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
--- Lines: 21 to 22
+-- Lines 21-23
 function BodyBagsBagBase:server_information()
 	return self._server_information
 end
 
--- Lines: 27 to 42
+-- Lines 27-42
 function BodyBagsBagBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -40,12 +42,12 @@ function BodyBagsBagBase:init(unit)
 	end
 end
 
--- Lines: 44 to 45
+-- Lines 44-46
 function BodyBagsBagBase:get_name_id()
 	return "bodybags_bag"
 end
 
--- Lines: 50 to 57
+-- Lines 50-57
 function BodyBagsBagBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -56,7 +58,7 @@ function BodyBagsBagBase:_clbk_validate()
 	end
 end
 
--- Lines: 61 to 70
+-- Lines 61-70
 function BodyBagsBagBase:sync_setup(upgrade_lvl, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -68,7 +70,7 @@ function BodyBagsBagBase:sync_setup(upgrade_lvl, peer_id)
 	self:setup(upgrade_lvl)
 end
 
--- Lines: 74 to 100
+-- Lines 74-100
 function BodyBagsBagBase:setup()
 	self._bodybag_amount = tweak_data.upgrades.bodybag_crate_base
 	self._empty = false
@@ -94,12 +96,12 @@ function BodyBagsBagBase:setup()
 	end
 end
 
--- Lines: 102 to 104
+-- Lines 102-104
 function BodyBagsBagBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines: 107 to 135
+-- Lines 107-135
 function BodyBagsBagBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -126,7 +128,7 @@ function BodyBagsBagBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines: 139 to 144
+-- Lines 139-144
 function BodyBagsBagBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -135,7 +137,7 @@ function BodyBagsBagBase:server_set_dynamic()
 	end
 end
 
--- Lines: 147 to 153
+-- Lines 146-153
 function BodyBagsBagBase:sync_net_event(event_id)
 	if event_id == 1 then
 		self:sync_bodybag_taken(1)
@@ -144,14 +146,14 @@ function BodyBagsBagBase:sync_net_event(event_id)
 	end
 end
 
--- Lines: 155 to 158
+-- Lines 155-158
 function BodyBagsBagBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines: 162 to 187
+-- Lines 162-188
 function BodyBagsBagBase:take_bodybag(unit)
 	if self._empty then
 		return
@@ -178,7 +180,7 @@ function BodyBagsBagBase:take_bodybag(unit)
 	return can_take_bodybag
 end
 
--- Lines: 190 to 197
+-- Lines 190-197
 function BodyBagsBagBase:_set_visual_stage()
 	if alive(self._unit) and self._unit:damage() then
 		local state = "state_" .. tostring(math.clamp(self._max_bodybag_amount - self._bodybag_amount, 0, self._max_bodybag_amount))
@@ -189,7 +191,7 @@ function BodyBagsBagBase:_set_visual_stage()
 	end
 end
 
--- Lines: 199 to 205
+-- Lines 199-205
 function BodyBagsBagBase:sync_bodybag_taken(amount)
 	self._bodybag_amount = self._bodybag_amount - amount
 
@@ -200,7 +202,7 @@ function BodyBagsBagBase:sync_bodybag_taken(amount)
 	self:_set_visual_stage()
 end
 
--- Lines: 207 to 212
+-- Lines 207-213
 function BodyBagsBagBase:_can_take_bodybag(unit)
 	if self._empty or self._bodybag_amount < 1 or managers.player:has_max_body_bags() then
 		return false
@@ -209,7 +211,7 @@ function BodyBagsBagBase:_can_take_bodybag(unit)
 	return true
 end
 
--- Lines: 215 to 221
+-- Lines 215-221
 function BodyBagsBagBase:_set_empty()
 	self._empty = true
 
@@ -218,7 +220,7 @@ function BodyBagsBagBase:_set_empty()
 	end
 end
 
--- Lines: 225 to 230
+-- Lines 225-230
 function BodyBagsBagBase:save(data)
 	local state = {
 		bodybag_amount = self._bodybag_amount,
@@ -227,7 +229,7 @@ function BodyBagsBagBase:save(data)
 	data.BodyBagsBagBase = state
 end
 
--- Lines: 232 to 245
+-- Lines 232-245
 function BodyBagsBagBase:load(data)
 	local state = data.BodyBagsBagBase
 	self._bodybag_amount = state.bodybag_amount
@@ -245,7 +247,7 @@ function BodyBagsBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines: 249 to 254
+-- Lines 249-254
 function BodyBagsBagBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -253,9 +255,10 @@ function BodyBagsBagBase:destroy()
 		self._validate_clbk_id = nil
 	end
 end
+
 CustomBodyBagsBagBase = CustomBodyBagsBagBase or class(BodyBagsBagBase)
 
--- Lines: 260 to 270
+-- Lines 260-270
 function CustomBodyBagsBagBase:init(unit)
 	CustomBodyBagsBagBase.super.init(self, unit)
 
@@ -270,7 +273,7 @@ function CustomBodyBagsBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines: 272 to 280
+-- Lines 272-280
 function CustomBodyBagsBagBase:_set_empty()
 	self._empty = true
 
@@ -282,4 +285,3 @@ function CustomBodyBagsBagBase:_set_empty()
 		self._unit:damage():run_sequence_simple("empty")
 	end
 end
-

@@ -1,6 +1,6 @@
 require("lib/managers/menu/BoxGuiObject")
 
--- Lines: 4 to 8
+-- Lines 4-9
 function alive(obj)
 	if obj and obj:alive() then
 		return true
@@ -9,12 +9,12 @@ function alive(obj)
 	return false
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function Idstring(str)
 	return str
 end
 
--- Lines: 15 to 19
+-- Lines 15-19
 local function make_fine_text(text_obj)
 	local x, y, w, h = text_obj:text_rect()
 
@@ -22,7 +22,7 @@ local function make_fine_text(text_obj)
 	text_obj:set_position(math.round(text_obj:x()), math.round(text_obj:y()))
 end
 
--- Lines: 21 to 52
+-- Lines 21-52
 local function shrinkwrap(panel, padding)
 	padding = padding or {}
 	local padding_top = padding[1] or 0
@@ -69,7 +69,7 @@ end
 
 LevelLoadingScreenGuiScript = LevelLoadingScreenGuiScript or class()
 
--- Lines: 57 to 132
+-- Lines 57-132
 function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	self._scene_gui = scene_gui
 	self._res = res
@@ -170,12 +170,12 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	end
 end
 
--- Lines: 134 to 136
+-- Lines 134-136
 function LevelLoadingScreenGuiScript:update(progress, t, dt)
 	self._indicator:rotate(180 * dt)
 end
 
--- Lines: 140 to 198
+-- Lines 139-199
 function LevelLoadingScreenGuiScript:_make_loading_hint(parent, tip)
 	local container = parent:panel()
 	local hint_text_width = 450
@@ -219,12 +219,14 @@ function LevelLoadingScreenGuiScript:_make_loading_hint(parent, tip)
 	hint_index_text:set_rightbottom(hint_box:width() - 16, hint_box:height() - 16)
 	hint_title:set_leftbottom(hint_text:left(), hint_box:top())
 	hint_image:set_center_y(hint_box:center_y())
-	BoxGuiObject:new(hint_box, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(hint_box, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	shrinkwrap(container)
 	container:set_center_x(parent:width() * 0.5 - 20)
 	container:set_bottom(parent:height() - 50)
@@ -232,25 +234,27 @@ function LevelLoadingScreenGuiScript:_make_loading_hint(parent, tip)
 	return container
 end
 
--- Lines: 203 to 272
+-- Lines 202-273
 function LevelLoadingScreenGuiScript:_make_controller_hint(parent, coords)
 	local container = parent:panel()
 	local font = arg.load_level_data.coords_font or "fonts/font_medium_mf"
 	local font_size = arg.load_level_data.coords_font_size or 24
 
 	if not arg.load_level_data.controller_shapes then
-		local controller_shapes = {{
-			position = {
-				cy = 0.5,
-				cx = 0.5
-			},
-			texture_rect = {
-				0,
-				0,
-				512,
-				256
+		local controller_shapes = {
+			{
+				position = {
+					cy = 0.5,
+					cx = 0.5
+				},
+				texture_rect = {
+					0,
+					0,
+					512,
+					256
+				}
 			}
-		}}
+		}
 	end
 
 	local controllers = {}
@@ -326,7 +330,7 @@ function LevelLoadingScreenGuiScript:_make_controller_hint(parent, coords)
 	return container
 end
 
--- Lines: 275 to 294
+-- Lines 275-294
 function LevelLoadingScreenGuiScript:destroy()
 	if alive(self._saferect) then
 		self._scene_gui:destroy_workspace(self._saferect)
@@ -353,12 +357,12 @@ function LevelLoadingScreenGuiScript:destroy()
 	end
 end
 
--- Lines: 296 to 297
+-- Lines 296-298
 function LevelLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
--- Lines: 300 to 306
+-- Lines 300-306
 function LevelLoadingScreenGuiScript:set_visible(visible)
 	if visible then
 		self._ws:show()
@@ -366,4 +370,3 @@ function LevelLoadingScreenGuiScript:set_visible(visible)
 		self._ws:hide()
 	end
 end
-

@@ -3,7 +3,7 @@ core:import("CoreSessionStateQuitSession")
 
 InSession = InSession or class()
 
--- Lines: 6 to 13
+-- Lines 6-13
 function InSession:init(session)
 	assert(session)
 
@@ -14,12 +14,12 @@ function InSession:init(session)
 	self.session_state:player_slots():create_players()
 end
 
--- Lines: 15 to 17
+-- Lines 15-17
 function InSession:destroy()
 	self.session_state:player_slots():remove_players()
 end
 
--- Lines: 19 to 27
+-- Lines 19-27
 function InSession:transition()
 	if self._start_session then
 		return CoreSessionStateInSessionStart, self._session
@@ -30,8 +30,7 @@ function InSession:transition()
 	end
 end
 
--- Lines: 29 to 31
+-- Lines 29-31
 function InSession:start_session()
 	self._start_session = true
 end
-

@@ -1,6 +1,6 @@
 FlashGrenadeUnitDamage = FlashGrenadeUnitDamage or class(UnitDamage)
 
--- Lines: 3 to 11
+-- Lines 3-12
 function FlashGrenadeUnitDamage:add_damage(endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
 	local already_destroyed = self:get_damage() > 0
 	local destroyed, damage = UnitDamage.add_damage(self, endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
@@ -11,4 +11,3 @@ function FlashGrenadeUnitDamage:add_damage(endurance_type, attack_unit, dest_bod
 
 	return destroyed, damage
 end
-

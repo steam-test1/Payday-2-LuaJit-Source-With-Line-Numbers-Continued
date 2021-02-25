@@ -1,115 +1,127 @@
 IngameUIExt = IngameUIExt or class()
 
--- Lines: 4 to 5
+-- Lines 4-5
 function IngameUIExt:init(unit)
 end
 
--- Lines: 6 to 7
+-- Lines 6-7
 function IngameUIExt:set_active(unit)
 end
+
 AIAttentionObject = AIAttentionObject or class()
 
--- Lines: 10 to 11
+-- Lines 10-11
 function AIAttentionObject:init(unit)
 end
 
--- Lines: 12 to 13
+-- Lines 12-13
 function AIAttentionObject:set_active()
 end
+
 UseInteractionExt = UseInteractionExt or class()
 
--- Lines: 16 to 17
+-- Lines 16-17
 function UseInteractionExt:init(unit)
 end
 
--- Lines: 18 to 19
+-- Lines 18-19
 function UseInteractionExt:set_active()
 end
+
 SecurityCamera = SecurityCamera or class()
 
--- Lines: 22 to 23
+-- Lines 22-23
 function SecurityCamera:init(unit)
 end
+
 SecurityCameraInteractionExt = SecurityCameraInteractionExt or class()
 
--- Lines: 26 to 27
+-- Lines 26-27
 function SecurityCameraInteractionExt:init(unit)
 end
 
--- Lines: 29 to 30
+-- Lines 29-30
 function SecurityCameraInteractionExt:set_active()
 end
+
 ContourExt = ContourExt or class()
 
--- Lines: 33 to 34
+-- Lines 33-34
 function ContourExt:init(unit)
 end
 
--- Lines: 35 to 36
+-- Lines 35-36
 function ContourExt:set_active()
 end
+
 SyncUnitData = SyncUnitData or class()
 
--- Lines: 39 to 40
+-- Lines 39-40
 function SyncUnitData:init(unit)
 end
 
--- Lines: 41 to 42
+-- Lines 41-42
 function SyncUnitData:set_active()
 end
+
 AccessWeaponMenuInteractionExt = AccessWeaponMenuInteractionExt or class()
 
--- Lines: 45 to 46
+-- Lines 45-46
 function AccessWeaponMenuInteractionExt:init(unit)
 end
 
--- Lines: 48 to 49
+-- Lines 48-49
 function AccessWeaponMenuInteractionExt:set_active()
 end
+
 NetworkBaseExtension = NetworkBaseExtension or class()
 
--- Lines: 52 to 53
+-- Lines 52-53
 function NetworkBaseExtension:init(unit)
 end
 
--- Lines: 54 to 55
+-- Lines 54-55
 function NetworkBaseExtension:set_active()
 end
+
 DrivingInteractionExt = DrivingInteractionExt or class()
 
--- Lines: 58 to 59
+-- Lines 58-59
 function DrivingInteractionExt:init(unit)
 end
 
--- Lines: 60 to 61
+-- Lines 60-61
 function DrivingInteractionExt:set_active()
 end
+
 VehicleDamage = VehicleDamage or class()
 
--- Lines: 64 to 65
+-- Lines 64-65
 function VehicleDamage:init(unit)
 end
 
--- Lines: 66 to 67
+-- Lines 66-67
 function VehicleDamage:set_active()
 end
+
 CarryData = CarryData or class()
 
--- Lines: 70 to 71
+-- Lines 70-71
 function CarryData:init(unit)
 end
 
--- Lines: 72 to 73
+-- Lines 72-73
 function CarryData:set_active()
 end
+
 VehicleDrivingExt = VehicleDrivingExt or class()
 
--- Lines: 76 to 77
+-- Lines 76-77
 function VehicleDrivingExt:init(unit)
 end
+
 VehicleCamera = VehicleCamera or class()
 
--- Lines: 80 to 81
+-- Lines 80-81
 function VehicleCamera:init(unit)
 end
-

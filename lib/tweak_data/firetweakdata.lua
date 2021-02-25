@@ -1,6 +1,6 @@
 FireTweakData = FireTweakData or class()
 
--- Lines: 8 to 86
+-- Lines 4-86
 function FireTweakData:init(tweak_data)
 	self.fire_bones = {
 		"Spine",
@@ -70,4 +70,3 @@ function FireTweakData:init(tweak_data)
 		}
 	}
 end
-

@@ -4,7 +4,7 @@ local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_e
 local CoreMaterialEditorDecal = CoreMaterialEditorDecal or class(CoreMaterialEditorParameter)
 CoreMaterialEditorDecal.DECAL_MATERIAL_FILE = "settings/decals"
 
--- Lines: 10 to 50
+-- Lines 10-50
 function CoreMaterialEditorDecal:init(parent, editor)
 	self:_set_params(parent, editor)
 
@@ -47,17 +47,17 @@ function CoreMaterialEditorDecal:init(parent, editor)
 	self._editor:_update_output()
 end
 
--- Lines: 52 to 54
+-- Lines 52-54
 function CoreMaterialEditorDecal:update(t, dt)
 	CoreMaterialEditorParameter.update(self, t, dt)
 end
 
--- Lines: 56 to 58
+-- Lines 56-58
 function CoreMaterialEditorDecal:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
--- Lines: 60 to 77
+-- Lines 60-77
 function CoreMaterialEditorDecal:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -79,7 +79,7 @@ function CoreMaterialEditorDecal:on_toggle_customize()
 	end
 end
 
--- Lines: 79 to 93
+-- Lines 79-93
 function CoreMaterialEditorDecal:on_copy_to_parent()
 	if self._editor._parent_combo_box:get_value() ~= "[NONE]" then
 		self:_copy_to_parent()
@@ -98,7 +98,7 @@ function CoreMaterialEditorDecal:on_copy_to_parent()
 	self._editor:_create_parameter_panel()
 end
 
--- Lines: 97 to 102
+-- Lines 97-102
 function CoreMaterialEditorDecal:_set_params(parent, editor)
 	self._parent = parent
 	self._editor = editor
@@ -106,7 +106,7 @@ function CoreMaterialEditorDecal:_set_params(parent, editor)
 	self._parent_node = self._editor._parent_materials[self._editor._parent_combo_box:get_value()]
 end
 
--- Lines: 104 to 122
+-- Lines 104-122
 function CoreMaterialEditorDecal:_copy_to_parent(name)
 	local material_node = nil
 
@@ -130,7 +130,7 @@ function CoreMaterialEditorDecal:_copy_to_parent(name)
 	self._editor._parent_combo_box:set_value(parent)
 end
 
--- Lines: 124 to 134
+-- Lines 124-134
 function CoreMaterialEditorDecal:_on_combo_box_change()
 	self._value = self._combo_box:get_value()
 
@@ -143,7 +143,7 @@ function CoreMaterialEditorDecal:_on_combo_box_change()
 	self._editor:_update_output()
 end
 
--- Lines: 136 to 150
+-- Lines 136-150
 function CoreMaterialEditorDecal:_fill_decal_materials()
 	self._combo_box:clear()
 	self._combo_box:append("[NONE]")

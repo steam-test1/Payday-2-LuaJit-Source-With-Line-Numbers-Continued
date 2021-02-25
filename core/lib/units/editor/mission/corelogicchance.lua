@@ -1,12 +1,12 @@
 CoreLogicChanceUnitElement = CoreLogicChanceUnitElement or class(MissionElement)
 LogicChanceUnitElement = LogicChanceUnitElement or class(CoreLogicChanceUnitElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function LogicChanceUnitElement:init(...)
 	CoreLogicChanceUnitElement.init(self, ...)
 end
 
--- Lines: 9 to 15
+-- Lines 9-15
 function CoreLogicChanceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -15,7 +15,7 @@ function CoreLogicChanceUnitElement:init(unit)
 	table.insert(self._save_values, "chance")
 end
 
--- Lines: 17 to 24
+-- Lines 17-24
 function CoreLogicChanceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -28,16 +28,19 @@ function CoreLogicChanceUnitElement:_build_panel(panel, panel_sizer)
 		max = 100
 	}, "Specifies chance that this element will call its on executed elements (in percent)")
 end
+
 CoreLogicChanceOperatorUnitElement = CoreLogicChanceOperatorUnitElement or class(MissionElement)
-CoreLogicChanceOperatorUnitElement.LINK_ELEMENTS = {"elements"}
+CoreLogicChanceOperatorUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 LogicChanceOperatorUnitElement = LogicChanceOperatorUnitElement or class(CoreLogicChanceOperatorUnitElement)
 
--- Lines: 33 to 35
+-- Lines 33-35
 function LogicChanceOperatorUnitElement:init(...)
 	LogicChanceOperatorUnitElement.super.init(self, ...)
 end
 
--- Lines: 37 to 47
+-- Lines 37-47
 function CoreLogicChanceOperatorUnitElement:init(unit)
 	CoreLogicChanceOperatorUnitElement.super.init(self, unit)
 
@@ -50,7 +53,7 @@ function CoreLogicChanceOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 49 to 59
+-- Lines 49-59
 function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreLogicChanceOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -70,17 +73,17 @@ function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all
 	end
 end
 
--- Lines: 61 to 64
+-- Lines 61-64
 function CoreLogicChanceOperatorUnitElement:get_links_to_unit(...)
 	CoreLogicChanceOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 66 to 67
+-- Lines 66-67
 function CoreLogicChanceOperatorUnitElement:update_editing()
 end
 
--- Lines: 69 to 82
+-- Lines 69-82
 function CoreLogicChanceOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -98,18 +101,20 @@ function CoreLogicChanceOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 85 to 87
+-- Lines 85-87
 function CoreLogicChanceOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 89 to 102
+-- Lines 89-102
 function CoreLogicChanceOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_chance/logic_chance"}
+	local names = {
+		"logic_chance/logic_chance"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "operation", {
@@ -126,16 +131,19 @@ function CoreLogicChanceOperatorUnitElement:_build_panel(panel, panel_sizer)
 	}, "Amount of chance to add, subtract or set to the logic chance elements.")
 	self:_add_help_text("This element can modify logic_chance element. Select logic chance elements to modify using insert and clicking on the elements.")
 end
+
 CoreLogicChanceTriggerUnitElement = CoreLogicChanceTriggerUnitElement or class(MissionElement)
-CoreLogicChanceTriggerUnitElement.LINK_ELEMENTS = {"elements"}
+CoreLogicChanceTriggerUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 LogicChanceTriggerUnitElement = LogicChanceTriggerUnitElement or class(CoreLogicChanceTriggerUnitElement)
 
--- Lines: 111 to 113
+-- Lines 111-113
 function LogicChanceTriggerUnitElement:init(...)
 	LogicChanceTriggerUnitElement.super.init(self, ...)
 end
 
--- Lines: 115 to 123
+-- Lines 115-123
 function CoreLogicChanceTriggerUnitElement:init(unit)
 	CoreLogicChanceTriggerUnitElement.super.init(self, unit)
 
@@ -146,7 +154,7 @@ function CoreLogicChanceTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 125 to 134
+-- Lines 125-134
 function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreLogicChanceTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -166,17 +174,17 @@ function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 	end
 end
 
--- Lines: 136 to 139
+-- Lines 136-139
 function CoreLogicChanceTriggerUnitElement:get_links_to_unit(...)
 	CoreLogicChanceTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 141 to 142
+-- Lines 141-142
 function CoreLogicChanceTriggerUnitElement:update_editing()
 end
 
--- Lines: 144 to 157
+-- Lines 144-157
 function CoreLogicChanceTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -194,18 +202,20 @@ function CoreLogicChanceTriggerUnitElement:add_element()
 	end
 end
 
--- Lines: 160 to 162
+-- Lines 160-162
 function CoreLogicChanceTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 164 to 176
+-- Lines 164-176
 function CoreLogicChanceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"logic_chance/logic_chance"}
+	local names = {
+		"logic_chance/logic_chance"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "outcome", {
@@ -214,4 +224,3 @@ function CoreLogicChanceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select an outcome to trigger on")
 	self:_add_help_text("This element is a trigger to logic_chance element.")
 end
-

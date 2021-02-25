@@ -1,6 +1,6 @@
 PlayerBodyBoneMergeBase = PlayerBodyBoneMergeBase or class(UnitBase)
 
--- Lines: 4 to 9
+-- Lines 4-9
 function PlayerBodyBoneMergeBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -9,24 +9,24 @@ function PlayerBodyBoneMergeBase:init(unit)
 	self._is_in_original_material = true
 end
 
--- Lines: 11 to 12
+-- Lines 11-13
 function PlayerBodyBoneMergeBase:char_tweak()
 	return {}
 end
 
--- Lines: 15 to 16
+-- Lines 15-17
 function PlayerBodyBoneMergeBase:is_in_original_material()
 	return self._is_in_original_material
 end
 
--- Lines: 19 to 23
+-- Lines 19-23
 function PlayerBodyBoneMergeBase:set_material_state(original)
 	if original and not self._is_in_original_material or not original and self._is_in_original_material then
 		self:swap_material_config()
 	end
 end
 
--- Lines: 25 to 38
+-- Lines 25-38
 function PlayerBodyBoneMergeBase:swap_material_config(material_applied_clbk)
 	local new_material = Idstring(self.contour_material)
 
@@ -44,7 +44,7 @@ function PlayerBodyBoneMergeBase:swap_material_config(material_applied_clbk)
 	end
 end
 
--- Lines: 41 to 56
+-- Lines 40-56
 function PlayerBodyBoneMergeBase:on_material_applied(material_applied_clbk)
 	if not alive(self._unit) then
 		return
@@ -61,8 +61,7 @@ function PlayerBodyBoneMergeBase:on_material_applied(material_applied_clbk)
 	end
 end
 
--- Lines: 58 to 60
+-- Lines 58-60
 function PlayerBodyBoneMergeBase:set_allow_invisible(allow)
 	self._allow_invisible = allow
 end
-

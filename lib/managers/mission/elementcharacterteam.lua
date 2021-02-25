@@ -2,13 +2,13 @@ core:import("CoreMissionScriptElement")
 
 ElementCharacterTeam = ElementCharacterTeam or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 9
+-- Lines 5-9
 function ElementCharacterTeam:init(...)
 	ElementCharacterTeam.super.init(self, ...)
 	self:_finalize_values()
 end
 
--- Lines: 11 to 20
+-- Lines 11-20
 function ElementCharacterTeam:_finalize_values()
 	local values = self._values
 
@@ -21,13 +21,13 @@ function ElementCharacterTeam:_finalize_values()
 	end
 end
 
--- Lines: 22 to 50
+-- Lines 22-50
 function ElementCharacterTeam:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
-	-- Lines: 29 to 31
+	-- Lines 28-31
 	local function _set_unit_team_f(unit)
 		managers.groupai:state():set_char_team(unit, self._values.team)
 	end
@@ -52,4 +52,3 @@ function ElementCharacterTeam:on_executed(instigator)
 
 	ElementCharacterTeam.super.on_executed(self, instigator)
 end
-

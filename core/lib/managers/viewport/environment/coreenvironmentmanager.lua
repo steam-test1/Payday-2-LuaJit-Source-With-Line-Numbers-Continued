@@ -7,7 +7,7 @@ EnvironmentManager = EnvironmentManager or CoreClass.class()
 local extension = "environment"
 local ids_extension = Idstring(extension)
 
--- Lines: 16 to 94
+-- Lines 12-94
 function EnvironmentManager:init()
 	self._env_data_map = {}
 	self._feeder_class_map = {}
@@ -192,7 +192,7 @@ function EnvironmentManager:init()
 	self:preload_environment(self._game_default_environment_path)
 end
 
--- Lines: 96 to 103
+-- Lines 96-103
 function EnvironmentManager:destroy()
 	self._env_data_map = nil
 	self._feeder_class_map = nil
@@ -202,29 +202,29 @@ function EnvironmentManager:destroy()
 	self._deprecated_data_path_map = nil
 end
 
--- Lines: 105 to 109
+-- Lines 105-109
 function EnvironmentManager:preload_environment(path)
 	if not self._env_data_map[path] then
 		self._env_data_map[path] = self:_load(path)
 	end
 end
 
--- Lines: 111 to 112
+-- Lines 111-113
 function EnvironmentManager:has_data_path_key(data_path_key)
 	return self._feeder_class_map[data_path_key] ~= nil
 end
 
--- Lines: 115 to 116
+-- Lines 115-117
 function EnvironmentManager:is_deprecated_data_path(data_path)
 	return self._deprecated_data_path_map and self._deprecated_data_path_map[data_path] ~= nil
 end
 
--- Lines: 119 to 120
+-- Lines 119-121
 function EnvironmentManager:get_predefined_environment_filter_map()
 	return self._predefined_environment_filter_map
 end
 
--- Lines: 123 to 128
+-- Lines 123-129
 function EnvironmentManager:get_default_value(data_path_key)
 	local feeder = self._feeder_class_map[data_path_key]
 
@@ -235,7 +235,7 @@ function EnvironmentManager:get_default_value(data_path_key)
 	return feeder.DEFAULT_VALUE
 end
 
--- Lines: 131 to 145
+-- Lines 131-146
 function EnvironmentManager:get_value(path, data_path_key)
 	local env_data = self:_get_data(path)
 
@@ -254,7 +254,7 @@ function EnvironmentManager:get_value(path, data_path_key)
 	return value
 end
 
--- Lines: 148 to 156
+-- Lines 148-156
 function EnvironmentManager:set_global_environment_modifier(data_path_key, is_override, modifier_func)
 	local global_modifier_data = nil
 
@@ -268,32 +268,32 @@ function EnvironmentManager:set_global_environment_modifier(data_path_key, is_ov
 	self._global_environment_modifier_map[data_path_key] = global_modifier_data
 end
 
--- Lines: 158 to 160
+-- Lines 158-160
 function EnvironmentManager:set_default_environment(default_environment_path)
 	self._default_environment_path = default_environment_path
 end
 
--- Lines: 162 to 163
+-- Lines 162-164
 function EnvironmentManager:default_environment()
 	return self._default_environment_path
 end
 
--- Lines: 166 to 167
+-- Lines 166-168
 function EnvironmentManager:game_default_environment()
 	return self._game_default_environment_path
 end
 
--- Lines: 170 to 172
+-- Lines 170-172
 function EnvironmentManager:set_override_environment(override_environment_path)
 	self._override_environment_path = override_environment_path
 end
 
--- Lines: 174 to 175
+-- Lines 174-176
 function EnvironmentManager:override_environment()
 	return self._override_environment_path
 end
 
--- Lines: 178 to 181
+-- Lines 178-182
 function EnvironmentManager:_set_global_feeder(feeder)
 	local old_feeder = self._global_feeder_map[feeder.DATA_PATH_KEY]
 	self._global_feeder_map[feeder.DATA_PATH_KEY] = feeder
@@ -301,18 +301,20 @@ function EnvironmentManager:_set_global_feeder(feeder)
 	return old_feeder
 end
 
--- Lines: 184 to 187
+-- Lines 184-187
 function EnvironmentManager:editor_add_created_callback(func)
 	self._created_callback_list = self._created_callback_list or {}
 
 	table.insert(self._created_callback_list, func)
 end
 
--- Lines: 189 to 223
+-- Lines 189-223
 function EnvironmentManager:editor_reload(path)
 	local entry_path = managers.database:entry_relative_path(path .. "." .. extension)
 	local is_new = not managers.database:has(entry_path)
-	local source_files = {entry_path}
+	local source_files = {
+		entry_path
+	}
 
 	for _, old_path in ipairs(managers.database:list_entries_of_type("environment")) do
 		table.insert(source_files, old_path .. "." .. extension)
@@ -345,7 +347,7 @@ function EnvironmentManager:editor_reload(path)
 	end
 end
 
--- Lines: 225 to 237
+-- Lines 225-238
 function EnvironmentManager:_get_data(path)
 	local env_data = self._env_data_map[path]
 
@@ -361,7 +363,7 @@ function EnvironmentManager:_get_data(path)
 	return env_data
 end
 
--- Lines: 240 to 248
+-- Lines 240-249
 function EnvironmentManager:_create_feeder(data_path_key, value)
 	local feeder = self._feeder_class_map[data_path_key]:new(value)
 	local global_modifier_data = self._global_environment_modifier_map[data_path_key]
@@ -373,7 +375,7 @@ function EnvironmentManager:_create_feeder(data_path_key, value)
 	return feeder
 end
 
--- Lines: 251 to 269
+-- Lines 251-270
 function EnvironmentManager:_load(path)
 	local raw_data = nil
 
@@ -396,7 +398,7 @@ function EnvironmentManager:_load(path)
 	return env_data
 end
 
--- Lines: 272 to 288
+-- Lines 272-288
 function EnvironmentManager:_load_env_data(data_path, env_data, raw_data)
 	for _, sub_raw_data in ipairs(raw_data) do
 		if sub_raw_data._meta == "param" then
@@ -415,4 +417,3 @@ function EnvironmentManager:_load_env_data(data_path, env_data, raw_data)
 		end
 	end
 end
-

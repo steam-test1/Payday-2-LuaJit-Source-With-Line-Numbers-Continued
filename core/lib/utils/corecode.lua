@@ -4,7 +4,7 @@ core:import("CoreDebug")
 core:import("CoreClass")
 core:import("CoreApp")
 
--- Lines: 24 to 30
+-- Lines 24-31
 local function open_lua_source_file(source)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -16,7 +16,7 @@ local function open_lua_source_file(source)
 	return DB:has(entry_type, entry_name:id()) and DB:open(entry_type, entry_name:id()) or nil
 end
 
--- Lines: 34 to 49
+-- Lines 34-50
 function get_prototype(info)
 	if info.source == "=[C]" then
 		return "(C++ method)"
@@ -26,7 +26,7 @@ function get_prototype(info)
 	local source_file = open_lua_source_file(info.source)
 
 	if source_file then
-		for i = 1, info.linedefined, 1 do
+		for i = 1, info.linedefined do
 			prototype = source_file:gets()
 		end
 
@@ -36,7 +36,7 @@ function get_prototype(info)
 	return prototype
 end
 
--- Lines: 53 to 77
+-- Lines 53-78
 function get_source(info)
 	if info.source == "=[C]" then
 		return "(C++ method)"
@@ -45,7 +45,7 @@ function get_source(info)
 	local source_file = open_lua_source_file(info.source)
 	local lines = {}
 
-	for i = 1, info.linedefined - 1, 1 do
+	for i = 1, info.linedefined - 1 do
 		local line = source_file:gets()
 
 		if line:match("^%s*%-%-") then
@@ -55,7 +55,7 @@ function get_source(info)
 		end
 	end
 
-	for i = info.linedefined, info.lastlinedefined, 1 do
+	for i = info.linedefined, info.lastlinedefined do
 		table.insert(lines, source_file:gets())
 	end
 
@@ -64,7 +64,7 @@ function get_source(info)
 	return table.concat(lines, "\n")
 end
 
--- Lines: 81 to 97
+-- Lines 80-97
 function traceback(max_level)
 	max_level = max_level or 2
 	local level = 2
@@ -72,7 +72,7 @@ function traceback(max_level)
 	while true do
 		local info = debug.getinfo(level, "Sl")
 
-		if not info or max_level + 2 <= level then
+		if not info or level >= max_level + 2 then
 			break
 		end
 
@@ -86,7 +86,7 @@ function traceback(max_level)
 	end
 end
 
--- Lines: 99 to 103
+-- Lines 99-104
 function alive(obj)
 	if obj and obj:alive() then
 		return true
@@ -95,12 +95,12 @@ function alive(obj)
 	return false
 end
 
--- Lines: 106 to 108
+-- Lines 106-108
 function deprecation_warning(method_name, breaking_release_name)
 	CoreDebug.cat_print("debug", string.format("DEPRECATION WARNING: %s will be removed in %s", method_name, breaking_release_name or "a future release"))
 end
 
--- Lines: 119 to 149
+-- Lines 119-150
 function sort_iterator(t, raw)
 	local sorted = {}
 
@@ -136,7 +136,7 @@ function sort_iterator(t, raw)
 	end
 end
 
--- Lines: 156 to 196
+-- Lines 156-196
 function line_representation(x, seen, raw)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -193,12 +193,14 @@ function line_representation(x, seen, raw)
 	end
 end
 
--- Lines: 202 to 225
+-- Lines 202-225
 function add_prints(class_name, ignore_list)
 	local obj = _G[class_name]
 	local to_change = {}
 	ignore_list = ignore_list or {}
-	local ignore = {new = true}
+	local ignore = {
+		new = true
+	}
 
 	for _, v in pairs(ignore_list) do
 		ignore[v] = true
@@ -206,8 +208,6 @@ function add_prints(class_name, ignore_list)
 
 	for k, v in pairs(obj) do
 		if type(v) == "function" and not ignore[k] then
-
-			-- Lines: 215 to 217
 			to_change[k] = function (...)
 				print("[" .. class_name .. "]" .. "." .. k, ...)
 
@@ -221,16 +221,16 @@ function add_prints(class_name, ignore_list)
 	end
 end
 
--- Lines: 236 to 258
+-- Lines 236-258
 function tag_print(tag, ...)
 	tag = string.sub(tag, 1, 1) == "[" and tag or "[" .. tag .. "]"
 
-	-- Lines: 238 to 254
+	-- Lines 238-255
 	local function do_things(tag, ...)
 		local str = ""
 		local need_front = true
 
-		for i = 1, select("#", ...), 1 do
+		for i = 1, select("#", ...) do
 			local s, lines = string.gsub(tostring(select(i, ...)), "\n", "\n" .. tag .. "\t")
 
 			if lines > 0 then
@@ -252,14 +252,14 @@ function tag_print(tag, ...)
 	print(do_things(tag, ...))
 end
 
--- Lines: 263 to 264
+-- Lines 261-265
 function make_tag_print(tag)
 	return function (...)
 		tag_print(tag, ...)
 	end
 end
 
--- Lines: 269 to 285
+-- Lines 269-285
 function full_representation(x, seen)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -278,7 +278,7 @@ end
 
 inspect = full_representation
 
--- Lines: 288 to 294
+-- Lines 288-294
 function properties(x)
 	local t = {}
 
@@ -289,11 +289,11 @@ function properties(x)
 	CoreDebug.cat_print("debug", ascii_table(t))
 end
 
--- Lines: 297 to 334
+-- Lines 297-334
 function help(o)
 	local methods = {}
 
-	-- Lines: 299 to 326
+	-- Lines 299-326
 	local function add_methods(t)
 		if type(t) == "table" then
 			for k, v in pairs(t) do
@@ -315,7 +315,13 @@ function help(o)
 					end
 
 					k = k .. string.rep(" ", 40 - #k)
-					k = info.what == "Lua" and k .. "(" .. info.source .. ":" .. info.linedefined .. ")" or k .. "(C++ function)"
+
+					if info.what == "Lua" then
+						k = k .. "(" .. info.source .. ":" .. info.linedefined .. ")"
+					else
+						k = k .. "(C++ function)"
+					end
+
 					methods[k] = true
 				end
 			end
@@ -341,7 +347,7 @@ function help(o)
 	end
 end
 
--- Lines: 339 to 356
+-- Lines 339-357
 function ascii_table(t, raw)
 	local out = ""
 	local klen = 20
@@ -360,22 +366,24 @@ function ascii_table(t, raw)
 		end
 	end
 
-	out = out .. "-":rep(klen + vlen + 5) .. "\n"
+	out = out .. ("-"):rep(klen + vlen + 5) .. "\n"
 
 	for k, v in sort_iterator(t, raw) do
 		out = out .. "| " .. line_representation(k, nil, raw):left(klen) .. "| " .. line_representation(v, nil, raw):left(vlen) .. "|\n"
 	end
 
-	out = out .. "-":rep(klen + vlen + 5) .. "\n"
+	out = out .. ("-"):rep(klen + vlen + 5) .. "\n"
 
 	return out
 end
 
--- Lines: 362 to 422
+-- Lines 362-422
 function memory_report(limit)
 	local seen = {}
 	local count = {}
-	local name = {_G = _G}
+	local name = {
+		_G = _G
+	}
 
 	for k, v in pairs(_G) do
 		if type(v) == "userdata" and v.key or type(v) ~= "userdata" then
@@ -383,7 +391,7 @@ function memory_report(limit)
 		end
 	end
 
-	-- Lines: 373 to 377
+	-- Lines 373-378
 	local function simple(item)
 		local t = type(item)
 
@@ -398,7 +406,7 @@ function memory_report(limit)
 		return true
 	end
 
-	-- Lines: 380 to 402
+	-- Lines 380-402
 	local function recurse(item, parent, key)
 		local index = type(item) == "userdata" and item:key() or item
 
@@ -446,7 +454,7 @@ function memory_report(limit)
 	for k, v in pairs(count) do
 		total = total + v
 
-		if (limit or 100) < v then
+		if v > (limit or 100) then
 			res[#res + 1] = string.format("%6i  %s", v, k)
 		end
 	end
@@ -472,13 +480,15 @@ end
 
 __profiled = {}
 
--- Lines: 437 to 473
+-- Lines 437-473
 function profile(s)
 	if __profiled[s] then
 		return
 	end
 
-	local t = {s = s}
+	local t = {
+		s = s
+	}
 	local start, stop = s:find(":")
 
 	if start then
@@ -493,7 +503,7 @@ function profile(s)
 
 		t.f = rawget(_G, t.class)[t.name]
 
-		-- Lines: 450 to 451
+		-- Lines 451-451
 		function t.patch(f)
 			_G[t.class][t.name] = f
 		end
@@ -501,7 +511,7 @@ function profile(s)
 		t.name = s
 		t.f = rawget(_G, t.name)
 
-		-- Lines: 454 to 455
+		-- Lines 455-455
 		function t.patch(f)
 			_G[t.name] = f
 		end
@@ -513,7 +523,7 @@ function profile(s)
 		return
 	end
 
-	-- Lines: 463 to 467
+	-- Lines 463-468
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
 		res = t.f(...)
@@ -530,7 +540,7 @@ function profile(s)
 	Application:console_command("profiler add " .. s)
 end
 
--- Lines: 475 to 482
+-- Lines 475-482
 function unprofile(s)
 	local t = __profiled[s]
 
@@ -543,7 +553,7 @@ function unprofile(s)
 	__profiled[s] = nil
 end
 
--- Lines: 484 to 489
+-- Lines 484-489
 function reprofile()
 	for k, v in pairs(__old_profiled) do
 		profile(k)
@@ -552,3 +562,20 @@ function reprofile()
 	__old_profiled = {}
 end
 
+-- Lines 491-503
+function safe_get_value(table, ...)
+	local keys = {
+		...
+	}
+	local value = table
+
+	for _, key in ipairs(keys) do
+		value = value[key]
+
+		if value == nil then
+			break
+		end
+	end
+
+	return value
+end

@@ -3,7 +3,7 @@ core:import("CoreGameStateFrontEnd")
 
 PreFrontEnd = PreFrontEnd or class()
 
--- Lines: 6 to 10
+-- Lines 6-10
 function PreFrontEnd:init()
 	local player_slot = self.game_state:player_slots():primary_slot()
 
@@ -12,12 +12,12 @@ function PreFrontEnd:init()
 	self.game_state._is_in_pre_front_end = true
 end
 
--- Lines: 12 to 14
+-- Lines 12-14
 function PreFrontEnd:destroy()
 	self.game_state._is_in_pre_front_end = false
 end
 
--- Lines: 16 to 25
+-- Lines 16-25
 function PreFrontEnd:transition()
 	if not self.game_state:player_slots():has_primary_local_user() then
 		return
@@ -29,4 +29,3 @@ function PreFrontEnd:transition()
 		return CoreGameStateFrontEnd.FrontEnd
 	end
 end
-

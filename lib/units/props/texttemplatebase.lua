@@ -1,12 +1,12 @@
 TextTemplateBase = TextTemplateBase or class(UnitBase)
 
--- Lines: 3 to 7
+-- Lines 3-7
 function TextTemplateBase:init(unit)
 	TextTemplateBase.super.init(self, unit, false)
 	self:_apply_template()
 end
 
--- Lines: 9 to 15
+-- Lines 9-15
 function TextTemplateBase:_apply_template()
 	if self.TEMPLATE == "stocks" then
 		self:_stock_ticker()
@@ -15,16 +15,16 @@ function TextTemplateBase:_apply_template()
 	end
 end
 
--- Lines: 17 to 20
+-- Lines 17-20
 function TextTemplateBase:set_template(template)
 	self.TEMPLATE = template
 
 	self:_apply_template()
 end
 
--- Lines: 24 to 62
+-- Lines 22-62
 function TextTemplateBase:_stock_ticker()
-	for i = 1, self._unit:text_gui().ROWS, 1 do
+	for i = 1, self._unit:text_gui().ROWS do
 		self._unit:text_gui():set_row_gap(i, 20)
 		self._unit:text_gui():clear_row_and_guis(i)
 		self._unit:text_gui():set_row_speed(i, i * 100 + 40 + 120 * math.rand(1))
@@ -192,7 +192,19 @@ function TextTemplateBase:_stock_ticker()
 
 		for i, company in ipairs(companies) do
 			srand = 0
-			srand = math.rand(1) < bankruptcy_chance and math.rand(-99, -45) or math.rand(1) < bad_chance and math.rand(-55, -5) or math.rand(1) < good_chance and math.rand(0, 40) or math.rand(1) < joker_chance and math.rand(-100, 250) or math.rand(-10, 10)
+
+			if math.rand(1) < bankruptcy_chance then
+				srand = math.rand(-99, -45)
+			elseif math.rand(1) < bad_chance then
+				srand = math.rand(-55, -5)
+			elseif math.rand(1) < good_chance then
+				srand = math.rand(0, 40)
+			elseif math.rand(1) < joker_chance then
+				srand = math.rand(-100, 250)
+			else
+				srand = math.rand(-10, 10)
+			end
+
 			TextTemplateBase.STOCK_PERCENT[i] = srand
 		end
 	end
@@ -207,13 +219,13 @@ function TextTemplateBase:_stock_ticker()
 	end
 end
 
--- Lines: 64 to 83
+-- Lines 64-83
 function TextTemplateBase:_big_bank_welcome()
 	self._unit:text_gui():set_row_speed(1, 100)
 	self._unit:text_gui():set_row_speed(2, 240 + 120 * math.rand(1))
 	self._unit:text_gui():set_row_gap(1, 320)
 
-	for i = 1, self._unit:text_gui().ROWS, 1 do
+	for i = 1, self._unit:text_gui().ROWS do
 		self._unit:text_gui():clear_row_and_guis(i)
 	end
 
@@ -279,17 +291,19 @@ function TextTemplateBase:_big_bank_welcome()
 	end
 end
 
--- Lines: 86 to 87
+-- Lines 85-87
 function TextTemplateBase:destroy()
 end
 
--- Lines: 89 to 95
+-- Lines 89-95
 function TextTemplateBase:save(data)
-	local state = {template = self.TEMPLATE}
+	local state = {
+		template = self.TEMPLATE
+	}
 	data.TextTemplateBase = state
 end
 
--- Lines: 97 to 103
+-- Lines 97-103
 function TextTemplateBase:load(data)
 	local state = data.TextTemplateBase
 
@@ -297,4 +311,3 @@ function TextTemplateBase:load(data)
 		self:set_template(state.template)
 	end
 end
-

@@ -1,11 +1,11 @@
 SelectByName = SelectByName or class(UnitByName)
 
--- Lines: 3 to 84
+-- Lines 3-84
 function SelectByName:init(...)
 	UnitByName.init(self, "Select by name", nil, ...)
 end
 
--- Lines: 86 to 103
+-- Lines 86-103
 function SelectByName:_build_buttons(panel, sizer)
 	local find_btn = EWS:Button(panel, "Find", "", "BU_BOTTOM")
 
@@ -27,7 +27,7 @@ function SelectByName:_build_buttons(panel, sizer)
 	UnitByName._build_buttons(self, panel, sizer)
 end
 
--- Lines: 147 to 164
+-- Lines 147-164
 function SelectByName:_on_delete()
 	local confirm = EWS:message_box(self._dialog, "Delete selected unit(s)?", self._dialog_name, "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -44,13 +44,13 @@ function SelectByName:_on_delete()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines: 166 to 169
+-- Lines 166-169
 function SelectByName:_on_find_unit()
 	self:_on_select_unit()
 	managers.editor:center_view_on_unit(self:_selected_item_unit())
 end
 
--- Lines: 171 to 192
+-- Lines 171-192
 function SelectByName:_on_select_unit()
 	managers.editor:change_layer_based_on_unit(self:_selected_item_unit())
 	managers.editor:freeze_gui_lists()
@@ -62,4 +62,3 @@ function SelectByName:_on_select_unit()
 
 	self._blocked = false
 end
-

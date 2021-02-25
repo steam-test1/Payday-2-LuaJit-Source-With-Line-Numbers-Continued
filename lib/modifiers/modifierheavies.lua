@@ -7,7 +7,7 @@ ModifierHeavies.unit_swaps = {
 	["units/payday2/characters/ene_fbi_swat_1/ene_fbi_swat_1"] = "units/payday2/characters/ene_city_heavy_r870/ene_city_heavy_r870"
 }
 
--- Lines: 13 to 34
+-- Lines 12-34
 function ModifierHeavies:init(data)
 	ModifierHeavies.super.init(self, data)
 
@@ -27,4 +27,3 @@ function ModifierHeavies:init(data)
 		end
 	end
 end
-

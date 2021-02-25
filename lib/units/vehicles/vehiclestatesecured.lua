@@ -1,11 +1,11 @@
 VehicleStateSecured = VehicleStateSecured or class(BaseVehicleState)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function VehicleStateSecured:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines: 10 to 17
+-- Lines 9-17
 function VehicleStateSecured:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
@@ -13,7 +13,7 @@ function VehicleStateSecured:enter(state_data, enter_data)
 	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
 end
 
--- Lines: 21 to 39
+-- Lines 21-39
 function VehicleStateSecured:adjust_interactions()
 	VehicleStateSecured.super.adjust_interactions(self)
 
@@ -38,8 +38,7 @@ function VehicleStateSecured:adjust_interactions()
 	end
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function VehicleStateSecured:stop_vehicle()
 	return true
 end
-

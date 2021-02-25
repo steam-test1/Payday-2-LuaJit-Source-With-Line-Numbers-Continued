@@ -1,7 +1,7 @@
 HUDChatVR = HUDChat
 HUDChatVR.old_init = HUDChat.init
 
--- Lines: 6 to 16
+-- Lines 6-16
 function HUDChatVR:init(ws, hud)
 	local old_panel = hud.panel
 	hud.panel = managers.hud:tablet_page("left_page")
@@ -11,20 +11,20 @@ function HUDChatVR:init(ws, hud)
 
 	hud.panel = old_panel
 end
+
 HUDChatVR.default_layout_output_panel = HUDChat._layout_output_panel
 
--- Lines: 19 to 23
+-- Lines 19-23
 function HUDChatVR:_layout_output_panel()
 	self:default_layout_output_panel()
 	self._panel:child("output_panel"):set_bottom(self._panel:h())
 end
 
--- Lines: 42 to 43
+-- Lines 42-43
 function HUDChatVR:_animate_fade_output()
 end
 
--- Lines: 46 to 48
+-- Lines 46-48
 function HUDChatVR:_animate_show_component(o)
 	o:set_alpha(1)
 end
-

@@ -1,6 +1,6 @@
 DramaTweakData = DramaTweakData or class()
 
--- Lines: 7 to 23
+-- Lines 7-23
 function DramaTweakData:init()
 	self:_create_table_structure()
 
@@ -17,7 +17,6 @@ function DramaTweakData:init()
 	self.assault_fade_end = 0.25
 end
 
--- Lines: 28 to 29
+-- Lines 27-29
 function DramaTweakData:_create_table_structure()
 end
-

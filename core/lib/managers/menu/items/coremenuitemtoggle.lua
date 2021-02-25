@@ -5,7 +5,7 @@ core:import("CoreMenuItemOption")
 ItemToggle = ItemToggle or class(CoreMenuItem.Item)
 ItemToggle.TYPE = "toggle"
 
--- Lines: 9 to 29
+-- Lines 9-29
 function ItemToggle:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -27,12 +27,12 @@ function ItemToggle:init(data_node, parameters)
 	end
 end
 
--- Lines: 31 to 33
+-- Lines 31-33
 function ItemToggle:add_option(option)
 	table.insert(self.options, option)
 end
 
--- Lines: 35 to 46
+-- Lines 35-46
 function ItemToggle:toggle()
 	if not self._enabled then
 		return
@@ -40,14 +40,14 @@ function ItemToggle:toggle()
 
 	self.selected = self.selected + 1
 
-	if #self.options < self.selected then
+	if self.selected > #self.options then
 		self.selected = 1
 	end
 
 	self:dirty()
 end
 
--- Lines: 48 to 59
+-- Lines 48-59
 function ItemToggle:toggle_back()
 	if not self._enabled then
 		return
@@ -62,12 +62,12 @@ function ItemToggle:toggle_back()
 	self:dirty()
 end
 
--- Lines: 61 to 62
+-- Lines 61-63
 function ItemToggle:selected_option()
 	return self.options[self.selected]
 end
 
--- Lines: 65 to 71
+-- Lines 65-72
 function ItemToggle:value()
 	local value = ""
 	local selected_option = self:selected_option()
@@ -79,7 +79,7 @@ function ItemToggle:value()
 	return value
 end
 
--- Lines: 74 to 82
+-- Lines 74-82
 function ItemToggle:set_value(value)
 	for i, option in ipairs(self.options) do
 		if option:parameters().value == value then
@@ -92,9 +92,11 @@ function ItemToggle:set_value(value)
 	self:dirty()
 end
 
--- Lines: 88 to 128
+-- Lines 86-129
 function ItemToggle:setup_gui(node, row_item)
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, node:_right_align())
 
 	row_item.gui_text:set_text(row_item.to_upper and utf8.to_upper(row_item.text) or row_item.text)
@@ -148,9 +150,10 @@ function ItemToggle:setup_gui(node, row_item)
 
 	return true
 end
+
 local xl_pad = 64
 
--- Lines: 132 to 225
+-- Lines 132-226
 function ItemToggle:reload(row_item, node)
 	if not row_item then
 		return
@@ -240,7 +243,7 @@ function ItemToggle:reload(row_item, node)
 	return true
 end
 
--- Lines: 228 to 251
+-- Lines 228-251
 function ItemToggle:_set_toggle_item_image(row_item)
 	if self:selected_option():parameters().icon then
 		if row_item.highlighted and self:selected_option():parameters().s_icon then
@@ -269,7 +272,7 @@ function ItemToggle:_set_toggle_item_image(row_item)
 	end
 end
 
--- Lines: 253 to 271
+-- Lines 253-272
 function ItemToggle:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(row_item.font and Idstring(row_item.font) or _G.tweak_data.menu.default_font_no_outline_id)
@@ -293,7 +296,7 @@ function ItemToggle:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 274 to 292
+-- Lines 274-293
 function ItemToggle:fade_row_item(node, row_item)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(row_item.font and Idstring(row_item.font) or _G.tweak_data.menu.default_font_id)
@@ -316,4 +319,3 @@ function ItemToggle:fade_row_item(node, row_item)
 
 	return true
 end
-

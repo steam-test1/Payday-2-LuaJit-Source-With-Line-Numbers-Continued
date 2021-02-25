@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementStatisticsContact = ElementStatisticsContact or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementStatisticsContact:init(...)
 	ElementStatisticsContact.super.init(self, ...)
 end
 
--- Lines: 9 to 20
+-- Lines 9-20
 function ElementStatisticsContact:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -22,12 +22,12 @@ function ElementStatisticsContact:on_executed(instigator)
 	ElementStatisticsContact.super.on_executed(self, instigator)
 end
 
--- Lines: 22 to 24
+-- Lines 22-24
 function ElementStatisticsContact:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 26 to 65
+-- Lines 26-66
 function ElementStatisticsContact:_completed_contact_data(contact_id, state, difficulty, dropin)
 	local count = 0
 	local job_list = managers.statistics:sessions_jobs()
@@ -67,4 +67,3 @@ function ElementStatisticsContact:_completed_contact_data(contact_id, state, dif
 
 	return count
 end
-

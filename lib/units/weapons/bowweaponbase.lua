@@ -1,6 +1,6 @@
 BowWeaponBase = BowWeaponBase or class(ProjectileWeaponBase)
 
--- Lines: 5 to 16
+-- Lines 5-16
 function BowWeaponBase:init(unit)
 	BowWeaponBase.super.init(self, unit)
 
@@ -9,19 +9,19 @@ function BowWeaponBase:init(unit)
 	self._steelsight_speed = 0.5
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function BowWeaponBase:trigger_pressed(...)
 	self:_start_charging()
 end
 
--- Lines: 26 to 30
+-- Lines 26-30
 function BowWeaponBase:trigger_held(...)
 	if not self._charging and not self._cancelled then
 		self:_start_charging()
 	end
 end
 
--- Lines: 34 to 40
+-- Lines 34-40
 function BowWeaponBase:_start_charging()
 	self._cancelled = nil
 	self._charging = true
@@ -30,12 +30,12 @@ function BowWeaponBase:_start_charging()
 	self:play_tweak_data_sound("charge")
 end
 
--- Lines: 48 to 50
+-- Lines 48-50
 function BowWeaponBase:set_tased_shot(bool)
 	self._is_tased_shot = bool
 end
 
--- Lines: 52 to 66
+-- Lines 52-67
 function BowWeaponBase:trigger_released(...)
 	local fired = nil
 
@@ -56,7 +56,7 @@ function BowWeaponBase:trigger_released(...)
 	return fired
 end
 
--- Lines: 71 to 76
+-- Lines 71-76
 function BowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_percent)
 	if not alive(attacker) or attacker ~= managers.player:player_unit() then
 		return
@@ -69,16 +69,16 @@ function BowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_percent
 	})
 end
 
--- Lines: 81 to 82
+-- Lines 81-82
 function BowWeaponBase:_spawn_muzzle_effect()
 end
 
--- Lines: 86 to 87
+-- Lines 86-88
 function BowWeaponBase:charge_fail()
 	return self:charge_multiplier() < 0.2
 end
 
--- Lines: 90 to 99
+-- Lines 90-100
 function BowWeaponBase:charge_multiplier()
 	if self._is_tased_shot then
 		return 1
@@ -94,44 +94,44 @@ function BowWeaponBase:charge_multiplier()
 	return charge_multiplier
 end
 
--- Lines: 105 to 106
+-- Lines 104-107
 function BowWeaponBase:projectile_speed_multiplier()
 	return math.lerp(0.05, 1, self:charge_multiplier())
 end
 
--- Lines: 112 to 113
+-- Lines 111-114
 function BowWeaponBase:projectile_damage_multiplier()
 	return math.lerp(0.1, 1, self:charge_multiplier())
 end
 
--- Lines: 118 to 119
+-- Lines 118-120
 function BowWeaponBase:projectile_charge_value()
 	return self:charge_multiplier()
 end
 
--- Lines: 124 to 128
+-- Lines 124-128
 function BowWeaponBase:_adjust_throw_z(m_vec)
 	local adjust_z = math.lerp(0, 0.05, 1 - math.abs(mvector3.z(m_vec)))
 
 	mvector3.set_z(m_vec, mvector3.z(m_vec) + adjust_z)
 end
 
--- Lines: 132 to 133
+-- Lines 132-134
 function BowWeaponBase:fire_on_release()
 	return true
 end
 
--- Lines: 138 to 139
+-- Lines 138-140
 function BowWeaponBase:can_refire_while_tased()
 	return false
 end
 
--- Lines: 144 to 145
+-- Lines 144-146
 function BowWeaponBase:charging()
 	return self._charging and not self._cancelled
 end
 
--- Lines: 150 to 154
+-- Lines 150-154
 function BowWeaponBase:interupt_charging()
 	self._charging = nil
 	self._cancelled = nil
@@ -139,12 +139,12 @@ function BowWeaponBase:interupt_charging()
 	self:play_tweak_data_sound("charge_cancel")
 end
 
--- Lines: 158 to 159
+-- Lines 158-160
 function BowWeaponBase:manages_steelsight()
 	return true
 end
 
--- Lines: 164 to 173
+-- Lines 164-174
 function BowWeaponBase:steelsight_pressed()
 	if self._cancelled then
 		return
@@ -156,27 +156,29 @@ function BowWeaponBase:steelsight_pressed()
 		self:play_tweak_data_sound("charge_cancel")
 	end
 
-	return {exit_steelsight = true}
+	return {
+		exit_steelsight = true
+	}
 end
 
--- Lines: 178 to 179
+-- Lines 178-180
 function BowWeaponBase:wants_steelsight()
 	return self._charging and not self._cancelled
 end
 
--- Lines: 184 to 185
+-- Lines 184-186
 function BowWeaponBase:enter_steelsight_speed_multiplier()
 	return self._steelsight_speed * BowWeaponBase.super.enter_steelsight_speed_multiplier(self)
 end
 
--- Lines: 192 to 194
+-- Lines 190-195
 function BowWeaponBase:reload_speed_multiplier()
 	local code_miss_multiplier = self:weapon_tweak_data().bow_reload_speed_multiplier or 1
 
 	return code_miss_multiplier * BowWeaponBase.super.reload_speed_multiplier(self)
 end
 
--- Lines: 199 to 204
+-- Lines 199-204
 function BowWeaponBase:set_ammo_max(ammo_max)
 	BowWeaponBase.super.set_ammo_max(self, ammo_max)
 
@@ -185,7 +187,7 @@ function BowWeaponBase:set_ammo_max(ammo_max)
 	end
 end
 
--- Lines: 208 to 213
+-- Lines 208-213
 function BowWeaponBase:set_ammo_total(ammo_total)
 	BowWeaponBase.super.set_ammo_total(self, ammo_total)
 
@@ -194,7 +196,7 @@ function BowWeaponBase:set_ammo_total(ammo_total)
 	end
 end
 
--- Lines: 217 to 222
+-- Lines 217-222
 function BowWeaponBase:replenish()
 	BowWeaponBase.super.replenish(self)
 
@@ -203,30 +205,31 @@ function BowWeaponBase:replenish()
 	end
 end
 
--- Lines: 226 to 227
+-- Lines 226-228
 function BowWeaponBase:charge_max_t()
 	return self:weapon_tweak_data().charge_data.max_t
 end
+
 CrossbowWeaponBase = CrossbowWeaponBase or class(ProjectileWeaponBase)
 
--- Lines: 244 to 248
+-- Lines 244-248
 function CrossbowWeaponBase:init(unit)
 	CrossbowWeaponBase.super.init(self, unit)
 
 	self._client_authoritative = true
 end
 
--- Lines: 250 to 251
+-- Lines 250-252
 function CrossbowWeaponBase:should_reload_immediately()
 	return true
 end
 
--- Lines: 254 to 255
+-- Lines 254-256
 function CrossbowWeaponBase:charge_fail()
 	return false
 end
 
--- Lines: 258 to 263
+-- Lines 258-263
 function CrossbowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_percent)
 	if not alive(attacker) or attacker ~= managers.player:player_unit() then
 		return
@@ -238,4 +241,3 @@ function CrossbowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_pe
 		weapon_unit = self._unit
 	})
 end
-

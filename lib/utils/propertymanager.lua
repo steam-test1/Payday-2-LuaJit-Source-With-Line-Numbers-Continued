@@ -1,11 +1,11 @@
 PropertyManager = PropertyManager or class()
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PropertyManager:init()
 	self._properties = {}
 end
 
--- Lines: 10 to 16
+-- Lines 10-16
 function PropertyManager:add_to_property(prop, value)
 	if not self._properties[prop] then
 		self._properties[prop] = value
@@ -14,7 +14,7 @@ function PropertyManager:add_to_property(prop, value)
 	end
 end
 
--- Lines: 18 to 24
+-- Lines 18-24
 function PropertyManager:mul_to_property(prop, value)
 	if not self._properties[prop] then
 		self._properties[prop] = value
@@ -23,12 +23,12 @@ function PropertyManager:mul_to_property(prop, value)
 	end
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function PropertyManager:set_property(prop, value)
 	self._properties[prop] = value
 end
 
--- Lines: 30 to 34
+-- Lines 30-35
 function PropertyManager:get_property(prop, default)
 	if self._properties[prop] then
 		return self._properties[prop]
@@ -37,7 +37,7 @@ function PropertyManager:get_property(prop, default)
 	return default
 end
 
--- Lines: 37 to 41
+-- Lines 37-42
 function PropertyManager:has_property(prop)
 	if self._properties[prop] then
 		return true
@@ -46,10 +46,9 @@ function PropertyManager:has_property(prop)
 	return false
 end
 
--- Lines: 44 to 48
+-- Lines 44-48
 function PropertyManager:remove_property(prop)
 	if self._properties[prop] then
 		self._properties[prop] = nil
 	end
 end
-

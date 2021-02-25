@@ -1,13 +1,13 @@
 M79GrenadeBase = M79GrenadeBase or class()
 
--- Lines: 3 to 5
+-- Lines 3-6
 function M79GrenadeBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines: 10 to 19
+-- Lines 10-19
 function M79GrenadeBase:init(unit)
 	self._unit = unit
 	self._new_pos = unit:position()
@@ -20,7 +20,7 @@ function M79GrenadeBase:init(unit)
 	self._player_damage = 9
 end
 
--- Lines: 23 to 38
+-- Lines 23-38
 function M79GrenadeBase:launch(params)
 	self._owner = params.owner
 	self._user = params.user
@@ -36,7 +36,7 @@ function M79GrenadeBase:launch(params)
 	self._auto_explode_t = self._last_upd_t + 3
 end
 
--- Lines: 42 to 76
+-- Lines 42-76
 function M79GrenadeBase:update(unit, t, dt)
 	if self._auto_explode_t < t then
 		self:_detonate()
@@ -77,7 +77,7 @@ function M79GrenadeBase:update(unit, t, dt)
 	self._next_upd_t = t + self._upd_interval
 end
 
--- Lines: 80 to 88
+-- Lines 80-88
 function M79GrenadeBase:_upd_velocity(dt)
 	local new_vel_z = mvector3.z(self._velocity) - dt * 981
 
@@ -87,12 +87,12 @@ function M79GrenadeBase:_upd_velocity(dt)
 	mvector3.add(self._new_pos, self._last_pos)
 end
 
--- Lines: 92 to 99
+-- Lines 92-99
 function M79GrenadeBase:_upd_position()
 	self._unit:set_position(self._new_pos)
 end
 
--- Lines: 103 to 112
+-- Lines 103-112
 function M79GrenadeBase:_chk_collision()
 	local col_ray = World:raycast("ray", self._last_pos, self._new_pos, "slot_mask", self._collision_slotmask)
 	col_ray = col_ray or World:raycast("ray", self._last_last_pos, self._new_pos, "slot_mask", self._collision_slotmask)
@@ -104,7 +104,7 @@ function M79GrenadeBase:_chk_collision()
 	end
 end
 
--- Lines: 116 to 149
+-- Lines 116-149
 function M79GrenadeBase:_detonate()
 	if self._detonated then
 		debug_pause("[M79GrenadeBase:_detonate] grenade has already detonated", self._unit, alive(self._unit) and self._unit:slot())
@@ -144,4 +144,3 @@ function M79GrenadeBase:_detonate()
 	GrenadeBase._detect_and_give_dmg(self, expl_pos)
 	managers.network:session():send_to_peers_synched("m79grenade_explode_on_client", expl_pos, expl_normal, self._user, self._damage, self._range, self._curve_pow)
 end
-

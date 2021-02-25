@@ -3,7 +3,7 @@ core:import("CoreInitState")
 
 GameStateMachine = GameStateMachine or class()
 
--- Lines: 12 to 24
+-- Lines 12-24
 function GameStateMachine:init(start_state)
 	self._states = {}
 	self._transitions = {}
@@ -12,12 +12,16 @@ function GameStateMachine:init(start_state)
 	self._transitions[init:name()] = self._transitions[init:name()] or {}
 	self._transitions[init:name()][start_state:name()] = init.default_transition
 	self._current_state = init
-	self._queued_transitions = {{start_state}}
+	self._queued_transitions = {
+		{
+			start_state
+		}
+	}
 
 	self:_do_state_change()
 end
 
--- Lines: 26 to 33
+-- Lines 26-33
 function GameStateMachine:destroy()
 	for _, state in pairs(self._states) do
 		state:destroy()
@@ -27,7 +31,7 @@ function GameStateMachine:destroy()
 	self._transitions = {}
 end
 
--- Lines: 35 to 40
+-- Lines 35-40
 function GameStateMachine:add_transition(from, to, trans_func)
 	self._states[from:name()] = from
 	self._states[to:name()] = to
@@ -35,12 +39,12 @@ function GameStateMachine:add_transition(from, to, trans_func)
 	self._transitions[from:name()][to:name()] = trans_func
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function GameStateMachine:current_state()
 	return self._current_state
 end
 
--- Lines: 46 to 49
+-- Lines 46-50
 function GameStateMachine:can_change_state(state)
 	local state_from = self._queued_transitions and self._queued_transitions[#self._queued_transitions][1] or self._current_state
 	local valid_transitions = self._transitions[state_from:name()]
@@ -48,7 +52,7 @@ function GameStateMachine:can_change_state(state)
 	return valid_transitions and valid_transitions[state:name()] ~= nil
 end
 
--- Lines: 52 to 74
+-- Lines 52-74
 function GameStateMachine:change_state(state, params)
 	if self._doing_state_change then
 		Application:error("[GameStateMachine:change_state] State change during transition!")
@@ -59,9 +63,7 @@ function GameStateMachine:change_state(state, params)
 
 	cat_print("game_state_machine", "[GameStateMachine] Requested state change " .. transition_debug_string)
 
-	if not self:can_change_state(state) then
-		-- Nothing
-	else
+	if self:can_change_state(state) then
 		self._queued_transitions = self._queued_transitions or {}
 
 		table.insert(self._queued_transitions, {
@@ -71,47 +73,47 @@ function GameStateMachine:change_state(state, params)
 	end
 end
 
--- Lines: 76 to 77
+-- Lines 76-78
 function GameStateMachine:current_state_name()
 	return self._current_state:name()
 end
 
--- Lines: 80 to 82
+-- Lines 80-83
 function GameStateMachine:can_change_state_by_name(state_name)
 	local state = assert(self._states[state_name], "[GameStateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	return self:can_change_state(state)
 end
 
--- Lines: 85 to 88
+-- Lines 85-88
 function GameStateMachine:change_state_by_name(state_name, params)
 	local state = assert(self._states[state_name], "[GameStateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	self:change_state(state, params)
 end
 
--- Lines: 90 to 94
+-- Lines 90-94
 function GameStateMachine:update(t, dt)
 	if self._current_state.update then
 		self._current_state:update(t, dt)
 	end
 end
 
--- Lines: 96 to 100
+-- Lines 96-100
 function GameStateMachine:paused_update(t, dt)
 	if self._current_state.paused_update then
 		self._current_state:paused_update(t, dt)
 	end
 end
 
--- Lines: 102 to 106
+-- Lines 102-106
 function GameStateMachine:end_update(t, dt)
 	if self._queued_transitions then
 		self:_do_state_change()
 	end
 end
 
--- Lines: 109 to 130
+-- Lines 109-130
 function GameStateMachine:_do_state_change()
 	if not self._queued_transitions then
 		return
@@ -136,7 +138,7 @@ function GameStateMachine:_do_state_change()
 	self._doing_state_change = false
 end
 
--- Lines: 132 to 138
+-- Lines 132-138
 function GameStateMachine:last_queued_state_name()
 	if self._queued_transitions then
 		return self._queued_transitions[#self._queued_transitions][1]:name()
@@ -144,4 +146,3 @@ function GameStateMachine:last_queued_state_name()
 		return self:current_state_name()
 	end
 end
-

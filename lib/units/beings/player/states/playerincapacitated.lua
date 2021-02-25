@@ -1,12 +1,12 @@
 PlayerIncapacitated = PlayerIncapacitated or class(PlayerStandard)
 PlayerIncapacitated._update_movement = PlayerBleedOut._update_movement
 
--- Lines: 5 to 7
+-- Lines 5-7
 function PlayerIncapacitated:init(unit)
 	PlayerIncapacitated.super.init(self, unit)
 end
 
--- Lines: 11 to 51
+-- Lines 11-51
 function PlayerIncapacitated:enter(state_data, enter_data)
 	PlayerIncapacitated.super.enter(self, state_data, enter_data)
 	self:_interupt_action_steelsight()
@@ -23,7 +23,9 @@ function PlayerIncapacitated:enter(state_data, enter_data)
 
 	self:_interupt_action_charging_weapon(managers.player:player_timer():time())
 
-	self._revive_SO_data = {unit = self._unit}
+	self._revive_SO_data = {
+		unit = self._unit
+	}
 
 	self:_start_action_incapacitated(managers.player:player_timer():time())
 	self._unit:base():set_slot(self._unit, 4)
@@ -45,18 +47,23 @@ function PlayerIncapacitated:enter(state_data, enter_data)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), true, 1)
 end
 
--- Lines: 55 to 67
+-- Lines 55-67
 function PlayerIncapacitated:_enter(enter_data)
 	local preset = nil
-	preset = managers.groupai:state():whisper_mode() and {
-		"pl_mask_on_friend_combatant_whisper_mode",
-		"pl_mask_on_friend_non_combatant_whisper_mode",
-		"pl_mask_on_foe_combatant_whisper_mode_crouch",
-		"pl_mask_on_foe_non_combatant_whisper_mode_crouch"
-	} or {
-		"pl_friend_combatant_cbt",
-		"pl_friend_non_combatant_cbt"
-	}
+
+	if managers.groupai:state():whisper_mode() then
+		preset = {
+			"pl_mask_on_friend_combatant_whisper_mode",
+			"pl_mask_on_friend_non_combatant_whisper_mode",
+			"pl_mask_on_foe_combatant_whisper_mode_crouch",
+			"pl_mask_on_foe_non_combatant_whisper_mode_crouch"
+		}
+	else
+		preset = {
+			"pl_friend_combatant_cbt",
+			"pl_friend_non_combatant_cbt"
+		}
+	end
 
 	self._ext_movement:set_attention_settings(preset)
 
@@ -65,7 +72,7 @@ function PlayerIncapacitated:_enter(enter_data)
 	end
 end
 
--- Lines: 71 to 82
+-- Lines 71-83
 function PlayerIncapacitated:exit(state_data, new_state_name)
 	PlayerIncapacitated.super.exit(self, state_data, new_state_name)
 	self:_end_action_incapacitated(managers.player:player_timer():time())
@@ -73,20 +80,22 @@ function PlayerIncapacitated:exit(state_data, new_state_name)
 	PlayerBleedOut._unregister_revive_SO(self)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), false, 1)
 
-	return {equip_weapon = self._reequip_weapon}
+	return {
+		equip_weapon = self._reequip_weapon
+	}
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function PlayerIncapacitated:interaction_blocked()
 	return true
 end
 
--- Lines: 93 to 95
+-- Lines 93-95
 function PlayerIncapacitated:update(t, dt)
 	PlayerIncapacitated.super.update(self, t, dt)
 end
 
--- Lines: 104 to 159
+-- Lines 101-159
 function PlayerIncapacitated:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -128,7 +137,7 @@ function PlayerIncapacitated:_update_check_actions(t, dt)
 	self:_check_action_interact(t, input)
 end
 
--- Lines: 165 to 177
+-- Lines 165-177
 function PlayerIncapacitated:_check_action_interact(t, input)
 	if input.btn_interact_press then
 		if _G.IS_VR then
@@ -143,7 +152,7 @@ function PlayerIncapacitated:_check_action_interact(t, input)
 	end
 end
 
--- Lines: 181 to 193
+-- Lines 181-193
 function PlayerIncapacitated:_start_action_incapacitated(t)
 	self:_interupt_action_running(t)
 
@@ -157,7 +166,7 @@ function PlayerIncapacitated:_start_action_incapacitated(t)
 	self._unit:camera()._camera_unit:base():animate_fov(75)
 end
 
--- Lines: 197 to 210
+-- Lines 197-210
 function PlayerIncapacitated:_end_action_incapacitated(t)
 	if not self:_can_stand() then
 		return
@@ -171,15 +180,14 @@ function PlayerIncapacitated:_end_action_incapacitated(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines: 214 to 218
+-- Lines 214-218
 function PlayerIncapacitated:pre_destroy(unit)
 	PlayerIncapacitated.super.pre_destroy(self, unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 end
 
--- Lines: 220 to 223
+-- Lines 220-223
 function PlayerIncapacitated:destroy(unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 	managers.environment_controller:set_taser_value(1)
 end
-

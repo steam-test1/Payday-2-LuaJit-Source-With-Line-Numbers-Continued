@@ -1,64 +1,87 @@
 TimerGui = TimerGui or class()
-TimerGui.themes = {}
-TimerGui.themes.default = {}
+TimerGui.themes = {
+	default = {}
+}
 TimerGui.themes.default.hide_background = false
 TimerGui.themes.default.timer_color = tweak_data.hud.prime_color
 TimerGui.themes.default.working_text_color = TimerGui.themes.default.timer_color
 TimerGui.themes.default.time_header_text_color = TimerGui.themes.default.timer_color
 TimerGui.themes.default.time_text_color = TimerGui.themes.default.timer_color
-TimerGui.themes.old = {}
-TimerGui.themes.old.hide_background = true
-TimerGui.themes.old.timer_color = Color(0.3, 0.5, 0.3)
-TimerGui.themes.old.timer_background_color = Color(0.2, 0.1, 0.2, 0.1)
+TimerGui.themes.old = {
+	hide_background = true,
+	timer_color = Color(0.3, 0.5, 0.3),
+	timer_background_color = Color(0.2, 0.1, 0.2, 0.1)
+}
 TimerGui.themes.old.working_text_color = TimerGui.themes.old.timer_color
 TimerGui.themes.old.time_header_text_color = TimerGui.themes.old.timer_color
 TimerGui.themes.old.time_text_color = TimerGui.themes.old.timer_color
 TimerGui.themes.old.bg_rect_color = Color.black
 TimerGui.themes.old.bg_rect_blend_mode = "mul"
-TimerGui.themes.old.jammed = {}
-TimerGui.themes.old.jammed.bg_rect = Color(0.1, 0, 0)
-TimerGui.themes.old.jammed.bg_rect_blend_mode = "mul"
+TimerGui.themes.old.jammed = {
+	bg_rect = Color(0.1, 0, 0),
+	bg_rect_blend_mode = "mul"
+}
 TimerGui.themes.old.upgrade_color_0 = Color(0, 0, 0)
 TimerGui.themes.old.upgrade_color_1 = Color(0.3, 0.6, 0.3)
 TimerGui.themes.old.upgrade_color_2 = Color(0.8, 1, 0.8)
-TimerGui.themes.blue = {}
-TimerGui.themes.blue.hide_background = true
-TimerGui.themes.blue.timer_color = Color(0.4, 0.6, 0.8)
+TimerGui.themes.blue = {
+	hide_background = true,
+	timer_color = Color(0.4, 0.6, 0.8)
+}
 TimerGui.themes.blue.working_text_color = TimerGui.themes.blue.timer_color
 TimerGui.themes.blue.time_header_text_color = TimerGui.themes.blue.timer_color
 TimerGui.themes.blue.time_text_color = TimerGui.themes.blue.timer_color
 TimerGui.themes.blue.bg_rect_color = Color(0.4, 0, 0, 0)
-TimerGui.themes.blue.jammed = {}
-TimerGui.themes.blue.jammed.bg_rect = Color(0.1, 0, 0)
+TimerGui.themes.blue.jammed = {
+	bg_rect = Color(0.1, 0, 0)
+}
 TimerGui.themes.blue.upgrade_color_0 = Color(0, 0, 0)
 TimerGui.themes.blue.upgrade_color_1 = Color(0.2, 0.3, 0.4)
 TimerGui.themes.blue.upgrade_color_2 = TimerGui.themes.blue.timer_color
-TimerGui.themes.custom_background = {}
-TimerGui.themes.custom_background.hide_background = true
-TimerGui.themes.custom_background.timer_color = Color(0.8, 0.8, 0.8)
+TimerGui.themes.custom_background = {
+	hide_background = true,
+	timer_color = Color(0.8, 0.8, 0.8)
+}
 TimerGui.themes.custom_background.working_text_color = TimerGui.themes.custom_background.timer_color
 TimerGui.themes.custom_background.time_header_text_color = TimerGui.themes.custom_background.timer_color
 TimerGui.themes.custom_background.time_text_color = TimerGui.themes.custom_background.timer_color
 TimerGui.themes.custom_background.bg_rect_color = Color(0, 0, 0, 0)
-TimerGui.themes.custom_background.jammed = {}
-TimerGui.themes.custom_background.jammed.bg_rect = Color(0.1, 0, 0)
+TimerGui.themes.custom_background.jammed = {
+	bg_rect = Color(0.1, 0, 0)
+}
 TimerGui.themes.custom_background.upgrade_color_0 = Color(0, 0, 0)
 TimerGui.themes.custom_background.upgrade_color_1 = Color(0.2, 0.3, 0.4)
 TimerGui.themes.custom_background.upgrade_color_2 = TimerGui.themes.custom_background.timer_color
-TimerGui.themes.bry_control_display = {}
-TimerGui.themes.bry_control_display.hide_background = true
-TimerGui.themes.bry_control_display.timer_color = Color(1, 0.956, 0.494)
+TimerGui.themes.bry_control_display = {
+	hide_background = true,
+	timer_color = Color(1, 0.956, 0.494)
+}
 TimerGui.themes.bry_control_display.working_text_color = TimerGui.themes.bry_control_display.timer_color
 TimerGui.themes.bry_control_display.time_header_text_color = TimerGui.themes.bry_control_display.timer_color
 TimerGui.themes.bry_control_display.time_text_color = TimerGui.themes.bry_control_display.timer_color
-TimerGui.themes.bry_control_display.jammed = {}
-TimerGui.themes.bry_control_display.jammed.bg_rect = Color(0.1, 0, 0)
+TimerGui.themes.bry_control_display.jammed = {
+	bg_rect = Color(0.1, 0, 0)
+}
 TimerGui.themes.bry_control_display.upgrade_color_0 = Color(0, 0, 0)
 TimerGui.themes.bry_control_display.upgrade_color_1 = Color(0.2, 0.3, 0.4)
 TimerGui.themes.bry_control_display.upgrade_color_2 = TimerGui.themes.bry_control_display.timer_color
-TimerGui.themes.lxy_control_display = {}
-TimerGui.themes.lxy_control_display.hide_background = true
-TimerGui.themes.lxy_control_display.jammed = {}
+TimerGui.themes.vit_control_display = {
+	hide_background = true,
+	timer_color = Color(0, 1, 0.7)
+}
+TimerGui.themes.vit_control_display.working_text_color = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.vit_control_display.time_header_text_color = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.vit_control_display.time_text_color = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.vit_control_display.jammed = {
+	bg_rect = Color(0.1, 0, 0)
+}
+TimerGui.themes.vit_control_display.upgrade_color_0 = Color(0, 0, 0)
+TimerGui.themes.vit_control_display.upgrade_color_1 = Color(0.2, 0.3, 0.4)
+TimerGui.themes.vit_control_display.upgrade_color_2 = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.lxy_control_display = {
+	hide_background = true,
+	jammed = {}
+}
 TimerGui.themes.lxy_control_display.jammed.bg_rect = Color(0.1, 0, 0, 0)
 TimerGui.themes.lxy_control_display.upgrade_color_0 = Color(0, 0, 0)
 TimerGui.themes.lxy_control_display.upgrade_color_1 = Color(0.2, 0.3, 0.4)
@@ -73,15 +96,17 @@ TimerGui.themes.lxy_control_display.time_header_text_color = Color(0.75, 1, 0.3,
 TimerGui.themes.lxy_control_display.time_text_font = Idstring("fonts/font_eurostile_ext")
 TimerGui.themes.lxy_control_display.time_text_font_size = 90
 TimerGui.themes.lxy_control_display.time_text_color = Color(0.75, 1, 0.3, 0.3)
-TimerGui.upgrade_colors = {}
-TimerGui.upgrade_colors.upgrade_color_0 = tweak_data.screen_colors.item_stage_3
-TimerGui.upgrade_colors.upgrade_color_1 = tweak_data.screen_colors.text
-TimerGui.upgrade_colors.upgrade_color_2 = tweak_data.hud.prime_color
-TimerGui.EVENT_IDS = {}
-TimerGui.EVENT_IDS.jammed = 1
-TimerGui.EVENT_IDS.unjammed = 2
+TimerGui.upgrade_colors = {
+	upgrade_color_0 = tweak_data.screen_colors.item_stage_3,
+	upgrade_color_1 = tweak_data.screen_colors.text,
+	upgrade_color_2 = tweak_data.hud.prime_color
+}
+TimerGui.EVENT_IDS = {
+	jammed = 1,
+	unjammed = 2
+}
 
--- Lines: 106 to 132
+-- Lines 120-146
 function TimerGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -105,12 +130,12 @@ function TimerGui:init(unit)
 	self._update_enabled = false
 end
 
--- Lines: 134 to 136
+-- Lines 148-150
 function TimerGui:set_can_jam(can_jam)
 	self._can_jam = can_jam
 end
 
--- Lines: 138 to 148
+-- Lines 152-162
 function TimerGui:set_jam_times(amount)
 	if not self._can_jam then
 		Application:error("[Drill]", "This Drill cannot jam, use another one.")
@@ -127,19 +152,19 @@ function TimerGui:set_jam_times(amount)
 	self._jam_times = amount
 end
 
--- Lines: 150 to 152
+-- Lines 164-166
 function TimerGui:set_override_timer(override_timer)
 	self._override_timer = override_timer
 end
 
--- Lines: 154 to 158
+-- Lines 168-172
 function TimerGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(0, 0, gui_object, Vector3(0, 0, 0))
 	self._gui = self._ws:panel():gui(Idstring("guis/timer_gui"))
 	self._gui_script = self._gui:script()
 end
 
--- Lines: 160 to 165
+-- Lines 174-180
 function TimerGui:get_upgrade_icon_color(upgrade_color)
 	if not self.THEME then
 		return TimerGui.upgrade_colors[upgrade_color]
@@ -150,7 +175,7 @@ function TimerGui:get_upgrade_icon_color(upgrade_color)
 	return theme and theme[upgrade_color] or TimerGui.upgrade_colors[upgrade_color]
 end
 
--- Lines: 168 to 236
+-- Lines 182-250
 function TimerGui:_set_theme(theme_name)
 	local theme = TimerGui.themes[theme_name]
 
@@ -224,7 +249,7 @@ function TimerGui:_set_theme(theme_name)
 	self:_set_original_colors()
 end
 
--- Lines: 238 to 244
+-- Lines 252-258
 function TimerGui:_set_original_colors()
 	self._original_colors = {}
 
@@ -233,7 +258,7 @@ function TimerGui:_set_original_colors()
 	end
 end
 
--- Lines: 250 to 299
+-- Lines 260-313
 function TimerGui:setup()
 	self._gui_script.working_text:set_render_template(Idstring("Text"))
 	self._gui_script.time_header_text:set_render_template(Idstring("Text"))
@@ -280,7 +305,7 @@ function TimerGui:setup()
 	self._gui_script.panel:set_alpha(1)
 end
 
--- Lines: 302 to 308
+-- Lines 316-322
 function TimerGui:reset()
 	self._started = false
 
@@ -290,7 +315,7 @@ function TimerGui:reset()
 	end
 end
 
--- Lines: 310 to 342
+-- Lines 324-356
 function TimerGui:_start(timer, current_timer)
 	self._started = true
 	self._done = false
@@ -317,7 +342,7 @@ function TimerGui:_start(timer, current_timer)
 	self:_set_jamming_values()
 end
 
--- Lines: 345 to 358
+-- Lines 359-372
 function TimerGui:_set_jamming_values()
 	if not self._can_jam then
 		return
@@ -327,7 +352,7 @@ function TimerGui:_set_jamming_values()
 	local jammed_times = math.random(self._jam_times)
 	local interval = self._timer / jammed_times
 
-	for i = 1, jammed_times, 1 do
+	for i = 1, jammed_times do
 		local start = interval / 2
 		self._jamming_intervals[i] = start + math.rand(start / 1.25)
 	end
@@ -335,22 +360,24 @@ function TimerGui:_set_jamming_values()
 	self._current_jam_timer = table.remove(self._jamming_intervals, 1)
 end
 
--- Lines: 360 to 362
+-- Lines 374-376
 function TimerGui:set_timer_multiplier(multiplier)
 	self._timer_multiplier = multiplier
 end
 
--- Lines: 364 to 368
+-- Lines 378-382
 function TimerGui:set_skill(skill)
 	if self._skill == nil or self._skill < skill then
 		self._skill = skill
 	end
 end
 
--- Lines: 370 to 393
+-- Lines 384-407
 function TimerGui:set_background_icons(background_icons)
 	local panel = self._gui_script.panel
-	local background_icons_panel = panel:child("background_icons_panel") or panel:panel({name = "background_icons_panel"})
+	local background_icons_panel = panel:child("background_icons_panel") or panel:panel({
+		name = "background_icons_panel"
+	})
 
 	background_icons_panel:rect({
 		layer = 3,
@@ -377,7 +404,7 @@ function TimerGui:set_background_icons(background_icons)
 	self._gui_script.panel:set_alpha(alpha)
 end
 
--- Lines: 395 to 411
+-- Lines 409-425
 function TimerGui:start(timer)
 	timer = self._override_timer or timer
 
@@ -402,12 +429,12 @@ function TimerGui:start(timer)
 	end
 end
 
--- Lines: 413 to 415
+-- Lines 427-429
 function TimerGui:sync_start(timer)
 	self:_start(timer)
 end
 
--- Lines: 417 to 457
+-- Lines 431-471
 function TimerGui:update(unit, t, dt)
 	if self._jammed then
 		self._gui_script.drill_screen_background:set_color(self._gui_script.drill_screen_background:color():with_alpha(0.5 + (math.sin(t * 750) + 1) / 4))
@@ -451,19 +478,19 @@ function TimerGui:update(unit, t, dt)
 	end
 end
 
--- Lines: 459 to 462
+-- Lines 473-476
 function TimerGui:set_visible(visible)
 	self._visible = visible
 
 	self._gui:set_visible(visible)
 end
 
--- Lines: 464 to 465
+-- Lines 478-480
 function TimerGui:is_visible()
 	return self._visible
 end
 
--- Lines: 468 to 474
+-- Lines 482-488
 function TimerGui:sync_net_event(event_id)
 	if event_id == TimerGui.EVENT_IDS.jammed then
 		self:_set_jammed(true)
@@ -472,7 +499,7 @@ function TimerGui:sync_net_event(event_id)
 	end
 end
 
--- Lines: 488 to 495
+-- Lines 494-509
 function TimerGui:set_jammed(jammed)
 	if managers.network:session() then
 		local event_id = jammed and TimerGui.EVENT_IDS.jammed or TimerGui.EVENT_IDS.unjammed
@@ -483,7 +510,7 @@ function TimerGui:set_jammed(jammed)
 	self:_set_jammed(jammed)
 end
 
--- Lines: 498 to 571
+-- Lines 512-585
 function TimerGui:_set_jammed(jammed)
 	self._jammed = jammed
 
@@ -569,12 +596,12 @@ function TimerGui:_set_jammed(jammed)
 	end
 end
 
--- Lines: 575 to 577
+-- Lines 587-591
 function TimerGui:set_powered(powered, enable_interaction)
 	self:_set_powered(powered, enable_interaction)
 end
 
--- Lines: 579 to 652
+-- Lines 593-666
 function TimerGui:_set_powered(powered, enable_interaction)
 	self._powered = powered
 
@@ -633,7 +660,7 @@ function TimerGui:_set_powered(powered, enable_interaction)
 	self._unit:base():set_powered(powered)
 end
 
--- Lines: 654 to 665
+-- Lines 668-679
 function TimerGui:done()
 	self:_set_done()
 
@@ -648,7 +675,7 @@ function TimerGui:done()
 	end
 end
 
--- Lines: 667 to 675
+-- Lines 681-689
 function TimerGui:_set_done()
 	self._done = true
 
@@ -660,7 +687,7 @@ function TimerGui:_set_done()
 	self._unit:base():done()
 end
 
--- Lines: 677 to 683
+-- Lines 691-697
 function TimerGui:update_sound_event()
 	if self._done or not self._started or self._jammed or not self._powered then
 		return
@@ -669,13 +696,13 @@ function TimerGui:update_sound_event()
 	self:post_event(self._resume_event)
 end
 
--- Lines: 685 to 688
+-- Lines 699-702
 function TimerGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines: 690 to 696
+-- Lines 704-710
 function TimerGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -685,7 +712,7 @@ function TimerGui:destroy()
 	end
 end
 
--- Lines: 698 to 712
+-- Lines 712-726
 function TimerGui:save(data)
 	local state = {
 		update_enabled = self._update_enabled,
@@ -702,7 +729,7 @@ function TimerGui:save(data)
 	data.TimerGui = state
 end
 
--- Lines: 714 to 734
+-- Lines 728-748
 function TimerGui:load(data)
 	local state = data.TimerGui
 
@@ -730,7 +757,7 @@ function TimerGui:load(data)
 	self:set_timer_multiplier(state.timer_multiplier or 1)
 end
 
--- Lines: 736 to 751
+-- Lines 750-765
 function TimerGui:post_event(event)
 	if not event then
 		return
@@ -748,9 +775,10 @@ function TimerGui:post_event(event)
 		self._unit:sound_source():post_event(event)
 	end
 end
+
 DrillTimerGui = DrillTimerGui or class(TimerGui)
 
--- Lines: 755 to 771
+-- Lines 769-785
 function DrillTimerGui:post_event(event)
 	if not event then
 		return
@@ -768,4 +796,3 @@ function DrillTimerGui:post_event(event)
 		self._unit:sound_source():post_event(event)
 	end
 end
-

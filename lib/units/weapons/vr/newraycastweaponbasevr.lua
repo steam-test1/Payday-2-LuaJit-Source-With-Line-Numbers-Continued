@@ -8,20 +8,20 @@ local __reload_speed_multiplier = NewRaycastWeaponBase.reload_speed_multiplier
 local __clbk_assembly_complete = NewRaycastWeaponBase.clbk_assembly_complete
 local __destroy = NewRaycastWeaponBase.destroy
 
--- Lines: 12 to 17
+-- Lines 12-17
 function NewRaycastWeaponBaseVR:clbk_assembly_complete(...)
 	__clbk_assembly_complete(self, ...)
 	self:_hide_objects()
 	tweak_data:add_reload_callback(self, self.tweak_data_clbk_reload)
 end
 
--- Lines: 19 to 23
+-- Lines 19-23
 function NewRaycastWeaponBaseVR:destroy(...)
 	__destroy(self, ...)
 	tweak_data:remove_reload_callback(self)
 end
 
--- Lines: 25 to 41
+-- Lines 25-41
 function NewRaycastWeaponBaseVR:tweak_data_clbk_reload()
 	if self._hidden_objects then
 		for part_name, data in pairs(self._hidden_objects) do
@@ -41,7 +41,7 @@ function NewRaycastWeaponBaseVR:tweak_data_clbk_reload()
 	self:_hide_objects()
 end
 
--- Lines: 47 to 80
+-- Lines 43-80
 function NewRaycastWeaponBaseVR:_hide_objects()
 	local hidden_data = tweak_data.vr.weapon_hidden[self.name_id]
 
@@ -82,7 +82,7 @@ function NewRaycastWeaponBaseVR:_hide_objects()
 	end
 end
 
--- Lines: 82 to 94
+-- Lines 82-95
 function NewRaycastWeaponBaseVR:check_autoaim(from_pos, direction, max_dist, use_aim_assist, autohit_override_data)
 	local spread_x, spread_y = __get_spread(self, self._setup.user_unit)
 	local spread = math.max((spread_x + spread_y) / 2, 1)
@@ -95,7 +95,7 @@ function NewRaycastWeaponBaseVR:check_autoaim(from_pos, direction, max_dist, use
 	return __check_autoaim(self, from_pos, direction, max_dist, use_aim_assist, autohit)
 end
 
--- Lines: 97 to 108
+-- Lines 97-109
 function NewRaycastWeaponBaseVR:_get_spread(user_unit)
 	local spread_x, spread_y = __get_spread(self, user_unit)
 	local fps_camera = user_unit:camera() and user_unit:camera():camera_unit():base()
@@ -110,14 +110,14 @@ function NewRaycastWeaponBaseVR:_get_spread(user_unit)
 	return spread_x, spread_y
 end
 
--- Lines: 111 to 113
+-- Lines 111-114
 function NewRaycastWeaponBaseVR:reload_speed_multiplier()
 	local mul = __reload_speed_multiplier(self)
 
 	return mul * tweak_data.vr.reload_speed_mul
 end
 
--- Lines: 116 to 152
+-- Lines 116-152
 function NewRaycastWeaponBaseVR:start_reload(total_time)
 	NewRaycastWeaponBaseVR.super.start_reload(self)
 
@@ -157,15 +157,16 @@ function NewRaycastWeaponBaseVR:start_reload(total_time)
 		end
 	end
 end
+
 local __on_reload = NewRaycastWeaponBaseVR.on_reload
 
--- Lines: 155 to 161
+-- Lines 155-161
 function NewRaycastWeaponBaseVR:on_reload(...)
 	__on_reload(self, ...)
 	self:stop_reload()
 end
 
--- Lines: 163 to 178
+-- Lines 163-178
 function NewRaycastWeaponBaseVR:finish_reload()
 	if alive(self._reload_mag_unit) then
 		self._reload_finish_total_time = nil
@@ -184,7 +185,7 @@ function NewRaycastWeaponBaseVR:finish_reload()
 	self:tweak_data_anim_stop("magazine_empty")
 end
 
--- Lines: 180 to 192
+-- Lines 180-192
 function NewRaycastWeaponBaseVR:stop_reload()
 	if alive(self._reload_mag_unit) then
 		self._reload_finish_total_time = tweak_data.vr.reload_buff
@@ -199,9 +200,10 @@ function NewRaycastWeaponBaseVR:stop_reload()
 		end
 	end
 end
+
 local __update_reloading = NewRaycastWeaponBaseVR.update_reloading
 
--- Lines: 195 to 201
+-- Lines 195-202
 function NewRaycastWeaponBaseVR:update_reloading(t, dt, time_left)
 	if self._reload_mag_unit and self._current_reload_time and self._current_reload_time <= self._total_reload_time then
 		self._current_reload_time = self._current_reload_time + dt
@@ -212,7 +214,7 @@ function NewRaycastWeaponBaseVR:update_reloading(t, dt, time_left)
 	return __update_reloading(self, t, dt, time_left)
 end
 
--- Lines: 204 to 211
+-- Lines 204-211
 function NewRaycastWeaponBaseVR:update_reload_finish(t, dt)
 	if self._reload_finish_current_time <= self._reload_finish_total_time then
 		self._reload_finish_current_time = self._reload_finish_current_time + dt
@@ -223,7 +225,7 @@ function NewRaycastWeaponBaseVR:update_reload_finish(t, dt)
 	end
 end
 
--- Lines: 213 to 224
+-- Lines 213-224
 function NewRaycastWeaponBase:_play_reload_anim(anim_group_id, to, from, unit)
 	unit = unit or self._unit
 
@@ -240,7 +242,7 @@ function NewRaycastWeaponBase:_play_reload_anim(anim_group_id, to, from, unit)
 	end
 end
 
--- Lines: 226 to 298
+-- Lines 226-298
 function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	if not self._timeline then
 		return
@@ -316,7 +318,9 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	end
 
 	if mag_data.effect then
-		local effect = {effect = Idstring(mag_data.effect.name)}
+		local effect = {
+			effect = Idstring(mag_data.effect.name)
+		}
 		local unit = nil
 
 		if mag_data.effect.part then
@@ -332,17 +336,17 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	end
 end
 
--- Lines: 300 to 301
+-- Lines 300-302
 function NewRaycastWeaponBaseVR:is_finishing_reload()
 	return not not self._reload_finish_current_time
 end
 
--- Lines: 304 to 305
+-- Lines 304-306
 function NewRaycastWeaponBaseVR:get_reload_mag_unit()
 	return self._reload_mag_unit
 end
 
--- Lines: 308 to 314
+-- Lines 308-314
 function NewRaycastWeaponBaseVR:_mag_data()
 	local mag_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("magazine", self._factory_id, self._blueprint)
 	local mag_id = mag_list and mag_list[1]
@@ -352,14 +356,14 @@ function NewRaycastWeaponBaseVR:_mag_data()
 	end
 end
 
--- Lines: 316 to 318
+-- Lines 316-319
 function NewRaycastWeaponBaseVR:custom_magazine_name()
 	local data = tweak_data.vr.reload_timelines[self.name_id]
 
 	return data and data.custom_mag_unit
 end
 
--- Lines: 321 to 326
+-- Lines 321-327
 function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	if self:custom_magazine_name() then
 		return World:spawn_unit(Idstring(self:custom_magazine_name()), pos or Vector3(), Rotation())
@@ -368,7 +372,7 @@ function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	return self:spawn_magazine_unit(pos)
 end
 
--- Lines: 329 to 334
+-- Lines 329-334
 function NewRaycastWeaponBaseVR:reload_object_name()
 	local mag_data = self:_mag_data()
 
@@ -377,19 +381,20 @@ function NewRaycastWeaponBaseVR:reload_object_name()
 	end
 end
 
--- Lines: 336 to 339
+-- Lines 336-339
 function NewRaycastWeaponBaseVR:_set_part_temporary_visibility(part_id, visible)
 	self._invisible_parts = self._invisible_parts or {}
 	self._invisible_parts[part_id] = not visible
 end
 
--- Lines: 341 to 342
+-- Lines 341-343
 function NewRaycastWeaponBaseVR:_is_part_visible(part_id)
 	return not self._invisible_parts or not self._invisible_parts[part_id]
 end
+
 local __get_sound_event = NewRaycastWeaponBase._get_sound_event
 
--- Lines: 346 to 355
+-- Lines 346-356
 function NewRaycastWeaponBaseVR:_get_sound_event(event, alternative_event)
 	local sound_overrides = tweak_data.vr.weapon_sound_overrides[self.name_id]
 
@@ -403,4 +408,3 @@ function NewRaycastWeaponBaseVR:_get_sound_event(event, alternative_event)
 
 	return __get_sound_event(self, event, alternative_event)
 end
-

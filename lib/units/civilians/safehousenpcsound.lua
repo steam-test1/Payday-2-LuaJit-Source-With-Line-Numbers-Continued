@@ -2,7 +2,7 @@ SafehouseNPCSound = SafehouseNPCSound or class(CivilianHeisterSound)
 SafehouseNPCSound.RND_MIN = 4
 SafehouseNPCSound.RND_MAX = 6
 
--- Lines: 9 to 31
+-- Lines 8-31
 function SafehouseNPCSound:init(unit)
 	SafehouseNPCSound.super.init(self, unit)
 
@@ -30,13 +30,13 @@ function SafehouseNPCSound:init(unit)
 	end
 end
 
--- Lines: 33 to 36
+-- Lines 33-36
 function SafehouseNPCSound:_randomize_speech_time()
 	local offset = self.character and tweak_data.safehouse.heisters[self.character] and tweak_data.safehouse.heisters[self.character].idle_offset or 0
 	self._speech_t = Application:time() + offset + math.random(self.RND_MIN, self.RND_MAX)
 end
 
--- Lines: 39 to 50
+-- Lines 39-50
 function SafehouseNPCSound:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
 	if not alive(unit) then
 		return
@@ -53,7 +53,7 @@ function SafehouseNPCSound:sound_callback(instance, event_type, unit, sound_sour
 	end
 end
 
--- Lines: 52 to 72
+-- Lines 52-72
 function SafehouseNPCSound:update(unit, t, dt)
 	local is_speaking = self:speaking(t)
 
@@ -79,7 +79,7 @@ function SafehouseNPCSound:update(unit, t, dt)
 	end
 end
 
--- Lines: 75 to 80
+-- Lines 75-80
 function SafehouseNPCSound:sound_start(...)
 	if self._snd_start_clbk then
 		self._snd_start_clbk()
@@ -88,14 +88,14 @@ function SafehouseNPCSound:sound_start(...)
 	end
 end
 
--- Lines: 82 to 86
+-- Lines 82-86
 function SafehouseNPCSound:snd_clbk()
 	if self._snd_clbk then
 		self._snd_clbk()
 	end
 end
 
--- Lines: 88 to 92
+-- Lines 88-92
 function SafehouseNPCSound:_on_muttering_done()
 	self:_randomize_speech_time()
 	self._unit:set_extension_update_enabled(Idstring("sound"), true)
@@ -103,7 +103,7 @@ function SafehouseNPCSound:_on_muttering_done()
 	self._snd_clbk = nil
 end
 
--- Lines: 94 to 105
+-- Lines 94-105
 function SafehouseNPCSound:_sound_start_muttering(override_sound)
 	if not self.character then
 		debug_pause("[SafehouseNPCSound:_sound_start_muttering] no character set!")
@@ -119,4 +119,3 @@ function SafehouseNPCSound:_sound_start_muttering(override_sound)
 
 	self:say(override_sound or string.format("Play_%s_idle", self.character), false, true)
 end
-

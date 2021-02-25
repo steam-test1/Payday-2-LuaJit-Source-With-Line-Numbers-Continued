@@ -7,22 +7,24 @@ TEXTURE = CoreDependencyNode.TEXTURE
 local _FILE = "./data/settings/materials.xml"
 MaterialsfileDependencyNode = MaterialsfileDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 15 to 17
+-- Lines 15-17
 function MaterialsfileDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, MATERIALS_FILE, nil, name, get_dn_cb, database)
 end
 
--- Lines: 19 to 23
+-- Lines 19-24
 function MaterialsfileDependencyNode:_parse()
 	local f = File:open(_FILE, "r")
 	local xmlnode = Node.from_xml(f:read())
 
 	f:close()
 
-	return {xmlnode}
+	return {
+		xmlnode
+	}
 end
 
--- Lines: 26 to 38
+-- Lines 26-38
 function MaterialsfileDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 
@@ -43,4 +45,3 @@ function MaterialsfileDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

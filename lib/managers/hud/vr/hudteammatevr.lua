@@ -1,13 +1,14 @@
 HUDTeammateVR = HUDTeammate
 HUDTeammateVR.old_init = HUDTeammate.init
 
--- Lines: 11 to 19
+-- Lines 11-19
 function HUDTeammateVR:override_function_parameters(func_name, override)
 	self["overridden_" .. func_name] = self[func_name]
 
-	-- Lines: 13 to 18
 	self[func_name] = function (...)
-		local new_params = {override(...)}
+		local new_params = {
+			override(...)
+		}
 
 		if #new_params > 0 then
 			return self["overridden_" .. func_name](unpack(new_params))
@@ -15,7 +16,7 @@ function HUDTeammateVR:override_function_parameters(func_name, override)
 	end
 end
 
--- Lines: 23 to 69
+-- Lines 23-69
 function HUDTeammateVR:init(i, teammates_panel, is_player, width)
 	self._watch_panel = managers.hud:watch_panel()
 	self._watch_floating_panel = managers.hud:holo_panel(managers.hud:holo_count())
@@ -51,7 +52,9 @@ function HUDTeammateVR:init(i, teammates_panel, is_player, width)
 		y = self._special_equipment_name:bottom(),
 		w = self._secondary_panel:w() / 2
 	})
-	self._carry_panel = self._special_equipment_panel:panel({visible = false})
+	self._carry_panel = self._special_equipment_panel:panel({
+		visible = false
+	})
 
 	self:old_init(i, self._tablet_panel, is_player, width)
 
@@ -84,9 +87,10 @@ function HUDTeammateVR:init(i, teammates_panel, is_player, width)
 	VRManagerPD2.overlay_helper(self._watch_panel)
 	VRManagerPD2.overlay_helper(self._watch_floating_panel)
 end
+
 local __create_radial_health = HUDTeammate._create_radial_health
 
--- Lines: 72 to 297
+-- Lines 72-297
 function HUDTeammateVR:_create_radial_health(radial_health_panel)
 	if not self._main_player then
 		return __create_radial_health(self, radial_health_panel)
@@ -202,7 +206,9 @@ function HUDTeammateVR:_create_radial_health(radial_health_panel)
 
 		radial_ability_icon:set_center(radial_ability_panel:center())
 
-		local radial_delayed_damage_panel = radial_health_panel:panel({name = "radial_delayed_damage"})
+		local radial_delayed_damage_panel = radial_health_panel:panel({
+			name = "radial_delayed_damage"
+		})
 		local radial_delayed_damage_armor = radial_delayed_damage_panel:bitmap({
 			texture = "guis/dlcs/vr/textures/pd2/vr_hud_dot_shield",
 			name = "radial_delayed_damage_armor",
@@ -330,17 +336,17 @@ function HUDTeammateVR:_create_radial_health(radial_health_panel)
 	end
 end
 
--- Lines: 299 to 301
+-- Lines 299-301
 function HUDTeammateVR:hide_radial()
 	self._radial_health_panel:hide()
 end
 
--- Lines: 303 to 305
+-- Lines 303-305
 function HUDTeammateVR:show_radial()
 	self._radial_health_panel:show()
 end
 
--- Lines: 307 to 344
+-- Lines 307-344
 function HUDTeammateVR:_create_stamina_radial(stamina_panel)
 	self._stamina_panel = stamina_panel
 	local stamina_radial = stamina_panel:bitmap({
@@ -380,16 +386,17 @@ function HUDTeammateVR:_create_stamina_radial(stamina_panel)
 	})
 end
 
--- Lines: 346 to 350
+-- Lines 346-350
 function HUDTeammateVR:set_stamina(data)
 	local stamina_radial = self._stamina_panel:child("stamina_radial")
 	local red = data.current / data.total
 
 	stamina_radial:set_color(Color(1, red, 1, 1))
 end
+
 HUDTeammateVR.default_create_condition = HUDTeammate._create_condition
 
--- Lines: 353 to 362
+-- Lines 353-362
 function HUDTeammateVR:_create_condition(radial_health_panel)
 	if not self._main_player then
 		return self:default_create_condition(radial_health_panel)
@@ -419,9 +426,10 @@ function HUDTeammateVR:_create_condition(radial_health_panel)
 
 	condition_timer:set_shape(radial_health_panel:shape())
 end
+
 HUDTeammateVR.default_create_weapon_panels = HUDTeammate._create_weapon_panels
 
--- Lines: 365 to 434
+-- Lines 365-434
 function HUDTeammateVR:_create_weapon_panels(weapons_panel)
 	if not self._main_player then
 		self:default_create_weapon_panels(weapons_panel)
@@ -441,12 +449,14 @@ function HUDTeammateVR:_create_weapon_panels(weapons_panel)
 			name = "ammo_bg",
 			color = Color(0.3, 0, 0, 0)
 		})
-		BoxGuiObject:new(panel, {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		BoxGuiObject:new(panel, {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 
 		local text_w = panel:w() / 2 - 10
 		local text_h = panel:h() / 2 - 10
@@ -557,7 +567,7 @@ function HUDTeammateVR:_create_weapon_panels(weapons_panel)
 	VRManagerPD2.overlay_helper(self._ammo_panel)
 end
 
--- Lines: 436 to 454
+-- Lines 436-454
 function HUDTeammateVR:_create_reload_panel()
 	local panel = self._ammo_panel:panel({
 		name = "reload_panel",
@@ -609,7 +619,7 @@ function HUDTeammateVR:_create_reload_panel()
 	panel:set_visible(false)
 end
 
--- Lines: 456 to 471
+-- Lines 456-471
 function HUDTeammateVR:set_reload_visible(visible)
 	local reload_panel = self._ammo_panel:child("reload_panel")
 
@@ -626,13 +636,14 @@ function HUDTeammateVR:set_reload_visible(visible)
 	end
 end
 
--- Lines: 473 to 475
+-- Lines 473-475
 function HUDTeammateVR:set_reload_timer(current, max)
 	self._reload_progress:set_current(current / max)
 end
+
 HUDTeammateVR.default_set_weapon_selected = HUDTeammate.set_weapon_selected
 
--- Lines: 478 to 505
+-- Lines 478-505
 function HUDTeammateVR:set_weapon_selected(id, hud_icon)
 	if not self._main_player then
 		return self:default_set_weapon_selected(id, hud_icon)
@@ -667,9 +678,10 @@ function HUDTeammateVR:set_weapon_selected(id, hud_icon)
 
 	managers.hud:belt():set_icon_by_type("weapon", inactive_type)
 end
+
 HUDTeammateVR.default_set_weapon_firemode = HUDTeammate.set_weapon_firemode
 
--- Lines: 508 to 527
+-- Lines 508-527
 function HUDTeammateVR:set_weapon_firemode(id, firemode)
 	if not self._main_player then
 		return self:default_set_weapon_firemode(id, firemode)
@@ -690,16 +702,18 @@ function HUDTeammateVR:set_weapon_firemode(id, firemode)
 		end
 	end
 end
+
 HUDTeammateVR.default_recreate_weapon_firemode = HUDTeammate.recreate_weapon_firemode
 
--- Lines: 530 to 533
+-- Lines 530-533
 function HUDTeammateVR:recreate_weapon_firemode()
 	self:setup_firemode(0, self._ammo_panel:child("primary_weapon_panel"):child("weapon_selection"))
 	self:setup_firemode(1, self._ammo_panel:child("secondary_weapon_panel"):child("weapon_selection"))
 end
+
 HUDTeammateVR.default_set_ammo_amount_by_type = HUDTeammate.set_ammo_amount_by_type
 
--- Lines: 536 to 582
+-- Lines 536-582
 function HUDTeammateVR:set_ammo_amount_by_type(type, max_clip, current_clip, current_left, max, weapon_panel)
 	if not self._main_player then
 		return self:default_set_ammo_amount_by_type(type, max_clip, current_clip, current_left, max, weapon_panel)
@@ -713,7 +727,7 @@ function HUDTeammateVR:set_ammo_amount_by_type(type, max_clip, current_clip, cur
 		return
 	end
 
-	-- Lines: 549 to 559
+	-- Lines 549-559
 	local function ammo_flash(o, color, alpha)
 		managers.hud:set_ammo_flash_color(color)
 		managers.hud:set_forced_ammo_alpha(alpha)
@@ -757,9 +771,10 @@ function HUDTeammateVR:set_ammo_amount_by_type(type, max_clip, current_clip, cur
 		managers.hud:set_forced_ammo_alpha(nil)
 	end
 end
+
 HUDTeammateVR.default_set_state = HUDTeammate.set_state
 
--- Lines: 585 to 609
+-- Lines 585-609
 function HUDTeammateVR:set_state(state)
 	local teammate_panel = self._panel
 	local is_player = state == "player"
@@ -785,9 +800,10 @@ function HUDTeammateVR:set_state(state)
 		callsign:set_position(name:x() - name:h(), name:y() + 1)
 	end
 end
+
 HUDTeammateVR.default_create_equipment_panels = HUDTeammate._create_equipment_panels
 
--- Lines: 612 to 624
+-- Lines 612-624
 function HUDTeammateVR:_create_equipment_panels(player_panel, x, top, bottom)
 	if self._main_player then
 		return self:default_create_equipment_panels(self._tablet_panel, self._tablet_panel:w() - 60, self._tablet_panel:h() - 170, self._tablet_panel:h() - 100)
@@ -802,7 +818,7 @@ function HUDTeammateVR:_create_equipment_panels(player_panel, x, top, bottom)
 	end
 end
 
--- Lines: 626 to 665
+-- Lines 626-665
 function HUDTeammateVR:add_special_equipment(data)
 	local teammate_panel = self._special_equipment_panel
 	local special_equipment = self._special_equipment
@@ -882,7 +898,7 @@ function HUDTeammateVR:add_special_equipment(data)
 	self:layout_special_equipments()
 end
 
--- Lines: 667 to 679
+-- Lines 667-679
 function HUDTeammateVR:remove_special_equipment(equipment)
 	local teammate_panel = self._special_equipment_panel
 	local special_equipment = self._special_equipment
@@ -899,7 +915,7 @@ function HUDTeammateVR:remove_special_equipment(equipment)
 	end
 end
 
--- Lines: 681 to 693
+-- Lines 681-693
 function HUDTeammateVR:set_special_equipment_amount(equipment_id, amount)
 	local teammate_panel = self._special_equipment_panel
 	local special_equipment = self._special_equipment
@@ -915,12 +931,12 @@ function HUDTeammateVR:set_special_equipment_amount(equipment_id, amount)
 	end
 end
 
--- Lines: 695 to 697
+-- Lines 695-697
 function HUDTeammateVR:clear_special_equipment()
 	self._special_equipment_panel:clear()
 end
 
--- Lines: 699 to 711
+-- Lines 699-711
 function HUDTeammateVR:layout_special_equipments()
 	local teammate_panel = self._special_equipment_panel
 	local special_equipment = self._special_equipment
@@ -934,17 +950,19 @@ function HUDTeammateVR:layout_special_equipments()
 
 	self._carry_panel:set_x(next_x)
 end
+
 HUDTeammateVR.default_set_name = HUDTeammate.set_name
 
--- Lines: 714 to 718
+-- Lines 714-718
 function HUDTeammateVR:set_name(teammate_name)
 	self:default_set_name(teammate_name)
 	self._special_equipment_name:set_text(teammate_name)
 	self._special_equipment_name:show()
 end
+
 local __remove_panel = HUDTeammate.remove_panel
 
--- Lines: 728 to 733
+-- Lines 728-734
 function HUDTeammateVR:remove_panel()
 	if not self._main_player then
 		return __remove_panel(self)
@@ -952,9 +970,10 @@ function HUDTeammateVR:remove_panel()
 
 	return __remove_panel(self, self._ammo_panel)
 end
+
 local __set_grenades_amount = HUDTeammate.set_grenades_amount
 
--- Lines: 741 to 754
+-- Lines 741-755
 function HUDTeammateVR:set_grenades_amount(data)
 	if self._main_player and data.amount then
 		if data.amount > 0 then
@@ -968,9 +987,10 @@ function HUDTeammateVR:set_grenades_amount(data)
 
 	return __set_grenades_amount(self, data)
 end
+
 local __set_grenade_cooldown = HUDTeammate.set_grenade_cooldown
 
--- Lines: 758 to 771
+-- Lines 758-771
 function HUDTeammateVR:set_grenade_cooldown(data)
 	__set_grenade_cooldown(self, data)
 
@@ -986,9 +1006,10 @@ function HUDTeammateVR:set_grenade_cooldown(data)
 		end
 	end
 end
+
 local __set_deployable_equipment_amount = HUDTeammate.set_deployable_equipment_amount
 
--- Lines: 774 to 786
+-- Lines 774-787
 function HUDTeammateVR:set_deployable_equipment_amount(index, data)
 	if self._main_player then
 		local belt_id = index == 1 and "deployable" or "deployable_secondary"
@@ -1004,9 +1025,10 @@ function HUDTeammateVR:set_deployable_equipment_amount(index, data)
 
 	return __set_deployable_equipment_amount(self, index, data)
 end
+
 local __set_deployable_equipment_amount_from_string = HUDTeammate.set_deployable_equipment_amount_from_string
 
--- Lines: 790 to 802
+-- Lines 790-803
 function HUDTeammateVR:set_deployable_equipment_amount_from_string(index, data)
 	if self._main_player then
 		local belt_id = index == 1 and "deployable" or "deployable_secondary"
@@ -1022,9 +1044,10 @@ function HUDTeammateVR:set_deployable_equipment_amount_from_string(index, data)
 
 	return __set_deployable_equipment_amount_from_string(self, index, data)
 end
+
 local __set_deployable_equipment = HUDTeammate.set_deployable_equipment
 
--- Lines: 806 to 811
+-- Lines 806-812
 function HUDTeammateVR:set_deployable_equipment(...)
 	if self._main_player then
 		managers.hud:belt():update_icon("deployable")
@@ -1032,9 +1055,10 @@ function HUDTeammateVR:set_deployable_equipment(...)
 
 	return __set_deployable_equipment(self, ...)
 end
+
 local __set_deployable_equipment_from_string = HUDTeammate.set_deployable_equipment_from_string
 
--- Lines: 815 to 820
+-- Lines 815-821
 function HUDTeammateVR:set_deployable_equipment_from_string(...)
 	if self._main_player then
 		managers.hud:belt():update_icon("deployable")
@@ -1043,7 +1067,7 @@ function HUDTeammateVR:set_deployable_equipment_from_string(...)
 	return __set_deployable_equipment_from_string(self, ...)
 end
 
--- Lines: 826 to 846
+-- Lines 826-846
 function HUDTeammateVR:set_hand(hand)
 	if PlayerHand.hand_id(hand) == PlayerHand.RIGHT then
 		self._ammo_panel:set_x(100)
@@ -1058,7 +1082,7 @@ function HUDTeammateVR:set_hand(hand)
 	self._ammo_flash:set_shape(self._ammo_panel:shape())
 end
 
--- Lines: 850 to 878
+-- Lines 850-878
 function HUDTeammateVR:setup_firemode(id, weapon_selection_panel)
 	if alive(weapon_selection_panel:child("firemode_single")) then
 		weapon_selection_panel:remove(weapon_selection_panel:child("firemode_single"))
@@ -1106,8 +1130,7 @@ function HUDTeammateVR:setup_firemode(id, weapon_selection_panel)
 	firemode_auto:set_visible(false)
 end
 
--- Lines: 880 to 882
+-- Lines 880-882
 function HUDTeammateVR:set_weapon_firemode_active(firemode_gui, active)
 	firemode_gui:set_selection(0, active and 0 or utf8.len(firemode_gui:text()))
 end
-

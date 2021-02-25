@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementLootPile = ElementLootPile or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 7 to 14
+-- Lines 6-14
 function ElementLootPile:init(...)
 	ElementLootPile.super.init(self, ...)
 
@@ -11,7 +11,7 @@ function ElementLootPile:init(...)
 	self._steal_SO_data = {}
 end
 
--- Lines: 16 to 23
+-- Lines 16-23
 function ElementLootPile:on_script_activated()
 	ElementLootPile.super.on_script_activated(self)
 
@@ -24,7 +24,7 @@ function ElementLootPile:on_script_activated()
 	self:on_set_enabled()
 end
 
--- Lines: 25 to 31
+-- Lines 25-31
 function ElementLootPile:on_set_enabled()
 	if self:enabled() then
 		self:register_steal_SO()
@@ -33,7 +33,7 @@ function ElementLootPile:on_set_enabled()
 	end
 end
 
--- Lines: 33 to 43
+-- Lines 33-43
 function ElementLootPile:update(t, dt)
 	if self._next_steal_time ~= nil then
 		self._next_steal_time = self._next_steal_time - dt
@@ -48,7 +48,7 @@ function ElementLootPile:update(t, dt)
 	end
 end
 
--- Lines: 46 to 144
+-- Lines 45-144
 function ElementLootPile:register_steal_SO()
 	if self._remaining_loot <= 0 then
 		return
@@ -148,7 +148,7 @@ function ElementLootPile:register_steal_SO()
 	self._next_steal_time = tonumber(self:value("reissue_delay")) or 30
 end
 
--- Lines: 148 to 167
+-- Lines 146-167
 function ElementLootPile:unregister_steal_SO()
 	for i, SO_data in pairs(self._steal_SO_data) do
 		if SO_data.SO_registered then
@@ -171,7 +171,7 @@ function ElementLootPile:unregister_steal_SO()
 	self._steal_SO_data = {}
 end
 
--- Lines: 170 to 192
+-- Lines 169-192
 function ElementLootPile:on_pickup_SO_completed(loot_index, thief)
 	if not self._steal_SO_data[loot_index] then
 		return
@@ -194,7 +194,7 @@ function ElementLootPile:on_pickup_SO_completed(loot_index, thief)
 	end
 end
 
--- Lines: 195 to 206
+-- Lines 194-206
 function ElementLootPile:on_pickup_SO_failed(loot_index, thief)
 	if not self._steal_SO_data[loot_index] then
 		return
@@ -207,7 +207,7 @@ function ElementLootPile:on_pickup_SO_failed(loot_index, thief)
 	end
 end
 
--- Lines: 209 to 224
+-- Lines 208-224
 function ElementLootPile:on_secure_SO_completed(loot_index, thief)
 	if not self._steal_SO_data[loot_index] then
 		return
@@ -224,7 +224,7 @@ function ElementLootPile:on_secure_SO_completed(loot_index, thief)
 	self._steal_SO_data[loot_index] = nil
 end
 
--- Lines: 227 to 242
+-- Lines 226-242
 function ElementLootPile:on_secure_SO_failed(loot_index, thief)
 	if not self._steal_SO_data[loot_index] then
 		return
@@ -240,7 +240,7 @@ function ElementLootPile:on_secure_SO_failed(loot_index, thief)
 	self._steal_SO_data[loot_index] = nil
 end
 
--- Lines: 244 to 258
+-- Lines 244-259
 function ElementLootPile:clbk_pickup_SO_verification(loot_index, candidate_unit)
 	if not self._steal_SO_data[loot_index] or not self._steal_SO_data[loot_index].SO_id then
 		return
@@ -263,10 +263,9 @@ function ElementLootPile:clbk_pickup_SO_verification(loot_index, candidate_unit)
 	return true
 end
 
--- Lines: 261 to 265
+-- Lines 261-265
 function ElementLootPile:on_pickup_SO_administered(loot_index, thief)
 	if loot_index and self._steal_SO_data[loot_index] and not self._steal_SO_data[loot_index].thief then
 		self._steal_SO_data[loot_index].SO_registered = false
 	end
 end
-

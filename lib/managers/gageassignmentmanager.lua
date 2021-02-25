@@ -1,23 +1,24 @@
 GageAssignmentManager = GageAssignmentManager or class()
 
--- Lines: 3 to 6
+-- Lines 3-6
 function GageAssignmentManager:init()
 	self:_setup()
 	tweak_data:add_reload_callback(self, callback(self, self, "reloaded"))
 end
 
--- Lines: 8 to 10
+-- Lines 8-10
 function GageAssignmentManager:reloaded()
 	self:_setup()
 end
 
--- Lines: 12 to 21
+-- Lines 12-21
 function GageAssignmentManager:_setup()
 	self._tweak_data = tweak_data.gage_assignment
 
 	if not Global.gage_assignment then
-		Global.gage_assignment = {}
-		Global.gage_assignment.visited_gage_crimenet = false
+		Global.gage_assignment = {
+			visited_gage_crimenet = false
+		}
 
 		self:_setup_assignments()
 	end
@@ -25,7 +26,7 @@ function GageAssignmentManager:_setup()
 	self._global = Global.gage_assignment
 end
 
--- Lines: 23 to 34
+-- Lines 23-34
 function GageAssignmentManager:_setup_assignments()
 	local assignments = {
 		active_assignments = {},
@@ -39,40 +40,40 @@ function GageAssignmentManager:_setup_assignments()
 	end
 end
 
--- Lines: 36 to 39
+-- Lines 36-39
 function GageAssignmentManager:reset()
 	Global.gage_assignment = nil
 
 	self:_setup()
 end
 
--- Lines: 41 to 44
+-- Lines 41-44
 function GageAssignmentManager:init_finalize()
 	Application:debug("[GageAssignmentManager:init_finalize]")
 	self:activate_assignments()
 end
 
--- Lines: 50 to 51
+-- Lines 50-52
 function GageAssignmentManager:get_latest_completed(assignment)
 	return self._saved_completed_assignments and self._saved_completed_assignments[assignment] or 0
 end
 
--- Lines: 54 to 55
+-- Lines 54-56
 function GageAssignmentManager:get_latest_progress(assignment)
 	return self._saved_progressed_assignments and self._saved_progressed_assignments[assignment] or 0
 end
 
--- Lines: 58 to 59
+-- Lines 58-60
 function GageAssignmentManager:get_latest_data()
 	return self._saved_completed_assignments, self._saved_progressed_assignments
 end
 
--- Lines: 62 to 63
+-- Lines 62-64
 function GageAssignmentManager:get_assignment_progress(assignment)
 	return self._global.active_assignments[assignment] and Application:digest_value(self._global.active_assignments[assignment], false) or 0
 end
 
--- Lines: 66 to 75
+-- Lines 66-76
 function GageAssignmentManager:get_assignment_data(assignment)
 	local active_value = self._global.active_assignments[assignment]
 	local completed_value = self._global.completed_assignments[assignment]
@@ -85,7 +86,7 @@ function GageAssignmentManager:get_assignment_data(assignment)
 	return Application:digest_value(active_value, false), to_aquire, Application:digest_value(completed_value, false)
 end
 
--- Lines: 80 to 102
+-- Lines 80-102
 function GageAssignmentManager:activate_assignments()
 	local is_host = Network:is_server() or Global.game_settings.single_player
 
@@ -112,14 +113,14 @@ function GageAssignmentManager:activate_assignments()
 	self._queued_spawned_units = nil
 end
 
--- Lines: 104 to 109
+-- Lines 104-109
 function GageAssignmentManager:_activate_assignments_client()
 	self._active_assignments = self._active_assignments or {}
 	self._spawned_units = self._spawned_units or {}
 	self._progressed_assignments = {}
 end
 
--- Lines: 111 to 127
+-- Lines 111-127
 function GageAssignmentManager:deactivate_assignments()
 	local is_host = Network:is_server() or Global.game_settings.single_player
 
@@ -140,7 +141,7 @@ function GageAssignmentManager:deactivate_assignments()
 	self._progressed_assignments = nil
 end
 
--- Lines: 129 to 135
+-- Lines 129-135
 function GageAssignmentManager:_deactivate_assignments_client()
 	self._spawned_units = nil
 	self._queued_spawns = nil
@@ -149,7 +150,7 @@ function GageAssignmentManager:_deactivate_assignments_client()
 	self._progressed_assignments = nil
 end
 
--- Lines: 138 to 179
+-- Lines 138-180
 function GageAssignmentManager:on_mission_completed()
 	local total_pickup = 0
 	local completed_assignments = {}
@@ -200,9 +201,11 @@ function GageAssignmentManager:on_mission_completed()
 	return total_pickup > 0
 end
 
--- Lines: 183 to 198
+-- Lines 183-198
 function GageAssignmentManager:debug_test_dialog_params(show_items)
-	self._global.dialog_params = {assignments = {}}
+	self._global.dialog_params = {
+		assignments = {}
+	}
 
 	for assignemnt, data in pairs(self._tweak_data:get_assignments()) do
 		self._global.dialog_params.assignments[assignemnt] = math.random(10) - 5
@@ -218,7 +221,7 @@ function GageAssignmentManager:debug_test_dialog_params(show_items)
 	self:dialog_show_completed_assignments(show_items)
 end
 
--- Lines: 200 to 268
+-- Lines 200-268
 function GageAssignmentManager:dialog_show_completed_assignments(show_items)
 	if not self._global.dialog_params then
 		return
@@ -303,7 +306,7 @@ function GageAssignmentManager:dialog_show_completed_assignments(show_items)
 	self._global.dialog_params = nil
 end
 
--- Lines: 272 to 288
+-- Lines 272-289
 function GageAssignmentManager:is_unit_an_assignment(unit)
 	if self._spawned_units then
 		for i, spawned_unit in ipairs(self._spawned_units) do
@@ -324,17 +327,17 @@ function GageAssignmentManager:is_unit_an_assignment(unit)
 	return false
 end
 
--- Lines: 293 to 295
+-- Lines 293-295
 function GageAssignmentManager:on_simulation_ended()
 	self:deactivate_assignments()
 end
 
--- Lines: 297 to 300
+-- Lines 297-300
 function GageAssignmentManager:on_simulation_started()
 	self:activate_assignments()
 end
 
--- Lines: 304 to 311
+-- Lines 304-311
 function GageAssignmentManager:queue_spawn(position, rotation)
 	if self._active_assignments then
 		self:do_spawn(position, rotation)
@@ -348,7 +351,7 @@ function GageAssignmentManager:queue_spawn(position, rotation)
 	end
 end
 
--- Lines: 313 to 338
+-- Lines 313-338
 function GageAssignmentManager:on_unit_spawned(unit)
 	if not alive(unit) then
 		return
@@ -378,7 +381,7 @@ function GageAssignmentManager:on_unit_spawned(unit)
 	end
 end
 
--- Lines: 340 to 384
+-- Lines 340-385
 function GageAssignmentManager:do_spawn(position, rotation)
 	local is_host = Network:is_server() or Global.game_settings.single_player
 
@@ -424,7 +427,7 @@ function GageAssignmentManager:do_spawn(position, rotation)
 	return nil
 end
 
--- Lines: 389 to 442
+-- Lines 389-442
 function GageAssignmentManager:on_unit_interact(unit, assignment)
 	if not alive(unit) then
 		return false
@@ -480,7 +483,7 @@ function GageAssignmentManager:on_unit_interact(unit, assignment)
 	self._progressed_assignments[assignment] = self._progressed_assignments[assignment] + 1
 end
 
--- Lines: 444 to 448
+-- Lines 444-448
 function GageAssignmentManager:show_chat_message(peer_name)
 	local max_units = self:count_all_units()
 	local remaining = self:count_active_units()
@@ -491,7 +494,7 @@ function GageAssignmentManager:show_chat_message(peer_name)
 	}))
 end
 
--- Lines: 452 to 459
+-- Lines 450-459
 function GageAssignmentManager:present_progress(assignment, peer_name)
 	local max_units = self:count_all_units()
 	local remaining = self:count_active_units()
@@ -503,7 +506,7 @@ function GageAssignmentManager:present_progress(assignment, peer_name)
 	})
 end
 
--- Lines: 472 to 474
+-- Lines 461-474
 function GageAssignmentManager:_present_progress(assignment, collected, to_aquire)
 	managers.hint:show_hint(self._tweak_data:get_value(assignment, "progress_id"), nil, nil, {
 		collected = collected,
@@ -511,7 +514,7 @@ function GageAssignmentManager:_present_progress(assignment, collected, to_aquir
 	})
 end
 
--- Lines: 476 to 481
+-- Lines 476-482
 function GageAssignmentManager:get_stinger_id()
 	local job_tweak = tweak_data.narrative.jobs[managers.job:current_real_job_id()]
 
@@ -522,7 +525,7 @@ function GageAssignmentManager:get_stinger_id()
 	return "stinger_objectivecomplete"
 end
 
--- Lines: 484 to 496
+-- Lines 484-496
 function GageAssignmentManager:_present_completed(assignment, collected, to_aquire)
 	local title_id = self._tweak_data:get_value(assignment, "present_id")
 	local title = managers.localization:text(title_id, {})
@@ -542,7 +545,7 @@ function GageAssignmentManager:_present_completed(assignment, collected, to_aqui
 	})
 end
 
--- Lines: 498 to 519
+-- Lines 498-519
 function GageAssignmentManager:_give_rewards(assignment)
 	local completed = Application:digest_value(self._global.completed_assignments[assignment], false) + 1
 	self._global.completed_assignments[assignment] = Application:digest_value(completed, true)
@@ -569,14 +572,14 @@ function GageAssignmentManager:_give_rewards(assignment)
 	end
 end
 
--- Lines: 523 to 525
+-- Lines 523-526
 function GageAssignmentManager:count_all_units()
 	local max_units = tweak_data.gage_assignment:get_num_assignment_units()
 
 	return max_units
 end
 
--- Lines: 528 to 540
+-- Lines 528-541
 function GageAssignmentManager:count_active_units()
 	if not self._spawned_units then
 		return 0
@@ -593,7 +596,7 @@ function GageAssignmentManager:count_active_units()
 	return count
 end
 
--- Lines: 543 to 552
+-- Lines 543-553
 function GageAssignmentManager:get_current_experience_multiplier()
 	local max_units = self:count_all_units()
 	local active_units = self:count_active_units()
@@ -607,17 +610,17 @@ function GageAssignmentManager:get_current_experience_multiplier()
 	return self._tweak_data:get_experience_multiplier(ratio)
 end
 
--- Lines: 557 to 558
+-- Lines 557-559
 function GageAssignmentManager:visited_gage_crimenet()
 	return self._global.visited_gage_crimenet
 end
 
--- Lines: 561 to 563
+-- Lines 561-563
 function GageAssignmentManager:visit_gage_crimenet()
 	self._global.visited_gage_crimenet = true
 end
 
--- Lines: 567 to 569
+-- Lines 567-569
 function GageAssignmentManager:sync_save(data)
 	data.GageAssignmentManager = {
 		active = self._active_assignments,
@@ -625,7 +628,7 @@ function GageAssignmentManager:sync_save(data)
 	}
 end
 
--- Lines: 571 to 593
+-- Lines 571-593
 function GageAssignmentManager:sync_load(data)
 	if data.GageAssignmentManager then
 		self._active_assignments = data.GageAssignmentManager.active
@@ -649,7 +652,7 @@ function GageAssignmentManager:sync_load(data)
 	end
 end
 
--- Lines: 596 to 604
+-- Lines 595-604
 function GageAssignmentManager:save(data)
 	local save_data = {
 		active_assignments = deep_clone(self._global.active_assignments),
@@ -660,7 +663,7 @@ function GageAssignmentManager:save(data)
 	data.gage_assignment = save_data
 end
 
--- Lines: 607 to 647
+-- Lines 606-647
 function GageAssignmentManager:load(data, version)
 	if data.gage_assignment then
 		Global.gage_assignment = data.gage_assignment
@@ -703,7 +706,6 @@ function GageAssignmentManager:load(data, version)
 	end
 end
 
--- Lines: 665 to 666
+-- Lines 651-666
 function GageAssignmentManager:debug_show_units(persistance)
 end
-

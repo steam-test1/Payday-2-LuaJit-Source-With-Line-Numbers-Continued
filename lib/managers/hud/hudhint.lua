@@ -1,6 +1,6 @@
 HUDHint = HUDHint or class()
 
--- Lines: 3 to 26
+-- Lines 3-26
 function HUDHint:init(hud)
 	self._hud_panel = hud.panel
 
@@ -34,7 +34,9 @@ function HUDHint:init(hud)
 
 	marker:set_center_y(self._hint_panel:h() / 2)
 
-	local clip_panel = self._hint_panel:panel({name = "clip_panel"})
+	local clip_panel = self._hint_panel:panel({
+		name = "clip_panel"
+	})
 
 	clip_panel:rect({
 		name = "bg",
@@ -55,7 +57,7 @@ function HUDHint:init(hud)
 	})
 end
 
--- Lines: 28 to 45
+-- Lines 28-45
 function HUDHint:show(params)
 	local text = params.text
 	local clip_panel = self._hint_panel:child("clip_panel")
@@ -68,12 +70,12 @@ function HUDHint:show(params)
 	self._hint_panel:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), params.time or 3, utf8.to_upper(text))
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function HUDHint:stop()
 	self._stop = true
 end
 
--- Lines: 51 to 192
+-- Lines 51-192
 function HUDHint:_animate_show(hint_panel, done_cb, seconds, text)
 	local clip_panel = hint_panel:child("clip_panel")
 	local hint_text = clip_panel:child("hint_text")
@@ -146,11 +148,10 @@ function HUDHint:_animate_show(hint_panel, done_cb, seconds, text)
 	done_cb()
 end
 
--- Lines: 196 to 197
+-- Lines 195-197
 function HUDHint:show_done()
 end
 
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDHintVR")
 end
-

@@ -1,6 +1,6 @@
 SelectNameModal = SelectNameModal or class(CoreEditorEwsDialog)
 
--- Lines: 6 to 58
+-- Lines 6-58
 function SelectNameModal:init(name, assets_list, settings, ...)
 	Global.world_editor = Global.world_editor or {}
 	Global.world_editor.filter = Global.world_editor.filter or ""
@@ -49,15 +49,15 @@ function SelectNameModal:init(name, assets_list, settings, ...)
 	self:show_modal()
 end
 
--- Lines: 60 to 61
+-- Lines 60-61
 function SelectNameModal:_on_mark_assett()
 end
 
--- Lines: 63 to 64
+-- Lines 63-64
 function SelectNameModal:_on_select_asset()
 end
 
--- Lines: 73 to 83
+-- Lines 73-83
 function SelectNameModal:_build_buttons(panel, sizer)
 	local select_btn = EWS:Button(panel, "Select", "", "BU_BOTTOM")
 
@@ -72,36 +72,36 @@ function SelectNameModal:_build_buttons(panel, sizer)
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 end
 
--- Lines: 86 to 89
+-- Lines 85-89
 function SelectNameModal:_on_select_asset()
 	self._cancelled = false
 
 	self._dialog:end_modal("hello")
 end
 
--- Lines: 96 to 98
+-- Lines 96-98
 function SelectNameModal:on_cancel()
 	self._dialog:end_modal("hello")
 end
 
--- Lines: 100 to 101
+-- Lines 100-102
 function SelectNameModal:selected_assets()
 	return self:_selected_item_assets()
 end
 
--- Lines: 104 to 107
+-- Lines 104-107
 function SelectNameModal:update_filter()
 	Global.world_editor.filter = self._filter:get_value()
 
 	self:fill_asset_list()
 end
 
--- Lines: 109 to 110
+-- Lines 109-111
 function SelectNameModal:cancelled()
 	return self._cancelled
 end
 
--- Lines: 115 to 135
+-- Lines 115-135
 function SelectNameModal:fill_asset_list()
 	self._list:delete_all_items()
 
@@ -129,7 +129,7 @@ function SelectNameModal:fill_asset_list()
 	self._list:autosize_column(0)
 end
 
--- Lines: 137 to 142
+-- Lines 137-142
 function SelectNameModal:key_delete(ctrlr, event)
 	event:skip()
 
@@ -138,7 +138,7 @@ function SelectNameModal:key_delete(ctrlr, event)
 	end
 end
 
--- Lines: 144 to 149
+-- Lines 144-149
 function SelectNameModal:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -147,11 +147,11 @@ function SelectNameModal:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines: 152 to 153
+-- Lines 151-153
 function SelectNameModal:_on_delete()
 end
 
--- Lines: 155 to 162
+-- Lines 155-163
 function SelectNameModal:_selected_item_assets()
 	local assets = {}
 
@@ -163,4 +163,3 @@ function SelectNameModal:_selected_item_assets()
 
 	return assets
 end
-

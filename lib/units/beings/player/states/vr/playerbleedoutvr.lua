@@ -4,13 +4,13 @@ local __enter = PlayerBleedOut.enter
 local __exit = PlayerBleedOut.exit
 local __destroy = PlayerBleedOut.destroy
 
--- Lines: 9 to 13
+-- Lines 9-13
 function PlayerBleedOutVR:enter(...)
 	__enter(self, ...)
 	self._ext_movement:set_orientation_state("bleedout", self._unit:position())
 end
 
--- Lines: 15 to 22
+-- Lines 15-23
 function PlayerBleedOutVR:exit(state_data, new_state_name)
 	self._ext_movement:set_orientation_state("none")
 
@@ -23,7 +23,7 @@ function PlayerBleedOutVR:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines: 25 to 32
+-- Lines 25-32
 function PlayerBleedOutVR:destroy()
 	if managers.network:session() then
 		self:set_belt_and_hands_enabled(true)
@@ -31,13 +31,14 @@ function PlayerBleedOutVR:destroy()
 
 	__destroy(self)
 end
+
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 local mvec_hmd_pos = Vector3()
 local vec_ray_up = Vector3(0, 0, 200)
 local vec_ray_down = Vector3(0, 0, 200)
 
--- Lines: 41 to 71
+-- Lines 40-71
 function PlayerBleedOutVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 
@@ -72,7 +73,7 @@ function PlayerBleedOutVR:_update_movement(t, dt)
 	self._ext_movement:set_ghost_position(pos_new, not move_unit and self._unit:position())
 end
 
--- Lines: 75 to 84
+-- Lines 75-84
 function PlayerBleedOutVR:_start_action_bleedout(t)
 	self:_interupt_action_running(t)
 	self._unit:kill_mover()
@@ -85,7 +86,7 @@ function PlayerBleedOutVR:_start_action_bleedout(t)
 	self._state_data.downed = true
 end
 
--- Lines: 88 to 98
+-- Lines 88-98
 function PlayerBleedOutVR:_end_action_bleedout(t)
 	self:_activate_mover(Idstring(self:_can_stand() and "stand" or "duck"))
 	self._unit:mover():set_velocity(Vector3())
@@ -99,7 +100,7 @@ function PlayerBleedOutVR:_end_action_bleedout(t)
 	self._state_data.downed = false
 end
 
--- Lines: 101 to 135
+-- Lines 101-135
 function PlayerBleedOutVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		local disallowed_hand_id = self._unit:hand():get_active_hand_id("melee") or self._unit:hand():get_active_hand_id("deployable")
@@ -142,4 +143,3 @@ function PlayerBleedOutVR:set_belt_and_hands_enabled(enabled)
 		end
 	end
 end
-

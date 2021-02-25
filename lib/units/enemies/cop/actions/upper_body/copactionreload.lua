@@ -1,6 +1,6 @@
 CopActionReload = CopActionReload or class()
 
--- Lines: 6 to 67
+-- Lines 4-67
 function CopActionReload:init(action_desc, common_data)
 	self._ext_movement = common_data.ext_movement
 	self._ext_anim = common_data.ext_anim
@@ -33,12 +33,22 @@ function CopActionReload:init(action_desc, common_data)
 		self._body_part = action_desc.body_part
 		self._modifier_name = Idstring("action_upper_body")
 		self._modifier = self._machine:get_modifier(self._modifier_name)
-		self._blocks = {light_hurt = -1}
+		self._blocks = {
+			light_hurt = -1
+		}
 
 		if self._attention then
 			self._modifier_on = true
 			local target_pos = nil
-			target_pos = self._attention.handler and self._attention.handler:get_attention_m_pos() or self._attention.unit and self._attention.unit:movement():m_head_pos() or self._attention.pos
+
+			if self._attention.handler then
+				target_pos = self._attention.handler:get_attention_m_pos()
+			elseif self._attention.unit then
+				target_pos = self._attention.unit:movement():m_head_pos()
+			else
+				target_pos = self._attention.pos
+			end
+
 			local shoot_from_pos = common_data.pos + math.UP * 160
 			local target_vec = target_pos - shoot_from_pos
 
@@ -56,16 +66,24 @@ function CopActionReload:init(action_desc, common_data)
 	end
 end
 
--- Lines: 71 to 72
+-- Lines 71-73
 function CopActionReload:type()
 	return "reload"
 end
 
--- Lines: 77 to 100
+-- Lines 77-100
 function CopActionReload:update(t)
 	if self._modifier_on then
 		local target_pos = nil
-		target_pos = self._attention.handler and self._attention.handler:get_attention_m_pos() or self._attention.unit and self._attention.unit:movement():m_head_pos() or self._attention.pos
+
+		if self._attention.handler then
+			target_pos = self._attention.handler:get_attention_m_pos()
+		elseif self._attention.unit then
+			target_pos = self._attention.unit:movement():m_head_pos()
+		else
+			target_pos = self._attention.pos
+		end
+
 		local shoot_from_pos = math.UP * 130
 
 		mvector3.add(shoot_from_pos, self._common_data.pos)
@@ -86,7 +104,7 @@ function CopActionReload:update(t)
 	end
 end
 
--- Lines: 104 to 110
+-- Lines 104-111
 function CopActionReload:_play_reload()
 	local redir_res = self._ext_movement:play_redirect("reload")
 
@@ -99,12 +117,12 @@ function CopActionReload:_play_reload()
 	return redir_res
 end
 
--- Lines: 115 to 116
+-- Lines 115-117
 function CopActionReload:expired()
 	return self._expired
 end
 
--- Lines: 121 to 130
+-- Lines 121-130
 function CopActionReload:on_attention(attention)
 	if attention then
 		self._modifier_on = true
@@ -119,7 +137,7 @@ function CopActionReload:on_attention(attention)
 	self._attention = attention
 end
 
--- Lines: 134 to 139
+-- Lines 134-139
 function CopActionReload:on_exit()
 	if self._modifier_on then
 		self._modifier_on = nil
@@ -128,13 +146,12 @@ function CopActionReload:on_exit()
 	end
 end
 
--- Lines: 143 to 144
+-- Lines 143-145
 function CopActionReload:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines: 149 to 150
+-- Lines 149-151
 function CopActionReload:need_upd()
 	return true
 end
-

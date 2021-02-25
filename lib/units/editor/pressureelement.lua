@@ -1,6 +1,6 @@
 PressureUnitElement = PressureUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function PressureUnitElement:init(unit)
 	PressureUnitElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function PressureUnitElement:init(unit)
 	table.insert(self._save_values, "interval")
 end
 
--- Lines: 13 to 63
+-- Lines 13-63
 function PressureUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -71,4 +71,3 @@ function PressureUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

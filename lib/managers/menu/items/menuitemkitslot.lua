@@ -3,7 +3,7 @@ core:import("CoreMenuItem")
 MenuItemKitSlot = MenuItemKitSlot or class(CoreMenuItem.Item)
 MenuItemKitSlot.TYPE = "kitslot"
 
--- Lines: 6 to 34
+-- Lines 6-34
 function MenuItemKitSlot:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -36,7 +36,7 @@ function MenuItemKitSlot:init(data_node, parameters)
 	end
 end
 
--- Lines: 36 to 67
+-- Lines 36-68
 function MenuItemKitSlot:next()
 	if not self._enabled then
 		return
@@ -71,7 +71,7 @@ function MenuItemKitSlot:next()
 	return true
 end
 
--- Lines: 70 to 101
+-- Lines 70-102
 function MenuItemKitSlot:previous()
 	if not self._enabled then
 		return
@@ -106,22 +106,22 @@ function MenuItemKitSlot:previous()
 	return true
 end
 
--- Lines: 104 to 105
+-- Lines 104-106
 function MenuItemKitSlot:left_arrow_visible()
 	return self._current_index > 1 and self._enabled
 end
 
--- Lines: 108 to 109
+-- Lines 108-110
 function MenuItemKitSlot:right_arrow_visible()
 	return self._current_index < #self._options and self._enabled
 end
 
--- Lines: 112 to 113
+-- Lines 112-114
 function MenuItemKitSlot:arrow_visible()
 	return #self._options > 0
 end
 
--- Lines: 116 to 131
+-- Lines 116-131
 function MenuItemKitSlot:text()
 	if #self._options == 0 then
 		return managers.localization:text("menu_kit_locked")
@@ -141,7 +141,7 @@ function MenuItemKitSlot:text()
 	end
 end
 
--- Lines: 133 to 154
+-- Lines 133-154
 function MenuItemKitSlot:icon_and_description()
 	if #self._options == 0 then
 		return "locked", managers.localization:text("des_locked")
@@ -165,7 +165,7 @@ function MenuItemKitSlot:icon_and_description()
 	end
 end
 
--- Lines: 156 to 170
+-- Lines 156-171
 function MenuItemKitSlot:upgrade_progress()
 	if #self._options == 0 then
 		return 0, 0
@@ -185,12 +185,12 @@ function MenuItemKitSlot:upgrade_progress()
 	return 0, 0
 end
 
--- Lines: 173 to 174
+-- Lines 173-175
 function MenuItemKitSlot:percentage()
 	return 66
 end
 
--- Lines: 177 to 198
+-- Lines 177-198
 function MenuItemKitSlot.clbk_msg_set_kit_selection(overwrite_data, msg_queue, rpc_name, peer_id, category, selection_name, slot)
 	if msg_queue then
 		local category_data = overwrite_data.categories[category]
@@ -230,17 +230,21 @@ function MenuItemKitSlot.clbk_msg_set_kit_selection(overwrite_data, msg_queue, r
 	end
 end
 
--- Lines: 202 to 306
+-- Lines 202-307
 function MenuItemKitSlot:setup_gui(node, row_item)
 	local category = self:parameters().category
 	local slot = self:parameters().slot
-	row_item.gui_panel = node.item_panel:panel({w = node.item_panel:w()})
+	row_item.gui_panel = node.item_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, node:_right_align(), "right")
 
 	row_item.gui_text:set_wrap(true)
 	row_item.gui_text:set_word_wrap(true)
 
-	row_item.choice_panel = row_item.gui_panel:panel({w = node.item_panel:w()})
+	row_item.choice_panel = row_item.gui_panel:panel({
+		w = node.item_panel:w()
+	})
 	row_item.choice_text = row_item.choice_panel:text({
 		halign = "center",
 		vertical = "center",
@@ -295,7 +299,9 @@ function MenuItemKitSlot:setup_gui(node, row_item)
 
 	row_item.description_panel:set_left(row_item.choice_panel:left())
 
-	row_item.description_panel_bg = row_item.description_panel:rect({color = Color.black:with_alpha(0.5)})
+	row_item.description_panel_bg = row_item.description_panel:rect({
+		color = Color.black:with_alpha(0.5)
+	})
 	local icon, texture_rect = tweak_data.hud_icons:get_icon_data("fallback")
 	row_item.description_icon = row_item.description_panel:bitmap({
 		name = "description_icon",
@@ -388,7 +394,7 @@ function MenuItemKitSlot:setup_gui(node, row_item)
 	return true
 end
 
--- Lines: 309 to 330
+-- Lines 309-331
 function MenuItemKitSlot:reload(row_item, node)
 	local icon_id, description = self:icon_and_description()
 
@@ -412,7 +418,7 @@ function MenuItemKitSlot:reload(row_item, node)
 	return true
 end
 
--- Lines: 333 to 345
+-- Lines 333-346
 function MenuItemKitSlot:highlight_row_item(node, row_item, mouse_over)
 	row_item.description_panel:set_visible(false)
 	row_item.choice_text:set_color(row_item.color)
@@ -425,7 +431,7 @@ function MenuItemKitSlot:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 348 to 360
+-- Lines 348-361
 function MenuItemKitSlot:fade_row_item(node, row_item, mouse_over)
 	row_item.description_panel:set_visible(false)
 	row_item.choice_text:set_color(self:arrow_visible() and tweak_data.menu.default_changeable_text_color or tweak_data.menu.default_disabled_text_color)
@@ -438,7 +444,7 @@ function MenuItemKitSlot:fade_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines: 363 to 444
+-- Lines 363-444
 function MenuItemKitSlot:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local xl_pad = 64
@@ -470,7 +476,7 @@ function MenuItemKitSlot:_layout(node, row_item)
 	row_item.description_panel:set_h(126 * tweak_data.scale.kit_menu_description_h_scale)
 	row_item.description_panel:set_w(safe_rect.width / 2)
 	row_item.description_panel:set_right(safe_rect.width)
-	row_item.description_panel:set_bottom((safe_rect.height - tweak_data.menu.upper_saferect_border) - tweak_data.menu.border_pad)
+	row_item.description_panel:set_bottom(safe_rect.height - tweak_data.menu.upper_saferect_border - tweak_data.menu.border_pad)
 	row_item.description_panel_bg:set_size(row_item.description_panel:size())
 
 	local pad = 4 * tweak_data.scale.kit_menu_bar_scale
@@ -479,7 +485,7 @@ function MenuItemKitSlot:_layout(node, row_item)
 	row_item.description_icon:set_position(pad, pad)
 	row_item.description_text:set_font_size(tweak_data.menu.kit_description_font_size)
 	row_item.description_text:set_h(row_item.description_panel:h())
-	row_item.description_text:set_w((safe_rect.width / 2 - (row_item.description_icon:right() + 4)) - pad)
+	row_item.description_text:set_w(safe_rect.width / 2 - (row_item.description_icon:right() + 4) - pad)
 	row_item.description_text:set_y(pad)
 	row_item.description_text:set_left(row_item.description_icon:right() + 4)
 	row_item.description_progress_text:set_font_size(node.font_size)
@@ -492,7 +498,7 @@ function MenuItemKitSlot:_layout(node, row_item)
 	row_item.progress_bg:set_h(22 * tweak_data.scale.kit_menu_bar_scale)
 	row_item.progress_bg:set_bottom(row_item.description_panel_bg:h() - pad)
 	row_item.progress_bg:set_left(row_item.description_progress_text:right() + 8)
-	row_item.progress_bg:set_w((row_item.description_panel:w() - row_item.progress_bg:left()) - pad)
+	row_item.progress_bg:set_w(row_item.description_panel:w() - row_item.progress_bg:left() - pad)
 
 	local current, total = self:upgrade_progress()
 	local value = total ~= 0 and current / total or 0
@@ -504,4 +510,3 @@ function MenuItemKitSlot:_layout(node, row_item)
 	row_item.progress_text:set_size(row_item.progress_bg:size())
 	row_item.progress_text:set_position(row_item.progress_bg:x(), row_item.progress_bg:y())
 end
-

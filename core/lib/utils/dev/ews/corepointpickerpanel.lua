@@ -7,7 +7,7 @@ core:import("CoreDebug")
 
 PointPickerPanel = PointPickerPanel or CoreClass.class()
 
--- Lines: 10 to 19
+-- Lines 10-19
 function PointPickerPanel:init(parent_frame, title)
 	assert(managers.viewport)
 
@@ -21,7 +21,7 @@ function PointPickerPanel:init(parent_frame, title)
 	self:_create_panel(parent_frame)
 end
 
--- Lines: 21 to 40
+-- Lines 21-40
 function PointPickerPanel:_create_panel(parent_frame)
 	local panel_sizer = EWS:BoxSizer("HORIZONTAL")
 	self.__panel = EWS:Panel(parent_frame)
@@ -45,24 +45,24 @@ function PointPickerPanel:_create_panel(parent_frame)
 	panel_sizer:add(self.__z_textctrl, 1, 2, "ALL,EXPAND,ALIGN_RIGHT")
 end
 
--- Lines: 42 to 43
+-- Lines 42-44
 function PointPickerPanel:panel()
 	return self.__panel
 end
 
--- Lines: 46 to 47
+-- Lines 46-48
 function PointPickerPanel:get_value()
 	return self.__current_position
 end
 
--- Lines: 50 to 53
+-- Lines 50-53
 function PointPickerPanel:set_value(vector)
 	self.__current_position = vector
 
 	self:_set_text(vector)
 end
 
--- Lines: 55 to 67
+-- Lines 55-67
 function PointPickerPanel:update(time, delta_time)
 	if self:_text_ctrl_has_focus() then
 		self.__current_position = Vector3(self.__x_textctrl:get_value(), self.__y_textctrl:get_value(), self.__z_textctrl:get_value())
@@ -74,19 +74,19 @@ function PointPickerPanel:update(time, delta_time)
 	self.__point_draw:update(time, delta_time)
 end
 
--- Lines: 69 to 72
+-- Lines 69-73
 function PointPickerPanel:_text_ctrl_has_focus()
 	return EWS:get_window_in_focus() == self.__x_textctrl or EWS:get_window_in_focus() == self.__y_textctrl or EWS:get_window_in_focus() == self.__z_textctrl
 end
 
--- Lines: 75 to 79
+-- Lines 75-79
 function PointPickerPanel:_set_text(vector)
 	self.__x_textctrl:set_value(string.format("%.3f", vector.x))
 	self.__y_textctrl:set_value(string.format("%.3f", vector.y))
 	self.__z_textctrl:set_value(string.format("%.3f", vector.z))
 end
 
--- Lines: 81 to 89
+-- Lines 81-89
 function PointPickerPanel:_on_picker_toggle()
 	if self.__picker_button:get_value() == false then
 		self.__point_picker:stop_picking()
@@ -97,7 +97,7 @@ function PointPickerPanel:_on_picker_toggle()
 	end
 end
 
--- Lines: 91 to 101
+-- Lines 91-101
 function PointPickerPanel:_on_picking(sender, raycast)
 	if raycast then
 		self:_set_text(raycast.position)
@@ -112,7 +112,7 @@ function PointPickerPanel:_on_picking(sender, raycast)
 	end
 end
 
--- Lines: 103 to 110
+-- Lines 103-110
 function PointPickerPanel:_on_finished_picking(sender, raycast)
 	if raycast then
 		self.__picker_button:set_value(false)
@@ -123,4 +123,3 @@ function PointPickerPanel:_on_finished_picking(sender, raycast)
 		self:set_value(raycast.position)
 	end
 end
-

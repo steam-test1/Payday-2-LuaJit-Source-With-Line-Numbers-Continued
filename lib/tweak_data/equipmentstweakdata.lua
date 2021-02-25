@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines: 4 to 784
+-- Lines 3-795
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -35,7 +35,9 @@ function EquipmentsTweakData:init()
 		icon = "equipment_ammo_bag",
 		description_id = "des_ammo_bag",
 		visual_object = "g_ammobag",
-		quantity = {1}
+		quantity = {
+			1
+		}
 	}
 	self.doctor_bag = {
 		deploy_time = 2,
@@ -45,7 +47,9 @@ function EquipmentsTweakData:init()
 		visual_object = "g_medicbag",
 		icon = "equipment_doctor_bag",
 		description_id = "des_doctor_bag",
-		quantity = {1},
+		quantity = {
+			1
+		},
 		upgrade_deploy_time_multiplier = {
 			upgrade = "deploy_time_multiplier",
 			category = "first_aid_kit"
@@ -77,7 +81,9 @@ function EquipmentsTweakData:init()
 		visual_object = "g_sentrybag",
 		icon = "equipment_sentry",
 		description_id = "des_sentry_gun",
-		quantity = {1},
+		quantity = {
+			1
+		},
 		upgrade_deploy_time_multiplier = {
 			upgrade = "sentry_gun_deploy_time_multiplier",
 			category = "player"
@@ -94,12 +100,16 @@ function EquipmentsTweakData:init()
 		visual_object = "g_sentrybag",
 		icon = "equipment_sentry_silent",
 		description_id = "des_sentry_gun",
-		quantity = {1},
+		quantity = {
+			1
+		},
 		upgrade_deploy_time_multiplier = {
 			upgrade = "sentry_gun_deploy_time_multiplier",
 			category = "player"
 		},
-		upgrade_name = {"sentry_gun"}
+		upgrade_name = {
+			"sentry_gun"
+		}
 	}
 	self.ecm_jammer = {
 		deploy_time = 2,
@@ -109,7 +119,9 @@ function EquipmentsTweakData:init()
 		icon = "equipment_ecm_jammer",
 		description_id = "des_ecm_jammer",
 		visual_object = "g_toolbag",
-		quantity = {1}
+		quantity = {
+			1
+		}
 	}
 	self.armor_kit = {
 		deploy_time = 2,
@@ -126,7 +138,9 @@ function EquipmentsTweakData:init()
 		deploying_text_id = "hud_equipment_equipping_armor_kit",
 		action_timer = 2,
 		visual_object = "g_armorbag",
-		quantity = {1}
+		quantity = {
+			1
+		}
 	}
 	self.first_aid_kit = {
 		deploy_time = 1,
@@ -136,7 +150,9 @@ function EquipmentsTweakData:init()
 		visual_object = "g_firstaidbag",
 		icon = "equipment_first_aid_kit",
 		description_id = "des_first_aid_kit",
-		quantity = {4},
+		quantity = {
+			4
+		},
 		upgrade_deploy_time_multiplier = {
 			upgrade = "deploy_time_multiplier",
 			category = "first_aid_kit"
@@ -150,7 +166,9 @@ function EquipmentsTweakData:init()
 		visual_object = "g_bodybagsbag",
 		icon = "equipment_bodybags_bag",
 		description_id = "des_bodybags_bag",
-		quantity = {1},
+		quantity = {
+			1
+		},
 		upgrade_deploy_time_multiplier = {
 			upgrade = "bodybags_bag_deploy_time_multiplier",
 			category = "player"
@@ -210,6 +228,13 @@ function EquipmentsTweakData:init()
 			text_id = "hud_int_equipment_pickup_keycard",
 			icon = "equipment_bank_manager_key"
 		},
+		president_key = {
+			sync_possession = true,
+			action_message = "bank_manager_key_obtained",
+			transfer_quantity = 4,
+			text_id = "hud_int_equipment_pickup_presidential_keycard",
+			icon = "equipment_bank_manager_key"
+		},
 		help_keycard = {
 			sync_possession = true,
 			action_message = "bank_manager_key_obtained",
@@ -224,7 +249,7 @@ function EquipmentsTweakData:init()
 		},
 		keychain = {
 			sync_possession = true,
-			icon = "equipment_generic_key",
+			icon = "equipment_key_chain",
 			text_id = "hud_int_equipment_pickup_keychain"
 		},
 		chavez_key = {
@@ -672,4 +697,3 @@ function EquipmentsTweakData:init()
 		text_id = "hud_briefcase"
 	}
 end
-

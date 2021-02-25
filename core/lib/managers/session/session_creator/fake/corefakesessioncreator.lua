@@ -3,11 +3,11 @@ core:import("CoreFakeSession")
 
 Creator = Creator or class()
 
--- Lines: 6 to 7
+-- Lines 6-7
 function Creator:init()
 end
 
--- Lines: 9 to 17
+-- Lines 9-18
 function Creator:create_session(session_info, player_slots)
 	if session_info:is_ranked() then
 		cat_print("debug", "create_session: is_ranked")
@@ -20,18 +20,21 @@ function Creator:create_session(session_info, player_slots)
 	return CoreFakeSession.Session:new()
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function Creator:join_session(session_id)
 	return CoreFakeSession.Session:new()
 end
 
--- Lines: 24 to 27
+-- Lines 24-27
 function Creator:find_session(session_info, callback)
 	local fake_sessions = {
-		{info = 2},
-		{info = 3}
+		{
+			info = 2
+		},
+		{
+			info = 3
+		}
 	}
 
 	callback(fake_sessions)
 end
-

@@ -5,7 +5,7 @@ core:import("CoreMenuItemToggle")
 
 MenuNodeTable = MenuNodeTable or class(CoreMenuNode.MenuNode)
 
--- Lines: 8 to 18
+-- Lines 8-18
 function MenuNodeTable:init(data_node)
 	MenuNodeTable.super.init(self, data_node)
 
@@ -20,17 +20,16 @@ function MenuNodeTable:init(data_node)
 	end
 end
 
--- Lines: 20 to 21
+-- Lines 20-21
 function MenuNodeTable:_setup_columns()
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function MenuNodeTable:_add_column(params)
 	table.insert(self._columns, params)
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function MenuNodeTable:columns()
 	return self._columns
 end
-

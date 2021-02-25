@@ -6,25 +6,25 @@ local small_font = tweak_data.menu.pd2_small_font
 local small_font_size = tweak_data.menu.pd2_small_font_size
 CustomSafehouseGuiItem = CustomSafehouseGuiItem or class()
 
--- Lines: 12 to 14
+-- Lines 12-14
 function CustomSafehouseGuiItem:init()
 	self._selected = false
 end
 
--- Lines: 16 to 17
+-- Lines 16-17
 function CustomSafehouseGuiItem:refresh()
 end
 
--- Lines: 19 to 20
+-- Lines 19-20
 function CustomSafehouseGuiItem:inside()
 end
 
--- Lines: 22 to 23
+-- Lines 22-24
 function CustomSafehouseGuiItem:is_selected()
 	return self._selected
 end
 
--- Lines: 26 to 34
+-- Lines 26-34
 function CustomSafehouseGuiItem:set_selected(selected, play_sound)
 	if self._selected ~= selected then
 		self._selected = selected
@@ -37,12 +37,12 @@ function CustomSafehouseGuiItem:set_selected(selected, play_sound)
 	end
 end
 
--- Lines: 36 to 37
+-- Lines 36-38
 function CustomSafehouseGuiItem:is_active()
 	return self._active
 end
 
--- Lines: 40 to 45
+-- Lines 40-45
 function CustomSafehouseGuiItem:set_active(active, play_sound)
 	if self._active ~= active then
 		self._active = active
@@ -51,18 +51,19 @@ function CustomSafehouseGuiItem:set_active(active, play_sound)
 	end
 end
 
--- Lines: 47 to 50
+-- Lines 47-50
 function CustomSafehouseGuiItem:trigger()
 	managers.menu_component:post_event("menu_enter")
 	self:refresh()
 end
 
--- Lines: 52 to 53
+-- Lines 52-53
 function CustomSafehouseGuiItem:flash()
 end
+
 CustomSafehouseGuiTabItem = CustomSafehouseGuiTabItem or class(CustomSafehouseGuiItem)
 
--- Lines: 60 to 100
+-- Lines 59-100
 function CustomSafehouseGuiTabItem:init(index, title_id, page_item, gui, tab_x, tab_panel)
 	CustomSafehouseGuiTabItem.super.init(self)
 
@@ -103,44 +104,44 @@ function CustomSafehouseGuiTabItem:init(index, title_id, page_item, gui, tab_x, 
 	self:refresh()
 end
 
--- Lines: 102 to 103
+-- Lines 102-104
 function CustomSafehouseGuiTabItem:index()
 	return self._index
 end
 
--- Lines: 106 to 107
+-- Lines 106-108
 function CustomSafehouseGuiTabItem:page()
 	return self._page_item
 end
 
--- Lines: 110 to 111
+-- Lines 110-112
 function CustomSafehouseGuiTabItem:prev_page_position()
 	return self._page_panel:left() - 15
 end
 
--- Lines: 114 to 115
+-- Lines 114-116
 function CustomSafehouseGuiTabItem:next_page_position()
 	return self._page_panel:right() + 15
 end
 
--- Lines: 118 to 121
+-- Lines 118-121
 function CustomSafehouseGuiTabItem:set_active(active)
 	self._active = active
 
 	self:refresh()
 end
 
--- Lines: 123 to 124
+-- Lines 123-125
 function CustomSafehouseGuiTabItem:is_active()
 	return self._active
 end
 
--- Lines: 127 to 128
+-- Lines 127-129
 function CustomSafehouseGuiTabItem:inside(x, y)
 	return self._page_panel:inside(x, y)
 end
 
--- Lines: 132 to 140
+-- Lines 131-140
 function CustomSafehouseGuiTabItem:refresh()
 	if alive(self._page_panel) then
 		self._page_panel:child("PageText"):set_blend_mode(self._active and "normal" or "add")
@@ -148,9 +149,10 @@ function CustomSafehouseGuiTabItem:refresh()
 		self._page_panel:child("PageTabBG"):set_visible(self._active)
 	end
 end
+
 CustomSafehouseGuiPage = CustomSafehouseGuiPage or class(CustomSafehouseGuiItem)
 
--- Lines: 147 to 162
+-- Lines 146-162
 function CustomSafehouseGuiPage:init(page_id, page_panel, fullscreen_panel, gui)
 	CustomSafehouseGuiPage.super.init(self)
 
@@ -162,26 +164,28 @@ function CustomSafehouseGuiPage:init(page_id, page_panel, fullscreen_panel, gui)
 	self._info_panel = gui:info_panel():panel({})
 	self._event_listener = gui:event_listener()
 
-	self._event_listener:add(page_id, {"refresh"}, callback(self, self, "refresh"))
+	self._event_listener:add(page_id, {
+		"refresh"
+	}, callback(self, self, "refresh"))
 	self:refresh()
 end
 
--- Lines: 164 to 165
+-- Lines 164-165
 function CustomSafehouseGuiPage:update(t, dt)
 end
 
--- Lines: 167 to 168
+-- Lines 167-169
 function CustomSafehouseGuiPage:event_listener()
 	return self._event_listener
 end
 
--- Lines: 171 to 174
+-- Lines 171-174
 function CustomSafehouseGuiPage:refresh()
 	self:panel():set_visible(self._active)
 	self:info_panel():set_visible(self._active)
 end
 
--- Lines: 176 to 179
+-- Lines 176-180
 function CustomSafehouseGuiPage:set_active(active)
 	self._active = active
 
@@ -190,26 +194,26 @@ function CustomSafehouseGuiPage:set_active(active)
 	return active
 end
 
--- Lines: 182 to 183
+-- Lines 182-183
 function CustomSafehouseGuiPage:on_notify(tree, msg)
 end
 
--- Lines: 185 to 186
+-- Lines 185-187
 function CustomSafehouseGuiPage:name()
 	return self._page_name
 end
 
--- Lines: 189 to 190
+-- Lines 189-191
 function CustomSafehouseGuiPage:panel()
 	return self._panel
 end
 
--- Lines: 193 to 194
+-- Lines 193-195
 function CustomSafehouseGuiPage:info_panel()
 	return self._info_panel
 end
 
--- Lines: 198 to 204
+-- Lines 197-204
 function CustomSafehouseGuiPage:stack_panels(padding, panels)
 	for idx, panel in ipairs(panels) do
 		panel:set_left(0)
@@ -217,51 +221,51 @@ function CustomSafehouseGuiPage:stack_panels(padding, panels)
 	end
 end
 
--- Lines: 206 to 207
+-- Lines 206-207
 function CustomSafehouseGuiPage:mouse_clicked(o, button, x, y)
 end
 
--- Lines: 209 to 210
+-- Lines 209-210
 function CustomSafehouseGuiPage:mouse_pressed(button, x, y)
 end
 
--- Lines: 212 to 213
+-- Lines 212-213
 function CustomSafehouseGuiPage:mouse_released(button, x, y)
 end
 
--- Lines: 215 to 216
+-- Lines 215-216
 function CustomSafehouseGuiPage:mouse_moved(button, x, y)
 end
 
--- Lines: 218 to 219
+-- Lines 218-219
 function CustomSafehouseGuiPage:mouse_wheel_up(x, y)
 end
 
--- Lines: 221 to 222
+-- Lines 221-222
 function CustomSafehouseGuiPage:mouse_wheel_down(x, y)
 end
 
--- Lines: 224 to 225
+-- Lines 224-225
 function CustomSafehouseGuiPage:move_up()
 end
 
--- Lines: 227 to 228
+-- Lines 227-228
 function CustomSafehouseGuiPage:move_down()
 end
 
--- Lines: 230 to 231
+-- Lines 230-231
 function CustomSafehouseGuiPage:move_left()
 end
 
--- Lines: 233 to 234
+-- Lines 233-234
 function CustomSafehouseGuiPage:move_right()
 end
 
--- Lines: 236 to 237
+-- Lines 236-237
 function CustomSafehouseGuiPage:confirm_pressed()
 end
 
--- Lines: 240 to 255
+-- Lines 239-255
 function CustomSafehouseGuiPage:special_btn_pressed(button)
 	if not self:is_active() or not self._controllers_mapping then
 		return
@@ -279,16 +283,17 @@ function CustomSafehouseGuiPage:special_btn_pressed(button)
 	end
 end
 
--- Lines: 257 to 258
+-- Lines 257-259
 function CustomSafehouseGuiPage:get_legend()
 	return {
 		"move",
 		"back"
 	}
 end
+
 CustomSafehouseGuiButtonItem = CustomSafehouseGuiButtonItem or class(CustomSafehouseGuiItem)
 
--- Lines: 266 to 316
+-- Lines 265-316
 function CustomSafehouseGuiButtonItem:init(panel, data, x, priority)
 	CustomSafehouseGuiButtonItem.super.init(self, panel, data)
 
@@ -341,22 +346,22 @@ function CustomSafehouseGuiButtonItem:init(panel, data, x, priority)
 	end
 end
 
--- Lines: 318 to 319
+-- Lines 318-320
 function CustomSafehouseGuiButtonItem:button_data()
 	return self._btn_data
 end
 
--- Lines: 322 to 323
+-- Lines 322-324
 function CustomSafehouseGuiButtonItem:get_custom_data()
 	return self._custom_data
 end
 
--- Lines: 326 to 328
+-- Lines 326-328
 function CustomSafehouseGuiButtonItem:reorder(new_prio)
 	self._panel:set_y(self._panel:x() + (new_prio - 1) * small_font_size)
 end
 
--- Lines: 330 to 337
+-- Lines 330-337
 function CustomSafehouseGuiButtonItem:set_text(text)
 	local prefix = not managers.menu:is_pc_controller() and self._btn_data.btn and managers.localization:get_default_macro(self._btn_data.btn) or ""
 
@@ -369,12 +374,12 @@ function CustomSafehouseGuiButtonItem:set_text(text)
 	self._btn_text:set_h(h)
 end
 
--- Lines: 339 to 340
+-- Lines 339-341
 function CustomSafehouseGuiButtonItem:text()
 	return self._btn_text:text()
 end
 
--- Lines: 343 to 347
+-- Lines 343-348
 function CustomSafehouseGuiButtonItem:inside(x, y)
 	if self._hidden then
 		return false
@@ -383,17 +388,17 @@ function CustomSafehouseGuiButtonItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 350 to 352
+-- Lines 350-352
 function CustomSafehouseGuiButtonItem:show()
 	self._select_rect:set_visible(true)
 end
 
--- Lines: 354 to 356
+-- Lines 354-356
 function CustomSafehouseGuiButtonItem:hide()
 	self._select_rect:set_visible(false)
 end
 
--- Lines: 358 to 362
+-- Lines 358-363
 function CustomSafehouseGuiButtonItem:visible()
 	if self._hidden then
 		return false
@@ -402,7 +407,7 @@ function CustomSafehouseGuiButtonItem:visible()
 	return self._select_rect:visible()
 end
 
--- Lines: 365 to 371
+-- Lines 365-371
 function CustomSafehouseGuiButtonItem:refresh()
 	if self._selected then
 		self:show()
@@ -411,13 +416,13 @@ function CustomSafehouseGuiButtonItem:refresh()
 	end
 end
 
--- Lines: 373 to 376
+-- Lines 373-376
 function CustomSafehouseGuiButtonItem:trigger()
 	CustomSafehouseGuiButtonItem.super.trigger(self)
 	self._callback()
 end
 
--- Lines: 378 to 382
+-- Lines 378-382
 function CustomSafehouseGuiButtonItem:set_color(color, selected_color)
 	self._color = color or self._color
 	self._selected_color = selected_color or color or self._selected_color
@@ -425,7 +430,7 @@ function CustomSafehouseGuiButtonItem:set_color(color, selected_color)
 	self:set_selected(self._selected, false)
 end
 
--- Lines: 384 to 394
+-- Lines 384-394
 function CustomSafehouseGuiButtonItem:set_selected(selected, play_sound)
 	CustomSafehouseGuiButtonItem.super.set_selected(self, selected, play_sound)
 
@@ -438,20 +443,21 @@ function CustomSafehouseGuiButtonItem:set_selected(selected, play_sound)
 	end
 end
 
--- Lines: 396 to 397
+-- Lines 396-398
 function CustomSafehouseGuiButtonItem:hidden()
 	return self._hidden
 end
 
--- Lines: 400 to 403
+-- Lines 400-403
 function CustomSafehouseGuiButtonItem:set_hidden(hidden)
 	self._hidden = hidden
 
 	self._panel:set_visible(not hidden)
 end
+
 CustomSafehouseGuiButtonItemWithIcon = CustomSafehouseGuiButtonItemWithIcon or class(CustomSafehouseGuiButtonItem)
 
--- Lines: 409 to 417
+-- Lines 409-417
 function CustomSafehouseGuiButtonItemWithIcon:init(panel, data, x, priority)
 	CustomSafehouseGuiButtonItemWithIcon.super.init(self, panel, data, x, priority)
 
@@ -462,7 +468,7 @@ function CustomSafehouseGuiButtonItemWithIcon:init(panel, data, x, priority)
 	self._btn_text:set_left(self._panel:h())
 end
 
--- Lines: 419 to 429
+-- Lines 419-429
 function CustomSafehouseGuiButtonItemWithIcon:_create_icon(icon)
 	self._icon = self._panel:bitmap({
 		x = 3,
@@ -475,7 +481,7 @@ function CustomSafehouseGuiButtonItemWithIcon:_create_icon(icon)
 	self._icon:set_center_y(self._panel:h() / 2)
 end
 
--- Lines: 431 to 444
+-- Lines 431-444
 function CustomSafehouseGuiButtonItemWithIcon:set_icon(icon)
 	if alive(self._icon) then
 		if icon then
@@ -489,12 +495,12 @@ function CustomSafehouseGuiButtonItemWithIcon:set_icon(icon)
 	end
 end
 
--- Lines: 446 to 447
+-- Lines 446-448
 function CustomSafehouseGuiButtonItemWithIcon:icon()
 	return self._icon
 end
 
--- Lines: 450 to 460
+-- Lines 450-460
 function CustomSafehouseGuiButtonItemWithIcon:set_selected(selected, play_sound)
 	CustomSafehouseGuiButtonItemWithIcon.super.set_selected(self, selected, play_sound)
 
@@ -506,4 +512,3 @@ function CustomSafehouseGuiButtonItemWithIcon:set_selected(selected, play_sound)
 		end
 	end
 end
-

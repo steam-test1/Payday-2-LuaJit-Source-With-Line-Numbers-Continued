@@ -1,9 +1,11 @@
 CharacterTeamElement = CharacterTeamElement or class(MissionElement)
 CharacterTeamElement.SAVE_UNIT_POSITION = false
 CharacterTeamElement.SAVE_UNIT_ROTATION = false
-CharacterTeamElement.LINK_ELEMENTS = {"elements"}
+CharacterTeamElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 7 to 19
+-- Lines 7-19
 function CharacterTeamElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -18,16 +20,16 @@ function CharacterTeamElement:init(unit)
 	table.insert(self._save_values, "use_instigator")
 end
 
--- Lines: 21 to 23
+-- Lines 21-23
 function CharacterTeamElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines: 25 to 26
+-- Lines 25-26
 function CharacterTeamElement:update_editing()
 end
 
--- Lines: 28 to 36
+-- Lines 28-36
 function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -45,7 +47,7 @@ function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 38 to 48
+-- Lines 38-48
 function CharacterTeamElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -63,12 +65,12 @@ function CharacterTeamElement:add_element()
 	end
 end
 
--- Lines: 51 to 53
+-- Lines 51-53
 function CharacterTeamElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 56 to 93
+-- Lines 56-93
 function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -123,4 +125,3 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 		ctrlr = team_combo_box
 	})
 end
-

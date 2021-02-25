@@ -1,22 +1,22 @@
 SyncManager = SyncManager or class()
 
--- Lines: 4 to 7
+-- Lines 4-7
 function SyncManager:init()
 	self._units = {}
 	self._synced_units = {}
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function SyncManager:add_managed_unit(unit_id, script)
 	self._units[unit_id] = script
 end
 
--- Lines: 13 to 14
+-- Lines 13-15
 function SyncManager:get_managed_unit(id)
 	return self._units[id]
 end
 
--- Lines: 17 to 23
+-- Lines 17-23
 function SyncManager:add_synced_outfit_unit(unit_id, type, data_string)
 	self._synced_units[unit_id] = {
 		type = type,
@@ -26,19 +26,19 @@ function SyncManager:add_synced_outfit_unit(unit_id, type, data_string)
 	managers.network:session():send_to_peers_synched("sync_synced_unit_outfit", unit_id, type, data_string)
 end
 
--- Lines: 25 to 27
+-- Lines 25-27
 function SyncManager:remove_synced_outfit_unit(unit_id)
 	self._synced_units[unit_id] = nil
 end
 
--- Lines: 29 to 33
+-- Lines 29-33
 function SyncManager:resync_all()
 	for _, peer in pairs(managers.network:session():peers()) do
 		self:send_all_synced_units_to(peer)
 	end
 end
 
--- Lines: 35 to 51
+-- Lines 35-51
 function SyncManager:send_all_synced_units_to(peer)
 	if type(peer) == "number" then
 		local find_peer = peer
@@ -59,6 +59,7 @@ function SyncManager:send_all_synced_units_to(peer)
 		end
 	end
 end
+
 SyncManager.sync_functions = {
 	weapon = "handle_synced_weapon_blueprint",
 	vault_cash = "handle_synced_vault_cash",
@@ -66,7 +67,7 @@ SyncManager.sync_functions = {
 	mask = "handle_synced_mask_blueprint"
 }
 
--- Lines: 62 to 70
+-- Lines 62-70
 function SyncManager:on_received_synced_outfit(unit_id, type, outfit_string)
 	print("[SyncManager] received synced blueprint", type, outfit_string)
 
@@ -79,7 +80,7 @@ function SyncManager:on_received_synced_outfit(unit_id, type, outfit_string)
 	end
 end
 
--- Lines: 75 to 80
+-- Lines 75-80
 function SyncManager:add_synced_weapon_blueprint(unit_id, factory_id, blueprint)
 	local blueprint_string = managers.weapon_factory:blueprint_to_string(factory_id, blueprint)
 	blueprint_string = factory_id .. " " .. blueprint_string
@@ -88,7 +89,7 @@ function SyncManager:add_synced_weapon_blueprint(unit_id, factory_id, blueprint)
 	print("[SyncManager] added synced weapon:", unit_id, blueprint_string)
 end
 
--- Lines: 82 to 97
+-- Lines 82-97
 function SyncManager:handle_synced_weapon_blueprint(unit_id, data_string)
 	local unit_element = self:get_managed_unit(unit_id)
 
@@ -107,7 +108,7 @@ function SyncManager:handle_synced_weapon_blueprint(unit_id, data_string)
 	end
 end
 
--- Lines: 102 to 106
+-- Lines 102-106
 function SyncManager:add_synced_mask_blueprint(unit_id, mask_id, blueprint)
 	local blueprint_string = string.format("%s %s %s %s", tostring(mask_id), tostring(blueprint.color.id), tostring(blueprint.pattern.id), tostring(blueprint.material.id))
 
@@ -115,7 +116,7 @@ function SyncManager:add_synced_mask_blueprint(unit_id, mask_id, blueprint)
 	print("[SyncManager] added synced mask: ", unit_id, blueprint_string)
 end
 
--- Lines: 108 to 114
+-- Lines 108-114
 function SyncManager:handle_synced_mask_blueprint(unit_id, data_string)
 	local unit_element = self:get_managed_unit(unit_id)
 
@@ -126,20 +127,26 @@ function SyncManager:handle_synced_mask_blueprint(unit_id, data_string)
 	end
 end
 
--- Lines: 116 to 124
+-- Lines 116-125
 function SyncManager:_get_mask_id_and_blueprint(data_string)
 	local data = string.split(data_string or "", " ")
 	local mask_id = data[1]
 	local blueprint = {
-		color = {id = data[2] or "nothing"},
-		pattern = {id = data[3] or "no_color_no_material"},
-		material = {id = data[4] or "plastic"}
+		color = {
+			id = data[2] or "nothing"
+		},
+		pattern = {
+			id = data[3] or "no_color_no_material"
+		},
+		material = {
+			id = data[4] or "plastic"
+		}
 	}
 
 	return mask_id, blueprint
 end
 
--- Lines: 130 to 134
+-- Lines 130-134
 function SyncManager:add_synced_offshore_gui(unit_id, visibility, displayed_cash)
 	local blueprint = string.format("%s %s", tostring(visibility), tostring(displayed_cash))
 
@@ -147,7 +154,7 @@ function SyncManager:add_synced_offshore_gui(unit_id, visibility, displayed_cash
 	print("[SyncManager] added synced offshore: ", unit_id, blueprint)
 end
 
--- Lines: 136 to 143
+-- Lines 136-143
 function SyncManager:handle_synced_offshore_gui(unit_id, data_string)
 	local data = string.split(data_string, " ")
 	local unit_element = self:get_managed_unit(unit_id)
@@ -158,7 +165,7 @@ function SyncManager:handle_synced_offshore_gui(unit_id, data_string)
 	end
 end
 
--- Lines: 148 to 152
+-- Lines 148-152
 function SyncManager:add_synced_vault_cash(unit_id, tier)
 	local blueprint = string.format("%s", tostring(tier))
 
@@ -166,7 +173,7 @@ function SyncManager:add_synced_vault_cash(unit_id, tier)
 	print("[SyncManager] added synced vault: ", unit_id, blueprint)
 end
 
--- Lines: 154 to 160
+-- Lines 154-160
 function SyncManager:handle_synced_vault_cash(unit_id, data_string)
 	local target_tier = tonumber(data_string)
 	local unit_element = self:get_managed_unit(unit_id)
@@ -175,4 +182,3 @@ function SyncManager:handle_synced_vault_cash(unit_id, data_string)
 		unit_element:set_active_tier(target_tier)
 	end
 end
-

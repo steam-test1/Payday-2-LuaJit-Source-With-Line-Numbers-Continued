@@ -2,7 +2,7 @@ CarryUnitElement = CarryUnitElement or class(MissionElement)
 CarryUnitElement.SAVE_UNIT_POSITION = false
 CarryUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 6 to 15
+-- Lines 6-15
 function CarryUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -14,7 +14,7 @@ function CarryUnitElement:init(unit)
 	table.insert(self._save_values, "type_filter")
 end
 
--- Lines: 20 to 32
+-- Lines 20-32
 function CarryUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -31,6 +31,7 @@ function CarryUnitElement:_build_panel(panel, panel_sizer)
 
 	table.insert(operations, "poof")
 	self:_build_value_combobox(panel, panel_sizer, "operation", operations)
-	self:_build_value_combobox(panel, panel_sizer, "type_filter", table.list_add({"none"}, tweak_data.carry:get_carry_ids()))
+	self:_build_value_combobox(panel, panel_sizer, "type_filter", table.list_add({
+		"none"
+	}, tweak_data.carry:get_carry_ids()))
 end
-

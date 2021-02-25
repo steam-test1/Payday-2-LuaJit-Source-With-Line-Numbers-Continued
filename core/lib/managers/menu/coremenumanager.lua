@@ -6,21 +6,21 @@ core:import("CoreMenuRenderer")
 
 Manager = Manager or class()
 
--- Lines: 9 to 13
+-- Lines 9-13
 function Manager:init()
 	managers.menu = managers.menu or self
 	self._registered_menus = {}
 	self._open_menus = {}
 end
 
--- Lines: 15 to 19
+-- Lines 15-19
 function Manager:destroy()
 	for _, menu in ipairs(self._open_menus) do
 		self:close_menu(menu.name)
 	end
 end
 
--- Lines: 21 to 57
+-- Lines 21-57
 function Manager:register_menu(menu)
 	if menu.name and self._registered_menus[menu.name] then
 		return
@@ -59,14 +59,14 @@ function Manager:register_menu(menu)
 	end
 end
 
--- Lines: 59 to 61
+-- Lines 59-62
 function Manager:get_menu(menu_name)
 	local menu = self._registered_menus[menu_name]
 
 	return menu
 end
 
--- Lines: 64 to 98
+-- Lines 64-98
 function Manager:open_menu(menu_name, position, ...)
 	local menu = self._registered_menus[menu_name]
 
@@ -102,7 +102,7 @@ function Manager:open_menu(menu_name, position, ...)
 	end
 end
 
--- Lines: 100 to 119
+-- Lines 100-119
 function Manager:close_menu(menu_name)
 	local menu = nil
 
@@ -125,7 +125,7 @@ function Manager:close_menu(menu_name)
 	end
 end
 
--- Lines: 121 to 137
+-- Lines 121-137
 function Manager:_menu_closed(menu_name)
 	if menu_name then
 		for i, menu in ipairs(self._open_menus) do
@@ -144,11 +144,11 @@ function Manager:_menu_closed(menu_name)
 	end
 end
 
--- Lines: 139 to 140
+-- Lines 139-140
 function Manager:_node_selected(menu_name, node)
 end
 
--- Lines: 142 to 148
+-- Lines 142-148
 function Manager:input_enabled(enabled)
 	self._input_enabled = enabled
 
@@ -157,7 +157,7 @@ function Manager:input_enabled(enabled)
 	end
 end
 
--- Lines: 152 to 177
+-- Lines 150-177
 function Manager:update(t, dt)
 	local active_menu = self._open_menus[#self._open_menus]
 
@@ -173,4 +173,3 @@ function Manager:update(t, dt)
 		menu.renderer:update(t, dt)
 	end
 end
-

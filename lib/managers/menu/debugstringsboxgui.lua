@@ -1,6 +1,6 @@
 DebugStringsBoxGui = DebugStringsBoxGui or class(TextBoxGui)
 
--- Lines: 3 to 22
+-- Lines 3-22
 function DebugStringsBoxGui:init(ws, title, text, content_data, config, file)
 	self._file = file
 	config = config or {}
@@ -8,7 +8,7 @@ function DebugStringsBoxGui:init(ws, title, text, content_data, config, file)
 	config.w = 300
 	local x, y = ws:size()
 	config.x = x - config.w
-	config.y = (y - config.h) - CoreMenuRenderer.Renderer.border_height + 10
+	config.y = y - config.h - CoreMenuRenderer.Renderer.border_height + 10
 	config.no_close_legend = true
 	config.no_scroll_legend = true
 	self._default_font_size = tweak_data.menu.default_font_size
@@ -18,12 +18,12 @@ function DebugStringsBoxGui:init(ws, title, text, content_data, config, file)
 	self:set_layer(10)
 end
 
--- Lines: 26 to 28
+-- Lines 24-28
 function DebugStringsBoxGui:set_layer(layer)
 	DebugStringsBoxGui.super.set_layer(self, layer)
 end
 
--- Lines: 30 to 109
+-- Lines 30-109
 function DebugStringsBoxGui:_create_text_box(ws, title, text, content_data, config)
 	DebugStringsBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 
@@ -109,16 +109,16 @@ function DebugStringsBoxGui:_create_text_box(ws, title, text, content_data, conf
 	self:_set_scroll_indicator()
 end
 
--- Lines: 112 to 113
+-- Lines 111-113
 function DebugStringsBoxGui:mouse_moved(x, y)
 end
 
--- Lines: 115 to 117
+-- Lines 115-117
 function DebugStringsBoxGui:_check_scroll_indicator_states()
 	DebugStringsBoxGui.super._check_scroll_indicator_states(self)
 end
 
--- Lines: 119 to 167
+-- Lines 119-167
 function DebugStringsBoxGui:set_size(x, y)
 	DebugStringsBoxGui.super.set_size(self, x, y)
 
@@ -151,14 +151,13 @@ function DebugStringsBoxGui:set_size(x, y)
 	end
 end
 
--- Lines: 169 to 171
+-- Lines 169-171
 function DebugStringsBoxGui:set_visible(visible)
 	DebugStringsBoxGui.super.set_visible(self, visible)
 end
 
--- Lines: 173 to 176
+-- Lines 173-176
 function DebugStringsBoxGui:close()
 	print("DebugStringsBoxGui:close()")
 	DebugStringsBoxGui.super.close(self)
 end
-

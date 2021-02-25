@@ -9,19 +9,19 @@ SettingsReader = SettingsReader or class()
 SettingsReader.db_type = "input_settings"
 SettingsReader.db_path = "settings/input"
 
--- Lines: 13 to 16
+-- Lines 13-16
 function SettingsReader:init()
 	self._layer_descriptions = {}
 
 	self:_read_settings()
 end
 
--- Lines: 18 to 19
+-- Lines 18-20
 function SettingsReader:layer_descriptions()
 	return self._layer_descriptions
 end
 
--- Lines: 22 to 31
+-- Lines 22-31
 function SettingsReader:_read_settings()
 	if not DB:has(SettingsReader.db_type, SettingsReader.db_path) then
 		return
@@ -33,7 +33,7 @@ function SettingsReader:_read_settings()
 	self:_read_children(xml_node_children)
 end
 
--- Lines: 33 to 43
+-- Lines 33-43
 function SettingsReader:_read_children(nodes)
 	self._layer_descriptions = {}
 	local layer_description_priority = 1
@@ -50,7 +50,7 @@ function SettingsReader:_read_children(nodes)
 	end
 end
 
--- Lines: 45 to 52
+-- Lines 45-52
 function SettingsReader:_read_layer_description_children(nodes, layer_description)
 	for node in nodes do
 		assert(node:name() == "context")
@@ -62,7 +62,7 @@ function SettingsReader:_read_layer_description_children(nodes, layer_descriptio
 	end
 end
 
--- Lines: 54 to 66
+-- Lines 54-66
 function SettingsReader:_read_context_description_children(nodes, context_description)
 	for node in nodes do
 		if node:name() == "input" then
@@ -78,7 +78,7 @@ function SettingsReader:_read_context_description_children(nodes, context_descri
 	end
 end
 
--- Lines: 68 to 75
+-- Lines 68-75
 function SettingsReader:_read_input(node, context_description)
 	local type_name = node:parameter("type")
 	local name = node:parameter("name")
@@ -87,7 +87,7 @@ function SettingsReader:_read_input(node, context_description)
 	context_description:add_input_target_description(input_target_description)
 end
 
--- Lines: 77 to 84
+-- Lines 77-84
 function SettingsReader:_read_layout_descriptions_children(nodes, context_description)
 	for node in nodes do
 		assert(node:name() == "layout")
@@ -99,7 +99,7 @@ function SettingsReader:_read_layout_descriptions_children(nodes, context_descri
 	end
 end
 
--- Lines: 86 to 93
+-- Lines 86-93
 function SettingsReader:_read_layout_description_children(nodes, context_description, layout_description)
 	for node in nodes do
 		assert(node:name() == "device", "Only <device> is allowed as children to <layout>. Encountered '" .. node:name() .. "'")
@@ -111,7 +111,7 @@ function SettingsReader:_read_layout_description_children(nodes, context_descrip
 	end
 end
 
--- Lines: 95 to 100
+-- Lines 95-100
 function SettingsReader:_read_device_layout_description_children(nodes, context_description, device_layout_description)
 	for node in nodes do
 		assert(node:name() == "bind")
@@ -119,7 +119,7 @@ function SettingsReader:_read_device_layout_description_children(nodes, context_
 	end
 end
 
--- Lines: 102 to 119
+-- Lines 102-119
 function SettingsReader:_read_bind(node, context_description, device_layout_description)
 	local axis_name = node:parameter("axis")
 	local input_name = node:parameter("input")
@@ -139,4 +139,3 @@ function SettingsReader:_read_bind(node, context_description, device_layout_desc
 		end
 	end
 end
-

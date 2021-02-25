@@ -2,19 +2,19 @@ require("lib/managers/menu/ContractBoxGui")
 
 SkirmishContractBoxGui = SkirmishContractBoxGui or class(ContractBoxGui)
 
--- Lines: 5 to 7
+-- Lines 5-8
 function SkirmishContractBoxGui:_is_weekly()
 	local lobby_data = managers.network.matchmake:get_lobby_data()
 
 	return tonumber(lobby_data.skirmish) == SkirmishManager.LOBBY_WEEKLY
 end
 
--- Lines: 10 to 11
+-- Lines 10-12
 function SkirmishContractBoxGui:_crewpage_text()
 	return managers.localization:to_upper_text(self:_is_weekly() and "menu_weekly_skirmish" or "menu_skirmish")
 end
 
--- Lines: 14 to 164
+-- Lines 14-164
 function SkirmishContractBoxGui:create_contract_box()
 	if not managers.network:session() then
 		return
@@ -74,8 +74,12 @@ function SkirmishContractBoxGui:create_contract_box()
 		local contract_visuals = job_data.contract_visuals or {}
 		local xp_min = contract_visuals.min_mission_xp and contract_visuals.min_mission_xp or 0
 		local xp_max = contract_visuals.max_mission_xp and contract_visuals.max_mission_xp or 0
-		local total_xp_min = managers.experience:get_contract_xp_by_stars(job_id, job_stars, difficulty_stars, job_data.professional, #job_chain, {mission_xp = xp_min})
-		local total_xp_max = managers.experience:get_contract_xp_by_stars(job_id, job_stars, difficulty_stars, job_data.professional, #job_chain, {mission_xp = xp_max})
+		local total_xp_min = managers.experience:get_contract_xp_by_stars(job_id, job_stars, difficulty_stars, job_data.professional, #job_chain, {
+			mission_xp = xp_min
+		})
+		local total_xp_max = managers.experience:get_contract_xp_by_stars(job_id, job_stars, difficulty_stars, job_data.professional, #job_chain, {
+			mission_xp = xp_max
+		})
 		local xp_text_min = managers.money:add_decimal_marks_to_string(tostring(math.round(total_xp_min)))
 		local xp_text_max = managers.money:add_decimal_marks_to_string(tostring(math.round(total_xp_max)))
 		local job_xp_text = total_xp_min < total_xp_max and managers.localization:text("menu_number_range", {
@@ -88,7 +92,7 @@ function SkirmishContractBoxGui:create_contract_box()
 		local lines = {}
 		local heading_max_width = 0
 
-		-- Lines: 74 to 97
+		-- Lines 74-97
 		local function add_line(heading_text, value_text)
 			local heading = FineText:new(self._contract_panel, {
 				text = heading_text,
@@ -182,14 +186,16 @@ function SkirmishContractBoxGui:create_contract_box()
 		wfs:set_world_rightbottom(self._contract_panel:world_right() - 5, self._contract_panel:world_bottom())
 	end
 
-	BoxGuiObject:new(self._contract_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._contract_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
-	for i = 1, tweak_data.max_players, 1 do
+	for i = 1, tweak_data.max_players do
 		local peer = managers.network:session():peer(i)
 
 		if peer then
@@ -204,4 +210,3 @@ function SkirmishContractBoxGui:create_contract_box()
 
 	self._enabled = true
 end
-

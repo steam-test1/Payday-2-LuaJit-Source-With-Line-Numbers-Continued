@@ -1,6 +1,6 @@
 CopLogicGuard = class(CopLogicIdle)
 
--- Lines: 7 to 63
+-- Lines 7-63
 function CopLogicGuard.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -54,10 +54,12 @@ function CopLogicGuard.enter(data, new_logic_name, enter_params)
 		return
 	end
 
-	data.unit:brain():set_attention_settings({cbt = true})
+	data.unit:brain():set_attention_settings({
+		cbt = true
+	})
 end
 
--- Lines: 67 to 93
+-- Lines 67-93
 function CopLogicGuard.update(data)
 	local my_data = data.internal_data
 	local guard_obj = my_data.guard_obj
@@ -84,7 +86,7 @@ function CopLogicGuard.update(data)
 	end
 end
 
--- Lines: 98 to 105
+-- Lines 97-105
 function CopLogicGuard.action_complete_clbk(data, action)
 	local action_type = action:type()
 
@@ -95,12 +97,12 @@ function CopLogicGuard.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 109 to 111
+-- Lines 109-111
 function CopLogicGuard.on_new_objective(data, old_objective)
 	CopLogicIdle.on_new_objective(data, old_objective)
 end
 
--- Lines: 115 to 136
+-- Lines 115-136
 function CopLogicGuard.on_area_safety(data, nav_seg, safe, event)
 	local objective = data.objective
 
@@ -122,4 +124,3 @@ function CopLogicGuard.on_area_safety(data, nav_seg, safe, event)
 		CopLogicBase._exit(data.unit, "attack")
 	end
 end
-

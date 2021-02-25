@@ -2,16 +2,16 @@ core:import("CoreWorldDefinition")
 
 WorldDefinition = WorldDefinition or class(CoreWorldDefinition.WorldDefinition)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function WorldDefinition:init(...)
 	WorldDefinition.super.init(self, ...)
 end
 
--- Lines: 10 to 11
+-- Lines 9-11
 function WorldDefinition:_project_assign_unit_data(unit, data)
 end
 
--- Lines: 13 to 19
+-- Lines 13-20
 function WorldDefinition:get_cover_data()
 	local path = self:world_dir() .. "cover_data"
 
@@ -23,4 +23,3 @@ function WorldDefinition:get_cover_data()
 end
 
 CoreClass.override_class(CoreWorldDefinition.WorldDefinition, WorldDefinition)
-

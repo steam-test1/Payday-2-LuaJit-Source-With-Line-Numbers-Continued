@@ -4,11 +4,11 @@ core:import("CoreMenuNodeGui")
 Renderer = Renderer or class()
 Renderer.border_height = 44
 
--- Lines: 8 to 9
+-- Lines 8-9
 function Renderer:preload()
 end
 
--- Lines: 11 to 43
+-- Lines 11-43
 function Renderer:init(logic, parameters)
 	parameters = parameters or {}
 	self._logic = logic
@@ -40,7 +40,9 @@ function Renderer:init(logic, parameters)
 	self._fullscreen_ws:hide()
 
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
-	self._main_panel = self.ws:panel():panel({layer = self._base_layer})
+	self._main_panel = self.ws:panel():panel({
+		layer = self._base_layer
+	})
 	self.safe_rect_panel = self.ws:panel():panel({
 		w = safe_rect_pixels.width,
 		h = safe_rect_pixels.height,
@@ -48,12 +50,12 @@ function Renderer:init(logic, parameters)
 	})
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function Renderer:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines: 49 to 57
+-- Lines 49-57
 function Renderer:open(...)
 	managers.gui_data:layout_workspace(self.ws)
 	managers.gui_data:layout_fullscreen_workspace(self._fullscreen_ws)
@@ -66,12 +68,12 @@ function Renderer:open(...)
 	self._fullscreen_ws:show()
 end
 
--- Lines: 59 to 60
+-- Lines 59-61
 function Renderer:is_open()
 	return self._open
 end
 
--- Lines: 64 to 99
+-- Lines 64-99
 function Renderer:show_node(node, parameters)
 	local layer = self._base_layer
 	local previous_node_gui = self:active_node_gui()
@@ -83,7 +85,12 @@ function Renderer:show_node(node, parameters)
 	end
 
 	local new_node_gui = nil
-	new_node_gui = parameters.node_gui_class and parameters.node_gui_class:new(node, layer + 1, parameters) or CoreMenuNodeGui.NodeGui:new(node, layer + 1, parameters)
+
+	if parameters.node_gui_class then
+		new_node_gui = parameters.node_gui_class:new(node, layer + 1, parameters)
+	else
+		new_node_gui = CoreMenuNodeGui.NodeGui:new(node, layer + 1, parameters)
+	end
 
 	table.insert(self._node_gui_stack, new_node_gui)
 
@@ -92,7 +99,7 @@ function Renderer:show_node(node, parameters)
 	end
 end
 
--- Lines: 101 to 110
+-- Lines 101-110
 function Renderer:refresh_node_stack(parameters)
 	for i, node_gui in ipairs(self._node_gui_stack) do
 		node_gui:refresh_gui(node_gui.node, parameters)
@@ -105,7 +112,7 @@ function Renderer:refresh_node_stack(parameters)
 	end
 end
 
--- Lines: 112 to 116
+-- Lines 112-116
 function Renderer:refresh_node(node, parameters)
 	local layer = self._base_layer
 	local node_gui = self:active_node_gui()
@@ -113,7 +120,7 @@ function Renderer:refresh_node(node, parameters)
 	node_gui:refresh_gui(node, parameters)
 end
 
--- Lines: 118 to 123
+-- Lines 118-123
 function Renderer:highlight_item(item, mouse_over)
 	local active_node_gui = self:active_node_gui()
 
@@ -122,7 +129,7 @@ function Renderer:highlight_item(item, mouse_over)
 	end
 end
 
--- Lines: 125 to 130
+-- Lines 125-130
 function Renderer:fade_item(item)
 	local active_node_gui = self:active_node_gui()
 
@@ -131,7 +138,7 @@ function Renderer:fade_item(item)
 	end
 end
 
--- Lines: 132 to 138
+-- Lines 132-138
 function Renderer:trigger_item(item)
 	local node_gui = self:active_node_gui()
 
@@ -140,7 +147,7 @@ function Renderer:trigger_item(item)
 	end
 end
 
--- Lines: 140 to 158
+-- Lines 140-158
 function Renderer:navigate_back()
 	local active_node_gui = self:active_node_gui()
 
@@ -152,7 +159,7 @@ function Renderer:navigate_back()
 	end
 end
 
--- Lines: 160 to 167
+-- Lines 160-167
 function Renderer:node_item_dirty(node, item)
 	local node_name = node:parameters().name
 
@@ -163,7 +170,7 @@ function Renderer:node_item_dirty(node, item)
 	end
 end
 
--- Lines: 169 to 174
+-- Lines 169-174
 function Renderer:update(t, dt)
 	self:update_input_timer(dt)
 
@@ -172,7 +179,7 @@ function Renderer:update(t, dt)
 	end
 end
 
--- Lines: 176 to 183
+-- Lines 176-183
 function Renderer:update_input_timer(dt)
 	if self._timer > 0 then
 		self._timer = self._timer - dt
@@ -183,19 +190,19 @@ function Renderer:update_input_timer(dt)
 	end
 end
 
--- Lines: 185 to 186
+-- Lines 185-187
 function Renderer:active_node_gui()
 	return self._node_gui_stack[#self._node_gui_stack]
 end
 
--- Lines: 189 to 192
+-- Lines 189-192
 function Renderer:disable_input(time)
 	self._timer = time
 
 	self._logic:accept_input(false)
 end
 
--- Lines: 194 to 208
+-- Lines 194-208
 function Renderer:close()
 	self._fullscreen_ws:hide()
 
@@ -218,7 +225,7 @@ function Renderer:close()
 	self._logic:renderer_closed()
 end
 
--- Lines: 212 to 217
+-- Lines 210-217
 function Renderer:hide()
 	local active_node_gui = self:active_node_gui()
 
@@ -227,7 +234,7 @@ function Renderer:hide()
 	end
 end
 
--- Lines: 221 to 226
+-- Lines 219-226
 function Renderer:show()
 	local active_node_gui = self:active_node_gui()
 
@@ -236,7 +243,7 @@ function Renderer:show()
 	end
 end
 
--- Lines: 228 to 234
+-- Lines 228-234
 function Renderer:_layout_main_panel()
 	local scaled_size = self:_scaled_size()
 
@@ -247,7 +254,7 @@ function Renderer:_layout_main_panel()
 	self.safe_rect_panel:set_shape(safe_rect.x, safe_rect.y, safe_rect.width, safe_rect.height)
 end
 
--- Lines: 236 to 244
+-- Lines 236-244
 function Renderer:resolution_changed()
 	local res = RenderSettings.resolution
 
@@ -260,10 +267,9 @@ function Renderer:resolution_changed()
 	end
 end
 
--- Lines: 246 to 248
+-- Lines 246-249
 function Renderer:selected_node()
 	local stack = self._node_gui_stack
 
 	return stack[#stack]
 end
-

@@ -1,7 +1,7 @@
 BaseNetworkHandler = BaseNetworkHandler or class()
 BaseNetworkHandler._gamestate_filter = deep_clone(GameStateFilters)
 
--- Lines: 7 to 13
+-- Lines 7-14
 function BaseNetworkHandler._verify_in_session()
 	local session = managers.network:session()
 
@@ -13,7 +13,7 @@ function BaseNetworkHandler._verify_in_session()
 	return session
 end
 
--- Lines: 18 to 25
+-- Lines 18-26
 function BaseNetworkHandler._verify_in_server_session()
 	local session = managers.network:session()
 	session = session and session:is_host()
@@ -26,7 +26,7 @@ function BaseNetworkHandler._verify_in_server_session()
 	return session
 end
 
--- Lines: 30 to 37
+-- Lines 30-38
 function BaseNetworkHandler._verify_in_client_session()
 	local session = managers.network:session()
 	session = session and session:is_client()
@@ -39,13 +39,17 @@ function BaseNetworkHandler._verify_in_client_session()
 	return session
 end
 
--- Lines: 42 to 58
+-- Lines 42-58
 function BaseNetworkHandler._verify_sender(rpc)
 	local session = managers.network:session()
 	local peer = nil
 
 	if session then
-		peer = rpc:protocol_at_index(0) == "STEAM" and session:peer_by_user_id(rpc:ip_at_index(0)) or session:peer_by_ip(rpc:ip_at_index(0))
+		if rpc:protocol_at_index(0) == "STEAM" then
+			peer = session:peer_by_user_id(rpc:ip_at_index(0))
+		else
+			peer = session:peer_by_ip(rpc:ip_at_index(0))
+		end
 
 		if peer then
 			return peer
@@ -56,17 +60,17 @@ function BaseNetworkHandler._verify_sender(rpc)
 	Application:stack_dump()
 end
 
--- Lines: 62 to 63
+-- Lines 62-64
 function BaseNetworkHandler._verify_character_and_sender(unit, rpc)
 	return BaseNetworkHandler._verify_sender(rpc) and BaseNetworkHandler._verify_character(unit)
 end
 
--- Lines: 68 to 69
+-- Lines 68-70
 function BaseNetworkHandler._verify_character(unit)
 	return alive(unit) and not unit:character_damage():dead()
 end
 
--- Lines: 74 to 81
+-- Lines 74-81
 function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	if game_state_machine:verify_game_state(acceptable_gamestates) then
 		return true
@@ -76,7 +80,7 @@ function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	Application:stack_dump()
 end
 
--- Lines: 85 to 123
+-- Lines 85-123
 function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	if self._flushing_unit_too_early_packets then
 		return
@@ -123,7 +127,7 @@ function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	self._flushing_unit_too_early_packets = nil
 end
 
--- Lines: 127 to 151
+-- Lines 127-152
 function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, unit_param_index, ...)
 	if self._flushing_unit_too_early_packets then
 		return
@@ -140,7 +144,9 @@ function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, uni
 	local data = {
 		unit_param_index = unit_param_index,
 		fun_name = fun_name,
-		params = {...}
+		params = {
+			...
+		}
 	}
 	local unit_id = tonumber(unit_id_str)
 	self._unit_too_early_queue[unit_id] = self._unit_too_early_queue[unit_id] or {}
@@ -150,4 +156,3 @@ function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, uni
 
 	return true
 end
-

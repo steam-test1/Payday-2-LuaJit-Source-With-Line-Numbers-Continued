@@ -1,6 +1,6 @@
 SmallLootBase = SmallLootBase or class(UnitBase)
 
--- Lines: 5 to 10
+-- Lines 5-10
 function SmallLootBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -9,11 +9,11 @@ function SmallLootBase:init(unit)
 	self:_setup()
 end
 
--- Lines: 17 to 18
+-- Lines 14-18
 function SmallLootBase:_setup()
 end
 
--- Lines: 22 to 38
+-- Lines 22-38
 function SmallLootBase:take(unit)
 	if self._empty then
 		return
@@ -33,13 +33,13 @@ function SmallLootBase:take(unit)
 	end
 end
 
--- Lines: 40 to 44
+-- Lines 40-44
 function SmallLootBase:taken(small_loot_multiplier_upgrade_level, peer_id)
 	managers.loot:secure_small_loot(self.small_loot, small_loot_multiplier_upgrade_level, peer_id)
 	self:_set_empty()
 end
 
--- Lines: 46 to 52
+-- Lines 46-52
 function SmallLootBase:_set_empty()
 	self._empty = true
 
@@ -48,7 +48,6 @@ function SmallLootBase:_set_empty()
 	end
 end
 
--- Lines: 57 to 58
+-- Lines 56-58
 function SmallLootBase:destroy()
 end
-

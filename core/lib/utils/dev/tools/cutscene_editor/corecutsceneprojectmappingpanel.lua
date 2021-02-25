@@ -3,7 +3,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneEditorProject")
 
 CoreCutsceneProjectMappingPanel = CoreCutsceneProjectMappingPanel or class(CoreTableEditorPanel)
 
--- Lines: 6 to 13
+-- Lines 6-13
 function CoreCutsceneProjectMappingPanel:init(parent)
 	self.super.init(self, parent)
 	self:freeze()
@@ -12,18 +12,18 @@ function CoreCutsceneProjectMappingPanel:init(parent)
 	self:thaw()
 end
 
--- Lines: 15 to 16
+-- Lines 15-17
 function CoreCutsceneProjectMappingPanel:projects()
 	return managers.database:list_entries_of_type("cutscene_project")
 end
 
--- Lines: 19 to 30
+-- Lines 19-31
 function CoreCutsceneProjectMappingPanel:mappings()
 	local mappings = {}
 	local list_ctrl = self.__list_ctrl
 	local row_count = list_ctrl:item_count()
 
-	for row = 0, row_count - 1, 1 do
+	for row = 0, row_count - 1 do
 		local project = list_ctrl:get_item(row, 0)
 		local output = list_ctrl:get_item(row, 1)
 		mappings[project] = output
@@ -32,7 +32,7 @@ function CoreCutsceneProjectMappingPanel:mappings()
 	return mappings
 end
 
--- Lines: 33 to 47
+-- Lines 33-47
 function CoreCutsceneProjectMappingPanel:set_mappings(mappings, project_sort_func)
 	self:freeze()
 	self:clear()
@@ -50,7 +50,7 @@ function CoreCutsceneProjectMappingPanel:set_mappings(mappings, project_sort_fun
 	self:thaw()
 end
 
--- Lines: 49 to 67
+-- Lines 49-68
 function CoreCutsceneProjectMappingPanel:_sizer_with_editable_fields(parent)
 	local sizer = EWS:BoxSizer("VERTICAL")
 	local project_enabled = self:selected_item() ~= nil and not table.empty(self:projects())
@@ -72,7 +72,7 @@ function CoreCutsceneProjectMappingPanel:_sizer_with_editable_fields(parent)
 	return sizer
 end
 
--- Lines: 70 to 89
+-- Lines 70-90
 function CoreCutsceneProjectMappingPanel:_create_project_dropdown(parent)
 	local value = self:selected_item_value("Project")
 	local control = EWS:ComboBox(parent, "", "", "CB_DROPDOWN,CB_READONLY,CB_SORT")
@@ -98,9 +98,8 @@ function CoreCutsceneProjectMappingPanel:_create_project_dropdown(parent)
 	return control
 end
 
--- Lines: 92 to 95
+-- Lines 92-95
 function CoreCutsceneProjectMappingPanel:_refresh_buttons_panel()
 	self.super._refresh_buttons_panel(self)
 	self.__add_button:set_enabled(not table.empty(self:projects()))
 end
-

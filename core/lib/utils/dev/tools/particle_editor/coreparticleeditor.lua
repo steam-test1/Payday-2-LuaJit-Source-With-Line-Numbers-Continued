@@ -7,7 +7,7 @@ require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditorSimulators")
 require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditorVisualizers")
 require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditorPanel")
 
--- Lines: 11 to 18
+-- Lines 11-18
 function collect_members(cls, m)
 	for funcname, funcobj in pairs(cls) do
 		if funcname:find("create_") then
@@ -17,7 +17,7 @@ function collect_members(cls, m)
 	end
 end
 
--- Lines: 20 to 27
+-- Lines 20-27
 function collect_member_names(members, member_names)
 	for k, v in pairs(members) do
 		local vi = v()
@@ -53,7 +53,7 @@ collect_member_names(stack_members.visualizer, stack_member_names.visualizer)
 
 CoreParticleEditor = CoreParticleEditor or class()
 
--- Lines: 41 to 53
+-- Lines 41-53
 function CoreParticleEditor:init()
 	if managers.editor then
 		managers.editor:set_listener_enabled(true)
@@ -70,21 +70,21 @@ function CoreParticleEditor:init()
 	CoreEWS.check_news(self._main_frame, "particle_editor", true)
 end
 
--- Lines: 55 to 103
+-- Lines 55-103
 function CoreParticleEditor:start_dialog()
 	local dialog = EWS:Dialog(self._main_frame, "Tsar Bomba Particle Editor : Choose...", "", Vector3(-1, -1, 0), Vector3(400, 400, 0), "DEFAULT_DIALOG_STYLE")
 
-	-- Lines: 58 to 60
+	-- Lines 58-60
 	local function on_new(dialog)
 		dialog:end_modal("NEW")
 	end
 
-	-- Lines: 62 to 64
+	-- Lines 62-64
 	local function on_empty_new(dialog)
 		dialog:end_modal("EMPTY_NEW")
 	end
 
-	-- Lines: 66 to 68
+	-- Lines 66-68
 	local function on_load(dialog)
 		dialog:end_modal("LOAD")
 	end
@@ -125,21 +125,21 @@ function CoreParticleEditor:start_dialog()
 	end
 end
 
--- Lines: 105 to 154
+-- Lines 105-154
 function CoreParticleEditor:new_dialog()
 	local dialog = EWS:Dialog(self._main_frame, "Create New Effect", "", Vector3(-1, -1, 0), Vector3(300, 400, 0), "DEFAULT_DIALOG_STYLE")
 
-	-- Lines: 108 to 110
+	-- Lines 108-110
 	local function on_new(dialog)
 		dialog:end_modal("NEW")
 	end
 
-	-- Lines: 112 to 114
+	-- Lines 112-114
 	local function on_create(dialog)
 		dialog:end_modal("CREATE")
 	end
 
-	-- Lines: 116 to 122
+	-- Lines 116-122
 	local function on_select_type(combo_desc)
 		local combo = combo_desc.combo
 		local desc_ctrl = combo_desc.desc
@@ -190,7 +190,7 @@ function CoreParticleEditor:new_dialog()
 	end
 end
 
--- Lines: 156 to 259
+-- Lines 156-259
 function CoreParticleEditor:create_main_frame()
 	self._main_frame = EWS:Frame("Tsar Bomba Particle Editor", Vector3(-1, -1, -1), Vector3(1000, 800, -1), "DEFAULT_FRAME_STYLE,FRAME_FLOAT_ON_PARENT", Global.frame)
 	local menu_bar = EWS:MenuBar()
@@ -295,7 +295,7 @@ function CoreParticleEditor:create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 261 to 265
+-- Lines 261-265
 function CoreParticleEditor:on_undo()
 	local cur_effect = self:current_effect()
 
@@ -304,7 +304,7 @@ function CoreParticleEditor:on_undo()
 	end
 end
 
--- Lines: 267 to 326
+-- Lines 267-326
 function CoreParticleEditor:on_batch_all_remove_update_render()
 	local ret = EWS:message_box(self._main_frame, "You are about to batch all effects of project database and remove update_render\nfor atoms that do not have a visualizer with screen_aligned set.\nAre you sure you want to continue?", "Are you sure you wish to continue?", "YES_NO", Vector3(-1, -1, 0))
 
@@ -353,7 +353,7 @@ function CoreParticleEditor:on_batch_all_remove_update_render()
 	end
 end
 
--- Lines: 328 to 349
+-- Lines 328-349
 function CoreParticleEditor:on_batch_all_load_unload()
 	local ret = EWS:message_box(self._main_frame, "You are about to batch all effects of project database and load and unload them.\nAre you sure you want to continue?", "Are you sure you wish to continue?", "YES_NO", Vector3(-1, -1, 0))
 
@@ -382,7 +382,7 @@ function CoreParticleEditor:on_batch_all_load_unload()
 	cat_debug("debug", "Done!")
 end
 
--- Lines: 351 to 355
+-- Lines 351-355
 function CoreParticleEditor:on_redo()
 	local cur_effect = self:current_effect()
 
@@ -391,7 +391,7 @@ function CoreParticleEditor:on_redo()
 	end
 end
 
--- Lines: 357 to 375
+-- Lines 357-375
 function CoreParticleEditor:on_effect_changed(arg, event)
 	if event:get_id() ~= "EFFECTS_NOTEBOOK" then
 		return
@@ -419,7 +419,7 @@ function CoreParticleEditor:on_effect_changed(arg, event)
 	event:skip()
 end
 
--- Lines: 377 to 381
+-- Lines 377-381
 function CoreParticleEditor:on_play()
 	local cur_effect = self:current_effect()
 
@@ -428,7 +428,7 @@ function CoreParticleEditor:on_play()
 	end
 end
 
--- Lines: 383 to 387
+-- Lines 383-387
 function CoreParticleEditor:on_play_lowest()
 	local cur_effect = self:current_effect()
 
@@ -437,7 +437,7 @@ function CoreParticleEditor:on_play_lowest()
 	end
 end
 
--- Lines: 389 to 393
+-- Lines 389-393
 function CoreParticleEditor:on_play_highest()
 	local cur_effect = self:current_effect()
 
@@ -446,7 +446,7 @@ function CoreParticleEditor:on_play_highest()
 	end
 end
 
--- Lines: 395 to 403
+-- Lines 395-403
 function CoreParticleEditor:on_debug_draw()
 	local b = "true"
 
@@ -457,12 +457,12 @@ function CoreParticleEditor:on_debug_draw()
 	Application:console_command("set show_tngeffects " .. b)
 end
 
--- Lines: 405 to 407
+-- Lines 405-407
 function CoreParticleEditor:on_effect_stats()
 	Application:console_command("stats tngeffects")
 end
 
--- Lines: 409 to 412
+-- Lines 409-412
 function CoreParticleEditor:on_show_stack_overview()
 	local cur_effect = self:current_effect()
 
@@ -471,7 +471,7 @@ function CoreParticleEditor:on_show_stack_overview()
 	end
 end
 
--- Lines: 414 to 419
+-- Lines 414-419
 function CoreParticleEditor:on_automove_gizmo_no_move()
 	self._gizmo_menu:set_checked("PARENT_JUMP", false)
 	self._gizmo_menu:set_checked("PARENT_SMOOTH", false)
@@ -480,7 +480,7 @@ function CoreParticleEditor:on_automove_gizmo_no_move()
 	self._gizmo_movement = "NO_MOVE"
 end
 
--- Lines: 421 to 428
+-- Lines 421-428
 function CoreParticleEditor:on_automove_gizmo_jump()
 	self._gizmo_menu:set_checked("PARENT_NO_MOVE", false)
 	self._gizmo_menu:set_checked("PARENT_SMOOTH", false)
@@ -491,7 +491,7 @@ function CoreParticleEditor:on_automove_gizmo_jump()
 	self._gizmo_accum = 0
 end
 
--- Lines: 430 to 437
+-- Lines 430-437
 function CoreParticleEditor:on_automove_gizmo_smooth()
 	self._gizmo_menu:set_checked("PARENT_NO_MOVE", false)
 	self._gizmo_menu:set_checked("PARENT_JUMP", false)
@@ -502,7 +502,7 @@ function CoreParticleEditor:on_automove_gizmo_smooth()
 	self._gizmo_accum = 0
 end
 
--- Lines: 439 to 446
+-- Lines 439-446
 function CoreParticleEditor:on_automove_gizmo_circle()
 	self._gizmo_menu:set_checked("PARENT_NO_MOVE", false)
 	self._gizmo_menu:set_checked("PARENT_SMOOTH", false)
@@ -513,7 +513,7 @@ function CoreParticleEditor:on_automove_gizmo_circle()
 	self._gizmo_accum = 0
 end
 
--- Lines: 449 to 454
+-- Lines 449-454
 function CoreParticleEditor:on_move_gizmo_to_origo()
 	local gizmo = self:effect_gizmo()
 
@@ -521,7 +521,7 @@ function CoreParticleEditor:on_move_gizmo_to_origo()
 	gizmo:set_rotation(Rotation())
 end
 
--- Lines: 456 to 462
+-- Lines 456-462
 function CoreParticleEditor:on_move_gizmo_to_camera()
 	local gizmo = self:effect_gizmo()
 	local camera_rot = Application:last_camera_rotation()
@@ -530,7 +530,7 @@ function CoreParticleEditor:on_move_gizmo_to_camera()
 	gizmo:set_position(camera_pos + camera_rot:y() * 400)
 end
 
--- Lines: 464 to 472
+-- Lines 464-472
 function CoreParticleEditor:on_move_gizmo_to_player()
 	local gizmo = self:effect_gizmo()
 	local pos = gizmo:position()
@@ -539,19 +539,19 @@ function CoreParticleEditor:on_move_gizmo_to_player()
 	gizmo:set_position(pos)
 end
 
--- Lines: 475 to 478
+-- Lines 475-478
 function CoreParticleEditor:on_set_gizmo_rotation(rot)
 	local gizmo = self:effect_gizmo()
 
 	self:effect_gizmo():set_rotation(rot)
 end
 
--- Lines: 480 to 482
+-- Lines 480-482
 function CoreParticleEditor:on_reset_gizmo_rotation()
 	self:effect_gizmo():set_rotation(Rotation())
 end
 
--- Lines: 484 to 508
+-- Lines 484-509
 function CoreParticleEditor:create_top_bar(parent)
 	local panel = EWS:Panel(parent, "", "")
 	local play_button = EWS:Button(panel, "Play", "", "BU_EXACTFIT")
@@ -584,7 +584,7 @@ function CoreParticleEditor:create_top_bar(parent)
 	return panel
 end
 
--- Lines: 512 to 519
+-- Lines 512-520
 function CoreParticleEditor:effect_gizmo()
 	if not self._effect_gizmo or not alive(self._effect_gizmo) then
 		self._effect_gizmo = World:spawn_unit(Idstring("core/units/effect_gizmo/effect_gizmo"), Vector3(0, 300, 100), Rotation())
@@ -597,7 +597,7 @@ function CoreParticleEditor:effect_gizmo()
 	return self._effect_gizmo
 end
 
--- Lines: 522 to 551
+-- Lines 522-551
 function CoreParticleEditor:update(t, dt)
 	local cur_effect = self:current_effect()
 
@@ -607,7 +607,7 @@ function CoreParticleEditor:update(t, dt)
 
 	if self._gizmo_movement == "SMOOTH" then
 		local gizmo = self:effect_gizmo()
-		self._gizmo_accum = self._gizmo_accum + (dt * 360) / 4
+		self._gizmo_accum = self._gizmo_accum + dt * 360 / 4
 		local a = self._gizmo_accum
 		local r = 500
 
@@ -622,7 +622,7 @@ function CoreParticleEditor:update(t, dt)
 		gizmo:set_position(self._gizmo_anchor + Vector3(100 * s, 0, 0))
 	elseif self._gizmo_movement == "CIRCLE" then
 		local gizmo = self:effect_gizmo()
-		self._gizmo_accum = self._gizmo_accum + (dt * 360) / 16
+		self._gizmo_accum = self._gizmo_accum + dt * 360 / 16
 		local a = self._gizmo_accum
 		local r = 500
 
@@ -631,11 +631,11 @@ function CoreParticleEditor:update(t, dt)
 	end
 end
 
--- Lines: 553 to 554
+-- Lines 553-554
 function CoreParticleEditor:set_position(pos)
 end
 
--- Lines: 556 to 561
+-- Lines 556-561
 function CoreParticleEditor:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -644,12 +644,12 @@ function CoreParticleEditor:destroy()
 	end
 end
 
--- Lines: 563 to 565
+-- Lines 563-565
 function CoreParticleEditor:close()
 	self._main_frame:destroy()
 end
 
--- Lines: 567 to 575
+-- Lines 567-575
 function CoreParticleEditor:on_close_effect()
 	local curi = self:current_effect_index()
 
@@ -665,7 +665,7 @@ function CoreParticleEditor:on_close_effect()
 	self:remove_gizmo()
 end
 
--- Lines: 578 to 589
+-- Lines 578-589
 function CoreParticleEditor:on_close()
 	for _, e in ipairs(self._effects) do
 		if not e:close() then
@@ -681,7 +681,7 @@ function CoreParticleEditor:on_close()
 	end
 end
 
--- Lines: 591 to 596
+-- Lines 591-596
 function CoreParticleEditor:remove_gizmo()
 	if alive(self._effect_gizmo) then
 		managers.editor:remove_special_unit(self._effect_gizmo)
@@ -689,7 +689,7 @@ function CoreParticleEditor:remove_gizmo()
 	end
 end
 
--- Lines: 598 to 613
+-- Lines 598-613
 function CoreParticleEditor:add_effect(effect)
 	self._main_frame:freeze()
 
@@ -710,7 +710,7 @@ function CoreParticleEditor:add_effect(effect)
 	self._main_frame:thaw()
 end
 
--- Lines: 615 to 619
+-- Lines 615-620
 function CoreParticleEditor:current_effect()
 	local i = self:current_effect_index()
 
@@ -721,7 +721,7 @@ function CoreParticleEditor:current_effect()
 	return self._effects[i]
 end
 
--- Lines: 622 to 629
+-- Lines 622-630
 function CoreParticleEditor:current_effect_index()
 	local page = self._effects_notebook:get_current_page()
 
@@ -734,7 +734,7 @@ function CoreParticleEditor:current_effect_index()
 	return -1
 end
 
--- Lines: 632 to 639
+-- Lines 632-640
 function CoreParticleEditor:effect_for_page(page)
 	for _, e in ipairs(self._effects) do
 		if e:panel() == page then
@@ -745,7 +745,7 @@ function CoreParticleEditor:effect_for_page(page)
 	return nil
 end
 
--- Lines: 642 to 650
+-- Lines 642-650
 function CoreParticleEditor:set_page_name(page, name)
 	local i = 0
 
@@ -758,12 +758,12 @@ function CoreParticleEditor:set_page_name(page, name)
 	end
 end
 
--- Lines: 652 to 654
+-- Lines 652-654
 function CoreParticleEditor:on_new()
 	self:new_dialog()
 end
 
--- Lines: 656 to 670
+-- Lines 656-670
 function CoreParticleEditor:on_open()
 	local f = managers.database:open_file_dialog(self._main_frame, "*.effect", self._last_used_dir)
 
@@ -780,7 +780,7 @@ function CoreParticleEditor:on_open()
 	self:add_effect(effect)
 end
 
--- Lines: 672 to 675
+-- Lines 672-675
 function CoreParticleEditor:on_save()
 	local cur = self:current_effect()
 
@@ -789,7 +789,7 @@ function CoreParticleEditor:on_save()
 	end
 end
 
--- Lines: 677 to 680
+-- Lines 677-680
 function CoreParticleEditor:on_save_as()
 	local cur = self:current_effect()
 
@@ -797,4 +797,3 @@ function CoreParticleEditor:on_save_as()
 		cur:on_save_as()
 	end
 end
-

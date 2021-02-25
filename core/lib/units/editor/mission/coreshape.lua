@@ -3,12 +3,12 @@ core:import("CoreShapeManager")
 CoreShapeUnitElement = CoreShapeUnitElement or class(MissionElement)
 ShapeUnitElement = ShapeUnitElement or class(CoreShapeUnitElement)
 
--- Lines: 7 to 9
+-- Lines 7-9
 function ShapeUnitElement:init(...)
 	CoreShapeUnitElement.init(self, ...)
 end
 
--- Lines: 11 to 31
+-- Lines 11-31
 function CoreShapeUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -28,7 +28,7 @@ function CoreShapeUnitElement:init(unit)
 	table.insert(self._save_values, "radius")
 end
 
--- Lines: 36 to 41
+-- Lines 36-41
 function CoreShapeUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local shape = self:get_shape()
 
@@ -37,7 +37,7 @@ function CoreShapeUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 43 to 48
+-- Lines 43-49
 function CoreShapeUnitElement:get_shape()
 	if not self._shape then
 		self:_create_shapes()
@@ -46,13 +46,13 @@ function CoreShapeUnitElement:get_shape()
 	return self._hed.shape_type == "box" and self._shape or self._hed.shape_type == "cylinder" and self._cylinder_shape
 end
 
--- Lines: 51 to 54
+-- Lines 51-54
 function CoreShapeUnitElement:set_shape_property(params)
 	self._shape:set_property(params.property, self._hed[params.value])
 	self._cylinder_shape:set_property(params.property, self._hed[params.value])
 end
 
--- Lines: 56 to 68
+-- Lines 56-68
 function CoreShapeUnitElement:_set_shape_type()
 	local is_box = self._hed.shape_type == "box"
 	local is_cylinder = self._hed.shape_type == "cylinder"
@@ -67,7 +67,7 @@ function CoreShapeUnitElement:_set_shape_type()
 	self._sliders.radius:set_enabled(is_cylinder)
 end
 
--- Lines: 70 to 76
+-- Lines 70-76
 function CoreShapeUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
 		width = self._hed.width,
@@ -85,7 +85,7 @@ function CoreShapeUnitElement:_create_shapes()
 	self._cylinder_shape:set_unit(self._unit)
 end
 
--- Lines: 78 to 83
+-- Lines 78-83
 function CoreShapeUnitElement:set_element_data(params, ...)
 	CoreShapeUnitElement.super.set_element_data(self, params, ...)
 
@@ -94,17 +94,17 @@ function CoreShapeUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 86 to 128
+-- Lines 86-129
 function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-
-	self:_build_value_combobox(panel, panel_sizer, "shape_type", {
+	local _, shape_type_params = self:_build_value_combobox(panel, panel_sizer, "shape_type", {
 		"box",
 		"cylinder"
 	}, "Select shape for area")
+	self._shape_type_params = shape_type_params
 
 	if not self._shape then
 		self:_create_shapes()
@@ -188,7 +188,7 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self:_set_shape_type()
 end
 
--- Lines: 130 to 147
+-- Lines 131-148
 function CoreShapeUnitElement:scale_slider(panel, sizer, number_ctrlr_params, value, name)
 	local slider_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -223,19 +223,18 @@ function CoreShapeUnitElement:scale_slider(panel, sizer, number_ctrlr_params, va
 	self._sliders[value] = slider
 end
 
--- Lines: 149 to 154
+-- Lines 150-155
 function CoreShapeUnitElement:set_size(params)
-	local value = (self._hed[params.value] * params.ctrlr:get_value()) / 100
+	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
 	self._shape:set_property(params.value, value)
 	self._cylinder_shape:set_property(params.value, value)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 
--- Lines: 156 to 159
+-- Lines 157-160
 function CoreShapeUnitElement:size_release(params)
 	self._hed[params.value] = params.number_ctrlr_params.value
 
 	params.ctrlr:set_value(100)
 end
-

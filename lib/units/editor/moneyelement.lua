@@ -7,7 +7,7 @@ MoneyUnitElement.actions = {
 	"DeductSpending"
 }
 
--- Lines: 12 to 25
+-- Lines 11-25
 function MoneyUnitElement:init(unit)
 	MoneyUnitElement.super.init(self, unit)
 
@@ -22,12 +22,12 @@ function MoneyUnitElement:init(unit)
 	table.insert(self._save_values, "only_local_player")
 end
 
--- Lines: 27 to 29
+-- Lines 27-29
 function MoneyUnitElement:toggle_local_only()
 	self._hed.only_local_player = self._toggle_local:get_value()
 end
 
--- Lines: 31 to 53
+-- Lines 31-53
 function MoneyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -35,7 +35,9 @@ function MoneyUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_combobox(panel, panel_sizer, "action", MoneyUnitElement.actions, "Action")
-	self:_build_value_number(panel, panel_sizer, "amount", {floats = false}, nil, "Amount")
+	self:_build_value_number(panel, panel_sizer, "amount", {
+		floats = false
+	}, nil, "Amount")
 
 	self._toggle_local = EWS:CheckBox(panel, "Execute only if local player is instigator")
 
@@ -52,9 +54,10 @@ function MoneyUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
+
 FilterMoneyUnitElement = FilterMoneyUnitElement or class(MissionElement)
 
--- Lines: 60 to 73
+-- Lines 59-73
 function FilterMoneyUnitElement:init(unit)
 	FilterMoneyUnitElement.super.init(self, unit)
 
@@ -69,14 +72,16 @@ function FilterMoneyUnitElement:init(unit)
 	table.insert(self._save_values, "only_local_player")
 end
 
--- Lines: 76 to 88
+-- Lines 75-88
 function FilterMoneyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_number(panel, panel_sizer, "value", {floats = 0}, "Specify cash value to trigger on.")
+	self:_build_value_number(panel, panel_sizer, "value", {
+		floats = 0
+	}, "Specify cash value to trigger on.")
 	self:_build_value_combobox(panel, panel_sizer, "account", {
 		"offshore",
 		"spending"
@@ -91,4 +96,3 @@ function FilterMoneyUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "only_local_player", "Only run if the local player is the instigator")
 	self:_add_help_text("Checks that the player has the required amount of cash in their spending or offshore accounts.")
 end
-

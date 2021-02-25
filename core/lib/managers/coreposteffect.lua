@@ -1,11 +1,11 @@
 CorePostEffectModifier = CorePostEffectModifier or class()
 
--- Lines: 3 to 5
+-- Lines 3-5
 function CorePostEffectModifier:init()
 	self._params = {}
 end
 
--- Lines: 7 to 19
+-- Lines 7-19
 function CorePostEffectModifier:add(from)
 	for key, value in pairs(from._params) do
 		if self._params[key] then
@@ -18,14 +18,14 @@ function CorePostEffectModifier:add(from)
 	end
 end
 
--- Lines: 21 to 25
+-- Lines 21-25
 function CorePostEffectModifier:scale(scale)
 	for key, value in pairs(self._params) do
 		self._params[key] = self._params[key] * scale
 	end
 end
 
--- Lines: 27 to 35
+-- Lines 27-35
 function CorePostEffectModifier:copy(from)
 	for key, value in pairs(from._params) do
 		if type(value) ~= "number" then
@@ -36,7 +36,7 @@ function CorePostEffectModifier:copy(from)
 	end
 end
 
--- Lines: 37 to 48
+-- Lines 37-48
 function CorePostEffectModifier:interpolate(postfx, with, scale)
 	for key, value in pairs(postfx._params) do
 		if type(value) ~= "string" then
@@ -50,7 +50,7 @@ function CorePostEffectModifier:interpolate(postfx, with, scale)
 	end
 end
 
--- Lines: 50 to 57
+-- Lines 50-57
 function CorePostEffectModifier:interpolate_value(postfx, with, key, scale)
 	if not with._params[key] or not postfx._params[key] then
 		return
@@ -60,7 +60,7 @@ function CorePostEffectModifier:interpolate_value(postfx, with, key, scale)
 	end
 end
 
--- Lines: 59 to 79
+-- Lines 59-79
 function CorePostEffectModifier:parse(xml_node)
 	self._params = {}
 
@@ -82,17 +82,17 @@ function CorePostEffectModifier:parse(xml_node)
 	end
 end
 
--- Lines: 81 to 83
+-- Lines 81-83
 function CorePostEffectModifier:set_value(key, value)
 	self._params[key] = value
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function CorePostEffectModifier:value(key)
 	return self._params[key]
 end
 
--- Lines: 89 to 98
+-- Lines 89-99
 function CorePostEffectModifier:database_lookup(str)
 	local i = string.find(str, "#")
 	local db_key = string.sub(str, 1, i - 1)
@@ -106,14 +106,15 @@ function CorePostEffectModifier:database_lookup(str)
 
 	return value
 end
+
 CorePostProcessor = CorePostProcessor or class()
 
--- Lines: 105 to 107
+-- Lines 105-107
 function CorePostProcessor:init()
 	self._modifiers = {}
 end
 
--- Lines: 109 to 116
+-- Lines 109-116
 function CorePostProcessor:add(from)
 	for name, modifier in pairs(from._modifiers) do
 		if not self._modifiers[name] then
@@ -124,14 +125,14 @@ function CorePostProcessor:add(from)
 	end
 end
 
--- Lines: 118 to 122
+-- Lines 118-122
 function CorePostProcessor:scale(scale)
 	for name, modifier in pairs(self._modifiers) do
 		modifier:scale(scale)
 	end
 end
 
--- Lines: 124 to 131
+-- Lines 124-131
 function CorePostProcessor:copy(from)
 	for name, modifier in pairs(from._modifiers) do
 		if not self._modifiers[name] then
@@ -142,7 +143,7 @@ function CorePostProcessor:copy(from)
 	end
 end
 
--- Lines: 133 to 157
+-- Lines 133-157
 function CorePostProcessor:interpolate(postfx, with, scale)
 	for name, modifier in pairs(postfx._modifiers) do
 		if not with._modifiers[name] then
@@ -169,7 +170,7 @@ function CorePostProcessor:interpolate(postfx, with, scale)
 	end
 end
 
--- Lines: 159 to 169
+-- Lines 159-169
 function CorePostProcessor:interpolate_value(postfx, with, modifier, key, scale)
 	if not with._modifiers[modifier] or not postfx._modifiers[modifier] then
 		return
@@ -182,7 +183,7 @@ function CorePostProcessor:interpolate_value(postfx, with, modifier, key, scale)
 	self._modifiers[modifier]:interpolate_value(postfx._modifiers[modifier], with._modifiers[modifier], key, scale)
 end
 
--- Lines: 171 to 181
+-- Lines 171-181
 function CorePostProcessor:parse(xml_node)
 	for child in xml_node:children() do
 		local name = child:parameter("name")
@@ -197,7 +198,7 @@ function CorePostProcessor:parse(xml_node)
 	end
 end
 
--- Lines: 183 to 188
+-- Lines 183-188
 function CorePostProcessor:set_value(modifier, key, value)
 	if not self._modifiers[modifier] then
 		self._modifiers[modifier] = CorePostEffectModifier:new()
@@ -206,7 +207,7 @@ function CorePostProcessor:set_value(modifier, key, value)
 	self._modifiers[modifier]:set_value(key, value)
 end
 
--- Lines: 190 to 196
+-- Lines 190-196
 function CorePostProcessor:value(modifier, key)
 	if self._modifiers[modifier] then
 		return self._modifiers[modifier]:value(key)
@@ -214,25 +215,26 @@ function CorePostProcessor:value(modifier, key)
 		return nil
 	end
 end
+
 CorePostEffect = CorePostEffect or class()
 
--- Lines: 202 to 204
+-- Lines 202-204
 function CorePostEffect:init()
 	self:set_default()
 end
 
--- Lines: 206 to 208
+-- Lines 206-208
 function CorePostEffect:set_name(name)
 	self._name = name
 end
 
--- Lines: 210 to 213
+-- Lines 210-213
 function CorePostEffect:set_default()
 	self._post_processors = {}
 	self._name = "default"
 end
 
--- Lines: 215 to 223
+-- Lines 215-223
 function CorePostEffect:add(from)
 	for name, processor in pairs(from._post_processors) do
 		if not self._post_processors[name] then
@@ -244,14 +246,14 @@ function CorePostEffect:add(from)
 	end
 end
 
--- Lines: 225 to 229
+-- Lines 225-229
 function CorePostEffect:scale(scale)
 	for name, processor in pairs(self._post_processors) do
 		processor:scale(scale)
 	end
 end
 
--- Lines: 231 to 241
+-- Lines 231-241
 function CorePostEffect:copy(from)
 	for name, processor in pairs(from._post_processors) do
 		if not self._post_processors[name] then
@@ -265,7 +267,7 @@ function CorePostEffect:copy(from)
 	self._name = from._name
 end
 
--- Lines: 243 to 273
+-- Lines 243-273
 function CorePostEffect:interpolate(postfx, with, scale)
 	for name, processor in pairs(postfx._post_processors) do
 		if not with._post_processors[name] then
@@ -298,7 +300,7 @@ function CorePostEffect:interpolate(postfx, with, scale)
 	self._name = postfx._name
 end
 
--- Lines: 275 to 287
+-- Lines 275-287
 function CorePostEffect:interpolate_value(postfx, with, processor, modifier, key, scale)
 	if not with._post_processors[processor] or not postfx._post_processors[processor] then
 		return
@@ -314,7 +316,7 @@ function CorePostEffect:interpolate_value(postfx, with, processor, modifier, key
 	self._post_processors[processor]:interpolate_value(postfx._post_processors[processor], with._post_processors[processor], modifier, key, scale)
 end
 
--- Lines: 289 to 301
+-- Lines 289-301
 function CorePostEffect:parse(xml_node)
 	for child in xml_node:children() do
 		local name = child:parameter("name")
@@ -332,7 +334,7 @@ function CorePostEffect:parse(xml_node)
 	end
 end
 
--- Lines: 303 to 308
+-- Lines 303-308
 function CorePostEffect:set_value(processor, modifier, key, value)
 	if not self._post_processors[processor] then
 		self._post_processors[processor] = CorePostProcessor:new()
@@ -341,7 +343,7 @@ function CorePostEffect:set_value(processor, modifier, key, value)
 	self._post_processors[processor]:set_value(modifier, key, value)
 end
 
--- Lines: 310 to 316
+-- Lines 310-316
 function CorePostEffect:value(processor, modifier, key)
 	if self._post_processors[processor] then
 		return self._post_processors[processor]:value(modifier, key)
@@ -349,4 +351,3 @@ function CorePostEffect:value(processor, modifier, key)
 		return nil
 	end
 end
-

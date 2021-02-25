@@ -7,7 +7,7 @@ core:import("CoreEws")
 
 WireLayer = WireLayer or class(CoreLayer.Layer)
 
--- Lines: 11 to 27
+-- Lines 11-27
 function WireLayer:init(owner, save_name, units_vector, slot_mask)
 	WireLayer.super.init(self, owner, save_name or "wires")
 
@@ -16,7 +16,9 @@ function WireLayer:init(owner, save_name, units_vector, slot_mask)
 	self._ctrlrs = {}
 	self._mid_point_align = 0.5
 
-	self:load_unit_map_from_vector(units_vector or {"wire"})
+	self:load_unit_map_from_vector(units_vector or {
+		"wire"
+	})
 
 	self._unit_name = ""
 	self._target_name = Idstring("a_target")
@@ -24,7 +26,7 @@ function WireLayer:init(owner, save_name, units_vector, slot_mask)
 	self._slot_mask = managers.slot:get_mask(slot_mask or "wires")
 end
 
--- Lines: 29 to 53
+-- Lines 29-53
 function WireLayer:save()
 	for _, unit in ipairs(self._created_units) do
 		local target = unit:get_object(self._target_name)
@@ -54,7 +56,7 @@ function WireLayer:save()
 	end
 end
 
--- Lines: 55 to 62
+-- Lines 55-62
 function WireLayer:update_unit_settings()
 	WireLayer.super.update_unit_settings(self)
 
@@ -65,7 +67,7 @@ function WireLayer:update_unit_settings()
 	end
 end
 
--- Lines: 64 to 82
+-- Lines 64-82
 function WireLayer:spawn_unit()
 	if self._grab then
 		return
@@ -90,15 +92,18 @@ function WireLayer:spawn_unit()
 	end
 end
 
--- Lines: 84 to 90
+-- Lines 84-90
 function WireLayer:set_select_unit(unit)
 	WireLayer.super.set_select_unit(self, unit)
 
 	self._selected_point = nil
-	self._selected_point = self._selected_unit and self._selected_unit:get_object(self._target_name)
+
+	if self._selected_unit then
+		self._selected_point = self._selected_unit:get_object(self._target_name)
+	end
 end
 
--- Lines: 92 to 98
+-- Lines 92-98
 function WireLayer:delete_selected_unit()
 	if self._selected_unit then
 		for _, unit in ipairs(CoreTable.clone(self._selected_units)) do
@@ -107,7 +112,7 @@ function WireLayer:delete_selected_unit()
 	end
 end
 
--- Lines: 100 to 104
+-- Lines 100-104
 function WireLayer:delete_unit(unit)
 	WireLayer.super.delete_unit(self, unit)
 
@@ -115,17 +120,17 @@ function WireLayer:delete_unit(unit)
 	self._selected_point = nil
 end
 
--- Lines: 106 to 108
+-- Lines 106-108
 function WireLayer:grab_point()
 	self._grab = true
 end
 
--- Lines: 110 to 112
+-- Lines 110-112
 function WireLayer:release_grab_point()
 	self._grab = false
 end
 
--- Lines: 114 to 194
+-- Lines 114-194
 function WireLayer:update(t, dt)
 	WireLayer.super.update(self, t, dt)
 
@@ -203,7 +208,7 @@ function WireLayer:update(t, dt)
 	Application:draw_rotation(self._current_pos, self._current_rot)
 end
 
--- Lines: 196 to 240
+-- Lines 196-241
 function WireLayer:build_panel(notebook)
 	cat_print("editor", "WireLayer:build_panel")
 
@@ -249,7 +254,7 @@ function WireLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines: 243 to 250
+-- Lines 243-250
 function WireLayer:change_slack(wire_slack)
 	if self._selected_unit then
 		self._selected_unit:wire_data().slack = self._slack_params.value
@@ -259,26 +264,26 @@ function WireLayer:change_slack(wire_slack)
 	end
 end
 
--- Lines: 252 to 256
+-- Lines 252-256
 function WireLayer:set_midpoint()
 	if self._selected_unit then
 		CoreMath.wire_set_midpoint(self._selected_unit, self._selected_unit:orientation_object():name(), self._target_name, self._middle_name)
 	end
 end
 
--- Lines: 258 to 260
+-- Lines 258-260
 function WireLayer:deselect()
 	WireLayer.super.deselect(self)
 end
 
--- Lines: 262 to 265
+-- Lines 262-265
 function WireLayer:clear()
 	WireLayer.super.clear(self)
 
 	self._selected_point = nil
 end
 
--- Lines: 267 to 273
+-- Lines 267-274
 function WireLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -289,7 +294,7 @@ function WireLayer:get_help(text)
 	return text
 end
 
--- Lines: 276 to 288
+-- Lines 276-288
 function WireLayer:add_triggers()
 	WireLayer.super.add_triggers(self)
 
@@ -305,14 +310,13 @@ function WireLayer:add_triggers()
 	end
 end
 
--- Lines: 290 to 293
+-- Lines 290-293
 function WireLayer:deactivate()
 	WireLayer.super.deactivate(self)
 	WireLayer.super.deselect(self)
 end
 
--- Lines: 295 to 297
+-- Lines 295-297
 function WireLayer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end
-

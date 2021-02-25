@@ -3,10 +3,16 @@ require("lib/managers/dialogs/Dialog")
 
 Xbox360Dialog = Xbox360Dialog or class(Dialog)
 
--- Lines: 7 to 23
+-- Lines 7-24
 function Xbox360Dialog:show()
 	local focus_button = self:focus_button()
-	focus_button = focus_button and focus_button - 1 or 0
+
+	if focus_button then
+		focus_button = focus_button - 1
+	else
+		focus_button = 0
+	end
+
 	local button_text_list = self:button_text_list()
 	local success = Application:display_message_box_dialog(self:get_platform_id(), self:title(), self:text(), focus_button, callback(self, self, "button_pressed"), false, unpack(button_text_list))
 
@@ -17,7 +23,7 @@ function Xbox360Dialog:show()
 	return success
 end
 
--- Lines: 26 to 33
+-- Lines 26-33
 function Xbox360Dialog:button_pressed(button_index)
 	if button_index == -1 then
 		button_index = self:focus_button() or 1
@@ -28,8 +34,7 @@ function Xbox360Dialog:button_pressed(button_index)
 	Dialog.button_pressed(self, button_index + 1)
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function Xbox360Dialog:blocks_exec()
 	return false
 end
-

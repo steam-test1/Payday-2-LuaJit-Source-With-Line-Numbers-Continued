@@ -3,7 +3,7 @@ FirstAidKitBase.upgrade_lvl_shift = 2
 FirstAidKitBase.auto_recovery_shift = 4
 FirstAidKitBase.List = {}
 
--- Lines: 7 to 9
+-- Lines 7-9
 function FirstAidKitBase.Add(obj, pos, min_distance)
 	table.insert(FirstAidKitBase.List, {
 		obj = obj,
@@ -12,7 +12,7 @@ function FirstAidKitBase.Add(obj, pos, min_distance)
 	})
 end
 
--- Lines: 11 to 18
+-- Lines 11-18
 function FirstAidKitBase.Remove(obj)
 	for i, o in pairs(FirstAidKitBase.List) do
 		if obj == o.obj then
@@ -23,7 +23,7 @@ function FirstAidKitBase.Remove(obj)
 	end
 end
 
--- Lines: 21 to 28
+-- Lines 21-29
 function FirstAidKitBase.GetFirstAidKit(pos)
 	for i, o in pairs(FirstAidKitBase.List) do
 		local dst = mvector3.distance(pos, o.pos)
@@ -36,7 +36,7 @@ function FirstAidKitBase.GetFirstAidKit(pos)
 	return nil
 end
 
--- Lines: 32 to 39
+-- Lines 32-40
 function FirstAidKitBase.spawn(pos, rot, bits, peer_id)
 	local unit_name = "units/pd2_dlc_old_hoxton/equipment/gen_equipment_first_aid_kit/gen_equipment_first_aid_kit"
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
@@ -47,19 +47,21 @@ function FirstAidKitBase.spawn(pos, rot, bits, peer_id)
 	return unit
 end
 
--- Lines: 45 to 48
+-- Lines 45-48
 function FirstAidKitBase:set_server_information(peer_id)
-	self._server_information = {owner_peer_id = peer_id}
+	self._server_information = {
+		owner_peer_id = peer_id
+	}
 
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function FirstAidKitBase:server_information()
 	return self._server_information
 end
 
--- Lines: 57 to 68
+-- Lines 57-68
 function FirstAidKitBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -74,7 +76,7 @@ function FirstAidKitBase:init(unit)
 	end
 end
 
--- Lines: 70 to 75
+-- Lines 70-75
 function FirstAidKitBase:sync_auto_recovery(min_distance)
 	if min_distance ~= 0 then
 		self._min_distance = min_distance
@@ -83,15 +85,15 @@ function FirstAidKitBase:sync_auto_recovery(min_distance)
 	end
 end
 
--- Lines: 77 to 81
+-- Lines 77-82
 function FirstAidKitBase:_get_upgrade_levels(bits)
 	local auto_recovery = Bitwise:rshift(bits, FirstAidKitBase.auto_recovery_shift)
-	local upgrade_lvl = Bitwise:rshift(bits, FirstAidKitBase.upgrade_lvl_shift) % 2 ^ FirstAidKitBase.upgrade_lvl_shift
+	local upgrade_lvl = Bitwise:rshift(bits, FirstAidKitBase.upgrade_lvl_shift) % 2^FirstAidKitBase.upgrade_lvl_shift
 
 	return upgrade_lvl, auto_recovery
 end
 
--- Lines: 86 to 93
+-- Lines 86-93
 function FirstAidKitBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -102,7 +104,7 @@ function FirstAidKitBase:_clbk_validate()
 	end
 end
 
--- Lines: 97 to 106
+-- Lines 97-106
 function FirstAidKitBase:sync_setup(bits, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -114,7 +116,7 @@ function FirstAidKitBase:sync_setup(bits, peer_id)
 	self:setup(bits)
 end
 
--- Lines: 110 to 135
+-- Lines 110-135
 function FirstAidKitBase:setup(bits)
 	local upgrade_lvl, auto_recovery = self:_get_upgrade_levels(bits)
 	self._damage_reduction_upgrade = upgrade_lvl == 1
@@ -145,12 +147,12 @@ function FirstAidKitBase:setup(bits)
 	end
 end
 
--- Lines: 137 to 139
+-- Lines 137-139
 function FirstAidKitBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines: 142 to 170
+-- Lines 142-170
 function FirstAidKitBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -177,7 +179,7 @@ function FirstAidKitBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines: 174 to 179
+-- Lines 174-179
 function FirstAidKitBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -186,7 +188,7 @@ function FirstAidKitBase:server_set_dynamic()
 	end
 end
 
--- Lines: 181 to 187
+-- Lines 181-187
 function FirstAidKitBase:sync_net_event(event_id)
 	if event_id == 1 then
 		self:_set_dynamic()
@@ -195,14 +197,14 @@ function FirstAidKitBase:sync_net_event(event_id)
 	end
 end
 
--- Lines: 189 to 192
+-- Lines 189-192
 function FirstAidKitBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines: 196 to 210
+-- Lines 196-210
 function FirstAidKitBase:take(unit)
 	if self._empty then
 		return
@@ -221,20 +223,22 @@ function FirstAidKitBase:take(unit)
 	self:_set_empty()
 end
 
--- Lines: 212 to 215
+-- Lines 212-215
 function FirstAidKitBase:_set_empty()
 	self._empty = true
 
 	self._unit:set_slot(0)
 end
 
--- Lines: 219 to 223
+-- Lines 219-223
 function FirstAidKitBase:save(data)
-	local state = {is_dynamic = self._is_dynamic}
+	local state = {
+		is_dynamic = self._is_dynamic
+	}
 	data.FirstAidKitBase = state
 end
 
--- Lines: 225 to 232
+-- Lines 225-232
 function FirstAidKitBase:load(data)
 	local state = data.FirstAidKitBase
 
@@ -245,7 +249,7 @@ function FirstAidKitBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines: 236 to 245
+-- Lines 236-245
 function FirstAidKitBase:destroy()
 	if self._min_distance then
 		FirstAidKitBase.Remove(self)
@@ -257,4 +261,3 @@ function FirstAidKitBase:destroy()
 		self._validate_clbk_id = nil
 	end
 end
-

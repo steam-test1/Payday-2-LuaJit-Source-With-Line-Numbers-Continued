@@ -4,24 +4,25 @@ core:import("CoreClass")
 
 SequenceManager = SequenceManager or class(CoreSequenceManager.SequenceManager)
 
--- Lines: 8 to 15
+-- Lines 8-15
 function SequenceManager:init()
 	SequenceManager.super.init(self, managers.slot:get_mask("body_area_damage"), managers.slot:get_mask("area_damage_blocker"), managers.slot:get_mask("unit_area_damage"))
 	self:register_event_element_class(InteractionElement)
 
 	self._proximity_masks.players = managers.slot:get_mask("players")
 end
+
 InteractionElement = InteractionElement or class(CoreSequenceManager.BaseElement)
 InteractionElement.NAME = "interaction"
 
--- Lines: 20 to 24
+-- Lines 20-24
 function InteractionElement:init(node, unit_element)
 	InteractionElement.super.init(self, node, unit_element)
 
 	self._enabled = self:get("enabled")
 end
 
--- Lines: 26 to 33
+-- Lines 26-33
 function InteractionElement:activate_callback(env)
 	local enabled = self:run_parsed_func(env, self._enabled)
 
@@ -33,4 +34,3 @@ function InteractionElement:activate_callback(env)
 end
 
 CoreClass.override_class(CoreSequenceManager.SequenceManager, SequenceManager)
-

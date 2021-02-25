@@ -1,7 +1,7 @@
 ObjectInteractionManager = ObjectInteractionManager or class()
 ObjectInteractionManager.FRAMES_TO_COMPLETE = 15
 
--- Lines: 4 to 25
+-- Lines 4-25
 function ObjectInteractionManager:init()
 	self._interactive_units = {}
 	self._interactive_count = 0
@@ -20,7 +20,7 @@ function ObjectInteractionManager:init()
 	self._slotmask_interaction_obstruction = managers.slot:get_mask("interaction_obstruction")
 end
 
--- Lines: 27 to 57
+-- Lines 27-57
 function ObjectInteractionManager:update(t, dt)
 	local player_unit = managers.player:player_unit()
 
@@ -50,7 +50,7 @@ function ObjectInteractionManager:update(t, dt)
 	end
 end
 
--- Lines: 61 to 78
+-- Lines 61-79
 function ObjectInteractionManager:interact(player, data, hand_id)
 	if alive(self._active_unit) then
 		if _G.IS_VR and self._interact_hand ~= hand_id then
@@ -69,7 +69,7 @@ function ObjectInteractionManager:interact(player, data, hand_id)
 	return false
 end
 
--- Lines: 83 to 88
+-- Lines 83-88
 function ObjectInteractionManager:end_action_interact(player)
 	self._active_object_locked_data = nil
 
@@ -78,17 +78,17 @@ function ObjectInteractionManager:end_action_interact(player)
 	end
 end
 
--- Lines: 92 to 94
+-- Lines 92-94
 function ObjectInteractionManager:interupt_action_interact()
 	self._active_object_locked_data = nil
 end
 
--- Lines: 98 to 99
+-- Lines 98-100
 function ObjectInteractionManager:active_unit()
 	return self._active_unit
 end
 
--- Lines: 104 to 109
+-- Lines 104-109
 function ObjectInteractionManager:add_unit(unit)
 	table.insert(self._interactive_units, unit)
 
@@ -96,7 +96,7 @@ function ObjectInteractionManager:add_unit(unit)
 	self._close_freq = math.max(1, math.floor(#self._interactive_units / self.FRAMES_TO_COMPLETE))
 end
 
--- Lines: 113 to 139
+-- Lines 113-139
 function ObjectInteractionManager:remove_unit(unit)
 	for k, v in pairs(self._interactive_units) do
 		if v == unit then
@@ -124,10 +124,11 @@ function ObjectInteractionManager:remove_unit(unit)
 		end
 	end
 end
+
 local mvec1 = Vector3()
 local index_table = {}
 
--- Lines: 146 to 459
+-- Lines 145-460
 function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand_unit, hand_id)
 	local close_units_list = self._close_units
 
@@ -136,27 +137,30 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand
 	end
 
 	local mvec3_dis = mvector3.distance
+	local k = #close_units_list
 
-	if #close_units_list > 0 then
-		for k, unit in pairs(close_units_list) do
-			if alive(unit) and unit:interaction():active() then
-				local distance = mvec3_dis(player_pos, unit:interaction():interact_position())
-				local should_remove = unit:interaction():interact_distance() < distance or distance < unit:interaction():max_interact_distance()
+	while k > 0 do
+		local unit = close_units_list[k]
 
-				if _G.IS_VR then
-					should_remove = should_remove or hand_unit:raycast("ray", hand_unit:position(), player_unit:movement():m_head_pos(), "slot_mask", 1)
-				end
+		if alive(unit) and unit:interaction():active() then
+			local distance = mvec3_dis(player_pos, unit:interaction():interact_position())
+			local should_remove = unit:interaction():interact_distance() < distance or distance < unit:interaction():max_interact_distance()
 
-				if should_remove then
-					table.remove(close_units_list, k)
-				end
-			else
+			if _G.IS_VR then
+				should_remove = should_remove or hand_unit:raycast("ray", hand_unit:position(), player_unit:movement():m_head_pos(), "slot_mask", 1)
+			end
+
+			if should_remove then
 				table.remove(close_units_list, k)
 			end
+		else
+			table.remove(close_units_list, k)
 		end
+
+		k = k - 1
 	end
 
-	for i = 1, self._close_freq, 1 do
+	for i = 1, self._close_freq do
 		if self._interactive_count <= self._close_index then
 			self._close_index = 1
 		else
@@ -225,7 +229,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand
 		self._close_test_index = self._close_test_index or 0
 		self._close_test_index = self._close_test_index + 1
 
-		if #close_units_list < self._close_test_index then
+		if self._close_test_index > #close_units_list then
 			self._close_test_index = 1
 		end
 
@@ -277,7 +281,13 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand
 					if _G.IS_VR then
 						local distance_pass = distance < 30 and distance < current_distance
 						has_distance_passed = has_distance_passed or distance_pass
-						interaction_passed = distance_pass or not has_distance_passed
+
+						if not distance_pass then
+							if has_distance_passed then
+								interaction_passed = false
+							end
+						end
+
 						current_distance = math.min(distance, current_distance)
 					end
 
@@ -361,9 +371,10 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand
 		end
 	end
 end
+
 local m_obj_pos = Vector3()
 
--- Lines: 468 to 505
+-- Lines 466-507
 function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	if locator then
 		local obstructed = World:raycast("ray", locator:position(), camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
@@ -392,7 +403,7 @@ function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	return false
 end
 
--- Lines: 508 to 522
+-- Lines 509-524
 function ObjectInteractionManager:_in_close_list(unit, id)
 	local close_units_list = self._close_units
 
@@ -411,10 +422,9 @@ function ObjectInteractionManager:_in_close_list(unit, id)
 	return false
 end
 
--- Lines: 525 to 529
+-- Lines 526-530
 function ObjectInteractionManager:on_interaction_released(data)
 	if self._active_unit then
 		self._active_unit:interaction():on_interaction_released(data)
 	end
 end
-

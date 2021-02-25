@@ -2,19 +2,19 @@ core:import("CoreMissionScriptElement")
 
 ElementMissionEnd = ElementMissionEnd or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementMissionEnd:init(...)
 	ElementMissionEnd.super.init(self, ...)
 end
 
--- Lines: 11 to 15
+-- Lines 9-15
 function ElementMissionEnd:client_on_executed(instigator)
 	if self._values.state == "leave_safehouse" and instigator:base().is_local_player then
 		MenuCallbackHandler:leave_safehouse()
 	end
 end
 
--- Lines: 17 to 42
+-- Lines 17-42
 function ElementMissionEnd:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -43,4 +43,3 @@ function ElementMissionEnd:on_executed(instigator)
 
 	ElementMissionEnd.super.on_executed(self, instigator)
 end
-

@@ -2,7 +2,7 @@ core:module("CoreMenuItemOption")
 
 ItemOption = ItemOption or class()
 
--- Lines: 7 to 18
+-- Lines 6-18
 function ItemOption:init(data_node, parameters)
 	local params = parameters or {}
 
@@ -17,18 +17,17 @@ function ItemOption:init(data_node, parameters)
 	self:set_parameters(params)
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function ItemOption:value()
 	return self._parameters.value
 end
 
--- Lines: 24 to 25
+-- Lines 24-26
 function ItemOption:parameters()
 	return self._parameters
 end
 
--- Lines: 28 to 30
+-- Lines 28-30
 function ItemOption:set_parameters(parameters)
 	self._parameters = parameters
 end
-

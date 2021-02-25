@@ -1,6 +1,6 @@
 CopLogicInactive = class(CopLogicBase)
 
--- Lines: 7 to 54
+-- Lines 7-54
 function CopLogicInactive.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 
@@ -52,7 +52,7 @@ function CopLogicInactive.enter(data, new_logic_name, enter_params)
 	data.logic._set_interaction(data, my_data)
 end
 
--- Lines: 58 to 65
+-- Lines 58-65
 function CopLogicInactive.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
@@ -62,36 +62,42 @@ function CopLogicInactive.exit(data, new_logic_name, enter_params)
 	CopLogicBase.cancel_delayed_clbks(my_data)
 end
 
--- Lines: 69 to 70
+-- Lines 69-71
 function CopLogicInactive.is_available_for_assignment(data)
 	return false
 end
 
--- Lines: 75 to 82
+-- Lines 75-82
 function CopLogicInactive.on_enemy_weapons_hot(data)
 	local my_data = data.internal_data
 
-	data.unit:brain():set_attention_settings({corpse_cbt = true})
+	data.unit:brain():set_attention_settings({
+		corpse_cbt = true
+	})
 
 	if data.unit:interaction():active() then
 		data.unit:interaction():set_active(false, true, true)
 	end
 end
 
--- Lines: 86 to 96
+-- Lines 86-96
 function CopLogicInactive._register_attention(data, my_data)
 	if data.unit:character_damage():dead() then
 		if managers.groupai:state():enemy_weapons_hot() then
-			data.unit:brain():set_attention_settings({corpse_cbt = true})
+			data.unit:brain():set_attention_settings({
+				corpse_cbt = true
+			})
 		else
-			data.unit:brain():set_attention_settings({corpse_sneak = true})
+			data.unit:brain():set_attention_settings({
+				corpse_sneak = true
+			})
 		end
 	else
 		data.unit:brain():set_attention_settings(nil)
 	end
 end
 
--- Lines: 100 to 110
+-- Lines 100-110
 function CopLogicInactive._set_interaction(data, my_data)
 	if data.unit:character_damage():dead() and managers.groupai:state():whisper_mode() then
 		if data.unit:unit_data().has_alarm_pager then
@@ -103,7 +109,7 @@ function CopLogicInactive._set_interaction(data, my_data)
 	end
 end
 
--- Lines: 114 to 123
+-- Lines 114-123
 function CopLogicInactive.on_new_objective(data, old_objective)
 	if not data.internal_data.removing_objective then
 		debug_pause_unit(data.unit, "[CopLogicInactive.on_new_objective]", data.unit, "new_objective", data.objective and inspect(data.objective), "old_objective", old_objective and inspect(old_objective))
@@ -115,4 +121,3 @@ function CopLogicInactive.on_new_objective(data, old_objective)
 		old_objective.fail_clbk(data.unit)
 	end
 end
-

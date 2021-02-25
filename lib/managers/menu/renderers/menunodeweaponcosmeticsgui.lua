@@ -1,6 +1,6 @@
 MenuNodeSkinEditorGui = MenuNodeSkinEditorGui or class(MenuNodeGui)
 
--- Lines: 4 to 14
+-- Lines 4-14
 function MenuNodeSkinEditorGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -13,7 +13,7 @@ function MenuNodeSkinEditorGui:init(node, layer, parameters)
 	MenuNodeSkinEditorGui.super.init(self, node, layer, parameters)
 end
 
--- Lines: 16 to 48
+-- Lines 16-48
 function MenuNodeSkinEditorGui:mouse_pressed(button, x, y)
 	if button == Idstring("1") then
 		local row_item = self._highlighted_item and self:row_item(self._highlighted_item)
@@ -42,9 +42,10 @@ function MenuNodeSkinEditorGui:mouse_pressed(button, x, y)
 		end
 	end
 end
+
 MenuNodeArmorSkinEditorGui = MenuNodeArmorSkinEditorGui or class(MenuNodeGui)
 
--- Lines: 58 to 83
+-- Lines 57-83
 function MenuNodeArmorSkinEditorGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -61,21 +62,23 @@ function MenuNodeArmorSkinEditorGui:init(node, layer, parameters)
 
 		panel:set_w(self.ws:panel():w() * (1 - (node:parameters().align_line_proportions or 0.65)))
 		panel:set_right(self.ws:panel():w())
-		panel:set_h((self.ws:panel():h() - tweak_data.menu.pd2_large_font_size) - 10)
+		panel:set_h(self.ws:panel():h() - tweak_data.menu.pd2_large_font_size - 10)
 		panel:rect({
 			alpha = 0.4,
 			color = Color.black
 		})
-		BoxGuiObject:new(panel, {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		BoxGuiObject:new(panel, {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 	end
 end
 
--- Lines: 85 to 110
+-- Lines 85-110
 function MenuNodeArmorSkinEditorGui:mouse_pressed(button, x, y)
 	if button == Idstring("1") then
 		local row_item = self._highlighted_item and self:row_item(self._highlighted_item)
@@ -104,4 +107,3 @@ function MenuNodeArmorSkinEditorGui:mouse_pressed(button, x, y)
 		end
 	end
 end
-

@@ -2,7 +2,7 @@ MandatoryBagsUnitElement = MandatoryBagsUnitElement or class(MissionElement)
 MandatoryBagsUnitElement.SAVE_UNIT_POSITION = false
 MandatoryBagsUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 13
+-- Lines 5-13
 function MandatoryBagsUnitElement:init(unit)
 	MandatoryBagsUnitElement.super.init(self, unit)
 
@@ -13,18 +13,19 @@ function MandatoryBagsUnitElement:init(unit)
 	table.insert(self._save_values, "amount")
 end
 
--- Lines: 18 to 26
+-- Lines 18-26
 function MandatoryBagsUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({"none"}, tweak_data.carry:get_carry_ids()))
+	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({
+		"none"
+	}, tweak_data.carry:get_carry_ids()))
 	self:_build_value_number(panel, panel_sizer, "amount", {
 		min = 0,
 		floats = 0,
 		max = 100
 	}, "Amount of mandatory bags.")
 end
-

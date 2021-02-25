@@ -4,7 +4,7 @@ end
 
 GuiDataManager = GuiDataManager or class()
 
--- Lines: 7 to 18
+-- Lines 7-18
 function GuiDataManager:init(scene_gui, res, safe_rect_pixels, safe_rect, static_aspect_ratio)
 	self._ws_size_data = {}
 	self._scene_gui = scene_gui
@@ -18,71 +18,83 @@ function GuiDataManager:init(scene_gui, res, safe_rect_pixels, safe_rect, static
 	self._workspace_configuration = {}
 end
 
--- Lines: 21 to 22
+-- Lines 20-22
 function GuiDataManager:destroy()
 end
 
--- Lines: 24 to 30
+-- Lines 24-31
 function GuiDataManager:create_saferect_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
-	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
+	self._workspace_configuration[ws:key()] = {
+		workspace_object = workspace_object
+	}
 
 	self:layout_workspace(ws)
 
 	return ws
 end
 
--- Lines: 33 to 39
+-- Lines 33-40
 function GuiDataManager:create_fullscreen_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
-	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
+	self._workspace_configuration[ws:key()] = {
+		workspace_object = workspace_object
+	}
 
 	self:layout_fullscreen_workspace(ws)
 
 	return ws
 end
 
--- Lines: 42 to 48
+-- Lines 42-49
 function GuiDataManager:create_fullscreen_16_9_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
-	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
+	self._workspace_configuration[ws:key()] = {
+		workspace_object = workspace_object
+	}
 
 	self:layout_fullscreen_16_9_workspace(ws)
 
 	return ws
 end
 
--- Lines: 51 to 57
+-- Lines 51-58
 function GuiDataManager:create_corner_saferect_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
-	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
+	self._workspace_configuration[ws:key()] = {
+		workspace_object = workspace_object
+	}
 
 	self:layout_corner_saferect_workspace(ws)
 
 	return ws
 end
 
--- Lines: 60 to 66
+-- Lines 60-67
 function GuiDataManager:create_1280_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
-	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
+	self._workspace_configuration[ws:key()] = {
+		workspace_object = workspace_object
+	}
 
 	self:layout_1280_workspace(ws)
 
 	return ws
 end
 
--- Lines: 69 to 75
+-- Lines 69-76
 function GuiDataManager:create_corner_saferect_1280_workspace(workspace_object, scene)
 	local ws = (scene or self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
-	self._workspace_configuration[ws:key()] = {workspace_object = workspace_object}
+	self._workspace_configuration[ws:key()] = {
+		workspace_object = workspace_object
+	}
 
 	self:layout_corner_saferect_1280_workspace(ws)
 
 	return ws
 end
 
--- Lines: 80 to 93
+-- Lines 79-93
 function GuiDataManager:destroy_workspace(ws)
 	if not ws then
 		return
@@ -95,12 +107,12 @@ function GuiDataManager:destroy_workspace(ws)
 	ws:gui():destroy_workspace(ws)
 end
 
--- Lines: 95 to 96
+-- Lines 95-97
 function GuiDataManager:get_scene_gui()
 	return self._scene_gui or Overlay:gui()
 end
 
--- Lines: 102 to 107
+-- Lines 102-108
 function GuiDataManager:_get_safe_rect_pixels()
 	if self._safe_rect_pixels then
 		return self._safe_rect_pixels
@@ -109,7 +121,7 @@ function GuiDataManager:_get_safe_rect_pixels()
 	return managers.viewport:get_safe_rect_pixels()
 end
 
--- Lines: 110 to 115
+-- Lines 110-116
 function GuiDataManager:_get_safe_rect()
 	if self._safe_rect then
 		return self._safe_rect
@@ -118,7 +130,7 @@ function GuiDataManager:_get_safe_rect()
 	return managers.viewport:get_safe_rect()
 end
 
--- Lines: 118 to 123
+-- Lines 118-124
 function GuiDataManager:_aspect_ratio()
 	if self._static_aspect_ratio then
 		return self._static_aspect_ratio
@@ -126,12 +138,13 @@ function GuiDataManager:_aspect_ratio()
 
 	return managers.viewport:aspect_ratio()
 end
+
 local base_res = {
 	x = 1280,
 	y = 720
 }
 
--- Lines: 128 to 266
+-- Lines 128-266
 function GuiDataManager:_setup_workspace_data()
 	print("[GuiDataManager:_setup_workspace_data]")
 
@@ -148,8 +161,8 @@ function GuiDataManager:_setup_workspace_data()
 	local h = scaled_size.height
 	local sh = math.min(safe_rect.height, safe_rect.width / (w / h))
 	local sw = math.min(safe_rect.width, safe_rect.height * w / h)
-	local x = res.x / 2 - (sh * w / h) / 2
-	local y = res.y / 2 - (sw / (w / h)) / 2
+	local x = res.x / 2 - sh * w / h / 2
+	local y = res.y / 2 - sw / (w / h) / 2
 	self._safe_x = x
 	self._safe_y = y
 	self._saferect_data.w = w
@@ -189,8 +202,8 @@ function GuiDataManager:_setup_workspace_data()
 	h = base_res.y
 	sh = math.min(res.y, res.x / (w / h))
 	sw = math.min(res.x, res.y * w / h)
-	x = res.x / 2 - (sh * w / h) / 2
-	y = res.y / 2 - (sw / (w / h)) / 2
+	x = res.x / 2 - sh * w / h / 2
+	y = res.y / 2 - sw / (w / h) / 2
 	self._fullrect_16_9_data.w = w
 	self._fullrect_16_9_data.h = h
 	self._fullrect_16_9_data.width = self._fullrect_16_9_data.w
@@ -234,37 +247,37 @@ function GuiDataManager:_setup_workspace_data()
 	self._corner_saferect_1280_data.on_screen_width = sw
 end
 
--- Lines: 268 to 271
+-- Lines 268-271
 function GuiDataManager:layout_workspace(ws)
 	self:_set_layout(ws, self._saferect_data)
 end
 
--- Lines: 273 to 276
+-- Lines 273-276
 function GuiDataManager:layout_fullscreen_workspace(ws)
 	self:_set_layout(ws, self._fullrect_data)
 end
 
--- Lines: 278 to 281
+-- Lines 278-281
 function GuiDataManager:layout_fullscreen_16_9_workspace(ws)
 	self:_set_layout(ws, self._fullrect_16_9_data)
 end
 
--- Lines: 283 to 286
+-- Lines 283-286
 function GuiDataManager:layout_corner_saferect_workspace(ws)
 	self:_set_layout(ws, self._corner_saferect_data)
 end
 
--- Lines: 288 to 291
+-- Lines 288-291
 function GuiDataManager:layout_1280_workspace(ws)
 	self:_set_layout(ws, self._fullrect_1280_data)
 end
 
--- Lines: 293 to 296
+-- Lines 293-296
 function GuiDataManager:layout_corner_saferect_1280_workspace(ws)
 	self:_set_layout(ws, self._corner_saferect_1280_data)
 end
 
--- Lines: 299 to 320
+-- Lines 299-320
 function GuiDataManager:_set_linked_ws(ws, obj, screen_data)
 	local rot = obj:rotation()
 	local size = obj:oobb():size()
@@ -292,7 +305,7 @@ function GuiDataManager:_set_linked_ws(ws, obj, screen_data)
 	ws:set_linked(screen_data.w, screen_data.h, obj, obj:position() - center + offset, x_axis, y_axis)
 end
 
--- Lines: 323 to 341
+-- Lines 323-341
 function GuiDataManager:_set_layout(ws, screen_data)
 	self._ws_size_data[ws:key()] = screen_data
 
@@ -314,7 +327,7 @@ function GuiDataManager:_set_layout(ws, screen_data)
 	ws:set_screen(screen_data.w, screen_data.h, screen_data.x, screen_data.y, screen_data.on_screen_width)
 end
 
--- Lines: 358 to 361
+-- Lines 356-362
 function GuiDataManager:scaled_size()
 	local w = math.round(self:_get_safe_rect().width * base_res.x)
 	local h = math.round(self:_get_safe_rect().height * base_res.y)
@@ -327,39 +340,39 @@ function GuiDataManager:scaled_size()
 	}
 end
 
--- Lines: 364 to 365
+-- Lines 364-366
 function GuiDataManager:safe_scaled_size()
 	return self._saferect_data
 end
 
--- Lines: 368 to 369
+-- Lines 368-370
 function GuiDataManager:corner_scaled_size()
 	return self._corner_saferect_data
 end
 
--- Lines: 372 to 373
+-- Lines 372-374
 function GuiDataManager:full_scaled_size()
 	return self._fullrect_data
 end
 
--- Lines: 376 to 377
+-- Lines 376-378
 function GuiDataManager:full_16_9_size()
 	return self._fullrect_16_9_data
 end
 
--- Lines: 380 to 381
+-- Lines 380-382
 function GuiDataManager:full_1280_size()
 	return self._fullrect_1280_data
 end
 
--- Lines: 385 to 387
+-- Lines 385-388
 function GuiDataManager:convert_pos(...)
 	local x, y = self:convert_pos_float(...)
 
 	return math.round(x), math.round(y)
 end
 
--- Lines: 390 to 404
+-- Lines 390-405
 function GuiDataManager:convert_pos_float(from_ws, to_ws, in_x, in_y)
 	local from = self._ws_size_data[from_ws:key()]
 	local to = self._ws_size_data[to_ws:key()]
@@ -376,59 +389,58 @@ function GuiDataManager:convert_pos_float(from_ws, to_ws, in_x, in_y)
 	return (x - to.x) / scale, (y - to.y) / scale
 end
 
--- Lines: 407 to 408
+-- Lines 407-410
 function GuiDataManager:full_to_full_16_9(in_x, in_y)
 	return self:safe_to_full_16_9(self:full_to_safe(in_x, in_y))
 end
 
--- Lines: 412 to 413
+-- Lines 412-414
 function GuiDataManager:safe_to_full_16_9(in_x, in_y)
 	return self._fullrect_16_9_data.convert_x + in_x, self._fullrect_16_9_data.convert_y + in_y
 end
 
--- Lines: 416 to 417
+-- Lines 416-418
 function GuiDataManager:full_16_9_to_safe(in_x, in_y)
 	return in_x - self._fullrect_16_9_data.convert_x, in_y - self._fullrect_16_9_data.convert_y
 end
 
--- Lines: 421 to 422
+-- Lines 421-423
 function GuiDataManager:safe_to_full(in_x, in_y)
 	return self._fullrect_data.convert_x + in_x, self._fullrect_data.convert_y + in_y
 end
 
--- Lines: 425 to 426
+-- Lines 425-427
 function GuiDataManager:full_to_safe(in_x, in_y)
 	return in_x - self._fullrect_data.convert_x, in_y - self._fullrect_data.convert_y
 end
 
--- Lines: 429 to 430
+-- Lines 429-431
 function GuiDataManager:corner_safe_to_full(in_x, in_y)
 	return self._fullrect_data.corner_convert_x + in_x, self._fullrect_data.corner_convert_y + in_y
 end
 
--- Lines: 433 to 434
+-- Lines 433-435
 function GuiDataManager:y_safe_to_full(in_y)
 	return self._fullrect_data.convert_y + in_y
 end
 
--- Lines: 437 to 439
+-- Lines 437-439
 function GuiDataManager:resolution_changed()
 	self:_setup_workspace_data()
 end
 
--- Lines: 442 to 444
+-- Lines 442-444
 function GuiDataManager:set_scene_gui(gui)
 	self._scene_gui = gui
 end
 
--- Lines: 446 to 448
+-- Lines 446-448
 function GuiDataManager:set_workspace_objects(workspace_objects)
 	self._workspace_objects = workspace_objects
 end
 
--- Lines: 450 to 453
+-- Lines 450-453
 function GuiDataManager:add_workspace_object(name, workspace_object)
 	self._workspace_objects = self._workspace_objects or {}
 	self._workspace_objects[name] = workspace_object
 end
-

@@ -1,6 +1,6 @@
 core:module("CoreLogic")
 
--- Lines: 11 to 17
+-- Lines 11-17
 function toboolean(value)
 	if type(value) == "string" then
 		return value == "true"
@@ -9,7 +9,7 @@ function toboolean(value)
 	end
 end
 
--- Lines: 19 to 25
+-- Lines 19-25
 function iff(t, a, b)
 	if t then
 		return a
@@ -17,4 +17,3 @@ function iff(t, a, b)
 		return b
 	end
 end
-

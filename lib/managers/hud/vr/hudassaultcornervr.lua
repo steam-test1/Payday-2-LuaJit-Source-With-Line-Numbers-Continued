@@ -1,7 +1,7 @@
 HUDAssaultCornerVR = HUDAssaultCorner
 HUDAssaultCornerVR.old_init = HUDAssaultCorner.init
 
--- Lines: 6 to 24
+-- Lines 6-24
 function HUDAssaultCornerVR:init(hud, full_hud, tweak_hud)
 	local old_panel = hud.panel
 	hud.panel = managers.hud:tablet_page()
@@ -38,7 +38,7 @@ function HUDAssaultCornerVR:init(hud, full_hud, tweak_hud)
 	self._watch_point_of_no_return_timer:set_center(watch_panel:w() / 2, watch_panel:h() / 2)
 end
 
--- Lines: 26 to 41
+-- Lines 26-41
 function HUDAssaultCornerVR:show_point_of_no_return_timer()
 	local delay_time = self._assault and 1.2 or 0
 
@@ -53,7 +53,7 @@ function HUDAssaultCornerVR:show_point_of_no_return_timer()
 	managers.hud._hud_heist_timer:hide()
 end
 
--- Lines: 43 to 53
+-- Lines 43-53
 function HUDAssaultCornerVR:hide_point_of_no_return_timer()
 	self._noreturn_bg_box:stop()
 	self._hud_panel:child("point_of_no_return_panel"):set_visible(false)
@@ -65,7 +65,7 @@ function HUDAssaultCornerVR:hide_point_of_no_return_timer()
 	managers.hud._hud_heist_timer:show()
 end
 
--- Lines: 55 to 62
+-- Lines 55-62
 function HUDAssaultCornerVR:feed_point_of_no_return_timer(time)
 	time = math.floor(time)
 	local minutes = math.floor(time / 60)
@@ -75,10 +75,9 @@ function HUDAssaultCornerVR:feed_point_of_no_return_timer(time)
 	self._watch_point_of_no_return_timer:set_text(text)
 end
 
--- Lines: 77 to 81
+-- Lines 64-81
 function HUDAssaultCornerVR:flash_point_of_no_return_timer()
-
-	-- Lines: 65 to 78
+	-- Lines 65-78
 	local function flash_timer(o)
 		local t = 0
 
@@ -97,7 +96,7 @@ function HUDAssaultCornerVR:flash_point_of_no_return_timer()
 	self._watch_point_of_no_return_timer:animate(flash_timer)
 end
 
--- Lines: 83 to 103
+-- Lines 83-103
 function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, delay_time)
 	local icon_noreturnbox = point_of_no_return_panel:child("icon_noreturnbox")
 	local point_of_no_return_text = self._noreturn_bg_box:child("point_of_no_return_text")
@@ -108,9 +107,11 @@ function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, del
 	icon_noreturnbox:stop()
 	icon_noreturnbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-	-- Lines: 97 to 99
+	-- Lines 97-99
 	local function open_done()
-		point_of_no_return_text:animate(callback(self, self, "_animate_show_texts"), {point_of_no_return_text})
+		point_of_no_return_text:animate(callback(self, self, "_animate_show_texts"), {
+			point_of_no_return_text
+		})
 	end
 
 	self._noreturn_bg_box:stop()
@@ -120,10 +121,9 @@ function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, del
 	})
 end
 
--- Lines: 107 to 111
+-- Lines 105-111
 function HUDAssaultCornerVR:_set_hostage_offseted(is_offseted)
 	if is_offseted then
 		self:start_assault_callback()
 	end
 end
-

@@ -5,7 +5,7 @@ core:import("CoreMath")
 
 CollisionCameraNode = CollisionCameraNode or CoreClass.class(CoreTransformCameraNode.TransformCameraNode)
 
--- Lines: 8 to 21
+-- Lines 8-21
 function CollisionCameraNode:init(settings)
 	CollisionCameraNode.super.init(self, settings)
 
@@ -22,21 +22,23 @@ function CollisionCameraNode:init(settings)
 	self._safe_position_var = settings.safe_position_var
 end
 
--- Lines: 23 to 28
+-- Lines 23-28
 function CollisionCameraNode:set_unit(unit)
 	self._unit = unit
 
 	if self._ignore_unit then
-		self._pop_controller:set_parameter("ignore_units", {unit})
+		self._pop_controller:set_parameter("ignore_units", {
+			unit
+		})
 	end
 end
 
--- Lines: 30 to 32
+-- Lines 30-32
 function CollisionCameraNode:set_safe_position(position)
 	self._safe_position = position
 end
 
--- Lines: 34 to 66
+-- Lines 34-66
 function CollisionCameraNode.compile_settings(xml_node, settings)
 	CollisionCameraNode.super.compile_settings(xml_node, settings)
 
@@ -71,13 +73,13 @@ function CollisionCameraNode.compile_settings(xml_node, settings)
 	end
 end
 
--- Lines: 69 to 73
+-- Lines 68-73
 function CollisionCameraNode:update(t, dt, in_data, out_data)
 	self:_update(t, dt, in_data, out_data)
 	CollisionCameraNode.super.update(self, t, dt, in_data, out_data)
 end
 
--- Lines: 75 to 83
+-- Lines 75-83
 function CollisionCameraNode:_update_smoother(t, dt, in_data, out_data)
 	local position = in_data._position
 	local rotation = in_data._rotation
@@ -86,7 +88,7 @@ function CollisionCameraNode:_update_smoother(t, dt, in_data, out_data)
 	self._local_position = (new_position - position):rotate_with(rotation:inverse())
 end
 
--- Lines: 85 to 118
+-- Lines 85-118
 function CollisionCameraNode:_update_fast_smooth(t, dt, in_data, out_data)
 	local position = in_data._position
 	local rotation = in_data._rotation
@@ -116,7 +118,7 @@ function CollisionCameraNode:_update_fast_smooth(t, dt, in_data, out_data)
 	end
 end
 
--- Lines: 120 to 128
+-- Lines 120-128
 function CollisionCameraNode:debug_render(t, dt)
 	local safe_position = self._camera_data[self._safe_position_var]
 	local brush = Draw:brush(Color(0.3, 1, 1, 1))
@@ -127,4 +129,3 @@ function CollisionCameraNode:debug_render(t, dt)
 
 	brush2:sphere(self._position, 1)
 end
-

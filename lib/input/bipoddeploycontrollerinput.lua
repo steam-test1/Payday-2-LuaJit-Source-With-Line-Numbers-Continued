@@ -1,12 +1,12 @@
 BipodDeployControllerInput = BipodDeployControllerInput or class()
 
--- Lines: 6 to 9
+-- Lines 6-9
 function BipodDeployControllerInput:init()
 	self._deploy_bipod_t = 0
 	self._deploy_bipod_waiting = true
 end
 
--- Lines: 12 to 30
+-- Lines 12-30
 function BipodDeployControllerInput:update(t, dt, controller, input)
 	input.btn_weapon_gadget_press = false
 
@@ -28,4 +28,3 @@ function BipodDeployControllerInput:update(t, dt, controller, input)
 		end
 	end
 end
-

@@ -8,7 +8,7 @@ end
 
 mt.__declared = {}
 
--- Lines: 21 to 30
+-- Lines 21-30
 function mt.__newindex(t, n, v)
 	if not mt.__declared[n] then
 		local info = debug.getinfo(2, "S")
@@ -23,7 +23,7 @@ function mt.__newindex(t, n, v)
 	rawset(t, n, v)
 end
 
--- Lines: 32 to 39
+-- Lines 32-39
 function mt.__index(t, n)
 	if not mt.__declared[n] then
 		local info = debug.getinfo(2, "S")
@@ -33,4 +33,3 @@ function mt.__index(t, n)
 		end
 	end
 end
-

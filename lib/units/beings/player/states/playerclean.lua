@@ -1,16 +1,16 @@
 PlayerClean = PlayerClean or class(PlayerStandard)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function PlayerClean:init(unit)
 	PlayerClean.super.init(self, unit)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function PlayerClean:enter(state_data, enter_data)
 	PlayerClean.super.enter(self, state_data, enter_data)
 end
 
--- Lines: 15 to 47
+-- Lines 15-47
 function PlayerClean:_enter(enter_data)
 	local equipped_selection = self._unit:inventory():equipped_selection()
 
@@ -36,7 +36,9 @@ function PlayerClean:_enter(enter_data)
 	if not managers.groupai:state():enemy_weapons_hot() then
 		self._enemy_weapons_hot_listen_id = "PlayerClean" .. tostring(self._unit:key())
 
-		managers.groupai:state():add_listener(self._enemy_weapons_hot_listen_id, {"enemy_weapons_hot"}, callback(self, self, "clbk_enemy_weapons_hot"))
+		managers.groupai:state():add_listener(self._enemy_weapons_hot_listen_id, {
+			"enemy_weapons_hot"
+		}, callback(self, self, "clbk_enemy_weapons_hot"))
 	end
 
 	self._ext_network:send("set_stance", 1, false, false)
@@ -51,7 +53,7 @@ function PlayerClean:_enter(enter_data)
 	end
 end
 
--- Lines: 51 to 74
+-- Lines 51-75
 function PlayerClean:exit(state_data, new_state_name)
 	PlayerClean.super.exit(self, state_data)
 
@@ -75,17 +77,17 @@ function PlayerClean:exit(state_data, new_state_name)
 	end
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function PlayerClean:interaction_blocked()
 	return true
 end
 
--- Lines: 85 to 87
+-- Lines 85-87
 function PlayerClean:update(t, dt)
 	PlayerClean.super.update(self, t, dt)
 end
 
--- Lines: 96 to 138
+-- Lines 93-138
 function PlayerClean:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -118,12 +120,12 @@ function PlayerClean:_update_check_actions(t, dt)
 	end
 end
 
--- Lines: 142 to 143
+-- Lines 142-144
 function PlayerClean:_get_walk_headbob()
 	return 0.0125
 end
 
--- Lines: 151 to 162
+-- Lines 150-163
 function PlayerClean:_check_action_interact(t, input)
 	local new_action = nil
 	local interaction_wanted = input.btn_interact_press
@@ -139,12 +141,12 @@ function PlayerClean:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines: 167 to 169
+-- Lines 167-169
 function PlayerClean:_start_action_state_standard(t)
 	managers.player:set_player_state("standard")
 end
 
--- Lines: 173 to 177
+-- Lines 173-177
 function PlayerClean:clbk_enemy_weapons_hot()
 	managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
 
@@ -152,4 +154,3 @@ function PlayerClean:clbk_enemy_weapons_hot()
 
 	managers.player:set_player_state("standard")
 end
-

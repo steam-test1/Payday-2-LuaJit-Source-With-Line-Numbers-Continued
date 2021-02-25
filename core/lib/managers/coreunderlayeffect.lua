@@ -1,11 +1,11 @@
 CoreUnderlayMaterial = CoreUnderlayMaterial or class()
 
--- Lines: 3 to 5
+-- Lines 3-5
 function CoreUnderlayMaterial:init()
 	self._params = {}
 end
 
--- Lines: 7 to 19
+-- Lines 7-19
 function CoreUnderlayMaterial:add(from)
 	for key, value in pairs(from._params) do
 		if self._params[key] then
@@ -18,14 +18,14 @@ function CoreUnderlayMaterial:add(from)
 	end
 end
 
--- Lines: 21 to 25
+-- Lines 21-25
 function CoreUnderlayMaterial:scale(scale)
 	for key, value in pairs(self._params) do
 		self._params[key] = self._params[key] * scale
 	end
 end
 
--- Lines: 27 to 35
+-- Lines 27-35
 function CoreUnderlayMaterial:copy(from)
 	for key, value in pairs(from._params) do
 		if type(value) ~= "number" then
@@ -36,7 +36,7 @@ function CoreUnderlayMaterial:copy(from)
 	end
 end
 
--- Lines: 37 to 46
+-- Lines 37-46
 function CoreUnderlayMaterial:interpolate(postfx, with, scale)
 	for key, value in pairs(postfx._params) do
 		if not with._params[key] then
@@ -48,7 +48,7 @@ function CoreUnderlayMaterial:interpolate(postfx, with, scale)
 	end
 end
 
--- Lines: 48 to 55
+-- Lines 48-55
 function CoreUnderlayMaterial:interpolate_value(postfx, with, key, scale)
 	if not with._params[key] or not postfx._params[key] then
 		return
@@ -58,7 +58,7 @@ function CoreUnderlayMaterial:interpolate_value(postfx, with, key, scale)
 	end
 end
 
--- Lines: 57 to 77
+-- Lines 57-77
 function CoreUnderlayMaterial:parse(xml_node)
 	self._params = {}
 
@@ -80,17 +80,17 @@ function CoreUnderlayMaterial:parse(xml_node)
 	end
 end
 
--- Lines: 79 to 81
+-- Lines 79-81
 function CoreUnderlayMaterial:set_value(key, value)
 	self._params[key] = value
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function CoreUnderlayMaterial:value(key)
 	return self._params[key]
 end
 
--- Lines: 87 to 96
+-- Lines 87-97
 function CoreUnderlayMaterial:database_lookup(str)
 	local i = string.find(str, "#")
 	local db_key = string.sub(str, 1, i - 1)
@@ -104,25 +104,26 @@ function CoreUnderlayMaterial:database_lookup(str)
 
 	return value
 end
+
 CoreUnderlayEffect = CoreUnderlayEffect or class()
 
--- Lines: 103 to 105
+-- Lines 103-105
 function CoreUnderlayEffect:init()
 	self:set_default()
 end
 
--- Lines: 107 to 110
+-- Lines 107-110
 function CoreUnderlayEffect:set_default()
 	self._materials = {}
 	self._name = "default"
 end
 
--- Lines: 112 to 114
+-- Lines 112-114
 function CoreUnderlayEffect:set_name(name)
 	self._name = name
 end
 
--- Lines: 116 to 123
+-- Lines 116-123
 function CoreUnderlayEffect:add(from)
 	for name, material in pairs(from._materials) do
 		if not self._materials[name] then
@@ -133,14 +134,14 @@ function CoreUnderlayEffect:add(from)
 	end
 end
 
--- Lines: 125 to 129
+-- Lines 125-129
 function CoreUnderlayEffect:scale(scale)
 	for name, material in pairs(self._materials) do
 		material:scale(scale)
 	end
 end
 
--- Lines: 131 to 140
+-- Lines 131-140
 function CoreUnderlayEffect:copy(from)
 	for name, material in pairs(from._materials) do
 		if not self._materials[name] then
@@ -153,7 +154,7 @@ function CoreUnderlayEffect:copy(from)
 	self._name = from._name
 end
 
--- Lines: 142 to 168
+-- Lines 142-168
 function CoreUnderlayEffect:interpolate(postfx, with, scale)
 	for name, material in pairs(postfx._materials) do
 		if not with._materials[name] then
@@ -182,7 +183,7 @@ function CoreUnderlayEffect:interpolate(postfx, with, scale)
 	self._name = postfx._name
 end
 
--- Lines: 170 to 181
+-- Lines 170-181
 function CoreUnderlayEffect:interpolate_value(postfx, with, material, key, scale)
 	if not with._materials[material] or not postfx._materials[material] then
 		return
@@ -197,7 +198,7 @@ function CoreUnderlayEffect:interpolate_value(postfx, with, material, key, scale
 	self._materials[material]:interpolate_value(postfx._materials[material], with._materials[material], key, scale)
 end
 
--- Lines: 183 to 193
+-- Lines 183-193
 function CoreUnderlayEffect:parse(xml_node)
 	for child in xml_node:children() do
 		local name = child:parameter("name")
@@ -212,7 +213,7 @@ function CoreUnderlayEffect:parse(xml_node)
 	end
 end
 
--- Lines: 195 to 200
+-- Lines 195-200
 function CoreUnderlayEffect:set_value(material, key, value)
 	if not self._materials[material] then
 		self._materials[material] = CoreUnderlayMaterial:new()
@@ -221,7 +222,7 @@ function CoreUnderlayEffect:set_value(material, key, value)
 	self._materials[material]:set_value(key, value)
 end
 
--- Lines: 202 to 208
+-- Lines 202-208
 function CoreUnderlayEffect:value(material, key)
 	if self._materials[material] then
 		return self._materials[material]:value(key)
@@ -229,4 +230,3 @@ function CoreUnderlayEffect:value(material, key)
 		return nil
 	end
 end
-

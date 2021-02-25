@@ -2,12 +2,12 @@ require("lib/states/GameState")
 
 MenuMainState = MenuMainState or class(GameState)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines: 9 to 213
+-- Lines 9-218
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -124,17 +124,19 @@ function MenuMainState:at_enter(old_state)
 
 		if not managers.custom_safehouse:unlocked() then
 			if not Global.mission_manager.has_played_tutorial and not Global.skip_menu_dialogs then
-
-				-- Lines: 138 to 140
+				-- Lines 138-140
 				local function yes_func()
-					MenuCallbackHandler:play_safehouse({skip_question = true})
+					MenuCallbackHandler:play_safehouse({
+						skip_question = true
+					})
 				end
 
-				managers.menu:show_question_start_tutorial({yes_func = yes_func})
+				managers.menu:show_question_start_tutorial({
+					yes_func = yes_func
+				})
 			end
 		elseif not managers.custom_safehouse:has_entered_safehouse() and not Global.skip_menu_dialogs then
-
-			-- Lines: 146 to 149
+			-- Lines 146-149
 			local function yes_func()
 				MenuCallbackHandler:play_single_player()
 				MenuCallbackHandler:start_single_player_job({
@@ -144,9 +146,13 @@ function MenuMainState:at_enter(old_state)
 			end
 
 			if managers.custom_safehouse:is_new_player() then
-				managers.menu:show_question_new_safehouse_new_player({yes_func = yes_func})
+				managers.menu:show_question_new_safehouse_new_player({
+					yes_func = yes_func
+				})
 			else
-				managers.menu:show_question_new_safehouse({yes_func = yes_func})
+				managers.menu:show_question_new_safehouse({
+					yes_func = yes_func
+				})
 			end
 		end
 
@@ -172,9 +178,11 @@ function MenuMainState:at_enter(old_state)
 			difficulty = Global.exe_argument_difficulty
 		})
 	end
+
+	managers.statistics:check_stats()
 end
 
--- Lines: 222 to 234
+-- Lines 226-239
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -187,11 +195,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines: 245 to 246
+-- Lines 241-251
 function MenuMainState:update(t, dt)
 end
 
--- Lines: 248 to 253
+-- Lines 253-258
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -200,7 +208,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines: 255 to 269
+-- Lines 260-274
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -212,24 +220,27 @@ function MenuMainState:_create_server_left_dialog()
 		text = managers.localization:text("dialog_ok"),
 		callback_func = callback(self, self, "on_server_left_ok_pressed")
 	}
-	dialog_data.button_list = {ok_button}
+	dialog_data.button_list = {
+		ok_button
+	}
 
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 271 to 277
+-- Lines 276-282
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines: 279 to 282
+-- Lines 284-287
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
-	managers.menu:show_mp_disconnected_internet_dialog({ok_func = callback(self, self, "on_server_left_ok_pressed")})
+	managers.menu:show_mp_disconnected_internet_dialog({
+		ok_func = callback(self, self, "on_server_left_ok_pressed")
+	})
 end
 
--- Lines: 284 to 285
+-- Lines 289-290
 function MenuMainState:on_disconnected()
 end
-

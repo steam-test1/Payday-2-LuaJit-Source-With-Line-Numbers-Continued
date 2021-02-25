@@ -5,18 +5,18 @@ local EMPTY_WORKSHEET_XML1 = " <Worksheet ss:Name=\"%s\">\n  <Table> "
 local EMPTY_WORKSHEET_XML2 = "\n  </Table>\n </Worksheet> "
 Worksheet = Worksheet or CoreClass.class()
 
--- Lines: 18 to 21
+-- Lines 18-21
 function Worksheet:init(name)
 	self._name = name
 	self._rows = {}
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function Worksheet:add_row(row)
 	table.insert(self._rows, row)
 end
 
--- Lines: 27 to 34
+-- Lines 27-34
 function Worksheet:to_xml(f)
 	f:write(string.format(EMPTY_WORKSHEET_XML1, self._name))
 
@@ -27,4 +27,3 @@ function Worksheet:to_xml(f)
 
 	f:write(EMPTY_WORKSHEET_XML2)
 end
-

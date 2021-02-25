@@ -4,7 +4,7 @@ require("lib/states/GameState")
 IngameLobbyMenuState = IngameLobbyMenuState or class(GameState)
 IngameLobbyMenuState.GUI_LOOTSCREEN = Idstring("guis/lootscreen/lootscreen_fullscreen")
 
--- Lines: 8 to 22
+-- Lines 8-22
 function IngameLobbyMenuState:init(game_state_machine)
 	GameState.init(self, "ingame_lobby_menu", game_state_machine)
 
@@ -18,7 +18,7 @@ function IngameLobbyMenuState:init(game_state_machine)
 	self._continue_cb = callback(self, self, "_continue")
 end
 
--- Lines: 24 to 33
+-- Lines 24-33
 function IngameLobbyMenuState:setup_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("ingame_lobby_menu", managers.controller:get_default_wrapper_index(), false)
@@ -31,7 +31,7 @@ function IngameLobbyMenuState:setup_controller()
 	end
 end
 
--- Lines: 35 to 47
+-- Lines 35-47
 function IngameLobbyMenuState:_clear_controller()
 	if not self._controller then
 		return
@@ -47,12 +47,12 @@ function IngameLobbyMenuState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines: 49 to 51
+-- Lines 49-51
 function IngameLobbyMenuState:_continue()
 	self:continue()
 end
 
--- Lines: 53 to 71
+-- Lines 53-71
 function IngameLobbyMenuState:continue()
 	if self:_continue_blocked() then
 		return
@@ -71,7 +71,7 @@ function IngameLobbyMenuState:continue()
 	end
 end
 
--- Lines: 73 to 94
+-- Lines 73-95
 function IngameLobbyMenuState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._loot_menu
 
@@ -98,18 +98,18 @@ function IngameLobbyMenuState:_continue_blocked()
 	return false
 end
 
--- Lines: 97 to 101
+-- Lines 97-101
 function IngameLobbyMenuState:set_controller_enabled(enabled)
 	if self._controller then
 		-- Nothing
 	end
 end
 
--- Lines: 104 to 105
+-- Lines 103-105
 function IngameLobbyMenuState:update(t, dt)
 end
 
--- Lines: 108 to 197
+-- Lines 108-197
 function IngameLobbyMenuState:at_enter()
 	managers.music:stop()
 	managers.platform:set_presence("Mission_end")
@@ -149,8 +149,12 @@ function IngameLobbyMenuState:at_enter()
 
 		local max_pc = managers.experience:level_to_stars()
 		local disable_weapon_mods = not managers.lootdrop:can_drop_weapon_mods() and true or nil
-		local card_left_pc = managers.lootdrop:new_fake_loot_pc(nil, {weapon_mods = disable_weapon_mods})
-		local card_right_pc = managers.lootdrop:new_fake_loot_pc(nil, {weapon_mods = disable_weapon_mods})
+		local card_left_pc = managers.lootdrop:new_fake_loot_pc(nil, {
+			weapon_mods = disable_weapon_mods
+		})
+		local card_right_pc = managers.lootdrop:new_fake_loot_pc(nil, {
+			weapon_mods = disable_weapon_mods
+		})
 
 		managers.hud:make_cards_hud(managers.network:session() and managers.network:session():local_peer(), max_pc, card_left_pc, card_right_pc)
 
@@ -193,14 +197,14 @@ function IngameLobbyMenuState:at_enter()
 	end
 end
 
--- Lines: 199 to 203
+-- Lines 199-203
 function IngameLobbyMenuState:_set_lootdrop()
 	if not managers.network.account:inventory_reward(callback(self, self, "_clbk_inventory_reward")) then
 		self:set_lootdrop()
 	end
 end
 
--- Lines: 205 to 222
+-- Lines 205-222
 function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	if error then
 		Application:error("[IngameLobbyMenuState:_clbk_inventory_reward] Failed to reward tradable item (" .. tostring(error) .. ")")
@@ -220,7 +224,7 @@ function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	self:set_lootdrop(drop_category, drop_entry)
 end
 
--- Lines: 224 to 269
+-- Lines 224-269
 function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	local global_value, item_category, item_id, max_pc, item_pc = nil
 	local allow_loot_drop = true
@@ -246,8 +250,12 @@ function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 
 	local peer = managers.network:session() and managers.network:session():local_peer() or false
 	local disable_weapon_mods = not managers.lootdrop:can_drop_weapon_mods() and true or nil
-	local card_left_pc = managers.lootdrop:new_fake_loot_pc(nil, {weapon_mods = disable_weapon_mods})
-	local card_right_pc = managers.lootdrop:new_fake_loot_pc(nil, {weapon_mods = disable_weapon_mods})
+	local card_left_pc = managers.lootdrop:new_fake_loot_pc(nil, {
+		weapon_mods = disable_weapon_mods
+	})
+	local card_right_pc = managers.lootdrop:new_fake_loot_pc(nil, {
+		weapon_mods = disable_weapon_mods
+	})
 	local lootdrop_data = {
 		peer,
 		global_value,
@@ -269,7 +277,7 @@ function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	end
 end
 
--- Lines: 271 to 289
+-- Lines 271-289
 function IngameLobbyMenuState:at_exit()
 	print("[IngameLobbyMenuState:at_exit()]")
 
@@ -281,21 +289,20 @@ function IngameLobbyMenuState:at_exit()
 	managers.menu_component:hide_game_chat_gui()
 end
 
--- Lines: 291 to 295
+-- Lines 291-295
 function IngameLobbyMenuState:on_server_left()
 	Application:debug("IngameLobbyMenuState:on_server_left()")
 	managers.menu_component:set_lootdrop_state("on_server_left")
 end
 
--- Lines: 297 to 301
+-- Lines 297-301
 function IngameLobbyMenuState:on_kicked()
 	Application:debug("IngameLobbyMenuState:on_kicked()")
 	managers.menu_component:set_lootdrop_state("on_kicked")
 end
 
--- Lines: 303 to 307
+-- Lines 303-307
 function IngameLobbyMenuState:on_disconnected()
 	Application:debug("IngameLobbyMenuState:on_disconnected()")
 	managers.menu_component:set_lootdrop_state("on_disconnected")
 end
-

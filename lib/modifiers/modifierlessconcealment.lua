@@ -6,7 +6,7 @@ ModifierLessConcealment.default_value = "conceal"
 ModifierLessConcealment.total_localization = "menu_cs_modifier_total_generic_value"
 ModifierLessConcealment.stealth = true
 
--- Lines: 10 to 14
+-- Lines 10-15
 function ModifierLessConcealment:modify_value(id, value)
 	if id == "BlackMarketManager:GetConcealment" then
 		return value + self:value()
@@ -14,4 +14,3 @@ function ModifierLessConcealment:modify_value(id, value)
 
 	return value
 end
-

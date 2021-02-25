@@ -1,8 +1,10 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 
--- Lines: 3 to 2519
+-- Lines 3-2519
 function BlackMarketTweakData:_init_textures(tweak_data)
-	self.textures = {no_color_no_material = {}}
+	self.textures = {
+		no_color_no_material = {}
+	}
 	self.textures.no_color_no_material.name_id = "bm_txt_no_color_no_material"
 	self.textures.no_color_no_material.texture = "units/payday2/masks/shared_textures/patterns/pattern_no_color_no_material_df"
 	self.textures.no_color_no_material.value = 0
@@ -1213,7 +1215,9 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_yggdrasil_df",
 		value = 4
 	}
-	self.textures.pumpgrin = {name_id = "bm_txt_pumpgrin"}
+	self.textures.pumpgrin = {
+		name_id = "bm_txt_pumpgrin"
+	}
 
 	if is_nextgen_console then
 		self.textures.pumpgrin.pcs = {
@@ -1235,7 +1239,9 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures.pumpgrin.texture = "units/payday2/masks/shared_textures/patterns/pattern_pumpgrin_df"
 	self.textures.pumpgrin.global_value = "halloween"
 	self.textures.pumpgrin.value = 5
-	self.textures.shout = {name_id = "bm_txt_shout"}
+	self.textures.shout = {
+		name_id = "bm_txt_shout"
+	}
 
 	if is_nextgen_console then
 		self.textures.shout.pcs = {
@@ -1257,7 +1263,9 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures.shout.texture = "units/payday2/masks/shared_textures/patterns/pattern_shout_df"
 	self.textures.shout.global_value = "halloween"
 	self.textures.shout.value = 5
-	self.textures.webbed = {name_id = "bm_txt_webbed"}
+	self.textures.webbed = {
+		name_id = "bm_txt_webbed"
+	}
 
 	if is_nextgen_console then
 		self.textures.webbed.pcs = {
@@ -1279,7 +1287,9 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures.webbed.texture = "units/payday2/masks/shared_textures/patterns/pattern_webbed_df"
 	self.textures.webbed.global_value = "halloween"
 	self.textures.webbed.value = 5
-	self.textures.hannibalistic = {name_id = "bm_txt_hannibalistic"}
+	self.textures.hannibalistic = {
+		name_id = "bm_txt_hannibalistic"
+	}
 
 	if is_nextgen_console then
 		self.textures.hannibalistic.pcs = {
@@ -1301,7 +1311,9 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures.hannibalistic.texture = "units/payday2/masks/shared_textures/patterns/pattern_hannibalistic_df"
 	self.textures.hannibalistic.global_value = "halloween"
 	self.textures.hannibalistic.value = 5
-	self.textures.stitches = {name_id = "bm_txt_stitches"}
+	self.textures.stitches = {
+		name_id = "bm_txt_stitches"
+	}
 
 	if is_nextgen_console then
 		self.textures.stitches.pcs = {
@@ -1323,7 +1335,9 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures.stitches.texture = "units/payday2/masks/shared_textures/patterns/pattern_stitches_df"
 	self.textures.stitches.global_value = "halloween"
 	self.textures.stitches.value = 4
-	self.textures.doomweaver = {name_id = "bm_txt_doomweaver"}
+	self.textures.doomweaver = {
+		name_id = "bm_txt_doomweaver"
+	}
 
 	if is_nextgen_console then
 		self.textures.doomweaver.pcs = {
@@ -3270,4 +3284,3 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		end
 	end
 end
-

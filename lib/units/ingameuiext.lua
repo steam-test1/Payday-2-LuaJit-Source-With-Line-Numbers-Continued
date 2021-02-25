@@ -1,6 +1,6 @@
 IngameUIExt = IngameUIExt or class()
 
--- Lines: 3 to 11
+-- Lines 3-11
 function IngameUIExt:init(unit)
 	self._unit = unit
 
@@ -10,4 +10,3 @@ function IngameUIExt:init(unit)
 		end
 	end
 end
-

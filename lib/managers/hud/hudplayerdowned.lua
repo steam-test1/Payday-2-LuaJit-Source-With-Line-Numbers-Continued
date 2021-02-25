@@ -1,6 +1,6 @@
 HUDPlayerDowned = HUDPlayerDowned or class()
 
--- Lines: 3 to 35
+-- Lines 3-35
 function HUDPlayerDowned:init(hud)
 	self._hud = hud
 	self._hud_panel = hud.panel
@@ -9,7 +9,9 @@ function HUDPlayerDowned:init(hud)
 		self._hud_panel:remove(self._hud_panel:child("downed_panel"))
 	end
 
-	local downed_panel = self._hud_panel:panel({name = "downed_panel"})
+	local downed_panel = self._hud_panel:panel({
+		name = "downed_panel"
+	})
 	local timer_msg = downed_panel:text({
 		text = "BLEH BLEH IN",
 		vertical = "center",
@@ -44,12 +46,14 @@ function HUDPlayerDowned:init(hud)
 	self._hud.arrest_finished_text:set_center_x(self._hud_panel:center_x())
 end
 
--- Lines: 37 to 39
+-- Lines 37-39
 function HUDPlayerDowned:set_arrest_finished_text()
-	self._hud.arrest_finished_text:set_text(utf8.to_upper(managers.localization:text("hud_instruct_finish_arrest", {BTN_INTERACT = managers.localization:btn_macro("interact")})))
+	self._hud.arrest_finished_text:set_text(utf8.to_upper(managers.localization:text("hud_instruct_finish_arrest", {
+		BTN_INTERACT = managers.localization:btn_macro("interact")
+	})))
 end
 
--- Lines: 41 to 49
+-- Lines 41-49
 function HUDPlayerDowned:on_downed()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -57,7 +61,7 @@ function HUDPlayerDowned:on_downed()
 	timer_msg:set_text(utf8.to_upper(managers.localization:text("hud_custody_in")))
 end
 
--- Lines: 51 to 55
+-- Lines 51-55
 function HUDPlayerDowned:on_arrested()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -65,7 +69,7 @@ function HUDPlayerDowned:on_arrested()
 	timer_msg:set_text(utf8.to_upper(managers.localization:text("hud_uncuffed_in")))
 end
 
--- Lines: 57 to 65
+-- Lines 57-65
 function HUDPlayerDowned:show_timer()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -76,7 +80,7 @@ function HUDPlayerDowned:show_timer()
 	self._hud.timer:set_alpha(1)
 end
 
--- Lines: 67 to 74
+-- Lines 67-74
 function HUDPlayerDowned:hide_timer()
 	local downed_panel = self._hud_panel:child("downed_panel")
 	local timer_msg = downed_panel:child("timer_msg")
@@ -85,7 +89,7 @@ function HUDPlayerDowned:hide_timer()
 	self._hud.timer:set_alpha(0.65)
 end
 
--- Lines: 76 to 82
+-- Lines 76-82
 function HUDPlayerDowned:show_arrest_finished()
 	self._hud.arrest_finished_text:set_visible(true)
 
@@ -96,7 +100,7 @@ function HUDPlayerDowned:show_arrest_finished()
 	self._hud.timer:set_visible(false)
 end
 
--- Lines: 84 to 86
+-- Lines 84-86
 function HUDPlayerDowned:hide_arrest_finished()
 	self._hud.arrest_finished_text:set_visible(false)
 end
@@ -104,4 +108,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDPlayerDownedVR")
 end
-

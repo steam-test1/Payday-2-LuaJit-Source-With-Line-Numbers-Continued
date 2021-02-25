@@ -2,12 +2,12 @@ require("lib/states/GameState")
 
 IngameFreefall = IngameFreefall or class(IngamePlayerBaseState)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function IngameFreefall:init(game_state_machine)
 	IngameFreefall.super.init(self, "ingame_freefall", game_state_machine)
 end
 
--- Lines: 9 to 30
+-- Lines 9-30
 function IngameFreefall:at_enter()
 	local players = managers.player:players()
 
@@ -32,7 +32,7 @@ function IngameFreefall:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 33 to 41
+-- Lines 32-41
 function IngameFreefall:at_exit()
 	local player = managers.player:player_unit()
 
@@ -44,18 +44,17 @@ function IngameFreefall:at_exit()
 	managers.hud:hide(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines: 43 to 45
+-- Lines 43-45
 function IngameFreefall:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function IngameFreefall:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines: 51 to 53
+-- Lines 51-53
 function IngameFreefall:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
-

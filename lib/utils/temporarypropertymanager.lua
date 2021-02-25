@@ -1,11 +1,11 @@
 TemporaryPropertyManager = TemporaryPropertyManager or class()
 
--- Lines: 6 to 8
+-- Lines 6-8
 function TemporaryPropertyManager:init()
 	self._properties = {}
 end
 
--- Lines: 10 to 12
+-- Lines 10-12
 function TemporaryPropertyManager:activate_property(prop, time, value)
 	self._properties[prop] = {
 		value,
@@ -13,7 +13,7 @@ function TemporaryPropertyManager:activate_property(prop, time, value)
 	}
 end
 
--- Lines: 14 to 21
+-- Lines 14-22
 function TemporaryPropertyManager:get_property(prop, default)
 	local time = Application:time()
 
@@ -26,7 +26,7 @@ function TemporaryPropertyManager:get_property(prop, default)
 	return default
 end
 
--- Lines: 24 to 31
+-- Lines 24-31
 function TemporaryPropertyManager:add_to_property(prop, time, value)
 	if not self:has_active_property(prop) then
 		self:activate_property(prop, time, value)
@@ -36,7 +36,7 @@ function TemporaryPropertyManager:add_to_property(prop, time, value)
 	end
 end
 
--- Lines: 33 to 39
+-- Lines 33-39
 function TemporaryPropertyManager:mul_to_property(prop, time, value)
 	if not self:has_active_property(prop) then
 		self:activate_property(prop, time, value)
@@ -45,14 +45,14 @@ function TemporaryPropertyManager:mul_to_property(prop, time, value)
 	end
 end
 
--- Lines: 41 to 45
+-- Lines 41-45
 function TemporaryPropertyManager:set_time(prop, time)
 	if self:has_active_property(prop) then
 		self._properties[prop][2] = Application:time() + time
 	end
 end
 
--- Lines: 47 to 57
+-- Lines 47-58
 function TemporaryPropertyManager:has_active_property(prop)
 	local time = Application:time()
 
@@ -69,10 +69,9 @@ function TemporaryPropertyManager:has_active_property(prop)
 	return false
 end
 
--- Lines: 60 to 64
+-- Lines 60-64
 function TemporaryPropertyManager:remove_property(prop)
 	if self._properties[prop] then
 		self._properties[prop] = nil
 	end
 end
-

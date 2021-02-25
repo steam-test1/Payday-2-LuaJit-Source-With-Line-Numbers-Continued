@@ -2,7 +2,7 @@ core:module("CoreSlotManager")
 
 SlotManager = SlotManager or class()
 
--- Lines: 5 to 50
+-- Lines 5-50
 function SlotManager:init()
 	local unit_manager = World:unit_manager()
 
@@ -35,10 +35,12 @@ function SlotManager:init()
 	}
 end
 
--- Lines: 52 to 74
+-- Lines 52-75
 function SlotManager:get_mask(...)
 	local mask = nil
-	local arg_list = {...}
+	local arg_list = {
+		...
+	}
 
 	for _, name in pairs(arg_list) do
 		local next_mask = self._masks[name]
@@ -61,13 +63,12 @@ function SlotManager:get_mask(...)
 	return mask
 end
 
--- Lines: 77 to 78
+-- Lines 77-79
 function SlotManager:get_mask_name(slotmask)
 	return table.get_key(self._masks, slotmask)
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function SlotManager:get_mask_map()
 	return self._masks
 end
-

@@ -1,11 +1,13 @@
-CoreCutsceneKey = CoreCutsceneKey or {_classes = {}}
+CoreCutsceneKey = CoreCutsceneKey or {
+	_classes = {}
+}
 
--- Lines: 3 to 4
+-- Lines 3-5
 function CoreCutsceneKey:create(element_name, key_collection)
 	return assert(self._classes[element_name], "Element name \"" .. tostring(element_name) .. "\" does not match any registered cutscene key type."):new(key_collection)
 end
 
--- Lines: 7 to 18
+-- Lines 7-18
 function CoreCutsceneKey:register_class(path)
 	require(path)
 
@@ -20,7 +22,7 @@ function CoreCutsceneKey:register_class(path)
 	CoreCutsceneKey._classes[element_name] = class
 end
 
--- Lines: 20 to 27
+-- Lines 20-28
 function CoreCutsceneKey:types()
 	local sorted_types = {}
 
@@ -35,18 +37,18 @@ function CoreCutsceneKey:types()
 	return sorted_types
 end
 
--- Lines: 30 to 36
+-- Lines 30-37
 function CoreCutsceneKey:next_available_colour()
 	self._colour_index = (self._colour_index or 0) + 1
 
-	if #self:colour_palette() < self._colour_index then
+	if self._colour_index > #self:colour_palette() then
 		self._colour_index = 1
 	end
 
 	return self:colour_palette()[self._colour_index]
 end
 
--- Lines: 39 to 47
+-- Lines 39-48
 function CoreCutsceneKey:colour_palette()
 	if self._colour_palette == nil then
 		local hex_values = {
@@ -120,4 +122,3 @@ CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreVolumeSetCut
 CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreZoomCameraCutsceneKey")
 CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreChangeShadowCutsceneKey")
 CoreCutsceneKey:register_class("core/lib/managers/cutscene/keys/CoreLightGroupCutsceneKey")
-

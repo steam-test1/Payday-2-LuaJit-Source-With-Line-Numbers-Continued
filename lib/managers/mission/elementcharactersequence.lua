@@ -2,18 +2,18 @@ core:import("CoreMissionScriptElement")
 
 ElementCharacterSequence = ElementCharacterSequence or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementCharacterSequence:init(...)
 	ElementCharacterSequence.super.init(self, ...)
 end
 
--- Lines: 9 to 43
+-- Lines 9-43
 function ElementCharacterSequence:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
-	-- Lines: 14 to 20
+	-- Lines 14-20
 	local function f(unit)
 		unit:damage():run_sequence_simple(self._values.sequence)
 
@@ -46,4 +46,3 @@ function ElementCharacterSequence:on_executed(instigator)
 
 	ElementCharacterSequence.super.on_executed(self, instigator)
 end
-

@@ -3,18 +3,18 @@ PlayerCarry.target_tilt = -5
 PlayerCarry.throw_limit_t = 0.5
 local armor_init = tweak_data.player.damage.ARMOR_INIT
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerCarry:init(unit)
 	PlayerCarry.super.init(self, unit)
 end
 
--- Lines: 12 to 25
+-- Lines 12-25
 function PlayerCarry:enter(state_data, enter_data)
 	PlayerCarry.super.enter(self, state_data, enter_data)
 	self._unit:camera():camera_unit():base():set_target_tilt(PlayerCarry.target_tilt)
 end
 
--- Lines: 29 to 63
+-- Lines 29-63
 function PlayerCarry:_enter(enter_data)
 	local my_carry_data = managers.player:get_my_carry_data()
 
@@ -51,12 +51,14 @@ function PlayerCarry:_enter(enter_data)
 	self:_upd_attention()
 end
 
--- Lines: 67 to 80
+-- Lines 67-81
 function PlayerCarry:exit(state_data, new_state_name)
 	PlayerCarry.super.exit(self, state_data, new_state_name)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
 
-	local exit_data = {skip_equip = true}
+	local exit_data = {
+		skip_equip = true
+	}
 	self._dye_risk = nil
 
 	managers.job:set_memory("kill_count_carry", nil, true)
@@ -67,7 +69,7 @@ function PlayerCarry:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines: 85 to 92
+-- Lines 85-92
 function PlayerCarry:update(t, dt)
 	PlayerCarry.super.update(self, t, dt)
 
@@ -76,23 +78,25 @@ function PlayerCarry:update(t, dt)
 	end
 end
 
--- Lines: 94 to 97
+-- Lines 94-97
 function PlayerCarry:set_tweak_data(name)
 	self._tweak_data_name = name
 
 	self:_check_dye_pack()
 end
 
--- Lines: 99 to 105
+-- Lines 99-105
 function PlayerCarry:_check_dye_pack()
 	local my_carry_data = managers.player:get_my_carry_data()
 
 	if my_carry_data.has_dye_pack then
-		self._dye_risk = {next_t = managers.player:player_timer():time() + 2 + math.random(3)}
+		self._dye_risk = {
+			next_t = managers.player:player_timer():time() + 2 + math.random(3)
+		}
 	end
 end
 
--- Lines: 107 to 122
+-- Lines 107-122
 function PlayerCarry:_check_dye_explode()
 	local chance = math.rand(1)
 
@@ -109,7 +113,7 @@ function PlayerCarry:_check_dye_explode()
 	self._dye_risk.next_t = managers.player:player_timer():time() + 2 + math.random(3)
 end
 
--- Lines: 131 to 243
+-- Lines 128-243
 function PlayerCarry:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -168,14 +172,14 @@ function PlayerCarry:_update_check_actions(t, dt)
 	self:_check_action_night_vision(t, input)
 end
 
--- Lines: 249 to 253
+-- Lines 245-253
 function PlayerCarry:_check_action_run(...)
 	if tweak_data.carry.types[self._tweak_data_name].can_run or managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		PlayerCarry.super._check_action_run(self, ...)
 	end
 end
 
--- Lines: 256 to 287
+-- Lines 256-288
 function PlayerCarry:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_release and self._throw_time and t and t < self._throw_time
@@ -215,38 +219,36 @@ function PlayerCarry:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines: 293 to 294
+-- Lines 292-297
 function PlayerCarry:_check_change_weapon(...)
 	return PlayerCarry.super._check_change_weapon(self, ...)
 end
 
--- Lines: 300 to 301
+-- Lines 299-304
 function PlayerCarry:_check_action_equip(...)
 	return PlayerCarry.super._check_action_equip(self, ...)
 end
 
--- Lines: 308 to 310
+-- Lines 308-310
 function PlayerCarry:_update_movement(t, dt)
 	PlayerCarry.super._update_movement(self, t, dt)
 end
 
--- Lines: 314 to 317
+-- Lines 314-317
 function PlayerCarry:_start_action_jump(...)
 	PlayerCarry.super._start_action_jump(self, ...)
 end
 
--- Lines: 319 to 325
+-- Lines 319-325
 function PlayerCarry:_perform_jump(jump_vec)
-	if managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
-		-- Nothing
-	else
+	if not managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
 	end
 
 	PlayerCarry.super._perform_jump(self, jump_vec)
 end
 
--- Lines: 333 to 351
+-- Lines 329-352
 function PlayerCarry:_get_max_walk_speed(...)
 	local multiplier = tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 	multiplier = managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") and 1 or math.clamp(multiplier * managers.player:upgrade_value("carry", "movement_speed_multiplier", 1), 0, 1)
@@ -255,7 +257,7 @@ function PlayerCarry:_get_max_walk_speed(...)
 		local base_max_armor = armor_init + managers.player:body_armor_value("armor") + managers.player:body_armor_skill_addend()
 		local mul = managers.player:upgrade_value("player", "armor_carry_bonus", 1)
 
-		for i = 1, base_max_armor, 1 do
+		for i = 1, base_max_armor do
 			multiplier = multiplier * mul
 		end
 
@@ -265,20 +267,20 @@ function PlayerCarry:_get_max_walk_speed(...)
 	return PlayerCarry.super._get_max_walk_speed(self, ...) * multiplier
 end
 
--- Lines: 354 to 355
+-- Lines 354-356
 function PlayerCarry:_get_walk_headbob(...)
 	return PlayerCarry.super._get_walk_headbob(self, ...) * tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 end
 
--- Lines: 361 to 362
+-- Lines 360-362
 function PlayerCarry:pre_destroy(unit)
 end
 
--- Lines: 367 to 368
+-- Lines 366-368
 function PlayerCarry:destroy()
 end
 
--- Lines: 373 to 374
+-- Lines 373-375
 function PlayerCarry:_get_input(...)
 	return PlayerCarry.super._get_input(self, ...)
 end
@@ -286,4 +288,3 @@ end
 if _G.IS_VR then
 	require("lib/units/beings/player/states/vr/PlayerCarryVR")
 end
-

@@ -5,7 +5,7 @@ core:import("CoreDebug")
 
 PointerDraw = PointerDraw or CoreClass.class()
 
--- Lines: 8 to 13
+-- Lines 8-13
 function PointerDraw:init(color, size, position)
 	self.__shape = shape or "sphere"
 	self.__color = color or Color("ff0000")
@@ -13,7 +13,7 @@ function PointerDraw:init(color, size, position)
 	self.__size = size or 30
 end
 
--- Lines: 15 to 22
+-- Lines 15-22
 function PointerDraw:update(time, delta_time)
 	if self.__position then
 		local pen = Draw:pen()
@@ -24,8 +24,7 @@ function PointerDraw:update(time, delta_time)
 	end
 end
 
--- Lines: 24 to 26
+-- Lines 24-26
 function PointerDraw:set_position(position)
 	self.__position = position
 end
-

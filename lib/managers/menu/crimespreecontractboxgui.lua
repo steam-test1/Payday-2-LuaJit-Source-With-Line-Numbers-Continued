@@ -1,6 +1,6 @@
 CrimeSpreeContractBoxGui = CrimeSpreeContractBoxGui or class()
 
--- Lines: 5 to 21
+-- Lines 4-21
 function CrimeSpreeContractBoxGui:init(ws, fullscreen_ws)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -9,7 +9,7 @@ function CrimeSpreeContractBoxGui:init(ws, fullscreen_ws)
 	self._peer_panels = {}
 
 	if not self:_can_update() then
-		for i = 1, tweak_data.max_players, 1 do
+		for i = 1, tweak_data.max_players do
 			self:_check_create_peer_panel(i)
 		end
 	end
@@ -17,23 +17,23 @@ function CrimeSpreeContractBoxGui:init(ws, fullscreen_ws)
 	self._enabled = true
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function CrimeSpreeContractBoxGui:set_enabled(enabled)
 	self._enabled = enabled
 end
 
--- Lines: 27 to 30
+-- Lines 27-30
 function CrimeSpreeContractBoxGui:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines: 34 to 35
+-- Lines 34-36
 function CrimeSpreeContractBoxGui:_can_update()
 	return not Global.game_settings.single_player
 end
 
--- Lines: 38 to 46
+-- Lines 38-47
 function CrimeSpreeContractBoxGui:_check_create_peer_panel(peer_id)
 	if not self._peer_panels[peer_id] then
 		local peer = managers.network:session():peer(peer_id)
@@ -47,7 +47,7 @@ function CrimeSpreeContractBoxGui:_check_create_peer_panel(peer_id)
 	return self._peer_panels[peer_id]
 end
 
--- Lines: 50 to 61
+-- Lines 49-61
 function CrimeSpreeContractBoxGui:update_character_menu_state(peer_id, state)
 	if not self:_can_update() then
 		return
@@ -61,7 +61,7 @@ function CrimeSpreeContractBoxGui:update_character_menu_state(peer_id, state)
 	end
 end
 
--- Lines: 64 to 75
+-- Lines 63-75
 function CrimeSpreeContractBoxGui:update_character(peer_id)
 	if not self:_can_update() then
 		return
@@ -75,11 +75,11 @@ function CrimeSpreeContractBoxGui:update_character(peer_id)
 	end
 end
 
--- Lines: 78 to 79
+-- Lines 77-79
 function CrimeSpreeContractBoxGui:update_bg_state(peer_id, state)
 end
 
--- Lines: 82 to 93
+-- Lines 81-93
 function CrimeSpreeContractBoxGui:set_character_panel_alpha(peer_id, alpha)
 	if not self:_can_update() then
 		return
@@ -93,22 +93,22 @@ function CrimeSpreeContractBoxGui:set_character_panel_alpha(peer_id, alpha)
 	end
 end
 
--- Lines: 97 to 98
+-- Lines 97-98
 function CrimeSpreeContractBoxGui:refresh()
 end
 
--- Lines: 100 to 107
+-- Lines 100-107
 function CrimeSpreeContractBoxGui:update(t, dt)
 	if not self:_can_update() then
 		return
 	end
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		self:update_character(i)
 	end
 end
 
--- Lines: 110 to 130
+-- Lines 109-130
 function CrimeSpreeContractBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() or not self:_can_update() then
 		return
@@ -129,7 +129,7 @@ function CrimeSpreeContractBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 133 to 153
+-- Lines 132-153
 function CrimeSpreeContractBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() or not self:_can_update() then
 		return
@@ -152,7 +152,7 @@ function CrimeSpreeContractBoxGui:mouse_moved(x, y)
 	end
 end
 
--- Lines: 155 to 159
+-- Lines 155-160
 function CrimeSpreeContractBoxGui:can_take_input()
 	if managers.menu_component and managers.menu_component:crime_spree_modifiers() then
 		return false
@@ -161,30 +161,29 @@ function CrimeSpreeContractBoxGui:can_take_input()
 	return true
 end
 
--- Lines: 162 to 163
+-- Lines 162-164
 function CrimeSpreeContractBoxGui:check_minimize()
 	return false
 end
 
--- Lines: 166 to 167
+-- Lines 166-167
 function CrimeSpreeContractBoxGui:moved_scroll_bar()
 end
 
--- Lines: 169 to 170
+-- Lines 169-170
 function CrimeSpreeContractBoxGui:mouse_wheel_down()
 end
 
--- Lines: 172 to 173
+-- Lines 172-173
 function CrimeSpreeContractBoxGui:mouse_wheel_up()
 end
 
--- Lines: 175 to 176
+-- Lines 175-177
 function CrimeSpreeContractBoxGui:check_grab_scroll_bar()
 	return false
 end
 
--- Lines: 179 to 180
+-- Lines 179-181
 function CrimeSpreeContractBoxGui:release_scroll_bar()
 	return false
 end
-

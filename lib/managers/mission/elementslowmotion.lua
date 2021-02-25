@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementSlowMotion = ElementSlowMotion or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 20
+-- Lines 5-20
 function ElementSlowMotion:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -21,4 +21,3 @@ function ElementSlowMotion:on_executed(instigator)
 	managers.time_speed:play_effect(eff_id, eff_desc)
 	ElementSlowMotion.super.on_executed(self, instigator)
 end
-

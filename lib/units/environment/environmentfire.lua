@@ -1,7 +1,7 @@
 EnvironmentFire = EnvironmentFire or class(UnitBase)
 local unit_id = Idstring("units/payday2/environment/environment_fire_1/environment_fire_1")
 
--- Lines: 8 to 15
+-- Lines 8-16
 function EnvironmentFire.spawn(position, rotation, data, normal, user_unit, added_time, range_multiplier)
 	local unit = World:spawn_unit(unit_id, position, rotation)
 
@@ -12,7 +12,7 @@ function EnvironmentFire.spawn(position, rotation, data, normal, user_unit, adde
 	return unit
 end
 
--- Lines: 18 to 23
+-- Lines 18-23
 function EnvironmentFire:init(unit)
 	self._unit = unit
 	self._burn_tick_counter = 0
@@ -20,12 +20,12 @@ function EnvironmentFire:init(unit)
 	self._molotov_damage_effect_table = {}
 end
 
--- Lines: 25 to 26
+-- Lines 25-27
 function EnvironmentFire:get_name_id()
 	return "environment_fire"
 end
 
--- Lines: 30 to 192
+-- Lines 29-192
 function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_multiplier)
 	local custom_params = {
 		camera_shake_max_mul = 4,
@@ -123,7 +123,7 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_mul
 		end
 	end
 
-	for i = 1, self._hexes, 1 do
+	for i = 1, self._hexes do
 		vector = position + offset
 		raycast = World:raycast("ray", position, vector, "slot_mask", slotmask)
 		local ray_cast, fake_ball_outline = nil
@@ -174,7 +174,7 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_mul
 	self._unit:set_visible(false)
 end
 
--- Lines: 194 to 219
+-- Lines 194-219
 function EnvironmentFire:update(unit, t, dt)
 	if self._burn_duration <= 0 then
 		self._unit:set_slot(0)
@@ -206,7 +206,7 @@ function EnvironmentFire:update(unit, t, dt)
 	end
 end
 
--- Lines: 222 to 292
+-- Lines 222-292
 function EnvironmentFire:_do_damage()
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -273,14 +273,14 @@ function EnvironmentFire:_do_damage()
 	self._burn_tick_counter = 0
 end
 
--- Lines: 294 to 298
+-- Lines 294-298
 function EnvironmentFire:destroy(unit)
 	for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 		World:effect_manager():fade_kill(damage_effect_entry.effect_id)
 	end
 end
 
--- Lines: 300 to 321
+-- Lines 300-321
 function EnvironmentFire:save(data)
 	local state = {
 		burn_duration = self._burn_duration,
@@ -304,7 +304,7 @@ function EnvironmentFire:save(data)
 	data.EnvironmentFire = state
 end
 
--- Lines: 323 to 344
+-- Lines 323-344
 function EnvironmentFire:load(data)
 	local state = data.EnvironmentFire
 	self._burn_duration = state.burn_duration
@@ -327,4 +327,3 @@ function EnvironmentFire:load(data)
 
 	self:on_spawn(data, normal, self._user_unit, added_time, range_multiplier)
 end
-

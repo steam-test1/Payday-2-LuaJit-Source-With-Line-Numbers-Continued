@@ -4,12 +4,12 @@ CorePlayEffectUnitElement = CorePlayEffectUnitElement or class(MissionElement)
 CorePlayEffectUnitElement.USES_POINT_ORIENTATION = true
 PlayEffectUnitElement = PlayEffectUnitElement or class(CorePlayEffectUnitElement)
 
--- Lines: 8 to 10
+-- Lines 8-10
 function PlayEffectUnitElement:init(...)
 	CorePlayEffectUnitElement.init(self, ...)
 end
 
--- Lines: 12 to 32
+-- Lines 12-32
 function CorePlayEffectUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -26,7 +26,7 @@ function CorePlayEffectUnitElement:init(unit)
 	table.insert(self._save_values, "max_amount")
 end
 
--- Lines: 34 to 42
+-- Lines 34-42
 function CorePlayEffectUnitElement:test_element()
 	if self._hed.effect ~= "none" then
 		self:stop_test_element()
@@ -42,7 +42,7 @@ function CorePlayEffectUnitElement:test_element()
 	end
 end
 
--- Lines: 44 to 49
+-- Lines 44-49
 function CorePlayEffectUnitElement:stop_test_element()
 	if self._effect then
 		World:effect_manager():kill(self._effect)
@@ -51,9 +51,11 @@ function CorePlayEffectUnitElement:stop_test_element()
 	end
 end
 
--- Lines: 51 to 56
+-- Lines 51-57
 function CorePlayEffectUnitElement:_effect_options()
-	local effect_options = {"none"}
+	local effect_options = {
+		"none"
+	}
 
 	for _, name in ipairs(managers.database:list_entries_of_type("effect")) do
 		table.insert(effect_options, name)
@@ -62,7 +64,7 @@ function CorePlayEffectUnitElement:_effect_options()
 	return effect_options
 end
 
--- Lines: 59 to 77
+-- Lines 59-77
 function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -98,7 +100,7 @@ Be sure not to use a looping effect when using repeat or the effects will add to
 	self:add_help_text(help)
 end
 
--- Lines: 79 to 83
+-- Lines 79-83
 function CorePlayEffectUnitElement:add_to_mission_package()
 	if self._hed.effect and self._hed.effect ~= "none" then
 		managers.editor:add_to_world_package({
@@ -108,16 +110,19 @@ function CorePlayEffectUnitElement:add_to_mission_package()
 		})
 	end
 end
+
 CoreStopEffectUnitElement = CoreStopEffectUnitElement or class(MissionElement)
-CoreStopEffectUnitElement.LINK_ELEMENTS = {"elements"}
+CoreStopEffectUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 StopEffectUnitElement = StopEffectUnitElement or class(CoreStopEffectUnitElement)
 
--- Lines: 92 to 94
+-- Lines 92-94
 function StopEffectUnitElement:init(...)
 	CoreStopEffectUnitElement.init(self, ...)
 end
 
--- Lines: 96 to 104
+-- Lines 96-104
 function CoreStopEffectUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -128,7 +133,7 @@ function CoreStopEffectUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 106 to 115
+-- Lines 106-115
 function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -148,17 +153,17 @@ function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 117 to 120
+-- Lines 117-120
 function CoreStopEffectUnitElement:get_links_to_unit(...)
 	CoreStopEffectUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines: 122 to 123
+-- Lines 122-123
 function CoreStopEffectUnitElement:update_editing()
 end
 
--- Lines: 125 to 135
+-- Lines 125-135
 function CoreStopEffectUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -176,18 +181,20 @@ function CoreStopEffectUnitElement:add_element()
 	end
 end
 
--- Lines: 138 to 140
+-- Lines 138-140
 function CoreStopEffectUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 142 to 152
+-- Lines 142-152
 function CoreStopEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = {"env_effect_play"}
+	local names = {
+		"env_effect_play"
+	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "operation", {
@@ -195,4 +202,3 @@ function CoreStopEffectUnitElement:_build_panel(panel, panel_sizer)
 		"fade_kill"
 	}, "Select a kind of operation to perform on the added effects")
 end
-

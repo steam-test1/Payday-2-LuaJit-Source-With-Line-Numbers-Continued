@@ -8,18 +8,20 @@ MutatorEnemyDamage.reductions = {
 	exp = 0
 }
 MutatorEnemyDamage.disables_achievements = true
-MutatorEnemyDamage.categories = {"enemies"}
+MutatorEnemyDamage.categories = {
+	"enemies"
+}
 MutatorEnemyDamage.icon_coords = {
 	5,
 	1
 }
 
--- Lines: 16 to 18
+-- Lines 16-18
 function MutatorEnemyDamage:register_values(mutator_manager)
 	self:register_value("damage_multiplier", 2, "dm")
 end
 
--- Lines: 20 to 27
+-- Lines 20-27
 function MutatorEnemyDamage:name()
 	local name = MutatorEnemyHealth.super.name(self)
 
@@ -30,12 +32,12 @@ function MutatorEnemyDamage:name()
 	end
 end
 
--- Lines: 31 to 32
+-- Lines 31-33
 function MutatorEnemyDamage:get_damage_multiplier()
 	return self:value("damage_multiplier")
 end
 
--- Lines: 35 to 39
+-- Lines 35-40
 function MutatorEnemyDamage:modify_value(id, value)
 	if id == "PlayerDamage:TakeDamageBullet" then
 		return value * self:get_damage_multiplier()
@@ -44,17 +46,17 @@ function MutatorEnemyDamage:modify_value(id, value)
 	return value
 end
 
--- Lines: 44 to 45
+-- Lines 44-46
 function MutatorEnemyDamage:_min_damage()
 	return 1.01
 end
 
--- Lines: 48 to 49
+-- Lines 48-50
 function MutatorEnemyDamage:_max_damage()
 	return 10
 end
 
--- Lines: 53 to 73
+-- Lines 52-75
 function MutatorEnemyDamage:setup_options_gui(node)
 	local params = {
 		name = "enemy_damage_slider",
@@ -80,12 +82,12 @@ function MutatorEnemyDamage:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 77 to 79
+-- Lines 77-79
 function MutatorEnemyDamage:_update_damage_multiplier(item)
 	self:set_value("damage_multiplier", item:value())
 end
 
--- Lines: 82 to 92
+-- Lines 81-92
 function MutatorEnemyDamage:reset_to_default()
 	self:clear_values()
 
@@ -98,8 +100,7 @@ function MutatorEnemyDamage:reset_to_default()
 	end
 end
 
--- Lines: 94 to 95
+-- Lines 94-96
 function MutatorEnemyDamage:options_fill()
 	return self:_get_percentage_fill(self:_min_damage(), self:_max_damage(), self:get_damage_multiplier())
 end
-

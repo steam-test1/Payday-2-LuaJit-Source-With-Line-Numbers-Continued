@@ -1,13 +1,15 @@
 SyncUnitData = SyncUnitData or class()
 
--- Lines: 3 to 5
+-- Lines 3-5
 function SyncUnitData:init(unit)
 	self._unit = unit
 end
 
--- Lines: 7 to 29
+-- Lines 7-29
 function SyncUnitData:save(data)
-	local state = {lights = {}}
+	local state = {
+		lights = {}
+	}
 
 	for _, light in ipairs(self._unit:get_objects_by_type(Idstring("light"))) do
 		local l = {
@@ -31,7 +33,7 @@ function SyncUnitData:save(data)
 	data.SyncUnitData = state
 end
 
--- Lines: 31 to 36
+-- Lines 31-36
 function SyncUnitData:load(data)
 	local state = data.SyncUnitData
 	self._unit:unit_data().unit_id = self._unit:editor_id()
@@ -39,4 +41,3 @@ function SyncUnitData:load(data)
 	managers.worlddefinition:setup_lights(self._unit, state)
 	managers.worlddefinition:setup_projection_light(self._unit, state)
 end
-

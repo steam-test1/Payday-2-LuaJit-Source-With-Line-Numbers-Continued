@@ -1,7 +1,7 @@
 MenuNodeUpdatesGui = MenuNodeUpdatesGui or class(MenuNodeGui)
 MenuNodeUpdatesGui.PADDING = 10
 
--- Lines: 4 to 45
+-- Lines 4-45
 function MenuNodeUpdatesGui:init(node, layer, parameters)
 	MenuNodeUpdatesGui.super.init(self, node, layer, parameters)
 
@@ -14,7 +14,7 @@ function MenuNodeUpdatesGui:init(node, layer, parameters)
 		if self._panel then
 			local previous_content_updates = self._panel:child("previous_content_updates")
 
-			-- Lines: 14 to 21
+			-- Lines 14-21
 			local function animate_loading_texture(o)
 				local time = coroutine.yield()
 				local start_rotation = o:rotation()
@@ -64,7 +64,7 @@ function MenuNodeUpdatesGui:init(node, layer, parameters)
 	end
 end
 
--- Lines: 47 to 107
+-- Lines 47-107
 function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 	if not self then
 		return
@@ -77,7 +77,7 @@ function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 	local prefix = "##1##"
 	local item_start = string.find(page, prefix)
 
-	for index = 1, #item_list, 1 do
+	for index = 1, #item_list do
 		local item = item_list[index]
 
 		if item and item.use_db then
@@ -124,7 +124,7 @@ function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 	self:set_latest_text()
 end
 
--- Lines: 109 to 118
+-- Lines 109-119
 function MenuNodeUpdatesGui:_get_text(s, sp, ep)
 	local result = {}
 	local len = string.len(s)
@@ -140,7 +140,7 @@ function MenuNodeUpdatesGui:_get_text(s, sp, ep)
 	return string.sub(s, e1 + 1, s2 - 1) or ""
 end
 
--- Lines: 121 to 130
+-- Lines 121-131
 function MenuNodeUpdatesGui:_get_db_text(id, category)
 	if not self._db_items then
 		return
@@ -153,7 +153,7 @@ function MenuNodeUpdatesGui:_get_db_text(id, category)
 	return self._db_items[id][category]
 end
 
--- Lines: 133 to 362
+-- Lines 133-362
 function MenuNodeUpdatesGui:setup()
 	self:unretrieve_textures()
 
@@ -161,7 +161,9 @@ function MenuNodeUpdatesGui:setup()
 	self._prev_page_highlighted = nil
 	self._back_button_highlighted = nil
 	local ws = self.ws
-	local panel = ws:panel():child("MenuNodeUpdatesGui") or ws:panel():panel({name = "MenuNodeUpdatesGui"})
+	local panel = ws:panel():child("MenuNodeUpdatesGui") or ws:panel():panel({
+		name = "MenuNodeUpdatesGui"
+	})
 	self._panel = panel
 
 	panel:clear()
@@ -236,7 +238,7 @@ function MenuNodeUpdatesGui:setup()
 	local previous_updates = {}
 	local latest_update = content_updates[#content_updates - start_number]
 
-	for i = #content_updates - start_number, math.max((#content_updates - num_previous_updates) - start_number + 1, 1), -1 do
+	for i = #content_updates - start_number, math.max(#content_updates - num_previous_updates - start_number + 1, 1), -1 do
 		table.insert(previous_updates, content_updates[i])
 	end
 
@@ -256,39 +258,47 @@ function MenuNodeUpdatesGui:setup()
 		latest_update_panel:set_h(latest_update_panel:w() * 0.5)
 	end
 
-	local selected = BoxGuiObject:new(latest_update_panel, {sides = {
-		2,
-		2,
-		2,
-		2
-	}})
+	local selected = BoxGuiObject:new(latest_update_panel, {
+		sides = {
+			2,
+			2,
+			2,
+			2
+		}
+	})
 
-	BoxGuiObject:new(latest_update_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(latest_update_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
-	self._selects = {[latest_update.id] = selected}
+	self._selects = {
+		[latest_update.id] = selected
+	}
 	self._select_x = 1
 	local w = panel:w()
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 30 or 5
 	local dech_panel_h = SystemInfo:platform() == Idstring("WIN32") and latest_update_panel:h() or panel:h() / 2
 	local latest_desc_panel = panel:panel({
 		name = "latest_description",
-		w = (panel:w() - latest_update_panel:w()) - padding,
+		w = panel:w() - latest_update_panel:w() - padding,
 		h = dech_panel_h,
 		x = latest_update_panel:right() + padding,
 		y = latest_update_panel:top()
 	})
 
-	BoxGuiObject:new(latest_desc_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(latest_desc_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local title_string = latest_update.name_id and managers.localization:to_upper_text(latest_update.name_id) or self:_get_db_text(latest_update.id, "title") or ""
 	local date_string = latest_update.date_id and managers.localization:to_upper_text(latest_update.date_id) or self:_get_db_text(latest_update.id, "date") or ""
@@ -329,7 +339,7 @@ function MenuNodeUpdatesGui:setup()
 	date_text:set_size(w, h)
 	date_text:set_top(title_text:bottom())
 	desc_text:set_top(date_text:bottom())
-	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, (latest_desc_panel:h() - desc_text:top()) - self.PADDING)
+	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, latest_desc_panel:h() - desc_text:top() - self.PADDING)
 
 	if self._tweak_data.button then
 		local top_button = panel:panel({
@@ -440,21 +450,25 @@ function MenuNodeUpdatesGui:setup()
 		text:set_bottom(previous_updates_panel:bottom() - self.PADDING + 1)
 
 		self._previous_update_texts[data.id] = text
-		local selected = BoxGuiObject:new(content_panel, {sides = {
-			2,
-			2,
-			2,
-			2
-		}})
+		local selected = BoxGuiObject:new(content_panel, {
+			sides = {
+				2,
+				2,
+				2,
+				2
+			}
+		})
 		self._selects[data.id] = selected
 	end
 
-	BoxGuiObject:new(previous_updates_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(previous_updates_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	for i, box in pairs(self._selects) do
 		box:hide()
@@ -507,7 +521,7 @@ function MenuNodeUpdatesGui:setup()
 		self:make_fine_text(page_text)
 		self._next_page:set_right(previous_updates_panel:right() - 10)
 		self._next_page:set_bottom(previous_updates_panel:top() - 10)
-		self._prev_page:set_right((self._next_page:left() - page_text:w()) - 8)
+		self._prev_page:set_right(self._next_page:left() - page_text:w() - 8)
 		self._prev_page:set_bottom(self._next_page:bottom())
 		page_text:set_center((self._prev_page:right() + self._next_page:left()) / 2, self._next_page:center_y() + 3)
 		prev_text:set_color(not managers.menu:is_pc_controller() and Color.white or current_page > 1 and tweak_data.screen_colors.button_stage_3 or tweak_data.menu.default_disabled_text_color)
@@ -515,7 +529,7 @@ function MenuNodeUpdatesGui:setup()
 	end
 end
 
--- Lines: 364 to 368
+-- Lines 364-369
 function MenuNodeUpdatesGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -525,7 +539,7 @@ function MenuNodeUpdatesGui:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 371 to 373
+-- Lines 371-373
 function MenuNodeUpdatesGui:texture_done_clbk(panel, texture_ids)
 	panel:bitmap({
 		name = "texture",
@@ -535,7 +549,7 @@ function MenuNodeUpdatesGui:texture_done_clbk(panel, texture_ids)
 	})
 end
 
--- Lines: 375 to 396
+-- Lines 375-397
 function MenuNodeUpdatesGui:check_inside(x, y)
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui")
@@ -561,7 +575,7 @@ function MenuNodeUpdatesGui:check_inside(x, y)
 	return nil
 end
 
--- Lines: 399 to 505
+-- Lines 399-506
 function MenuNodeUpdatesGui:mouse_moved(o, x, y)
 	local moved = self._mouse_x ~= x or self._mouse_y ~= y
 	self._mouse_x = x
@@ -665,7 +679,7 @@ function MenuNodeUpdatesGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines: 508 to 547
+-- Lines 508-547
 function MenuNodeUpdatesGui:mouse_pressed(button, x, y)
 	if alive(self._prev_page) and self._current_page > 1 and self._prev_page:inside(x, y) then
 		self._node:parameters().current_page = self._current_page - 1
@@ -707,7 +721,7 @@ function MenuNodeUpdatesGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 549 to 557
+-- Lines 549-557
 function MenuNodeUpdatesGui:mouse_released(button, x, y)
 	local released = self:check_inside(x, y)
 
@@ -718,14 +732,14 @@ function MenuNodeUpdatesGui:mouse_released(button, x, y)
 	self._pressed = nil
 end
 
--- Lines: 559 to 563
+-- Lines 559-563
 function MenuNodeUpdatesGui:confirm_pressed()
 	if self._content_highlighted then
 		self:open(self._content_highlighted)
 	end
 end
 
--- Lines: 565 to 601
+-- Lines 565-601
 function MenuNodeUpdatesGui:open(content_update)
 	self._content_highlighted = content_update
 
@@ -768,7 +782,7 @@ function MenuNodeUpdatesGui:open(content_update)
 	end
 end
 
--- Lines: 603 to 608
+-- Lines 603-608
 function MenuNodeUpdatesGui:open_url(url)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		Steam:overlay_activate("url", url)
@@ -776,12 +790,12 @@ function MenuNodeUpdatesGui:open_url(url)
 	end
 end
 
--- Lines: 610 to 611
+-- Lines 610-612
 function MenuNodeUpdatesGui:input_focus()
 	return 1
 end
 
--- Lines: 614 to 653
+-- Lines 614-653
 function MenuNodeUpdatesGui:set_latest_text()
 	if not self._content_highlighted then
 		return
@@ -810,10 +824,10 @@ function MenuNodeUpdatesGui:set_latest_text()
 	date_text:set_top(title_text:bottom())
 	desc_text:set_text(desc_string)
 	desc_text:set_top(date_text:bottom())
-	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, (latest_desc_panel:h() - desc_text:top()) - self.PADDING)
+	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, latest_desc_panel:h() - desc_text:top() - self.PADDING)
 end
 
--- Lines: 655 to 687
+-- Lines 655-688
 function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refresh)
 	local result = false
 
@@ -858,7 +872,7 @@ function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refre
 	return result
 end
 
--- Lines: 690 to 745
+-- Lines 690-745
 function MenuNodeUpdatesGui:move_highlight(x, y)
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui")
@@ -866,9 +880,7 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 	local previous_updates_panel = panel:child("previous_content_updates")
 	local content_highlighted = self._content_highlighted
 
-	if not content_highlighted then
-		-- Nothing
-	else
+	if content_highlighted then
 		self._select_x = self._select_x + x
 	end
 
@@ -883,14 +895,18 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 
 			self:set_latest_content(content_highlighted, true)
 		end
-	elseif diff_x <= 0 or self:next_page() then
+	elseif diff_x > 0 then
+		if self:next_page() then
+			-- Nothing
+		end
+	else
 		content_highlighted = self._previous_content_updates[self._select_x]
 
 		self:set_latest_content(content_highlighted, true)
 	end
 end
 
--- Lines: 747 to 753
+-- Lines 747-753
 function MenuNodeUpdatesGui:previous_page()
 	if self._current_page > 1 then
 		self._node:parameters().current_page = self._current_page - 1
@@ -901,7 +917,7 @@ function MenuNodeUpdatesGui:previous_page()
 	end
 end
 
--- Lines: 755 to 762
+-- Lines 755-762
 function MenuNodeUpdatesGui:next_page()
 	local num_pages = self._num_pages
 
@@ -914,29 +930,29 @@ function MenuNodeUpdatesGui:next_page()
 	end
 end
 
--- Lines: 766 to 767
+-- Lines 764-767
 function MenuNodeUpdatesGui:move_up()
 end
 
--- Lines: 771 to 772
+-- Lines 769-772
 function MenuNodeUpdatesGui:move_down()
 end
 
--- Lines: 774 to 776
+-- Lines 774-777
 function MenuNodeUpdatesGui:move_left()
 	self:move_highlight(-1, 0)
 
 	return true
 end
 
--- Lines: 779 to 781
+-- Lines 779-782
 function MenuNodeUpdatesGui:move_right()
 	self:move_highlight(1, 0)
 
 	return true
 end
 
--- Lines: 784 to 795
+-- Lines 784-795
 function MenuNodeUpdatesGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -952,14 +968,13 @@ function MenuNodeUpdatesGui:unretrieve_textures()
 	self._lastest_texture_request = nil
 end
 
--- Lines: 800 to 807
+-- Lines 797-807
 function MenuNodeUpdatesGui:close()
 	self:unretrieve_textures()
 	MenuNodeUpdatesGui.super.close(self)
 end
 
--- Lines: 809 to 811
+-- Lines 809-811
 function MenuNodeUpdatesGui:_setup_panels(node)
 	MenuNodeUpdatesGui.super._setup_panels(self, node)
 end
-

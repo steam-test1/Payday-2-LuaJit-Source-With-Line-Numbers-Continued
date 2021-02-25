@@ -2,7 +2,7 @@ VehicleSpotlightExt = VehicleSpotlightExt or class()
 VehicleSpotlightExt.UP_VECTOR = Vector3(0, 0, 1)
 VehicleSpotlightExt.SPOTLIGHT_NORMAL = Vector3(0, 1, 0)
 
--- Lines: 6 to 10
+-- Lines 6-10
 function VehicleSpotlightExt:init(unit)
 	self._unit = unit
 
@@ -10,7 +10,7 @@ function VehicleSpotlightExt:init(unit)
 	self:_init_tweak_data()
 end
 
--- Lines: 13 to 45
+-- Lines 12-45
 function VehicleSpotlightExt:_init_tweak_data()
 	local spotlight_data = tweak_data.spotlights[self._tweak_data]
 	self._wiggle = {
@@ -45,7 +45,7 @@ function VehicleSpotlightExt:_init_tweak_data()
 	end
 end
 
--- Lines: 56 to 97
+-- Lines 47-97
 function VehicleSpotlightExt:update(unit, t, dt)
 	self._next_target_search_t = self._next_target_search_t - dt
 
@@ -55,7 +55,7 @@ function VehicleSpotlightExt:update(unit, t, dt)
 	end
 
 	local target_direction = nil
-	target_direction = alive(self._target) and self._target:position() or self._neutral_direction or Vector3(0, 0, 0)
+	target_direction = (not alive(self._target) or self._target:position()) and (self._neutral_direction or Vector3(0, 0, 0))
 
 	for _, obj_pair in ipairs(self._objects) do
 		local obj = obj_pair[1]
@@ -84,7 +84,7 @@ function VehicleSpotlightExt:update(unit, t, dt)
 	end
 end
 
--- Lines: 101 to 122
+-- Lines 99-124
 function VehicleSpotlightExt:find_new_target()
 	local best_target = {
 		nil,
@@ -111,4 +111,3 @@ function VehicleSpotlightExt:find_new_target()
 
 	return best_target[1]
 end
-

@@ -1,14 +1,15 @@
 ProjectileWeaponBase = ProjectileWeaponBase or class(NewRaycastWeaponBase)
 
--- Lines: 3 to 6
+-- Lines 3-6
 function ProjectileWeaponBase:init(...)
 	ProjectileWeaponBase.super.init(self, ...)
 
 	self._projectile_type = self:weapon_tweak_data().projectile_type
 end
+
 local mvec_spread_direction = Vector3()
 
--- Lines: 11 to 53
+-- Lines 11-54
 function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local unit = nil
 	local spread_x, spread_y = self:_get_spread(user_unit)
@@ -59,7 +60,7 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	return {}
 end
 
--- Lines: 58 to 65
+-- Lines 58-65
 function ProjectileWeaponBase:_update_stats_values()
 	ProjectileWeaponBase.super._update_stats_values(self)
 
@@ -68,22 +69,21 @@ function ProjectileWeaponBase:_update_stats_values()
 	end
 end
 
--- Lines: 67 to 68
+-- Lines 67-69
 function ProjectileWeaponBase:_adjust_throw_z(m_vec)
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function ProjectileWeaponBase:projectile_damage_multiplier()
 	return self._dmg_mul
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function ProjectileWeaponBase:projectile_speed_multiplier()
 	return 1
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function ProjectileWeaponBase:_get_spawn_offset()
 	return 0
 end
-

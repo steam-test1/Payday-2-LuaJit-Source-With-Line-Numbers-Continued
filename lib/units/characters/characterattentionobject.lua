@@ -2,18 +2,18 @@ require("lib/units/props/AIAttentionObject")
 
 CharacterAttentionObject = CharacterAttentionObject or class(AIAttentionObject)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function CharacterAttentionObject:init(unit)
 	CharacterAttentionObject.super.init(self, unit, true)
 end
 
--- Lines: 11 to 14
+-- Lines 11-14
 function CharacterAttentionObject:setup_attention_positions(m_head_pos, m_pos)
 	self._m_head_pos = m_head_pos or self._unit:movement():m_head_pos()
 	self._m_pos = m_pos or self._unit:movement():m_pos()
 end
 
--- Lines: 18 to 55
+-- Lines 18-56
 function CharacterAttentionObject:chk_settings_diff(settings_set)
 	local attention_data = self._attention_data
 	local changes = nil
@@ -60,7 +60,7 @@ function CharacterAttentionObject:chk_settings_diff(settings_set)
 	return changes
 end
 
--- Lines: 60 to 127
+-- Lines 60-127
 function CharacterAttentionObject:set_settings_set(settings_set)
 	local attention_data = self._attention_data
 	local changed, register, unregister = nil
@@ -131,23 +131,22 @@ function CharacterAttentionObject:set_settings_set(settings_set)
 	end
 end
 
--- Lines: 131 to 132
+-- Lines 131-133
 function CharacterAttentionObject:get_attention_m_pos(settings)
 	return self._m_head_pos
 end
 
--- Lines: 137 to 138
+-- Lines 137-139
 function CharacterAttentionObject:get_detection_m_pos()
 	return self._m_head_pos
 end
 
--- Lines: 143 to 144
+-- Lines 143-145
 function CharacterAttentionObject:get_ground_m_pos()
 	return self._m_pos
 end
 
--- Lines: 149 to 151
+-- Lines 149-151
 function CharacterAttentionObject:_register()
 	managers.groupai:state():register_AI_attention_object(self._parent_unit or self._unit, self, self._unit:movement() and self._unit:movement():nav_tracker())
 end
-

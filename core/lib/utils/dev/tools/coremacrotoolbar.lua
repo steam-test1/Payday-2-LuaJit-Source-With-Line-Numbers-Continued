@@ -1,6 +1,6 @@
 CoreMacroToolbar = CoreMacroToolbar or class()
 
--- Lines: 3 to 11
+-- Lines 3-11
 function CoreMacroToolbar:init(toolbar_panel, toolbar_box, default_icon, macro_file, self_str)
 	self._toolbar_panel = toolbar_panel
 	self._toolbar_box = toolbar_box
@@ -11,7 +11,7 @@ function CoreMacroToolbar:init(toolbar_panel, toolbar_box, default_icon, macro_f
 	self:reload_macros()
 end
 
--- Lines: 13 to 42
+-- Lines 13-42
 function CoreMacroToolbar:reload_macros()
 	if self._macros then
 		for name, macro in pairs(self._macros) do
@@ -31,7 +31,9 @@ function CoreMacroToolbar:reload_macros()
 			end
 
 			local name = macro:parameter("name")
-			self._macros[name] = {_ews = EWS:BitmapButton(self._toolbar_panel, icon_path, "", "")}
+			self._macros[name] = {
+				_ews = EWS:BitmapButton(self._toolbar_panel, icon_path, "", "")
+			}
 
 			self._macros[name]._ews:set_tool_tip(name)
 
@@ -48,7 +50,7 @@ function CoreMacroToolbar:reload_macros()
 	end
 end
 
--- Lines: 44 to 52
+-- Lines 44-52
 function CoreMacroToolbar:trigger_event(event_name)
 	if self._macros then
 		for _, macro in pairs(self._macros) do
@@ -58,4 +60,3 @@ function CoreMacroToolbar:trigger_event(event_name)
 		end
 	end
 end
-

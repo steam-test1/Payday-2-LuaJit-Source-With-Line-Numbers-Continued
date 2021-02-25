@@ -1,17 +1,17 @@
 MedicDamage = MedicDamage or class(CopDamage)
 
--- Lines: 3 to 10
+-- Lines 3-10
 function MedicDamage:init(...)
 	MedicDamage.super.init(self, ...)
 
 	self._heal_cooldown_t = 0
 end
 
--- Lines: 22 to 23
+-- Lines 12-23
 function MedicDamage:update(t, dt)
 end
 
--- Lines: 25 to 82
+-- Lines 25-83
 function MedicDamage:heal_unit(unit, override_cooldown)
 	local t = Application:time()
 	local cooldown = tweak_data.medic.cooldown
@@ -66,4 +66,3 @@ function MedicDamage:heal_unit(unit, override_cooldown)
 
 	return true
 end
-

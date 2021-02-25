@@ -4,14 +4,14 @@ local idstr_trail = Idstring("trail")
 local idstr_simulator_length = Idstring("simulator_length")
 local idstr_size = Idstring("size")
 
--- Lines: 8 to 11
+-- Lines 8-11
 function NPCSniperRifleBase:init(unit)
 	NPCSniperRifleBase.super.init(self, unit)
 
 	self._trail_length = World:effect_manager():get_initial_simulator_var_vector2(self.TRAIL_EFFECT, idstr_trail, idstr_simulator_length, idstr_size)
 end
 
--- Lines: 15 to 23
+-- Lines 15-23
 function NPCSniperRifleBase:_spawn_trail_effect(direction, col_ray)
 	self._obj_fire:m_position(self._trail_effect_table.position)
 	mvector3.set(self._trail_effect_table.normal, direction)
@@ -23,4 +23,3 @@ function NPCSniperRifleBase:_spawn_trail_effect(direction, col_ray)
 		World:effect_manager():set_simulator_var_vector2(trail, idstr_trail, idstr_simulator_length, idstr_size, self._trail_length)
 	end
 end
-

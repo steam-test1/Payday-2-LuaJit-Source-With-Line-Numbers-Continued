@@ -1,7 +1,9 @@
 CinematicCameraUnitElement = CinematicCameraUnitElement or class(MissionElement)
-CinematicCameraUnitElement.ON_EXECUTED_ALTERNATIVES = {"camera_done"}
+CinematicCameraUnitElement.ON_EXECUTED_ALTERNATIVES = {
+	"camera_done"
+}
 
--- Lines: 4 to 13
+-- Lines 4-13
 function CinematicCameraUnitElement:init(unit)
 	CinematicCameraUnitElement.super.init(self, unit)
 
@@ -12,23 +14,23 @@ function CinematicCameraUnitElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
--- Lines: 15 to 18
+-- Lines 15-18
 function CinematicCameraUnitElement:layer_finished(...)
 	CinematicCameraUnitElement.super.layer_finished(self, ...)
 	self:_on_state_changed()
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function CinematicCameraUnitElement:selected(...)
 	CinematicCameraUnitElement.super.selected(self, ...)
 end
 
--- Lines: 24 to 26
+-- Lines 24-26
 function CinematicCameraUnitElement:deselected(...)
 	CinematicCameraUnitElement.super.deselected(self, ...)
 end
 
--- Lines: 28 to 33
+-- Lines 28-33
 function CinematicCameraUnitElement:test_element()
 	self._camera_unit:base():start()
 
@@ -37,13 +39,13 @@ function CinematicCameraUnitElement:test_element()
 	end
 end
 
--- Lines: 35 to 38
+-- Lines 35-38
 function CinematicCameraUnitElement:stop_test_element()
 	self._camera_unit:base():stop()
 	self._camera_unit:base():play_state(Idstring("std/empty"), 1, 0)
 end
 
--- Lines: 40 to 46
+-- Lines 40-47
 function CinematicCameraUnitElement:_get_states()
 	local states = {}
 
@@ -56,17 +58,17 @@ function CinematicCameraUnitElement:_get_states()
 	return states
 end
 
--- Lines: 49 to 51
+-- Lines 49-51
 function CinematicCameraUnitElement:_show_camera_gui()
 	self._camera_unit:base():create_ews()
 end
 
--- Lines: 53 to 55
+-- Lines 53-55
 function CinematicCameraUnitElement:_on_state_changed()
 	self._camera_unit:base():set_current_state_name(self._hed.state)
 end
 
--- Lines: 58 to 94
+-- Lines 58-94
 function CinematicCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -108,7 +110,7 @@ function CinematicCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
--- Lines: 96 to 101
+-- Lines 96-101
 function CinematicCameraUnitElement:destroy(...)
 	if alive(self._camera_unit) then
 		World:delete_unit(self._camera_unit)
@@ -117,7 +119,7 @@ function CinematicCameraUnitElement:destroy(...)
 	CinematicCameraUnitElement.super.destroy(self, ...)
 end
 
--- Lines: 103 to 106
+-- Lines 103-106
 function CinematicCameraUnitElement:add_to_mission_package()
 	local unit_name = Idstring("units/pd2_cinematics/cs_camera/cs_camera")
 
@@ -127,4 +129,3 @@ function CinematicCameraUnitElement:add_to_mission_package()
 		continent = self._unit:unit_data().continent
 	})
 end
-

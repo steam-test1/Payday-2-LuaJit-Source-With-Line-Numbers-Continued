@@ -2,7 +2,7 @@ TeamAIInventory = TeamAIInventory or class(CopInventory)
 TeamAIInventory.add_unit_by_factory_name = HuskPlayerInventory.add_unit_by_factory_name
 TeamAIInventory.add_unit_by_factory_blueprint = HuskPlayerInventory.add_unit_by_factory_blueprint
 
--- Lines: 8 to 15
+-- Lines 8-15
 function TeamAIInventory:preload_mask()
 	local character_name = managers.criminals:character_name_by_unit(self._unit)
 	local mask_unit_name = managers.criminals:character_data_by_name(character_name).mask_obj
@@ -12,19 +12,19 @@ function TeamAIInventory:preload_mask()
 	managers.dyn_resource:load(Idstring("unit"), Idstring(mask_unit_name), managers.dyn_resource.DYN_RESOURCES_PACKAGE, callback(self, self, "clbk_mask_unit_loaded"))
 end
 
--- Lines: 19 to 23
+-- Lines 19-23
 function TeamAIInventory:clbk_mask_unit_loaded(status, asset_type, asset_name)
 	self._mask_unit_loaded = status
 
 	self:_reset_mask_visibility()
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function TeamAIInventory:is_mask_unit_loaded()
 	return self._mask_unit_loaded
 end
 
--- Lines: 33 to 47
+-- Lines 33-47
 function TeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
@@ -45,7 +45,7 @@ function TeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	new_unit:set_enabled(false)
 end
 
--- Lines: 51 to 62
+-- Lines 51-62
 function TeamAIInventory:add_unit(new_unit, equip)
 	TeamAIInventory.super.add_unit(self, new_unit, equip)
 
@@ -58,7 +58,7 @@ function TeamAIInventory:add_unit(new_unit, equip)
 	new_unit:base():set_visibility_state(false)
 end
 
--- Lines: 66 to 78
+-- Lines 66-78
 function TeamAIInventory:_ensure_weapon_visibility(override_weapon, override)
 	local show_gun = override or not self._unit:movement():cool()
 	local weapon = override_weapon or self:equipped_unit()
@@ -75,7 +75,7 @@ function TeamAIInventory:_ensure_weapon_visibility(override_weapon, override)
 	end
 end
 
--- Lines: 82 to 86
+-- Lines 82-87
 function TeamAIInventory:equip_selection(selection_index, instant)
 	local res = TeamAIInventory.super.equip_selection(self, selection_index, instant)
 
@@ -84,7 +84,7 @@ function TeamAIInventory:equip_selection(selection_index, instant)
 	return res
 end
 
--- Lines: 91 to 99
+-- Lines 91-99
 function TeamAIInventory:synch_equipped_weapon(weap_index, blueprint_string, cosmetics_string)
 	local weapon_name = self._get_weapon_name_from_sync_index(weap_index)
 
@@ -97,7 +97,7 @@ function TeamAIInventory:synch_equipped_weapon(weap_index, blueprint_string, cos
 	self:add_unit_by_name(weapon_name, true, true)
 end
 
--- Lines: 103 to 108
+-- Lines 103-108
 function TeamAIInventory:_unload_mask()
 	if self._mask_unit_name then
 		managers.dyn_resource:unload(Idstring("unit"), Idstring(self._mask_unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
@@ -106,14 +106,22 @@ function TeamAIInventory:_unload_mask()
 	end
 end
 
--- Lines: 112 to 114
+-- Lines 112-114
 function TeamAIInventory:_reset_mask_visibility()
 	self:set_mask_visibility(self._mask_visibility and true or false)
 end
 
--- Lines: 118 to 122
+-- Lines 118-122
 function TeamAIInventory:pre_destroy(unit)
 	TeamAIInventory.super.pre_destroy(self, unit)
 	self:_unload_mask()
 end
 
+-- Lines 126-131
+function TeamAIInventory:set_visibility_state(state)
+	if state and self._unit:movement():cool() then
+		return
+	end
+
+	TeamAIInventory.super.set_visibility_state(self, state)
+end

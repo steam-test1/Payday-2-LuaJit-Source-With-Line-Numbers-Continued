@@ -6,12 +6,12 @@ UNIT = CoreDependencyNode.UNIT
 CUTSCENE = CoreDependencyNode.CUTSCENE
 CutsceneDependencyNode = CutsceneDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 13 to 15
+-- Lines 13-15
 function CutsceneDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, CUTSCENE, "cutscene", name, get_dn_cb, database)
 end
 
--- Lines: 17 to 38
+-- Lines 17-38
 function CutsceneDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 
@@ -47,4 +47,3 @@ function CutsceneDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

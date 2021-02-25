@@ -1,18 +1,19 @@
 InfamyManager = InfamyManager or class()
 InfamyManager.VERSION = 1
 
--- Lines: 4 to 6
+-- Lines 4-6
 function InfamyManager:init()
 	self:_setup()
 end
 
--- Lines: 8 to 24
+-- Lines 8-24
 function InfamyManager:_setup(reset)
 	if not Global.infamy_manager or reset then
-		Global.infamy_manager = {}
-		Global.infamy_manager.points = Application:digest_value(0, true)
-		Global.infamy_manager.VERSION = InfamyManager.VERSION
-		Global.infamy_manager.reset_message = false
+		Global.infamy_manager = {
+			points = Application:digest_value(0, true),
+			VERSION = InfamyManager.VERSION,
+			reset_message = false
+		}
 		self._global = Global.infamy_manager
 		self._global.unlocks = {}
 
@@ -24,22 +25,22 @@ function InfamyManager:_setup(reset)
 	self._global = Global.infamy_manager
 end
 
--- Lines: 26 to 27
+-- Lines 26-28
 function InfamyManager:points()
 	return Application:digest_value(self._global.points, false)
 end
 
--- Lines: 30 to 32
+-- Lines 30-32
 function InfamyManager:aquire_point()
 	self:_set_points(self:points() + 1)
 end
 
--- Lines: 34 to 36
+-- Lines 34-36
 function InfamyManager:_set_points(value)
 	self._global.points = Application:digest_value(value, true)
 end
 
--- Lines: 38 to 51
+-- Lines 38-51
 function InfamyManager:_reset_points()
 	local points = math.abs(self:points())
 
@@ -56,14 +57,14 @@ function InfamyManager:_reset_points()
 	self:_verify_loaded_data()
 end
 
--- Lines: 53 to 57
+-- Lines 53-57
 function InfamyManager:required_points(item)
 	if tweak_data.infamy.items[item] then
 		return Application:digest_value(tweak_data.infamy.items[item].cost, false) <= self:points()
 	end
 end
 
--- Lines: 59 to 88
+-- Lines 59-88
 function InfamyManager:unlock_item(item)
 	local infamy_item = tweak_data.infamy.items[item]
 
@@ -89,12 +90,12 @@ function InfamyManager:unlock_item(item)
 	end
 end
 
--- Lines: 90 to 91
+-- Lines 90-92
 function InfamyManager:owned(item)
 	return self._global.unlocks[item] or false
 end
 
--- Lines: 94 to 149
+-- Lines 94-150
 function InfamyManager:available(item)
 	local tier_count = 0
 	local points_curr_tier = 0
@@ -151,7 +152,7 @@ function InfamyManager:available(item)
 	return false
 end
 
--- Lines: 152 to 157
+-- Lines 152-157
 function InfamyManager:reset_items()
 	self:_reset_points()
 
@@ -159,7 +160,7 @@ function InfamyManager:reset_items()
 	self._global.reset_message = true
 end
 
--- Lines: 159 to 167
+-- Lines 159-167
 function InfamyManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -172,7 +173,7 @@ function InfamyManager:check_reset_message()
 	end
 end
 
--- Lines: 169 to 179
+-- Lines 169-179
 function InfamyManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -183,7 +184,7 @@ function InfamyManager:save(data)
 	data.InfamyManager = state
 end
 
--- Lines: 181 to 199
+-- Lines 181-199
 function InfamyManager:load(data, version)
 	local state = data.InfamyManager
 
@@ -205,7 +206,7 @@ function InfamyManager:load(data, version)
 	end
 end
 
--- Lines: 201 to 229
+-- Lines 201-229
 function InfamyManager:_verify_loaded_data()
 	local assumed_points = managers.experience:current_rank()
 	local points = assumed_points
@@ -238,10 +239,9 @@ function InfamyManager:_verify_loaded_data()
 	end
 end
 
--- Lines: 231 to 234
+-- Lines 231-234
 function InfamyManager:reset()
 	Global.infamy_manager = nil
 
 	self:_setup()
 end
-

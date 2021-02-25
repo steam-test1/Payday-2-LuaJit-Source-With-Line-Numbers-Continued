@@ -1,16 +1,16 @@
 HuskCopInventory = HuskCopInventory or class(HuskPlayerInventory)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function HuskCopInventory:init(unit)
 	CopInventory.init(self, unit)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function HuskCopInventory:set_visibility_state(state)
 	CopInventory.set_visibility_state(self, state)
 end
 
--- Lines: 15 to 34
+-- Lines 15-34
 function HuskCopInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 
@@ -39,33 +39,32 @@ function HuskCopInventory:add_unit_by_name(new_unit_name, equip)
 	CopInventory.add_unit(self, new_unit, equip)
 end
 
--- Lines: 38 to 40
+-- Lines 38-40
 function HuskCopInventory:get_weapon()
 	CopInventory.get_weapon(self)
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function HuskCopInventory:drop_weapon()
 	CopInventory.drop_weapon(self)
 end
 
--- Lines: 50 to 52
+-- Lines 50-52
 function HuskCopInventory:drop_shield()
 	CopInventory.drop_shield(self)
 end
 
--- Lines: 56 to 58
+-- Lines 56-58
 function HuskCopInventory:destroy_all_items()
 	CopInventory.destroy_all_items(self)
 end
 
--- Lines: 62 to 64
+-- Lines 62-64
 function HuskCopInventory:add_unit(new_unit, equip)
 	CopInventory.add_unit(self, new_unit, equip)
 end
 
--- Lines: 68 to 70
+-- Lines 68-70
 function HuskCopInventory:set_visibility_state(state)
 	CopInventory.set_visibility_state(self, state)
 end
-

@@ -66,29 +66,31 @@ if _G.IS_VR then
 else
 	PlayerHand = PlayerHand or class()
 
-	-- Lines: 96 to 97
+	-- Lines 97-97
 	function PlayerHand:init(unit)
 	end
 
-	-- Lines: 96 to 97
+	-- Lines 97-97
 	function PlayerHand:destroy()
 	end
+
 	PlayerWarp = PlayerWarp or class()
 
-	-- Lines: 97 to 98
+	-- Lines 98-98
 	function PlayerWarp:init(unit)
 	end
 
-	-- Lines: 97 to 98
+	-- Lines 98-98
 	function PlayerWarp:destroy()
 	end
+
 	HandMelee = HandMelee or class()
 
-	-- Lines: 98 to 99
+	-- Lines 99-99
 	function HandMelee:init(unit)
 	end
 
-	-- Lines: 98 to 99
+	-- Lines 99-99
 	function HandMelee:destroy()
 	end
 end
@@ -242,6 +244,8 @@ require("lib/units/props/ZipLine")
 require("lib/units/props/TextTemplateBase")
 require("lib/units/props/ExplodingProp")
 require("lib/units/props/SafehouseVaultMoneyStacks")
+require("lib/units/props/UnoDeviceBase")
+require("lib/units/props/UnoPianoBase")
 require("lib/units/characters/PlayerBodyBoneMergeBase")
 require("lib/units/SyncMaterials")
 require("lib/managers/menu/FadeoutGuiObject")
@@ -249,7 +253,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines: 328 to 478
+-- Lines 335-485
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -290,7 +294,7 @@ function GameSetup:load_packages()
 
 	self._loaded_diff_packages = {}
 
-	-- Lines: 372 to 377
+	-- Lines 379-384
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
 			table.insert(self._loaded_diff_packages, package_name)
@@ -393,7 +397,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines: 480 to 561
+-- Lines 487-568
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -465,12 +469,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines: 563 to 565
+-- Lines 570-572
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines: 567 to 607
+-- Lines 574-614
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -504,7 +508,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines: 609 to 653
+-- Lines 616-661
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -551,7 +555,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines: 656 to 698
+-- Lines 663-703
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -591,16 +595,14 @@ function GameSetup:init_finalize()
 	self._keyboard = Input:keyboard()
 
 	managers.network.account:set_playing(true)
-
-	if Network:is_server() and managers.job:current_job_id() == "chill" then
-		managers.custom_safehouse:send_room_tiers()
-	end
+	managers.custom_safehouse:init_finalize()
 end
 
--- Lines: 700 to 744
+-- Lines 705-749
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
+	managers.dialog:update(t, dt)
 	managers.enemy:update(t, dt)
 	managers.groupai:update(t, dt)
 	managers.spawn:update(t, dt)
@@ -627,7 +629,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 746 to 756
+-- Lines 751-761
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -639,7 +641,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines: 758 to 774
+-- Lines 763-779
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -653,13 +655,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines: 776 to 781
+-- Lines 781-786
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines: 783 to 810
+-- Lines 788-815
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -685,7 +687,7 @@ function GameSetup:save(data)
 	managers.skirmish:sync_save(data)
 end
 
--- Lines: 812 to 840
+-- Lines 817-845
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -712,7 +714,7 @@ function GameSetup:load(data)
 	managers.skirmish:sync_load(data)
 end
 
--- Lines: 873 to 874
+-- Lines 848-879
 function GameSetup:_update_debug_input()
 end
 

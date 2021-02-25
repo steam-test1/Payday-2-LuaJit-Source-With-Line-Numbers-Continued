@@ -16,20 +16,20 @@ MutatorExplodingEnemies.icon_coords = {
 	1
 }
 
--- Lines: 14 to 20
+-- Lines 14-20
 function MutatorExplodingEnemies:register_values(mutator_manager)
 	self:register_value("explosion_size", 4, "es")
 	self:register_value("nuclear_dozers", false, "nd")
 end
 
--- Lines: 22 to 25
+-- Lines 22-25
 function MutatorExplodingEnemies:setup(mutator_manager)
 	self._explosions = {}
 
 	mutator_manager:register_message(Message.OnCopDamageDeath, "MutatorExplodingEnemies", callback(self, self, "explode"))
 end
 
--- Lines: 27 to 43
+-- Lines 27-44
 function MutatorExplodingEnemies:name()
 	local name = MutatorExplodingEnemies.super.name(self)
 
@@ -44,37 +44,37 @@ function MutatorExplodingEnemies:name()
 	return name
 end
 
--- Lines: 49 to 50
+-- Lines 49-51
 function MutatorExplodingEnemies:default_explosion_size()
 	return 4
 end
 
--- Lines: 53 to 54
+-- Lines 53-55
 function MutatorExplodingEnemies:get_explosion_size()
 	return self:value("explosion_size")
 end
 
--- Lines: 57 to 58
+-- Lines 57-59
 function MutatorExplodingEnemies:use_nuclear_bulldozers()
 	return self:value("nuclear_dozers")
 end
 
--- Lines: 64 to 65
+-- Lines 61-67
 function MutatorExplodingEnemies:explosion_delay()
 	return 0
 end
 
--- Lines: 71 to 72
+-- Lines 71-73
 function MutatorExplodingEnemies:_min_explosion_size()
 	return 2
 end
 
--- Lines: 75 to 76
+-- Lines 75-77
 function MutatorExplodingEnemies:_max_explosion_size()
 	return 6
 end
 
--- Lines: 80 to 135
+-- Lines 79-137
 function MutatorExplodingEnemies:setup_options_gui(node)
 	local params = {
 		name = "explosion_slider",
@@ -142,17 +142,17 @@ function MutatorExplodingEnemies:setup_options_gui(node)
 	return new_item
 end
 
--- Lines: 139 to 141
+-- Lines 139-141
 function MutatorExplodingEnemies:_update_explosion_size(item)
 	self:set_value("explosion_size", item:value())
 end
 
--- Lines: 143 to 145
+-- Lines 143-145
 function MutatorExplodingEnemies:_toggle_nuclear_bulldozers(item)
 	self:set_value("nuclear_dozers", item:value() == "on")
 end
 
--- Lines: 154 to 178
+-- Lines 153-178
 function MutatorExplodingEnemies:reset_to_default()
 	self:clear_values()
 
@@ -171,12 +171,12 @@ function MutatorExplodingEnemies:reset_to_default()
 	end
 end
 
--- Lines: 180 to 181
+-- Lines 180-182
 function MutatorExplodingEnemies:options_fill()
 	return self:_get_percentage_fill(self:_min_explosion_size(), self:_max_explosion_size(), self:get_explosion_size())
 end
 
--- Lines: 187 to 200
+-- Lines 186-200
 function MutatorExplodingEnemies:update(t, dt)
 	for i = #self._explosions, 1, -1 do
 		local data = self._explosions[i]
@@ -189,7 +189,7 @@ function MutatorExplodingEnemies:update(t, dt)
 	end
 end
 
--- Lines: 203 to 218
+-- Lines 202-218
 function MutatorExplodingEnemies:explode(cop_damage, attack_data)
 	if not Network:is_server() then
 		return
@@ -206,7 +206,7 @@ function MutatorExplodingEnemies:explode(cop_damage, attack_data)
 	end
 end
 
--- Lines: 221 to 272
+-- Lines 220-272
 function MutatorExplodingEnemies:_detonate(cop_damage, attack_data)
 	if Network:is_server() then
 		local pos = attack_data.pos
@@ -255,4 +255,3 @@ function MutatorExplodingEnemies:_detonate(cop_damage, attack_data)
 		managers.network:session():send_to_peers_synched("sync_explosion_to_client", attack_data.attacker_unit, pos, normal, ply_damage, range, curve_pow)
 	end
 end
-

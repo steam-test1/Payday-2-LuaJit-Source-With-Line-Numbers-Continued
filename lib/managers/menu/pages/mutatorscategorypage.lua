@@ -10,7 +10,7 @@ local PANEL_PADDING = 10
 MutatorsCategoryPage = MutatorsCategoryPage or class(MenuGuiTabPage)
 MutatorsCategoryPage.category = "all"
 
--- Lines: 18 to 31
+-- Lines 17-31
 function MutatorsCategoryPage:init(page_id, page_panel, fullscreen_panel, gui)
 	MutatorsCategoryPage.super.init(self, page_id, page_panel, fullscreen_panel, gui)
 
@@ -25,20 +25,24 @@ function MutatorsCategoryPage:init(page_id, page_panel, fullscreen_panel, gui)
 	end
 end
 
--- Lines: 34 to 79
+-- Lines 33-79
 function MutatorsCategoryPage:_setup_mutators_list()
 	self._items = {}
 	self._buttons = {}
 	local mutators_list = {}
-	local scroll = ScrollablePanel:new(self:panel(), "MutatorsPanel", {padding = 0})
+	local scroll = ScrollablePanel:new(self:panel(), "MutatorsPanel", {
+		padding = 0
+	})
 
 	scroll:on_canvas_updated_callback(callback(self, self, "_on_mutators_panel_updated"))
-	BoxGuiObject:new(scroll:panel(), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(scroll:panel(), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	table.insert(self._scrollable_panels, scroll)
 
 	self._mutators_scroll = scroll
@@ -63,7 +67,7 @@ function MutatorsCategoryPage:_setup_mutators_list()
 		index = index + 1
 	end
 
-	for i = 1, #self._items, 1 do
+	for i = 1, #self._items do
 		if i > 1 then
 			self._items[i]:link("prev", self._items[i - 1])
 		end
@@ -80,7 +84,7 @@ function MutatorsCategoryPage:_setup_mutators_list()
 	scroll:set_canvas_size(scroll:canvas():w(), new_h)
 end
 
--- Lines: 82 to 89
+-- Lines 81-89
 function MutatorsCategoryPage:_on_mutators_panel_updated()
 	if self._mutators_scroll:is_scrollable() then
 		for i, mutator_item in ipairs(self._items) do
@@ -89,17 +93,17 @@ function MutatorsCategoryPage:_on_mutators_panel_updated()
 	end
 end
 
--- Lines: 91 to 92
+-- Lines 91-93
 function MutatorsCategoryPage:help_text_panel()
 	return self._help_text_panel
 end
 
--- Lines: 95 to 96
+-- Lines 95-97
 function MutatorsCategoryPage:buttons_panel()
 	return self._buttons_panel
 end
 
--- Lines: 101 to 275
+-- Lines 99-275
 function MutatorsCategoryPage:_setup_help_panel()
 	self._help_text_panel = self:info_panel():panel({})
 	self._buttons_panel = self:info_panel():panel({})
@@ -254,12 +258,14 @@ function MutatorsCategoryPage:_setup_help_panel()
 	self._buttons = {}
 	self._controllers_pc_mapping = {}
 	self._controllers_mapping = {}
-	local buttons = {{
-		btn = "BTN_Y",
-		name_id = "menu_mutators_reset_all",
-		pc_btn = "menu_modify_item",
-		callback = callback(self, self, "_reset_mutators")
-	}}
+	local buttons = {
+		{
+			btn = "BTN_Y",
+			name_id = "menu_mutators_reset_all",
+			pc_btn = "menu_modify_item",
+			callback = callback(self, self, "_reset_mutators")
+		}
+	}
 
 	if not managers.menu:is_pc_controller() then
 		table.insert(buttons, {
@@ -276,7 +282,7 @@ function MutatorsCategoryPage:_setup_help_panel()
 	end
 
 	table.sort(buttons, function (a, b)
-		return (b.prio or 0) < (a.prio or 0)
+		return (a.prio or 0) > (b.prio or 0)
 	end)
 
 	local btn_x = 10
@@ -291,23 +297,27 @@ function MutatorsCategoryPage:_setup_help_panel()
 	end
 
 	self:buttons_panel():set_h(table.size(buttons) * tweak_data.menu.pd2_small_font_size + 20)
-	self:help_text_panel():set_h((self:help_text_panel():h() - self:buttons_panel():h()) - 10)
+	self:help_text_panel():set_h(self:help_text_panel():h() - self:buttons_panel():h() - 10)
 	self:buttons_panel():set_top(self:help_text_panel():bottom() + 10)
-	BoxGuiObject:new(self:help_text_panel(), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
-	BoxGuiObject:new(self:buttons_panel(), {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self:help_text_panel(), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
+	BoxGuiObject:new(self:buttons_panel(), {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 end
 
--- Lines: 278 to 323
+-- Lines 277-323
 function MutatorsCategoryPage:refresh()
 	MutatorsCategoryPage.super.refresh(self)
 
@@ -325,7 +335,9 @@ function MutatorsCategoryPage:refresh()
 		compatible, incompatible_mutator = managers.mutators:can_enable_mutator(self._selected_item:mutator())
 
 		if not compatible then
-			self._incompatibilities_text:set_text(managers.localization:text("menu_mutators_incompatibilities", {mutators = incompatible_mutator:name()}))
+			self._incompatibilities_text:set_text(managers.localization:text("menu_mutators_incompatibilities", {
+				mutators = incompatible_mutator:name()
+			}))
 			self._incompatibilities_text:set_visible(true)
 
 			local _, _, _, h = self._incompatibilities_text:text_rect()
@@ -361,7 +373,7 @@ function MutatorsCategoryPage:refresh()
 	end
 end
 
--- Lines: 325 to 329
+-- Lines 325-330
 function MutatorsCategoryPage:_get_reduction_macros()
 	return {
 		cash_reduction = math.round((1 - managers.mutators:get_cash_multiplier()) * 100),
@@ -369,7 +381,7 @@ function MutatorsCategoryPage:_get_reduction_macros()
 	}
 end
 
--- Lines: 332 to 343
+-- Lines 332-343
 function MutatorsCategoryPage:_set_selected(item)
 	if self._selected_item ~= item then
 		if self._selected_item then
@@ -386,25 +398,25 @@ function MutatorsCategoryPage:_set_selected(item)
 	end
 end
 
--- Lines: 345 to 348
+-- Lines 345-348
 function MutatorsCategoryPage:_reset_mutators()
 	managers.mutators:reset_all_mutators()
 	self:refresh()
 end
 
--- Lines: 350 to 354
+-- Lines 350-354
 function MutatorsCategoryPage:_open_selected_options()
 	if self:is_active() and self._selected_item then
 		self._selected_item:trigger_options()
 	end
 end
 
--- Lines: 358 to 359
+-- Lines 358-360
 function MutatorsCategoryPage:get_legend()
 	return {}
 end
 
--- Lines: 362 to 366
+-- Lines 362-367
 function MutatorsCategoryPage:is_active()
 	if managers.menu:active_menu().logic:selected_node():parameters().name == "mutators_options" then
 		return false
@@ -413,7 +425,7 @@ function MutatorsCategoryPage:is_active()
 	return MutatorsCategoryPage.super.is_active(self)
 end
 
--- Lines: 370 to 405
+-- Lines 369-407
 function MutatorsCategoryPage:mouse_moved(button, x, y)
 	if not self:is_active() then
 		return
@@ -424,7 +436,9 @@ function MutatorsCategoryPage:mouse_moved(button, x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:mouse_moved(button, x, y)}
+			local values = {
+				panel:mouse_moved(button, x, y)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -457,7 +471,7 @@ function MutatorsCategoryPage:mouse_moved(button, x, y)
 	return pointer ~= nil, pointer
 end
 
--- Lines: 410 to 438
+-- Lines 409-438
 function MutatorsCategoryPage:mouse_pressed(button, x, y)
 	if not self:is_active() then
 		return
@@ -465,7 +479,9 @@ function MutatorsCategoryPage:mouse_pressed(button, x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:mouse_pressed(button, x, y)}
+			local values = {
+				panel:mouse_pressed(button, x, y)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -490,7 +506,7 @@ function MutatorsCategoryPage:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 441 to 456
+-- Lines 440-456
 function MutatorsCategoryPage:mouse_released(button, x, y)
 	if not self:is_active() then
 		return
@@ -498,7 +514,9 @@ function MutatorsCategoryPage:mouse_released(button, x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:mouse_released(button, x, y)}
+			local values = {
+				panel:mouse_released(button, x, y)
+			}
 
 			if values[1] ~= nil then
 				self._prevent_click = (self._prevent_click or 0) + 1
@@ -509,7 +527,7 @@ function MutatorsCategoryPage:mouse_released(button, x, y)
 	end
 end
 
--- Lines: 459 to 473
+-- Lines 458-473
 function MutatorsCategoryPage:mouse_wheel_up(x, y)
 	if not self:is_active() then
 		return
@@ -517,7 +535,9 @@ function MutatorsCategoryPage:mouse_wheel_up(x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:scroll(x, y, 1)}
+			local values = {
+				panel:scroll(x, y, 1)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -526,7 +546,7 @@ function MutatorsCategoryPage:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines: 476 to 490
+-- Lines 475-490
 function MutatorsCategoryPage:mouse_wheel_down(x, y)
 	if not self:is_active() then
 		return
@@ -534,7 +554,9 @@ function MutatorsCategoryPage:mouse_wheel_down(x, y)
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
-			local values = {panel:scroll(x, y, -1)}
+			local values = {
+				panel:scroll(x, y, -1)
+			}
 
 			if values[1] ~= nil then
 				return unpack(values)
@@ -543,14 +565,14 @@ function MutatorsCategoryPage:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines: 492 to 496
+-- Lines 492-496
 function MutatorsCategoryPage:confirm_pressed()
 	if self:is_active() and self._selected_item then
 		self._selected_item:trigger()
 	end
 end
 
--- Lines: 498 to 503
+-- Lines 498-503
 function MutatorsCategoryPage:move_up()
 	if self:is_active() and self._selected_item and self._selected_item:get_link("prev") then
 		self:_set_selected(self._selected_item:get_link("prev"))
@@ -558,7 +580,7 @@ function MutatorsCategoryPage:move_up()
 	end
 end
 
--- Lines: 505 to 510
+-- Lines 505-510
 function MutatorsCategoryPage:move_down()
 	if self:is_active() and self._selected_item and self._selected_item:get_link("next") then
 		self:_set_selected(self._selected_item:get_link("next"))
@@ -566,7 +588,7 @@ function MutatorsCategoryPage:move_down()
 	end
 end
 
--- Lines: 512 to 523
+-- Lines 512-523
 function MutatorsCategoryPage:_scroll(target)
 	local scroll_panel = self._mutators_scroll:scroll_panel()
 	local y = self._mutators_scroll:canvas():y() + target:bottom()
@@ -581,9 +603,10 @@ function MutatorsCategoryPage:_scroll(target)
 		end
 	end
 end
+
 MutatorItem = class(MenuGuiItem)
 
--- Lines: 530 to 666
+-- Lines 529-666
 function MutatorItem:init(parent_panel, mutator, index)
 	MutatorItem.super.init(self)
 
@@ -603,12 +626,14 @@ function MutatorItem:init(parent_panel, mutator, index)
 		h = self._panel:h()
 	})
 
-	BoxGuiObject:new(self._icon_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(self._icon_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local tex, rect = mutator:icon()
 	self._icon = self._icon_panel:bitmap({
@@ -679,16 +704,18 @@ function MutatorItem:init(parent_panel, mutator, index)
 			halign = "right",
 			w = option_size,
 			h = option_size,
-			x = (self._panel:w() - option_size) - spacing,
+			x = self._panel:w() - option_size - spacing,
 			y = spacing
 		})
 
-		BoxGuiObject:new(self._option_panel, {sides = {
-			1,
-			1,
-			1,
-			1
-		}})
+		BoxGuiObject:new(self._option_panel, {
+			sides = {
+				1,
+				1,
+				1,
+				1
+			}
+		})
 
 		local icon_size = MutatorsManager._icon_size
 		self._options_icon = self._option_panel:bitmap({
@@ -730,32 +757,32 @@ function MutatorItem:init(parent_panel, mutator, index)
 	end
 end
 
--- Lines: 668 to 669
+-- Lines 668-670
 function MutatorItem:mutator()
 	return self._mutator
 end
 
--- Lines: 672 to 673
+-- Lines 672-674
 function MutatorItem:icon_alpha()
 	return self:mutator():is_enabled() and 1 or 0.35
 end
 
--- Lines: 676 to 677
+-- Lines 676-678
 function MutatorItem:text_alpha()
 	return self:mutator():is_enabled() and 1 or 0.8
 end
 
--- Lines: 680 to 681
+-- Lines 680-682
 function MutatorItem:selection_alpha()
 	return self:mutator():is_enabled() and 0.4 or 0.65
 end
 
--- Lines: 684 to 685
+-- Lines 684-686
 function MutatorItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines: 689 to 705
+-- Lines 688-705
 function MutatorItem:trigger(x, y)
 	if managers.menu:active_menu().logic:selected_node():parameters().name == "mutators_options" then
 		return false
@@ -773,26 +800,28 @@ function MutatorItem:trigger(x, y)
 	end
 end
 
--- Lines: 707 to 712
+-- Lines 707-712
 function MutatorItem:trigger_options()
 	if managers.menu:active_menu().logic:selected_node():parameters().name == "mutators_options" then
 		return false
 	end
 
-	managers.menu:open_node("mutators_options", {self:mutator()})
+	managers.menu:open_node("mutators_options", {
+		self:mutator()
+	})
 end
 
--- Lines: 714 to 715
+-- Lines 714-716
 function MutatorItem:top()
 	return self._panel:top() - PANEL_PADDING
 end
 
--- Lines: 718 to 719
+-- Lines 718-720
 function MutatorItem:bottom()
 	return self._panel:bottom() + PANEL_PADDING
 end
 
--- Lines: 723 to 756
+-- Lines 722-756
 function MutatorItem:refresh()
 	local compatible = managers.mutators:can_enable_mutator(self:mutator())
 	local compatible_color = compatible and tweak_data.screen_colors.button_stage_3 or tweak_data.screen_colors.important_1
@@ -825,7 +854,7 @@ function MutatorItem:refresh()
 	end
 end
 
--- Lines: 758 to 766
+-- Lines 758-766
 function MutatorItem:set_options_selected(selected, play_sound)
 	if self._selected_options ~= selected then
 		self._selected_options = selected
@@ -838,7 +867,7 @@ function MutatorItem:set_options_selected(selected, play_sound)
 	end
 end
 
--- Lines: 769 to 785
+-- Lines 768-785
 function MutatorItem:mouse_moved(button, x, y, allow_selection)
 	if allow_selection then
 		if self:mutator().has_options and self._option_panel:inside(x, y) then
@@ -858,16 +887,15 @@ function MutatorItem:mouse_moved(button, x, y, allow_selection)
 	self:set_selected(false)
 end
 
--- Lines: 787 to 790
+-- Lines 787-790
 function MutatorItem:link(position, item)
 	self._links = self._links or {}
 	self._links[position] = item
 end
 
--- Lines: 792 to 794
+-- Lines 792-795
 function MutatorItem:get_link(position)
 	self._links = self._links or {}
 
 	return self._links[position]
 end
-

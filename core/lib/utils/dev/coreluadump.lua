@@ -1,10 +1,10 @@
 core:module("CoreLuaDump")
 
--- Lines: 3 to 12
+-- Lines 3-13
 local function string_to_binary(str)
 	local out_str = nil
 
-	for i = 1, string.len(str), 1 do
+	for i = 1, string.len(str) do
 		out_str = out_str and out_str .. " "
 		out_str = (out_str or "") .. string.byte(str, i)
 	end
@@ -12,7 +12,7 @@ local function string_to_binary(str)
 	return out_str or ""
 end
 
--- Lines: 15 to 63
+-- Lines 15-64
 local function dump_collect(tab, t, level, max_level)
 	if level < max_level then
 		for k, v in pairs(tab) do
@@ -86,7 +86,7 @@ local function dump_collect(tab, t, level, max_level)
 	return t
 end
 
--- Lines: 66 to 76
+-- Lines 66-76
 local function write_to_file(file, t, level)
 	for k, v in pairs(t) do
 		if v._type == "table" then
@@ -99,7 +99,7 @@ local function write_to_file(file, t, level)
 	end
 end
 
--- Lines: 78 to 103
+-- Lines 78-103
 local function write_locals(file)
 	local i = 1
 	local value = 1
@@ -131,15 +131,14 @@ local function write_locals(file)
 	end
 end
 
--- Lines: 105 to 123
+-- Lines 105-123
 function core_lua_dump(file_name, root, max_level, no_bin)
 	local file = File:open(file_name or "lua_dump.xml", "w")
 
 	assert(file)
 
 	if no_bin then
-
-		-- Lines: 109 to 110
+		-- Lines 110-110
 		function string_to_binary(str)
 			return str
 		end
@@ -154,4 +153,3 @@ function core_lua_dump(file_name, root, max_level, no_bin)
 	file:close()
 	cat_print("debug", "LUA dump done!")
 end
-

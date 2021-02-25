@@ -1,6 +1,6 @@
 TeamAILogicInactive = class(TeamAILogicBase)
 
--- Lines: 7 to 23
+-- Lines 7-23
 function TeamAILogicInactive.enter(data, new_logic_name, enter_params)
 	TeamAILogicBase.enter(data, new_logic_name, enter_params)
 	data.brain:rem_all_pos_rsrv()
@@ -18,7 +18,7 @@ function TeamAILogicInactive.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 27 to 34
+-- Lines 27-34
 function TeamAILogicInactive.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
@@ -28,8 +28,7 @@ function TeamAILogicInactive.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.cancel_delayed_clbks(my_data)
 end
 
--- Lines: 38 to 39
+-- Lines 38-40
 function TeamAILogicInactive.is_available_for_assignment(data)
 	return false
 end
-

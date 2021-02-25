@@ -1,6 +1,6 @@
 SmokeGrenadeElement = SmokeGrenadeElement or class(MissionElement)
 
--- Lines: 4 to 16
+-- Lines 4-16
 function SmokeGrenadeElement:init(unit)
 	SmokeGrenadeElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function SmokeGrenadeElement:init(unit)
 	table.insert(self._save_values, "effect_type")
 end
 
--- Lines: 18 to 32
+-- Lines 18-32
 function SmokeGrenadeElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -35,4 +35,3 @@ function SmokeGrenadeElement:_build_panel(panel, panel_sizer)
 	}, "Select what type of effect will be spawned.")
 	self:_add_help_text("Spawns a smoke grenade.")
 end
-

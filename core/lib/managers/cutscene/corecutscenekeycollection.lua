@@ -1,11 +1,11 @@
 CoreCutsceneKeyCollection = CoreCutsceneKeyCollection or class()
 
--- Lines: 10 to 11
+-- Lines 10-12
 function CoreCutsceneKeyCollection:keys(element_name)
 	return self:keys_between(-1, math.huge, element_name)
 end
 
--- Lines: 14 to 59
+-- Lines 14-59
 function CoreCutsceneKeyCollection:keys_between(start_time, end_time, element_name)
 	if start_time == end_time then
 		return function ()
@@ -56,7 +56,7 @@ function CoreCutsceneKeyCollection:keys_between(start_time, end_time, element_na
 	end
 end
 
--- Lines: 61 to 76
+-- Lines 61-77
 function CoreCutsceneKeyCollection:keys_to_update(time, element_name)
 	local keys = self:_all_keys_sorted_by_time()
 	local index = 0
@@ -76,7 +76,7 @@ function CoreCutsceneKeyCollection:keys_to_update(time, element_name)
 	end
 end
 
--- Lines: 79 to 89
+-- Lines 79-89
 function CoreCutsceneKeyCollection:first_key(time, element_name, properties)
 	for index, key in ipairs(self:_all_keys_sorted_by_time()) do
 		if time <= key:time() and (element_name == nil or element_name == key.ELEMENT_NAME) and (properties == nil or table.true_for_all(properties, function (value, attribute_name)
@@ -87,7 +87,7 @@ function CoreCutsceneKeyCollection:first_key(time, element_name, properties)
 	end
 end
 
--- Lines: 91 to 104
+-- Lines 91-105
 function CoreCutsceneKeyCollection:last_key_before(time, element_name, properties)
 	local last_key = nil
 
@@ -105,4 +105,3 @@ function CoreCutsceneKeyCollection:last_key_before(time, element_name, propertie
 
 	return last_key
 end
-

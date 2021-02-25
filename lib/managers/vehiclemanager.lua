@@ -1,6 +1,6 @@
 VehicleManager = VehicleManager or class()
 
--- Lines: 3 to 10
+-- Lines 3-10
 function VehicleManager:init()
 	self._vehicles = {}
 	self._listener_holder = EventListenerHolder:new()
@@ -8,7 +8,7 @@ function VehicleManager:init()
 	self._draw_enabled = false
 end
 
--- Lines: 16 to 22
+-- Lines 13-22
 function VehicleManager:on_simulation_started()
 	for i = #self._vehicles, 1, -1 do
 		if not alive(self._vehicles[i]) then
@@ -17,7 +17,7 @@ function VehicleManager:on_simulation_started()
 	end
 end
 
--- Lines: 24 to 40
+-- Lines 24-40
 function VehicleManager:on_simulation_ended()
 	Application:debug("[VehicleManager] on_simulation_ended")
 
@@ -36,22 +36,22 @@ function VehicleManager:on_simulation_ended()
 	self._listener_holder = EventListenerHolder:new()
 end
 
--- Lines: 43 to 45
+-- Lines 43-45
 function VehicleManager:_call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end
 
--- Lines: 48 to 50
+-- Lines 48-50
 function VehicleManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines: 52 to 54
+-- Lines 52-54
 function VehicleManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines: 57 to 63
+-- Lines 57-63
 function VehicleManager:add_vehicle(vehicle)
 	table.insert(self._vehicles, vehicle)
 
@@ -60,7 +60,7 @@ function VehicleManager:add_vehicle(vehicle)
 	end
 end
 
--- Lines: 65 to 72
+-- Lines 65-72
 function VehicleManager:remove_vehicle(vehicle)
 	table.delete(vehicle)
 	managers.hud:_remove_name_label(vehicle:unit_data().name_label_id)
@@ -70,12 +70,12 @@ function VehicleManager:remove_vehicle(vehicle)
 	end
 end
 
--- Lines: 74 to 75
+-- Lines 74-76
 function VehicleManager:get_all_vehicles()
 	return self._vehicles
 end
 
--- Lines: 78 to 84
+-- Lines 78-85
 function VehicleManager:get_vehicle(animation_id)
 	for i, v in ipairs(self._vehicles) do
 		if v:vehicle_driving()._tweak_data.animations.vehicle_id == animation_id then
@@ -86,7 +86,7 @@ function VehicleManager:get_vehicle(animation_id)
 	return nil
 end
 
--- Lines: 87 to 92
+-- Lines 87-92
 function VehicleManager:on_player_entered_vehicle(vehicle_unit, player)
 	self._listener_holder:call("on_enter", player)
 
@@ -95,7 +95,7 @@ function VehicleManager:on_player_entered_vehicle(vehicle_unit, player)
 	end
 end
 
--- Lines: 94 to 101
+-- Lines 94-102
 function VehicleManager:all_players_in_vehicles()
 	local total_players = managers.network:session():amount_of_alive_players()
 	local players_in_vehicles = 0
@@ -109,12 +109,12 @@ function VehicleManager:all_players_in_vehicles()
 	return all_in
 end
 
--- Lines: 104 to 106
+-- Lines 104-106
 function VehicleManager:on_player_exited_vehicle(vehicle_unit, player)
 	self._listener_holder:call("on_exit", player)
 end
 
--- Lines: 110 to 115
+-- Lines 110-115
 function VehicleManager:remove_player_from_all_vehicles(player)
 	Application:debug("[VehicleManager] Removing player from all vehicles")
 
@@ -123,7 +123,7 @@ function VehicleManager:remove_player_from_all_vehicles(player)
 	end
 end
 
--- Lines: 118 to 177
+-- Lines 118-177
 function VehicleManager:update_vehicles_data_to_peer(peer)
 	if peer:ip_verified() then
 		for i, v in ipairs(self._vehicles) do
@@ -168,14 +168,18 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 			while loot_index <= #stored_loot do
 				local loot1 = stored_loot[loot_index]
 				loot_index = loot_index + 1
-				local loot2 = {multiplier = 0}
+				local loot2 = {
+					multiplier = 0
+				}
 
 				if loot_index <= #stored_loot then
 					loot2 = stored_loot[loot_index]
 				end
 
 				loot_index = loot_index + 1
-				local loot3 = {multiplier = 0}
+				local loot3 = {
+					multiplier = 0
+				}
 
 				if loot_index <= #stored_loot then
 					loot3 = stored_loot[loot_index]
@@ -189,7 +193,7 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 	end
 end
 
--- Lines: 180 to 185
+-- Lines 180-185
 function VehicleManager:sync_npc_vehicle_data(vehicle_unit, state_name, target_unit)
 	local v_npc_ext = vehicle_unit:npc_vehicle_driving()
 
@@ -198,7 +202,7 @@ function VehicleManager:sync_npc_vehicle_data(vehicle_unit, state_name, target_u
 	v_npc_ext:start()
 end
 
--- Lines: 188 to 262
+-- Lines 188-262
 function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open)
 	local v_ext = vehicle_unit:vehicle_driving()
 
@@ -300,7 +304,7 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 	end
 end
 
--- Lines: 265 to 273
+-- Lines 265-273
 function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, carry_id2, multiplier2, carry_id3, multiplier3)
 	if not alive(vehicle_unit) then
 		return
@@ -313,7 +317,7 @@ function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, 
 	v_ext:sync_loot(carry_id3, multiplier3)
 end
 
--- Lines: 277 to 306
+-- Lines 276-307
 function VehicleManager:find_active_vehicle_with_player()
 	for i, v in ipairs(self._vehicles) do
 		if v:vehicle_driving()._vehicle:is_active() then
@@ -342,7 +346,7 @@ function VehicleManager:find_active_vehicle_with_player()
 	return nil
 end
 
--- Lines: 310 to 334
+-- Lines 309-335
 function VehicleManager:find_npc_vehicle_target()
 	local target_unit = nil
 
@@ -359,7 +363,7 @@ function VehicleManager:find_npc_vehicle_target()
 	return target_unit
 end
 
--- Lines: 337 to 350
+-- Lines 337-350
 function VehicleManager:update(t, dt)
 	if self._debug and self._draw_enabled then
 		for i, v in ipairs(self._vehicles) do
@@ -372,4 +376,3 @@ function VehicleManager:update(t, dt)
 		end
 	end
 end
-

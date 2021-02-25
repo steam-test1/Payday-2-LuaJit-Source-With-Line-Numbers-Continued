@@ -1,6 +1,6 @@
 FilterProfileUnitElement = FilterProfileUnitElement or class(MissionElement)
 
--- Lines: 3 to 15
+-- Lines 3-15
 function FilterProfileUnitElement:init(unit)
 	FilterProfileUnitElement.super.init(self, unit)
 
@@ -15,7 +15,7 @@ function FilterProfileUnitElement:init(unit)
 	table.insert(self._save_values, "achievement")
 end
 
--- Lines: 18 to 28
+-- Lines 18-28
 function FilterProfileUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -37,6 +37,7 @@ function FilterProfileUnitElement:_build_panel(panel, panel_sizer)
 		floats = 0,
 		max = 1000000
 	}, "Set money offshore filter, in thousands.")
-	self:_build_value_combobox(panel, panel_sizer, "achievement", table.list_add({"none"}, table.map_keys(managers.achievment.achievments)), "Select an achievement to filter on")
+	self:_build_value_combobox(panel, panel_sizer, "achievement", table.list_add({
+		"none"
+	}, table.map_keys(managers.achievment.achievments)), "Select an achievement to filter on")
 end
-

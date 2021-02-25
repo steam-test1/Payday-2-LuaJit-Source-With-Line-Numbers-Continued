@@ -1,6 +1,6 @@
 UnitDamageTriggerUnitElement = UnitDamageTriggerUnitElement or class(MissionElement)
 
--- Lines: 5 to 15
+-- Lines 4-15
 function UnitDamageTriggerUnitElement:init(unit)
 	UnitDamageTriggerUnitElement.super.init(self, unit)
 
@@ -12,7 +12,7 @@ function UnitDamageTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "damage_types")
 end
 
--- Lines: 18 to 27
+-- Lines 18-27
 function UnitDamageTriggerUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -25,14 +25,14 @@ function UnitDamageTriggerUnitElement:layer_finished()
 	end
 end
 
--- Lines: 29 to 33
+-- Lines 29-33
 function UnitDamageTriggerUnitElement:load_unit(unit)
 	if unit then
 		self._units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines: 35 to 58
+-- Lines 35-58
 function UnitDamageTriggerUnitElement:update_selected()
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -62,7 +62,7 @@ function UnitDamageTriggerUnitElement:update_selected()
 	end
 end
 
--- Lines: 60 to 73
+-- Lines 60-73
 function UnitDamageTriggerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -81,7 +81,7 @@ function UnitDamageTriggerUnitElement:update_unselected(t, dt, selected_unit, al
 	end
 end
 
--- Lines: 75 to 88
+-- Lines 75-88
 function UnitDamageTriggerUnitElement:draw_links_unselected(...)
 	UnitDamageTriggerUnitElement.super.draw_links_unselected(self, ...)
 
@@ -99,7 +99,7 @@ function UnitDamageTriggerUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 90 to 95
+-- Lines 90-95
 function UnitDamageTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -112,7 +112,7 @@ function UnitDamageTriggerUnitElement:update_editing()
 	end
 end
 
--- Lines: 97 to 112
+-- Lines 97-112
 function UnitDamageTriggerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -135,29 +135,28 @@ function UnitDamageTriggerUnitElement:select_unit()
 	end
 end
 
--- Lines: 114 to 117
+-- Lines 114-117
 function UnitDamageTriggerUnitElement:_remove_unit(unit)
 	self._units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 119 to 122
+-- Lines 119-122
 function UnitDamageTriggerUnitElement:_add_unit(unit)
 	self._units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines: 124 to 126
+-- Lines 124-126
 function UnitDamageTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines: 134 to 144
+-- Lines 128-144
 function UnitDamageTriggerUnitElement:add_unit_list_btn()
-
-	-- Lines: 130 to 134
+	-- Lines 130-135
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
 			return false
@@ -175,10 +174,9 @@ function UnitDamageTriggerUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 149 to 159
+-- Lines 146-159
 function UnitDamageTriggerUnitElement:remove_unit_list_btn()
-
-	-- Lines: 148 to 149
+	-- Lines 148-150
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]
 	end
@@ -192,7 +190,7 @@ function UnitDamageTriggerUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines: 162 to 199
+-- Lines 161-199
 function UnitDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -229,4 +227,3 @@ function UnitDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 		sizer = panel_sizer
 	})
 end
-

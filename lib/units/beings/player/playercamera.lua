@@ -5,7 +5,7 @@ end
 PlayerCamera = PlayerCamera or class()
 PlayerCamera.IDS_NOTHING = Idstring("")
 
--- Lines: 12 to 42
+-- Lines 12-42
 function PlayerCamera:init(unit)
 	self._unit = unit
 	self._m_cam_rot = unit:rotation()
@@ -32,7 +32,7 @@ function PlayerCamera:init(unit)
 	end
 end
 
--- Lines: 47 to 92
+-- Lines 46-92
 function PlayerCamera:setup_viewport(data)
 	if self._vp then
 		self._vp:destroy()
@@ -74,12 +74,12 @@ function PlayerCamera:setup_viewport(data)
 	end
 end
 
--- Lines: 94 to 96
+-- Lines 94-96
 function PlayerCamera:_set_dimensions()
 	self._vp._vp:set_dimensions(0, (1 - RenderSettings.aspect_ratio / 1.7777777777777777) / 2, 1, RenderSettings.aspect_ratio / 1.7777777777777777)
 end
 
--- Lines: 100 to 118
+-- Lines 100-118
 function PlayerCamera:spawn_camera_unit()
 	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local unit_folder = "suit"
@@ -96,77 +96,77 @@ function PlayerCamera:spawn_camera_unit()
 	end
 end
 
--- Lines: 122 to 123
+-- Lines 122-124
 function PlayerCamera:camera_object()
 	return self._camera_object
 end
 
--- Lines: 126 to 127
+-- Lines 126-128
 function PlayerCamera:camera_unit()
 	return self._camera_unit
 end
 
--- Lines: 132 to 133
+-- Lines 132-134
 function PlayerCamera:anim_state_machine()
 	return self._camera_unit:anim_state_machine()
 end
 
--- Lines: 138 to 140
+-- Lines 138-141
 function PlayerCamera:play_redirect(redirect_name, speed, offset_time)
 	local result = self._camera_unit:base():play_redirect(redirect_name, speed, offset_time)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
--- Lines: 143 to 145
+-- Lines 143-146
 function PlayerCamera:play_redirect_timeblend(state, redirect_name, offset_time, t)
 	local result = self._camera_unit:base():play_redirect_timeblend(state, redirect_name, offset_time, t)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
--- Lines: 150 to 152
+-- Lines 150-153
 function PlayerCamera:play_state(state_name, at_time)
 	local result = self._camera_unit:base():play_state(state_name, at_time)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
--- Lines: 155 to 157
+-- Lines 155-158
 function PlayerCamera:play_raw(name, params)
 	local result = self._camera_unit:base():play_raw(name, params)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
--- Lines: 162 to 164
+-- Lines 162-164
 function PlayerCamera:set_speed(state_name, speed)
 	self._machine:set_speed(state_name, speed)
 end
 
--- Lines: 166 to 167
+-- Lines 166-168
 function PlayerCamera:anim_data()
 	return self._camera_unit:anim_data()
 end
 
--- Lines: 174 to 176
+-- Lines 174-176
 function PlayerCamera:link_scope(camera_object, screen_object, material, texture_channel, zoom)
 	self._scope_camera:link_scope(camera_object, screen_object, material, texture_channel, zoom)
 end
 
--- Lines: 178 to 180
+-- Lines 178-180
 function PlayerCamera:unlink_scope()
 	self._scope_camera:unlink_scope()
 end
 
--- Lines: 182 to 186
+-- Lines 182-186
 function PlayerCamera:update(unit, t, dt)
 	if self._scope_camera then
 		self._scope_camera:update(t, dt)
 	end
 end
 
--- Lines: 192 to 204
+-- Lines 192-204
 function PlayerCamera:destroy()
 	self._vp:destroy()
 
@@ -181,7 +181,7 @@ function PlayerCamera:destroy()
 	self:remove_sound_listener()
 end
 
--- Lines: 206 to 215
+-- Lines 206-215
 function PlayerCamera:remove_sound_listener()
 	if not self._listener_id then
 		return
@@ -194,18 +194,20 @@ function PlayerCamera:remove_sound_listener()
 	self._listener_id = nil
 end
 
--- Lines: 219 to 223
+-- Lines 219-223
 function PlayerCamera:clbk_fp_enter(aim_dir)
 	if self._camera_manager_mode ~= "first_person" then
 		self._camera_manager_mode = "first_person"
 	end
 end
 
--- Lines: 227 to 237
+-- Lines 227-237
 function PlayerCamera:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("player_camera", self._camera_object, self._camera_object, nil, false)
 
-	managers.listener:add_set("player_camera", {"player_camera"})
+	managers.listener:add_set("player_camera", {
+		"player_camera"
+	})
 
 	self._listener_activation_id = managers.listener:activate_set("main", "player_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
@@ -215,41 +217,42 @@ function PlayerCamera:_setup_sound_listener()
 	})
 end
 
--- Lines: 239 to 241
+-- Lines 239-241
 function PlayerCamera:set_default_listener_object()
 	self:set_listener_object(self._camera_object)
 end
 
--- Lines: 244 to 246
+-- Lines 244-246
 function PlayerCamera:set_listener_object(object)
 	managers.listener:set_listener(self._listener_id, object, object, nil)
 end
 
--- Lines: 250 to 251
+-- Lines 250-253
 function PlayerCamera:position()
 	return self._m_cam_pos
 end
 
--- Lines: 257 to 258
+-- Lines 257-260
 function PlayerCamera:rotation()
 	return self._m_cam_rot
 end
 
--- Lines: 264 to 265
+-- Lines 264-267
 function PlayerCamera:forward()
 	return self._m_cam_fwd
 end
+
 local camera_mvec = Vector3()
 local reticle_mvec = Vector3()
 
--- Lines: 273 to 275
+-- Lines 273-276
 function PlayerCamera:position_with_shake()
 	self._camera_object:m_position(camera_mvec)
 
 	return camera_mvec
 end
 
--- Lines: 280 to 285
+-- Lines 280-286
 function PlayerCamera:forward_with_shake_toward_reticle(reticle_obj)
 	reticle_obj:m_position(reticle_mvec)
 	self._camera_object:m_position(camera_mvec)
@@ -259,7 +262,7 @@ function PlayerCamera:forward_with_shake_toward_reticle(reticle_obj)
 	return reticle_mvec
 end
 
--- Lines: 291 to 300
+-- Lines 290-300
 function PlayerCamera:set_position(pos)
 	if _G.IS_VR then
 		self._camera_object:set_position(pos)
@@ -272,13 +275,14 @@ function PlayerCamera:set_position(pos)
 	mvector3.set(self._m_cam_pos, pos)
 end
 
--- Lines: 305 to 307
+-- Lines 305-307
 function PlayerCamera:update_transform()
 	self._camera_object:transform()
 end
+
 local mvec1 = Vector3()
 
--- Lines: 313 to 372
+-- Lines 312-372
 function PlayerCamera:set_rotation(rot)
 	if _G.IS_VR then
 		self._camera_object:set_rotation(rot)
@@ -310,9 +314,9 @@ function PlayerCamera:set_rotation(rot)
 		sync_yaw = 360 - sync_yaw
 	end
 
-	sync_yaw = math.floor((255 * sync_yaw) / 360)
+	sync_yaw = math.floor(255 * sync_yaw / 360)
 	local sync_pitch = math.clamp(rot:pitch(), -85, 85) + 85
-	sync_pitch = math.floor((127 * sync_pitch) / 170)
+	sync_pitch = math.floor(127 * sync_pitch / 170)
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
 	if tweak_data.network then
@@ -332,22 +336,22 @@ function PlayerCamera:set_rotation(rot)
 	end
 end
 
--- Lines: 374 to 376
+-- Lines 374-376
 function PlayerCamera:set_forced_sync_delay(t)
 	self._forced_next_sync_t = t
 end
 
--- Lines: 380 to 385
+-- Lines 380-385
 function PlayerCamera:set_FOV(fov_value)
 	self._camera_object:set_fov(fov_value)
 end
 
--- Lines: 389 to 390
+-- Lines 389-391
 function PlayerCamera:viewport()
 	return self._vp
 end
 
--- Lines: 395 to 405
+-- Lines 395-405
 function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	if not self._shakers then
 		return
@@ -358,7 +362,7 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	end
 end
 
--- Lines: 410 to 415
+-- Lines 409-416
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	if _G.IS_VR then
 		return
@@ -367,13 +371,12 @@ function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	return self._shaker:play(effect, amplitude or 1, frequency or 1, offset or 0)
 end
 
--- Lines: 418 to 420
+-- Lines 418-420
 function PlayerCamera:stop_shaker(id)
 	self._shaker:stop_immediately(id)
 end
 
--- Lines: 422 to 423
+-- Lines 422-424
 function PlayerCamera:shaker()
 	return self._shaker
 end
-

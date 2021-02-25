@@ -1,6 +1,6 @@
 MenuNodeStatsGui = MenuNodeStatsGui or class(MenuNodeGui)
 
--- Lines: 3 to 8
+-- Lines 3-8
 function MenuNodeStatsGui:init(node, layer, parameters)
 	MenuNodeStatsGui.super.init(self, node, layer, parameters)
 
@@ -9,14 +9,14 @@ function MenuNodeStatsGui:init(node, layer, parameters)
 	self:_setup_stats(node)
 end
 
--- Lines: 10 to 14
+-- Lines 10-14
 function MenuNodeStatsGui:_setup_panels(node)
 	MenuNodeStatsGui.super._setup_panels(self, node)
 
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 end
 
--- Lines: 16 to 54
+-- Lines 16-54
 function MenuNodeStatsGui:_setup_stats(node)
 	self:_add_stats({
 		type = "text",
@@ -78,7 +78,9 @@ function MenuNodeStatsGui:_setup_stats(node)
 		end
 
 		local safe_rect = managers.viewport:get_safe_rect_pixels()
-		local panel = self._item_panel_parent:panel({y = y})
+		local panel = self._item_panel_parent:panel({
+			y = y
+		})
 		local text = panel:text({
 			halign = "center",
 			vertical = "center",
@@ -100,7 +102,7 @@ function MenuNodeStatsGui:_setup_stats(node)
 	end
 end
 
--- Lines: 56 to 119
+-- Lines 56-119
 function MenuNodeStatsGui:_add_stats(params)
 	local y = 0
 
@@ -108,7 +110,9 @@ function MenuNodeStatsGui:_add_stats(params)
 		y = y + panel:h() + self.spacing
 	end
 
-	local panel = self._item_panel_parent:panel({y = y})
+	local panel = self._item_panel_parent:panel({
+		y = y
+	})
 	local topic = panel:text({
 		halign = "right",
 		vertical = "center",
@@ -195,23 +199,22 @@ function MenuNodeStatsGui:_add_stats(params)
 	table.insert(self._stats_items, panel)
 end
 
--- Lines: 121 to 123
+-- Lines 121-123
 function MenuNodeStatsGui:_create_menu_item(row_item)
 	MenuNodeStatsGui.super._create_menu_item(self, row_item)
 end
 
--- Lines: 125 to 127
+-- Lines 125-127
 function MenuNodeStatsGui:_setup_item_panel_parent(safe_rect)
 	MenuNodeStatsGui.super._setup_item_panel_parent(self, safe_rect)
 end
 
--- Lines: 129 to 131
+-- Lines 129-131
 function MenuNodeStatsGui:_setup_item_panel(safe_rect, res)
 	MenuNodeStatsGui.super._setup_item_panel(self, safe_rect, res)
 end
 
--- Lines: 133 to 137
+-- Lines 133-137
 function MenuNodeStatsGui:resolution_changed()
 	MenuNodeStatsGui.super.resolution_changed(self)
 end
-

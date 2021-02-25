@@ -1,11 +1,12 @@
 CoreMusicManager = CoreMusicManager or class()
 
--- Lines: 3 to 56
+-- Lines 3-56
 function CoreMusicManager:init()
 	if not Global.music_manager then
-		Global.music_manager = {}
-		Global.music_manager.source = SoundDevice:create_source("music")
-		Global.music_manager.volume = 0
+		Global.music_manager = {
+			source = SoundDevice:create_source("music"),
+			volume = 0
+		}
 
 		self:init_globals()
 	end
@@ -51,7 +52,7 @@ function CoreMusicManager:init()
 	self._external_media_playing = false
 end
 
--- Lines: 58 to 68
+-- Lines 58-68
 function CoreMusicManager:init_finalize()
 	if SystemInfo:platform() == Idstring("X360") then
 		self._has_music_control = XboxLive:app_has_playback_control()
@@ -64,16 +65,16 @@ function CoreMusicManager:init_finalize()
 	managers.savefile:add_load_sequence_done_callback_handler(callback(self, self, "on_load_complete"))
 end
 
--- Lines: 70 to 71
+-- Lines 70-71
 function CoreMusicManager:init_globals()
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function CoreMusicManager:music_tracks()
 	return {}
 end
 
--- Lines: 77 to 87
+-- Lines 77-87
 function CoreMusicManager:check_music_switch()
 	local switches = tweak_data.levels:get_music_switches()
 
@@ -85,7 +86,7 @@ function CoreMusicManager:check_music_switch()
 	end
 end
 
--- Lines: 89 to 102
+-- Lines 89-102
 function CoreMusicManager:post_event(name)
 	if not name then
 		return
@@ -100,29 +101,29 @@ function CoreMusicManager:post_event(name)
 	end
 end
 
--- Lines: 106 to 109
+-- Lines 106-109
 function CoreMusicManager:stop()
 	Global.music_manager.source:stop()
 
 	Global.music_manager.current_event = nil
 end
 
--- Lines: 111 to 112
+-- Lines 111-113
 function CoreMusicManager:music_paths()
 	return self._path_list
 end
 
--- Lines: 115 to 116
+-- Lines 115-117
 function CoreMusicManager:music_events(path)
 	return self._event_map[path]
 end
 
--- Lines: 119 to 120
+-- Lines 119-121
 function CoreMusicManager:music_path(event)
 	return self._path_map[event]
 end
 
--- Lines: 124 to 131
+-- Lines 124-131
 function CoreMusicManager:set_volume(volume)
 	Global.music_manager.volume = volume
 
@@ -133,7 +134,7 @@ function CoreMusicManager:set_volume(volume)
 	end
 end
 
--- Lines: 134 to 143
+-- Lines 134-143
 function CoreMusicManager:clbk_game_has_music_control(status)
 	print("[CoreMusicManager:clbk_game_has_music_control]", status)
 
@@ -146,17 +147,17 @@ function CoreMusicManager:clbk_game_has_music_control(status)
 	self._has_music_control = status
 end
 
--- Lines: 145 to 147
+-- Lines 145-147
 function CoreMusicManager:on_load_complete()
 	self:set_volume(managers.user:get_setting("music_volume") / 100)
 end
 
--- Lines: 149 to 150
+-- Lines 149-151
 function CoreMusicManager:has_music_control()
 	return self._has_music_control
 end
 
--- Lines: 154 to 164
+-- Lines 154-164
 function CoreMusicManager:save(data)
 	local state = {}
 
@@ -168,7 +169,7 @@ function CoreMusicManager:save(data)
 	data.CoreMusicManager = state
 end
 
--- Lines: 166 to 173
+-- Lines 166-173
 function CoreMusicManager:load(data)
 	local state = data.CoreMusicManager
 
@@ -178,4 +179,3 @@ function CoreMusicManager:load(data)
 
 	Global.music_manager.synced_track = state.track
 end
-

@@ -2,7 +2,7 @@ VehicleDamage = VehicleDamage or class()
 VehicleDamage.VEHICLE_DEFAULT_HEALTH = 100
 VehicleDamage._HEALTH_GRANULARITY = 512
 
--- Lines: 6 to 25
+-- Lines 6-25
 function VehicleDamage:init(unit)
 	self._unit = unit
 
@@ -19,7 +19,7 @@ function VehicleDamage:init(unit)
 	self._half_damaged_squence_played = false
 end
 
--- Lines: 29 to 34
+-- Lines 29-34
 function VehicleDamage:set_tweak_data(data)
 	self._tweak_data = data
 	self._current_max_health = self._tweak_data.damage.max_health
@@ -27,12 +27,12 @@ function VehicleDamage:set_tweak_data(data)
 	self._HEALTH_INIT_PRECENT = self._current_max_health / self._HEALTH_GRANULARITY
 end
 
--- Lines: 36 to 37
+-- Lines 36-38
 function VehicleDamage:melee_hit_sfx()
 	return "hit_gen"
 end
 
--- Lines: 42 to 50
+-- Lines 42-51
 function VehicleDamage:is_invulnerable()
 	local result = false
 	local players_count_inside_vehicle = self._unit:vehicle_driving():num_players_inside()
@@ -44,7 +44,7 @@ function VehicleDamage:is_invulnerable()
 	return result
 end
 
--- Lines: 54 to 69
+-- Lines 54-71
 function VehicleDamage:is_friendly_fire(attacker_unit)
 	local friendly_fire = false
 
@@ -61,12 +61,14 @@ function VehicleDamage:is_friendly_fire(attacker_unit)
 	return not friendly_fire
 end
 
--- Lines: 77 to 108
+-- Lines 76-110
 function VehicleDamage:damage_mission(dmg)
-	local damage_info = {result = {
-		variant = "killzone",
-		type = "hurt"
-	}}
+	local damage_info = {
+		result = {
+			variant = "killzone",
+			type = "hurt"
+		}
+	}
 	local attack_data = {
 		variant = "killzone",
 		damage = dmg
@@ -103,7 +105,7 @@ function VehicleDamage:damage_mission(dmg)
 	return result
 end
 
--- Lines: 146 to 217
+-- Lines 145-218
 function VehicleDamage:damage_bullet(attack_data)
 	if self._unit:vehicle_driving() and not self._unit:vehicle_driving():is_vulnerable() then
 		return
@@ -181,12 +183,12 @@ function VehicleDamage:damage_bullet(attack_data)
 	return result
 end
 
--- Lines: 220 to 222
+-- Lines 220-222
 function VehicleDamage:_send_bullet_attack_result(attack_data, attacker, damage_percent, body_index, hit_offset_height)
 	self._unit:network():send("damage_bullet", attacker, damage_percent, body_index, hit_offset_height, 0, self:dead() and true or false)
 end
 
--- Lines: 225 to 273
+-- Lines 224-273
 function VehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit_offset_height, variant, death)
 	if self:dead() then
 		return
@@ -237,25 +239,27 @@ function VehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body,
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 275 to 276
+-- Lines 275-276
 function VehicleDamage:_send_sync_bullet_attack_result(attack_data, hit_offset_height)
 end
 
--- Lines: 280 to 281
+-- Lines 279-282
 function VehicleDamage:stun_hit(attack_data)
 	return nil
 end
 
--- Lines: 288 to 336
+-- Lines 287-338
 function VehicleDamage:damage_explosion(attack_data)
 	if not self._unit:vehicle_driving():is_vulnerable() then
 		return
 	end
 
-	local damage_info = {result = {
-		variant = "explosion",
-		type = "hurt"
-	}}
+	local damage_info = {
+		result = {
+			variant = "explosion",
+			type = "hurt"
+		}
+	}
 
 	if self._god_mode or self._invulnerable then
 		self:_call_listeners(damage_info)
@@ -302,12 +306,12 @@ function VehicleDamage:damage_explosion(attack_data)
 	return result
 end
 
--- Lines: 341 to 343
+-- Lines 340-343
 function VehicleDamage:_send_explosion_attack_result(attack_data, attacker, damage_percent, i_attack_variant, direction)
 	self._unit:network():send("damage_explosion_fire", attacker, damage_percent, i_attack_variant, self._dead and true or false, direction, attack_data.weapon_unit)
 end
 
--- Lines: 345 to 397
+-- Lines 345-397
 function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	Application:trace("[VehicleDamage:sync_damage_explosion]")
 
@@ -317,7 +321,9 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 
 	local variant = "explosion"
 	local damage = damage_percent * self._HEALTH_INIT_PRECENT
-	local attack_data = {variant = variant}
+	local attack_data = {
+		variant = variant
+	}
 	local result = nil
 
 	if death then
@@ -372,11 +378,11 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 399 to 400
+-- Lines 399-400
 function VehicleDamage:_send_sync_explosion_attack_result(attack_data)
 end
 
--- Lines: 404 to 453
+-- Lines 404-454
 function VehicleDamage:damage_fire(attack_data)
 	Application:trace("[VehicleDamage:damage_fire]")
 
@@ -384,10 +390,12 @@ function VehicleDamage:damage_fire(attack_data)
 		return
 	end
 
-	local damage_info = {result = {
-		variant = "fire",
-		type = "hurt"
-	}}
+	local damage_info = {
+		result = {
+			variant = "fire",
+			type = "hurt"
+		}
+	}
 
 	if self._god_mode or self._invulnerable then
 		self:_call_listeners(damage_info)
@@ -434,12 +442,12 @@ function VehicleDamage:damage_fire(attack_data)
 	return result
 end
 
--- Lines: 457 to 459
+-- Lines 456-459
 function VehicleDamage:_send_fire_attack_result(attack_data, attacker, damage_percent, i_attack_variant, direction)
 	self._unit:network():send("damage_explosion_fire", attacker, damage_percent, i_attack_variant, self._dead and true or false, direction, attack_data.weapon_unit)
 end
 
--- Lines: 461 to 510
+-- Lines 461-510
 function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	Application:trace("[VehicleDamage:sync_damage_fire]")
 
@@ -449,7 +457,9 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 
 	local variant = "fire"
 	local damage = damage_percent * self._HEALTH_INIT_PRECENT
-	local attack_data = {variant = variant}
+	local attack_data = {
+		variant = variant
+	}
 	local result = nil
 
 	if death then
@@ -502,11 +512,11 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 	self:_on_damage_received(attack_data)
 end
 
--- Lines: 512 to 513
+-- Lines 512-513
 function VehicleDamage:_send_sync_fire_attack_result(attack_data)
 end
 
--- Lines: 522 to 574
+-- Lines 517-574
 function VehicleDamage:damage_collision(attack_data)
 	local local_player_seat = nil
 
@@ -519,10 +529,12 @@ function VehicleDamage:damage_collision(attack_data)
 			return
 		end
 
-		local damage_info = {result = {
-			variant = "collision",
-			type = "hurt"
-		}}
+		local damage_info = {
+			result = {
+				variant = "collision",
+				type = "hurt"
+			}
+		}
 
 		if Global.god_mode then
 			if attack_data.damage > 0 then
@@ -556,25 +568,25 @@ function VehicleDamage:damage_collision(attack_data)
 	end
 end
 
--- Lines: 578 to 582
+-- Lines 578-582
 function VehicleDamage:_send_vehicle_health(health)
 	if managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_ai_vehicle_action", "health", self._unit, health, nil)
 	end
 end
 
--- Lines: 584 to 594
+-- Lines 584-594
 function VehicleDamage:sync_vehicle_health(health)
 	self:set_health(tonumber(health))
 	self:_health_recap()
 end
 
--- Lines: 598 to 600
+-- Lines 598-600
 function VehicleDamage:_on_damage_received(damage_info)
 	self:_call_listeners(damage_info)
 end
 
--- Lines: 605 to 612
+-- Lines 605-613
 function VehicleDamage:_get_attack_variant_index(variant)
 	for i, test_variant in ipairs(self._ATTACK_VARIANTS) do
 		if variant == test_variant then
@@ -587,7 +599,7 @@ function VehicleDamage:_get_attack_variant_index(variant)
 	return 1
 end
 
--- Lines: 617 to 624
+-- Lines 617-625
 function VehicleDamage:_calc_health_damage(attack_data)
 	local health_subtracted = 0
 	health_subtracted = self:get_real_health()
@@ -598,12 +610,12 @@ function VehicleDamage:_calc_health_damage(attack_data)
 	return health_subtracted
 end
 
--- Lines: 628 to 629
+-- Lines 627-630
 function VehicleDamage:get_real_health()
 	return self._health
 end
 
--- Lines: 633 to 639
+-- Lines 632-639
 function VehicleDamage:change_health(change_of_health)
 	self:set_health(self:get_real_health() + change_of_health)
 
@@ -612,12 +624,12 @@ function VehicleDamage:change_health(change_of_health)
 	end
 end
 
--- Lines: 641 to 642
+-- Lines 641-643
 function VehicleDamage:incapacitated()
 	return self._incapacitated
 end
 
--- Lines: 648 to 655
+-- Lines 645-655
 function VehicleDamage:revive()
 	self:_revive()
 
@@ -626,7 +638,7 @@ function VehicleDamage:revive()
 	end
 end
 
--- Lines: 660 to 673
+-- Lines 657-673
 function VehicleDamage:_revive()
 	self:set_health(self:_max_health())
 	self._unit:vehicle_driving():set_state(VehicleDrivingExt.STATE_DRIVING, false)
@@ -638,22 +650,22 @@ function VehicleDamage:_revive()
 	self._half_damaged_squence_played = false
 end
 
--- Lines: 678 to 681
+-- Lines 675-681
 function VehicleDamage:sync_vehicle_revive()
 	self:_revive()
 end
 
--- Lines: 685 to 686
+-- Lines 685-687
 function VehicleDamage:need_revive()
 	return self.dead()
 end
 
--- Lines: 689 to 690
+-- Lines 689-691
 function VehicleDamage:dead()
 	return self._health <= 0
 end
 
--- Lines: 693 to 697
+-- Lines 693-697
 function VehicleDamage:die()
 	Application:trace("[VehicleDamage:die]")
 
@@ -662,7 +674,7 @@ function VehicleDamage:die()
 	self._unit:vehicle_driving():on_vehicle_death()
 end
 
--- Lines: 700 to 709
+-- Lines 700-709
 function VehicleDamage:_chk_dmg_too_soon(damage)
 	local next_allowed_dmg_t = type(self._next_allowed_dmg_t) == "number" and self._next_allowed_dmg_t or Application:digest_value(self._next_allowed_dmg_t, false)
 
@@ -671,45 +683,45 @@ function VehicleDamage:_chk_dmg_too_soon(damage)
 	end
 end
 
--- Lines: 717 to 718
+-- Lines 711-718
 function VehicleDamage:_hit_direction(col_ray)
 end
 
--- Lines: 722 to 724
+-- Lines 722-724
 function VehicleDamage:_call_listeners(damage_info)
 	self._listener_holder:call(damage_info.result.type, self._unit, damage_info)
 end
 
--- Lines: 728 to 731
+-- Lines 728-731
 function VehicleDamage:add_listener(key, events, clbk)
 	events = events or self._all_event_types
 
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines: 735 to 737
+-- Lines 735-737
 function VehicleDamage:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines: 742 to 744
+-- Lines 741-744
 function VehicleDamage:set_health(health)
 	self._health = health
 end
 
--- Lines: 746 to 747
+-- Lines 746-748
 function VehicleDamage:_max_health()
 	return self._current_max_health
 end
 
--- Lines: 758 to 761
+-- Lines 757-761
 function VehicleDamage:_set_health_effect()
 	local hp = self:get_real_health() / self:_max_health()
 
 	math.clamp(hp, 0, 1)
 end
 
--- Lines: 763 to 770
+-- Lines 763-771
 function VehicleDamage:_get_attack_variant_index(variant)
 	for i, test_variant in ipairs(CopDamage._ATTACK_VARIANTS) do
 		if variant == test_variant then
@@ -722,7 +734,7 @@ function VehicleDamage:_get_attack_variant_index(variant)
 	return 1
 end
 
--- Lines: 776 to 787
+-- Lines 775-787
 function VehicleDamage:_health_recap()
 	if not self._half_damaged_squence_played and self:get_real_health() / self:_max_health() <= 0.5 then
 		if self._unit:damage():has_sequence(VehicleDrivingExt.SEQUENCE_HALF_DAMAGED) then
@@ -736,4 +748,3 @@ function VehicleDamage:_health_recap()
 		self:die()
 	end
 end
-

@@ -1,7 +1,7 @@
 HandStatesCommon = HandStatesCommon or {}
 local M = HandStatesCommon
 
--- Lines: 4 to 13
+-- Lines 4-14
 function M.warp_inputs()
 	local inputs = {}
 
@@ -18,7 +18,7 @@ function M.warp_inputs()
 	return inputs
 end
 
--- Lines: 16 to 22
+-- Lines 16-23
 function M.warp_target_inputs()
 	local inputs = {}
 
@@ -31,7 +31,7 @@ function M.warp_target_inputs()
 	return inputs
 end
 
--- Lines: 25 to 32
+-- Lines 25-33
 function M.run_input()
 	local inputs = {}
 
@@ -42,7 +42,7 @@ function M.run_input()
 	return inputs
 end
 
--- Lines: 36 to 44
+-- Lines 35-45
 function M:toggle_menu_condition(hand, key_map)
 	for key, connections in pairs(key_map) do
 		if table.contains(connections, "toggle_menu") then
@@ -55,7 +55,7 @@ function M:toggle_menu_condition(hand, key_map)
 	return hand == default_hand
 end
 
--- Lines: 47 to 59
+-- Lines 47-60
 function M:movement_condition(hand, key_map, connection_name)
 	local default_hand = managers.vr:get_setting("default_weapon_hand") == "right" and 1 or 2
 

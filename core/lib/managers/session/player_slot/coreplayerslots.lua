@@ -4,7 +4,7 @@ core:import("CoreSessionGenericState")
 
 PlayerSlots = PlayerSlots or class(CoreSessionGenericState.State)
 
--- Lines: 7 to 12
+-- Lines 7-12
 function PlayerSlots:init(local_user_manager, factory)
 	self._slots = {}
 	self._local_user_manager = local_user_manager
@@ -14,19 +14,19 @@ function PlayerSlots:init(local_user_manager, factory)
 	self._factory = factory
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function PlayerSlots:clear()
 	self._slots = {}
 end
 
--- Lines: 18 to 22
+-- Lines 18-22
 function PlayerSlots:clear_session()
 	for _, slot in pairs(self._slots) do
 		slot:clear_session()
 	end
 end
 
--- Lines: 24 to 30
+-- Lines 24-31
 function PlayerSlots:add_player_slot()
 	local new_index = #self._slots + 1
 	local new_slot = CorePlayerSlot.PlayerSlot:new(self, self._local_user_manager)
@@ -35,7 +35,7 @@ function PlayerSlots:add_player_slot()
 	return new_slot
 end
 
--- Lines: 33 to 41
+-- Lines 33-41
 function PlayerSlots:_remove_player_slot(player_slot)
 	for index, slot in pairs(self._slots) do
 		if slot == player_slot then
@@ -48,19 +48,19 @@ function PlayerSlots:_remove_player_slot(player_slot)
 	assert(false, "couldn't find that player slot")
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function PlayerSlots:slots()
 	return self._slots
 end
 
--- Lines: 47 to 51
+-- Lines 47-51
 function PlayerSlots:transition()
 	for _, slot in pairs(self._slots) do
 		slot:transition()
 	end
 end
 
--- Lines: 53 to 56
+-- Lines 53-57
 function PlayerSlots:primary_slot()
 	local primary_slot = self._slots[1]
 
@@ -69,14 +69,14 @@ function PlayerSlots:primary_slot()
 	return primary_slot
 end
 
--- Lines: 59 to 61
+-- Lines 59-62
 function PlayerSlots:has_primary_local_user()
 	local primary_slot = self._slots[1]
 
 	return primary_slot ~= nil and primary_slot:has_assigned_user()
 end
 
--- Lines: 64 to 69
+-- Lines 64-70
 function PlayerSlots:primary_local_user()
 	local primary_slot = self._slots[1]
 
@@ -86,7 +86,7 @@ function PlayerSlots:primary_local_user()
 	return primary_slot:assigned_user()
 end
 
--- Lines: 72 to 78
+-- Lines 72-78
 function PlayerSlots:create_players()
 	for index, slot in pairs(self._slots) do
 		if slot:has_assigned_user() then
@@ -95,7 +95,7 @@ function PlayerSlots:create_players()
 	end
 end
 
--- Lines: 80 to 86
+-- Lines 80-86
 function PlayerSlots:remove_players()
 	for index, slot in pairs(self._slots) do
 		if slot:has_player() then
@@ -104,7 +104,7 @@ function PlayerSlots:remove_players()
 	end
 end
 
--- Lines: 88 to 95
+-- Lines 88-95
 function PlayerSlots:enter_level_handler(level_handler)
 	for index, slot in pairs(self._slots) do
 		local player = slot:player()
@@ -115,7 +115,7 @@ function PlayerSlots:enter_level_handler(level_handler)
 	end
 end
 
--- Lines: 97 to 104
+-- Lines 97-104
 function PlayerSlots:leave_level_handler(level_handler)
 	for index, slot in pairs(self._slots) do
 		local player = slot:player()
@@ -125,4 +125,3 @@ function PlayerSlots:leave_level_handler(level_handler)
 		end
 	end
 end
-

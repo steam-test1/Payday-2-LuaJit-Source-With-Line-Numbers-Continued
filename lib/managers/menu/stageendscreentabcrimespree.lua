@@ -1,11 +1,13 @@
 CrimeSpreeResultTabItem = CrimeSpreeResultTabItem or class(StatsTabItem)
 local padding = 10
 
--- Lines: 8 to 53
+-- Lines 6-53
 function CrimeSpreeResultTabItem:init(panel, tab_panel, text, i)
 	self._main_panel = panel
 	self._tab_panel = tab_panel
-	self._panel = self._main_panel:panel({h = self._main_panel:h() - 70})
+	self._panel = self._main_panel:panel({
+		h = self._main_panel:h() - 70
+	})
 	self._index = i
 	local prev_item_title_text = tab_panel:child("tab_text_" .. tostring(i - 1))
 	local offset = prev_item_title_text and prev_item_title_text:right() or 0
@@ -41,7 +43,7 @@ function CrimeSpreeResultTabItem:init(panel, tab_panel, text, i)
 	self:_setup()
 end
 
--- Lines: 57 to 70
+-- Lines 55-70
 function CrimeSpreeResultTabItem:_setup()
 	self._cs_panel = self._panel:panel({
 		w = self._panel:w() - padding * 2,
@@ -56,18 +58,20 @@ function CrimeSpreeResultTabItem:_setup()
 	self:_create_timeline(1)
 end
 
--- Lines: 72 to 73
+-- Lines 72-74
 function CrimeSpreeResultTabItem:success()
 	return managers.job:stage_success() and not managers.crime_spree:has_failed()
 end
 
--- Lines: 78 to 172
+-- Lines 76-172
 function CrimeSpreeResultTabItem:_create_level(total_w)
 	self._level_panel = self._cs_panel:panel({})
 	local level_gain = managers.crime_spree:mission_completion_gain()
 	local gain_x = self._level_panel:w() * (1 - total_w) * 0.5
 	local gain_y = self._level_panel:h() * 0.25
-	local gain_text = "+" .. managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(0, "")})
+	local gain_text = "+" .. managers.localization:text("menu_cs_level", {
+		level = managers.experience:cash_string(0, "")
+	})
 	local gain_color = self:success() and tweak_data.screen_colors.crime_spree_risk or tweak_data.screen_colors.important_1
 
 	if not self:success() then
@@ -98,7 +102,7 @@ function CrimeSpreeResultTabItem:_create_level(total_w)
 	}
 	local bonus_i = 0
 
-	-- Lines: 119 to 160
+	-- Lines 118-160
 	local function add_bonus(text, level, color)
 		local font = tweak_data.menu.pd2_small_font
 		local font_size = tweak_data.menu.pd2_small_font_size
@@ -129,7 +133,9 @@ function CrimeSpreeResultTabItem:_create_level(total_w)
 				align = "center",
 				alpha = 0,
 				layer = 10,
-				text = "+" .. managers.localization:text("menu_cs_level", {level = level or 0}),
+				text = "+" .. managers.localization:text("menu_cs_level", {
+					level = level or 0
+				}),
 				h = font_size,
 				font_size = font_size,
 				font = font,
@@ -162,7 +168,7 @@ function CrimeSpreeResultTabItem:_create_level(total_w)
 	end
 end
 
--- Lines: 176 to 375
+-- Lines 174-375
 function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	self._timeline_panel = self._cs_panel:panel({
 		h = self._cs_panel:h() * 0.5,
@@ -181,7 +187,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	for category, step in pairs(tweak_data.crime_spree.modifier_levels) do
 		local count = managers.crime_spree:modifiers_to_select(category)
 
-		for i = 0, math.min(count, math.floor(max_step / step) - 1), 1 do
+		for i = 0, math.min(count, math.floor(max_step / step) - 1) do
 			local level = managers.crime_spree:next_modifier_level(category, start_level, i)
 
 			if level then
@@ -196,7 +202,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	local timeline_y = self._timeline_panel:h() * 0.5
 	local edge_padding = 48
 	local timeline_zero = timeline_x + edge_padding
-	local timeline_max = (timeline_x + timeline_w) - edge_padding
+	local timeline_max = timeline_x + timeline_w - edge_padding
 	local end_val = managers.crime_spree:spree_level()
 
 	for _, level in ipairs(modifier_levels) do
@@ -269,7 +275,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	local level_gap = 5
 	local used_levels = {}
 
-	-- Lines: 290 to 354
+	-- Lines 288-356
 	local function add_modifier_marker(level, text)
 		local p = 1 / ((end_val - start_level) / (level - start_level))
 
@@ -327,7 +333,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 
 		marker_line:set_x(cx - math.floor(marker_w * 0.5))
 
-		for i = level - level_gap, level + level_gap, 1 do
+		for i = level - level_gap, level + level_gap do
 			used_levels[i] = true
 		end
 
@@ -360,7 +366,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	}
 end
 
--- Lines: 379 to 483
+-- Lines 377-483
 function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	self._reward_panel = self._cs_panel:panel({
 		x = self._cs_panel:w() * (1 - total_w),
@@ -370,7 +376,7 @@ function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	})
 	local w = self._reward_panel:w() / #tweak_data.crime_spree.rewards
 
-	-- Lines: 390 to 414
+	-- Lines 389-416
 	local function create_card(idx, panel, icon, rotation)
 		local scale = 0.65
 		local texture, rect, coords = tweak_data.hud_icons:get_icon_data(idx == 1 and (icon or "downcard_overkill_deck") or "downcard_overkill_deck")
@@ -422,7 +428,7 @@ function CrimeSpreeResultTabItem:_create_rewards(total_w)
 			local rotation = math.rand(-10, 10)
 			local num_cards = 1
 
-			for i = 1, num_cards, 1 do
+			for i = 1, num_cards do
 				card = create_card(i, i == 1 and first_card_panel or panel, data.icon, rotation)
 
 				card:hide()
@@ -462,7 +468,7 @@ function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	end
 end
 
--- Lines: 487 to 491
+-- Lines 487-492
 function CrimeSpreeResultTabItem:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -472,13 +478,14 @@ function CrimeSpreeResultTabItem:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 495 to 496
+-- Lines 494-496
 function CrimeSpreeResultTabItem:set_stats(stats_data)
 end
 
--- Lines: 499 to 500
+-- Lines 498-500
 function CrimeSpreeResultTabItem:feed_statistics(stats_data)
 end
+
 CrimeSpreeResultTabItem.stages = {
 	{
 		delay = 1,
@@ -494,12 +501,14 @@ CrimeSpreeResultTabItem.stages = {
 	}
 }
 
--- Lines: 511 to 527
+-- Lines 510-527
 function CrimeSpreeResultTabItem:_advance_stage(delay)
 	local idx = (self._update and self._update.idx or 0) + 1
 
 	if not CrimeSpreeResultTabItem.stages[idx] then
-		self._update = {done = true}
+		self._update = {
+			done = true
+		}
 
 		return
 	end
@@ -511,7 +520,7 @@ function CrimeSpreeResultTabItem:_advance_stage(delay)
 	}
 end
 
--- Lines: 531 to 547
+-- Lines 529-547
 function CrimeSpreeResultTabItem:update(t, dt)
 	if not self._update then
 		self:_advance_stage()
@@ -528,14 +537,14 @@ function CrimeSpreeResultTabItem:update(t, dt)
 	end
 end
 
--- Lines: 549 to 553
+-- Lines 549-553
 function CrimeSpreeResultTabItem.animate_modifier_unlock(o)
 	over(0.6, function (p)
 		o:set_alpha(math.lerp(0.4, 1, p * 2))
 	end)
 end
 
--- Lines: 555 to 562
+-- Lines 555-562
 function CrimeSpreeResultTabItem:fade_in(element, duration, delay)
 	if delay then
 		wait(delay)
@@ -546,7 +555,7 @@ function CrimeSpreeResultTabItem:fade_in(element, duration, delay)
 	end)
 end
 
--- Lines: 564 to 571
+-- Lines 564-571
 function CrimeSpreeResultTabItem:fade_out(element, duration, delay)
 	if delay then
 		wait(delay)
@@ -557,7 +566,7 @@ function CrimeSpreeResultTabItem:fade_out(element, duration, delay)
 	end)
 end
 
--- Lines: 573 to 584
+-- Lines 573-584
 function CrimeSpreeResultTabItem:count_text(element, cash_string, start_val, end_val, duration, delay)
 	if delay then
 		wait(delay)
@@ -569,12 +578,14 @@ function CrimeSpreeResultTabItem:count_text(element, cash_string, start_val, end
 	over(duration, function (p)
 		v = math.lerp(start_val, end_val, p)
 
-		element:set_text(managers.localization:text("menu_cs_level", {level = managers.experience:cash_string(v, cash_string)}))
+		element:set_text(managers.localization:text("menu_cs_level", {
+			level = managers.experience:cash_string(v, cash_string)
+		}))
 	end)
 	managers.menu_component:post_event("count_1_finished")
 end
 
--- Lines: 589 to 624
+-- Lines 588-624
 function CrimeSpreeResultTabItem:_update_gain_calculate(t, dt)
 	local t = 0
 	local fade_t = 0.5
@@ -619,7 +630,7 @@ function CrimeSpreeResultTabItem:_update_gain_calculate(t, dt)
 	self:_advance_stage(t)
 end
 
--- Lines: 628 to 683
+-- Lines 626-683
 function CrimeSpreeResultTabItem:_update_level_gain(t, dt)
 	if not self:success() then
 		self:_advance_stage()
@@ -678,7 +689,7 @@ function CrimeSpreeResultTabItem:_update_level_gain(t, dt)
 	end
 end
 
--- Lines: 685 to 690
+-- Lines 685-690
 function CrimeSpreeResultTabItem.animate_card_panel(o, reward_num)
 	wait(reward_num * 0.5)
 	over(0.5, function (p)
@@ -686,7 +697,7 @@ function CrimeSpreeResultTabItem.animate_card_panel(o, reward_num)
 	end)
 end
 
--- Lines: 693 to 720
+-- Lines 692-720
 function CrimeSpreeResultTabItem.flip_card(card, reward_num)
 	wait(reward_num * 0.5)
 
@@ -714,7 +725,7 @@ function CrimeSpreeResultTabItem.flip_card(card, reward_num)
 	end)
 end
 
--- Lines: 724 to 731
+-- Lines 722-731
 function CrimeSpreeResultTabItem.animate_card(o, reward_num, card_idx)
 	wait(reward_num * 0.5 + 0.5)
 	o:show()
@@ -723,7 +734,7 @@ function CrimeSpreeResultTabItem.animate_card(o, reward_num, card_idx)
 	end)
 end
 
--- Lines: 735 to 754
+-- Lines 733-754
 function CrimeSpreeResultTabItem:_update_reward_gain(t, dt)
 	if not self:success() then
 		self:_advance_stage()
@@ -745,4 +756,3 @@ function CrimeSpreeResultTabItem:_update_reward_gain(t, dt)
 
 	self:_advance_stage()
 end
-

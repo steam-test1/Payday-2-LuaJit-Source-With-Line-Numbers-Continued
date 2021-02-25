@@ -1,16 +1,18 @@
 GrenadeBase = GrenadeBase or class(ProjectileBase)
-GrenadeBase.EVENT_IDS = {detonate = 1}
+GrenadeBase.EVENT_IDS = {
+	detonate = 1
+}
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
--- Lines: 9 to 12
+-- Lines 9-12
 function GrenadeBase:init(unit)
 	GrenadeBase.super.init(self, unit)
 
 	self._variant = "explosion"
 end
 
--- Lines: 14 to 19
+-- Lines 14-19
 function GrenadeBase:_setup_server_data()
 	self._slot_mask = managers.slot:get_mask("trip_mine_targets")
 
@@ -19,7 +21,7 @@ function GrenadeBase:_setup_server_data()
 	end
 end
 
--- Lines: 23 to 34
+-- Lines 23-34
 function GrenadeBase:update(unit, t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -36,34 +38,34 @@ function GrenadeBase:update(unit, t, dt)
 	GrenadeBase.super.update(self, unit, t, dt)
 end
 
--- Lines: 38 to 40
+-- Lines 38-40
 function GrenadeBase:clbk_impact(...)
 	self:_detonate()
 end
 
--- Lines: 42 to 44
+-- Lines 42-44
 function GrenadeBase:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines: 48 to 50
+-- Lines 48-50
 function GrenadeBase:_detonate()
 	print("no _detonate function for grenade base")
 end
 
--- Lines: 52 to 54
+-- Lines 52-54
 function GrenadeBase:_detonate_on_client()
 	print("no _detonate_on_client function for grenade base")
 end
 
--- Lines: 58 to 62
+-- Lines 58-62
 function GrenadeBase:sync_net_event(event_id)
 	if event_id == GrenadeBase.EVENT_IDS.detonate then
 		self:_detonate_on_client()
 	end
 end
 
--- Lines: 66 to 92
+-- Lines 66-92
 function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return
@@ -100,7 +102,7 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 	self:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count)
 end
 
--- Lines: 95 to 208
+-- Lines 95-208
 function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count)
 	local enemy_base = unit:base()
 	local unit_type = enemy_base._tweak_table
@@ -141,7 +143,7 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 			mvector3.set(mvec2, unit:position())
 
 			local distance = mvector3.distance_sq(mvec1, mvec2)
-			distance_pass = achievement_data.distance * achievement_data.distance <= distance
+			distance_pass = distance >= achievement_data.distance * achievement_data.distance
 		end
 
 		timer_pass = not achievement_data.timer
@@ -164,7 +166,9 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 
 				managers.job:set_memory(memory_name, memory, true)
 			else
-				managers.job:set_memory(memory_name, {t}, true)
+				managers.job:set_memory(memory_name, {
+					t
+				}, true)
 			end
 		end
 
@@ -198,20 +202,21 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 	end
 end
 
--- Lines: 212 to 214
+-- Lines 212-214
 function GrenadeBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines: 216 to 220
+-- Lines 216-220
 function GrenadeBase:save(data)
-	local state = {timer = self._timer}
+	local state = {
+		timer = self._timer
+	}
 	data.GrenadeBase = state
 end
 
--- Lines: 224 to 227
+-- Lines 224-227
 function GrenadeBase:load(data)
 	local state = data.GrenadeBase
 	self._timer = state.timer
 end
-

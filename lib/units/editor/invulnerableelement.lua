@@ -1,7 +1,9 @@
 InvulnerableUnitElement = InvulnerableUnitElement or class(MissionElement)
-InvulnerableUnitElement.LINK_ELEMENTS = {"elements"}
+InvulnerableUnitElement.LINK_ELEMENTS = {
+	"elements"
+}
 
--- Lines: 4 to 14
+-- Lines 4-14
 function InvulnerableUnitElement:init(unit)
 	InvulnerableUnitElement.super.init(self, unit)
 
@@ -14,7 +16,7 @@ function InvulnerableUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 16 to 25
+-- Lines 16-25
 function InvulnerableUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -34,17 +36,17 @@ function InvulnerableUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 27 to 30
+-- Lines 27-30
 function InvulnerableUnitElement:get_links_to_unit(...)
 	InvulnerableUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines: 32 to 33
+-- Lines 32-33
 function InvulnerableUnitElement:update_editing()
 end
 
--- Lines: 35 to 45
+-- Lines 35-45
 function InvulnerableUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -62,7 +64,7 @@ function InvulnerableUnitElement:add_element()
 	end
 end
 
--- Lines: 47 to 54
+-- Lines 47-55
 function InvulnerableUnitElement:_correct_unit(u_name)
 	local names = {
 		"ai_spawn_enemy",
@@ -81,12 +83,12 @@ function InvulnerableUnitElement:_correct_unit(u_name)
 	return false
 end
 
--- Lines: 57 to 59
+-- Lines 57-59
 function InvulnerableUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 61 to 83
+-- Lines 61-83
 function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -118,4 +120,3 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

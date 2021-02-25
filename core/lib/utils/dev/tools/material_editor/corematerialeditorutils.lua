@@ -1,6 +1,6 @@
 CoreMaterialEditor = CoreMaterialEditor or class()
 
--- Lines: 5 to 9
+-- Lines 5-9
 function CoreMaterialEditor:live_update_parameter(name, param_type, param_ui_type, value)
 	if alive(self._selected_unit) then
 		table.insert(self._live_update_parameter_list, {
@@ -12,7 +12,7 @@ function CoreMaterialEditor:live_update_parameter(name, param_type, param_ui_typ
 	end
 end
 
--- Lines: 13 to 19
+-- Lines 13-19
 function CoreMaterialEditor:_get_node(node, name)
 	for n in node:children() do
 		if n:name() == name then
@@ -21,7 +21,7 @@ function CoreMaterialEditor:_get_node(node, name)
 	end
 end
 
--- Lines: 21 to 28
+-- Lines 21-29
 function CoreMaterialEditor:_get_all_nodes(node, name)
 	local t = {}
 
@@ -34,7 +34,7 @@ function CoreMaterialEditor:_get_all_nodes(node, name)
 	return t
 end
 
--- Lines: 31 to 37
+-- Lines 31-37
 function CoreMaterialEditor:_find_node(node, name, key, value)
 	for n in node:children() do
 		if n:parameter(key) == value and (not name or n:name() == name) then
@@ -43,7 +43,7 @@ function CoreMaterialEditor:_find_node(node, name, key, value)
 	end
 end
 
--- Lines: 39 to 46
+-- Lines 39-47
 function CoreMaterialEditor:_find_all_nodes(node, name, key, value)
 	local t = {}
 
@@ -56,7 +56,7 @@ function CoreMaterialEditor:_find_all_nodes(node, name, key, value)
 	return t
 end
 
--- Lines: 50 to 67
+-- Lines 50-67
 function CoreMaterialEditor:_read_config()
 	self._global_material_config_name = self.PROJECT_GLOBAL_GONFIG_NAME
 
@@ -79,7 +79,7 @@ function CoreMaterialEditor:_read_config()
 	end
 end
 
--- Lines: 69 to 79
+-- Lines 69-79
 function CoreMaterialEditor:_write_config()
 	local file = assert(SystemFS:open(managers.database:base_path() .. self.SETTINGS_FILE, "w"))
 	local str = "<material_editor>\n"
@@ -92,29 +92,29 @@ function CoreMaterialEditor:_write_config()
 	file:close()
 end
 
--- Lines: 81 to 83
+-- Lines 81-83
 function CoreMaterialEditor:_freeze_frame()
 	self._main_frame:freeze()
 end
 
--- Lines: 85 to 89
+-- Lines 85-89
 function CoreMaterialEditor:_unfreeze_frame()
 	self._main_frame:layout()
 	self._main_frame:thaw()
 	self._main_frame:refresh()
 end
 
--- Lines: 91 to 93
+-- Lines 91-93
 function CoreMaterialEditor:_freeze_output()
 	self._lock_output = true
 end
 
--- Lines: 95 to 97
+-- Lines 95-97
 function CoreMaterialEditor:_unfreeze_output()
 	self._lock_output = nil
 end
 
--- Lines: 99 to 109
+-- Lines 99-109
 function CoreMaterialEditor:_remot_compile()
 	local defines = nil
 
@@ -129,7 +129,7 @@ function CoreMaterialEditor:_remot_compile()
 	assert(os.execute(cmd) == 0)
 end
 
--- Lines: 111 to 145
+-- Lines 111-146
 function CoreMaterialEditor:_create_make_file(rebuild)
 	local make_params, temp_params = self:_get_make_params()
 	local file = SystemFS:open(managers.database:base_path() .. self.TEMP_PATH .. "make.xml", "w")
@@ -146,7 +146,11 @@ function CoreMaterialEditor:_create_make_file(rebuild)
 
 		for k, v in pairs(self._shader_defines) do
 			if v._checked then
-				defines = not defines and k or defines .. " " .. k
+				if not defines then
+					defines = k
+				else
+					defines = defines .. " " .. k
+				end
 			end
 		end
 
@@ -165,7 +169,7 @@ function CoreMaterialEditor:_create_make_file(rebuild)
 	return make_params, temp_params
 end
 
--- Lines: 148 to 157
+-- Lines 148-158
 function CoreMaterialEditor:_run_compiler()
 	local cmd = Application:nice_path(managers.database:root_path() .. "aux_assets\\engine\\bin\\shaderdev\\", true) .. "shaderdev -m \"" .. Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "make.xml", false) .. "\" > \"" .. Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "compile_log.txt", false) .. "\""
 	local ret = os.execute(cmd)
@@ -178,7 +182,7 @@ function CoreMaterialEditor:_run_compiler()
 	return ret == 0
 end
 
--- Lines: 160 to 183
+-- Lines 160-184
 function CoreMaterialEditor:_get_make_params()
 	local shader = self._compilable_shaders[self._compilable_shader_combo_box:get_value()]
 	local srcpath = managers.database:base_path() .. self.SHADER_PATH .. managers.database:entry_name(shader._entry)
@@ -203,7 +207,7 @@ function CoreMaterialEditor:_get_make_params()
 	return make_params, temp_params
 end
 
--- Lines: 186 to 192
+-- Lines 186-192
 function CoreMaterialEditor:_cleanup_temp_files(temp_params)
 	for k, v in pairs(temp_params) do
 		os.remove(v)
@@ -213,18 +217,18 @@ function CoreMaterialEditor:_cleanup_temp_files(temp_params)
 	os.remove(Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "compile_log.txt", false))
 end
 
--- Lines: 194 to 198
+-- Lines 194-198
 function CoreMaterialEditor:_insert_libs_in_database(temp_params, make_params)
 	assert(SystemFS:copy_file(temp_params.render_templates, make_params.render_templates), string.format("Could not copy %s -> %s", temp_params.render_templates, make_params.render_templates))
 	self:_cleanup_temp_files(temp_params)
 	managers.database:recompile()
 end
 
--- Lines: 201 to 202
+-- Lines 200-202
 function CoreMaterialEditor:_copy_to_remote_client()
 end
 
--- Lines: 204 to 210
+-- Lines 204-210
 function CoreMaterialEditor:_find_unit_material(unit)
 	local path = unit:material_config():s()
 	local node = DB:has("material_config", path) and DB:load_node("material_config", path)
@@ -234,7 +238,7 @@ function CoreMaterialEditor:_find_unit_material(unit)
 	end
 end
 
--- Lines: 212 to 226
+-- Lines 212-226
 function CoreMaterialEditor:_find_selected_unit()
 	if managers.editor and managers.editor:selected_unit() and managers.editor:selected_unit() ~= self._selected_unit and not self._material_lock then
 		self._selected_unit = managers.editor:selected_unit()
@@ -249,7 +253,7 @@ function CoreMaterialEditor:_find_selected_unit()
 	end
 end
 
--- Lines: 228 to 237
+-- Lines 228-237
 function CoreMaterialEditor:_get_material()
 	local units_in_world = World:find_units_quick("all")
 
@@ -262,7 +266,7 @@ function CoreMaterialEditor:_get_material()
 	end
 end
 
--- Lines: 239 to 245
+-- Lines 239-246
 function CoreMaterialEditor:_create_rt_name(rt)
 	table.sort(rt)
 
@@ -275,7 +279,7 @@ function CoreMaterialEditor:_create_rt_name(rt)
 	return rt_str
 end
 
--- Lines: 248 to 256
+-- Lines 248-256
 function CoreMaterialEditor:_try_convert_parameter(mat, child, rt)
 	if child:name() == "diffuse_texture" then
 		table.insert(rt, "DIFFUSE_TEXTURE")
@@ -286,7 +290,7 @@ function CoreMaterialEditor:_try_convert_parameter(mat, child, rt)
 	end
 end
 
--- Lines: 258 to 275
+-- Lines 258-275
 function CoreMaterialEditor:_version_error(mat)
 	local res = EWS:message_box(self._main_frame, "This material is not of the expected version! Do you want to convert it?", "Version", "YES_NO", Vector3(-1, -1, -1))
 
@@ -308,7 +312,7 @@ function CoreMaterialEditor:_version_error(mat)
 	end
 end
 
--- Lines: 277 to 293
+-- Lines 277-293
 function CoreMaterialEditor:_update_material(param)
 	local material = self:_get_material()
 
@@ -329,7 +333,7 @@ function CoreMaterialEditor:_update_material(param)
 	end
 end
 
--- Lines: 295 to 302
+-- Lines 295-302
 function CoreMaterialEditor:_live_update()
 	if alive(self._selected_unit) then
 		for _, param in ipairs(self._live_update_parameter_list) do
@@ -340,7 +344,7 @@ function CoreMaterialEditor:_live_update()
 	end
 end
 
--- Lines: 304 to 313
+-- Lines 304-314
 function CoreMaterialEditor:_check_valid_xml_on_save(node)
 	local str = nil
 
@@ -355,7 +359,7 @@ function CoreMaterialEditor:_check_valid_xml_on_save(node)
 	return str == nil, str
 end
 
--- Lines: 316 to 324
+-- Lines 316-324
 function CoreMaterialEditor:_set_channels_default_texture(node)
 	for mat in node:children() do
 		for var in mat:children() do
@@ -365,4 +369,3 @@ function CoreMaterialEditor:_set_channels_default_texture(node)
 		end
 	end
 end
-

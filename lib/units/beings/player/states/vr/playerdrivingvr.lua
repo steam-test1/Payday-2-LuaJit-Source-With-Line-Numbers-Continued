@@ -1,7 +1,7 @@
 PlayerDrivingVR = PlayerDriving or Application:error("PlayerDrivingVR needs PlayerDriving!")
 local __enter = PlayerDriving.enter
 
--- Lines: 5 to 39
+-- Lines 5-39
 function PlayerDrivingVR:enter(...)
 	__enter(self, ...)
 	self._camera_unit:base():enter_vehicle()
@@ -35,7 +35,7 @@ function PlayerDrivingVR:enter(...)
 	self:set_throttle(0)
 end
 
--- Lines: 41 to 69
+-- Lines 41-69
 function PlayerDrivingVR:_setup_help_text(is_driver)
 	local driving_tweak = tweak_data.vr.driving[self._vehicle_ext.tweak_data]
 
@@ -49,7 +49,9 @@ function PlayerDrivingVR:_setup_help_text(is_driver)
 		local throttle = driving_tweak.throttle
 
 		if type(driving_tweak.steering_pos) ~= "table" or not driving_tweak.steering_pos then
-			local steering = {driving_tweak.steering_pos}
+			local steering = {
+				driving_tweak.steering_pos
+			}
 		end
 
 		for key, offset in pairs(steering) do
@@ -74,7 +76,7 @@ function PlayerDrivingVR:_setup_help_text(is_driver)
 	end
 end
 
--- Lines: 71 to 149
+-- Lines 71-149
 function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 	local rot = self._vehicle_unit:rotation()
 	local offset = nil
@@ -118,12 +120,14 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 	})
 
 	panel:set_center(ws:panel():w() / 2, ws:panel():h() / 2)
-	BoxGuiObject:new(panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	BoxGuiObject:new(panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	if type == "throttle" then
 		self._throttle_panel = ws:panel()
@@ -190,7 +194,7 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 	text:set_center(panel:w() / 2, panel:h() / 2)
 end
 
--- Lines: 151 to 155
+-- Lines 151-156
 function PlayerDrivingVR:get_text_from_id(id, type)
 	if type then
 		id = id .. "_" .. type
@@ -199,7 +203,7 @@ function PlayerDrivingVR:get_text_from_id(id, type)
 	return managers.localization:to_upper_text("hud_vr_" .. id)
 end
 
--- Lines: 158 to 167
+-- Lines 158-167
 function PlayerDrivingVR:set_help_text(id, type)
 	local ws = self._vehicle_ws[id]
 
@@ -211,9 +215,10 @@ function PlayerDrivingVR:set_help_text(id, type)
 
 	ws:panel():child(id):child("text"):set_text(text)
 end
+
 local __exit = PlayerDriving.exit
 
--- Lines: 170 to 182
+-- Lines 170-182
 function PlayerDrivingVR:exit(...)
 	__exit(self, ...)
 	self._unit:hand():_change_hand_to_default(PlayerHand.RIGHT)
@@ -228,7 +233,7 @@ function PlayerDrivingVR:exit(...)
 	self._throttle_arrows = nil
 end
 
--- Lines: 184 to 200
+-- Lines 184-200
 function PlayerDrivingVR:_postion_player_on_seat(seat)
 	local rot = self._seat.object:rotation()
 	local pos = self._seat.object:position()
@@ -245,13 +250,14 @@ function PlayerDrivingVR:_postion_player_on_seat(seat)
 	self._initial_hmd_rotation_inv = Rotation(VRManager:hmd_rotation():yaw(), 0, 0):inverse()
 	self._hmd_delta = Vector3()
 end
+
 local __update = PlayerDriving.update
 local hmd_delta = Vector3()
 local ghost_pos = Vector3()
 local seat_offset = Vector3()
 local hmd_rot = Rotation()
 
--- Lines: 207 to 241
+-- Lines 207-241
 function PlayerDrivingVR:update(t, dt)
 	__update(self, t, dt)
 
@@ -290,23 +296,22 @@ function PlayerDrivingVR:update(t, dt)
 	self._ext_movement:set_ghost_position(ghost_pos)
 end
 
--- Lines: 243 to 245
+-- Lines 243-245
 function PlayerDrivingVR:reset_ghost_position()
 	self._hmd_delta = Vector3()
 end
 
--- Lines: 247 to 249
+-- Lines 247-249
 function PlayerDrivingVR:set_steering(value)
 	self._steering_value = value
 end
 
--- Lines: 251 to 289
+-- Lines 251-289
 function PlayerDrivingVR:set_throttle(value)
 	self._throttle_value = value
 
 	if self._throttle_arrows then
-
-		-- Lines: 256 to 262
+		-- Lines 256-263
 		local function stretch_value(val, range)
 			if val == 0 then
 				return 0
@@ -318,7 +323,7 @@ function PlayerDrivingVR:set_throttle(value)
 			return (val - 0.5) * mul + 0.5
 		end
 
-		-- Lines: 265 to 274
+		-- Lines 265-274
 		local function set_arrow_size(arrow, val, inverse)
 			val = stretch_value(val, 0.4)
 			local size = 128
@@ -347,9 +352,10 @@ function PlayerDrivingVR:set_throttle(value)
 		end
 	end
 end
+
 local __get_drive_axis = PlayerDriving._get_drive_axis
 
--- Lines: 292 to 303
+-- Lines 292-304
 function PlayerDrivingVR:_get_drive_axis()
 	local drive_axis = __get_drive_axis(self)
 
@@ -363,4 +369,3 @@ function PlayerDrivingVR:_get_drive_axis()
 
 	return drive_axis
 end
-

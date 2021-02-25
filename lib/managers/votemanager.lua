@@ -31,16 +31,16 @@ VoteManager.REASON = {
 	invalid_weapon = 9
 }
 
--- Lines: 43 to 44
+-- Lines 43-44
 function VoteManager:init()
 end
 
--- Lines: 46 to 48
+-- Lines 46-48
 function VoteManager:kick(peer_id)
 	self:_request_vote("kick", self.VOTE_EVENT.request_kick, peer_id)
 end
 
--- Lines: 50 to 65
+-- Lines 50-65
 function VoteManager:kick_auto(reason, peer, loading)
 	if Network:is_server() then
 		if not peer:is_host() then
@@ -56,12 +56,12 @@ function VoteManager:kick_auto(reason, peer, loading)
 	end
 end
 
--- Lines: 67 to 69
+-- Lines 67-69
 function VoteManager:restart()
 	self:_request_vote("restart", self.VOTE_EVENT.request_restart)
 end
 
--- Lines: 71 to 76
+-- Lines 71-76
 function VoteManager:restart_auto()
 	if managers.network:session() then
 		managers.network:session():send_to_peers_except(self._peer_to_exclude, "voting_data", self.VOTE_EVENT.instant_restart, 0, 0)
@@ -69,7 +69,7 @@ function VoteManager:restart_auto()
 	end
 end
 
--- Lines: 78 to 90
+-- Lines 78-90
 function VoteManager:response(state)
 	if self._voted or not managers.network:session() then
 		return
@@ -84,7 +84,7 @@ function VoteManager:response(state)
 	end
 end
 
--- Lines: 92 to 98
+-- Lines 92-98
 function VoteManager:abort_vote(peer_id)
 	if not self._type then
 		return
@@ -93,12 +93,12 @@ function VoteManager:abort_vote(peer_id)
 	self:_host_register(peer_id, self.VOTES.cancel)
 end
 
--- Lines: 100 to 101
+-- Lines 100-102
 function VoteManager:available()
 	return not self._cooldown and not self._type
 end
 
--- Lines: 104 to 121
+-- Lines 104-122
 function VoteManager:kick_reason_to_string(reason)
 	local reason_texts = {
 		"menu_chat_peer_cheated_many_assets",
@@ -117,12 +117,12 @@ function VoteManager:kick_reason_to_string(reason)
 	return reason_texts[reason]
 end
 
--- Lines: 124 to 125
+-- Lines 124-126
 function VoteManager:is_restarting()
 	return self._callback_type == "restart"
 end
 
--- Lines: 128 to 150
+-- Lines 128-150
 function VoteManager:_request_vote(vote_type, vote_network, peer_id)
 	if self._type then
 		return
@@ -147,7 +147,7 @@ function VoteManager:_request_vote(vote_type, vote_network, peer_id)
 	self:_refresh_menu()
 end
 
--- Lines: 152 to 191
+-- Lines 152-192
 function VoteManager:_host_start(vote_type, voter_peer_id, kicked_peer_id)
 	if self._type then
 		return false
@@ -166,7 +166,9 @@ function VoteManager:_host_start(vote_type, voter_peer_id, kicked_peer_id)
 	self._timeout = TimerManager:wall():time() + tweak_data.voting.timeout
 	self._vote_cooldown = self._vote_cooldown or {}
 	self._vote_cooldown[voter_peer_id] = TimerManager:wall():time() + tweak_data.voting.cooldown
-	self._vote_response = {[managers.network:session():local_peer():id()] = self.VOTES.none}
+	self._vote_response = {
+		[managers.network:session():local_peer():id()] = self.VOTES.none
+	}
 
 	for id, peer in pairs(managers.network:session():peers()) do
 		if not peer:loading() and id ~= kicked_peer_id then
@@ -187,7 +189,7 @@ function VoteManager:_host_start(vote_type, voter_peer_id, kicked_peer_id)
 	return true
 end
 
--- Lines: 194 to 224
+-- Lines 194-224
 function VoteManager:_host_finish(success)
 	managers.system_menu:close("vote_data")
 
@@ -224,7 +226,7 @@ function VoteManager:_host_finish(success)
 	self._vote_response = nil
 end
 
--- Lines: 226 to 240
+-- Lines 226-240
 function VoteManager:_host_register(peer_id, response)
 	if not self._vote_response or not self._vote_response[peer_id] or self._vote_response[peer_id] ~= self.VOTES.none then
 		return
@@ -242,7 +244,7 @@ function VoteManager:_host_register(peer_id, response)
 	end
 end
 
--- Lines: 242 to 287
+-- Lines 242-288
 function VoteManager:_host_count(abort)
 	local yes_count = 0
 	local cancel_count = 0
@@ -284,7 +286,7 @@ function VoteManager:_host_count(abort)
 			end
 		end
 
-		success = amount / 2 < yes_count
+		success = yes_count > amount / 2
 	elseif self._type == "restart" then
 		success = yes_count == amount
 	end
@@ -292,7 +294,7 @@ function VoteManager:_host_count(abort)
 	return success, all_voted
 end
 
--- Lines: 290 to 302
+-- Lines 290-302
 function VoteManager:_start(type, kick_peer)
 	self._type = type
 	self._peer_to_exclude = kick_peer
@@ -307,7 +309,7 @@ function VoteManager:_start(type, kick_peer)
 	self:message_vote()
 end
 
--- Lines: 304 to 313
+-- Lines 304-313
 function VoteManager:_stop()
 	managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(self._type == "kick" and "menu_chat_vote_kick_ended" or "menu_chat_vote_restart_ended"))
 
@@ -319,7 +321,7 @@ function VoteManager:_stop()
 	managers.system_menu:close("vote_data")
 end
 
--- Lines: 315 to 320
+-- Lines 315-320
 function VoteManager:_restart_counter()
 	if not self._stopped then
 		self._callback_type = "restart"
@@ -327,7 +329,7 @@ function VoteManager:_restart_counter()
 	end
 end
 
--- Lines: 322 to 343
+-- Lines 322-343
 function VoteManager:_message(response, peer_id, kick_peer_id)
 	local peer = managers.network:session():peer(peer_id)
 
@@ -336,7 +338,9 @@ function VoteManager:_message(response, peer_id, kick_peer_id)
 	end
 
 	if response == self.VOTES.cancel then
-		managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_vote_cancel", {name = peer:name()}))
+		managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_vote_cancel", {
+			name = peer:name()
+		}))
 	else
 		local kick_peer = kick_peer_id and managers.network:session():peer(kick_peer_id)
 
@@ -347,15 +351,19 @@ function VoteManager:_message(response, peer_id, kick_peer_id)
 					kick_name = kick_peer:name()
 				}))
 			else
-				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_kick_yes_unknown" or "menu_chat_vote_kick_no_unknown", {name = peer:name()}))
+				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_kick_yes_unknown" or "menu_chat_vote_kick_no_unknown", {
+					name = peer:name()
+				}))
 			end
 		elseif self._type == "restart" then
-			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_restart_yes" or "menu_chat_vote_restart_no", {name = peer:name()}))
+			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_restart_yes" or "menu_chat_vote_restart_no", {
+				name = peer:name()
+			}))
 		end
 	end
 end
 
--- Lines: 345 to 354
+-- Lines 345-354
 function VoteManager:_refresh_menu()
 	if managers.menu:active_menu() and managers.menu:active_menu().logic:selected_node() then
 		local name = managers.menu:active_menu().logic:selected_node():parameters().name
@@ -368,16 +376,18 @@ function VoteManager:_refresh_menu()
 	end
 end
 
--- Lines: 356 to 361
+-- Lines 356-362
 function VoteManager:help_text()
 	if not self:available() and self._cooldown then
-		return managers.localization:text("menu_vote_kick_cooldown", {time = math.ceil(self._cooldown - TimerManager:wall():time())})
+		return managers.localization:text("menu_vote_kick_cooldown", {
+			time = math.ceil(self._cooldown - TimerManager:wall():time())
+		})
 	end
 
 	return ""
 end
 
--- Lines: 364 to 409
+-- Lines 364-409
 function VoteManager:network_package(type, value, result, peer_id)
 	if Network:is_server() then
 		if type == self.VOTE_EVENT.request_kick then
@@ -415,7 +425,9 @@ function VoteManager:network_package(type, value, result, peer_id)
 		local peer = managers.network:session():peer(value)
 
 		if peer and result ~= 0 then
-			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(self:kick_reason_to_string(result), {name = peer:name()}))
+			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(self:kick_reason_to_string(result), {
+				name = peer:name()
+			}))
 		end
 	elseif type == self.VOTE_EVENT.instant_restart then
 		self:_restart_counter()
@@ -424,7 +436,7 @@ function VoteManager:network_package(type, value, result, peer_id)
 	end
 end
 
--- Lines: 411 to 468
+-- Lines 411-468
 function VoteManager:update(t, dt)
 	local current_time = TimerManager:wall():time()
 
@@ -470,8 +482,10 @@ function VoteManager:update(t, dt)
 		if self._callback_type == "restart" then
 			self._callback_counter_print = self._callback_counter_print or tweak_data.voting.restart_delay
 
-			if self._callback_counter - current_time < self._callback_counter_print then
-				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_restart_timer", {time = self._callback_counter_print}))
+			if self._callback_counter_print > self._callback_counter - current_time then
+				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_restart_timer", {
+					time = self._callback_counter_print
+				}))
 
 				self._callback_counter_print = self._callback_counter_print - 1
 			end
@@ -489,7 +503,7 @@ function VoteManager:update(t, dt)
 	end
 end
 
--- Lines: 470 to 475
+-- Lines 470-475
 function VoteManager:stop()
 	self._callback_type = nil
 	self._callback_counter = nil
@@ -497,7 +511,7 @@ function VoteManager:stop()
 	self._stopped = true
 end
 
--- Lines: 477 to 562
+-- Lines 477-562
 function VoteManager:message_vote()
 	if not self._type or self._voted or not managers.network:session() then
 		return
@@ -521,14 +535,20 @@ function VoteManager:message_vote()
 
 	local count = math.ceil(self._timeout - TimerManager:wall():time())
 	local message = nil
-	local dialog_data = {id = "vote_data"}
+	local dialog_data = {
+		id = "vote_data"
+	}
 	local peer = self._peer_to_exclude and managers.network:session():peer(self._peer_to_exclude)
-	local yes_button = {callback_func = function ()
-		self:response(self.VOTES.yes)
-	end}
-	local no_button = {callback_func = function ()
-		self:response(self.VOTES.no)
-	end}
+	local yes_button = {
+		callback_func = function ()
+			self:response(self.VOTES.yes)
+		end
+	}
+	local no_button = {
+		callback_func = function ()
+			self:response(self.VOTES.no)
+		end
+	}
 	local cancel_button = {
 		text = managers.localization:text("dialog_vote_cancel"),
 		callback_func = function ()
@@ -539,7 +559,12 @@ function VoteManager:message_vote()
 	local timeout_choice = nil
 
 	if self._type == "kick" then
-		message = peer and "dialog_mp_vote_kick_message" or "dialog_mp_vote_kick_unknown_message"
+		if peer then
+			message = "dialog_mp_vote_kick_message"
+		else
+			message = "dialog_mp_vote_kick_unknown_message"
+		end
+
 		dialog_data.title = managers.localization:text("dialog_mp_vote_kick_response_title")
 		yes_button.text = managers.localization:text("dialog_vote_kick_yes")
 		no_button.text = managers.localization:text("dialog_vote_kick_no")
@@ -590,11 +615,13 @@ function VoteManager:message_vote()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 564 to 585
+-- Lines 564-585
 function VoteManager:message_host_kick(peer)
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_kick_player_title"),
-		text = managers.localization:text("dialog_mp_kick_player_message", {PLAYER = peer:name()})
+		text = managers.localization:text("dialog_mp_kick_player_message", {
+			PLAYER = peer:name()
+		})
 	}
 	local yes_button = {
 		text = managers.localization:text("dialog_yes"),
@@ -619,35 +646,34 @@ function VoteManager:message_host_kick(peer)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines: 587 to 589
+-- Lines 587-589
 function VoteManager:sync_server_kick_option(peer)
 	peer:send("voting_data", self.VOTE_EVENT.server_kick_option, Global.game_settings.kick_option, 0)
 end
 
--- Lines: 591 to 592
+-- Lines 591-593
 function VoteManager:option_vote_kick()
 	return game_state_machine:current_state_name() ~= "menu_main" and (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 2
 end
 
--- Lines: 595 to 596
+-- Lines 595-597
 function VoteManager:option_host_kick()
 	return game_state_machine:current_state_name() == "menu_main" or (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 1
 end
 
--- Lines: 599 to 600
+-- Lines 599-601
 function VoteManager:option_no_kick()
 	return (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 0
 end
 
--- Lines: 603 to 605
+-- Lines 603-606
 function VoteManager:option_vote_restart()
 	local setting = Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced
 
 	return setting == 2 or setting == 0
 end
 
--- Lines: 608 to 609
+-- Lines 608-610
 function VoteManager:option_host_restart()
 	return (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 1
 end
-

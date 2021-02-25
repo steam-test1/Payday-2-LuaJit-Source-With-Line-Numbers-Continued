@@ -1,6 +1,6 @@
 CoreCameraDistancePicker = CoreCameraDistancePicker or class()
 
--- Lines: 3 to 15
+-- Lines 3-15
 function CoreCameraDistancePicker:init(parent_window, value, button_label)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	self.__panel = EWS:Panel(parent_window)
@@ -20,12 +20,12 @@ function CoreCameraDistancePicker:init(parent_window, value, button_label)
 	self.__button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_enter_pick_mode"))
 end
 
--- Lines: 17 to 18
+-- Lines 17-19
 function CoreCameraDistancePicker:panel()
 	return self.__panel
 end
 
--- Lines: 21 to 46
+-- Lines 21-46
 function CoreCameraDistancePicker:update(time, delta_time)
 	local picking_camera = self.__is_picking and managers.viewport and managers.viewport:get_current_camera()
 
@@ -54,28 +54,28 @@ function CoreCameraDistancePicker:update(time, delta_time)
 	end
 end
 
--- Lines: 48 to 53
+-- Lines 48-54
 function CoreCameraDistancePicker:_screen_to_world(coords)
 	local camera = assert(managers.viewport and managers.viewport:get_current_camera())
 	local viewport = assert(managers.viewport and managers.viewport:get_active_vp())
 	local viewport_rect = viewport:get_rect()
-	local viewport_position = coords:with_x((coords.x * 2 * viewport:get_width_multiplier()) / viewport_rect.w):with_y((coords.y * 2) / viewport_rect.h)
+	local viewport_position = coords:with_x(coords.x * 2 * viewport:get_width_multiplier() / viewport_rect.w):with_y(coords.y * 2 / viewport_rect.h)
 
 	return camera:screen_to_world(viewport_position)
 end
 
--- Lines: 56 to 62
+-- Lines 56-63
 function CoreCameraDistancePicker:_world_to_screen(coords)
 	local camera = assert(managers.viewport and managers.viewport:get_current_camera())
 	local viewport = assert(managers.viewport and managers.viewport:get_active_vp())
 	local viewport_rect = viewport:get_rect()
 	local viewport_position = camera:world_to_screen(coords)
-	local screen_position = viewport_position:with_x((viewport_position.x * 2 * viewport:get_width_multiplier()) / viewport_rect.w):with_y(-viewport_position.y / 2 * viewport_rect.h)
+	local screen_position = viewport_position:with_x(viewport_position.x * 2 * viewport:get_width_multiplier() / viewport_rect.w):with_y(-viewport_position.y / 2 * viewport_rect.h)
 
 	return screen_position
 end
 
--- Lines: 65 to 71
+-- Lines 65-71
 function CoreCameraDistancePicker:connect(event_type, script_callback, object_data)
 	if object_data then
 		self.__field:connect(event_type, script_callback, object_data)
@@ -84,7 +84,7 @@ function CoreCameraDistancePicker:connect(event_type, script_callback, object_da
 	end
 end
 
--- Lines: 73 to 79
+-- Lines 73-79
 function CoreCameraDistancePicker:disconnect(event_type, script_callback, object_data)
 	if object_data then
 		self.__field:disconnect(event_type, script_callback, object_data)
@@ -93,58 +93,57 @@ function CoreCameraDistancePicker:disconnect(event_type, script_callback, object
 	end
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function CoreCameraDistancePicker:get_value(value)
 	return self.__field:get_value(value)
 end
 
--- Lines: 85 to 87
+-- Lines 85-87
 function CoreCameraDistancePicker:set_value(value)
 	self.__field:set_value(value)
 end
 
--- Lines: 89 to 91
+-- Lines 89-91
 function CoreCameraDistancePicker:change_value(value)
 	self.__field:change_value(value)
 end
 
--- Lines: 93 to 97
+-- Lines 93-97
 function CoreCameraDistancePicker:set_background_colour(r, g, b)
 	self.__field:set_background_colour(r, g, b)
 	self.__field:refresh()
 	self.__field:update()
 end
 
--- Lines: 99 to 100
+-- Lines 99-101
 function CoreCameraDistancePicker:enabled()
 	return self.__field:enabled()
 end
 
--- Lines: 103 to 106
+-- Lines 103-106
 function CoreCameraDistancePicker:set_enabled(enabled)
 	self.__field:set_enabled(enabled)
 	self.__button:set_enabled(enabled and not self.__pick_button_disabled)
 end
 
--- Lines: 108 to 111
+-- Lines 108-111
 function CoreCameraDistancePicker:set_pick_button_enabled(enabled)
 	self.__pick_button_disabled = not enabled or nil
 
 	self.__button:set_enabled(self:enabled() and not self.__pick_button_disabled)
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function CoreCameraDistancePicker:has_focus()
 	return self.__is_picking or EWS:get_window_in_focus() == self.__field
 end
 
--- Lines: 117 to 119
+-- Lines 117-119
 function CoreCameraDistancePicker:_enter_pick_mode()
 	self.__is_picking = true
 end
 
--- Lines: 121 to 123
+-- Lines 121-123
 function CoreCameraDistancePicker:_exit_pick_mode()
 	self.__is_picking = nil
 end
-

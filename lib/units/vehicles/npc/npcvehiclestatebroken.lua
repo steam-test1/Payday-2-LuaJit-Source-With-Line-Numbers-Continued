@@ -1,20 +1,20 @@
 NpcVehicleStateBroken = NpcVehicleStateBroken or class(NpcBaseVehicleState)
 
--- Lines: 3 to 5
+-- Lines 3-5
 function NpcVehicleStateBroken:init(unit)
 	NpcBaseVehicleState.init(self, unit)
 end
 
--- Lines: 9 to 10
+-- Lines 9-10
 function NpcVehicleStateBroken:update(t, dt)
 end
 
--- Lines: 13 to 14
+-- Lines 13-15
 function NpcVehicleStateBroken:name()
 	return NpcVehicleDrivingExt.STATE_BROKEN
 end
 
--- Lines: 18 to 26
+-- Lines 18-26
 function NpcVehicleStateBroken:on_enter()
 	print("NpcVehicleStateBroken:on_enter()")
 
@@ -22,4 +22,3 @@ function NpcVehicleStateBroken:on_enter()
 		self._unit:damage():run_sequence_simple(VehicleDrivingExt.SEQUENCE_FULL_DAMAGED)
 	end
 end
-

@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementVehicleSpawner = ElementVehicleSpawner or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 119 to 135
+-- Lines 119-135
 function ElementVehicleSpawner:init(...)
 	Application:trace("ElementVehicleSpawner:init")
 	ElementVehicleSpawner.super.init(self, ...)
@@ -20,14 +20,14 @@ function ElementVehicleSpawner:init(...)
 	self._vehicle_units = {}
 end
 
--- Lines: 138 to 140
+-- Lines 138-141
 function ElementVehicleSpawner:value(name)
 	Application:trace("ElementVehicleSpawner:value", name)
 
 	return self._values[name]
 end
 
--- Lines: 143 to 150
+-- Lines 143-150
 function ElementVehicleSpawner:client_on_executed(...)
 	Application:trace("ElementVehicleSpawner:client_on_executed")
 
@@ -36,7 +36,7 @@ function ElementVehicleSpawner:client_on_executed(...)
 	end
 end
 
--- Lines: 152 to 162
+-- Lines 152-162
 function ElementVehicleSpawner:on_executed(instigator)
 	Application:trace("ElementVehicleSpawner:on_executed", inspect(self._values))
 
@@ -51,15 +51,14 @@ function ElementVehicleSpawner:on_executed(instigator)
 	ElementVehicleSpawner.super.on_executed(self, self._unit or instigator)
 end
 
--- Lines: 165 to 169
+-- Lines 164-169
 function ElementVehicleSpawner:unspawn_all_units()
 	for _, vehicle_unit in ipairs(self._vehicle_units) do
 		vehicle_unit:set_slot(0)
 	end
 end
 
--- Lines: 172 to 174
+-- Lines 171-174
 function ElementVehicleSpawner:stop_simulation(...)
 	self:unspawn_all_units()
 end
-

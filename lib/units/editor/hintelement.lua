@@ -1,6 +1,6 @@
 HintUnitElement = HintUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function HintUnitElement:init(unit)
 	HintUnitElement.super.init(self, unit)
 
@@ -11,14 +11,14 @@ function HintUnitElement:init(unit)
 	table.insert(self._save_values, "instigator_only")
 end
 
--- Lines: 13 to 16
+-- Lines 13-16
 function HintUnitElement:_set_text()
 	local hint = managers.hint:hint(self._hed.hint_id)
 
 	self._text:set_value(hint and managers.localization:text(hint.text_id) or "none")
 end
 
--- Lines: 18 to 23
+-- Lines 18-23
 function HintUnitElement:set_element_data(params, ...)
 	HintUnitElement.super.set_element_data(self, params, ...)
 
@@ -27,7 +27,7 @@ function HintUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 25 to 43
+-- Lines 25-43
 function HintUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -35,7 +35,9 @@ function HintUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_checkbox(panel, panel_sizer, "instigator_only", "Only show the hint on the instigator unit")
-	self:_build_value_combobox(panel, panel_sizer, "hint_id", table.list_add({"none"}, managers.hint:ids()), "Select a text id from the combobox")
+	self:_build_value_combobox(panel, panel_sizer, "hint_id", table.list_add({
+		"none"
+	}, managers.hint:ids()), "Select a text id from the combobox")
 
 	local text_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -47,4 +49,3 @@ function HintUnitElement:_build_panel(panel, panel_sizer)
 	self:_set_text()
 	panel_sizer:add(text_sizer, 1, 0, "EXPAND")
 end
-

@@ -1,12 +1,12 @@
 TimeSpeedEffectTweakData = TimeSpeedEffectTweakData or class()
 
--- Lines: 3 to 6
+-- Lines 3-6
 function TimeSpeedEffectTweakData:init()
 	self:_init_base_effects()
 	self:_init_mission_effects()
 end
 
--- Lines: 10 to 51
+-- Lines 10-51
 function TimeSpeedEffectTweakData:_init_base_effects()
 	self.mask_on = {
 		sustain = 5,
@@ -42,17 +42,19 @@ function TimeSpeedEffectTweakData:_init_base_effects()
 	}
 end
 
--- Lines: 55 to 79
+-- Lines 55-79
 function TimeSpeedEffectTweakData:_init_mission_effects()
-	self.mission_effects = {quickdraw = {
-		sustain = 5,
-		timer = "pausable",
-		speed = 0.2,
-		fade_out = 0.8,
-		fade_in = 0.3,
-		sync = true,
-		fade_in_delay = 0.5
-	}}
+	self.mission_effects = {
+		quickdraw = {
+			sustain = 5,
+			timer = "pausable",
+			speed = 0.2,
+			fade_out = 0.8,
+			fade_in = 0.3,
+			sync = true,
+			fade_in_delay = 0.5
+		}
+	}
 	self.mission_effects.quickdraw_player = {
 		timer = "pausable",
 		speed = 0.5,
@@ -64,4 +66,3 @@ function TimeSpeedEffectTweakData:_init_mission_effects()
 		fade_out = self.mission_effects.quickdraw.fade_out
 	}
 end
-

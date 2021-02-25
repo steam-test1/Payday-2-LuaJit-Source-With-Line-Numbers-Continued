@@ -12,11 +12,11 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 OnPressedTextButton = OnPressedTextButton or class(TextButton)
 
--- Lines: 21 to 22
+-- Lines 21-22
 function OnPressedTextButton:mouse_clicked()
 end
 
--- Lines: 24 to 29
+-- Lines 24-29
 function OnPressedTextButton:mouse_pressed(button, x, y)
 	if button == Idstring("0") and self._text:inside(x, y) then
 		self._trigger()
@@ -24,9 +24,10 @@ function OnPressedTextButton:mouse_pressed(button, x, y)
 		return true
 	end
 end
+
 local AchievementRecentListItem = AchievementRecentListItem or class(GrowPanel)
 
--- Lines: 35 to 90
+-- Lines 35-90
 function AchievementRecentListItem:init(parent, item, black_bg)
 	AchievementRecentListItem.super.init(self, parent, {
 		border = 10,
@@ -51,7 +52,9 @@ function AchievementRecentListItem:init(parent, item, black_bg)
 		font_size = medium_font_size
 	}))
 	placer:add_bottom(self:fine_text({
-		text = managers.localization:text("menu_achievement_unlock_date", {DATE = os.date("%d %b %Y %H:%M", item.unlock_time)}),
+		text = managers.localization:text("menu_achievement_unlock_date", {
+			DATE = os.date("%d %b %Y %H:%M", item.unlock_time)
+		}),
 		font = tiny_font,
 		font_size = tiny_font_size,
 		color = tweak_data.screen_colors.achievement_grey
@@ -61,7 +64,9 @@ function AchievementRecentListItem:init(parent, item, black_bg)
 
 	if icons then
 		local fixed_w = self:w() / 3
-		local panel = GrowPanel:new(self, {fixed_w = fixed_w})
+		local panel = GrowPanel:new(self, {
+			fixed_w = fixed_w
+		})
 		local g_placer = panel:placer()
 
 		g_placer:set_start(fixed_w)
@@ -106,9 +111,10 @@ function AchievementRecentListItem:init(parent, item, black_bg)
 		})
 	end
 end
+
 AchievementRecentListGui = AchievementRecentListGui or class(ExtendedPanel)
 
--- Lines: 96 to 151
+-- Lines 96-151
 function AchievementRecentListGui:init(parent, list, back_callback)
 	self._back_callback = back_callback
 
@@ -121,9 +127,13 @@ function AchievementRecentListGui:init(parent, list, back_callback)
 	self:set_center(parent:w() / 2, parent:h() / 2)
 
 	if not managers.menu:is_pc_controller() then
-		self._legends = TextLegendsBar:new(parent, nil, {layer = self:layer()})
+		self._legends = TextLegendsBar:new(parent, nil, {
+			layer = self:layer()
+		})
 
-		self._legends:add_items({"menu_legend_back"})
+		self._legends:add_items({
+			"menu_legend_back"
+		})
 		self._legends:set_world_rightbottom(parent:world_rightbottom())
 	end
 
@@ -132,11 +142,13 @@ function AchievementRecentListGui:init(parent, list, back_callback)
 	local placer = UiPlacer:new(border, border, 8, 8)
 
 	placer:add_bottom(self:fine_text({
-		text = managers.localization:text("menu_achievements_recent_unlocked", {COUNT = #list}),
+		text = managers.localization:text("menu_achievements_recent_unlocked", {
+			COUNT = #list
+		}),
 		font = medium_font,
 		font_size = medium_font_size
 	}))
-	placer:set_at((self:w() - border) - 6, nil)
+	placer:set_at(self:w() - border - 6, nil)
 
 	local safe = placer:add_left(self:fit_bitmap({
 		w = 32,
@@ -157,7 +169,7 @@ function AchievementRecentListGui:init(parent, list, back_callback)
 		scrollbar_padding = 5,
 		input = true,
 		w = row_w,
-		h = (self:h() - placer:most().bottom) - 48
+		h = self:h() - placer:most().bottom - 48
 	}))
 
 	scroll:add_lines_and_static_down_indicator()
@@ -187,20 +199,26 @@ function AchievementRecentListGui:init(parent, list, back_callback)
 		back:move(0, 6)
 	end
 
-	local back_panel = self:panel({layer = -2})
+	local back_panel = self:panel({
+		layer = -2
+	})
 
-	back_panel:rect({color = Color.black:with_alpha(0.8)})
-	BoxGuiObject:new(back_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	back_panel:rect({
+		color = Color.black:with_alpha(0.8)
+	})
+	BoxGuiObject:new(back_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self._back = back_panel
 end
 
--- Lines: 153 to 156
+-- Lines 153-156
 function AchievementRecentListGui:close()
 	self:remove_self()
 
@@ -209,7 +227,7 @@ function AchievementRecentListGui:close()
 	end
 end
 
--- Lines: 158 to 167
+-- Lines 158-167
 function AchievementRecentListGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_left_controller_axis()
@@ -220,10 +238,9 @@ function AchievementRecentListGui:update(...)
 	end
 end
 
--- Lines: 169 to 171
+-- Lines 169-172
 function AchievementRecentListGui:back_pressed()
 	self._back_callback()
 
 	return true
 end
-

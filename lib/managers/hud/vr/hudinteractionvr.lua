@@ -1,10 +1,12 @@
 HUDInteractionVR = HUDInteraction
 
--- Lines: 4 to 68
+-- Lines 4-68
 function HUDInteractionVR:init(hud, child_name)
 	self._watch_prompt_panel = managers.hud:watch_prompt_panel()
 	hud.old_panel = hud.panel
-	hud.panel = self._watch_prompt_panel:panel({name = child_name or "interact"})
+	hud.panel = self._watch_prompt_panel:panel({
+		name = child_name or "interact"
+	})
 	self._hud_panel = hud.panel
 	self._circle_radius = 40
 	self._sides = self._circle_radius
@@ -26,13 +28,17 @@ function HUDInteractionVR:init(hud, child_name)
 		h = self._circle_radius * 2
 	})
 
-	interact_text_bg:rect({color = Color(0.3, 0, 0, 0)})
-	BoxGuiObject:new(interact_text_bg, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	interact_text_bg:rect({
+		color = Color(0.3, 0, 0, 0)
+	})
+	BoxGuiObject:new(interact_text_bg, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	local interact_text = self._hud_panel:text({
 		vertical = "center",
@@ -69,11 +75,14 @@ function HUDInteractionVR:init(hud, child_name)
 	hud.panel = hud.old_panel
 	hud.old_panel = nil
 end
+
 HUDInteractionVR.default_show_interact = HUDInteraction.show_interact
 
--- Lines: 71 to 77
+-- Lines 71-77
 function HUDInteractionVR:show_interact(data)
-	data = data or {text = self._last_interaction_text or ""}
+	data = data or {
+		text = self._last_interaction_text or ""
+	}
 
 	self:default_show_interact(data)
 	self._hud_panel:child(self._child_name_text .. "_bg"):set_visible(true)
@@ -83,7 +92,7 @@ function HUDInteractionVR:show_interact(data)
 	self._hud_panel:show()
 end
 
--- Lines: 79 to 92
+-- Lines 79-92
 function HUDInteractionVR:remove_interact()
 	if not alive(self._hud_panel) then
 		return
@@ -102,7 +111,7 @@ function HUDInteractionVR:remove_interact()
 	end
 end
 
--- Lines: 98 to 107
+-- Lines 94-107
 function HUDInteractionVR:set_bar_valid(valid, text_id)
 	self._hud_panel:child(self._child_name_text):set_visible(valid)
 
@@ -116,7 +125,7 @@ function HUDInteractionVR:set_bar_valid(valid, text_id)
 	self._hud_panel:child(self._child_name_text .. "_bg"):set_visible(true)
 end
 
--- Lines: 110 to 130
+-- Lines 110-130
 function HUDInteractionVR:show_interaction_bar(current, total)
 	if self._interact_circle then
 		self._interact_circle:remove()
@@ -161,7 +170,7 @@ function HUDInteractionVR:show_interaction_bar(current, total)
 	self._interaction_panel:show()
 end
 
--- Lines: 132 to 137
+-- Lines 132-137
 function HUDInteractionVR:set_interaction_bar_width(current, total)
 	if self._interact_circle then
 		self._interact_circle:set_current(current / total)
@@ -169,7 +178,7 @@ function HUDInteractionVR:set_interaction_bar_width(current, total)
 	end
 end
 
--- Lines: 139 to 149
+-- Lines 139-149
 function HUDInteractionVR:hide_interaction_bar(complete)
 	if self._interact_circle then
 		self._interact_circle:remove()
@@ -184,7 +193,7 @@ function HUDInteractionVR:hide_interaction_bar(complete)
 	end
 end
 
--- Lines: 151 to 163
+-- Lines 151-163
 function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text))
 	self._hud_panel:remove(self._hud_panel:child(self._child_ivalid_name_text))
@@ -202,9 +211,8 @@ function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text .. "_bg"))
 end
 
--- Lines: 167 to 170
+-- Lines 167-170
 function HUDInteractionVR:_animate_interaction_complete(bitmap, circle)
 	bitmap:parent():remove(bitmap)
 	circle:remove()
 end
-

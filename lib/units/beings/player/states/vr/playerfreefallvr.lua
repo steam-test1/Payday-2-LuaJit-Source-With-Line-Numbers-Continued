@@ -1,15 +1,16 @@
 PlayerFreefallVR = PlayerFreefall or Application:error("PlayerFreefallVR needs PlayerFreefall!")
 local __init = PlayerFreefall.init
 
--- Lines: 5 to 9
+-- Lines 5-9
 function PlayerFreefallVR:init(...)
 	__init(self, ...)
 
 	self._comfort_screen_setting_changed_clbk = callback(self, self, "_on_comfort_screen_setting_changed")
 end
+
 local __enter = PlayerFreefall.enter
 
--- Lines: 12 to 22
+-- Lines 12-22
 function PlayerFreefallVR:enter(...)
 	__enter(self, ...)
 
@@ -22,9 +23,10 @@ function PlayerFreefallVR:enter(...)
 
 	managers.vr:add_setting_changed_callback("zipline_screen", self._comfort_screen_setting_changed_clbk)
 end
+
 local __exit = PlayerFreefall.exit
 
--- Lines: 25 to 35
+-- Lines 25-35
 function PlayerFreefallVR:exit(...)
 	__exit(self, ...)
 
@@ -38,19 +40,20 @@ function PlayerFreefallVR:exit(...)
 	managers.vr:remove_setting_changed_callback("zipline_screen", self._comfort_screen_setting_changed_clbk)
 end
 
--- Lines: 37 to 39
+-- Lines 37-39
 function PlayerFreefallVR:_update_variables(t, dt)
 	self._current_height = self._ext_movement:hmd_position().z
 end
+
 local __update_movement = PlayerFreefall._update_movement
 
--- Lines: 42 to 46
+-- Lines 42-46
 function PlayerFreefallVR:_update_movement(t, dt)
 	__update_movement(self, t, dt)
 	self._unit:movement():set_ghost_position(self._unit:position())
 end
 
--- Lines: 48 to 58
+-- Lines 48-58
 function PlayerFreefallVR:_on_comfort_screen_setting_changed(setting, old, new)
 	if new then
 		self._camera_unit:base():set_hmd_tracking(false)
@@ -64,4 +67,3 @@ function PlayerFreefallVR:_on_comfort_screen_setting_changed(setting, old, new)
 		self._comfort_screen_active = false
 	end
 end
-

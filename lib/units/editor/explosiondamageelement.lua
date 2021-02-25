@@ -1,6 +1,6 @@
 ExplosionDamageUnitElement = ExplosionDamageUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function ExplosionDamageUnitElement:init(unit)
 	ExplosionDamageUnitElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function ExplosionDamageUnitElement:init(unit)
 	table.insert(self._save_values, "damage")
 end
 
--- Lines: 19 to 25
+-- Lines 19-25
 function ExplosionDamageUnitElement:update_selected()
 	local brush = Draw:brush()
 
@@ -23,7 +23,7 @@ function ExplosionDamageUnitElement:update_selected()
 	pen:sphere(self._unit:position(), self._hed.range)
 end
 
--- Lines: 27 to 35
+-- Lines 27-35
 function ExplosionDamageUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -40,4 +40,3 @@ function ExplosionDamageUnitElement:_build_panel(panel, panel_sizer)
 		max = 100
 	}, "The damage from the explosion")
 end
-

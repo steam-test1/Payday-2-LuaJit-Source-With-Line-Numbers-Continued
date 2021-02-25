@@ -5,36 +5,36 @@ core:import("CoreInteractionEditorOpStack")
 
 InteractionEditorSystemEvents = InteractionEditorSystemEvents or CoreClass.class()
 
--- Lines: 10 to 13
+-- Lines 10-14
 function InteractionEditorSystemEvents:setup_stack()
 	local stack = CoreInteractionEditorOpStack.InteractionEditorOpStack:new()
 
 	return stack
 end
 
--- Lines: 17 to 18
+-- Lines 16-18
 function InteractionEditorSystemEvents:undo_add_node(node_id, node_type)
 end
 
--- Lines: 21 to 22
+-- Lines 20-22
 function InteractionEditorSystemEvents:redo_add_node(node_id, node_type)
 end
 
--- Lines: 25 to 26
+-- Lines 24-26
 function InteractionEditorSystemEvents:undo_remove_node(node_id)
 end
 
--- Lines: 29 to 30
+-- Lines 28-30
 function InteractionEditorSystemEvents:redo_remove_node(node_id)
 end
 
--- Lines: 32 to 35
+-- Lines 32-35
 function InteractionEditorSystemEvents:on_delete_node(data, event)
 	self:remove_node(event:node())
 	event:skip()
 end
 
--- Lines: 37 to 44
+-- Lines 37-44
 function InteractionEditorSystemEvents:on_select_node(data, event)
 	self:ui():clean_prop_panel()
 
@@ -47,7 +47,7 @@ function InteractionEditorSystemEvents:on_select_node(data, event)
 	event:skip()
 end
 
--- Lines: 46 to 55
+-- Lines 46-55
 function InteractionEditorSystemEvents:on_connect_node(data, event)
 	local md_src = event:source():metadata()
 	local output = event:outslot()
@@ -65,7 +65,7 @@ function InteractionEditorSystemEvents:on_connect_node(data, event)
 	end
 end
 
--- Lines: 57 to 62
+-- Lines 57-62
 function InteractionEditorSystemEvents:on_disconnect_node(data, event)
 	local md_src = event:source():metadata()
 	local output = event:outslot()
@@ -76,4 +76,3 @@ function InteractionEditorSystemEvents:on_disconnect_node(data, event)
 	self._desc:transition_remove(md_src, output, md_dest, input)
 	event:skip()
 end
-

@@ -7,30 +7,30 @@ core:import("CoreInteractionEditorSystem")
 
 InteractionEditor = InteractionEditor or CoreClass.class(CoreInteractionEditorUIEvents.InteractionEditorUIEvents)
 
--- Lines: 12 to 15
+-- Lines 12-15
 function InteractionEditor:init()
 	self._ui = CoreInteractionEditorUI.InteractionEditorUI:new(self)
 	self._systems = {}
 end
 
--- Lines: 17 to 19
+-- Lines 17-19
 function InteractionEditor:set_position(pos)
 	self._ui:set_position(pos)
 end
 
--- Lines: 21 to 25
+-- Lines 21-25
 function InteractionEditor:update(t, dt)
 	for _, sys in pairs(self._systems) do
 		sys:update(t, dt)
 	end
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function InteractionEditor:ui()
 	return self._ui
 end
 
--- Lines: 31 to 37
+-- Lines 31-37
 function InteractionEditor:close()
 	for _, sys in pairs(self._systems) do
 		sys:close()
@@ -41,7 +41,7 @@ function InteractionEditor:close()
 	self._ui:destroy()
 end
 
--- Lines: 39 to 45
+-- Lines 39-45
 function InteractionEditor:open_system(path)
 	for _, sys in pairs(self._systems) do
 		sys:deactivate()
@@ -51,12 +51,12 @@ function InteractionEditor:open_system(path)
 	self._systems[sys] = sys
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function InteractionEditor:save_system(sys, path)
 	assert(sys or self:active_system()):save(path)
 end
 
--- Lines: 51 to 67
+-- Lines 51-67
 function InteractionEditor:close_system(sys)
 	local system = sys or self:active_system()
 
@@ -78,7 +78,7 @@ function InteractionEditor:close_system(sys)
 	end
 end
 
--- Lines: 69 to 75
+-- Lines 69-75
 function InteractionEditor:active_system()
 	for _, sys in pairs(self._systems) do
 		if sys:active() then
@@ -87,7 +87,7 @@ function InteractionEditor:active_system()
 	end
 end
 
--- Lines: 77 to 87
+-- Lines 77-87
 function InteractionEditor:activate_system(panel)
 	for _, sys in pairs(self._systems) do
 		sys:deactivate()
@@ -102,7 +102,7 @@ function InteractionEditor:activate_system(panel)
 	end
 end
 
--- Lines: 89 to 98
+-- Lines 89-98
 function InteractionEditor:do_save(sys)
 	local system = sys or self:active_system()
 
@@ -115,7 +115,7 @@ function InteractionEditor:do_save(sys)
 	end
 end
 
--- Lines: 100 to 113
+-- Lines 100-113
 function InteractionEditor:do_save_as(sys)
 	local system = sys or self:active_system()
 
@@ -128,7 +128,7 @@ function InteractionEditor:do_save_as(sys)
 	end
 end
 
--- Lines: 115 to 123
+-- Lines 115-123
 function InteractionEditor:do_save_all()
 	for _, system in pairs(self._systems) do
 		if system:is_new() then
@@ -139,7 +139,7 @@ function InteractionEditor:do_save_all()
 	end
 end
 
--- Lines: 125 to 130
+-- Lines 125-130
 function InteractionEditor:undo(sys)
 	local system = sys or self:active_system()
 
@@ -148,7 +148,7 @@ function InteractionEditor:undo(sys)
 	end
 end
 
--- Lines: 132 to 137
+-- Lines 132-137
 function InteractionEditor:redo(sys)
 	local system = sys or self:active_system()
 
@@ -156,4 +156,3 @@ function InteractionEditor:redo(sys)
 		system:redo()
 	end
 end
-

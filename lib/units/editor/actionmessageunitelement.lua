@@ -1,6 +1,6 @@
 ActionMessageUnitElement = ActionMessageUnitElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function ActionMessageUnitElement:init(unit)
 	ActionMessageUnitElement.super.init(self, unit)
 
@@ -9,14 +9,14 @@ function ActionMessageUnitElement:init(unit)
 	table.insert(self._save_values, "message_id")
 end
 
--- Lines: 11 to 14
+-- Lines 11-14
 function ActionMessageUnitElement:set_text()
 	local message = managers.action_messaging:message(self._hed.message_id)
 
 	self._text:set_value(message and managers.localization:text(message.text_id) or "none")
 end
 
--- Lines: 16 to 49
+-- Lines 16-49
 function ActionMessageUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -52,4 +52,3 @@ function ActionMessageUnitElement:_build_panel(panel, panel_sizer)
 	text_sizer:add(self._text, 2, 2, "RIGHT,TOP,EXPAND")
 	panel_sizer:add(text_sizer, 1, 0, "EXPAND")
 end
-

@@ -5,7 +5,7 @@ InteractionUnitElement.ON_EXECUTED_ALTERNATIVES = {
 	"start"
 }
 
--- Lines: 4 to 14
+-- Lines 4-14
 function InteractionUnitElement:init(unit)
 	InteractionUnitElement.super.init(self, unit)
 
@@ -18,14 +18,16 @@ function InteractionUnitElement:init(unit)
 	table.insert(self._save_values, "host_only")
 end
 
--- Lines: 17 to 28
+-- Lines 17-28
 function InteractionUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "tweak_data_id", table.list_add({"none"}, table.map_keys(tweak_data.interaction)))
+	self:_build_value_combobox(panel, panel_sizer, "tweak_data_id", table.list_add({
+		"none"
+	}, table.map_keys(tweak_data.interaction)))
 	self:_build_value_number(panel, panel_sizer, "override_timer", {
 		floats = 1,
 		min = -1
@@ -34,7 +36,7 @@ function InteractionUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element creates an interaction. Override time is optional and will replace tweak data timer (-1 means do not overrride). Use disabled/enabled state on element to set active state on interaction.")
 end
 
--- Lines: 30 to 33
+-- Lines 30-33
 function InteractionUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "units/dev_tools/mission_elements/point_interaction/interaction_dummy",
@@ -47,4 +49,3 @@ function InteractionUnitElement:add_to_mission_package()
 		continent = self._unit:unit_data().continent
 	})
 end
-

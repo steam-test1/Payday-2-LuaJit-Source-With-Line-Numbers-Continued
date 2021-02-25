@@ -2,13 +2,15 @@ require("lib/managers/menu/items/PromotionalMenuButton")
 
 PromotionalMenuGui = PromotionalMenuGui or class(MenuGuiComponent)
 
--- Lines: 7 to 23
+-- Lines 6-23
 function PromotionalMenuGui:init(ws, fullscreen_ws, node)
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
 	self._ws = managers.gui_data:create_saferect_workspace()
 	self._node = node
 	self._panel = self._ws:panel():panel()
-	self._fullscreen_panel = self._fullscreen_ws:panel():panel({layer = -100})
+	self._fullscreen_panel = self._fullscreen_ws:panel():panel({
+		layer = -100
+	})
 	self.make_fine_text = BlackMarketGui.make_fine_text
 	self._buttons = {}
 	self._selection = {
@@ -18,7 +20,7 @@ function PromotionalMenuGui:init(ws, fullscreen_ws, node)
 	self._selection_map = {}
 end
 
--- Lines: 26 to 37
+-- Lines 25-37
 function PromotionalMenuGui:close()
 	if alive(self._ws) then
 		managers.gui_data:destroy_workspace(self._ws)
@@ -33,21 +35,23 @@ function PromotionalMenuGui:close()
 	end
 end
 
--- Lines: 39 to 41
+-- Lines 39-42
 function PromotionalMenuGui:_idx(x, y)
 	local i = (y - 1) * self._menu_data.layout.x + x - 1
 
 	return i
 end
 
--- Lines: 45 to 164
+-- Lines 44-164
 function PromotionalMenuGui:setup(menu_data, theme_data)
 	self._menu_data = menu_data
 	self._theme_data = theme_data
 	local padding = menu_data.padding or 10
 
 	if self._theme_data.backgrounds then
-		local bg_panel = self._fullscreen_ws:panel({layer = -100})
+		local bg_panel = self._fullscreen_ws:panel({
+			layer = -100
+		})
 
 		for idx, data in ipairs(self._theme_data.backgrounds) do
 			if data.type == "image" then
@@ -113,10 +117,10 @@ function PromotionalMenuGui:setup(menu_data, theme_data)
 
 		local _x, _y = nil
 
-		for x = 1, btn_data.size[1], 1 do
+		for x = 1, btn_data.size[1] do
 			_x = x + btn:position()[1] - 1
 
-			for y = 1, btn_data.size[2], 1 do
+			for y = 1, btn_data.size[2] do
 				_y = y + btn:position()[2] - 1
 				self._selection_map[self:_idx(_x, _y)] = btn
 			end
@@ -134,7 +138,7 @@ function PromotionalMenuGui:setup(menu_data, theme_data)
 	end
 end
 
--- Lines: 167 to 204
+-- Lines 166-204
 function PromotionalMenuGui:_add_back_button()
 	local back_button = self._panel:text({
 		vertical = "bottom",
@@ -175,14 +179,14 @@ function PromotionalMenuGui:_add_back_button()
 	bg_back:set_visible(managers.menu:is_pc_controller())
 end
 
--- Lines: 208 to 210
+-- Lines 208-211
 function PromotionalMenuGui:_get_selected_button()
 	local idx = self:_idx(self._selection[1], self._selection[2])
 
 	return self._selection_map[idx]
 end
 
--- Lines: 213 to 227
+-- Lines 213-227
 function PromotionalMenuGui:_set_selection(btn, force)
 	if force or btn:position()[1] == self._selection[1] and btn:position()[2] == self._selection[2] then
 		for _, b in ipairs(self._buttons) do
@@ -198,7 +202,7 @@ function PromotionalMenuGui:_set_selection(btn, force)
 	end
 end
 
--- Lines: 231 to 259
+-- Lines 229-259
 function PromotionalMenuGui:move_selection(mx, my, force)
 	local last_btn = self:_get_selected_button()
 	local itr = 1
@@ -225,12 +229,12 @@ function PromotionalMenuGui:move_selection(mx, my, force)
 	end
 end
 
--- Lines: 263 to 264
+-- Lines 263-265
 function PromotionalMenuGui:input_focus()
 	return 1
 end
 
--- Lines: 268 to 292
+-- Lines 267-294
 function PromotionalMenuGui:mouse_moved(button, x, y)
 	local used, pointer = nil
 
@@ -265,27 +269,27 @@ function PromotionalMenuGui:mouse_moved(button, x, y)
 	return used, pointer
 end
 
--- Lines: 296 to 298
+-- Lines 296-298
 function PromotionalMenuGui:move_up()
 	self:move_selection(0, -1)
 end
 
--- Lines: 300 to 302
+-- Lines 300-302
 function PromotionalMenuGui:move_down()
 	self:move_selection(0, 1)
 end
 
--- Lines: 304 to 306
+-- Lines 304-306
 function PromotionalMenuGui:move_left()
 	self:move_selection(-1, 0)
 end
 
--- Lines: 308 to 310
+-- Lines 308-310
 function PromotionalMenuGui:move_right()
 	self:move_selection(1, 0)
 end
 
--- Lines: 313 to 328
+-- Lines 312-328
 function PromotionalMenuGui:mouse_clicked(o, button, x, y)
 	if alive(self._back_button) and self._back_button:inside(x, y) then
 		managers.menu:back(true)
@@ -302,7 +306,7 @@ function PromotionalMenuGui:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines: 330 to 335
+-- Lines 330-335
 function PromotionalMenuGui:confirm_pressed()
 	local btn = self:_get_selected_button()
 
@@ -310,4 +314,3 @@ function PromotionalMenuGui:confirm_pressed()
 		btn:trigger()
 	end
 end
-

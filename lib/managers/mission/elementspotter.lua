@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementSpotter = ElementSpotter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 10
+-- Lines 5-10
 function ElementSpotter:init(...)
 	ElementSpotter.super.init(self, ...)
 
@@ -10,14 +10,14 @@ function ElementSpotter:init(...)
 	self._enemy_contours = {}
 end
 
--- Lines: 12 to 16
+-- Lines 12-16
 function ElementSpotter:on_script_activated()
 	if self._values.enabled then
 		self:add_callback()
 	end
 end
 
--- Lines: 18 to 25
+-- Lines 18-25
 function ElementSpotter:set_enabled(enabled)
 	ElementSpotter.super.set_enabled(self, enabled)
 
@@ -28,7 +28,7 @@ function ElementSpotter:set_enabled(enabled)
 	end
 end
 
--- Lines: 27 to 35
+-- Lines 27-35
 function ElementSpotter:add_callback()
 	if not Network:is_server() then
 		return
@@ -39,7 +39,7 @@ function ElementSpotter:add_callback()
 	end
 end
 
--- Lines: 37 to 42
+-- Lines 37-42
 function ElementSpotter:remove_callback()
 	if self._callback then
 		self._mission_script:remove(self._callback)
@@ -48,7 +48,7 @@ function ElementSpotter:remove_callback()
 	end
 end
 
--- Lines: 44 to 50
+-- Lines 44-50
 function ElementSpotter:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -56,9 +56,10 @@ function ElementSpotter:on_executed(instigator, ...)
 
 	ElementSpotter.super.on_executed(self, instigator, ...)
 end
+
 local mvec1 = Vector3()
 
--- Lines: 53 to 102
+-- Lines 53-102
 function ElementSpotter:update_spotter()
 	if not self._values.enabled then
 		return
@@ -102,4 +103,3 @@ function ElementSpotter:update_spotter()
 		self._found_units = #self._found_units > 0 and self._found_units or nil
 	end
 end
-

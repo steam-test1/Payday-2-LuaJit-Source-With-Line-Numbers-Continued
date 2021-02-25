@@ -1,6 +1,6 @@
 BainStateElement = BainStateElement or class(MissionElement)
 
--- Lines: 3 to 9
+-- Lines 3-9
 function BainStateElement:init(unit)
 	BainStateElement.super.init(self, unit)
 
@@ -9,7 +9,7 @@ function BainStateElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
--- Lines: 12 to 29
+-- Lines 12-29
 function BainStateElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -32,4 +32,3 @@ function BainStateElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

@@ -8,22 +8,22 @@ local mabs = math.abs
 local masin = math.asin
 local pi = math.pi
 
--- Lines: 19 to 20
+-- Lines 19-21
 function Easing.linear(a, b, t)
 	return mlerp(a, b, t)
 end
 
--- Lines: 25 to 26
+-- Lines 25-27
 function Easing.in_quad(a, b, t)
 	return (b - a) * t * t + a
 end
 
--- Lines: 29 to 30
+-- Lines 29-31
 function Easing.out_quad(a, b, t)
 	return -(b - a) * t * (t - 2) + a
 end
 
--- Lines: 33 to 40
+-- Lines 33-40
 function Easing.inout_quad(a, b, t)
 	t = t * 2
 
@@ -34,7 +34,7 @@ function Easing.inout_quad(a, b, t)
 	end
 end
 
--- Lines: 42 to 50
+-- Lines 42-50
 function Easing.outin_quad(a, b, t)
 	t = t * 2
 	local c = (b - a) * 0.5
@@ -46,19 +46,19 @@ function Easing.outin_quad(a, b, t)
 	end
 end
 
--- Lines: 54 to 55
+-- Lines 54-56
 function Easing.in_cubic(a, b, t)
 	return (b - a) * t * t * t + a
 end
 
--- Lines: 58 to 60
+-- Lines 58-61
 function Easing.out_cubic(a, b, t)
 	t = t - 1
 
 	return (b - a) * (t * t * t + 1) + a
 end
 
--- Lines: 63 to 71
+-- Lines 63-71
 function Easing.inout_cubic(a, b, t)
 	t = t * 2
 
@@ -71,7 +71,7 @@ function Easing.inout_cubic(a, b, t)
 	end
 end
 
--- Lines: 73 to 81
+-- Lines 73-81
 function Easing.outin_cubic(a, b, t)
 	t = t * 2
 	local c = (b - a) * 0.5
@@ -83,19 +83,19 @@ function Easing.outin_cubic(a, b, t)
 	end
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function Easing.in_quart(a, b, t)
 	return (b - a) * t * t * t * t + a
 end
 
--- Lines: 89 to 91
+-- Lines 89-92
 function Easing.out_quart(a, b, t)
 	t = t - 1
 
 	return -(b - a) * (t * t * t * t - 1) + a
 end
 
--- Lines: 94 to 102
+-- Lines 94-102
 function Easing.inout_quart(a, b, t)
 	t = t * 2
 
@@ -108,7 +108,7 @@ function Easing.inout_quart(a, b, t)
 	end
 end
 
--- Lines: 104 to 112
+-- Lines 104-112
 function Easing.outin_quart(a, b, t)
 	t = t * 2
 	local c = (b - a) * 0.5
@@ -120,19 +120,19 @@ function Easing.outin_quart(a, b, t)
 	end
 end
 
--- Lines: 116 to 117
+-- Lines 116-118
 function Easing.in_quint(a, b, t)
 	return (b - a) * t * t * t * t * t + a
 end
 
--- Lines: 120 to 122
+-- Lines 120-123
 function Easing.out_quint(a, b, t)
 	t = t - 1
 
 	return (b - a) * (t * t * t * t * t + 1) + a
 end
 
--- Lines: 125 to 133
+-- Lines 125-133
 function Easing.inout_quint(a, b, t)
 	t = t * 2
 
@@ -145,7 +145,7 @@ function Easing.inout_quint(a, b, t)
 	end
 end
 
--- Lines: 135 to 143
+-- Lines 135-143
 function Easing.outin_quint(a, b, t)
 	t = t * 2
 	local c = (b - a) * 0.5
@@ -157,7 +157,7 @@ function Easing.outin_quint(a, b, t)
 	end
 end
 
--- Lines: 147 to 154
+-- Lines 147-154
 function Easing.in_expo(a, b, t)
 	if t == 0 then
 		return a
@@ -168,7 +168,7 @@ function Easing.in_expo(a, b, t)
 	end
 end
 
--- Lines: 156 to 163
+-- Lines 156-163
 function Easing.out_expo(a, b, t)
 	if t == 1 then
 		return b
@@ -179,7 +179,7 @@ function Easing.out_expo(a, b, t)
 	end
 end
 
--- Lines: 166 to 183
+-- Lines 165-183
 function Easing.inout_expo(a, b, t)
 	if t == 1 then
 		return b
@@ -201,7 +201,7 @@ function Easing.inout_expo(a, b, t)
 	end
 end
 
--- Lines: 185 to 193
+-- Lines 185-193
 function Easing.outin_expo(a, b, t)
 	t = t * 2
 	local c = (b - a) * 0.5
@@ -212,4 +212,3 @@ function Easing.outin_expo(a, b, t)
 		return Easing.in_expo(a + c, b, t - 1) + c
 	end
 end
-

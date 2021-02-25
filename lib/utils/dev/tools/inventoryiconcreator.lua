@@ -1,12 +1,12 @@
 InventoryIconCreator = InventoryIconCreator or class()
 InventoryIconCreator.OPTIONAL = "<optional>"
 
--- Lines: 5 to 7
+-- Lines 5-7
 function InventoryIconCreator:init()
 	self:_set_job_settings()
 end
 
--- Lines: 9 to 15
+-- Lines 9-15
 function InventoryIconCreator:_set_job_settings()
 	self._job_settings = {
 		weapon = {
@@ -32,12 +32,14 @@ function InventoryIconCreator:_set_job_settings()
 	}
 end
 
--- Lines: 22 to 41
+-- Lines 22-41
 function InventoryIconCreator:_create_weapon(factory_id, blueprint, weapon_skin)
 	self:destroy_items()
 
 	self._current_texture_name = factory_id .. (weapon_skin and " " .. weapon_skin or "")
-	local cosmetics = weapon_skin and {id = weapon_skin} or nil
+	local cosmetics = weapon_skin and {
+		id = weapon_skin
+	} or nil
 	local unit_name = tweak_data.weapon.factory[factory_id].unit
 
 	managers.dyn_resource:load(Idstring("unit"), Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
@@ -53,7 +55,7 @@ function InventoryIconCreator:_create_weapon(factory_id, blueprint, weapon_skin)
 	self._weapon_unit:base():on_enabled()
 end
 
--- Lines: 43 to 67
+-- Lines 43-67
 function InventoryIconCreator:_create_mask(mask_id, blueprint)
 	self:destroy_items()
 
@@ -77,7 +79,7 @@ function InventoryIconCreator:_create_mask(mask_id, blueprint)
 	self._mask_unit:set_moving(true)
 end
 
--- Lines: 69 to 84
+-- Lines 69-84
 function InventoryIconCreator:_create_melee(melee_id)
 	self:destroy_items()
 
@@ -93,7 +95,7 @@ function InventoryIconCreator:_create_melee(melee_id)
 	self._melee_unit:set_moving(true)
 end
 
--- Lines: 86 to 104
+-- Lines 86-104
 function InventoryIconCreator:_create_throwable(throwable_id)
 	self:destroy_items()
 
@@ -113,12 +115,12 @@ function InventoryIconCreator:_create_throwable(throwable_id)
 	self._throwable_unit:set_moving(true)
 end
 
--- Lines: 106 to 108
+-- Lines 106-108
 function InventoryIconCreator:_assemble_completed(parts, blueprint)
 	self._weapon_unit:set_moving(true)
 end
 
--- Lines: 110 to 114
+-- Lines 110-114
 function InventoryIconCreator:start_jobs(jobs)
 	self._current_job = 0
 	self._jobs = jobs
@@ -126,7 +128,7 @@ function InventoryIconCreator:start_jobs(jobs)
 	managers.editor:add_tool_updator("InventoryIconCreator", callback(self, self, "_update"))
 end
 
--- Lines: 117 to 158
+-- Lines 116-158
 function InventoryIconCreator:start_all_weapons_skin(test)
 	local filter = self._filter:get_value()
 
@@ -137,12 +139,18 @@ function InventoryIconCreator:start_all_weapons_skin(test)
 	end
 
 	local weapons = {}
-	weapons = test and {
-		"wpn_fps_rpg7",
-		"wpn_fps_snp_r93",
-		"wpn_fps_pis_x_g17",
-		"wpn_fps_ass_74"
-	} or self:_get_all_weapons()
+
+	if test then
+		weapons = {
+			"wpn_fps_rpg7",
+			"wpn_fps_snp_r93",
+			"wpn_fps_pis_x_g17",
+			"wpn_fps_ass_74"
+		}
+	else
+		weapons = self:_get_all_weapons()
+	end
+
 	local jobs = {}
 	local search_string = "_" .. filter .. "$"
 
@@ -180,7 +188,7 @@ function InventoryIconCreator:start_all_weapons_skin(test)
 	self:start_jobs(jobs)
 end
 
--- Lines: 160 to 179
+-- Lines 160-179
 function InventoryIconCreator:start_all_weapons(test)
 	local confirm = EWS:message_box(Global.frame_panel, "Really, all of them?", "Icon creator", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -189,11 +197,17 @@ function InventoryIconCreator:start_all_weapons(test)
 	end
 
 	local weapons = {}
-	weapons = test and {
-		"wpn_fps_rpg7",
-		"wpn_fps_snp_r93",
-		"wpn_fps_pis_x_g17"
-	} or self:_get_all_weapons()
+
+	if test then
+		weapons = {
+			"wpn_fps_rpg7",
+			"wpn_fps_snp_r93",
+			"wpn_fps_pis_x_g17"
+		}
+	else
+		weapons = self:_get_all_weapons()
+	end
+
 	local jobs = {}
 
 	for _, factory_id in ipairs(weapons) do
@@ -208,14 +222,14 @@ function InventoryIconCreator:start_all_weapons(test)
 	self:start_jobs(jobs)
 end
 
--- Lines: 181 to 193
+-- Lines 181-193
 function InventoryIconCreator:start_all_weapon_skins()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
 	local jobs = {}
 
 	for _, weapon_skin in ipairs(self:_get_weapon_skins()) do
-		weapon_skin = weapon_skin ~= "none" and false
+		weapon_skin = weapon_skin ~= "none" and weapon_skin
 
 		if weapon_skin then
 			blueprint = tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint or blueprint
@@ -231,33 +245,35 @@ function InventoryIconCreator:start_all_weapon_skins()
 	self:start_jobs(jobs)
 end
 
--- Lines: 195 to 202
+-- Lines 195-202
 function InventoryIconCreator:start_one_weapon()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local weapon_skin = self._ctrlrs.weapon.weapon_skin:get_value()
-	weapon_skin = weapon_skin ~= "none" and false
+	weapon_skin = weapon_skin ~= "none" and weapon_skin
 	local blueprint = weapon_skin and tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint
 	blueprint = blueprint or self:_get_blueprint_from_ui()
 
-	self:start_jobs({{
-		factory_id = factory_id,
-		blueprint = blueprint,
-		weapon_skin = weapon_skin
-	}})
+	self:start_jobs({
+		{
+			factory_id = factory_id,
+			blueprint = blueprint,
+			weapon_skin = weapon_skin
+		}
+	})
 end
 
--- Lines: 204 to 211
+-- Lines 204-211
 function InventoryIconCreator:preview_one_weapon()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local weapon_skin = self._ctrlrs.weapon.weapon_skin:get_value()
-	weapon_skin = weapon_skin ~= "none" and false
+	weapon_skin = weapon_skin ~= "none" and weapon_skin
 	local blueprint = weapon_skin and tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint
 	blueprint = blueprint or self:_get_blueprint_from_ui()
 
 	self:_create_weapon(factory_id, blueprint, weapon_skin)
 end
 
--- Lines: 213 to 223
+-- Lines 213-224
 function InventoryIconCreator:_get_blueprint_from_ui()
 	local blueprint = {}
 
@@ -274,7 +290,7 @@ function InventoryIconCreator:_get_blueprint_from_ui()
 	return blueprint
 end
 
--- Lines: 226 to 232
+-- Lines 226-233
 function InventoryIconCreator:_get_all_weapons()
 	local weapons = {}
 
@@ -287,11 +303,13 @@ function InventoryIconCreator:_get_all_weapons()
 	return weapons
 end
 
--- Lines: 235 to 248
+-- Lines 235-249
 function InventoryIconCreator:_get_weapon_skins()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(factory_id)
-	local t = {"none"}
+	local t = {
+		"none"
+	}
 
 	for name, item_data in pairs(tweak_data.blackmarket.weapon_skins) do
 		local match_weapon_id = item_data.weapon_id or item_data.weapons[1]
@@ -304,7 +322,7 @@ function InventoryIconCreator:_get_weapon_skins()
 	return t
 end
 
--- Lines: 253 to 273
+-- Lines 253-273
 function InventoryIconCreator:start_all_masks(with_blueprint)
 	local confirm = EWS:message_box(Global.frame_panel, "Really, all of them?", "Icon creator", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -312,16 +330,23 @@ function InventoryIconCreator:start_all_masks(with_blueprint)
 		return
 	end
 
-	masks = {} or {
-		"troll",
-		"mr_sinister",
-		"baby_cry",
-		"pazuzu",
-		"anubis",
-		"infamy_lurker",
-		"plague",
-		"robo_santa"
-	} or self:_get_all_masks()
+	local masks = {}
+
+	if false then
+		masks = {
+			"troll",
+			"mr_sinister",
+			"baby_cry",
+			"pazuzu",
+			"anubis",
+			"infamy_lurker",
+			"plague",
+			"robo_santa"
+		}
+	else
+		masks = self:_get_all_masks()
+	end
+
 	local blueprint = with_blueprint and self:_get_mask_blueprint_from_ui() or nil
 	local jobs = {}
 
@@ -335,18 +360,20 @@ function InventoryIconCreator:start_all_masks(with_blueprint)
 	self:start_jobs(jobs)
 end
 
--- Lines: 275 to 279
+-- Lines 275-279
 function InventoryIconCreator:start_one_mask(with_blueprint)
 	local mask_id = self._ctrlrs.mask.mask_id:get_value()
 	local blueprint = with_blueprint and self:_get_mask_blueprint_from_ui() or nil
 
-	self:start_jobs({{
-		mask_id = mask_id,
-		blueprint = blueprint
-	}})
+	self:start_jobs({
+		{
+			mask_id = mask_id,
+			blueprint = blueprint
+		}
+	})
 end
 
--- Lines: 281 to 285
+-- Lines 281-285
 function InventoryIconCreator:preview_one_mask(with_blueprint)
 	local mask_id = self._ctrlrs.mask.mask_id:get_value()
 	local blueprint = with_blueprint and self:_get_mask_blueprint_from_ui() or nil
@@ -354,21 +381,23 @@ function InventoryIconCreator:preview_one_mask(with_blueprint)
 	self:_create_mask(mask_id, blueprint)
 end
 
--- Lines: 287 to 295
+-- Lines 287-296
 function InventoryIconCreator:_get_mask_blueprint_from_ui()
 	local blueprint = {}
 
 	for type, ctrlr in pairs(self._ctrlrs.mask) do
 		if type ~= "mask_id" then
 			local id = ctrlr:get_value()
-			blueprint[type] = {id = id}
+			blueprint[type] = {
+				id = id
+			}
 		end
 	end
 
 	return blueprint
 end
 
--- Lines: 298 to 306
+-- Lines 298-307
 function InventoryIconCreator:_get_all_masks()
 	local t = {}
 
@@ -383,7 +412,7 @@ function InventoryIconCreator:_get_all_masks()
 	return t
 end
 
--- Lines: 311 to 322
+-- Lines 311-322
 function InventoryIconCreator:start_all_melee()
 	local confirm = EWS:message_box(Global.frame_panel, "Really, all of them?", "Icon creator", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -394,27 +423,33 @@ function InventoryIconCreator:start_all_melee()
 	local jobs = {}
 
 	for _, melee_id in ipairs(self:_get_all_melee()) do
-		table.insert(jobs, {melee_id = melee_id})
+		table.insert(jobs, {
+			melee_id = melee_id
+		})
 	end
 
 	self:start_jobs(jobs)
 end
 
--- Lines: 324 to 327
+-- Lines 324-327
 function InventoryIconCreator:start_one_melee()
 	local melee_id = self._ctrlrs.melee.melee_id:get_value()
 
-	self:start_jobs({{melee_id = melee_id}})
+	self:start_jobs({
+		{
+			melee_id = melee_id
+		}
+	})
 end
 
--- Lines: 329 to 332
+-- Lines 329-332
 function InventoryIconCreator:preview_one_melee()
 	local melee_id = self._ctrlrs.melee.melee_id:get_value()
 
 	self:_create_melee(melee_id)
 end
 
--- Lines: 334 to 345
+-- Lines 334-346
 function InventoryIconCreator:_get_all_melee()
 	local t = {}
 
@@ -431,7 +466,7 @@ function InventoryIconCreator:_get_all_melee()
 	return t
 end
 
--- Lines: 350 to 361
+-- Lines 350-361
 function InventoryIconCreator:start_all_throwable()
 	local confirm = EWS:message_box(Global.frame_panel, "Really, all of them?", "Icon creator", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -442,27 +477,33 @@ function InventoryIconCreator:start_all_throwable()
 	local jobs = {}
 
 	for _, throwable_id in ipairs(self:_get_all_throwable()) do
-		table.insert(jobs, {throwable_id = throwable_id})
+		table.insert(jobs, {
+			throwable_id = throwable_id
+		})
 	end
 
 	self:start_jobs(jobs)
 end
 
--- Lines: 363 to 366
+-- Lines 363-366
 function InventoryIconCreator:start_one_throwable()
 	local throwable_id = self._ctrlrs.throwable.throwable_id:get_value()
 
-	self:start_jobs({{throwable_id = throwable_id}})
+	self:start_jobs({
+		{
+			throwable_id = throwable_id
+		}
+	})
 end
 
--- Lines: 368 to 371
+-- Lines 368-371
 function InventoryIconCreator:preview_one_throwable()
 	local throwable_id = self._ctrlrs.throwable.throwable_id:get_value()
 
 	self:_create_throwable(throwable_id)
 end
 
--- Lines: 373 to 383
+-- Lines 373-384
 function InventoryIconCreator:_get_all_throwable()
 	local t = {}
 
@@ -477,7 +518,7 @@ function InventoryIconCreator:_get_all_throwable()
 	return t
 end
 
--- Lines: 386 to 399
+-- Lines 386-399
 function InventoryIconCreator:_start_job()
 	self._has_job = true
 	local job = self._jobs[self._current_job]
@@ -495,7 +536,7 @@ function InventoryIconCreator:_start_job()
 	self:start_create()
 end
 
--- Lines: 401 to 412
+-- Lines 401-412
 function InventoryIconCreator:check_next_job()
 	if self._has_job then
 		return
@@ -503,7 +544,7 @@ function InventoryIconCreator:check_next_job()
 
 	self._current_job = self._current_job + 1
 
-	if #self._jobs < self._current_job then
+	if self._current_job > #self._jobs then
 		managers.editor:remove_tool_updator("InventoryIconCreator")
 
 		return
@@ -512,7 +553,7 @@ function InventoryIconCreator:check_next_job()
 	self:_start_job()
 end
 
--- Lines: 414 to 419
+-- Lines 414-419
 function InventoryIconCreator:_update()
 	if self._steps then
 		self:_next_step()
@@ -521,7 +562,7 @@ function InventoryIconCreator:_update()
 	self:check_next_job()
 end
 
--- Lines: 421 to 451
+-- Lines 421-451
 function InventoryIconCreator:start_create()
 	self._old_data = {
 		camera_position = managers.editor:camera_position(),
@@ -555,7 +596,7 @@ function InventoryIconCreator:start_create()
 	table.insert(self._steps, callback(self, self, "end_create"))
 end
 
--- Lines: 453 to 472
+-- Lines 453-472
 function InventoryIconCreator:end_create()
 	managers.editor:set_camera(self._old_data.camera_position, self._old_data.camera_rotation)
 	managers.editor:set_camera_fov(self._old_data.camera_fov)
@@ -575,14 +616,14 @@ function InventoryIconCreator:end_create()
 	self._has_job = false
 end
 
--- Lines: 474 to 477
+-- Lines 474-477
 function InventoryIconCreator:_create_backdrop()
 	self:_destroy_backdrop()
 
 	self._backdrop = safe_spawn_unit(Idstring("units/test/jocke/oneplanetorulethemall"), self._backdrop_position, self._backdrop_rotation)
 end
 
--- Lines: 479 to 484
+-- Lines 479-484
 function InventoryIconCreator:_destroy_backdrop()
 	if alive(self._backdrop) then
 		World:delete_unit(self._backdrop)
@@ -591,7 +632,7 @@ function InventoryIconCreator:_destroy_backdrop()
 	end
 end
 
--- Lines: 486 to 513
+-- Lines 486-513
 function InventoryIconCreator:_setup_camera()
 	local job_setting = nil
 
@@ -624,11 +665,11 @@ function InventoryIconCreator:_setup_camera()
 	managers.editor:_set_appwin_fixed_resolution(Vector3(w + 4, h + 4, 0))
 end
 
--- Lines: 515 to 522
+-- Lines 515-522
 function InventoryIconCreator:_next_step()
 	self._current_step = self._current_step + 1
 
-	if #self._steps < self._current_step then
+	if self._current_step > #self._steps then
 		return
 	end
 
@@ -637,7 +678,7 @@ function InventoryIconCreator:_next_step()
 	func()
 end
 
--- Lines: 524 to 528
+-- Lines 524-528
 function InventoryIconCreator:_take_screen_shot_1()
 	local name = self._current_texture_name .. "_dif.tga"
 	local path = managers.database:root_path()
@@ -645,14 +686,14 @@ function InventoryIconCreator:_take_screen_shot_1()
 	Application:screenshot(path .. name)
 end
 
--- Lines: 530 to 534
+-- Lines 530-534
 function InventoryIconCreator:_pre_screen_shot_2()
 	managers.editor:on_post_processor_effect("empty")
 	managers.editor:change_visualization("depth_visualization")
 	self._backdrop:set_visible(false)
 end
 
--- Lines: 536 to 540
+-- Lines 536-540
 function InventoryIconCreator:_take_screen_shot_2()
 	local name = self._current_texture_name .. "_dph.tga"
 	local path = managers.database:root_path()
@@ -660,7 +701,7 @@ function InventoryIconCreator:_take_screen_shot_2()
 	Application:screenshot(path .. name)
 end
 
--- Lines: 542 to 547
+-- Lines 542-547
 function InventoryIconCreator:destroy_items()
 	self:destroy_weapon()
 	self:destroy_mask()
@@ -668,7 +709,7 @@ function InventoryIconCreator:destroy_items()
 	self:destroy_throwable()
 end
 
--- Lines: 549 to 556
+-- Lines 549-556
 function InventoryIconCreator:destroy_weapon()
 	if not alive(self._weapon_unit) then
 		return
@@ -679,7 +720,7 @@ function InventoryIconCreator:destroy_weapon()
 	self._weapon_unit = nil
 end
 
--- Lines: 558 to 565
+-- Lines 558-565
 function InventoryIconCreator:destroy_mask()
 	if not alive(self._mask_unit) then
 		return
@@ -690,7 +731,7 @@ function InventoryIconCreator:destroy_mask()
 	self._mask_unit = nil
 end
 
--- Lines: 567 to 574
+-- Lines 567-574
 function InventoryIconCreator:destroy_melee()
 	if not alive(self._melee_unit) then
 		return
@@ -701,7 +742,7 @@ function InventoryIconCreator:destroy_melee()
 	self._melee_unit = nil
 end
 
--- Lines: 576 to 583
+-- Lines 576-583
 function InventoryIconCreator:destroy_throwable()
 	if not alive(self._throwable_unit) then
 		return
@@ -712,14 +753,14 @@ function InventoryIconCreator:destroy_throwable()
 	self._throwable_unit = nil
 end
 
--- Lines: 587 to 591
+-- Lines 587-591
 function InventoryIconCreator:show_ews()
 	if not self._main_frame then
 		self:create_ews()
 	end
 end
 
--- Lines: 593 to 632
+-- Lines 593-632
 function InventoryIconCreator:create_ews()
 	self:close_ews()
 
@@ -768,9 +809,11 @@ function InventoryIconCreator:create_ews()
 	self._main_frame:set_visible(true)
 end
 
--- Lines: 636 to 702
+-- Lines 636-702
 function InventoryIconCreator:_create_custom_job(panel, sizer)
-	self._custom_ctrlrs = {resolution = {}}
+	self._custom_ctrlrs = {
+		resolution = {}
+	}
 	local checkbox = EWS:CheckBox(panel, "Use current camera setting", "")
 
 	checkbox:set_value(false)
@@ -832,27 +875,27 @@ function InventoryIconCreator:_create_custom_job(panel, sizer)
 	self._item_rotation_control = self:_create_item_rotation("Item Rotation: ", self._item_rotation, panel, sizer, callback(self, self, "_update_item_rotation"))
 end
 
--- Lines: 704 to 706
+-- Lines 704-706
 function InventoryIconCreator:_update_backdrop_position(position)
 	self._backdrop_position = position
 end
 
--- Lines: 708 to 710
+-- Lines 708-710
 function InventoryIconCreator:_update_backdrop_rotation(rotation)
 	self._backdrop_rotation = rotation
 end
 
--- Lines: 712 to 714
+-- Lines 712-714
 function InventoryIconCreator:_update_item_position(position)
 	self._item_position = position
 end
 
--- Lines: 716 to 718
+-- Lines 716-718
 function InventoryIconCreator:_update_item_rotation(rotation)
 	self._item_rotation = rotation
 end
 
--- Lines: 720 to 736
+-- Lines 720-737
 function InventoryIconCreator:_create_axis_control(name, default_value, panel, sizer, cb, prop)
 	local axis_params = {
 		floats = 0,
@@ -879,7 +922,7 @@ function InventoryIconCreator:_create_axis_control(name, default_value, panel, s
 	return axis_params
 end
 
--- Lines: 739 to 750
+-- Lines 739-751
 function InventoryIconCreator:_create_position_control(name, default_value, panel, sizer, cb)
 	local h_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -904,7 +947,7 @@ function InventoryIconCreator:_create_position_control(name, default_value, pane
 	return pp
 end
 
--- Lines: 753 to 764
+-- Lines 753-765
 function InventoryIconCreator:_create_rotation_control(name, default_value, panel, sizer, cb)
 	local h_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -929,7 +972,7 @@ function InventoryIconCreator:_create_rotation_control(name, default_value, pane
 	return rp
 end
 
--- Lines: 767 to 778
+-- Lines 767-779
 function InventoryIconCreator:_create_item_position(name, default_value, panel, sizer, cb)
 	local h_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -954,7 +997,7 @@ function InventoryIconCreator:_create_item_position(name, default_value, panel, 
 	return ppx
 end
 
--- Lines: 782 to 793
+-- Lines 782-794
 function InventoryIconCreator:_create_item_rotation(name, default_value, panel, sizer, cb)
 	local h_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -991,7 +1034,7 @@ function InventoryIconCreator:_create_item_rotation(name, default_value, panel, 
 	return rpx
 end
 
--- Lines: 800 to 844
+-- Lines 800-845
 function InventoryIconCreator:_create_weapons_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -1058,7 +1101,7 @@ function InventoryIconCreator:_create_weapons_page(notebook)
 	return panel
 end
 
--- Lines: 847 to 896
+-- Lines 847-896
 function InventoryIconCreator:_add_weapon_mods(params)
 	local panel = params.panel
 	local sizer = params.sizer
@@ -1110,7 +1153,7 @@ function InventoryIconCreator:_add_weapon_mods(params)
 	self._weapon_mods_panel:parent():layout()
 end
 
--- Lines: 898 to 929
+-- Lines 898-930
 function InventoryIconCreator:_add_weapon_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -1144,7 +1187,7 @@ function InventoryIconCreator:_add_weapon_ctrlr(panel, sizer, name, options, val
 	return ctrlr
 end
 
--- Lines: 932 to 950
+-- Lines 932-950
 function InventoryIconCreator:_update_weapon_combobox_text(param)
 	local name = param.name
 	local value = param.ctrlr:get_value()
@@ -1166,13 +1209,13 @@ function InventoryIconCreator:_update_weapon_combobox_text(param)
 	end
 end
 
--- Lines: 952 to 955
+-- Lines 952-955
 function InventoryIconCreator:_set_weapon_skin()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local weapon_skin = self._ctrlrs.weapon.weapon_skin:get_value()
 end
 
--- Lines: 958 to 967
+-- Lines 957-967
 function InventoryIconCreator:_update_weapon_skins()
 	local weapon_skin = self._ctrlrs.weapon.weapon_skin
 
@@ -1185,7 +1228,7 @@ function InventoryIconCreator:_update_weapon_skins()
 	weapon_skin:set_value("none")
 end
 
--- Lines: 971 to 1016
+-- Lines 971-1017
 function InventoryIconCreator:_create_masks_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -1247,7 +1290,7 @@ function InventoryIconCreator:_create_masks_page(notebook)
 	return panel
 end
 
--- Lines: 1019 to 1048
+-- Lines 1019-1049
 function InventoryIconCreator:_add_mask_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -1281,7 +1324,7 @@ function InventoryIconCreator:_add_mask_ctrlr(panel, sizer, name, options, value
 	return ctrlr
 end
 
--- Lines: 1051 to 1070
+-- Lines 1051-1070
 function InventoryIconCreator:_update_mask_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -1304,7 +1347,7 @@ function InventoryIconCreator:_update_mask_combobox_text(params)
 	end
 end
 
--- Lines: 1074 to 1098
+-- Lines 1074-1099
 function InventoryIconCreator:_create_melee_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -1339,7 +1382,7 @@ function InventoryIconCreator:_create_melee_page(notebook)
 	return panel
 end
 
--- Lines: 1101 to 1130
+-- Lines 1101-1131
 function InventoryIconCreator:_add_melee_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -1373,7 +1416,7 @@ function InventoryIconCreator:_add_melee_ctrlr(panel, sizer, name, options, valu
 	return ctrlr
 end
 
--- Lines: 1133 to 1146
+-- Lines 1133-1146
 function InventoryIconCreator:_update_melee_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -1390,7 +1433,7 @@ function InventoryIconCreator:_update_melee_combobox_text(params)
 	end
 end
 
--- Lines: 1150 to 1174
+-- Lines 1150-1175
 function InventoryIconCreator:_create_throwable_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -1425,7 +1468,7 @@ function InventoryIconCreator:_create_throwable_page(notebook)
 	return panel
 end
 
--- Lines: 1178 to 1207
+-- Lines 1178-1208
 function InventoryIconCreator:_add_throwable_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -1459,7 +1502,7 @@ function InventoryIconCreator:_add_throwable_ctrlr(panel, sizer, name, options, 
 	return ctrlr
 end
 
--- Lines: 1210 to 1224
+-- Lines 1210-1224
 function InventoryIconCreator:_update_throwable_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -1478,7 +1521,7 @@ function InventoryIconCreator:_update_throwable_combobox_text(params)
 	end
 end
 
--- Lines: 1226 to 1236
+-- Lines 1226-1236
 function InventoryIconCreator:close_ews()
 	if alive(self._weapon_mods_panel) then
 		self._weapon_mods_panel:destroy()
@@ -1492,4 +1535,3 @@ function InventoryIconCreator:close_ews()
 		self._main_frame = nil
 	end
 end
-

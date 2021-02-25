@@ -2,7 +2,7 @@ MissionFilterUnitElement = MissionFilterUnitElement or class(MissionElement)
 MissionFilterUnitElement.SAVE_UNIT_POSITION = false
 MissionFilterUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines: 5 to 19
+-- Lines 5-19
 function MissionFilterUnitElement:init(unit)
 	MissionFilterUnitElement.super.init(self, unit)
 
@@ -19,7 +19,7 @@ function MissionFilterUnitElement:init(unit)
 	table.insert(self._save_values, 5)
 end
 
--- Lines: 22 to 52
+-- Lines 22-52
 function MissionFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -70,4 +70,3 @@ function MissionFilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(var_5, 0, 0, "EXPAND")
 end
-

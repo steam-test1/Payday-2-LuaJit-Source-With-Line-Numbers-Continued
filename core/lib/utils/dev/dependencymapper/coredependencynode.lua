@@ -13,7 +13,7 @@ MATERIALS_FILE = 9
 MODEL = 10
 DependencyNodeBase = DependencyNodeBase or CoreClass.class()
 
--- Lines: 20 to 35
+-- Lines 20-35
 function DependencyNodeBase:init(type_, db_type, name, get_dn_cb, database)
 	assert(type(type_) == "number")
 	assert(type(name) == "string")
@@ -29,22 +29,22 @@ function DependencyNodeBase:init(type_, db_type, name, get_dn_cb, database)
 	self._depends_on = {}
 end
 
--- Lines: 37 to 38
+-- Lines 37-39
 function DependencyNodeBase:isdependencynode()
 	return true
 end
 
--- Lines: 41 to 42
+-- Lines 41-43
 function DependencyNodeBase:type_()
 	return self._type
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function DependencyNodeBase:name()
 	return self._name
 end
 
--- Lines: 58 to 77
+-- Lines 49-77
 function DependencyNodeBase:match(pattern)
 	if pattern == nil then
 		return true
@@ -67,7 +67,7 @@ function DependencyNodeBase:match(pattern)
 	end
 end
 
--- Lines: 79 to 90
+-- Lines 79-91
 function DependencyNodeBase:get_dependencies()
 	if not self._parsed then
 		for _, xmlnode in ipairs(self:_parse()) do
@@ -86,7 +86,7 @@ function DependencyNodeBase:get_dependencies()
 	return dn_list
 end
 
--- Lines: 93 to 96
+-- Lines 93-97
 function DependencyNodeBase:reached(pattern)
 	local found = {}
 
@@ -95,7 +95,7 @@ function DependencyNodeBase:reached(pattern)
 	return found
 end
 
--- Lines: 99 to 111
+-- Lines 99-111
 function DependencyNodeBase:_reached(pattern, traversed, found)
 	if traversed[self] then
 		return
@@ -112,7 +112,7 @@ function DependencyNodeBase:_reached(pattern, traversed, found)
 	end
 end
 
--- Lines: 113 to 117
+-- Lines 113-118
 function DependencyNodeBase:_parse()
 	local entry = self._database:lookup(self._db_type, self._name)
 
@@ -120,10 +120,12 @@ function DependencyNodeBase:_parse()
 
 	local xmlnode = self._database:load_node(entry)
 
-	return {xmlnode}
+	return {
+		xmlnode
+	}
 end
 
--- Lines: 120 to 130
+-- Lines 120-130
 function DependencyNodeBase:_walkxml(xmlnode)
 	local deps = _Deps:new()
 
@@ -138,24 +140,24 @@ function DependencyNodeBase:_walkxml(xmlnode)
 	end
 end
 
--- Lines: 132 to 134
+-- Lines 132-134
 function DependencyNodeBase:_walkxml2dependencies(xmlnode, deps)
 	error("Not Implemented")
 end
+
 _Deps = _Deps or CoreClass.class()
 
--- Lines: 143 to 145
+-- Lines 143-145
 function _Deps:init()
 	self._dnlist = {}
 end
 
--- Lines: 147 to 149
+-- Lines 147-149
 function _Deps:add(dn)
 	table.insert(self._dnlist, dn)
 end
 
--- Lines: 151 to 152
+-- Lines 151-153
 function _Deps:get_pairs()
 	return ipairs(self._dnlist)
 end
-

@@ -1,11 +1,11 @@
 ReloadTimeline = ReloadTimeline or class()
 
--- Lines: 3 to 5
+-- Lines 3-5
 function ReloadTimeline:init(timeline_tweak)
 	self._timeline = deep_clone(timeline_tweak)
 end
 
--- Lines: 7 to 26
+-- Lines 7-26
 local function lerp_func(a, b, t)
 	assert(type(a) == type(b), "Can't lerp different types!\n" .. type(a) .. " and " .. type(b))
 
@@ -34,7 +34,7 @@ local function lerp_func(a, b, t)
 	assert(false, "Invalid lerp")
 end
 
--- Lines: 28 to 54
+-- Lines 28-54
 function ReloadTimeline:get_key(key, time)
 	time = math.clamp(time, 0, 1)
 	local before = {
@@ -71,7 +71,7 @@ function ReloadTimeline:get_key(key, time)
 	end
 end
 
--- Lines: 56 to 61
+-- Lines 56-62
 function ReloadTimeline:get_data(time)
 	local data = {}
 
@@ -89,4 +89,3 @@ function ReloadTimeline:get_data(time)
 
 	return data
 end
-

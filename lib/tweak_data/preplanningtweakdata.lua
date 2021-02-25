@@ -1,6 +1,6 @@
 PrePlanningTweakData = PrePlanningTweakData or class()
 
--- Lines: 3 to 11
+-- Lines 3-12
 function PrePlanningTweakData:get_custom_texture_rect(num)
 	if not num then
 		return
@@ -17,7 +17,7 @@ function PrePlanningTweakData:get_custom_texture_rect(num)
 	}
 end
 
--- Lines: 14 to 22
+-- Lines 14-23
 function PrePlanningTweakData:get_category_texture_rect(num)
 	if not num then
 		return
@@ -34,7 +34,7 @@ function PrePlanningTweakData:get_category_texture_rect(num)
 	}
 end
 
--- Lines: 25 to 33
+-- Lines 25-34
 function PrePlanningTweakData:get_type_texture_rect(num)
 	if not num then
 		return
@@ -51,15 +51,23 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines: 45 to 1409
+-- Lines 36-1409
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
-	self.plans = {escape_plan = {}}
+	self.plans = {
+		escape_plan = {}
+	}
 	self.plans.escape_plan.category = "escape_plan"
-	self.plans.vault_plan = {category = "vault_plan"}
-	self.plans.plan_of_action = {category = "plan_of_action"}
-	self.plans.entry_plan = {category = "entry_plan"}
+	self.plans.vault_plan = {
+		category = "vault_plan"
+	}
+	self.plans.plan_of_action = {
+		category = "plan_of_action"
+	}
+	self.plans.entry_plan = {
+		category = "entry_plan"
+	}
 	self.gui = {
 		custom_icons_path = "guis/dlcs/big_bank/textures/pd2/pre_planning/preplan_icon_types",
 		type_icons_path = "guis/dlcs/big_bank/textures/pd2/pre_planning/preplan_icon_types",
@@ -67,7 +75,9 @@ function PrePlanningTweakData:init(tweak_data)
 		category_icons_bg = 42,
 		MAX_DRAW_POINTS = 1000
 	}
-	self.categories = {default = {}}
+	self.categories = {
+		default = {}
+	}
 	self.categories.default.name_id = "menu_pp_cat_default"
 	self.categories.default.desc_id = "menu_pp_cat_default_desc"
 	self.categories.default.icon = 32
@@ -155,7 +165,9 @@ function PrePlanningTweakData:init(tweak_data)
 		icon = 12,
 		prio = 1
 	}
-	self.types = {ammo_bag = {}}
+	self.types = {
+		ammo_bag = {}
+	}
 	self.types.ammo_bag.name_id = "menu_pp_asset_ammo"
 	self.types.ammo_bag.desc_id = "menu_pp_asset_ammo_desc"
 	self.types.ammo_bag.deployable_id = "ammo_bag"
@@ -1405,7 +1417,7 @@ function PrePlanningTweakData:init(tweak_data)
 	}
 end
 
--- Lines: 1411 to 2200
+-- Lines 1411-2200
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -1941,7 +1953,9 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 		},
 		mission_briefing_texture = "guis/textures/pd2/pre_planning/mission_briefing_big",
 		total_budget = 8,
-		default_plans = {vault_plan = "branchbank_lance"},
+		default_plans = {
+			vault_plan = "branchbank_lance"
+		},
 		start_location = {
 			group = "a",
 			zoom = 1,
@@ -1978,7 +1992,9 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 		},
 		mission_briefing_texture = "guis/textures/pd2/pre_planning/mission_briefing_big",
 		total_budget = 8,
-		default_plans = {vault_plan = "branchbank_lance"},
+		default_plans = {
+			vault_plan = "branchbank_lance"
+		},
 		start_location = {
 			group = "a",
 			zoom = 1,
@@ -2272,7 +2288,9 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 		},
 		mission_briefing_texture = "guis/textures/pd2/pre_planning/mission_briefing_crojob_stealth",
 		total_budget = 10,
-		default_plans = {escape_plan = "crojob2_escape_van"},
+		default_plans = {
+			escape_plan = "crojob2_escape_van"
+		},
 		start_location = {
 			group = "a",
 			zoom = 1.5,
@@ -2324,19 +2342,23 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			name_id = "menu_pp_crojob_stage_3_loc_b",
 			y2 = -4225,
 			y1 = -19225,
-			custom_points = {{
-				text_id = "menu_pp_info_crojob3_thermite",
-				rotation = 0,
-				y = 566,
-				to_upper = true,
-				icon = 45,
-				x = 533,
-				post_event = "Play_pln_cr3_49"
-			}}
+			custom_points = {
+				{
+					text_id = "menu_pp_info_crojob3_thermite",
+					rotation = 0,
+					y = 566,
+					to_upper = true,
+					icon = 45,
+					x = 533,
+					post_event = "Play_pln_cr3_49"
+				}
+			}
 		},
 		mission_briefing_texture = "guis/textures/pd2/pre_planning/mission_briefing_crojob_loud",
 		total_budget = 10,
-		default_plans = {escape_plan = "crojob3_escape_boat"},
+		default_plans = {
+			escape_plan = "crojob3_escape_boat"
+		},
 		start_location = {
 			group = "a",
 			zoom = 1,
@@ -2388,19 +2410,23 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			name_id = "menu_pp_crojob_stage_3_loc_b",
 			y2 = -4225,
 			y1 = -19225,
-			custom_points = {{
-				text_id = "menu_pp_info_crojob3_thermite",
-				rotation = 0,
-				y = 566,
-				to_upper = true,
-				icon = 45,
-				x = 533,
-				post_event = "Play_pln_cr3_49"
-			}}
+			custom_points = {
+				{
+					text_id = "menu_pp_info_crojob3_thermite",
+					rotation = 0,
+					y = 566,
+					to_upper = true,
+					icon = 45,
+					x = 533,
+					post_event = "Play_pln_cr3_49"
+				}
+			}
 		},
 		mission_briefing_texture = "guis/textures/pd2/pre_planning/mission_briefing_crojob_loud",
 		total_budget = 10,
-		default_plans = {escape_plan = "crojob3_escape_boat"},
+		default_plans = {
+			escape_plan = "crojob3_escape_boat"
+		},
 		start_location = {
 			group = "a",
 			zoom = 1,
@@ -2577,8 +2603,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines: 2202 to 2203
+-- Lines 2202-2204
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end
-

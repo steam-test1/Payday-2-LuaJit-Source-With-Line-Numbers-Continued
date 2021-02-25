@@ -1,6 +1,6 @@
 SpawnGrenadeUnitElement = SpawnGrenadeUnitElement or class(MissionElement)
 
--- Lines: 3 to 13
+-- Lines 3-13
 function SpawnGrenadeUnitElement:init(unit)
 	SpawnGrenadeUnitElement.super.init(self, unit)
 
@@ -13,19 +13,19 @@ function SpawnGrenadeUnitElement:init(unit)
 	table.insert(self._save_values, "strength")
 end
 
--- Lines: 15 to 23
+-- Lines 15-23
 function SpawnGrenadeUnitElement:test_element()
 	if self._hed.grenade_type == "frag" then
 		ProjectileBase.throw_projectile(self._hed.grenade_type, self._unit:position(), self._hed.spawn_dir * self._hed.strength)
 	end
 end
 
--- Lines: 25 to 27
+-- Lines 25-27
 function SpawnGrenadeUnitElement:update_selected(time, rel_time)
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._hed.spawn_dir * 35, 0.75, 0.75, 0.75, 0.075)
 end
 
--- Lines: 29 to 52
+-- Lines 29-52
 function SpawnGrenadeUnitElement:update_editing(time, rel_time)
 	local kb = Input:keyboard()
 	local speed = 60 * rel_time
@@ -59,7 +59,7 @@ function SpawnGrenadeUnitElement:update_editing(time, rel_time)
 	end
 end
 
--- Lines: 54 to 64
+-- Lines 54-64
 function SpawnGrenadeUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -67,7 +67,8 @@ function SpawnGrenadeUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_combobox(panel, panel_sizer, "grenade_type", table.map_keys(tweak_data.blackmarket.projectiles), "Select what type of grenade will be spawned.")
-	self:_build_value_number(panel, panel_sizer, "strength", {floats = 1}, "Use this to add a strength to a physic push on the spawned grenade")
+	self:_build_value_number(panel, panel_sizer, "strength", {
+		floats = 1
+	}, "Use this to add a strength to a physic push on the spawned grenade")
 	self:_add_help_text("Spawns a grenade.")
 end
-

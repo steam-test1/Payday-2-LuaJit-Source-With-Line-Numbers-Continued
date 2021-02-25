@@ -1,6 +1,6 @@
 TeamAIBase = TeamAIBase or class(CopBase)
 
--- Lines: 3 to 18
+-- Lines 3-18
 function TeamAIBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -16,24 +16,24 @@ function TeamAIBase:post_init()
 	managers.occlusion:remove_occlusion(self._unit)
 end
 
--- Lines: 22 to 24
+-- Lines 22-25
 function TeamAIBase:nick_name()
 	local name = self._tweak_table
 
 	return managers.localization:text("menu_" .. name)
 end
 
--- Lines: 29 to 30
+-- Lines 29-31
 function TeamAIBase:default_weapon_name(slot)
 	return tweak_data.character[self._tweak_table].weapon.weapons_of_choice[slot or "primary"]
 end
 
--- Lines: 35 to 36
+-- Lines 35-37
 function TeamAIBase:arrest_settings()
 	return tweak_data.character[self._tweak_table].arrest
 end
 
--- Lines: 42 to 51
+-- Lines 41-51
 function TeamAIBase:pre_destroy(unit)
 	self:remove_upgrades()
 	self:unregister()
@@ -44,19 +44,23 @@ function TeamAIBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
--- Lines: 56 to 74
+-- Lines 56-74
 function TeamAIBase:set_loadout(loadout)
 	if self._loadout then
 		self:remove_upgrades()
 	end
 
-	-- Lines: 62 to 67
+	-- Lines 61-67
 	local function aquire(item)
 		if not tweak_data.upgrades.crew_skill_definitions[item] then
-			local definition = {upgrades = item and {{
-				category = "team",
-				upgrade = item
-			}} or {}}
+			local definition = {
+				upgrades = item and {
+					{
+						category = "team",
+						upgrade = item
+					}
+				} or {}
+			}
 		end
 
 		for _, v in pairs(definition.upgrades) do
@@ -74,17 +78,20 @@ function TeamAIBase:set_loadout(loadout)
 	self._loadout = loadout
 end
 
--- Lines: 79 to 94
+-- Lines 79-94
 function TeamAIBase:remove_upgrades()
 	if self._loadout then
-
-		-- Lines: 82 to 87
+		-- Lines 81-87
 		local function unaquire(item)
 			if not tweak_data.upgrades.crew_skill_definitions[item] then
-				local definition = {upgrades = item and {{
-					category = "team",
-					upgrade = item
-				}} or {}}
+				local definition = {
+					upgrades = item and {
+						{
+							category = "team",
+							upgrade = item
+						}
+					} or {}
+				}
 			end
 
 			for _, v in pairs(definition.upgrades) do
@@ -103,7 +110,7 @@ function TeamAIBase:remove_upgrades()
 	end
 end
 
--- Lines: 101 to 106
+-- Lines 98-106
 function TeamAIBase:save(data)
 	data.base = {
 		tweak_table = self._tweak_table,
@@ -111,14 +118,14 @@ function TeamAIBase:save(data)
 	}
 end
 
--- Lines: 110 to 114
+-- Lines 110-114
 function TeamAIBase:on_death_exit()
 	TeamAIBase.super.on_death_exit(self)
 	self:unregister()
 	self:set_slot(self._unit, 0)
 end
 
--- Lines: 118 to 123
+-- Lines 118-123
 function TeamAIBase:_register()
 	if not self._registered then
 		managers.groupai:state():register_criminal(self._unit)
@@ -127,7 +134,7 @@ function TeamAIBase:_register()
 	end
 end
 
--- Lines: 127 to 138
+-- Lines 127-138
 function TeamAIBase:unregister()
 	if self._registered then
 		if Network:is_server() then
@@ -143,12 +150,11 @@ function TeamAIBase:unregister()
 	end
 end
 
--- Lines: 142 to 143
+-- Lines 142-143
 function TeamAIBase:chk_freeze_anims()
 end
 
--- Lines: 147 to 148
+-- Lines 147-149
 function TeamAIBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end
-

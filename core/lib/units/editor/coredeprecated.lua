@@ -1,17 +1,17 @@
 CoreDeprecatedHubElement = CoreDeprecatedHubElement or class(HubElement)
 DeprecatedHubElement = DeprecatedHubElement or class(CoreDeprecatedHubElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function DeprecatedHubElement:init(...)
 	CoreDeprecatedHubElement.init(self, ...)
 end
 
--- Lines: 9 to 11
+-- Lines 9-11
 function CoreDeprecatedHubElement:init(unit)
 	HubElement.init(self, unit)
 end
 
--- Lines: 13 to 27
+-- Lines 13-27
 function CoreDeprecatedHubElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -25,4 +25,3 @@ function CoreDeprecatedHubElement:_build_panel(panel, panel_sizer)
 	deprecated_sizer:add(EWS:StaticText(panel, "Have a nice day!", 0, ""), 1, 0, "ALIGN_CENTER")
 	panel_sizer:add(deprecated_sizer, 0, 0, "EXPAND")
 end
-

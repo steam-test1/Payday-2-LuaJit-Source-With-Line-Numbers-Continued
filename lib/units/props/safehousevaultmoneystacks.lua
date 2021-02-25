@@ -18,7 +18,7 @@ SafehouseVaultMoneyStacks.MONEY_STEPS = {
 	300000000
 }
 
--- Lines: 26 to 36
+-- Lines 25-36
 function SafehouseVaultMoneyStacks:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -32,12 +32,12 @@ function SafehouseVaultMoneyStacks:init(unit)
 	self:_setup()
 end
 
--- Lines: 39 to 80
+-- Lines 38-80
 function SafehouseVaultMoneyStacks:_setup()
 	self._tiers = {}
 	local cash_index = (self.tier - 1) * self.CHUNKS
 
-	for i = 1, self.CHUNKS, 1 do
+	for i = 1, self.CHUNKS do
 		local body = self._unit:body("body_money_chunk_" .. tostring(i))
 
 		if body then
@@ -72,7 +72,7 @@ function SafehouseVaultMoneyStacks:_setup()
 	self:set_active_tier(target_tier)
 end
 
--- Lines: 82 to 88
+-- Lines 82-88
 function SafehouseVaultMoneyStacks:set_active_tier(target_tier)
 	self._active_tier = target_tier
 
@@ -83,7 +83,7 @@ function SafehouseVaultMoneyStacks:set_active_tier(target_tier)
 	self:perform_sync()
 end
 
--- Lines: 91 to 97
+-- Lines 90-97
 function SafehouseVaultMoneyStacks:_set_tier_enabled(tier_data, enable)
 	tier_data.body:set_enabled(enable)
 
@@ -92,10 +92,9 @@ function SafehouseVaultMoneyStacks:_set_tier_enabled(tier_data, enable)
 	end
 end
 
--- Lines: 99 to 103
+-- Lines 99-103
 function SafehouseVaultMoneyStacks:perform_sync()
 	if managers.sync and Network:is_server() then
 		managers.sync:add_synced_vault_cash(self._unit:id(), self._active_tier)
 	end
 end
-

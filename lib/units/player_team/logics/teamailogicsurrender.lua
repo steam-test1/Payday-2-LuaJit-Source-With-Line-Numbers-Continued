@@ -3,7 +3,7 @@ TeamAILogicSurrender.on_cop_neutralized = TeamAILogicIdle.on_cop_neutralized
 TeamAILogicSurrender.on_alert = TeamAILogicIdle.on_alert
 TeamAILogicSurrender.on_recovered = TeamAILogicDisabled.on_recovered
 
--- Lines: 13 to 60
+-- Lines 12-60
 function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	TeamAILogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -50,7 +50,7 @@ function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines: 65 to 86
+-- Lines 64-86
 function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -73,20 +73,19 @@ function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 	data.unit:interaction():set_active(false, false)
 end
 
--- Lines: 90 to 91
+-- Lines 90-91
 function TeamAILogicSurrender.action_complete_clbk(data, action)
 end
 
--- Lines: 95 to 96
+-- Lines 95-96
 function TeamAILogicSurrender.can_activate()
 end
 
--- Lines: 100 to 102
+-- Lines 100-102
 function TeamAILogicSurrender.on_detected_enemy_destroyed(data, enemy_unit)
 	TeamAILogicIdle.on_cop_neutralized(data, enemy_unit:key())
 end
 
--- Lines: 106 to 107
+-- Lines 106-107
 function TeamAILogicSurrender.is_available_for_assignment(data)
 end
-

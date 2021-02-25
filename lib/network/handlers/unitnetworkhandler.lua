@@ -1,7 +1,7 @@
 local tmp_rot1 = Rotation()
 UnitNetworkHandler = UnitNetworkHandler or class(BaseNetworkHandler)
 
--- Lines: 5 to 51
+-- Lines 5-51
 function UnitNetworkHandler:set_unit(unit, character_name, outfit_string, outfit_version, peer_id, team_id)
 	print("[UnitNetworkHandler:set_unit]", unit, character_name, peer_id)
 	Application:stack_dump()
@@ -46,7 +46,7 @@ function UnitNetworkHandler:set_unit(unit, character_name, outfit_string, outfit
 	self:_chk_flush_unit_too_early_packets(unit)
 end
 
--- Lines: 55 to 60
+-- Lines 55-60
 function UnitNetworkHandler:switch_weapon(unit, unequip_multiplier, equip_multiplier, sender)
 	if not self._verify_character_and_sender(unit, sender) then
 		return
@@ -55,7 +55,7 @@ function UnitNetworkHandler:switch_weapon(unit, unequip_multiplier, equip_multip
 	unit:movement():sync_switch_weapon(unequip_multiplier, equip_multiplier)
 end
 
--- Lines: 64 to 75
+-- Lines 64-75
 function UnitNetworkHandler:set_equipped_weapon(unit, item_index, blueprint_string, cosmetics_string, sender)
 	if not self._verify_character(unit) then
 		return
@@ -70,7 +70,7 @@ function UnitNetworkHandler:set_equipped_weapon(unit, item_index, blueprint_stri
 	unit:inventory():synch_equipped_weapon(item_index, blueprint_string, cosmetics_string, peer)
 end
 
--- Lines: 77 to 82
+-- Lines 77-82
 function UnitNetworkHandler:set_weapon_gadget_state(unit, gadget_state, sender)
 	if not self._verify_character_and_sender(unit, sender) then
 		return
@@ -79,7 +79,7 @@ function UnitNetworkHandler:set_weapon_gadget_state(unit, gadget_state, sender)
 	unit:inventory():synch_weapon_gadget_state(gadget_state)
 end
 
--- Lines: 85 to 90
+-- Lines 85-90
 function UnitNetworkHandler:set_weapon_gadget_color(unit, red, green, blue, sender)
 	if not self._verify_character_and_sender(unit, sender) then
 		return
@@ -88,21 +88,21 @@ function UnitNetworkHandler:set_weapon_gadget_color(unit, red, green, blue, send
 	unit:inventory():sync_weapon_gadget_color(Color(red / 255, green / 255, blue / 255))
 end
 
--- Lines: 93 to 97
+-- Lines 93-97
 function UnitNetworkHandler:first_aid_kit_sync(unit, min_distance)
 	if min_distance ~= 0 then
 		unit:base():sync_auto_recovery(min_distance)
 	end
 end
 
--- Lines: 101 to 112
+-- Lines 101-112
 function UnitNetworkHandler:set_look_dir(unit, yaw_in, pitch_in, sender)
 	if not self._verify_character_and_sender(unit, sender) then
 		return
 	end
 
 	local dir = Vector3()
-	local yaw = (360 * yaw_in) / 255
+	local yaw = 360 * yaw_in / 255
 	local pitch = math.lerp(-85, 85, pitch_in / 127)
 	local rot = Rotation(yaw, pitch, 0)
 
@@ -110,7 +110,7 @@ function UnitNetworkHandler:set_look_dir(unit, yaw_in, pitch_in, sender)
 	unit:movement():sync_look_dir(dir)
 end
 
--- Lines: 116 to 171
+-- Lines 116-171
 function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_yaw, nav_link_act_index, from_idle, haste_code, end_yaw, no_walk, no_strafe, pose_code, end_pose_code)
 	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -119,22 +119,22 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	local end_rot = nil
 
 	if end_yaw ~= 0 then
-		end_rot = Rotation((360 * (end_yaw - 1)) / 254, 0, 0)
+		end_rot = Rotation(360 * (end_yaw - 1) / 254, 0, 0)
 	end
 
 	local nav_path = {}
 
 	if nav_link_act_index ~= 0 then
-		local nav_link_rot = (360 * nav_link_yaw) / 255
+		local nav_link_rot = 360 * nav_link_yaw / 255
 		local nav_link = unit:movement()._actions.walk.synthesize_nav_link(first_nav_point, nav_link_rot, unit:movement()._actions.act:_get_act_name_from_index(nav_link_act_index), from_idle)
 
-		-- Lines: 129 to 130
-		nav_link.element.value = function (element, name)
+		-- Lines 130-130
+		function nav_link.element.value(element, name)
 			return element[name]
 		end
 
-		-- Lines: 130 to 131
-		nav_link.element.nav_link_wants_align_pos = function (element)
+		-- Lines 131-131
+		function nav_link.element.nav_link_wants_align_pos(element)
 			return element.from_idle
 		end
 
@@ -182,7 +182,7 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	unit:movement():action_request(action_desc)
 end
 
--- Lines: 175 to 180
+-- Lines 175-180
 function UnitNetworkHandler:action_walk_nav_point(unit, nav_point, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -191,7 +191,7 @@ function UnitNetworkHandler:action_walk_nav_point(unit, nav_point, sender)
 	unit:movement():sync_action_walk_nav_point(nav_point)
 end
 
--- Lines: 182 to 187
+-- Lines 182-187
 function UnitNetworkHandler:player_action_walk_nav_point(unit, nav_point, speed, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -200,7 +200,7 @@ function UnitNetworkHandler:player_action_walk_nav_point(unit, nav_point, speed,
 	unit:movement():sync_action_walk_nav_point(nav_point, speed)
 end
 
--- Lines: 192 to 197
+-- Lines 192-197
 function UnitNetworkHandler:action_change_run(unit, is_running, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -209,7 +209,7 @@ function UnitNetworkHandler:action_change_run(unit, is_running, sender)
 	unit:movement():sync_action_change_run(is_running)
 end
 
--- Lines: 201 to 206
+-- Lines 201-206
 function UnitNetworkHandler:action_change_speed(unit, speed, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -218,7 +218,7 @@ function UnitNetworkHandler:action_change_speed(unit, speed, sender)
 	unit:movement():sync_action_change_speed(speed)
 end
 
--- Lines: 210 to 215
+-- Lines 210-215
 function UnitNetworkHandler:action_walk_stop(unit)
 	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -227,18 +227,18 @@ function UnitNetworkHandler:action_walk_stop(unit)
 	unit:movement():sync_action_walk_stop()
 end
 
--- Lines: 219 to 225
+-- Lines 219-225
 function UnitNetworkHandler:action_walk_nav_link(unit, pos, yaw, anim_index, from_idle)
 	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	local rot = (360 * yaw) / 255
+	local rot = 360 * yaw / 255
 
 	unit:movement():sync_action_walk_nav_link(pos, rot, anim_index, from_idle)
 end
 
--- Lines: 229 to 234
+-- Lines 229-234
 function UnitNetworkHandler:action_change_pose(unit, pose_code, pos)
 	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -247,7 +247,7 @@ function UnitNetworkHandler:action_change_pose(unit, pose_code, pos)
 	unit:movement():sync_action_change_pose(pose_code, pos)
 end
 
--- Lines: 238 to 267
+-- Lines 238-267
 function UnitNetworkHandler:action_spooc_start(unit, target_u_pos, flying_strike, action_id)
 	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -258,7 +258,9 @@ function UnitNetworkHandler:action_spooc_start(unit, target_u_pos, flying_strike
 		type = "spooc",
 		path_index = 1,
 		body_part = 1,
-		nav_path = {unit:position()},
+		nav_path = {
+			unit:position()
+		},
 		target_u_pos = target_u_pos,
 		flying_strike = flying_strike,
 		action_id = action_id,
@@ -280,7 +282,7 @@ function UnitNetworkHandler:action_spooc_start(unit, target_u_pos, flying_strike
 	unit:movement():action_request(action_desc)
 end
 
--- Lines: 271 to 276
+-- Lines 271-276
 function UnitNetworkHandler:action_spooc_stop(unit, pos, nav_index, action_id, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -289,7 +291,7 @@ function UnitNetworkHandler:action_spooc_stop(unit, pos, nav_index, action_id, s
 	unit:movement():sync_action_spooc_stop(pos, nav_index, action_id)
 end
 
--- Lines: 280 to 285
+-- Lines 280-285
 function UnitNetworkHandler:action_spooc_nav_point(unit, pos, action_id, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -298,7 +300,7 @@ function UnitNetworkHandler:action_spooc_nav_point(unit, pos, action_id, sender)
 	unit:movement():sync_action_spooc_nav_point(pos, action_id)
 end
 
--- Lines: 289 to 294
+-- Lines 289-294
 function UnitNetworkHandler:action_spooc_strike(unit, pos, action_id, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -307,7 +309,7 @@ function UnitNetworkHandler:action_spooc_strike(unit, pos, action_id, sender)
 	unit:movement():sync_action_spooc_strike(pos, action_id)
 end
 
--- Lines: 298 to 310
+-- Lines 298-310
 function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, sender)
 	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -317,13 +319,13 @@ function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, 
 		body_part = 1,
 		type = "warp",
 		position = has_pos and pos,
-		rotation = has_rot and Rotation((360 * (yaw - 1)) / 254, 0, 0)
+		rotation = has_rot and Rotation(360 * (yaw - 1) / 254, 0, 0)
 	}
 
 	unit:movement():action_request(action_desc)
 end
 
--- Lines: 314 to 319
+-- Lines 314-319
 function UnitNetworkHandler:friendly_fire_hit(subject_unit)
 	if not self._verify_character(subject_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -332,7 +334,7 @@ function UnitNetworkHandler:friendly_fire_hit(subject_unit)
 	subject_unit:character_damage():friendly_fire_hit()
 end
 
--- Lines: 323 to 331
+-- Lines 323-331
 function UnitNetworkHandler:damage_bullet(subject_unit, attacker_unit, damage, i_body, height_offset, variant, death, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -345,7 +347,7 @@ function UnitNetworkHandler:damage_bullet(subject_unit, attacker_unit, damage, i
 	subject_unit:character_damage():sync_damage_bullet(attacker_unit, damage, i_body, height_offset, variant, death)
 end
 
--- Lines: 336 to 350
+-- Lines 335-350
 function UnitNetworkHandler:damage_explosion_fire(subject_unit, attacker_unit, damage, i_attack_variant, death, direction, weapon_unit, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -362,7 +364,7 @@ function UnitNetworkHandler:damage_explosion_fire(subject_unit, attacker_unit, d
 	end
 end
 
--- Lines: 354 to 365
+-- Lines 353-365
 function UnitNetworkHandler:damage_explosion_stun(subject_unit, attacker_unit, damage, i_attack_variant, death, direction, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -377,7 +379,7 @@ function UnitNetworkHandler:damage_explosion_stun(subject_unit, attacker_unit, d
 	end
 end
 
--- Lines: 368 to 377
+-- Lines 368-377
 function UnitNetworkHandler:damage_fire(subject_unit, attacker_unit, damage, start_dot_dance_antimation, death, direction, weapon_type, weapon_unit, healed, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -390,7 +392,7 @@ function UnitNetworkHandler:damage_fire(subject_unit, attacker_unit, damage, sta
 	subject_unit:character_damage():sync_damage_fire(attacker_unit, damage, start_dot_dance_antimation, death, direction, weapon_type, weapon_unit, healed)
 end
 
--- Lines: 381 to 389
+-- Lines 381-389
 function UnitNetworkHandler:damage_dot(subject_unit, attacker_unit, damage, death, variant, hurt_animation, weapon_id, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -403,7 +405,7 @@ function UnitNetworkHandler:damage_dot(subject_unit, attacker_unit, damage, deat
 	subject_unit:character_damage():sync_damage_dot(attacker_unit, damage, death, variant, hurt_animation, weapon_id)
 end
 
--- Lines: 393 to 401
+-- Lines 393-401
 function UnitNetworkHandler:damage_tase(subject_unit, attacker_unit, damage, variant, death, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -416,7 +418,7 @@ function UnitNetworkHandler:damage_tase(subject_unit, attacker_unit, damage, var
 	subject_unit:character_damage():sync_damage_tase(attacker_unit, damage, variant, death)
 end
 
--- Lines: 405 to 413
+-- Lines 405-413
 function UnitNetworkHandler:damage_melee(subject_unit, attacker_unit, damage, damage_effect, i_body, height_offset, variant, death, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -429,7 +431,7 @@ function UnitNetworkHandler:damage_melee(subject_unit, attacker_unit, damage, da
 	subject_unit:character_damage():sync_damage_melee(attacker_unit, damage, damage_effect, i_body, height_offset, variant, death)
 end
 
--- Lines: 418 to 427
+-- Lines 417-427
 function UnitNetworkHandler:damage_simple(subject_unit, attacker_unit, damage, i_attack_variant, i_result, death, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -442,7 +444,7 @@ function UnitNetworkHandler:damage_simple(subject_unit, attacker_unit, damage, i
 	subject_unit:character_damage():sync_damage_simple(attacker_unit, damage, i_attack_variant, i_result, death)
 end
 
--- Lines: 431 to 439
+-- Lines 431-439
 function UnitNetworkHandler:from_server_damage_bullet(subject_unit, attacker_unit, hit_offset_height, result_index, sender)
 	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -455,7 +457,7 @@ function UnitNetworkHandler:from_server_damage_bullet(subject_unit, attacker_uni
 	subject_unit:character_damage():sync_damage_bullet(attacker_unit, hit_offset_height, result_index)
 end
 
--- Lines: 443 to 457
+-- Lines 443-457
 function UnitNetworkHandler:from_server_damage_explosion_fire(subject_unit, attacker_unit, result_index, i_attack_variant, sender)
 	if not self._verify_character(subject_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -472,7 +474,7 @@ function UnitNetworkHandler:from_server_damage_explosion_fire(subject_unit, atta
 	end
 end
 
--- Lines: 461 to 469
+-- Lines 461-469
 function UnitNetworkHandler:from_server_damage_melee(subject_unit, attacker_unit, hit_offset_height, result_index, sender)
 	if not self._verify_character(subject_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -485,7 +487,7 @@ function UnitNetworkHandler:from_server_damage_melee(subject_unit, attacker_unit
 	subject_unit:character_damage():sync_damage_melee(attacker_unit, attacker_unit, hit_offset_height, result_index)
 end
 
--- Lines: 473 to 478
+-- Lines 473-478
 function UnitNetworkHandler:from_server_damage_incapacitated(subject_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(subject_unit) then
 		return
@@ -494,7 +496,7 @@ function UnitNetworkHandler:from_server_damage_incapacitated(subject_unit, sende
 	subject_unit:character_damage():sync_damage_incapacitated()
 end
 
--- Lines: 482 to 487
+-- Lines 482-487
 function UnitNetworkHandler:from_server_damage_bleeding(subject_unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(subject_unit) then
 		return
@@ -503,7 +505,7 @@ function UnitNetworkHandler:from_server_damage_bleeding(subject_unit)
 	subject_unit:character_damage():sync_damage_bleeding()
 end
 
--- Lines: 491 to 496
+-- Lines 491-496
 function UnitNetworkHandler:from_server_damage_tase(subject_unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(subject_unit) then
 		return
@@ -512,7 +514,7 @@ function UnitNetworkHandler:from_server_damage_tase(subject_unit)
 	subject_unit:character_damage():sync_damage_tase()
 end
 
--- Lines: 500 to 505
+-- Lines 500-505
 function UnitNetworkHandler:from_server_unit_recovered(subject_unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(subject_unit) then
 		return
@@ -521,7 +523,7 @@ function UnitNetworkHandler:from_server_unit_recovered(subject_unit)
 	subject_unit:character_damage():sync_unit_recovered()
 end
 
--- Lines: 509 to 514
+-- Lines 509-514
 function UnitNetworkHandler:shot_blank(shooting_unit, impact, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(shooting_unit, sender) then
 		return
@@ -530,7 +532,7 @@ function UnitNetworkHandler:shot_blank(shooting_unit, impact, sender)
 	shooting_unit:movement():sync_shot_blank(impact)
 end
 
--- Lines: 516 to 521
+-- Lines 516-521
 function UnitNetworkHandler:sync_start_auto_fire_sound(shooting_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(shooting_unit, sender) then
 		return
@@ -539,7 +541,7 @@ function UnitNetworkHandler:sync_start_auto_fire_sound(shooting_unit, sender)
 	shooting_unit:movement():sync_start_auto_fire_sound()
 end
 
--- Lines: 523 to 528
+-- Lines 523-528
 function UnitNetworkHandler:sync_stop_auto_fire_sound(shooting_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(shooting_unit, sender) then
 		return
@@ -548,7 +550,7 @@ function UnitNetworkHandler:sync_stop_auto_fire_sound(shooting_unit, sender)
 	shooting_unit:movement():sync_stop_auto_fire_sound()
 end
 
--- Lines: 533 to 538
+-- Lines 533-538
 function UnitNetworkHandler:shot_blank_reliable(shooting_unit, impact, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(shooting_unit, sender) then
 		return
@@ -557,7 +559,7 @@ function UnitNetworkHandler:shot_blank_reliable(shooting_unit, impact, sender)
 	shooting_unit:movement():sync_shot_blank(impact)
 end
 
--- Lines: 542 to 547
+-- Lines 542-547
 function UnitNetworkHandler:reload_weapon(unit, empty_reload, reload_speed_multiplier, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -566,7 +568,7 @@ function UnitNetworkHandler:reload_weapon(unit, empty_reload, reload_speed_multi
 	unit:movement():sync_reload_weapon(empty_reload, reload_speed_multiplier)
 end
 
--- Lines: 551 to 565
+-- Lines 551-565
 function UnitNetworkHandler:reload_weapon_cop(unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -582,7 +584,7 @@ function UnitNetworkHandler:reload_weapon_cop(unit, sender)
 	end
 end
 
--- Lines: 569 to 574
+-- Lines 569-574
 function UnitNetworkHandler:reload_weapon_interupt(unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -591,7 +593,7 @@ function UnitNetworkHandler:reload_weapon_interupt(unit, sender)
 	unit:movement():sync_reload_weapon_interupt()
 end
 
--- Lines: 578 to 588
+-- Lines 578-588
 function UnitNetworkHandler:run_mission_element(id, unit, orientation_element_index)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		if self._verify_gamestate(self._gamestate_filter.any_end_game) then
@@ -608,7 +610,7 @@ function UnitNetworkHandler:run_mission_element(id, unit, orientation_element_in
 	managers.mission:client_run_mission_element(id, unit, orientation_element_index)
 end
 
--- Lines: 590 to 598
+-- Lines 590-598
 function UnitNetworkHandler:run_mission_element_no_instigator(id, orientation_element_index)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		if self._verify_gamestate(self._gamestate_filter.any_end_game) then
@@ -621,7 +623,7 @@ function UnitNetworkHandler:run_mission_element_no_instigator(id, orientation_el
 	managers.mission:client_run_mission_element(id, nil, orientation_element_index)
 end
 
--- Lines: 602 to 607
+-- Lines 602-607
 function UnitNetworkHandler:to_server_mission_element_trigger(id, unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -630,7 +632,7 @@ function UnitNetworkHandler:to_server_mission_element_trigger(id, unit)
 	managers.mission:server_run_mission_element_trigger(id, unit)
 end
 
--- Lines: 609 to 614
+-- Lines 609-614
 function UnitNetworkHandler:to_server_area_event(event_id, id, unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -639,7 +641,7 @@ function UnitNetworkHandler:to_server_area_event(event_id, id, unit)
 	managers.mission:to_server_area_event(event_id, id, unit)
 end
 
--- Lines: 630 to 636
+-- Lines 630-636
 function UnitNetworkHandler:to_server_access_camera_trigger(id, trigger, instigator)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -648,7 +650,7 @@ function UnitNetworkHandler:to_server_access_camera_trigger(id, trigger, instiga
 	managers.mission:to_server_access_camera_trigger(id, trigger, instigator)
 end
 
--- Lines: 640 to 676
+-- Lines 640-676
 function UnitNetworkHandler:sync_body_damage_bullet(body, attacker, normal_yaw, normal_pitch, position, direction_yaw, direction_pitch, damage, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -697,7 +699,7 @@ function UnitNetworkHandler:sync_body_damage_bullet(body, attacker, normal_yaw, 
 	end
 end
 
--- Lines: 680 to 701
+-- Lines 680-701
 function UnitNetworkHandler:sync_body_damage_lock(body, damage, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -728,7 +730,7 @@ function UnitNetworkHandler:sync_body_damage_lock(body, damage, sender)
 	body:extension().damage:damage_lock(nil, nil, nil, nil, damage)
 end
 
--- Lines: 705 to 726
+-- Lines 705-726
 function UnitNetworkHandler:sync_body_damage_explosion(body, attacker, normal, position, direction, damage, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -760,12 +762,12 @@ function UnitNetworkHandler:sync_body_damage_explosion(body, attacker, normal, p
 	body:extension().damage:damage_damage(attacker, normal, position, direction, damage / 163.84)
 end
 
--- Lines: 730 to 732
+-- Lines 730-732
 function UnitNetworkHandler:sync_body_damage_explosion_no_attacker(body, normal, position, direction, damage, sender)
 	self:sync_body_damage_explosion(body, nil, normal, position, direction, damage, sender)
 end
 
--- Lines: 736 to 757
+-- Lines 736-757
 function UnitNetworkHandler:sync_body_damage_fire(body, attacker, normal, position, direction, damage, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -797,12 +799,12 @@ function UnitNetworkHandler:sync_body_damage_fire(body, attacker, normal, positi
 	body:extension().damage:damage_damage(attacker, normal, position, direction, damage / 163.84)
 end
 
--- Lines: 761 to 763
+-- Lines 761-763
 function UnitNetworkHandler:sync_body_damage_fire_no_attacker(body, normal, position, direction, damage, sender)
 	self:sync_body_damage_fire(body, nil, normal, position, direction, damage, sender)
 end
 
--- Lines: 767 to 787
+-- Lines 767-787
 function UnitNetworkHandler:sync_body_damage_melee(body, attacker, normal, position, direction, damage, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -833,7 +835,7 @@ function UnitNetworkHandler:sync_body_damage_melee(body, attacker, normal, posit
 	body:extension().damage:damage_melee(attacker, normal, position, direction, damage)
 end
 
--- Lines: 791 to 823
+-- Lines 791-823
 function UnitNetworkHandler:sync_interacted(unit, unit_id, tweak_setting, status, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -870,7 +872,7 @@ function UnitNetworkHandler:sync_interacted(unit, unit_id, tweak_setting, status
 	end
 end
 
--- Lines: 827 to 841
+-- Lines 827-841
 function UnitNetworkHandler:sync_multiple_equipment_bag_interacted(unit, amount_wanted, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -889,7 +891,7 @@ function UnitNetworkHandler:sync_multiple_equipment_bag_interacted(unit, amount_
 	end
 end
 
--- Lines: 845 to 856
+-- Lines 845-856
 function UnitNetworkHandler:sync_interacted_by_id(unit_id, tweak_setting, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) and not self._verify_sender(sender) then
 		return
@@ -906,7 +908,7 @@ function UnitNetworkHandler:sync_interacted_by_id(unit_id, tweak_setting, sender
 	self:sync_interacted(u_data.unit, unit_id, tweak_setting, 1, sender)
 end
 
--- Lines: 860 to 870
+-- Lines 860-870
 function UnitNetworkHandler:sync_interaction_reply(status)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -919,7 +921,7 @@ function UnitNetworkHandler:sync_interaction_reply(status)
 	managers.player:from_server_interaction_reply(status)
 end
 
--- Lines: 874 to 894
+-- Lines 874-894
 function UnitNetworkHandler:interaction_set_active(unit, u_id, active, tweak_data, flash, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -943,7 +945,7 @@ function UnitNetworkHandler:interaction_set_active(unit, u_id, active, tweak_dat
 	end
 end
 
--- Lines: 898 to 906
+-- Lines 898-906
 function UnitNetworkHandler:sync_teammate_progress(type_index, enabled, tweak_data_id, timer, success, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -956,7 +958,7 @@ function UnitNetworkHandler:sync_teammate_progress(type_index, enabled, tweak_da
 	managers.hud:teammate_progress(peer_id, type_index, enabled, tweak_data_id, timer, success)
 end
 
--- Lines: 909 to 919
+-- Lines 909-919
 function UnitNetworkHandler:action_aim_state(cop)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(cop) then
 		return
@@ -971,7 +973,7 @@ function UnitNetworkHandler:action_aim_state(cop)
 	cop:movement():action_request(shoot_action)
 end
 
--- Lines: 923 to 928
+-- Lines 923-928
 function UnitNetworkHandler:action_aim_end(cop)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(cop) then
 		return
@@ -980,7 +982,7 @@ function UnitNetworkHandler:action_aim_end(cop)
 	cop:movement():sync_action_aim_end()
 end
 
--- Lines: 932 to 951
+-- Lines 932-951
 function UnitNetworkHandler:action_hurt_start(unit, hurt_type, body_part, death_type, type, variant, direction_vec, hit_pos)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1010,7 +1012,7 @@ function UnitNetworkHandler:action_hurt_start(unit, hurt_type, body_part, death_
 	end
 end
 
--- Lines: 953 to 958
+-- Lines 953-958
 function UnitNetworkHandler:action_hurt_end(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1019,7 +1021,7 @@ function UnitNetworkHandler:action_hurt_end(unit)
 	unit:movement():sync_action_hurt_end()
 end
 
--- Lines: 962 to 988
+-- Lines 962-988
 function UnitNetworkHandler:set_attention(unit, target_unit, reaction, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1057,7 +1059,7 @@ function UnitNetworkHandler:set_attention(unit, target_unit, reaction, sender)
 	})
 end
 
--- Lines: 992 to 997
+-- Lines 992-997
 function UnitNetworkHandler:cop_set_attention_pos(unit, pos)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1069,7 +1071,7 @@ function UnitNetworkHandler:cop_set_attention_pos(unit, pos)
 	})
 end
 
--- Lines: 1001 to 1006
+-- Lines 1001-1006
 function UnitNetworkHandler:set_allow_fire(unit, state)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1078,7 +1080,7 @@ function UnitNetworkHandler:set_allow_fire(unit, state)
 	unit:movement():synch_allow_fire(state)
 end
 
--- Lines: 1010 to 1015
+-- Lines 1010-1015
 function UnitNetworkHandler:set_stance(unit, stance_code, instant, execute_queued, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -1087,7 +1089,7 @@ function UnitNetworkHandler:set_stance(unit, stance_code, instant, execute_queue
 	unit:movement():sync_stance(stance_code, instant, execute_queued)
 end
 
--- Lines: 1019 to 1024
+-- Lines 1019-1024
 function UnitNetworkHandler:set_pose(unit, pose_code, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -1096,7 +1098,7 @@ function UnitNetworkHandler:set_pose(unit, pose_code, sender)
 	unit:movement():sync_pose(pose_code)
 end
 
--- Lines: 1028 to 1060
+-- Lines 1028-1060
 function UnitNetworkHandler:long_dis_interaction(target_unit, amount, aggressor_unit, secondary)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(target_unit) or not self._verify_character(aggressor_unit) then
 		return
@@ -1128,7 +1130,7 @@ function UnitNetworkHandler:long_dis_interaction(target_unit, amount, aggressor_
 	end
 end
 
--- Lines: 1064 to 1086
+-- Lines 1064-1086
 function UnitNetworkHandler:alarm_pager_interaction(u_id, tweak_table, status, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1141,14 +1143,21 @@ function UnitNetworkHandler:alarm_pager_interaction(u_id, tweak_table, status, s
 
 		if peer then
 			local status_str = nil
-			status_str = status == 1 and "started" or status == 2 and "interrupted" or "complete"
+
+			if status == 1 then
+				status_str = "started"
+			elseif status == 2 then
+				status_str = "interrupted"
+			else
+				status_str = "complete"
+			end
 
 			unit_data.unit:interaction():sync_interacted(peer, nil, status_str)
 		end
 	end
 end
 
--- Lines: 1090 to 1100
+-- Lines 1090-1100
 function UnitNetworkHandler:remove_corpse_by_id(u_id, carry_bodybag, peer_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1161,7 +1170,7 @@ function UnitNetworkHandler:remove_corpse_by_id(u_id, carry_bodybag, peer_id, se
 	managers.enemy:remove_corpse_by_id(u_id)
 end
 
--- Lines: 1104 to 1109
+-- Lines 1104-1109
 function UnitNetworkHandler:unit_tied(unit, aggressor, can_flee)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1170,7 +1179,7 @@ function UnitNetworkHandler:unit_tied(unit, aggressor, can_flee)
 	unit:brain():on_tied(aggressor, false, can_flee)
 end
 
--- Lines: 1113 to 1118
+-- Lines 1113-1118
 function UnitNetworkHandler:unit_traded(unit, position, rotation)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1179,7 +1188,7 @@ function UnitNetworkHandler:unit_traded(unit, position, rotation)
 	unit:brain():on_trade(position, rotation, true)
 end
 
--- Lines: 1122 to 1127
+-- Lines 1122-1127
 function UnitNetworkHandler:hostage_trade(unit, enable, trade_success, skip_hint)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1188,7 +1197,7 @@ function UnitNetworkHandler:hostage_trade(unit, enable, trade_success, skip_hint
 	CopLogicTrade.hostage_trade(unit, enable, trade_success, skip_hint)
 end
 
--- Lines: 1129 to 1134
+-- Lines 1129-1134
 function UnitNetworkHandler:set_unit_invulnerable(unit, enable)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1197,7 +1206,7 @@ function UnitNetworkHandler:set_unit_invulnerable(unit, enable)
 	unit:character_damage():set_invulnerable(enable)
 end
 
--- Lines: 1136 to 1141
+-- Lines 1136-1141
 function UnitNetworkHandler:set_trade_countdown(enable)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1206,7 +1215,7 @@ function UnitNetworkHandler:set_trade_countdown(enable)
 	managers.trade:set_trade_countdown(enable)
 end
 
--- Lines: 1143 to 1148
+-- Lines 1143-1148
 function UnitNetworkHandler:set_trade_death(criminal_name, respawn_penalty, hostages_killed)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1215,7 +1224,7 @@ function UnitNetworkHandler:set_trade_death(criminal_name, respawn_penalty, host
 	managers.trade:sync_set_trade_death(criminal_name, respawn_penalty, hostages_killed)
 end
 
--- Lines: 1150 to 1155
+-- Lines 1150-1155
 function UnitNetworkHandler:set_trade_spawn(criminal_name)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1224,7 +1233,7 @@ function UnitNetworkHandler:set_trade_spawn(criminal_name)
 	managers.trade:sync_set_trade_spawn(criminal_name)
 end
 
--- Lines: 1157 to 1162
+-- Lines 1157-1162
 function UnitNetworkHandler:set_trade_replace(replace_ai, criminal_name1, criminal_name2, respawn_penalty)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1233,7 +1242,7 @@ function UnitNetworkHandler:set_trade_replace(replace_ai, criminal_name1, crimin
 	managers.trade:sync_set_trade_replace(replace_ai, criminal_name1, criminal_name2, respawn_penalty)
 end
 
--- Lines: 1166 to 1171
+-- Lines 1166-1171
 function UnitNetworkHandler:action_idle_start(unit, body_part, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1245,12 +1254,12 @@ function UnitNetworkHandler:action_idle_start(unit, body_part, sender)
 	})
 end
 
--- Lines: 1175 to 1177
+-- Lines 1175-1177
 function UnitNetworkHandler:action_act_start(unit, act_index, blocks_hurt, clamp_to_graph, needs_full_blend)
 	self:action_act_start_align(unit, act_index, blocks_hurt, clamp_to_graph, needs_full_blend, nil, nil)
 end
 
--- Lines: 1181 to 1192
+-- Lines 1181-1192
 function UnitNetworkHandler:action_act_start_align(unit, act_index, blocks_hurt, clamp_to_graph, needs_full_blend, start_yaw, start_pos)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1259,13 +1268,13 @@ function UnitNetworkHandler:action_act_start_align(unit, act_index, blocks_hurt,
 	local start_rot = nil
 
 	if start_yaw and start_yaw ~= 0 then
-		start_rot = Rotation((360 * (start_yaw - 1)) / 254, 0, 0)
+		start_rot = Rotation(360 * (start_yaw - 1) / 254, 0, 0)
 	end
 
 	unit:movement():sync_action_act_start(act_index, blocks_hurt, clamp_to_graph, needs_full_blend, start_rot, start_pos)
 end
 
--- Lines: 1194 to 1199
+-- Lines 1194-1199
 function UnitNetworkHandler:action_act_end(unit)
 	if not alive(unit) or unit:character_damage():dead() then
 		return
@@ -1274,7 +1283,7 @@ function UnitNetworkHandler:action_act_end(unit)
 	unit:movement():sync_action_act_end()
 end
 
--- Lines: 1203 to 1208
+-- Lines 1203-1208
 function UnitNetworkHandler:action_dodge_start(unit, body_part, variation, side, rotation, speed, shoot_acc)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1283,7 +1292,7 @@ function UnitNetworkHandler:action_dodge_start(unit, body_part, variation, side,
 	unit:movement():sync_action_dodge_start(body_part, variation, side, rotation, speed, shoot_acc)
 end
 
--- Lines: 1210 to 1215
+-- Lines 1210-1215
 function UnitNetworkHandler:action_dodge_end(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -1292,7 +1301,7 @@ function UnitNetworkHandler:action_dodge_end(unit)
 	unit:movement():sync_action_dodge_end()
 end
 
--- Lines: 1219 to 1248
+-- Lines 1219-1248
 function UnitNetworkHandler:action_tase_event(taser_unit, event_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(taser_unit) then
 		return
@@ -1326,7 +1335,7 @@ function UnitNetworkHandler:action_tase_event(taser_unit, event_id, sender)
 	end
 end
 
--- Lines: 1252 to 1270
+-- Lines 1252-1270
 function UnitNetworkHandler:alert(alerted_unit, aggressor)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(alerted_unit) or not self._verify_character(aggressor) then
 		return
@@ -1339,7 +1348,12 @@ function UnitNetworkHandler:alert(alerted_unit, aggressor)
 	end
 
 	local aggressor_pos = nil
-	aggressor_pos = aggressor:movement() and aggressor:movement().m_head_pos and aggressor:movement():m_head_pos() or aggressor:position()
+
+	if aggressor:movement() and aggressor:movement().m_head_pos then
+		aggressor_pos = aggressor:movement():m_head_pos()
+	else
+		aggressor_pos = aggressor:position()
+	end
 
 	alerted_unit:brain():on_alert({
 		"aggression",
@@ -1349,7 +1363,7 @@ function UnitNetworkHandler:alert(alerted_unit, aggressor)
 	})
 end
 
--- Lines: 1274 to 1296
+-- Lines 1274-1296
 function UnitNetworkHandler:revive_player(revive_health_level, revive_damage_reduction, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1375,7 +1389,7 @@ function UnitNetworkHandler:revive_player(revive_health_level, revive_damage_red
 	end
 end
 
--- Lines: 1298 to 1308
+-- Lines 1298-1308
 function UnitNetworkHandler:start_revive_player(timer, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1390,21 +1404,21 @@ function UnitNetworkHandler:start_revive_player(timer, sender)
 	end
 end
 
--- Lines: 1310 to 1314
+-- Lines 1310-1314
 function UnitNetworkHandler:pause_downed_timer(unit, sender)
 	if alive(unit) and unit.interaction then
 		unit:interaction():set_waypoint_paused(true)
 	end
 end
 
--- Lines: 1316 to 1320
+-- Lines 1316-1320
 function UnitNetworkHandler:unpause_downed_timer(unit, sender)
 	if alive(unit) and unit.interaction then
 		unit:interaction():set_waypoint_paused(false)
 	end
 end
 
--- Lines: 1322 to 1332
+-- Lines 1322-1332
 function UnitNetworkHandler:interupt_revive_player(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1419,7 +1433,7 @@ function UnitNetworkHandler:interupt_revive_player(sender)
 	end
 end
 
--- Lines: 1334 to 1344
+-- Lines 1334-1344
 function UnitNetworkHandler:start_free_player(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1434,7 +1448,7 @@ function UnitNetworkHandler:start_free_player(sender)
 	end
 end
 
--- Lines: 1346 to 1356
+-- Lines 1346-1356
 function UnitNetworkHandler:interupt_free_player(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1449,7 +1463,7 @@ function UnitNetworkHandler:interupt_free_player(sender)
 	end
 end
 
--- Lines: 1358 to 1364
+-- Lines 1358-1364
 function UnitNetworkHandler:pause_arrested_timer(unit, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1460,7 +1474,7 @@ function UnitNetworkHandler:pause_arrested_timer(unit, sender)
 	unit:character_damage():pause_arrested_timer(peer:id())
 end
 
--- Lines: 1366 to 1372
+-- Lines 1366-1372
 function UnitNetworkHandler:unpause_arrested_timer(unit, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1471,7 +1485,7 @@ function UnitNetworkHandler:unpause_arrested_timer(unit, sender)
 	unit:character_damage():unpause_arrested_timer(peer:id())
 end
 
--- Lines: 1376 to 1381
+-- Lines 1376-1381
 function UnitNetworkHandler:revive_unit(unit, reviving_unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) or not alive(reviving_unit) then
 		return
@@ -1480,7 +1494,7 @@ function UnitNetworkHandler:revive_unit(unit, reviving_unit)
 	unit:interaction():interact(reviving_unit)
 end
 
--- Lines: 1383 to 1390
+-- Lines 1383-1390
 function UnitNetworkHandler:pause_bleed_out(unit, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1491,7 +1505,7 @@ function UnitNetworkHandler:pause_bleed_out(unit, sender)
 	unit:character_damage():pause_bleed_out(peer:id())
 end
 
--- Lines: 1392 to 1398
+-- Lines 1392-1398
 function UnitNetworkHandler:unpause_bleed_out(unit, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1502,7 +1516,7 @@ function UnitNetworkHandler:unpause_bleed_out(unit, sender)
 	unit:character_damage():unpause_bleed_out(peer:id())
 end
 
--- Lines: 1400 to 1412
+-- Lines 1400-1412
 function UnitNetworkHandler:interaction_set_waypoint_paused(unit, paused, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1519,7 +1533,7 @@ function UnitNetworkHandler:interaction_set_waypoint_paused(unit, paused, sender
 	unit:interaction():set_waypoint_paused(paused)
 end
 
--- Lines: 1416 to 1431
+-- Lines 1416-1431
 function UnitNetworkHandler:place_trip_mine(pos, normal, sensor_upgrade, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1539,7 +1553,7 @@ function UnitNetworkHandler:place_trip_mine(pos, normal, sensor_upgrade, rpc)
 	rpc:activate_trip_mine(unit)
 end
 
--- Lines: 1433 to 1441
+-- Lines 1433-1441
 function UnitNetworkHandler:activate_trip_mine(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1550,7 +1564,7 @@ function UnitNetworkHandler:activate_trip_mine(unit)
 	end
 end
 
--- Lines: 1443 to 1451
+-- Lines 1443-1451
 function UnitNetworkHandler:sync_trip_mine_setup(unit, sensor_upgrade, peer_id)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1560,7 +1574,7 @@ function UnitNetworkHandler:sync_trip_mine_setup(unit, sensor_upgrade, peer_id)
 	unit:base():sync_setup(sensor_upgrade)
 end
 
--- Lines: 1453 to 1463
+-- Lines 1453-1463
 function UnitNetworkHandler:sync_trip_mine_explode(unit, user_unit, ray_from, ray_to, damage_size, damage, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1575,7 +1589,7 @@ function UnitNetworkHandler:sync_trip_mine_explode(unit, user_unit, ray_from, ra
 	end
 end
 
--- Lines: 1465 to 1475
+-- Lines 1465-1475
 function UnitNetworkHandler:sync_trip_mine_explode_spawn_fire(unit, user_unit, ray_from, ray_to, damage_size, damage, added_time, range_multiplier, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1590,12 +1604,12 @@ function UnitNetworkHandler:sync_trip_mine_explode_spawn_fire(unit, user_unit, r
 	end
 end
 
--- Lines: 1477 to 1479
+-- Lines 1477-1479
 function UnitNetworkHandler:sync_trip_mine_explode_no_user(unit, ray_from, ray_to, damage_size, damage, sender)
 	self:sync_trip_mine_explode(unit, nil, ray_from, ray_to, damage_size, damage, sender)
 end
 
--- Lines: 1481 to 1486
+-- Lines 1481-1486
 function UnitNetworkHandler:sync_trip_mine_set_armed(unit, bool, length, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1604,7 +1618,7 @@ function UnitNetworkHandler:sync_trip_mine_set_armed(unit, bool, length, sender)
 	unit:base():sync_trip_mine_set_armed(bool, length)
 end
 
--- Lines: 1490 to 1512
+-- Lines 1490-1512
 function UnitNetworkHandler:request_place_ecm_jammer(battery_life_upgrade_lvl, body, rel_pos, rel_rot, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1633,7 +1647,7 @@ function UnitNetworkHandler:request_place_ecm_jammer(battery_life_upgrade_lvl, b
 	rpc:from_server_ecm_jammer_place_result(unit, body, rel_pos, rel_rot)
 end
 
--- Lines: 1516 to 1533
+-- Lines 1516-1533
 function UnitNetworkHandler:from_server_ecm_jammer_place_result(unit, body, rel_pos, rel_rot, rpc)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1653,7 +1667,7 @@ function UnitNetworkHandler:from_server_ecm_jammer_place_result(unit, body, rel_
 	unit:base():link_attachment(body, rel_pos, rel_rot)
 end
 
--- Lines: 1538 to 1548
+-- Lines 1538-1548
 function UnitNetworkHandler:sync_deployable_attachment(unit, body, relative_pos, relative_rot, rpc)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1666,7 +1680,7 @@ function UnitNetworkHandler:sync_deployable_attachment(unit, body, relative_pos,
 	unit:base():link_attachment(body, relative_pos, relative_rot)
 end
 
--- Lines: 1552 to 1560
+-- Lines 1552-1560
 function UnitNetworkHandler:from_server_ecm_jammer_rejected(rpc)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1677,7 +1691,7 @@ function UnitNetworkHandler:from_server_ecm_jammer_rejected(rpc)
 	end
 end
 
--- Lines: 1564 to 1577
+-- Lines 1564-1577
 function UnitNetworkHandler:sync_unit_event_id_16(unit, ext_name, event_id, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1696,7 +1710,7 @@ function UnitNetworkHandler:sync_unit_event_id_16(unit, ext_name, event_id, rpc)
 	extension:sync_net_event(event_id, peer)
 end
 
--- Lines: 1581 to 1587
+-- Lines 1581-1587
 function UnitNetworkHandler:m79grenade_explode_on_client(position, normal, user, damage, range, curve_pow, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(user, sender) then
 		return
@@ -1705,7 +1719,7 @@ function UnitNetworkHandler:m79grenade_explode_on_client(position, normal, user,
 	ProjectileBase._explode_on_client(position, normal, user, damage, range, curve_pow)
 end
 
--- Lines: 1590 to 1596
+-- Lines 1590-1596
 function UnitNetworkHandler:element_explode_on_client(position, normal, damage, range, curve_pow, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1714,7 +1728,7 @@ function UnitNetworkHandler:element_explode_on_client(position, normal, damage, 
 	managers.explosion:client_damage_and_push(position, normal, nil, damage, range, curve_pow)
 end
 
--- Lines: 1598 to 1610
+-- Lines 1598-1610
 function UnitNetworkHandler:picked_up_sentry_gun(unit, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1731,7 +1745,7 @@ function UnitNetworkHandler:picked_up_sentry_gun(unit, rpc)
 	end
 end
 
--- Lines: 1613 to 1624
+-- Lines 1613-1624
 function UnitNetworkHandler:picked_up_sentry_gun_response(sentry_uid, ammo, max_ammo, sentry_type_index, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1749,7 +1763,7 @@ function UnitNetworkHandler:picked_up_sentry_gun_response(sentry_uid, ammo, max_
 	SentryGunBase.on_picked_up(sentry_type, ammo_ratio, sentry_uid)
 end
 
--- Lines: 1628 to 1640
+-- Lines 1628-1640
 function UnitNetworkHandler:place_sentry_gun(pos, rot, equipment_selection_index, user_unit, unit_idstring_index, ammo_level, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1768,7 +1782,7 @@ function UnitNetworkHandler:place_sentry_gun(pos, rot, equipment_selection_index
 	end
 end
 
--- Lines: 1644 to 1681
+-- Lines 1644-1681
 function UnitNetworkHandler:from_server_sentry_gun_place_result(owner_peer_id, equipment_selection_index, sentry_gun_unit, rot_level, spread_level, shield, ammo_level, rpc)
 	local local_peer = managers.network:session():local_peer()
 
@@ -1798,7 +1812,9 @@ function UnitNetworkHandler:from_server_sentry_gun_place_result(owner_peer_id, e
 	local spread_mul = SentryGunBase.SPREAD_MUL[spread_level]
 	local setup_data = {
 		spread_mul = spread_mul,
-		ignore_units = {sentry_gun_unit}
+		ignore_units = {
+			sentry_gun_unit
+		}
 	}
 
 	sentry_gun_unit:weapon():setup(setup_data)
@@ -1810,7 +1826,7 @@ function UnitNetworkHandler:from_server_sentry_gun_place_result(owner_peer_id, e
 	sentry_gun_unit:base():post_setup()
 end
 
--- Lines: 1685 to 1691
+-- Lines 1685-1691
 function UnitNetworkHandler:sync_sentrygun_dynamic(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1819,7 +1835,7 @@ function UnitNetworkHandler:sync_sentrygun_dynamic(unit)
 	unit:base():sync_set_dynamic()
 end
 
--- Lines: 1695 to 1700
+-- Lines 1695-1700
 function UnitNetworkHandler:sentrygun_ammo(unit, ammo_ratio, owner_id)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1828,17 +1844,17 @@ function UnitNetworkHandler:sentrygun_ammo(unit, ammo_ratio, owner_id)
 	unit:weapon():sync_ammo(ammo_ratio)
 end
 
--- Lines: 1704 to 1706
+-- Lines 1704-1706
 function UnitNetworkHandler:sentrygun_sync_armor_piercing(unit, use_armor_piercing)
 	unit:weapon():set_fire_mode_net(use_armor_piercing)
 end
 
--- Lines: 1710 to 1712
+-- Lines 1710-1712
 function UnitNetworkHandler:sync_fire_mode_interaction(unit, fire_mode_unit, owner_id)
 	unit:weapon():interaction_setup(fire_mode_unit, owner_id)
 end
 
--- Lines: 1716 to 1721
+-- Lines 1716-1721
 function UnitNetworkHandler:sentrygun_health(unit, health_ratio)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1847,7 +1863,7 @@ function UnitNetworkHandler:sentrygun_health(unit, health_ratio)
 	unit:character_damage():sync_health(health_ratio)
 end
 
--- Lines: 1725 to 1730
+-- Lines 1725-1730
 function UnitNetworkHandler:turret_idle_state(unit, state)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1856,7 +1872,7 @@ function UnitNetworkHandler:turret_idle_state(unit, state)
 	unit:brain():set_idle(state)
 end
 
--- Lines: 1734 to 1739
+-- Lines 1734-1739
 function UnitNetworkHandler:turret_update_shield_smoke_level(unit, ratio, up)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1865,7 +1881,7 @@ function UnitNetworkHandler:turret_update_shield_smoke_level(unit, ratio, up)
 	unit:character_damage():update_shield_smoke_level(ratio, up)
 end
 
--- Lines: 1743 to 1749
+-- Lines 1743-1749
 function UnitNetworkHandler:turret_repair(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1874,7 +1890,7 @@ function UnitNetworkHandler:turret_repair(unit)
 	unit:movement():repair()
 end
 
--- Lines: 1753 to 1759
+-- Lines 1753-1759
 function UnitNetworkHandler:turret_complete_repairing(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1883,7 +1899,7 @@ function UnitNetworkHandler:turret_complete_repairing(unit)
 	unit:movement():complete_repairing()
 end
 
--- Lines: 1763 to 1768
+-- Lines 1763-1768
 function UnitNetworkHandler:turret_repair_shield(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1892,7 +1908,7 @@ function UnitNetworkHandler:turret_repair_shield(unit)
 	unit:character_damage():repair_shield()
 end
 
--- Lines: 1772 to 1782
+-- Lines 1772-1782
 function UnitNetworkHandler:sync_unit_module(parent_unit, module_unit, align_obj_name, module_id, parent_extension_name)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1905,7 +1921,7 @@ function UnitNetworkHandler:sync_unit_module(parent_unit, module_unit, align_obj
 	parent_unit[parent_extension_name](parent_unit):spawn_module(module_unit, align_obj_name, module_id)
 end
 
--- Lines: 1786 to 1797
+-- Lines 1786-1797
 function UnitNetworkHandler:run_unit_module_function(parent_unit, module_id, parent_extension_name, module_extension_name, func_name, params)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1920,7 +1936,7 @@ function UnitNetworkHandler:run_unit_module_function(parent_unit, module_id, par
 	parent_unit[parent_extension_name](parent_unit):run_module_function_unsafe(module_id, module_extension_name, func_name, params_split[1], params_split[2])
 end
 
--- Lines: 1801 to 1807
+-- Lines 1801-1807
 function UnitNetworkHandler:sync_equipment_setup(unit, upgrade_lvl, peer_id)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1929,7 +1945,7 @@ function UnitNetworkHandler:sync_equipment_setup(unit, upgrade_lvl, peer_id)
 	unit:base():sync_setup(upgrade_lvl, peer_id)
 end
 
--- Lines: 1811 to 1817
+-- Lines 1811-1817
 function UnitNetworkHandler:sync_ammo_bag_setup(unit, upgrade_lvl, peer_id, bullet_storm_level)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1938,7 +1954,7 @@ function UnitNetworkHandler:sync_ammo_bag_setup(unit, upgrade_lvl, peer_id, bull
 	unit:base():sync_setup(upgrade_lvl, peer_id, bullet_storm_level)
 end
 
--- Lines: 1821 to 1826
+-- Lines 1821-1826
 function UnitNetworkHandler:sync_ammo_bag_ammo_taken(unit, amount, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1947,7 +1963,7 @@ function UnitNetworkHandler:sync_ammo_bag_ammo_taken(unit, amount, sender)
 	unit:base():sync_ammo_taken(amount)
 end
 
--- Lines: 1830 to 1835
+-- Lines 1830-1835
 function UnitNetworkHandler:sync_grenade_crate_grenade_taken(unit, amount, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -1956,7 +1972,7 @@ function UnitNetworkHandler:sync_grenade_crate_grenade_taken(unit, amount, sende
 	unit:base():sync_grenade_taken(amount)
 end
 
--- Lines: 1839 to 1856
+-- Lines 1839-1856
 function UnitNetworkHandler:place_deployable_bag(class_name, pos, rot, upgrade_lvl, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1979,7 +1995,7 @@ function UnitNetworkHandler:place_deployable_bag(class_name, pos, rot, upgrade_l
 	end
 end
 
--- Lines: 1860 to 1875
+-- Lines 1860-1875
 function UnitNetworkHandler:place_ammo_bag(pos, rot, upgrade_lvl, bullet_storm_level, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1998,7 +2014,7 @@ function UnitNetworkHandler:place_ammo_bag(pos, rot, upgrade_lvl, bullet_storm_l
 	end
 end
 
--- Lines: 1879 to 1886
+-- Lines 1879-1886
 function UnitNetworkHandler:used_deployable(rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -2009,7 +2025,7 @@ function UnitNetworkHandler:used_deployable(rpc)
 	peer:set_used_deployable(true)
 end
 
--- Lines: 1890 to 1895
+-- Lines 1890-1895
 function UnitNetworkHandler:sync_doctor_bag_taken(unit, amount, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2018,7 +2034,7 @@ function UnitNetworkHandler:sync_doctor_bag_taken(unit, amount, sender)
 	unit:base():sync_taken(amount)
 end
 
--- Lines: 1899 to 1904
+-- Lines 1899-1904
 function UnitNetworkHandler:sync_money_wrap_money_taken(unit, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2027,7 +2043,7 @@ function UnitNetworkHandler:sync_money_wrap_money_taken(unit, sender)
 	unit:base():sync_money_taken()
 end
 
--- Lines: 1908 to 1921
+-- Lines 1908-1921
 function UnitNetworkHandler:sync_pickup(unit, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2044,7 +2060,7 @@ function UnitNetworkHandler:sync_pickup(unit, sender)
 	end
 end
 
--- Lines: 1925 to 1935
+-- Lines 1925-1935
 function UnitNetworkHandler:unit_sound_play(unit, event_id, source, sender)
 	if not alive(unit) or not self._verify_sender(sender) then
 		return
@@ -2057,7 +2073,7 @@ function UnitNetworkHandler:unit_sound_play(unit, event_id, source, sender)
 	unit:sound():play(event_id, source, false)
 end
 
--- Lines: 1939 to 1960
+-- Lines 1939-1960
 function UnitNetworkHandler:corpse_sound_play(unit_id, event_id, source)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2082,7 +2098,7 @@ function UnitNetworkHandler:corpse_sound_play(unit_id, event_id, source)
 	u_data.unit:sound():play(event_id, source, false)
 end
 
--- Lines: 1964 to 1973
+-- Lines 1964-1973
 function UnitNetworkHandler:say(unit, event_id, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2095,7 +2111,7 @@ function UnitNetworkHandler:say(unit, event_id, sender)
 	end
 end
 
--- Lines: 1977 to 1982
+-- Lines 1977-1982
 function UnitNetworkHandler:sync_remove_one_teamAI(name, replace_with_player)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2104,7 +2120,7 @@ function UnitNetworkHandler:sync_remove_one_teamAI(name, replace_with_player)
 	managers.groupai:state():sync_remove_one_teamAI(name, replace_with_player)
 end
 
--- Lines: 1986 to 1991
+-- Lines 1986-1991
 function UnitNetworkHandler:sync_smoke_grenade(detonate_pos, shooter_pos, duration, flashbang)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2113,7 +2129,7 @@ function UnitNetworkHandler:sync_smoke_grenade(detonate_pos, shooter_pos, durati
 	managers.groupai:state():sync_smoke_grenade(detonate_pos, shooter_pos, duration, flashbang)
 end
 
--- Lines: 1995 to 2000
+-- Lines 1995-2000
 function UnitNetworkHandler:sync_smoke_grenade_kill()
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2122,7 +2138,7 @@ function UnitNetworkHandler:sync_smoke_grenade_kill()
 	managers.groupai:state():sync_smoke_grenade_kill()
 end
 
--- Lines: 2004 to 2009
+-- Lines 2004-2009
 function UnitNetworkHandler:sync_cs_grenade(detonate_pos, shooter_pos, duration)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2131,7 +2147,7 @@ function UnitNetworkHandler:sync_cs_grenade(detonate_pos, shooter_pos, duration)
 	managers.groupai:state():sync_cs_grenade(detonate_pos, shooter_pos, duration)
 end
 
--- Lines: 2013 to 2018
+-- Lines 2013-2018
 function UnitNetworkHandler:sync_cs_grenade_kill()
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2140,7 +2156,7 @@ function UnitNetworkHandler:sync_cs_grenade_kill()
 	managers.groupai:state():sync_cs_grenade_kill()
 end
 
--- Lines: 2022 to 2027
+-- Lines 2022-2027
 function UnitNetworkHandler:sync_hostage_headcount(value)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2149,7 +2165,7 @@ function UnitNetworkHandler:sync_hostage_headcount(value)
 	managers.groupai:state():sync_hostage_headcount(value)
 end
 
--- Lines: 2031 to 2036
+-- Lines 2031-2036
 function UnitNetworkHandler:play_distance_interact_redirect(unit, redirect, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2158,7 +2174,7 @@ function UnitNetworkHandler:play_distance_interact_redirect(unit, redirect, send
 	unit:movement():play_redirect(redirect)
 end
 
--- Lines: 2040 to 2056
+-- Lines 2040-2056
 function UnitNetworkHandler:play_distance_interact_redirect_delay(unit, redirect, delay, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -2175,7 +2191,7 @@ function UnitNetworkHandler:play_distance_interact_redirect_delay(unit, redirect
 	end
 end
 
--- Lines: 2060 to 2065
+-- Lines 2060-2065
 function UnitNetworkHandler:start_timer_gui(unit, timer, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2184,7 +2200,7 @@ function UnitNetworkHandler:start_timer_gui(unit, timer, sender)
 	unit:timer_gui():sync_start(timer)
 end
 
--- Lines: 2078 to 2083
+-- Lines 2078-2083
 function UnitNetworkHandler:give_equipment(equipment, amount, transfer, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2197,7 +2213,7 @@ function UnitNetworkHandler:give_equipment(equipment, amount, transfer, sender)
 	})
 end
 
--- Lines: 2087 to 2092
+-- Lines 2087-2092
 function UnitNetworkHandler:on_sole_criminal_respawned(peer_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2206,7 +2222,7 @@ function UnitNetworkHandler:on_sole_criminal_respawned(peer_id, sender)
 	managers.player:on_sole_criminal_respawned(peer_id)
 end
 
--- Lines: 2096 to 2101
+-- Lines 2096-2101
 function UnitNetworkHandler:killzone_set_unit(type)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2215,7 +2231,7 @@ function UnitNetworkHandler:killzone_set_unit(type)
 	managers.killzone:set_unit(managers.player:player_unit(), type)
 end
 
--- Lines: 2105 to 2110
+-- Lines 2105-2110
 function UnitNetworkHandler:dangerzone_set_level(level)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2224,7 +2240,7 @@ function UnitNetworkHandler:dangerzone_set_level(level)
 	managers.player:player_unit():character_damage():set_danger_level(level)
 end
 
--- Lines: 2114 to 2200
+-- Lines 2114-2200
 function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, unit_id_str)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2313,7 +2329,7 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 	end
 end
 
--- Lines: 2204 to 2209
+-- Lines 2204-2209
 function UnitNetworkHandler:sync_show_hint(id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2322,7 +2338,7 @@ function UnitNetworkHandler:sync_show_hint(id, sender)
 	managers.hint:sync_show_hint(id)
 end
 
--- Lines: 2213 to 2218
+-- Lines 2213-2218
 function UnitNetworkHandler:sync_show_action_message(unit, id, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2331,7 +2347,7 @@ function UnitNetworkHandler:sync_show_action_message(unit, id, sender)
 	managers.action_messaging:sync_show_message(id, unit)
 end
 
--- Lines: 2222 to 2227
+-- Lines 2222-2227
 function UnitNetworkHandler:sync_waiting_for_player_start(variant, soundtrack)
 	if not self._verify_gamestate(self._gamestate_filter.waiting_for_players) then
 		return
@@ -2340,7 +2356,7 @@ function UnitNetworkHandler:sync_waiting_for_player_start(variant, soundtrack)
 	game_state_machine:current_state():sync_start(variant, soundtrack)
 end
 
--- Lines: 2229 to 2234
+-- Lines 2229-2234
 function UnitNetworkHandler:sync_waiting_for_player_skip()
 	if not self._verify_gamestate(self._gamestate_filter.waiting_for_players) then
 		return
@@ -2349,7 +2365,7 @@ function UnitNetworkHandler:sync_waiting_for_player_skip()
 	game_state_machine:current_state():sync_skip()
 end
 
--- Lines: 2238 to 2248
+-- Lines 2238-2248
 function UnitNetworkHandler:criminal_hurt(criminal_unit, attacker_unit, damage_ratio, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(criminal_unit, sender) then
 		return
@@ -2363,7 +2379,7 @@ function UnitNetworkHandler:criminal_hurt(criminal_unit, attacker_unit, damage_r
 	managers.groupai:state():criminal_hurt_drama(criminal_unit, attacker_unit, damage_ratio * 0.01)
 end
 
--- Lines: 2252 to 2257
+-- Lines 2252-2257
 function UnitNetworkHandler:arrested(unit)
 	if not alive(unit) then
 		return
@@ -2372,7 +2388,7 @@ function UnitNetworkHandler:arrested(unit)
 	unit:movement():sync_arrested()
 end
 
--- Lines: 2261 to 2273
+-- Lines 2261-2273
 function UnitNetworkHandler:suspect_uncovered(enemy_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2388,7 +2404,7 @@ function UnitNetworkHandler:suspect_uncovered(enemy_unit, sender)
 	suspect_unit:movement():on_uncovered(enemy_unit)
 end
 
--- Lines: 2277 to 2285
+-- Lines 2277-2285
 function UnitNetworkHandler:add_synced_team_upgrade(category, upgrade, level, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -2401,7 +2417,7 @@ function UnitNetworkHandler:add_synced_team_upgrade(category, upgrade, level, se
 	managers.player:add_synced_team_upgrade(peer_id, category, upgrade, level)
 end
 
--- Lines: 2288 to 2295
+-- Lines 2288-2295
 function UnitNetworkHandler:sync_deployable_equipment(deployable, amount, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2412,7 +2428,7 @@ function UnitNetworkHandler:sync_deployable_equipment(deployable, amount, sender
 	managers.player:set_synced_deployable_equipment(peer, deployable, amount)
 end
 
--- Lines: 2298 to 2305
+-- Lines 2298-2305
 function UnitNetworkHandler:sync_cable_ties(amount, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2423,7 +2439,7 @@ function UnitNetworkHandler:sync_cable_ties(amount, sender)
 	managers.player:set_synced_cable_ties(peer:id(), amount)
 end
 
--- Lines: 2308 to 2315
+-- Lines 2308-2315
 function UnitNetworkHandler:sync_grenades(grenade, amount, register_peer_id, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2434,7 +2450,7 @@ function UnitNetworkHandler:sync_grenades(grenade, amount, register_peer_id, sen
 	managers.player:set_synced_grenades(peer:id(), grenade, amount, register_peer_id)
 end
 
--- Lines: 2317 to 2327
+-- Lines 2317-2327
 function UnitNetworkHandler:sync_grenades_cooldown(end_time, duration, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2452,7 +2468,7 @@ function UnitNetworkHandler:sync_grenades_cooldown(end_time, duration, sender)
 	end
 end
 
--- Lines: 2330 to 2337
+-- Lines 2330-2337
 function UnitNetworkHandler:sync_ammo_amount(selection_index, max_clip, current_clip, current_left, max, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2463,7 +2479,7 @@ function UnitNetworkHandler:sync_ammo_amount(selection_index, max_clip, current_
 	managers.player:set_synced_ammo_info(peer:id(), selection_index, max_clip, current_clip, current_left, max)
 end
 
--- Lines: 2340 to 2347
+-- Lines 2340-2347
 function UnitNetworkHandler:activate_temporary_team_upgrade(category, upgrade, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2474,7 +2490,7 @@ function UnitNetworkHandler:activate_temporary_team_upgrade(category, upgrade, s
 	managers.player:activate_synced_temporary_team_upgrade(peer:id(), category, upgrade)
 end
 
--- Lines: 2350 to 2357
+-- Lines 2350-2357
 function UnitNetworkHandler:sync_bipod(bipod_pos, body_pos, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2485,7 +2501,7 @@ function UnitNetworkHandler:sync_bipod(bipod_pos, body_pos, sender)
 	managers.player:set_synced_bipod(peer, bipod_pos, body_pos)
 end
 
--- Lines: 2360 to 2367
+-- Lines 2360-2367
 function UnitNetworkHandler:sync_carry(carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2496,7 +2512,7 @@ function UnitNetworkHandler:sync_carry(carry_id, multiplier, dye_initiated, has_
 	managers.player:set_synced_carry(peer, carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
 end
 
--- Lines: 2369 to 2376
+-- Lines 2369-2376
 function UnitNetworkHandler:sync_remove_carry(sender)
 	local peer = self._verify_sender(sender)
 
@@ -2507,7 +2523,7 @@ function UnitNetworkHandler:sync_remove_carry(sender)
 	managers.player:remove_synced_carry(peer)
 end
 
--- Lines: 2378 to 2385
+-- Lines 2378-2385
 function UnitNetworkHandler:server_drop_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2518,7 +2534,7 @@ function UnitNetworkHandler:server_drop_carry(carry_id, carry_multiplier, dye_in
 	managers.player:server_drop_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer)
 end
 
--- Lines: 2387 to 2397
+-- Lines 2387-2397
 function UnitNetworkHandler:sync_carry_data(unit, carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2528,7 +2544,7 @@ function UnitNetworkHandler:sync_carry_data(unit, carry_id, carry_multiplier, dy
 	managers.player:sync_carry_data(unit, carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
 end
 
--- Lines: 2410 to 2425
+-- Lines 2410-2425
 function UnitNetworkHandler:sync_cocaine_stacks(amount, in_use, upgrade_level, power_level, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2546,7 +2562,7 @@ function UnitNetworkHandler:sync_cocaine_stacks(amount, in_use, upgrade_level, p
 	managers.player:set_synced_cocaine_stacks(peer_id, amount, in_use, upgrade_level, power_level)
 end
 
--- Lines: 2431 to 2448
+-- Lines 2431-2448
 function UnitNetworkHandler:request_throw_projectile(projectile_type_index, position, dir, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2565,7 +2581,7 @@ function UnitNetworkHandler:request_throw_projectile(projectile_type_index, posi
 	ProjectileBase.throw_projectile(projectile_type, position, dir, peer_id)
 end
 
--- Lines: 2451 to 2500
+-- Lines 2451-2500
 function UnitNetworkHandler:sync_throw_projectile(unit, pos, dir, projectile_type_index, peer_id, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2621,7 +2637,7 @@ function UnitNetworkHandler:sync_throw_projectile(unit, pos, dir, projectile_typ
 	unit:base():sync_throw_projectile(dir, projectile_type)
 end
 
--- Lines: 2507 to 2550
+-- Lines 2502-2550
 function UnitNetworkHandler:sync_attach_projectile(unit, instant_dynamic_pickup, parent_unit, parent_body, parent_object, local_pos, dir, projectile_type_index, peer_id, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2657,7 +2673,7 @@ function UnitNetworkHandler:sync_attach_projectile(unit, instant_dynamic_pickup,
 	end
 end
 
--- Lines: 2552 to 2565
+-- Lines 2552-2565
 function UnitNetworkHandler:sync_detonate_incendiary_grenade(unit, ext_name, event_id, normal, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -2676,7 +2692,7 @@ function UnitNetworkHandler:sync_detonate_incendiary_grenade(unit, ext_name, eve
 	extension:sync_detonate_incendiary_grenade(event_id, normal, peer)
 end
 
--- Lines: 2567 to 2580
+-- Lines 2567-2580
 function UnitNetworkHandler:sync_detonate_molotov_grenade(unit, ext_name, event_id, normal, rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -2695,14 +2711,14 @@ function UnitNetworkHandler:sync_detonate_molotov_grenade(unit, ext_name, event_
 	extension:sync_detonate_molotov_grenade(event_id, normal, peer)
 end
 
--- Lines: 2585 to 2589
+-- Lines 2584-2589
 function UnitNetworkHandler:sync_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, is_molotov, rpc)
 	local peer = self._verify_sender(rpc)
 
 	managers.fire:sync_add_fire_dot(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, user_unit, peer, is_molotov)
 end
 
--- Lines: 2593 to 2600
+-- Lines 2593-2600
 function UnitNetworkHandler:server_secure_loot(carry_id, multiplier_level, peer_id, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2713,7 +2729,7 @@ function UnitNetworkHandler:server_secure_loot(carry_id, multiplier_level, peer_
 	managers.loot:server_secure_loot(carry_id, multiplier_level, nil, peer_id)
 end
 
--- Lines: 2602 to 2608
+-- Lines 2602-2608
 function UnitNetworkHandler:sync_secure_loot(carry_id, multiplier_level, silent, peer_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) and not self._verify_gamestate(self._gamestate_filter.any_end_game) or not self._verify_sender(sender) then
 		return
@@ -2722,7 +2738,7 @@ function UnitNetworkHandler:sync_secure_loot(carry_id, multiplier_level, silent,
 	managers.loot:sync_secure_loot(carry_id, multiplier_level, silent, peer_id)
 end
 
--- Lines: 2610 to 2620
+-- Lines 2610-2620
 function UnitNetworkHandler:sync_small_loot_taken(unit, multiplier_level, sender)
 	if not alive(unit) and self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2737,7 +2753,7 @@ function UnitNetworkHandler:sync_small_loot_taken(unit, multiplier_level, sender
 	unit:base():taken(multiplier_level, peer:id())
 end
 
--- Lines: 2624 to 2631
+-- Lines 2624-2631
 function UnitNetworkHandler:server_unlock_asset(asset_id, is_show_chat_message, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2748,7 +2764,7 @@ function UnitNetworkHandler:server_unlock_asset(asset_id, is_show_chat_message, 
 	managers.assets:server_unlock_asset(asset_id, is_show_chat_message, peer)
 end
 
--- Lines: 2633 to 2640
+-- Lines 2633-2640
 function UnitNetworkHandler:sync_unlock_asset(asset_id, is_show_chat_message, unlocker_peer_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2759,7 +2775,7 @@ function UnitNetworkHandler:sync_unlock_asset(asset_id, is_show_chat_message, un
 	managers.assets:sync_unlock_asset(asset_id, is_show_chat_message, peer)
 end
 
--- Lines: 2644 to 2650
+-- Lines 2644-2650
 function UnitNetworkHandler:sync_heist_time(time, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2768,7 +2784,7 @@ function UnitNetworkHandler:sync_heist_time(time, sender)
 	managers.game_play_central:sync_heist_time(time)
 end
 
--- Lines: 2654 to 2660
+-- Lines 2654-2660
 function UnitNetworkHandler:run_mission_door_sequence(unit, sequence_name, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2777,7 +2793,7 @@ function UnitNetworkHandler:run_mission_door_sequence(unit, sequence_name, sende
 	unit:base():run_sequence_simple(sequence_name)
 end
 
--- Lines: 2662 to 2668
+-- Lines 2662-2668
 function UnitNetworkHandler:set_mission_door_device_powered(unit, powered, interaction_enabled, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2786,7 +2802,7 @@ function UnitNetworkHandler:set_mission_door_device_powered(unit, powered, inter
 	MissionDoor.set_mission_door_device_powered(unit, powered, interaction_enabled)
 end
 
--- Lines: 2670 to 2676
+-- Lines 2670-2676
 function UnitNetworkHandler:run_mission_door_device_sequence(unit, sequence_name, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2795,7 +2811,7 @@ function UnitNetworkHandler:run_mission_door_device_sequence(unit, sequence_name
 	MissionDoor.run_mission_door_device_sequence(unit, sequence_name)
 end
 
--- Lines: 2678 to 2686
+-- Lines 2678-2686
 function UnitNetworkHandler:server_place_mission_door_device(unit, player, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2804,7 +2820,7 @@ function UnitNetworkHandler:server_place_mission_door_device(unit, player, sende
 	local result = unit:interaction():server_place_mission_door_device(player, sender)
 end
 
--- Lines: 2688 to 2694
+-- Lines 2688-2694
 function UnitNetworkHandler:result_place_mission_door_device(unit, result, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2813,7 +2829,7 @@ function UnitNetworkHandler:result_place_mission_door_device(unit, result, sende
 	unit:interaction():result_place_mission_door_device(result)
 end
 
--- Lines: 2738 to 2752
+-- Lines 2738-2752
 function UnitNetworkHandler:set_armor(unit, percent, max_mul, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2834,7 +2850,7 @@ function UnitNetworkHandler:set_armor(unit, percent, max_mul, sender)
 	end
 end
 
--- Lines: 2755 to 2771
+-- Lines 2754-2771
 function UnitNetworkHandler:set_health(unit, percent, max_mul, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2859,7 +2875,7 @@ function UnitNetworkHandler:set_health(unit, percent, max_mul, sender)
 	end
 end
 
--- Lines: 2774 to 2779
+-- Lines 2774-2779
 function UnitNetworkHandler:sync_equipment_possession(peer_id, equipment, amount, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2868,7 +2884,7 @@ function UnitNetworkHandler:sync_equipment_possession(peer_id, equipment, amount
 	managers.player:set_synced_equipment_possession(peer_id, equipment, amount)
 end
 
--- Lines: 2781 to 2791
+-- Lines 2781-2791
 function UnitNetworkHandler:sync_remove_equipment_possession(peer_id, equipment, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2885,7 +2901,7 @@ function UnitNetworkHandler:sync_remove_equipment_possession(peer_id, equipment,
 	managers.player:remove_equipment_possession(peer_id, equipment)
 end
 
--- Lines: 2795 to 2800
+-- Lines 2795-2800
 function UnitNetworkHandler:sync_start_anticipation()
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2894,7 +2910,7 @@ function UnitNetworkHandler:sync_start_anticipation()
 	managers.hud:sync_start_anticipation()
 end
 
--- Lines: 2802 to 2807
+-- Lines 2802-2807
 function UnitNetworkHandler:sync_start_anticipation_music()
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2903,7 +2919,7 @@ function UnitNetworkHandler:sync_start_anticipation_music()
 	managers.hud:sync_start_anticipation_music()
 end
 
--- Lines: 2809 to 2817
+-- Lines 2809-2817
 function UnitNetworkHandler:sync_start_assault(assault_number)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2913,7 +2929,7 @@ function UnitNetworkHandler:sync_start_assault(assault_number)
 	managers.skirmish:sync_start_assault(assault_number)
 end
 
--- Lines: 2819 to 2824
+-- Lines 2819-2824
 function UnitNetworkHandler:sync_end_assault(result)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2922,7 +2938,7 @@ function UnitNetworkHandler:sync_end_assault(result)
 	managers.hud:sync_end_assault(result)
 end
 
--- Lines: 2826 to 2831
+-- Lines 2826-2831
 function UnitNetworkHandler:sync_assault_dialog(index)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -2931,7 +2947,7 @@ function UnitNetworkHandler:sync_assault_dialog(index)
 	managers.hud:sync_assault_dialog(index)
 end
 
--- Lines: 2835 to 2860
+-- Lines 2835-2860
 function UnitNetworkHandler:sync_contour_state(unit, u_id, type, state, multiplier, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2962,7 +2978,7 @@ function UnitNetworkHandler:sync_contour_state(unit, u_id, type, state, multipli
 	end
 end
 
--- Lines: 2864 to 2884
+-- Lines 2864-2884
 function UnitNetworkHandler:mark_minion(unit, minion_owner_peer_id, convert_enemies_health_multiplier_level, passive_convert_enemies_health_multiplier_level, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -2987,7 +3003,7 @@ function UnitNetworkHandler:mark_minion(unit, minion_owner_peer_id, convert_enem
 	end
 end
 
--- Lines: 2886 to 2895
+-- Lines 2886-2895
 function UnitNetworkHandler:remove_minion(unit, sender)
 	if not self._verify_sender(sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3000,11 +3016,11 @@ function UnitNetworkHandler:remove_minion(unit, sender)
 	end
 end
 
--- Lines: 2898 to 2899
+-- Lines 2897-2899
 function UnitNetworkHandler:spot_enemy(unit)
 end
 
--- Lines: 2901 to 2906
+-- Lines 2901-2906
 function UnitNetworkHandler:count_down_player_minions()
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3013,7 +3029,7 @@ function UnitNetworkHandler:count_down_player_minions()
 	managers.player:count_down_player_minions()
 end
 
--- Lines: 2910 to 2915
+-- Lines 2910-2915
 function UnitNetworkHandler:sync_teammate_helped_hint(hint, helped_unit, helping_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(helped_unit, sender) or not self._verify_character(helping_unit, sender) then
 		return
@@ -3022,7 +3038,7 @@ function UnitNetworkHandler:sync_teammate_helped_hint(hint, helped_unit, helping
 	managers.trade:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 end
 
--- Lines: 2919 to 2924
+-- Lines 2919-2924
 function UnitNetworkHandler:sync_assault_mode(enabled)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3031,7 +3047,7 @@ function UnitNetworkHandler:sync_assault_mode(enabled)
 	managers.groupai:state():sync_assault_mode(enabled)
 end
 
--- Lines: 2928 to 2933
+-- Lines 2928-2933
 function UnitNetworkHandler:sync_hostage_killed_warning(warning)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3040,7 +3056,7 @@ function UnitNetworkHandler:sync_hostage_killed_warning(warning)
 	managers.groupai:state():sync_hostage_killed_warning(warning)
 end
 
--- Lines: 2937 to 2943
+-- Lines 2937-2943
 function UnitNetworkHandler:set_interaction_voice(unit, voice, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -3049,7 +3065,7 @@ function UnitNetworkHandler:set_interaction_voice(unit, voice, sender)
 	unit:brain():set_interaction_voice(voice ~= "" and voice or nil)
 end
 
--- Lines: 2947 to 2952
+-- Lines 2947-2952
 function UnitNetworkHandler:sync_teammate_comment(message, pos, pos_based, radius, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3058,7 +3074,7 @@ function UnitNetworkHandler:sync_teammate_comment(message, pos, pos_based, radiu
 	managers.groupai:state():sync_teammate_comment(message, pos, pos_based, radius)
 end
 
--- Lines: 2954 to 2959
+-- Lines 2954-2959
 function UnitNetworkHandler:sync_teammate_comment_instigator(unit, message)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3067,7 +3083,7 @@ function UnitNetworkHandler:sync_teammate_comment_instigator(unit, message)
 	managers.groupai:state():sync_teammate_comment_instigator(unit, message)
 end
 
--- Lines: 2963 to 2968
+-- Lines 2963-2968
 function UnitNetworkHandler:begin_gameover_fadeout()
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3076,7 +3092,7 @@ function UnitNetworkHandler:begin_gameover_fadeout()
 	managers.groupai:state():begin_gameover_fadeout()
 end
 
--- Lines: 2972 to 2987
+-- Lines 2972-2987
 function UnitNetworkHandler:send_statistics(total_kills, total_specials_kills, total_head_shots, accuracy, downs, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_end_game) then
 		return
@@ -3091,23 +3107,25 @@ function UnitNetworkHandler:send_statistics(total_kills, total_specials_kills, t
 	managers.network:session():on_statistics_recieved(peer:id(), total_kills, total_specials_kills, total_head_shots, accuracy, downs)
 end
 
--- Lines: 2991 to 2995
+-- Lines 2991-2995
 function UnitNetworkHandler:sync_statistics_result(...)
 	if game_state_machine:current_state().on_statistics_result then
 		game_state_machine:current_state():on_statistics_result(...)
 	end
 end
 
--- Lines: 2999 to 3004
+-- Lines 2999-3004
 function UnitNetworkHandler:statistics_tied(name, sender)
 	if not self._verify_sender(sender) then
 		return
 	end
 
-	managers.statistics:tied({name = name})
+	managers.statistics:tied({
+		name = name
+	})
 end
 
--- Lines: 3008 to 3020
+-- Lines 3008-3020
 function UnitNetworkHandler:bain_comment(bain_line, sender)
 	if not self._verify_sender(sender) then
 		return
@@ -3118,7 +3136,7 @@ function UnitNetworkHandler:bain_comment(bain_line, sender)
 	end
 end
 
--- Lines: 3024 to 3031
+-- Lines 3024-3031
 function UnitNetworkHandler:is_inside_point_of_no_return(is_inside, sender)
 	local peer = self._verify_sender(sender)
 
@@ -3129,7 +3147,7 @@ function UnitNetworkHandler:is_inside_point_of_no_return(is_inside, sender)
 	managers.groupai:state():set_is_inside_point_of_no_return(peer:id(), is_inside)
 end
 
--- Lines: 3035 to 3048
+-- Lines 3035-3048
 function UnitNetworkHandler:mission_ended(win, num_is_inside, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3147,7 +3165,7 @@ function UnitNetworkHandler:mission_ended(win, num_is_inside, sender)
 	end
 end
 
--- Lines: 3052 to 3059
+-- Lines 3052-3059
 function UnitNetworkHandler:sync_level_up(level, sender)
 	local peer = self._verify_sender(sender)
 
@@ -3158,7 +3176,7 @@ function UnitNetworkHandler:sync_level_up(level, sender)
 	peer:set_level(level)
 end
 
--- Lines: 3072 to 3078
+-- Lines 3072-3078
 function UnitNetworkHandler:sync_disable_shout(unit, state, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -3167,7 +3185,7 @@ function UnitNetworkHandler:sync_disable_shout(unit, state, sender)
 	ElementDisableShout.sync_function(unit, state)
 end
 
--- Lines: 3080 to 3089
+-- Lines 3080-3089
 function UnitNetworkHandler:sync_run_sequence_char(unit, seq, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -3178,7 +3196,7 @@ function UnitNetworkHandler:sync_run_sequence_char(unit, seq, sender)
 	end
 end
 
--- Lines: 3091 to 3100
+-- Lines 3091-3100
 function UnitNetworkHandler:sync_player_kill_statistic(tweak_table_name, is_headshot, weapon_unit, variant, stats_name, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) or not alive(weapon_unit) then
 		return
@@ -3200,7 +3218,7 @@ function UnitNetworkHandler:sync_player_kill_statistic(tweak_table_name, is_head
 	managers.statistics:killed(data)
 end
 
--- Lines: 3104 to 3115
+-- Lines 3104-3115
 function UnitNetworkHandler:set_attention_enabled(unit, setting_index, state, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
 		return
@@ -3215,7 +3233,7 @@ function UnitNetworkHandler:set_attention_enabled(unit, setting_index, state, se
 	end
 end
 
--- Lines: 3119 to 3125
+-- Lines 3119-3125
 function UnitNetworkHandler:link_attention_no_rot(parent_unit, attention_object, parent_object, local_pos, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not alive(parent_unit) or not alive(attention_object) then
 		return
@@ -3224,7 +3242,7 @@ function UnitNetworkHandler:link_attention_no_rot(parent_unit, attention_object,
 	attention_object:attention():link(parent_unit, parent_object, local_pos)
 end
 
--- Lines: 3129 to 3135
+-- Lines 3129-3135
 function UnitNetworkHandler:unlink_attention(attention_object, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not alive(attention_object) then
 		return
@@ -3233,7 +3251,7 @@ function UnitNetworkHandler:unlink_attention(attention_object, sender)
 	attention_object:attention():link(nil)
 end
 
--- Lines: 3139 to 3163
+-- Lines 3139-3163
 function UnitNetworkHandler:suspicion(suspect_peer_id, susp_value, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3251,12 +3269,18 @@ function UnitNetworkHandler:suspicion(suspect_peer_id, susp_value, sender)
 		return
 	end
 
-	susp_value = (susp_value ~= 0 or false) and (susp_value == 255 and true or susp_value / 254)
+	if susp_value == 0 then
+		susp_value = false
+	elseif susp_value == 255 then
+		susp_value = true
+	else
+		susp_value = susp_value / 254
+	end
 
 	suspect_unit:movement():on_suspicion(nil, susp_value)
 end
 
--- Lines: 3167 to 3187
+-- Lines 3167-3187
 function UnitNetworkHandler:suspicion_hud(observer_unit, status)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not alive(observer_unit) then
 		return
@@ -3279,7 +3303,7 @@ function UnitNetworkHandler:suspicion_hud(observer_unit, status)
 	managers.groupai:state():on_criminal_suspicion_progress(nil, observer_unit, status)
 end
 
--- Lines: 3191 to 3197
+-- Lines 3191-3197
 function UnitNetworkHandler:group_ai_event(event_id, blame_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3288,7 +3312,7 @@ function UnitNetworkHandler:group_ai_event(event_id, blame_id, sender)
 	managers.groupai:state():sync_event(event_id, blame_id)
 end
 
--- Lines: 3201 to 3221
+-- Lines 3201-3221
 function UnitNetworkHandler:start_timespeed_effect(effect_id, timer_name, affect_timer_names_str, speed, fade_in, sustain, fade_out, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3312,7 +3336,7 @@ function UnitNetworkHandler:start_timespeed_effect(effect_id, timer_name, affect
 	managers.time_speed:play_effect(effect_id, effect_desc)
 end
 
--- Lines: 3225 to 3231
+-- Lines 3225-3231
 function UnitNetworkHandler:stop_timespeed_effect(effect_id, fade_out_duration, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3321,7 +3345,7 @@ function UnitNetworkHandler:stop_timespeed_effect(effect_id, fade_out_duration, 
 	managers.time_speed:stop_effect(effect_id, fade_out_duration)
 end
 
--- Lines: 3235 to 3249
+-- Lines 3235-3249
 function UnitNetworkHandler:sync_upgrade(upgrade_category, upgrade_name, upgrade_level, sender)
 	local peer = self._verify_sender(sender)
 
@@ -3342,7 +3366,7 @@ function UnitNetworkHandler:sync_upgrade(upgrade_category, upgrade_name, upgrade
 	unit:base():set_upgrade_value(upgrade_category, upgrade_name, upgrade_level)
 end
 
--- Lines: 3256 to 3270
+-- Lines 3256-3270
 function UnitNetworkHandler:sync_temporary_upgrade_owned(upgrade_category, upgrade_name, upgrade_level, index, sender)
 	local peer = self._verify_sender(sender)
 
@@ -3363,7 +3387,7 @@ function UnitNetworkHandler:sync_temporary_upgrade_owned(upgrade_category, upgra
 	unit:base():set_temporary_upgrade_owned(upgrade_category, upgrade_name, upgrade_level, index)
 end
 
--- Lines: 3274 to 3288
+-- Lines 3274-3288
 function UnitNetworkHandler:sync_temporary_upgrade_activated(upgrade_index, sender)
 	local peer = self._verify_sender(sender)
 
@@ -3384,7 +3408,7 @@ function UnitNetworkHandler:sync_temporary_upgrade_activated(upgrade_index, send
 	unit:base():activate_temporary_upgrade(upgrade_index)
 end
 
--- Lines: 3292 to 3316
+-- Lines 3292-3316
 function UnitNetworkHandler:suppression(unit, ratio, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -3405,13 +3429,13 @@ function UnitNetworkHandler:suppression(unit, ratio, sender)
 		amount = "max"
 		panic_chance = -1
 	else
-		amount = ratio == 15 and "max" or amount_max > 0 and (amount_max * ratio) / 15 or "max"
+		amount = ratio == 15 and "max" or amount_max > 0 and amount_max * ratio / 15 or "max"
 	end
 
 	unit:character_damage():build_suppression(amount, panic_chance)
 end
 
--- Lines: 3320 to 3326
+-- Lines 3320-3326
 function UnitNetworkHandler:suppressed_state(unit, state, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
@@ -3420,19 +3444,19 @@ function UnitNetworkHandler:suppressed_state(unit, state, sender)
 	unit:movement():on_suppressed(state)
 end
 
--- Lines: 3330 to 3338
+-- Lines 3330-3338
 function UnitNetworkHandler:camera_yaw_pitch(cam_unit, yaw_255, pitch_255)
 	if not alive(cam_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	local yaw = (360 * yaw_255) / 255 - 180
-	local pitch = (180 * pitch_255) / 255 - 90
+	local yaw = 360 * yaw_255 / 255 - 180
+	local pitch = 180 * pitch_255 / 255 - 90
 
 	cam_unit:base():apply_rotations(yaw, pitch)
 end
 
--- Lines: 3342 to 3352
+-- Lines 3342-3352
 function UnitNetworkHandler:loot_link(loot_unit, parent_unit, sender)
 	if not alive(loot_unit) or not alive(parent_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3445,7 +3469,7 @@ function UnitNetworkHandler:loot_link(loot_unit, parent_unit, sender)
 	end
 end
 
--- Lines: 3356 to 3366
+-- Lines 3356-3366
 function UnitNetworkHandler:remove_unit(unit, sender)
 	if not alive(unit) then
 		return
@@ -3458,7 +3482,7 @@ function UnitNetworkHandler:remove_unit(unit, sender)
 	unit:set_slot(0)
 end
 
--- Lines: 3370 to 3376
+-- Lines 3370-3376
 function UnitNetworkHandler:sync_gui_net_event(unit, event_id, value, sender)
 	if not alive(unit) or not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3467,7 +3491,7 @@ function UnitNetworkHandler:sync_gui_net_event(unit, event_id, value, sender)
 	unit:digital_gui():sync_gui_net_event(event_id, value)
 end
 
--- Lines: 3380 to 3386
+-- Lines 3380-3386
 function UnitNetworkHandler:sync_proximity_activation(unit, proximity_name, range_data_string, sender)
 	if not alive(unit) or not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3476,7 +3500,7 @@ function UnitNetworkHandler:sync_proximity_activation(unit, proximity_name, rang
 	unit:damage():sync_proximity_activation(proximity_name, range_data_string)
 end
 
--- Lines: 3388 to 3408
+-- Lines 3388-3408
 function UnitNetworkHandler:sync_inflict_body_damage(body, unit, normal, position, direction, damage, velocity, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3507,7 +3531,7 @@ function UnitNetworkHandler:sync_inflict_body_damage(body, unit, normal, positio
 	body:extension().damage:damage_fire(unit, normal, position, direction, damage, velocity)
 end
 
--- Lines: 3413 to 3428
+-- Lines 3413-3428
 function UnitNetworkHandler:sync_team_relation(team_index_1, team_index_2, relation_code)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3526,7 +3550,7 @@ function UnitNetworkHandler:sync_team_relation(team_index_1, team_index_2, relat
 	managers.groupai:state():set_team_relation(team_id_1, team_id_2, relation, nil)
 end
 
--- Lines: 3432 to 3444
+-- Lines 3432-3444
 function UnitNetworkHandler:sync_char_team(unit, team_index, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3542,12 +3566,12 @@ function UnitNetworkHandler:sync_char_team(unit, team_index, sender)
 	unit:movement():set_team(team_data)
 end
 
--- Lines: 3448 to 3450
+-- Lines 3448-3450
 function UnitNetworkHandler:sync_drill_upgrades(unit, autorepair_level_1, autorepair_level_2, drill_speed_level, silent, reduced_alert)
 	unit:base():set_skill_upgrades(Drill.create_upgrades(autorepair_level_1, autorepair_level_2, drill_speed_level, silent, reduced_alert))
 end
 
--- Lines: 3454 to 3470
+-- Lines 3454-3470
 function UnitNetworkHandler:sync_vehicle_driving(action, unit, player)
 	Application:debug("[DRIVING_NET] sync_vehicle_driving " .. action)
 
@@ -3565,7 +3589,7 @@ function UnitNetworkHandler:sync_vehicle_driving(action, unit, player)
 	end
 end
 
--- Lines: 3474 to 3479
+-- Lines 3473-3479
 function UnitNetworkHandler:sync_vehicle_set_input(unit, accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear)
 	if not alive(unit) then
 		return
@@ -3574,7 +3598,7 @@ function UnitNetworkHandler:sync_vehicle_set_input(unit, accelerate, steer, brak
 	unit:vehicle_driving():sync_set_input(accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear)
 end
 
--- Lines: 3482 to 3487
+-- Lines 3481-3487
 function UnitNetworkHandler:sync_vehicle_state(unit, position, rotation, velocity)
 	if not alive(unit) then
 		return
@@ -3583,7 +3607,7 @@ function UnitNetworkHandler:sync_vehicle_state(unit, position, rotation, velocit
 	unit:vehicle_driving():sync_state(position, rotation, velocity)
 end
 
--- Lines: 3490 to 3496
+-- Lines 3490-3496
 function UnitNetworkHandler:sync_enter_vehicle_host(vehicle, seat_name, peer_id, player)
 	Application:debug("[DRIVING_NET] sync_enter_vehicle_host", seat_name)
 
@@ -3594,7 +3618,7 @@ function UnitNetworkHandler:sync_enter_vehicle_host(vehicle, seat_name, peer_id,
 	managers.player:server_enter_vehicle(vehicle, peer_id, player, seat_name)
 end
 
--- Lines: 3498 to 3505
+-- Lines 3498-3505
 function UnitNetworkHandler:sync_vehicle_player(action, vehicle, peer_id, player, seat_name)
 	Application:debug("[DRIVING_NET] sync_vehicle_player " .. action)
 
@@ -3605,7 +3629,7 @@ function UnitNetworkHandler:sync_vehicle_player(action, vehicle, peer_id, player
 	end
 end
 
--- Lines: 3507 to 3513
+-- Lines 3507-3513
 function UnitNetworkHandler:sync_vehicle_data(vehicle, state_name, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open)
 	Application:debug("[DRIVING_NET] sync_vehicles_data")
 
@@ -3616,7 +3640,7 @@ function UnitNetworkHandler:sync_vehicle_data(vehicle, state_name, occupant_driv
 	managers.vehicle:sync_vehicle_data(vehicle, state_name, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open)
 end
 
--- Lines: 3515 to 3521
+-- Lines 3515-3521
 function UnitNetworkHandler:sync_npc_vehicle_data(vehicle, state_name, target_unit)
 	Application:debug("[DRIVING_NET] sync_npc_vehicle_data", vehicle, state_name)
 
@@ -3627,7 +3651,7 @@ function UnitNetworkHandler:sync_npc_vehicle_data(vehicle, state_name, target_un
 	managers.vehicle:sync_npc_vehicle_data(vehicle, state_name, target_unit)
 end
 
--- Lines: 3524 to 3530
+-- Lines 3524-3530
 function UnitNetworkHandler:sync_vehicle_loot(vehicle, carry_id1, multiplier1, carry_id2, multiplier2, carry_id3, multiplier3)
 	Application:debug("[DRIVING_NET] sync_vehicle_loot")
 
@@ -3638,7 +3662,7 @@ function UnitNetworkHandler:sync_vehicle_loot(vehicle, carry_id1, multiplier1, c
 	managers.vehicle:sync_vehicle_loot(vehicle, carry_id1, multiplier1, carry_id2, multiplier2, carry_id3, multiplier3)
 end
 
--- Lines: 3532 to 3549
+-- Lines 3532-3549
 function UnitNetworkHandler:sync_ai_vehicle_action(action, vehicle, data, unit)
 	Application:debug("[DRIVING_NET] sync_ai_vehicle_action: ", action, data)
 
@@ -3661,7 +3685,7 @@ function UnitNetworkHandler:sync_ai_vehicle_action(action, vehicle, data, unit)
 	end
 end
 
--- Lines: 3551 to 3557
+-- Lines 3551-3557
 function UnitNetworkHandler:server_store_loot_in_vehicle(vehicle, loot_bag)
 	Application:debug("[DRIVING_NET] server_store_loot_in_vehicle")
 
@@ -3672,7 +3696,7 @@ function UnitNetworkHandler:server_store_loot_in_vehicle(vehicle, loot_bag)
 	vehicle:vehicle_driving():server_store_loot_in_vehicle(loot_bag)
 end
 
--- Lines: 3559 to 3565
+-- Lines 3559-3565
 function UnitNetworkHandler:sync_vehicle_change_stance(shooting_unit, stance)
 	Application:debug("[DRIVING_NET] sync_vehicle_change_stance")
 
@@ -3683,7 +3707,7 @@ function UnitNetworkHandler:sync_vehicle_change_stance(shooting_unit, stance)
 	shooting_unit:movement():sync_vehicle_change_stance(stance)
 end
 
--- Lines: 3567 to 3573
+-- Lines 3567-3573
 function UnitNetworkHandler:sync_store_loot_in_vehicle(vehicle, loot_bag, carry_id, multiplier)
 	Application:debug("[DRIVING_NET] sync_store_loot_in_vehicle")
 
@@ -3694,25 +3718,25 @@ function UnitNetworkHandler:sync_store_loot_in_vehicle(vehicle, loot_bag, carry_
 	vehicle:vehicle_driving():sync_store_loot_in_vehicle(loot_bag, carry_id, multiplier)
 end
 
--- Lines: 3575 to 3578
+-- Lines 3575-3578
 function UnitNetworkHandler:server_give_vehicle_loot_to_player(vehicle, peer_id)
 	Application:debug("[DRIVING_NET] server_give_vehicle_loot_to_player")
 	vehicle:vehicle_driving():server_give_vehicle_loot_to_player(peer_id)
 end
 
--- Lines: 3580 to 3583
+-- Lines 3580-3583
 function UnitNetworkHandler:sync_give_vehicle_loot_to_player(vehicle, carry_id, multiplier, peer_id)
 	Application:debug("[DRIVING_NET] sync_give_vehicle_loot_to_player")
 	vehicle:vehicle_driving():sync_give_vehicle_loot_to_player(carry_id, multiplier, peer_id)
 end
 
--- Lines: 3585 to 3588
+-- Lines 3585-3588
 function UnitNetworkHandler:sync_vehicle_interact_trunk(vehicle, peer_id)
 	Application:debug("[DRIVING_NET] sync_vehicle_interact_trunk")
 	vehicle:vehicle_driving():_interact_trunk(vehicle)
 end
 
--- Lines: 3592 to 3603
+-- Lines 3592-3603
 function UnitNetworkHandler:sync_damage_reduction_buff(damage_reduction)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3727,7 +3751,7 @@ function UnitNetworkHandler:sync_damage_reduction_buff(damage_reduction)
 	managers.groupai:state():set_phalanx_damage_reduction_buff(damage_reduction)
 end
 
--- Lines: 3607 to 3613
+-- Lines 3607-3613
 function UnitNetworkHandler:sync_assault_endless(enabled)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3736,7 +3760,7 @@ function UnitNetworkHandler:sync_assault_endless(enabled)
 	managers.groupai:state():set_assault_endless(enabled)
 end
 
--- Lines: 3617 to 3625
+-- Lines 3617-3625
 function UnitNetworkHandler:action_jump(unit, pos, jump_vec, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3749,7 +3773,7 @@ function UnitNetworkHandler:action_jump(unit, pos, jump_vec, sender)
 	unit:movement():sync_action_jump(pos, jump_vec)
 end
 
--- Lines: 3627 to 3635
+-- Lines 3627-3635
 function UnitNetworkHandler:action_jump_middle(unit, pos, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3762,7 +3786,7 @@ function UnitNetworkHandler:action_jump_middle(unit, pos, sender)
 	unit:movement():sync_action_jump_middle(pos)
 end
 
--- Lines: 3637 to 3645
+-- Lines 3637-3645
 function UnitNetworkHandler:action_land(unit, pos, sender)
 	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3775,7 +3799,7 @@ function UnitNetworkHandler:action_land(unit, pos, sender)
 	unit:movement():sync_action_land(pos)
 end
 
--- Lines: 3647 to 3658
+-- Lines 3647-3658
 function UnitNetworkHandler:sync_player_swansong(unit, active, sender)
 	local peer = self._verify_sender(sender)
 
@@ -3791,14 +3815,14 @@ function UnitNetworkHandler:sync_player_swansong(unit, active, sender)
 	end
 end
 
--- Lines: 3660 to 3664
+-- Lines 3660-3664
 function UnitNetworkHandler:special_eq_response(unit, sender)
 	if unit:interaction().apply_item_pickup then
 		unit:interaction():apply_item_pickup()
 	end
 end
 
--- Lines: 3666 to 3684
+-- Lines 3666-3684
 function UnitNetworkHandler:sync_swansong_hud(unit, peer_id)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3821,7 +3845,7 @@ function UnitNetworkHandler:sync_swansong_hud(unit, peer_id)
 	end
 end
 
--- Lines: 3686 to 3704
+-- Lines 3686-3704
 function UnitNetworkHandler:sync_swansong_timer(unit, current, total, revives, peer_id)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3848,7 +3872,7 @@ function UnitNetworkHandler:sync_swansong_timer(unit, current, total, revives, p
 	end
 end
 
--- Lines: 3709 to 3716
+-- Lines 3709-3716
 function UnitNetworkHandler:sync_fall_position(unit, pos, rot)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3859,12 +3883,12 @@ function UnitNetworkHandler:sync_fall_position(unit, pos, rot)
 	end
 end
 
--- Lines: 3721 to 3723
+-- Lines 3721-3723
 function UnitNetworkHandler:sync_spawn_extra_ammo(unit)
 	managers.player:spawn_extra_ammo(unit)
 end
 
--- Lines: 3728 to 3736
+-- Lines 3728-3736
 function UnitNetworkHandler:sync_stored_pos(unit, sync, pos, rot)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3875,7 +3899,7 @@ function UnitNetworkHandler:sync_stored_pos(unit, sync, pos, rot)
 	end
 end
 
--- Lines: 3739 to 3747
+-- Lines 3739-3747
 function UnitNetworkHandler:sync_team_ai_stopped(unit, stopped)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3886,7 +3910,7 @@ function UnitNetworkHandler:sync_team_ai_stopped(unit, stopped)
 	end
 end
 
--- Lines: 3751 to 3759
+-- Lines 3751-3759
 function UnitNetworkHandler:sync_damage_achievements(unit, weapon_unit, attacker_unit, distance, damage, head_shot, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3897,7 +3921,7 @@ function UnitNetworkHandler:sync_damage_achievements(unit, weapon_unit, attacker
 	end
 end
 
--- Lines: 3764 to 3777
+-- Lines 3764-3777
 function UnitNetworkHandler:sync_medic_heal(unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3914,7 +3938,7 @@ function UnitNetworkHandler:sync_medic_heal(unit, sender)
 	end
 end
 
--- Lines: 3784 to 3790
+-- Lines 3784-3790
 function UnitNetworkHandler:sync_explosion_to_client(unit, position, normal, damage, range, curve_pow, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3924,7 +3948,7 @@ function UnitNetworkHandler:sync_explosion_to_client(unit, position, normal, dam
 	managers.explosion:explode_on_client(position, normal, unit, damage, range, curve_pow)
 end
 
--- Lines: 3792 to 3834
+-- Lines 3792-3834
 function UnitNetworkHandler:sync_friendly_fire_damage(peer_id, unit, damage, variant, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3940,7 +3964,9 @@ function UnitNetworkHandler:sync_friendly_fire_damage(peer_id, unit, damage, var
 				attacker_unit = unit,
 				damage = damage,
 				variant = variant,
-				col_ray = {position = unit:position()},
+				col_ray = {
+					position = unit:position()
+				},
 				push_vel = Vector3()
 			}
 
@@ -3957,7 +3983,7 @@ function UnitNetworkHandler:sync_friendly_fire_damage(peer_id, unit, damage, var
 	managers.job:set_memory("trophy_flawless", true, false)
 end
 
--- Lines: 3840 to 3847
+-- Lines 3840-3847
 function UnitNetworkHandler:sync_flashbang_event(unit, event_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -3968,7 +3994,7 @@ function UnitNetworkHandler:sync_flashbang_event(unit, event_id, sender)
 	end
 end
 
--- Lines: 3851 to 3874
+-- Lines 3851-3874
 function UnitNetworkHandler:sync_ability_hud(end_time, time_total, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3999,7 +4025,7 @@ function UnitNetworkHandler:sync_ability_hud(end_time, time_total, sender)
 	end
 end
 
--- Lines: 3877 to 3891
+-- Lines 3877-3891
 function UnitNetworkHandler:sync_underbarrel_switch(selection_index, underbarrel_id, is_on, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4020,7 +4046,7 @@ function UnitNetworkHandler:sync_underbarrel_switch(selection_index, underbarrel
 	unit:inventory():set_weapon_underbarrel(selection_index, underbarrel_id, is_on)
 end
 
--- Lines: 3895 to 3903
+-- Lines 3895-3903
 function UnitNetworkHandler:sync_ai_throw_bag(unit, carry_unit, target_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4031,7 +4057,7 @@ function UnitNetworkHandler:sync_ai_throw_bag(unit, carry_unit, target_unit, sen
 	end
 end
 
--- Lines: 3905 to 3920
+-- Lines 3905-3920
 function UnitNetworkHandler:request_carried_bag_unit(ai_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4052,7 +4078,7 @@ function UnitNetworkHandler:request_carried_bag_unit(ai_unit, sender)
 	end
 end
 
--- Lines: 3922 to 3931
+-- Lines 3922-3931
 function UnitNetworkHandler:sync_carried_bag_unit(ai_unit, carry_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4064,7 +4090,7 @@ function UnitNetworkHandler:sync_carried_bag_unit(ai_unit, carry_unit, sender)
 	end
 end
 
--- Lines: 3936 to 3946
+-- Lines 3936-3946
 function UnitNetworkHandler:sync_unit_spawn(parent_unit, spawn_unit, align_obj_name, unit_id, parent_extension_name)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4077,7 +4103,7 @@ function UnitNetworkHandler:sync_unit_spawn(parent_unit, spawn_unit, align_obj_n
 	parent_unit[parent_extension_name](parent_unit):spawn_unit(unit_id, align_obj_name, spawn_unit)
 end
 
--- Lines: 3950 to 3960
+-- Lines 3950-3960
 function UnitNetworkHandler:sync_unit_surrendered(unit, surrendered)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4090,7 +4116,7 @@ function UnitNetworkHandler:sync_unit_surrendered(unit, surrendered)
 	unit:brain():sync_surrender(surrendered)
 end
 
--- Lines: 3964 to 3974
+-- Lines 3964-3974
 function UnitNetworkHandler:sync_unit_converted(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4103,7 +4129,7 @@ function UnitNetworkHandler:sync_unit_converted(unit)
 	unit:brain():sync_converted()
 end
 
--- Lines: 3978 to 3988
+-- Lines 3978-3988
 function UnitNetworkHandler:sync_link_spawned_unit(parent_unit, unit_id, joint_table, parent_extension_name)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4116,7 +4142,7 @@ function UnitNetworkHandler:sync_link_spawned_unit(parent_unit, unit_id, joint_t
 	parent_unit[parent_extension_name](parent_unit):_link_joints(unit_id, joint_table)
 end
 
--- Lines: 3992 to 4002
+-- Lines 3992-4002
 function UnitNetworkHandler:run_spawn_unit_sequence(parent_unit, parent_extension_name, unit_id, sequence_name)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4129,7 +4155,7 @@ function UnitNetworkHandler:run_spawn_unit_sequence(parent_unit, parent_extensio
 	parent_unit[parent_extension_name](parent_unit):_spawn_run_sequence(unit_id, sequence_name)
 end
 
--- Lines: 4006 to 4016
+-- Lines 4006-4016
 function UnitNetworkHandler:run_local_push_child_unit(parent_unit, parent_extension_name, unit_id, mass, pow, vec3_a, vec3_b)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4142,7 +4168,7 @@ function UnitNetworkHandler:run_local_push_child_unit(parent_unit, parent_extens
 	parent_unit[parent_extension_name](parent_unit):local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
 end
 
--- Lines: 4020 to 4035
+-- Lines 4020-4035
 function UnitNetworkHandler:sync_special_character_material(character_unit, material_name)
 	if not alive(character_unit) then
 		return
@@ -4159,7 +4185,7 @@ function UnitNetworkHandler:sync_special_character_material(character_unit, mate
 	end
 end
 
--- Lines: 4040 to 4048
+-- Lines 4040-4048
 function UnitNetworkHandler:sync_enemy_buff(enemy_unit, buff_category, buff_total, sender)
 	if not alive(enemy_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4168,7 +4194,7 @@ function UnitNetworkHandler:sync_enemy_buff(enemy_unit, buff_category, buff_tota
 	enemy_unit:base():_sync_buff_total(buff_category, buff_total)
 end
 
--- Lines: 4050 to 4055
+-- Lines 4050-4055
 function UnitNetworkHandler:sync_tear_gas_grenade_properties(grenade, radius, damage, duration)
 	grenade:base():set_properties({
 		radius = radius,
@@ -4176,12 +4202,12 @@ function UnitNetworkHandler:sync_tear_gas_grenade_properties(grenade, radius, da
 	})
 end
 
--- Lines: 4057 to 4059
+-- Lines 4057-4059
 function UnitNetworkHandler:sync_tear_gas_grenade_detonate(grenade)
 	grenade:base():detonate()
 end
 
--- Lines: 4065 to 4075
+-- Lines 4065-4075
 function UnitNetworkHandler:sync_spawn_smoke_screen(unit, dodge_bonus)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4194,7 +4220,7 @@ function UnitNetworkHandler:sync_spawn_smoke_screen(unit, dodge_bonus)
 	managers.player:_sync_activate_smoke_screen(unit, dodge_bonus)
 end
 
--- Lines: 4080 to 4088
+-- Lines 4080-4088
 function UnitNetworkHandler:sync_melee_start(unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4207,7 +4233,7 @@ function UnitNetworkHandler:sync_melee_start(unit, sender)
 	unit:movement():sync_melee_start()
 end
 
--- Lines: 4090 to 4098
+-- Lines 4090-4098
 function UnitNetworkHandler:sync_melee_discharge(unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4220,7 +4246,7 @@ function UnitNetworkHandler:sync_melee_discharge(unit, sender)
 	unit:movement():sync_melee_discharge()
 end
 
--- Lines: 4102 to 4114
+-- Lines 4102-4114
 function UnitNetworkHandler:sync_interaction_anim(unit, is_start, tweak_data, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4237,7 +4263,7 @@ function UnitNetworkHandler:sync_interaction_anim(unit, is_start, tweak_data, se
 	end
 end
 
--- Lines: 4118 to 4126
+-- Lines 4118-4126
 function UnitNetworkHandler:sync_shotgun_push(unit, hit_pos, dir, distance, attacker, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4250,7 +4276,7 @@ function UnitNetworkHandler:sync_shotgun_push(unit, hit_pos, dir, distance, atta
 	managers.game_play_central:_do_shotgun_push(unit, hit_pos, dir, distance, attacker, sender)
 end
 
--- Lines: 4131 to 4139
+-- Lines 4131-4139
 function UnitNetworkHandler:sync_carry_set_position_and_throw(unit, destination, direction, force, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4263,7 +4289,7 @@ function UnitNetworkHandler:sync_carry_set_position_and_throw(unit, destination,
 	unit:carry_data():set_position_and_throw(destination, direction, force)
 end
 
--- Lines: 4211 to 4220
+-- Lines 4211-4220
 function UnitNetworkHandler:action_teleport(unit, position, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4276,7 +4302,7 @@ function UnitNetworkHandler:action_teleport(unit, position, sender)
 	unit:movement():sync_action_teleport(position)
 end
 
--- Lines: 4241 to 4249
+-- Lines 4241-4249
 function UnitNetworkHandler:sync_tag_team(tagged, owner, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4289,7 +4315,7 @@ function UnitNetworkHandler:sync_tag_team(tagged, owner, sender)
 	managers.player:sync_tag_team(tagged, owner)
 end
 
--- Lines: 4251 to 4256
+-- Lines 4251-4256
 function UnitNetworkHandler:end_tag_team(tagged, owner, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -4298,7 +4324,7 @@ function UnitNetworkHandler:end_tag_team(tagged, owner, sender)
 	managers.player:end_tag_team(tagged, owner)
 end
 
--- Lines: 4260 to 4270
+-- Lines 4260-4270
 function UnitNetworkHandler:sync_delayed_damage_hud(delayed_damage, sender)
 	local peer = self._verify_sender(sender)
 
@@ -4313,7 +4339,7 @@ function UnitNetworkHandler:sync_delayed_damage_hud(delayed_damage, sender)
 	end
 end
 
--- Lines: 4273 to 4283
+-- Lines 4273-4283
 function UnitNetworkHandler:sync_damage_absorption_hud(absorption_amount, sender)
 	local peer = self._verify_sender(sender)
 
@@ -4327,4 +4353,3 @@ function UnitNetworkHandler:sync_damage_absorption_hud(absorption_amount, sender
 		teammate_panel:set_absorb_active(absorption_amount)
 	end
 end
-

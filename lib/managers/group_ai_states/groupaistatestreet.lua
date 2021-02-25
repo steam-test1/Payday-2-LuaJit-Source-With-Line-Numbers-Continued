@@ -1,6 +1,6 @@
 GroupAIStateStreet = GroupAIStateStreet or class(GroupAIStateBesiege)
 
--- Lines: 4 to 21
+-- Lines 4-21
 function GroupAIStateStreet:_upd_police_activity()
 	self._police_upd_task_queued = false
 
@@ -23,7 +23,7 @@ function GroupAIStateStreet:_upd_police_activity()
 	self:_queue_police_upd_task()
 end
 
--- Lines: 26 to 165
+-- Lines 25-165
 function GroupAIStateStreet:_begin_new_tasks()
 	local all_areas = self._area_data
 	local nav_manager = managers.navigation
@@ -137,7 +137,9 @@ function GroupAIStateStreet:_begin_new_tasks()
 						table.insert(recon_candidates, area)
 					else
 						are_recon_candidates_safe = true
-						recon_candidates = {area}
+						recon_candidates = {
+							area
+						}
 					end
 				elseif not are_recon_candidates_safe then
 					table.insert(recon_candidates, area)
@@ -156,7 +158,7 @@ function GroupAIStateStreet:_begin_new_tasks()
 		end
 
 		i = i + 1
-	until #to_search_areas < i
+	until i > #to_search_areas
 
 	if assault_candidates then
 		self:_begin_assault()
@@ -182,7 +184,7 @@ function GroupAIStateStreet:_begin_new_tasks()
 	end
 end
 
--- Lines: 170 to 207
+-- Lines 169-207
 function GroupAIStateStreet:_begin_assault()
 	local assault_data = self._task_data.assault
 	assault_data.active = true
@@ -214,13 +216,15 @@ function GroupAIStateStreet:_begin_assault()
 	end
 
 	if self._draw_drama then
-		table.insert(self._draw_drama.assault_hist, {self._t})
+		table.insert(self._draw_drama.assault_hist, {
+			self._t
+		})
 	end
 
 	self._task_data.recon.tasks = {}
 end
 
--- Lines: 211 to 255
+-- Lines 211-255
 function GroupAIStateStreet:_upd_assault_task(task_data)
 	local assault_data = self._task_data.assault
 	local target_area = task_data.target_area
@@ -234,8 +238,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 
 	if nr_wanted > 0 and assault_data.phase ~= "fade" and not next(self._spawning_groups) then
-
-		-- Lines: 230 to 231
+		-- Lines 230-232
 		local function verif_clbk(test_spawn_group)
 			return test_spawn_group.area.id == target_area.id
 		end
@@ -249,10 +252,12 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 				pose = "stand",
 				type = "assault_area",
 				area = task_data.target_area,
-				coarse_path = {{
-					task_data.target_area.pos_nav_seg,
-					task_data.target_area.pos
-				}}
+				coarse_path = {
+					{
+						task_data.target_area.pos_nav_seg,
+						task_data.target_area.pos
+					}
+				}
 			}
 
 			self:_spawn_in_group(spawn_group, spawn_group_type, grp_objective, assault_data)
@@ -268,7 +273,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 end
 
--- Lines: 260 to 269
+-- Lines 259-269
 function GroupAIStateStreet:_begin_reenforce_task(reenforce_area)
 	local new_task = {
 		use_spawn_event = true,
@@ -282,7 +287,7 @@ function GroupAIStateStreet:_begin_reenforce_task(reenforce_area)
 	self._task_data.reenforce.next_dispatch_t = self._t + self:_get_difficulty_dependent_value(tweak_data.group_ai.street.reenforce.interval)
 end
 
--- Lines: 273 to 372
+-- Lines 273-372
 function GroupAIStateStreet:_upd_reenforce_tasks()
 	local reenforce_tasks = self._task_data.reenforce.tasks
 	local t = self._t
@@ -308,7 +313,15 @@ function GroupAIStateStreet:_upd_reenforce_tasks()
 
 			if undershot > 0 and not self._task_data.regroup.active and self._task_data.assault.phase ~= "fade" and self._task_data.reenforce.next_dispatch_t < t and self:is_area_safe(task_data.target_area) then
 				local used_event = nil
-				used_event = task_data.use_spawn_event
+
+				if task_data.use_spawn_event then
+					task_data.use_spawn_event = false
+
+					if self:_try_use_task_spawn_event(t, task_data.target_area, "reenforce") then
+						used_event = true
+					end
+				end
+
 				local used_group, spawning_groups = nil
 
 				if not used_event then
@@ -382,7 +395,7 @@ function GroupAIStateStreet:_upd_reenforce_tasks()
 	self:_assign_enemy_groups_to_reenforce()
 end
 
--- Lines: 376 to 632
+-- Lines 376-632
 function GroupAIStateStreet:_upd_assault_tasks()
 	local assault_data = self._task_data.assault
 
@@ -457,8 +470,8 @@ function GroupAIStateStreet:_upd_assault_tasks()
 	else
 		local enemies_left = self:_count_police_force("assault")
 
-		if enemies_left < 7 or assault_data.phase_end_t + 350 < t then
-			if assault_data.phase_end_t - 8 < t and not assault_data.said_retreat then
+		if enemies_left < 7 or t > assault_data.phase_end_t + 350 then
+			if t > assault_data.phase_end_t - 8 and not assault_data.said_retreat then
 				if self._drama_data.amount < tweak_data.drama.assault_fade_end then
 					assault_data.said_retreat = true
 
@@ -536,7 +549,9 @@ function GroupAIStateStreet:_upd_assault_tasks()
 		else
 			assault_task = {
 				target_area = self._area_data[target_area_id],
-				target_criminals = {[criminal_u_key] = self._criminals[criminal_u_key]},
+				target_criminals = {
+					[criminal_u_key] = self._criminals[criminal_u_key]
+				},
 				start_t = t
 			}
 			assault_tasks[target_area_id] = assault_task
@@ -603,7 +618,7 @@ function GroupAIStateStreet:_upd_assault_tasks()
 
 			for group_id, group in pairs(self._groups) do
 				if group.objective.type == "assault_area" and group.objective.area.id == area_id then
-					area_population = (area_population + group.initial_size) - group.casualties
+					area_population = area_population + group.initial_size - group.casualties
 				end
 			end
 
@@ -619,4 +634,3 @@ function GroupAIStateStreet:_upd_assault_tasks()
 		self:_upd_assault_task(assault_task)
 	end
 end
-

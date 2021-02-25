@@ -1,6 +1,6 @@
 MenuNodeMutatorOptionsGui = MenuNodeMutatorOptionsGui or class(MenuNodeGui)
 
--- Lines: 4 to 18
+-- Lines 4-18
 function MenuNodeMutatorOptionsGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -15,11 +15,11 @@ function MenuNodeMutatorOptionsGui:init(node, layer, parameters)
 	self:setup(node)
 end
 
--- Lines: 20 to 21
+-- Lines 20-21
 function MenuNodeMutatorOptionsGui:setup(node)
 end
 
--- Lines: 23 to 27
+-- Lines 23-28
 function MenuNodeMutatorOptionsGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -29,7 +29,7 @@ function MenuNodeMutatorOptionsGui:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 30 to 91
+-- Lines 30-91
 function MenuNodeMutatorOptionsGui:_setup_item_panel(safe_rect, res)
 	MenuNodeMutatorOptionsGui.super._setup_item_panel(self, safe_rect, res)
 	self.item_panel:set_w(safe_rect.width * (1 - self._align_line_proportions))
@@ -75,12 +75,14 @@ function MenuNodeMutatorOptionsGui:_setup_item_panel(safe_rect, res)
 
 	self._texture_panel:set_center(self.box_panel:w() / 2, self.box_panel:h() / 2)
 
-	self.boxgui = BoxGuiObject:new(self.box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self.boxgui = BoxGuiObject:new(self.box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
@@ -103,7 +105,7 @@ function MenuNodeMutatorOptionsGui:_setup_item_panel(safe_rect, res)
 	self:_set_topic_position()
 end
 
--- Lines: 93 to 101
+-- Lines 93-101
 function MenuNodeMutatorOptionsGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -114,7 +116,7 @@ function MenuNodeMutatorOptionsGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeMutatorOptionsGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines: 103 to 111
+-- Lines 103-111
 function MenuNodeMutatorOptionsGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -127,12 +129,12 @@ function MenuNodeMutatorOptionsGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 113 to 115
+-- Lines 113-115
 function MenuNodeMutatorOptionsGui:_setup_item_rows(node)
 	MenuNodeMutatorOptionsGui.super._setup_item_rows(self, node)
 end
 
--- Lines: 117 to 126
+-- Lines 117-126
 function MenuNodeMutatorOptionsGui:reload_item(item)
 	MenuNodeMutatorOptionsGui.super.reload_item(self, item)
 
@@ -144,7 +146,7 @@ function MenuNodeMutatorOptionsGui:reload_item(item)
 	end
 end
 
--- Lines: 128 to 136
+-- Lines 128-136
 function MenuNodeMutatorOptionsGui:_align_marker(row_item)
 	MenuNodeMutatorOptionsGui.super._align_marker(self, row_item)
 
@@ -157,8 +159,7 @@ function MenuNodeMutatorOptionsGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines: 138 to 140
+-- Lines 138-140
 function MenuNodeMutatorOptionsGui:close()
 	MenuNodeMutatorOptionsGui.super.close(self)
 end
-

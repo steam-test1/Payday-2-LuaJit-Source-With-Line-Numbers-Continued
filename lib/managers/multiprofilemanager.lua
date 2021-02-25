@@ -1,6 +1,6 @@
 MultiProfileManager = MultiProfileManager or class()
 
--- Lines: 3 to 11
+-- Lines 3-11
 function MultiProfileManager:init()
 	if not Global.multi_profile then
 		Global.multi_profile = {}
@@ -13,7 +13,7 @@ function MultiProfileManager:init()
 	self:_check_amount()
 end
 
--- Lines: 13 to 35
+-- Lines 13-35
 function MultiProfileManager:save_current()
 	print("[MultiProfileManager:save_current] current profile:", self._global._current_profile)
 
@@ -36,7 +36,7 @@ function MultiProfileManager:save_current()
 	print("[MultiProfileManager:save_current] done")
 end
 
--- Lines: 37 to 70
+-- Lines 37-70
 function MultiProfileManager:load_current()
 	local profile = self:current_profile()
 	local blm = managers.blackmarket
@@ -78,7 +78,7 @@ function MultiProfileManager:load_current()
 	end
 end
 
--- Lines: 72 to 76
+-- Lines 72-77
 function MultiProfileManager:current_profile_name()
 	if not self:current_profile() then
 		return "Error"
@@ -87,12 +87,12 @@ function MultiProfileManager:current_profile_name()
 	return self:current_profile().name or "Profile " .. self._global._current_profile
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function MultiProfileManager:profile_count()
 	return math.max(#self._global._profiles, 1)
 end
 
--- Lines: 83 to 96
+-- Lines 83-96
 function MultiProfileManager:set_current_profile(index)
 	if index < 0 or self:profile_count() < index then
 		return
@@ -110,43 +110,43 @@ function MultiProfileManager:set_current_profile(index)
 	print("[MultiProfileManager:set_current_profile] current profile:", self._global._current_profile)
 end
 
--- Lines: 98 to 99
+-- Lines 98-100
 function MultiProfileManager:current_profile()
 	return self:profile(self._global._current_profile)
 end
 
--- Lines: 102 to 103
+-- Lines 102-104
 function MultiProfileManager:profile(index)
 	return self._global._profiles[index]
 end
 
--- Lines: 107 to 110
+-- Lines 106-110
 function MultiProfileManager:_add_profile(profile, index)
 	index = index or #self._global._profiles + 1
 	self._global._profiles[index] = profile
 end
 
--- Lines: 112 to 114
+-- Lines 112-114
 function MultiProfileManager:next_profile()
 	self:set_current_profile(self._global._current_profile + 1)
 end
 
--- Lines: 116 to 118
+-- Lines 116-118
 function MultiProfileManager:previous_profile()
 	self:set_current_profile(self._global._current_profile - 1)
 end
 
--- Lines: 120 to 121
+-- Lines 120-122
 function MultiProfileManager:has_next()
 	return self._global._current_profile < self:profile_count()
 end
 
--- Lines: 124 to 125
+-- Lines 124-126
 function MultiProfileManager:has_previous()
 	return self._global._current_profile > 1
 end
 
--- Lines: 129 to 169
+-- Lines 128-169
 function MultiProfileManager:open_quick_select()
 	local dialog_data = {
 		title = "",
@@ -192,14 +192,14 @@ function MultiProfileManager:open_quick_select()
 	managers.system_menu:show_buttons(dialog_data)
 end
 
--- Lines: 171 to 177
+-- Lines 171-177
 function MultiProfileManager:save(data)
 	local save_data = deep_clone(self._global._profiles)
 	save_data.current_profile = self._global._current_profile
 	data.multi_profile = save_data
 end
 
--- Lines: 179 to 188
+-- Lines 179-188
 function MultiProfileManager:load(data)
 	if data.multi_profile then
 		for i, profile in ipairs(data.multi_profile) do
@@ -212,7 +212,7 @@ function MultiProfileManager:load(data)
 	self:_check_amount()
 end
 
--- Lines: 191 to 210
+-- Lines 190-210
 function MultiProfileManager:_check_amount()
 	local wanted_amount = 15
 
@@ -237,4 +237,3 @@ function MultiProfileManager:_check_amount()
 		self._global._current_profile = prev_current
 	end
 end
-

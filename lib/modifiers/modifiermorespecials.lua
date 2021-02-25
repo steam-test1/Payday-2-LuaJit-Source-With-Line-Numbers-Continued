@@ -5,7 +5,7 @@ ModifierMoreSpecials.desc_id = "menu_cs_modifier_specials"
 ModifierMoreSpecials.default_value = "inc"
 ModifierMoreSpecials.unit_tweak_id = "tank"
 
--- Lines: 10 to 19
+-- Lines 9-19
 function ModifierMoreSpecials:init(data)
 	ModifierMoreSpecials.super.init(self, data)
 
@@ -15,4 +15,3 @@ function ModifierMoreSpecials:init(data)
 		end
 	end
 end
-

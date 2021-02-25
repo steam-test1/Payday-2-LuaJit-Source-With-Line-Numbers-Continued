@@ -1,7 +1,7 @@
 HUDWaitingLegend = HUDWaitingLegend or class()
 local PADDING = 8
 
--- Lines: 5 to 23
+-- Lines 5-23
 function HUDWaitingLegend:init(hud)
 	self._hud_panel = hud.panel
 	self._panel = self._hud_panel:panel({
@@ -42,7 +42,7 @@ function HUDWaitingLegend:init(hud)
 	self._panel:set_visible(false)
 end
 
--- Lines: 25 to 30
+-- Lines 25-31
 function HUDWaitingLegend:create_button(text, binding, func_name)
 	return {
 		text = text,
@@ -51,7 +51,7 @@ function HUDWaitingLegend:create_button(text, binding, func_name)
 	}
 end
 
--- Lines: 33 to 65
+-- Lines 33-65
 function HUDWaitingLegend:update_buttons()
 	local str = ""
 
@@ -59,7 +59,9 @@ function HUDWaitingLegend:update_buttons()
 		local button_text = managers.localization:btn_macro(btn.binding, true, true)
 
 		if button_text then
-			str = str .. (str == "" and "" or "  ") .. managers.localization:text(btn.text, {MY_BTN = button_text})
+			str = str .. (str == "" and "" or "  ") .. managers.localization:text(btn.text, {
+				MY_BTN = button_text
+			})
 		end
 	end
 
@@ -87,7 +89,7 @@ function HUDWaitingLegend:update_buttons()
 	self._panel:set_visible(true)
 end
 
--- Lines: 67 to 78
+-- Lines 67-78
 function HUDWaitingLegend:on_input(button)
 	if not self._current_peer or self._block_input_until and Application:time() < self._block_input_until then
 		return
@@ -102,7 +104,7 @@ function HUDWaitingLegend:on_input(button)
 	end
 end
 
--- Lines: 80 to 93
+-- Lines 80-93
 function HUDWaitingLegend:show_on(teammate_hud, peer)
 	if self._box then
 		self._box:stop()
@@ -119,7 +121,7 @@ function HUDWaitingLegend:show_on(teammate_hud, peer)
 	self._block_input_until = Application:time() + 0.5
 end
 
--- Lines: 95 to 120
+-- Lines 95-120
 function HUDWaitingLegend:animate_open()
 	self._btn_text:set_visible(false)
 	self._box:stop()
@@ -144,41 +146,40 @@ function HUDWaitingLegend:animate_open()
 	end)
 end
 
--- Lines: 122 to 123
+-- Lines 122-124
 function HUDWaitingLegend:peer()
 	return self._current_peer
 end
 
--- Lines: 127 to 128
+-- Lines 127-129
 function HUDWaitingLegend:is_set()
 	return not not self._current_peer
 end
 
--- Lines: 131 to 134
+-- Lines 131-134
 function HUDWaitingLegend:turn_off()
 	self._current_peer = nil
 
 	self._panel:set_visible(false)
 end
 
--- Lines: 136 to 140
+-- Lines 136-140
 function HUDWaitingLegend:spawn()
 	if self._current_peer then
 		managers.wait:spawn_waiting(self._current_peer:id())
 	end
 end
 
--- Lines: 142 to 146
+-- Lines 142-146
 function HUDWaitingLegend:return_back()
 	if self._current_peer then
 		managers.wait:kick_to_briefing(self._current_peer:id())
 	end
 end
 
--- Lines: 148 to 152
+-- Lines 148-152
 function HUDWaitingLegend:kick()
 	if self._current_peer then
 		managers.vote:message_host_kick(self._current_peer)
 	end
 end
-

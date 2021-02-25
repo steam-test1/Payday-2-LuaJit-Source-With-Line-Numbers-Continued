@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 HUDStatsScreenSkirmish = HUDStatsScreenSkirmish or class(HUDStatsScreen)
 
--- Lines: 15 to 88
+-- Lines 15-88
 function HUDStatsScreenSkirmish:recreate_left()
 	self._left:clear()
 	self._left:bitmap({
@@ -86,7 +86,9 @@ function HUDStatsScreenSkirmish:recreate_left()
 		}), 0)
 	end
 
-	local loot_panel = ExtendedPanel:new(self._left, {w = (self._left:w() - 16) - 8})
+	local loot_panel = ExtendedPanel:new(self._left, {
+		w = self._left:w() - 16 - 8
+	})
 	placer = UiPlacer:new(16, 0, 8, 4)
 
 	placer:add_bottom(loot_panel:fine_text({
@@ -107,4 +109,3 @@ function HUDStatsScreenSkirmish:recreate_left()
 	loot_panel:set_size(placer:most_rightbottom())
 	loot_panel:set_leftbottom(0, self._left:h() - 16)
 end
-

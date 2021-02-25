@@ -1,6 +1,6 @@
 BlurZoneUnitElement = BlurZoneUnitElement or class(MissionElement)
 
--- Lines: 3 to 13
+-- Lines 3-13
 function BlurZoneUnitElement:init(unit)
 	BlurZoneUnitElement.super.init(self, unit)
 
@@ -13,7 +13,7 @@ function BlurZoneUnitElement:init(unit)
 	table.insert(self._save_values, "height")
 end
 
--- Lines: 15 to 29
+-- Lines 15-29
 function BlurZoneUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local brush = Draw:brush()
 
@@ -29,7 +29,7 @@ function BlurZoneUnitElement:update_selected(t, dt, selected_unit, all_units)
 	pen:half_sphere(self._unit:position() + math.Z * self._hed.height, self._hed.radius, -math.Z)
 end
 
--- Lines: 31 to 96
+-- Lines 31-96
 function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -102,4 +102,3 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = height
 	})
 end
-

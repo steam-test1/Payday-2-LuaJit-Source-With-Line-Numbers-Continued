@@ -8,28 +8,29 @@ require("lib/utils/VRFadeout")
 
 PlayerMenuCamera = PlayerMenuCamera or class()
 
--- Lines: 13 to 14
+-- Lines 13-14
 function PlayerMenuCamera:init(unit)
 end
 
--- Lines: 16 to 18
+-- Lines 16-18
 function PlayerMenuCamera:set_menu_player(player)
 	self._player = player
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function PlayerMenuCamera:position()
 	return Vector3(0, 0, 0)
 end
 
--- Lines: 24 to 25
+-- Lines 24-26
 function PlayerMenuCamera:rotation()
 	return Rotation()
 end
+
 local hand_states_menu = require("lib/input/HandStatesPlayerMenu")
 TouchWheel = TouchWheel or class()
 
--- Lines: 33 to 40
+-- Lines 33-40
 function TouchWheel:init(granularity_x, granularity_y)
 	self._granularity_x = granularity_x
 	self._granularity_y = granularity_y
@@ -39,7 +40,7 @@ function TouchWheel:init(granularity_x, granularity_y)
 	self._touching = false
 end
 
--- Lines: 42 to 63
+-- Lines 42-64
 function TouchWheel:feed(v)
 	mvector3.set(self._prev_value, self._value)
 
@@ -64,29 +65,30 @@ function TouchWheel:feed(v)
 	return self._touching
 end
 
--- Lines: 66 to 67
+-- Lines 66-68
 function TouchWheel:step_x()
 	return self._value.x - self._prev_value.x
 end
 
--- Lines: 70 to 71
+-- Lines 70-72
 function TouchWheel:step_y()
 	return self._value.y - self._prev_value.y
 end
 
--- Lines: 74 to 75
+-- Lines 74-76
 function TouchWheel:value()
 	return self._value
 end
+
 StickWheel = StickWheel or class()
 
--- Lines: 82 to 85
+-- Lines 82-85
 function StickWheel:init()
 	self._value = Vector3(0, 0, 0)
 	self._scrolling = false
 end
 
--- Lines: 87 to 108
+-- Lines 87-109
 function StickWheel:feed(v)
 	local t = TimerManager:game():time()
 
@@ -115,7 +117,7 @@ function StickWheel:feed(v)
 	return self._scrolling
 end
 
--- Lines: 111 to 114
+-- Lines 111-115
 function StickWheel:step_x()
 	local v = self._value.x
 
@@ -124,7 +126,7 @@ function StickWheel:step_x()
 	return v
 end
 
--- Lines: 117 to 120
+-- Lines 117-121
 function StickWheel:step_y()
 	local v = self._value.y
 
@@ -133,10 +135,11 @@ function StickWheel:step_y()
 	return v
 end
 
--- Lines: 123 to 124
+-- Lines 123-125
 function StickWheel:value()
 	return self._value
 end
+
 PlayerMenu = PlayerMenu or class()
 PlayerMenu.STATE_IDLE = 0
 PlayerMenu.STATE_TARGETING = 1
@@ -146,13 +149,13 @@ PlayerMenu.STATE_EMPTY = 4
 PlayerMenu.WARP_SPEED = 3000
 PlayerMenu.MAX_WARP_DISTANCE = 500
 PlayerMenu.MAX_WARP_JUMP_DISTANCE = 450
-PlayerMenu.WARP_JUMP_TIME = (2 * tweak_data.player.movement_state.standard.movement.jump_velocity.z) / 982
+PlayerMenu.WARP_JUMP_TIME = 2 * tweak_data.player.movement_state.standard.movement.jump_velocity.z / 982
 PlayerMenu.MAX_WARP_JUMP_MOVE_SPEED = PlayerMenu.MAX_WARP_JUMP_DISTANCE / PlayerMenu.WARP_JUMP_TIME
 local mvec_temp1 = Vector3()
 local mvec_temp2 = Vector3()
 local mvec_temp3 = Vector3()
 
--- Lines: 147 to 191
+-- Lines 147-191
 function PlayerMenu:init(position, is_start_menu)
 	self._is_start_menu = is_start_menu or false
 	self._can_warp = self._is_start_menu
@@ -204,24 +207,24 @@ function PlayerMenu:init(position, is_start_menu)
 	end
 end
 
--- Lines: 193 to 195
+-- Lines 193-195
 function PlayerMenu:link_scope(camera_object, screen_object, material, texture_channel, zoom)
 	self._scope_camera:link_scope(camera_object, screen_object, material, texture_channel, zoom)
 end
 
--- Lines: 197 to 199
+-- Lines 197-199
 function PlayerMenu:unlink_scope()
 	self._scope_camera:unlink_scope()
 end
 
--- Lines: 201 to 205
+-- Lines 201-205
 function PlayerMenu:on_savefile_loaded(slot, success, is_setting_slot, cache_only)
 	if is_setting_slot then
 		self._refresh_settings = true
 	end
 end
 
--- Lines: 207 to 217
+-- Lines 207-217
 function PlayerMenu:destroy()
 	if self._vp then
 		self._vp:destroy()
@@ -236,24 +239,24 @@ function PlayerMenu:destroy()
 	end
 end
 
--- Lines: 225 to 228
+-- Lines 225-228
 function PlayerMenu:register_workspace(params)
 	self._workspaces = self._workspaces or {}
 	self._workspaces[params.ws:key()] = params
 end
 
--- Lines: 230 to 233
+-- Lines 230-233
 function PlayerMenu:unregister_workspace(ws)
 	self._workspaces = self._workspaces or {}
 	self._workspaces[ws:key()] = nil
 end
 
--- Lines: 235 to 236
+-- Lines 235-237
 function PlayerMenu:get_rumble_position()
 	return self._hmd_pos
 end
 
--- Lines: 239 to 255
+-- Lines 239-255
 function PlayerMenu:change_state(state, ...)
 	if state == self._current_state then
 		return
@@ -277,37 +280,37 @@ function PlayerMenu:change_state(state, ...)
 	self._state_update = self._states[self._current_state].update
 end
 
--- Lines: 257 to 258
+-- Lines 257-259
 function PlayerMenu:current_state()
 	return self._current_state
 end
 
--- Lines: 261 to 262
+-- Lines 261-263
 function PlayerMenu:controller()
 	return self._controller
 end
 
--- Lines: 265 to 266
+-- Lines 265-267
 function PlayerMenu:hand(hand_index)
 	return self._hands[hand_index]
 end
 
--- Lines: 269 to 270
+-- Lines 269-271
 function PlayerMenu:camera()
 	return self._camera_object
 end
 
--- Lines: 273 to 274
+-- Lines 273-275
 function PlayerMenu:position()
 	return self._position
 end
 
--- Lines: 277 to 278
+-- Lines 277-279
 function PlayerMenu:base_rotation()
 	return self._base_rotation
 end
 
--- Lines: 281 to 286
+-- Lines 281-286
 function PlayerMenu:_rotate_player(right)
 	local angle = managers.vr:get_setting("rotate_player_angle")
 	local rot = right and Rotation(-angle, 0, 0) or Rotation(angle, 0, 0)
@@ -316,7 +319,7 @@ function PlayerMenu:_rotate_player(right)
 	managers.overlay_effect:play_effect(tweak_data.vr.overlay_effects.fade_in_rotate_player)
 end
 
--- Lines: 288 to 304
+-- Lines 288-305
 function PlayerMenu:_get_max_walk_speed(t, force_run)
 	local speed_tweak = tweak_data.player.movement_state.standard.movement.speed
 	local movement_speed = speed_tweak.STANDARD_MAX
@@ -335,10 +338,11 @@ function PlayerMenu:_get_max_walk_speed(t, force_run)
 
 	return movement_speed * multiplier
 end
+
 local mvec_prev_pos = Vector3()
 local mvec_mover_to_ghost = Vector3()
 
--- Lines: 310 to 467
+-- Lines 310-467
 function PlayerMenu:update(t, dt)
 	if self._tracking_enabled then
 		if self._refresh_settings then
@@ -466,7 +470,7 @@ function PlayerMenu:update(t, dt)
 					hand.speed = hand.speed + 0.5 * dt
 				end
 
-				local t_slerp = math.min((speed * dt) / deg, 1)
+				local t_slerp = math.min(speed * dt / deg, 1)
 
 				mrotation.slerp(rot, hand.prev_rotation, rot, t_slerp)
 
@@ -497,7 +501,7 @@ function PlayerMenu:update(t, dt)
 	self:_update_post_material_vars()
 end
 
--- Lines: 470 to 500
+-- Lines 469-501
 local function intersect_ws(shape, normal, from, dir)
 	local d = mvector3.dot(dir, normal)
 
@@ -507,10 +511,16 @@ local function intersect_ws(shape, normal, from, dir)
 
 	local p = mvector3.dot(shape[1] - from, normal) / d * dir + from
 
-	for i = 1, #shape, 1 do
+	for i = 1, #shape do
 		local p1 = shape[i]
 		local p2 = nil
-		p2 = i ~= #shape and shape[i + 1] or shape[1]
+
+		if i ~= #shape then
+			p2 = shape[i + 1]
+		else
+			p2 = shape[1]
+		end
+
 		local d = p1 - p2
 
 		mvector3.normalize(d)
@@ -527,7 +537,7 @@ local function intersect_ws(shape, normal, from, dir)
 	return p
 end
 
--- Lines: 503 to 557
+-- Lines 503-558
 function PlayerMenu:raycast(from, dir)
 	local closest_point, min_length_sq = nil
 	local workspaces = self._workspaces
@@ -589,33 +599,33 @@ function PlayerMenu:raycast(from, dir)
 	return closest_point, hit_ws
 end
 
--- Lines: 560 to 561
+-- Lines 560-562
 function PlayerMenu:is_idle()
 	return self._current_state == PlayerMenu.STATE_IDLE
 end
 
--- Lines: 564 to 567
+-- Lines 564-567
 function PlayerMenu:attach_controller(controller)
 	self._hand_state_machine:attach_controller(controller)
 	self._hand_state_machine:refresh()
 end
 
--- Lines: 569 to 571
+-- Lines 569-571
 function PlayerMenu:dettach_controller(controller)
 	self._hand_state_machine:deattach_controller(controller)
 end
 
--- Lines: 573 to 575
+-- Lines 573-575
 function PlayerMenu:set_primary_hand(hand)
 	self:_set_primary_hand(hand == "right" and 1 or 2)
 end
 
--- Lines: 577 to 578
+-- Lines 577-579
 function PlayerMenu:primary_hand_index()
 	return self._primary_hand
 end
 
--- Lines: 581 to 596
+-- Lines 581-596
 function PlayerMenu:start()
 	self._base_rotation = Rotation(self._is_start_menu and 0 or -VRManager:hmd_rotation():yaw(), 0, 0)
 
@@ -639,7 +649,7 @@ function PlayerMenu:start()
 	self:change_state(PlayerMenu.STATE_IDLE)
 end
 
--- Lines: 598 to 608
+-- Lines 598-608
 function PlayerMenu:stop()
 	self:_set_tracking_enabled(false)
 
@@ -656,17 +666,17 @@ function PlayerMenu:stop()
 	self._hand_state_machine:enter_hand_state(2, "default")
 end
 
--- Lines: 610 to 611
+-- Lines 610-612
 function PlayerMenu:is_active()
 	return self._is_active or false
 end
 
--- Lines: 614 to 616
+-- Lines 614-616
 function PlayerMenu:set_position(position)
 	mvector3.set(self._position, position)
 end
 
--- Lines: 622 to 660
+-- Lines 621-660
 function PlayerMenu:update_input()
 	if self._controller:get_input_pressed("laser_primary") then
 		managers.mouse_pointer._ws:feed_mouse_pressed(Idstring("0"))
@@ -702,7 +712,7 @@ function PlayerMenu:update_input()
 	end
 end
 
--- Lines: 662 to 667
+-- Lines 662-667
 function PlayerMenu:change_ws(ws)
 	self._workspaces[self._current_ws:key()].deactivate()
 	self._workspaces[ws:key()].activate()
@@ -711,7 +721,7 @@ function PlayerMenu:change_ws(ws)
 	self._current_ws = ws
 end
 
--- Lines: 670 to 686
+-- Lines 669-686
 function PlayerMenu:draw()
 	local hand = self._hands[self._primary_hand]
 	local offset = mvector3.copy(hand:laser_position())
@@ -737,13 +747,13 @@ function PlayerMenu:draw()
 	self:_laser_ray(p ~= nil, from, to)
 end
 
--- Lines: 688 to 697
+-- Lines 688-697
 function PlayerMenu:update_base(t, dt)
 	self:update_input()
 	self:draw()
 end
 
--- Lines: 699 to 709
+-- Lines 699-709
 function PlayerMenu:idle_update(t, dt)
 	if (self._can_warp or PlayerMenu.DEBUG_WARP) and self._movement_input:is_movement_warp() then
 		local state = self._movement_input:state()
@@ -756,7 +766,7 @@ function PlayerMenu:idle_update(t, dt)
 	self:update_base(t, dt)
 end
 
--- Lines: 714 to 723
+-- Lines 714-723
 function PlayerMenu:target_enter()
 	local hand = self._hands[self._primary_hand == 1 and 2 or 1]
 	self._warp_ext = hand:unit():warp()
@@ -769,12 +779,12 @@ function PlayerMenu:target_enter()
 	self._warp_ext:set_blocked(false)
 end
 
--- Lines: 725 to 727
+-- Lines 725-727
 function PlayerMenu:target_exit()
 	self._warp_ext:set_targeting(false)
 end
 
--- Lines: 729 to 742
+-- Lines 729-742
 function PlayerMenu:target_update(t, dt)
 	self:update_base(t, dt)
 
@@ -792,16 +802,16 @@ function PlayerMenu:target_update(t, dt)
 	end
 end
 
--- Lines: 747 to 749
+-- Lines 747-749
 function PlayerMenu:warp_enter(position)
 	self._target_position = mvector3.copy(position)
 end
 
--- Lines: 751 to 752
+-- Lines 751-752
 function PlayerMenu:warp_exit()
 end
 
--- Lines: 754 to 764
+-- Lines 754-764
 function PlayerMenu:warp_update(t, dt)
 	self._warp_dir = self._target_position - self._position
 	local dist = mvector3.normalize(self._warp_dir)
@@ -815,26 +825,26 @@ function PlayerMenu:warp_update(t, dt)
 	end
 end
 
--- Lines: 769 to 773
+-- Lines 769-773
 function PlayerMenu:bootup_init_update()
 	if TextureCache:check_textures_loaded() then
 		self:change_state(PlayerMenu.STATE_EMPTY)
 	end
 end
 
--- Lines: 775 to 779
+-- Lines 775-779
 function PlayerMenu:bootup_init_exit()
 	self:_set_viewport_active(true)
 	managers.overlay_effect:play_effect(tweak_data.overlay_effects.level_fade_in)
 	self:_set_tracking_enabled(true)
 end
 
--- Lines: 795 to 798
+-- Lines 783-798
 function PlayerMenu:_set_tracking_enabled(enabled)
 	self._tracking_enabled = enabled
 end
 
--- Lines: 802 to 809
+-- Lines 802-809
 function PlayerMenu:_set_primary_hand(hand)
 	local offhand = 3 - hand
 
@@ -846,11 +856,13 @@ function PlayerMenu:_set_primary_hand(hand)
 	self._primary_hand = hand
 end
 
--- Lines: 814 to 852
+-- Lines 814-852
 function PlayerMenu:_setup_states()
 	self._current_state = nil
 	self._states = {
-		[PlayerMenu.STATE_IDLE] = {update = callback(self, self, "idle_update")},
+		[PlayerMenu.STATE_IDLE] = {
+			update = callback(self, self, "idle_update")
+		},
 		[PlayerMenu.STATE_TARGETING] = {
 			enter = callback(self, self, "target_enter"),
 			exit = callback(self, self, "target_exit"),
@@ -881,9 +893,10 @@ function PlayerMenu:_setup_states()
 
 	self._hand_state_machine:attach_controller(self._controller, true)
 end
+
 PlayerMenuHandBase = PlayerMenuHandBase or class()
 
--- Lines: 858 to 872
+-- Lines 858-872
 function PlayerMenuHandBase:init(config, laser_orientation_object)
 	self._hand_data = {}
 	local data = self._hand_data
@@ -898,7 +911,7 @@ function PlayerMenuHandBase:init(config, laser_orientation_object)
 	data._laser_orientation_object = laser_orientation_object
 end
 
--- Lines: 874 to 891
+-- Lines 874-891
 function PlayerMenuHandBase:update_orientation(position, rotation, player_position, hmd_horz)
 	local data = self._hand_data
 
@@ -917,41 +930,42 @@ function PlayerMenuHandBase:update_orientation(position, rotation, player_positi
 	self:set_orientation(data.position, data.rotation)
 end
 
--- Lines: 893 to 894
+-- Lines 893-895
 function PlayerMenuHandBase:position()
 	return self._hand_data.position
 end
 
--- Lines: 897 to 898
+-- Lines 897-899
 function PlayerMenuHandBase:rotation()
 	return self._hand_data.rotation
 end
 
--- Lines: 901 to 902
+-- Lines 901-903
 function PlayerMenuHandBase:raw_rotation()
 	return self._hand_data.raw_rotation
 end
 
--- Lines: 905 to 906
+-- Lines 905-907
 function PlayerMenuHandBase:forward()
 	return self._hand_data._forward
 end
 
--- Lines: 909 to 910
+-- Lines 909-910
 function PlayerMenuHandBase:set_state(state)
 end
 
--- Lines: 912 to 913
+-- Lines 912-914
 function PlayerMenuHandBase:laser_position()
 	return self._hand_data._laser_orientation_object:local_position()
 end
 
--- Lines: 916 to 917
+-- Lines 916-917
 function PlayerMenuHandBase:set_orientation(position, rotation)
 end
+
 PlayerMenuHandUnit = PlayerMenuHandUnit or class(PlayerMenuHandBase)
 
--- Lines: 923 to 930
+-- Lines 923-930
 function PlayerMenuHandUnit:init(config)
 	local hand_unit = World:spawn_unit(config.unit_name, Vector3(0, 0, 0), Rotation())
 
@@ -964,31 +978,32 @@ function PlayerMenuHandUnit:init(config)
 	self.super.init(self, config, hand_unit:get_object(config.laser_orientation_object))
 end
 
--- Lines: 932 to 935
+-- Lines 932-935
 function PlayerMenuHandUnit:configure(other)
 	self._unit:base():set_other_hand_unit(other._unit)
 	self._unit:base():set_hand_data(self._hand_data)
 end
 
--- Lines: 937 to 941
+-- Lines 937-941
 function PlayerMenuHandUnit:set_orientation(position, rotation)
 	self._unit:set_position(position)
 	self._unit:set_rotation(rotation)
 	self._unit:set_moving(2)
 end
 
--- Lines: 943 to 945
+-- Lines 943-945
 function PlayerMenuHandUnit:set_state(state)
 	self._unit:damage():run_sequence_simple(state)
 end
 
--- Lines: 947 to 948
+-- Lines 947-949
 function PlayerMenuHandUnit:unit()
 	return self._unit
 end
+
 PlayerMenuHandObject = PlayerMenuHandObject or class(PlayerMenuHandBase)
 
--- Lines: 955 to 962
+-- Lines 955-962
 function PlayerMenuHandObject:init(config)
 	self.super.init(self, config, config.laser_orientation_object)
 
@@ -1001,7 +1016,7 @@ function PlayerMenuHandObject:init(config)
 	end
 end
 
--- Lines: 964 to 969
+-- Lines 964-969
 function PlayerMenuHandObject:set_orientation(position, rotation)
 	if self._object then
 		self._object:set_position(position)
@@ -1009,10 +1024,12 @@ function PlayerMenuHandObject:set_orientation(position, rotation)
 	end
 end
 
--- Lines: 971 to 982
+-- Lines 971-982
 function PlayerMenuHandObject:_set_visibility(object, visibility)
 	if object then
-		local objects = {object}
+		local objects = {
+			object
+		}
 
 		while #objects ~= 0 do
 			local cur = table.remove(objects, 1)
@@ -1026,7 +1043,7 @@ function PlayerMenuHandObject:_set_visibility(object, visibility)
 	end
 end
 
--- Lines: 984 to 994
+-- Lines 984-994
 function PlayerMenuHandObject:set_state(state)
 	local obj = self._states[state]
 
@@ -1041,14 +1058,14 @@ function PlayerMenuHandObject:set_state(state)
 	end
 end
 
--- Lines: 996 to 1000
+-- Lines 996-1000
 function PlayerMenuHandObject:_hide_all()
 	for _, o in pairs(self._states) do
 		self:_set_visibility(o, false)
 	end
 end
 
--- Lines: 1005 to 1059
+-- Lines 1004-1059
 function PlayerMenu:_create_hands()
 	local controller_rotation = Rotation()
 
@@ -1106,7 +1123,7 @@ function PlayerMenu:_create_hands()
 	end
 end
 
--- Lines: 1061 to 1069
+-- Lines 1061-1069
 function PlayerMenu:_create_mover()
 	if self._is_start_menu then
 		self._mover_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/units/menu_mover"), Vector3(0, 0, 0), Rotation())
@@ -1118,15 +1135,16 @@ function PlayerMenu:_create_mover()
 	end
 end
 
--- Lines: 1071 to 1072
+-- Lines 1071-1073
 function PlayerMenu:render_target()
 	return self._render_target
 end
 
--- Lines: 1075 to 1076
+-- Lines 1075-1077
 function PlayerMenu:render_target_resolution()
 	return self._render_target_resolution
 end
+
 local ids_hdr_post_processor = Idstring("hdr_post_processor")
 local ids_hdr_post_composite = Idstring("post_DOF")
 local ids_radial_offset = Idstring("radial_offset")
@@ -1134,7 +1152,7 @@ local ids_dof_settings = Idstring("settings")
 local ids_contrast = Idstring("contrast")
 local ids_chromatic = Idstring("chromatic_amount")
 
--- Lines: 1086 to 1093
+-- Lines 1086-1093
 function PlayerMenu:_update_post_material_vars()
 	if self._post_material then
 		self._post_material:set_variable(ids_chromatic, 0)
@@ -1144,7 +1162,7 @@ function PlayerMenu:_update_post_material_vars()
 	end
 end
 
--- Lines: 1095 to 1144
+-- Lines 1095-1144
 function PlayerMenu:_create_camera()
 	if self._is_start_menu then
 		self._camera_object = World:create_camera()
@@ -1206,12 +1224,12 @@ function PlayerMenu:_create_camera()
 	end
 end
 
--- Lines: 1156 to 1158
+-- Lines 1146-1158
 function PlayerMenu:_set_viewport_active(active)
 	self._vp:set_active(active)
 end
 
--- Lines: 1160 to 1176
+-- Lines 1160-1176
 function PlayerMenu:_laser_ray(visible, from, to)
 	if self._is_start_menu then
 		if visible then
@@ -1232,7 +1250,7 @@ function PlayerMenu:_laser_ray(visible, from, to)
 	end
 end
 
--- Lines: 1178 to 1186
+-- Lines 1178-1186
 function PlayerMenu:_update_fadeout(mover_position, head_position, rotation, t, dt)
 	if not self._is_start_menu then
 		return false
@@ -1245,7 +1263,7 @@ function PlayerMenu:_update_fadeout(mover_position, head_position, rotation, t, 
 	end
 end
 
--- Lines: 1188 to 1206
+-- Lines 1188-1206
 function PlayerMenu:_setup_draw()
 	if self._is_start_menu then
 		self._brush_warp = Draw:brush(Color(0.07, 0, 0.60784, 0.81176))
@@ -1271,4 +1289,3 @@ function PlayerMenu:_setup_draw()
 		self._laser_dot_obj:set_visibility(false)
 	end
 end
-

@@ -4,16 +4,16 @@ core:import("CoreSessionStateJoinSession")
 
 FindSession = FindSession or class()
 
--- Lines: 7 to 9
+-- Lines 7-9
 function FindSession:init()
 	self.session_state._session_creator:find_session(self.session_state._session_info, callback(self, self, "_sessions_found"))
 end
 
--- Lines: 11 to 12
+-- Lines 11-12
 function FindSession:destroy()
 end
 
--- Lines: 14 to 20
+-- Lines 14-20
 function FindSession:_sessions_found(sessions)
 	if not sessions then
 		self._session_to_join = false
@@ -22,7 +22,7 @@ function FindSession:_sessions_found(sessions)
 	self._session_id_to_join = sessions[1].info
 end
 
--- Lines: 22 to 28
+-- Lines 22-28
 function FindSession:transition()
 	if self._session_id_to_join == false then
 		return CoreSessionStateCreateSession.CreateSession
@@ -30,4 +30,3 @@ function FindSession:transition()
 		return CoreSessionStateJoinSession.JoinSession, self._session_id_to_join
 	end
 end
-

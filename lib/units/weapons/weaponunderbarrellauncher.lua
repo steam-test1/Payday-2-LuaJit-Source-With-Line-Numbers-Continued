@@ -2,9 +2,11 @@ WeaponUnderbarrelLauncher = WeaponUnderbarrelLauncher or class(WeaponUnderbarrel
 WeaponUnderbarrelLauncher.GADGET_TYPE = "underbarrel_launcher"
 local mvec_spread_direction = Vector3()
 
--- Lines: 7 to 47
+-- Lines 6-49
 function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
-	self._ammo_data = {launcher_grenade = self.launcher_projectile}
+	self._ammo_data = {
+		launcher_grenade = self.launcher_projectile
+	}
 	local unit = nil
 	local spread_x, spread_y = weapon_base:_get_spread(user_unit)
 	local right = direction:cross(Vector3(0, 0, 1)):normalized()
@@ -46,12 +48,11 @@ function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_po
 	return {}
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function WeaponUnderbarrelLauncher:_adjust_throw_z(m_vec)
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function WeaponUnderbarrelLauncher:_get_spawn_offset()
 	return 0
 end
-

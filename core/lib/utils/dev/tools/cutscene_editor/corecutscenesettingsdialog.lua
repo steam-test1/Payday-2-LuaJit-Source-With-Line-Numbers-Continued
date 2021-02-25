@@ -3,7 +3,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneEditorProject")
 
 CoreCutsceneSettingsDialog = CoreCutsceneSettingsDialog or class()
 
--- Lines: 6 to 33
+-- Lines 6-33
 function CoreCutsceneSettingsDialog:init(parent)
 	self.__window = EWS:Dialog(parent, "Project Settings", "", Vector3(100, 500, 0), Vector3(400, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 
@@ -38,7 +38,7 @@ function CoreCutsceneSettingsDialog:init(parent)
 	sizer:add(buttons_panel, 0, 4, "ALL,EXPAND")
 end
 
--- Lines: 35 to 39
+-- Lines 35-39
 function CoreCutsceneSettingsDialog:destroy()
 	self.__animation_patches:destroy()
 	self.__window:destroy()
@@ -46,7 +46,7 @@ function CoreCutsceneSettingsDialog:destroy()
 	self.__window = nil
 end
 
--- Lines: 41 to 44
+-- Lines 41-45
 function CoreCutsceneSettingsDialog:show()
 	self.__revert_export_type = self:export_type()
 	self.__revert_animation_patches = self.__animation_patches:patches()
@@ -54,12 +54,12 @@ function CoreCutsceneSettingsDialog:show()
 	return self.__window:show_modal()
 end
 
--- Lines: 47 to 49
+-- Lines 47-49
 function CoreCutsceneSettingsDialog:set_unit_types(unit_types)
 	self.__animation_patches:set_unit_types(unit_types)
 end
 
--- Lines: 51 to 55
+-- Lines 51-55
 function CoreCutsceneSettingsDialog:populate_from_project(project)
 	self.__animation_patches:set_patches(project:animation_patches())
 
@@ -68,17 +68,17 @@ function CoreCutsceneSettingsDialog:populate_from_project(project)
 	self.__export_type_dropdown:set_value(self.__export_type)
 end
 
--- Lines: 57 to 58
+-- Lines 57-59
 function CoreCutsceneSettingsDialog:unit_animation_patches()
 	return self.__animation_patches:patches()
 end
 
--- Lines: 61 to 62
+-- Lines 61-63
 function CoreCutsceneSettingsDialog:export_type()
 	return self.__export_type or get_core_or_local("CutsceneEditorProject").DEFAULT_EXPORT_TYPE
 end
 
--- Lines: 65 to 79
+-- Lines 65-80
 function CoreCutsceneSettingsDialog:_create_buttons_panel(parent)
 	local panel = EWS:Panel(parent)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
@@ -98,7 +98,7 @@ function CoreCutsceneSettingsDialog:_create_buttons_panel(parent)
 	return panel
 end
 
--- Lines: 82 to 87
+-- Lines 82-87
 function CoreCutsceneSettingsDialog:_on_ok_button_clicked(sender)
 	self.__export_type = self.__export_type_dropdown:get_value()
 	self.__revert_export_type = nil
@@ -107,7 +107,7 @@ function CoreCutsceneSettingsDialog:_on_ok_button_clicked(sender)
 	self.__window:end_modal("OK")
 end
 
--- Lines: 89 to 96
+-- Lines 89-96
 function CoreCutsceneSettingsDialog:_on_close()
 	self.__window:set_visible(false)
 	self.__export_type_dropdown:set_value(self.__revert_export_type)
@@ -118,4 +118,3 @@ function CoreCutsceneSettingsDialog:_on_close()
 
 	self.__window:end_modal("CANCEL")
 end
-

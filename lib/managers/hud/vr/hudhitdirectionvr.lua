@@ -1,7 +1,7 @@
 HUDHitDirectionVR = HUDHitDirection or class("HUDHitDirectionVR needs HUDHitDirection!")
 local __init = HUDHitDirection.init
 
--- Lines: 5 to 15
+-- Lines 5-15
 function HUDHitDirectionVR:init(hud)
 	local old_panel = hud.panel
 	hud.panel = managers.hud:full_hmd_panel()
@@ -16,7 +16,7 @@ function HUDHitDirectionVR:init(hud)
 	self._hit_direction_panel:set_position(0, 0)
 end
 
--- Lines: 17 to 34
+-- Lines 17-34
 function HUDHitDirectionVR:_add_hit_indicator(damage_origin, damage_type, fixed_angle)
 	damage_type = damage_type or HUDHitDirection.DAMAGE_TYPES.HEALTH
 	local hit = self._hit_direction_panel:gradient({
@@ -36,7 +36,7 @@ function HUDHitDirectionVR:_add_hit_indicator(damage_origin, damage_type, fixed_
 	hit:animate(callback(self, self, "_animate"), data, callback(self, self, "_remove"))
 end
 
--- Lines: 36 to 43
+-- Lines 36-44
 function HUDHitDirectionVR:_get_indicator_intensity_multiplier(damage_type)
 	if damage_type == HUDHitDirection.DAMAGE_TYPES.HEALTH and alive(managers.player:player_unit()) then
 		return 1 + 1 - managers.player:player_unit():character_damage():health_ratio()
@@ -45,7 +45,7 @@ function HUDHitDirectionVR:_get_indicator_intensity_multiplier(damage_type)
 	return 1
 end
 
--- Lines: 46 to 76
+-- Lines 46-76
 function HUDHitDirectionVR:_animate(indicator, data, remove_func)
 	data.t = data.duration
 	data.col_start = 0.7
@@ -86,4 +86,3 @@ function HUDHitDirectionVR:_animate(indicator, data, remove_func)
 
 	remove_func(indicator, data)
 end
-

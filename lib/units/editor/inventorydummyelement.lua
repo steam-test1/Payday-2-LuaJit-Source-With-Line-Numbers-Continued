@@ -1,6 +1,6 @@
 InventoryDummyUnitElement = InventoryDummyUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function InventoryDummyUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -11,7 +11,7 @@ function InventoryDummyUnitElement:init(unit)
 	table.insert(self._save_values, "slot")
 end
 
--- Lines: 16 to 24
+-- Lines 16-24
 function InventoryDummyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -30,4 +30,3 @@ function InventoryDummyUnitElement:_build_panel(panel, panel_sizer)
 		max = 9
 	}, "Set inventory slot to spawn")
 end
-

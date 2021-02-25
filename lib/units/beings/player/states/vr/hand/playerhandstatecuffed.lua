@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStateCuffed = PlayerHandStateCuffed or class(PlayerHandState)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerHandStateCuffed:init(hsm, name, hand_unit, sequence)
 	PlayerHandStateCuffed.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 18
+-- Lines 10-18
 function PlayerHandStateCuffed:at_enter(prev_state)
 	PlayerHandStateCuffed.super.at_enter(self, prev_state)
 	self:hsm():enter_controller_state("empty")
@@ -19,10 +19,9 @@ function PlayerHandStateCuffed:at_enter(prev_state)
 	self._cuff_unit:set_local_position(Vector3(self:hsm():hand_id() == PlayerHand.RIGHT and 1 or -1, -9, 0))
 end
 
--- Lines: 20 to 25
+-- Lines 20-25
 function PlayerHandStateCuffed:at_exit(next_state)
 	PlayerHandStateCuffed.super.at_exit(self, next_state)
 	self._cuff_unit:unlink()
 	self._cuff_unit:set_slot(0)
 end
-

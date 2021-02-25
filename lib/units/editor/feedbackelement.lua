@@ -1,7 +1,7 @@
 FeedbackUnitElement = FeedbackUnitElement or class(MissionElement)
 FeedbackUnitElement.USES_POINT_ORIENTATION = true
 
--- Lines: 4 to 44
+-- Lines 4-44
 function FeedbackUnitElement:init(unit)
 	FeedbackUnitElement.super.init(self, unit)
 
@@ -40,7 +40,7 @@ function FeedbackUnitElement:init(unit)
 	table.insert(self._save_values, "above_camera_effect_distance")
 end
 
--- Lines: 53 to 62
+-- Lines 52-62
 function FeedbackUnitElement:update_selected(t, dt, selected_unit, all_units)
 	if self._hed.orientation_elements then
 		for _, id in ipairs(self._hed.orientation_elements) do
@@ -53,7 +53,7 @@ function FeedbackUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines: 64 to 75
+-- Lines 64-75
 function FeedbackUnitElement:_draw_ranges(pos)
 	local brush = Draw:brush()
 
@@ -69,7 +69,7 @@ function FeedbackUnitElement:_draw_ranges(pos)
 	pen:sphere(pos, self._hed.range * self._hed.above_camera_effect_distance)
 end
 
--- Lines: 77 to 130
+-- Lines 77-130
 function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -136,7 +136,9 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 	local above_camera_effect_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Above camera effect")
 
 	panel_sizer:add(above_camera_effect_sizer, 0, 0, "EXPAND")
-	self:_build_value_combobox(panel, above_camera_effect_sizer, "above_camera_effect", table.list_add({"none"}, self:_effect_options()), "Select and above camera effect", "effect")
+	self:_build_value_combobox(panel, above_camera_effect_sizer, "above_camera_effect", table.list_add({
+		"none"
+	}, self:_effect_options()), "Select and above camera effect", "effect")
 	self:_build_value_number(panel, above_camera_effect_sizer, "above_camera_effect_distance", {
 		min = 0,
 		floats = 2,
@@ -144,7 +146,7 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 	}, "A filter value to use with the range. A value of 1 means that the effect will be played whenever inside the range, a lower value means you need to be closer to the position.", "distance filter")
 end
 
--- Lines: 132 to 137
+-- Lines 132-138
 function FeedbackUnitElement:_effect_options()
 	local effect_options = {}
 
@@ -155,7 +157,7 @@ function FeedbackUnitElement:_effect_options()
 	return effect_options
 end
 
--- Lines: 140 to 144
+-- Lines 140-144
 function FeedbackUnitElement:add_to_mission_package()
 	if self._hed.effect and self._hed.above_camera_effect ~= "none" then
 		managers.editor:add_to_world_package({
@@ -165,4 +167,3 @@ function FeedbackUnitElement:add_to_mission_package()
 		})
 	end
 end
-

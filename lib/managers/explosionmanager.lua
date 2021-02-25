@@ -5,12 +5,12 @@ local empty_idstr = Idstring("")
 local molotov_effect = "effects/payday2/particles/explosions/molotov_grenade"
 local tmp_vec3 = Vector3()
 
--- Lines: 10 to 12
+-- Lines 10-12
 function ExplosionManager:init()
 	self._sustain_effects = {}
 end
 
--- Lines: 14 to 21
+-- Lines 14-21
 function ExplosionManager:update(t, dt)
 	for i, effect in ipairs(self._sustain_effects) do
 		if effect.expire_t < t then
@@ -20,7 +20,7 @@ function ExplosionManager:update(t, dt)
 	end
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function ExplosionManager:add_sustain_effect(effect_id, sustain_time)
 	table.insert(self._sustain_effects, {
 		id = effect_id,
@@ -28,7 +28,7 @@ function ExplosionManager:add_sustain_effect(effect_id, sustain_time)
 	})
 end
 
--- Lines: 28 to 33
+-- Lines 28-33
 function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	local player = managers.player:player_unit()
 
@@ -43,7 +43,7 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_chara
 	end
 end
 
--- Lines: 36 to 217
+-- Lines 36-218
 function ExplosionManager:detect_and_stun(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -74,7 +74,9 @@ function ExplosionManager:detect_and_stun(params)
 		alert_unit
 	})
 
-	local splinters = {mvector3.copy(hit_pos)}
+	local splinters = {
+		mvector3.copy(hit_pos)
+	}
 	local dirs = {
 		Vector3(range, 0, 0),
 		Vector3(-range, 0, 0),
@@ -90,7 +92,13 @@ function ExplosionManager:detect_and_stun(params)
 		mvector3.add(pos, hit_pos)
 
 		local splinter_ray = nil
-		splinter_ray = ignore_unit and World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask) or World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+
+		if ignore_unit then
+			splinter_ray = World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask)
+		else
+			splinter_ray = World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+		end
+
 		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
 		local near_splinter = false
 
@@ -116,7 +124,9 @@ function ExplosionManager:detect_and_stun(params)
 	local characters_hit = {}
 	local units_to_push = {}
 	local hit_units = {}
-	local ignore_units = {ignore_unit}
+	local ignore_units = {
+		ignore_unit
+	}
 	local type = nil
 
 	if not params.no_raycast_check_characters then
@@ -161,9 +171,7 @@ function ExplosionManager:detect_and_stun(params)
 					elseif CopDamage.is_gangster(type) then
 						count_gangsters = count_gangsters + 1
 					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" and type ~= "american" and type ~= "jowi" then
-						if type == "hoxton" then
-							-- Nothing
-						else
+						if type ~= "hoxton" then
 							count_cops = count_cops + 1
 						end
 					end
@@ -207,9 +215,7 @@ function ExplosionManager:detect_and_stun(params)
 					elseif CopDamage.is_gangster(type) then
 						count_gangster_kills = count_gangster_kills + 1
 					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" then
-						if type == "american" then
-							-- Nothing
-						else
+						if type ~= "american" then
 							count_cop_kills = count_cop_kills + 1
 						end
 					end
@@ -232,7 +238,7 @@ function ExplosionManager:detect_and_stun(params)
 	return hit_units, splinters, results
 end
 
--- Lines: 222 to 443
+-- Lines 222-444
 function ExplosionManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -280,7 +286,9 @@ function ExplosionManager:detect_and_give_dmg(params)
 		alert_unit
 	})
 
-	local splinters = {mvector3.copy(hit_pos)}
+	local splinters = {
+		mvector3.copy(hit_pos)
+	}
 	local dirs = {
 		Vector3(range, 0, 0),
 		Vector3(-range, 0, 0),
@@ -296,7 +304,13 @@ function ExplosionManager:detect_and_give_dmg(params)
 		mvector3.add(pos, hit_pos)
 
 		local splinter_ray = nil
-		splinter_ray = ignore_unit and World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask) or World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+
+		if ignore_unit then
+			splinter_ray = World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask)
+		else
+			splinter_ray = World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+		end
+
 		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
 		local near_splinter = false
 
@@ -322,7 +336,9 @@ function ExplosionManager:detect_and_give_dmg(params)
 	local characters_hit = {}
 	local units_to_push = {}
 	local hit_units = {}
-	local ignore_units = {ignore_unit}
+	local ignore_units = {
+		ignore_unit
+	}
 	local type = nil
 
 	if not params.no_raycast_check_characters then
@@ -370,9 +386,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 					elseif CopDamage.is_gangster(type) then
 						count_gangsters = count_gangsters + 1
 					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" and type ~= "american" and type ~= "jowi" then
-						if type == "hoxton" then
-							-- Nothing
-						else
+						if type ~= "hoxton" then
 							count_cops = count_cops + 1
 						end
 					end
@@ -427,9 +441,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 						elseif CopDamage.is_gangster(type) then
 							count_gangster_kills = count_gangster_kills + 1
 						elseif type ~= "russian" and type ~= "german" and type ~= "spanish" then
-							if type == "american" then
-								-- Nothing
-							else
+							if type ~= "american" then
 								count_cop_kills = count_cop_kills + 1
 							end
 						end
@@ -455,7 +467,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines: 446 to 483
+-- Lines 446-483
 function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	for u_key, unit in pairs(units_to_push) do
 		if alive(unit) then
@@ -470,7 +482,7 @@ function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 				local rot_acc = Vector3(1 - math.rand(2), 1 - math.rand(2), 1 - math.rand(2)) * 10
 				local i_u_body = 0
 
-				while i_u_body < nr_u_bodies do
+				while nr_u_bodies > i_u_body do
 					local u_body = unit:body(i_u_body)
 
 					if u_body:enabled() and u_body:dynamic() then
@@ -497,7 +509,7 @@ function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	end
 end
 
--- Lines: 486 to 536
+-- Lines 485-536
 function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -541,13 +553,13 @@ function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir
 	end
 end
 
--- Lines: 539 to 542
+-- Lines 539-542
 function ExplosionManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines: 544 to 564
+-- Lines 544-564
 function ExplosionManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -570,13 +582,13 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines: 567 to 571
+-- Lines 567-571
 function ExplosionManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table)
 end
 
--- Lines: 573 to 612
+-- Lines 573-612
 function ExplosionManager:player_feedback(position, normal, range, custom_params)
 	local player = managers.player:player_unit()
 
@@ -637,10 +649,11 @@ function ExplosionManager:player_feedback(position, normal, range, custom_params
 		end
 	end
 end
+
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines: 616 to 680
+-- Lines 616-680
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
 	local effect_id = nil
@@ -708,7 +721,9 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 			end
 
 			sound_source:post_event(sound_event)
-			managers.enemy:add_delayed_clbk("ExplosionManager", callback(ProjectileBase, ProjectileBase, "_dispose_of_sound", {sound_source = sound_source}), TimerManager:game():time() + 4)
+			managers.enemy:add_delayed_clbk("ExplosionManager", callback(ProjectileBase, ProjectileBase, "_dispose_of_sound", {
+				sound_source = sound_source
+			}), TimerManager:game():time() + 4)
 		end
 	end
 
@@ -717,7 +732,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	end
 end
 
--- Lines: 682 to 715
+-- Lines 682-715
 function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 
@@ -767,4 +782,3 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 		end
 	end
 end
-

@@ -7,7 +7,7 @@ core:import("CoreColorPickerPanel")
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorColor3 = CoreMaterialEditorColor3 or class(CoreMaterialEditorParameter)
 
--- Lines: 13 to 21
+-- Lines 13-21
 function CoreMaterialEditorColor3:init(parent, editor, parameter_info, parameter_node)
 	CoreMaterialEditorParameter.init(self, parent, editor, parameter_info, parameter_node)
 
@@ -18,18 +18,18 @@ function CoreMaterialEditorColor3:init(parent, editor, parameter_info, parameter
 	self._right_box:add(self._picker_panel:panel(), 1, 0, "ALL,EXPAND")
 end
 
--- Lines: 23 to 26
+-- Lines 23-26
 function CoreMaterialEditorColor3:update(t, dt)
 	CoreMaterialEditorParameter.update(self, t, dt)
 	self._picker_panel:update(t, dt)
 end
 
--- Lines: 28 to 30
+-- Lines 28-30
 function CoreMaterialEditorColor3:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
--- Lines: 32 to 42
+-- Lines 32-42
 function CoreMaterialEditorColor3:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -40,7 +40,7 @@ function CoreMaterialEditorColor3:on_toggle_customize()
 	self:update_live()
 end
 
--- Lines: 46 to 50
+-- Lines 46-50
 function CoreMaterialEditorColor3:_on_color(sender, color)
 	self._value = Vector3(color.r, color.g, color.b)
 

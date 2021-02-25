@@ -1,6 +1,6 @@
 UnitBreakdownView = UnitBreakdownView or class(CoreEditorEwsDialog)
 
--- Lines: 8 to 67
+-- Lines 6-67
 function UnitBreakdownView:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Unit Breakdown", "unit_breakdown", Vector3(300, 150, 0), Vector3(600, 800, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -49,7 +49,7 @@ function UnitBreakdownView:init(...)
 	self:perform_update()
 end
 
--- Lines: 69 to 77
+-- Lines 69-77
 function UnitBreakdownView:set_visible(visible)
 	self._dialog:set_visible(visible)
 
@@ -60,17 +60,17 @@ function UnitBreakdownView:set_visible(visible)
 	end
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function UnitBreakdownView:get_unit_name(unit)
 	return unit:unit_data().name_id
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function UnitBreakdownView:get_unit_path(unit)
 	return unit:name():s()
 end
 
--- Lines: 87 to 92
+-- Lines 87-92
 function UnitBreakdownView:perform_update(name_filter, unique, name_func)
 	local filter = self._filter_text:get_value()
 	local unique = self._unique_check:get_value()
@@ -79,7 +79,7 @@ function UnitBreakdownView:perform_update(name_filter, unique, name_func)
 	self:_perform_update(filter, unique, func)
 end
 
--- Lines: 96 to 230
+-- Lines 94-230
 function UnitBreakdownView:_perform_update(name_filter, require_unique, name_func)
 	name_filter = name_filter and (type(name_filter) == "string" or nil) and string.trim(name_filter)
 
@@ -188,7 +188,7 @@ function UnitBreakdownView:_perform_update(name_filter, require_unique, name_fun
 	end
 end
 
--- Lines: 233 to 244
+-- Lines 232-244
 function UnitBreakdownView:get_continents()
 	local continents = managers.editor:continents()
 	self._ordered_continents = {}
@@ -205,11 +205,11 @@ function UnitBreakdownView:get_continents()
 	end)
 end
 
--- Lines: 246 to 247
+-- Lines 246-247
 function UnitBreakdownView:on_tree_ctrl_change()
 end
 
--- Lines: 250 to 281
+-- Lines 249-281
 function UnitBreakdownView:on_tree_ctrl_select()
 	local id = self._tree:selected_item()
 	local layer = self:_get_layer(id)
@@ -239,7 +239,7 @@ function UnitBreakdownView:on_tree_ctrl_select()
 	end
 end
 
--- Lines: 284 to 294
+-- Lines 283-294
 function UnitBreakdownView:select_unit_by_tree_id(id)
 	local text = self._tree:get_item_text(id)
 	local unit_id = string.match(text, "%[(.*)%]")
@@ -253,11 +253,11 @@ function UnitBreakdownView:select_unit_by_tree_id(id)
 	end
 end
 
--- Lines: 297 to 298
+-- Lines 296-298
 function UnitBreakdownView:select_units_by_path(path)
 end
 
--- Lines: 302 to 321
+-- Lines 300-323
 function UnitBreakdownView:_get_layer(selected_item_id)
 	if selected_item_id then
 		local layer_id = self._tree:get_parent(selected_item_id)
@@ -279,7 +279,7 @@ function UnitBreakdownView:_get_layer(selected_item_id)
 	return nil
 end
 
--- Lines: 326 to 350
+-- Lines 325-350
 function UnitBreakdownView:_get_continent(selected_item_id)
 	if selected_item_id then
 		local layer_id = self._tree:get_parent(selected_item_id)
@@ -303,26 +303,26 @@ function UnitBreakdownView:_get_continent(selected_item_id)
 	end
 end
 
--- Lines: 352 to 353
+-- Lines 352-353
 function UnitBreakdownView:on_update_filter()
 end
 
--- Lines: 355 to 357
+-- Lines 355-357
 function UnitBreakdownView:on_refresh_clicked()
 	self:perform_update()
 end
 
--- Lines: 359 to 361
+-- Lines 359-361
 function UnitBreakdownView:on_unique_checked()
 	self:perform_update()
 end
 
--- Lines: 363 to 365
+-- Lines 363-365
 function UnitBreakdownView:on_close_clicked()
 	self:set_visible(false)
 end
 
--- Lines: 368 to 426
+-- Lines 367-426
 function UnitBreakdownView:on_export_clicked()
 	if not self._layer_units then
 		Application:set_clipboard("[No Data]")
@@ -334,7 +334,9 @@ function UnitBreakdownView:on_export_clicked()
 	local sep_char = "\t"
 	local unit_format = "%s,%s,%s,%s,%s,%s,%s"
 	unit_format = string.gsub(unit_format, ",", sep_char)
-	local export_layers = {"Statics"}
+	local export_layers = {
+		"Statics"
+	}
 	local exclude_prefixes = {
 		"units/dev_tools/",
 		"core/units/light_omni"
@@ -365,4 +367,3 @@ function UnitBreakdownView:on_export_clicked()
 
 	Application:set_clipboard(export_text)
 end
-

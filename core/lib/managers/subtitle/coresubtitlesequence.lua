@@ -5,34 +5,34 @@ SubtitleSequence = SubtitleSequence or CoreClass.class()
 Subtitle = Subtitle or CoreClass.class()
 StringIDSubtitle = StringIDSubtitle or CoreClass.class(Subtitle)
 
--- Lines: 13 to 17
+-- Lines 13-17
 function SubtitleSequence:init(sequence_node)
 	if sequence_node then
 		self:_load_from_xml(sequence_node)
 	end
 end
 
--- Lines: 19 to 20
+-- Lines 19-21
 function SubtitleSequence:name()
 	return self:parameters().name or ""
 end
 
--- Lines: 23 to 24
+-- Lines 23-25
 function SubtitleSequence:duration()
 	return self.__subtitles and self.__subtitles[#self.__subtitles]:end_time()
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function SubtitleSequence:parameters()
 	return self.__parameters or {}
 end
 
--- Lines: 31 to 32
+-- Lines 31-33
 function SubtitleSequence:subtitles()
 	return self.__subtitles or {}
 end
 
--- Lines: 35 to 38
+-- Lines 35-38
 function SubtitleSequence:add_subtitle(subtitle)
 	self.__subtitles = self.__subtitles or {}
 
@@ -41,7 +41,7 @@ function SubtitleSequence:add_subtitle(subtitle)
 	end)
 end
 
--- Lines: 40 to 60
+-- Lines 40-60
 function SubtitleSequence:_load_from_xml(sequence_node)
 	assert(managers.localization, "Localization Manager not ready.")
 	assert(sequence_node and sequence_node:name() == "sequence", "Attempting to construct from non-sequence XML node.")
@@ -66,52 +66,51 @@ function SubtitleSequence:_load_from_xml(sequence_node)
 	CoreClass.freeze(self.__subtitles)
 end
 
--- Lines: 62 to 64
+-- Lines 62-64
 function SubtitleSequence:_report_bad_string_id(string_id)
 	Localizer:lookup(string_id)
 end
 
--- Lines: 66 to 67
+-- Lines 66-68
 function SubtitleSequence:_xml_assert(condition, node, message)
 	return condition or error(string.format("Error parsing \"%s\" - %s", string.gsub(node:file(), "^.*[/\\]", ""), message))
 end
 
--- Lines: 75 to 79
+-- Lines 75-79
 function Subtitle:init(string_data, start_time, duration)
 	self.__string_data = string_data ~= nil and assert(tostring(string_data), "Invalid string argument.") or ""
 	self.__start_time = assert(tonumber(start_time), "Invalid start time argument.")
 	self.__duration = duration ~= nil and assert(tonumber(duration), "Invalid duration argument.") or nil
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function Subtitle:string()
 	return self.__string_data
 end
 
--- Lines: 85 to 86
+-- Lines 85-87
 function Subtitle:start_time()
 	return self.__start_time
 end
 
--- Lines: 89 to 90
+-- Lines 89-91
 function Subtitle:end_time()
 	return self:start_time() + (self:duration() or math.huge)
 end
 
--- Lines: 93 to 94
+-- Lines 93-95
 function Subtitle:duration()
 	return self.__duration
 end
 
--- Lines: 97 to 98
+-- Lines 97-99
 function Subtitle:is_active_at_time(time)
 	return self:start_time() < time and time < self:end_time()
 end
 
--- Lines: 106 to 108
+-- Lines 106-109
 function StringIDSubtitle:string()
 	assert(managers.localization, "Localization Manager not ready.")
 
 	return managers.localization:text(self.__string_data)
 end
-

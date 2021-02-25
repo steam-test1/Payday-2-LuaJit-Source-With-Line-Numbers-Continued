@@ -2,21 +2,21 @@ require("lib/states/GameState")
 
 GameOverState = GameOverState or class(MissionEndState)
 
--- Lines: 5 to 8
+-- Lines 5-8
 function GameOverState:init(game_state_machine, setup)
 	GameOverState.super.init(self, "gameoverscreen", game_state_machine, setup)
 
 	self._type = "gameover"
 end
 
--- Lines: 10 to 13
+-- Lines 10-13
 function GameOverState:at_enter(...)
 	self._success = false
 
 	GameOverState.super.at_enter(self, ...)
 end
 
--- Lines: 15 to 23
+-- Lines 15-23
 function GameOverState:_shut_down_network(...)
 	if managers.dlc:is_trial() then
 		GameOverState.super._shut_down_network(self)
@@ -27,7 +27,7 @@ function GameOverState:_shut_down_network(...)
 	end
 end
 
--- Lines: 25 to 35
+-- Lines 25-35
 function GameOverState:_load_start_menu(...)
 	if managers.dlc:is_trial() then
 		Global.open_trial_buy = true
@@ -40,23 +40,25 @@ function GameOverState:_load_start_menu(...)
 	end
 end
 
--- Lines: 37 to 53
+-- Lines 37-53
 function GameOverState:_set_continue_button_text()
 	local text_id = self._continue_block_timer and Application:time() < self._continue_block_timer and "menu_es_calculating_experience" or not self._completion_bonus_done and "menu_es_calculating_experience" or (Network:is_server() or managers.dlc:is_trial()) and (managers.job:is_current_job_professional() and (Global.game_settings.single_player and "failed_disconnected_continue" or "debug_mission_end_continue") or "menu_victory_retry_stage") or "victory_client_waiting_for_server"
 	local continue_button = managers.menu:is_pc_controller() and "[ENTER]" or nil
-	local text = utf8.to_upper(managers.localization:text(text_id, {CONTINUE = continue_button}))
+	local text = utf8.to_upper(managers.localization:text(text_id, {
+		CONTINUE = continue_button
+	}))
 
 	managers.menu_component:set_endscreen_continue_button_text(text, text_id ~= "failed_disconnected_continue" and text_id ~= "debug_mission_end_continue" and text_id ~= "menu_victory_retry_stage")
 end
 
--- Lines: 55 to 59
+-- Lines 55-59
 function GameOverState:_continue()
 	if Network:is_server() or managers.dlc:is_trial() then
 		self:continue()
 	end
 end
 
--- Lines: 61 to 88
+-- Lines 61-88
 function GameOverState:continue()
 	if self:_continue_blocked() then
 		return
@@ -86,4 +88,3 @@ function GameOverState:continue()
 		Application:error("Trying to continue from game over screen, but I have no state to goto")
 	end
 end
-

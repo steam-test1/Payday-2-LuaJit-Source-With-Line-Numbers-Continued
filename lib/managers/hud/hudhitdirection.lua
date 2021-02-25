@@ -1,13 +1,14 @@
 HUDHitDirection = HUDHitDirection or class()
 HUDHitDirection.UNIT_TYPE_HIT_PLAYER = 1
 HUDHitDirection.UNIT_TYPE_HIT_VEHICLE = 2
-HUDHitDirection.DAMAGE_TYPES = {}
-HUDHitDirection.DAMAGE_TYPES.HEALTH = 1
-HUDHitDirection.DAMAGE_TYPES.ARMOUR = 2
-HUDHitDirection.DAMAGE_TYPES.VEHICLE = 3
+HUDHitDirection.DAMAGE_TYPES = {
+	HEALTH = 1,
+	ARMOUR = 2,
+	VEHICLE = 3
+}
 HUDHitDirection.PANEL_SIZE = 300
 
--- Lines: 14 to 32
+-- Lines 13-32
 function HUDHitDirection:init(hud)
 	self._hud_panel = hud.panel
 	self._unit_type_hit = HUDHitDirection.UNIT_TYPE_HIT_PLAYER
@@ -29,12 +30,12 @@ function HUDHitDirection:init(hud)
 	self._hit_direction_panel:set_center(self._hit_direction_panel:parent():w() * 0.5, self._hit_direction_panel:parent():h() * 0.5)
 end
 
--- Lines: 34 to 36
+-- Lines 34-36
 function HUDHitDirection:on_hit_direction(origin, damage_type, fixed_angle)
 	self:_add_hit_indicator(origin or Vector3(0, 0, 0), damage_type, fixed_angle)
 end
 
--- Lines: 39 to 62
+-- Lines 38-62
 function HUDHitDirection:_add_hit_indicator(damage_origin, damage_type, fixed_angle)
 	damage_type = damage_type or HUDHitDirection.DAMAGE_TYPES.HEALTH
 	local hit = self._hit_direction_panel:bitmap({
@@ -59,7 +60,7 @@ function HUDHitDirection:_add_hit_indicator(damage_origin, damage_type, fixed_an
 	hit:animate(callback(self, self, "_animate"), data, callback(self, self, "_remove"))
 end
 
--- Lines: 64 to 74
+-- Lines 64-74
 function HUDHitDirection:_get_indicator_color(damage_type, t)
 	if damage_type == HUDHitDirection.DAMAGE_TYPES.HEALTH then
 		return Color(1, t, t)
@@ -72,7 +73,7 @@ function HUDHitDirection:_get_indicator_color(damage_type, t)
 	end
 end
 
--- Lines: 77 to 117
+-- Lines 76-117
 function HUDHitDirection:_animate(indicator, data, remove_func)
 	data.t = data.duration
 	data.col_start = 0.7
@@ -109,7 +110,7 @@ function HUDHitDirection:_animate(indicator, data, remove_func)
 	remove_func(indicator, data)
 end
 
--- Lines: 119 to 121
+-- Lines 119-121
 function HUDHitDirection:_remove(indicator, data)
 	self._hit_direction_panel:remove(indicator)
 end
@@ -117,4 +118,3 @@ end
 if _G.IS_VR then
 	require("lib/managers/hud/vr/HUDHitDirectionVR")
 end
-

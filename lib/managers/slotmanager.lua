@@ -4,7 +4,7 @@ core:import("CoreClass")
 
 SlotManager = SlotManager or class(CoreSlotManager.SlotManager)
 
--- Lines: 8 to 170
+-- Lines 8-170
 function SlotManager:init()
 	SlotManager.super.init(self)
 
@@ -92,4 +92,3 @@ function SlotManager:init()
 end
 
 CoreClass.override_class(CoreSlotManager.SlotManager, SlotManager)
-

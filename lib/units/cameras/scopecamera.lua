@@ -1,7 +1,7 @@
 ScopeCamera = ScopeCamera or class()
 ScopeCamera.DISABLE_STABILIZATION = false
 
--- Lines: 6 to 12
+-- Lines 6-12
 function ScopeCamera:init(camera)
 	self._camera_ext = camera
 
@@ -12,12 +12,12 @@ function ScopeCamera:init(camera)
 	self:_add_setting_callback("weapon_precision_mode", "_weapon_precision_mode_changed")
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function ScopeCamera:_weapon_precision_mode_changed(setting, old, new)
 	self._weapon_precision_mode = new
 end
 
--- Lines: 18 to 24
+-- Lines 18-24
 function ScopeCamera:_add_setting_callback(setting_name, method)
 	local clbk = callback(self, self, method)
 
@@ -32,7 +32,7 @@ function ScopeCamera:_add_setting_callback(setting_name, method)
 	})
 end
 
--- Lines: 26 to 66
+-- Lines 26-66
 function ScopeCamera:_setup_camera()
 	local rt_resolution = Vector3(512, 512, 0)
 	local rt = Application:create_texture("render_target", rt_resolution.x, rt_resolution.y)
@@ -77,7 +77,7 @@ function ScopeCamera:_setup_camera()
 	self._clear_vp = clear_vp
 end
 
--- Lines: 69 to 84
+-- Lines 69-84
 function ScopeCamera:link_scope(camera_object, screen_object, material, texture_channel, zoom)
 	material:set_variable(Idstring("scope_zoom"), 1)
 	material:set_variable(Idstring("scope_fadeout"), 1)
@@ -98,7 +98,7 @@ function ScopeCamera:link_scope(camera_object, screen_object, material, texture_
 	self._scope_active = true
 end
 
--- Lines: 86 to 90
+-- Lines 86-90
 function ScopeCamera:unlink_scope()
 	self._vp:set_active(false)
 	self._clear_vp:set_active(false)
@@ -106,7 +106,7 @@ function ScopeCamera:unlink_scope()
 	self._scope_active = false
 end
 
--- Lines: 92 to 156
+-- Lines 92-156
 function ScopeCamera:update(t, dt)
 	if not self._scope_active then
 		return
@@ -164,4 +164,3 @@ function ScopeCamera:update(t, dt)
 		end
 	end
 end
-

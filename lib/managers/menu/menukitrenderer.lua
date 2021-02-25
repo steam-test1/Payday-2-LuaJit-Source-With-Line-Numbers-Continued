@@ -3,18 +3,20 @@ require("lib/managers/menu/MenuNodeKitGui")
 
 MenuKitRenderer = MenuKitRenderer or class(MenuLobbyRenderer)
 
--- Lines: 7 to 10
+-- Lines 7-10
 function MenuKitRenderer:init(logic)
-	local parameters = {layer = 200}
+	local parameters = {
+		layer = 200
+	}
 
 	MenuRenderer.init(self, logic, parameters)
 end
 
--- Lines: 12 to 13
+-- Lines 12-13
 function MenuKitRenderer:_setup_bg()
 end
 
--- Lines: 15 to 39
+-- Lines 15-39
 function MenuKitRenderer:show_node(node)
 	local gui_class = MenuNodeKitGui
 
@@ -40,7 +42,7 @@ function MenuKitRenderer:show_node(node)
 	self:_update_slots_info()
 end
 
--- Lines: 41 to 51
+-- Lines 41-51
 function MenuKitRenderer:open(...)
 	self._all_items_enabled = true
 	self._no_stencil = true
@@ -55,7 +57,7 @@ function MenuKitRenderer:open(...)
 	end
 end
 
--- Lines: 54 to 77
+-- Lines 54-77
 function MenuKitRenderer:_update_slots_info()
 	print("MenuKitRenderer:_update_slots_info")
 
@@ -81,7 +83,7 @@ function MenuKitRenderer:_update_slots_info()
 	end
 end
 
--- Lines: 79 to 93
+-- Lines 79-93
 function MenuKitRenderer:_entered_menu()
 	self:on_request_lobby_slot_reply()
 
@@ -99,7 +101,7 @@ function MenuKitRenderer:_entered_menu()
 	end
 end
 
--- Lines: 95 to 102
+-- Lines 95-102
 function MenuKitRenderer:_set_player_slot(nr, params)
 	local peer = managers.network:session():peer(nr)
 	local ready = peer:waiting_for_player_ready()
@@ -109,13 +111,13 @@ function MenuKitRenderer:_set_player_slot(nr, params)
 	MenuKitRenderer.super._set_player_slot(self, nr, params)
 end
 
--- Lines: 105 to 108
+-- Lines 105-108
 function MenuKitRenderer:highlight_item(item, ...)
 	MenuKitRenderer.super.highlight_item(self, item, ...)
 	self:post_event("highlight")
 end
 
--- Lines: 110 to 117
+-- Lines 110-117
 function MenuKitRenderer:trigger_item(item)
 	MenuKitRenderer.super.trigger_item(self, item)
 
@@ -126,7 +128,7 @@ function MenuKitRenderer:trigger_item(item)
 	end
 end
 
--- Lines: 119 to 127
+-- Lines 119-128
 function MenuKitRenderer:sync_chat_message(message, id)
 	for _, node_gui in ipairs(self._node_gui_stack) do
 		local row_item_chat = node_gui:row_item_by_name("chat")
@@ -141,7 +143,7 @@ function MenuKitRenderer:sync_chat_message(message, id)
 	return false
 end
 
--- Lines: 130 to 139
+-- Lines 130-139
 function MenuKitRenderer:set_all_items_enabled(enabled)
 	self._all_items_enabled = enabled
 
@@ -154,7 +156,7 @@ function MenuKitRenderer:set_all_items_enabled(enabled)
 	end
 end
 
--- Lines: 141 to 152
+-- Lines 141-152
 function MenuKitRenderer:set_ready_items_enabled(enabled)
 	if not self._all_items_enabled then
 		return
@@ -169,14 +171,14 @@ function MenuKitRenderer:set_ready_items_enabled(enabled)
 	end
 end
 
--- Lines: 155 to 159
+-- Lines 154-159
 function MenuKitRenderer:set_bg_visible(visible)
 	if self._menu_bg then
 		self._menu_bg:set_visible(visible)
 	end
 end
 
--- Lines: 161 to 175
+-- Lines 161-175
 function MenuKitRenderer:set_bg_area(area)
 	if self._menu_bg then
 		if area == "full" then
@@ -193,13 +195,13 @@ function MenuKitRenderer:set_bg_area(area)
 	end
 end
 
--- Lines: 177 to 181
+-- Lines 177-181
 function MenuKitRenderer:set_slot_joining(peer, peer_id)
 	MenuKitRenderer.super.set_slot_joining(self, peer, peer_id)
 	managers.preplanning:on_peer_added(peer_id)
 end
 
--- Lines: 183 to 188
+-- Lines 183-188
 function MenuKitRenderer:remove_player_slot_by_peer_id(peer, reason)
 	MenuKitRenderer.super.remove_player_slot_by_peer_id(self, peer, reason)
 
@@ -208,8 +210,7 @@ function MenuKitRenderer:remove_player_slot_by_peer_id(peer, reason)
 	managers.preplanning:on_peer_removed(peer_id)
 end
 
--- Lines: 190 to 192
+-- Lines 190-192
 function MenuKitRenderer:close(...)
 	MenuKitRenderer.super.close(self, ...)
 end
-

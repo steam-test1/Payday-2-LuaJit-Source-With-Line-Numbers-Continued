@@ -1,6 +1,6 @@
 ServerStatusBoxGui = ServerStatusBoxGui or class(TextBoxGui)
 
--- Lines: 3 to 20
+-- Lines 3-20
 function ServerStatusBoxGui:init(ws, title, text, content_data, config)
 	config = config or {}
 	config.h = config.h or 130
@@ -17,18 +17,18 @@ function ServerStatusBoxGui:init(ws, title, text, content_data, config)
 	self:set_layer(10)
 end
 
--- Lines: 23 to 24
+-- Lines 22-24
 function ServerStatusBoxGui:update(t, dt)
 end
 
--- Lines: 26 to 29
+-- Lines 26-29
 function ServerStatusBoxGui:_make_nice_text(text)
 	local _, _, w, h = text:text_rect()
 
 	text:set_size(w, h)
 end
 
--- Lines: 31 to 64
+-- Lines 31-64
 function ServerStatusBoxGui:_create_text_box(ws, title, text, content_data, config)
 	ServerStatusBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 
@@ -102,7 +102,7 @@ function ServerStatusBoxGui:_create_text_box(ws, title, text, content_data, conf
 	self:_set_scroll_indicator()
 end
 
--- Lines: 66 to 77
+-- Lines 66-77
 function ServerStatusBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() then
 		return
@@ -113,7 +113,7 @@ function ServerStatusBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines: 79 to 86
+-- Lines 79-87
 function ServerStatusBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() then
 		return
@@ -124,17 +124,17 @@ function ServerStatusBoxGui:mouse_moved(x, y)
 	return false, pointer
 end
 
--- Lines: 89 to 91
+-- Lines 89-91
 function ServerStatusBoxGui:_check_scroll_indicator_states()
 	ServerStatusBoxGui.super._check_scroll_indicator_states(self)
 end
 
--- Lines: 93 to 96
+-- Lines 93-96
 function ServerStatusBoxGui:set_size(x, y)
 	ServerStatusBoxGui.super.set_size(self, x, y)
 end
 
--- Lines: 98 to 109
+-- Lines 98-109
 function ServerStatusBoxGui:set_server_info_state(state)
 	print("ServerStatusBoxGui:set_server_info_state", state)
 
@@ -146,4 +146,3 @@ function ServerStatusBoxGui:set_server_info_state(state)
 
 	self._scroll_panel:child("server_panel"):child("server_state_text"):set_text(string.upper(s))
 end
-

@@ -1,6 +1,6 @@
 SkirmishModifierList = SkirmishModifierList or class(GUIObjectWrapper)
 
--- Lines: 3 to 77
+-- Lines 3-77
 function SkirmishModifierList:init(parent, config)
 	local h_padding = 20
 	local v_padding = 5
@@ -33,7 +33,7 @@ function SkirmishModifierList:init(parent, config)
 			texture_rect = icon_tweak.texture_rect,
 			x = h_padding
 		})
-		local description_width = (((modifier_panel:width() - modifier_icon:width()) - 5) - h_padding * 2) - scrollbar_padding
+		local description_width = modifier_panel:width() - modifier_icon:width() - 5 - h_padding * 2 - scrollbar_padding
 		local modifier_desc = modifier_panel:text({
 			vertical = "center",
 			name = "modifier_desc",
@@ -67,13 +67,12 @@ function SkirmishModifierList:init(parent, config)
 	SkirmishModifierList.super.init(self, panel)
 end
 
--- Lines: 78 to 79
+-- Lines 79-79
 function SkirmishModifierList:scroll(...)
 	self._scroll:scroll(...)
 end
 
--- Lines: 79 to 80
+-- Lines 80-80
 function SkirmishModifierList:perform_scroll(...)
 	self._scroll:perform_scroll(...)
 end
-

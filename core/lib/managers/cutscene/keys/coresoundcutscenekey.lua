@@ -15,27 +15,27 @@ CoreSoundCutsceneKey.control_for_unit_name = CoreCutsceneKeyBase.standard_combo_
 CoreSoundCutsceneKey.control_for_object_name = CoreCutsceneKeyBase.standard_combo_box_control
 CoreSoundCutsceneKey.control_for_bank = CoreCutsceneKeyBase.standard_combo_box_control
 
--- Lines: 16 to 17
+-- Lines 16-18
 function CoreSoundCutsceneKey:__tostring()
 	return "Trigger sound \"" .. self:bank() .. "/" .. self:cue() .. "\" on \"" .. self:unit_name() .. "\"."
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function CoreSoundCutsceneKey:prime(player)
 	self:sound():prime()
 end
 
--- Lines: 24 to 26
+-- Lines 24-26
 function CoreSoundCutsceneKey:skip(player)
 	self:stop()
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function CoreSoundCutsceneKey:can_evaluate_with_player(player)
 	return true
 end
 
--- Lines: 32 to 42
+-- Lines 32-42
 function CoreSoundCutsceneKey:play(player, undo, fast_forward)
 	if undo then
 		self:stop()
@@ -48,14 +48,14 @@ function CoreSoundCutsceneKey:play(player, undo, fast_forward)
 	end
 end
 
--- Lines: 44 to 48
+-- Lines 44-48
 function CoreSoundCutsceneKey:update(player, time)
 	if self.is_in_cutscene_editor then
 		self:handle_cutscene_editor_scrubbing(player, time)
 	end
 end
 
--- Lines: 50 to 67
+-- Lines 50-67
 function CoreSoundCutsceneKey:handle_cutscene_editor_scrubbing(player, time)
 	if self._last_evaluated_time then
 		if time == self._last_evaluated_time then
@@ -78,27 +78,27 @@ function CoreSoundCutsceneKey:handle_cutscene_editor_scrubbing(player, time)
 	self._last_evaluated_time = time
 end
 
--- Lines: 69 to 70
+-- Lines 69-71
 function CoreSoundCutsceneKey:is_valid_unit_name(unit_name)
 	return unit_name == nil or unit_name == "" or CoreCutsceneKeyBase.is_valid_unit_name(self, unit_name)
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function CoreSoundCutsceneKey:is_valid_object_name(object_name)
 	return object_name == nil or object_name == "" or CoreCutsceneKeyBase.is_valid_object_name(self, object_name)
 end
 
--- Lines: 77 to 78
+-- Lines 77-79
 function CoreSoundCutsceneKey:is_valid_bank(bank)
 	return bank and bank ~= "" and table.contains(Sound:soundbanks(), bank)
 end
 
--- Lines: 81 to 82
+-- Lines 81-83
 function CoreSoundCutsceneKey:is_valid_cue(cue)
 	return cue and cue ~= "" and self:is_valid_bank(self:bank()) and Sound:make_bank(self:bank(), cue) ~= nil
 end
 
--- Lines: 85 to 96
+-- Lines 85-96
 function CoreSoundCutsceneKey:refresh_control_for_bank(control)
 	control:freeze()
 	control:clear()
@@ -116,7 +116,7 @@ function CoreSoundCutsceneKey:refresh_control_for_bank(control)
 	control:thaw()
 end
 
--- Lines: 98 to 104
+-- Lines 98-104
 function CoreSoundCutsceneKey:refresh_control_for_unit_name(control)
 	CoreCutsceneKeyBase.refresh_control_for_unit_name(self, control)
 	control:append("")
@@ -126,7 +126,7 @@ function CoreSoundCutsceneKey:refresh_control_for_unit_name(control)
 	end
 end
 
--- Lines: 106 to 112
+-- Lines 106-112
 function CoreSoundCutsceneKey:refresh_control_for_object_name(control)
 	CoreCutsceneKeyBase.refresh_control_for_object_name(self, control)
 	control:append("")
@@ -136,14 +136,14 @@ function CoreSoundCutsceneKey:refresh_control_for_object_name(control)
 	end
 end
 
--- Lines: 114 to 118
+-- Lines 114-118
 function CoreSoundCutsceneKey:on_attribute_before_changed(attribute_name, value, previous_value)
 	if attribute_name ~= "sync_to_video" then
 		self:stop()
 	end
 end
 
--- Lines: 120 to 127
+-- Lines 120-127
 function CoreSoundCutsceneKey:on_attribute_changed(attribute_name, value, previous_value)
 	if attribute_name == "bank" or attribute_name == "cue" then
 		self._sound = nil
@@ -154,7 +154,7 @@ function CoreSoundCutsceneKey:on_attribute_changed(attribute_name, value, previo
 	end
 end
 
--- Lines: 129 to 134
+-- Lines 129-135
 function CoreSoundCutsceneKey:sound()
 	if self._sound == nil then
 		self._sound = assert(Sound:make_bank(self:bank(), self:cue()), "Sound \"" .. self:bank() .. "/" .. self:cue() .. "\" not found.")
@@ -163,7 +163,7 @@ function CoreSoundCutsceneKey:sound()
 	return self._sound
 end
 
--- Lines: 137 to 143
+-- Lines 137-143
 function CoreSoundCutsceneKey:stop()
 	if self._sound_abort_func then
 		self._sound_abort_func()
@@ -174,15 +174,14 @@ function CoreSoundCutsceneKey:stop()
 	self._last_evaluated_time = nil
 end
 
--- Lines: 145 to 155
+-- Lines 145-155
 function CoreSoundCutsceneKey:_trigger_sound(offset)
 	self:stop()
 
 	local instance = self:sound():play(self:sync_to_video() and "running_offset" or "offset", offset or 0)
 
 	if alive(instance) then
-
-		-- Lines: 149 to 153
+		-- Lines 149-153
 		function self._sound_abort_func()
 			if alive(instance) and instance:is_playing() then
 				instance:stop()
@@ -190,4 +189,3 @@ function CoreSoundCutsceneKey:_trigger_sound(offset)
 		end
 	end
 end
-

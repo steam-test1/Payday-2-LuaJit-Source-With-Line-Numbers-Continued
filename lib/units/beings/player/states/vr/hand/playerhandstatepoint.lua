@@ -2,12 +2,12 @@ require("lib/units/beings/player/states/vr/hand/PlayerHandState")
 
 PlayerHandStatePoint = PlayerHandStatePoint or class(PlayerHandState)
 
--- Lines: 6 to 8
+-- Lines 6-8
 function PlayerHandStatePoint:init(hsm, name, hand_unit, sequence)
 	PlayerHandStatePoint.super.init(self, name, hsm, hand_unit, sequence)
 end
 
--- Lines: 10 to 16
+-- Lines 10-16
 function PlayerHandStatePoint:at_enter(prev_state)
 	PlayerHandStatePoint.super.at_enter(self, prev_state)
 
@@ -17,7 +17,7 @@ function PlayerHandStatePoint:at_enter(prev_state)
 	self:hsm():enter_controller_state("point")
 end
 
--- Lines: 18 to 27
+-- Lines 18-27
 function PlayerHandStatePoint:update(t, dt)
 	if not self._timer_t then
 		self._timer_t = t
@@ -30,10 +30,9 @@ function PlayerHandStatePoint:update(t, dt)
 	end
 end
 
--- Lines: 29 to 33
+-- Lines 29-33
 function PlayerHandStatePoint:default_transition(next_state)
 	if self._can_transition then
 		PlayerHandStatePoint.super.default_transition(self, next_state)
 	end
 end
-

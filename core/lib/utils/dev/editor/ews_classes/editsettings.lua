@@ -3,7 +3,7 @@ core:import("CoreEws")
 
 EditUnitSettings = EditUnitSettings or class(EditUnitBase)
 
--- Lines: 6 to 70
+-- Lines 6-70
 function EditUnitSettings:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Settings",
@@ -72,7 +72,7 @@ function EditUnitSettings:init(editor)
 	self._panel = panel
 end
 
--- Lines: 72 to 84
+-- Lines 72-84
 function EditUnitSettings:add_cutscene_actor()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for cutscene actor:", "Add cutscene actor", "", Vector3(-1, -1, 0), true)
 
@@ -90,7 +90,7 @@ function EditUnitSettings:add_cutscene_actor()
 	end
 end
 
--- Lines: 86 to 90
+-- Lines 86-90
 function EditUnitSettings:remove_cutscene_actor()
 	managers.cutscene:unregister_cutscene_actor(self._ctrls.unit)
 
@@ -99,7 +99,7 @@ function EditUnitSettings:remove_cutscene_actor()
 	self._ctrls.cutscene_actor_name:set_value("")
 end
 
--- Lines: 92 to 99
+-- Lines 92-99
 function EditUnitSettings:set_disable_shadows()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -110,14 +110,14 @@ function EditUnitSettings:set_disable_shadows()
 	end
 end
 
--- Lines: 101 to 115
+-- Lines 101-115
 function EditUnitSettings:set_disable_collision()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
 			local disable = self._ctrls.disable_collision:get_value()
 			unit:unit_data().disable_collision = disable
 
-			for index = 0, unit:num_bodies() - 1, 1 do
+			for index = 0, unit:num_bodies() - 1 do
 				local body = unit:body(index)
 
 				if body then
@@ -129,7 +129,7 @@ function EditUnitSettings:set_disable_collision()
 	end
 end
 
--- Lines: 117 to 124
+-- Lines 117-124
 function EditUnitSettings:set_delayed_load()
 	local delayed = self._ctrls.delayed_load:get_value()
 
@@ -140,7 +140,7 @@ function EditUnitSettings:set_delayed_load()
 	end
 end
 
--- Lines: 126 to 132
+-- Lines 126-132
 function EditUnitSettings:set_hide_on_projection_light()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -149,7 +149,7 @@ function EditUnitSettings:set_hide_on_projection_light()
 	end
 end
 
--- Lines: 134 to 140
+-- Lines 134-140
 function EditUnitSettings:set_disable_on_ai_graph()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -158,7 +158,7 @@ function EditUnitSettings:set_disable_on_ai_graph()
 	end
 end
 
--- Lines: 142 to 158
+-- Lines 142-159
 function EditUnitSettings:is_editable(unit, units)
 	if alive(unit) then
 		self._ctrls.unit = unit
@@ -177,4 +177,3 @@ function EditUnitSettings:is_editable(unit, units)
 
 	return false
 end
-

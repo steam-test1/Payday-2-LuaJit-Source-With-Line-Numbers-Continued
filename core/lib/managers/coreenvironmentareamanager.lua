@@ -5,7 +5,7 @@ core:import("CoreEnvironmentFeeder")
 EnvironmentAreaManager = EnvironmentAreaManager or class()
 EnvironmentAreaManager.POSITION_OFFSET = 50
 
--- Lines: 10 to 31
+-- Lines 10-31
 function EnvironmentAreaManager:init()
 	self._areas = {}
 	self._blocks = 0
@@ -38,32 +38,32 @@ function EnvironmentAreaManager:init()
 	self:set_default_filter_list(default_filter_list)
 end
 
--- Lines: 33 to 35
+-- Lines 33-35
 function EnvironmentAreaManager:set_default_transition_time(time)
 	self._default_transition_time = time
 end
 
--- Lines: 37 to 38
+-- Lines 37-39
 function EnvironmentAreaManager:default_transition_time()
 	return self._default_transition_time
 end
 
--- Lines: 41 to 43
+-- Lines 41-43
 function EnvironmentAreaManager:set_default_bezier_curve(bezier_curve)
 	self._default_bezier_curve = bezier_curve
 end
 
--- Lines: 45 to 46
+-- Lines 45-47
 function EnvironmentAreaManager:default_bezier_curve()
 	return self._default_bezier_curve
 end
 
--- Lines: 49 to 51
+-- Lines 49-51
 function EnvironmentAreaManager:set_default_filter_list(filter_list)
 	self._default_filter_list = filter_list
 end
 
--- Lines: 53 to 59
+-- Lines 53-59
 function EnvironmentAreaManager:default_filter_list()
 	if self._default_filter_list then
 		return table.list_copy(self._default_filter_list)
@@ -72,17 +72,17 @@ function EnvironmentAreaManager:default_filter_list()
 	end
 end
 
--- Lines: 61 to 62
+-- Lines 61-63
 function EnvironmentAreaManager:default_prio()
 	return 100
 end
 
--- Lines: 65 to 66
+-- Lines 65-67
 function EnvironmentAreaManager:areas()
 	return self._areas
 end
 
--- Lines: 69 to 73
+-- Lines 69-74
 function EnvironmentAreaManager:add_area(area_params)
 	local area = EnvironmentArea:new(area_params)
 
@@ -92,14 +92,14 @@ function EnvironmentAreaManager:add_area(area_params)
 	return area
 end
 
--- Lines: 76 to 78
+-- Lines 76-78
 function EnvironmentAreaManager:prio_order_areas()
 	table.sort(self._areas, function (a, b)
 		return a:is_higher_prio(b:prio())
 	end)
 end
 
--- Lines: 80 to 85
+-- Lines 80-85
 function EnvironmentAreaManager:remove_area(area)
 	for _, vp in ipairs(managers.viewport:viewports()) do
 		vp:on_environment_area_removed(area)
@@ -108,7 +108,7 @@ function EnvironmentAreaManager:remove_area(area)
 	table.delete(self._areas, area)
 end
 
--- Lines: 87 to 96
+-- Lines 87-96
 function EnvironmentAreaManager:update(t, dt)
 	local vps = managers.viewport:all_really_active_viewports()
 
@@ -121,7 +121,7 @@ function EnvironmentAreaManager:update(t, dt)
 	end
 end
 
--- Lines: 99 to 107
+-- Lines 99-108
 function EnvironmentAreaManager:environment_at_position(pos)
 	local environment = managers.viewport:default_environment()
 
@@ -136,18 +136,19 @@ function EnvironmentAreaManager:environment_at_position(pos)
 	return environment
 end
 
--- Lines: 110 to 112
+-- Lines 110-112
 function EnvironmentAreaManager:add_block()
 	self._blocks = self._blocks + 1
 end
 
--- Lines: 114 to 116
+-- Lines 114-116
 function EnvironmentAreaManager:remove_block()
 	self._blocks = self._blocks - 1
 end
+
 EnvironmentArea = EnvironmentArea or class(CoreShapeManager.ShapeBox)
 
--- Lines: 122 to 133
+-- Lines 122-133
 function EnvironmentArea:init(params)
 	params.type = "box"
 
@@ -164,7 +165,7 @@ function EnvironmentArea:init(params)
 	self:_generate_id()
 end
 
--- Lines: 135 to 143
+-- Lines 135-143
 function EnvironmentArea:_generate_id()
 	local filter_list_id = ""
 
@@ -177,7 +178,7 @@ function EnvironmentArea:_generate_id()
 	self._id = (self._properties.environment .. filter_list_id):key()
 end
 
--- Lines: 145 to 152
+-- Lines 145-153
 function EnvironmentArea:save_level_data()
 	local unit = self:unit()
 
@@ -188,7 +189,7 @@ function EnvironmentArea:save_level_data()
 	return EnvironmentArea.super.save_level_data(self)
 end
 
--- Lines: 155 to 163
+-- Lines 155-163
 function EnvironmentArea:set_unit(unit)
 	EnvironmentArea.super.set_unit(self, unit)
 
@@ -199,70 +200,70 @@ function EnvironmentArea:set_unit(unit)
 	end
 end
 
--- Lines: 165 to 166
+-- Lines 165-167
 function EnvironmentArea:id()
 	return self._id
 end
 
--- Lines: 169 to 170
+-- Lines 169-171
 function EnvironmentArea:environment()
 	return self:property("environment")
 end
 
--- Lines: 173 to 176
+-- Lines 173-176
 function EnvironmentArea:set_environment(environment)
 	self:set_property_string("environment", environment)
 	self:_generate_id()
 end
 
--- Lines: 178 to 179
+-- Lines 178-180
 function EnvironmentArea:permanent()
 	return self:property("permanent")
 end
 
--- Lines: 182 to 184
+-- Lines 182-184
 function EnvironmentArea:set_permanent(permanent)
 	self._properties.permanent = permanent
 end
 
--- Lines: 186 to 187
+-- Lines 186-188
 function EnvironmentArea:transition_time()
 	return self:property("transition_time")
 end
 
--- Lines: 190 to 192
+-- Lines 190-192
 function EnvironmentArea:set_transition_time(time)
 	self._properties.transition_time = time
 end
 
--- Lines: 194 to 195
+-- Lines 194-196
 function EnvironmentArea:bezier_curve()
 	return self:property("bezier_curve")
 end
 
--- Lines: 198 to 200
+-- Lines 198-200
 function EnvironmentArea:set_bezier_curve(bezier_curve)
 	self._properties.bezier_curve = bezier_curve
 end
 
--- Lines: 202 to 203
+-- Lines 202-204
 function EnvironmentArea:filter_list()
 	return self:property("filter_list")
 end
 
--- Lines: 206 to 209
+-- Lines 206-209
 function EnvironmentArea:set_filter_list(filter_list)
 	self._properties.filter_list = filter_list
 
 	self:_generate_id()
 end
 
--- Lines: 211 to 212
+-- Lines 211-213
 function EnvironmentArea:prio()
 	return self:property("prio")
 end
 
--- Lines: 215 to 220
+-- Lines 215-220
 function EnvironmentArea:set_prio(prio)
 	if self._properties.prio ~= prio then
 		self._properties.prio = prio
@@ -271,7 +272,7 @@ function EnvironmentArea:set_prio(prio)
 	end
 end
 
--- Lines: 222 to 228
+-- Lines 222-228
 function EnvironmentArea:is_higher_prio(min_prio)
 	if min_prio then
 		return self._properties.prio < min_prio
@@ -279,4 +280,3 @@ function EnvironmentArea:is_higher_prio(min_prio)
 		return true
 	end
 end
-

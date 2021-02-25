@@ -3,7 +3,7 @@ core:import("CoreOverlayEffectManager")
 OverlayEffectManager = OverlayEffectManager or class(CoreOverlayEffectManager.OverlayEffectManager)
 OverlayEffectManager.CAMERA_HEIGHT = 140
 
--- Lines: 10 to 24
+-- Lines 10-24
 function OverlayEffectManager:init()
 	OverlayEffectManager.super.init(self)
 
@@ -18,10 +18,11 @@ function OverlayEffectManager:init()
 		self:add_preset(name, setting)
 	end
 end
+
 local zero_rotation = Rotation(0, 0, 0)
 local zero_vector3 = Vector3(0, 0, 0)
 
--- Lines: 31 to 36
+-- Lines 31-36
 function OverlayEffectManager:reset_hmd_orientation()
 	local pos, rot = VRManager:hmd_pose()
 	self._hmd_position = pos
@@ -31,7 +32,7 @@ function OverlayEffectManager:reset_hmd_orientation()
 	self._hmd_rotation = Rotation:yaw_pitch_roll(rot:yaw(), 0, 0):inverse()
 end
 
--- Lines: 38 to 53
+-- Lines 38-53
 function OverlayEffectManager:update(t, dt)
 	if _G.IS_VR then
 		if self._enable_hmd_tracking then
@@ -49,7 +50,7 @@ function OverlayEffectManager:update(t, dt)
 	OverlayEffectManager.super.update(self, t, dt)
 end
 
--- Lines: 60 to 66
+-- Lines 55-66
 function OverlayEffectManager:paused_update(t, dt)
 	if _G.IS_VR then
 		self._overlay_camera:set_position(zero_vector3)
@@ -59,17 +60,16 @@ function OverlayEffectManager:paused_update(t, dt)
 	OverlayEffectManager.super.paused_update(self, t, dt)
 end
 
--- Lines: 68 to 71
+-- Lines 68-71
 function OverlayEffectManager:set_hmd_tracking(tracking)
 	self._enable_hmd_tracking = tracking
 
 	self:reset_hmd_orientation()
 end
 
--- Lines: 73 to 74
+-- Lines 73-75
 function OverlayEffectManager:viewport()
 	return self._vp_overlay
 end
 
 CoreClass.override_class(CoreOverlayEffectManager.OverlayEffectManager, OverlayEffectManager)
-

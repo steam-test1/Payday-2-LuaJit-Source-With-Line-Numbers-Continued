@@ -1,6 +1,6 @@
 VanSkinExt = VanSkinExt or class()
 
--- Lines: 5 to 27
+-- Lines 4-27
 function VanSkinExt:init(unit)
 	self._unit = unit
 	local skin_id = managers.blackmarket:equipped_van_skin()
@@ -18,4 +18,3 @@ function VanSkinExt:init(unit)
 		end
 	end
 end
-

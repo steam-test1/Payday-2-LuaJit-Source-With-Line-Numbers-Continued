@@ -4,7 +4,7 @@ ModifierAssaultExtender.name_id = "none"
 ModifierAssaultExtender.desc_id = "menu_cs_modifier_assault_extender"
 ModifierAssaultExtender.default_value = "duration"
 
--- Lines: 8 to 16
+-- Lines 8-16
 function ModifierAssaultExtender:init(data)
 	ModifierAssaultExtender.super.init(self, data)
 
@@ -16,7 +16,7 @@ function ModifierAssaultExtender:init(data)
 	self._hostage_last_update = 0
 end
 
--- Lines: 18 to 24
+-- Lines 18-24
 function ModifierAssaultExtender:_update_hostage_time()
 	local now = TimerManager:game():time()
 	local diff = now - self._hostage_last_update
@@ -25,32 +25,32 @@ function ModifierAssaultExtender:_update_hostage_time()
 	self._hostage_last_update = now
 end
 
--- Lines: 26 to 30
+-- Lines 26-30
 function ModifierAssaultExtender:_update_hostage_count()
 	local num_hostages = managers.groupai:state():hostage_count()
 	local num_minions = managers.groupai:state():get_amount_enemies_converted_to_criminals()
 	self._hostage_count = math.min(num_hostages + num_minions, self:value("max_hostages"))
 end
 
--- Lines: 32 to 35
+-- Lines 32-35
 function ModifierAssaultExtender:OnHostageCountChanged()
 	self:_update_hostage_time()
 	self:_update_hostage_count()
 end
 
--- Lines: 37 to 40
+-- Lines 37-40
 function ModifierAssaultExtender:OnMinionAdded()
 	self:_update_hostage_time()
 	self:_update_hostage_count()
 end
 
--- Lines: 42 to 45
+-- Lines 42-45
 function ModifierAssaultExtender:OnMinionRemoved()
 	self:_update_hostage_time()
 	self:_update_hostage_count()
 end
 
--- Lines: 47 to 53
+-- Lines 47-53
 function ModifierAssaultExtender:OnEnterSustainPhase(duration)
 	local now = TimerManager:game():time()
 	self._sustain_start_time = now
@@ -59,7 +59,7 @@ function ModifierAssaultExtender:OnEnterSustainPhase(duration)
 	self._hostage_last_update = now
 end
 
--- Lines: 55 to 72
+-- Lines 55-73
 function ModifierAssaultExtender:modify_value(id, value, ...)
 	if id == "GroupAIStateBesiege:SustainEndTime" then
 		self:_update_hostage_time()
@@ -84,4 +84,3 @@ function ModifierAssaultExtender:modify_value(id, value, ...)
 
 	return value
 end
-

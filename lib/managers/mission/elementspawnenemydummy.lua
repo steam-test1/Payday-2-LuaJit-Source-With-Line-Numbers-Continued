@@ -8,7 +8,7 @@ ElementSpawnEnemyDummy.ACCESSIBILITIES = {
 	"acrobatic"
 }
 
--- Lines: 9 to 18
+-- Lines 9-18
 function ElementSpawnEnemyDummy:init(...)
 	ElementSpawnEnemyDummy.super.init(self, ...)
 
@@ -20,24 +20,24 @@ function ElementSpawnEnemyDummy:init(...)
 	self:_finalize_values()
 end
 
--- Lines: 20 to 49
+-- Lines 20-49
 function ElementSpawnEnemyDummy:_finalize_values()
 	local values = self._values
 	values.spawn_action = self:value("spawn_action")
 
-	-- Lines: 24 to 26
+	-- Lines 24-26
 	local function _save_boolean(name_in)
 		values[name_in] = values[name_in] or nil
 	end
 
-	-- Lines: 28 to 32
+	-- Lines 28-32
 	local function _nil_if_none(name_in)
 		if not values[name_in] or values[name_in] == "none" then
 			values[name_in] = nil
 		end
 	end
 
-	-- Lines: 34 to 37
+	-- Lines 34-37
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
 		values[name_in] = found_index ~= -1 and found_index or nil
@@ -58,17 +58,17 @@ function ElementSpawnEnemyDummy:_finalize_values()
 	self._values = clone(values)
 end
 
--- Lines: 51 to 52
+-- Lines 51-53
 function ElementSpawnEnemyDummy:enemy_name()
 	return self._enemy_name
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function ElementSpawnEnemyDummy:units()
 	return self._units
 end
 
--- Lines: 63 to 117
+-- Lines 63-118
 function ElementSpawnEnemyDummy:produce(params)
 	if not managers.groupai:state():is_AI_enabled() then
 		return
@@ -132,7 +132,7 @@ function ElementSpawnEnemyDummy:produce(params)
 	return unit
 end
 
--- Lines: 120 to 127
+-- Lines 120-127
 function ElementSpawnEnemyDummy:clbk_unit_destroyed(unit)
 	local u_key = unit:key()
 
@@ -143,7 +143,7 @@ function ElementSpawnEnemyDummy:clbk_unit_destroyed(unit)
 	end
 end
 
--- Lines: 129 to 135
+-- Lines 129-135
 function ElementSpawnEnemyDummy:event(name, unit)
 	if self._events[name] then
 		for _, callback in ipairs(self._events[name]) do
@@ -152,14 +152,14 @@ function ElementSpawnEnemyDummy:event(name, unit)
 	end
 end
 
--- Lines: 137 to 140
+-- Lines 137-140
 function ElementSpawnEnemyDummy:add_event_callback(name, callback)
 	self._events[name] = self._events[name] or {}
 
 	table.insert(self._events[name], callback)
 end
 
--- Lines: 142 to 151
+-- Lines 142-151
 function ElementSpawnEnemyDummy:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -174,7 +174,7 @@ function ElementSpawnEnemyDummy:on_executed(instigator)
 	ElementSpawnEnemyDummy.super.on_executed(self, unit)
 end
 
--- Lines: 153 to 163
+-- Lines 153-164
 function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, spawn_properties)
 	local entry_action = self._create_action_data(CopActionAct._act_redirects.enemy_spawn[self._values.spawn_action])
 
@@ -191,11 +191,13 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 		init_state = "idle",
 		stance = stance,
 		objective = objective,
-		params = {scan = true}
+		params = {
+			scan = true
+		}
 	}
 end
 
--- Lines: 166 to 172
+-- Lines 166-172
 function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	if not anim_name or anim_name == "none" then
 		return {
@@ -219,7 +221,7 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	end
 end
 
--- Lines: 174 to 181
+-- Lines 174-181
 function ElementSpawnEnemyDummy:unspawn_all_units()
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -229,7 +231,7 @@ function ElementSpawnEnemyDummy:unspawn_all_units()
 	end
 end
 
--- Lines: 183 to 189
+-- Lines 183-189
 function ElementSpawnEnemyDummy:kill_all_units()
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -241,7 +243,7 @@ function ElementSpawnEnemyDummy:kill_all_units()
 	end
 end
 
--- Lines: 191 to 197
+-- Lines 191-197
 function ElementSpawnEnemyDummy:execute_on_all_units(func)
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -250,8 +252,7 @@ function ElementSpawnEnemyDummy:execute_on_all_units(func)
 	end
 end
 
--- Lines: 199 to 200
+-- Lines 199-201
 function ElementSpawnEnemyDummy:accessibility()
 	return self.ACCESSIBILITIES[self._values.accessibility]
 end
-

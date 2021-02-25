@@ -1,14 +1,14 @@
 HostStateInGame = HostStateInGame or class(HostStateBase)
 HostStateInGame.STATE_INDEX = 3
 
--- Lines: 5 to 9
+-- Lines 5-9
 function HostStateInGame:enter(data, enter_params)
 	print("[HostStateInGame:enter]", data, inspect(enter_params))
 
 	self._new_peers = {}
 end
 
--- Lines: 13 to 194
+-- Lines 13-194
 function HostStateInGame:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, gameversion, join_attempt_identifier, auth_ticket, sender)
 	print("[HostStateInGame:on_join_request_received]", data, peer_name, client_preferred_character, dlcs, xuid, peer_level, gameversion, join_attempt_identifier, sender:ip_at_index(0))
 
@@ -75,7 +75,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 		return
 	end
 
-	if tweak_data.max_players - 1 <= table.size(data.peers) then
+	if table.size(data.peers) >= tweak_data.max_players - 1 then
 		print("server is full")
 		self:_send_request_denied(sender, 5, my_user_id)
 
@@ -104,7 +104,12 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	new_peer:set_join_attempt_identifier(join_attempt_identifier)
 
 	local new_peer_rpc = nil
-	new_peer_rpc = managers.network:protocol_type() == "TCP_IP" and managers.network:session():resolve_new_peer_rpc(new_peer, sender) or sender
+
+	if managers.network:protocol_type() == "TCP_IP" then
+		new_peer_rpc = managers.network:session():resolve_new_peer_rpc(new_peer, sender)
+	else
+		new_peer_rpc = sender
+	end
 
 	new_peer:set_rpc(new_peer_rpc)
 	new_peer:set_ip_verified(true)
@@ -168,7 +173,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	self._new_peers[new_peer_id] = true
 end
 
--- Lines: 198 to 218
+-- Lines 198-218
 function HostStateInGame:on_peer_finished_loading(data, peer)
 	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
@@ -189,8 +194,7 @@ function HostStateInGame:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines: 222 to 223
+-- Lines 222-224
 function HostStateInGame:is_joinable(data)
 	return not data.wants_to_load_level
 end
-

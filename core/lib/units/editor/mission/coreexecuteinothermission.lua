@@ -1,25 +1,24 @@
 CoreExecuteInOtherMissionUnitElement = CoreExecuteInOtherMissionUnitElement or class(MissionElement)
 ExecuteInOtherMissionUnitElement = ExecuteInOtherMissionUnitElement or class(CoreExecuteInOtherMissionUnitElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ExecuteInOtherMissionUnitElement:init(...)
 	CoreExecuteInOtherMissionUnitElement.init(self, ...)
 end
 
--- Lines: 9 to 12
+-- Lines 9-12
 function CoreExecuteInOtherMissionUnitElement:init(unit)
 	MissionElement.init(self, unit)
 end
 
--- Lines: 14 to 17
+-- Lines 14-17
 function CoreExecuteInOtherMissionUnitElement:selected()
 	MissionElement.selected(self)
 end
 
--- Lines: 19 to 26
+-- Lines 19-26
 function CoreExecuteInOtherMissionUnitElement:add_unit_list_btn()
-
-	-- Lines: 19 to 20
+	-- Lines 20-20
 	local function f(unit)
 		return unit:type() == Idstring("mission_element") and unit ~= self._unit
 	end
@@ -31,7 +30,7 @@ function CoreExecuteInOtherMissionUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 29 to 61
+-- Lines 28-61
 function CoreExecuteInOtherMissionUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -44,4 +43,3 @@ function CoreExecuteInOtherMissionUnitElement:_build_panel(panel, panel_sizer)
 	self._btn_toolbar:realize()
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
-

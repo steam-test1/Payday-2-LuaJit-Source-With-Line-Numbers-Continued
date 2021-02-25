@@ -3,7 +3,7 @@ ModifierExplosionImmunity._type = "ModifierExplosionImmunity"
 ModifierExplosionImmunity.name_id = "none"
 ModifierExplosionImmunity.desc_id = "menu_cs_modifier_dozer_immune"
 
--- Lines: 7 to 11
+-- Lines 7-12
 function ModifierExplosionImmunity:modify_value(id, value, unit_tweak)
 	if id == "CopDamage:DamageExplosion" and unit_tweak == "tank" then
 		return 0
@@ -11,4 +11,3 @@ function ModifierExplosionImmunity:modify_value(id, value, unit_tweak)
 
 	return value
 end
-

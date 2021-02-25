@@ -5,7 +5,7 @@ core:import("CoreGameStateInEditorPrepareStopSimulation")
 
 Simulation = Simulation or class(CoreGameStateInGame.InGame)
 
--- Lines: 8 to 16
+-- Lines 8-16
 function Simulation:transition()
 	if not self.game_state._front_end_requester:is_requested() then
 		return
@@ -15,4 +15,3 @@ function Simulation:transition()
 		return CoreGameStateInEditorPrepareStopSimulation.PrepareStopSimulation, self._level_handler
 	end
 end
-

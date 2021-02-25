@@ -1,7 +1,7 @@
 HUDObjectivesVR = HUDObjectives
 HUDObjectivesVR.old_init = HUDObjectives.init
 
--- Lines: 6 to 13
+-- Lines 6-13
 function HUDObjectivesVR:init(hud)
 	hud.old_panel = hud.panel
 	hud.panel = managers.hud:tablet_page()
@@ -12,4 +12,3 @@ function HUDObjectivesVR:init(hud)
 	hud.panel = hud.old_panel
 	hud.old_panel = nil
 end
-

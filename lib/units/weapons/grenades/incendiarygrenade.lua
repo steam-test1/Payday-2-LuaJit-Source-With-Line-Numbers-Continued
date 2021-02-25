@@ -1,18 +1,18 @@
 IncendiaryGrenade = IncendiaryGrenade or class(GrenadeBase)
 
--- Lines: 5 to 8
+-- Lines 5-8
 function IncendiaryGrenade:init(unit)
 	IncendiaryGrenade.super.super.init(self, unit)
 
 	self._detonated = false
 end
 
--- Lines: 10 to 12
+-- Lines 10-12
 function IncendiaryGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	self:_detonate(normal)
 end
 
--- Lines: 15 to 21
+-- Lines 15-21
 function IncendiaryGrenade:_detonate(normal)
 	if self._detonated == false then
 		self._detonated = true
@@ -22,14 +22,14 @@ function IncendiaryGrenade:_detonate(normal)
 	end
 end
 
--- Lines: 23 to 27
+-- Lines 23-27
 function IncendiaryGrenade:sync_detonate_incendiary_grenade(event_id, normal)
 	if event_id == GrenadeBase.EVENT_IDS.detonate then
 		self:_detonate_on_client(normal)
 	end
 end
 
--- Lines: 29 to 34
+-- Lines 29-34
 function IncendiaryGrenade:_detonate_on_client(normal)
 	if self._detonated == false then
 		self._detonated = true
@@ -38,7 +38,7 @@ function IncendiaryGrenade:_detonate_on_client(normal)
 	end
 end
 
--- Lines: 36 to 49
+-- Lines 36-49
 function IncendiaryGrenade:_spawn_environment_fire(normal)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
@@ -53,7 +53,7 @@ function IncendiaryGrenade:_spawn_environment_fire(normal)
 	self.burn_stop_time = TimerManager:game():time() + data.fire_dot_data.dot_length + 1
 end
 
--- Lines: 51 to 57
+-- Lines 51-57
 function IncendiaryGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -62,7 +62,7 @@ function IncendiaryGrenade:bullet_hit()
 	self:_detonate()
 end
 
--- Lines: 63 to 80
+-- Lines 60-80
 function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return
@@ -82,7 +82,7 @@ function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 	end
 end
 
--- Lines: 83 to 92
+-- Lines 83-92
 function IncendiaryGrenade:update(unit, t, dt)
 	GrenadeBase.update(self, unit, t, dt)
 
@@ -95,4 +95,3 @@ function IncendiaryGrenade:update(unit, t, dt)
 		self._unit:set_slot(0)
 	end
 end
-

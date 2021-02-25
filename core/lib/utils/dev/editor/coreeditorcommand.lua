@@ -4,33 +4,33 @@ EditorCommand = EditorCommand or class()
 EditorCommand.__type = EditorCommand
 EditorCommand.UnitValues = {}
 
--- Lines: 8 to 11
+-- Lines 8-11
 function EditorCommand:init(layer)
 	self._layer = layer
 	self._values = {}
 end
 
--- Lines: 13 to 14
+-- Lines 13-15
 function EditorCommand:__tostring()
 	return "[Command base]"
 end
 
--- Lines: 18 to 20
+-- Lines 18-20
 function EditorCommand:execute()
 	print("Execute not implemented for EditorCommand")
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function EditorCommand:undo()
 	print("Undo not implemented for EditorCommand")
 end
 
--- Lines: 28 to 29
+-- Lines 28-30
 function EditorCommand:layer()
 	return self._layer
 end
 
--- Lines: 33 to 41
+-- Lines 33-41
 function EditorCommand:value(val, default)
 	self._values = self._values or {}
 	local v = self._values[val]
@@ -41,6 +41,7 @@ function EditorCommand:value(val, default)
 		return default
 	end
 end
+
 ReferenceUnitCommand = ReferenceUnitCommand or class(EditorCommand)
 ReferenceUnitCommand.__type = ReferenceUnitCommand
 ReferenceUnitCommand.UnitValues = {
@@ -48,19 +49,19 @@ ReferenceUnitCommand.UnitValues = {
 	"selected_units"
 }
 
--- Lines: 49 to 53
+-- Lines 49-53
 function ReferenceUnitCommand:execute()
 	if not self:are_unit_values_set() then
 		self:save_unit_values()
 	end
 end
 
--- Lines: 55 to 56
+-- Lines 55-57
 function ReferenceUnitCommand:are_unit_values_set()
 	return self._values.__set
 end
 
--- Lines: 60 to 67
+-- Lines 59-67
 function ReferenceUnitCommand:save_unit_values()
 	self._values.reference_unit = self._layer._selected_unit:unit_data().unit_id
 	self._values.selected_units = {}
@@ -72,7 +73,7 @@ function ReferenceUnitCommand:save_unit_values()
 	self._values.__set = true
 end
 
--- Lines: 69 to 78
+-- Lines 69-79
 function ReferenceUnitCommand:get_saved_units()
 	local reference_unit = managers.editor:unit_with_id(self:value("reference_unit")) or managers.editor:get_special_unit_with_id(self:value("reference_unit"))
 	local units = {}
@@ -87,6 +88,7 @@ function ReferenceUnitCommand:get_saved_units()
 
 	return reference_unit, units
 end
+
 MoveUnitCommand = MoveUnitCommand or class(ReferenceUnitCommand)
 MoveUnitCommand.__type = MoveUnitCommand
 MoveUnitCommand.UnitValues = {
@@ -94,7 +96,7 @@ MoveUnitCommand.UnitValues = {
 	"selected_units"
 }
 
--- Lines: 87 to 92
+-- Lines 87-92
 function MoveUnitCommand:init(layer, command)
 	MoveUnitCommand.super.init(self, layer)
 
@@ -103,7 +105,7 @@ function MoveUnitCommand:init(layer, command)
 	end
 end
 
--- Lines: 94 to 100
+-- Lines 94-100
 function MoveUnitCommand:save_unit_values()
 	MoveUnitCommand.super.save_unit_values(self)
 
@@ -114,7 +116,7 @@ function MoveUnitCommand:save_unit_values()
 	end
 end
 
--- Lines: 102 to 106
+-- Lines 102-106
 function MoveUnitCommand:execute(pos)
 	MoveUnitCommand.super.execute(self)
 
@@ -123,12 +125,12 @@ function MoveUnitCommand:execute(pos)
 	self:perform_move(self:value("target_pos"), self:get_saved_units())
 end
 
--- Lines: 108 to 110
+-- Lines 108-110
 function MoveUnitCommand:undo()
 	self:perform_move(self:value("original_pos"), self:get_saved_units())
 end
 
--- Lines: 114 to 143
+-- Lines 112-143
 function MoveUnitCommand:perform_move(pos, reference, units)
 	local reselect = false
 
@@ -139,7 +141,9 @@ function MoveUnitCommand:perform_move(pos, reference, units)
 	end
 
 	if reselect then
-		local select_units = {reference}
+		local select_units = {
+			reference
+		}
 
 		for _, unit in ipairs(units) do
 			table.insert(select_units, unit)
@@ -163,10 +167,11 @@ function MoveUnitCommand:perform_move(pos, reference, units)
 	end
 end
 
--- Lines: 145 to 146
+-- Lines 145-147
 function MoveUnitCommand:__tostring()
 	return string.format("[Command MoveUnit target: %s]", tostring(self:value("target_pos")))
 end
+
 RotateUnitCommand = RotateUnitCommand or class(ReferenceUnitCommand)
 RotateUnitCommand.__type = RotateUnitCommand
 RotateUnitCommand.UnitValues = {
@@ -174,7 +179,7 @@ RotateUnitCommand.UnitValues = {
 	"selected_units"
 }
 
--- Lines: 155 to 160
+-- Lines 155-160
 function RotateUnitCommand:init(layer, command)
 	RotateUnitCommand.super.init(self, layer)
 
@@ -183,14 +188,14 @@ function RotateUnitCommand:init(layer, command)
 	end
 end
 
--- Lines: 162 to 165
+-- Lines 162-165
 function RotateUnitCommand:save_unit_values()
 	MoveUnitCommand.super.save_unit_values(self)
 
 	self._values.rot_add = Rotation()
 end
 
--- Lines: 167 to 174
+-- Lines 167-174
 function RotateUnitCommand:execute(rot)
 	RotateUnitCommand.super.execute(self)
 
@@ -200,12 +205,12 @@ function RotateUnitCommand:execute(rot)
 	self:perform_rotation(rot or self._values.rot_add, self:get_saved_units())
 end
 
--- Lines: 176 to 178
+-- Lines 176-178
 function RotateUnitCommand:undo()
 	self:perform_rotation(self:value("rot_add"):inverse(), self:get_saved_units())
 end
 
--- Lines: 181 to 193
+-- Lines 180-193
 function RotateUnitCommand:perform_rotation(rot, reference, units)
 	local rot = rot * reference:rotation()
 
@@ -220,15 +225,18 @@ function RotateUnitCommand:perform_rotation(rot, reference, units)
 	end
 end
 
--- Lines: 195 to 196
+-- Lines 195-197
 function RotateUnitCommand:__tostring()
 	return string.format("[Command RotateUnit target: %s]", tostring(self:value("rot_add")))
 end
+
 HideUnitsCommand = HideUnitsCommand or class(EditorCommand)
 HideUnitsCommand.__type = HideUnitsCommand
-HideUnitsCommand.UnitValues = {"units"}
+HideUnitsCommand.UnitValues = {
+	"units"
+}
 
--- Lines: 207 to 221
+-- Lines 205-221
 function HideUnitsCommand:execute(units, hidden)
 	if not self._values.units then
 		self._values.units = {}
@@ -247,12 +255,12 @@ function HideUnitsCommand:execute(units, hidden)
 	self:hide_units(self:value("units"), hidden)
 end
 
--- Lines: 223 to 225
+-- Lines 223-225
 function HideUnitsCommand:undo()
 	self:hide_units(self:value("units"), not self:value("hide"))
 end
 
--- Lines: 227 to 234
+-- Lines 227-234
 function HideUnitsCommand:hide_units(units, hidden)
 	for _, unit_id in ipairs(units) do
 		local unit = managers.editor:unit_with_id(unit_id)
@@ -263,15 +271,18 @@ function HideUnitsCommand:hide_units(units, hidden)
 	end
 end
 
--- Lines: 236 to 237
+-- Lines 236-238
 function HideUnitsCommand:__tostring()
 	return string.format("[Command HideUnits hidden: %s]", tostring(self:value("hide")))
 end
+
 SpawnUnitCommand = SpawnUnitCommand or class(EditorCommand)
 SpawnUnitCommand.__type = SpawnUnitCommand
-SpawnUnitCommand.UnitValues = {"spawned_unit"}
+SpawnUnitCommand.UnitValues = {
+	"spawned_unit"
+}
 
--- Lines: 247 to 258
+-- Lines 246-260
 function SpawnUnitCommand:execute(name, pos, rot, to_continent_name, prefered_id)
 	if name and pos and rot then
 		self._values.args = {
@@ -296,7 +307,7 @@ function SpawnUnitCommand:execute(name, pos, rot, to_continent_name, prefered_id
 	return unit
 end
 
--- Lines: 264 to 276
+-- Lines 262-276
 function SpawnUnitCommand:undo()
 	local unit = managers.editor:unit_with_id(self:value("spawned_unit"))
 
@@ -305,21 +316,24 @@ function SpawnUnitCommand:undo()
 	end
 end
 
--- Lines: 278 to 279
+-- Lines 278-280
 function SpawnUnitCommand:__tostring()
 	return string.format("[Command SpawnUnit %s]", tostring(self._values.args[1]))
 end
+
 DeleteStaticUnitCommand = DeleteStaticUnitCommand or class(EditorCommand)
 DeleteStaticUnitCommand.__type = DeleteStaticUnitCommand
 DeleteStaticUnitCommand.__priority = 1000000
-DeleteStaticUnitCommand.UnitValues = {"unit"}
+DeleteStaticUnitCommand.UnitValues = {
+	"unit"
+}
 DeleteStaticUnitCommand.IgnoredRestoreKeys = {
 	"id",
 	"name_id",
 	"continent"
 }
 
--- Lines: 291 to 310
+-- Lines 290-310
 function DeleteStaticUnitCommand:execute(unit)
 	unit = unit or managers.editor:unit_with_id(self:value("id"))
 
@@ -337,7 +351,7 @@ function DeleteStaticUnitCommand:execute(unit)
 	self:layer():remove_unit(unit)
 end
 
--- Lines: 314 to 323
+-- Lines 312-323
 function DeleteStaticUnitCommand:undo()
 	local unit = self:layer():do_spawn_unit(self:value("name"), self:value("pos"), self:value("rot"), self:value("continent"), true, self:value("id"))
 
@@ -346,7 +360,7 @@ function DeleteStaticUnitCommand:undo()
 	self:layer():clone_edited_values(unit, unit)
 end
 
--- Lines: 326 to 334
+-- Lines 325-334
 function DeleteStaticUnitCommand:save_unit_values(unit)
 	self._values.id = unit:unit_data().unit_id
 	self._values.name = unit:name()
@@ -356,7 +370,7 @@ function DeleteStaticUnitCommand:save_unit_values(unit)
 	self._values.unit_data = unit:unit_data()
 end
 
--- Lines: 337 to 344
+-- Lines 336-344
 function DeleteStaticUnitCommand:restore_unit_values(unit)
 	for key, value in pairs(self._values.unit_data) do
 		if not table.contains(self.IgnoredRestoreKeys, key) then
@@ -365,29 +379,31 @@ function DeleteStaticUnitCommand:restore_unit_values(unit)
 	end
 end
 
--- Lines: 346 to 347
+-- Lines 346-348
 function DeleteStaticUnitCommand:__tostring()
 	return string.format("[Command DeleteStaticUnit %s(%s)]", tostring(self._values.name), tostring(self._values.id))
 end
+
 MissionElementEditorCommand = MissionElementEditorCommand or class(EditorCommand)
 MissionElementEditorCommand.__type = MissionElementEditorCommand
 
--- Lines: 355 to 358
+-- Lines 355-358
 function MissionElementEditorCommand:init(mission_element)
 	MissionElementEditorCommand.super.init(self, managers.editor:layer("Mission"))
 
 	self._values.element_id = mission_element._unit:unit_data().unit_id
 end
 
--- Lines: 361 to 362
+-- Lines 360-363
 function MissionElementEditorCommand:get_self_mission_element()
 	return managers.editor:unit_with_id(self._values.element_id):mission_element()
 end
+
 DeleteMissionElementCommand = DeleteMissionElementCommand or class(MissionElementEditorCommand)
 DeleteMissionElementCommand.__type = DeleteMissionElementCommand
 DeleteMissionElementCommand.__priority = 100000
 
--- Lines: 372 to 380
+-- Lines 371-380
 function DeleteMissionElementCommand:execute(mission_element)
 	mission_element = mission_element or self:get_self_mission_element()
 
@@ -396,7 +412,7 @@ function DeleteMissionElementCommand:execute(mission_element)
 	end
 end
 
--- Lines: 384 to 398
+-- Lines 382-398
 function DeleteMissionElementCommand:undo(is_final_action)
 	local mission_element = self:get_self_mission_element()
 
@@ -411,14 +427,15 @@ function DeleteMissionElementCommand:undo(is_final_action)
 	end
 end
 
--- Lines: 400 to 401
+-- Lines 400-402
 function DeleteMissionElementCommand:__tostring()
 	return string.format("[Command DeleteMissionElement %s]", tostring(self._values.element_id))
 end
+
 MissionElementAddOnExecutedCommand = MissionElementAddOnExecutedCommand or class(MissionElementEditorCommand)
 MissionElementAddOnExecutedCommand.__type = MissionElementAddOnExecutedCommand
 
--- Lines: 410 to 432
+-- Lines 409-432
 function MissionElementAddOnExecutedCommand:execute(mission_element, unit, existing_params)
 	mission_element = mission_element or self:get_self_mission_element()
 	unit = unit or managers.editor:unit_with_id(self._values.params.id)
@@ -440,7 +457,7 @@ function MissionElementAddOnExecutedCommand:execute(mission_element, unit, exist
 	self._values.params = params
 end
 
--- Lines: 436 to 443
+-- Lines 434-443
 function MissionElementAddOnExecutedCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local remove_unit = managers.editor:unit_with_id(self._values.params.id)
@@ -449,14 +466,15 @@ function MissionElementAddOnExecutedCommand:undo()
 	command:execute(mission_element, remove_unit)
 end
 
--- Lines: 445 to 446
+-- Lines 445-447
 function MissionElementAddOnExecutedCommand:__tostring()
 	return string.format("[Command AddOnExecuted %s]", tostring(self._values.element_id))
 end
+
 MissionElementRemoveOnExecutedCommand = MissionElementRemoveOnExecutedCommand or class(MissionElementEditorCommand)
 MissionElementRemoveOnExecutedCommand.__type = MissionElementRemoveOnExecutedCommand
 
--- Lines: 455 to 479
+-- Lines 454-481
 function MissionElementRemoveOnExecutedCommand:execute(mission_element, unit)
 	mission_element = mission_element or self:get_self_mission_element()
 	unit = unit or managers.editor:unit_with_id(self._values.unit_id)
@@ -481,7 +499,7 @@ function MissionElementRemoveOnExecutedCommand:execute(mission_element, unit)
 	return false
 end
 
--- Lines: 485 to 492
+-- Lines 483-492
 function MissionElementRemoveOnExecutedCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local add_unit = managers.editor:unit_with_id(self._values.removed_on_executed.id)
@@ -490,14 +508,15 @@ function MissionElementRemoveOnExecutedCommand:undo()
 	command:execute(mission_element, add_unit, self._values.removed_on_executed)
 end
 
--- Lines: 494 to 495
+-- Lines 494-496
 function MissionElementRemoveOnExecutedCommand:__tostring()
 	return string.format("[Command RemoveOnExecuted %s]", tostring(self._values.element_id))
 end
+
 MissionElementAddLinkElementCommand = MissionElementAddLinkElementCommand or class(MissionElementEditorCommand)
 MissionElementAddLinkElementCommand.__type = MissionElementAddLinkElementCommand
 
--- Lines: 504 to 522
+-- Lines 503-522
 function MissionElementAddLinkElementCommand:execute(mission_element, link_name, unit_id)
 	mission_element = mission_element or self:get_self_mission_element()
 	link_name = link_name or self._values.link_name
@@ -515,7 +534,7 @@ function MissionElementAddLinkElementCommand:execute(mission_element, link_name,
 	end
 end
 
--- Lines: 525 to 530
+-- Lines 524-530
 function MissionElementAddLinkElementCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local command = MissionElementRemoveLinkElementCommand:new(mission_element)
@@ -523,14 +542,15 @@ function MissionElementAddLinkElementCommand:undo()
 	command:execute(mission_element, self:value("link_name"), self:value("unit_id"))
 end
 
--- Lines: 532 to 533
+-- Lines 532-534
 function MissionElementAddLinkElementCommand:__tostring()
 	return string.format("[Command AddLinkElement [%s %s]]", tostring(self:value("link_name")), tostring(self:value("unit_id")))
 end
+
 MissionElementRemoveLinkElementCommand = MissionElementRemoveLinkElementCommand or class(MissionElementEditorCommand)
 MissionElementRemoveLinkElementCommand.__type = MissionElementRemoveLinkElementCommand
 
--- Lines: 542 to 560
+-- Lines 541-560
 function MissionElementRemoveLinkElementCommand:execute(mission_element, link_name, unit_id)
 	mission_element = mission_element or self:get_self_mission_element()
 	link_name = link_name or self._values.link_name
@@ -548,7 +568,7 @@ function MissionElementRemoveLinkElementCommand:execute(mission_element, link_na
 	end
 end
 
--- Lines: 563 to 568
+-- Lines 562-568
 function MissionElementRemoveLinkElementCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local command = MissionElementAddLinkElementCommand:new(mission_element)
@@ -556,8 +576,7 @@ function MissionElementRemoveLinkElementCommand:undo()
 	command:execute(mission_element, self:value("link_name"), self:value("unit_id"))
 end
 
--- Lines: 570 to 571
+-- Lines 570-572
 function MissionElementRemoveLinkElementCommand:__tostring()
 	return string.format("[Command RemoveLinkElement [%s %s]]", tostring(self:value("link_name")), tostring(self:value("unit_id")))
 end
-

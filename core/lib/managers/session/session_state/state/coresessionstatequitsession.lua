@@ -3,7 +3,7 @@ core:import("CoreSessionStateInit")
 
 QuitSession = QuitSession or class()
 
--- Lines: 6 to 12
+-- Lines 6-12
 function QuitSession:init(session)
 	self._session = session
 
@@ -13,15 +13,14 @@ function QuitSession:init(session)
 	self._session:delete_session()
 end
 
--- Lines: 14 to 17
+-- Lines 14-17
 function QuitSession:destroy()
 	self.session_state._quit_session_requester:task_completed()
 
 	self.session_state._session = nil
 end
 
--- Lines: 19 to 20
+-- Lines 19-21
 function QuitSession:transition()
 	return CoreSessionStateInit.Init, self._session
 end
-

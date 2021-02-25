@@ -2,12 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementStatistics = ElementStatistics or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 7
+-- Lines 5-7
 function ElementStatistics:init(...)
 	ElementStatistics.super.init(self, ...)
 end
 
--- Lines: 9 to 17
+-- Lines 9-17
 function ElementStatistics:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -17,8 +17,7 @@ function ElementStatistics:on_executed(instigator)
 	ElementStatistics.super.on_executed(self, instigator)
 end
 
--- Lines: 19 to 21
+-- Lines 19-21
 function ElementStatistics:client_on_executed(...)
 	self:on_executed(...)
 end
-

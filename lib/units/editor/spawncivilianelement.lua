@@ -14,7 +14,7 @@ SpawnCivilianUnitElement.INSTANCE_VAR_NAMES = {
 	}
 }
 
--- Lines: 10 to 25
+-- Lines 10-25
 function SpawnCivilianUnitElement:init(unit)
 	SpawnCivilianUnitElement.super.init(self, unit)
 
@@ -31,23 +31,23 @@ function SpawnCivilianUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
--- Lines: 27 to 30
+-- Lines 27-30
 function SpawnCivilianUnitElement:post_init(...)
 	SpawnCivilianUnitElement.super.post_init(self, ...)
 	self:_load_pickup()
 end
 
--- Lines: 32 to 34
+-- Lines 32-34
 function SpawnCivilianUnitElement:test_element()
 	SpawnEnemyUnitElement.test_element(self)
 end
 
--- Lines: 36 to 37
+-- Lines 36-38
 function SpawnCivilianUnitElement:get_spawn_anim()
 	return self._hed.state
 end
 
--- Lines: 40 to 49
+-- Lines 40-49
 function SpawnCivilianUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		if enemy:base() and enemy:base().set_slot then
@@ -60,7 +60,7 @@ function SpawnCivilianUnitElement:stop_test_element()
 	self._enemies = {}
 end
 
--- Lines: 51 to 56
+-- Lines 51-56
 function SpawnCivilianUnitElement:set_element_data(params, ...)
 	SpawnCivilianUnitElement.super.set_element_data(self, params, ...)
 
@@ -69,16 +69,18 @@ function SpawnCivilianUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines: 58 to 63
+-- Lines 58-63
 function SpawnCivilianUnitElement:_reload_unit_list_btn()
 	self:stop_test_element()
 
 	if self._hed.enemy ~= "none" then
-		managers.editor:reload_units({Idstring(self._hed.enemy)}, true, true)
+		managers.editor:reload_units({
+			Idstring(self._hed.enemy)
+		}, true, true)
 	end
 end
 
--- Lines: 65 to 92
+-- Lines 65-92
 function SpawnCivilianUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -87,7 +89,9 @@ function SpawnCivilianUnitElement:_build_panel(panel, panel_sizer)
 	local enemy_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	panel_sizer:add(enemy_sizer, 0, 0, "EXPAND")
-	self:_build_value_combobox(panel, enemy_sizer, "enemy", self._options, nil, nil, {horizontal_sizer_proportions = 1})
+	self:_build_value_combobox(panel, enemy_sizer, "enemy", self._options, nil, nil, {
+		horizontal_sizer_proportions = 1
+	})
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -95,16 +99,20 @@ function SpawnCivilianUnitElement:_build_panel(panel, panel_sizer)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_reload_unit_list_btn"), nil)
 	toolbar:realize()
 	enemy_sizer:add(toolbar, 0, 0, "EXPAND,LEFT")
-	self:_build_value_combobox(panel, panel_sizer, "state", table.list_add(self._states, {"none"}))
+	self:_build_value_combobox(panel, panel_sizer, "state", table.list_add(self._states, {
+		"none"
+	}))
 
 	local pickups = table.map_keys(tweak_data.pickups)
 
 	table.insert(pickups, "none")
 	self:_build_value_combobox(panel, panel_sizer, "force_pickup", pickups)
-	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({"default"}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
+	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
+		"default"
+	}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
 end
 
--- Lines: 94 to 99
+-- Lines 94-99
 function SpawnCivilianUnitElement:_load_pickup()
 	if self._hed.force_pickup ~= "none" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -113,7 +121,7 @@ function SpawnCivilianUnitElement:_load_pickup()
 	end
 end
 
--- Lines: 103 to 113
+-- Lines 101-113
 function SpawnCivilianUnitElement:add_to_mission_package()
 	if self._hed.force_pickup ~= "none" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -139,7 +147,7 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 	end
 end
 
--- Lines: 115 to 121
+-- Lines 115-121
 function SpawnCivilianUnitElement:_resolve_team(unit)
 	if self._hed.team == "default" then
 		return tweak_data.levels:get_default_team_ID("non_combatant")
@@ -148,9 +156,8 @@ function SpawnCivilianUnitElement:_resolve_team(unit)
 	end
 end
 
--- Lines: 123 to 126
+-- Lines 123-126
 function SpawnCivilianUnitElement:destroy(...)
 	SpawnCivilianUnitElement.super.destroy(self, ...)
 	self:stop_test_element()
 end
-

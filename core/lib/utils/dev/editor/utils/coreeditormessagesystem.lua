@@ -2,7 +2,7 @@ require("core/lib/utils/dev/editor/utils/CoreEditorMessages")
 
 EditorMessageSystem = EditorMessageSystem or class()
 
--- Lines: 5 to 12
+-- Lines 5-12
 function EditorMessageSystem:init()
 	self._listeners = {}
 	self._remove_list = {}
@@ -11,7 +11,7 @@ function EditorMessageSystem:init()
 	self._uid = 1000
 end
 
--- Lines: 14 to 20
+-- Lines 14-21
 function EditorMessageSystem:register(message, uid, func)
 	if not uid then
 		uid = self._uid
@@ -27,7 +27,7 @@ function EditorMessageSystem:register(message, uid, func)
 	return uid
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function EditorMessageSystem:unregister(message, uid)
 	table.insert(self._remove_list, {
 		message = message,
@@ -35,9 +35,11 @@ function EditorMessageSystem:unregister(message, uid)
 	})
 end
 
--- Lines: 28 to 31
+-- Lines 28-31
 function EditorMessageSystem:notify(message, uid, ...)
-	local arg = {...}
+	local arg = {
+		...
+	}
 
 	table.insert(self._messages, {
 		message = message,
@@ -46,9 +48,11 @@ function EditorMessageSystem:notify(message, uid, ...)
 	})
 end
 
--- Lines: 34 to 45
+-- Lines 34-45
 function EditorMessageSystem:notify_now(message, uid, ...)
-	local arg = {...}
+	local arg = {
+		...
+	}
 
 	if self._listeners[message] then
 		if uid and self._listeners[message][uid] then
@@ -61,19 +65,19 @@ function EditorMessageSystem:notify_now(message, uid, ...)
 	end
 end
 
--- Lines: 47 to 68
+-- Lines 47-68
 function EditorMessageSystem:_notify()
 	local messages = deep_clone(self._messages)
 	local count = #self._messages
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		self._messages[i] = nil
 	end
 
 	self._messages = nil
 	self._messages = {}
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		if self._listeners[messages[i].message] then
 			if messages[i].uid then
 				self._listeners[messages[i].message][messages[i].uid](unpack(messages[i].arg))
@@ -86,7 +90,7 @@ function EditorMessageSystem:_notify()
 	end
 end
 
--- Lines: 70 to 73
+-- Lines 70-73
 function EditorMessageSystem:flush()
 	if #self._remove_list > 0 then
 		self:_remove()
@@ -97,17 +101,17 @@ function EditorMessageSystem:flush()
 	end
 end
 
--- Lines: 75 to 78
+-- Lines 75-78
 function EditorMessageSystem:update()
 	self:flush()
 	self:_notify()
 end
 
--- Lines: 81 to 91
+-- Lines 81-91
 function EditorMessageSystem:_remove()
 	local count = #self._remove_list
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		local data = self._remove_list[i]
 
 		self:_unregister(self._remove_list[i].message, self._remove_list[i].uid)
@@ -120,11 +124,11 @@ function EditorMessageSystem:_remove()
 	self._remove_list = {}
 end
 
--- Lines: 93 to 104
+-- Lines 93-104
 function EditorMessageSystem:_add()
 	local count = #self._add_list
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		local data = self._add_list[i]
 
 		self:_register(data.message, data.uid, data.func)
@@ -138,7 +142,7 @@ function EditorMessageSystem:_add()
 	self._add_list = {}
 end
 
--- Lines: 106 to 114
+-- Lines 106-114
 function EditorMessageSystem:_register(message, uid, func)
 	if not self._listeners[message] then
 		self._listeners[message] = {}
@@ -149,10 +153,9 @@ function EditorMessageSystem:_register(message, uid, func)
 	end
 end
 
--- Lines: 116 to 120
+-- Lines 116-120
 function EditorMessageSystem:_unregister(message, uid)
 	if self._listeners[message] then
 		self._listeners[message][uid] = nil
 	end
 end
-

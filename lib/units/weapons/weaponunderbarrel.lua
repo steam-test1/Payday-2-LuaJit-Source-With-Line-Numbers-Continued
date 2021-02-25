@@ -1,7 +1,7 @@
 WeaponUnderbarrel = WeaponUnderbarrel or class(WeaponGadgetBase)
 WeaponUnderbarrel.GADGET_TYPE = "underbarrel"
 
--- Lines: 6 to 14
+-- Lines 5-14
 function WeaponUnderbarrel:init(unit)
 	self._unit = unit
 	self._is_npc = false
@@ -11,16 +11,16 @@ function WeaponUnderbarrel:init(unit)
 	self:setup_underbarrel()
 end
 
--- Lines: 17 to 18
+-- Lines 16-18
 function WeaponUnderbarrel:destroy(unit)
 end
 
--- Lines: 20 to 22
+-- Lines 20-22
 function WeaponUnderbarrel:setup_underbarrel()
 	self._ammo = WeaponAmmo:new(self.name_id, self._tweak_data.CLIP_AMMO_MAX, self._tweak_data.AMMO_MAX)
 end
 
--- Lines: 24 to 29
+-- Lines 24-29
 function WeaponUnderbarrel:check_state()
 	if self._is_npc then
 		return false
@@ -29,12 +29,12 @@ function WeaponUnderbarrel:check_state()
 	self:toggle()
 end
 
--- Lines: 33 to 34
+-- Lines 33-35
 function WeaponUnderbarrel:_fire_raycast(weapon_base, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	return {}
 end
 
--- Lines: 37 to 41
+-- Lines 37-42
 function WeaponUnderbarrel:start_shooting_allowed()
 	if not self._next_fire_t or self._next_fire_t <= TimerManager:main():time() then
 		return true
@@ -43,37 +43,37 @@ function WeaponUnderbarrel:start_shooting_allowed()
 	return false
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function WeaponUnderbarrel:on_shot()
 	self._next_fire_t = TimerManager:main():time() + (self._tweak_data.fire_mode_data and self._tweak_data.fire_mode_data.fire_rate or 0)
 end
 
--- Lines: 48 to 49
+-- Lines 48-50
 function WeaponUnderbarrel:fire_mode()
 	return self._tweak_data.FIRE_MODE
 end
 
--- Lines: 52 to 53
+-- Lines 52-54
 function WeaponUnderbarrel:can_toggle_firemode()
 	return self._tweak_data.CAN_TOGGLE_FIREMODE
 end
 
--- Lines: 56 to 57
+-- Lines 56-58
 function WeaponUnderbarrel:is_single_shot()
 	return self._tweak_data.FIRE_MODE == "single"
 end
 
--- Lines: 60 to 62
+-- Lines 60-62
 function WeaponUnderbarrel:replenish()
 	self._ammo:replenish()
 end
 
--- Lines: 64 to 65
+-- Lines 64-66
 function WeaponUnderbarrel:ammo_base()
 	return self._ammo
 end
 
--- Lines: 68 to 76
+-- Lines 68-77
 function WeaponUnderbarrel:_get_sound_event(weapon, event, alternative_event)
 	local str_name = self.name_id
 
@@ -87,22 +87,22 @@ function WeaponUnderbarrel:_get_sound_event(weapon, event, alternative_event)
 	return event
 end
 
--- Lines: 79 to 80
+-- Lines 79-81
 function WeaponUnderbarrel:_get_tweak_data_weapon_animation(anim)
 	return "bipod_" .. anim
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function WeaponUnderbarrel:_spawn_muzzle_effect()
 	return true
 end
 
--- Lines: 87 to 88
+-- Lines 87-89
 function WeaponUnderbarrel:_spawn_shell_eject_effect()
 	return true
 end
 
--- Lines: 94 to 102
+-- Lines 93-102
 function WeaponUnderbarrel:_check_state(current_state)
 	WeaponUnderbarrel.super._check_state(self, current_state)
 
@@ -113,7 +113,7 @@ function WeaponUnderbarrel:_check_state(current_state)
 	end
 end
 
--- Lines: 104 to 111
+-- Lines 104-111
 function WeaponUnderbarrel:play_anim()
 	if not self._anim then
 		return
@@ -125,18 +125,17 @@ function WeaponUnderbarrel:play_anim()
 	self._unit:anim_play_to(self._anim, self._anim_state and length or 0, speed)
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function WeaponUnderbarrel:reload_prefix()
 	return "underbarrel_"
 end
 
--- Lines: 119 to 120
+-- Lines 119-121
 function WeaponUnderbarrel:is_underbarrel()
 	return true
 end
 
--- Lines: 123 to 124
+-- Lines 123-125
 function WeaponUnderbarrel:toggle_requires_stance_update()
 	return true
 end
-

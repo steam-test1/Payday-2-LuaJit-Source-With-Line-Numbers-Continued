@@ -6,7 +6,7 @@ NPCRaycastWeaponBase._VOICES = {
 }
 NPCRaycastWeaponBase._next_i_voice = {}
 
--- Lines: 5 to 78
+-- Lines 5-78
 function NPCRaycastWeaponBase:init(unit)
 	RaycastWeaponBase.super.init(self, unit, false)
 
@@ -89,7 +89,7 @@ function NPCRaycastWeaponBase:init(unit)
 	end
 end
 
--- Lines: 85 to 102
+-- Lines 84-102
 function NPCRaycastWeaponBase:setup(setup_data)
 	self._autoaim = setup_data.autoaim
 	self._alert_events = setup_data.alert_AI and {} or nil
@@ -103,7 +103,7 @@ function NPCRaycastWeaponBase:setup(setup_data)
 	self._setup.user_sound_variant = 1
 end
 
--- Lines: 106 to 110
+-- Lines 106-110
 function NPCRaycastWeaponBase:start_autofire(nr_shots)
 	self:_sound_autofire_start(nr_shots)
 
@@ -111,17 +111,17 @@ function NPCRaycastWeaponBase:start_autofire(nr_shots)
 	self._shooting = true
 end
 
--- Lines: 113 to 114
+-- Lines 113-115
 function NPCRaycastWeaponBase:fire_mode()
 	return tweak_data.weapon[self._name_id].auto and "auto" or "single"
 end
 
--- Lines: 117 to 118
+-- Lines 117-119
 function NPCRaycastWeaponBase:recoil_wait()
 	return self:fire_mode() == "auto" and self:weapon_tweak_data().auto.fire_rate or nil
 end
 
--- Lines: 123 to 129
+-- Lines 123-129
 function NPCRaycastWeaponBase:stop_autofire()
 	if not self._shooting then
 		return
@@ -132,7 +132,7 @@ function NPCRaycastWeaponBase:stop_autofire()
 	self._shooting = nil
 end
 
--- Lines: 133 to 138
+-- Lines 133-139
 function NPCRaycastWeaponBase:singleshot(...)
 	local fired = self:fire(...)
 
@@ -143,7 +143,7 @@ function NPCRaycastWeaponBase:singleshot(...)
 	return fired
 end
 
--- Lines: 143 to 151
+-- Lines 143-152
 function NPCRaycastWeaponBase:trigger_held(...)
 	local fired = nil
 
@@ -158,15 +158,16 @@ function NPCRaycastWeaponBase:trigger_held(...)
 	return fired
 end
 
--- Lines: 156 to 158
+-- Lines 156-158
 function NPCRaycastWeaponBase:add_damage_multiplier(damage_multiplier)
 	self._damage = self._damage * damage_multiplier
 end
+
 local mto = Vector3()
 local mfrom = Vector3()
 local mspread = Vector3()
 
--- Lines: 165 to 203
+-- Lines 165-203
 function NPCRaycastWeaponBase:fire_blank(direction, impact)
 	local user_unit = self._setup.user_unit
 
@@ -203,7 +204,7 @@ function NPCRaycastWeaponBase:fire_blank(direction, impact)
 	self:_sound_singleshot()
 end
 
--- Lines: 207 to 213
+-- Lines 207-213
 function NPCRaycastWeaponBase:destroy(unit)
 	RaycastWeaponBase.super.pre_destroy(self, unit)
 
@@ -212,7 +213,7 @@ function NPCRaycastWeaponBase:destroy(unit)
 	end
 end
 
--- Lines: 217 to 223
+-- Lines 217-224
 function NPCRaycastWeaponBase:non_npc_name_id()
 	if not self._non_npc_name_id then
 		self._non_npc_name_id = self._name_id
@@ -223,7 +224,7 @@ function NPCRaycastWeaponBase:non_npc_name_id()
 	return self._non_npc_name_id
 end
 
--- Lines: 226 to 231
+-- Lines 226-232
 function NPCRaycastWeaponBase:_get_spread(user_unit)
 	local weapon_tweak = tweak_data.weapon[self._name_id]
 
@@ -234,7 +235,7 @@ function NPCRaycastWeaponBase:_get_spread(user_unit)
 	return weapon_tweak.spread
 end
 
--- Lines: 236 to 244
+-- Lines 236-244
 function NPCRaycastWeaponBase:_sound_autofire_start(nr_shots)
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds
 	local sound_name = tweak_sound.prefix .. self._setup.user_sound_variant .. self._voice .. (nr_shots and "_" .. tostring(nr_shots) .. "shot" or "_loop")
@@ -246,7 +247,7 @@ function NPCRaycastWeaponBase:_sound_autofire_start(nr_shots)
 	end
 end
 
--- Lines: 248 to 256
+-- Lines 248-256
 function NPCRaycastWeaponBase:_sound_autofire_end()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds
 	local sound_name = tweak_sound.prefix .. self._setup.user_sound_variant .. self._voice .. "_end"
@@ -258,7 +259,7 @@ function NPCRaycastWeaponBase:_sound_autofire_end()
 	end
 end
 
--- Lines: 260 to 268
+-- Lines 260-268
 function NPCRaycastWeaponBase:_sound_singleshot()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds
 	local sound_name = tweak_sound.prefix .. self._setup.user_sound_variant .. self._voice .. "_1shot"
@@ -269,10 +270,11 @@ function NPCRaycastWeaponBase:_sound_singleshot()
 		sound = self._sound_fire:post_event(sound_name)
 	end
 end
+
 local mvec_to = Vector3()
 local mvec_spread = Vector3()
 
--- Lines: 274 to 331
+-- Lines 274-332
 function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local result = {}
 	local hit_unit = nil
@@ -313,7 +315,7 @@ function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	if not col_ray or col_ray.distance > 600 or result.guaranteed_miss then
 		local num_rays = (tweak_data.weapon[self._name_id] or {}).rays or 1
 
-		for i = 1, num_rays, 1 do
+		for i = 1, num_rays do
 			mvector3.set(mvec_spread, direction)
 
 			if i > 1 then
@@ -327,7 +329,9 @@ function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	result.hit_enemy = char_hit
 
 	if self._alert_events then
-		result.rays = {col_ray}
+		result.rays = {
+			col_ray
+		}
 	end
 
 	self:_cleanup_smoke_shot()
@@ -335,7 +339,7 @@ function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	return result
 end
 
--- Lines: 339 to 377
+-- Lines 338-377
 function NPCRaycastWeaponBase:_check_smoke_shot(user_unit, target_unit)
 	if not user_unit:movement() or not user_unit:movement().in_smoke or not alive(target_unit) then
 		return
@@ -355,7 +359,9 @@ function NPCRaycastWeaponBase:_check_smoke_shot(user_unit, target_unit)
 		end
 
 		if not self._ignore_unit_tables then
-			self._ignore_unit_tables = {normal = clone(self._setup.ignore_units)}
+			self._ignore_unit_tables = {
+				normal = clone(self._setup.ignore_units)
+			}
 		end
 
 		local key = "smoke_" .. tostring(target_unit:key())
@@ -372,14 +378,14 @@ function NPCRaycastWeaponBase:_check_smoke_shot(user_unit, target_unit)
 	end
 end
 
--- Lines: 380 to 384
+-- Lines 379-384
 function NPCRaycastWeaponBase:_cleanup_smoke_shot()
 	if self._ignore_unit_tables then
 		self._setup.ignore_units = self._ignore_unit_tables.normal
 	end
 end
 
--- Lines: 389 to 397
+-- Lines 389-397
 function NPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 	self._obj_fire:m_position(self._trail_effect_table.position)
 	mvector3.set(self._trail_effect_table.normal, direction)
@@ -391,17 +397,17 @@ function NPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 	end
 end
 
--- Lines: 401 to 402
+-- Lines 401-403
 function NPCRaycastWeaponBase:has_flashlight_on()
 	return self._flashlight_data and self._flashlight_data.on and true or false
 end
 
--- Lines: 405 to 406
+-- Lines 405-407
 function NPCRaycastWeaponBase:flashlight_data()
 	return self._flashlight_data
 end
 
--- Lines: 409 to 427
+-- Lines 409-427
 function NPCRaycastWeaponBase:flashlight_state_changed()
 	if not self._flashlight_data then
 		return
@@ -424,7 +430,7 @@ function NPCRaycastWeaponBase:flashlight_state_changed()
 	end
 end
 
--- Lines: 429 to 445
+-- Lines 429-445
 function NPCRaycastWeaponBase:set_flashlight_enabled(enabled)
 	if not self._flashlight_data then
 		return
@@ -445,7 +451,7 @@ function NPCRaycastWeaponBase:set_flashlight_enabled(enabled)
 	end
 end
 
--- Lines: 447 to 459
+-- Lines 447-459
 function NPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 	if not self._flashlight_data then
 		return
@@ -460,7 +466,7 @@ function NPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 	end
 end
 
--- Lines: 461 to 482
+-- Lines 461-482
 function NPCRaycastWeaponBase:set_laser_enabled(state)
 	if state then
 		if alive(self._laser_unit) then
@@ -469,7 +475,7 @@ function NPCRaycastWeaponBase:set_laser_enabled(state)
 
 		local spawn_rot = self._obj_fire:rotation()
 		local spawn_pos = self._obj_fire:position()
-		spawn_pos = (spawn_pos - spawn_rot:y() * 8 + spawn_rot:z() * 2) - spawn_rot:x() * 1.5
+		spawn_pos = spawn_pos - spawn_rot:y() * 8 + spawn_rot:z() * 2 - spawn_rot:x() * 1.5
 		self._laser_unit = World:spawn_unit(Idstring("units/payday2/weapons/wpn_npc_upg_fl_ass_smg_sho_peqbox/wpn_npc_upg_fl_ass_smg_sho_peqbox"), spawn_pos, spawn_rot)
 
 		self._unit:link(self._obj_fire:name(), self._laser_unit)
@@ -483,4 +489,3 @@ function NPCRaycastWeaponBase:set_laser_enabled(state)
 		self._laser_unit = nil
 	end
 end
-

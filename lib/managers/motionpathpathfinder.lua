@@ -1,7 +1,7 @@
 MotionPathPathFinder = MotionPathPathFinder or class()
 MotionPathPathFinder._VERSION = 0.1
 
--- Lines: 9 to 14
+-- Lines 9-14
 function MotionPathPathFinder:init()
 	self._open_nodes = {}
 	self._closed_nodes = {}
@@ -9,7 +9,7 @@ function MotionPathPathFinder:init()
 	self:recreate_graph()
 end
 
--- Lines: 17 to 34
+-- Lines 17-34
 function MotionPathPathFinder:recreate_graph()
 	self._nodes = {}
 	self._graph_units = {}
@@ -25,7 +25,7 @@ function MotionPathPathFinder:recreate_graph()
 	self._closed_nodes = {}
 end
 
--- Lines: 37 to 49
+-- Lines 37-50
 function MotionPathPathFinder:_make_link(current_pos, target_marker_index, path)
 	local link = nil
 	local target_marker = path.markers[target_marker_index]
@@ -43,12 +43,12 @@ function MotionPathPathFinder:_make_link(current_pos, target_marker_index, path)
 	return link
 end
 
--- Lines: 53 to 86
+-- Lines 53-86
 function MotionPathPathFinder:_add_path(path)
 	local point_index = 1
 	local last_marker, current_unit, current_pos = nil
 
-	for i_marker = 1, #path.markers, 1 do
+	for i_marker = 1, #path.markers do
 		local current_marker = path.markers[i_marker]
 		local current_unit = self:_get_mop_marker_data(current_marker)
 
@@ -85,19 +85,24 @@ function MotionPathPathFinder:_add_path(path)
 	end
 end
 
--- Lines: 89 to 99
+-- Lines 89-100
 function MotionPathPathFinder:_get_unit(unit_id)
 	local unit = self._graph_units[unit_id]
 
 	if not unit then
-		unit = Application:editor() and managers.editor:unit_with_id(unit_id) or managers.worlddefinition:get_unit(unit_id)
+		if Application:editor() then
+			unit = managers.editor:unit_with_id(unit_id)
+		else
+			unit = managers.worlddefinition:get_unit(unit_id)
+		end
+
 		self._graph_units[unit_id] = unit
 	end
 
 	return unit
 end
 
--- Lines: 103 to 108
+-- Lines 103-109
 function MotionPathPathFinder:_get_mop_marker_data(unit_id)
 	local unit = managers.mission:get_element_by_id(unit_id)
 
@@ -108,7 +113,7 @@ function MotionPathPathFinder:_get_mop_marker_data(unit_id)
 	return unit
 end
 
--- Lines: 114 to 132
+-- Lines 114-133
 function MotionPathPathFinder:find_path(start_pos, end_pos)
 	self._graph_units = {}
 	local end_node, start_node = self:_astar_search(start_pos, end_pos)
@@ -128,7 +133,7 @@ function MotionPathPathFinder:find_path(start_pos, end_pos)
 	return last_path
 end
 
--- Lines: 139 to 222
+-- Lines 136-223
 function MotionPathPathFinder:_astar_search(start_pos, end_pos)
 	local start_node, end_node = self:_find_nodes(start_pos, end_pos)
 
@@ -197,7 +202,7 @@ function MotionPathPathFinder:_astar_search(start_pos, end_pos)
 	return nil, nil
 end
 
--- Lines: 226 to 251
+-- Lines 226-252
 function MotionPathPathFinder:_find_nodes(start_pos, end_pos)
 	if not start_pos or not end_pos then
 		return nil, nil
@@ -227,7 +232,7 @@ function MotionPathPathFinder:_find_nodes(start_pos, end_pos)
 	return start_node, end_node
 end
 
--- Lines: 255 to 265
+-- Lines 255-266
 function MotionPathPathFinder:_get_best_node(open_nodes)
 	local best_node = nil
 	local heuristic = 100000000
@@ -241,4 +246,3 @@ function MotionPathPathFinder:_get_best_node(open_nodes)
 
 	return best_node
 end
-

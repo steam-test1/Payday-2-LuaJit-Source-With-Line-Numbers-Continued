@@ -3,7 +3,7 @@ core:import("CoreCode")
 
 OverlayEffectManager = OverlayEffectManager or class()
 
--- Lines: 11 to 28
+-- Lines 10-28
 function OverlayEffectManager:init()
 	local gui = Overlay:newgui()
 	self._vp_overlay = Application:create_scene_viewport(0, 0, 1, 1)
@@ -30,34 +30,34 @@ function OverlayEffectManager:init()
 	managers.viewport:add_resolution_changed_func(callback(self, self, "change_resolution"))
 end
 
--- Lines: 32 to 34
+-- Lines 32-34
 function OverlayEffectManager:set_visible(visible)
 	self._ws:panel():set_visible(visible)
 end
 
--- Lines: 36 to 38
+-- Lines 36-38
 function OverlayEffectManager:add_preset(name, settings)
 	self._presets[name] = settings
 end
 
--- Lines: 40 to 41
+-- Lines 40-42
 function OverlayEffectManager:presets()
 	return self._presets
 end
 
--- Lines: 44 to 46
+-- Lines 44-46
 function OverlayEffectManager:set_default_layer(layer)
 	self._default_layer = layer
 end
 
--- Lines: 50 to 54
+-- Lines 50-54
 function OverlayEffectManager:update(t, dt)
 	self._vp_overlay:update()
 	self:check_pause_state()
 	self:progress_effects(t, dt)
 end
 
--- Lines: 58 to 73
+-- Lines 58-73
 function OverlayEffectManager:destroy()
 	if CoreCode.alive(self._overlay_camera) then
 		Overlay:delete_camera(self._overlay_camera)
@@ -78,14 +78,14 @@ function OverlayEffectManager:destroy()
 	end
 end
 
--- Lines: 75 to 79
+-- Lines 75-79
 function OverlayEffectManager:render()
 	if Global.render_debug.render_overlay then
 		Application:render("Overlay", self._vp_overlay)
 	end
 end
 
--- Lines: 81 to 121
+-- Lines 81-121
 function OverlayEffectManager:progress_effects(t, dt, paused)
 	for key, effect in pairs(self._playing_effects) do
 		local data = effect.data
@@ -134,13 +134,13 @@ function OverlayEffectManager:progress_effects(t, dt, paused)
 	end
 end
 
--- Lines: 125 to 128
+-- Lines 125-128
 function OverlayEffectManager:paused_update(t, dt)
 	self:check_pause_state(true)
 	self:progress_effects(t, dt, true)
 end
 
--- Lines: 132 to 150
+-- Lines 132-150
 function OverlayEffectManager:check_pause_state(paused)
 	if self._paused then
 		if not paused then
@@ -163,22 +163,27 @@ function OverlayEffectManager:check_pause_state(paused)
 	end
 end
 
--- Lines: 164 to 207
+-- Lines 164-207
 function OverlayEffectManager:play_effect(data)
 	if data then
 		local spawn_alpha = data.color.alpha * (data.fade_in > 0 and 0 or 1)
 		local rectangle = nil
-		rectangle = data.gradient_points and self._ws:panel():gradient({
-			w = RenderSettings.resolution.x,
-			h = RenderSettings.resolution.y,
-			color = data.color:with_alpha(spawn_alpha),
-			gradient_points = data.gradient_points,
-			orientation = data.orientation
-		}) or self._ws:panel():rect({
-			w = RenderSettings.resolution.x,
-			h = RenderSettings.resolution.y,
-			color = data.color:with_alpha(spawn_alpha)
-		})
+
+		if data.gradient_points then
+			rectangle = self._ws:panel():gradient({
+				w = RenderSettings.resolution.x,
+				h = RenderSettings.resolution.y,
+				color = data.color:with_alpha(spawn_alpha),
+				gradient_points = data.gradient_points,
+				orientation = data.orientation
+			})
+		else
+			rectangle = self._ws:panel():rect({
+				w = RenderSettings.resolution.x,
+				h = RenderSettings.resolution.y,
+				color = data.color:with_alpha(spawn_alpha)
+			})
+		end
 
 		rectangle:set_layer(self._default_layer)
 		rectangle:set_blend_mode(data.blend_mode)
@@ -247,7 +252,7 @@ function OverlayEffectManager:play_effect(data)
 	end
 end
 
--- Lines: 211 to 235
+-- Lines 211-235
 function OverlayEffectManager:stop_effect(id)
 	if id then
 		if self._playing_effects[id] then
@@ -274,7 +279,7 @@ function OverlayEffectManager:stop_effect(id)
 	end
 end
 
--- Lines: 239 to 256
+-- Lines 239-256
 function OverlayEffectManager:fade_out_effect(id)
 	if id then
 		local effect = self._playing_effects[id]
@@ -295,7 +300,7 @@ function OverlayEffectManager:fade_out_effect(id)
 	end
 end
 
--- Lines: 260 to 265
+-- Lines 260-265
 function OverlayEffectManager:change_resolution()
 	local res = RenderSettings.resolution
 
@@ -306,4 +311,3 @@ function OverlayEffectManager:change_resolution()
 		})
 	end
 end
-

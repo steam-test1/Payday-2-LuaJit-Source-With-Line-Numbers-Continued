@@ -1,6 +1,6 @@
 FriendsBoxGui = FriendsBoxGui or class(TextBoxGui)
 
--- Lines: 3 to 28
+-- Lines 3-28
 function FriendsBoxGui:init(ws, title, text, content_data, config, type)
 	self._type = type
 	config = config or {}
@@ -8,7 +8,7 @@ function FriendsBoxGui:init(ws, title, text, content_data, config, type)
 	config.w = 300
 	local x, y = ws:size()
 	config.x = x - config.w
-	config.y = (y - config.h) - CoreMenuRenderer.Renderer.border_height + 10
+	config.y = y - config.h - CoreMenuRenderer.Renderer.border_height + 10
 	config.no_close_legend = true
 	config.no_scroll_legend = true
 	self._default_font_size = tweak_data.menu.default_font_size
@@ -25,7 +25,7 @@ function FriendsBoxGui:init(ws, title, text, content_data, config, type)
 	self:set_layer(10)
 end
 
--- Lines: 60 to 131
+-- Lines 60-131
 function FriendsBoxGui:_create_friend_action_gui_by_user(user_data)
 	if self._friend_action_gui then
 		self._friend_action_gui:close()
@@ -33,7 +33,9 @@ function FriendsBoxGui:_create_friend_action_gui_by_user(user_data)
 
 	local user = user_data.user
 	local offline = user_data.main_state == "offline"
-	local data = {button_list = {}}
+	local data = {
+		button_list = {}
+	}
 	local my_lobby_id = managers.network.matchmake.lobby_handler and managers.network.matchmake.lobby_handler:id()
 	local user_lobby_id = user:lobby() and user:lobby():id()
 
@@ -108,7 +110,7 @@ function FriendsBoxGui:_create_friend_action_gui_by_user(user_data)
 	self._friend_action_gui:set_layer(self:layer() + 20)
 end
 
--- Lines: 135 to 140
+-- Lines 133-140
 function FriendsBoxGui:set_layer(layer)
 	FriendsBoxGui.super.set_layer(self, layer)
 
@@ -117,7 +119,7 @@ function FriendsBoxGui:set_layer(layer)
 	end
 end
 
--- Lines: 142 to 275
+-- Lines 142-275
 function FriendsBoxGui:update_friends()
 	if not Steam:logged_on() then
 		return
@@ -258,11 +260,19 @@ function FriendsBoxGui:update_friends()
 	self:_layout_friends_panel()
 end
 
--- Lines: 277 to 293
+-- Lines 277-293
 function FriendsBoxGui:_update_sub_state(user_data)
 	local friends_panel = self._scroll_panel:child("friends_panel")
 	local panel = nil
-	panel = user_data.main_state == "ingame" and friends_panel:child("ingame_panel") or user_data.main_state == "online" and friends_panel:child("online_panel") or friends_panel:child("offline_panel")
+
+	if user_data.main_state == "ingame" then
+		panel = friends_panel:child("ingame_panel")
+	elseif user_data.main_state == "online" then
+		panel = friends_panel:child("online_panel")
+	else
+		panel = friends_panel:child("offline_panel")
+	end
+
 	local user_panel = panel:child(user_data.user:id())
 	local user_state = user_panel:child("user_state")
 
@@ -273,7 +283,7 @@ function FriendsBoxGui:_update_sub_state(user_data)
 	user_state:set_w(w)
 end
 
--- Lines: 295 to 328
+-- Lines 295-328
 function FriendsBoxGui:_layout_friends_panel()
 	local friends_panel = self._scroll_panel:child("friends_panel")
 	local ingame_panel = friends_panel:child("ingame_panel")
@@ -314,7 +324,7 @@ function FriendsBoxGui:_layout_friends_panel()
 	self:_check_scroll_indicator_states()
 end
 
--- Lines: 330 to 337
+-- Lines 330-338
 function FriendsBoxGui:_get_state_h(panel)
 	local h = 0
 
@@ -329,7 +339,7 @@ function FriendsBoxGui:_get_state_h(panel)
 	return h
 end
 
--- Lines: 340 to 374
+-- Lines 340-374
 function FriendsBoxGui:_create_text_box(ws, title, text, content_data, config)
 	FriendsBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 
@@ -416,7 +426,7 @@ function FriendsBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self:_layout_friends_panel()
 end
 
--- Lines: 377 to 425
+-- Lines 376-425
 function FriendsBoxGui:_create_user(friends_panel, h, user, state, sub_state, level)
 	local color = state == "online" and self._online_color or state == "ingame" and self._ingame_color or self._offline_color
 	local panel = friends_panel:panel({
@@ -529,7 +539,7 @@ function FriendsBoxGui:_create_user(friends_panel, h, user, state, sub_state, le
 	lobby:set_right(panel:w())
 end
 
--- Lines: 427 to 508
+-- Lines 427-508
 function FriendsBoxGui:mouse_pressed(button, x, y)
 	if self._friend_action_gui and self._friend_action_gui:visible() and self._friend_action_gui:in_info_area_focus(x, y) then
 		if button == Idstring("0") then
@@ -583,12 +593,12 @@ function FriendsBoxGui:mouse_pressed(button, x, y)
 				x = x + 16
 				y = y - 16
 
-				if (self:x() + self:w()) - 20 < x + self._friend_action_gui:w() then
-					x = ((self:x() + self:w()) - 20) - self._friend_action_gui:w()
+				if x + self._friend_action_gui:w() > self:x() + self:w() - 20 then
+					x = self:x() + self:w() - 20 - self._friend_action_gui:w()
 				end
 
-				if self:y() + self:h() < y + self._friend_action_gui:h() then
-					y = (self:y() + self:h()) - self._friend_action_gui:h()
+				if y + self._friend_action_gui:h() > self:y() + self:h() then
+					y = self:y() + self:h() - self._friend_action_gui:h()
 				end
 
 				self._friend_action_gui:set_position(x, y)
@@ -603,7 +613,7 @@ function FriendsBoxGui:mouse_pressed(button, x, y)
 	self:_hide_friend_action_user()
 end
 
--- Lines: 510 to 515
+-- Lines 510-515
 function FriendsBoxGui:_hide_friend_action_user()
 	self._friend_action_user = nil
 
@@ -612,7 +622,7 @@ function FriendsBoxGui:_hide_friend_action_user()
 	end
 end
 
--- Lines: 518 to 539
+-- Lines 518-540
 function FriendsBoxGui:_inside_user(x, y)
 	local friends_panel = self._scroll_panel:child("friends_panel")
 	local ingame_panel = friends_panel:child("ingame_panel")
@@ -640,7 +650,7 @@ function FriendsBoxGui:_inside_user(x, y)
 	return nil
 end
 
--- Lines: 543 to 549
+-- Lines 543-550
 function FriendsBoxGui:_get_user_panel(id)
 	local friends_panel = self._scroll_panel:child("friends_panel")
 	local ingame_panel = friends_panel:child("ingame_panel")
@@ -650,7 +660,7 @@ function FriendsBoxGui:_get_user_panel(id)
 	return ingame_panel:child(id) or online_panel:child(id) or offline_panel:child(id)
 end
 
--- Lines: 552 to 564
+-- Lines 552-564
 function FriendsBoxGui:mouse_moved(x, y)
 	if self._friend_action_gui and self._friend_action_gui:visible() and self._friend_action_gui:in_info_area_focus(x, y) then
 		self._friend_action_gui:check_focus_button(x, y)
@@ -665,7 +675,7 @@ function FriendsBoxGui:mouse_moved(x, y)
 	self:_set_user_panels_state(x, y, friends_panel:child("offline_panel"), self._offline_color)
 end
 
--- Lines: 566 to 575
+-- Lines 566-575
 function FriendsBoxGui:_set_user_panels_state(x, y, panel, color)
 	for _, user_panel in ipairs(panel:children()) do
 		local inside = user_panel:inside(x, y)
@@ -676,12 +686,12 @@ function FriendsBoxGui:_set_user_panels_state(x, y, panel, color)
 	end
 end
 
--- Lines: 577 to 579
+-- Lines 577-579
 function FriendsBoxGui:_check_scroll_indicator_states()
 	FriendsBoxGui.super._check_scroll_indicator_states(self)
 end
 
--- Lines: 581 to 598
+-- Lines 581-598
 function FriendsBoxGui:set_size(x, y)
 	FriendsBoxGui.super.set_size(self, x, y)
 
@@ -689,7 +699,7 @@ function FriendsBoxGui:set_size(x, y)
 
 	friends_panel:set_w(self._scroll_panel:w())
 
-	-- Lines: 587 to 593
+	-- Lines 587-593
 	local function f(friends_panel, panel)
 		panel:set_w(friends_panel:w())
 
@@ -704,7 +714,7 @@ function FriendsBoxGui:set_size(x, y)
 	f(friends_panel, friends_panel:child("offline_panel"))
 end
 
--- Lines: 600 to 605
+-- Lines 600-605
 function FriendsBoxGui:set_visible(visible)
 	if not visible then
 		self:_hide_friend_action_user()
@@ -713,7 +723,7 @@ function FriendsBoxGui:set_visible(visible)
 	FriendsBoxGui.super.set_visible(self, visible)
 end
 
--- Lines: 607 to 613
+-- Lines 607-613
 function FriendsBoxGui:close()
 	print("FriendsBoxGui:close()")
 	FriendsBoxGui.super.close(self)
@@ -722,4 +732,3 @@ function FriendsBoxGui:close()
 		self._friend_action_gui:close()
 	end
 end
-

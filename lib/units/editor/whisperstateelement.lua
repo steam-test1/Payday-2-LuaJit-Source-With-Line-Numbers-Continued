@@ -1,6 +1,6 @@
 WhisperStateUnitElement = WhisperStateUnitElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function WhisperStateUnitElement:init(unit)
 	WhisperStateUnitElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function WhisperStateUnitElement:init(unit)
 	table.insert(self._save_values, "disable_hud")
 end
 
--- Lines: 14 to 36
+-- Lines 14-36
 function WhisperStateUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -43,4 +43,3 @@ function WhisperStateUnitElement:_build_panel(panel, panel_sizer)
 
 	self:add_help_text(help)
 end
-

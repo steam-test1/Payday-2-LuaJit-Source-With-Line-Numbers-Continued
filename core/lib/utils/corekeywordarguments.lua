@@ -1,7 +1,7 @@
 core:module("CoreKeywordArguments")
 core:import("CoreClass")
 
--- Lines: 75 to 94
+-- Lines 75-95
 function parse_kwargs(args, ...)
 	assert(#args == 1)
 	assert(type(args[1]) == "table")
@@ -9,7 +9,9 @@ function parse_kwargs(args, ...)
 	local kwargs = args[1]
 	local result = {}
 
-	for _, arg_def in ipairs({...}) do
+	for _, arg_def in ipairs({
+		...
+	}) do
 		local j = string.find(arg_def, ":")
 		local typ = string.sub(arg_def, 1, j - 1)
 		local name = string.sub(arg_def, j + 1)
@@ -30,9 +32,11 @@ end
 
 KeywordArguments = KeywordArguments or CoreClass.class()
 
--- Lines: 105 to 114
+-- Lines 105-114
 function KeywordArguments:init(...)
-	local args = {...}
+	local args = {
+		...
+	}
 
 	assert(#args == 1, "must be called with one argument only (a table with keyword arguments)")
 	assert(type(args[1]) == "table", "must be called with table as first argument")
@@ -45,16 +49,18 @@ function KeywordArguments:init(...)
 	end
 end
 
--- Lines: 116 to 118
+-- Lines 116-118
 function KeywordArguments:assert_all_consumed()
 	assert(table.size(self._unconsumed_kwargs) == 0, "unknown keyword argument(s): " .. string.join(", ", self._unconsumed_kwargs))
 end
 
--- Lines: 121 to 129
+-- Lines 121-130
 function KeywordArguments:mandatory(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v ~= nil, "a mandatory keyword argument (" .. n .. ") is missing")
@@ -66,11 +72,13 @@ function KeywordArguments:mandatory(...)
 	return unpack(ret_list)
 end
 
--- Lines: 132 to 141
+-- Lines 132-142
 function KeywordArguments:mandatory_string(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v ~= nil, "a mandatory keyword argument (" .. n .. ") is missing")
@@ -83,11 +91,13 @@ function KeywordArguments:mandatory_string(...)
 	return unpack(ret_list)
 end
 
--- Lines: 144 to 153
+-- Lines 144-154
 function KeywordArguments:mandatory_number(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v ~= nil, "a mandatory keyword argument (" .. n .. ") is missing")
@@ -100,11 +110,13 @@ function KeywordArguments:mandatory_number(...)
 	return unpack(ret_list)
 end
 
--- Lines: 156 to 165
+-- Lines 156-166
 function KeywordArguments:mandatory_table(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v ~= nil, "a mandatory keyword argument (" .. n .. ") is missing")
@@ -117,11 +129,13 @@ function KeywordArguments:mandatory_table(...)
 	return unpack(ret_list)
 end
 
--- Lines: 168 to 178
+-- Lines 168-179
 function KeywordArguments:mandatory_function(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v ~= nil, "a mandatory keyword argument (" .. n .. ") is missing")
@@ -134,11 +148,13 @@ function KeywordArguments:mandatory_function(...)
 	return unpack(ret_list)
 end
 
--- Lines: 181 to 191
+-- Lines 181-192
 function KeywordArguments:mandatory_object(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v ~= nil, "a mandatory keyword argument (" .. n .. ") is missing")
@@ -151,11 +167,13 @@ function KeywordArguments:mandatory_object(...)
 	return unpack(ret_list)
 end
 
--- Lines: 195 to 201
+-- Lines 195-202
 function KeywordArguments:optional(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		table.insert(ret_list, self._kwargs[n])
 
 		self._unconsumed_kwargs[n] = nil
@@ -164,11 +182,13 @@ function KeywordArguments:optional(...)
 	return unpack(ret_list)
 end
 
--- Lines: 204 to 213
+-- Lines 204-214
 function KeywordArguments:optional_string(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v == nil or type(v) == "string", "keyword argument is not a string (" .. n .. "=" .. tostring(v) .. ")")
@@ -180,11 +200,13 @@ function KeywordArguments:optional_string(...)
 	return unpack(ret_list)
 end
 
--- Lines: 216 to 225
+-- Lines 216-226
 function KeywordArguments:optional_number(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v == nil or type(v) == "number", "keyword argument is not a number (" .. n .. "=" .. tostring(v) .. ")")
@@ -196,11 +218,13 @@ function KeywordArguments:optional_number(...)
 	return unpack(ret_list)
 end
 
--- Lines: 228 to 237
+-- Lines 228-238
 function KeywordArguments:optional_table(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v == nil or type(v) == "table", "keyword argument is not a table or userdata (" .. n .. "=" .. tostring(v) .. ")")
@@ -212,11 +236,13 @@ function KeywordArguments:optional_table(...)
 	return unpack(ret_list)
 end
 
--- Lines: 240 to 248
+-- Lines 240-249
 function KeywordArguments:optional_function(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v == nil or type(v) == "function", "keyword argument is not a function (" .. n .. "=" .. tostring(v) .. ")")
@@ -228,11 +254,13 @@ function KeywordArguments:optional_function(...)
 	return unpack(ret_list)
 end
 
--- Lines: 251 to 260
+-- Lines 251-261
 function KeywordArguments:optional_object(...)
 	local ret_list = {}
 
-	for _, n in ipairs({...}) do
+	for _, n in ipairs({
+		...
+	}) do
 		local v = self._kwargs[n]
 
 		assert(v == nil or type(v) == "table" or type(v) == "userdata", "keyword argument is not a table or userdata (" .. n .. "=" .. tostring(v) .. ")")
@@ -243,4 +271,3 @@ function KeywordArguments:optional_object(...)
 
 	return unpack(ret_list)
 end
-

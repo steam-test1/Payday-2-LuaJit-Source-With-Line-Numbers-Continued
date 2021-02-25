@@ -3,7 +3,7 @@ ModifierMedicDeathwish._type = "ModifierMedicDeathwish"
 ModifierMedicDeathwish.name_id = "none"
 ModifierMedicDeathwish.desc_id = "menu_cs_modifier_medic_deathwish"
 
--- Lines: 7 to 24
+-- Lines 7-24
 function ModifierMedicDeathwish:OnEnemyDied(unit, damage_info)
 	if Network:is_client() then
 		return
@@ -23,4 +23,3 @@ function ModifierMedicDeathwish:OnEnemyDied(unit, damage_info)
 		end
 	end
 end
-

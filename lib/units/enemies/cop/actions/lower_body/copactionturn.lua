@@ -2,7 +2,7 @@ CopActionTurn = CopActionTurn or class()
 local tmp_rot = Rotation()
 local mrot_set_ypr = mrotation.set_yaw_pitch_roll
 
--- Lines: 8 to 35
+-- Lines 7-36
 function CopActionTurn:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_movement = common_data.ext_movement
@@ -30,7 +30,7 @@ function CopActionTurn:init(action_desc, common_data)
 	return true
 end
 
--- Lines: 40 to 47
+-- Lines 40-47
 function CopActionTurn:on_exit()
 	self._common_data.unit:set_driving("script")
 	self._ext_movement:set_root_blend(true)
@@ -42,7 +42,7 @@ function CopActionTurn:on_exit()
 	self._ext_movement:set_rotation(tmp_rot)
 end
 
--- Lines: 51 to 58
+-- Lines 51-58
 function CopActionTurn:update(t)
 	if not self._ext_anim.turn and self._ext_anim.idle_full_blend then
 		self._expired = true
@@ -51,7 +51,7 @@ function CopActionTurn:update(t)
 	self._ext_movement:set_m_rot(self._common_data.unit:rotation())
 end
 
--- Lines: 62 to 101
+-- Lines 62-101
 function CopActionTurn:_upd_wait_full_blend(t)
 	if self._ext_anim.idle_full_blend then
 		local angle = self._action_desc.angle
@@ -99,18 +99,17 @@ function CopActionTurn:_upd_wait_full_blend(t)
 	end
 end
 
--- Lines: 105 to 106
+-- Lines 105-107
 function CopActionTurn:type()
 	return "turn"
 end
 
--- Lines: 111 to 112
+-- Lines 111-113
 function CopActionTurn:expired()
 	return self._expired
 end
 
--- Lines: 117 to 118
+-- Lines 117-119
 function CopActionTurn:need_upd()
 	return true
 end
-

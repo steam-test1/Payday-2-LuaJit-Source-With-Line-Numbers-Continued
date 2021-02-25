@@ -1,6 +1,6 @@
 EnableSoundEnvironmentElement = EnableSoundEnvironmentElement or class(MissionElement)
 
--- Lines: 3 to 11
+-- Lines 3-11
 function EnableSoundEnvironmentElement:init(unit)
 	EnableSoundEnvironmentElement.super.init(self, unit)
 
@@ -11,7 +11,7 @@ function EnableSoundEnvironmentElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines: 13 to 29
+-- Lines 13-29
 function EnableSoundEnvironmentElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -34,11 +34,11 @@ function EnableSoundEnvironmentElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(enable_sound_env, 0, 0, "EXPAND")
 end
 
--- Lines: 31 to 32
+-- Lines 31-32
 function EnableSoundEnvironmentElement:update_editing()
 end
 
--- Lines: 34 to 42
+-- Lines 34-42
 function EnableSoundEnvironmentElement:update_selected(t, dt)
 	for _, area in ipairs(managers.sound_environment:areas()) do
 		for _, name in ipairs(self._hed.elements) do
@@ -55,7 +55,7 @@ function EnableSoundEnvironmentElement:update_selected(t, dt)
 	end
 end
 
--- Lines: 44 to 54
+-- Lines 44-54
 function EnableSoundEnvironmentElement:update_unselected()
 	for _, name in ipairs(self._hed.elements) do
 		for _, area in ipairs(managers.sound_environment:areas()) do
@@ -66,7 +66,7 @@ function EnableSoundEnvironmentElement:update_unselected()
 	end
 end
 
--- Lines: 56 to 66
+-- Lines 56-66
 function EnableSoundEnvironmentElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -84,7 +84,7 @@ function EnableSoundEnvironmentElement:add_element()
 	end
 end
 
--- Lines: 68 to 78
+-- Lines 68-78
 function EnableSoundEnvironmentElement:remove_links(unit)
 	for _, area in ipairs(managers.sound_environment:areas()) do
 		if area:unit():key() == unit:key() then
@@ -97,15 +97,14 @@ function EnableSoundEnvironmentElement:remove_links(unit)
 	end
 end
 
--- Lines: 80 to 82
+-- Lines 80-82
 function EnableSoundEnvironmentElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 84 to 97
+-- Lines 84-97
 function EnableSoundEnvironmentElement:add_unit_list_btn()
-
-	-- Lines: 84 to 85
+	-- Lines 85-85
 	local function f(unit)
 		return unit:type() == Idstring("sound")
 	end
@@ -127,7 +126,7 @@ function EnableSoundEnvironmentElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 99 to 105
+-- Lines 99-105
 function EnableSoundEnvironmentElement:_add_or_remove_graph(id)
 	if table.contains(self._hed.elements, id) then
 		table.delete(self._hed.elements, id)
@@ -135,4 +134,3 @@ function EnableSoundEnvironmentElement:_add_or_remove_graph(id)
 		table.insert(self._hed.elements, id)
 	end
 end
-

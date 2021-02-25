@@ -1,9 +1,10 @@
 TripMineBase = TripMineBase or class(UnitBase)
-TripMineBase.EVENT_IDS = {}
-TripMineBase.EVENT_IDS.sensor_beep = 1
-TripMineBase.EVENT_IDS.explosion_beep = 2
+TripMineBase.EVENT_IDS = {
+	sensor_beep = 1,
+	explosion_beep = 2
+}
 
--- Lines: 7 to 12
+-- Lines 7-13
 function TripMineBase.spawn(pos, rot, sensor_upgrade, peer_id)
 	local unit = World:spawn_unit(Idstring("units/payday2/equipment/gen_equipment_tripmine/gen_equipment_tripmine"), pos, rot)
 
@@ -13,19 +14,21 @@ function TripMineBase.spawn(pos, rot, sensor_upgrade, peer_id)
 	return unit
 end
 
--- Lines: 18 to 21
+-- Lines 18-21
 function TripMineBase:set_server_information(peer_id)
-	self._server_information = {owner_peer_id = peer_id}
+	self._server_information = {
+		owner_peer_id = peer_id
+	}
 
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
--- Lines: 24 to 25
+-- Lines 24-26
 function TripMineBase:server_information()
 	return self._server_information
 end
 
--- Lines: 30 to 61
+-- Lines 30-61
 function TripMineBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -59,7 +62,7 @@ function TripMineBase:init(unit)
 	managers.player:send_message("trip_mine_placed", nil, self._unit)
 end
 
--- Lines: 65 to 72
+-- Lines 65-72
 function TripMineBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -70,19 +73,21 @@ function TripMineBase:_clbk_validate()
 	end
 end
 
--- Lines: 76 to 77
+-- Lines 76-78
 function TripMineBase:get_name_id()
 	return "trip_mine"
 end
 
--- Lines: 80 to 81
+-- Lines 80-82
 function TripMineBase:interaction_text_id()
 	return self._sensor_upgrade and (self:armed() and "hud_int_equipment_sensor_mode_trip_mine" or "hud_int_equipment_normal_mode_trip_mine") or "debug_interact_trip_mine"
 end
 
--- Lines: 84 to 90
+-- Lines 84-91
 function TripMineBase:is_category(...)
-	for _, cat in ipairs({...}) do
+	for _, cat in ipairs({
+		...
+	}) do
 		if cat == "trip_mine" then
 			return true
 		end
@@ -91,7 +96,7 @@ function TripMineBase:is_category(...)
 	return false
 end
 
--- Lines: 97 to 104
+-- Lines 97-104
 function TripMineBase:sync_setup(sensor_upgrade)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -102,7 +107,7 @@ function TripMineBase:sync_setup(sensor_upgrade)
 	self:setup(sensor_upgrade)
 end
 
--- Lines: 107 to 124
+-- Lines 107-124
 function TripMineBase:setup(sensor_upgrade)
 	self._slotmask = managers.slot:get_mask("trip_mine_targets")
 	self._first_armed = false
@@ -124,7 +129,7 @@ function TripMineBase:setup(sensor_upgrade)
 	self._unit:contour():add(upgrade and "deployable_interactable" or "deployable_active")
 end
 
--- Lines: 128 to 171
+-- Lines 128-171
 function TripMineBase:set_active(active, owner)
 	self._active = active
 
@@ -175,12 +180,12 @@ function TripMineBase:set_active(active, owner)
 	end
 end
 
--- Lines: 175 to 176
+-- Lines 175-177
 function TripMineBase:active()
 	return self._active
 end
 
--- Lines: 181 to 186
+-- Lines 181-187
 function TripMineBase:armed()
 	if self._activate_timer then
 		return self._startup_armed
@@ -189,7 +194,7 @@ function TripMineBase:armed()
 	return self._armed
 end
 
--- Lines: 189 to 210
+-- Lines 189-210
 function TripMineBase:_set_armed(armed)
 	if not self._activate_timer then
 		self._armed = armed
@@ -215,7 +220,7 @@ function TripMineBase:_set_armed(armed)
 	self._unit:interaction():set_dirty(true)
 end
 
--- Lines: 212 to 221
+-- Lines 212-221
 function TripMineBase:set_armed(armed)
 	if not managers.network:session() then
 		return
@@ -228,7 +233,7 @@ function TripMineBase:set_armed(armed)
 	end
 end
 
--- Lines: 223 to 229
+-- Lines 223-229
 function TripMineBase:sync_trip_mine_set_armed(armed, length)
 	if not self._owner then
 		self._length = length
@@ -239,24 +244,24 @@ function TripMineBase:sync_trip_mine_set_armed(armed, length)
 	self:_set_armed(armed)
 end
 
--- Lines: 233 to 235
+-- Lines 233-235
 function TripMineBase:contour_selected()
 	self._unit:contour():add("deployable_selected")
 end
 
--- Lines: 237 to 239
+-- Lines 237-239
 function TripMineBase:contour_unselected()
 	self._unit:contour():remove("deployable_selected")
 end
 
--- Lines: 243 to 249
+-- Lines 243-249
 function TripMineBase:_update_draw_laser()
 	if self._use_draw_laser and self._first_armed and (self._armed or self._sensor_upgrade) then
 		self._laser_brush:cylinder(self._ray_from_pos, self._ray_to_pos, 0.5)
 	end
 end
 
--- Lines: 251 to 304
+-- Lines 251-304
 function TripMineBase:update(unit, t, dt)
 	self:_update_draw_laser()
 
@@ -318,12 +323,12 @@ function TripMineBase:update(unit, t, dt)
 	end
 end
 
--- Lines: 308 to 309
+-- Lines 308-310
 function TripMineBase:_raycast()
 	return self._unit:raycast("ray", self._ray_from_pos, self._ray_to_pos, "slot_mask", self._slotmask, "ray_type", "trip_mine body")
 end
 
--- Lines: 314 to 338
+-- Lines 314-338
 function TripMineBase:_sensor(t)
 	local ray = self:_raycast()
 
@@ -347,12 +352,12 @@ function TripMineBase:_sensor(t)
 	end
 end
 
--- Lines: 340 to 342
+-- Lines 340-342
 function TripMineBase:sync_trip_mine_beep_sensor()
 	self:_emit_sensor_sound_and_effect()
 end
 
--- Lines: 347 to 366
+-- Lines 347-366
 function TripMineBase:_check_body()
 	if not self._attached_data then
 		return
@@ -373,7 +378,7 @@ function TripMineBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines: 370 to 397
+-- Lines 370-397
 function TripMineBase:_check()
 	if not managers.network:session() then
 		return
@@ -402,12 +407,12 @@ function TripMineBase:_check()
 	end
 end
 
--- Lines: 401 to 403
+-- Lines 401-403
 function TripMineBase:sync_trip_mine_beep_explode()
 	self._unit:sound_source():post_event("trip_mine_beep_explode")
 end
 
--- Lines: 408 to 419
+-- Lines 408-419
 function TripMineBase:explode()
 	if not self._active then
 		return
@@ -422,7 +427,7 @@ function TripMineBase:explode()
 	self:_explode(col_ray)
 end
 
--- Lines: 421 to 522
+-- Lines 421-522
 function TripMineBase:_explode(col_ray)
 	if not managers.network:session() then
 		return
@@ -452,7 +457,9 @@ function TripMineBase:_explode(col_ray)
 			if character and not characters_hit[hit_body:unit():key()] then
 				local com = hit_body:center_of_mass()
 				local ray_from = math.point_on_line(self._ray_from_pos, self._ray_to_pos, com)
-				ray_hit = not World:raycast("ray", ray_from, com, "slot_mask", slotmask, "ignore_unit", {hit_body:unit()}, "report")
+				ray_hit = not World:raycast("ray", ray_from, com, "slot_mask", slotmask, "ignore_unit", {
+					hit_body:unit()
+				}, "report")
 
 				if ray_hit then
 					characters_hit[hit_body:unit():key()] = true
@@ -528,13 +535,13 @@ function TripMineBase:_explode(col_ray)
 	self._unit:set_slot(0)
 end
 
--- Lines: 524 to 527
+-- Lines 524-527
 function TripMineBase:sync_trip_mine_explode_and_spawn_fire(user_unit, ray_from, ray_to, damage_size, damage, added_time, range_multiplier)
 	self:_spawn_environment_fire(user_unit, added_time, range_multiplier)
 	self:sync_trip_mine_explode(user_unit, ray_from, ray_to, damage_size, damage)
 end
 
--- Lines: 529 to 564
+-- Lines 529-564
 function TripMineBase:sync_trip_mine_explode(user_unit, ray_from, ray_to, damage_size, damage)
 	self:_play_sound_and_effects()
 	self._unit:set_slot(0)
@@ -572,7 +579,7 @@ function TripMineBase:sync_trip_mine_explode(user_unit, ray_from, ray_to, damage
 	end
 end
 
--- Lines: 566 to 576
+-- Lines 566-576
 function TripMineBase:_spawn_environment_fire(user_unit, added_time, range_multiplier)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
@@ -586,7 +593,7 @@ function TripMineBase:_spawn_environment_fire(user_unit, added_time, range_multi
 	EnvironmentFire.spawn(position, rotation, data, normal, user_unit, added_time, range_multiplier)
 end
 
--- Lines: 578 to 585
+-- Lines 578-585
 function TripMineBase:_play_sound_and_effects()
 	World:effect_manager():spawn({
 		effect = Idstring("effects/particles/explosions/explosion_grenade"),
@@ -598,19 +605,21 @@ function TripMineBase:_play_sound_and_effects()
 
 	sound_source:set_position(self._unit:position())
 	sound_source:post_event("trip_mine_explode")
-	managers.enemy:add_delayed_clbk("TrMiexpl", callback(TripMineBase, TripMineBase, "_dispose_of_sound", {sound_source = sound_source}), TimerManager:game():time() + 4)
+	managers.enemy:add_delayed_clbk("TrMiexpl", callback(TripMineBase, TripMineBase, "_dispose_of_sound", {
+		sound_source = sound_source
+	}), TimerManager:game():time() + 4)
 end
 
--- Lines: 590 to 592
+-- Lines 588-592
 function TripMineBase:_emit_sensor_sound_and_effect()
 	self._unit:sound_source():post_event("trip_mine_sensor_alarm")
 end
 
--- Lines: 594 to 595
+-- Lines 594-595
 function TripMineBase._dispose_of_sound(...)
 end
 
--- Lines: 597 to 603
+-- Lines 597-603
 function TripMineBase:sync_net_event(event_id)
 	if event_id == TripMineBase.EVENT_IDS.sensor_beep then
 		self:sync_trip_mine_beep_sensor()
@@ -619,7 +628,7 @@ function TripMineBase:sync_net_event(event_id)
 	end
 end
 
--- Lines: 607 to 618
+-- Lines 607-619
 function TripMineBase:_give_explosion_damage(col_ray, unit, damage)
 	local action_data = {
 		variant = "explosion",
@@ -635,7 +644,7 @@ function TripMineBase:_give_explosion_damage(col_ray, unit, damage)
 	return defense_data
 end
 
--- Lines: 623 to 632
+-- Lines 623-632
 function TripMineBase:save(data)
 	local state = {
 		armed = self._armed,
@@ -648,7 +657,7 @@ function TripMineBase:save(data)
 	data.TripMineBase = state
 end
 
--- Lines: 634 to 649
+-- Lines 634-649
 function TripMineBase:load(data)
 	local state = data.TripMineBase
 	self._init_length = 500
@@ -666,14 +675,14 @@ function TripMineBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines: 653 to 656
+-- Lines 653-656
 function TripMineBase:_debug_draw(from, to)
 	local brush = Draw:brush(Color.red:with_alpha(0.5))
 
 	brush:cylinder(from, to, 1)
 end
 
--- Lines: 658 to 663
+-- Lines 658-663
 function TripMineBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -681,4 +690,3 @@ function TripMineBase:destroy()
 		self._validate_clbk_id = nil
 	end
 end
-

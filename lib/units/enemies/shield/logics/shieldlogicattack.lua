@@ -1,9 +1,11 @@
 ShieldLogicAttack = class(TankCopLogicAttack)
 
--- Lines: 10 to 51
+-- Lines 9-51
 function ShieldLogicAttack.enter(data, new_logic_name, enter_params)
 	local old_internal_data = data.internal_data
-	local my_data = {unit = data.unit}
+	local my_data = {
+		unit = data.unit
+	}
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
 	my_data.tmp_vec1 = Vector3()
@@ -35,7 +37,9 @@ function ShieldLogicAttack.enter(data, new_logic_name, enter_params)
 		return
 	end
 
-	data.unit:brain():set_attention_settings({cbt = true})
+	data.unit:brain():set_attention_settings({
+		cbt = true
+	})
 
 	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
 	my_data.update_queue_id = "ShieldLogicAttack.queued_update" .. key_str
@@ -43,7 +47,7 @@ function ShieldLogicAttack.enter(data, new_logic_name, enter_params)
 	ShieldLogicAttack.queue_update(data, my_data)
 end
 
--- Lines: 56 to 66
+-- Lines 55-66
 function ShieldLogicAttack.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -55,7 +59,7 @@ function ShieldLogicAttack.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 end
 
--- Lines: 70 to 198
+-- Lines 70-198
 function ShieldLogicAttack.queued_update(data)
 	local t = TimerManager:game():time()
 	data.t = t
@@ -154,7 +158,9 @@ function ShieldLogicAttack.queued_update(data)
 				if do_move then
 					my_data.pathing_to_optimal_pos = true
 					my_data.optimal_path_search_id = tostring(unit:key()) .. "optimal"
-					local reservation = managers.navigation:reserve_pos(nil, nil, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {unit_pos = data.m_pos}), 70, data.pos_rsrv_id)
+					local reservation = managers.navigation:reserve_pos(nil, nil, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {
+						unit_pos = data.m_pos
+					}), 70, data.pos_rsrv_id)
 
 					if reservation then
 						to_pos = reservation.position
@@ -179,7 +185,7 @@ function ShieldLogicAttack.queued_update(data)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines: 202 to 223
+-- Lines 202-224
 function ShieldLogicAttack:_reserve_pos_step_clbk(data, test_pos)
 	if not data.step_vector then
 		data.step_vector = mvector3.copy(data.unit_pos)
@@ -210,7 +216,7 @@ function ShieldLogicAttack:_reserve_pos_step_clbk(data, test_pos)
 	return true
 end
 
--- Lines: 229 to 244
+-- Lines 229-244
 function ShieldLogicAttack._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -230,7 +236,7 @@ function ShieldLogicAttack._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines: 248 to 269
+-- Lines 248-269
 function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
@@ -253,7 +259,7 @@ function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data
 	end
 end
 
--- Lines: 273 to 290
+-- Lines 273-290
 function ShieldLogicAttack._cancel_optimal_attempt(data, my_data)
 	if my_data.optimal_path then
 		my_data.optimal_path = nil
@@ -280,12 +286,12 @@ function ShieldLogicAttack._cancel_optimal_attempt(data, my_data)
 	end
 end
 
--- Lines: 295 to 297
+-- Lines 295-297
 function ShieldLogicAttack.queue_update(data, my_data)
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, ShieldLogicAttack.queued_update, data, data.t + (data.important and 0.5 or 1.5), data.important and true)
 end
 
--- Lines: 301 to 540
+-- Lines 301-540
 function ShieldLogicAttack._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -535,7 +541,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 	end
 end
 
--- Lines: 544 to 561
+-- Lines 544-561
 function ShieldLogicAttack.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -555,24 +561,26 @@ function ShieldLogicAttack.action_complete_clbk(data, action)
 	end
 end
 
--- Lines: 565 to 569
+-- Lines 565-569
 function ShieldLogicAttack.is_advancing(data)
 	if data.internal_data.walking_to_optimal_pos and data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
 	end
 end
 
--- Lines: 573 to 576
+-- Lines 573-577
 function ShieldLogicAttack._get_all_paths(data)
-	return {optimal_path = data.internal_data.optimal_path}
+	return {
+		optimal_path = data.internal_data.optimal_path
+	}
 end
 
--- Lines: 581 to 583
+-- Lines 581-583
 function ShieldLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.optimal_path = verified_paths.optimal_path
 end
 
--- Lines: 587 to 661
+-- Lines 587-661
 function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	if not data.char_tweak.wall_fwd_offset then
 		return pos
@@ -629,4 +637,3 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 		return bump2 and walk_to_pos2 or walk_to_pos, true
 	end
 end
-

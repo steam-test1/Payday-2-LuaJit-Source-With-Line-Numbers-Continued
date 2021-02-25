@@ -8,7 +8,7 @@ core:import("CoreSubtitleSequencePlayer")
 
 SubtitleManager = SubtitleManager or CoreClass.class()
 
--- Lines: 11 to 16
+-- Lines 11-16
 function SubtitleManager:init()
 	self.__subtitle_sequences = {}
 	self.__loaded_sequence_file_paths = {}
@@ -17,17 +17,17 @@ function SubtitleManager:init()
 	self:_update_presenter_visibility()
 end
 
--- Lines: 18 to 20
+-- Lines 18-20
 function SubtitleManager:destroy()
 	self:set_presenter(nil)
 end
 
--- Lines: 22 to 23
+-- Lines 22-24
 function SubtitleManager:presenter()
 	return assert(self.__presenter, "Invalid presenter. SubtitleManager might have been destroyed.")
 end
 
--- Lines: 26 to 41
+-- Lines 26-41
 function SubtitleManager:set_presenter(presenter)
 	assert(presenter == nil or type(presenter.preprocess_sequence) == "function", "Invalid presenter.")
 
@@ -46,7 +46,7 @@ function SubtitleManager:set_presenter(presenter)
 	end
 end
 
--- Lines: 43 to 54
+-- Lines 43-54
 function SubtitleManager:load_sequences(sequence_file_path)
 	local root_node = DB:load_node("subtitle_sequence", sequence_file_path)
 
@@ -62,7 +62,7 @@ function SubtitleManager:load_sequences(sequence_file_path)
 	end
 end
 
--- Lines: 56 to 61
+-- Lines 56-61
 function SubtitleManager:reload_sequences()
 	self.__subtitle_sequences = {}
 
@@ -71,7 +71,7 @@ function SubtitleManager:reload_sequences()
 	end
 end
 
--- Lines: 63 to 72
+-- Lines 63-72
 function SubtitleManager:update(time, delta_time)
 	if self.__player then
 		self.__player:update(time, delta_time)
@@ -84,46 +84,46 @@ function SubtitleManager:update(time, delta_time)
 	self:presenter():update(time, delta_time)
 end
 
--- Lines: 74 to 75
+-- Lines 74-76
 function SubtitleManager:enabled()
 	return Global.__SubtitleManager__enabled or false
 end
 
--- Lines: 78 to 81
+-- Lines 78-81
 function SubtitleManager:set_enabled(enabled)
 	Global.__SubtitleManager__enabled = not not enabled
 
 	self:_update_presenter_visibility()
 end
 
--- Lines: 83 to 84
+-- Lines 83-85
 function SubtitleManager:visible()
 	return not self.__hidden
 end
 
--- Lines: 87 to 90
+-- Lines 87-90
 function SubtitleManager:set_visible(visible)
 	self.__hidden = not visible or nil
 
 	self:_update_presenter_visibility()
 end
 
--- Lines: 92 to 94
+-- Lines 92-94
 function SubtitleManager:clear_subtitle()
 	self:show_subtitle_localized("")
 end
 
--- Lines: 96 to 97
+-- Lines 96-98
 function SubtitleManager:is_showing_subtitles()
 	return self:enabled() and self:visible() and self.__player ~= nil
 end
 
--- Lines: 100 to 102
+-- Lines 100-102
 function SubtitleManager:show_subtitle(string_id, duration, macros)
 	self:show_subtitle_localized(managers.localization:text(string_id, macros), duration)
 end
 
--- Lines: 104 to 108
+-- Lines 104-108
 function SubtitleManager:show_subtitle_localized(localized_string, duration)
 	local sequence = CoreSubtitleSequence.SubtitleSequence:new()
 
@@ -132,27 +132,26 @@ function SubtitleManager:show_subtitle_localized(localized_string, duration)
 	self.__player = CoreSubtitleSequencePlayer.SubtitleSequencePlayer:new(sequence, self:presenter())
 end
 
--- Lines: 110 to 113
+-- Lines 110-113
 function SubtitleManager:run_subtitle_sequence(sequence_id)
 	local sequence = sequence_id and assert(self.__subtitle_sequences[sequence_id], string.format("Sequence \"%s\" not found.", sequence_id))
 	self.__player = sequence and CoreSubtitleSequencePlayer.SubtitleSequencePlayer:new(sequence, self:presenter())
 end
 
--- Lines: 115 to 116
+-- Lines 115-117
 function SubtitleManager:subtitle_sequence_ids()
 	return CoreTable.table.map_keys(self.__subtitle_sequences or {})
 end
 
--- Lines: 119 to 120
+-- Lines 119-121
 function SubtitleManager:has_subtitle_sequence(sequence_id)
 	return (self.__subtitle_sequences and self.__subtitle_sequences[sequence_id]) ~= nil
 end
 
--- Lines: 123 to 127
+-- Lines 123-127
 function SubtitleManager:_update_presenter_visibility()
 	local presenter = self:presenter()
 	local show_presenter = self:enabled() and self:visible() and (not managers.user or managers.user:get_setting("subtitle"))
 
 	presenter[show_presenter and "show" or "hide"](presenter)
 end
-

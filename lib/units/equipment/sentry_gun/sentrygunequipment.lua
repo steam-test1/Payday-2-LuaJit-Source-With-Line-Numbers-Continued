@@ -2,17 +2,23 @@ SentryGunEquipment = SentryGunEquipment or class()
 SentryGunEquipment._DAMAGE_EFFECTS_1 = 0.5
 SentryGunEquipment._DAMAGE_EFFECTS_2 = 0.25
 
--- Lines: 8 to 14
+-- Lines 8-14
 function SentryGunEquipment:init(unit)
 	self._unit = unit
 	local event_listener = unit:event_listener()
 
-	event_listener:add("SentryGunEquipment_on_damage_received", {"on_damage_received"}, callback(self, self, "_on_damage_received_event"))
-	event_listener:add("SentryGunEquipment_on_death_event", {"on_death"}, callback(self, self, "_on_death_event"))
-	event_listener:add("SentryGunEquipment_on_destroy_unit", {"on_destroy_unit"}, callback(self, self, "_on_destroy_unit"))
+	event_listener:add("SentryGunEquipment_on_damage_received", {
+		"on_damage_received"
+	}, callback(self, self, "_on_damage_received_event"))
+	event_listener:add("SentryGunEquipment_on_death_event", {
+		"on_death"
+	}, callback(self, self, "_on_death_event"))
+	event_listener:add("SentryGunEquipment_on_destroy_unit", {
+		"on_destroy_unit"
+	}, callback(self, self, "_on_destroy_unit"))
 end
 
--- Lines: 16 to 26
+-- Lines 16-26
 function SentryGunEquipment:_on_damage_received_event(health_ratio)
 	if health_ratio < self._DAMAGE_EFFECTS_2 then
 		self:_check_sound()
@@ -26,13 +32,13 @@ function SentryGunEquipment:_on_damage_received_event(health_ratio)
 	end
 end
 
--- Lines: 29 to 32
+-- Lines 29-32
 function SentryGunEquipment:_on_death_event()
 	self._unit:sound_source():post_event("wp_sentrygun_destroy")
 	self._unit:damage():run_sequence_simple("destroyed")
 end
 
--- Lines: 35 to 41
+-- Lines 35-41
 function SentryGunEquipment:_on_destroy_unit()
 	if self._broken_loop_snd_event then
 		self._broken_loop_snd_event:stop()
@@ -43,10 +49,9 @@ function SentryGunEquipment:_on_destroy_unit()
 	self._unit:damage():run_sequence_simple("remove_effects")
 end
 
--- Lines: 43 to 47
+-- Lines 43-47
 function SentryGunEquipment:_check_sound()
 	if not self._broken_loop_snd_event then
 		self._broken_loop_snd_event = self._unit:sound_source():post_event("wp_sentrygun_broken_loop")
 	end
 end
-

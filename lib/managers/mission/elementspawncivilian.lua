@@ -2,7 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementSpawnCivilian = ElementSpawnCivilian or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 5 to 12
+-- Lines 5-12
 function ElementSpawnCivilian:init(...)
 	ElementSpawnCivilian.super.init(self, ...)
 
@@ -12,7 +12,7 @@ function ElementSpawnCivilian:init(...)
 	self:_finalize_values()
 end
 
--- Lines: 14 to 21
+-- Lines 14-21
 function ElementSpawnCivilian:_finalize_values()
 	self._values.state = self:value("state")
 	local state_index = table.index_of(CopActionAct._act_redirects.civilian_spawn, self._values.state)
@@ -21,17 +21,17 @@ function ElementSpawnCivilian:_finalize_values()
 	self._values.team = self._values.team ~= "default" and self._values.team or nil
 end
 
--- Lines: 23 to 24
+-- Lines 23-25
 function ElementSpawnCivilian:enemy_name()
 	return self._enemy_name
 end
 
--- Lines: 27 to 28
+-- Lines 27-29
 function ElementSpawnCivilian:units()
 	return self._units
 end
 
--- Lines: 31 to 62
+-- Lines 31-63
 function ElementSpawnCivilian:produce(params)
 	if not managers.groupai:state():is_AI_enabled() then
 		return
@@ -79,7 +79,7 @@ function ElementSpawnCivilian:produce(params)
 	return unit
 end
 
--- Lines: 65 to 71
+-- Lines 65-71
 function ElementSpawnCivilian:event(name, unit)
 	if self._events and self._events[name] then
 		for _, callback in ipairs(self._events[name]) do
@@ -88,7 +88,7 @@ function ElementSpawnCivilian:event(name, unit)
 	end
 end
 
--- Lines: 73 to 77
+-- Lines 73-77
 function ElementSpawnCivilian:add_event_callback(name, callback)
 	self._events = self._events or {}
 	self._events[name] = self._events[name] or {}
@@ -96,7 +96,7 @@ function ElementSpawnCivilian:add_event_callback(name, callback)
 	table.insert(self._events[name], callback)
 end
 
--- Lines: 79 to 90
+-- Lines 79-90
 function ElementSpawnCivilian:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -111,18 +111,17 @@ function ElementSpawnCivilian:on_executed(instigator)
 	ElementSpawnCivilian.super.on_executed(self, unit)
 end
 
--- Lines: 92 to 94
+-- Lines 92-94
 function ElementSpawnCivilian:unspawn_all_units()
 	ElementSpawnEnemyDummy.unspawn_all_units(self)
 end
 
--- Lines: 96 to 98
+-- Lines 96-98
 function ElementSpawnCivilian:kill_all_units()
 	ElementSpawnEnemyDummy.kill_all_units(self)
 end
 
--- Lines: 100 to 102
+-- Lines 100-102
 function ElementSpawnCivilian:execute_on_all_units(func)
 	ElementSpawnEnemyDummy.execute_on_all_units(self, func)
 end
-

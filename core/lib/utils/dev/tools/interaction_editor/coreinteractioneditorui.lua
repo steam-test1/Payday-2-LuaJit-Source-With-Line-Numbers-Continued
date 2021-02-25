@@ -6,7 +6,7 @@ core:import("CoreInteractionEditorPropUI")
 
 InteractionEditorUI = InteractionEditorUI or CoreClass.class()
 
--- Lines: 11 to 76
+-- Lines 11-76
 function InteractionEditorUI:init(owner)
 	self._main_frame = EWS:Frame(CoreInteractionEditorConfig.EDITOR_TITLE, Vector3(-1, -1, -1), Vector3(1000, 800, 0), "", Global.frame)
 	local menu_bar = EWS:MenuBar()
@@ -74,22 +74,22 @@ function InteractionEditorUI:init(owner)
 	self:connect_events()
 end
 
--- Lines: 78 to 79
+-- Lines 78-80
 function InteractionEditorUI:frame()
 	return self._main_frame
 end
 
--- Lines: 82 to 84
+-- Lines 82-84
 function InteractionEditorUI:set_position(pos)
 	self._main_frame:set_position(pos)
 end
 
--- Lines: 86 to 88
+-- Lines 86-88
 function InteractionEditorUI:set_title(text)
 	self._main_frame:set_title(text and CoreInteractionEditorConfig.EDITOR_TITLE .. " - " .. text or CoreInteractionEditorConfig.EDITOR_TITLE)
 end
 
--- Lines: 90 to 105
+-- Lines 90-105
 function InteractionEditorUI:connect_events()
 	self._main_frame:connect("NEW", "EVT_COMMAND_MENU_SELECTED", callback(self._owner, self._owner, "on_new"), nil)
 	self._main_frame:connect("OPEN", "EVT_COMMAND_MENU_SELECTED", callback(self._owner, self._owner, "on_open"), nil)
@@ -104,7 +104,7 @@ function InteractionEditorUI:connect_events()
 	self._main_frame:connect("", "EVT_COMMAND_NOTEBOOK_PAGE_CHANGED", callback(self._owner, self._owner, "on_notebook_changing"), nil)
 end
 
--- Lines: 107 to 128
+-- Lines 107-129
 function InteractionEditorUI:create_graph_context_menu(system)
 	system:graph():connect("", "EVT_RIGHT_UP", callback(self._owner, self._owner, "on_show_graph_context_menu"), system)
 
@@ -131,13 +131,13 @@ function InteractionEditorUI:create_graph_context_menu(system)
 	return menu
 end
 
--- Lines: 131 to 134
+-- Lines 131-134
 function InteractionEditorUI:show_graph_context_menu(system)
 	system:context_menu():set_enabled("DELETE_NODE", false)
 	system:graph():window():popup_menu(system:context_menu(), Vector3(-1, -1, 0))
 end
 
--- Lines: 136 to 141
+-- Lines 136-141
 function InteractionEditorUI:destroy()
 	if CoreCode.alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -146,24 +146,24 @@ function InteractionEditorUI:destroy()
 	end
 end
 
--- Lines: 143 to 145
+-- Lines 143-145
 function InteractionEditorUI:clean_prop_panel()
 	self._prop_panel:clean()
 end
 
--- Lines: 147 to 149
+-- Lines 147-149
 function InteractionEditorUI:rebuild_prop_panel(desc, node)
 	self._prop_panel:rebuild(desc, node)
 end
 
--- Lines: 151 to 153
+-- Lines 151-154
 function InteractionEditorUI:create_nb_page(caption, select)
 	local panel = EWS:Panel(self._main_notebook, "", "")
 
 	return panel, self._main_notebook:add_page(panel, caption, select)
 end
 
--- Lines: 156 to 163
+-- Lines 156-163
 function InteractionEditorUI:destroy_nb_page(id)
 	self._main_notebook:freeze()
 
@@ -175,50 +175,50 @@ function InteractionEditorUI:destroy_nb_page(id)
 	self._main_notebook:refresh()
 end
 
--- Lines: 165 to 166
+-- Lines 165-167
 function InteractionEditorUI:current_nb_page()
 	return self._main_notebook:get_current_page()
 end
 
--- Lines: 169 to 170
+-- Lines 169-171
 function InteractionEditorUI:get_nb_page_count()
 	return self._main_notebook:get_page_count()
 end
 
--- Lines: 173 to 174
+-- Lines 173-175
 function InteractionEditorUI:set_nb_page(id)
 	return self._main_notebook:set_page(id)
 end
 
--- Lines: 177 to 178
+-- Lines 177-179
 function InteractionEditorUI:get_nb_page(id)
 	return self._main_notebook:get_page(id)
 end
 
--- Lines: 181 to 183
+-- Lines 181-183
 function InteractionEditorUI:update_nb_page_caption(id, text)
 	self._main_notebook:set_page_text(id, text)
 end
 
--- Lines: 185 to 191
+-- Lines 185-191
 function InteractionEditorUI:get_nb_page_by_caption(text)
-	for i = 0, self._main_notebook:get_page_count() - 1, 1 do
+	for i = 0, self._main_notebook:get_page_count() - 1 do
 		if self._main_notebook:get_page_text(i) == text then
 			return i
 		end
 	end
 end
 
--- Lines: 193 to 199
+-- Lines 193-199
 function InteractionEditorUI:get_nb_page_id(panel)
-	for i = 0, self._main_notebook:get_page_count() - 1, 1 do
+	for i = 0, self._main_notebook:get_page_count() - 1 do
 		if self._main_notebook:get_page(i) == panel then
 			return i
 		end
 	end
 end
 
--- Lines: 201 to 209
+-- Lines 201-209
 function InteractionEditorUI:set_save_close_option_enabled(b)
 	self._file_menu:set_enabled("SAVE", b)
 	self._tool_bar:set_tool_enabled("SAVE", b)
@@ -229,8 +229,7 @@ function InteractionEditorUI:set_save_close_option_enabled(b)
 	self._tool_bar:set_tool_enabled("CLOSE", b)
 end
 
--- Lines: 211 to 212
+-- Lines 211-213
 function InteractionEditorUI:want_to_save(path)
 	return EWS:message_box(self._main_frame, path .. " has changed.\nDo you want to save it?", "Save Changes", "ICON_WARNING,YES_DEFAULT,YES_NO,CANCEL", Vector3(-1, -1, -1))
 end
-

@@ -1,6 +1,6 @@
 EWSControlSettingSync = EWSControlSettingSync or class()
 
--- Lines: 4 to 14
+-- Lines 4-14
 function EWSControlSettingSync:init(ews_frame)
 	if ews_frame == nil then
 		Application:error("EWSControlSettingSync:init(): No ews_frame given as argument. Check so you use : to call new.")
@@ -13,7 +13,7 @@ function EWSControlSettingSync:init(ews_frame)
 	self._col = EWS:ColourDialog(self._ews_frame, true, Vector3(1, 1, 1))
 end
 
--- Lines: 17 to 22
+-- Lines 17-23
 function EWSControlSettingSync:get_control(id)
 	local control_info = self._controls_map[id]
 
@@ -24,19 +24,19 @@ function EWSControlSettingSync:get_control(id)
 	return control_info.main_control
 end
 
--- Lines: 26 to 28
+-- Lines 26-28
 function EWSControlSettingSync:set_control_updated_callback(cb)
 	self._control_updated_callback = cb
 end
 
--- Lines: 30 to 32
+-- Lines 30-33
 function EWSControlSettingSync:get_unique_id()
 	self._unique_id_counter = self._unique_id_counter + 1
 
 	return "_unique_id" .. self._unique_id_counter
 end
 
--- Lines: 36 to 51
+-- Lines 36-51
 function EWSControlSettingSync:update_setting_box(custom_data, event_object)
 	local id = event_object:get_id()
 	local res = self._col:show_modal()
@@ -54,7 +54,7 @@ function EWSControlSettingSync:update_setting_box(custom_data, event_object)
 	end
 end
 
--- Lines: 56 to 123
+-- Lines 56-123
 function EWSControlSettingSync:update_setting(custom_data, event_object)
 	local id = event_object:get_id()
 	local control_info = self:get_control_info(id)
@@ -132,20 +132,20 @@ function EWSControlSettingSync:update_setting(custom_data, event_object)
 	end
 end
 
--- Lines: 125 to 129
+-- Lines 125-129
 function EWSControlSettingSync:set_ews_vector(id, value)
 	self:set_ews_value(id .. "-r", value.x)
 	self:set_ews_value(id .. "-g", value.y)
 	self:set_ews_value(id .. "-b", value.z)
 end
 
--- Lines: 131 to 134
+-- Lines 131-134
 function EWSControlSettingSync:set_ews_vector2(id, value)
 	self:set_ews_value(id .. "-r", value.x)
 	self:set_ews_value(id .. "-g", value.y)
 end
 
--- Lines: 136 to 141
+-- Lines 136-141
 function EWSControlSettingSync:set_ews_box(id, value)
 	local control_info = self:get_control_info(id .. "-rgb")
 	local main_data = control_info.main_control
@@ -153,7 +153,7 @@ function EWSControlSettingSync:set_ews_box(id, value)
 	main_data:set_background_colour(value.x * 255, value.y * 255, value.z * 255)
 end
 
--- Lines: 143 to 158
+-- Lines 143-159
 function EWSControlSettingSync:do_set_ews_value(id, value)
 	local control_info = self:get_control_info(id)
 	local main_data = control_info.main_control
@@ -174,7 +174,7 @@ function EWSControlSettingSync:do_set_ews_value(id, value)
 	return main_value
 end
 
--- Lines: 161 to 167
+-- Lines 161-167
 function EWSControlSettingSync:set_ews_value(id, value)
 	local main_value = self:do_set_ews_value(id, value)
 
@@ -183,7 +183,7 @@ function EWSControlSettingSync:set_ews_value(id, value)
 	end
 end
 
--- Lines: 168 to 171
+-- Lines 168-172
 function EWSControlSettingSync:get_ews_value(id)
 	local control_info = self:get_control_info(id)
 	local data = control_info.main_control
@@ -191,7 +191,7 @@ function EWSControlSettingSync:get_ews_value(id)
 	return self:get_ews_control_value(data, control_info)
 end
 
--- Lines: 174 to 198
+-- Lines 174-198
 function EWSControlSettingSync:set_ews_control_value(value, data, control_info)
 	local controls_type = control_info.controls_type
 
@@ -224,7 +224,7 @@ function EWSControlSettingSync:set_ews_control_value(value, data, control_info)
 	end
 end
 
--- Lines: 199 to 226
+-- Lines 199-227
 function EWSControlSettingSync:get_ews_control_value(data, control_info)
 	local controls_type = control_info.controls_type
 	local value = nil
@@ -261,12 +261,12 @@ function EWSControlSettingSync:get_ews_control_value(data, control_info)
 	return value
 end
 
--- Lines: 228 to 229
+-- Lines 228-230
 function EWSControlSettingSync:get_ews_control_value_from_id(data, id)
 	return self:get_ews_control_value(data, self:get_control_info(id))
 end
 
--- Lines: 232 to 237
+-- Lines 232-238
 function EWSControlSettingSync:get_control_info(id)
 	local control_info = self._controls_map[id]
 
@@ -277,7 +277,7 @@ function EWSControlSettingSync:get_control_info(id)
 	return control_info
 end
 
--- Lines: 240 to 256
+-- Lines 240-256
 function EWSControlSettingSync:update_link(custom_data, event_object)
 	local control_info = self:get_control_info(event_object:get_id())
 	local value = self:get_ews_control_value(custom_data, control_info)
@@ -298,7 +298,7 @@ function EWSControlSettingSync:update_link(custom_data, event_object)
 	end
 end
 
--- Lines: 258 to 269
+-- Lines 258-269
 function EWSControlSettingSync:show_texture_dialog(custom_data, event_object)
 	local control_info = self:get_control_info(event_object:get_id())
 	local dialog = EWS:FileDialog(self._ews_frame, "Choose file", managers.database:base_path(), "", "DDS self:files(*.dds)|*.dds|TGA self:files(*.tga)|*.tga", "OPEN,FILE_MUST_EXIST")
@@ -313,7 +313,7 @@ function EWSControlSettingSync:show_texture_dialog(custom_data, event_object)
 	end
 end
 
--- Lines: 271 to 274
+-- Lines 271-275
 function EWSControlSettingSync:create_small_label(text)
 	local label = EWS:StaticText(self._ews_frame, text, 0, "")
 
@@ -322,7 +322,7 @@ function EWSControlSettingSync:create_small_label(text)
 	return label
 end
 
--- Lines: 277 to 292
+-- Lines 277-293
 function EWSControlSettingSync:create_linker(id, link_ids)
 	local check = EWS:CheckBox(self._ews_frame, "Link", id, "")
 
@@ -330,7 +330,9 @@ function EWSControlSettingSync:create_linker(id, link_ids)
 	self._ews_frame:connect(id, "EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "update_link"), check)
 
 	local info_map = {}
-	local types_map = {[check] = "check"}
+	local types_map = {
+		[check] = "check"
+	}
 	info_map.controls_type = types_map
 	info_map.main_control = check
 	info_map.links = link_ids
@@ -339,7 +341,7 @@ function EWSControlSettingSync:create_linker(id, link_ids)
 	return check
 end
 
--- Lines: 295 to 339
+-- Lines 295-340
 function EWSControlSettingSync:create_slider(id, min, max, num_decimals, labeltext)
 	min = min or 0
 	max = max or 0
@@ -347,7 +349,7 @@ function EWSControlSettingSync:create_slider(id, min, max, num_decimals, labelte
 	min = min * scale
 	max = max * scale
 
-	if max < min or min == max then
+	if min > max or min == max then
 		Application:throw_exception("EWSControlSettingSync::create_slider(" .. id .. "," .. min .. "," .. max .. "," .. num_decimals .. ") Arguments are confusing")
 	end
 
@@ -374,7 +376,9 @@ function EWSControlSettingSync:create_slider(id, min, max, num_decimals, labelte
 		[slider] = "slider"
 	}
 	info_map.controls_type = types_map
-	local scales_map = {[slider] = scale}
+	local scales_map = {
+		[slider] = scale
+	}
 	info_map.controls_scale = scales_map
 	info_map.controls = {
 		slider,
@@ -387,20 +391,24 @@ function EWSControlSettingSync:create_slider(id, min, max, num_decimals, labelte
 	return sizer
 end
 
--- Lines: 342 to 350
+-- Lines 342-351
 function EWSControlSettingSync:create_double_slider(id_min, id_max, min, max, num_decimals)
 	local sizer = EWS:BoxSizer("VERTICAL")
 
 	sizer:add(self:create_slider(id_min, min, max, num_decimals), 1, 0, "EXPAND")
 	sizer:add(self:create_slider(id_max, min, max, num_decimals), 1, 0, "EXPAND")
 
-	self:get_control_info(id_min).sync_less = {id_max}
-	self:get_control_info(id_max).sync_more = {id_min}
+	self:get_control_info(id_min).sync_less = {
+		id_max
+	}
+	self:get_control_info(id_max).sync_more = {
+		id_min
+	}
 
 	return sizer
 end
 
--- Lines: 353 to 357
+-- Lines 353-358
 function EWSControlSettingSync:create_double_slider2(id_min, id_max, min, max, num_decimals)
 	local sizer = EWS:BoxSizer("VERTICAL")
 
@@ -410,7 +418,7 @@ function EWSControlSettingSync:create_double_slider2(id_min, id_max, min, max, n
 	return sizer
 end
 
--- Lines: 360 to 376
+-- Lines 360-377
 function EWSControlSettingSync:create_rgb_slider(base_id, min, max, num_decimals, labeltext)
 	local sizer = EWS:BoxSizer("VERTICAL")
 
@@ -436,12 +444,17 @@ function EWSControlSettingSync:create_rgb_slider(base_id, min, max, num_decimals
 	return sizer
 end
 
--- Lines: 379 to 404
+-- Lines 379-405
 function EWSControlSettingSync:create_rgb_box(base_id, labeltext)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	local newid = base_id .. "-rgb"
 	local label = nil
-	label = labeltext == nil and base_id or labeltext
+
+	if labeltext == nil then
+		label = base_id
+	else
+		label = labeltext
+	end
 
 	sizer:add(self:create_small_label(label), 2, 0, "")
 
@@ -451,7 +464,9 @@ function EWSControlSettingSync:create_rgb_box(base_id, labeltext)
 	slider:connect("", "EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "update_setting_box"), slider)
 
 	local info_map = {}
-	local types_map = {[slider] = "box"}
+	local types_map = {
+		[slider] = "box"
+	}
 	info_map.controls_type = types_map
 	info_map.main_control = slider
 	self._controls_map[newid] = info_map
@@ -459,7 +474,7 @@ function EWSControlSettingSync:create_rgb_box(base_id, labeltext)
 	return sizer
 end
 
--- Lines: 407 to 427
+-- Lines 407-428
 function EWSControlSettingSync:create_string(id, label_text)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	local text = EWS:TextCtrl(self._ews_frame, "", id, "")
@@ -475,7 +490,9 @@ function EWSControlSettingSync:create_string(id, label_text)
 	self._ews_frame:connect(id, "EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_setting"), text)
 
 	local info_map = {}
-	local types_map = {[text] = "text"}
+	local types_map = {
+		[text] = "text"
+	}
 	info_map.controls_type = types_map
 	info_map.main_control = text
 	self._controls_map[id] = info_map
@@ -483,7 +500,7 @@ function EWSControlSettingSync:create_string(id, label_text)
 	return sizer
 end
 
--- Lines: 430 to 447
+-- Lines 430-448
 function EWSControlSettingSync:create_texture_path(id)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	local text = EWS:TextCtrl(self._ews_frame, "", id, "TE_PROCESS_ENTER")
@@ -494,7 +511,9 @@ function EWSControlSettingSync:create_texture_path(id)
 	self._ews_frame:connect(id, "EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_setting"), text)
 
 	local info_map = {}
-	local types_map = {[text] = "text"}
+	local types_map = {
+		[text] = "text"
+	}
 	info_map.controls_type = types_map
 	info_map.main_control = text
 	self._controls_map[id] = info_map
@@ -502,7 +521,7 @@ function EWSControlSettingSync:create_texture_path(id)
 	return sizer
 end
 
--- Lines: 450 to 481
+-- Lines 450-482
 function EWSControlSettingSync:create_list_config(id, rename_event_func, add_event_func)
 	local sizer = EWS:BoxSizer("VERTICAL")
 	local text = EWS:TextCtrl(self._ews_frame, "", id, "")
@@ -542,7 +561,7 @@ function EWSControlSettingSync:create_list_config(id, rename_event_func, add_eve
 	return sizer
 end
 
--- Lines: 484 to 505
+-- Lines 484-506
 function EWSControlSettingSync:create_combo_config(id, label_text, rename_event_func)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	local combo = EWS:ComboBox(self._ews_frame, "", id, "CB_SORT,CB_DROPDOWN")
@@ -562,7 +581,9 @@ function EWSControlSettingSync:create_combo_config(id, label_text, rename_event_
 	self._ews_frame:connect(id, "EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_setting"), combo)
 
 	local info_map = {}
-	local types_map = {[combo] = "combo"}
+	local types_map = {
+		[combo] = "combo"
+	}
 	info_map.controls_type = types_map
 	info_map.main_control = combo
 	self._controls_map[id] = info_map
@@ -570,7 +591,7 @@ function EWSControlSettingSync:create_combo_config(id, label_text, rename_event_
 	return sizer
 end
 
--- Lines: 507 to 539
+-- Lines 507-540
 function EWSControlSettingSync:create_name_popup(id, label_text, init_text)
 	init_text = init_text or "none"
 	local pop_up = EWS:Dialog(nil, label_text, "", Vector3(525, 400, 0), Vector3(230, 150, 0), "CAPTION,CLOSE_BOX")
@@ -598,7 +619,9 @@ function EWSControlSettingSync:create_name_popup(id, label_text, init_text)
 	pop_up_main_sizer:add(button_sizer, 0, 0, "EXPAND")
 
 	local info_map = {}
-	local types_map = {[popup_name] = "popup_name"}
+	local types_map = {
+		[popup_name] = "popup_name"
+	}
 	info_map.controls_type = types_map
 	info_map.main_control = popup_name
 	self._controls_map[id] = info_map
@@ -606,12 +629,12 @@ function EWSControlSettingSync:create_name_popup(id, label_text, init_text)
 	return pop_up
 end
 
--- Lines: 541 to 543
+-- Lines 541-543
 function EWSControlSettingSync:close_name_popup(popup)
 	popup:end_modal()
 end
 
--- Lines: 545 to 550
+-- Lines 545-550
 function EWSControlSettingSync:attach_function_button(to_id, sizer, text, event_func)
 	local id = self:get_unique_id()
 	local btn = EWS:Button(self._ews_frame, text, id, "BU_EXACTFIT,NO_BORDER")
@@ -620,7 +643,7 @@ function EWSControlSettingSync:attach_function_button(to_id, sizer, text, event_
 	self._ews_frame:connect(id, "EVT_COMMAND_BUTTON_CLICKED", event_func, to_id)
 end
 
--- Lines: 552 to 565
+-- Lines 552-565
 function EWSControlSettingSync:append_to_control(id, map)
 	local control_info = self:get_control_info(id)
 	local list_data = control_info.main_control
@@ -638,7 +661,7 @@ function EWSControlSettingSync:append_to_control(id, map)
 	end
 end
 
--- Lines: 567 to 620
+-- Lines 567-621
 function EWSControlSettingSync:create_properties_list(id, add_vector, read_only)
 	local sizer = EWS:BoxSizer("VERTICAL")
 	local list = EWS:ListCtrl(self._ews_frame, id, "LC_REPORT,LC_HRULES,LC_VRULES,LC_SINGLE_SEL")
@@ -679,8 +702,12 @@ function EWSControlSettingSync:create_properties_list(id, add_vector, read_only)
 	self._ews_frame:connect(id, "EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "update_setting"), list)
 	self._ews_frame:connect(id, "EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_setting"), text)
 
-	local info_map = {listctrl_data = {}}
-	local types_map = {[list] = "listctrl"}
+	local info_map = {
+		listctrl_data = {}
+	}
+	local types_map = {
+		[list] = "listctrl"
+	}
 
 	if not read_only then
 		types_map[text] = "text"
@@ -697,7 +724,7 @@ function EWSControlSettingSync:create_properties_list(id, add_vector, read_only)
 	return sizer
 end
 
--- Lines: 622 to 641
+-- Lines 622-641
 function EWSControlSettingSync:load_properties_list(id, properties_map)
 	local control_info = self:get_control_info(id)
 	local list_data = control_info.main_control
@@ -729,7 +756,7 @@ function EWSControlSettingSync:load_properties_list(id, properties_map)
 	end
 end
 
--- Lines: 642 to 649
+-- Lines 642-650
 function EWSControlSettingSync:save_properties_list(id)
 	local saved_map = {}
 	local control_info = self:get_control_info(id)
@@ -742,7 +769,7 @@ function EWSControlSettingSync:save_properties_list(id)
 	return saved_map
 end
 
--- Lines: 653 to 661
+-- Lines 652-661
 function EWSControlSettingSync:add_property_to_list(custom_data, event_object)
 	local control_info = self:get_control_info(event_object:get_id())
 	local name = self:get_ews_control_value(custom_data, control_info)
@@ -755,7 +782,7 @@ function EWSControlSettingSync:add_property_to_list(custom_data, event_object)
 	}
 end
 
--- Lines: 662 to 672
+-- Lines 662-672
 function EWSControlSettingSync:remove_selected_property_from_list(custom_data, event_object)
 	local control_info = self:get_control_info(custom_data)
 	local list_data = control_info.main_control
@@ -770,9 +797,9 @@ function EWSControlSettingSync:remove_selected_property_from_list(custom_data, e
 	end
 end
 
--- Lines: 674 to 723
+-- Lines 674-724
 function EWSControlSettingSync:create_about_dialog(about_text)
-	local text = about_text or "This about was created by\nHkan\nThe all and mighty."
+	local text = about_text or "This about was created by\nH\\xe5kan\nThe all and mighty."
 	local num_lines = 0
 	local longest_line = 0
 	local at = 0
@@ -819,15 +846,16 @@ function EWSControlSettingSync:create_about_dialog(about_text)
 	return about_dialog
 end
 
--- Lines: 726 to 728
+-- Lines 726-728
 function EWSControlSettingSync:on_about_dialog_button_ok(data, event)
 	data:end_modal("")
 end
+
 AboutDialog = AboutDialog or class()
 
--- Lines: 734 to 782
+-- Lines 733-782
 function AboutDialog:init(parent, text)
-	local text = text or "This about was created by\nHkan\nThe all and mighty."
+	local text = text or "This about was created by\nH\\xe5kan\nThe all and mighty."
 	local num_lines = 0
 	local longest_line = 0
 	local at = 0
@@ -871,13 +899,12 @@ function AboutDialog:init(parent, text)
 	self._ok_button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_button_ok"), "")
 end
 
--- Lines: 784 to 786
+-- Lines 784-786
 function AboutDialog:on_button_ok(data, event)
 	self._frame:end_modal("")
 end
 
--- Lines: 789 to 792
+-- Lines 788-792
 function AboutDialog:show()
 	self._frame:show_modal()
 end
-

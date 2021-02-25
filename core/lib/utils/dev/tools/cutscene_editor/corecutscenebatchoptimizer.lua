@@ -4,13 +4,13 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneFootage")
 
 CoreCutsceneBatchOptimizer = CoreCutsceneBatchOptimizer or class()
 
--- Lines: 6 to 9
+-- Lines 6-9
 function CoreCutsceneBatchOptimizer:init()
 	self.__prioritized_queue = {}
 	self.__queue = {}
 end
 
--- Lines: 11 to 26
+-- Lines 11-26
 function CoreCutsceneBatchOptimizer:add_project(project_name, optimized_cutscene_name)
 	local project = assert(self:_load_project(project_name), string.format("Cutscene Project \"%s\" not found in database.", project_name))
 	local optimizer = self:_create_optimizer_for_project(project)
@@ -34,14 +34,14 @@ function CoreCutsceneBatchOptimizer:add_project(project_name, optimized_cutscene
 	self.__max_queue_size = math.max(self.__max_queue_size or 0, self:queue_size())
 end
 
--- Lines: 28 to 30
+-- Lines 28-31
 function CoreCutsceneBatchOptimizer:next_project()
 	local front = self.__prioritized_queue[1] or self.__queue[1]
 
 	return front and front.project_name
 end
 
--- Lines: 33 to 40
+-- Lines 33-41
 function CoreCutsceneBatchOptimizer:consume_project()
 	local front = table.remove(self.__prioritized_queue, 1) or table.remove(self.__queue, 1)
 
@@ -53,17 +53,17 @@ function CoreCutsceneBatchOptimizer:consume_project()
 	return self:queue_size()
 end
 
--- Lines: 43 to 44
+-- Lines 43-45
 function CoreCutsceneBatchOptimizer:queue_size()
 	return #self.__queue + #self.__prioritized_queue
 end
 
--- Lines: 47 to 48
+-- Lines 47-49
 function CoreCutsceneBatchOptimizer:max_queue_size()
 	return self.__max_queue_size or 0
 end
 
--- Lines: 56 to 63
+-- Lines 56-64
 function CoreCutsceneBatchOptimizer:_load_project(project_name)
 	local database_entry = self.__database:has("cutscene_project", project_name) and self.__database:lookup("cutscene_project", project_name)
 
@@ -78,7 +78,7 @@ function CoreCutsceneBatchOptimizer:_load_project(project_name)
 	return nil
 end
 
--- Lines: 66 to 86
+-- Lines 66-87
 function CoreCutsceneBatchOptimizer:_create_optimizer_for_project(project)
 	local optimizer = core_or_local("CutsceneOptimizer")
 
@@ -107,7 +107,7 @@ function CoreCutsceneBatchOptimizer:_create_optimizer_for_project(project)
 	return optimizer
 end
 
--- Lines: 89 to 93
+-- Lines 89-94
 function CoreCutsceneBatchOptimizer:_create_clip(clip_descriptor)
 	local footage = assert(core_or_local("CutsceneFootage", managers.cutscene:get_cutscene(clip_descriptor.cutscene)), "Cutscene \"" .. clip_descriptor.cutscene .. "\" does not exist.")
 	local clip = footage:create_clip(clip_descriptor.from, clip_descriptor.to, clip_descriptor.camera)
@@ -116,4 +116,3 @@ function CoreCutsceneBatchOptimizer:_create_clip(clip_descriptor)
 
 	return clip
 end
-

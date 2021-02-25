@@ -3,7 +3,7 @@ core:import("CoreMenuStateAttract")
 
 Start = Start or class()
 
--- Lines: 6 to 15
+-- Lines 6-15
 function Start:init()
 	self._start_time = TimerManager:game():time()
 	local player_slots = self.pre_front_end.menu_state._player_slots
@@ -16,18 +16,17 @@ function Start:init()
 	menu_handler:start()
 end
 
--- Lines: 17 to 19
+-- Lines 17-19
 function Start:destroy()
 	self._primary_slot:stop_local_user_binding()
 end
 
--- Lines: 21 to 28
+-- Lines 21-28
 function Start:transition()
 	local current_time = TimerManager:game():time()
 	local time_until_attract = 15
 
-	if self._start_time + time_until_attract <= current_time then
+	if current_time >= self._start_time + time_until_attract then
 		return CoreMenuStateAttract.Attract
 	end
 end
-

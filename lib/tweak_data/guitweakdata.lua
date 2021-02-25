@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines: 4 to 1279
+-- Lines 3-1298
 function GuiTweakData:init()
 	local soundtrack = {
 		store = 254260,
@@ -621,9 +621,13 @@ function GuiTweakData:init()
 			gage_pack_lmg
 		}
 	elseif SystemInfo:platform() == Idstring("PS4") then
-		self.content_updates.item_list = {armored_transport}
+		self.content_updates.item_list = {
+			armored_transport
+		}
 	elseif SystemInfo:platform() == Idstring("XB1") then
-		self.content_updates.item_list = {armored_transport}
+		self.content_updates.item_list = {
+			armored_transport
+		}
 	elseif SystemInfo:platform() == Idstring("X360") then
 		self.content_updates.item_list = {}
 	end
@@ -670,7 +674,9 @@ function GuiTweakData:init()
 		overkill_290 = "guis/textures/pd2/risklevel_deathwish_blackscreen",
 		easy_wish = "guis/textures/pd2/risklevel_deathwish_easywish_blackscreen"
 	}
-	self.suspicion_to_visibility = {{}}
+	self.suspicion_to_visibility = {
+		{}
+	}
 	self.suspicion_to_visibility[1].name_id = "bm_menu_concealment_low"
 	self.suspicion_to_visibility[1].max_index = 9
 	self.suspicion_to_visibility[2] = {
@@ -681,7 +687,9 @@ function GuiTweakData:init()
 		name_id = "bm_menu_concealment_high",
 		max_index = 30
 	}
-	self.mouse_pointer = {controller = {}}
+	self.mouse_pointer = {
+		controller = {}
+	}
 	self.mouse_pointer.controller.acceleration_speed = 4
 	self.mouse_pointer.controller.max_acceleration = 3
 	self.mouse_pointer.controller.mouse_pointer_speed = 125
@@ -697,7 +705,9 @@ function GuiTweakData:init()
 	self.MAX_WEAPON_SLOTS = self.MAX_WEAPON_PAGES * self.WEAPON_ROWS_PER_PAGE * self.WEAPON_COLUMNS_PER_PAGE
 	self.fbi_files_webpage = "http://fbi.overkillsoftware.com/"
 	self.crimefest_challenges_webpage = "http://www.overkillsoftware.com/games/roadtocrimefest/"
-	self.crime_net = {controller = {}}
+	self.crime_net = {
+		controller = {}
+	}
 	self.crime_net.controller.snap_distance = 50
 	self.crime_net.controller.snap_speed = 5
 	self.crime_net.job_vars = {
@@ -731,10 +741,18 @@ function GuiTweakData:init()
 	}
 	self.buy_weapon_categories = {
 		primaries = {
-			{"assault_rifle"},
-			{"shotgun"},
-			{"lmg"},
-			{"snp"},
+			{
+				"assault_rifle"
+			},
+			{
+				"shotgun"
+			},
+			{
+				"lmg"
+			},
+			{
+				"snp"
+			},
 			{
 				"akimbo",
 				"pistol"
@@ -747,13 +765,23 @@ function GuiTweakData:init()
 				"akimbo",
 				"shotgun"
 			},
-			{"wpn_special"}
+			{
+				"wpn_special"
+			}
 		},
 		secondaries = {
-			{"pistol"},
-			{"smg"},
-			{"wpn_special"},
-			{"shotgun"}
+			{
+				"pistol"
+			},
+			{
+				"smg"
+			},
+			{
+				"wpn_special"
+			},
+			{
+				"shotgun"
+			}
 		}
 	}
 	self.LONGEST_CHAR_NAME = "JOHN WICK"
@@ -1816,7 +1844,9 @@ function GuiTweakData:init()
 			name_id = "menu_cn_filters_sidebar",
 			icon = "sidebar_filters"
 		},
-		{item_class = "CrimeNetSidebarSeparator"},
+		{
+			item_class = "CrimeNetSidebarSeparator"
+		},
 		{
 			visible_callback = "clbk_visible_not_in_lobby",
 			callback = "clbk_the_basics",
@@ -1842,7 +1872,9 @@ function GuiTweakData:init()
 			icon = "sidebar_broker",
 			callback = "clbk_contract_broker"
 		},
-		{item_class = "CrimeNetSidebarSeparator"},
+		{
+			item_class = "CrimeNetSidebarSeparator"
+		},
 		{
 			name_id = "menu_cn_side_jobs",
 			icon = "sidebar_side_jobs",
@@ -1863,7 +1895,9 @@ function GuiTweakData:init()
 			icon = "sidebar_codex",
 			callback = "clbk_contact_database"
 		},
-		{item_class = "CrimeNetSidebarSeparator"},
+		{
+			item_class = "CrimeNetSidebarSeparator"
+		},
 		{
 			name_id = "menu_mutators",
 			callback = "clbk_mutators",
@@ -1872,7 +1906,7 @@ function GuiTweakData:init()
 			item_class = "CrimeNetSidebarMutatorsItem"
 		},
 		{
-			visible_callback = "clbk_visible_not_in_lobby",
+			visible_callback = "clbk_visible_crime_spree",
 			name_id = "cn_crime_spree",
 			callback = "clbk_crime_spree",
 			id = "crime_spree",
@@ -1984,7 +2018,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "heist_contact_locke_description",
 					post_event = "loc_quote_set_a",
-					videos = {"locke1"}
+					videos = {
+						"locke1"
+					}
 				},
 				name_id = "heist_contact_locke",
 				id = "locke"
@@ -1993,7 +2029,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_jimmy_desc_codex",
 					post_event = "pln_contact_jimmy",
-					videos = {"jimmy1"}
+					videos = {
+						"jimmy1"
+					}
 				},
 				name_id = "menu_jimmy",
 				id = "jimmy_contact"
@@ -2002,7 +2040,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_continental_desc_codex",
 					post_event = "continental_quote_set_a",
-					videos = {"continental1"}
+					videos = {
+						"continental1"
+					}
 				},
 				name_id = "menu_continental",
 				id = "continental_contact"
@@ -2138,7 +2178,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_bonnie_desc_codex",
 					post_event = "pln_contact_bonnie",
-					videos = {"bonnie1"}
+					videos = {
+						"bonnie1"
+					}
 				},
 				name_id = "menu_bonnie",
 				id = "bonnie"
@@ -2147,7 +2189,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_sokol_desc_codex",
 					post_event = "pln_contact_sokol",
-					videos = {"sokol1"}
+					videos = {
+						"sokol1"
+					}
 				},
 				name_id = "menu_sokol",
 				id = "sokol"
@@ -2156,7 +2200,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_dragon_desc_codex",
 					post_event = "pln_contact_jiro",
-					videos = {"dragon1"}
+					videos = {
+						"dragon1"
+					}
 				},
 				name_id = "menu_dragon",
 				id = "dragon"
@@ -2165,7 +2211,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_bodhi_desc_codex",
 					post_event = "pln_contact_bodhi",
-					videos = {"bodhi1"}
+					videos = {
+						"bodhi1"
+					}
 				},
 				name_id = "menu_bodhi",
 				id = "bodhi"
@@ -2174,7 +2222,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_jimmy_desc_codex",
 					post_event = "pln_contact_jimmy",
-					videos = {"jimmy1"}
+					videos = {
+						"jimmy1"
+					}
 				},
 				name_id = "menu_jimmy",
 				id = "jimmy"
@@ -2183,7 +2233,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_sydney_desc_codex",
 					post_event = "pln_contact_sydney",
-					videos = {"sydney1"}
+					videos = {
+						"sydney1"
+					}
 				},
 				name_id = "menu_sydney",
 				id = "sydney"
@@ -2192,7 +2244,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_wild_desc_codex",
 					post_event = "pln_contact_rust",
-					videos = {"wild1"}
+					videos = {
+						"wild1"
+					}
 				},
 				name_id = "menu_wild",
 				id = "wild"
@@ -2201,7 +2255,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_chico_desc_codex",
 					post_event = "pln_contact_tony",
-					videos = {"chico1"}
+					videos = {
+						"chico1"
+					}
 				},
 				name_id = "menu_chico",
 				id = "chico"
@@ -2210,7 +2266,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_max_desc_codex",
 					post_event = "pln_contact_sangres",
-					videos = {"max1"}
+					videos = {
+						"max1"
+					}
 				},
 				name_id = "menu_max",
 				id = "max"
@@ -2219,7 +2277,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_joy_desc_codex",
 					post_event = "pln_contact_joy",
-					videos = {"joy1"}
+					videos = {
+						"joy1"
+					}
 				},
 				name_id = "menu_joy",
 				id = "joy"
@@ -2228,7 +2288,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_myh_desc_codex",
 					post_event = "pln_contact_duke",
-					videos = {"myh1"}
+					videos = {
+						"myh1"
+					}
 				},
 				name_id = "menu_myh",
 				id = "myh"
@@ -2237,7 +2299,9 @@ function GuiTweakData:init()
 				{
 					desc_id = "menu_ecp_desc_codex",
 					post_event = "pln_contact_ecp",
-					videos = {"ecp1"}
+					videos = {
+						"ecp1"
+					}
 				},
 				name_id = "menu_ecp",
 				id = "ecp"
@@ -2249,209 +2313,211 @@ function GuiTweakData:init()
 	self.crime_net.locations = {}
 
 	if not Application:production_build() or SystemInfo:platform() ~= Idstring("WIN32") then
-		self.crime_net.locations = {{
+		self.crime_net.locations = {
 			{
-				weight = 100,
-				dots = {
-					{
-						1601,
-						425
+				{
+					weight = 100,
+					dots = {
+						{
+							1601,
+							425
+						},
+						{
+							1025,
+							835
+						},
+						{
+							444,
+							567
+						},
+						{
+							1221,
+							685
+						},
+						{
+							1603,
+							555
+						},
+						{
+							1401,
+							620
+						},
+						{
+							1581,
+							685
+						},
+						{
+							1306,
+							750
+						},
+						{
+							1486,
+							815
+						},
+						{
+							1666,
+							750
+						},
+						{
+							1450,
+							880
+						},
+						{
+							1041,
+							620
+						},
+						{
+							730,
+							880
+						},
+						{
+							883,
+							555
+						},
+						{
+							861,
+							685
+						},
+						{
+							766,
+							815
+						},
+						{
+							946,
+							750
+						},
+						{
+							1480,
+							165
+						},
+						{
+							1304,
+							295
+						},
+						{
+							1484,
+							230
+						},
+						{
+							1664,
+							295
+						},
+						{
+							1241,
+							425
+						},
+						{
+							1421,
+							360
+						},
+						{
+							1063,
+							490
+						},
+						{
+							1243,
+							555
+						},
+						{
+							1423,
+							490
+						},
+						{
+							1120,
+							165
+						},
+						{
+							1124,
+							230
+						},
+						{
+							760,
+							165
+						},
+						{
+							764,
+							230
+						},
+						{
+							944,
+							295
+						},
+						{
+							701,
+							360
+						},
+						{
+							681,
+							620
+						},
+						{
+							881,
+							425
+						},
+						{
+							703,
+							490
+						},
+						{
+							400,
+							165
+						},
+						{
+							404,
+							230
+						},
+						{
+							584,
+							295
+						},
+						{
+							343,
+							490
+						},
+						{
+							224,
+							295
+						},
+						{
+							341,
+							360
+						},
+						{
+							521,
+							425
+						},
+						{
+							586,
+							750
+						}
+					}
+				},
+				filters = {
+					regions = {
+						"street",
+						"dock",
+						"professional"
 					},
-					{
-						1025,
-						835
+					contacts = {
+						"vlad",
+						"the_elephant",
+						"hector",
+						"bain",
+						"the_dentist",
+						"the_butcher"
 					},
-					{
-						444,
-						567
-					},
-					{
-						1221,
-						685
-					},
-					{
-						1603,
-						555
-					},
-					{
-						1401,
-						620
-					},
-					{
-						1581,
-						685
-					},
-					{
-						1306,
-						750
-					},
-					{
-						1486,
-						815
-					},
-					{
-						1666,
-						750
-					},
-					{
-						1450,
-						880
-					},
-					{
-						1041,
-						620
-					},
-					{
-						730,
-						880
-					},
-					{
-						883,
-						555
-					},
-					{
-						861,
-						685
-					},
-					{
-						766,
-						815
-					},
-					{
-						946,
-						750
-					},
-					{
-						1480,
-						165
-					},
-					{
-						1304,
-						295
-					},
-					{
-						1484,
-						230
-					},
-					{
-						1664,
-						295
-					},
-					{
-						1241,
-						425
-					},
-					{
-						1421,
-						360
-					},
-					{
-						1063,
-						490
-					},
-					{
-						1243,
-						555
-					},
-					{
-						1423,
-						490
-					},
-					{
-						1120,
-						165
-					},
-					{
-						1124,
-						230
-					},
-					{
-						760,
-						165
-					},
-					{
-						764,
-						230
-					},
-					{
-						944,
-						295
-					},
-					{
-						701,
-						360
-					},
-					{
-						681,
-						620
-					},
-					{
-						881,
-						425
-					},
-					{
-						703,
-						490
-					},
-					{
-						400,
-						165
-					},
-					{
-						404,
-						230
-					},
-					{
-						584,
-						295
-					},
-					{
-						343,
-						490
-					},
-					{
-						224,
-						295
-					},
-					{
-						341,
-						360
-					},
-					{
-						521,
-						425
-					},
-					{
-						586,
-						750
+					difficulties = {
+						"normal",
+						"hard",
+						"overkill",
+						"overkill_145",
+						"easy_wish",
+						"overkill_290",
+						"sm_wish"
 					}
 				}
-			},
-			filters = {
-				regions = {
-					"street",
-					"dock",
-					"professional"
-				},
-				contacts = {
-					"vlad",
-					"the_elephant",
-					"hector",
-					"bain",
-					"the_dentist",
-					"the_butcher"
-				},
-				difficulties = {
-					"normal",
-					"hard",
-					"overkill",
-					"overkill_145",
-					"easy_wish",
-					"overkill_290",
-					"sm_wish"
-				}
 			}
-		}}
+		}
 	else
 		self.crime_net.locations = {
 			{
@@ -2902,7 +2968,9 @@ function GuiTweakData:init()
 						"hector",
 						"bain"
 					},
-					difficulties = {"normal"}
+					difficulties = {
+						"normal"
+					}
 				}
 			},
 			{
@@ -2933,7 +3001,9 @@ function GuiTweakData:init()
 						"hector",
 						"bain"
 					},
-					difficulties = {"normal"}
+					difficulties = {
+						"normal"
+					}
 				}
 			},
 			{
@@ -4847,7 +4917,9 @@ function GuiTweakData:init()
 	local dlc_1_folder = "units/pd2_dlc1/weapons/wpn_effects_textures/"
 	local butch_folder = "units/pd2_dlc_butcher_mods/weapons/wpn_effects_textures/"
 	wts.color_indexes = {
-		{color = "red"},
+		{
+			color = "red"
+		},
 		{
 			color = "blue",
 			dlc = "gage_pack_jobs"
@@ -4861,115 +4933,117 @@ function GuiTweakData:init()
 			dlc = "gage_pack_jobs"
 		}
 	}
-	wts.types = {sight = {
-		{
-			name_id = "menu_reticle_1_s",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_s_1_il"
-		},
-		{
-			name_id = "menu_reticle_1_m",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_m_1_il"
-		},
-		{
-			name_id = "menu_reticle_1_l",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_l_1_il"
-		},
-		{
-			name_id = "menu_reticle_2",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_2_il"
-		},
-		{
-			name_id = "menu_reticle_3",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_3_il"
-		},
-		{
-			name_id = "menu_reticle_4",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_4_il"
-		},
-		{
-			name_id = "menu_reticle_5",
-			dlc = "gage_pack_jobs",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_5_il"
-		},
-		{
-			name_id = "menu_reticle_6",
-			dlc = "gage_pack_jobs",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_6_il"
-		},
-		{
-			name_id = "menu_reticle_7",
-			dlc = "gage_pack_jobs",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_7_il"
-		},
-		{
-			name_id = "menu_reticle_8",
-			dlc = "gage_pack_jobs",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_8_il"
-		},
-		{
-			name_id = "menu_reticle_9",
-			dlc = "gage_pack_jobs",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_9_il"
-		},
-		{
-			name_id = "menu_reticle_10",
-			dlc = "gage_pack_jobs",
-			texture_path = dlc_1_folder .. "wpn_sight_reticle_10_il"
-		},
-		{
-			name_id = "menu_reticle_11",
-			texture_path = butch_folder .. "wpn_sight_reticle_11_il"
-		},
-		{
-			name_id = "menu_reticle_12",
-			texture_path = butch_folder .. "wpn_sight_reticle_12_il"
-		},
-		{
-			name_id = "menu_reticle_13",
-			texture_path = butch_folder .. "wpn_sight_reticle_13_il"
-		},
-		{
-			name_id = "menu_reticle_14",
-			texture_path = butch_folder .. "wpn_sight_reticle_14_il"
-		},
-		{
-			name_id = "menu_reticle_15",
-			texture_path = butch_folder .. "wpn_sight_reticle_15_il"
-		},
-		{
-			name_id = "menu_reticle_16",
-			texture_path = butch_folder .. "wpn_sight_reticle_16_il"
-		},
-		{
-			name_id = "menu_reticle_17",
-			texture_path = butch_folder .. "wpn_sight_reticle_17_il"
-		},
-		{
-			name_id = "menu_reticle_18",
-			texture_path = butch_folder .. "wpn_sight_reticle_18_il"
-		},
-		{
-			name_id = "menu_reticle_19",
-			texture_path = butch_folder .. "wpn_sight_reticle_19_il"
-		},
-		{
-			name_id = "menu_reticle_20",
-			texture_path = butch_folder .. "wpn_sight_reticle_20_il"
-		},
-		{
-			name_id = "menu_reticle_21",
-			texture_path = butch_folder .. "wpn_sight_reticle_21_il"
-		},
-		{
-			name_id = "menu_reticle_22",
-			texture_path = butch_folder .. "wpn_sight_reticle_22_il"
-		},
-		{
-			name_id = "menu_reticle_23",
-			texture_path = butch_folder .. "wpn_sight_reticle_23_il"
-		},
-		suffix = "_il"
-	}}
+	wts.types = {
+		sight = {
+			{
+				name_id = "menu_reticle_1_s",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_s_1_il"
+			},
+			{
+				name_id = "menu_reticle_1_m",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_m_1_il"
+			},
+			{
+				name_id = "menu_reticle_1_l",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_l_1_il"
+			},
+			{
+				name_id = "menu_reticle_2",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_2_il"
+			},
+			{
+				name_id = "menu_reticle_3",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_3_il"
+			},
+			{
+				name_id = "menu_reticle_4",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_4_il"
+			},
+			{
+				name_id = "menu_reticle_5",
+				dlc = "gage_pack_jobs",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_5_il"
+			},
+			{
+				name_id = "menu_reticle_6",
+				dlc = "gage_pack_jobs",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_6_il"
+			},
+			{
+				name_id = "menu_reticle_7",
+				dlc = "gage_pack_jobs",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_7_il"
+			},
+			{
+				name_id = "menu_reticle_8",
+				dlc = "gage_pack_jobs",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_8_il"
+			},
+			{
+				name_id = "menu_reticle_9",
+				dlc = "gage_pack_jobs",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_9_il"
+			},
+			{
+				name_id = "menu_reticle_10",
+				dlc = "gage_pack_jobs",
+				texture_path = dlc_1_folder .. "wpn_sight_reticle_10_il"
+			},
+			{
+				name_id = "menu_reticle_11",
+				texture_path = butch_folder .. "wpn_sight_reticle_11_il"
+			},
+			{
+				name_id = "menu_reticle_12",
+				texture_path = butch_folder .. "wpn_sight_reticle_12_il"
+			},
+			{
+				name_id = "menu_reticle_13",
+				texture_path = butch_folder .. "wpn_sight_reticle_13_il"
+			},
+			{
+				name_id = "menu_reticle_14",
+				texture_path = butch_folder .. "wpn_sight_reticle_14_il"
+			},
+			{
+				name_id = "menu_reticle_15",
+				texture_path = butch_folder .. "wpn_sight_reticle_15_il"
+			},
+			{
+				name_id = "menu_reticle_16",
+				texture_path = butch_folder .. "wpn_sight_reticle_16_il"
+			},
+			{
+				name_id = "menu_reticle_17",
+				texture_path = butch_folder .. "wpn_sight_reticle_17_il"
+			},
+			{
+				name_id = "menu_reticle_18",
+				texture_path = butch_folder .. "wpn_sight_reticle_18_il"
+			},
+			{
+				name_id = "menu_reticle_19",
+				texture_path = butch_folder .. "wpn_sight_reticle_19_il"
+			},
+			{
+				name_id = "menu_reticle_20",
+				texture_path = butch_folder .. "wpn_sight_reticle_20_il"
+			},
+			{
+				name_id = "menu_reticle_21",
+				texture_path = butch_folder .. "wpn_sight_reticle_21_il"
+			},
+			{
+				name_id = "menu_reticle_22",
+				texture_path = butch_folder .. "wpn_sight_reticle_22_il"
+			},
+			{
+				name_id = "menu_reticle_23",
+				texture_path = butch_folder .. "wpn_sight_reticle_23_il"
+			},
+			suffix = "_il"
+		}
+	}
 	wts.types.gadget = wts.types.sight
 	self.weapon_texture_switches = wts
 	self.default_part_texture_switch = "1 3"
@@ -4985,8 +5059,20 @@ function GuiTweakData:init()
 		"category",
 		"bonus"
 	}
-	self.new_heists = {limit = 5}
+	self.new_heists = {
+		limit = 5
+	}
 
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_crimefest_2018",
+		texture_path = "guis/textures/pd2/new_heists/crimefest_2018",
+		url = "https://www.overkillsoftware.com/games/breakingnews/"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_crimefest_2018_sale",
+		texture_path = "guis/textures/pd2/new_heists/crimefest_2018_sale",
+		url = "https://store.steampowered.com/bundle/3756/PAYDAY_2_Ultimate_Edition/ "
+	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_icebreaker",
 		texture_path = "guis/textures/pd2/new_heists/icebreaker",
@@ -5129,7 +5215,7 @@ function GuiTweakData:init()
 	})
 end
 
--- Lines: 1281 to 1300
+-- Lines 1300-1319
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5157,7 +5243,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines: 1302 to 1370
+-- Lines 1321-1389
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5190,8 +5276,8 @@ function GuiTweakData:_create_location_spawning_dots()
 					local j, c = nil
 					j = #vx
 
-					for i = 1, #vx, 1 do
-						if ry < vy[i] ~= ry < vy[j] and rx < ((vx[j] - vx[i]) * (ry - vy[i])) / (vy[j] - vy[i]) + vx[i] then
+					for i = 1, #vx do
+						if ry < vy[i] ~= (ry < vy[j]) and rx < (vx[j] - vx[i]) * (ry - vy[i]) / (vy[j] - vy[i]) + vx[i] then
 							found_point = not found_point
 						end
 
@@ -5215,7 +5301,9 @@ function GuiTweakData:_create_location_spawning_dots()
 		zig = not zig
 	end
 
-	local new_locations = {{}}
+	local new_locations = {
+		{}
+	}
 	new_locations[1].filters = self.crime_net.locations[1].filters
 	new_locations[1][1] = {
 		dots = {},
@@ -5233,15 +5321,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines: 1373 to 1374
+-- Lines 1391-1393
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines: 1384 to 1385
+-- Lines 1395-1404
 function GuiTweakData:print_locations()
 end
 
--- Lines: 1387 to 1420
+-- Lines 1406-1440
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5280,7 +5368,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines: 1423 to 1547
+-- Lines 1442-1567
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5403,12 +5491,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines: 1550 to 1551
+-- Lines 1569-1571
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines: 1554 to 1560
+-- Lines 1573-1580
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5418,4 +5506,3 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 
 	return 0
 end
-

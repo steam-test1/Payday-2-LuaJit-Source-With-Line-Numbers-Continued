@@ -23,7 +23,7 @@ TeamAIDamage.set_invulnerable = CopDamage.set_invulnerable
 TeamAIDamage._hurt_severities = CopDamage._hurt_severities
 TeamAIDamage.get_damage_type = CopDamage.get_damage_type
 
--- Lines: 17 to 53
+-- Lines 17-53
 function TeamAIDamage:init(unit)
 	self._unit = unit
 	self._char_tweak = tweak_data.character[unit:base()._tweak_table]
@@ -49,7 +49,7 @@ function TeamAIDamage:init(unit)
 	}
 end
 
--- Lines: 57 to 101
+-- Lines 57-101
 function TeamAIDamage:update(unit, t, dt)
 	if self._regenerate_t then
 		if self._regenerate_t < t then
@@ -88,7 +88,7 @@ function TeamAIDamage:update(unit, t, dt)
 	end
 end
 
--- Lines: 105 to 130
+-- Lines 105-131
 function TeamAIDamage:damage_melee(attack_data)
 	if self._invulnerable or self._dead or self._fatal or self._arrested_timer then
 		return
@@ -98,7 +98,9 @@ function TeamAIDamage:damage_melee(attack_data)
 		return
 	end
 
-	local result = {variant = "melee"}
+	local result = {
+		variant = "melee"
+	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
 	local t = TimerManager:game():time()
 	self._next_allowed_dmg_t = t + self._dmg_interval
@@ -118,12 +120,14 @@ function TeamAIDamage:damage_melee(attack_data)
 	return result
 end
 
--- Lines: 135 to 155
+-- Lines 135-155
 function TeamAIDamage:force_bleedout()
 	local attack_data = {
 		damage = 100000,
 		pos = Vector3(),
-		col_ray = {position = Vector3()}
+		col_ray = {
+			position = Vector3()
+		}
 	}
 	local result = {
 		type = "none",
@@ -146,7 +150,7 @@ function TeamAIDamage:force_bleedout()
 	self:_send_bullet_attack_result(attack_data)
 end
 
--- Lines: 158 to 167
+-- Lines 158-167
 function TeamAIDamage:force_custody()
 	self:force_bleedout()
 
@@ -159,7 +163,7 @@ function TeamAIDamage:force_custody()
 	self:clbk_exit_to_dead()
 end
 
--- Lines: 172 to 202
+-- Lines 172-203
 function TeamAIDamage:damage_bullet(attack_data)
 	local result = {
 		type = "none",
@@ -201,17 +205,17 @@ function TeamAIDamage:damage_bullet(attack_data)
 	return result
 end
 
--- Lines: 207 to 208
+-- Lines 206-209
 function TeamAIDamage:stun_hit(attack_data)
 	return nil
 end
 
--- Lines: 212 to 213
+-- Lines 212-214
 function TeamAIDamage:accuracy_multiplier()
 	return 1
 end
 
--- Lines: 218 to 243
+-- Lines 218-244
 function TeamAIDamage:damage_explosion(attack_data)
 	if self:_cannot_take_damage() then
 		return
@@ -229,7 +233,9 @@ function TeamAIDamage:damage_explosion(attack_data)
 		return
 	end
 
-	local result = {variant = attack_data.variant}
+	local result = {
+		variant = attack_data.variant
+	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
 
 	if health_subtracted > 0 then
@@ -246,7 +252,7 @@ function TeamAIDamage:damage_explosion(attack_data)
 	return result
 end
 
--- Lines: 246 to 274
+-- Lines 246-275
 function TeamAIDamage:damage_fire(attack_data)
 	if self:_cannot_take_damage() then
 		return
@@ -268,7 +274,9 @@ function TeamAIDamage:damage_fire(attack_data)
 		return
 	end
 
-	local result = {variant = attack_data.variant}
+	local result = {
+		variant = attack_data.variant
+	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
 
 	if health_subtracted > 0 then
@@ -285,7 +293,7 @@ function TeamAIDamage:damage_fire(attack_data)
 	return result
 end
 
--- Lines: 279 to 300
+-- Lines 279-301
 function TeamAIDamage:damage_mission(attack_data)
 	if self._dead or self._invulnerable and not attack_data.forced then
 		return
@@ -295,7 +303,9 @@ function TeamAIDamage:damage_mission(attack_data)
 	local damage_percent = self._HEALTH_GRANULARITY
 	attack_data.damage = self._health
 	attack_data.variant = "explosion"
-	local result = {variant = attack_data.variant}
+	local result = {
+		variant = attack_data.variant
+	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
 
 	if health_subtracted > 0 then
@@ -312,7 +322,7 @@ function TeamAIDamage:damage_mission(attack_data)
 	return result
 end
 
--- Lines: 307 to 350
+-- Lines 305-351
 function TeamAIDamage:damage_tase(attack_data)
 	if attack_data ~= nil and PlayerDamage.is_friendly_fire(self, attack_data.attacker_unit) then
 		self:friendly_fire_hit()
@@ -327,7 +337,9 @@ function TeamAIDamage:damage_tase(attack_data)
 	self._regenerate_t = nil
 	local damage_info = {
 		variant = "tase",
-		result = {type = "hurt"}
+		result = {
+			type = "hurt"
+		}
 	}
 
 	if self._tase_effect then
@@ -357,11 +369,11 @@ function TeamAIDamage:damage_tase(attack_data)
 	return damage_info
 end
 
--- Lines: 356 to 357
+-- Lines 355-357
 function TeamAIDamage:damage_dot(attack_data)
 end
 
--- Lines: 362 to 410
+-- Lines 361-411
 function TeamAIDamage:_apply_damage(attack_data, result)
 	local damage = attack_data.damage
 	damage = math.clamp(damage, self._HEALTH_TOTAL_PERCENT, self._HEALTH_TOTAL)
@@ -418,12 +430,12 @@ function TeamAIDamage:_apply_damage(attack_data, result)
 	return damage_percent, health_subtracted
 end
 
--- Lines: 415 to 417
+-- Lines 415-417
 function TeamAIDamage:friendly_fire_hit()
 	self:inc_dodge_count(2)
 end
 
--- Lines: 421 to 445
+-- Lines 421-445
 function TeamAIDamage:inc_dodge_count(n)
 	local t = Application:time()
 
@@ -453,12 +465,12 @@ function TeamAIDamage:inc_dodge_count(n)
 	end
 end
 
--- Lines: 452 to 453
+-- Lines 449-455
 function TeamAIDamage:down_time()
 	return self._char_dmg_tweak.DOWNED_TIME
 end
 
--- Lines: 459 to 492
+-- Lines 459-492
 function TeamAIDamage:_check_bleed_out()
 	if self._health <= 0 then
 		self._bleed_out_health = self._HEALTH_BLEEDOUT_INIT
@@ -496,7 +508,7 @@ function TeamAIDamage:_check_bleed_out()
 	end
 end
 
--- Lines: 496 to 510
+-- Lines 496-510
 function TeamAIDamage:_check_fatal()
 	if self._bleed_out_health <= 0 then
 		if not self._bleed_out then
@@ -514,9 +526,10 @@ function TeamAIDamage:_check_fatal()
 		PlayerMovement.set_attention_settings(self._unit:brain(), nil, "team_AI")
 	end
 end
+
 TeamAIDamage.get_paused_counter_name_by_peer = PlayerDamage.get_paused_counter_name_by_peer
 
--- Lines: 518 to 534
+-- Lines 518-534
 function TeamAIDamage:pause_bleed_out(peer_id)
 	self._bleed_out_paused_count = self._bleed_out_paused_count + 1
 
@@ -539,7 +552,7 @@ function TeamAIDamage:pause_bleed_out(peer_id)
 	end
 end
 
--- Lines: 538 to 551
+-- Lines 538-551
 function TeamAIDamage:unpause_bleed_out(peer_id)
 	self._bleed_out_paused_count = self._bleed_out_paused_count - 1
 
@@ -558,12 +571,12 @@ function TeamAIDamage:unpause_bleed_out(peer_id)
 	end
 end
 
--- Lines: 555 to 557
+-- Lines 555-557
 function TeamAIDamage:stop_bleedout()
 	self:_regenerated()
 end
 
--- Lines: 561 to 570
+-- Lines 561-570
 function TeamAIDamage:on_arrested()
 	self:stop_bleedout()
 
@@ -577,21 +590,21 @@ function TeamAIDamage:on_arrested()
 	end
 end
 
--- Lines: 572 to 575
+-- Lines 572-575
 function TeamAIDamage:pause_arrested_timer(peer_id)
 	self._arrested_paused_counter = self._arrested_paused_counter + 1
 
 	PlayerDamage.set_peer_paused_counter(self, peer_id, "arrested")
 end
 
--- Lines: 577 to 580
+-- Lines 577-580
 function TeamAIDamage:unpause_arrested_timer(peer_id)
 	self._arrested_paused_counter = self._arrested_paused_counter - 1
 
 	PlayerDamage.set_peer_paused_counter(self, peer_id, nil)
 end
 
--- Lines: 584 to 599
+-- Lines 584-599
 function TeamAIDamage:_on_hurt()
 	if self._to_incapacitated_clbk_id then
 		return
@@ -611,22 +624,22 @@ function TeamAIDamage:_on_hurt()
 	self._regenerate_t = TimerManager:game():time() + regen_time
 end
 
--- Lines: 603 to 604
+-- Lines 603-605
 function TeamAIDamage:bleed_out()
 	return self._bleed_out
 end
 
--- Lines: 609 to 610
+-- Lines 609-611
 function TeamAIDamage:fatal()
 	return self._fatal
 end
 
--- Lines: 615 to 616
+-- Lines 615-617
 function TeamAIDamage:is_downed()
 	return self._bleed_out or self._fatal
 end
 
--- Lines: 621 to 636
+-- Lines 621-636
 function TeamAIDamage:_regenerated()
 	self._health = self._HEALTH_INIT
 	self._health_ratio = 1
@@ -648,11 +661,11 @@ function TeamAIDamage:_regenerated()
 	self._regenerate_t = nil
 end
 
--- Lines: 640 to 641
+-- Lines 640-641
 function TeamAIDamage:_convert_to_health_percentage(health_abs)
 end
 
--- Lines: 645 to 649
+-- Lines 645-650
 function TeamAIDamage:_clamp_health_percentage(health_abs)
 	health_abs = math.clamp(health_abs, self._HEALTH_TOTAL_PERCENT, self._HEALTH_TOTAL)
 	local health_percent = math.ceil(health_abs / self._HEALTH_TOTAL_PERCENT)
@@ -661,7 +674,7 @@ function TeamAIDamage:_clamp_health_percentage(health_abs)
 	return health_abs, health_percent
 end
 
--- Lines: 657 to 686
+-- Lines 656-688
 function TeamAIDamage:_get_closest_player(ignore_constraints)
 	local desired_player = nil
 	local player_distance = math.huge
@@ -693,7 +706,7 @@ function TeamAIDamage:_get_closest_player(ignore_constraints)
 	return desired_player
 end
 
--- Lines: 691 to 725
+-- Lines 690-727
 function TeamAIDamage:_teleport_carried_bag()
 	if self._unit:movement()._carry_unit then
 		self._unit:movement():throw_bag()
@@ -729,7 +742,7 @@ function TeamAIDamage:_teleport_carried_bag()
 	return false
 end
 
--- Lines: 734 to 754
+-- Lines 731-754
 function TeamAIDamage:_die()
 	self:_teleport_carried_bag()
 
@@ -750,7 +763,7 @@ function TeamAIDamage:_die()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines: 758 to 766
+-- Lines 758-766
 function TeamAIDamage:_unregister_unit()
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
 
@@ -761,42 +774,42 @@ function TeamAIDamage:_unregister_unit()
 	Network:detach_unit(self._unit)
 end
 
--- Lines: 770 to 772
+-- Lines 770-772
 function TeamAIDamage:_send_damage_drama(attack_data, health_subtracted)
 	PlayerDamage._send_damage_drama(self, attack_data, health_subtracted)
 end
 
--- Lines: 776 to 781
+-- Lines 776-781
 function TeamAIDamage:_call_listeners(damage_info)
 	CopDamage._call_listeners(self, damage_info)
 end
 
--- Lines: 785 to 787
+-- Lines 785-787
 function TeamAIDamage:add_listener(...)
 	CopDamage.add_listener(self, ...)
 end
 
--- Lines: 791 to 793
+-- Lines 791-793
 function TeamAIDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
--- Lines: 797 to 798
+-- Lines 797-799
 function TeamAIDamage:health_ratio()
 	return self._health_ratio
 end
 
--- Lines: 803 to 804
+-- Lines 803-805
 function TeamAIDamage:focus_delay_mul()
 	return 1
 end
 
--- Lines: 809 to 810
+-- Lines 809-811
 function TeamAIDamage:dead()
 	return self._dead
 end
 
--- Lines: 815 to 851
+-- Lines 815-851
 function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offset_height)
 	if self:_cannot_take_damage() then
 		return
@@ -804,7 +817,9 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 
 	local body = self._unit:body(i_body)
 	damage = damage * self._HEALTH_TOTAL_PERCENT
-	local result = {variant = "bullet"}
+	local result = {
+		variant = "bullet"
+	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
 
 	mvector3.set_z(hit_pos, hit_pos.z + hit_offset_height)
@@ -837,7 +852,7 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 855 to 889
+-- Lines 855-889
 function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_variant)
 	if self:_cannot_take_damage() then
 		return
@@ -845,7 +860,9 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
 	damage = damage * self._HEALTH_TOTAL_PERCENT
-	local result = {variant = variant}
+	local result = {
+		variant = variant
+	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_com())
 	local attack_dir = nil
 
@@ -875,7 +892,7 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 893 to 927
+-- Lines 893-927
 function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	if self:_cannot_take_damage() then
 		return
@@ -883,7 +900,9 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
 	damage = damage * self._HEALTH_TOTAL_PERCENT
-	local result = {variant = variant}
+	local result = {
+		variant = variant
+	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_com())
 	local attack_dir = nil
 
@@ -913,7 +932,7 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 931 to 968
+-- Lines 931-968
 function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_percent, i_body, hit_offset_height)
 	if self:_cannot_take_damage() then
 		return
@@ -921,7 +940,9 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 
 	local body = self._unit:body(i_body)
 	damage = damage * self._HEALTH_TOTAL_PERCENT
-	local result = {variant = "melee"}
+	local result = {
+		variant = "melee"
+	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
 
 	mvector3.set_z(hit_pos, hit_pos.z + hit_offset_height)
@@ -956,22 +977,22 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 	self:_call_listeners(attack_data)
 end
 
--- Lines: 972 to 974
+-- Lines 972-974
 function TeamAIDamage:shoot_pos_mid(m_pos)
 	self._spine2_obj:m_position(m_pos)
 end
 
--- Lines: 978 to 979
+-- Lines 978-980
 function TeamAIDamage:need_revive()
 	return (self._bleed_out or self._fatal) and not self._dead
 end
 
--- Lines: 984 to 985
+-- Lines 984-986
 function TeamAIDamage:arrested()
 	return self._arrested_timer
 end
 
--- Lines: 990 to 1061
+-- Lines 990-1061
 function TeamAIDamage:revive(reviving_unit)
 	if self._dead then
 		return
@@ -998,7 +1019,9 @@ function TeamAIDamage:revive(reviving_unit)
 
 		self._unit:interaction():set_active(false, false)
 		self._unit:brain():on_recovered(reviving_unit)
-		PlayerMovement.set_attention_settings(self._unit:brain(), {"team_enemy_cbt"}, "team_AI")
+		PlayerMovement.set_attention_settings(self._unit:brain(), {
+			"team_enemy_cbt"
+		}, "team_AI")
 		self._unit:network():send("from_server_unit_recovered")
 		managers.groupai:state():on_criminal_recovered(self._unit)
 		managers.mission:call_global_event("player_revive_ai")
@@ -1019,7 +1042,9 @@ function TeamAIDamage:revive(reviving_unit)
 		local res = self._unit:movement():action_request(action_data)
 
 		self._unit:brain():on_recovered(reviving_unit)
-		PlayerMovement.set_attention_settings(self._unit:brain(), {"team_enemy_cbt"}, "team_AI")
+		PlayerMovement.set_attention_settings(self._unit:brain(), {
+			"team_enemy_cbt"
+		}, "team_AI")
 		self._unit:network():send("from_server_unit_recovered")
 		managers.groupai:state():on_criminal_recovered(self._unit)
 	end
@@ -1043,7 +1068,7 @@ function TeamAIDamage:revive(reviving_unit)
 	end
 end
 
--- Lines: 1065 to 1073
+-- Lines 1065-1073
 function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 	local attacker = attack_data.attacker_unit
@@ -1057,7 +1082,7 @@ function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	self._unit:network():send("from_server_damage_bullet", attacker, hit_offset_height, result_index)
 end
 
--- Lines: 1077 to 1084
+-- Lines 1077-1084
 function TeamAIDamage:_send_explosion_attack_result(attack_data)
 	local attacker = attack_data.attacker_unit
 
@@ -1070,7 +1095,7 @@ function TeamAIDamage:_send_explosion_attack_result(attack_data)
 	self._unit:network():send("from_server_damage_explosion_fire", attacker, result_index, CopDamage._get_attack_variant_index(self, attack_data.variant))
 end
 
--- Lines: 1086 to 1093
+-- Lines 1086-1093
 function TeamAIDamage:_send_fire_attack_result(attack_data)
 	local attacker = attack_data.attacker_unit
 
@@ -1083,7 +1108,7 @@ function TeamAIDamage:_send_fire_attack_result(attack_data)
 	self._unit:network():send("from_server_damage_explosion_fire", attacker, result_index, CopDamage._get_attack_variant_index(self, attack_data.variant))
 end
 
--- Lines: 1097 to 1105
+-- Lines 1097-1105
 function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 	local attacker = attack_data.attacker_unit
@@ -1097,12 +1122,12 @@ function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	self._unit:network():send("from_server_damage_melee", attacker, hit_offset_height, result_index)
 end
 
--- Lines: 1109 to 1111
+-- Lines 1109-1111
 function TeamAIDamage:_send_tase_attack_result()
 	self._unit:network():send("from_server_damage_tase")
 end
 
--- Lines: 1115 to 1143
+-- Lines 1115-1143
 function TeamAIDamage:on_tase_ended()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -1133,14 +1158,14 @@ function TeamAIDamage:on_tase_ended()
 	end
 end
 
--- Lines: 1147 to 1150
+-- Lines 1147-1150
 function TeamAIDamage:clbk_exit_to_incapacitated()
 	self._to_incapacitated_clbk_id = nil
 
 	self:_on_incapacitated()
 end
 
--- Lines: 1154 to 1159
+-- Lines 1154-1159
 function TeamAIDamage:on_incapacitated()
 	if self:_cannot_take_damage() then
 		return
@@ -1149,7 +1174,7 @@ function TeamAIDamage:on_incapacitated()
 	self:_on_incapacitated()
 end
 
--- Lines: 1164 to 1189
+-- Lines 1163-1189
 function TeamAIDamage:_on_incapacitated()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -1166,7 +1191,9 @@ function TeamAIDamage:_on_incapacitated()
 	self._regenerate_t = nil
 	local dmg_info = {
 		variant = "bleeding",
-		result = {type = "fatal"}
+		result = {
+			type = "fatal"
+		}
 	}
 	self._bleed_out_health = 0
 
@@ -1183,7 +1210,7 @@ function TeamAIDamage:_on_incapacitated()
 	self._unit:network():send("from_server_damage_incapacitated")
 end
 
--- Lines: 1194 to 1213
+-- Lines 1193-1213
 function TeamAIDamage:clbk_exit_to_dead()
 	managers.mission:call_global_event("ai_in_custody")
 
@@ -1195,29 +1222,31 @@ function TeamAIDamage:clbk_exit_to_dead()
 
 	local dmg_info = {
 		variant = "bleeding",
-		result = {type = "death"}
+		result = {
+			type = "death"
+		}
 	}
 
 	self:_call_listeners(dmg_info)
 	self:_unregister_unit()
 end
 
--- Lines: 1217 to 1219
+-- Lines 1217-1219
 function TeamAIDamage:pre_destroy()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines: 1229 to 1230
+-- Lines 1223-1231
 function TeamAIDamage:_cannot_take_damage()
 	return self._invulnerable or self._dead or self._fatal or self._arrested_timer
 end
 
--- Lines: 1235 to 1237
+-- Lines 1235-1237
 function TeamAIDamage:disable()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines: 1241 to 1250
+-- Lines 1241-1250
 function TeamAIDamage:_clear_damage_transition_callbacks()
 	if self._to_incapacitated_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._to_incapacitated_clbk_id)
@@ -1232,17 +1261,17 @@ function TeamAIDamage:_clear_damage_transition_callbacks()
 	end
 end
 
--- Lines: 1254 to 1255
+-- Lines 1254-1256
 function TeamAIDamage:last_suppression_t()
 	return self._last_received_dmg_t
 end
 
--- Lines: 1260 to 1261
+-- Lines 1260-1262
 function TeamAIDamage:can_attach_projectiles()
 	return false
 end
 
--- Lines: 1266 to 1279
+-- Lines 1266-1279
 function TeamAIDamage:save(data)
 	if self._arrested_timer then
 		data.char_dmg = data.char_dmg or {}
@@ -1259,4 +1288,3 @@ function TeamAIDamage:save(data)
 		data.char_dmg.fatal = true
 	end
 end
-

@@ -6,7 +6,7 @@ core:import("CoreDebug")
 
 VectorSliderBox = VectorSliderBox or CoreClass.mixin(CoreClass.class(), CoreEvent.BasicEventHandling)
 
--- Lines: 9 to 18
+-- Lines 9-18
 function VectorSliderBox:init(parent_frame, title, min, max, step)
 	assert(min < max)
 
@@ -18,22 +18,22 @@ function VectorSliderBox:init(parent_frame, title, min, max, step)
 	self._box = EWS:StaticBoxSizer(self._parent_frame, "VERTICAL", title)
 end
 
--- Lines: 20 to 21
+-- Lines 20-22
 function VectorSliderBox:box()
 	return self._box
 end
 
--- Lines: 24 to 26
+-- Lines 24-26
 function VectorSliderBox:_on_slider_movement()
 	self:_update_text()
 end
 
--- Lines: 28 to 30
+-- Lines 28-30
 function VectorSliderBox:_on_slider_changed()
 	self:_update_values()
 end
 
--- Lines: 32 to 38
+-- Lines 32-38
 function VectorSliderBox:_on_mute_toggle()
 	if self.__mute_toggle:get_value() == true then
 		self:_set_enabled_all(false)
@@ -42,7 +42,7 @@ function VectorSliderBox:_on_mute_toggle()
 	end
 end
 
--- Lines: 40 to 44
+-- Lines 40-45
 function VectorSliderBox:_create_slider()
 	local new_slider = EWS:Slider(self._parent_frame, 0, 0, self._slider_max)
 
@@ -52,7 +52,7 @@ function VectorSliderBox:_create_slider()
 	return new_slider
 end
 
--- Lines: 47 to 56
+-- Lines 47-57
 function VectorSliderBox:_create_mute_button()
 	local box, mute_button = nil
 	box = EWS:BoxSizer("HORIZONTAL")
@@ -65,7 +65,7 @@ function VectorSliderBox:_create_mute_button()
 	return mute_button
 end
 
--- Lines: 59 to 71
+-- Lines 59-72
 function VectorSliderBox:_create_sizer()
 	local box, text_ctrl, slider = nil
 	box = EWS:BoxSizer("HORIZONTAL")
@@ -80,7 +80,7 @@ function VectorSliderBox:_create_sizer()
 	return slider, text_ctrl
 end
 
--- Lines: 74 to 80
+-- Lines 74-80
 function VectorSliderBox:get_value()
 	if self._mute_toggle:get_value() == true then
 		return Vector3(0, 0, 0)
@@ -89,7 +89,7 @@ function VectorSliderBox:get_value()
 	end
 end
 
--- Lines: 82 to 93
+-- Lines 82-93
 function VectorSliderBox:set_value(vector)
 	self.__slider_x:set_value(self:_actual_to_slider(vector.x))
 	self.__slider_y:set_value(self:_actual_to_slider(vector.y))
@@ -103,17 +103,17 @@ function VectorSliderBox:set_value(vector)
 	end
 end
 
--- Lines: 95 to 96
+-- Lines 95-97
 function VectorSliderBox:_actual_to_slider(value)
 	return (value - self._min) / self._step
 end
 
--- Lines: 99 to 100
+-- Lines 99-101
 function VectorSliderBox:_slider_to_actual(value)
 	return value * self._step + self._min
 end
 
--- Lines: 103 to 111
+-- Lines 103-111
 function VectorSliderBox:_update_values()
 	local x, y, z = nil
 	x = self:_slider_to_actual(self.__slider_x:get_value())
@@ -124,7 +124,7 @@ function VectorSliderBox:_update_values()
 	self:_set_text(x, y, z)
 end
 
--- Lines: 113 to 120
+-- Lines 113-120
 function VectorSliderBox:_update_text()
 	local x, y, z = nil
 	x = self:_slider_to_actual(self.__slider_x:get_value())
@@ -134,14 +134,14 @@ function VectorSliderBox:_update_text()
 	self:_set_text(x, y, z)
 end
 
--- Lines: 122 to 126
+-- Lines 122-126
 function VectorSliderBox:_set_text(x, y, z)
 	self.__slider_x_textctrl:set_value(string.format("%.3f", x))
 	self.__slider_y_textctrl:set_value(string.format("%.3f", y))
 	self.__slider_z_textctrl:set_value(string.format("%.3f", z))
 end
 
--- Lines: 128 to 135
+-- Lines 128-135
 function VectorSliderBox:_on_update_textctrl()
 	local x, y, z = nil
 	x = self:_check_input(self.__slider_x_textctrl:get_value())
@@ -151,7 +151,7 @@ function VectorSliderBox:_on_update_textctrl()
 	self:set_value(Vector3(x, y, z))
 end
 
--- Lines: 137 to 146
+-- Lines 137-147
 function VectorSliderBox:_check_input(input)
 	local value = tonumber(input)
 
@@ -164,7 +164,7 @@ function VectorSliderBox:_check_input(input)
 	return value
 end
 
--- Lines: 149 to 158
+-- Lines 149-158
 function VectorSliderBox:_set_enabled_all(value)
 	self.__slider_x:set_enabled(value)
 	self.__slider_y:set_enabled(value)
@@ -173,9 +173,10 @@ function VectorSliderBox:_set_enabled_all(value)
 	self.__slider_z:set_enabled(value)
 	self.__slider_z_textctrl:set_enabled(value)
 end
+
 Vector2SliderBox = Vector2SliderBox or CoreClass.class(VectorSliderBox)
 
--- Lines: 162 to 171
+-- Lines 162-171
 function Vector2SliderBox:init(parent_frame, title, min, max, step)
 	self.super:init(parent_frame, title, min, max, step)
 
@@ -186,9 +187,10 @@ function Vector2SliderBox:init(parent_frame, title, min, max, step)
 	self.__slider_z = EWS:Slider(self._parent_frame, 0, 0, 0)
 	self.__slider_z_textctrl = EWS:TextCtrl(self._parent_frame, 0, "", "")
 end
+
 Vector3SliderBox = Vector3SliderBox or CoreClass.class(VectorSliderBox)
 
--- Lines: 175 to 183
+-- Lines 175-183
 function Vector3SliderBox:init(parent_frame, title, min, max, step)
 	self.super.init(self, parent_frame, title, min, max, step)
 
@@ -198,4 +200,3 @@ function Vector3SliderBox:init(parent_frame, title, min, max, step)
 	self.__slider_y, self.__slider_y_textctrl = self:_create_sizer()
 	self.__slider_z, self.__slider_z_textctrl = self:_create_sizer()
 end
-

@@ -8,12 +8,12 @@ MATERIAL_CONFIG = CoreDependencyNode.MATERIAL_CONFIG
 CUTSCENE = CoreDependencyNode.CUTSCENE
 UnitDependencyNode = UnitDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
--- Lines: 15 to 17
+-- Lines 15-17
 function UnitDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, UNIT, "unit", name, get_dn_cb, database)
 end
 
--- Lines: 19 to 57
+-- Lines 19-57
 function UnitDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 
@@ -76,4 +76,3 @@ function UnitDependencyNode:_walkxml2dependencies(xmlnode, deps)
 		end
 	end
 end
-

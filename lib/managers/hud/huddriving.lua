@@ -1,6 +1,6 @@
 HUDDriving = HUDDriving or class()
 
--- Lines: 3 to 17
+-- Lines 3-17
 function HUDDriving:init(hud, full_hud)
 	self._hud_panel = hud.panel
 	self._full_hud_panel = full_hud.panel
@@ -68,20 +68,19 @@ function HUDDriving:init(hud, full_hud)
 	})
 end
 
--- Lines: 19 to 21
+-- Lines 19-21
 function HUDDriving:start()
 	self._active = true
 end
 
--- Lines: 23 to 25
+-- Lines 23-25
 function HUDDriving:stop()
 	self._active = false
 end
 
--- Lines: 27 to 31
+-- Lines 27-31
 function HUDDriving:set_vehicle_state(speed, rpm, gear)
 	self._hud_panel:child("value_speed"):set_text(string.format("%d", speed) .. " km/h")
 	self._hud_panel:child("value_RPM"):set_text(rpm .. " rpm")
 	self._hud_panel:child("value_gear"):set_text(gear)
 end
-

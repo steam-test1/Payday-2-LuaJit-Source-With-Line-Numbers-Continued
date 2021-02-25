@@ -3,12 +3,12 @@ require("lib/managers/dialogs/AchievementsDialog")
 
 Xbox360AchievementsDialog = Xbox360AchievementsDialog or class(AchievementsDialog)
 
--- Lines: 7 to 13
+-- Lines 7-13
 function Xbox360AchievementsDialog:init(manager, data)
 	AchievementsDialog.init(self, manager, data)
 end
 
--- Lines: 15 to 21
+-- Lines 15-22
 function Xbox360AchievementsDialog:show()
 	self._manager:event_dialog_shown(self)
 	XboxLive:show_achievements_ui(self:get_platform_id())
@@ -18,17 +18,16 @@ function Xbox360AchievementsDialog:show()
 	return true
 end
 
--- Lines: 24 to 28
+-- Lines 24-28
 function Xbox360AchievementsDialog:update(t, dt)
 	if self._show_time and self._show_time ~= t and not Application:is_showing_system_dialog() then
 		self:done_callback()
 	end
 end
 
--- Lines: 30 to 34
+-- Lines 30-34
 function Xbox360AchievementsDialog:done_callback()
 	self._show_time = nil
 
 	AchievementsDialog.done_callback(self)
 end
-

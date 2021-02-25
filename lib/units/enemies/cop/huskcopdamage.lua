@@ -1,6 +1,6 @@
 HuskCopDamage = HuskCopDamage or class(CopDamage)
 
--- Lines: 6 to 41
+-- Lines 5-41
 function HuskCopDamage:die(variant)
 	CopDamage.MAD_3_ACHIEVEMENT(variant)
 	self:_check_friend_4(variant)
@@ -35,4 +35,3 @@ function HuskCopDamage:die(variant)
 
 	self:_on_death()
 end
-

@@ -1,6 +1,6 @@
 HuskPlayerInventory = HuskPlayerInventory or class(PlayerInventory)
 
--- Lines: 4 to 10
+-- Lines 4-10
 function HuskPlayerInventory:init(unit)
 	HuskPlayerInventory.super.init(self, unit)
 
@@ -15,11 +15,11 @@ function HuskPlayerInventory:init(unit)
 	self._peer_weapons = {}
 end
 
--- Lines: 14 to 15
+-- Lines 14-15
 function HuskPlayerInventory:_send_equipped_weapon()
 end
 
--- Lines: 19 to 24
+-- Lines 19-24
 function HuskPlayerInventory:synch_equipped_weapon(weap_index, blueprint_string, cosmetics_string, peer)
 	self:_perform_switch_equipped_weapon(weap_index, blueprint_string, cosmetics_string, peer)
 
@@ -28,7 +28,7 @@ function HuskPlayerInventory:synch_equipped_weapon(weap_index, blueprint_string,
 	end
 end
 
--- Lines: 26 to 33
+-- Lines 26-33
 function HuskPlayerInventory:_perform_switch_equipped_weapon(weap_index, blueprint_string, cosmetics_string, peer)
 	local weapon_name = self._get_weapon_name_from_sync_index(weap_index)
 
@@ -39,7 +39,7 @@ function HuskPlayerInventory:_perform_switch_equipped_weapon(weap_index, bluepri
 	end
 end
 
--- Lines: 35 to 52
+-- Lines 35-52
 function HuskPlayerInventory:check_peer_weapon_spawn()
 	if SystemInfo:platform() ~= Idstring("PS3") then
 		return true
@@ -61,7 +61,7 @@ function HuskPlayerInventory:check_peer_weapon_spawn()
 	end
 end
 
--- Lines: 56 to 61
+-- Lines 56-61
 function HuskPlayerInventory:set_melee_weapon_by_peer(peer)
 	local blackmarket_outfit = peer and peer:blackmarket_outfit()
 
@@ -70,7 +70,7 @@ function HuskPlayerInventory:set_melee_weapon_by_peer(peer)
 	end
 end
 
--- Lines: 66 to 78
+-- Lines 65-78
 function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
@@ -89,7 +89,7 @@ function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	self:add_unit(new_unit, equip, instant)
 end
 
--- Lines: 82 to 111
+-- Lines 82-111
 function HuskPlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, blueprint_string, cosmetics_string)
 	local factory_weapon = tweak_data.weapon.factory[factory_name]
 	local ids_unit_name = Idstring(factory_weapon.unit)
@@ -99,7 +99,13 @@ function HuskPlayerInventory:add_unit_by_factory_name(factory_name, equip, insta
 	end
 
 	local blueprint = nil
-	blueprint = blueprint_string and blueprint_string ~= "" and managers.weapon_factory:unpack_blueprint_from_string(factory_name, blueprint_string) or managers.weapon_factory:get_default_blueprint_by_factory_id(factory_name)
+
+	if blueprint_string and blueprint_string ~= "" then
+		blueprint = managers.weapon_factory:unpack_blueprint_from_string(factory_name, blueprint_string)
+	else
+		blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_name)
+	end
+
 	local cosmetics = nil
 	local cosmetics_data = string.split(cosmetics_string, "-")
 	local weapon_skin_id = cosmetics_data[1] or "nil"
@@ -119,7 +125,7 @@ function HuskPlayerInventory:add_unit_by_factory_name(factory_name, equip, insta
 	self:add_unit_by_factory_blueprint(factory_name, equip, instant, blueprint, cosmetics)
 end
 
--- Lines: 115 to 142
+-- Lines 115-142
 function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, instant, blueprint, cosmetics)
 	local factory_weapon = tweak_data.weapon.factory[factory_name]
 	local ids_unit_name = Idstring(factory_weapon.unit)
@@ -155,7 +161,7 @@ function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, 
 	end
 end
 
--- Lines: 144 to 153
+-- Lines 144-153
 function HuskPlayerInventory:synch_weapon_gadget_state(state)
 	if self:equipped_unit():base().set_gadget_on and self._unit:movement().set_cbt_permanent then
 		self:equipped_unit():base():set_gadget_on(state, true)
@@ -168,14 +174,14 @@ function HuskPlayerInventory:synch_weapon_gadget_state(state)
 	end
 end
 
--- Lines: 156 to 160
+-- Lines 156-160
 function HuskPlayerInventory:sync_weapon_gadget_color(color)
 	if self:equipped_unit():base().set_gadget_color then
 		self:equipped_unit():base():set_gadget_color(color)
 	end
 end
 
--- Lines: 165 to 176
+-- Lines 165-176
 function HuskPlayerInventory:on_melee_item_shown()
 	local selection = self._available_selections[self._equipped_selection]
 
@@ -188,7 +194,7 @@ function HuskPlayerInventory:on_melee_item_shown()
 	end
 end
 
--- Lines: 178 to 188
+-- Lines 178-188
 function HuskPlayerInventory:on_melee_item_hidden()
 	local selection = self._available_selections[self._equipped_selection]
 
@@ -201,7 +207,7 @@ function HuskPlayerInventory:on_melee_item_hidden()
 	end
 end
 
--- Lines: 192 to 207
+-- Lines 192-207
 function HuskPlayerInventory._get_weapon_name_from_sync_index(w_index)
 	if w_index <= #tweak_data.character.weap_unit_names then
 		return tweak_data.character.weap_unit_names[w_index]
@@ -220,7 +226,7 @@ function HuskPlayerInventory._get_weapon_name_from_sync_index(w_index)
 	end
 end
 
--- Lines: 212 to 219
+-- Lines 212-219
 function HuskPlayerInventory:set_weapon_underbarrel(selection_index, underbarrel_id, is_on)
 	selection_index = 2
 	local selection = self._available_selections[selection_index]
@@ -232,3 +238,14 @@ function HuskPlayerInventory:set_weapon_underbarrel(selection_index, underbarrel
 	selection.unit:base():set_underbarrel(underbarrel_id, is_on)
 end
 
+-- Lines 224-231
+function HuskPlayerInventory:set_visibility_state(state)
+	local state_name = self._unit:movement():current_state_name()
+	local is_clean = HuskPlayerMovement.clean_states[state_name]
+
+	if state and is_clean then
+		return
+	end
+
+	HuskPlayerInventory.super.set_visibility_state(self, state)
+end

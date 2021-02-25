@@ -2,7 +2,7 @@ core:module("CoreGTextureManager")
 
 GTextureManager = GTextureManager or class()
 
--- Lines: 5 to 13
+-- Lines 5-13
 function GTextureManager:init()
 	self._texture_map = {}
 	self._preloaded = {}
@@ -12,7 +12,7 @@ function GTextureManager:init()
 	GlobalTextureManager:set_texture("current_global_world_overlay_mask_texture", nil)
 end
 
--- Lines: 15 to 29
+-- Lines 15-29
 function GTextureManager:set_texture(variable_name, texture_name, texture_type)
 	local old_data = self._texture_map[variable_name]
 
@@ -36,7 +36,7 @@ function GTextureManager:set_texture(variable_name, texture_name, texture_type)
 	end
 end
 
--- Lines: 31 to 43
+-- Lines 31-43
 function GTextureManager:preload(textures, texture_type)
 	if type(textures) == "string" then
 		if not self._preloaded[textures] then
@@ -51,7 +51,7 @@ function GTextureManager:preload(textures, texture_type)
 	end
 end
 
--- Lines: 45 to 59
+-- Lines 45-59
 function GTextureManager:destroy()
 	for variable_name, data in pairs(self._texture_map) do
 		if data.texture then
@@ -67,4 +67,3 @@ function GTextureManager:destroy()
 	self._texture_map = nil
 	self._preloaded = nil
 end
-

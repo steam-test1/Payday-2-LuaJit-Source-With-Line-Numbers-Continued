@@ -1,6 +1,6 @@
 MenuNodeReticleSwitchGui = MenuNodeReticleSwitchGui or class(MenuNodeGui)
 
--- Lines: 3 to 17
+-- Lines 3-17
 function MenuNodeReticleSwitchGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -15,7 +15,7 @@ function MenuNodeReticleSwitchGui:init(node, layer, parameters)
 	self:setup(node)
 end
 
--- Lines: 19 to 29
+-- Lines 19-29
 function MenuNodeReticleSwitchGui:setup(node)
 	local color = node:item("reticle_color"):value()
 	local type = node:item("reticle_type"):value()
@@ -27,7 +27,7 @@ function MenuNodeReticleSwitchGui:setup(node)
 	self:set_reticle_texture(texture)
 end
 
--- Lines: 31 to 35
+-- Lines 31-36
 function MenuNodeReticleSwitchGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -37,7 +37,7 @@ function MenuNodeReticleSwitchGui:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines: 38 to 101
+-- Lines 38-101
 function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	MenuNodeReticleSwitchGui.super._setup_item_panel(self, safe_rect, res)
 	self.item_panel:set_w(safe_rect.width * (1 - self._align_line_proportions))
@@ -84,12 +84,14 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self._texture_panel:set_center(self.box_panel:w() / 2, self.box_panel:h() / 2)
 	self:_set_reticle_texture(self._texture)
 
-	self.boxgui = BoxGuiObject:new(self.box_panel, {sides = {
-		1,
-		1,
-		1,
-		1
-	}})
+	self.boxgui = BoxGuiObject:new(self.box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
@@ -112,7 +114,7 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self:_set_topic_position()
 end
 
--- Lines: 103 to 146
+-- Lines 103-147
 function MenuNodeReticleSwitchGui:update_item_dlc_locks()
 	local node = self.node
 
@@ -145,12 +147,12 @@ function MenuNodeReticleSwitchGui:update_item_dlc_locks()
 	return pass_type and pass_color
 end
 
--- Lines: 149 to 151
+-- Lines 149-151
 function MenuNodeReticleSwitchGui:set_reticle_texture(texture)
 	self:_set_reticle_texture(texture)
 end
 
--- Lines: 153 to 162
+-- Lines 153-162
 function MenuNodeReticleSwitchGui:_set_reticle_texture(texture)
 	if texture and alive(self._texture_panel) and DB:has(Idstring("texture"), texture) then
 		self._texture_panel:clear()
@@ -162,7 +164,7 @@ function MenuNodeReticleSwitchGui:_set_reticle_texture(texture)
 	end
 end
 
--- Lines: 164 to 171
+-- Lines 164-171
 function MenuNodeReticleSwitchGui:_unretrieve_texture()
 	if self._texture then
 		managers.menu_component:unretrieve_texture(self._texture, self._texture_index)
@@ -173,7 +175,7 @@ function MenuNodeReticleSwitchGui:_unretrieve_texture()
 	end
 end
 
--- Lines: 173 to 178
+-- Lines 173-178
 function MenuNodeReticleSwitchGui:_texture_done_callback(texture_ids)
 	if self and alive(self._texture_panel) then
 		self._texture_panel:bitmap({
@@ -187,12 +189,12 @@ function MenuNodeReticleSwitchGui:_texture_done_callback(texture_ids)
 	end
 end
 
--- Lines: 180 to 181
+-- Lines 180-182
 function MenuNodeReticleSwitchGui:get_recticle_texture_ids()
 	return self._texture_ids
 end
 
--- Lines: 184 to 192
+-- Lines 184-192
 function MenuNodeReticleSwitchGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -203,7 +205,7 @@ function MenuNodeReticleSwitchGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeReticleSwitchGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines: 194 to 202
+-- Lines 194-202
 function MenuNodeReticleSwitchGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -216,12 +218,12 @@ function MenuNodeReticleSwitchGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines: 204 to 206
+-- Lines 204-206
 function MenuNodeReticleSwitchGui:_setup_item_rows(node)
 	MenuNodeReticleSwitchGui.super._setup_item_rows(self, node)
 end
 
--- Lines: 208 to 217
+-- Lines 208-217
 function MenuNodeReticleSwitchGui:reload_item(item)
 	MenuNodeReticleSwitchGui.super.reload_item(self, item)
 
@@ -233,7 +235,7 @@ function MenuNodeReticleSwitchGui:reload_item(item)
 	end
 end
 
--- Lines: 219 to 227
+-- Lines 219-227
 function MenuNodeReticleSwitchGui:_align_marker(row_item)
 	MenuNodeReticleSwitchGui.super._align_marker(self, row_item)
 
@@ -246,9 +248,8 @@ function MenuNodeReticleSwitchGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines: 229 to 232
+-- Lines 229-232
 function MenuNodeReticleSwitchGui:close()
 	self:_unretrieve_texture()
 	MenuNodeReticleSwitchGui.super.close(self)
 end
-

@@ -7,17 +7,17 @@ ElementMoney.DEDUCT_OFFSHORE = "DeductOffshore"
 ElementMoney.ADD_SPENDING = "AddSpending"
 ElementMoney.DEDUCT_SPENDING = "DeductSpending"
 
--- Lines: 10 to 12
+-- Lines 10-12
 function ElementMoney:init(...)
 	ElementMoney.super.init(self, ...)
 end
 
--- Lines: 14 to 16
+-- Lines 14-16
 function ElementMoney:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 19 to 51
+-- Lines 18-51
 function ElementMoney:on_executed(instigator)
 	if not self._values.enabled or not self._values.amount then
 		return
@@ -55,19 +55,20 @@ function ElementMoney:on_executed(instigator)
 
 	ElementMoney.super.on_executed(self, instigator)
 end
+
 ElementMoneyFilter = ElementMoneyFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines: 57 to 59
+-- Lines 57-59
 function ElementMoneyFilter:init(...)
 	ElementMoneyFilter.super.init(self, ...)
 end
 
--- Lines: 61 to 63
+-- Lines 61-63
 function ElementMoneyFilter:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines: 66 to 89
+-- Lines 65-89
 function ElementMoneyFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -95,7 +96,7 @@ function ElementMoneyFilter:on_executed(instigator)
 	end
 end
 
--- Lines: 91 to 105
+-- Lines 91-106
 function ElementMoneyFilter:_check_value(account_amt)
 	local value = self:value("value")
 	local check_type = self:value("check_type")
@@ -114,4 +115,3 @@ function ElementMoneyFilter:_check_value(account_amt)
 
 	return false
 end
-

@@ -2,7 +2,7 @@ core:module("CoreLinkedStackMap")
 
 LinkedStackMap = LinkedStackMap or class()
 
--- Lines: 6 to 11
+-- Lines 6-11
 function LinkedStackMap:init()
 	self._linked_map = {}
 	self._top_link = nil
@@ -10,30 +10,29 @@ function LinkedStackMap:init()
 	self._last_link_id = 0
 end
 
--- Lines: 13 to 14
+-- Lines 13-15
 function LinkedStackMap:top_link()
 	return self._top_link
 end
 
--- Lines: 17 to 18
+-- Lines 17-19
 function LinkedStackMap:top()
 	return self._top_link and self._top_link.value
 end
 
--- Lines: 21 to 22
+-- Lines 21-23
 function LinkedStackMap:get_linked_map()
 	return self._linked_map
 end
 
--- Lines: 25 to 26
+-- Lines 25-27
 function LinkedStackMap:get(link_id)
 	return self._linked_map[link_id]
 end
 
--- Lines: 32 to 34
+-- Lines 29-35
 function LinkedStackMap:iterator()
-
-	-- Lines: 30 to 32
+	-- Lines 30-33
 	local function func(map, key)
 		local id, link = next(map, key)
 
@@ -43,10 +42,9 @@ function LinkedStackMap:iterator()
 	return func, self._linked_map, nil
 end
 
--- Lines: 51 to 53
+-- Lines 37-54
 function LinkedStackMap:top_bottom_iterator()
-
-	-- Lines: 38 to 52
+	-- Lines 38-52
 	local function func(map, link_id)
 		if link_id then
 			local link = map[link_id].previous
@@ -66,10 +64,9 @@ function LinkedStackMap:top_bottom_iterator()
 	return func, self._linked_map, nil
 end
 
--- Lines: 70 to 72
+-- Lines 56-73
 function LinkedStackMap:bottom_top_iterator()
-
-	-- Lines: 57 to 71
+	-- Lines 57-71
 	local function func(map, link_id)
 		if link_id then
 			local link = map[link_id].next
@@ -89,7 +86,7 @@ function LinkedStackMap:bottom_top_iterator()
 	return func, self._linked_map, nil
 end
 
--- Lines: 75 to 91
+-- Lines 75-92
 function LinkedStackMap:add(value)
 	self._last_link_id = self._last_link_id + 1
 	local link = {
@@ -110,7 +107,7 @@ function LinkedStackMap:add(value)
 	return self._last_link_id
 end
 
--- Lines: 94 to 119
+-- Lines 94-119
 function LinkedStackMap:remove(link_id)
 	local link = self._linked_map[link_id]
 
@@ -138,16 +135,20 @@ function LinkedStackMap:remove(link_id)
 	end
 end
 
--- Lines: 121 to 135
+-- Lines 121-136
 function LinkedStackMap:to_string()
 	local string = ""
 	local link = self._top_link
 
 	while link do
-		string = string == "" and tostring(link.value) or string .. ", " .. tostring(link.value)
+		if string == "" then
+			string = tostring(link.value)
+		else
+			string = string .. ", " .. tostring(link.value)
+		end
+
 		link = link.previous
 	end
 
 	return string
 end
-

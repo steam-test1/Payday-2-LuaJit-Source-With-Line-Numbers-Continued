@@ -12,7 +12,12 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"block"
 }
 
--- Lines: 8 to 21
+table.list_append(VehicleOperatorUnitElement.ACTIONS, {
+	"enable_player_exit",
+	"disable_player_exit"
+})
+
+-- Lines 11-24
 function VehicleOperatorUnitElement:init(unit)
 	VehicleOperatorUnitElement.super.init(self, unit)
 
@@ -28,7 +33,7 @@ function VehicleOperatorUnitElement:init(unit)
 	self._actions = VehicleOperatorUnitElement.ACTIONS
 end
 
--- Lines: 24 to 35
+-- Lines 27-38
 function VehicleOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
@@ -47,12 +52,12 @@ function VehicleOperatorUnitElement:add_element()
 	end
 end
 
--- Lines: 39 to 41
+-- Lines 42-44
 function VehicleOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines: 45 to 54
+-- Lines 48-57
 function VehicleOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
@@ -69,7 +74,7 @@ function VehicleOperatorUnitElement:update_editing()
 	end
 end
 
--- Lines: 57 to 73
+-- Lines 60-76
 function VehicleOperatorUnitElement:draw_links_unselected(...)
 	VehicleOperatorUnitElement.super.draw_links_unselected(self, ...)
 
@@ -91,7 +96,7 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines: 76 to 90
+-- Lines 79-93
 function VehicleOperatorUnitElement:draw_links_selected(...)
 	VehicleOperatorUnitElement.super.draw_links_selected(self, ...)
 
@@ -110,11 +115,11 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 	end
 end
 
--- Lines: 93 to 111
+-- Lines 96-114
 function VehicleOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines: 95 to 103
+	-- Lines 98-107
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -138,10 +143,9 @@ function VehicleOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines: 113 to 120
+-- Lines 116-123
 function VehicleOperatorUnitElement:remove_unit_list_btn()
-
-	-- Lines: 113 to 114
+	-- Lines 117-117
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)
 	end
@@ -155,7 +159,7 @@ function VehicleOperatorUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines: 122 to 146
+-- Lines 125-149
 function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -179,4 +183,3 @@ function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator")
 	self:_add_help_text("Choose an operation to perform on the selected elements. An element might not have the selected operation implemented and will then generate error when executed.")
 end
-
