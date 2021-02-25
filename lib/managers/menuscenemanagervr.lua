@@ -96,7 +96,7 @@ function MenuSceneManagerVR:_set_up_environments()
 	}
 end
 
--- Lines 94-165
+-- Lines 94-166
 function MenuSceneManagerVR:_set_up_templates()
 	local ref = self._bg_unit:get_object(Idstring("a_camera_reference"))
 	local c_ref = self._bg_unit:get_object(Idstring("a_reference"))
@@ -141,7 +141,8 @@ function MenuSceneManagerVR:_set_up_templates()
 		"blackmarket_screenshot",
 		"crime_spree_lobby",
 		"crew_management",
-		"blackmarket_item"
+		"blackmarket_item",
+		"movie_theater"
 	}
 
 	for _, template in ipairs(cloned_templates) do
@@ -166,7 +167,7 @@ end
 
 local __set_lobby_character_out_fit = MenuSceneManager.set_lobby_character_out_fit
 
--- Lines 168-176
+-- Lines 169-177
 function MenuSceneManagerVR:set_lobby_character_out_fit(i, outfit_string, rank)
 	__set_lobby_character_out_fit(self, i, outfit_string, rank)
 
@@ -180,7 +181,7 @@ end
 
 local __set_item_unit = MenuSceneManager._set_item_unit
 
--- Lines 179-201
+-- Lines 180-202
 function MenuSceneManagerVR:_set_item_unit(unit, oobb_object, max_mod, type, second_unit, custom_data)
 	__set_item_unit(self, unit, oobb_object, max_mod, type, second_unit, custom_data)
 
@@ -210,7 +211,7 @@ end
 
 local __remove_item = MenuSceneManager.remove_item
 
--- Lines 204-210
+-- Lines 205-211
 function MenuSceneManagerVR:remove_item()
 	__remove_item(self)
 
@@ -222,7 +223,7 @@ end
 
 local __set_scene_template = MenuSceneManager.set_scene_template
 
--- Lines 213-221
+-- Lines 214-222
 function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip_transition)
 	__set_scene_template(self, template, data, custom_name, skip_transition)
 
@@ -233,11 +234,11 @@ function MenuSceneManagerVR:set_scene_template(template, data, custom_name, skip
 	end
 end
 
--- Lines 223-224
+-- Lines 224-225
 function MenuSceneManagerVR:spawn_workbench_room()
 end
 
--- Lines 226-231
+-- Lines 227-232
 function MenuSceneManagerVR:get_henchmen_positioning(index)
 	local pos = Vector3(-180 + 50 * index, 340 + 30 * index, 0)
 	local rot = Rotation(180)
@@ -245,7 +246,7 @@ function MenuSceneManagerVR:get_henchmen_positioning(index)
 	return pos, rot
 end
 
--- Lines 234-252
+-- Lines 235-253
 function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	self._character_text_ws = self._character_text_ws or {}
 	local character = self._lobby_characters[peer_id]
@@ -272,7 +273,7 @@ function MenuSceneManagerVR:create_character_text_panel(peer_id)
 	return panel, panel:center()
 end
 
--- Lines 254-262
+-- Lines 255-263
 function MenuSceneManagerVR:clear_character_text_panels()
 	if not self._character_text_ws then
 		return
@@ -283,7 +284,7 @@ function MenuSceneManagerVR:clear_character_text_panels()
 	end
 end
 
--- Lines 264-272
+-- Lines 265-273
 function MenuSceneManagerVR:_create_economy_safe_scene()
 	local pos = self._scene_templates.safe.character_pos + Vector3(50, 100, 0)
 	local rot = Rotation(30)
@@ -295,7 +296,7 @@ end
 
 local __load_safe_result_content = MenuSceneManager.load_safe_result_content
 
--- Lines 275-281
+-- Lines 276-282
 function MenuSceneManagerVR:load_safe_result_content(...)
 	__load_safe_result_content(self, ...)
 

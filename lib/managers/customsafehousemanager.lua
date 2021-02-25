@@ -1,3 +1,5 @@
+require("lib/managers/custom_safehouse/UnoAchievementChallenge")
+
 local one_day_seconds = 86400
 CustomSafehouseManager = CustomSafehouseManager or class()
 CustomSafehouseManager.SAVE_DATA_VERSION = 2
@@ -15,6 +17,8 @@ function CustomSafehouseManager:init_finalize()
 	if Network:is_server() and managers.job:current_job_id() == "chill" then
 		self:send_room_tiers()
 	end
+
+	self._uno_achievement_challenge:init_finalize()
 end
 
 -- Lines 29-85
@@ -70,6 +74,8 @@ function CustomSafehouseManager:_setup()
 	if not self:unlocked() then
 		self._global._new_player = true
 	end
+
+	self._uno_achievement_challenge = UnoAchievementChallenge:new()
 end
 
 -- Lines 88-137
@@ -116,7 +122,8 @@ function CustomSafehouseManager:save(data)
 		daily = self._global.daily,
 		has_entered_safehouse = self._global._has_entered_safehouse or false,
 		spawn_cooldown = self._global._spawn_cooldown or 0,
-		new_player = self._global._new_player or false
+		new_player = self._global._new_player or false,
+		uno_achievement_challenge = self._uno_achievement_challenge:save()
 	}
 	data.CustomSafehouseManager = state
 end
@@ -181,6 +188,7 @@ function CustomSafehouseManager:load(data, version)
 
 		self:check_if_new_daily_available()
 		self:attempt_give_initial_coins()
+		self._uno_achievement_challenge:load(state.uno_achievement_challenge)
 	end
 end
 
@@ -1158,4 +1166,9 @@ end
 -- Lines 1179-1181
 function CustomSafehouseManager:is_new_player()
 	return self._global._new_player
+end
+
+-- Lines 1184-1186
+function CustomSafehouseManager:uno_achievement_challenge()
+	return self._uno_achievement_challenge
 end

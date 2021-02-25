@@ -40,7 +40,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 54-2569
+-- Lines 54-2571
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -4590,6 +4590,47 @@ function AchievementsTweakData:init(tweak_data)
 			job = "sah",
 			difficulty = sm_wish_and_above
 		},
+		nmh_1 = {
+			award = "nmh_1",
+			job = "nmh",
+			difficulty = normal_and_above
+		},
+		nmh_2 = {
+			award = "nmh_2",
+			job = "nmh",
+			difficulty = hard_and_above
+		},
+		nmh_3 = {
+			award = "nmh_3",
+			job = "nmh",
+			difficulty = veryhard_and_above
+		},
+		nmh_4 = {
+			award = "nmh_4",
+			job = "nmh",
+			difficulty = overkill_and_above
+		},
+		nmh_5 = {
+			award = "nmh_5",
+			job = "nmh",
+			difficulty = easywish_and_above
+		},
+		nmh_6 = {
+			award = "nmh_6",
+			job = "nmh",
+			difficulty = deathwish_and_above
+		},
+		nmh_7 = {
+			award = "nmh_7",
+			job = "nmh",
+			difficulty = sm_wish_and_above
+		},
+		nmh_8 = {
+			award = "nmh_8",
+			one_down = true,
+			job = "nmh",
+			difficulty = sm_wish_and_above
+		},
 		bph_1 = {
 			award = "bph_1",
 			job = "bph",
@@ -4630,6 +4671,74 @@ function AchievementsTweakData:init(tweak_data)
 			one_down = true,
 			job = "bph",
 			difficulty = sm_wish_and_above
+		},
+		vit_1 = {
+			award = "vit_1",
+			job = "vit",
+			difficulty = normal_and_above
+		},
+		vit_2 = {
+			award = "vit_2",
+			job = "vit",
+			difficulty = hard_and_above
+		},
+		vit_3 = {
+			award = "vit_3",
+			job = "vit",
+			difficulty = veryhard_and_above
+		},
+		vit_4 = {
+			award = "vit_4",
+			job = "vit",
+			difficulty = overkill_and_above
+		},
+		vit_5 = {
+			award = "vit_5",
+			job = "vit",
+			difficulty = easywish_and_above
+		},
+		vit_6 = {
+			award = "vit_6",
+			job = "vit",
+			difficulty = deathwish_and_above
+		},
+		vit_7 = {
+			award = "vit_7",
+			job = "vit",
+			difficulty = sm_wish_and_above
+		},
+		vit_8 = {
+			award = "vit_8",
+			one_down = true,
+			job = "vit",
+			difficulty = sm_wish_and_above
+		},
+		vit_11 = {
+			award = "vit_11",
+			job = "vit",
+			masks = {
+				"bush",
+				"clinton",
+				"franklin",
+				"grant",
+				"lincoln",
+				"nixon",
+				"obama",
+				"washington",
+				"win_donald",
+				"win_donald_mega"
+			},
+			difficulty = overkill_and_above
+		},
+		uno_1 = {
+			award = "uno_1",
+			bag_loot_value = 400000,
+			jobs = {
+				"branchbank_prof",
+				"branchbank_gold_prof",
+				"branchbank_cash",
+				"branchbank_deposit"
+			}
 		},
 		bain_jobs = {
 			complete_job = true,
@@ -5562,6 +5671,26 @@ function AchievementsTweakData:init(tweak_data)
 		story_very_hard_henrys_rock = {
 			job = "des",
 			story = "story_very_hard_henrys_rock",
+			difficulty = veryhard_and_above
+		},
+		story_very_hard_sah = {
+			job = "sah",
+			story = "story_very_hard_sah",
+			difficulty = veryhard_and_above
+		},
+		story_very_hard_bph = {
+			job = "bph",
+			story = "story_very_hard_bph",
+			difficulty = veryhard_and_above
+		},
+		story_very_hard_nmh = {
+			job = "nmh",
+			story = "story_very_hard_nmh",
+			difficulty = veryhard_and_above
+		},
+		story_very_hard_vit = {
+			job = "vit",
+			story = "story_very_hard_vit",
 			difficulty = veryhard_and_above
 		},
 		challenge_srtd = {
@@ -7483,7 +7612,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2588-2615
+-- Lines 2590-2617
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -7494,7 +7623,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2597-2608
+	-- Lines 2599-2610
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7524,7 +7653,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2617-2622
+-- Lines 2619-2624
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7537,7 +7666,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2624-2632
+-- Lines 2626-2634
 local function from_level(level)
 	if not level then
 		error()
@@ -7553,7 +7682,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2634-2642
+-- Lines 2636-2644
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7569,7 +7698,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2644-2655
+-- Lines 2646-2657
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7591,7 +7720,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2660-2837
+-- Lines 2662-2839
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -7740,7 +7869,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 2872-3051
+-- Lines 2874-3053
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -7930,16 +8059,16 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 2989-2989
+	-- Lines 2991-2991
 	local function dummy_progress()
 		return 0
 	end
 
-	-- Lines 2991-3027
+	-- Lines 2993-3029
 	local function from_mission_counter(counter, counter_total, inverted)
 		local counter_element, counter_total_element = nil
 
-		-- Lines 2995-3010
+		-- Lines 2997-3012
 		local function get_current()
 			counter_element = counter_element or managers.mission:get_mission_element_by_name(counter)
 
@@ -7957,7 +8086,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 			return current_count
 		end
 
-		-- Lines 3012-3020
+		-- Lines 3014-3022
 		local function get_max()
 			counter_total_element = counter_total_element or managers.mission:get_mission_element_by_name(counter_total)
 

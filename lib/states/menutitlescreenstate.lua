@@ -388,25 +388,26 @@ function MenuTitlescreenState:is_attract_video_delay_done()
 	return TimerManager:main():time() > self._attract_video_time + _G.tweak_data.states.title.ATTRACT_VIDEO_DELAY
 end
 
--- Lines 383-404
+-- Lines 383-405
 function MenuTitlescreenState:play_attract_video()
 	self:reset_attract_video()
 
-	local res = RenderSettings.resolution
+	local screen_width = self._full_workspace:width()
+	local screen_height = self._full_workspace:height()
 	local src_width = 1280
 	local src_height = 720
 	local dest_width, dest_height = nil
 
-	if src_width / src_height > res.x / res.y then
-		dest_width = res.x
+	if src_width / src_height > screen_width / screen_height then
+		dest_width = screen_width
 		dest_height = src_height * dest_width / src_width
 	else
-		dest_height = res.y
+		dest_height = screen_height
 		dest_width = src_width * dest_height / src_height
 	end
 
-	local x = (res.x - dest_width) / 2
-	local y = (res.y - dest_height) / 2
+	local x = (screen_width - dest_width) / 2
+	local y = (screen_height - dest_height) / 2
 	self._attract_video_gui = self._full_workspace:panel():video({
 		video = "movies/attract",
 		x = x,
@@ -420,7 +421,7 @@ function MenuTitlescreenState:play_attract_video()
 	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and self:get_video_volume() or 0)
 end
 
--- Lines 406-436
+-- Lines 407-437
 function MenuTitlescreenState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
@@ -451,7 +452,7 @@ function MenuTitlescreenState:at_exit()
 	managers.system_menu:init_finalize()
 end
 
--- Lines 438-445
+-- Lines 439-446
 function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_user_changed")
 
@@ -460,7 +461,7 @@ function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	end
 end
 
--- Lines 447-452
+-- Lines 448-453
 function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_storage_changed")
 

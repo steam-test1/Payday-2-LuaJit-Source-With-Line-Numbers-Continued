@@ -181,7 +181,7 @@ function AssetsTweakData:_init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 189-1727
+-- Lines 189-1736
 function AssetsTweakData:_init_assets(tweak_data)
 	self.safe_escape = {
 		name_id = "menu_asset_safe_escape",
@@ -235,7 +235,8 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"fish",
 			"dah",
 			"tag",
-			"sah"
+			"sah",
+			"vit"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_bodybags_bag_desc",
@@ -317,7 +318,9 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"brb",
 			"des",
 			"sah",
-			"bph"
+			"bph",
+			"vit",
+			"nmh"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_grenade_crate_desc",
@@ -370,7 +373,9 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"brb",
 			"des",
 			"sah",
-			"bph"
+			"bph",
+			"vit",
+			"nmh"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_ammo_desc",
@@ -420,7 +425,9 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"brb",
 			"des",
 			"sah",
-			"bph"
+			"bph",
+			"vit",
+			"nmh"
 		},
 		visible_if_locked = true,
 		unlock_desc_id = "menu_asset_health_desc",
@@ -1389,7 +1396,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 	}
 end
 
--- Lines 1730-1777
+-- Lines 1739-1786
 function AssetsTweakData:_init_debug_assets(tweak_data)
 	self.debug_1 = {
 		name_id = "debug_1",
@@ -1454,7 +1461,7 @@ function AssetsTweakData:_init_debug_assets(tweak_data)
 	}
 end
 
--- Lines 1779-1816
+-- Lines 1788-1825
 function AssetsTweakData:debug_assets()
 	local levels = {}
 
@@ -1462,7 +1469,7 @@ function AssetsTweakData:debug_assets()
 		levels[level_id] = 0
 	end
 
-	-- Lines 1785-1793
+	-- Lines 1794-1802
 	local function f(id)
 		if id == "all" then
 			for i, d in pairs(levels) do

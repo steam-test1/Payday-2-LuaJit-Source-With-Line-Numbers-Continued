@@ -65,6 +65,19 @@ TimerGui.themes.bry_control_display.jammed = {
 TimerGui.themes.bry_control_display.upgrade_color_0 = Color(0, 0, 0)
 TimerGui.themes.bry_control_display.upgrade_color_1 = Color(0.2, 0.3, 0.4)
 TimerGui.themes.bry_control_display.upgrade_color_2 = TimerGui.themes.bry_control_display.timer_color
+TimerGui.themes.vit_control_display = {
+	hide_background = true,
+	timer_color = Color(0, 1, 0.7)
+}
+TimerGui.themes.vit_control_display.working_text_color = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.vit_control_display.time_header_text_color = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.vit_control_display.time_text_color = TimerGui.themes.vit_control_display.timer_color
+TimerGui.themes.vit_control_display.jammed = {
+	bg_rect = Color(0.1, 0, 0)
+}
+TimerGui.themes.vit_control_display.upgrade_color_0 = Color(0, 0, 0)
+TimerGui.themes.vit_control_display.upgrade_color_1 = Color(0.2, 0.3, 0.4)
+TimerGui.themes.vit_control_display.upgrade_color_2 = TimerGui.themes.vit_control_display.timer_color
 TimerGui.themes.lxy_control_display = {
 	hide_background = true,
 	jammed = {}
@@ -93,7 +106,7 @@ TimerGui.EVENT_IDS = {
 	unjammed = 2
 }
 
--- Lines 106-132
+-- Lines 120-146
 function TimerGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -117,12 +130,12 @@ function TimerGui:init(unit)
 	self._update_enabled = false
 end
 
--- Lines 134-136
+-- Lines 148-150
 function TimerGui:set_can_jam(can_jam)
 	self._can_jam = can_jam
 end
 
--- Lines 138-148
+-- Lines 152-162
 function TimerGui:set_jam_times(amount)
 	if not self._can_jam then
 		Application:error("[Drill]", "This Drill cannot jam, use another one.")
@@ -139,19 +152,19 @@ function TimerGui:set_jam_times(amount)
 	self._jam_times = amount
 end
 
--- Lines 150-152
+-- Lines 164-166
 function TimerGui:set_override_timer(override_timer)
 	self._override_timer = override_timer
 end
 
--- Lines 154-158
+-- Lines 168-172
 function TimerGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(0, 0, gui_object, Vector3(0, 0, 0))
 	self._gui = self._ws:panel():gui(Idstring("guis/timer_gui"))
 	self._gui_script = self._gui:script()
 end
 
--- Lines 160-166
+-- Lines 174-180
 function TimerGui:get_upgrade_icon_color(upgrade_color)
 	if not self.THEME then
 		return TimerGui.upgrade_colors[upgrade_color]
@@ -162,7 +175,7 @@ function TimerGui:get_upgrade_icon_color(upgrade_color)
 	return theme and theme[upgrade_color] or TimerGui.upgrade_colors[upgrade_color]
 end
 
--- Lines 168-236
+-- Lines 182-250
 function TimerGui:_set_theme(theme_name)
 	local theme = TimerGui.themes[theme_name]
 
@@ -236,7 +249,7 @@ function TimerGui:_set_theme(theme_name)
 	self:_set_original_colors()
 end
 
--- Lines 238-244
+-- Lines 252-258
 function TimerGui:_set_original_colors()
 	self._original_colors = {}
 
@@ -245,7 +258,7 @@ function TimerGui:_set_original_colors()
 	end
 end
 
--- Lines 246-299
+-- Lines 260-313
 function TimerGui:setup()
 	self._gui_script.working_text:set_render_template(Idstring("Text"))
 	self._gui_script.time_header_text:set_render_template(Idstring("Text"))
@@ -292,7 +305,7 @@ function TimerGui:setup()
 	self._gui_script.panel:set_alpha(1)
 end
 
--- Lines 302-308
+-- Lines 316-322
 function TimerGui:reset()
 	self._started = false
 
@@ -302,7 +315,7 @@ function TimerGui:reset()
 	end
 end
 
--- Lines 310-342
+-- Lines 324-356
 function TimerGui:_start(timer, current_timer)
 	self._started = true
 	self._done = false
@@ -329,7 +342,7 @@ function TimerGui:_start(timer, current_timer)
 	self:_set_jamming_values()
 end
 
--- Lines 345-358
+-- Lines 359-372
 function TimerGui:_set_jamming_values()
 	if not self._can_jam then
 		return
@@ -347,19 +360,19 @@ function TimerGui:_set_jamming_values()
 	self._current_jam_timer = table.remove(self._jamming_intervals, 1)
 end
 
--- Lines 360-362
+-- Lines 374-376
 function TimerGui:set_timer_multiplier(multiplier)
 	self._timer_multiplier = multiplier
 end
 
--- Lines 364-368
+-- Lines 378-382
 function TimerGui:set_skill(skill)
 	if self._skill == nil or self._skill < skill then
 		self._skill = skill
 	end
 end
 
--- Lines 370-393
+-- Lines 384-407
 function TimerGui:set_background_icons(background_icons)
 	local panel = self._gui_script.panel
 	local background_icons_panel = panel:child("background_icons_panel") or panel:panel({
@@ -391,7 +404,7 @@ function TimerGui:set_background_icons(background_icons)
 	self._gui_script.panel:set_alpha(alpha)
 end
 
--- Lines 395-411
+-- Lines 409-425
 function TimerGui:start(timer)
 	timer = self._override_timer or timer
 
@@ -416,12 +429,12 @@ function TimerGui:start(timer)
 	end
 end
 
--- Lines 413-415
+-- Lines 427-429
 function TimerGui:sync_start(timer)
 	self:_start(timer)
 end
 
--- Lines 417-457
+-- Lines 431-471
 function TimerGui:update(unit, t, dt)
 	if self._jammed then
 		self._gui_script.drill_screen_background:set_color(self._gui_script.drill_screen_background:color():with_alpha(0.5 + (math.sin(t * 750) + 1) / 4))
@@ -465,19 +478,19 @@ function TimerGui:update(unit, t, dt)
 	end
 end
 
--- Lines 459-462
+-- Lines 473-476
 function TimerGui:set_visible(visible)
 	self._visible = visible
 
 	self._gui:set_visible(visible)
 end
 
--- Lines 464-466
+-- Lines 478-480
 function TimerGui:is_visible()
 	return self._visible
 end
 
--- Lines 468-474
+-- Lines 482-488
 function TimerGui:sync_net_event(event_id)
 	if event_id == TimerGui.EVENT_IDS.jammed then
 		self:_set_jammed(true)
@@ -486,7 +499,7 @@ function TimerGui:sync_net_event(event_id)
 	end
 end
 
--- Lines 480-495
+-- Lines 494-509
 function TimerGui:set_jammed(jammed)
 	if managers.network:session() then
 		local event_id = jammed and TimerGui.EVENT_IDS.jammed or TimerGui.EVENT_IDS.unjammed
@@ -497,7 +510,7 @@ function TimerGui:set_jammed(jammed)
 	self:_set_jammed(jammed)
 end
 
--- Lines 498-571
+-- Lines 512-585
 function TimerGui:_set_jammed(jammed)
 	self._jammed = jammed
 
@@ -583,12 +596,12 @@ function TimerGui:_set_jammed(jammed)
 	end
 end
 
--- Lines 573-577
+-- Lines 587-591
 function TimerGui:set_powered(powered, enable_interaction)
 	self:_set_powered(powered, enable_interaction)
 end
 
--- Lines 579-652
+-- Lines 593-666
 function TimerGui:_set_powered(powered, enable_interaction)
 	self._powered = powered
 
@@ -647,7 +660,7 @@ function TimerGui:_set_powered(powered, enable_interaction)
 	self._unit:base():set_powered(powered)
 end
 
--- Lines 654-665
+-- Lines 668-679
 function TimerGui:done()
 	self:_set_done()
 
@@ -662,7 +675,7 @@ function TimerGui:done()
 	end
 end
 
--- Lines 667-675
+-- Lines 681-689
 function TimerGui:_set_done()
 	self._done = true
 
@@ -674,7 +687,7 @@ function TimerGui:_set_done()
 	self._unit:base():done()
 end
 
--- Lines 677-683
+-- Lines 691-697
 function TimerGui:update_sound_event()
 	if self._done or not self._started or self._jammed or not self._powered then
 		return
@@ -683,13 +696,13 @@ function TimerGui:update_sound_event()
 	self:post_event(self._resume_event)
 end
 
--- Lines 685-688
+-- Lines 699-702
 function TimerGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 690-696
+-- Lines 704-710
 function TimerGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -699,7 +712,7 @@ function TimerGui:destroy()
 	end
 end
 
--- Lines 698-712
+-- Lines 712-726
 function TimerGui:save(data)
 	local state = {
 		update_enabled = self._update_enabled,
@@ -716,7 +729,7 @@ function TimerGui:save(data)
 	data.TimerGui = state
 end
 
--- Lines 714-734
+-- Lines 728-748
 function TimerGui:load(data)
 	local state = data.TimerGui
 
@@ -744,7 +757,7 @@ function TimerGui:load(data)
 	self:set_timer_multiplier(state.timer_multiplier or 1)
 end
 
--- Lines 736-751
+-- Lines 750-765
 function TimerGui:post_event(event)
 	if not event then
 		return
@@ -765,7 +778,7 @@ end
 
 DrillTimerGui = DrillTimerGui or class(TimerGui)
 
--- Lines 755-771
+-- Lines 769-785
 function DrillTimerGui:post_event(event)
 	if not event then
 		return

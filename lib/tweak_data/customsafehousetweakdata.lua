@@ -28,6 +28,7 @@ function CustomSafehouseTweakData:init(tweak_data)
 	self:_init_trophies(tweak_data)
 	self:_init_dailies(tweak_data)
 	self:_init_map(tweak_data)
+	self:_init_uno()
 
 	self.daily_redirects = {
 		daily_sewers = "daily_helicopter",
@@ -717,7 +718,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines 759-1594
+-- Lines 759-1606
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1484,6 +1485,22 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 		}
 	})
 	table.insert(self.trophies, {
+		id = "trophy_device_assembled",
+		gives_reward = false,
+		hidden_in_list = true,
+		objectives = {
+			self:_progress("trophy_device_assembled", 1)
+		}
+	})
+	table.insert(self.trophies, {
+		id = "trophy_device_opened",
+		gives_reward = false,
+		hidden_in_list = true,
+		objectives = {
+			self:_progress("trophy_device_opened", 1)
+		}
+	})
+	table.insert(self.trophies, {
 		id = "trophy_vlads_cupcake",
 		gives_reward = false,
 		hidden_in_list = true,
@@ -1492,9 +1509,19 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 			self:_achievement("trk_dm_0")
 		}
 	})
+	table.insert(self.trophies, {
+		name_id = "trophy_bains_book",
+		image_id = "safehouse_trophies_preview_bains_book",
+		objective_id = "trophy_bains_book_completion_objective",
+		id = "trophy_bains_book",
+		desc_id = "trophy_bains_book_desc",
+		objectives = {
+			self:_achievement("nmh_1")
+		}
+	})
 end
 
--- Lines 1596-1603
+-- Lines 1608-1615
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1505,7 +1532,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines 1605-1614
+-- Lines 1617-1626
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1519,7 +1546,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines 1616-1966
+-- Lines 1628-1978
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1847,7 +1874,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines 1968-1974
+-- Lines 1980-1986
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1856,7 +1883,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines 1978-2195
+-- Lines 1990-2207
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,
@@ -2078,5 +2105,79 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 		icon = "safehouse_character_icon_ecp",
 		x = 1140,
 		y = 830
+	}
+end
+
+-- Lines 2210-2303
+function CustomSafehouseTweakData:_init_uno()
+	self.uno_achievements_pool = {
+		"armored_1",
+		"armored_2",
+		"bat_2",
+		"berry_2",
+		"bigbank_5",
+		"bob_3",
+		"born_5",
+		"bph_11",
+		"brb_8",
+		"cac_13",
+		"cac_26",
+		"cac_9",
+		"cane_2",
+		"charliesierra_5",
+		"cow_10",
+		"cow_4",
+		"dah_9",
+		"dark_3",
+		"diamonds_are_forever",
+		"doctor_fantastic",
+		"fish_5",
+		"fort_4",
+		"green_6",
+		"halloween_2",
+		"i_wasnt_even_there",
+		"jerry_4",
+		"kenaz_4",
+		"kosugi_2",
+		"lets_do_this",
+		"live_2",
+		"lord_of_war",
+		"man_2",
+		"melt_3",
+		"moon_5",
+		"nmh_10",
+		"pal_2",
+		"payback_2",
+		"peta_3",
+		"pig_2",
+		"run_10",
+		"rvd_11",
+		"sah_10",
+		"spa_5",
+		"tag_10",
+		"trk_af_3",
+		"trk_fs_3",
+		"trk_sh_3",
+		"uno_1",
+		"uno_2",
+		"uno_3",
+		"uno_4",
+		"uno_5",
+		"uno_6",
+		"uno_7",
+		"uno_8",
+		"uno_9",
+		"wwh_9"
+	}
+	self.uno_notes = {
+		"26c470e6125f7011",
+		"f6341f24fdee897e",
+		"7246dea0602ee2bc",
+		"4bae9a1ce071f5ac",
+		"88ceb778cad2166a",
+		"88ceb778cad2166a",
+		"4bae9a1ce071f5ac",
+		"7246dea0602ee2bc",
+		"f6341f24fdee897e"
 	}
 end

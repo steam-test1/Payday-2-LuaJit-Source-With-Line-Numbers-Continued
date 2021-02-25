@@ -3,8 +3,9 @@ HuskTeamAIInventory.preload_mask = TeamAIInventory.preload_mask
 HuskTeamAIInventory.clbk_mask_unit_loaded = TeamAIInventory.clbk_mask_unit_loaded
 HuskTeamAIInventory._reset_mask_visibility = TeamAIInventory._reset_mask_visibility
 HuskTeamAIInventory._ensure_weapon_visibility = TeamAIInventory._ensure_weapon_visibility
+HuskTeamAIInventory.set_visibility_state = TeamAIInventory.set_visibility_state
 
--- Lines 10-21
+-- Lines 11-22
 function HuskTeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
@@ -23,19 +24,19 @@ function HuskTeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	CopInventory.add_unit(self, new_unit, equip)
 end
 
--- Lines 23-26
+-- Lines 24-27
 function HuskTeamAIInventory:pre_destroy()
 	HuskTeamAIInventory.super.pre_destroy(self)
 	TeamAIInventory._unload_mask(self)
 end
 
--- Lines 29-34
+-- Lines 30-35
 function HuskTeamAIInventory:add_unit(new_unit, equip)
 	HuskTeamAIInventory.super.add_unit(self, new_unit, equip)
 	self:_ensure_weapon_visibility(new_unit)
 end
 
--- Lines 38-43
+-- Lines 39-44
 function HuskTeamAIInventory:equip_selection(selection_index, instant)
 	local res = HuskTeamAIInventory.super.equip_selection(self, selection_index, instant)
 

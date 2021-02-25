@@ -561,3 +561,21 @@ function reprofile()
 
 	__old_profiled = {}
 end
+
+-- Lines 491-503
+function safe_get_value(table, ...)
+	local keys = {
+		...
+	}
+	local value = table
+
+	for _, key in ipairs(keys) do
+		value = value[key]
+
+		if value == nil then
+			break
+		end
+	end
+
+	return value
+end

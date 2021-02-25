@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 5-5519
+-- Lines 5-5545
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -60,22 +60,23 @@ function DLCTweakData:init(tweak_data)
 			gage_pack_snp = true,
 			dlc1 = true,
 			ghm = true,
+			ssm = true,
 			steel = true,
-			hlm2 = true,
 			pd2_million = true,
-			speedrunners = 1,
+			hlm2 = true,
 			mmh = true,
 			fgl = true,
 			pd2_hw_boxing = true,
-			alienware_alpha = true,
+			speedrunners = 1,
 			infamous = 1,
 			pines = true,
-			humble_summer_2015 = 1,
+			alienware_alpha = true,
 			born = true,
+			humble_summer_2015 = 1,
 			khp = true,
-			apa = true,
 			trk = true,
 			pmp = true,
+			apa = true,
 			wmp = true,
 			opera = true,
 			pd2_goty = 1,

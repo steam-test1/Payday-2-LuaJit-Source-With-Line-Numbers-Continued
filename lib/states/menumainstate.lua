@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-213
+-- Lines 9-218
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -178,9 +178,11 @@ function MenuMainState:at_enter(old_state)
 			difficulty = Global.exe_argument_difficulty
 		})
 	end
+
+	managers.statistics:check_stats()
 end
 
--- Lines 221-234
+-- Lines 226-239
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -193,11 +195,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 236-246
+-- Lines 241-251
 function MenuMainState:update(t, dt)
 end
 
--- Lines 248-253
+-- Lines 253-258
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -206,7 +208,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 255-269
+-- Lines 260-274
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -225,13 +227,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 271-277
+-- Lines 276-282
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 279-282
+-- Lines 284-287
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -239,6 +241,6 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 284-285
+-- Lines 289-290
 function MenuMainState:on_disconnected()
 end
