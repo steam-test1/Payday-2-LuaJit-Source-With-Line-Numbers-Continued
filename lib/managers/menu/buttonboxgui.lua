@@ -1,6 +1,6 @@
 ButtonBoxGui = ButtonBoxGui or class(TextBoxGui)
 
--- Lines 4-64
+-- Lines 4-68
 function ButtonBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	self._button_list = button_list
 	local has_buttons = button_list and #button_list > 0
@@ -43,6 +43,11 @@ function ButtonBoxGui:_setup_buttons_panel(info_area, button_list, focus_button,
 					name = button.id_name
 				})
 				button_text_config.text = utf8.to_upper(button.text or "")
+
+				if button_text_config.text == "" then
+					button_text_config.text = " "
+				end
+
 				local text = button_panel:text(button_text_config)
 				local _, _, w, h = text:text_rect()
 				max_w = math.max(max_w, w)
@@ -74,12 +79,12 @@ function ButtonBoxGui:_setup_buttons_panel(info_area, button_list, focus_button,
 	return buttons_panel
 end
 
--- Lines 66-68
+-- Lines 70-72
 function ButtonBoxGui:_override_info_area_size(info_area, scroll_panel, buttons_panel)
 	info_area:set_h(math.min(scroll_panel:bottom() + buttons_panel:h() + 10 + 5, 620))
 end
 
--- Lines 70-81
+-- Lines 74-85
 function ButtonBoxGui:set_focus_button(focus_button, allow_callbacks)
 	if focus_button ~= self._text_box_focus_button then
 		managers.menu:post_event("highlight")
@@ -94,7 +99,7 @@ function ButtonBoxGui:set_focus_button(focus_button, allow_callbacks)
 	end
 end
 
--- Lines 83-97
+-- Lines 87-101
 function ButtonBoxGui:_set_button_selected(index, is_selected, allow_callbacks)
 	ButtonBoxGui.super._set_button_selected(self, index, is_selected)
 
@@ -111,7 +116,7 @@ function ButtonBoxGui:_set_button_selected(index, is_selected, allow_callbacks)
 	end
 end
 
--- Lines 99-113
+-- Lines 103-117
 function ButtonBoxGui:change_focus_button(change, override_at)
 	local button_count = self._text_box_buttons_panel:num_children() - 1
 	local focus_button = ((override_at or self._text_box_focus_button) + change) % button_count
@@ -129,7 +134,7 @@ function ButtonBoxGui:change_focus_button(change, override_at)
 	self:set_focus_button(focus_button)
 end
 
--- Lines 115-123
+-- Lines 119-127
 function ButtonBoxGui:_scroll_buttons(direction)
 	local SCROLL_SPEED = 28
 	local speed = SCROLL_SPEED * TimerManager:main():delta_time() * 200
@@ -139,7 +144,7 @@ function ButtonBoxGui:_scroll_buttons(direction)
 	self._text_box_buttons_panel:set_y(new_y)
 end
 
--- Lines 125-132
+-- Lines 129-136
 function ButtonBoxGui:mouse_wheel_up(x, y)
 	local used = ButtonBoxGui.super.mouse_wheel_up(self, x, y)
 
@@ -152,7 +157,7 @@ function ButtonBoxGui:mouse_wheel_up(x, y)
 	return used
 end
 
--- Lines 134-141
+-- Lines 138-145
 function ButtonBoxGui:mouse_wheel_down(x, y)
 	local used = ButtonBoxGui.super.mouse_wheel_down(self, x, y)
 

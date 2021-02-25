@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-880
+-- Lines 29-901
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -554,6 +554,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 300
 		self.small_loot.vault_loot_jewels = 600
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 769
 	elseif difficulty_index == 3 then
 		self.small_loot.money_bundle = 1000
 		self.small_loot.money_bundle_value = 10000
@@ -580,6 +581,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 750
 		self.small_loot.vault_loot_jewels = 1200
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 1538
 	elseif difficulty_index == 4 then
 		self.small_loot.money_bundle = 1000
 		self.small_loot.money_bundle_value = 10000
@@ -606,6 +608,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 1750
 		self.small_loot.vault_loot_jewels = 3000
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 3838
 	elseif difficulty_index == 5 then
 		self.small_loot.money_bundle = 1000
 		self.small_loot.money_bundle_value = 10000
@@ -632,6 +635,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 3500
 		self.small_loot.vault_loot_jewels = 5775
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 7692
 	elseif difficulty_index == 6 then
 		self.small_loot.money_bundle = 1000
 		self.small_loot.money_bundle_value = 10000
@@ -658,6 +662,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 4500
 		self.small_loot.vault_loot_jewels = 7500
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 11000
 	elseif difficulty_index == 7 then
 		self.small_loot.money_bundle = 1000
 		self.small_loot.money_bundle_value = 10000
@@ -684,6 +689,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 4500
 		self.small_loot.vault_loot_jewels = 7500
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 11000
 	else
 		self.small_loot.money_bundle = 1000
 		self.small_loot.money_bundle_value = 10000
@@ -710,6 +716,7 @@ function MoneyTweakData:init(tweak_data)
 		self.small_loot.vault_loot_ring = 4500
 		self.small_loot.vault_loot_jewels = 7500
 		self.small_loot.vault_loot_macka = 1
+		self.small_loot.federali_medal = 11000
 	end
 
 	self.max_small_loot_value = 2800000

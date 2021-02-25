@@ -992,7 +992,22 @@ function TeamAIDamage:arrested()
 	return self._arrested_timer
 end
 
--- Lines 990-1063
+-- Lines 990-1006
+function TeamAIDamage:revive_instant()
+	if self._bleed_out or self._fatal then
+		self:_regenerated()
+		self._unit:interaction():set_active(false, false)
+		PlayerMovement.set_attention_settings(self._unit:brain(), {
+			"team_enemy_cbt"
+		}, "team_AI")
+		self._unit:network():send("from_server_unit_recovered")
+	end
+
+	managers.hud:set_mugshot_normal(self._unit:unit_data().mugshot_id)
+	self:pickup_dropped_bag()
+end
+
+-- Lines 1008-1070
 function TeamAIDamage:revive(reviving_unit, silent)
 	if self._dead then
 		return
@@ -1055,6 +1070,11 @@ function TeamAIDamage:revive(reviving_unit, silent)
 		self._unit:sound():say("s05x_sin", true)
 	end
 
+	self:pickup_dropped_bag()
+end
+
+-- Lines 1074-1086
+function TeamAIDamage:pickup_dropped_bag()
 	local dropped_bag = self._unit:movement():was_carrying_bag()
 
 	if dropped_bag and alive(dropped_bag.unit) then
@@ -1071,7 +1091,7 @@ function TeamAIDamage:revive(reviving_unit, silent)
 	end
 end
 
--- Lines 1067-1075
+-- Lines 1092-1100
 function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 	local attacker = attack_data.attacker_unit
@@ -1085,7 +1105,7 @@ function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	self._unit:network():send("from_server_damage_bullet", attacker, hit_offset_height, result_index)
 end
 
--- Lines 1079-1086
+-- Lines 1104-1111
 function TeamAIDamage:_send_explosion_attack_result(attack_data)
 	local attacker = attack_data.attacker_unit
 
@@ -1098,7 +1118,7 @@ function TeamAIDamage:_send_explosion_attack_result(attack_data)
 	self._unit:network():send("from_server_damage_explosion_fire", attacker, result_index, CopDamage._get_attack_variant_index(self, attack_data.variant))
 end
 
--- Lines 1088-1095
+-- Lines 1113-1120
 function TeamAIDamage:_send_fire_attack_result(attack_data)
 	local attacker = attack_data.attacker_unit
 
@@ -1111,7 +1131,7 @@ function TeamAIDamage:_send_fire_attack_result(attack_data)
 	self._unit:network():send("from_server_damage_explosion_fire", attacker, result_index, CopDamage._get_attack_variant_index(self, attack_data.variant))
 end
 
--- Lines 1099-1107
+-- Lines 1124-1132
 function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 	local attacker = attack_data.attacker_unit
@@ -1125,12 +1145,12 @@ function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	self._unit:network():send("from_server_damage_melee", attacker, hit_offset_height, result_index)
 end
 
--- Lines 1111-1113
+-- Lines 1136-1138
 function TeamAIDamage:_send_tase_attack_result()
 	self._unit:network():send("from_server_damage_tase")
 end
 
--- Lines 1117-1145
+-- Lines 1142-1170
 function TeamAIDamage:on_tase_ended()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -1161,14 +1181,14 @@ function TeamAIDamage:on_tase_ended()
 	end
 end
 
--- Lines 1149-1152
+-- Lines 1174-1177
 function TeamAIDamage:clbk_exit_to_incapacitated()
 	self._to_incapacitated_clbk_id = nil
 
 	self:_on_incapacitated()
 end
 
--- Lines 1156-1161
+-- Lines 1181-1186
 function TeamAIDamage:on_incapacitated()
 	if self:_cannot_take_damage() then
 		return
@@ -1177,7 +1197,7 @@ function TeamAIDamage:on_incapacitated()
 	self:_on_incapacitated()
 end
 
--- Lines 1165-1191
+-- Lines 1190-1216
 function TeamAIDamage:_on_incapacitated()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -1213,7 +1233,7 @@ function TeamAIDamage:_on_incapacitated()
 	self._unit:network():send("from_server_damage_incapacitated")
 end
 
--- Lines 1195-1215
+-- Lines 1220-1240
 function TeamAIDamage:clbk_exit_to_dead()
 	managers.mission:call_global_event("ai_in_custody")
 
@@ -1234,22 +1254,22 @@ function TeamAIDamage:clbk_exit_to_dead()
 	self:_unregister_unit()
 end
 
--- Lines 1219-1221
+-- Lines 1244-1246
 function TeamAIDamage:pre_destroy()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines 1225-1233
+-- Lines 1250-1258
 function TeamAIDamage:_cannot_take_damage()
 	return self._invulnerable or self._dead or self._fatal or self._arrested_timer
 end
 
--- Lines 1237-1239
+-- Lines 1262-1264
 function TeamAIDamage:disable()
 	self:_clear_damage_transition_callbacks()
 end
 
--- Lines 1243-1252
+-- Lines 1268-1277
 function TeamAIDamage:_clear_damage_transition_callbacks()
 	if self._to_incapacitated_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._to_incapacitated_clbk_id)
@@ -1264,17 +1284,17 @@ function TeamAIDamage:_clear_damage_transition_callbacks()
 	end
 end
 
--- Lines 1256-1258
+-- Lines 1281-1283
 function TeamAIDamage:last_suppression_t()
 	return self._last_received_dmg_t
 end
 
--- Lines 1262-1264
+-- Lines 1287-1289
 function TeamAIDamage:can_attach_projectiles()
 	return false
 end
 
--- Lines 1268-1281
+-- Lines 1293-1306
 function TeamAIDamage:save(data)
 	if self._arrested_timer then
 		data.char_dmg = data.char_dmg or {}

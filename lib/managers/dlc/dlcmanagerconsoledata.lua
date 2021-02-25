@@ -29,7 +29,8 @@ local free_dlcs = {
 	"mex",
 	"mwm",
 	"trd",
-	"bex"
+	"bex",
+	"hnd"
 }
 
 -- Lines 162-177

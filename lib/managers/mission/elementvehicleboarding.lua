@@ -21,7 +21,7 @@ function ElementVehicleBoarding:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 21-109
+-- Lines 21-114
 function ElementVehicleBoarding:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -62,26 +62,30 @@ function ElementVehicleBoarding:on_executed(instigator)
 			seat_index = #ordered_seats - (#team_ai + #players) + 1
 
 			for _, heister in ipairs(team_ai) do
-				local seat = ordered_seats[seat_index]
-				seat_index = seat_index + 1
-				local movement_ext = heister.unit:movement()
-				local brain_ext = heister.unit:brain()
+				if alive(heister.unit) then
+					local seat = ordered_seats[seat_index]
+					seat_index = seat_index + 1
+					local movement_ext = heister.unit:movement()
+					local brain_ext = heister.unit:brain()
+					local damage_ext = heister.unit:character_damage()
 
-				vehicle_ext:_create_seat_SO(seat, true)
+					vehicle_ext:_create_seat_SO(seat, true)
 
-				local so_data = seat.drive_SO_data
-				so_data.unit = heister.unit
-				so_data.ride_objective.action.align_sync = true
+					local so_data = seat.drive_SO_data
+					so_data.unit = heister.unit
+					so_data.ride_objective.action.align_sync = true
 
-				brain_ext:set_objective(so_data.ride_objective)
-				managers.network:session():send_to_peers("sync_ai_vehicle_action", "enter", vehicle, seat.name, heister.unit)
+					damage_ext:revive_instant()
+					brain_ext:set_objective(so_data.ride_objective)
+					managers.network:session():send_to_peers("sync_ai_vehicle_action", "enter", vehicle, seat.name, heister.unit)
 
-				movement_ext.vehicle_unit = vehicle
-				movement_ext.vehicle_seat = seat
+					movement_ext.vehicle_unit = vehicle
+					movement_ext.vehicle_seat = seat
 
-				movement_ext:set_position(seat.object:position())
-				movement_ext:set_rotation(seat.object:rotation())
-				movement_ext:action_request(so_data.ride_objective.action)
+					movement_ext:set_position(seat.object:position())
+					movement_ext:set_rotation(seat.object:rotation())
+					movement_ext:action_request(so_data.ride_objective.action)
+				end
 			end
 		else
 			seat_index = #ordered_seats - #players + 1
@@ -91,8 +95,10 @@ function ElementVehicleBoarding:on_executed(instigator)
 			local seat = ordered_seats[seat_index]
 			seat_index = seat_index + 1
 
-			if heister.unit == managers.player:player_unit() then
-				managers.player:enter_vehicle(vehicle, seat.object)
+			if alive(heister.unit) and heister.unit == managers.player:player_unit() then
+				local object = vehicle:get_object(Idstring(VehicleDrivingExt.INTERACTION_PREFIX .. seat.name)) or seat.object
+
+				managers.player:enter_vehicle(vehicle, object)
 
 				break
 			end
@@ -109,12 +115,12 @@ function ElementVehicleBoarding:on_executed(instigator)
 	ElementVehicleBoarding.super.on_executed(self, instigator)
 end
 
--- Lines 111-113
+-- Lines 116-118
 function ElementVehicleBoarding:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines 115-117
+-- Lines 120-122
 function ElementVehicleBoarding:load(data)
 	self:set_enabled(data.enabled)
 end

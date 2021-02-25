@@ -390,7 +390,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 412-2462
+-- Lines 412-2465
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -705,6 +705,7 @@ function TweakData:init()
 
 	self.hud_icons = HudIconsTweakData:new()
 	self.weapon = WeaponTweakData:new(self)
+	self.weapon_akimbo_mappings = self.weapon:get_akimbo_mappings()
 	local weapon_tweak_meta = {
 		__index = function (table, key)
 			if key == "category" then
@@ -794,6 +795,7 @@ function TweakData:init()
 	self.raid_jobs = RaidJobsTweakData:new(self)
 
 	self.blackmarket:build_player_style_list(self)
+	self.blackmarket:build_glove_list(self)
 
 	self.ai_carry = {
 		throw_distance = 500,
@@ -1823,6 +1825,9 @@ Play the full version soon to get your full PAYDAY!]],
 			track = "track_68"
 		},
 		{
+			track = "track_69"
+		},
+		{
 			track = "track_pth_01",
 			lock = "payday"
 		},
@@ -2720,7 +2725,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2466-2482
+-- Lines 2469-2485
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2738,7 +2743,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2487-2584
+-- Lines 2490-2592
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2781,10 +2786,15 @@ function TweakData:init_screen_colors()
 	self.screen_colors.stats_positive = Color(255, 191, 221, 125) / 255
 	self.screen_colors.stats_negative = Color(255, 254, 93, 99) / 255
 	self.screen_colors.stats_mods = Color(255, 229, 229, 76) / 255
+	self.screen_colors.dark_bg = Color(0.65, 0, 0, 0)
 
 	if Global.test_new_colors then
+		local r, g, b = Color.purple:unpack()
+
 		for i, d in pairs(self.screen_colors) do
-			self.screen_colors[i] = Color.purple
+			self.screen_colors[i].r = r
+			self.screen_colors[i].g = g
+			self.screen_colors[i].b = b
 		end
 	end
 
@@ -2817,19 +2827,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2588-2668
+-- Lines 2596-2676
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2672-2674
+-- Lines 2680-2682
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2678-2686
+-- Lines 2686-2694
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2840,7 +2850,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2690-2693
+-- Lines 2698-2701
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2850,7 +2860,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2697-2706
+-- Lines 2705-2714
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2863,7 +2873,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2710-2886
+-- Lines 2718-2894
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3052,7 +3062,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 2888-3061
+-- Lines 2896-3069
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3166,7 +3176,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3063-3135
+-- Lines 3071-3143
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3239,7 +3249,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3138-3142
+-- Lines 3146-3150
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3257,7 +3267,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3159-3374
+-- Lines 3167-3382
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

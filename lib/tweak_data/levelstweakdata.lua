@@ -4,15 +4,17 @@ LevelsTweakData.LevelType = {
 	Russia = "russia",
 	Zombie = "zombie",
 	Murkywater = "murkywater",
+	Federales = "federales",
 	Federales = "federales"
 }
 
--- Lines 17-2655
+-- Lines 17-2693
 function LevelsTweakData:init()
 	local america = LevelsTweakData.LevelType.America
 	local russia = LevelsTweakData.LevelType.Russia
 	local zombie = LevelsTweakData.LevelType.Zombie
 	local murkywater = LevelsTweakData.LevelType.Murkywater
+	local federales = LevelsTweakData.LevelType.Federales
 	local federales = LevelsTweakData.LevelType.Federales
 	self.ai_groups = {
 		default = america,
@@ -20,6 +22,7 @@ function LevelsTweakData:init()
 		russia = russia,
 		zombie = zombie,
 		murkywater = murkywater,
+		federales = federales,
 		federales = federales
 	}
 	self.framing_frame_1 = {
@@ -2070,6 +2073,83 @@ function LevelsTweakData:init()
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/bex/textures/loading/job_bex_01_df"
 	}
+	self.pex = {
+		name_id = "heist_pex_hl",
+		briefing_id = "heist_pex_briefing",
+		briefing_dialog = "Play_loc_pex_brf",
+		world_name = "narratives/locke/pex",
+		intro_event = "Play_loc_pex_intro",
+		outro_event = {
+			loud = "Play_loc_pex_end_loud",
+			stealth = "Play_loc_pex_end_stealth"
+		},
+		music = "heist",
+		package = "packages/job_pex",
+		cube = "cube_apply_heist_bank",
+		block_AIs = {
+			old_hoxton = true
+		},
+		ai_group_type = federales,
+		narrator = "locke",
+		ghost_bonus = 0.15,
+		teams = {
+			criminal1 = {
+				foes = {
+					law1 = true,
+					mobster1 = true
+				},
+				friends = {
+					converted_enemy = true,
+					escort = true
+				}
+			},
+			law1 = {
+				foes = {
+					converted_enemy = true,
+					criminal1 = true,
+					mobster1 = true
+				},
+				friends = {}
+			},
+			mobster1 = {
+				foes = {
+					converted_enemy = true,
+					law1 = true,
+					criminal1 = true
+				},
+				friends = {}
+			},
+			converted_enemy = {
+				foes = {
+					law1 = true,
+					mobster1 = true
+				},
+				friends = {
+					criminal1 = true,
+					escort = true
+				}
+			},
+			neutral1 = {
+				foes = {},
+				friends = {}
+			},
+			hacked_turret = {
+				foes = {
+					law1 = true,
+					mobster1 = true
+				},
+				friends = {}
+			},
+			escort = {
+				foes = {},
+				friends = {
+					converted_enemy = true,
+					criminal1 = true
+				}
+			}
+		},
+		load_screen = "guis/dlcs/pex/textures/loading/job_pex_01_df"
+	}
 	self._level_index = {
 		"welcome_to_the_jungle_1",
 		"welcome_to_the_jungle_1_night",
@@ -2188,7 +2268,8 @@ function LevelsTweakData:init()
 		"bph",
 		"mex",
 		"mex_cooking",
-		"bex"
+		"bex",
+		"pex"
 	}
 
 	if SystemInfo:distribution() == Idstring("STEAM") then
@@ -2213,12 +2294,12 @@ function LevelsTweakData:init()
 	}
 end
 
--- Lines 2659-2661
+-- Lines 2697-2699
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
--- Lines 2663-2668
+-- Lines 2701-2706
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -2227,12 +2308,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
--- Lines 2672-2674
+-- Lines 2710-2712
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
--- Lines 2678-2684
+-- Lines 2716-2722
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2241,7 +2322,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
--- Lines 2688-2694
+-- Lines 2726-2732
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -2250,17 +2331,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
--- Lines 2696-2698
+-- Lines 2734-2736
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
--- Lines 2700-2702
+-- Lines 2738-2740
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
--- Lines 2706-2712
+-- Lines 2744-2750
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2269,7 +2350,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 2714-2720
+-- Lines 2752-2758
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2278,7 +2359,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 2722-2728
+-- Lines 2760-2766
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -2287,7 +2368,7 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
--- Lines 2730-2783
+-- Lines 2768-2821
 function LevelsTweakData:get_music_switches()
 	if not Global.level_data then
 		return nil
@@ -2347,7 +2428,7 @@ function LevelsTweakData:get_music_switches()
 	return switches
 end
 
--- Lines 2785-2795
+-- Lines 2823-2833
 function LevelsTweakData:get_music_event(stage)
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music_id = level_data and level_data.music or "default"
@@ -2359,7 +2440,7 @@ function LevelsTweakData:get_music_event(stage)
 	return tweak_data.music[music_id][stage]
 end
 
--- Lines 2797-2804
+-- Lines 2835-2842
 function LevelsTweakData:get_music_event_ext()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music = level_data and level_data.music_ext
@@ -2368,7 +2449,7 @@ function LevelsTweakData:get_music_event_ext()
 	return music, music_start
 end
 
--- Lines 2807-2861
+-- Lines 2845-2899
 function LevelsTweakData:get_music_event_ext_ghost()
 	if not Global.level_data then
 		return nil, nil
@@ -2428,7 +2509,7 @@ function LevelsTweakData:get_music_event_ext_ghost()
 	return table.random(ghost_music_exts), level_data.music_ext_start
 end
 
--- Lines 2865-2883
+-- Lines 2903-2921
 function LevelsTweakData:get_default_team_ID(type)
 	local lvl_tweak = self[Global.level_data.level_id]
 
@@ -2451,7 +2532,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
--- Lines 2885-2912
+-- Lines 2923-2950
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -2516,7 +2597,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines 2914-2932
+-- Lines 2952-2970
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -2531,7 +2612,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
--- Lines 2934-2948
+-- Lines 2972-2986
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -2551,7 +2632,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines 2950-2957
+-- Lines 2988-2995
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 
@@ -2562,7 +2643,7 @@ function LevelsTweakData:get_team_index(team_id)
 	end
 end
 
--- Lines 2959-2970
+-- Lines 2997-3008
 function LevelsTweakData:get_ai_group_type()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 

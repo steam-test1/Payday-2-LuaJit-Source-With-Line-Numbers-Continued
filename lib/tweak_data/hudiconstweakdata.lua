@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3002
+-- Lines 7-3041
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -1569,6 +1569,51 @@ function HudIconsTweakData:init()
 	}
 	self.equipment_tape = {
 		texture = "guis/dlcs/bex/textures/pd2/hud_pickups_tape",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_boltcutter = {
+		texture = "guis/dlcs/pex/textures/pd2/hud_pickups_boltcutter",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_policebadge = {
+		texture = "guis/dlcs/pex/textures/pd2/hud_pickups_policebadge",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_flammable = {
+		texture = "guis/textures/pd2/hud_pickups",
+		texture_rect = {
+			64,
+			64,
+			32,
+			32
+		}
+	}
+	self.equipment_rfid_tag_01 = {
+		texture = "guis/dlcs/pex/textures/pd2/hud_pickups_rfid_tag_01",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_rfid_tag_02 = {
+		texture = "guis/dlcs/pex/textures/pd2/hud_pickups_rfid_tag_02",
 		texture_rect = {
 			0,
 			0,
@@ -13538,6 +13583,105 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_LowMurder = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_PaidInFull = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakfastInTijuana_StolenValor = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_pex",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
 	self.C_Bain_H_Arena_Holdout_3 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
 		texture_rect = {
@@ -13878,7 +14022,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3005-3008
+-- Lines 3044-3047
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -13891,7 +14035,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3010-3026
+-- Lines 3049-3065
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -13917,7 +14061,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3028-3033
+-- Lines 3067-3072
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -13931,7 +14075,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3035-3041
+-- Lines 3074-3080
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -13942,7 +14086,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3043-3049
+-- Lines 3082-3088
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

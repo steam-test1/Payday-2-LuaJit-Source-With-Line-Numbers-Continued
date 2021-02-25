@@ -436,7 +436,7 @@ function PlayerEquipment:remove_sentry_deployement_cost(sentry_uid)
 	end
 end
 
--- Lines 388-425
+-- Lines 388-430
 function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	if self._sentrygun_placement_requested then
 		return
@@ -453,9 +453,12 @@ function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 
 		local ammo_level = managers.player:upgrade_value("sentry_gun", "extra_ammo_multiplier", 1)
 		local armor_multiplier = 1 + managers.player:upgrade_value("sentry_gun", "armor_multiplier", 1) - 1 + managers.player:upgrade_value("sentry_gun", "armor_multiplier2", 1) - 1
+		local can_switch_fire_mode = managers.player:has_category_upgrade("sentry_gun", "ap_bullets")
+		local equipment_name = managers.player:equipment_in_slot(selected_index)
+		local fire_mode_index = can_switch_fire_mode and managers.player:get_equipment_setting(equipment_name, "fire_mode") or 1
 
 		if Network:is_client() then
-			managers.network:session():send_to_host("place_sentry_gun", pos, rot, selected_index, self._unit, unit_idstring_index, ammo_level)
+			managers.network:session():send_to_host("place_sentry_gun", pos, rot, selected_index, self._unit, unit_idstring_index, ammo_level, fire_mode_index)
 
 			self._sentrygun_placement_requested = true
 
@@ -469,8 +472,9 @@ function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 
 				local fire_rate_reduction = managers.player:upgrade_value("sentry_gun", "fire_rate_reduction", 1)
 
-				managers.network:session():send_to_peers_synched("from_server_sentry_gun_place_result", managers.network:session():local_peer():id(), selected_index, sentry_gun_unit, rot_level, spread_level, shield, ammo_level)
+				managers.network:session():send_to_peers_synched("from_server_sentry_gun_place_result", managers.network:session():local_peer():id(), selected_index, sentry_gun_unit, rot_level, spread_level, shield, ammo_level, fire_mode_index)
 				sentry_gun_unit:event_listener():call("on_setup", true)
+				sentry_gun_unit:base():post_setup(fire_mode_index)
 			else
 				return false
 			end
@@ -482,28 +486,28 @@ function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	return false
 end
 
--- Lines 428-432
+-- Lines 433-437
 function PlayerEquipment:use_flash_grenade()
 	self._grenade_name = "units/weapons/flash_grenade/flash_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines 434-437
+-- Lines 439-442
 function PlayerEquipment:use_smoke_grenade()
 	self._grenade_name = "units/weapons/smoke_grenade/smoke_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines 439-442
+-- Lines 444-447
 function PlayerEquipment:use_frag_grenade()
 	self._grenade_name = "units/weapons/frag_grenade/frag_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines 445-457
+-- Lines 450-462
 function PlayerEquipment:throw_flash_grenade()
 	if not self._grenade_name then
 		Application:error("Tried to throw a grenade with no name")
@@ -521,7 +525,7 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
--- Lines 459-487
+-- Lines 464-492
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
@@ -551,7 +555,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 489-509
+-- Lines 494-514
 function PlayerEquipment:throw_grenade()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
@@ -575,7 +579,7 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 513-517
+-- Lines 518-522
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -584,7 +588,7 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
--- Lines 521-526
+-- Lines 526-531
 function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	if self._sentrygun_placement_requested then
 		self:_sentry_gun_ammo_cost(sentry_gun_id)
@@ -593,7 +597,7 @@ function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	self._sentrygun_placement_requested = nil
 end
 
--- Lines 530-535
+-- Lines 535-540
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)

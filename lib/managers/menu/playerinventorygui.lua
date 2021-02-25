@@ -855,7 +855,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self._player_stats_panel = player_panel:panel({
 		name = "player_stats_panel",
 		x = 10,
-		h = 160,
+		h = 180,
 		w = player_panel:w() - 20
 	})
 
@@ -1803,6 +1803,11 @@ function PlayerInventoryGui:setup_player_stats(panel)
 		},
 		{
 			name = "dodge",
+			procent = true,
+			revert = true
+		},
+		{
+			name = "crit",
 			procent = true,
 			revert = true
 		},
@@ -4683,6 +4688,13 @@ function PlayerInventoryGui:open_armor_menu(selected_tab)
 		override_slots = override_slots,
 		identifier = BlackMarketGui.identifiers.player_style
 	})
+	table.insert(new_node_data, {
+		name = "bm_menu_gloves",
+		on_create_func_name = "populate_gloves",
+		category = "gloves",
+		override_slots = override_slots,
+		identifier = BlackMarketGui.identifiers.glove
+	})
 
 	new_node_data.topic_id = "bm_menu_outfits"
 	new_node_data.selected_tab = selected_tab
@@ -6040,7 +6052,7 @@ function PlayerInventoryGui:_get_melee_weapon_stats(name)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 4418-4515
+-- Lines 4418-4521
 function PlayerInventoryGui:_get_armor_stats(name)
 	local base_stats = {}
 	local mods_stats = {}
@@ -6112,6 +6124,15 @@ function PlayerInventoryGui:_get_armor_stats(name)
 			}
 			skill_stats[stat.name] = {
 				value = managers.player:skill_dodge_chance(false, false, false, name, detection_risk) * 100
+			}
+		elseif stat.name == "crit" then
+			local base = 0
+			local mod = managers.player:body_armor_value("crit", upgrade_level)
+			base_stats[stat.name] = {
+				value = (base + mod) * 100
+			}
+			skill_stats[stat.name] = {
+				value = managers.player:critical_hit_chance(detection_risk) * 100
 			}
 		elseif stat.name == "damage_shake" then
 			local base = tweak_data.gui.armor_damage_shake_base

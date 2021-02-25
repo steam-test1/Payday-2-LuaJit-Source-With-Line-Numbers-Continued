@@ -41,7 +41,7 @@ function LootDropManager:add_qlvl_to_weapon_mods(override_tweak_data)
 	end
 end
 
--- Lines 69-131
+-- Lines 69-135
 function LootDropManager:_setup_items()
 	local pc_items = {}
 	Global.lootdrop_manager.pc_items = pc_items
@@ -82,14 +82,20 @@ function LootDropManager:_setup_items()
 		end
 	end
 
+	local k, v = nil
+
 	for key, data in pairs(tweak_data.blackmarket) do
 		if type(data) == "table" then
-			sort_pc(key, data)
+			k, v = next(data)
+
+			if type(v) == "table" then
+				sort_pc(key, data)
+			end
 		end
 	end
 end
 
--- Lines 134-166
+-- Lines 138-170
 function LootDropManager:new_debug_drop(amount, add_to_inventory, stars)
 	amount = amount or 10
 	add_to_inventory = add_to_inventory or false
@@ -127,7 +133,7 @@ function LootDropManager:new_debug_drop(amount, add_to_inventory, stars)
 	Global.debug_drop_result = self._debug_drop_result
 end
 
--- Lines 168-252
+-- Lines 172-256
 function LootDropManager:droppable_items(item_pc, infamous_success, skip_types)
 	local plvl = managers.experience:current_level()
 	local xp_no_next_lv = managers.experience:next_level_data_points() - managers.experience:next_level_data_current_points()
@@ -222,7 +228,7 @@ function LootDropManager:droppable_items(item_pc, infamous_success, skip_types)
 	return droppable_items, maxed_inventory_items
 end
 
--- Lines 254-273
+-- Lines 258-277
 function LootDropManager:infamous_chance(setup_data)
 	local infamous_diff = 1
 
@@ -245,12 +251,12 @@ function LootDropManager:infamous_chance(setup_data)
 	return chance * multiplier, chance, multiplier
 end
 
--- Lines 275-277
+-- Lines 279-281
 function LootDropManager:get_random_item_pc(setup_data)
 	return self:_get_random_item_pc(false, nil, setup_data)
 end
 
--- Lines 279-312
+-- Lines 283-316
 function LootDropManager:_get_random_item_pc(debug, debug_stars, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -294,14 +300,14 @@ function LootDropManager:_get_random_item_pc(debug, debug_stars, setup_data)
 	return item_pc
 end
 
--- Lines 314-317
+-- Lines 318-321
 function LootDropManager:new_make_drop(return_data, setup_data)
 	return_data = type(return_data) == "table" and return_data or {}
 
 	self:_new_make_drop(false, true, nil, return_data, setup_data)
 end
 
--- Lines 319-413
+-- Lines 323-417
 function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, return_data, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -408,7 +414,7 @@ function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, re
 	return global_value, pc_type, entry, pc
 end
 
--- Lines 416-530
+-- Lines 420-534
 function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -514,7 +520,7 @@ function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_
 	return co
 end
 
--- Lines 534-567
+-- Lines 538-571
 function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	amount = amount or 10
 	add_to_inventory = add_to_inventory or false
@@ -552,14 +558,14 @@ function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	Global.debug_drop_result = self._debug_drop_result
 end
 
--- Lines 569-572
+-- Lines 573-576
 function LootDropManager:make_drop(return_data)
 	return_data = type(return_data) == "table" and return_data or {}
 
 	self:_make_drop(false, true, nil, return_data)
 end
 
--- Lines 574-931
+-- Lines 578-935
 function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return_data)
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
 	local all_humans = human_players == 4
@@ -775,7 +781,7 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 	end
 end
 
--- Lines 933-945
+-- Lines 937-949
 function LootDropManager:_get_type_items(normalized_chance, debug)
 	local seed = math.rand(1)
 
@@ -802,14 +808,14 @@ function LootDropManager:_get_type_items(normalized_chance, debug)
 	return next(normalized_chance)
 end
 
--- Lines 947-950
+-- Lines 951-954
 function LootDropManager:reset()
 	Global.lootdrop_manager = nil
 
 	self:_setup()
 end
 
--- Lines 952-999
+-- Lines 956-1003
 function LootDropManager:can_drop_weapon_mods()
 	local plvl = managers.experience:current_level()
 	local dropable_items = {}
@@ -861,7 +867,7 @@ function LootDropManager:can_drop_weapon_mods()
 	return #dropable_items > 0
 end
 
--- Lines 1001-1008
+-- Lines 1005-1012
 function LootDropManager:specific_fake_loot_pc(preferred)
 	local to_drop = {
 		cash = 3,
@@ -876,7 +882,7 @@ function LootDropManager:specific_fake_loot_pc(preferred)
 	return to_drop[preferred] or 1
 end
 
--- Lines 1010-1039
+-- Lines 1014-1043
 function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	local sum = 0
 	local to_drop = {
@@ -914,7 +920,7 @@ function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	return 1
 end
 
--- Lines 1067-1084
+-- Lines 1071-1088
 function LootDropManager:debug_check_items(check_type)
 	local t = {}
 
@@ -937,7 +943,7 @@ function LootDropManager:debug_check_items(check_type)
 	return t
 end
 
--- Lines 1086-1114
+-- Lines 1090-1118
 function LootDropManager:debug_loot_aquire_method(type)
 	local no_pcs = managers.lootdrop:debug_check_items(type)
 	local t = {
@@ -982,7 +988,7 @@ function LootDropManager:debug_loot_aquire_method(type)
 	return t
 end
 
--- Lines 1116-1136
+-- Lines 1120-1140
 function LootDropManager:debug_print_pc_items(check_type)
 	for type, data in pairs(tweak_data.blackmarket) do
 		if not check_type or type == check_type then
@@ -1006,12 +1012,12 @@ function LootDropManager:debug_print_pc_items(check_type)
 	end
 end
 
--- Lines 1139-1141
+-- Lines 1143-1145
 function LootDropManager:save(data)
 	data.LootDropManager = self._global
 end
 
--- Lines 1144-1146
+-- Lines 1148-1150
 function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end

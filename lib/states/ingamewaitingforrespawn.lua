@@ -291,7 +291,7 @@ local mrot_set_axis_angle = mrotation.set_axis_angle
 local mrot_set_look_at = mrotation.set_look_at
 local math_up = math.UP
 
--- Lines 308-465
+-- Lines 308-469
 function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	self:_refresh_teammate_list()
 
@@ -367,8 +367,10 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 
 			mvec3_set(self._vec_target, target_pos)
 
-			local oobb = vehicle_unit:oobb()
-			local up = oobb:z() * 2.5
+			local spectate_object = vehicle_unit:vehicle_driving() and vehicle_unit:vehicle_driving().spectate_object and vehicle_unit:get_object(Idstring(vehicle_unit:vehicle_driving().spectate_object)) or vehicle_unit
+			local oobb = spectate_object:oobb()
+			local z_offset = vehicle_unit:vehicle_driving() and vehicle_unit:vehicle_driving().spectate_offset or 2.5
+			local up = oobb:z() * z_offset
 
 			mvec3_add(self._vec_target, up)
 		else
@@ -412,7 +414,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	end
 end
 
--- Lines 469-545
+-- Lines 473-549
 function IngameWaitingForRespawnState:at_enter()
 	if _G.IS_VR then
 		managers.menu:open_menu("custody")
@@ -494,7 +496,7 @@ function IngameWaitingForRespawnState:at_enter()
 	end
 end
 
--- Lines 549-583
+-- Lines 553-587
 function IngameWaitingForRespawnState:at_exit()
 	if _G.IS_VR then
 		managers.menu:close_menu("custody")
@@ -528,7 +530,7 @@ function IngameWaitingForRespawnState:at_exit()
 	managers.hud:set_player_condition("mugshot_normal", "")
 end
 
--- Lines 587-630
+-- Lines 591-634
 function IngameWaitingForRespawnState:_refresh_teammate_list()
 	local all_teammates = self._spectator_data.teammate_records
 	local teammate_list = self._spectator_data.teammate_list
@@ -578,7 +580,7 @@ function IngameWaitingForRespawnState:_refresh_teammate_list()
 	end
 end
 
--- Lines 634-640
+-- Lines 638-644
 function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	for i_key, test_u_key in ipairs(self._spectator_data.teammate_list) do
 		if test_u_key == u_key then
@@ -587,11 +589,11 @@ function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	end
 end
 
--- Lines 644-673
+-- Lines 648-677
 function IngameWaitingForRespawnState:watch_priority_character()
 	self:_refresh_teammate_list()
 
-	-- Lines 647-654
+	-- Lines 651-658
 	local function try_watch_unit(unit_key)
 		if table.contains(self._spectator_data.teammate_list, unit_key) then
 			self._spectator_data.watch_u_key = unit_key
@@ -620,7 +622,7 @@ function IngameWaitingForRespawnState:watch_priority_character()
 	self._dis_curr = nil
 end
 
--- Lines 677-694
+-- Lines 681-698
 function IngameWaitingForRespawnState:cb_next_player()
 	self:_refresh_teammate_list()
 
@@ -637,7 +639,7 @@ function IngameWaitingForRespawnState:cb_next_player()
 	self._dis_curr = nil
 end
 
--- Lines 698-715
+-- Lines 702-719
 function IngameWaitingForRespawnState:cb_prev_player()
 	self:_refresh_teammate_list()
 
@@ -660,7 +662,7 @@ function IngameWaitingForRespawnState:cb_prev_player()
 	self._dis_curr = nil
 end
 
--- Lines 719-772
+-- Lines 723-776
 function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
 	managers.hud:set_custody_can_be_trade_visible(false)
 
@@ -691,12 +693,12 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 	end
 end
 
--- Lines 774-776
+-- Lines 778-780
 function IngameWaitingForRespawnState:finish_trade()
 	self:_begin_game_enter_transition()
 end
 
--- Lines 778-805
+-- Lines 782-809
 function IngameWaitingForRespawnState:begin_trade()
 	managers.hud:set_custody_can_be_trade_visible(true)
 
@@ -720,22 +722,22 @@ function IngameWaitingForRespawnState:begin_trade()
 	self._play_too_long_line_t = Application:time() + 60
 end
 
--- Lines 807-809
+-- Lines 811-813
 function IngameWaitingForRespawnState:cancel_trade()
 	managers.hud:set_custody_can_be_trade_visible(false)
 end
 
--- Lines 811-813
+-- Lines 815-817
 function IngameWaitingForRespawnState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 815-817
+-- Lines 819-821
 function IngameWaitingForRespawnState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 819-821
+-- Lines 823-825
 function IngameWaitingForRespawnState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

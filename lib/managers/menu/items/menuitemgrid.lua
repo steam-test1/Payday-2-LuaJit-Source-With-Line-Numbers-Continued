@@ -586,8 +586,12 @@ function MenuItemGrid:close(row_item)
 	self._requested_textures = {}
 end
 
--- Lines 511-523
+-- Lines 511-527
 function MenuItemGrid:option_texture_loaded_clbk(option, texture_idstring)
+	if not alive(option.gui_panel) then
+		return
+	end
+
 	option.gui_icon = option.gui_panel:bitmap({
 		blend_mode = "normal",
 		texture = texture_idstring
@@ -604,7 +608,7 @@ function MenuItemGrid:option_texture_loaded_clbk(option, texture_idstring)
 	self:_update_option_icon_size(option)
 end
 
--- Lines 525-545
+-- Lines 529-549
 function MenuItemGrid:_update_option_icon_size(option)
 	if not option.gui_icon then
 		return
@@ -624,7 +628,7 @@ function MenuItemGrid:_update_option_icon_size(option)
 	option.gui_icon:set_center(panel_width / 2, panel_height / 2)
 end
 
--- Lines 547-564
+-- Lines 551-568
 function MenuItemGrid:clear_gui(row_item)
 	if row_item.scroll_panel then
 		self.scroll_y = -row_item.scroll_panel:canvas():y()
@@ -641,7 +645,7 @@ function MenuItemGrid:clear_gui(row_item)
 	end
 end
 
--- Lines 566-581
+-- Lines 570-585
 function MenuItemGrid:highlight_row_item(node, row_item, mouse_over)
 	if row_item.gui_info_panel then
 		row_item.gui_info_panel:set_visible(true)
@@ -661,7 +665,7 @@ function MenuItemGrid:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines 583-592
+-- Lines 587-596
 function MenuItemGrid:fade_row_item(node, row_item, mouse_over)
 	if row_item.gui_info_panel then
 		row_item.gui_info_panel:set_visible(false)
@@ -673,14 +677,14 @@ function MenuItemGrid:fade_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines 594-597
+-- Lines 598-601
 function MenuItemGrid:align_panel(row_item, item_panel)
 	row_item.gui_panel:set_center_x(item_panel:w() / 2)
 
 	return true
 end
 
--- Lines 599-604
+-- Lines 603-608
 function MenuItemGrid:align_marker(row_item, marker_data, node_gui)
 	marker_data.gradient:hide()
 	marker_data.marker:hide()
@@ -688,7 +692,7 @@ function MenuItemGrid:align_marker(row_item, marker_data, node_gui)
 	return true
 end
 
--- Lines 606-612
+-- Lines 610-616
 function MenuItemGrid:update_selection_position(row_item)
 	local current_option = self._options[self._current_index]
 
@@ -699,7 +703,7 @@ function MenuItemGrid:update_selection_position(row_item)
 	row_item.selection_panel:set_position(selection_option.gui_panel:position())
 end
 
--- Lines 614-624
+-- Lines 618-628
 function MenuItemGrid:_create_gui_box(row_item, box_name, panel, sides, visible)
 	if row_item.gui_boxes[box_name] then
 		row_item.gui_boxes[box_name]:close()

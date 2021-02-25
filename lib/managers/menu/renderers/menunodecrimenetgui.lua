@@ -210,9 +210,8 @@ function MenuNodeCrimenetFiltersGui:_setup_item_panel(safe_rect, res)
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
 	self.box_panel:rect({
-		alpha = 0.6,
 		rotation = 360,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 	self._align_data.panel:set_left(self.box_panel:left())
 	self._list_arrows.up:set_world_left(self._align_data.panel:world_left())
@@ -1556,9 +1555,8 @@ function MenuNodeCrimenetContactInfoGui:_setup_layout()
 
 	self._panel:set_center(panel:w() / 2, panel:h() / 2)
 	self._panel:rect({
-		alpha = 0.6,
 		layer = 0,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 	BoxGuiObject:new(self._panel, {
 		sides = {
@@ -2066,9 +2064,8 @@ function MenuNodeCrimenetContactShortGui:_setup_layout()
 
 	self._panel:set_center(panel:w() / 2, panel:h() / 2)
 	self._panel:rect({
-		alpha = 0.6,
 		layer = 0,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 	BoxGuiObject:new(self._panel, {
 		sides = {
@@ -2645,9 +2642,8 @@ function MenuNodeCrimenetContactChillGui:_setup_layout()
 
 	self._panel:set_center(panel:w() / 2, panel:h() / 2)
 	self._panel:rect({
-		alpha = 0.6,
 		layer = 0,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 	BoxGuiObject:new(self._panel, {
 		sides = {
@@ -3412,9 +3408,8 @@ function MenuNodeCrimenetGageAssignmentGui:_setup_layout()
 
 	self:_set_panel_position(panel)
 	self._panel:rect({
-		alpha = 0.6,
 		layer = 0,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 	BoxGuiObject:new(self._panel, {
 		sides = {
@@ -4497,9 +4492,8 @@ function MenuNodeChooseWeaponRewardGui:_setup_item_panel(safe_rect, res)
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
 	self.box_panel:rect({
-		alpha = 0.6,
 		rotation = 360,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 	self._align_data.panel:set_left(self.box_panel:left())
 	self._list_arrows.up:set_world_left(self._align_data.panel:world_left())
@@ -4648,9 +4642,8 @@ function MenuNodeChooseWeaponCosmeticGui:_setup_item_panel(safe_rect, res)
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
 	self.box_panel:rect({
-		alpha = 0.6,
 		rotation = 360,
-		color = Color.black
+		color = tweak_data.screen_colors.dark_bg
 	})
 
 	if alive(self.blur_panel) then

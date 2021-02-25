@@ -296,6 +296,12 @@ function GenericDLCManager:give_dlc_package()
 						add_to_inventory = false
 					end
 
+					if add_to_inventory and loot_drop.type_items == "gloves" then
+						managers.blackmarket:on_aquired_glove_id(loot_drop.item_entry)
+
+						add_to_inventory = false
+					end
+
 					if add_to_inventory then
 						for i = 1, loot_drop.amount or 1 do
 							local entry = tweak_data.blackmarket[loot_drop.type_items][loot_drop.item_entry]
@@ -362,6 +368,14 @@ function GenericDLCManager:give_missing_package()
 				if check_loot_drop and loot_drop.type_items == "suit_variations" then
 					if not managers.blackmarket:suit_variation_unlocked(loot_drop.item_entry[1], loot_drop.item_entry[2]) then
 						managers.blackmarket:on_aquired_suit_variation(loot_drop.item_entry[1], loot_drop.item_entry[2])
+					end
+
+					check_loot_drop = false
+				end
+
+				if check_loot_drop and loot_drop.type_items == "gloves" then
+					if not managers.blackmarket:glove_id_unlocked(loot_drop.item_entry) then
+						managers.blackmarket:on_aquired_glove_id(loot_drop.item_entry)
 					end
 
 					check_loot_drop = false
@@ -2220,9 +2234,12 @@ function WINDLCManager:init()
 	self:_init_promoted_dlc_list()
 end
 
--- Lines 2535-2650
+-- Lines 2535-2659
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"pex",
+		"wcc",
+		"atw",
 		"bex",
 		"afp",
 		"wcs",
@@ -2270,12 +2287,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 2652-2654
+-- Lines 2661-2663
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 2656-2672
+-- Lines 2665-2681
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -2292,7 +2309,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines 2674-2689
+-- Lines 2683-2698
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2301,7 +2318,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 2692-2732
+-- Lines 2701-2741
 function WINDLCManager:check_pdth(clbk)
 	if not self._check_pdth_request and clbk and Global.dlc_manager.has_pdth ~= nil then
 		clbk(Global.dlc_manager.has_pdth, Global.dlc_manager.pdth_tester)
@@ -2319,7 +2336,7 @@ function WINDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 2708-2727
+		-- Lines 2717-2736
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2354,7 +2371,7 @@ function WINDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 2736-2747
+-- Lines 2745-2756
 function WINDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2372,7 +2389,7 @@ function WINDLCManager:chk_vr_dlc()
 	return nil
 end
 
--- Lines 2750-2757
+-- Lines 2759-2766
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

@@ -128,7 +128,7 @@ end
 ChatGui = ChatGui or class(ChatBase)
 ChatGui.line_height = 22
 
--- Lines 137-245
+-- Lines 137-249
 function ChatGui:init(ws)
 	self._ws = ws
 	self._hud_panel = ws:panel()
@@ -293,23 +293,27 @@ function ChatGui:init(ws)
 	self._enabled = true
 
 	if MenuCallbackHandler:is_win32() then
+		self._num_new_messages = 0
+		self._chat_button_show_string = managers.localization:to_upper_text("menu_cn_chat_show", {
+			BTN_BACK = managers.localization:btn_macro("toggle_chat")
+		})
+		self._chat_button_hide_string = managers.localization:to_upper_text("menu_cn_chat_hide", {
+			BTN_BACK = managers.localization:btn_macro("toggle_chat")
+		})
 		local chat_button_panel = self._hud_panel:panel({
 			name = "chat_button_panel"
 		})
 		local chat_button = chat_button_panel:text({
+			text = "",
 			name = "chat_button",
 			blend_mode = "add",
 			layer = 40,
-			text = managers.localization:to_upper_text("menu_cn_chat_show", {
-				BTN_BACK = managers.localization:btn_macro("toggle_chat")
-			}),
 			font_size = tweak_data.menu.pd2_small_font_size,
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.screen_colors.button_stage_3
 		})
-		local _, _, w, h = chat_button:text_rect()
 
-		chat_button:set_size(w, h)
+		self:update_chat_button()
 		chat_button:set_right(chat_button_panel:w() / 2)
 		chat_button:set_bottom(chat_button_panel:h() - 11)
 
@@ -349,9 +353,9 @@ function ChatGui:init(ws)
 	end
 end
 
--- Lines 247-252
+-- Lines 251-256
 function ChatGui:start_hud_blur()
-	-- Lines 248-250
+	-- Lines 252-254
 	local function func(o)
 		over(0.6, function (p)
 			o:set_alpha(math.lerp(0, 1, p))
@@ -361,39 +365,72 @@ function ChatGui:start_hud_blur()
 	self._hud_blur:animate(func)
 end
 
--- Lines 254-257
+-- Lines 258-261
 function ChatGui:stop_hud_blur()
 	self._hud_blur:stop()
 	self._hud_blur:set_alpha(0)
 end
 
--- Lines 259-278
+-- Lines 263-280
+function ChatGui:update_chat_button()
+	local chat_button_panel = self._hud_panel:child("chat_button_panel")
+	local chat_button = chat_button_panel:child("chat_button")
+	local show_chat_string = not self._crimenet_chat_state
+	local new_messages = self._num_new_messages
+	local chat_string = show_chat_string and self._chat_button_show_string or self._chat_button_hide_string
+
+	if new_messages and new_messages > 0 then
+		chat_button:set_text(chat_string .. " (" .. tostring(new_messages) .. ")")
+	else
+		chat_button:set_text(chat_string)
+	end
+
+	local x, y, w, h = chat_button:text_rect()
+
+	chat_button:set_size(math.ceil(w), math.ceil(h))
+end
+
+-- Lines 282-311
 function ChatGui:start_notify_new_message()
-	if MenuCallbackHandler:is_win32() and not self._crimenet_chat_state and not self._notifying_new_msg then
-		self._notifying_new_msg = true
+	if MenuCallbackHandler:is_win32() then
+		if not self._crimenet_chat_state and not self._notifying_new_msg then
+			self._notifying_new_msg = true
 
-		-- Lines 264-269
-		local function func(o)
-			over(0.1, function (p)
-				o:set_alpha(math.lerp(0, 0.6, p))
-			end)
-
-			while true do
-				over(2, function (p)
-					o:set_alpha(math.abs(math.cos(p * 360)) * 0.4 + 0.2)
+			-- Lines 287-292
+			local function func(o)
+				over(0.1, function (p)
+					o:set_alpha(math.lerp(0, 0.6, p))
 				end)
+
+				while true do
+					over(2, function (p)
+						o:set_alpha(math.abs(math.cos(p * 360)) * 0.4 + 0.2)
+					end)
+				end
 			end
+
+			local chat_button_panel = self._hud_panel:child("chat_button_panel")
+			local new_msg_flash = chat_button_panel:child("new_msg_flash")
+
+			new_msg_flash:stop()
+			new_msg_flash:animate(func)
 		end
 
-		local chat_button_panel = self._hud_panel:child("chat_button_panel")
-		local new_msg_flash = chat_button_panel:child("new_msg_flash")
+		if not self._crimenet_chat_state then
+			self._num_new_messages = self._num_new_messages + 1
 
-		new_msg_flash:stop()
-		new_msg_flash:animate(func)
+			self:update_chat_button()
+
+			local chat_button_panel = self._hud_panel:child("chat_button_panel")
+			local chat_button = chat_button_panel:child("chat_button")
+
+			managers.menu_component:set_preplanning_drawboard(chat_button:right() + 15, chat_button:top())
+			managers.menu_component:post_event("chat_ping")
+		end
 	end
 end
 
--- Lines 280-291
+-- Lines 313-327
 function ChatGui:stop_notify_new_message()
 	if MenuCallbackHandler:is_win32() and self._notifying_new_msg then
 		self._notifying_new_msg = false
@@ -402,16 +439,20 @@ function ChatGui:stop_notify_new_message()
 
 		new_msg_flash:stop()
 		new_msg_flash:set_alpha(0)
+
+		self._num_new_messages = 0
+
+		self:update_chat_button()
 	end
 end
 
--- Lines 293-296
+-- Lines 329-332
 function ChatGui:set_leftbottom(left, bottom)
 	self._panel:set_left(left)
 	self._panel:set_bottom(self._panel:parent():h() - bottom)
 end
 
--- Lines 298-311
+-- Lines 334-347
 function ChatGui:set_max_lines(max_lines)
 	self._max_lines = max_lines
 
@@ -451,7 +492,7 @@ ChatGui.PRESETS = {
 		chat_blur = true,
 		left = 0,
 		is_crimenet_chat = true,
-		chat_bg_alpha = 0.25,
+		chat_bg_alpha = 0.75,
 		bottom = 0,
 		layer = tweak_data.gui.CRIMENET_CHAT_LAYER
 	},
@@ -459,14 +500,26 @@ ChatGui.PRESETS = {
 		chat_blur = true,
 		left = 10,
 		is_crimenet_chat = true,
-		chat_bg_alpha = 0.25,
+		chat_bg_alpha = 0.75,
 		chat_button_align = "left",
+		bottom = 0,
+		layer = tweak_data.gui.CRIMENET_CHAT_LAYER
+	},
+	inventory = {
+		chat_button_y_offset = 25,
+		left = 0,
+		is_crimenet_chat = true,
+		chat_bg_alpha = 0.75,
+		chat_button_align = "left",
+		chat_blur = true,
 		bottom = 0,
 		layer = tweak_data.gui.CRIMENET_CHAT_LAYER
 	}
 }
+ChatGui.PRESETS.weapon_color_customize = deep_clone(ChatGui.PRESETS.inventory)
+ChatGui.PRESETS.weapon_color_customize.chat_button_y_offset = 0
 
--- Lines 318-356
+-- Lines 361-408
 function ChatGui:set_params(params)
 	if type(params) == "string" then
 		params = self.PRESETS[params] or {}
@@ -502,6 +555,18 @@ function ChatGui:set_params(params)
 		self._chat_button_align = params.chat_button_align
 	end
 
+	self._chat_button_y_offset = nil
+
+	if params.chat_button_y_offset then
+		self._chat_button_y_offset = params.chat_button_y_offset
+	end
+
+	self._chat_button_x_offset = nil
+
+	if params.chat_button_x_offset then
+		self._chat_button_x_offset = params.chat_button_x_offset
+	end
+
 	if params.is_crimenet_chat then
 		self:enable_crimenet_chat()
 	else
@@ -509,7 +574,7 @@ function ChatGui:set_params(params)
 	end
 end
 
--- Lines 358-366
+-- Lines 410-418
 function ChatGui:enable_crimenet_chat()
 	if MenuCallbackHandler:is_win32() then
 		self._is_crimenet_chat = true
@@ -522,19 +587,28 @@ function ChatGui:enable_crimenet_chat()
 	end
 end
 
--- Lines 368-377
+-- Lines 420-437
 function ChatGui:disable_crimenet_chat()
 	if MenuCallbackHandler:is_win32() then
 		self._is_crimenet_chat = false
 		local chat_button_panel = self._hud_panel:child("chat_button_panel")
 
 		chat_button_panel:hide()
-		self._panel:child("output_panel"):stop()
-		self._panel:child("output_panel"):animate(callback(self, self, "_animate_fade_output"))
+
+		local output_panel = self._panel:child("output_panel")
+		local output_alpha = output_panel:alpha()
+		local has_new_messages = self._num_new_messages > 0
+
+		self:_show_crimenet_chat()
+
+		if output_alpha < 1 and not has_new_messages then
+			output_panel:stop()
+			output_panel:set_alpha(0)
+		end
 	end
 end
 
--- Lines 379-389
+-- Lines 439-449
 function ChatGui:toggle_crimenet_chat()
 	if MenuCallbackHandler:is_win32() then
 		self._crimenet_chat_state = not self._crimenet_chat_state
@@ -549,7 +623,7 @@ function ChatGui:toggle_crimenet_chat()
 	end
 end
 
--- Lines 391-400
+-- Lines 451-460
 function ChatGui:set_crimenet_chat(state)
 	if MenuCallbackHandler:is_win32() and self._crimenet_chat_state ~= state then
 		self._crimenet_chat_state = state
@@ -562,7 +636,7 @@ function ChatGui:set_crimenet_chat(state)
 	end
 end
 
--- Lines 402-409
+-- Lines 462-469
 function ChatGui:get_chat_button_shape()
 	local chat_button_panel = self._hud_panel:child("chat_button_panel")
 	local chat_button = chat_button_panel and chat_button_panel:child("chat_button")
@@ -572,7 +646,7 @@ function ChatGui:get_chat_button_shape()
 	end
 end
 
--- Lines 411-479
+-- Lines 471-540
 function ChatGui:_show_crimenet_chat()
 	if SystemInfo:platform() == Idstring("WIN32") and managers.controller:get_default_wrapper_type() ~= "pc" then
 		local desc = managers.localization:text("menu_chat_input")
@@ -586,7 +660,7 @@ function ChatGui:_show_crimenet_chat()
 			""
 		}
 
-		-- Lines 419-424
+		-- Lines 479-484
 		local function func(submitted, submitted_text)
 			if submitted then
 				self:enter_text(nil, submitted_text)
@@ -613,16 +687,13 @@ function ChatGui:_show_crimenet_chat()
 	local chat_blur = self._panel:child("chat_blur")
 	local hud_blur = self._hud_blur
 	local output_bg = self._panel:child("output_panel"):child("output_bg")
+	self._crimenet_chat_state = true
+
+	self:stop_notify_new_message()
+	self:update_chat_button()
+
 	local chat_button_panel = self._hud_panel:child("chat_button_panel")
 	local chat_button = chat_button_panel:child("chat_button")
-
-	chat_button:set_text(managers.localization:to_upper_text("menu_cn_chat_hide", {
-		BTN_BACK = managers.localization:btn_macro("toggle_chat")
-	}))
-
-	local _, _, w, h = chat_button:text_rect()
-
-	chat_button:set_size(w, h)
 
 	if self._chat_button_align == "left" then
 		chat_button:set_left(self._panel:left())
@@ -632,7 +703,8 @@ function ChatGui:_show_crimenet_chat()
 		chat_button:set_right(chat_button_panel:w() / 2)
 	end
 
-	chat_button:set_bottom(chat_button_panel:h() - 11)
+	chat_button:set_bottom(chat_button_panel:h())
+	chat_button:move(self._chat_button_x_offset or 0, -(self._chat_button_y_offset or 11))
 	managers.menu_component:set_preplanning_drawboard(chat_button:right() + 15, chat_button:top())
 	managers.menu_component:hide_preplanning_drawboard()
 
@@ -646,14 +718,10 @@ function ChatGui:_show_crimenet_chat()
 	self:set_output_alpha(1)
 	self._panel:child("output_panel"):stop()
 	self._panel:child("output_panel"):animate(callback(self, self, "_animate_fade_output"))
-	self:stop_notify_new_message()
-
-	self._crimenet_chat_state = true
-
 	self._panel:set_bottom(self._hud_panel:child("chat_button_panel"):child("chat_button"):top())
 end
 
--- Lines 481-517
+-- Lines 542-579
 function ChatGui:_hide_crimenet_chat()
 	local chat_bg = self._panel:child("chat_bg")
 	local chat_blur = self._panel:child("chat_blur")
@@ -662,16 +730,12 @@ function ChatGui:_hide_crimenet_chat()
 
 	self:_loose_focus()
 
+	self._crimenet_chat_state = false
+
+	self:update_chat_button()
+
 	local chat_button_panel = self._hud_panel:child("chat_button_panel")
 	local chat_button = chat_button_panel:child("chat_button")
-
-	chat_button:set_text(managers.localization:to_upper_text("menu_cn_chat_show", {
-		BTN_BACK = managers.localization:btn_macro("toggle_chat")
-	}))
-
-	local _, _, w, h = chat_button:text_rect()
-
-	chat_button:set_size(w, h)
 
 	if self._chat_button_align == "left" then
 		chat_button:set_left(self._panel:left())
@@ -681,7 +745,8 @@ function ChatGui:_hide_crimenet_chat()
 		chat_button:set_right(chat_button_panel:w() / 2)
 	end
 
-	chat_button:set_bottom(chat_button_panel:h() - 11)
+	chat_button:set_bottom(chat_button_panel:h())
+	chat_button:move(self._chat_button_x_offset or 0, -(self._chat_button_y_offset or 11))
 	managers.menu_component:set_preplanning_drawboard(chat_button:right() + 15, chat_button:top())
 
 	local blur_object = chat_button_panel:child("chat_button_blur")
@@ -691,18 +756,15 @@ function ChatGui:_hide_crimenet_chat()
 	local new_msg_flash = chat_button_panel:child("new_msg_flash")
 
 	new_msg_flash:set_center(chat_button:center())
-
-	self._crimenet_chat_state = false
-
 	self._panel:set_top(self._hud_panel:h())
 end
 
--- Lines 519-521
+-- Lines 581-583
 function ChatGui:enabled()
 	return self._enabled
 end
 
--- Lines 523-528
+-- Lines 585-590
 function ChatGui:set_enabled(enabled)
 	if not enabled then
 		self:_loose_focus()
@@ -711,7 +773,7 @@ function ChatGui:set_enabled(enabled)
 	self._enabled = enabled
 end
 
--- Lines 530-539
+-- Lines 592-601
 function ChatGui:hide()
 	self._panel:hide()
 	self._hud_blur:hide()
@@ -724,13 +786,13 @@ function ChatGui:hide()
 	text:set_selection(0, 0)
 end
 
--- Lines 541-544
+-- Lines 603-606
 function ChatGui:show()
 	self._panel:show()
 	self:set_enabled(true)
 end
 
--- Lines 546-552
+-- Lines 608-614
 function ChatGui:set_layer(layer)
 	self._panel:set_layer(layer)
 	self._hud_blur:set_layer(layer - 2)
@@ -740,7 +802,7 @@ function ChatGui:set_layer(layer)
 	end
 end
 
--- Lines 554-558
+-- Lines 616-620
 function ChatGui:set_channel_id(channel_id)
 	managers.chat:unregister_receiver(self._channel_id, self)
 
@@ -749,7 +811,7 @@ function ChatGui:set_channel_id(channel_id)
 	managers.chat:register_receiver(self._channel_id, self)
 end
 
--- Lines 560-567
+-- Lines 622-629
 function ChatGui:esc_key_callback()
 	if not self._enabled then
 		return
@@ -775,7 +837,7 @@ else
 	}
 end
 
--- Lines 586-629
+-- Lines 648-691
 function ChatGui:enter_key_callback()
 	if not self._enabled then
 		return
@@ -820,7 +882,7 @@ function ChatGui:enter_key_callback()
 	text:set_selection(0, 0)
 end
 
--- Lines 631-654
+-- Lines 693-716
 function ChatGui:_create_input_panel()
 	self._input_panel = self._panel:panel({
 		name = "input_panel",
@@ -897,7 +959,7 @@ function ChatGui:_create_input_panel()
 	self._input_panel:animate(callback(self, self, "_animate_hide_input"))
 end
 
--- Lines 656-711
+-- Lines 718-773
 function ChatGui:_layout_output_panel(force_update_scroll_indicators)
 	local output_panel = self._panel:child("output_panel")
 	local scroll_panel = output_panel:child("scroll_panel")
@@ -961,7 +1023,7 @@ function ChatGui:_layout_output_panel(force_update_scroll_indicators)
 	self:set_scroll_indicators(force_update_scroll_indicators)
 end
 
--- Lines 713-727
+-- Lines 775-789
 function ChatGui:_layout_input_panel()
 	self._input_panel:set_w(self._panel_width - self._input_panel:x())
 
@@ -980,7 +1042,7 @@ function ChatGui:_layout_input_panel()
 	self._input_panel:set_x(self._panel:child("output_panel"):x())
 end
 
--- Lines 729-783
+-- Lines 791-845
 function ChatGui:set_scroll_indicators(force_update_scroll_indicators)
 	local output_panel = self._panel:child("output_panel")
 	local scroll_panel = output_panel:child("scroll_panel")
@@ -1054,14 +1116,14 @@ function ChatGui:set_scroll_indicators(force_update_scroll_indicators)
 	end
 end
 
--- Lines 785-790
+-- Lines 847-852
 function ChatGui:set_size(x, y)
 	ChatGui.super.set_size(self, x, y)
 	self:_layout_input_panel()
 	self:_layout_output_panel(true)
 end
 
--- Lines 792-805
+-- Lines 854-867
 function ChatGui:input_focus()
 	if self._esc_focus_delay then
 		self._esc_focus_delay = nil
@@ -1082,13 +1144,13 @@ function ChatGui:input_focus()
 	return self._focus
 end
 
--- Lines 807-810
+-- Lines 869-872
 function ChatGui:enter_loose_focus_delay_end()
 	self._enter_loose_focus_delay = nil
 	self._enter_loose_focus_delay_end = nil
 end
 
--- Lines 812-819
+-- Lines 874-881
 function ChatGui:special_btn_pressed(button)
 	if MenuCallbackHandler:is_win32() and button == Idstring("toggle_chat") and not self._focus and self._is_crimenet_chat then
 		self:toggle_crimenet_chat()
@@ -1097,7 +1159,7 @@ function ChatGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 821-863
+-- Lines 883-925
 function ChatGui:mouse_moved(x, y)
 	if not self._enabled then
 		return false, false
@@ -1149,7 +1211,7 @@ function ChatGui:mouse_moved(x, y)
 	return inside or self._focus, inside and "link" or "arrow"
 end
 
--- Lines 865-871
+-- Lines 927-933
 function ChatGui:moved_scroll_bar(x, y)
 	if self._grabbed_scroll_bar then
 		self._current_y = self:scroll_with_bar(y, self._current_y)
@@ -1160,7 +1222,7 @@ function ChatGui:moved_scroll_bar(x, y)
 	return false
 end
 
--- Lines 873-898
+-- Lines 935-960
 function ChatGui:scroll_with_bar(target_y, current_y)
 	local line_height = ChatGui.line_height
 	local diff = current_y - target_y
@@ -1189,7 +1251,7 @@ function ChatGui:scroll_with_bar(target_y, current_y)
 	return current_y
 end
 
--- Lines 900-905
+-- Lines 962-967
 function ChatGui:mouse_released(o, button, x, y)
 	if not self._enabled then
 		return
@@ -1198,7 +1260,7 @@ function ChatGui:mouse_released(o, button, x, y)
 	self:release_scroll_bar()
 end
 
--- Lines 907-959
+-- Lines 969-1021
 function ChatGui:mouse_pressed(button, x, y)
 	if not self._enabled then
 		return
@@ -1259,12 +1321,12 @@ function ChatGui:mouse_pressed(button, x, y)
 	return self:_loose_focus()
 end
 
--- Lines 961-963
+-- Lines 1023-1025
 function ChatGui:check_grab_scroll_panel(x, y)
 	return false
 end
 
--- Lines 965-984
+-- Lines 1027-1046
 function ChatGui:check_grab_scroll_bar(x, y)
 	local scroll_bar = self._panel:child("scroll_bar")
 
@@ -1294,7 +1356,7 @@ function ChatGui:check_grab_scroll_bar(x, y)
 	return false
 end
 
--- Lines 986-996
+-- Lines 1048-1058
 function ChatGui:release_scroll_bar()
 	self._pressing_arrow_up = nil
 	self._pressing_arrow_down = nil
@@ -1308,7 +1370,7 @@ function ChatGui:release_scroll_bar()
 	return false
 end
 
--- Lines 998-1008
+-- Lines 1060-1070
 function ChatGui:scroll_up()
 	local output_panel = self._panel:child("output_panel")
 	local scroll_panel = output_panel:child("scroll_panel")
@@ -1324,7 +1386,7 @@ function ChatGui:scroll_up()
 	end
 end
 
--- Lines 1010-1020
+-- Lines 1072-1082
 function ChatGui:scroll_down()
 	local output_panel = self._panel:child("output_panel")
 	local scroll_panel = output_panel:child("scroll_panel")
@@ -1340,7 +1402,7 @@ function ChatGui:scroll_down()
 	end
 end
 
--- Lines 1022-1038
+-- Lines 1084-1100
 function ChatGui:mouse_wheel_up(x, y)
 	if not self._enabled then
 		return
@@ -1362,7 +1424,7 @@ function ChatGui:mouse_wheel_up(x, y)
 	return self:scroll_up()
 end
 
--- Lines 1040-1056
+-- Lines 1102-1118
 function ChatGui:mouse_wheel_down(x, y)
 	if not self._enabled then
 		return
@@ -1384,7 +1446,7 @@ function ChatGui:mouse_wheel_down(x, y)
 	return self:scroll_down()
 end
 
--- Lines 1058-1063
+-- Lines 1120-1125
 function ChatGui:open_page()
 	self:_on_focus()
 
@@ -1393,12 +1455,12 @@ function ChatGui:open_page()
 	end
 end
 
--- Lines 1065-1067
+-- Lines 1127-1129
 function ChatGui:close_page()
 	self:_loose_focus()
 end
 
--- Lines 1069-1116
+-- Lines 1131-1178
 function ChatGui:_on_focus()
 	if not self._enabled then
 		return
@@ -1436,7 +1498,7 @@ function ChatGui:_on_focus()
 	self:update_caret()
 end
 
--- Lines 1118-1151
+-- Lines 1180-1213
 function ChatGui:_loose_focus()
 	if not self._focus then
 		return false
@@ -1468,14 +1530,14 @@ function ChatGui:_loose_focus()
 	return true
 end
 
--- Lines 1153-1156
+-- Lines 1215-1218
 function ChatGui:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines 1159-1166
+-- Lines 1221-1228
 function ChatGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -1485,7 +1547,7 @@ function ChatGui.blink(o)
 	end
 end
 
--- Lines 1168-1175
+-- Lines 1230-1237
 function ChatGui:set_blinking(b)
 	local caret = self._input_panel:child("caret")
 
@@ -1506,7 +1568,7 @@ function ChatGui:set_blinking(b)
 	end
 end
 
--- Lines 1177-1206
+-- Lines 1239-1268
 function ChatGui:update_caret()
 	local text = self._input_panel:child("input_text")
 	local caret = self._input_panel:child("caret")
@@ -1542,7 +1604,7 @@ function ChatGui:update_caret()
 	self._input_panel:child("input_bg"):set_color(Color.black:with_alpha(0.4))
 end
 
--- Lines 1209-1242
+-- Lines 1271-1304
 function ChatGui:enter_text(o, s)
 	if managers.hud and managers.hud:showing_stats_screen() then
 		return
@@ -1575,7 +1637,7 @@ function ChatGui:enter_text(o, s)
 	self:update_caret()
 end
 
--- Lines 1245-1302
+-- Lines 1307-1364
 function ChatGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -1641,14 +1703,14 @@ function ChatGui:update_key_down(o, k)
 	end
 end
 
--- Lines 1304-1308
+-- Lines 1366-1370
 function ChatGui:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
 end
 
--- Lines 1311-1396
+-- Lines 1373-1458
 function ChatGui:key_press(o, k)
 	if self._skip_first then
 		if k == Idstring("enter") then
@@ -1736,11 +1798,11 @@ function ChatGui:key_press(o, k)
 	self:update_caret()
 end
 
--- Lines 1400-1402
+-- Lines 1462-1463
 function ChatGui:send_message(name, message)
 end
 
--- Lines 1404-1505
+-- Lines 1465-1566
 function ChatGui:receive_message(name, message, color, icon)
 	if not alive(self._panel) or not managers.network:session() then
 		return
@@ -1815,7 +1877,7 @@ function ChatGui:receive_message(name, message, color, icon)
 	end
 end
 
--- Lines 1507-1525
+-- Lines 1568-1586
 function ChatGui:_animate_fade_output()
 	if self._is_crimenet_chat then
 		return
@@ -1842,7 +1904,7 @@ function ChatGui:_animate_fade_output()
 	self:set_output_alpha(0)
 end
 
--- Lines 1527-1538
+-- Lines 1588-1599
 function ChatGui:_animate_show_component(panel, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -1858,7 +1920,7 @@ function ChatGui:_animate_show_component(panel, start_alpha)
 	panel:set_alpha(1)
 end
 
--- Lines 1540-1545
+-- Lines 1601-1606
 function ChatGui:_animate_show_input(input_panel)
 	local TOTAL_T = 0.2
 	local start_alpha = input_panel:alpha()
@@ -1869,7 +1931,7 @@ function ChatGui:_animate_show_input(input_panel)
 	end)
 end
 
--- Lines 1547-1561
+-- Lines 1608-1622
 function ChatGui:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.2
 	local start_alpha = input_panel:alpha()
@@ -1880,7 +1942,7 @@ function ChatGui:_animate_hide_input(input_panel)
 	end)
 end
 
--- Lines 1563-1572
+-- Lines 1624-1633
 function ChatGui:_animate_input_bg(input_bg)
 	local t = 0
 
@@ -1893,12 +1955,12 @@ function ChatGui:_animate_input_bg(input_bg)
 	end
 end
 
--- Lines 1574-1576
+-- Lines 1635-1637
 function ChatGui:set_output_alpha(alpha)
 	self._panel:child("output_panel"):set_alpha(alpha)
 end
 
--- Lines 1578-1589
+-- Lines 1639-1650
 function ChatGui:close(...)
 	self._panel:child("output_panel"):stop()
 	self._input_panel:stop()

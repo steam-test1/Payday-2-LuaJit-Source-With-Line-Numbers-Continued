@@ -524,7 +524,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		x = max_x
 	})
 
-	risk_text:set_top(math.round(risk_title:bottom() + 4))
+	risk_text:set_top(math.round(risk_title:bottom()))
 	risk_text:set_h(risk_stats_panel:bottom() - risk_text:top())
 	risk_text:hide()
 
@@ -2171,7 +2171,7 @@ function CrimeNetContractGui:next_page()
 	end
 end
 
--- Lines 2012-2046
+-- Lines 2012-2050
 function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	local job_data = self._node:parameters().menu_component_data
 	local diffs = {
@@ -2208,16 +2208,20 @@ function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	risk_text:set_text(managers.localization:to_upper_text(menu_risk_id) .. " " .. managers.localization:to_upper_text("menu_stat_job_completed", {
 		stat = tostring(stat)
 	}) .. " ")
+
+	local _, _, _, h = risk_text:text_rect()
+
+	risk_text:set_h(h)
 	self:set_potential_rewards(self._potential_show_max)
 end
 
--- Lines 2048-2051
+-- Lines 2052-2055
 function CrimeNetContractGui:set_one_down(one_down)
 	local job_data = self._node:parameters().menu_component_data
 	job_data.one_down = one_down
 end
 
--- Lines 2053-2068
+-- Lines 2057-2072
 function CrimeNetContractGui:close()
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:activate_controller_mouse()

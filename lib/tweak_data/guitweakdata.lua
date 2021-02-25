@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1421
+-- Lines 3-1447
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5078,6 +5078,26 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_pex_bundle",
+		texture_path = "guis/textures/pd2/new_heists/pex_bundle",
+		url = "https://ovk.af/pexbundleslider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_pex",
+		texture_path = "guis/textures/pd2/new_heists/pex",
+		url = "https://ovk.af/pexheistslider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_atw",
+		texture_path = "guis/textures/pd2/new_heists/atw",
+		url = "https://ovk.af/pexwpslider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_wcc",
+		texture_path = "guis/textures/pd2/new_heists/wcc",
+		url = "https://ovk.af/pexwcp2slider"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_u1993",
 		texture_path = "guis/textures/pd2/new_heists/u1993",
 		url = "http://ovk.af/april2020"
@@ -5284,7 +5304,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1423-1442
+-- Lines 1449-1468
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5312,7 +5332,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1444-1512
+-- Lines 1470-1538
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5390,15 +5410,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1514-1516
+-- Lines 1540-1542
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1518-1527
+-- Lines 1544-1553
 function GuiTweakData:print_locations()
 end
 
--- Lines 1529-1563
+-- Lines 1555-1589
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5437,7 +5457,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1565-1690
+-- Lines 1591-1716
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5560,12 +5580,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 1692-1694
+-- Lines 1718-1720
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 1696-1703
+-- Lines 1722-1729
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

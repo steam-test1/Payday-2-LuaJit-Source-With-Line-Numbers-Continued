@@ -1,6 +1,6 @@
 FilterUnitElement = FilterUnitElement or class(MissionElement)
 
--- Lines 3-45
+-- Lines 3-51
 function FilterUnitElement:init(unit)
 	FilterUnitElement.super.init(self, unit)
 
@@ -18,6 +18,9 @@ function FilterUnitElement:init(unit)
 	self._hed.player_4 = true
 	self._hed.platform_win32 = true
 	self._hed.platform_ps3 = true
+	self._hed.platform_pc_only = false
+	self._hed.platform_xb1_only = false
+	self._hed.platform_ps4_only = false
 	self._hed.mode_assault = true
 	self._hed.mode_control = true
 
@@ -35,17 +38,20 @@ function FilterUnitElement:init(unit)
 	table.insert(self._save_values, "player_4")
 	table.insert(self._save_values, "platform_win32")
 	table.insert(self._save_values, "platform_ps3")
+	table.insert(self._save_values, "platform_pc_only")
+	table.insert(self._save_values, "platform_xb1_only")
+	table.insert(self._save_values, "platform_ps4_only")
 	table.insert(self._save_values, "mode_assault")
 	table.insert(self._save_values, "mode_control")
 end
 
--- Lines 47-50
+-- Lines 53-56
 function FilterUnitElement:post_init(...)
 	FilterUnitElement.super.post_init(self, ...)
 	self:_check_convertion()
 end
 
--- Lines 52-65
+-- Lines 58-71
 function FilterUnitElement:_check_convertion()
 	if self._hed.difficulty_overkill_290 == nil then
 		self._hed.difficulty_overkill_290 = self._hed.difficulty_overkill_145
@@ -60,7 +66,7 @@ function FilterUnitElement:_check_convertion()
 	end
 end
 
--- Lines 68-171
+-- Lines 74-192
 function FilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_check_convertion()
 	self:_create_panel()
@@ -191,7 +197,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	h_sizer:add(platform_sizer, 1, 0, "EXPAND")
 
-	local platform_win32 = EWS:CheckBox(panel, "Win32", "")
+	local platform_win32 = EWS:CheckBox(panel, "Steam and Currgen", "")
 
 	platform_win32:set_value(self._hed.platform_win32)
 	platform_win32:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -200,7 +206,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	platform_sizer:add(platform_win32, 0, 0, "EXPAND")
 
-	local platform_ps3 = EWS:CheckBox(panel, "PS3", "")
+	local platform_ps3 = EWS:CheckBox(panel, "Oldgen", "")
 
 	platform_ps3:set_value(self._hed.platform_ps3)
 	platform_ps3:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -208,6 +214,33 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = platform_ps3
 	})
 	platform_sizer:add(platform_ps3, 0, 0, "EXPAND")
+
+	local platform_pc_only = EWS:CheckBox(panel, "Steam", "")
+
+	platform_pc_only:set_value(self._hed.platform_pc_only)
+	platform_pc_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "platform_pc_only",
+		ctrlr = platform_pc_only
+	})
+	platform_sizer:add(platform_pc_only, 0, 0, "EXPAND")
+
+	local platform_xb1_only = EWS:CheckBox(panel, "Xbox One", "")
+
+	platform_xb1_only:set_value(self._hed.platform_xb1_only)
+	platform_xb1_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "platform_xb1_only",
+		ctrlr = platform_xb1_only
+	})
+	platform_sizer:add(platform_xb1_only, 0, 0, "EXPAND")
+
+	local platform_ps4_only = EWS:CheckBox(panel, "PS4", "")
+
+	platform_ps4_only:set_value(self._hed.platform_ps4_only)
+	platform_ps4_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "platform_ps4_only",
+		ctrlr = platform_ps4_only
+	})
+	platform_sizer:add(platform_ps4_only, 0, 0, "EXPAND")
 
 	local mode_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Mode")
 

@@ -1,4 +1,4 @@
--- Lines 1-389
+-- Lines 1-393
 function TweakData:_init_pd2()
 	print("TweakData:_init_pd2()")
 
@@ -45,6 +45,10 @@ function TweakData:_init_pd2()
 		custody_font_large = "fonts/font_large_mf",
 		font_size = 28,
 		small_font_size = 24
+	}
+	self.hud_color_blind_assist = {
+		health = Color("FF7F00"),
+		armor = Color("00AAFF")
 	}
 	self.hud_icons.bag_icon = {
 		texture = "guis/textures/pd2/hud_tabs",
@@ -708,7 +712,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 391-394
+-- Lines 395-398
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -721,7 +725,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 396-427
+-- Lines 400-431
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -751,7 +755,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 429-470
+-- Lines 433-474
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -811,7 +815,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 472-581
+-- Lines 476-585
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

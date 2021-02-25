@@ -51,7 +51,7 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines 36-1500
+-- Lines 36-1544
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
@@ -1514,9 +1514,53 @@ function PrePlanningTweakData:init(tweak_data)
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
 		budget_cost = 3
 	}
+	self.types.pex_parked_car = {
+		name_id = "menu_pp_asset_pex_parked_car",
+		desc_id = "menu_pp_asset_pex_parked_car_desc",
+		category = "hired_help",
+		icon = 104,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		budget_cost = 3
+	}
+	self.types.pex_spiked_churro = {
+		name_id = "menu_pp_asset_pex_spiked_churro",
+		desc_id = "menu_pp_asset_pex_spiked_churro_desc",
+		category = "hired_help",
+		icon = 105,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		budget_cost = 3
+	}
+	self.types.pex_camera_access = {
+		name_id = "menu_pp_asset_pex_camera_access",
+		desc_id = "menu_pp_asset_pex_camera_access_desc",
+		category = "hired_help",
+		icon = 24,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		budget_cost = 3
+	}
+	self.types.pex_open_window = {
+		name_id = "menu_pp_asset_pex_open_window",
+		desc_id = "menu_pp_asset_pex_open_window_desc",
+		category = "hired_help",
+		icon = 111,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		budget_cost = 3
+	}
 end
 
--- Lines 1502-2482
+-- Lines 1546-2563
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -3095,9 +3139,47 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			y = 512
 		}
 	}
+	self.locations.pex = {
+		{
+			texture = "guis/dlcs/pex/textures/pd2/pre_planning/pex_01",
+			x2 = 5500,
+			rotation = 0,
+			map_size = 1,
+			map_x = -1.5,
+			map_y = 0,
+			name_id = "menu_pp_pex_bpr_loc_a",
+			x1 = -0 - 5500,
+			y1 = -0 - 5500,
+			y2 = -0 + 5500,
+			custom_points = {}
+		},
+		{
+			texture = "guis/dlcs/pex/textures/pd2/pre_planning/pex_02",
+			x2 = 5500,
+			rotation = 0,
+			map_size = 1,
+			map_x = -0.4,
+			map_y = 0,
+			name_id = "menu_pp_pex_bpr_loc_b",
+			x1 = -0 - 5500,
+			y1 = -0 - 5500,
+			y2 = -0 + 5500,
+			custom_points = {}
+		},
+		mission_briefing_texture = "guis/dlcs/pex/textures/pd2/pre_planning/pex_preview",
+		post_event_prefix = "loc",
+		total_budget = 10,
+		default_plans = {},
+		start_location = {
+			group = "a",
+			zoom = 1,
+			x = 512,
+			y = 512
+		}
+	}
 end
 
--- Lines 2484-2486
+-- Lines 2565-2567
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

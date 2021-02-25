@@ -6,9 +6,14 @@ HUDHitDirection.DAMAGE_TYPES = {
 	ARMOUR = 2,
 	VEHICLE = 3
 }
+HUDHitDirection.DAMAGE_TYPE_NAMES = {
+	"health",
+	"armor",
+	"vehicle"
+}
 HUDHitDirection.PANEL_SIZE = 300
 
--- Lines 13-32
+-- Lines 19-38
 function HUDHitDirection:init(hud)
 	self._hud_panel = hud.panel
 	self._unit_type_hit = HUDHitDirection.UNIT_TYPE_HIT_PLAYER
@@ -30,20 +35,20 @@ function HUDHitDirection:init(hud)
 	self._hit_direction_panel:set_center(self._hit_direction_panel:parent():w() * 0.5, self._hit_direction_panel:parent():h() * 0.5)
 end
 
--- Lines 34-36
+-- Lines 40-42
 function HUDHitDirection:on_hit_direction(origin, damage_type, fixed_angle)
 	self:_add_hit_indicator(origin or Vector3(0, 0, 0), damage_type, fixed_angle)
 end
 
--- Lines 38-62
+-- Lines 44-68
 function HUDHitDirection:_add_hit_indicator(damage_origin, damage_type, fixed_angle)
 	damage_type = damage_type or HUDHitDirection.DAMAGE_TYPES.HEALTH
 	local hit = self._hit_direction_panel:bitmap({
-		texture = "guis/textures/pd2/hitdirection",
 		blend_mode = "add",
 		alpha = 1,
 		visible = true,
 		rotation = 0,
+		texture = self:_get_indicator_texture(damage_type),
 		color = Color.white
 	})
 
@@ -60,20 +65,42 @@ function HUDHitDirection:_add_hit_indicator(damage_origin, damage_type, fixed_an
 	hit:animate(callback(self, self, "_animate"), data, callback(self, self, "_remove"))
 end
 
--- Lines 64-74
+-- Lines 70-80
+function HUDHitDirection:_get_indicator_texture(damage_type)
+	if managers.user:get_setting("color_blind_hit_direction") then
+		if damage_type == HUDHitDirection.DAMAGE_TYPES.HEALTH then
+			return "guis/textures/pd2/hitdirection_bold"
+		elseif damage_type == HUDHitDirection.DAMAGE_TYPES.ARMOUR then
+			return "guis/textures/pd2/hitdirection"
+		end
+	end
+
+	return "guis/textures/pd2/hitdirection"
+end
+
+-- Lines 82-100
 function HUDHitDirection:_get_indicator_color(damage_type, t)
+	if managers.user:get_setting("color_blind_hit_direction") then
+		local name = HUDHitDirection.DAMAGE_TYPE_NAMES[damage_type]
+		local color = tweak_data.hud_color_blind_assist[name]
+
+		if color then
+			return color
+		end
+	end
+
 	if damage_type == HUDHitDirection.DAMAGE_TYPES.HEALTH then
 		return Color(1, t, t)
 	elseif damage_type == HUDHitDirection.DAMAGE_TYPES.ARMOUR then
 		return Color(t, 0.8, 1)
 	elseif damage_type == HUDHitDirection.DAMAGE_TYPES.VEHICLE then
 		return Color(1, 0.8, t)
-	else
-		return Color(1, t, t)
 	end
+
+	return Color(1, t, t)
 end
 
--- Lines 76-117
+-- Lines 102-143
 function HUDHitDirection:_animate(indicator, data, remove_func)
 	data.t = data.duration
 	data.col_start = 0.7
@@ -110,7 +137,7 @@ function HUDHitDirection:_animate(indicator, data, remove_func)
 	remove_func(indicator, data)
 end
 
--- Lines 119-121
+-- Lines 145-147
 function HUDHitDirection:_remove(indicator, data)
 	self._hit_direction_panel:remove(indicator)
 end

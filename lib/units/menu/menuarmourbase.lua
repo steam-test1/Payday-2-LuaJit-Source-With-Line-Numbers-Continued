@@ -82,6 +82,11 @@ function MenuArmourBase:suit_variation()
 	return self._suit_variation
 end
 
+-- Lines 92-94
+function MenuArmourBase:glove_id()
+	return self._glove_id
+end
+
 -- Lines 99-102
 function MenuArmourBase:set_armor_id(armor_id)
 	self._armor_id = armor_id
@@ -137,6 +142,13 @@ function MenuArmourBase:set_player_style(player_style, material_variation)
 	self:request_cosmetics_update()
 end
 
+-- Lines 153-156
+function MenuArmourBase:set_glove_id(glove_id)
+	self._glove_id = glove_id
+
+	self:request_cosmetics_update()
+end
+
 -- Lines 161-170
 function MenuArmourBase:request_cosmetics_update()
 	if not self._request_update then
@@ -187,6 +199,7 @@ function MenuArmourBase:update_character_visuals(cosmetics)
 		visual_seed = self._visual_seed,
 		player_style = visual_state.player_style or "none",
 		suit_variation = visual_state.suit_variation or "default",
+		glove_id = visual_state.glove_id or managers.blackmarket:get_default_glove_id(),
 		mask_id = visual_state.mask or self._mask_id,
 		armor_id = visual_state.armor or "level_1",
 		armor_skin = visual_state.armor_skin or "none"
@@ -251,6 +264,7 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 		character_name = self._character_name,
 		player_style = self:get_player_style_check_job(),
 		suit_variation = self:get_suit_variation_check_job(),
+		glove_id = self._glove_id,
 		mask = self._mask_id,
 		armor = self._armor_id,
 		armor_skin = self:use_cc() and self._armor_skin_id
@@ -302,6 +316,12 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 
 	if material_variation_name then
 		self:_add_asset(material_configs, material_variation_name)
+	end
+
+	local glove_unit_name = tweak_data.blackmarket:get_glove_value(visual_state.glove_id, visual_state.character_name, "unit", visual_state.player_style, visual_state.suit_variation)
+
+	if glove_unit_name then
+		self:_add_asset(units, glove_unit_name)
 	end
 
 	if table.size(new_cosmetics.unit) > 0 or table.size(new_cosmetics.material_config) > 0 or table.size(new_cosmetics.texture) > 0 then

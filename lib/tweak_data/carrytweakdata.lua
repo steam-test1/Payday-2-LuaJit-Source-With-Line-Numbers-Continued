@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1152
+-- Lines 3-1167
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -88,7 +88,8 @@ function CarryTweakData:init(tweak_data)
 		vault_loot_coins = tweak_data:get_value("money_manager", "small_loot", "vault_loot_coins"),
 		vault_loot_ring = tweak_data:get_value("money_manager", "small_loot", "vault_loot_ring"),
 		vault_loot_jewels = tweak_data:get_value("money_manager", "small_loot", "vault_loot_jewels"),
-		vault_loot_macka = tweak_data:get_value("money_manager", "small_loot", "vault_loot_macka")
+		vault_loot_macka = tweak_data:get_value("money_manager", "small_loot", "vault_loot_macka"),
+		federali_medal = tweak_data:get_value("money_manager", "small_loot", "federali_medal")
 	}
 	self.gold = {
 		type = "heavy",
@@ -999,9 +1000,15 @@ function CarryTweakData:init(tweak_data)
 			SO_category = "enemies"
 		}
 	}
+	self.hydraulic_opener = {
+		type = "heavy",
+		name_id = "hud_carry_hydraulic_opener",
+		unit = "units/payday2/pickups/gen_pku_toolbag/gen_pku_toolbag",
+		visual_unit_name = "units/payday2/characters/npc_acc_tools_bag_1/npc_acc_tools_bag_1"
+	}
 end
 
--- Lines 1154-1163
+-- Lines 1169-1178
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1016,7 +1023,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1166-1174
+-- Lines 1181-1189
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 
