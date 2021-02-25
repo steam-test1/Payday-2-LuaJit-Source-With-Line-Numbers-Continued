@@ -245,8 +245,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 		upgrade_lock = {
 			upgrade = "buy_bodybags_asset",
 			category = "player"
-		},
-		server_lock = true
+		}
 	}
 	self.spotter = {
 		name_id = "menu_asset_spotter",
@@ -263,8 +262,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 		upgrade_lock = {
 			upgrade = "buy_spotter_asset",
 			category = "player"
-		},
-		server_lock = true
+		}
 	}
 	self.grenade_crate = {
 		name_id = "menu_asset_grenade_crate",

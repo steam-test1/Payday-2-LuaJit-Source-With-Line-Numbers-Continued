@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-6653
+-- Lines 3-6654
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -6051,6 +6051,7 @@ function InteractionTweakData:init(tweak_data)
 	self.pickup_police_uniform = {
 		text_id = "hud_int_hold_take_police_uniform",
 		action_text_id = "hud_action_taking_police_uniform",
+		interact_distance = 120,
 		timer = 1,
 		start_active = false
 	}

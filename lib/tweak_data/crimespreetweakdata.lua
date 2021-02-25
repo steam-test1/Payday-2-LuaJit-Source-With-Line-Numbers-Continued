@@ -807,7 +807,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return "downcard_overkill_deck"
 end
 
--- Lines 1164-1249
+-- Lines 1164-1253
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -920,11 +920,19 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 		{
 			id = "drm_somber_woodland",
 			type = "armor"
+		},
+		{
+			id = "color_anv_04",
+			type = "weapon_skins"
+		},
+		{
+			id = "color_anv_05",
+			type = "weapon_skins"
 		}
 	}
 end
 
--- Lines 1251-1441
+-- Lines 1255-1445
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
@@ -1094,7 +1102,7 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 1443-1459
+-- Lines 1447-1463
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {
@@ -1115,12 +1123,12 @@ function CrimeSpreeTweakData:init_gui(tweak_data)
 	}
 end
 
--- Lines 1461-1469
+-- Lines 1465-1473
 function CrimeSpreeTweakData:get_mission_type_from_index(index)
 	return index
 end
 
--- Lines 1471-1490
+-- Lines 1475-1494
 function CrimeSpreeTweakData:get_index_from_id(level_id)
 	if level_id then
 		for i = 1, 3 do
@@ -1139,7 +1147,7 @@ function CrimeSpreeTweakData:get_index_from_id(level_id)
 	end
 end
 
--- Lines 1492-1506
+-- Lines 1496-1510
 function CrimeSpreeTweakData:get_id_from_index(merged_index)
 	local index_has_data = merged_index > 100
 

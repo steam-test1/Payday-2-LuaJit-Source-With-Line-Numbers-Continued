@@ -63,7 +63,7 @@ function IngameWaitingForPlayersState:sync_skip()
 	self:_start_delay()
 end
 
--- Lines 64-80
+-- Lines 64-82
 function IngameWaitingForPlayersState:_start()
 	if not Network:is_server() then
 		return
@@ -73,13 +73,15 @@ function IngameWaitingForPlayersState:_start()
 		managers.preplanning:execute_reserved_mission_elements()
 	end
 
+	managers.assets:check_triggers("asset")
+
 	local variant = managers.groupai:state():blackscreen_variant() or 0
 
 	self:sync_start(variant)
 	managers.network:session():send_to_peers_synched("sync_waiting_for_player_start", variant, Global.music_manager.current_track, Global.music_manager.current_music_ext or "")
 end
 
--- Lines 83-133
+-- Lines 85-135
 function IngameWaitingForPlayersState:sync_start(variant, soundtrack, music_ext)
 	managers.menu_component:disable_mission_briefing_gui()
 	self._kit_menu.renderer:set_all_items_enabled(false)
@@ -117,12 +119,12 @@ function IngameWaitingForPlayersState:sync_start(variant, soundtrack, music_ext)
 	end
 end
 
--- Lines 135-137
+-- Lines 137-139
 function IngameWaitingForPlayersState:blackscreen_started()
 	return self._blackscreen_started or false
 end
 
--- Lines 139-172
+-- Lines 141-174
 function IngameWaitingForPlayersState:_start_audio()
 	managers.hud:show(self.LEVEL_INTRO_GUI)
 	managers.hud:set_blackscreen_mid_text(self._intro_text_id and managers.localization:text(self._intro_text_id) or "")
@@ -167,7 +169,7 @@ function IngameWaitingForPlayersState:_start_audio()
 	end
 end
 
--- Lines 174-185
+-- Lines 176-187
 function IngameWaitingForPlayersState:_create_blackscreen_loading_icon()
 	if self._fadeout_loading_icon then
 		return
@@ -181,7 +183,7 @@ function IngameWaitingForPlayersState:_create_blackscreen_loading_icon()
 	self._fadeout_loading_icon = FadeoutGuiObject:new(settings)
 end
 
--- Lines 187-192
+-- Lines 189-194
 function IngameWaitingForPlayersState:_start_delay()
 	if self._delay_start_t then
 		return
@@ -190,7 +192,7 @@ function IngameWaitingForPlayersState:_start_delay()
 	self._delay_start_t = Application:time() + 1
 end
 
--- Lines 195-217
+-- Lines 197-219
 function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
 	self:_create_blackscreen_loading_icon()
 
@@ -199,13 +201,13 @@ function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
 	end
 end
 
--- Lines 219-223
+-- Lines 221-225
 function IngameWaitingForPlayersState:_briefing_callback(event_type, label, cookie)
 	print("[IngameWaitingForPlayersState]", "event_type", event_type, "label", label, "cookie", cookie)
 	managers.menu_component:set_mission_briefing_description(label)
 end
 
--- Lines 232-360
+-- Lines 234-362
 function IngameWaitingForPlayersState:update(t, dt)
 	if not managers.network:session() then
 		return
@@ -315,7 +317,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines 362-488
+-- Lines 364-490
 function IngameWaitingForPlayersState:at_enter()
 	if _G.IS_VR then
 		managers.menu:open_menu("waiting_for_players")
@@ -421,7 +423,7 @@ function IngameWaitingForPlayersState:at_enter()
 	TestAPIHelper.on_event("start_job_loadout")
 end
 
--- Lines 492-523
+-- Lines 494-525
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -459,7 +461,7 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines 527-541
+-- Lines 529-543
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	if not self._skip_promt_shown and not self._file_streamer_max_workload and (not managers.menu:active_menu() or managers.menu:active_menu().name == "waiting_for_players") and managers.network:session() then
 		if managers.network:session():are_peers_done_streaming() then
@@ -476,7 +478,7 @@ function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	end
 end
 
--- Lines 543-550
+-- Lines 545-552
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -487,17 +489,17 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines 553-555
+-- Lines 555-557
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 end
 
--- Lines 557-559
+-- Lines 559-561
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines 561-665
+-- Lines 563-667
 function IngameWaitingForPlayersState:at_exit(next_state)
 	if _G.IS_VR then
 		managers.menu:close_menu("waiting_for_players")
@@ -583,7 +585,7 @@ function IngameWaitingForPlayersState:at_exit(next_state)
 	Telemetry:on_start_heist()
 end
 
--- Lines 667-680
+-- Lines 669-682
 function IngameWaitingForPlayersState:_get_cameras()
 	self._cameras = {}
 
@@ -614,7 +616,7 @@ function IngameWaitingForPlayersState:_get_cameras()
 	end
 end
 
--- Lines 682-695
+-- Lines 684-697
 function IngameWaitingForPlayersState:_next_camera()
 	self._camera_data.next_t = Application:time() + 8 + math.rand(4)
 	self._camera_data.index = self._camera_data.index + 1
@@ -628,17 +630,17 @@ function IngameWaitingForPlayersState:_next_camera()
 	self._cam_unit:camera():start(math.rand(30))
 end
 
--- Lines 697-699
+-- Lines 699-701
 function IngameWaitingForPlayersState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 701-703
+-- Lines 703-705
 function IngameWaitingForPlayersState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 705-707
+-- Lines 707-709
 function IngameWaitingForPlayersState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

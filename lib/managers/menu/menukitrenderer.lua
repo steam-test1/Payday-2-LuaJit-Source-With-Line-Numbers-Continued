@@ -201,16 +201,17 @@ function MenuKitRenderer:set_slot_joining(peer, peer_id)
 	managers.preplanning:on_peer_added(peer_id)
 end
 
--- Lines 183-188
+-- Lines 183-189
 function MenuKitRenderer:remove_player_slot_by_peer_id(peer, reason)
 	MenuKitRenderer.super.remove_player_slot_by_peer_id(self, peer, reason)
 
 	local peer_id = peer:id()
 
 	managers.preplanning:on_peer_removed(peer_id)
+	managers.assets:on_peer_removed(peer_id)
 end
 
--- Lines 190-192
+-- Lines 191-193
 function MenuKitRenderer:close(...)
 	MenuKitRenderer.super.close(self, ...)
 end

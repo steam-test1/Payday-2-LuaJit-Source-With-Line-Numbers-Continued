@@ -204,16 +204,19 @@ function MenuCustomizeWeaponColorInitiator:setup_node(node, node_data)
 
 	node:add_item(new_item)
 
-	local back_params = {
-		last_item = "true",
-		name = "back",
-		text_id = "menu_back",
-		align = "right",
-		previous_node = "true"
-	}
-	new_item = node:create_item({}, back_params)
+	if managers.menu:is_pc_controller() then
+		local back_params = {
+			last_item = "true",
+			name = "back",
+			text_id = "menu_back",
+			align = "right",
+			previous_node = "true"
+		}
+		new_item = node:create_item({}, back_params)
 
-	node:add_item(new_item)
+		node:add_item(new_item)
+	end
+
 	node:set_default_item_name("cosmetic_color")
 	managers.blackmarket:view_weapon_with_cosmetics(weapon_color_data.category, weapon_color_data.slot, weapon_color_data.cosmetic_data, nil, nil, BlackMarketGui.get_crafting_custom_data())
 
@@ -765,7 +768,7 @@ function MenuNodeCustomizeWeaponColorGui:resolution_changed()
 	self:_set_info_shape()
 end
 
--- Lines 680-754
+-- Lines 680-758
 function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	node = node or self.node
 
@@ -824,6 +827,8 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 			unlock_id = achievement_visual and achievement_visual.desc_id or "achievement_" .. tostring(achievement) .. "_desc" or "bm_menu_dlc_locked"
 		elseif managers.dlc:is_content_skirmish_locked("weapon_skins", color_id) then
 			unlock_id = "bm_menu_skirmish_content_reward"
+		elseif managers.dlc:is_content_crimespree_locked("weapon_skins", color_id) then
+			unlock_id = "bm_menu_crimespree_content_reward"
 		else
 			unlock_id = "bm_menu_dlc_locked"
 		end
@@ -844,7 +849,7 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	self:set_mini_info_with_color_range(info_string, color_range)
 end
 
--- Lines 756-764
+-- Lines 760-768
 function MenuNodeGui:set_mini_info_with_color_range(text, color_range)
 	self._mini_info_text:set_text(text)
 	self._mini_info_text:clear_range_color(0, utf8.len(self._mini_info_text:text()))
@@ -854,7 +859,7 @@ function MenuNodeGui:set_mini_info_with_color_range(text, color_range)
 	end
 end
 
--- Lines 766-779
+-- Lines 770-783
 function MenuNodeCustomizeWeaponColorGui:_clear_gui()
 	if alive(self.blur) then
 		self.start_blur = self.blur:alpha()
@@ -873,12 +878,12 @@ function MenuNodeCustomizeWeaponColorGui:_clear_gui()
 	self._tab_panel = nil
 end
 
--- Lines 781-783
+-- Lines 785-787
 function MenuNodeCustomizeWeaponColorGui:_setup_item_rows(node)
 	MenuNodeCustomizeWeaponColorGui.super._setup_item_rows(self, node)
 end
 
--- Lines 785-795
+-- Lines 789-799
 function MenuNodeCustomizeWeaponColorGui:reload_item(item)
 	MenuNodeCustomizeWeaponColorGui.super.reload_item(self, item)
 
@@ -890,13 +895,13 @@ function MenuNodeCustomizeWeaponColorGui:reload_item(item)
 	end
 end
 
--- Lines 797-800
+-- Lines 801-804
 function MenuNodeCustomizeWeaponColorGui:_align_marker(row_item)
 	MenuNodeCustomizeWeaponColorGui.super._align_marker(self, row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right() - self._align_line_padding)
 end
 
--- Lines 802-811
+-- Lines 806-815
 function MenuNodeCustomizeWeaponColorGui:close()
 	for _, row_item in ipairs(self.row_items) do
 		if row_item.item and type(row_item.item.close) == "function" then

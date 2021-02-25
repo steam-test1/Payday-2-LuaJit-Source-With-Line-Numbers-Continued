@@ -1171,7 +1171,7 @@ function CrimeSpreeRewardsMenuComponent:_fade_out_exp_panels()
 	self:next_state(t)
 end
 
--- Lines 1079-1227
+-- Lines 1079-1250
 function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 	self._cosmetics_panel = self._panel:panel({
 		x = padding,
@@ -1188,7 +1188,8 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 	local t = 0
 	local card_types = {
 		continental_coins = "upcard_coins",
-		armor = "upcard_cosmetic"
+		armor = "upcard_cosmetic",
+		weapon_skins = "upcard_cosmetic"
 	}
 
 	for i, reward in ipairs(cosmetic_rewards) do
@@ -1235,6 +1236,28 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 			local rtd = tweak_data.economy.rarities[td.rarity]
 			rarity_name = managers.localization:to_upper_text(rtd.name_id)
 			rarity_color = rtd.color or tweak_data.screen_colors.text
+		elseif reward.type == "weapon_skins" then
+			local td = tweak_data.blackmarket.weapon_skins[reward.id]
+
+			if td.is_a_color_skin then
+				local dlc = td.dlc or managers.dlc:global_value_to_dlc(td.global_value)
+				local global_value = td.global_value or managers.dlc:dlc_to_global_value(dlc)
+				local global_value_tweak = tweak_data.lootdrop.global_values[global_value]
+				local guis_catalog = "guis/"
+				local bundle_folder = td.texture_bundle_folder
+
+				if bundle_folder then
+					guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
+				end
+
+				item_name = managers.localization:to_upper_text(td.name_id)
+				texture = guis_catalog .. "textures/pd2/blackmarket/icons/weapon_color/" .. reward.id
+
+				if global_value_tweak then
+					rarity_name = managers.localization:to_upper_text(global_value_tweak.name_id)
+					rarity_color = global_value_tweak.color
+				end
+			end
 		elseif reward.type == "continental_coins" then
 			texture = "guis/dlcs/chill/textures/pd2/safehouse/continental_coins_drop"
 			item_name = managers.experience:cash_string(reward.amount, "") .. " " .. managers.localization:to_upper_text("menu_cs_coins")
@@ -1322,7 +1345,7 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 	self:next_state(t + 1)
 end
 
--- Lines 1229-1234
+-- Lines 1252-1257
 function CrimeSpreeRewardsMenuComponent:_cleanup_cosmetic_drops()
 	if alive(self._cosmetics_panel) then
 		self._panel:remove(self._cosmetics_panel)
@@ -1331,7 +1354,7 @@ function CrimeSpreeRewardsMenuComponent:_cleanup_cosmetic_drops()
 	self:next_state(0)
 end
 
--- Lines 1236-1368
+-- Lines 1259-1391
 function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 	local loot_drops = managers.crime_spree:loot_drops()
 
@@ -1473,7 +1496,7 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 	self:next_state(end_t)
 end
 
--- Lines 1370-1375
+-- Lines 1393-1398
 function CrimeSpreeRewardsMenuComponent:_cleanup_loot_drops()
 	if alive(self._loot_panel) then
 		self._panel:remove(self._loot_panel)
@@ -1482,7 +1505,7 @@ function CrimeSpreeRewardsMenuComponent:_cleanup_loot_drops()
 	self:next_state(0)
 end
 
--- Lines 1377-1522
+-- Lines 1400-1559
 function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	self._list_panel = self._panel:panel({
 		x = padding,
@@ -1499,7 +1522,7 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	local fade_in_delay = fade_in_t / 4
 	local size = tweak_data.menu.pd2_small_font_size
 
-	-- Lines 1392-1412
+	-- Lines 1415-1435
 	local function add_reward_text(text, color)
 		local reward_text = self._list_scroll:canvas():text({
 			alpha = 0,
@@ -1545,6 +1568,19 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 			add_reward_text(managers.localization:text("menu_cs_reward_armor_skin", {
 				skin = name
 			}), col)
+		elseif reward.type == "weapon_skins" then
+			local td = tweak_data.blackmarket.weapon_skins[reward.id]
+
+			if td.is_a_color_skin then
+				local name = managers.localization:text(td.name_id)
+				local dlc = td.dlc or managers.dlc:global_value_to_dlc(td.global_value)
+				local global_value = td.global_value or managers.dlc:dlc_to_global_value(dlc)
+				local color = tweak_data.lootdrop.global_values[global_value] and tweak_data.lootdrop.global_values[global_value].color or tweak_data.screen_colors.text
+
+				add_reward_text(managers.localization:text("menu_cs_reward_weapon_color", {
+					skin = name
+				}), color)
+			end
 		elseif reward.type == "continental_coins" then
 			add_reward_text(managers.experience:cash_string(reward.amount, "") .. " " .. managers.localization:to_upper_text("menu_cs_coins"))
 		end

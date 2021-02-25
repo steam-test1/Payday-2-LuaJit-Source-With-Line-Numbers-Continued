@@ -1032,7 +1032,7 @@ function ConnectionNetworkHandler:preplanning_reserved(type, id, peer_id, state,
 	end
 end
 
--- Lines 993-1005
+-- Lines 993-1007
 function ConnectionNetworkHandler:reserve_preplanning(type, id, state, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1046,10 +1046,12 @@ function ConnectionNetworkHandler:reserve_preplanning(type, id, state, sender)
 		managers.preplanning:server_unreserve_mission_element(id, peer:id())
 	elseif state == 2 then
 		managers.preplanning:server_vote_on_plan(type, id, peer:id())
+	elseif state == 3 then
+		managers.preplanning:server_mass_vote_on_plan(type, id)
 	end
 end
 
--- Lines 1007-1013
+-- Lines 1009-1015
 function ConnectionNetworkHandler:draw_preplanning_point(x, y, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1060,7 +1062,7 @@ function ConnectionNetworkHandler:draw_preplanning_point(x, y, sender)
 	managers.menu_component:sync_preplanning_draw_point(peer:id(), x, y)
 end
 
--- Lines 1015-1021
+-- Lines 1017-1023
 function ConnectionNetworkHandler:draw_preplanning_event(event_id, var1, var2, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1071,7 +1073,7 @@ function ConnectionNetworkHandler:draw_preplanning_event(event_id, var1, var2, s
 	managers.menu_component:sync_preplanning_draw_event(peer:id(), event_id, var1, var2)
 end
 
--- Lines 1025-1032
+-- Lines 1027-1034
 function ConnectionNetworkHandler:voting_data(type, value, result, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1082,7 +1084,7 @@ function ConnectionNetworkHandler:voting_data(type, value, result, sender)
 	managers.vote:network_package(type, value, result, peer:id())
 end
 
--- Lines 1036-1044
+-- Lines 1038-1046
 function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)
 	if not self._verify_sender(sender) then
 		return
@@ -1091,7 +1093,7 @@ function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)
 	print("ConnectionNetworkHandler:sync_award_achievement():", achievement_id)
 end
 
--- Lines 1048-1055
+-- Lines 1050-1057
 function ConnectionNetworkHandler:propagate_alert(type, position, range, filter, aggressor, head_position, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1109,7 +1111,7 @@ function ConnectionNetworkHandler:propagate_alert(type, position, range, filter,
 	})
 end
 
--- Lines 1059-1064
+-- Lines 1061-1066
 function ConnectionNetworkHandler:set_auto_assault_ai_trade(character_name, time)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1118,12 +1120,12 @@ function ConnectionNetworkHandler:set_auto_assault_ai_trade(character_name, time
 	managers.trade:sync_set_auto_assault_ai_trade(character_name, time)
 end
 
--- Lines 1069-1071
+-- Lines 1071-1073
 function ConnectionNetworkHandler:auto_init_respawn_player(pos, peer_id)
 	managers.player:init_auto_respawn_callback(pos, peer_id)
 end
 
--- Lines 1076-1078
+-- Lines 1078-1080
 function ConnectionNetworkHandler:auto_respawn_player(pos, peer_id)
 	managers.player:clbk_super_syndrome_respawn({
 		pos = pos,
@@ -1131,14 +1133,14 @@ function ConnectionNetworkHandler:auto_respawn_player(pos, peer_id)
 	})
 end
 
--- Lines 1083-1087
+-- Lines 1085-1089
 function ConnectionNetworkHandler:start_super_syndrome_trade(pos, peer_id)
 	if not managers.player._coroutine_mgr:is_running("stockholm_syndrome_trade") then
 		managers.player._coroutine_mgr:add_coroutine("stockholm_syndrome_trade", PlayerAction.StockholmSyndromeTrade, pos, peer_id)
 	end
 end
 
--- Lines 1092-1102
+-- Lines 1094-1104
 function ConnectionNetworkHandler:request_stockholm_syndrome(pos, peer_id, auto_activate)
 	local peer = managers.network:session():peer(peer_id)
 	local allowed, feedback_idx = StockholmSyndromeTradeAction.is_allowed()
@@ -1155,37 +1157,37 @@ function ConnectionNetworkHandler:request_stockholm_syndrome(pos, peer_id, auto_
 	end
 end
 
--- Lines 1106-1108
+-- Lines 1108-1110
 function ConnectionNetworkHandler:stockholm_syndrome_results(can_trade, feedback_idx)
 	managers.player:send_message(Message.CanTradeHostage, nil, can_trade, feedback_idx)
 end
 
--- Lines 1113-1115
+-- Lines 1115-1117
 function ConnectionNetworkHandler:sync_set_super_syndrome(peer_id, active)
 	managers.groupai:state():set_super_syndrome(peer_id, active)
 end
 
--- Lines 1119-1121
+-- Lines 1121-1123
 function ConnectionNetworkHandler:peer_joined_sound(infamous)
 	managers.menu:post_event(infamous and "infamous_player_join_stinger" or "player_join")
 end
 
--- Lines 1125-1127
+-- Lines 1127-1129
 function ConnectionNetworkHandler:client_used_weapon(weapon_id)
 	managers.statistics:used_weapon(weapon_id)
 end
 
--- Lines 1129-1131
+-- Lines 1131-1133
 function ConnectionNetworkHandler:sync_used_weapon(weapon_id)
 	managers.statistics:_used_weapon(weapon_id)
 end
 
--- Lines 1138-1140
+-- Lines 1140-1142
 function ConnectionNetworkHandler:sync_mutators_launch(countdown, sender)
 	managers.mutators:show_mutators_launch_countdown(countdown)
 end
 
--- Lines 1143-1149
+-- Lines 1145-1151
 function ConnectionNetworkHandler:sync_mutators_launch_ready(peer_id, is_ready, sender)
 	local peer = managers.network:session():peer(peer_id)
 
@@ -1196,7 +1198,7 @@ function ConnectionNetworkHandler:sync_mutators_launch_ready(peer_id, is_ready, 
 	managers.mutators:set_peer_is_ready(peer_id, is_ready)
 end
 
--- Lines 1151-1157
+-- Lines 1153-1159
 function ConnectionNetworkHandler:sync_mutator_hydra_split(position, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1207,7 +1209,7 @@ function ConnectionNetworkHandler:sync_mutator_hydra_split(position, sender)
 	MutatorHydra.play_split_particle(position, Rotation())
 end
 
--- Lines 1162-1168
+-- Lines 1164-1170
 function ConnectionNetworkHandler:sync_synced_unit_outfit(unit_id, outfit_type, outfit_string, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1218,14 +1220,14 @@ function ConnectionNetworkHandler:sync_synced_unit_outfit(unit_id, outfit_type, 
 	managers.sync:on_received_synced_outfit(unit_id, outfit_type, outfit_string)
 end
 
--- Lines 1170-1176
+-- Lines 1172-1178
 function ConnectionNetworkHandler:sync_safehouse_room_tier(room_name, room_tier)
 	if managers.custom_safehouse then
 		managers.custom_safehouse:set_host_room_tier(room_name, room_tier)
 	end
 end
 
--- Lines 1183-1189
+-- Lines 1185-1191
 function ConnectionNetworkHandler:sync_crime_spree_level(peer_id, spree_level, has_failed, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1236,7 +1238,7 @@ function ConnectionNetworkHandler:sync_crime_spree_level(peer_id, spree_level, h
 	managers.crime_spree:set_peer_spree_level(peer_id, spree_level, has_failed)
 end
 
--- Lines 1192-1198
+-- Lines 1194-1200
 function ConnectionNetworkHandler:sync_crime_spree_mission(mission_slot, mission_id, selected, perform_randomize, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1247,7 +1249,7 @@ function ConnectionNetworkHandler:sync_crime_spree_mission(mission_slot, mission
 	managers.crime_spree:set_server_mission(mission_slot, mission_id, selected, perform_randomize)
 end
 
--- Lines 1201-1207
+-- Lines 1203-1209
 function ConnectionNetworkHandler:sync_crime_spree_modifier(modifier_id, modifier_level, announce, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1258,7 +1260,7 @@ function ConnectionNetworkHandler:sync_crime_spree_modifier(modifier_id, modifie
 	managers.crime_spree:set_server_modifier(modifier_id, modifier_level, announce)
 end
 
--- Lines 1210-1216
+-- Lines 1212-1218
 function ConnectionNetworkHandler:sync_crime_spree_modifiers_finalize(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1269,7 +1271,7 @@ function ConnectionNetworkHandler:sync_crime_spree_modifiers_finalize(sender)
 	managers.crime_spree:on_finalize_modifiers()
 end
 
--- Lines 1219-1225
+-- Lines 1221-1227
 function ConnectionNetworkHandler:sync_crime_spree_gage_asset_event(event_id, asset_id, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1280,7 +1282,7 @@ function ConnectionNetworkHandler:sync_crime_spree_gage_asset_event(event_id, as
 	managers.crime_spree:on_gage_asset_event(event_id, asset_id, peer)
 end
 
--- Lines 1232-1239
+-- Lines 1234-1241
 function ConnectionNetworkHandler:sync_player_installed_mod(peer_id, mod_id, mod_friendly_name, sender)
 	print("[ConnectionNetworkHandler] sync_player_installed_mod", peer_id, mod_id, mod_friendly_name)
 
@@ -1293,7 +1295,7 @@ function ConnectionNetworkHandler:sync_player_installed_mod(peer_id, mod_id, mod
 	peer:register_mod(mod_id, mod_friendly_name)
 end
 
--- Lines 1245-1251
+-- Lines 1247-1253
 function ConnectionNetworkHandler:sync_phalanx_vip_achievement_unlocked(achievement_id, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1304,7 +1306,7 @@ function ConnectionNetworkHandler:sync_phalanx_vip_achievement_unlocked(achievem
 	managers.achievment:award_enemy_kill_achievement(achievement_id)
 end
 
--- Lines 1257-1263
+-- Lines 1259-1265
 function ConnectionNetworkHandler:sync_is_vr(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1315,7 +1317,7 @@ function ConnectionNetworkHandler:sync_is_vr(sender)
 	peer:set_is_vr()
 end
 
--- Lines 1300-1307
+-- Lines 1302-1309
 function ConnectionNetworkHandler:get_virus_achievement(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1326,7 +1328,7 @@ function ConnectionNetworkHandler:get_virus_achievement(sender)
 	managers.achievment:award("cac_28")
 end
 
--- Lines 1313-1324
+-- Lines 1315-1326
 function ConnectionNetworkHandler:sync_end_assault_skirmish(sender)
 	local peer = self._verify_sender(sender)
 
@@ -1341,7 +1343,7 @@ function ConnectionNetworkHandler:sync_end_assault_skirmish(sender)
 	managers.skirmish:on_end_assault()
 end
 
--- Lines 1328-1342
+-- Lines 1330-1344
 function ConnectionNetworkHandler:uno_achievement_challenge_completed(sender)
 	local peer = self._verify_sender(sender)
 

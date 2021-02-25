@@ -3101,7 +3101,7 @@ function PrePlanningMapGui:create_text_button(params)
 	return button_panel, #self._text_buttons
 end
 
--- Lines 2404-2511
+-- Lines 2404-2512
 function PrePlanningMapGui:set_active_node(node)
 	if not self._enabled or self._active_node.node ~= node then
 		self._active_node.node = node
@@ -3169,6 +3169,8 @@ function PrePlanningMapGui:set_active_node(node)
 					self:set_map_position(px, py, location_group, false)
 				end
 			end
+
+			managers.preplanning:on_preplanning_open()
 		end
 
 		if not managers.menu:is_pc_controller() then
@@ -3211,12 +3213,12 @@ function PrePlanningMapGui:set_active_node(node)
 	end
 end
 
--- Lines 2513-2515
+-- Lines 2514-2516
 function PrePlanningMapGui:enabled()
 	return self._enabled
 end
 
--- Lines 2517-2535
+-- Lines 2518-2536
 function PrePlanningMapGui:disable()
 	if self._enabled then
 		self._enabled = false
@@ -3237,7 +3239,7 @@ function PrePlanningMapGui:disable()
 	end
 end
 
--- Lines 2537-2686
+-- Lines 2538-2687
 function PrePlanningMapGui:update(t, dt)
 	if not self._enabled then
 		return
@@ -3407,7 +3409,7 @@ function PrePlanningMapGui:update(t, dt)
 	self._one_frame_input_delay = false
 end
 
--- Lines 2690-2701
+-- Lines 2691-2702
 function PrePlanningMapGui:set_map_position_to_item(item)
 	if not self._enabled then
 		return
@@ -3424,7 +3426,7 @@ function PrePlanningMapGui:set_map_position_to_item(item)
 	end
 end
 
--- Lines 2703-2725
+-- Lines 2704-2726
 function PrePlanningMapGui:set_map_position(x, y, location, lerp)
 	if not self._enabled then
 		return
@@ -3456,7 +3458,7 @@ function PrePlanningMapGui:set_map_position(x, y, location, lerp)
 	end
 end
 
--- Lines 2727-2762
+-- Lines 2728-2763
 function PrePlanningMapGui:_set_map_position(x, y, location)
 	self._map_panel:set_position(x, y)
 	self._grid_panel:set_center(self._map_panel:center())
@@ -3492,12 +3494,12 @@ function PrePlanningMapGui:_set_map_position(x, y, location)
 	end
 end
 
--- Lines 2764-2766
+-- Lines 2765-2767
 function PrePlanningMapGui:_move_map_position(mx, my)
 	self:_set_map_position(self._map_x + mx, self._map_y + my)
 end
 
--- Lines 2768-2776
+-- Lines 2769-2777
 function PrePlanningMapGui:set_lerp_zoom(zoom)
 	local min = self._min_zoom or 1
 	local max = self._max_zoom or 5
@@ -3508,7 +3510,7 @@ function PrePlanningMapGui:set_lerp_zoom(zoom)
 	end
 end
 
--- Lines 2778-2811
+-- Lines 2779-2812
 function PrePlanningMapGui:_set_zoom(zoom, x, y, ignore_update)
 	local min = self._min_zoom or 1
 	local max = self._max_zoom or 5
@@ -3542,26 +3544,26 @@ function PrePlanningMapGui:_set_zoom(zoom, x, y, ignore_update)
 	return false
 end
 
--- Lines 2813-2815
+-- Lines 2814-2816
 function PrePlanningMapGui:_change_zoom(zoom, x, y)
 	return self:_set_zoom(self._map_zoom * zoom, x, y)
 end
 
--- Lines 2817-2821
+-- Lines 2818-2822
 function PrePlanningMapGui:zoom_out(x, y)
 	if self:_change_zoom(0.9, x, y) then
 		managers.menu_component:post_event("zoom_out")
 	end
 end
 
--- Lines 2823-2827
+-- Lines 2824-2828
 function PrePlanningMapGui:zoom_in(x, y)
 	if self:_change_zoom(1.1, x, y) then
 		managers.menu_component:post_event("zoom_in")
 	end
 end
 
--- Lines 2831-2947
+-- Lines 2832-2948
 function PrePlanningMapGui:mouse_moved(o, x, y)
 	if not self._enabled or self._one_frame_input_delay then
 		return false, "arrow"
@@ -3683,7 +3685,7 @@ function PrePlanningMapGui:mouse_moved(o, x, y)
 	return used, icon or "arrow"
 end
 
--- Lines 2949-3009
+-- Lines 2950-3010
 function PrePlanningMapGui:mouse_pressed(button, x, y)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3750,7 +3752,7 @@ function PrePlanningMapGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 3011-3042
+-- Lines 3012-3043
 function PrePlanningMapGui:mouse_released(button, x, y)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3792,7 +3794,7 @@ function PrePlanningMapGui:mouse_released(button, x, y)
 	end
 end
 
--- Lines 3044-3057
+-- Lines 3045-3058
 function PrePlanningMapGui:special_btn_pressed(button)
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3805,11 +3807,11 @@ function PrePlanningMapGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 3059-3060
+-- Lines 3060-3061
 function PrePlanningMapGui:confirm_pressed()
 end
 
--- Lines 3062-3068
+-- Lines 3063-3069
 function PrePlanningMapGui:next_page()
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3818,7 +3820,7 @@ function PrePlanningMapGui:next_page()
 	self:zoom_in(self._panel:w() / 2, self._panel:h() / 2)
 end
 
--- Lines 3070-3076
+-- Lines 3071-3077
 function PrePlanningMapGui:previous_page()
 	if not self._enabled or self._one_frame_input_delay then
 		return
@@ -3827,12 +3829,12 @@ function PrePlanningMapGui:previous_page()
 	self:zoom_out(self._panel:w() / 2, self._panel:h() / 2)
 end
 
--- Lines 3078-3080
+-- Lines 3079-3081
 function PrePlanningMapGui:input_focus()
 	return self._enabled and self._grabbed_map and true or false
 end
 
--- Lines 3084-3095
+-- Lines 3085-3096
 function PrePlanningMapGui:close()
 	self:stop_event()
 	self._saferect_root_panel:remove(self._panel)

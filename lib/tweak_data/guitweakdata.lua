@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1447
+-- Lines 3-1453
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5078,6 +5078,11 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_anv",
+		texture_path = "guis/textures/pd2/new_heists/anv",
+		url = "https://ovk.af/7thAnniversary"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_pex_bundle",
 		texture_path = "guis/textures/pd2/new_heists/pex_bundle",
 		url = "https://ovk.af/pexbundleslider"
@@ -5304,7 +5309,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1449-1468
+-- Lines 1455-1474
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5332,7 +5337,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1470-1538
+-- Lines 1476-1544
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5410,15 +5415,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1540-1542
+-- Lines 1546-1548
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1544-1553
+-- Lines 1550-1559
 function GuiTweakData:print_locations()
 end
 
--- Lines 1555-1589
+-- Lines 1561-1595
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5457,7 +5462,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1591-1716
+-- Lines 1597-1722
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5580,12 +5585,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 1718-1720
+-- Lines 1724-1726
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 1722-1729
+-- Lines 1728-1735
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

@@ -859,11 +859,15 @@ function SkirmishTweakData:_init_briefing()
 	}
 end
 
--- Lines 433-470
+-- Lines 433-477
 function SkirmishTweakData:_init_additional_rewards()
 	local tier1 = deep_clone(self.weekly_rewards[1])
 	local tier2 = deep_clone(self.weekly_rewards[2])
 	local tier3 = deep_clone(self.weekly_rewards[3])
+	tier1.weapon_skins = {
+		"color_anv_02",
+		"color_anv_03"
+	}
 	tier2.weapon_skins = {
 		"color_red_crust",
 		"color_blue_deluxe",
