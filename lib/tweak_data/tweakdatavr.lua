@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-5185
+-- Lines 4-5297
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -423,6 +423,15 @@ function TweakDataVR:init(tweak_data)
 			shrew = {
 				position = Vector3(-0.5, 1, 1)
 			},
+			stech = {
+				position = Vector3(-0.5, 1, 1)
+			},
+			beer = {
+				position = Vector3(-0.5, 1, 1)
+			},
+			czech = {
+				position = Vector3(-0.5, 1, 1)
+			},
 			x_usp = {
 				position = Vector3(-0.5, 2.5, 1)
 			},
@@ -454,6 +463,15 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(-0.5, 2, 2)
 			},
 			x_breech = {
+				position = Vector3(-0.5, 1, 1)
+			},
+			x_stech = {
+				position = Vector3(-0.5, 1, 1)
+			},
+			x_beer = {
+				position = Vector3(-0.5, 1, 1)
+			},
+			x_czech = {
 				position = Vector3(-0.5, 1, 1)
 			},
 			akmsu = {
@@ -1329,6 +1347,12 @@ function TweakDataVR:init(tweak_data)
 	}
 	self.weapon_assist = {
 		weapons = {
+			beer = {
+				position = Vector3(0, 12, -2)
+			},
+			czech = {
+				position = Vector3(0, 12, -2)
+			},
 			striker = {
 				position = Vector3(0, 28, 0)
 			},
@@ -2636,6 +2660,111 @@ function TweakDataVR:init(tweak_data)
 				{
 					time = 0.6,
 					sound = "wp_packrat_slide_release",
+					pos = Vector3()
+				}
+			}
+		},
+		beer = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -7, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		czech = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -7, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		stech = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -7, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
 					pos = Vector3()
 				}
 			}
@@ -5888,6 +6017,111 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		x_beer = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -7, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		x_czech = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -7, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		x_stech = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -7, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -4, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
 		x_sr2 = {
 			start = {
 				{
@@ -8736,7 +8970,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 5191-5302
+-- Lines 5303-5414
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -8951,7 +9185,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 5306-5366
+-- Lines 5418-5478
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -9031,7 +9265,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 5369-5381
+-- Lines 5481-5493
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -9052,7 +9286,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 5383-5409
+-- Lines 5495-5521
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -9073,14 +9307,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 5411-5415
+-- Lines 5523-5527
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 5417-5429
+-- Lines 5529-5541
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -9098,7 +9332,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 5431-5439
+-- Lines 5543-5551
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -9111,7 +9345,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 5441-5445
+-- Lines 5553-5557
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -9120,7 +9354,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5447-5455
+-- Lines 5559-5567
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -9135,7 +9369,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5457-5464
+-- Lines 5569-5576
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -9148,7 +9382,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5466-5473
+-- Lines 5578-5585
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

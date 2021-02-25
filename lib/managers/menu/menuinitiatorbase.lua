@@ -108,7 +108,34 @@ function MenuInitiatorBase:create_multichoice(node, choices, params, index)
 	return new_item
 end
 
--- Lines 78-84
+-- Lines 79-98
+function MenuInitiatorBase:create_grid(node, choices, params, index)
+	if #choices == 0 then
+		return
+	end
+
+	local data_node = {
+		type = "MenuItemGrid"
+	}
+
+	for _, choice in ipairs(choices) do
+		table.insert(data_node, choice)
+	end
+
+	local new_item = node:create_item(data_node, params)
+
+	new_item:set_value(choices[1].value)
+
+	if index then
+		node:insert_item(new_item, index)
+	else
+		node:add_item(new_item)
+	end
+
+	return new_item
+end
+
+-- Lines 100-106
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
@@ -125,7 +152,7 @@ function MenuInitiatorBase:create_slider(node, params)
 	return new_item
 end
 
--- Lines 86-93
+-- Lines 108-115
 function MenuInitiatorBase:create_input(node, params)
 	local data_node = {
 		type = "MenuItemInput"
@@ -138,7 +165,7 @@ function MenuInitiatorBase:create_input(node, params)
 	return new_item
 end
 
--- Lines 95-102
+-- Lines 117-124
 function MenuInitiatorBase:create_textbox(node, params)
 	local data_node = {
 		type = "MenuItemTextBox"
@@ -151,7 +178,7 @@ function MenuInitiatorBase:create_textbox(node, params)
 	return new_item
 end
 
--- Lines 104-118
+-- Lines 126-140
 function MenuInitiatorBase:add_back_button(node)
 	node:delete_item("back")
 

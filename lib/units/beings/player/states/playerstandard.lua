@@ -4991,7 +4991,7 @@ function PlayerStandard:_check_action_night_vision(t, input)
 	self:set_night_vision_state(not self._state_data.night_vision_active)
 end
 
--- Lines 5415-5445
+-- Lines 5415-5452
 function PlayerStandard:set_night_vision_state(state)
 	local mask_id = managers.blackmarket:equipped_mask().mask_id
 	local mask_tweak = tweak_data.blackmarket.masks[mask_id]
@@ -5002,11 +5002,10 @@ function PlayerStandard:set_night_vision_state(state)
 	end
 
 	local ambient_color_key = CoreEnvironmentFeeder.PostAmbientColorFeeder.DATA_PATH_KEY
-	local default_color_grading = EnvironmentControllerManager._GAME_DEFAULT_COLOR_GRADING
-	local effect = state and night_vision.effect or default_color_grading
+	local effect = nil
 
 	if state then
-		-- Lines 5429-5433
+		-- Lines 5428-5432
 		local function light_modifier(handler, feeder)
 			local base_light = feeder._target and mvector3.copy(feeder._target) or Vector3()
 			local light = night_vision.light
@@ -5015,25 +5014,34 @@ function PlayerStandard:set_night_vision_state(state)
 		end
 
 		managers.viewport:create_global_environment_modifier(ambient_color_key, true, light_modifier)
+
+		self._night_vision_saved_default_color_grading = managers.environment_controller:default_color_grading()
+		effect = night_vision.effect
 	else
 		managers.viewport:destroy_global_environment_modifier(ambient_color_key)
+
+		effect = self._night_vision_saved_default_color_grading
+		self._night_vision_saved_default_color_grading = nil
 	end
 
 	self._unit:sound():play(state and "night_vision_on" or "night_vision_off", nil, false)
-	managers.environment_controller:set_default_color_grading(effect, state)
-	managers.environment_controller:refresh_render_settings()
+
+	if effect then
+		managers.environment_controller:set_default_color_grading(effect, state)
+		managers.environment_controller:refresh_render_settings()
+	end
 
 	self._state_data.night_vision_active = state
 end
 
--- Lines 5450-5454
+-- Lines 5457-5461
 function PlayerStandard:weapon_recharge_clbk_listener()
 	for id, weapon in pairs(self._ext_inventory:available_selections()) do
 		managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
 	end
 end
 
--- Lines 5457-5462
+-- Lines 5464-5469
 function PlayerStandard:get_equipped_weapon()
 	if self._equipped_unit then
 		return self._equipped_unit:base()
@@ -5042,7 +5050,7 @@ function PlayerStandard:get_equipped_weapon()
 	return nil
 end
 
--- Lines 5466-5472
+-- Lines 5473-5479
 function PlayerStandard:save(data)
 	if self._state_data.ducking then
 		data.pose = 2
@@ -5051,7 +5059,7 @@ function PlayerStandard:save(data)
 	end
 end
 
--- Lines 5476-5488
+-- Lines 5483-5495
 function PlayerStandard:pre_destroy()
 	if self._pos_reservation then
 		managers.navigation:unreserve_pos(self._pos_reservation)
@@ -5066,7 +5074,7 @@ function PlayerStandard:pre_destroy()
 	self:set_night_vision_state(false)
 end
 
--- Lines 5494-5503
+-- Lines 5501-5510
 function PlayerStandard:tweak_data_clbk_reload()
 	local state_name = self._ext_movement:current_state_name()
 

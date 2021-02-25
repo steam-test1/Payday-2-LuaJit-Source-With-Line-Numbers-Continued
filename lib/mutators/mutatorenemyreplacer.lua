@@ -151,7 +151,7 @@ function MutatorEnemyReplacer:modify_unit_categories(group_ai_tweak, difficulty_
 	end
 end
 
--- Lines 130-194
+-- Lines 130-226
 function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	if not self._groups.tank then
 		if difficulty_index < 6 then
@@ -165,6 +165,14 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 					russia = {
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_saiga/ene_akan_fbi_tank_saiga"),
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_r870/ene_akan_fbi_tank_r870")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_1/ene_murkywater_bulldozer_1"),
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_2/ene_murkywater_bulldozer_2")
+					},
+					federales = {
+						Idstring("units/pd2_dlc_mad/characters/ene_swat_dozer_policia_federale_saiga/ene_swat_dozer_policia_federale_saiga"),
+						Idstring("units/pd2_dlc_mad/characters/ene_swat_dozer_policia_federale_r870/ene_swat_dozer_policia_federale_r870")
 					}
 				},
 				access = access_type_all
@@ -180,6 +188,14 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 					russia = {
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_r870/ene_akan_fbi_tank_r870"),
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_rpk_lmg/ene_akan_fbi_tank_rpk_lmg")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_2/ene_murkywater_bulldozer_2"),
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_3/ene_murkywater_bulldozer_3")
+					},
+					federales = {
+						Idstring("units/pd2_dlc_mad/characters/ene_swat_dozer_policia_federale_saiga/ene_swat_dozer_policia_federale_saiga"),
+						Idstring("units/pd2_dlc_mad/characters/ene_swat_dozer_policia_federale_m249/ene_swat_dozer_policia_federale_m249")
 					}
 				},
 				access = access_type_all
@@ -197,6 +213,16 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_r870/ene_akan_fbi_tank_r870"),
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_saiga/ene_akan_fbi_tank_saiga"),
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_tank_rpk_lmg/ene_akan_fbi_tank_rpk_lmg")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_1/ene_murkywater_bulldozer_1"),
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_2/ene_murkywater_bulldozer_2"),
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_bulldozer_3/ene_murkywater_bulldozer_3")
+					},
+					federales = {
+						Idstring("units/pd2_dlc_bex/characters/ene_swat_dozer_policia_federale_saiga/ene_swat_dozer_policia_federale_saiga"),
+						Idstring("units/pd2_dlc_bex/characters/ene_swat_dozer_policia_federale_m249/ene_swat_dozer_policia_federale_m249"),
+						Idstring("units/pd2_dlc_bex/characters/ene_swat_dozer_policia_federale_r870/ene_swat_dozer_policia_federale_r870")
 					}
 				},
 				access = access_type_all
@@ -207,7 +233,7 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	return self._groups.tank
 end
 
--- Lines 196-238
+-- Lines 228-288
 function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	if not self._groups.shield then
 		if difficulty_index <= 7 then
@@ -221,6 +247,14 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 					russia = {
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_sr2_smg/ene_akan_fbi_shield_sr2_smg"),
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_shield_c45/ene_akan_cs_shield_c45")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_shield/ene_murkywater_shield"),
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_shield/ene_murkywater_shield")
+					},
+					federales = {
+						Idstring("units/payday2/characters/ene_shield_1/ene_shield_1"),
+						Idstring("units/payday2/characters/ene_shield_2/ene_shield_2")
 					}
 				},
 				access = access_type_all
@@ -234,6 +268,12 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 					},
 					russia = {
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_shield_dw_sr2_smg/ene_akan_fbi_shield_dw_sr2_smg")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_shield/ene_murkywater_shield")
+					},
+					federales = {
+						Idstring("units/pd2_dlc_gitgud/characters/ene_zeal_swat_shield/ene_zeal_swat_shield")
 					}
 				},
 				access = access_type_all
@@ -244,7 +284,7 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	return self._groups.shield
 end
 
--- Lines 240-259
+-- Lines 290-317
 function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	if not self._groups.taser then
 		self._groups.taser = {
@@ -255,6 +295,12 @@ function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 				},
 				russia = {
 					Idstring("units/pd2_dlc_mad/characters/ene_akan_cs_tazer_ak47_ass/ene_akan_cs_tazer_ak47_ass")
+				},
+				murkywater = {
+					Idstring("units/pd2_dlc_bph/characters/ene_murkywater_tazer/ene_murkywater_tazer")
+				},
+				federales = {
+					Idstring("units/pd2_dlc_bex/characters/ene_swat_tazer_policia_federale/ene_swat_tazer_policia_federale")
 				}
 			},
 			access = access_type_all
@@ -264,7 +310,7 @@ function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	return self._groups.taser
 end
 
--- Lines 261-300
+-- Lines 319-374
 function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	if not self._groups.spooc then
 		if difficulty_index <= 7 then
@@ -276,6 +322,12 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 					},
 					russia = {
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_cloaker/ene_murkywater_cloaker")
+					},
+					federales = {
+						Idstring("units/pd2_dlc_bex/characters/ene_swat_cloaker_policia_federale/ene_swat_cloaker_policia_federale")
 					}
 				},
 				access = access_type_all
@@ -289,6 +341,12 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 					},
 					russia = {
 						Idstring("units/pd2_dlc_mad/characters/ene_akan_fbi_spooc_asval_smg/ene_akan_fbi_spooc_asval_smg")
+					},
+					murkywater = {
+						Idstring("units/pd2_dlc_bph/characters/ene_murkywater_cloaker/ene_murkywater_cloaker")
+					},
+					federales = {
+						Idstring("units/pd2_dlc_bex/characters/ene_swat_cloaker_policia_federale/ene_swat_cloaker_policia_federale")
 					}
 				},
 				access = access_type_all
@@ -299,7 +357,7 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	return self._groups.spooc
 end
 
--- Lines 303-324
+-- Lines 377-408
 function MutatorEnemyReplacer:_get_unit_group_medic(difficulty_index)
 	if not self._groups.medic then
 		self._groups.medic = {
@@ -312,6 +370,14 @@ function MutatorEnemyReplacer:_get_unit_group_medic(difficulty_index)
 				russia = {
 					Idstring("units/payday2/characters/ene_medic_r870/ene_medic_r870"),
 					Idstring("units/payday2/characters/ene_medic_m4/ene_medic_m4")
+				},
+				murkywater = {
+					Idstring("units/pd2_dlc_bph/characters/ene_murkywater_medic/ene_murkywater_medic"),
+					Idstring("units/pd2_dlc_bph/characters/ene_murkywater_medic_r870/ene_murkywater_medic_r870")
+				},
+				federales = {
+					Idstring("units/pd2_dlc_bex/characters/ene_swat_medic_policia_federale/ene_swat_medic_policia_federale"),
+					Idstring("units/pd2_dlc_bex/characters/ene_swat_medic_policia_federale_r870/ene_swat_medic_policia_federale_r870")
 				}
 			},
 			access = access_type_all
@@ -341,7 +407,7 @@ MutatorMediDozer.icon_coords = {
 	1
 }
 
--- Lines 344-352
+-- Lines 428-436
 function MutatorMediDozer:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -350,7 +416,7 @@ function MutatorMediDozer:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines 356-419
+-- Lines 440-523
 function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits = {
 		shield = 0,
@@ -369,6 +435,14 @@ function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_inde
 			russia = {
 				Idstring("units/payday2/characters/ene_medic_m4/ene_medic_m4"),
 				Idstring("units/payday2/characters/ene_medic_m4/ene_medic_m4")
+			},
+			murkywater = {
+				Idstring("units/pd2_dlc_bph/characters/ene_murkywater_medic/ene_murkywater_medic"),
+				Idstring("units/pd2_dlc_bph/characters/ene_murkywater_medic/ene_murkywater_medic")
+			},
+			federales = {
+				Idstring("units/pd2_dlc_bex/characters/ene_swat_medic_policia_federale/ene_swat_medic_policia_federale"),
+				Idstring("units/pd2_dlc_bex/characters/ene_swat_medic_policia_federale/ene_swat_medic_policia_federale")
 			}
 		},
 		access = access_type_all
@@ -383,6 +457,14 @@ function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_inde
 			russia = {
 				Idstring("units/payday2/characters/ene_medic_r870/ene_medic_r870"),
 				Idstring("units/payday2/characters/ene_medic_r870/ene_medic_r870")
+			},
+			murkywater = {
+				Idstring("units/pd2_dlc_bph/characters/ene_murkywater_medic_r870/ene_murkywater_medic_r870"),
+				Idstring("units/pd2_dlc_bph/characters/ene_murkywater_medic_r870/ene_murkywater_medic_r870")
+			},
+			federales = {
+				Idstring("units/pd2_dlc_bex/characters/ene_swat_medic_policia_federale_r870/ene_swat_medic_policia_federale_r870"),
+				Idstring("units/pd2_dlc_bex/characters/ene_swat_medic_policia_federale_r870/ene_swat_medic_policia_federale_r870")
 			}
 		},
 		access = access_type_all
@@ -422,7 +504,7 @@ MutatorTitandozers.icon_coords = {
 }
 MutatorTitandozers.load_priority = -10
 
--- Lines 439-447
+-- Lines 543-551
 function MutatorTitandozers:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -431,7 +513,7 @@ function MutatorTitandozers:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines 451-465
+-- Lines 555-569
 function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits.tank = math.huge
 	local unit_group = self:_get_unit_group_titandozer(difficulty_index)
@@ -445,7 +527,7 @@ function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_in
 	end
 end
 
--- Lines 467-486
+-- Lines 571-598
 function MutatorTitandozers:_get_unit_group_titandozer(difficulty_index)
 	if not self._groups.tank then
 		self._groups.tank = {
@@ -455,6 +537,12 @@ function MutatorTitandozers:_get_unit_group_titandozer(difficulty_index)
 					Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
 				},
 				russia = {
+					Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
+				},
+				murkywater = {
+					Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
+				},
+				federales = {
 					Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
 				}
 			},

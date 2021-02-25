@@ -718,7 +718,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines 759-1606
+-- Lines 759-1619
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1519,9 +1519,20 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 			self:_achievement("nmh_1")
 		}
 	})
+	table.insert(self.trophies, {
+		name_id = "trophy_bex",
+		image_id = "safehouse_trophies_preview_bex",
+		objective_id = "trophy_bex_objective",
+		id = "trophy_bex",
+		gives_reward = false,
+		desc_id = "trophy_bex_desc",
+		objectives = {
+			self:_progress("trophy_bex", 1)
+		}
+	})
 end
 
--- Lines 1608-1615
+-- Lines 1621-1628
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1532,7 +1543,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines 1617-1626
+-- Lines 1630-1639
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1546,7 +1557,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines 1628-1978
+-- Lines 1641-1991
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1874,7 +1885,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines 1980-1986
+-- Lines 1993-1999
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1883,7 +1894,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines 1990-2207
+-- Lines 2003-2220
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,
@@ -2108,7 +2119,7 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 	}
 end
 
--- Lines 2210-2300
+-- Lines 2223-2313
 function CustomSafehouseTweakData:_init_uno()
 	self.uno_achievements_pool = {
 		"armored_1",

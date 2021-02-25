@@ -110,22 +110,25 @@ function TeamAIBase:remove_upgrades()
 	end
 end
 
--- Lines 98-106
+-- Lines 98-109
 function TeamAIBase:save(data)
+	local character = managers.criminals:character_by_unit(self._unit)
+	local visual_seed = character and character.visual_state and character.visual_state.visual_seed
 	data.base = {
 		tweak_table = self._tweak_table,
-		loadout = managers.blackmarket:henchman_loadout_string_from_loadout(self._loadout)
+		loadout = managers.blackmarket:henchman_loadout_string_from_loadout(self._loadout),
+		visual_seed = visual_seed
 	}
 end
 
--- Lines 110-114
+-- Lines 113-117
 function TeamAIBase:on_death_exit()
 	TeamAIBase.super.on_death_exit(self)
 	self:unregister()
 	self:set_slot(self._unit, 0)
 end
 
--- Lines 118-123
+-- Lines 121-126
 function TeamAIBase:_register()
 	if not self._registered then
 		managers.groupai:state():register_criminal(self._unit)
@@ -134,7 +137,7 @@ function TeamAIBase:_register()
 	end
 end
 
--- Lines 127-138
+-- Lines 130-141
 function TeamAIBase:unregister()
 	if self._registered then
 		if Network:is_server() then
@@ -150,11 +153,11 @@ function TeamAIBase:unregister()
 	end
 end
 
--- Lines 142-143
+-- Lines 145-146
 function TeamAIBase:chk_freeze_anims()
 end
 
--- Lines 147-149
+-- Lines 150-152
 function TeamAIBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

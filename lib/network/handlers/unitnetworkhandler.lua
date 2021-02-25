@@ -4171,7 +4171,7 @@ function UnitNetworkHandler:sync_unit_converted(unit)
 		return
 	end
 
-	if not alive(unit) and unit:brain() and unit:brain().sync_converted then
+	if not alive(unit) or not unit:brain() or not unit:brain().sync_converted then
 		return
 	end
 

@@ -52,12 +52,12 @@ function LocalizationManager:exists(string_id)
 	return Localizer:exists(Idstring(string_id))
 end
 
--- Lines 160-179
+-- Lines 160-185
 function LocalizationManager:text(string_id, macros)
-	local return_string = "ERROR: " .. string_id
+	local return_string = "ERROR: " .. tostring(string_id)
 	local str_id = nil
 
-	if not string_id or string_id == "" then
+	if not string_id or string_id == "" or type(string_id) ~= "string" then
 		return_string = ""
 	elseif self:exists(string_id .. "_" .. self._platform) then
 		str_id = string_id .. "_" .. self._platform
@@ -74,12 +74,12 @@ function LocalizationManager:text(string_id, macros)
 	return return_string
 end
 
--- Lines 181-184
+-- Lines 187-190
 function LocalizationManager:format_text(text_string)
 	return self:_localizer_post_process(self:_text_localize(text_string, "@", ";"))
 end
 
--- Lines 196-223
+-- Lines 202-229
 function LocalizationManager:_localizer_post_process(string)
 	local localized_string = string
 	local macros = {}
@@ -103,9 +103,9 @@ function LocalizationManager:_localizer_post_process(string)
 	return self:_text_macroize(localized_string, macros)
 end
 
--- Lines 225-228
+-- Lines 231-234
 function LocalizationManager:_text_localize(text)
-	-- Lines 226-226
+	-- Lines 232-232
 	local function func(id)
 		return self:exists(id) and self:text(id) or false
 	end
@@ -113,9 +113,9 @@ function LocalizationManager:_text_localize(text)
 	return self:_text_format(text, "@", ";", func)
 end
 
--- Lines 230-233
+-- Lines 236-239
 function LocalizationManager:_text_macroize(text, macros)
-	-- Lines 231-231
+	-- Lines 237-237
 	local function func(word)
 		return macros[word] or false
 	end
@@ -123,7 +123,7 @@ function LocalizationManager:_text_macroize(text, macros)
 	return self:_text_format(text, "$", ";", func)
 end
 
--- Lines 235-246
+-- Lines 241-252
 function LocalizationManager:_text_format(text, X, Y, func)
 	local match_string = "%b" .. X .. Y
 

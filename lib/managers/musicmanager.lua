@@ -380,8 +380,8 @@ end
 function MusicManager:current_track_string()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 
-	if level_data and level_data.music == "no_music" then
-		return utf8.to_upper(managers.localization:text("menu_jukebox_track_" .. Global.level_data.level_id))
+	if level_data and level_data.music_ext_start then
+		return utf8.to_upper(managers.localization:text("menu_jukebox_screen_" .. Global.music_manager.current_music_ext))
 	end
 
 	return utf8.to_upper(managers.localization:text("menu_jukebox_" .. Global.music_manager.current_track))
@@ -576,7 +576,7 @@ function MusicManager:jukebox_ghost_track(name)
 	end
 end
 
--- Lines 540-796
+-- Lines 540-799
 function MusicManager:jukebox_default_tracks()
 	local default_options = {
 		heist_friend = "all",
@@ -631,12 +631,13 @@ function MusicManager:jukebox_default_tracks()
 		heist_sah = "music_tag",
 		heist_firestarter3 = "track_02",
 		heist_spa = "all",
-		heist_dark = "music_dark",
+		heist_bex = "track_68",
 		heist_alex1 = "track_08",
-		heist_tag = "music_tag",
+		heist_dark = "music_dark",
 		heist_kenaz_full = "all",
 		heist_framing_frame3 = "track_03",
 		heist_alex3 = "track_02",
+		heist_tag = "music_tag",
 		heistfinish = "music_loot_drop",
 		heist_gallery = "track_05",
 		heist_mallcrasher = "track_03",
@@ -739,7 +740,7 @@ function MusicManager:jukebox_default_tracks()
 	return default_options
 end
 
--- Lines 798-883
+-- Lines 801-886
 function MusicManager:jukebox_music_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -778,7 +779,7 @@ function MusicManager:jukebox_music_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 885-938
+-- Lines 888-941
 function MusicManager:jukebox_menu_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -805,7 +806,7 @@ function MusicManager:jukebox_menu_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 941-956
+-- Lines 944-959
 function MusicManager:jukebox_ghost_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -823,7 +824,7 @@ function MusicManager:jukebox_ghost_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 959-961
+-- Lines 962-964
 function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end

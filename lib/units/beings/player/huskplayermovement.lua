@@ -4832,7 +4832,7 @@ function HuskPlayerMovement:_post_load(unit, t, dt)
 		end
 
 		peer:set_outfit_string(my_data.outfit, my_data.outfit_version)
-		UnitNetworkHandler.set_unit(UnitNetworkHandler, unit, my_data.character_name, my_data.outfit, my_data.outfit_version, my_data.peer_id)
+		UnitNetworkHandler.set_unit(UnitNetworkHandler, unit, my_data.character_name, my_data.outfit, my_data.outfit_version, my_data.peer_id, nil, data.visual_state and data.visual_state.visual_seed)
 
 		if managers.network:session():peer_by_unit(unit) == nil then
 			Application:error("[HuskPlayerBase:_post_load] A player husk who appears to not have an owning member was detached.")
@@ -4860,23 +4860,25 @@ function HuskPlayerMovement:_post_load(unit, t, dt)
 	end
 end
 
--- Lines 4984-5001
+-- Lines 4984-5003
 function HuskPlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
+	local character = managers.criminals:character_by_unit(self._unit)
 	data.movement = {
 		state_name = self._state,
 		look_fwd = self:detect_look_dir(),
 		pose = self._pose_code,
 		stance = self._stance.code,
 		peer_id = peer_id,
-		character_name = managers.criminals:character_name_by_unit(self._unit),
+		visual_seed = character and character.visual_state and character.visual_state.visual_seed,
+		character_name = character and character.name,
 		outfit = managers.network:session():peer(peer_id):profile("outfit_string")
 	}
 	data.zip_line_unit_id = self:zipline_unit() and self:zipline_unit():editor_id()
 	data.down_time = self._last_down_time
 end
 
--- Lines 5005-5031
+-- Lines 5007-5033
 function HuskPlayerMovement:pre_destroy(unit)
 	if self._pos_reservation then
 		managers.navigation:unreserve_pos(self._pos_reservation)
@@ -4906,31 +4908,31 @@ function HuskPlayerMovement:pre_destroy(unit)
 	self:_destroy_current_carry_unit()
 end
 
--- Lines 5035-5037
+-- Lines 5037-5039
 function HuskPlayerMovement:set_attention_setting_enabled(setting_name, state)
 	return PlayerMovement.set_attention_setting_enabled(self, setting_name, state, false)
 end
 
--- Lines 5041-5043
+-- Lines 5043-5045
 function HuskPlayerMovement:clbk_attention_notice_sneak(observer_unit, status)
 	return PlayerMovement.clbk_attention_notice_sneak(self, observer_unit, status)
 end
 
--- Lines 5047-5049
+-- Lines 5049-5051
 function HuskPlayerMovement:_create_attention_setting_from_descriptor(setting_desc, setting_name)
 	return PlayerMovement._create_attention_setting_from_descriptor(self, setting_desc, setting_name)
 end
 
--- Lines 5053-5055
+-- Lines 5055-5057
 function HuskPlayerMovement:attention_handler()
 	return self._attention_handler
 end
 
--- Lines 5059-5060
+-- Lines 5061-5062
 function HuskPlayerMovement:_feed_suspicion_to_hud()
 end
 
--- Lines 5064-5072
+-- Lines 5066-5074
 function HuskPlayerMovement:_apply_attention_setting_modifications(setting)
 	setting.detection = self._unit:base():detection_settings()
 	local weight_mul = self._unit:base():upgrade_value("player", "camouflage_bonus") or 1
@@ -4942,7 +4944,7 @@ function HuskPlayerMovement:_apply_attention_setting_modifications(setting)
 	end
 end
 
--- Lines 5076-5118
+-- Lines 5078-5120
 function HuskPlayerMovement:sync_call_civilian(civilian_unit)
 	if not self._sympathy_civ and civilian_unit:brain():is_available_for_assignment({
 		type = "revive"
@@ -4989,7 +4991,7 @@ function HuskPlayerMovement:sync_call_civilian(civilian_unit)
 	end
 end
 
--- Lines 5122-5135
+-- Lines 5124-5137
 function HuskPlayerMovement:on_civ_revive_started(sympathy_civ)
 	if self._unit:interaction():active() then
 		self._unit:interaction():interact_start(sympathy_civ)
@@ -5007,14 +5009,14 @@ function HuskPlayerMovement:on_civ_revive_started(sympathy_civ)
 	end
 end
 
--- Lines 5139-5143
+-- Lines 5141-5145
 function HuskPlayerMovement:on_civ_revive_failed(sympathy_civ)
 	if self._sympathy_civ then
 		self._sympathy_civ = nil
 	end
 end
 
--- Lines 5147-5163
+-- Lines 5149-5165
 function HuskPlayerMovement:on_civ_revive_completed(sympathy_civ)
 	if sympathy_civ ~= self._sympathy_civ then
 		debug_pause_unit(sympathy_civ, "[HuskPlayerMovement:on_civ_revive_completed] idiot thinks he is reviving", sympathy_civ)
@@ -5039,14 +5041,14 @@ function HuskPlayerMovement:on_civ_revive_completed(sympathy_civ)
 	end
 end
 
--- Lines 5167-5170
+-- Lines 5169-5172
 function HuskPlayerMovement:sync_stance(stance_code)
 	self._stance.owner_stance_code = stance_code
 
 	self:_chk_change_stance()
 end
 
--- Lines 5174-5190
+-- Lines 5176-5192
 function HuskPlayerMovement:_chk_change_stance()
 	local wanted_stance_code = nil
 
@@ -5065,17 +5067,17 @@ function HuskPlayerMovement:_chk_change_stance()
 	end
 end
 
--- Lines 5194-5196
+-- Lines 5196-5198
 function HuskPlayerMovement:sync_action_change_run(is_running)
 	self._running = is_running
 end
 
--- Lines 5200-5202
+-- Lines 5202-5204
 function HuskPlayerMovement:sync_action_change_speed(speed)
 	self._synced_max_speed = speed
 end
 
--- Lines 5206-5214
+-- Lines 5208-5216
 function HuskPlayerMovement:gravity()
 	if self._state == "parachute" then
 		return tweak_data.player.parachute.gravity
@@ -5086,7 +5088,7 @@ function HuskPlayerMovement:gravity()
 	end
 end
 
--- Lines 5216-5224
+-- Lines 5218-5226
 function HuskPlayerMovement:terminal_velocity()
 	if self._state == "parachute" then
 		return tweak_data.player.parachute.terminal_velocity
@@ -5097,7 +5099,7 @@ function HuskPlayerMovement:terminal_velocity()
 	end
 end
 
--- Lines 5228-5285
+-- Lines 5230-5287
 function HuskPlayerMovement:_get_max_move_speed(run)
 	local my_tweak = tweak_data.player.movement_state.standard
 	local move_speed = nil
@@ -5154,7 +5156,7 @@ function HuskPlayerMovement:_get_max_move_speed(run)
 	return move_speed
 end
 
--- Lines 5289-5310
+-- Lines 5291-5312
 function HuskPlayerMovement:_chk_ground_ray(check_pos, return_ray)
 	local mover_radius = 60
 	local up_pos = tmp_vec1
@@ -5176,7 +5178,7 @@ function HuskPlayerMovement:_chk_ground_ray(check_pos, return_ray)
 	end
 end
 
--- Lines 5313-5320
+-- Lines 5315-5322
 function HuskPlayerMovement:_chk_floor_moving_pos(pos)
 	local ground_ray = self:_chk_ground_ray(pos, true)
 
@@ -5185,7 +5187,7 @@ function HuskPlayerMovement:_chk_floor_moving_pos(pos)
 	end
 end
 
--- Lines 5325-5339
+-- Lines 5327-5341
 function HuskPlayerMovement:sync_attention_setting(setting_name, state)
 	if state then
 		local setting_desc = tweak_data.attention.settings[setting_name]
@@ -5202,7 +5204,7 @@ function HuskPlayerMovement:sync_attention_setting(setting_name, state)
 	end
 end
 
--- Lines 5343-5351
+-- Lines 5345-5353
 function HuskPlayerMovement:is_SPOOC_attack_allowed()
 	if self._unit:character_damage():get_mission_blocker("invulnerable") then
 		return false
@@ -5215,7 +5217,7 @@ function HuskPlayerMovement:is_SPOOC_attack_allowed()
 	return true
 end
 
--- Lines 5353-5358
+-- Lines 5355-5360
 function HuskPlayerMovement:is_taser_attack_allowed()
 	if self._unit:character_damage():get_mission_blocker("invulnerable") or self._vehicle then
 		return false
@@ -5224,7 +5226,7 @@ function HuskPlayerMovement:is_taser_attack_allowed()
 	return true
 end
 
--- Lines 5363-5376
+-- Lines 5365-5378
 function HuskPlayerMovement:on_enter_zipline(zipline_unit)
 	local zipline = zipline_unit:zipline()
 
@@ -5237,7 +5239,7 @@ function HuskPlayerMovement:on_enter_zipline(zipline_unit)
 	end
 end
 
--- Lines 5378-5395
+-- Lines 5380-5397
 function HuskPlayerMovement:on_exit_zipline()
 	if self._atention_on then
 		self._machine:forbid_modifier(self._look_modifier_name)
@@ -5258,14 +5260,14 @@ function HuskPlayerMovement:on_exit_zipline()
 	self._zipline.enabled = false
 end
 
--- Lines 5397-5401
+-- Lines 5399-5403
 function HuskPlayerMovement:zipline_unit()
 	if self._zipline and self._zipline.zipline_unit then
 		return self._zipline.zipline_unit
 	end
 end
 
--- Lines 5406-5428
+-- Lines 5408-5430
 function HuskPlayerMovement:on_exit_vehicle()
 	self._arm_animator:set_state_blocked("driving", false)
 
@@ -5288,7 +5290,7 @@ function HuskPlayerMovement:on_exit_vehicle()
 	self:clear_movement_path()
 end
 
--- Lines 5430-5435
+-- Lines 5432-5437
 function HuskPlayerMovement:sync_vehicle_change_stance(stance)
 	local anim = self._machine:segment_state(self._ids_base)
 
@@ -5298,19 +5300,19 @@ function HuskPlayerMovement:sync_vehicle_change_stance(stance)
 	self._vehicle_shooting_stance = stance
 end
 
--- Lines 5440-5443
+-- Lines 5442-5445
 function HuskPlayerMovement:sync_action_jump(pos, jump_vec)
 	self:_override_last_node_action("land", true)
 	self:sync_action_walk_nav_point(pos, nil, "jump", sync_action_force)
 end
 
--- Lines 5448-5451
+-- Lines 5450-5453
 function HuskPlayerMovement:sync_action_teleport(pos)
 	self:sync_action_walk_nav_point(nil, nil, "teleport_start", sync_action_force)
 	self:sync_action_walk_nav_point(pos, nil, "teleport_end", sync_action_force_and_execute)
 end
 
--- Lines 5455-5479
+-- Lines 5457-5481
 function HuskPlayerMovement:_cleanup_previous_state(previous_state)
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -5336,21 +5338,21 @@ function HuskPlayerMovement:_cleanup_previous_state(previous_state)
 	end
 end
 
--- Lines 5483-5491
+-- Lines 5485-5493
 function HuskPlayerMovement:anim_clbk_hide_akimbo_weapon()
 	if alive(self._unit:inventory():equipped_unit()) and self._unit:inventory():equipped_unit():base().AKIMBO then
 		self._unit:inventory():equipped_unit():base():on_melee_item_shown()
 	end
 end
 
--- Lines 5493-5501
+-- Lines 5495-5503
 function HuskPlayerMovement:anim_clbk_show_akimbo_weapon()
 	if alive(self._unit:inventory():equipped_unit()) and self._unit:inventory():equipped_unit():base().AKIMBO then
 		self._unit:inventory():equipped_unit():base():on_melee_item_hidden()
 	end
 end
 
--- Lines 5503-5513
+-- Lines 5505-5515
 function HuskPlayerMovement:sync_interaction_anim_start(tweak)
 	self:destroy_magazine_in_hand()
 
@@ -5363,7 +5365,7 @@ function HuskPlayerMovement:sync_interaction_anim_start(tweak)
 	end
 end
 
--- Lines 5515-5525
+-- Lines 5517-5527
 function HuskPlayerMovement:sync_interaction_anim_end()
 	self:destroy_magazine_in_hand()
 
@@ -5387,7 +5389,7 @@ HuskPlayerMovement._gadgets = {
 	}
 }
 
--- Lines 5540-5547
+-- Lines 5542-5549
 function HuskPlayerMovement:spawn_wanted_items()
 	if self._wanted_items then
 		for _, spawn_info in ipairs(self._wanted_items) do
@@ -5398,7 +5400,7 @@ function HuskPlayerMovement:spawn_wanted_items()
 	end
 end
 
--- Lines 5549-5569
+-- Lines 5551-5571
 function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	local align_name = self._gadgets.aligns[align_place]
 
@@ -5428,7 +5430,7 @@ function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	table.insert(self._equipped_items[align_place], item_unit)
 end
 
--- Lines 5571-5584
+-- Lines 5573-5586
 function HuskPlayerMovement:_destroy_items()
 	if not self._equipped_items then
 		return
@@ -5445,7 +5447,7 @@ function HuskPlayerMovement:_destroy_items()
 	self._equipped_items = nil
 end
 
--- Lines 5587-5598
+-- Lines 5589-5600
 function HuskPlayerMovement:anim_clbk_wanted_item(unit, item_type, align_place, droppable)
 	self._wanted_items = self._wanted_items or {}
 
@@ -5461,19 +5463,19 @@ function HuskPlayerMovement:anim_clbk_wanted_item(unit, item_type, align_place, 
 	self:spawn_wanted_items()
 end
 
--- Lines 5600-5603
+-- Lines 5602-5605
 function HuskPlayerMovement:anim_clbk_flush_wanted_items()
 	self._wanted_items = nil
 
 	self:_destroy_items()
 end
 
--- Lines 5608-5610
+-- Lines 5610-5612
 function HuskPlayerMovement:is_vr()
 	return self._is_vr
 end
 
--- Lines 5612-5614
+-- Lines 5614-5616
 function HuskPlayerMovement:set_is_vr()
 	self._is_vr = true
 end

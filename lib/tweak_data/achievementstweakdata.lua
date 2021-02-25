@@ -1,12 +1,18 @@
 require("lib/tweak_data/GeneratedAchievementTweakData")
 
--- Lines 6-47
+-- Lines 6-69
 local function get_texture_path(tweak_data, category, id)
 	local td = nil
 	local rtn = {}
 
 	if category == "armor_skins" then
 		td = tweak_data.economy.armor_skins[id]
+	elseif category == "suit_variations" then
+		local player_style = id[1]
+		local suit_variation = id[2]
+		local ps_td = tweak_data:get_raw_value("blackmarket", "player_styles", player_style)
+		local sv_td = ps_td.material_variations and ps_td.material_variations[suit_variation]
+		td = sv_td and (sv_td.texture_bundle_folder and sv_td or ps_td)
 	else
 		td = tweak_data:get_raw_value("blackmarket", category, id)
 	end
@@ -24,6 +30,12 @@ local function get_texture_path(tweak_data, category, id)
 
 		if category == "armor_skins" then
 			rtn.texture = guis_catalog .. "armor_skins/" .. id
+		elseif category == "weapon_skins" then
+			rtn.texture = guis_catalog .. "textures/pd2/blackmarket/icons/" .. (td.is_a_color_skin and "weapon_color" or "weapon_skins") .. "/" .. id
+		elseif category == "suit_variations" then
+			local player_style = id[1]
+			local suit_variation = id[2]
+			rtn.texture = guis_catalog .. "textures/pd2/blackmarket/icons/player_styles/" .. player_style .. "_" .. suit_variation
 		else
 			rtn.texture = guis_catalog .. "textures/pd2/blackmarket/icons/" .. (category == "weapon_mods" and "mods" or category) .. "/" .. id
 		end
@@ -40,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 54-2625
+-- Lines 76-2669
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -1164,6 +1176,12 @@ function AchievementsTweakData:init(tweak_data)
 			stat = "bph_9_stat",
 			is_dropin = false,
 			difficulty = overkill_and_above
+		},
+		bex_9 = {
+			award = "bex_9",
+			melee_id = "chac",
+			enemy = "civilian_mariachi",
+			job = "bex"
 		}
 	}
 	self.complete_heist_achievements = {
@@ -4812,6 +4830,47 @@ function AchievementsTweakData:init(tweak_data)
 			job = "mex_cooking",
 			difficulty = sm_wish_and_above
 		},
+		bex_1 = {
+			award = "bex_1",
+			job = "bex",
+			difficulty = normal_and_above
+		},
+		bex_2 = {
+			award = "bex_2",
+			job = "bex",
+			difficulty = hard_and_above
+		},
+		bex_3 = {
+			award = "bex_3",
+			job = "bex",
+			difficulty = veryhard_and_above
+		},
+		bex_4 = {
+			award = "bex_4",
+			job = "bex",
+			difficulty = overkill_and_above
+		},
+		bex_5 = {
+			award = "bex_5",
+			job = "bex",
+			difficulty = easywish_and_above
+		},
+		bex_6 = {
+			award = "bex_6",
+			job = "bex",
+			difficulty = deathwish_and_above
+		},
+		bex_7 = {
+			award = "bex_7",
+			job = "bex",
+			difficulty = sm_wish_and_above
+		},
+		bex_8 = {
+			award = "bex_8",
+			one_down = true,
+			job = "bex",
+			difficulty = sm_wish_and_above
+		},
 		uno_1 = {
 			award = "uno_1",
 			bag_loot_value = 400000,
@@ -6065,7 +6124,8 @@ function AchievementsTweakData:init(tweak_data)
 			"bph",
 			"vit",
 			"mex",
-			"mex_cooking"
+			"mex_cooking",
+			"bex"
 		},
 		jimmy = {
 			"mad",
@@ -7060,7 +7120,8 @@ function AchievementsTweakData:init(tweak_data)
 				"skulloverkillplus",
 				"gitgud_e_wish",
 				"gitgud_sm_wish",
-				"dnm"
+				"dnm",
+				"ggac_od_t2"
 			}
 		},
 		funding_father = {
@@ -7700,7 +7761,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2644-2671
+-- Lines 2688-2715
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -7711,7 +7772,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2653-2664
+	-- Lines 2697-2708
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7741,7 +7802,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2673-2678
+-- Lines 2717-2722
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7754,7 +7815,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2680-2688
+-- Lines 2724-2732
 local function from_level(level)
 	if not level then
 		error()
@@ -7770,7 +7831,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2690-2698
+-- Lines 2734-2742
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7786,7 +7847,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2700-2711
+-- Lines 2744-2755
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7808,7 +7869,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2716-2899
+-- Lines 2760-2956
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -7856,6 +7917,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	}
 
 	table.insert(self.tags.unlock, "outfit")
+	table.insert(self.tags.unlock, "weapon_color")
 
 	local contacts = {}
 
@@ -7925,6 +7987,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 				local sort_order = {
 					"characters",
 					"weapon_mods",
+					"weapon_skins",
 					"masks",
 					"player_styles",
 					"melee_weapons",
@@ -7961,7 +8024,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 2934-3076
+-- Lines 2991-3133
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8152,7 +8215,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3054-3054
+	-- Lines 3111-3111
 	local function dummy_progress()
 		return 0
 	end

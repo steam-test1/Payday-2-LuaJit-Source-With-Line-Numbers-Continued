@@ -181,7 +181,7 @@ function AssetsTweakData:_init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 189-1744
+-- Lines 189-1745
 function AssetsTweakData:_init_assets(tweak_data)
 	self.safe_escape = {
 		name_id = "menu_asset_safe_escape",
@@ -1145,7 +1145,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 	}
 	self.crojob1_plan = {
 		name_id = "menu_asset_arm_info",
-		texture = "guis/textures/pd2/mission_briefing/assets/crojob/stage_1/assets_crojob_insiderinfo_bomb",
+		texture = "guis/textures/pd2/mission_briefing/assets/bcrojob/stage_1/assets_crojob_insiderinfo_bomb",
 		stages = {
 			"crojob1"
 		},
@@ -1399,7 +1399,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 	}
 end
 
--- Lines 1747-1794
+-- Lines 1748-1795
 function AssetsTweakData:_init_debug_assets(tweak_data)
 	self.debug_1 = {
 		name_id = "debug_1",
@@ -1464,7 +1464,7 @@ function AssetsTweakData:_init_debug_assets(tweak_data)
 	}
 end
 
--- Lines 1796-1833
+-- Lines 1797-1834
 function AssetsTweakData:debug_assets()
 	local levels = {}
 
@@ -1472,7 +1472,7 @@ function AssetsTweakData:debug_assets()
 		levels[level_id] = 0
 	end
 
-	-- Lines 1802-1810
+	-- Lines 1803-1811
 	local function f(id)
 		if id == "all" then
 			for i, d in pairs(levels) do

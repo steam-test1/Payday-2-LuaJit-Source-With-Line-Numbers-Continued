@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-875
+-- Lines 29-880
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -86,6 +86,8 @@ function MoneyTweakData:init(tweak_data)
 		unknown = 5000,
 		safe = 4600,
 		prototype = 10000,
+		faberge_egg = 3000,
+		treasure = 3200,
 		counterfeit_money = 1100,
 		box_unknown = 10000,
 		black_tablet = 10000,

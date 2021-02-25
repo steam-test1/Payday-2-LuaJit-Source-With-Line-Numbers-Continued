@@ -893,7 +893,7 @@ function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines 872-1527
+-- Lines 872-1530
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()
@@ -933,6 +933,9 @@ function MissionEndState:chk_complete_heist_achievements()
 						"civilian_female",
 						"bank_manager"
 					}
+
+					table.insert(civilians, "civilian_mariachi")
+
 					local count = nil
 
 					for i, name in ipairs(civilians) do

@@ -229,7 +229,9 @@ function CoreSetup:__pre_init()
 end
 
 local lang_mods = {
-	[Idstring("japanese"):key()] = "japanese"
+	[Idstring("japanese"):key()] = "japanese",
+	[Idstring("schinese"):key()] = "schinese",
+	[Idstring("korean"):key()] = "korean"
 }
 
 -- Lines 293-443

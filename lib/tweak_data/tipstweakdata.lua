@@ -666,7 +666,7 @@ function TipsTweakData:init()
 		{
 			cat_index = 111,
 			image = "weapon_melee",
-			consoles = true,
+			consoles = false,
 			category = "gameplay"
 		},
 		{

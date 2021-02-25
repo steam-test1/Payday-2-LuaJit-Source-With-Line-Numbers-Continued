@@ -537,7 +537,7 @@ end
 function MissionLayer:_on_gui_mission_element_help()
 	local short_name = self:_stripped_unit_name(self._selected_unit:name():s())
 
-	EWS:launch_url("https://intranet.starbreeze.com/wiki/index.php/" .. short_name)
+	EWS:launch_url("https://confluence.starbreeze.com/display/PD2/" .. short_name)
 end
 
 -- Lines 533-542

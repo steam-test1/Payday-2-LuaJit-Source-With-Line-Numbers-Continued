@@ -9,12 +9,13 @@ function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	end)
 end
 
--- Lines 29-45
+-- Lines 29-75
 function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	if not cosmetics then
 		self._cosmetics_id = nil
 		self._cosmetics_quality = nil
 		self._cosmetics_bonus = nil
+		self._cosmetics_color_index = nil
 		self._cosmetics_data = nil
 
 		return
@@ -24,29 +25,61 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	self._cosmetics_quality = cosmetics and cosmetics.quality
 	self._cosmetics_bonus = cosmetics and cosmetics.bonus
 	self._cosmetics_data = self._cosmetics_id and tweak_data.blackmarket.weapon_skins[self._cosmetics_id]
+	self._cosmetics_color_index = cosmetics and cosmetics.color_index
+
+	if self._cosmetics_color_index then
+		if not self._cosmetics_data[self._cosmetics_color_index] then
+			self._cosmetics_id = nil
+			self._cosmetics_quality = nil
+			self._cosmetics_bonus = nil
+			self._cosmetics_color_index = nil
+			self._cosmetics_data = nil
+
+			return
+		end
+
+		local weapon_color_data = {}
+
+		for k, v in pairs(self._cosmetics_data) do
+			if type(k) ~= "number" then
+				weapon_color_data[k] = v
+			end
+		end
+
+		for k, v in pairs(self._cosmetics_data[self._cosmetics_color_index]) do
+			weapon_color_data[k] = v
+		end
+
+		self._cosmetics_data = weapon_color_data
+	end
 end
 
--- Lines 47-49
+-- Lines 78-80
+function NewRaycastWeaponBase:get_cosmetics_color_index()
+	return self._cosmetics_color_index
+end
+
+-- Lines 82-84
 function NewRaycastWeaponBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines 51-53
+-- Lines 86-88
 function NewRaycastWeaponBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines 55-57
+-- Lines 90-92
 function NewRaycastWeaponBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines 59-61
+-- Lines 94-96
 function NewRaycastWeaponBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines 63-91
+-- Lines 98-126
 function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_material_config, force_third_person)
 	force_third_person = force_third_person or _G.IS_VR
 
@@ -72,7 +105,7 @@ function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_m
 	return Idstring(unit_name .. "_cc")
 end
 
--- Lines 93-148
+-- Lines 128-183
 function NewRaycastWeaponBase:_update_materials()
 	if not self._parts then
 		return
@@ -153,7 +186,7 @@ local material_variables = {
 	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 }
 
--- Lines 177-184
+-- Lines 212-219
 function NewRaycastWeaponBase:get_cosmetic_value(...)
 	local cosmetic_value = self:get_cosmetics_data()
 
@@ -166,7 +199,7 @@ function NewRaycastWeaponBase:get_cosmetic_value(...)
 	return cosmetic_value
 end
 
--- Lines 186-289
+-- Lines 221-325
 function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	material_variables.wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 
@@ -202,7 +235,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 			end
 
 			for key, material_texture in pairs(material_textures) do
-				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key)
+				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[material_texture]
 
 				if value then
 					if type_name(value) ~= "Idstring" then
@@ -248,7 +281,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 291-302
+-- Lines 327-338
 function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -263,7 +296,7 @@ function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 304-329
+-- Lines 340-365
 function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -282,7 +315,7 @@ function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines 331-365
+-- Lines 367-402
 function NewRaycastWeaponBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 
@@ -297,7 +330,7 @@ function NewRaycastWeaponBase:_set_material_textures()
 
 		for _, material in pairs(materials) do
 			for key, material_texture in pairs(material_textures) do
-				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key)
+				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[material_texture]
 
 				if value then
 					if type_name(value) ~= "Idstring" then
@@ -319,7 +352,7 @@ function NewRaycastWeaponBase:_set_material_textures()
 	end
 end
 
--- Lines 570-666
+-- Lines 607-704
 function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets)
 	local mag_data = nil
 	local mag_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("magazine", self._factory_id, self._blueprint)
@@ -393,7 +426,7 @@ function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets)
 		end
 
 		for key, material_texture in pairs(material_textures) do
-			value = self:get_cosmetic_value("weapons", self._name_id, "parts", mag_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", mag_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key)
+			value = self:get_cosmetic_value("weapons", self._name_id, "parts", mag_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", mag_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[material_texture]
 
 			if value then
 				if type_name(value) ~= "Idstring" then
@@ -450,7 +483,7 @@ local mvec3_add = mvector3.add
 local mvec3_sub = mvector3.subtract
 local mvec3_mul = mvector3.multiply
 
--- Lines 688-729
+-- Lines 726-767
 function NewRaycastWeaponBase:drop_magazine_object()
 	if not self._name_id then
 		return

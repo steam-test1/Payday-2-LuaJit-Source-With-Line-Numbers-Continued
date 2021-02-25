@@ -2,8 +2,35 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-2924
+-- Lines 7-2963
 function HudIconsTweakData:init()
+	self.mouse_left_click = {
+		texture = "guis/textures/pd2/mouse_buttons",
+		texture_rect = {
+			1,
+			1,
+			17,
+			23
+		}
+	}
+	self.mouse_right_click = {
+		texture = "guis/textures/pd2/mouse_buttons",
+		texture_rect = {
+			18,
+			1,
+			17,
+			23
+		}
+	}
+	self.mouse_scroll_wheel = {
+		texture = "guis/textures/pd2/mouse_buttons",
+		texture_rect = {
+			35,
+			1,
+			17,
+			23
+		}
+	}
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
@@ -1524,6 +1551,24 @@ function HudIconsTweakData:init()
 	}
 	self.equipment_blueprint = {
 		texture = "guis/dlcs/mex/textures/pd2/hud_pickups_blueprint",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_tape_fingerprint = {
+		texture = "guis/dlcs/bex/textures/pd2/hud_pickups_tape_fingerprint",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_tape = {
+		texture = "guis/dlcs/bex/textures/pd2/hud_pickups_tape",
 		texture_rect = {
 			0,
 			0,
@@ -13394,6 +13439,105 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_Silencioso = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_Gunpowder = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_HitMe = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_bex",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -13410,7 +13554,7 @@ end
 
 local atlas_data = nil
 
--- Lines 2927-2930
+-- Lines 2966-2969
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -13423,7 +13567,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 2932-2948
+-- Lines 2971-2987
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -13449,7 +13593,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 2950-2955
+-- Lines 2989-2994
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -13463,7 +13607,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 2957-2963
+-- Lines 2996-3002
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -13474,7 +13618,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 2965-2971
+-- Lines 3004-3010
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

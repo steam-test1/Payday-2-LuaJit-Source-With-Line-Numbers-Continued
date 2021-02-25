@@ -21,10 +21,11 @@ local free_dlcs = {
 	"ecp",
 	"mex",
 	"mwm",
-	"trd"
+	"trd",
+	"bex"
 }
 
--- Lines 129-144
+-- Lines 133-148
 function PS4DLCManager:init_console()
 	for i, dlc in ipairs(free_dlcs) do
 		Global.dlc_manager.all_dlc_data[dlc] = {
@@ -34,7 +35,7 @@ function PS4DLCManager:init_console()
 	end
 end
 
--- Lines 146-172
+-- Lines 150-176
 function XB1DLCManager:init_console()
 	local last_index = 0
 

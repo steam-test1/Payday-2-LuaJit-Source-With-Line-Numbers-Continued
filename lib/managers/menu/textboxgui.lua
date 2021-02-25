@@ -376,7 +376,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	if self._override_info_area_size then
 		self:_override_info_area_size(info_area, scroll_panel, buttons_panel)
 	else
-		info_area:set_h(scroll_panel:bottom() + buttons_panel:h() + 10 + 5)
+		info_area:set_h(scroll_panel:bottom() + buttons_panel:h() + 10 + 5 + lower_static_panel:h())
 	end
 
 	buttons_panel:set_bottom(info_area:h() - 10)
@@ -441,7 +441,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 			2
 		}
 	}):set_aligns("scale", "scale")
-	lower_static_panel:set_bottom(main:h() - h * 2)
+	lower_static_panel:set_bottom(buttons_panel:top() - 2)
 
 	self._info_box = BoxGuiObject:new(info_area, {
 		sides = {
@@ -795,7 +795,7 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 end
 
 -- Lines 525-527
-function TextBoxGui:_create_lower_static_panel()
+function TextBoxGui:_create_lower_static_panel(lower_static_panel)
 end
 
 -- Lines 529-537

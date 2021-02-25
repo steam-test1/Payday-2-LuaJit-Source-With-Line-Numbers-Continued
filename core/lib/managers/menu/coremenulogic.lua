@@ -113,7 +113,7 @@ function Logic:refresh_node_stack(queue, ...)
 	self:_queue_action("refresh_node_stack", ...)
 end
 
--- Lines 114-125
+-- Lines 114-127
 function Logic:_refresh_node_stack(...)
 	for i, node in ipairs(self._node_stack) do
 		if node:parameters().refresh then
@@ -124,18 +124,20 @@ function Logic:_refresh_node_stack(...)
 
 		local selected_item = node:selected_item()
 
-		node:select_item(selected_item and selected_item:name())
+		if selected_item then
+			node:select_item(selected_item and selected_item:name())
+		end
 	end
 
 	self:_call_callback("renderer_refresh_node_stack")
 end
 
--- Lines 127-132
+-- Lines 129-134
 function Logic:refresh_node(node_name, queue, ...)
 	self:_queue_action("refresh_node", node_name, ...)
 end
 
--- Lines 134-154
+-- Lines 136-156
 function Logic:_refresh_node(node_name, ...)
 	local node = self:selected_node()
 
@@ -155,12 +157,12 @@ function Logic:_refresh_node(node_name, ...)
 	end
 end
 
--- Lines 156-161
+-- Lines 158-163
 function Logic:update_node(node_name, queue, ...)
 	self:_queue_action("update_node", node_name, ...)
 end
 
--- Lines 163-187
+-- Lines 165-189
 function Logic:_update_node(node_name, ...)
 	local node = self:selected_node()
 
@@ -175,14 +177,14 @@ function Logic:_update_node(node_name, ...)
 	end
 end
 
--- Lines 189-193
+-- Lines 191-195
 function Logic:navigate_back(queue, skip_nodes)
 	if self._accept_input or queue then
 		self:_queue_action("navigate_back", skip_nodes)
 	end
 end
 
--- Lines 195-223
+-- Lines 197-225
 function Logic:_navigate_back(skip_nodes)
 	local node = self._node_stack[#self._node_stack]
 
@@ -216,7 +218,7 @@ function Logic:_navigate_back(skip_nodes)
 	self:_call_callback("menu_manager_select_node", node)
 end
 
--- Lines 226-234
+-- Lines 228-236
 function Logic:soft_open()
 	local node = self._node_stack[#self._node_stack]
 
@@ -229,31 +231,31 @@ function Logic:soft_open()
 	end
 end
 
--- Lines 236-238
+-- Lines 238-240
 function Logic:selected_node()
 	return self._node_stack[#self._node_stack]
 end
 
--- Lines 240-242
+-- Lines 242-244
 function Logic:selected_node_name()
 	return self:selected_node():parameters().name
 end
 
--- Lines 244-248
+-- Lines 246-250
 function Logic:select_item(item_name, queue)
 	if self._accept_input or queue then
 		self:_queue_action("select_item", item_name)
 	end
 end
 
--- Lines 250-254
+-- Lines 252-256
 function Logic:mouse_over_select_item(item_name, queue)
 	if self._accept_input or queue then
 		self:_queue_action("select_item", item_name, true)
 	end
 end
 
--- Lines 256-271
+-- Lines 258-273
 function Logic:_select_item(item_name, mouse_over)
 	local current_node = self:selected_node()
 
@@ -269,14 +271,14 @@ function Logic:_select_item(item_name, mouse_over)
 	end
 end
 
--- Lines 273-277
+-- Lines 275-279
 function Logic:trigger_item(queue, item)
 	if self._accept_input or queue then
 		self:_queue_action("trigger_item", item)
 	end
 end
 
--- Lines 279-287
+-- Lines 281-289
 function Logic:_trigger_item(item)
 	item = item or self:selected_item()
 
@@ -286,7 +288,7 @@ function Logic:_trigger_item(item)
 	end
 end
 
--- Lines 289-296
+-- Lines 291-298
 function Logic:selected_item()
 	local item = nil
 	local node = self:selected_node()
@@ -298,7 +300,7 @@ function Logic:selected_item()
 	return item
 end
 
--- Lines 298-305
+-- Lines 300-307
 function Logic:get_item(name)
 	local item = nil
 	local node = self:selected_node()
@@ -310,7 +312,7 @@ function Logic:get_item(name)
 	return item
 end
 
--- Lines 307-316
+-- Lines 309-318
 function Logic:get_node(node_name, ...)
 	local node = self._data:get_node(node_name, ...)
 
@@ -321,19 +323,19 @@ function Logic:get_node(node_name, ...)
 	return node
 end
 
--- Lines 318-321
+-- Lines 320-323
 function Logic:accept_input(accept)
 	self._accept_input = accept
 
 	self:_call_callback("input_accept_input", accept)
 end
 
--- Lines 323-325
+-- Lines 325-327
 function Logic:register_callback(id, callback)
 	self._callback_map[id] = callback
 end
 
--- Lines 327-333
+-- Lines 329-335
 function Logic:_call_callback(id, ...)
 	if self._callback_map[id] then
 		self._callback_map[id](...)
@@ -342,17 +344,17 @@ function Logic:_call_callback(id, ...)
 	end
 end
 
--- Lines 335-337
+-- Lines 337-339
 function Logic:node_item_dirty(node, item)
 	self:_call_callback("renderer_node_item_dirty", node, item)
 end
 
--- Lines 339-341
+-- Lines 341-343
 function Logic:renderer_closed()
 	self:_call_callback("menu_manager_menu_closed")
 end
 
--- Lines 343-364
+-- Lines 345-366
 function Logic:close(closing_menu)
 	local selected_node = self:selected_node()
 

@@ -1497,8 +1497,130 @@ function Layer:create_unit(name, pos, rot, to_continent_name, prefered_id)
 	return unit
 end
 
--- Lines 1396-1423
+-- Lines 1395-1497
+function Layer:check_unit_dependencies(unit_name)
+	-- Lines 1396-1398
+	local function remove_whitespace(str)
+		return string.gsub(str, "^%s*(.-)%s*$", "%1")
+	end
+
+	local object_file = CoreEngineAccess._editor_unit_data(unit_name:id()):model()
+	local object_xml = nil
+
+	if DB:has("object", object_file) then
+		object_xml = DB:load_node("object", object_file)
+	else
+		object_xml = SystemFS:parse_xml("data/objects" .. object_file:s())
+	end
+
+	local depended_effects = {}
+	local unit_dependencies = {}
+
+	if object_xml then
+		local recursive_check_object = nil
+
+		-- Lines 1413-1426
+		function recursive_check_object(node)
+			for i = 0, node:num_children() - 1 do
+				local child = node:child(i)
+
+				if child:name() == "effect_spawner" and child:has_parameter("effect") then
+					local object_effect = remove_whitespace(child:parameter("effect"))
+					depended_effects[object_effect] = false
+				end
+
+				if child:num_children() > 0 then
+					recursive_check_object(child)
+				end
+			end
+		end
+
+		recursive_check_object(object_xml)
+	end
+
+	local unit_file_path = Application:base_path() .. "../../assets/" .. unit_name:s() .. ".unit"
+	local unit_xml = SystemFS:parse_xml(unit_file_path)
+	local recursive_check_unit = nil
+
+	-- Lines 1434-1447
+	function recursive_check_unit(node)
+		for i = 0, node:num_children() - 1 do
+			local child = node:child(i)
+
+			if child:name() == "depends_on" and child:has_parameter("effect") then
+				local depended_effect = remove_whitespace(child:parameter("effect"))
+				unit_dependencies[depended_effect] = false
+			end
+
+			if child:num_children() > 0 then
+				recursive_check_unit(child)
+			end
+		end
+	end
+
+	recursive_check_unit(unit_xml)
+
+	local sequence_file = nil
+
+	for child in object_xml:children() do
+		if child:name() == "sequence_manager" then
+			sequence_file = Idstring(child:parameter("file"))
+		end
+	end
+
+	if sequence_file then
+		local sequence_file_extension = Idstring("sequence_manager")
+		local manager_node = PackageManager:editor_load_script_data(sequence_file_extension:id(), sequence_file)
+		local found_effect = false
+		local recursive_check_sequence = nil
+
+		-- Lines 1462-1480
+		function recursive_check_sequence(node)
+			for key, value in pairs(node) do
+				if key == "_meta" then
+					if value == "effect" then
+						found_effect = true
+					else
+						found_effect = false
+					end
+				end
+
+				if key == "name" and found_effect then
+					local sequence_effect = remove_whitespace(string.gsub(value, "'", ""))
+					depended_effects[sequence_effect] = false
+					found_effect = false
+				end
+
+				if type(value) == "table" then
+					recursive_check_sequence(value)
+				end
+			end
+		end
+
+		recursive_check_sequence(manager_node)
+	end
+
+	for seq_key, seq_value in pairs(depended_effects) do
+		for unit_key, unit_value in pairs(unit_dependencies) do
+			if seq_key == unit_key then
+				depended_effects[seq_key] = true
+			end
+		end
+	end
+
+	for key, value in pairs(depended_effects) do
+		if value == false then
+			error("Missing effect dependency " .. key .. " on unit " .. unit_name:s() .. ".unit")
+		end
+	end
+end
+
+-- Lines 1502-1535
 function Layer:do_spawn_unit(name, pos, rot, to_continent_name, prevent_undo, prefered_id)
+	if Application:editor() and name:s() ~= "" then
+		self:check_unit_dependencies(name)
+	end
+
 	local continent = to_continent_name and managers.editor:continent(to_continent_name) or managers.editor:current_continent()
 
 	if continent:value("locked") and not self._continent_locked_picked then
@@ -1526,7 +1648,7 @@ function Layer:do_spawn_unit(name, pos, rot, to_continent_name, prevent_undo, pr
 	end
 end
 
--- Lines 1426-1439
+-- Lines 1538-1551
 function Layer:remove_unit(unit)
 	table.delete(self._selected_units, unit)
 	self:remove_highlighted_unit(unit)
@@ -1542,7 +1664,7 @@ function Layer:remove_unit(unit)
 	World:delete_unit(unit)
 end
 
--- Lines 1441-1449
+-- Lines 1553-1561
 function Layer:delete_unit(unit, prevent_undo)
 	local command = CoreEditorCommand.DeleteStaticUnitCommand:new(self)
 
@@ -1553,11 +1675,11 @@ function Layer:delete_unit(unit, prevent_undo)
 	end
 end
 
--- Lines 1452-1453
+-- Lines 1564-1565
 function Layer:_on_unit_created(unit)
 end
 
--- Lines 1456-1463
+-- Lines 1568-1575
 function Layer:show_replace_units()
 	if self:ctrl() or self:shift() or self:alt() then
 		return
@@ -1568,7 +1690,7 @@ function Layer:show_replace_units()
 	end
 end
 
--- Lines 1466-1477
+-- Lines 1578-1589
 function Layer:get_created_unit_by_pattern(patterns)
 	local units = {}
 
@@ -1583,7 +1705,7 @@ function Layer:get_created_unit_by_pattern(patterns)
 	return units
 end
 
--- Lines 1479-1490
+-- Lines 1591-1602
 function Layer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -1597,31 +1719,31 @@ function Layer:add_triggers()
 	vc:add_trigger(Idstring("center_view_on_selected_unit"), callback(self, self, "on_center_view_on_selected_unit"))
 end
 
--- Lines 1492-1494
+-- Lines 1604-1606
 function Layer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end
 
--- Lines 1496-1498
+-- Lines 1608-1610
 function Layer:get_help(text)
 	return text .. "No help Available"
 end
 
--- Lines 1500-1502
+-- Lines 1612-1614
 function Layer:clone()
 	cat_debug("editor", "No clone implemented in current layer")
 end
 
--- Lines 1504-1505
+-- Lines 1616-1617
 function Layer:_cloning_done()
 end
 
--- Lines 1508-1510
+-- Lines 1620-1622
 function Layer:on_center_view_on_selected_unit()
 	managers.editor:center_view_on_unit(self:selected_unit())
 end
 
--- Lines 1512-1528
+-- Lines 1624-1640
 function Layer:on_clone_edited_values()
 	if self:ctrl() then
 		return
@@ -1642,7 +1764,7 @@ function Layer:on_clone_edited_values()
 	end
 end
 
--- Lines 1531-1608
+-- Lines 1643-1720
 function Layer:clone_edited_values(unit, source)
 	if unit:name() ~= source:name() then
 		return
@@ -1733,7 +1855,7 @@ function Layer:clone_edited_values(unit, source)
 	end
 end
 
--- Lines 1611-1617
+-- Lines 1723-1729
 function Layer:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -1744,7 +1866,7 @@ function Layer:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
--- Lines 1620-1628
+-- Lines 1732-1740
 function Layer:set_enabled(enabled)
 	self._layer_enabled = enabled
 
@@ -1757,22 +1879,22 @@ function Layer:set_enabled(enabled)
 	return true
 end
 
--- Lines 1631-1633
+-- Lines 1743-1745
 function Layer:hide_all()
 	self:_hide_units(self._created_units, true)
 end
 
--- Lines 1636-1638
+-- Lines 1748-1750
 function Layer:unhide_all()
 	self:_hide_units(self._created_units, false)
 end
 
--- Lines 1641-1643
+-- Lines 1753-1755
 function Layer:on_hide_selected()
 	self:_hide_units(_G.clone(self:selected_units()), true)
 end
 
--- Lines 1646-1650
+-- Lines 1758-1762
 function Layer:_hide_units(units, hide)
 	local hide_command = CoreEditorCommand.HideUnitsCommand:new(self)
 
@@ -1780,7 +1902,7 @@ function Layer:_hide_units(units, hide)
 	managers.editor:register_undo_command(hide_command)
 end
 
--- Lines 1652-1668
+-- Lines 1764-1780
 function Layer:clear()
 	for _, unit in ipairs(self._created_units) do
 		if alive(unit) then
@@ -1802,7 +1924,7 @@ function Layer:clear()
 	end
 end
 
--- Lines 1671-1683
+-- Lines 1783-1795
 function Layer:set_unit_name(units)
 	local i = units:selected_item()
 
@@ -1822,7 +1944,7 @@ function Layer:set_unit_name(units)
 	end
 end
 
--- Lines 1686-1693
+-- Lines 1798-1805
 function Layer:get_real_name(name)
 	local fs = " %*"
 
@@ -1834,52 +1956,52 @@ function Layer:get_real_name(name)
 	return name
 end
 
--- Lines 1694-1696
+-- Lines 1806-1808
 function Layer:condition()
 	return managers.editor:conditions() or self._using_widget
 end
 
--- Lines 1697-1699
+-- Lines 1809-1811
 function Layer:grab()
 	return self._grab
 end
 
--- Lines 1700-1701
+-- Lines 1812-1813
 function Layer:create_marker()
 end
 
--- Lines 1702-1703
+-- Lines 1814-1815
 function Layer:use_marker()
 end
 
--- Lines 1706-1707
+-- Lines 1818-1819
 function Layer:on_continent_changed()
 end
 
--- Lines 1710-1711
+-- Lines 1822-1823
 function Layer:set_unit_rotations(rot, finalize)
 end
 
--- Lines 1714-1715
+-- Lines 1826-1827
 function Layer:set_unit_positions(pos, finalize)
 end
 
--- Lines 1719-1720
+-- Lines 1831-1832
 function Layer:_add_project_save_data(data)
 end
 
--- Lines 1724-1725
+-- Lines 1836-1837
 function Layer:_add_project_unit_save_data(unit, data)
 end
 
--- Lines 1727-1729
+-- Lines 1839-1841
 function Layer:selected_amount_string()
 	return "Selected " .. self._save_name .. ": " .. #self._selected_units
 end
 
 local idstring_wpn = Idstring("wpn")
 
--- Lines 1732-1752
+-- Lines 1844-1864
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
 		local unit_data = unit:unit_data()
@@ -1907,7 +2029,7 @@ function Layer:save()
 	end
 end
 
--- Lines 1754-1804
+-- Lines 1866-1916
 function Layer:test_spawn(type)
 	local pos = Vector3()
 	local rot = Rotation()
@@ -1965,17 +2087,17 @@ function Layer:test_spawn(type)
 	print("DONE")
 end
 
--- Lines 1806-1808
+-- Lines 1918-1920
 function Layer:shift()
 	return CoreInput.shift()
 end
 
--- Lines 1809-1811
+-- Lines 1921-1923
 function Layer:ctrl()
 	return CoreInput.ctrl()
 end
 
--- Lines 1812-1814
+-- Lines 1924-1926
 function Layer:alt()
 	return CoreInput.alt()
 end

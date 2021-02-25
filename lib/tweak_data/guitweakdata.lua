@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1384
+-- Lines 3-1416
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5078,14 +5078,44 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_xmn_2019",
-		texture_path = "guis/textures/pd2/new_heists/xmn_2019",
-		url = "http://store.steampowered.com/app/218620/PAYDAY_2/"
+		name_id = "menu_nh_bex",
+		texture_path = "guis/textures/pd2/new_heists/bex",
+		url = "ovk.af/bexheistslider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_tailor_pack_2",
+		texture_path = "guis/textures/pd2/new_heists/tailor_pack_2",
+		url = "ovk.af/bextp2slider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_weapon_pack",
+		texture_path = "guis/textures/pd2/new_heists/weapon_pack",
+		url = "ovk.af/bexwpslider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_weapon_color_pack",
+		texture_path = "guis/textures/pd2/new_heists/weapon_color_pack",
+		url = "ovk.af/bexwcp1slider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_bex_dlc_bundle",
+		texture_path = "guis/textures/pd2/new_heists/bex_dlc_bundle",
+		url = "ovk.af/bexbundleslider"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_combo",
+		texture_path = "guis/textures/pd2/new_heists/combo",
+		url = "https://ovk.af/ingameBCBundle"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_legacy",
 		texture_path = "guis/textures/pd2/new_heists/legacy",
 		url = "https://ovk.af/ingameLegacy"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_xmn_2019",
+		texture_path = "guis/textures/pd2/new_heists/xmn_2019",
+		url = "http://store.steampowered.com/app/218620/PAYDAY_2/"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_mex",
@@ -5101,11 +5131,6 @@ function GuiTweakData:init(tweak_data)
 		name_id = "menu_nh_mwm",
 		texture_path = "guis/textures/pd2/new_heists/mwm",
 		url = "https://ovk.af/ingameCartelOptics"
-	})
-	table.insert(self.new_heists, {
-		name_id = "menu_nh_combo",
-		texture_path = "guis/textures/pd2/new_heists/combo",
-		url = "https://ovk.af/ingameBCBundle"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_theme",
@@ -5254,7 +5279,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1386-1405
+-- Lines 1418-1437
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5282,7 +5307,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1407-1475
+-- Lines 1439-1507
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5360,15 +5385,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1477-1479
+-- Lines 1509-1511
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1481-1490
+-- Lines 1513-1522
 function GuiTweakData:print_locations()
 end
 
--- Lines 1492-1526
+-- Lines 1524-1558
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5407,7 +5432,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1528-1653
+-- Lines 1560-1685
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5530,12 +5555,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 1655-1657
+-- Lines 1687-1689
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 1659-1666
+-- Lines 1691-1698
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

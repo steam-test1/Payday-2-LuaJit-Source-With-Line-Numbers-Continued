@@ -1,8 +1,8 @@
 StatisticsGenerator = StatisticsGenerator or class()
 
--- Lines 3-20
+-- Lines 3-21
 function StatisticsGenerator.generate()
-	local level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list, deployable_list, suit_list = tweak_data.statistics:statistics_table()
+	local level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list, deployable_list, suit_list, weapon_color_list = tweak_data.statistics:statistics_table()
 	local xml_path = StatisticsGenerator._root_path() .. "aux_assets\\config\\win32\\statistics.xml"
 	local xml = SystemFS:open(xml_path, "w")
 
@@ -14,10 +14,11 @@ function StatisticsGenerator.generate()
 	StatisticsGenerator._generate_group("character", character_list, xml)
 	StatisticsGenerator._generate_group("deployable", deployable_list, xml)
 	StatisticsGenerator._generate_group("suit", suit_list, xml)
+	StatisticsGenerator._generate_group("weapon_color", weapon_color_list, xml)
 	SystemFS:close(xml)
 end
 
--- Lines 24-33
+-- Lines 25-34
 function StatisticsGenerator._generate_group(group, list, xml)
 	xml:puts("<" .. group .. "s>")
 
@@ -29,13 +30,13 @@ function StatisticsGenerator._generate_group(group, list, xml)
 	xml:puts("")
 end
 
--- Lines 35-42
+-- Lines 36-43
 function StatisticsGenerator._root_path()
 	local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "..\\..\\")
 	path = Application:nice_path(path, true)
 	local f = nil
 
-	-- Lines 40-40
+	-- Lines 41-41
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
 

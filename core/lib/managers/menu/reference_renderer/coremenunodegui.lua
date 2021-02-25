@@ -333,7 +333,7 @@ end
 function NodeGui:_create_menu_item(row_item)
 end
 
--- Lines 372-481
+-- Lines 372-493
 function NodeGui:_reposition_items(highlighted_row_item)
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local dy = 0
@@ -344,6 +344,8 @@ function NodeGui:_reposition_items(highlighted_row_item)
 		end
 
 		local prev_item, first_item = nil
+		local top_dividers_padding = 0
+		local bottom_dividers_padding = 0
 		local num_dividers_top = 0
 
 		for i = 1, #self.row_items do
@@ -352,6 +354,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 			if first_item.type ~= "divider" and not first_item.item:parameters().back and not first_item.item:parameters().pd2_corner then
 				break
 			elseif first_item.type == "divider" then
+				top_dividers_padding = top_dividers_padding + (first_item.item:get_h(first_item, self) or first_item.gui_panel:h())
 				num_dividers_top = num_dividers_top + 1
 			end
 		end
@@ -366,6 +369,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 			if last_item.type ~= "divider" and not last_item.item:parameters().back and not last_item.item:parameters().pd2_corner then
 				break
 			elseif last_item.type == "divider" then
+				bottom_dividers_padding = bottom_dividers_padding + (last_item.item:get_h(last_item, self) or last_item.gui_panel:h())
 				num_dividers_bottom = num_dividers_bottom + 1
 			end
 		end
@@ -403,29 +407,38 @@ function NodeGui:_reposition_items(highlighted_row_item)
 			end
 		end
 
-		local h = highlighted_row_item.item:get_h(highlighted_row_item, self) or highlighted_row_item.gui_panel:h()
-		local offset = first and h * num_dividers_top or last and h * num_dividers_bottom or h
-		offset = offset + self.height_padding
+		local panel_height = self._item_panel_parent:h()
+		local panel_top = self._item_panel_parent:world_y()
+		local panel_bottom = panel_top + panel_height
+		local highlighted_height = highlighted_row_item.item:get_h(highlighted_row_item, self) or highlighted_row_item.gui_panel:h()
+		local highlighted_top = highlighted_row_item.gui_panel:world_y()
+		local highlighted_bottom = highlighted_top + highlighted_height
+		local offset_prev = (first and top_dividers_padding or 0) + self.height_padding
 
-		if self._item_panel_parent:world_y() > highlighted_row_item.gui_panel:world_y() - (offset + (prev_item and math.abs(prev_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h or 0)) then
-			if prev_item then
-				offset = offset + math.abs(prev_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h
-			end
+		if prev_item then
+			local prev_top = prev_item.gui_panel:world_y()
+			offset_prev = offset_prev + math.abs(prev_top - highlighted_top)
+		end
 
-			dy = -(highlighted_row_item.gui_panel:world_y() - self._item_panel_parent:world_y() - offset)
-		elseif self._item_panel_parent:world_y() + self._item_panel_parent:h() < highlighted_row_item.gui_panel:world_y() + highlighted_row_item.gui_panel:h() + offset + (next_item and math.abs(next_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h or 0) then
-			if next_item then
-				offset = offset + math.abs(next_item.gui_panel:y() - highlighted_row_item.gui_panel:y()) - h
-			end
+		local offset_next = (last and bottom_dividers_padding or 0) + self.height_padding
 
-			dy = -(highlighted_row_item.gui_panel:world_y() + highlighted_row_item.gui_panel:h() - (self._item_panel_parent:world_y() + self._item_panel_parent:h()) + offset)
+		if next_item then
+			local next_height = next_item.item:get_h(next_item, self) or next_item.gui_panel:h()
+			local next_top = next_item.gui_panel:world_y()
+			offset_next = offset_next + math.abs(next_top + next_height - highlighted_bottom)
+		end
+
+		if panel_top > highlighted_top - offset_prev then
+			dy = -(highlighted_top - panel_top - offset_prev)
+		elseif panel_bottom < highlighted_bottom + offset_next then
+			dy = -(highlighted_bottom - panel_bottom + offset_next)
 		end
 
 		local old_dy = self._scroll_data.dy_left
 		local is_same_dir = math.abs(old_dy) > 0 and (math.sign(dy) == math.sign(old_dy) or dy == 0)
 
 		if is_same_dir then
-			local within_view = math.within(highlighted_row_item.gui_panel:world_y(), self._item_panel_parent:world_y(), self._item_panel_parent:world_y() + self._item_panel_parent:h())
+			local within_view = math.within(highlighted_top, panel_top, panel_bottom)
 
 			if within_view then
 				dy = math.max(math.abs(old_dy), math.abs(dy)) * math.sign(old_dy)
@@ -436,7 +449,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 	self:scroll_start(dy)
 end
 
--- Lines 483-489
+-- Lines 495-501
 function NodeGui:scroll_setup()
 	self._scroll_data = {
 		max_scroll_duration = 0.5,
@@ -446,7 +459,7 @@ function NodeGui:scroll_setup()
 	}
 end
 
--- Lines 491-503
+-- Lines 503-515
 function NodeGui:scroll_start(dy)
 	local speed = self._scroll_data.scroll_speed
 
@@ -461,7 +474,7 @@ function NodeGui:scroll_start(dy)
 	self:scroll_update(TimerManager:main():delta_time())
 end
 
--- Lines 505-527
+-- Lines 517-539
 function NodeGui:scroll_update(dt)
 	local dy_left = self._scroll_data.dy_left
 
@@ -489,7 +502,7 @@ function NodeGui:scroll_update(dt)
 	end
 end
 
--- Lines 529-554
+-- Lines 541-566
 function NodeGui:wheel_scroll_start(dy)
 	local speed = 30
 
@@ -516,7 +529,7 @@ function NodeGui:wheel_scroll_start(dy)
 	return true
 end
 
--- Lines 556-565
+-- Lines 568-577
 function NodeGui:highlight_item(item, mouse_over)
 	if not item then
 		return
@@ -531,7 +544,7 @@ function NodeGui:highlight_item(item, mouse_over)
 	self._highlighted_item = item
 end
 
--- Lines 567-573
+-- Lines 579-585
 function NodeGui:_highlight_row_item(row_item, mouse_over)
 	if row_item then
 		row_item.highlighted = true
@@ -541,7 +554,7 @@ function NodeGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines 575-579
+-- Lines 587-591
 function NodeGui:fade_item(item)
 	local item_name = item:parameters().name
 	local row_item = self:row_item(item)
@@ -549,7 +562,7 @@ function NodeGui:fade_item(item)
 	self:_fade_row_item(row_item)
 end
 
--- Lines 581-587
+-- Lines 593-599
 function NodeGui:_fade_row_item(row_item)
 	if row_item then
 		row_item.highlighted = false
@@ -559,7 +572,7 @@ function NodeGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines 589-597
+-- Lines 601-609
 function NodeGui:row_item(item)
 	local item_name = item:parameters().name
 
@@ -572,7 +585,7 @@ function NodeGui:row_item(item)
 	return nil
 end
 
--- Lines 599-606
+-- Lines 611-618
 function NodeGui:row_item_by_name(item_name)
 	for _, row_item in ipairs(self.row_items) do
 		if row_item.name == item_name then
@@ -583,7 +596,7 @@ function NodeGui:row_item_by_name(item_name)
 	return nil
 end
 
--- Lines 608-631
+-- Lines 620-643
 function NodeGui:update(t, dt)
 	local scrolled = self:scroll_update(dt)
 
@@ -603,11 +616,11 @@ function NodeGui:update(t, dt)
 	end
 end
 
--- Lines 633-634
+-- Lines 645-646
 function NodeGui:_set_topic_position()
 end
 
--- Lines 636-645
+-- Lines 648-657
 function NodeGui:_item_panel_height()
 	local height = self.height_padding * 2
 
@@ -621,7 +634,7 @@ function NodeGui:_item_panel_height()
 	return height
 end
 
--- Lines 647-688
+-- Lines 659-700
 function NodeGui:_set_item_positions()
 	local total_height = self:_item_panel_height()
 	local current_y = self.height_padding
@@ -665,25 +678,25 @@ function NodeGui:_set_item_positions()
 	end
 end
 
--- Lines 690-696
+-- Lines 702-708
 function NodeGui:resolution_changed()
 	self:_setup_size()
 	self:_set_item_positions()
 	self:highlight_item(self._highlighted_item)
 end
 
--- Lines 698-700
+-- Lines 710-712
 function NodeGui:_setup_item_panel_parent(safe_rect)
 	self._item_panel_parent:set_shape(safe_rect.x, safe_rect.y, safe_rect.width, safe_rect.height)
 end
 
--- Lines 702-705
+-- Lines 714-717
 function NodeGui:_set_width_and_height(safe_rect)
 	self.width = safe_rect.width
 	self.height = safe_rect.height
 end
 
--- Lines 707-723
+-- Lines 719-735
 function NodeGui:_setup_item_panel(safe_rect, res)
 	local item_panel_offset = safe_rect.height * 0.5 - #self.row_items * 0.5 * (self.font_size + self.spacing)
 
@@ -695,12 +708,12 @@ function NodeGui:_setup_item_panel(safe_rect, res)
 	self.item_panel:set_w(safe_rect.width)
 end
 
--- Lines 725-727
+-- Lines 737-739
 function NodeGui:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines 729-790
+-- Lines 741-802
 function NodeGui:_setup_size()
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local scaled_size = managers.gui_data:scaled_size()
@@ -741,11 +754,11 @@ function NodeGui:_setup_size()
 	end
 end
 
--- Lines 792-793
+-- Lines 804-805
 function NodeGui:_setup_item_size(row_item)
 end
 
--- Lines 795-803
+-- Lines 807-815
 function NodeGui:mouse_pressed(button, x, y)
 	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and self:_mid_align() < x then
 		if button == Idstring("mouse wheel down") then

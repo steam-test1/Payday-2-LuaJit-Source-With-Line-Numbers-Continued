@@ -67,13 +67,17 @@ function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, po
 	self._unit:set_slot(0)
 end
 
--- Lines 85-100
+-- Lines 85-104
 function ConcussionGrenade:_can_stun_unit(unit)
 	local can_stun = false
 	local unit_name = nil
 
 	if unit and unit:base() then
 		unit_name = unit:base()._tweak_table
+	end
+
+	if alive(unit) and unit:brain() and unit:brain().is_hostage and unit:brain():is_hostage() then
+		return false
 	end
 
 	if unit_name then
@@ -83,7 +87,7 @@ function ConcussionGrenade:_can_stun_unit(unit)
 	end
 end
 
--- Lines 104-109
+-- Lines 108-113
 function ConcussionGrenade:_detonate_on_client()
 	local pos = self._unit:position()
 	local range = self._range
@@ -92,7 +96,7 @@ function ConcussionGrenade:_detonate_on_client()
 	self:_flash_player()
 end
 
--- Lines 111-120
+-- Lines 115-124
 function ConcussionGrenade:_flash_player()
 	local detonate_pos = self._unit:position() + math.UP * 100
 	local range = self._PLAYER_FLASH_RANGE
@@ -107,7 +111,7 @@ function ConcussionGrenade:_flash_player()
 	end
 end
 
--- Lines 124-131
+-- Lines 128-135
 function ConcussionGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

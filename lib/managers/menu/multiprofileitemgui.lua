@@ -1,49 +1,48 @@
 MultiProfileItemGui = MultiProfileItemGui or class()
-MultiProfileItemGui.quick_panel_h = 24
+MultiProfileItemGui.quick_panel_w = 36
+MultiProfileItemGui.quick_panel_h = 36
+MultiProfileItemGui.profile_panel_w = 280
+MultiProfileItemGui.profile_panel_h = 36
+MultiProfileItemGui.padding = 5
 
--- Lines 5-48
+-- Lines 9-60
 function MultiProfileItemGui:init(ws, panel)
 	self._ws = ws
+	local panel_w = self.profile_panel_w
+	local panel_h = self.profile_panel_h
+
+	if managers.menu:is_pc_controller() then
+		panel_w = self.quick_panel_w + self.padding + self.profile_panel_w
+		panel_h = math.max(self.quick_panel_h, self.profile_panel_h)
+	end
+
 	self._panel = self._panel or panel:panel({
-		w = 280,
-		h = 36 + self.quick_panel_h
+		w = panel_w,
+		h = panel_h
 	})
 
 	self._panel:set_bottom(panel:bottom() - 4)
 	self._panel:set_center_x(panel:w() / 2)
 
 	self._profile_panel = self._profile_panel or self._panel:panel({
-		w = 280,
-		h = 36,
-		y = self.quick_panel_h
+		w = self.profile_panel_w,
+		h = self.profile_panel_h
 	})
 
-	self._profile_panel:rect({
-		alpha = 0.4,
-		layer = -100,
-		color = Color.black
-	})
+	self._profile_panel:set_center_y(self._panel:h() / 2)
+	self._profile_panel:set_top(math.round(self._profile_panel:top()))
 
-	self._box_panel = self._profile_panel:panel()
-	self._box = BoxGuiObject:new(self._box_panel, {
-		sides = {
-			1,
-			1,
-			1,
-			1
-		}
-	})
+	local box_panel_w = self._profile_panel:w()
 
 	if managers.menu:is_pc_controller() then
-		self._panel:set_w(self._panel:w() + self._profile_panel:h())
-
 		self._quick_select_panel = self._quick_select_panel or self._panel:panel({
-			w = self._profile_panel:h(),
-			h = self._profile_panel:h()
+			w = self.quick_panel_w,
+			h = self.quick_panel_h
 		})
 
-		self._quick_select_panel:set_left(self._profile_panel:right())
-		self._quick_select_panel:set_top(self._profile_panel:top())
+		self._quick_select_panel:set_left(self._profile_panel:right() + self.padding)
+		self._quick_select_panel:set_center_y(self._panel:h() / 2)
+		self._quick_select_panel:set_top(math.round(self._quick_select_panel:top()))
 
 		if not self._quick_select_panel_elements then
 			self._quick_select_panel_elements = {}
@@ -106,21 +105,25 @@ function MultiProfileItemGui:init(ws, panel)
 			}))
 		end
 
-		self._quick_select_panel:rect({
-			alpha = 0.4,
-			layer = -100,
-			color = Color.black
-		})
-		BoxGuiObject:new(self._quick_select_panel:panel(), {
-			sides = {
-				0,
-				1,
-				4,
-				4
-			}
-		})
+		box_panel_w = box_panel_w + self.quick_panel_w + self.padding
 	end
 
+	self._box_panel = self._panel:panel()
+
+	self._box_panel:rect({
+		alpha = 0.4,
+		layer = -100,
+		color = Color.black
+	})
+
+	self._box = BoxGuiObject:new(self._box_panel, {
+		sides = {
+			1,
+			1,
+			1,
+			1
+		}
+	})
 	self._caret = self._profile_panel:rect({
 		blend_mode = "add",
 		name = "caret",
@@ -136,22 +139,22 @@ function MultiProfileItemGui:init(ws, panel)
 	self:update()
 end
 
--- Lines 50-52
+-- Lines 62-64
 function MultiProfileItemGui:panel()
 	return self._panel
 end
 
--- Lines 54-56
+-- Lines 66-68
 function MultiProfileItemGui:profile_panel()
 	return self._profile_panel
 end
 
--- Lines 58-60
+-- Lines 70-72
 function MultiProfileItemGui:set_name_editing_enabled(enabled)
 	self._name_editing_enabled = enabled
 end
 
--- Lines 62-90
+-- Lines 74-113
 function MultiProfileItemGui:update()
 	local mult = managers.multi_profile
 	local name = mult:current_profile_name()
@@ -176,43 +179,79 @@ function MultiProfileItemGui:update()
 	self._name_text:set_left(text_width * 0.1)
 
 	local arrow_left = self._profile_panel:child("arrow_left")
-	arrow_left = arrow_left or self._profile_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
-		name = "arrow_left",
-		size = 32,
-		texture_rect = {
-			0,
-			0,
-			24,
-			24
-		},
-		color = mult:has_previous() and tweak_data.screen_colors.button_stage_3 or tweak_data.menu.default_disabled_text_color
-	})
-	local arrow_right = self._profile_panel:child("arrow_right")
-	arrow_right = arrow_right or self._profile_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
-		name = "arrow_right",
-		size = 32,
-		rotation = 180,
-		texture_rect = {
-			0,
-			0,
-			24,
-			24
-		},
-		color = mult:has_next() and tweak_data.screen_colors.button_stage_3 or tweak_data.menu.default_disabled_text_color
-	})
 
-	arrow_left:set_left(0)
-	arrow_right:set_right(self._profile_panel:w())
+	if not arrow_left then
+		if managers.menu:is_pc_controller() and not managers.menu:is_steam_controller() then
+			arrow_left = self._profile_panel:bitmap({
+				texture = "guis/textures/menu_arrows",
+				name = "arrow_left",
+				texture_rect = {
+					24,
+					0,
+					24,
+					24
+				},
+				color = mult:has_previous() and tweak_data.screen_colors.button_stage_3 or tweak_data.menu.default_disabled_text_color
+			})
+		else
+			local BTN_TOP_L = managers.menu:is_steam_controller() and managers.localization:steam_btn("trigger_l") or managers.localization:get_default_macro("BTN_TOP_L")
+			arrow_left = self._profile_panel:text({
+				name = "arrow_left",
+				h = 24,
+				vertical = "center",
+				w = 24,
+				align = "center",
+				text = BTN_TOP_L,
+				color = not mult:has_previous() and Color(0, 0, 0, 0),
+				font = tweak_data.menu.pd2_small_font,
+				font_size = tweak_data.menu.pd2_small_font_size
+			})
+		end
+	end
+
+	local arrow_right = self._profile_panel:child("arrow_right")
+
+	if not arrow_right then
+		if managers.menu:is_pc_controller() and not managers.menu:is_steam_controller() then
+			arrow_right = self._profile_panel:bitmap({
+				texture = "guis/textures/menu_arrows",
+				name = "arrow_right",
+				size = 32,
+				rotation = 180,
+				texture_rect = {
+					24,
+					0,
+					24,
+					24
+				},
+				color = mult:has_next() and tweak_data.screen_colors.button_stage_3 or tweak_data.menu.default_disabled_text_color
+			})
+		else
+			local BTN_TOP_R = managers.menu:is_steam_controller() and managers.localization:steam_btn("trigger_r") or managers.localization:get_default_macro("BTN_TOP_R")
+			arrow_right = self._profile_panel:text({
+				name = "arrow_right",
+				h = 24,
+				vertical = "center",
+				w = 24,
+				align = "center",
+				text = BTN_TOP_R,
+				color = not mult:has_next() and Color(0, 0, 0, 0),
+				font = tweak_data.menu.pd2_small_font,
+				font_size = tweak_data.menu.pd2_small_font_size
+			})
+		end
+	end
+
+	arrow_left:set_left(5)
+	arrow_right:set_right(self._profile_panel:w() - 5)
 	arrow_left:set_center_y(self._profile_panel:h() / 2)
 	arrow_right:set_center_y(self._profile_panel:h() / 2)
 	self:_update_caret()
 end
 
--- Lines 92-176
+-- Lines 115-205
 function MultiProfileItemGui:mouse_moved(x, y)
-	-- Lines 93-102
+	-- Lines 116-125
 	local function anim_func(o, large)
 		local current_width = o:w()
 		local current_height = o:h()
@@ -229,23 +268,26 @@ function MultiProfileItemGui:mouse_moved(x, y)
 	local mult = managers.multi_profile
 	local pointer, used = nil
 	local arrow_left = self._profile_panel:child("arrow_left")
+	self._arrow_selection = nil
 
 	if arrow_left and mult:has_previous() then
 		if arrow_left:inside(x, y) then
-			if self._arrow_selection ~= "left" then
+			if self._is_left_selected ~= true then
 				arrow_left:set_color(tweak_data.screen_colors.button_stage_2)
 				arrow_left:animate(anim_func, true)
 				managers.menu_component:post_event("highlight")
+
+				self._is_left_selected = true
 			end
 
 			self._arrow_selection = "left"
 			pointer = "link"
 			used = true
-		elseif self._arrow_selection == "left" then
+		elseif self._is_left_selected == true then
 			arrow_left:set_color(tweak_data.screen_colors.button_stage_3)
 			arrow_left:animate(anim_func, false)
 
-			self._arrow_selection = nil
+			self._is_left_selected = false
 		end
 	end
 
@@ -253,40 +295,46 @@ function MultiProfileItemGui:mouse_moved(x, y)
 
 	if arrow_right and mult:has_next() then
 		if arrow_right:inside(x, y) then
-			if self._arrow_selection ~= "right" then
+			if self._is_right_selected ~= true then
 				arrow_right:set_color(tweak_data.screen_colors.button_stage_2)
 				arrow_right:animate(anim_func, true)
 				managers.menu_component:post_event("highlight")
+
+				self._is_right_selected = true
 			end
 
 			self._arrow_selection = "right"
 			pointer = "link"
 			used = true
-		elseif self._arrow_selection == "right" then
+		elseif self._is_right_selected == true then
 			arrow_right:set_color(tweak_data.screen_colors.button_stage_3)
 			arrow_right:animate(anim_func, false)
 
-			self._arrow_selection = nil
+			self._is_right_selected = false
 		end
 	end
 
 	if alive(self._quick_select_panel) then
 		if self._quick_select_panel:inside(x, y) then
-			if self._arrow_selection ~= "quick" then
+			if self._is_quick_selected ~= true then
 				for _, element in ipairs(self._quick_select_panel_elements) do
 					element:set_color(tweak_data.screen_colors.button_stage_2)
 				end
+
+				managers.menu_component:post_event("highlight")
+
+				self._is_quick_selected = true
 			end
 
 			self._arrow_selection = "quick"
 			pointer = "link"
 			used = true
-		elseif self._arrow_selection == "quick" then
+		elseif self._is_quick_selected == true then
 			for _, element in ipairs(self._quick_select_panel_elements) do
 				element:set_color(tweak_data.screen_colors.button_stage_3)
 			end
 
-			self._arrow_selection = nil
+			self._is_quick_selected = false
 		end
 	end
 
@@ -308,7 +356,7 @@ function MultiProfileItemGui:mouse_moved(x, y)
 	return used, pointer
 end
 
--- Lines 178-198
+-- Lines 207-227
 function MultiProfileItemGui:mouse_pressed(button, x, y)
 	if button == Idstring("0") then
 		if self:arrow_selection() == "left" then
@@ -334,12 +382,12 @@ function MultiProfileItemGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 200-202
+-- Lines 229-231
 function MultiProfileItemGui:arrow_selection()
 	return self._arrow_selection
 end
 
--- Lines 206-243
+-- Lines 235-272
 function MultiProfileItemGui:set_editing(editing)
 	if not self._name_editing_enabled then
 		return
@@ -375,7 +423,7 @@ function MultiProfileItemGui:set_editing(editing)
 	end
 end
 
--- Lines 245-252
+-- Lines 274-281
 function MultiProfileItemGui.blink(o)
 	while true do
 		o:set_color(Color(0.05, 1, 1, 1))
@@ -385,7 +433,7 @@ function MultiProfileItemGui.blink(o)
 	end
 end
 
--- Lines 254-261
+-- Lines 283-290
 function MultiProfileItemGui:set_blinking(b)
 	local caret = self._caret
 
@@ -406,7 +454,7 @@ function MultiProfileItemGui:set_blinking(b)
 	end
 end
 
--- Lines 263-280
+-- Lines 292-309
 function MultiProfileItemGui:_update_caret()
 	local text = self._name_text
 	local caret = self._caret
@@ -433,7 +481,7 @@ function MultiProfileItemGui:_update_caret()
 	self:set_blinking(s == e and self._editing)
 end
 
--- Lines 282-289
+-- Lines 311-318
 function MultiProfileItemGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -444,7 +492,7 @@ function MultiProfileItemGui:update_key_down(o, k)
 	end
 end
 
--- Lines 291-304
+-- Lines 320-333
 function MultiProfileItemGui:key_press(o, k)
 	if not self._editing then
 		return
@@ -459,7 +507,7 @@ function MultiProfileItemGui:key_press(o, k)
 	self:_update_caret()
 end
 
--- Lines 306-317
+-- Lines 335-346
 function MultiProfileItemGui:key_release(o, k)
 	if not self._editing then
 		return
@@ -473,7 +521,7 @@ function MultiProfileItemGui:key_release(o, k)
 	self:_update_caret()
 end
 
--- Lines 319-331
+-- Lines 348-360
 function MultiProfileItemGui:trigger()
 	if not self._editing then
 		self:set_editing(true)
@@ -490,7 +538,7 @@ function MultiProfileItemGui:trigger()
 	self:_update_caret()
 end
 
--- Lines 333-349
+-- Lines 362-378
 function MultiProfileItemGui:enter_text(o, s)
 	if not self._editing then
 		return
@@ -506,7 +554,7 @@ function MultiProfileItemGui:enter_text(o, s)
 	end
 end
 
--- Lines 351-394
+-- Lines 380-423
 function MultiProfileItemGui:handle_key(k, pressed)
 	local text = self._name_text
 	local s, e = text:selection()

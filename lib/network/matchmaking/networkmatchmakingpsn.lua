@@ -1699,7 +1699,7 @@ function NetworkMatchMakingPSN:on_peer_removed(peer)
 	managers.network.voice_chat:close_channel_to(peer)
 end
 
--- Lines 1550-1697
+-- Lines 1550-1698
 function NetworkMatchMakingPSN:cb_connection_established(info)
 	if self._is_server_var then
 		return
@@ -1757,7 +1757,7 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 			end
 		})
 
-		-- Lines 1596-1680
+		-- Lines 1596-1681
 		local function f(res, level_index, difficulty_index, state_index)
 			managers.system_menu:close("waiting_for_server_response")
 
@@ -1778,14 +1778,14 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 					managers.network:queue_stop_network()
 					managers.menu:show_crime_spree_locked_dialog()
 				end
-			else
-				MenuCallbackHandler:crimenet_focus_changed(nil, false)
-				managers.menu:on_enter_lobby()
 			end
 
 			if res ~= "JOINED_LOBBY" and res ~= "JOINED_GAME" then
 				managers.crime_spree:disable_crime_spree_gamemode()
+				print("GN: CS mode disabled!")
 			end
+
+			print("cb_connection_established : res = ", res)
 
 			if res == "JOINED_LOBBY" then
 				MenuCallbackHandler:crimenet_focus_changed(nil, false)
@@ -1857,12 +1857,12 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 	end
 end
 
--- Lines 1699-1701
+-- Lines 1700-1702
 function NetworkMatchMakingPSN:get_connection_info(npid_name)
 	return self._connection_info[npid_name]
 end
 
--- Lines 1704-1711
+-- Lines 1705-1712
 function NetworkMatchMakingPSN:_in_list(id)
 	for k, v in pairs(self._players) do
 		if tostring(v.pnid) == tostring(id) then
@@ -1873,7 +1873,7 @@ function NetworkMatchMakingPSN:_in_list(id)
 	return false
 end
 
--- Lines 1713-1723
+-- Lines 1714-1724
 function NetworkMatchMakingPSN:_translate_settings(settings, value)
 	if value == "game_mode" then
 		local game_mode_in_settings = settings.game_mode
@@ -1886,7 +1886,7 @@ function NetworkMatchMakingPSN:_translate_settings(settings, value)
 	end
 end
 
--- Lines 1725-1796
+-- Lines 1726-1797
 function NetworkMatchMakingPSN:_error_cb(info)
 	if info then
 		print(" [NetworkMatchMakingPSN:_error_cb]")
@@ -1939,7 +1939,7 @@ function NetworkMatchMakingPSN:_error_cb(info)
 	end
 end
 
--- Lines 1799-1855
+-- Lines 1800-1856
 function NetworkMatchMakingPSN:_error_message_solver(info)
 	if info.error == "8002232c" then
 		return
@@ -1985,7 +1985,7 @@ function NetworkMatchMakingPSN:_error_message_solver(info)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1857-1891
+-- Lines 1858-1892
 function NetworkMatchMakingPSN:send_join_invite(friend)
 	print("NetworkMatchMakingPSN:send_join_invite")
 
@@ -2014,7 +2014,7 @@ function NetworkMatchMakingPSN:send_join_invite(friend)
 	})
 end
 
--- Lines 1893-1910
+-- Lines 1894-1911
 function NetworkMatchMakingPSN:_recived_join_invite(message)
 	print("NetworkMatchMakingPSN:_recived_join_invite")
 
@@ -2046,7 +2046,7 @@ function NetworkMatchMakingPSN:_recived_join_invite(message)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1915-1929
+-- Lines 1916-1930
 function NetworkMatchMakingPSN:_join_invite_accepted(room_id)
 	print("_join_invite_accepted", room_id)
 
@@ -2065,7 +2065,7 @@ function NetworkMatchMakingPSN:_join_invite_accepted(room_id)
 	self:join_server_with_check(room_id, true)
 end
 
--- Lines 1931-1940
+-- Lines 1932-1941
 function NetworkMatchMakingPSN:_set_room_hidden(set)
 	if set == self._hidden or not self._room_id then
 		return
@@ -2077,11 +2077,11 @@ function NetworkMatchMakingPSN:_set_room_hidden(set)
 	self._hidden = set
 end
 
--- Lines 1942-1944
+-- Lines 1943-1945
 function NetworkMatchMakingPSN:_server_timed_out(rpc)
 end
 
--- Lines 1946-1953
+-- Lines 1947-1954
 function NetworkMatchMakingPSN:_client_timed_out(rpc)
 	for k, v in pairs(self._players) do
 		if v.rpc:ip_at_index(0) == rpc:ip_at_index(0) then
@@ -2090,14 +2090,14 @@ function NetworkMatchMakingPSN:_client_timed_out(rpc)
 	end
 end
 
--- Lines 1955-1959
+-- Lines 1956-1960
 function NetworkMatchMakingPSN:set_server_joinable(state)
 	self._server_joinable = state
 
 	self:_set_room_hidden(not state)
 end
 
--- Lines 1961-1963
+-- Lines 1962-1964
 function NetworkMatchMakingPSN:is_server_joinable()
 	return self._server_joinable
 end

@@ -23,11 +23,16 @@ function ItemOption:value()
 end
 
 -- Lines 24-26
+function ItemOption:get_parameter(name)
+	return self._parameters[name]
+end
+
+-- Lines 28-30
 function ItemOption:parameters()
 	return self._parameters
 end
 
--- Lines 28-30
+-- Lines 32-34
 function ItemOption:set_parameters(parameters)
 	self._parameters = parameters
 end

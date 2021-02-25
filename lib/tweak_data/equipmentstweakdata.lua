@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-811
+-- Lines 3-830
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -707,5 +707,15 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		icon = "equipment_blueprint",
 		text_id = "hud_equipment_blueprints"
+	}
+	self.specials.fingerprint = {
+		sync_possession = true,
+		icon = "equipment_tape_fingerprint",
+		text_id = "hud_fingerprint"
+	}
+	self.specials.tape = {
+		sync_possession = true,
+		icon = "equipment_tape",
+		text_id = "hud_equipment_take_tape"
 	}
 end

@@ -230,9 +230,11 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines 290-303
+-- Lines 290-304
 function ManageSpawnedUnits:save(data)
-	if not alive(self._unit) or self._unit:id() == -1 then
+	if not alive(self._unit) or self._unit:id() == -1 or self.local_only then
+		data.managed_spawned_units = nil
+
 		return
 	end
 
@@ -247,7 +249,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines 307-324
+-- Lines 308-325
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -267,7 +269,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines 328-351
+-- Lines 329-352
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -299,7 +301,7 @@ end
 local empty_vec = Vector3()
 local empty_rot = Rotation()
 
--- Lines 357-375
+-- Lines 358-376
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	local ids, parent_object, child_object = nil
 	local parent_unit = self._unit
@@ -320,7 +322,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	parent_unit:set_moving()
 end
 
--- Lines 378-387
+-- Lines 379-388
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 

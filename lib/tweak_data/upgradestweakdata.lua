@@ -4590,7 +4590,7 @@ function UpgradesTweakData:_init_pd2_values()
 	end
 end
 
--- Lines 1626-2549
+-- Lines 1626-2551
 function UpgradesTweakData:init(tweak_data)
 	self.level_tree = {
 		[0] = {
@@ -4735,7 +4735,8 @@ function UpgradesTweakData:init(tweak_data)
 				"baton",
 				"slot_lever",
 				"frankish",
-				"ecp"
+				"ecp",
+				"chac"
 			}
 		},
 		[18] = {
@@ -4881,7 +4882,13 @@ function UpgradesTweakData:init(tweak_data)
 				"glock_18c",
 				"asval",
 				"long",
-				"x_g18c"
+				"x_g18c",
+				"x_beer",
+				"beer",
+				"x_czech",
+				"czech",
+				"x_stech",
+				"stech"
 			}
 		},
 		[30] = {
@@ -5480,6 +5487,12 @@ function UpgradesTweakData:init(tweak_data)
 	self:_legacy_weapon_definitions()
 	self:_x_legacy_weapon_definitions()
 	self:_coach_weapon_definitions()
+	self:_beer_weapon_definitions()
+	self:_x_beer_weapon_definitions()
+	self:_czech_weapon_definitions()
+	self:_x_czech_weapon_definitions()
+	self:_stech_weapon_definitions()
+	self:_x_stech_weapon_definitions()
 	self:_melee_weapon_definitions()
 	self:_grenades_definitions()
 	self:_carry_definitions()
@@ -5539,7 +5552,7 @@ function UpgradesTweakData:init(tweak_data)
 	end
 end
 
--- Lines 2552-2604
+-- Lines 2554-2606
 function UpgradesTweakData:_init_value_tables()
 	self.values = {
 		player = {},
@@ -5579,7 +5592,7 @@ function UpgradesTweakData:_init_value_tables()
 	self.values.team.damage_dampener = {}
 end
 
--- Lines 2607-2657
+-- Lines 2609-2659
 function UpgradesTweakData:_init_values()
 	self.values.weapon = self.values.weapon or {}
 	self.values.weapon.reload_speed_multiplier = {
@@ -5659,7 +5672,7 @@ function UpgradesTweakData:_init_values()
 	}
 end
 
--- Lines 2660-6530
+-- Lines 2662-6532
 function UpgradesTweakData:_player_definitions()
 	self.definitions.body_armor1 = {
 		name_id = "bm_armor_level_2",
@@ -9583,7 +9596,7 @@ function UpgradesTweakData:_player_definitions()
 	end
 end
 
--- Lines 6533-6668
+-- Lines 6535-6670
 function UpgradesTweakData:_trip_mine_definitions()
 	self.definitions.trip_mine = {
 		description_text_id = "trip_mine",
@@ -9723,7 +9736,7 @@ function UpgradesTweakData:_trip_mine_definitions()
 	}
 end
 
--- Lines 6671-6785
+-- Lines 6673-6787
 function UpgradesTweakData:_ecm_jammer_definitions()
 	self.definitions.ecm_jammer = {
 		name_id = "menu_equipment_ecm_jammer",
@@ -9846,7 +9859,7 @@ function UpgradesTweakData:_ecm_jammer_definitions()
 	}
 end
 
--- Lines 6788-6841
+-- Lines 6790-6843
 function UpgradesTweakData:_ammo_bag_definitions()
 	self.definitions.ammo_bag = {
 		description_text_id = "ammo_bag",
@@ -9902,7 +9915,7 @@ function UpgradesTweakData:_ammo_bag_definitions()
 	}
 end
 
--- Lines 6844-6905
+-- Lines 6846-6907
 function UpgradesTweakData:_doctor_bag_definitions()
 	self.definitions.doctor_bag = {
 		description_text_id = "doctor_bag",
@@ -9967,7 +9980,7 @@ function UpgradesTweakData:_doctor_bag_definitions()
 	}
 end
 
--- Lines 6908-7009
+-- Lines 6910-7011
 function UpgradesTweakData:_cable_tie_definitions()
 	self.definitions.cable_tie = {
 		equipment_id = "cable_tie",
@@ -10073,7 +10086,7 @@ function UpgradesTweakData:_cable_tie_definitions()
 	}
 end
 
--- Lines 7014-7021
+-- Lines 7016-7023
 function UpgradesTweakData:_armor_kit_definitions()
 	self.definitions.armor_kit = {
 		name_id = "menu_equipment_armor_kit",
@@ -10083,7 +10096,7 @@ function UpgradesTweakData:_armor_kit_definitions()
 	}
 end
 
--- Lines 7024-7234
+-- Lines 7026-7236
 function UpgradesTweakData:_sentry_gun_definitions()
 	self.definitions.sentry_gun = {
 		description_text_id = "sentry_gun",
@@ -10304,7 +10317,7 @@ function UpgradesTweakData:_sentry_gun_definitions()
 	}
 end
 
--- Lines 7236-7247
+-- Lines 7238-7249
 function UpgradesTweakData:_rep_definitions()
 	local rep_upgrades = self.values.rep_upgrades
 
@@ -10318,7 +10331,7 @@ function UpgradesTweakData:_rep_definitions()
 	end
 end
 
--- Lines 7250-7344
+-- Lines 7252-7346
 function UpgradesTweakData:_c45_definitions()
 	self.definitions.c45 = {
 		description_text_id = "des_c45",
@@ -10415,7 +10428,7 @@ function UpgradesTweakData:_c45_definitions()
 	end
 end
 
--- Lines 7347-7440
+-- Lines 7349-7442
 function UpgradesTweakData:_beretta92_definitions()
 	self.definitions.beretta92 = {
 		description_text_id = "des_beretta92",
@@ -10511,7 +10524,7 @@ function UpgradesTweakData:_beretta92_definitions()
 	end
 end
 
--- Lines 7443-7538
+-- Lines 7445-7540
 function UpgradesTweakData:_raging_bull_definitions()
 	self.definitions.raging_bull = {
 		description_text_id = "des_raging_bull",
@@ -10609,7 +10622,7 @@ function UpgradesTweakData:_raging_bull_definitions()
 	end
 end
 
--- Lines 7540-7555
+-- Lines 7542-7557
 function UpgradesTweakData:_olympic_definitions()
 	self.definitions.olympic = {
 		factory_id = "wpn_fps_smg_olympic",
@@ -10623,7 +10636,7 @@ function UpgradesTweakData:_olympic_definitions()
 	}
 end
 
--- Lines 7557-7564
+-- Lines 7559-7566
 function UpgradesTweakData:_amcar_definitions()
 	self.definitions.amcar = {
 		free = true,
@@ -10633,7 +10646,7 @@ function UpgradesTweakData:_amcar_definitions()
 	}
 end
 
--- Lines 7566-7576
+-- Lines 7568-7578
 function UpgradesTweakData:_m16_definitions()
 	self.definitions.m16 = {
 		factory_id = "wpn_fps_ass_m16",
@@ -10642,7 +10655,7 @@ function UpgradesTweakData:_m16_definitions()
 	}
 end
 
--- Lines 7578-7595
+-- Lines 7580-7597
 function UpgradesTweakData:_new_m4_definitions()
 	self.definitions.new_m4 = {
 		factory_id = "wpn_fps_ass_m4",
@@ -10656,7 +10669,7 @@ function UpgradesTweakData:_new_m4_definitions()
 	}
 end
 
--- Lines 7597-7613
+-- Lines 7599-7615
 function UpgradesTweakData:_glock_18c_definitions()
 	self.definitions.glock_18c = {
 		factory_id = "wpn_fps_pis_g18c",
@@ -10670,7 +10683,7 @@ function UpgradesTweakData:_glock_18c_definitions()
 	}
 end
 
--- Lines 7615-7625
+-- Lines 7617-7627
 function UpgradesTweakData:_saiga_definitions()
 	self.definitions.saiga = {
 		factory_id = "wpn_fps_shot_saiga",
@@ -10679,7 +10692,7 @@ function UpgradesTweakData:_saiga_definitions()
 	}
 end
 
--- Lines 7627-7642
+-- Lines 7629-7644
 function UpgradesTweakData:_akmsu_definitions()
 	self.definitions.akmsu = {
 		factory_id = "wpn_fps_smg_akmsu",
@@ -10693,7 +10706,7 @@ function UpgradesTweakData:_akmsu_definitions()
 	}
 end
 
--- Lines 7644-7660
+-- Lines 7646-7662
 function UpgradesTweakData:_ak74_definitions()
 	self.definitions.ak74 = {
 		factory_id = "wpn_fps_ass_74",
@@ -10707,7 +10720,7 @@ function UpgradesTweakData:_ak74_definitions()
 	}
 end
 
--- Lines 7662-7672
+-- Lines 7664-7674
 function UpgradesTweakData:_akm_definitions()
 	self.definitions.akm = {
 		factory_id = "wpn_fps_ass_akm",
@@ -10716,7 +10729,7 @@ function UpgradesTweakData:_akm_definitions()
 	}
 end
 
--- Lines 7674-7685
+-- Lines 7676-7687
 function UpgradesTweakData:_akm_gold_definitions()
 	self.definitions.akm_gold = {
 		dlc = "pd2_clan",
@@ -10726,7 +10739,7 @@ function UpgradesTweakData:_akm_gold_definitions()
 	}
 end
 
--- Lines 7687-7697
+-- Lines 7689-7699
 function UpgradesTweakData:_ak5_definitions()
 	self.definitions.ak5 = {
 		factory_id = "wpn_fps_ass_ak5",
@@ -10735,7 +10748,7 @@ function UpgradesTweakData:_ak5_definitions()
 	}
 end
 
--- Lines 7699-7714
+-- Lines 7701-7716
 function UpgradesTweakData:_aug_definitions()
 	self.definitions.aug = {
 		factory_id = "wpn_fps_ass_aug",
@@ -10749,7 +10762,7 @@ function UpgradesTweakData:_aug_definitions()
 	}
 end
 
--- Lines 7716-7726
+-- Lines 7718-7728
 function UpgradesTweakData:_g36_definitions()
 	self.definitions.g36 = {
 		factory_id = "wpn_fps_ass_g36",
@@ -10758,7 +10771,7 @@ function UpgradesTweakData:_g36_definitions()
 	}
 end
 
--- Lines 7729-7739
+-- Lines 7731-7741
 function UpgradesTweakData:_p90_definitions()
 	self.definitions.p90 = {
 		factory_id = "wpn_fps_smg_p90",
@@ -10767,7 +10780,7 @@ function UpgradesTweakData:_p90_definitions()
 	}
 end
 
--- Lines 7741-7751
+-- Lines 7743-7753
 function UpgradesTweakData:_new_m14_definitions()
 	self.definitions.new_m14 = {
 		factory_id = "wpn_fps_ass_m14",
@@ -10776,7 +10789,7 @@ function UpgradesTweakData:_new_m14_definitions()
 	}
 end
 
--- Lines 7753-7763
+-- Lines 7755-7765
 function UpgradesTweakData:_mp9_definitions()
 	self.definitions.mp9 = {
 		factory_id = "wpn_fps_smg_mp9",
@@ -10785,7 +10798,7 @@ function UpgradesTweakData:_mp9_definitions()
 	}
 end
 
--- Lines 7765-7780
+-- Lines 7767-7782
 function UpgradesTweakData:_deagle_definitions()
 	self.definitions.deagle = {
 		factory_id = "wpn_fps_pis_deagle",
@@ -10799,7 +10812,7 @@ function UpgradesTweakData:_deagle_definitions()
 	}
 end
 
--- Lines 7782-7792
+-- Lines 7784-7794
 function UpgradesTweakData:_new_mp5_definitions()
 	self.definitions.new_mp5 = {
 		factory_id = "wpn_fps_smg_mp5",
@@ -10808,7 +10821,7 @@ function UpgradesTweakData:_new_mp5_definitions()
 	}
 end
 
--- Lines 7794-7809
+-- Lines 7796-7811
 function UpgradesTweakData:_colt_1911_definitions()
 	self.definitions.colt_1911 = {
 		factory_id = "wpn_fps_pis_1911",
@@ -10822,7 +10835,7 @@ function UpgradesTweakData:_colt_1911_definitions()
 	}
 end
 
--- Lines 7811-7821
+-- Lines 7813-7823
 function UpgradesTweakData:_mac10_definitions()
 	self.definitions.mac10 = {
 		factory_id = "wpn_fps_smg_mac10",
@@ -10831,7 +10844,7 @@ function UpgradesTweakData:_mac10_definitions()
 	}
 end
 
--- Lines 7823-7830
+-- Lines 7825-7832
 function UpgradesTweakData:_glock_17_definitions()
 	self.definitions.glock_17 = {
 		free = true,
@@ -10841,7 +10854,7 @@ function UpgradesTweakData:_glock_17_definitions()
 	}
 end
 
--- Lines 7832-7848
+-- Lines 7834-7850
 function UpgradesTweakData:_b92fs_definitions()
 	self.definitions.b92fs = {
 		factory_id = "wpn_fps_pis_beretta",
@@ -10855,7 +10868,7 @@ function UpgradesTweakData:_b92fs_definitions()
 	}
 end
 
--- Lines 7850-7860
+-- Lines 7852-7862
 function UpgradesTweakData:_huntsman_definitions()
 	self.definitions.huntsman = {
 		factory_id = "wpn_fps_shot_huntsman",
@@ -10864,7 +10877,7 @@ function UpgradesTweakData:_huntsman_definitions()
 	}
 end
 
--- Lines 7862-7872
+-- Lines 7864-7874
 function UpgradesTweakData:_r870_definitions()
 	self.definitions.r870 = {
 		factory_id = "wpn_fps_shot_r870",
@@ -10873,7 +10886,7 @@ function UpgradesTweakData:_r870_definitions()
 	}
 end
 
--- Lines 7874-7880
+-- Lines 7876-7882
 function UpgradesTweakData:_serbu_definitions()
 	self.definitions.serbu = {
 		factory_id = "wpn_fps_shot_serbu",
@@ -10882,7 +10895,7 @@ function UpgradesTweakData:_serbu_definitions()
 	}
 end
 
--- Lines 7882-7898
+-- Lines 7884-7900
 function UpgradesTweakData:_new_raging_bull_definitions()
 	self.definitions.new_raging_bull = {
 		factory_id = "wpn_fps_pis_rage",
@@ -10896,7 +10909,7 @@ function UpgradesTweakData:_new_raging_bull_definitions()
 	}
 end
 
--- Lines 7900-8039
+-- Lines 7902-8041
 function UpgradesTweakData:_saw_definitions()
 	self.definitions.saw = {
 		factory_id = "wpn_fps_saw",
@@ -11045,7 +11058,7 @@ function UpgradesTweakData:_saw_definitions()
 	}
 end
 
--- Lines 8041-8048
+-- Lines 8043-8050
 function UpgradesTweakData:_usp_definitions()
 	self.definitions.usp = {
 		dlc = "pd2_clan",
@@ -11055,7 +11068,7 @@ function UpgradesTweakData:_usp_definitions()
 	}
 end
 
--- Lines 8050-8057
+-- Lines 8052-8059
 function UpgradesTweakData:_g22c_definitions()
 	self.definitions.g22c = {
 		dlc = "pd2_clan",
@@ -11065,7 +11078,7 @@ function UpgradesTweakData:_g22c_definitions()
 	}
 end
 
--- Lines 8059-8066
+-- Lines 8061-8068
 function UpgradesTweakData:_judge_definitions()
 	self.definitions.judge = {
 		dlc = "pd2_clan",
@@ -11075,7 +11088,7 @@ function UpgradesTweakData:_judge_definitions()
 	}
 end
 
--- Lines 8070-8077
+-- Lines 8072-8079
 function UpgradesTweakData:_m45_definitions()
 	self.definitions.m45 = {
 		dlc = "armored_transport",
@@ -11085,7 +11098,7 @@ function UpgradesTweakData:_m45_definitions()
 	}
 end
 
--- Lines 8078-8091
+-- Lines 8080-8093
 function UpgradesTweakData:_s552_definitions()
 	self.definitions.s552 = {
 		dlc = "armored_transport",
@@ -11101,7 +11114,7 @@ function UpgradesTweakData:_s552_definitions()
 	}
 end
 
--- Lines 8092-8099
+-- Lines 8094-8101
 function UpgradesTweakData:_ppk_definitions()
 	self.definitions.ppk = {
 		dlc = "armored_transport",
@@ -11111,7 +11124,7 @@ function UpgradesTweakData:_ppk_definitions()
 	}
 end
 
--- Lines 8103-8110
+-- Lines 8105-8112
 function UpgradesTweakData:_mp7_definitions()
 	self.definitions.mp7 = {
 		dlc = "gage_pack",
@@ -11121,7 +11134,7 @@ function UpgradesTweakData:_mp7_definitions()
 	}
 end
 
--- Lines 8111-8118
+-- Lines 8113-8120
 function UpgradesTweakData:_scar_definitions()
 	self.definitions.scar = {
 		dlc = "gage_pack",
@@ -11131,7 +11144,7 @@ function UpgradesTweakData:_scar_definitions()
 	}
 end
 
--- Lines 8119-8126
+-- Lines 8121-8128
 function UpgradesTweakData:_p226_definitions()
 	self.definitions.p226 = {
 		dlc = "gage_pack",
@@ -11141,7 +11154,7 @@ function UpgradesTweakData:_p226_definitions()
 	}
 end
 
--- Lines 8129-8136
+-- Lines 8131-8138
 function UpgradesTweakData:_hk21_definitions()
 	self.definitions.hk21 = {
 		dlc = "gage_pack_lmg",
@@ -11151,7 +11164,7 @@ function UpgradesTweakData:_hk21_definitions()
 	}
 end
 
--- Lines 8137-8144
+-- Lines 8139-8146
 function UpgradesTweakData:_m249_definitions()
 	self.definitions.m249 = {
 		dlc = "gage_pack_lmg",
@@ -11161,7 +11174,7 @@ function UpgradesTweakData:_m249_definitions()
 	}
 end
 
--- Lines 8145-8152
+-- Lines 8147-8154
 function UpgradesTweakData:_rpk_definitions()
 	self.definitions.rpk = {
 		dlc = "gage_pack_lmg",
@@ -11171,7 +11184,7 @@ function UpgradesTweakData:_rpk_definitions()
 	}
 end
 
--- Lines 8155-8162
+-- Lines 8157-8164
 function UpgradesTweakData:_m95_definitions()
 	self.definitions.m95 = {
 		dlc = "gage_pack_snp",
@@ -11181,7 +11194,7 @@ function UpgradesTweakData:_m95_definitions()
 	}
 end
 
--- Lines 8164-8171
+-- Lines 8166-8173
 function UpgradesTweakData:_msr_definitions()
 	self.definitions.msr = {
 		dlc = "gage_pack_snp",
@@ -11191,7 +11204,7 @@ function UpgradesTweakData:_msr_definitions()
 	}
 end
 
--- Lines 8173-8180
+-- Lines 8175-8182
 function UpgradesTweakData:_r93_definitions()
 	self.definitions.r93 = {
 		dlc = "gage_pack_snp",
@@ -11201,7 +11214,7 @@ function UpgradesTweakData:_r93_definitions()
 	}
 end
 
--- Lines 8183-8190
+-- Lines 8185-8192
 function UpgradesTweakData:_fal_definitions()
 	self.definitions.fal = {
 		dlc = "big_bank",
@@ -11211,7 +11224,7 @@ function UpgradesTweakData:_fal_definitions()
 	}
 end
 
--- Lines 8193-8200
+-- Lines 8195-8202
 function UpgradesTweakData:_benelli_definitions()
 	self.definitions.benelli = {
 		dlc = "gage_pack_shotgun",
@@ -11221,7 +11234,7 @@ function UpgradesTweakData:_benelli_definitions()
 	}
 end
 
--- Lines 8201-8217
+-- Lines 8203-8219
 function UpgradesTweakData:_striker_definitions()
 	self.definitions.striker = {
 		dlc = "gage_pack_shotgun",
@@ -11240,7 +11253,7 @@ function UpgradesTweakData:_striker_definitions()
 	}
 end
 
--- Lines 8218-8225
+-- Lines 8220-8227
 function UpgradesTweakData:_ksg_definitions()
 	self.definitions.ksg = {
 		dlc = "gage_pack_shotgun",
@@ -11250,7 +11263,7 @@ function UpgradesTweakData:_ksg_definitions()
 	}
 end
 
--- Lines 8229-8236
+-- Lines 8231-8238
 function UpgradesTweakData:_scorpion_definitions()
 	self.definitions.scorpion = {
 		dlc = "hl_miami",
@@ -11260,7 +11273,7 @@ function UpgradesTweakData:_scorpion_definitions()
 	}
 end
 
--- Lines 8237-8244
+-- Lines 8239-8246
 function UpgradesTweakData:_tec9_definitions()
 	self.definitions.tec9 = {
 		dlc = "hl_miami",
@@ -11270,7 +11283,7 @@ function UpgradesTweakData:_tec9_definitions()
 	}
 end
 
--- Lines 8245-8252
+-- Lines 8247-8254
 function UpgradesTweakData:_uzi_definitions()
 	self.definitions.uzi = {
 		dlc = "hl_miami",
@@ -11280,7 +11293,7 @@ function UpgradesTweakData:_uzi_definitions()
 	}
 end
 
--- Lines 8255-8262
+-- Lines 8257-8264
 function UpgradesTweakData:_gre_m79_definitions()
 	self.definitions.gre_m79 = {
 		dlc = "gage_pack_assault",
@@ -11290,7 +11303,7 @@ function UpgradesTweakData:_gre_m79_definitions()
 	}
 end
 
--- Lines 8263-8270
+-- Lines 8265-8272
 function UpgradesTweakData:_g3_definitions()
 	self.definitions.g3 = {
 		dlc = "gage_pack_assault",
@@ -11300,7 +11313,7 @@ function UpgradesTweakData:_g3_definitions()
 	}
 end
 
--- Lines 8271-8278
+-- Lines 8273-8280
 function UpgradesTweakData:_galil_definitions()
 	self.definitions.galil = {
 		dlc = "gage_pack_assault",
@@ -11310,7 +11323,7 @@ function UpgradesTweakData:_galil_definitions()
 	}
 end
 
--- Lines 8279-8286
+-- Lines 8281-8288
 function UpgradesTweakData:_famas_definitions()
 	self.definitions.famas = {
 		dlc = "gage_pack_assault",
@@ -11320,7 +11333,7 @@ function UpgradesTweakData:_famas_definitions()
 	}
 end
 
--- Lines 8289-8296
+-- Lines 8291-8298
 function UpgradesTweakData:_spas12_definitions()
 	self.definitions.spas12 = {
 		dlc = "pd2_clan",
@@ -11330,7 +11343,7 @@ function UpgradesTweakData:_spas12_definitions()
 	}
 end
 
--- Lines 8299-8306
+-- Lines 8301-8308
 function UpgradesTweakData:_mg42_definitions()
 	self.definitions.mg42 = {
 		dlc = "gage_pack_historical",
@@ -11340,7 +11353,7 @@ function UpgradesTweakData:_mg42_definitions()
 	}
 end
 
--- Lines 8307-8314
+-- Lines 8309-8316
 function UpgradesTweakData:_c96_definitions()
 	self.definitions.c96 = {
 		dlc = "gage_pack_historical",
@@ -11350,7 +11363,7 @@ function UpgradesTweakData:_c96_definitions()
 	}
 end
 
--- Lines 8315-8322
+-- Lines 8317-8324
 function UpgradesTweakData:_sterling_definitions()
 	self.definitions.sterling = {
 		dlc = "gage_pack_historical",
@@ -11360,7 +11373,7 @@ function UpgradesTweakData:_sterling_definitions()
 	}
 end
 
--- Lines 8323-8330
+-- Lines 8325-8332
 function UpgradesTweakData:_mosin_definitions()
 	self.definitions.mosin = {
 		dlc = "gage_pack_historical",
@@ -11370,7 +11383,7 @@ function UpgradesTweakData:_mosin_definitions()
 	}
 end
 
--- Lines 8331-8338
+-- Lines 8333-8340
 function UpgradesTweakData:_m1928_definitions()
 	self.definitions.m1928 = {
 		dlc = "pd2_clan",
@@ -11380,7 +11393,7 @@ function UpgradesTweakData:_m1928_definitions()
 	}
 end
 
--- Lines 8339-8346
+-- Lines 8341-8348
 function UpgradesTweakData:_l85a2_definitions()
 	self.definitions.l85a2 = {
 		dlc = "character_pack_clover",
@@ -11390,7 +11403,7 @@ function UpgradesTweakData:_l85a2_definitions()
 	}
 end
 
--- Lines 8348-8355
+-- Lines 8350-8357
 function UpgradesTweakData:_vhs_definitions()
 	self.definitions.vhs = {
 		dlc = "character_pack_dragan",
@@ -11400,7 +11413,7 @@ function UpgradesTweakData:_vhs_definitions()
 	}
 end
 
--- Lines 8356-8363
+-- Lines 8358-8365
 function UpgradesTweakData:_hs2000_definitions()
 	self.definitions.hs2000 = {
 		dlc = "the_bomb",
@@ -11410,7 +11423,7 @@ function UpgradesTweakData:_hs2000_definitions()
 	}
 end
 
--- Lines 8366-8374
+-- Lines 8368-8376
 function UpgradesTweakData:_m134_weapon_definitions()
 	self.definitions.m134 = {
 		dlc = "overkill_pack",
@@ -11420,7 +11433,7 @@ function UpgradesTweakData:_m134_weapon_definitions()
 	}
 end
 
--- Lines 8376-8384
+-- Lines 8378-8386
 function UpgradesTweakData:_rpg7_weapon_definitions()
 	self.definitions.rpg7 = {
 		dlc = "overkill_pack",
@@ -11430,7 +11443,7 @@ function UpgradesTweakData:_rpg7_weapon_definitions()
 	}
 end
 
--- Lines 8387-8394
+-- Lines 8389-8396
 function UpgradesTweakData:_cobray_definitions()
 	self.definitions.cobray = {
 		dlc = "hlm2_deluxe",
@@ -11440,7 +11453,7 @@ function UpgradesTweakData:_cobray_definitions()
 	}
 end
 
--- Lines 8397-8404
+-- Lines 8399-8406
 function UpgradesTweakData:_b682_weapon_definitions()
 	self.definitions.b682 = {
 		dlc = "pd2_clan",
@@ -11450,7 +11463,7 @@ function UpgradesTweakData:_b682_weapon_definitions()
 	}
 end
 
--- Lines 8407-8823
+-- Lines 8409-8832
 function UpgradesTweakData:_melee_weapon_definitions()
 	self.definitions.weapon = {
 		category = "melee_weapon"
@@ -11782,9 +11795,13 @@ function UpgradesTweakData:_melee_weapon_definitions()
 	self.definitions.fear = {
 		category = "melee_weapon"
 	}
+	self.definitions.chac = {
+		dlc = "bex",
+		category = "melee_weapon"
+	}
 end
 
--- Lines 8826-8928
+-- Lines 8835-8937
 function UpgradesTweakData:_grenades_definitions()
 	self.definitions.molotov = {
 		dlc = "bbq",
@@ -11855,7 +11872,7 @@ function UpgradesTweakData:_grenades_definitions()
 	}
 end
 
--- Lines 8932-9327
+-- Lines 8941-9336
 function UpgradesTweakData:_weapon_definitions()
 	self.definitions.weapon_steelsight_highlight_specials = {
 		name_id = "menu_weapon_steelsight_highlight_specials",
@@ -12277,7 +12294,7 @@ function UpgradesTweakData:_weapon_definitions()
 	}
 end
 
--- Lines 9329-9470
+-- Lines 9338-9479
 function UpgradesTweakData:_pistol_definitions()
 	self.definitions.pistol_reload_speed_multiplier = {
 		name_id = "menu_pistol_reload_speed",
@@ -12434,7 +12451,7 @@ function UpgradesTweakData:_pistol_definitions()
 	}
 end
 
--- Lines 9472-9530
+-- Lines 9481-9539
 function UpgradesTweakData:_assault_rifle_definitions()
 	self.definitions.assault_rifle_recoil_multiplier = {
 		name_id = "menu_assault_rifle_recoil_multiplier",
@@ -12501,7 +12518,7 @@ function UpgradesTweakData:_assault_rifle_definitions()
 	}
 end
 
--- Lines 9532-9590
+-- Lines 9541-9599
 function UpgradesTweakData:_lmg_definitions()
 	self.definitions.lmg_recoil_multiplier = {
 		name_id = "menu_lmg_recoil_multiplier",
@@ -12568,7 +12585,7 @@ function UpgradesTweakData:_lmg_definitions()
 	}
 end
 
--- Lines 9592-9650
+-- Lines 9601-9659
 function UpgradesTweakData:_snp_definitions()
 	self.definitions.snp_recoil_multiplier = {
 		name_id = "menu_snp_recoil_multiplier",
@@ -12635,7 +12652,7 @@ function UpgradesTweakData:_snp_definitions()
 	}
 end
 
--- Lines 9654-9703
+-- Lines 9663-9712
 function UpgradesTweakData:_smg_definitions()
 	self.definitions.smg_reload_speed_multiplier = {
 		name_id = "menu_reload_speed_multiplier",
@@ -12693,7 +12710,7 @@ function UpgradesTweakData:_smg_definitions()
 	}
 end
 
--- Lines 9705-9795
+-- Lines 9714-9804
 function UpgradesTweakData:_shotgun_definitions()
 	self.definitions.shotgun_recoil_multiplier = {
 		name_id = "menu_shotgun_recoil_multiplier",
@@ -12796,7 +12813,7 @@ function UpgradesTweakData:_shotgun_definitions()
 	}
 end
 
--- Lines 9797-9866
+-- Lines 9806-9875
 function UpgradesTweakData:_carry_definitions()
 	self.definitions.carry_movement_penalty_nullifier = {
 		name_id = "menu_carry_movement_penalty_nullifier",
@@ -12872,7 +12889,7 @@ function UpgradesTweakData:_carry_definitions()
 	}
 end
 
--- Lines 9868-10111
+-- Lines 9877-10120
 function UpgradesTweakData:_team_definitions()
 	self.definitions.team_pistol_recoil_index_addend = {
 		name_id = "menu_team_pistol_recoil_index_addend",
@@ -13130,7 +13147,7 @@ function UpgradesTweakData:_team_definitions()
 	self:_crew_definitions()
 end
 
--- Lines 10113-10235
+-- Lines 10122-10244
 function UpgradesTweakData:_crew_definitions()
 	self.crew_skill_definitions = self.crew_skill_definitions or {}
 	self.crew_ability_definitions = self.crew_ability_definitions or {}
@@ -13250,7 +13267,7 @@ function UpgradesTweakData:_crew_definitions()
 	}
 end
 
--- Lines 10237-10385
+-- Lines 10246-10394
 function UpgradesTweakData:_temporary_definitions()
 	self.definitions.temporary_armor_break_invulnerable_1 = {
 		name_id = "menu_player_health_multiplier",
@@ -13409,7 +13426,7 @@ function UpgradesTweakData:_temporary_definitions()
 	}
 end
 
--- Lines 10387-10398
+-- Lines 10396-10407
 function UpgradesTweakData:_cooldown_definitions()
 	self.definitions.cooldown_long_dis_revive = {
 		name_id = "menu_cooldown_long_dis_revive",
@@ -13422,7 +13439,7 @@ function UpgradesTweakData:_cooldown_definitions()
 	}
 end
 
--- Lines 10417-10423
+-- Lines 10426-10432
 function UpgradesTweakData:_shape_charge_definitions()
 	self.definitions.shape_charge = {
 		name_id = "menu_shape_charge",
@@ -13431,7 +13448,7 @@ function UpgradesTweakData:_shape_charge_definitions()
 	}
 end
 
--- Lines 10426-10524
+-- Lines 10435-10533
 function UpgradesTweakData:_m4_definitions()
 	self.definitions.m4 = {
 		description_text_id = "des_m4",
@@ -13526,7 +13543,7 @@ function UpgradesTweakData:_m4_definitions()
 	end
 end
 
--- Lines 10527-10648
+-- Lines 10536-10657
 function UpgradesTweakData:_m14_definitions()
 	self.definitions.m14 = {
 		description_text_id = "des_m14",
@@ -13650,7 +13667,7 @@ function UpgradesTweakData:_m14_definitions()
 	end
 end
 
--- Lines 10651-10772
+-- Lines 10660-10781
 function UpgradesTweakData:_mp5_definitions()
 	self.definitions.mp5 = {
 		description_text_id = "des_mp5",
@@ -13774,7 +13791,7 @@ function UpgradesTweakData:_mp5_definitions()
 	end
 end
 
--- Lines 10775-10870
+-- Lines 10784-10879
 function UpgradesTweakData:_mac11_definitions()
 	self.definitions.mac11 = {
 		description_text_id = "des_mac11",
@@ -13872,7 +13889,7 @@ function UpgradesTweakData:_mac11_definitions()
 	end
 end
 
--- Lines 10873-10966
+-- Lines 10882-10975
 function UpgradesTweakData:_remington_definitions()
 	self.definitions.r870_shotgun = {
 		description_text_id = "des_r870_shotgun",
@@ -13970,7 +13987,7 @@ function UpgradesTweakData:_remington_definitions()
 	end
 end
 
--- Lines 10969-11117
+-- Lines 10978-11126
 function UpgradesTweakData:_mossberg_definitions()
 	self.definitions.mossberg = {
 		description_text_id = "des_mossberg",
@@ -14094,7 +14111,7 @@ function UpgradesTweakData:_mossberg_definitions()
 	end
 end
 
--- Lines 11123-11249
+-- Lines 11132-11258
 function UpgradesTweakData:_ak47_definitions()
 	self.definitions.ak47 = {
 		description_text_id = "des_ak47",
@@ -14218,7 +14235,7 @@ function UpgradesTweakData:_ak47_definitions()
 	end
 end
 
--- Lines 11253-11384
+-- Lines 11262-11393
 function UpgradesTweakData:_glock_definitions()
 	self.definitions.glock = {
 		description_text_id = "des_glock",
@@ -14342,7 +14359,7 @@ function UpgradesTweakData:_glock_definitions()
 	end
 end
 
--- Lines 11388-11486
+-- Lines 11397-11495
 function UpgradesTweakData:_m79_definitions()
 	self.definitions.m79 = {
 		description_text_id = "des_m79",
@@ -14440,7 +14457,7 @@ function UpgradesTweakData:_m79_definitions()
 	end
 end
 
--- Lines 11489-11590
+-- Lines 11498-11599
 function UpgradesTweakData:_akimbo_definitions()
 	self.definitions.akimbo_damage_multiplier_1 = {
 		name_id = "menu_akimbo_damage_multiplier",
@@ -14547,7 +14564,7 @@ function UpgradesTweakData:_akimbo_definitions()
 	}
 end
 
--- Lines 11592-11655
+-- Lines 11601-11664
 function UpgradesTweakData:_first_aid_kit_definitions()
 	self.definitions.first_aid_kit = {
 		name_id = "menu_equipment_first_aid_kit",
@@ -14616,7 +14633,7 @@ function UpgradesTweakData:_first_aid_kit_definitions()
 	}
 end
 
--- Lines 11657-11673
+-- Lines 11666-11682
 function UpgradesTweakData:_bodybags_bag_definitions()
 	self.definitions.bodybags_bag = {
 		name_id = "menu_equipment_bodybags_bag",
@@ -14635,7 +14652,7 @@ function UpgradesTweakData:_bodybags_bag_definitions()
 	}
 end
 
--- Lines 11675-11682
+-- Lines 11684-11691
 function UpgradesTweakData:_jowi_definitions()
 	self.definitions.jowi = {
 		factory_id = "wpn_fps_jowi",
@@ -14644,7 +14661,7 @@ function UpgradesTweakData:_jowi_definitions()
 	}
 end
 
--- Lines 11684-11690
+-- Lines 11693-11699
 function UpgradesTweakData:_x_1911_definitions()
 	self.definitions.x_1911 = {
 		factory_id = "wpn_fps_x_1911",
@@ -14653,7 +14670,7 @@ function UpgradesTweakData:_x_1911_definitions()
 	}
 end
 
--- Lines 11692-11698
+-- Lines 11701-11707
 function UpgradesTweakData:_x_b92fs_definitions()
 	self.definitions.x_b92fs = {
 		factory_id = "wpn_fps_x_b92fs",
@@ -14662,7 +14679,7 @@ function UpgradesTweakData:_x_b92fs_definitions()
 	}
 end
 
--- Lines 11700-11706
+-- Lines 11709-11715
 function UpgradesTweakData:_x_deagle_definitions()
 	self.definitions.x_deagle = {
 		factory_id = "wpn_fps_x_deagle",
@@ -14671,7 +14688,7 @@ function UpgradesTweakData:_x_deagle_definitions()
 	}
 end
 
--- Lines 11709-11716
+-- Lines 11718-11725
 function UpgradesTweakData:_g26_definitions()
 	self.definitions.g26 = {
 		dlc = "pd2_clan",
@@ -14681,7 +14698,7 @@ function UpgradesTweakData:_g26_definitions()
 	}
 end
 
--- Lines 11718-11723
+-- Lines 11727-11732
 function UpgradesTweakData:_kabartanto_definitions()
 	self.definitions.kabartanto = {
 		dlc = "pd2_clan",
@@ -14689,7 +14706,7 @@ function UpgradesTweakData:_kabartanto_definitions()
 	}
 end
 
--- Lines 11725-11730
+-- Lines 11734-11739
 function UpgradesTweakData:_toothbrush_definitions()
 	self.definitions.toothbrush = {
 		dlc = "pd2_clan",
@@ -14697,7 +14714,7 @@ function UpgradesTweakData:_toothbrush_definitions()
 	}
 end
 
--- Lines 11732-11737
+-- Lines 11741-11746
 function UpgradesTweakData:_chef_definitions()
 	self.definitions.chef = {
 		dlc = "pd2_clan",
@@ -14705,7 +14722,7 @@ function UpgradesTweakData:_chef_definitions()
 	}
 end
 
--- Lines 11739-11745
+-- Lines 11748-11754
 function UpgradesTweakData:_x_g22c_definitions()
 	self.definitions.x_g22c = {
 		factory_id = "wpn_fps_pis_x_g22c",
@@ -14714,7 +14731,7 @@ function UpgradesTweakData:_x_g22c_definitions()
 	}
 end
 
--- Lines 11746-11752
+-- Lines 11755-11761
 function UpgradesTweakData:_x_g17_definitions()
 	self.definitions.x_g17 = {
 		factory_id = "wpn_fps_pis_x_g17",
@@ -14723,7 +14740,7 @@ function UpgradesTweakData:_x_g17_definitions()
 	}
 end
 
--- Lines 11753-11759
+-- Lines 11762-11768
 function UpgradesTweakData:_x_usp_definitions()
 	self.definitions.x_usp = {
 		factory_id = "wpn_fps_pis_x_usp",
@@ -14732,7 +14749,7 @@ function UpgradesTweakData:_x_usp_definitions()
 	}
 end
 
--- Lines 11762-11769
+-- Lines 11771-11778
 function UpgradesTweakData:_flamethrower_mk2_definitions()
 	self.definitions.flamethrower_mk2 = {
 		dlc = "bbq",
@@ -14742,7 +14759,7 @@ function UpgradesTweakData:_flamethrower_mk2_definitions()
 	}
 end
 
--- Lines 11771-11778
+-- Lines 11780-11787
 function UpgradesTweakData:_m32_definitions()
 	self.definitions.m32 = {
 		dlc = "bbq",
@@ -14752,7 +14769,7 @@ function UpgradesTweakData:_m32_definitions()
 	}
 end
 
--- Lines 11780-11787
+-- Lines 11789-11796
 function UpgradesTweakData:_aa12_definitions()
 	self.definitions.aa12 = {
 		dlc = "bbq",
@@ -14762,7 +14779,7 @@ function UpgradesTweakData:_aa12_definitions()
 	}
 end
 
--- Lines 11789-11817
+-- Lines 11798-11826
 function UpgradesTweakData:_bbq_weapon_definitions()
 	self.definitions.fork = {
 		dlc = "bbq",
@@ -14785,7 +14802,7 @@ function UpgradesTweakData:_bbq_weapon_definitions()
 	}
 end
 
--- Lines 11820-11827
+-- Lines 11829-11836
 function UpgradesTweakData:_peacemaker_definitions()
 	self.definitions.peacemaker = {
 		dlc = "west",
@@ -14795,7 +14812,7 @@ function UpgradesTweakData:_peacemaker_definitions()
 	}
 end
 
--- Lines 11829-11836
+-- Lines 11838-11845
 function UpgradesTweakData:_winchester1874_definitions()
 	self.definitions.winchester1874 = {
 		dlc = "west",
@@ -14805,7 +14822,7 @@ function UpgradesTweakData:_winchester1874_definitions()
 	}
 end
 
--- Lines 11838-11845
+-- Lines 11847-11854
 function UpgradesTweakData:_plainsrider_definitions()
 	self.definitions.plainsrider = {
 		dlc = "west",
@@ -14815,7 +14832,7 @@ function UpgradesTweakData:_plainsrider_definitions()
 	}
 end
 
--- Lines 11848-11855
+-- Lines 11857-11864
 function UpgradesTweakData:_mateba_definitions()
 	self.definitions.mateba = {
 		dlc = "arena",
@@ -14825,7 +14842,7 @@ function UpgradesTweakData:_mateba_definitions()
 	}
 end
 
--- Lines 11858-11865
+-- Lines 11867-11874
 function UpgradesTweakData:_asval_definitions()
 	self.definitions.asval = {
 		dlc = "character_pack_sokol",
@@ -14835,7 +14852,7 @@ function UpgradesTweakData:_asval_definitions()
 	}
 end
 
--- Lines 11868-11875
+-- Lines 11877-11884
 function UpgradesTweakData:_sub2000_definitions()
 	self.definitions.sub2000 = {
 		dlc = "kenaz",
@@ -14845,7 +14862,7 @@ function UpgradesTweakData:_sub2000_definitions()
 	}
 end
 
--- Lines 11878-11885
+-- Lines 11887-11894
 function UpgradesTweakData:_wa2000_definitions()
 	self.definitions.wa2000 = {
 		dlc = "turtles",
@@ -14855,7 +14872,7 @@ function UpgradesTweakData:_wa2000_definitions()
 	}
 end
 
--- Lines 11886-11893
+-- Lines 11895-11902
 function UpgradesTweakData:_polymer_definitions()
 	self.definitions.polymer = {
 		dlc = "turtles",
@@ -14865,7 +14882,7 @@ function UpgradesTweakData:_polymer_definitions()
 	}
 end
 
--- Lines 11894-11901
+-- Lines 11903-11910
 function UpgradesTweakData:_hunter_definitions()
 	self.definitions.hunter = {
 		dlc = "turtles",
@@ -14875,7 +14892,7 @@ function UpgradesTweakData:_hunter_definitions()
 	}
 end
 
--- Lines 11904-11911
+-- Lines 11913-11920
 function UpgradesTweakData:_baka_definitions()
 	self.definitions.baka = {
 		dlc = "dragon",
@@ -14885,7 +14902,7 @@ function UpgradesTweakData:_baka_definitions()
 	}
 end
 
--- Lines 11914-11921
+-- Lines 11923-11930
 function UpgradesTweakData:_arblast_weapon_definitions()
 	self.definitions.arblast = {
 		dlc = "steel",
@@ -14895,7 +14912,7 @@ function UpgradesTweakData:_arblast_weapon_definitions()
 	}
 end
 
--- Lines 11922-11929
+-- Lines 11931-11938
 function UpgradesTweakData:_frankish_weapon_definitions()
 	self.definitions.frankish = {
 		dlc = "steel",
@@ -14905,7 +14922,7 @@ function UpgradesTweakData:_frankish_weapon_definitions()
 	}
 end
 
--- Lines 11930-11937
+-- Lines 11939-11946
 function UpgradesTweakData:_long_weapon_definitions()
 	self.definitions.long = {
 		dlc = "steel",
@@ -14915,7 +14932,7 @@ function UpgradesTweakData:_long_weapon_definitions()
 	}
 end
 
--- Lines 11940-11946
+-- Lines 11949-11955
 function UpgradesTweakData:_par_weapon_definitions()
 	self.definitions.par = {
 		factory_id = "wpn_fps_lmg_par",
@@ -14924,7 +14941,7 @@ function UpgradesTweakData:_par_weapon_definitions()
 	}
 end
 
--- Lines 11947-11954
+-- Lines 11956-11963
 function UpgradesTweakData:_sparrow_weapon_definitions()
 	self.definitions.sparrow = {
 		dlc = "berry",
@@ -14934,7 +14951,7 @@ function UpgradesTweakData:_sparrow_weapon_definitions()
 	}
 end
 
--- Lines 11955-11961
+-- Lines 11964-11970
 function UpgradesTweakData:_model70_weapon_definitions()
 	self.definitions.model70 = {
 		factory_id = "wpn_fps_snp_model70",
@@ -14943,7 +14960,7 @@ function UpgradesTweakData:_model70_weapon_definitions()
 	}
 end
 
--- Lines 11974-11981
+-- Lines 11983-11990
 function UpgradesTweakData:_m37_weapon_definitions()
 	self.definitions.m37 = {
 		dlc = "peta",
@@ -14953,7 +14970,7 @@ function UpgradesTweakData:_m37_weapon_definitions()
 	}
 end
 
--- Lines 11984-11991
+-- Lines 11993-12000
 function UpgradesTweakData:_china_weapon_definitions()
 	self.definitions.china = {
 		dlc = "pal",
@@ -14963,7 +14980,7 @@ function UpgradesTweakData:_china_weapon_definitions()
 	}
 end
 
--- Lines 11994-12003
+-- Lines 12003-12012
 function UpgradesTweakData:_sr2_weapon_definitions()
 	self.definitions.sr2 = {
 		factory_id = "wpn_fps_smg_sr2",
@@ -14972,7 +14989,7 @@ function UpgradesTweakData:_sr2_weapon_definitions()
 	}
 end
 
--- Lines 12004-12013
+-- Lines 12013-12022
 function UpgradesTweakData:_x_sr2_weapon_definitions()
 	self.definitions.x_sr2 = {
 		factory_id = "wpn_fps_smg_x_sr2",
@@ -14981,7 +14998,7 @@ function UpgradesTweakData:_x_sr2_weapon_definitions()
 	}
 end
 
--- Lines 12016-12025
+-- Lines 12025-12034
 function UpgradesTweakData:_pl14_weapon_definitions()
 	self.definitions.pl14 = {
 		factory_id = "wpn_fps_pis_pl14",
@@ -14990,7 +15007,7 @@ function UpgradesTweakData:_pl14_weapon_definitions()
 	}
 end
 
--- Lines 12028-12034
+-- Lines 12037-12043
 function UpgradesTweakData:_x_mp5_weapon_definitions()
 	self.definitions.x_mp5 = {
 		factory_id = "wpn_fps_smg_x_mp5",
@@ -14999,7 +15016,7 @@ function UpgradesTweakData:_x_mp5_weapon_definitions()
 	}
 end
 
--- Lines 12035-12041
+-- Lines 12044-12050
 function UpgradesTweakData:_x_akmsu_weapon_definitions()
 	self.definitions.x_akmsu = {
 		factory_id = "wpn_fps_smg_x_akmsu",
@@ -15008,7 +15025,7 @@ function UpgradesTweakData:_x_akmsu_weapon_definitions()
 	}
 end
 
--- Lines 12044-12051
+-- Lines 12053-12060
 function UpgradesTweakData:_tecci_weapon_definitions()
 	self.definitions.tecci = {
 		dlc = "opera",
@@ -15018,7 +15035,7 @@ function UpgradesTweakData:_tecci_weapon_definitions()
 	}
 end
 
--- Lines 12054-12061
+-- Lines 12063-12070
 function UpgradesTweakData:_hajk_weapon_definitions()
 	self.definitions.hajk = {
 		dlc = "born",
@@ -15028,7 +15045,7 @@ function UpgradesTweakData:_hajk_weapon_definitions()
 	}
 end
 
--- Lines 12064-12071
+-- Lines 12073-12080
 function UpgradesTweakData:_boot_weapon_definitions()
 	self.definitions.boot = {
 		dlc = "wild",
@@ -15038,7 +15055,7 @@ function UpgradesTweakData:_boot_weapon_definitions()
 	}
 end
 
--- Lines 12074-12081
+-- Lines 12083-12090
 function UpgradesTweakData:_packrat_weapon_definitions()
 	self.definitions.packrat = {
 		dlc = "pim",
@@ -15048,7 +15065,7 @@ function UpgradesTweakData:_packrat_weapon_definitions()
 	}
 end
 
--- Lines 12082-12089
+-- Lines 12091-12098
 function UpgradesTweakData:_schakal_weapon_definitions()
 	self.definitions.schakal = {
 		dlc = "pim",
@@ -15058,7 +15075,7 @@ function UpgradesTweakData:_schakal_weapon_definitions()
 	}
 end
 
--- Lines 12090-12097
+-- Lines 12099-12106
 function UpgradesTweakData:_desertfox_weapon_definitions()
 	self.definitions.desertfox = {
 		dlc = "pim",
@@ -15068,7 +15085,7 @@ function UpgradesTweakData:_desertfox_weapon_definitions()
 	}
 end
 
--- Lines 12098-12105
+-- Lines 12107-12114
 function UpgradesTweakData:_x_packrat_weapon_definitions()
 	self.definitions.x_packrat = {
 		dlc = "pim",
@@ -15078,7 +15095,7 @@ function UpgradesTweakData:_x_packrat_weapon_definitions()
 	}
 end
 
--- Lines 12108-12115
+-- Lines 12117-12124
 function UpgradesTweakData:_rota_weapon_definitions()
 	self.definitions.rota = {
 		dlc = "rota",
@@ -15088,7 +15105,7 @@ function UpgradesTweakData:_rota_weapon_definitions()
 	}
 end
 
--- Lines 12118-12125
+-- Lines 12127-12134
 function UpgradesTweakData:_arbiter_weapon_definitions()
 	self.definitions.arbiter = {
 		dlc = "tango",
@@ -15098,7 +15115,7 @@ function UpgradesTweakData:_arbiter_weapon_definitions()
 	}
 end
 
--- Lines 12128-12141
+-- Lines 12137-12150
 function UpgradesTweakData:_contraband_weapon_definitions()
 	self.definitions.contraband = {
 		dlc = "chico",
@@ -15114,7 +15131,7 @@ function UpgradesTweakData:_contraband_weapon_definitions()
 	}
 end
 
--- Lines 12144-12151
+-- Lines 12153-12160
 function UpgradesTweakData:_ray_weapon_definitions()
 	self.definitions.ray = {
 		dlc = "friend",
@@ -15124,7 +15141,7 @@ function UpgradesTweakData:_ray_weapon_definitions()
 	}
 end
 
--- Lines 12154-12161
+-- Lines 12163-12170
 function UpgradesTweakData:_tti_weapon_definitions()
 	self.definitions.tti = {
 		dlc = "spa",
@@ -15134,7 +15151,7 @@ function UpgradesTweakData:_tti_weapon_definitions()
 	}
 end
 
--- Lines 12165-12172
+-- Lines 12174-12181
 function UpgradesTweakData:_siltstone_weapon_definitions()
 	self.definitions.siltstone = {
 		dlc = "grv",
@@ -15144,7 +15161,7 @@ function UpgradesTweakData:_siltstone_weapon_definitions()
 	}
 end
 
--- Lines 12174-12181
+-- Lines 12183-12190
 function UpgradesTweakData:_flint_weapon_definitions()
 	self.definitions.flint = {
 		dlc = "grv",
@@ -15154,7 +15171,7 @@ function UpgradesTweakData:_flint_weapon_definitions()
 	}
 end
 
--- Lines 12183-12190
+-- Lines 12192-12199
 function UpgradesTweakData:_coal_weapon_definitions()
 	self.definitions.coal = {
 		dlc = "grv",
@@ -15164,7 +15181,7 @@ function UpgradesTweakData:_coal_weapon_definitions()
 	}
 end
 
--- Lines 12193-12200
+-- Lines 12202-12209
 function UpgradesTweakData:_lemming_weapon_definitions()
 	self.definitions.lemming = {
 		dlc = "pd2_clan",
@@ -15174,7 +15191,7 @@ function UpgradesTweakData:_lemming_weapon_definitions()
 	}
 end
 
--- Lines 12203-12214
+-- Lines 12212-12223
 function UpgradesTweakData:_chinchilla_weapon_definitions()
 	self.definitions.chinchilla = {
 		dlc = "max",
@@ -15184,7 +15201,7 @@ function UpgradesTweakData:_chinchilla_weapon_definitions()
 	}
 end
 
--- Lines 12215-12226
+-- Lines 12224-12235
 function UpgradesTweakData:_x_chinchilla_weapon_definitions()
 	self.definitions.x_chinchilla = {
 		dlc = "max",
@@ -15194,7 +15211,7 @@ function UpgradesTweakData:_x_chinchilla_weapon_definitions()
 	}
 end
 
--- Lines 12230-12236
+-- Lines 12239-12245
 function UpgradesTweakData:_shepheard_weapon_definitions()
 	self.definitions.shepheard = {
 		factory_id = "wpn_fps_smg_shepheard",
@@ -15203,7 +15220,7 @@ function UpgradesTweakData:_shepheard_weapon_definitions()
 	}
 end
 
--- Lines 12237-12243
+-- Lines 12246-12252
 function UpgradesTweakData:_x_shepheard_weapon_definitions()
 	self.definitions.x_shepheard = {
 		factory_id = "wpn_fps_smg_x_shepheard",
@@ -15212,7 +15229,7 @@ function UpgradesTweakData:_x_shepheard_weapon_definitions()
 	}
 end
 
--- Lines 12247-12253
+-- Lines 12256-12262
 function UpgradesTweakData:_breech_weapon_definitions()
 	self.definitions.breech = {
 		factory_id = "wpn_fps_pis_breech",
@@ -15221,7 +15238,7 @@ function UpgradesTweakData:_breech_weapon_definitions()
 	}
 end
 
--- Lines 12255-12261
+-- Lines 12264-12270
 function UpgradesTweakData:_ching_weapon_definitions()
 	self.definitions.ching = {
 		factory_id = "wpn_fps_ass_ching",
@@ -15230,7 +15247,7 @@ function UpgradesTweakData:_ching_weapon_definitions()
 	}
 end
 
--- Lines 12263-12269
+-- Lines 12272-12278
 function UpgradesTweakData:_erma_weapon_definitions()
 	self.definitions.erma = {
 		factory_id = "wpn_fps_smg_erma",
@@ -15239,7 +15256,7 @@ function UpgradesTweakData:_erma_weapon_definitions()
 	}
 end
 
--- Lines 12273-12280
+-- Lines 12282-12289
 function UpgradesTweakData:_ecp_weapon_definitions()
 	self.definitions.ecp = {
 		dlc = "ecp",
@@ -15249,7 +15266,7 @@ function UpgradesTweakData:_ecp_weapon_definitions()
 	}
 end
 
--- Lines 12284-12290
+-- Lines 12293-12299
 function UpgradesTweakData:_shrew_weapon_definitions()
 	self.definitions.shrew = {
 		factory_id = "wpn_fps_pis_shrew",
@@ -15258,7 +15275,7 @@ function UpgradesTweakData:_shrew_weapon_definitions()
 	}
 end
 
--- Lines 12292-12298
+-- Lines 12301-12307
 function UpgradesTweakData:_x_shrew_weapon_definitions()
 	self.definitions.x_shrew = {
 		factory_id = "wpn_fps_pis_x_shrew",
@@ -15267,7 +15284,7 @@ function UpgradesTweakData:_x_shrew_weapon_definitions()
 	}
 end
 
--- Lines 12302-12308
+-- Lines 12311-12317
 function UpgradesTweakData:_basset_weapon_definitions()
 	self.definitions.basset = {
 		factory_id = "wpn_fps_sho_basset",
@@ -15276,7 +15293,7 @@ function UpgradesTweakData:_basset_weapon_definitions()
 	}
 end
 
--- Lines 12309-12315
+-- Lines 12318-12324
 function UpgradesTweakData:_x_basset_weapon_definitions()
 	self.definitions.x_basset = {
 		factory_id = "wpn_fps_sho_x_basset",
@@ -15285,7 +15302,7 @@ function UpgradesTweakData:_x_basset_weapon_definitions()
 	}
 end
 
--- Lines 12318-12324
+-- Lines 12327-12333
 function UpgradesTweakData:_corgi_weapon_definitions()
 	self.definitions.corgi = {
 		factory_id = "wpn_fps_ass_corgi",
@@ -15294,7 +15311,7 @@ function UpgradesTweakData:_corgi_weapon_definitions()
 	}
 end
 
--- Lines 12327-12333
+-- Lines 12336-12342
 function UpgradesTweakData:_slap_weapon_definitions()
 	self.definitions.slap = {
 		factory_id = "wpn_fps_gre_slap",
@@ -15303,7 +15320,7 @@ function UpgradesTweakData:_slap_weapon_definitions()
 	}
 end
 
--- Lines 12357-12363
+-- Lines 12366-12372
 function UpgradesTweakData:_x_coal_weapon_definitions()
 	self.definitions.x_coal = {
 		factory_id = "wpn_fps_smg_x_coal",
@@ -15312,7 +15329,7 @@ function UpgradesTweakData:_x_coal_weapon_definitions()
 	}
 end
 
--- Lines 12364-12370
+-- Lines 12373-12379
 function UpgradesTweakData:_x_baka_weapon_definitions()
 	self.definitions.x_baka = {
 		factory_id = "wpn_fps_smg_x_baka",
@@ -15321,7 +15338,7 @@ function UpgradesTweakData:_x_baka_weapon_definitions()
 	}
 end
 
--- Lines 12371-12377
+-- Lines 12380-12386
 function UpgradesTweakData:_x_cobray_weapon_definitions()
 	self.definitions.x_cobray = {
 		factory_id = "wpn_fps_smg_x_cobray",
@@ -15330,7 +15347,7 @@ function UpgradesTweakData:_x_cobray_weapon_definitions()
 	}
 end
 
--- Lines 12379-12385
+-- Lines 12388-12394
 function UpgradesTweakData:_x_erma_weapon_definitions()
 	self.definitions.x_erma = {
 		factory_id = "wpn_fps_smg_x_erma",
@@ -15339,7 +15356,7 @@ function UpgradesTweakData:_x_erma_weapon_definitions()
 	}
 end
 
--- Lines 12387-12393
+-- Lines 12396-12402
 function UpgradesTweakData:_x_hajk_weapon_definitions()
 	self.definitions.x_hajk = {
 		factory_id = "wpn_fps_smg_x_hajk",
@@ -15348,7 +15365,7 @@ function UpgradesTweakData:_x_hajk_weapon_definitions()
 	}
 end
 
--- Lines 12394-12400
+-- Lines 12403-12409
 function UpgradesTweakData:_x_m45_weapon_definitions()
 	self.definitions.x_m45 = {
 		factory_id = "wpn_fps_smg_x_m45",
@@ -15357,7 +15374,7 @@ function UpgradesTweakData:_x_m45_weapon_definitions()
 	}
 end
 
--- Lines 12401-12407
+-- Lines 12410-12416
 function UpgradesTweakData:_x_m1928_weapon_definitions()
 	self.definitions.x_m1928 = {
 		factory_id = "wpn_fps_smg_x_m1928",
@@ -15366,7 +15383,7 @@ function UpgradesTweakData:_x_m1928_weapon_definitions()
 	}
 end
 
--- Lines 12408-12414
+-- Lines 12417-12423
 function UpgradesTweakData:_x_mac10_weapon_definitions()
 	self.definitions.x_mac10 = {
 		factory_id = "wpn_fps_smg_x_mac10",
@@ -15375,7 +15392,7 @@ function UpgradesTweakData:_x_mac10_weapon_definitions()
 	}
 end
 
--- Lines 12415-12421
+-- Lines 12424-12430
 function UpgradesTweakData:_x_mp7_weapon_definitions()
 	self.definitions.x_mp7 = {
 		factory_id = "wpn_fps_smg_x_mp7",
@@ -15384,7 +15401,7 @@ function UpgradesTweakData:_x_mp7_weapon_definitions()
 	}
 end
 
--- Lines 12422-12428
+-- Lines 12431-12437
 function UpgradesTweakData:_x_mp9_weapon_definitions()
 	self.definitions.x_mp9 = {
 		factory_id = "wpn_fps_smg_x_mp9",
@@ -15393,7 +15410,7 @@ function UpgradesTweakData:_x_mp9_weapon_definitions()
 	}
 end
 
--- Lines 12429-12435
+-- Lines 12438-12444
 function UpgradesTweakData:_x_olympic_weapon_definitions()
 	self.definitions.x_olympic = {
 		factory_id = "wpn_fps_smg_x_olympic",
@@ -15402,7 +15419,7 @@ function UpgradesTweakData:_x_olympic_weapon_definitions()
 	}
 end
 
--- Lines 12436-12442
+-- Lines 12445-12451
 function UpgradesTweakData:_x_p90_weapon_definitions()
 	self.definitions.x_p90 = {
 		factory_id = "wpn_fps_smg_x_p90",
@@ -15411,7 +15428,7 @@ function UpgradesTweakData:_x_p90_weapon_definitions()
 	}
 end
 
--- Lines 12443-12449
+-- Lines 12452-12458
 function UpgradesTweakData:_x_polymer_weapon_definitions()
 	self.definitions.x_polymer = {
 		factory_id = "wpn_fps_smg_x_polymer",
@@ -15420,7 +15437,7 @@ function UpgradesTweakData:_x_polymer_weapon_definitions()
 	}
 end
 
--- Lines 12450-12456
+-- Lines 12459-12465
 function UpgradesTweakData:_x_schakal_weapon_definitions()
 	self.definitions.x_schakal = {
 		factory_id = "wpn_fps_smg_x_schakal",
@@ -15429,7 +15446,7 @@ function UpgradesTweakData:_x_schakal_weapon_definitions()
 	}
 end
 
--- Lines 12457-12463
+-- Lines 12466-12472
 function UpgradesTweakData:_x_scorpion_weapon_definitions()
 	self.definitions.x_scorpion = {
 		factory_id = "wpn_fps_smg_x_scorpion",
@@ -15438,7 +15455,7 @@ function UpgradesTweakData:_x_scorpion_weapon_definitions()
 	}
 end
 
--- Lines 12464-12470
+-- Lines 12473-12479
 function UpgradesTweakData:_x_sterling_weapon_definitions()
 	self.definitions.x_sterling = {
 		factory_id = "wpn_fps_smg_x_sterling",
@@ -15447,7 +15464,7 @@ function UpgradesTweakData:_x_sterling_weapon_definitions()
 	}
 end
 
--- Lines 12471-12477
+-- Lines 12480-12486
 function UpgradesTweakData:_x_tec9_weapon_definitions()
 	self.definitions.x_tec9 = {
 		factory_id = "wpn_fps_smg_x_tec9",
@@ -15456,7 +15473,7 @@ function UpgradesTweakData:_x_tec9_weapon_definitions()
 	}
 end
 
--- Lines 12478-12484
+-- Lines 12487-12493
 function UpgradesTweakData:_x_uzi_weapon_definitions()
 	self.definitions.x_uzi = {
 		factory_id = "wpn_fps_smg_x_uzi",
@@ -15465,7 +15482,7 @@ function UpgradesTweakData:_x_uzi_weapon_definitions()
 	}
 end
 
--- Lines 12489-12495
+-- Lines 12498-12504
 function UpgradesTweakData:_x_2006m_weapon_definitions()
 	self.definitions.x_2006m = {
 		factory_id = "wpn_fps_pis_x_2006m",
@@ -15474,7 +15491,7 @@ function UpgradesTweakData:_x_2006m_weapon_definitions()
 	}
 end
 
--- Lines 12497-12503
+-- Lines 12506-12512
 function UpgradesTweakData:_x_breech_weapon_definitions()
 	self.definitions.x_breech = {
 		factory_id = "wpn_fps_pis_x_breech",
@@ -15483,7 +15500,7 @@ function UpgradesTweakData:_x_breech_weapon_definitions()
 	}
 end
 
--- Lines 12505-12511
+-- Lines 12514-12520
 function UpgradesTweakData:_x_c96_weapon_definitions()
 	self.definitions.x_c96 = {
 		factory_id = "wpn_fps_pis_x_c96",
@@ -15492,7 +15509,7 @@ function UpgradesTweakData:_x_c96_weapon_definitions()
 	}
 end
 
--- Lines 12512-12518
+-- Lines 12521-12527
 function UpgradesTweakData:_x_g18c_weapon_definitions()
 	self.definitions.x_g18c = {
 		factory_id = "wpn_fps_pis_x_g18c",
@@ -15501,7 +15518,7 @@ function UpgradesTweakData:_x_g18c_weapon_definitions()
 	}
 end
 
--- Lines 12519-12525
+-- Lines 12528-12534
 function UpgradesTweakData:_x_hs2000_weapon_definitions()
 	self.definitions.x_hs2000 = {
 		factory_id = "wpn_fps_pis_x_hs2000",
@@ -15510,7 +15527,7 @@ function UpgradesTweakData:_x_hs2000_weapon_definitions()
 	}
 end
 
--- Lines 12526-12532
+-- Lines 12535-12541
 function UpgradesTweakData:_x_lemming_weapon_definitions()
 	self.definitions.x_lemming = {
 		factory_id = "wpn_fps_pis_x_lemming",
@@ -15519,7 +15536,7 @@ function UpgradesTweakData:_x_lemming_weapon_definitions()
 	}
 end
 
--- Lines 12533-12539
+-- Lines 12542-12548
 function UpgradesTweakData:_x_p226_weapon_definitions()
 	self.definitions.x_p226 = {
 		factory_id = "wpn_fps_pis_x_p226",
@@ -15528,7 +15545,7 @@ function UpgradesTweakData:_x_p226_weapon_definitions()
 	}
 end
 
--- Lines 12540-12546
+-- Lines 12549-12555
 function UpgradesTweakData:_x_peacemaker_weapon_definitions()
 	self.definitions.x_peacemaker = {
 		factory_id = "wpn_fps_pis_x_peacemaker",
@@ -15537,7 +15554,7 @@ function UpgradesTweakData:_x_peacemaker_weapon_definitions()
 	}
 end
 
--- Lines 12547-12553
+-- Lines 12556-12562
 function UpgradesTweakData:_x_pl14_weapon_definitions()
 	self.definitions.x_pl14 = {
 		factory_id = "wpn_fps_pis_x_pl14",
@@ -15546,7 +15563,7 @@ function UpgradesTweakData:_x_pl14_weapon_definitions()
 	}
 end
 
--- Lines 12554-12560
+-- Lines 12563-12569
 function UpgradesTweakData:_x_ppk_weapon_definitions()
 	self.definitions.x_ppk = {
 		factory_id = "wpn_fps_pis_x_ppk",
@@ -15555,7 +15572,7 @@ function UpgradesTweakData:_x_ppk_weapon_definitions()
 	}
 end
 
--- Lines 12561-12567
+-- Lines 12570-12576
 function UpgradesTweakData:_x_rage_weapon_definitions()
 	self.definitions.x_rage = {
 		factory_id = "wpn_fps_pis_x_rage",
@@ -15564,7 +15581,7 @@ function UpgradesTweakData:_x_rage_weapon_definitions()
 	}
 end
 
--- Lines 12568-12574
+-- Lines 12577-12583
 function UpgradesTweakData:_x_sparrow_weapon_definitions()
 	self.definitions.x_sparrow = {
 		factory_id = "wpn_fps_pis_x_sparrow",
@@ -15573,7 +15590,7 @@ function UpgradesTweakData:_x_sparrow_weapon_definitions()
 	}
 end
 
--- Lines 12576-12582
+-- Lines 12585-12591
 function UpgradesTweakData:_x_judge_weapon_definitions()
 	self.definitions.x_judge = {
 		factory_id = "wpn_fps_pis_x_judge",
@@ -15582,7 +15599,7 @@ function UpgradesTweakData:_x_judge_weapon_definitions()
 	}
 end
 
--- Lines 12583-12589
+-- Lines 12592-12598
 function UpgradesTweakData:_x_rota_weapon_definitions()
 	self.definitions.x_rota = {
 		factory_id = "wpn_fps_sho_x_rota",
@@ -15591,7 +15608,7 @@ function UpgradesTweakData:_x_rota_weapon_definitions()
 	}
 end
 
--- Lines 12593-12600
+-- Lines 12602-12609
 function UpgradesTweakData:_shuno_weapon_definitions()
 	self.definitions.shuno = {
 		dlc = "dmg",
@@ -15601,7 +15618,7 @@ function UpgradesTweakData:_shuno_weapon_definitions()
 	}
 end
 
--- Lines 12604-12611
+-- Lines 12613-12620
 function UpgradesTweakData:_system_weapon_definitions()
 	self.definitions.system = {
 		factory_id = "wpn_fps_fla_system",
@@ -15610,7 +15627,7 @@ function UpgradesTweakData:_system_weapon_definitions()
 	}
 end
 
--- Lines 12615-12621
+-- Lines 12624-12630
 function UpgradesTweakData:_komodo_weapon_definitions()
 	self.definitions.komodo = {
 		factory_id = "wpn_fps_ass_komodo",
@@ -15619,7 +15636,7 @@ function UpgradesTweakData:_komodo_weapon_definitions()
 	}
 end
 
--- Lines 12625-12631
+-- Lines 12634-12640
 function UpgradesTweakData:_elastic_weapon_definitions()
 	self.definitions.elastic = {
 		factory_id = "wpn_fps_bow_elastic",
@@ -15628,7 +15645,7 @@ function UpgradesTweakData:_elastic_weapon_definitions()
 	}
 end
 
--- Lines 12634-12640
+-- Lines 12643-12649
 function UpgradesTweakData:_legacy_weapon_definitions()
 	self.definitions.legacy = {
 		factory_id = "wpn_fps_pis_legacy",
@@ -15637,7 +15654,7 @@ function UpgradesTweakData:_legacy_weapon_definitions()
 	}
 end
 
--- Lines 12641-12647
+-- Lines 12650-12656
 function UpgradesTweakData:_x_legacy_weapon_definitions()
 	self.definitions.x_legacy = {
 		factory_id = "wpn_fps_pis_x_legacy",
@@ -15646,11 +15663,71 @@ function UpgradesTweakData:_x_legacy_weapon_definitions()
 	}
 end
 
--- Lines 12651-12657
+-- Lines 12660-12666
 function UpgradesTweakData:_coach_weapon_definitions()
 	self.definitions.coach = {
 		factory_id = "wpn_fps_sho_coach",
 		weapon_id = "coach",
+		category = "weapon"
+	}
+end
+
+-- Lines 12669-12676
+function UpgradesTweakData:_beer_weapon_definitions()
+	self.definitions.beer = {
+		dlc = "afp",
+		factory_id = "wpn_fps_pis_beer",
+		weapon_id = "beer",
+		category = "weapon"
+	}
+end
+
+-- Lines 12677-12684
+function UpgradesTweakData:_x_beer_weapon_definitions()
+	self.definitions.x_beer = {
+		dlc = "afp",
+		factory_id = "wpn_fps_pis_x_beer",
+		weapon_id = "x_beer",
+		category = "weapon"
+	}
+end
+
+-- Lines 12685-12692
+function UpgradesTweakData:_czech_weapon_definitions()
+	self.definitions.czech = {
+		dlc = "afp",
+		factory_id = "wpn_fps_pis_czech",
+		weapon_id = "czech",
+		category = "weapon"
+	}
+end
+
+-- Lines 12693-12700
+function UpgradesTweakData:_x_czech_weapon_definitions()
+	self.definitions.x_czech = {
+		dlc = "afp",
+		factory_id = "wpn_fps_pis_x_czech",
+		weapon_id = "x_czech",
+		category = "weapon"
+	}
+end
+
+-- Lines 12701-12708
+function UpgradesTweakData:_stech_weapon_definitions()
+	self.definitions.stech = {
+		dlc = "afp",
+		factory_id = "wpn_fps_pis_stech",
+		weapon_id = "stech",
+		category = "weapon"
+	}
+end
+
+-- Lines 12709-12716
+function UpgradesTweakData:_x_stech_weapon_definitions()
+	self.definitions.x_stech = {
+		dlc = "afp",
+		factory_id = "wpn_fps_pis_x_stech",
+		weapon_id = "x_stech",
 		category = "weapon"
 	}
 end

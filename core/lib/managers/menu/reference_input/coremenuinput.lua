@@ -50,20 +50,30 @@ function MenuInput:set_axis_y_timer(time)
 	self._axis_delay_timer.y = time
 end
 
--- Lines 46-49
+-- Lines 46-57
 function MenuInput:_input_hijacked()
+	local item = self._logic:selected_item()
+
+	if item and item.input_focus then
+		local input_focus = item:input_focus()
+
+		if input_focus then
+			return input_focus
+		end
+	end
+
 	local active_menu = managers.menu:active_menu()
 
 	return active_menu and active_menu.renderer:input_focus()
 end
 
--- Lines 52-72
+-- Lines 60-80
 function MenuInput:input_item(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		if item:parameters().sign_in then
 			print("requires sign in")
 
-			-- Lines 56-56
+			-- Lines 64-64
 			local function f(success)
 				print(success)
 
@@ -87,7 +97,7 @@ function MenuInput:input_item(item, controller, mouse_click)
 	end
 end
 
--- Lines 75-103
+-- Lines 83-111
 function MenuInput:input_slider(item, controller)
 	local slider_delay_down = 0.1
 	local slider_delay_pressed = 0.2
@@ -123,7 +133,7 @@ function MenuInput:input_slider(item, controller)
 	end
 end
 
--- Lines 106-130
+-- Lines 114-138
 function MenuInput:input_toggle(item, controller, mouse_click)
 	local toggle_delay_down = 0.3
 	local toggle_delay_pressed = 0.6
@@ -134,7 +144,7 @@ function MenuInput:input_toggle(item, controller, mouse_click)
 	end
 end
 
--- Lines 132-191
+-- Lines 140-204
 function MenuInput:update(t, dt)
 	self:_check_releases()
 	self:any_keyboard_used()
@@ -150,6 +160,12 @@ function MenuInput:update(t, dt)
 	end
 
 	if self:_input_hijacked() then
+		local item = self._logic:selected_item()
+
+		if item and item.INPUT_ON_HIJACK then
+			self._item_input_action_map[item.TYPE](item, self._controller)
+		end
+
 		return false
 	end
 
@@ -189,7 +205,7 @@ function MenuInput:update(t, dt)
 	return true
 end
 
--- Lines 194-199
+-- Lines 207-212
 function MenuInput:menu_up_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("menu_up")
@@ -198,7 +214,7 @@ function MenuInput:menu_up_input_bool()
 	return false
 end
 
--- Lines 201-206
+-- Lines 214-219
 function MenuInput:menu_up_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("menu_up")
@@ -207,7 +223,7 @@ function MenuInput:menu_up_pressed()
 	return false
 end
 
--- Lines 208-213
+-- Lines 221-226
 function MenuInput:menu_up_released()
 	if self._controller then
 		return self._controller:get_input_released("menu_up")
@@ -216,7 +232,7 @@ function MenuInput:menu_up_released()
 	return false
 end
 
--- Lines 216-221
+-- Lines 229-234
 function MenuInput:menu_down_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("menu_down")
@@ -225,7 +241,7 @@ function MenuInput:menu_down_input_bool()
 	return false
 end
 
--- Lines 223-228
+-- Lines 236-241
 function MenuInput:menu_down_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("menu_down")
@@ -234,7 +250,7 @@ function MenuInput:menu_down_pressed()
 	return false
 end
 
--- Lines 230-235
+-- Lines 243-248
 function MenuInput:menu_down_released()
 	if self._controller then
 		return self._controller:get_input_released("menu_down")
@@ -243,7 +259,7 @@ function MenuInput:menu_down_released()
 	return false
 end
 
--- Lines 238-243
+-- Lines 251-256
 function MenuInput:menu_left_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("menu_left")
@@ -252,7 +268,7 @@ function MenuInput:menu_left_input_bool()
 	return false
 end
 
--- Lines 245-250
+-- Lines 258-263
 function MenuInput:menu_left_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("menu_left")
@@ -261,7 +277,7 @@ function MenuInput:menu_left_pressed()
 	return false
 end
 
--- Lines 252-257
+-- Lines 265-270
 function MenuInput:menu_left_released()
 	if self._controller then
 		return self._controller:get_input_released("menu_left")
@@ -270,7 +286,7 @@ function MenuInput:menu_left_released()
 	return false
 end
 
--- Lines 260-265
+-- Lines 273-278
 function MenuInput:menu_right_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("menu_right")
@@ -279,7 +295,7 @@ function MenuInput:menu_right_input_bool()
 	return false
 end
 
--- Lines 267-272
+-- Lines 280-285
 function MenuInput:menu_right_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("menu_right")
@@ -288,7 +304,7 @@ function MenuInput:menu_right_pressed()
 	return false
 end
 
--- Lines 273-278
+-- Lines 286-291
 function MenuInput:menu_right_released()
 	if self._controller then
 		return self._controller:get_input_released("menu_right")
@@ -297,7 +313,7 @@ function MenuInput:menu_right_released()
 	return false
 end
 
--- Lines 329-337
+-- Lines 342-350
 function MenuInput:_check_releases()
 	if self:menu_left_released() or self:menu_right_released() then
 		self:set_axis_x_timer(0.01)
@@ -308,12 +324,12 @@ function MenuInput:_check_releases()
 	end
 end
 
--- Lines 339-341
+-- Lines 352-354
 function MenuInput:accept_input(accept)
 	self._accept_input = accept
 end
 
--- Lines 343-350
+-- Lines 356-363
 function MenuInput:focus(focus)
 	if focus then
 		self:create_controller()
@@ -322,7 +338,7 @@ function MenuInput:focus(focus)
 	end
 end
 
--- Lines 352-361
+-- Lines 365-374
 function MenuInput:create_controller()
 	if not self._controller then
 		local controller = managers.controller:create_controller(nil, nil, false)
@@ -334,7 +350,7 @@ function MenuInput:create_controller()
 	end
 end
 
--- Lines 363-368
+-- Lines 376-381
 function MenuInput:destroy_controller()
 	if self._controller then
 		self._controller:destroy()
@@ -343,11 +359,11 @@ function MenuInput:destroy_controller()
 	end
 end
 
--- Lines 370-371
+-- Lines 383-384
 function MenuInput:logic_changed()
 end
 
--- Lines 373-402
+-- Lines 386-415
 function MenuInput:next_item()
 	if not self._accept_input then
 		return
@@ -382,7 +398,7 @@ function MenuInput:next_item()
 	end
 end
 
--- Lines 404-429
+-- Lines 417-442
 function MenuInput:prev_item()
 	local current_item = self._logic:selected_item()
 
@@ -413,7 +429,7 @@ function MenuInput:prev_item()
 	end
 end
 
--- Lines 433-443
+-- Lines 446-456
 function MenuInput:back(queue, skip_nodes)
 	if self:_input_hijacked() == true then
 		return
@@ -426,7 +442,7 @@ function MenuInput:back(queue, skip_nodes)
 	self._logic:navigate_back(queue == true or false, type(skip_nodes) == "number" and skip_nodes or false)
 end
 
--- Lines 445-459
+-- Lines 458-472
 function MenuInput:select_node()
 	local item = self._logic:selected_item()
 
@@ -443,7 +459,7 @@ function MenuInput:select_node()
 	end
 end
 
--- Lines 461-473
+-- Lines 474-486
 function MenuInput:any_keyboard_used()
 	if self._keyboard_used or not self._controller or managers.controller:get_default_wrapper_type() ~= "pc" and managers.controller:get_default_wrapper_type() ~= "steam" then
 		return

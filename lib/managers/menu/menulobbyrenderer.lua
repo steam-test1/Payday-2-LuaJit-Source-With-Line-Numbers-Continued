@@ -413,7 +413,7 @@ function MenuLobbyRenderer:highlight_item(item, ...)
 	MenuLobbyRenderer.super.highlight_item(self, item, ...)
 end
 
--- Lines 348-377
+-- Lines 348-378
 function MenuLobbyRenderer:trigger_item(item)
 	MenuRenderer.super.trigger_item(self, item)
 	Application:debug("trigger_item", item)
@@ -435,29 +435,31 @@ function MenuLobbyRenderer:trigger_item(item)
 			if percentage > 0 and percentage < 100 then
 				-- Nothing
 			end
+		elseif item_type == "grid" then
+			-- Nothing
 		elseif item_type == "multi_choice" then
 			-- Nothing
 		end
 	end
 end
 
--- Lines 379-381
+-- Lines 380-382
 function MenuLobbyRenderer:post_event(event)
 	self._sound_source:post_event(event)
 end
 
--- Lines 383-387
+-- Lines 384-388
 function MenuLobbyRenderer:navigate_back()
 	MenuLobbyRenderer.super.navigate_back(self)
 	self:post_event("menu_exit")
 end
 
--- Lines 389-391
+-- Lines 390-392
 function MenuLobbyRenderer:resolution_changed(...)
 	MenuLobbyRenderer.super.resolution_changed(self, ...)
 end
 
--- Lines 393-401
+-- Lines 394-402
 function MenuLobbyRenderer:_layout_menu_bg()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -467,7 +469,7 @@ function MenuLobbyRenderer:_layout_menu_bg()
 	self:set_stencil_align(self._menu_stencil_align, self._menu_stencil_align_percent)
 end
 
--- Lines 403-448
+-- Lines 404-449
 function MenuLobbyRenderer:_layout_slot_progress_panel(slot, progress)
 	print("MenuLobbyRenderer:_layout_slot_progress_panel()", slot, progress)
 
@@ -511,7 +513,7 @@ function MenuLobbyRenderer:_layout_slot_progress_panel(slot, progress)
 	slot.p_tec:set_w(slot.params and slot.p_sup_bg:w() * (progress[4] or 0) / 49 or slot.p_tec:w())
 end
 
--- Lines 452-502
+-- Lines 453-503
 function MenuLobbyRenderer:_layout_info_panel()
 	local res = RenderSettings.resolution
 	local safe_rect = managers.gui_data:scaled_size()
@@ -565,7 +567,7 @@ function MenuLobbyRenderer:_layout_info_panel()
 	self._difficulty_text:set_w(self._gui_info_panel:w())
 end
 
--- Lines 504-512
+-- Lines 505-513
 function MenuLobbyRenderer:_layout_video()
 	if self._level_video then
 		local w = self._gui_info_panel:w()
@@ -577,12 +579,12 @@ function MenuLobbyRenderer:_layout_video()
 	end
 end
 
--- Lines 514-516
+-- Lines 515-517
 function MenuLobbyRenderer:set_bg_visible(visible)
 	self._menu_bg:set_visible(visible)
 end
 
--- Lines 518-532
+-- Lines 519-533
 function MenuLobbyRenderer:set_bg_area(area)
 	if self._menu_bg then
 		if area == "full" then
@@ -599,17 +601,17 @@ function MenuLobbyRenderer:set_bg_area(area)
 	end
 end
 
--- Lines 534-536
+-- Lines 535-537
 function MenuLobbyRenderer:set_stencil_image(image)
 	MenuRenderer.set_stencil_image(self, image)
 end
 
--- Lines 538-540
+-- Lines 539-541
 function MenuLobbyRenderer:refresh_theme()
 	MenuRenderer.refresh_theme(self)
 end
 
--- Lines 542-583
+-- Lines 543-584
 function MenuLobbyRenderer:set_stencil_align(align, percent)
 	if not self._menu_stencil then
 		return
@@ -658,7 +660,7 @@ function MenuLobbyRenderer:set_stencil_align(align, percent)
 	end
 end
 
--- Lines 586-600
+-- Lines 587-601
 function MenuLobbyRenderer:current_menu_text(topic_id)
 	local ids = {}
 
@@ -678,97 +680,97 @@ function MenuLobbyRenderer:current_menu_text(topic_id)
 	return s
 end
 
--- Lines 602-604
+-- Lines 603-605
 function MenuLobbyRenderer:scroll_up(...)
 	MenuRenderer.scroll_up(self, ...)
 end
 
--- Lines 606-608
+-- Lines 607-609
 function MenuLobbyRenderer:scroll_down(...)
 	MenuRenderer.scroll_down(self, ...)
 end
 
--- Lines 610-612
+-- Lines 611-613
 function MenuLobbyRenderer:accept_input(...)
 	MenuRenderer.accept_input(self, ...)
 end
 
--- Lines 614-616
+-- Lines 615-617
 function MenuLobbyRenderer:mouse_pressed(...)
 	return MenuRenderer.mouse_pressed(self, ...)
 end
 
--- Lines 618-620
+-- Lines 619-621
 function MenuLobbyRenderer:mouse_released(...)
 	return MenuRenderer.mouse_released(self, ...)
 end
 
--- Lines 622-624
+-- Lines 623-625
 function MenuLobbyRenderer:mouse_moved(...)
 	return MenuRenderer.mouse_moved(self, ...)
 end
 
--- Lines 626-628
+-- Lines 627-629
 function MenuLobbyRenderer:input_focus(...)
 	return MenuRenderer.input_focus(self, ...)
 end
 
--- Lines 630-632
+-- Lines 631-633
 function MenuLobbyRenderer:move_up(...)
 	return MenuRenderer.move_up(self, ...)
 end
 
--- Lines 634-636
+-- Lines 635-637
 function MenuLobbyRenderer:move_down(...)
 	return MenuRenderer.move_down(self, ...)
 end
 
--- Lines 638-640
+-- Lines 639-641
 function MenuLobbyRenderer:move_left(...)
 	return MenuRenderer.move_left(self, ...)
 end
 
--- Lines 642-644
+-- Lines 643-645
 function MenuLobbyRenderer:move_right(...)
 	return MenuRenderer.move_right(self, ...)
 end
 
--- Lines 646-648
+-- Lines 647-649
 function MenuLobbyRenderer:next_page(...)
 	return MenuRenderer.next_page(self, ...)
 end
 
--- Lines 650-652
+-- Lines 651-653
 function MenuLobbyRenderer:previous_page(...)
 	return MenuRenderer.previous_page(self, ...)
 end
 
--- Lines 654-656
+-- Lines 655-657
 function MenuLobbyRenderer:confirm_pressed(...)
 	return MenuRenderer.confirm_pressed(self, ...)
 end
 
--- Lines 658-660
+-- Lines 659-661
 function MenuLobbyRenderer:special_btn_pressed(...)
 	return managers.menu_component:special_btn_pressed(...)
 end
 
--- Lines 662-664
+-- Lines 663-665
 function MenuLobbyRenderer:special_btn_released(...)
 	return managers.menu_component:special_btn_released(...)
 end
 
--- Lines 666-668
+-- Lines 667-669
 function MenuLobbyRenderer:back_pressed(...)
 	return MenuRenderer.back_pressed(self, ...)
 end
 
--- Lines 670-672
+-- Lines 671-673
 function MenuLobbyRenderer:mouse_clicked(...)
 	return MenuRenderer.mouse_clicked(self, ...)
 end
 
--- Lines 674-676
+-- Lines 675-677
 function MenuLobbyRenderer:mouse_double_click(...)
 	return MenuRenderer.mouse_double_click(self, ...)
 end

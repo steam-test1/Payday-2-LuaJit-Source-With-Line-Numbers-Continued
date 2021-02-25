@@ -52,7 +52,7 @@ function MenuNodeBaseGui:setup()
 	self.is_pc_controller = managers.menu:is_pc_controller()
 end
 
--- Lines 69-124
+-- Lines 69-125
 function MenuNodeBaseGui:create_text_button(params)
 	local left = params.left or params.x
 	local right = params.right
@@ -105,25 +105,6 @@ function MenuNodeBaseGui:create_text_button(params)
 		button_panel:set_bottom(bottom)
 	end
 
-	local left, right, top, bottom = nil
-
-	for _, button in ipairs(self._text_buttons) do
-		if alive(button.text) then
-			left = button_panel:left() < button.panel:right()
-			right = button.panel:left() < button_panel:right()
-			top = button_panel:top() < button.panel:bottom()
-			bottom = button.panel:top() < button_panel:bottom()
-
-			if left and right and top and bottom then
-				if button.panel:visible() and button_panel:visible() then
-					Application:error("[MenuNodeBaseGui:create_text_button] Text button intersects with another text button", text, button.text:text())
-				else
-					Application:debug("[MenuNodeBaseGui:create_text_button] Text button intersects with another text button", text, button_panel:visible(), button.text:text(), button.panel:visible())
-				end
-			end
-		end
-	end
-
 	table.insert(self._text_buttons, {
 		highlighted = false,
 		panel = button_panel,
@@ -136,7 +117,7 @@ function MenuNodeBaseGui:create_text_button(params)
 	return button_panel
 end
 
--- Lines 126-158
+-- Lines 127-159
 function MenuNodeBaseGui:create_gui_box(panel, params)
 	if not alive(panel) then
 		return
@@ -164,11 +145,11 @@ function MenuNodeBaseGui:create_gui_box(panel, params)
 	end
 end
 
--- Lines 160-161
+-- Lines 161-162
 function MenuNodeBaseGui:update_info(button)
 end
 
--- Lines 165-200
+-- Lines 166-201
 function MenuNodeBaseGui:mouse_moved(o, x, y)
 	local used = false
 	local icon = "arrow"
@@ -215,7 +196,7 @@ function MenuNodeBaseGui:mouse_moved(o, x, y)
 	return used, icon
 end
 
--- Lines 202-217
+-- Lines 203-218
 function MenuNodeBaseGui:mouse_pressed(button, x, y)
 	if button == Idstring("0") or button == Idstring("1") then
 		for _, btn in ipairs(self._text_buttons) do
@@ -234,39 +215,39 @@ function MenuNodeBaseGui:mouse_pressed(button, x, y)
 	return MenuNodeBaseGui.super.mouse_pressed(self, button, x, y)
 end
 
--- Lines 219-221
+-- Lines 220-222
 function MenuNodeBaseGui:mouse_released(button, x, y)
 end
 
--- Lines 223-224
+-- Lines 224-225
 function MenuNodeBaseGui:confirm_pressed()
 end
 
--- Lines 226-227
+-- Lines 227-228
 function MenuNodeBaseGui:previous_page()
 end
 
--- Lines 229-230
+-- Lines 230-231
 function MenuNodeBaseGui:next_page()
 end
 
--- Lines 232-233
+-- Lines 233-234
 function MenuNodeBaseGui:move_up()
 end
 
--- Lines 235-236
+-- Lines 236-237
 function MenuNodeBaseGui:move_down()
 end
 
--- Lines 238-239
+-- Lines 239-240
 function MenuNodeBaseGui:move_left()
 end
 
--- Lines 241-242
+-- Lines 242-243
 function MenuNodeBaseGui:move_right()
 end
 
--- Lines 246-255
+-- Lines 247-256
 function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio, blend_mode)
 	if not managers.menu_component then
 		return
@@ -286,7 +267,7 @@ function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio,
 	end
 end
 
--- Lines 257-265
+-- Lines 258-266
 function MenuNodeBaseGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -297,7 +278,7 @@ function MenuNodeBaseGui:unretrieve_textures()
 	self._requested_textures = {}
 end
 
--- Lines 267-305
+-- Lines 268-306
 function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	params = params or {}
 	local panel = params.panel or params[1]
@@ -344,7 +325,7 @@ function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	end
 end
 
--- Lines 307-310
+-- Lines 308-311
 function MenuNodeBaseGui:close()
 	self:unretrieve_textures()
 	MenuNodeBaseGui.super.close(self)

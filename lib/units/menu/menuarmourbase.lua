@@ -97,18 +97,25 @@ function MenuArmourBase:set_character_name(name)
 	self:request_cosmetics_update()
 end
 
--- Lines 104-111
+-- Lines 104-119
 function MenuArmourBase:set_mask_id(id)
 	self._mask_id = id
 
-	call_on_next_update(function ()
+	-- Lines 108-112
+	local function call_func()
 		if not self._applying_cosmetics and not self._request_update then
 			self:update_character_visuals(self._cosmetics)
 		end
-	end)
+	end
+
+	if is_next_update_funcs_busy() then
+		call_func()
+	else
+		call_on_next_update(call_func)
+	end
 end
 
--- Lines 114-123
+-- Lines 122-131
 function MenuArmourBase:set_armor_skin_id(id)
 	if not id or tweak_data.economy.armor_skins[id] then
 		self._armor_skin_id = id
@@ -117,12 +124,12 @@ function MenuArmourBase:set_armor_skin_id(id)
 	end
 end
 
--- Lines 125-127
+-- Lines 133-135
 function MenuArmourBase:set_cosmetics_data(armor_skin_id)
 	self:set_armor_skin_id(armor_skin_id)
 end
 
--- Lines 131-135
+-- Lines 139-143
 function MenuArmourBase:set_player_style(player_style, material_variation)
 	self._suit_variation = material_variation
 	self._player_style = player_style
@@ -130,23 +137,27 @@ function MenuArmourBase:set_player_style(player_style, material_variation)
 	self:request_cosmetics_update()
 end
 
--- Lines 140-145
+-- Lines 148-157
 function MenuArmourBase:request_cosmetics_update()
 	if not self._request_update then
 		self._request_update = true
 
-		call_on_next_update(callback(self, self, "_apply_cosmetics"))
+		if is_next_update_funcs_busy() then
+			self:_apply_cosmetics()
+		else
+			call_on_next_update(callback(self, self, "_apply_cosmetics"))
+		end
 	end
 end
 
--- Lines 147-150
+-- Lines 159-162
 function MenuArmourBase:add_clbk_listener(clbk_name, func)
 	self._clbk_listeners[clbk_name] = self._clbk_listeners[clbk_name] or {}
 
 	table.insert(self._clbk_listeners[clbk_name], func)
 end
 
--- Lines 152-161
+-- Lines 164-173
 function MenuArmourBase:execute_callbacks(clbk_name, ...)
 	if self._clbks[clbk_name] then
 		self._clbks[clbk_name](...)
@@ -159,12 +170,12 @@ function MenuArmourBase:execute_callbacks(clbk_name, ...)
 	end
 end
 
--- Lines 163-166
+-- Lines 175-178
 function MenuArmourBase:is_cosmetics_applied()
 	return self._is_visuals_updated
 end
 
--- Lines 168-193
+-- Lines 180-205
 function MenuArmourBase:update_character_visuals(cosmetics)
 	cat_print("character_cosmetics", "[MenuArmourBase:update_character_visuals]")
 	self:_print_cosmetics(cosmetics)
@@ -183,12 +194,12 @@ function MenuArmourBase:update_character_visuals(cosmetics)
 	self._is_visuals_updated = true
 end
 
--- Lines 196-204
+-- Lines 208-216
 function MenuArmourBase:_use_job()
 	return false
 end
 
--- Lines 206-223
+-- Lines 218-235
 function MenuArmourBase:get_player_style_check_job()
 	if self:_use_job() then
 		local player_style = "none"
@@ -210,7 +221,7 @@ function MenuArmourBase:get_player_style_check_job()
 	return self._player_style or "none"
 end
 
--- Lines 225-231
+-- Lines 237-243
 function MenuArmourBase:get_suit_variation_check_job()
 	if self:_use_job() then
 		return "default"
@@ -219,16 +230,15 @@ function MenuArmourBase:get_suit_variation_check_job()
 	return self._suit_variation or "default"
 end
 
--- Lines 234-321
+-- Lines 246-333
 function MenuArmourBase:_apply_cosmetics(clbks)
-	self._request_update = nil
-
 	if self._applying_cosmetics then
-		self:request_cosmetics_update()
+		call_on_next_update(callback(self, self, "_apply_cosmetics"))
 
 		return
 	end
 
+	self._request_update = nil
 	self._is_visuals_updated = false
 	self._clbks = clbks or {}
 	local units = {}
@@ -306,7 +316,7 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 	end
 end
 
--- Lines 323-333
+-- Lines 335-345
 function MenuArmourBase:_add_asset(assets, name)
 	if name then
 		local ids = name
@@ -323,7 +333,7 @@ function MenuArmourBase:_add_asset(assets, name)
 	end
 end
 
--- Lines 335-354
+-- Lines 347-366
 function MenuArmourBase:clbk_armor_unit_loaded(cosmetics, status, asset_type, asset_name)
 	if not self._applying_cosmetics then
 		return
@@ -347,7 +357,7 @@ function MenuArmourBase:clbk_armor_unit_loaded(cosmetics, status, asset_type, as
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 356-375
+-- Lines 368-387
 function MenuArmourBase:clbk_armor_material_config_loaded(cosmetics, status, asset_type, asset_name)
 	if not self._applying_cosmetics then
 		return
@@ -371,7 +381,7 @@ function MenuArmourBase:clbk_armor_material_config_loaded(cosmetics, status, ass
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 377-396
+-- Lines 389-408
 function MenuArmourBase:clbk_armor_texture_loaded(cosmetics, tex_name)
 	if not self._applying_cosmetics then
 		return
@@ -395,7 +405,7 @@ function MenuArmourBase:clbk_armor_texture_loaded(cosmetics, tex_name)
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 398-504
+-- Lines 410-516
 function MenuArmourBase:_chk_load_complete(cosmetics)
 	if not self._applying_cosmetics or not self._all_load_requests_sent then
 		return
@@ -507,7 +517,7 @@ function MenuArmourBase:_chk_load_complete(cosmetics)
 	end
 end
 
--- Lines 506-548
+-- Lines 518-560
 function MenuArmourBase:_load_cosmetic_assets(cosmetics)
 	cat_print("character_cosmetics", "[MenuArmourBase:_load_cosmetic_assets]")
 	self:_print_cosmetics(cosmetics)
@@ -555,7 +565,7 @@ function MenuArmourBase:_load_cosmetic_assets(cosmetics)
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 550-579
+-- Lines 562-591
 function MenuArmourBase:_unload_cosmetic_assets(cosmetics)
 	cat_print("character_cosmetics", "[MenuArmourBase:_unload_cosmetic_assets]")
 	self:_print_cosmetics(cosmetics)
@@ -586,7 +596,7 @@ function MenuArmourBase:_unload_cosmetic_assets(cosmetics)
 	cosmetics.applied = false
 end
 
--- Lines 582-586
+-- Lines 594-598
 function MenuArmourBase:use_cc()
 	local ignored_by_armor_skin = self._cosmetics_data and self._cosmetics_data.ignore_cc
 	local no_armor_skin = not self._armor_skin_id or self._armor_skin_id == "none"
@@ -594,6 +604,6 @@ function MenuArmourBase:use_cc()
 	return not ignored_by_armor_skin and not no_armor_skin
 end
 
--- Lines 589-611
+-- Lines 601-623
 function MenuArmourBase:_print_cosmetics(cosmetics)
 end
