@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4608
+-- Lines 10-4616
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8220,6 +8220,17 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "mega_max"
+		}
+	}
+	self.xm20_free = {
+		free = true,
+		content = {}
+	}
+	self.xm20_free.content.loot_global_value = "xm20"
+	self.xm20_free.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_o_tf90"
 		}
 	}
 end

@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3123
+-- Lines 7-3156
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -2987,6 +2987,60 @@ function HudIconsTweakData:init()
 		texture = "guis/textures/pd2/crime_spree/missions_atlas_02",
 		texture_rect = {
 			csm_w * 4,
+			csm_h * 0,
+			csm_w,
+			csm_h
+		}
+	}
+	self.csm_mad = {
+		texture = "guis/dlcs/ja21/textures/pd2/crime_spree/missions_atlas_03",
+		texture_rect = {
+			csm_w * 0,
+			csm_h * 0,
+			csm_w,
+			csm_h
+		}
+	}
+	self.csm_tag = {
+		texture = "guis/dlcs/ja21/textures/pd2/crime_spree/missions_atlas_03",
+		texture_rect = {
+			csm_w * 1,
+			csm_h * 0,
+			csm_w,
+			csm_h
+		}
+	}
+	self.csm_pex = {
+		texture = "guis/dlcs/ja21/textures/pd2/crime_spree/missions_atlas_03",
+		texture_rect = {
+			csm_w * 2,
+			csm_h * 0,
+			csm_w,
+			csm_h
+		}
+	}
+	self.csm_bex = {
+		texture = "guis/dlcs/ja21/textures/pd2/crime_spree/missions_atlas_03",
+		texture_rect = {
+			csm_w * 3,
+			csm_h * 0,
+			csm_w,
+			csm_h
+		}
+	}
+	self.csm_sah = {
+		texture = "guis/dlcs/ja21/textures/pd2/crime_spree/missions_atlas_03",
+		texture_rect = {
+			csm_w * 4,
+			csm_h * 0,
+			csm_w,
+			csm_h
+		}
+	}
+	self.csm_arena = {
+		texture = "guis/dlcs/ja21/textures/pd2/crime_spree/missions_atlas_03",
+		texture_rect = {
+			csm_w * 5,
 			csm_h * 0,
 			csm_w,
 			csm_h
@@ -14238,7 +14292,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3126-3129
+-- Lines 3159-3162
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -14251,7 +14305,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3131-3147
+-- Lines 3164-3180
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -14277,7 +14331,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3149-3154
+-- Lines 3182-3187
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -14291,7 +14345,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3156-3162
+-- Lines 3189-3195
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -14302,7 +14356,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3164-3170
+-- Lines 3197-3203
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

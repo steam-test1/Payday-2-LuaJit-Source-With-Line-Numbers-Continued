@@ -53,6 +53,11 @@ function GenericDLCManager:has_inf()
 	return self:is_dlc_unlocked("inf")
 end
 
+-- Lines 74-76
+function GenericDLCManager:has_ja21()
+	return self:is_dlc_unlocked("ja21")
+end
+
 -- Lines 79-81
 function GenericDLCManager:has_maw()
 	return self:is_dlc_unlocked("maw")
@@ -198,7 +203,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 234-480
+-- Lines 239-490
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.afp = {
 		app_id = "1255151",
@@ -245,6 +250,10 @@ function WINDLCManager:init_generated()
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.inf = {
+		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.ja21 = {
 		app_id = "218620",
 		no_install = true
 	}

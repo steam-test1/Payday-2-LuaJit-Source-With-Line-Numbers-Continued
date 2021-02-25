@@ -1069,10 +1069,6 @@ end
 
 -- Lines 961-968
 function JobManager:get_job_christmas_bonus(job_id)
-	if self:is_christmas_job(job_id) then
-		return (tweak_data:get_value("experience_manager", "limited_xmas_bonus_multiplier") or 1) - 1
-	end
-
 	return 0
 end
 
