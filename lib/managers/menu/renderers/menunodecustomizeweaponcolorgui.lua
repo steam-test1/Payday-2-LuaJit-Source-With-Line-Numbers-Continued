@@ -21,7 +21,7 @@ function MenuCustomizeWeaponColorInitiator:modify_node(original_node, node_data)
 	return self:setup_node(node, node_data)
 end
 
--- Lines 29-203
+-- Lines 29-223
 function MenuCustomizeWeaponColorInitiator:setup_node(node, node_data)
 	node:clean_items()
 
@@ -42,7 +42,7 @@ function MenuCustomizeWeaponColorInitiator:setup_node(node, node_data)
 	weapon_color_data.slot = node_data.slot
 	weapon_color_data.cosmetic_data = clone(crafted.cosmetics)
 	local weapon_color_tweak_data = tweak_data.blackmarket.weapon_skins[weapon_color_id]
-	local weapon_color_group_id = weapon_color_tweak_data.group_id
+	local weapon_color_variation_template = tweak_data.blackmarket.weapon_color_templates.color_variation
 	local color_group_data = {}
 	node.color_group_data = color_group_data
 	color_group_data.options = {}
@@ -105,17 +105,17 @@ function MenuCustomizeWeaponColorInitiator:setup_node(node, node_data)
 			height_aspect = 0.85,
 			text_id = "menu_weapon_color_title",
 			align_line_proportions = 0,
-			rows = 2,
+			rows = 2.5,
 			sort_callback = "sort_weapon_colors",
-			columns = 15
+			columns = 20
 		})
 
 		color_item:set_value(weapon_color_id)
-		self:create_divider(node, "divider_padding", nil, 20)
+		self:create_divider(node, "padding", nil, 10)
 
 		local variations_data = {}
 
-		for index = 1, #weapon_color_tweak_data do
+		for index = 1, #weapon_color_variation_template do
 			table.insert(variations_data, {
 				_meta = "option",
 				value = index,
@@ -156,7 +156,7 @@ function MenuCustomizeWeaponColorInitiator:setup_node(node, node_data)
 		quality_item:set_value(weapon_color_quality)
 	end
 
-	self:create_divider(node, "divider_end", nil, 8)
+	self:create_divider(node, "end", nil, 8)
 
 	local new_item = nil
 	local apply_params = {
@@ -195,10 +195,14 @@ function MenuCustomizeWeaponColorInitiator:setup_node(node, node_data)
 	node:set_default_item_name("cosmetic_color")
 	managers.blackmarket:view_weapon_with_cosmetics(weapon_color_data.category, weapon_color_data.slot, weapon_color_data.cosmetic_data, nil, nil, BlackMarketGui.get_crafting_custom_data())
 
+	node.randomseed = os.time()
+
+	math.randomseed(node.randomseed)
+
 	return node
 end
 
--- Lines 205-245
+-- Lines 225-266
 function MenuCustomizeWeaponColorInitiator:refresh_node(node)
 	local cosmetic_color_item = node:item("cosmetic_color")
 
@@ -234,13 +238,15 @@ function MenuCustomizeWeaponColorInitiator:refresh_node(node)
 	local can_apply = MenuCallbackHandler:can_apply_weapon_color(node)
 
 	apply_item:set_enabled(can_apply)
+	math.randomseed(node.randomseed)
 
 	return node
 end
 
 MenuNodeCustomizeWeaponColorGui = MenuNodeCustomizeWeaponColorGui or class(MenuNodeBaseGui)
+MenuNodeCustomizeWeaponColorGui.CUSTOM_MOUSE_INPUT = true
 
--- Lines 251-263
+-- Lines 273-285
 function MenuNodeCustomizeWeaponColorGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -254,7 +260,7 @@ function MenuNodeCustomizeWeaponColorGui:init(node, layer, parameters)
 	MenuNodeCustomizeWeaponColorGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 265-273
+-- Lines 287-295
 function MenuNodeCustomizeWeaponColorGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -265,13 +271,13 @@ function MenuNodeCustomizeWeaponColorGui:_setup_item_panel_parent(safe_rect, sha
 	MenuNodeCustomizeWeaponColorGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 275-278
+-- Lines 297-300
 function MenuNodeCustomizeWeaponColorGui:setup(node)
 	MenuNodeCustomizeWeaponColorGui.super.setup(self, node)
 	self:update_color_info()
 end
 
--- Lines 280-358
+-- Lines 302-381
 function MenuNodeCustomizeWeaponColorGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCustomizeWeaponColorGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -281,9 +287,8 @@ function MenuNodeCustomizeWeaponColorGui:_setup_item_panel(safe_rect, res)
 	local color_grid_width = color_grid_row_item.gui_panel:width()
 
 	self.item_panel:set_w(color_grid_width)
-	self.item_panel:set_center_x(safe_rect.width / 2)
+	self.item_panel:set_center_x(safe_rect.width / 2 + 4)
 	self.item_panel:set_bottom(safe_rect.height - align_padding * 2 - (alive(self._legends_panel) and self._legends_panel:h() + align_padding or 0))
-	self.item_panel:set_position(math.round(self.item_panel:x()), math.round(self.item_panel:y()))
 
 	local title_string = managers.localization:to_upper_text(self.node.topic_id, self.node.topic_params)
 	self._text_panel = self._item_panel_parent:panel({
@@ -364,7 +369,7 @@ function MenuNodeCustomizeWeaponColorGui:_setup_item_panel(safe_rect, res)
 	})
 
 	self.box_panel:set_shape(self.item_panel:shape())
-	self.box_panel:grow(align_padding * 2, align_padding * 3)
+	self.box_panel:grow(align_padding * 1, align_padding * 2)
 	self.box_panel:move(-align_padding, -align_padding)
 
 	self.boxgui = BoxGuiObject:new(self.box_panel, {
@@ -385,28 +390,29 @@ function MenuNodeCustomizeWeaponColorGui:_setup_item_panel(safe_rect, res)
 		color = Color.black
 	})
 
-	local blur = self.box_panel:bitmap({
+	self.blur = self.box_panel:bitmap({
 		texture = "guis/textures/test_blur_df",
 		render_template = "VertexColorTexturedBlur3D",
 		w = self.box_panel:w(),
 		h = self.box_panel:h()
 	})
+	local start_blur = self.start_blur or 0
 
-	-- Lines 350-353
+	-- Lines 373-376
 	local function func(o)
-		local start_blur = 0
+		local blur = start_blur
 
 		over(0.6, function (p)
-			o:set_alpha(math.lerp(start_blur, 1, p))
+			o:set_alpha(math.lerp(blur, 1, p))
 		end)
 	end
 
-	blur:animate(func)
+	self.blur:animate(func)
 	self._align_data.panel:set_left(self.box_panel:left())
 	self:_set_topic_position()
 end
 
--- Lines 360-377
+-- Lines 383-400
 function MenuNodeCustomizeWeaponColorGui:_update_tab(index)
 	local color_group_data = self.node.color_group_data
 	local tab = self._tabs[index]
@@ -426,7 +432,7 @@ function MenuNodeCustomizeWeaponColorGui:_update_tab(index)
 	end
 end
 
--- Lines 379-389
+-- Lines 402-412
 function MenuNodeCustomizeWeaponColorGui:_set_color_group_index(index)
 	local color_group_data = self.node.color_group_data
 	local new_index = math.clamp(index, 1, #color_group_data.options)
@@ -438,8 +444,89 @@ function MenuNodeCustomizeWeaponColorGui:_set_color_group_index(index)
 	end
 end
 
--- Lines 391-423
+-- Lines 415-423
+function MenuNodeCustomizeWeaponColorGui:input_focus()
+	if self._mouse_over_row_item then
+		local current_item = managers.menu:active_menu().logic:selected_item()
+		local mouse_over_item = self._mouse_over_row_item.item
+
+		if current_item == mouse_over_item and mouse_over_item.TYPE == "grid" then
+			return 1
+		end
+	end
+end
+
+-- Lines 425-524
 function MenuNodeCustomizeWeaponColorGui:mouse_moved(o, x, y)
+	local used = false
+	local icon = "arrow"
+
+	if managers.menu_scene:input_focus() then
+		self._mouse_over_row_item = nil
+
+		return used, icon
+	end
+
+	local current_item = managers.menu:active_menu().logic:selected_item()
+	local current_row_item = current_item and self:row_item(current_item)
+	local selected_row_item = nil
+
+	if current_row_item and current_row_item.gui_panel and current_row_item.gui_panel:inside(x, y) then
+		selected_row_item = current_row_item
+	else
+		local inside_item_panel_parent = self:item_panel_parent():inside(x, y)
+		local item, is_inside = nil
+
+		for _, row_item in pairs(self.row_items) do
+			item = row_item.item
+			is_inside = false
+
+			if item and not item.no_mouse_select then
+				is_inside = item.TYPE == "grid" and item:scroll_bar_grabbed(row_item) and true or inside_item_panel_parent and row_item.gui_panel:inside(x, y)
+			end
+
+			if is_inside then
+				selected_row_item = row_item
+
+				break
+			end
+		end
+	end
+
+	if selected_row_item then
+		local selected_name = selected_row_item.name
+		used = true
+		icon = "link"
+
+		if not current_item or selected_name ~= current_item:name() then
+			managers.menu:active_menu().logic:mouse_over_select_item(selected_name, false)
+
+			current_row_item = selected_row_item
+			current_item = selected_row_item.item
+		end
+
+		if current_item then
+			self._mouse_over_row_item = current_row_item
+
+			if current_item.TYPE == "grid" then
+				icon = current_item:mouse_moved(x, y, current_row_item)
+			elseif current_item.TYPE == "multi_choice" then
+				local inside_arrow_left = current_row_item.arrow_left:visible() and current_row_item.arrow_left:inside(x, y)
+				local inside_arrow_right = current_row_item.arrow_right:visible() and current_row_item.arrow_right:inside(x, y)
+				local inside_gui_text = current_row_item.arrow_left:visible() and current_row_item.arrow_right:visible() and current_row_item.gui_text:inside(x, y)
+				local inside_choice_panel = current_row_item.choice_panel:visible() and current_row_item.choice_panel:inside(x, y)
+
+				if inside_arrow_left or inside_arrow_right or inside_gui_text or inside_choice_panel then
+					icon = "link"
+				else
+					icon = "arrow"
+				end
+			end
+		end
+	else
+		self._mouse_over_row_item = nil
+	end
+
 	local color_group_data = self.node.color_group_data
 
 	if color_group_data.highlighted then
@@ -454,9 +541,6 @@ function MenuNodeCustomizeWeaponColorGui:mouse_moved(o, x, y)
 
 		self:_update_tab(prev_highlighted)
 	end
-
-	local used = false
-	local icon = "arrow"
 
 	for index, tab in ipairs(self._tabs) do
 		if tab.panel:inside(x, y) then
@@ -478,37 +562,117 @@ function MenuNodeCustomizeWeaponColorGui:mouse_moved(o, x, y)
 	return used, icon
 end
 
--- Lines 425-431
+-- Lines 526-599
 function MenuNodeCustomizeWeaponColorGui:mouse_pressed(button, x, y)
-	local color_group_data = self.node.color_group_data
-	local highlighted_tab = self._tabs[color_group_data.highlighted]
+	local active_menu = managers.menu:active_menu()
 
-	if highlighted_tab and highlighted_tab.panel:inside(x, y) then
-		self:_set_color_group_index(color_group_data.highlighted)
+	if not managers.menu:active_menu() then
+		return
+	end
+
+	local logic = active_menu.logic
+	local input = active_menu.input
+
+	if self._mouse_over_row_item then
+		local mouse_over_item = self._mouse_over_row_item.item
+
+		if button == Idstring("mouse wheel down") then
+			if mouse_over_item.TYPE == "grid" then
+				return mouse_over_item:wheel_scroll_start(-1, self._mouse_over_row_item)
+			end
+		elseif button == Idstring("mouse wheel up") and mouse_over_item.TYPE == "grid" then
+			return mouse_over_item:wheel_scroll_start(1, self._mouse_over_row_item)
+		end
+
+		if button == Idstring("0") then
+			if mouse_over_item.TYPE == "grid" then
+				mouse_over_item:mouse_pressed(button, x, y, self._mouse_over_row_item)
+			elseif mouse_over_item.TYPE == "multi_choice" then
+				if self._mouse_over_row_item.arrow_right:inside(x, y) then
+					if mouse_over_item:next() then
+						input:post_event("selection_next")
+						logic:trigger_item(true, mouse_over_item)
+					end
+				elseif self._mouse_over_row_item.arrow_left:inside(x, y) then
+					if mouse_over_item:previous() then
+						input:post_event("selection_previous")
+						logic:trigger_item(true, mouse_over_item)
+					end
+				elseif self._mouse_over_row_item.gui_text:inside(x, y) then
+					if self._mouse_over_row_item.align == "left" then
+						if mouse_over_item:previous() then
+							input:post_event("selection_previous")
+							logic:trigger_item(true, mouse_over_item)
+						end
+					elseif mouse_over_item:next() then
+						input:post_event("selection_next")
+						logic:trigger_item(true, mouse_over_item)
+					end
+				elseif self._mouse_over_row_item.choice_panel:inside(x, y) and mouse_over_item:enabled() then
+					mouse_over_item:popup_choice(self._mouse_over_row_item)
+					input:post_event("selection_next")
+					logic:trigger_item(true, mouse_over_item)
+				end
+			elseif mouse_over_item.TYPE == "divider" then
+				-- Nothing
+			else
+				local item = logic:selected_item()
+
+				if item then
+					input._item_input_action_map[item.TYPE](item, input._controller, true)
+				end
+			end
+
+			return true
+		end
+	end
+
+	if button == Idstring("0") then
+		local color_group_data = self.node.color_group_data
+		local highlighted_tab = self._tabs[color_group_data.highlighted]
+
+		if highlighted_tab and highlighted_tab.panel:inside(x, y) then
+			self:_set_color_group_index(color_group_data.highlighted)
+
+			return true
+		end
 	end
 end
 
--- Lines 433-436
+-- Lines 601-609
+function MenuNodeCustomizeWeaponColorGui:mouse_released(button, x, y)
+	local item = nil
+
+	for _, row_item in pairs(self.row_items) do
+		item = row_item.item
+
+		if item.TYPE == "grid" then
+			row_item.item:mouse_released(button, x, y, row_item)
+		end
+	end
+end
+
+-- Lines 611-614
 function MenuNodeCustomizeWeaponColorGui:previous_page()
 	local color_group_data = self.node.color_group_data
 
 	self:_set_color_group_index(color_group_data.selected - 1)
 end
 
--- Lines 438-441
+-- Lines 616-619
 function MenuNodeCustomizeWeaponColorGui:next_page()
 	local color_group_data = self.node.color_group_data
 
 	self:_set_color_group_index(color_group_data.selected + 1)
 end
 
--- Lines 443-480
+-- Lines 621-660
 function MenuNodeCustomizeWeaponColorGui:_set_info_shape()
-	local variation_row_item = self:row_item_by_name("cosmetic_variation")
+	local top_align_row_item = self:row_item_by_name("cosmetic_variation")
 	local left = self.item_panel:world_left()
-	local top = variation_row_item.gui_panel:world_top() - self._align_line_padding
-	local width = self.item_panel:width() - variation_row_item.gui_panel:width() - self._align_line_padding * 3
-	local height = self.item_panel:height() - variation_row_item.gui_panel:top() + self._align_line_padding * 2
+	local top = top_align_row_item.gui_panel:world_top()
+	local width = self.item_panel:width() - top_align_row_item.gui_panel:width() - self._align_line_padding * 2
+	local height = self.item_panel:height() - top_align_row_item.gui_panel:top() + self._align_line_padding * 0
 
 	self._info_bg_rect:set_world_position(left, top)
 	self._info_bg_rect:set_size(width, height)
@@ -548,37 +712,35 @@ function MenuNodeCustomizeWeaponColorGui:_set_info_shape()
 	self.item_box_panel = self.safe_rect_panel:panel({
 		x = mini_info:right() + self._align_line_padding,
 		y = mini_info:top(),
-		w = variation_row_item.gui_panel:width() + self._align_line_padding * 2,
+		w = top_align_row_item.gui_panel:width() + self._align_line_padding * 2,
 		h = mini_info:h()
 	})
 	self.item_box_gui = BoxGuiObject:new(self.item_box_panel, {
 		sides = {
-			1,
-			1,
-			1,
-			1
+			0,
+			0,
+			0,
+			0
 		},
 		layer = self.layers.background + 1
 	})
 
-	MenuNodeBaseGui.rec_round_object(self.item_panel)
-	MenuNodeBaseGui.rec_round_object(self._text_panel)
-	MenuNodeBaseGui.rec_round_object(self._tab_panel)
+	MenuNodeBaseGui.rec_round_object(mini_text)
 end
 
--- Lines 482-485
+-- Lines 662-665
 function MenuNodeCustomizeWeaponColorGui:_set_item_positions()
 	MenuNodeCustomizeWeaponColorGui.super._set_item_positions(self)
 	self:_set_info_shape()
 end
 
--- Lines 487-490
+-- Lines 667-670
 function MenuNodeCustomizeWeaponColorGui:resolution_changed()
 	MenuNodeCustomizeWeaponColorGui.super.resolution_changed(self)
 	self:_set_info_shape()
 end
 
--- Lines 492-561
+-- Lines 672-746
 function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	node = node or self.node
 
@@ -595,7 +757,7 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	local info_string = ""
 	local color_range = {}
 
-	-- Lines 505-514
+	-- Lines 685-694
 	local function _add_string(new_string, color, separator)
 		separator = separator or ""
 		local s = utf8.len(info_string) + 1
@@ -635,6 +797,8 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 		if achievement and managers.achievment:get_info(achievement) then
 			local achievement_visual = tweak_data.achievement.visual[achievement]
 			unlock_id = achievement_visual and achievement_visual.desc_id or "achievement_" .. tostring(achievement) .. "_desc" or "bm_menu_dlc_locked"
+		elseif managers.dlc:is_content_skirmish_locked("weapon_skins", color_id) then
+			unlock_id = "bm_menu_skirmish_content_reward"
 		else
 			unlock_id = "bm_menu_dlc_locked"
 		end
@@ -655,7 +819,7 @@ function MenuNodeCustomizeWeaponColorGui:update_color_info(node)
 	self:set_mini_info_with_color_range(info_string, color_range)
 end
 
--- Lines 563-571
+-- Lines 748-756
 function MenuNodeGui:set_mini_info_with_color_range(text, color_range)
 	self._mini_info_text:set_text(text)
 	self._mini_info_text:clear_range_color(0, utf8.len(self._mini_info_text:text()))
@@ -665,9 +829,16 @@ function MenuNodeGui:set_mini_info_with_color_range(text, color_range)
 	end
 end
 
--- Lines 573-581
+-- Lines 758-771
 function MenuNodeCustomizeWeaponColorGui:_clear_gui()
+	if alive(self.blur) then
+		self.start_blur = self.blur:alpha()
+	end
+
 	MenuNodeCustomizeWeaponColorGui.super._clear_gui(self)
+
+	self._mouse_over_row_item = nil
+
 	self._item_panel_parent:remove(self._text_panel)
 
 	self._text_panel = nil
@@ -677,12 +848,12 @@ function MenuNodeCustomizeWeaponColorGui:_clear_gui()
 	self._tab_panel = nil
 end
 
--- Lines 583-585
+-- Lines 773-775
 function MenuNodeCustomizeWeaponColorGui:_setup_item_rows(node)
 	MenuNodeCustomizeWeaponColorGui.super._setup_item_rows(self, node)
 end
 
--- Lines 587-597
+-- Lines 777-787
 function MenuNodeCustomizeWeaponColorGui:reload_item(item)
 	MenuNodeCustomizeWeaponColorGui.super.reload_item(self, item)
 
@@ -694,8 +865,20 @@ function MenuNodeCustomizeWeaponColorGui:reload_item(item)
 	end
 end
 
--- Lines 599-602
+-- Lines 789-792
 function MenuNodeCustomizeWeaponColorGui:_align_marker(row_item)
 	MenuNodeCustomizeWeaponColorGui.super._align_marker(self, row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right() - self._align_line_padding)
+end
+
+-- Lines 794-803
+function MenuNodeCustomizeWeaponColorGui:close()
+	for _, row_item in ipairs(self.row_items) do
+		if row_item.item and type(row_item.item.close) == "function" then
+			row_item.item:close(row_item)
+		end
+	end
+
+	math.randomseed(os.time())
+	MenuNodeCustomizeWeaponColorGui.super.close(self)
 end

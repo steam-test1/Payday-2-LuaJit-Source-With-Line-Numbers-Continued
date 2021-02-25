@@ -1,7 +1,9 @@
+require("lib/utils/accelbyte/TelemetryConst")
+
 StoryMissionsManager = StoryMissionsManager or class()
 StoryMissionsManager._version = 2
 
--- Lines 5-56
+-- Lines 6-57
 function StoryMissionsManager:init()
 	if not Global.story_mission_manager then
 		Global.story_mission_manager = {}
@@ -58,32 +60,32 @@ function StoryMissionsManager:init()
 	end)
 end
 
--- Lines 58-60
+-- Lines 59-61
 function StoryMissionsManager:current_mission()
 	return self._global.current_mission
 end
 
--- Lines 62-64
+-- Lines 63-65
 function StoryMissionsManager:get_mission(id)
 	return self._global.missions[id]
 end
 
--- Lines 66-68
+-- Lines 67-69
 function StoryMissionsManager:get_mission_at(i)
 	return self._global.mission_order[i]
 end
 
--- Lines 70-72
+-- Lines 71-73
 function StoryMissionsManager:missions()
 	return self._global.missions
 end
 
--- Lines 74-76
+-- Lines 75-77
 function StoryMissionsManager:missions_in_order()
 	return self._global.mission_order
 end
 
--- Lines 78-89
+-- Lines 79-90
 function StoryMissionsManager:get_mission_levels(id)
 	local m = self:_get_or_current(id)
 
@@ -102,7 +104,7 @@ function StoryMissionsManager:get_mission_levels(id)
 	return levels
 end
 
--- Lines 91-106
+-- Lines 92-107
 function StoryMissionsManager:award(id, steps)
 	steps = steps or 1
 	local m = self:current_mission() or {}
@@ -126,7 +128,7 @@ function StoryMissionsManager:award(id, steps)
 	end
 end
 
--- Lines 110-122
+-- Lines 111-123
 function StoryMissionsManager:claim_rewards(mission)
 	mission = self:_get_or_current(mission)
 
@@ -144,7 +146,7 @@ function StoryMissionsManager:claim_rewards(mission)
 	managers.savefile:save_progress()
 end
 
--- Lines 124-148
+-- Lines 125-149
 function StoryMissionsManager:_reward(reward)
 	if reward.type_items == "xp" then
 		local value_id = tweak_data.blackmarket[reward.type_items][reward.item_entry].value_id
@@ -163,13 +165,13 @@ function StoryMissionsManager:_reward(reward)
 			Application:error("[Story] Failed to give reward", reward.type_items, reward.item_entry)
 		end
 	elseif reward[1] == "safehouse_coins" and reward[2] > 0 then
-		managers.custom_safehouse:add_coins(reward[2])
+		managers.custom_safehouse:add_coins(reward[2], TelemetryConst.economy_origin.mission_reward)
 	else
 		Application:error("[Story] Failed to give reward")
 	end
 end
 
--- Lines 152-175
+-- Lines 153-176
 function StoryMissionsManager:_check_complete(mission)
 	mission = self:_get_or_current(mission)
 
@@ -202,7 +204,7 @@ function StoryMissionsManager:_check_complete(mission)
 	end
 end
 
--- Lines 177-192
+-- Lines 178-193
 function StoryMissionsManager:_find_next_mission(dont_set)
 	local last = nil
 
@@ -225,7 +227,7 @@ function StoryMissionsManager:_find_next_mission(dont_set)
 	return last
 end
 
--- Lines 194-201
+-- Lines 195-202
 function StoryMissionsManager:_change_current_mission(mission)
 	self._global.current_mission = mission
 
@@ -235,7 +237,7 @@ function StoryMissionsManager:_change_current_mission(mission)
 	end
 end
 
--- Lines 205-210
+-- Lines 206-211
 function StoryMissionsManager:_get_offset_mission(mission, offset)
 	local m = self:_get_or_current(mission)
 
@@ -246,7 +248,7 @@ function StoryMissionsManager:_get_offset_mission(mission, offset)
 	return self._global.mission_order[m.order + offset]
 end
 
--- Lines 214-222
+-- Lines 215-223
 function StoryMissionsManager:_get_or_current(mission)
 	if mission then
 		if type(mission) == "string" then
@@ -259,7 +261,7 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines 226-258
+-- Lines 227-259
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
@@ -294,7 +296,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines 260-271
+-- Lines 261-272
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -309,7 +311,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 273-294
+-- Lines 274-295
 function StoryMissionsManager:_migrate_save_data(version_from, version_to, state)
 	if version_to - version_from > 1 then
 		version_from = self:_migrate_save_data(version_from, version_to - 1, state)
@@ -335,7 +337,7 @@ function StoryMissionsManager:_migrate_save_data(version_from, version_to, state
 	end
 end
 
--- Lines 296-344
+-- Lines 297-345
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -390,12 +392,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 346-348
+-- Lines 347-349
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 350-393
+-- Lines 351-394
 function StoryMissionsManager:start_mission(mission, objective_id)
 	if not self:_get_or_current(mission) then
 		local m = {
@@ -459,9 +461,9 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 397-413
+-- Lines 398-414
 function StoryMissionsManager:reset_all()
-	-- Lines 398-406
+	-- Lines 399-407
 	local function reset(m)
 		if not m then
 			return

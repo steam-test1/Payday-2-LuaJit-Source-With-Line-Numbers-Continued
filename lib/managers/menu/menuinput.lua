@@ -187,7 +187,7 @@ function MenuInput:_modified_mouse_pos(x, y)
 	return managers.mouse_pointer:convert_mouse_pos(x, y)
 end
 
--- Lines 186-282
+-- Lines 186-277
 function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	if not managers.menu:active_menu() then
 		return
@@ -218,17 +218,12 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
 	local select_item, select_row_item = nil
 
-	if node_gui and managers.menu_component:input_focus() ~= true then
+	if node_gui and managers.menu_component:input_focus() ~= true and not node_gui.CUSTOM_MOUSE_INPUT then
 		local inside_item_panel_parent = node_gui:item_panel_parent():inside(x, y)
 
 		for _, row_item in pairs(node_gui.row_items) do
 			if row_item.item:parameters().pd2_corner then
 				if row_item.gui_text:inside(x, y) and not self._logic:get_item(row_item.name).no_mouse_select then
-					select_item = row_item.name
-					select_row_item = row_item
-				end
-			elseif row_item.type == "grid" then
-				if row_item.gui_panel:inside(x, y) then
 					select_item = row_item.name
 					select_row_item = row_item
 				end
@@ -253,7 +248,7 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 		elseif selected_item.TYPE == "slider" then
 			managers.mouse_pointer:set_pointer_image("hand")
 		elseif selected_item.TYPE == "grid" then
-			local pointer = selected_item:mouse_moved(x, y, select_row_item, self._logic)
+			local pointer = selected_item:mouse_moved(x, y, select_row_item)
 
 			managers.mouse_pointer:set_pointer_image(pointer)
 		elseif selected_item.TYPE == "multi_choice" then
@@ -284,7 +279,7 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	managers.mouse_pointer:set_pointer_image("arrow")
 end
 
--- Lines 285-316
+-- Lines 280-311
 function MenuInput:input_kitslot(item, controller, mouse_click)
 	local slider_delay_down = 0.1
 	local slider_delay_pressed = 0.2
@@ -322,7 +317,7 @@ function MenuInput:input_kitslot(item, controller, mouse_click)
 	end
 end
 
--- Lines 318-399
+-- Lines 313-394
 function MenuInput:input_grid(item, controller, mouse_click)
 	if item.TYPE ~= "grid" then
 		return
@@ -341,7 +336,7 @@ function MenuInput:input_grid(item, controller, mouse_click)
 
 	if axis_timer.x <= 0 then
 		if self:menu_right_input_bool() then
-			if item:move_x(1) then
+			if item:move_x(1, row_item) then
 				self:post_event("selection_next")
 				item:update_selection_position(row_item)
 			end
@@ -352,7 +347,7 @@ function MenuInput:input_grid(item, controller, mouse_click)
 				self:set_axis_x_timer(delay_pressed)
 			end
 		elseif self:menu_left_input_bool() then
-			if item:move_x(-1) then
+			if item:move_x(-1, row_item) then
 				self:post_event("selection_previous")
 				item:update_selection_position(row_item)
 			end
@@ -367,7 +362,7 @@ function MenuInput:input_grid(item, controller, mouse_click)
 
 	if axis_timer.y <= 0 then
 		if self:menu_up_input_bool() then
-			if item:move_y(-1) then
+			if item:move_y(-1, row_item) then
 				self:post_event("selection_previous")
 				item:update_selection_position(row_item)
 				self:set_axis_y_timer(delay_down)
@@ -384,7 +379,7 @@ function MenuInput:input_grid(item, controller, mouse_click)
 				end
 			end
 		elseif self:menu_down_input_bool() then
-			if item:move_y(1) then
+			if item:move_y(1, row_item) then
 				self:post_event("selection_next")
 				item:update_selection_position(row_item)
 				self:set_axis_y_timer(delay_down)
@@ -403,13 +398,13 @@ function MenuInput:input_grid(item, controller, mouse_click)
 		end
 	end
 
-	if (controller:get_input_pressed("confirm") or mouse_click) and item:set_to_selection() then
+	if controller:get_input_pressed("confirm") and item:set_to_selection() then
 		self:post_event("selection_next")
 		self._logic:trigger_item(true, item)
 	end
 end
 
--- Lines 401-437
+-- Lines 396-432
 function MenuInput:input_multi_choice(item, controller, mouse_click)
 	local slider_delay_down = 0.1
 	local slider_delay_pressed = 0.2
@@ -449,7 +444,7 @@ function MenuInput:input_multi_choice(item, controller, mouse_click)
 	end
 end
 
--- Lines 439-447
+-- Lines 434-442
 function MenuInput:input_expand(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		item:toggle()
@@ -457,14 +452,14 @@ function MenuInput:input_expand(item, controller, mouse_click)
 	end
 end
 
--- Lines 449-454
+-- Lines 444-449
 function MenuInput:input_chat(item, controller, mouse_click)
 	if not controller:get_input_pressed("confirm") and mouse_click then
 		-- Nothing
 	end
 end
 
--- Lines 456-465
+-- Lines 451-460
 function MenuInput:input_customize_controller(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		local node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -479,12 +474,12 @@ function MenuInput:input_customize_controller(item, controller, mouse_click)
 	end
 end
 
--- Lines 467-469
+-- Lines 462-464
 function MenuInput:get_accept_input()
 	return self._accept_input and true or false
 end
 
--- Lines 471-477
+-- Lines 466-472
 function MenuInput:register_callback(input, name, callback)
 	if not self._callback_map[input] then
 		Application:error("MenuInput:register_callback", "Failed to register callback", "input: " .. input, "name: " .. name)
@@ -495,7 +490,7 @@ function MenuInput:register_callback(input, name, callback)
 	self._callback_map[input][name] = callback
 end
 
--- Lines 479-485
+-- Lines 474-480
 function MenuInput:unregister_callback(input, name)
 	if not self._callback_map[input] then
 		Application:error("MenuInput:register_callback", "Failed to unregister callback", "input: " .. input, "name: " .. name)
@@ -506,7 +501,7 @@ function MenuInput:unregister_callback(input, name)
 	self._callback_map[input][name] = nil
 end
 
--- Lines 487-494
+-- Lines 482-489
 function MenuInput:can_toggle_chat()
 	local item = self._logic:selected_item()
 
@@ -517,7 +512,7 @@ function MenuInput:can_toggle_chat()
 	return true
 end
 
--- Lines 496-675
+-- Lines 491-670
 function MenuInput:mouse_pressed(o, button, x, y)
 	if not self._accept_input then
 		return
@@ -541,7 +536,7 @@ function MenuInput:mouse_pressed(o, button, x, y)
 			return
 		end
 
-		if node_gui then
+		if node_gui and not node_gui.CUSTOM_MOUSE_INPUT then
 			for _, row_item in pairs(node_gui.row_items) do
 				if row_item.item:parameters().pd2_corner then
 					if row_item.gui_text:inside(x, y) then
@@ -606,7 +601,7 @@ function MenuInput:mouse_pressed(o, button, x, y)
 						local item = self._logic:selected_item()
 
 						if row_item.item == item then
-							self._item_input_action_map[item.TYPE](item, self._controller, true)
+							row_item.item:mouse_pressed(button, x, y, row_item)
 						end
 					elseif row_item.type == "multi_choice" then
 						local item = row_item.item
@@ -665,7 +660,7 @@ function MenuInput:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 677-702
+-- Lines 672-709
 function MenuInput:mouse_released(o, button, x, y)
 	if not self._accept_input then
 		return
@@ -686,6 +681,19 @@ function MenuInput:mouse_released(o, button, x, y)
 	end
 
 	self._slider_marker = nil
+	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
+
+	if node_gui and not node_gui.CUSTOM_MOUSE_INPUT then
+		for _, row_item in pairs(node_gui.row_items) do
+			if row_item.type == "grid" then
+				local item = self._logic:selected_item()
+
+				if row_item.item == item then
+					row_item.item:mouse_released(button, x, y, row_item)
+				end
+			end
+		end
+	end
 
 	if managers.menu:active_menu().renderer:mouse_released(o, button, x, y) then
 		return
@@ -696,7 +704,7 @@ function MenuInput:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines 704-725
+-- Lines 711-732
 function MenuInput:mouse_clicked(o, button, x, y)
 	if not self._accept_input then
 		return
@@ -723,7 +731,7 @@ function MenuInput:mouse_clicked(o, button, x, y)
 	return managers.menu:active_menu().renderer:mouse_clicked(o, button, x, y)
 end
 
--- Lines 727-751
+-- Lines 734-758
 function MenuInput:mouse_double_click(o, button, x, y)
 	if not self._accept_input then
 		return
@@ -752,7 +760,7 @@ end
 
 local print_timers = {}
 
--- Lines 754-759
+-- Lines 761-766
 local function upd_print(id, t, ...)
 	if not print_timers[id] or print_timers[id] < t then
 		print(...)
@@ -761,7 +769,7 @@ local function upd_print(id, t, ...)
 	end
 end
 
--- Lines 761-882
+-- Lines 768-889
 function MenuInput:update(t, dt)
 	if self._menu_plane then
 		self._menu_plane:set_rotation(Rotation(math.sin(t * 60) * 40, math.sin(t * 50) * 30, 0))
@@ -880,7 +888,7 @@ function MenuInput:update(t, dt)
 	self._mouse_moved = nil
 end
 
--- Lines 884-926
+-- Lines 891-933
 function MenuInput:_give_special_buttons()
 	if self._controller then
 		local special_btns = {
@@ -939,7 +947,7 @@ function MenuInput:_give_special_buttons()
 	end
 end
 
--- Lines 928-938
+-- Lines 935-945
 function MenuInput:menu_axis_move()
 	local axis_moved = {
 		x = 0,
@@ -957,72 +965,72 @@ function MenuInput:menu_axis_move()
 	return axis_moved
 end
 
--- Lines 952-954
+-- Lines 959-961
 function MenuInput:post_event(event)
 	self._sound_source:post_event(event)
 end
 
--- Lines 957-959
+-- Lines 964-966
 function MenuInput:menu_up_input_bool()
 	return MenuInput.super.menu_up_input_bool(self) or self._move_axis_limit < self:menu_axis_move().y
 end
 
--- Lines 960-963
+-- Lines 967-970
 function MenuInput:menu_up_pressed()
 	return MenuInput.super.menu_up_pressed(self) or self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_move().y > 0
 end
 
--- Lines 964-966
+-- Lines 971-973
 function MenuInput:menu_up_released()
 	return MenuInput.super.menu_up_released(self) or self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 970-972
+-- Lines 977-979
 function MenuInput:menu_down_input_bool()
 	return MenuInput.super.menu_down_input_bool(self) or self:menu_axis_move().y < -self._move_axis_limit
 end
 
--- Lines 973-976
+-- Lines 980-983
 function MenuInput:menu_down_pressed()
 	return MenuInput.super.menu_down_pressed(self) or self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_move().y < 0
 end
 
--- Lines 977-979
+-- Lines 984-986
 function MenuInput:menu_down_released()
 	return MenuInput.super.menu_down_released(self) or self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 983-986
+-- Lines 990-993
 function MenuInput:menu_left_input_bool()
 	return MenuInput.super.menu_left_input_bool(self) or self:menu_axis_move().x < -self._move_axis_limit
 end
 
--- Lines 987-990
+-- Lines 994-997
 function MenuInput:menu_left_pressed()
 	return MenuInput.super.menu_left_pressed(self) or self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_move().x < 0
 end
 
--- Lines 991-993
+-- Lines 998-1000
 function MenuInput:menu_left_released()
 	return MenuInput.super.menu_left_released(self) or self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 997-1000
+-- Lines 1004-1007
 function MenuInput:menu_right_input_bool()
 	return MenuInput.super.menu_right_input_bool(self) or self._move_axis_limit < self:menu_axis_move().x
 end
 
--- Lines 1001-1004
+-- Lines 1008-1011
 function MenuInput:menu_right_pressed()
 	return MenuInput.super.menu_right_pressed(self) or self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_move().x > 0
 end
 
--- Lines 1005-1007
+-- Lines 1012-1014
 function MenuInput:menu_right_released()
 	return MenuInput.super.menu_right_released(self) or self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 1022-1027
+-- Lines 1029-1034
 function MenuInput:menu_next_page_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("next_page")
@@ -1031,7 +1039,7 @@ function MenuInput:menu_next_page_input_bool()
 	return false
 end
 
--- Lines 1029-1034
+-- Lines 1036-1041
 function MenuInput:menu_next_page_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("next_page")
@@ -1040,7 +1048,7 @@ function MenuInput:menu_next_page_pressed()
 	return false
 end
 
--- Lines 1035-1040
+-- Lines 1042-1047
 function MenuInput:menu_next_page_released()
 	if self._controller then
 		return self._controller:get_input_released("next_page")
@@ -1049,7 +1057,7 @@ function MenuInput:menu_next_page_released()
 	return false
 end
 
--- Lines 1044-1049
+-- Lines 1051-1056
 function MenuInput:menu_previous_page_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("previous_page")
@@ -1058,7 +1066,7 @@ function MenuInput:menu_previous_page_input_bool()
 	return false
 end
 
--- Lines 1051-1056
+-- Lines 1058-1063
 function MenuInput:menu_previous_page_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("previous_page")
@@ -1067,7 +1075,7 @@ function MenuInput:menu_previous_page_pressed()
 	return false
 end
 
--- Lines 1057-1062
+-- Lines 1064-1069
 function MenuInput:menu_previous_page_released()
 	if self._controller then
 		return self._controller:get_input_released("previous_page")
@@ -1076,7 +1084,7 @@ function MenuInput:menu_previous_page_released()
 	return false
 end
 
--- Lines 1069-1093
+-- Lines 1076-1100
 function MenuInput:_update_axis_status()
 	local axis_moved = self:menu_axis_move()
 
@@ -1101,7 +1109,7 @@ function MenuInput:_update_axis_status()
 	end
 end
 
--- Lines 1096-1118
+-- Lines 1103-1125
 function MenuInput:_update_axis_scroll_status()
 	local axis_scrolled = self:menu_axis_scroll()
 
@@ -1126,7 +1134,7 @@ function MenuInput:_update_axis_scroll_status()
 	end
 end
 
--- Lines 1121-1142
+-- Lines 1128-1149
 function MenuInput:input_crime_spree_item(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		local node_gui = managers.menu:active_menu().renderer:active_node_gui()

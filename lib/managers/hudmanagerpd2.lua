@@ -25,6 +25,7 @@ require("lib/managers/hud/HUDPlayerCustody")
 require("lib/managers/hud/HUDWaitingLegend")
 require("lib/managers/hud/HUDStageEndCrimeSpreeScreen")
 require("lib/managers/hud/HUDStatsScreenSkirmish")
+require("lib/managers/hud/HUDLootScreenSkirmish")
 
 HUDManager.disabled = {
 	[Idstring("guis/player_hud"):key()] = true,
@@ -32,7 +33,7 @@ HUDManager.disabled = {
 }
 HUDManager.PLAYER_PANEL = 4
 
--- Lines 53-69
+-- Lines 56-72
 function HUDManager:controller_mod_changed()
 	if self:alive("guis/mask_off_hud") then
 		self:script("guis/mask_off_hud").mask_on_text:set_text(utf8.to_upper(managers.localization:text("hud_instruct_mask_on", {
@@ -53,7 +54,7 @@ function HUDManager:controller_mod_changed()
 	end
 end
 
--- Lines 73-78
+-- Lines 76-81
 function HUDManager:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -61,7 +62,7 @@ function HUDManager:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 80-85
+-- Lines 83-88
 function HUDManager:text_clone(text)
 	return text:parent():text({
 		font = tweak_data.hud.medium_font_noshadow,
@@ -79,21 +80,21 @@ function HUDManager:text_clone(text)
 	})
 end
 
--- Lines 89-91
+-- Lines 92-94
 function HUDManager:set_player_location(location_id)
 end
 
--- Lines 93-95
+-- Lines 96-98
 function HUDManager:hide_local_player_gear()
 	self:hide_player_gear(HUDManager.PLAYER_PANEL)
 end
 
--- Lines 96-98
+-- Lines 99-101
 function HUDManager:show_local_player_gear()
 	self:show_player_gear(HUDManager.PLAYER_PANEL)
 end
 
--- Lines 99-108
+-- Lines 102-111
 function HUDManager:hide_player_gear(panel_id)
 	if self._teammate_panels[panel_id] and self._teammate_panels[panel_id]:panel() and self._teammate_panels[panel_id]:panel():child("player") then
 		local player_panel = self._teammate_panels[panel_id]:panel():child("player")
@@ -106,7 +107,7 @@ function HUDManager:hide_player_gear(panel_id)
 	end
 end
 
--- Lines 109-118
+-- Lines 112-121
 function HUDManager:show_player_gear(panel_id)
 	if self._teammate_panels[panel_id] and self._teammate_panels[panel_id]:panel() and self._teammate_panels[panel_id]:panel():child("player") then
 		local player_panel = self._teammate_panels[panel_id]:panel():child("player")
@@ -119,7 +120,7 @@ function HUDManager:show_player_gear(panel_id)
 	end
 end
 
--- Lines 129-148
+-- Lines 132-151
 function HUDManager:add_weapon(data)
 	self:_set_weapon(data)
 
@@ -138,19 +139,19 @@ function HUDManager:add_weapon(data)
 	end
 end
 
--- Lines 150-160
+-- Lines 153-163
 function HUDManager:_set_weapon(data)
 	if data.inventory_index > 2 then
 		return
 	end
 end
 
--- Lines 163-165
+-- Lines 166-168
 function HUDManager:set_weapon_selected_by_inventory_index(inventory_index)
 	self:_set_weapon_selected(inventory_index)
 end
 
--- Lines 168-172
+-- Lines 171-175
 function HUDManager:_set_weapon_selected(id)
 	self._hud.selected_weapon = id
 	local icon = self._hud.weapons[self._hud.selected_weapon].unit:base():weapon_tweak_data().hud_icon
@@ -158,19 +159,19 @@ function HUDManager:_set_weapon_selected(id)
 	self:_set_teammate_weapon_selected(HUDManager.PLAYER_PANEL, id, icon)
 end
 
--- Lines 174-179
+-- Lines 177-182
 function HUDManager:_set_teammate_weapon_selected(i, id, icon)
 	self._teammate_panels[i]:set_weapon_selected(id, icon)
 end
 
--- Lines 181-185
+-- Lines 184-188
 function HUDManager:recreate_weapon_firemode(i)
 	if self._teammate_panels[i] then
 		self._teammate_panels[i]:recreate_weapon_firemode()
 	end
 end
 
--- Lines 188-221
+-- Lines 191-224
 function HUDManager:get_waiting_index(peer_id)
 	self._waiting_index = self._waiting_index or {}
 
@@ -178,14 +179,14 @@ function HUDManager:get_waiting_index(peer_id)
 		return self._waiting_index[peer_id]
 	end
 
-	-- Lines 194-197
+	-- Lines 197-200
 	local function set_index(i)
 		self._waiting_index[peer_id] = i
 
 		return i
 	end
 
-	-- Lines 199-201
+	-- Lines 202-204
 	local function allowed_index(i)
 		return i and not table.contains(self._waiting_index, i)
 	end
@@ -212,7 +213,7 @@ function HUDManager:get_waiting_index(peer_id)
 	return nil
 end
 
--- Lines 223-240
+-- Lines 226-243
 function HUDManager:add_waiting(peer_id, override_index)
 	if not Network:is_server() then
 		return
@@ -234,7 +235,7 @@ function HUDManager:add_waiting(peer_id, override_index)
 	end
 end
 
--- Lines 242-263
+-- Lines 245-266
 function HUDManager:remove_waiting(peer_id)
 	if not Network:is_server() then
 		return
@@ -260,12 +261,12 @@ function HUDManager:remove_waiting(peer_id)
 	end
 end
 
--- Lines 270-272
+-- Lines 273-275
 function HUDManager:set_teammate_weapon_firemode(i, id, firemode)
 	self._teammate_panels[i]:set_weapon_firemode(id, firemode)
 end
 
--- Lines 275-298
+-- Lines 278-301
 function HUDManager:set_ammo_amount(selection_index, max_clip, current_clip, current_left, max)
 	if selection_index > 3 then
 		print("set_ammo_amount", selection_index, max_clip, current_clip, current_left, max)
@@ -289,14 +290,14 @@ function HUDManager:set_ammo_amount(selection_index, max_clip, current_clip, cur
 	end
 end
 
--- Lines 301-307
+-- Lines 304-310
 function HUDManager:set_teammate_ammo_amount(id, selection_index, max_clip, current_clip, current_left, max)
 	local type = selection_index == 1 and "secondary" or "primary"
 
 	self._teammate_panels[id]:set_ammo_amount_by_type(type, max_clip, current_clip, current_left, max)
 end
 
--- Lines 310-315
+-- Lines 313-318
 function HUDManager:set_weapon_ammo_by_unit(unit)
 	local second_weapon_index = self._hud.selected_weapon == 1 and 2 or 1
 
@@ -305,56 +306,56 @@ function HUDManager:set_weapon_ammo_by_unit(unit)
 	end
 end
 
--- Lines 318-320
+-- Lines 321-323
 function HUDManager:_update_second_weapon_ammo_info(i, unit)
 end
 
--- Lines 322-324
+-- Lines 325-327
 function HUDManager:damage_taken()
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:_damage_taken()
 end
 
--- Lines 327-329
+-- Lines 330-332
 function HUDManager:set_player_health(data)
 	self:set_teammate_health(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 331-333
+-- Lines 334-336
 function HUDManager:set_teammate_health(i, data)
 	self._teammate_panels[i]:set_health(data)
 end
 
--- Lines 335-337
+-- Lines 338-340
 function HUDManager:set_player_custom_radial(data)
 	self:set_teammate_custom_radial(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 338-340
+-- Lines 341-343
 function HUDManager:set_teammate_custom_radial(i, data)
 	self._teammate_panels[i]:set_custom_radial(data)
 end
 
--- Lines 342-344
+-- Lines 345-347
 function HUDManager:set_player_ability_radial(data)
 	self:set_teammate_ability_radial(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 346-348
+-- Lines 349-351
 function HUDManager:set_teammate_ability_radial(i, data)
 	self._teammate_panels[i]:set_ability_radial(data)
 end
 
--- Lines 350-352
+-- Lines 353-355
 function HUDManager:activate_teammate_ability_radial(i, time_left, time_total)
 	self._teammate_panels[i]:activate_ability_radial(time_left, time_total)
 end
 
--- Lines 355-357
+-- Lines 358-360
 function HUDManager:set_teammate_delayed_damage(i, delayed_damage)
 	self._teammate_panels[i]:set_delayed_damage(delayed_damage)
 end
 
--- Lines 361-367
+-- Lines 364-370
 function HUDManager:set_player_armor(data)
 	if data.current == 0 and not data.no_hint then
 		managers.hint:show_hint("damage_pad")
@@ -363,32 +364,32 @@ function HUDManager:set_player_armor(data)
 	self:set_teammate_armor(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 370-372
+-- Lines 373-375
 function HUDManager:set_teammate_armor(i, data)
 	self._teammate_panels[i]:set_armor(data)
 end
 
--- Lines 375-377
+-- Lines 378-380
 function HUDManager:set_teammate_name(i, teammate_name)
 	self._teammate_panels[i]:set_name(teammate_name)
 end
 
--- Lines 380-382
+-- Lines 383-385
 function HUDManager:set_teammate_callsign(i, id)
 	self._teammate_panels[i]:set_callsign(id)
 end
 
--- Lines 385-387
+-- Lines 388-390
 function HUDManager:set_cable_tie(i, data)
 	self._teammate_panels[i]:set_cable_tie(data)
 end
 
--- Lines 390-392
+-- Lines 393-395
 function HUDManager:set_cable_ties_amount(i, amount)
 	self._teammate_panels[i]:set_cable_ties_amount(amount)
 end
 
--- Lines 395-403
+-- Lines 398-406
 function HUDManager:set_teammate_state(i, state)
 	if state == "player" then
 		self:set_ai_stopped(i, false)
@@ -397,12 +398,12 @@ function HUDManager:set_teammate_state(i, state)
 	self._teammate_panels[i]:set_state(state)
 end
 
--- Lines 406-408
+-- Lines 409-411
 function HUDManager:add_special_equipment(data)
 	self:add_teammate_special_equipment(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 411-419
+-- Lines 414-422
 function HUDManager:add_teammate_special_equipment(i, data)
 	if not i then
 		print("[HUDManager:add_teammate_special_equipment] - Didn't get a number")
@@ -414,27 +415,27 @@ function HUDManager:add_teammate_special_equipment(i, data)
 	self._teammate_panels[i]:add_special_equipment(data)
 end
 
--- Lines 422-424
+-- Lines 425-427
 function HUDManager:remove_special_equipment(equipment)
 	self:remove_teammate_special_equipment(HUDManager.PLAYER_PANEL, equipment)
 end
 
--- Lines 427-429
+-- Lines 430-432
 function HUDManager:remove_teammate_special_equipment(panel_id, equipment)
 	self._teammate_panels[panel_id]:remove_special_equipment(equipment)
 end
 
--- Lines 432-434
+-- Lines 435-437
 function HUDManager:set_special_equipment_amount(equipment_id, amount)
 	self:set_teammate_special_equipment_amount(HUDManager.PLAYER_PANEL, equipment_id, amount)
 end
 
--- Lines 437-439
+-- Lines 440-442
 function HUDManager:set_teammate_special_equipment_amount(i, equipment_id, amount)
 	self._teammate_panels[i]:set_special_equipment_amount(equipment_id, amount)
 end
 
--- Lines 441-446
+-- Lines 444-449
 function HUDManager:clear_player_special_equipments()
 	if not self._teammate_panels then
 		return
@@ -443,54 +444,54 @@ function HUDManager:clear_player_special_equipments()
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:clear_special_equipment()
 end
 
--- Lines 449-451
+-- Lines 452-454
 function HUDManager:set_stored_health(stored_health_ratio)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_stored_health(stored_health_ratio)
 end
 
--- Lines 453-455
+-- Lines 456-458
 function HUDManager:set_stored_health_max(stored_health_ratio)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_stored_health_max(stored_health_ratio)
 end
 
--- Lines 464-466
+-- Lines 467-469
 function HUDManager:set_info_meter(i, data)
 	self._teammate_panels[i or HUDManager.PLAYER_PANEL]:set_info_meter(data)
 end
 
--- Lines 476-478
+-- Lines 479-481
 function HUDManager:set_absorb_active(i, absorb_amount)
 	self._teammate_panels[i or HUDManager.PLAYER_PANEL]:set_absorb_active(absorb_amount)
 end
 
--- Lines 516-518
+-- Lines 519-521
 function HUDManager:add_item(data)
 	self:set_deployable_equipment(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 520-522
+-- Lines 523-525
 function HUDManager:add_item_from_string(data)
 	self:set_deployable_equipment_from_string(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 525-527
+-- Lines 528-530
 function HUDManager:set_deployable_equipment(i, data)
 	self._teammate_panels[i]:set_deployable_equipment(data)
 end
 
--- Lines 529-531
+-- Lines 532-534
 function HUDManager:set_deployable_equipment_from_string(i, data)
 	self._teammate_panels[i]:set_deployable_equipment_from_string(data)
 end
 
--- Lines 534-536
+-- Lines 537-539
 function HUDManager:set_item_amount(index, amount)
 	self:set_teammate_deployable_equipment_amount(HUDManager.PLAYER_PANEL, index, {
 		amount = amount
 	})
 end
 
--- Lines 539-541
+-- Lines 542-544
 function HUDManager:set_item_amount_from_string(index, amount_str, amount)
 	self:set_teammate_deployable_equipment_amount_from_string(HUDManager.PLAYER_PANEL, index, {
 		amount_str = amount_str,
@@ -498,53 +499,53 @@ function HUDManager:set_item_amount_from_string(index, amount_str, amount)
 	})
 end
 
--- Lines 544-546
+-- Lines 547-549
 function HUDManager:set_teammate_deployable_equipment_amount(i, index, data)
 	self._teammate_panels[i]:set_deployable_equipment_amount(index, data)
 end
 
--- Lines 548-550
+-- Lines 551-553
 function HUDManager:set_teammate_deployable_equipment_amount_from_string(i, index, data)
 	self._teammate_panels[i]:set_deployable_equipment_amount_from_string(index, data)
 end
 
--- Lines 552-554
+-- Lines 555-557
 function HUDManager:set_player_grenade_cooldown(data)
 	self:set_teammate_grenade_cooldown(HUDManager.PLAYER_PANEL, data)
 end
 
--- Lines 556-558
+-- Lines 559-561
 function HUDManager:set_teammate_grenade_cooldown(i, data)
 	self._teammate_panels[i]:set_grenade_cooldown(data)
 end
 
--- Lines 560-562
+-- Lines 563-565
 function HUDManager:set_ability_icon(i, icon)
 	self._teammate_panels[i]:set_ability_icon(icon)
 end
 
--- Lines 565-568
+-- Lines 568-571
 function HUDManager:set_teammate_grenades(i, data)
 	self._teammate_panels[i]:set_grenades(data)
 	self:set_ability_icon(i, data.icon)
 end
 
--- Lines 571-574
+-- Lines 574-577
 function HUDManager:set_teammate_grenades_amount(i, data)
 	self._teammate_panels[i]:set_grenades_amount(data)
 end
 
--- Lines 576-578
+-- Lines 579-581
 function HUDManager:animate_grenade_flash(i)
 	self._teammate_panels[i]:animate_grenade_flash()
 end
 
--- Lines 580-582
+-- Lines 583-585
 function HUDManager:set_player_condition(icon_data, text)
 	self:set_teammate_condition(HUDManager.PLAYER_PANEL, icon_data, text)
 end
 
--- Lines 585-593
+-- Lines 588-596
 function HUDManager:set_teammate_condition(i, icon_data, text)
 	if not i then
 		print("Didn't get a number")
@@ -556,7 +557,7 @@ function HUDManager:set_teammate_condition(i, icon_data, text)
 	self._teammate_panels[i]:set_condition(icon_data, text)
 end
 
--- Lines 595-600
+-- Lines 598-603
 function HUDManager:set_teammate_carry_info(i, carry_id, value)
 	if i == HUDManager.PLAYER_PANEL then
 		return
@@ -565,7 +566,7 @@ function HUDManager:set_teammate_carry_info(i, carry_id, value)
 	self._teammate_panels[i]:set_carry_info(carry_id, value)
 end
 
--- Lines 602-607
+-- Lines 605-610
 function HUDManager:remove_teammate_carry_info(i)
 	if i == HUDManager.PLAYER_PANEL then
 		return
@@ -574,14 +575,14 @@ function HUDManager:remove_teammate_carry_info(i)
 	self._teammate_panels[i]:remove_carry_info()
 end
 
--- Lines 611-615
+-- Lines 614-618
 function HUDManager:start_teammate_timer(i, time)
 	if self._teammate_panels[i] then
 		self._teammate_panels[i]:start_timer(time)
 	end
 end
 
--- Lines 617-623
+-- Lines 620-626
 function HUDManager:is_teammate_timer_running(i)
 	if self._teammate_panels[i] then
 		return self._teammate_panels[i]:is_timer_running()
@@ -590,21 +591,21 @@ function HUDManager:is_teammate_timer_running(i)
 	end
 end
 
--- Lines 625-629
+-- Lines 628-632
 function HUDManager:pause_teammate_timer(i, pause)
 	if self._teammate_panels[i] then
 		self._teammate_panels[i]:set_pause_timer(pause)
 	end
 end
 
--- Lines 631-635
+-- Lines 634-638
 function HUDManager:stop_teammate_timer(i)
 	if self._teammate_panels[i] then
 		self._teammate_panels[i]:stop_timer()
 	end
 end
 
--- Lines 639-670
+-- Lines 642-673
 function HUDManager:_setup_player_info_hud_pd2()
 	print("_setup_player_info_hud_pd2")
 
@@ -632,7 +633,7 @@ function HUDManager:_setup_player_info_hud_pd2()
 	self:_create_waiting_legend(hud)
 end
 
--- Lines 672-683
+-- Lines 675-686
 function HUDManager:_create_ammo_test()
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 
@@ -661,7 +662,7 @@ function HUDManager:_create_ammo_test()
 	})
 end
 
--- Lines 685-700
+-- Lines 688-703
 function HUDManager:_create_hud_chat()
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 
@@ -677,7 +678,7 @@ function HUDManager:_create_hud_chat()
 	end
 end
 
--- Lines 702-708
+-- Lines 705-711
 function HUDManager:_create_hud_chat_access()
 	local hud = managers.hud:script(IngameAccessCamera.GUI_SAFERECT)
 
@@ -688,7 +689,7 @@ function HUDManager:_create_hud_chat_access()
 	self._hud_chat_access = HUDChat:new(self._saferect, hud)
 end
 
--- Lines 711-718
+-- Lines 714-721
 function HUDManager:_create_assault_corner()
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	local full_hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
@@ -698,7 +699,7 @@ function HUDManager:_create_assault_corner()
 	self._hud_assault_corner = HUDAssaultCorner:new(hud, full_hud, tweak_data.levels[Global.game_settings.level_id].hud or {})
 end
 
--- Lines 720-732
+-- Lines 723-735
 function HUDManager:mark_cheater(peer_id)
 	local name_label = self:_name_label_by_peer_id(peer_id)
 
@@ -715,9 +716,9 @@ function HUDManager:mark_cheater(peer_id)
 	end
 end
 
--- Lines 735-816
+-- Lines 738-819
 function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
-	-- Lines 736-799
+	-- Lines 739-802
 	local function add_panel(i)
 		self._teammate_panels[i]:add_panel()
 		self._teammate_panels[i]:set_peer_id(peer_id)
@@ -832,7 +833,7 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 	end
 end
 
--- Lines 819-854
+-- Lines 822-857
 function HUDManager:remove_teammate_panel(id)
 	self._teammate_panels[id]:remove_panel()
 
@@ -863,7 +864,7 @@ function HUDManager:remove_teammate_panel(id)
 	managers.hud._teammate_panels[HUDManager.PLAYER_PANEL]:set_state("player")
 end
 
--- Lines 856-867
+-- Lines 859-870
 function HUDManager:get_teammate_panel_by_peer(peer)
 	if not peer then
 		return self._teammate_panels[HUDManager.PLAYER_PANEL]
@@ -878,12 +879,12 @@ function HUDManager:get_teammate_panel_by_peer(peer)
 	end
 end
 
--- Lines 955-957
+-- Lines 958-960
 function HUDManager:teampanels_height()
 	return 120
 end
 
--- Lines 959-1000
+-- Lines 962-1003
 function HUDManager:_create_teammates_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud.teammate_panels_data = self._hud.teammate_panels_data or {}
@@ -924,42 +925,42 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 end
 
--- Lines 1003-1007
+-- Lines 1006-1010
 function HUDManager:_create_waiting_legend(hud)
 	if Network:is_server() then
 		self._waiting_legend = HUDWaitingLegend:new(hud)
 	end
 end
 
--- Lines 1012-1015
+-- Lines 1015-1018
 function HUDManager:_create_present_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_presenter = HUDPresenter:new(hud)
 end
 
--- Lines 1018-1022
+-- Lines 1021-1025
 function HUDManager:present(params)
 	if self._hud_presenter then
 		self._hud_presenter:present(params)
 	end
 end
 
--- Lines 1025-1026
+-- Lines 1028-1029
 function HUDManager:present_done()
 end
 
--- Lines 1030-1033
+-- Lines 1033-1036
 function HUDManager:_create_interaction(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_interaction = HUDInteraction:new(hud)
 end
 
--- Lines 1036-1038
+-- Lines 1039-1041
 function HUDManager:show_interact(data)
 	self._hud_interaction:show_interact(data)
 end
 
--- Lines 1041-1046
+-- Lines 1044-1049
 function HUDManager:remove_interact()
 	if not self._hud_interaction then
 		return
@@ -968,63 +969,63 @@ function HUDManager:remove_interact()
 	self._hud_interaction:remove_interact()
 end
 
--- Lines 1049-1051
+-- Lines 1052-1054
 function HUDManager:show_interaction_bar(current, total)
 	self._hud_interaction:show_interaction_bar(current, total)
 end
 
--- Lines 1054-1056
+-- Lines 1057-1059
 function HUDManager:set_interaction_bar_width(current, total)
 	self._hud_interaction:set_interaction_bar_width(current, total)
 end
 
--- Lines 1059-1061
+-- Lines 1062-1064
 function HUDManager:hide_interaction_bar(complete)
 	self._hud_interaction:hide_interaction_bar(complete)
 end
 
--- Lines 1065-1068
+-- Lines 1068-1071
 function HUDManager:_create_progress_timer(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._progress_timer = HUDInteraction:new(hud, "progress_timer")
 end
 
--- Lines 1070-1072
+-- Lines 1073-1075
 function HUDManager:show_progress_timer(data)
 	self._progress_timer:show_interact(data)
 end
 
--- Lines 1074-1076
+-- Lines 1077-1079
 function HUDManager:remove_progress_timer()
 	self._progress_timer:remove_interact()
 end
 
--- Lines 1078-1080
+-- Lines 1081-1083
 function HUDManager:show_progress_timer_bar(current, total)
 	self._progress_timer:show_interaction_bar(current, total)
 end
 
--- Lines 1082-1084
+-- Lines 1085-1087
 function HUDManager:set_progress_timer_bar_width(current, total)
 	self._progress_timer:set_interaction_bar_width(current, total)
 end
 
--- Lines 1086-1088
+-- Lines 1089-1091
 function HUDManager:set_progress_timer_bar_valid(valid, text_id)
 	self._progress_timer:set_bar_valid(valid, text_id)
 end
 
--- Lines 1090-1092
+-- Lines 1093-1095
 function HUDManager:hide_progress_timer_bar(complete)
 	self._progress_timer:hide_interaction_bar(complete)
 end
 
--- Lines 1097-1099
+-- Lines 1100-1102
 function HUDManager:set_control_info(data)
 	self._hud_assault_corner:set_control_info(data)
 end
 
--- Lines 1104-1116
+-- Lines 1107-1119
 function HUDManager:sync_start_assault(assault_number)
 	managers.music:post_event(tweak_data.levels:get_music_event("assault"))
 
@@ -1035,7 +1036,7 @@ function HUDManager:sync_start_assault(assault_number)
 	self._hud_assault_corner:sync_start_assault(assault_number)
 end
 
--- Lines 1119-1134
+-- Lines 1122-1137
 function HUDManager:sync_end_assault(result)
 	managers.music:post_event(tweak_data.levels:get_music_event("control"))
 
@@ -1052,37 +1053,37 @@ function HUDManager:sync_end_assault(result)
 	self._hud_assault_corner:sync_end_assault(result)
 end
 
--- Lines 1136-1140
+-- Lines 1139-1143
 function HUDManager:sync_assault_number(assault_number)
 	self._hud_assault_corner:sync_start_assault(assault_number)
 end
 
--- Lines 1142-1144
+-- Lines 1145-1147
 function HUDManager:show_casing(mode)
 	self._hud_assault_corner:show_casing(mode)
 end
 
--- Lines 1146-1148
+-- Lines 1149-1151
 function HUDManager:hide_casing()
 	self._hud_assault_corner:hide_casing()
 end
 
--- Lines 1150-1152
+-- Lines 1153-1155
 function HUDManager:sync_set_assault_mode(mode)
 	self._hud_assault_corner:sync_set_assault_mode(mode)
 end
 
--- Lines 1154-1156
+-- Lines 1157-1159
 function HUDManager:set_buff_enabled(buff_name, enabled)
 	self._hud_assault_corner:set_buff_enabled(buff_name, enabled)
 end
 
--- Lines 1160-1162
+-- Lines 1163-1165
 function HUDManager:_additional_layout()
 	self:_setup_stats_screen()
 end
 
--- Lines 1164-1178
+-- Lines 1167-1181
 function HUDManager:_setup_stats_screen()
 	if not self:alive(self.STATS_SCREEN_FULLSCREEN) then
 		return
@@ -1097,7 +1098,7 @@ function HUDManager:_setup_stats_screen()
 	self._hud_statsscreen = stats_screen_class:new()
 end
 
--- Lines 1181-1195
+-- Lines 1184-1198
 function HUDManager:show_stats_screen()
 	local safe = self.STATS_SCREEN_SAFERECT
 	local full = self.STATS_SCREEN_FULLSCREEN
@@ -1114,7 +1115,7 @@ function HUDManager:show_stats_screen()
 	self:add_updator("_hud_statsscreen", callback(self._hud_statsscreen, self._hud_statsscreen, "update"))
 end
 
--- Lines 1198-1203
+-- Lines 1201-1206
 function HUDManager:update_stat_screen()
 	if not self._hud_statsscreen then
 		return
@@ -1123,7 +1124,7 @@ function HUDManager:update_stat_screen()
 	self._hud_statsscreen:update()
 end
 
--- Lines 1207-1215
+-- Lines 1210-1218
 function HUDManager:hide_stats_screen()
 	self._showing_stats_screen = false
 
@@ -1134,41 +1135,41 @@ function HUDManager:hide_stats_screen()
 	self:remove_updator("_hud_statsscreen")
 end
 
--- Lines 1217-1219
+-- Lines 1220-1222
 function HUDManager:showing_stats_screen()
 	return self._showing_stats_screen
 end
 
--- Lines 1221-1225
+-- Lines 1224-1228
 function HUDManager:loot_value_updated()
 	if self._hud_statsscreen then
 		self._hud_statsscreen:loot_value_updated()
 	end
 end
 
--- Lines 1227-1231
+-- Lines 1230-1234
 function HUDManager:on_ext_inventory_changed()
 	if self._hud_statsscreen then
 		self._hud_statsscreen:on_ext_inventory_changed()
 	end
 end
 
--- Lines 1236-1238
+-- Lines 1239-1241
 function HUDManager:feed_point_of_no_return_timer(time, is_inside)
 	self._hud_assault_corner:feed_point_of_no_return_timer(time, is_inside)
 end
 
--- Lines 1241-1243
+-- Lines 1244-1246
 function HUDManager:show_point_of_no_return_timer()
 	self._hud_assault_corner:show_point_of_no_return_timer()
 end
 
--- Lines 1246-1248
+-- Lines 1249-1251
 function HUDManager:hide_point_of_no_return_timer()
 	self._hud_assault_corner:hide_point_of_no_return_timer()
 end
 
--- Lines 1251-1259
+-- Lines 1254-1262
 function HUDManager:flash_point_of_no_return_timer(beep)
 	if beep then
 		self._sound_source:post_event("last_10_seconds_beep")
@@ -1177,44 +1178,44 @@ function HUDManager:flash_point_of_no_return_timer(beep)
 	self._hud_assault_corner:flash_point_of_no_return_timer(beep)
 end
 
--- Lines 1263-1266
+-- Lines 1266-1269
 function HUDManager:_create_objectives(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_objectives = HUDObjectives:new(hud)
 end
 
--- Lines 1270-1273
+-- Lines 1273-1276
 function HUDManager:activate_objective(data)
 	self._hud_objectives:activate_objective(data)
 end
 
--- Lines 1276-1279
+-- Lines 1279-1282
 function HUDManager:complete_sub_objective(data)
 end
 
--- Lines 1282-1285
+-- Lines 1285-1288
 function HUDManager:update_amount_objective(data)
 	print("HUDManager:update_amount_objective", inspect(data))
 	self._hud_objectives:update_amount_objective(data)
 end
 
--- Lines 1288-1290
+-- Lines 1291-1293
 function HUDManager:remind_objective(id)
 	self._hud_objectives:remind_objective(id)
 end
 
--- Lines 1293-1296
+-- Lines 1296-1299
 function HUDManager:complete_objective(data)
 	self._hud_objectives:complete_objective(data)
 end
 
--- Lines 1300-1303
+-- Lines 1303-1306
 function HUDManager:_create_hint(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_hint = HUDHint:new(hud)
 end
 
--- Lines 1306-1312
+-- Lines 1309-1315
 function HUDManager:show_hint(params)
 	self._hud_hint:show(params)
 
@@ -1223,60 +1224,60 @@ function HUDManager:show_hint(params)
 	end
 end
 
--- Lines 1314-1316
+-- Lines 1317-1319
 function HUDManager:stop_hint()
 	self._hud_hint:stop()
 end
 
--- Lines 1320-1323
+-- Lines 1323-1326
 function HUDManager:_create_heist_timer(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_heist_timer = HUDHeistTimer:new(hud, tweak_data.levels[Global.game_settings.level_id].hud or {})
 end
 
--- Lines 1325-1327
+-- Lines 1328-1330
 function HUDManager:feed_heist_time(time)
 	self._hud_heist_timer:set_time(time)
 end
 
--- Lines 1329-1331
+-- Lines 1332-1334
 function HUDManager:modify_heist_time(time)
 	self._hud_heist_timer:modify_time(time)
 end
 
--- Lines 1335-1338
+-- Lines 1338-1341
 function HUDManager:_create_temp_hud(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_temp = HUDTemp:new(hud)
 end
 
--- Lines 1340-1342
+-- Lines 1343-1345
 function HUDManager:temp_show_carry_bag(carry_id, value)
 	self._hud_temp:show_carry_bag(carry_id, value)
 end
 
--- Lines 1344-1346
+-- Lines 1347-1349
 function HUDManager:temp_hide_carry_bag()
 	self._hud_temp:hide_carry_bag()
 end
 
--- Lines 1348-1350
+-- Lines 1351-1353
 function HUDManager:set_stamina_value(value)
 	self._hud_temp:set_stamina_value(value)
 end
 
--- Lines 1352-1354
+-- Lines 1355-1357
 function HUDManager:set_max_stamina(value)
 	self._hud_temp:set_max_stamina(value)
 end
 
--- Lines 1358-1361
+-- Lines 1361-1364
 function HUDManager:_create_suspicion(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_suspicion = HUDSuspicion:new(hud, self._sound_source)
 end
 
--- Lines 1364-1375
+-- Lines 1367-1378
 function HUDManager:set_suspicion(status)
 	if type(status) == "boolean" then
 		if status then
@@ -1290,13 +1291,13 @@ function HUDManager:set_suspicion(status)
 	end
 end
 
--- Lines 1379-1382
+-- Lines 1382-1385
 function HUDManager:_create_hit_confirm(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_hit_confirm = HUDHitConfirm:new(hud)
 end
 
--- Lines 1384-1389
+-- Lines 1387-1392
 function HUDManager:on_hit_confirmed()
 	if not managers.user:get_setting("hit_indicator") then
 		return
@@ -1305,7 +1306,7 @@ function HUDManager:on_hit_confirmed()
 	self._hud_hit_confirm:on_hit_confirmed()
 end
 
--- Lines 1391-1396
+-- Lines 1394-1399
 function HUDManager:on_headshot_confirmed()
 	if not managers.user:get_setting("hit_indicator") then
 		return
@@ -1314,7 +1315,7 @@ function HUDManager:on_headshot_confirmed()
 	self._hud_hit_confirm:on_headshot_confirmed()
 end
 
--- Lines 1398-1403
+-- Lines 1401-1406
 function HUDManager:on_crit_confirmed()
 	if not managers.user:get_setting("hit_indicator") then
 		return
@@ -1323,75 +1324,75 @@ function HUDManager:on_crit_confirmed()
 	self._hud_hit_confirm:on_crit_confirmed()
 end
 
--- Lines 1407-1410
+-- Lines 1410-1413
 function HUDManager:_create_hit_direction(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	self._hud_hit_direction = HUDHitDirection:new(hud)
 end
 
--- Lines 1412-1414
+-- Lines 1415-1417
 function HUDManager:on_hit_direction(dir, unit_type_hit, fixed_angle)
 	self._hud_hit_direction:on_hit_direction(dir, unit_type_hit, fixed_angle)
 end
 
--- Lines 1418-1421
+-- Lines 1421-1424
 function HUDManager:_create_downed_hud(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_DOWNED_HUD)
 	self._hud_player_downed = HUDPlayerDowned:new(hud)
 end
 
--- Lines 1423-1425
+-- Lines 1426-1428
 function HUDManager:on_downed()
 	self._hud_player_downed:on_downed()
 end
 
--- Lines 1427-1429
+-- Lines 1430-1432
 function HUDManager:on_arrested()
 	self._hud_player_downed:on_arrested()
 end
 
--- Lines 1433-1436
+-- Lines 1436-1439
 function HUDManager:_create_custody_hud(hud)
 	hud = hud or managers.hud:script(PlayerBase.PLAYER_CUSTODY_HUD)
 	self._hud_player_custody = HUDPlayerCustody:new(hud)
 end
 
--- Lines 1438-1440
+-- Lines 1441-1443
 function HUDManager:set_custody_respawn_time(time)
 	self._hud_player_custody:set_respawn_time(time)
 end
 
--- Lines 1442-1444
+-- Lines 1445-1447
 function HUDManager:set_custody_timer_visibility(visible)
 	self._hud_player_custody:set_timer_visibility(visible)
 end
 
--- Lines 1446-1448
+-- Lines 1449-1451
 function HUDManager:set_custody_civilians_killed(amount)
 	self._hud_player_custody:set_civilians_killed(amount)
 end
 
--- Lines 1450-1452
+-- Lines 1453-1455
 function HUDManager:set_custody_trade_delay(time)
 	self._hud_player_custody:set_trade_delay(time)
 end
 
--- Lines 1454-1456
+-- Lines 1457-1459
 function HUDManager:set_custody_trade_delay_visible(visible)
 	self._hud_player_custody:set_trade_delay_visible(visible)
 end
 
--- Lines 1458-1460
+-- Lines 1461-1463
 function HUDManager:set_custody_negotiating_visible(visible)
 	self._hud_player_custody:set_negotiating_visible(visible)
 end
 
--- Lines 1462-1464
+-- Lines 1465-1467
 function HUDManager:set_custody_can_be_trade_visible(visible)
 	self._hud_player_custody:set_can_be_trade_visible(visible)
 end
 
--- Lines 1468-1517
+-- Lines 1471-1520
 function HUDManager:align_teammate_name_label(panel, interact)
 	local double_radius = interact:radius() * 2
 	local text = panel:child("text")
@@ -1436,7 +1437,7 @@ function HUDManager:align_teammate_name_label(panel, interact)
 	end
 end
 
--- Lines 1522-1581
+-- Lines 1525-1584
 function HUDManager:_add_name_label(data)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
@@ -1558,7 +1559,7 @@ function HUDManager:_add_name_label(data)
 	return id
 end
 
--- Lines 1583-1623
+-- Lines 1586-1626
 function HUDManager:add_vehicle_name_label(data)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels].id or 0
@@ -1663,7 +1664,7 @@ function HUDManager:add_vehicle_name_label(data)
 	return id
 end
 
--- Lines 1626-1640
+-- Lines 1629-1643
 function HUDManager:_remove_name_label(id)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 
@@ -1681,7 +1682,7 @@ function HUDManager:_remove_name_label(id)
 	end
 end
 
--- Lines 1642-1653
+-- Lines 1645-1656
 function HUDManager:_name_label_by_peer_id(peer_id)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 
@@ -1696,7 +1697,7 @@ function HUDManager:_name_label_by_peer_id(peer_id)
 	end
 end
 
--- Lines 1655-1666
+-- Lines 1658-1669
 function HUDManager:_get_name_label(id)
 	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
 
@@ -1711,7 +1712,7 @@ function HUDManager:_get_name_label(id)
 	end
 end
 
--- Lines 1667-1672
+-- Lines 1670-1675
 function HUDManager:set_name_label_carry_info(peer_id, carry_id, value)
 	local name_label = self:_name_label_by_peer_id(peer_id)
 
@@ -1720,7 +1721,7 @@ function HUDManager:set_name_label_carry_info(peer_id, carry_id, value)
 	end
 end
 
--- Lines 1674-1681
+-- Lines 1677-1684
 function HUDManager:set_vehicle_label_carry_info(label_id, value, number)
 	local name_label = self:_get_name_label(label_id)
 
@@ -1731,7 +1732,7 @@ function HUDManager:set_vehicle_label_carry_info(label_id, value, number)
 	end
 end
 
--- Lines 1684-1689
+-- Lines 1687-1692
 function HUDManager:remove_name_label_carry_info(peer_id)
 	local name_label = self:_name_label_by_peer_id(peer_id)
 
@@ -1740,7 +1741,7 @@ function HUDManager:remove_name_label_carry_info(peer_id)
 	end
 end
 
--- Lines 1691-1733
+-- Lines 1694-1736
 function HUDManager:teammate_progress(peer_id, type_index, enabled, tweak_data_id, timer, success)
 	local name_label = self:_name_label_by_peer_id(peer_id)
 
@@ -1804,7 +1805,7 @@ function HUDManager:teammate_progress(peer_id, type_index, enabled, tweak_data_i
 	end
 end
 
--- Lines 1735-1743
+-- Lines 1738-1746
 function HUDManager:_animate_label_interact(panel, interact, timer)
 	local t = 0
 
@@ -1818,24 +1819,24 @@ function HUDManager:_animate_label_interact(panel, interact, timer)
 	interact:set_current(1)
 end
 
--- Lines 1745-1747
+-- Lines 1748-1750
 function HUDManager:toggle_chatinput()
 	self:set_chat_focus(true)
 end
 
--- Lines 1749-1751
+-- Lines 1752-1754
 function HUDManager:chat_focus()
 	return self._chat_focus
 end
 
--- Lines 1753-1757
+-- Lines 1756-1760
 function HUDManager:set_chat_skip_first(skip_first)
 	if self._hud_chat then
 		self._hud_chat:set_skip_first(skip_first)
 	end
 end
 
--- Lines 1760-1777
+-- Lines 1763-1780
 function HUDManager:set_chat_focus(focus)
 	if not self:alive(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2) then
 		return
@@ -1857,24 +1858,24 @@ function HUDManager:set_chat_focus(focus)
 	end
 end
 
--- Lines 1781-1786
+-- Lines 1784-1789
 function HUDManager:setup_access_camera_hud()
 	local hud = managers.hud:script(IngameAccessCamera.GUI_SAFERECT)
 	local full_hud = managers.hud:script(IngameAccessCamera.GUI_FULLSCREEN)
 	self._hud_access_camera = HUDAccessCamera:new(hud, full_hud)
 end
 
--- Lines 1788-1790
+-- Lines 1791-1793
 function HUDManager:set_access_camera_name(name)
 	self._hud_access_camera:set_camera_name(name)
 end
 
--- Lines 1792-1794
+-- Lines 1795-1797
 function HUDManager:set_access_camera_destroyed(destroyed, no_feed)
 	self._hud_access_camera:set_destroyed(destroyed, no_feed)
 end
 
--- Lines 1796-1803
+-- Lines 1799-1806
 function HUDManager:start_access_camera()
 	self._hud_access_camera:start()
 
@@ -1885,7 +1886,7 @@ function HUDManager:start_access_camera()
 	self._hud_chat = self._hud_chat_access or self._hud_chat
 end
 
--- Lines 1805-1812
+-- Lines 1808-1815
 function HUDManager:stop_access_camera()
 	self._hud_access_camera:stop()
 
@@ -1896,17 +1897,17 @@ function HUDManager:stop_access_camera()
 	self._hud_chat = self._hud_chat_ingame or self._hud_chat
 end
 
--- Lines 1814-1816
+-- Lines 1817-1819
 function HUDManager:access_camera_track(i, cam, pos)
 	self._hud_access_camera:draw_marker(i, self._workspace:world_to_screen(cam, pos))
 end
 
--- Lines 1818-1820
+-- Lines 1821-1823
 function HUDManager:access_camera_track_max_amount(amount)
 	self._hud_access_camera:max_markers(amount)
 end
 
--- Lines 1824-1829
+-- Lines 1827-1832
 function HUDManager:setup_driving_hud()
 	print("HUDManager:setup_driving_hud()")
 
@@ -1915,138 +1916,138 @@ function HUDManager:setup_driving_hud()
 	self._hud_driving = HUDDriving:new(hud, full_hud)
 end
 
--- Lines 1831-1833
+-- Lines 1834-1836
 function HUDManager:start_driving()
 	self._hud_driving:start()
 end
 
--- Lines 1835-1837
+-- Lines 1838-1840
 function HUDManager:stop_driving()
 	self._hud_driving:stop()
 end
 
--- Lines 1839-1841
+-- Lines 1842-1844
 function HUDManager:set_driving_vehicle_state(speed, rpm, gear)
 	self._hud_driving:set_vehicle_state(speed, rpm, gear)
 end
 
--- Lines 1844-1848
+-- Lines 1847-1851
 function HUDManager:setup_blackscreen_hud()
 	local hud = managers.hud:script(IngameWaitingForPlayersState.LEVEL_INTRO_GUI)
 	self._hud_blackscreen = HUDBlackScreen:new(hud)
 end
 
--- Lines 1850-1852
+-- Lines 1853-1855
 function HUDManager:set_blackscreen_mid_text(...)
 	self._hud_blackscreen:set_mid_text(...)
 end
 
--- Lines 1854-1856
+-- Lines 1857-1859
 function HUDManager:blackscreen_fade_in_mid_text()
 	self._hud_blackscreen:fade_in_mid_text()
 end
 
--- Lines 1858-1860
+-- Lines 1861-1863
 function HUDManager:blackscreen_fade_out_mid_text()
 	self._hud_blackscreen:fade_out_mid_text()
 end
 
--- Lines 1862-1864
+-- Lines 1865-1867
 function HUDManager:set_blackscreen_job_data()
 	self._hud_blackscreen:set_job_data()
 end
 
--- Lines 1866-1868
+-- Lines 1869-1871
 function HUDManager:set_blackscreen_skip_circle(current, total)
 	self._hud_blackscreen:set_skip_circle(current, total)
 end
 
--- Lines 1870-1872
+-- Lines 1873-1875
 function HUDManager:blackscreen_skip_circle_done()
 	self._hud_blackscreen:skip_circle_done()
 end
 
--- Lines 1876-1879
+-- Lines 1879-1882
 function HUDManager:setup_mission_briefing_hud()
 	local hud = managers.hud:script(IngameWaitingForPlayersState.GUI_FULLSCREEN)
 	self._hud_mission_briefing = HUDMissionBriefing:new(hud, self:workspace("fullscreen_workspace", "menu"))
 end
 
--- Lines 1881-1885
+-- Lines 1884-1888
 function HUDManager:hide_mission_briefing_hud()
 	if self._hud_mission_briefing then
 		self._hud_mission_briefing:hide()
 	end
 end
 
--- Lines 1887-1891
+-- Lines 1890-1894
 function HUDManager:layout_mission_briefing_hud()
 	if self._hud_mission_briefing then
 		self._hud_mission_briefing:update_layout()
 	end
 end
 
--- Lines 1893-1895
+-- Lines 1896-1898
 function HUDManager:get_mission_briefing_hud()
 	return self._hud_mission_briefing
 end
 
--- Lines 1897-1899
+-- Lines 1900-1902
 function HUDManager:set_player_slot(nr, params)
 	self._hud_mission_briefing:set_player_slot(nr, params)
 end
 
--- Lines 1901-1903
+-- Lines 1904-1906
 function HUDManager:set_slot_joining(peer, peer_id)
 	self._hud_mission_briefing:set_slot_joining(peer, peer_id)
 end
 
--- Lines 1905-1907
+-- Lines 1908-1910
 function HUDManager:set_slot_ready(peer, peer_id)
 	self._hud_mission_briefing:set_slot_ready(peer, peer_id)
 end
 
--- Lines 1909-1911
+-- Lines 1912-1914
 function HUDManager:set_slot_not_ready(peer, peer_id)
 	self._hud_mission_briefing:set_slot_not_ready(peer, peer_id)
 end
 
--- Lines 1913-1915
+-- Lines 1916-1918
 function HUDManager:set_dropin_progress(peer_id, progress_percentage, mode)
 	self._hud_mission_briefing:set_dropin_progress(peer_id, progress_percentage, mode)
 end
 
--- Lines 1917-1919
+-- Lines 1920-1922
 function HUDManager:set_player_slots_kit(slot)
 	self._hud_mission_briefing:set_player_slots_kit(slot)
 end
 
--- Lines 1921-1923
+-- Lines 1924-1926
 function HUDManager:set_kit_selection(peer_id, category, id, slot)
 	self._hud_mission_briefing:set_kit_selection(peer_id, category, id, slot)
 end
 
--- Lines 1925-1927
+-- Lines 1928-1930
 function HUDManager:set_slot_outfit(slot, criminal_name, outfit)
 	self._hud_mission_briefing:set_slot_outfit(slot, criminal_name, outfit)
 end
 
--- Lines 1929-1931
+-- Lines 1932-1934
 function HUDManager:set_slot_voice(peer, peer_id, active)
 	self._hud_mission_briefing:set_slot_voice(peer, peer_id, active)
 end
 
--- Lines 1933-1935
+-- Lines 1936-1938
 function HUDManager:remove_player_slot_by_peer_id(peer, reason)
 	self._hud_mission_briefing:remove_player_slot_by_peer_id(peer, reason)
 end
 
--- Lines 1937-1939
+-- Lines 1940-1942
 function HUDManager:is_inside_mission_briefing_slot(peer_id, child, x, y)
 	return self._hud_mission_briefing:inside_slot(peer_id, child, x, y)
 end
 
--- Lines 1943-1956
+-- Lines 1946-1959
 function HUDManager:setup_endscreen_hud()
 	local ws = self:workspace("fullscreen_workspace", "menu")
 	local hud = managers.hud:script(MissionEndState.GUI_ENDSCREEN)
@@ -2058,84 +2059,84 @@ function HUDManager:setup_endscreen_hud()
 	end
 end
 
--- Lines 1958-1962
+-- Lines 1961-1965
 function HUDManager:hide_endscreen_hud()
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:hide()
 	end
 end
 
--- Lines 1964-1968
+-- Lines 1967-1971
 function HUDManager:show_endscreen_hud()
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:show()
 	end
 end
 
--- Lines 1970-1974
+-- Lines 1973-1977
 function HUDManager:layout_endscreen_hud()
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:update_layout()
 	end
 end
 
--- Lines 1977-1981
+-- Lines 1980-1984
 function HUDManager:set_continue_button_text_endscreen_hud(text)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:set_continue_button_text(text)
 	end
 end
 
--- Lines 1983-1987
+-- Lines 1986-1990
 function HUDManager:set_success_endscreen_hud(success, server_left)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:set_success(success, server_left)
 	end
 end
 
--- Lines 1989-1993
+-- Lines 1992-1996
 function HUDManager:set_statistics_endscreen_hud(criminals_completed, success)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:set_statistics(criminals_completed, success)
 	end
 end
 
--- Lines 1994-1998
+-- Lines 1997-2001
 function HUDManager:set_special_packages_endscreen_hud(params)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:set_special_packages(params)
 	end
 end
 
--- Lines 2000-2004
+-- Lines 2003-2007
 function HUDManager:set_speed_up_endscreen_hud(multiplier)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:set_speed_up(multiplier)
 	end
 end
 
--- Lines 2006-2018
+-- Lines 2009-2021
 function HUDManager:set_group_statistics_endscreen_hud(best_kills, best_kills_score, best_special_kills, best_special_kills_score, best_accuracy, best_accuracy_score, most_downs, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:set_group_statistics(best_kills, best_kills_score, best_special_kills, best_special_kills_score, best_accuracy, best_accuracy_score, most_downs, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	end
 end
 
--- Lines 2020-2024
+-- Lines 2023-2027
 function HUDManager:send_xp_data_endscreen_hud(data, done_clbk)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:send_xp_data(data, done_clbk)
 	end
 end
 
--- Lines 2026-2030
+-- Lines 2029-2033
 function HUDManager:update_endscreen_hud(t, dt)
 	if self._hud_stage_endscreen then
 		self._hud_stage_endscreen:update(t, dt)
 	end
 end
 
--- Lines 2036-2042
+-- Lines 2039-2045
 function HUDManager:setup_lootscreen_hud()
 	local hud = managers.hud:script(IngameLobbyMenuState.GUI_LOOTSCREEN)
 	self._hud_lootscreen = HUDLootScreen:new(hud, self:workspace("fullscreen_workspace", "menu"), self._saved_lootdrop, self._saved_selected, self._saved_card_chosen, self._saved_setup)
@@ -2144,21 +2145,21 @@ function HUDManager:setup_lootscreen_hud()
 	self._saved_card_chosen = nil
 end
 
--- Lines 2044-2048
+-- Lines 2047-2051
 function HUDManager:hide_lootscreen_hud()
 	if self._hud_lootscreen then
 		self._hud_lootscreen:hide()
 	end
 end
 
--- Lines 2050-2054
+-- Lines 2053-2057
 function HUDManager:show_lootscreen_hud()
 	if self._hud_lootscreen then
 		self._hud_lootscreen:show()
 	end
 end
 
--- Lines 2056-2063
+-- Lines 2059-2066
 function HUDManager:make_cards_hud(peer, max_pc, left_card, right_card)
 	if self._hud_lootscreen then
 		self._hud_lootscreen:make_cards(peer, max_pc, left_card, right_card)
@@ -2174,7 +2175,7 @@ function HUDManager:make_cards_hud(peer, max_pc, left_card, right_card)
 	end
 end
 
--- Lines 2065-2072
+-- Lines 2068-2075
 function HUDManager:make_lootdrop_hud(lootdrop_data)
 	if self._hud_lootscreen then
 		self._hud_lootscreen:make_lootdrop(lootdrop_data)
@@ -2185,7 +2186,7 @@ function HUDManager:make_lootdrop_hud(lootdrop_data)
 	end
 end
 
--- Lines 2074-2081
+-- Lines 2077-2084
 function HUDManager:set_selected_lootcard(peer_id, selected)
 	if self._hud_lootscreen then
 		self._hud_lootscreen:set_selected(peer_id, selected)
@@ -2195,7 +2196,7 @@ function HUDManager:set_selected_lootcard(peer_id, selected)
 	end
 end
 
--- Lines 2083-2090
+-- Lines 2086-2093
 function HUDManager:confirm_choose_lootcard(peer_id, card_id)
 	if self._hud_lootscreen then
 		self._hud_lootscreen:begin_choose_card(peer_id, card_id)
@@ -2205,19 +2206,61 @@ function HUDManager:confirm_choose_lootcard(peer_id, card_id)
 	end
 end
 
--- Lines 2092-2094
+-- Lines 2095-2097
 function HUDManager:get_lootscreen_hud()
 	return self._hud_lootscreen
 end
 
--- Lines 2097-2101
+-- Lines 2100-2104
 function HUDManager:layout_lootscreen_hud()
 	if self._hud_lootscreen then
 		self._hud_lootscreen:update_layout()
 	end
 end
 
--- Lines 2106-2114
+-- Lines 2109-2113
+function HUDManager:layout_lootscreen_skirmish_hud()
+	if self._hud_lootscreen then
+		self._hud_lootscreen:update_layout()
+	end
+end
+
+-- Lines 2115-2119
+function HUDManager:setup_lootscreen_skirmish_hud()
+	local hud = managers.hud:script(IngameLobbyMenuState.GUI_LOOTSCREEN)
+	self._hud_lootscreen = HUDLootScreenSkirmish:new(hud, self:workspace("fullscreen_workspace", "menu"), self._saved_lootdrop, self._saved_setup)
+	self._saved_lootdrop = nil
+end
+
+-- Lines 2121-2125
+function HUDManager:hide_lootscreen_skirmish_hud()
+	if self._hud_lootscreen then
+		self._hud_lootscreen:hide()
+	end
+end
+
+-- Lines 2127-2131
+function HUDManager:show_lootscreen_skirmish_hud()
+	if self._hud_lootscreen then
+		self._hud_lootscreen:show()
+	end
+end
+
+-- Lines 2133-2140
+function HUDManager:make_skirmish_cards_hud(peer, amount_cards)
+	if self._hud_lootscreen then
+		self._hud_lootscreen:make_cards(peer, amount_cards)
+	else
+		self._saved_setup = self._saved_setup or {}
+
+		table.insert(self._saved_setup, {
+			peer = peer,
+			amount_cards = amount_cards
+		})
+	end
+end
+
+-- Lines 2145-2153
 function HUDManager:_create_test_circle()
 	if self._test_circle then
 		self._test_circle:remove()
@@ -2235,17 +2278,17 @@ function HUDManager:_create_test_circle()
 	self._test_circle._circle:animate(callback(self, self, "_animate_test_circle"))
 end
 
--- Lines 2118-2120
+-- Lines 2157-2159
 function HUDManager:set_blackscreen_loading_text_status(status)
 	self._hud_blackscreen:set_loading_text_status(status)
 end
 
--- Lines 2124-2126
+-- Lines 2163-2165
 function HUDManager:set_custody_respawn_type(is_ai_trade)
 	self._hud_player_custody:set_respawn_type(is_ai_trade)
 end
 
--- Lines 2132-2179
+-- Lines 2171-2218
 function HUDManager:set_ai_stopped(ai_id, stopped)
 	local teammate_panel = self._teammate_panels[ai_id]
 
@@ -2259,11 +2302,10 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 		return
 	end
 
-	local name = panel:child("name") and string.gsub(panel:child("name"):text(), "%W", "")
 	local label = nil
 
 	for _, lbl in ipairs(self._hud.name_labels) do
-		if string.gsub(lbl.character_name, "%W", "") == name then
+		if lbl.id == ai_id then
 			label = lbl
 
 			break
@@ -2311,7 +2353,7 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 	end
 end
 
--- Lines 2186-2194
+-- Lines 2225-2233
 function HUDManager:achievement_popup(id)
 	if managers.network.account:signin_state() ~= "signed in" then
 		return
@@ -2325,22 +2367,22 @@ function HUDManager:achievement_popup(id)
 	HudChallengeNotification.queue(title, text, icon)
 end
 
--- Lines 2197-2200
+-- Lines 2236-2239
 function HUDManager:challenge_popup(d)
 	HudChallengeNotification.queue(managers.localization:to_upper_text("hud_challenge_popup"), managers.localization:to_upper_text(d.name_id))
 end
 
--- Lines 2202-2205
+-- Lines 2241-2244
 function HUDManager:custom_ingame_popup(title_id, text_id, icon_id)
 	HudChallengeNotification.queue(managers.localization:to_upper_text(title_id), managers.localization:to_upper_text(text_id), icon_id)
 end
 
--- Lines 2207-2209
+-- Lines 2246-2248
 function HUDManager:custom_ingame_popup_text(title, text, icon_id)
 	HudChallengeNotification.queue(title, text, icon_id)
 end
 
--- Lines 2212-2233
+-- Lines 2251-2272
 function HUDManager:safe_house_challenge_popup(id, c_type)
 	local d = nil
 	local title_id = "hud_trophy_popup"
@@ -2363,7 +2405,7 @@ function HUDManager:safe_house_challenge_popup(id, c_type)
 	end
 end
 
--- Lines 2236-2241
+-- Lines 2275-2280
 function HUDManager:achievement_milestone_popup(id)
 	local milestone = managers.achievment:get_milestone(id)
 	local title = managers.localization:to_upper_text("hud_achievement_milestone_popup")
@@ -2374,7 +2416,7 @@ function HUDManager:achievement_milestone_popup(id)
 	HudChallengeNotification.queue(title, description, "milestone_trophy", milestone.rewards)
 end
 
--- Lines 2246-2254
+-- Lines 2285-2293
 function HUDManager:register_ingame_workspace(name, obj)
 	self._ingame_workspaces = self._ingame_workspaces or {}
 
@@ -2387,14 +2429,14 @@ function HUDManager:register_ingame_workspace(name, obj)
 	end
 end
 
--- Lines 2256-2258
+-- Lines 2295-2297
 function HUDManager:ingame_workspace(name)
 	return self._ingame_workspaces and self._ingame_workspaces[name]
 end
 
--- Lines 2590-2607
+-- Lines 2629-2646
 function HUDManager:hide_panels(...)
-	-- Lines 2591-2596
+	-- Lines 2630-2635
 	local function fade_out(o)
 		for t, p, dt in seconds(1) do
 			o:set_alpha(1 - p)

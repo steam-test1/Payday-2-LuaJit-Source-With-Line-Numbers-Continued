@@ -11,7 +11,7 @@ require("lib/tweak_data/blackmarket/PlayerStyleTweakData")
 
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 
--- Lines 25-52
+-- Lines 28-59
 function BlackMarketTweakData:init(tweak_data)
 	self:_init_colors(tweak_data)
 	self:_init_materials(tweak_data)
@@ -25,16 +25,52 @@ function BlackMarketTweakData:init(tweak_data)
 	self:_init_bullets(tweak_data)
 	self:_init_projectiles(tweak_data)
 	self:_init_melee_weapons(tweak_data)
-	self:_init_weapon_skins()
+	self:_init_weapon_skins(tweak_data)
 	self:_init_player_styles(tweak_data)
 	self:_init_weapon_mods(tweak_data)
 end
 
--- Lines 149-179
+-- Lines 61-115
+function BlackMarketTweakData:_get_character_groups()
+	local characters_female = {
+		"female_1",
+		"sydney",
+		"joy",
+		"ecp_female"
+	}
+	local characters_female_big = {
+		"bonnie",
+		"ecp_male"
+	}
+	local characters_male = {
+		"dallas",
+		"wolf",
+		"hoxton",
+		"chains",
+		"jowi",
+		"old_hoxton",
+		"dragan",
+		"jacket",
+		"sokol",
+		"dragon",
+		"bodhi",
+		"jimmy",
+		"chico",
+		"myh"
+	}
+	local characters_male_big = {
+		"wild",
+		"max"
+	}
+
+	return characters_female, characters_female_big, characters_male, characters_male_big
+end
+
+-- Lines 162-192
 function BlackMarketTweakData:print_missing_strings(skip_print_id)
 end
 
--- Lines 181-190
+-- Lines 194-203
 function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	for id, data in pairs(tweak_data) do
 		if data.name_id and not data.desc_id then
@@ -47,7 +83,7 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
--- Lines 194-219
+-- Lines 207-232
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	if self.weapon_skins then
 		tweak_data.weapon.factory:create_bonuses(tweak_data, self.weapon_skins)
@@ -81,7 +117,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self:_add_desc_from_name_macro(self.weapon_mods)
 end
 
--- Lines 223-502
+-- Lines 236-515
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {
 		locked = {}
@@ -486,7 +522,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines 506-582
+-- Lines 519-595
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -602,7 +638,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 586-648
+-- Lines 599-661
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -704,7 +740,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 652-691
+-- Lines 665-704
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -746,7 +782,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 695-727
+-- Lines 708-740
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -780,7 +816,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 729-742
+-- Lines 742-755
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -797,7 +833,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 744-755
+-- Lines 757-768
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

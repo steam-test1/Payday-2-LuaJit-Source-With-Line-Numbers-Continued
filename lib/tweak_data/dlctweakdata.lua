@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4481
+-- Lines 10-4488
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -7946,6 +7946,18 @@ function DLCTweakData:init(tweak_data)
 			type_items = "weapon_skins",
 			item_entry = "color_blue_payday",
 			amount = 1
+		}
+	}
+	self.ach_trd_sus_1 = {
+		dlc = "has_achievement",
+		achievement_id = "trk_sh_0",
+		content = {}
+	}
+	self.ach_trd_sus_1.content.loot_global_value = "sus"
+	self.ach_trd_sus_1.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "slaughterhouse"
 		}
 	}
 	self.ach_trd_bex_1 = {

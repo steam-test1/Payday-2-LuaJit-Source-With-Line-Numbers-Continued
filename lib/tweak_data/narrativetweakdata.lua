@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-4180
+-- Lines 3-4209
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -6357,8 +6357,8 @@ function NarrativeTweakData:init(tweak_data)
 	self.jobs.skm_mus.contract_visuals.min_mission_xp = skirmish_exp.min
 	self.jobs.skm_mus.contract_visuals.max_mission_xp = skirmish_exp.max
 	self.jobs.skm_mus.contract_visuals.preview_image = {
-		id = "tag",
-		folder = "tag"
+		id = "skm_mus",
+		folder = "shl"
 	}
 	self.jobs.skm_mus.contract_visuals.weekly_skirmish_image = "guis/textures/pd2/skirmish/menu_landing_mus"
 	self.jobs.skm_mus.date_added = {
@@ -6403,8 +6403,8 @@ function NarrativeTweakData:init(tweak_data)
 	self.jobs.skm_red2.contract_visuals.min_mission_xp = skirmish_exp.min
 	self.jobs.skm_red2.contract_visuals.max_mission_xp = skirmish_exp.max
 	self.jobs.skm_red2.contract_visuals.preview_image = {
-		id = "tag",
-		folder = "tag"
+		id = "skm_red2",
+		folder = "shl"
 	}
 	self.jobs.skm_red2.contract_visuals.weekly_skirmish_image = "guis/textures/pd2/skirmish/menu_landing_red2"
 	self.jobs.skm_red2.date_added = {
@@ -6449,8 +6449,8 @@ function NarrativeTweakData:init(tweak_data)
 	self.jobs.skm_run.contract_visuals.min_mission_xp = skirmish_exp.min
 	self.jobs.skm_run.contract_visuals.max_mission_xp = skirmish_exp.max
 	self.jobs.skm_run.contract_visuals.preview_image = {
-		id = "tag",
-		folder = "tag"
+		id = "skm_run",
+		folder = "shl"
 	}
 	self.jobs.skm_run.contract_visuals.weekly_skirmish_image = "guis/textures/pd2/skirmish/menu_landing_run"
 	self.jobs.skm_run.date_added = {
@@ -6495,14 +6495,239 @@ function NarrativeTweakData:init(tweak_data)
 	self.jobs.skm_watchdogs_stage2.contract_visuals.min_mission_xp = skirmish_exp.min
 	self.jobs.skm_watchdogs_stage2.contract_visuals.max_mission_xp = skirmish_exp.max
 	self.jobs.skm_watchdogs_stage2.contract_visuals.preview_image = {
-		id = "tag",
-		folder = "tag"
+		id = "skm_watchdogs",
+		folder = "shl"
 	}
 	self.jobs.skm_watchdogs_stage2.contract_visuals.weekly_skirmish_image = "guis/textures/pd2/skirmish/menu_landing_watchdogs"
 	self.jobs.skm_watchdogs_stage2.date_added = {
 		2018,
 		4,
 		23
+	}
+	self.stages.skm_bex = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "skm_bex"
+	}
+	self.jobs.skm_bex = {
+		name_id = "heist_skm_bex",
+		briefing_id = "heist_skm_bex_crimenet",
+		contact = "skirmish",
+		region = "street",
+		jc = 60,
+		chain = {
+			self.stages.skm_bex
+		},
+		briefing_event = "pln_fwb_cbf_01",
+		debrief_event = "pln_fwb_34",
+		crimenet_callouts = {
+			"Play_loc_tag_cnc_01"
+		},
+		crimenet_videos = {
+			"codex/locke1"
+		},
+		payout = skirmish_payout,
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			200000,
+			200000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.skm_bex.contract_visuals.min_mission_xp = skirmish_exp.min
+	self.jobs.skm_bex.contract_visuals.max_mission_xp = skirmish_exp.max
+	self.jobs.skm_bex.contract_visuals.preview_image = {
+		id = "skm_bex",
+		folder = "shl"
+	}
+	self.jobs.skm_bex.date_added = {
+		2020,
+		4,
+		28
+	}
+	self.stages.skm_cas = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "skm_cas"
+	}
+	self.jobs.skm_cas = {
+		name_id = "heist_skm_cas",
+		briefing_id = "heist_skm_cas_crimenet",
+		contact = "skirmish",
+		region = "street",
+		jc = 60,
+		chain = {
+			self.stages.skm_cas
+		},
+		briefing_event = "pln_fwb_cbf_01",
+		debrief_event = "pln_fwb_34",
+		crimenet_callouts = {
+			"Play_loc_tag_cnc_01"
+		},
+		crimenet_videos = {
+			"codex/locke1"
+		},
+		payout = skirmish_payout,
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			200000,
+			200000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.skm_cas.contract_visuals.min_mission_xp = skirmish_exp.min
+	self.jobs.skm_cas.contract_visuals.max_mission_xp = skirmish_exp.max
+	self.jobs.skm_cas.contract_visuals.preview_image = {
+		id = "skm_cas",
+		folder = "shl"
+	}
+	self.jobs.skm_cas.date_added = {
+		2020,
+		4,
+		28
+	}
+	self.stages.skm_big2 = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "skm_big2"
+	}
+	self.jobs.skm_big2 = {
+		name_id = "heist_skm_big2",
+		briefing_id = "heist_skm_big2_crimenet",
+		contact = "skirmish",
+		region = "street",
+		jc = 60,
+		chain = {
+			self.stages.skm_big2
+		},
+		briefing_event = "pln_fwb_cbf_01",
+		debrief_event = "pln_fwb_34",
+		crimenet_callouts = {
+			"Play_loc_tag_cnc_01"
+		},
+		crimenet_videos = {
+			"codex/locke1"
+		},
+		payout = skirmish_payout,
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			200000,
+			200000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.skm_big2.contract_visuals.min_mission_xp = skirmish_exp.min
+	self.jobs.skm_big2.contract_visuals.max_mission_xp = skirmish_exp.max
+	self.jobs.skm_big2.contract_visuals.preview_image = {
+		id = "skm_big2",
+		folder = "shl"
+	}
+	self.jobs.skm_big2.date_added = {
+		2020,
+		4,
+		28
+	}
+	self.stages.skm_mallcrasher = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "skm_mallcrasher"
+	}
+	self.jobs.skm_mallcrasher = {
+		name_id = "heist_skm_mallcrasher",
+		briefing_id = "heist_skm_mallcrasher_crimenet",
+		contact = "skirmish",
+		region = "street",
+		jc = 60,
+		chain = {
+			self.stages.skm_mallcrasher
+		},
+		briefing_event = "pln_fwb_cbf_01",
+		debrief_event = "pln_fwb_34",
+		crimenet_callouts = {
+			"Play_loc_tag_cnc_01"
+		},
+		crimenet_videos = {
+			"codex/locke1"
+		},
+		payout = skirmish_payout,
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			200000,
+			200000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.skm_mallcrasher.contract_visuals.min_mission_xp = skirmish_exp.min
+	self.jobs.skm_mallcrasher.contract_visuals.max_mission_xp = skirmish_exp.max
+	self.jobs.skm_mallcrasher.contract_visuals.preview_image = {
+		id = "skm_mallcrasher",
+		folder = "shl"
+	}
+	self.jobs.skm_mallcrasher.date_added = {
+		2020,
+		4,
+		28
+	}
+	self.stages.skm_arena = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "skm_arena"
+	}
+	self.jobs.skm_arena = {
+		name_id = "heist_skm_arena",
+		briefing_id = "heist_skm_arena_crimenet",
+		contact = "skirmish",
+		region = "street",
+		jc = 60,
+		chain = {
+			self.stages.skm_arena
+		},
+		briefing_event = "pln_fwb_cbf_01",
+		debrief_event = "pln_fwb_34",
+		crimenet_callouts = {
+			"Play_loc_tag_cnc_01"
+		},
+		crimenet_videos = {
+			"codex/locke1"
+		},
+		payout = skirmish_payout,
+		contract_cost = {
+			16000,
+			32000,
+			80000,
+			160000,
+			200000,
+			200000,
+			200000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.skm_arena.contract_visuals.min_mission_xp = skirmish_exp.min
+	self.jobs.skm_arena.contract_visuals.max_mission_xp = skirmish_exp.max
+	self.jobs.skm_arena.contract_visuals.preview_image = {
+		id = "skm_arena",
+		folder = "shl"
+	}
+	self.jobs.skm_arena.date_added = {
+		2020,
+		4,
+		28
 	}
 	self._jobs_index = {
 		"jewelry_store",
@@ -6586,6 +6811,11 @@ function NarrativeTweakData:init(tweak_data)
 		"skm_red2",
 		"skm_run",
 		"skm_watchdogs_stage2",
+		"skm_cas",
+		"skm_big2",
+		"skm_mallcrasher",
+		"skm_arena",
+		"skm_bex",
 		"vit",
 		"bph",
 		"mex",
@@ -6657,7 +6887,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 4184-4199
+-- Lines 4213-4228
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -6676,22 +6906,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 4201-4203
+-- Lines 4230-4232
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 4205-4207
+-- Lines 4234-4236
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 4211-4213
+-- Lines 4240-4242
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 4217-4224
+-- Lines 4246-4253
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -6702,12 +6932,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 4228-4230
+-- Lines 4257-4259
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 4234-4250
+-- Lines 4263-4279
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -6724,7 +6954,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 4252-4262
+-- Lines 4281-4291
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -6737,7 +6967,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 4266-4317
+-- Lines 4295-4346
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -6794,7 +7024,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4321-4333
+-- Lines 4350-4362
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -6811,7 +7041,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4337-4352
+-- Lines 4366-4381
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

@@ -1,15 +1,35 @@
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
+local material_defaults = {
+	diffuse_layer1_texture = Idstring("units/payday2_cash/safes/default/base_gradient/base_default_df"),
+	diffuse_layer2_texture = Idstring("units/payday2_cash/safes/default/pattern_gradient/gradient_default_df"),
+	diffuse_layer0_texture = Idstring("units/payday2_cash/safes/default/pattern/pattern_default_df"),
+	diffuse_layer3_texture = Idstring("units/payday2_cash/safes/default/sticker/sticker_default_df")
+}
+local material_textures = {
+	pattern = "diffuse_layer0_texture",
+	sticker = "diffuse_layer3_texture",
+	pattern_gradient = "diffuse_layer2_texture",
+	base_gradient = "diffuse_layer1_texture"
+}
+local material_variables = {
+	cubemap_pattern_control = "cubemap_pattern_control",
+	pattern_pos = "pattern_pos",
+	uv_scale = "uv_scale",
+	uv_offset_rot = "uv_offset_rot",
+	pattern_tweak = "pattern_tweak",
+	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
+}
 
--- Lines 23-26
+-- Lines 50-53
 function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	self:set_cosmetics_data(cosmetics)
 	self:_apply_cosmetics(async_clbk or function ()
 	end)
 end
 
--- Lines 29-75
+-- Lines 56-110
 function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	if not cosmetics then
 		self._cosmetics_id = nil
@@ -27,8 +47,11 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	self._cosmetics_data = self._cosmetics_id and tweak_data.blackmarket.weapon_skins[self._cosmetics_id]
 	self._cosmetics_color_index = cosmetics and cosmetics.color_index
 
-	if self._cosmetics_color_index then
-		if not self._cosmetics_data[self._cosmetics_color_index] then
+	if self._cosmetics_color_index and self._cosmetics_data and self._cosmetics_data.color_skin_data then
+		local color_skin_data = self._cosmetics_data.color_skin_data
+		local variation_template = tweak_data.blackmarket.weapon_color_templates.color_variation[self._cosmetics_color_index]
+
+		if not variation_template then
 			self._cosmetics_id = nil
 			self._cosmetics_quality = nil
 			self._cosmetics_bonus = nil
@@ -38,15 +61,21 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 			return
 		end
 
-		local weapon_color_data = {}
+		local variation_data = {
+			base_none = material_defaults.diffuse_layer1_texture,
+			pattern_none = material_defaults.diffuse_layer0_texture,
+			gradient_none = material_defaults.diffuse_layer2_texture
+		}
 
-		for k, v in pairs(self._cosmetics_data) do
-			if type(k) ~= "number" then
-				weapon_color_data[k] = v
-			end
+		for key, value in pairs(variation_template) do
+			variation_data[key] = color_skin_data[value]
 		end
 
-		for k, v in pairs(self._cosmetics_data[self._cosmetics_color_index]) do
+		local weapon_color_data = {}
+
+		tweak_data.blackmarket:populate_weapon_color_skin(weapon_color_data, variation_data, self._name_id)
+
+		for k, v in pairs(self._cosmetics_data) do
 			weapon_color_data[k] = v
 		end
 
@@ -54,32 +83,32 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	end
 end
 
--- Lines 78-80
+-- Lines 113-115
 function NewRaycastWeaponBase:get_cosmetics_color_index()
 	return self._cosmetics_color_index
 end
 
--- Lines 82-84
+-- Lines 117-119
 function NewRaycastWeaponBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines 86-88
+-- Lines 121-123
 function NewRaycastWeaponBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines 90-92
+-- Lines 125-127
 function NewRaycastWeaponBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines 94-96
+-- Lines 129-131
 function NewRaycastWeaponBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines 98-126
+-- Lines 133-161
 function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_material_config, force_third_person)
 	force_third_person = force_third_person or _G.IS_VR
 
@@ -105,7 +134,7 @@ function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_m
 	return Idstring(unit_name .. "_cc")
 end
 
--- Lines 128-183
+-- Lines 163-218
 function NewRaycastWeaponBase:_update_materials()
 	if not self._parts then
 		return
@@ -165,28 +194,7 @@ function NewRaycastWeaponBase:_update_materials()
 	end
 end
 
-local material_defaults = {
-	diffuse_layer1_texture = Idstring("units/payday2_cash/safes/default/base_gradient/base_default_df"),
-	diffuse_layer2_texture = Idstring("units/payday2_cash/safes/default/pattern_gradient/gradient_default_df"),
-	diffuse_layer0_texture = Idstring("units/payday2_cash/safes/default/pattern/pattern_default_df"),
-	diffuse_layer3_texture = Idstring("units/payday2_cash/safes/default/sticker/sticker_default_df")
-}
-local material_textures = {
-	pattern = "diffuse_layer0_texture",
-	sticker = "diffuse_layer3_texture",
-	pattern_gradient = "diffuse_layer2_texture",
-	base_gradient = "diffuse_layer1_texture"
-}
-local material_variables = {
-	cubemap_pattern_control = "cubemap_pattern_control",
-	pattern_pos = "pattern_pos",
-	uv_scale = "uv_scale",
-	uv_offset_rot = "uv_offset_rot",
-	pattern_tweak = "pattern_tweak",
-	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
-}
-
--- Lines 212-219
+-- Lines 220-227
 function NewRaycastWeaponBase:get_cosmetic_value(...)
 	local cosmetic_value = self:get_cosmetics_data()
 
@@ -199,7 +207,7 @@ function NewRaycastWeaponBase:get_cosmetic_value(...)
 	return cosmetic_value
 end
 
--- Lines 221-325
+-- Lines 229-333
 function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	material_variables.wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 
@@ -281,7 +289,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 327-338
+-- Lines 335-346
 function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -296,7 +304,7 @@ function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 340-365
+-- Lines 348-373
 function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -315,7 +323,7 @@ function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines 367-402
+-- Lines 375-410
 function NewRaycastWeaponBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 
@@ -352,7 +360,7 @@ function NewRaycastWeaponBase:_set_material_textures()
 	end
 end
 
--- Lines 607-704
+-- Lines 615-712
 function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets)
 	local mag_data = nil
 	local mag_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("magazine", self._factory_id, self._blueprint)
@@ -483,7 +491,7 @@ local mvec3_add = mvector3.add
 local mvec3_sub = mvector3.subtract
 local mvec3_mul = mvector3.multiply
 
--- Lines 726-767
+-- Lines 734-775
 function NewRaycastWeaponBase:drop_magazine_object()
 	if not self._name_id then
 		return

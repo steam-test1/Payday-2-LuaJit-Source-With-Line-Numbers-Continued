@@ -390,7 +390,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 412-2450
+-- Lines 412-2462
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1515,6 +1515,7 @@ Play the full version soon to get your full PAYDAY!]],
 	}
 	self.contour.character.standard_color = Vector3(0.1, 1, 0.5)
 	self.contour.character.friendly_color = Vector3(0.2, 0.8, 1)
+	self.contour.character.friendly_minion_color = Vector3(0.1, 0.4, 1)
 	self.contour.character.downed_color = Vector3(1, 0.5, 0)
 	self.contour.character.dead_color = Vector3(1, 0.1, 0.1)
 	self.contour.character.dangerous_color = Vector3(0.6, 0.2, 0.2)
@@ -1537,7 +1538,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self.contour.deployable = {
 		standard_color = Vector3(0.1, 1, 0.5),
 		selected_color = Vector3(1, 1, 1),
-		active_color = Vector3(0.1, 0.5, 1),
+		active_color = Vector3(0.1, 0.4, 1),
 		interact_color = Vector3(0.1, 1, 0.1),
 		disabled_color = Vector3(1, 0.1, 0.1)
 	}
@@ -2112,6 +2113,12 @@ Play the full version soon to get your full PAYDAY!]],
 		},
 		{
 			track = "music_tag"
+		},
+		{
+			track = "ojos_de_diamante"
+		},
+		{
+			track = "ojos_de_esmeralda"
 		}
 	}
 	self.music.soundbank_list = {
@@ -2713,7 +2720,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2454-2470
+-- Lines 2466-2482
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2731,7 +2738,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2475-2572
+-- Lines 2487-2584
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2810,19 +2817,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2576-2656
+-- Lines 2588-2668
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2660-2662
+-- Lines 2672-2674
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2666-2674
+-- Lines 2678-2686
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2833,7 +2840,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2678-2681
+-- Lines 2690-2693
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2843,7 +2850,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2685-2694
+-- Lines 2697-2706
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2856,7 +2863,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2698-2874
+-- Lines 2710-2886
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3045,7 +3052,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 2876-3049
+-- Lines 2888-3061
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3159,7 +3166,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3051-3123
+-- Lines 3063-3135
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3232,7 +3239,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3126-3130
+-- Lines 3138-3142
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3250,7 +3257,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3147-3362
+-- Lines 3159-3374
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

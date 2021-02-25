@@ -169,18 +169,22 @@ if SteamClass then
 		check_requests_func()
 	end
 
-	-- Lines 260-269
+	-- Lines 260-273
 	function check_requests_func()
 		if not current_request then
 			current_request = table.remove(requests, 1)
 
 			if current_request then
-				steam_http_request(Steam, current_request[1], request_done_func)
+				if current_request[3] and type(current_request[3]) == "table" then
+					steam_http_request(Steam, current_request[1], request_done_func, current_request[3])
+				else
+					steam_http_request(Steam, current_request[1], request_done_func)
+				end
 			end
 		end
 	end
 
-	-- Lines 271-288
+	-- Lines 275-292
 	function SteamClass:http_request(path, clbk, id_key)
 		if id_key then
 			if current_request and current_request[3] and current_request[3] == id_key then

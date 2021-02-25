@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 HUDStatsScreenSkirmish = HUDStatsScreenSkirmish or class(HUDStatsScreen)
 
--- Lines 15-88
+-- Lines 15-100
 function HUDStatsScreenSkirmish:recreate_left()
 	self._left:clear()
 	self._left:bitmap({
@@ -90,6 +90,33 @@ function HUDStatsScreenSkirmish:recreate_left()
 		w = self._left:w() - 16 - 8
 	})
 	placer = UiPlacer:new(16, 0, 8, 4)
+
+	if managers.player:has_category_upgrade("player", "convert_enemies") then
+		local minion_text = placer:add_bottom(loot_panel:fine_text({
+			keep_w = true,
+			text = managers.localization:text("hud_stats_enemies_converted"),
+			font = medium_font,
+			font_size = medium_font_size
+		}))
+
+		placer:add_right(nil, 0)
+
+		local minion_texture, minion_rect = tweak_data.hud_icons:get_icon_data("minions_converted")
+		local minion_icon = placer:add_left(loot_panel:fit_bitmap({
+			w = 17,
+			h = 17,
+			texture = minion_texture,
+			texture_rect = minion_rect
+		}))
+
+		minion_icon:set_center_y(minion_text:center_y())
+		placer:add_left(loot_panel:fine_text({
+			text = tostring(managers.player:num_local_minions()),
+			font = medium_font,
+			font_size = medium_font_size
+		}), 7)
+		placer:new_row()
+	end
 
 	placer:add_bottom(loot_panel:fine_text({
 		keep_w = true,

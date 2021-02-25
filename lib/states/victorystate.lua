@@ -1,15 +1,16 @@
 require("lib/states/GameState")
+require("lib/utils/accelbyte/TelemetryConst")
 
 VictoryState = VictoryState or class(MissionEndState)
 
--- Lines 5-9
+-- Lines 6-10
 function VictoryState:init(game_state_machine, setup)
 	VictoryState.super.init(self, "victoryscreen", game_state_machine, setup)
 
 	self._type = "victory"
 end
 
--- Lines 11-32
+-- Lines 12-33
 function VictoryState:at_enter(...)
 	self._success = true
 
@@ -19,7 +20,7 @@ function VictoryState:at_enter(...)
 		local was_safehouse_raid = managers.job:current_job_id() == "chill_combat"
 
 		if was_safehouse_raid then
-			managers.custom_safehouse:add_coins(tweak_data.safehouse.rewards.raid)
+			managers.custom_safehouse:add_coins(tweak_data.safehouse.rewards.raid, TelemetryConst.economy_origin.safehouse_raid_reward)
 
 			self._safehouse_raid_rewarded = true
 		end
@@ -30,7 +31,7 @@ function VictoryState:at_enter(...)
 	end
 end
 
--- Lines 34-39
+-- Lines 35-40
 function VictoryState:at_exit(...)
 	if self._post_event then
 		self._post_event:stop()
@@ -39,14 +40,14 @@ function VictoryState:at_exit(...)
 	VictoryState.super.at_exit(self, ...)
 end
 
--- Lines 41-45
+-- Lines 42-46
 function VictoryState:_shut_down_network()
 	if managers.dlc:is_trial() then
 		VictoryState.super._shut_down_network(self)
 	end
 end
 
--- Lines 47-52
+-- Lines 48-53
 function VictoryState:_load_start_menu()
 	if managers.dlc:is_trial() then
 		Global.open_trial_buy = true
@@ -55,7 +56,7 @@ function VictoryState:_load_start_menu()
 	end
 end
 
--- Lines 54-63
+-- Lines 55-64
 function VictoryState:_set_continue_button_text()
 	local is_server_or_trial = Network:is_server() or managers.dlc:is_trial()
 	local text_id = not is_server_or_trial and "victory_client_waiting_for_server" or self._completion_bonus_done == false and "menu_es_calculating_experience" or managers.job:on_last_stage() and "menu_victory_goto_payday" or "menu_victory_goto_next_stage"
@@ -67,14 +68,14 @@ function VictoryState:_set_continue_button_text()
 	managers.menu_component:set_endscreen_continue_button_text(text, not is_server_or_trial or not self._completion_bonus_done)
 end
 
--- Lines 65-69
+-- Lines 66-70
 function VictoryState:_continue()
 	if Network:is_server() or managers.dlc:is_trial() then
 		self:continue()
 	end
 end
 
--- Lines 71-92
+-- Lines 72-93
 function VictoryState:continue()
 	if self:_continue_blocked() then
 		return

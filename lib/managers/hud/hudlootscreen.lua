@@ -661,7 +661,7 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	end
 end
 
--- Lines 523-628
+-- Lines 523-669
 function HUDLootScreen:make_lootdrop(lootdrop_data)
 	local peer = lootdrop_data[1]
 	local peer_id = peer and peer:id() or 1
@@ -705,7 +705,7 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 			peer_id,
 			category == "textures" and true or false
 		})
-		local texture_path = nil
+		local texture_path, rarity_path = nil
 
 		if category == "textures" then
 			texture_path = tweak_data.blackmarket.textures[item_id].texture
@@ -741,6 +741,22 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 			else
 				texture_path = "guis/dlcs/cash/safes/default/safes/default_01"
 			end
+		elseif category == "weapon_skins" then
+			local weapon_id = managers.blackmarket:get_weapon_id_by_cosmetic_id(item_id)
+			texture_path, rarity_path = managers.blackmarket:get_weapon_icon_path(weapon_id, {
+				id = item_id
+			})
+		elseif category == "armor_skins" then
+			local skin_tweak = tweak_data.economy.armor_skins[item_id]
+			local guis_catalog = "guis/"
+			local bundle_folder = skin_tweak.texture_bundle_folder
+
+			if bundle_folder then
+				guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
+			end
+
+			texture_path = guis_catalog .. "armor_skins/" .. item_id
+			rarity_path = managers.blackmarket:get_cosmetic_rarity_bg(skin_tweak.rarity or "common")
 		elseif category == "drills" then
 			local td = tweak_data.economy[category] and tweak_data.economy[category][item_id]
 
@@ -781,6 +797,34 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 			texture_path = guis_catalog .. "textures/pd2/blackmarket/icons/" .. tostring(category) .. "/" .. tostring(guis_id)
 		end
 
+		if rarity_path then
+			local rarity_bitmap = item_panel:bitmap({
+				blend_mode = "add",
+				texture = rarity_path
+			})
+			local texture_width = rarity_bitmap:texture_width()
+			local texture_height = rarity_bitmap:texture_height()
+			local panel_width = item_panel:w()
+			local panel_height = item_panel:h()
+			local tw = texture_width
+			local th = texture_height
+			local pw = panel_width
+			local ph = panel_height
+
+			if tw == 0 or th == 0 then
+				Application:error("[MenuNodeOpenContainerGui] BG Texture size error!:", "width", tw, "height", th)
+
+				tw = 1
+				th = 1
+			end
+
+			local sw = math.min(pw, ph * tw / th)
+			local sh = math.min(ph, pw / (tw / th))
+
+			rarity_bitmap:set_size(math.round(sw) * 2, math.round(sh) * 2)
+			rarity_bitmap:set_center(item_panel:w() * 0.5, item_panel:h() * 0.5)
+		end
+
 		Application:debug("Requesting Texture", texture_path, "PEER", peer_id)
 
 		if DB:has(Idstring("texture"), texture_path) then
@@ -798,7 +842,7 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 	end
 end
 
--- Lines 630-682
+-- Lines 671-723
 function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	if not alive(self._peers_panel) then
 		TextureCache:unretrieve(texture_idstring)
@@ -811,6 +855,7 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	local panel = self._peers_panel:child("peer" .. tostring(peer_id)):child("item")
 	local item = panel:bitmap({
 		blend_mode = "normal",
+		layer = 1,
 		texture = texture_idstring
 	})
 
@@ -860,7 +905,7 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	end
 end
 
--- Lines 684-794
+-- Lines 725-841
 function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	if not self._peer_data[peer_id].active then
 		self._peer_data[peer_id].delayed_card_id = card_id
@@ -932,6 +977,11 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 		"upcard_weapon_bonus"
 	}
 
+	table.insert(card_nums, "upcard_cosmetic")
+
+	type_to_card.weapon_skins = #card_nums
+	type_to_card.armor_skins = #card_nums
+
 	for i, pc in ipairs(cards) do
 		local my_card = i == card_id
 		local card_panel = panel:child("card" .. i)
@@ -977,7 +1027,7 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	self._peer_data[peer_id].wait_for_choice = nil
 end
 
--- Lines 796-838
+-- Lines 843-891
 function HUDLootScreen:begin_flip_card(peer_id)
 	self._peer_data[peer_id].wait_t = 5
 	local type_to_card = {
@@ -1004,6 +1054,11 @@ function HUDLootScreen:begin_flip_card(peer_id)
 		"upcard_drill",
 		"upcard_weapon_bonus"
 	}
+
+	table.insert(card_nums, "upcard_cosmetic")
+
+	type_to_card.weapon_skins = #card_nums
+	type_to_card.armor_skins = #card_nums
 	local lootdrop_data = self._peer_data[peer_id].lootdrops
 	local item_category = lootdrop_data[3]
 	local item_id = lootdrop_data[4]
@@ -1046,14 +1101,14 @@ function HUDLootScreen:begin_flip_card(peer_id)
 	self._peer_data[peer_id].chosen_card_id = nil
 end
 
--- Lines 840-843
+-- Lines 893-896
 function HUDLootScreen:debug_flip()
 	local card = self._peers_panel:child("peer1"):child("card1")
 
 	card:animate(callback(self, self, "flipcard"), 1.5)
 end
 
--- Lines 845-980
+-- Lines 898-1033
 function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	local downcard = card_panel:child("downcard")
 	local upcard = card_panel:child("upcard")
@@ -1195,7 +1250,7 @@ function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	end)
 end
 
--- Lines 982-1079
+-- Lines 1035-1132
 function HUDLootScreen:show_item(peer_id)
 	if not self._peer_data[peer_id].active then
 		return
@@ -1211,7 +1266,7 @@ function HUDLootScreen:show_item(peer_id)
 			child:set_center(panel:child("item"):w() * 0.5, panel:child("item"):h() * 0.5)
 		end
 
-		-- Lines 995-997
+		-- Lines 1048-1050
 		local function anim_fadein(o)
 			over(1, function (p)
 				o:set_alpha(p)
@@ -1305,7 +1360,7 @@ function HUDLootScreen:show_item(peer_id)
 	end
 end
 
--- Lines 1081-1111
+-- Lines 1134-1164
 function HUDLootScreen:update(t, dt)
 	for peer_id = 1, tweak_data.max_players do
 		if self._peer_data[peer_id].wait_t then
@@ -1337,12 +1392,12 @@ function HUDLootScreen:update(t, dt)
 	end
 end
 
--- Lines 1113-1115
+-- Lines 1166-1168
 function HUDLootScreen:fetch_local_lootdata()
 	return self._peer_data[self:get_local_peer_id()].lootdrops
 end
 
--- Lines 1117-1268
+-- Lines 1170-1321
 function HUDLootScreen:create_stars_giving_animation()
 	local lootdrops = self:fetch_local_lootdata()
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
@@ -1381,7 +1436,7 @@ function HUDLootScreen:create_stars_giving_animation()
 	star_reason_text:set_h(tweak_data.menu.pd2_medium_font_size)
 	star_reason_text:set_world_center_y(math.round(self._foreground_layer_safe:child("loot_text"):world_center_y()) + 2)
 
-	-- Lines 1158-1263
+	-- Lines 1211-1316
 	local function animation_func(o)
 		local texture, rect = tweak_data.hud_icons:get_icon_data("risk_pd")
 		local latest_star = 0
@@ -1423,12 +1478,12 @@ function HUDLootScreen:create_stars_giving_animation()
 	self._stars_panel:animate(animation_func)
 end
 
--- Lines 1270-1272
+-- Lines 1323-1325
 function HUDLootScreen:get_local_peer_id()
 	return Global.game_settings.single_player and 1 or managers.network:session() and managers.network:session():local_peer():id() or 1
 end
 
--- Lines 1274-1286
+-- Lines 1327-1339
 function HUDLootScreen:check_inside_local_peer(x, y)
 	local peer_id = self:get_local_peer_id()
 	local panel = self._peers_panel:child("peer" .. tostring(peer_id))
@@ -1443,12 +1498,12 @@ function HUDLootScreen:check_inside_local_peer(x, y)
 	end
 end
 
--- Lines 1288-1290
+-- Lines 1341-1343
 function HUDLootScreen:set_layer(layer)
 	self._backdrop:set_layer(layer)
 end
 
--- Lines 1292-1308
+-- Lines 1345-1361
 function HUDLootScreen:reload()
 	self._backdrop:close()
 
@@ -1457,7 +1512,7 @@ function HUDLootScreen:reload()
 	HUDLootScreen.init(self, self._hud, self._workspace)
 end
 
--- Lines 1310-1316
+-- Lines 1363-1369
 function HUDLootScreen:close()
 	self._active = false
 

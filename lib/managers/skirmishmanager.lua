@@ -8,8 +8,10 @@ function SkirmishManager:init()
 	self._global = Global.skirmish_manager
 end
 
--- Lines 13-32
+-- Lines 13-39
 function SkirmishManager:init_finalize()
+	print("SkirmishManager:init_finalize")
+
 	if not self:is_skirmish() then
 		return
 	end
@@ -28,38 +30,43 @@ function SkirmishManager:init_finalize()
 	end
 
 	managers.network:add_event_listener({}, "on_set_dropin", callback(self, self, "block_weekly_progress"))
+
+	self._start_wave = self:wave_range()
+	self._loot_drops = nil
+	self._lootdrops_coroutine = nil
+	self._generated_lootdrops = nil
 end
 
--- Lines 34-37
+-- Lines 41-44
 function SkirmishManager:is_skirmish()
 	local level_tweak = managers.job:current_level_data()
 
 	return level_tweak and level_tweak.group_ai_state == "skirmish"
 end
 
--- Lines 39-41
+-- Lines 46-48
 function SkirmishManager:is_weekly_skirmish()
 	return self:is_skirmish() and Global.game_settings.weekly_skirmish
 end
 
--- Lines 43-46
+-- Lines 50-53
 function SkirmishManager:random_skirmish_job_id()
 	local job_list = tweak_data.skirmish.job_list
 
 	return job_list[math.random(1, #job_list)]
 end
 
--- Lines 48-50
+-- Lines 55-57
 function SkirmishManager:is_unlocked()
 	return managers.experience:current_level() >= 65 or managers.experience:current_rank() > 0
 end
 
--- Lines 52-55
+-- Lines 59-62
 function SkirmishManager:wave_range()
 	return 1, 9
 end
 
--- Lines 67-81
+-- Lines 74-88
 function SkirmishManager:host_weekly_match()
 	if Network:is_server() then
 		return true
@@ -79,7 +86,7 @@ function SkirmishManager:host_weekly_match()
 	return self:active_weekly().key == host_weekly_string:key()
 end
 
--- Lines 83-98
+-- Lines 90-105
 function SkirmishManager:_apply_modifiers_for_wave(wave_number)
 	local modifiers_data = tweak_data.skirmish.wave_modifiers[wave_number]
 
@@ -96,7 +103,7 @@ function SkirmishManager:_apply_modifiers_for_wave(wave_number)
 	end
 end
 
--- Lines 100-110
+-- Lines 107-117
 function SkirmishManager:_apply_weekly_modifiers()
 	for _, modifier_name in ipairs(self:weekly_modifiers()) do
 		local modifier_data = tweak_data.skirmish.weekly_modifiers[modifier_name]
@@ -108,7 +115,7 @@ function SkirmishManager:_apply_weekly_modifiers()
 	end
 end
 
--- Lines 112-118
+-- Lines 119-125
 function SkirmishManager:current_wave_number()
 	if Network:is_server() then
 		return managers.groupai and managers.groupai:state():get_assault_number()
@@ -117,7 +124,7 @@ function SkirmishManager:current_wave_number()
 	end
 end
 
--- Lines 120-129
+-- Lines 127-136
 function SkirmishManager:sync_start_assault(wave_number)
 	if not self:is_skirmish() then
 		return
@@ -130,7 +137,7 @@ function SkirmishManager:sync_start_assault(wave_number)
 	self._synced_wave_number = wave_number
 end
 
--- Lines 131-135
+-- Lines 138-142
 function SkirmishManager:on_start_assault()
 	local wave_number = managers.groupai:state():get_assault_number()
 
@@ -138,7 +145,7 @@ function SkirmishManager:on_start_assault()
 	self:update_matchmake_attributes()
 end
 
--- Lines 137-144
+-- Lines 144-151
 function SkirmishManager:on_end_assault()
 	local new_ransom_amount = tweak_data.skirmish.ransom_amounts[self:current_wave_number()]
 
@@ -149,7 +156,7 @@ function SkirmishManager:on_end_assault()
 	end
 end
 
--- Lines 146-155
+-- Lines 153-162
 function SkirmishManager:set_ransom_amount(amount)
 	self._current_ransom_amount = amount
 
@@ -162,12 +169,12 @@ function SkirmishManager:set_ransom_amount(amount)
 	})
 end
 
--- Lines 157-159
+-- Lines 164-166
 function SkirmishManager:current_ransom_amount()
 	return self._current_ransom_amount or 0
 end
 
--- Lines 161-176
+-- Lines 168-183
 function SkirmishManager:_has_players_in_custody()
 	local session = managers.network:session()
 	local all_peers = session and session:all_peers()
@@ -185,8 +192,10 @@ function SkirmishManager:_has_players_in_custody()
 	return false
 end
 
--- Lines 178-184
+-- Lines 185-194
 function SkirmishManager:check_gameover_conditions()
+	return false
+
 	if not self:is_skirmish() or not self._game_over_delay then
 		return false
 	end
@@ -194,7 +203,7 @@ function SkirmishManager:check_gameover_conditions()
 	return self._game_over_delay < Application:time()
 end
 
--- Lines 186-201
+-- Lines 196-211
 function SkirmishManager:update()
 	if self:_has_players_in_custody() then
 		if not self._game_over_delay then
@@ -213,7 +222,7 @@ function SkirmishManager:update()
 	end
 end
 
--- Lines 203-208
+-- Lines 213-218
 function SkirmishManager:sync_save(data)
 	local state = {
 		wave_number = self:current_wave_number()
@@ -221,14 +230,16 @@ function SkirmishManager:sync_save(data)
 	data.SkirmishManager = state
 end
 
--- Lines 210-213
+-- Lines 220-224
 function SkirmishManager:sync_load(data)
 	local state = data.SkirmishManager
 
 	self:sync_start_assault(state.wave_number)
+
+	self._start_wave = state.wave_number
 end
 
--- Lines 215-226
+-- Lines 226-237
 function SkirmishManager:apply_matchmake_attributes(lobby_attributes)
 	lobby_attributes.skirmish = 0
 
@@ -242,12 +253,12 @@ function SkirmishManager:apply_matchmake_attributes(lobby_attributes)
 	end
 end
 
--- Lines 228-230
+-- Lines 239-241
 function SkirmishManager:update_matchmake_attributes()
 	managers.network.matchmake:set_server_attributes(MenuCallbackHandler:get_matchmake_attributes())
 end
 
--- Lines 232-237
+-- Lines 243-248
 function SkirmishManager:on_joined_server(lobby_data)
 	if not lobby_data then
 		return
@@ -256,22 +267,23 @@ function SkirmishManager:on_joined_server(lobby_data)
 	Global.game_settings.weekly_skirmish = tonumber(lobby_data.skirmish) == SkirmishManager.LOBBY_WEEKLY
 end
 
--- Lines 239-241
+-- Lines 250-252
 function SkirmishManager:on_left_lobby()
 	Global.game_settings.weekly_skirmish = nil
 end
 
--- Lines 243-250
+-- Lines 254-264
 function SkirmishManager:save(data)
 	data.skirmish = {
 		active_weekly = self._global.active_weekly,
 		weekly_progress = self._global.weekly_progress,
 		weekly_rewards = self._global.weekly_rewards,
-		claimed_rewards = self._global.claimed_rewards
+		claimed_rewards = self._global.claimed_rewards,
+		special_rewards = self._global.special_rewards
 	}
 end
 
--- Lines 252-262
+-- Lines 266-289
 function SkirmishManager:load(data)
 	data = data.skirmish
 
@@ -283,9 +295,22 @@ function SkirmishManager:load(data)
 	self._global.weekly_progress = data.weekly_progress
 	self._global.weekly_rewards = data.weekly_rewards
 	self._global.claimed_rewards = data.claimed_rewards
+	self._global.special_rewards = data.special_rewards
+
+	if not self._global.special_rewards and self._global.claimed_rewards then
+		self._global.special_rewards = {}
+
+		for type, rewards in pairs(self._global.claimed_rewards) do
+			self._global.special_rewards[type] = {}
+
+			for entry, _ in pairs(rewards) do
+				self._global.special_rewards[type][entry] = true
+			end
+		end
+	end
 end
 
--- Lines 264-295
+-- Lines 291-322
 function SkirmishManager:activate_weekly_skirmish(weekly_skirmish_string, force)
 	local active_weekly = self._global.active_weekly or {}
 	local weekly_skirmish_key = Idstring(weekly_skirmish_string):key()
@@ -316,12 +341,12 @@ function SkirmishManager:activate_weekly_skirmish(weekly_skirmish_string, force)
 	self._global.weekly_rewards = nil
 end
 
--- Lines 297-299
+-- Lines 324-326
 function SkirmishManager:active_weekly()
 	return self._global.active_weekly
 end
 
--- Lines 301-312
+-- Lines 328-339
 function SkirmishManager:weekly_modifiers()
 	if self:is_weekly_skirmish() and Network:is_client() then
 		if not self._host_weekly_modifiers then
@@ -335,7 +360,7 @@ function SkirmishManager:weekly_modifiers()
 	return self._global.active_weekly.modifiers
 end
 
--- Lines 314-321
+-- Lines 341-348
 function SkirmishManager:weekly_time_left_params()
 	local diff = math.max(self:active_weekly().end_timestamp - os.time(), 0)
 
@@ -346,7 +371,7 @@ function SkirmishManager:weekly_time_left_params()
 	}
 end
 
--- Lines 323-329
+-- Lines 350-356
 function SkirmishManager:weekly_progress()
 	if not self._global.weekly_progress then
 		return 0
@@ -355,12 +380,12 @@ function SkirmishManager:weekly_progress()
 	return Application:digest_value(self._global.weekly_progress, false)
 end
 
--- Lines 331-333
+-- Lines 358-360
 function SkirmishManager:block_weekly_progress()
 	self._weekly_progress_blocked = true
 end
 
--- Lines 335-344
+-- Lines 362-371
 function SkirmishManager:on_weekly_completed()
 	if self._weekly_progress_blocked then
 		return
@@ -373,7 +398,7 @@ function SkirmishManager:on_weekly_completed()
 	end
 end
 
--- Lines 346-356
+-- Lines 373-383
 function SkirmishManager:unclaimed_rewards()
 	local tier_to_id = {
 		3,
@@ -391,7 +416,7 @@ function SkirmishManager:unclaimed_rewards()
 	return unclaimed
 end
 
--- Lines 358-398
+-- Lines 385-425
 function SkirmishManager:claim_reward(id)
 	local id_to_tier = {
 		[3.0] = 1,
@@ -432,7 +457,174 @@ function SkirmishManager:claim_reward(id)
 	managers.savefile:save_progress()
 end
 
--- Lines 400-402
+-- Lines 427-429
 function SkirmishManager:claimed_reward_by_id(id)
 	return self._global.weekly_rewards and self._global.weekly_rewards[id]
+end
+
+-- Lines 432-435
+function SkirmishManager:get_wave_progress()
+	print("SkirmishManager:get_wave_progress", self:current_wave_number(), self._start_wave)
+
+	return self:current_wave_number()
+end
+
+-- Lines 437-490
+function SkirmishManager:add_random_special_reward(lootpool)
+	self._global.special_rewards = self._global.special_rewards or {}
+	local possible_rewards = {}
+	local blackmarket_tweak = tweak_data.blackmarket
+	local category_tweak, item_tweak, global_value, has_unlockable, special_category = nil
+
+	for category, items in pairs(lootpool) do
+		special_category = self._global.special_rewards[category]
+		category_tweak = blackmarket_tweak[category]
+
+		for _, entry in ipairs(items) do
+			item_tweak = category_tweak[entry]
+			global_value = managers.blackmarket:get_global_value(category, entry)
+			has_unlockable = item_tweak.is_a_unlockable and managers.blackmarket:has_item(global_value, category, entry)
+
+			if not has_unlockable and (not special_category or not special_category[entry]) then
+				table.insert(possible_rewards, {
+					global_value = global_value,
+					type_items = category,
+					item_entry = entry
+				})
+			else
+				print("skipping", global_value, category, entry)
+			end
+		end
+	end
+
+	local reward = table.random(possible_rewards)
+	item_tweak = blackmarket_tweak[reward.type_items][reward.item_entry]
+
+	if not item_tweak.is_a_unlockable then
+		self._global.special_rewards[reward.type_items] = self._global.special_rewards[reward.type_items] or {}
+		special_category = self._global.special_rewards[reward.type_items]
+		special_category[reward.item_entry] = true
+		local got_all_rewards_of_type = true
+
+		for _, entry in ipairs(lootpool[reward.type_items]) do
+			if not special_category[entry] then
+				got_all_rewards_of_type = false
+
+				break
+			end
+		end
+
+		if got_all_rewards_of_type then
+			for _, entry in ipairs(lootpool[reward.type_items]) do
+				special_category[entry] = nil
+			end
+		end
+	end
+
+	managers.blackmarket:add_to_inventory(reward.global_value, reward.type_items, reward.item_entry)
+
+	return reward
+end
+
+-- Lines 492-518
+function SkirmishManager:get_amount_rewards()
+	local wave_progress = self:get_wave_progress()
+	local num_rewards = 1
+
+	for wave, amount in pairs(tweak_data.skirmish.additional_coins) do
+		if wave <= wave_progress and amount > 0 then
+			num_rewards = num_rewards + 1
+
+			break
+		end
+	end
+
+	for wave, lootpool in pairs(tweak_data.skirmish.additional_rewards) do
+		if wave <= wave_progress then
+			num_rewards = num_rewards + 1
+		end
+	end
+
+	for wave, amount in pairs(tweak_data.skirmish.additional_lootdrops) do
+		if wave <= wave_progress then
+			num_rewards = num_rewards + amount
+		end
+	end
+
+	return num_rewards
+end
+
+-- Lines 520-558
+function SkirmishManager:make_lootdrops(got_inventory_reward)
+	local wave_progress = self:get_wave_progress()
+	self._generated_lootdrops = {}
+	local amount_coins = 0
+
+	for wave, amount in pairs(tweak_data.skirmish.additional_coins) do
+		if wave <= wave_progress then
+			amount_coins = amount_coins + amount
+		end
+	end
+
+	self._generated_lootdrops.coins = amount_coins
+
+	if amount_coins > 0 then
+		managers.custom_safehouse:add_coins(amount_coins)
+	end
+
+	self._generated_lootdrops.special_rewards = {}
+
+	for wave, lootpool in pairs(tweak_data.skirmish.additional_rewards) do
+		if wave <= wave_progress then
+			table.insert(self._generated_lootdrops.special_rewards, self:add_random_special_reward(lootpool))
+		end
+	end
+
+	local amount_lootdrops = not got_inventory_reward and 1 or 0
+
+	for wave, amount in pairs(tweak_data.skirmish.additional_lootdrops) do
+		if wave <= wave_progress then
+			amount_lootdrops = amount_lootdrops + amount
+		end
+	end
+
+	local item_pc = managers.lootdrop:get_random_item_pc()
+	self._lootdrops_coroutine = managers.lootdrop:new_make_mass_drop(amount_lootdrops, item_pc, self._generated_lootdrops)
+end
+
+-- Lines 561-563
+function SkirmishManager:get_generated_lootdrops()
+	return self._loot_drops or {}
+end
+
+-- Lines 565-592
+function SkirmishManager:has_finished_generating_additional_rewards()
+	if self._lootdrops_coroutine then
+		local status = coroutine.status(self._lootdrops_coroutine)
+
+		if status == "dead" then
+			self._loot_drops = {
+				items = clone(self._generated_lootdrops.items)
+			}
+
+			table.list_append(self._loot_drops.items, self._generated_lootdrops.special_rewards or {})
+
+			if self._generated_lootdrops.coins > 0 then
+				self._loot_drops.coins = self._generated_lootdrops.coins
+			end
+
+			self._generated_lootdrops = nil
+			self._lootdrops_coroutine = nil
+
+			return true
+		elseif status == "suspended" then
+			coroutine.resume(self._lootdrops_coroutine)
+
+			return false
+		else
+			return false
+		end
+	end
+
+	return true
 end

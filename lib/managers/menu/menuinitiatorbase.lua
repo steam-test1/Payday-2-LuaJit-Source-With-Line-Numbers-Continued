@@ -5,14 +5,15 @@ function MenuInitiatorBase:modify_node(original_node, data)
 	return original_node
 end
 
--- Lines 15-30
-function MenuInitiatorBase:create_divider(node, id, text_id, size, color)
+-- Lines 15-31
+function MenuInitiatorBase:create_divider(node, id, text_id, size, color, visible_callback)
 	local params = {
 		name = "divider_" .. id,
 		no_text = not text_id,
 		text_id = text_id,
 		size = size or 8,
-		color = color
+		color = color,
+		visible_callback = visible_callback
 	}
 	local data_node = {
 		type = "MenuItemDivider"
@@ -24,7 +25,7 @@ function MenuInitiatorBase:create_divider(node, id, text_id, size, color)
 	return new_item
 end
 
--- Lines 32-46
+-- Lines 33-47
 function MenuInitiatorBase:create_toggle(node, params, index)
 	local data_node = {
 		{
@@ -70,7 +71,7 @@ function MenuInitiatorBase:create_toggle(node, params, index)
 	return new_item
 end
 
--- Lines 47-54
+-- Lines 48-55
 function MenuInitiatorBase:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -81,7 +82,7 @@ function MenuInitiatorBase:create_item(node, params)
 	return new_item
 end
 
--- Lines 57-76
+-- Lines 58-77
 function MenuInitiatorBase:create_multichoice(node, choices, params, index)
 	if #choices == 0 then
 		return
@@ -108,7 +109,7 @@ function MenuInitiatorBase:create_multichoice(node, choices, params, index)
 	return new_item
 end
 
--- Lines 79-98
+-- Lines 80-99
 function MenuInitiatorBase:create_grid(node, choices, params, index)
 	if #choices == 0 then
 		return
@@ -135,7 +136,7 @@ function MenuInitiatorBase:create_grid(node, choices, params, index)
 	return new_item
 end
 
--- Lines 100-106
+-- Lines 101-107
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
@@ -152,7 +153,7 @@ function MenuInitiatorBase:create_slider(node, params)
 	return new_item
 end
 
--- Lines 108-115
+-- Lines 109-116
 function MenuInitiatorBase:create_input(node, params)
 	local data_node = {
 		type = "MenuItemInput"
@@ -165,7 +166,7 @@ function MenuInitiatorBase:create_input(node, params)
 	return new_item
 end
 
--- Lines 117-124
+-- Lines 118-125
 function MenuInitiatorBase:create_textbox(node, params)
 	local data_node = {
 		type = "MenuItemTextBox"
@@ -178,7 +179,7 @@ function MenuInitiatorBase:create_textbox(node, params)
 	return new_item
 end
 
--- Lines 126-140
+-- Lines 127-141
 function MenuInitiatorBase:add_back_button(node)
 	node:delete_item("back")
 

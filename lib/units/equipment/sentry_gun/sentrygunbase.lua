@@ -118,15 +118,19 @@ function SentryGunBase:post_init()
 	end
 end
 
--- Lines 106-161
+-- Lines 106-163
 function SentryGunBase.spawn(owner, pos, rot, peer_id, verify_equipment, unit_idstring_index)
 	local attached_data = SentryGunBase._attach(pos, rot)
 
 	if not attached_data then
+		Application:error("[SentryGunBase.spawn] Failed attaching sentry gun", owner, pos, rot, peer_id, verify_equipment, unit_idstring_index)
+
 		return
 	end
 
 	if verify_equipment and not managers.player:verify_equipment(peer_id, "sentry_gun") then
+		Application:error("[SentryGunBase.spawn] Player equipment verification failed", owner, pos, rot, peer_id, verify_equipment, unit_idstring_index)
+
 		return
 	end
 
@@ -184,7 +188,7 @@ function SentryGunBase.spawn(owner, pos, rot, peer_id, verify_equipment, unit_id
 	return unit, spread_level, rot_speed_level
 end
 
--- Lines 165-193
+-- Lines 167-195
 function SentryGunBase:spawn_from_sequence(align_obj_name, module_id)
 	if not Network:is_server() then
 		return
@@ -215,7 +219,7 @@ function SentryGunBase:spawn_from_sequence(align_obj_name, module_id)
 	unit:brain():set_active(true)
 end
 
--- Lines 197-230
+-- Lines 199-232
 function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 	self._tweak_table_id = tweak_table_id
 	local team_id = tweak_data.levels:get_default_team_ID(team_type)
@@ -252,12 +256,12 @@ function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 	managers.groupai:state():register_turret(self._unit)
 end
 
--- Lines 234-236
+-- Lines 236-238
 function SentryGunBase:get_name_id()
 	return self._tweak_table_id
 end
 
--- Lines 241-244
+-- Lines 243-246
 function SentryGunBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
@@ -266,12 +270,12 @@ function SentryGunBase:set_server_information(peer_id)
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
--- Lines 249-251
+-- Lines 251-253
 function SentryGunBase:server_information()
 	return self._server_information
 end
 
--- Lines 255-312
+-- Lines 257-314
 function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, spread_multiplier, rot_speed_multiplier, has_shield, attached_data)
 	if Network:is_client() and not self._skip_authentication then
 		self._validate_clbk_id = "sentry_gun_validate" .. tostring(unit:key())
@@ -337,7 +341,7 @@ function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, spread_mu
 	return true
 end
 
--- Lines 314-319
+-- Lines 316-326
 function SentryGunBase:post_setup()
 	self._sentry_uid = "sentry_" .. tostring(sentry_uid)
 
@@ -345,11 +349,15 @@ function SentryGunBase:post_setup()
 		"on_picked_up_carry"
 	}, callback(self, self, "_on_picked_up_cash"))
 
+	if alive(self._owner) then
+		self._owner:base():add_destroy_listener(self._sentry_uid, callback(self, self, "remove_dead_owner"))
+	end
+
 	sentry_uid = sentry_uid + 1
 	self._attached_data = self._attach(nil, nil, self._unit)
 end
 
--- Lines 321-329
+-- Lines 328-336
 function SentryGunBase:_on_picked_up_cash(unit)
 	if unit and self._attached_data and self._attached_data.unit and self._attached_data.position and unit == self._attached_data.unit then
 		local new_pos = self._unit:position()
@@ -359,32 +367,39 @@ function SentryGunBase:_on_picked_up_cash(unit)
 	end
 end
 
--- Lines 331-333
+-- Lines 338-340
 function SentryGunBase:get_owner()
 	return self._owner or self._owner_id and managers.network:session() and managers.network:session():peer(self._owner_id) and managers.network:session():peer(self._owner_id):unit()
 end
 
--- Lines 335-337
+-- Lines 342-344
 function SentryGunBase:get_owner_peer()
 	return self._owner_id and managers.network:session() and managers.network:session():peer(self._owner_id)
 end
 
--- Lines 339-341
+-- Lines 346-348
 function SentryGunBase:get_owner_id()
 	return self._owner_id
 end
 
--- Lines 343-345
+-- Lines 350-352
 function SentryGunBase:get_type()
 	return self._type or "sentry_gun"
 end
 
--- Lines 349-351
+-- Lines 354-358
+function SentryGunBase:remove_dead_owner(dead_owner)
+	if alive(self._unit) then
+		self._unit:weapon():remove_dead_owner(dead_owner)
+	end
+end
+
+-- Lines 362-364
 function SentryGunBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines 353-360
+-- Lines 366-373
 function SentryGunBase:on_interaction()
 	if Network:is_server() then
 		SentryGunBase.on_picked_up(self:get_type(), self._unit:weapon():ammo_ratio(), self._unit:id())
@@ -394,7 +409,7 @@ function SentryGunBase:on_interaction()
 	end
 end
 
--- Lines 362-383
+-- Lines 375-396
 function SentryGunBase.on_picked_up(sentry_type, ammo_ratio, sentry_uid)
 	managers.player:add_sentry_gun(1, sentry_type)
 
@@ -419,7 +434,7 @@ function SentryGunBase.on_picked_up(sentry_type, ammo_ratio, sentry_uid)
 	end
 end
 
--- Lines 387-392
+-- Lines 400-405
 function SentryGunBase:server_set_dynamic()
 	self:sync_set_dynamic()
 
@@ -428,14 +443,14 @@ function SentryGunBase:server_set_dynamic()
 	end
 end
 
--- Lines 394-397
+-- Lines 407-410
 function SentryGunBase:sync_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic_base"):set_enabled(true)
 end
 
--- Lines 402-424
+-- Lines 415-437
 function SentryGunBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -462,19 +477,19 @@ function SentryGunBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 428-431
+-- Lines 441-444
 function SentryGunBase:remove()
 	self._removed = true
 
 	self._unit:set_slot(0)
 end
 
--- Lines 433-435
+-- Lines 446-448
 function SentryGunBase:is_removed()
 	return self._removed
 end
 
--- Lines 440-463
+-- Lines 453-476
 function SentryGunBase._attach(pos, rot, sentrygun_unit)
 	pos = pos or sentrygun_unit:position()
 	rot = rot or sentrygun_unit:rotation()
@@ -502,7 +517,7 @@ function SentryGunBase._attach(pos, rot, sentrygun_unit)
 	end
 end
 
--- Lines 467-476
+-- Lines 480-489
 function SentryGunBase:set_visibility_state(stage)
 	local state = stage and true
 
@@ -515,24 +530,24 @@ function SentryGunBase:set_visibility_state(stage)
 	self._lod_stage = stage
 end
 
--- Lines 481-483
+-- Lines 494-496
 function SentryGunBase:weapon_tweak_data()
 	return tweak_data.weapon[self._unit:weapon()._name_id]
 end
 
--- Lines 487-498
+-- Lines 500-511
 function SentryGunBase:check_interact_blocked(player)
 	local result = not alive(self._unit) or self._unit:character_damage():dead() or self._unit:weapon():ammo_ratio() == 1 or not self:get_net_event_id(player) or false
 
 	return result
 end
 
--- Lines 500-502
+-- Lines 513-515
 function SentryGunBase:can_interact(player)
 	return not self:check_interact_blocked(player)
 end
 
--- Lines 504-511
+-- Lines 517-524
 function SentryGunBase:show_blocked_hint(interaction_tweak_data, player, skip_hint)
 	local event_id, wanted, possible = self:get_net_event_id(player)
 
@@ -562,7 +577,7 @@ local refill_ratios = {
 	0.0625
 }
 
--- Lines 515-568
+-- Lines 528-581
 function SentryGunBase:get_net_event_id(player)
 	local sentry_gun_reload_ratio = tweak_data.upgrades.sentry_gun_reload_ratio or 1
 
@@ -613,18 +628,18 @@ function SentryGunBase:get_net_event_id(player)
 	return event_id, wanted_event_id, possible_event_id
 end
 
--- Lines 570-572
+-- Lines 583-585
 function SentryGunBase:interaction_text_id()
 	return "hud_interact_sentry_gun_switch_fire_mode"
 end
 
--- Lines 574-577
+-- Lines 587-590
 function SentryGunBase:add_string_macros(macroes)
 	local event_id, wanted_event_id, possible_event_id = self:get_net_event_id(managers.player:local_player())
 	macroes.AMMO = wanted_event_id and string.format("%2.f%%", (1 - refill_ratios[wanted_event_id]) * 100) or "100%"
 end
 
--- Lines 579-638
+-- Lines 592-651
 function SentryGunBase:sync_net_event(event_id, peer)
 	print("SentryGunBase:sync_net_event", event_id, inspect(peer), Network:is_server())
 
@@ -682,7 +697,7 @@ function SentryGunBase:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 640-656
+-- Lines 653-669
 function SentryGunBase:refill(ammo_ratio)
 	if self._unit:character_damage():dead() then
 		return
@@ -701,35 +716,35 @@ function SentryGunBase:refill(ammo_ratio)
 	self._unit:interaction():set_dirty(true)
 end
 
--- Lines 658-660
+-- Lines 671-673
 function SentryGunBase:set_waiting_for_refill(state)
 	self._waiting_for_refill = state and true or nil
 end
 
--- Lines 662-664
+-- Lines 675-677
 function SentryGunBase:waiting_for_refill()
 	return self._waiting_for_refill
 end
 
--- Lines 669-672
+-- Lines 682-685
 function SentryGunBase:on_death()
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
 	self:unregister()
 end
 
--- Lines 676-679
+-- Lines 689-692
 function SentryGunBase:enable_shield()
 	self._has_shield = true
 
 	self._unit:damage():run_sequence_simple("shield_on")
 end
 
--- Lines 684-686
+-- Lines 697-699
 function SentryGunBase:has_shield()
 	return self._has_shield or false
 end
 
--- Lines 691-696
+-- Lines 704-709
 function SentryGunBase:unregister()
 	if self._registered then
 		self._registered = nil
@@ -738,14 +753,14 @@ function SentryGunBase:unregister()
 	end
 end
 
--- Lines 700-703
+-- Lines 713-716
 function SentryGunBase:register()
 	self._registered = true
 
 	managers.groupai:state():register_criminal(self._unit)
 end
 
--- Lines 707-714
+-- Lines 720-727
 function SentryGunBase:save(save_data)
 	local my_save_data = {}
 	save_data.base = my_save_data
@@ -754,12 +769,12 @@ function SentryGunBase:save(save_data)
 	my_save_data.is_dynamic = self._is_dynamic
 end
 
--- Lines 716-718
+-- Lines 729-731
 function SentryGunBase:ammo_ratio()
 	return self._unit:weapon():ammo_ratio()
 end
 
--- Lines 722-739
+-- Lines 735-752
 function SentryGunBase:load(save_data)
 	self._was_dropin = true
 	local my_save_data = save_data.base
@@ -779,13 +794,17 @@ function SentryGunBase:load(save_data)
 	end
 end
 
--- Lines 743-754
+-- Lines 756-771
 function SentryGunBase:pre_destroy()
 	SentryGunBase.super.pre_destroy(self, self._unit)
 	managers.mission:remove_global_event_listener(self._sentry_uid)
 	self:unregister()
 
 	self._removed = true
+
+	if alive(self._owner) then
+		self._owner:base():remove_destroy_listener(self._sentry_uid)
+	end
 
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)

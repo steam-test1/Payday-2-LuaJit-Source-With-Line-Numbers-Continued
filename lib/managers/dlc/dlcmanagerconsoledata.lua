@@ -17,15 +17,22 @@ local free_dlcs = {
 	"ztm",
 	"dmg",
 	"pmp",
+	"ant",
+	"rvd",
+	"dbd_clan",
+	"dbd_deluxe",
+	"sha",
+	"boo",
+	"eng",
+	"solus_clan",
 	"complete_overkill_pack",
-	"ecp",
 	"mex",
 	"mwm",
 	"trd",
 	"bex"
 }
 
--- Lines 133-148
+-- Lines 162-177
 function PS4DLCManager:init_console()
 	for i, dlc in ipairs(free_dlcs) do
 		Global.dlc_manager.all_dlc_data[dlc] = {
@@ -35,7 +42,7 @@ function PS4DLCManager:init_console()
 	end
 end
 
--- Lines 150-176
+-- Lines 179-205
 function XB1DLCManager:init_console()
 	local last_index = 0
 

@@ -667,7 +667,14 @@ function SentryGunWeapon:remove_fire_mode_interaction()
 	end
 end
 
--- Lines 657-664
+-- Lines 656-660
+function SentryGunWeapon:remove_dead_owner(dead_owner)
+	if self._setup.ignore_units then
+		table.delete(self._setup.ignore_units, dead_owner)
+	end
+end
+
+-- Lines 663-670
 function SentryGunWeapon:setup_virtual_ammo(mul)
 	local ammo_amount = tweak_data.upgrades.sentry_gun_base_ammo * mul
 	self._virtual_max_ammo = ammo_amount
@@ -682,7 +689,7 @@ function SentryGunWeapon:setup_virtual_ammo(mul)
 	}, callback(self, self, "_sync_virtual_ammo"))
 end
 
--- Lines 666-671
+-- Lines 672-677
 function SentryGunWeapon:get_virtual_ammo_ratio()
 	if self._virtual_max_ammo and self._virtual_ammo then
 		return self._virtual_ammo / self._virtual_max_ammo
@@ -691,14 +698,14 @@ function SentryGunWeapon:get_virtual_ammo_ratio()
 	return 1
 end
 
--- Lines 673-677
+-- Lines 679-683
 function SentryGunWeapon:_on_fire_virtual_shoot()
 	if self._virtual_ammo then
 		self._virtual_ammo = self._virtual_ammo - 1
 	end
 end
 
--- Lines 679-683
+-- Lines 685-689
 function SentryGunWeapon:_sync_virtual_ammo()
 	if self._virtual_max_ammo and self._virtual_ammo then
 		self._virtual_ammo = self._virtual_max_ammo * self:ammo_ratio()

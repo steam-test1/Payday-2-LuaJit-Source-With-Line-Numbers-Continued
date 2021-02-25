@@ -4,12 +4,14 @@ local FADEOUT_SPEED = 5
 local SCROLL_SPEED = 28
 ScrollablePanel.SCROLL_SPEED = SCROLL_SPEED
 
--- Lines 9-121
+-- Lines 9-128
 function ScrollablePanel:init(parent_panel, name, data)
 	data = data or {}
 	self._alphas = {}
 	self._x_padding = data.x_padding ~= nil and data.x_padding or data.padding ~= nil and data.padding or PANEL_PADDING
 	self._y_padding = data.y_padding ~= nil and data.y_padding or data.padding ~= nil and data.padding or PANEL_PADDING
+	self._scrollbar_y_padding = data.scrollbar_y_padding
+	self._update = data.update ~= nil and data.update or self._default_update
 	self._force_scroll_indicators = data.force_scroll_indicators
 	local layer = data.layer ~= nil and data.layer or 50
 	data.name = data.name or name and name .. "Base"
@@ -84,7 +86,7 @@ function ScrollablePanel:init(parent_panel, name, data)
 		color = Color.white
 	})
 
-	scroll_up_indicator_arrow:set_top(self:y_padding() + 6)
+	scroll_up_indicator_arrow:set_top(self:scrollbar_y_padding())
 	scroll_up_indicator_arrow:set_right(self:panel():w() - self:scrollbar_x_padding())
 
 	local scroll_down_indicator_arrow = self:panel():bitmap({
@@ -99,7 +101,7 @@ function ScrollablePanel:init(parent_panel, name, data)
 		color = Color.white
 	})
 
-	scroll_down_indicator_arrow:set_bottom(self:panel():h() - self:y_padding() - 6)
+	scroll_down_indicator_arrow:set_bottom(self:panel():h() - self:scrollbar_y_padding())
 	scroll_down_indicator_arrow:set_right(self:panel():w() - self:scrollbar_x_padding())
 
 	if data.left_scrollbar then
@@ -125,45 +127,51 @@ function ScrollablePanel:init(parent_panel, name, data)
 	})
 
 	self._scroll_bar_box_class:set_aligns("scale", "scale")
-	self._scroll_bar:set_w(8)
+	self._scroll_bar:set_w(data.scroll_w or 8)
 	self._scroll_bar:set_bottom(scroll_down_indicator_arrow:top())
 	self._scroll_bar:set_center_x(scroll_down_indicator_arrow:center_x())
 
 	self._bar_minimum_size = data.bar_minimum_size or 5
-	self._thread = self._panel:animate(self._update, self)
+	self._thread = self._panel:animate(function (o, self)
+		while true do
+			local dt = coroutine.yield()
+
+			self:_update(dt)
+		end
+	end, self)
 end
 
--- Lines 123-125
+-- Lines 130-132
 function ScrollablePanel:alive()
 	return alive(self:panel())
 end
 
--- Lines 127-129
+-- Lines 134-136
 function ScrollablePanel:panel()
 	return self._panel
 end
 
--- Lines 131-133
+-- Lines 138-140
 function ScrollablePanel:scroll_panel()
 	return self._scroll_panel
 end
 
--- Lines 135-137
+-- Lines 142-144
 function ScrollablePanel:canvas()
 	return self._canvas
 end
 
--- Lines 139-141
+-- Lines 146-148
 function ScrollablePanel:x_padding()
 	return self._x_padding
 end
 
--- Lines 143-145
+-- Lines 150-152
 function ScrollablePanel:y_padding()
 	return self._y_padding
 end
 
--- Lines 147-153
+-- Lines 154-160
 function ScrollablePanel:scrollbar_x_padding()
 	if self._x_padding == 0 then
 		return PANEL_PADDING
@@ -172,16 +180,18 @@ function ScrollablePanel:scrollbar_x_padding()
 	end
 end
 
--- Lines 155-161
+-- Lines 162-170
 function ScrollablePanel:scrollbar_y_padding()
-	if self._y_padding == 0 then
-		return PANEL_PADDING
-	else
-		return self._y_padding
+	local y_padding = self:y_padding()
+
+	if self._scrollbar_y_padding then
+		return y_padding + self._scrollbar_y_padding
 	end
+
+	return y_padding + 6
 end
 
--- Lines 163-170
+-- Lines 172-179
 function ScrollablePanel:set_pos(x, y)
 	if x ~= nil then
 		self:panel():set_x(x)
@@ -192,45 +202,45 @@ function ScrollablePanel:set_pos(x, y)
 	end
 end
 
--- Lines 172-188
+-- Lines 181-197
 function ScrollablePanel:set_size(w, h)
 	self:panel():set_size(w, h)
 	self:scroll_panel():set_size(w - self:x_padding() * 2, h - self:y_padding() * 2)
 
 	local scroll_up_indicator_arrow = self:panel():child("scroll_up_indicator_arrow")
 
-	scroll_up_indicator_arrow:set_top(self:y_padding() + 6)
+	scroll_up_indicator_arrow:set_top(self:scrollbar_y_padding())
 	scroll_up_indicator_arrow:set_right(self:panel():w() - self:scrollbar_x_padding())
 
 	local scroll_down_indicator_arrow = self:panel():child("scroll_down_indicator_arrow")
 
-	scroll_down_indicator_arrow:set_bottom(self:panel():h() - self:y_padding() - 6)
+	scroll_down_indicator_arrow:set_bottom(self:panel():h() - self:scrollbar_y_padding())
 	scroll_down_indicator_arrow:set_right(self:panel():w() - self:scrollbar_x_padding())
 	self._scroll_bar:set_bottom(scroll_down_indicator_arrow:top())
 	self._scroll_bar:set_center_x(scroll_down_indicator_arrow:center_x())
 end
 
--- Lines 190-192
+-- Lines 199-201
 function ScrollablePanel:on_canvas_updated_callback(callback)
 	self._on_canvas_updated = callback
 end
 
--- Lines 194-196
+-- Lines 203-205
 function ScrollablePanel:canvas_max_width()
 	return self:scroll_panel():w()
 end
 
--- Lines 198-200
+-- Lines 207-209
 function ScrollablePanel:canvas_scroll_width()
 	return self:scroll_panel():w() - self:x_padding() - 5
 end
 
--- Lines 202-204
+-- Lines 211-213
 function ScrollablePanel:canvas_scroll_height()
 	return self:scroll_panel():h()
 end
 
--- Lines 206-243
+-- Lines 215-252
 function ScrollablePanel:update_canvas_size()
 	local orig_w = self:canvas():w()
 	local max_h = 0
@@ -269,7 +279,7 @@ function ScrollablePanel:update_canvas_size()
 	self:set_canvas_size(nil, max_h)
 end
 
--- Lines 245-278
+-- Lines 254-287
 function ScrollablePanel:set_canvas_size(w, h)
 	if w == nil then
 		w = self:canvas():w()
@@ -287,7 +297,7 @@ function ScrollablePanel:set_canvas_size(w, h)
 
 	self:canvas():set_size(w, h)
 
-	local show_scrollbar = self:scroll_panel():h() < h
+	local show_scrollbar = math.floor(self:scroll_panel():h()) < math.floor(h)
 
 	if not show_scrollbar then
 		self._scroll_bar:set_alpha(0)
@@ -306,7 +316,7 @@ function ScrollablePanel:set_canvas_size(w, h)
 	end
 end
 
--- Lines 280-287
+-- Lines 289-296
 function ScrollablePanel:set_element_alpha_target(element, target, speed)
 	local element_name = type(element) == "string" and element or element:name()
 	self._alphas[element_name] = {
@@ -316,12 +326,12 @@ function ScrollablePanel:set_element_alpha_target(element, target, speed)
 	}
 end
 
--- Lines 289-291
+-- Lines 298-300
 function ScrollablePanel:is_scrollable()
 	return self:scroll_panel():h() < self:canvas():h()
 end
 
--- Lines 297-302
+-- Lines 306-311
 function ScrollablePanel:scroll(x, y, direction)
 	if self:panel():inside(x, y) then
 		self:perform_scroll(SCROLL_SPEED * TimerManager:main():delta_time() * 200, direction)
@@ -330,7 +340,7 @@ function ScrollablePanel:scroll(x, y, direction)
 	end
 end
 
--- Lines 304-319
+-- Lines 313-327
 function ScrollablePanel:perform_scroll(speed, direction)
 	if self:canvas():h() <= self:scroll_panel():h() then
 		return
@@ -346,7 +356,7 @@ function ScrollablePanel:perform_scroll(speed, direction)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 321-334
+-- Lines 329-342
 function ScrollablePanel:scroll_to(y)
 	if self:canvas():h() <= self:scroll_panel():h() then
 		return
@@ -362,7 +372,7 @@ function ScrollablePanel:scroll_to(y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 336-356
+-- Lines 344-364
 function ScrollablePanel:scroll_with_bar(target_y, current_y)
 	local arrow_size = self:panel():child("scroll_up_indicator_arrow"):size()
 	local scroll_panel = self:scroll_panel()
@@ -387,7 +397,7 @@ function ScrollablePanel:scroll_with_bar(target_y, current_y)
 	end
 end
 
--- Lines 358-365
+-- Lines 366-373
 function ScrollablePanel:release_scroll_bar()
 	self._pressing_arrow_up = false
 	self._pressing_arrow_down = false
@@ -399,7 +409,7 @@ function ScrollablePanel:release_scroll_bar()
 	end
 end
 
--- Lines 367-372
+-- Lines 375-380
 function ScrollablePanel:_set_scroll_indicator()
 	local bar_h = self:panel():child("scroll_down_indicator_arrow"):top() - self:panel():child("scroll_up_indicator_arrow"):bottom()
 
@@ -408,10 +418,10 @@ function ScrollablePanel:_set_scroll_indicator()
 	end
 end
 
--- Lines 374-394
+-- Lines 382-402
 function ScrollablePanel:_check_scroll_indicator_states()
-	local up_alpha = self:canvas():top() < 0 and 1 or 0
-	local down_alpha = self:scroll_panel():h() < self:canvas():bottom() and 1 or 0
+	local up_alpha = math.floor(self:canvas():top()) < 0 and 1 or 0
+	local down_alpha = math.floor(self:scroll_panel():h()) < math.floor(self:canvas():bottom()) and 1 or 0
 
 	self:set_element_alpha_target("scroll_up_indicator_arrow", up_alpha, FADEOUT_SPEED)
 	self:set_element_alpha_target("scroll_down_indicator_arrow", down_alpha, FADEOUT_SPEED)
@@ -430,23 +440,38 @@ function ScrollablePanel:_check_scroll_indicator_states()
 	self._scroll_bar:set_top(up_arrow:bottom() + max * at)
 end
 
--- Lines 400-416
-function ScrollablePanel._update(o, self)
-	while true do
-		local dt = coroutine.yield()
+-- Lines 404-415
+function ScrollablePanel:reset_scroll_indicator_alphas()
+	self:_check_scroll_indicator_states()
 
-		for element_name, data in pairs(self._alphas) do
-			data.current = math.step(data.current, data.target, dt * data.speed)
-			local element = self:panel():child(element_name)
+	local element = nil
 
-			if alive(element) then
-				element:set_alpha(data.current)
-			end
+	for element_name, data in pairs(self._alphas) do
+		data.current = data.target
+		element = self:panel():child(element_name)
+
+		if alive(element) then
+			element:set_alpha(data.current)
 		end
 	end
 end
 
--- Lines 418-438
+-- Lines 421-432
+function ScrollablePanel:_default_update(dt)
+	local element, step = nil
+
+	for element_name, data in pairs(self._alphas) do
+		step = dt == -1 and 1 or dt * data.speed
+		data.current = math.step(data.current, data.target, step)
+		element = self:panel():child(element_name)
+
+		if alive(element) then
+			element:set_alpha(data.current)
+		end
+	end
+end
+
+-- Lines 434-454
 function ScrollablePanel:mouse_moved(button, x, y)
 	if self._grabbed_scroll_bar then
 		self:scroll_with_bar(y, self._current_y)
@@ -461,24 +486,24 @@ function ScrollablePanel:mouse_moved(button, x, y)
 			self:perform_scroll(SCROLL_SPEED * 0.1, 1)
 		end
 
-		return true, "link"
+		return true, self:panel():child("scroll_up_indicator_arrow"):alpha() > 0 and "link" or "arrow"
 	elseif self:panel():child("scroll_down_indicator_arrow"):inside(x, y) then
 		if self._pressing_arrow_down then
 			self:perform_scroll(SCROLL_SPEED * 0.1, -1)
 		end
 
-		return true, "link"
+		return true, self:panel():child("scroll_down_indicator_arrow"):alpha() > 0 and "link" or "arrow"
 	end
 end
 
--- Lines 440-444
+-- Lines 456-460
 function ScrollablePanel:mouse_clicked(o, button, x, y)
 	if alive(self._scroll_bar) and self._scroll_bar:visible() and self._scroll_bar:inside(x, y) then
 		return true
 	end
 end
 
--- Lines 446-458
+-- Lines 462-474
 function ScrollablePanel:mouse_pressed(button, x, y)
 	if alive(self._scroll_bar) and self._scroll_bar:visible() and self._scroll_bar:inside(x, y) then
 		self._grabbed_scroll_bar = true
@@ -496,7 +521,7 @@ function ScrollablePanel:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 460-462
+-- Lines 476-478
 function ScrollablePanel:mouse_released(button, x, y)
 	return self:release_scroll_bar()
 end

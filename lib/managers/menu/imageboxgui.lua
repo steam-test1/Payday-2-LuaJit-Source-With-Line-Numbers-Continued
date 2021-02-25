@@ -15,7 +15,7 @@ function ImageBoxGui:_create_text_box(ws, title, text, content_data, text_config
 	self:_create_image_box(image_config)
 end
 
--- Lines 16-175
+-- Lines 16-182
 function ImageBoxGui:_create_image_box(image_config)
 	image_config = image_config or {}
 	local image_shapes = image_config.shapes or {}
@@ -24,6 +24,7 @@ function ImageBoxGui:_create_image_box(image_config)
 	} or {}
 	local image_video = image_config.video or nil
 	local video_loop = image_config.video_loop or false
+	local video_start_paused = image_config.video_start_paused or false
 	local keep_texure_ratio = image_config.keep_ratio or false
 	local image_render_template = image_config.render_template
 	local image_blend_mode = image_config.blend_mode
@@ -129,6 +130,10 @@ function ImageBoxGui:_create_image_box(image_config)
 			image:set_render_template(image_render_template)
 		end
 
+		if video_start_paused then
+			image:pause()
+		end
+
 		if keep_texure_ratio then
 			local texture_width = image:video_width()
 			local texture_height = image:video_height()
@@ -141,6 +146,8 @@ function ImageBoxGui:_create_image_box(image_config)
 			image:set_size(sw, sh)
 			image:set_center(image_panel:w() / 2, image_panel:h() / 2)
 		end
+
+		self._video = image
 	end
 
 	if image_shapes then
@@ -184,7 +191,18 @@ function ImageBoxGui:_create_image_box(image_config)
 	main:set_center(main:parent():w() / 2, main:parent():h() / 2)
 end
 
--- Lines 177-184
+-- Lines 184-192
+function ImageBoxGui:set_video_paused(paused)
+	if self._video then
+		if paused then
+			self._video:pause()
+		else
+			self._video:play()
+		end
+	end
+end
+
+-- Lines 194-201
 function ImageBoxGui:request_texture(texture_path, panel, keep_aspect_ratio, blend_mode, layer, render_template)
 	if not managers.menu_component then
 		return
@@ -204,7 +222,7 @@ function ImageBoxGui:request_texture(texture_path, panel, keep_aspect_ratio, ble
 	})
 end
 
--- Lines 186-194
+-- Lines 203-211
 function ImageBoxGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -215,7 +233,7 @@ function ImageBoxGui:unretrieve_textures()
 	self._requested_textures = {}
 end
 
--- Lines 196-236
+-- Lines 213-253
 function ImageBoxGui:texture_done_clbk(params, texture_ids)
 	params = params or {}
 	local panel = params.panel or params[1]
@@ -266,7 +284,7 @@ function ImageBoxGui:texture_done_clbk(params, texture_ids)
 	end
 end
 
--- Lines 238-241
+-- Lines 255-258
 function ImageBoxGui:close()
 	self:unretrieve_textures()
 	ImageBoxGui.super.close(self)

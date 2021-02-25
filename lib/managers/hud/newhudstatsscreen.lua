@@ -131,7 +131,7 @@ function HUDStatsScreen:init()
 	self:recreate_right()
 end
 
--- Lines 88-254
+-- Lines 88-291
 function HUDStatsScreen:recreate_left()
 	self._left:clear()
 	self._left:bitmap({
@@ -160,6 +160,8 @@ function HUDStatsScreen:recreate_left()
 
 		return
 	end
+
+	local is_whisper_mode = managers.groupai and managers.groupai:state():whisper_mode()
 
 	if stage_data then
 		if managers.crime_spree:is_active() then
@@ -207,7 +209,6 @@ function HUDStatsScreen:recreate_left()
 			}))
 
 			if managers.job:is_level_ghostable(managers.job:current_level_id()) then
-				local is_whisper_mode = managers.groupai and managers.groupai:state():whisper_mode()
 				local ghost_color = is_whisper_mode and Color.white or tweak_data.screen_colors.important_1
 				local ghost = placer:add_right(self._left:bitmap({
 					texture = "guis/textures/pd2/cn_minighost",
@@ -318,6 +319,73 @@ function HUDStatsScreen:recreate_left()
 		w = self._left:w() - 16 - 8
 	})
 	placer = UiPlacer:new(16, 0, 8, 4)
+
+	if not is_whisper_mode and managers.player:has_category_upgrade("player", "convert_enemies") then
+		local minion_text = placer:add_bottom(loot_panel:fine_text({
+			keep_w = true,
+			text = managers.localization:text("hud_stats_enemies_converted"),
+			font = medium_font,
+			font_size = medium_font_size
+		}))
+
+		placer:add_right(nil, 0)
+
+		local minion_texture, minion_rect = tweak_data.hud_icons:get_icon_data("minions_converted")
+		local minion_icon = placer:add_left(loot_panel:fit_bitmap({
+			w = 17,
+			h = 17,
+			texture = minion_texture,
+			texture_rect = minion_rect
+		}))
+
+		minion_icon:set_center_y(minion_text:center_y())
+		placer:add_left(loot_panel:fine_text({
+			text = tostring(managers.player:num_local_minions()),
+			font = medium_font,
+			font_size = medium_font_size
+		}), 7)
+		placer:new_row()
+	end
+
+	if is_whisper_mode then
+		local pagers_used = managers.groupai:state():get_nr_successful_alarm_pager_bluffs()
+		local max_pagers_data = managers.player:has_category_upgrade("player", "corpse_alarm_pager_bluff") and tweak_data.player.alarm_pager.bluff_success_chance_w_skill or tweak_data.player.alarm_pager.bluff_success_chance
+		local max_num_pagers = #max_pagers_data
+
+		for i, chance in ipairs(max_pagers_data) do
+			if chance == 0 then
+				max_num_pagers = i - 1
+
+				break
+			end
+		end
+
+		local pagers_text = placer:add_bottom(loot_panel:fine_text({
+			keep_w = true,
+			text = managers.localization:text("hud_stats_pagers_used"),
+			font = medium_font,
+			font_size = medium_font_size
+		}))
+
+		placer:add_right(nil, 0)
+
+		local pagers_texture, pagers_rect = tweak_data.hud_icons:get_icon_data("pagers_used")
+		local pagers_icon = placer:add_left(loot_panel:fit_bitmap({
+			w = 17,
+			h = 17,
+			texture = pagers_texture,
+			texture_rect = pagers_rect
+		}))
+
+		pagers_icon:set_center_y(pagers_text:center_y())
+		placer:add_left(loot_panel:fine_text({
+			text = tostring(pagers_used) .. "/" .. tostring(max_num_pagers),
+			font = medium_font,
+			font_size = medium_font_size
+		}), 7)
+		placer:new_row()
+	end
+
 	local mandatory_bags_data = managers.loot:get_mandatory_bags_data()
 	local mandatory_amount = mandatory_bags_data and mandatory_bags_data.amount
 	local secured_amount = managers.loot:get_secured_mandatory_bags_amount()
@@ -418,7 +486,7 @@ function HUDStatsScreen:recreate_left()
 	loot_panel:set_leftbottom(0, self._left:h() - 16)
 end
 
--- Lines 256-277
+-- Lines 293-314
 function HUDStatsScreen:recreate_right()
 	self._right:clear()
 	self._right:bitmap({
@@ -454,7 +522,7 @@ function HUDStatsScreen:recreate_right()
 	track_text:set_leftbottom(10, self._right:h() - 10)
 end
 
--- Lines 280-299
+-- Lines 317-336
 function HUDStatsScreen:_create_tracked_list(panel)
 	local placer = UiPlacer:new(10, 10, 0, 8)
 
@@ -495,7 +563,7 @@ function HUDStatsScreen:_create_tracked_list(panel)
 	end
 end
 
--- Lines 303-312
+-- Lines 340-349
 function HUDStatsScreen:_create_mutators_list(panel)
 	local placer = UiPlacer:new(10, 10)
 
@@ -514,7 +582,7 @@ function HUDStatsScreen:_create_mutators_list(panel)
 	end
 end
 
--- Lines 316-326
+-- Lines 353-363
 function HUDStatsScreen:hide()
 	local left_panel = self._left
 	local right_panel = self._right
@@ -529,7 +597,7 @@ function HUDStatsScreen:hide()
 	left_panel:animate(callback(self, self, "_animate_hide_stats_left_panel"), right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 end
 
--- Lines 328-345
+-- Lines 365-382
 function HUDStatsScreen:show()
 	self:recreate_left()
 	self:recreate_right()
@@ -552,17 +620,17 @@ function HUDStatsScreen:show()
 	left_panel:animate(callback(self, self, "_animate_show_stats_left_panel"), right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 end
 
--- Lines 348-350
+-- Lines 385-387
 function HUDStatsScreen:loot_value_updated()
 	self:recreate_left()
 end
 
--- Lines 352-354
+-- Lines 389-391
 function HUDStatsScreen:on_ext_inventory_changed()
 	self:recreate_left()
 end
 
--- Lines 356-364
+-- Lines 393-401
 function HUDStatsScreen:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -575,7 +643,7 @@ function HUDStatsScreen:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 378-421
+-- Lines 415-458
 function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
@@ -615,7 +683,7 @@ function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, 
 	self:_rec_round_object(bottom_panel)
 end
 
--- Lines 423-459
+-- Lines 460-496
 function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
@@ -652,7 +720,7 @@ function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, 
 	bottom_panel:set_y(bottom_panel:parent():h())
 end
 
--- Lines 461-465
+-- Lines 498-502
 function HUDStatsScreen:update(t, dt)
 	for _, v in pairs(self._tracked_items or {}) do
 		v:update_progress()

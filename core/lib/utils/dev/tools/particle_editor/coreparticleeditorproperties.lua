@@ -484,10 +484,11 @@ function CoreEffectProperty:set_timeline_init_callback_name(c)
 	self._timeline_init_callback = c
 end
 
--- Lines 407-413
+-- Lines 407-414
 function create_text_field(parent, view, prop)
 	local field = EWS:TextCtrl(parent, prop._value, "", "TE_PROCESS_ENTER")
 
+	field:set_min_size(Vector3(20, 20, 0))
 	field:connect("EVT_COMMAND_TEXT_UPDATED", callback(prop, prop, "on_change", {
 		widget = field,
 		view = view
@@ -504,11 +505,11 @@ function create_text_field(parent, view, prop)
 	return field
 end
 
--- Lines 415-436
+-- Lines 416-437
 function create_color_selector(parent, view, prop)
 	local button = EWS:Button(parent, " ", "", "BU_EXACTFIT")
 
-	-- Lines 417-425
+	-- Lines 418-426
 	local function on_click(vars)
 		local cdlg = EWS:ColourDialog(vars.button, true, math.string_to_vector(vars.prop._value) * 0.00392156862745098)
 
@@ -521,7 +522,7 @@ function create_color_selector(parent, view, prop)
 		end
 	end
 
-	-- Lines 427-430
+	-- Lines 428-431
 	local function update_colour(vars)
 		local c = math.string_to_vector(vars.prop._value)
 
@@ -541,7 +542,7 @@ function create_color_selector(parent, view, prop)
 	return button
 end
 
--- Lines 438-460
+-- Lines 439-461
 function create_texture_selector(parent, view, prop)
 	local panel = EWS:Panel(parent, "", "")
 	local panel_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -554,7 +555,7 @@ function create_texture_selector(parent, view, prop)
 	panel_sizer:add(field, 1, 0, "EXPAND")
 	panel_sizer:add(browse_button, 0, 0, "EXPAND")
 
-	-- Lines 448-456
+	-- Lines 449-457
 	local function on_browse_button_click()
 		local path = managers.database:open_file_dialog(panel, "Textures (*.dds)|*.dds", view._last_texture_dir)
 
@@ -572,7 +573,7 @@ function create_texture_selector(parent, view, prop)
 	return panel
 end
 
--- Lines 462-484
+-- Lines 463-485
 function create_effect_selector(parent, view, prop)
 	local panel = EWS:Panel(parent, "", "")
 	local panel_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -585,7 +586,7 @@ function create_effect_selector(parent, view, prop)
 	panel_sizer:add(field, 1, 0, "EXPAND")
 	panel_sizer:add(browse_button, 0, 0, "EXPAND")
 
-	-- Lines 472-480
+	-- Lines 473-481
 	local function on_browse_button_click()
 		local path = managers.database:open_file_dialog(panel, "Effects (*.effect)|*.effect", view._last_used_dir)
 
@@ -603,11 +604,11 @@ function create_effect_selector(parent, view, prop)
 	return panel
 end
 
--- Lines 488-498
+-- Lines 489-499
 function create_percentage_slider(parent, view, prop)
 	local slider = EWS:Slider(parent, tonumber(prop._value) * 100, 0, 100, "", "")
 
-	-- Lines 491-494
+	-- Lines 492-495
 	local function on_thumbtrack(vars)
 		vars.prop._value = "" .. vars.slider:get_value() / 100
 
@@ -623,11 +624,11 @@ function create_percentage_slider(parent, view, prop)
 	return slider
 end
 
--- Lines 500-513
+-- Lines 501-514
 function create_check(parent, view, prop)
 	local check = EWS:CheckBox(parent, "", "", "")
 
-	-- Lines 502-508
+	-- Lines 503-509
 	local function on_check(vars)
 		vars.prop._value = "false"
 
@@ -648,9 +649,9 @@ function create_check(parent, view, prop)
 	return check
 end
 
--- Lines 516-606
+-- Lines 517-608
 function create_key_curve_widget(parent, view, prop)
-	-- Lines 517-525
+	-- Lines 518-526
 	local function refresh_list(vars)
 		local listbox = vars.listbox
 		local prop = vars.prop
@@ -664,7 +665,7 @@ function create_key_curve_widget(parent, view, prop)
 		vars.view:update_view(false)
 	end
 
-	-- Lines 527-536
+	-- Lines 528-537
 	local function on_add(vars)
 		local listbox = vars.listbox
 		local t = vars.t
@@ -680,7 +681,7 @@ function create_key_curve_widget(parent, view, prop)
 		end
 	end
 
-	-- Lines 538-548
+	-- Lines 539-549
 	local function on_remove(vars)
 		local listbox = vars.listbox
 		local t = vars.t
@@ -697,7 +698,7 @@ function create_key_curve_widget(parent, view, prop)
 		end
 	end
 
-	-- Lines 550-558
+	-- Lines 551-559
 	local function on_select(vars)
 		local listbox = vars.listbox
 		local t = vars.t
@@ -712,7 +713,7 @@ function create_key_curve_widget(parent, view, prop)
 		v:set_value(prop._keys[listbox:selected_index() + 1].v)
 	end
 
-	-- Lines 560-569
+	-- Lines 561-570
 	local function on_set(vars)
 		local listbox = vars.listbox
 		local t = vars.t
@@ -735,9 +736,12 @@ function create_key_curve_widget(parent, view, prop)
 	local remove_button = EWS:Button(panel, "Remove", "", "BU_EXACTFIT")
 	local t = EWS:TextCtrl(panel, "0", "", "TE_PROCESS_ENTER")
 
-	t:set_min_size(Vector3(40, -1, 0))
+	t:set_min_size(Vector3(40, 20, 0))
 
 	local v = EWS:TextCtrl(panel, "0 0 0", "", "TE_PROCESS_ENTER")
+
+	v:set_min_size(Vector3(40, 20, 0))
+
 	local top_sizer = EWS:BoxSizer("VERTICAL")
 
 	top_sizer:add(listbox, 1, 0, "EXPAND")
@@ -777,7 +781,7 @@ function create_key_curve_widget(parent, view, prop)
 	return panel
 end
 
--- Lines 608-616
+-- Lines 610-618
 function topdown_layout(w)
 	local q = w
 
@@ -790,7 +794,7 @@ function topdown_layout(w)
 	end
 end
 
--- Lines 618-832
+-- Lines 620-834
 function CoreEffectProperty:create_widget(parent, view)
 	local widget = nil
 
@@ -824,7 +828,7 @@ function CoreEffectProperty:create_widget(parent, view)
 	elseif self._type == "box" then
 		widget = EWS:AABBSelector(parent, "", math.string_to_vector(self._min), math.string_to_vector(self._max))
 
-		-- Lines 646-654
+		-- Lines 648-656
 		local function on_box_commit(widget_view)
 			if math.string_to_vector(self._min) ~= widget_view.widget:get_min() or math.string_to_vector(self._max) ~= widget_view.widget:get_max() then
 				local minv = widget_view.widget:get_min()
@@ -879,14 +883,14 @@ function CoreEffectProperty:create_widget(parent, view)
 
 		self._compound_container:fill_property_container_sheet(widget, view)
 	elseif self._type == "list_objects" then
-		-- Lines 688-692
+		-- Lines 690-694
 		local function on_add_object(vars)
 			table.insert(vars.property._list_members, deep_clone(self._list_objects[vars.combo:get_value()]))
 			vars:fill_list()
 			vars.view:update_view(false)
 		end
 
-		-- Lines 694-700
+		-- Lines 696-702
 		local function on_remove_object(vars)
 			if vars.list_box:selected_index() < 0 then
 				return
@@ -898,7 +902,7 @@ function CoreEffectProperty:create_widget(parent, view)
 			vars.view:update_view(false)
 		end
 
-		-- Lines 702-719
+		-- Lines 704-721
 		local function on_select_object(vars)
 			local top_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -922,7 +926,7 @@ function CoreEffectProperty:create_widget(parent, view)
 			topdown_layout(vars.sheet)
 		end
 
-		-- Lines 721-726
+		-- Lines 723-728
 		local function fill_list(vars)
 			vars.list_box:clear()
 
@@ -1002,7 +1006,7 @@ function CoreEffectProperty:create_widget(parent, view)
 			widget:add_key(tonumber(k.t), v)
 		end
 
-		-- Lines 796-813
+		-- Lines 798-815
 		local function on_keys_commit(widget_view)
 			local keys = widget_view.widget:get_keys()
 			local prop = widget_view.prop
@@ -1050,12 +1054,12 @@ function CoreEffectProperty:create_widget(parent, view)
 	return widget
 end
 
--- Lines 834-836
+-- Lines 836-838
 function CoreEffectProperty:help()
 	return self._help
 end
 
--- Lines 838-882
+-- Lines 840-884
 function CoreEffectProperty:save(node)
 	if self._type == "null" then
 		return
@@ -1109,7 +1113,7 @@ function CoreEffectProperty:save(node)
 	end
 end
 
--- Lines 884-957
+-- Lines 886-959
 function CoreEffectProperty:load(node)
 	if self._type == "null" then
 		return
@@ -1149,7 +1153,7 @@ function CoreEffectProperty:load(node)
 		if self._type == "variant" then
 			self._variants[self._value]:load(node)
 		elseif self._type == "value_list" then
-			-- Lines 921-934
+			-- Lines 923-936
 			local function contains(l, v)
 				for _, value in ipairs(l) do
 					if type(value) == "userdata" and type(v) == "string" or type(value) == "string" and type(v) == "userdata" then
@@ -1193,7 +1197,7 @@ function CoreEffectProperty:load(node)
 	end
 end
 
--- Lines 959-961
+-- Lines 961-963
 function CoreEffectProperty:value()
 	return self._value
 end

@@ -1,6 +1,6 @@
 IngameContractGuiSkirmish = IngameContractGuiSkirmish or class()
 
--- Lines 3-112
+-- Lines 3-116
 function IngameContractGuiSkirmish:init(ws, node)
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
 	self._panel = ws:panel():panel({
@@ -63,7 +63,7 @@ function IngameContractGuiSkirmish:init(ws, node)
 	if managers.skirmish:is_weekly_skirmish() then
 		text = job_data and managers.localization:text(job_data.briefing_id) or ""
 	else
-		text = managers.localization:text("menu_skirmish_random_briefing")
+		text = managers.localization:text("menu_skirmish_selected_briefing")
 	end
 
 	local briefing_description = text_panel:text({
@@ -127,7 +127,7 @@ function IngameContractGuiSkirmish:init(ws, node)
 	})
 end
 
--- Lines 114-122
+-- Lines 118-126
 function IngameContractGuiSkirmish:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -140,12 +140,12 @@ function IngameContractGuiSkirmish:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 124-126
+-- Lines 128-130
 function IngameContractGuiSkirmish:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines 128-133
+-- Lines 132-137
 function IngameContractGuiSkirmish:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -154,7 +154,7 @@ function IngameContractGuiSkirmish:close()
 	end
 end
 
--- Lines 135-140
+-- Lines 139-144
 function IngameContractGuiSkirmish:mouse_wheel_up(x, y)
 	if not self._modifier_list then
 		return
@@ -163,7 +163,7 @@ function IngameContractGuiSkirmish:mouse_wheel_up(x, y)
 	self._modifier_list:scroll(x, y, 1)
 end
 
--- Lines 142-147
+-- Lines 146-151
 function IngameContractGuiSkirmish:mouse_wheel_down(x, y)
 	if not self._modifier_list then
 		return

@@ -1,4 +1,4 @@
--- Lines 1-380
+-- Lines 1-389
 function TweakData:_init_pd2()
 	print("TweakData:_init_pd2()")
 
@@ -676,6 +676,24 @@ function TweakData:_init_pd2()
 			32
 		}
 	}
+	self.hud_icons.minions_converted = {
+		texture = "guis/textures/pd2/skilltree/icons_atlas",
+		texture_rect = {
+			384,
+			512,
+			64,
+			64
+		}
+	}
+	self.hud_icons.pagers_used = {
+		texture = "guis/textures/pd2/pagers_used",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
 	self.hud_icons.none_icon = {
 		texture = "guis/textures/pd2/equipment_02",
 		texture_rect = {
@@ -690,7 +708,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 382-385
+-- Lines 391-394
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -703,7 +721,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 387-418
+-- Lines 396-427
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -733,7 +751,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 420-461
+-- Lines 429-470
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -793,7 +811,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 463-572
+-- Lines 472-581
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

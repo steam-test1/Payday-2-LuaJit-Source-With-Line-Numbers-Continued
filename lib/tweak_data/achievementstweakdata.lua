@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-2669
+-- Lines 76-2690
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -5855,6 +5855,43 @@ function AchievementsTweakData:init(tweak_data)
 			}
 		}
 	}
+	local skirmish_complete_heists = {
+		"skm_cas",
+		"skm_big2",
+		"skm_mallcrasher",
+		"skm_arena",
+		"skm_watchdogs_stage2",
+		"skm_red2",
+		"skm_run",
+		"skm_mus",
+		"skm_bex"
+	}
+	self.skirmish_wave_achievements = {}
+
+	for index, job_id in pairs(skirmish_complete_heists) do
+		local achievement_index = (index - 1) * 4
+		self.skirmish_wave_achievements["skm_" .. tostring(achievement_index + 1)] = {
+			skirmish_wave = 3,
+			award = "skm_" .. tostring(achievement_index + 1),
+			level_id = job_id
+		}
+		self.skirmish_wave_achievements["skm_" .. tostring(achievement_index + 2)] = {
+			skirmish_wave = 5,
+			award = "skm_" .. tostring(achievement_index + 2),
+			level_id = job_id
+		}
+		self.skirmish_wave_achievements["skm_" .. tostring(achievement_index + 3)] = {
+			skirmish_wave = 7,
+			award = "skm_" .. tostring(achievement_index + 3),
+			level_id = job_id
+		}
+		self.skirmish_wave_achievements["skm_" .. tostring(achievement_index + 4)] = {
+			skirmish_wave = 9,
+			award = "skm_" .. tostring(achievement_index + 4),
+			level_id = job_id
+		}
+	end
+
 	self.check_equipment_memory_on_leave = {
 		self.complete_heist_achievements.daily_whats_stealth,
 		self.complete_heist_achievements.daily_gears
@@ -7761,7 +7798,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2688-2715
+-- Lines 2709-2736
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -7772,7 +7809,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2697-2708
+	-- Lines 2718-2729
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7802,7 +7839,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2717-2722
+-- Lines 2738-2743
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7815,7 +7852,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2724-2732
+-- Lines 2745-2753
 local function from_level(level)
 	if not level then
 		error()
@@ -7831,7 +7868,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2734-2742
+-- Lines 2755-2763
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7847,7 +7884,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2744-2755
+-- Lines 2765-2776
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7869,7 +7906,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2760-2956
+-- Lines 2781-2983
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8024,7 +8061,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 2991-3133
+-- Lines 3018-3160
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8215,7 +8252,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3111-3111
+	-- Lines 3138-3138
 	local function dummy_progress()
 		return 0
 	end

@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-7901
+-- Lines 10-7756
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -3228,6 +3228,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		value = 0,
 		texture_bundle_folder = "solus",
 		sort_number = 23,
+		global_value = "solus_clan",
 		dlc = "solus_clan"
 	}
 	self.masks.mig_death = {
@@ -5899,7 +5900,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "ami",
-		sort_number = 62,
+		sort_number = 105,
 		global_value = "infamous",
 		offsets = {
 			joy = {
@@ -5922,7 +5923,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "ami",
-		sort_number = 62,
+		sort_number = 100,
 		global_value = "infamous"
 	}
 	self.masks.ami_03 = {
@@ -5931,7 +5932,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "ami",
-		sort_number = 62,
+		sort_number = 101,
 		global_value = "infamous"
 	}
 	self.masks.ami_04 = {
@@ -5941,7 +5942,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		value = 0,
 		type = "helmet",
 		texture_bundle_folder = "ami",
-		sort_number = 62,
+		sort_number = 103,
 		global_value = "infamous"
 	}
 	self.masks.ami_05 = {
@@ -5950,7 +5951,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "ami",
-		sort_number = 62,
+		sort_number = 102,
 		global_value = "infamous"
 	}
 	self.masks.ami_06 = {
@@ -5959,7 +5960,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "ami",
-		sort_number = 62,
+		sort_number = 106,
 		global_value = "infamous"
 	}
 	self.masks.cmt_01 = {
@@ -6259,7 +6260,7 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		pcs = {},
 		value = 0,
 		texture_bundle_folder = "tam",
-		sort_number = 70,
+		sort_number = 107,
 		global_value = "tam"
 	}
 	self.masks.skm_07 = {

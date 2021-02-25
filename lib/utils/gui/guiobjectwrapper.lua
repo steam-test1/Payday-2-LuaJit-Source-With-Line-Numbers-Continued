@@ -345,52 +345,62 @@ function GUIObjectWrapper:set_visible(...)
 	self._gui_obj:set_visible(...)
 end
 
+-- Lines 77-77
+function GUIObjectWrapper:set_valign(...)
+	self._gui_obj:set_valign(...)
+end
+
 -- Lines 78-78
+function GUIObjectWrapper:set_halign(...)
+	self._gui_obj:set_halign(...)
+end
+
+-- Lines 80-80
 function GUIObjectWrapper:move(...)
 	self._gui_obj:move(...)
 end
 
--- Lines 79-79
+-- Lines 81-81
 function GUIObjectWrapper:grow(...)
 	self._gui_obj:grow(...)
 end
 
--- Lines 81-81
+-- Lines 83-83
 function GUIObjectWrapper:animate(...)
 	return self._gui_obj:animate(...)
 end
 
--- Lines 83-83
+-- Lines 85-85
 function GUIObjectWrapper:layer(...)
 	return self._gui_obj:layer(...)
 end
 
--- Lines 84-84
+-- Lines 86-86
 function GUIObjectWrapper:set_layer(...)
 	self._gui_obj:set_layer(...)
 end
 
--- Lines 85-85
+-- Lines 87-87
 function GUIObjectWrapper:set_world_layer(...)
 	self._gui_obj:set_world_layer(...)
 end
 
--- Lines 86-86
+-- Lines 88-88
 function GUIObjectWrapper:world_layer(...)
 	return self._gui_obj:world_layer(...)
 end
 
--- Lines 88-88
+-- Lines 90-90
 function GUIObjectWrapper:inside(...)
 	return self._gui_obj:inside(...)
 end
 
--- Lines 89-89
+-- Lines 91-91
 function GUIObjectWrapper:outside(...)
 	return self._gui_obj:outside(...)
 end
 
--- Lines 91-91
+-- Lines 93-93
 function GUIObjectWrapper:alive(...)
 	return self._gui_obj:alive(...)
 end

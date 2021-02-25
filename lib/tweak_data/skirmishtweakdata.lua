@@ -1,6 +1,6 @@
 SkirmishTweakData = SkirmishTweakData or class()
 
--- Lines 4-20
+-- Lines 4-23
 function SkirmishTweakData:init(tweak_data)
 	self:_init_special_unit_spawn_limits()
 	self:_init_group_ai_data(tweak_data)
@@ -12,11 +12,12 @@ function SkirmishTweakData:init(tweak_data)
 	self:_init_ransom_amounts()
 	self:_init_job_list(tweak_data)
 	self:_init_briefing()
+	self:_init_additional_rewards()
 
 	self.custody_game_over_delay = 10
 end
 
--- Lines 22-46
+-- Lines 25-49
 function SkirmishTweakData:_init_special_unit_spawn_limits()
 	self.special_unit_spawn_limits = {
 		{
@@ -169,14 +170,14 @@ function SkirmishTweakData:_init_special_unit_spawn_limits()
 	}
 end
 
--- Lines 48-53
+-- Lines 51-56
 function SkirmishTweakData:_init_group_ai_data(tweak_data)
 	local skirmish_data = deep_clone(tweak_data.group_ai.besiege)
 	skirmish_data.assault.groups = nil
 	tweak_data.group_ai.skirmish = skirmish_data
 end
 
--- Lines 55-65
+-- Lines 58-68
 function SkirmishTweakData:_init_wave_phase_durations(tweak_data)
 	local skirmish_data = tweak_data.group_ai.skirmish
 	skirmish_data.assault.anticipation_duration = {
@@ -210,7 +211,7 @@ function SkirmishTweakData:_init_wave_phase_durations(tweak_data)
 	}
 end
 
--- Lines 67-151
+-- Lines 70-154
 function SkirmishTweakData:_init_spawn_group_weights(tweak_data)
 	local nice_human_readable_table = {
 		{
@@ -548,7 +549,7 @@ function SkirmishTweakData:_init_spawn_group_weights(tweak_data)
 	setmetatable(tweak_data.group_ai.skirmish.assault, skirmish_assault_meta)
 end
 
--- Lines 153-215
+-- Lines 156-224
 function SkirmishTweakData:_init_wave_modifiers()
 	self.wave_modifiers = {}
 	local health_damage_multipliers = {
@@ -641,7 +642,14 @@ function SkirmishTweakData:_init_wave_modifiers()
 		{
 			class = "ModifierEnemyHealthAndDamageByWave",
 			data = {
-				waves = health_damage_multipliers
+				waves = health_damage_multipliers,
+				excluded_enemies = {
+					damage = {
+						"sniper",
+						"heavy_swat_sniper"
+					},
+					health = {}
+				}
 			}
 		},
 		{
@@ -651,14 +659,6 @@ function SkirmishTweakData:_init_wave_modifiers()
 	self.wave_modifiers[3] = {
 		{
 			class = "ModifierSkulldozers"
-		}
-	}
-	self.wave_modifiers[5] = {
-		{
-			class = "ModifierHeavySniper",
-			data = {
-				spawn_chance = 5
-			}
 		}
 	}
 	self.wave_modifiers[7] = {
@@ -673,7 +673,7 @@ function SkirmishTweakData:_init_wave_modifiers()
 	}
 end
 
--- Lines 217-293
+-- Lines 226-302
 function SkirmishTweakData:_init_weekly_modifiers()
 	self.weekly_modifiers = {
 		wsm01 = {
@@ -743,7 +743,7 @@ function SkirmishTweakData:_init_weekly_modifiers()
 	}
 end
 
--- Lines 295-370
+-- Lines 304-379
 function SkirmishTweakData:_init_weekly_rewards()
 	self.weekly_rewards = {
 		{
@@ -815,7 +815,7 @@ function SkirmishTweakData:_init_weekly_rewards()
 	}
 end
 
--- Lines 372-402
+-- Lines 381-411
 function SkirmishTweakData:_init_ransom_amounts()
 	self.ransom_amounts = {
 		1600000,
@@ -834,7 +834,7 @@ function SkirmishTweakData:_init_ransom_amounts()
 	end
 end
 
--- Lines 404-416
+-- Lines 413-425
 function SkirmishTweakData:_init_job_list(tweak_data)
 	self.job_list = {}
 
@@ -850,11 +850,47 @@ function SkirmishTweakData:_init_job_list(tweak_data)
 	end
 end
 
--- Lines 418-421
+-- Lines 427-430
 function SkirmishTweakData:_init_briefing()
 	self.random_skirmish = {
 		crimenet_videos = {
 			"codex/locke1"
 		}
+	}
+end
+
+-- Lines 433-470
+function SkirmishTweakData:_init_additional_rewards()
+	local tier1 = deep_clone(self.weekly_rewards[1])
+	local tier2 = deep_clone(self.weekly_rewards[2])
+	local tier3 = deep_clone(self.weekly_rewards[3])
+	tier2.weapon_skins = {
+		"color_red_crust",
+		"color_blue_deluxe",
+		"color_purple_song",
+		"color_blue_teal",
+		"color_green_mellow"
+	}
+	tier3.weapon_skins = {
+		"color_blue_deep",
+		"color_blue_ice",
+		"color_orange_mellow",
+		"color_green_deluxe",
+		"color_pink_cat"
+	}
+	self.additional_rewards = {
+		[3] = tier1,
+		[5] = tier2,
+		[9] = tier3
+	}
+	self.additional_lootdrops = {
+		[3.0] = 1,
+		[5.0] = 2,
+		[9.0] = 4
+	}
+	self.additional_coins = {
+		[3.0] = 1,
+		[5.0] = 2,
+		[9.0] = 3
 	}
 end

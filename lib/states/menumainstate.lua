@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-228
+-- Lines 9-243
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -74,6 +74,28 @@ function MenuMainState:at_enter(old_state)
 		managers.menu:check_vr_dlc()
 	end
 
+	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_decided then
+		-- Lines 84-87
+		local function yes_func()
+			managers.user:set_setting("use_telemetry", true, true)
+			MenuCallbackHandler:save_settings()
+		end
+
+		-- Lines 88-91
+		local function no_func()
+			managers.user:set_setting("use_telemetry", false, true)
+			MenuCallbackHandler:save_settings()
+		end
+
+		Global.use_telemetry_decided = true
+
+		managers.savefile:setting_changed()
+		managers.menu:show_accept_telemetry({
+			yes_func = yes_func,
+			no_func = no_func
+		})
+	end
+
 	local has_invite = false
 
 	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
@@ -133,7 +155,7 @@ function MenuMainState:at_enter(old_state)
 
 		if not managers.custom_safehouse:unlocked() then
 			if not Global.mission_manager.has_played_tutorial and not Global.skip_menu_dialogs then
-				-- Lines 148-150
+				-- Lines 163-165
 				local function yes_func()
 					MenuCallbackHandler:play_safehouse({
 						skip_question = true
@@ -145,7 +167,7 @@ function MenuMainState:at_enter(old_state)
 				})
 			end
 		elseif not managers.custom_safehouse:has_entered_safehouse() and not Global.skip_menu_dialogs then
-			-- Lines 156-159
+			-- Lines 171-174
 			local function yes_func()
 				MenuCallbackHandler:play_single_player()
 				MenuCallbackHandler:start_single_player_job({
@@ -191,7 +213,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 236-249
+-- Lines 251-264
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -204,11 +226,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 251-261
+-- Lines 266-276
 function MenuMainState:update(t, dt)
 end
 
--- Lines 263-268
+-- Lines 278-283
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -217,7 +239,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 270-284
+-- Lines 285-299
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -236,13 +258,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 286-292
+-- Lines 301-307
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 294-297
+-- Lines 309-312
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -250,6 +272,6 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 299-300
+-- Lines 314-315
 function MenuMainState:on_disconnected()
 end

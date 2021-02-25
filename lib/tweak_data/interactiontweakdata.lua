@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-6364
+-- Lines 3-6386
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -5940,6 +5940,8 @@ function InteractionTweakData:init(tweak_data)
 		interact_distance = 100,
 		special_equipment_block = "fingerprint"
 	}
+	self.bex_take_cupprint_directional = deep_clone(self.bex_take_cupprint)
+	self.bex_take_cupprint_directional.axis = "x"
 	self.bex_activate_flare = {
 		text_id = "hud_int_activate_flare",
 		action_text_id = "hud_int_activating_flare",

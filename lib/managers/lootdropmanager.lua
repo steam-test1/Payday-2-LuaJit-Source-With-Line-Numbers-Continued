@@ -245,34 +245,17 @@ function LootDropManager:infamous_chance(setup_data)
 	return chance * multiplier, chance, multiplier
 end
 
--- Lines 275-278
-function LootDropManager:new_make_drop(return_data, setup_data)
-	return_data = type(return_data) == "table" and return_data or {}
-
-	self:_new_make_drop(false, true, nil, return_data, setup_data)
+-- Lines 275-277
+function LootDropManager:get_random_item_pc(setup_data)
+	return self:_get_random_item_pc(false, nil, setup_data)
 end
 
--- Lines 280-398
-function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, return_data, setup_data)
+-- Lines 279-312
+function LootDropManager:_get_random_item_pc(debug, debug_stars, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
 	local stars = debug_stars or pstars
 	local pc = stars * 10
-
-	if not debug then
-		print("Player level", plvl)
-		print("Player stars", pstars)
-		print("Stars", stars)
-		print("Pay class", pc)
-		print("Difficulty stars", managers.job:current_difficulty_stars() or 0)
-	end
-
-	return_data = return_data or {}
-	return_data.job_stars = stars
-	return_data.total_stars = stars
-	return_data.player_level = plvl
-	return_data.player_stars = pstars
-	return_data.payclass = pc
 	local pcs = tweak_data.lootdrop.STARS[stars].pcs
 	local chance_curve = tweak_data.lootdrop.STARS_CURVES[stars]
 	local start_chance = tweak_data.lootdrop.PC_CHANCE[stars]
@@ -303,12 +286,44 @@ function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, re
 			end
 
 			item_pc = pcs[i]
-			return_data.item_payclass = item_pc
 
 			break
 		end
 	end
 
+	return item_pc
+end
+
+-- Lines 314-317
+function LootDropManager:new_make_drop(return_data, setup_data)
+	return_data = type(return_data) == "table" and return_data or {}
+
+	self:_new_make_drop(false, true, nil, return_data, setup_data)
+end
+
+-- Lines 319-413
+function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, return_data, setup_data)
+	local plvl = managers.experience:current_level()
+	local pstars = managers.experience:level_to_stars()
+	local stars = debug_stars or pstars
+	local pc = stars * 10
+
+	if not debug then
+		print("Player level", plvl)
+		print("Player stars", pstars)
+		print("Stars", stars)
+		print("Pay class", pc)
+		print("Difficulty stars", managers.job:current_difficulty_stars() or 0)
+	end
+
+	return_data = return_data or {}
+	return_data.job_stars = stars
+	return_data.total_stars = stars
+	return_data.player_level = plvl
+	return_data.player_stars = pstars
+	return_data.payclass = pc
+	local item_pc = self:_get_random_item_pc(debug, debug_stars, setup_data)
+	return_data.item_payclass = item_pc
 	local infamous_chance, infamous_base_chance, infamous_base_multiplier = self:infamous_chance(setup_data)
 	local infamous_roll = math.rand(1)
 	local infamous_success = infamous_roll < infamous_chance
@@ -393,7 +408,7 @@ function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, re
 	return global_value, pc_type, entry, pc
 end
 
--- Lines 401-515
+-- Lines 416-530
 function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -499,7 +514,7 @@ function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_
 	return co
 end
 
--- Lines 519-552
+-- Lines 534-567
 function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	amount = amount or 10
 	add_to_inventory = add_to_inventory or false
@@ -537,14 +552,14 @@ function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	Global.debug_drop_result = self._debug_drop_result
 end
 
--- Lines 554-557
+-- Lines 569-572
 function LootDropManager:make_drop(return_data)
 	return_data = type(return_data) == "table" and return_data or {}
 
 	self:_make_drop(false, true, nil, return_data)
 end
 
--- Lines 559-916
+-- Lines 574-931
 function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return_data)
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
 	local all_humans = human_players == 4
@@ -760,7 +775,7 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 	end
 end
 
--- Lines 918-930
+-- Lines 933-945
 function LootDropManager:_get_type_items(normalized_chance, debug)
 	local seed = math.rand(1)
 
@@ -787,14 +802,14 @@ function LootDropManager:_get_type_items(normalized_chance, debug)
 	return next(normalized_chance)
 end
 
--- Lines 932-935
+-- Lines 947-950
 function LootDropManager:reset()
 	Global.lootdrop_manager = nil
 
 	self:_setup()
 end
 
--- Lines 937-984
+-- Lines 952-999
 function LootDropManager:can_drop_weapon_mods()
 	local plvl = managers.experience:current_level()
 	local dropable_items = {}
@@ -846,7 +861,7 @@ function LootDropManager:can_drop_weapon_mods()
 	return #dropable_items > 0
 end
 
--- Lines 986-989
+-- Lines 1001-1008
 function LootDropManager:specific_fake_loot_pc(preferred)
 	local to_drop = {
 		cash = 3,
@@ -861,7 +876,7 @@ function LootDropManager:specific_fake_loot_pc(preferred)
 	return to_drop[preferred] or 1
 end
 
--- Lines 991-1016
+-- Lines 1010-1039
 function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	local sum = 0
 	local to_drop = {
@@ -899,7 +914,7 @@ function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	return 1
 end
 
--- Lines 1044-1061
+-- Lines 1067-1084
 function LootDropManager:debug_check_items(check_type)
 	local t = {}
 
@@ -922,7 +937,7 @@ function LootDropManager:debug_check_items(check_type)
 	return t
 end
 
--- Lines 1063-1091
+-- Lines 1086-1114
 function LootDropManager:debug_loot_aquire_method(type)
 	local no_pcs = managers.lootdrop:debug_check_items(type)
 	local t = {
@@ -967,7 +982,7 @@ function LootDropManager:debug_loot_aquire_method(type)
 	return t
 end
 
--- Lines 1093-1113
+-- Lines 1116-1136
 function LootDropManager:debug_print_pc_items(check_type)
 	for type, data in pairs(tweak_data.blackmarket) do
 		if not check_type or type == check_type then
@@ -991,12 +1006,12 @@ function LootDropManager:debug_print_pc_items(check_type)
 	end
 end
 
--- Lines 1116-1118
+-- Lines 1139-1141
 function LootDropManager:save(data)
 	data.LootDropManager = self._global
 end
 
--- Lines 1121-1123
+-- Lines 1144-1146
 function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end

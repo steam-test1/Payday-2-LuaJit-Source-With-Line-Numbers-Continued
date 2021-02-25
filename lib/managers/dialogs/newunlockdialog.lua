@@ -35,6 +35,7 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 	local image_config = {
 		layer = 2,
 		keep_ratio = true,
+		video_start_paused = true,
 		padding = 10,
 		w = data.image_w or 128,
 		h = data.image_h or 128,
@@ -76,14 +77,15 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 	self._sound_event = data.sound_event
 end
 
--- Lines 50-54
+-- Lines 50-55
 function NewUnlockDialog:fade_in()
 	NewUnlockDialog.super.fade_in(self)
+	self._panel_script:set_video_paused(false)
 
 	self._start_sound_t = self._sound_event and TimerManager:main():time() + 0.2
 end
 
--- Lines 56-63
+-- Lines 57-64
 function NewUnlockDialog:update(t, dt)
 	NewUnlockDialog.super.update(self, t, dt)
 

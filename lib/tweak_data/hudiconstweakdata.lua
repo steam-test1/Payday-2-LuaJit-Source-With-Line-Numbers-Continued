@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-2963
+-- Lines 7-3002
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -13538,6 +13538,330 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Bain_H_Arena_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_Arena_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_Arena_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Bain_H_Arena_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			176,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_FirstWorldBank_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			698,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_FirstWorldBank_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			785,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_FirstWorldBank_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_FirstWorldBank_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_HeatStreet_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			350,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_HeatStreet_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			350,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_HeatStreet_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			524,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Classics_H_HeatStreet_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			698,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_BigBank_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			611,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_BigBank_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			437,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_BigBank_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			611,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_BigBank_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			437,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_Diamond_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			263,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_Diamond_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			437,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_Diamond_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			263,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_Diamond_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			437,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_GoldenGrinCasino_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			176,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_GoldenGrinCasino_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			350,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_GoldenGrinCasino_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			176,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Dentist_H_GoldenGrinCasino_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Hector_H_Watchdogs_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			263,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Hector_H_Watchdogs_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			437,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Hector_H_Watchdogs_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Hector_H_Watchdogs_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_Mallcrasher_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			524,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_Mallcrasher_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_Mallcrasher_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_Mallcrasher_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_Holdout_3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			89,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_Holdout_5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			263,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_Holdout_7 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			611,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Vlad_H_SanMartinBank_Holdout_9 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -13554,7 +13878,7 @@ end
 
 local atlas_data = nil
 
--- Lines 2966-2969
+-- Lines 3005-3008
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -13567,7 +13891,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 2971-2987
+-- Lines 3010-3026
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -13593,7 +13917,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 2989-2994
+-- Lines 3028-3033
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -13607,7 +13931,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 2996-3002
+-- Lines 3035-3041
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -13618,7 +13942,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3004-3010
+-- Lines 3043-3049
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

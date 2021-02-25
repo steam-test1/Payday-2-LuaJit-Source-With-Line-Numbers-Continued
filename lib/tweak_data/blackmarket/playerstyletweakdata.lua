@@ -1,35 +1,6 @@
--- Lines 1-1402
+-- Lines 1-1440
 function BlackMarketTweakData:_init_player_styles(tweak_data)
-	local characters_female = {
-		"female_1",
-		"sydney",
-		"joy",
-		"ecp_female"
-	}
-	local characters_female_big = {
-		"bonnie",
-		"ecp_male"
-	}
-	local characters_male = {
-		"dallas",
-		"wolf",
-		"hoxton",
-		"chains",
-		"jowi",
-		"old_hoxton",
-		"dragan",
-		"jacket",
-		"sokol",
-		"dragon",
-		"bodhi",
-		"jimmy",
-		"chico",
-		"myh"
-	}
-	local characters_male_big = {
-		"wild",
-		"max"
-	}
+	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
 	local body_replacement_standard = {
 		head = false,
@@ -41,7 +12,7 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 	self.player_styles = {}
 	self.player_style_list = {}
 
-	-- Lines 294-299
+	-- Lines 240-245
 	local function set_characters_data(player_style, characters, data)
 		self.player_styles[player_style].characters = self.player_styles[player_style].characters or {}
 
@@ -1734,9 +1705,165 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.hippie.characters.ecp_male = hippie_characters_male_fat
+	self.player_styles.esport = {
+		name_id = "bm_suit_esport",
+		desc_id = "bm_suit_esport_desc",
+		global_value = "ess",
+		texture_bundle_folder = "ess",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_fps_esport/ess_acc_fps_esport_male",
+		material_variations = {}
+	}
+	self.player_styles.esport.material_variations.default = {
+		name_id = "bm_suit_var_esport_default",
+		global_value = "ess",
+		desc_id = "bm_suit_var_esport_default_desc"
+	}
+	self.player_styles.esport.material_variations.yellow = {
+		desc_id = "bm_suit_var_esport_yellow_desc",
+		global_value = "ess",
+		auto_aquire = true,
+		name_id = "bm_suit_var_esport_yellow",
+		third_material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/shared_materials/ess_acc_esport_yellow",
+		material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_fps_esport/ess_acc_fps_esport_yellow"
+	}
+	self.player_styles.esport.material_variations.green = {
+		desc_id = "bm_suit_var_esport_green_desc",
+		global_value = "ess",
+		auto_aquire = true,
+		name_id = "bm_suit_var_esport_green",
+		third_material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/shared_materials/ess_acc_esport_green",
+		material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_fps_esport/ess_acc_fps_esport_green"
+	}
+	self.player_styles.esport.material_variations.black = {
+		desc_id = "bm_suit_var_esport_black_desc",
+		global_value = "ess",
+		auto_aquire = true,
+		name_id = "bm_suit_var_esport_black",
+		third_material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/shared_materials/ess_acc_esport_black",
+		material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_fps_esport/ess_acc_fps_esport_black"
+	}
+	self.player_styles.esport.material_variations.white = {
+		desc_id = "bm_suit_var_esport_white_desc",
+		global_value = "ess",
+		auto_aquire = true,
+		name_id = "bm_suit_var_esport_white",
+		third_material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/shared_materials/ess_acc_esport_white",
+		material = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_fps_esport/ess_acc_fps_esport_white"
+	}
+	self.player_styles.esport.characters = {}
+	local esport_characters_male = {
+		third_unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_esport_male_average/ess_acc_esport_male_average"
+	}
+
+	set_characters_data("esport", characters_male, esport_characters_male)
+
+	local esport_characters_male_big = {
+		third_unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_esport_male_big/ess_acc_esport_male_big"
+	}
+
+	set_characters_data("esport", characters_male_big, esport_characters_male_big)
+
+	local esport_characters_female = {
+		unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_fps_esport/ess_acc_fps_esport_female",
+		third_unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_esport_female_average/ess_acc_esport_female_average"
+	}
+
+	set_characters_data("esport", characters_female, esport_characters_female)
+
+	local esport_characters_female_big = {
+		third_unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_esport_female_big/ess_acc_esport_female_big"
+	}
+
+	set_characters_data("esport", characters_female_big, esport_characters_female_big)
+
+	local esport_characters_male_fat = {
+		third_unit = "units/pd2_dlc_ess/characters/ess_acc_esportgamer/ess_acc_esport_male_fat/ess_acc_esport_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.esport.characters.ecp_male = esport_characters_male_fat
+	self.player_styles.slaughterhouse = {
+		locks = {
+			achievement = "trk_sh_0"
+		},
+		name_id = "bm_suit_slaughterhouse",
+		desc_id = "bm_suit_slaughterhouse_desc",
+		global_value = "sus",
+		texture_bundle_folder = "sus",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse",
+		characters = {}
+	}
+	local slaughterhouse_characters_male = {
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_average/sus_acc_slaughterhouse_male_average"
+	}
+
+	set_characters_data("slaughterhouse", characters_male, slaughterhouse_characters_male)
+
+	local slaughterhouse_dragon = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_02",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_average_02/sus_acc_slaughterhouse_male_average_02"
+	}
+	self.player_styles.slaughterhouse.characters.dragon = slaughterhouse_dragon
+	local slaughterhouse_bodhi = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_bodhi",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_average_bodhi/sus_acc_slaughterhouse_male_average_bodhi"
+	}
+	self.player_styles.slaughterhouse.characters.bodhi = slaughterhouse_bodhi
+	local slaughterhouse_scarface = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_02",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_average_02/sus_acc_slaughterhouse_male_average_02"
+	}
+	self.player_styles.slaughterhouse.characters.chico = slaughterhouse_scarface
+	local slaughterhouse_chains = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_chains",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_average_chains/sus_acc_slaughterhouse_male_average_chains"
+	}
+	self.player_styles.slaughterhouse.characters.chains = slaughterhouse_chains
+	local slaughterhouse_characters_male_big = {
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_big/sus_acc_slaughterhouse_male_big"
+	}
+
+	set_characters_data("slaughterhouse", characters_male_big, slaughterhouse_characters_male_big)
+
+	local slaughterhouse_sangres = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_sangres",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_big_sangres/sus_acc_slaughterhouse_male_big_sangres"
+	}
+	self.player_styles.slaughterhouse.characters.max = slaughterhouse_sangres
+	local slaughterhouse_characters_female = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_female",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_female_average/sus_acc_slaughterhouse_female_average"
+	}
+
+	set_characters_data("slaughterhouse", characters_female, slaughterhouse_characters_female)
+
+	local slaughterhouse_sydney = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_female_sydney",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_female_average_sydney/sus_acc_slaughterhouse_female_average_sydney"
+	}
+	self.player_styles.slaughterhouse.characters.sydney = slaughterhouse_sydney
+	local slaughterhouse_joy = {
+		unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_female_joy",
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_female_average_joy/sus_acc_slaughterhouse_female_average_joy"
+	}
+	self.player_styles.slaughterhouse.characters.joy = slaughterhouse_joy
+	local slaughterhouse_characters_female_big = {}
+	slaughterhouse_characters_female.unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_fps_slaughterhouse/sus_acc_fps_slaughterhouse_female"
+	slaughterhouse_characters_female_big.third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_female_big/sus_acc_slaughterhouse_female_big"
+
+	set_characters_data("slaughterhouse", characters_female_big, slaughterhouse_characters_female_big)
+
+	local slaughterhouse_characters_male_fat = {
+		third_unit = "units/pd2_dlc_sus/characters/sus_acc_slaughterhouse/sus_acc_slaughterhouse_male_fat/sus_acc_slaughterhouse_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.slaughterhouse.characters.ecp_male = slaughterhouse_characters_male_fat
 end
 
--- Lines 1404-1426
+-- Lines 1442-1464
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -1761,7 +1888,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 1428-1453
+-- Lines 1466-1491
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -1789,7 +1916,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 1455-1476
+-- Lines 1493-1514
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -1816,7 +1943,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 1478-1514
+-- Lines 1516-1552
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -1860,7 +1987,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 1517-1546
+-- Lines 1555-1584
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -1891,7 +2018,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 1548-1554
+-- Lines 1586-1592
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -1900,7 +2027,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 1556-1571
+-- Lines 1594-1609
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -1920,11 +2047,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 1573-1606
+-- Lines 1611-1644
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 1577-1603
+	-- Lines 1615-1641
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

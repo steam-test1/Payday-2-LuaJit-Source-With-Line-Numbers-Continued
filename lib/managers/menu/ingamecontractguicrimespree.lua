@@ -182,31 +182,33 @@ function IngameContractGuiCrimeSpree:mouse_wheel_down(x, y)
 	self._scroll:scroll(x, y, -1)
 end
 
--- Lines 157-163
+-- Lines 157-166
 function IngameContractGuiCrimeSpree:special_btn_pressed(button)
-	if button == Idstring("menu_modify_item") then
+	print("[IngameContractGuiCrimeSpree:special_btn_pressed]")
+
+	if button == Idstring("menu_modify_item") and alive(self._potential_rewards_title) then
 		self:_toggle_potential_rewards()
 	end
 
 	return false
 end
 
--- Lines 165-167
+-- Lines 168-170
 function IngameContractGuiCrimeSpree:_setup_controller_input()
 	CrimeSpreeContractMenuComponent._setup_controller_input(self)
 end
 
--- Lines 169-171
+-- Lines 172-174
 function IngameContractGuiCrimeSpree:_axis_move(o, axis_name, axis_vector, controller)
 	CrimeSpreeContractMenuComponent._axis_move(self, o, axis_name, axis_vector, controller)
 end
 
--- Lines 173-175
+-- Lines 176-178
 function IngameContractGuiCrimeSpree:update(t, dt)
 	CrimeSpreeContractMenuComponent.update(self, t, dt)
 end
 
--- Lines 177-182
+-- Lines 180-185
 function IngameContractGuiCrimeSpree:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)

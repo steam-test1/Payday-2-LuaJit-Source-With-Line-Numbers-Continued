@@ -29,7 +29,7 @@ function StoryMissionsTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines 26-41
+-- Lines 26-40
 function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	local tweak_data = self._tweak_data or tweak_data
 	local data = self:_progress(progress_id, ...)
@@ -47,8 +47,6 @@ function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	} or ach.jobs
 	data.difficulty = ach.difficulty and ach.difficulty[1]
 
-	print("difficulty", data.difficulty, ach.difficulty and ach.difficulty[1])
-
 	if not data.levels then
 		Application:error("Can't find jobs data from achievement", progress_id)
 
@@ -58,7 +56,7 @@ function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	return data
 end
 
--- Lines 43-45
+-- Lines 42-44
 function StoryMissionsTweakData:_default_reward()
 	return {
 		{
@@ -68,7 +66,7 @@ function StoryMissionsTweakData:_default_reward()
 	}
 end
 
--- Lines 47-53
+-- Lines 46-52
 function StoryMissionsTweakData:_default_pre_coins()
 	return {
 		{
@@ -82,7 +80,7 @@ function StoryMissionsTweakData:_default_pre_coins()
 	}
 end
 
--- Lines 58-64
+-- Lines 57-63
 function StoryMissionsTweakData:get_mission(id)
 	for idx, mission in ipairs(self.missions) do
 		if mission.id == id then
@@ -91,7 +89,7 @@ function StoryMissionsTweakData:get_mission(id)
 	end
 end
 
--- Lines 66-83
+-- Lines 65-82
 function StoryMissionsTweakData:_mission(id, data)
 	data = data or {}
 	data.id = id
@@ -102,7 +100,7 @@ function StoryMissionsTweakData:_mission(id, data)
 	return data
 end
 
--- Lines 86-91
+-- Lines 85-90
 local function level_check(id, ach_id)
 	local d = tweak_data.achievement.level_achievements[ach_id or id]
 
@@ -111,24 +109,24 @@ local function level_check(id, ach_id)
 	end
 end
 
--- Lines 93-97
+-- Lines 92-96
 local function maybe_award(id, check, set)
 	if check then
 		managers.story:award(id, set == true and check or set or nil)
 	end
 end
 
--- Lines 101-103
+-- Lines 100-102
 function StoryMissionsTweakData._sm_1_check(mission_data)
 	level_check("story_basics_lvl10")
 end
 
--- Lines 105-112
+-- Lines 104-111
 function StoryMissionsTweakData._sm_first_safehouse_check()
 	maybe_award("story_first_safehouse", managers.custom_safehouse:unlocked())
 end
 
--- Lines 114-119
+-- Lines 113-118
 function StoryMissionsTweakData._sm_2_check()
 	local slots = managers.player:equipment_slots()
 
@@ -137,17 +135,17 @@ function StoryMissionsTweakData._sm_2_check()
 	maybe_award("story_inv_skillpoints", tweak_data.story.sm_2_skillpoints <= managers.skilltree:total_points_spent())
 end
 
--- Lines 121-123
+-- Lines 120-122
 function StoryMissionsTweakData._sm_moving_up_check()
 	level_check("story_chill_level")
 end
 
--- Lines 125-127
+-- Lines 124-126
 function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines 131-760
+-- Lines 130-759
 function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 5
 	self.missions = {
