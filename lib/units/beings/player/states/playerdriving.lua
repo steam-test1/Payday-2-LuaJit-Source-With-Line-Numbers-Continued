@@ -30,8 +30,6 @@ function PlayerDriving:enter(state_data, enter_data)
 			ai.unit:movement():set_should_stay(false)
 		end
 	end
-
-	self._was_unarmed = enter_data.was_unarmed
 end
 
 -- Lines 44-105
@@ -150,10 +148,7 @@ function PlayerDriving:exit(state_data, new_state_name)
 		self._unit:inventory():show_equipped_unit()
 	end
 
-	if not self._was_unarmed or not managers.groupai:state():whisper_mode() then
-		self._unit:camera():play_redirect(self:get_animation("equip"))
-	end
-
+	self._unit:camera():play_redirect(self:get_animation("equip"))
 	managers.player:exit_vehicle()
 
 	self._dye_risk = nil
@@ -595,12 +590,8 @@ function PlayerDriving:cb_leave()
 		return
 	end
 
-	if self._was_unarmed and managers.groupai:state():whisper_mode() then
-		managers.player:set_player_state("mask_off")
-	else
-		self._unit:camera():play_redirect(self:get_animation("idle"))
-		managers.player:set_player_state("standard")
-	end
+	self._unit:camera():play_redirect(self:get_animation("idle"))
+	managers.player:set_player_state("standard")
 end
 
 -- Lines 621-623

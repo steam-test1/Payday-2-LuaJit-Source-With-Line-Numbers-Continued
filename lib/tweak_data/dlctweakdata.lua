@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 5-5545
+-- Lines 5-5483
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -52,31 +52,27 @@ function DLCTweakData:init(tweak_data)
 			sft = true,
 			pim = true,
 			cash = true,
-			sdb = true,
+			ghm = true,
 			bbq = true,
-			ram = true,
+			steel = true,
 			jigg = 1,
 			season_pass = true,
 			gage_pack_snp = true,
 			dlc1 = true,
-			ghm = true,
-			ssm = true,
-			steel = true,
+			speedrunners = 1,
+			alienware_alpha = true,
+			humble_summer_2015 = 1,
 			pd2_million = true,
 			hlm2 = true,
 			mmh = true,
 			fgl = true,
 			pd2_hw_boxing = true,
-			speedrunners = 1,
+			apa = true,
 			infamous = 1,
 			pines = true,
-			alienware_alpha = true,
 			born = true,
-			humble_summer_2015 = 1,
-			khp = true,
 			trk = true,
 			pmp = true,
-			apa = true,
 			wmp = true,
 			opera = true,
 			pd2_goty = 1,
@@ -94,7 +90,6 @@ function DLCTweakData:init(tweak_data)
 			tng = true,
 			pal = true,
 			favorite = true,
-			ktm = true,
 			mad = true,
 			turtles = true,
 			gage_pack_jobs = false,
@@ -7674,72 +7669,6 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "ghm",
-			amount = 1
-		}
-	}
-	self.khp_bundle = {
-		free = true,
-		content = {}
-	}
-	self.khp_bundle.content.loot_global_value = "normal"
-	self.khp_bundle.content.loot_drops = {
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_pis_legacy_b_threaded",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_pis_legacy_g_wood",
-			amount = 1
-		}
-	}
-	self.sdb_bundle = {
-		free = true,
-		content = {}
-	}
-	self.sdb_bundle.content.loot_global_value = "normal"
-	self.sdb_bundle.content.loot_drops = {
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_sho_coach_b_short",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_sho_coach_s_short",
-			amount = 1
-		}
-	}
-	self.ram_bundle = {
-		free = true,
-		content = {}
-	}
-	self.ram_bundle.content.loot_global_value = "normal"
-	self.ram_bundle.content.loot_drops = {
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_bow_elastic_m_explosive",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_bow_elastic_m_poison",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_bow_elastic_body_tactic",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_bow_elastic_g_2",
-			amount = 1
-		},
-		{
-			type_items = "weapon_mods",
-			item_entry = "wpn_fps_bow_elastic_g_3",
 			amount = 1
 		}
 	}

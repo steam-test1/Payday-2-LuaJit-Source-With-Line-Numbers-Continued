@@ -1862,24 +1862,20 @@ end
 
 MenuNodeMainGui = MenuNodeMainGui or class(MenuNodeGui)
 
--- Lines 1769-1778
+-- Lines 1769-1773
 function MenuNodeMainGui:_setup_item_rows(node)
 	MenuNodeMainGui.super._setup_item_rows(self, node)
 	self:_add_version_string()
 	managers.features:announce_feature("short_heists_available")
-
-	if MenuCallbackHandler:enable_movie_theater() then
-		managers.features:announce_feature("movie_theater_unlocked")
-	end
 end
 
--- Lines 1780-1783
+-- Lines 1775-1778
 function MenuNodeMainGui:set_visible(visible)
 	MenuNodeMainGui.super.set_visible(self, visible)
 	self:_add_version_string()
 end
 
--- Lines 1785-1838
+-- Lines 1780-1833
 function MenuNodeMainGui:_add_version_string()
 	if alive(self._version_string) then
 		self._version_string:parent():remove(self._version_string)
@@ -1899,7 +1895,7 @@ function MenuNodeMainGui:_add_version_string()
 			font_size = tweak_data.menu.pd2_small_font_size
 		})
 
-		-- Lines 1813-1833
+		-- Lines 1808-1828
 		local function fade_in(o)
 			local from = Color(0, 1, 1, 1)
 			local to = Color(1, 1, 1, 1)

@@ -723,20 +723,9 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name)
 	end
 end
 
--- Lines 787-789
-function VehicleDrivingExt:disable_player_exit()
-	self._manual_exit_disabled = true
-end
-
--- Lines 791-793
-function VehicleDrivingExt:enable_player_exit()
-	self._manual_exit_disabled = nil
-end
-
 -- Lines 796-802
 function VehicleDrivingExt:allow_exit()
 	local allowed = self._current_state:allow_exit()
-	allowed = allowed and not self._manual_exit_disabled
 
 	return allowed
 end
@@ -871,15 +860,6 @@ function VehicleDrivingExt:get_object_placement(player)
 	print("[VehicleDrivingExt:get_object_placement] Seat not found for player!")
 
 	return nil, nil
-end
-
--- Lines 929-935
-function VehicleDrivingExt:get_seat_by_name(seat_name)
-	for name, seat in pairs(self._seats) do
-		if name == seat_name then
-			return seat
-		end
-	end
 end
 
 -- Lines 940-959
@@ -1548,8 +1528,8 @@ function VehicleDrivingExt:_chk_register_drive_SO()
 	end
 end
 
--- Lines 1598-1705
-function VehicleDrivingExt:_create_seat_SO(seat, dont_register)
+-- Lines 1600-1705
+function VehicleDrivingExt:_create_seat_SO(seat)
 	if seat.drive_SO_data then
 		return
 	end
@@ -1600,15 +1580,13 @@ function VehicleDrivingExt:_create_seat_SO(seat, dont_register)
 	}
 	local SO_id = "ride_" .. tostring(self._unit:key()) .. seat.name
 	seat.drive_SO_data = {
+		SO_registered = true,
 		SO_id = SO_id,
-		SO_registered = not dont_register,
 		align_area = align_area,
 		ride_objective = ride_objective
 	}
 
-	if not dont_register then
-		managers.groupai:state():add_special_objective(SO_id, SO_descriptor)
-	end
+	managers.groupai:state():add_special_objective(SO_id, SO_descriptor)
 end
 
 -- Lines 1708-1729

@@ -1,6 +1,6 @@
 SniperGrazeDamage = SniperGrazeDamage or {}
 
--- Lines 35-134
+-- Lines 35-129
 function SniperGrazeDamage:on_weapon_fired(weapon_unit, result)
 	if not weapon_unit:base():is_category("snp") then
 		return
@@ -24,9 +24,8 @@ function SniperGrazeDamage:on_weapon_fired(weapon_unit, result)
 	for _, hit in ipairs(result.rays) do
 		local is_turret = hit.unit:in_slot(sentry_mask)
 		local is_ally = hit.unit:in_slot(ally_mask)
-		local is_valid_hit = hit.damage_result and hit.damage_result.attack_data
 
-		if not is_turret and not is_ally and is_valid_hit then
+		if not is_turret and not is_ally and hit.damage_result then
 			local result = hit.damage_result
 			local attack_data = result.attack_data
 			local headshot_kill = attack_data.headshot and result.type == "death" or result.type == "healed"

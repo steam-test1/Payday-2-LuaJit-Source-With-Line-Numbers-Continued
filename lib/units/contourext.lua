@@ -178,12 +178,7 @@ function ContourExt:init(unit)
 	end
 end
 
--- Lines 220-222
-function ContourExt:contour_list()
-	return self._contour_list
-end
-
--- Lines 224-234
+-- Lines 220-230
 function ContourExt:apply_to_linked(func_name, ...)
 	if self._unit.spawn_manager and self._unit:spawn_manager() and self._unit:spawn_manager():linked_units() then
 		for unit_id, _ in pairs(self._unit:spawn_manager():linked_units()) do
@@ -198,7 +193,7 @@ function ContourExt:apply_to_linked(func_name, ...)
 	end
 end
 
--- Lines 236-321
+-- Lines 232-317
 function ContourExt:add(type, sync, multiplier)
 	if Global.debug_contour_enabled then
 		return
@@ -277,7 +272,7 @@ function ContourExt:add(type, sync, multiplier)
 	return setup
 end
 
--- Lines 323-338
+-- Lines 319-334
 function ContourExt:change_color(type, color)
 	if not self._contour_list then
 		return
@@ -296,7 +291,7 @@ function ContourExt:change_color(type, color)
 	self:apply_to_linked("change_color", type, color)
 end
 
--- Lines 340-357
+-- Lines 336-353
 function ContourExt:flash(type_or_id, frequency)
 	if not self._contour_list then
 		return
@@ -317,7 +312,7 @@ function ContourExt:flash(type_or_id, frequency)
 	self:apply_to_linked("flash", type_or_id, frequency)
 end
 
--- Lines 359-369
+-- Lines 355-365
 function ContourExt:is_flashing()
 	if not self._contour_list then
 		return
@@ -330,7 +325,7 @@ function ContourExt:is_flashing()
 	end
 end
 
--- Lines 371-391
+-- Lines 367-387
 function ContourExt:remove(type, sync)
 	if not self._contour_list then
 		return
@@ -353,7 +348,7 @@ function ContourExt:remove(type, sync)
 	self:apply_to_linked("remove", type, sync)
 end
 
--- Lines 393-413
+-- Lines 389-409
 function ContourExt:remove_by_id(id, sync)
 	if not self._contour_list then
 		return
@@ -376,7 +371,7 @@ function ContourExt:remove_by_id(id, sync)
 	self:apply_to_linked("remove", remove_type, sync)
 end
 
--- Lines 415-422
+-- Lines 411-418
 function ContourExt:has_id(id)
 	for i, setup in ipairs(self._contour_list) do
 		if setup.type == id then
@@ -387,13 +382,13 @@ function ContourExt:has_id(id)
 	return false
 end
 
--- Lines 424-427
+-- Lines 420-423
 function ContourExt:_clear()
 	self._contour_list = nil
 	self._materials = nil
 end
 
--- Lines 429-497
+-- Lines 425-493
 function ContourExt:_remove(index, sync)
 	local setup = self._contour_list and self._contour_list[index]
 
@@ -464,7 +459,7 @@ function ContourExt:_remove(index, sync)
 	end
 end
 
--- Lines 499-551
+-- Lines 495-547
 function ContourExt:update(unit, t, dt)
 	local index = 1
 
@@ -514,7 +509,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines 553-578
+-- Lines 549-574
 function ContourExt:_upd_opacity(opacity, is_retry)
 	if opacity == self._last_opacity then
 		return
@@ -544,7 +539,7 @@ function ContourExt:_upd_opacity(opacity, is_retry)
 	self:apply_to_linked("_upd_opacity", opacity, is_retry)
 end
 
--- Lines 580-605
+-- Lines 576-601
 function ContourExt:_upd_color(is_retry)
 	if not self._contour_list or #self._contour_list == 0 then
 		return
@@ -575,7 +570,7 @@ function ContourExt:_upd_color(is_retry)
 	self:apply_to_linked("_upd_color", is_retry)
 end
 
--- Lines 607-627
+-- Lines 603-623
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
@@ -596,7 +591,7 @@ function ContourExt:_apply_top_preset()
 	end
 end
 
--- Lines 629-652
+-- Lines 625-648
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -624,7 +619,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines 654-670
+-- Lines 650-666
 function ContourExt:_chk_update_state()
 	local needs_update = nil
 
@@ -645,7 +640,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines 672-680
+-- Lines 668-676
 function ContourExt:update_materials()
 	if self._contour_list and next(self._contour_list) then
 		self._materials = nil
@@ -658,7 +653,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines 682-691
+-- Lines 678-687
 function ContourExt:save(data)
 	if self._contour_list then
 		for _, setup in ipairs(self._contour_list) do
@@ -671,7 +666,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines 693-697
+-- Lines 689-693
 function ContourExt:load(data)
 	if data and data.highlight_character then
 		self:add(data.highlight_character.type)

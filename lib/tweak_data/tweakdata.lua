@@ -390,7 +390,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 412-2361
+-- Lines 412-2334
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1739,15 +1739,6 @@ Play the full version soon to get your full PAYDAY!]],
 			track = "track_61"
 		},
 		{
-			track = "track_62_lcv"
-		},
-		{
-			track = "track_63"
-		},
-		{
-			track = "track_64_lcv"
-		},
-		{
 			track = "track_32_lcv"
 		},
 		{
@@ -2534,20 +2525,6 @@ Play the full version soon to get your full PAYDAY!]],
 	self.projectiles.ecp_arrow_exp.damage = 55
 	self.projectiles.ecp_arrow_exp.bullet_class = "InstantExplosiveBulletBase"
 	self.projectiles.ecp_arrow_exp.remove_on_impact = true
-	self.projectiles.elastic_arrow = {
-		damage = 200,
-		launch_speed = 3500,
-		adjust_z = -130,
-		mass_look_up_modifier = 1,
-		push_at_body_index = 0
-	}
-	self.projectiles.elastic_arrow_poison = deep_clone(self.projectiles.elastic_arrow)
-	self.projectiles.elastic_arrow_poison.damage = 30
-	self.projectiles.elastic_arrow_poison.bullet_class = "PoisonBulletBase"
-	self.projectiles.elastic_arrow_exp = deep_clone(self.projectiles.elastic_arrow)
-	self.projectiles.elastic_arrow_exp.damage = 140
-	self.projectiles.elastic_arrow_exp.bullet_class = "InstantExplosiveBulletBase"
-	self.projectiles.elastic_arrow_exp.remove_on_impact = true
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
@@ -2631,25 +2608,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2365-2381
-function TweakData:load_movie_list()
-	local CONFIG_PATH = "gamedata/movie_theater"
-	local FILE_EXTENSION = "movie_theater"
-	self.movies = {}
-	local movie_data = PackageManager:xml_data(FILE_EXTENSION:id(), CONFIG_PATH:id())
-
-	if movie_data then
-		for i = 0, movie_data:num_children() - 1 do
-			local item = movie_data:child(i):parameter_map()
-
-			if item.file and DB:has(Idstring("movie"), item.file) then
-				table.insert(self.movies, item)
-			end
-		end
-	end
-end
-
--- Lines 2386-2483
+-- Lines 2338-2435
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2728,19 +2687,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2487-2567
+-- Lines 2439-2519
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2571-2573
+-- Lines 2523-2525
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2577-2585
+-- Lines 2529-2537
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2751,7 +2710,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2589-2592
+-- Lines 2541-2544
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2761,7 +2720,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2596-2605
+-- Lines 2548-2557
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2774,7 +2733,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2609-2785
+-- Lines 2561-2737
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -2963,7 +2922,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 2787-2960
+-- Lines 2739-2902
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3026,12 +2985,6 @@ function TweakData:set_menu_scale()
 	self.menu.pd2_tiny_font = "fonts/font_small_mf"
 	self.menu.pd2_tiny_font_id = Idstring(self.menu.pd2_tiny_font)
 	self.menu.pd2_tiny_font_size = 16
-	self.menu.uno_vessel_font = "fonts/font_vessel"
-	self.menu.uno_vessel_font_id = Idstring(self.menu.uno_vessel_font)
-	self.menu.uno_vessel_font_size = 20
-	self.menu.uno_vessel_ext_font = "fonts/font_vessel_ext"
-	self.menu.uno_vessel_ext_font_id = Idstring(self.menu.uno_vessel_ext_font)
-	self.menu.uno_vessel_ext_font_size = 20
 	self.menu.default_font_size = 24 * scale_multiplier
 	self.menu.default_font_row_item_color = Color.white
 	self.menu.default_hightlight_row_item_color = Color(1, 0, 0, 0)
@@ -3077,7 +3030,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 2962-3034
+-- Lines 2904-2976
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3150,7 +3103,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3037-3041
+-- Lines 2979-2983
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3168,7 +3121,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3058-3273
+-- Lines 3000-3215
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

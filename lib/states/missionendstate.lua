@@ -29,7 +29,7 @@ end
 function MissionEndState:set_controller_enabled(enabled)
 end
 
--- Lines 32-263
+-- Lines 32-259
 function MissionEndState:at_enter(old_state, params)
 	managers.environment_effects:stop_all()
 
@@ -251,17 +251,17 @@ function MissionEndState:at_enter(old_state, params)
 	end
 end
 
--- Lines 265-267
+-- Lines 261-263
 function MissionEndState:is_success()
 	return self._success
 end
 
--- Lines 271-273
+-- Lines 267-269
 function MissionEndState:_get_xp_dissected(success, num_winners, personal_win)
 	return managers.experience:get_xp_dissected(success, num_winners, personal_win)
 end
 
--- Lines 275-314
+-- Lines 271-310
 function MissionEndState:_get_contract_xp(success)
 	local has_active_job = managers.job:has_active_job()
 	local job_and_difficulty_stars = has_active_job and managers.job:current_job_and_difficulty_stars() or 1
@@ -297,14 +297,14 @@ function MissionEndState:_get_contract_xp(success)
 	return contract_xp
 end
 
--- Lines 316-320
+-- Lines 312-316
 function MissionEndState:set_continue_button_text()
 	if self._completion_bonus_done then
 		self:_set_continue_button_text()
 	end
 end
 
--- Lines 322-337
+-- Lines 318-333
 function MissionEndState:_set_continue_button_text()
 	local text_id = "failed_disconnected_continue"
 	local not_clickable = false
@@ -324,7 +324,7 @@ function MissionEndState:_set_continue_button_text()
 	managers.menu_component:set_endscreen_continue_button_text(text, not_clickable)
 end
 
--- Lines 339-356
+-- Lines 335-352
 function MissionEndState:play_finishing_sound(success)
 	if self._server_left then
 		return
@@ -341,13 +341,13 @@ function MissionEndState:play_finishing_sound(success)
 	end
 end
 
--- Lines 359-362
+-- Lines 355-358
 function MissionEndState:completion_bonus_done(total_xp_bonus)
 	self._total_xp_bonus = total_xp_bonus
 	self._completion_bonus_done = false
 end
 
--- Lines 364-409
+-- Lines 360-405
 function MissionEndState:at_exit(next_state)
 	managers.briefing:stop_event(true)
 	managers.hud:hide(self.GUI_ENDSCREEN)
@@ -391,7 +391,7 @@ function MissionEndState:at_exit(next_state)
 	managers.menu:close_menu("mission_end_menu")
 end
 
--- Lines 412-417
+-- Lines 408-413
 function MissionEndState:_shut_down_network()
 	Network:set_multiplayer(false)
 	managers.network:queue_stop_network()
@@ -399,7 +399,7 @@ function MissionEndState:_shut_down_network()
 	managers.network.voice_chat:destroy_voice()
 end
 
--- Lines 420-431
+-- Lines 416-427
 function MissionEndState:_load_start_menu(next_state)
 	if next_state:name() == "disconnected" then
 		return
@@ -413,7 +413,7 @@ function MissionEndState:_load_start_menu(next_state)
 	setup:load_start_menu()
 end
 
--- Lines 433-604
+-- Lines 429-600
 function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_score, best_special_kills_peer_id, best_special_kills_score, best_accuracy_peer_id, best_accuracy_score, most_downs_peer_id, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	print("on_statistics_result begin")
 
@@ -594,7 +594,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 	end
 end
 
--- Lines 607-698
+-- Lines 603-694
 function MissionEndState:generate_safehouse_statistics()
 	if not managers.custom_safehouse:unlocked() then
 		return
@@ -693,7 +693,7 @@ function MissionEndState:generate_safehouse_statistics()
 	self._statistics_data.stage_safehouse_summary = stage_safehouse_summary_string
 end
 
--- Lines 700-706
+-- Lines 696-702
 function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	if self._statistics_feeded then
 		self:generate_safehouse_statistics()
@@ -701,7 +701,7 @@ function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	end
 end
 
--- Lines 709-736
+-- Lines 705-732
 function MissionEndState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._mission_end_menu
 
@@ -732,12 +732,12 @@ function MissionEndState:_continue_blocked()
 	return false
 end
 
--- Lines 738-740
+-- Lines 734-736
 function MissionEndState:_continue()
 	self:continue()
 end
 
--- Lines 742-758
+-- Lines 738-754
 function MissionEndState:continue()
 	if self:_continue_blocked() then
 		return
@@ -756,7 +756,7 @@ function MissionEndState:continue()
 	end
 end
 
--- Lines 760-768
+-- Lines 756-764
 function MissionEndState:_clear_controller()
 	if not self._controller then
 		return
@@ -768,7 +768,7 @@ function MissionEndState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 770-782
+-- Lines 766-778
 function MissionEndState:debug_continue()
 	if not self._success then
 		return
@@ -786,14 +786,14 @@ function MissionEndState:debug_continue()
 	end
 end
 
--- Lines 784-787
+-- Lines 780-783
 function MissionEndState:set_completion_bonus_done(done)
 	self._completion_bonus_done = done
 
 	self:_set_continue_button_text()
 end
 
--- Lines 789-847
+-- Lines 785-843
 function MissionEndState:update(t, dt)
 	managers.hud:update_endscreen_hud(t, dt)
 
@@ -854,27 +854,27 @@ function MissionEndState:update(t, dt)
 	self._in_focus = in_focus
 end
 
--- Lines 849-851
+-- Lines 845-847
 function MissionEndState:game_ended()
 	return true
 end
 
--- Lines 853-855
+-- Lines 849-851
 function MissionEndState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 857-859
+-- Lines 853-855
 function MissionEndState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 861-863
+-- Lines 857-859
 function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines 866-1521
+-- Lines 862-1505
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()
@@ -976,7 +976,7 @@ function MissionEndState:chk_complete_heist_achievements()
 				end
 			end
 
-			local mask_pass, diff_pass, one_down_pass, no_shots_pass, contract_pass, job_pass, jobs_pass, level_pass, levels_pass, stealth_pass, loud_pass, equipped_pass, job_value_pass, phalanx_vip_alive_pass, used_weapon_category_pass, equipped_team_pass, timer_pass, num_players_pass, pass_skills, killed_by_weapons_pass, killed_by_melee_pass, killed_by_grenade_pass, civilians_killed_pass, complete_job_pass, memory_pass, is_host_pass, character_pass, converted_cops_pass, total_accuracy_pass, weapons_used_pass, everyone_killed_by_weapons_pass, everyone_killed_by_melee_pass, everyone_killed_by_grenade_pass, everyone_weapons_used_pass, enemy_killed_pass, everyone_used_weapon_category_pass, everyone_killed_by_weapon_category_pass, everyone_killed_by_projectile_pass, killed_pass, shots_by_weapon_pass, killed_by_blueprint_pass, melee_used_pass, mutators_pass, secured_pass, crime_spree_pass, preplan_pass, max_players_pass, bots_pass, bag_loot_value_pass, all_pass, weapon_data, memory, level_id, stage, num_skills = nil
+			local mask_pass, diff_pass, one_down_pass, no_shots_pass, contract_pass, job_pass, jobs_pass, level_pass, levels_pass, stealth_pass, loud_pass, equipped_pass, job_value_pass, phalanx_vip_alive_pass, used_weapon_category_pass, equipped_team_pass, timer_pass, num_players_pass, pass_skills, killed_by_weapons_pass, killed_by_melee_pass, killed_by_grenade_pass, civilians_killed_pass, complete_job_pass, memory_pass, is_host_pass, character_pass, converted_cops_pass, total_accuracy_pass, weapons_used_pass, everyone_killed_by_weapons_pass, everyone_killed_by_melee_pass, everyone_killed_by_grenade_pass, everyone_weapons_used_pass, enemy_killed_pass, everyone_used_weapon_category_pass, everyone_killed_by_weapon_category_pass, everyone_killed_by_projectile_pass, killed_pass, shots_by_weapon_pass, killed_by_blueprint_pass, melee_used_pass, mutators_pass, secured_pass, crime_spree_pass, preplan_pass, max_players_pass, bots_pass, all_pass, weapon_data, memory, level_id, stage, num_skills = nil
 			local phalanx_vip_alive = false
 
 			for _, enemy in pairs(managers.enemy:all_enemies() or {}) do
@@ -1012,8 +1012,6 @@ function MissionEndState:chk_complete_heist_achievements()
 				preplan_pass = not achievement_data.no_preplan or not managers.preplanning:get_finished_preplan() or #managers.preplanning:get_finished_preplan()[2] == 0
 				max_players_pass = not achievement_data.max_players or managers.network:session():amount_of_players() <= achievement_data.max_players
 				bots_pass = not achievement_data.no_bots or managers.criminals:nr_AI_criminals() == 0
-				mask_pass = mask_pass and (not achievement_data.masks or table.contains(achievement_data.masks, managers.blackmarket:equipped_mask().mask_id))
-				bag_loot_value_pass = not achievement_data.bag_loot_value or achievement_data.bag_loot_value <= managers.money:get_payouts().bag_payout
 				enemy_killed_pass = not achievement_data.killed
 
 				if achievement_data.killed then
@@ -1404,7 +1402,7 @@ function MissionEndState:chk_complete_heist_achievements()
 				end
 
 				equipped_team_pass = managers.challenge:check_equipped(achievement_data) and managers.challenge:check_equipped_team(achievement_data)
-				all_pass = job_pass and jobs_pass and level_pass and levels_pass and contract_pass and diff_pass and mask_pass and no_shots_pass and stealth_pass and loud_pass and equipped_pass and equipped_team_pass and num_players_pass and pass_skills and timer_pass and killed_by_weapons_pass and killed_by_melee_pass and killed_by_grenade_pass and complete_job_pass and job_value_pass and memory_pass and phalanx_vip_alive_pass and used_weapon_category_pass and is_host_pass and character_pass and converted_cops_pass and total_accuracy_pass and weapons_used_pass and everyone_killed_by_weapons_pass and everyone_killed_by_melee_pass and everyone_killed_by_grenade_pass and everyone_weapons_used_pass and everyone_used_weapon_category_pass and enemy_killed_pass and everyone_killed_by_weapon_category_pass and everyone_killed_by_projectile_pass and killed_pass and shots_by_weapon_pass and killed_by_blueprint_pass and melee_used_pass and one_down_pass and mutators_pass and secured_pass and crime_spree_pass and preplan_pass and max_players_pass and bots_pass and bag_loot_value_pass
+				all_pass = job_pass and jobs_pass and level_pass and levels_pass and contract_pass and diff_pass and mask_pass and no_shots_pass and stealth_pass and loud_pass and equipped_pass and equipped_team_pass and num_players_pass and pass_skills and timer_pass and killed_by_weapons_pass and killed_by_melee_pass and killed_by_grenade_pass and complete_job_pass and job_value_pass and memory_pass and phalanx_vip_alive_pass and used_weapon_category_pass and is_host_pass and character_pass and converted_cops_pass and total_accuracy_pass and weapons_used_pass and everyone_killed_by_weapons_pass and everyone_killed_by_melee_pass and everyone_killed_by_grenade_pass and everyone_weapons_used_pass and everyone_used_weapon_category_pass and enemy_killed_pass and everyone_killed_by_weapon_category_pass and everyone_killed_by_projectile_pass and killed_pass and shots_by_weapon_pass and killed_by_blueprint_pass and melee_used_pass and one_down_pass and mutators_pass and secured_pass and crime_spree_pass and preplan_pass and max_players_pass and bots_pass
 
 				if all_pass and achievement_data.need_full_job and managers.job:has_active_job() then
 					memory = managers.job:get_memory(achievement)

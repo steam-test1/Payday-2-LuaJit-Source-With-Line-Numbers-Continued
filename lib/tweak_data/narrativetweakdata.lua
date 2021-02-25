@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-3876
+-- Lines 3-3848
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -5671,144 +5671,6 @@ function NarrativeTweakData:init(tweak_data)
 		4,
 		29
 	}
-	self.stages.vit = {
-		type = "d",
-		type_id = "heist_type_assault",
-		level_id = "vit"
-	}
-	self.jobs.vit = {
-		name_id = "heist_vit",
-		briefing_id = "heist_vit_crimenet",
-		contact = "locke",
-		region = "street",
-		jc = 30,
-		chain = {
-			self.stages.vit
-		},
-		briefing_event = "Play_pln_vit_cbf_01",
-		debrief_event = nil,
-		crimenet_callouts = {
-			"Play_loc_vit_cnc_01"
-		},
-		crimenet_videos = {
-			"contact_locke1"
-		},
-		payout = {
-			50000,
-			125000,
-			250000,
-			550000,
-			700000,
-			700000,
-			700000
-		},
-		contract_cost = {
-			24000,
-			48000,
-			120000,
-			240000,
-			300000,
-			300000,
-			300000
-		},
-		contract_visuals = {}
-	}
-	self.jobs.vit.contract_visuals.min_mission_xp = {
-		14200,
-		14200,
-		14200,
-		14200,
-		14200,
-		14200,
-		14200
-	}
-	self.jobs.vit.contract_visuals.max_mission_xp = {
-		23200,
-		23200,
-		23200,
-		23200,
-		23200,
-		23200,
-		23200
-	}
-	self.jobs.vit.contract_visuals.preview_image = {
-		id = "vit",
-		folder = "vit"
-	}
-	self.jobs.vit.date_added = {
-		2018,
-		11,
-		1
-	}
-	self.stages.bph = {
-		type = "d",
-		type_id = "heist_type_assault",
-		level_id = "bph"
-	}
-	self.jobs.bph = {
-		name_id = "heist_bph",
-		briefing_id = "heist_bph_crimenet",
-		contact = "locke",
-		region = "street",
-		jc = 30,
-		chain = {
-			self.stages.bph
-		},
-		briefing_event = "Play_loc_bph_cbf_01",
-		debrief_event = nil,
-		crimenet_callouts = {
-			"Play_loc_bph_cnc_01"
-		},
-		crimenet_videos = {
-			"contact_locke1"
-		},
-		payout = {
-			60000,
-			150000,
-			300000,
-			600000,
-			750000,
-			750000,
-			750000
-		},
-		contract_cost = {
-			24000,
-			48000,
-			120000,
-			240000,
-			300000,
-			300000,
-			300000
-		},
-		contract_visuals = {}
-	}
-	self.jobs.bph.contract_visuals.min_mission_xp = {
-		14200,
-		14200,
-		14200,
-		14200,
-		14200,
-		14200,
-		14200
-	}
-	self.jobs.bph.contract_visuals.max_mission_xp = {
-		23200,
-		23200,
-		23200,
-		23200,
-		23200,
-		23200,
-		23200
-	}
-	self.jobs.bph.contract_visuals.preview_image = {
-		id = "bph",
-		folder = "bph"
-	}
-	self.jobs.bph.date_added = {
-		2018,
-		10,
-		26
-	}
 	self.stages.lbe_lobby_end = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -5942,76 +5804,6 @@ function NarrativeTweakData:init(tweak_data)
 		12000,
 		12000,
 		12000
-	}
-	self.stages.nmh = {
-		type = "d",
-		type_id = "heist_type_assault",
-		level_id = "nmh"
-	}
-	self.jobs.nmh = {
-		name_id = "heist_nmh",
-		briefing_id = "heist_nmh_crimenet",
-		contact = "classic",
-		region = "street",
-		jc = 30,
-		chain = {
-			self.stages.nmh
-		},
-		briefing_event = "Play_rb1_nmh_cbf_01",
-		debrief_event = nil,
-		crimenet_callouts = {
-			"Play_pln_nmh_cnc_01"
-		},
-		crimenet_videos = {
-			"cn_branchbank1",
-			"cn_branchbank3"
-		},
-		payout = {
-			60000,
-			74000,
-			125000,
-			185000,
-			260000,
-			260000,
-			260000
-		},
-		contract_cost = {
-			31000,
-			62000,
-			155000,
-			310000,
-			400000,
-			400000,
-			400000
-		},
-		contract_visuals = {}
-	}
-	self.jobs.nmh.contract_visuals.min_mission_xp = {
-		22400,
-		22400,
-		22400,
-		22400,
-		22400,
-		22400,
-		22400
-	}
-	self.jobs.nmh.contract_visuals.max_mission_xp = {
-		32000,
-		32000,
-		32000,
-		32000,
-		32000,
-		32000,
-		32000
-	}
-	self.jobs.nmh.contract_visuals.preview_image = {
-		id = "nmh",
-		folder = "nmh"
-	}
-	self.jobs.nmh.date_added = {
-		2018,
-		10,
-		30
 	}
 	self.stages.sah = {
 		type = "d",
@@ -6359,14 +6151,11 @@ function NarrativeTweakData:init(tweak_data)
 		"brb",
 		"tag",
 		"des",
-		"nmh",
 		"sah",
 		"skm_mus",
 		"skm_red2",
 		"skm_run",
-		"skm_watchdogs_stage2",
-		"vit",
-		"bph"
+		"skm_watchdogs_stage2"
 	}
 	self.forced_jobs = {
 		firestarter = true,
@@ -6433,7 +6222,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 3880-3895
+-- Lines 3852-3867
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -6452,22 +6241,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 3897-3899
+-- Lines 3869-3871
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 3901-3903
+-- Lines 3873-3875
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 3907-3909
+-- Lines 3879-3881
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 3913-3920
+-- Lines 3885-3892
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -6478,12 +6267,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 3924-3926
+-- Lines 3896-3898
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 3930-3946
+-- Lines 3902-3918
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -6500,7 +6289,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 3948-3958
+-- Lines 3920-3930
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -6513,7 +6302,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 3962-4013
+-- Lines 3934-3985
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -6570,7 +6359,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4017-4029
+-- Lines 3989-4001
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -6587,7 +6376,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4033-4048
+-- Lines 4005-4020
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

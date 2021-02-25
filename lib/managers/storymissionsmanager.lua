@@ -310,7 +310,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 277-314
+-- Lines 277-312
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -320,11 +320,8 @@ function StoryMissionsManager:load(cache, version)
 
 	for id, c in pairs(state.completed_missions or {}) do
 		local m = self:get_mission(id)
-
-		if m then
-			m.completed = true
-			m.rewarded = c.rewarded
-		end
+		m.completed = true
+		m.rewarded = c.rewarded
 	end
 
 	local curr = state.current_mission
@@ -352,12 +349,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 316-318
+-- Lines 314-316
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 320-363
+-- Lines 318-361
 function StoryMissionsManager:start_mission(mission, objective_id)
 	if not self:_get_or_current(mission) then
 		local m = {
@@ -421,9 +418,9 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 367-383
+-- Lines 365-381
 function StoryMissionsManager:reset_all()
-	-- Lines 368-376
+	-- Lines 366-374
 	local function reset(m)
 		if not m then
 			return
