@@ -1,4 +1,4 @@
--- Lines 3-159
+-- Lines 3-168
 function DLCTweakData:init_generated()
 	self.flm_bundle = {
 		free = true,
@@ -21,6 +21,18 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "masks",
 			item_entry = "ghx",
+			amount = 1
+		}
+	}
+	self.maw_bundle = {
+		free = true,
+		content = {}
+	}
+	self.maw_bundle.content.loot_global_value = "maw"
+	self.maw_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "maw_01",
 			amount = 1
 		}
 	}

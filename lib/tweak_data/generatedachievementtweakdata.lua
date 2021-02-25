@@ -1,4 +1,4 @@
--- Lines 2-7794
+-- Lines 2-7795
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -8520,6 +8520,7 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		uno_2 = {
+			additional_id = true,
 			sort_name = "C_Bain_H_DiamondStore_Hostage",
 			icon_id = "C_Bain_H_DiamondStore_Hostage",
 			tags = {

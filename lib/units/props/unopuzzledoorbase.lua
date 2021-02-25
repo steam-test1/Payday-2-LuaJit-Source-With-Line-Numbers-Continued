@@ -11,6 +11,7 @@ function UnoPuzzleDoorBase:init(unit)
 	local riddle_ids = {}
 
 	for i = 1, #tweak_data.safehouse.uno_door_riddles do
+		riddle_ids[i] = i
 	end
 
 	table.shuffle(riddle_ids)
@@ -24,12 +25,14 @@ function UnoPuzzleDoorBase:init(unit)
 	self._sound_source = self._unit:sound_source(Idstring("snd"))
 end
 
--- Lines 29-31
+-- Lines 29-32
 function UnoPuzzleDoorBase:init_puzzle()
+	UnoPuzzleDoorBase.puzzle_initialized = true
+
 	self:set_riddle(1)
 end
 
--- Lines 33-56
+-- Lines 34-57
 function UnoPuzzleDoorBase:update(unit, t, dt)
 	if not self._current_riddle then
 		return
@@ -51,17 +54,17 @@ function UnoPuzzleDoorBase:update(unit, t, dt)
 	end
 end
 
--- Lines 58-60
+-- Lines 59-61
 function UnoPuzzleDoorBase:save(data)
 	data.puzzle_door_riddles = self._riddle_ids
 end
 
--- Lines 62-64
+-- Lines 63-65
 function UnoPuzzleDoorBase:load(data)
 	self._riddle_ids = data.puzzle_door_riddles
 end
 
--- Lines 66-76
+-- Lines 67-77
 function UnoPuzzleDoorBase:set_riddle(current_riddle)
 	if current_riddle == self._current_riddle then
 		return
@@ -75,7 +78,7 @@ function UnoPuzzleDoorBase:set_riddle(current_riddle)
 	self._unit:damage():run_sequence_simple("set_riddle_" .. riddle_id)
 end
 
--- Lines 78-101
+-- Lines 79-102
 function UnoPuzzleDoorBase:submit_answer()
 	local stops = {
 		self._outer:current_stop(),
@@ -102,41 +105,41 @@ function UnoPuzzleDoorBase:submit_answer()
 	end
 end
 
--- Lines 103-108
+-- Lines 104-109
 function UnoPuzzleDoorBase:revive_player()
 	local player = managers.player:player_unit()
 
-	if player then
+	if player and player:character_damage():need_revive() then
 		player:character_damage():revive(true)
 	end
 end
 
--- Lines 110-110
+-- Lines 111-111
 function UnoPuzzleDoorBase:turn_outer_cw()
 	self._outer:turn_clockwise()
 end
 
--- Lines 111-111
+-- Lines 112-112
 function UnoPuzzleDoorBase:turn_outer_ccw()
 	self._outer:turn_counterclockwise()
 end
 
--- Lines 113-113
+-- Lines 114-114
 function UnoPuzzleDoorBase:turn_middle_cw()
 	self._middle:turn_clockwise()
 end
 
--- Lines 114-114
+-- Lines 115-115
 function UnoPuzzleDoorBase:turn_middle_ccw()
 	self._middle:turn_counterclockwise()
 end
 
--- Lines 116-116
+-- Lines 117-117
 function UnoPuzzleDoorBase:turn_inner_cw()
 	self._inner:turn_clockwise()
 end
 
--- Lines 117-117
+-- Lines 118-118
 function UnoPuzzleDoorBase:turn_inner_ccw()
 	self._inner:turn_counterclockwise()
 end
@@ -145,7 +148,7 @@ UnoPuzzleDoorRing = UnoPuzzleDoorRing or class()
 UnoPuzzleDoorRing.SPEED = 10
 UnoPuzzleDoorRing.EPSILON = 0.0001
 
--- Lines 147-152
+-- Lines 148-153
 function UnoPuzzleDoorRing:init(ring_object, stops)
 	self._object = ring_object
 	self._stops = stops
@@ -153,7 +156,7 @@ function UnoPuzzleDoorRing:init(ring_object, stops)
 	self._target = Rotation()
 end
 
--- Lines 154-164
+-- Lines 155-165
 function UnoPuzzleDoorRing:update(t, dt)
 	local rotation = self._object:local_rotation()
 	local diff = Rotation:rotation_difference(rotation, self._target)
@@ -165,25 +168,25 @@ function UnoPuzzleDoorRing:update(t, dt)
 	return self.EPSILON < math.abs(angle)
 end
 
--- Lines 166-168
+-- Lines 167-169
 function UnoPuzzleDoorRing:current_stop()
 	return self._current_stop
 end
 
--- Lines 170-173
+-- Lines 171-174
 function UnoPuzzleDoorRing:_target_stop(stop)
 	local angle = 360 / self._stops * stop
 	self._target = Rotation(Vector3(0, 1, 0), angle)
 end
 
--- Lines 175-178
+-- Lines 176-179
 function UnoPuzzleDoorRing:turn_clockwise()
 	self._current_stop = math.mod(self._current_stop + 1, self._stops)
 
 	self:_target_stop(self._current_stop)
 end
 
--- Lines 180-187
+-- Lines 181-188
 function UnoPuzzleDoorRing:turn_counterclockwise()
 	self._current_stop = self._current_stop - 1
 

@@ -64,7 +64,7 @@ function UnoAchievementChallenge:attempt_access_notification()
 	self._group_challenge_verified = verified_after
 end
 
--- Lines 63-88
+-- Lines 63-85
 function UnoAchievementChallenge:group_challenge_completed()
 	local session = managers.network:session()
 
@@ -73,22 +73,19 @@ function UnoAchievementChallenge:group_challenge_completed()
 	end
 
 	local peers = session:all_peers()
-	local team_size_required = 4
+	local worthy_players_required = 4
+	local worthy_count = 0
 
-	if team_size_required > #peers then
-		return false
-	end
-
-	for _, peer in ipairs(session:all_peers()) do
-		if not self._peer_completion[peer:id()] then
-			return false
+	for _, peer in pairs(peers) do
+		if self._peer_completion[peer:id()] then
+			worthy_count = worthy_count + 1
 		end
 	end
 
-	return true
+	return worthy_players_required <= worthy_count
 end
 
--- Lines 90-108
+-- Lines 87-105
 function UnoAchievementChallenge:challenge_completed()
 	if not self._global.challenge then
 		return false
@@ -105,17 +102,17 @@ function UnoAchievementChallenge:challenge_completed()
 	return true
 end
 
--- Lines 110-112
+-- Lines 107-109
 function UnoAchievementChallenge:challenge()
 	return self._global.challenge
 end
 
--- Lines 114-116
+-- Lines 111-113
 function UnoAchievementChallenge:save()
 	return self._global
 end
 
--- Lines 118-123
+-- Lines 115-120
 function UnoAchievementChallenge:load(data)
 	if not data then
 		return
