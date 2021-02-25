@@ -227,9 +227,19 @@ function CoreSetup:__pre_init()
 	end
 end
 
--- Lines 281-426
+local lang_mods = {
+	[Idstring("japanese"):key()] = "japanese"
+}
+
+-- Lines 292-442
 function CoreSetup:__init()
 	self:init_category_print()
+
+	local language = lang_mods[SystemInfo:language():key()]
+
+	if language and not PackageManager:loaded("core/packages/language_" .. language) then
+		PackageManager:load("core/packages/language_" .. language)
+	end
 
 	if not PackageManager:loaded("core/packages/base") then
 		PackageManager:load("core/packages/base")
@@ -334,7 +344,7 @@ function CoreSetup:__init()
 	self:init_finalize()
 end
 
--- Lines 428-457
+-- Lines 444-473
 function CoreSetup:__destroy()
 	self:destroy()
 	self.__gsm:destroy()
@@ -349,11 +359,11 @@ function CoreSetup:__destroy()
 	self._smoketest:destroy()
 end
 
--- Lines 459-460
+-- Lines 475-476
 function CoreSetup:loading_update(t, dt)
 end
 
--- Lines 462-541
+-- Lines 478-557
 function CoreSetup:__update(t, dt)
 	if self.__firstupdate then
 		self:stop_loading_screen()
@@ -381,7 +391,7 @@ function CoreSetup:__update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines 543-577
+-- Lines 559-593
 function CoreSetup:__paused_update(t, dt)
 	managers.viewport:paused_update(t, dt)
 
@@ -400,7 +410,7 @@ function CoreSetup:__paused_update(t, dt)
 	self:paused_update(t, dt)
 end
 
--- Lines 579-592
+-- Lines 595-608
 function CoreSetup:__end_update(t, dt)
 	managers.camera:update(t, dt)
 	self._session:end_update(t, dt)
@@ -415,14 +425,14 @@ function CoreSetup:__end_update(t, dt)
 	end
 end
 
--- Lines 594-599
+-- Lines 610-615
 function CoreSetup:__paused_end_update(t, dt)
 	self:paused_end_update(t, dt)
 	self.__gsm:end_update(t, dt)
 	managers.DOF:paused_update(t, dt)
 end
 
--- Lines 601-607
+-- Lines 617-623
 function CoreSetup:__render()
 	managers.portal:render()
 	self:pre_render()
@@ -431,7 +441,7 @@ function CoreSetup:__render()
 	self:render()
 end
 
--- Lines 609-663
+-- Lines 625-679
 function CoreSetup:__end_frame(t, dt)
 	self:end_frame(t, dt)
 	managers.viewport:end_frame(t, dt)
@@ -488,21 +498,21 @@ function CoreSetup:__end_frame(t, dt)
 	end
 end
 
--- Lines 665-668
+-- Lines 681-684
 function CoreSetup:__loading_update(t, dt)
 	self._session:update(t, dt)
 	self:loading_update()
 end
 
--- Lines 670-671
+-- Lines 686-687
 function CoreSetup:__animations_reloaded()
 end
 
--- Lines 673-674
+-- Lines 689-690
 function CoreSetup:__script_reloaded()
 end
 
--- Lines 676-681
+-- Lines 692-697
 function CoreSetup:__entering_window(user_data, event_object)
 	if Global.frame:is_active() then
 		Global.application_window:set_focus()
@@ -510,26 +520,26 @@ function CoreSetup:__entering_window(user_data, event_object)
 	end
 end
 
--- Lines 683-687
+-- Lines 699-703
 function CoreSetup:__leaving_window(user_data, event_object)
 	if not managers.editor or managers.editor._in_mixed_input_mode then
 		Input:keyboard():unacquire()
 	end
 end
 
--- Lines 689-693
+-- Lines 705-709
 function CoreSetup:__kill_focus(user_data, event_object)
 	if managers.editor and not managers.editor:in_mixed_input_mode() and not Global.running_simulation then
 		managers.editor:set_in_mixed_input_mode(true)
 	end
 end
 
--- Lines 695-697
+-- Lines 711-713
 function CoreSetup:__save(data)
 	self:save(data)
 end
 
--- Lines 699-701
+-- Lines 715-717
 function CoreSetup:__load(data)
 	self:load(data)
 end
@@ -538,7 +548,7 @@ core:module("CoreSetup")
 
 CoreSetup = _CoreSetup
 
--- Lines 711-749
+-- Lines 727-765
 function CoreSetup:make_entrypoint()
 	if not _G.CoreSetup.__entrypoint_is_setup then
 		assert(rawget(_G, "pre_init") == nil)

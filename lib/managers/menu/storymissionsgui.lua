@@ -216,7 +216,7 @@ function StoryMissionsGui:_navigate_story(offset)
 	self:_update(sought_mission)
 end
 
--- Lines 176-188
+-- Lines 176-190
 function StoryMissionsGui:_update(mission)
 	if mission and type(mission) == "string" then
 		mission = managers.story:get_mission(mission)
@@ -227,10 +227,11 @@ function StoryMissionsGui:_update(mission)
 
 	self:_update_side(mission)
 	self:_update_info(mission)
+	self:round_main_panel()
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 190-241
+-- Lines 192-258
 function StoryMissionsGui:_update_side(current)
 	local current_scroll_amount = -self._side_scroll:canvas():y()
 
@@ -282,7 +283,7 @@ function StoryMissionsGui:_update_side(current)
 	self._side_scroll:scroll_to_show(shown_mission_item)
 end
 
--- Lines 243-422
+-- Lines 260-439
 function StoryMissionsGui:_update_info(mission)
 	self._info_scroll:clear()
 	self:_change_legend("select", false)
@@ -593,7 +594,7 @@ function StoryMissionsGui:_update_info(mission)
 	end
 end
 
--- Lines 459-473
+-- Lines 476-490
 function StoryMissionsGui:toggle_voice_message(message)
 	if not self._voice then
 		return
@@ -621,7 +622,7 @@ function StoryMissionsGui:toggle_voice_message(message)
 	end
 end
 
--- Lines 475-482
+-- Lines 492-499
 function StoryMissionsGui:sound_event_callback(event_type, duration)
 	if not self._voice or not alive(self._voice.text) then
 		return
@@ -635,7 +636,7 @@ function StoryMissionsGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 484-502
+-- Lines 501-519
 function StoryMissionsGui:update()
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -657,7 +658,7 @@ function StoryMissionsGui:update()
 	end
 end
 
--- Lines 504-528
+-- Lines 521-545
 function StoryMissionsGui:_change_selected_level(axis)
 	if self._change_level_btn_disabled then
 		return
@@ -688,19 +689,19 @@ function StoryMissionsGui:_change_selected_level(axis)
 	end
 end
 
--- Lines 530-532
+-- Lines 547-549
 function StoryMissionsGui:_enable_selected_level_btns()
 	self._change_level_btn_disabled = nil
 end
 
--- Lines 534-538
+-- Lines 551-555
 function StoryMissionsGui:confirm_pressed()
 	if alive(self._select_btn) then
 		self._select_btn:_trigger()
 	end
 end
 
--- Lines 540-547
+-- Lines 557-564
 function StoryMissionsGui:_start_mission_general()
 	if self._selected_level_btn then
 		self._selected_level_btn:_trigger()
@@ -711,14 +712,14 @@ function StoryMissionsGui:_start_mission_general()
 	managers.story:start_current()
 end
 
--- Lines 549-551
+-- Lines 566-568
 function StoryMissionsGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 
 StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(BaseButton)
 
--- Lines 557-588
+-- Lines 574-605
 function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	StoryMissionsGuiSidebarItem.super.init(self, panel)
 
@@ -749,12 +750,12 @@ function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	self:set_color(self._color)
 end
 
--- Lines 590-592
+-- Lines 607-609
 function StoryMissionsGuiSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines 594-601
+-- Lines 611-618
 function StoryMissionsGuiSidebarItem:set_icon(icon)
 	if icon then
 		self._icon:set_visible(true)
@@ -764,13 +765,13 @@ function StoryMissionsGuiSidebarItem:set_icon(icon)
 	end
 end
 
--- Lines 603-606
+-- Lines 620-623
 function StoryMissionsGuiSidebarItem:set_color(color)
 	self._text:set_color(color)
 	self._icon:set_color(color)
 end
 
--- Lines 608-613
+-- Lines 625-630
 function StoryMissionsGuiSidebarItem:_hover_changed(hover)
 	self:set_color(hover and self._color_highlight or self._color)
 
@@ -779,7 +780,7 @@ function StoryMissionsGuiSidebarItem:_hover_changed(hover)
 	end
 end
 
--- Lines 617-625
+-- Lines 634-642
 local function set_defaults(target, source)
 	target = target or {}
 
@@ -795,7 +796,7 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines 632-714
+-- Lines 649-731
 function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	config = set_defaults(config, {
 		input = true,
@@ -897,7 +898,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines 716-718
+-- Lines 733-735
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end

@@ -687,7 +687,7 @@ function NetworkManager:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines 682-712
+-- Lines 682-716
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 

@@ -1,6 +1,8 @@
+require("lib/tweak_data/GeneratedMarketLinkTweakData")
+
 EconomyTweakData = EconomyTweakData or class()
 
--- Lines 3-1229
+-- Lines 7-1281
 function EconomyTweakData:init()
 	self.safes = {}
 	self.drills = {}
@@ -9,6 +11,7 @@ function EconomyTweakData:init()
 	self.bundles = {}
 	self.rarities = {}
 	self.qualities = {}
+	self.market_links = init_auto_generated_steam_market_links()
 	self.rarities.common = {
 		index = 1,
 		fake_chance = 75,
@@ -1178,6 +1181,49 @@ function EconomyTweakData:init()
 			weapon_skins = table.list_add(self.contents.cat_01.contains.weapon_skins, self.contents.cat_01_legendary.contains.weapon_skins)
 		}
 	}
+	self.contents.ait_01 = {
+		def_id = 10056,
+		contains = {
+			weapon_skins = {
+				"lemming_ait",
+				"b92fs_ait",
+				"sub2000_ait",
+				"deagle_ait",
+				"elastic_ait",
+				"slap_ait",
+				"m16_ait",
+				"system_ait",
+				"mac10_ait",
+				"polymer_ait",
+				"spas12_ait",
+				"rota_ait",
+				"komodo_ait",
+				"tecci_ait",
+				"uzi_ait"
+			},
+			contents = {
+				"ait_01_legendary"
+			}
+		}
+	}
+	self.contents.ait_01_legendary = {
+		def_id = 10057,
+		contains = {
+			weapon_skins = {
+				"scar_ait"
+			}
+		},
+		rarity = "legendary"
+	}
+	self.bundles.ait_01 = {
+		def_id = 30008,
+		dlc_id = "892410",
+		quality = "mint",
+		bonus = false,
+		contains = {
+			weapon_skins = table.list_add(self.contents.ait_01.contains.weapon_skins, self.contents.ait_01_legendary.contains.weapon_skins)
+		}
+	}
 	self.safes.overkill_01 = {
 		def_id = 50000,
 		promo = true,
@@ -1458,6 +1504,16 @@ function EconomyTweakData:init()
 		texture_bundle_folder = "cash/safes/cat",
 		market_link = "https://steamcommunity.com/market/listings/218620/Community%20Safe%207"
 	}
+	self.safes.ait_01 = {
+		free = true,
+		drill = "ait_01",
+		content = "ait_01",
+		bundle = "ait_01",
+		name_id = "bm_menu_safe_ait_01",
+		unit_name = "units/payday2_cash/safes/ait/safe/eco_safe_ait",
+		texture_bundle_folder = "cash/safes/ait",
+		market_link = "https://steamcommunity.com/market/listings/218620/Community%20Safe%208"
+	}
 	self.drills.overkill_01 = {
 		safe = "overkill_01",
 		def_id = 70000,
@@ -1643,6 +1699,10 @@ function EconomyTweakData:init()
 		safe = "cat_01",
 		unit_name = "units/payday2_cash/safes/cat/drill/eco_drill_cat"
 	}
+	self.drills.ait_01 = {
+		safe = "ait_01",
+		unit_name = "units/payday2_cash/safes/ait/drill/eco_drill_ait"
+	}
 	self.bonuses = {
 		concealment_p1 = {}
 	}
@@ -1807,7 +1867,7 @@ function EconomyTweakData:init()
 	self:_init_armor_skins()
 end
 
--- Lines 1239-1248
+-- Lines 1291-1300
 function EconomyTweakData:get_entry_from_index(category, index)
 	for entry, data in pairs(self[category] or {}) do
 		if not data.index then
@@ -1820,12 +1880,12 @@ function EconomyTweakData:get_entry_from_index(category, index)
 	end
 end
 
--- Lines 1250-1252
+-- Lines 1302-1304
 function EconomyTweakData:get_index_from_entry(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].index
 end
 
--- Lines 1254-1267
+-- Lines 1306-1319
 function EconomyTweakData:get_bonus_icons(entry)
 	local bonus_data = self.bonuses[entry]
 	local bonuses = {}
@@ -1843,8 +1903,16 @@ function EconomyTweakData:get_bonus_icons(entry)
 	return bonuses
 end
 
--- Lines 1269-1281
+EconomyTweakData.market_link_search = "https://steamcommunity.com/market/search?appid=218620&q="
+
+-- Lines 1322-1339
 function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmetic_id)
+	local market_link = self.market_links.weapon_skins[cosmetic_id]
+
+	if market_link then
+		return EconomyTweakData.market_link_search .. market_link
+	end
+
 	local cosmetic_name = tweak_data.blackmarket.weapon_skins[cosmetic_id] and managers.localization:text(tweak_data.blackmarket.weapon_skins[cosmetic_id].name_id)
 	local weapon_name = managers.weapon_factory:get_weapon_name_by_weapon_id(weapon_id)
 
@@ -1852,41 +1920,47 @@ function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmet
 		cosmetic_name = string.gsub(cosmetic_name, " ", "+")
 		weapon_name = string.gsub(weapon_name, " ", "+")
 
-		return string.gsub("http://steamcommunity.com/market/search?appid=218620&q=" .. cosmetic_name .. "+" .. weapon_name, "++", "+")
+		return string.gsub(EconomyTweakData.market_link_search .. cosmetic_name .. "+" .. weapon_name, "++", "+")
 	end
 
 	return nil
 end
 
--- Lines 1284-1292
+-- Lines 1342-1355
 function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
+	local market_link = self.market_links.armor_skins[cosmetic_id]
+
+	if market_link then
+		return EconomyTweakData.market_link_search .. market_link
+	end
+
 	local cosmetic_name = tweak_data.economy.armor_skins[cosmetic_id] and managers.localization:text(tweak_data.economy.armor_skins[cosmetic_id].name_id)
 
 	if cosmetic_name then
 		cosmetic_name = string.gsub(cosmetic_name, " ", "+")
 
-		return string.gsub("http://steamcommunity.com/market/search?appid=218620&q=" .. cosmetic_name .. "+", "++", "+")
+		return string.gsub(EconomyTweakData.market_link_search .. cosmetic_name .. "+", "++", "+")
 	end
 
 	return nil
 end
 
--- Lines 1295-1297
+-- Lines 1358-1360
 function EconomyTweakData:create_market_link_url(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].market_link
 end
 
--- Lines 1299-1301
+-- Lines 1362-1364
 function EconomyTweakData:create_buy_tradable_url(def_id, quantity)
 	return "https://store.steampowered.com/buyitem/218620/" .. tostring(def_id) .. "/"
 end
 
--- Lines 1303-1305
+-- Lines 1366-1368
 function EconomyTweakData:create_sell_tradable_url(steam_id, instance_id)
 	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/?sellOnLoad=1#218620_2_" .. tostring(instance_id)
 end
 
--- Lines 1307-1337
+-- Lines 1370-1400
 function EconomyTweakData:get_bonuses_by_safe(safe)
 	local safe_tweak = self.contents[safe]
 	local ids = deep_clone(safe_tweak.contains.weapon_skins)

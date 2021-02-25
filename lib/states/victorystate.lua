@@ -9,7 +9,7 @@ function VictoryState:init(game_state_machine, setup)
 	self._type = "victory"
 end
 
--- Lines 11-30
+-- Lines 11-32
 function VictoryState:at_enter(...)
 	self._success = true
 
@@ -30,7 +30,7 @@ function VictoryState:at_enter(...)
 	end
 end
 
--- Lines 32-37
+-- Lines 34-39
 function VictoryState:at_exit(...)
 	if self._post_event then
 		self._post_event:stop()
@@ -39,14 +39,14 @@ function VictoryState:at_exit(...)
 	VictoryState.super.at_exit(self, ...)
 end
 
--- Lines 39-43
+-- Lines 41-45
 function VictoryState:_shut_down_network()
 	if managers.dlc:is_trial() then
 		VictoryState.super._shut_down_network(self)
 	end
 end
 
--- Lines 45-50
+-- Lines 47-52
 function VictoryState:_load_start_menu()
 	if managers.dlc:is_trial() then
 		Global.open_trial_buy = true
@@ -55,7 +55,7 @@ function VictoryState:_load_start_menu()
 	end
 end
 
--- Lines 52-61
+-- Lines 54-63
 function VictoryState:_set_continue_button_text()
 	local is_server_or_trial = Network:is_server() or managers.dlc:is_trial()
 	local text_id = not is_server_or_trial and "victory_client_waiting_for_server" or self._completion_bonus_done == false and "menu_es_calculating_experience" or managers.job:on_last_stage() and "menu_victory_goto_payday" or "menu_victory_goto_next_stage"
@@ -67,14 +67,14 @@ function VictoryState:_set_continue_button_text()
 	managers.menu_component:set_endscreen_continue_button_text(text, not is_server_or_trial or not self._completion_bonus_done)
 end
 
--- Lines 63-67
+-- Lines 65-69
 function VictoryState:_continue()
 	if Network:is_server() or managers.dlc:is_trial() then
 		self:continue()
 	end
 end
 
--- Lines 69-90
+-- Lines 71-92
 function VictoryState:continue()
 	if self:_continue_blocked() then
 		return

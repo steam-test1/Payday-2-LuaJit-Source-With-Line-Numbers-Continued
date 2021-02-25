@@ -19,12 +19,13 @@ function OffshoreGui:init(unit)
 	end
 end
 
--- Lines 26-28
+-- Lines 26-29
 function OffshoreGui:add_workspace(gui_object)
-	self._ws = self._new_gui:create_object_workspace(1280, 720, gui_object, Vector3(0, 0, 0))
+	local gui_width, gui_height = managers.gui_data:get_base_res()
+	self._ws = self._new_gui:create_object_workspace(gui_width, gui_height, gui_object, Vector3(0, 0, 0))
 end
 
--- Lines 30-52
+-- Lines 31-53
 function OffshoreGui:setup()
 	if self._back_drop_gui then
 		self._back_drop_gui:destroy()
@@ -70,20 +71,20 @@ function OffshoreGui:setup()
 	self._ws:panel():set_visible(self._visible)
 end
 
--- Lines 54-55
+-- Lines 55-56
 function OffshoreGui:_start()
 end
 
--- Lines 57-58
+-- Lines 58-59
 function OffshoreGui:start()
 end
 
--- Lines 60-62
+-- Lines 61-63
 function OffshoreGui:sync_start()
 	self:_start()
 end
 
--- Lines 64-70
+-- Lines 65-71
 function OffshoreGui:set_visible(visible)
 	self._visible = visible
 
@@ -94,13 +95,13 @@ function OffshoreGui:set_visible(visible)
 	self:perform_sync()
 end
 
--- Lines 72-75
+-- Lines 73-76
 function OffshoreGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 77-83
+-- Lines 78-84
 function OffshoreGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -110,12 +111,12 @@ function OffshoreGui:destroy()
 	end
 end
 
--- Lines 85-87
+-- Lines 86-88
 function OffshoreGui:update_offshore(cash)
 	self._money_text:set_text(managers.experience:cash_string(cash or managers.money:offshore()))
 end
 
--- Lines 89-93
+-- Lines 90-94
 function OffshoreGui:perform_sync()
 	if managers.sync and Network:is_server() then
 		managers.sync:add_synced_offshore_gui(self._unit:id(), self._visible, managers.money:offshore())

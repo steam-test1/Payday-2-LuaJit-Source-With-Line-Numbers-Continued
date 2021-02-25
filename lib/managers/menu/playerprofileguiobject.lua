@@ -1,6 +1,6 @@
 PlayerProfileGuiObject = PlayerProfileGuiObject or class()
 
--- Lines 3-244
+-- Lines 3-268
 function PlayerProfileGuiObject:init(ws)
 	local panel = ws:panel():panel()
 	local next_level_data = managers.experience:next_level_data() or {}
@@ -84,6 +84,28 @@ function PlayerProfileGuiObject:init(ws)
 	total_money_text:set_top(math.round(money_text:bottom()))
 
 	max_left_len = math.max(max_left_len, total_money_text:w())
+	local skillpoint_top = math.round(total_money_text:bottom())
+	local unlocked = false
+	local coins = 0
+	unlocked = managers.custom_safehouse:unlocked()
+	coins = managers.custom_safehouse:coins()
+
+	if unlocked then
+		local coin_text = panel:text({
+			text = self:get_text("menu_es_coins_progress") .. ": " .. managers.experience:cash_string(math.floor(coins), ""),
+			font_size = font_size,
+			font = font,
+			color = tweak_data.screen_colors.text
+		})
+
+		self:_make_fine_text(coin_text)
+		coin_text:set_left(math.round(exp_ring:right()))
+		coin_text:set_top(skillpoint_top)
+
+		max_left_len = math.max(max_left_len, coin_text:w())
+		skillpoint_top = math.round(coin_text:bottom())
+	end
+
 	local skillpoints = managers.skilltree:points()
 	local skill_text, skill_glow = nil
 
@@ -100,7 +122,7 @@ function PlayerProfileGuiObject:init(ws)
 
 		self:_make_fine_text(skill_text)
 		skill_text:set_left(math.round(exp_ring:right()))
-		skill_text:set_top(math.round(total_money_text:bottom()))
+		skill_text:set_top(skillpoint_top)
 
 		max_left_len = math.max(max_left_len, skill_text:w())
 		local skill_icon = panel:bitmap({
@@ -233,7 +255,7 @@ function PlayerProfileGuiObject:init(ws)
 	level_text:set_center(exp_ring:center())
 
 	if skill_glow then
-		-- Lines 231-237
+		-- Lines 255-261
 		local function animate_new_skillpoints(o)
 			while true do
 				over(1, function (p)
@@ -250,7 +272,7 @@ function PlayerProfileGuiObject:init(ws)
 	self:_rec_round_object(panel)
 end
 
--- Lines 246-255
+-- Lines 270-279
 function PlayerProfileGuiObject:_rec_round_object(object)
 	local x, y, w, h = object:shape()
 
@@ -263,12 +285,12 @@ function PlayerProfileGuiObject:_rec_round_object(object)
 	end
 end
 
--- Lines 257-259
+-- Lines 281-283
 function PlayerProfileGuiObject:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines 261-266
+-- Lines 285-290
 function PlayerProfileGuiObject:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -276,7 +298,7 @@ function PlayerProfileGuiObject:_make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 268-273
+-- Lines 292-297
 function PlayerProfileGuiObject:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)

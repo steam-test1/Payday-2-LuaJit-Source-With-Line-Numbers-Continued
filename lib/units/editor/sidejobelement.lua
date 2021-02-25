@@ -15,7 +15,7 @@ function SideJobAwardElement:init(unit)
 	table.insert(self._save_values, "players_from_start")
 end
 
--- Lines 23-62
+-- Lines 23-64
 function SideJobAwardElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -62,7 +62,7 @@ function SideJobAwardElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Awards an objective from any DLC that uses generic side jobs.")
 end
 
--- Lines 64-81
+-- Lines 66-84
 function SideJobAwardElement:set_element_data(data)
 	SideJobAwardElement.super.set_element_data(self, data)
 
@@ -82,7 +82,7 @@ end
 
 SideJobFilterElement = SideJobFilterElement or class(MissionElement)
 
--- Lines 88-100
+-- Lines 91-103
 function SideJobFilterElement:init(unit)
 	SideJobFilterElement.super.init(self, unit)
 
@@ -95,7 +95,7 @@ function SideJobFilterElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines 102-138
+-- Lines 105-143
 function SideJobFilterElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -143,7 +143,7 @@ function SideJobFilterElement:_build_panel(panel, panel_sizer)
 	}, "Check if the challenge is completed or incomplete")
 end
 
--- Lines 140-158
+-- Lines 145-164
 function SideJobFilterElement:set_element_data(data)
 	SideJobFilterElement.super.set_element_data(self, data)
 

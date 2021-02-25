@@ -6,53 +6,82 @@ local NOT_WIN_32 = not IS_WIN_32
 local TOP_ADJUSTMENT = NOT_WIN_32 and 50 or 55
 local BOT_ADJUSTMENT = NOT_WIN_32 and 40 or 60
 
--- Lines 10-28
-local function select_anim(o, box, instant)
-	if box.image_object then
-		local object = box.image_object
-		local current_width = object.gui:w()
-		local current_height = object.gui:h()
-		local end_width = object.shape[3]
-		local end_height = object.shape[4]
-		local cx, cy = object.gui:center()
+-- Lines 9-57
+local function _animate(objects, scale, anim_time)
+	local anims = {}
 
-		if instant then
-			object.gui:set_size(end_width, end_height)
-			object.gui:set_center(cx, cy)
-		else
-			over(0.2, function (p)
-				object.gui:set_size(math.lerp(current_width, end_width, p), math.lerp(current_height, end_height, p))
-				object.gui:set_center(cx, cy)
-			end)
+	for _, object in pairs(objects) do
+		if object then
+			local data = {
+				sw = object.gui:width(),
+				sh = object.gui:height(),
+				ew = object.shape[3] * scale,
+				eh = object.shape[4] * scale,
+				sf = object.gui.font_scale and object.gui:font_scale() or scale,
+				ef = scale
+			}
+
+			table.insert(anims, {
+				object = object,
+				data = data
+			})
+		end
+	end
+
+	if anim_time == 0 then
+		for _, anim in ipairs(anims) do
+			local cx, cy = anim.object.gui:center()
+
+			anim.object.gui:set_size(anim.data.ew, anim.data.eh)
+			anim.object.gui:set_center(cx, cy)
+
+			if anim.object.gui.set_font_scale then
+				anim.object.gui:set_font_scale(anim.data.ef)
+			end
+		end
+
+		return
+	end
+
+	local time = 0
+
+	while anim_time > time do
+		local dt = coroutine.yield()
+		time = time + dt
+		local p = time / anim_time
+
+		for _, anim in ipairs(anims) do
+			local cx, cy = anim.object.gui:center()
+
+			anim.object.gui:set_size(math.lerp(anim.data.sw, anim.data.ew, p), math.lerp(anim.data.sh, anim.data.eh, p))
+			anim.object.gui:set_center(cx, cy)
+
+			if anim.object.gui.set_font_scale then
+				anim.object.gui:set_font_scale(math.lerp(anim.data.sf, anim.data.ef, p))
+			end
 		end
 	end
 end
 
--- Lines 30-48
-local function unselect_anim(o, box, instant)
-	if box.image_object then
-		local object = box.image_object
-		local current_width = object.gui:w()
-		local current_height = object.gui:h()
-		local end_width = object.shape[3] * 0.8
-		local end_height = object.shape[4] * 0.8
-		local cx, cy = object.gui:center()
+-- Lines 59-61
+local function select_anim(o, box, instant)
+	_animate({
+		box.image_object,
+		box.animate_text and box.text_object
+	}, 1, instant and 0 or 0.2)
+end
 
-		if instant then
-			object.gui:set_size(end_width, end_height)
-			object.gui:set_center(cx, cy)
-		else
-			over(0.2, function (p)
-				object.gui:set_size(math.lerp(current_width, end_width, p), math.lerp(current_height, end_height, p))
-				object.gui:set_center(cx, cy)
-			end)
-		end
-	end
+-- Lines 63-65
+local function unselect_anim(o, box, instant)
+	_animate({
+		box.image_object,
+		box.animate_text and box.text_object
+	}, 0.8, instant and 0 or 0.2)
 end
 
 PlayerInventoryGui = PlayerInventoryGui or class()
 
--- Lines 53-57
+-- Lines 70-74
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -60,7 +89,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 59-804
+-- Lines 76-836
 function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -200,6 +229,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		bg_image = player_loadout_data.primary.item_bg_texture,
 		text_selected_color = player_loadout_data.primary.info_text_color,
 		use_background = player_loadout_data.primary.item_bg_texture and true or false,
+		akimbo_gui_data = player_loadout_data.primary.akimbo_gui_data,
 		select_anim = select_anim,
 		unselect_anim = unselect_anim,
 		bg_color = Color.white:with_alpha(0.75),
@@ -221,6 +251,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		bg_image = player_loadout_data.secondary.item_bg_texture,
 		text_selected_color = player_loadout_data.secondary.info_text_color,
 		use_background = player_loadout_data.secondary.item_bg_texture and true or false,
+		akimbo_gui_data = player_loadout_data.secondary.akimbo_gui_data,
 		select_anim = select_anim,
 		unselect_anim = unselect_anim,
 		bg_color = Color.white:with_alpha(0.75),
@@ -273,39 +304,35 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	})
 	local armor_box = self:create_box({
 		name = "armor",
+		redirect_box = "outfit_armor",
+		can_select = false,
 		bg_blend_mode = "normal",
 		w = box_width,
 		h = box_height,
 		unselected_text = managers.localization:to_upper_text("bm_menu_armors"),
-		text = player_loadout_data.armor.info_text,
-		image = player_loadout_data.armor.item_texture,
 		select_anim = select_anim,
 		unselect_anim = unselect_anim,
 		bg_color = Color.black:with_alpha(0.05),
 		clbks = {
-			right = false,
-			left = callback(self, self, "open_armor_menu"),
-			up = callback(self, self, "previous_armor"),
-			down = callback(self, self, "next_armor")
-		}
+			create = callback(self, self, "create_outfit_box")
+		},
+		data = player_loadout_data.outfit
 	})
 	local deployable_box = self:create_box({
 		name = "deployable",
+		redirect_box = "deployable_primary",
+		can_select = false,
 		bg_blend_mode = "normal",
 		w = box_width,
 		h = box_height,
 		unselected_text = managers.localization:to_upper_text("bm_menu_deployables"),
-		text = player_loadout_data.deployable.info_text,
-		image = player_loadout_data.deployable.item_texture,
 		select_anim = select_anim,
 		unselect_anim = unselect_anim,
 		bg_color = Color.black:with_alpha(0.05),
 		clbks = {
-			right = false,
-			left = callback(self, self, "open_deployable_menu"),
-			up = callback(self, self, "previous_deployable"),
-			down = callback(self, self, "next_deployable")
-		}
+			create = callback(self, self, "create_deployable_box")
+		},
+		data = player_loadout_data.deployable
 	})
 	local mask_box = self:create_box({
 		name = "mask",
@@ -344,6 +371,44 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 			left = callback(self, self, "open_character_menu"),
 			up = callback(self, self, "previous_character"),
 			down = callback(self, self, "next_character")
+		}
+	})
+	local infamy_box = self:create_box({
+		name = "infamy",
+		bg_blend_mode = "normal",
+		w = box_width,
+		h = box_height,
+		unselected_text = managers.localization:to_upper_text("menu_infamytree"),
+		text = managers.localization:to_upper_text("menu_infamytree"),
+		alpha = managers.network:session() and 0.2 or 1,
+		select_anim = select_anim,
+		unselect_anim = unselect_anim,
+		bg_color = Color.black:with_alpha(0.05),
+		clbks = managers.network:session() and {
+			right = false
+		} or {
+			down = false,
+			up = false,
+			right = false,
+			left = callback(self, self, "open_infamy_menu")
+		}
+	})
+	local crew_box = self:create_box({
+		image = "guis/dlcs/mom/textures/pd2/crewmanagement_icon",
+		name = "crew",
+		bg_blend_mode = "normal",
+		w = box_width,
+		h = box_height,
+		unselected_text = managers.localization:to_upper_text("menu_crew_management"),
+		text = managers.localization:to_upper_text("menu_crew_management"),
+		select_anim = select_anim,
+		unselect_anim = unselect_anim,
+		bg_color = Color.black:with_alpha(0.05),
+		clbks = {
+			down = false,
+			up = false,
+			right = false,
+			left = callback(self, self, "open_crew_menu")
 		}
 	})
 	local skill_box = self:create_box({
@@ -420,40 +485,65 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		{
 			"character",
 			"primary",
-			"deployable"
+			"skilltree"
 		},
 		{
 			"mask",
 			"secondary",
-			"armor"
-		},
-		{
-			nil,
-			"melee",
-			"skilltree"
-		},
-		{
-			nil,
-			"throwable",
 			"specialization"
+		},
+		{
+			"armor",
+			"throwable",
+			"crew"
+		},
+		{
+			"deployable",
+			"melee",
+			"infamy"
 		}
 	}
 
 	self:sort_boxes_by_matrix(box_matrix)
 
-	local character_panel = self._panel:panel()
-	local weapons_panel = self._panel:panel()
-	local eqpt_skills_panel = self._panel:panel()
+	local character_panel = self._panel:panel({
+		name = "character_panel"
+	})
+	local weapons_panel = self._panel:panel({
+		name = "weapons_panel"
+	})
+	local eqpt_skills_panel = self._panel:panel({
+		name = "eqpt_skills_panel"
+	})
 
-	character_panel:set_shape(character_box:left(), character_box:top(), mask_box:right() - character_box:left(), mask_box:bottom() - character_box:top())
-	weapons_panel:set_shape(primary_box:left(), primary_box:top(), throwable_box:right() - primary_box:left(), throwable_box:bottom() - primary_box:top())
-	eqpt_skills_panel:set_shape(deployable_box:left(), deployable_box:top(), specialization_box:right() - deployable_box:left(), specialization_box:bottom() - deployable_box:top())
-	character_panel:set_w(math.floor(eqpt_skills_panel:w()))
-	weapons_panel:set_w(math.floor(eqpt_skills_panel:w()))
-	eqpt_skills_panel:set_w(math.floor(eqpt_skills_panel:w()))
-	eqpt_skills_panel:set_right(self._panel:w())
-	weapons_panel:set_right(eqpt_skills_panel:left() - padding_x)
-	character_panel:set_right(weapons_panel:left() - padding_x)
+	-- Lines 254-263
+	local function get_matrix_column_boxes(column)
+		local boxes = {}
+
+		for _, row in ipairs(box_matrix) do
+			if row[column] and self._boxes_by_name[row[column]] then
+				table.insert(boxes, self._boxes_by_name[row[column]])
+			end
+		end
+
+		return boxes
+	end
+
+	for i, column_panel in ipairs({
+		character_panel,
+		weapons_panel,
+		eqpt_skills_panel
+	}) do
+		local boxes = get_matrix_column_boxes(i)
+
+		if #boxes > 0 then
+			local first = boxes[1].panel
+			local last = boxes[#boxes].panel
+
+			column_panel:set_shape(first:left(), first:top(), box_width, last:bottom() - first:top())
+		end
+	end
+
 	character_panel:rect({
 		alpha = 0.4,
 		color = Color.black
@@ -467,15 +557,21 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		color = Color.black
 	})
 
-	local column_one_box_panel = self._panel:panel()
+	local column_one_box_panel = self._panel:panel({
+		name = "column_one_box_panel"
+	})
 
 	column_one_box_panel:set_shape(character_panel:shape())
 
-	local column_two_box_panel = self._panel:panel()
+	local column_two_box_panel = self._panel:panel({
+		name = "column_two_box_panel"
+	})
 
 	column_two_box_panel:set_shape(weapons_panel:shape())
 
-	local column_three_box_panel = self._panel:panel()
+	local column_three_box_panel = self._panel:panel({
+		name = "column_three_box_panel"
+	})
 
 	column_three_box_panel:set_shape(eqpt_skills_panel:shape())
 
@@ -504,6 +600,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		}
 	})
 	local character_text = self._panel:text({
+		name = "character_text",
 		blend_mode = "add",
 		text = managers.localization:to_upper_text("menu_player_column_one_title"),
 		font = tweak_data.menu.pd2_small_font,
@@ -511,6 +608,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		color = tweak_data.screen_colors.text
 	})
 	local weapons_text = self._panel:text({
+		name = "weapons_text",
 		blend_mode = "add",
 		text = managers.localization:to_upper_text("menu_player_column_two_title"),
 		font = tweak_data.menu.pd2_small_font,
@@ -518,6 +616,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		color = tweak_data.screen_colors.text
 	})
 	local eqpt_skills_text = self._panel:text({
+		name = "eqpt_skills_text",
 		blend_mode = "add",
 		text = managers.localization:to_upper_text("menu_player_column_three_title"),
 		font = tweak_data.menu.pd2_small_font,
@@ -533,6 +632,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	eqpt_skills_text:set_rightbottom(eqpt_skills_panel:right(), eqpt_skills_panel:top())
 
 	local alias_text = self._panel:text({
+		name = "alias_text",
 		blend_mode = "add",
 		x = 2,
 		y = TOP_ADJUSTMENT,
@@ -545,8 +645,9 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	make_fine_text(alias_text)
 
 	local player_panel = self._panel:panel({
-		w = 320,
+		name = "player_panel",
 		h = 290,
+		w = 320,
 		x = 0,
 		y = TOP_ADJUSTMENT + tweak_data.menu.pd2_small_font_size
 	})
@@ -558,7 +659,9 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		color = Color.black
 	})
 
-	self._player_box_panel = self._panel:panel()
+	self._player_box_panel = self._panel:panel({
+		name = "player_box_panel"
+	})
 
 	self._player_box_panel:set_shape(player_panel:shape())
 
@@ -619,59 +722,13 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		font_size = tweak_data.menu.pd2_medium_font_size
 	})
 
-	local player_rank_panel = player_panel:panel({
-		name = "player_rank_panel",
-		w = size / 2,
-		h = size / 2,
-		x = player_level_panel:right() + 2,
-		y = player_level_panel:top()
-	})
-	local texture = "guis/textures/pd2/inv_infamycard_bg"
-	local texture_rect = {
-		0,
-		0,
-		29,
-		43
-	}
-	local player_rank_bitmap = player_rank_panel:bitmap({
-		texture = texture,
-		texture_rect = texture_rect
-	})
-	local panel_width = player_rank_panel:width()
-	local panel_height = player_rank_panel:height()
-	local texture_width = 64
-	local texture_height = 92
-	local aspect = panel_width / panel_height
-	local sw = math.max(texture_width, texture_height * aspect)
-	local sh = math.max(texture_height, texture_width / aspect)
-	local dw = texture_width / sw
-	local dh = texture_height / sh
-
-	player_rank_bitmap:set_size(math.round(dw * panel_width * 0.9), math.round(dh * panel_height * 0.9))
-	player_rank_bitmap:set_center(panel_width / 2, panel_height / 2)
-
-	local rank_text = player_rank_panel:text({
-		vertical = "center",
-		align = "center",
-		layer = 1,
-		text = managers.experience:rank_string(player_rank),
-		font = tweak_data.menu.pd2_small_font,
-		font_size = tweak_data.menu.pd2_small_font_size,
-		color = Color.black
-	})
-	local _, _, w, _ = rank_text:text_rect()
-
-	if w > 0 and w >= player_rank_bitmap:w() - 6 then
-		rank_text:set_font_size(rank_text:font_size() * (player_rank_bitmap:w() - 6) / w)
-	end
-
 	local detection_panel = player_panel:panel({
 		name = "detection_panel",
+		x = 0,
 		layer = 0,
-		x = player_level_panel:right() + 2,
-		y = player_rank_panel:bottom(),
-		w = size / 2,
-		h = size / 2
+		y = player_level_panel:top(),
+		w = size - tweak_data.menu.pd2_small_font_size * 2,
+		h = size - tweak_data.menu.pd2_small_font_size * 2
 	})
 	local detection_ring_left_bg = detection_panel:bitmap({
 		blend_mode = "add",
@@ -751,6 +808,23 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
 	})
+	local detection_text = player_panel:text({
+		name = "detection_text",
+		alpha = 1,
+		visible = true,
+		blend_mode = "add",
+		y = player_level_panel:top(),
+		text = managers.localization:to_upper_text("bm_menu_stats_detection"),
+		font = tweak_data.menu.pd2_small_font,
+		font_size = tweak_data.menu.pd2_small_font_size
+	})
+
+	make_fine_text(detection_text)
+	detection_text:set_right(player_panel:w() - 10)
+	detection_panel:set_center_x(detection_text:center_x())
+	detection_panel:set_right(math.min(detection_panel:right(), detection_text:right()))
+	detection_panel:set_top(detection_text:bottom() + 5)
+
 	self._player_stats_panel = player_panel:panel({
 		name = "player_stats_panel",
 		x = 10,
@@ -806,6 +880,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self:set_info_text("")
 
 	self._legends_panel = self._panel:panel({
+		name = "legends_panel",
 		w = self._panel:w() * 0.75,
 		h = tweak_data.menu.pd2_medium_font_size
 	})
@@ -1000,7 +1075,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self._text_buttons = {}
 	local alias_show_button, alias_hide_button, column_one_show_button, column_one_hide_button, column_two_show_button, column_two_hide_button, column_three_show_button, column_three_hide_button = nil
 
-	-- Lines 498-514
+	-- Lines 530-546
 	local function alias_hide_func()
 		if alive(alias_show_button) then
 			alias_show_button:hide()
@@ -1030,7 +1105,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 516-532
+	-- Lines 548-564
 	local function alias_show_func()
 		if alive(alias_show_button) then
 			alias_show_button:show()
@@ -1060,7 +1135,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 535-555
+	-- Lines 567-587
 	local function column_one_hide_func()
 		if alive(column_one_show_button) then
 			column_one_show_button:hide()
@@ -1096,7 +1171,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 557-577
+	-- Lines 589-609
 	local function column_one_show_func()
 		if alive(column_one_show_button) then
 			column_one_show_button:show()
@@ -1132,7 +1207,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 580-603
+	-- Lines 612-635
 	local function column_two_hide_func()
 		if alive(column_two_show_button) then
 			column_two_show_button:hide()
@@ -1172,7 +1247,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 605-628
+	-- Lines 637-660
 	local function column_two_show_func()
 		if alive(column_two_show_button) then
 			column_two_show_button:show()
@@ -1212,7 +1287,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 632-657
+	-- Lines 664-689
 	local function column_three_hide_func()
 		if alive(column_three_show_button) then
 			column_three_show_button:hide()
@@ -1254,7 +1329,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 		end
 	end
 
-	-- Lines 659-684
+	-- Lines 691-716
 	local function column_three_show_func()
 		if alive(column_three_show_button) then
 			column_three_show_button:show()
@@ -1392,22 +1467,30 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 			text = hide_string,
 			clbk = column_three_show_func
 		})
-		local alias_big_panel = self._panel:panel({})
+		local alias_big_panel = self._panel:panel({
+			name = "alias_big_panel"
+		})
 
 		alias_big_panel:set_w(self._player_panel:w())
 		alias_big_panel:set_x(self._player_panel:x())
 
-		local column_one_big_panel = self._panel:panel({})
+		local column_one_big_panel = self._panel:panel({
+			name = "column_one_big_panel"
+		})
 
 		column_one_big_panel:set_w(character_panel:w())
 		column_one_big_panel:set_x(character_panel:x())
 
-		local column_two_big_panel = self._panel:panel({})
+		local column_two_big_panel = self._panel:panel({
+			name = "column_two_big_panel"
+		})
 
 		column_two_big_panel:set_w(weapons_panel:w())
 		column_two_big_panel:set_x(weapons_panel:x())
 
-		local column_three_big_panel = self._panel:panel({})
+		local column_three_big_panel = self._panel:panel({
+			name = "column_three_big_panel"
+		})
 
 		column_three_big_panel:set_w(eqpt_skills_panel:w())
 		column_three_big_panel:set_x(eqpt_skills_panel:x())
@@ -1435,29 +1518,25 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	self._multi_profile_item = MultiProfileItemGui:new(self._ws, self._panel)
 
 	self:_round_everything()
-
-	local box = self:_get_selected_box()
-
-	if box then
-		box.selected = true
-
-		self:_update_stats(box.name)
-		self:_update_box_status(box, true)
-		self:_update_legends(box.name)
-
-		if box.select_anim then
-			box.panel:stop()
-			box.panel:animate(box.select_anim, box, true)
-		end
-	end
-
+	self:_update_selected_box(true)
 	self:update_detection()
 	self:_update_player_stats()
 	self:_update_mod_boxes()
-	self:_update_deployable_box()
+
+	local deployable_secondary = self._boxes_by_name.deployable_secondary
+
+	if deployable_secondary then
+		deployable_secondary.links = self._boxes_by_name.deployable.links
+	end
+
+	local outfit_player_style = self._boxes_by_name.outfit_player_style
+
+	if outfit_player_style then
+		outfit_player_style.links = self._boxes_by_name.armor.links
+	end
 end
 
--- Lines 806-893
+-- Lines 838-925
 function PlayerInventoryGui:_update_legends(name)
 	local box = self._boxes_by_name[name]
 
@@ -1578,7 +1657,7 @@ function PlayerInventoryGui:_update_legends(name)
 	end
 end
 
--- Lines 895-913
+-- Lines 927-945
 function PlayerInventoryGui:_round_everything()
 	if alive(self._panel) then
 		for i, d in ipairs(self._panel:children()) do
@@ -1599,7 +1678,7 @@ function PlayerInventoryGui:_round_everything()
 	end
 end
 
--- Lines 915-924
+-- Lines 947-956
 function PlayerInventoryGui:_rec_round_object(object)
 	local x, y, w, h = object:shape()
 
@@ -1612,7 +1691,7 @@ function PlayerInventoryGui:_rec_round_object(object)
 	end
 end
 
--- Lines 928-988
+-- Lines 960-1020
 function PlayerInventoryGui:set_info_text(text, color_ranges, recursive)
 	self._info_text:set_text(text)
 
@@ -1677,7 +1756,7 @@ function PlayerInventoryGui:set_info_text(text, color_ranges, recursive)
 	self._info_panel:set_h(self._info_panel:parent():h() - self._info_panel:top())
 end
 
--- Lines 992-1043
+-- Lines 1024-1075
 function PlayerInventoryGui:setup_player_stats(panel)
 	local data = {
 		{
@@ -1830,7 +1909,7 @@ function PlayerInventoryGui:setup_player_stats(panel)
 	end
 end
 
--- Lines 1047-1098
+-- Lines 1079-1130
 function PlayerInventoryGui:set_weapon_stats(panel, data)
 	local stats_panel = panel:child("stats_panel")
 
@@ -1973,7 +2052,7 @@ function PlayerInventoryGui:set_weapon_stats(panel, data)
 	end
 end
 
--- Lines 1100-1149
+-- Lines 1132-1181
 function PlayerInventoryGui:set_weapon_mods_stats(panel, data)
 	local stats_panel = panel:child("stats_panel")
 
@@ -2081,7 +2160,7 @@ function PlayerInventoryGui:set_weapon_mods_stats(panel, data)
 	end
 end
 
--- Lines 1151-1201
+-- Lines 1183-1233
 function PlayerInventoryGui:set_melee_stats(panel, data)
 	local stats_panel = panel:child("stats_panel")
 
@@ -2207,7 +2286,7 @@ function PlayerInventoryGui:set_melee_stats(panel, data)
 	end
 end
 
--- Lines 1203-1253
+-- Lines 1235-1285
 function PlayerInventoryGui:set_skilltree_stats(panel, data)
 	local stats_panel = panel:child("stats_panel")
 
@@ -2335,12 +2414,12 @@ function PlayerInventoryGui:set_skilltree_stats(panel, data)
 	end
 end
 
--- Lines 1256-1258
+-- Lines 1288-1290
 local function format_round(num, round_value)
 	return round_value and tostring(math.round(num)) or string.format("%.1f", num):gsub("%.?0+$", "")
 end
 
--- Lines 1260-1289
+-- Lines 1292-1321
 function PlayerInventoryGui:_update_player_stats()
 	local player_loadout_data = managers.blackmarket:player_loadout_data()
 	local category = "armors"
@@ -2370,7 +2449,7 @@ function PlayerInventoryGui:_update_player_stats()
 	end
 end
 
--- Lines 1293-1365
+-- Lines 1325-1408
 function PlayerInventoryGui:_update_stats(name)
 	if name == self._current_stat_shown then
 		return
@@ -2429,8 +2508,10 @@ function PlayerInventoryGui:_update_stats(name)
 		})
 		self:set_weapon_stats(self._info_panel, stats)
 		self:_update_info_weapon(name)
-	elseif name == "armor" then
+	elseif name == "outfit_armor" then
 		self:_update_info_armor(name)
+	elseif name == "outfit_player_style" then
+		self:_update_info_player_style(name)
 	elseif name == "melee" then
 		self:set_melee_stats(self._info_panel, {
 			{
@@ -2478,10 +2559,14 @@ function PlayerInventoryGui:_update_stats(name)
 		self:_update_info_mask(name)
 	elseif name == "throwable" then
 		self:_update_info_throwable(name)
-	elseif name == "deployable" then
-		self:_update_info_deployable(name)
+	elseif name == "deployable_primary" then
+		self:_update_info_deployable(name, 1)
 	elseif name == "deployable_secondary" then
 		self:_update_info_deployable(name, 2)
+	elseif name == "infamy" then
+		self:_update_info_infamy(name)
+	elseif name == "crew" then
+		self:_update_info_crew(name)
 	else
 		local box = self._boxes_by_name[name]
 		local stats = {
@@ -2553,7 +2638,7 @@ function PlayerInventoryGui:_update_stats(name)
 	end
 end
 
--- Lines 1367-1413
+-- Lines 1410-1456
 function PlayerInventoryGui:_update_info_skilltree(name, skilltrees)
 	local text_string = ""
 	text_string = text_string .. managers.localization:text("menu_st_skill_switch_set", {
@@ -2582,7 +2667,7 @@ function PlayerInventoryGui:_update_info_skilltree(name, skilltrees)
 	end
 end
 
--- Lines 1415-1440
+-- Lines 1458-1483
 function PlayerInventoryGui:_update_info_specialization(name)
 	local text_string = ""
 	local current_specialization = managers.skilltree:get_specialization_value("current_specialization")
@@ -2601,7 +2686,7 @@ function PlayerInventoryGui:_update_info_specialization(name)
 			}) .. "\n"
 		end
 
-		if IS_WIN_32 and specialization_data.desc_id then
+		if self:_should_show_description() and specialization_data.desc_id then
 			text_string = text_string .. "\n" .. managers.localization:text(specialization_data.desc_id)
 		end
 	end
@@ -2609,7 +2694,7 @@ function PlayerInventoryGui:_update_info_specialization(name)
 	self:set_info_text(text_string)
 end
 
--- Lines 1442-1470
+-- Lines 1485-1513
 function PlayerInventoryGui:_update_info_character(name)
 	local character = managers.blackmarket:get_preferred_character()
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -2628,14 +2713,14 @@ function PlayerInventoryGui:_update_info_character(name)
 		table.insert(color_ranges, color_range)
 	end
 
-	if IS_WIN_32 then
+	if self:_should_show_description() then
 		text_string = text_string .. managers.localization:text(character .. "_desc") .. "\n"
 	end
 
 	self:set_info_text(text_string, color_ranges)
 end
 
--- Lines 1472-1487
+-- Lines 1515-1530
 function PlayerInventoryGui:_update_info_mask(name)
 	local mask = managers.blackmarket:equipped_mask()
 	local mask_name = managers.blackmarket:get_mask_name_by_category_slot("masks", managers.blackmarket:equipped_mask_slot())
@@ -2645,7 +2730,7 @@ function PlayerInventoryGui:_update_info_mask(name)
 	if mask_data then
 		text_string = text_string .. mask_name .. "\n\n"
 
-		if IS_WIN_32 then
+		if self:_should_show_description() then
 			text_string = text_string .. managers.localization:text(mask_data.desc_id) .. "\n"
 		end
 	end
@@ -2653,7 +2738,7 @@ function PlayerInventoryGui:_update_info_mask(name)
 	self:set_info_text(text_string)
 end
 
--- Lines 1489-1503
+-- Lines 1532-1546
 function PlayerInventoryGui:_update_info_throwable(name)
 	local throwable_id, amount = managers.blackmarket:equipped_projectile()
 	local projectile_data = throwable_id and tweak_data.blackmarket.projectiles[throwable_id]
@@ -2662,7 +2747,7 @@ function PlayerInventoryGui:_update_info_throwable(name)
 	if projectile_data then
 		text_string = text_string .. managers.localization:text(projectile_data.name_id) .. " (x" .. tostring(amount) .. ")" .. "\n\n"
 
-		if IS_WIN_32 then
+		if self:_should_show_description() then
 			text_string = text_string .. managers.localization:text(projectile_data.desc_id) .. "\n"
 		end
 	end
@@ -2670,7 +2755,7 @@ function PlayerInventoryGui:_update_info_throwable(name)
 	self:set_info_text(text_string)
 end
 
--- Lines 1505-1528
+-- Lines 1548-1571
 function PlayerInventoryGui:_update_info_deployable(name, slot)
 	local deployable_id = managers.blackmarket:equipped_deployable(slot)
 	local equipment_data = deployable_id and tweak_data.equipments[deployable_id]
@@ -2692,7 +2777,7 @@ function PlayerInventoryGui:_update_info_deployable(name, slot)
 
 		text_string = text_string .. managers.localization:text(deployable_data.name_id) .. " (x" .. tostring(amount) .. ")" .. "\n\n"
 
-		if IS_WIN_32 then
+		if self:_should_show_description() then
 			text_string = text_string .. managers.localization:text(deployable_data.desc_id, {
 				BTN_INTERACT = managers.localization:btn_macro("interact", true),
 				BTN_USE_ITEM = managers.localization:btn_macro("use_item", true)
@@ -2703,7 +2788,43 @@ function PlayerInventoryGui:_update_info_deployable(name, slot)
 	self:set_info_text(text_string)
 end
 
--- Lines 1555-1569
+-- Lines 1574-1594
+function PlayerInventoryGui:_update_info_infamy(name)
+	local rank = managers.infamy:points()
+	local color_ranges = {}
+	local text_string = managers.localization:to_upper_text("menu_infamy_rank", {
+		rank = tostring(managers.experience:current_rank())
+	}) .. "\n"
+
+	if managers.network:session() then
+		local color_range = {
+			start = utf8.len(text_string),
+			color = tweak_data.screen_colors.important_1
+		}
+		text_string = text_string .. managers.localization:to_upper_text("menu_preferred_character_lobby_error") .. "\n"
+		color_range.stop = utf8.len(text_string)
+
+		table.insert(color_ranges, color_range)
+	end
+
+	text_string = text_string .. "\n" .. managers.localization:to_upper_text("st_menu_infamy_available_points", {
+		points = managers.infamy:points()
+	}) .. "\n" .. managers.localization:to_upper_text("menu_infamy_total_xp", {
+		xpboost = string.format("%0.1f", (managers.player:get_infamy_exp_multiplier() - 1) * 100)
+	}) .. "\n\n" .. managers.localization:text("menu_infamytree_help")
+
+	self:set_info_text(text_string, color_ranges)
+end
+
+-- Lines 1597-1601
+function PlayerInventoryGui:_update_info_crew(name)
+	local color_ranges = {}
+	local text_string = managers.localization:text("menu_crew_management_help")
+
+	self:set_info_text(text_string, color_ranges)
+end
+
+-- Lines 1605-1619
 function PlayerInventoryGui:_update_info_generic(name)
 	local player_loadout_data = managers.blackmarket:player_loadout_data()
 	local text_string = ""
@@ -2716,7 +2837,7 @@ function PlayerInventoryGui:_update_info_generic(name)
 	self:set_info_text(text_string)
 end
 
--- Lines 1571-1654
+-- Lines 1621-1704
 function PlayerInventoryGui:_update_info_weapon_mod(box)
 	local mod_data = box.params.mod_data
 	local crafted = managers.blackmarket:get_crafted_category_slot(mod_data.category, mod_data.slot)
@@ -2804,7 +2925,7 @@ function PlayerInventoryGui:_update_info_weapon_mod(box)
 	end
 end
 
--- Lines 1656-1709
+-- Lines 1706-1759
 function PlayerInventoryGui:_update_info_weapon(name)
 	local player_loadout_data = managers.blackmarket:player_loadout_data()
 	local category = name == "primary" and "primaries" or "secondaries"
@@ -2863,7 +2984,7 @@ function PlayerInventoryGui:_update_info_weapon(name)
 	end
 end
 
--- Lines 1711-1779
+-- Lines 1761-1829
 function PlayerInventoryGui:_update_info_weapon_cosmetics(name, cosmetics)
 	local c_td = tweak_data.blackmarket.weapon_skins[cosmetics.id] or {}
 	local quality_text = managers.localization:text(tweak_data.economy.qualities[cosmetics.quality].name_id)
@@ -2944,7 +3065,7 @@ function PlayerInventoryGui:_update_info_weapon_cosmetics(name, cosmetics)
 	end
 end
 
--- Lines 1781-1797
+-- Lines 1831-1847
 function PlayerInventoryGui:_update_info_armor(name)
 	local armor_id = managers.blackmarket:equipped_armor()
 	local armor_data = armor_id and tweak_data.blackmarket.armors[armor_id]
@@ -2953,7 +3074,7 @@ function PlayerInventoryGui:_update_info_armor(name)
 	if armor_data then
 		text_string = text_string .. managers.localization:text(armor_data.name_id) .. "\n\n"
 
-		if IS_WIN_32 then
+		if self:_should_show_description() then
 			text_string = text_string .. managers.localization:text(armor_data.desc_id) .. "\n"
 		end
 	end
@@ -2961,7 +3082,24 @@ function PlayerInventoryGui:_update_info_armor(name)
 	self:set_info_text(text_string)
 end
 
--- Lines 1799-1897
+-- Lines 1850-1865
+function PlayerInventoryGui:_update_info_player_style(name)
+	local player_style = managers.blackmarket:equipped_player_style()
+	local player_style_data = player_style and tweak_data.blackmarket.player_styles[player_style]
+	local text_string = ""
+
+	if player_style_data then
+		text_string = text_string .. managers.localization:text(player_style_data.name_id) .. "\n\n"
+
+		if self:_should_show_description() then
+			text_string = text_string .. managers.localization:text(player_style_data.desc_id) .. "\n"
+		end
+	end
+
+	self:set_info_text(text_string)
+end
+
+-- Lines 1868-1966
 function PlayerInventoryGui:_update_info_melee(name)
 	local player_loadout_data = managers.blackmarket:player_loadout_data()
 	local category = "melee_weapons"
@@ -3058,7 +3196,7 @@ function PlayerInventoryGui:_update_info_melee(name)
 	end
 end
 
--- Lines 1900-1944
+-- Lines 1969-2020
 function PlayerInventoryGui:sort_boxes_by_matrix(box_matrix)
 	local padding_x = 10
 	local padding_y = 0
@@ -3097,126 +3235,140 @@ function PlayerInventoryGui:sort_boxes_by_matrix(box_matrix)
 					}
 					box.params.x = x
 					box.params.y = y
+
+					if box.redirect_box then
+						local redirect_box = self:_get_box_redirected(box.redirect_box)
+
+						if redirect_box then
+							redirect_box.links = box.links
+						end
+					end
 				end
 			end
 		end
 	end
 end
 
--- Lines 1946-1961
-function PlayerInventoryGui:create_grid_links(grid_x, grid_y)
-	local up, down, left, right = nil
-
-	for i, box in ipairs(self._boxes) do
-		up = i - grid_x
-		down = i + grid_x
-		left = (i - 1) % grid_x ~= 0 and i - 1 or 0
-		right = i % grid_x ~= 0 and i + 1 or 0
-		up = self._boxes[up] or nil
-		down = self._boxes[down] or nil
-		left = self._boxes[left] or nil
-		right = self._boxes[right] or nil
-		box.links = {
-			up = up and up.name,
-			down = down and down.name,
-			left = left and left.name,
-			right = right and right.name
+-- Lines 2042-2080
+function PlayerInventoryGui:create_deployable_box(box)
+	local deployable_data = box.params.data
+	local panel = box.panel
+	local w, h = panel:size()
+	local primary_text = deployable_data.info_text
+	local primary_image = deployable_data.item_texture
+	local primary_params = {
+		name = "deployable_primary",
+		unselected_text = " ",
+		bg_blend_mode = "normal",
+		use_borders = false,
+		w = w,
+		h = h,
+		bg_color = Color.black:with_alpha(0.05),
+		parent_box = box,
+		text = primary_text,
+		image = primary_image,
+		select_anim = select_anim,
+		unselect_anim = unselect_anim,
+		clbks = {
+			right = false,
+			left = callback(self, self, "open_deployable_menu"),
+			up = callback(self, self, "previous_deployable"),
+			down = callback(self, self, "next_deployable")
 		}
-	end
-end
+	}
 
--- Lines 1965-1998
-function PlayerInventoryGui:_update_deployable_box()
-	local box = self._boxes_by_name.deployable_secondary
-
-	if box then
-		self:unretrieve_box_textures(box)
-		box.panel:parent():remove(box.panel)
-
-		box.dead = true
-		self._boxes_by_name.deployable_secondary = nil
-	end
-
-	for index, box in pairs(self._boxes) do
-		if box.dead then
-			table.remove(self._boxes, index)
-
-			break
-		end
-	end
-
-	local box = self._boxes_by_name.deployable
-	local deployable_data = managers.blackmarket:player_loadout_data().deployable
-
-	if deployable_data and deployable_data.secondary and managers.player:has_category_upgrade("player", "second_deployable") then
-		local sec_data = deployable_data.secondary
-		local clbks = {
+	if deployable_data.secondary then
+		primary_params.w = primary_params.w / 2 + 5
+		primary_params.x = 0
+		local secondary_text = deployable_data.secondary.info_text
+		local secondary_image = deployable_data.secondary.item_texture
+		local secondary_params = clone(primary_params)
+		secondary_params.x = primary_params.w - 10
+		secondary_params.name = "deployable_secondary"
+		secondary_params.parent_box = box
+		secondary_params.text = secondary_text
+		secondary_params.image = secondary_image
+		secondary_params.clbks = {
 			left = callback(self, self, "open_deployable_menu"),
 			up = callback(self, self, "previous_deployable_secondary"),
 			down = callback(self, self, "next_deployable_secondary")
 		}
-		local icon_box = self:create_box({
-			padding = 5,
-			name = "deployable_secondary",
-			unselected_text = "",
-			image_size_mul = 1,
-			alpha = 1,
-			layer = 3,
-			bg_blend_mode = "normal",
-			use_borders = false,
-			w = box.panel:w() / 2,
-			h = box.panel:h(),
-			text = sec_data.info_text,
-			image = sec_data.item_texture,
-			select_anim = select_anim,
-			unselect_anim = unselect_anim,
-			clbks = clbks
-		})
-
-		icon_box:set_center(box.panel:x() + box.panel:w() - 40, box.panel:y() + box.panel:h() / 2)
-		icon_box:set_visible(box.panel:visible())
-
-		if box.image_object then
-			box.image_object.gui:set_center_x(50)
-			self._boxes_by_name.deployable_secondary.image_object.gui:set_center_y(box.image_object.gui:center_y())
-		end
+		local primary_panel, primary_box = self:create_box(primary_params)
+		primary_box.links = box.links
+		local secondary_panel, secondary_box = self:create_box(secondary_params)
+		secondary_box.links = box.links
+	else
+		local primary_panel, primary_box = self:create_box(primary_params)
+		primary_box.links = box.links
 	end
 end
 
--- Lines 2000-2109
+-- Lines 2083-2123
+function PlayerInventoryGui:create_outfit_box(box)
+	local outfit_data = box.params.data
+	local armor_data = outfit_data.armor
+	local player_style_data = outfit_data.player_style
+	local panel = box.panel
+	local w, h = panel:size()
+	local armor_text = armor_data.info_text
+	local armor_image = armor_data.item_texture
+	local armor_params = {
+		name = "outfit_armor",
+		unselected_text = " ",
+		bg_blend_mode = "normal",
+		use_borders = false,
+		w = w,
+		h = h,
+		bg_color = Color.black:with_alpha(0.05),
+		parent_box = box,
+		text = armor_text,
+		image = armor_image,
+		select_anim = select_anim,
+		unselect_anim = unselect_anim,
+		clbks = {
+			right = false,
+			left = callback(self, self, "open_armor_menu", 1),
+			up = callback(self, self, "previous_armor"),
+			down = callback(self, self, "next_armor")
+		}
+	}
+
+	if player_style_data then
+		armor_params.w = armor_params.w / 2 + 5
+		armor_params.x = 0
+		local player_style_text = player_style_data.info_text
+		local player_style_image = player_style_data.item_texture
+		local player_style_params = clone(armor_params)
+		player_style_params.x = armor_params.w - 10
+		player_style_params.name = "outfit_player_style"
+		player_style_params.parent_box = box
+		player_style_params.text = player_style_text
+		player_style_params.image = player_style_image
+		player_style_params.clbks = {
+			left = callback(self, self, "open_armor_menu", 2),
+			up = callback(self, self, "previous_player_style"),
+			down = callback(self, self, "next_player_style")
+		}
+		local armor_panel, armor_box = self:create_box(armor_params)
+		armor_box.links = box.links
+		local player_style_panel, player_style_box = self:create_box(player_style_params)
+		player_style_box.links = box.links
+	else
+		local armor_panel, armor_box = self:create_box(armor_params)
+		armor_box.links = box.links
+	end
+end
+
+-- Lines 2126-2236
 function PlayerInventoryGui:_update_mod_boxes()
-	local box = nil
+	local box_name, box = next(self._mod_boxes)
 
-	for _, mod_box in ipairs(self._mod_boxes) do
-		box = self._boxes_by_name[mod_box.name]
+	while box do
+		self:remove_box(box)
 
-		if box then
-			self:unretrieve_box_textures(box)
-			box.panel:parent():remove(box.panel)
-
-			box.dead = true
-			self._boxes_by_name[mod_box.name] = nil
-		end
+		box_name, box = next(self._mod_boxes)
 	end
 
-	local to_be_removed = {}
-
-	for index, box in pairs(self._boxes) do
-		if box.dead then
-			table.insert(to_be_removed, index)
-		end
-	end
-
-	for _, index in ipairs(to_be_removed) do
-		table.remove(self._boxes, index)
-	end
-
-	for i = 2, self._max_layer do
-		self._boxes_by_layer[i] = nil
-	end
-
-	self._mod_boxes = {}
-	self._max_layer = 1
 	local player_loadout_data = managers.blackmarket:player_loadout_data(true)
 	local clbks = {
 		left = callback(self, self, "open_weapon_mod_menu")
@@ -3369,7 +3521,7 @@ function PlayerInventoryGui:_update_mod_boxes()
 				31
 			},
 			select_anim = select_anim,
-			unselect_anim = select_anim,
+			unselect_anim = unselect_anim,
 			links = mod_links
 		})
 
@@ -3378,11 +3530,62 @@ function PlayerInventoryGui:_update_mod_boxes()
 		x = x + w + 2
 
 		icon_box:set_visible(skilltree_box:visible())
+		self:add_child_box(self._boxes_by_name.skilltree, self._boxes_by_name[box_name])
 	end
+
+	local infamy_box = self._boxes_by_name.infamy
+	local w, h = infamy_box.panel:size()
+	local player_rank = managers.experience:current_rank()
+	local _, infamy_card_box = self:create_box({
+		keep_texture_size = true,
+		name = "infamy_card",
+		alpha = 1,
+		image = "guis/textures/pd2/inv_infamycard_bg",
+		image_size_mul = 1.3,
+		can_select = false,
+		layer = 2,
+		clbks = false,
+		bg_blend_mode = "normal",
+		use_borders = false,
+		w = w,
+		h = h,
+		parent_box = infamy_box,
+		texture_rect = {
+			0,
+			0,
+			29,
+			43
+		},
+		select_anim = select_anim,
+		unselect_anim = unselect_anim
+	})
+	local tx, ty, tw, th = infamy_card_box.image_object.gui:world_shape()
+	local _, infamy_rank_box = self:create_box({
+		text_vertical = "center",
+		name = "infamy_card_number",
+		alpha = 1,
+		layer = 3,
+		clbks = false,
+		animate_text = true,
+		use_borders = false,
+		text_align = "center",
+		can_select = false,
+		text_blend_mode = "normal",
+		x = tx,
+		y = ty,
+		w = tw,
+		h = th,
+		text = managers.experience:rank_string(player_rank),
+		text_color = Color.black,
+		select_anim = select_anim,
+		unselect_anim = unselect_anim
+	})
+
+	self:add_child_box(infamy_card_box, infamy_rank_box)
 end
 
--- Lines 2113-2389
-function PlayerInventoryGui:create_box(params, index)
+-- Lines 2240-2533
+function PlayerInventoryGui:create_box(params)
 	local x = params.x or 0
 	local y = params.y or 0
 	local w = math.max(params.w or params.width or 1, 1)
@@ -3395,7 +3598,7 @@ function PlayerInventoryGui:create_box(params, index)
 	local box_valign = params.valign or "top"
 	local border_padding = params.border_padding or params.padding or 5
 	local padding = params.padding or 0
-	local text = params.text or false
+	local text = params.text or ""
 	local unselected_text = params.unselected_text or text
 	local image = params.image or false
 	local dual_image = params.dual_image or false
@@ -3404,22 +3607,26 @@ function PlayerInventoryGui:create_box(params, index)
 	local background_image = params.bg_image or false
 	local clbks = params.callbacks or params.clbks or false
 	local links = params.links or false
+	local redirect_box = params.redirect_box or false
 	local can_select = params.can_select == nil and true or params.can_select
 	local layer = params.layer or 1
+	local parent_box = params.parent_box or false
 	local enabled = params.enabled == nil and true or params.enabled
 	local name = params.name or tostring(#self._boxes + 1)
 
 	if self._boxes_by_name[name] then
 		Application:error("[PlayerInventoryGui:create_box] Failed creating box! Box with that name already exists", name)
+		Application:stack_dump()
 
-		return
+		return self._boxes_by_name[name].panel, self._boxes_by_name[name]
 	end
 
 	local select_anim = params.select_anim or false
 	local unselect_anim = params.unselect_anim or false
+	local animate_text = params.animate_text or false
 	w = math.max(w, border_padding * 2 + 1)
 	h = math.max(h, border_padding * 2 + 1)
-	local panel = self._panel:panel({
+	local panel = (parent_box and parent_box.panel or self._panel):panel({
 		name = name,
 		x = x,
 		y = y,
@@ -3430,7 +3637,7 @@ function PlayerInventoryGui:create_box(params, index)
 	})
 	local text_object, image_object, borders_object, bg_object = nil
 
-	if text then
+	if text and not parent_box then
 		local align = params.text_align or "left"
 		local vertical = params.text_vertical or "top"
 		local selected_color = params.text_selected_color or params.text_color or tweak_data.screen_colors.text
@@ -3439,12 +3646,15 @@ function PlayerInventoryGui:create_box(params, index)
 		local font = params.font or tweak_data.menu.pd2_small_font
 		local font_size = params.font_size or tweak_data.menu.pd2_small_font_size
 		local gui_object = panel:text({
-			layer = 1,
+			layer = 2,
+			name = unselected_text,
 			text = unselected_text,
 			font = font,
 			font_size = font_size,
 			color = unselected_color,
-			blend_mode = blend_mode
+			blend_mode = blend_mode,
+			vertical = vertical,
+			align = align
 		})
 
 		make_fine_text(gui_object)
@@ -3497,7 +3707,8 @@ function PlayerInventoryGui:create_box(params, index)
 	end
 
 	if image or dual_image then
-		local text_vertical = params.text_vertical or "top"
+		local above_text_object = parent_box and parent_box.text_object or text_object
+		local above_text_vertical = parent_box and (parent_box.params.text_vertical or "top") or params.text_vertical or "top"
 		local async_loading = true
 		local selected_color = params.image_selected_color or params.image_color or Color.white
 		local unselected_color = params.image_unselected_color or params.image_color or Color.white
@@ -3506,17 +3717,21 @@ function PlayerInventoryGui:create_box(params, index)
 		local texture_rect = params.texture_rect or params.image_rect or nil
 		local image_size_mul = params.image_size_mul or 1
 		local panel_width = panel:w() - border_padding * 2
-		local panel_height = panel:h() - border_padding * 2 - (text_object and text_object.gui:h() + padding or 0)
+		local panel_height = panel:h() - border_padding * 2 - (above_text_object and above_text_vertical ~= "center" and above_text_object.gui:h() + padding or 0)
+		local akimbo_gui_data = params.akimbo_gui_data
 		local gui_object = panel:panel({
+			name = "texture_panel",
 			layer = 1,
 			w = panel_width,
 			h = panel_height
 		})
 
-		if text_object and text_object.gui and text_vertical == "top" then
-			gui_object:set_top(text_object.gui:bottom())
-		elseif text_object and text_object.gui and text_vertical == "bottom" then
-			gui_object:set_bottom(text_object.gui:top())
+		if above_text_object and above_text_object.gui and above_text_vertical == "top" then
+			gui_object:set_top(above_text_object.gui:bottom() + padding)
+		elseif above_text_object and above_text_object.gui and above_text_vertical == "bottom" then
+			gui_object:set_bottom(above_text_object.gui:top() - padding)
+		elseif above_text_object and above_text_object.gui and above_text_vertical == "center" then
+			gui_object:set_center_y(panel:h() / 2)
 		else
 			gui_object:set_y(border_padding)
 		end
@@ -3534,7 +3749,9 @@ function PlayerInventoryGui:create_box(params, index)
 				render_template = render_template,
 				blend_mode = blend_mode,
 				texture_rect = texture_rect,
-				image_size_mul = image_size_mul
+				image_size_mul = image_size_mul,
+				keep_texture_size = params.keep_texture_size,
+				akimbo_gui_data = params.akimbo_gui_data
 			}
 
 			if not async_loading then
@@ -3550,6 +3767,7 @@ function PlayerInventoryGui:create_box(params, index)
 			local texture_rect_dual_2 = params.texture_rect_dual_2 or params.image_rect_dual_2 or nil
 			local panel1 = gui_object:panel({
 				valign = "scale",
+				name = "dual_panel1",
 				halign = "scale"
 			})
 
@@ -3562,7 +3780,8 @@ function PlayerInventoryGui:create_box(params, index)
 				unselected_color = unselected_color,
 				render_template = render_template,
 				blend_mode = blend_mode,
-				texture_rect = texture_rect_dual_1
+				texture_rect = texture_rect_dual_1,
+				keep_texture_size = params.keep_texture_size
 			}
 
 			if not async_loading then
@@ -3576,6 +3795,7 @@ function PlayerInventoryGui:create_box(params, index)
 
 			local panel2 = gui_object:panel({
 				valign = "scale",
+				name = "dual_panel2",
 				halign = "scale"
 			})
 
@@ -3588,7 +3808,8 @@ function PlayerInventoryGui:create_box(params, index)
 				unselected_color = unselected_color,
 				render_template = render_template,
 				blend_mode = blend_mode,
-				texture_rect = texture_rect_dual_2
+				texture_rect = texture_rect_dual_2,
+				keep_texture_size = params.keep_texture_size
 			}
 
 			if not async_loading then
@@ -3613,7 +3834,7 @@ function PlayerInventoryGui:create_box(params, index)
 		}
 	end
 
-	if use_borders then
+	if use_borders and not parent_box then
 		local selected_color = params.box_selected_color or params.box_color or Color.white
 		local unselected_color = params.box_unselected_color or params.box_color or Color.white
 		local selected_sides = params.box_selected_sides or {
@@ -3643,7 +3864,7 @@ function PlayerInventoryGui:create_box(params, index)
 		}
 	end
 
-	if use_background then
+	if use_background and not parent_box then
 		local selected_color = params.bg_selected_color or params.bg_color or Color.white
 		local unselected_color = params.bg_unselected_color or params.bg_color or Color.white
 		local selectable = params.bg_selectable or false
@@ -3728,20 +3949,25 @@ function PlayerInventoryGui:create_box(params, index)
 		enabled = enabled,
 		select_anim = select_anim,
 		unselect_anim = unselect_anim,
+		animate_text = animate_text,
 		links = links,
+		redirect_box = redirect_box,
 		can_select = can_select,
-		params = params
+		params = params,
+		children = {}
 	}
 
-	if unselect_anim then
-		panel:animate(unselect_anim, box, true)
+	self:_animate_box(box, unselect_anim, true)
+
+	if parent_box then
+		self:add_child_box(parent_box, box)
 	end
 
-	if index and not self._boxes[index] then
-		self._boxes[index] = box
-	else
-		self._boxes[#self._boxes + 1] = box
+	if clbks and clbks.create then
+		clbks.create(box)
 	end
+
+	table.insert(self._boxes, box)
 
 	self._boxes_by_name[name] = box
 	self._boxes_by_layer[layer] = self._boxes_by_layer[layer] or {}
@@ -3756,13 +3982,42 @@ function PlayerInventoryGui:create_box(params, index)
 	return panel, box
 end
 
--- Lines 2391-2454
+-- Lines 2535-2546
+function PlayerInventoryGui:add_child_box(parent_box, child_box)
+	if not parent_box or table.contains(parent_box.children, child_box) then
+		return
+	end
+
+	if not child_box or child_box.parent then
+		return
+	end
+
+	table.insert(parent_box.children, child_box)
+
+	child_box.parent = parent_box
+end
+
+-- Lines 2548-2559
+function PlayerInventoryGui:remove_child_box(parent_box, child_box)
+	if not parent_box then
+		return
+	end
+
+	if not child_box or not child_box.parent then
+		return
+	end
+
+	table.delete(parent_box.children, child_box)
+
+	child_box.parent = nil
+end
+
+-- Lines 2561-2586
 function PlayerInventoryGui:update_box(box, params, skip_update_other)
 	if not box or not box.params then
 		return
 	end
 
-	local selected = box.selected
 	local box_params = box.params
 	box_params.links = box.links
 
@@ -3774,16 +4029,50 @@ function PlayerInventoryGui:update_box(box, params, skip_update_other)
 
 	local visible = box.panel:visible()
 
+	self:remove_box(box)
+
+	local panel, new_box = self:create_box(box_params)
+
+	panel:set_visible(visible)
+
+	if not skip_update_other then
+		self:update_detection()
+		self:_update_player_stats()
+		self:_update_mod_boxes()
+	end
+
+	self:_update_selected_box(true)
+end
+
+-- Lines 2589-2654
+function PlayerInventoryGui:remove_box(box)
+	if not box then
+		return
+	end
+
+	local box_params = box.params
+	local box_name = box_params.name
+
+	if box.parent then
+		self:remove_child_box(box.parent, box)
+	end
+
+	if box.children then
+		for _, child_box in ipairs(clone(box.children)) do
+			self:remove_box(child_box)
+		end
+	end
+
 	self:unretrieve_box_textures(box)
 
 	if box.panel then
-		self._panel:remove(box.panel)
+		box.panel:parent():remove(box.panel)
 	end
 
 	local box_index = 0
 
 	for index, layer_box in ipairs(self._boxes_by_layer[box.layer] or {}) do
-		if layer_box.name == box_params.name then
+		if layer_box.name == box_name then
 			box_index = index
 
 			break
@@ -3792,44 +4081,48 @@ function PlayerInventoryGui:update_box(box, params, skip_update_other)
 
 	if box_index ~= 0 then
 		table.remove(self._boxes_by_layer[box.layer], box_index)
+	else
+		Application:error("Failed to remove box from layer")
 	end
 
-	local box_index = 0
+	if box.layer > 1 then
+		box_index = 0
+
+		for index, index_box in ipairs(self._mod_boxes) do
+			if index_box.name == box_name then
+				box_index = index
+
+				break
+			end
+		end
+
+		if box_index ~= 0 then
+			table.remove(self._mod_boxes, box_index)
+		else
+			Application:error("Failed to remove box from mod")
+		end
+	end
+
+	box_index = 0
 
 	for index, index_box in ipairs(self._boxes) do
-		if index_box.name == box_params.name then
+		if index_box.name == box_name then
 			box_index = index
 
 			break
 		end
 	end
 
-	self._boxes[box_index] = nil
-	self._boxes_by_name[box_params.name] = nil
-	local panel, new_box = self:create_box(box_params, box_index)
-
-	panel:set_visible(visible)
-
-	if not skip_update_other then
-		self:update_detection()
-		self:_update_player_stats()
-		self:_update_mod_boxes()
-		self:_update_deployable_box()
+	if box_index ~= 0 then
+		table.remove(self._boxes, box_index)
+	else
+		Application:error("Failed to remove box from index")
 	end
 
-	if selected then
-		new_box.selected = true
-
-		self:_update_box_status(new_box, true)
-
-		if new_box.select_anim then
-			new_box.panel:stop()
-			new_box.panel:animate(new_box.select_anim, new_box, true)
-		end
-	end
+	self._boxes_by_name[box_name] = nil
 end
 
--- Lines 2458-2472
+-- Lines 2658-2679
 function PlayerInventoryGui:_update_loadout_boxes()
 	local player_loadout_data = managers.blackmarket:player_loadout_data()
 	local loadout_boxes = {
@@ -3839,9 +4132,14 @@ function PlayerInventoryGui:_update_loadout_boxes()
 		mask = "mask",
 		melee = "melee_weapon",
 		primary = "primary",
-		deployable = "deployable",
-		character = "character"
+		character = "character",
+		armor = nil
 	}
+
+	self:update_box(self._boxes_by_name.armor, {
+		data = player_loadout_data.outfit
+	})
+
 	local box = nil
 
 	for box_name, entry in pairs(loadout_boxes) do
@@ -3861,12 +4159,15 @@ function PlayerInventoryGui:_update_loadout_boxes()
 		end
 	end
 
+	self:update_box(self._boxes_by_name.deployable, {
+		data = player_loadout_data.deployable
+	})
 	self:update_detection()
 	self:_update_player_stats()
 	self:_update_mod_boxes()
 end
 
--- Lines 2476-2528
+-- Lines 2683-2735
 function PlayerInventoryGui:update_detection()
 	local detection_panel = self._player_panel:child("detection_panel")
 
@@ -3903,7 +4204,7 @@ function PlayerInventoryGui:update_detection()
 	detection_ring_right2:set_color(Color(0.5 + value * 0.5, 1, 1))
 end
 
--- Lines 2530-2564
+-- Lines 2737-2796
 function PlayerInventoryGui:texture_loaded_clbk(params, texture_idstring)
 	local panel = params.panel
 	local texture = texture_idstring
@@ -3912,8 +4213,11 @@ function PlayerInventoryGui:texture_loaded_clbk(params, texture_idstring)
 	local render_template = params.render_template
 	local blend_mode = params.blend_mode
 	local texture_rect = params.texture_rect
+	local keep_texture_size = params.keep_texture_size
 	local image_size_mul = params.image_size_mul or 1
+	local akimbo_gui_data = params.akimbo_gui_data
 	local gui_object = panel:bitmap({
+		name = "image",
 		halign = "scale",
 		valign = "scale",
 		texture = texture,
@@ -3928,7 +4232,7 @@ function PlayerInventoryGui:texture_loaded_clbk(params, texture_idstring)
 	local texture_height = texture_rect and texture_rect[4] or gui_object:texture_height()
 
 	if panel_height <= 0 then
-		Application:error("[PlayerInventoryGui:create_box] Failed creating image! Box not large enough")
+		Application:error("[PlayerInventoryGui:create_box] Failed creating image! Box not large enough", inspect(params))
 		panel:remove(gui_object)
 
 		gui_object = nil
@@ -3938,18 +4242,48 @@ function PlayerInventoryGui:texture_loaded_clbk(params, texture_idstring)
 		local sh = math.max(texture_height, texture_width / aspect)
 		local dw = texture_width / sw
 		local dh = texture_height / sh
+		local width = dw * panel_width * image_size_mul
+		local height = dh * panel_height * image_size_mul
 
-		gui_object:set_size(math.round(dw * panel_width * image_size_mul), math.round(dh * panel_height * image_size_mul))
-		gui_object:set_center(panel_width / 2, panel_height / 2)
+		if keep_texture_size then
+			width = texture_width * image_size_mul
+			height = texture_height * image_size_mul
+		end
+
+		if akimbo_gui_data then
+			local gui_object2 = panel:bitmap({
+				name = "image2",
+				halign = "scale",
+				valign = "scale",
+				texture = texture,
+				color = unselected_color,
+				render_template = render_template,
+				blend_mode = blend_mode,
+				texture_rect = texture_rect
+			})
+			local scale = akimbo_gui_data.scale or 0.75
+			local offset = akimbo_gui_data.offset or 0.1
+			local rotation = akimbo_gui_data.rotation or 45
+
+			gui_object:set_size(width * scale, height * scale)
+			gui_object2:set_size(width * scale, height * scale)
+			gui_object:set_center(panel_width * (0.5 - offset), panel_height * 0.5)
+			gui_object2:set_center(panel_width * (0.5 + offset), panel_height * 0.5)
+			gui_object:set_rotation(rotation)
+			gui_object2:set_rotation(rotation)
+		else
+			gui_object:set_size(width, height)
+			gui_object:set_center(panel_width * 0.5, panel_height * 0.5)
+		end
 	end
 end
 
--- Lines 2569-2571
+-- Lines 2801-2803
 function PlayerInventoryGui:open_weapon_mod_menu(box)
 	BlackMarketGui.choose_weapon_mods_callback(self, box.params.mod_data)
 end
 
--- Lines 2575-2613
+-- Lines 2807-2845
 function PlayerInventoryGui:open_weapon_category_menu(category)
 	local crafted_category = managers.blackmarket:get_crafted_category(category) or {}
 	local new_node_data = {
@@ -4009,17 +4343,17 @@ function PlayerInventoryGui:open_weapon_category_menu(category)
 	})
 end
 
--- Lines 2615-2617
+-- Lines 2847-2849
 function PlayerInventoryGui:_open_preview_node()
 	managers.menu:open_node("blackmarket_preview_node", {})
 end
 
--- Lines 2619-2621
+-- Lines 2851-2853
 function PlayerInventoryGui:_open_crafting_node(data)
 	managers.menu:open_node("blackmarket_crafting_node", data)
 end
 
--- Lines 2623-2626
+-- Lines 2855-2858
 function PlayerInventoryGui:_start_crafting_weapon(data, new_node_data)
 	local custom_data = {
 		scene_template = "blackmarket_crafting",
@@ -4031,17 +4365,17 @@ function PlayerInventoryGui:_start_crafting_weapon(data, new_node_data)
 	}), true, BlackMarketGui.get_crafting_custom_data())
 end
 
--- Lines 2632-2634
+-- Lines 2864-2866
 function PlayerInventoryGui:open_primary_menu()
 	self:open_weapon_category_menu("primaries")
 end
 
--- Lines 2636-2638
+-- Lines 2868-2870
 function PlayerInventoryGui:preview_primary()
 	managers.blackmarket:view_weapon("primaries", managers.blackmarket:equipped_weapon_slot("primaries"), callback(self, self, "_open_preview_node"))
 end
 
--- Lines 2640-2649
+-- Lines 2872-2881
 function PlayerInventoryGui:previous_primary()
 	local box = self._boxes_by_name.primary
 
@@ -4059,7 +4393,7 @@ function PlayerInventoryGui:previous_primary()
 	end
 end
 
--- Lines 2651-2660
+-- Lines 2883-2892
 function PlayerInventoryGui:next_primary()
 	local box = self._boxes_by_name.primary
 
@@ -4077,17 +4411,17 @@ function PlayerInventoryGui:next_primary()
 	end
 end
 
--- Lines 2665-2667
+-- Lines 2897-2899
 function PlayerInventoryGui:open_secondary_menu()
 	self:open_weapon_category_menu("secondaries")
 end
 
--- Lines 2669-2671
+-- Lines 2901-2903
 function PlayerInventoryGui:preview_secondary()
 	managers.blackmarket:view_weapon("secondaries", managers.blackmarket:equipped_weapon_slot("secondaries"), callback(self, self, "_open_preview_node"))
 end
 
--- Lines 2673-2682
+-- Lines 2905-2914
 function PlayerInventoryGui:previous_secondary()
 	local box = self._boxes_by_name.secondary
 
@@ -4105,7 +4439,7 @@ function PlayerInventoryGui:previous_secondary()
 	end
 end
 
--- Lines 2684-2693
+-- Lines 2916-2925
 function PlayerInventoryGui:next_secondary()
 	local box = self._boxes_by_name.secondary
 
@@ -4123,9 +4457,13 @@ function PlayerInventoryGui:next_secondary()
 	end
 end
 
--- Lines 2698-2728
+-- Lines 2930-2961
 function PlayerInventoryGui:open_melee_menu()
-	local sorted_categories, item_categories = managers.blackmarket:get_sorted_melee_weapons()
+	local sorted_categories, item_categories, override_slots = managers.blackmarket:get_sorted_melee_weapons()
+	override_slots = override_slots or {
+		4,
+		4
+	}
 	local new_node_data = {}
 	local item_data, selected_tab = nil
 
@@ -4153,10 +4491,7 @@ function PlayerInventoryGui:open_melee_menu()
 			name = category,
 			name_localized = name_id,
 			on_create_data = item_data,
-			override_slots = {
-				4,
-				4
-			},
+			override_slots = override_slots,
 			identifier = BlackMarketGui.identifiers.melee_weapon
 		})
 	end
@@ -4173,7 +4508,7 @@ function PlayerInventoryGui:open_melee_menu()
 	})
 end
 
--- Lines 2730-2738
+-- Lines 2963-2971
 function PlayerInventoryGui:preview_melee()
 	local equipped_melee_weapon = managers.blackmarket:equipped_melee_weapon()
 	local my_tweak_data = tweak_data.blackmarket.melee_weapons[equipped_melee_weapon]
@@ -4184,7 +4519,7 @@ function PlayerInventoryGui:preview_melee()
 	end
 end
 
--- Lines 2740-2748
+-- Lines 2973-2981
 function PlayerInventoryGui:previous_melee()
 	local box = self._boxes_by_name.melee
 
@@ -4203,7 +4538,7 @@ function PlayerInventoryGui:previous_melee()
 	end
 end
 
--- Lines 2750-2758
+-- Lines 2983-2991
 function PlayerInventoryGui:next_melee()
 	local box = self._boxes_by_name.melee
 
@@ -4222,7 +4557,7 @@ function PlayerInventoryGui:next_melee()
 	end
 end
 
--- Lines 2763-2770
+-- Lines 2996-3003
 function PlayerInventoryGui:open_throwable_menu()
 	local new_node_data = {}
 
@@ -4246,7 +4581,7 @@ function PlayerInventoryGui:open_throwable_menu()
 	})
 end
 
--- Lines 2772-2780
+-- Lines 3005-3013
 function PlayerInventoryGui:preview_throwable()
 	local equipped_grenade = managers.blackmarket:equipped_grenade()
 	local my_tweak_data = tweak_data.blackmarket.projectiles[equipped_grenade]
@@ -4257,7 +4592,7 @@ function PlayerInventoryGui:preview_throwable()
 	end
 end
 
--- Lines 2782-2790
+-- Lines 3015-3023
 function PlayerInventoryGui:previous_throwable()
 	local box = self._boxes_by_name.throwable
 
@@ -4272,7 +4607,7 @@ function PlayerInventoryGui:previous_throwable()
 	end
 end
 
--- Lines 2792-2800
+-- Lines 3025-3033
 function PlayerInventoryGui:next_throwable()
 	local box = self._boxes_by_name.throwable
 
@@ -4287,80 +4622,115 @@ function PlayerInventoryGui:next_throwable()
 	end
 end
 
--- Lines 2805-2833
-function PlayerInventoryGui:open_armor_menu()
+-- Lines 3038-3090
+function PlayerInventoryGui:open_armor_menu(selected_tab)
 	local new_node_data = {}
+	local override_slots = {
+		3,
+		3
+	}
 
 	table.insert(new_node_data, {
 		name = "bm_menu_armors",
 		on_create_func_name = "populate_armors",
 		category = "armors",
-		override_slots = {
-			3,
-			3
-		},
+		override_slots = override_slots,
 		identifier = BlackMarketGui.identifiers.armor
 	})
+	table.insert(new_node_data, {
+		name = "bm_menu_player_styles",
+		on_create_func_name = "populate_player_styles",
+		category = "player_styles",
+		override_slots = override_slots,
+		identifier = BlackMarketGui.identifiers.player_style
+	})
 
-	new_node_data.topic_id = "bm_menu_armors"
-	new_node_data.scroll_tab_anywhere = true
+	new_node_data.topic_id = "bm_menu_outfits"
+	new_node_data.selected_tab = selected_tab
 	new_node_data.skip_blur = true
 	new_node_data.use_bgs = true
 	new_node_data.panel_grid_w_mul = 0.6
 
 	managers.environment_controller:set_dof_distance(10, false)
 	managers.menu_scene:remove_item()
-	managers.menu:open_node("blackmarket_armor_node", {
+	managers.menu:open_node("blackmarket_outfit_node", {
 		new_node_data
 	})
 end
 
--- Lines 2835-2845
+-- Lines 3092-3102
 function PlayerInventoryGui:preview_armor()
 end
 
--- Lines 2847-2855
+-- Lines 3105-3113
 function PlayerInventoryGui:previous_armor()
-	local box = self._boxes_by_name.armor
+	local box = self._boxes_by_name.outfit_armor
 
 	if box and managers.blackmarket:equip_previous_armor() then
 		local player_loadout_data = managers.blackmarket:player_loadout_data()
 
-		self:update_box(box, {
-			text = player_loadout_data.armor.info_text,
-			image = player_loadout_data.armor.item_texture
+		self:update_box(self._boxes_by_name.armor, {
+			data = player_loadout_data.outfit
 		})
 		self:_update_info_armor("armor")
 	end
 end
 
--- Lines 2857-2865
+-- Lines 3115-3123
 function PlayerInventoryGui:next_armor()
-	local box = self._boxes_by_name.armor
+	local box = self._boxes_by_name.outfit_armor
 
 	if box and managers.blackmarket:equip_next_armor() then
 		local player_loadout_data = managers.blackmarket:player_loadout_data()
 
-		self:update_box(box, {
-			text = player_loadout_data.armor.info_text,
-			image = player_loadout_data.armor.item_texture
+		self:update_box(self._boxes_by_name.armor, {
+			data = player_loadout_data.outfit
 		})
 		self:_update_info_armor("armor")
 	end
 end
 
--- Lines 2870-2877
+-- Lines 3125-3133
+function PlayerInventoryGui:previous_player_style()
+	local box = self._boxes_by_name.outfit_player_style
+
+	if box and managers.blackmarket:equip_previous_player_style() then
+		local player_loadout_data = managers.blackmarket:player_loadout_data()
+
+		self:update_box(self._boxes_by_name.armor, {
+			data = player_loadout_data.outfit
+		})
+		self:_update_info_player_style("player_style")
+	end
+end
+
+-- Lines 3135-3143
+function PlayerInventoryGui:next_player_style()
+	local box = self._boxes_by_name.outfit_player_style
+
+	if box and managers.blackmarket:equip_next_player_style() then
+		local player_loadout_data = managers.blackmarket:player_loadout_data()
+
+		self:update_box(self._boxes_by_name.armor, {
+			data = player_loadout_data.outfit
+		})
+		self:_update_info_player_style("player_style")
+	end
+end
+
+-- Lines 3169-3181
 function PlayerInventoryGui:open_deployable_menu()
+	local override_slots = {
+		3,
+		3
+	}
 	local new_node_data = {}
 
 	table.insert(new_node_data, {
 		name = "bm_menu_deployables",
 		on_create_func_name = "populate_deployables",
 		category = "deployables",
-		override_slots = {
-			3,
-			3
-		},
+		override_slots = override_slots,
 		identifier = BlackMarketGui.identifiers.deployable
 	})
 
@@ -4372,7 +4742,7 @@ function PlayerInventoryGui:open_deployable_menu()
 	})
 end
 
--- Lines 2879-2887
+-- Lines 3183-3191
 function PlayerInventoryGui:preview_deployable()
 	local equipped_deployable = managers.blackmarket:equipped_deployable()
 	local my_tweak_data = tweak_data.equipments[equipped_deployable]
@@ -4383,59 +4753,63 @@ function PlayerInventoryGui:preview_deployable()
 	end
 end
 
--- Lines 2889-2898
+-- Lines 3193-3201
 function PlayerInventoryGui:previous_deployable()
 	local box = self._boxes_by_name.deployable
 
-	if box and managers.blackmarket:equip_previous_deployable() then
+	if box and managers.blackmarket:equip_previous_deployable(1) then
 		local player_loadout_data = managers.blackmarket:player_loadout_data()
 
 		self:update_box(box, {
-			text = player_loadout_data.deployable.info_text,
-			image = player_loadout_data.deployable.item_texture
+			data = player_loadout_data.deployable
 		})
-		self:_update_info_deployable("deployable")
-		self:_update_deployable_box()
+		self:_update_info_deployable("deployable", 1)
 	end
 end
 
--- Lines 2900-2909
+-- Lines 3203-3211
 function PlayerInventoryGui:next_deployable()
 	local box = self._boxes_by_name.deployable
 
-	if box and managers.blackmarket:equip_next_deployable() then
+	if box and managers.blackmarket:equip_next_deployable(1) then
 		local player_loadout_data = managers.blackmarket:player_loadout_data()
 
 		self:update_box(box, {
-			text = player_loadout_data.deployable.info_text,
-			image = player_loadout_data.deployable.item_texture
+			data = player_loadout_data.deployable
 		})
-		self:_update_info_deployable("deployable")
-		self:_update_deployable_box()
+		self:_update_info_deployable("deployable", 1)
 	end
 end
 
--- Lines 2914-2920
+-- Lines 3216-3224
 function PlayerInventoryGui:previous_deployable_secondary()
-	local box = self._boxes_by_name.deployable_secondary
+	local box = self._boxes_by_name.deployable
 
 	if box and managers.blackmarket:equip_previous_deployable(2) then
-		self:_update_deployable_box()
+		local player_loadout_data = managers.blackmarket:player_loadout_data()
+
+		self:update_box(box, {
+			data = player_loadout_data.deployable
+		})
 		self:_update_info_deployable("deployable", 2)
 	end
 end
 
--- Lines 2922-2928
+-- Lines 3226-3234
 function PlayerInventoryGui:next_deployable_secondary()
-	local box = self._boxes_by_name.deployable_secondary
+	local box = self._boxes_by_name.deployable
 
 	if box and managers.blackmarket:equip_next_deployable(2) then
-		self:_update_deployable_box()
+		local player_loadout_data = managers.blackmarket:player_loadout_data()
+
+		self:update_box(box, {
+			data = player_loadout_data.deployable
+		})
 		self:_update_info_deployable("deployable", 2)
 	end
 end
 
--- Lines 2933-2971
+-- Lines 3239-3277
 function PlayerInventoryGui:open_mask_menu()
 	local crafted_category = managers.blackmarket:get_crafted_category("masks") or {}
 	local new_node_data = {
@@ -4495,13 +4869,13 @@ function PlayerInventoryGui:open_mask_menu()
 	})
 end
 
--- Lines 2973-2976
+-- Lines 3279-3282
 function PlayerInventoryGui:preview_mask()
 	managers.blackmarket:view_mask(managers.blackmarket:equipped_mask_slot())
 	managers.menu:open_node("blackmarket_preview_mask_node", {})
 end
 
--- Lines 2978-2987
+-- Lines 3284-3293
 function PlayerInventoryGui:previous_mask()
 	local box = self._boxes_by_name.mask
 
@@ -4516,7 +4890,7 @@ function PlayerInventoryGui:previous_mask()
 	end
 end
 
--- Lines 2989-2998
+-- Lines 3295-3304
 function PlayerInventoryGui:next_mask()
 	local box = self._boxes_by_name.mask
 
@@ -4531,18 +4905,19 @@ function PlayerInventoryGui:next_mask()
 	end
 end
 
--- Lines 3003-3010
+-- Lines 3309-3321
 function PlayerInventoryGui:open_character_menu()
+	local override_slots = {
+		6,
+		3
+	}
 	local new_node_data = {}
 
 	table.insert(new_node_data, {
 		name = "bm_menu_characters",
 		on_create_func_name = "populate_characters",
 		category = "characters",
-		override_slots = {
-			6,
-			3
-		},
+		override_slots = override_slots,
 		identifier = BlackMarketGui.identifiers.character
 	})
 
@@ -4557,11 +4932,11 @@ function PlayerInventoryGui:open_character_menu()
 	})
 end
 
--- Lines 3012-3022
+-- Lines 3323-3333
 function PlayerInventoryGui:preview_character()
 end
 
--- Lines 3024-3041
+-- Lines 3335-3352
 function PlayerInventoryGui:previous_character()
 	local box = self._boxes_by_name.character
 
@@ -4589,7 +4964,7 @@ function PlayerInventoryGui:previous_character()
 	end
 end
 
--- Lines 3043-3060
+-- Lines 3354-3371
 function PlayerInventoryGui:next_character()
 	local box = self._boxes_by_name.character
 
@@ -4617,16 +4992,38 @@ function PlayerInventoryGui:next_character()
 	end
 end
 
--- Lines 3081-3083
+-- Lines 3377-3385
+function PlayerInventoryGui:open_infamy_menu()
+	-- Lines 3378-3378
+	local function clbk()
+		managers.menu:open_node("infamytree")
+	end
+
+	if MenuCallbackHandler:can_become_infamous() and Application:digest_value(tweak_data.infamy.ranks[managers.experience:current_rank() + 1], false) <= managers.money:offshore() then
+		MenuCallbackHandler:become_infamous({
+			yes_clbk = clbk,
+			no_clbk = clbk
+		})
+	else
+		clbk()
+	end
+end
+
+-- Lines 3389-3391
+function PlayerInventoryGui:open_crew_menu()
+	managers.menu:open_node("crew_management")
+end
+
+-- Lines 3398-3400
 function PlayerInventoryGui:open_skilltree_menu()
 	managers.menu:open_node("skilltree_new", {})
 end
 
--- Lines 3085-3095
+-- Lines 3402-3412
 function PlayerInventoryGui:preview_skilltree()
 end
 
--- Lines 3097-3110
+-- Lines 3414-3426
 function PlayerInventoryGui:previous_skilltree()
 	local box = self._boxes_by_name.skilltree
 
@@ -4646,11 +5043,10 @@ function PlayerInventoryGui:previous_skilltree()
 		self:_update_specialization_box()
 		self:_update_loadout_boxes()
 		self:_update_info_skilltree("skilltree")
-		self:_update_deployable_box()
 	end
 end
 
--- Lines 3112-3125
+-- Lines 3428-3440
 function PlayerInventoryGui:next_skilltree()
 	local box = self._boxes_by_name.skilltree
 
@@ -4670,11 +5066,10 @@ function PlayerInventoryGui:next_skilltree()
 		self:_update_specialization_box()
 		self:_update_loadout_boxes()
 		self:_update_info_skilltree("skilltree")
-		self:_update_deployable_box()
 	end
 end
 
--- Lines 3130-3132
+-- Lines 3445-3447
 function PlayerInventoryGui:open_specialization_menu()
 	managers.menu:open_node("skilltree", {
 		{
@@ -4683,11 +5078,11 @@ function PlayerInventoryGui:open_specialization_menu()
 	})
 end
 
--- Lines 3134-3144
+-- Lines 3449-3459
 function PlayerInventoryGui:preview_specialization()
 end
 
--- Lines 3146-3175
+-- Lines 3461-3490
 function PlayerInventoryGui:_update_specialization_box()
 	local box = self._boxes_by_name.specialization
 
@@ -4731,7 +5126,7 @@ function PlayerInventoryGui:_update_specialization_box()
 	end
 end
 
--- Lines 3177-3185
+-- Lines 3492-3499
 function PlayerInventoryGui:previous_specialization()
 	local box = self._boxes_by_name.specialization
 
@@ -4739,11 +5134,10 @@ function PlayerInventoryGui:previous_specialization()
 		self:_update_specialization_box()
 		self:_update_loadout_boxes()
 		self:_update_info_specialization("specialization")
-		self:_update_deployable_box()
 	end
 end
 
--- Lines 3187-3195
+-- Lines 3501-3508
 function PlayerInventoryGui:next_specialization()
 	local box = self._boxes_by_name.specialization
 
@@ -4751,12 +5145,34 @@ function PlayerInventoryGui:next_specialization()
 		self:_update_specialization_box()
 		self:_update_loadout_boxes()
 		self:_update_info_specialization("specialization")
-		self:_update_deployable_box()
 	end
 end
 
--- Lines 3204-3293
-function PlayerInventoryGui:_update_box_status(box, selected)
+-- Lines 3516-3531
+function PlayerInventoryGui:_animate_box(box, selected, instant)
+	if box then
+		if box.children then
+			for _, child_box in ipairs(box.children) do
+				self:_animate_box(child_box, selected, instant)
+			end
+		end
+
+		local panel = box.panel
+		local anim = selected and box.select_anim or box.unselected_anim
+
+		if alive(panel) and selected then
+			box.panel:stop()
+			box.panel:animate(selected, box, instant)
+		end
+	end
+end
+
+-- Lines 3533-3631
+function PlayerInventoryGui:_update_box_status(box, selected, override_text_string)
+	if not box then
+		return
+	end
+
 	local list = {
 		"text_object",
 		"image_object",
@@ -4813,9 +5229,10 @@ function PlayerInventoryGui:_update_box_status(box, selected)
 		local keep_box_ratio = box.params and box.params.keep_box_ratio or true
 		local font = box.params and box.params.font or tweak_data.menu.pd2_small_font
 		local font_size = box.params and box.params.font_size or tweak_data.menu.pd2_small_font_size
+		local text_string = override_text_string or selected and text_object.selected_text or text_object.unselected_text
 
 		gui_object:set_font_size(font_size)
-		gui_object:set_text(selected and text_object.selected_text or text_object.unselected_text)
+		gui_object:set_text(text_string)
 		make_fine_text(gui_object)
 
 		local w = box.panel:w()
@@ -4854,23 +5271,75 @@ function PlayerInventoryGui:_update_box_status(box, selected)
 
 		gui_object:set_position(math.round(gui_object:x()), math.round(gui_object:y()))
 	end
+
+	if box.parent then
+		self:_update_box_status(box.parent, selected, selected and box.params.text)
+	end
 end
 
--- Lines 3295-3297
+-- Lines 3633-3642
+function PlayerInventoryGui:_update_selected_box(instant)
+	local box = self:_get_selected_box()
+
+	if box then
+		self:_update_stats(box.name)
+		self:_update_legends(box.name)
+		self:_update_box_status(box, true)
+		self:_animate_box(box, box.select_anim, instant)
+	end
+end
+
+-- Lines 3644-3646
 function PlayerInventoryGui:_get_selected_box()
 	return self._data and self._data.selected_box and self._boxes_by_name[self._data.selected_box]
 end
 
--- Lines 3301-3340
-function PlayerInventoryGui:_move(dir, box)
+-- Lines 3648-3667
+function PlayerInventoryGui:_set_selected_box(box)
 	local selected_box = self:_get_selected_box()
-	local move_box = box or selected_box
+
+	if selected_box == box then
+		return
+	end
+
+	if selected_box then
+		selected_box.selected = false
+
+		self:_update_box_status(selected_box, false)
+		self:_animate_box(selected_box, selected_box.unselect_anim, false)
+	end
+
+	if box then
+		box.selected = true
+		self._data.selected_box = box.name
+
+		self:_update_selected_box(false)
+		managers.menu_component:post_event("highlight")
+	end
+end
+
+-- Lines 3671-3680
+function PlayerInventoryGui:_get_box_redirected(box_name)
+	local box = self._boxes_by_name[box_name]
+
+	if box then
+		if not box.redirect_box then
+			return box, box_name
+		end
+
+		return self:_get_box_redirected(box.redirect_box)
+	end
+end
+
+-- Lines 3682-3701
+function PlayerInventoryGui:_move(dir, box)
+	local move_box = box or self:_get_selected_box()
 
 	if move_box and move_box.links then
 		local linked_box_name = move_box.links[dir]
 
 		if linked_box_name then
-			local new_box = self._boxes_by_name[linked_box_name]
+			local new_box = self:_get_box_redirected(linked_box_name)
 
 			if new_box then
 				if not new_box.panel:tree_visible() then
@@ -4881,55 +5350,33 @@ function PlayerInventoryGui:_move(dir, box)
 					return
 				end
 
-				selected_box.selected = false
-
-				self:_update_box_status(selected_box, false)
-
-				if selected_box.unselect_anim then
-					selected_box.panel:stop()
-					selected_box.panel:animate(selected_box.unselect_anim, selected_box)
-				end
-
-				self._data.selected_box = linked_box_name
-
-				managers.menu_component:post_event("highlight")
-
-				new_box.selected = true
-
-				self:_update_stats(new_box.name)
-				self:_update_box_status(new_box, true)
-				self:_update_legends(new_box.name)
-
-				if new_box.select_anim then
-					new_box.panel:stop()
-					new_box.panel:animate(new_box.select_anim, new_box)
-				end
+				self:_set_selected_box(new_box)
 			end
 		end
 	end
 end
 
--- Lines 3342-3344
+-- Lines 3703-3705
 function PlayerInventoryGui:move_left()
 	self:_move("left")
 end
 
--- Lines 3346-3348
+-- Lines 3707-3709
 function PlayerInventoryGui:move_right()
 	self:_move("right")
 end
 
--- Lines 3350-3352
+-- Lines 3711-3713
 function PlayerInventoryGui:move_up()
 	self:_move("up")
 end
 
--- Lines 3354-3356
+-- Lines 3715-3717
 function PlayerInventoryGui:move_down()
 	self:_move("down")
 end
 
--- Lines 3358-3363
+-- Lines 3719-3724
 function PlayerInventoryGui:next_page()
 	local box = self:_get_selected_box()
 
@@ -4938,7 +5385,7 @@ function PlayerInventoryGui:next_page()
 	end
 end
 
--- Lines 3365-3370
+-- Lines 3726-3731
 function PlayerInventoryGui:previous_page()
 	local box = self:_get_selected_box()
 
@@ -4947,7 +5394,7 @@ function PlayerInventoryGui:previous_page()
 	end
 end
 
--- Lines 3372-3396
+-- Lines 3733-3757
 function PlayerInventoryGui:special_btn_pressed(button)
 	if button == Idstring("menu_preview_item_alt") then
 		local box = self:_get_selected_box()
@@ -4976,7 +5423,7 @@ function PlayerInventoryGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 3398-3403
+-- Lines 3759-3764
 function PlayerInventoryGui:confirm_pressed()
 	local box = self:_get_selected_box()
 
@@ -4985,12 +5432,12 @@ function PlayerInventoryGui:confirm_pressed()
 	end
 end
 
--- Lines 3407-3409
+-- Lines 3768-3770
 function PlayerInventoryGui:input_focus()
 	return self._panel:visible() and self._input_focus
 end
 
--- Lines 3413-3533
+-- Lines 3774-3855
 function PlayerInventoryGui:mouse_moved(o, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -5021,25 +5468,21 @@ function PlayerInventoryGui:mouse_moved(o, x, y)
 		self._panel:child("back_button"):set_color(tweak_data.screen_colors.button_stage_3)
 	end
 
-	local mouse_over_selected_box = nil
+	local mouse_over_box = nil
 
-	for i = self._max_layer, 1, -1 do
-		if self._boxes_by_layer[i] then
-			for _, box in ipairs(self._boxes_by_layer[i]) do
-				if alive(box.panel) and box.panel:tree_visible() and box.can_select and box.panel:inside(x, y) then
-					self._data.selected_box = box.name
-					mouse_over_selected_box = box.name
-					used = true
-					pointer = "link"
-
-					break
-				end
-			end
+	for i, box in ipairs(self._boxes) do
+		if alive(box.panel) and box.panel:tree_visible() and box.can_select and box.panel:inside(x, y) and (not mouse_over_box or mouse_over_box.layer < box.layer) then
+			mouse_over_box = box
 		end
+	end
 
-		if used then
-			break
-		end
+	if mouse_over_box then
+		local new_box = self:_get_box_redirected(mouse_over_box.name)
+
+		self:_set_selected_box(new_box)
+
+		used = true
+		pointer = "link"
 	end
 
 	for _, button in ipairs(self._text_buttons) do
@@ -5073,38 +5516,6 @@ function PlayerInventoryGui:mouse_moved(o, x, y)
 		end
 	end
 
-	for _, box in ipairs(self._boxes) do
-		if self._data.selected_box == box.name then
-			if not box.selected then
-				box.selected = true
-
-				self:_update_stats(box.name)
-				self:_update_box_status(box, true)
-				managers.menu_component:post_event("highlight")
-
-				if alive(box.panel) and box.select_anim then
-					box.panel:stop()
-					box.panel:animate(box.select_anim, box)
-				end
-			end
-		elseif box.selected then
-			box.selected = false
-
-			self:_update_box_status(box, false)
-
-			if alive(box.panel) and box.unselect_anim then
-				box.panel:stop()
-				box.panel:animate(box.unselect_anim, box)
-			end
-		end
-	end
-
-	if self._mouse_over_selected_box ~= mouse_over_selected_box then
-		self._mouse_over_selected_box = mouse_over_selected_box
-
-		self:_update_legends(mouse_over_selected_box)
-	end
-
 	local u, p = self._multi_profile_item:mouse_moved(x, y)
 	used = u or used
 	pointer = p or pointer
@@ -5113,7 +5524,7 @@ function PlayerInventoryGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 3535-3584
+-- Lines 3857-3906
 function PlayerInventoryGui:mouse_pressed(button, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -5165,7 +5576,7 @@ function PlayerInventoryGui:mouse_pressed(button, x, y)
 	self._multi_profile_item:mouse_pressed(button, x, y)
 end
 
--- Lines 3588-3601
+-- Lines 3910-3923
 function PlayerInventoryGui:unretrieve_box_textures(box)
 	local object = nil
 
@@ -5187,7 +5598,7 @@ function PlayerInventoryGui:unretrieve_box_textures(box)
 	end
 end
 
--- Lines 3603-3627
+-- Lines 3925-3949
 function PlayerInventoryGui:close()
 	for _, box in ipairs(self._boxes) do
 		self:unretrieve_box_textures(box)
@@ -5217,7 +5628,12 @@ function PlayerInventoryGui:close()
 	self._boxes_by_name = {}
 end
 
--- Lines 3635-3691
+-- Lines 3951-3957
+function PlayerInventoryGui:_should_show_description()
+	return IS_WIN_32
+end
+
+-- Lines 3964-4020
 function PlayerInventoryGui:create_text_button(params)
 	local left = params.left or params.x
 	local right = params.right
@@ -5237,6 +5653,7 @@ function PlayerInventoryGui:create_text_button(params)
 	local font_size = params.font_size or tweak_data.menu.pd2_small_font_size
 	local alpha = params.alpha or 1
 	local button_panel = self._panel:panel({
+		name = "button_panel",
 		x = left,
 		y = top,
 		layer = layer,
@@ -5302,7 +5719,7 @@ function PlayerInventoryGui:create_text_button(params)
 	return button_panel
 end
 
--- Lines 3693-3823
+-- Lines 4022-4152
 function PlayerInventoryGui:_get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
@@ -5436,7 +5853,7 @@ function PlayerInventoryGui:_get_mods_stats(name, base_stats, equipped_mods, bon
 	return mods_stats
 end
 
--- Lines 3826-3941
+-- Lines 4155-4270
 function PlayerInventoryGui:_get_melee_weapon_stats(name)
 	local base_stats = {}
 	local mods_stats = {}
@@ -5584,7 +6001,7 @@ function PlayerInventoryGui:_get_melee_weapon_stats(name)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 3943-4040
+-- Lines 4272-4369
 function PlayerInventoryGui:_get_armor_stats(name)
 	local base_stats = {}
 	local mods_stats = {}

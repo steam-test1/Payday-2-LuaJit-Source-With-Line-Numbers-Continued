@@ -817,20 +817,16 @@ function GamePlayCentralManager:get_shotgun_push_range()
 	return range
 end
 
--- Lines 843-856
+-- Lines 843-854
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, attacker)
-	if self:get_shotgun_push_range() < distance then
+	if not distance or self:get_shotgun_push_range() < distance then
 		return
-	end
-
-	if unit:id() > 0 then
-		managers.network:session():send_to_peers("sync_shotgun_push", unit, hit_pos, dir, distance, attacker)
 	end
 
 	self:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 end
 
--- Lines 858-885
+-- Lines 856-881
 function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if unit:movement()._active_actions[1] and unit:movement()._active_actions[1]:type() == "hurt" then
 		unit:movement()._active_actions[1]:force_ragdoll()
@@ -860,7 +856,7 @@ end
 
 local default_projectile_trail = Idstring("effects/payday2/particles/weapons/arrow_trail")
 
--- Lines 890-897
+-- Lines 886-893
 function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	if self._projectile_trails[unit:key()] then
 		return
@@ -876,7 +872,7 @@ function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	}
 end
 
--- Lines 899-911
+-- Lines 895-907
 function GamePlayCentralManager:remove_projectile_trail(unit)
 	local data = self._projectile_trails[unit:key()]
 
@@ -896,7 +892,7 @@ local atom_ids = Idstring("Trail - Straight")
 local simulator_ids = Idstring("opacity_1")
 local opacity_ids = Idstring("opacity")
 
--- Lines 917-929
+-- Lines 913-925
 function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	for unit_key, data in pairs(self._projectile_trails) do
 		if data.t then
@@ -914,7 +910,7 @@ function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	end
 end
 
--- Lines 933-939
+-- Lines 929-935
 function GamePlayCentralManager:announcer_say(event)
 	if not self._announcer_sound_source then
 		self._announcer_sound_source = SoundDevice:create_source("announcer")
@@ -923,7 +919,7 @@ function GamePlayCentralManager:announcer_say(event)
 	self._announcer_sound_source:post_event(event)
 end
 
--- Lines 943-952
+-- Lines 939-948
 function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
@@ -935,7 +931,7 @@ function GamePlayCentralManager:save(data)
 	data.GamePlayCentralManager = state
 end
 
--- Lines 954-968
+-- Lines 950-964
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
 
@@ -955,7 +951,7 @@ function GamePlayCentralManager:load(data)
 	end
 end
 
--- Lines 976-1032
+-- Lines 972-1028
 function GamePlayCentralManager:debug_weapon()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -967,7 +963,7 @@ function GamePlayCentralManager:debug_weapon()
 
 	gui:clear()
 
-	-- Lines 983-1028
+	-- Lines 979-1024
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
 			return ""
@@ -978,7 +974,7 @@ function GamePlayCentralManager:debug_weapon()
 		local blueprint = weapon:base()._blueprint
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
-		-- Lines 993-995
+		-- Lines 989-991
 		local function add_line(text, s)
 			return text .. s .. "\n"
 		end

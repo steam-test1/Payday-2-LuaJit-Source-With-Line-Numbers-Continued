@@ -207,18 +207,19 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
--- Lines 261-269
+-- Lines 261-270
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
 	if (Network:is_server() or self.allow_client_spawn) and entry and alive(entry.unit) then
 		entry.unit:set_slot(0)
+		entry.unit:set_visible(false)
 	end
 
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines 277-285
+-- Lines 278-286
 function ManageSpawnedUnits:destroy(unit)
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
@@ -229,7 +230,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines 289-302
+-- Lines 290-303
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -246,7 +247,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines 306-323
+-- Lines 307-324
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -266,7 +267,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines 327-350
+-- Lines 328-351
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -295,23 +296,31 @@ function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	end
 end
 
--- Lines 354-365
+local empty_vec = Vector3()
+local empty_rot = Rotation()
+
+-- Lines 357-375
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
+	local ids, parent_object, child_object = nil
+	local parent_unit = self._unit
+	local child_unit = self._spawned_units[unit_id].unit
+
 	for index, value in ipairs(self[joint_table]) do
 		if index > 1 then
-			local parent_object = self._unit:get_object(Idstring(value))
-			local child_object = self._spawned_units[unit_id].unit:get_object(Idstring(value))
+			ids = Idstring(value)
+			parent_object = parent_unit:get_object(ids)
+			child_object = child_unit:get_object(ids)
 
+			child_object:set_local_position(empty_vec)
+			child_object:set_local_rotation(empty_rot)
 			child_object:link(parent_object)
-			child_object:set_position(parent_object:position())
-			child_object:set_rotation(parent_object:rotation())
 		end
 	end
 
-	self._unit:set_moving()
+	parent_unit:set_moving()
 end
 
--- Lines 368-377
+-- Lines 378-387
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 

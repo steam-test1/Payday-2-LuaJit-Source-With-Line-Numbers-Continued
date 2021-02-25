@@ -4,7 +4,7 @@ core:import("CoreMenuItem")
 ItemSlider = ItemSlider or class(CoreMenuItem.Item)
 ItemSlider.TYPE = "slider"
 
--- Lines 8-41
+-- Lines 8-47
 function ItemSlider:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -13,6 +13,8 @@ function ItemSlider:init(data_node, parameters)
 	self._max = 1
 	self._step = 0.1
 	self._show_value = false
+	self._show_scale = 1
+	self._is_scaled = false
 	self._is_percentage = false
 	self._decimal_count = 5
 
@@ -20,7 +22,9 @@ function ItemSlider:init(data_node, parameters)
 		self._min = data_node.min or self._min
 		self._max = data_node.max or self._max
 		self._step = data_node.step or self._step
+		self._show_scale = data_node.show_scale or self._show_scale
 		self._show_value = data_node.show_value
+		self._is_scaled = data_node.is_scaled
 		self._is_percentage = data_node.is_percentage
 		self._show_slider_text = self._show_value or data_node.show_slider_text
 		self._decimal_count = data_node.decimal_count or self._decimal_count
@@ -30,78 +34,84 @@ function ItemSlider:init(data_node, parameters)
 	self._max = tonumber(self._max)
 	self._step = tonumber(self._step)
 	self._decimal_count = tonumber(self._decimal_count)
+	self._show_scale = tonumber(self._show_scale)
 	self._slider_color = _G.tweak_data.screen_colors.button_stage_3
 	self._slider_color_highlight = _G.tweak_data.screen_colors.button_stage_2
 	self._value = self._min
 end
 
--- Lines 43-45
+-- Lines 49-51
 function ItemSlider:value()
 	return self._value
 end
 
--- Lines 47-49
+-- Lines 53-55
 function ItemSlider:show_value()
 	return self._show_value
 end
 
--- Lines 51-54
+-- Lines 57-60
 function ItemSlider:set_value(value)
 	self._value = math.min(math.max(self._min, value), self._max)
 
 	self:dirty()
 end
 
--- Lines 56-58
+-- Lines 62-64
 function ItemSlider:set_value_by_percentage(percent)
 	self:set_value(self._min + (self._max - self._min) * percent / 100)
 end
 
--- Lines 60-62
+-- Lines 66-68
 function ItemSlider:set_min(value)
 	self._min = value
 end
 
--- Lines 64-66
+-- Lines 70-72
 function ItemSlider:set_max(value)
 	self._max = value
 end
 
--- Lines 68-70
+-- Lines 74-76
 function ItemSlider:set_step(value)
 	self._step = value
 end
 
--- Lines 72-74
+-- Lines 78-80
 function ItemSlider:set_decimal_count(value)
 	self._decimal_count = value
 end
 
--- Lines 76-78
+-- Lines 82-84
 function ItemSlider:increase()
 	self:set_value(self._value + self._step)
 end
 
--- Lines 80-82
+-- Lines 86-88
 function ItemSlider:decrease()
 	self:set_value(self._value - self._step)
 end
 
--- Lines 84-87
+-- Lines 90-93
 function ItemSlider:percentage()
-	local value = tonumber(self:raw_value_string())
+	local value = self:value()
 
 	return (value - self._min) / (self._max - self._min) * 100
 end
 
--- Lines 89-91
+-- Lines 95-97
+function ItemSlider:scaled_value_string()
+	return string.format("%." .. self._decimal_count .. "f", self:value() * self._show_scale)
+end
+
+-- Lines 99-101
 function ItemSlider:raw_value_string()
 	return string.format("%." .. self._decimal_count .. "f", self:value())
 end
 
--- Lines 93-99
+-- Lines 103-109
 function ItemSlider:value_string()
-	local str = self:raw_value_string()
+	local str = self._is_scaled and self:scaled_value_string() or self:raw_value_string()
 
 	if self._is_percentage then
 		str = str .. "%"
@@ -110,27 +120,27 @@ function ItemSlider:value_string()
 	return str
 end
 
--- Lines 101-103
+-- Lines 111-113
 function ItemSlider:set_slider_color(color)
 	self._slider_color = color
 end
 
--- Lines 105-107
+-- Lines 115-117
 function ItemSlider:set_slider_highlighted_color(color)
 	self._slider_color_highlight = color
 end
 
--- Lines 109-111
+-- Lines 119-121
 function ItemSlider:slider_color()
 	return self._slider_color
 end
 
--- Lines 113-115
+-- Lines 123-125
 function ItemSlider:slider_highlighted_color()
 	return self._slider_color_highlight
 end
 
--- Lines 119-193
+-- Lines 129-203
 function ItemSlider:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
 		w = node.item_panel:w()
@@ -223,7 +233,7 @@ function ItemSlider:setup_gui(node, row_item)
 	return true
 end
 
--- Lines 195-218
+-- Lines 205-228
 function ItemSlider:reload(row_item, node)
 	if not row_item then
 		return
@@ -248,7 +258,7 @@ function ItemSlider:reload(row_item, node)
 	return true
 end
 
--- Lines 220-235
+-- Lines 230-245
 function ItemSlider:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(row_item.font and Idstring(row_item.font) or _G.tweak_data.menu.default_font_no_outline_id)
@@ -268,7 +278,7 @@ function ItemSlider:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines 237-251
+-- Lines 247-261
 function ItemSlider:fade_row_item(node, row_item)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(row_item.font and Idstring(row_item.font) or _G.tweak_data.menu.default_font_id)
@@ -288,7 +298,7 @@ function ItemSlider:fade_row_item(node, row_item)
 	return true
 end
 
--- Lines 253-330
+-- Lines 263-340
 function ItemSlider:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 

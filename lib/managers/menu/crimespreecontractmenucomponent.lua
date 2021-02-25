@@ -1,7 +1,6 @@
 CrimeSpreeContractMenuComponent = CrimeSpreeContractMenuComponent or class(MenuGuiComponentGeneric)
-local padding = 10
 
--- Lines 6-18
+-- Lines 4-16
 function CrimeSpreeContractMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -13,7 +12,7 @@ function CrimeSpreeContractMenuComponent:init(ws, fullscreen_ws, node)
 	self:_setup()
 end
 
--- Lines 20-26
+-- Lines 18-24
 function CrimeSpreeContractMenuComponent:close()
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:activate_controller_mouse()
@@ -23,17 +22,17 @@ function CrimeSpreeContractMenuComponent:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines 28-30
+-- Lines 26-28
 function CrimeSpreeContractMenuComponent:_is_host()
 	return self._hosting
 end
 
--- Lines 32-34
+-- Lines 30-32
 function CrimeSpreeContractMenuComponent:_host_spree_level()
 	return tonumber(self._data.crime_spree or 0)
 end
 
--- Lines 36-155
+-- Lines 34-162
 function CrimeSpreeContractMenuComponent:_setup()
 	local parent = self._ws:panel()
 
@@ -53,15 +52,14 @@ function CrimeSpreeContractMenuComponent:_setup()
 		self:_setup_controller_input()
 	end
 
-	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
-	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
-	local width = 900
-	local height = 580
-
-	if not is_win_32 then
-		width = 900
-		height = is_nextgen and 570 or 525
-	end
+	local font_size = tweak_data.menu.pd2_small_font_size
+	local font = tweak_data.menu.pd2_small_font
+	local risk_color = tweak_data.screen_colors.risk
+	local padding = tweak_data.gui.crime_net.contract_gui.padding
+	local width = tweak_data.gui.crime_net.contract_gui.width
+	local height = tweak_data.gui.crime_net.contract_gui.height
+	local text_w = tweak_data.gui.crime_net.contract_gui.text_width
+	local text_h = math.round(height * 0.4)
 
 	self._fullscreen_panel:rect({
 		alpha = 0.75,
@@ -77,7 +75,7 @@ function CrimeSpreeContractMenuComponent:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	-- Lines 81-84
+	-- Lines 78-81
 	local function func(o)
 		local start_blur = 0
 
@@ -127,6 +125,14 @@ function CrimeSpreeContractMenuComponent:_setup()
 
 	self._contract_panel:set_center_y(self._panel:h() * 0.5)
 	self._contact_text_header:set_bottom(self._contract_panel:top())
+
+	if self._contact_text_header:y() < 0 then
+		local y_offset = -self._contact_text_header:y()
+
+		self._contact_text_header:move(0, y_offset)
+		self._contract_panel:move(0, y_offset)
+	end
+
 	BoxGuiObject:new(self._contract_panel, {
 		sides = {
 			1,
@@ -136,12 +142,6 @@ function CrimeSpreeContractMenuComponent:_setup()
 		}
 	})
 
-	local w = is_win_32 and 389 or 356
-	local text_w = width - w
-	local text_h = self._contract_panel:h() * 0.4
-	local font_size = tweak_data.menu.pd2_small_font_size
-	local font = tweak_data.menu.pd2_small_font
-	local risk_color = tweak_data.screen_colors.risk
 	self._desc_text = self._contract_panel:text({
 		vertical = "top",
 		wrap = true,
@@ -156,7 +156,14 @@ function CrimeSpreeContractMenuComponent:_setup()
 		x = padding,
 		y = padding
 	})
+	local _, _, _, h = self._desc_text:text_rect()
+	local scale = 1
 
+	if text_h < h then
+		scale = text_h / (h - font_size)
+	end
+
+	self._desc_text:set_font_size(font_size * scale)
 	CrimeNetGui.make_color_text(self, self._desc_text, tweak_data.screen_colors.important_1)
 
 	if managers.crime_spree:in_progress() then
@@ -166,8 +173,9 @@ function CrimeSpreeContractMenuComponent:_setup()
 	end
 end
 
--- Lines 157-348
+-- Lines 164-352
 function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
+	local padding = tweak_data.gui.crime_net.contract_gui.padding
 	self._coins_panel = self._contract_panel:panel({
 		x = padding,
 		y = padding,
@@ -340,7 +348,7 @@ function CrimeSpreeContractMenuComponent:_setup_new_crime_spree(text_w, text_h)
 	end
 end
 
--- Lines 352-358
+-- Lines 356-362
 function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, text_h)
 	if self:_is_host() then
 		self:_setup_continue_host(text_w, text_h)
@@ -349,8 +357,9 @@ function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, tex
 	end
 end
 
--- Lines 360-420
+-- Lines 364-425
 function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
+	local padding = tweak_data.gui.crime_net.contract_gui.padding
 	local modifiers = managers.crime_spree:active_modifiers()
 	local next_modifiers_h = tweak_data.menu.pd2_small_font_size * 2
 	local line_h = tweak_data.menu.pd2_small_font_size * 1.5
@@ -359,7 +368,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 		x = padding,
 		y = self._desc_text:bottom() + padding + tweak_data.menu.pd2_medium_font_size,
 		w = text_w,
-		h = self._contract_panel:h() - text_h - padding * 2 - tweak_data.menu.pd2_medium_font_size
+		h = self._contract_panel:h() - text_h - padding * 3 - tweak_data.menu.pd2_medium_font_size
 	})
 
 	CrimeSpreeModifierDetailsPage.add_modifiers_panel(self, self._modifiers_panel, managers.crime_spree:active_modifiers(), false)
@@ -406,8 +415,9 @@ function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	self._scroll:update_canvas_size()
 end
 
--- Lines 422-491
+-- Lines 427-497
 function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
+	local padding = tweak_data.gui.crime_net.contract_gui.padding
 	self._info_panel = self._contract_panel:panel({
 		x = padding,
 		y = self._desc_text:bottom() + padding + tweak_data.menu.pd2_medium_font_size,
@@ -479,7 +489,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	end
 end
 
--- Lines 495-502
+-- Lines 501-508
 function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	for idx, btn in ipairs(self._buttons) do
 		if button == btn then
@@ -490,7 +500,7 @@ function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	return 1
 end
 
--- Lines 504-515
+-- Lines 510-521
 function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	if btn:can_activate() then
 		for idx, btn in ipairs(self._buttons) do
@@ -506,7 +516,7 @@ function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	end
 end
 
--- Lines 519-532
+-- Lines 525-538
 function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	local used, pointer = nil
 
@@ -522,7 +532,7 @@ function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 534-543
+-- Lines 540-549
 function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
@@ -533,21 +543,21 @@ function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 545-549
+-- Lines 551-555
 function CrimeSpreeContractMenuComponent:mouse_wheel_up(x, y)
 	if alive(self._scroll) then
 		self._scroll:scroll(x, y, 1)
 	end
 end
 
--- Lines 551-555
+-- Lines 557-561
 function CrimeSpreeContractMenuComponent:mouse_wheel_down(x, y)
 	if alive(self._scroll) then
 		self._scroll:scroll(x, y, -1)
 	end
 end
 
--- Lines 557-580
+-- Lines 563-586
 function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	local change = 0
 
@@ -576,7 +586,7 @@ function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines 582-591
+-- Lines 588-597
 function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._gui = {
 		_left_axis_vector = Vector3(),
@@ -587,7 +597,7 @@ function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._panel:axis_move(callback(self, self, "_axis_move"))
 end
 
--- Lines 593-599
+-- Lines 599-605
 function CrimeSpreeContractMenuComponent:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._gui._left_axis_vector, axis_vector)
@@ -596,7 +606,7 @@ function CrimeSpreeContractMenuComponent:_axis_move(o, axis_name, axis_vector, c
 	end
 end
 
--- Lines 601-612
+-- Lines 607-618
 function CrimeSpreeContractMenuComponent:update(t, dt)
 	if not managers.menu:is_pc_controller() and self._gui and self._gui._right_axis_vector and alive(self._scroll) and not mvector3.is_zero(self._gui._right_axis_vector) then
 		local x = mvector3.x(self._gui._right_axis_vector)
@@ -611,8 +621,9 @@ CrimeSpreeStartingLevelItem.size = {
 	h = 140
 }
 
--- Lines 621-746
+-- Lines 627-751
 function CrimeSpreeStartingLevelItem:init(parent, data)
+	local padding = tweak_data.gui.crime_net.contract_gui.padding
 	self._parent = parent
 	self._level = data.level or 0
 	self._start_cost = managers.crime_spree:get_start_cost(self._level)
@@ -736,7 +747,7 @@ function CrimeSpreeStartingLevelItem:init(parent, data)
 	self:refresh()
 end
 
--- Lines 748-772
+-- Lines 753-775
 function CrimeSpreeStartingLevelItem:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(not self:is_active() and self:is_selected())
@@ -755,39 +766,39 @@ function CrimeSpreeStartingLevelItem:refresh()
 	end
 end
 
--- Lines 774-782
+-- Lines 777-783
 function CrimeSpreeStartingLevelItem:can_activate()
-	return self._start_cost < managers.custom_safehouse:coins()
+	return self._start_cost <= managers.custom_safehouse:coins()
 end
 
--- Lines 784-786
+-- Lines 785-787
 function CrimeSpreeStartingLevelItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 788-790
+-- Lines 789-791
 function CrimeSpreeStartingLevelItem:callback()
 	return self._callback
 end
 
--- Lines 792-794
+-- Lines 793-795
 function CrimeSpreeStartingLevelItem:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines 796-798
+-- Lines 797-799
 function CrimeSpreeStartingLevelItem:level()
 	return self._level
 end
 
--- Lines 800-802
+-- Lines 801-803
 function CrimeSpreeStartingLevelItem:panel()
 	return self._panel
 end
 
 MenuCrimeNetCrimeSpreeContractInitiator = MenuCrimeNetCrimeSpreeContractInitiator or class()
 
--- Lines 807-865
+-- Lines 808-866
 function MenuCrimeNetCrimeSpreeContractInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 

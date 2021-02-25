@@ -155,18 +155,20 @@ function CivilianDamage:stun_hit(attack_data)
 	end
 end
 
--- Lines 157-161
+-- Lines 157-163
 function CivilianDamage:_lie_down_clbk(attacker_unit)
-	local params = {
-		force_lie_down = true
-	}
+	if alive(attacker_unit) and alive(self._unit) then
+		local params = {
+			force_lie_down = true
+		}
 
-	self._unit:brain():set_logic("surrender", params)
+		self._unit:brain():set_logic("surrender", params)
 
-	self._lie_down_clbk_id = nil
+		self._lie_down_clbk_id = nil
+	end
 end
 
--- Lines 166-188
+-- Lines 168-190
 function CivilianDamage:damage_melee(attack_data)
 	if managers.player:has_category_upgrade("player", "civ_harmless_melee") and self.no_intimidation_by_dmg and not self:no_intimidation_by_dmg() and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
 		self._survive_shot_t = TimerManager:game():time() + 2.5
@@ -185,7 +187,7 @@ function CivilianDamage:damage_melee(attack_data)
 	return CopDamage.damage_melee(self, attack_data)
 end
 
--- Lines 192-205
+-- Lines 194-207
 function CivilianDamage:damage_tase(attack_data)
 	if managers.player:has_category_upgrade("player", "civ_harmless_melee") and self.no_intimidation_by_dmg and not self:no_intimidation_by_dmg() and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
 		self._survive_shot_t = TimerManager:game():time() + 2.5

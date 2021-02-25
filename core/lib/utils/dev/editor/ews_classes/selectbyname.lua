@@ -50,9 +50,10 @@ function SelectByName:_on_find_unit()
 	managers.editor:center_view_on_unit(self:_selected_item_unit())
 end
 
--- Lines 171-192
+-- Lines 171-193
 function SelectByName:_on_select_unit()
 	managers.editor:change_layer_based_on_unit(self:_selected_item_unit())
+	managers.editor:change_continent_based_on_unit(self:_selected_item_unit())
 	managers.editor:freeze_gui_lists()
 
 	self._blocked = true

@@ -14,7 +14,7 @@ EconomyTweakData.ordered_sorting_groups.armor_skins = {
 }
 local sorting_groups = EconomyTweakData.sorting_groups.armor_skins
 
--- Lines 25-35
+-- Lines 31-41
 function EconomyTweakData:get_real_armor_skin_id(skin_id)
 	local lbv = "_lbv"
 
@@ -25,12 +25,12 @@ function EconomyTweakData:get_real_armor_skin_id(skin_id)
 	end
 end
 
--- Lines 37-39
+-- Lines 43-45
 function EconomyTweakData:get_armor_skin_id(skin_id)
 	return skin_id
 end
 
--- Lines 42-93
+-- Lines 48-99
 function EconomyTweakData:get_armor_based_value(value_table, armor_level)
 	if not armor_level then
 		Application:stack_dump_error("")
@@ -76,7 +76,7 @@ function EconomyTweakData:get_armor_based_value(value_table, armor_level)
 	end
 end
 
--- Lines 95-187
+-- Lines 101-197
 function EconomyTweakData:_init_armor_skins()
 	local ids_big = Idstring("units/payday2/characters/shared_textures/vest_big_01_df")
 	local ids_small = Idstring("units/payday2/characters/shared_textures/vest_small_01_df")
@@ -153,7 +153,7 @@ function EconomyTweakData:_init_armor_skins()
 	self:_init_armor_skins_armor_safe()
 end
 
--- Lines 189-683
+-- Lines 199-693
 function EconomyTweakData:_init_armor_skins_crime_spree()
 	self.armor_skins.cvc_green = {
 		name_id = "bm_askn_cvc_green",
@@ -644,7 +644,7 @@ function EconomyTweakData:_init_armor_skins_crime_spree()
 	}
 end
 
--- Lines 685-1307
+-- Lines 695-1310
 function EconomyTweakData:_init_armor_skins_armor_safe()
 	self.armor_skins.ast_armor1 = {
 		name_id = "bm_askn_ast_armor3",

@@ -157,7 +157,7 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 	end
 end
 
--- Lines 157-175
+-- Lines 157-181
 function DynamicResourceManager:unload(resource_type, resource_name, package_name, keep_using)
 	if keep_using then
 		debug_pause("[DynamicResourceManager:unload] keep_using should be false!", resource_type, resource_name, package_name, keep_using)
@@ -165,6 +165,14 @@ function DynamicResourceManager:unload(resource_type, resource_name, package_nam
 
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key]
+
+	if entry == nil then
+		Application:error("[DynamicResourceManager:unload] No entry to unload!", resource_type, resource_name, package_name, key)
+		Application:stack_dump()
+
+		return
+	end
+
 	entry.ref_c = entry.ref_c - 1
 
 	if entry.ref_c ~= 0 then
@@ -178,14 +186,14 @@ function DynamicResourceManager:unload(resource_type, resource_name, package_nam
 	self._dyn_resources[key] = nil
 end
 
--- Lines 179-182
+-- Lines 185-188
 function DynamicResourceManager:has_resource(resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 
 	return self._dyn_resources[key] and true or false
 end
 
--- Lines 187-191
+-- Lines 193-197
 function DynamicResourceManager:is_resource_ready(resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key]
@@ -193,7 +201,7 @@ function DynamicResourceManager:is_resource_ready(resource_type, resource_name, 
 	return entry and entry.ready
 end
 
--- Lines 195-216
+-- Lines 201-222
 function DynamicResourceManager:clbk_resource_loaded(status, resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key] or self._to_unload and self._to_unload[key]
@@ -216,12 +224,17 @@ function DynamicResourceManager:clbk_resource_loaded(status, resource_type, reso
 	end
 end
 
--- Lines 220-222
-function DynamicResourceManager:change_material_config(name, unit)
-	unit:set_material_config(name, true, callback(self, self, "on_material_applied", unit), 100)
+-- Lines 226-233
+function DynamicResourceManager:change_material_config(name, unit, synchronous)
+	if synchronous then
+		unit:set_material_config(name, true)
+		self:on_material_applied(unit)
+	else
+		unit:set_material_config(name, true, callback(self, self, "on_material_applied", unit), 100)
+	end
 end
 
--- Lines 226-236
+-- Lines 237-247
 function DynamicResourceManager:on_material_applied(unit)
 	if alive(unit) then
 		if unit:interaction() then
@@ -234,21 +247,21 @@ function DynamicResourceManager:on_material_applied(unit)
 	end
 end
 
--- Lines 240-244
+-- Lines 251-255
 function DynamicResourceManager:_check_file_streamer_status()
 	local nr_tasks = Application:file_streamer_workload()
 
 	self._listener_holder:call(self.listener_events.file_streamer_workload, nr_tasks)
 end
 
--- Lines 248-251
+-- Lines 259-262
 function DynamicResourceManager:is_file_streamer_idle()
 	local nr_tasks = Application:file_streamer_workload()
 
 	return nr_tasks == 0
 end
 
--- Lines 255-268
+-- Lines 266-279
 function DynamicResourceManager:set_file_streaming_chunk_size_mul(mul, sleep_time)
 	mul = mul or self._streaming_settings.chunk_size_mul
 	sleep_time = sleep_time or self._streaming_settings.sleep_time
@@ -264,7 +277,7 @@ function DynamicResourceManager:set_file_streaming_chunk_size_mul(mul, sleep_tim
 	self:_set_file_streamer_settings(self._streaming_settings.chunk_size_kb, sleep_time)
 end
 
--- Lines 272-282
+-- Lines 283-293
 function DynamicResourceManager:_set_file_streamer_settings(chunk_size_kb, sleep_time)
 	self._streaming_settings.chunk_size_kb = chunk_size_kb
 	self._streaming_settings.sleep_time = sleep_time
@@ -273,27 +286,27 @@ function DynamicResourceManager:_set_file_streamer_settings(chunk_size_kb, sleep
 	Application:set_file_streamer_settings(chunk_size_kb_end_value, sleep_time)
 end
 
--- Lines 286-288
+-- Lines 297-299
 function DynamicResourceManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 292-294
+-- Lines 303-305
 function DynamicResourceManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 298-300
+-- Lines 309-311
 function DynamicResourceManager:max_streaming_chunk()
 	return self._max_streaming_chunk_kb
 end
 
--- Lines 304-306
+-- Lines 315-317
 function DynamicResourceManager:clbk_streaming_chunk_size_changed(name, old_value, new_value)
 	self:_set_file_streamer_settings(new_value, self._streaming_settings.sleep_time)
 end
 
--- Lines 310-326
+-- Lines 321-337
 function DynamicResourceManager:preload_units()
 	print("[DynamicResourceManager:preload_units]")
 end

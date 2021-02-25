@@ -364,7 +364,7 @@ function GageAssetsItem:update_asset_positions()
 	end
 end
 
--- Lines 314-435
+-- Lines 314-433
 function GageAssetsItem:select_asset(i, instant)
 	if self._num_items < #self._assets_list then
 		if i then
@@ -501,7 +501,7 @@ function GageAssetsItem:select_asset(i, instant)
 	end
 end
 
--- Lines 437-445
+-- Lines 435-443
 function GageAssetsItem:check_deselect_item()
 	if self._asset_selected and self._assets_list[self._asset_selected] then
 		self._assets_list[self._asset_selected].asset:stop()
@@ -512,7 +512,7 @@ function GageAssetsItem:check_deselect_item()
 	self._asset_selected = nil
 end
 
--- Lines 447-510
+-- Lines 445-508
 function GageAssetsItem:mouse_moved(x, y)
 	if alive(self._move_left_rect) and alive(self._move_right_rect) then
 		if self._move_left_rect:visible() and self._move_left_rect:inside(x, y) then
@@ -588,7 +588,7 @@ function GageAssetsItem:mouse_moved(x, y)
 	return selected, highlighted
 end
 
--- Lines 512-534
+-- Lines 510-532
 function GageAssetsItem:mouse_pressed(button, x, y)
 	local inside = GageAssetsItem.super.mouse_pressed(self, button, x, y)
 
@@ -617,7 +617,7 @@ function GageAssetsItem:mouse_pressed(button, x, y)
 	return inside
 end
 
--- Lines 536-563
+-- Lines 534-561
 function GageAssetsItem:move(x, y)
 	if #self._assets_list == 0 then
 		return
@@ -648,7 +648,7 @@ function GageAssetsItem:move(x, y)
 	end
 end
 
--- Lines 565-576
+-- Lines 563-574
 function GageAssetsItem:move_left()
 	self:move(-1, 0)
 
@@ -664,17 +664,17 @@ function GageAssetsItem:move_left()
 	self:select_asset(new_selected)
 end
 
--- Lines 578-580
+-- Lines 576-578
 function GageAssetsItem:move_up()
 	self:move(0, -1)
 end
 
--- Lines 582-584
+-- Lines 580-582
 function GageAssetsItem:move_down()
 	self:move(0, 1)
 end
 
--- Lines 586-597
+-- Lines 584-595
 function GageAssetsItem:move_right()
 	self:move(1, 0)
 
@@ -690,17 +690,17 @@ function GageAssetsItem:move_right()
 	self:select_asset(new_selected)
 end
 
--- Lines 599-601
+-- Lines 597-599
 function GageAssetsItem:confirm_pressed()
 	return self:_return_asset_info(self._asset_selected)
 end
 
--- Lines 603-605
+-- Lines 601-603
 function GageAssetsItem:something_selected()
 	return self._asset_selected and true or false
 end
 
--- Lines 607-630
+-- Lines 605-626
 function GageAssetsItem:_return_asset_info(i)
 	if not i or not self._assets_list[i] then
 		return nil
@@ -723,12 +723,12 @@ function GageAssetsItem:_return_asset_info(i)
 	return i, asset_cost
 end
 
--- Lines 632-634
+-- Lines 628-630
 function GageAssetsItem:get_asset_id(i)
 	return self._assets_list[i].id, true, self._assets_list[i].locked
 end
 
--- Lines 636-646
+-- Lines 632-642
 function GageAssetsItem:unlock_asset_by_id(id)
 	for i, data in ipairs(self._assets_list) do
 		if Idstring(data.id) == Idstring(id) then
@@ -739,7 +739,7 @@ function GageAssetsItem:unlock_asset_by_id(id)
 	self:select_asset(self._asset_selected, true)
 end
 
--- Lines 648-656
+-- Lines 644-652
 function GageAssetsItem:_unlock_asset(i, asset_data)
 	asset_data.locked = false
 

@@ -1,6 +1,6 @@
 CrimeNetContractGui = CrimeNetContractGui or class()
 
--- Lines 3-857
+-- Lines 3-863
 function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -21,16 +21,17 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	local job_data = self._node:parameters().menu_component_data
 	self._customizable = job_data.customize_contract or false
 	self._smart_matchmaking = job_data.smart_matchmaking or false
-	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
-	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
-	local width = 900
-	local height = 580
-
-	if not is_win_32 then
-		width = 900
-		height = is_nextgen and 550 or 525
-	end
-
+	local font_size = tweak_data.menu.pd2_small_font_size
+	local font = tweak_data.menu.pd2_small_font
+	local risk_color = tweak_data.screen_colors.risk
+	local padding = tweak_data.gui.crime_net.contract_gui.padding
+	local half_padding = 0.5 * padding
+	local double_padding = 2 * padding
+	local width = tweak_data.gui.crime_net.contract_gui.width
+	local height = tweak_data.gui.crime_net.contract_gui.height
+	local text_w = tweak_data.gui.crime_net.contract_gui.text_width
+	local contact_w = tweak_data.gui.crime_net.contract_gui.contact_width
+	local contact_h = contact_w / 1.7777777777777777
 	local blur = self._fullscreen_panel:bitmap({
 		texture = "guis/textures/test_blur_df",
 		render_template = "VertexColorTexturedBlur3D",
@@ -39,7 +40,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	-- Lines 30-33
+	-- Lines 32-35
 	local function func(o)
 		local start_blur = 0
 
@@ -75,6 +76,13 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._contract_panel:set_center_y(self._panel:h() * 0.5)
 	self._contact_text_header:set_bottom(self._contract_panel:top())
 
+	if self._contact_text_header:y() < 0 then
+		local y_offset = -self._contact_text_header:y()
+
+		self._contact_text_header:move(0, y_offset)
+		self._contract_panel:move(0, y_offset)
+	end
+
 	if not job_data.job_id then
 		local bottom = self._contract_panel:bottom()
 
@@ -97,7 +105,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 		self._contact_text_header:set_size(width, h)
 		self._contact_text_header:set_top(self._contract_panel:top())
-		self._contact_text_header:move(10, 10)
+		self._contact_text_header:move(padding, padding)
 		BoxGuiObject:new(self._contract_panel, {
 			sides = {
 				1,
@@ -125,11 +133,6 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	job_data.job_id = job_data.job_id or "ukrainian_job"
 	local narrative = tweak_data.narrative:job_data(job_data.job_id)
 	local narrative_chains = tweak_data.narrative:job_chain(job_data.job_id)
-	local w = is_win_32 and 389 or 356
-	local text_w = width - w
-	local font_size = tweak_data.menu.pd2_small_font_size
-	local font = tweak_data.menu.pd2_small_font
-	local risk_color = tweak_data.screen_colors.risk
 
 	self._contact_text_header:set_text(managers.localization:to_upper_text("menu_cn_contract_title", {
 		job = managers.localization:text(narrative.name_id)
@@ -141,13 +144,13 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		wrap = true,
 		align = "left",
 		wrap_word = true,
-		y = 10,
-		x = 10,
 		text = managers.localization:text(narrative.briefing_id),
 		w = text_w,
 		font_size = font_size,
 		font = font,
-		color = tweak_data.screen_colors.text
+		color = tweak_data.screen_colors.text,
+		x = padding,
+		y = padding
 	})
 	local _, _, _, h = contract_text:text_rect()
 	local scale = 1
@@ -160,8 +163,6 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self:make_fine_text(contract_text)
 
 	last_bottom = contract_text:bottom()
-	local contact_w = width - (text_w + 20) - 10
-	local contact_h = contact_w / 1.7777777777777777
 	local is_job_ghostable = managers.job:is_job_ghostable(job_data.job_id)
 
 	if is_job_ghostable then
@@ -198,7 +199,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			color = tweak_data.screen_colors.ghost_color
 		})
 
-		ghostable_text:set_position(contract_text:x(), last_bottom + 10)
+		ghostable_text:set_position(contract_text:x(), last_bottom + padding)
 		self:make_fine_text(ghostable_text)
 
 		last_bottom = ghostable_text:bottom()
@@ -213,14 +214,14 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		})
 
 		self:make_fine_text(locked_text)
-		locked_text:set_position(contract_text:x(), last_bottom + 10)
+		locked_text:set_position(contract_text:x(), last_bottom + padding)
 	end
 
 	local contact_panel = self._contract_panel:panel({
-		y = 10,
 		w = contact_w,
 		h = contact_h,
-		x = text_w + 20
+		x = text_w + double_padding,
+		y = padding
 	})
 	local contact_image = contact_panel:rect({
 		color = Color(0.3, 0, 0, 0)
@@ -249,7 +250,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	local x, y, w, h = contact_text:text_rect()
 
 	contact_text:set_size(w, h)
-	contact_text:set_position(contact_panel:left(), contact_panel:bottom() + 5)
+	contact_text:set_position(contact_panel:left(), contact_panel:bottom() + half_padding)
 	BoxGuiObject:new(contact_panel, {
 		sides = {
 			1,
@@ -263,10 +264,10 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		name = "modifiers_text",
 		vertical = "top",
 		align = "left",
-		x = 10,
 		text = managers.localization:to_upper_text("menu_cn_modifiers"),
 		font = font,
 		font_size = font_size,
+		x = padding,
 		color = tweak_data.screen_colors.text,
 		w = text_w
 	})
@@ -288,7 +289,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 		self:make_fine_text(one_down_warning_text)
 		one_down_warning_text:set_top(next_top)
-		one_down_warning_text:set_left(20)
+		one_down_warning_text:set_left(double_padding)
 
 		next_top = one_down_warning_text:bottom()
 	end
@@ -324,7 +325,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	self:make_fine_text(ghost_warning_text)
 	ghost_warning_text:set_top(next_top)
-	ghost_warning_text:set_left(20)
+	ghost_warning_text:set_left(double_padding)
 	ghost_warning_text:set_visible(has_ghost_bonus)
 
 	if ghost_warning_text:visible() then
@@ -363,7 +364,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	self:make_fine_text(heat_warning_text)
 	heat_warning_text:set_top(next_top)
-	heat_warning_text:set_left(20)
+	heat_warning_text:set_left(double_padding)
 	heat_warning_text:set_visible(is_job_heated)
 
 	self._heat_color = heat_color
@@ -388,7 +389,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	self:make_fine_text(pro_warning_text)
 	pro_warning_text:set_h(pro_warning_text:h())
-	pro_warning_text:set_left(20)
+	pro_warning_text:set_left(double_padding)
 	pro_warning_text:set_top(next_top)
 	pro_warning_text:set_visible(narrative.professional)
 
@@ -396,16 +397,16 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		next_top = pro_warning_text:bottom()
 	end
 
-	next_top = next_top + 5
+	next_top = next_top + half_padding
 
 	modifiers_text:set_visible(heat_warning_text:visible() or one_down_active or pro_warning_text:visible() or ghost_warning_text:visible())
 
 	local risk_title = self._contract_panel:text({
-		x = 10,
 		font = font,
 		font_size = font_size,
 		text = managers.localization:to_upper_text("menu_risk"),
-		color = risk_color
+		color = risk_color,
+		x = padding
 	})
 
 	self:make_fine_text(risk_title)
@@ -429,11 +430,11 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	local risk_stats_panel = self._contract_panel:panel({
 		name = "risk_stats_panel",
-		x = 10,
-		w = text_w
+		w = text_w,
+		x = padding
 	})
 
-	risk_stats_panel:set_h(risk_title:h() + 5)
+	risk_stats_panel:set_h(risk_title:h() + half_padding)
 
 	local plvl = managers.experience:current_level()
 	local player_stars = math.max(math.ceil(plvl / 10), 1)
@@ -499,8 +500,8 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			risk_stat:set_alpha(alpha)
 
 			max_y = math.max(max_y, risk:bottom())
-			max_x = math.max(max_x, risk:right() + 5)
-			max_x = math.max(max_x, risk_stat:right() + risk_stats_panel:left() + 10)
+			max_x = math.max(max_x, risk:right() + half_padding)
+			max_x = math.max(max_x, risk_stat:right() + risk_stats_panel:left() + padding)
 		end
 	end
 
@@ -529,13 +530,13 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	local potential_rewards_title = self._contract_panel:text({
 		blend_mode = "add",
-		x = 10,
 		font = font,
 		font_size = font_size,
 		text = managers.localization:to_upper_text(self._customizable and "menu_potential_rewards_min" or "menu_potential_rewards", {
 			BTN_Y = managers.localization:btn_macro("menu_modify_item")
 		}),
-		color = managers.menu:is_pc_controller() and self._customizable and tweak_data.screen_colors.button_stage_3 or tweak_data.screen_colors.text
+		color = managers.menu:is_pc_controller() and self._customizable and tweak_data.screen_colors.button_stage_3 or tweak_data.screen_colors.text,
+		x = padding
 	})
 
 	self:make_fine_text(potential_rewards_title)
@@ -617,28 +618,24 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	local payday_money = math.round(total_payout)
 	local payday_text = self._contract_panel:text({
 		name = "payday_text",
-		x = 10,
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_large_font_size,
 		text = managers.localization:to_upper_text("menu_payday", {
 			MONEY = managers.experience:cash_string(0)
 		}),
-		color = tweak_data.screen_colors.text
+		color = tweak_data.screen_colors.text,
+		x = padding
 	})
 
 	self:make_fine_text(payday_text)
-	payday_text:set_bottom(self._contract_panel:h() - 10)
-
-	if not is_win_32 then
-		payday_text:move(0, 5)
-	end
+	payday_text:set_bottom(self._contract_panel:h() - padding)
 
 	self._briefing_event = narrative.briefing_event
 
 	if self._briefing_event then
 		self._briefing_len_panel = self._contract_panel:panel({
 			w = contact_image:w(),
-			h = font_size * 2 + 20
+			h = 2 * (font_size + padding)
 		})
 
 		self._briefing_len_panel:rect({
@@ -654,28 +651,28 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			blend_mode = "add",
 			name = "text",
 			text = "",
-			y = 10,
-			x = 10,
 			layer = 1,
 			font = font,
 			font_size = font_size,
-			color = tweak_data.screen_colors.text
+			color = tweak_data.screen_colors.text,
+			x = padding,
+			y = padding
 		})
 
 		local button_text = self._briefing_len_panel:text({
 			blend_mode = "add",
 			name = "button_text",
 			text = " ",
-			y = 10,
-			x = 10,
 			layer = 1,
 			font = font,
 			font_size = font_size,
-			color = tweak_data.screen_colors.text
+			color = tweak_data.screen_colors.text,
+			x = padding,
+			y = padding
 		})
 		local _, _, _, h = button_text:text_rect()
 
-		self._briefing_len_panel:set_h(h * 2 + 20)
+		self._briefing_len_panel:set_h(2 * (h + padding))
 
 		if managers.menu:is_pc_controller() then
 			button_text:set_color(tweak_data.screen_colors.button_stage_3)
@@ -689,7 +686,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 				1
 			}
 		})
-		self._briefing_len_panel:set_position(contact_text:left(), contact_text:bottom() + 10)
+		self._briefing_len_panel:set_position(contact_text:left(), contact_text:bottom() + padding)
 	end
 
 	self._tabs = {}
@@ -709,7 +706,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	pages_panel:set_visible(false)
 
-	-- Lines 438-469
+	-- Lines 444-475
 	local function add_tab(text_id)
 		local prev_tab = self._tabs[#self._tabs]
 		local tab_item = MenuGuiSmallTabItem:new(#self._tabs + 1, text_id, nil, self, 0, tabs_panel)
@@ -756,7 +753,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		self._mutators_scroll = ScrollablePanel:new(mutators_panel, "mutators_scroll", {
 			padding = 0
 		})
-		local _y = 5
+		local _y = half_padding
 		local mutators_list = {}
 		local last_item = nil
 
@@ -774,11 +771,11 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 		for i, mutator in ipairs(mutators_list) do
 			local mutator_text = self._mutators_scroll:canvas():text({
-				x = 10,
 				name = "mutator_text_" .. tostring(i),
 				font = tweak_data.menu.pd2_small_font,
 				font_size = tweak_data.menu.pd2_small_font_size,
 				text = mutator:name(),
+				x = padding,
 				y = _y,
 				h = tweak_data.menu.pd2_small_font_size
 			})
@@ -786,7 +783,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			last_item = mutator_text
 		end
 
-		last_item:set_h(last_item:h() + 10)
+		last_item:set_h(last_item:h() + padding)
 		self._mutators_scroll:update_canvas_size()
 		managers.mutators:set_crimenet_lobby_data(nil)
 	end
@@ -796,7 +793,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		local _y = 7
 		local add_back = true
 
-		-- Lines 552-594
+		-- Lines 558-600
 		local function add_line(left_text, right_text)
 			if right_text == nil or left_text == nil then
 				return
@@ -818,21 +815,21 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			right_text = type(right_text) == "number" and tostring(right_text) or managers.localization:to_upper_text(right_text)
 			local left = content_panel:text({
 				align = "left",
-				x = 10,
 				font = tweak_data.menu.pd2_small_font,
 				font_size = tweak_data.menu.pd2_small_font_size,
 				text = left_text,
+				x = padding,
 				y = _y,
 				h = tweak_data.menu.pd2_small_font_size,
-				w = content_panel:w() - 20,
+				w = content_panel:w() - double_padding,
 				color = Color(0.8, 0.8, 0.8)
 			})
 			local right = content_panel:text({
 				align = "right",
-				x = 10,
 				font = tweak_data.menu.pd2_small_font,
 				font_size = tweak_data.menu.pd2_small_font_size,
 				text = right_text .. " ",
+				x = padding,
 				y = _y,
 				h = tweak_data.menu.pd2_small_font_size,
 				w = content_panel:w() - 20,
@@ -884,7 +881,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			local _y = 7
 			local add_back = true
 
-			-- Lines 627-669
+			-- Lines 633-675
 			local function add_line(id, text, ignore_back)
 				local canvas = self._mods_scroll:canvas()
 
@@ -903,28 +900,28 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 				text = string.upper(text)
 				local left_text = canvas:text({
 					align = "left",
-					x = 10,
 					name = id,
 					font = tweak_data.menu.pd2_small_font,
 					font_size = tweak_data.menu.pd2_small_font_size,
 					text = text,
+					x = padding,
 					y = _y,
 					h = tweak_data.menu.pd2_small_font_size,
-					w = canvas:w() - 20,
+					w = canvas:w() - double_padding,
 					color = Color(0.8, 0.8, 0.8)
 				})
 				local highlight_text = canvas:text({
 					blend_mode = "add",
 					align = "left",
 					visible = false,
-					x = 10,
 					name = id,
 					font = tweak_data.menu.pd2_small_font,
 					font_size = tweak_data.menu.pd2_small_font_size,
 					text = text,
+					x = padding,
 					y = _y,
 					h = tweak_data.menu.pd2_small_font_size,
-					w = canvas:w() - 20,
+					w = canvas:w() - double_padding,
 					color = tweak_data.screen_colors.button_stage_2
 				})
 				_y = left_text:bottom() + 2
@@ -1045,12 +1042,6 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			self._briefing_len_panel:hide()
 		end
 
-		if not is_win_32 and not is_nextgen then
-			contact_panel:hide()
-			contact_text:set_top(contact_panel:top())
-			contact_text:set_text("")
-		end
-
 		local premium_text = self._contract_panel:text({
 			text = "  ",
 			name = "premium_text",
@@ -1062,7 +1053,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			color = tweak_data.screen_colors.button_stage_3
 		})
 
-		premium_text:set_top(contact_text:bottom() + 10)
+		premium_text:set_top(contact_text:bottom() + padding)
 		premium_text:set_left(contact_text:left())
 		premium_text:set_w(contact_image:w())
 		self._contact_text_header:set_text(managers.localization:to_upper_text("menu_cn_premium_buy_desc") .. ": " .. managers.localization:to_upper_text(narrative.name_id))
@@ -1105,7 +1096,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._potential_show_max = false
 end
 
--- Lines 859-895
+-- Lines 865-901
 function CrimeNetContractGui:_create_xp_appendices(x, y)
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local font = tweak_data.menu.pd2_small_font
@@ -1169,7 +1160,7 @@ function CrimeNetContractGui:_create_xp_appendices(x, y)
 	return job_xp, add_xp, heat_add_xp, ghost_add_xp
 end
 
--- Lines 897-920
+-- Lines 903-926
 function CrimeNetContractGui:_update_xp_appendices()
 	local job_xp = self._contract_panel:child("job_xp")
 	local add_xp = self._contract_panel:child("add_xp")
@@ -1194,7 +1185,7 @@ function CrimeNetContractGui:_update_xp_appendices()
 	end
 end
 
--- Lines 922-943
+-- Lines 928-949
 function CrimeNetContractGui:_check_level_up(levels_gained)
 	local gonna_level_up = levels_gained >= 1
 	self._gonna_level_up = self._gonna_level_up or false
@@ -1208,7 +1199,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 		potential_level_up_text:set_blend_mode("normal")
 
 		if gonna_level_up then
-			-- Lines 933-938
+			-- Lines 939-944
 			local function pulse_anim(o)
 				o:set_blend_mode("add")
 
@@ -1224,7 +1215,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 	end
 end
 
--- Lines 945-953
+-- Lines 951-959
 function CrimeNetContractGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -1237,20 +1228,20 @@ function CrimeNetContractGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 966-969
+-- Lines 972-975
 function CrimeNetContractGui:set_time(t, dt)
 	self._wait_t = t + 1
 	self._step = self._step + 1
 end
 
--- Lines 971-976
+-- Lines 977-982
 function CrimeNetContractGui:start_sound(t, dt)
 	self:toggle_post_event()
 
 	self._step = self._step + 1
 end
 
--- Lines 978-1049
+-- Lines 984-1055
 function CrimeNetContractGui:count_job_stars(t, dt)
 	if self._data.stars.job_stars == 0 then
 		self._step = self._step + 1
@@ -1305,7 +1296,7 @@ function CrimeNetContractGui:count_job_stars(t, dt)
 	end
 end
 
--- Lines 1051-1165
+-- Lines 1057-1171
 function CrimeNetContractGui:count_difficulty_stars(t, dt)
 	if self._data.stars.difficulty_stars == 0 then
 		self._data.gui_objects.risk_text:show()
@@ -1395,7 +1386,7 @@ function CrimeNetContractGui:count_difficulty_stars(t, dt)
 	end
 end
 
--- Lines 1168-1172
+-- Lines 1174-1178
 function CrimeNetContractGui:start_counter(t, dt)
 	managers.menu_component:post_event("count_1")
 
@@ -1403,7 +1394,7 @@ function CrimeNetContractGui:start_counter(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1174-1179
+-- Lines 1180-1185
 function CrimeNetContractGui:end_counter(t, dt)
 	managers.menu_component:post_event("count_1_finished")
 
@@ -1412,7 +1403,7 @@ function CrimeNetContractGui:end_counter(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1181-1185
+-- Lines 1187-1191
 function CrimeNetContractGui:start_count_payday(t, dt)
 	managers.menu_component:post_event("count_1")
 
@@ -1420,7 +1411,7 @@ function CrimeNetContractGui:start_count_payday(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1187-1196
+-- Lines 1193-1202
 function CrimeNetContractGui:count_payday(t, dt)
 	self._data.counted_payday_money = math.round(math.step(self._data.counted_payday_money, self._data.payday_money, dt * math.max(self._data.payday_money / (math.rand(1) + 3.5), 40000)))
 
@@ -1434,7 +1425,7 @@ function CrimeNetContractGui:count_payday(t, dt)
 	end
 end
 
--- Lines 1198-1203
+-- Lines 1204-1209
 function CrimeNetContractGui:end_count_payday(t, dt)
 	managers.menu_component:post_event("count_1_finished")
 
@@ -1443,7 +1434,7 @@ function CrimeNetContractGui:end_count_payday(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1215-1272
+-- Lines 1221-1278
 function CrimeNetContractGui:count_job_base(t, dt)
 	local tick = dt * math.max(self._data.experience / (math.rand(1) + 1.5), 4000)
 	self._data.counted_job_xp = math.round(math.step(self._data.counted_job_xp, self._data.experience, tick))
@@ -1500,7 +1491,7 @@ function CrimeNetContractGui:count_job_base(t, dt)
 	end
 end
 
--- Lines 1274-1321
+-- Lines 1280-1327
 function CrimeNetContractGui:count_job_risk(t, dt)
 	self._data.counted_risk_xp = math.round(math.step(self._data.counted_risk_xp, self._data.add_experience, dt * math.max(self._data.add_experience / (math.rand(1) + 0.75), 40000)))
 	self._data.counted_heat_xp = math.round(self._data.heat_experience + math.step(self._data.counted_heat_xp, self._data.heat_add_experience, dt * math.max(self._data.heat_add_experience / (math.rand(1) + 0.75), 40000)))
@@ -1549,7 +1540,7 @@ function CrimeNetContractGui:count_job_risk(t, dt)
 	end
 end
 
--- Lines 1323-1332
+-- Lines 1329-1338
 function CrimeNetContractGui:count_job_payday(t, dt)
 	self._data.counted_payday_money = math.round(math.step(self._data.counted_payday_money, self._data.payday_money, dt * math.max(self._data.payday_money / (math.rand(1) + 1.5), 80000)))
 
@@ -1563,7 +1554,7 @@ function CrimeNetContractGui:count_job_payday(t, dt)
 	end
 end
 
--- Lines 1335-1507
+-- Lines 1341-1513
 function CrimeNetContractGui:set_potential_rewards(show_max)
 	if self._step <= #self._steps then
 		return
@@ -1736,7 +1727,7 @@ function CrimeNetContractGui:set_potential_rewards(show_max)
 	end
 end
 
--- Lines 1510-1743
+-- Lines 1516-1749
 function CrimeNetContractGui:set_all(t, dt)
 	local job_data = self._node:parameters().menu_component_data
 	local narrative = tweak_data.narrative:job_data(job_data.job_id)
@@ -1891,7 +1882,7 @@ function CrimeNetContractGui:set_all(t, dt)
 	end
 end
 
--- Lines 1745-1763
+-- Lines 1751-1769
 function CrimeNetContractGui:free_memory(t, dt)
 	self._data = nil
 	self._step = self._step + 1
@@ -1915,7 +1906,7 @@ function CrimeNetContractGui:free_memory(t, dt)
 	end
 end
 
--- Lines 1765-1784
+-- Lines 1771-1790
 function CrimeNetContractGui:sound_event_callback(event_type, duration)
 	if event_type == "end_of_event" then
 		self._briefing_duration = nil
@@ -1935,7 +1926,7 @@ function CrimeNetContractGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 1786-1803
+-- Lines 1792-1809
 function CrimeNetContractGui:toggle_post_event()
 	if not self._briefing_event then
 		return
@@ -1955,7 +1946,7 @@ function CrimeNetContractGui:toggle_post_event()
 	end
 end
 
--- Lines 1805-1817
+-- Lines 1811-1823
 function CrimeNetContractGui:set_active_page(index)
 	if self._active_page then
 		self._tabs[self._active_page]:set_active(false)
@@ -1972,7 +1963,7 @@ function CrimeNetContractGui:set_active_page(index)
 	end
 end
 
--- Lines 1819-1842
+-- Lines 1825-1848
 function CrimeNetContractGui:update(t, dt)
 	if self._wait_t then
 		if self._wait_t < t then
@@ -2000,7 +1991,7 @@ function CrimeNetContractGui:update(t, dt)
 	end
 end
 
--- Lines 1844-1905
+-- Lines 1850-1911
 function CrimeNetContractGui:mouse_moved(o, x, y)
 	if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 then
 		if self._briefing_len_panel:child("button_text"):inside(x, y) then
@@ -2072,7 +2063,7 @@ function CrimeNetContractGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines 1907-1933
+-- Lines 1913-1939
 function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 and self._briefing_len_panel:child("button_text"):inside(x, y) then
 		self:toggle_post_event()
@@ -2101,7 +2092,7 @@ function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 1935-1946
+-- Lines 1941-1952
 function CrimeNetContractGui:mouse_wheel_up(x, y)
 	if self._mutators_scroll then
 		self._mutators_scroll:scroll(x, y, 1)
@@ -2112,7 +2103,7 @@ function CrimeNetContractGui:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 1948-1959
+-- Lines 1954-1965
 function CrimeNetContractGui:mouse_wheel_down(x, y)
 	if self._mutators_scroll then
 		self._mutators_scroll:scroll(x, y, -1)
@@ -2123,7 +2114,7 @@ function CrimeNetContractGui:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 1961-1966
+-- Lines 1967-1972
 function CrimeNetContractGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -2131,7 +2122,7 @@ function CrimeNetContractGui:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 1968-1976
+-- Lines 1974-1982
 function CrimeNetContractGui:_toggle_potential_rewards()
 	if alive(self._potential_rewards_title) and self._step > #self._steps then
 		self._potential_show_max = not self._potential_show_max
@@ -2145,7 +2136,7 @@ function CrimeNetContractGui:_toggle_potential_rewards()
 	end
 end
 
--- Lines 1978-1990
+-- Lines 1984-1996
 function CrimeNetContractGui:special_btn_pressed(button)
 	if button == Idstring("voice_message") or self._smart_matchmaking and button == Idstring("menu_toggle_voice_message") then
 		if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 then
@@ -2162,7 +2153,7 @@ function CrimeNetContractGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 1992-1997
+-- Lines 1998-2003
 function CrimeNetContractGui:previous_page()
 	if self._active_page and self._active_page > 1 then
 		self:set_active_page(self._active_page - 1)
@@ -2171,7 +2162,7 @@ function CrimeNetContractGui:previous_page()
 	end
 end
 
--- Lines 1999-2004
+-- Lines 2005-2010
 function CrimeNetContractGui:next_page()
 	if self._active_page and self._active_page < #self._tabs then
 		self:set_active_page(self._active_page + 1)
@@ -2180,7 +2171,7 @@ function CrimeNetContractGui:next_page()
 	end
 end
 
--- Lines 2006-2040
+-- Lines 2012-2046
 function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	local job_data = self._node:parameters().menu_component_data
 	local diffs = {
@@ -2220,13 +2211,13 @@ function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	self:set_potential_rewards(self._potential_show_max)
 end
 
--- Lines 2042-2045
+-- Lines 2048-2051
 function CrimeNetContractGui:set_one_down(one_down)
 	local job_data = self._node:parameters().menu_component_data
 	job_data.one_down = one_down
 end
 
--- Lines 2047-2062
+-- Lines 2053-2068
 function CrimeNetContractGui:close()
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:activate_controller_mouse()

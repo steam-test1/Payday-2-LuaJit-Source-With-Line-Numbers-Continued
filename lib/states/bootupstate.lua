@@ -277,7 +277,7 @@ function BootupState:update(t, dt)
 
 	self:check_confirm_pressed()
 
-	if not self:is_playing() or (self._play_data.can_skip or Global.override_bootup_can_skip) and self:is_skipped() then
+	if not self:is_playing() or (self._play_data and self._play_data.can_skip or Global.override_bootup_can_skip) and self:is_skipped() then
 		self:play_next(self:is_skipped())
 	else
 		self:update_fades()
@@ -300,40 +300,40 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines 207-245
+-- Lines 207-247
 function BootupState:update_fades()
 	local time, duration = nil
-
-	if self._play_data.video then
-		duration = self._gui_obj:length()
-		local frames = self._gui_obj:frames()
-
-		if frames > 0 then
-			time = self._gui_obj:frame_num() / frames * duration
-		else
-			time = 0
-		end
-	else
-		time = TimerManager:game():time() - self._play_time
-		duration = self._play_data.duration
-	end
-
 	local old_fade = self._fade
+	self._fade = 1
 
-	if self._play_data.fade_in and time < self._play_data.fade_in then
-		if self._play_data.fade_in > 0 then
-			self._fade = time / self._play_data.fade_in
+	if self._play_data then
+		if self._play_data.video then
+			duration = self._gui_obj:length()
+			local frames = self._gui_obj:frames()
+
+			if frames > 0 then
+				time = self._gui_obj:frame_num() / frames * duration
+			else
+				time = 0
+			end
 		else
-			self._fade = 1
+			time = TimerManager:game():time() - self._play_time
+			duration = self._play_data.duration
 		end
-	elseif self._play_data.fade_in and duration - time < self._play_data.fade_out then
-		if self._play_data.fade_out > 0 then
-			self._fade = (duration - time) / self._play_data.fade_out
-		else
-			self._fade = 0
+
+		if self._play_data.fade_in and time < self._play_data.fade_in then
+			if self._play_data.fade_in > 0 then
+				self._fade = time / self._play_data.fade_in
+			else
+				self._fade = 1
+			end
+		elseif self._play_data.fade_in and duration - time < self._play_data.fade_out then
+			if self._play_data.fade_out > 0 then
+				self._fade = (duration - time) / self._play_data.fade_out
+			else
+				self._fade = 0
+			end
 		end
-	else
-		self._fade = 1
 	end
 
 	if self._fade ~= old_fade then
@@ -341,9 +341,9 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines 247-259
+-- Lines 249-261
 function BootupState:apply_fade()
-	if self._play_data.gui then
+	if self._play_data and self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
 
 		if script.set_fade then
@@ -356,7 +356,7 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines 261-269
+-- Lines 263-271
 function BootupState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -367,20 +367,20 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines 271-281
+-- Lines 273-283
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
 			return self._gui_obj:loop_count() < 1
-		else
+		elseif self._play_data then
 			return TimerManager:game():time() < self._play_time + self._play_data.duration
 		end
-	else
-		return false
 	end
+
+	return false
 end
 
--- Lines 283-387
+-- Lines 285-389
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -495,7 +495,7 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines 389-434
+-- Lines 391-436
 function BootupState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 

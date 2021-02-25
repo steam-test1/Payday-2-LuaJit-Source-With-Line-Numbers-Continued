@@ -398,7 +398,7 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 	}
 end
 
--- Lines 793-1131
+-- Lines 793-1149
 function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	local health_increase = 25
 	local damage_increase = 25
@@ -796,7 +796,7 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	}
 end
 
--- Lines 1133-1140
+-- Lines 1151-1158
 function CrimeSpreeTweakData:get_reward_icon(reward)
 	for _, data in ipairs(self.rewards) do
 		if data.id == reward then
@@ -807,7 +807,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return "downcard_overkill_deck"
 end
 
--- Lines 1142-1227
+-- Lines 1160-1245
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -924,7 +924,7 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 	}
 end
 
--- Lines 1229-1419
+-- Lines 1247-1437
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
@@ -1094,7 +1094,7 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 1421-1437
+-- Lines 1439-1455
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {
@@ -1115,11 +1115,18 @@ function CrimeSpreeTweakData:init_gui(tweak_data)
 	}
 end
 
--- Lines 1439-1457
+-- Lines 1457-1465
+function CrimeSpreeTweakData:get_mission_type_from_index(index)
+	return index
+end
+
+-- Lines 1467-1486
 function CrimeSpreeTweakData:get_index_from_id(level_id)
 	if level_id then
 		for i = 1, 3 do
-			for index, mission in ipairs(self.missions[i]) do
+			local mission_type = self:get_mission_type_from_index(i)
+
+			for index, mission in ipairs(self.missions[mission_type]) do
 				if mission.id == level_id then
 					local merged_index = i * 100 + index
 
@@ -1132,12 +1139,12 @@ function CrimeSpreeTweakData:get_index_from_id(level_id)
 	end
 end
 
--- Lines 1459-1473
+-- Lines 1488-1502
 function CrimeSpreeTweakData:get_id_from_index(merged_index)
 	local index_has_data = merged_index > 100
 
 	if index_has_data then
-		local mission_type = math.floor(merged_index / 100)
+		local mission_type = self:get_mission_type_from_index(math.floor(merged_index / 100))
 		local mission_index = merged_index % 100
 		local mission_id = self.missions[mission_type][mission_index].id
 

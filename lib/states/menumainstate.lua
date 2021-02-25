@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-218
+-- Lines 9-228
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -45,7 +45,16 @@ function MenuMainState:at_enter(old_state)
 				fade_out = 0.5,
 				color = Color.black
 			})
-			managers.menu:open_node("crimenet")
+
+			if Global.game_settings.single_player then
+				MenuCallbackHandler:play_single_player()
+				MenuCallbackHandler:chk_dlc_content_updated()
+				managers.menu:open_node("crimenet_single_player")
+			else
+				MenuCallbackHandler:play_online_game()
+				MenuCallbackHandler:chk_dlc_content_updated()
+				managers.menu:open_node("crimenet")
+			end
 
 			Global.load_crime_net = false
 		elseif Global.load_start_menu then
@@ -124,7 +133,7 @@ function MenuMainState:at_enter(old_state)
 
 		if not managers.custom_safehouse:unlocked() then
 			if not Global.mission_manager.has_played_tutorial and not Global.skip_menu_dialogs then
-				-- Lines 138-140
+				-- Lines 148-150
 				local function yes_func()
 					MenuCallbackHandler:play_safehouse({
 						skip_question = true
@@ -136,7 +145,7 @@ function MenuMainState:at_enter(old_state)
 				})
 			end
 		elseif not managers.custom_safehouse:has_entered_safehouse() and not Global.skip_menu_dialogs then
-			-- Lines 146-149
+			-- Lines 156-159
 			local function yes_func()
 				MenuCallbackHandler:play_single_player()
 				MenuCallbackHandler:start_single_player_job({
@@ -182,7 +191,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 226-239
+-- Lines 236-249
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -195,11 +204,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 241-251
+-- Lines 251-261
 function MenuMainState:update(t, dt)
 end
 
--- Lines 253-258
+-- Lines 263-268
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -208,7 +217,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 260-274
+-- Lines 270-284
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -227,13 +236,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 276-282
+-- Lines 286-292
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 284-287
+-- Lines 294-297
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -241,6 +250,6 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 289-290
+-- Lines 299-300
 function MenuMainState:on_disconnected()
 end

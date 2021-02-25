@@ -69,7 +69,7 @@ end
 
 LevelLoadingScreenGuiScript = LevelLoadingScreenGuiScript or class()
 
--- Lines 57-132
+-- Lines 57-134
 function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	self._scene_gui = scene_gui
 	self._res = res
@@ -99,8 +99,12 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	})
 
 	level_image:set_alpha(0.5)
-	level_image:set_size(level_image:parent():h() * level_image:texture_width() / level_image:texture_height(), level_image:parent():h())
-	level_image:set_position(0, 0)
+
+	local level_image_ratio = level_image:texture_width() / level_image:texture_height()
+
+	level_image:set_size(level_image:parent():h() * level_image_ratio, level_image:parent():h())
+	level_image:set_center_x(level_image:parent():w() / 2)
+	level_image:set_y(0)
 
 	local background_fullpanel = self._back_drop_gui:get_new_background_layer()
 	local background_safepanel = self._back_drop_gui:get_new_background_layer()
@@ -170,12 +174,12 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	end
 end
 
--- Lines 134-136
+-- Lines 136-138
 function LevelLoadingScreenGuiScript:update(progress, t, dt)
 	self._indicator:rotate(180 * dt)
 end
 
--- Lines 139-199
+-- Lines 141-201
 function LevelLoadingScreenGuiScript:_make_loading_hint(parent, tip)
 	local container = parent:panel()
 	local hint_text_width = 450
@@ -234,7 +238,7 @@ function LevelLoadingScreenGuiScript:_make_loading_hint(parent, tip)
 	return container
 end
 
--- Lines 202-273
+-- Lines 204-275
 function LevelLoadingScreenGuiScript:_make_controller_hint(parent, coords)
 	local container = parent:panel()
 	local font = arg.load_level_data.coords_font or "fonts/font_medium_mf"
@@ -330,7 +334,7 @@ function LevelLoadingScreenGuiScript:_make_controller_hint(parent, coords)
 	return container
 end
 
--- Lines 275-294
+-- Lines 277-296
 function LevelLoadingScreenGuiScript:destroy()
 	if alive(self._saferect) then
 		self._scene_gui:destroy_workspace(self._saferect)
@@ -357,12 +361,12 @@ function LevelLoadingScreenGuiScript:destroy()
 	end
 end
 
--- Lines 296-298
+-- Lines 298-300
 function LevelLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
--- Lines 300-306
+-- Lines 302-308
 function LevelLoadingScreenGuiScript:set_visible(visible)
 	if visible then
 		self._ws:show()

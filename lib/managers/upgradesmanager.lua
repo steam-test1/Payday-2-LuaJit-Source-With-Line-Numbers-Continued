@@ -1044,10 +1044,10 @@ end
 -- Lines 985-993
 function UpgradesManager:load(data)
 	local state = data.UpgradesManager
-	self._global.automanage = state.automanage
-	self._global.progress = state.progress
-	self._global.target_tree = state.target_tree
-	self._global.disabled_visual_upgrades = state.disabled_visual_upgrades
+	self._global.automanage = state.automanage or self._global.automanage
+	self._global.progress = state.progress or self._global.progress
+	self._global.target_tree = state.target_tree or self._global.target_tree
+	self._global.disabled_visual_upgrades = state.disabled_visual_upgrades or self._global.disabled_visual_upgrades
 
 	self:_verify_loaded_data()
 end

@@ -375,7 +375,7 @@ function EnvironmentManager:_create_feeder(data_path_key, value)
 	return feeder
 end
 
--- Lines 251-270
+-- Lines 251-275
 function EnvironmentManager:_load(path)
 	local raw_data = nil
 
@@ -395,10 +395,16 @@ function EnvironmentManager:_load(path)
 
 	self:_load_env_data(nil, env_data, raw_data.data)
 
+	for data_path_key, feeder in pairs(self._feeder_class_map) do
+		if not env_data[data_path_key] and feeder and feeder.DEFAULT_VALUE then
+			env_data[data_path_key] = feeder.DEFAULT_VALUE
+		end
+	end
+
 	return env_data
 end
 
--- Lines 272-288
+-- Lines 277-293
 function EnvironmentManager:_load_env_data(data_path, env_data, raw_data)
 	for _, sub_raw_data in ipairs(raw_data) do
 		if sub_raw_data._meta == "param" then

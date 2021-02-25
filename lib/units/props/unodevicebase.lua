@@ -56,37 +56,44 @@ function UnoDeviceBase:show_text(text)
 	end)
 end
 
--- Lines 63-73
+-- Lines 63-80
 function UnoDeviceBase:cycle_hints()
-	local uno_challenge = managers.custom_safehouse:uno_achievement_challenge()
-	local achievement_id = uno_challenge:challenge()[self._next_hint]
+	local uno_challenge = nil
+	uno_challenge = managers.custom_safehouse:uno_achievement_challenge()
 
-	self:show_hint(achievement_id)
+	if uno_challenge then
+		local achievement_id = uno_challenge:challenge()[self._next_hint]
 
-	self._next_hint = self._next_hint + 1
+		self:show_hint(achievement_id)
 
-	if UnoAchievementChallenge.CHALLENGE_COUNT < self._next_hint then
-		self._next_hint = 1
+		self._next_hint = self._next_hint + 1
+
+		if UnoAchievementChallenge.CHALLENGE_COUNT < self._next_hint then
+			self._next_hint = 1
+		end
 	end
 end
 
--- Lines 75-85
+-- Lines 82-92
 function UnoDeviceBase:show_hint(achievement_id)
 	local hint_text = managers.localization:text("uno_device_hint_" .. Idstring(achievement_id):key())
 
 	self:show_text(hint_text)
 end
 
--- Lines 87-91
+-- Lines 94-105
 function UnoDeviceBase:generate_challenge()
-	local uno_challenge = managers.custom_safehouse:uno_achievement_challenge()
+	local uno_challenge = nil
+	uno_challenge = managers.custom_safehouse:uno_achievement_challenge()
 
-	uno_challenge:generate_challenge()
+	if uno_challenge then
+		uno_challenge:generate_challenge()
 
-	self._next_hint = 1
+		self._next_hint = 1
+	end
 end
 
--- Lines 93-100
+-- Lines 107-114
 function UnoDeviceBase:destroy()
 	if alive(self._ws) then
 		self._gui:destroy_workspace(self._ws)

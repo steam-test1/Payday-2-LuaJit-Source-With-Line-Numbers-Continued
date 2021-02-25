@@ -307,12 +307,22 @@ function MissionDoor:_run_sequence_simple(sequence_name)
 	self._unit:damage():run_sequence_simple(sequence_name)
 end
 
--- Lines 282-294
+-- Lines 282-300
 function MissionDoor:_destroy_devices()
 	for _, device in pairs(self._devices) do
 		for _, unit_data in ipairs(device.units) do
 			if alive(unit_data.unit) then
-				unit_data.unit:set_slot(0)
+				if unit_data.unit:timer_gui() and unit_data.unit:timer_gui():is_playing_done_event() then
+					unit_data.unit:set_visible(false)
+					unit_data.unit:timer_gui():hide()
+					unit_data.unit:timer_gui():add_listener_to_done_event(function (unit)
+						if alive(unit) then
+							unit:set_slot(0)
+						end
+					end)
+				else
+					unit_data.unit:set_slot(0)
+				end
 			end
 		end
 	end
@@ -320,7 +330,7 @@ function MissionDoor:_destroy_devices()
 	self._devices = {}
 end
 
--- Lines 296-307
+-- Lines 302-313
 function MissionDoor:destroy()
 	for _, device in pairs(self._devices) do
 		for _, unit_data in ipairs(device.units) do
@@ -333,18 +343,18 @@ end
 
 MissionDoorDevice = MissionDoorDevice or class()
 
--- Lines 314-317
+-- Lines 320-323
 function MissionDoorDevice:init(unit)
 	self._unit = unit
 end
 
--- Lines 319-322
+-- Lines 325-328
 function MissionDoorDevice:set_parent_data(door_unit, device_type)
 	self._parent_door = door_unit
 	self._device_type = device_type
 end
 
--- Lines 324-331
+-- Lines 330-337
 function MissionDoorDevice:placed()
 	if not alive(self._parent_door) then
 		CoreDebug.cat_debug("gaspode", "MissionDoor:placed", "Had no parent door unit")
@@ -357,12 +367,12 @@ function MissionDoorDevice:placed()
 	self._parent_door:base():device_placed(self._unit, self._device_type)
 end
 
--- Lines 333-335
+-- Lines 339-341
 function MissionDoorDevice:can_place()
 	return not self._placed
 end
 
--- Lines 337-348
+-- Lines 343-354
 function MissionDoorDevice:report_jammed_state(jammed)
 	if not alive(self._parent_door) then
 		CoreDebug.cat_debug("gaspode", "MissionDoor:report_jammed_state", "Had no parent door unit")
@@ -377,7 +387,7 @@ function MissionDoorDevice:report_jammed_state(jammed)
 	end
 end
 
--- Lines 350-357
+-- Lines 356-363
 function MissionDoorDevice:report_resumed()
 	if not alive(self._parent_door) then
 		CoreDebug.cat_debug("gaspode", "MissionDoor:report_jammed_state", "Had no parent door unit")
@@ -388,7 +398,7 @@ function MissionDoorDevice:report_resumed()
 	self._parent_door:base():device_resumed(self._device_type)
 end
 
--- Lines 359-365
+-- Lines 365-371
 function MissionDoorDevice:report_completed()
 	if not alive(self._parent_door) then
 		CoreDebug.cat_debug("gaspode", "MissionDoor:report_completed", "Had no parent door unit")
@@ -399,7 +409,7 @@ function MissionDoorDevice:report_completed()
 	self._parent_door:base():device_completed(self._device_type)
 end
 
--- Lines 367-374
+-- Lines 373-380
 function MissionDoorDevice:report_trigger_sequence(trigger_sequence_name)
 	CoreDebug.cat_debug("gaspode", "MissionDoor:report_trigger_sequence", trigger_sequence_name)
 
@@ -412,6 +422,6 @@ function MissionDoorDevice:report_trigger_sequence(trigger_sequence_name)
 	self._parent_door:base():trigger_sequence(trigger_sequence_name)
 end
 
--- Lines 376-378
+-- Lines 382-384
 function MissionDoorDevice:destroy()
 end

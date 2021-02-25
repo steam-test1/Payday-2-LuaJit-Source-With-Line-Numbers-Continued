@@ -40,7 +40,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 54-2583
+-- Lines 54-2625
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -4730,6 +4730,88 @@ function AchievementsTweakData:init(tweak_data)
 			},
 			difficulty = overkill_and_above
 		},
+		mex_1 = {
+			award = "mex_1",
+			job = "mex",
+			difficulty = normal_and_above
+		},
+		mex_2 = {
+			award = "mex_2",
+			job = "mex",
+			difficulty = hard_and_above
+		},
+		mex_3 = {
+			award = "mex_3",
+			job = "mex",
+			difficulty = veryhard_and_above
+		},
+		mex_4 = {
+			award = "mex_4",
+			job = "mex",
+			difficulty = overkill_and_above
+		},
+		mex_5 = {
+			award = "mex_5",
+			job = "mex",
+			difficulty = easywish_and_above
+		},
+		mex_6 = {
+			award = "mex_6",
+			job = "mex",
+			difficulty = deathwish_and_above
+		},
+		mex_7 = {
+			award = "mex_7",
+			job = "mex",
+			difficulty = sm_wish_and_above
+		},
+		mex_8 = {
+			award = "mex_8",
+			one_down = true,
+			job = "mex",
+			difficulty = sm_wish_and_above
+		},
+		mex2_1 = {
+			award = "mex2_1",
+			job = "mex_cooking",
+			difficulty = normal_and_above
+		},
+		mex2_2 = {
+			award = "mex2_2",
+			job = "mex_cooking",
+			difficulty = hard_and_above
+		},
+		mex2_3 = {
+			award = "mex2_3",
+			job = "mex_cooking",
+			difficulty = veryhard_and_above
+		},
+		mex2_4 = {
+			award = "mex2_4",
+			job = "mex_cooking",
+			difficulty = overkill_and_above
+		},
+		mex2_5 = {
+			award = "mex2_5",
+			job = "mex_cooking",
+			difficulty = easywish_and_above
+		},
+		mex2_6 = {
+			award = "mex2_6",
+			job = "mex_cooking",
+			difficulty = deathwish_and_above
+		},
+		mex2_7 = {
+			award = "mex2_7",
+			job = "mex_cooking",
+			difficulty = sm_wish_and_above
+		},
+		mex2_8 = {
+			award = "mex2_8",
+			one_down = true,
+			job = "mex_cooking",
+			difficulty = sm_wish_and_above
+		},
 		uno_1 = {
 			award = "uno_1",
 			bag_loot_value = 400000,
@@ -5981,7 +6063,9 @@ function AchievementsTweakData:init(tweak_data)
 			"des",
 			"sah",
 			"bph",
-			"vit"
+			"vit",
+			"mex",
+			"mex_cooking"
 		},
 		jimmy = {
 			"mad",
@@ -7616,7 +7700,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2602-2629
+-- Lines 2644-2671
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -7627,7 +7711,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2611-2622
+	-- Lines 2653-2664
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -7657,7 +7741,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2631-2636
+-- Lines 2673-2678
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -7670,7 +7754,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2638-2646
+-- Lines 2680-2688
 local function from_level(level)
 	if not level then
 		error()
@@ -7686,7 +7770,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2648-2656
+-- Lines 2690-2698
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -7702,7 +7786,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2658-2669
+-- Lines 2700-2711
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -7724,7 +7808,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2674-2851
+-- Lines 2716-2899
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -7770,6 +7854,9 @@ function AchievementsTweakData:_init_visual(tweak_data)
 			"players_4"
 		}
 	}
+
+	table.insert(self.tags.unlock, "outfit")
+
 	local contacts = {}
 
 	for _, job_id in ipairs(tweak_data.narrative:get_jobs_index()) do
@@ -7839,6 +7926,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 					"characters",
 					"weapon_mods",
 					"masks",
+					"player_styles",
 					"melee_weapons",
 					"materials",
 					"textures"
@@ -7873,7 +7961,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 2886-3028
+-- Lines 2934-3076
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8064,7 +8152,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3006-3006
+	-- Lines 3054-3054
 	local function dummy_progress()
 		return 0
 	end

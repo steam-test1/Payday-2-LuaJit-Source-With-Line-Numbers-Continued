@@ -54,74 +54,78 @@ end
 function ContourExt:set_active()
 end
 
+-- Lines 37-38
+function ContourExt:update_materials()
+end
+
 SyncUnitData = SyncUnitData or class()
 
--- Lines 39-40
+-- Lines 41-42
 function SyncUnitData:init(unit)
 end
 
--- Lines 41-42
+-- Lines 43-44
 function SyncUnitData:set_active()
 end
 
 AccessWeaponMenuInteractionExt = AccessWeaponMenuInteractionExt or class()
 
--- Lines 45-46
+-- Lines 47-48
 function AccessWeaponMenuInteractionExt:init(unit)
 end
 
--- Lines 48-49
+-- Lines 50-51
 function AccessWeaponMenuInteractionExt:set_active()
 end
 
 NetworkBaseExtension = NetworkBaseExtension or class()
 
--- Lines 52-53
+-- Lines 54-55
 function NetworkBaseExtension:init(unit)
 end
 
--- Lines 54-55
+-- Lines 56-57
 function NetworkBaseExtension:set_active()
 end
 
 DrivingInteractionExt = DrivingInteractionExt or class()
 
--- Lines 58-59
+-- Lines 60-61
 function DrivingInteractionExt:init(unit)
 end
 
--- Lines 60-61
+-- Lines 62-63
 function DrivingInteractionExt:set_active()
 end
 
 VehicleDamage = VehicleDamage or class()
 
--- Lines 64-65
+-- Lines 66-67
 function VehicleDamage:init(unit)
 end
 
--- Lines 66-67
+-- Lines 68-69
 function VehicleDamage:set_active()
 end
 
 CarryData = CarryData or class()
 
--- Lines 70-71
+-- Lines 72-73
 function CarryData:init(unit)
 end
 
--- Lines 72-73
+-- Lines 74-75
 function CarryData:set_active()
 end
 
 VehicleDrivingExt = VehicleDrivingExt or class()
 
--- Lines 76-77
+-- Lines 78-79
 function VehicleDrivingExt:init(unit)
 end
 
 VehicleCamera = VehicleCamera or class()
 
--- Lines 80-81
+-- Lines 82-83
 function VehicleCamera:init(unit)
 end

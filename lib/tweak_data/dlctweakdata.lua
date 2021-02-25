@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 5-5555
+-- Lines 10-4379
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -7816,6 +7816,95 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "scm_02",
+			amount = 1
+		}
+	}
+	self.ach_trd_dah_1 = {
+		dlc = "has_achievement",
+		achievement_id = "dah_1",
+		content = {}
+	}
+	self.ach_trd_dah_1.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "sneak_suit"
+		}
+	}
+	self.ach_trd_nmh_1 = {
+		dlc = "has_achievement",
+		achievement_id = "nmh_1",
+		content = {}
+	}
+	self.ach_trd_nmh_1.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "scrub"
+		}
+	}
+	self.ach_trd_glace_1 = {
+		dlc = "has_achievement",
+		achievement_id = "glace_1",
+		content = {}
+	}
+	self.ach_trd_glace_1.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "raincoat"
+		}
+	}
+	self.ach_trd_sah_1 = {
+		dlc = "has_achievement",
+		achievement_id = "sah_1",
+		content = {}
+	}
+	self.ach_trd_sah_1.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "tux"
+		}
+	}
+	self.ach_trd_wwh_1 = {
+		dlc = "has_achievement",
+		achievement_id = "wwh_1",
+		content = {}
+	}
+	self.ach_trd_wwh_1.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "winter_suit"
+		}
+	}
+	self.ach_trd_mex_9 = {
+		dlc = "has_achievement",
+		achievement_id = "mex_9",
+		content = {}
+	}
+	self.ach_trd_mex_9.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "murky_suit"
+		}
+	}
+	self.pd2_clan_trd = {
+		content = {},
+		dlc = "has_pd2_clan"
+	}
+	self.pd2_clan_trd.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "jail_pd2_clan"
+		}
+	}
+	self.ach_trd_mex_10 = {
+		dlc = "has_achievement",
+		achievement_id = "mex_10",
+		content = {}
+	}
+	self.ach_trd_mex_10.content.loot_global_value = "mex"
+	self.ach_trd_mex_10.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "roman",
 			amount = 1
 		}
 	}

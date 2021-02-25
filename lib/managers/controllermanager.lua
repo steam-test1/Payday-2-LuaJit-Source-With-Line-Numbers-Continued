@@ -4,22 +4,45 @@ core:import("CoreClass")
 
 ControllerManager = ControllerManager or class(CoreControllerManager.ControllerManager)
 
--- Lines 8-18
+-- Lines 8-19
 function ControllerManager:init(path, default_settings_path)
 	default_settings_path = "settings/controller_settings"
 	path = default_settings_path
 	self._menu_mode_enabled = 0
+	self._rebind_connections_requested = false
 
 	ControllerManager.super.init(self, path, default_settings_path)
 end
 
--- Lines 20-24
+-- Lines 21-25
 function ControllerManager:update(t, dt)
 	ControllerManager.super.update(self, t, dt)
 	self:_poll_reconnected_controller()
 end
 
--- Lines 26-45
+-- Lines 27-37
+function ControllerManager:request_rebind_connections()
+	if _G.setup.__firstupdate then
+		self:rebind_connections()
+
+		return
+	end
+
+	if not self._rebind_connections_requested then
+		self._rebind_connections_requested = true
+
+		_G.setup:add_end_frame_clbk(callback(self, self, "rebind_connections"))
+	end
+end
+
+-- Lines 39-42
+function ControllerManager:rebind_connections()
+	self._rebind_connections_requested = false
+
+	ControllerManager.super.rebind_connections(self)
+end
+
+-- Lines 44-63
 function ControllerManager:_poll_reconnected_controller()
 	if SystemInfo:platform() == Idstring("XB1") and Global.controller_manager.connect_controller_dialog_visible then
 		local active_xuid = XboxLive:current_user()
@@ -36,7 +59,7 @@ function ControllerManager:_poll_reconnected_controller()
 	end
 end
 
--- Lines 47-52
+-- Lines 65-70
 function ControllerManager:controller_mod_changed()
 	if not Global.controller_manager.user_mod then
 		Global.controller_manager.user_mod = managers.user:get_setting("controller_mod")
@@ -45,7 +68,7 @@ function ControllerManager:controller_mod_changed()
 	end
 end
 
--- Lines 54-64
+-- Lines 72-82
 function ControllerManager:set_user_mod(connection_name, params)
 	Global.controller_manager.user_mod = Global.controller_manager.user_mod or {}
 
@@ -62,7 +85,7 @@ function ControllerManager:set_user_mod(connection_name, params)
 	managers.user:set_setting("controller_mod", Global.controller_manager.user_mod, true)
 end
 
--- Lines 66-78
+-- Lines 84-96
 function ControllerManager:clear_user_mod(category, CONTROLS_INFO)
 	Global.controller_manager.user_mod = Global.controller_manager.user_mod or {}
 	local names = table.map_keys(Global.controller_manager.user_mod)
@@ -78,7 +101,7 @@ function ControllerManager:clear_user_mod(category, CONTROLS_INFO)
 	self:load_user_mod()
 end
 
--- Lines 80-99
+-- Lines 98-117
 function ControllerManager:load_user_mod()
 	if Global.controller_manager.user_mod then
 		local connections = managers.controller:get_settings(managers.user:get_setting("controller_mod_type")):get_connection_map()
@@ -102,7 +125,7 @@ function ControllerManager:load_user_mod()
 	end
 end
 
--- Lines 101-107
+-- Lines 119-125
 function ControllerManager:init_finalize()
 	managers.user:add_setting_changed_callback("controller_mod", callback(self, self, "controller_mod_changed"), true)
 
@@ -113,7 +136,7 @@ function ControllerManager:init_finalize()
 	self:_check_dialog()
 end
 
--- Lines 109-126
+-- Lines 127-144
 function ControllerManager:default_controller_connect_change(connected)
 	ControllerManager.super.default_controller_connect_change(self, connected)
 
@@ -122,19 +145,19 @@ function ControllerManager:default_controller_connect_change(connected)
 	end
 end
 
--- Lines 128-133
+-- Lines 146-151
 function ControllerManager:_check_dialog()
 	if Global.controller_manager.connect_controller_dialog_visible and not self:_controller_changed_dialog_active() then
 		self:_show_controller_changed_dialog()
 	end
 end
 
--- Lines 135-137
+-- Lines 153-155
 function ControllerManager:_controller_changed_dialog_active()
 	return managers.system_menu:is_active_by_id("connect_controller_dialog") and true or false
 end
 
--- Lines 139-161
+-- Lines 157-179
 function ControllerManager:_show_controller_changed_dialog()
 	if self:_controller_changed_dialog_active() then
 		return
@@ -165,12 +188,12 @@ function ControllerManager:_show_controller_changed_dialog()
 	managers.system_menu:show(data)
 end
 
--- Lines 163-168
+-- Lines 181-186
 function ControllerManager:_change_mode(mode)
 	self:change_default_wrapper_mode(mode)
 end
 
--- Lines 170-184
+-- Lines 188-202
 function ControllerManager:set_menu_mode_enabled(enabled)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
@@ -188,12 +211,12 @@ function ControllerManager:set_menu_mode_enabled(enabled)
 	end
 end
 
--- Lines 186-188
+-- Lines 204-206
 function ControllerManager:get_menu_mode_enabled()
 	return self._menu_mode_enabled and self._menu_mode_enabled > 0
 end
 
--- Lines 190-200
+-- Lines 208-218
 function ControllerManager:set_ingame_mode(mode)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		if mode then
@@ -206,7 +229,7 @@ function ControllerManager:set_ingame_mode(mode)
 	end
 end
 
--- Lines 209-217
+-- Lines 227-235
 function ControllerManager:_close_controller_changed_dialog(hard)
 	if Global.controller_manager.connect_controller_dialog_visible or self:_controller_changed_dialog_active() then
 		print("[ControllerManager:_close_controller_changed_dialog] closing")
@@ -215,12 +238,12 @@ function ControllerManager:_close_controller_changed_dialog(hard)
 	end
 end
 
--- Lines 219-228
+-- Lines 237-246
 function ControllerManager:connect_controller_dialog_callback()
 	Global.controller_manager.connect_controller_dialog_visible = nil
 end
 
--- Lines 230-245
+-- Lines 248-263
 function ControllerManager:get_mouse_controller()
 	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
@@ -237,7 +260,7 @@ function ControllerManager:get_mouse_controller()
 	return Input:mouse()
 end
 
--- Lines 248-255
+-- Lines 266-273
 function ControllerManager:get_vr_wrapper_index()
 	for index = 1, self._wrapper_count do
 		local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
@@ -248,7 +271,7 @@ function ControllerManager:get_vr_wrapper_index()
 	end
 end
 
--- Lines 257-266
+-- Lines 275-284
 function ControllerManager:get_vr_controller()
 	for index = 1, self._wrapper_count do
 		local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]

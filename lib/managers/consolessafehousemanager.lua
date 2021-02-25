@@ -1,6 +1,6 @@
 ConsolesSafehouseManager = ConsolesSafehouseManager or class()
 
--- Lines 6-16
+-- Lines 10-22
 function ConsolesSafehouseManager:init()
 	self:_setup()
 
@@ -8,10 +8,28 @@ function ConsolesSafehouseManager:init()
 	self.prices_crew_ability = 6
 	self.prices_weapon_mod = 6
 	self.prices_event_weapon_mod = 18
-	self.rewards_experience_ratio = 1000000
+	self.rewards_experience_ratio = 500000
+	self.level_limit = 0
 end
 
--- Lines 18-32
+-- Lines 24-26
+function ConsolesSafehouseManager:unlocked()
+	return true
+end
+
+-- Lines 28-32
+function ConsolesSafehouseManager:reset()
+	Global.consoles_safehouse_manager_manager = nil
+	self._global = nil
+
+	self:_setup()
+end
+
+-- Lines 34-38
+function ConsolesSafehouseManager:init_finalize()
+end
+
+-- Lines 40-57
 function ConsolesSafehouseManager:_setup()
 	print("[ConsolesSafehouseManager:_setup]")
 
@@ -29,7 +47,7 @@ function ConsolesSafehouseManager:_setup()
 	self:attempt_give_initial_coins()
 end
 
--- Lines 34-42
+-- Lines 59-71
 function ConsolesSafehouseManager:save(data)
 	print("[ConsolesSafehouseManager:save]")
 
@@ -40,7 +58,7 @@ function ConsolesSafehouseManager:save(data)
 	data.ConsolesSafehouseManager = state
 end
 
--- Lines 44-56
+-- Lines 73-88
 function ConsolesSafehouseManager:load(data, version)
 	print("[ConsolesSafehouseManager:load]")
 
@@ -54,35 +72,39 @@ function ConsolesSafehouseManager:load(data, version)
 	end
 end
 
--- Lines 58-61
+-- Lines 90-93
 function ConsolesSafehouseManager:coins()
 	print("[ConsolesSafehouseManager:coins]")
 
 	return Application:digest_value(self._global.total, false)
 end
 
--- Lines 63-66
+-- Lines 95-98
 function ConsolesSafehouseManager:previous_coins()
 	print("[ConsolesSafehouseManager:previous_coins]")
 
 	return Application:digest_value(self._global.prev_total, false)
 end
 
--- Lines 68-71
+-- Lines 100-103
 function ConsolesSafehouseManager:total_coins_earned()
 	print("[ConsolesSafehouseManager:total_coins_earned]")
 
 	return Application:digest_value(self._global.total_collected, false)
 end
 
--- Lines 73-76
+-- Lines 105-108
 function ConsolesSafehouseManager:coins_spent()
 	print("[ConsolesSafehouseManager:coins_spent]")
 
 	return self:total_coins_earned() - self:coins()
 end
 
--- Lines 78-88
+-- Lines 110-115
+function ConsolesSafehouseManager:update_previous_coins()
+end
+
+-- Lines 117-133
 function ConsolesSafehouseManager:add_coins(amount)
 	print("[ConsolesSafehouseManager:add_coins]")
 
@@ -94,7 +116,7 @@ function ConsolesSafehouseManager:add_coins(amount)
 	print("Adding coins: ", amount, Application:digest_value(self._global.total, false))
 end
 
--- Lines 90-94
+-- Lines 135-139
 function ConsolesSafehouseManager:deduct_coins(amount)
 	print("[ConsolesSafehouseManager:deduct_coins]")
 
@@ -102,7 +124,7 @@ function ConsolesSafehouseManager:deduct_coins(amount)
 	Global.consoles_safehouse_manager_manager.total = Application:digest_value(self:coins() - amount, true)
 end
 
--- Lines 96-104
+-- Lines 141-149
 function ConsolesSafehouseManager:attempt_give_initial_coins()
 	print("[ConsolesSafehouseManager:attempt_give_initial_coins]")
 
@@ -114,15 +136,19 @@ function ConsolesSafehouseManager:attempt_give_initial_coins()
 	end
 end
 
--- Lines 106-109
+-- Lines 151-154
 function ConsolesSafehouseManager:get_coins_income()
 	print("[ConsolesSafehouseManager:get_coins_income")
 
 	return math.floor(Application:digest_value(self._global.total, false)) - math.floor(Application:digest_value(self._global.prev_total, false))
 end
 
--- Lines 111-114
+-- Lines 156-159
 function ConsolesSafehouseManager:give_upgrade_points(exp)
-	print("[ConsolesSafehouseManager:give_upgrade_points]")
-	self:add_coins(exp / rewards_experience_ratio)
+	print("[ConsolesSafehouseManager:give_upgrade_points]: ", exp)
+	self:add_coins(exp / self.rewards_experience_ratio)
+end
+
+-- Lines 168-170
+function ConsolesSafehouseManager:add_coins_ingore_locked(amount)
 end

@@ -13,7 +13,7 @@ function LocalizationManager:init()
 	Application:set_default_letter(95)
 end
 
--- Lines 13-291
+-- Lines 13-303
 function LocalizationManager:_setup_macros()
 	local btn_a = utf8.char(57344)
 	local btn_b = utf8.char(57345)
@@ -154,11 +154,26 @@ function LocalizationManager:_setup_macros()
 		d_right = btn_dpad_r
 	}
 	self._input_translations.xb1 = table.map_copy(self._input_translations.xbox360)
+	self._input_translations.ps3 = table.map_copy(self._input_translations.xbox360)
+
+	table.map_append(self._input_translations.ps3, {
+		cross = btn_a,
+		circle = btn_b,
+		square = btn_x,
+		triangle = btn_y,
+		r1_trigger = btn_top_r,
+		l1_trigger = btn_top_l,
+		l2_trigger = btn_bottom_l,
+		r2_trigger = btn_bottom_r,
+		select = btn_back
+	})
+
+	self._input_translations.ps4 = table.map_copy(self._input_translations.ps3)
 end
 
 local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
--- Lines 294-305
+-- Lines 306-317
 function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	if not button then
 		return
@@ -174,7 +189,7 @@ function LocalizationManager:btn_macro(button, to_upper, nil_if_empty)
 	return self:key_to_btn_text(key, to_upper, type)
 end
 
--- Lines 307-330
+-- Lines 319-342
 function LocalizationManager:key_to_btn_text(key, to_upper, type)
 	if _G.IS_VR and not key then
 		return ""
@@ -196,22 +211,22 @@ function LocalizationManager:key_to_btn_text(key, to_upper, type)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines 332-334
+-- Lines 344-346
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines 336-338
+-- Lines 348-350
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines 340-355
+-- Lines 352-367
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines 357-367
+-- Lines 369-379
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -227,7 +242,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines 369-415
+-- Lines 381-427
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -275,7 +290,7 @@ function LocalizationManager:check_translation()
 	end
 end
 
--- Lines 418-420
+-- Lines 430-432
 function LocalizationManager:set_input_translation(button_name, translation)
 	self._input_translations[button_name] = translation
 end

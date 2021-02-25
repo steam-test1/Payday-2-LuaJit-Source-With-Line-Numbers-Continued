@@ -51,7 +51,7 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines 36-1409
+-- Lines 36-1446
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
@@ -176,7 +176,7 @@ function PrePlanningTweakData:init(tweak_data)
 	self.types.ammo_bag.total = 2
 	self.types.ammo_bag.cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_deaddropbag")
 	self.types.ammo_bag.budget_cost = 2
-	self.types.ammo_bag.post_event = "gus_preplan_05"
+	self.types.ammo_bag.post_event = "preplan_05"
 	self.types.ammo_bag.prio = 5
 	self.types.health_bag = {
 		name_id = "menu_pp_asset_health",
@@ -187,7 +187,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 2,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_deaddropbag"),
 		budget_cost = 2,
-		post_event = "gus_preplan_06",
+		post_event = "preplan_06",
 		prio = 6
 	}
 	self.types.bodybags_bag = {
@@ -203,7 +203,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 2,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_deaddropbag"),
 		budget_cost = 2,
-		post_event = "gus_preplan_15",
+		post_event = "preplan_15",
 		prio = 3
 	}
 	self.types.grenade_crate = {
@@ -216,7 +216,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 2,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_deaddropbag"),
 		budget_cost = 2,
-		post_event = "gus_preplan_15",
+		post_event = "preplan_15",
 		prio = 4,
 		progress_stat = "gage_10_stats"
 	}
@@ -230,7 +230,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "dead_drop",
 		icon = 12,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_drillparts"),
 		budget_cost = 3,
 		prio = 2
@@ -241,7 +241,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 23,
 		total = 1,
-		post_event = "gus_preplan_07",
+		post_event = "preplan_07",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_zipline"),
 		budget_cost = 2
@@ -254,7 +254,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 41,
 		total = 1,
-		post_event = "gus_preplan_07",
+		post_event = "preplan_07",
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_unlocked_door"),
 		budget_cost = 1,
 		prio = 2
@@ -265,7 +265,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 41,
 		total = 5,
-		post_event = "gus_preplan_07",
+		post_event = "preplan_07",
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_unlocked_window"),
 		budget_cost = 1,
 		prio = 2
@@ -278,21 +278,21 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_highlight_keybox"),
 		budget_cost = 2,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 2
 	}
 	self.types.ladder = {
 		name_id = "menu_pp_asset_ladder",
 		category = "mission_equipment",
 		total = 1,
-		post_event = "gus_preplan_07",
+		post_event = "preplan_07",
 		prio = 2
 	}
 	self.types.disable_camera = {
 		name_id = "menu_pp_asset_disable_camera",
 		category = "surveillance",
 		total = 1,
-		post_event = "gus_preplan_08",
+		post_event = "preplan_08",
 		prio = 2
 	}
 	self.types.disable_metal_detector = {
@@ -303,7 +303,7 @@ function PrePlanningTweakData:init(tweak_data)
 			category = "player"
 		},
 		total = 1,
-		post_event = "gus_preplan_10",
+		post_event = "preplan_10",
 		prio = 3
 	}
 	self.types.disable_guards_cake = {
@@ -318,7 +318,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_cake"),
 		budget_cost = 3,
-		post_event = "gus_preplan_09",
+		post_event = "preplan_09",
 		prio = 1
 	}
 	self.types.extra_cameras = {
@@ -334,7 +334,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 9,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_extracameras"),
 		budget_cost = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 2
 	}
 	self.types.keycard = {
@@ -349,7 +349,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_keycard"),
 		budget_cost = 2,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 2
 	}
 	self.types.camera_access = {
@@ -360,7 +360,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_accesscameras"),
 		budget_cost = 2,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 8
 	}
 	self.types.delay_police_10 = {
@@ -370,7 +370,7 @@ function PrePlanningTweakData:init(tweak_data)
 		icon = 42,
 		category = "data_hacking",
 		total = 1,
-		post_event = "gus_preplan_04",
+		post_event = "preplan_04",
 		prio = 7
 	}
 	self.types.delay_police_10_no_pos = deep_clone(self.types.delay_police_10)
@@ -386,7 +386,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_delay20"),
 		budget_cost = 1,
-		post_event = "gus_preplan_04",
+		post_event = "preplan_04",
 		prio = 6
 	}
 	self.types.delay_police_30 = {
@@ -398,7 +398,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_delay30"),
 		budget_cost = 2,
-		post_event = "gus_preplan_10",
+		post_event = "preplan_10",
 		prio = 5
 	}
 	self.types.delay_police_30_no_pos = deep_clone(self.types.delay_police_30)
@@ -411,7 +411,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "data_hacking",
 		total = 1,
 		budget_cost = 4,
-		post_event = "gus_preplan_04",
+		post_event = "preplan_04",
 		prio = 4
 	}
 	self.types.reduce_timelock_60 = {
@@ -423,7 +423,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_timelock60"),
 		budget_cost = 2,
-		post_event = "gus_preplan_10",
+		post_event = "preplan_10",
 		prio = 3
 	}
 	self.types.reduce_timelock_120 = {
@@ -434,7 +434,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "data_hacking",
 		total = 1,
 		budget_cost = 4,
-		post_event = "gus_preplan_10",
+		post_event = "preplan_10",
 		prio = 2
 	}
 	self.types.reduce_timelock_240 = {
@@ -445,7 +445,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "data_hacking",
 		total = 1,
 		budget_cost = 6,
-		post_event = "gus_preplan_10",
+		post_event = "preplan_10",
 		prio = 1
 	}
 	self.types.spycam = {
@@ -465,7 +465,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 3,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_spycam"),
 		budget_cost = 2,
-		post_event = "gus_preplan_14",
+		post_event = "preplan_14",
 		prio = 3
 	}
 	self.types.spotter = {
@@ -483,7 +483,7 @@ function PrePlanningTweakData:init(tweak_data)
 		icon = 33,
 		total = 1,
 		budget_cost = 2,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 4
 	}
 	self.types.spotter_des = deep_clone(self.types.spotter)
@@ -496,7 +496,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "hired_help",
 		icon = 55,
 		total = 1,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_mia_cost_sniper"),
 		budget_cost = 1
@@ -507,7 +507,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "hired_help",
 		icon = 15,
 		total = 1,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_mia_cost_delayed_police"),
 		budget_cost = 1
@@ -518,7 +518,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "hired_help",
 		icon = 61,
 		total = 1,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_mia_cost_reduce_mobsters"),
 		budget_cost = 1
@@ -532,7 +532,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 6
 	}
 	self.types.escape_bus_loud = {
@@ -545,7 +545,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_escapebig"),
 		budget_cost = 6,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 1
 	}
 	self.types.escape_c4_loud = {
@@ -558,7 +558,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_escapebig"),
 		budget_cost = 3,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 2
 	}
 	self.types.escape_elevator_loud = {
@@ -571,7 +571,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_escapebig"),
 		budget_cost = 3,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 3
 	}
 	self.types.escape_zipline_loud = {
@@ -584,7 +584,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_zipline"),
 		budget_cost = 3,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 2
 	}
 	self.types.escape_helicopter_loud = {
@@ -597,7 +597,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 3
 	}
 	self.types.escape_aliens_loud = {
@@ -610,7 +610,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "mission_asset_cost_large", 10),
 		budget_cost = 10,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 99
 	}
 	self.types.vault_drill = {
@@ -621,7 +621,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 2,
 		prio = 5
 	}
@@ -633,7 +633,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "mission_asset_cost_large", 1),
 		budget_cost = 4,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 2
 	}
 	self.types.vault_lance = {
@@ -645,7 +645,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 5
 	}
 	self.types.vault_big_drill = {
@@ -658,7 +658,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 5
 	}
 	self.types.vault_thermite = {
@@ -671,7 +671,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_thermite"),
 		budget_cost = 5,
-		post_event = "gus_preplan_02",
+		post_event = "preplan_02",
 		prio = 1
 	}
 	self.types.vault_singularity = {
@@ -682,7 +682,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "mission_asset_cost_large", 10),
 		budget_cost = 10,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 99
 	}
 	self.types.disable_alarm_button = {
@@ -693,7 +693,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_disable_alarm_button"),
 		budget_cost = 3,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1
 	}
 	self.types.safe_escape = {
@@ -708,7 +708,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_safe_escape"),
 		budget_cost = 3,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1
 	}
 	self.types.sniper_spot = {
@@ -719,7 +719,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_sniper_spot"),
 		budget_cost = 3,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1
 	}
 	self.types.bag_shortcut = {
@@ -728,7 +728,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 34,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_bag_shortcut"),
 		budget_cost = 2
@@ -739,7 +739,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 34,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_bag_zipline"),
 		budget_cost = 2
@@ -750,7 +750,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 34,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_bag_zipline"),
 		budget_cost = 2
@@ -761,7 +761,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "hired_help",
 		icon = 34,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_loot_drop_off"),
 		budget_cost = 2
@@ -772,7 +772,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "hired_help",
 		icon = 34,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_loot_drop_off"),
 		budget_cost = 2
@@ -785,7 +785,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "dead_drop",
 		icon = 51,
 		total = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_thermal_paste"),
 		budget_cost = 3,
@@ -797,7 +797,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 63,
 		total = 1,
-		post_event = "gus_preplan_07",
+		post_event = "preplan_07",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_framing_frame_1_truck"),
 		budget_cost = 2
@@ -808,7 +808,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 41,
 		total = 1,
-		post_event = "gus_preplan_07",
+		post_event = "preplan_07",
 		prio = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_framing_frame_1_entry_point"),
 		budget_cost = 2
@@ -823,7 +823,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 5
 	}
 	self.types.branchbank_vault_key = {
@@ -834,7 +834,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_branchbank_vault_key"),
 		budget_cost = 3,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 2
 	}
 	self.types.crojob_stealth = {
@@ -873,7 +873,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_12",
+		post_event = "preplan_12",
 		prio = 3
 	}
 	self.types.crojob2_escape_helicopter = {
@@ -886,7 +886,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_escape_mid"),
 		budget_cost = 4,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 3
 	}
 	self.types.crojob2_escape_boat = {
@@ -899,7 +899,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_escape_close"),
 		budget_cost = 8,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 3
 	}
 	self.types.crojob2_better_hacker = {
@@ -911,7 +911,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_hacker"),
 		budget_cost = 3,
-		post_event = "gus_preplan_10",
+		post_event = "preplan_10",
 		prio = 3
 	}
 	self.types.crojob2_better_pilot = {
@@ -923,7 +923,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_pilot"),
 		budget_cost = 3,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 3
 	}
 	self.types.crojob2_manifest = {
@@ -935,7 +935,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_manifest"),
 		budget_cost = 2,
-		post_event = "gus_preplan_14",
+		post_event = "preplan_14",
 		prio = 3
 	}
 	self.types.crojob3_escape_boat = {
@@ -948,7 +948,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 3
 	}
 	self.types.crojob3_escape_plane = {
@@ -961,7 +961,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_escape_mid"),
 		budget_cost = 4,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 3
 	}
 	self.types.crojob3_escape_helicopter = {
@@ -974,7 +974,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_escape_close"),
 		budget_cost = 8,
-		post_event = "gus_preplan_14",
+		post_event = "preplan_14",
 		prio = 3
 	}
 	self.types.crojob3_demolition_expert = {
@@ -986,7 +986,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 3,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_demolition"),
 		budget_cost = 1,
-		post_event = "gus_preplan_14",
+		post_event = "preplan_14",
 		prio = 3
 	}
 	self.types.crojob3_better_pilot = {
@@ -998,7 +998,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_pilot"),
 		budget_cost = 4,
-		post_event = "gus_preplan_17",
+		post_event = "preplan_17",
 		prio = 3
 	}
 	self.types.crojob3_sniper = {
@@ -1010,7 +1010,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_mia_cost_sniper"),
 		budget_cost = 4,
-		post_event = "gus_preplan_13",
+		post_event = "preplan_13",
 		prio = 3
 	}
 	self.types.crojob3_ladder = {
@@ -1022,7 +1022,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_ladder"),
 		budget_cost = 1,
-		post_event = "gus_preplan_15",
+		post_event = "preplan_15",
 		prio = 5
 	}
 	self.types.crojob3_crowbar = {
@@ -1034,7 +1034,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_thebomb_cost_crowbar"),
 		budget_cost = 1,
-		post_event = "gus_preplan_15",
+		post_event = "preplan_15",
 		prio = 5
 	}
 	self.types.glass_cutter = {
@@ -1045,7 +1045,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_glass_cutter"),
 		budget_cost = 1,
-		post_event = "gus_preplan_16",
+		post_event = "preplan_16",
 		prio = 2
 	}
 	self.types.kenaz_silent_entry = {
@@ -1094,7 +1094,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 0,
-		post_event = "gus_preplan_12",
+		post_event = "preplan_12",
 		prio = 3
 	}
 	self.types.kenaz_zeppelin_escape = {
@@ -1107,7 +1107,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 4,
-		post_event = "gus_preplan_12",
+		post_event = "preplan_12",
 		prio = 3
 	}
 	self.types.kenaz_van_escape = {
@@ -1120,7 +1120,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 8,
-		post_event = "gus_preplan_12",
+		post_event = "preplan_12",
 		prio = 3
 	}
 	self.types.kenaz_wrecking_ball_escape = {
@@ -1133,7 +1133,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		cost = 0,
 		budget_cost = 10,
-		post_event = "gus_preplan_12",
+		post_event = "preplan_12",
 		prio = 3
 	}
 	self.types.sentry_gun = {
@@ -1415,9 +1415,53 @@ function PrePlanningTweakData:init(tweak_data)
 		post_event = "",
 		prio = 3
 	}
+	self.types.mex_keys = {
+		name_id = "menu_pp_asset_mex_keys",
+		desc_id = "menu_pp_asset_mex_keys_desc",
+		category = "mission_equipment",
+		icon = 43,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 1,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		budget_cost = 3
+	}
+	self.types.roof_access = {
+		name_id = "menu_pp_asset_roof_access",
+		desc_id = "menu_pp_asset_roof_access_desc",
+		category = "mission_equipment",
+		icon = 63,
+		total = 2,
+		post_event = "gus_preplan_07",
+		prio = 1,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_roof_access"),
+		budget_cost = 3
+	}
+	self.types.upper_floor_access = {
+		name_id = "menu_pp_asset_upper_floor_access",
+		desc_id = "menu_pp_asset_upper_floor_access_desc",
+		category = "mission_equipment",
+		icon = 63,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 1,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_upper_floor_access"),
+		budget_cost = 2
+	}
+	self.types.crowbar_single = {
+		name_id = "menu_pp_asset_crowbar_single",
+		desc_id = "menu_pp_asset_crowbar_single_desc",
+		category = "mission_equipment",
+		icon = 72,
+		total = 1,
+		post_event = "gus_preplan_07",
+		prio = 1,
+		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_crowbar_single"),
+		budget_cost = 1
+	}
 end
 
--- Lines 1411-2200
+-- Lines 1448-2376
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -2601,9 +2645,353 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			y = 1024
 		}
 	}
+	self.locations.mex = {
+		{
+			texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_01",
+			map_width = 1,
+			x2 = 6750,
+			map_x = -0.6,
+			x1 = -2450,
+			map_size = 1,
+			map_height = 1,
+			map_y = 1.1,
+			name_id = "menu_pp_mex_loc_a",
+			y2 = 6450,
+			y1 = -2750,
+			rotation = -0,
+			custom_points = {
+				{
+					text_id = "menu_pp_info_mex_entry",
+					rotation = 0,
+					y = 1024,
+					to_upper = true,
+					icon = 45,
+					x = 150
+				},
+				{
+					text_id = "menu_pp_info_mex_shack_north",
+					rotation = 0,
+					y = 450,
+					to_upper = true,
+					icon = 45,
+					x = 875
+				},
+				{
+					text_id = "menu_pp_info_mex_shack_south",
+					rotation = 0,
+					y = 1700,
+					to_upper = true,
+					icon = 45,
+					x = 975
+				},
+				{
+					text_id = "menu_pp_info_mex_tunnel_entrance_north",
+					rotation = 0,
+					y = 370,
+					to_upper = true,
+					icon = 45,
+					x = 1212
+				},
+				{
+					text_id = "menu_pp_info_mex_tunnel_entrance_east",
+					rotation = 0,
+					y = 970,
+					to_upper = true,
+					icon = 45,
+					x = 1700
+				},
+				{
+					text_id = "menu_pp_info_mex_tunnel_entrance_south",
+					rotation = 0,
+					y = 1650,
+					to_upper = true,
+					icon = 45,
+					x = 1750
+				}
+			}
+		},
+		{
+			texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_02",
+			map_width = 1,
+			x2 = 6750,
+			map_x = -0.6,
+			x1 = -2450,
+			map_size = 1,
+			map_height = 1,
+			map_y = 0,
+			name_id = "menu_pp_mex_loc_b",
+			y2 = 6450,
+			y1 = -2750,
+			rotation = -0,
+			custom_points = {
+				{
+					text_id = "menu_pp_info_mex_briefing_room",
+					rotation = 0,
+					y = 990,
+					to_upper = true,
+					icon = 45,
+					x = 1018
+				},
+				{
+					text_id = "menu_pp_info_mex_secruity_room_a",
+					rotation = 0,
+					y = 915,
+					to_upper = true,
+					icon = 45,
+					x = 860
+				},
+				{
+					text_id = "menu_pp_info_mex_secruity_room_b",
+					rotation = 0,
+					y = 930,
+					to_upper = true,
+					icon = 45,
+					x = 1290
+				}
+			}
+		},
+		{
+			texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_03",
+			map_width = 1,
+			x2 = 8172,
+			map_x = 0.6,
+			x1 = -3822,
+			map_size = 1,
+			map_height = 1,
+			map_y = 1.1,
+			name_id = "menu_pp_mex_loc_c",
+			y2 = -3603,
+			y1 = -15597,
+			rotation = -0,
+			custom_points = {
+				{
+					text_id = "menu_pp_info_mex_tunnel_exit_north",
+					rotation = 0,
+					y = 240,
+					to_upper = true,
+					icon = 45,
+					x = 1420
+				},
+				{
+					text_id = "menu_pp_info_mex_tunnel_exit_west",
+					rotation = 0,
+					y = 1270,
+					to_upper = true,
+					icon = 45,
+					x = 260
+				},
+				{
+					text_id = "menu_pp_info_mex_tunnel_exit_south",
+					rotation = 0,
+					y = 1630,
+					to_upper = true,
+					icon = 45,
+					x = 1820
+				},
+				{
+					text_id = "menu_pp_info_mex_hangar_a",
+					rotation = 0,
+					y = 830,
+					to_upper = true,
+					icon = 45,
+					x = 1630
+				},
+				{
+					text_id = "menu_pp_info_mex_hangar_b",
+					rotation = 0,
+					y = 1200,
+					to_upper = true,
+					icon = 45,
+					x = 1720
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_06",
+					rotation = 0,
+					y = 980,
+					to_upper = true,
+					icon = 45,
+					x = 610
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_05",
+					rotation = 0,
+					y = 805,
+					to_upper = true,
+					icon = 45,
+					x = 610
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_04",
+					rotation = 0,
+					y = 730,
+					to_upper = true,
+					icon = 45,
+					x = 610
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_01",
+					rotation = 0,
+					y = 300,
+					to_upper = true,
+					icon = 45,
+					x = 710
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_02",
+					rotation = 0,
+					y = 300,
+					to_upper = true,
+					icon = 45,
+					x = 800
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_03",
+					rotation = 0,
+					y = 300,
+					to_upper = true,
+					icon = 45,
+					x = 880
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_07",
+					rotation = 0,
+					y = 1720,
+					to_upper = true,
+					icon = 45,
+					x = 590
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_08",
+					rotation = 0,
+					y = 1480,
+					to_upper = true,
+					icon = 45,
+					x = 1210
+				},
+				{
+					text_id = "menu_pp_info_mex_storage_09",
+					rotation = 0,
+					y = 1845,
+					to_upper = true,
+					icon = 45,
+					x = 930
+				}
+			}
+		},
+		{
+			texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_04",
+			map_width = 1,
+			x2 = 8172,
+			map_x = 0.6,
+			x1 = -3822,
+			map_size = 1,
+			map_height = 1,
+			map_y = 0,
+			name_id = "menu_pp_mex_loc_d",
+			y2 = -3603,
+			y1 = -15597,
+			rotation = -0,
+			custom_points = {
+				{
+					text_id = "menu_pp_info_mex_controlroom",
+					rotation = 0,
+					y = 700,
+					to_upper = true,
+					icon = 45,
+					x = 580
+				},
+				{
+					text_id = "menu_pp_info_mex_secruity_room_c",
+					rotation = 0,
+					y = 575,
+					to_upper = true,
+					icon = 45,
+					x = 975
+				},
+				{
+					text_id = "menu_pp_info_mex_secruity_room_d",
+					rotation = 0,
+					y = 840,
+					to_upper = true,
+					icon = 45,
+					x = 550
+				},
+				{
+					text_id = "menu_pp_info_mex_secruity_room_e",
+					rotation = 0,
+					y = 575,
+					to_upper = true,
+					icon = 45,
+					x = 1070
+				}
+			}
+		},
+		{
+			texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_05",
+			map_width = 1,
+			x2 = 8172,
+			map_x = 0.6,
+			x1 = -3822,
+			map_size = 1,
+			map_height = 1,
+			map_y = -1.1,
+			name_id = "menu_pp_mex_loc_e",
+			y2 = -3603,
+			y1 = -15597,
+			rotation = -0,
+			custom_points = {
+				{
+					text_id = "menu_pp_info_mex_roof_entrance_a",
+					rotation = 0,
+					y = 530,
+					to_upper = true,
+					icon = 45,
+					x = 950
+				},
+				{
+					text_id = "menu_pp_info_mex_roof_entrance_b",
+					rotation = 0,
+					y = 900,
+					to_upper = true,
+					icon = 45,
+					x = 800
+				}
+			}
+		},
+		{
+			texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_boarder_01",
+			map_size = 1,
+			skip_for_grid = true,
+			map_y = -0.3,
+			x2 = 10000,
+			map_x = 0,
+			x1 = -10000,
+			map_height = 4,
+			map_width = 0.12,
+			name_id = "menu_pp_mex_loc_boarder",
+			y2 = 5000,
+			y1 = -5000,
+			rotation = -0
+		},
+		grid_width_mul = 1,
+		post_event_prefix = "loc",
+		mission_briefing_texture = "guis/dlcs/mex/textures/pd2/pre_planning/mex_01",
+		total_budget = 10,
+		default_plans = {},
+		start_location = {
+			group = "a",
+			zoom = 1.5,
+			x = 1024,
+			y = 1024
+		},
+		active_location_groups = {
+			"a",
+			"b"
+		}
+	}
 end
 
--- Lines 2202-2204
+-- Lines 2378-2380
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

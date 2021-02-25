@@ -10,7 +10,7 @@ end
 
 ContractBrokerHeistItem = ContractBrokerHeistItem or class()
 
--- Lines 11-301
+-- Lines 11-303
 function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self._parent = parent_panel
 	self._job_data = job_data
@@ -99,7 +99,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 			word_wrap = true,
 			layer = 2,
 			text = error_message,
-			font = tweak_data.menu.pd2_large_font,
+			font = tweak_data.menu.pd2_small_font,
 			font_size = tweak_data.menu.pd2_small_font_size
 		})
 		BoxGuiObject:new(self._image_panel:panel({
@@ -121,7 +121,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		halign = "left",
 		valign = "top",
 		text = managers.localization:to_upper_text(job_tweak.name_id),
-		font = tweak_data.menu.pd2_large_font,
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		color = job_data.enabled and tweak_data.screen_colors.text or tweak_data.screen_colors.important_1
 	})
@@ -138,7 +138,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		halign = "left",
 		valign = "top",
 		text = managers.localization:to_upper_text(contact_tweak.name_id),
-		font = tweak_data.menu.pd2_large_font,
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
 		color = tweak_data.screen_colors.text
 	})
@@ -156,7 +156,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		halign = "left",
 		valign = "top",
 		text = dlc_name,
-		font = tweak_data.menu.pd2_large_font,
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
 		color = dlc_color
 	})
@@ -174,7 +174,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 			halign = "left",
 			valign = "top",
 			text = managers.localization:to_upper_text("menu_new"),
-			font = tweak_data.menu.pd2_large_font,
+			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
 			color = Color(255, 105, 254, 59) / 255
 		})
@@ -192,7 +192,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		halign = "right",
 		valign = "top",
 		text = self:get_last_played_text(),
-		font = tweak_data.menu.pd2_large_font,
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.8,
 		color = tweak_data.screen_colors.text
 	})
@@ -233,7 +233,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		halign = "right",
 		valign = "top",
 		text = self:get_heist_day_text(),
-		font = tweak_data.menu.pd2_large_font,
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
 		color = tweak_data.screen_colors.text
 	})
@@ -250,7 +250,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		halign = "right",
 		valign = "top",
 		text = self:get_heist_day_icon(),
-		font = tweak_data.menu.pd2_large_font,
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.8,
 		color = tweak_data.screen_colors.text
 	})
@@ -269,7 +269,7 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 			halign = "right",
 			valign = "top",
 			text = managers.localization:get_default_macro("BTN_GHOST"),
-			font = tweak_data.menu.pd2_large_font,
+			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
 			color = tweak_data.screen_colors.text
 		})
@@ -283,22 +283,22 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self:refresh()
 end
 
--- Lines 303-305
+-- Lines 305-307
 function ContractBrokerHeistItem:destroy()
 	self._parent:remove(self._panel)
 end
 
--- Lines 307-309
+-- Lines 309-311
 function ContractBrokerHeistItem:top()
 	return self._panel:top()
 end
 
--- Lines 311-313
+-- Lines 313-315
 function ContractBrokerHeistItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines 315-345
+-- Lines 317-347
 function ContractBrokerHeistItem:get_last_played_text()
 	local current_date = DateTime:new("now")
 	local last_played_date = managers.crimenet:get_last_played_job(self._job_data.job_id)
@@ -343,7 +343,7 @@ function ContractBrokerHeistItem:get_last_played_text()
 	})
 end
 
--- Lines 347-377
+-- Lines 349-379
 function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	local dlc_name = ""
 	local dlc_color = Color(1, 0, 1)
@@ -358,7 +358,7 @@ function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 				end
 			else
 				dlc_color = tweak_data.screen_colors.dlc_color
-				dlc_name = managers.localization:to_upper_text("menu_ultimate_edition_short")
+				dlc_name = managers.localization:to_upper_text("cn_menu_dlc")
 			end
 		end
 	elseif job_tweak.competitive then
@@ -369,7 +369,7 @@ function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	return dlc_name, dlc_color
 end
 
--- Lines 379-396
+-- Lines 381-398
 function ContractBrokerHeistItem:is_stealthable()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -389,7 +389,7 @@ function ContractBrokerHeistItem:is_stealthable()
 	return false
 end
 
--- Lines 398-406
+-- Lines 400-408
 function ContractBrokerHeistItem:_job_num_days()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -402,7 +402,7 @@ function ContractBrokerHeistItem:_job_num_days()
 	end
 end
 
--- Lines 408-415
+-- Lines 410-417
 function ContractBrokerHeistItem:get_heist_day_text()
 	local days = self:_job_num_days()
 
@@ -417,7 +417,7 @@ function ContractBrokerHeistItem:get_heist_day_text()
 	end
 end
 
--- Lines 417-426
+-- Lines 419-428
 function ContractBrokerHeistItem:get_heist_day_icon()
 	local days = self:_job_num_days()
 
@@ -430,12 +430,12 @@ function ContractBrokerHeistItem:get_heist_day_icon()
 	end
 end
 
--- Lines 430-432
+-- Lines 432-434
 function ContractBrokerHeistItem:refresh()
 	self._favourite:set_color(managers.crimenet:is_job_favourite(self._job_data.job_id) and Color.yellow or Color.white)
 end
 
--- Lines 434-443
+-- Lines 436-445
 function ContractBrokerHeistItem:select()
 	if not self._selected then
 		self._selected = true
@@ -450,7 +450,7 @@ function ContractBrokerHeistItem:select()
 	end
 end
 
--- Lines 445-453
+-- Lines 447-455
 function ContractBrokerHeistItem:deselect()
 	if self._selected then
 		self._selected = false
@@ -463,7 +463,7 @@ function ContractBrokerHeistItem:deselect()
 	end
 end
 
--- Lines 455-482
+-- Lines 457-484
 function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	local used = used
 	local pointer = nil
@@ -497,7 +497,7 @@ function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	return used, pointer
 end
 
--- Lines 484-496
+-- Lines 486-498
 function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	if self._favourite:inside(x, y) then
 		self:toggle_favourite()
@@ -512,7 +512,7 @@ function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 498-524
+-- Lines 500-526
 function ContractBrokerHeistItem:trigger()
 	if self._job_data and not self._job_data.enabled then
 		managers.menu:post_event("menu_error")
@@ -539,7 +539,7 @@ function ContractBrokerHeistItem:trigger()
 	})
 end
 
--- Lines 526-531
+-- Lines 528-533
 function ContractBrokerHeistItem:toggle_favourite()
 	local is_fav = managers.crimenet:is_job_favourite(self._job_data.job_id)
 

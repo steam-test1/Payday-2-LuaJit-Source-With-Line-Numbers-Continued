@@ -266,7 +266,7 @@ end
 function MenuNodeBaseGui:move_right()
 end
 
--- Lines 246-253
+-- Lines 246-255
 function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio, blend_mode)
 	if not managers.menu_component then
 		return
@@ -278,13 +278,15 @@ function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio,
 		blend_mode = blend_mode
 	}))
 
-	table.insert(self._requested_textures, {
-		texture_count = texture_count,
-		texture = texture_path
-	})
+	if texture_count ~= false then
+		table.insert(self._requested_textures, {
+			texture_count = texture_count,
+			texture = texture_path
+		})
+	end
 end
 
--- Lines 255-263
+-- Lines 257-265
 function MenuNodeBaseGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -295,7 +297,7 @@ function MenuNodeBaseGui:unretrieve_textures()
 	self._requested_textures = {}
 end
 
--- Lines 265-303
+-- Lines 267-305
 function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	params = params or {}
 	local panel = params.panel or params[1]
@@ -342,7 +344,7 @@ function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	end
 end
 
--- Lines 305-308
+-- Lines 307-310
 function MenuNodeBaseGui:close()
 	self:unretrieve_textures()
 	MenuNodeBaseGui.super.close(self)

@@ -1,15 +1,19 @@
 FadeToBlackElement = FadeToBlackElement or class(MissionElement)
 
--- Lines 3-9
+-- Lines 3-13
 function FadeToBlackElement:init(unit)
 	FadeToBlackElement.super.init(self, unit)
 
 	self._hed.state = false
+	self._hed.fade_in = "element_fade_in"
+	self._hed.fade_out = "element_fade_out"
 
 	table.insert(self._save_values, "state")
+	table.insert(self._save_values, "fade_in")
+	table.insert(self._save_values, "fade_out")
 end
 
--- Lines 12-29
+-- Lines 16-37
 function FadeToBlackElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -24,8 +28,15 @@ function FadeToBlackElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(state, 0, 0, "EXPAND")
 
+	local overlay_effects = table.map_keys(tweak_data.overlay_effects, function (x, y)
+		return x < y
+	end)
+
+	self:_build_value_combobox(panel, panel_sizer, "fade_in", overlay_effects, "Fade in overlay effect.")
+	self:_build_value_combobox(panel, panel_sizer, "fade_out", overlay_effects, "Fade out overlay effect.")
+
 	local help = {
-		text = "Fade in or out, takes 3 seconds. Hardcore.",
+		text = "Fade in or out, takes 3 seconds. Hardcore.\nCustom fade in/out can be added in TweakData.lua -> self.overlay_effects",
 		panel = panel,
 		sizer = panel_sizer
 	}

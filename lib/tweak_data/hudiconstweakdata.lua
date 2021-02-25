@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-2892
+-- Lines 7-2924
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -1515,6 +1515,15 @@ function HudIconsTweakData:init()
 	}
 	self.equipment_mayan_gold = {
 		texture = "guis/dlcs/uno/textures/pd2/hud_pickups_uno",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_blueprint = {
+		texture = "guis/dlcs/mex/textures/pd2/hud_pickups_blueprint",
 		texture_rect = {
 			0,
 			0,
@@ -13214,6 +13223,177 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			176,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			263,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			350,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			176,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			263,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			350,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_Identity = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrossing_TwoStep = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			89,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BorderCrystals_HeisterCocinero = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_mex",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -13230,7 +13410,7 @@ end
 
 local atlas_data = nil
 
--- Lines 2895-2898
+-- Lines 2927-2930
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -13243,7 +13423,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 2900-2916
+-- Lines 2932-2948
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -13269,7 +13449,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 2918-2923
+-- Lines 2950-2955
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -13283,7 +13463,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 2925-2931
+-- Lines 2957-2963
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -13294,7 +13474,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 2933-2939
+-- Lines 2965-2971
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

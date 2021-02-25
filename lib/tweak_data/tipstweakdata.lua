@@ -1038,7 +1038,7 @@ function TipsTweakData:init()
 		{
 			cat_index = 32,
 			image = "weapon_bow",
-			consoles = true,
+			consoles = false,
 			category = "heister"
 		},
 		{

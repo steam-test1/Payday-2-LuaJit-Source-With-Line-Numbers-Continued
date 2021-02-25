@@ -17,7 +17,7 @@ function CrimeSpreeForcedModifiersMenuComponent:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines 23-151
+-- Lines 23-175
 function CrimeSpreeForcedModifiersMenuComponent:_setup()
 	local modifiers = self:get_modifers()
 	local parent = self._ws:panel()
@@ -109,6 +109,32 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 	self._back_btn:set_callback(callback(self, self, "_on_back"))
 	self._back_btn:shrink_wrap_button(0, 0)
 	self._back_btn:panel():set_right(self._button_panel:w() - padding * 2)
+	self._back_btn:panel():set_visible(managers.menu:is_pc_controller())
+
+	if not managers.menu:is_pc_controller() then
+		self._legend_text = self._button_panel:text({
+			halign = "right",
+			vertical = "bottom",
+			layer = 1,
+			blend_mode = "add",
+			align = "right",
+			text = "",
+			y = 0,
+			x = 0,
+			valign = "bottom",
+			color = tweak_data.screen_colors.text,
+			font = tweak_data.menu.pd2_medium_font,
+			font_size = tweak_data.menu.pd2_medium_font_size
+		})
+
+		self._legend_text:set_right(self._back_btn:panel():right())
+
+		local legend_string = managers.localization:to_upper_text("menu_legend_back")
+
+		self._legend_text:set_text(legend_string)
+		self._legend_text:set_rotation(360)
+	end
+
 	self._panel:set_w(self._modifiers_scroll:panel():w())
 	self._panel:set_h(self._button_panel:bottom() + padding)
 	self._panel:set_center_x(parent:center_x())
@@ -141,13 +167,9 @@ function CrimeSpreeForcedModifiersMenuComponent:_setup()
 			1
 		}
 	})
-
-	if not managers.menu:is_pc_controller() then
-		self:_select_back_btn()
-	end
 end
 
--- Lines 155-164
+-- Lines 179-188
 function CrimeSpreeForcedModifiersMenuComponent:get_modifers()
 	local count = managers.crime_spree:modifiers_to_select("forced", true)
 
@@ -160,7 +182,7 @@ function CrimeSpreeForcedModifiersMenuComponent:get_modifers()
 	end
 end
 
--- Lines 166-179
+-- Lines 190-203
 function CrimeSpreeForcedModifiersMenuComponent:add_modifiers_to_spree(modifiers)
 	if Network:is_server() then
 		for _, modifier in ipairs(modifiers) do
@@ -173,12 +195,12 @@ function CrimeSpreeForcedModifiersMenuComponent:add_modifiers_to_spree(modifiers
 	end
 end
 
--- Lines 183-185
+-- Lines 207-209
 function CrimeSpreeForcedModifiersMenuComponent:_on_back()
 	managers.menu:back(true)
 end
 
--- Lines 189-196
+-- Lines 213-220
 function CrimeSpreeForcedModifiersMenuComponent:update(t, dt)
 	self._back_btn:update(t, dt)
 
@@ -189,14 +211,14 @@ function CrimeSpreeForcedModifiersMenuComponent:update(t, dt)
 	end
 end
 
--- Lines 198-202
+-- Lines 222-226
 function CrimeSpreeForcedModifiersMenuComponent:confirm_pressed()
 	if self._selected_item and self._selected_item:callback() then
 		self._selected_item:callback()()
 	end
 end
 
--- Lines 204-222
+-- Lines 228-246
 function CrimeSpreeForcedModifiersMenuComponent:mouse_moved(o, x, y)
 	if not managers.menu:is_pc_controller() then
 		return
@@ -218,7 +240,7 @@ function CrimeSpreeForcedModifiersMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 224-231
+-- Lines 248-255
 function CrimeSpreeForcedModifiersMenuComponent:mouse_pressed(button, x, y)
 	if self._back_btn:is_selected() and self._back_btn:callback() then
 		self._back_btn:callback()()
@@ -229,22 +251,22 @@ function CrimeSpreeForcedModifiersMenuComponent:mouse_pressed(button, x, y)
 	return self._modifiers_scroll:mouse_pressed(button, x, y)
 end
 
--- Lines 233-235
+-- Lines 257-259
 function CrimeSpreeForcedModifiersMenuComponent:mouse_released(button, x, y)
 	return self._modifiers_scroll:mouse_released(button, x, y)
 end
 
--- Lines 237-239
+-- Lines 261-263
 function CrimeSpreeForcedModifiersMenuComponent:mouse_wheel_up(x, y)
 	return self._modifiers_scroll:scroll(x, y, 1)
 end
 
--- Lines 241-243
+-- Lines 265-267
 function CrimeSpreeForcedModifiersMenuComponent:mouse_wheel_down(x, y)
 	return self._modifiers_scroll:scroll(x, y, -1)
 end
 
--- Lines 245-249
+-- Lines 269-273
 function CrimeSpreeForcedModifiersMenuComponent:_select_back_btn()
 	self._back_btn:set_selected(true)
 

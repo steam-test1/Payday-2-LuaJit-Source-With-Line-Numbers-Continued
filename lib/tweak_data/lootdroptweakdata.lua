@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2145
+-- Lines 5-2191
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -234,7 +234,6 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.normal.track = false
 	self.global_values.normal.sort_number = 0
 	self.global_values.normal.category = "normal"
-	self.global_values.normal.ignore_ulti = true
 	self.global_values.superior = {
 		name_id = "bm_global_value_superior",
 		desc_id = "menu_l_global_value_superior",
@@ -246,8 +245,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = false,
 		track = false,
 		sort_number = 25,
-		category = nil,
-		ignore_ulti = true
+		category = nil
 	}
 	self.global_values.exceptional = {
 		name_id = "bm_global_value_exceptional",
@@ -260,8 +258,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = false,
 		track = false,
 		sort_number = 26,
-		category = nil,
-		ignore_ulti = true
+		category = nil
 	}
 	self.global_values.infamous = {
 		name_id = "bm_global_value_infamous",
@@ -274,9 +271,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = false,
 		sort_number = 30,
-		category = "infamous",
-		track = false,
-		ignore_ulti = true
+		category = "infamous"
 	}
 	self.global_values.infamy = {
 		name_id = "bm_global_value_infamous",
@@ -290,8 +285,7 @@ function LootDropTweakData:init(tweak_data)
 		track = false,
 		sort_number = 35,
 		hide_unavailable = true,
-		category = "infamous",
-		ignore_ulti = true
+		category = "infamous"
 	}
 	self.global_values.preorder = {
 		name_id = "bm_global_value_preorder",
@@ -305,8 +299,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = -10,
 		hide_unavailable = true,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.pd2_clan = {
 		name_id = "bm_global_value_pd2_clan",
@@ -320,8 +313,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = -100,
-		unique_lock_icon = "guis/textures/pd2/lock_community",
-		ignore_ulti = true
+		unique_lock_icon = "guis/textures/pd2/lock_community"
 	}
 	self.global_values.poetry_soundtrack = {
 		name_id = "bm_global_value_poetry_soundtrack",
@@ -350,8 +342,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 50,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.xmas = {
 		name_id = "bm_global_value_xmas",
@@ -365,8 +356,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 60,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.twitch_pack = {
 		name_id = "bm_global_value_twitch_pack",
@@ -381,8 +371,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 70,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.humble_pack2 = {
 		name_id = "bm_global_value_humble_pack2",
@@ -397,8 +386,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 71,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.alienware_alpha = {
 		name_id = "bm_global_value_alienware_alpha",
@@ -413,8 +401,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 72,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.alienware_alpha_promo = {
 		name_id = "bm_global_value_alienware_alpha_promo",
@@ -429,8 +416,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 73,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.humble_pack3 = {
 		name_id = "bm_global_value_humble_pack3",
@@ -445,8 +431,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 74,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.humble_pack4 = {
 		name_id = "bm_global_value_humble_pack4",
@@ -461,8 +446,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 75,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.e3_s15a = {
 		name_id = "bm_global_value_e3_s15a",
@@ -477,8 +461,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 76,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.e3_s15b = {
 		name_id = "bm_global_value_e3_s15b",
@@ -493,8 +476,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 77,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.e3_s15c = {
 		name_id = "bm_global_value_e3_s15c",
@@ -509,8 +491,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 78,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.e3_s15d = {
 		name_id = "bm_global_value_e3_s15d",
@@ -525,8 +506,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 79,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.bobblehead = {
 		name_id = "bm_global_value_bobblehead",
@@ -541,8 +521,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 80,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.pdcon_2015 = {
 		name_id = "bm_global_value_pdcon_2015",
@@ -557,8 +536,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 81,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.pdcon_2016 = {
 		name_id = "bm_global_value_pdcon_2016",
@@ -573,8 +551,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 83,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.jigg = {
 		name_id = "bm_global_value_jigg",
@@ -589,8 +566,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 82,
-		hide_unavailable = true,
-		ignore_ulti = true
+		hide_unavailable = true
 	}
 	self.global_values.xmas_soundtrack = {
 		name_id = "bm_global_value_xmas_soundtrack",
@@ -746,8 +722,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 88,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.hlm2 = {
 		name_id = "bm_global_value_hlm2",
@@ -762,8 +737,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 89,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.hlm2_deluxe = {
 		name_id = "bm_global_value_hlm2_deluxe",
@@ -778,8 +752,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 90,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.speedrunners = {
 		name_id = "bm_global_value_speedrunners",
@@ -794,8 +767,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 91,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.gage_pack_historical = {
 		name_id = "bm_global_value_gage_pack_historical",
@@ -949,8 +921,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 99,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.butch_pack_free = {
 		name_id = "bm_global_value_butch_pack_free",
@@ -1175,8 +1146,7 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 2,
 		unlock_id = "bm_global_value_dbd_clan_unlock",
 		dlc = true,
-		category = "pd2_clan",
-		ignore_ulti = true
+		category = "pd2_clan"
 	}
 	self.global_values.dbd_deluxe = {
 		name_id = "bm_global_value_dbd_deluxe",
@@ -1191,8 +1161,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 90,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.wild = {
 		name_id = "bm_global_value_wild",
@@ -1236,8 +1205,7 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 2,
 		unlock_id = "bm_global_value_solus_clan_unlock",
 		dlc = true,
-		category = "pd2_clan",
-		ignore_ulti = true
+		category = "pd2_clan"
 	}
 	self.global_values.legendary = {
 		name_id = "bm_global_value_legendary",
@@ -1265,8 +1233,7 @@ function LootDropTweakData:init(tweak_data)
 		hide_unavailable = true,
 		unlock_id = "bm_global_value_sparkle_unlock",
 		dlc = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.rota = {
 		name_id = "bm_global_value_rota",
@@ -1336,8 +1303,7 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 301,
 		dlc = true,
 		category = "collaboration",
-		unlock_id = "bm_global_value_rvd_unlock",
-		ignore_ulti = true
+		unlock_id = "bm_global_value_rvd_unlock"
 	}
 	self.global_values.swm = {
 		name_id = "bm_global_value_swm",
@@ -1352,8 +1318,7 @@ function LootDropTweakData:init(tweak_data)
 		hide_unavailable = true,
 		dlc = true,
 		unlock_id = "bm_global_value_swm_unlock",
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.sha = {
 		name_id = "bm_global_value_sha",
@@ -1367,8 +1332,7 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 302,
 		unlock_id = "bm_global_value_sha_unlock",
 		category = "collaboration",
-		dlc = true,
-		ignore_ulti = true
+		dlc = true
 	}
 	self.global_values.spa = {
 		name_id = "bm_global_value_spa",
@@ -1439,8 +1403,7 @@ function LootDropTweakData:init(tweak_data)
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
 		unlock_id = "bm_global_value_ant_unlock",
 		dlc = true,
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.ant_free = {
 		name_id = "bm_global_value_ant",
@@ -1455,8 +1418,7 @@ function LootDropTweakData:init(tweak_data)
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
 		unlock_id = "bm_global_value_ant_free_unlock",
 		dlc = true,
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.eng = {
 		name_id = "bm_global_value_eng",
@@ -1471,8 +1433,7 @@ function LootDropTweakData:init(tweak_data)
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
 		unlock_id = "bm_global_value_eng_unlock",
 		dlc = true,
-		category = "collaboration",
-		ignore_ulti = true
+		category = "collaboration"
 	}
 	self.global_values.pn2 = {
 		name_id = "bm_global_value_pn2",
@@ -1487,8 +1448,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 306,
 		hide_unavailable = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.max = {
 		name_id = "bm_global_value_max",
@@ -1544,8 +1504,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = -100,
-		unique_lock_icon = "guis/textures/pd2/lock_community",
-		ignore_ulti = true
+		unique_lock_icon = "guis/textures/pd2/lock_community"
 	}
 	self.global_values.fdm = {
 		name_id = "bm_global_value_fdm",
@@ -1558,7 +1517,6 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 86,
 		hide_unavailable = true,
-		ignore_ulti = true,
 		dlc = true,
 		unlock_id = "bm_global_value_fdm_unlock",
 		category = "global_event"
@@ -1575,8 +1533,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.cmo = {
 		name_id = "bm_global_value_cmo",
@@ -1618,8 +1575,7 @@ function LootDropTweakData:init(tweak_data)
 		hide_unavailable = true,
 		unlock_id = "bm_global_value_pbm_unlock",
 		dlc = true,
-		category = "global_event",
-		ignore_ulti = true
+		category = "global_event"
 	}
 	self.global_values.dnm = {
 		name_id = "bm_global_value_dnm",
@@ -1648,8 +1604,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.fgl = {
 		name_id = "bm_global_value_fgl",
@@ -1664,8 +1619,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.osa = {
 		name_id = "bm_global_value_osa",
@@ -1680,8 +1634,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.dmg = {
 		name_id = "bm_global_value_dmg",
@@ -1696,8 +1649,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.ghm = {
 		name_id = "bm_global_value_ghm",
@@ -1712,8 +1664,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 	self.global_values.ztm = {
 		name_id = "bm_global_value_ztm",
@@ -1728,8 +1679,7 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 300,
-		category = "dlc",
-		ignore_ulti = true
+		category = "dlc"
 	}
 
 	if SystemInfo:platform() == Idstring("PS3") then
@@ -1747,12 +1697,6 @@ function LootDropTweakData:init(tweak_data)
 			sort_number = 200,
 			category = nil
 		}
-	end
-
-	for _, gv_data in pairs(self.global_values) do
-		if not gv_data.ignore_ulti then
-			gv_data.unlock_id = "bm_global_value_ue_unlock"
-		end
 	end
 
 	self.global_value_list_index = {
@@ -1829,7 +1773,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2147-2152
+-- Lines 2193-2198
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

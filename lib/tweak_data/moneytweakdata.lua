@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-870
+-- Lines 29-875
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -520,6 +520,10 @@ function MoneyTweakData:init(tweak_data)
 	self.preplaning_thebomb_cost_escape_mid = 6000
 	self.preplaning_thebomb_cost_escape_close = 10000
 	self.preplaning_thebomb_cost_demolition = 500
+	self.preplaning_asset_cost_mex_keys = 2000
+	self.preplaning_asset_cost_roof_access = 2000
+	self.preplaning_asset_cost_upper_floor_access = 1000
+	self.preplaning_asset_cost_crowbar_single = 1000
 	self.small_loot = {}
 
 	if difficulty_index <= 2 then

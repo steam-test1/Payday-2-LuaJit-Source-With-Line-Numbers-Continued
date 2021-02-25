@@ -168,7 +168,7 @@ function CrimeSpreeResultTabItem:_create_level(total_w)
 	end
 end
 
--- Lines 174-375
+-- Lines 174-389
 function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	self._timeline_panel = self._cs_panel:panel({
 		h = self._cs_panel:h() * 0.5,
@@ -190,7 +190,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 		for i = 0, math.min(count, math.floor(max_step / step) - 1) do
 			local level = managers.crime_spree:next_modifier_level(category, start_level, i)
 
-			if level then
+			if level and not table.contains(modifier_levels, level) then
 				table.insert(modifier_levels, level)
 			end
 		end
@@ -210,6 +210,8 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 			end_val = level
 		end
 	end
+
+	table.sort(modifier_levels)
 
 	local real_w = timeline_max - timeline_zero
 	local bg_rect = self._timeline_panel:rect({
@@ -275,8 +277,8 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	local level_gap = 5
 	local used_levels = {}
 
-	-- Lines 288-356
-	local function add_modifier_marker(level, text)
+	-- Lines 290-368
+	local function add_modifier_marker(level, text, previous_marker)
 		local p = 1 / ((end_val - start_level) / (level - start_level))
 
 		if level == start_level then
@@ -337,6 +339,16 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 			used_levels[i] = true
 		end
 
+		if previous_marker and marker:left() < previous_marker[1]:right() + 4 then
+			local move_len = tweak_data.menu.pd2_medium_font_size - 4
+
+			marker_line:grow(0, move_len)
+			marker:move(0, move_len)
+			ticket:move(0, move_len)
+			marker:set_rotation(360)
+			ticket:set_rotation(360)
+		end
+
 		marker_i = marker_i + 1
 
 		return {
@@ -346,9 +358,11 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	end
 
 	local markers = {}
+	local previous_marker = nil
 
 	for _, level in ipairs(modifier_levels) do
-		local marker = add_modifier_marker(level, managers.experience:cash_string(level, ""))
+		local marker = add_modifier_marker(level, managers.experience:cash_string(level, ""), previous_marker)
+		previous_marker = marker
 
 		table.insert(markers, {
 			level,
@@ -366,7 +380,7 @@ function CrimeSpreeResultTabItem:_create_timeline(total_w)
 	}
 end
 
--- Lines 377-483
+-- Lines 391-497
 function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	self._reward_panel = self._cs_panel:panel({
 		x = self._cs_panel:w() * (1 - total_w),
@@ -376,7 +390,7 @@ function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	})
 	local w = self._reward_panel:w() / #tweak_data.crime_spree.rewards
 
-	-- Lines 389-416
+	-- Lines 403-430
 	local function create_card(idx, panel, icon, rotation)
 		local scale = 0.65
 		local texture, rect, coords = tweak_data.hud_icons:get_icon_data(idx == 1 and (icon or "downcard_overkill_deck") or "downcard_overkill_deck")
@@ -468,7 +482,7 @@ function CrimeSpreeResultTabItem:_create_rewards(total_w)
 	end
 end
 
--- Lines 487-492
+-- Lines 501-506
 function CrimeSpreeResultTabItem:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -478,11 +492,11 @@ function CrimeSpreeResultTabItem:make_fine_text(text)
 	return x, y, w, h
 end
 
--- Lines 494-496
+-- Lines 508-510
 function CrimeSpreeResultTabItem:set_stats(stats_data)
 end
 
--- Lines 498-500
+-- Lines 512-514
 function CrimeSpreeResultTabItem:feed_statistics(stats_data)
 end
 
@@ -501,7 +515,7 @@ CrimeSpreeResultTabItem.stages = {
 	}
 }
 
--- Lines 510-527
+-- Lines 524-541
 function CrimeSpreeResultTabItem:_advance_stage(delay)
 	local idx = (self._update and self._update.idx or 0) + 1
 
@@ -520,7 +534,7 @@ function CrimeSpreeResultTabItem:_advance_stage(delay)
 	}
 end
 
--- Lines 529-547
+-- Lines 543-561
 function CrimeSpreeResultTabItem:update(t, dt)
 	if not self._update then
 		self:_advance_stage()
@@ -537,14 +551,14 @@ function CrimeSpreeResultTabItem:update(t, dt)
 	end
 end
 
--- Lines 549-553
+-- Lines 563-567
 function CrimeSpreeResultTabItem.animate_modifier_unlock(o)
 	over(0.6, function (p)
 		o:set_alpha(math.lerp(0.4, 1, p * 2))
 	end)
 end
 
--- Lines 555-562
+-- Lines 569-576
 function CrimeSpreeResultTabItem:fade_in(element, duration, delay)
 	if delay then
 		wait(delay)
@@ -555,7 +569,7 @@ function CrimeSpreeResultTabItem:fade_in(element, duration, delay)
 	end)
 end
 
--- Lines 564-571
+-- Lines 578-585
 function CrimeSpreeResultTabItem:fade_out(element, duration, delay)
 	if delay then
 		wait(delay)
@@ -566,7 +580,7 @@ function CrimeSpreeResultTabItem:fade_out(element, duration, delay)
 	end)
 end
 
--- Lines 573-584
+-- Lines 587-598
 function CrimeSpreeResultTabItem:count_text(element, cash_string, start_val, end_val, duration, delay)
 	if delay then
 		wait(delay)
@@ -585,7 +599,7 @@ function CrimeSpreeResultTabItem:count_text(element, cash_string, start_val, end
 	managers.menu_component:post_event("count_1_finished")
 end
 
--- Lines 588-624
+-- Lines 602-638
 function CrimeSpreeResultTabItem:_update_gain_calculate(t, dt)
 	local t = 0
 	local fade_t = 0.5
@@ -630,7 +644,7 @@ function CrimeSpreeResultTabItem:_update_gain_calculate(t, dt)
 	self:_advance_stage(t)
 end
 
--- Lines 626-683
+-- Lines 640-697
 function CrimeSpreeResultTabItem:_update_level_gain(t, dt)
 	if not self:success() then
 		self:_advance_stage()
@@ -689,7 +703,7 @@ function CrimeSpreeResultTabItem:_update_level_gain(t, dt)
 	end
 end
 
--- Lines 685-690
+-- Lines 699-704
 function CrimeSpreeResultTabItem.animate_card_panel(o, reward_num)
 	wait(reward_num * 0.5)
 	over(0.5, function (p)
@@ -697,7 +711,7 @@ function CrimeSpreeResultTabItem.animate_card_panel(o, reward_num)
 	end)
 end
 
--- Lines 692-720
+-- Lines 706-734
 function CrimeSpreeResultTabItem.flip_card(card, reward_num)
 	wait(reward_num * 0.5)
 
@@ -725,7 +739,7 @@ function CrimeSpreeResultTabItem.flip_card(card, reward_num)
 	end)
 end
 
--- Lines 722-731
+-- Lines 736-745
 function CrimeSpreeResultTabItem.animate_card(o, reward_num, card_idx)
 	wait(reward_num * 0.5 + 0.5)
 	o:show()
@@ -734,7 +748,7 @@ function CrimeSpreeResultTabItem.animate_card(o, reward_num, card_idx)
 	end)
 end
 
--- Lines 733-754
+-- Lines 747-768
 function CrimeSpreeResultTabItem:_update_reward_gain(t, dt)
 	if not self:success() then
 		self:_advance_stage()

@@ -101,15 +101,21 @@ function LobbyCharacterData:set_alpha(new_alpha)
 	self._panel:set_alpha(new_alpha)
 end
 
--- Lines 125-129
+-- Lines 125-136
 function LobbyCharacterData:update_peer_id(new_peer_id)
-	local peer = managers.network:session():peer(new_peer_id)
-	self._peer = peer
+	if not self:_can_update() then
+		return
+	end
 
-	self:set_alpha(peer and 1 or 0)
+	if new_peer_id then
+		local peer = managers.network:session():peer(new_peer_id)
+		self._peer = peer
+
+		self:set_alpha(peer and 1 or 0)
+	end
 end
 
--- Lines 131-192
+-- Lines 138-199
 function LobbyCharacterData:update_character()
 	if not self:_can_update() then
 		return
@@ -152,7 +158,7 @@ function LobbyCharacterData:update_character()
 	self:sort_text_and_reposition()
 end
 
--- Lines 194-204
+-- Lines 201-211
 function LobbyCharacterData:update_character_menu_state(new_state)
 	if not self:_can_update() then
 		return
@@ -164,7 +170,7 @@ function LobbyCharacterData:update_character_menu_state(new_state)
 	self:sort_text_and_reposition()
 end
 
--- Lines 206-215
+-- Lines 213-222
 function LobbyCharacterData:update_position()
 	if not self:_can_update() then
 		return
@@ -175,7 +181,7 @@ function LobbyCharacterData:update_position()
 	self._panel:set_center(pos.x, pos.y)
 end
 
--- Lines 217-260
+-- Lines 224-267
 function LobbyCharacterData:sort_text_and_reposition()
 	local order = {
 		self._name_text,
@@ -212,7 +218,7 @@ function LobbyCharacterData:sort_text_and_reposition()
 	self:update_position()
 end
 
--- Lines 262-267
+-- Lines 269-274
 function LobbyCharacterData:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 

@@ -144,7 +144,7 @@ function StoryMissionsManager:claim_rewards(mission)
 	managers.savefile:save_progress()
 end
 
--- Lines 124-150
+-- Lines 124-148
 function StoryMissionsManager:_reward(reward)
 	if reward.type_items == "xp" then
 		local value_id = tweak_data.blackmarket[reward.type_items][reward.item_entry].value_id
@@ -169,7 +169,7 @@ function StoryMissionsManager:_reward(reward)
 	end
 end
 
--- Lines 154-177
+-- Lines 152-175
 function StoryMissionsManager:_check_complete(mission)
 	mission = self:_get_or_current(mission)
 
@@ -202,7 +202,7 @@ function StoryMissionsManager:_check_complete(mission)
 	end
 end
 
--- Lines 179-194
+-- Lines 177-192
 function StoryMissionsManager:_find_next_mission(dont_set)
 	local last = nil
 
@@ -225,7 +225,7 @@ function StoryMissionsManager:_find_next_mission(dont_set)
 	return last
 end
 
--- Lines 196-203
+-- Lines 194-201
 function StoryMissionsManager:_change_current_mission(mission)
 	self._global.current_mission = mission
 
@@ -235,7 +235,7 @@ function StoryMissionsManager:_change_current_mission(mission)
 	end
 end
 
--- Lines 207-212
+-- Lines 205-210
 function StoryMissionsManager:_get_offset_mission(mission, offset)
 	local m = self:_get_or_current(mission)
 
@@ -246,7 +246,7 @@ function StoryMissionsManager:_get_offset_mission(mission, offset)
 	return self._global.mission_order[m.order + offset]
 end
 
--- Lines 216-224
+-- Lines 214-222
 function StoryMissionsManager:_get_or_current(mission)
 	if mission then
 		if type(mission) == "string" then
@@ -259,7 +259,7 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines 228-260
+-- Lines 226-258
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
@@ -294,7 +294,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines 262-273
+-- Lines 260-271
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -309,7 +309,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 275-296
+-- Lines 273-294
 function StoryMissionsManager:_migrate_save_data(version_from, version_to, state)
 	if version_to - version_from > 1 then
 		version_from = self:_migrate_save_data(version_from, version_to - 1, state)
@@ -335,7 +335,7 @@ function StoryMissionsManager:_migrate_save_data(version_from, version_to, state
 	end
 end
 
--- Lines 298-346
+-- Lines 296-344
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -390,12 +390,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 348-350
+-- Lines 346-348
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 352-395
+-- Lines 350-393
 function StoryMissionsManager:start_mission(mission, objective_id)
 	if not self:_get_or_current(mission) then
 		local m = {
@@ -459,9 +459,9 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 399-415
+-- Lines 397-413
 function StoryMissionsManager:reset_all()
-	-- Lines 400-408
+	-- Lines 398-406
 	local function reset(m)
 		if not m then
 			return

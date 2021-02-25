@@ -2091,7 +2091,7 @@ function NewRaycastWeaponBase:get_all_override_weapon_gadgets()
 		end
 	end
 
-	return self._cached_gadgets
+	return self._cached_gadgets or {}
 end
 
 -- Lines 2018-2023

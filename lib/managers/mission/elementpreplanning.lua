@@ -51,3 +51,23 @@ end
 function ElementPrePlanning:load(data)
 	self:set_enabled(data.enabled)
 end
+
+ElementPrePlanningExecuteGroup = ElementPrePlanningExecuteGroup or class(CoreMissionScriptElement.MissionScriptElement)
+
+-- Lines 54-56
+function ElementPrePlanningExecuteGroup:init(...)
+	ElementPrePlanningExecuteGroup.super.init(self, ...)
+end
+
+-- Lines 58-68
+function ElementPrePlanningExecuteGroup:on_executed(instigator, ...)
+	if not self._values.enabled then
+		return
+	end
+
+	if managers.preplanning then
+		managers.preplanning:activate_location_groups(self._values.location_groups)
+	end
+
+	ElementPrePlanningExecuteGroup.super.on_executed(self, instigator, ...)
+end

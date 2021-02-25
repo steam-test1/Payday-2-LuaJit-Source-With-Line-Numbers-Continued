@@ -125,7 +125,7 @@ function ExperienceManager:debug_add_points(points, present_xp)
 	self:add_points(points, present_xp, true)
 end
 
--- Lines 126-160
+-- Lines 126-161
 function ExperienceManager:give_experience(xp, force_or_debug)
 	self._experience_progress_data = {
 		gained = xp,
@@ -166,7 +166,7 @@ function ExperienceManager:give_experience(xp, force_or_debug)
 	return return_data
 end
 
--- Lines 162-167
+-- Lines 163-168
 function ExperienceManager:mission_xp()
 	local total_xp = self._global.mission_xp_total and Application:digest_value(self._global.mission_xp_total, false) or 0
 	local current_xp = self._global.mission_xp_current and Application:digest_value(self._global.mission_xp_current, false) or 0
@@ -174,7 +174,7 @@ function ExperienceManager:mission_xp()
 	return total_xp + current_xp
 end
 
--- Lines 169-189
+-- Lines 170-190
 function ExperienceManager:mission_xp_process(stage_success, stage_final)
 	if not stage_success then
 		self._global.mission_xp_current = nil
@@ -186,7 +186,7 @@ function ExperienceManager:mission_xp_process(stage_success, stage_final)
 	self._global.mission_xp_current = nil
 end
 
--- Lines 191-196
+-- Lines 192-197
 function ExperienceManager:mission_xp_award(amount)
 	if amount > 0 then
 		local current_xp = self._global.mission_xp_current and Application:digest_value(self._global.mission_xp_current, false) or 0
@@ -194,13 +194,13 @@ function ExperienceManager:mission_xp_award(amount)
 	end
 end
 
--- Lines 198-201
+-- Lines 199-202
 function ExperienceManager:mission_xp_clear()
 	self._global.mission_xp_total = nil
 	self._global.mission_xp_current = nil
 end
 
--- Lines 203-210
+-- Lines 204-211
 function ExperienceManager:on_loot_drop_xp(value_id, force)
 	local amount = tweak_data:get_value("experience_manager", "loot_drop_value", value_id) or 0
 
@@ -211,7 +211,7 @@ function ExperienceManager:on_loot_drop_xp(value_id, force)
 	end
 end
 
--- Lines 212-262
+-- Lines 213-263
 function ExperienceManager:add_points(points, present_xp, debug)
 	if not debug and managers.platform:presence() ~= "Playing" and managers.platform:presence() ~= "Mission_end" then
 		return
@@ -263,7 +263,7 @@ function ExperienceManager:add_points(points, present_xp, debug)
 	return self:add_points(points - points_left, present_xp, debug)
 end
 
--- Lines 264-284
+-- Lines 265-285
 function ExperienceManager:_level_up()
 	self:_set_current_level(self:current_level() + 1)
 	self:_set_next_level_data(self:current_level() + 1)
@@ -285,7 +285,7 @@ function ExperienceManager:_level_up()
 	managers.mission:call_global_event(Message.OnLevelUp)
 end
 
--- Lines 286-299
+-- Lines 287-300
 function ExperienceManager:_check_achievements()
 	local level = self:current_level()
 
@@ -302,11 +302,11 @@ function ExperienceManager:_check_achievements()
 	end
 end
 
--- Lines 301-303
+-- Lines 302-304
 function ExperienceManager:present()
 end
 
--- Lines 305-316
+-- Lines 306-317
 function ExperienceManager:_present_xp(amount)
 	local event = "money_collect_small"
 
@@ -317,17 +317,17 @@ function ExperienceManager:_present_xp(amount)
 	end
 end
 
--- Lines 318-320
+-- Lines 319-321
 function ExperienceManager:current_level()
 	return self._global.level and Application:digest_value(self._global.level, false) or 0
 end
 
--- Lines 322-324
+-- Lines 323-325
 function ExperienceManager:current_rank()
 	return self._global.rank and Application:digest_value(self._global.rank, false) or 0
 end
 
--- Lines 326-330
+-- Lines 327-331
 function ExperienceManager:_set_current_level(value)
 	value = math.max(value, 0)
 	self._global.level = Application:digest_value(value, true)
@@ -335,7 +335,7 @@ function ExperienceManager:_set_current_level(value)
 	self:update_progress()
 end
 
--- Lines 332-339
+-- Lines 333-340
 function ExperienceManager:set_current_rank(value)
 	if value < #tweak_data.infamy.ranks + 1 then
 		managers.infamy:aquire_point()
@@ -347,7 +347,7 @@ function ExperienceManager:set_current_rank(value)
 	end
 end
 
--- Lines 341-370
+-- Lines 342-371
 function ExperienceManager:rank_string(rank)
 	local numbers = {
 		1,
@@ -392,7 +392,7 @@ function ExperienceManager:rank_string(rank)
 	return roman
 end
 
--- Lines 372-376
+-- Lines 373-377
 function ExperienceManager:level_to_stars()
 	local plvl = managers.experience:current_level()
 	local player_stars = math.clamp(math.ceil((plvl + 1) / 10), 1, 10)
@@ -400,27 +400,27 @@ function ExperienceManager:level_to_stars()
 	return player_stars
 end
 
--- Lines 378-380
+-- Lines 379-381
 function ExperienceManager:xp_gained()
 	return self._global.xp_gained and Application:digest_value(self._global.xp_gained, false) or 0
 end
 
--- Lines 382-384
+-- Lines 383-385
 function ExperienceManager:_set_xp_gained(value)
 	self._global.xp_gained = Application:digest_value(value, true)
 end
 
--- Lines 386-388
+-- Lines 387-389
 function ExperienceManager:total()
 	return Application:digest_value(self._global.total, false)
 end
 
--- Lines 390-392
+-- Lines 391-393
 function ExperienceManager:_set_total(value)
 	self._global.total = Application:digest_value(value, true)
 end
 
--- Lines 395-409
+-- Lines 396-410
 function ExperienceManager:cash_string(cash, cash_sign)
 	local sign = ""
 
@@ -441,7 +441,7 @@ function ExperienceManager:cash_string(cash, cash_sign)
 	return sign .. final_cash_sign .. string.reverse(s)
 end
 
--- Lines 411-419
+-- Lines 412-420
 function ExperienceManager:experience_string(xp)
 	local total = tostring(math.round(math.abs(xp)))
 	local reverse = string.reverse(total)
@@ -454,12 +454,12 @@ function ExperienceManager:experience_string(xp)
 	return string.reverse(s)
 end
 
--- Lines 421-423
+-- Lines 422-424
 function ExperienceManager:total_cash_string()
 	return self:cash_string(self:total()) .. (self:total() > 0 and self._cash_tousand_separator .. "000" or "")
 end
 
--- Lines 426-433
+-- Lines 427-434
 function ExperienceManager:actions()
 	local t = {}
 
@@ -472,42 +472,42 @@ function ExperienceManager:actions()
 	return t
 end
 
--- Lines 435-439
+-- Lines 436-440
 function ExperienceManager:get_job_xp_by_stars(stars)
 	local amount = tweak_data:get_value("experience_manager", "job_completion", stars)
 
 	return amount or 0
 end
 
--- Lines 441-445
+-- Lines 442-446
 function ExperienceManager:get_stage_xp_by_stars(stars)
 	local amount = tweak_data:get_value("experience_manager", "stage_completion", stars)
 
 	return amount or 0
 end
 
--- Lines 447-451
+-- Lines 448-452
 function ExperienceManager:get_contract_difficulty_multiplier(stars)
 	local multiplier = tweak_data:get_value("experience_manager", "difficulty_multiplier", stars)
 
 	return multiplier or 0
 end
 
--- Lines 453-456
+-- Lines 454-457
 function ExperienceManager:get_current_stage_xp_by_stars(stars, diff_stars)
 	local amount = self:get_stage_xp_by_stars(stars) + self:get_stage_xp_by_stars(stars) * self:get_contract_difficulty_multiplier(diff_stars)
 
 	return amount or 0
 end
 
--- Lines 458-461
+-- Lines 459-462
 function ExperienceManager:get_current_job_xp_by_stars(stars, diff_stars)
 	local amount = self:get_job_xp_by_stars(stars) + self:get_job_xp_by_stars(stars) * self:get_contract_difficulty_multiplier(diff_stars)
 
 	return amount or 0
 end
 
--- Lines 463-475
+-- Lines 464-476
 function ExperienceManager:get_current_job_day_multiplier()
 	if not managers.job:has_active_job() then
 		return 1
@@ -519,7 +519,7 @@ function ExperienceManager:get_current_job_day_multiplier()
 	return is_current_job_professional and tweak_data:get_value("experience_manager", "pro_day_multiplier", current_job_day) or tweak_data:get_value("experience_manager", "day_multiplier", current_job_day)
 end
 
--- Lines 477-496
+-- Lines 478-497
 function ExperienceManager:get_levels_gained_from_xp(xp)
 	local next_level_data = self:next_level_data()
 	local xp_needed_to_level = math.max(1, next_level_data.points - next_level_data.current_points)
@@ -538,7 +538,7 @@ function ExperienceManager:get_levels_gained_from_xp(xp)
 	return level_gained
 end
 
--- Lines 499-511
+-- Lines 500-512
 function ExperienceManager:get_on_completion_xp()
 	local has_active_job = managers.job:has_active_job()
 	local job_and_difficulty_stars = has_active_job and managers.job:current_job_and_difficulty_stars() or 1
@@ -554,7 +554,7 @@ function ExperienceManager:get_on_completion_xp()
 	return amount
 end
 
--- Lines 513-640
+-- Lines 514-641
 function ExperienceManager:get_contract_xp_by_stars(job_id, job_stars, risk_stars, professional, job_days, extra_params)
 	local debug_player_level = extra_params and extra_params.debug_player_level
 	local ignore_heat = extra_params and extra_params.ignore_heat
@@ -593,7 +593,7 @@ function ExperienceManager:get_contract_xp_by_stars(job_id, job_stars, risk_star
 	local total_extra_risk_xp = 0
 	local total_xp = 0
 
-	-- Lines 560-562
+	-- Lines 561-563
 	local function make_fine_number(v)
 		return math.round(v)
 	end
@@ -655,7 +655,7 @@ function ExperienceManager:get_contract_xp_by_stars(job_id, job_stars, risk_star
 	return total_xp, dissected_xp
 end
 
--- Lines 642-900
+-- Lines 643-901
 function ExperienceManager:get_xp_by_params(params)
 	local job_id = params.job_id
 	local job_stars = params.job_stars or 0
@@ -806,7 +806,7 @@ function ExperienceManager:get_xp_by_params(params)
 	return math.round(total_xp), dissection_table
 end
 
--- Lines 902-926
+-- Lines 903-927
 function ExperienceManager:get_xp_dissected(success, num_winners, personal_win)
 	local has_active_job = managers.job:has_active_job()
 	local job_and_difficulty_stars = has_active_job and managers.job:current_job_and_difficulty_stars() or 1
@@ -833,17 +833,17 @@ function ExperienceManager:get_xp_dissected(success, num_winners, personal_win)
 	})
 end
 
--- Lines 930-932
+-- Lines 931-933
 function ExperienceManager:level_cap()
 	return Application:digest_value(self.LEVEL_CAP, false)
 end
 
--- Lines 934-936
+-- Lines 935-937
 function ExperienceManager:reached_level_cap()
 	return self:level_cap() <= self:current_level()
 end
 
--- Lines 940-949
+-- Lines 941-950
 function ExperienceManager:save(data)
 	local state = {
 		total = self._global.total,
@@ -855,7 +855,7 @@ function ExperienceManager:save(data)
 	data.ExperienceManager = state
 end
 
--- Lines 951-981
+-- Lines 952-982
 function ExperienceManager:load(data)
 	local state = data.ExperienceManager
 
@@ -881,7 +881,7 @@ function ExperienceManager:load(data)
 	self:_check_achievements()
 end
 
--- Lines 983-989
+-- Lines 984-990
 function ExperienceManager:reset()
 	managers.upgrades:reset()
 	managers.player:reset()
@@ -892,7 +892,7 @@ function ExperienceManager:reset()
 	self:update_progress()
 end
 
--- Lines 991-997
+-- Lines 992-998
 function ExperienceManager:update_progress()
 	if self:current_rank() > 0 then
 		managers.platform:set_progress(1)
@@ -901,7 +901,7 @@ function ExperienceManager:update_progress()
 	end
 end
 
--- Lines 1001-1039
+-- Lines 1002-1040
 function ExperienceManager:chk_ask_use_backup(savegame_data, backup_savegame_data)
 	local savegame_exp_total, backup_savegame_exp_total, savegame_rank, backup_savegame_rank = nil
 	local state = savegame_data.ExperienceManager

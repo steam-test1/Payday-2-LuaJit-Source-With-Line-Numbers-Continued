@@ -35,7 +35,7 @@ end
 
 -- Lines 38-47
 function CrimeSpreeContractBoxGui:_check_create_peer_panel(peer_id)
-	if not self._peer_panels[peer_id] then
+	if not self._peer_panels[peer_id] and managers.network:session() then
 		local peer = managers.network:session():peer(peer_id)
 
 		if peer then

@@ -411,7 +411,7 @@ function AchievmentManager:get_recent_milestones(dont_update_shown)
 	return rtn
 end
 
--- Lines 373-403
+-- Lines 373-407
 function AchievmentManager:_update_current_milestone()
 	local current_count = self:total_unlocked()
 	local check_drops = false
@@ -446,12 +446,12 @@ function AchievmentManager:_update_current_milestone()
 	end
 end
 
--- Lines 433-435
+-- Lines 437-439
 function AchievmentManager:award_data(t, name)
 	return self:_award_achievement(t, name)
 end
 
--- Lines 439-496
+-- Lines 443-500
 function AchievmentManager:award(id)
 	if not self:exists(id) then
 		Application:error("[AchievmentManager:award] Awarding non-existing achievement", "id", id)
@@ -489,7 +489,7 @@ function AchievmentManager:award(id)
 	managers.mission:call_global_event(Message.OnAchievement, id)
 end
 
--- Lines 499-506
+-- Lines 503-510
 function AchievmentManager:award_enemy_kill_achievement(id)
 	for achievement_id, achievement_data in pairs(tweak_data.achievement.enemy_kill_achievements) do
 		if achievement_id == id then
@@ -500,7 +500,7 @@ function AchievmentManager:award_enemy_kill_achievement(id)
 	end
 end
 
--- Lines 510-544
+-- Lines 514-548
 function AchievmentManager:update()
 	local cur = nil
 	self._progress_iter, cur = next(self._with_progress, self._with_progress[self._progress_iter] and self._progress_iter)
@@ -542,7 +542,7 @@ function AchievmentManager:update()
 	end
 end
 
--- Lines 546-567
+-- Lines 550-571
 function AchievmentManager:force_track(id, state)
 	local data = self:get_info(id)
 
@@ -572,12 +572,12 @@ function AchievmentManager:force_track(id, state)
 	return data.forced
 end
 
--- Lines 569-571
+-- Lines 573-575
 function AchievmentManager:get_force_tracked()
 	return self._forced
 end
 
--- Lines 573-603
+-- Lines 577-607
 function AchievmentManager:get_tracked_fill(max)
 	max = max or self.MAX_TRACKED
 
@@ -611,7 +611,7 @@ function AchievmentManager:get_tracked_fill(max)
 	return list
 end
 
--- Lines 605-621
+-- Lines 609-625
 function AchievmentManager:track(id, state)
 	local data = self:get_info(id)
 
@@ -632,24 +632,24 @@ function AchievmentManager:track(id, state)
 	return data.tracked
 end
 
--- Lines 623-625
+-- Lines 627-629
 function AchievmentManager:get_friends_with_achievement(id, callback)
 	return self.handler:friends_with_achievement(id, callback)
 end
 
--- Lines 627-629
+-- Lines 631-633
 function AchievmentManager:get_global_achieved_percent(id)
 	return self.handler:achievement_achieved_percent(id)
 end
 
--- Lines 632-636
+-- Lines 636-640
 function AchievmentManager:set_recent_time(time)
 	time = time or os.time()
 	self._recent_data = self._recent_data or {}
 	self._recent_data.time = time >= 0 and time or os.time() + time
 end
 
--- Lines 638-656
+-- Lines 642-660
 function AchievmentManager:get_recent_achievements(params)
 	params = params or {}
 	local recent = params.from or self._recent_data.time
@@ -670,7 +670,7 @@ function AchievmentManager:get_recent_achievements(params)
 	return rtn
 end
 
--- Lines 659-681
+-- Lines 663-685
 function AchievmentManager:_give_reward(id, skip_exp)
 	print("[AchievmentManager:_give_reward] ", id)
 
@@ -689,7 +689,7 @@ function AchievmentManager:_give_reward(id, skip_exp)
 	self:_update_current_milestone()
 end
 
--- Lines 683-740
+-- Lines 687-744
 function AchievmentManager:award_progress(stat, value)
 	if Application:editor() then
 		return
@@ -738,7 +738,7 @@ function AchievmentManager:award_progress(stat, value)
 	end
 end
 
--- Lines 744-749
+-- Lines 748-753
 function AchievmentManager:get_stat(stat)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return managers.network.account:get_stat(stat)
@@ -747,12 +747,12 @@ function AchievmentManager:get_stat(stat)
 	return false
 end
 
--- Lines 753-755
+-- Lines 757-759
 function AchievmentManager:award_none(id)
 	Application:debug("[AchievmentManager:award_none] Awarded achievment", id)
 end
 
--- Lines 759-773
+-- Lines 763-777
 function AchievmentManager:award_steam(id)
 	Application:debug("[AchievmentManager:award_steam] Awarded Steam achievment", id)
 	self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
@@ -768,7 +768,7 @@ function AchievmentManager:award_steam(id)
 	end
 end
 
--- Lines 777-787
+-- Lines 781-791
 function AchievmentManager:clear_steam(id)
 	print("[AchievmentManager:clear_steam]", id)
 
@@ -782,7 +782,7 @@ function AchievmentManager:clear_steam(id)
 	self.handler:store_data()
 end
 
--- Lines 791-801
+-- Lines 795-805
 function AchievmentManager:clear_all_steam()
 	print("[AchievmentManager:clear_all_steam]")
 
@@ -796,7 +796,7 @@ function AchievmentManager:clear_all_steam()
 	self.handler:store_data()
 end
 
--- Lines 805-814
+-- Lines 809-818
 function AchievmentManager.steam_unlock_result(achievment)
 	print("[AchievmentManager:steam_unlock_result] Awarded Steam achievment", achievment)
 
@@ -809,11 +809,11 @@ function AchievmentManager.steam_unlock_result(achievment)
 	end
 end
 
--- Lines 817-833
+-- Lines 821-837
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
-	-- Lines 825-830
+	-- Lines 829-834
 	local function x360_unlock_result(result)
 		print("result", result)
 	end
@@ -821,7 +821,7 @@ function AchievmentManager:award_x360(id)
 	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
 end
 
--- Lines 837-848
+-- Lines 841-852
 function AchievmentManager:award_psn(id)
 	print("[AchievmentManager:award] Awarded PSN achievment", id, self:get_info(id).id)
 
@@ -835,7 +835,7 @@ function AchievmentManager:award_psn(id)
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
--- Lines 850-858
+-- Lines 854-862
 function AchievmentManager.psn_unlock_result(request, error_str)
 	print("[AchievmentManager:psn_unlock_result] Awarded PSN achievment", request, error_str)
 
@@ -848,7 +848,7 @@ function AchievmentManager.psn_unlock_result(request, error_str)
 	end
 end
 
--- Lines 862-872
+-- Lines 866-876
 function AchievmentManager:chk_install_trophies()
 	if Trophies:is_installed() then
 		print("[AchievmentManager:chk_install_trophies] Already installed")
@@ -863,7 +863,7 @@ function AchievmentManager:chk_install_trophies()
 	end
 end
 
--- Lines 876-882
+-- Lines 880-886
 function AchievmentManager:clbk_install_trophies(result)
 	print("[AchievmentManager:clbk_install_trophies]", result)
 
@@ -874,7 +874,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines 886-936
+-- Lines 890-940
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
@@ -933,7 +933,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 	end
 end
 
--- Lines 940-947
+-- Lines 944-951
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -943,7 +943,7 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines 950-992
+-- Lines 954-996
 function AchievmentManager:_check_autounlock_complete_heist()
 	local condition_whitelist = {
 		"award",
@@ -953,7 +953,7 @@ function AchievmentManager:_check_autounlock_complete_heist()
 		"jobs"
 	}
 
-	-- Lines 960-975
+	-- Lines 964-979
 	local function eligible_for_autounlock(achievement_data)
 		local has_award = achievement_data.award
 		local has_difficulty = achievement_data.difficulty
@@ -995,17 +995,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines 995-997
+-- Lines 999-1001
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines 1000-1002
+-- Lines 1004-1006
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines 1004-1032
+-- Lines 1008-1036
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)

@@ -235,7 +235,7 @@ function MenuCallbackHandler:end_crime_spree(item, node)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 232-255
+-- Lines 232-253
 function MenuCallbackHandler:_dialog_end_crime_spree_yes()
 	if managers.crime_spree:can_refund_entry_fee() then
 		local cost = managers.crime_spree:get_start_cost(managers.crime_spree:spree_level())
@@ -248,11 +248,11 @@ function MenuCallbackHandler:_dialog_end_crime_spree_yes()
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 257-259
+-- Lines 255-257
 function MenuCallbackHandler:_dialog_end_crime_spree_no()
 end
 
--- Lines 263-287
+-- Lines 261-285
 function MenuCallbackHandler:return_to_crime_spree_lobby()
 	if game_state_machine:current_state_name() == "disconnected" then
 		return
@@ -282,7 +282,7 @@ function MenuCallbackHandler:return_to_crime_spree_lobby()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 291-317
+-- Lines 289-315
 function MenuCallbackHandler:leave_crime_spree_lobby()
 	if game_state_machine:current_state_name() == "ingame_lobby_menu" then
 		self:end_game()
@@ -314,7 +314,7 @@ function MenuCallbackHandler:leave_crime_spree_lobby()
 	return true
 end
 
--- Lines 321-351
+-- Lines 319-349
 function MenuCallbackHandler:end_game_crime_spree()
 	local fail_on_quit = true
 
@@ -353,11 +353,11 @@ function MenuCallbackHandler:end_game_crime_spree()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 353-354
+-- Lines 351-352
 function MenuCallbackHandler:_dialog_end_game_crime_spree_no()
 end
 
--- Lines 356-389
+-- Lines 354-387
 function MenuCallbackHandler:_dialog_end_game_crime_spree_yes(failed)
 	managers.platform:set_playing(false)
 	managers.job:clear_saved_ghost_bonus()
@@ -393,7 +393,7 @@ function MenuCallbackHandler:_dialog_end_game_crime_spree_yes(failed)
 	setup:load_start_menu()
 end
 
--- Lines 393-446
+-- Lines 391-484
 function MenuCallbackHandler:crime_spree_continue()
 	local cost = managers.crime_spree:get_continue_cost(managers.crime_spree:spree_level())
 	local params = {
@@ -445,8 +445,9 @@ function MenuCallbackHandler:crime_spree_continue()
 	return true
 end
 
--- Lines 448-463
+-- Lines 486-533
 function MenuCallbackHandler:_dialog_crime_spree_continue_yes()
+	print("[MenuCallbackHandler:_dialog_crime_spree_continue_yes]")
 	managers.crime_spree:continue_crime_spree()
 	managers.menu:active_menu().logic:refresh_node("main")
 
@@ -460,13 +461,17 @@ function MenuCallbackHandler:_dialog_crime_spree_continue_yes()
 	managers.menu_component:create_crime_spree_missions_gui(managers.menu:active_menu().logic:selected_node())
 	managers.menu_component:refresh_crime_spree_details_gui()
 	WalletGuiObject.refresh()
+
+	if managers.menu:active_menu() then
+		managers.menu:active_menu().logic:select_item("spree_start", true)
+	end
 end
 
--- Lines 465-467
+-- Lines 535-537
 function MenuCallbackHandler:_dialog_crime_spree_continue_no()
 end
 
--- Lines 471-491
+-- Lines 541-561
 function MenuCallbackHandler:create_server_left_crime_spree_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title")
@@ -493,12 +498,12 @@ function MenuCallbackHandler:create_server_left_crime_spree_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 493-495
+-- Lines 563-565
 function MenuCallbackHandler:_on_server_left_ok_pressed()
 	self:_dialog_end_game_crime_spree_yes(false)
 end
 
--- Lines 499-517
+-- Lines 569-587
 function MenuCallbackHandler:show_peer_kicked_crime_spree_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text(Global.on_remove_peer_message and "dialog_information_title" or "dialog_mp_kicked_out_title")
@@ -527,7 +532,7 @@ function MenuCallbackHandler:show_peer_kicked_crime_spree_dialog(params)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 521-571
+-- Lines 591-639
 function MenuCallbackHandler:crime_spree_reroll()
 	local mission_gui = managers.menu_component:crime_spree_missions_gui()
 
@@ -578,7 +583,7 @@ function MenuCallbackHandler:crime_spree_reroll()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 573-597
+-- Lines 641-663
 function MenuCallbackHandler:_dialog_crime_spree_reroll_yes()
 	managers.custom_safehouse:deduct_coins(managers.crime_spree:randomization_cost())
 	managers.crime_spree:randomize_mission_set()
@@ -591,18 +596,18 @@ function MenuCallbackHandler:_dialog_crime_spree_reroll_yes()
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 599-601
+-- Lines 665-667
 function MenuCallbackHandler:_dialog_crime_spree_reroll_no()
 end
 
--- Lines 605-609
+-- Lines 671-675
 function MenuCallbackHandler:crime_spree_select_modifier()
 	if self:show_crime_spree_select_modifier() then
 		managers.menu:open_node("crime_spree_select_modifiers", {})
 	end
 end
 
--- Lines 611-617
+-- Lines 677-683
 function MenuCallbackHandler:crime_spree_start_game()
 	if managers.crime_spree:current_mission() == nil then
 		managers.menu:post_event("menu_error")
@@ -611,7 +616,7 @@ function MenuCallbackHandler:crime_spree_start_game()
 	end
 end
 
--- Lines 621-644
+-- Lines 687-710
 function MenuManager:show_confirm_mission_gage_asset_buy(params)
 	local asset_tweak_data = tweak_data.crime_spree.assets[params.asset_id]
 	local dialog_data = {
@@ -641,7 +646,7 @@ function MenuManager:show_confirm_mission_gage_asset_buy(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 646-666
+-- Lines 712-732
 function MenuManager:show_gage_assets_unlock_prevented(params)
 	local asset_tweak_data = tweak_data.crime_spree.assets[params.asset_id]
 	local dialog_data = {}
@@ -666,7 +671,7 @@ function MenuManager:show_gage_assets_unlock_prevented(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 668-683
+-- Lines 734-749
 function MenuManager:show_gage_asset_desc(params)
 	local asset_tweak_data = tweak_data.crime_spree.assets[params.asset_id]
 	local dialog_data = {
@@ -685,7 +690,7 @@ function MenuManager:show_gage_asset_desc(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 687-691
+-- Lines 753-757
 function MenuCallbackHandler:choice_spree_difference_filter(item)
 	Global.game_settings.crime_spree_max_lobby_diff = item:value()
 
@@ -693,13 +698,13 @@ function MenuCallbackHandler:choice_spree_difference_filter(item)
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
--- Lines 695-698
+-- Lines 761-764
 function MenuCallbackHandler:debug_crime_spree_reset()
 	managers.crime_spree:reset_crime_spree()
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 701-720
+-- Lines 767-786
 function MenuCallbackHandler:clear_crime_spree_record()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -722,13 +727,13 @@ function MenuCallbackHandler:clear_crime_spree_record()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 722-725
+-- Lines 788-791
 function MenuCallbackHandler:_dialog_clear_crime_spree_record_yes()
 	Global.crime_spree.highest_level = nil
 
 	managers.savefile:save_progress()
 end
 
--- Lines 727-728
+-- Lines 793-794
 function MenuCallbackHandler:_dialog_clear_crime_spree_record_no()
 end

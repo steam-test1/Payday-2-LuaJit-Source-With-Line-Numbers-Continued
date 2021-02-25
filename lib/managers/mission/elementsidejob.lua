@@ -10,7 +10,7 @@ function ElementSideJobAward:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 15-50
+-- Lines 15-52
 function ElementSideJobAward:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -48,7 +48,7 @@ end
 
 ElementSideJobFilter = ElementSideJobFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 58-63
+-- Lines 60-65
 function ElementSideJobFilter:on_script_activated()
 	ElementSideJobFilter.super.on_script_activated(self)
 
@@ -57,7 +57,7 @@ function ElementSideJobFilter:on_script_activated()
 	end
 end
 
--- Lines 65-103
+-- Lines 67-105
 function ElementSideJobFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return

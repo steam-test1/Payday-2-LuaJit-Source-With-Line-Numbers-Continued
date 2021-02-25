@@ -1,6 +1,6 @@
 LightLoadingScreenGuiScript = LightLoadingScreenGuiScript or class()
 
--- Lines 4-46
+-- Lines 4-45
 function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, is_win32)
 	self._base_layer = base_layer
 	self._is_win32 = is_win32
@@ -36,7 +36,7 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 		text_id = "debug_loading_level",
 		font_size = 32,
 		align = "left",
-		font = "fonts/font_medium_mf",
+		font = "fonts/font_large_mf",
 		halign = "left",
 		color = Color.white,
 		layer = self._base_layer + 1
@@ -73,16 +73,15 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	self:setup(res, progress)
 end
 
--- Lines 48-57
+-- Lines 47-63
 function LightLoadingScreenGuiScript:layout_saferect()
-	local scaled_size = {
-		x = 0,
-		height = 674,
-		width = 1198,
-		y = 0
+	local base_res = {
+		x = 1280,
+		y = 720
 	}
-	local w = scaled_size.width
-	local h = scaled_size.height
+	local safe_rect = self:get_safe_rect()
+	local w = math.round(safe_rect.width * base_res.x)
+	local h = math.round(safe_rect.height * base_res.y)
 	local sh = math.min(self._safe_rect_pixels.height, self._safe_rect_pixels.width / (w / h))
 	local sw = math.min(self._safe_rect_pixels.width, self._safe_rect_pixels.height * w / h)
 	local x = math.round(self._res.x / 2 - sh * w / h / 2)
@@ -91,9 +90,9 @@ function LightLoadingScreenGuiScript:layout_saferect()
 	self._saferect:set_screen(w, h, x, y, sw)
 end
 
--- Lines 60-64
+-- Lines 66-70
 function LightLoadingScreenGuiScript:get_safe_rect()
-	local a = self._is_win32 and 0.032 or 0.075
+	local a = self._is_win32 and 0.032 or 0.05
 	local b = 1 - a * 2
 
 	return {
@@ -104,7 +103,7 @@ function LightLoadingScreenGuiScript:get_safe_rect()
 	}
 end
 
--- Lines 67-78
+-- Lines 73-84
 function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	local safe_rect_scale = self:get_safe_rect()
 	local safe_rect_pixels = {
@@ -117,7 +116,7 @@ function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	return safe_rect_pixels
 end
 
--- Lines 80-103
+-- Lines 86-109
 function LightLoadingScreenGuiScript:setup(res, progress)
 	self._gui_tweak_data = {
 		upper_saferect_border = 64,
@@ -126,15 +125,15 @@ function LightLoadingScreenGuiScript:setup(res, progress)
 
 	self._title_text:set_font_size(32)
 	self._stonecold_small_logo:set_size(256, 56)
-	self._title_text:set_shape(0, 0, self._safe_rect_pixels.width, self._gui_tweak_data.upper_saferect_border - self._gui_tweak_data.border_pad)
+	self._title_text:set_position(0, self._gui_tweak_data.border_pad)
 
-	local _, _, w, _ = self._title_text:text_rect()
+	local _, _, w, h = self._title_text:text_rect()
 
-	self._title_text:set_w(w)
-	self._stonecold_small_logo:set_right(self._stonecold_small_logo:parent():w())
-	self._stonecold_small_logo:set_bottom(self._gui_tweak_data.upper_saferect_border - self._gui_tweak_data.border_pad)
-	self._indicator:set_left(self._title_text:right() + 8)
-	self._indicator:set_bottom(self._gui_tweak_data.upper_saferect_border - self._gui_tweak_data.border_pad)
+	self._title_text:set_size(math.round(w), math.round(h))
+	self._stonecold_small_logo:set_righttop(math.floor(self._saferect_panel:w()), 0)
+	self._indicator:set_center_y(self._title_text:center_y() - 2)
+	self._indicator:set_y(math.round(self._indicator:y()))
+	self._indicator:set_left(math.round(self._title_text:right() + 8))
 	self._bg_gui:set_size(res.x, res.y)
 
 	if progress > 0 then
@@ -142,7 +141,7 @@ function LightLoadingScreenGuiScript:setup(res, progress)
 	end
 end
 
--- Lines 105-119
+-- Lines 111-125
 function LightLoadingScreenGuiScript:update(progress, dt)
 	self._indicator:rotate(180 * dt)
 
@@ -157,11 +156,11 @@ function LightLoadingScreenGuiScript:update(progress, dt)
 	end
 end
 
--- Lines 125-127
+-- Lines 131-133
 function LightLoadingScreenGuiScript:set_text(text)
 end
 
--- Lines 129-136
+-- Lines 135-142
 function LightLoadingScreenGuiScript:destroy()
 	if alive(self._ws) then
 		self._scene_gui:destroy_workspace(self._ws)
@@ -172,12 +171,12 @@ function LightLoadingScreenGuiScript:destroy()
 	end
 end
 
--- Lines 138-140
+-- Lines 144-146
 function LightLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
--- Lines 142-164
+-- Lines 148-170
 function LightLoadingScreenGuiScript:set_visible(visible, res)
 	if res then
 		self._res = res
