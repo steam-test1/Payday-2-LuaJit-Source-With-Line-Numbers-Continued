@@ -683,7 +683,7 @@ function PlayerInventory:load(data)
 	end
 end
 
--- Lines 694-722
+-- Lines 694-724
 function PlayerInventory:_clbk_weapon_add(data)
 	self._weapon_add_clbk = nil
 
@@ -713,14 +713,21 @@ function PlayerInventory:_clbk_weapon_add(data)
 
 		managers.hud:set_mugshot_weapon(self._unit:unit_data().mugshot_id, icon, self:equipped_unit():base():weapon_tweak_data().use_data.selection_index)
 	end
+
+	self._weapon_load_finished = true
 end
 
 -- Lines 726-728
+function PlayerInventory:has_finished_networked_weapon_load()
+	return self._weapon_load_finished or false
+end
+
+-- Lines 732-734
 function PlayerInventory:mask_visibility()
 	return self._mask_visibility or false
 end
 
--- Lines 730-811
+-- Lines 736-817
 function PlayerInventory:set_mask_visibility(state)
 	self._mask_visibility = state
 
@@ -798,7 +805,7 @@ function PlayerInventory:set_mask_visibility(state)
 	end
 end
 
--- Lines 813-831
+-- Lines 819-837
 function PlayerInventory:update_mask_offset(mask_data)
 	local char = nil
 
@@ -820,7 +827,7 @@ function PlayerInventory:update_mask_offset(mask_data)
 	end
 end
 
--- Lines 833-849
+-- Lines 839-855
 function PlayerInventory:set_mask_offset(mask_unit, mask_align, position, rotation)
 	if not alive(mask_unit) then
 		return
@@ -835,7 +842,7 @@ function PlayerInventory:set_mask_offset(mask_unit, mask_align, position, rotati
 	end
 end
 
--- Lines 852-872
+-- Lines 858-878
 function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 	self._melee_weapon_data = managers.blackmarket:get_melee_weapon_data(melee_weapon_id)
 
@@ -852,11 +859,11 @@ function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 	end
 end
 
--- Lines 874-875
+-- Lines 880-881
 function PlayerInventory:set_melee_weapon_by_peer(peer)
 end
 
--- Lines 879-887
+-- Lines 885-893
 function PlayerInventory:set_ammo(ammo)
 	for id, weapon in pairs(self._available_selections) do
 		weapon.unit:base():set_ammo(ammo)
@@ -864,7 +871,7 @@ function PlayerInventory:set_ammo(ammo)
 	end
 end
 
--- Lines 891-898
+-- Lines 897-904
 function PlayerInventory:need_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if not weapon.unit:base():ammo_full() then
@@ -875,7 +882,7 @@ function PlayerInventory:need_ammo()
 	return false
 end
 
--- Lines 903-910
+-- Lines 909-916
 function PlayerInventory:all_out_of_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if not weapon.unit:base():out_of_ammo() then
@@ -886,17 +893,17 @@ function PlayerInventory:all_out_of_ammo()
 	return true
 end
 
--- Lines 916-918
+-- Lines 922-924
 function PlayerInventory:anim_cbk_spawn_character_mask(unit)
 	self:set_mask_visibility(true)
 end
 
--- Lines 920-922
+-- Lines 926-928
 function PlayerInventory:anim_clbk_equip_exit(unit)
 	self:set_mask_visibility(true)
 end
 
--- Lines 926-934
+-- Lines 932-940
 function PlayerInventory:set_visibility_state(state)
 	for i, sel_data in pairs(self._available_selections) do
 		local enabled = sel_data.unit:enabled()
@@ -909,7 +916,7 @@ function PlayerInventory:set_visibility_state(state)
 	end
 end
 
--- Lines 938-945
+-- Lines 944-951
 function PlayerInventory:set_weapon_enabled(state)
 	if self._equipped_selection then
 		self:equipped_unit():set_enabled(state)
@@ -920,7 +927,7 @@ function PlayerInventory:set_weapon_enabled(state)
 	end
 end
 
--- Lines 954-970
+-- Lines 960-976
 function PlayerInventory:sync_net_event(event_id, peer)
 	local net_events = self._NET_EVENTS
 
@@ -939,33 +946,33 @@ function PlayerInventory:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 972-974
+-- Lines 978-980
 function PlayerInventory:get_jammer_time()
 	return self._unit:base():upgrade_value("player", "pocket_ecm_jammer_base").duration
 end
 
--- Lines 978-980
+-- Lines 984-986
 function PlayerInventory:_send_net_event(event_id)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "inventory", event_id)
 end
 
--- Lines 984-986
+-- Lines 990-992
 function PlayerInventory:_send_net_event_to_host(event_id)
 	managers.network:session():send_to_host("sync_unit_event_id_16", self._unit, "inventory", event_id)
 end
 
--- Lines 990-992
+-- Lines 996-998
 function PlayerInventory:is_jammer_active()
 	return self._jammer_data and self._jammer_data.effect
 end
 
--- Lines 994-997
+-- Lines 1000-1003
 function PlayerInventory:start_jammer_effect(...)
 	self:_start_jammer_effect(...)
 	self:_send_net_event(self._NET_EVENTS.jammer_start)
 end
 
--- Lines 999-1016
+-- Lines 1005-1022
 function PlayerInventory:_start_jammer_effect(end_time)
 	end_time = end_time or self:get_jammer_time() + TimerManager:game():time()
 	self._jammer_data = {
@@ -993,7 +1000,7 @@ function PlayerInventory:_start_jammer_effect(end_time)
 	end
 end
 
--- Lines 1018-1023
+-- Lines 1024-1029
 function PlayerInventory:stop_jammer_effect()
 	self:_stop_jammer_effect()
 
@@ -1002,7 +1009,7 @@ function PlayerInventory:stop_jammer_effect()
 	end
 end
 
--- Lines 1025-1040
+-- Lines 1031-1046
 function PlayerInventory:_stop_jammer_effect()
 	if not self._jammer_data or self._jammer_data.effect ~= "jamming" then
 		return
@@ -1020,7 +1027,7 @@ function PlayerInventory:_stop_jammer_effect()
 	end
 end
 
--- Lines 1044-1051
+-- Lines 1050-1057
 function PlayerInventory:start_feedback_effect(...)
 	if Network:is_server() then
 		self:_start_feedback_effect(...)
@@ -1030,7 +1037,7 @@ function PlayerInventory:start_feedback_effect(...)
 	end
 end
 
--- Lines 1053-1079
+-- Lines 1059-1085
 function PlayerInventory:_start_feedback_effect(end_time, interval, range)
 	end_time = end_time or self:get_jammer_time() + TimerManager:game():time()
 	self._jammer_data = {
@@ -1065,7 +1072,7 @@ function PlayerInventory:_start_feedback_effect(end_time, interval, range)
 	end
 end
 
--- Lines 1081-1086
+-- Lines 1087-1092
 function PlayerInventory:stop_feedback_effect()
 	self:_stop_feedback_effect()
 
@@ -1074,7 +1081,7 @@ function PlayerInventory:stop_feedback_effect()
 	end
 end
 
--- Lines 1088-1109
+-- Lines 1094-1115
 function PlayerInventory:_stop_feedback_effect()
 	if not self._jammer_data or self._jammer_data.effect ~= "feedback" then
 		return
@@ -1098,7 +1105,7 @@ function PlayerInventory:_stop_feedback_effect()
 	end
 end
 
--- Lines 1113-1125
+-- Lines 1119-1131
 function PlayerInventory:_feedback_heal_on_kill()
 	local unit = managers.player:player_unit()
 	local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
@@ -1113,7 +1120,7 @@ function PlayerInventory:_feedback_heal_on_kill()
 	end
 end
 
--- Lines 1127-1142
+-- Lines 1133-1148
 function PlayerInventory:_jamming_kill_dodge()
 	local unit = managers.player:player_unit()
 	local data = self._jammer_data
@@ -1132,7 +1139,7 @@ function PlayerInventory:_jamming_kill_dodge()
 	end
 end
 
--- Lines 1144-1160
+-- Lines 1150-1166
 function PlayerInventory:_do_feedback()
 	local t = TimerManager:game():time()
 

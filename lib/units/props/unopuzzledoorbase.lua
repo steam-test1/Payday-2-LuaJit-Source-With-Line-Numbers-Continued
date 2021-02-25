@@ -27,8 +27,7 @@ end
 
 -- Lines 29-32
 function UnoPuzzleDoorBase:init_puzzle()
-	UnoPuzzleDoorBase.puzzle_initialized = true
-
+	Steam:sa_handler():set_stat("uno_puzzle_door_activated", 1)
 	self:set_riddle(1)
 end
 
@@ -105,41 +104,49 @@ function UnoPuzzleDoorBase:submit_answer()
 	end
 end
 
--- Lines 104-109
+-- Lines 104-117
 function UnoPuzzleDoorBase:revive_player()
 	local player = managers.player:player_unit()
 
 	if player and player:character_damage():need_revive() then
 		player:character_damage():revive(true)
 	end
+
+	if Network:is_server() then
+		for _, character in ipairs(managers.criminals:characters()) do
+			if character.data.ai and alive(character.unit) then
+				character.unit:character_damage():revive(nil, true)
+			end
+		end
+	end
 end
 
--- Lines 111-111
+-- Lines 119-119
 function UnoPuzzleDoorBase:turn_outer_cw()
 	self._outer:turn_clockwise()
 end
 
--- Lines 112-112
+-- Lines 120-120
 function UnoPuzzleDoorBase:turn_outer_ccw()
 	self._outer:turn_counterclockwise()
 end
 
--- Lines 114-114
+-- Lines 122-122
 function UnoPuzzleDoorBase:turn_middle_cw()
 	self._middle:turn_clockwise()
 end
 
--- Lines 115-115
+-- Lines 123-123
 function UnoPuzzleDoorBase:turn_middle_ccw()
 	self._middle:turn_counterclockwise()
 end
 
--- Lines 117-117
+-- Lines 125-125
 function UnoPuzzleDoorBase:turn_inner_cw()
 	self._inner:turn_clockwise()
 end
 
--- Lines 118-118
+-- Lines 126-126
 function UnoPuzzleDoorBase:turn_inner_ccw()
 	self._inner:turn_counterclockwise()
 end
@@ -148,7 +155,7 @@ UnoPuzzleDoorRing = UnoPuzzleDoorRing or class()
 UnoPuzzleDoorRing.SPEED = 10
 UnoPuzzleDoorRing.EPSILON = 0.0001
 
--- Lines 148-153
+-- Lines 156-161
 function UnoPuzzleDoorRing:init(ring_object, stops)
 	self._object = ring_object
 	self._stops = stops
@@ -156,7 +163,7 @@ function UnoPuzzleDoorRing:init(ring_object, stops)
 	self._target = Rotation()
 end
 
--- Lines 155-165
+-- Lines 163-173
 function UnoPuzzleDoorRing:update(t, dt)
 	local rotation = self._object:local_rotation()
 	local diff = Rotation:rotation_difference(rotation, self._target)
@@ -168,25 +175,25 @@ function UnoPuzzleDoorRing:update(t, dt)
 	return self.EPSILON < math.abs(angle)
 end
 
--- Lines 167-169
+-- Lines 175-177
 function UnoPuzzleDoorRing:current_stop()
 	return self._current_stop
 end
 
--- Lines 171-174
+-- Lines 179-182
 function UnoPuzzleDoorRing:_target_stop(stop)
 	local angle = 360 / self._stops * stop
 	self._target = Rotation(Vector3(0, 1, 0), angle)
 end
 
--- Lines 176-179
+-- Lines 184-187
 function UnoPuzzleDoorRing:turn_clockwise()
 	self._current_stop = math.mod(self._current_stop + 1, self._stops)
 
 	self:_target_stop(self._current_stop)
 end
 
--- Lines 181-188
+-- Lines 189-196
 function UnoPuzzleDoorRing:turn_counterclockwise()
 	self._current_stop = self._current_stop - 1
 

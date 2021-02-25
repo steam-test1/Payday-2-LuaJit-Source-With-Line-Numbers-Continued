@@ -10,7 +10,7 @@ function PlayerClean:enter(state_data, enter_data)
 	PlayerClean.super.enter(self, state_data, enter_data)
 end
 
--- Lines 15-47
+-- Lines 15-55
 function PlayerClean:_enter(enter_data)
 	local equipped_selection = self._unit:inventory():equipped_selection()
 
@@ -20,6 +20,16 @@ function PlayerClean:_enter(enter_data)
 		self._ext_inventory:equip_selection(1, false)
 		managers.upgrades:setup_current_weapon()
 	end
+
+	for _, selection in ipairs(self._unit:inventory():available_selections()) do
+		local weapon_unit = selection.unit
+
+		if weapon_unit then
+			weapon_unit:base():set_gadget_on(0, false)
+		end
+	end
+
+	self._unit:network():send("set_weapon_gadget_state", 0)
 
 	if self._unit:camera():anim_data().equipped then
 		self._unit:camera():play_redirect(self:get_animation("unequip"))
@@ -53,7 +63,7 @@ function PlayerClean:_enter(enter_data)
 	end
 end
 
--- Lines 51-75
+-- Lines 59-83
 function PlayerClean:exit(state_data, new_state_name)
 	PlayerClean.super.exit(self, state_data)
 
@@ -77,17 +87,17 @@ function PlayerClean:exit(state_data, new_state_name)
 	end
 end
 
--- Lines 79-81
+-- Lines 87-89
 function PlayerClean:interaction_blocked()
 	return true
 end
 
--- Lines 85-87
+-- Lines 93-95
 function PlayerClean:update(t, dt)
 	PlayerClean.super.update(self, t, dt)
 end
 
--- Lines 93-138
+-- Lines 101-146
 function PlayerClean:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -120,12 +130,12 @@ function PlayerClean:_update_check_actions(t, dt)
 	end
 end
 
--- Lines 142-144
+-- Lines 150-152
 function PlayerClean:_get_walk_headbob()
 	return 0.0125
 end
 
--- Lines 150-163
+-- Lines 158-171
 function PlayerClean:_check_action_interact(t, input)
 	local new_action = nil
 	local interaction_wanted = input.btn_interact_press
@@ -141,12 +151,12 @@ function PlayerClean:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines 167-169
+-- Lines 175-177
 function PlayerClean:_start_action_state_standard(t)
 	managers.player:set_player_state("standard")
 end
 
--- Lines 173-177
+-- Lines 181-185
 function PlayerClean:clbk_enemy_weapons_hot()
 	managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
 

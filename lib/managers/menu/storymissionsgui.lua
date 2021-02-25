@@ -11,10 +11,10 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 local done_icon = "guis/textures/menu_singletick"
 local reward_icon = "guis/textures/pd2/icon_reward"
-local selected_icon = "guis/textures/scrollarrow"
+local active_mission_icon = "guis/textures/scrollarrow"
 StoryMissionsGui = StoryMissionsGui or class(ExtendedPanel)
 
--- Lines 21-99
+-- Lines 21-94
 function StoryMissionsGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -64,6 +64,22 @@ function StoryMissionsGui:init(ws, fullscreen_ws, node)
 				func = callback(self, self, "_start_mission_general")
 			}
 		})
+		self._legends:add_item({
+			enabled = false,
+			binding = "next_page",
+			text = managers.localization:to_upper_text("menu_legend_next_story_mission", {
+				BTN = managers.localization:key_to_btn_text("right_shoulder", true)
+			}),
+			func = callback(self, self, "_navigate_story", 1)
+		}, "next_mission", true)
+		self._legends:add_item({
+			enabled = false,
+			binding = "previous_page",
+			text = managers.localization:to_upper_text("menu_legend_previous_story_mission", {
+				BTN = managers.localization:key_to_btn_text("left_shoulder", true)
+			}),
+			func = callback(self, self, "_navigate_story", -1)
+		}, "previous_mission", true)
 		self._legends:set_rightbottom(self:w(), self:h())
 	end
 
@@ -105,11 +121,10 @@ function StoryMissionsGui:init(ws, fullscreen_ws, node)
 	})
 	self:_add_title()
 	self:_add_back_button()
-	self:_update_side()
-	self:_update_info()
+	self:_update()
 end
 
--- Lines 101-113
+-- Lines 96-108
 function StoryMissionsGui:close()
 	if managers.briefing:event_playing() then
 		managers.briefing:stop_event()
@@ -122,7 +137,7 @@ function StoryMissionsGui:close()
 	self:remove_self()
 end
 
--- Lines 115-132
+-- Lines 110-127
 function StoryMissionsGui:_add_title()
 	self._title = self:text({
 		name = "title",
@@ -140,7 +155,7 @@ function StoryMissionsGui:_add_title()
 	})
 end
 
--- Lines 134-159
+-- Lines 129-154
 function StoryMissionsGui:_add_back_button()
 	if not managers.menu:is_pc_controller() then
 		return
@@ -179,56 +194,95 @@ function StoryMissionsGui:_add_back_button()
 	bg_back:move(13, -9)
 end
 
--- Lines 161-165
+-- Lines 156-160
 function StoryMissionsGui:_change_legend(id, state)
 	if self._legends then
 		self._legends:set_item_enabled(id, state)
 	end
 end
 
--- Lines 167-174
+-- Lines 162-174
+function StoryMissionsGui:_navigate_story(offset)
+	if managers.story:current_mission().order < self._shown_mission.order + offset then
+		return
+	end
+
+	local sought_mission = managers.story:get_mission_at(self._shown_mission.order + offset)
+
+	if not sought_mission then
+		return
+	end
+
+	self:_update(sought_mission)
+end
+
+-- Lines 176-188
 function StoryMissionsGui:_update(mission)
 	if mission and type(mission) == "string" then
 		mission = managers.story:get_mission(mission)
 	end
 
+	mission = mission or managers.story:current_mission()
+	self._shown_mission = mission
+
 	self:_update_side(mission)
 	self:_update_info(mission)
+	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 176-206
+-- Lines 190-241
 function StoryMissionsGui:_update_side(current)
+	local current_scroll_amount = -self._side_scroll:canvas():y()
+
 	self._side_scroll:clear()
 
 	local canvas = self._side_scroll:canvas()
 	local placer = canvas:placer()
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local tab_size = 20
-	current = current or managers.story:current_mission()
-	local all_done = current.completed and current.rewarded and current.last_mission
+	local active_mission = managers.story:current_mission()
+	local shown_mission_item = nil
+
+	self:_change_legend("next_mission", current.order < active_mission.order)
+	self:_change_legend("previous_mission", current.order > 1)
 
 	for i, mission in table.reverse_ipairs(managers.story:missions_in_order()) do
-		if mission.completed or i == current.order then
+		if i <= active_mission.order then
 			local color = tweak_data.menu.default_disabled_text_color
+			local color_highlight = tweak_data.menu.default_font_row_item_color
 			local icon = done_icon
+			local icon_rotation = 0
 
-			if i == current.order and not all_done then
+			if i == current.order then
 				color = tweak_data.screen_colors.button_stage_3
-				icon = selected_icon
+				color_highlight = tweak_data.screen_colors.button_stage_2
+			end
+
+			if i == active_mission.order then
+				icon = active_mission_icon
+				icon_rotation = -90
 			end
 
 			local item = placer:add_row(StoryMissionsGuiSidebarItem:new(canvas, {
 				text = managers.localization:to_upper_text(mission.name_id),
 				icon = icon,
-				icon_rotation = icon == selected_icon and -90 or 0
+				icon_rotation = icon_rotation,
+				color = color,
+				color_highlight = color_highlight,
+				callback = callback(self, self, "_update", mission)
 			}))
 
-			item:set_color(color)
+			if mission == self._shown_mission then
+				shown_mission_item = item
+			end
 		end
 	end
+
+	self._side_scroll:scroll_item():scroll_to(current_scroll_amount)
+	self._side_scroll:scroll_to_show(shown_mission_item)
 end
 
--- Lines 208-392
+-- Lines 243-422
 function StoryMissionsGui:_update_info(mission)
 	self._info_scroll:clear()
 	self:_change_legend("select", false)
@@ -505,58 +559,41 @@ function StoryMissionsGui:_update_info(mission)
 		placer:set_at_from(reward_text)
 	end
 
-	if mission.completed then
-		if not mission.rewarded then
-			local item = placer:add_row(TextButton:new(canvas, {
-				text_id = mission.last_mission and "menu_sm_claim_rewards" or "menu_sm_claim_rewards_goto_next",
-				font = medium_font,
-				font_size = medium_font_size
-			}, function ()
-				managers.story:claim_rewards(mission)
-				managers.menu_component:post_event("menu_skill_investment")
+	if mission.completed and not mission.rewarded then
+		local item = placer:add_row(TextButton:new(canvas, {
+			text_id = mission.last_mission and "menu_sm_claim_rewards" or "menu_sm_claim_rewards_goto_next",
+			font = medium_font,
+			font_size = medium_font_size
+		}, function ()
+			managers.story:claim_rewards(mission)
+			managers.menu_component:post_event("menu_skill_investment")
 
-				local dialog_data = {
-					title = managers.localization:text("menu_sm_claim_rewards"),
-					text = managers.localization:text(mission.reward_id)
-				}
-				local ok_button = {
-					text = managers.localization:text("dialog_ok"),
-					callback_func = function ()
-						self:_update()
-					end
-				}
-				dialog_data.button_list = {
-					ok_button
-				}
+			local dialog_data = {
+				title = managers.localization:text("menu_sm_claim_rewards"),
+				text = managers.localization:text(mission.reward_id)
+			}
+			local ok_button = {
+				text = managers.localization:text("dialog_ok"),
+				callback_func = function ()
+					self:_update()
+				end
+			}
+			dialog_data.button_list = {
+				ok_button
+			}
 
-				managers.system_menu:show(dialog_data)
-			end))
+			managers.system_menu:show(dialog_data)
+		end))
 
-			item:set_right(canvas:w())
+		item:set_right(canvas:w())
 
-			self._select_btn = item
+		self._select_btn = item
 
-			self:_change_legend("select", true)
-		elseif not mission.last_mission then
-			local item = placer:add_row(TextButton:new(canvas, {
-				text_id = "menu_sm_claim_goto_next",
-				font = medium_font,
-				font_size = medium_font_size
-			}, function ()
-				managers.story:_find_next_mission()
-				self:_update()
-			end))
-
-			item:set_right(canvas:w())
-
-			self._select_btn = item
-
-			self:_change_legend("select", true)
-		end
+		self:_change_legend("select", true)
 	end
 end
 
--- Lines 429-443
+-- Lines 459-473
 function StoryMissionsGui:toggle_voice_message(message)
 	if not self._voice then
 		return
@@ -584,7 +621,7 @@ function StoryMissionsGui:toggle_voice_message(message)
 	end
 end
 
--- Lines 445-452
+-- Lines 475-482
 function StoryMissionsGui:sound_event_callback(event_type, duration)
 	if not self._voice or not alive(self._voice.text) then
 		return
@@ -598,7 +635,7 @@ function StoryMissionsGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 454-472
+-- Lines 484-502
 function StoryMissionsGui:update()
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -620,7 +657,7 @@ function StoryMissionsGui:update()
 	end
 end
 
--- Lines 474-498
+-- Lines 504-528
 function StoryMissionsGui:_change_selected_level(axis)
 	if self._change_level_btn_disabled then
 		return
@@ -651,19 +688,19 @@ function StoryMissionsGui:_change_selected_level(axis)
 	end
 end
 
--- Lines 500-502
+-- Lines 530-532
 function StoryMissionsGui:_enable_selected_level_btns()
 	self._change_level_btn_disabled = nil
 end
 
--- Lines 504-508
+-- Lines 534-538
 function StoryMissionsGui:confirm_pressed()
 	if alive(self._select_btn) then
 		self._select_btn:_trigger()
 	end
 end
 
--- Lines 510-517
+-- Lines 540-547
 function StoryMissionsGui:_start_mission_general()
 	if self._selected_level_btn then
 		self._selected_level_btn:_trigger()
@@ -674,20 +711,22 @@ function StoryMissionsGui:_start_mission_general()
 	managers.story:start_current()
 end
 
--- Lines 519-521
+-- Lines 549-551
 function StoryMissionsGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 
-StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(ExtendedPanel)
+StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(BaseButton)
 
--- Lines 527-551
+-- Lines 557-588
 function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	StoryMissionsGuiSidebarItem.super.init(self, panel)
 
 	local font = tweak_data.menu.pd2_small_font
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local tab_size = 20
+	self._color = parameters.color
+	self._color_highlight = parameters.color_highlight
 	self._text = self:fine_text({
 		text = parameters.text or "",
 		font = font,
@@ -703,15 +742,19 @@ function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	})
 
 	self._icon:set_visible(parameters.icon)
+
+	self._trigger = parameters.callback
+
 	self:set_h(self._text:bottom())
+	self:set_color(self._color)
 end
 
--- Lines 553-555
+-- Lines 590-592
 function StoryMissionsGuiSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines 557-564
+-- Lines 594-601
 function StoryMissionsGuiSidebarItem:set_icon(icon)
 	if icon then
 		self._icon:set_visible(true)
@@ -721,13 +764,22 @@ function StoryMissionsGuiSidebarItem:set_icon(icon)
 	end
 end
 
--- Lines 566-569
+-- Lines 603-606
 function StoryMissionsGuiSidebarItem:set_color(color)
 	self._text:set_color(color)
 	self._icon:set_color(color)
 end
 
--- Lines 573-581
+-- Lines 608-613
+function StoryMissionsGuiSidebarItem:_hover_changed(hover)
+	self:set_color(hover and self._color_highlight or self._color)
+
+	if hover then
+		managers.menu_component:post_event("highlight")
+	end
+end
+
+-- Lines 617-625
 local function set_defaults(target, source)
 	target = target or {}
 
@@ -743,7 +795,7 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines 588-670
+-- Lines 632-714
 function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	config = set_defaults(config, {
 		input = true,
@@ -845,7 +897,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines 672-674
+-- Lines 716-718
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end

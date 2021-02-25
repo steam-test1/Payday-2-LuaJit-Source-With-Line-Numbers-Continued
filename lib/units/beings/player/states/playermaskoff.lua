@@ -21,15 +21,8 @@ function PlayerMaskOff:enter(state_data, enter_data)
 	end
 end
 
--- Lines 17-49
+-- Lines 17-51
 function PlayerMaskOff:_enter(enter_data)
-	local equipped_weapon = self._unit:inventory():equipped_unit()
-
-	if equipped_weapon then
-		equipped_weapon:base():set_gadget_on(0, false)
-		self._unit:network():send("set_weapon_gadget_state", 0)
-	end
-
 	local equipped_selection = self._unit:inventory():equipped_selection()
 
 	if equipped_selection ~= 1 then
@@ -38,6 +31,16 @@ function PlayerMaskOff:_enter(enter_data)
 		self._ext_inventory:equip_selection(1, false)
 		managers.upgrades:setup_current_weapon()
 	end
+
+	for _, selection in ipairs(self._unit:inventory():available_selections()) do
+		local weapon_unit = selection.unit
+
+		if weapon_unit then
+			weapon_unit:base():set_gadget_on(0, false)
+		end
+	end
+
+	self._unit:network():send("set_weapon_gadget_state", 0)
 
 	if self._unit:camera():anim_data().equipped then
 		self._unit:camera():play_redirect(self:get_animation("unequip"))
@@ -60,7 +63,7 @@ function PlayerMaskOff:_enter(enter_data)
 	self._show_casing_t = Application:time() + 4
 end
 
--- Lines 51-77
+-- Lines 53-79
 function PlayerMaskOff:exit(state_data, new_state_name)
 	PlayerMaskOff.super.exit(self, state_data)
 	managers.hud:hide_casing()
@@ -87,7 +90,7 @@ function PlayerMaskOff:exit(state_data, new_state_name)
 	}
 end
 
--- Lines 79-86
+-- Lines 81-88
 function PlayerMaskOff:update(t, dt)
 	PlayerMaskOff.super.update(self, t, dt)
 
@@ -98,7 +101,7 @@ function PlayerMaskOff:update(t, dt)
 	end
 end
 
--- Lines 91-157
+-- Lines 93-159
 function PlayerMaskOff:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -137,7 +140,7 @@ function PlayerMaskOff:_update_check_actions(t, dt)
 	self:_check_action_change_equipment(t, input)
 end
 
--- Lines 162-201
+-- Lines 164-203
 function PlayerMaskOff:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 
@@ -176,7 +179,7 @@ function PlayerMaskOff:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines 203-215
+-- Lines 205-217
 function PlayerMaskOff:_start_action_interact(t, input, timer, interact_object)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -193,7 +196,7 @@ function PlayerMaskOff:_start_action_interact(t, input, timer, interact_object)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 1, true, self._interact_params.tweak_data, timer, false)
 end
 
--- Lines 217-233
+-- Lines 219-235
 function PlayerMaskOff:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
@@ -212,18 +215,18 @@ function PlayerMaskOff:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines 235-238
+-- Lines 237-240
 function PlayerMaskOff:_end_action_interact()
 	self:_interupt_action_interact(nil, nil, true)
 	managers.interaction:end_action_interact(self._unit)
 end
 
--- Lines 242-244
+-- Lines 244-246
 function PlayerMaskOff:_upd_attention()
 	self._ext_movement:set_attention_settings(self._mask_off_attention_settings)
 end
 
--- Lines 249-262
+-- Lines 251-264
 function PlayerMaskOff:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_press
@@ -241,7 +244,7 @@ function PlayerMaskOff:_check_use_item(t, input)
 	end
 end
 
--- Lines 264-278
+-- Lines 266-280
 function PlayerMaskOff:_start_action_use_item(t)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -265,14 +268,14 @@ function PlayerMaskOff:_start_action_use_item(t)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 2, true, equipment_id, deploy_timer, false)
 end
 
--- Lines 280-284
+-- Lines 282-286
 function PlayerMaskOff:_end_action_use_item(valid)
 	local result = managers.player:use_selected_equipment(self._unit)
 
 	self:_interupt_action_use_item(nil, nil, valid)
 end
 
--- Lines 286-297
+-- Lines 288-299
 function PlayerMaskOff:_interupt_action_use_item(t, input, complete)
 	if self._use_item_expire_t then
 		self._use_item_expire_t = nil
@@ -284,7 +287,7 @@ function PlayerMaskOff:_interupt_action_use_item(t, input, complete)
 	end
 end
 
--- Lines 302-310
+-- Lines 304-312
 function PlayerMaskOff:_update_start_standard_timers(t)
 	if self._start_standard_expire_t then
 		managers.hud:set_progress_timer_bar_width(tweak_data.player.put_on_mask_time - (self._start_standard_expire_t - t), tweak_data.player.put_on_mask_time)
@@ -297,7 +300,7 @@ function PlayerMaskOff:_update_start_standard_timers(t)
 	end
 end
 
--- Lines 312-319
+-- Lines 314-321
 function PlayerMaskOff:_start_action_state_standard(t)
 	self._start_standard_expire_t = t + tweak_data.player.put_on_mask_time
 
@@ -308,7 +311,7 @@ function PlayerMaskOff:_start_action_state_standard(t)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 3, true, "mask_on_action", tweak_data.player.put_on_mask_time, false)
 end
 
--- Lines 321-330
+-- Lines 323-332
 function PlayerMaskOff:_interupt_action_start_standard(t, input, complete)
 	if self._start_standard_expire_t then
 		self._start_standard_expire_t = nil
@@ -319,7 +322,7 @@ function PlayerMaskOff:_interupt_action_start_standard(t, input, complete)
 	end
 end
 
--- Lines 332-339
+-- Lines 334-341
 function PlayerMaskOff:_end_action_start_standard()
 	self:_interupt_action_start_standard(nil, nil, true)
 	PlayerStandard.say_line(self, "a01x_any", true)
@@ -327,7 +330,7 @@ function PlayerMaskOff:_end_action_start_standard()
 	managers.achievment:award("no_one_cared_who_i_was")
 end
 
--- Lines 344-378
+-- Lines 346-380
 function PlayerMaskOff:mark_units(line, t, no_gesture, skip_alert)
 	local mark_sec_camera = managers.player:has_category_upgrade("player", "sec_camera_highlight_mask_off")
 	local mark_special_enemies = managers.player:has_category_upgrade("player", "special_enemy_highlight_mask_off")
@@ -362,28 +365,28 @@ function PlayerMaskOff:mark_units(line, t, no_gesture, skip_alert)
 	return mark_sec_camera or mark_special_enemies
 end
 
--- Lines 382-386
+-- Lines 384-388
 function PlayerMaskOff:_check_action_jump(t, input)
 	if input.btn_duck_press then
 		managers.hint:show_hint("mask_off_block_interact")
 	end
 end
 
--- Lines 388-392
+-- Lines 390-394
 function PlayerMaskOff:_check_action_duck(t, input)
 	if input.btn_jump_press then
 		managers.hint:show_hint("mask_off_block_interact")
 	end
 end
 
--- Lines 394-398
+-- Lines 396-400
 function PlayerMaskOff:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.hint:show_hint("mask_off_block_interact")
 	end
 end
 
--- Lines 400-406
+-- Lines 402-408
 function PlayerMaskOff:clbk_enemy_weapons_hot()
 	if self._enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
@@ -394,12 +397,12 @@ function PlayerMaskOff:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines 408-410
+-- Lines 410-412
 function PlayerMaskOff:interaction_blocked()
 	return false
 end
 
--- Lines 412-414
+-- Lines 414-416
 function PlayerMaskOff:_get_walk_headbob()
 	return 0.0125
 end

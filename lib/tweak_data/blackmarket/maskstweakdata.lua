@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-7666
+-- Lines 10-7652
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -2015,7 +2015,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.dallas_glow = {
 		unit = "units/pd2_dlc_cop/masks/msk_dallas_glow/msk_dallas_glow",
 		name_id = "bm_msk_dallas_glow",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "dlc_pack_overkill",
 		value = 0
@@ -2023,7 +2022,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.wolf_glow = {
 		unit = "units/pd2_dlc_cop/masks/msk_wolf_glow/msk_wolf_glow",
 		name_id = "bm_msk_wolf_glow",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "dlc_pack_overkill",
 		value = 0
@@ -2031,7 +2029,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.hoxton_glow = {
 		unit = "units/pd2_dlc_cop/masks/msk_hoxton_glow/msk_hoxton_glow",
 		name_id = "bm_msk_hoxton_glow",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "dlc_pack_overkill",
 		value = 0
@@ -2039,7 +2036,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.chains_glow = {
 		unit = "units/pd2_dlc_cop/masks/msk_chains_glow/msk_chains_glow",
 		name_id = "bm_msk_chains_glow",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "dlc_pack_overkill",
 		value = 0
@@ -2933,7 +2929,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.megacthulhu = {
 		unit = "units/pd2_dlc_super/masks/megacthulu/msk_megacthulhu",
 		name_id = "bm_msk_megacthulhu",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "super",
 		value = 0
@@ -2941,7 +2936,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.hunter = {
 		unit = "units/pd2_dlc_super/masks/hunter/msk_hunter",
 		name_id = "bm_msk_hunter",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "super",
 		value = 0
@@ -2949,7 +2943,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.cop_skull = {
 		unit = "units/pd2_dlc_super/masks/cop_skull/msk_cop_skull",
 		name_id = "bm_cop_mega_skull",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "super",
 		value = 0
@@ -2957,7 +2950,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.cop_plague_doctor = {
 		unit = "units/pd2_dlc_super/masks/cop_plague_doctor/msk_cop_plague_doctor",
 		name_id = "bm_cop_plague_doctor",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "super",
 		value = 0
@@ -2965,7 +2957,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.cop_kawaii = {
 		unit = "units/pd2_dlc_super/masks/cop_kawaii/msk_cop_kawaii",
 		name_id = "bm_cop_kawaii",
-		pcs = {},
 		dlc = "complete_overkill_pack",
 		texture_bundle_folder = "super",
 		value = 0
@@ -3198,7 +3189,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.fab_mega_grin = {
 		unit = "units/pd2_dlc_fab/masks/mega_grin/msk_fab_mega_grin",
 		name_id = "bm_msk_mega_grin",
-		pcs = {},
 		value = 0,
 		texture_bundle_folder = "fab",
 		dlc = "complete_overkill_pack"
@@ -3206,7 +3196,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.fab_mega_doctor = {
 		unit = "units/pd2_dlc_fab/masks/mega_doctor/msk_fab_mega_doctor",
 		name_id = "bm_msk_mega_doctor",
-		pcs = {},
 		value = 0,
 		texture_bundle_folder = "fab",
 		dlc = "complete_overkill_pack"
@@ -3214,7 +3203,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.fab_mega_alien = {
 		unit = "units/pd2_dlc_fab/masks/mega_alien/msk_fab_mega_alien",
 		name_id = "bm_msk_mega_alien",
-		pcs = {},
 		value = 0,
 		texture_bundle_folder = "fab",
 		dlc = "complete_overkill_pack"
@@ -3222,7 +3210,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.cop_mega_gage_blade = {
 		unit = "units/pd2_dlc_fab/masks/cop_mega_gage_blade/msk_cop_mega_gage_blade",
 		name_id = "bm_msk_mega_blade",
-		pcs = {},
 		value = 0,
 		texture_bundle_folder = "fab",
 		dlc = "complete_overkill_pack"
@@ -3230,7 +3217,6 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks.fab_mega_mark = {
 		unit = "units/pd2_dlc_fab/masks/mega_bear/msk_fab_mega_mark",
 		name_id = "bm_msk_mega_mark",
-		pcs = {},
 		value = 0,
 		texture_bundle_folder = "fab",
 		dlc = "complete_overkill_pack"
@@ -7255,6 +7241,22 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		global_value = "infamous",
 		texture_bundle_folder = "sms",
 		sort_number = 73
+	}
+	self.masks.scm_01 = {
+		unit = "units/pd2_dlc_scm/masks/scm_01/msk_scm_01",
+		name_id = "bm_msk_scm_01",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "scm",
+		sort_number = 75
+	}
+	self.masks.scm_02 = {
+		unit = "units/pd2_dlc_scm/masks/scm_02/msk_scm_02",
+		name_id = "bm_msk_scm_02",
+		value = 0,
+		global_value = "infamous",
+		texture_bundle_folder = "scm",
+		sort_number = 75
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

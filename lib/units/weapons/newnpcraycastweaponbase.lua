@@ -202,7 +202,12 @@ function NewNPCRaycastWeaponBase:stop_autofire()
 	self._shooting = nil
 end
 
--- Lines 190-196
+-- Lines 190-192
+function NewNPCRaycastWeaponBase:shooting()
+	return self._shooting
+end
+
+-- Lines 196-202
 function NewNPCRaycastWeaponBase:singleshot(...)
 	local fired = self:fire(...)
 
@@ -213,7 +218,7 @@ function NewNPCRaycastWeaponBase:singleshot(...)
 	return fired
 end
 
--- Lines 200-216
+-- Lines 206-222
 function NewNPCRaycastWeaponBase:trigger_held(...)
 	local fired = nil
 
@@ -230,7 +235,7 @@ function NewNPCRaycastWeaponBase:trigger_held(...)
 	return fired
 end
 
--- Lines 218-234
+-- Lines 224-240
 function NewNPCRaycastWeaponBase:auto_trigger_held(direction, impact)
 	local fired = false
 
@@ -251,7 +256,7 @@ local mto = Vector3()
 local mfrom = Vector3()
 local mspread = Vector3()
 
--- Lines 240-316
+-- Lines 246-322
 function NewNPCRaycastWeaponBase:auto_fire_blank(direction, impact)
 	local user_unit = self._setup.user_unit
 
@@ -325,7 +330,7 @@ function NewNPCRaycastWeaponBase:auto_fire_blank(direction, impact)
 	return true
 end
 
--- Lines 320-391
+-- Lines 326-397
 function NewNPCRaycastWeaponBase:fire_blank(direction, impact)
 	local user_unit = self._setup.user_unit
 
@@ -395,12 +400,12 @@ function NewNPCRaycastWeaponBase:fire_blank(direction, impact)
 	self:_sound_singleshot()
 end
 
--- Lines 394-396
+-- Lines 400-402
 function NewNPCRaycastWeaponBase:_spawn_muzzle_effect(from_pos, direction)
 	World:effect_manager():spawn(self._muzzle_effect_table)
 end
 
--- Lines 400-409
+-- Lines 406-415
 function NewNPCRaycastWeaponBase:destroy(unit)
 	RaycastWeaponBase.super.pre_destroy(self, unit)
 	managers.weapon_factory:disassemble(self._parts)
@@ -412,7 +417,7 @@ function NewNPCRaycastWeaponBase:destroy(unit)
 	managers.mission:remove_global_event_listener(tostring(self._unit:key()))
 end
 
--- Lines 413-446
+-- Lines 419-452
 function NewNPCRaycastWeaponBase:_get_spread(user_unit)
 	local weapon_tweak = tweak_data.weapon[self:non_npc_name_id()]
 
@@ -449,7 +454,7 @@ function NewNPCRaycastWeaponBase:_get_spread(user_unit)
 	return spread_x, spread_y
 end
 
--- Lines 450-461
+-- Lines 456-467
 function NewNPCRaycastWeaponBase:_sound_autofire_start(nr_shots)
 	self._sound_fire:stop()
 
@@ -463,14 +468,14 @@ function NewNPCRaycastWeaponBase:_sound_autofire_start(nr_shots)
 	end
 end
 
--- Lines 463-467
+-- Lines 469-473
 function NewNPCRaycastWeaponBase:_on_auto_fire_stop()
 	if self._shooting then
 		self:_sound_autofire_start()
 	end
 end
 
--- Lines 471-479
+-- Lines 477-485
 function NewNPCRaycastWeaponBase:_sound_autofire_end()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds
 	local sound_name = tweak_sound.prefix .. self._setup.user_sound_variant .. self._voice .. "_end"
@@ -482,7 +487,7 @@ function NewNPCRaycastWeaponBase:_sound_autofire_end()
 	end
 end
 
--- Lines 483-491
+-- Lines 489-497
 function NewNPCRaycastWeaponBase:_sound_singleshot()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds
 	local sound_name = tweak_sound.prefix .. self._setup.user_sound_variant .. self._voice .. "_1shot"
@@ -494,7 +499,7 @@ function NewNPCRaycastWeaponBase:_sound_singleshot()
 	end
 end
 
--- Lines 496-498
+-- Lines 502-504
 function NewNPCRaycastWeaponBase:set_user_is_team_ai(enabled)
 	self._is_team_ai = enabled
 end
@@ -503,7 +508,7 @@ local mvec_to = Vector3()
 local mvec_spread = Vector3()
 local mvec1 = Vector3()
 
--- Lines 506-647
+-- Lines 512-653
 function NewNPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, shoot_through_data)
 	local result = {}
 	local hit_unit = nil
@@ -639,7 +644,7 @@ function NewNPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, d
 	return result
 end
 
--- Lines 651-662
+-- Lines 657-668
 function NewNPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 	if not alive(self._obj_fire) then
 		return
@@ -655,17 +660,17 @@ function NewNPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 	end
 end
 
--- Lines 666-668
+-- Lines 672-674
 function NewNPCRaycastWeaponBase:has_flashlight_on()
 	return self._flashlight_data and self._flashlight_data.on and true or false
 end
 
--- Lines 670-672
+-- Lines 676-678
 function NewNPCRaycastWeaponBase:flashlight_data()
 	return self._flashlight_data
 end
 
--- Lines 674-692
+-- Lines 680-698
 function NewNPCRaycastWeaponBase:flashlight_state_changed()
 	if not self._flashlight_data then
 		return
@@ -688,7 +693,7 @@ function NewNPCRaycastWeaponBase:flashlight_state_changed()
 	end
 end
 
--- Lines 694-713
+-- Lines 700-719
 function NewNPCRaycastWeaponBase:set_flashlight_enabled(enabled)
 	if not self._flashlight_data then
 		return
@@ -713,7 +718,7 @@ function NewNPCRaycastWeaponBase:set_flashlight_enabled(enabled)
 	end
 end
 
--- Lines 715-730
+-- Lines 721-736
 function NewNPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 	if not self._flashlight_data then
 		return
@@ -732,7 +737,7 @@ function NewNPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 	end
 end
 
--- Lines 733-740
+-- Lines 739-746
 function NewNPCRaycastWeaponBase:set_underbarrel(underbarrel_id, enabled)
 	underbarrel_id = underbarrel_id .. "_npc"
 

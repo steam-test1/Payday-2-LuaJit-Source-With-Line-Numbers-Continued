@@ -1,7 +1,7 @@
 StoryMissionsManager = StoryMissionsManager or class()
-StoryMissionsManager._version = 1
+StoryMissionsManager._version = 2
 
--- Lines 5-60
+-- Lines 5-56
 function StoryMissionsManager:init()
 	if not Global.story_mission_manager then
 		Global.story_mission_manager = {}
@@ -35,8 +35,6 @@ function StoryMissionsManager:init()
 				end
 			end
 		end
-
-		gm.mission_order[#gm.mission_order].last_mission = true
 	end
 
 	self._global = Global.story_mission_manager
@@ -60,32 +58,32 @@ function StoryMissionsManager:init()
 	end)
 end
 
--- Lines 62-64
+-- Lines 58-60
 function StoryMissionsManager:current_mission()
 	return self._global.current_mission
 end
 
--- Lines 66-68
+-- Lines 62-64
 function StoryMissionsManager:get_mission(id)
 	return self._global.missions[id]
 end
 
--- Lines 70-72
+-- Lines 66-68
 function StoryMissionsManager:get_mission_at(i)
 	return self._global.mission_order[i]
 end
 
--- Lines 74-76
+-- Lines 70-72
 function StoryMissionsManager:missions()
 	return self._global.missions
 end
 
--- Lines 78-80
+-- Lines 74-76
 function StoryMissionsManager:missions_in_order()
 	return self._global.mission_order
 end
 
--- Lines 82-93
+-- Lines 78-89
 function StoryMissionsManager:get_mission_levels(id)
 	local m = self:_get_or_current(id)
 
@@ -104,7 +102,7 @@ function StoryMissionsManager:get_mission_levels(id)
 	return levels
 end
 
--- Lines 95-110
+-- Lines 91-106
 function StoryMissionsManager:award(id, steps)
 	steps = steps or 1
 	local m = self:current_mission() or {}
@@ -128,7 +126,7 @@ function StoryMissionsManager:award(id, steps)
 	end
 end
 
--- Lines 114-126
+-- Lines 110-122
 function StoryMissionsManager:claim_rewards(mission)
 	mission = self:_get_or_current(mission)
 
@@ -146,7 +144,7 @@ function StoryMissionsManager:claim_rewards(mission)
 	managers.savefile:save_progress()
 end
 
--- Lines 128-154
+-- Lines 124-150
 function StoryMissionsManager:_reward(reward)
 	if reward.type_items == "xp" then
 		local value_id = tweak_data.blackmarket[reward.type_items][reward.item_entry].value_id
@@ -171,7 +169,7 @@ function StoryMissionsManager:_reward(reward)
 	end
 end
 
--- Lines 158-181
+-- Lines 154-177
 function StoryMissionsManager:_check_complete(mission)
 	mission = self:_get_or_current(mission)
 
@@ -204,7 +202,7 @@ function StoryMissionsManager:_check_complete(mission)
 	end
 end
 
--- Lines 183-198
+-- Lines 179-194
 function StoryMissionsManager:_find_next_mission(dont_set)
 	local last = nil
 
@@ -227,7 +225,7 @@ function StoryMissionsManager:_find_next_mission(dont_set)
 	return last
 end
 
--- Lines 200-207
+-- Lines 196-203
 function StoryMissionsManager:_change_current_mission(mission)
 	self._global.current_mission = mission
 
@@ -237,7 +235,7 @@ function StoryMissionsManager:_change_current_mission(mission)
 	end
 end
 
--- Lines 211-216
+-- Lines 207-212
 function StoryMissionsManager:_get_offset_mission(mission, offset)
 	local m = self:_get_or_current(mission)
 
@@ -248,7 +246,7 @@ function StoryMissionsManager:_get_offset_mission(mission, offset)
 	return self._global.mission_order[m.order + offset]
 end
 
--- Lines 220-228
+-- Lines 216-224
 function StoryMissionsManager:_get_or_current(mission)
 	if mission then
 		if type(mission) == "string" then
@@ -261,7 +259,7 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines 232-262
+-- Lines 228-260
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
@@ -272,6 +270,7 @@ function StoryMissionsManager:save(cache)
 
 		completed_missions[mission.id] = {
 			id = mission.id,
+			objectives = self:_save_objectives(mission),
 			rewarded = mission.rewarded
 		}
 	end
@@ -295,7 +294,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines 264-275
+-- Lines 262-273
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -310,12 +309,42 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 277-314
+-- Lines 275-296
+function StoryMissionsManager:_migrate_save_data(version_from, version_to, state)
+	if version_to - version_from > 1 then
+		version_from = self:_migrate_save_data(version_from, version_to - 1, state)
+	end
+
+	if version_from == 1 then
+		for id, saved_mission in pairs(state.completed_missions or {}) do
+			local mission = self:get_mission(id)
+
+			if mission then
+				saved_mission.objectives = {}
+
+				for _, sub_obj in ipairs(mission.objectives[1] or {}) do
+					local objective_data = {
+						completed = true,
+						progress_id = sub_obj.progress_id,
+						progress = sub_obj.max_progress
+					}
+					saved_mission.objectives[sub_obj.progress_id] = objective_data
+				end
+			end
+		end
+	end
+end
+
+-- Lines 298-346
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
-	if not state or state.version ~= StoryMissionsManager._version then
+	if not state then
 		return
+	end
+
+	if (state.version or 0) < self._version then
+		self:_migrate_save_data(state.version, self._version, state)
 	end
 
 	for id, c in pairs(state.completed_missions or {}) do
@@ -324,6 +353,15 @@ function StoryMissionsManager:load(cache, version)
 		if m then
 			m.completed = true
 			m.rewarded = c.rewarded
+
+			for id, o in pairs(c.objectives or {}) do
+				local my_o = m.objectives_flat[id]
+
+				if my_o then
+					my_o.completed = o.completed
+					my_o.progress = o.progress
+				end
+			end
 		end
 	end
 
@@ -352,12 +390,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 316-318
+-- Lines 348-350
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 320-363
+-- Lines 352-395
 function StoryMissionsManager:start_mission(mission, objective_id)
 	if not self:_get_or_current(mission) then
 		local m = {
@@ -421,9 +459,9 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 367-383
+-- Lines 399-415
 function StoryMissionsManager:reset_all()
-	-- Lines 368-376
+	-- Lines 400-408
 	local function reset(m)
 		if not m then
 			return

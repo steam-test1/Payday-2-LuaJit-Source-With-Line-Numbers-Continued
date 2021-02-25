@@ -13,7 +13,7 @@ end
 -- Lines 11-17
 function StoryMissionsTweakData:_create_objective(data)
 	data = data or {}
-	data.complete = false
+	data.completed = false
 	data.max_progress = data.progress_id and data.max_progress or 1
 	data.progress = 0
 
@@ -147,7 +147,7 @@ function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines 131-754
+-- Lines 131-760
 function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 5
 	self.missions = {
@@ -897,6 +897,12 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 				}
 			},
 			rewards = self:_default_reward()
+		}),
+		self:_mission("sm_end", {
+			rewarded = true,
+			completed = true,
+			last_mission = true,
+			objectives = {}
 		})
 	}
 end

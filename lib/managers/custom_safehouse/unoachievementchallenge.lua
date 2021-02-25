@@ -8,7 +8,7 @@ function UnoAchievementChallenge:init()
 	self._peer_completion = {}
 end
 
--- Lines 13-26
+-- Lines 13-28
 function UnoAchievementChallenge:init_finalize()
 	if not managers.network:session() then
 		return
@@ -22,9 +22,11 @@ function UnoAchievementChallenge:init_finalize()
 		self:set_peer_completed(managers.network:session():local_peer():id(), self:challenge_completed())
 		managers.mission:add_global_event_listener({}, "on_peer_removed", callback(self, self, "on_peer_removed"))
 	end
+
+	managers.mission:add_global_event_listener({}, Message.OnAchievement, callback(self, self, "on_achievement_awarded"))
 end
 
--- Lines 28-41
+-- Lines 30-43
 function UnoAchievementChallenge:generate_challenge(trigger_save)
 	local pool = tweak_data.safehouse.uno_achievements_pool
 	local challenge = table.shuffled_copy(pool)
@@ -40,19 +42,33 @@ function UnoAchievementChallenge:generate_challenge(trigger_save)
 	end
 end
 
--- Lines 43-45
+-- Lines 45-47
 function UnoAchievementChallenge:on_peer_removed(peer_id)
 	self:set_peer_completed(peer_id, nil)
 end
 
--- Lines 47-50
+-- Lines 49-52
 function UnoAchievementChallenge:set_peer_completed(peer_id, completed)
 	self._peer_completion[peer_id] = completed
 
 	self:attempt_access_notification()
 end
 
--- Lines 52-61
+-- Lines 54-56
+function UnoAchievementChallenge:uno_ending_key()
+	return Application:md5_encrypt("9x7XhhdHVse6hmRBTmz2" .. Steam:userid())
+end
+
+-- Lines 58-63
+function UnoAchievementChallenge:on_achievement_awarded(achievement_id)
+	if achievement_id == "fin_1" then
+		Global.statistics_manager.stat_check.h = self:uno_ending_key()
+
+		managers.statistics:check_stats()
+	end
+end
+
+-- Lines 65-74
 function UnoAchievementChallenge:attempt_access_notification()
 	local verified_before = self._group_challenge_verified
 	local verified_after = self:group_challenge_completed()
@@ -64,7 +80,7 @@ function UnoAchievementChallenge:attempt_access_notification()
 	self._group_challenge_verified = verified_after
 end
 
--- Lines 63-85
+-- Lines 76-98
 function UnoAchievementChallenge:group_challenge_completed()
 	local session = managers.network:session()
 
@@ -85,7 +101,7 @@ function UnoAchievementChallenge:group_challenge_completed()
 	return worthy_players_required <= worthy_count
 end
 
--- Lines 87-105
+-- Lines 100-118
 function UnoAchievementChallenge:challenge_completed()
 	if not self._global.challenge then
 		return false
@@ -102,17 +118,17 @@ function UnoAchievementChallenge:challenge_completed()
 	return true
 end
 
--- Lines 107-109
+-- Lines 120-122
 function UnoAchievementChallenge:challenge()
 	return self._global.challenge
 end
 
--- Lines 111-113
+-- Lines 124-126
 function UnoAchievementChallenge:save()
 	return self._global
 end
 
--- Lines 115-120
+-- Lines 128-133
 function UnoAchievementChallenge:load(data)
 	if not data then
 		return
