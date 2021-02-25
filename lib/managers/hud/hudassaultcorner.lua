@@ -1034,6 +1034,7 @@ function HUDAssaultCorner:show_casing(mode)
 		self._casing_bg_box:child("text_panel"):clear()
 	else
 		self._casing_bg_box:panel({
+			halign = "grow",
 			name = "text_panel"
 		})
 	end

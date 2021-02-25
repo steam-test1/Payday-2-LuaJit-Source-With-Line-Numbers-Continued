@@ -793,7 +793,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 463-569
+-- Lines 463-572
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -1019,6 +1019,10 @@ function TweakData:_setup_scene_poses()
 		jail = {
 			"standard_suit",
 			"standard_suit"
+		},
+		poolrepair = {
+			"pool",
+			"pool"
 		}
 	}
 end

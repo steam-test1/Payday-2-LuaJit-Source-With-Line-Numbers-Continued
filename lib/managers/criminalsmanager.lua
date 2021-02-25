@@ -321,7 +321,7 @@ function CriminalsManager:update_character_visual_state(character_name, visual_s
 	}
 end
 
--- Lines 364-505
+-- Lines 364-509
 function CriminalsManager.set_character_visual_state(unit, character_name, is_local_peer, visual_seed, player_style, suit_variation, mask_id, armor_id, armor_skin)
 	print("[CriminalsManager.set_character_visual_state]", unit, character_name, is_local_peer, visual_seed, player_style, suit_variation, mask_id, armor_id, armor_skin)
 
@@ -343,7 +343,11 @@ function CriminalsManager.set_character_visual_state(unit, character_name, is_lo
 		return
 	end
 
-	-- Lines 391-402
+	if unit:inventory() and unit:inventory().mask_visibility and not unit:inventory():mask_visibility() then
+		mask_id = nil
+	end
+
+	-- Lines 395-406
 	local function run_sequence_safe(sequence, sequence_unit)
 		if not sequence then
 			return
@@ -358,7 +362,7 @@ function CriminalsManager.set_character_visual_state(unit, character_name, is_lo
 		end
 	end
 
-	-- Lines 404-406
+	-- Lines 408-410
 	local function get_value_string(value)
 		return is_local_peer and tostring(value) or "third_" .. tostring(value)
 	end
@@ -467,12 +471,12 @@ function CriminalsManager.set_character_visual_state(unit, character_name, is_lo
 	math.random()
 end
 
--- Lines 507-509
+-- Lines 511-513
 function CriminalsManager.get_new_visual_seed()
 	return math.random(0, 32767)
 end
 
--- Lines 511-517
+-- Lines 515-521
 function CriminalsManager:update_visual_states()
 	for _, character in ipairs(self:characters()) do
 		if character.taken and alive(character.unit) then
@@ -481,7 +485,7 @@ function CriminalsManager:update_visual_states()
 	end
 end
 
--- Lines 530-541
+-- Lines 534-545
 function CriminalsManager:set_active_player_style(player_style, sync)
 	self._player_style = tweak_data.blackmarket.player_styles[player_style] and player_style or nil
 
@@ -496,7 +500,7 @@ function CriminalsManager:set_active_player_style(player_style, sync)
 	end
 end
 
--- Lines 543-554
+-- Lines 547-558
 function CriminalsManager:active_player_style()
 	if self._player_style then
 		return self._player_style
@@ -511,7 +515,7 @@ function CriminalsManager:active_player_style()
 	return "none"
 end
 
--- Lines 557-564
+-- Lines 561-568
 function CriminalsManager:set_active_player_style_locked(locked, sync)
 	self._player_style_locked = locked
 
@@ -522,7 +526,7 @@ function CriminalsManager:set_active_player_style_locked(locked, sync)
 	end
 end
 
--- Lines 566-577
+-- Lines 570-581
 function CriminalsManager:is_active_player_style_locked()
 	if self._player_style_locked then
 		return true
@@ -537,7 +541,7 @@ function CriminalsManager:is_active_player_style_locked()
 	return false
 end
 
--- Lines 582-661
+-- Lines 586-665
 function CriminalsManager:set_unit(name, unit, ai_loadout)
 	print("[CriminalsManager]:set_unit", name, unit)
 
@@ -597,7 +601,7 @@ function CriminalsManager:set_unit(name, unit, ai_loadout)
 	end
 end
 
--- Lines 663-681
+-- Lines 667-685
 function CriminalsManager:set_data(name)
 	print("[CriminalsManager]:set_data", name)
 
@@ -619,7 +623,7 @@ function CriminalsManager:set_data(name)
 	end
 end
 
--- Lines 685-693
+-- Lines 689-697
 function CriminalsManager:is_taken(name)
 	for _, data in pairs(self._characters) do
 		if name == data.name then
@@ -630,7 +634,7 @@ function CriminalsManager:is_taken(name)
 	return false
 end
 
--- Lines 697-703
+-- Lines 701-707
 function CriminalsManager:character_name_by_peer_id(peer_id)
 	for _, data in pairs(self._characters) do
 		if data.taken and peer_id == data.peer_id then
@@ -639,14 +643,14 @@ function CriminalsManager:character_name_by_peer_id(peer_id)
 	end
 end
 
--- Lines 707-715
+-- Lines 711-719
 function CriminalsManager:character_color_id_by_peer_id(peer_id)
 	local workname = self.character_workname_by_peer_id(peer_id)
 
 	return self:character_color_id_by_name(workname)
 end
 
--- Lines 719-729
+-- Lines 723-733
 function CriminalsManager:character_color_id_by_unit(unit)
 	local search_key = unit:key()
 
@@ -661,7 +665,7 @@ function CriminalsManager:character_color_id_by_unit(unit)
 	end
 end
 
--- Lines 731-744
+-- Lines 735-748
 function CriminalsManager:character_color_id_by_name(name)
 	for id, data in pairs(self._characters) do
 		if name == data.name then
@@ -670,7 +674,7 @@ function CriminalsManager:character_color_id_by_name(name)
 	end
 end
 
--- Lines 748-769
+-- Lines 752-773
 function CriminalsManager:character_by_name(name)
 	local character_name = CriminalsManager.convert_new_to_old_character_workname(name)
 
@@ -683,7 +687,7 @@ function CriminalsManager:character_by_name(name)
 	return false
 end
 
--- Lines 771-783
+-- Lines 775-787
 function CriminalsManager:character_by_peer_id(peer_id)
 	for _, character in pairs(self._characters) do
 		if peer_id == character.peer_id then
@@ -694,7 +698,7 @@ function CriminalsManager:character_by_peer_id(peer_id)
 	return false
 end
 
--- Lines 785-806
+-- Lines 789-810
 function CriminalsManager:character_by_unit(unit)
 	local search_key = unit:key()
 
@@ -707,7 +711,7 @@ function CriminalsManager:character_by_unit(unit)
 	return false
 end
 
--- Lines 810-819
+-- Lines 814-823
 function CriminalsManager:has_character_by_name(name)
 	local character_name = CriminalsManager.convert_new_to_old_character_workname(name)
 
@@ -720,7 +724,7 @@ function CriminalsManager:has_character_by_name(name)
 	return false
 end
 
--- Lines 821-829
+-- Lines 825-833
 function CriminalsManager:has_character_by_peer_id(peer_id)
 	for _, character in pairs(self._characters) do
 		if peer_id == character.peer_id then
@@ -731,7 +735,7 @@ function CriminalsManager:has_character_by_peer_id(peer_id)
 	return false
 end
 
--- Lines 831-840
+-- Lines 835-844
 function CriminalsManager:has_character_by_unit(unit)
 	local search_key = unit and unit:key()
 
@@ -744,7 +748,7 @@ function CriminalsManager:has_character_by_unit(unit)
 	return false
 end
 
--- Lines 844-849
+-- Lines 848-853
 function CriminalsManager:character_data_by_name(name)
 	local character = self:character_by_name(name)
 
@@ -753,7 +757,7 @@ function CriminalsManager:character_data_by_name(name)
 	end
 end
 
--- Lines 851-856
+-- Lines 855-860
 function CriminalsManager:character_data_by_peer_id(peer_id)
 	local character = self:character_by_peer_id(peer_id)
 
@@ -762,7 +766,7 @@ function CriminalsManager:character_data_by_peer_id(peer_id)
 	end
 end
 
--- Lines 858-863
+-- Lines 862-867
 function CriminalsManager:character_data_by_unit(unit)
 	local character = self:character_by_unit(unit)
 
@@ -771,7 +775,7 @@ function CriminalsManager:character_data_by_unit(unit)
 	end
 end
 
--- Lines 867-872
+-- Lines 871-876
 function CriminalsManager:character_static_data_by_name(name)
 	local character = self:character_by_name(name)
 
@@ -780,7 +784,7 @@ function CriminalsManager:character_static_data_by_name(name)
 	end
 end
 
--- Lines 876-881
+-- Lines 880-885
 function CriminalsManager:character_unit_by_name(name)
 	local character = self:character_by_name(name)
 
@@ -789,7 +793,7 @@ function CriminalsManager:character_unit_by_name(name)
 	end
 end
 
--- Lines 883-888
+-- Lines 887-892
 function CriminalsManager:character_unit_by_peer_id(peer_id)
 	local character = self:character_by_peer_id(peer_id)
 
@@ -798,7 +802,7 @@ function CriminalsManager:character_unit_by_peer_id(peer_id)
 	end
 end
 
--- Lines 892-897
+-- Lines 896-901
 function CriminalsManager:character_taken_by_name(name)
 	local character = self:character_by_name(name)
 
@@ -807,7 +811,7 @@ function CriminalsManager:character_taken_by_name(name)
 	end
 end
 
--- Lines 900-905
+-- Lines 904-909
 function CriminalsManager:character_peer_id_by_name(name)
 	local character = self:character_by_name(name)
 
@@ -816,7 +820,7 @@ function CriminalsManager:character_peer_id_by_name(name)
 	end
 end
 
--- Lines 907-912
+-- Lines 911-916
 function CriminalsManager:character_peer_id_by_unit(unit)
 	local character = self:character_by_unit(unit)
 
@@ -825,7 +829,7 @@ function CriminalsManager:character_peer_id_by_unit(unit)
 	end
 end
 
--- Lines 916-942
+-- Lines 920-946
 function CriminalsManager:get_free_character_name()
 	local preferred = managers.blackmarket:preferred_henchmen()
 
@@ -858,7 +862,7 @@ function CriminalsManager:get_free_character_name()
 	end
 end
 
--- Lines 946-955
+-- Lines 950-959
 function CriminalsManager:get_num_player_criminals()
 	local num = 0
 
@@ -871,7 +875,7 @@ function CriminalsManager:get_num_player_criminals()
 	return num
 end
 
--- Lines 959-983
+-- Lines 963-987
 function CriminalsManager:on_peer_left(peer_id)
 	for id, data in pairs(self._characters) do
 		local char_dmg = alive(data.unit) and data.unit:character_damage()
@@ -902,7 +906,7 @@ function CriminalsManager:on_peer_left(peer_id)
 	end
 end
 
--- Lines 987-999
+-- Lines 991-1003
 function CriminalsManager:remove_character_by_unit(unit)
 	if type_name(unit) ~= "Unit" then
 		return
@@ -919,7 +923,7 @@ function CriminalsManager:remove_character_by_unit(unit)
 	end
 end
 
--- Lines 1003-1010
+-- Lines 1007-1014
 function CriminalsManager:remove_character_by_peer_id(peer_id)
 	for id, data in pairs(self._characters) do
 		if data.taken and peer_id == data.peer_id then
@@ -930,7 +934,7 @@ function CriminalsManager:remove_character_by_peer_id(peer_id)
 	end
 end
 
--- Lines 1014-1021
+-- Lines 1018-1025
 function CriminalsManager:remove_character_by_name(name)
 	for id, data in pairs(self._characters) do
 		if data.taken and name == data.name then
@@ -941,7 +945,7 @@ function CriminalsManager:remove_character_by_name(name)
 	end
 end
 
--- Lines 1025-1035
+-- Lines 1029-1039
 function CriminalsManager:character_name_by_unit(unit)
 	if type_name(unit) ~= "Unit" then
 		return nil
@@ -956,7 +960,7 @@ function CriminalsManager:character_name_by_unit(unit)
 	end
 end
 
--- Lines 1039-1045
+-- Lines 1043-1049
 function CriminalsManager:character_name_by_panel_id(panel_id)
 	for id, data in pairs(self._characters) do
 		if data.taken and data.data.panel_id == panel_id then
@@ -965,7 +969,7 @@ function CriminalsManager:character_name_by_panel_id(panel_id)
 	end
 end
 
--- Lines 1049-1059
+-- Lines 1053-1063
 function CriminalsManager:character_static_data_by_unit(unit)
 	if type_name(unit) ~= "Unit" then
 		return nil
@@ -980,7 +984,7 @@ function CriminalsManager:character_static_data_by_unit(unit)
 	end
 end
 
--- Lines 1063-1071
+-- Lines 1067-1075
 function CriminalsManager:nr_AI_criminals()
 	local nr_AI_criminals = 0
 
@@ -993,7 +997,7 @@ function CriminalsManager:nr_AI_criminals()
 	return nr_AI_criminals
 end
 
--- Lines 1073-1081
+-- Lines 1077-1085
 function CriminalsManager:nr_taken_criminals()
 	local nr_taken_criminals = 0
 
@@ -1006,7 +1010,7 @@ function CriminalsManager:nr_taken_criminals()
 	return nr_taken_criminals
 end
 
--- Lines 1085-1093
+-- Lines 1089-1097
 function CriminalsManager:is_character_as_AI_level_blocked(name)
 	if not Global.game_settings.level_id then
 		return false
@@ -1017,7 +1021,7 @@ function CriminalsManager:is_character_as_AI_level_blocked(name)
 	return block_AIs and block_AIs[name] or false
 end
 
--- Lines 1097-1117
+-- Lines 1101-1121
 function CriminalsManager:get_team_ai_character(index)
 	Global.team_ai = Global.team_ai or {}
 	index = index or 1
@@ -1044,7 +1048,7 @@ function CriminalsManager:get_team_ai_character(index)
 	return char_name
 end
 
--- Lines 1120-1136
+-- Lines 1124-1140
 function CriminalsManager:save_current_character_names()
 	Global.team_ai = Global.team_ai or {}
 	local index = 1
@@ -1057,7 +1061,7 @@ function CriminalsManager:save_current_character_names()
 	end
 end
 
--- Lines 1140-1175
+-- Lines 1144-1179
 function CriminalsManager:_reserve_loadout_for(char)
 	print("[CriminalsManager]._reserve_loadout_for", char)
 
@@ -1099,7 +1103,7 @@ function CriminalsManager:_reserve_loadout_for(char)
 	return managers.blackmarket:henchman_loadout(1, true)
 end
 
--- Lines 1179-1216
+-- Lines 1183-1220
 function CriminalsManager:_reassign_loadouts()
 	local current_taken = {}
 	local remove_from_index = 1
@@ -1145,12 +1149,12 @@ function CriminalsManager:_reassign_loadouts()
 	end
 end
 
--- Lines 1220-1222
+-- Lines 1224-1226
 function CriminalsManager:get_loadout_string_for(char_name)
 	return managers.blackmarket:henchman_loadout_string(self:get_loadout_for(char_name))
 end
 
--- Lines 1224-1228
+-- Lines 1228-1232
 function CriminalsManager:get_loadout_for(char_name)
 	local index = self._loadout_map[char_name] or 1
 

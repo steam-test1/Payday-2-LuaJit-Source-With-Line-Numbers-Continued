@@ -107,14 +107,14 @@ function IngameWaitingForSpawnAllowed:at_enter()
 	})
 end
 
--- Lines 120-146
+-- Lines 120-150
 function IngameWaitingForSpawnAllowed:at_exit(data)
 	if _G.IS_VR then
 		managers.menu:close_menu("custody")
 	end
 
 	if self.music_on_death then
-		managers.music:track_listen_stop()
+		managers.music:stop_listen_all()
 
 		self.music_on_death = nil
 	end
@@ -137,19 +137,19 @@ function IngameWaitingForSpawnAllowed:at_exit(data)
 	managers.hud:set_player_condition("mugshot_normal", "")
 end
 
--- Lines 152-153
+-- Lines 156-157
 function IngameWaitingForSpawnAllowed:trade_death(respawn_delay, hostages_killed)
 end
 
--- Lines 155-156
+-- Lines 159-160
 function IngameWaitingForSpawnAllowed:finish_trade()
 end
 
--- Lines 158-159
+-- Lines 162-163
 function IngameWaitingForSpawnAllowed:begin_trade()
 end
 
--- Lines 161-162
+-- Lines 165-166
 function IngameWaitingForSpawnAllowed:cancel_trade()
 end
 

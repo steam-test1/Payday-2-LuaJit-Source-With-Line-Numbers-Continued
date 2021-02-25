@@ -5732,7 +5732,7 @@ end
 
 -- Lines 5632-5634
 function MenuSoundCreator:refresh_node(node)
-	self:modify_node(node)
+	return self:modify_node(node)
 end
 
 -- Lines 5637-5699
@@ -7108,7 +7108,7 @@ function MenuJukeboxHeistTracks:_have_music(job_id)
 		end
 	else
 		for _, level_data in ipairs(job_tweak.chain) do
-			if tweak_data.levels[level_data.level_id].music ~= "no_music" then
+			if level_data.level_id and tweak_data.levels[level_data.level_id].music ~= "no_music" then
 				return true
 			end
 		end
@@ -7247,9 +7247,422 @@ function MenuJukeboxMenuTracks:modify_node(node, data)
 	return node
 end
 
+MenuKitJukeboxGhostInitiator = MenuKitJukeboxGhostInitiator or class()
+
+-- Lines 7020-7087
+function MenuKitJukeboxGhostInitiator:modify_node(node, data)
+	if not node:item("choose_jukebox_your_choice") then
+		local track_list, track_locked = managers.music:jukebox_ghost_tracks()
+		local option_data = {
+			type = "MenuItemMultiChoiceWithIcon"
+		}
+
+		for _, track_name in ipairs(track_list) do
+			if not track_locked[track_name] then
+				table.insert(option_data, {
+					_meta = "option",
+					text_id = "menu_jukebox_screen_" .. track_name,
+					value = track_name
+				})
+			end
+		end
+
+		local params = {
+			callback = "jukebox_ghost_track_selection",
+			name = "choose_jukebox_your_choice",
+			text_id = "",
+			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
+		}
+		local item = node:create_item(option_data, params)
+
+		item:set_enabled(false)
+		node:add_item(item)
+	end
+
+	local track_name = managers.localization:text("menu_jukebox_playlist_ghost")
+	local job_data = Global.job_manager.current_job
+
+	if job_data then
+		local track = managers.music:jukebox_ghost_specific()
+
+		if track == "all" then
+			track_name = track_name .. " (" .. managers.localization:text("menu_jukebox_playlist_all") .. ")"
+		elseif track == "playlist" then
+			track_name = track_name .. " (" .. managers.localization:text("menu_jukebox_random_ghost_playlist") .. ")"
+		else
+			track_name = track_name .. " (" .. managers.localization:text("menu_jukebox_screen_" .. track) .. ")"
+		end
+	end
+
+	node:item("toggle_jukebox_playlist_heist"):set_parameter("localize", "false")
+	node:item("toggle_jukebox_playlist_heist"):set_parameter("text_id", track_name)
+
+	if Network:is_server() then
+		if Global.music_manager.loadout_selection_ghost == "server" then
+			Global.music_manager.loadout_selection_ghost = nil
+		end
+
+		node:item("toggle_jukebox_server_choice"):set_enabled(false)
+	end
+
+	if not Global.music_manager.loadout_selection_ghost or Global.music_manager.loadout_selection_ghost == "heist" then
+		node:item("toggle_jukebox_playlist_heist"):set_value("on")
+	elseif Global.music_manager.loadout_selection_ghost == "global" then
+		node:item("toggle_jukebox_playlist_global"):set_value("on")
+	elseif Global.music_manager.loadout_selection_ghost == "all" then
+		node:item("toggle_jukebox_playlist_all"):set_value("on")
+	elseif Global.music_manager.loadout_selection_ghost == "server" then
+		node:item("toggle_jukebox_server_choice"):set_value("on")
+	else
+		node:item("toggle_jukebox_your_choice"):set_value("on")
+
+		local selection = node:item("choose_jukebox_your_choice")
+
+		selection:set_enabled(true)
+		selection:set_value(Global.music_manager.loadout_selection_ghost)
+	end
+
+	return node
+end
+
+MenuJukeboxGhostPlaylist = MenuJukeboxGhostPlaylist or class()
+
+-- Lines 7091-7134
+function MenuJukeboxGhostPlaylist:modify_node(node, data)
+	managers.menu_component:show_contract_character(false)
+	node:clean_items()
+
+	local data = {
+		{
+			w = 24,
+			y = 0,
+			h = 24,
+			s_y = 24,
+			value = "on",
+			s_w = 24,
+			s_h = 24,
+			s_x = 24,
+			_meta = "option",
+			icon = "guis/textures/menu_tickbox",
+			x = 24,
+			s_icon = "guis/textures/menu_tickbox"
+		},
+		{
+			w = 24,
+			y = 0,
+			h = 24,
+			s_y = 24,
+			value = "off",
+			s_w = 24,
+			s_h = 24,
+			s_x = 0,
+			_meta = "option",
+			icon = "guis/textures/menu_tickbox",
+			x = 0,
+			s_icon = "guis/textures/menu_tickbox"
+		},
+		type = "MenuItemToggleWithIcon"
+	}
+	local item = nil
+	local track_list, track_locked = managers.music:jukebox_ghost_tracks()
+
+	for _, track_name in pairs(track_list) do
+		local locked = track_locked[track_name]
+		local params = {
+			callback = "jukebox_option_ghost_playlist",
+			name = track_name,
+			text_id = "menu_jukebox_screen_" .. track_name,
+			help_id = locked and "menu_jukebox_locked_" .. locked,
+			disabled_color = tweak_data.screen_colors.important_1,
+			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
+		}
+		item = node:create_item(data, params)
+
+		if locked then
+			item:set_value("off")
+			item:set_enabled(false)
+		else
+			item:set_value(managers.music:playlist_ghost_contains(track_name) and "on" or "off")
+		end
+
+		node:add_item(item)
+	end
+
+	managers.menu:add_back_button(node)
+
+	return node
+end
+
+MenuJukeboxGhostTracks = MenuJukeboxGhostTracks or class()
+
+-- Lines 7140-7207
+function MenuJukeboxGhostTracks:modify_node(node, data)
+	managers.menu_component:show_contract_character(false)
+	node:clean_items()
+
+	local track_list, track_locked = managers.music:jukebox_ghost_tracks()
+	local option_data = {
+		type = "MenuItemMultiChoiceWithIcon"
+	}
+
+	table.insert(option_data, {
+		value = "all",
+		text_id = "menu_jukebox_playlist_all",
+		_meta = "option"
+	})
+	table.insert(option_data, {
+		value = "playlist",
+		text_id = "menu_jukebox_random_ghost_playlist",
+		_meta = "option"
+	})
+
+	for _, track_name in pairs(track_list) do
+		if not track_locked[track_name] then
+			table.insert(option_data, {
+				_meta = "option",
+				text_id = "menu_jukebox_screen_" .. track_name,
+				value = track_name
+			})
+		end
+	end
+
+	local track_list = {}
+	local unique_jobs = {}
+
+	for _, job_id in ipairs(tweak_data.narrative:get_jobs_index()) do
+		local job_tweak = tweak_data.narrative:job_data(job_id)
+
+		if self:_have_music_ext(job_id) and not table.contains(unique_jobs, job_tweak.name_id) then
+			local text_id, color_ranges = tweak_data.narrative:create_job_name(job_id, true)
+			local days = #tweak_data.narrative:job_chain(job_id)
+
+			table.insert(unique_jobs, job_tweak.name_id)
+
+			if days > 1 then
+				for i = 1, days do
+					table.insert(track_list, {
+						job_id = job_id,
+						name_id = job_tweak.name_id,
+						day = i,
+						sort_id = text_id,
+						text_id = text_id .. " - " .. managers.localization:text("menu_jukebox_heist_day", {
+							day = i
+						}),
+						color_ranges = color_ranges
+					})
+				end
+			else
+				table.insert(track_list, {
+					job_id = job_id,
+					name_id = job_tweak.name_id,
+					sort_id = text_id,
+					text_id = text_id,
+					color_ranges = color_ranges
+				})
+			end
+		end
+	end
+
+	table.sort(track_list, function (x, y)
+		return x.sort_id == y.sort_id and x.text_id < y.text_id or x.sort_id < y.sort_id
+	end)
+
+	for _, track_data in pairs(track_list) do
+		local heist_name = track_data.name_id .. (track_data.day and track_data.day or "")
+		local params = {
+			localize = "false",
+			align = "left",
+			callback = "jukebox_option_ghost_tracks",
+			text_offset = 100,
+			name = heist_name,
+			text_id = track_data.text_id,
+			color_ranges = track_data.color_ranges,
+			heist_job = track_data.job_id,
+			heist_days = track_data.day,
+			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
+		}
+		local item = node:create_item(option_data, params)
+
+		item:set_value(managers.music:track_attachment(heist_name) or "all")
+		node:add_item(item)
+	end
+
+	managers.menu:add_back_button(node)
+
+	return node
+end
+
+-- Lines 7209-7233
+function MenuJukeboxGhostTracks:_have_music_ext(job_id)
+	local job_tweak = tweak_data.narrative.jobs[job_id]
+
+	if not job_tweak or job_tweak.contact == "tests" or job_tweak.wrapped_to_job then
+		return false
+	end
+
+	if job_tweak.job_wrapper then
+		for _, wrapped_job in ipairs(job_tweak.job_wrapper) do
+			for _, level_data in ipairs(tweak_data.narrative.jobs[wrapped_job].chain) do
+				if tweak_data.levels[level_data.level_id].music_ext_start then
+					return true
+				end
+			end
+		end
+	else
+		for _, level_data in ipairs(job_tweak.chain) do
+			if level_data.level_id and tweak_data.levels[level_data.level_id].music_ext_start then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+-- Lines 7235-7243
+function MenuCallbackHandler:jukebox_ghost_playlist_all(item)
+	if item:enabled() then
+		self:_jukebox_disable_items(item)
+
+		Global.music_manager.loadout_selection_ghost = "all"
+
+		managers.music:music_ext_listen_stop()
+		managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):set_icon_visible(false)
+	end
+end
+
+-- Lines 7245-7253
+function MenuCallbackHandler:jukebox_ghost_playlist_global(item)
+	if item:enabled() then
+		self:_jukebox_disable_items(item)
+
+		Global.music_manager.loadout_selection_ghost = "global"
+
+		managers.music:music_ext_listen_stop()
+		managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):set_icon_visible(false)
+	end
+end
+
+-- Lines 7255-7263
+function MenuCallbackHandler:jukebox_ghost_playlist_heist(item)
+	if item:enabled() then
+		self:_jukebox_disable_items(item)
+
+		Global.music_manager.loadout_selection_ghost = "heist"
+
+		managers.music:music_ext_listen_stop()
+		managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):set_icon_visible(false)
+	end
+end
+
+-- Lines 7265-7273
+function MenuCallbackHandler:jukebox_ghost_server_choice(item)
+	if item:enabled() then
+		self:_jukebox_disable_items(item)
+
+		Global.music_manager.loadout_selection_ghost = "server"
+
+		managers.music:music_ext_listen_stop()
+		managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):set_icon_visible(false)
+	end
+end
+
+-- Lines 7275-7280
+function MenuCallbackHandler:jukebox_ghost_your_choice(item)
+	if item:enabled() then
+		self:_jukebox_disable_items(item)
+
+		Global.music_manager.loadout_selection_ghost = managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):value()
+	end
+end
+
+-- Lines 7282-7294
+function MenuCallbackHandler:jukebox_ghost_track_selection(item)
+	local track = item:value()
+	Global.music_manager.loadout_selection_ghost = track
+
+	if track ~= "all" and track ~= "playlist" then
+		managers.music:music_ext_listen_start(track)
+		managers.menu_component:on_ready_pressed_mission_briefing_gui(false)
+		item:set_icon_visible(true)
+	else
+		managers.music:music_ext_listen_stop()
+		item:set_icon_visible(false)
+	end
+end
+
+-- Lines 7296-7328
+function MenuCallbackHandler:jukebox_option_ghost_playlist(item)
+	local tracks_list = managers.music:jukebox_ghost_tracks()
+	local empty_list = true
+
+	for _, track_name in pairs(tracks_list) do
+		if managers.menu:active_menu().logic:selected_node():item(track_name):value() == "on" then
+			empty_list = false
+
+			break
+		end
+	end
+
+	local item_list = managers.menu:active_menu().logic:selected_node():items()
+
+	for _, item_data in ipairs(item_list) do
+		if item_data.set_icon_visible then
+			item_data:set_icon_visible(false)
+		end
+	end
+
+	if empty_list then
+		item:set_value("on")
+	else
+		if item:value() == "on" then
+			managers.music:playlist_ghost_add(item:name())
+			managers.music:music_ext_listen_start(item:name())
+			item:set_icon_visible(true)
+		else
+			managers.music:playlist_ghost_remove(item:name())
+			managers.music:music_ext_listen_stop()
+		end
+
+		managers.savefile:setting_changed()
+	end
+end
+
+-- Lines 7330-7357
+function MenuCallbackHandler:jukebox_option_ghost_tracks(item)
+	local track = item:value()
+	local job = item:parameters().heist_job
+	local job_tweak = tweak_data.narrative.jobs[job]
+
+	if not job_tweak then
+		return
+	end
+
+	local day = item:parameters().heist_days and item:parameters().heist_days or ""
+
+	managers.music:track_attachment_add(job_tweak.name_id .. day, track)
+
+	local item_list = managers.menu:active_menu().logic:selected_node():items()
+
+	for _, item_data in ipairs(item_list) do
+		if item_data.set_icon_visible then
+			item_data:set_icon_visible(false)
+		end
+	end
+
+	if track ~= "all" and track ~= "playlist" then
+		managers.music:music_ext_listen_start(track)
+		item:set_icon_visible(true)
+	else
+		managers.music:music_ext_listen_stop()
+	end
+
+	managers.savefile:setting_changed()
+end
+
 MenuPrePlanningInitiator = MenuPrePlanningInitiator or class(MenuCrimeNetContactInfoInitiator)
 
--- Lines 7019-7034
+-- Lines 7363-7378
 function MenuPrePlanningInitiator:modify_node(node, item_name, selected_item)
 	node:clean_items()
 
@@ -7268,7 +7681,7 @@ function MenuPrePlanningInitiator:modify_node(node, item_name, selected_item)
 	return node
 end
 
--- Lines 7038-7079
+-- Lines 7382-7423
 function MenuPrePlanningInitiator:create_info_items(node, params, selected_item)
 	self:create_divider(node, "info_div", nil, nil, nil)
 
@@ -7304,7 +7717,7 @@ function MenuPrePlanningInitiator:create_info_items(node, params, selected_item)
 	return node, selected_item
 end
 
--- Lines 7081-7134
+-- Lines 7425-7478
 function MenuPrePlanningInitiator:modifiy_node_view_only(node, item_name, selected_item)
 	local subgroups = managers.preplanning:get_mission_element_subgroups()
 
@@ -7354,7 +7767,7 @@ function MenuPrePlanningInitiator:modifiy_node_view_only(node, item_name, select
 	return node, selected_item
 end
 
--- Lines 7136-7160
+-- Lines 7480-7504
 function MenuPrePlanningInitiator:set_locks_to_param(params, key, index)
 	local data = tweak_data:get_raw_value("preplanning", key, index) or {}
 	local enabled = params.enabled ~= false
@@ -7385,7 +7798,7 @@ function MenuPrePlanningInitiator:set_locks_to_param(params, key, index)
 	params.ignore_disabled = true
 end
 
--- Lines 7162-7215
+-- Lines 7506-7559
 function MenuPrePlanningInitiator:modifiy_node_preplanning(node, item_name, selected_item)
 	if not managers.preplanning:can_edit_preplan() then
 		return self:modifiy_node_view_only(node, item_name, selected_item)
@@ -7439,7 +7852,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning(node, item_name, sele
 	return node, selected_item
 end
 
--- Lines 7219-7283
+-- Lines 7563-7627
 function MenuPrePlanningInitiator:modifiy_node_preplanning_category(node, item_name, selected_item)
 	node:parameters().current_category = item_name or node:parameters().current_category
 	local current_category = node:parameters().current_category
@@ -7506,7 +7919,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_category(node, item_n
 	return node, selected_item
 end
 
--- Lines 7287-7424
+-- Lines 7631-7768
 function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name, selected_item)
 	node:parameters().current_type = item_name or node:parameters().current_type
 	local current_type = node:parameters().current_type
@@ -7648,7 +8061,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name,
 	return node, selected_item
 end
 
--- Lines 7428-7509
+-- Lines 7772-7853
 function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name, selected_item)
 	node:parameters().current_plan = item_name or node:parameters().current_plan
 	local current_plan = node:parameters().current_plan
@@ -7738,7 +8151,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name,
 	return node, selected_item
 end
 
--- Lines 7513-7564
+-- Lines 7857-7908
 function MenuPrePlanningInitiator:modifiy_node_preplanning_custom(node, item_name, selected_item)
 	node:parameters().current_custom = item_name or node:parameters().current_custom
 	local current_custom = node:parameters().current_custom
@@ -7793,14 +8206,14 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_custom(node, item_nam
 	return node, selected_item
 end
 
--- Lines 7569-7572
+-- Lines 7913-7916
 function MenuPrePlanningInitiator:refresh_node(node)
 	local selected_item_name = node:selected_item() and node:selected_item():name()
 
 	return self:modify_node(node, nil, selected_item_name)
 end
 
--- Lines 7574-7581
+-- Lines 7918-7925
 function MenuPrePlanningInitiator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, deep_clone(params))
@@ -7811,35 +8224,35 @@ function MenuPrePlanningInitiator:create_item(node, params)
 	return new_item
 end
 
--- Lines 7586-7590
+-- Lines 7930-7934
 function MenuCallbackHandler:open_preplanning_plan_item(item)
 	managers.menu:open_node("preplanning_plan", {
 		item:name()
 	})
 end
 
--- Lines 7592-7596
+-- Lines 7936-7940
 function MenuCallbackHandler:open_preplanning_category_item(item)
 	managers.menu:open_node("preplanning_category", {
 		item:name()
 	})
 end
 
--- Lines 7598-7602
+-- Lines 7942-7946
 function MenuCallbackHandler:open_preplanning_custom_item(item)
 	managers.menu:open_node("preplanning_custom", {
 		item:name()
 	})
 end
 
--- Lines 7604-7608
+-- Lines 7948-7952
 function MenuCallbackHandler:open_preplanning_type_item(item)
 	managers.menu:open_node("preplanning_type", {
 		item:name()
 	})
 end
 
--- Lines 7613-7647
+-- Lines 7957-7991
 function MenuCallbackHandler:open_preplanning_to_type(category, type, item_name)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local node_name = logic and logic:selected_node() and logic:selected_node():parameters().name
@@ -7888,7 +8301,7 @@ function MenuCallbackHandler:open_preplanning_to_type(category, type, item_name)
 	})
 end
 
--- Lines 7649-7669
+-- Lines 7993-8013
 function MenuCallbackHandler:open_preplanning_to_plan(plan, item_name)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local node_name = logic and logic:selected_node() and logic:selected_node():parameters().name
@@ -7915,12 +8328,12 @@ function MenuCallbackHandler:open_preplanning_to_plan(plan, item_name)
 	})
 end
 
--- Lines 7671-7673
+-- Lines 8015-8017
 function MenuCallbackHandler:stop_preplanning_post_event()
 	managers.menu_component:preplanning_stop_event()
 end
 
--- Lines 7675-7680
+-- Lines 8019-8024
 function MenuCallbackHandler:pressed_preplanning_custom_point(item)
 	if item:parameters().post_event then
 		managers.menu_component:preplanning_post_event(item:parameters().post_event, item:name(), true)
@@ -7928,14 +8341,14 @@ function MenuCallbackHandler:pressed_preplanning_custom_point(item)
 	end
 end
 
--- Lines 7682-7688
+-- Lines 8026-8032
 function MenuCallbackHandler:set_preplanning_custom_filter(item)
 	if item and item:enabled() then
 		print("AAAAAAAAAAAAA ", item:name())
 	end
 end
 
--- Lines 7690-7695
+-- Lines 8034-8039
 function MenuCallbackHandler:set_preplanning_category_filter(item)
 	if item and item:enabled() then
 		managers.menu_component:set_preplanning_category_filter(item:name())
@@ -7946,7 +8359,7 @@ function MenuCallbackHandler:set_preplanning_category_filter(item)
 	end
 end
 
--- Lines 7697-7702
+-- Lines 8041-8046
 function MenuCallbackHandler:set_preplanning_type_filter(item)
 	if item and item:enabled() then
 		managers.menu_component:set_preplanning_type_filter(item:name())
@@ -7957,7 +8370,7 @@ function MenuCallbackHandler:set_preplanning_type_filter(item)
 	end
 end
 
--- Lines 7704-7718
+-- Lines 8048-8062
 function MenuCallbackHandler:vote_preplanning_mission_element_by_item(item)
 	if item then
 		if item:enabled() then
@@ -7976,7 +8389,7 @@ function MenuCallbackHandler:vote_preplanning_mission_element_by_item(item)
 	end
 end
 
--- Lines 7720-7726
+-- Lines 8064-8070
 function MenuCallbackHandler:vote_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local item = logic and logic:selected_node() and logic:selected_node():item(id)
@@ -7986,17 +8399,17 @@ function MenuCallbackHandler:vote_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines 7729-7731
+-- Lines 8073-8075
 function MenuCallbackHandler:select_preplanning_mission_element_by_item(item)
 end
 
--- Lines 7734-7737
+-- Lines 8078-8081
 function MenuCallbackHandler:reserve_preplanning_mission_element(type, id)
 	print("[reserve_preplanning_mission_element]", "type", type, "id", id)
 	managers.preplanning:reserve_mission_element(type, id)
 end
 
--- Lines 7739-7752
+-- Lines 8083-8096
 function MenuCallbackHandler:reserve_preplanning_mission_element_by_item(item)
 	if item then
 		if item:enabled() then
@@ -8012,7 +8425,7 @@ function MenuCallbackHandler:reserve_preplanning_mission_element_by_item(item)
 	end
 end
 
--- Lines 7754-7760
+-- Lines 8098-8104
 function MenuCallbackHandler:reserve_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local item = logic and logic:selected_node() and logic:selected_node():item(id)
@@ -8022,20 +8435,20 @@ function MenuCallbackHandler:reserve_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines 7764-7767
+-- Lines 8108-8111
 function MenuCallbackHandler:unreserve_preplanning_mission_element(id)
 	print("[unreserve_preplanning_mission_element]", "id", id)
 	managers.preplanning:unreserve_mission_element(id)
 end
 
--- Lines 7769-7773
+-- Lines 8113-8117
 function MenuCallbackHandler:unreserve_preplanning_mission_element_by_item(item)
 	if item and item:enabled() then
 		MenuCallbackHandler:unreserve_preplanning_mission_element(item:name())
 	end
 end
 
--- Lines 7775-7782
+-- Lines 8119-8126
 function MenuCallbackHandler:unreserve_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu() and managers.menu:active_menu().logic
 	local item = logic and logic:selected_node() and logic:selected_node():item(id)
@@ -8045,7 +8458,7 @@ function MenuCallbackHandler:unreserve_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines 7786-7798
+-- Lines 8130-8142
 function MenuCallbackHandler:swap_preplanning_mission_element_by_id(id)
 	local logic = managers.menu:active_menu().logic
 
@@ -8062,14 +8475,14 @@ function MenuCallbackHandler:swap_preplanning_mission_element_by_id(id)
 	end
 end
 
--- Lines 7801-7805
+-- Lines 8145-8149
 function MenuCallbackHandler:swap_preplanning_mission_element_by_item(item)
 	if item and item:enabled() then
 		MenuCallbackHandler:swap_preplanning_mission_element_by_id(item:name())
 	end
 end
 
--- Lines 7807-7818
+-- Lines 8151-8162
 function MenuCallbackHandler:select_preplanning_item_by_id(id)
 	local logic = managers.menu:active_menu().logic
 
@@ -8084,44 +8497,44 @@ function MenuCallbackHandler:select_preplanning_item_by_id(id)
 	end
 end
 
--- Lines 7820-7822
+-- Lines 8164-8166
 function MenuCallbackHandler:chk_preplanning_type(item)
 	return managers.menu_component:get_preplanning_filter() == item:name()
 end
 
--- Lines 7824-7827
+-- Lines 8168-8171
 function MenuCallbackHandler:chk_preplanning_point(item)
 	return false
 end
 
--- Lines 7829-7831
+-- Lines 8173-8175
 function MenuCallbackHandler:clear_preplanning_category_filter()
 	managers.menu_component:set_preplanning_category_filter(false)
 end
 
--- Lines 7833-7835
+-- Lines 8177-8179
 function MenuCallbackHandler:clear_preplanning_type_filter()
 	managers.menu_component:set_preplanning_type_filter(false)
 end
 
--- Lines 7839-7841
+-- Lines 8183-8185
 function MenuCallbackHandler:open_preplanning_help(item)
 	managers.menu:show_preplanning_help()
 end
 
--- Lines 7843-7845
+-- Lines 8187-8189
 function MenuCallbackHandler:open_preplanning_drawboard_item(item)
 	managers.menu:open_node("preplanning_drawboard")
 end
 
--- Lines 7847-7850
+-- Lines 8191-8194
 function MenuCallbackHandler:toggle_preplanning_drawing(item)
 	local peer_id = tonumber(item:name())
 
 	managers.menu_component:toggle_preplanning_drawing(peer_id)
 end
 
--- Lines 7854-7869
+-- Lines 8198-8213
 function MenuCallbackHandler:_jukebox_disable_items(selected_item)
 	local your_choice = managers.menu:active_menu().logic:selected_node():item("toggle_jukebox_your_choice")
 	local items = {}
@@ -8139,7 +8552,7 @@ function MenuCallbackHandler:_jukebox_disable_items(selected_item)
 	managers.menu:active_menu().logic:selected_node():item("choose_jukebox_your_choice"):set_enabled(selected_item == your_choice)
 end
 
--- Lines 7871-7879
+-- Lines 8215-8223
 function MenuCallbackHandler:jukebox_playlist_all(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8151,7 +8564,7 @@ function MenuCallbackHandler:jukebox_playlist_all(item)
 	end
 end
 
--- Lines 7881-7889
+-- Lines 8225-8233
 function MenuCallbackHandler:jukebox_playlist_global(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8163,7 +8576,7 @@ function MenuCallbackHandler:jukebox_playlist_global(item)
 	end
 end
 
--- Lines 7891-7899
+-- Lines 8235-8243
 function MenuCallbackHandler:jukebox_playlist_heist(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8175,7 +8588,7 @@ function MenuCallbackHandler:jukebox_playlist_heist(item)
 	end
 end
 
--- Lines 7901-7909
+-- Lines 8245-8253
 function MenuCallbackHandler:jukebox_server_choice(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8187,7 +8600,7 @@ function MenuCallbackHandler:jukebox_server_choice(item)
 	end
 end
 
--- Lines 7911-7916
+-- Lines 8255-8260
 function MenuCallbackHandler:jukebox_your_choice(item)
 	if item:enabled() then
 		self:_jukebox_disable_items(item)
@@ -8196,7 +8609,7 @@ function MenuCallbackHandler:jukebox_your_choice(item)
 	end
 end
 
--- Lines 7918-7930
+-- Lines 8262-8274
 function MenuCallbackHandler:jukebox_track_selection(item)
 	local track = item:value()
 	Global.music_manager.loadout_selection = track
@@ -8211,7 +8624,7 @@ function MenuCallbackHandler:jukebox_track_selection(item)
 	end
 end
 
--- Lines 7932-7963
+-- Lines 8276-8307
 function MenuCallbackHandler:jukebox_option_heist_tracks(item)
 	local track = item:value()
 	local job = item:parameters().heist_job
@@ -8248,7 +8661,7 @@ function MenuCallbackHandler:jukebox_option_heist_tracks(item)
 	managers.savefile:setting_changed()
 end
 
--- Lines 7965-7997
+-- Lines 8309-8341
 function MenuCallbackHandler:jukebox_option_heist_playlist(item)
 	local tracks_list = managers.music:jukebox_music_tracks()
 	local empty_list = true
@@ -8285,7 +8698,7 @@ function MenuCallbackHandler:jukebox_option_heist_playlist(item)
 	end
 end
 
--- Lines 7999-8031
+-- Lines 8343-8375
 function MenuCallbackHandler:jukebox_option_menu_playlist(item)
 	local tracks_list = managers.music:jukebox_menu_tracks()
 	local empty_list = true
@@ -8322,7 +8735,7 @@ function MenuCallbackHandler:jukebox_option_menu_playlist(item)
 	end
 end
 
--- Lines 8033-8052
+-- Lines 8377-8396
 function MenuCallbackHandler:jukebox_option_menu_tracks(item)
 	local track = item:value()
 	local item_list = managers.menu:active_menu().logic:selected_node():items()
@@ -8345,21 +8758,21 @@ function MenuCallbackHandler:jukebox_option_menu_tracks(item)
 	managers.savefile:setting_changed()
 end
 
--- Lines 8054-8056
+-- Lines 8398-8400
 function MenuCallbackHandler:jukebox_options_enter(item)
 	managers.music:post_event("stop_all_music")
 end
 
--- Lines 8058-8062
+-- Lines 8402-8410
 function MenuCallbackHandler:jukebox_option_back(item)
-	managers.music:track_listen_stop()
+	managers.music:stop_listen_all()
 	managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
 	managers.menu_component:show_contract_character(true)
 end
 
 MenuCrimeNetGageAssignmentInitiator = MenuCrimeNetGageAssignmentInitiator or class(MenuCrimeNetContactInfoInitiator)
 
--- Lines 8071-8133
+-- Lines 8419-8481
 function MenuCrimeNetGageAssignmentInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -8437,21 +8850,21 @@ MenuCrimeNetSpecialInitiator = MenuCrimeNetSpecialInitiator or class()
 MenuCrimeNetSpecialInitiator.job_callback = nil
 MenuCrimeNetSpecialInitiator.choose_any_job = nil
 
--- Lines 8139-8142
+-- Lines 8487-8490
 function MenuCrimeNetSpecialInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node)
 end
 
--- Lines 8144-8147
+-- Lines 8492-8495
 function MenuCrimeNetSpecialInitiator:refresh_node(node)
 	self:setup_node(node)
 
 	return node
 end
 
--- Lines 8149-8322
+-- Lines 8497-8670
 function MenuCrimeNetSpecialInitiator:setup_node(node)
 	local listed_contact = node:parameters().listed_contact
 
@@ -8622,7 +9035,7 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 	return node
 end
 
--- Lines 8325-8339
+-- Lines 8673-8687
 function MenuCrimeNetSpecialInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -8639,7 +9052,7 @@ function MenuCrimeNetSpecialInitiator:create_divider(node, id, text_id, size, co
 	node:add_item(new_item)
 end
 
--- Lines 8341-8429
+-- Lines 8689-8777
 function MenuCrimeNetSpecialInitiator:create_job(node, contract)
 	local id = contract.id
 	local enabled = contract.enabled
@@ -8711,14 +9124,14 @@ end
 
 MenuReticleSwitchInitiator = MenuReticleSwitchInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines 8433-8436
+-- Lines 8781-8784
 function MenuReticleSwitchInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines 8438-8535
+-- Lines 8786-8883
 function MenuReticleSwitchInitiator:setup_node(node, data)
 	node:clean_items()
 
@@ -8818,7 +9231,7 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 	return node
 end
 
--- Lines 8537-8546
+-- Lines 8885-8896
 function MenuReticleSwitchInitiator:refresh_node(node, data)
 	local confirm = node:item("confirm")
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -8828,13 +9241,15 @@ function MenuReticleSwitchInitiator:refresh_node(node, data)
 
 		confirm:set_enabled(enabled)
 	end
+
+	return node
 end
 
--- Lines 8548-8549
+-- Lines 8898-8899
 function MenuReticleSwitchInitiator:create_multichoice()
 end
 
--- Lines 8551-8572
+-- Lines 8901-8922
 function MenuCallbackHandler:is_reticle_applicable(node)
 	local type = node:item("reticle_type"):value()
 	local color = node:item("reticle_color"):value()
@@ -8848,7 +9263,7 @@ function MenuCallbackHandler:is_reticle_applicable(node)
 	return pass_type and pass_color
 end
 
--- Lines 8574-8606
+-- Lines 8924-8956
 function MenuCallbackHandler:update_weapon_texture_switch(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -8882,7 +9297,7 @@ function MenuCallbackHandler:update_weapon_texture_switch(item)
 	end
 end
 
--- Lines 8608-8640
+-- Lines 8958-8990
 function MenuCallbackHandler:set_weapon_texture_switch(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -8916,7 +9331,7 @@ end
 
 MenuCrimeNetCasinoInitiator = MenuCrimeNetCasinoInitiator or class()
 
--- Lines 8644-8655
+-- Lines 8994-9005
 function MenuCrimeNetCasinoInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -8931,7 +9346,7 @@ function MenuCrimeNetCasinoInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 8657-8669
+-- Lines 9007-9019
 function MenuCrimeNetCasinoInitiator:refresh_node(node)
 	local options = {
 		preferred = node:item("preferred_item"):value(),
@@ -8947,12 +9362,12 @@ function MenuCrimeNetCasinoInitiator:refresh_node(node)
 	return node
 end
 
--- Lines 8671-8673
+-- Lines 9021-9023
 function MenuCallbackHandler:casino_betting_visible()
 	return true
 end
 
--- Lines 8675-8898
+-- Lines 9025-9248
 function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 	local visible_callback = "casino_betting_visible"
 	local preferred_data = {
@@ -9255,7 +9670,7 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 	end
 end
 
--- Lines 8900-8915
+-- Lines 9250-9265
 function MenuCrimeNetCasinoInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		visible_callback = "casino_betting_visible",
@@ -9275,7 +9690,7 @@ end
 
 MenuCrimeNetCasinoLootdropInitiator = MenuCrimeNetCasinoLootdropInitiator or class()
 
--- Lines 8919-8928
+-- Lines 9269-9278
 function MenuCrimeNetCasinoLootdropInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -9290,7 +9705,7 @@ end
 
 MenuCrimeNetFiltersInitiator = MenuCrimeNetFiltersInitiator or class()
 
--- Lines 8932-9002
+-- Lines 9282-9352
 function MenuCrimeNetFiltersInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -9346,7 +9761,7 @@ function MenuCrimeNetFiltersInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 9004-9066
+-- Lines 9354-9416
 function MenuCrimeNetFiltersInitiator:update_node(node)
 	if MenuCallbackHandler:is_win32() then
 		local not_friends_only = not Global.game_settings.search_friends_only
@@ -9392,37 +9807,43 @@ function MenuCrimeNetFiltersInitiator:update_node(node)
 	end
 end
 
--- Lines 9069-9077
+-- Lines 9419-9429
 function MenuCallbackHandler:choice_gamemode_filter(item)
 	Global.game_settings.gamemode_filter = item:value()
 
 	managers.user:set_setting("crimenet_gamemode_filter", item:value())
-	managers.menu:back()
-	managers.menu:open_node("crimenet_filters", {})
+
+	local logic = managers.menu:active_menu().logic
+
+	if logic then
+		logic:refresh_node_stack()
+	end
 end
 
--- Lines 9079-9081
+-- Lines 9431-9433
 function MenuCrimeNetFiltersInitiator:is_standard()
 	return not Global.game_settings or not Global.game_settings.gamemode_filter or Global.game_settings.gamemode_filter == GamemodeStandard.id
 end
 
--- Lines 9087-9089
+-- Lines 9439-9441
 function MenuCrimeNetFiltersInitiator:is_skirmish()
 	return Global.game_settings.gamemode_filter == "skirmish"
 end
 
--- Lines 9093-9095
+-- Lines 9445-9447
 function MenuCrimeNetFiltersInitiator:is_crime_spree()
 	return Global.game_settings and Global.game_settings.gamemode_filter == GamemodeCrimeSpree.id
 end
 
--- Lines 9098-9101
+-- Lines 9450-9455
 function MenuCrimeNetFiltersInitiator:refresh_node(node)
 	self:modify_node(node, {})
 	self:update_node(node)
+
+	return node
 end
 
--- Lines 9103-9210
+-- Lines 9457-9564
 function MenuCrimeNetFiltersInitiator:add_filters(node)
 	if node:item("divider_end") then
 		return
@@ -9543,7 +9964,7 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 	self:modify_node(node, {})
 end
 
--- Lines 9212-9218
+-- Lines 9566-9572
 function MenuCallbackHandler:_reset_filters(item)
 	if managers.network.matchmake.reset_filters then
 		managers.network.matchmake:reset_filters()
@@ -9554,14 +9975,14 @@ end
 
 MenuMutatorOptionsInitiator = MenuMutatorOptionsInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines 9222-9225
+-- Lines 9576-9579
 function MenuMutatorOptionsInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines 9227-9273
+-- Lines 9581-9627
 function MenuMutatorOptionsInitiator:setup_node(node, mutator)
 	node:clean_items()
 
@@ -9605,16 +10026,17 @@ function MenuMutatorOptionsInitiator:setup_node(node, mutator)
 	return node
 end
 
--- Lines 9275-9276
+-- Lines 9629-9631
 function MenuMutatorOptionsInitiator:refresh_node(node, data)
+	return node
 end
 
--- Lines 9278-9280
+-- Lines 9633-9635
 function MenuCallbackHandler:reset_mutator(item)
 	item:parameters().mutator:reset_to_default()
 end
 
--- Lines 9282-9294
+-- Lines 9637-9649
 function MenuCallbackHandler:save_mutator_options(item)
 	local mutator = item:parameters().gui_node.node:parameters()._mutator
 
@@ -9627,7 +10049,7 @@ function MenuCallbackHandler:save_mutator_options(item)
 	self:_update_mutators_info()
 end
 
--- Lines 9296-9302
+-- Lines 9651-9657
 function MenuCallbackHandler:_update_mutators_info()
 	if Network:is_server() then
 		managers.network.matchmake:set_server_attributes(self:get_matchmake_attributes())
@@ -9637,14 +10059,14 @@ end
 
 MenuLobbyCountdownInitiator = MenuLobbyCountdownInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines 9307-9310
+-- Lines 9662-9665
 function MenuLobbyCountdownInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines 9312-9334
+-- Lines 9667-9689
 function MenuLobbyCountdownInitiator:setup_node(node, mutator)
 	node:clean_items()
 
@@ -9665,13 +10087,14 @@ function MenuLobbyCountdownInitiator:setup_node(node, mutator)
 	return node
 end
 
--- Lines 9336-9337
+-- Lines 9691-9693
 function MenuLobbyCountdownInitiator:refresh_node(node, data)
+	return node
 end
 
 MenuCrimeNetSmartmatchmakeInitiator = MenuCrimeNetSmartmatchmakeInitiator or class()
 
--- Lines 9344-9360
+-- Lines 9700-9716
 function MenuCrimeNetSmartmatchmakeInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -9686,7 +10109,7 @@ function MenuCrimeNetSmartmatchmakeInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 9362-9421
+-- Lines 9718-9777
 function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 	if node:item("divider_end") then
 		return
@@ -9748,7 +10171,7 @@ function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 	node:add_item(new_item)
 end
 
--- Lines 9424-9464
+-- Lines 9780-9820
 function MenuCallbackHandler:start_smart_matchmaking(item)
 	print("crimenet_filter_crimespree = ", managers.user:get_setting("crimenet_filter_crimespree"))
 
@@ -9782,7 +10205,7 @@ function MenuCallbackHandler:start_smart_matchmaking(item)
 	managers.network.matchmake:join_by_smartmatch(smart_mode, smart_job_id, smart_difficulty)
 end
 
--- Lines 9466-9470
+-- Lines 9822-9826
 function MenuCallbackHandler:open_contract_smart_matchmaking_node(item)
 	local job_tweak = tweak_data.narrative:job_data(item:parameters().id)
 	local is_professional = job_tweak and job_tweak.professional or false
@@ -9803,7 +10226,7 @@ MenuCrimeNetSmartMatchmakingInitiator.job_callback = "open_contract_smart_matchm
 MenuCrimeNetSmartMatchmakingInitiator.choose_any_job = true
 MenuCrimeNetSmartMatchmakingInitiator.contract_divider_id = "menu_cn_smart_matchmaking_divider_title"
 
--- Lines 9478-9492
+-- Lines 9834-9848
 function MenuCrimeNetSmartMatchmakingInitiator:pre_create_clbk(node)
 	local params = {
 		callback = "start_smart_matchmaking",
@@ -9819,7 +10242,7 @@ end
 
 MenuOptionInitiator = MenuOptionInitiator or class()
 
--- Lines 9495-9526
+-- Lines 9851-9882
 function MenuOptionInitiator:modify_node(node)
 	local node_name = node:parameters().name
 
@@ -9846,12 +10269,12 @@ function MenuOptionInitiator:modify_node(node)
 	end
 end
 
--- Lines 9528-9530
+-- Lines 9884-9886
 function MenuOptionInitiator:refresh_node(node)
-	self:modify_node(node)
+	return self:modify_node(node)
 end
 
--- Lines 9532-9539
+-- Lines 9888-9895
 function MenuOptionInitiator:modify_resolution(node)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		local res_name = string.format("%d x %d", RenderSettings.resolution.x, RenderSettings.resolution.y)
@@ -9862,7 +10285,7 @@ function MenuOptionInitiator:modify_resolution(node)
 	return node
 end
 
--- Lines 9541-9549
+-- Lines 9897-9905
 function MenuOptionInitiator:modify_adv_options(node)
 	if node:item("toggle_workshop") then
 		node:item("toggle_workshop"):set_value(managers.user:get_setting("workshop") and "on" or "off")
@@ -9871,7 +10294,7 @@ function MenuOptionInitiator:modify_adv_options(node)
 	return node
 end
 
--- Lines 9551-9650
+-- Lines 9907-10006
 function MenuOptionInitiator:modify_adv_video(node)
 	node:item("toggle_vsync"):set_value(RenderSettings.v_sync and "on" or "off")
 
@@ -9977,7 +10400,7 @@ function MenuOptionInitiator:modify_adv_video(node)
 	return node
 end
 
--- Lines 9652-9733
+-- Lines 10008-10089
 function MenuOptionInitiator:modify_video(node)
 	local adapter_item = node:item("choose_video_adapter")
 
@@ -10083,7 +10506,7 @@ function MenuOptionInitiator:modify_video(node)
 	return node
 end
 
--- Lines 9736-9896
+-- Lines 10092-10252
 function MenuOptionInitiator:modify_controls(node)
 	local option_value = "off"
 	local rumble_item = node:item("toggle_rumble")
@@ -10259,7 +10682,7 @@ function MenuOptionInitiator:modify_controls(node)
 	return node
 end
 
--- Lines 9899-9944
+-- Lines 10255-10300
 function MenuOptionInitiator:modify_user_interface_options(node)
 	local controller_hint_box = node:item("toggle_controller_hint")
 	local controller_hint_setting = managers.user:get_setting("loading_screen_show_controller")
@@ -10307,12 +10730,12 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	return node
 end
 
--- Lines 9967-10067
+-- Lines 10323-10423
 function MenuOptionInitiator:modify_debug_options(node)
 	return node
 end
 
--- Lines 10070-10082
+-- Lines 10426-10438
 function MenuOptionInitiator:modify_options(node)
 	if _G.IS_VR then
 		node:set_default_item_name("video")
@@ -10323,7 +10746,7 @@ function MenuOptionInitiator:modify_options(node)
 	return node
 end
 
--- Lines 10085-10113
+-- Lines 10441-10469
 function MenuOptionInitiator:modify_network_options(node)
 	local toggle_throttling_item = node:item("toggle_throttling")
 
@@ -10354,7 +10777,7 @@ end
 
 SkillSwitchInitiator = SkillSwitchInitiator or class()
 
--- Lines 10117-10160
+-- Lines 10473-10516
 function SkillSwitchInitiator:modify_node(node, data)
 	node:clean_items()
 
@@ -10405,7 +10828,7 @@ function SkillSwitchInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines 10162-10170
+-- Lines 10518-10526
 function SkillSwitchInitiator:refresh_node(node, data)
 	local selected_item = node:selected_item() and node:selected_item():name()
 	node = self:modify_node(node, data)
@@ -10417,7 +10840,7 @@ function SkillSwitchInitiator:refresh_node(node, data)
 	return node
 end
 
--- Lines 10172-10178
+-- Lines 10528-10534
 function SkillSwitchInitiator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10426,7 +10849,7 @@ function SkillSwitchInitiator:create_item(node, params)
 	node:add_item(new_item)
 end
 
--- Lines 10180-10194
+-- Lines 10536-10550
 function SkillSwitchInitiator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -10443,7 +10866,7 @@ function SkillSwitchInitiator:create_divider(node, id, text_id, size, color)
 	node:add_item(new_item)
 end
 
--- Lines 10196-10211
+-- Lines 10552-10567
 function SkillSwitchInitiator:add_back_button(node)
 	node:delete_item("back")
 
@@ -10459,7 +10882,7 @@ function SkillSwitchInitiator:add_back_button(node)
 	node:add_item(new_item)
 end
 
--- Lines 10214-10245
+-- Lines 10570-10601
 function MenuCallbackHandler:unlock_skill_switch(item)
 	local spending_cost = managers.money:get_unlock_skill_switch_spending_cost(item:parameters().name)
 	local offshore_cost = managers.money:get_unlock_skill_switch_offshore_cost(item:parameters().name)
@@ -10510,20 +10933,20 @@ function MenuCallbackHandler:unlock_skill_switch(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 10247-10250
+-- Lines 10603-10606
 function MenuCallbackHandler:set_active_skill_switch(item)
 	managers.skilltree:switch_skills(item:parameters().name)
 	self:refresh_node()
 end
 
--- Lines 10255-10257
+-- Lines 10611-10613
 function MenuCallbackHandler:has_installed_mods()
 	return not self:is_console() and table.size(DB:mods()) > 0
 end
 
 ModMenuCreator = ModMenuCreator or class()
 
--- Lines 10260-10265
+-- Lines 10616-10621
 function ModMenuCreator:modify_node(original_node, data)
 	local node = original_node
 
@@ -10532,7 +10955,7 @@ function ModMenuCreator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 10268-10323
+-- Lines 10624-10679
 function ModMenuCreator:create_mod_menu(node)
 	node:clean_items()
 
@@ -10541,7 +10964,7 @@ function ModMenuCreator:create_mod_menu(node)
 	local conflicted_content = {}
 	local modded_content = {}
 
-	-- Lines 10277-10279
+	-- Lines 10633-10635
 	local function id_key(path)
 		return Idstring(path):key()
 	end
@@ -10600,7 +11023,7 @@ function ModMenuCreator:create_mod_menu(node)
 	node:parameters().modded_content = modded_content
 end
 
--- Lines 10325-10339
+-- Lines 10681-10695
 function ModMenuCreator:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -10617,7 +11040,7 @@ function ModMenuCreator:create_divider(node, id, text_id, size, color)
 	node:add_item(new_item)
 end
 
--- Lines 10341-10347
+-- Lines 10697-10703
 function ModMenuCreator:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10626,7 +11049,7 @@ function ModMenuCreator:create_item(node, params)
 	node:add_item(new_item)
 end
 
--- Lines 10349-10359
+-- Lines 10705-10715
 function ModMenuCreator:create_toggle(node, params)
 	local data_node = {
 		{
@@ -10667,7 +11090,7 @@ function ModMenuCreator:create_toggle(node, params)
 	return new_item
 end
 
--- Lines 10361-10374
+-- Lines 10717-10730
 function ModMenuCreator:add_back_button(node)
 	node:delete_item("back")
 
@@ -10683,11 +11106,11 @@ function ModMenuCreator:add_back_button(node)
 	node:add_item(new_item)
 end
 
--- Lines 10376-10378
+-- Lines 10732-10734
 function MenuCallbackHandler:save_mod_changes(node)
 end
 
--- Lines 10380-10386
+-- Lines 10736-10742
 function MenuCallbackHandler:mod_option_toggle_enabled(item)
 	print("mod_option_toggle_enabled", "mod", item:name(), "status", item:value())
 
@@ -10698,7 +11121,7 @@ end
 
 MenuCrimeNetChallengeInitiator = MenuCrimeNetChallengeInitiator or class(MenuCrimeNetGageAssignmentInitiator)
 
--- Lines 10391-10415
+-- Lines 10747-10771
 function MenuCrimeNetChallengeInitiator:modify_node(original_node, data)
 	local node, first_item = self:setup_node(original_node)
 
@@ -10716,7 +11139,7 @@ function MenuCrimeNetChallengeInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 10417-10435
+-- Lines 10773-10791
 function MenuCrimeNetChallengeInitiator:refresh_node(node)
 	local _, first_item = self:setup_node(node)
 
@@ -10729,7 +11152,7 @@ function MenuCrimeNetChallengeInitiator:refresh_node(node)
 	return node
 end
 
--- Lines 10437-10444
+-- Lines 10793-10800
 function MenuCallbackHandler:is_current_challenge(item)
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -10740,7 +11163,7 @@ function MenuCallbackHandler:is_current_challenge(item)
 	return false
 end
 
--- Lines 10446-10561
+-- Lines 10802-10917
 function MenuCrimeNetChallengeInitiator:setup_node(node)
 	node:clean_items()
 	self:create_divider(node, 1, managers.localization:text("menu_gage_assignment_div_menu"), nil, tweak_data.screen_colors.text)
@@ -10878,7 +11301,7 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 	return node, first_item
 end
 
--- Lines 10563-10578
+-- Lines 10919-10934
 function MenuCallbackHandler:update_challenge_menu_node()
 	if not managers.menu:active_menu() then
 		return false
@@ -10899,7 +11322,7 @@ function MenuCallbackHandler:update_challenge_menu_node()
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines 10580-10602
+-- Lines 10936-10958
 function MenuCallbackHandler:give_challenge_reward(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -10925,7 +11348,7 @@ end
 
 MenuChooseWeaponRewardInitiator = MenuChooseWeaponRewardInitiator or class()
 
--- Lines 10606-10732
+-- Lines 10962-11088
 function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local node = original_node
 
@@ -10940,12 +11363,12 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	local secondaries = managers.blackmarket:get_weapon_category("secondaries")
 	local items = {}
 
-	-- Lines 10629-10631
+	-- Lines 10985-10987
 	local function chk_unlocked_func(weapon)
 		return not not weapon.unlocked
 	end
 
-	-- Lines 10633-10641
+	-- Lines 10989-10997
 	local function chk_dlc_func(weapon)
 		x_id = weapon.weapon_id
 		x_gv = weapon_tweak[x_id].global_value
@@ -10957,14 +11380,14 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 		return true
 	end
 
-	-- Lines 10643-10646
+	-- Lines 10999-11002
 	local function chk_dropable_func(weapon)
 		local loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon.weapon_id, nil, true)
 
 		return loot_table and #loot_table > 0 or false
 	end
 
-	-- Lines 10648-10650
+	-- Lines 11004-11006
 	local function chk_parent_func(weapon)
 		return weapon_tweak[weapon.weapon_id] and not weapon_tweak[weapon.weapon_id].parent_weapon_id
 	end
@@ -10994,7 +11417,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 		end
 	end
 
-	-- Lines 10673-10708
+	-- Lines 11029-11064
 	local function sort_func(x, y)
 		x_unlocked = x.unlocked
 		y_unlocked = y.unlocked
@@ -11056,14 +11479,14 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 10734-10737
+-- Lines 11090-11093
 function MenuChooseWeaponRewardInitiator:refresh_node(node)
 	self:setup_node(node)
 
 	return node
 end
 
--- Lines 10739-10892
+-- Lines 11095-11248
 function MenuChooseWeaponRewardInitiator:setup_node(node)
 	local listed_category = node:parameters().listed_category or "assault_rifle"
 	local listed_weapon = node:parameters().listed_weapon or "amcar"
@@ -11178,7 +11601,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		global_values = table.list_union(global_values)
 		local x_sn, y_sn = nil
 
-		-- Lines 10819-10834
+		-- Lines 11175-11190
 		local function sort_func(x, y)
 			if x == "normal" then
 				return true
@@ -11272,7 +11695,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 	return node
 end
 
--- Lines 10895-10911
+-- Lines 11251-11267
 function MenuChooseWeaponRewardInitiator:create_divider(node, id, text_id, size, color, align)
 	local params = {
 		name = "divider_" .. id,
@@ -11291,7 +11714,7 @@ function MenuChooseWeaponRewardInitiator:create_divider(node, id, text_id, size,
 	node:add_item(new_item)
 end
 
--- Lines 10913-10934
+-- Lines 11269-11290
 function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11318,7 +11741,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines 10936-10955
+-- Lines 11292-11311
 function MenuCallbackHandler:choice_challenge_choose_weapon(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11345,7 +11768,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines 10957-10977
+-- Lines 11313-11333
 function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11372,7 +11795,7 @@ function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines 10979-11016
+-- Lines 11335-11372
 function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11413,7 +11836,7 @@ function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 	managers.menu:show_challenge_reward(reward)
 end
 
--- Lines 11018-11030
+-- Lines 11374-11386
 function MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_value)
 	local loot_table, limited_loot_table = managers.blackmarket:get_lootdropable_mods_by_weapon_id(weapon_id, global_value, true)
 	local my_loot_table = #limited_loot_table > 0 and limited_loot_table or loot_table
@@ -11430,14 +11853,14 @@ end
 
 MenuCustomizeGadgetInitiator = MenuCustomizeGadgetInitiator or class(MenuCrimeNetSpecialInitiator)
 
--- Lines 11036-11039
+-- Lines 11392-11395
 function MenuCustomizeGadgetInitiator:modify_node(original_node, data)
 	local node = original_node
 
 	return self:setup_node(node, data)
 end
 
--- Lines 11041-11196
+-- Lines 11397-11552
 function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	node:clean_items()
 
@@ -11589,7 +12012,7 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	return node
 end
 
--- Lines 11198-11207
+-- Lines 11554-11565
 function MenuCustomizeGadgetInitiator:refresh_node(node, data)
 	local confirm = node:item("confirm")
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -11599,9 +12022,11 @@ function MenuCustomizeGadgetInitiator:refresh_node(node, data)
 
 		confirm:set_enabled(enabled)
 	end
+
+	return node
 end
 
--- Lines 11209-11224
+-- Lines 11567-11582
 function MenuCustomizeGadgetInitiator:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
@@ -11622,37 +12047,37 @@ function MenuCustomizeGadgetInitiator:create_slider(node, params)
 	return new_item
 end
 
--- Lines 11226-11228
+-- Lines 11584-11586
 function MenuCallbackHandler:set_gadget_laser_hue()
 	self:update_gadget_customization()
 end
 
--- Lines 11230-11232
+-- Lines 11588-11590
 function MenuCallbackHandler:set_gadget_laser_sat()
 	self:update_gadget_customization()
 end
 
--- Lines 11234-11236
+-- Lines 11592-11594
 function MenuCallbackHandler:set_gadget_laser_val()
 	self:update_gadget_customization()
 end
 
--- Lines 11238-11240
+-- Lines 11596-11598
 function MenuCallbackHandler:set_gadget_flashlight_hue()
 	self:update_gadget_customization()
 end
 
--- Lines 11242-11244
+-- Lines 11600-11602
 function MenuCallbackHandler:set_gadget_flashlight_sat()
 	self:update_gadget_customization()
 end
 
--- Lines 11246-11248
+-- Lines 11604-11606
 function MenuCallbackHandler:set_gadget_flashlight_val()
 	self:update_gadget_customization()
 end
 
--- Lines 11250-11269
+-- Lines 11608-11627
 function MenuCallbackHandler:update_gadget_customization(item)
 	if not managers.menu:active_menu() then
 		return false
@@ -11676,7 +12101,7 @@ function MenuCallbackHandler:update_gadget_customization(item)
 	end
 end
 
--- Lines 11271-11296
+-- Lines 11629-11654
 function MenuCallbackHandler:set_gadget_customize_params()
 	if not managers.menu:active_menu() then
 		return false

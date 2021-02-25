@@ -23768,7 +23768,7 @@ function WeaponTweakData:_init_coach(weapon_data)
 	}
 end
 
--- Lines 27823-28208
+-- Lines 27813-28198
 function WeaponTweakData:_create_table_structure()
 	self.c45_npc = {
 		usage = "is_pistol",
@@ -24993,11 +24993,11 @@ function WeaponTweakData:_create_table_structure()
 	}
 end
 
--- Lines 28212-28213
+-- Lines 28202-28203
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines 28215-28223
+-- Lines 28205-28213
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then

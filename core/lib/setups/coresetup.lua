@@ -55,12 +55,13 @@ if Application:ews_enabled() then
 	require("core/lib/utils/dev/tools/material_editor/CoreMaterialEditor")
 	require("core/lib/utils/dev/tools/particle_editor/CoreParticleEditor")
 	require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneEditor")
+	require("core/lib/utils/dev/tools/texture_report_editor/CoreTextureReport")
 end
 
 CoreSetup = CoreSetup or class()
 local _CoreSetup = CoreSetup
 
--- Lines 113-127
+-- Lines 114-128
 function CoreSetup:init()
 	CoreClass.close_override()
 
@@ -70,121 +71,121 @@ function CoreSetup:init()
 	self.__firstupdate = true
 end
 
--- Lines 129-130
+-- Lines 130-131
 function CoreSetup:init_category_print()
 end
 
--- Lines 132-133
+-- Lines 133-134
 function CoreSetup:load_packages()
 end
 
--- Lines 135-136
+-- Lines 136-137
 function CoreSetup:unload_packages()
 end
 
--- Lines 138-139
+-- Lines 139-140
 function CoreSetup:start_boot_loading_screen()
 end
 
--- Lines 141-142
+-- Lines 142-143
 function CoreSetup:init_managers(managers)
 end
 
--- Lines 144-145
+-- Lines 145-146
 function CoreSetup:init_toolhub(toolhub)
 end
 
--- Lines 147-148
+-- Lines 148-149
 function CoreSetup:init_game()
 end
 
--- Lines 150-152
+-- Lines 151-153
 function CoreSetup:init_finalize()
 	managers.mission:post_init()
 end
 
--- Lines 154-155
+-- Lines 155-156
 function CoreSetup:start_loading_screen()
 end
 
--- Lines 157-158
+-- Lines 158-159
 function CoreSetup:stop_loading_screen()
 end
 
--- Lines 160-161
+-- Lines 161-162
 function CoreSetup:update(t, dt)
 end
 
--- Lines 163-164
+-- Lines 164-165
 function CoreSetup:paused_update(t, dt)
 end
 
--- Lines 166-167
+-- Lines 167-168
 function CoreSetup:pre_render()
 end
 
--- Lines 169-170
+-- Lines 170-171
 function CoreSetup:render()
 end
 
--- Lines 172-173
+-- Lines 173-174
 function CoreSetup:end_frame(t, dt)
 end
 
--- Lines 175-176
+-- Lines 176-177
 function CoreSetup:end_update(t, dt)
 end
 
--- Lines 178-179
+-- Lines 179-180
 function CoreSetup:paused_end_update(t, dt)
 end
 
--- Lines 181-182
+-- Lines 182-183
 function CoreSetup:save(data)
 end
 
--- Lines 184-185
+-- Lines 185-186
 function CoreSetup:load(data)
 end
 
--- Lines 187-188
+-- Lines 188-189
 function CoreSetup:destroy()
 end
 
--- Lines 194-196
+-- Lines 195-197
 function CoreSetup:freeflight()
 	return self.__freeflight
 end
 
--- Lines 202-205
+-- Lines 203-206
 function CoreSetup:exec(context)
 	self.__exec = true
 	self.__context = context
 end
 
--- Lines 207-211
+-- Lines 208-212
 function CoreSetup:quit()
 	if not Application:editor() then
 		self.__quit = true
 	end
 end
 
--- Lines 213-215
+-- Lines 214-216
 function CoreSetup:block_exec()
 	return false
 end
 
--- Lines 217-219
+-- Lines 218-220
 function CoreSetup:block_quit()
 	return false
 end
 
--- Lines 221-223
+-- Lines 222-224
 function CoreSetup:has_queued_exec()
 	return self.__exec
 end
 
--- Lines 229-279
+-- Lines 230-280
 function CoreSetup:__pre_init()
 	if Application:editor() then
 		managers.global_texture = CoreGTextureManager.GTextureManager:new()
@@ -231,7 +232,7 @@ local lang_mods = {
 	[Idstring("japanese"):key()] = "japanese"
 }
 
--- Lines 292-442
+-- Lines 293-443
 function CoreSetup:__init()
 	self:init_category_print()
 
@@ -323,6 +324,7 @@ function CoreSetup:__init()
 		managers.toolhub:add("Particle Editor", CoreParticleEditor)
 		managers.toolhub:add(CorePuppeteer.EDITOR_TITLE, CorePuppeteer)
 		managers.toolhub:add(CoreCutsceneEditor.EDITOR_TITLE, CoreCutsceneEditor)
+		managers.toolhub:add(CoreTextureReport.EDITOR_TITLE, CoreTextureReport)
 
 		if not Application:editor() then
 			managers.toolhub:add("Unit Reloader", CoreUnitReloader)
@@ -344,7 +346,7 @@ function CoreSetup:__init()
 	self:init_finalize()
 end
 
--- Lines 444-473
+-- Lines 445-474
 function CoreSetup:__destroy()
 	self:destroy()
 	self.__gsm:destroy()
@@ -359,11 +361,11 @@ function CoreSetup:__destroy()
 	self._smoketest:destroy()
 end
 
--- Lines 475-476
+-- Lines 476-477
 function CoreSetup:loading_update(t, dt)
 end
 
--- Lines 478-557
+-- Lines 479-558
 function CoreSetup:__update(t, dt)
 	if self.__firstupdate then
 		self:stop_loading_screen()
@@ -391,7 +393,7 @@ function CoreSetup:__update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines 559-593
+-- Lines 560-594
 function CoreSetup:__paused_update(t, dt)
 	managers.viewport:paused_update(t, dt)
 
@@ -410,7 +412,7 @@ function CoreSetup:__paused_update(t, dt)
 	self:paused_update(t, dt)
 end
 
--- Lines 595-608
+-- Lines 596-609
 function CoreSetup:__end_update(t, dt)
 	managers.camera:update(t, dt)
 	self._session:end_update(t, dt)
@@ -425,14 +427,14 @@ function CoreSetup:__end_update(t, dt)
 	end
 end
 
--- Lines 610-615
+-- Lines 611-616
 function CoreSetup:__paused_end_update(t, dt)
 	self:paused_end_update(t, dt)
 	self.__gsm:end_update(t, dt)
 	managers.DOF:paused_update(t, dt)
 end
 
--- Lines 617-623
+-- Lines 618-624
 function CoreSetup:__render()
 	managers.portal:render()
 	self:pre_render()
@@ -441,7 +443,7 @@ function CoreSetup:__render()
 	self:render()
 end
 
--- Lines 625-679
+-- Lines 626-680
 function CoreSetup:__end_frame(t, dt)
 	self:end_frame(t, dt)
 	managers.viewport:end_frame(t, dt)
@@ -498,21 +500,21 @@ function CoreSetup:__end_frame(t, dt)
 	end
 end
 
--- Lines 681-684
+-- Lines 682-685
 function CoreSetup:__loading_update(t, dt)
 	self._session:update(t, dt)
 	self:loading_update()
 end
 
--- Lines 686-687
+-- Lines 687-688
 function CoreSetup:__animations_reloaded()
 end
 
--- Lines 689-690
+-- Lines 690-691
 function CoreSetup:__script_reloaded()
 end
 
--- Lines 692-697
+-- Lines 693-698
 function CoreSetup:__entering_window(user_data, event_object)
 	if Global.frame:is_active() then
 		Global.application_window:set_focus()
@@ -520,26 +522,26 @@ function CoreSetup:__entering_window(user_data, event_object)
 	end
 end
 
--- Lines 699-703
+-- Lines 700-704
 function CoreSetup:__leaving_window(user_data, event_object)
 	if not managers.editor or managers.editor._in_mixed_input_mode then
 		Input:keyboard():unacquire()
 	end
 end
 
--- Lines 705-709
+-- Lines 706-710
 function CoreSetup:__kill_focus(user_data, event_object)
 	if managers.editor and not managers.editor:in_mixed_input_mode() and not Global.running_simulation then
 		managers.editor:set_in_mixed_input_mode(true)
 	end
 end
 
--- Lines 711-713
+-- Lines 712-714
 function CoreSetup:__save(data)
 	self:save(data)
 end
 
--- Lines 715-717
+-- Lines 716-718
 function CoreSetup:__load(data)
 	self:load(data)
 end
@@ -548,7 +550,7 @@ core:module("CoreSetup")
 
 CoreSetup = _CoreSetup
 
--- Lines 727-765
+-- Lines 728-766
 function CoreSetup:make_entrypoint()
 	if not _G.CoreSetup.__entrypoint_is_setup then
 		assert(rawget(_G, "pre_init") == nil)

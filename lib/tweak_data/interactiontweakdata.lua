@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-6250
+-- Lines 3-6257
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -5914,5 +5914,12 @@ function InteractionTweakData:init(tweak_data)
 		sound_interupt = "bar_hose_drag_out_cancel",
 		sound_done = "bar_hose_drag_out_finish",
 		axis = "y"
+	}
+	self.bex_take_cup = {
+		text_id = "hud_int_take_cup",
+		action_text_id = "hud_action_taking_cup",
+		interact_distance = 200,
+		start_active = false,
+		timer = 1
 	}
 end

@@ -1,4 +1,4 @@
--- Lines 3-206
+-- Lines 3-215
 function DLCTweakData:init_generated()
 	self.flm_bundle = {
 		free = true,
@@ -237,6 +237,18 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "player_styles",
 			item_entry = "peacoat",
+			amount = 1
+		}
+	}
+	self.xmn_bundle = {
+		free = true,
+		content = {}
+	}
+	self.xmn_bundle.content.loot_global_value = "xmn"
+	self.xmn_bundle.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "xmas_tuxedo",
 			amount = 1
 		}
 	}

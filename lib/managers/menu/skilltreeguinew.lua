@@ -421,7 +421,7 @@ function NewSkillTreeGui:refresh_reset_skills_legends(trees_idx)
 		make_fine_text(text)
 		text:set_right(right)
 
-		right = text:left()
+		right = text:left() - 10
 
 		table.insert(self._legend_buttons, {
 			text = text,
@@ -817,7 +817,7 @@ function NewSkillTreeGui:_update_legends(item)
 			})
 		end
 
-		right = right - 4
+		right = right - 10
 	end
 end
 

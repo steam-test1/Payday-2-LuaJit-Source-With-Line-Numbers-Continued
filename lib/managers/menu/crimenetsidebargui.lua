@@ -610,7 +610,7 @@ end
 
 -- Lines 573-577
 function CrimeNetSidebarItem:set_text(text)
-	text = string.upper(text)
+	text = utf8.to_upper(text)
 	text = text:gsub(" ", "_")
 
 	self._text:set_text(text)
