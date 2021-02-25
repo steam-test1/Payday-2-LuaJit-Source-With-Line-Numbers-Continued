@@ -1090,7 +1090,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "entry_plan",
 		icon = 95,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_loud_entry_with_c4"),
 		budget_cost = 6,
 		post_event = "",
 		prio = 3
@@ -1116,7 +1116,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "escape_plan",
 		icon = 54,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_zeppelin_escape"),
 		budget_cost = 4,
 		post_event = "preplan_12",
 		prio = 3
@@ -1129,7 +1129,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "escape_plan",
 		icon = 54,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_van_escape"),
 		budget_cost = 8,
 		post_event = "preplan_12",
 		prio = 3
@@ -1142,7 +1142,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "escape_plan",
 		icon = 54,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_wrecking_ball_escape"),
 		budget_cost = 10,
 		post_event = "preplan_12",
 		prio = 3
@@ -1164,7 +1164,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_upgrades",
 		icon = 64,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_better_plasma_cutter"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1175,7 +1175,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_upgrades",
 		icon = 92,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_improved_cooling_system"),
 		budget_cost = 3,
 		post_event = "",
 		prio = 3
@@ -1186,7 +1186,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_upgrades",
 		icon = 15,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_engine_optimization"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1197,7 +1197,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_upgrades",
 		icon = 44,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_engine_additional_power"),
 		budget_cost = 3,
 		post_event = "",
 		prio = 3
@@ -1220,7 +1220,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_attachments",
 		icon = 44,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_extra_battery"),
 		budget_cost = 3,
 		post_event = "",
 		prio = 3
@@ -1231,7 +1231,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_attachments",
 		icon = 92,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_water_level_indicator"),
 		budget_cost = 1,
 		post_event = "",
 		prio = 3
@@ -1242,7 +1242,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_attachments",
 		icon = 15,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_timer_addon"),
 		budget_cost = 1,
 		post_event = "",
 		prio = 3
@@ -1253,7 +1253,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_attachments",
 		icon = 93,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_toolbox"),
 		budget_cost = 1,
 		post_event = "",
 		prio = 3
@@ -1264,7 +1264,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_attachments",
 		icon = 31,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_medkit"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1275,7 +1275,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = false,
 		category = "BFD_attachments",
 		icon = 52,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_drill_ammobox"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1286,7 +1286,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = true,
 		category = "hired_help",
 		icon = 73,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_ace_pilot"),
 		budget_cost = 1,
 		post_event = "",
 		prio = 3
@@ -1297,7 +1297,7 @@ function PrePlanningTweakData:init(tweak_data)
 		pos_not_important = true,
 		category = "hired_help",
 		icon = 74,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_faster_blimp"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1309,7 +1309,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "data_hacking",
 		icon = 45,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_rig_slotmachine"),
 		budget_cost = 4,
 		post_event = "",
 		prio = 3
@@ -1321,7 +1321,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "data_hacking",
 		icon = 42,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_sabotage_skylight_barrier"),
 		budget_cost = 3,
 		post_event = "",
 		prio = 3
@@ -1333,7 +1333,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 85,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_customer_data_USB"),
 		budget_cost = 3,
 		post_event = "",
 		prio = 3
@@ -1349,7 +1349,7 @@ function PrePlanningTweakData:init(tweak_data)
 		},
 		icon = 41,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_unlocked_cages"),
 		budget_cost = 3,
 		post_event = "",
 		prio = 3
@@ -1365,7 +1365,7 @@ function PrePlanningTweakData:init(tweak_data)
 		},
 		icon = 41,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_unlocked_doors"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1381,7 +1381,7 @@ function PrePlanningTweakData:init(tweak_data)
 		},
 		icon = 83,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_guitar_case_position"),
 		budget_cost = 1,
 		post_event = "",
 		prio = 3
@@ -1397,7 +1397,7 @@ function PrePlanningTweakData:init(tweak_data)
 		},
 		icon = 42,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_disable_metal_detectors"),
 		budget_cost = 1,
 		post_event = "",
 		prio = 3
@@ -1409,7 +1409,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "hired_help",
 		icon = 91,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_celebrity_visit"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1421,7 +1421,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "mission_equipment",
 		icon = 43,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_kenaz_vault_gate_key"),
 		budget_cost = 2,
 		post_event = "",
 		prio = 3
@@ -1478,7 +1478,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 1,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_car_pull"),
 		budget_cost = 6
 	}
 	self.types.bex_drunk_mariachi = {
@@ -1489,7 +1489,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_drunk_mariachi"),
 		budget_cost = 3
 	}
 	self.types.bex_garbage_truck = {
@@ -1500,7 +1500,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_garbage_truck"),
 		budget_cost = 3
 	}
 	self.types.bex_zipline = {
@@ -1511,7 +1511,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_zipline"),
 		budget_cost = 3
 	}
 	self.types.pex_parked_car = {
@@ -1522,7 +1522,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_parked_car"),
 		budget_cost = 3
 	}
 	self.types.pex_spiked_churro = {
@@ -1533,7 +1533,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_spiked_churro"),
 		budget_cost = 3
 	}
 	self.types.pex_camera_access = {
@@ -1544,7 +1544,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_camera_access"),
 		budget_cost = 3
 	}
 	self.types.pex_open_window = {
@@ -1555,7 +1555,7 @@ function PrePlanningTweakData:init(tweak_data)
 		total = 1,
 		post_event = "preplan_16",
 		prio = 3,
-		cost = tweak_data:get_value("money_manager", "preplaning_asset_cost_mex_keys"),
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_open_window"),
 		budget_cost = 3
 	}
 	self.types.fex_stealth_entry_with_thermite = {
@@ -1579,7 +1579,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "entry_plan_generic",
 		icon = 95,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_fex_stealth_entry_with_boat"),
 		budget_cost = 6,
 		post_event = "preplan_07",
 		prio = 3
@@ -1605,7 +1605,7 @@ function PrePlanningTweakData:init(tweak_data)
 		category = "escape_plan",
 		icon = 54,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_fex_loud_escape_with_heli"),
 		budget_cost = 6,
 		post_event = "preplan_16",
 		prio = 3
@@ -1614,11 +1614,15 @@ function PrePlanningTweakData:init(tweak_data)
 		name_id = "menu_pp_asset_fex_stealth_semi_open_garage_door",
 		desc_id = "menu_pp_asset_fex_stealth_semi_open_garage_door_desc",
 		plan = "insider_help",
+		upgrade_lock = {
+			upgrade = "additional_assets",
+			category = "player"
+		},
 		pos_not_important = false,
 		category = "insider_help",
 		icon = 111,
 		total = 1,
-		cost = 0,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_fex_stealth_semi_open_garage_door"),
 		budget_cost = 2,
 		post_event = "preplan_16",
 		prio = 1

@@ -1,4 +1,4 @@
--- Lines 2-8466
+-- Lines 2-8475
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -13774,6 +13774,20 @@ function init_auto_generated_achievement_data(tags)
 				tags.difficulty.overkill,
 				tags.tactics.loud,
 				tags.contracts.locke
+			}
+		},
+		xm20_1 = {
+			need_unlock_icons = true,
+			icon_id = "C_Vlad_Xmas_OnlyForUs",
+			sort_name = "C_Vlad_Xmas_OnlyForUs",
+			unlock_id = true,
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.normal,
+				tags.unlock.mask,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.vlad
 			}
 		},
 		cac_1 = {

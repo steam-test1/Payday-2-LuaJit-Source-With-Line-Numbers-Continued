@@ -390,7 +390,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 416-2475
+-- Lines 416-2477
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1378,6 +1378,7 @@ Play the full version soon to get your full PAYDAY!]],
 		1.3
 	}
 	self.experience_manager.limited_bonus_multiplier = 1
+	self.experience_manager.limited_xmas_bonus_multiplier = 1.15
 	self.experience_manager.level_limit = {
 		low_cap_level = -1,
 		low_cap_multiplier = 0.75,
@@ -2731,7 +2732,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2479-2495
+-- Lines 2481-2497
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2749,7 +2750,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2500-2604
+-- Lines 2502-2606
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2834,19 +2835,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2608-2688
+-- Lines 2610-2690
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2692-2694
+-- Lines 2694-2696
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2698-2706
+-- Lines 2700-2708
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2857,7 +2858,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2710-2713
+-- Lines 2712-2715
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2867,7 +2868,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2717-2726
+-- Lines 2719-2728
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2880,7 +2881,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2730-2906
+-- Lines 2732-2908
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3069,7 +3070,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 2908-3081
+-- Lines 2910-3083
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3183,7 +3184,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3083-3155
+-- Lines 3085-3157
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3256,7 +3257,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3158-3162
+-- Lines 3160-3164
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3274,7 +3275,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3179-3394
+-- Lines 3181-3396
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

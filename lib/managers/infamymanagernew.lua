@@ -21,13 +21,13 @@ function InfamyManager:_setup(reset)
 			self._global.unlocks[item_name] = false
 		end
 
-		self._global.selected_join_stinger = nil
+		self._global.selected_join_stinger = 0
 		self._global.join_stingers = {}
 
-		for index = 1, tweak_data.infamy.join_stingers do
+		for index = 0, tweak_data.infamy.join_stingers do
 			self._global.join_stingers[index] = {
-				unlocked = false,
-				index = index
+				index = index,
+				unlocked = table.contains(tweak_data.infamy.free_join_stingers, index)
 			}
 		end
 	end
@@ -144,7 +144,7 @@ end
 function InfamyManager:selected_join_stinger_index()
 	local stinger_data = self._global.join_stingers[self._global.selected_join_stinger]
 
-	return stinger_data and stinger_data.index or 1
+	return stinger_data and stinger_data.index or 0
 end
 
 -- Lines 131-134
@@ -172,7 +172,7 @@ function InfamyManager:get_unlocked_join_stingers()
 	local unlocked_stingers = {}
 	local stinger_data = nil
 
-	for index = 1, tweak_data.infamy.join_stingers do
+	for index = 0, tweak_data.infamy.join_stingers do
 		stinger_data = self._global.join_stingers[index]
 
 		if stinger_data.unlocked then
@@ -188,7 +188,7 @@ function InfamyManager:get_all_join_stingers()
 	local all_stingers = {}
 	local join_stinger_data = nil
 
-	for index = 1, tweak_data.infamy.join_stingers do
+	for index = 0, tweak_data.infamy.join_stingers do
 		join_stinger_data = self._global.join_stingers[index]
 
 		table.insert(all_stingers, {
@@ -200,7 +200,15 @@ function InfamyManager:get_all_join_stingers()
 	return all_stingers
 end
 
--- Lines 172-181
+-- Lines 172-177
+function InfamyManager:get_join_stinger_name_id(stinger_index)
+	local item_id = string.format("infamy_stinger_%03d", stinger_name)
+	local item_tweak = tweak_data.infamy.items[item_id]
+
+	return item_tweak and item_tweak.name_id or "menu_" .. item_id .. "_name"
+end
+
+-- Lines 179-188
 function InfamyManager:get_infamy_card_id_and_rect()
 	local texture_id = "guis/dlcs/infamous/textures/pd2/infamous_tree/infamy_card_display"
 	local inf_rank = math.min(managers.experience:current_rank(), tweak_data.infamy.ranks - 1) - 1
@@ -216,7 +224,7 @@ function InfamyManager:get_infamy_card_id_and_rect()
 	return texture_id, texture_rect
 end
 
--- Lines 183-188
+-- Lines 190-195
 function InfamyManager:reset_items()
 	self:_reset_points()
 
@@ -224,7 +232,7 @@ function InfamyManager:reset_items()
 	self._global.reset_message = true
 end
 
--- Lines 190-198
+-- Lines 197-205
 function InfamyManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -237,7 +245,7 @@ function InfamyManager:check_reset_message()
 	end
 end
 
--- Lines 200-211
+-- Lines 207-218
 function InfamyManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -249,7 +257,7 @@ function InfamyManager:save(data)
 	data.InfamyManager = state
 end
 
--- Lines 213-243
+-- Lines 220-250
 function InfamyManager:load(data, version)
 	local state = data.InfamyManager
 
@@ -284,7 +292,7 @@ function InfamyManager:load(data, version)
 	end
 end
 
--- Lines 245-270
+-- Lines 252-277
 function InfamyManager:_verify_loaded_data()
 	local tree_map = {}
 
@@ -317,7 +325,7 @@ function InfamyManager:_verify_loaded_data()
 	end
 end
 
--- Lines 272-275
+-- Lines 279-282
 function InfamyManager:reset()
 	Global.infamy_manager = nil
 

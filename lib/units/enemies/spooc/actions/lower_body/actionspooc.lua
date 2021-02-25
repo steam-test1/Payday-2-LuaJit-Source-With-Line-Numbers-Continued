@@ -1483,7 +1483,7 @@ end
 
 -- Lines 1453-1456
 function ActionSpooc:_use_christmas_sounds()
-	local tweak = tweak_data.narrative.jobs[managers.job:current_real_job_id()]
+	local tweak = managers.job:current_level_data()
 
 	return tweak and tweak.is_christmas_heist
 end

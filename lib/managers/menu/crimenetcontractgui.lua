@@ -1,6 +1,6 @@
 CrimeNetContractGui = CrimeNetContractGui or class()
 
--- Lines 3-863
+-- Lines 3-883
 function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -273,7 +273,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	})
 
 	self:make_fine_text(modifiers_text)
-	modifiers_text:set_bottom(math.round(self._contract_panel:h() * 0.5))
+	modifiers_text:set_bottom(math.round(self._contract_panel:h() * 0.5 - font_size))
 
 	local next_top = modifiers_text:bottom()
 	local one_down_active = job_data.one_down == 1
@@ -297,7 +297,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	local ghost_bonus_mul = managers.job:get_ghost_bonus()
 	local skill_bonus = managers.player:get_skill_exp_multiplier()
 	local infamy_bonus = managers.player:get_infamy_exp_multiplier()
-	local limited_bonus = tweak_data:get_value("experience_manager", "limited_bonus_multiplier") or 1
+	local limited_bonus = managers.player:get_limited_exp_multiplier(job_data.job_id, nil)
 	local job_ghost = math.round(ghost_bonus_mul * 100)
 	local job_ghost_string = tostring(math.abs(job_ghost))
 	local has_ghost_bonus = ghost_bonus_mul > 0
@@ -397,7 +397,36 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		next_top = pro_warning_text:bottom()
 	end
 
-	next_top = next_top + half_padding
+	local is_christmas_job = managers.job:is_christmas_job(job_data.job_id)
+
+	if is_christmas_job then
+		local holiday_potential_bonus = managers.job:get_job_christmas_bonus(job_data.job_id)
+		local holiday_bonus_percentage = math.round(holiday_potential_bonus * 100)
+
+		if holiday_bonus_percentage ~= 0 then
+			local holiday_string = tostring(holiday_bonus_percentage)
+			local holiday_text = self._contract_panel:text({
+				vertical = "top",
+				wrap = true,
+				align = "left",
+				wrap_word = true,
+				blend_mode = "normal",
+				text = managers.localization:to_upper_text("holiday_warning_text", {
+					event_icon = managers.localization:get_default_macro("BTN_XMAS"),
+					bonus = holiday_string
+				}),
+				w = text_w,
+				font_size = font_size,
+				font = font,
+				color = tweak_data.screen_colors.event_color
+			})
+
+			holiday_text:set_position(double_padding, next_top)
+			self:make_fine_text(holiday_text)
+
+			next_top = holiday_text:bottom()
+		end
+	end
 
 	modifiers_text:set_visible(heat_warning_text:visible() or one_down_active or pro_warning_text:visible() or ghost_warning_text:visible())
 
@@ -412,6 +441,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self:make_fine_text(risk_title)
 	risk_title:set_top(next_top)
 
+	next_top = next_top + half_padding
 	local menu_risk_id = "menu_risk_pd"
 
 	if job_data.difficulty == "hard" then
@@ -706,7 +736,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 
 	pages_panel:set_visible(false)
 
-	-- Lines 444-475
+	-- Lines 464-495
 	local function add_tab(text_id)
 		local prev_tab = self._tabs[#self._tabs]
 		local tab_item = MenuGuiSmallTabItem:new(#self._tabs + 1, text_id, nil, self, 0, tabs_panel)
@@ -793,7 +823,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		local _y = 7
 		local add_back = true
 
-		-- Lines 558-600
+		-- Lines 578-620
 		local function add_line(left_text, right_text)
 			if right_text == nil or left_text == nil then
 				return
@@ -881,7 +911,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 			local _y = 7
 			local add_back = true
 
-			-- Lines 633-675
+			-- Lines 653-695
 			local function add_line(id, text, ignore_back)
 				local canvas = self._mods_scroll:canvas()
 
@@ -1096,7 +1126,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._potential_show_max = false
 end
 
--- Lines 865-901
+-- Lines 885-921
 function CrimeNetContractGui:_create_xp_appendices(x, y)
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local font = tweak_data.menu.pd2_small_font
@@ -1160,7 +1190,7 @@ function CrimeNetContractGui:_create_xp_appendices(x, y)
 	return job_xp, add_xp, heat_add_xp, ghost_add_xp
 end
 
--- Lines 903-926
+-- Lines 923-946
 function CrimeNetContractGui:_update_xp_appendices()
 	local job_xp = self._contract_panel:child("job_xp")
 	local add_xp = self._contract_panel:child("add_xp")
@@ -1185,7 +1215,7 @@ function CrimeNetContractGui:_update_xp_appendices()
 	end
 end
 
--- Lines 928-949
+-- Lines 948-969
 function CrimeNetContractGui:_check_level_up(levels_gained)
 	local gonna_level_up = levels_gained >= 1
 	self._gonna_level_up = self._gonna_level_up or false
@@ -1199,7 +1229,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 		potential_level_up_text:set_blend_mode("normal")
 
 		if gonna_level_up then
-			-- Lines 939-944
+			-- Lines 959-964
 			local function pulse_anim(o)
 				o:set_blend_mode("add")
 
@@ -1215,7 +1245,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 	end
 end
 
--- Lines 951-959
+-- Lines 971-979
 function CrimeNetContractGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -1228,20 +1258,20 @@ function CrimeNetContractGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 972-975
+-- Lines 992-995
 function CrimeNetContractGui:set_time(t, dt)
 	self._wait_t = t + 1
 	self._step = self._step + 1
 end
 
--- Lines 977-982
+-- Lines 997-1002
 function CrimeNetContractGui:start_sound(t, dt)
 	self:toggle_post_event()
 
 	self._step = self._step + 1
 end
 
--- Lines 984-1055
+-- Lines 1004-1075
 function CrimeNetContractGui:count_job_stars(t, dt)
 	if self._data.stars.job_stars == 0 then
 		self._step = self._step + 1
@@ -1296,7 +1326,7 @@ function CrimeNetContractGui:count_job_stars(t, dt)
 	end
 end
 
--- Lines 1057-1171
+-- Lines 1077-1191
 function CrimeNetContractGui:count_difficulty_stars(t, dt)
 	if self._data.stars.difficulty_stars == 0 then
 		self._data.gui_objects.risk_text:show()
@@ -1386,7 +1416,7 @@ function CrimeNetContractGui:count_difficulty_stars(t, dt)
 	end
 end
 
--- Lines 1174-1178
+-- Lines 1194-1198
 function CrimeNetContractGui:start_counter(t, dt)
 	managers.menu_component:post_event("count_1")
 
@@ -1394,7 +1424,7 @@ function CrimeNetContractGui:start_counter(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1180-1185
+-- Lines 1200-1205
 function CrimeNetContractGui:end_counter(t, dt)
 	managers.menu_component:post_event("count_1_finished")
 
@@ -1403,7 +1433,7 @@ function CrimeNetContractGui:end_counter(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1187-1191
+-- Lines 1207-1211
 function CrimeNetContractGui:start_count_payday(t, dt)
 	managers.menu_component:post_event("count_1")
 
@@ -1411,7 +1441,7 @@ function CrimeNetContractGui:start_count_payday(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1193-1202
+-- Lines 1213-1222
 function CrimeNetContractGui:count_payday(t, dt)
 	self._data.counted_payday_money = math.round(math.step(self._data.counted_payday_money, self._data.payday_money, dt * math.max(self._data.payday_money / (math.rand(1) + 3.5), 40000)))
 
@@ -1425,7 +1455,7 @@ function CrimeNetContractGui:count_payday(t, dt)
 	end
 end
 
--- Lines 1204-1209
+-- Lines 1224-1229
 function CrimeNetContractGui:end_count_payday(t, dt)
 	managers.menu_component:post_event("count_1_finished")
 
@@ -1434,7 +1464,7 @@ function CrimeNetContractGui:end_count_payday(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1221-1278
+-- Lines 1241-1298
 function CrimeNetContractGui:count_job_base(t, dt)
 	local tick = dt * math.max(self._data.experience / (math.rand(1) + 1.5), 4000)
 	self._data.counted_job_xp = math.round(math.step(self._data.counted_job_xp, self._data.experience, tick))
@@ -1491,7 +1521,7 @@ function CrimeNetContractGui:count_job_base(t, dt)
 	end
 end
 
--- Lines 1280-1327
+-- Lines 1300-1347
 function CrimeNetContractGui:count_job_risk(t, dt)
 	self._data.counted_risk_xp = math.round(math.step(self._data.counted_risk_xp, self._data.add_experience, dt * math.max(self._data.add_experience / (math.rand(1) + 0.75), 40000)))
 	self._data.counted_heat_xp = math.round(self._data.heat_experience + math.step(self._data.counted_heat_xp, self._data.heat_add_experience, dt * math.max(self._data.heat_add_experience / (math.rand(1) + 0.75), 40000)))
@@ -1540,7 +1570,7 @@ function CrimeNetContractGui:count_job_risk(t, dt)
 	end
 end
 
--- Lines 1329-1338
+-- Lines 1349-1358
 function CrimeNetContractGui:count_job_payday(t, dt)
 	self._data.counted_payday_money = math.round(math.step(self._data.counted_payday_money, self._data.payday_money, dt * math.max(self._data.payday_money / (math.rand(1) + 1.5), 80000)))
 
@@ -1554,7 +1584,7 @@ function CrimeNetContractGui:count_job_payday(t, dt)
 	end
 end
 
--- Lines 1341-1513
+-- Lines 1361-1533
 function CrimeNetContractGui:set_potential_rewards(show_max)
 	if self._step <= #self._steps then
 		return
@@ -1727,7 +1757,7 @@ function CrimeNetContractGui:set_potential_rewards(show_max)
 	end
 end
 
--- Lines 1516-1749
+-- Lines 1536-1769
 function CrimeNetContractGui:set_all(t, dt)
 	local job_data = self._node:parameters().menu_component_data
 	local narrative = tweak_data.narrative:job_data(job_data.job_id)
@@ -1882,7 +1912,7 @@ function CrimeNetContractGui:set_all(t, dt)
 	end
 end
 
--- Lines 1751-1769
+-- Lines 1771-1789
 function CrimeNetContractGui:free_memory(t, dt)
 	self._data = nil
 	self._step = self._step + 1
@@ -1906,7 +1936,7 @@ function CrimeNetContractGui:free_memory(t, dt)
 	end
 end
 
--- Lines 1771-1790
+-- Lines 1791-1810
 function CrimeNetContractGui:sound_event_callback(event_type, duration)
 	if event_type == "end_of_event" then
 		self._briefing_duration = nil
@@ -1926,7 +1956,7 @@ function CrimeNetContractGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 1792-1809
+-- Lines 1812-1829
 function CrimeNetContractGui:toggle_post_event()
 	if not self._briefing_event then
 		return
@@ -1946,7 +1976,7 @@ function CrimeNetContractGui:toggle_post_event()
 	end
 end
 
--- Lines 1811-1823
+-- Lines 1831-1843
 function CrimeNetContractGui:set_active_page(index)
 	if self._active_page then
 		self._tabs[self._active_page]:set_active(false)
@@ -1963,7 +1993,7 @@ function CrimeNetContractGui:set_active_page(index)
 	end
 end
 
--- Lines 1825-1848
+-- Lines 1845-1868
 function CrimeNetContractGui:update(t, dt)
 	if self._wait_t then
 		if self._wait_t < t then
@@ -1991,7 +2021,7 @@ function CrimeNetContractGui:update(t, dt)
 	end
 end
 
--- Lines 1850-1911
+-- Lines 1870-1931
 function CrimeNetContractGui:mouse_moved(o, x, y)
 	if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 then
 		if self._briefing_len_panel:child("button_text"):inside(x, y) then
@@ -2063,7 +2093,7 @@ function CrimeNetContractGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines 1913-1939
+-- Lines 1933-1964
 function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 and self._briefing_len_panel:child("button_text"):inside(x, y) then
 		self:toggle_post_event()
@@ -2084,7 +2114,15 @@ function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	if self._mod_items and self._mods_tab and self._mods_tab:is_active() and button == Idstring("0") then
 		for _, item in ipairs(self._mod_items) do
 			if item[1]:inside(x, y) then
-				Steam:overlay_activate("url", "http://paydaymods.com/mods/" .. item[1]:name())
+				local mod_name = item[1]:name()
+
+				if mod_name then
+					Steam:overlay_activate("url", "https://modworkshop.net/find/mod?q=" .. mod_name .. "&tags=&gid=1")
+
+					break
+				end
+
+				Steam:overlay_activate("url", "https://modworkshop.net")
 
 				break
 			end
@@ -2092,7 +2130,7 @@ function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 1941-1952
+-- Lines 1966-1977
 function CrimeNetContractGui:mouse_wheel_up(x, y)
 	if self._mutators_scroll then
 		self._mutators_scroll:scroll(x, y, 1)
@@ -2103,7 +2141,7 @@ function CrimeNetContractGui:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 1954-1965
+-- Lines 1979-1990
 function CrimeNetContractGui:mouse_wheel_down(x, y)
 	if self._mutators_scroll then
 		self._mutators_scroll:scroll(x, y, -1)
@@ -2114,7 +2152,7 @@ function CrimeNetContractGui:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 1967-1972
+-- Lines 1992-1997
 function CrimeNetContractGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -2122,7 +2160,7 @@ function CrimeNetContractGui:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 1974-1982
+-- Lines 1999-2007
 function CrimeNetContractGui:_toggle_potential_rewards()
 	if alive(self._potential_rewards_title) and self._step > #self._steps then
 		self._potential_show_max = not self._potential_show_max
@@ -2136,7 +2174,7 @@ function CrimeNetContractGui:_toggle_potential_rewards()
 	end
 end
 
--- Lines 1984-1996
+-- Lines 2009-2021
 function CrimeNetContractGui:special_btn_pressed(button)
 	if button == Idstring("voice_message") or self._smart_matchmaking and button == Idstring("menu_toggle_voice_message") then
 		if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 then
@@ -2153,7 +2191,7 @@ function CrimeNetContractGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 1998-2003
+-- Lines 2023-2028
 function CrimeNetContractGui:previous_page()
 	if self._active_page and self._active_page > 1 then
 		self:set_active_page(self._active_page - 1)
@@ -2162,7 +2200,7 @@ function CrimeNetContractGui:previous_page()
 	end
 end
 
--- Lines 2005-2010
+-- Lines 2030-2035
 function CrimeNetContractGui:next_page()
 	if self._active_page and self._active_page < #self._tabs then
 		self:set_active_page(self._active_page + 1)
@@ -2171,7 +2209,7 @@ function CrimeNetContractGui:next_page()
 	end
 end
 
--- Lines 2012-2050
+-- Lines 2037-2075
 function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	local job_data = self._node:parameters().menu_component_data
 	local diffs = {
@@ -2215,13 +2253,13 @@ function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	self:set_potential_rewards(self._potential_show_max)
 end
 
--- Lines 2052-2055
+-- Lines 2077-2080
 function CrimeNetContractGui:set_one_down(one_down)
 	local job_data = self._node:parameters().menu_component_data
 	job_data.one_down = one_down
 end
 
--- Lines 2057-2072
+-- Lines 2082-2097
 function CrimeNetContractGui:close()
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:activate_controller_mouse()

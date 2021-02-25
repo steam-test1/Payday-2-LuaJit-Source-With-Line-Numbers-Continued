@@ -357,7 +357,7 @@ CrimeSpreeMissionButton.RandomState = {
 	Spin = 1
 }
 
--- Lines 360-494
+-- Lines 360-499
 function CrimeSpreeMissionButton:init(idx, parent, mission_data)
 	self._idx = idx
 	self._mission_data = mission_data
@@ -376,6 +376,17 @@ function CrimeSpreeMissionButton:init(idx, parent, mission_data)
 		color = Color.black
 	})
 	local texture, rect = tweak_data.hud_icons:get_icon_data(mission_data.icon)
+
+	if not texture or not DB:has(Idstring("texture"), texture) then
+		texture = "guis/dlcs/cee/textures/pd2/crime_spree/missions_atlas"
+		rect = {
+			0,
+			0,
+			280,
+			140
+		}
+	end
+
 	self._mission_image = self._image_panel:bitmap({
 		blend_mode = "add",
 		name = "mission_image",
@@ -499,7 +510,7 @@ function CrimeSpreeMissionButton:init(idx, parent, mission_data)
 	self:refresh()
 end
 
--- Lines 496-501
+-- Lines 501-506
 function CrimeSpreeMissionButton:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(self:is_active() or self:is_selected())
@@ -507,37 +518,37 @@ function CrimeSpreeMissionButton:refresh()
 	self._active_border:set_visible(self:is_active())
 end
 
--- Lines 503-505
+-- Lines 508-510
 function CrimeSpreeMissionButton:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 507-509
+-- Lines 512-514
 function CrimeSpreeMissionButton:panel()
 	return self._panel
 end
 
--- Lines 511-513
+-- Lines 516-518
 function CrimeSpreeMissionButton:index()
 	return self._idx
 end
 
--- Lines 515-517
+-- Lines 520-522
 function CrimeSpreeMissionButton:callback()
 	return self._callback
 end
 
--- Lines 519-521
+-- Lines 524-526
 function CrimeSpreeMissionButton:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines 523-525
+-- Lines 528-530
 function CrimeSpreeMissionButton:is_randomizing()
 	return self._randomize ~= nil
 end
 
--- Lines 527-618
+-- Lines 532-623
 function CrimeSpreeMissionButton:update(t, dt)
 	if self._randomize then
 		if self._randomize.state == CrimeSpreeMissionButton.RandomState.Spin then
@@ -618,7 +629,7 @@ function CrimeSpreeMissionButton:update(t, dt)
 	end
 end
 
--- Lines 620-633
+-- Lines 625-638
 function CrimeSpreeMissionButton:randomize(mission_data)
 	self._mission_data = mission_data
 	self._randomize = {
@@ -632,7 +643,7 @@ function CrimeSpreeMissionButton:randomize(mission_data)
 	self:_create_random_texts()
 end
 
--- Lines 635-639
+-- Lines 640-644
 function CrimeSpreeMissionButton:update_mission(mission_data)
 	self._mission_data = mission_data
 
@@ -640,7 +651,7 @@ function CrimeSpreeMissionButton:update_mission(mission_data)
 	self:update_info_text(mission_data)
 end
 
--- Lines 641-661
+-- Lines 646-666
 function CrimeSpreeMissionButton:update_button_text(text, mission_data, dont_reset_pos)
 	text = text or self._level_text
 	mission_data = mission_data or self._mission_data
@@ -663,12 +674,12 @@ function CrimeSpreeMissionButton:update_button_text(text, mission_data, dont_res
 	end
 end
 
--- Lines 663-665
+-- Lines 668-670
 function CrimeSpreeMissionButton:button_text_h()
 	return self._panel:h() - tweak_data.menu.pd2_small_font_size - 4
 end
 
--- Lines 667-704
+-- Lines 672-714
 function CrimeSpreeMissionButton:update_info_text(mission_data)
 	mission_data = mission_data or self._mission_data
 	local text = ""
@@ -699,6 +710,16 @@ function CrimeSpreeMissionButton:update_info_text(mission_data)
 
 	local texture, rect = tweak_data.hud_icons:get_icon_data(mission_data.icon)
 
+	if not texture or not DB:has(Idstring("texture"), texture) then
+		texture = "guis/dlcs/cee/textures/pd2/crime_spree/missions_atlas"
+		rect = {
+			0,
+			0,
+			280,
+			140
+		}
+	end
+
 	self._mission_image:set_image(texture)
 
 	if rect then
@@ -706,7 +727,7 @@ function CrimeSpreeMissionButton:update_info_text(mission_data)
 	end
 end
 
--- Lines 706-739
+-- Lines 716-749
 function CrimeSpreeMissionButton:_create_random_texts()
 	self:_cleanup_random_texts()
 
@@ -742,7 +763,7 @@ function CrimeSpreeMissionButton:_create_random_texts()
 	end
 end
 
--- Lines 741-752
+-- Lines 751-762
 function CrimeSpreeMissionButton:_cleanup_random_texts()
 	if self._random_texts then
 		for i, text in ipairs(self._random_texts) do
@@ -755,7 +776,7 @@ function CrimeSpreeMissionButton:_cleanup_random_texts()
 	end
 end
 
--- Lines 754-778
+-- Lines 764-788
 function CrimeSpreeMissionButton:_move_random_texts(speed, dt)
 	for i, text in ipairs(self._random_texts) do
 		text:set_y(text:y() + speed * dt)
@@ -778,7 +799,7 @@ function CrimeSpreeMissionButton:_move_random_texts(speed, dt)
 	end
 end
 
--- Lines 780-788
+-- Lines 790-798
 function CrimeSpreeMissionButton:_get_mission_category(mission)
 	if mission.add <= 5 then
 		return "short"
@@ -789,7 +810,7 @@ function CrimeSpreeMissionButton:_get_mission_category(mission)
 	end
 end
 
--- Lines 790-792
+-- Lines 800-802
 function CrimeSpreeMissionButton:mission_id()
 	return (self._mission_data or {}).id
 end

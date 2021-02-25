@@ -812,7 +812,7 @@ function AchievmentManager:clear_steam(id)
 	self.handler:store_data()
 end
 
--- Lines 823-833
+-- Lines 823-839
 function AchievmentManager:clear_all_steam()
 	print("[AchievmentManager:clear_all_steam]")
 
@@ -826,7 +826,7 @@ function AchievmentManager:clear_all_steam()
 	self.handler:store_data()
 end
 
--- Lines 837-846
+-- Lines 843-852
 function AchievmentManager.steam_unlock_result(achievment)
 	print("[AchievmentManager:steam_unlock_result] Awarded Steam achievment", achievment)
 
@@ -839,11 +839,11 @@ function AchievmentManager.steam_unlock_result(achievment)
 	end
 end
 
--- Lines 849-865
+-- Lines 855-871
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
-	-- Lines 857-862
+	-- Lines 863-868
 	local function x360_unlock_result(result)
 		print("result", result)
 	end
@@ -851,7 +851,7 @@ function AchievmentManager:award_x360(id)
 	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
 end
 
--- Lines 869-880
+-- Lines 875-886
 function AchievmentManager:award_psn(id)
 	print("[AchievmentManager:award] Awarded PSN achievment", id, self:get_info(id).id)
 
@@ -865,7 +865,7 @@ function AchievmentManager:award_psn(id)
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
--- Lines 882-890
+-- Lines 888-896
 function AchievmentManager.psn_unlock_result(request, error_str)
 	print("[AchievmentManager:psn_unlock_result] Awarded PSN achievment", request, error_str)
 
@@ -878,7 +878,7 @@ function AchievmentManager.psn_unlock_result(request, error_str)
 	end
 end
 
--- Lines 894-904
+-- Lines 900-910
 function AchievmentManager:chk_install_trophies()
 	if Trophies:is_installed() then
 		print("[AchievmentManager:chk_install_trophies] Already installed")
@@ -893,7 +893,7 @@ function AchievmentManager:chk_install_trophies()
 	end
 end
 
--- Lines 908-914
+-- Lines 914-920
 function AchievmentManager:clbk_install_trophies(result)
 	print("[AchievmentManager:clbk_install_trophies]", result)
 
@@ -904,7 +904,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines 918-968
+-- Lines 924-974
 function AchievmentManager:check_complete_heist_stats_achivements()
 	local job = nil
 
@@ -963,7 +963,7 @@ function AchievmentManager:check_complete_heist_stats_achivements()
 	end
 end
 
--- Lines 972-979
+-- Lines 978-985
 function AchievmentManager:check_autounlock_achievements()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self:_check_autounlock_complete_heist()
@@ -973,7 +973,7 @@ function AchievmentManager:check_autounlock_achievements()
 	self:_check_autounlock_infamy()
 end
 
--- Lines 982-1024
+-- Lines 988-1030
 function AchievmentManager:_check_autounlock_complete_heist()
 	local condition_whitelist = {
 		"award",
@@ -983,7 +983,7 @@ function AchievmentManager:_check_autounlock_complete_heist()
 		"jobs"
 	}
 
-	-- Lines 992-1007
+	-- Lines 998-1013
 	local function eligible_for_autounlock(achievement_data)
 		local has_award = achievement_data.award
 		local has_difficulty = achievement_data.difficulty
@@ -1025,17 +1025,17 @@ function AchievmentManager:_check_autounlock_complete_heist()
 	end
 end
 
--- Lines 1027-1029
+-- Lines 1033-1035
 function AchievmentManager:_check_autounlock_difficulties()
 	self:check_complete_heist_stats_achivements()
 end
 
--- Lines 1032-1034
+-- Lines 1038-1040
 function AchievmentManager:_check_autounlock_infamy()
 	managers.experience:_check_achievements()
 end
 
--- Lines 1036-1064
+-- Lines 1042-1070
 function AchievmentManager:_award_achievement(t, name)
 	if name then
 		print("[AchievmentManager] awarding: ", name)

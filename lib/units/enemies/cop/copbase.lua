@@ -85,41 +85,59 @@ function CopBase:enable_leg_arm_hitbox()
 	end
 end
 
--- Lines 90-99
+-- Lines 90-119
 function CopBase:_chk_spawn_gear()
-	local tweak = tweak_data.narrative.jobs[managers.job:current_real_job_id()]
+	local tweak = managers.job:current_level_data()
 
-	if self._tweak_table == "spooc" and tweak and tweak.is_christmas_heist then
-		local align_obj_name = Idstring("Head")
-		local align_obj = self._unit:get_object(align_obj_name)
-		self._headwear_unit = World:spawn_unit(Idstring("units/payday2/characters/ene_acc_spook_santa_hat/ene_acc_spook_santa_hat"), Vector3(), Rotation())
+	if tweak and tweak.is_christmas_heist then
+		if self._tweak_table == "spooc" then
+			self._headwear_unit = safe_spawn_unit("units/payday2/characters/ene_acc_spook_santa_hat/ene_acc_spook_santa_hat", Vector3(), Rotation())
+		elseif self._tweak_table == "tank_medic" or self._tweak_table == "tank_mini" then
+			self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_zeal_santa_hat/ene_acc_dozer_zeal_santa_hat", Vector3(), Rotation())
+		elseif self._tweak_table == "tank" then
+			local region = tweak_data.levels:get_ai_group_type()
+			local difficulty_index = tweak_data:difficulty_to_index(Global and Global.game_settings and Global.game_settings.difficulty or "overkill")
 
-		self._unit:link(align_obj_name, self._headwear_unit, self._headwear_unit:orientation_object():name())
+			if region == "russia" or region == "federales" then
+				self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_akan_santa_hat/ene_acc_dozer_akan_santa_hat", Vector3(), Rotation())
+			elseif difficulty_index == 8 then
+				self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_zeal_santa_hat/ene_acc_dozer_zeal_santa_hat", Vector3(), Rotation())
+			else
+				self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_santa_hat/ene_acc_dozer_santa_hat", Vector3(), Rotation())
+			end
+		end
+
+		if self._headwear_unit then
+			local align_obj_name = Idstring("Head")
+			local align_obj = self._unit:get_object(align_obj_name)
+
+			self._unit:link(align_obj_name, self._headwear_unit, self._headwear_unit:orientation_object():name())
+		end
 	end
 end
 
--- Lines 103-106
+-- Lines 123-126
 function CopBase:has_tag(tag)
 	local tags = self:char_tweak().tags
 
 	return tags and table.contains(tags, tag) or false
 end
 
--- Lines 108-111
+-- Lines 128-131
 function CopBase:has_all_tags(tags)
 	local my_tags = self:char_tweak().tags
 
 	return my_tags and table.contains_all(my_tags, tags) or false
 end
 
--- Lines 113-116
+-- Lines 133-136
 function CopBase:has_any_tag(tags)
 	local my_tags = self:char_tweak().tags
 
 	return my_tags and table.contains_any(my_tags, tags) or false
 end
 
--- Lines 120-128
+-- Lines 140-148
 function CopBase:default_weapon_name()
 	local default_weapon_id = self._default_weapon_id
 	local weap_ids = tweak_data.character.weap_ids
@@ -131,22 +149,22 @@ function CopBase:default_weapon_name()
 	end
 end
 
--- Lines 132-134
+-- Lines 152-154
 function CopBase:visibility_state()
 	return self._visibility_state
 end
 
--- Lines 138-140
+-- Lines 158-160
 function CopBase:lod_stage()
 	return self._lod_stage
 end
 
--- Lines 144-146
+-- Lines 164-166
 function CopBase:set_allow_invisible(allow)
 	self._allow_invisible = allow
 end
 
--- Lines 150-198
+-- Lines 170-218
 function CopBase:set_visibility_state(stage)
 	local state = stage and true
 
@@ -203,17 +221,17 @@ function CopBase:set_visibility_state(stage)
 	self:chk_freeze_anims()
 end
 
--- Lines 202-204
+-- Lines 222-224
 function CopBase:set_anim_lod(stage)
 	self._unit:set_animation_lod(unpack(self._anim_lods[stage]))
 end
 
--- Lines 208-210
+-- Lines 228-230
 function CopBase:on_death_exit()
 	self._unit:set_animations_enabled(false)
 end
 
--- Lines 214-226
+-- Lines 234-246
 function CopBase:chk_freeze_anims()
 	if (not self._lod_stage or self._lod_stage > 1) and self._ext_anim.can_freeze and self._ext_anim.upper_body_empty then
 		if not self._anims_frozen then
@@ -230,7 +248,7 @@ function CopBase:chk_freeze_anims()
 	end
 end
 
--- Lines 231-239
+-- Lines 251-259
 function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	if send_to_action then
 		unit:movement():on_anim_act_clbk(anim_act)
@@ -239,7 +257,7 @@ function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	end
 end
 
--- Lines 243-256
+-- Lines 263-276
 function CopBase:save(data)
 	if self._unit:interaction() and self._unit:interaction().tweak_data == "hostage_trade" then
 		data.is_hostage_trade = true
@@ -256,7 +274,7 @@ function CopBase:save(data)
 	end
 end
 
--- Lines 260-270
+-- Lines 280-290
 function CopBase:load(data)
 	if data.is_hostage_trade then
 		CopLogicTrade.hostage_trade(self._unit, true, false)
@@ -267,7 +285,7 @@ function CopBase:load(data)
 	self._buffs = data.buffs
 end
 
--- Lines 274-288
+-- Lines 294-308
 function CopBase:swap_material_config(material_applied_clbk)
 	local new_material = self._material_translation_map[self._loading_material_key or tostring(self._unit:material_config():key())]
 
@@ -286,7 +304,7 @@ function CopBase:swap_material_config(material_applied_clbk)
 	end
 end
 
--- Lines 292-306
+-- Lines 312-326
 function CopBase:on_material_applied(material_applied_clbk)
 	if not alive(self._unit) then
 		return
@@ -303,32 +321,34 @@ function CopBase:on_material_applied(material_applied_clbk)
 	end
 end
 
--- Lines 310-312
+-- Lines 330-332
 function CopBase:is_in_original_material()
 	return self._is_in_original_material
 end
 
--- Lines 316-320
+-- Lines 336-340
 function CopBase:set_material_state(original)
 	if original and not self._is_in_original_material or not original and self._is_in_original_material then
 		self:swap_material_config()
 	end
 end
 
--- Lines 324-326
+-- Lines 344-346
 function CopBase:char_tweak()
 	return self._char_tweak
 end
 
--- Lines 330-333
+-- Lines 350-353
 function CopBase:melee_weapon()
 	return self._melee_weapon_table or self._char_tweak.melee_weapon or "weapon"
 end
 
--- Lines 337-346
+-- Lines 357-367
 function CopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)
+
+		self._headwear_unit = nil
 	end
 
 	unit:brain():pre_destroy(unit)
@@ -337,7 +357,7 @@ function CopBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 351-363
+-- Lines 372-384
 function CopBase:_refresh_buff_total(name)
 	local buff_list = self._buffs[name]
 	local sum = 0
@@ -353,13 +373,13 @@ function CopBase:_refresh_buff_total(name)
 	end
 end
 
--- Lines 365-368
+-- Lines 386-389
 function CopBase:_sync_buff_total(name, total)
 	self._buffs[name] = self._buffs[name] or {}
 	self._buffs[name]._total = total * 0.001
 end
 
--- Lines 370-391
+-- Lines 391-412
 function CopBase:add_buff(name, value)
 	if not Network:is_server() then
 		return
@@ -385,7 +405,7 @@ function CopBase:add_buff(name, value)
 	return id
 end
 
--- Lines 393-407
+-- Lines 414-428
 function CopBase:remove_buff_by_id(name, id)
 	if not Network:is_server() then
 		return
@@ -402,7 +422,7 @@ function CopBase:remove_buff_by_id(name, id)
 	self:_refresh_buff_total(name)
 end
 
--- Lines 409-420
+-- Lines 430-441
 function CopBase:get_total_buff(name)
 	local buff_list = self._buffs[name]
 

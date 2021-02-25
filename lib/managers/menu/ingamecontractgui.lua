@@ -1,6 +1,6 @@
 IngameContractGui = IngameContractGui or class()
 
--- Lines 3-286
+-- Lines 3-304
 function IngameContractGui:init(ws, node)
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
 	self._panel = ws:panel():panel({
@@ -8,7 +8,7 @@ function IngameContractGui:init(ws, node)
 		h = math.round(ws:panel():h() * 1)
 	})
 
-	self._panel:set_y(CoreMenuRenderer.Renderer.border_height + tweak_data.menu.pd2_large_font_size - 5)
+	self._panel:set_y(math.max(tweak_data.menu.pd2_medium_font_size, CoreMenuRenderer.Renderer.border_height))
 	self._panel:grow(0, -(self._panel:y() + tweak_data.menu.pd2_medium_font_size))
 
 	self._node = node
@@ -71,6 +71,7 @@ function IngameContractGui:init(ws, node)
 	briefing_description:set_top(briefing_title:bottom())
 
 	local is_job_ghostable = managers.job:is_job_ghostable(managers.job:current_job_id())
+	local ghostable_text = nil
 
 	if is_job_ghostable then
 		local min_ghost_bonus, max_ghost_bonus = managers.job:get_job_ghost_bonus(managers.job:current_job_id())
@@ -91,7 +92,7 @@ function IngameContractGui:init(ws, node)
 		end
 
 		local ghost_bonus_string = min_ghost_bonus == max_ghost_bonus and min_string or min_string .. "-" .. max_string
-		local ghostable_text = text_panel:text({
+		ghostable_text = text_panel:text({
 			blend_mode = "add",
 			vertical = "top",
 			wrap = true,
@@ -120,7 +121,7 @@ function IngameContractGui:init(ws, node)
 	})
 
 	managers.hud:make_fine_text(modifiers_text)
-	modifiers_text:set_bottom(text_panel:h() * 0.5)
+	modifiers_text:set_bottom(text_panel:h() * 0.5 - tweak_data.menu.pd2_small_font_size)
 
 	local next_top = modifiers_text:bottom()
 	local one_down_warning_text = nil
@@ -233,6 +234,35 @@ function IngameContractGui:init(ws, node)
 		pro_warning_text:set_left(10)
 
 		next_top = pro_warning_text:bottom()
+	end
+
+	local is_christmas_job = managers.job:is_christmas_job(managers.job:current_job_id())
+
+	if is_christmas_job then
+		local holiday_potential_bonus = managers.job:get_job_christmas_bonus(managers.job:current_job_id())
+		local holiday_bonus_percentage = math.round(holiday_potential_bonus * 100)
+
+		if holiday_bonus_percentage ~= 0 then
+			local holiday_string = tostring(holiday_bonus_percentage)
+			local holiday_text = text_panel:text({
+				vertical = "top",
+				wrap = true,
+				align = "left",
+				wrap_word = true,
+				text = managers.localization:to_upper_text("holiday_warning_text", {
+					event_icon = managers.localization:get_default_macro("BTN_XMAS"),
+					bonus = holiday_string
+				}),
+				font_size = tweak_data.menu.pd2_small_font_size,
+				font = tweak_data.menu.pd2_small_font,
+				color = tweak_data.screen_colors.event_color
+			})
+
+			holiday_text:set_position(10, next_top)
+			managers.hud:make_fine_text(holiday_text)
+
+			next_top = holiday_text:bottom()
+		end
 	end
 
 	next_top = next_top + 5
@@ -430,7 +460,7 @@ function IngameContractGui:init(ws, node)
 	})
 end
 
--- Lines 288-296
+-- Lines 306-314
 function IngameContractGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -443,24 +473,24 @@ function IngameContractGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 298-300
+-- Lines 316-318
 function IngameContractGui:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines 302-304
+-- Lines 320-322
 function IngameContractGui:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines 306-311
+-- Lines 324-329
 function IngameContractGui:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
 	text:set_size(w, h)
 end
 
--- Lines 313-437
+-- Lines 331-455
 function IngameContractGui:set_potential_rewards(show_max)
 	if not alive(self._rewards_panel) then
 		return
@@ -636,7 +666,7 @@ function IngameContractGui:set_potential_rewards(show_max)
 	payday_text:set_bottom(self._rewards_panel:h())
 end
 
--- Lines 439-455
+-- Lines 457-473
 function IngameContractGui:mouse_moved(o, x, y)
 	if alive(self._potential_rewards_title) and self._potential_rewards_title:visible() then
 		if self._potential_rewards_title:inside(x, y) then
@@ -658,14 +688,14 @@ function IngameContractGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines 457-461
+-- Lines 475-479
 function IngameContractGui:mouse_pressed(button, x, y)
 	if alive(self._potential_rewards_title) and self._potential_rewards_title:visible() and self._potential_rewards_title:inside(x, y) then
 		self:_toggle_potential_rewards()
 	end
 end
 
--- Lines 463-472
+-- Lines 481-490
 function IngameContractGui:_toggle_potential_rewards()
 	if alive(self._potential_rewards_title) then
 		self._potential_show_max = not self._potential_show_max
@@ -679,7 +709,7 @@ function IngameContractGui:_toggle_potential_rewards()
 	end
 end
 
--- Lines 474-480
+-- Lines 492-498
 function IngameContractGui:special_btn_pressed(button)
 	if button == Idstring("menu_modify_item") then
 		self:_toggle_potential_rewards()
@@ -688,7 +718,7 @@ function IngameContractGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 482-487
+-- Lines 500-505
 function IngameContractGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)

@@ -134,7 +134,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 155-282
+-- Lines 155-284
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -152,14 +152,6 @@ function MenuSetup:init_game()
 					i = i + 1
 				elseif arg == "-checkpoint_index" then
 					checkpoint_index = tonumber(arg_list[i + 1])
-					i = i + 1
-				elseif arg == "-level" then
-					level = arg_list[i + 1]
-					Global.exe_argument_level = level
-					i = i + 1
-				elseif arg == "-difficulty" then
-					difficulty = arg_list[i + 1]
-					Global.exe_argument_difficulty = difficulty
 					i = i + 1
 				elseif arg == "-class" then
 					level_class_name = arg_list[i + 1]
@@ -207,7 +199,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines 284-296
+-- Lines 286-298
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
@@ -219,7 +211,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines 298-328
+-- Lines 300-330
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -253,7 +245,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines 330-349
+-- Lines 332-351
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -271,32 +263,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 351-356
+-- Lines 353-358
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 358-362
+-- Lines 360-364
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 364-392
+-- Lines 366-394
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 394-398
+-- Lines 396-400
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 400-403
+-- Lines 402-405
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()
