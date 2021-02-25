@@ -13545,9 +13545,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_1 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D0",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D0",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D0",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D0",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13557,8 +13557,8 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_10 = {
-			sort_name = "C_Locke_H_BainPrisonHeist_Another",
-			icon_id = "C_Locke_H_BainPrisonHeist_Another",
+			sort_name = "C_Locke_H_HellsIsland_Another",
+			icon_id = "C_Locke_H_HellsIsland_Another",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -13567,8 +13567,8 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_11 = {
-			sort_name = "C_Locke_H_BainPrisonHeist_Beacon",
-			icon_id = "C_Locke_H_BainPrisonHeist_Beacon",
+			sort_name = "C_Locke_H_HellsIsland_Beacon",
+			icon_id = "C_Locke_H_HellsIsland_Beacon",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -13577,9 +13577,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_2 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D1",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D1",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D1",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D1",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13589,9 +13589,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_3 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D2",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D2",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D2",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D2",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13601,9 +13601,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_4 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D3",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D3",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D3",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D3",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13613,9 +13613,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_5 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D4",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D4",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D4",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D4",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13625,9 +13625,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_6 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D5",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D5",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D5",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D5",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13637,9 +13637,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_7 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_D6",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_D6",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_D6",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_D6",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13649,9 +13649,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_8 = {
-			icon_id = "C_Locke_H_BainPrisonHeist_AllDiffs_OD_D6",
-			ladder = "H_BainPrisonHeist",
-			sort_name = "C_Locke_H_BainPrisonHeist_AllDiffs_OD_D6",
+			icon_id = "C_Locke_H_HellsIsland_AllDiffs_OD_D6",
+			ladder = "H_HellsIsland",
+			sort_name = "C_Locke_H_HellsIsland_AllDiffs_OD_D6",
 			additional_id = true,
 			tags = {
 				tags.progress.completion,
@@ -13661,8 +13661,8 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		bph_9 = {
-			sort_name = "C_Locke_H_BainPrisonHeist_PrisonRules",
-			icon_id = "C_Locke_H_BainPrisonHeist_PrisonRules",
+			sort_name = "C_Locke_H_HellsIsland_PrisonRules",
+			icon_id = "C_Locke_H_HellsIsland_PrisonRules",
 			progress = true,
 			tags = {
 				tags.progress.heisting,

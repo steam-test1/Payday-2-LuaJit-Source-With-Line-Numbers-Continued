@@ -4916,7 +4916,8 @@ function UpgradesTweakData:init(tweak_data)
 				"striker",
 				"wa2000",
 				"beardy",
-				"catch"
+				"catch",
+				"elastic"
 			}
 		},
 		[34] = {
@@ -4965,7 +4966,8 @@ function UpgradesTweakData:init(tweak_data)
 				"m134",
 				"rpg7",
 				"arblast",
-				"scoutknife"
+				"scoutknife",
+				"komodo"
 			}
 		},
 		[39] = {
@@ -5009,7 +5011,8 @@ function UpgradesTweakData:init(tweak_data)
 			upgrades = {
 				"b682",
 				"m32",
-				"morning"
+				"morning",
+				"coach"
 			}
 		},
 		[44] = {
@@ -5471,8 +5474,11 @@ function UpgradesTweakData:init(tweak_data)
 	self:_x_rota_weapon_definitions()
 	self:_shuno_weapon_definitions()
 	self:_system_weapon_definitions()
+	self:_komodo_weapon_definitions()
+	self:_elastic_weapon_definitions()
 	self:_legacy_weapon_definitions()
 	self:_x_legacy_weapon_definitions()
+	self:_coach_weapon_definitions()
 	self:_melee_weapon_definitions()
 	self:_grenades_definitions()
 	self:_carry_definitions()
@@ -15600,6 +15606,24 @@ function UpgradesTweakData:_system_weapon_definitions()
 	}
 end
 
+-- Lines 12607-12613
+function UpgradesTweakData:_komodo_weapon_definitions()
+	self.definitions.komodo = {
+		factory_id = "wpn_fps_ass_komodo",
+		weapon_id = "komodo",
+		category = "weapon"
+	}
+end
+
+-- Lines 12618-12624
+function UpgradesTweakData:_elastic_weapon_definitions()
+	self.definitions.elastic = {
+		factory_id = "wpn_fps_bow_elastic",
+		weapon_id = "elastic",
+		category = "weapon"
+	}
+end
+
 -- Lines 12627-12633
 function UpgradesTweakData:_legacy_weapon_definitions()
 	self.definitions.legacy = {
@@ -15614,6 +15638,16 @@ function UpgradesTweakData:_x_legacy_weapon_definitions()
 	self.definitions.x_legacy = {
 		factory_id = "wpn_fps_pis_x_legacy",
 		weapon_id = "x_legacy",
+		category = "weapon"
+	}
+end
+
+-- Lines 12644-12651
+function UpgradesTweakData:_coach_weapon_definitions()
+	self.definitions.coach = {
+		dlc = "pd2_clan",
+		factory_id = "wpn_fps_sho_coach",
+		weapon_id = "coach",
 		category = "weapon"
 	}
 end

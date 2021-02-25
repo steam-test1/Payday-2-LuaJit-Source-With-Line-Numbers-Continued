@@ -3,7 +3,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines 32-754
+-- Lines 32-753
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -527,6 +527,31 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 			cooldown = "perkdeck_cooldown_over"
 		}
 	}
+	self.projectiles.elastic_arrow = {
+		unit = "units/pd2_dlc_ram/weapons/wpn_prj_elastic_arrow/wpn_prj_elastic_m_standard",
+		local_unit = "units/pd2_dlc_ram/weapons/wpn_prj_elastic_arrow/wpn_prj_elastic_m_standard_local",
+		weapon_id = "elastic",
+		no_cheat_count = true,
+		impact_detonation = true,
+		client_authoritative = true
+	}
+	self.projectiles.elastic_arrow_poison = {
+		unit = "units/pd2_dlc_ram/weapons/wpn_prj_elastic_arrow_poison/wpn_prj_elastic_m_poison",
+		local_unit = "units/pd2_dlc_ram/weapons/wpn_prj_elastic_arrow_poison/wpn_prj_elastic_m_poison_local",
+		weapon_id = "elastic",
+		no_cheat_count = true,
+		impact_detonation = true,
+		client_authoritative = true
+	}
+	self.projectiles.elastic_arrow_exp = {
+		unit = "units/pd2_dlc_ram/weapons/wpn_prj_elastic_arrow_exp/wpn_prj_elastic_m_explosive",
+		local_unit = "units/pd2_dlc_ram/weapons/wpn_prj_elastic_arrow_exp/wpn_prj_elastic_m_explosive_local",
+		weapon_id = "elastic",
+		no_cheat_count = true,
+		impact_detonation = true,
+		client_authoritative = true,
+		is_explosive = true
+	}
 	self._projectiles_index = {
 		"frag",
 		"launcher_frag",
@@ -574,7 +599,10 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		"ecp_arrow_poison",
 		"pocket_ecm_jammer",
 		"launcher_frag_slap",
-		"launcher_incendiary_slap"
+		"launcher_incendiary_slap",
+		"elastic_arrow",
+		"elastic_arrow_poison",
+		"elastic_arrow_exp"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 
@@ -587,12 +615,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 756-758
+-- Lines 755-757
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 760-767
+-- Lines 759-766
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -603,7 +631,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 769-771
+-- Lines 768-770
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

@@ -16187,7 +16187,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines 5878-6493
+-- Lines 5878-6499
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {
@@ -16750,9 +16750,14 @@ function CharacterTweakData:character_map()
 				"ene_murkywater_shield",
 				"ene_murkywater_sniper",
 				"ene_murkywater_heavy",
-				"ene_murkywater_light",
 				"ene_murkywater_heavy_shotgun",
-				"ene_murkywater_heavy_g36"
+				"ene_murkywater_heavy_g36",
+				"ene_murkywater_light_city",
+				"ene_murkywater_light_city_r870",
+				"ene_murkywater_light_fbi_r870",
+				"ene_murkywater_light_fbi",
+				"ene_murkywater_light",
+				"ene_murkywater_light_r870"
 			}
 		}
 	}
