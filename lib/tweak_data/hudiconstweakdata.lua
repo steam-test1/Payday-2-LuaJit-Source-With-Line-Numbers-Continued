@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3156
+-- Lines 7-3169
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -13916,6 +13916,105 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D0 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			89,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D1 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			2,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D2 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			89,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D3 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			176,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D4 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			2,
+			89,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D5 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			89,
+			176,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			176,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllDiffs_OD_D6 = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			2,
+			350,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_AllTheGold = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			2,
+			263,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_KeepBeathing = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_JiuFeng_H_DragonHeist_Speed = {
+		texture = "guis/dlcs/trk/atlases/achievement_atlas_chas",
+		texture_rect = {
+			263,
+			350,
+			85,
+			85
+		}
+	}
 	self.C_Bain_H_Arena_Holdout_3 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_shl",
 		texture_rect = {
@@ -14292,7 +14391,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3159-3162
+-- Lines 3172-3175
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -14305,7 +14404,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3164-3180
+-- Lines 3177-3193
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -14331,7 +14430,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3182-3187
+-- Lines 3195-3200
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -14345,7 +14444,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3189-3195
+-- Lines 3202-3208
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -14356,7 +14455,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3197-3203
+-- Lines 3210-3216
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

@@ -37517,7 +37517,7 @@ function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 38899-41127
+-- Lines 38899-41146
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {
@@ -39719,5 +39719,22 @@ function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 		base_variation = Idstring("units/pd2_dlc_wcs/weapon_colors/base_gradient/wcs_black_df"),
 		pattern_default = Idstring("units/pd2_dlc_in31/weapon_colors/pattern/pattern_in31_08_df"),
 		gradient_default = Idstring("units/pd2_dlc_in31/weapon_colors/pattern_gradient/gradient_in31_08_df")
+	})
+	self:create_new_color_skin("color_mar21_01", {
+		texture_bundle_folder = "mar21",
+		global_value = "mar21",
+		sort_number = 0,
+		global_value_category = "collectable",
+		color = Color("1e1e1e")
+	}, {
+		base_default = Idstring("units/pd2_dlc_wcc/weapon_colors/base_gradient/base_gradient_wcc_pattern_default"),
+		base_metal = Idstring("units/pd2_dlc_wcc/weapon_colors/base_gradient/base_gradient_wcc_pattern_metal"),
+		base_plastic = Idstring("units/pd2_dlc_wcc/weapon_colors/base_gradient/base_gradient_wcc_pattern_plastic"),
+		base_half = Idstring("units/pd2_dlc_wcc/weapon_colors/base_gradient/base_gradient_wcc_pattern_half"),
+		base_half_02 = Idstring("units/pd2_dlc_wcc/weapon_colors/base_gradient/base_gradient_wcc_pattern_half_02"),
+		base_detail = Idstring("units/pd2_dlc_wcc/weapon_colors/base_gradient/base_gradient_wcc_pattern_details"),
+		base_variation = Idstring("units/pd2_dlc_wcs/weapon_colors/base_gradient/wcs_black_df"),
+		pattern_default = Idstring("units/pd2_dlc_mar21/weapon_colors/pattern/pattern_mar21_01_df"),
+		gradient_default = Idstring("units/pd2_dlc_mar21/weapon_colors/pattern_gradient/gradient_mar21_01_df")
 	})
 end

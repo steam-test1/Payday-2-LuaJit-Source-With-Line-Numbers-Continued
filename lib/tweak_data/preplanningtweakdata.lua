@@ -51,7 +51,7 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines 36-1611
+-- Lines 36-1645
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
@@ -1627,9 +1627,42 @@ function PrePlanningTweakData:init(tweak_data)
 		post_event = "preplan_16",
 		prio = 1
 	}
+	self.types.chas_tram = {
+		name_id = "menu_pp_chas_tram",
+		desc_id = "menu_pp_chas_tram_desc",
+		category = "hired_help",
+		icon = 103,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 1,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_chas_tram"),
+		budget_cost = 6
+	}
+	self.types.chas_garbage_truck = {
+		name_id = "menu_pp_asset_chas_garbage_truck",
+		desc_id = "menu_pp_asset_chas_garbage_truck_desc",
+		category = "hired_help",
+		icon = 102,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_garbage_truck"),
+		budget_cost = 3
+	}
+	self.types.chas_open_window = {
+		name_id = "menu_pp_asset_chas_open_window",
+		desc_id = "menu_pp_asset_chas_open_window_desc",
+		category = "hired_help",
+		icon = 111,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_open_window"),
+		budget_cost = 2
+	}
 end
 
--- Lines 1613-2690
+-- Lines 1647-2739
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -3290,24 +3323,34 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	self.locations.chas = {
 		{
 			texture = "guis/dlcs/chas/textures/pd2/pre_planning/chas_01",
-			x2 = 6000,
+			x2 = 3500,
 			rotation = 0,
 			map_size = 1,
 			map_x = -0.55,
+			x1 = -9500,
 			map_y = 0,
 			name_id = "menu_pp_chas_bpr_loc_a",
-			x1 = -0 - 6000,
-			y1 = -0 - 6000,
-			y2 = -0 + 6000,
+			y2 = 8500,
+			y1 = -4500,
+			custom_points = {}
+		},
+		{
+			texture = "guis/dlcs/chas/textures/pd2/pre_planning/chas_02",
+			x2 = 3500,
+			rotation = 0,
+			map_size = 1,
+			map_x = 0.55,
+			x1 = -9500,
+			map_y = 0,
+			name_id = "menu_pp_chas_bpr_loc_b",
+			y2 = 8500,
+			y1 = -4500,
 			custom_points = {}
 		},
 		mission_briefing_texture = "guis/dlcs/chas/textures/pd2/pre_planning/chas_preview",
 		post_event_prefix = "loc",
 		total_budget = 10,
-		default_plans = {
-			escape_plan = "fex_loud_escape_with_car",
-			entry_plan_generic = "chas_stealth_entry_with_thermite"
-		},
+		default_plans = {},
 		start_location = {
 			group = "a",
 			zoom = 1,
@@ -3317,7 +3360,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines 2692-2694
+-- Lines 2741-2743
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

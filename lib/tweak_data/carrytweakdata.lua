@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1189
+-- Lines 3-1190
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -1006,9 +1006,28 @@ function CarryTweakData:init(tweak_data)
 		unit = "units/payday2/pickups/gen_pku_toolbag/gen_pku_toolbag",
 		visual_unit_name = "units/payday2/characters/npc_acc_tools_bag_1/npc_acc_tools_bag_1"
 	}
+	self.chas_artifact = {
+		type = "heavy",
+		name_id = "hud_carry_dragon_statue",
+		bag_value = "artifact_statue",
+		unit = "units/payday2/pickups/gen_pku_cage_bag/gen_pku_cage_bag",
+		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
+	self.chas_teaset = {
+		type = "light",
+		name_id = "hud_carry_tea_set",
+		bag_value = "money",
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
 end
 
--- Lines 1191-1200
+-- Lines 1192-1201
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1023,7 +1042,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1203-1211
+-- Lines 1204-1212
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

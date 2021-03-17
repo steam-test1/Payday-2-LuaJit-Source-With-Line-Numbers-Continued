@@ -2291,9 +2291,10 @@ function WINDLCManager:init()
 	self:_init_promoted_dlc_list()
 end
 
--- Lines 2592-2728
+-- Lines 2592-2731
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"chas",
 		"fawp",
 		"fex",
 		"mxw",
@@ -2348,12 +2349,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 2730-2732
+-- Lines 2733-2735
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 2734-2750
+-- Lines 2737-2753
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -2370,7 +2371,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines 2752-2767
+-- Lines 2755-2770
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2379,7 +2380,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 2770-2810
+-- Lines 2773-2813
 function WINDLCManager:check_pdth(clbk)
 	if not self._check_pdth_request and clbk and Global.dlc_manager.has_pdth ~= nil then
 		clbk(Global.dlc_manager.has_pdth, Global.dlc_manager.pdth_tester)
@@ -2397,7 +2398,7 @@ function WINDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 2786-2805
+		-- Lines 2789-2808
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2432,7 +2433,7 @@ function WINDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 2814-2825
+-- Lines 2817-2828
 function WINDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2450,7 +2451,7 @@ function WINDLCManager:chk_vr_dlc()
 	return nil
 end
 
--- Lines 2828-2835
+-- Lines 2831-2838
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

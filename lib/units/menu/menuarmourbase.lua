@@ -28,7 +28,7 @@ MenuArmourBase.material_variables = {
 	wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 }
 
--- Lines 41-51
+-- Lines 41-52
 function MenuArmourBase:init(unit, update_enabled)
 	MenuArmourBase.super.init(self, unit, false)
 	self:set_armor_id("level_1")
@@ -41,60 +41,61 @@ function MenuArmourBase:init(unit, update_enabled)
 		texture = {},
 		state = {}
 	}
+	self._stored_clbk_listeners = {}
 	self._clbk_listeners = {}
 	self._clbks = {}
 end
 
--- Lines 53-57
+-- Lines 54-58
 function MenuArmourBase:destroy()
 	MenuArmourBase.super.destroy(self)
 	self:_unload_cosmetic_assets(self._cosmetics)
 	self:update_character_visuals(self._cosmetics)
 end
 
--- Lines 63-65
+-- Lines 64-66
 function MenuArmourBase:armor_id()
 	return self._armor_id
 end
 
--- Lines 67-69
+-- Lines 68-70
 function MenuArmourBase:character_name()
 	return self._character_name
 end
 
--- Lines 71-73
+-- Lines 72-74
 function MenuArmourBase:mask_id()
 	return self._mask_id
 end
 
--- Lines 76-78
+-- Lines 77-79
 function MenuArmourBase:armor_skin_id()
 	return self._armor_skin_id
 end
 
--- Lines 82-84
+-- Lines 83-85
 function MenuArmourBase:player_style()
 	return self._player_style
 end
 
--- Lines 86-88
+-- Lines 87-89
 function MenuArmourBase:suit_variation()
 	return self._suit_variation
 end
 
--- Lines 92-94
+-- Lines 93-95
 function MenuArmourBase:glove_id()
 	return self._glove_id
 end
 
--- Lines 99-102
+-- Lines 100-103
 function MenuArmourBase:set_armor_id(armor_id)
 	self._armor_id = armor_id
 
 	self:request_cosmetics_update()
 end
 
--- Lines 104-108
+-- Lines 105-109
 function MenuArmourBase:set_character_name(name)
 	self._character_name = name
 	self._is_visuals_updated = false
@@ -102,11 +103,11 @@ function MenuArmourBase:set_character_name(name)
 	self:request_cosmetics_update()
 end
 
--- Lines 110-125
+-- Lines 111-126
 function MenuArmourBase:set_mask_id(id)
 	self._mask_id = id
 
-	-- Lines 114-118
+	-- Lines 115-119
 	local function call_func()
 		if not self._applying_cosmetics and not self._request_update then
 			self:update_character_visuals(self._cosmetics)
@@ -120,7 +121,7 @@ function MenuArmourBase:set_mask_id(id)
 	end
 end
 
--- Lines 128-137
+-- Lines 129-138
 function MenuArmourBase:set_armor_skin_id(id)
 	if not id or tweak_data.economy.armor_skins[id] then
 		self._armor_skin_id = id
@@ -129,12 +130,12 @@ function MenuArmourBase:set_armor_skin_id(id)
 	end
 end
 
--- Lines 139-141
+-- Lines 140-142
 function MenuArmourBase:set_cosmetics_data(armor_skin_id)
 	self:set_armor_skin_id(armor_skin_id)
 end
 
--- Lines 145-149
+-- Lines 146-150
 function MenuArmourBase:set_player_style(player_style, material_variation)
 	self._suit_variation = material_variation
 	self._player_style = player_style
@@ -142,14 +143,14 @@ function MenuArmourBase:set_player_style(player_style, material_variation)
 	self:request_cosmetics_update()
 end
 
--- Lines 153-156
+-- Lines 154-157
 function MenuArmourBase:set_glove_id(glove_id)
 	self._glove_id = glove_id
 
 	self:request_cosmetics_update()
 end
 
--- Lines 161-170
+-- Lines 162-171
 function MenuArmourBase:request_cosmetics_update()
 	if not self._request_update then
 		self._request_update = true
@@ -162,14 +163,14 @@ function MenuArmourBase:request_cosmetics_update()
 	end
 end
 
--- Lines 172-175
+-- Lines 173-176
 function MenuArmourBase:add_clbk_listener(clbk_name, func)
-	self._clbk_listeners[clbk_name] = self._clbk_listeners[clbk_name] or {}
+	self._stored_clbk_listeners[clbk_name] = self._stored_clbk_listeners[clbk_name] or {}
 
-	table.insert(self._clbk_listeners[clbk_name], func)
+	table.insert(self._stored_clbk_listeners[clbk_name], func)
 end
 
--- Lines 177-186
+-- Lines 178-187
 function MenuArmourBase:execute_callbacks(clbk_name, ...)
 	if self._clbks[clbk_name] then
 		self._clbks[clbk_name](...)
@@ -182,12 +183,12 @@ function MenuArmourBase:execute_callbacks(clbk_name, ...)
 	end
 end
 
--- Lines 188-191
+-- Lines 189-192
 function MenuArmourBase:is_cosmetics_applied()
 	return self._is_visuals_updated
 end
 
--- Lines 193-223
+-- Lines 194-224
 function MenuArmourBase:update_character_visuals(cosmetics)
 	cat_print("character_cosmetics", "[MenuArmourBase:update_character_visuals]")
 	self:_print_cosmetics(cosmetics)
@@ -210,12 +211,12 @@ function MenuArmourBase:update_character_visuals(cosmetics)
 	self._is_visuals_updated = true
 end
 
--- Lines 226-234
+-- Lines 227-235
 function MenuArmourBase:_use_job()
 	return false
 end
 
--- Lines 236-253
+-- Lines 237-254
 function MenuArmourBase:get_player_style_check_job()
 	if self:_use_job() then
 		local player_style = "none"
@@ -237,7 +238,7 @@ function MenuArmourBase:get_player_style_check_job()
 	return self._player_style or "none"
 end
 
--- Lines 255-261
+-- Lines 256-262
 function MenuArmourBase:get_suit_variation_check_job()
 	if self:_use_job() then
 		return "default"
@@ -246,7 +247,7 @@ function MenuArmourBase:get_suit_variation_check_job()
 	return self._suit_variation or "default"
 end
 
--- Lines 264-361
+-- Lines 265-365
 function MenuArmourBase:_apply_cosmetics(clbks)
 	if self._applying_cosmetics then
 		call_on_next_update(callback(self, self, "_apply_cosmetics"))
@@ -255,6 +256,8 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 	end
 
 	self._request_update = nil
+	self._clbk_listeners = self._stored_clbk_listeners
+	self._stored_clbk_listeners = {}
 	self._is_visuals_updated = false
 	self._clbks = clbks or {}
 	local units = {}
@@ -339,7 +342,7 @@ function MenuArmourBase:_apply_cosmetics(clbks)
 	end
 end
 
--- Lines 363-373
+-- Lines 367-377
 function MenuArmourBase:_add_asset(assets, name)
 	if name then
 		local ids = name
@@ -356,7 +359,7 @@ function MenuArmourBase:_add_asset(assets, name)
 	end
 end
 
--- Lines 375-394
+-- Lines 379-398
 function MenuArmourBase:clbk_armor_unit_loaded(cosmetics, status, asset_type, asset_name)
 	if not self._applying_cosmetics then
 		return
@@ -380,7 +383,7 @@ function MenuArmourBase:clbk_armor_unit_loaded(cosmetics, status, asset_type, as
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 396-415
+-- Lines 400-419
 function MenuArmourBase:clbk_armor_material_config_loaded(cosmetics, status, asset_type, asset_name)
 	if not self._applying_cosmetics then
 		return
@@ -404,7 +407,7 @@ function MenuArmourBase:clbk_armor_material_config_loaded(cosmetics, status, ass
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 417-436
+-- Lines 421-440
 function MenuArmourBase:clbk_armor_texture_loaded(cosmetics, tex_name)
 	if not self._applying_cosmetics then
 		return
@@ -428,7 +431,7 @@ function MenuArmourBase:clbk_armor_texture_loaded(cosmetics, tex_name)
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 438-544
+-- Lines 442-548
 function MenuArmourBase:_chk_load_complete(cosmetics)
 	if not self._applying_cosmetics or not self._all_load_requests_sent then
 		return
@@ -530,7 +533,7 @@ function MenuArmourBase:_chk_load_complete(cosmetics)
 	cosmetics.applied = true
 	self._applying_cosmetics = false
 
-	self:execute_callbacks("done")
+	self:execute_callbacks("done", cosmetics.state)
 
 	self._clbks = {}
 	self._clbk_listeners = {}
@@ -540,7 +543,7 @@ function MenuArmourBase:_chk_load_complete(cosmetics)
 	end
 end
 
--- Lines 546-588
+-- Lines 550-592
 function MenuArmourBase:_load_cosmetic_assets(cosmetics)
 	cat_print("character_cosmetics", "[MenuArmourBase:_load_cosmetic_assets]")
 	self:_print_cosmetics(cosmetics)
@@ -588,7 +591,7 @@ function MenuArmourBase:_load_cosmetic_assets(cosmetics)
 	self:_chk_load_complete(cosmetics)
 end
 
--- Lines 590-619
+-- Lines 594-623
 function MenuArmourBase:_unload_cosmetic_assets(cosmetics)
 	cat_print("character_cosmetics", "[MenuArmourBase:_unload_cosmetic_assets]")
 	self:_print_cosmetics(cosmetics)
@@ -619,7 +622,7 @@ function MenuArmourBase:_unload_cosmetic_assets(cosmetics)
 	cosmetics.applied = false
 end
 
--- Lines 622-626
+-- Lines 626-630
 function MenuArmourBase:use_cc()
 	local ignored_by_armor_skin = self._cosmetics_data and self._cosmetics_data.ignore_cc
 	local no_armor_skin = not self._armor_skin_id or self._armor_skin_id == "none"
@@ -627,6 +630,6 @@ function MenuArmourBase:use_cc()
 	return not ignored_by_armor_skin and not no_armor_skin
 end
 
--- Lines 629-651
+-- Lines 633-655
 function MenuArmourBase:_print_cosmetics(cosmetics)
 end

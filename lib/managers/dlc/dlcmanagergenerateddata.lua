@@ -18,6 +18,11 @@ function GenericDLCManager:has_bex()
 	return self:is_dlc_unlocked("bex")
 end
 
+-- Lines 44-46
+function GenericDLCManager:has_chas()
+	return self:is_dlc_unlocked("chas")
+end
+
 -- Lines 69-71
 function GenericDLCManager:has_ess()
 	return self:is_dlc_unlocked("ess")
@@ -26,6 +31,11 @@ end
 -- Lines 84-86
 function GenericDLCManager:has_faco()
 	return self:is_dlc_unlocked("faco")
+end
+
+-- Lines 89-91
+function GenericDLCManager:has_fall()
+	return self:is_dlc_unlocked("fall")
 end
 
 -- Lines 94-96
@@ -71,6 +81,11 @@ end
 -- Lines 139-141
 function GenericDLCManager:has_ja21()
 	return self:is_dlc_unlocked("ja21")
+end
+
+-- Lines 164-166
+function GenericDLCManager:has_mar21()
+	return self:is_dlc_unlocked("mar21")
 end
 
 -- Lines 174-176
@@ -188,6 +203,11 @@ function GenericDLCManager:has_trd()
 	return self:is_dlc_unlocked("trd")
 end
 
+-- Lines 359-361
+function GenericDLCManager:has_tstp()
+	return self:is_dlc_unlocked("tstp")
+end
+
 -- Lines 369-371
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
@@ -239,12 +259,20 @@ function WINDLCManager:init_generated()
 		no_install = true,
 		webpage = "ovk.af/bexheistyb"
 	}
+	Global.dlc_manager.all_dlc_data.chas = {
+		app_id = "1555040",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.ess = {
 		app_id = "1303240",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.faco = {
 		app_id = "1555050",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.fall = {
+		app_id = "218620",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.fawp = {
@@ -281,6 +309,10 @@ function WINDLCManager:init_generated()
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.ja21 = {
+		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.mar21 = {
 		app_id = "218620",
 		no_install = true
 	}
@@ -383,6 +415,10 @@ function WINDLCManager:init_generated()
 		app_id = "1184410",
 		no_install = true,
 		webpage = "https://ovk.af/ingame2TailorPack"
+	}
+	Global.dlc_manager.all_dlc_data.tstp = {
+		app_id = "1555040",
+		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.wcc = {
 		app_id = "1347751",

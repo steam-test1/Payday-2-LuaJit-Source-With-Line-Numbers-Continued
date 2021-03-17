@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1514
+-- Lines 3-1530
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -2048,6 +2048,17 @@ function GuiTweakData:init(tweak_data)
 				},
 				name_id = "menu_continental",
 				id = "continental_contact"
+			},
+			{
+				{
+					desc_id = "heist_contact_jiufeng_description",
+					post_event = "jfe_quote_set_a",
+					videos = {
+						"jiufeng1"
+					}
+				},
+				name_id = "heist_contact_jiufeng",
+				id = "jiufeng"
 			},
 			name_id = "menu_contacts",
 			id = "contacts"
@@ -5078,6 +5089,11 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_chas",
+		texture_path = "guis/textures/pd2/new_heists/chas",
+		url = "https://ovk.af/CGDPWebS"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_faco",
 		texture_path = "guis/textures/pd2/new_heists/faco",
 		url = "https://ovk.af/JFSPSliderW"
@@ -5344,7 +5360,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1516-1535
+-- Lines 1532-1551
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5372,7 +5388,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1537-1605
+-- Lines 1553-1621
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5450,15 +5466,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1607-1609
+-- Lines 1623-1625
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1611-1620
+-- Lines 1627-1636
 function GuiTweakData:print_locations()
 end
 
--- Lines 1622-1656
+-- Lines 1638-1672
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5497,7 +5513,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1658-1783
+-- Lines 1674-1799
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5620,12 +5636,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 1785-1787
+-- Lines 1801-1803
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 1789-1796
+-- Lines 1805-1812
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then

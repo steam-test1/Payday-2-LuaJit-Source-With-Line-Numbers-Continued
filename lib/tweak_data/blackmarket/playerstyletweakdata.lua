@@ -1,4 +1,4 @@
--- Lines 1-1642
+-- Lines 1-1811
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -2029,9 +2029,222 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.leather.characters.ecp_male = leather_characters_male_fat
+	self.player_styles.hitman = {
+		name_id = "bm_suit_tstp_hitman",
+		desc_id = "bm_suit_tstp_hitman_desc",
+		texture_bundle_folder = "tstp",
+		global_value = "tstp",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_fps_hitman_male/tstp_acc_fps_hitman_male",
+		material_variations = {}
+	}
+	self.player_styles.hitman.material_variations.default = {
+		name_id = "bm_suit_tstp_hitman_default",
+		global_value = "tstp",
+		desc_id = "bm_suit_tstp_hitman_default_desc"
+	}
+	self.player_styles.hitman.characters = {}
+	self.player_styles.hitman.material_variations = {
+		default = {
+			name_id = "bm_suit_tstp_hitman_default",
+			global_value = "tstp",
+			desc_id = "bm_suit_tstp_hitman_default_desc",
+			auto_aquire = true
+		},
+		blue = {
+			desc_id = "bm_suit_tstp_hitman_blue_desc",
+			global_value = "tstp",
+			auto_aquire = true,
+			name_id = "bm_suit_tstp_hitman_blue",
+			third_material = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/shared_materials/tstp_acc_hitman_blue",
+			material = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/shared_materials/tstp_acc_fps_hitman_blue"
+		},
+		red = {
+			desc_id = "bm_suit_tstp_hitman_red_desc",
+			global_value = "tstp",
+			auto_aquire = true,
+			name_id = "bm_suit_tstp_hitman_red",
+			third_material = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/shared_materials/tstp_acc_hitman_red",
+			material = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/shared_materials/tstp_acc_fps_hitman_red"
+		},
+		brown = {
+			desc_id = "bm_suit_tstp_hitman_brown_desc",
+			global_value = "tstp",
+			auto_aquire = true,
+			name_id = "bm_suit_tstp_hitman_brown",
+			third_material = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/shared_materials/tstp_acc_hitman_brown",
+			material = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/shared_materials/tstp_acc_fps_hitman_brown"
+		}
+	}
+	local hitman_characters_male = {
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_hitman_male_average/tstp_acc_hitman_male_average"
+	}
+
+	set_characters_data("hitman", characters_male, hitman_characters_male)
+
+	local hitman_characters_male_big = {
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_hitman_male_big/tstp_acc_hitman_male_big"
+	}
+
+	set_characters_data("hitman", characters_male_big, hitman_characters_male_big)
+
+	local hitman_characters_female = {
+		unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_fps_hitman_female/tstp_acc_fps_hitman_female",
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_hitman_female_average/tstp_acc_hitman_female_average"
+	}
+
+	set_characters_data("hitman", characters_female, hitman_characters_female)
+
+	local hitman_characters_female_big = {
+		unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_fps_hitman_female/tstp_acc_fps_hitman_female",
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_hitman_female_fat/tstp_acc_hitman_female_fat"
+	}
+
+	set_characters_data("hitman", characters_female_big, hitman_characters_female_big)
+
+	local hitman_characters_male_fat = {
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_hitman/tstp_acc_hitman_male_fat/tstp_acc_hitman_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.hitman.characters.ecp_male = hitman_characters_male_fat
+	self.player_styles.traditional = {
+		name_id = "bm_suit_tstp_traditional",
+		desc_id = "bm_suit_tstp_traditional_desc",
+		texture_bundle_folder = "tstp",
+		global_value = "tstp",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_fps_traditional_male/tstp_acc_fps_traditional_male",
+		material_variations = {}
+	}
+	self.player_styles.traditional.material_variations.default = {
+		name_id = "bm_suit_tstp_traditional_default",
+		global_value = "tstp",
+		desc_id = "bm_suit_tstp_traditional_default_desc"
+	}
+	self.player_styles.traditional.characters = {}
+	self.player_styles.traditional.material_variations = {
+		default = {
+			name_id = "bm_suit_tstp_traditional_default",
+			global_value = "tstp",
+			desc_id = "bm_suit_tstp_traditional_default_desc",
+			auto_aquire = true
+		},
+		blue = {
+			desc_id = "bm_suit_tstp_traditional_blue_desc",
+			global_value = "tstp",
+			auto_aquire = true,
+			name_id = "bm_suit_tstp_traditional_blue",
+			third_material = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/shared_materials/tstp_acc_traditional_blue",
+			material = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/shared_materials/tstp_acc_fps_traditional_blue"
+		},
+		red = {
+			desc_id = "bm_suit_tstp_traditional_red_desc",
+			global_value = "tstp",
+			auto_aquire = true,
+			name_id = "bm_suit_tstp_traditional_red",
+			third_material = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/shared_materials/tstp_acc_traditional_red",
+			material = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/shared_materials/tstp_acc_fps_traditional_red"
+		},
+		brown = {
+			desc_id = "bm_suit_tstp_traditional_brown_desc",
+			global_value = "tstp",
+			auto_aquire = true,
+			name_id = "bm_suit_tstp_traditional_brown",
+			third_material = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/shared_materials/tstp_acc_traditional_brown",
+			material = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/shared_materials/tstp_acc_fps_traditional_brown"
+		}
+	}
+	local traditional_characters_male = {
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_traditional_male_average/tstp_acc_traditional_male_average"
+	}
+
+	set_characters_data("traditional", characters_male, traditional_characters_male)
+
+	local traditional_characters_male_big = {
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_traditional_male_big/tstp_acc_traditional_male_big"
+	}
+
+	set_characters_data("traditional", characters_male_big, traditional_characters_male_big)
+
+	local traditional_characters_female = {
+		unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_fps_traditional_female/tstp_acc_fps_traditional_female",
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_traditional_female_average/tstp_acc_traditional_female_average"
+	}
+
+	set_characters_data("traditional", characters_female, traditional_characters_female)
+
+	local traditional_characters_female_big = {
+		unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_fps_traditional_female/tstp_acc_fps_traditional_female",
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_traditional_female_fat/tstp_acc_traditional_female_fat"
+	}
+
+	set_characters_data("traditional", characters_female_big, traditional_characters_female_big)
+
+	local traditional_characters_male_fat = {
+		third_unit = "units/pd2_dlc_tstp/characters/tstp_acc_traditional/tstp_acc_traditional_male_fat/tstp_acc_traditional_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.traditional.characters.ecp_male = traditional_characters_male_fat
+	self.player_styles.thug = {
+		name_id = "bm_suit_mar21_thug",
+		desc_id = "bm_suit_mar21_thug_desc",
+		texture_bundle_folder = "mar21",
+		global_value = "mar21",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_fps_thug_male/mar21_acc_fps_thug_male",
+		material_variations = {}
+	}
+	self.player_styles.thug.material_variations.default = {
+		name_id = "bm_suit_mar21_thug_default",
+		global_value = "mar21",
+		desc_id = "bm_suit_mar21_thug_default_desc"
+	}
+	self.player_styles.thug.characters = {}
+	self.player_styles.thug.material_variations = {
+		default = {
+			name_id = "bm_suit_mar21_thug_default",
+			global_value = "mar21",
+			desc_id = "bm_suit_mar21_thug_default_desc",
+			prio = 0
+		}
+	}
+	local thug_characters_male = {
+		third_unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_thug_male_average/mar21_acc_thug_male_average"
+	}
+
+	set_characters_data("thug", characters_male, thug_characters_male)
+
+	local thug_characters_male_big = {
+		third_unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_thug_male_big/mar21_acc_thug_male_big"
+	}
+
+	set_characters_data("thug", characters_male_big, thug_characters_male_big)
+
+	local thug_characters_female = {
+		unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_fps_thug_female/mar21_acc_fps_thug_female",
+		third_unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_thug_female_average/mar21_acc_thug_female_average"
+	}
+
+	set_characters_data("thug", characters_female, thug_characters_female)
+
+	local thug_characters_female_big = {
+		unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_fps_thug_female/mar21_acc_fps_thug_female",
+		third_unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_thug_female_fat/mar21_acc_thug_female_fat"
+	}
+
+	set_characters_data("thug", characters_female_big, thug_characters_female_big)
+
+	local thug_characters_male_fat = {
+		third_unit = "units/pd2_dlc_mar21/characters/mar21_acc_thug/mar21_acc_thug_male_fat/mar21_acc_thug_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.thug.characters.ecp_male = thug_characters_male_fat
 end
 
--- Lines 1644-1666
+-- Lines 1813-1835
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -2056,7 +2269,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 1668-1693
+-- Lines 1837-1862
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -2084,7 +2297,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 1695-1716
+-- Lines 1864-1885
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -2111,7 +2324,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 1718-1754
+-- Lines 1887-1923
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -2155,7 +2368,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 1757-1786
+-- Lines 1926-1955
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -2186,7 +2399,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 1788-1794
+-- Lines 1957-1963
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -2195,7 +2408,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 1796-1811
+-- Lines 1965-1980
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -2215,11 +2428,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 1813-1849
+-- Lines 1982-2018
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 1817-1846
+	-- Lines 1986-2015
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

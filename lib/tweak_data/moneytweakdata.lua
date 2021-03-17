@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-943
+-- Lines 29-945
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -562,6 +562,7 @@ function MoneyTweakData:init(tweak_data)
 	self.preplanning_asset_cost_kenaz_disable_metal_detectors = 0
 	self.preplanning_asset_cost_kenaz_celebrity_visit = 0
 	self.preplanning_asset_cost_kenaz_vault_gate_key = 0
+	self.preplanning_asset_cost_chas_tram = 5000
 	self.small_loot = {}
 
 	if difficulty_index <= 2 then
