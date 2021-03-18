@@ -1,4 +1,4 @@
--- Lines 3-854
+-- Lines 3-878
 function DLCTweakData:init_generated()
 	self.afp_bundle = {
 		dlc = "has_afp",

@@ -1,4 +1,4 @@
--- Lines 5-1611
+-- Lines 5-1671
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.afp = {
 		name_id = "bm_global_value_afp",
@@ -237,7 +237,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		durability_multiplier = 1,
 		drops = true,
 		track = true,
-		sort_number = 505,
+		sort_number = 701,
 		category = "infamous"
 	}
 	self.global_values.inf = {
@@ -253,7 +253,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		durability_multiplier = 1,
 		drops = true,
 		track = true,
-		sort_number = 500,
+		sort_number = 700,
 		category = "infamous"
 	}
 	self.global_values.ja21 = {

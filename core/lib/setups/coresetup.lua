@@ -231,7 +231,7 @@ end
 local lang_mods = {
 	[Idstring("japanese"):key()] = "japanese",
 	[Idstring("schinese"):key()] = "schinese",
-	[Idstring("korean"):key()] = "korean"
+	[Idstring("koreana"):key()] = "korean"
 }
 
 -- Lines 293-443
