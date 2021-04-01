@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4626
+-- Lines 10-4638
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8244,5 +8244,15 @@ function DLCTweakData:init(tweak_data)
 			item_entry = "color_faco_00",
 			amount = 1
 		}
+	}
+	self.ach_gsu_01 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "gsu_01"
+	}
+	self.ach_gsu_01.content.loot_global_value = "apfo"
+	self.ach_gsu_01.content.loot_drops = {}
+	self.ach_gsu_01.content.upgrades = {
+		"spoon_gold"
 	}
 end

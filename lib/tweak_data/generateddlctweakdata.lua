@@ -1,4 +1,4 @@
--- Lines 3-854
+-- Lines 3-878
 function DLCTweakData:init_generated()
 	self.afp_bundle = {
 		dlc = "has_afp",
@@ -104,6 +104,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.apfo_bundle = {
+		free = true,
+		content = {}
+	}
+	self.apfo_bundle.content.loot_global_value = "apfo"
+	self.apfo_bundle.content.loot_drops = {}
 	self.atw_bundle = {
 		dlc = "has_atw",
 		content = {}

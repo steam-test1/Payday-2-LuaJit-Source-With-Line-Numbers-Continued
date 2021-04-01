@@ -1,4 +1,4 @@
--- Lines 2-8559
+-- Lines 2-8558
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -7257,6 +7257,20 @@ function init_auto_generated_achievement_data(tags)
 				tags.difficulty.normal,
 				tags.tactics.loud,
 				tags.contracts.escape
+			}
+		},
+		gsu_01 = {
+			need_unlock_icons = true,
+			icon_id = "Other_H_All_ForAllYou",
+			sort_name = "Other_H_All_ForAllYou",
+			unlock_id = true,
+			tags = {
+				tags.progress.generic,
+				tags.difficulty.normal,
+				tags.unlock.weapon,
+				tags.tactics.loud,
+				tags.tactics.killer,
+				tags.inventory.weapon
 			}
 		},
 		bex_1 = {

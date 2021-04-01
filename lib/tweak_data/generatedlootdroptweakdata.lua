@@ -1,4 +1,4 @@
--- Lines 5-1611
+-- Lines 5-1671
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.afp = {
 		name_id = "bm_global_value_afp",
@@ -30,6 +30,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = -5,
+		category = "global_event"
+	}
+	self.global_values.apfo = {
+		name_id = "bm_global_value_apfo",
+		desc_id = "menu_l_global_value_apfo",
+		unlock_id = "bm_global_value_apfo_unlock",
+		color = tweak_data.screen_colors.event_color,
+		dlc = true,
+		free = true,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 507,
 		category = "global_event"
 	}
 	self.global_values.atw = {
@@ -237,7 +253,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		durability_multiplier = 1,
 		drops = true,
 		track = true,
-		sort_number = 505,
+		sort_number = 701,
 		category = "infamous"
 	}
 	self.global_values.inf = {
@@ -253,7 +269,7 @@ function LootDropTweakData:init_generated(tweak_data)
 		durability_multiplier = 1,
 		drops = true,
 		track = true,
-		sort_number = 500,
+		sort_number = 700,
 		category = "infamous"
 	}
 	self.global_values.ja21 = {

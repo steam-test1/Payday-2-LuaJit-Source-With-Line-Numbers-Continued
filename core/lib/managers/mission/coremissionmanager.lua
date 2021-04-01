@@ -668,20 +668,24 @@ function MissionScript:remove_save_state_cb(id)
 	self._save_states[id] = nil
 end
 
--- Lines 618-642
+-- Lines 618-646
 function MissionScript:save(data)
 	local state = {}
 
 	for id, _ in pairs(self._save_states) do
 		state[id] = {}
 
-		self._elements[id]:save(state[id])
+		if self._elements[id] and self._elements[id].save then
+			self._elements[id]:save(state[id])
+		else
+			CoreDebug.debug_pause("[MissionScript] save: save_states contains non-existing mission element or missing save function.", id, self._elements[id])
+		end
 	end
 
 	data[self._name] = state
 end
 
--- Lines 645-676
+-- Lines 649-680
 function MissionScript:load(data)
 	local state = data[self._name]
 
@@ -700,7 +704,7 @@ function MissionScript:load(data)
 	end
 end
 
--- Lines 679-684
+-- Lines 683-688
 function MissionScript:stop_simulation(...)
 	for _, element in pairs(self._elements) do
 		element:stop_simulation(...)
@@ -709,7 +713,7 @@ function MissionScript:stop_simulation(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines 687-692
+-- Lines 691-696
 function MissionScript:pre_destroy(...)
 	for _, element in pairs(self._elements) do
 		element:pre_destroy(...)
@@ -718,7 +722,7 @@ function MissionScript:pre_destroy(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines 695-700
+-- Lines 699-704
 function MissionScript:destroy(...)
 	for _, element in pairs(self._elements) do
 		element:destroy(...)
