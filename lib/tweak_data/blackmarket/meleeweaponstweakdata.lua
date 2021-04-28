@@ -1,4 +1,4 @@
--- Lines 1-2944
+-- Lines 1-2952
 function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 	self.melee_weapons = {
 		weapon = {}

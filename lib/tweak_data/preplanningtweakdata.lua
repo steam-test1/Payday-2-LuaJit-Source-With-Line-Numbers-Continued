@@ -1662,7 +1662,7 @@ function PrePlanningTweakData:init(tweak_data)
 	}
 end
 
--- Lines 1647-2739
+-- Lines 1647-2778
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -3360,7 +3360,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines 2741-2743
+-- Lines 2780-2782
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

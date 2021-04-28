@@ -3678,49 +3678,71 @@ function MenuSceneManager:spawn_armor(armor_id)
 	self:_spawn_item("units/menu/menu_character/menu_character_test", nil)
 end
 
--- Lines 3665-3671
-function MenuSceneManager:setup_infamy_menu()
+-- Lines 3665-3673
+function MenuSceneManager:on_setup_infamy_menu()
 	self:add_one_frame_delayed_clbk(function ()
-		self._character_unit:set_position(Vector3(500, 0, -500))
+		if not _G.IS_VR then
+			self._character_unit:set_position(Vector3(500, 0, -500))
 
-		self._outfit_state = self._character_unit:play_redirect(Idstring("idle_menu"))
+			self._outfit_state = self._character_unit:play_redirect(Idstring("idle_menu"))
+		end
 
-		self:remove_item()
+		self.infamy_menu_ready = true
 	end)
 end
 
--- Lines 3673-3689
+-- Lines 3675-3682
+function MenuSceneManager:on_close_infamy_menu()
+	if _G.IS_VR then
+		self:set_character_player_style(managers.blackmarket:equipped_player_style(), managers.blackmarket:get_suit_variation(), self._character_unit)
+		self:set_character_gloves(managers.blackmarket:equipped_glove_id(), self._character_unit)
+	end
+
+	self:remove_item()
+
+	self.infamy_menu_ready = false
+end
+
+-- Lines 3684-3702
 function MenuSceneManager:spawn_infamy_outfit_preview(outfit_id, material_variation)
 	self:add_one_frame_delayed_clbk(function ()
 		self:set_character_player_style(outfit_id, material_variation, self._character_unit)
-		self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "cvc_var1", 1)
-		self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "husk2", 0)
-
-		self._character_yaw = -45
-
-		self._character_unit:set_rotation(Rotation(self._character_yaw))
 
 		local asset_id = Idstring(tweak_data.blackmarket.player_styles[outfit_id].unit)
 
-		self._character_unit:base():add_clbk_listener("done", callback(self, self, "spawn_outfit_done", asset_id))
+		if not _G.IS_VR then
+			self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "cvc_var1", 1)
+			self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "husk2", 0)
+
+			self._character_yaw = -45
+
+			self._character_unit:set_rotation(Rotation(self._character_yaw))
+			self._character_unit:base():add_clbk_listener("done", callback(self, self, "spawn_outfit_done", asset_id))
+
+			self._use_character_grab2 = true
+			self._use_character_pan = true
+		end
 
 		self._infamy_item_spawned = asset_id
-		self._use_character_grab2 = true
-		self._use_character_pan = true
 	end)
 end
 
--- Lines 3691-3697
+-- Lines 3704-3714
 function MenuSceneManager:remove_outfit(...)
-	mvector3.set_z(self._character_values.pos_target, mvector3.z(self._character_values.pos_current))
-	self._character_unit:set_position(Vector3(500, 0, -500))
+	if not _G.IS_VR then
+		mvector3.set_z(self._character_values.pos_target, mvector3.z(self._character_values.pos_current))
+		self._character_unit:set_position(Vector3(500, 0, -500))
+
+		self._use_character_grab2 = false
+		self._use_character_pan = false
+	else
+		self:set_character_player_style(managers.blackmarket:equipped_player_style(), managers.blackmarket:get_suit_variation(), self._character_unit)
+	end
 
 	self._infamy_item_spawned = false
-	self._use_character_grab2 = false
-	self._use_character_pan = false
 end
 
--- Lines 3699-3709
+-- Lines 3716-3726
 function MenuSceneManager:spawn_outfit_done(asset_id)
 	self:add_one_frame_delayed_clbk(function ()
 		if self._infamy_item_spawned and self._infamy_item_spawned == asset_id then
@@ -3733,38 +3755,45 @@ function MenuSceneManager:spawn_outfit_done(asset_id)
 	end)
 end
 
--- Lines 3711-3728
+-- Lines 3728-3747
 function MenuSceneManager:spawn_infamy_gloves_preview(glove_id)
 	self:add_one_frame_delayed_clbk(function ()
 		self:set_character_player_style("default", nil, self._character_unit)
 		self:set_character_gloves(glove_id, self._character_unit)
 
-		self._character_yaw = -90
-
-		self._character_unit:set_rotation(Rotation(self._character_yaw))
-		self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "cvc_var1", 0)
-		self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "husk2", 1)
-
 		local asset_id = Idstring(tweak_data.blackmarket.gloves[glove_id].unit)
 
-		self._character_unit:base():add_clbk_listener("done", callback(self, self, "spawn_gloves_done", asset_id))
+		if not _G.IS_VR then
+			self._character_yaw = -90
+
+			self._character_unit:set_rotation(Rotation(self._character_yaw))
+			self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "cvc_var1", 0)
+			self._character_unit:anim_state_machine():set_parameter(self._outfit_state, "husk2", 1)
+			self._character_unit:base():add_clbk_listener("done", callback(self, self, "spawn_gloves_done", asset_id))
+
+			self._use_character_grab2 = false
+			self._use_item_grab = false
+		end
 
 		self._infamy_item_spawned = asset_id
-		self._use_character_grab2 = false
-		self._use_item_grab = false
 	end)
 end
 
--- Lines 3730-3735
+-- Lines 3749-3758
 function MenuSceneManager:remove_gloves()
-	self._character_unit:set_position(Vector3(500, 0, -500))
+	if not _G.IS_VR then
+		self._character_unit:set_position(Vector3(500, 0, -500))
+
+		self._use_character_grab2 = false
+		self._use_item_grab = true
+	else
+		self:set_character_gloves(managers.blackmarket:equipped_glove_id(), self._character_unit)
+	end
 
 	self._infamy_item_spawned = false
-	self._use_character_grab2 = false
-	self._use_item_grab = true
 end
 
--- Lines 3737-3746
+-- Lines 3760-3769
 function MenuSceneManager:spawn_gloves_done(asset_id)
 	self:add_one_frame_delayed_clbk(function ()
 		if self._infamy_item_spawned and self._infamy_item_spawned == asset_id then
@@ -3776,7 +3805,7 @@ function MenuSceneManager:spawn_gloves_done(asset_id)
 	end)
 end
 
--- Lines 3748-3764
+-- Lines 3771-3787
 function MenuSceneManager:spawn_infamy_card_preview(card_sqeuence_name, show_front)
 	self:add_one_frame_delayed_clbk(function ()
 		self._item_pos = Vector3(0, 0, 0)
@@ -3802,12 +3831,13 @@ function MenuSceneManager:spawn_infamy_card_preview(card_sqeuence_name, show_fro
 	end)
 end
 
--- Lines 3766-3773
+-- Lines 3789-3797
 function MenuSceneManager:spawn_infamy_weapon_preview(color_id)
 	self:add_one_frame_delayed_clbk(function ()
 		self._use_item_grab = true
+		local blueprint = clone(tweak_data.weapon.factory.wpn_fps_pis_g17.default_blueprint)
 
-		managers.menu_scene:spawn_item_weapon("wpn_fps_pis_g22c", nil, {
+		managers.menu_scene:spawn_item_weapon("wpn_fps_pis_g17", blueprint, {
 			instance_id = "color_tan_khaki",
 			quality = "mint",
 			color_index = 10,
@@ -3820,7 +3850,7 @@ function MenuSceneManager:spawn_infamy_weapon_preview(color_id)
 	end)
 end
 
--- Lines 3775-3797
+-- Lines 3799-3821
 function MenuSceneManager:character_screen_position(peer_id)
 	local unit = self._lobby_characters[peer_id]
 
@@ -3864,22 +3894,22 @@ function MenuSceneManager:character_screen_position(peer_id)
 	end
 end
 
--- Lines 3799-3801
+-- Lines 3823-3825
 function MenuSceneManager:_release_item_grab()
 	self._item_grabbed = false
 end
 
--- Lines 3803-3805
+-- Lines 3827-3829
 function MenuSceneManager:_release_item_move_grab()
 	self._item_move_grabbed = false
 end
 
--- Lines 3806-3808
+-- Lines 3830-3832
 function MenuSceneManager:_release_character_grab()
 	self._character_grabbed = false
 end
 
--- Lines 3810-3848
+-- Lines 3834-3872
 function MenuSceneManager:controller_move(x, y)
 	if self._item_unit and alive(self._item_unit.unit) then
 		local diff = -y * 90
@@ -3912,12 +3942,12 @@ function MenuSceneManager:controller_move(x, y)
 	self._item_grabbed = true
 end
 
--- Lines 3850-3852
+-- Lines 3874-3876
 function MenuSceneManager:stop_controller_move()
 	self._item_grabbed = false
 end
 
--- Lines 3854-3877
+-- Lines 3878-3901
 function MenuSceneManager:controller_zoom(x, y)
 	self:change_fov("out", y * 20)
 
@@ -3932,14 +3962,14 @@ function MenuSceneManager:controller_zoom(x, y)
 	end
 end
 
--- Lines 3879-3881
+-- Lines 3903-3905
 function MenuSceneManager:stop_controller_zoom()
 	self._character_grabbed = false
 end
 
 local target_pos_vector = Vector3()
 
--- Lines 3884-3899
+-- Lines 3908-3923
 function MenuSceneManager:change_fov(zoom, amount)
 	if self._can_change_fov then
 		if zoom == "in" then
@@ -3955,7 +3985,7 @@ function MenuSceneManager:change_fov(zoom, amount)
 	end
 end
 
--- Lines 3901-4004
+-- Lines 3925-4028
 function MenuSceneManager:mouse_pressed(o, button, x, y)
 	local input_focus = managers.menu_component:input_focus()
 
@@ -4042,7 +4072,7 @@ function MenuSceneManager:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 4006-4014
+-- Lines 4030-4038
 function MenuSceneManager:mouse_released(o, button, x, y)
 	if button == Idstring("0") then
 		self:_release_item_grab()
@@ -4052,7 +4082,7 @@ function MenuSceneManager:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines 4022-4150
+-- Lines 4046-4174
 function MenuSceneManager:mouse_moved(o, x, y)
 	if managers.menu_component:input_focus() == true or managers.menu_component:input_focus() == 1 then
 		return false, "arrow"
@@ -4149,7 +4179,7 @@ function MenuSceneManager:mouse_moved(o, x, y)
 	end
 end
 
--- Lines 4152-4154
+-- Lines 4176-4178
 function MenuSceneManager:get_crafting_custom_data()
 	return {
 		scene_template = "blackmarket_crafting",
@@ -4158,7 +4188,7 @@ function MenuSceneManager:get_crafting_custom_data()
 	}
 end
 
--- Lines 4156-4158
+-- Lines 4180-4182
 function MenuSceneManager:get_screenshot_custom_data()
 	return {
 		item_yaw = 0,
@@ -4167,12 +4197,12 @@ function MenuSceneManager:get_screenshot_custom_data()
 	}
 end
 
--- Lines 4160-4162
+-- Lines 4184-4186
 function MenuSceneManager:workbench_room_name()
 	return Idstring("units/pd2_dlc_shiny/menu_showcase/menu_showcase")
 end
 
--- Lines 4164-4176
+-- Lines 4188-4200
 function MenuSceneManager:delete_workbench_room()
 	if alive(self._workbench_room) then
 		local old_name = self._workbench_room:name()
@@ -4189,7 +4219,7 @@ function MenuSceneManager:delete_workbench_room()
 	end
 end
 
--- Lines 4178-4190
+-- Lines 4202-4214
 function MenuSceneManager:spawn_workbench_room(workbench_name)
 	self:delete_workbench_room()
 
@@ -4206,7 +4236,7 @@ function MenuSceneManager:spawn_workbench_room(workbench_name)
 	self._workbench_room = World:spawn_unit(ids_unit_workbench_room_name, pos)
 end
 
--- Lines 4192-4210
+-- Lines 4216-4234
 function MenuSceneManager:pre_unload()
 	self._weapon_names = {}
 
@@ -4230,7 +4260,7 @@ function MenuSceneManager:pre_unload()
 	end
 end
 
--- Lines 4212-4227
+-- Lines 4236-4251
 function MenuSceneManager:unload()
 	local unloaded_masks = {}
 
@@ -4249,18 +4279,18 @@ function MenuSceneManager:unload()
 	end
 end
 
--- Lines 4230-4235
+-- Lines 4254-4259
 function MenuSceneManager:set_server_loading()
 end
 
--- Lines 4237-4240
+-- Lines 4261-4264
 function MenuSceneManager:set_lobby_character_stance(i, stance)
 	local unit = self._lobby_characters[i]
 
 	unit:play_redirect(Idstring(stance))
 end
 
--- Lines 4245-4265
+-- Lines 4269-4289
 function MenuSceneManager:_update_safe_scene(t, dt)
 	if self._safe_shake and self._safe_shake_transition then
 		self._safe_shake_transition.speed = math.step(self._safe_shake_transition.speed, self._safe_shake_transition.target_speed, dt / 2)
@@ -4297,11 +4327,11 @@ function MenuSceneManager:_update_safe_scene(t, dt)
 	end
 end
 
--- Lines 4268-4275
+-- Lines 4292-4299
 function MenuSceneManager:_test_start_open_economy_safe(safe_entry)
 	managers.network.account:inventory_reward_unlock(safe_entry, nil, nil, callback(self, self, "_safe_result_recieved"))
 
-	-- Lines 4271-4273
+	-- Lines 4295-4297
 	local function ready_clbk()
 		print("ECONOMY SAFE READY CALLBACK")
 	end
@@ -4309,7 +4339,7 @@ function MenuSceneManager:_test_start_open_economy_safe(safe_entry)
 	self:start_open_economy_safe(safe_entry, ready_clbk)
 end
 
--- Lines 4277-4281
+-- Lines 4301-4305
 function MenuSceneManager:reset_economy_safe()
 	self._safe_scene_destroyed = true
 
@@ -4317,7 +4347,7 @@ function MenuSceneManager:reset_economy_safe()
 	managers.menu_scene:remove_item()
 end
 
--- Lines 4300-4304
+-- Lines 4324-4328
 function MenuSceneManager:store_safe_result(error, items_new, items_removed)
 	managers.network.account:inventory_repair_list(items_new)
 	managers.network.account:inventory_repair_list(items_removed)
@@ -4329,7 +4359,7 @@ function MenuSceneManager:store_safe_result(error, items_new, items_removed)
 	}
 end
 
--- Lines 4306-4313
+-- Lines 4330-4337
 function MenuSceneManager:fetch_safe_result()
 	if self._safe_result_recieved_data then
 		local data = self._safe_result_recieved_data
@@ -4339,12 +4369,12 @@ function MenuSceneManager:fetch_safe_result()
 	end
 end
 
--- Lines 4317-4319
+-- Lines 4341-4343
 function MenuSceneManager:create_economy_safe_scene(safe_entry, ready_clbk)
 	self:_load_economy_safe(safe_entry, ready_clbk)
 end
 
--- Lines 4321-4340
+-- Lines 4345-4364
 function MenuSceneManager:start_open_economy_safe()
 	self._safe_scene_destroyed = false
 
@@ -4369,7 +4399,7 @@ function MenuSceneManager:start_open_economy_safe()
 	return false
 end
 
--- Lines 4342-4384
+-- Lines 4366-4408
 function MenuSceneManager:_load_economy_safe(safe_entry, ready_clbk)
 	self:_destroy_economy_safe()
 
@@ -4402,7 +4432,7 @@ function MenuSceneManager:_load_economy_safe(safe_entry, ready_clbk)
 	managers.blackmarket:load_economy_safe(safe_entry, self._safe_scene_data)
 end
 
--- Lines 4386-4391
+-- Lines 4410-4415
 function MenuSceneManager:_clbk_safe_unit_loaded(safe_data_param)
 	print("A: SAFE LOADED", Application:time())
 
@@ -4411,7 +4441,7 @@ function MenuSceneManager:_clbk_safe_unit_loaded(safe_data_param)
 	self:_check_safe_data_ready()
 end
 
--- Lines 4393-4398
+-- Lines 4417-4422
 function MenuSceneManager:_clbk_drill_unit_loaded(drill_data_param)
 	print("A: DRILL LOADED", Application:time())
 
@@ -4420,7 +4450,7 @@ function MenuSceneManager:_clbk_drill_unit_loaded(drill_data_param)
 	self:_check_safe_data_ready()
 end
 
--- Lines 4400-4404
+-- Lines 4424-4428
 function MenuSceneManager:_clbk_saferoom_unit_loaded(saferoom_data)
 	print("A: SAFEROOM LOADED", Application:time())
 
@@ -4429,7 +4459,7 @@ function MenuSceneManager:_clbk_saferoom_unit_loaded(saferoom_data)
 	self:_check_safe_data_ready()
 end
 
--- Lines 4406-4424
+-- Lines 4430-4448
 function MenuSceneManager:_check_safe_data_loaded()
 	print(inspect(self._safe_scene_data))
 
@@ -4448,14 +4478,14 @@ function MenuSceneManager:_check_safe_data_loaded()
 	return true
 end
 
--- Lines 4426-4430
+-- Lines 4450-4454
 function MenuSceneManager:_check_safe_data_ready()
 	if self:_check_safe_data_loaded() and self._safe_scene_data.ready_clbk then
 		self._safe_scene_data.ready_clbk()
 	end
 end
 
--- Lines 4433-4440
+-- Lines 4457-4464
 function MenuSceneManager:_calc_angles()
 	local cx = 200
 	local cy = 100
@@ -4466,12 +4496,12 @@ function MenuSceneManager:_calc_angles()
 	return math.rad(spin), math.rad(tilt)
 end
 
--- Lines 4442-4444
+-- Lines 4466-4468
 function MenuSceneManager:_scene_offset_from_camera()
 	return Vector3(0, 600, -80)
 end
 
--- Lines 4446-4455
+-- Lines 4470-4479
 function MenuSceneManager:_create_economy_safe_scene()
 	local pos = self._scene_templates.safe.camera_pos + self:_scene_offset_from_camera()
 	self._economy_safe = World:spawn_unit(self._safe_scene_data.safe_data.safe_name, pos)
@@ -4481,14 +4511,14 @@ function MenuSceneManager:_create_economy_safe_scene()
 	self:_start_safe_drill_sequence()
 end
 
--- Lines 4459-4469
+-- Lines 4483-4493
 function MenuSceneManager:_safe_result_recieved(error, items_new, items_removed)
 	local load_start_time = Application:time()
 	local result = items_new[1]
 
 	print("B: RESULT RECIEVED", result.weapon_skin, Application:time())
 
-	-- Lines 4463-4467
+	-- Lines 4487-4491
 	local function ready_clbk()
 		local min_time_left = math.max(3 - (Application:time() - load_start_time), 0)
 
@@ -4499,7 +4529,7 @@ function MenuSceneManager:_safe_result_recieved(error, items_new, items_removed)
 	self:load_safe_result_content(result, ready_clbk)
 end
 
--- Lines 4472-4537
+-- Lines 4496-4561
 function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 	local item_data = (tweak_data.economy[result.category] or tweak_data.blackmarket[result.category])[result.entry]
 	self._safe_result_content_data = {
@@ -4555,7 +4585,7 @@ function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 	end
 end
 
--- Lines 4539-4543
+-- Lines 4563-4567
 function MenuSceneManager:_set_safe_result_ready_flag(flag)
 	print("B: RESULT CONTENT LOADED", Application:time(), flag)
 
@@ -4564,7 +4594,7 @@ function MenuSceneManager:_set_safe_result_ready_flag(flag)
 	self:_check_safe_result_content_loaded()
 end
 
--- Lines 4545-4551
+-- Lines 4569-4575
 function MenuSceneManager:_safe_result_parts_loaded(part, blueprint)
 	print("B: RESULT WEAPON PARTS LOADED", Application:time())
 
@@ -4574,7 +4604,7 @@ function MenuSceneManager:_safe_result_parts_loaded(part, blueprint)
 	self:_check_safe_result_content_loaded()
 end
 
--- Lines 4553-4558
+-- Lines 4577-4582
 function MenuSceneManager:_safe_open_minimum_time()
 	print("B: SAFE OPEN MINIMUM TIME", Application:time())
 
@@ -4583,7 +4613,7 @@ function MenuSceneManager:_safe_open_minimum_time()
 	self:_check_safe_result_content_loaded()
 end
 
--- Lines 4560-4572
+-- Lines 4584-4596
 function MenuSceneManager:_check_safe_result_content_loaded()
 	for flag, ready in pairs(self._safe_result_content_data.ready_flags) do
 		if not ready then
@@ -4598,7 +4628,7 @@ function MenuSceneManager:_check_safe_result_content_loaded()
 	end
 end
 
--- Lines 4576-4584
+-- Lines 4600-4608
 function MenuSceneManager:create_safe_content(created_clbk)
 	if self._safe_shake_transition then
 		self._safe_shake_transition.target_speed = 0.5
@@ -4610,12 +4640,12 @@ function MenuSceneManager:create_safe_content(created_clbk)
 	self._economy_safe:damage():add_trigger_callback("create_safe_result", callback(self, self, "_create_safe_result_trigger", created_clbk))
 end
 
--- Lines 4586-4588
+-- Lines 4610-4612
 function MenuSceneManager:_create_safe_result_trigger(created_clbk)
 	self:add_callback(callback(self, self, "_create_safe_result", created_clbk), 0.1, nil)
 end
 
--- Lines 4590-4636
+-- Lines 4614-4660
 function MenuSceneManager:_create_safe_result(created_clbk)
 	if self._safe_scene_destroyed then
 		return
@@ -4667,7 +4697,7 @@ function MenuSceneManager:_create_safe_result(created_clbk)
 	managers.menu:set_cash_safe_scene_done(true)
 end
 
--- Lines 4638-4643
+-- Lines 4662-4667
 function MenuSceneManager:_start_safe_explosion_blur()
 	self._safe_explosion_blur = {
 		max_value = Vector3(0, 1, 4),
@@ -4676,22 +4706,22 @@ function MenuSceneManager:_start_safe_explosion_blur()
 	}
 end
 
--- Lines 4645-4647
+-- Lines 4669-4671
 function MenuSceneManager:_start_safe_drill_sequence()
 	self._economy_drill:damage():run_sequence_simple("anim_start_drilling")
 end
 
--- Lines 4649-4651
+-- Lines 4673-4675
 function MenuSceneManager:_push_through_safe_drill_sequence()
 	self._economy_drill:damage():run_sequence_simple("anim_push_through")
 end
 
--- Lines 4653-4655
+-- Lines 4677-4679
 function MenuSceneManager:_done_safe_drill_sequence()
 	self._economy_drill:damage():run_sequence_simple("anim_fall_off")
 end
 
--- Lines 4657-4662
+-- Lines 4681-4686
 function MenuSceneManager:_open_safe_sequence()
 	local rarity = self._safe_result_content_data.item_data.rarity
 
@@ -4702,7 +4732,7 @@ function MenuSceneManager:_open_safe_sequence()
 	self._economy_safe:damage():run_sequence_simple(sequence)
 end
 
--- Lines 4664-4699
+-- Lines 4688-4723
 function MenuSceneManager:_destroy_economy_safe()
 	if alive(self._economy_safe) then
 		local old_name = self._economy_safe:name()
@@ -4747,67 +4777,67 @@ function MenuSceneManager:_destroy_economy_safe()
 	managers.blackmarket:release_preloaded_category("economy_safe")
 end
 
--- Lines 4701-4711
+-- Lines 4725-4735
 function MenuSceneManager:set_blackmarket_tradable_loaded()
 end
 
--- Lines 4713-4715
+-- Lines 4737-4739
 function MenuSceneManager:get_character_unit()
 	return self._character_unit
 end
 
--- Lines 4718-4721
+-- Lines 4742-4745
 function MenuSceneManager:preview_character_skin(skin_id, unit, clbks)
 	unit = unit or self._character_unit
 
 	self:set_character_armor_skin(skin_id, unit)
 end
 
--- Lines 4723-4725
+-- Lines 4747-4749
 function MenuSceneManager:get_character_armor_skin(unit)
 	return (unit or self._character_unit):base():armor_skin_id()
 end
 
--- Lines 4730-4733
+-- Lines 4754-4757
 function MenuSceneManager:preview_player_style(player_style, material_variation, unit, clbks)
 	unit = unit or self._character_unit
 
 	self:set_character_player_style(player_style, material_variation or managers.blackmarket:get_suit_variation(player_style), unit)
 end
 
--- Lines 4735-4737
+-- Lines 4759-4761
 function MenuSceneManager:get_player_style(unit)
 	return (unit or self._character_unit):base():player_style()
 end
 
--- Lines 4739-4741
+-- Lines 4763-4765
 function MenuSceneManager:get_suit_variation(unit)
 	return (unit or self._character_unit):base():suit_variation()
 end
 
--- Lines 4745-4748
+-- Lines 4769-4772
 function MenuSceneManager:preview_gloves(glove_id, unit, clbks)
 	unit = unit or self._character_unit
 
 	self:set_character_gloves(glove_id, unit)
 end
 
--- Lines 4750-4752
+-- Lines 4774-4776
 function MenuSceneManager:get_glove_id(unit)
 	return (unit or self._character_unit):base():glove_id()
 end
 
--- Lines 4759-4761
+-- Lines 4783-4785
 function MenuSceneManager:get_character_name(unit)
 	return (unit or self._character_unit):base():character_name()
 end
 
--- Lines 4763-4765
+-- Lines 4787-4789
 function MenuSceneManager:get_character_armor(unit)
 	return (unit or self._character_unit):base():armor_id()
 end
 
--- Lines 4767-4771
+-- Lines 4791-4795
 function MenuSceneManager:destroy()
 	if self._vp then
 		self._vp:destroy()

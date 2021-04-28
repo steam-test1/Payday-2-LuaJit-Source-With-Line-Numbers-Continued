@@ -195,7 +195,7 @@ function WeaponColorTemplates._setup_npc_weapons(tweak_data, weapons)
 	end
 end
 
--- Lines 213-1441
+-- Lines 213-1647
 function WeaponColorTemplates._setup_color_skin_weapons(tweak_data)
 	local weapons = {}
 

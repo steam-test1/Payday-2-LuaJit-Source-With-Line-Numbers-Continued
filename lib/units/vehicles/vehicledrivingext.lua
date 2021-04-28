@@ -26,8 +26,8 @@ VehicleDrivingExt.STATE_INACTIVE = "inactive"
 VehicleDrivingExt.STATE_PARKED = "parked"
 VehicleDrivingExt.STATE_DRIVING = "driving"
 VehicleDrivingExt.STATE_BROKEN = "broken"
-VehicleDrivingExt.STATE_LOCKED = "locked"
 VehicleDrivingExt.STATE_SECURED = "secured"
+VehicleDrivingExt.STATE_LOCKED = "locked"
 VehicleDrivingExt.STATE_FROZEN = "frozen"
 VehicleDrivingExt.STATE_BLOCKED = "blocked"
 VehicleDrivingExt.TIME_ENTER = 0.3
@@ -47,7 +47,7 @@ VehicleDrivingExt.SEQUENCE_TRUNK_OPEN = "anim_trunk_open"
 VehicleDrivingExt.SEQUENCE_TRUNK_CLOSE = "anim_trunk_close"
 VehicleDrivingExt.PLAYER_CAPSULE_OFFSET = Vector3(0, 0, -150)
 
--- Lines 59-154
+-- Lines 60-155
 function VehicleDrivingExt:init(unit)
 	self._unit = unit
 
@@ -137,7 +137,7 @@ function VehicleDrivingExt:init(unit)
 	self.hud_label_offset = self._tweak_data.hud_label_offset or self._unit:oobb():size().z
 end
 
--- Lines 156-169
+-- Lines 157-170
 function VehicleDrivingExt:_setup_states()
 	local unit = self._unit
 	self._states = {
@@ -153,7 +153,7 @@ function VehicleDrivingExt:_setup_states()
 	}
 end
 
--- Lines 172-194
+-- Lines 173-195
 function VehicleDrivingExt:set_tweak_data(data)
 	self._tweak_data = data
 	self._seats = deep_clone(self._tweak_data.seats)
@@ -177,12 +177,12 @@ function VehicleDrivingExt:set_tweak_data(data)
 	self._last_drop_position = self._unit:get_object(Idstring(self._tweak_data.loot_drop_point)):position()
 end
 
--- Lines 197-199
+-- Lines 198-200
 function VehicleDrivingExt:get_view()
 	return self._vehicle_view
 end
 
--- Lines 202-227
+-- Lines 203-228
 function VehicleDrivingExt:update(unit, t, dt)
 	self:_manage_position_reservation()
 
@@ -211,7 +211,7 @@ function VehicleDrivingExt:update(unit, t, dt)
 	self._current_state:update(t, dt)
 end
 
--- Lines 232-238
+-- Lines 233-239
 function VehicleDrivingExt:_create_position_reservation()
 	self._pos_reservation_id = managers.navigation:get_pos_reservation_id()
 
@@ -226,7 +226,7 @@ function VehicleDrivingExt:_create_position_reservation()
 	end
 end
 
--- Lines 241-257
+-- Lines 242-258
 function VehicleDrivingExt:_manage_position_reservation()
 	if not self._pos_reservation_id and managers.navigation and managers.navigation:is_data_ready() then
 		self:_create_position_reservation()
@@ -246,24 +246,24 @@ function VehicleDrivingExt:_manage_position_reservation()
 	end
 end
 
--- Lines 263-265
+-- Lines 264-266
 function VehicleDrivingExt:get_action_for_interaction(pos, locator)
 	return self._current_state:get_action_for_interaction(pos, locator, self._tweak_data)
 end
 
--- Lines 268-271
+-- Lines 269-272
 function VehicleDrivingExt:set_interaction_allowed(allowed)
 	self._interaction_allowed = allowed
 
 	self._current_state:adjust_interactions()
 end
 
--- Lines 274-276
+-- Lines 275-277
 function VehicleDrivingExt:is_interaction_allowed()
 	return self._interaction_allowed
 end
 
--- Lines 279-295
+-- Lines 280-296
 function VehicleDrivingExt:is_interaction_enabled(action)
 	if not self:is_interaction_allowed() then
 		return false
@@ -284,7 +284,7 @@ function VehicleDrivingExt:is_interaction_enabled(action)
 	return result
 end
 
--- Lines 298-326
+-- Lines 299-327
 function VehicleDrivingExt:set_state(name, do_not_sync)
 	if name == self._current_state_name or self._current_state_name == VehicleDrivingExt.STATE_SECURED then
 		return
@@ -318,17 +318,17 @@ function VehicleDrivingExt:set_state(name, do_not_sync)
 	end
 end
 
--- Lines 328-330
+-- Lines 329-331
 function VehicleDrivingExt:get_state_name()
 	return self._current_state_name
 end
 
--- Lines 333-335
+-- Lines 334-336
 function VehicleDrivingExt:lock()
 	self:set_state(VehicleDrivingExt.STATE_LOCKED)
 end
 
--- Lines 338-344
+-- Lines 339-345
 function VehicleDrivingExt:unlock()
 	if not self._vehicle:is_active() then
 		self:set_state(VehicleDrivingExt.STATE_INACTIVE)
@@ -337,7 +337,7 @@ function VehicleDrivingExt:unlock()
 	end
 end
 
--- Lines 347-359
+-- Lines 348-360
 function VehicleDrivingExt:secure()
 	local carry_ext = self._unit:carry_data()
 
@@ -352,18 +352,18 @@ function VehicleDrivingExt:secure()
 	self:set_state(VehicleDrivingExt.STATE_SECURED)
 end
 
--- Lines 362-365
+-- Lines 363-366
 function VehicleDrivingExt:break_down()
 	self._unit:character_damage():damage_mission(100000)
 	self:set_state(VehicleDrivingExt.STATE_BROKEN)
 end
 
--- Lines 369-371
+-- Lines 370-372
 function VehicleDrivingExt:damage(damage)
 	self._unit:character_damage():damage_mission(damage)
 end
 
--- Lines 374-380
+-- Lines 375-381
 function VehicleDrivingExt:activate()
 	if self:num_players_inside() > 0 then
 		self:set_state(VehicleDrivingExt.STATE_DRIVING)
@@ -372,17 +372,17 @@ function VehicleDrivingExt:activate()
 	end
 end
 
--- Lines 382-384
+-- Lines 383-385
 function VehicleDrivingExt:deactivate()
 	self:set_state(VehicleDrivingExt.STATE_FROZEN)
 end
 
--- Lines 386-388
+-- Lines 387-389
 function VehicleDrivingExt:block()
 	self:set_state(VehicleDrivingExt.STATE_BLOCKED)
 end
 
--- Lines 392-411
+-- Lines 393-412
 function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	if not carry_id or carry_id == "" then
 		return false
@@ -407,7 +407,7 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	end
 end
 
--- Lines 413-430
+-- Lines 414-431
 function VehicleDrivingExt:sync_loot(carry_id, multiplier)
 	if not carry_id or carry_id == "" then
 		return false
@@ -430,7 +430,7 @@ function VehicleDrivingExt:sync_loot(carry_id, multiplier)
 	end
 end
 
--- Lines 433-461
+-- Lines 434-462
 function VehicleDrivingExt:remove_loot(carry_id, multiplier)
 	if not carry_id or carry_id == "" then
 		return false
@@ -465,21 +465,21 @@ function VehicleDrivingExt:remove_loot(carry_id, multiplier)
 	return false
 end
 
--- Lines 464-467
+-- Lines 465-468
 function VehicleDrivingExt:get_random_loot()
 	local entry = math.random(#self._loot)
 
 	return entry
 end
 
--- Lines 470-473
+-- Lines 471-474
 function VehicleDrivingExt:get_loot()
 	local entry = #self._loot
 
 	return entry
 end
 
--- Lines 476-483
+-- Lines 477-484
 function VehicleDrivingExt:give_vehicle_loot_to_player(peer_id)
 	if Network:is_server() then
 		self:server_give_vehicle_loot_to_player(peer_id)
@@ -488,7 +488,7 @@ function VehicleDrivingExt:give_vehicle_loot_to_player(peer_id)
 	end
 end
 
--- Lines 486-494
+-- Lines 487-495
 function VehicleDrivingExt:server_give_vehicle_loot_to_player(peer_id)
 	local loot = self._loot[self:get_loot()]
 
@@ -498,7 +498,7 @@ function VehicleDrivingExt:server_give_vehicle_loot_to_player(peer_id)
 	end
 end
 
--- Lines 497-509
+-- Lines 498-510
 function VehicleDrivingExt:sync_give_vehicle_loot_to_player(carry_id, multiplier, peer_id)
 	if not self:remove_loot(carry_id, multiplier) then
 		Application:error("[VehicleDrivingExt] Trying to remove loot that is not in the vehicle: ", carry_id)
@@ -513,7 +513,7 @@ function VehicleDrivingExt:sync_give_vehicle_loot_to_player(carry_id, multiplier
 	managers.player:register_carry(managers.network:session():peer(peer_id), carry_id)
 end
 
--- Lines 512-533
+-- Lines 513-534
 function VehicleDrivingExt:drop_loot()
 	if not self:_should_drop_loot() then
 		return
@@ -539,12 +539,12 @@ function VehicleDrivingExt:drop_loot()
 	end
 end
 
--- Lines 536-557
+-- Lines 537-558
 function VehicleDrivingExt:_should_drop_loot()
 	return false
 end
 
--- Lines 560-571
+-- Lines 561-572
 function VehicleDrivingExt:_store_loot(unit)
 	if self._tweak_data and self._tweak_data.max_loot_bags <= #self._loot then
 		return
@@ -557,7 +557,7 @@ function VehicleDrivingExt:_store_loot(unit)
 	end
 end
 
--- Lines 574-583
+-- Lines 575-584
 function VehicleDrivingExt:server_store_loot_in_vehicle(unit)
 	local carry_ext = unit:carry_data()
 	local carry_id = carry_ext:carry_id()
@@ -567,7 +567,7 @@ function VehicleDrivingExt:server_store_loot_in_vehicle(unit)
 	self:sync_store_loot_in_vehicle(unit, carry_id, multiplier)
 end
 
--- Lines 586-599
+-- Lines 587-600
 function VehicleDrivingExt:sync_store_loot_in_vehicle(unit, carry_id, multiplier)
 	local carry_ext = unit:carry_data()
 
@@ -581,7 +581,7 @@ function VehicleDrivingExt:sync_store_loot_in_vehicle(unit, carry_id, multiplier
 	end
 end
 
--- Lines 602-669
+-- Lines 603-670
 function VehicleDrivingExt:_loot_filter_func(carry_data)
 	local carry_id = carry_data:carry_id()
 
@@ -594,7 +594,7 @@ function VehicleDrivingExt:_loot_filter_func(carry_data)
 	return false
 end
 
--- Lines 672-689
+-- Lines 673-690
 function VehicleDrivingExt:_catch_loot()
 	if self._tweak_data and self._tweak_data.max_loot_bags <= #self._loot or not self._interaction_loot then
 		return false
@@ -618,7 +618,7 @@ function VehicleDrivingExt:_catch_loot()
 	end
 end
 
--- Lines 692-706
+-- Lines 693-707
 function VehicleDrivingExt:get_nearest_loot_point(pos)
 	local nearest_loot_point = nil
 	local min_distance = 1e+20
@@ -638,7 +638,7 @@ function VehicleDrivingExt:get_nearest_loot_point(pos)
 	return nearest_loot_point, min_distance
 end
 
--- Lines 711-716
+-- Lines 712-717
 function VehicleDrivingExt:enter_vehicle(player)
 	local seat = self:find_seat_for_player(player)
 
@@ -647,7 +647,7 @@ function VehicleDrivingExt:enter_vehicle(player)
 	end
 end
 
--- Lines 719-748
+-- Lines 720-749
 function VehicleDrivingExt:reserve_seat(player, position, seat_name)
 	local seat = nil
 
@@ -680,7 +680,7 @@ function VehicleDrivingExt:reserve_seat(player, position, seat_name)
 	return seat
 end
 
--- Lines 750-784
+-- Lines 751-785
 function VehicleDrivingExt:place_player_on_seat(player, seat_name)
 	local number_of_seats = 0
 
@@ -723,17 +723,17 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name)
 	end
 end
 
--- Lines 787-789
+-- Lines 788-790
 function VehicleDrivingExt:disable_player_exit()
 	self._manual_exit_disabled = true
 end
 
--- Lines 791-793
+-- Lines 792-794
 function VehicleDrivingExt:enable_player_exit()
 	self._manual_exit_disabled = nil
 end
 
--- Lines 796-802
+-- Lines 797-803
 function VehicleDrivingExt:allow_exit()
 	local allowed = self._current_state:allow_exit()
 	allowed = allowed and not self._manual_exit_disabled
@@ -741,7 +741,7 @@ function VehicleDrivingExt:allow_exit()
 	return allowed
 end
 
--- Lines 804-832
+-- Lines 805-833
 function VehicleDrivingExt:exit_vehicle(player)
 	local seat = self:find_seat_for_player(player)
 
@@ -769,7 +769,7 @@ function VehicleDrivingExt:exit_vehicle(player)
 	end
 end
 
--- Lines 834-845
+-- Lines 835-846
 function VehicleDrivingExt:_evacuate_vehicle()
 	for _, seat in pairs(self._seats) do
 		if alive(seat.occupant) and seat.occupant:brain() then
@@ -781,7 +781,7 @@ function VehicleDrivingExt:_evacuate_vehicle()
 	self._unit:attention():set_attention(nil, nil)
 end
 
--- Lines 847-869
+-- Lines 848-870
 function VehicleDrivingExt:_evacuate_seat(seat)
 	seat.occupant:unlink()
 
@@ -807,7 +807,7 @@ function VehicleDrivingExt:_evacuate_seat(seat)
 	seat.occupant = nil
 end
 
--- Lines 872-925
+-- Lines 873-926
 function VehicleDrivingExt:find_exit_position(player)
 	print("[VehicleDrivingExt:find_exit_position]")
 
@@ -868,7 +868,7 @@ function VehicleDrivingExt:find_exit_position(player)
 	return exit_position
 end
 
--- Lines 928-941
+-- Lines 929-942
 function VehicleDrivingExt:get_object_placement(player)
 	local seat = self:find_seat_for_player(player)
 
@@ -888,7 +888,7 @@ function VehicleDrivingExt:get_object_placement(player)
 	return nil, nil
 end
 
--- Lines 944-950
+-- Lines 945-951
 function VehicleDrivingExt:get_seat_by_name(seat_name)
 	for name, seat in pairs(self._seats) do
 		if name == seat_name then
@@ -897,7 +897,7 @@ function VehicleDrivingExt:get_seat_by_name(seat_name)
 	end
 end
 
--- Lines 955-974
+-- Lines 956-975
 function VehicleDrivingExt:get_available_seat(position)
 	local nearest_seat = nil
 	local min_distance = 1e+20
@@ -924,7 +924,7 @@ function VehicleDrivingExt:get_available_seat(position)
 	return nearest_seat, min_distance
 end
 
--- Lines 976-983
+-- Lines 977-984
 function VehicleDrivingExt:has_driving_seat()
 	for _, seat in pairs(self._seats) do
 		if seat.driving then
@@ -935,7 +935,7 @@ function VehicleDrivingExt:has_driving_seat()
 	return false
 end
 
--- Lines 985-993
+-- Lines 986-994
 function VehicleDrivingExt:find_seat_for_player(player)
 	for _, seat in pairs(self._seats) do
 		if alive(seat.occupant) and seat.occupant == player then
@@ -946,7 +946,7 @@ function VehicleDrivingExt:find_seat_for_player(player)
 	return nil
 end
 
--- Lines 996-1004
+-- Lines 997-1005
 function VehicleDrivingExt:num_players_inside()
 	local num_players = 0
 
@@ -959,7 +959,7 @@ function VehicleDrivingExt:num_players_inside()
 	return num_players
 end
 
--- Lines 1007-1020
+-- Lines 1008-1021
 function VehicleDrivingExt:on_team_ai_enter(ai_unit)
 	ai_unit:movement().vehicle_unit:link(Idstring(VehicleDrivingExt.THIRD_PREFIX .. ai_unit:movement().vehicle_seat.name), ai_unit, ai_unit:orientation_object():name())
 
@@ -974,23 +974,23 @@ function VehicleDrivingExt:on_team_ai_enter(ai_unit)
 	self._door_soundsource:post_event(self._tweak_data.sound.door_close)
 end
 
--- Lines 1025-1027
+-- Lines 1026-1028
 function VehicleDrivingExt:on_vehicle_death()
 	self:set_state(VehicleDrivingExt.STATE_BROKEN)
 end
 
--- Lines 1030-1033
+-- Lines 1031-1034
 function VehicleDrivingExt:repair_vehicle()
 	self:set_state(VehicleDrivingExt.STATE_PARKED)
 	self._unit:character_damage():revive()
 end
 
--- Lines 1036-1038
+-- Lines 1037-1039
 function VehicleDrivingExt:is_vulnerable()
 	return self._current_state:is_vulnerable()
 end
 
--- Lines 1042-1047
+-- Lines 1043-1048
 function VehicleDrivingExt:start(player)
 	self:_start(player)
 
@@ -999,12 +999,12 @@ function VehicleDrivingExt:start(player)
 	end
 end
 
--- Lines 1050-1052
+-- Lines 1051-1053
 function VehicleDrivingExt:sync_start(player)
 	self:_start(player)
 end
 
--- Lines 1055-1061
+-- Lines 1056-1062
 function VehicleDrivingExt:_start(player)
 	local seat = self:find_seat_for_player(player)
 
@@ -1015,7 +1015,7 @@ function VehicleDrivingExt:_start(player)
 	self:activate_vehicle()
 end
 
--- Lines 1063-1072
+-- Lines 1064-1073
 function VehicleDrivingExt:activate_vehicle()
 	if not self._vehicle:is_active() then
 		self._unit:damage():run_sequence_simple("driving")
@@ -1027,7 +1027,7 @@ function VehicleDrivingExt:activate_vehicle()
 	self._drop_time_delay = TimerManager:main():time()
 end
 
--- Lines 1075-1080
+-- Lines 1076-1081
 function VehicleDrivingExt:stop()
 	self:_stop()
 
@@ -1036,12 +1036,12 @@ function VehicleDrivingExt:stop()
 	end
 end
 
--- Lines 1083-1085
+-- Lines 1084-1086
 function VehicleDrivingExt:sync_stop()
 	self:_stop()
 end
 
--- Lines 1088-1096
+-- Lines 1089-1097
 function VehicleDrivingExt:_stop()
 	print("[DRIVING] VehicleDrivingExt: _stop()")
 	self:stop_all_sound_events()
@@ -1053,7 +1053,7 @@ function VehicleDrivingExt:_stop()
 	self:set_state(VehicleDrivingExt.STATE_INACTIVE)
 end
 
--- Lines 1099-1128
+-- Lines 1100-1129
 function VehicleDrivingExt:set_input(accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear, dt, y_axis)
 	if self._current_state:stop_vehicle() then
 		accelerate = 0
@@ -1084,22 +1084,22 @@ function VehicleDrivingExt:set_input(accelerate, steer, brake, handbrake, gear_u
 	end
 end
 
--- Lines 1130-1132
+-- Lines 1131-1133
 function VehicleDrivingExt:sync_set_input(accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear)
 	self:_set_input(accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear)
 end
 
--- Lines 1134-1136
+-- Lines 1135-1137
 function VehicleDrivingExt:sync_state(position, rotation, velocity)
 	self._vehicle:adjust_vehicle_state(position, rotation, velocity)
 end
 
--- Lines 1138-1140
+-- Lines 1139-1141
 function VehicleDrivingExt:sync_vehicle_state(new_state)
 	self:set_state(new_state, true)
 end
 
--- Lines 1142-1147
+-- Lines 1143-1148
 function VehicleDrivingExt:_set_input(accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear)
 	local gear_shift = 0
 
@@ -1114,7 +1114,7 @@ function VehicleDrivingExt:_set_input(accelerate, steer, brake, handbrake, gear_
 	self._vehicle:set_input(accelerate, steer, brake, handbrake, gear_shift, forced_gear)
 end
 
--- Lines 1153-1162
+-- Lines 1154-1163
 function VehicleDrivingExt:_wake_nearby_dynamics()
 	local slotmask = World:make_slot_mask(1)
 	local units = World:find_units_quick("sphere", self._vehicle:position(), 500, slotmask)
@@ -1126,7 +1126,7 @@ function VehicleDrivingExt:_wake_nearby_dynamics()
 	end
 end
 
--- Lines 1165-1172
+-- Lines 1166-1173
 function VehicleDrivingExt:_should_push(unit)
 	for _, seat in pairs(self._seats) do
 		if seat.occupant == unit or seat.drive_SO_data and seat.drive_SO_data.unit == unit then
@@ -1137,7 +1137,7 @@ function VehicleDrivingExt:_should_push(unit)
 	return true
 end
 
--- Lines 1175-1228
+-- Lines 1176-1229
 function VehicleDrivingExt:_detect_npc_collisions()
 	local vel = self._vehicle:velocity()
 
@@ -1193,7 +1193,7 @@ function VehicleDrivingExt:_detect_npc_collisions()
 	end
 end
 
--- Lines 1231-1269
+-- Lines 1232-1270
 function VehicleDrivingExt:_detect_collisions(t, dt)
 	local current_speed = self._vehicle:velocity()
 
@@ -1228,7 +1228,7 @@ function VehicleDrivingExt:_detect_collisions(t, dt)
 	self._old_speed = current_speed
 end
 
--- Lines 1272-1344
+-- Lines 1273-1345
 function VehicleDrivingExt:_detect_invalid_possition(t, dt)
 	local respawn = false
 	local rot = self._vehicle:rotation()
@@ -1301,7 +1301,7 @@ function VehicleDrivingExt:_detect_invalid_possition(t, dt)
 	end
 end
 
--- Lines 1346-1398
+-- Lines 1347-1399
 function VehicleDrivingExt:respawn_vehicle(auto_respawn)
 	self.respawn_available = false
 
@@ -1353,7 +1353,7 @@ function VehicleDrivingExt:respawn_vehicle(auto_respawn)
 	end
 end
 
--- Lines 1400-1409
+-- Lines 1401-1410
 function VehicleDrivingExt:_check_respawn_spot_valid(counter)
 	local oobb = self._positions[counter].oobb
 	local slotmask = managers.slot:get_mask("all")
@@ -1366,7 +1366,7 @@ function VehicleDrivingExt:_check_respawn_spot_valid(counter)
 	end
 end
 
--- Lines 1414-1491
+-- Lines 1415-1492
 function VehicleDrivingExt:_play_sound_events(t, dt)
 	local state = self._vehicle:get_state()
 	local slip = false
@@ -1442,7 +1442,7 @@ function VehicleDrivingExt:_play_sound_events(t, dt)
 	self:_play_engine_sound(state)
 end
 
--- Lines 1494-1510
+-- Lines 1495-1511
 function VehicleDrivingExt:_start_engine_sound()
 	if not self._playing_engine_sound and self._engine_soundsource then
 		self._playing_engine_sound = true
@@ -1463,7 +1463,7 @@ function VehicleDrivingExt:_start_engine_sound()
 	end
 end
 
--- Lines 1513-1518
+-- Lines 1514-1519
 function VehicleDrivingExt:_stop_engine_sound()
 	if self._playing_engine_sound and self._engine_soundsource then
 		self._engine_soundsource:stop()
@@ -1472,7 +1472,7 @@ function VehicleDrivingExt:_stop_engine_sound()
 	end
 end
 
--- Lines 1520-1525
+-- Lines 1521-1526
 function VehicleDrivingExt:_start_broken_engine_sound()
 	if not self._playing_engine_sound and self._engine_soundsource and self._tweak_data.sound.broken_engine then
 		self._engine_soundsource:post_event(self._tweak_data.sound.broken_engine)
@@ -1481,7 +1481,7 @@ function VehicleDrivingExt:_start_broken_engine_sound()
 	end
 end
 
--- Lines 1527-1557
+-- Lines 1528-1558
 function VehicleDrivingExt:_play_engine_sound(state)
 	local speed = state:get_speed() * 3.6
 	local rpm = state:get_rpm()
@@ -1514,7 +1514,7 @@ function VehicleDrivingExt:_play_engine_sound(state)
 	self._engine_soundsource:set_rtpc(self._tweak_data.sound.engine_speed_rtpc, speed_rtpc)
 end
 
--- Lines 1559-1567
+-- Lines 1560-1568
 function VehicleDrivingExt:stop_all_sound_events()
 	self._hit_soundsource:stop()
 	self._slip_soundsource:stop()
@@ -1527,14 +1527,14 @@ function VehicleDrivingExt:stop_all_sound_events()
 	self._playing_slip_sound_dt = 0
 end
 
--- Lines 1571-1575
+-- Lines 1572-1576
 function VehicleDrivingExt:_unregister_drive_SO_all()
 	for _, seat in pairs(self._seats) do
 		self:_unregister_drive_SO(seat)
 	end
 end
 
--- Lines 1577-1593
+-- Lines 1578-1594
 function VehicleDrivingExt:_unregister_drive_SO(seat)
 	if seat.drive_SO_data then
 		local SO_data = seat.drive_SO_data
@@ -1550,7 +1550,7 @@ function VehicleDrivingExt:_unregister_drive_SO(seat)
 	end
 end
 
--- Lines 1596-1609
+-- Lines 1597-1610
 function VehicleDrivingExt:_chk_register_drive_SO()
 	if not Network:is_server() or not managers.navigation:is_data_ready() then
 		return
@@ -1563,7 +1563,7 @@ function VehicleDrivingExt:_chk_register_drive_SO()
 	end
 end
 
--- Lines 1613-1720
+-- Lines 1614-1721
 function VehicleDrivingExt:_create_seat_SO(seat, dont_register)
 	if seat.drive_SO_data then
 		return
@@ -1626,12 +1626,12 @@ function VehicleDrivingExt:_create_seat_SO(seat, dont_register)
 	end
 end
 
--- Lines 1723-1744
+-- Lines 1724-1745
 function VehicleDrivingExt:clbk_drive_SO_verification(candidate_unit)
 	return true
 end
 
--- Lines 1747-1759
+-- Lines 1748-1760
 function VehicleDrivingExt:on_drive_SO_administered(seat, unit)
 	if seat.drive_SO_data.unit then
 		debug_pause("[VehicleDrivingExt:on_drive_SO_administered] Already had a unit!!!!", seat.name, unit, seat.drive_SO_data.unit)
@@ -1645,7 +1645,7 @@ function VehicleDrivingExt:on_drive_SO_administered(seat, unit)
 	managers.network:session():send_to_peers_synched("sync_ai_vehicle_action", "enter", self._unit, seat.name, unit)
 end
 
--- Lines 1762-1781
+-- Lines 1763-1782
 function VehicleDrivingExt:on_drive_SO_started(seat, unit)
 	local rot = seat.third_object:rotation()
 	local pos = seat.third_object:position()
@@ -1655,7 +1655,7 @@ function VehicleDrivingExt:on_drive_SO_started(seat, unit)
 	end
 end
 
--- Lines 1783-1808
+-- Lines 1784-1809
 function VehicleDrivingExt:on_drive_SO_completed(seat, unit)
 	Application:debug("[VehicleDrivingExt:on_drive_SO_completed]", seat.name)
 
@@ -1676,7 +1676,7 @@ function VehicleDrivingExt:on_drive_SO_completed(seat, unit)
 	unit:brain():set_active(false)
 end
 
--- Lines 1811-1824
+-- Lines 1812-1825
 function VehicleDrivingExt:on_drive_SO_failed(seat, unit)
 	if not seat.drive_SO_data then
 		return
@@ -1693,7 +1693,7 @@ function VehicleDrivingExt:on_drive_SO_failed(seat, unit)
 	self:_create_seat_SO(seat)
 end
 
--- Lines 1826-1865
+-- Lines 1827-1866
 function VehicleDrivingExt:sync_ai_vehicle_action(action, seat_name, unit)
 	if action == "enter" then
 		for _, seat in pairs(self._seats) do
@@ -1714,7 +1714,7 @@ function VehicleDrivingExt:sync_ai_vehicle_action(action, seat_name, unit)
 	end
 end
 
--- Lines 1867-1883
+-- Lines 1868-1884
 function VehicleDrivingExt:collision_callback(tag, unit, body, other_unit, other_body, position, normal, velocity, ...)
 	if other_unit and other_unit:npc_vehicle_driving() then
 		local attack_data = {
@@ -1729,7 +1729,7 @@ function VehicleDrivingExt:collision_callback(tag, unit, body, other_unit, other
 	end
 end
 
--- Lines 1886-1927
+-- Lines 1887-1928
 function VehicleDrivingExt:on_impact(ray, gforce, velocity)
 	if ray then
 		self._hit_soundsource:set_position(ray.hit_position)
@@ -1766,12 +1766,12 @@ function VehicleDrivingExt:on_impact(ray, gforce, velocity)
 	end
 end
 
--- Lines 1929-1931
+-- Lines 1930-1932
 function VehicleDrivingExt:shooting_stance_allowed()
 	return self._shooting_stance_allowed
 end
 
--- Lines 1933-1938
+-- Lines 1934-1939
 function VehicleDrivingExt:interact_trunk()
 	local vehicle = self._unit
 	local peer_id = managers.network:session():local_peer():id()
@@ -1780,7 +1780,7 @@ function VehicleDrivingExt:interact_trunk()
 	self:_interact_trunk(vehicle)
 end
 
--- Lines 1940-1953
+-- Lines 1941-1954
 function VehicleDrivingExt:_interact_trunk(vehicle)
 	local driving_ext = vehicle:vehicle_driving()
 
@@ -1797,7 +1797,7 @@ function VehicleDrivingExt:_interact_trunk(vehicle)
 	end
 end
 
--- Lines 1956-1965
+-- Lines 1957-1966
 function VehicleDrivingExt:_number_in_the_vehicle()
 	local count = 0
 
@@ -1810,11 +1810,11 @@ function VehicleDrivingExt:_number_in_the_vehicle()
 	return count
 end
 
--- Lines 1967-1968
+-- Lines 1968-1969
 function VehicleDrivingExt:pre_destroy(unit)
 end
 
--- Lines 1970-1972
+-- Lines 1971-1973
 function VehicleDrivingExt:destroy()
 	managers.hud:_remove_name_label(self._unit:unit_data().name_label_id)
 end

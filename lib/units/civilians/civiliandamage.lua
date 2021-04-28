@@ -187,7 +187,7 @@ function CivilianDamage:damage_melee(attack_data)
 	return CopDamage.damage_melee(self, attack_data)
 end
 
--- Lines 194-207
+-- Lines 231-244
 function CivilianDamage:damage_tase(attack_data)
 	if managers.player:has_category_upgrade("player", "civ_harmless_melee") and self.no_intimidation_by_dmg and not self:no_intimidation_by_dmg() and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
 		self._survive_shot_t = TimerManager:game():time() + 2.5

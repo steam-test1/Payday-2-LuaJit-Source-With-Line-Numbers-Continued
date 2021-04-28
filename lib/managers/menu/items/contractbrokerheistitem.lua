@@ -497,7 +497,7 @@ function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	return used, pointer
 end
 
--- Lines 509-521
+-- Lines 509-519
 function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	if self._favourite:inside(x, y) then
 		self:toggle_favourite()
@@ -512,10 +512,12 @@ function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 523-559
+-- Lines 521-557
 function ContractBrokerHeistItem:trigger()
 	if self._job_data and not self._job_data.enabled then
-		managers.menu:post_event("menu_error")
+		local store_page_opened = self:trigger_open_store_page()
+
+		managers.menu:post_event(store_page_opened and "menu_enter" or "menu_error")
 
 		return
 	end
@@ -548,7 +550,34 @@ function ContractBrokerHeistItem:trigger()
 	})
 end
 
--- Lines 561-566
+-- Lines 559-583
+function ContractBrokerHeistItem:trigger_open_store_page()
+	local job_tweak = self._job_data and tweak_data.narrative.jobs[self._job_data.job_id]
+	local dlc = job_tweak and job_tweak.dlc
+	local is_unlocked = not dlc or managers.dlc:is_dlc_unlocked(dlc)
+
+	if not is_unlocked and MenuCallbackHandler:is_overlay_enabled() then
+		local dlc_data = Global.dlc_manager.all_dlc_data[dlc]
+
+		if dlc_data and not dlc_data.external then
+			if dlc_data.webpage then
+				Steam:overlay_activate("url", dlc_data.webpage)
+			elseif dlc_data.app_id then
+				Steam:overlay_activate("store", dlc_data.app_id)
+			elseif dlc_data.source_id then
+				Steam:overlay_activate("game", "OfficialGameGroup")
+			else
+				Steam:overlay_activate("url", tweak_data.gui.store_page)
+			end
+
+			return true
+		end
+	end
+
+	return false
+end
+
+-- Lines 585-590
 function ContractBrokerHeistItem:toggle_favourite()
 	local is_fav = managers.crimenet:is_job_favourite(self._job_data.job_id)
 

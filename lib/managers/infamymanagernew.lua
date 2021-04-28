@@ -60,22 +60,26 @@ function InfamyManager:required_points(item)
 	return tweak_data.infamy.items[item] and true or false
 end
 
--- Lines 54-57
-function InfamyManager:reward_player_styles(global_value, category, player_style)
+-- Lines 54-61
+function InfamyManager:reward_player_styles(global_value, category, player_style, suit_variation)
 	managers.blackmarket:on_aquired_player_style(player_style)
+
+	if suit_variation and suit_variation ~= "default" then
+		managers.blackmarket:on_aquired_suit_variation(player_style, suit_variation)
+	end
 end
 
--- Lines 58-61
+-- Lines 62-65
 function InfamyManager:reward_suit_variations(global_value, category, player_style, suit_variation)
 	managers.blackmarket:on_aquired_suit_variation(player_style, suit_variation)
 end
 
--- Lines 64-67
+-- Lines 68-71
 function InfamyManager:reward_gloves(global_value, category, glove_id)
 	managers.blackmarket:on_aquired_glove_id(glove_id)
 end
 
--- Lines 70-76
+-- Lines 74-80
 function InfamyManager:reward_item(global_value, category, item_id)
 	local item_tweak = tweak_data.blackmarket[category][item_id]
 	global_value = global_value or item_tweak.global_value or managers.dlc:dlc_to_global_value(item_tweak.dlc) or "normal"
@@ -83,7 +87,7 @@ function InfamyManager:reward_item(global_value, category, item_id)
 	managers.blackmarket:add_to_inventory(global_value, category, item_id)
 end
 
--- Lines 78-98
+-- Lines 82-103
 function InfamyManager:unlock_item(item)
 	local infamy_item = tweak_data.infamy.items[item]
 
@@ -95,7 +99,9 @@ function InfamyManager:unlock_item(item)
 
 	if self:available(item) and not self:owned(item) then
 		for bonus, entry in ipairs(infamy_item.upgrades) do
-			self["reward_" .. tostring(entry[2])] or self.reward_item(self, unpack(entry))
+			local reward_func = self["reward_" .. tostring(entry[2])] or self.reward_item
+
+			reward_func(self, unpack(entry))
 		end
 
 		if infamy_item.upgrades.join_stingers then
@@ -108,12 +114,12 @@ function InfamyManager:unlock_item(item)
 	end
 end
 
--- Lines 100-102
+-- Lines 105-107
 function InfamyManager:owned(item)
 	return self._global.unlocks[item] or false
 end
 
--- Lines 104-113
+-- Lines 109-118
 function InfamyManager:available(item)
 	local current_rank = managers.experience:current_rank()
 
@@ -126,7 +132,7 @@ function InfamyManager:available(item)
 	return false
 end
 
--- Lines 115-120
+-- Lines 120-125
 function InfamyManager:select_join_stinger(join_stinger)
 	local stinger_data = self._global.join_stingers[join_stinger]
 
@@ -135,26 +141,26 @@ function InfamyManager:select_join_stinger(join_stinger)
 	end
 end
 
--- Lines 122-124
+-- Lines 127-129
 function InfamyManager:selected_join_stinger()
 	return self._global.selected_join_stinger
 end
 
--- Lines 126-129
+-- Lines 131-134
 function InfamyManager:selected_join_stinger_index()
 	local stinger_data = self._global.join_stingers[self._global.selected_join_stinger]
 
 	return stinger_data and stinger_data.index or 0
 end
 
--- Lines 131-134
+-- Lines 136-139
 function InfamyManager:is_join_stinger_unlocked(stinger_id)
 	local stinger_data = self._global.join_stingers[stinger_id]
 
 	return stinger_data and stinger_data.unlocked or false
 end
 
--- Lines 136-144
+-- Lines 141-149
 function InfamyManager:unlock_join_stinger(stinger_id)
 	local stinger_data = self._global.join_stingers[stinger_id]
 
@@ -167,7 +173,7 @@ function InfamyManager:unlock_join_stinger(stinger_id)
 	end
 end
 
--- Lines 146-158
+-- Lines 151-163
 function InfamyManager:get_unlocked_join_stingers()
 	local unlocked_stingers = {}
 	local stinger_data = nil
@@ -183,7 +189,7 @@ function InfamyManager:get_unlocked_join_stingers()
 	return unlocked_stingers
 end
 
--- Lines 160-170
+-- Lines 165-175
 function InfamyManager:get_all_join_stingers()
 	local all_stingers = {}
 	local join_stinger_data = nil
@@ -200,7 +206,7 @@ function InfamyManager:get_all_join_stingers()
 	return all_stingers
 end
 
--- Lines 172-177
+-- Lines 177-182
 function InfamyManager:get_join_stinger_name_id(stinger_name)
 	local item_id = string.format("infamy_stinger_%03d", stinger_name)
 	local item_tweak = tweak_data.infamy.items[item_id]
@@ -208,7 +214,7 @@ function InfamyManager:get_join_stinger_name_id(stinger_name)
 	return item_tweak and item_tweak.name_id or "menu_" .. item_id .. "_name"
 end
 
--- Lines 179-188
+-- Lines 184-193
 function InfamyManager:get_infamy_card_id_and_rect()
 	local texture_id = "guis/dlcs/infamous/textures/pd2/infamous_tree/infamy_card_display"
 	local inf_rank = math.min(managers.experience:current_rank(), tweak_data.infamy.ranks - 1) - 1
@@ -224,7 +230,7 @@ function InfamyManager:get_infamy_card_id_and_rect()
 	return texture_id, texture_rect
 end
 
--- Lines 190-195
+-- Lines 195-200
 function InfamyManager:reset_items()
 	self:_reset_points()
 
@@ -232,7 +238,7 @@ function InfamyManager:reset_items()
 	self._global.reset_message = true
 end
 
--- Lines 197-205
+-- Lines 202-210
 function InfamyManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -245,7 +251,7 @@ function InfamyManager:check_reset_message()
 	end
 end
 
--- Lines 207-218
+-- Lines 212-223
 function InfamyManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -257,7 +263,7 @@ function InfamyManager:save(data)
 	data.InfamyManager = state
 end
 
--- Lines 220-250
+-- Lines 225-255
 function InfamyManager:load(data, version)
 	local state = data.InfamyManager
 
@@ -292,7 +298,7 @@ function InfamyManager:load(data, version)
 	end
 end
 
--- Lines 252-277
+-- Lines 257-282
 function InfamyManager:_verify_loaded_data()
 	local tree_map = {}
 
@@ -325,7 +331,7 @@ function InfamyManager:_verify_loaded_data()
 	end
 end
 
--- Lines 279-282
+-- Lines 284-287
 function InfamyManager:reset()
 	Global.infamy_manager = nil
 

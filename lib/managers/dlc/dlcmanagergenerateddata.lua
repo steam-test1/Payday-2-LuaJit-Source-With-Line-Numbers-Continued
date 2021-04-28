@@ -79,166 +79,171 @@ function GenericDLCManager:has_in31()
 end
 
 -- Lines 134-136
+function GenericDLCManager:has_in32()
+	return self:is_dlc_unlocked("in32")
+end
+
+-- Lines 149-151
 function GenericDLCManager:has_inf()
 	return self:is_dlc_unlocked("inf")
 end
 
--- Lines 139-141
+-- Lines 154-156
 function GenericDLCManager:has_ja21()
 	return self:is_dlc_unlocked("ja21")
 end
 
--- Lines 164-166
+-- Lines 179-181
 function GenericDLCManager:has_mar21()
 	return self:is_dlc_unlocked("mar21")
 end
 
--- Lines 174-176
+-- Lines 189-191
 function GenericDLCManager:has_maw()
 	return self:is_dlc_unlocked("maw")
 end
 
--- Lines 179-181
+-- Lines 194-196
 function GenericDLCManager:has_mbs()
 	return self:is_dlc_unlocked("mbs")
 end
 
--- Lines 189-191
+-- Lines 204-206
 function GenericDLCManager:has_mex()
 	return self:is_dlc_unlocked("mex")
 end
 
--- Lines 194-196
+-- Lines 209-211
 function GenericDLCManager:has_mmh()
 	return self:is_dlc_unlocked("mmh")
 end
 
--- Lines 199-201
+-- Lines 214-216
 function GenericDLCManager:has_mwm()
 	return self:is_dlc_unlocked("mwm")
 end
 
--- Lines 204-206
+-- Lines 219-221
 function GenericDLCManager:has_mxw()
 	return self:is_dlc_unlocked("mxw")
 end
 
--- Lines 209-211
+-- Lines 224-226
 function GenericDLCManager:has_ocp()
 	return self:is_dlc_unlocked("ocp")
 end
 
--- Lines 229-231
+-- Lines 244-246
 function GenericDLCManager:has_pex()
 	return self:is_dlc_unlocked("pex")
 end
 
--- Lines 234-236
+-- Lines 249-251
 function GenericDLCManager:has_pgo()
 	return self:is_dlc_unlocked("pgo")
 end
 
--- Lines 259-261
+-- Lines 274-276
 function GenericDLCManager:has_scm()
 	return self:is_dlc_unlocked("scm")
 end
 
--- Lines 264-266
+-- Lines 279-281
 function GenericDLCManager:has_sdm()
 	return self:is_dlc_unlocked("sdm")
 end
 
--- Lines 274-276
+-- Lines 289-291
 function GenericDLCManager:has_sft()
 	return self:is_dlc_unlocked("sft")
 end
 
--- Lines 279-281
+-- Lines 294-296
 function GenericDLCManager:has_shl()
 	return self:is_dlc_unlocked("shl")
 end
 
--- Lines 284-286
+-- Lines 299-301
 function GenericDLCManager:has_skm()
 	return self:is_dlc_unlocked("skm")
 end
 
--- Lines 289-291
+-- Lines 304-306
 function GenericDLCManager:has_smo()
 	return self:is_dlc_unlocked("smo")
 end
 
--- Lines 294-296
+-- Lines 309-311
 function GenericDLCManager:has_sms()
 	return self:is_dlc_unlocked("sms")
 end
 
--- Lines 304-306
+-- Lines 319-321
 function GenericDLCManager:has_sus()
 	return self:is_dlc_unlocked("sus")
 end
 
--- Lines 309-311
+-- Lines 324-326
 function GenericDLCManager:has_svc()
 	return self:is_dlc_unlocked("svc")
 end
 
--- Lines 319-321
+-- Lines 334-336
 function GenericDLCManager:has_tam()
 	return self:is_dlc_unlocked("tam")
 end
 
--- Lines 324-326
+-- Lines 339-341
 function GenericDLCManager:has_tar()
 	return self:is_dlc_unlocked("tar")
 end
 
--- Lines 339-341
+-- Lines 354-356
 function GenericDLCManager:has_tjp()
 	return self:is_dlc_unlocked("tjp")
 end
 
--- Lines 344-346
+-- Lines 359-361
 function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
--- Lines 349-351
+-- Lines 364-366
 function GenericDLCManager:has_trd()
 	return self:is_dlc_unlocked("trd")
 end
 
--- Lines 359-361
+-- Lines 374-376
 function GenericDLCManager:has_tstp()
 	return self:is_dlc_unlocked("tstp")
 end
 
--- Lines 369-371
+-- Lines 384-386
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
 end
 
--- Lines 374-376
+-- Lines 389-391
 function GenericDLCManager:has_wcc_s01()
 	return self:is_dlc_unlocked("wcc_s01")
 end
 
--- Lines 379-381
+-- Lines 394-396
 function GenericDLCManager:has_wcc_s02()
 	return self:is_dlc_unlocked("wcc_s02")
 end
 
--- Lines 384-386
+-- Lines 399-401
 function GenericDLCManager:has_wcs()
 	return self:is_dlc_unlocked("wcs")
 end
 
--- Lines 389-391
+-- Lines 404-406
 function GenericDLCManager:has_xm20()
 	return self:is_dlc_unlocked("xm20")
 end
 
--- Lines 399-401
+-- Lines 414-416
 function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
@@ -310,6 +315,10 @@ function WINDLCManager:init_generated()
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.in31 = {
+		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.in32 = {
 		app_id = "218620",
 		no_install = true
 	}

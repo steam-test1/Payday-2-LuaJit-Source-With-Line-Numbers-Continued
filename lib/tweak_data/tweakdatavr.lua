@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-5586
+-- Lines 4-5685
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -979,7 +979,8 @@ function TweakDataVR:init(tweak_data)
 		},
 		m590 = {
 			position = Vector3(3, 0, 0),
-			rotation = Rotation(-223, -129, 70)
+			rotation = Rotation(-223, -129, 70),
+			weapon_offset = Vector3(0, 16, 8)
 		},
 		boot = {
 			position = Vector3(3, 0, 0),
@@ -4078,6 +4079,17 @@ function TweakDataVR:init(tweak_data)
 				}
 			},
 			finish = {
+				{
+					time = 0,
+					anims = {
+						{
+							anim_group = "reload_exit",
+							to = 0.7,
+							from = 0.2,
+							part = "foregrip"
+						}
+					}
+				},
 				{
 					time = 0,
 					sound = "wp_m590_insert_shell"
@@ -9586,7 +9598,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 5592-5703
+-- Lines 5691-5802
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -9801,7 +9813,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 5707-5767
+-- Lines 5806-5866
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -9881,7 +9893,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 5770-5782
+-- Lines 5869-5881
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -9902,7 +9914,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 5784-5810
+-- Lines 5883-5909
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -9923,14 +9935,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 5812-5816
+-- Lines 5911-5915
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 5818-5830
+-- Lines 5917-5929
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -9948,7 +9960,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 5832-5840
+-- Lines 5931-5939
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -9961,7 +9973,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 5842-5846
+-- Lines 5941-5945
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -9970,7 +9982,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5848-5856
+-- Lines 5947-5955
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -9985,7 +9997,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5858-5865
+-- Lines 5957-5964
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -9998,7 +10010,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5867-5874
+-- Lines 5966-5973
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

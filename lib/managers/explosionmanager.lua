@@ -43,7 +43,7 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_chara
 	end
 end
 
--- Lines 36-218
+-- Lines 37-219
 function ExplosionManager:detect_and_stun(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -238,7 +238,7 @@ function ExplosionManager:detect_and_stun(params)
 	return hit_units, splinters, results
 end
 
--- Lines 222-444
+-- Lines 223-445
 function ExplosionManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -467,7 +467,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines 446-483
+-- Lines 448-485
 function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	for u_key, unit in pairs(units_to_push) do
 		if alive(unit) then
@@ -509,7 +509,7 @@ function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	end
 end
 
--- Lines 485-536
+-- Lines 487-538
 function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -553,13 +553,13 @@ function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir
 	end
 end
 
--- Lines 539-542
+-- Lines 541-544
 function ExplosionManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 544-564
+-- Lines 546-566
 function ExplosionManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -582,13 +582,13 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines 567-571
+-- Lines 569-573
 function ExplosionManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table)
 end
 
--- Lines 573-612
+-- Lines 575-614
 function ExplosionManager:player_feedback(position, normal, range, custom_params)
 	local player = managers.player:player_unit()
 
@@ -653,7 +653,7 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 616-680
+-- Lines 618-682
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
 	local effect_id = nil
@@ -732,7 +732,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	end
 end
 
--- Lines 682-715
+-- Lines 684-717
 function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 

@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-634
+-- Lines 78-662
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -127,36 +127,38 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 	}
 	self.suit_default_gloves = {
 		hitman = "heist_default",
-		peacoat = "saints",
+		gentleman = "heist_default",
 		clown = "heist_clown",
-		scrub = "heist_default",
+		slaughterhouse = "heist_default",
 		jumpsuit = "heat",
 		hiphop = "bonemittens",
 		gunslinger = "heist_default",
-		thug = "heist_default",
 		xmas_tuxedo = "heist_default",
+		t800 = "heist_default",
 		winter_suit = "sneak",
 		hippie = "rainbow_mittens",
-		slaughterhouse = "heist_default",
-		t800 = "heist_default",
-		badsanta = "heist_default",
+		scrub = "heist_default",
 		desperado = "desperado",
-		punk = "punk",
-		cartelboss = "heist_default",
-		candycane = "heist_default",
-		raincoat = "heist_default",
-		mariachi = "mariatchi",
-		leather = "heist_default",
-		gentleman = "heist_default",
-		poolrepair = "heist_default",
-		jail_pd2_clan = "heist_default",
-		traditional = "heist_default",
-		esport = "esport",
 		miami = "heist_default",
-		murky_suit = "murky",
+		candycane = "heist_default",
+		general = "heist_default",
+		mariachi = "mariatchi",
+		poolrepair = "heist_default",
+		traditional = "heist_default",
 		sneak_suit = "sneak",
 		tux = "heist_default",
-		continental = "continental"
+		continental = "continental",
+		peacoat = "saints",
+		thug = "heist_default",
+		badsanta = "heist_default",
+		gangstercoat = "heist_default",
+		leather = "heist_default",
+		punk = "punk",
+		cartelboss = "heist_default",
+		raincoat = "heist_default",
+		jail_pd2_clan = "heist_default",
+		esport = "esport",
+		murky_suit = "murky"
 	}
 	self.gloves.default = {
 		name_id = "bm_gloves_default",
@@ -449,5 +451,23 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 4,
 		unit = "units/pd2_dlc_tstp/characters/tstp_glv_blackdragon/tstp_glv_blackdragon",
 		third_material = "units/pd2_dlc_tstp/characters/tstp_glv_blackdragon/tstp_glv_blackdragon_third"
+	}
+	self.gloves.goldnet = {
+		name_id = "bm_gloves_goldnet",
+		desc_id = "bm_gloves_goldnet_desc",
+		texture_bundle_folder = "in32",
+		global_value = "in32",
+		sort_number = 1,
+		unit = "units/pd2_dlc_in32/characters/in32_glv_goldnet/glv_goldnet",
+		third_material = "units/pd2_dlc_in32/characters/in32_glv_goldnet/glv_goldnet_third"
+	}
+	self.gloves.postmoto = {
+		name_id = "bm_gloves_postmoto",
+		desc_id = "bm_gloves_postmoto_desc",
+		texture_bundle_folder = "in32",
+		global_value = "in32",
+		sort_number = 2,
+		unit = "units/pd2_dlc_in32/characters/in32_glv_postmoto/glv_postmoto",
+		third_material = "units/pd2_dlc_in32/characters/in32_glv_postmoto/glv_postmoto_third"
 	}
 end

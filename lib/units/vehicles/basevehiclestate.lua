@@ -1,11 +1,11 @@
 BaseVehicleState = BaseVehicleState or class()
 
--- Lines 11-13
+-- Lines 4-6
 function BaseVehicleState:init(unit)
 	self._unit = unit
 end
 
--- Lines 17-23
+-- Lines 10-16
 function BaseVehicleState:update(t, dt)
 	self._unit:vehicle_driving():_wake_nearby_dynamics()
 	self._unit:vehicle_driving():_detect_npc_collisions()
@@ -14,15 +14,15 @@ function BaseVehicleState:update(t, dt)
 	self._unit:vehicle_driving():_play_sound_events(t, dt)
 end
 
--- Lines 27-29
+-- Lines 20-22
 function BaseVehicleState:enter(state_data, enter_data)
 end
 
--- Lines 33-35
+-- Lines 26-28
 function BaseVehicleState:exit(state_data)
 end
 
--- Lines 39-68
+-- Lines 32-61
 function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 	local locator_name = locator:name()
 
@@ -53,14 +53,14 @@ function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 	return VehicleDrivingExt.INTERACT_INVALID
 end
 
--- Lines 72-76
+-- Lines 65-69
 function BaseVehicleState:adjust_interactions()
 	if not self._unit:vehicle_driving():is_interaction_allowed() then
 		self:disable_interactions()
 	end
 end
 
--- Lines 80-91
+-- Lines 73-84
 function BaseVehicleState:disable_interactions()
 	if self._unit:damage() and self._unit:damage():has_sequence(VehicleDrivingExt.INTERACT_ENTRY_ENABLED) then
 		self._unit:damage():run_sequence_simple(VehicleDrivingExt.INTERACT_ENTRY_DISABLED)
@@ -75,22 +75,22 @@ function BaseVehicleState:disable_interactions()
 	end
 end
 
--- Lines 95-97
+-- Lines 88-90
 function BaseVehicleState:allow_exit()
 	return true
 end
 
--- Lines 101-103
+-- Lines 94-96
 function BaseVehicleState:is_vulnerable()
 	return false
 end
 
--- Lines 107-109
+-- Lines 100-102
 function BaseVehicleState:stop_vehicle()
 	return false
 end
 
--- Lines 113-122
+-- Lines 106-115
 function BaseVehicleState:create_name_hud()
 	local name_id = self._unit:vehicle_driving()._tweak_data.name_id
 
@@ -103,7 +103,7 @@ function BaseVehicleState:create_name_hud()
 	end
 end
 
--- Lines 126-128
+-- Lines 119-121
 function BaseVehicleState:remove_name_hud()
 	managers.hud:remove_hud_info_by_unit(self._unit)
 end

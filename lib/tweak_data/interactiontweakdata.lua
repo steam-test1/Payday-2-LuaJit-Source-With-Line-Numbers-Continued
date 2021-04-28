@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-7244
+-- Lines 3-7272
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -6694,6 +6694,12 @@ function InteractionTweakData:init(tweak_data)
 		text_id = "hud_int_hold_xm20_mask",
 		action_text_id = "hud_action_xm20_mask",
 		timer = 1,
+		interact_distance = 200
+	}
+	self.chca_flip_table = {
+		text_id = "hud_int_flip_table",
+		action_text_id = "hud_action_flipping_table",
+		timer = 2,
 		interact_distance = 200
 	}
 end
