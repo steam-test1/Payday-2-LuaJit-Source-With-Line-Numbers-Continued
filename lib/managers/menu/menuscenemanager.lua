@@ -3678,7 +3678,7 @@ function MenuSceneManager:spawn_armor(armor_id)
 	self:_spawn_item("units/menu/menu_character/menu_character_test", nil)
 end
 
--- Lines 3665-3673
+-- Lines 3665-3674
 function MenuSceneManager:on_setup_infamy_menu()
 	self:add_one_frame_delayed_clbk(function ()
 		if not _G.IS_VR then
@@ -3687,18 +3687,18 @@ function MenuSceneManager:on_setup_infamy_menu()
 			self._outfit_state = self._character_unit:play_redirect(Idstring("idle_menu"))
 		end
 
+		self:remove_item()
+
 		self.infamy_menu_ready = true
 	end)
 end
 
--- Lines 3675-3682
+-- Lines 3676-3682
 function MenuSceneManager:on_close_infamy_menu()
 	if _G.IS_VR then
 		self:set_character_player_style(managers.blackmarket:equipped_player_style(), managers.blackmarket:get_suit_variation(), self._character_unit)
 		self:set_character_gloves(managers.blackmarket:equipped_glove_id(), self._character_unit)
 	end
-
-	self:remove_item()
 
 	self.infamy_menu_ready = false
 end
