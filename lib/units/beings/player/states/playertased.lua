@@ -6,7 +6,7 @@ function PlayerTased:init(unit)
 	PlayerTased.super.init(self, unit)
 end
 
--- Lines 11-76
+-- Lines 11-60
 function PlayerTased:enter(state_data, enter_data)
 	PlayerTased.super.enter(self, state_data, enter_data)
 	self:_start_action_tased(managers.player:player_timer():time(), state_data.non_lethal_electrocution)
@@ -56,45 +56,12 @@ function PlayerTased:enter(state_data, enter_data)
 	self.tased = true
 	self._state_data = state_data
 
-	if managers.player:has_category_upgrade("player", "taser_malfunction") then
-		local data = managers.player:upgrade_value("player", "taser_malfunction")
-
-		if data then
-			managers.player:register_message(Message.SendTaserMalfunction, "taser_malfunction", function ()
-				self:_on_malfunction_to_taser_event()
-			end)
-			managers.player:add_coroutine("taser_malfunction", PlayerAction.TaserMalfunction, managers.player, data.interval, data.chance_to_trigger)
-		end
-	end
-
-	if managers.player:has_category_upgrade("player", "escape_taser") then
-		local interact_string = managers.localization:text("hud_int_escape_taser", {
-			BTN_INTERACT = managers.localization:btn_macro("interact", false)
-		})
-
-		managers.hud:show_interact({
-			icon = "mugshot_electrified",
-			text = interact_string
-		})
-
-		local target_time = managers.player:upgrade_value("player", "escape_taser", 2)
-
-		managers.player:add_coroutine("escape_tase", PlayerAction.EscapeTase, managers.player, managers.hud, Application:time() + target_time)
-
-		-- Lines 72-72
-		local function clbk()
-			self:give_shock_to_taser_no_damage()
-		end
-
-		managers.player:register_message(Message.EscapeTase, "escape_tase", clbk)
-	end
-
 	CopDamage.register_listener("on_criminal_tased", {
 		"on_criminal_tased"
 	}, callback(self, self, "_on_tased_event"))
 end
 
--- Lines 80-90
+-- Lines 64-74
 function PlayerTased:_enter(enter_data)
 	self._unit:base():set_slot(self._unit, 2)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
@@ -110,7 +77,7 @@ function PlayerTased:_enter(enter_data)
 	end
 end
 
--- Lines 94-129
+-- Lines 78-113
 function PlayerTased:exit(state_data, enter_data)
 	PlayerTased.super.exit(self, state_data, enter_data)
 
@@ -151,17 +118,17 @@ function PlayerTased:exit(state_data, enter_data)
 	CopDamage.unregister_listener("on_criminal_tased")
 end
 
--- Lines 133-135
+-- Lines 117-119
 function PlayerTased:interaction_blocked()
 	return true
 end
 
--- Lines 139-141
+-- Lines 123-125
 function PlayerTased:update(t, dt)
 	PlayerTased.super.update(self, t, dt)
 end
 
--- Lines 147-197
+-- Lines 131-181
 function PlayerTased:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -202,7 +169,7 @@ function PlayerTased:_update_check_actions(t, dt)
 	local new_action = nil
 end
 
--- Lines 201-234
+-- Lines 185-218
 function PlayerTased:_check_action_shock(t, input)
 	if self._next_shock < t then
 		self._num_shocks = self._num_shocks + 1
@@ -242,7 +209,7 @@ function PlayerTased:_check_action_shock(t, input)
 	end
 end
 
--- Lines 238-379
+-- Lines 222-363
 function PlayerTased:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
@@ -388,7 +355,7 @@ function PlayerTased:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines 385-395
+-- Lines 369-379
 function PlayerTased:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) and not alive(self._counter_taser_unit) then
 		if _G.IS_VR then
@@ -401,7 +368,7 @@ function PlayerTased:_check_action_interact(t, input)
 	end
 end
 
--- Lines 399-424
+-- Lines 383-408
 function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, false, true, false)
 	local interact_type, queue_name = nil
@@ -429,7 +396,7 @@ function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	end
 end
 
--- Lines 428-435
+-- Lines 412-419
 function PlayerTased:_start_action_tased(t, non_lethal)
 	self:_interupt_action_running(t)
 	self:_stance_entered()
@@ -439,14 +406,14 @@ function PlayerTased:_start_action_tased(t, non_lethal)
 	managers.hint:show_hint(non_lethal and "hint_been_electrocuted" or "hint_been_tasered")
 end
 
--- Lines 439-442
+-- Lines 423-426
 function PlayerTased:_start_action_counter_tase(t, prime_target)
 	self._counter_taser_unit = prime_target.unit
 
 	self._unit:camera():play_redirect(self:get_animation("tased_counter"))
 end
 
--- Lines 446-473
+-- Lines 430-457
 function PlayerTased:_register_revive_SO()
 	if self._SO_id or not managers.navigation:is_data_ready() then
 		return
@@ -476,14 +443,14 @@ function PlayerTased:_register_revive_SO()
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
 end
 
--- Lines 477-480
+-- Lines 461-464
 function PlayerTased:clbk_exit_to_fatal()
 	self._fatal_delayed_clbk = nil
 
 	managers.player:set_player_state("incapacitated")
 end
 
--- Lines 484-492
+-- Lines 468-476
 function PlayerTased:clbk_exit_to_std()
 	self._recover_delayed_clbk = nil
 
@@ -496,7 +463,7 @@ function PlayerTased:clbk_exit_to_std()
 	end
 end
 
--- Lines 496-509
+-- Lines 480-493
 function PlayerTased:on_tase_ended()
 	self._tase_ended = true
 
@@ -517,14 +484,47 @@ function PlayerTased:on_tase_ended()
 	self._taser_unit = nil
 end
 
--- Lines 513-517
+-- Lines 497-518
 function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	if self._unit == tased_unit then
 		self._taser_unit = taser_unit
+
+		if managers.player:has_category_upgrade("player", "taser_malfunction") then
+			local data = managers.player:upgrade_value("player", "taser_malfunction")
+
+			if data then
+				managers.player:register_message(Message.SendTaserMalfunction, "taser_malfunction", function ()
+					self:_on_malfunction_to_taser_event()
+				end)
+				managers.player:add_coroutine("taser_malfunction", PlayerAction.TaserMalfunction, managers.player, data.interval, data.chance_to_trigger)
+			end
+		end
+
+		if managers.player:has_category_upgrade("player", "escape_taser") then
+			local interact_string = managers.localization:text("hud_int_escape_taser", {
+				BTN_INTERACT = managers.localization:btn_macro("interact", false)
+			})
+
+			managers.hud:show_interact({
+				icon = "mugshot_electrified",
+				text = interact_string
+			})
+
+			local target_time = managers.player:upgrade_value("player", "escape_taser", 2)
+
+			managers.player:add_coroutine("escape_tase", PlayerAction.EscapeTase, managers.player, managers.hud, Application:time() + target_time)
+
+			-- Lines 514-514
+			local function clbk()
+				self:give_shock_to_taser_no_damage()
+			end
+
+			managers.player:register_message(Message.EscapeTase, "escape_tase", clbk)
+		end
 	end
 end
 
--- Lines 521-528
+-- Lines 522-529
 function PlayerTased:give_shock_to_taser()
 	if not alive(self._counter_taser_unit) then
 		return
@@ -535,7 +535,7 @@ function PlayerTased:give_shock_to_taser()
 	self:_give_shock_to_taser(self._counter_taser_unit)
 end
 
--- Lines 530-544
+-- Lines 531-545
 function PlayerTased:_give_shock_to_taser(taser_unit)
 	return
 
@@ -554,7 +554,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	taser_unit:character_damage():damage_melee(action_data)
 end
 
--- Lines 548-566
+-- Lines 549-567
 function PlayerTased:give_shock_to_taser_no_damage()
 	if not alive(self._taser_unit) then
 		return
@@ -576,7 +576,7 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	self._unit:sound():play("tase_counter_attack")
 end
 
--- Lines 569-589
+-- Lines 570-590
 function PlayerTased:_on_malfunction_to_taser_event()
 	if not alive(self._taser_unit) then
 		return

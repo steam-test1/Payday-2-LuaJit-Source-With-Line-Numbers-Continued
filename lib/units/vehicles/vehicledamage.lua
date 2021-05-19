@@ -248,6 +248,11 @@ function VehicleDamage:stun_hit(attack_data)
 	return nil
 end
 
+-- Lines 286-289
+function VehicleDamage:damage_tase(attack_data)
+	return nil
+end
+
 -- Lines 294-345
 function VehicleDamage:damage_explosion(attack_data)
 	if not self._unit:vehicle_driving():is_vulnerable() then

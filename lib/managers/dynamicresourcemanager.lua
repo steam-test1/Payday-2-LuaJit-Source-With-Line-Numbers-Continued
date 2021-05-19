@@ -157,7 +157,7 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 	end
 end
 
--- Lines 157-181
+-- Lines 157-183
 function DynamicResourceManager:unload(resource_type, resource_name, package_name, keep_using)
 	if keep_using then
 		debug_pause("[DynamicResourceManager:unload] keep_using should be false!", resource_type, resource_name, package_name, keep_using)
@@ -186,14 +186,14 @@ function DynamicResourceManager:unload(resource_type, resource_name, package_nam
 	self._dyn_resources[key] = nil
 end
 
--- Lines 185-188
+-- Lines 187-190
 function DynamicResourceManager:has_resource(resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 
 	return self._dyn_resources[key] and true or false
 end
 
--- Lines 193-197
+-- Lines 195-199
 function DynamicResourceManager:is_resource_ready(resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key]
@@ -201,7 +201,7 @@ function DynamicResourceManager:is_resource_ready(resource_type, resource_name, 
 	return entry and entry.ready
 end
 
--- Lines 201-222
+-- Lines 203-224
 function DynamicResourceManager:clbk_resource_loaded(status, resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key] or self._to_unload and self._to_unload[key]
@@ -224,7 +224,7 @@ function DynamicResourceManager:clbk_resource_loaded(status, resource_type, reso
 	end
 end
 
--- Lines 226-233
+-- Lines 228-235
 function DynamicResourceManager:change_material_config(name, unit, synchronous)
 	if synchronous then
 		unit:set_material_config(name, true)
@@ -234,7 +234,7 @@ function DynamicResourceManager:change_material_config(name, unit, synchronous)
 	end
 end
 
--- Lines 237-247
+-- Lines 239-249
 function DynamicResourceManager:on_material_applied(unit)
 	if alive(unit) then
 		if unit:interaction() then
@@ -247,21 +247,21 @@ function DynamicResourceManager:on_material_applied(unit)
 	end
 end
 
--- Lines 251-255
+-- Lines 253-257
 function DynamicResourceManager:_check_file_streamer_status()
 	local nr_tasks = Application:file_streamer_workload()
 
 	self._listener_holder:call(self.listener_events.file_streamer_workload, nr_tasks)
 end
 
--- Lines 259-262
+-- Lines 261-264
 function DynamicResourceManager:is_file_streamer_idle()
 	local nr_tasks = Application:file_streamer_workload()
 
 	return nr_tasks == 0
 end
 
--- Lines 266-279
+-- Lines 268-281
 function DynamicResourceManager:set_file_streaming_chunk_size_mul(mul, sleep_time)
 	mul = mul or self._streaming_settings.chunk_size_mul
 	sleep_time = sleep_time or self._streaming_settings.sleep_time
@@ -277,7 +277,7 @@ function DynamicResourceManager:set_file_streaming_chunk_size_mul(mul, sleep_tim
 	self:_set_file_streamer_settings(self._streaming_settings.chunk_size_kb, sleep_time)
 end
 
--- Lines 283-293
+-- Lines 285-295
 function DynamicResourceManager:_set_file_streamer_settings(chunk_size_kb, sleep_time)
 	self._streaming_settings.chunk_size_kb = chunk_size_kb
 	self._streaming_settings.sleep_time = sleep_time
@@ -286,27 +286,27 @@ function DynamicResourceManager:_set_file_streamer_settings(chunk_size_kb, sleep
 	Application:set_file_streamer_settings(chunk_size_kb_end_value, sleep_time)
 end
 
--- Lines 297-299
+-- Lines 299-301
 function DynamicResourceManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 303-305
+-- Lines 305-307
 function DynamicResourceManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 309-311
+-- Lines 311-313
 function DynamicResourceManager:max_streaming_chunk()
 	return self._max_streaming_chunk_kb
 end
 
--- Lines 315-317
+-- Lines 317-319
 function DynamicResourceManager:clbk_streaming_chunk_size_changed(name, old_value, new_value)
 	self:_set_file_streamer_settings(new_value, self._streaming_settings.sleep_time)
 end
 
--- Lines 321-337
+-- Lines 323-339
 function DynamicResourceManager:preload_units()
 	print("[DynamicResourceManager:preload_units]")
 end

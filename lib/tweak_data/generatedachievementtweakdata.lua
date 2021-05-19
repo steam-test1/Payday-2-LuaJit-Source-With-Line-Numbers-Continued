@@ -1,4 +1,4 @@
--- Lines 2-8558
+-- Lines 2-8634
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -9200,6 +9200,23 @@ function init_auto_generated_achievement_data(tags)
 				tags.tactics.stealth,
 				tags.tactics.timed,
 				tags.contracts.locke
+			}
+		},
+		sawp_1 = {
+			need_unlock_icons = true,
+			icon_id = "Other_H_All_Buzz",
+			progress = true,
+			sort_name = "Other_H_All_Buzz",
+			additional_id = true,
+			unlock_id = true,
+			tags = {
+				tags.progress.generic,
+				tags.difficulty.overkill,
+				tags.unlock.weapon,
+				tags.tactics.loud,
+				tags.tactics.killer,
+				tags.inventory.weapon,
+				tags.inventory.equipment
 			}
 		},
 		skm_1 = {

@@ -1145,6 +1145,10 @@ function PlayerTweakData:_init_new_stances()
 	self:_init_x_m1911()
 	self:_init_vityaz()
 	self:_init_x_vityaz()
+	self:_init_groza()
+	self:_init_pm9()
+	self:_init_x_pm9()
+	self:_init_qbu88()
 	self:_init_shepheard()
 	self:_init_x_shepheard()
 	self:_init_breech()
@@ -3527,7 +3531,133 @@ function PlayerTweakData:_init_pl14()
 	self.stances.pl14.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 4938-4974
+-- Lines 4779-4819
+function PlayerTweakData:_init_qbu88()
+	self.stances.qbu88 = deep_clone(self.stances.default)
+	local pivot_shoulder_translation = Vector3(11.8411, 23.0275, -2.16914)
+	local pivot_shoulder_rotation = Rotation(4.34121e-05, -0.00103616, -0.000334039)
+	local pivot_head_translation = Vector3(10, 20, -3)
+	local pivot_head_rotation = Rotation(0, 0, 1)
+	self.stances.qbu88.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.qbu88.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.qbu88.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -22, 0)
+	self.stances.qbu88.standard.vel_overshot.yaw_neg = 5
+	self.stances.qbu88.standard.vel_overshot.yaw_pos = -5
+	self.stances.qbu88.standard.vel_overshot.pitch_neg = -5
+	self.stances.qbu88.standard.vel_overshot.pitch_pos = 5
+	local pivot_head_translation = Vector3(0, 24, -1)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.qbu88.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.qbu88.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.qbu88.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
+	self.stances.qbu88.steelsight.vel_overshot.yaw_neg = -2
+	self.stances.qbu88.steelsight.vel_overshot.yaw_pos = 2
+	self.stances.qbu88.steelsight.vel_overshot.pitch_neg = 1
+	self.stances.qbu88.steelsight.vel_overshot.pitch_pos = -1
+	local pivot_head_translation = Vector3(9, 19, -4)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.qbu88.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.qbu88.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.qbu88.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -22, 0)
+	self.stances.qbu88.crouched.vel_overshot.yaw_neg = -3
+	self.stances.qbu88.crouched.vel_overshot.yaw_pos = 3
+	self.stances.qbu88.crouched.vel_overshot.pitch_neg = 2
+	self.stances.qbu88.crouched.vel_overshot.pitch_pos = -2
+end
+
+-- Lines 4820-4860
+function PlayerTweakData:_init_groza()
+	self.stances.groza = deep_clone(self.stances.default)
+	local pivot_shoulder_translation = Vector3(13.2306, 18.767, -1.72531)
+	local pivot_shoulder_rotation = Rotation(-1.26267, 0.777322, 0.38795)
+	local pivot_head_translation = Vector3(10, 20, -3)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.groza.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.groza.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.groza.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -22, 0)
+	self.stances.groza.standard.vel_overshot.yaw_neg = 5
+	self.stances.groza.standard.vel_overshot.yaw_pos = -5
+	self.stances.groza.standard.vel_overshot.pitch_neg = -5
+	self.stances.groza.standard.vel_overshot.pitch_pos = 5
+	local pivot_head_translation = Vector3(0, 24, 0)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.groza.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.groza.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.groza.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
+	self.stances.groza.steelsight.vel_overshot.yaw_neg = -2
+	self.stances.groza.steelsight.vel_overshot.yaw_pos = 2
+	self.stances.groza.steelsight.vel_overshot.pitch_neg = 1
+	self.stances.groza.steelsight.vel_overshot.pitch_pos = -1
+	local pivot_head_translation = Vector3(9, 19, -4)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.groza.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.groza.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.groza.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -22, 0)
+	self.stances.groza.crouched.vel_overshot.yaw_neg = -3
+	self.stances.groza.crouched.vel_overshot.yaw_pos = 3
+	self.stances.groza.crouched.vel_overshot.pitch_neg = 2
+	self.stances.groza.crouched.vel_overshot.pitch_pos = -2
+end
+
+-- Lines 4862-4899
+function PlayerTweakData:_init_pm9()
+	self.stances.pm9 = deep_clone(self.stances.default)
+	local pivot_shoulder_translation = Vector3(9.33471, 13.913, -0.0159556)
+	local pivot_shoulder_rotation = Rotation(0.001265, 0.00210433, -0.000365091)
+	local pivot_head_translation = Vector3(7, 16, 1.5)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.pm9.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.pm9.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.pm9.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -40, 0)
+	self.stances.pm9.standard.vel_overshot.yaw_neg = 9
+	self.stances.pm9.standard.vel_overshot.yaw_pos = -9
+	self.stances.pm9.standard.vel_overshot.pitch_neg = -9
+	self.stances.pm9.standard.vel_overshot.pitch_pos = 9
+	local pivot_head_translation = Vector3(-1.89, 16, 4.5)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.pm9.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.pm9.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.pm9.steelsight.zoom_fov = false
+	self.stances.pm9.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
+	self.stances.pm9.steelsight.vel_overshot.yaw_neg = 15
+	self.stances.pm9.steelsight.vel_overshot.yaw_pos = -15
+	self.stances.pm9.steelsight.vel_overshot.pitch_neg = -15
+	self.stances.pm9.steelsight.vel_overshot.pitch_pos = 15
+	local pivot_head_translation = Vector3(6, 15, 0)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.pm9.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.pm9.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.pm9.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -40, 0)
+end
+
+-- Lines 4901-4936
+function PlayerTweakData:_init_x_pm9()
+	self.stances.x_pm9 = deep_clone(self.stances.default)
+	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
+	local pivot_shoulder_rotation = Rotation(-7.3371e-08, -8.32429e-06, -1.70755e-06)
+	local pivot_head_translation = Vector3(10.95, 28, -4)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.x_pm9.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.x_pm9.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.x_pm9.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -86, 0)
+	local pivot_head_translation = Vector3(10.95, 32, -3)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.x_pm9.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.x_pm9.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.x_pm9.steelsight.zoom_fov = false
+	self.stances.x_pm9.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
+	self.stances.x_pm9.steelsight.vel_overshot.yaw_neg = 5
+	self.stances.x_pm9.steelsight.vel_overshot.yaw_pos = -5
+	self.stances.x_pm9.steelsight.vel_overshot.pitch_neg = -12
+	self.stances.x_pm9.steelsight.vel_overshot.pitch_pos = 12
+	local pivot_head_translation = Vector3(10.95, 28, -5)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+	self.stances.x_pm9.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.x_pm9.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.x_pm9.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
+end
+
+-- Lines 4940-4976
 function PlayerTweakData:_init_m1911()
 	self.stances.m1911 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.44347, 40.2309, -5.37017)
@@ -3554,7 +3684,7 @@ function PlayerTweakData:_init_m1911()
 	self.stances.m1911.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 4977-5012
+-- Lines 4979-5014
 function PlayerTweakData:_init_x_m1911()
 	self.stances.x_m1911 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -3581,7 +3711,7 @@ function PlayerTweakData:_init_x_m1911()
 	self.stances.x_m1911.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 5014-5051
+-- Lines 5016-5053
 function PlayerTweakData:_init_vityaz()
 	self.stances.vityaz = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.6777, 19.971, -3.11304)
@@ -3611,7 +3741,7 @@ function PlayerTweakData:_init_vityaz()
 	self.stances.vityaz.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 5053-5088
+-- Lines 5055-5090
 function PlayerTweakData:_init_x_vityaz()
 	self.stances.x_vityaz = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -3638,7 +3768,7 @@ function PlayerTweakData:_init_x_vityaz()
 	self.stances.x_vityaz.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 5091-5127
+-- Lines 5093-5129
 function PlayerTweakData:_init_m590()
 	self.stances.m590 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.6371, 13.6152, -4.94151)
@@ -3668,7 +3798,7 @@ function PlayerTweakData:_init_m590()
 	self.stances.m590.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 5132-5167
+-- Lines 5134-5169
 function PlayerTweakData:_init_x_mp5()
 	self.stances.x_mp5 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -3695,7 +3825,7 @@ function PlayerTweakData:_init_x_mp5()
 	self.stances.x_mp5.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 5169-5204
+-- Lines 5171-5206
 function PlayerTweakData:_init_x_akmsu()
 	self.stances.x_akmsu = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -3722,7 +3852,7 @@ function PlayerTweakData:_init_x_akmsu()
 	self.stances.x_akmsu.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 5208-5243
+-- Lines 5210-5245
 function PlayerTweakData:_init_tecci()
 	self.stances.tecci = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.2307, 11.2773, -3.55915)
@@ -3751,7 +3881,7 @@ function PlayerTweakData:_init_tecci()
 	self.stances.tecci.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5247-5282
+-- Lines 5249-5284
 function PlayerTweakData:_init_hajk()
 	self.stances.hajk = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(9.18603, 10.1026, -1.49307)
@@ -3780,7 +3910,7 @@ function PlayerTweakData:_init_hajk()
 	self.stances.hajk.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5286-5321
+-- Lines 5288-5323
 function PlayerTweakData:_init_boot()
 	self.stances.boot = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(9.33495, 21.5547, -4.86749)
@@ -3809,7 +3939,7 @@ function PlayerTweakData:_init_boot()
 	self.stances.boot.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5325-5360
+-- Lines 5327-5362
 function PlayerTweakData:_init_packrat()
 	self.stances.packrat = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.43619, 40.2227, -6.04893)
@@ -3838,7 +3968,7 @@ function PlayerTweakData:_init_packrat()
 	self.stances.packrat.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5361-5396
+-- Lines 5363-5398
 function PlayerTweakData:_init_schakal()
 	self.stances.schakal = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(7.87628, 9.54151, -2.2033)
@@ -3867,7 +3997,7 @@ function PlayerTweakData:_init_schakal()
 	self.stances.schakal.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5397-5470
+-- Lines 5399-5472
 function PlayerTweakData:_init_desertfox()
 	self.stances.desertfox = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(7.4322, 8.2886, -4.55909)
@@ -3895,7 +4025,7 @@ function PlayerTweakData:_init_desertfox()
 	self.stances.desertfox.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.desertfox.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 
-	-- Lines 5433-5468
+	-- Lines 5435-5470
 	function PlayerTweakData:_init_x_packrat()
 		self.stances.x_packrat = deep_clone(self.stances.default)
 		local pivot_shoulder_translation = Vector3(11.4939, 42.8789, -1.11447)
@@ -3923,7 +4053,7 @@ function PlayerTweakData:_init_desertfox()
 	end
 end
 
--- Lines 5475-5511
+-- Lines 5477-5513
 function PlayerTweakData:_init_rota()
 	self.stances.rota = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.4444, 18.1551, -2.51491)
@@ -3953,7 +4083,7 @@ function PlayerTweakData:_init_rota()
 	self.stances.rota.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 5517-5552
+-- Lines 5519-5554
 function PlayerTweakData:_init_arbiter()
 	self.stances.arbiter = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(12.6007, 11.9289, 1.92507)
@@ -3983,7 +4113,7 @@ function PlayerTweakData:_init_arbiter()
 	self.stances.arbiter.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 5558-5593
+-- Lines 5560-5595
 function PlayerTweakData:_init_contraband()
 	self.stances.contraband = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.5287, 22.9343, -2.3085)
@@ -4013,7 +4143,7 @@ function PlayerTweakData:_init_contraband()
 	self.stances.contraband.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 5599-5638
+-- Lines 5601-5640
 function PlayerTweakData:_init_ray()
 	self.stances.ray = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(2.48815, 7.60753, -5.20907)
@@ -4047,7 +4177,7 @@ function PlayerTweakData:_init_ray()
 	self.stances.ray.crouched.vel_overshot.pitch_pos = -5
 end
 
--- Lines 5643-5685
+-- Lines 5645-5687
 function PlayerTweakData:_init_tti()
 	self.stances.tti = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(9.36916, 15.8528, -0.934953)
@@ -4082,7 +4212,7 @@ function PlayerTweakData:_init_tti()
 	self.stances.tti.crouched.vel_overshot.pitch_pos = -8
 end
 
--- Lines 5690-5732
+-- Lines 5692-5734
 function PlayerTweakData:_init_siltstone()
 	self.stances.siltstone = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(9.42981, 34.8465, -3.24468)
@@ -4117,7 +4247,7 @@ function PlayerTweakData:_init_siltstone()
 	self.stances.siltstone.crouched.vel_overshot.pitch_pos = -8
 end
 
--- Lines 5736-5782
+-- Lines 5738-5784
 function PlayerTweakData:_init_flint()
 	self.stances.flint = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.2469, 16.6957, -4.38158)
@@ -4151,7 +4281,7 @@ function PlayerTweakData:_init_flint()
 	self.stances.flint.steelsight.vel_overshot.pitch_pos = -3
 end
 
--- Lines 5785-5825
+-- Lines 5787-5827
 function PlayerTweakData:_init_coal()
 	self.stances.coal = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.6275, 30.2986, -3.54447)
@@ -4185,7 +4315,7 @@ function PlayerTweakData:_init_coal()
 	self.stances.coal.crouched.vel_overshot.pitch_pos = -5
 end
 
--- Lines 5830-5864
+-- Lines 5832-5866
 function PlayerTweakData:_init_lemming()
 	self.stances.lemming = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.44788, 38.6251, -5.22182)
@@ -4214,7 +4344,7 @@ function PlayerTweakData:_init_lemming()
 	self.stances.lemming.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5870-5904
+-- Lines 5872-5906
 function PlayerTweakData:_init_chinchilla()
 	self.stances.chinchilla = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.43099, 44.68, -2.92959)
@@ -4243,7 +4373,7 @@ function PlayerTweakData:_init_chinchilla()
 	self.stances.chinchilla.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5907-5941
+-- Lines 5909-5943
 function PlayerTweakData:_init_x_chinchilla()
 	self.stances.x_chinchilla = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(9.0014, 44.6795, -2.91751)
@@ -4272,7 +4402,7 @@ function PlayerTweakData:_init_x_chinchilla()
 	self.stances.x_chinchilla.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5945-5979
+-- Lines 5947-5981
 function PlayerTweakData:_init_model3()
 	self.stances.model3 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.43099, 44.68, -2.92959)
@@ -4301,7 +4431,7 @@ function PlayerTweakData:_init_model3()
 	self.stances.model3.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 5982-6016
+-- Lines 5984-6018
 function PlayerTweakData:_init_x_model3()
 	self.stances.x_model3 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(9.0014, 44.6795, -2.91751)
@@ -4330,7 +4460,7 @@ function PlayerTweakData:_init_x_model3()
 	self.stances.x_model3.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 6020-6054
+-- Lines 6022-6056
 function PlayerTweakData:_init_shepheard()
 	self.stances.shepheard = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.7119, 20.9514, -1.5095)
@@ -4359,7 +4489,7 @@ function PlayerTweakData:_init_shepheard()
 	self.stances.shepheard.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 6057-6092
+-- Lines 6059-6094
 function PlayerTweakData:_init_x_shepheard()
 	self.stances.x_shepheard = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.8081, 23.3412, 1.673)
@@ -4386,7 +4516,7 @@ function PlayerTweakData:_init_x_shepheard()
 	self.stances.x_shepheard.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6097-6132
+-- Lines 6099-6134
 function PlayerTweakData:_init_breech()
 	self.stances.breech = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.14622, 27.4494, -3.81421)
@@ -4415,7 +4545,7 @@ function PlayerTweakData:_init_breech()
 	self.stances.breech.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 6134-6174
+-- Lines 6136-6176
 function PlayerTweakData:_init_ching()
 	self.stances.ching = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.895, 16.2585, -2.67599)
@@ -4449,7 +4579,7 @@ function PlayerTweakData:_init_ching()
 	self.stances.ching.crouched.vel_overshot.pitch_pos = -2
 end
 
--- Lines 6176-6212
+-- Lines 6178-6214
 function PlayerTweakData:_init_erma()
 	self.stances.erma = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.49394, 27.436, -2.76126)
@@ -4479,7 +4609,7 @@ function PlayerTweakData:_init_erma()
 	self.stances.erma.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 6217-6257
+-- Lines 6219-6259
 function PlayerTweakData:_init_ecp()
 	self.stances.ecp = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(3.56467, 19.1489, -4.35772)
@@ -4513,7 +4643,7 @@ function PlayerTweakData:_init_ecp()
 	self.stances.ecp.crouched.vel_overshot.pitch_pos = -2
 end
 
--- Lines 6262-6301
+-- Lines 6264-6303
 function PlayerTweakData:_init_shrew()
 	self.stances.shrew = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.45918, 40.2496, -4.0125)
@@ -4545,7 +4675,7 @@ function PlayerTweakData:_init_shrew()
 	self.stances.shrew.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 6303-6338
+-- Lines 6305-6340
 function PlayerTweakData:_init_x_shrew()
 	self.stances.x_shrew = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.4139, 42.291, -2.06512)
@@ -4572,7 +4702,7 @@ function PlayerTweakData:_init_x_shrew()
 	self.stances.x_shrew.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6343-6383
+-- Lines 6345-6385
 function PlayerTweakData:_init_basset()
 	self.stances.basset = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.8411, 23.0275, -2.16914)
@@ -4606,7 +4736,7 @@ function PlayerTweakData:_init_basset()
 	self.stances.basset.crouched.vel_overshot.pitch_pos = -2
 end
 
--- Lines 6385-6428
+-- Lines 6387-6430
 function PlayerTweakData:_init_x_basset()
 	self.stances.x_basset = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.582, 24.5843, -11.4445)
@@ -4641,7 +4771,7 @@ function PlayerTweakData:_init_x_basset()
 	self.stances.x_basset.crouched.vel_overshot.pitch_pos = -12
 end
 
--- Lines 6433-6474
+-- Lines 6435-6476
 function PlayerTweakData:_init_corgi()
 	self.stances.corgi = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.8414, 20.7689, -4.23194)
@@ -4675,7 +4805,7 @@ function PlayerTweakData:_init_corgi()
 	self.stances.corgi.crouched.vel_overshot.pitch_pos = -2
 end
 
--- Lines 6479-6520
+-- Lines 6481-6522
 function PlayerTweakData:_init_slap()
 	self.stances.slap = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(6.62696, 28.6192, -5.18681)
@@ -4709,7 +4839,7 @@ function PlayerTweakData:_init_slap()
 	self.stances.slap.crouched.vel_overshot.pitch_pos = -21
 end
 
--- Lines 6530-6565
+-- Lines 6532-6567
 function PlayerTweakData:_init_x_coal()
 	self.stances.x_coal = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(21.7292, 50.4726, -2.2322)
@@ -4736,7 +4866,7 @@ function PlayerTweakData:_init_x_coal()
 	self.stances.x_coal.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6568-6603
+-- Lines 6570-6605
 function PlayerTweakData:_init_x_baka()
 	self.stances.x_baka = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4763,7 +4893,7 @@ function PlayerTweakData:_init_x_baka()
 	self.stances.x_baka.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6606-6641
+-- Lines 6608-6643
 function PlayerTweakData:_init_x_cobray()
 	self.stances.x_cobray = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4790,7 +4920,7 @@ function PlayerTweakData:_init_x_cobray()
 	self.stances.x_cobray.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6644-6679
+-- Lines 6646-6681
 function PlayerTweakData:_init_x_erma()
 	self.stances.x_erma = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4817,7 +4947,7 @@ function PlayerTweakData:_init_x_erma()
 	self.stances.x_erma.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6682-6717
+-- Lines 6684-6719
 function PlayerTweakData:_init_x_hajk()
 	self.stances.x_hajk = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4844,7 +4974,7 @@ function PlayerTweakData:_init_x_hajk()
 	self.stances.x_hajk.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6720-6755
+-- Lines 6722-6757
 function PlayerTweakData:_init_x_m45()
 	self.stances.x_m45 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4871,7 +5001,7 @@ function PlayerTweakData:_init_x_m45()
 	self.stances.x_m45.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6758-6793
+-- Lines 6760-6795
 function PlayerTweakData:_init_x_m1928()
 	self.stances.x_m1928 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4898,7 +5028,7 @@ function PlayerTweakData:_init_x_m1928()
 	self.stances.x_m1928.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6796-6831
+-- Lines 6798-6833
 function PlayerTweakData:_init_x_mac10()
 	self.stances.x_mac10 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4925,7 +5055,7 @@ function PlayerTweakData:_init_x_mac10()
 	self.stances.x_mac10.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6834-6869
+-- Lines 6836-6871
 function PlayerTweakData:_init_x_mp7()
 	self.stances.x_mp7 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4952,7 +5082,7 @@ function PlayerTweakData:_init_x_mp7()
 	self.stances.x_mp7.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6872-6907
+-- Lines 6874-6909
 function PlayerTweakData:_init_x_mp9()
 	self.stances.x_mp9 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -4979,7 +5109,7 @@ function PlayerTweakData:_init_x_mp9()
 	self.stances.x_mp9.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6910-6945
+-- Lines 6912-6947
 function PlayerTweakData:_init_x_olympic()
 	self.stances.x_olympic = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5006,7 +5136,7 @@ function PlayerTweakData:_init_x_olympic()
 	self.stances.x_olympic.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6948-6983
+-- Lines 6950-6985
 function PlayerTweakData:_init_x_p90()
 	self.stances.x_p90 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(21.7292, 50.4726, -2.2322)
@@ -5033,7 +5163,7 @@ function PlayerTweakData:_init_x_p90()
 	self.stances.x_p90.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 6986-7021
+-- Lines 6988-7023
 function PlayerTweakData:_init_x_polymer()
 	self.stances.x_polymer = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5060,7 +5190,7 @@ function PlayerTweakData:_init_x_polymer()
 	self.stances.x_polymer.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7024-7059
+-- Lines 7026-7061
 function PlayerTweakData:_init_x_schakal()
 	self.stances.x_schakal = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5087,7 +5217,7 @@ function PlayerTweakData:_init_x_schakal()
 	self.stances.x_schakal.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7062-7097
+-- Lines 7064-7099
 function PlayerTweakData:_init_x_scorpion()
 	self.stances.x_scorpion = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5114,7 +5244,7 @@ function PlayerTweakData:_init_x_scorpion()
 	self.stances.x_scorpion.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7100-7135
+-- Lines 7102-7137
 function PlayerTweakData:_init_x_sterling()
 	self.stances.x_sterling = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(21.7292, 50.4726, -2.2322)
@@ -5141,7 +5271,7 @@ function PlayerTweakData:_init_x_sterling()
 	self.stances.x_sterling.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7138-7173
+-- Lines 7140-7175
 function PlayerTweakData:_init_x_tec9()
 	self.stances.x_tec9 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5168,7 +5298,7 @@ function PlayerTweakData:_init_x_tec9()
 	self.stances.x_tec9.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7176-7211
+-- Lines 7178-7213
 function PlayerTweakData:_init_x_uzi()
 	self.stances.x_uzi = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5195,7 +5325,7 @@ function PlayerTweakData:_init_x_uzi()
 	self.stances.x_uzi.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7217-7252
+-- Lines 7219-7254
 function PlayerTweakData:_init_x_2006m()
 	self.stances.x_2006m = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5222,7 +5352,7 @@ function PlayerTweakData:_init_x_2006m()
 	self.stances.x_2006m.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7256-7291
+-- Lines 7258-7293
 function PlayerTweakData:_init_x_breech()
 	self.stances.x_breech = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5249,7 +5379,7 @@ function PlayerTweakData:_init_x_breech()
 	self.stances.x_breech.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7294-7329
+-- Lines 7296-7331
 function PlayerTweakData:_init_x_c96()
 	self.stances.x_c96 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5276,7 +5406,7 @@ function PlayerTweakData:_init_x_c96()
 	self.stances.x_c96.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7332-7367
+-- Lines 7334-7369
 function PlayerTweakData:_init_x_g18c()
 	self.stances.x_g18c = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5303,7 +5433,7 @@ function PlayerTweakData:_init_x_g18c()
 	self.stances.x_g18c.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7370-7405
+-- Lines 7372-7407
 function PlayerTweakData:_init_x_hs2000()
 	self.stances.x_hs2000 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5330,7 +5460,7 @@ function PlayerTweakData:_init_x_hs2000()
 	self.stances.x_hs2000.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7409-7444
+-- Lines 7411-7446
 function PlayerTweakData:_init_x_lemming()
 	self.stances.x_lemming = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5357,7 +5487,7 @@ function PlayerTweakData:_init_x_lemming()
 	self.stances.x_lemming.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7448-7483
+-- Lines 7450-7485
 function PlayerTweakData:_init_x_p226()
 	self.stances.x_p226 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5384,7 +5514,7 @@ function PlayerTweakData:_init_x_p226()
 	self.stances.x_p226.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7488-7523
+-- Lines 7490-7525
 function PlayerTweakData:_init_x_peacemaker()
 	self.stances.x_peacemaker = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5411,7 +5541,7 @@ function PlayerTweakData:_init_x_peacemaker()
 	self.stances.x_peacemaker.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7526-7561
+-- Lines 7528-7563
 function PlayerTweakData:_init_x_pl14()
 	self.stances.x_pl14 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5438,7 +5568,7 @@ function PlayerTweakData:_init_x_pl14()
 	self.stances.x_pl14.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7564-7599
+-- Lines 7566-7601
 function PlayerTweakData:_init_x_ppk()
 	self.stances.x_ppk = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5465,7 +5595,7 @@ function PlayerTweakData:_init_x_ppk()
 	self.stances.x_ppk.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7602-7637
+-- Lines 7604-7639
 function PlayerTweakData:_init_x_rage()
 	self.stances.x_rage = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5492,7 +5622,7 @@ function PlayerTweakData:_init_x_rage()
 	self.stances.x_rage.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7640-7675
+-- Lines 7642-7677
 function PlayerTweakData:_init_x_sparrow()
 	self.stances.x_sparrow = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5519,7 +5649,7 @@ function PlayerTweakData:_init_x_sparrow()
 	self.stances.x_sparrow.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7678-7713
+-- Lines 7680-7715
 function PlayerTweakData:_init_x_judge()
 	self.stances.x_judge = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5546,7 +5676,7 @@ function PlayerTweakData:_init_x_judge()
 	self.stances.x_judge.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7716-7751
+-- Lines 7718-7753
 function PlayerTweakData:_init_x_rota()
 	self.stances.x_rota = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5573,7 +5703,7 @@ function PlayerTweakData:_init_x_rota()
 	self.stances.x_rota.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 7754-7789
+-- Lines 7756-7791
 function PlayerTweakData:_init_shuno()
 	self.stances.shuno = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(7.51824, 28.414, -10.4346)
@@ -5603,7 +5733,7 @@ function PlayerTweakData:_init_shuno()
 	self.stances.shuno.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -40, 0)
 end
 
--- Lines 7794-7824
+-- Lines 7796-7826
 function PlayerTweakData:_init_system()
 	self.stances.system = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.3456, 14.9643, -6.50593)
@@ -5629,7 +5759,7 @@ function PlayerTweakData:_init_system()
 	self.stances.system.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 7830-7860
+-- Lines 7832-7862
 function PlayerTweakData:_init_komodo()
 	self.stances.komodo = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.0169, 20.9827, -4.40513)
@@ -5655,7 +5785,7 @@ function PlayerTweakData:_init_komodo()
 	self.stances.komodo.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -50, 0)
 end
 
--- Lines 7865-7902
+-- Lines 7867-7904
 function PlayerTweakData:_init_elastic()
 	self.stances.elastic = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(15.328, 54.4645, -10.5711)
@@ -5685,7 +5815,7 @@ function PlayerTweakData:_init_elastic()
 	self.stances.elastic.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -50, 0)
 end
 
--- Lines 7906-7939
+-- Lines 7908-7941
 function PlayerTweakData:_init_legacy()
 	self.stances.legacy = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.43673, 36.8199, -6.54269)
@@ -5714,7 +5844,7 @@ function PlayerTweakData:_init_legacy()
 	self.stances.legacy.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -50, 0)
 end
 
--- Lines 7943-7978
+-- Lines 7945-7980
 function PlayerTweakData:_init_x_legacy()
 	self.stances.x_legacy = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.1326, 41.1752, -3.20809)
@@ -5741,7 +5871,7 @@ function PlayerTweakData:_init_x_legacy()
 	self.stances.x_legacy.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -56, 0)
 end
 
--- Lines 7982-8019
+-- Lines 7984-8021
 function PlayerTweakData:_init_coach()
 	self.stances.coach = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.7495, 27.138, -6.31249)
@@ -5771,7 +5901,7 @@ function PlayerTweakData:_init_coach()
 	self.stances.coach.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
 end
 
--- Lines 8024-8063
+-- Lines 8026-8065
 function PlayerTweakData:_init_beer()
 	self.stances.beer = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.66726, 32.1883, -2.86906)
@@ -5803,7 +5933,7 @@ function PlayerTweakData:_init_beer()
 	self.stances.beer.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 8067-8102
+-- Lines 8069-8104
 function PlayerTweakData:_init_x_beer()
 	self.stances.x_beer = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.3477, 43.0448, -2.16278)
@@ -5830,7 +5960,7 @@ function PlayerTweakData:_init_x_beer()
 	self.stances.x_beer.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 8105-8144
+-- Lines 8107-8146
 function PlayerTweakData:_init_czech()
 	self.stances.czech = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.66723, 30.1231, -3.12016)
@@ -5862,7 +5992,7 @@ function PlayerTweakData:_init_czech()
 	self.stances.czech.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 8148-8183
+-- Lines 8150-8185
 function PlayerTweakData:_init_x_czech()
 	self.stances.x_czech = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.4072, 41.148, -2.49424)
@@ -5889,7 +6019,7 @@ function PlayerTweakData:_init_x_czech()
 	self.stances.x_czech.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 8186-8225
+-- Lines 8188-8227
 function PlayerTweakData:_init_stech()
 	self.stances.stech = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.46191, 38.5443, -3.96121)
@@ -5921,7 +6051,7 @@ function PlayerTweakData:_init_stech()
 	self.stances.stech.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
 end
 
--- Lines 8229-8264
+-- Lines 8231-8266
 function PlayerTweakData:_init_x_stech()
 	self.stances.x_stech = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -5948,7 +6078,7 @@ function PlayerTweakData:_init_x_stech()
 	self.stances.x_stech.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 8269-8302
+-- Lines 8271-8304
 function PlayerTweakData:_init_holt()
 	self.stances.holt = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.43514, 38.6107, -6.42505)
@@ -5977,7 +6107,7 @@ function PlayerTweakData:_init_holt()
 	self.stances.holt.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -20, 0)
 end
 
--- Lines 8306-8341
+-- Lines 8308-8343
 function PlayerTweakData:_init_x_holt()
 	self.stances.x_holt = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.9257, 47.3309, -0.659333)
@@ -6004,7 +6134,7 @@ function PlayerTweakData:_init_x_holt()
 	self.stances.x_holt.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -36, 0)
 end
 
--- Lines 8343-8399
+-- Lines 8345-8401
 function PlayerTweakData:_init_m60()
 	self.stances.m60 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(10.7056, 4.38842, -0.747177)
@@ -6052,7 +6182,7 @@ function PlayerTweakData:_init_m60()
 	self.stances.m60.bipod.shakers.breathing.amplitude = 0
 end
 
--- Lines 8401-8437
+-- Lines 8403-8439
 function PlayerTweakData:_init_r700()
 	self.stances.r700 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(7.96548, 39.0752, -3.76283)

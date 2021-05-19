@@ -811,7 +811,7 @@ function Telemetry:send_on_heist_start()
 	end
 
 	if not CrimeSpreeManager:_is_host() then
-		return
+		-- Nothing
 	end
 
 	local player_count = 0
@@ -837,7 +837,7 @@ function Telemetry:send_on_heist_end(end_reason)
 	end
 
 	if not CrimeSpreeManager:_is_host() then
-		return
+		-- Nothing
 	end
 
 	local player_count = 0

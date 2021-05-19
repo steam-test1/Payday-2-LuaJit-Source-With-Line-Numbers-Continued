@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2207
+-- Lines 5-2234
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1684,6 +1684,22 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 300,
 		category = "dlc"
 	}
+	self.global_values.sawp_grenade = {
+		name_id = "bm_global_value_sawp",
+		desc_id = "menu_l_global_value_sawp",
+		unlock_id = "bm_wpn_gre_electric_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = false,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 508,
+		category = "dlc"
+	}
 
 	if SystemInfo:platform() == Idstring("PS3") then
 		self.global_values.sweettooth = {
@@ -1776,7 +1792,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2209-2214
+-- Lines 2236-2241
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4638
+-- Lines 10-4667
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8254,5 +8254,25 @@ function DLCTweakData:init(tweak_data)
 	self.ach_gsu_01.content.loot_drops = {}
 	self.ach_gsu_01.content.upgrades = {
 		"spoon_gold"
+	}
+	self.sawp_starter_pack = {
+		free = true,
+		content = {}
+	}
+	self.sawp_starter_pack.content.loot_global_value = "normal"
+	self.sawp_starter_pack.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "cable_guy"
+		}
+	}
+	self.sawp_grenade = {
+		dlc = "has_sawp_dlc_or_achievement",
+		achievement_id = "sawp_1",
+		content = {}
+	}
+	self.sawp_grenade.content.loot_drops = {}
+	self.sawp_grenade.content.upgrades = {
+		"wpn_gre_electric"
 	}
 end

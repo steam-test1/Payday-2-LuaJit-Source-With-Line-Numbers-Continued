@@ -191,6 +191,13 @@ function SentryGunDamage:stun_hit(attack_data)
 	end
 end
 
+-- Lines 205-209
+function SentryGunDamage:damage_tase(attack_data)
+	if self._dead or self._invulnerable then
+		return
+	end
+end
+
 -- Lines 214-270
 function SentryGunDamage:damage_fire(attack_data)
 	if self._dead or self._invulnerable or Network:is_client() and self._ignore_client_damage or attack_data.variant == "stun" or not tweak_data.weapon[self._unit:base():get_name_id()].FIRE_DMG_MUL then

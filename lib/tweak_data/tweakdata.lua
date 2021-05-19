@@ -390,7 +390,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 416-2514
+-- Lines 416-2564
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -2300,6 +2300,42 @@ Play the full version soon to get your full PAYDAY!]],
 		launcher_m203 = {
 			explosion = false,
 			fire = false
+		},
+		wpn_gre_electric = {
+			explosion = false,
+			tase = false
+		},
+		launcher_electric = {
+			explosion = false,
+			tase = false
+		},
+		launcher_electric_m32 = {
+			explosion = false,
+			tase = false
+		},
+		launcher_electric_china = {
+			explosion = false,
+			tase = false
+		},
+		launcher_electric_slap = {
+			explosion = false,
+			tase = false
+		},
+		launcher_electric_arbiter = {
+			explosion = false,
+			tase = false
+		},
+		underbarrel_electric = {
+			explosion = false,
+			tase = false
+		},
+		underbarrel_electric_groza = {
+			explosion = false,
+			tase = false
+		},
+		underbarrel_m203_groza = {
+			explosion = false,
+			tase = false
 		}
 	}
 	self.projectiles = {
@@ -2655,6 +2691,45 @@ Play the full version soon to get your full PAYDAY!]],
 	self.projectiles.elastic_arrow_exp.damage = 140
 	self.projectiles.elastic_arrow_exp.bullet_class = "InstantExplosiveBulletBase"
 	self.projectiles.elastic_arrow_exp.remove_on_impact = true
+	self.projectiles.wpn_gre_electric = {
+		damage = 60,
+		curve_pow = 3.5,
+		range = 1000,
+		name_id = "bm_electric_grenade",
+		sound_event = "grenade_electric_explode"
+	}
+	self.projectiles.launcher_electric = deep_clone(self.projectiles.launcher_frag)
+	self.projectiles.launcher_electric.launch_speed = 1250
+	self.projectiles.launcher_electric.projectile_trail = true
+	self.projectiles.launcher_electric.damage = 80
+	self.projectiles.launcher_electric.player_damage = 0
+	self.projectiles.launcher_electric.curve_pow = 2.5
+	self.projectiles.launcher_electric.range = 800
+	self.projectiles.launcher_electric.sound_event = "gl_electric_explode"
+	self.projectiles.launcher_electric_m32 = deep_clone(self.projectiles.launcher_electric)
+	self.projectiles.launcher_electric_m32.damage = 90
+	self.projectiles.launcher_electric_m32.sound_event = "gl_electric_explode"
+	self.projectiles.launcher_electric_china = deep_clone(self.projectiles.launcher_electric)
+	self.projectiles.launcher_electric_china.damage = 56
+	self.projectiles.launcher_electric_china.sound_event = "gl_electric_explode"
+	self.projectiles.launcher_electric_slap = deep_clone(self.projectiles.launcher_electric)
+	self.projectiles.launcher_electric_slap.damage = 90
+	self.projectiles.launcher_electric_slap.sound_event = "gl_electric_explode"
+	self.projectiles.launcher_electric_arbiter = deep_clone(self.projectiles.launcher_electric)
+	self.projectiles.launcher_electric_arbiter.launch_speed = 7000
+	self.projectiles.launcher_electric_arbiter.damage = 30
+	self.projectiles.launcher_electric_arbiter.sound_event = "gl_electric_explode"
+	self.projectiles.underbarrel_electric = deep_clone(self.projectiles.launcher_frag)
+	self.projectiles.underbarrel_electric.launch_speed = 1250
+	self.projectiles.underbarrel_electric.projectile_trail = true
+	self.projectiles.underbarrel_electric.damage = 80
+	self.projectiles.underbarrel_electric.player_damage = 0
+	self.projectiles.underbarrel_electric.curve_pow = 2.5
+	self.projectiles.underbarrel_electric.range = 800
+	self.projectiles.underbarrel_electric.sound_event = "gl_electric_explode"
+	self.projectiles.underbarrel_electric_groza = deep_clone(self.projectiles.underbarrel_electric)
+	self.projectiles.underbarrel_electric_groza.sound_event = "gl_electric_explode"
+	self.projectiles.underbarrel_m203_groza = deep_clone(self.projectiles.launcher_m203)
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
@@ -2666,6 +2741,12 @@ Play the full version soon to get your full PAYDAY!]],
 			dot_damage = 25,
 			dot_length = 6,
 			hurt_animation_chance = 1
+		}
+	}
+	self.tase_data = {
+		light = {},
+		heavy = {
+			duration = 3
 		}
 	}
 	self.quickplay = {
@@ -2738,7 +2819,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2518-2534
+-- Lines 2568-2584
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2756,7 +2837,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2539-2643
+-- Lines 2589-2693
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2841,19 +2922,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2647-2727
+-- Lines 2697-2777
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2731-2733
+-- Lines 2781-2783
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2737-2745
+-- Lines 2787-2795
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2864,7 +2945,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2749-2752
+-- Lines 2799-2802
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2874,7 +2955,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2756-2765
+-- Lines 2806-2815
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2887,7 +2968,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2769-2945
+-- Lines 2819-2995
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3076,7 +3157,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 2947-3120
+-- Lines 2997-3176
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3190,7 +3271,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3122-3194
+-- Lines 3178-3250
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3263,7 +3344,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3197-3201
+-- Lines 3253-3257
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3281,7 +3362,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3218-3433
+-- Lines 3274-3489
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false
