@@ -305,14 +305,21 @@ function MenuItemGrid:scroll_bar_grabbed(row_item)
 	return row_item.scroll_panel:scroll_item()._grabbed_scroll_bar
 end
 
--- Lines 273-276
+-- Lines 273-284
 function MenuItemGrid:wheel_scroll_start(dy, row_item)
-	local scroll_item = row_item.scroll_panel:scroll_item()
+	local max_row = math.ceil(#self._options / self._columns)
+	local size = row_item.scroll_panel:canvas():h()
+	local size_per_row = size / max_row
+	local row_to_show = math.floor((-row_item.scroll_panel:canvas():y() + 1) / size_per_row) - dy
+	local option_to_show = 1 + row_to_show * self._columns
+	local selection_option = self._options[option_to_show]
 
-	scroll_item:perform_scroll(scroll_item.SCROLL_SPEED * TimerManager:main():delta_time() * 200, dy)
+	if selection_option then
+		row_item.scroll_panel:scroll_item():scroll_to(selection_option.gui_panel:top())
+	end
 end
 
--- Lines 278-283
+-- Lines 286-291
 function MenuItemGrid:mouse_released(button, x, y, row_item)
 	row_item.grid_panel:mouse_released(button, x, y)
 
@@ -321,7 +328,7 @@ function MenuItemGrid:mouse_released(button, x, y, row_item)
 	end
 end
 
--- Lines 285-317
+-- Lines 293-325
 function MenuItemGrid:mouse_pressed(button, x, y, row_item)
 	local delay_down = 0.1
 	local delay_pressed = 0.2
@@ -355,7 +362,7 @@ function MenuItemGrid:mouse_pressed(button, x, y, row_item)
 	end
 end
 
--- Lines 319-338
+-- Lines 327-346
 function MenuItemGrid:mouse_moved(x, y, row_item)
 	local hover, cursor_type = row_item.grid_panel:mouse_moved(self, x, y)
 
@@ -380,7 +387,7 @@ function MenuItemGrid:mouse_moved(x, y, row_item)
 	return cursor_type
 end
 
--- Lines 350-467
+-- Lines 358-475
 function MenuItemGrid:setup_gui(node_gui, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local align_line_padding = self:parameters().align_line_padding or node_gui:align_line_padding()
@@ -546,7 +553,7 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 	return true
 end
 
--- Lines 469-496
+-- Lines 477-504
 function MenuItemGrid:_scroll_update(dt)
 	local element, step = nil
 
@@ -577,7 +584,7 @@ function MenuItemGrid:_scroll_update(dt)
 	end
 end
 
--- Lines 504-509
+-- Lines 512-517
 function MenuItemGrid:close(row_item)
 	for _, ids in ipairs(self._requested_textures) do
 		TextureCache:unretrieve(ids)
@@ -586,7 +593,7 @@ function MenuItemGrid:close(row_item)
 	self._requested_textures = {}
 end
 
--- Lines 511-527
+-- Lines 519-535
 function MenuItemGrid:option_texture_loaded_clbk(option, texture_idstring)
 	if not alive(option.gui_panel) then
 		return
@@ -608,7 +615,7 @@ function MenuItemGrid:option_texture_loaded_clbk(option, texture_idstring)
 	self:_update_option_icon_size(option)
 end
 
--- Lines 529-549
+-- Lines 537-557
 function MenuItemGrid:_update_option_icon_size(option)
 	if not option.gui_icon then
 		return
@@ -628,7 +635,7 @@ function MenuItemGrid:_update_option_icon_size(option)
 	option.gui_icon:set_center(panel_width / 2, panel_height / 2)
 end
 
--- Lines 551-568
+-- Lines 559-576
 function MenuItemGrid:clear_gui(row_item)
 	if row_item.scroll_panel then
 		self.scroll_y = -row_item.scroll_panel:canvas():y()
@@ -645,7 +652,7 @@ function MenuItemGrid:clear_gui(row_item)
 	end
 end
 
--- Lines 570-585
+-- Lines 578-593
 function MenuItemGrid:highlight_row_item(node, row_item, mouse_over)
 	if row_item.gui_info_panel then
 		row_item.gui_info_panel:set_visible(true)
@@ -665,7 +672,7 @@ function MenuItemGrid:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines 587-596
+-- Lines 595-604
 function MenuItemGrid:fade_row_item(node, row_item, mouse_over)
 	if row_item.gui_info_panel then
 		row_item.gui_info_panel:set_visible(false)
@@ -677,14 +684,14 @@ function MenuItemGrid:fade_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines 598-601
+-- Lines 606-609
 function MenuItemGrid:align_panel(row_item, item_panel)
 	row_item.gui_panel:set_center_x(item_panel:w() / 2)
 
 	return true
 end
 
--- Lines 603-608
+-- Lines 611-616
 function MenuItemGrid:align_marker(row_item, marker_data, node_gui)
 	marker_data.gradient:hide()
 	marker_data.marker:hide()
@@ -692,7 +699,7 @@ function MenuItemGrid:align_marker(row_item, marker_data, node_gui)
 	return true
 end
 
--- Lines 610-616
+-- Lines 618-624
 function MenuItemGrid:update_selection_position(row_item)
 	local current_option = self._options[self._current_index]
 
@@ -703,7 +710,7 @@ function MenuItemGrid:update_selection_position(row_item)
 	row_item.selection_panel:set_position(selection_option.gui_panel:position())
 end
 
--- Lines 618-628
+-- Lines 626-636
 function MenuItemGrid:_create_gui_box(row_item, box_name, panel, sides, visible)
 	if row_item.gui_boxes[box_name] then
 		row_item.gui_boxes[box_name]:close()

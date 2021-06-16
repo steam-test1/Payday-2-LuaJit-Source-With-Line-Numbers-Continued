@@ -128,7 +128,7 @@ function StoryMissionsManager:award(id, steps)
 	end
 end
 
--- Lines 111-123
+-- Lines 111-132
 function StoryMissionsManager:claim_rewards(mission)
 	mission = self:_get_or_current(mission)
 
@@ -136,7 +136,14 @@ function StoryMissionsManager:claim_rewards(mission)
 		return
 	end
 
-	for _, t in pairs(mission.rewards or {}) do
+	local skipped_mission = self:get_last_skipped_mission() == mission
+	local rewards = mission.rewards_halved and skipped_mission and mission.rewards_halved or mission.rewards
+
+	for _, t in pairs(rewards or {}) do
+		if t[1] == "safehouse_coins" and skipped_mission then
+			t[2] = math.floor(t[2] / 2)
+		end
+
 		self:_reward(t)
 	end
 
@@ -146,7 +153,7 @@ function StoryMissionsManager:claim_rewards(mission)
 	managers.savefile:save_progress()
 end
 
--- Lines 125-149
+-- Lines 134-158
 function StoryMissionsManager:_reward(reward)
 	if reward.type_items == "xp" then
 		local value_id = tweak_data.blackmarket[reward.type_items][reward.item_entry].value_id
@@ -171,7 +178,7 @@ function StoryMissionsManager:_reward(reward)
 	end
 end
 
--- Lines 153-176
+-- Lines 162-185
 function StoryMissionsManager:_check_complete(mission)
 	mission = self:_get_or_current(mission)
 
@@ -204,20 +211,22 @@ function StoryMissionsManager:_check_complete(mission)
 	end
 end
 
--- Lines 178-193
+-- Lines 187-204
 function StoryMissionsManager:_find_next_mission(dont_set)
 	local last = nil
 
 	for _, m in pairs(self._global.mission_order) do
-		if not m.completed or not m.rewarded then
-			if not dont_set then
-				self:_change_current_mission(m)
+		if not m.is_header then
+			if not m.completed or not m.rewarded then
+				if not dont_set then
+					self:_change_current_mission(m)
+				end
+
+				return m
 			end
 
-			return m
+			last = last or m.last_mission and m
 		end
-
-		last = last or m.last_mission and m
 	end
 
 	if not dont_set then
@@ -227,7 +236,7 @@ function StoryMissionsManager:_find_next_mission(dont_set)
 	return last
 end
 
--- Lines 195-202
+-- Lines 206-213
 function StoryMissionsManager:_change_current_mission(mission)
 	self._global.current_mission = mission
 
@@ -237,7 +246,7 @@ function StoryMissionsManager:_change_current_mission(mission)
 	end
 end
 
--- Lines 206-211
+-- Lines 217-222
 function StoryMissionsManager:_get_offset_mission(mission, offset)
 	local m = self:_get_or_current(mission)
 
@@ -248,7 +257,7 @@ function StoryMissionsManager:_get_offset_mission(mission, offset)
 	return self._global.mission_order[m.order + offset]
 end
 
--- Lines 215-223
+-- Lines 226-234
 function StoryMissionsManager:_get_or_current(mission)
 	if mission then
 		if type(mission) == "string" then
@@ -261,7 +270,7 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines 227-259
+-- Lines 238-270
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
@@ -296,7 +305,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines 261-272
+-- Lines 272-283
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -311,7 +320,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 274-295
+-- Lines 285-306
 function StoryMissionsManager:_migrate_save_data(version_from, version_to, state)
 	if version_to - version_from > 1 then
 		version_from = self:_migrate_save_data(version_from, version_to - 1, state)
@@ -337,7 +346,7 @@ function StoryMissionsManager:_migrate_save_data(version_from, version_to, state
 	end
 end
 
--- Lines 297-345
+-- Lines 308-356
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -392,12 +401,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 347-349
+-- Lines 358-360
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 351-394
+-- Lines 362-411
 function StoryMissionsManager:start_mission(mission, objective_id)
 	local m = self:_get_or_current(mission) or {
 		objectives_flat = {}
@@ -432,7 +441,7 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 		return
 	end
 
-	if o.basic then
+	if o.basic or Global.game_settings.single_player then
 		Global.game_settings.team_ai = true
 		Global.game_settings.team_ai_option = 2
 
@@ -443,24 +452,83 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 		})
 
 		return
+	else
+		MenuCallbackHandler:play_online_game()
 	end
 
 	local job_data = tweak_data.narrative:job_data(level)
 	local data = {
+		customize_difficulty = true,
 		difficulty = difficulty,
 		difficulty_id = tweak_data:difficulty_to_index(difficulty),
 		job_id = level,
 		contract_visuals = job_data and job_data.contract_visuals
 	}
+	self._global.story_level_opened = level
 
 	managers.menu:open_node(Global.game_settings.single_player and "crimenet_contract_singleplayer" or "crimenet_contract_host", {
 		data
 	})
 end
 
--- Lines 398-414
+-- Lines 414-426
+function StoryMissionsManager:skip_mission(mission)
+	local m = self:get_mission(mission) or mission
+
+	if not m then
+		Application:error("Failed to complete mission...", m)
+
+		return
+	end
+
+	for _, o in pairs(m.objectives_flat) do
+		o.completed = true
+		o.progress = o.max_progress
+	end
+
+	self:_check_complete(m)
+
+	self._global.skipped_mission = mission
+end
+
+-- Lines 428-430
+function StoryMissionsManager:get_last_skipped_mission(mission)
+	return self._global.skipped_mission
+end
+
+-- Lines 434-436
+function StoryMissionsManager:set_last_failed_heist(last_failed_heist)
+	self._global.last_failed_heist_id = last_failed_heist
+end
+
+-- Lines 438-440
+function StoryMissionsManager:get_last_failed_heist()
+	return self._global.last_failed_heist_id or ""
+end
+
+-- Lines 442-458
+function StoryMissionsManager:is_heist_story_started(heist_id)
+	local mission = self:current_mission()
+	heist_id = heist_id or ""
+
+	for i, objective_row in ipairs(mission.objectives) do
+		for _, objective in ipairs(objective_row) do
+			if not mission.completed and not objective.completed and objective.levels then
+				for _, level in ipairs(objective.levels) do
+					if heist_id == level and heist_id == self._global.story_level_opened then
+						return true
+					end
+				end
+			end
+		end
+	end
+
+	return false
+end
+
+-- Lines 463-479
 function StoryMissionsManager:reset_all()
-	-- Lines 399-407
+	-- Lines 464-472
 	local function reset(m)
 		if not m then
 			return

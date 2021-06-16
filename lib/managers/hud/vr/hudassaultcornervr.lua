@@ -38,22 +38,26 @@ function HUDAssaultCornerVR:init(hud, full_hud, tweak_hud)
 	self._watch_point_of_no_return_timer:set_center(watch_panel:w() / 2, watch_panel:h() / 2)
 end
 
--- Lines 26-41
-function HUDAssaultCornerVR:show_point_of_no_return_timer()
+-- Lines 26-43
+function HUDAssaultCornerVR:show_point_of_no_return_timer(id)
 	local delay_time = self._assault and 1.2 or 0
 
 	self:_end_assault()
-	self._hud_panel:child("point_of_no_return_panel"):stop()
-	self._hud_panel:child("point_of_no_return_panel"):animate(callback(self, self, "_animate_show_noreturn"), delay_time)
+	self:_update_noreturn(id)
+
+	local point_of_no_return_panel = self._hud_panel:child("point_of_no_return_panel")
+
+	point_of_no_return_panel:stop()
+	point_of_no_return_panel:animate(callback(self, self, "_animate_show_noreturn"), delay_time)
 	self._watch_point_of_no_return_timer:set_visible(true)
-	self:_set_feedback_color(self._noreturn_color)
+	self:_set_feedback_color(self._noreturn_data.color)
 
 	self._point_of_no_return = true
 
 	managers.hud._hud_heist_timer:hide()
 end
 
--- Lines 43-53
+-- Lines 45-55
 function HUDAssaultCornerVR:hide_point_of_no_return_timer()
 	self._noreturn_bg_box:stop()
 	self._hud_panel:child("point_of_no_return_panel"):set_visible(false)
@@ -65,7 +69,7 @@ function HUDAssaultCornerVR:hide_point_of_no_return_timer()
 	managers.hud._hud_heist_timer:show()
 end
 
--- Lines 55-62
+-- Lines 57-64
 function HUDAssaultCornerVR:feed_point_of_no_return_timer(time)
 	time = math.floor(time)
 	local minutes = math.floor(time / 60)
@@ -75,18 +79,20 @@ function HUDAssaultCornerVR:feed_point_of_no_return_timer(time)
 	self._watch_point_of_no_return_timer:set_text(text)
 end
 
--- Lines 64-81
+-- Lines 66-86
 function HUDAssaultCornerVR:flash_point_of_no_return_timer()
-	-- Lines 65-78
+	-- Lines 67-83
 	local function flash_timer(o)
 		local t = 0
 
 		while t < 0.5 do
 			t = t + coroutine.yield()
+			local color = self._noreturn_data.color or Color(1, 1, 0, 0)
+			local flash_color = self._noreturn_data.flash_color or Color(1, 1, 0.8, 0.2)
 			local n = 1 - math.sin(t * 180)
-			local r = math.lerp(1 or self._noreturn_color.r, 1, n)
-			local g = math.lerp(0 or self._noreturn_color.g, 0.8, n)
-			local b = math.lerp(0 or self._noreturn_color.b, 0.2, n)
+			local r = math.lerp(color.r, flash_color.r, n)
+			local g = math.lerp(color.g, flash_color.g, n)
+			local b = math.lerp(color.b, flash_color.b, n)
 
 			o:set_color(Color(r, g, b))
 			o:set_font_size(math.lerp(26, 32, n))
@@ -96,7 +102,7 @@ function HUDAssaultCornerVR:flash_point_of_no_return_timer()
 	self._watch_point_of_no_return_timer:animate(flash_timer)
 end
 
--- Lines 83-103
+-- Lines 88-108
 function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, delay_time)
 	local icon_noreturnbox = point_of_no_return_panel:child("icon_noreturnbox")
 	local point_of_no_return_text = self._noreturn_bg_box:child("point_of_no_return_text")
@@ -107,7 +113,7 @@ function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, del
 	icon_noreturnbox:stop()
 	icon_noreturnbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-	-- Lines 97-99
+	-- Lines 102-104
 	local function open_done()
 		point_of_no_return_text:animate(callback(self, self, "_animate_show_texts"), {
 			point_of_no_return_text
@@ -117,11 +123,11 @@ function HUDAssaultCornerVR:_animate_show_noreturn(point_of_no_return_panel, del
 	self._noreturn_bg_box:stop()
 	self._noreturn_bg_box:animate(callback(nil, _G, "HUDBGBox_animate_open_left"), 0.75, 242, open_done, {
 		attention_forever = true,
-		attention_color = self._casing_color
+		attention_color = self._noreturn_data.attention_color
 	})
 end
 
--- Lines 105-111
+-- Lines 110-116
 function HUDAssaultCornerVR:_set_hostage_offseted(is_offseted)
 	if is_offseted then
 		self:start_assault_callback()

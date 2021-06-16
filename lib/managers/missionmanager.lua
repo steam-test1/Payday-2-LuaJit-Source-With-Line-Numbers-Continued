@@ -137,7 +137,7 @@ require("lib/managers/mission/ElementTerminateAssault")
 
 MissionManager = MissionManager or class(CoreMissionManager.MissionManager)
 
--- Lines 163-273
+-- Lines 163-275
 function MissionManager:init(...)
 	MissionManager.super.init(self, ...)
 	self:add_area_instigator_categories("player")
@@ -146,6 +146,7 @@ function MissionManager:init(...)
 	self:add_area_instigator_categories("escorts")
 	self:add_area_instigator_categories("persons")
 	self:add_area_instigator_categories("local_criminals")
+	self:add_area_instigator_categories("player_criminals")
 	self:add_area_instigator_categories("criminals")
 	self:add_area_instigator_categories("ai_teammates")
 	self:add_area_instigator_categories("loot")
@@ -253,24 +254,25 @@ function MissionManager:init(...)
 			stage_job_values = {},
 			job_values = {},
 			saved_job_values = {},
-			has_played_tutorial = false
+			has_played_tutorial = false,
+			safehouse_ask_amount = 0
 		}
 	end
 end
 
--- Lines 275-278
+-- Lines 277-280
 function MissionManager:set_saved_job_value(key, value)
 	Global.mission_manager.saved_job_values[key] = value
 
 	self:on_set_saved_job_value(key, value)
 end
 
--- Lines 280-282
+-- Lines 282-284
 function MissionManager:get_saved_job_value(key)
 	return Global.mission_manager.saved_job_values[key]
 end
 
--- Lines 284-300
+-- Lines 286-302
 function MissionManager:on_set_saved_job_value(key, value)
 	local christmas_presents_values = {
 		present_bex = false,
@@ -290,40 +292,43 @@ function MissionManager:on_set_saved_job_value(key, value)
 	end
 end
 
--- Lines 306-311
+-- Lines 308-315
 function MissionManager:on_reset_profile()
 	for key, value in pairs(Global.mission_manager.saved_job_values) do
 		Global.mission_manager.saved_job_values[key] = nil
 	end
+
+	Global.mission_manager.has_played_tutorial = false
+	Global.mission_manager.safehouse_ask_amount = 0
 end
 
--- Lines 313-316
+-- Lines 317-320
 function MissionManager:set_job_value(key, value)
 	Global.mission_manager.stage_job_values[key] = value
 end
 
--- Lines 318-320
+-- Lines 322-324
 function MissionManager:get_job_value(key)
 	return Global.mission_manager.job_values[key] or Global.mission_manager.stage_job_values[key]
 end
 
--- Lines 322-324
+-- Lines 326-328
 function MissionManager:on_job_deactivated()
 	self:clear_job_values()
 end
 
--- Lines 326-329
+-- Lines 330-333
 function MissionManager:clear_job_values()
 	Global.mission_manager.job_values = {}
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines 331-334
+-- Lines 335-338
 function MissionManager:on_retry_job_stage()
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines 336-342
+-- Lines 340-346
 function MissionManager:on_stage_success()
 	for key, value in pairs(Global.mission_manager.stage_job_values) do
 		Global.mission_manager.job_values[key] = value
@@ -332,27 +337,27 @@ function MissionManager:on_stage_success()
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines 344-346
+-- Lines 348-350
 function MissionManager:set_mission_filter(mission_filter)
 	self._mission_filter = mission_filter
 end
 
--- Lines 348-350
+-- Lines 352-354
 function MissionManager:check_mission_filter(value)
 	return table.contains(self._mission_filter, value)
 end
 
--- Lines 352-354
+-- Lines 356-358
 function MissionManager:default_instigator()
 	return managers.player:player_unit()
 end
 
--- Lines 356-361
+-- Lines 360-365
 function MissionManager:activate_script(...)
 	MissionManager.super.activate_script(self, ...)
 end
 
--- Lines 363-371
+-- Lines 367-375
 function MissionManager:client_run_mission_element(id, unit, orientation_element_index)
 	for name, data in pairs(self._scripts) do
 		if data:element(id) then
@@ -364,7 +369,7 @@ function MissionManager:client_run_mission_element(id, unit, orientation_element
 	end
 end
 
--- Lines 374-384
+-- Lines 378-388
 function MissionManager:client_run_mission_element_end_screen(id, unit, orientation_element_index)
 	for name, data in pairs(self._scripts) do
 		if data:element(id) then
@@ -378,7 +383,7 @@ function MissionManager:client_run_mission_element_end_screen(id, unit, orientat
 	end
 end
 
--- Lines 386-394
+-- Lines 390-398
 function MissionManager:server_run_mission_element_trigger(id, unit)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -391,7 +396,7 @@ function MissionManager:server_run_mission_element_trigger(id, unit)
 	end
 end
 
--- Lines 397-412
+-- Lines 401-416
 function MissionManager:to_server_area_event(event_id, id, unit)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -410,7 +415,7 @@ function MissionManager:to_server_area_event(event_id, id, unit)
 	end
 end
 
--- Lines 436-443
+-- Lines 440-447
 function MissionManager:to_server_access_camera_trigger(id, trigger, instigator)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -421,26 +426,28 @@ function MissionManager:to_server_access_camera_trigger(id, trigger, instigator)
 	end
 end
 
--- Lines 445-451
+-- Lines 449-456
 function MissionManager:save_job_values(data)
 	local state = {
 		saved_job_values = Global.mission_manager.saved_job_values,
-		has_played_tutorial = Global.mission_manager.has_played_tutorial
+		has_played_tutorial = Global.mission_manager.has_played_tutorial,
+		safehouse_ask_amount = Global.mission_manager.safehouse_ask_amount
 	}
 	data.ProductMissionManager = state
 end
 
--- Lines 453-459
+-- Lines 458-465
 function MissionManager:load_job_values(data)
 	local state = data.ProductMissionManager
 
 	if state then
 		Global.mission_manager.saved_job_values = state.saved_job_values
 		Global.mission_manager.has_played_tutorial = state.has_played_tutorial
+		Global.mission_manager.safehouse_ask_amount = state.safehouse_ask_amount or 0
 	end
 end
 
--- Lines 462-467
+-- Lines 468-473
 function MissionManager:stop_simulation(...)
 	MissionManager.super.stop_simulation(self, ...)
 
@@ -450,7 +457,7 @@ function MissionManager:stop_simulation(...)
 	managers.loot:reset()
 end
 
--- Lines 469-477
+-- Lines 475-483
 function MissionManager:get_mission_element_by_name(name)
 	for _, data in pairs(self._scripts) do
 		for id, element in pairs(data:elements()) do
@@ -465,7 +472,7 @@ CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines 512-528
+-- Lines 518-534
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)

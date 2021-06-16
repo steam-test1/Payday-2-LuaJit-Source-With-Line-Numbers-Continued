@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-8066
+-- Lines 10-8122
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -7609,6 +7609,60 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 			joy = {
 				Vector3(0, 0.554498, -0.637965),
 				Rotation(0, 2.27524, 0)
+			}
+		}
+	}
+	self.masks.blacktortoise = {
+		unit = "units/pd2_dlc_sdtp/masks/msk_blacktortoise/msk_blacktortoise",
+		name_id = "bm_msk_sdtp_blacktortoise",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "sdtp",
+		texture_bundle_folder = "sdtp",
+		skip_mask_on_sequence = true
+	}
+	self.masks.vermilionbird = {
+		unit = "units/pd2_dlc_sdtp/masks/msk_vermilionbird/msk_vermilionbird",
+		name_id = "bm_msk_sdtp_vermilionbird",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "sdtp",
+		texture_bundle_folder = "sdtp",
+		skip_mask_on_sequence = true
+	}
+	self.masks.azuredragon = {
+		unit = "units/pd2_dlc_sdtp/masks/msk_azuredragon/msk_azuredragon",
+		name_id = "bm_msk_sdtp_azuredragon",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "sdtp",
+		texture_bundle_folder = "sdtp",
+		skip_mask_on_sequence = true
+	}
+	self.masks.whitetiger = {
+		unit = "units/pd2_dlc_sdtp/masks/msk_whitetiger/msk_whitetiger",
+		name_id = "bm_msk_sdtp_whitetiger",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "sdtp",
+		texture_bundle_folder = "sdtp",
+		skip_mask_on_sequence = true,
+		offsets = {
+			wild = {
+				Vector3(0, 0, 0.673745),
+				Rotation(-0, -0, -0)
 			}
 		}
 	}

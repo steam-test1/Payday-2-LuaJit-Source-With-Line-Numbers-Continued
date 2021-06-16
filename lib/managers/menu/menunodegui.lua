@@ -422,7 +422,7 @@ function MenuNodeGui:_set_topic_position()
 	self._items_bottom_line:set_right(self.item_panel:right())
 end
 
--- Lines 365-558
+-- Lines 365-570
 function MenuNodeGui:_create_menu_item(row_item)
 	local safe_rect = self:_scaled_size()
 	local align_x = safe_rect.width * self._align_line_proportions
@@ -712,6 +712,27 @@ function MenuNodeGui:_create_menu_item(row_item)
 			})
 		end
 
+		if row_item.item:parameters().glow then
+			row_item.glow = self.item_panel:bitmap({
+				layer = 0,
+				texture = row_item.item:parameters().glow,
+				texture_rect = row_item.item:parameters().glow_rect,
+				rotation = row_item.item:parameters().glow_rotation or 360,
+				visible = row_item.item:glow_visible()
+			})
+
+			-- Lines 552-558
+			local function animate_story_glow(o)
+				while true do
+					over(1, function (p)
+						o:set_alpha(math.lerp(0.4, 0.85, math.sin(p * 180)))
+					end)
+				end
+			end
+
+			row_item.glow:animate(animate_story_glow)
+		end
+
 		self:_align_normal(row_item)
 	end
 
@@ -727,21 +748,21 @@ function MenuNodeGui:_create_menu_item(row_item)
 	row_item.menu_unselected:set_color(row_item.item:parameters().is_expanded and Color(0.5, 0.5, 0.5) or Color.white)
 end
 
--- Lines 560-563
+-- Lines 572-575
 function MenuNodeGui:_setup_trial_buy(row_item)
-	row_item.row_item_color = Color(1, 1, 0.6588235294117647, 0)
+	row_item.row_item_color = tweak_data.screen_colors.dlc_buy_color
 
 	row_item.gui_panel:set_color(row_item.row_item_color)
 end
 
--- Lines 565-568
+-- Lines 577-580
 function MenuNodeGui:_setup_fake_disabled(row_item)
 	row_item.row_item_color = row_item.disabled_color
 
 	row_item.gui_panel:set_color(row_item.row_item_color)
 end
 
--- Lines 570-584
+-- Lines 582-596
 function MenuNodeGui:_create_info_panel(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
 		y = 0,
@@ -779,7 +800,7 @@ function MenuNodeGui:_create_info_panel(row_item)
 	})
 end
 
--- Lines 589-599
+-- Lines 601-611
 function MenuNodeGui:_set_lobby_campaign(row_item)
 	if not MenuNodeGui.lobby_campaign then
 		self:_create_lobby_campaign(row_item)
@@ -791,7 +812,7 @@ function MenuNodeGui:_set_lobby_campaign(row_item)
 	end
 end
 
--- Lines 601-663
+-- Lines 613-675
 function MenuNodeGui:_create_lobby_campaign(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
 		y = 0,
@@ -838,7 +859,7 @@ function MenuNodeGui:_create_lobby_campaign(row_item)
 	}
 end
 
--- Lines 665-697
+-- Lines 677-709
 function MenuNodeGui:_align_lobby_campaign(row_item)
 	self:_align_item_gui_info_panel(row_item.gui_info_panel)
 
@@ -853,7 +874,7 @@ function MenuNodeGui:_align_lobby_campaign(row_item)
 	row_item.level_briefing:set_top(row_item.level_title:bottom() + tweak_data.menu.info_padding)
 end
 
--- Lines 699-706
+-- Lines 711-718
 function MenuNodeGui:_highlight_lobby_campaign(row_item)
 	if row_item.level_id ~= Global.game_settings.level_id then
 		self:_reload_lobby_campaign(row_item)
@@ -862,12 +883,12 @@ function MenuNodeGui:_highlight_lobby_campaign(row_item)
 	row_item.gui_info_panel:set_visible(true)
 end
 
--- Lines 708-711
+-- Lines 720-723
 function MenuNodeGui:_fade_lobby_campaign(row_item)
 	row_item.gui_info_panel:set_visible(false)
 end
 
--- Lines 713-747
+-- Lines 725-759
 function MenuNodeGui:_reload_lobby_campaign(row_item)
 	if MenuNodeGui.lobby_campaign.level_id == Global.game_settings.level_id then
 		return
@@ -904,7 +925,7 @@ function MenuNodeGui:_reload_lobby_campaign(row_item)
 	}
 end
 
--- Lines 751-790
+-- Lines 763-802
 function MenuNodeGui:_create_lobby_difficulty(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
 		y = 0,
@@ -956,7 +977,7 @@ function MenuNodeGui:_create_lobby_difficulty(row_item)
 	})
 end
 
--- Lines 792-809
+-- Lines 804-821
 function MenuNodeGui:_align_lobby_difficulty(row_item)
 	local w = row_item.gui_info_panel:w()
 
@@ -969,7 +990,7 @@ function MenuNodeGui:_align_lobby_difficulty(row_item)
 	self:_align_lobby_difficulty_help_text(row_item)
 end
 
--- Lines 811-819
+-- Lines 823-831
 function MenuNodeGui:_align_lobby_difficulty_help_text(row_item)
 	local w = row_item.gui_info_panel:w()
 
@@ -982,23 +1003,23 @@ function MenuNodeGui:_align_lobby_difficulty_help_text(row_item)
 	row_item.difficulty_help_text:set_top(row_item.help_text:bottom() + tweak_data.menu.info_padding * 2)
 end
 
--- Lines 821-823
+-- Lines 833-835
 function MenuNodeGui:_highlight_lobby_difficulty(row_item)
 	row_item.gui_info_panel:set_visible(true)
 end
 
--- Lines 825-827
+-- Lines 837-839
 function MenuNodeGui:_fade_lobby_difficulty(row_item)
 	row_item.gui_info_panel:set_visible(false)
 end
 
--- Lines 829-832
+-- Lines 841-844
 function MenuNodeGui:_reload_lobby_difficulty(row_item)
 	row_item.difficulty_help_text:set_text(utf8.to_upper(managers.localization:text("menu_difficulty_" .. Global.game_settings.difficulty .. "_help")))
 	self:_align_lobby_difficulty_help_text(row_item)
 end
 
--- Lines 836-874
+-- Lines 848-870
 function MenuNodeGui:_align_friend(row_item)
 	local safe_rect = self:_scaled_size()
 
@@ -1009,27 +1030,8 @@ function MenuNodeGui:_align_friend(row_item)
 	row_item.friend_name:set_height(h)
 	row_item.friend_name:set_right(row_item.friend_name:parent():w())
 	row_item.gui_panel:set_height(h)
-
-	if row_item.icon then
-		local left = row_item.gui_panel:left()
-		local right = row_item.gui_panel:right()
-
-		if row_item.gui_panel.set_text then
-			local x, y, w, h = row_item.gui_panel:text_rect()
-			left = x
-			right = x + w
-		end
-
-		if row_item.item:parameters().icon_align == "left" then
-			row_item.icon:set_right(left)
-		else
-			row_item.icon:set_left(right)
-		end
-
-		row_item.icon:set_center_y(row_item.gui_panel:center_y())
-		row_item.icon:set_color(row_item.gui_panel:color())
-	end
-
+	self:update_icon_alignment(row_item)
+	self:update_glow_alignment(row_item)
 	row_item.signin_status:set_font_size(self.font_size)
 	row_item.signin_status:set_height(h)
 
@@ -1042,7 +1044,7 @@ function MenuNodeGui:_align_friend(row_item)
 	end
 end
 
--- Lines 876-899
+-- Lines 872-895
 function MenuNodeGui:activate_customize_controller(item)
 	local row_item = self:row_item(item)
 
@@ -1052,7 +1054,7 @@ function MenuNodeGui:activate_customize_controller(item)
 	self._listening_to_input = true
 	self._skip_first_activate_key = true
 
-	-- Lines 890-890
+	-- Lines 886-886
 	local function f(o, key)
 		self:_key_press(o, key, "keyboard", item)
 	end
@@ -1060,14 +1062,14 @@ function MenuNodeGui:activate_customize_controller(item)
 	row_item.controller_binding:set_text("_")
 	row_item.controller_binding:key_release(f)
 
-	-- Lines 893-893
+	-- Lines 889-889
 	local function f(o, key)
 		self:_key_press(o, key, "mouse", item)
 	end
 
 	row_item.controller_binding:mouse_click(f)
 
-	-- Lines 896-896
+	-- Lines 892-892
 	local function f(index, key)
 		self:_key_press(row_item.controller_binding, key, "mouse", item, true)
 	end
@@ -1076,7 +1078,7 @@ function MenuNodeGui:activate_customize_controller(item)
 	self._mouse_wheel_down_trigger = Input:mouse():add_trigger(Input:mouse():button_index(Idstring("mouse wheel down")), f)
 end
 
--- Lines 901-984
+-- Lines 897-980
 function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 	if managers.system_menu:is_active() then
 		return
@@ -1200,7 +1202,7 @@ function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 	self:_end_customize_controller(o, item)
 end
 
--- Lines 986-999
+-- Lines 982-995
 function MenuNodeGui:_end_customize_controller(o, item)
 	self.ws:disconnect_keyboard()
 	self.ws:disconnect_mouse()
@@ -1216,7 +1218,7 @@ function MenuNodeGui:_end_customize_controller(o, item)
 	item:dirty()
 end
 
--- Lines 1001-1017
+-- Lines 997-1013
 function MenuNodeGui:_cb_chat(row_item)
 	local chat_text = row_item.chat_input:child("text"):text()
 
@@ -1234,12 +1236,12 @@ function MenuNodeGui:_cb_chat(row_item)
 	row_item.chat_input:child("text"):set_selection(0, 0)
 end
 
--- Lines 1019-1022
+-- Lines 1015-1018
 function MenuNodeGui:sync_say(message, row_item, id)
 	self:_say(message, row_item, id)
 end
 
--- Lines 1024-1032
+-- Lines 1020-1028
 function MenuNodeGui:_say(message, row_item, id)
 	if managers.menu:active_menu() then
 		managers.menu:active_menu().renderer:post_event("prompt_exit")
@@ -1251,15 +1253,15 @@ function MenuNodeGui:_say(message, row_item, id)
 	s.box_print(message, tweak_data.chat_colors[id] or tweak_data.chat_colors[#tweak_data.chat_colors], i)
 end
 
--- Lines 1034-1035
+-- Lines 1030-1031
 function MenuNodeGui:_cb_unlock()
 end
 
--- Lines 1037-1038
+-- Lines 1033-1034
 function MenuNodeGui:_cb_lock()
 end
 
--- Lines 1040-1063
+-- Lines 1036-1059
 function MenuNodeGui:_text_item_part(row_item, panel, align_x, text_align)
 	local new_text = panel:text({
 		halign = "left",
@@ -1288,7 +1290,7 @@ function MenuNodeGui:_text_item_part(row_item, panel, align_x, text_align)
 	return new_text
 end
 
--- Lines 1065-1092
+-- Lines 1061-1088
 function MenuNodeGui:scroll_update(dt)
 	local scrolled = MenuNodeGui.super.scroll_update(self, dt)
 
@@ -1317,7 +1319,7 @@ function MenuNodeGui:scroll_update(dt)
 	return scrolled
 end
 
--- Lines 1094-1120
+-- Lines 1090-1116
 function MenuNodeGui:reload_item(item)
 	local type = item:type()
 	local row_item = self:row_item(item)
@@ -1341,7 +1343,7 @@ function MenuNodeGui:reload_item(item)
 	end
 end
 
--- Lines 1122-1138
+-- Lines 1118-1134
 function MenuNodeGui:_collaps_others(my_item)
 	for _, row_item in ipairs(self.row_items) do
 		local item = row_item.item
@@ -1354,7 +1356,7 @@ function MenuNodeGui:_collaps_others(my_item)
 	end
 end
 
--- Lines 1140-1175
+-- Lines 1136-1171
 function MenuNodeGui:_reload_expand(item)
 	local row_item = self:row_item(item)
 
@@ -1381,7 +1383,7 @@ function MenuNodeGui:_reload_expand(item)
 	end
 end
 
--- Lines 1177-1192
+-- Lines 1173-1188
 function MenuNodeGui:_delete_row_item(item)
 	for i, row_item in ipairs(self.row_items) do
 		if row_item.item == item then
@@ -1400,7 +1402,7 @@ function MenuNodeGui:_delete_row_item(item)
 	MenuNodeGui.super._delete_row_item(self, item)
 end
 
--- Lines 1194-1206
+-- Lines 1190-1202
 function MenuNodeGui:_clear_gui()
 	for i, row_item in ipairs(self.row_items) do
 		if alive(row_item.gui_pd2_panel) then
@@ -1415,14 +1417,14 @@ function MenuNodeGui:_clear_gui()
 	MenuNodeGui.super._clear_gui(self)
 end
 
--- Lines 1208-1212
+-- Lines 1204-1208
 function MenuNodeGui:need_repositioning()
 	self:_setup_size()
 	self:scroll_setup()
 	self:_set_item_positions()
 end
 
--- Lines 1214-1220
+-- Lines 1210-1216
 function MenuNodeGui:update_item_icon_visibility()
 	for _, row_item in pairs(self.row_items) do
 		if alive(row_item.icon) then
@@ -1431,7 +1433,42 @@ function MenuNodeGui:update_item_icon_visibility()
 	end
 end
 
--- Lines 1222-1227
+-- Lines 1218-1237
+function MenuNodeGui:update_icon_alignment(row_item)
+	if row_item.icon then
+		local left = row_item.gui_panel:left()
+		local right = row_item.gui_panel:right()
+
+		if row_item.gui_panel.set_text then
+			local x, y, w, h = row_item.gui_panel:text_rect()
+			left = x
+			right = x + w
+		end
+
+		if row_item.item:parameters().icon_align == "left" then
+			row_item.icon:set_right(left)
+		else
+			row_item.icon:set_left(right)
+		end
+
+		row_item.icon:set_center_y(row_item.gui_panel:center_y())
+		row_item.icon:set_color(row_item.gui_panel:color())
+	end
+end
+
+-- Lines 1239-1247
+function MenuNodeGui:update_glow_alignment(row_item)
+	if row_item.glow then
+		local x, y, w, h = row_item.gui_panel:text_rect()
+
+		row_item.glow:set_center_y(row_item.gui_panel:center_y())
+		row_item.glow:set_center_x(x + w / 2)
+		row_item.glow:set_width(w * 3)
+		row_item.glow:set_color(row_item.gui_panel:color())
+	end
+end
+
+-- Lines 1249-1254
 function MenuNodeGui:_reload_friend(item)
 	local row_item = self:row_item(item)
 	local status_text = managers.localization:text("menu_friends_" .. row_item.item:parameters().signin_status)
@@ -1439,7 +1476,7 @@ function MenuNodeGui:_reload_friend(item)
 	row_item.signin_status:set_text(utf8.to_upper(status_text))
 end
 
--- Lines 1229-1235
+-- Lines 1256-1262
 function MenuNodeGui:_setup_item_size(row_item)
 	local type = row_item.item:type()
 
@@ -1448,7 +1485,7 @@ function MenuNodeGui:_setup_item_size(row_item)
 	end
 end
 
--- Lines 1237-1258
+-- Lines 1264-1285
 function MenuNodeGui:_setup_level_size(row_item)
 	local padding = 24
 
@@ -1460,7 +1497,7 @@ function MenuNodeGui:_setup_level_size(row_item)
 	row_item.level_text:set_shape(padding, 66, w, row_item.gui_level_panel:w())
 end
 
--- Lines 1272-1277
+-- Lines 1299-1304
 function MenuNodeGui:_set_help_text(text_id, localize)
 	local active_menu = managers.menu:active_menu()
 
@@ -1469,7 +1506,7 @@ function MenuNodeGui:_set_help_text(text_id, localize)
 	end
 end
 
--- Lines 1279-1376
+-- Lines 1306-1387
 function MenuNodeGui:_highlight_row_item(row_item, mouse_over)
 	if row_item then
 		row_item.highlighted = true
@@ -1523,26 +1560,8 @@ function MenuNodeGui:_highlight_row_item(row_item, mouse_over)
 			end
 
 			MenuNodeGui.super._highlight_row_item(self, row_item)
-
-			if row_item.icon then
-				local left = row_item.gui_panel:left()
-				local right = row_item.gui_panel:right()
-
-				if row_item.gui_panel.set_text then
-					local x, y, w, h = row_item.gui_panel:text_rect()
-					left = x
-					right = x + w
-				end
-
-				if row_item.item:parameters().icon_align == "left" then
-					row_item.icon:set_right(left)
-				else
-					row_item.icon:set_left(right)
-				end
-
-				row_item.icon:set_center_y(row_item.gui_panel:center_y())
-				row_item.icon:set_color(row_item.gui_panel:color())
-			end
+			self:update_icon_alignment(row_item)
+			self:update_glow_alignment(row_item)
 		end
 
 		local active_menu = managers.menu:active_menu()
@@ -1557,7 +1576,7 @@ function MenuNodeGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines 1378-1507
+-- Lines 1389-1518
 function MenuNodeGui:_align_marker(row_item)
 	if row_item.item.hide_highlight then
 		self._marker_data.marker:hide()
@@ -1653,7 +1672,7 @@ function MenuNodeGui:_align_marker(row_item)
 	end
 end
 
--- Lines 1509-1595
+-- Lines 1520-1590
 function MenuNodeGui:_fade_row_item(row_item)
 	if row_item then
 		row_item.highlighted = false
@@ -1700,38 +1719,20 @@ function MenuNodeGui:_fade_row_item(row_item)
 			end
 
 			MenuNodeGui.super._fade_row_item(self, row_item)
-
-			if row_item.icon then
-				local left = row_item.gui_panel:left()
-				local right = row_item.gui_panel:right()
-
-				if row_item.gui_panel.set_text then
-					local x, y, w, h = row_item.gui_panel:text_rect()
-					left = x
-					right = x + w
-				end
-
-				if row_item.item:parameters().icon_align == "left" then
-					row_item.icon:set_right(left)
-				else
-					row_item.icon:set_left(right)
-				end
-
-				row_item.icon:set_center_y(row_item.gui_panel:center_y())
-				row_item.icon:set_color(row_item.gui_panel:color())
-			end
+			self:update_icon_alignment(row_item)
+			self:update_glow_alignment(row_item)
 		end
 	end
 end
 
--- Lines 1597-1602
+-- Lines 1592-1597
 function MenuNodeGui:_align_item_gui_info_panel(panel)
 	panel:set_shape(self._info_bg_rect:x() + tweak_data.menu.info_padding, self._info_bg_rect:y() + tweak_data.menu.info_padding, self._info_bg_rect:w() - tweak_data.menu.info_padding * 2, self._info_bg_rect:h() - tweak_data.menu.info_padding * 2)
 end
 
 local xl_pad = 64
 
--- Lines 1605-1619
+-- Lines 1600-1614
 function MenuNodeGui:_align_info_panel(row_item)
 	self:_align_item_gui_info_panel(row_item.gui_info_panel)
 	row_item.help_title:set_font_size(self.font_size)
@@ -1744,7 +1745,7 @@ function MenuNodeGui:_align_info_panel(row_item)
 	row_item.help_text:set_top(row_item.help_title:bottom() + tweak_data.menu.info_padding)
 end
 
--- Lines 1621-1655
+-- Lines 1616-1636
 function MenuNodeGui:_align_normal(row_item)
 	local safe_rect = self:_scaled_size()
 
@@ -1755,33 +1756,15 @@ function MenuNodeGui:_align_normal(row_item)
 	row_item.gui_panel:set_height(h)
 	row_item.gui_panel:set_left(self:_right_align() + (row_item.item:parameters().expand_value or 0))
 	row_item.gui_panel:set_w(safe_rect.width - row_item.gui_panel:left())
-
-	if row_item.icon then
-		local left = row_item.gui_panel:left()
-		local right = row_item.gui_panel:right()
-
-		if row_item.gui_panel.set_text then
-			local x, y, w, h = row_item.gui_panel:text_rect()
-			left = x
-			right = x + w
-		end
-
-		if row_item.item:parameters().icon_align == "left" then
-			row_item.icon:set_right(left)
-		else
-			row_item.icon:set_left(right)
-		end
-
-		row_item.icon:set_center_y(row_item.gui_panel:center_y())
-		row_item.icon:set_color(row_item.gui_panel:color())
-	end
+	self:update_icon_alignment(row_item)
+	self:update_glow_alignment(row_item)
 
 	if row_item.gui_info_panel then
 		self:_align_info_panel(row_item)
 	end
 end
 
--- Lines 1657-1710
+-- Lines 1638-1675
 function MenuNodeGui:_align_chat(row_item)
 	local safe_rect = self:_scaled_size()
 
@@ -1803,36 +1786,18 @@ function MenuNodeGui:_align_chat(row_item)
 	row_item.chat_output:set_w(row_item.gui_panel:w())
 	row_item.chat_output:set_bottom(h)
 	row_item.chat_output:set_right(row_item.gui_panel:w())
-
-	if row_item.icon then
-		local left = row_item.gui_panel:left()
-		local right = row_item.gui_panel:right()
-
-		if row_item.gui_panel.set_text then
-			local x, y, w, h = row_item.gui_panel:text_rect()
-			left = x
-			right = x + w
-		end
-
-		if row_item.item:parameters().icon_align == "left" then
-			row_item.icon:set_right(left)
-		else
-			row_item.icon:set_left(right)
-		end
-
-		row_item.icon:set_center_y(row_item.gui_panel:center_y())
-		row_item.icon:set_color(row_item.gui_panel:color())
-	end
+	self:update_icon_alignment(row_item)
+	self:update_glow_alignment(row_item)
 end
 
--- Lines 1712-1716
+-- Lines 1677-1681
 function MenuNodeGui:_update_scaled_values()
 	self.font_size = self.font_size or tweak_data.menu.pd2_medium_font_size
 	self.font = self.font or tweak_data.menu.pd2_medium_font
 	self._align_line_padding = 10 * tweak_data.scale.align_line_padding_multiplier
 end
 
--- Lines 1718-1774
+-- Lines 1683-1739
 function MenuNodeGui:resolution_changed()
 	self:_update_scaled_values()
 
@@ -1871,7 +1836,7 @@ function MenuNodeGui:resolution_changed()
 	self:_layout_legends()
 end
 
--- Lines 1776-1795
+-- Lines 1741-1760
 function MenuNodeGui:_layout_legends()
 	local safe_rect = self:_scaled_size()
 	local res = RenderSettings.resolution
@@ -1892,7 +1857,7 @@ function MenuNodeGui:_layout_legends()
 	self._legends_panel:set_bottom(self.ws:panel():bottom())
 end
 
--- Lines 1797-1827
+-- Lines 1762-1792
 function MenuNodeGui:set_visible(visible)
 	MenuNodeGui.super.set_visible(self, visible)
 
@@ -1929,7 +1894,7 @@ function MenuNodeGui:set_visible(visible)
 	end
 end
 
--- Lines 1830-1843
+-- Lines 1795-1808
 function MenuNodeGui:close(...)
 	for _, row_item in ipairs(self.row_items) do
 		local item = row_item.item
@@ -1946,7 +1911,7 @@ end
 
 MenuNodeMainGui = MenuNodeMainGui or class(MenuNodeGui)
 
--- Lines 1848-1857
+-- Lines 1813-1822
 function MenuNodeMainGui:_setup_item_rows(node)
 	MenuNodeMainGui.super._setup_item_rows(self, node)
 	self:_add_version_string()
@@ -1957,13 +1922,13 @@ function MenuNodeMainGui:_setup_item_rows(node)
 	end
 end
 
--- Lines 1859-1862
+-- Lines 1824-1827
 function MenuNodeMainGui:set_visible(visible)
 	MenuNodeMainGui.super.set_visible(self, visible)
 	self:_add_version_string()
 end
 
--- Lines 1864-1917
+-- Lines 1829-1882
 function MenuNodeMainGui:_add_version_string()
 	if alive(self._version_string) then
 		self._version_string:parent():remove(self._version_string)
@@ -1983,7 +1948,7 @@ function MenuNodeMainGui:_add_version_string()
 			font_size = tweak_data.menu.pd2_small_font_size
 		})
 
-		-- Lines 1892-1912
+		-- Lines 1857-1877
 		local function fade_in(o)
 			local from = Color(0, 1, 1, 1)
 			local to = Color(1, 1, 1, 1)

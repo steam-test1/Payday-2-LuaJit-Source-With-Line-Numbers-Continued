@@ -640,7 +640,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 603-665
+-- Lines 603-671
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -651,6 +651,15 @@ function BlackMarketTweakData:_init_xp()
 	self.xp.xp10.pcs = {
 		10,
 		40
+	}
+	self.xp.xp15 = {
+		name_id = "bm_exp_xp15",
+		value_id = "xp15",
+		multiplier = 1,
+		pcs = {
+			15,
+			40
+		}
 	}
 	self.xp.xp20 = {
 		name_id = "bm_exp_xp20",
@@ -742,7 +751,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 669-708
+-- Lines 675-714
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -784,7 +793,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 712-744
+-- Lines 718-750
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -818,7 +827,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 746-759
+-- Lines 752-765
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -835,7 +844,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 761-772
+-- Lines 767-778
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

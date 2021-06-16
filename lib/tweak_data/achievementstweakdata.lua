@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-2792
+-- Lines 76-2809
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -5020,6 +5020,47 @@ function AchievementsTweakData:init(tweak_data)
 			job = "chas",
 			difficulty = sm_wish_and_above
 		},
+		sand_1 = {
+			award = "sand_1",
+			job = "sand",
+			difficulty = normal_and_above
+		},
+		sand_2 = {
+			award = "sand_2",
+			job = "sand",
+			difficulty = hard_and_above
+		},
+		sand_3 = {
+			award = "sand_3",
+			job = "sand",
+			difficulty = veryhard_and_above
+		},
+		sand_4 = {
+			award = "sand_4",
+			job = "sand",
+			difficulty = overkill_and_above
+		},
+		sand_5 = {
+			award = "sand_5",
+			job = "sand",
+			difficulty = easywish_and_above
+		},
+		sand_6 = {
+			award = "sand_6",
+			job = "sand",
+			difficulty = deathwish_and_above
+		},
+		sand_7 = {
+			award = "sand_7",
+			job = "sand",
+			difficulty = sm_wish_and_above
+		},
+		sand_8 = {
+			award = "sand_8",
+			one_down = true,
+			job = "sand",
+			difficulty = sm_wish_and_above
+		},
 		uno_1 = {
 			award = "uno_1",
 			bag_loot_value = 400000,
@@ -5685,13 +5726,8 @@ function AchievementsTweakData:init(tweak_data)
 			story = "story_jewelry_store"
 		},
 		story_bank_heist = {
-			story = "story_bank_heist",
-			jobs = {
-				"branchbank_prof",
-				"branchbank_gold_prof",
-				"branchbank_cash",
-				"branchbank_deposit"
-			}
+			job = "branchbank_cash",
+			story = "story_bank_heist"
 		},
 		story_go_bank = {
 			job = "roberts",
@@ -6243,7 +6279,8 @@ function AchievementsTweakData:init(tweak_data)
 			"peta",
 			"moon",
 			"bex",
-			"fex"
+			"fex",
+			"sand"
 		},
 		hector = {
 			"watchdogs_wrapper",
@@ -7995,7 +8032,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2811-2838
+-- Lines 2828-2855
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -8006,7 +8043,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2820-2831
+	-- Lines 2837-2848
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -8036,7 +8073,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2840-2845
+-- Lines 2857-2862
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -8049,7 +8086,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2847-2855
+-- Lines 2864-2872
 local function from_level(level)
 	if not level then
 		error()
@@ -8065,7 +8102,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2857-2865
+-- Lines 2874-2882
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -8081,7 +8118,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2867-2878
+-- Lines 2884-2895
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -8103,7 +8140,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2883-3085
+-- Lines 2900-3112
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8208,7 +8245,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 				visual.unlock_icons = visual.unlock_icons or {}
 				visual.unlock_id = visual.unlock_id or true
 
-				for _, loot in pairs(data.content.loot_drops) do
+				for _, loot in pairs(data.content.loot_drops or {}) do
 					local tex_data = get_texture_path(tweak_data, loot.type_items, loot.item_entry)
 
 					if not table.contains(visual.unlock_icons, tex_data) then
@@ -8260,7 +8297,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3120-3262
+-- Lines 3147-3289
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8451,7 +8488,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3240-3240
+	-- Lines 3267-3267
 	local function dummy_progress()
 		return 0
 	end

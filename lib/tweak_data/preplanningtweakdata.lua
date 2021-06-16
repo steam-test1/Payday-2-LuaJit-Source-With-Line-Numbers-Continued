@@ -1660,9 +1660,53 @@ function PrePlanningTweakData:init(tweak_data)
 		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_open_window"),
 		budget_cost = 2
 	}
+	self.types.sand_broken_wall = {
+		name_id = "menu_pp_asset_sand_broken_wall",
+		desc_id = "menu_pp_asset_sand_broken_wall_desc",
+		category = "hired_help",
+		icon = 112,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 1,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_chas_tram"),
+		budget_cost = 1
+	}
+	self.types.sand_less_camera_drones = {
+		name_id = "menu_pp_asset_sand_less_camera_drones",
+		desc_id = "menu_pp_asset_sand_less_camera_drones_desc",
+		category = "hired_help",
+		icon = 114,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_garbage_truck"),
+		budget_cost = 3
+	}
+	self.types.sand_ladder_bridge = {
+		name_id = "menu_pp_asset_sand_ladder_bridge",
+		desc_id = "menu_pp_asset_sand_ladder_bridge_desc",
+		category = "hired_help",
+		icon = 63,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_bex_garbage_truck"),
+		budget_cost = 2
+	}
+	self.types.sand_extra_dumpsters = {
+		name_id = "menu_pp_asset_sand_extra_dumpsters",
+		desc_id = "menu_pp_asset_sand_extra_dumpsters_desc",
+		category = "hired_help",
+		icon = 113,
+		total = 1,
+		post_event = "preplan_16",
+		prio = 3,
+		cost = tweak_data:get_value("money_manager", "preplanning_asset_cost_pex_open_window"),
+		budget_cost = 2
+	}
 end
 
--- Lines 1693-2811
+-- Lines 1693-2828
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -3358,9 +3402,47 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			y = 512
 		}
 	}
+	self.locations.sand = {
+		{
+			texture = "guis/dlcs/sand/textures/pd2/pre_planning/sand_01",
+			x2 = 20700,
+			rotation = 0,
+			map_size = 1,
+			map_x = -0.55,
+			x1 = -9300,
+			map_y = 0,
+			name_id = "menu_pp_sand_bpr_loc_a",
+			y2 = 13700,
+			y1 = -16300,
+			custom_points = {}
+		},
+		{
+			texture = "guis/dlcs/sand/textures/pd2/pre_planning/sand_02",
+			x2 = 20700,
+			rotation = 0,
+			map_size = 1,
+			map_x = -0.55,
+			x1 = -9300,
+			map_y = 0.75,
+			name_id = "menu_pp_sand_bpr_loc_b",
+			y2 = 13700,
+			y1 = -16300,
+			custom_points = {}
+		},
+		mission_briefing_texture = "guis/dlcs/sand/textures/pd2/pre_planning/sand_preview",
+		post_event_prefix = "loc",
+		total_budget = 10,
+		default_plans = {},
+		start_location = {
+			group = "a",
+			zoom = 1,
+			x = 512,
+			y = 512
+		}
+	}
 end
 
--- Lines 2813-2815
+-- Lines 2830-2832
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

@@ -277,9 +277,7 @@ end
 
 -- Lines 239-242
 function CrimeNetSidebarGui:back_pressed()
-	managers.menu:force_back(false, true)
-
-	return true
+	return false
 end
 
 -- Lines 244-283
@@ -326,9 +324,9 @@ function CrimeNetSidebarGui:input_focus()
 	local mouse_pos_x, mouse_pos_y = managers.mouse_pointer:modified_mouse_pos()
 
 	if self:collapsed() then
-		return self._icons_panel:inside(mouse_pos_x, mouse_pos_y)
+		return self._icons_panel:inside(mouse_pos_x, mouse_pos_y) and 1
 	else
-		return self._panel:inside(mouse_pos_x, mouse_pos_y)
+		return self._panel:inside(mouse_pos_x, mouse_pos_y) and 1
 	end
 end
 
@@ -423,7 +421,12 @@ function CrimeNetSidebarGui:clbk_open_story_missions()
 	managers.menu:open_node("story_missions")
 end
 
--- Lines 381-391
+-- Lines 381-383
+function CrimeNetSidebarGui:clbk_open_quickplay()
+	managers.menu:open_node("quickplay_settings")
+end
+
+-- Lines 387-397
 function CrimeNetSidebarGui:clbk_skirmish()
 	local tab_filter = {
 		"",
@@ -445,14 +448,14 @@ function CrimeNetSidebarGui:clbk_skirmish()
 	})
 end
 
--- Lines 393-395
+-- Lines 399-401
 function CrimeNetSidebarGui:clbk_visible_skirmish()
 	return managers.skirmish:is_unlocked()
 end
 
 CrimeNetSidebarSeparator = CrimeNetSidebarSeparator or class()
 
--- Lines 403-422
+-- Lines 409-428
 function CrimeNetSidebarSeparator:init(sidebar, parent_panel, parameters)
 	self._full_width = parent_panel:width() - padding * 2
 	self._collapsed_width = 24
@@ -472,28 +475,28 @@ function CrimeNetSidebarSeparator:init(sidebar, parent_panel, parameters)
 	bitmap:set_center_y(self._panel:height() * 0.5)
 end
 
--- Lines 424-426
+-- Lines 430-432
 function CrimeNetSidebarSeparator:panel()
 	return self._panel
 end
 
--- Lines 428-430
+-- Lines 434-436
 function CrimeNetSidebarSeparator:set_collapsed(collapsed)
 	self._panel:set_width(collapsed and self._collapsed_width or self._full_width)
 end
 
--- Lines 432-434
+-- Lines 438-440
 function CrimeNetSidebarSeparator:accepts_interaction()
 	return false
 end
 
--- Lines 436-438
+-- Lines 442-444
 function CrimeNetSidebarSeparator:update(t, dt)
 end
 
 CrimeNetSidebarItem = CrimeNetSidebarItem or class()
 
--- Lines 445-514
+-- Lines 451-520
 function CrimeNetSidebarItem:init(sidebar, panel, parameters)
 	local font_size = math.ceil(tweak_data.menu.pd2_small_font_size)
 	local icon_size = 24
@@ -555,12 +558,12 @@ function CrimeNetSidebarItem:init(sidebar, panel, parameters)
 	self:set_highlight(false, true)
 end
 
--- Lines 516-518
+-- Lines 522-524
 function CrimeNetSidebarItem:accepts_interaction()
 	return true
 end
 
--- Lines 520-526
+-- Lines 526-532
 function CrimeNetSidebarItem:inside(x, y)
 	if self._collapsed then
 		return self._icon:inside(x, y)
@@ -569,27 +572,27 @@ function CrimeNetSidebarItem:inside(x, y)
 	end
 end
 
--- Lines 528-530
+-- Lines 534-536
 function CrimeNetSidebarItem:panel()
 	return self._panel
 end
 
--- Lines 532-534
+-- Lines 538-540
 function CrimeNetSidebarItem:icon()
 	return self._icon
 end
 
--- Lines 536-538
+-- Lines 542-544
 function CrimeNetSidebarItem:w()
 	return self._text:right() + padding
 end
 
--- Lines 540-542
+-- Lines 546-548
 function CrimeNetSidebarItem:callback()
 	return self._callback
 end
 
--- Lines 544-570
+-- Lines 550-576
 function CrimeNetSidebarItem:set_highlight(enabled, no_sound, force_update)
 	if self._highlight ~= enabled or force_update then
 		if self._collapsed then
@@ -617,7 +620,7 @@ function CrimeNetSidebarItem:set_highlight(enabled, no_sound, force_update)
 	end
 end
 
--- Lines 572-579
+-- Lines 578-585
 function CrimeNetSidebarItem:set_collapsed(collapsed)
 	self._collapsed = collapsed
 
@@ -625,7 +628,7 @@ function CrimeNetSidebarItem:set_collapsed(collapsed)
 	self:set_highlight(self._highlight, true, true)
 end
 
--- Lines 581-585
+-- Lines 587-591
 function CrimeNetSidebarItem:set_text(text)
 	text = utf8.to_upper(text)
 	text = text:gsub(" ", "_")
@@ -633,36 +636,36 @@ function CrimeNetSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines 587-589
+-- Lines 593-595
 function CrimeNetSidebarItem:color()
 	return self._color or tweak_data.screen_colors.button_stage_2
 end
 
--- Lines 591-594
+-- Lines 597-600
 function CrimeNetSidebarItem:set_color(color)
 	self._color = color
 
 	self:set_highlight(self._highlight, true, true)
 end
 
--- Lines 596-598
+-- Lines 602-604
 function CrimeNetSidebarItem:highlight_color()
 	return self._highlight_color or Color.white
 end
 
--- Lines 600-603
+-- Lines 606-609
 function CrimeNetSidebarItem:set_highlight_color(color)
 	self._highlight_color = color
 
 	self:set_highlight(self._highlight, true, true)
 end
 
--- Lines 605-607
+-- Lines 611-613
 function CrimeNetSidebarItem:set_pulse_color(color)
 	self._pulse_color = color
 end
 
--- Lines 609-625
+-- Lines 615-631
 function CrimeNetSidebarItem:create_glow(panel, color, scale)
 	scale = scale or 1
 	local glow_panel = panel:panel({
@@ -718,7 +721,7 @@ function CrimeNetSidebarItem:create_glow(panel, color, scale)
 	return glow_panel
 end
 
--- Lines 627-637
+-- Lines 633-643
 function CrimeNetSidebarItem:update(t, dt)
 	if self._highlight then
 		return
@@ -735,7 +738,7 @@ end
 
 CrimeNetSidebarAttentionItem = CrimeNetSidebarAttentionItem or class(CrimeNetSidebarItem)
 
--- Lines 643-651
+-- Lines 649-657
 function CrimeNetSidebarAttentionItem:init(sidebar, panel, parameters)
 	CrimeNetSidebarAttentionItem.super.init(self, sidebar, panel, parameters)
 
@@ -750,7 +753,7 @@ function CrimeNetSidebarAttentionItem:init(sidebar, panel, parameters)
 	end
 end
 
--- Lines 653-661
+-- Lines 659-667
 function CrimeNetSidebarAttentionItem:update(t, dt)
 	CrimeNetSidebarAttentionItem.super.update(self, t, dt)
 
@@ -765,7 +768,7 @@ end
 
 CrimeNetSidebarTutorialHeistsItem = CrimeNetSidebarTutorialHeistsItem or class(CrimeNetSidebarAttentionItem)
 
--- Lines 668-677
+-- Lines 674-683
 function CrimeNetSidebarTutorialHeistsItem:init(sidebar, panel, parameters)
 	local tutorial_completions = 0
 
@@ -780,7 +783,7 @@ end
 
 CrimeNetSidebarSkirmishItem = CrimeNetSidebarSkirmishItem or class(CrimeNetSidebarAttentionItem)
 
--- Lines 686-689
+-- Lines 692-695
 function CrimeNetSidebarSkirmishItem:init(sidebar, panel, parameters)
 	parameters.calling_attention = #managers.skirmish:unclaimed_rewards() > 0
 
@@ -789,7 +792,7 @@ end
 
 CrimeNetSidebarStoryMissionItem = CrimeNetSidebarStoryMissionItem or class(CrimeNetSidebarAttentionItem)
 
--- Lines 698-703
+-- Lines 704-709
 function CrimeNetSidebarStoryMissionItem:init(sidebar, panel, parameters)
 	local current = managers.story:current_mission()
 	parameters.calling_attention = current and current.completed and not current.rewarded
@@ -799,7 +802,7 @@ end
 
 CrimeNetSidebarSafehouseItem = CrimeNetSidebarSafehouseItem or class(CrimeNetSidebarItem)
 
--- Lines 711-742
+-- Lines 717-748
 function CrimeNetSidebarSafehouseItem:init(sidebar, panel, parameters)
 	CrimeNetSidebarSafehouseItem.super.init(self, sidebar, panel, parameters)
 
@@ -828,7 +831,7 @@ function CrimeNetSidebarSafehouseItem:init(sidebar, panel, parameters)
 	end
 end
 
--- Lines 744-785
+-- Lines 750-791
 function CrimeNetSidebarSafehouseItem:update(t, dt)
 	if self._unplayed then
 		local target_alpha = self._highlight and 0 or 0.2
@@ -872,7 +875,7 @@ function CrimeNetSidebarSafehouseItem:update(t, dt)
 	end
 end
 
--- Lines 787-793
+-- Lines 793-799
 function CrimeNetSidebarSafehouseItem:set_highlight(enabled, no_sound, force_update)
 	CrimeNetSidebarSafehouseItem.super.set_highlight(self, enabled, no_sound, force_update)
 
@@ -885,7 +888,7 @@ end
 
 CrimeNetSidebarMutatorsItem = CrimeNetSidebarMutatorsItem or class(CrimeNetSidebarItem)
 
--- Lines 801-816
+-- Lines 807-822
 function CrimeNetSidebarMutatorsItem:init(sidebar, panel, parameters)
 	CrimeNetSidebarMutatorsItem.super.init(self, sidebar, panel, parameters)
 
@@ -901,7 +904,7 @@ function CrimeNetSidebarMutatorsItem:init(sidebar, panel, parameters)
 	end
 end
 
--- Lines 818-828
+-- Lines 824-834
 function CrimeNetSidebarMutatorsItem:update(t, dt)
 	CrimeNetSidebarMutatorsItem.super.update(self, t, dt)
 
@@ -916,7 +919,7 @@ end
 
 CrimeNetSidebarCrimeSpreeItem = CrimeNetSidebarCrimeSpreeItem or class(CrimeNetSidebarItem)
 
--- Lines 836-846
+-- Lines 842-852
 function CrimeNetSidebarCrimeSpreeItem:init(...)
 	CrimeNetSidebarCrimeSpreeItem.super.init(self, ...)
 

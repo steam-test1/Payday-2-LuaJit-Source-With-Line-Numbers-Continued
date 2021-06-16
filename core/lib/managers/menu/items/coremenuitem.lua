@@ -3,7 +3,7 @@ core:module("CoreMenuItem")
 Item = Item or class()
 Item.TYPE = "item"
 
--- Lines 6-74
+-- Lines 6-78
 function Item:init(data_node, parameters)
 	self._type = ""
 	local params = parameters or {}
@@ -39,6 +39,10 @@ function Item:init(data_node, parameters)
 		self._icon_visible_callback_name_list = string.split(params.icon_visible_callback, " ")
 	end
 
+	if params.glow_visible_callback then
+		self._glow_visible_callback_name_list = string.split(params.glow_visible_callback, " ")
+	end
+
 	if params.callback then
 		params.callback = string.split(params.callback, " ")
 	else
@@ -66,54 +70,54 @@ function Item:init(data_node, parameters)
 	self._enabled = true
 end
 
--- Lines 76-79
+-- Lines 80-83
 function Item:set_enabled(enabled)
 	self._enabled = enabled
 
 	self:dirty()
 end
 
--- Lines 81-83
+-- Lines 85-87
 function Item:enabled()
 	return self._enabled
 end
 
--- Lines 85-87
+-- Lines 89-91
 function Item:type()
 	return self._type
 end
 
--- Lines 89-91
+-- Lines 93-95
 function Item:name()
 	return self._parameters.name
 end
 
--- Lines 93-95
+-- Lines 97-99
 function Item:info_panel()
 	return self._parameters.info_panel
 end
 
--- Lines 97-99
+-- Lines 101-103
 function Item:parameters()
 	return self._parameters
 end
 
--- Lines 101-103
+-- Lines 105-107
 function Item:parameter(name)
 	return self._parameters[name]
 end
 
--- Lines 105-107
+-- Lines 109-111
 function Item:set_parameter(name, value)
 	self._parameters[name] = value
 end
 
--- Lines 109-111
+-- Lines 113-115
 function Item:set_parameters(parameters)
 	self._parameters = parameters
 end
 
--- Lines 113-146
+-- Lines 117-157
 function Item:set_callback_handler(callback_handler)
 	self._callback_handler = callback_handler
 
@@ -141,6 +145,14 @@ function Item:set_callback_handler(callback_handler)
 		end
 	end
 
+	if self._glow_visible_callback_name_list then
+		for _, visible_callback_name in pairs(self._glow_visible_callback_name_list) do
+			self._glow_visible_callback_list = self._glow_visible_callback_list or {}
+
+			table.insert(self._glow_visible_callback_list, callback(callback_handler, callback_handler, visible_callback_name))
+		end
+	end
+
 	if self._enabled_callback_name_list then
 		for _, enabled_callback_name in pairs(self._enabled_callback_name_list) do
 			if callback_handler[enabled_callback_name] then
@@ -156,26 +168,26 @@ function Item:set_callback_handler(callback_handler)
 	end
 end
 
--- Lines 148-152
+-- Lines 159-163
 function Item:trigger()
 	for _, callback in pairs((self:enabled() or self:parameters().ignore_disabled) and self:parameters().callback or self:parameters().callback_disabled) do
 		callback(self)
 	end
 end
 
--- Lines 154-158
+-- Lines 165-169
 function Item:dirty()
 	if self.dirty_callback then
 		self:dirty_callback()
 	end
 end
 
--- Lines 160-162
+-- Lines 171-173
 function Item:set_visible(visible)
 	self._visible = visible
 end
 
--- Lines 164-176
+-- Lines 175-187
 function Item:visible()
 	if self._visible == false then
 		return false
@@ -192,60 +204,74 @@ function Item:visible()
 	return true
 end
 
--- Lines 178-180
+-- Lines 189-191
 function Item:on_delete_row_item()
 end
 
--- Lines 182-187
+-- Lines 193-199
 function Item:on_delete_item()
 	self._parameters.callback = {}
 	self._parameters.callback_disabled = {}
 	self._visible_callback_list = nil
 	self._icon_visible_callback_list = nil
+	self._glow_visible_callback_list = nil
 end
 
--- Lines 189-190
+-- Lines 201-202
 function Item:on_item_position(row_item, node)
 end
 
--- Lines 192-193
+-- Lines 204-205
 function Item:on_item_positions_done(row_item, node)
 end
 
--- Lines 195-197
+-- Lines 207-209
 function Item:get_h(row_item)
 	return nil
 end
 
--- Lines 203-205
+-- Lines 215-217
 function Item:setup_gui(node, row_item)
 	return false
 end
 
--- Lines 208-210
+-- Lines 220-222
 function Item:reload(row_item)
 	return false
 end
 
--- Lines 213-215
+-- Lines 225-227
 function Item:highlight_row_item(node, row_item, mouse_over)
 	return false
 end
 
--- Lines 218-220
+-- Lines 230-232
 function Item:fade_row_item(node, row_item)
 	return false
 end
 
--- Lines 222-224
+-- Lines 234-236
 function Item:menu_unselected_visible()
 	return true
 end
 
--- Lines 226-235
+-- Lines 238-247
 function Item:icon_visible()
 	if self._icon_visible_callback_list then
 		for _, visible_callback in pairs(self._icon_visible_callback_list) do
+			if not visible_callback(self) then
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
+-- Lines 249-258
+function Item:glow_visible()
+	if self._glow_visible_callback_list then
+		for _, visible_callback in pairs(self._glow_visible_callback_list) do
 			if not visible_callback(self) then
 				return false
 			end

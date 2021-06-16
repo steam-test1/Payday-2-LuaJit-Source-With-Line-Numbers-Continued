@@ -4715,16 +4715,63 @@ function MenuNodeChooseWeaponCosmeticGui:close(...)
 	managers.environment_controller:set_dof_distance(10, false)
 end
 
+MenuNodeQuickplayGui = MenuNodeQuickplayGui or class(MenuNodeCrimenetFiltersGui)
+
+-- Lines 3883-3898
+function MenuNodeQuickplayGui:init(node, layer, parameters)
+	MenuNodeQuickplayGui.super.init(self, node, layer, parameters)
+	managers.menu_component:disable_crimenet()
+
+	local mc_full_ws = managers.menu_component:fullscreen_ws()
+	self._fullscreen_panel = mc_full_ws:panel():panel({
+		layer = 50
+	})
+
+	self._fullscreen_panel:rect({
+		alpha = 0.5,
+		layer = 0,
+		color = Color.black
+	})
+
+	local blur = self._fullscreen_panel:bitmap({
+		texture = "guis/textures/test_blur_df",
+		render_template = "VertexColorTexturedBlur3D",
+		w = self._fullscreen_panel:w(),
+		h = self._fullscreen_panel:h()
+	})
+
+	-- Lines 3893-3896
+	local function func(o)
+		local start_blur = 0
+
+		over(0.6, function (p)
+			o:set_alpha(math.lerp(start_blur, 1, p))
+		end)
+	end
+
+	blur:animate(func)
+end
+
+-- Lines 3900-3906
+function MenuNodeQuickplayGui:close(...)
+	self._fullscreen_panel:parent():remove(self._fullscreen_panel)
+
+	self._fullscreen_panel = nil
+
+	managers.menu_component:enable_crimenet()
+	MenuNodeQuickplayGui.super.close(self, ...)
+end
+
 MenuNodeDOFGui = MenuNodeDOFGui or class(MenuNodeGui)
 
--- Lines 3883-3888
+-- Lines 3909-3914
 function MenuNodeDOFGui:init(...)
 	MenuNodeDOFGui.super.init(self, ...)
 	managers.environment_controller:set_dof_setting("standard")
 	managers.environment_controller:set_dof_distance(100, true)
 end
 
--- Lines 3889-3892
+-- Lines 3915-3918
 function MenuNodeDOFGui:close(...)
 	MenuNodeDOFGui.super.close(self, ...)
 	managers.environment_controller:set_dof_distance(10, false)
@@ -4732,7 +4779,7 @@ end
 
 MenuNodeOpenContainerGui = MenuNodeOpenContainerGui or class(MenuNodeBaseGui)
 
--- Lines 3897-3910
+-- Lines 3923-3936
 function MenuNodeOpenContainerGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -4747,13 +4794,13 @@ function MenuNodeOpenContainerGui:init(node, layer, parameters)
 	MenuNodeOpenContainerGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 3912-3915
+-- Lines 3938-3941
 function MenuNodeOpenContainerGui:refresh_gui(...)
 	MenuNodeOpenContainerGui.super.refresh_gui(self, ...)
 	self:setup(true)
 end
 
--- Lines 3917-4251
+-- Lines 3943-4277
 function MenuNodeOpenContainerGui:setup(half_fade)
 	local container_data = self.node:parameters().container_data
 
@@ -5030,7 +5077,7 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 
 	local x_td, y_td, x_rtd, y_rtd = nil
 
-	-- Lines 4119-4131
+	-- Lines 4145-4157
 	local function sort_func(x, y)
 		x_td = (x.category == "weapon_skins" and tweak_data.blackmarket.weapon_skins or tweak_data.economy[x.category])[x.entry]
 		y_td = (y.category == "weapon_skins" and tweak_data.blackmarket.weapon_skins or tweak_data.economy[y.category])[y.entry]
@@ -5222,7 +5269,7 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 	})
 end
 
--- Lines 4253-4314
+-- Lines 4279-4340
 function MenuNodeOpenContainerGui:update_info(button)
 	if button == self._selected_button then
 		return
@@ -5308,7 +5355,7 @@ function MenuNodeOpenContainerGui:update_info(button)
 	self:update_legends(button)
 end
 
--- Lines 4316-4356
+-- Lines 4342-4382
 function MenuNodeOpenContainerGui:update_legends(button)
 	self._legend_panel:clear()
 
@@ -5383,7 +5430,7 @@ function MenuNodeOpenContainerGui:update_legends(button)
 	end
 end
 
--- Lines 4358-4364
+-- Lines 4384-4390
 function MenuNodeOpenContainerGui:weapon_cosmetics_callback(button, data)
 	if button == Idstring("1") then
 		managers.blackmarket:view_weapon_platform_with_cosmetics(data.weapon_id, {
@@ -5403,7 +5450,7 @@ function MenuNodeOpenContainerGui:weapon_cosmetics_callback(button, data)
 	end
 end
 
--- Lines 4366-4371
+-- Lines 4392-4397
 function MenuNodeOpenContainerGui:armor_cosmetics_callback(button, data)
 	if button == Idstring("1") then
 		-- Nothing
@@ -5412,7 +5459,7 @@ function MenuNodeOpenContainerGui:armor_cosmetics_callback(button, data)
 	end
 end
 
--- Lines 4373-4382
+-- Lines 4399-4408
 function MenuNodeOpenContainerGui:prev_container()
 	local data = self.node:parameters().container_data
 	local market_bundle = data.active_market_bundle - 1
@@ -5424,7 +5471,7 @@ function MenuNodeOpenContainerGui:prev_container()
 	self:open_container(market_bundle)
 end
 
--- Lines 4384-4389
+-- Lines 4410-4415
 function MenuNodeOpenContainerGui:next_container()
 	local data = self.node:parameters().container_data
 	local market_bundle = data.active_market_bundle % data.num_bundles + 1
@@ -5432,7 +5479,7 @@ function MenuNodeOpenContainerGui:next_container()
 	self:open_container(market_bundle)
 end
 
--- Lines 4391-4408
+-- Lines 4417-4434
 function MenuNodeOpenContainerGui:open_container(market_bundle)
 	local data = self.node:parameters().container_data
 	local active_bundle = data.market_bundles[market_bundle]
@@ -5452,7 +5499,7 @@ function MenuNodeOpenContainerGui:open_container(market_bundle)
 	end
 end
 
--- Lines 4410-4416
+-- Lines 4436-4442
 function MenuNodeOpenContainerGui:previous_page()
 	local data = self.node:parameters().container_data
 
@@ -5462,7 +5509,7 @@ function MenuNodeOpenContainerGui:previous_page()
 	end
 end
 
--- Lines 4418-4424
+-- Lines 4444-4450
 function MenuNodeOpenContainerGui:next_page()
 	local data = self.node:parameters().container_data
 
@@ -5472,13 +5519,13 @@ function MenuNodeOpenContainerGui:next_page()
 	end
 end
 
--- Lines 4426-4429
+-- Lines 4452-4455
 function MenuNodeOpenContainerGui:set_visible(visible)
 	MenuNodeOpenContainerGui.super.set_visible(self, visible)
 	self._fullscreen_panel:set_visible(visible)
 end
 
--- Lines 4431-4438
+-- Lines 4457-4464
 function MenuNodeOpenContainerGui:_setup_item_panel(...)
 	MenuNodeOpenContainerGui.super._setup_item_panel(self, ...)
 
@@ -5489,7 +5536,7 @@ function MenuNodeOpenContainerGui:_setup_item_panel(...)
 	end
 end
 
--- Lines 4440-4450
+-- Lines 4466-4476
 function MenuNodeOpenContainerGui:close()
 	MenuNodeOpenContainerGui.super.close(self)
 
@@ -5506,7 +5553,7 @@ end
 
 MenuNodeContainerPreviewGui = MenuNodeContainerPreviewGui or class(MenuNodeGui)
 
--- Lines 4453-4481
+-- Lines 4479-4507
 function MenuNodeContainerPreviewGui:init(node, layer, parameters)
 	MenuNodeContainerPreviewGui.super.init(self, node, layer, parameters)
 
@@ -5548,7 +5595,7 @@ function MenuNodeContainerPreviewGui:init(node, layer, parameters)
 	end
 end
 
--- Lines 4483-4486
+-- Lines 4509-4512
 function MenuNodeContainerPreviewGui:close(...)
 	MenuNodeContainerPreviewGui.super.close(self, ...)
 	managers.menu_component:show_blackmarket_gui()

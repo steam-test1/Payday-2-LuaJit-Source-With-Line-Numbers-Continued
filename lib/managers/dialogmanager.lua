@@ -108,16 +108,13 @@ function DialogManager:queue_narrator_dialog(id, params)
 	self:queue_dialog(self._narrator_prefix .. id, params)
 end
 
--- Lines 102-109
+-- Lines 102-105
 function DialogManager:set_narrator(narrator)
-	local narrator_codes = {
-		bain = "ban",
-		locke = "loc"
-	}
-	self._narrator_prefix = "Play_" .. narrator_codes[narrator] .. "_"
+	local narrator_prefix = tweak_data.levels:get_narrator_prefix(narrator)
+	self._narrator_prefix = "Play_" .. narrator_prefix .. "_"
 end
 
--- Lines 112-138
+-- Lines 108-134
 function DialogManager:finished()
 	self:_stop_dialog()
 
@@ -146,7 +143,7 @@ function DialogManager:finished()
 	end
 end
 
--- Lines 140-152
+-- Lines 136-148
 function DialogManager:quit_dialog(no_done_cbk)
 	managers.subtitle:set_visible(false)
 	managers.subtitle:set_enabled(false)
@@ -160,7 +157,7 @@ function DialogManager:quit_dialog(no_done_cbk)
 	self._next_dialog = nil
 end
 
--- Lines 154-161
+-- Lines 150-157
 function DialogManager:conversation_names()
 	local t = {}
 
@@ -173,12 +170,12 @@ function DialogManager:conversation_names()
 	return t
 end
 
--- Lines 163-165
+-- Lines 159-161
 function DialogManager:on_simulation_ended()
 	self:quit_dialog(true)
 end
 
--- Lines 167-199
+-- Lines 163-195
 function DialogManager:_play_dialog(dialog, params, line)
 	local unit = params.on_unit or params.override_characters and managers.player:player_unit()
 
@@ -215,21 +212,21 @@ function DialogManager:_play_dialog(dialog, params, line)
 	end
 end
 
--- Lines 201-205
+-- Lines 197-201
 function DialogManager:_stop_dialog()
 	if self._current_dialog and self._current_dialog.unit then
 		self._current_dialog.unit:drama():stop_cue()
 	end
 end
 
--- Lines 207-211
+-- Lines 203-207
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
 	end
 end
 
--- Lines 213-222
+-- Lines 209-218
 function DialogManager:_load_dialogs()
 	local file_name = "gamedata/dialogs/index"
 	local data = PackageManager:script_data(Idstring("dialog_index"), file_name:id())
@@ -241,7 +238,7 @@ function DialogManager:_load_dialogs()
 	end
 end
 
--- Lines 224-250
+-- Lines 220-246
 function DialogManager:_load_dialog_data(name)
 	local file_name = "gamedata/dialogs/" .. name
 	local data = PackageManager:script_data(Idstring("dialog"), file_name:id())

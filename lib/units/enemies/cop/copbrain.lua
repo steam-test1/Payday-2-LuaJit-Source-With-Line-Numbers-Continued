@@ -1302,7 +1302,7 @@ function CopBrain:on_alarm_pager_interaction(status, player)
 	end
 end
 
--- Lines 1382-1446
+-- Lines 1382-1452
 function CopBrain:clbk_alarm_pager(ignore_this, data)
 	local pager_data = self._alarm_pager_data
 	local clbk_id = pager_data.pager_clbk_id
@@ -1345,10 +1345,13 @@ function CopBrain:clbk_alarm_pager(ignore_this, data)
 		managers.groupai:state():on_police_called("alarm_pager_not_answered")
 		self._unit:sound():stop()
 
+		local narrator_prefix = tweak_data.levels:get_narrator_prefix()
+		local sound_event = narrator_prefix .. "_alm_any_any"
+
 		if self._unit:character_damage():dead() then
-			self._unit:sound():corpse_play("pln_alm_any_any", nil, true)
+			self._unit:sound():corpse_play(sound_event, nil, true)
 		else
-			self._unit:sound():play("pln_alm_any_any", nil, true)
+			self._unit:sound():play(sound_event, nil, true)
 		end
 
 		self:end_alarm_pager()
@@ -1369,7 +1372,7 @@ function CopBrain:clbk_alarm_pager(ignore_this, data)
 	end
 end
 
--- Lines 1469-1486
+-- Lines 1475-1492
 function CopBrain:_chk_enable_bodybag_interaction()
 	if self:is_pager_started() then
 		return
@@ -1389,14 +1392,14 @@ function CopBrain:_chk_enable_bodybag_interaction()
 	return true
 end
 
--- Lines 1490-1494
+-- Lines 1496-1500
 function CopBrain:on_police_call_success(unit)
 	if self._logic_data.logic.on_police_call_success then
 		self._logic_data.logic.on_police_call_success(self._logic_data)
 	end
 end
 
--- Lines 1498-1528
+-- Lines 1504-1534
 function CopBrain:pre_destroy(unit)
 	self:set_active(false)
 
@@ -1430,7 +1433,7 @@ function CopBrain:pre_destroy(unit)
 	end
 end
 
--- Lines 1532-1540
+-- Lines 1538-1546
 function CopBrain:_get_radio_id(id)
 	local tweak = tweak_data.character[self._unit:base()._tweak_table]
 

@@ -634,7 +634,7 @@ function NodeGui:_item_panel_height()
 	return height
 end
 
--- Lines 659-713
+-- Lines 659-722
 function NodeGui:_set_item_positions()
 	local total_height = self:_item_panel_height()
 	local current_y = self.height_padding
@@ -679,6 +679,15 @@ function NodeGui:_set_item_positions()
 				row_item.icon:set_color(row_item.gui_panel:color())
 			end
 
+			if alive(row_item.glow) then
+				local x, y, w, h = row_item.gui_panel:text_rect()
+
+				row_item.glow:set_center_y(row_item.gui_panel:center_y())
+				row_item.glow:set_center_x(x + w / 2)
+				row_item.glow:set_width(w * 3)
+				row_item.glow:set_color(row_item.gui_panel:color())
+			end
+
 			local x, y, w, h = row_item.gui_panel:shape()
 			current_item_height = h + self.spacing
 			current_y = current_y + current_item_height
@@ -692,25 +701,25 @@ function NodeGui:_set_item_positions()
 	end
 end
 
--- Lines 715-721
+-- Lines 724-730
 function NodeGui:resolution_changed()
 	self:_setup_size()
 	self:_set_item_positions()
 	self:highlight_item(self._highlighted_item)
 end
 
--- Lines 723-725
+-- Lines 732-734
 function NodeGui:_setup_item_panel_parent(safe_rect)
 	self._item_panel_parent:set_shape(safe_rect.x, safe_rect.y, safe_rect.width, safe_rect.height)
 end
 
--- Lines 727-730
+-- Lines 736-739
 function NodeGui:_set_width_and_height(safe_rect)
 	self.width = safe_rect.width
 	self.height = safe_rect.height
 end
 
--- Lines 732-748
+-- Lines 741-757
 function NodeGui:_setup_item_panel(safe_rect, res)
 	local item_panel_offset = safe_rect.height * 0.5 - #self.row_items * 0.5 * (self.font_size + self.spacing)
 
@@ -722,12 +731,12 @@ function NodeGui:_setup_item_panel(safe_rect, res)
 	self.item_panel:set_w(safe_rect.width)
 end
 
--- Lines 750-752
+-- Lines 759-761
 function NodeGui:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines 754-815
+-- Lines 763-824
 function NodeGui:_setup_size()
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local scaled_size = managers.gui_data:scaled_size()
@@ -768,11 +777,11 @@ function NodeGui:_setup_size()
 	end
 end
 
--- Lines 817-818
+-- Lines 826-827
 function NodeGui:_setup_item_size(row_item)
 end
 
--- Lines 820-828
+-- Lines 829-837
 function NodeGui:mouse_pressed(button, x, y)
 	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and self:_mid_align() < x then
 		if button == Idstring("mouse wheel down") then

@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2234
+-- Lines 5-2235
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -315,7 +315,8 @@ function LootDropTweakData:init(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = -100,
-		unique_lock_icon = "guis/textures/pd2/lock_community"
+		unique_lock_icon = "guis/textures/pd2/lock_community",
+		unique_lock_color = Color(255, 59, 174, 254) / 255
 	}
 	self.global_values.poetry_soundtrack = {
 		name_id = "bm_global_value_poetry_soundtrack",
@@ -1797,7 +1798,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2236-2241
+-- Lines 2237-2242
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

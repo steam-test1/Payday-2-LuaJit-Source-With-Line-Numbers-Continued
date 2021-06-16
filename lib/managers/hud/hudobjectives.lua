@@ -79,9 +79,21 @@ function HUDBGBox_create(panel, params, config)
 	return box_panel
 end
 
+-- Lines 23-32
+function HUDBGBox_set_color(box_panel, config)
+	local color = config and config.color
+	local bg_color = config and config.bg_color or Color(1, 0, 0, 0)
+
+	box_panel:child("bg"):set_color(bg_color)
+	box_panel:child("left_top"):set_color(color)
+	box_panel:child("left_bottom"):set_color(color)
+	box_panel:child("right_top"):set_color(color)
+	box_panel:child("right_bottom"):set_color(color)
+end
+
 local box_speed = 1000
 
--- Lines 24-46
+-- Lines 35-57
 function HUDBGBox_animate_open_right(panel, wait_t, target_w, done_cb)
 	panel:set_visible(false)
 	panel:set_w(0)
@@ -112,7 +124,7 @@ function HUDBGBox_animate_open_right(panel, wait_t, target_w, done_cb)
 	done_cb()
 end
 
--- Lines 48-62
+-- Lines 59-73
 function HUDBGBox_animate_close_right(panel, done_cb)
 	local speed = box_speed
 	local cw = panel:w()
@@ -130,7 +142,7 @@ function HUDBGBox_animate_close_right(panel, done_cb)
 	done_cb()
 end
 
--- Lines 64-91
+-- Lines 75-102
 function HUDBGBox_animate_open_left(panel, wait_t, target_w, done_cb, config)
 	config = config or {}
 
@@ -173,7 +185,7 @@ function HUDBGBox_animate_open_left(panel, wait_t, target_w, done_cb, config)
 	done_cb()
 end
 
--- Lines 93-110
+-- Lines 104-121
 function HUDBGBox_animate_close_left(panel, done_cb)
 	local speed = box_speed
 	local cw = panel:w()
@@ -194,7 +206,7 @@ function HUDBGBox_animate_close_left(panel, done_cb)
 	done_cb()
 end
 
--- Lines 112-140
+-- Lines 123-151
 function HUDBGBox_animate_open_center(panel, wait_t, target_w, done_cb, config)
 	config = config or {}
 
@@ -238,7 +250,7 @@ function HUDBGBox_animate_open_center(panel, wait_t, target_w, done_cb, config)
 	end
 end
 
--- Lines 142-161
+-- Lines 153-172
 function HUDBGBox_animate_close_center(panel, done_cb)
 	local center_x = panel:center_x()
 	local cw = panel:w()
@@ -262,7 +274,7 @@ function HUDBGBox_animate_close_center(panel, done_cb)
 	end
 end
 
--- Lines 163-177
+-- Lines 174-188
 function HUDBGBox_animate_bg_attention(bg, config)
 	local color = config and config.color or Color.white
 	local attention_color_function = config and config.attention_color_function
@@ -284,7 +296,7 @@ end
 
 HUDObjectives = HUDObjectives or class()
 
--- Lines 183-203
+-- Lines 194-214
 function HUDObjectives:init(hud)
 	self._hud_panel = hud.panel
 
@@ -355,7 +367,7 @@ function HUDObjectives:init(hud)
 	amount_text:set_y(objective_text:y() + objective_text:font_size() - 2)
 end
 
--- Lines 205-231
+-- Lines 216-242
 function HUDObjectives:activate_objective(data)
 	print("[HUDObjectives] activate_objective", data.id, data.amount)
 
@@ -381,7 +393,7 @@ function HUDObjectives:activate_objective(data)
 	end
 end
 
--- Lines 233-247
+-- Lines 244-258
 function HUDObjectives:remind_objective(id)
 	print("[HUDObjectives] remind_objective", id, self._active_objective_id)
 
@@ -398,7 +410,7 @@ function HUDObjectives:remind_objective(id)
 	end
 end
 
--- Lines 249-259
+-- Lines 260-270
 function HUDObjectives:complete_objective(data)
 	print("[HUDObjectives] complete_objective", data.id, self._active_objective_id)
 
@@ -410,7 +422,7 @@ function HUDObjectives:complete_objective(data)
 	end
 end
 
--- Lines 261-275
+-- Lines 272-286
 function HUDObjectives:update_amount_objective(data)
 	print("[HUDObjectives] update_amount_objective", data.id, data.current_amount, data.amount)
 
@@ -426,7 +438,7 @@ function HUDObjectives:update_amount_objective(data)
 	end
 end
 
--- Lines 277-291
+-- Lines 288-302
 function HUDObjectives:open_right_done(uses_amount)
 	local objectives_panel = self._hud_panel:child("objectives_panel")
 	local objective_text = objectives_panel:child("objective_text")
@@ -443,7 +455,7 @@ function HUDObjectives:open_right_done(uses_amount)
 	objective_text:animate(callback(self, self, "_animate_show_text"), amount_text)
 end
 
--- Lines 293-311
+-- Lines 304-322
 function HUDObjectives:_animate_show_text(objective_text, amount_text)
 	local TOTAL_T = 0.5
 	local t = TOTAL_T
@@ -467,7 +479,7 @@ function HUDObjectives:_animate_show_text(objective_text, amount_text)
 	end
 end
 
--- Lines 313-349
+-- Lines 324-360
 function HUDObjectives:_animate_complete_objective(objectives_panel)
 	local objective_text = objectives_panel:child("objective_text")
 	local amount_text = objectives_panel:child("amount_text")
@@ -498,7 +510,7 @@ function HUDObjectives:_animate_complete_objective(objectives_panel)
 		amount_text:set_visible(false)
 	end
 
-	-- Lines 341-344
+	-- Lines 352-355
 	local function done_cb()
 		objectives_panel:child("objective_text"):set_text(utf8.to_upper(""))
 		objectives_panel:set_visible(false)
@@ -508,7 +520,7 @@ function HUDObjectives:_animate_complete_objective(objectives_panel)
 	self._bg_box:animate(callback(nil, _G, "HUDBGBox_animate_close_right"), done_cb)
 end
 
--- Lines 351-355
+-- Lines 362-366
 function HUDObjectives:_animate_activate_objective(objectives_panel)
 	local icon_objectivebox = objectives_panel:child("icon_objectivebox")
 
@@ -516,7 +528,7 @@ function HUDObjectives:_animate_activate_objective(objectives_panel)
 	icon_objectivebox:animate(callback(self, self, "_animate_icon_objectivebox"))
 end
 
--- Lines 357-369
+-- Lines 368-380
 function HUDObjectives:_animate_icon_objectivebox(icon_objectivebox)
 	local TOTAL_T = 5
 	local t = TOTAL_T

@@ -1,16 +1,17 @@
 StoryMissionsTweakData = StoryMissionsTweakData or class()
 StoryMissionsTweakData.DEFAULT_COINS = 3
 
--- Lines 5-9
+-- Lines 5-11
 function StoryMissionsTweakData:init(tweak_data)
 	self._tweak_data = tweak_data
 
 	self:_init_missions(tweak_data)
 
 	self._tweak_data = nil
+	self.main_menu_glow_level_limit = 25
 end
 
--- Lines 11-17
+-- Lines 13-19
 function StoryMissionsTweakData:_create_objective(data)
 	data = data or {}
 	data.completed = false
@@ -20,7 +21,7 @@ function StoryMissionsTweakData:_create_objective(data)
 	return data
 end
 
--- Lines 19-24
+-- Lines 21-26
 function StoryMissionsTweakData:_progress(progress_id, max_progress, data)
 	data = data or {}
 	data.progress_id = progress_id
@@ -29,7 +30,7 @@ function StoryMissionsTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines 26-40
+-- Lines 28-42
 function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	local tweak_data = self._tweak_data or tweak_data
 	local data = self:_progress(progress_id, ...)
@@ -56,7 +57,7 @@ function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	return data
 end
 
--- Lines 42-44
+-- Lines 44-46
 function StoryMissionsTweakData:_default_reward()
 	return {
 		{
@@ -66,7 +67,7 @@ function StoryMissionsTweakData:_default_reward()
 	}
 end
 
--- Lines 46-52
+-- Lines 48-54
 function StoryMissionsTweakData:_default_pre_coins()
 	return {
 		{
@@ -75,12 +76,26 @@ function StoryMissionsTweakData:_default_pre_coins()
 		},
 		{
 			type_items = "xp",
-			item_entry = "xp20"
+			item_entry = "xp30"
 		}
 	}
 end
 
--- Lines 57-63
+-- Lines 56-61
+function StoryMissionsTweakData:_default_pre_coins_halved()
+	return {
+		{
+			type_items = "cash",
+			item_entry = "cash10"
+		},
+		{
+			type_items = "xp",
+			item_entry = "xp15"
+		}
+	}
+end
+
+-- Lines 67-73
 function StoryMissionsTweakData:get_mission(id)
 	for idx, mission in ipairs(self.missions) do
 		if mission.id == id then
@@ -89,7 +104,7 @@ function StoryMissionsTweakData:get_mission(id)
 	end
 end
 
--- Lines 65-82
+-- Lines 75-92
 function StoryMissionsTweakData:_mission(id, data)
 	data = data or {}
 	data.id = id
@@ -100,7 +115,7 @@ function StoryMissionsTweakData:_mission(id, data)
 	return data
 end
 
--- Lines 85-90
+-- Lines 95-100
 local function level_check(id, ach_id)
 	local d = tweak_data.achievement.level_achievements[ach_id or id]
 
@@ -109,24 +124,24 @@ local function level_check(id, ach_id)
 	end
 end
 
--- Lines 92-96
+-- Lines 102-106
 local function maybe_award(id, check, set)
 	if check then
 		managers.story:award(id, set == true and check or set or nil)
 	end
 end
 
--- Lines 100-102
+-- Lines 110-112
 function StoryMissionsTweakData._sm_1_check(mission_data)
 	level_check("story_basics_lvl10")
 end
 
--- Lines 104-111
+-- Lines 114-121
 function StoryMissionsTweakData._sm_first_safehouse_check()
 	maybe_award("story_first_safehouse", managers.custom_safehouse:unlocked())
 end
 
--- Lines 113-118
+-- Lines 123-128
 function StoryMissionsTweakData._sm_2_check()
 	local slots = managers.player:equipment_slots()
 
@@ -135,30 +150,32 @@ function StoryMissionsTweakData._sm_2_check()
 	maybe_award("story_inv_skillpoints", tweak_data.story.sm_2_skillpoints <= managers.skilltree:total_points_spent())
 end
 
--- Lines 120-122
+-- Lines 130-132
 function StoryMissionsTweakData._sm_moving_up_check()
 	level_check("story_chill_level")
 end
 
--- Lines 124-126
+-- Lines 134-136
 function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines 130-759
+-- Lines 140-829
 function StoryMissionsTweakData:_init_missions(tweak_data)
-	self.sm_2_skillpoints = 5
+	self.sm_2_skillpoints = 8
 	self.missions = {
+		self:_mission("sm_act_1", {
+			rewarded = true,
+			completed = true,
+			is_header = true,
+			objectives = {}
+		}),
 		self:_mission("sm_1", {
 			reward_id = "menu_sm_pre_coin_reward",
-			voice_line = "Play_pln_stq_01",
 			custom_check = "_sm_1_check",
+			voice_line = "Play_pln_stq_01",
 			objectives = {
 				{
-					self:_level_progress("story_basics_stealth", 1, {
-						name_id = "menu_sm_basics_stealth",
-						basic = true
-					}),
 					self:_level_progress("story_basics_loud", 1, {
 						name_id = "menu_sm_basics_loud",
 						basic = true
@@ -170,26 +187,13 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 					})
 				}
 			},
-			rewards = self:_default_pre_coins()
-		}),
-		self:_mission("sm_first_safehouse", {
-			reward_id = "menu_sm_pre_coin_reward",
-			voice_line = "Play_pln_stq_29",
-			custom_check = "_sm_first_safehouse_check",
-			hide_progress = true,
-			objectives = {
-				{
-					self:_progress("story_first_safehouse", 1, {
-						name_id = "menu_sm_first_safehouse"
-					})
-				}
-			},
-			rewards = self:_default_pre_coins()
+			rewards = self:_default_pre_coins(),
+			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_2", {
 			reward_id = "menu_sm_pre_coin_reward",
-			voice_line = "Play_pln_stq_02",
 			custom_check = "_sm_2_check",
+			voice_line = "Play_pln_stq_02",
 			objectives = {
 				{
 					self:_progress("story_inv_deployable", 1, {
@@ -203,7 +207,8 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 					})
 				}
 			},
-			rewards = self:_default_pre_coins()
+			rewards = self:_default_pre_coins(),
+			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_3", {
 			reward_id = "menu_sm_pre_coin_reward",
@@ -218,35 +223,8 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 					})
 				}
 			},
-			rewards = self:_default_pre_coins()
-		}),
-		self:_mission("sm_4", {
-			reward_id = "menu_sm_4_reward",
-			voice_line = "Play_pln_stq_04",
-			objectives = {
-				{
-					self:_progress("story_shadow_raid_bags", 4, {
-						name_id = "menu_sm_shadow_raid_bags",
-						levels = {
-							"kosugi"
-						}
-					})
-				}
-			},
-			rewards = {
-				{
-					type_items = "cash",
-					item_entry = "cash20"
-				},
-				{
-					type_items = "xp",
-					item_entry = "xp20"
-				},
-				{
-					type_items = "weapon_mods",
-					item_entry = "wpn_fps_upg_ns_ass_smg_small"
-				}
-			}
+			rewards = self:_default_pre_coins(),
+			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_5", {
 			reward_id = "menu_sm_pre_coin_reward",
@@ -261,7 +239,8 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 					})
 				}
 			},
-			rewards = self:_default_pre_coins()
+			rewards = self:_default_pre_coins(),
+			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_6", {
 			reward_id = "menu_sm_pre_coin_reward",
@@ -283,14 +262,20 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 					})
 				}
 			},
-			rewards = self:_default_pre_coins()
+			rewards = self:_default_pre_coins(),
+			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_moving_up", {
 			reward_id = "menu_sm_moving_up_reward",
 			voice_line = "Play_pln_stq_30",
 			custom_check = "_sm_moving_up_check",
-			hide_progress = true,
 			objectives = {
+				{
+					self:_level_progress("story_basics_stealth", 1, {
+						name_id = "menu_sm_basics_stealth",
+						basic = true
+					})
+				},
 				{
 					self:_progress("story_chill_level", 1, {
 						name_id = "menu_sm_chill_level"
@@ -422,6 +407,12 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 				}
 			},
 			rewards = self:_default_reward()
+		}),
+		self:_mission("sm_act_2", {
+			rewarded = true,
+			completed = true,
+			is_header = true,
+			objectives = {}
 		}),
 		self:_mission("sm_17", {
 			reward_id = "menu_sm_default_reward",
@@ -643,6 +634,12 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 				}
 			},
 			rewards = self:_default_reward()
+		}),
+		self:_mission("sm_act_3", {
+			rewarded = true,
+			completed = true,
+			is_header = true,
+			objectives = {}
 		}),
 		self:_mission("sm_33", {
 			reward_id = "menu_sm_default_reward",

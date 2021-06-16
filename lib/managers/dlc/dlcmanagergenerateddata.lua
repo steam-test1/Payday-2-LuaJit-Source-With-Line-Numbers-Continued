@@ -93,6 +93,11 @@ function GenericDLCManager:has_ja21()
 	return self:is_dlc_unlocked("ja21")
 end
 
+-- Lines 164-166
+function GenericDLCManager:has_jun21()
+	return self:is_dlc_unlocked("jun21")
+end
+
 -- Lines 179-181
 function GenericDLCManager:has_mar21()
 	return self:is_dlc_unlocked("mar21")
@@ -148,6 +153,11 @@ function GenericDLCManager:has_saco()
 	return self:is_dlc_unlocked("saco")
 end
 
+-- Lines 264-266
+function GenericDLCManager:has_sand()
+	return self:is_dlc_unlocked("sand")
+end
+
 -- Lines 269-271
 function GenericDLCManager:has_sawp()
 	return self:is_dlc_unlocked("sawp")
@@ -161,6 +171,11 @@ end
 -- Lines 279-281
 function GenericDLCManager:has_sdm()
 	return self:is_dlc_unlocked("sdm")
+end
+
+-- Lines 284-286
+function GenericDLCManager:has_sdtp()
+	return self:is_dlc_unlocked("sdtp")
 end
 
 -- Lines 289-291
@@ -263,7 +278,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 424-862
+-- Lines 424-864
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.afp = {
 		app_id = "1255151",
@@ -345,6 +360,10 @@ function WINDLCManager:init_generated()
 		app_id = "218620",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.jun21 = {
+		app_id = "218620",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.mar21 = {
 		app_id = "218620",
 		no_install = true
@@ -396,6 +415,11 @@ function WINDLCManager:init_generated()
 		app_id = "1619070",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.sand = {
+		app_id = "1654480",
+		no_install = true,
+		webpage = "https://ovk.af/UkrainianPrisonerYBS"
+	}
 	Global.dlc_manager.all_dlc_data.sawp = {
 		app_id = "1619070",
 		no_install = true,
@@ -408,6 +432,11 @@ function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.sdm = {
 		app_id = "218620",
 		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.sdtp = {
+		app_id = "1654481",
+		no_install = true,
+		webpage = "https://ovk.af/UkrainianPrisonerYBS2"
 	}
 	Global.dlc_manager.all_dlc_data.sft = {
 		app_id = "218620",
