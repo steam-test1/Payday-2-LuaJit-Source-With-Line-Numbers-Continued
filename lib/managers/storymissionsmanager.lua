@@ -406,7 +406,7 @@ function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 362-411
+-- Lines 362-415
 function StoryMissionsManager:start_mission(mission, objective_id)
 	local m = self:_get_or_current(mission) or {
 		objectives_flat = {}
@@ -441,7 +441,13 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 		return
 	end
 
-	if o.basic or Global.game_settings.single_player then
+	if Global.game_settings.single_player then
+		MenuCallbackHandler:play_single_player()
+	else
+		MenuCallbackHandler:play_online_game()
+	end
+
+	if o.basic then
 		Global.game_settings.team_ai = true
 		Global.game_settings.team_ai_option = 2
 
@@ -452,8 +458,6 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 		})
 
 		return
-	else
-		MenuCallbackHandler:play_online_game()
 	end
 
 	local job_data = tweak_data.narrative:job_data(level)
@@ -471,7 +475,7 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 414-426
+-- Lines 418-430
 function StoryMissionsManager:skip_mission(mission)
 	local m = self:get_mission(mission) or mission
 
@@ -491,22 +495,22 @@ function StoryMissionsManager:skip_mission(mission)
 	self._global.skipped_mission = mission
 end
 
--- Lines 428-430
+-- Lines 432-434
 function StoryMissionsManager:get_last_skipped_mission(mission)
 	return self._global.skipped_mission
 end
 
--- Lines 434-436
+-- Lines 438-440
 function StoryMissionsManager:set_last_failed_heist(last_failed_heist)
 	self._global.last_failed_heist_id = last_failed_heist
 end
 
--- Lines 438-440
+-- Lines 442-444
 function StoryMissionsManager:get_last_failed_heist()
 	return self._global.last_failed_heist_id or ""
 end
 
--- Lines 442-458
+-- Lines 446-462
 function StoryMissionsManager:is_heist_story_started(heist_id)
 	local mission = self:current_mission()
 	heist_id = heist_id or ""
@@ -526,9 +530,9 @@ function StoryMissionsManager:is_heist_story_started(heist_id)
 	return false
 end
 
--- Lines 463-479
+-- Lines 467-483
 function StoryMissionsManager:reset_all()
-	-- Lines 464-472
+	-- Lines 468-476
 	local function reset(m)
 		if not m then
 			return

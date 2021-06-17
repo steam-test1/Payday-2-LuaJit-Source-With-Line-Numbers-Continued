@@ -440,7 +440,7 @@ function MissionEndState:_load_start_menu(next_state)
 	setup:load_start_menu()
 end
 
--- Lines 453-641
+-- Lines 453-644
 function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_score, best_special_kills_peer_id, best_special_kills_score, best_accuracy_peer_id, best_accuracy_score, most_downs_peer_id, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	print("on_statistics_result begin")
 
@@ -588,7 +588,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 
 	print("on_statistics_result end")
 
-	local level_id, all_pass, total_kill_pass, total_accuracy_pass, total_headshots_pass, total_downed_pass, level_pass, levels_pass, num_players_pass, diff_pass, one_down_pass, is_dropin_pass, success_pass, killed_by_weapon_category_pass = nil
+	local level_id, all_pass, total_kill_pass, total_accuracy_pass, total_headshots_pass, total_downed_pass, level_pass, levels_pass, num_players_pass, diff_pass, one_down_pass, is_dropin_pass, success_pass, killed_by_weapon_category_pass, local_accuracy_pass = nil
 
 	for achievement, achievement_data in pairs(tweak_data.achievement.complete_heist_statistics_achievements or {}) do
 		level_id = managers.job:has_active_job() and managers.job:current_level_id() or ""
@@ -600,6 +600,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 		total_kill_pass = not achievement_data.total_kills or achievement_data.total_kills <= total_kills
 		total_accuracy_pass = not achievement_data.total_accuracy or achievement_data.total_accuracy <= group_accuracy
 		total_downed_pass = not achievement_data.total_downs or group_downs <= achievement_data.total_downs
+		local_accuracy_pass = not achievement_data.local_accuracy or achievement_data.local_accuracy <= managers.statistics:session_hit_accuracy()
 		is_dropin_pass = achievement_data.is_dropin == nil or achievement_data.is_dropin == managers.statistics:is_dropin()
 		success_pass = not achievement_data.success or self._success
 
@@ -631,7 +632,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 			end
 		end
 
-		all_pass = diff_pass and one_down_pass and num_players_pass and level_pass and levels_pass and total_kill_pass and total_accuracy_pass and total_downed_pass and is_dropin_pass and total_headshots_pass and managers.challenge:check_equipped(achievement_data) and managers.challenge:check_equipped_team(achievement_data) and success_pass and killed_by_weapon_category_pass
+		all_pass = diff_pass and one_down_pass and num_players_pass and level_pass and levels_pass and total_kill_pass and total_accuracy_pass and total_downed_pass and is_dropin_pass and total_headshots_pass and managers.challenge:check_equipped(achievement_data) and managers.challenge:check_equipped_team(achievement_data) and success_pass and killed_by_weapon_category_pass and local_accuracy_pass
 
 		if all_pass and not managers.achievment:award_data(achievement_data) then
 			Application:debug("[MissionEndState] complete_heist_achievements:", achievement)
@@ -639,7 +640,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 	end
 end
 
--- Lines 644-727
+-- Lines 647-730
 function MissionEndState:generate_safehouse_statistics()
 	if not managers.custom_safehouse:unlocked() then
 		return
@@ -737,7 +738,7 @@ function MissionEndState:generate_safehouse_statistics()
 	self._statistics_data.stage_safehouse_summary = stage_safehouse_summary_string
 end
 
--- Lines 729-735
+-- Lines 732-738
 function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	if self._statistics_feeded then
 		self:generate_safehouse_statistics()
@@ -745,7 +746,7 @@ function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	end
 end
 
--- Lines 738-765
+-- Lines 741-768
 function MissionEndState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._mission_end_menu
 
@@ -776,12 +777,12 @@ function MissionEndState:_continue_blocked()
 	return false
 end
 
--- Lines 767-769
+-- Lines 770-772
 function MissionEndState:_continue()
 	self:continue()
 end
 
--- Lines 771-787
+-- Lines 774-790
 function MissionEndState:continue()
 	if self:_continue_blocked() then
 		return
@@ -800,7 +801,7 @@ function MissionEndState:continue()
 	end
 end
 
--- Lines 789-797
+-- Lines 792-800
 function MissionEndState:_clear_controller()
 	if not self._controller then
 		return
@@ -812,7 +813,7 @@ function MissionEndState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 799-811
+-- Lines 802-814
 function MissionEndState:debug_continue()
 	if not self._success then
 		return
@@ -830,14 +831,14 @@ function MissionEndState:debug_continue()
 	end
 end
 
--- Lines 813-816
+-- Lines 816-819
 function MissionEndState:set_completion_bonus_done(done)
 	self._completion_bonus_done = done
 
 	self:_set_continue_button_text()
 end
 
--- Lines 818-882
+-- Lines 821-885
 function MissionEndState:update(t, dt)
 	managers.hud:update_endscreen_hud(t, dt)
 
@@ -901,27 +902,27 @@ function MissionEndState:update(t, dt)
 	self._in_focus = in_focus
 end
 
--- Lines 884-886
+-- Lines 887-889
 function MissionEndState:game_ended()
 	return true
 end
 
--- Lines 888-890
+-- Lines 891-893
 function MissionEndState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 892-894
+-- Lines 895-897
 function MissionEndState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 896-898
+-- Lines 899-901
 function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines 901-1622
+-- Lines 904-1625
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()
