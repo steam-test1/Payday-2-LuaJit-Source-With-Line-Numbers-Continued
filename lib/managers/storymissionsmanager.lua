@@ -40,7 +40,7 @@ function StoryMissionsManager:init()
 	end
 
 	self._global = Global.story_mission_manager
-	self._global.current_mission = self._global.mission_order[1]
+	self._global.current_mission = self._global.mission_order[2]
 
 	call_on_next_update(function ()
 		managers.story:_find_next_mission()
@@ -270,20 +270,22 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines 238-270
+-- Lines 238-272
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
 	for _, mission in ipairs(self._global.mission_order) do
-		if not mission.completed then
-			break
-		end
+		if not mission.is_header then
+			if not mission.completed then
+				break
+			end
 
-		completed_missions[mission.id] = {
-			id = mission.id,
-			objectives = self:_save_objectives(mission),
-			rewarded = mission.rewarded
-		}
+			completed_missions[mission.id] = {
+				id = mission.id,
+				objectives = self:_save_objectives(mission),
+				rewarded = mission.rewarded
+			}
+		end
 	end
 
 	local current_mission = nil
@@ -305,7 +307,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines 272-283
+-- Lines 274-285
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -320,7 +322,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 285-306
+-- Lines 287-308
 function StoryMissionsManager:_migrate_save_data(version_from, version_to, state)
 	if version_to - version_from > 1 then
 		version_from = self:_migrate_save_data(version_from, version_to - 1, state)
@@ -346,7 +348,7 @@ function StoryMissionsManager:_migrate_save_data(version_from, version_to, state
 	end
 end
 
--- Lines 308-356
+-- Lines 310-358
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -401,12 +403,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 358-360
+-- Lines 360-362
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 362-415
+-- Lines 364-417
 function StoryMissionsManager:start_mission(mission, objective_id)
 	local m = self:_get_or_current(mission) or {
 		objectives_flat = {}
@@ -475,7 +477,7 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 418-430
+-- Lines 420-432
 function StoryMissionsManager:skip_mission(mission)
 	local m = self:get_mission(mission) or mission
 
@@ -495,22 +497,22 @@ function StoryMissionsManager:skip_mission(mission)
 	self._global.skipped_mission = mission
 end
 
--- Lines 432-434
+-- Lines 434-436
 function StoryMissionsManager:get_last_skipped_mission(mission)
 	return self._global.skipped_mission
 end
 
--- Lines 438-440
+-- Lines 440-442
 function StoryMissionsManager:set_last_failed_heist(last_failed_heist)
 	self._global.last_failed_heist_id = last_failed_heist
 end
 
--- Lines 442-444
+-- Lines 444-446
 function StoryMissionsManager:get_last_failed_heist()
 	return self._global.last_failed_heist_id or ""
 end
 
--- Lines 446-462
+-- Lines 448-464
 function StoryMissionsManager:is_heist_story_started(heist_id)
 	local mission = self:current_mission()
 	heist_id = heist_id or ""
@@ -530,9 +532,9 @@ function StoryMissionsManager:is_heist_story_started(heist_id)
 	return false
 end
 
--- Lines 467-483
+-- Lines 469-487
 function StoryMissionsManager:reset_all()
-	-- Lines 468-476
+	-- Lines 470-478
 	local function reset(m)
 		if not m then
 			return
@@ -548,7 +550,9 @@ function StoryMissionsManager:reset_all()
 	end
 
 	for _, m in pairs(self._global.missions) do
-		reset(m)
+		if not m.is_header then
+			reset(m)
+		end
 	end
 
 	self:_find_next_mission()
