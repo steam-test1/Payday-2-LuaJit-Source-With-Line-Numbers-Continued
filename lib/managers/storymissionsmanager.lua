@@ -477,7 +477,7 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 420-432
+-- Lines 420-433
 function StoryMissionsManager:skip_mission(mission)
 	local m = self:get_mission(mission) or mission
 
@@ -495,24 +495,25 @@ function StoryMissionsManager:skip_mission(mission)
 	self:_check_complete(m)
 
 	self._global.skipped_mission = mission
+	self._global.last_failed_heist_id = ""
 end
 
--- Lines 434-436
+-- Lines 435-437
 function StoryMissionsManager:get_last_skipped_mission(mission)
 	return self._global.skipped_mission
 end
 
--- Lines 440-442
+-- Lines 441-443
 function StoryMissionsManager:set_last_failed_heist(last_failed_heist)
 	self._global.last_failed_heist_id = last_failed_heist
 end
 
--- Lines 444-446
+-- Lines 445-447
 function StoryMissionsManager:get_last_failed_heist()
 	return self._global.last_failed_heist_id or ""
 end
 
--- Lines 448-464
+-- Lines 449-465
 function StoryMissionsManager:is_heist_story_started(heist_id)
 	local mission = self:current_mission()
 	heist_id = heist_id or ""
@@ -532,9 +533,9 @@ function StoryMissionsManager:is_heist_story_started(heist_id)
 	return false
 end
 
--- Lines 469-487
+-- Lines 470-488
 function StoryMissionsManager:reset_all()
-	-- Lines 470-478
+	-- Lines 471-479
 	local function reset(m)
 		if not m then
 			return

@@ -37490,13 +37490,16 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 38870-38893
+-- Lines 38870-38896
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
 	data.weapon_ids = {
 		"akm_gold"
 	}
+
+	table.insert(data.weapon_ids, "money")
+
 	data.use_blacklist = true
 	data.is_a_unlockable = true
 	data.is_a_color_skin = true
@@ -37512,12 +37515,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 38895-38897
+-- Lines 38898-38900
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 38899-41475
+-- Lines 38902-41651
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

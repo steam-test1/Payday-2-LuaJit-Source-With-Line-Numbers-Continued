@@ -239,7 +239,7 @@ end
 
 local tmp_used_flame_objects = nil
 
--- Lines 233-274
+-- Lines 233-280
 function FireManager:_start_enemy_fire_effect(dot_info)
 	local num_objects = #tweak_data.fire.fire_bones
 	local num_effects = math.random(3, num_objects)
@@ -261,7 +261,9 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 			idx = math.random(1, num_objects)
 		end
 
-		local effect = tweak_data.fire.effects.endless[tweak_data.fire.effects_cost[i]]
+		local fire_variant = alive(dot_info.weapon_unit) and (tweak_data.weapon[dot_info.weapon_unit:base():get_name_id()] or tweak_data.weapon.amcar).fire_variant
+		local effect_prefix = fire_variant and fire_variant .. "_" or ""
+		local effect = tweak_data.fire.effects[effect_prefix .. "endless"][tweak_data.fire.effects_cost[i]]
 		local bone = dot_info.enemy_unit:get_object(Idstring(tweak_data.fire.fire_bones[idx]))
 
 		if bone then
@@ -283,7 +285,7 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 	end
 end
 
--- Lines 305-320
+-- Lines 311-326
 function FireManager:_damage_fire_dot(dot_info)
 	if dot_info.user_unit and dot_info.user_unit == managers.player:player_unit() or not dot_info.user_unit and Network:is_server() then
 		local attacker_unit = managers.player:player_unit()
@@ -301,7 +303,7 @@ function FireManager:_damage_fire_dot(dot_info)
 	end
 end
 
--- Lines 323-328
+-- Lines 329-334
 function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	local player = managers.player:player_unit()
 
@@ -316,7 +318,7 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	end
 end
 
--- Lines 331-572
+-- Lines 337-578
 function FireManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -539,11 +541,11 @@ function FireManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines 574-576
+-- Lines 580-582
 function FireManager:units_to_push(units_to_push, hit_pos, range)
 end
 
--- Lines 578-630
+-- Lines 584-636
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -587,13 +589,13 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 	end
 end
 
--- Lines 632-635
+-- Lines 638-641
 function FireManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 637-657
+-- Lines 643-663
 function FireManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -615,20 +617,20 @@ function FireManager:client_damage_and_push(position, normal, user_unit, dmg, ra
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines 659-663
+-- Lines 665-669
 function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table, custom_params.sound_event_burning, custom_params.sound_event_impact_duration or 0, custom_params.sound_event_duration or 0)
 end
 
--- Lines 665-667
+-- Lines 671-673
 function FireManager:player_feedback(position, normal, range, custom_params)
 end
 
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 671-731
+-- Lines 677-737
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration, sound_event_duration)
 	effect_name = effect_name or "effects/payday2/particles/explosions/molotov_grenade"
 	local effect_id = nil
@@ -696,11 +698,11 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
--- Lines 733-735
+-- Lines 739-741
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 end
 
--- Lines 738-746
+-- Lines 744-752
 function FireManager:_dispose_of_impact_sound(custom_params)
 	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
 
@@ -716,7 +718,7 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	}), TimerManager:game():time() + t - custom_params.sound_event_impact_duration)
 end
 
--- Lines 749-753
+-- Lines 755-759
 function FireManager:_fade_out_burn_loop_sound(custom_params)
 	local fade_duration = 2
 
@@ -724,7 +726,7 @@ function FireManager:_fade_out_burn_loop_sound(custom_params)
 	managers.enemy:add_delayed_clbk("MolotovFading", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", custom_params), TimerManager:game():time() + fade_duration)
 end
 
--- Lines 756-759
+-- Lines 762-765
 function FireManager:on_simulation_ended()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}

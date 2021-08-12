@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-7420
+-- Lines 3-7502
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -6964,4 +6964,11 @@ function InteractionTweakData:init(tweak_data)
 	}
 	self.sand_ipad = deep_clone(self.money_wrap_single_chas)
 	self.sand_ipad.interact_distance = 200
+	self.pick_up_item = {
+		text_id = "hud_int_pick_up_item",
+		action_text_id = "hud_action_picking_up_item",
+		timer = 1,
+		start_active = true,
+		interact_distance = 150
+	}
 end

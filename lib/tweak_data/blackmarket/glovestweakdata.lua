@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-762
+-- Lines 78-779
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -152,6 +152,7 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		lowinttech = "heist_default",
 		boss = "heist_default",
 		peacoat = "saints",
+		baron = "jesterstripe",
 		thug = "heist_default",
 		badsanta = "heist_default",
 		gangstercoat = "heist_default",
@@ -545,5 +546,14 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 1,
 		unit = "units/pd2_dlc_sdtp/characters/glv_techhigh_bird/glv_techhigh_bird",
 		third_material = "units/pd2_dlc_sdtp/characters/glv_techhigh_bird/glv_techhigh_bird_third"
+	}
+	self.gloves.jesterstripe = {
+		name_id = "bm_gloves_jesterstripe",
+		desc_id = "bm_gloves_jesterstripe_desc",
+		texture_bundle_folder = "pda8",
+		global_value = "pda8",
+		sort_number = 1,
+		unit = "units/pd2_dlc_pda8/characters/glv_jesterstripe/glv_jesterstripe",
+		third_material = "units/pd2_dlc_pda8/characters/glv_jesterstripe/glv_jesterstripe_third"
 	}
 end

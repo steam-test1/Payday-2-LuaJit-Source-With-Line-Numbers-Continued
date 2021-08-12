@@ -340,7 +340,7 @@ function StatsTabItem:set_stats(stats_data)
 	end
 end
 
--- Lines 247-352
+-- Lines 247-355
 function StatsTabItem:feed_statistics(stats_data)
 	local text, stat_text = nil
 
@@ -432,6 +432,9 @@ function StatsTabItem:feed_statistics(stats_data)
 			if stat:h() < h then
 				stat:set_font(tweak_data.menu.pd2_small_font_id)
 				stat:set_font_size(tweak_data.menu.pd2_small_font_size)
+			else
+				stat:set_h(h)
+				child:set_h(stat:bottom() + 10)
 			end
 		elseif child:name() == "gage_assignment_summary" then
 			-- Nothing
@@ -445,7 +448,7 @@ function StatsTabItem:feed_statistics(stats_data)
 	end
 end
 
--- Lines 354-369
+-- Lines 357-372
 function StatsTabItem:mouse_moved(x, y, mouse_over_scroll)
 	if self._selected then
 		self._tab_text:set_color(tweak_data.screen_colors.button_stage_1)
@@ -465,7 +468,7 @@ function StatsTabItem:mouse_moved(x, y, mouse_over_scroll)
 	return self._selected, self._highlighted
 end
 
--- Lines 371-379
+-- Lines 374-382
 function StatsTabItem:mouse_pressed(button, x, y)
 	if button ~= Idstring("0") then
 		return false
@@ -478,19 +481,19 @@ function StatsTabItem:mouse_pressed(button, x, y)
 	return self._selected
 end
 
--- Lines 381-382
+-- Lines 384-385
 function StatsTabItem:move_left()
 end
 
--- Lines 384-385
+-- Lines 387-388
 function StatsTabItem:move_right()
 end
 
--- Lines 387-388
+-- Lines 390-391
 function StatsTabItem:confirm_pressed()
 end
 
--- Lines 390-398
+-- Lines 393-401
 function StatsTabItem.animate_select(o)
 	local size = o:w()
 	local center_x, center_y = o:center()
@@ -507,7 +510,7 @@ function StatsTabItem.animate_select(o)
 	end)
 end
 
--- Lines 400-408
+-- Lines 403-411
 function StatsTabItem.animate_deselect(o)
 	local size = o:w()
 	local center_x, center_y = o:center()
@@ -527,7 +530,7 @@ end
 StageEndScreenGui = StageEndScreenGui or class()
 local padding = 10
 
--- Lines 416-604
+-- Lines 419-624
 function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	self._safe_workspace = saferect_ws
 	self._full_workspace = fullrect_ws
@@ -646,11 +649,28 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 		table.insert(self._items, item)
 	end
 
+	local moneythrower_spent = game_state_machine:current_state()._moneythrower_spendings or 0
+	local should_show_moneythrower_spending = moneythrower_spent > 0
+
 	if show_summary then
+		local stats = {
+			"stage_cash_summary"
+		}
+
+		if should_show_moneythrower_spending then
+			stats[#stats + 1] = "moneythrower_spending"
+		end
+
+		item = StatsTabItem:new(self._panel, self._tab_panel, utf8.to_upper(managers.localization:text("menu_es_summary")), 1)
+
+		item:set_stats(stats)
+		table.insert(self._items, item)
+		self._items[1]._panel:set_alpha(0)
+	elseif should_show_moneythrower_spending then
 		item = StatsTabItem:new(self._panel, self._tab_panel, utf8.to_upper(managers.localization:text("menu_es_summary")), 1)
 
 		item:set_stats({
-			"stage_cash_summary"
+			"moneythrower_spending"
 		})
 		table.insert(self._items, item)
 		self._items[1]._panel:set_alpha(0)
@@ -762,7 +782,7 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	self:chk_reduce_to_small_font()
 end
 
--- Lines 607-616
+-- Lines 627-636
 function StageEndScreenGui:chk_reduce_to_small_font()
 	local max_x = alive(self._next_page) and self._next_page:left() - 5 or self._panel:w()
 
@@ -775,7 +795,7 @@ function StageEndScreenGui:chk_reduce_to_small_font()
 	end
 end
 
--- Lines 621-626
+-- Lines 641-646
 function StageEndScreenGui:hide()
 	self._enabled = false
 
@@ -783,7 +803,7 @@ function StageEndScreenGui:hide()
 	self._fullscreen_panel:set_alpha(0.5)
 end
 
--- Lines 628-633
+-- Lines 648-653
 function StageEndScreenGui:show()
 	self._enabled = true
 
@@ -791,7 +811,7 @@ function StageEndScreenGui:show()
 	self._fullscreen_panel:set_alpha(1)
 end
 
--- Lines 636-668
+-- Lines 656-688
 function StageEndScreenGui:play_bain_debrief()
 	local variant = managers.groupai:state():endscreen_variant() or 0
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
@@ -837,7 +857,7 @@ function StageEndScreenGui:play_bain_debrief()
 	end
 end
 
--- Lines 670-686
+-- Lines 690-706
 function StageEndScreenGui:console_subtitle_callback(event, string_id, duration, cookie)
 	if not self._console_subtitle_panel then
 		self._console_subtitle_panel = self._safe_workspace:panel():panel()
@@ -866,12 +886,12 @@ function StageEndScreenGui:console_subtitle_callback(event, string_id, duration,
 	end
 end
 
--- Lines 688-690
+-- Lines 708-710
 function StageEndScreenGui:bain_debrief_end_callback()
 	self._contact_debrief_t = TimerManager:main():time() + 3.5
 end
 
--- Lines 692-729
+-- Lines 712-749
 function StageEndScreenGui:update(t, dt)
 	if self._bain_debrief_t and self._bain_debrief_t < t then
 		self._bain_debrief_t = nil
@@ -914,7 +934,7 @@ function StageEndScreenGui:update(t, dt)
 	end
 end
 
--- Lines 731-752
+-- Lines 751-772
 function StageEndScreenGui:feed_statistics(data)
 	data = data or {}
 	data.total_objectives = managers.objectives:total_objectives(Global.level_data and Global.level_data.level_id)
@@ -939,12 +959,12 @@ function StageEndScreenGui:feed_statistics(data)
 	end
 end
 
--- Lines 754-756
+-- Lines 774-776
 function StageEndScreenGui:show_cash_summary()
 	self._items[1]._panel:set_alpha(1)
 end
 
--- Lines 758-776
+-- Lines 778-796
 function StageEndScreenGui:set_continue_button_text(text, not_clickable)
 	if managers.crime_spree:is_active() then
 		return
@@ -962,17 +982,17 @@ function StageEndScreenGui:set_continue_button_text(text, not_clickable)
 	self._continue_button:set_color(self._button_not_clickable and tweak_data.screen_colors.item_stage_1 or tweak_data.screen_colors.button_stage_3)
 end
 
--- Lines 778-780
+-- Lines 798-800
 function StageEndScreenGui:next_tab(no_sound)
 	return self:select_tab(math.min(self._selected_item + 1, #self._items), no_sound)
 end
 
--- Lines 782-784
+-- Lines 802-804
 function StageEndScreenGui:prev_tab(no_sound)
 	return self:select_tab(math.max(self._selected_item - 1, 1), no_sound)
 end
 
--- Lines 786-819
+-- Lines 806-839
 function StageEndScreenGui:select_tab(selected_item, no_sound)
 	if self._selected_item == selected_item then
 		return
@@ -1011,7 +1031,7 @@ function StageEndScreenGui:select_tab(selected_item, no_sound)
 	return self._selected_item
 end
 
--- Lines 821-864
+-- Lines 841-884
 function StageEndScreenGui:mouse_pressed(button, x, y)
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -1055,7 +1075,7 @@ function StageEndScreenGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 866-932
+-- Lines 886-952
 function StageEndScreenGui:mouse_moved(x, y)
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return false
@@ -1135,12 +1155,12 @@ function StageEndScreenGui:mouse_moved(x, y)
 	return false, "arrow"
 end
 
--- Lines 934-936
+-- Lines 954-956
 function StageEndScreenGui:input_focus()
 	return self._enabled and true or nil
 end
 
--- Lines 938-946
+-- Lines 958-966
 function StageEndScreenGui:scroll_up()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -1151,7 +1171,7 @@ function StageEndScreenGui:scroll_up()
 	end
 end
 
--- Lines 948-956
+-- Lines 968-976
 function StageEndScreenGui:scroll_down()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -1162,15 +1182,15 @@ function StageEndScreenGui:scroll_down()
 	end
 end
 
--- Lines 958-959
+-- Lines 978-979
 function StageEndScreenGui:move_up()
 end
 
--- Lines 961-962
+-- Lines 981-982
 function StageEndScreenGui:move_down()
 end
 
--- Lines 964-972
+-- Lines 984-992
 function StageEndScreenGui:move_left()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -1181,7 +1201,7 @@ function StageEndScreenGui:move_left()
 	end
 end
 
--- Lines 974-982
+-- Lines 994-1002
 function StageEndScreenGui:move_right()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -1192,7 +1212,7 @@ function StageEndScreenGui:move_right()
 	end
 end
 
--- Lines 984-992
+-- Lines 1004-1012
 function StageEndScreenGui:confirm_pressed()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -1205,33 +1225,33 @@ function StageEndScreenGui:confirm_pressed()
 	end
 end
 
--- Lines 994-998
+-- Lines 1014-1018
 function StageEndScreenGui:back_pressed()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return false
 	end
 end
 
--- Lines 1000-1004
+-- Lines 1020-1024
 function StageEndScreenGui:special_btn_pressed(btn)
 	if btn == Idstring("menu_challenge_claim") then
 		managers.hud:set_speed_up_endscreen_hud(5)
 	end
 end
 
--- Lines 1006-1013
+-- Lines 1026-1033
 function StageEndScreenGui:special_btn_released(btn)
 	if btn == Idstring("menu_challenge_claim") then
 		managers.hud:set_speed_up_endscreen_hud(nil)
 	end
 end
 
--- Lines 1015-1017
+-- Lines 1035-1037
 function StageEndScreenGui:accept_input(accept)
 	print("StageEndScreenGui:accept_input", accept)
 end
 
--- Lines 1019-1024
+-- Lines 1039-1044
 function StageEndScreenGui:next_page(no_sound)
 	if not self._enabled then
 		return
@@ -1240,7 +1260,7 @@ function StageEndScreenGui:next_page(no_sound)
 	self:next_tab(no_sound)
 end
 
--- Lines 1026-1031
+-- Lines 1046-1051
 function StageEndScreenGui:previous_page(no_sound)
 	if not self._enabled then
 		return
@@ -1249,7 +1269,7 @@ function StageEndScreenGui:previous_page(no_sound)
 	self:prev_tab(no_sound)
 end
 
--- Lines 1033-1043
+-- Lines 1053-1063
 function StageEndScreenGui:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -1264,7 +1284,7 @@ function StageEndScreenGui:close()
 	end
 end
 
--- Lines 1045-1049
+-- Lines 1065-1069
 function StageEndScreenGui:reload()
 	self:close()
 	StageEndScreenGui.init(self, self._safe_workspace, self._full_workspace, self._data)

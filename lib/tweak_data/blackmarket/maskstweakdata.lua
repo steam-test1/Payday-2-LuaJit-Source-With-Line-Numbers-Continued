@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-8122
+-- Lines 10-8142
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -7509,6 +7509,14 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		dlc = "in32",
 		global_value = "in32",
 		texture_bundle_folder = "in32"
+	}
+	self.masks.eighthgrin = {
+		unit = "units/pd2_dlc_pda8/masks/msk_eighthgrin/msk_eighthgrin",
+		name_id = "bm_msk_eighthgrin",
+		pcs = {},
+		value = 0,
+		global_value = "pda8",
+		texture_bundle_folder = "pda8"
 	}
 	self.masks.boss = {
 		unit = "units/pd2_dlc_srtr/masks/msk_boss/msk_boss",

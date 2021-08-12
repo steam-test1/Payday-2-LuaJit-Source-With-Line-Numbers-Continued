@@ -1,4 +1,4 @@
--- Lines 3-924
+-- Lines 3-933
 function DLCTweakData:init_generated()
 	self.afp_bundle = {
 		dlc = "has_afp",
@@ -765,6 +765,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.pda8_bundle = {
+		free = true,
+		content = {}
+	}
+	self.pda8_bundle.content.loot_global_value = "pda8"
+	self.pda8_bundle.content.loot_drops = {}
 	self.pex_bundle = {
 		dlc = "has_pex",
 		content = {}

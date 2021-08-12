@@ -4,15 +4,16 @@ UpgradesManager.AQUIRE_STRINGS = {
 	"SkillTree",
 	"SpecializationTree",
 	"LevelTree",
-	"DLC"
+	"DLC",
+	"SideJob"
 }
 
--- Lines 14-16
+-- Lines 17-19
 function UpgradesManager:init()
 	self:_setup()
 end
 
--- Lines 19-30
+-- Lines 22-33
 function UpgradesManager:_setup()
 	if not Global.upgrades_manager then
 		Global.upgrades_manager = {
@@ -32,16 +33,16 @@ function UpgradesManager:_setup()
 	self._global = Global.upgrades_manager
 end
 
--- Lines 33-59
+-- Lines 36-62
 function UpgradesManager:setup_current_weapon()
 end
 
--- Lines 61-63
+-- Lines 64-66
 function UpgradesManager:visual_weapon_upgrade_active(upgrade)
 	return not self._global.disabled_visual_upgrades[upgrade]
 end
 
--- Lines 65-71
+-- Lines 68-74
 function UpgradesManager:toggle_visual_weapon_upgrade(upgrade)
 	if self._global.disabled_visual_upgrades[upgrade] then
 		self._global.disabled_visual_upgrades[upgrade] = nil
@@ -50,7 +51,7 @@ function UpgradesManager:toggle_visual_weapon_upgrade(upgrade)
 	end
 end
 
--- Lines 89-102
+-- Lines 92-105
 function UpgradesManager:set_target_tree(tree)
 	local level = managers.experience:current_level()
 	local step = self._global.progress[tree]
@@ -63,24 +64,24 @@ function UpgradesManager:set_target_tree(tree)
 	self:_set_target_tree(tree)
 end
 
--- Lines 104-110
+-- Lines 107-113
 function UpgradesManager:_set_target_tree(tree)
 	local i = self._global.progress[tree] + 1
 	local upgrade = tweak_data.upgrades.definitions[tweak_data.upgrades.progress[tree][i]]
 	self._global.target_tree = tree
 end
 
--- Lines 112-114
+-- Lines 115-117
 function UpgradesManager:current_tree_name()
 	return self:tree_name(self._global.target_tree)
 end
 
--- Lines 116-118
+-- Lines 119-121
 function UpgradesManager:tree_name(tree)
 	return managers.localization:text(tweak_data.upgrades.trees[tree].name_id)
 end
 
--- Lines 120-124
+-- Lines 123-127
 function UpgradesManager:tree_allowed(tree, level)
 	level = level or managers.experience:current_level()
 	local cap = tweak_data.upgrades.tree_caps[self._global.progress[tree] + 1]
@@ -88,16 +89,16 @@ function UpgradesManager:tree_allowed(tree, level)
 	return not cap or level >= cap, cap
 end
 
--- Lines 126-128
+-- Lines 129-131
 function UpgradesManager:current_tree()
 	return self._global.target_tree
 end
 
--- Lines 130-132
+-- Lines 133-135
 function UpgradesManager:next_upgrade(tree)
 end
 
--- Lines 134-139
+-- Lines 137-142
 function UpgradesManager:level_up()
 	local level = managers.experience:current_level()
 
@@ -105,7 +106,7 @@ function UpgradesManager:level_up()
 	self:aquire_from_level_tree(level, false)
 end
 
--- Lines 141-155
+-- Lines 144-158
 function UpgradesManager:aquire_from_level_tree(level, loading)
 	local tree_data = tweak_data.upgrades.level_tree[level]
 
@@ -122,7 +123,7 @@ function UpgradesManager:aquire_from_level_tree(level, loading)
 	end
 end
 
--- Lines 157-171
+-- Lines 160-174
 function UpgradesManager:verify_level_tree(level, loading)
 	local tree_data = tweak_data.upgrades.level_tree[level]
 
@@ -142,7 +143,7 @@ function UpgradesManager:verify_level_tree(level, loading)
 	end
 end
 
--- Lines 173-179
+-- Lines 176-182
 function UpgradesManager:find_in_level_tree(id)
 	for level, tree_data in pairs(tweak_data.upgrades.level_tree) do
 		if table.contains(tree_data.upgrades, id) then
@@ -151,7 +152,7 @@ function UpgradesManager:find_in_level_tree(id)
 	end
 end
 
--- Lines 209-227
+-- Lines 212-230
 function UpgradesManager:_next_tree()
 	local tree = nil
 
@@ -169,12 +170,12 @@ function UpgradesManager:_next_tree()
 	return tree or self._global.target_tree
 end
 
--- Lines 229-231
+-- Lines 232-234
 function UpgradesManager:num_trees()
 	return managers.dlc:is_dlc_unlocked("preorder") and 4 or 3
 end
 
--- Lines 233-253
+-- Lines 236-256
 function UpgradesManager:_autochange_tree(exlude_tree)
 	local progress = clone(Global.upgrades_manager.progress)
 
@@ -199,7 +200,7 @@ function UpgradesManager:_autochange_tree(exlude_tree)
 	return n_tree
 end
 
--- Lines 256-270
+-- Lines 259-273
 function UpgradesManager:aquired(id, identifier)
 	if identifier then
 		local identify_key = Idstring(identifier):key()
@@ -218,7 +219,7 @@ function UpgradesManager:aquired(id, identifier)
 	end
 end
 
--- Lines 272-301
+-- Lines 275-304
 function UpgradesManager:aquire_default(id, identifier)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to aquire an upgrade that doesn't exist: " .. (id or "nil") .. "")
@@ -256,7 +257,7 @@ function UpgradesManager:aquire_default(id, identifier)
 	self:_aquire_upgrade(upgrade, id, true)
 end
 
--- Lines 303-332
+-- Lines 306-335
 function UpgradesManager:enable_weapon(id, identifier)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to aquire an upgrade that doesn't exist: " .. (id or "nil") .. "")
@@ -293,7 +294,7 @@ function UpgradesManager:enable_weapon(id, identifier)
 	managers.player:aquire_weapon(upgrade, id, UpgradesManager.AQUIRE_STRINGS[1])
 end
 
--- Lines 334-366
+-- Lines 337-369
 function UpgradesManager:aquire(id, loading, identifier)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to aquire an upgrade that doesn't exist: " .. (id or "nil") .. "")
@@ -331,7 +332,7 @@ function UpgradesManager:aquire(id, loading, identifier)
 	self:setup_current_weapon()
 end
 
--- Lines 368-399
+-- Lines 371-402
 function UpgradesManager:unaquire(id, identifier)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to unaquire an upgrade that doesn't exist: " .. (id or "nil") .. "")
@@ -368,7 +369,7 @@ function UpgradesManager:unaquire(id, identifier)
 	end
 end
 
--- Lines 401-425
+-- Lines 404-428
 function UpgradesManager:_aquire_upgrade(upgrade, id, loading)
 	if upgrade.category == "weapon" then
 		self:_aquire_weapon(upgrade, id, loading)
@@ -395,7 +396,7 @@ function UpgradesManager:_aquire_upgrade(upgrade, id, loading)
 	end
 end
 
--- Lines 427-449
+-- Lines 430-452
 function UpgradesManager:_unaquire_upgrade(upgrade, id)
 	if upgrade.category == "weapon" then
 		self:_unaquire_weapon(upgrade, id)
@@ -420,43 +421,43 @@ function UpgradesManager:_unaquire_upgrade(upgrade, id)
 	end
 end
 
--- Lines 451-454
+-- Lines 454-457
 function UpgradesManager:_aquire_weapon(upgrade, id, loading)
 	managers.player:aquire_weapon(upgrade, id)
 	managers.blackmarket:on_aquired_weapon_platform(upgrade, id, loading)
 end
 
--- Lines 456-459
+-- Lines 459-462
 function UpgradesManager:_unaquire_weapon(upgrade, id)
 	managers.player:unaquire_weapon(upgrade, id)
 	managers.blackmarket:on_unaquired_weapon_platform(upgrade, id)
 end
 
--- Lines 461-464
+-- Lines 464-467
 function UpgradesManager:_aquire_melee_weapon(upgrade, id, loading)
 	managers.player:aquire_melee_weapon(upgrade, id)
 	managers.blackmarket:on_aquired_melee_weapon(upgrade, id, loading)
 end
 
--- Lines 466-469
+-- Lines 469-472
 function UpgradesManager:_unaquire_melee_weapon(upgrade, id)
 	managers.player:unaquire_melee_weapon(upgrade, id)
 	managers.blackmarket:on_unaquired_melee_weapon(upgrade, id)
 end
 
--- Lines 471-474
+-- Lines 474-477
 function UpgradesManager:_aquire_grenade(upgrade, id, loading)
 	managers.player:aquire_grenade(upgrade, id)
 	managers.blackmarket:on_aquired_grenade(upgrade, id, loading)
 end
 
--- Lines 476-479
+-- Lines 479-482
 function UpgradesManager:_unaquire_grenade(upgrade, id)
 	managers.player:unaquire_grenade(upgrade, id)
 	managers.blackmarket:on_unaquired_grenade(upgrade, id)
 end
 
--- Lines 481-487
+-- Lines 484-490
 function UpgradesManager:_aquire_feature(feature)
 	if feature.incremental then
 		managers.player:aquire_incremental_upgrade(feature.upgrade)
@@ -465,7 +466,7 @@ function UpgradesManager:_aquire_feature(feature)
 	end
 end
 
--- Lines 489-495
+-- Lines 492-498
 function UpgradesManager:_unaquire_feature(feature)
 	if feature.incremental then
 		managers.player:unaquire_incremental_upgrade(feature.upgrade)
@@ -474,17 +475,17 @@ function UpgradesManager:_unaquire_feature(feature)
 	end
 end
 
--- Lines 497-499
+-- Lines 500-502
 function UpgradesManager:_aquire_equipment(equipment, id, loading)
 	managers.player:aquire_equipment(equipment, id, loading)
 end
 
--- Lines 501-503
+-- Lines 504-506
 function UpgradesManager:_unaquire_equipment(equipment, id)
 	managers.player:unaquire_equipment(equipment, id)
 end
 
--- Lines 505-511
+-- Lines 508-514
 function UpgradesManager:_aquire_equipment_upgrade(equipment_upgrade)
 	if equipment_upgrade.incremental then
 		managers.player:aquire_incremental_upgrade(equipment_upgrade.upgrade)
@@ -493,7 +494,7 @@ function UpgradesManager:_aquire_equipment_upgrade(equipment_upgrade)
 	end
 end
 
--- Lines 513-519
+-- Lines 516-522
 function UpgradesManager:_unaquire_equipment_upgrade(equipment_upgrade)
 	if equipment_upgrade.incremental then
 		managers.player:unaquire_incremental_upgrade(equipment_upgrade.upgrade)
@@ -502,7 +503,7 @@ function UpgradesManager:_unaquire_equipment_upgrade(equipment_upgrade)
 	end
 end
 
--- Lines 521-528
+-- Lines 524-531
 function UpgradesManager:_aquire_temporary(temporary, id)
 	if temporary.incremental then
 		managers.player:aquire_incremental_upgrade(temporary.upgrade)
@@ -511,7 +512,7 @@ function UpgradesManager:_aquire_temporary(temporary, id)
 	end
 end
 
--- Lines 530-537
+-- Lines 533-540
 function UpgradesManager:_unaquire_temporary(temporary, id)
 	if temporary.incremental then
 		managers.player:unaquire_incremental_upgrade(temporary.upgrade)
@@ -520,42 +521,42 @@ function UpgradesManager:_unaquire_temporary(temporary, id)
 	end
 end
 
--- Lines 539-541
+-- Lines 542-544
 function UpgradesManager:_aquire_cooldown(cooldown, id)
 	managers.player:aquire_cooldown_upgrade(cooldown.upgrade, id)
 end
 
--- Lines 543-545
+-- Lines 546-548
 function UpgradesManager:_unaquire_cooldown(cooldown, id)
 	managers.player:unaquire_cooldown_upgrade(cooldown.upgrade)
 end
 
--- Lines 547-549
+-- Lines 550-552
 function UpgradesManager:_aquire_team(team, id)
 	managers.player:aquire_team_upgrade(team.upgrade, id)
 end
 
--- Lines 551-553
+-- Lines 554-556
 function UpgradesManager:_unaquire_team(team, id)
 	managers.player:unaquire_team_upgrade(team.upgrade, id)
 end
 
--- Lines 555-557
+-- Lines 558-560
 function UpgradesManager:_aquire_armor(upgrade, id, loading)
 	managers.blackmarket:on_aquired_armor(upgrade, id, loading)
 end
 
--- Lines 559-561
+-- Lines 562-564
 function UpgradesManager:_unaquire_armor(upgrade, id)
 	managers.blackmarket:on_unaquired_armor(upgrade, id)
 end
 
--- Lines 563-565
+-- Lines 566-568
 function UpgradesManager:_aquire_rep_upgrade(upgrade, id)
 	managers.skilltree:rep_upgrade(upgrade, id)
 end
 
--- Lines 567-646
+-- Lines 570-649
 function UpgradesManager:get_value(upgrade_id, ...)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
@@ -651,21 +652,21 @@ function UpgradesManager:get_value(upgrade_id, ...)
 	print("no value for", upgrade_id, upgrade.category)
 end
 
--- Lines 648-651
+-- Lines 651-654
 function UpgradesManager:get_category(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
 	return upgrade.category
 end
 
--- Lines 653-656
+-- Lines 656-659
 function UpgradesManager:get_upgrade_upgrade(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
 	return upgrade.upgrade
 end
 
--- Lines 658-661
+-- Lines 661-664
 function UpgradesManager:get_upgrade_locks(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
@@ -674,7 +675,7 @@ function UpgradesManager:get_upgrade_locks(upgrade_id)
 	}
 end
 
--- Lines 663-675
+-- Lines 666-678
 function UpgradesManager:is_upgrade_locked(upgrade_id)
 	local locks = self:get_upgrade_locks(upgrade_id)
 
@@ -687,7 +688,7 @@ function UpgradesManager:is_upgrade_locked(upgrade_id)
 	return false
 end
 
--- Lines 678-686
+-- Lines 681-689
 function UpgradesManager:is_locked(step)
 	local level = managers.experience:current_level()
 
@@ -700,7 +701,7 @@ function UpgradesManager:is_locked(step)
 	return false
 end
 
--- Lines 688-695
+-- Lines 691-698
 function UpgradesManager:get_level_from_step(step)
 	for i, d in ipairs(tweak_data.upgrades.itree_caps) do
 		if step == d.step then
@@ -711,7 +712,7 @@ function UpgradesManager:get_level_from_step(step)
 	return 0
 end
 
--- Lines 698-704
+-- Lines 701-707
 function UpgradesManager:progress()
 	if managers.dlc:is_dlc_unlocked("preorder") then
 		return {
@@ -729,12 +730,12 @@ function UpgradesManager:progress()
 	}
 end
 
--- Lines 706-708
+-- Lines 709-711
 function UpgradesManager:progress_by_tree(tree)
 	return self._global.progress[tree]
 end
 
--- Lines 710-718
+-- Lines 713-721
 function UpgradesManager:name(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get name from an upgrade that doesn't exist: " .. id .. "")
@@ -747,7 +748,7 @@ function UpgradesManager:name(id)
 	return managers.localization:text(upgrade.name_id)
 end
 
--- Lines 720-728
+-- Lines 723-731
 function UpgradesManager:title(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get title from an upgrade that doesn't exist: " .. id .. "")
@@ -760,7 +761,7 @@ function UpgradesManager:title(id)
 	return upgrade.title_id and managers.localization:text(upgrade.title_id) or nil
 end
 
--- Lines 730-738
+-- Lines 733-741
 function UpgradesManager:subtitle(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get subtitle from an upgrade that doesn't exist: " .. id .. "")
@@ -773,7 +774,7 @@ function UpgradesManager:subtitle(id)
 	return upgrade.subtitle_id and managers.localization:text(upgrade.subtitle_id) or nil
 end
 
--- Lines 740-760
+-- Lines 743-763
 function UpgradesManager:complete_title(id, type)
 	local title = self:title(id)
 
@@ -798,7 +799,7 @@ function UpgradesManager:complete_title(id, type)
 	return title .. "\n" .. subtitle
 end
 
--- Lines 762-770
+-- Lines 765-773
 function UpgradesManager:description(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to get description from an upgrade that doesn't exist: " .. id .. "")
@@ -811,7 +812,7 @@ function UpgradesManager:description(id)
 	return upgrade.subtitle_id and managers.localization:text(upgrade.description_text_id or id) or nil
 end
 
--- Lines 773-779
+-- Lines 776-782
 function UpgradesManager:image(id)
 	local image = tweak_data.upgrades.definitions[id].image
 
@@ -822,7 +823,7 @@ function UpgradesManager:image(id)
 	return tweak_data.hud_icons:get_icon_data(image)
 end
 
--- Lines 781-787
+-- Lines 784-790
 function UpgradesManager:image_slice(id)
 	local image_slice = tweak_data.upgrades.definitions[id].image_slice
 
@@ -833,7 +834,7 @@ function UpgradesManager:image_slice(id)
 	return tweak_data.hud_icons:get_icon_data(image_slice)
 end
 
--- Lines 789-796
+-- Lines 792-799
 function UpgradesManager:icon(id)
 	if not tweak_data.upgrades.definitions[id] then
 		Application:error("Tried to aquire an upgrade that doesn't exist: " .. id .. "")
@@ -844,7 +845,7 @@ function UpgradesManager:icon(id)
 	return tweak_data.upgrades.definitions[id].icon
 end
 
--- Lines 798-808
+-- Lines 801-811
 function UpgradesManager:aquired_by_category(category)
 	local t = {}
 
@@ -857,17 +858,17 @@ function UpgradesManager:aquired_by_category(category)
 	return t
 end
 
--- Lines 810-812
+-- Lines 813-815
 function UpgradesManager:aquired_features()
 	return self:aquired_by_category("feature")
 end
 
--- Lines 814-816
+-- Lines 817-819
 function UpgradesManager:aquired_weapons()
 	return self:aquired_by_category("weapon")
 end
 
--- Lines 820-838
+-- Lines 823-841
 function UpgradesManager:list_level_rewards(dlcs)
 	local t = {}
 	local tree_data = tweak_data.upgrades.level_tree
@@ -892,7 +893,7 @@ function UpgradesManager:list_level_rewards(dlcs)
 	return t
 end
 
--- Lines 844-850
+-- Lines 847-853
 function UpgradesManager:all_weapon_upgrades()
 	for id, data in pairs(tweak_data.upgrades.definitions) do
 		if data.category == "weapon" then
@@ -901,7 +902,7 @@ function UpgradesManager:all_weapon_upgrades()
 	end
 end
 
--- Lines 852-860
+-- Lines 855-863
 function UpgradesManager:weapon_upgrade_by_weapon_id(weapon_id)
 	for id, data in pairs(tweak_data.upgrades.definitions) do
 		if data.category == "weapon" and data.weapon_id == weapon_id then
@@ -910,7 +911,7 @@ function UpgradesManager:weapon_upgrade_by_weapon_id(weapon_id)
 	end
 end
 
--- Lines 862-870
+-- Lines 865-873
 function UpgradesManager:weapon_upgrade_by_factory_id(factory_id)
 	for id, data in pairs(tweak_data.upgrades.definitions) do
 		if data.category == "weapon" and data.factory_id == factory_id then
@@ -919,7 +920,7 @@ function UpgradesManager:weapon_upgrade_by_factory_id(factory_id)
 	end
 end
 
--- Lines 874-884
+-- Lines 877-887
 function UpgradesManager:print_aquired_tree()
 	local tree = {}
 
@@ -934,7 +935,7 @@ function UpgradesManager:print_aquired_tree()
 	end
 end
 
--- Lines 886-934
+-- Lines 889-937
 function UpgradesManager:analyze()
 	local not_placed = {}
 	local placed = {}
@@ -999,7 +1000,7 @@ function UpgradesManager:analyze()
 	print("\nTotal upgrades " .. amount .. ".")
 end
 
--- Lines 936-950
+-- Lines 939-953
 function UpgradesManager:tree_stats()
 	local t = {
 		{
@@ -1030,7 +1031,7 @@ function UpgradesManager:tree_stats()
 	end
 end
 
--- Lines 976-993
+-- Lines 979-996
 function UpgradesManager:save(data)
 	local state = {
 		automanage = self._global.automanage,
@@ -1052,7 +1053,7 @@ function UpgradesManager:save(data)
 	data.UpgradesManager = state
 end
 
--- Lines 995-1003
+-- Lines 998-1006
 function UpgradesManager:load(data)
 	local state = data.UpgradesManager
 	self._global.automanage = state.automanage or self._global.automanage
@@ -1063,11 +1064,11 @@ function UpgradesManager:load(data)
 	self:_verify_loaded_data()
 end
 
--- Lines 1006-1045
+-- Lines 1009-1048
 function UpgradesManager:_verify_loaded_data()
 end
 
--- Lines 1047-1050
+-- Lines 1050-1053
 function UpgradesManager:reset()
 	Global.upgrades_manager = nil
 

@@ -111,6 +111,7 @@ require("lib/units/editor/CharacterDamageTriggerElement")
 require("lib/units/editor/AIForceAttentionElement")
 require("lib/units/editor/AIForceAttentionOperatorElement")
 require("lib/units/editor/SideJobElement")
+require("lib/units/editor/EventSideJobElement")
 require("lib/units/editor/TeleportPlayerElement")
 require("lib/units/editor/HeistTimerElement")
 require("lib/units/editor/DropInPointElement")
@@ -130,7 +131,7 @@ require("lib/utils/dev/tools/InventoryIconCreator")
 
 WorldEditor = WorldEditor or class(CoreEditor)
 
--- Lines 158-165
+-- Lines 161-168
 function WorldEditor:init(game_state_machine)
 	WorldEditor.super.init(self, game_state_machine)
 	Network:set_multiplayer(true)
@@ -139,7 +140,7 @@ function WorldEditor:init(game_state_machine)
 	self._tool_updators = {}
 end
 
--- Lines 167-176
+-- Lines 170-179
 function WorldEditor:update(...)
 	WorldEditor.super.update(self, ...)
 
@@ -152,17 +153,17 @@ function WorldEditor:update(...)
 	end
 end
 
--- Lines 178-180
+-- Lines 181-183
 function WorldEditor:add_tool_updator(name, updator)
 	self._tool_updators[name] = updator
 end
 
--- Lines 182-184
+-- Lines 185-187
 function WorldEditor:remove_tool_updator(name)
 	self._tool_updators[name] = nil
 end
 
--- Lines 186-189
+-- Lines 189-192
 function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulties = {
 		{
@@ -201,7 +202,7 @@ function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulty = "normal"
 end
 
--- Lines 191-194
+-- Lines 194-197
 function WorldEditor:_init_mission_players()
 	self._mission_players = {
 		1,
@@ -212,18 +213,18 @@ function WorldEditor:_init_mission_players()
 	self._mission_player = 1
 end
 
--- Lines 197-200
+-- Lines 200-203
 function WorldEditor:_project_init_layer_classes()
 	self:add_layer("Ai", CoreAiLayer.AiLayer)
 	self:add_layer("Heatmap", CoreHeatmapLayer.HeatmapLayer)
 end
 
--- Lines 203-205
+-- Lines 206-208
 function WorldEditor:_project_init_slot_masks()
 	self._go_through_units_before_simulaton_mask = self._go_through_units_before_simulaton_mask + 15
 end
 
--- Lines 207-213
+-- Lines 210-216
 function WorldEditor:project_prestart_up(with_mission)
 	managers.job:on_simulation_started()
 	managers.navigation:on_simulation_started()
@@ -232,7 +233,7 @@ function WorldEditor:project_prestart_up(with_mission)
 	managers.hud:on_simulation_started()
 end
 
--- Lines 217-246
+-- Lines 220-249
 function WorldEditor:project_run_simulation(with_mission)
 	Global.game_settings.difficulty = self._mission_difficulty
 
@@ -268,11 +269,11 @@ function WorldEditor:project_run_simulation(with_mission)
 	managers.game_play_central:start_heist_timer()
 end
 
--- Lines 248-250
+-- Lines 251-253
 function WorldEditor:_project_check_unit(unit)
 end
 
--- Lines 254-284
+-- Lines 257-287
 function WorldEditor:project_stop_simulation()
 	managers.hud:on_simulation_ended()
 	managers.hud:clear_waypoints()
@@ -301,7 +302,7 @@ function WorldEditor:project_stop_simulation()
 	managers.dot:on_simulation_ended()
 end
 
--- Lines 288-300
+-- Lines 291-303
 function WorldEditor:project_clear_units()
 	managers.groupai:state():set_AI_enabled(false)
 
@@ -318,34 +319,34 @@ function WorldEditor:project_clear_units()
 	end
 end
 
--- Lines 305-306
+-- Lines 308-309
 function WorldEditor:project_clear_layers()
 end
 
--- Lines 311-312
+-- Lines 314-315
 function WorldEditor:project_recreate_layers()
 end
 
--- Lines 315-318
+-- Lines 318-321
 function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
 	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
 end
 
--- Lines 320-323
+-- Lines 323-326
 function WorldEditor:_open_inventory_icon_creator()
 	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
 
 	self._inventory_icon_creator:show_ews()
 end
 
--- Lines 325-328
+-- Lines 328-331
 function WorldEditor:open()
 	WorldEditor.super.open(self)
 	managers.menu_component:set_rev_visible(self._enable_revision_number)
 end
 
--- Lines 330-334
+-- Lines 333-337
 function WorldEditor:on_enable_revision_number(changed, value)
 	if changed then
 		managers.menu_component:set_rev_visible(value)

@@ -23,7 +23,7 @@ function GroupAIStateStreet:_upd_police_activity()
 	self:_queue_police_upd_task()
 end
 
--- Lines 25-165
+-- Lines 25-174
 function GroupAIStateStreet:_begin_new_tasks()
 	local all_areas = self._area_data
 	local nav_manager = managers.navigation
@@ -97,6 +97,15 @@ function GroupAIStateStreet:_begin_new_tasks()
 		local demand = force_factor and force_factor.force
 		local nr_police = table.size(area.police.units)
 		local nr_criminals = table.size(area.criminal.units)
+		local criminal_character_in_area = false
+
+		for criminal_key, _ in pairs(area.criminal.units) do
+			if not self._criminals[criminal_key].status and not self._criminals[criminal_key].is_deployable then
+				criminal_character_in_area = true
+
+				break
+			end
+		end
 
 		if demand and (nr_criminals == 0 and reenforce_candidates or demand == 0) then
 			local area_free = true
@@ -147,7 +156,7 @@ function GroupAIStateStreet:_begin_new_tasks()
 			end
 		end
 
-		if nr_criminals == 0 then
+		if not criminal_character_in_area then
 			for neighbour_area_id, neighbour_area in pairs(area.neighbours) do
 				if not found_areas[neighbour_area_id] then
 					table.insert(to_search_areas, neighbour_area)
@@ -184,7 +193,7 @@ function GroupAIStateStreet:_begin_new_tasks()
 	end
 end
 
--- Lines 169-207
+-- Lines 178-216
 function GroupAIStateStreet:_begin_assault()
 	local assault_data = self._task_data.assault
 	assault_data.active = true
@@ -224,7 +233,7 @@ function GroupAIStateStreet:_begin_assault()
 	self._task_data.recon.tasks = {}
 end
 
--- Lines 211-255
+-- Lines 220-264
 function GroupAIStateStreet:_upd_assault_task(task_data)
 	local assault_data = self._task_data.assault
 	local target_area = task_data.target_area
@@ -238,7 +247,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 
 	if nr_wanted > 0 and assault_data.phase ~= "fade" and not next(self._spawning_groups) then
-		-- Lines 230-232
+		-- Lines 239-241
 		local function verif_clbk(test_spawn_group)
 			return test_spawn_group.area.id == target_area.id
 		end
@@ -273,7 +282,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 end
 
--- Lines 259-269
+-- Lines 268-278
 function GroupAIStateStreet:_begin_reenforce_task(reenforce_area)
 	local new_task = {
 		use_spawn_event = true,
@@ -287,7 +296,7 @@ function GroupAIStateStreet:_begin_reenforce_task(reenforce_area)
 	self._task_data.reenforce.next_dispatch_t = self._t + self:_get_difficulty_dependent_value(tweak_data.group_ai.street.reenforce.interval)
 end
 
--- Lines 273-372
+-- Lines 282-381
 function GroupAIStateStreet:_upd_reenforce_tasks()
 	local reenforce_tasks = self._task_data.reenforce.tasks
 	local t = self._t
@@ -395,7 +404,7 @@ function GroupAIStateStreet:_upd_reenforce_tasks()
 	self:_assign_enemy_groups_to_reenforce()
 end
 
--- Lines 376-632
+-- Lines 385-641
 function GroupAIStateStreet:_upd_assault_tasks()
 	local assault_data = self._task_data.assault
 

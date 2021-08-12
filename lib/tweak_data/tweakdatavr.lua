@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-5697
+-- Lines 4-5777
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -443,6 +443,9 @@ function TweakDataVR:init(tweak_data)
 			shrew = {
 				position = Vector3(-0.5, 1, 1)
 			},
+			rsh12 = {
+				position = Vector3(-0.5, 3, 1.2)
+			},
 			stech = {
 				position = Vector3(-0.5, 1, 1)
 			},
@@ -870,6 +873,16 @@ function TweakDataVR:init(tweak_data)
 			position = Vector3(0, 3, -2)
 		},
 		lemming = {
+			position = Vector3(0, 1.5, -2)
+		},
+		rsh12 = {
+			position = Vector3(3, 0, 0),
+			rotation = Rotation(-223, -129, 70)
+		},
+		type54 = {
+			position = Vector3(0, 1.5, -2)
+		},
+		x_type54 = {
 			position = Vector3(0, 1.5, -2)
 		},
 		breech = {
@@ -2699,6 +2712,76 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		type54 = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_lemming_mag_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -5, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_lemming_mag_in",
+					visible = true,
+					pos = Vector3(0, -5, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -3, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -3, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_lemming_mantle_forward",
+					pos = Vector3()
+				}
+			}
+		},
+		x_type54 = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_lemming_mag_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -5, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_lemming_mag_in",
+					visible = true,
+					pos = Vector3(0, -5, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -3, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -3, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_lemming_mantle_forward",
+					pos = Vector3()
+				}
+			}
+		},
 		chinchilla = {
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
@@ -3978,6 +4061,77 @@ function TweakDataVR:init(tweak_data)
 			}
 		},
 		judge = {
+			reload_part_type = "lower_reciever",
+			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			start = {
+				{
+					time = 0,
+					sound = "wp_rbull_drum_open",
+					anims = {
+						{
+							anim_group = "reload",
+							to = 1,
+							from = 0.5,
+							part = "lower_reciever"
+						}
+					}
+				},
+				{
+					time = 0.02,
+					sound = "wp_rbull_shells_out"
+				},
+				{
+					time = 0.09,
+					visible = {
+						visible = false,
+						parts = {
+							lower_reciever = {
+								"g_bullet_1",
+								"g_bullet_2",
+								"g_bullet_3",
+								"g_bullet_4",
+								"g_bullet_5"
+							}
+						}
+					},
+					effect = {
+						part = "lower_reciever",
+						name = "effects/payday2/particles/weapons/shells/shell_judge_dump",
+						object = "align_house_align"
+					}
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_rbull_shells_in",
+					anims = {
+						{
+							anim_group = "reload",
+							part = "lower_reciever",
+							from = 1.9
+						}
+					},
+					visible = {
+						visible = true,
+						parts = {
+							lower_reciever = {
+								"g_bullet_1",
+								"g_bullet_2",
+								"g_bullet_3",
+								"g_bullet_4",
+								"g_bullet_5"
+							}
+						}
+					}
+				},
+				{
+					time = 0.5,
+					sound = "wp_rbull_drum_close"
+				}
+			}
+		},
+		rsh12 = {
 			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
 			start = {
@@ -9805,7 +9959,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 5703-5814
+-- Lines 5783-5894
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -10020,7 +10174,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 5818-5878
+-- Lines 5898-5958
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -10100,7 +10254,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 5881-5893
+-- Lines 5961-5973
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -10121,7 +10275,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 5895-5921
+-- Lines 5975-6001
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -10142,14 +10296,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 5923-5927
+-- Lines 6003-6007
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 5929-5941
+-- Lines 6009-6021
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -10167,7 +10321,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 5943-5951
+-- Lines 6023-6031
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -10180,7 +10334,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 5953-5957
+-- Lines 6033-6037
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -10189,7 +10343,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5959-5967
+-- Lines 6039-6047
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -10204,7 +10358,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5969-5976
+-- Lines 6049-6056
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -10217,7 +10371,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 5978-5985
+-- Lines 6058-6065
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

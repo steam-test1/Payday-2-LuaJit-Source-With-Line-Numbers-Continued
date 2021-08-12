@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2235
+-- Lines 5-2270
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1685,6 +1685,20 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 300,
 		category = "dlc"
 	}
+	self.global_values.dlc_achievement = {
+		name_id = "bm_global_value_normal",
+		desc_id = "menu_l_global_value_normal",
+		unlock_id = "bm_global_value_normal_unlock",
+		color = dlc_color,
+		dlc = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = false,
+		track = true,
+		sort_number = 300,
+		category = "dlc"
+	}
 	self.global_values.sawp_grenade = {
 		name_id = "bm_global_value_sawp",
 		desc_id = "menu_l_global_value_sawp",
@@ -1700,6 +1714,22 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 508,
 		category = "dlc"
+	}
+	self.global_values.pda8_wpn_money = {
+		name_id = "bm_global_value_pda8",
+		desc_id = "menu_l_global_value_pda8",
+		unlock_id = "bm_wpn_money_event_ended",
+		color = tweak_data.screen_colors.event_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = false,
+		track = true,
+		sort_number = 510,
+		category = "global_event"
 	}
 
 	if SystemInfo:platform() == Idstring("PS3") then
@@ -1798,7 +1828,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2237-2242
+-- Lines 2272-2277
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

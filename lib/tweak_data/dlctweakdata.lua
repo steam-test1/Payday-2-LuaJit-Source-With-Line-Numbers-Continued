@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4667
+-- Lines 10-4676
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8291,4 +8291,11 @@ function DLCTweakData:init(tweak_data)
 			amount = 1
 		}
 	}
+	self.pda8_wpn_money = {
+		content = {},
+		dlc = "has_pda8_wpn_money"
+	}
+	self.pda8_wpn_money.content.loot_global_value = "pda8_wpn_money"
+	self.pda8_wpn_money.content.loot_drops = {}
+	self.pda8_wpn_money.content.upgrades = {}
 end

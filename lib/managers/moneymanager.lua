@@ -1153,12 +1153,19 @@ function MoneyManager:on_loot_drop_cash(value_id)
 	}, TelemetryConst.economy_origin.loot_drop_cash)
 end
 
--- Lines 1190-1192
+-- Lines 1190-1193
+function MoneyManager:on_loot_drop_offshore(value_id)
+	local amount = self:get_loot_drop_cash_value(value_id)
+
+	self:add_to_offshore(amount)
+end
+
+-- Lines 1195-1197
 function MoneyManager:get_cached_mask_part_id(category, id, global_value, mask_id)
 	return Idstring(string.format("%s%s%s%s", category, id, global_value, mask_id)):key()
 end
 
--- Lines 1194-1201
+-- Lines 1199-1206
 function MoneyManager:get_tweak_value(...)
 	local value = tweak_data:get_value(...)
 
@@ -1172,7 +1179,7 @@ function MoneyManager:get_tweak_value(...)
 	return value or 0
 end
 
--- Lines 1205-1220
+-- Lines 1210-1225
 function MoneyManager:get_preplanning_type_cost(type)
 	local cost = self:get_tweak_value("preplanning", "types", type, "cost") or 0
 	local has_active_job = managers.job:has_active_job()
@@ -1183,7 +1190,7 @@ function MoneyManager:get_preplanning_type_cost(type)
 	return math.round(cost)
 end
 
--- Lines 1222-1228
+-- Lines 1227-1233
 function MoneyManager:can_afford_preplanning_type(type)
 	local cost = self:get_preplanning_type_cost(type)
 	local reserved_cost = managers.preplanning:get_reserved_local_cost()
@@ -1191,19 +1198,19 @@ function MoneyManager:can_afford_preplanning_type(type)
 	return self:total() >= cost + reserved_cost
 end
 
--- Lines 1230-1233
+-- Lines 1235-1238
 function MoneyManager:on_buy_preplanning_types()
 	local cost = self:get_preplanning_types_cost()
 
 	self:_deduct_from_total(cost, TelemetryConst.economy_origin.buy_preplanning_types)
 end
 
--- Lines 1235-1237
+-- Lines 1240-1242
 function MoneyManager:get_preplanning_types_cost()
 	return managers.preplanning:get_reserved_local_cost() or 0
 end
 
--- Lines 1239-1246
+-- Lines 1244-1251
 function MoneyManager:get_preplanning_votes_cost()
 	local total_cost = 0
 	local plans = managers.preplanning:get_current_majority_votes()
@@ -1215,19 +1222,19 @@ function MoneyManager:get_preplanning_votes_cost()
 	return total_cost
 end
 
--- Lines 1248-1250
+-- Lines 1253-1255
 function MoneyManager:get_preplanning_total_cost()
 	return self:get_preplanning_types_cost() + self:get_preplanning_votes_cost()
 end
 
--- Lines 1252-1255
+-- Lines 1257-1260
 function MoneyManager:on_buy_preplanning_votes()
 	local total_cost = self:get_preplanning_votes_cost()
 
 	self:_deduct_from_total(total_cost, TelemetryConst.economy_origin.buy_preplanning_votes)
 end
 
--- Lines 1259-1282
+-- Lines 1264-1287
 function MoneyManager:get_skillpoint_cost(tree, tier, points)
 	local respec_tweak_data = tweak_data.money_manager.skilltree.respec
 	local exp_cost = 0
@@ -1245,7 +1252,7 @@ function MoneyManager:get_skillpoint_cost(tree, tier, points)
 	return math.round(cost)
 end
 
--- Lines 1284-1332
+-- Lines 1289-1337
 function MoneyManager:get_skilltree_tree_respec_cost(tree, forced_respec_multiplier)
 	local base_point_cost = self:get_tweak_value("money_manager", "skilltree", "respec", "base_point_cost")
 	local value = base_point_cost
@@ -1265,19 +1272,19 @@ function MoneyManager:get_skilltree_tree_respec_cost(tree, forced_respec_multipl
 	return math.round(value * (forced_respec_multiplier or self:get_tweak_value("money_manager", "skilltree", "respec", "respec_refund_multiplier")))
 end
 
--- Lines 1336-1340
+-- Lines 1341-1345
 function MoneyManager:get_mission_asset_cost()
 	local stars = managers.job:has_active_job() and managers.job:current_job_and_difficulty_stars() or 1
 
 	return math.round(self:get_tweak_value("money_manager", "mission_asset_cost", stars) * managers.player:upgrade_value("player", "assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "assets_cost_multiplier_b", 1) * managers.player:upgrade_value("player", "passive_assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "buy_cost_multiplier", 1) * managers.player:upgrade_value("player", "crime_net_deal", 1))
 end
 
--- Lines 1342-1345
+-- Lines 1347-1350
 function MoneyManager:get_mission_asset_cost_by_stars(stars)
 	return math.round(self:get_tweak_value("money_manager", "mission_asset_cost", stars) * managers.player:upgrade_value("player", "assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "assets_cost_multiplier_b", 1) * managers.player:upgrade_value("player", "passive_assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "buy_cost_multiplier", 1) * managers.player:upgrade_value("player", "crime_net_deal", 1))
 end
 
--- Lines 1347-1364
+-- Lines 1352-1369
 function MoneyManager:get_mission_asset_cost_by_id(id)
 	local asset_tweak_data = managers.assets:get_asset_tweak_data_by_id(id)
 	local value = asset_tweak_data and asset_tweak_data.money_lock or 0
@@ -1292,7 +1299,7 @@ function MoneyManager:get_mission_asset_cost_by_id(id)
 	return math.round(value * managers.player:upgrade_value("player", "assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "assets_cost_multiplier_b", 1) * managers.player:upgrade_value("player", "passive_assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "buy_cost_multiplier", 1) * managers.player:upgrade_value("player", "crime_net_deal", 1))
 end
 
--- Lines 1368-1386
+-- Lines 1373-1391
 function MoneyManager:get_cost_of_premium_contract(job_id, difficulty_id)
 	local job_data = tweak_data.narrative:job_data(job_id)
 
@@ -1321,21 +1328,21 @@ function MoneyManager:get_cost_of_premium_contract(job_id, difficulty_id)
 	return total_value
 end
 
--- Lines 1388-1393
+-- Lines 1393-1398
 function MoneyManager:can_afford_buy_premium_contract(job_id, difficulty_id)
 	local amount = self:get_cost_of_premium_contract(job_id, difficulty_id)
 
 	return amount <= self:offshore()
 end
 
--- Lines 1395-1398
+-- Lines 1400-1403
 function MoneyManager:on_buy_premium_contract(job_id, difficulty_id)
 	local amount = self:get_cost_of_premium_contract(job_id, difficulty_id)
 
 	self:deduct_from_offshore(amount)
 end
 
--- Lines 1402-1420
+-- Lines 1407-1425
 function MoneyManager:get_cost_of_casino_entrance()
 	local current_level = managers.experience:current_level()
 	local level = 1
@@ -1355,7 +1362,7 @@ function MoneyManager:get_cost_of_casino_entrance()
 	return self:get_tweak_value("casino", "entrance_fee", level)
 end
 
--- Lines 1422-1438
+-- Lines 1427-1443
 function MoneyManager:get_cost_of_casino_fee(secured_cards, increase_infamous, preferred_card)
 	local fee = self:get_cost_of_casino_entrance()
 
@@ -1374,12 +1381,12 @@ function MoneyManager:get_cost_of_casino_fee(secured_cards, increase_infamous, p
 	return fee
 end
 
--- Lines 1440-1442
+-- Lines 1445-1447
 function MoneyManager:can_afford_casino_fee(secured_cards, increase_infamous, preferred_card)
 	return self:get_cost_of_casino_fee(secured_cards, increase_infamous, preferred_card) <= self:offshore()
 end
 
--- Lines 1444-1450
+-- Lines 1449-1455
 function MoneyManager:on_buy_casino_fee(secured_cards, increase_infamous, preferred_card)
 	local amount = self:get_cost_of_casino_fee(secured_cards, increase_infamous, preferred_card)
 
@@ -1387,22 +1394,22 @@ function MoneyManager:on_buy_casino_fee(secured_cards, increase_infamous, prefer
 	self:dispatch_event("casino_fee_paid", amount)
 end
 
--- Lines 1455-1457
+-- Lines 1460-1462
 function MoneyManager:has_unlock_skill_switch_cost(selected_skill_switch)
 	return self:get_unlock_skill_switch_spending_cost(selected_skill_switch) ~= 0 or self:get_unlock_skill_switch_offshore_cost(selected_skill_switch) ~= 0
 end
 
--- Lines 1459-1461
+-- Lines 1464-1466
 function MoneyManager:get_unlock_skill_switch_spending_cost(selected_skill_switch)
 	return self:get_tweak_value("money_manager", "skill_switch_cost", selected_skill_switch, "spending")
 end
 
--- Lines 1463-1465
+-- Lines 1468-1470
 function MoneyManager:get_unlock_skill_switch_offshore_cost(selected_skill_switch)
 	return self:get_tweak_value("money_manager", "skill_switch_cost", selected_skill_switch, "offshore")
 end
 
--- Lines 1467-1471
+-- Lines 1472-1476
 function MoneyManager:can_afford_unlock_skill_switch(selected_skill_switch)
 	local spending_cost = self:get_unlock_skill_switch_spending_cost(selected_skill_switch)
 	local offshore_cost = self:get_unlock_skill_switch_offshore_cost(selected_skill_switch)
@@ -1410,7 +1417,7 @@ function MoneyManager:can_afford_unlock_skill_switch(selected_skill_switch)
 	return spending_cost <= self:total() and offshore_cost <= self:offshore()
 end
 
--- Lines 1473-1478
+-- Lines 1478-1483
 function MoneyManager:on_unlock_skill_switch(selected_skill_switch)
 	local spending_cost = self:get_unlock_skill_switch_spending_cost(selected_skill_switch)
 	local offshore_cost = self:get_unlock_skill_switch_offshore_cost(selected_skill_switch)
@@ -1419,17 +1426,17 @@ function MoneyManager:on_unlock_skill_switch(selected_skill_switch)
 	self:deduct_from_offshore(offshore_cost)
 end
 
--- Lines 1482-1488
+-- Lines 1487-1493
 function MoneyManager:get_infamous_cost(rank)
 	return Application:digest_value(tweak_data.infamy.offshore_cost[rank] or tweak_data.infamy.offshore_cost[#tweak_data.infamy.offshore_cost], false)
 end
 
--- Lines 1512-1514
+-- Lines 1517-1519
 function MoneyManager:total()
 	return Application:digest_value(self._global.total, false)
 end
 
--- Lines 1516-1521
+-- Lines 1521-1526
 function MoneyManager:_set_total(value)
 	self._global.total = Application:digest_value(value, true)
 
@@ -1438,22 +1445,22 @@ function MoneyManager:_set_total(value)
 	end
 end
 
--- Lines 1523-1525
+-- Lines 1528-1530
 function MoneyManager:total_collected()
 	return Application:digest_value(self._global.total_collected, false)
 end
 
--- Lines 1527-1529
+-- Lines 1532-1534
 function MoneyManager:_set_total_collected(value)
 	self._global.total_collected = Application:digest_value(value, true)
 end
 
--- Lines 1531-1533
+-- Lines 1536-1538
 function MoneyManager:offshore()
 	return Application:digest_value(self._global.offshore, false)
 end
 
--- Lines 1535-1540
+-- Lines 1540-1545
 function MoneyManager:_set_offshore(value)
 	self._global.offshore = Application:digest_value(value, true)
 
@@ -1462,17 +1469,17 @@ function MoneyManager:_set_offshore(value)
 	end
 end
 
--- Lines 1542-1544
+-- Lines 1547-1549
 function MoneyManager:total_spent()
 	return Application:digest_value(self._global.total_spent, false)
 end
 
--- Lines 1546-1548
+-- Lines 1551-1553
 function MoneyManager:_set_total_spent(value)
 	self._global.total_spent = Application:digest_value(value, true)
 end
 
--- Lines 1550-1554
+-- Lines 1555-1559
 function MoneyManager:add_to_total(amount, reason)
 	amount = math.round(amount)
 
@@ -1480,7 +1487,7 @@ function MoneyManager:add_to_total(amount, reason)
 	self:_add_to_total(amount, nil, reason)
 end
 
--- Lines 1556-1581
+-- Lines 1561-1586
 function MoneyManager:_add_to_total(amount, params, reason)
 	local no_offshore = params and params.no_offshore
 	local offshore = math.round(no_offshore and 0 or amount * (1 - self:get_tweak_value("money_manager", "offshore_rate")))
@@ -1506,7 +1513,7 @@ function MoneyManager:_add_to_total(amount, params, reason)
 	end
 end
 
--- Lines 1583-1587
+-- Lines 1588-1592
 function MoneyManager:deduct_from_total(amount, reason)
 	amount = math.round(amount)
 
@@ -1514,7 +1521,7 @@ function MoneyManager:deduct_from_total(amount, reason)
 	self:_deduct_from_total(amount, reason)
 end
 
--- Lines 1589-1596
+-- Lines 1594-1601
 function MoneyManager:_deduct_from_total(amount, reason)
 	amount = math.min(amount, self:total())
 
@@ -1527,7 +1534,7 @@ function MoneyManager:_deduct_from_total(amount, reason)
 	Telemetry:send_on_player_economy_event(reason, "cash", amount, "spend")
 end
 
--- Lines 1598-1606
+-- Lines 1603-1611
 function MoneyManager:add_to_spending(amount)
 	amount = math.round(amount)
 
@@ -1540,7 +1547,7 @@ function MoneyManager:add_to_spending(amount)
 	end
 end
 
--- Lines 1608-1614
+-- Lines 1613-1619
 function MoneyManager:deduct_from_spending(amount)
 	amount = math.round(amount)
 
@@ -1552,7 +1559,7 @@ function MoneyManager:deduct_from_spending(amount)
 	self:_on_total_changed(0, -amount, 0)
 end
 
--- Lines 1616-1624
+-- Lines 1621-1629
 function MoneyManager:add_to_offshore(amount)
 	amount = math.round(amount)
 
@@ -1565,7 +1572,7 @@ function MoneyManager:add_to_offshore(amount)
 	end
 end
 
--- Lines 1626-1630
+-- Lines 1631-1635
 function MoneyManager:deduct_from_offshore(amount)
 	amount = math.round(amount)
 
@@ -1573,7 +1580,7 @@ function MoneyManager:deduct_from_offshore(amount)
 	self:_deduct_from_offshore(amount)
 end
 
--- Lines 1632-1636
+-- Lines 1637-1641
 function MoneyManager:_deduct_from_offshore(amount)
 	amount = math.min(amount, self:offshore())
 
@@ -1581,7 +1588,7 @@ function MoneyManager:_deduct_from_offshore(amount)
 	self:_on_total_changed(0, 0, -amount)
 end
 
--- Lines 1638-1657
+-- Lines 1643-1662
 function MoneyManager:_on_total_changed(amount, spending_cash, offshore)
 	self._heist_total = self._heist_total + amount
 	self._heist_offshore = self._heist_offshore + offshore
@@ -1599,22 +1606,22 @@ function MoneyManager:_on_total_changed(amount, spending_cash, offshore)
 	end
 end
 
--- Lines 1659-1661
+-- Lines 1664-1666
 function MoneyManager:heist_total()
 	return self._heist_total or 0
 end
 
--- Lines 1663-1665
+-- Lines 1668-1670
 function MoneyManager:heist_spending()
 	return self._heist_spending or 0
 end
 
--- Lines 1667-1669
+-- Lines 1672-1674
 function MoneyManager:heist_offshore()
 	return self._heist_offshore or 0
 end
 
--- Lines 1671-1686
+-- Lines 1676-1691
 function MoneyManager:get_payouts()
 	return {
 		stage_payout = self._stage_payout,
@@ -1628,37 +1635,37 @@ function MoneyManager:get_payouts()
 	}
 end
 
--- Lines 1688-1690
+-- Lines 1693-1695
 function MoneyManager:_set_stage_payout(amount)
 	self._stage_payout = amount
 end
 
--- Lines 1692-1694
+-- Lines 1697-1699
 function MoneyManager:_set_job_payout(amount)
 	self._job_payout = amount
 end
 
--- Lines 1696-1698
+-- Lines 1701-1703
 function MoneyManager:_set_bag_payout(amount)
 	self._bag_payout = amount
 end
 
--- Lines 1700-1702
+-- Lines 1705-1707
 function MoneyManager:_set_small_loot_payout(amount)
 	self._small_loot_payout = amount
 end
 
--- Lines 1704-1706
+-- Lines 1709-1711
 function MoneyManager:_set_crew_payout(amount)
 	self._crew_payout = amount
 end
 
--- Lines 1708-1710
+-- Lines 1713-1715
 function MoneyManager:_set_vehicle_payout(amount)
 	self._vehicle_payout = amount
 end
 
--- Lines 1712-1717
+-- Lines 1717-1722
 function MoneyManager:_add(amount)
 	amount = self:_check_multipliers(amount)
 	self._heist_total = self._heist_total + amount
@@ -1666,7 +1673,7 @@ function MoneyManager:_add(amount)
 	self:_present(amount)
 end
 
--- Lines 1719-1724
+-- Lines 1724-1729
 function MoneyManager:_check_multipliers(amount)
 	for _, multiplier in pairs(self._active_multipliers) do
 		amount = amount * multiplier
@@ -1675,7 +1682,7 @@ function MoneyManager:_check_multipliers(amount)
 	return math.round(amount)
 end
 
--- Lines 1726-1743
+-- Lines 1731-1748
 function MoneyManager:_present(amount)
 	local s_amount = tostring(amount)
 	local reverse = string.reverse(s_amount)
@@ -1694,7 +1701,7 @@ function MoneyManager:_present(amount)
 	end
 end
 
--- Lines 1746-1753
+-- Lines 1751-1758
 function MoneyManager:actions()
 	local t = {}
 
@@ -1707,7 +1714,7 @@ function MoneyManager:actions()
 	return t
 end
 
--- Lines 1756-1763
+-- Lines 1761-1768
 function MoneyManager:multipliers()
 	local t = {}
 
@@ -1720,14 +1727,14 @@ function MoneyManager:multipliers()
 	return t
 end
 
--- Lines 1765-1768
+-- Lines 1770-1773
 function MoneyManager:reset()
 	Global.money_manager = nil
 
 	self:_setup()
 end
 
--- Lines 1770-1779
+-- Lines 1775-1784
 function MoneyManager:save(data)
 	local state = {
 		total = self._global.total,
@@ -1738,7 +1745,7 @@ function MoneyManager:save(data)
 	data.MoneyManager = state
 end
 
--- Lines 1781-1792
+-- Lines 1786-1797
 function MoneyManager:load(data)
 	local state = data.MoneyManager
 	self._global.total = state.total and Application:digest_value(math.max(0, Application:digest_value(state.total, false)), true) or self._global.total
@@ -1750,4 +1757,43 @@ function MoneyManager:load(data)
 		XboxLive:write_hero_stat("cash", self._global.total)
 		XboxLive:write_hero_stat("offshore", self._global.offshore)
 	end
+end
+
+-- Lines 1800-1802
+function MoneyManager:session_moneythrower_spending()
+	return managers.statistics:session_killed_by_weapon("money") > 0 and tweak_data:get_value("money_manager", "moneythrower", "kill_to_offshore_multiplier") <= self:offshore()
+end
+
+-- Lines 1804-1812
+function MoneyManager:get_session_moneythrower_kills()
+	local offshore_multiplier = tweak_data:get_value("money_manager", "moneythrower", "kill_to_offshore_multiplier")
+	local max_kills_per_session = tweak_data:get_value("money_manager", "moneythrower", "max_kills_per_session")
+	local offshore_kills = self:offshore() % offshore_multiplier
+	local session_kills = managers.statistics:session_killed_by_weapon("money")
+
+	return math.min(session_kills, offshore_kills, max_kills_per_session)
+end
+
+-- Lines 1814-1819
+function MoneyManager:get_session_moneythrower_spending()
+	local offshore_multiplier = tweak_data:get_value("money_manager", "moneythrower", "kill_to_offshore_multiplier")
+	local kills_to_spend = self:get_session_moneythrower_kills()
+
+	return kills_to_spend * offshore_multiplier
+end
+
+-- Lines 1821-1835
+function MoneyManager:on_spend_session_moneythrower()
+	local offshore_multiplier = tweak_data:get_value("money_manager", "moneythrower", "kill_to_offshore_multiplier")
+	local max_kills_per_session = tweak_data:get_value("money_manager", "moneythrower", "max_kills_per_session")
+	local offshore_kills = math.floor(self:offshore() / offshore_multiplier)
+	local session_kills = managers.statistics:session_killed_by_weapon("money")
+	local spending_kills = math.min(session_kills, offshore_kills, max_kills_per_session)
+	local spendings = spending_kills * offshore_multiplier
+
+	if spendings > 0 then
+		self:deduct_from_offshore(spendings)
+	end
+
+	return spending_kills, spendings
 end
