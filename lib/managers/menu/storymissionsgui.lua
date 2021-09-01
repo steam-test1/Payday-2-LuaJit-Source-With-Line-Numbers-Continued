@@ -348,7 +348,7 @@ function StoryMissionsGui:_update_side(current)
 	self._side_scroll:scroll_to_show(shown_mission_item)
 end
 
--- Lines 318-519
+-- Lines 318-520
 function StoryMissionsGui:_update_info(mission)
 	self._info_scroll:clear()
 	self:_change_legend("select", false)
@@ -481,7 +481,7 @@ function StoryMissionsGui:_update_info(mission)
 					color = text_col
 				}), obj_padd_x, 0)
 
-				if (not mission.completed or objective.basic) and (not objective.completed or objective.basic) and objective.levels and (not objective.basic or not Network:is_server()) and not Network:is_client() then
+				if (not mission.completed or objective.basic) and (not objective.completed or objective.basic) and objective.levels and (not objective.basic or not Network:is_server()) and not Network:is_client() and mission.completed == mission.rewarded then
 					if objective.dlc and not managers.dlc:is_dlc_unlocked(objective.dlc) and not Global.game_settings.single_player then
 						placer:add_right(canvas:fine_text({
 							text = managers.localization:to_upper_text("menu_ultimate_edition_short"),
@@ -683,12 +683,12 @@ function StoryMissionsGui:_update_info(mission)
 	end
 end
 
--- Lines 521-527
+-- Lines 522-528
 function StoryMissionsGui:_get_reward_string(mission)
 	return managers.story:get_last_skipped_mission() == mission and mission.reward_id .. "_halved" or mission.reward_id
 end
 
--- Lines 530-535
+-- Lines 531-536
 function StoryMissionsGui:_skip_mission(mission)
 	managers.statistics:_increment_menu("story_menu_skip", 1)
 	managers.statistics:publish_menu_stats_to_steam()
@@ -696,7 +696,7 @@ function StoryMissionsGui:_skip_mission(mission)
 	self:_update(mission)
 end
 
--- Lines 573-587
+-- Lines 574-588
 function StoryMissionsGui:toggle_voice_message(message)
 	if not self._voice then
 		return
@@ -724,7 +724,7 @@ function StoryMissionsGui:toggle_voice_message(message)
 	end
 end
 
--- Lines 589-596
+-- Lines 590-597
 function StoryMissionsGui:sound_event_callback(event_type, duration)
 	if not self._voice or not alive(self._voice.text) then
 		return
@@ -738,7 +738,7 @@ function StoryMissionsGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 598-616
+-- Lines 599-617
 function StoryMissionsGui:update()
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -760,7 +760,7 @@ function StoryMissionsGui:update()
 	end
 end
 
--- Lines 618-642
+-- Lines 619-643
 function StoryMissionsGui:_change_selected_level(axis)
 	if self._change_level_btn_disabled then
 		return
@@ -791,19 +791,19 @@ function StoryMissionsGui:_change_selected_level(axis)
 	end
 end
 
--- Lines 644-646
+-- Lines 645-647
 function StoryMissionsGui:_enable_selected_level_btns()
 	self._change_level_btn_disabled = nil
 end
 
--- Lines 648-652
+-- Lines 649-653
 function StoryMissionsGui:confirm_pressed()
 	if alive(self._select_btn) then
 		self._select_btn:_trigger()
 	end
 end
 
--- Lines 654-661
+-- Lines 655-662
 function StoryMissionsGui:_start_mission_general()
 	if self._selected_level_btn then
 		self._selected_level_btn:_trigger()
@@ -814,7 +814,7 @@ function StoryMissionsGui:_start_mission_general()
 	managers.story:start_current()
 end
 
--- Lines 663-667
+-- Lines 664-668
 function StoryMissionsGui:_toggle_online()
 	managers.menu_component:post_event("menu_enter")
 
@@ -823,7 +823,7 @@ function StoryMissionsGui:_toggle_online()
 	self:_update()
 end
 
--- Lines 669-685
+-- Lines 670-686
 function StoryMissionsGui:_skip_mission_dialog()
 	local dialog_data = {
 		title = managers.localization:text("menu_skip_story_title"),
@@ -846,14 +846,14 @@ function StoryMissionsGui:_skip_mission_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 687-689
+-- Lines 688-690
 function StoryMissionsGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 
 StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(BaseButton)
 
--- Lines 695-734
+-- Lines 696-735
 function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	StoryMissionsGuiSidebarItem.super.init(self, panel)
 
@@ -885,12 +885,12 @@ function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	self:set_color(self._color)
 end
 
--- Lines 736-738
+-- Lines 737-739
 function StoryMissionsGuiSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines 740-747
+-- Lines 741-748
 function StoryMissionsGuiSidebarItem:set_icon(icon)
 	if icon then
 		self._icon:set_visible(true)
@@ -900,13 +900,13 @@ function StoryMissionsGuiSidebarItem:set_icon(icon)
 	end
 end
 
--- Lines 749-752
+-- Lines 750-753
 function StoryMissionsGuiSidebarItem:set_color(color)
 	self._text:set_color(color)
 	self._icon:set_color(color)
 end
 
--- Lines 754-759
+-- Lines 755-760
 function StoryMissionsGuiSidebarItem:_hover_changed(hover)
 	self:set_color(hover and self._color_highlight or self._color)
 
@@ -917,7 +917,7 @@ end
 
 StoryActGuiSidebarItem = StoryActGuiSidebarItem or class(BaseButton)
 
--- Lines 766-783
+-- Lines 767-784
 function StoryActGuiSidebarItem:init(panel, parameters)
 	StoryActGuiSidebarItem.super.init(self, panel)
 
@@ -936,7 +936,7 @@ function StoryActGuiSidebarItem:init(panel, parameters)
 	self:set_h(self._text:bottom())
 end
 
--- Lines 788-796
+-- Lines 789-797
 local function set_defaults(target, source)
 	target = target or {}
 
@@ -952,7 +952,7 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines 803-885
+-- Lines 804-886
 function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	config = set_defaults(config, {
 		input = true,
@@ -1054,7 +1054,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines 887-889
+-- Lines 888-890
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end

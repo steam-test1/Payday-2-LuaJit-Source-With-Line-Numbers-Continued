@@ -51,7 +51,7 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines 36-1732
+-- Lines 36-1755
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
@@ -1706,7 +1706,7 @@ function PrePlanningTweakData:init(tweak_data)
 	}
 end
 
--- Lines 1734-2912
+-- Lines 1757-2953
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -2881,6 +2881,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			custom_points = {}
 		},
 		mission_briefing_texture = "guis/dlcs/berry/textures/pd2/pre_planning/mission_briefing_pbr",
+		post_event_prefix = "loc",
 		total_budget = 6,
 		default_plans = {},
 		start_location = {
@@ -3442,7 +3443,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines 2914-2916
+-- Lines 2955-2957
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

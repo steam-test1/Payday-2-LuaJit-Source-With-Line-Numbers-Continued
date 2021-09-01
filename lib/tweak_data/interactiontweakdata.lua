@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-7502
+-- Lines 3-7562
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -3016,6 +3016,8 @@ function InteractionTweakData:init(tweak_data)
 		sound_done = "bar_bag_money_finished",
 		blocked_hint = "carry_block"
 	}
+	self.gen_pku_evidence_bag_axis = deep_clone(self.gen_pku_evidence_bag)
+	self.gen_pku_evidence_bag_axis.axis = "z"
 	self.mcm_fbi_case = {
 		text_id = "hud_int_hold_open_case",
 		action_text_id = "hud_action_opening_case",
