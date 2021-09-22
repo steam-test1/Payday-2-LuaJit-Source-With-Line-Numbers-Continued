@@ -12,7 +12,7 @@ end
 function ShotgunBase:setup_default()
 	self._damage_near = tweak_data.weapon[self._name_id].damage_near
 	self._damage_far = tweak_data.weapon[self._name_id].damage_far
-	self._rays = tweak_data.weapon[self._name_id].rays or self._ammo_data.rays or 6
+	self._rays = tweak_data.weapon[self._name_id].rays or self._ammo_data and self._ammo_data.rays or 6
 	self._range = self._damage_far
 
 	if tweak_data.weapon[self._name_id].use_shotgun_reload == nil then
@@ -67,8 +67,8 @@ function ShotgunBase:run_and_shoot_allowed()
 end
 
 -- Lines 65-93
-function ShotgunBase:_update_stats_values()
-	ShotgunBase.super._update_stats_values(self)
+function ShotgunBase:_update_stats_values(disallow_replenish, ammo_data)
+	ShotgunBase.super._update_stats_values(self, disallow_replenish, ammo_data)
 	self:setup_default()
 
 	if self._ammo_data then

@@ -711,3 +711,17 @@ function SentryGunWeapon:_sync_virtual_ammo()
 		self._virtual_ammo = self._virtual_max_ammo * self:ammo_ratio()
 	end
 end
+
+-- Lines 693-695
+function SentryGunWeapon:gadget_overrides_weapon_functions()
+	return false
+end
+
+-- Lines 697-699
+function SentryGunWeapon:get_all_override_weapon_gadgets()
+	return {}
+end
+
+-- Lines 701-703
+function SentryGunWeapon:gadget_function_override(func, ...)
+end

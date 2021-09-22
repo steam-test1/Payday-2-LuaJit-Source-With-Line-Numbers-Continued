@@ -1,21 +1,23 @@
 WeaponUnderbarrelLauncher = WeaponUnderbarrelLauncher or class(WeaponUnderbarrel)
 WeaponUnderbarrelLauncher.GADGET_TYPE = "underbarrel_launcher"
 
--- Lines 6-9
+-- Lines 5-8
 function WeaponUnderbarrelLauncher:init(unit)
 	WeaponUnderbarrelLauncher.super.init(self, unit)
 
 	self._launcher_projectile = self.launcher_projectile
 end
 
--- Lines 11-13
-function WeaponUnderbarrelLauncher:set_launcher_projectile(launcher_projectile)
-	self._launcher_projectile = launcher_projectile
+-- Lines 11-14
+function WeaponUnderbarrelLauncher:setup_data(setup_data, damage_multiplier, ammo_data)
+	WeaponUnderbarrelLauncher.super.setup_data(self, setup_data, damage_multiplier, ammo_data)
+
+	self._launcher_projectile = ammo_data and ammo_data.launcher_grenade or self._launcher_projectile
 end
 
 local mvec_spread_direction = Vector3()
 
--- Lines 17-64
+-- Lines 22-69
 function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local projectile_type = self._launcher_projectile
 
@@ -64,11 +66,11 @@ function WeaponUnderbarrelLauncher:_fire_raycast(weapon_base, user_unit, from_po
 	return {}
 end
 
--- Lines 66-68
+-- Lines 71-73
 function WeaponUnderbarrelLauncher:_adjust_throw_z(m_vec)
 end
 
--- Lines 70-72
+-- Lines 75-77
 function WeaponUnderbarrelLauncher:_get_spawn_offset()
 	return 0
 end

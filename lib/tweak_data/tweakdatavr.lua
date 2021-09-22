@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-5777
+-- Lines 4-5801
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -1309,6 +1309,10 @@ function TweakDataVR:init(tweak_data)
 			position = Vector3(0, 3, 2),
 			rotation = Rotation(0, -25, 0)
 		},
+		shak12 = {
+			position = Vector3(0, 3, 2),
+			rotation = Rotation(0, -25, 0)
+		},
 		komodo = {
 			position = Vector3(0, 3, 2),
 			rotation = Rotation(0, -25, 0)
@@ -1850,6 +1854,9 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(-2, 28, 2)
 			},
 			corgi = {
+				position = Vector3(0, 22, -3)
+			},
+			shak12 = {
 				position = Vector3(0, 22, -3)
 			},
 			komodo = {
@@ -5757,6 +5764,42 @@ function TweakDataVR:init(tweak_data)
 			}
 		},
 		corgi = {
+			start = {
+				{
+					time = 0,
+					sound = "corgi_clip_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, 5, -20),
+					rot = Rotation(0, 30, 0)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "corgi_clip_in",
+					visible = true,
+					pos = Vector3(0, 0, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, 0, -4.5)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, 0, -4)
+				},
+				{
+					time = 0.6,
+					sound = "corgi_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		shak12 = {
 			start = {
 				{
 					time = 0,
@@ -9959,7 +10002,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 5783-5894
+-- Lines 5807-5918
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -10174,7 +10217,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 5898-5958
+-- Lines 5922-5982
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -10254,7 +10297,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 5961-5973
+-- Lines 5985-5997
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -10275,7 +10318,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 5975-6001
+-- Lines 5999-6025
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -10296,14 +10339,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6003-6007
+-- Lines 6027-6031
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6009-6021
+-- Lines 6033-6045
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -10321,7 +10364,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6023-6031
+-- Lines 6047-6055
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -10334,7 +10377,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6033-6037
+-- Lines 6057-6061
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -10343,7 +10386,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6039-6047
+-- Lines 6063-6071
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -10358,7 +10401,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6049-6056
+-- Lines 6073-6080
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -10371,7 +10414,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6058-6065
+-- Lines 6082-6089
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

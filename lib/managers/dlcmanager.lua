@@ -880,19 +880,29 @@ function GenericDLCManager:has_pda8_wpn_money()
 	return managers.event_jobs:get_event_stage() < 5
 end
 
--- Lines 878-880
+-- Lines 876-878
+function GenericDLCManager:has_gage_pack_shotgun()
+	return self:is_dlc_unlocked("gage_pack_shotgun")
+end
+
+-- Lines 880-882
+function GenericDLCManager:has_bbq()
+	return self:is_dlc_unlocked("bbq")
+end
+
+-- Lines 886-888
 function GenericDLCManager:has_goty_all_dlc_bundle_2014()
 	return self:has_goty_weapon_bundle_2014() and self:has_goty_heist_bundle_2014() and self:is_dlcs_unlocked({
 		"character_pack_clover"
 	})
 end
 
--- Lines 911-913
+-- Lines 919-921
 function GenericDLCManager:has_soundtrack_or_cce()
 	return self:is_dlc_unlocked("soundtrack") or self:is_dlc_unlocked("cce")
 end
 
--- Lines 917-922
+-- Lines 925-930
 function GenericDLCManager:has_freed_old_hoxton(data)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return self:is_dlc_unlocked("pd2_clan") and self:has_achievement(data)
@@ -901,58 +911,58 @@ function GenericDLCManager:has_freed_old_hoxton(data)
 	return true
 end
 
--- Lines 926-928
+-- Lines 934-936
 function GenericDLCManager:has_armored_transport_and_intel(data)
 	return self:is_dlc_unlocked("armored_transport") and self:has_achievement(data)
 end
 
--- Lines 932-934
+-- Lines 940-942
 function GenericDLCManager:has_hlm2()
 	return Global.dlc_manager.all_dlc_data.hlm2 and Global.dlc_manager.all_dlc_data.hlm2.verified or self:is_dlc_unlocked("hlm2_aus")
 end
 
--- Lines 938-940
+-- Lines 946-948
 function GenericDLCManager:has_hlm2_deluxe()
 	return Global.dlc_manager.all_dlc_data.hlm2_deluxe and Global.dlc_manager.all_dlc_data.hlm2_deluxe.verified or self:is_dlc_unlocked("hlm2_aus")
 end
 
--- Lines 945-947
+-- Lines 953-955
 function GenericDLCManager:has_sawp_dlc_or_achievement(data)
 	return self:is_dlc_unlocked("sawp") or self:has_achievement(data)
 end
 
--- Lines 953-955
+-- Lines 961-963
 function GenericDLCManager:has_srtr_or_srtr2()
 	return Global.dlc_manager.all_dlc_data.srtr and Global.dlc_manager.all_dlc_data.srtr.verified or Global.dlc_manager.all_dlc_data.srtr2 and Global.dlc_manager.all_dlc_data.srtr2.verified
 end
 
--- Lines 960-962
+-- Lines 968-970
 function GenericDLCManager:has_parent_dlc(data)
 	return data and data.parent_dlc and self:is_dlc_unlocked(data.parent_dlc)
 end
 
--- Lines 966-969
+-- Lines 974-977
 function GenericDLCManager:has_achievement(data)
 	local achievement = managers.achievment and data and data.achievement_id and managers.achievment:get_info(data.achievement_id)
 
 	return achievement and achievement.awarded or false
 end
 
--- Lines 972-975
+-- Lines 980-983
 function GenericDLCManager:has_achievement_milestone(data)
 	local milestone = data and data.milestone_id and managers.achievment:get_milestone(data.milestone_id)
 
 	return milestone.awarded
 end
 
--- Lines 986-993
+-- Lines 994-1001
 function GenericDLCManager:has_stat(data)
 	local sa_handler = Steam:sa_handler()
 
 	return sa_handler:get_stat(data.stat_id) >= (data.stat_value or 1)
 end
 
--- Lines 996-998
+-- Lines 1004-1006
 function GenericDLCManager:has_dlc_or_soundtrack_or_cce(dlc)
 	return managers.dlc:is_dlc_unlocked(dlc) or managers.dlc:has_soundtrack_or_cce()
 end
@@ -961,7 +971,7 @@ PS3DLCManager = PS3DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("PS3"):key()] = PS3DLCManager
 PS3DLCManager.SERVICE_ID = "EP4040-BLES01902_00"
 
--- Lines 1007-1043
+-- Lines 1015-1051
 function PS3DLCManager:init()
 	PS3DLCManager.super.init(self)
 
@@ -999,7 +1009,7 @@ function PS3DLCManager:init()
 	end
 end
 
--- Lines 1046-1065
+-- Lines 1054-1073
 function PS3DLCManager:_verify_dlcs()
 	local all_dlc = {}
 
@@ -1025,7 +1035,7 @@ function PS3DLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1067-1088
+-- Lines 1075-1096
 function PS3DLCManager:_init_NPCommerce()
 	PS3:set_service_id(self.SERVICE_ID)
 
@@ -1054,7 +1064,7 @@ function PS3DLCManager:_init_NPCommerce()
 	return true
 end
 
--- Lines 1090-1105
+-- Lines 1098-1113
 function PS3DLCManager:buy_full_game()
 	print("[PS3DLCManager:buy_full_game]")
 
@@ -1077,7 +1087,7 @@ function PS3DLCManager:buy_full_game()
 	}
 end
 
--- Lines 1107-1122
+-- Lines 1115-1130
 function PS3DLCManager:buy_product(product_name)
 	print("[PS3DLCManager:buy_product]", product_name)
 
@@ -1100,7 +1110,7 @@ function PS3DLCManager:buy_product(product_name)
 	}
 end
 
--- Lines 1124-1178
+-- Lines 1132-1186
 function PS3DLCManager:cb_NPCommerce(result, info)
 	print("[PS3DLCManager:cb_NPCommerce]", result, info)
 
@@ -1180,18 +1190,18 @@ function PS3DLCManager:cb_NPCommerce(result, info)
 	print("/[PS3DLCManager:cb_NPCommerce]")
 end
 
--- Lines 1182-1185
+-- Lines 1190-1193
 function PS3DLCManager:_close_NPCommerce()
 	print("[PS3DLCManager:_close_NPCommerce]")
 	NPCommerce:destroy()
 end
 
--- Lines 1189-1191
+-- Lines 1197-1199
 function PS3DLCManager:cb_confirm_purchase_yes(sku_data)
 	NPCommerce:checkout(sku_data.skuid)
 end
 
--- Lines 1195-1198
+-- Lines 1203-1206
 function PS3DLCManager:cb_confirm_purchase_no()
 	self._activity = nil
 
@@ -1201,7 +1211,7 @@ end
 X360DLCManager = X360DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("X360"):key()] = X360DLCManager
 
--- Lines 1205-1228
+-- Lines 1213-1236
 function X360DLCManager:init()
 	X360DLCManager.super.init(self)
 
@@ -1224,7 +1234,7 @@ function X360DLCManager:init()
 	end
 end
 
--- Lines 1230-1258
+-- Lines 1238-1266
 function X360DLCManager:_verify_dlcs()
 	local found_dlc = {}
 	local status = XboxLive:check_dlc_availability(0, 100, found_dlc)
@@ -1260,7 +1270,7 @@ function X360DLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1260-1262
+-- Lines 1268-1270
 function X360DLCManager:on_signin_complete()
 	self:_verify_dlcs()
 end
@@ -1268,7 +1278,7 @@ end
 PS4DLCManager = PS4DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("PS4"):key()] = PS4DLCManager
 
--- Lines 1270-1541
+-- Lines 1278-1549
 function PS4DLCManager:init()
 	PS4DLCManager.super.init(self)
 
@@ -1505,7 +1515,7 @@ function PS4DLCManager:init()
 	end
 end
 
--- Lines 1544-1576
+-- Lines 1552-1584
 function PS4DLCManager:_verify_dlcs()
 	local unlock_all_test = false
 	local titleVersion = PS3:get_titleVersion()
@@ -1527,7 +1537,7 @@ function PS4DLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1578-1598
+-- Lines 1586-1606
 function PS4DLCManager:_init_NPCommerce()
 	local result = NPCommerce:init()
 
@@ -1554,7 +1564,7 @@ function PS4DLCManager:_init_NPCommerce()
 	return true
 end
 
--- Lines 1600-1615
+-- Lines 1608-1623
 function PS4DLCManager:buy_full_game()
 	print("[PS4DLCManager:buy_full_game]")
 
@@ -1577,7 +1587,7 @@ function PS4DLCManager:buy_full_game()
 	}
 end
 
--- Lines 1617-1632
+-- Lines 1625-1640
 function PS4DLCManager:buy_product(product_name)
 	print("[PS4DLCManager:buy_product]", product_name)
 
@@ -1600,7 +1610,7 @@ function PS4DLCManager:buy_product(product_name)
 	}
 end
 
--- Lines 1634-1688
+-- Lines 1642-1696
 function PS4DLCManager:cb_NPCommerce(result, info)
 	print("[PS4DLCManager:cb_NPCommerce]", result, info)
 
@@ -1680,18 +1690,18 @@ function PS4DLCManager:cb_NPCommerce(result, info)
 	print("/[PS4DLCManager:cb_NPCommerce]")
 end
 
--- Lines 1692-1695
+-- Lines 1700-1703
 function PS4DLCManager:_close_NPCommerce()
 	print("[PS4DLCManager:_close_NPCommerce]")
 	NPCommerce:destroy()
 end
 
--- Lines 1699-1701
+-- Lines 1707-1709
 function PS4DLCManager:cb_confirm_purchase_yes(sku_data)
 	NPCommerce:checkout(sku_data.skuid)
 end
 
--- Lines 1705-1708
+-- Lines 1713-1716
 function PS4DLCManager:cb_confirm_purchase_no()
 	self._activity = nil
 
@@ -1701,7 +1711,7 @@ end
 XB1DLCManager = XB1DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("XB1"):key()] = XB1DLCManager
 
--- Lines 1716-1989
+-- Lines 1724-1997
 function XB1DLCManager:init()
 	XB1DLCManager.super.init(self)
 
@@ -1818,7 +1828,7 @@ function XB1DLCManager:init()
 	end
 end
 
--- Lines 1991-2012
+-- Lines 1999-2020
 function XB1DLCManager:_verify_dlcs()
 	local dlc_content_updated = false
 	local old_verified = nil
@@ -1841,7 +1851,7 @@ function XB1DLCManager:_verify_dlcs()
 	return dlc_content_updated
 end
 
--- Lines 2014-2031
+-- Lines 2022-2039
 function XB1DLCManager:chk_content_updated()
 	print("[XB1DLCManager:chk_content_updated]")
 
@@ -1863,7 +1873,7 @@ function XB1DLCManager:chk_content_updated()
 	end
 end
 
--- Lines 2033-2036
+-- Lines 2041-2044
 function XB1DLCManager:on_signin_complete()
 	self:chk_content_updated()
 end
@@ -1871,7 +1881,7 @@ end
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
--- Lines 2045-2629
+-- Lines 2053-2637
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
@@ -2317,9 +2327,10 @@ function WINDLCManager:init()
 	self:_init_promoted_dlc_list()
 end
 
--- Lines 2631-2779
+-- Lines 2639-2790
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"tawp",
 		"sand",
 		"sdtp",
 		"sawp",
@@ -2378,12 +2389,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 2781-2783
+-- Lines 2792-2794
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 2785-2801
+-- Lines 2796-2812
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -2400,7 +2411,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines 2803-2818
+-- Lines 2814-2829
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2409,7 +2420,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 2821-2861
+-- Lines 2832-2872
 function WINDLCManager:check_pdth(clbk)
 	if not self._check_pdth_request and clbk and Global.dlc_manager.has_pdth ~= nil then
 		clbk(Global.dlc_manager.has_pdth, Global.dlc_manager.pdth_tester)
@@ -2427,7 +2438,7 @@ function WINDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 2837-2856
+		-- Lines 2848-2867
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2458,11 +2469,11 @@ function WINDLCManager:check_pdth(clbk)
 
 		self._check_pdth_request = true
 
-		Steam:http_request("http://fbi.overkillsoftware.com/veterancheck/veterancheck.php?steamid=" .. Steam:userid(), result_function)
+		Steam:http_request("https://fbi.paydaythegame.com/veterancheck/veterancheck.php?steamid=" .. Steam:userid(), result_function)
 	end
 end
 
--- Lines 2865-2876
+-- Lines 2876-2887
 function WINDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2480,7 +2491,7 @@ function WINDLCManager:chk_vr_dlc()
 	return nil
 end
 
--- Lines 2879-2886
+-- Lines 2890-2897
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

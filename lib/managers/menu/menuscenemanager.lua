@@ -3330,6 +3330,19 @@ function MenuSceneManager:spawn_item_weapon(factory_id, blueprint, cosmetics, te
 
 	mrotation.set_zero(self._item_rot)
 
+	-- Lines 3300-3310
+	local function remove_blueprint_charms(blueprint)
+		local new_blueprint = {}
+
+		for i = 1, #blueprint do
+			if not blueprint[i]:find("charm") then
+				table.insert(new_blueprint, blueprint[i])
+			end
+		end
+
+		return new_blueprint
+	end
+
 	-- Lines 3313-3332
 	local function spawn_weapon(pos, rot, remove)
 		remove = remove or false
@@ -3341,6 +3354,10 @@ function MenuSceneManager:spawn_item_weapon(factory_id, blueprint, cosmetics, te
 
 		if blueprint then
 			local bp = blueprint
+
+			if remove then
+				bp = remove_blueprint_charms(blueprint)
+			end
 
 			w_unit:base():assemble_from_blueprint(factory_id, bp, true)
 		else

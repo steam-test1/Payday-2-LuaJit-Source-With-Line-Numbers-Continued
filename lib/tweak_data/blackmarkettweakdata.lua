@@ -85,13 +85,16 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
--- Lines 207-236
+-- Lines 207-277
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	if self.weapon_skins then
 		tweak_data.weapon.factory:create_bonuses(tweak_data, self.weapon_skins)
 	end
 
+	tweak_data.weapon.factory:create_charms(tweak_data)
+
 	self.weapon_mods = {}
+	local steelsight_parts = {}
 
 	for id, data in pairs(tweak_data.weapon.factory.parts) do
 		if is_nextgen_console then
@@ -112,14 +115,49 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 			texture_bundle_folder = data.texture_bundle_folder,
 			is_a_unlockable = data.is_a_unlockable,
 			unatainable = data.unatainable,
-			inaccessible = data.inaccessible
+			inaccessible = data.inaccessible,
+			sort_number = data.sort_number
 		}
+
+		if data.steelsight_parent then
+			steelsight_parts[id] = data.steelsight_parent
+		end
 	end
 
 	self:_add_desc_from_name_macro(self.weapon_mods)
+
+	for id, data in pairs(self.weapon_skins) do
+		for part_id, parent_id in pairs(steelsight_parts) do
+			if data.parts and data.parts[parent_id] then
+				data.parts[part_id] = data.parts[parent_id]
+			end
+		end
+
+		if data.types and data.types.sight and not data.types.sight_swap then
+			data.types.sight_swap = data.types.sight
+		end
+	end
+
+	local template_color_skin = self.weapon_color_templates.color_skin
+
+	if template_color_skin and template_color_skin.types.sight and not template_color_skin.types.sight_swap then
+		template_color_skin.types.sight_swap = template_color_skin.types.sight
+	end
+
+	for weapon_id, data in pairs(template_color_skin.weapons) do
+		for part_id, parent_id in pairs(steelsight_parts) do
+			if data.parts and data.parts[parent_id] then
+				data.parts[part_id] = data.parts[parent_id]
+			end
+		end
+
+		if data.types and data.types.sight and not data.types.sight_swap then
+			data.types.sight_swap = data.types.sight
+		end
+	end
 end
 
--- Lines 240-519
+-- Lines 281-560
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {
 		locked = {}
@@ -524,7 +562,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines 523-599
+-- Lines 564-640
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -640,7 +678,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 603-671
+-- Lines 644-712
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -751,7 +789,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 675-714
+-- Lines 716-755
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -793,7 +831,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 718-750
+-- Lines 759-791
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -827,7 +865,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 752-765
+-- Lines 793-806
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -844,7 +882,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 767-778
+-- Lines 808-819
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

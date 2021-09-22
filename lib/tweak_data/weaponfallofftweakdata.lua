@@ -1,6 +1,6 @@
 WeaponFalloffTemplate = WeaponFalloffTemplate or class()
 
--- Lines 3-361
+-- Lines 3-371
 function WeaponFalloffTemplate.setup_weapon_falloff_templates()
 	local weapon_falloff_templates = {
 		ASSAULT_FALL_LOW = {}
@@ -226,6 +226,14 @@ function WeaponFalloffTemplate.setup_weapon_falloff_templates()
 		far_falloff = 100,
 		near_multiplier = 1,
 		far_multiplier = 0.8
+	}
+	weapon_falloff_templates.PISTOL_FALL_SUPER = {
+		optimal_distance = 0,
+		optimal_range = 3000,
+		near_falloff = 0,
+		far_falloff = 1000,
+		near_multiplier = 1,
+		far_multiplier = 1
 	}
 	weapon_falloff_templates.SMG_FALL_LOW = {
 		optimal_distance = 0,

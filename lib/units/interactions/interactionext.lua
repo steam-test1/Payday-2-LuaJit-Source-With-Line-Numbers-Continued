@@ -3544,7 +3544,7 @@ end
 -- Lines 3201-3205
 function AccessPD2StashInteractionExt:interact(player)
 	AccessPD2StashInteractionExt.super.super.interact(self, player)
-	Steam:overlay_activate("url", "https://fbi.overkillsoftware.com/?skinbrowser=show")
+	Steam:overlay_activate("url", "https://fbi.paydaythegame.com/?skinbrowser=show")
 
 	return true
 end
@@ -3559,7 +3559,7 @@ end
 -- Lines 3213-3217
 function AccessBankInvadersInteractionExt:interact(player)
 	AccessBankInvadersInteractionExt.super.super.interact(self, player)
-	Steam:overlay_activate("url", "http://www.overkillsoftware.com/bankinvaders2/")
+	Steam:overlay_activate("url", "https://www.paydaythegame.com/legacy-static/bankinvaders2/")
 
 	return true
 end
