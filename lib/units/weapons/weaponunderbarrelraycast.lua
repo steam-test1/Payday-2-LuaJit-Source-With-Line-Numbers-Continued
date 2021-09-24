@@ -31,11 +31,6 @@ function WeaponUnderbarrelRaycast:ammo_base()
 	return self._ammo
 end
 
--- Lines 29-31
-function WeaponUnderbarrelRaycast:start_shooting_allowed()
-	return WeaponUnderbarrel.start_shooting_allowed(self)
-end
-
 -- Lines 33-35
 function WeaponUnderbarrelRaycast:_spawn_muzzle_effect()
 	return nil
@@ -128,11 +123,6 @@ end
 -- Lines 104-106
 function WeaponUnderbarrelShotgunRaycast:is_single_shot()
 	return WeaponUnderbarrel.is_single_shot(self)
-end
-
--- Lines 108-110
-function WeaponUnderbarrelShotgunRaycast:start_shooting_allowed()
-	return WeaponUnderbarrel.start_shooting_allowed(self)
 end
 
 -- Lines 112-114
