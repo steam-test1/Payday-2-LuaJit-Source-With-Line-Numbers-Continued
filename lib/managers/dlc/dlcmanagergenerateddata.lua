@@ -23,9 +23,19 @@ function GenericDLCManager:has_bex()
 	return self:is_dlc_unlocked("bex")
 end
 
+-- Lines 39-41
+function GenericDLCManager:has_cctp()
+	return self:is_dlc_unlocked("cctp")
+end
+
 -- Lines 49-51
 function GenericDLCManager:has_chas()
 	return self:is_dlc_unlocked("chas")
+end
+
+-- Lines 54-56
+function GenericDLCManager:has_chca()
+	return self:is_dlc_unlocked("chca")
 end
 
 -- Lines 74-76
@@ -136,6 +146,11 @@ end
 -- Lines 229-231
 function GenericDLCManager:has_ocp()
 	return self:is_dlc_unlocked("ocp")
+end
+
+-- Lines 234-236
+function GenericDLCManager:has_oct21()
+	return self:is_dlc_unlocked("oct21")
 end
 
 -- Lines 239-241
@@ -318,8 +333,16 @@ function WINDLCManager:init_generated()
 		no_install = true,
 		webpage = "ovk.af/bexheistyb"
 	}
+	Global.dlc_manager.all_dlc_data.cctp = {
+		app_id = "1778791",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.chas = {
 		app_id = "1555040",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.chca = {
+		app_id = "1778790",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.ess = {
@@ -415,6 +438,10 @@ function WINDLCManager:init_generated()
 		app_id = "1449442",
 		no_install = true,
 		webpage = "https://ovk.af/FEXWCP3YB"
+	}
+	Global.dlc_manager.all_dlc_data.oct21 = {
+		app_id = "218620",
+		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.pda8 = {
 		app_id = "218620",

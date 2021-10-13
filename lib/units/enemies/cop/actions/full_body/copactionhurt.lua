@@ -1605,12 +1605,14 @@ function CopActionHurt:expired()
 	return self._expired
 end
 
--- Lines 1536-1545
+-- Lines 1536-1548
 function CopActionHurt:chk_block(action_type, t)
-	if CopActionAct.chk_block(self, action_type, t) then
+	if self._hurt_type == "death" then
 		return true
 	elseif action_type == "death" then
-		-- Nothing
+		return false
+	elseif CopActionAct.chk_block(self, action_type, t) then
+		return true
 	elseif (action_type == "hurt" or action_type == "heavy_hurt" or action_type == "hurt_sick" or action_type == "poison_hurt") and not self._ext_anim.hurt_exit then
 		return true
 	elseif action_type == "turn" then
@@ -1618,12 +1620,12 @@ function CopActionHurt:chk_block(action_type, t)
 	end
 end
 
--- Lines 1549-1551
+-- Lines 1552-1554
 function CopActionHurt:on_attention(attention)
 	self._attention = attention
 end
 
--- Lines 1555-1572
+-- Lines 1558-1575
 function CopActionHurt:on_death_exit()
 	if self._shooting_hurt then
 		self._shooting_hurt = false
@@ -1636,7 +1638,7 @@ function CopActionHurt:on_death_exit()
 	end
 end
 
--- Lines 1576-1598
+-- Lines 1579-1601
 function CopActionHurt:on_death_drop(unit, stage)
 	if self._weapon_dropped then
 		return
@@ -1663,12 +1665,12 @@ function CopActionHurt:on_death_drop(unit, stage)
 	end
 end
 
--- Lines 1602-1604
+-- Lines 1605-1607
 function CopActionHurt:body_part()
 	return self._body_part
 end
 
--- Lines 1608-1614
+-- Lines 1611-1617
 function CopActionHurt:need_upd()
 	if self._died then
 		return false
@@ -1677,7 +1679,7 @@ function CopActionHurt:need_upd()
 	end
 end
 
--- Lines 1618-1635
+-- Lines 1621-1638
 function CopActionHurt:on_inventory_event(event)
 	local weapon_unit = self._ext_inventory:equipped_unit()
 
@@ -1698,7 +1700,7 @@ function CopActionHurt:on_inventory_event(event)
 	end
 end
 
--- Lines 1639-1645
+-- Lines 1642-1648
 function CopActionHurt:save(save_data)
 	for i, k in pairs(self._action_desc) do
 		if type_name(k) ~= "Unit" or alive(k) then
@@ -1707,14 +1709,14 @@ function CopActionHurt:save(save_data)
 	end
 end
 
--- Lines 1649-1653
+-- Lines 1652-1656
 function CopActionHurt:_prepare_ragdoll()
 	if self._unit:damage() and self._unit:damage():has_sequence("prepare_ragdoll") then
 		self._unit:damage():run_sequence_simple("prepare_ragdoll")
 	end
 end
 
--- Lines 1655-1707
+-- Lines 1658-1710
 function CopActionHurt:_start_ragdoll(reset_momentum)
 	if self._ragdolled then
 		return true
@@ -1777,7 +1779,7 @@ function CopActionHurt:_start_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1711-1716
+-- Lines 1714-1719
 function CopActionHurt:force_ragdoll(reset_momentum)
 	if self:_start_ragdoll(reset_momentum) then
 		self.update = self._upd_ragdolled
@@ -1786,7 +1788,7 @@ function CopActionHurt:force_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1720-1733
+-- Lines 1723-1736
 function CopActionHurt:clbk_body_active_state(tag, unit, body, activated)
 	if self._root_act_tags[tag:key()] then
 		if activated then
@@ -1806,7 +1808,7 @@ end
 
 CopActionHurt._apply_freefall = CopActionWalk._apply_freefall
 
--- Lines 1741-1746
+-- Lines 1744-1749
 function CopActionHurt:_freeze_ragdoll()
 	self._root_act_tags = {}
 
@@ -1815,7 +1817,7 @@ function CopActionHurt:_freeze_ragdoll()
 	end
 end
 
--- Lines 1750-1767
+-- Lines 1753-1770
 function CopActionHurt:clbk_chk_freeze_ragdoll()
 	if not alive(self._unit) then
 		self._ragdoll_freeze_clbk_id = nil
@@ -1839,7 +1841,7 @@ function CopActionHurt:clbk_chk_freeze_ragdoll()
 	end
 end
 
--- Lines 1771-1778
+-- Lines 1774-1781
 function CopActionHurt:clbk_shooting_hurt()
 	self._delayed_shooting_hurt_clbk_id = nil
 
@@ -1852,7 +1854,7 @@ function CopActionHurt:clbk_shooting_hurt()
 	self._weapon_unit:base():singleshot(fire_obj:position(), fire_obj:rotation(), 1, false, nil, nil, nil, nil)
 end
 
--- Lines 1782-1792
+-- Lines 1785-1795
 function CopActionHurt:on_destroy()
 	if self._shooting_hurt then
 		self._shooting_hurt = false

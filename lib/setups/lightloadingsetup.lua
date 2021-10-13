@@ -9,7 +9,7 @@ end
 
 LightLoadingSetup = LightLoadingSetup or class(CoreLoadingSetup)
 
--- Lines 15-33
+-- Lines 17-35
 function LightLoadingSetup:init()
 	if _G.IS_VR then
 		self:_init_vr_camera()
@@ -28,7 +28,7 @@ function LightLoadingSetup:init()
 	end
 end
 
--- Lines 35-43
+-- Lines 37-45
 function LightLoadingSetup:update(t, dt)
 	if _G.IS_VR then
 		self:_update_vr_camera()
@@ -38,13 +38,13 @@ function LightLoadingSetup:update(t, dt)
 	self._gui_wrapper:update(-1, dt)
 end
 
--- Lines 45-48
+-- Lines 47-50
 function LightLoadingSetup:destroy()
 	LightLoadingSetup.super.destroy(self)
 	Scene:delete_camera(self._camera)
 end
 
--- Lines 52-58
+-- Lines 54-60
 function LightLoadingSetup:_init_vr_camera()
 	local pos, rot = VRManager:hmd_pose()
 	self._initial_pose = {
@@ -54,7 +54,7 @@ function LightLoadingSetup:_init_vr_camera()
 	VRManager:set_output_scaling(1, 1)
 end
 
--- Lines 60-65
+-- Lines 62-67
 function LightLoadingSetup:_update_vr_camera()
 	local pos, rot = VRManager:hmd_pose()
 

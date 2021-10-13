@@ -11,7 +11,7 @@ if _G.IS_VR then
 	require("lib/utils/VRLoadingEnvironment")
 end
 
--- Lines 17-28
+-- Lines 19-30
 function fake_inspect(val)
 	if val == nil or type(val) ~= "table" then
 		return tostring(val)
@@ -30,7 +30,7 @@ end
 
 LevelLoadingSetup = LevelLoadingSetup or class(CoreLoadingSetup)
 
--- Lines 32-52
+-- Lines 34-54
 function LevelLoadingSetup:init()
 	if _G.IS_VR then
 		self:_init_vr_camera()
@@ -51,7 +51,7 @@ function LevelLoadingSetup:init()
 	end
 end
 
--- Lines 54-62
+-- Lines 56-64
 function LevelLoadingSetup:update(t, dt)
 	if _G.IS_VR then
 		self:_update_vr_camera()
@@ -61,13 +61,13 @@ function LevelLoadingSetup:update(t, dt)
 	self._gui_wrapper:update(-1, t, dt)
 end
 
--- Lines 64-67
+-- Lines 66-69
 function LevelLoadingSetup:destroy()
 	LevelLoadingSetup.super.destroy(self)
 	Scene:delete_camera(self._camera)
 end
 
--- Lines 70-76
+-- Lines 72-78
 function LevelLoadingSetup:_init_vr_camera()
 	local pos, rot = VRManager:hmd_pose()
 	self._initial_pose = {
@@ -77,7 +77,7 @@ function LevelLoadingSetup:_init_vr_camera()
 	VRManager:set_output_scaling(1, 1)
 end
 
--- Lines 78-83
+-- Lines 80-85
 function LevelLoadingSetup:_update_vr_camera()
 	local pos, rot = VRManager:hmd_pose()
 

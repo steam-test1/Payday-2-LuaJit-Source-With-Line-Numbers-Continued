@@ -46,44 +46,45 @@ require("lib/tweak_data/PromotionalMenusTweakData")
 require("lib/tweak_data/PromoUnlocksTweakData")
 require("lib/tweak_data/RaidJobsTweakData")
 require("lib/tweak_data/EventJobsTweakData")
+require("lib/tweak_data/MutatorTweakData")
 require("lib/tweak_data/TweakDataVR")
 require("lib/tweak_data/SkirmishTweakData")
 
 TweakData = TweakData or class()
 
--- Lines 85-85
+-- Lines 88-88
 function TweakData:_init_wip_tweak_data()
 end
 
--- Lines 86-86
+-- Lines 89-89
 function TweakData:_init_wip_blackmarket(tweak_data)
 end
 
--- Lines 87-87
+-- Lines 90-90
 function TweakData:_init_wip_levels()
 end
 
--- Lines 88-88
+-- Lines 91-91
 function TweakData:_init_wip_narrative()
 end
 
--- Lines 89-89
+-- Lines 92-92
 function TweakData:_init_wip_assets(tweak_data)
 end
 
--- Lines 90-90
+-- Lines 93-93
 function TweakData:_init_wip_weapon_factory(tweak_data)
 end
 
--- Lines 91-91
+-- Lines 94-94
 function TweakData:_init_wip_skilltree()
 end
 
--- Lines 92-92
+-- Lines 95-95
 function TweakData:_init_wip_upgrades()
 end
 
--- Lines 93-93
+-- Lines 96-96
 function TweakData:_init_wip_economy()
 end
 
@@ -91,7 +92,7 @@ require("lib/tweak_data/TweakDataPD2")
 
 TweakData.RELOAD = true
 
--- Lines 103-111
+-- Lines 106-114
 function TweakData:digest_tweak_data()
 	Application:debug("TweakData: Digesting tweak_data. <('O'<)")
 
@@ -106,7 +107,7 @@ function TweakData:digest_tweak_data()
 	end
 end
 
--- Lines 113-122
+-- Lines 116-125
 function TweakData:digest_recursive(key, parent)
 	local value = parent and parent[key] or key
 
@@ -119,7 +120,7 @@ function TweakData:digest_recursive(key, parent)
 	end
 end
 
--- Lines 124-143
+-- Lines 127-146
 function TweakData:get_value(...)
 	local arg = {
 		...
@@ -145,7 +146,7 @@ function TweakData:get_value(...)
 	return value
 end
 
--- Lines 145-158
+-- Lines 148-161
 function TweakData:get_raw_value(...)
 	local arg = {
 		...
@@ -166,7 +167,7 @@ function TweakData:get_raw_value(...)
 	return value
 end
 
--- Lines 161-165
+-- Lines 164-168
 function TweakData:get_mutatable_value(id, ...)
 	local value = self:get_raw_value(...)
 
@@ -175,7 +176,7 @@ function TweakData:get_mutatable_value(id, ...)
 	return value
 end
 
--- Lines 168-178
+-- Lines 171-181
 function TweakData:set_mode()
 	if not Global.game_settings then
 		return
@@ -188,17 +189,17 @@ function TweakData:set_mode()
 	end
 end
 
--- Lines 180-182
+-- Lines 183-185
 function TweakData:_set_singleplayer()
 	self.player:_set_singleplayer()
 end
 
--- Lines 184-186
+-- Lines 187-189
 function TweakData:_set_multiplayer()
 	self.player:_set_multiplayer()
 end
 
--- Lines 189-210
+-- Lines 192-213
 function TweakData:set_difficulty()
 	if not Global.game_settings then
 		return
@@ -223,7 +224,7 @@ function TweakData:set_difficulty()
 	end
 end
 
--- Lines 212-231
+-- Lines 215-234
 function TweakData:_set_easy()
 	self.player:_set_easy()
 	self.character:_set_easy()
@@ -238,7 +239,7 @@ function TweakData:_set_easy()
 	self.experience_manager.total_objectives_finished = 750
 end
 
--- Lines 233-252
+-- Lines 236-255
 function TweakData:_set_normal()
 	self.player:_set_normal()
 	self.character:_set_normal()
@@ -253,7 +254,7 @@ function TweakData:_set_normal()
 	self.experience_manager.total_objectives_finished = 1000
 end
 
--- Lines 254-273
+-- Lines 257-276
 function TweakData:_set_hard()
 	self.player:_set_hard()
 	self.character:_set_hard()
@@ -268,7 +269,7 @@ function TweakData:_set_hard()
 	self.experience_manager.total_objectives_finished = 1500
 end
 
--- Lines 275-294
+-- Lines 278-297
 function TweakData:_set_overkill()
 	self.player:_set_overkill()
 	self.character:_set_overkill()
@@ -283,7 +284,7 @@ function TweakData:_set_overkill()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 296-315
+-- Lines 299-318
 function TweakData:_set_overkill_145()
 	self.player:_set_overkill_145()
 	self.character:_set_overkill_145()
@@ -298,7 +299,7 @@ function TweakData:_set_overkill_145()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 317-336
+-- Lines 320-339
 function TweakData:_set_easy_wish()
 	self.player:_set_easy_wish()
 	self.character:_set_easy_wish()
@@ -313,7 +314,7 @@ function TweakData:_set_easy_wish()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 338-357
+-- Lines 341-360
 function TweakData:_set_overkill_290()
 	self.player:_set_overkill_290()
 	self.character:_set_overkill_290()
@@ -328,7 +329,7 @@ function TweakData:_set_overkill_290()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 359-378
+-- Lines 362-381
 function TweakData:_set_sm_wish()
 	self.player:_set_sm_wish()
 	self.character:_set_sm_wish()
@@ -343,37 +344,37 @@ function TweakData:_set_sm_wish()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 380-382
+-- Lines 383-385
 function TweakData:difficulty_to_index(difficulty)
 	return table.index_of(self.difficulties, difficulty)
 end
 
--- Lines 384-386
+-- Lines 387-389
 function TweakData:index_to_difficulty(index)
 	return self.difficulties[index]
 end
 
--- Lines 388-390
+-- Lines 391-393
 function TweakData:permission_to_index(permission)
 	return table.index_of(self.permissions, permission)
 end
 
--- Lines 392-394
+-- Lines 395-397
 function TweakData:index_to_permission(index)
 	return self.permissions[index]
 end
 
--- Lines 396-398
+-- Lines 399-401
 function TweakData:server_state_to_index(state)
 	return table.index_of(self.server_states, state)
 end
 
--- Lines 400-402
+-- Lines 403-405
 function TweakData:index_to_server_state(index)
 	return self.server_states[index]
 end
 
--- Lines 405-414
+-- Lines 408-417
 function TweakData:menu_sync_state_to_index(state)
 	if not state then
 		return false
@@ -386,12 +387,12 @@ function TweakData:menu_sync_state_to_index(state)
 	end
 end
 
--- Lines 415-417
+-- Lines 418-420
 function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 419-2574
+-- Lines 422-2589
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -796,6 +797,7 @@ function TweakData:init()
 	self.promo_unlocks = PromoUnlocksTweakData:new(self)
 	self.raid_jobs = RaidJobsTweakData:new(self)
 	self.event_jobs = EventJobsTweakData:new(self)
+	self.mutators = MutatorTweakData:new(self)
 
 	self.blackmarket:build_player_style_list(self)
 	self.blackmarket:build_glove_list(self)
@@ -1511,6 +1513,9 @@ Play the full version soon to get your full PAYDAY!]],
 		},
 		keychain = {
 			unit = Idstring("units/pd2_dlc_chas/pickups/chas_pku_keychain/chas_pku_keychain")
+		},
+		hand = {
+			unit = Idstring("units/pd2_dlc_chca/pickups/chca_pku_hand/chca_pku_hand")
 		}
 	}
 	self.danger_zones = {
@@ -1845,6 +1850,9 @@ Play the full version soon to get your full PAYDAY!]],
 		},
 		{
 			track = "track_73"
+		},
+		{
+			track = "track_74"
 		},
 		{
 			track = "track_pth_01",
@@ -2825,7 +2833,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2578-2594
+-- Lines 2593-2609
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2843,7 +2851,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2599-2705
+-- Lines 2614-2720
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2929,19 +2937,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2709-2789
+-- Lines 2724-2804
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2793-2795
+-- Lines 2808-2810
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2799-2807
+-- Lines 2814-2822
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2952,7 +2960,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2811-2814
+-- Lines 2826-2829
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2962,7 +2970,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2818-2827
+-- Lines 2833-2842
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2975,7 +2983,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2831-3007
+-- Lines 2846-3022
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3164,7 +3172,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3009-3188
+-- Lines 3024-3203
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3278,7 +3286,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3190-3262
+-- Lines 3205-3277
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3351,7 +3359,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3265-3269
+-- Lines 3280-3284
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3369,7 +3377,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3286-3501
+-- Lines 3301-3516
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

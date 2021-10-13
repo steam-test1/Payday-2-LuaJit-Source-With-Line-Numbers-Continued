@@ -1,6 +1,6 @@
 HUDAssaultCorner = HUDAssaultCorner or class()
 
--- Lines 3-163
+-- Lines 3-164
 function HUDAssaultCorner:init(hud, full_hud, tweak_hud)
 	self._hud_panel = hud.panel
 	self._full_hud_panel = full_hud.panel
@@ -30,8 +30,9 @@ function HUDAssaultCorner:init(hud, full_hud, tweak_hud)
 	self._vip_assault_color = Color(1, 1, 0.5019607843137255, 0)
 
 	if managers.mutators:are_mutators_active() then
-		self._assault_color = Color(255, 211, 133, 255) / 255
-		self._vip_assault_color = Color(255, 255, 133, 225) / 255
+		local mutator_color = managers.mutators:get_category_color(managers.mutators:get_enabled_active_mutator_category())
+		self._assault_color = mutator_color
+		self._vip_assault_color = Color(mutator_color.a, mutator_color.r, mutator_color.b, mutator_color.g)
 	end
 
 	if managers.skirmish:is_skirmish() then
@@ -320,7 +321,7 @@ function HUDAssaultCorner:init(hud, full_hud, tweak_hud)
 	vip_icon:set_center(self._vip_bg_box:w() / 2, self._vip_bg_box:h() / 2)
 end
 
--- Lines 165-189
+-- Lines 166-190
 function HUDAssaultCorner:_get_noreturn_data(id)
 	local noreturn_tweak_data = id and tweak_data.point_of_no_returns[id] or tweak_data.point_of_no_returns.noreturn
 	local noreturn_data = {
@@ -344,7 +345,7 @@ function HUDAssaultCorner:_get_noreturn_data(id)
 	return noreturn_data
 end
 
--- Lines 191-231
+-- Lines 192-232
 function HUDAssaultCorner:_update_noreturn(id)
 	local point_of_no_return_panel = self._hud_panel:child("point_of_no_return_panel")
 	local icon_noreturnbox = point_of_no_return_panel:child("icon_noreturnbox")
@@ -389,7 +390,7 @@ function HUDAssaultCorner:_update_noreturn(id)
 	self._noreturn_data = noreturn_data
 end
 
--- Lines 234-284
+-- Lines 235-285
 function HUDAssaultCorner:setup_wave_display(top, right)
 	if self._hud_panel:child("wave_panel") then
 		self._hud_panel:remove(self._hud_panel:child("wave_panel"))
@@ -463,19 +464,19 @@ function HUDAssaultCorner:setup_wave_display(top, right)
 	end
 end
 
--- Lines 286-288
+-- Lines 287-289
 function HUDAssaultCorner:should_display_waves()
 	return self._max_waves < math.huge
 end
 
--- Lines 292-362
+-- Lines 293-363
 function HUDAssaultCorner:_animate_text(text_panel, bg_box, color, color_function)
 	local text_list = (bg_box or self._bg_box):script().text_list
 	local text_index = 0
 	local texts = {}
 	local padding = 10
 
-	-- Lines 298-329
+	-- Lines 299-330
 	local function create_new_text(text_panel, text_list, text_index, texts)
 		if texts[text_index] and texts[text_index].text then
 			text_panel:remove(texts[text_index].text)
@@ -565,7 +566,7 @@ function HUDAssaultCorner:_animate_text(text_panel, bg_box, color, color_functio
 	end
 end
 
--- Lines 365-373
+-- Lines 366-374
 function HUDAssaultCorner:set_buff_enabled(buff_name, enabled)
 	self._hud_panel:child("buffs_panel"):set_visible(enabled)
 
@@ -581,12 +582,12 @@ function HUDAssaultCorner:set_buff_enabled(buff_name, enabled)
 	end
 end
 
--- Lines 375-377
+-- Lines 376-378
 function HUDAssaultCorner:get_assault_mode()
 	return self._assault_mode
 end
 
--- Lines 379-398
+-- Lines 380-399
 function HUDAssaultCorner:sync_set_assault_mode(mode)
 	if self._assault_mode == mode then
 		return
@@ -609,7 +610,7 @@ function HUDAssaultCorner:sync_set_assault_mode(mode)
 	icon_assaultbox:set_image(image)
 end
 
--- Lines 400-410
+-- Lines 401-411
 function HUDAssaultCorner:_update_assault_hud_color(color)
 	self._current_assault_color = color
 
@@ -624,7 +625,7 @@ function HUDAssaultCorner:_update_assault_hud_color(color)
 	icon_assaultbox:set_color(color)
 end
 
--- Lines 412-427
+-- Lines 413-428
 function HUDAssaultCorner:sync_start_assault(assault_number)
 	if self._point_of_no_return or self._casing then
 		return
@@ -644,7 +645,7 @@ function HUDAssaultCorner:sync_start_assault(assault_number)
 	self:_set_hostage_offseted(true)
 end
 
--- Lines 429-442
+-- Lines 430-443
 function HUDAssaultCorner:set_assault_wave_number(assault_number)
 	self._wave_number = assault_number
 	local panel = self._hud_panel:child("wave_panel")
@@ -660,12 +661,12 @@ function HUDAssaultCorner:set_assault_wave_number(assault_number)
 	end
 end
 
--- Lines 444-446
+-- Lines 445-447
 function HUDAssaultCorner:start_assault_callback()
 	self:_start_assault(self:_get_assault_strings())
 end
 
--- Lines 448-466
+-- Lines 449-467
 function HUDAssaultCorner:_get_assault_strings()
 	if self._assault_mode == "normal" then
 		if managers.job:current_difficulty_stars() > 0 then
@@ -720,7 +721,7 @@ function HUDAssaultCorner:_get_assault_strings()
 	end
 end
 
--- Lines 469-476
+-- Lines 470-477
 function HUDAssaultCorner:_get_survived_assault_strings()
 	if managers.job:current_difficulty_stars() > 0 then
 		local ids_risk = Idstring("risk")
@@ -747,7 +748,7 @@ function HUDAssaultCorner:_get_survived_assault_strings()
 	end
 end
 
--- Lines 479-486
+-- Lines 480-487
 function HUDAssaultCorner:sync_end_assault(result)
 	if self._point_of_no_return or self._casing then
 		return
@@ -756,7 +757,7 @@ function HUDAssaultCorner:sync_end_assault(result)
 	self:_end_assault()
 end
 
--- Lines 488-507
+-- Lines 489-508
 function HUDAssaultCorner:_set_text_list(text_list)
 	local assault_panel = self._hud_panel:child("assault_panel")
 	local text_panel = assault_panel:child("text_panel")
@@ -778,7 +779,7 @@ function HUDAssaultCorner:_set_text_list(text_list)
 	end
 end
 
--- Lines 509-564
+-- Lines 510-565
 function HUDAssaultCorner:_start_assault(text_list)
 	text_list = text_list or {
 		""
@@ -834,12 +835,12 @@ function HUDAssaultCorner:_start_assault(text_list)
 	end
 end
 
--- Lines 566-568
+-- Lines 567-569
 function HUDAssaultCorner:assault_attention_color_function()
 	return self._current_assault_color
 end
 
--- Lines 570-619
+-- Lines 571-620
 function HUDAssaultCorner:_end_assault()
 	if not self._assault then
 		self._start_assault_after_hostage_offset = nil
@@ -878,13 +879,13 @@ function HUDAssaultCorner:_end_assault()
 	end
 end
 
--- Lines 621-638
+-- Lines 622-639
 function HUDAssaultCorner:_close_assault_box()
 	local icon_assaultbox = self._hud_panel:child("assault_panel"):child("icon_assaultbox")
 
 	icon_assaultbox:stop()
 
-	-- Lines 626-634
+	-- Lines 627-635
 	local function close_done()
 		self._bg_box:set_visible(false)
 		icon_assaultbox:stop()
@@ -896,7 +897,7 @@ function HUDAssaultCorner:_close_assault_box()
 	self._bg_box:animate(callback(nil, _G, "HUDBGBox_animate_close_left"), close_done)
 end
 
--- Lines 640-652
+-- Lines 641-653
 function HUDAssaultCorner:_show_icon_assaultbox(icon_assaultbox)
 	local TOTAL_T = 2
 	local t = TOTAL_T
@@ -912,7 +913,7 @@ function HUDAssaultCorner:_show_icon_assaultbox(icon_assaultbox)
 	icon_assaultbox:set_alpha(1)
 end
 
--- Lines 654-679
+-- Lines 655-680
 function HUDAssaultCorner:_hide_icon_assaultbox(icon_assaultbox)
 	local TOTAL_T = 1
 	local t = TOTAL_T
@@ -940,19 +941,19 @@ function HUDAssaultCorner:_hide_icon_assaultbox(icon_assaultbox)
 	end
 end
 
--- Lines 681-685
+-- Lines 682-686
 function HUDAssaultCorner:_show_hostages()
 	if not self._point_of_no_return then
 		self._hud_panel:child("hostages_panel"):show()
 	end
 end
 
--- Lines 687-689
+-- Lines 688-690
 function HUDAssaultCorner:_hide_hostages()
 	self._hud_panel:child("hostages_panel"):hide()
 end
 
--- Lines 691-706
+-- Lines 692-707
 function HUDAssaultCorner:_set_hostage_offseted(is_offseted)
 	local hostage_panel = self._hud_panel:child("hostages_panel")
 	self._remove_hostage_offset = nil
@@ -968,7 +969,7 @@ function HUDAssaultCorner:_set_hostage_offseted(is_offseted)
 	end
 end
 
--- Lines 708-730
+-- Lines 709-731
 function HUDAssaultCorner:_offset_hostage(is_offseted, hostage_panel)
 	local TOTAL_T = 0.18
 	local OFFSET = self._bg_box:h() + 8
@@ -997,7 +998,7 @@ function HUDAssaultCorner:_offset_hostage(is_offseted, hostage_panel)
 	end
 end
 
--- Lines 733-739
+-- Lines 734-740
 function HUDAssaultCorner:set_control_info(data)
 	self._hostages_bg_box:child("num_hostages"):set_text("" .. data.nr_hostages)
 
@@ -1007,7 +1008,7 @@ function HUDAssaultCorner:set_control_info(data)
 	bg:animate(callback(nil, _G, "HUDBGBox_animate_bg_attention"), {})
 end
 
--- Lines 741-751
+-- Lines 742-752
 function HUDAssaultCorner:feed_point_of_no_return_timer(time, is_inside)
 	time = math.floor(time)
 	local minutes = math.floor(time / 60)
@@ -1017,7 +1018,7 @@ function HUDAssaultCorner:feed_point_of_no_return_timer(time, is_inside)
 	self._noreturn_bg_box:child("point_of_no_return_timer"):set_text(text)
 end
 
--- Lines 753-768
+-- Lines 754-769
 function HUDAssaultCorner:show_point_of_no_return_timer(id)
 	local delay_time = self._assault and 1.2 or 0
 
@@ -1034,7 +1035,7 @@ function HUDAssaultCorner:show_point_of_no_return_timer(id)
 	self._point_of_no_return = true
 end
 
--- Lines 770-783
+-- Lines 771-784
 function HUDAssaultCorner:hide_point_of_no_return_timer()
 	self._noreturn_bg_box:stop()
 	self._hud_panel:child("point_of_no_return_panel"):set_visible(false)
@@ -1045,9 +1046,9 @@ function HUDAssaultCorner:hide_point_of_no_return_timer()
 	self:_set_feedback_color(nil)
 end
 
--- Lines 785-811
+-- Lines 786-812
 function HUDAssaultCorner:flash_point_of_no_return_timer(beep)
-	-- Lines 788-805
+	-- Lines 789-806
 	local function flash_timer(o)
 		local t = 0
 
@@ -1070,7 +1071,7 @@ function HUDAssaultCorner:flash_point_of_no_return_timer(beep)
 	point_of_no_return_timer:animate(flash_timer)
 end
 
--- Lines 815-855
+-- Lines 816-856
 function HUDAssaultCorner:show_casing(mode)
 	local delay_time = self._assault and 1.2 or 0
 
@@ -1121,7 +1122,7 @@ function HUDAssaultCorner:show_casing(mode)
 	self._casing = true
 end
 
--- Lines 857-891
+-- Lines 858-892
 function HUDAssaultCorner:hide_casing()
 	if self._casing_bg_box:child("text_panel") then
 		self._casing_bg_box:child("text_panel"):stop()
@@ -1132,7 +1133,7 @@ function HUDAssaultCorner:hide_casing()
 
 	icon_casingbox:stop()
 
-	-- Lines 872-879
+	-- Lines 873-880
 	local function close_done()
 		self._casing_bg_box:set_visible(false)
 
@@ -1148,7 +1149,7 @@ function HUDAssaultCorner:hide_casing()
 	self._casing = false
 end
 
--- Lines 893-914
+-- Lines 894-915
 function HUDAssaultCorner:_animate_simple_text(text)
 	local _, _, w, _ = text:text_rect()
 
@@ -1175,7 +1176,7 @@ function HUDAssaultCorner:_animate_simple_text(text)
 	end
 end
 
--- Lines 916-937
+-- Lines 917-938
 function HUDAssaultCorner:_animate_show_casing(casing_panel, delay_time)
 	local icon_casingbox = casing_panel:child("icon_casingbox")
 
@@ -1184,7 +1185,7 @@ function HUDAssaultCorner:_animate_show_casing(casing_panel, delay_time)
 	icon_casingbox:stop()
 	icon_casingbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-	-- Lines 927-929
+	-- Lines 928-930
 	local function open_done()
 	end
 
@@ -1200,7 +1201,7 @@ function HUDAssaultCorner:_animate_show_casing(casing_panel, delay_time)
 	text_panel:animate(callback(self, self, "_animate_text"), self._casing_bg_box, Color.white)
 end
 
--- Lines 941-970
+-- Lines 942-971
 function HUDAssaultCorner:_animate_show_noreturn(point_of_no_return_panel, delay_time)
 	local icon_noreturnbox = point_of_no_return_panel:child("icon_noreturnbox")
 	local point_of_no_return_text = self._noreturn_bg_box:child("point_of_no_return_text")
@@ -1215,7 +1216,7 @@ function HUDAssaultCorner:_animate_show_noreturn(point_of_no_return_panel, delay
 	icon_noreturnbox:stop()
 	icon_noreturnbox:animate(callback(self, self, "_show_icon_assaultbox"))
 
-	-- Lines 958-960
+	-- Lines 959-961
 	local function open_done()
 		point_of_no_return_text:animate(callback(self, self, "_animate_show_texts"), {
 			point_of_no_return_text,
@@ -1237,7 +1238,7 @@ function HUDAssaultCorner:_animate_show_noreturn(point_of_no_return_panel, delay
 	})
 end
 
--- Lines 972-991
+-- Lines 973-992
 function HUDAssaultCorner:_animate_show_texts(anim_object, texts)
 	for _, text in ipairs(texts) do
 		text:set_visible(true)
@@ -1261,12 +1262,12 @@ function HUDAssaultCorner:_animate_show_texts(anim_object, texts)
 	end
 end
 
--- Lines 995-997
+-- Lines 996-998
 function HUDAssaultCorner:test()
 	self._hud_panel:child("point_of_no_return_panel"):animate(callback(self, self, "_animate_test_point_of_no_return"))
 end
 
--- Lines 999-1018
+-- Lines 1000-1019
 function HUDAssaultCorner:_animate_test_point_of_no_return(panel)
 	managers.hud:show_point_of_no_return_timer()
 
@@ -1290,7 +1291,7 @@ function HUDAssaultCorner:_animate_test_point_of_no_return(panel)
 	managers.hud:hide_point_of_no_return_timer()
 end
 
--- Lines 1021-1033
+-- Lines 1022-1034
 function HUDAssaultCorner:_set_feedback_color(color)
 	if self._feedback_color ~= color then
 		self._feedback_color = color
@@ -1306,7 +1307,7 @@ function HUDAssaultCorner:_set_feedback_color(color)
 	end
 end
 
--- Lines 1035-1051
+-- Lines 1036-1052
 function HUDAssaultCorner:_update_feedback_alpha(t, dt)
 	self._feedback_color_t = self._feedback_color_t - dt
 	local alpha_curve = math.sin(self._feedback_color_t * 180)
@@ -1324,7 +1325,7 @@ function HUDAssaultCorner:_update_feedback_alpha(t, dt)
 	managers.platform:set_feedback_color(color:with_alpha(alpha))
 end
 
--- Lines 1056-1065
+-- Lines 1057-1066
 function HUDAssaultCorner:_animate_wave_started(panel, assault_hud)
 	local wave_text = panel:child("num_waves")
 	local bg = panel:child("bg")
@@ -1334,7 +1335,7 @@ function HUDAssaultCorner:_animate_wave_started(panel, assault_hud)
 	bg:animate(callback(nil, _G, "HUDBGBox_animate_bg_attention"), {})
 end
 
--- Lines 1067-1080
+-- Lines 1068-1081
 function HUDAssaultCorner:_animate_wave_completed(panel, assault_hud)
 	local wave_text = panel:child("num_waves")
 	local bg = panel:child("bg")
@@ -1347,7 +1348,7 @@ function HUDAssaultCorner:_animate_wave_completed(panel, assault_hud)
 	assault_hud:_close_assault_box()
 end
 
--- Lines 1082-1088
+-- Lines 1083-1089
 function HUDAssaultCorner:get_completed_waves_string()
 	local macro = {
 		current = managers.network:session():is_host() and managers.groupai:state():get_assault_number() or self._wave_number,
@@ -1357,7 +1358,7 @@ function HUDAssaultCorner:get_completed_waves_string()
 	return managers.localization:to_upper_text("hud_assault_waves", macro)
 end
 
--- Lines 1091-1096
+-- Lines 1092-1097
 function HUDAssaultCorner:wave_popup_string_start()
 	local macro = {
 		current = managers.network:session():is_host() and managers.groupai:state():get_assault_number() or self._wave_number
@@ -1366,7 +1367,7 @@ function HUDAssaultCorner:wave_popup_string_start()
 	return managers.localization:to_upper_text("hud_skirmish_wave_start", macro)
 end
 
--- Lines 1098-1103
+-- Lines 1099-1104
 function HUDAssaultCorner:wave_popup_string_end()
 	local macro = {
 		current = managers.network:session():is_host() and managers.groupai:state():get_assault_number() or self._wave_number
@@ -1375,17 +1376,17 @@ function HUDAssaultCorner:wave_popup_string_end()
 	return managers.localization:to_upper_text("hud_skirmish_wave_end", macro)
 end
 
--- Lines 1110-1112
+-- Lines 1111-1113
 function HUDAssaultCorner:_popup_wave_started()
 	self:_popup_wave(self:wave_popup_string_start(), self._assault_color)
 end
 
--- Lines 1114-1116
+-- Lines 1115-1117
 function HUDAssaultCorner:_popup_wave_finished()
 	self:_popup_wave(self:wave_popup_string_end(), self._assault_survived_color)
 end
 
--- Lines 1118-1165
+-- Lines 1119-1166
 function HUDAssaultCorner:_popup_wave(text, color)
 	local popup_panel = self._hud_panel:panel({
 		w = 250,
@@ -1420,7 +1421,7 @@ function HUDAssaultCorner:_popup_wave(text, color)
 		color = color
 	})
 
-	-- Lines 1144-1162
+	-- Lines 1145-1163
 	local function animate_popup(panel)
 		local cx = panel:center_x()
 

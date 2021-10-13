@@ -17,12 +17,11 @@ function ElementInvulnerable:on_executed(instigator)
 	ElementInvulnerable.super.on_executed(self, instigator)
 end
 
--- Lines 21-23
+-- Lines 21-24
 function ElementInvulnerable:client_on_executed(instigator)
-	self:perform_invulnerable(instigator)
 end
 
--- Lines 25-43
+-- Lines 26-44
 function ElementInvulnerable:perform_invulnerable(instigator)
 	local units = {}
 
@@ -45,7 +44,7 @@ function ElementInvulnerable:perform_invulnerable(instigator)
 	end
 end
 
--- Lines 45-58
+-- Lines 46-60
 function ElementInvulnerable:_check_unit(unit)
 	if alive(unit) and unit:character_damage() then
 		local all_char_criminals = managers.groupai:state():all_char_criminals()
@@ -62,8 +61,9 @@ function ElementInvulnerable:_check_unit(unit)
 	return false
 end
 
--- Lines 61-64
+-- Lines 63-68
 function ElementInvulnerable:make_unit_invulnerable(unit)
 	unit:character_damage():set_invulnerable(self._values.invulnerable)
 	unit:character_damage():set_immortal(self._values.immortal)
+	unit:network():send("set_unit_invulnerable", self._values.invulnerable, self._values.immortal)
 end

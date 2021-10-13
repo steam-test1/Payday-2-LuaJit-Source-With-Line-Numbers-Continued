@@ -5,7 +5,7 @@ function FeatureManager:init()
 	self:_setup()
 end
 
--- Lines 7-61
+-- Lines 7-67
 function FeatureManager:_setup()
 	self._default = {
 		announcements = {}
@@ -50,7 +50,7 @@ function FeatureManager:_setup()
 	self._global = Global.feature_manager
 end
 
--- Lines 63-68
+-- Lines 69-74
 function FeatureManager:save(data)
 	Application:debug("[FeatureManager:save]")
 
@@ -60,7 +60,7 @@ function FeatureManager:save(data)
 	data.feature_manager = save_data
 end
 
--- Lines 70-82
+-- Lines 76-88
 function FeatureManager:load(data, version)
 	Application:debug("[FeatureManager:load]")
 
@@ -77,7 +77,7 @@ function FeatureManager:load(data, version)
 	end
 end
 
--- Lines 84-101
+-- Lines 90-107
 function FeatureManager:can_announce(feature_id)
 	local announcement = self._global.announcements[feature_id]
 
@@ -102,7 +102,7 @@ function FeatureManager:can_announce(feature_id)
 	return true
 end
 
--- Lines 103-133
+-- Lines 109-139
 function FeatureManager:announce_feature(feature_id)
 	if Global.skip_menu_dialogs then
 		return
@@ -141,7 +141,7 @@ function FeatureManager:announce_feature(feature_id)
 	self._global.announced[feature_id] = true
 end
 
--- Lines 135-141
+-- Lines 141-147
 function FeatureManager:set_feature_announce_times(feature_id, num)
 	local announcement = self._global.announcements[feature_id]
 
@@ -152,7 +152,7 @@ function FeatureManager:set_feature_announce_times(feature_id, num)
 	self._global.announcements[feature_id] = num
 end
 
--- Lines 147-151
+-- Lines 153-157
 function FeatureManager:crimenet_heat()
 	print("FeatureManager:crimenet_heat()")
 	managers.menu:show_announce_crimenet_heat()
@@ -160,7 +160,7 @@ function FeatureManager:crimenet_heat()
 	return true
 end
 
--- Lines 153-157
+-- Lines 159-163
 function FeatureManager:election_changes()
 	print("FeatureManager:election_changes()")
 	managers.menu:show_new_message_dialog({
@@ -171,7 +171,7 @@ function FeatureManager:election_changes()
 	return true
 end
 
--- Lines 159-163
+-- Lines 165-169
 function FeatureManager:crimenet_welcome()
 	print("FeatureManager:crimenet_welcome()")
 	managers.menu:show_new_message_dialog({
@@ -182,7 +182,7 @@ function FeatureManager:crimenet_welcome()
 	return true
 end
 
--- Lines 165-169
+-- Lines 171-175
 function FeatureManager:dlc_gage_pack_jobs()
 	print("FeatureManager:dlc_gage_pack_jobs()")
 	managers.menu:show_new_message_dialog({
@@ -193,7 +193,7 @@ function FeatureManager:dlc_gage_pack_jobs()
 	return true
 end
 
--- Lines 171-175
+-- Lines 177-181
 function FeatureManager:blackmarket_rename()
 	print("FeatureManager:blackmarket_rename()")
 	managers.menu:show_new_message_dialog({
@@ -204,7 +204,7 @@ function FeatureManager:blackmarket_rename()
 	return true
 end
 
--- Lines 177-203
+-- Lines 183-209
 function FeatureManager:join_pd2_clan()
 	print("FeatureManager:join_pd2_clan()")
 
@@ -242,7 +242,7 @@ function FeatureManager:join_pd2_clan()
 	return true
 end
 
--- Lines 205-209
+-- Lines 211-215
 function FeatureManager:perk_deck()
 	print("FeatureManager:perk_deck()")
 	managers.menu:show_new_message_dialog({
@@ -253,7 +253,7 @@ function FeatureManager:perk_deck()
 	return true
 end
 
--- Lines 211-215
+-- Lines 217-221
 function FeatureManager:freed_old_hoxton()
 	print("FeatureManager:freed_old_hoxton()")
 	managers.menu:show_new_message_dialog({
@@ -264,7 +264,7 @@ function FeatureManager:freed_old_hoxton()
 	return true
 end
 
--- Lines 217-221
+-- Lines 223-227
 function FeatureManager:infamy_2_0()
 	print("FeatureManager:infamy_2_0()")
 	managers.menu:show_new_message_dialog({
@@ -275,7 +275,7 @@ function FeatureManager:infamy_2_0()
 	return true
 end
 
--- Lines 223-247
+-- Lines 229-253
 function FeatureManager:thq_feature()
 	print("FeatureManager:thq_feature()")
 
@@ -283,7 +283,7 @@ function FeatureManager:thq_feature()
 		return
 	end
 
-	-- Lines 229-232
+	-- Lines 235-238
 	local function yes_function()
 		managers.user:set_setting("use_thq_weapon_parts", true)
 		managers.savefile:save_setting(true)
@@ -311,7 +311,7 @@ function FeatureManager:thq_feature()
 	return true
 end
 
--- Lines 249-253
+-- Lines 255-259
 function FeatureManager:crimenet_hacked()
 	print("FeatureManager:crimenet_hacked()")
 	managers.crimenet:set_getting_hacked(42.16)
@@ -319,11 +319,11 @@ function FeatureManager:crimenet_hacked()
 	return true
 end
 
--- Lines 256-276
+-- Lines 262-282
 function FeatureManager:short_heist()
 	print("FeatureManager:short_heist()")
 
-	-- Lines 259-266
+	-- Lines 265-272
 	local function yes_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_yes")
@@ -333,7 +333,7 @@ function FeatureManager:short_heist()
 		MenuCallbackHandler:play_short_heist()
 	end
 
-	-- Lines 268-272
+	-- Lines 274-278
 	local function no_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_no")
@@ -348,7 +348,7 @@ function FeatureManager:short_heist()
 	return true
 end
 
--- Lines 278-282
+-- Lines 284-288
 function FeatureManager:short_heists_available()
 	print("FeatureManager:short_heists_available()")
 	managers.menu:show_new_message_dialog({
@@ -359,13 +359,13 @@ function FeatureManager:short_heists_available()
 	return true
 end
 
--- Lines 286-289
+-- Lines 292-295
 function FeatureManager:new_career()
 	print("FeatureManager:new_career()")
 	managers.menu:show_new_player_popup()
 end
 
--- Lines 293-297
+-- Lines 299-303
 function FeatureManager:safehouse_dailies()
 	print("FeatureManager:safehouse_dailies()")
 	managers.menu:show_new_message_dialog({
@@ -376,7 +376,7 @@ function FeatureManager:safehouse_dailies()
 	return true
 end
 
--- Lines 301-305
+-- Lines 307-311
 function FeatureManager:tango_weapon_unlocked()
 	print("FeatureManager:tango_weapon_unlocked()")
 	managers.tango:announce_tango_weapon()
@@ -384,7 +384,7 @@ function FeatureManager:tango_weapon_unlocked()
 	return true
 end
 
--- Lines 309-312
+-- Lines 315-318
 function FeatureManager:movie_theater_unlocked()
 	managers.menu:show_movie_theater_unlocked_dialog()
 

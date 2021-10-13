@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-8184
+-- Lines 10-8220
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -7673,6 +7673,47 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 				Rotation(-0, -0, -0)
 			}
 		}
+	}
+	self.masks.mnk = {
+		unit = "units/pd2_dlc_cctp/masks/msk_mnk/msk_mnk",
+		name_id = "bm_msk_cctp_mnk",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "cctp",
+		texture_bundle_folder = "cctp"
+	}
+	self.masks.mnt = {
+		unit = "units/pd2_dlc_cctp/masks/msk_mnt/msk_mnt",
+		name_id = "bm_msk_cctp_mnt",
+		pcs = {},
+		value = 0,
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "cctp",
+		texture_bundle_folder = "cctp"
+	}
+	self.masks.tgr = {
+		unit = "units/pd2_dlc_cctp/masks/msk_tgr/msk_tgr",
+		name_id = "bm_msk_cctp_tgr",
+		pcs = {},
+		value = 0,
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "cctp",
+		texture_bundle_folder = "cctp"
+	}
+	self.masks.vpr = {
+		unit = "units/pd2_dlc_cctp/masks/msk_vpr/msk_vpr",
+		name_id = "bm_msk_cctp_vpr",
+		pcs = {},
+		value = 0,
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "cctp",
+		texture_bundle_folder = "cctp"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

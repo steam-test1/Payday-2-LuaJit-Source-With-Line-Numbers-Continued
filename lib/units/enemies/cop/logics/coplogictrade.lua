@@ -123,7 +123,7 @@ function CopLogicTrade.exit(data, new_logic_name, enter_params)
 	end
 
 	data.unit:character_damage():set_invulnerable(false)
-	data.unit:network():send("set_unit_invulnerable", false)
+	data.unit:network():send("set_unit_invulnerable", false, data.unit:character_damage()._immortal)
 end
 
 -- Lines 113-195

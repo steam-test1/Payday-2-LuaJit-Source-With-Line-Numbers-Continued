@@ -1,4 +1,4 @@
--- Lines 3-961
+-- Lines 3-967
 function DLCTweakData:init_generated()
 	self.afp_bundle = {
 		dlc = "has_afp",
@@ -183,12 +183,75 @@ function DLCTweakData:init_generated()
 	}
 	self.bex_bundle.content.loot_global_value = "bex"
 	self.bex_bundle.content.loot_drops = {}
+	self.cctp_bundle = {
+		dlc = "has_cctp",
+		content = {}
+	}
+	self.cctp_bundle.content.loot_global_value = "cctp"
+	self.cctp_bundle.content.loot_drops = {
+		{
+			type_items = "gloves",
+			item_entry = "mnk",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "mnt",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "tgr",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "vpr",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "mnk",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "mnt",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "tgr",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "vpr",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "cybertrench",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "cyberhoodie",
+			amount = 1
+		}
+	}
 	self.chas_bundle = {
 		dlc = "has_chas",
 		content = {}
 	}
 	self.chas_bundle.content.loot_global_value = "chas"
 	self.chas_bundle.content.loot_drops = {}
+	self.chca_bundle = {
+		dlc = "has_chca",
+		content = {}
+	}
+	self.chca_bundle.content.loot_global_value = "chca"
+	self.chca_bundle.content.loot_drops = {}
 	self.ess_bundle = {
 		dlc = "has_ess",
 		content = {}
@@ -765,6 +828,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.oct21_bundle = {
+		free = true,
+		content = {}
+	}
+	self.oct21_bundle.content.loot_global_value = "oct21"
+	self.oct21_bundle.content.loot_drops = {}
 	self.pda8_bundle = {
 		free = true,
 		content = {}

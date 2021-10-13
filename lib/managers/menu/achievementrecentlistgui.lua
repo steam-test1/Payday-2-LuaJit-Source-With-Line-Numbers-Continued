@@ -27,7 +27,7 @@ end
 
 local AchievementRecentListItem = AchievementRecentListItem or class(GrowPanel)
 
--- Lines 35-90
+-- Lines 35-94
 function AchievementRecentListItem:init(parent, item, black_bg)
 	AchievementRecentListItem.super.init(self, parent, {
 		border = 10,
@@ -36,6 +36,13 @@ function AchievementRecentListItem:init(parent, item, black_bg)
 	})
 
 	self._visual = tweak_data.achievement.visual[item.id]
+
+	if not self._visual then
+		Application:error("[AchievementRecentListItem] Missing visual for item", item.id)
+
+		self._visual = {}
+	end
+
 	local placer = self:placer()
 	local texture, texture_rect = tweak_data.hud_icons:get_icon_or(self._visual.icon_id, "guis/dlcs/unfinished/textures/placeholder")
 	local bitmap = placer:add_bottom(self:bitmap({
@@ -114,7 +121,7 @@ end
 
 AchievementRecentListGui = AchievementRecentListGui or class(ExtendedPanel)
 
--- Lines 96-151
+-- Lines 100-155
 function AchievementRecentListGui:init(parent, list, back_callback)
 	self._back_callback = back_callback
 
@@ -218,7 +225,7 @@ function AchievementRecentListGui:init(parent, list, back_callback)
 	self._back = back_panel
 end
 
--- Lines 153-156
+-- Lines 157-160
 function AchievementRecentListGui:close()
 	self:remove_self()
 
@@ -227,7 +234,7 @@ function AchievementRecentListGui:close()
 	end
 end
 
--- Lines 158-167
+-- Lines 162-171
 function AchievementRecentListGui:update(...)
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_left_controller_axis()
@@ -238,7 +245,7 @@ function AchievementRecentListGui:update(...)
 	end
 end
 
--- Lines 169-172
+-- Lines 173-176
 function AchievementRecentListGui:back_pressed()
 	self._back_callback()
 
