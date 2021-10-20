@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4721
+-- Lines 10-4731
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8355,4 +8355,16 @@ function DLCTweakData:init(tweak_data)
 	}
 	self.tawp_bbq.content.loot_global_value = "bbq"
 	self.tawp_bbq.content.loot_drops = {}
+	self.a10mask_bundle = {
+		dlc = "has_a10mask",
+		content = {}
+	}
+	self.a10mask_bundle.content.loot_global_value = "a10th"
+	self.a10mask_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "jesterskulls",
+			amount = 1
+		}
+	}
 end

@@ -58,7 +58,7 @@ end
 
 -- Lines 71-76
 function BowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_percent)
-	if not alive(attacker) or attacker ~= managers.player:player_unit() then
+	if type_name(attacker) ~= "Unit" or not alive(attacker) or attacker ~= managers.player:player_unit() then
 		return
 	end
 
@@ -231,7 +231,7 @@ end
 
 -- Lines 258-263
 function CrossbowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_percent)
-	if not alive(attacker) or attacker ~= managers.player:player_unit() then
+	if type_name(attacker) ~= "Unit" or not alive(attacker) or attacker ~= managers.player:player_unit() then
 		return
 	end
 

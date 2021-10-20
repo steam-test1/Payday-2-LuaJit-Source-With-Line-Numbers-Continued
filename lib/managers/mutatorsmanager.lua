@@ -8,6 +8,7 @@ require("lib/mutators/MutatorHydra")
 require("lib/mutators/MutatorEnemyReplacer")
 require("lib/mutators/MutatorCloakerEffect")
 require("lib/mutators/MutatorShieldDozers")
+require("lib/mutators/MutatorBirthday")
 
 MutatorsManager = MutatorsManager or class()
 MutatorsManager.package = "packages/toxic"
@@ -42,7 +43,8 @@ function MutatorsManager:init()
 		MutatorMediDozer:new(self),
 		MutatorCloakerEffect:new(self),
 		MutatorShieldDozers:new(self),
-		MutatorTitandozers:new(self)
+		MutatorTitandozers:new(self),
+		MutatorBirthday:new(self)
 	}
 	self._active_mutators = {}
 	local activate = Global.mutators and Global.mutators.active_on_load
@@ -743,6 +745,26 @@ end
 
 -- Lines 745-768
 function MutatorsManager:get_enabled_active_mutator_category()
+	if not self:can_mutators_be_active() then
+		return "mutator"
+	end
+
+	local mutators_to_check = nil
+
+	if Network:is_client() then
+		for mutator_id, content in pairs(self:get_mutators_from_lobby_data() or {}) do
+			if self:get_mutator_from_id(mutator_id):main_category() == "event" then
+				return "event"
+			end
+		end
+	else
+		for _, mutator in ipairs(self._mutators) do
+			if (mutator:is_enabled() or mutator:is_active()) and mutator:main_category() == "event" then
+				return "event"
+			end
+		end
+	end
+
 	return "mutator"
 end
 
@@ -750,6 +772,8 @@ end
 function MutatorsManager:get_category_color(category)
 	if category == "mutator" then
 		return tweak_data.screen_colors.mutators_color
+	elseif category == "event" then
+		return tweak_data.screen_colors.event_color
 	end
 
 	return tweak_data.screen_colors.mutators_color
@@ -759,6 +783,8 @@ end
 function MutatorsManager:get_category_text_color(category)
 	if category == "mutator" then
 		return tweak_data.screen_colors.mutators_color_text
+	elseif category == "event" then
+		return tweak_data.screen_colors.event_color
 	end
 
 	return tweak_data.screen_colors.mutators_color_text
@@ -766,7 +792,7 @@ end
 
 -- Lines 794-848
 function MutatorsManager:show_mutators_launch_countdown(countdown)
-	if Network:is_server() then
+	if Network:is_server() or managers.mutators:get_enabled_active_mutator_category() == "event" then
 		return
 	end
 

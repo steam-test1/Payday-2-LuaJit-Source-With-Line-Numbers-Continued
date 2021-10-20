@@ -557,7 +557,7 @@ function ContractBoxGui:create_contract_box()
 	self._enabled = true
 end
 
--- Lines 404-474
+-- Lines 404-476
 function ContractBoxGui:create_mutators_tooltip()
 	if self._mutators_tooltip and alive(self._mutators_tooltip) then
 		self._fullscreen_panel:remove(self._mutators_tooltip)
@@ -566,7 +566,9 @@ function ContractBoxGui:create_mutators_tooltip()
 		self._mutators_data = nil
 	end
 
-	if not managers.network:session() or not managers.mutators:are_mutators_enabled() then
+	local mutator_lobby_data = managers.mutators:get_mutators_from_lobby_data()
+
+	if not managers.network:session() or not managers.mutators:are_mutators_enabled() or not mutator_lobby_data then
 		return
 	end
 
@@ -587,7 +589,7 @@ function ContractBoxGui:create_mutators_tooltip()
 	})
 	local _y = mutators_title:bottom() + 5
 	local mutators_list = {}
-	self._mutators_data = deep_clone(managers.mutators:get_mutators_from_lobby_data())
+	self._mutators_data = deep_clone(mutator_lobby_data or {})
 
 	for mutator_id, mutator_data in pairs(self._mutators_data) do
 		local mutator = managers.mutators:get_mutator_from_id(mutator_id)
@@ -632,7 +634,7 @@ function ContractBoxGui:create_mutators_tooltip()
 	self._mutators_tooltip:set_alpha(0)
 end
 
--- Lines 476-553
+-- Lines 478-555
 function ContractBoxGui:check_update_mutators_tooltip()
 	local refresh_contract, refresh_tooltip = nil
 
@@ -648,7 +650,7 @@ function ContractBoxGui:check_update_mutators_tooltip()
 	else
 		local lobby_data = managers.mutators:get_mutators_from_lobby_data()
 
-		if self._mutators_data then
+		if self._mutators_data and lobby_data then
 			refresh_contract = self._contract_panel:child("mutators_text") == nil
 
 			for mutator_id, mutator_data in pairs(lobby_data) do
@@ -699,13 +701,13 @@ function ContractBoxGui:check_update_mutators_tooltip()
 	end
 end
 
--- Lines 556-561
+-- Lines 558-563
 function ContractBoxGui:refresh()
 	self:create_contract_box()
 	self:create_mutators_tooltip()
 end
 
--- Lines 563-595
+-- Lines 565-597
 function ContractBoxGui:update(t, dt)
 	for i = 1, tweak_data.max_players do
 		self:update_character(i)
@@ -741,7 +743,7 @@ function ContractBoxGui:update(t, dt)
 	end
 end
 
--- Lines 597-720
+-- Lines 599-722
 function ContractBoxGui:create_character_text(peer_id, x, y, text, rank, panel, color_ranges)
 	panel = panel or self._panel
 
@@ -847,7 +849,7 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, rank, panel, 
 	end
 end
 
--- Lines 722-754
+-- Lines 724-756
 function ContractBoxGui:update_character(peer_id)
 	if not peer_id or not managers.network:session() then
 		return
@@ -881,7 +883,7 @@ function ContractBoxGui:update_character(peer_id)
 	self:create_character_text(peer_id, x, y, text, player_rank, nil, color_ranges)
 end
 
--- Lines 756-764
+-- Lines 758-766
 function ContractBoxGui:update_character_menu_state(peer_id, state)
 	if not self._peers_state then
 		return
@@ -894,7 +896,7 @@ function ContractBoxGui:update_character_menu_state(peer_id, state)
 	self._peers_state[peer_id]:set_text(state and managers.localization:to_upper_text("menu_lobby_menu_state_" .. state) or "")
 end
 
--- Lines 766-771
+-- Lines 768-773
 function ContractBoxGui:update_bg_state(peer_id, state)
 	local peer = managers.network:session() and managers.network:session():local_peer() or false
 
@@ -903,7 +905,7 @@ function ContractBoxGui:update_bg_state(peer_id, state)
 	end
 end
 
--- Lines 773-785
+-- Lines 775-787
 function ContractBoxGui:set_character_panel_alpha(peer_id, alpha)
 	if self._peers and self._peers[peer_id] then
 		self._peers[peer_id]:set_alpha(alpha)
@@ -918,15 +920,15 @@ function ContractBoxGui:set_character_panel_alpha(peer_id, alpha)
 	end
 end
 
--- Lines 787-794
+-- Lines 789-796
 function ContractBoxGui:_create_text_box(ws, title, text, content_data, config)
 end
 
--- Lines 796-825
+-- Lines 798-827
 function ContractBoxGui:_create_lower_static_panel(lower_static_panel)
 end
 
--- Lines 827-855
+-- Lines 829-857
 function ContractBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() then
 		return
@@ -952,7 +954,7 @@ function ContractBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 857-889
+-- Lines 859-891
 function ContractBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() then
 		return
@@ -986,39 +988,39 @@ function ContractBoxGui:mouse_moved(x, y)
 	return used, pointer
 end
 
--- Lines 891-893
+-- Lines 893-895
 function ContractBoxGui:can_take_input()
 	return true
 end
 
--- Lines 895-896
+-- Lines 897-898
 function ContractBoxGui:moved_scroll_bar()
 end
 
--- Lines 898-899
+-- Lines 900-901
 function ContractBoxGui:mouse_wheel_down()
 end
 
--- Lines 901-902
+-- Lines 903-904
 function ContractBoxGui:mouse_wheel_up()
 end
 
--- Lines 904-906
+-- Lines 906-908
 function ContractBoxGui:check_minimize()
 	return false
 end
 
--- Lines 908-910
+-- Lines 910-912
 function ContractBoxGui:check_grab_scroll_bar()
 	return false
 end
 
--- Lines 912-914
+-- Lines 914-916
 function ContractBoxGui:release_scroll_bar()
 	return false
 end
 
--- Lines 916-933
+-- Lines 918-935
 function ContractBoxGui:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -1039,15 +1041,15 @@ function ContractBoxGui:set_enabled(enabled)
 	end
 end
 
--- Lines 935-938
+-- Lines 937-940
 function ContractBoxGui:set_size(x, y)
 end
 
--- Lines 940-942
+-- Lines 942-944
 function ContractBoxGui:set_visible(visible)
 end
 
--- Lines 944-948
+-- Lines 946-950
 function ContractBoxGui:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)

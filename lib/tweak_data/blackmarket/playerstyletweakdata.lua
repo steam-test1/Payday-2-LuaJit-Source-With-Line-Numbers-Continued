@@ -1,4 +1,4 @@
--- Lines 1-2305
+-- Lines 1-2356
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -2854,9 +2854,78 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.cybertrench.characters.ecp_male = cybertrench_characters_male_fat
+	self.player_styles.clown_2 = {
+		name_id = "bm_suit_clown_2",
+		desc_id = "bm_suit_clown_desc_2",
+		texture_bundle_folder = "a10th",
+		global_value = "a10th",
+		material_variations = {}
+	}
+	self.player_styles.clown_2.material_variations.default = {
+		name_id = "bm_suit_var_clown_2_default",
+		global_value = "a10th",
+		desc_id = "bm_suit_var_clown_2_default_desc"
+	}
+	self.player_styles.clown_2.material_variations.orange = {
+		desc_id = "bm_suit_var_clown_2_orange_desc",
+		global_value = "a10th",
+		auto_aquire = true,
+		name_id = "bm_suit_var_clown_2_orange",
+		third_material = "units/pd2_dlc_a10th/characters/a10th_acc_clown/shared_materials/a10th_acc_clown_orange",
+		material = "units/pd2_dlc_a10th/characters/a10th_acc_clown/shared_materials/a10th_acc_fps_clown_orange"
+	}
+	self.player_styles.clown_2.material_variations.white = {
+		desc_id = "bm_suit_var_clown_2_white_desc",
+		global_value = "a10th",
+		auto_aquire = true,
+		name_id = "bm_suit_var_clown_2_white",
+		third_material = "units/pd2_dlc_a10th/characters/a10th_acc_clown/shared_materials/a10th_acc_clown_white",
+		material = "units/pd2_dlc_a10th/characters/a10th_acc_clown/shared_materials/a10th_acc_fps_clown_white"
+	}
+	self.player_styles.clown_2.material_variations.yellow = {
+		desc_id = "bm_suit_var_clown_2_yellow_desc",
+		global_value = "a10th",
+		auto_aquire = true,
+		name_id = "bm_suit_var_clown_2_yellow",
+		third_material = "units/pd2_dlc_a10th/characters/a10th_acc_clown/shared_materials/a10th_acc_clown_yellow",
+		material = "units/pd2_dlc_a10th/characters/a10th_acc_clown/shared_materials/a10th_acc_fps_clown_yellow"
+	}
+	self.player_styles.clown_2.body_replacement = body_replacement_standard
+	self.player_styles.clown_2.third_body_replacement = body_replacement_standard
+	self.player_styles.clown_2.unit = "units/pd2_dlc_a10th/characters/a10th_acc_clown/a10th_acc_fps_clown_male/a10th_acc_fps_clown_male"
+	self.player_styles.clown_2.characters = {}
+	local clown_2_characters_male = {
+		third_unit = "units/pd2_dlc_a10th/characters/a10th_acc_clown/a10th_acc_clown_male_average/a10th_acc_clown_male_average"
+	}
+
+	set_characters_data("clown_2", characters_male, clown_2_characters_male)
+
+	local clown_2_characters_male_big = {
+		third_unit = "units/pd2_dlc_a10th/characters/a10th_acc_clown/a10th_acc_clown_male_big/a10th_acc_clown_male_big"
+	}
+
+	set_characters_data("clown_2", characters_male_big, clown_2_characters_male_big)
+
+	local clown_2_characters_female = {
+		third_unit = "units/pd2_dlc_a10th/characters/a10th_acc_clown/a10th_acc_clown_female_average/a10th_acc_clown_female_average"
+	}
+
+	set_characters_data("clown_2", characters_female, clown_2_characters_female)
+
+	local clown_2_characters_female_big = {
+		third_unit = "units/pd2_dlc_a10th/characters/a10th_acc_clown/a10th_acc_clown_female_fat/a10th_acc_clown_female_fat"
+	}
+
+	set_characters_data("clown_2", characters_female_big, clown_2_characters_female_big)
+
+	local clown_2_characters_male_fat = {
+		third_unit = "units/pd2_dlc_a10th/characters/a10th_acc_clown/a10th_acc_clown_male_fat/a10th_acc_clown_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.clown_2.characters.ecp_male = clown_2_characters_male_fat
 end
 
--- Lines 2307-2329
+-- Lines 2358-2380
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -2881,7 +2950,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 2331-2356
+-- Lines 2382-2407
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -2909,7 +2978,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 2358-2379
+-- Lines 2409-2430
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -2936,7 +3005,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 2381-2417
+-- Lines 2432-2468
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -2980,7 +3049,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 2420-2449
+-- Lines 2471-2500
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -3011,7 +3080,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 2451-2457
+-- Lines 2502-2508
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -3020,7 +3089,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 2459-2474
+-- Lines 2510-2525
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -3040,11 +3109,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 2476-2512
+-- Lines 2527-2563
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 2480-2509
+	-- Lines 2531-2560
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

@@ -1,5 +1,17 @@
 -- Lines 3-967
 function DLCTweakData:init_generated()
+	self.a10th_bundle = {
+		free = true,
+		content = {}
+	}
+	self.a10th_bundle.content.loot_global_value = "a10th"
+	self.a10th_bundle.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "clown_2",
+			amount = 1
+		}
+	}
 	self.afp_bundle = {
 		dlc = "has_afp",
 		content = {}

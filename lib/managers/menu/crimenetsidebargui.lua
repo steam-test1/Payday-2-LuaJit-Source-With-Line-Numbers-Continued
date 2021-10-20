@@ -73,7 +73,7 @@ function CrimeNetSidebarGui:_setup()
 	local next_position = padding
 	local item_margin = 2
 
-	for i, item in ipairs(tweak_data.gui.crime_net.sidebar) do
+	for i, item in ipairs(managers.crimenet:get_sidebar_filtered()) do
 		local visible = true
 
 		if item.visible_callback then
@@ -389,6 +389,11 @@ end
 -- Lines 352-354
 function CrimeNetSidebarGui:clbk_mutators()
 	managers.menu:open_node("mutators")
+end
+
+-- Lines 357-359
+function CrimeNetSidebarGui:clbk_a10th_event()
+	managers.features:a10th_event_explanation()
 end
 
 -- Lines 362-364
@@ -916,6 +921,15 @@ function CrimeNetSidebarMutatorsItem:update(t, dt)
 
 		self._glow_panel:set_alpha(0.3 + _t * target_alpha)
 	end
+end
+
+CrimeNetSidebarEventsItem = CrimeNetSidebarEventsItem or class(CrimeNetSidebarMutatorsItem)
+
+-- Lines 848-851
+function CrimeNetSidebarEventsItem:init(sidebar, panel, parameters)
+	parameters.glow_color = tweak_data.screen_colors.event_color
+
+	CrimeNetSidebarEventsItem.super.init(self, sidebar, panel, parameters)
 end
 
 CrimeNetSidebarCrimeSpreeItem = CrimeNetSidebarCrimeSpreeItem or class(CrimeNetSidebarItem)

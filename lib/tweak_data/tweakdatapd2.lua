@@ -863,11 +863,15 @@ function TweakData:_setup_scene_pose_items()
 		husk_akimbo2 = {
 			"primary",
 			"secondary"
+		},
+		husk_akimbo_x54 = {
+			"primary",
+			"secondary"
 		}
 	}
 end
 
--- Lines 514-623
+-- Lines 514-625
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -919,6 +923,10 @@ function TweakData:_setup_scene_poses()
 			"husk_infamous1",
 			"husk_infamous3",
 			"husk_infamous4"
+		},
+		x_type54 = {
+			"husk_akimbo_x54",
+			required_pose = true
 		},
 		m95 = {
 			"husk_m95"

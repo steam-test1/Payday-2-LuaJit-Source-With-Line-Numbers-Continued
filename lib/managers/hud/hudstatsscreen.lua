@@ -1040,7 +1040,7 @@ function HUDStatsScreen:_set_amount_string(text, amount)
 	text:set_range_color(0, string.len(amount == 0 and text:text() or zero), Color.white:with_alpha(0.5))
 end
 
--- Lines 444-501
+-- Lines 444-502
 function HUDStatsScreen:_create_mutators_list(mutators_panel)
 	mutators_panel:clear()
 
@@ -1049,6 +1049,7 @@ function HUDStatsScreen:_create_mutators_list(mutators_panel)
 	end
 
 	local y = 2
+	local mutator_text = "menu_" .. managers.mutators:get_enabled_active_mutator_category() .. "s"
 	local title = mutators_panel:text({
 		name = "title",
 		vertical = "center",
@@ -1056,7 +1057,7 @@ function HUDStatsScreen:_create_mutators_list(mutators_panel)
 		visible = true,
 		x = -2,
 		layer = 2,
-		text = managers.localization:to_upper_text("menu_mutators"),
+		text = managers.localization:to_upper_text(mutator_text),
 		font_size = tweak_data.hud_stats.loot_title_size,
 		font = tweak_data.hud_stats.objectives_font,
 		color = Color.white,
@@ -1101,7 +1102,7 @@ function HUDStatsScreen:_create_mutators_list(mutators_panel)
 	end
 end
 
--- Lines 504-528
+-- Lines 505-529
 function HUDStatsScreen:_animate_text_pulse(text, exp_gain_ring, exp_ring)
 	local t = 0
 	local c = text:color()
@@ -1124,7 +1125,7 @@ function HUDStatsScreen:_animate_text_pulse(text, exp_gain_ring, exp_ring)
 	end
 end
 
--- Lines 530-622
+-- Lines 531-623
 function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 	local mandatory_bags_data = managers.loot:get_mandatory_bags_data()
 	local secured_amount = managers.loot:get_secured_mandatory_bags_amount()
@@ -1269,7 +1270,7 @@ function HUDStatsScreen:_update_stats_screen_loot(loot_wrapper_panel)
 	instant_cash_text:set_alpha(instant_vis and 1 or 0.5)
 end
 
--- Lines 624-732
+-- Lines 625-733
 function HUDStatsScreen:_update_stats_screen_day(right_panel)
 	local job_data = managers.job:current_job_data()
 	local stage_data = managers.job:current_stage_data()
@@ -1384,7 +1385,7 @@ function HUDStatsScreen:_update_stats_screen_day(right_panel)
 	end
 end
 
--- Lines 736-740
+-- Lines 737-741
 function HUDStatsScreen:loot_value_updated()
 	local right_panel = self._full_hud_panel:child("right_panel")
 	local left_panel = self._full_hud_panel:child("left_panel")
@@ -1392,7 +1393,7 @@ function HUDStatsScreen:loot_value_updated()
 	self:_update_stats_screen_loot(left_panel:child("loot_wrapper_panel"))
 end
 
--- Lines 744-786
+-- Lines 745-787
 function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
@@ -1432,7 +1433,7 @@ function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, 
 	self:_rec_round_object(bottom_panel)
 end
 
--- Lines 788-826
+-- Lines 789-827
 function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
