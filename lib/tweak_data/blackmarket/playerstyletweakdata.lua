@@ -1,4 +1,4 @@
--- Lines 1-2356
+-- Lines 1-2355
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -2923,9 +2923,70 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.clown_2.characters.ecp_male = clown_2_characters_male_fat
+	self.player_styles.classyske = {
+		name_id = "bm_suit_classyske",
+		desc_id = "bm_suit_classyske_desc",
+		texture_bundle_folder = "trik",
+		global_value = "trik",
+		material_variations = {}
+	}
+	self.player_styles.classyske.material_variations.default = {
+		name_id = "bm_suit_var_classyske_default",
+		global_value = "trik",
+		desc_id = "bm_suit_var_classyske_default_desc"
+	}
+	self.player_styles.classyske.material_variations.red = {
+		desc_id = "bm_suit_var_classyske_red_desc",
+		global_value = "trik",
+		auto_aquire = true,
+		name_id = "bm_suit_var_classyske_red",
+		third_material = "units/pd2_dlc_trik/characters/trik_acc_classyske/shared_materials/trik_acc_classyske_red",
+		material = "units/pd2_dlc_trik/characters/trik_acc_classyske/shared_materials/trik_acc_fps_classyske_red"
+	}
+	self.player_styles.classyske.material_variations.cream = {
+		desc_id = "bm_suit_var_classyske_cream_desc",
+		global_value = "trik",
+		auto_aquire = true,
+		name_id = "bm_suit_var_classyske_cream",
+		third_material = "units/pd2_dlc_trik/characters/trik_acc_classyske/shared_materials/trik_acc_classyske_cream",
+		material = "units/pd2_dlc_trik/characters/trik_acc_classyske/shared_materials/trik_acc_fps_classyske_cream"
+	}
+	self.player_styles.classyske.body_replacement = body_replacement_standard
+	self.player_styles.classyske.third_body_replacement = body_replacement_standard
+	self.player_styles.classyske.unit = "units/pd2_dlc_trik/characters/trik_acc_classyske/trik_acc_fps_classyske_male/trik_acc_fps_classyske_male"
+	self.player_styles.classyske.characters = {}
+	local classyske_characters_male = {
+		third_unit = "units/pd2_dlc_trik/characters/trik_acc_classyske/trik_acc_classyske_male_average/trik_acc_classyske_male_average"
+	}
+
+	set_characters_data("classyske", characters_male, classyske_characters_male)
+
+	local classyske_characters_male_big = {
+		third_unit = "units/pd2_dlc_trik/characters/trik_acc_classyske/trik_acc_classyske_male_big/trik_acc_classyske_male_big"
+	}
+
+	set_characters_data("classyske", characters_male_big, classyske_characters_male_big)
+
+	local classyske_characters_female = {
+		third_unit = "units/pd2_dlc_trik/characters/trik_acc_classyske/trik_acc_classyske_female_average/trik_acc_classyske_female_average"
+	}
+
+	set_characters_data("classyske", characters_female, classyske_characters_female)
+
+	local classyske_characters_female_big = {
+		third_unit = "units/pd2_dlc_trik/characters/trik_acc_classyske/trik_acc_classyske_female_fat/trik_acc_classyske_female_fat"
+	}
+
+	set_characters_data("classyske", characters_female_big, classyske_characters_female_big)
+
+	local classyske_characters_male_fat = {
+		third_unit = "units/pd2_dlc_trik/characters/trik_acc_classyske/trik_acc_classyske_male_fat/trik_acc_classyske_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.classyske.characters.ecp_male = classyske_characters_male_fat
 end
 
--- Lines 2358-2380
+-- Lines 2357-2379
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -2950,7 +3011,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 2382-2407
+-- Lines 2381-2406
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -2978,7 +3039,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 2409-2430
+-- Lines 2408-2429
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3005,7 +3066,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 2432-2468
+-- Lines 2431-2467
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3049,7 +3110,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 2471-2500
+-- Lines 2470-2499
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -3080,7 +3141,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 2502-2508
+-- Lines 2501-2507
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -3089,7 +3150,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 2510-2525
+-- Lines 2509-2524
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -3109,11 +3170,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 2527-2563
+-- Lines 2526-2562
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 2531-2560
+	-- Lines 2530-2559
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

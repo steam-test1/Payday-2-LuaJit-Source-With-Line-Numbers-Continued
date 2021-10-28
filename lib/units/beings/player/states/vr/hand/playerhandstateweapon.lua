@@ -17,7 +17,7 @@ function PlayerHandStateWeapon:on_grip_toggle_setting_changed(setting, old, new)
 	self._grip_toggle_setting = new
 end
 
--- Lines 18-40
+-- Lines 18-45
 function PlayerHandStateWeapon:_link_weapon(weapon_unit)
 	if not alive(weapon_unit) then
 		return
@@ -36,9 +36,10 @@ function PlayerHandStateWeapon:_link_weapon(weapon_unit)
 
 		self._weapon_unit = weapon_unit
 
-		self._weapon_unit:base():on_enabled()
-		self._weapon_unit:base():set_visibility_state(true)
-		self._weapon_unit:set_position(self:hsm():position())
+		self._hand_unit:link(weapon_unit)
+		weapon_unit:base():on_enabled()
+		weapon_unit:base():set_visibility_state(true)
+		weapon_unit:set_position(self:hsm():position())
 
 		if weapon_unit:base().akimbo then
 			self:hsm():other_hand():set_default_state("akimbo")
@@ -46,17 +47,21 @@ function PlayerHandStateWeapon:_link_weapon(weapon_unit)
 	end
 end
 
--- Lines 42-50
+-- Lines 47-59
 function PlayerHandStateWeapon:_unlink_weapon()
 	if alive(self._weapon_unit) then
 		self._weapon_unit:base():set_visibility_state(false)
 		self._weapon_unit:base():on_disabled()
 
+		if self._weapon_unit:parent() then
+			self._weapon_unit:unlink()
+		end
+
 		self._weapon_unit = nil
 	end
 end
 
--- Lines 52-103
+-- Lines 61-112
 function PlayerHandStateWeapon:at_enter(prev_state)
 	PlayerHandStateWeapon.super.at_enter(self, prev_state)
 
@@ -104,7 +109,7 @@ function PlayerHandStateWeapon:at_enter(prev_state)
 	end
 end
 
--- Lines 105-120
+-- Lines 114-129
 function PlayerHandStateWeapon:inventory_changed(unit, event)
 	if event == "equip" then
 		self:_link_weapon(unit:inventory():equipped_unit())
@@ -121,7 +126,7 @@ function PlayerHandStateWeapon:inventory_changed(unit, event)
 	self._weapon_assist_toggle = nil
 end
 
--- Lines 122-143
+-- Lines 131-152
 function PlayerHandStateWeapon:at_exit(next_state)
 	managers.player:player_unit():inventory():remove_listener("PlayerHandStateWeapon_" .. tostring(self:hsm():hand_id()))
 
@@ -140,7 +145,7 @@ function PlayerHandStateWeapon:at_exit(next_state)
 	PlayerHandStateWeapon.super.at_exit(self, next_state)
 end
 
--- Lines 145-151
+-- Lines 154-160
 function PlayerHandStateWeapon:set_wanted_weapon_kick(amount)
 	if alive(self._weapon_unit) and tweak_data.vr.weapon_kick.exclude_list[self._weapon_id] then
 		return
@@ -149,17 +154,17 @@ function PlayerHandStateWeapon:set_wanted_weapon_kick(amount)
 	self._wanted_weapon_kick = math.min((self._wanted_weapon_kick or 0) + amount * tweak_data.vr.weapon_kick.kick_mul, tweak_data.vr.weapon_kick.max_kick)
 end
 
--- Lines 153-155
+-- Lines 162-164
 function PlayerHandStateWeapon:assist_position()
 	return self._assist_position
 end
 
--- Lines 157-159
+-- Lines 166-168
 function PlayerHandStateWeapon:assist_grip()
 	return self._assist_grip
 end
 
--- Lines 162-168
+-- Lines 171-177
 function PlayerHandStateWeapon:lock_hand_orientation(position, rotation)
 	if not position or not rotation then
 		self._locked_hand_orientation = nil
@@ -171,7 +176,7 @@ function PlayerHandStateWeapon:lock_hand_orientation(position, rotation)
 	end
 end
 
--- Lines 170-191
+-- Lines 179-200
 function PlayerHandStateWeapon:link_arrow_unit(weap_base)
 	if not weap_base or alive(self._arrow_unit) then
 		return
@@ -198,7 +203,7 @@ function PlayerHandStateWeapon:link_arrow_unit(weap_base)
 	self._hand_unit:melee():set_custom_unit(self._arrow_unit)
 end
 
--- Lines 193-203
+-- Lines 202-212
 function PlayerHandStateWeapon:unlink_arrow_unit()
 	if not alive(self._arrow_unit) then
 		return
@@ -218,7 +223,7 @@ local weapon_pos = Vector3()
 local weapon_rot = Rotation()
 local pen = Draw:pen()
 
--- Lines 210-414
+-- Lines 219-423
 function PlayerHandStateWeapon:update(t, dt)
 	mvector3.set(weapon_pos, self:hsm():position())
 
@@ -419,7 +424,7 @@ function PlayerHandStateWeapon:update(t, dt)
 	end
 end
 
--- Lines 416-418
+-- Lines 425-427
 function PlayerHandStateWeapon:set_warping(warping)
 	self._warping = warping
 end

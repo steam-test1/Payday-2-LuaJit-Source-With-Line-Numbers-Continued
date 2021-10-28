@@ -26,7 +26,6 @@ require("lib/managers/hud/HUDWaitingLegend")
 require("lib/managers/hud/HUDStageEndCrimeSpreeScreen")
 require("lib/managers/hud/HUDStatsScreenSkirmish")
 require("lib/managers/hud/HUDLootScreenSkirmish")
-require("lib/managers/hud/HUDMutator")
 
 HUDManager.disabled = {
 	[Idstring("guis/player_hud"):key()] = true,
@@ -633,7 +632,6 @@ function HUDManager:_setup_player_info_hud_pd2()
 	self:_create_hud_chat()
 	self:_create_assault_corner()
 	self:_create_waiting_legend(hud)
-	self:_create_mutator(hud)
 end
 
 -- Lines 683-694
@@ -1246,28 +1244,6 @@ end
 -- Lines 1340-1342
 function HUDManager:modify_heist_time(time)
 	self._hud_heist_timer:modify_time(time)
-end
-
--- Lines 1346-1355
-function HUDManager:_create_mutator(hud)
-	if managers.mutators:is_mutator_active(MutatorBirthday) and not _G.IS_VR then
-		hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
-		self._hud_mutator = HUDMutator:new(hud)
-	end
-end
-
--- Lines 1357-1366
-function HUDManager:add_buff(buff_id, name_id, color, time_left, show_time_left)
-	if not _G.IS_VR then
-		self._hud_mutator:add_buff(buff_id, name_id, color, time_left, show_time_left)
-	end
-end
-
--- Lines 1368-1377
-function HUDManager:update_mutator_hud(t, dt)
-	if not _G.IS_VR then
-		self._hud_mutator:update(t, dt)
-	end
 end
 
 -- Lines 1382-1385

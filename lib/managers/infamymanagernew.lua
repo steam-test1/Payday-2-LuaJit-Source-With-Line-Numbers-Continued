@@ -87,7 +87,7 @@ function InfamyManager:reward_item(global_value, category, item_id)
 	managers.blackmarket:add_to_inventory(global_value, category, item_id)
 end
 
--- Lines 82-103
+-- Lines 138-159
 function InfamyManager:unlock_item(item)
 	local infamy_item = tweak_data.infamy.items[item]
 
@@ -114,12 +114,12 @@ function InfamyManager:unlock_item(item)
 	end
 end
 
--- Lines 105-107
+-- Lines 161-163
 function InfamyManager:owned(item)
 	return self._global.unlocks[item] or false
 end
 
--- Lines 109-118
+-- Lines 165-174
 function InfamyManager:available(item)
 	local current_rank = managers.experience:current_rank()
 
@@ -132,7 +132,7 @@ function InfamyManager:available(item)
 	return false
 end
 
--- Lines 120-125
+-- Lines 176-181
 function InfamyManager:select_join_stinger(join_stinger)
 	local stinger_data = self._global.join_stingers[join_stinger]
 
@@ -141,26 +141,26 @@ function InfamyManager:select_join_stinger(join_stinger)
 	end
 end
 
--- Lines 127-129
+-- Lines 183-185
 function InfamyManager:selected_join_stinger()
 	return self._global.selected_join_stinger
 end
 
--- Lines 131-134
+-- Lines 187-190
 function InfamyManager:selected_join_stinger_index()
 	local stinger_data = self._global.join_stingers[self._global.selected_join_stinger]
 
 	return stinger_data and stinger_data.index or 0
 end
 
--- Lines 136-139
+-- Lines 192-195
 function InfamyManager:is_join_stinger_unlocked(stinger_id)
 	local stinger_data = self._global.join_stingers[stinger_id]
 
 	return stinger_data and stinger_data.unlocked or false
 end
 
--- Lines 141-149
+-- Lines 197-205
 function InfamyManager:unlock_join_stinger(stinger_id)
 	local stinger_data = self._global.join_stingers[stinger_id]
 
@@ -173,7 +173,7 @@ function InfamyManager:unlock_join_stinger(stinger_id)
 	end
 end
 
--- Lines 151-163
+-- Lines 207-219
 function InfamyManager:get_unlocked_join_stingers()
 	local unlocked_stingers = {}
 	local stinger_data = nil
@@ -189,7 +189,7 @@ function InfamyManager:get_unlocked_join_stingers()
 	return unlocked_stingers
 end
 
--- Lines 165-175
+-- Lines 221-231
 function InfamyManager:get_all_join_stingers()
 	local all_stingers = {}
 	local join_stinger_data = nil
@@ -206,7 +206,7 @@ function InfamyManager:get_all_join_stingers()
 	return all_stingers
 end
 
--- Lines 177-182
+-- Lines 233-238
 function InfamyManager:get_join_stinger_name_id(stinger_name)
 	local item_id = string.format("infamy_stinger_%03d", stinger_name)
 	local item_tweak = tweak_data.infamy.items[item_id]
@@ -214,7 +214,7 @@ function InfamyManager:get_join_stinger_name_id(stinger_name)
 	return item_tweak and item_tweak.name_id or "menu_" .. item_id .. "_name"
 end
 
--- Lines 184-193
+-- Lines 240-249
 function InfamyManager:get_infamy_card_id_and_rect()
 	local texture_id = "guis/dlcs/infamous/textures/pd2/infamous_tree/infamy_card_display"
 	local inf_rank = math.min(managers.experience:current_rank(), tweak_data.infamy.ranks - 1) - 1
@@ -230,7 +230,7 @@ function InfamyManager:get_infamy_card_id_and_rect()
 	return texture_id, texture_rect
 end
 
--- Lines 195-200
+-- Lines 251-256
 function InfamyManager:reset_items()
 	self:_reset_points()
 
@@ -238,7 +238,7 @@ function InfamyManager:reset_items()
 	self._global.reset_message = true
 end
 
--- Lines 202-210
+-- Lines 258-266
 function InfamyManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -251,7 +251,7 @@ function InfamyManager:check_reset_message()
 	end
 end
 
--- Lines 212-223
+-- Lines 268-279
 function InfamyManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -263,7 +263,7 @@ function InfamyManager:save(data)
 	data.InfamyManager = state
 end
 
--- Lines 225-255
+-- Lines 281-333
 function InfamyManager:load(data, version)
 	local state = data.InfamyManager
 
@@ -298,7 +298,7 @@ function InfamyManager:load(data, version)
 	end
 end
 
--- Lines 257-282
+-- Lines 335-360
 function InfamyManager:_verify_loaded_data()
 	local tree_map = {}
 
@@ -331,7 +331,7 @@ function InfamyManager:_verify_loaded_data()
 	end
 end
 
--- Lines 284-287
+-- Lines 362-365
 function InfamyManager:reset()
 	Global.infamy_manager = nil
 

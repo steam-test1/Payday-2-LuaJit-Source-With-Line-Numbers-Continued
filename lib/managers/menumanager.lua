@@ -1404,11 +1404,6 @@ function MenuManager:leave_online_menu()
 	if self:is_x360() or self:is_xb1() then
 		managers.user:on_exit_online_menus()
 	end
-
-	if managers.mutators:get_enabled_active_mutator_category() == "event" then
-		managers.mutators:reset_all_mutators()
-		managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
-	end
 end
 
 -- Lines 1466-1470
@@ -1452,7 +1447,6 @@ function MenuManager:on_leave_lobby()
 	managers.gage_assignment:deactivate_assignments()
 	managers.crime_spree:on_left_lobby()
 	managers.skirmish:on_left_lobby()
-	managers.music:post_event(managers.music:jukebox_menu_track("mainmenu"))
 end
 
 -- Lines 1517-1567
@@ -1936,16 +1930,6 @@ end
 -- Lines 1987-1989
 function MenuCallbackHandler:is_multiplayer()
 	return not Global.game_settings.single_player
-end
-
--- Lines 1991-1993
-function MenuCallbackHandler:is_event()
-	return managers.mutators:get_enabled_active_mutator_category() == "event"
-end
-
--- Lines 1994-1996
-function MenuCallbackHandler:is_not_event()
-	return not self:is_event()
 end
 
 -- Lines 2000-2007
@@ -3283,14 +3267,6 @@ function MenuCallbackHandler:play_single_player()
 
 	managers.network:host_game()
 	Network:set_server()
-
-	if managers.mutators:get_enabled_active_mutator_category() == "event" then
-		managers.mutators:reset_all_mutators()
-	end
-
-	managers.crimenet:set_sidebar_exclude_filter({
-		"menu_event_a10th_info"
-	})
 end
 
 -- Lines 3318-3330
@@ -3301,45 +3277,6 @@ function MenuCallbackHandler:play_online_game()
 	if managers.network.matchmake and managers.network.matchmake.load_user_filters then
 		managers.network.matchmake:load_user_filters()
 	end
-
-	if managers.mutators:get_enabled_active_mutator_category() == "event" then
-		managers.mutators:reset_all_mutators()
-	end
-
-	managers.crimenet:set_sidebar_exclude_filter({
-		"menu_event_a10th_info"
-	})
-end
-
--- Lines 3333-3350
-function MenuCallbackHandler:play_event_game()
-	Global.game_settings.single_player = false
-	Global.game_settings.team_ai_option = math.min(Global.game_settings.team_ai_option, 1)
-
-	if managers.network.matchmake and managers.network.matchmake.load_user_filters then
-		managers.network.matchmake:load_user_filters()
-
-		Global.game_settings.search_mutated_lobbies = true
-		Global.game_settings.search_event_lobbies_override = true
-		Global.game_settings.gamemode_filter = GamemodeStandard.id
-	end
-
-	local mutator_manager = managers.mutators
-
-	managers.mutators:reset_all_mutators()
-	mutator_manager:set_enabled(mutator_manager:get_mutator(MutatorBirthday), true)
-	managers.menu:active_menu().callback_handler:_update_mutators_info()
-	managers.music:post_event(tweak_data.mutators.birthday.event_track)
-	managers.features:announce_feature("a10th_event_explanation")
-	managers.crimenet:set_sidebar_exclude_filter({
-		"menu_cn_short",
-		"menu_cn_chill",
-		"menu_cn_side_jobs",
-		"menu_cn_casino",
-		"menu_mutators",
-		"cn_crime_spree",
-		"menu_cn_skirmish"
-	})
 end
 
 -- Lines 3353-3367
@@ -4524,6 +4461,17 @@ function MenuCallbackHandler:set_default_options()
 	}
 
 	managers.menu:show_default_option_dialog(params)
+end
+
+-- Lines 4459-4467
+function MenuCallbackHandler:sbz_account_login_webpage()
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		if MenuCallbackHandler:is_overlay_enabled() then
+			Steam:overlay_activate("url", tweak_data.gui.sbz_account_webpage)
+		else
+			managers.menu:show_enable_steam_overlay()
+		end
+	end
 end
 
 -- Lines 4470-4476
@@ -9984,18 +9932,6 @@ function MenuCrimeNetFiltersInitiator:update_node(node)
 		node:item("max_spree_difference_filter"):set_visible(self:is_crime_spree())
 		node:item("skirmish_wave_filter"):set_visible(self:is_skirmish())
 		node:item("job_plan_filter"):set_visible(not self:is_skirmish())
-
-		if Global.game_settings.search_event_lobbies_override then
-			node:item("toggle_mutated_lobby"):set_visible(false)
-			node:item("toggle_mutated_lobby"):set_enabled(false)
-			node:item("gamemode_filter"):set_visible(false)
-			node:item("gamemode_filter"):set_enabled(false)
-			node:item("divider_gamemode"):set_visible(false)
-		else
-			node:item("gamemode_filter"):set_visible(true)
-			node:item("gamemode_filter"):set_enabled(true)
-			node:item("divider_gamemode"):set_visible(true)
-		end
 	elseif MenuCallbackHandler:is_xb1() then
 		if Global.game_settings.search_crimespree_lobbies then
 			print("GN: CS lobby set to true")

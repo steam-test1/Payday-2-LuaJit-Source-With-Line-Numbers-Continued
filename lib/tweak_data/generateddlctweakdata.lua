@@ -1,4 +1,4 @@
--- Lines 3-967
+-- Lines 3-976
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -1435,6 +1435,38 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "gloves",
 			item_entry = "heat",
+			amount = 1
+		}
+	}
+	self.trik_bundle = {
+		free = true,
+		content = {}
+	}
+	self.trik_bundle.content.loot_global_value = "trik"
+	self.trik_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "tophatske",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "tophatskered",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "tophatskeblue",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "classyske",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_pumpkin",
 			amount = 1
 		}
 	}
