@@ -38,17 +38,21 @@ function MolotovGrenade:_detonate_on_client(normal)
 	end
 end
 
--- Lines 43-51
+-- Lines 43-58
 function MolotovGrenade:_spawn_environment_fire(normal)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
 	local data = tweak_data.env_effect:molotov_fire()
 
 	EnvironmentFire.spawn(position, rotation, data, normal, self._thrower_unit, 0, 1)
-	self._unit:set_slot(0)
+	self._unit:set_visible(false)
+
+	if Network:is_server() then
+		self.burn_stop_time = TimerManager:game():time() + data.burn_duration + data.fire_dot_data.dot_length + 1
+	end
 end
 
--- Lines 53-59
+-- Lines 60-66
 function MolotovGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -57,7 +61,7 @@ function MolotovGrenade:bullet_hit()
 	self:_detonate()
 end
 
--- Lines 62-82
+-- Lines 69-89
 function MolotovGrenade:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return
@@ -74,5 +78,16 @@ function MolotovGrenade:add_damage_result(unit, is_dead, damage_percent)
 
 	if is_dead then
 		self:_check_achievements(unit, is_dead, damage_percent, 1, 1)
+	end
+end
+
+-- Lines 93-100
+function MolotovGrenade:update(unit, t, dt)
+	MolotovGrenade.super.update(self, unit, t, dt)
+
+	local is_burn_finish = self.burn_stop_time and self.burn_stop_time < t
+
+	if is_burn_finish then
+		self._unit:set_slot(0)
 	end
 end

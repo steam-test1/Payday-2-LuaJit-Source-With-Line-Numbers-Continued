@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-8221
+-- Lines 10-8246
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -7527,6 +7527,15 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		texture_bundle_folder = "a10th",
 		hide_unavailable = true
 	}
+	self.masks.elegantteeth = {
+		unit = "units/pd2_dlc_sbzac2/masks/msk_elegantteeth/msk_elegantteeth",
+		name_id = "bm_msk_elegantteeth",
+		pcs = {},
+		value = 0,
+		dlc = "sbzac_elegantteeth",
+		global_value = "sbzac_elegantteeth",
+		texture_bundle_folder = "sbzac2"
+	}
 	self.masks.boss = {
 		unit = "units/pd2_dlc_srtr/masks/msk_boss/msk_boss",
 		name_id = "bm_msk_boss",
@@ -7723,6 +7732,16 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		preview_oobb_object = "g_mask",
 		global_value = "cctp",
 		texture_bundle_folder = "cctp"
+	}
+	self.masks.overkillpunk = {
+		unit = "units/pd2_dlc_in33/masks/msk_overkillpunk/msk_in33_overkillpunk",
+		name_id = "bm_msk_in33_overkillpunk",
+		pcs = {},
+		value = 0,
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		global_value = "in33",
+		texture_bundle_folder = "in33"
 	}
 	self.masks.tophatske = {
 		unit = "units/pd2_dlc_trik/masks/msk_tophatske/msk_tophatske",

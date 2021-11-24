@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-834
+-- Lines 78-853
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -133,7 +133,7 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		jumpsuit = "heat",
 		hiphop = "bonemittens",
 		gunslinger = "heist_default",
-		xmas_tuxedo = "heist_default",
+		overkillpunk = "heist_default",
 		t800 = "heist_default",
 		winter_suit = "sneak",
 		hippie = "rainbow_mittens",
@@ -144,6 +144,7 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		general = "heist_default",
 		highinttech = "heist_default",
 		cybertrench = "heist_default",
+		xmas_tuxedo = "heist_default",
 		mariachi = "mariatchi",
 		poolrepair = "heist_default",
 		traditional = "heist_default",
@@ -167,7 +168,8 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		jail_pd2_clan = "heist_default",
 		esport = "esport",
 		murky_suit = "murky",
-		cyberhoodie = "heist_default"
+		cyberhoodie = "heist_default",
+		elegantscarf = "heist_default"
 	}
 	self.gloves.default = {
 		name_id = "bm_gloves_default",
@@ -213,6 +215,15 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		texture_bundle_folder = "hnd",
 		unit = "units/pd2_dlc_hnd/characters/hnd_glv_sneakgloves/hnd_glv_sneakgloves",
 		third_material = "units/pd2_dlc_hnd/characters/hnd_glv_sneakgloves/hnd_glv_sneakgloves_third"
+	}
+	self.gloves.overkillpunk = {
+		name_id = "bm_gloves_overkillpunk",
+		desc_id = "bm_gloves_overkillpunk_desc",
+		texture_bundle_folder = "in33",
+		global_value = "in33",
+		sort_number = 1,
+		unit = "units/pd2_dlc_in33/characters/glv_overkillpunk/glv_overkillpunk",
+		third_material = "units/pd2_dlc_in33/characters/glv_overkillpunk/glv_overkillpunk_third"
 	}
 	self.gloves.murky = {
 		name_id = "bm_gloves_murky",

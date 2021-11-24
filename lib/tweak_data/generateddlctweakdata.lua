@@ -1,4 +1,4 @@
--- Lines 3-976
+-- Lines 3-1000
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -506,6 +506,12 @@ function DLCTweakData:init_generated()
 	}
 	self.in32_bundle.content.loot_global_value = "in32"
 	self.in32_bundle.content.loot_drops = {}
+	self.in33_bundle = {
+		free = true,
+		content = {}
+	}
+	self.in33_bundle.content.loot_global_value = "in33"
+	self.in33_bundle.content.loot_drops = {}
 	self.inf_bundle = {
 		free = true,
 		content = {}
@@ -1074,6 +1080,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.sbzac2_bundle = {
+		dlc = "has_sbzac2",
+		content = {}
+	}
+	self.sbzac2_bundle.content.loot_global_value = "sbzac2"
+	self.sbzac2_bundle.content.loot_drops = {}
 	self.scm_bundle = {
 		free = true,
 		content = {}

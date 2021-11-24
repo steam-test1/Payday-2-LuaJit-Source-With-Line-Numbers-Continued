@@ -14,8 +14,6 @@ end
 
 -- Lines 39-82
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
-	print("[ManageSpawnedUnits] spawn_unit", unit_id, unit)
-
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawn_unit = nil
 
@@ -100,7 +98,6 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 		return
 	end
 
-	print("[ManageSpawnedUnits] spawn_and_link_unit", joint_table, unit_id, unit)
 	self:spawn_unit(unit_id, self[joint_table][1], unit)
 
 	self._sync_spawn_and_link = self._sync_spawn_and_link or {}

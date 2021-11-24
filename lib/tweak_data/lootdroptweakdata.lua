@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2270
+-- Lines 5-2277
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1825,10 +1825,15 @@ function LootDropTweakData:init(tweak_data)
 		self.global_values.srtr.unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock"
 	end
 
+	self.global_values.sbzac_elegantteeth = self.global_values.sbzac2
+	self.global_values.sbzac_wpn_fps_upg_charm_skullz = self.global_values.sbzac2
+	self.global_values.sbzac_elegantscarf = self.global_values.sbzac2
+	self.global_values.sbzac_color_sbzac2_01 = self.global_values.sbzac2
+
 	self:_create_global_value_list_map()
 end
 
--- Lines 2272-2277
+-- Lines 2279-2284
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

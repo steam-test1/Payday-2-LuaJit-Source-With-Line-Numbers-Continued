@@ -1,4 +1,4 @@
--- Lines 1-2355
+-- Lines 1-2500
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -2923,6 +2923,51 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.clown_2.characters.ecp_male = clown_2_characters_male_fat
+	self.player_styles.overkillpunk = {
+		name_id = "bm_suit_overkillpunk",
+		desc_id = "bm_suit_overkillpunk_desc",
+		texture_bundle_folder = "in33",
+		global_value = "in33",
+		body_replacement = body_replacement_standard,
+		third_body_replacement = body_replacement_standard,
+		unit = "units/pd2_dlc_in33/characters/in33_acc_overkillpunk/in33_acc_fps_overkillpunk_male/in33_acc_fps_overkillpunk_male",
+		material_variations = {}
+	}
+	self.player_styles.overkillpunk.material_variations.default = {
+		name_id = "bm_suit_var_overkillpunk_default",
+		global_value = "in33",
+		desc_id = "bm_suit_var_overkillpunk_default_desc"
+	}
+	self.player_styles.overkillpunk.characters = {}
+	local overkillpunk_characters_male = {
+		third_unit = "units/pd2_dlc_in33/characters/in33_acc_overkillpunk/in33_acc_overkillpunk_male_average/in33_acc_overkillpunk_male_average"
+	}
+
+	set_characters_data("overkillpunk", characters_male, overkillpunk_characters_male)
+
+	local overkillpunk_characters_male_big = {
+		third_unit = "units/pd2_dlc_in33/characters/in33_acc_overkillpunk/in33_acc_overkillpunk_male_big/in33_acc_overkillpunk_male_big"
+	}
+
+	set_characters_data("overkillpunk", characters_male_big, overkillpunk_characters_male_big)
+
+	local overkillpunk_characters_female = {
+		third_unit = "units/pd2_dlc_in33/characters/in33_acc_overkillpunk/in33_acc_overkillpunk_female_average/in33_acc_overkillpunk_female_average"
+	}
+
+	set_characters_data("overkillpunk", characters_female, overkillpunk_characters_female)
+
+	local overkillpunk_characters_female_big = {
+		third_unit = "units/pd2_dlc_in33/characters/in33_acc_overkillpunk/in33_acc_overkillpunk_female_fat/in33_acc_overkillpunk_female_fat"
+	}
+
+	set_characters_data("overkillpunk", characters_female_big, overkillpunk_characters_female_big)
+
+	local overkillpunk_characters_male_fat = {
+		third_unit = "units/pd2_dlc_in33/characters/in33_acc_overkillpunk/in33_acc_overkillpunk_male_fat/in33_acc_overkillpunk_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.overkillpunk.characters.ecp_male = overkillpunk_characters_male_fat
 	self.player_styles.classyske = {
 		name_id = "bm_suit_classyske",
 		desc_id = "bm_suit_classyske_desc",
@@ -2984,9 +3029,54 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.classyske.characters.ecp_male = classyske_characters_male_fat
+	self.player_styles.elegantscarf = {
+		name_id = "bm_suit_elegantscarf",
+		desc_id = "bm_suit_elegantscarf_desc",
+		texture_bundle_folder = "sbzac2",
+		global_value = "sbzac_elegantscarf",
+		material_variations = {}
+	}
+	self.player_styles.elegantscarf.material_variations.default = {
+		name_id = "bm_suit_var_elegantscarf_default",
+		global_value = "sbzac_elegantscarf",
+		desc_id = "bm_suit_var_elegantscarf_default_desc"
+	}
+	self.player_styles.elegantscarf.body_replacement = body_replacement_standard
+	self.player_styles.elegantscarf.third_body_replacement = body_replacement_standard
+	self.player_styles.elegantscarf.unit = "units/pd2_dlc_sbzac2/characters/sbzac2_acc_elegantscarf/sbzac2_acc_fps_elegantscarf_male/sbzac2_acc_fps_elegantscarf_male"
+	self.player_styles.elegantscarf.characters = {}
+	local elegantscarf_characters_male = {
+		third_unit = "units/pd2_dlc_sbzac2/characters/sbzac2_acc_elegantscarf/sbzac2_acc_elegantscarf_male_average/sbzac2_acc_elegantscarf_male_average"
+	}
+
+	set_characters_data("elegantscarf", characters_male, elegantscarf_characters_male)
+
+	local elegantscarf_characters_male_big = {
+		third_unit = "units/pd2_dlc_sbzac2/characters/sbzac2_acc_elegantscarf/sbzac2_acc_elegantscarf_male_big/sbzac2_acc_elegantscarf_male_big"
+	}
+
+	set_characters_data("elegantscarf", characters_male_big, elegantscarf_characters_male_big)
+
+	local elegantscarf_characters_female = {
+		third_unit = "units/pd2_dlc_sbzac2/characters/sbzac2_acc_elegantscarf/sbzac2_acc_elegantscarf_female_average/sbzac2_acc_elegantscarf_female_average"
+	}
+
+	set_characters_data("elegantscarf", characters_female, elegantscarf_characters_female)
+
+	local elegantscarf_characters_female_big = {
+		third_unit = "units/pd2_dlc_sbzac2/characters/sbzac2_acc_elegantscarf/sbzac2_acc_elegantscarf_female_fat/sbzac2_acc_elegantscarf_female_fat"
+	}
+
+	set_characters_data("elegantscarf", characters_female_big, elegantscarf_characters_female_big)
+
+	local elegantscarf_characters_male_fat = {
+		third_unit = "units/pd2_dlc_sbzac2/characters/sbzac2_acc_elegantscarf/sbzac2_acc_elegantscarf_male_fat/sbzac2_acc_elegantscarf_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.elegantscarf.characters.ecp_male = elegantscarf_characters_male_fat
 end
 
--- Lines 2357-2379
+-- Lines 2502-2524
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -3011,7 +3101,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 2381-2406
+-- Lines 2526-2551
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -3039,7 +3129,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 2408-2429
+-- Lines 2553-2574
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3066,7 +3156,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 2431-2467
+-- Lines 2576-2612
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3110,7 +3200,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 2470-2499
+-- Lines 2615-2644
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -3141,7 +3231,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 2501-2507
+-- Lines 2646-2652
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -3150,7 +3240,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 2509-2524
+-- Lines 2654-2669
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -3170,11 +3260,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 2526-2562
+-- Lines 2671-2707
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 2530-2559
+	-- Lines 2675-2704
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

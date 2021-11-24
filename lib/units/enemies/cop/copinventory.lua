@@ -110,19 +110,25 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 104-114
+-- Lines 104-125
 function CopInventory:drop_shield()
-	if alive(self._shield_unit) then
-		self._shield_unit:unlink()
+	local shield_unit = self._shield_unit
+	self._shield_unit = nil
 
-		if self._shield_unit:damage() then
-			self._shield_unit:damage():run_sequence_simple("enable_body")
-			managers.enemy:register_shield(self._shield_unit)
+	if alive(shield_unit) then
+		shield_unit:unlink()
+
+		local u_dmg = shield_unit:damage()
+
+		if u_dmg and u_dmg:has_sequence("enable_body") then
+			u_dmg:run_sequence_simple("enable_body")
 		end
+
+		managers.enemy:register_shield(shield_unit)
 	end
 end
 
--- Lines 118-133
+-- Lines 129-144
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -140,7 +146,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 137-146
+-- Lines 148-157
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 

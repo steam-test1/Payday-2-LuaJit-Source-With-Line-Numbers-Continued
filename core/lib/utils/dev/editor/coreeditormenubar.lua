@@ -1101,17 +1101,16 @@ function CoreEditor:toggle_show_markers(data)
 	self._ews_editor_frame:layout()
 end
 
--- Lines 1001-1003
+-- Lines 1001-1005
 function CoreEditor:on_using_the_editor()
-	EWS:launch_url("https://confluence.starbreeze.com/display/PD2/Diesel+-+Tutorials+and+fundamentals")
 end
 
--- Lines 1005-1007
+-- Lines 1007-1009
 function CoreEditor:on_video_tutorials()
 	os.execute("explorer " .. "\\\\dallas\\Shared\\Starbreeze_Video_Tutorials" .. "\"")
 end
 
--- Lines 1009-1011
+-- Lines 1011-1013
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
 

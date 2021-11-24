@@ -222,14 +222,27 @@ function DoctorBagBase:_take(unit)
 	return taken
 end
 
--- Lines 230-233
+-- Lines 230-249
 function DoctorBagBase:_set_empty()
 	self._empty = true
+	local unit = self._unit
 
-	self._unit:set_slot(0)
+	if Network:is_server() or unit:id() == -1 then
+		unit:set_slot(0)
+	else
+		unit:set_visible(false)
+
+		local int_ext = unit:interaction()
+
+		if int_ext then
+			int_ext:set_active(false)
+		end
+
+		unit:set_enabled(false)
+	end
 end
 
--- Lines 235-240
+-- Lines 251-256
 function DoctorBagBase:_get_upgrade_levels(bits)
 	local dmg_reduction = Bitwise:rshift(bits, DoctorBagBase.damage_reduce_lvl_shift)
 	local amount_lvl = Bitwise:rshift(bits, DoctorBagBase.amount_upgrade_lvl_shift) % 2^DoctorBagBase.amount_upgrade_lvl_shift
@@ -237,7 +250,7 @@ function DoctorBagBase:_get_upgrade_levels(bits)
 	return amount_lvl, dmg_reduction
 end
 
--- Lines 244-249
+-- Lines 260-265
 function DoctorBagBase:save(data)
 	local state = {
 		amount = self._amount,
@@ -246,7 +259,7 @@ function DoctorBagBase:save(data)
 	data.DoctorBagBase = state
 end
 
--- Lines 251-261
+-- Lines 267-277
 function DoctorBagBase:load(data)
 	local state = data.DoctorBagBase
 	self._amount = state.amount
@@ -260,7 +273,7 @@ function DoctorBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 265-270
+-- Lines 281-286
 function DoctorBagBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -271,7 +284,7 @@ end
 
 CustomDoctorBagBase = CustomDoctorBagBase or class(DoctorBagBase)
 
--- Lines 275-285
+-- Lines 291-301
 function CustomDoctorBagBase:init(unit)
 	CustomDoctorBagBase.super.init(self, unit)
 
@@ -286,7 +299,7 @@ function CustomDoctorBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 287-295
+-- Lines 303-311
 function CustomDoctorBagBase:_set_empty()
 	self._empty = true
 

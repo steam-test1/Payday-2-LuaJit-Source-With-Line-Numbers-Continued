@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4731
+-- Lines 10-4763
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8364,6 +8364,50 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "jesterskulls",
+			amount = 1
+		}
+	}
+	self.sbzac_elegantteeth = {
+		content = {}
+	}
+	self.sbzac_elegantteeth.content.loot_global_value = "sbzac_elegantteeth"
+	self.sbzac_elegantteeth.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "elegantteeth",
+			amount = 1
+		}
+	}
+	self.sbzac_wpn_fps_upg_charm_skullz = {
+		content = {}
+	}
+	self.sbzac_wpn_fps_upg_charm_skullz.content.loot_global_value = "sbzac_wpn_fps_upg_charm_skullz"
+	self.sbzac_wpn_fps_upg_charm_skullz.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_skullz",
+			amount = 1
+		}
+	}
+	self.sbzac_elegantscarf = {
+		content = {}
+	}
+	self.sbzac_elegantscarf.content.loot_global_value = "sbzac_elegantscarf"
+	self.sbzac_elegantscarf.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "elegantscarf",
+			amount = 1
+		}
+	}
+	self.sbzac_color_sbzac2_01 = {
+		content = {}
+	}
+	self.sbzac_color_sbzac2_01.content.loot_global_value = "sbzac_color_sbzac2_01"
+	self.sbzac_color_sbzac2_01.content.loot_drops = {
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_sbzac2_01",
 			amount = 1
 		}
 	}

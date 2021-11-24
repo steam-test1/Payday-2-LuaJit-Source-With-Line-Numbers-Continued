@@ -232,21 +232,28 @@ function AmmoBagBase:_take_ammo(unit)
 	return taken
 end
 
--- Lines 232-244
+-- Lines 232-252
 function AmmoBagBase:_set_empty()
 	self._ammo_amount = 0
 	self._empty = true
+	local unit = self._unit
 
-	if Network:is_server() then
-		self._unit:set_slot(0)
+	if Network:is_server() or unit:id() == -1 then
+		unit:set_slot(0)
 	else
-		self._unit:set_enabled(false)
-		self._unit:set_visible(false)
-		self._unit:interaction():set_active(false)
+		unit:set_visible(false)
+
+		local int_ext = unit:interaction()
+
+		if int_ext then
+			int_ext:set_active(false)
+		end
+
+		unit:set_enabled(false)
 	end
 end
 
--- Lines 248-254
+-- Lines 256-262
 function AmmoBagBase:save(data)
 	local state = {
 		ammo_amount = self._ammo_amount,
@@ -256,7 +263,7 @@ function AmmoBagBase:save(data)
 	data.AmmoBagBase = state
 end
 
--- Lines 256-267
+-- Lines 264-275
 function AmmoBagBase:load(data)
 	local state = data.AmmoBagBase
 	self._ammo_amount = state.ammo_amount
@@ -271,12 +278,12 @@ function AmmoBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 269-271
+-- Lines 277-279
 function AmmoBagBase:round_value(val)
 	return math.floor(val * dec_mul) / dec_mul
 end
 
--- Lines 275-280
+-- Lines 283-288
 function AmmoBagBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -287,7 +294,7 @@ end
 
 CustomAmmoBagBase = CustomAmmoBagBase or class(AmmoBagBase)
 
--- Lines 285-295
+-- Lines 293-303
 function CustomAmmoBagBase:init(unit)
 	CustomAmmoBagBase.super.init(self, unit)
 
@@ -302,7 +309,7 @@ function CustomAmmoBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 297-305
+-- Lines 305-313
 function CustomAmmoBagBase:_set_empty()
 	self._empty = true
 

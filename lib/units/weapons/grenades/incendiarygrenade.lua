@@ -38,7 +38,7 @@ function IncendiaryGrenade:_detonate_on_client(normal)
 	end
 end
 
--- Lines 36-49
+-- Lines 36-54
 function IncendiaryGrenade:_spawn_environment_fire(normal)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
@@ -50,10 +50,12 @@ function IncendiaryGrenade:_spawn_environment_fire(normal)
 	EnvironmentFire.spawn(position, rotation, data, normal, self._thrower_unit, 0, 1)
 	self._unit:set_visible(false)
 
-	self.burn_stop_time = TimerManager:game():time() + data.fire_dot_data.dot_length + 1
+	if Network:is_server() then
+		self.burn_stop_time = TimerManager:game():time() + data.burn_duration + data.fire_dot_data.dot_length + 1
+	end
 end
 
--- Lines 51-57
+-- Lines 56-62
 function IncendiaryGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -62,7 +64,7 @@ function IncendiaryGrenade:bullet_hit()
 	self:_detonate()
 end
 
--- Lines 60-80
+-- Lines 65-85
 function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return
@@ -82,7 +84,7 @@ function IncendiaryGrenade:add_damage_result(unit, is_dead, damage_percent)
 	end
 end
 
--- Lines 83-92
+-- Lines 88-97
 function IncendiaryGrenade:update(unit, t, dt)
 	GrenadeBase.update(self, unit, t, dt)
 

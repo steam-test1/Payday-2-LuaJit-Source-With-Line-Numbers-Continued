@@ -1,4 +1,4 @@
--- Lines 5-1731
+-- Lines 5-1791
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.a10th = {
 		name_id = "bm_global_value_a10th",
@@ -320,6 +320,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		sort_number = 702,
 		category = "infamous"
 	}
+	self.global_values.in33 = {
+		name_id = "bm_global_value_in33",
+		desc_id = "menu_l_global_value_in33",
+		unlock_id = "bm_global_value_in33_unlock",
+		color = tweak_data.screen_colors.infamous_color,
+		dlc = true,
+		free = true,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 703,
+		category = "infamous"
+	}
 	self.global_values.inf = {
 		name_id = "bm_global_value_inf",
 		desc_id = "menu_l_global_value_inf",
@@ -607,6 +623,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		track = true,
 		sort_number = 508,
 		category = "dlc"
+	}
+	self.global_values.sbzac2 = {
+		name_id = "bm_global_value_sbzac2",
+		desc_id = "menu_l_global_value_sbzac2",
+		unlock_id = "bm_global_value_sbzac2_unlock",
+		color = tweak_data.screen_colors.community_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = -4,
+		category = "pd2_clan"
 	}
 	self.global_values.scm = {
 		name_id = "bm_global_value_scm",

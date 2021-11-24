@@ -39,12 +39,27 @@ function Pickup:set_active(active)
 	self._active = active
 end
 
--- Lines 38-40
+-- Lines 38-56
 function Pickup:delete_unit()
-	World:delete_unit(self._unit)
+	local unit = self._unit
+
+	if Network:is_server() or unit:id() == -1 then
+		World:delete_unit(unit)
+	else
+		unit:set_visible(false)
+		self:set_active(false)
+
+		local int_ext = unit:interaction()
+
+		if int_ext then
+			int_ext:set_active(false)
+		end
+
+		unit:set_enabled(false)
+	end
 end
 
--- Lines 42-46
+-- Lines 58-62
 function Pickup:save(data)
 	local state = {
 		active = self._active
@@ -52,7 +67,7 @@ function Pickup:save(data)
 	data.Pickup = state
 end
 
--- Lines 48-53
+-- Lines 64-69
 function Pickup:load(data)
 	local state = data.Pickup
 
@@ -61,10 +76,10 @@ function Pickup:load(data)
 	end
 end
 
--- Lines 55-56
+-- Lines 71-72
 function Pickup:sync_net_event(event, peer)
 end
 
--- Lines 58-59
+-- Lines 74-75
 function Pickup:destroy(unit)
 end

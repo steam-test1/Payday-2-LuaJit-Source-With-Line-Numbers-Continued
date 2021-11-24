@@ -4311,7 +4311,7 @@ end
 
 SpecializationTierItem = SpecializationTierItem or class(SpecializationItem)
 
--- Lines 3993-4078
+-- Lines 3993-4082
 function SpecializationTierItem:init(tier_data, tree_panel, tree, tier, x, y, w, h)
 	SpecializationTierItem.super.init(self)
 
@@ -4468,62 +4468,62 @@ function SpecializationTierItem:init(tier_data, tree_panel, tree, tier, x, y, w,
 	self:refresh()
 end
 
--- Lines 4080-4082
+-- Lines 4084-4086
 function SpecializationTierItem:name_string()
 	return self._name_string
 end
 
--- Lines 4084-4086
+-- Lines 4088-4090
 function SpecializationTierItem:desc_string()
 	return self._desc_string
 end
 
--- Lines 4088-4090
+-- Lines 4092-4094
 function SpecializationTierItem:desc_custom_color()
 	return nil
 end
 
--- Lines 4092-4094
+-- Lines 4096-4098
 function SpecializationTierItem:tier()
 	return self._tier
 end
 
--- Lines 4096-4098
+-- Lines 4100-4102
 function SpecializationTierItem:tree()
 	return self._tree
 end
 
--- Lines 4100-4102
+-- Lines 4104-4106
 function SpecializationTierItem:tier_data()
 	return self._tier_data
 end
 
--- Lines 4104-4106
+-- Lines 4108-4110
 function SpecializationTierItem:data()
 	return self._tier_data
 end
 
--- Lines 4108-4110
+-- Lines 4112-4114
 function SpecializationTierItem:panel()
 	return self._tier_panel
 end
 
--- Lines 4112-4114
+-- Lines 4116-4118
 function SpecializationTierItem:alive()
 	return alive(self._tier_panel)
 end
 
--- Lines 4116-4118
+-- Lines 4120-4122
 function SpecializationTierItem:inside(x, y)
 	return self._inside_panel:tree_visible() and self._inside_panel:inside(x, y)
 end
 
--- Lines 4120-4146
+-- Lines 4124-4150
 function SpecializationTierItem:flash()
 	print("SpecializationTierItem:flash()")
 end
 
--- Lines 4148-4171
+-- Lines 4152-4175
 function SpecializationTierItem:update_size(dt, tree_selected)
 	local size = {
 		self._tier_panel:size()
@@ -4551,7 +4551,7 @@ function SpecializationTierItem:update_size(dt, tree_selected)
 	return is_done
 end
 
--- Lines 4173-4256
+-- Lines 4177-4260
 function SpecializationTierItem:refresh()
 	if not alive(self._tier_panel) then
 		return
@@ -4630,7 +4630,7 @@ function SpecializationTierItem:refresh()
 	select_box:set_visible(self._selected)
 end
 
--- Lines 4258-4272
+-- Lines 4262-4276
 function SpecializationTierItem:update_progress(chk_lock, current_points, next_tier_points)
 	if not chk_lock or not self._progress_gui_locked then
 		current_points = current_points or managers.skilltree:get_specialization_value(self._tree, "tiers", "next_tier_data", "current_points")
@@ -4646,12 +4646,12 @@ function SpecializationTierItem:update_progress(chk_lock, current_points, next_t
 	end
 end
 
--- Lines 4274-4276
+-- Lines 4278-4280
 function SpecializationTierItem:set_progress_gui_lock(locked)
 	self._progress_gui_locked = true
 end
 
--- Lines 4278-4282
+-- Lines 4282-4286
 function SpecializationTierItem:trigger()
 	print("STUFF")
 	self:refresh()
@@ -4659,7 +4659,7 @@ end
 
 SpecializationGuiItem = SpecializationGuiItem or class()
 
--- Lines 4287-4296
+-- Lines 4291-4300
 function SpecializationGuiItem:init(main_panel, data, x, y, w, h)
 	self._main_panel = main_panel
 	self._panel = main_panel:panel({
@@ -4675,17 +4675,17 @@ function SpecializationGuiItem:init(main_panel, data, x, y, w, h)
 	self._alpha = 1
 end
 
--- Lines 4298-4300
+-- Lines 4302-4304
 function SpecializationGuiItem:data()
 	return self._data
 end
 
--- Lines 4302-4304
+-- Lines 4306-4308
 function SpecializationGuiItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 4306-4315
+-- Lines 4310-4319
 function SpecializationGuiItem:select(instant, no_sound)
 	if not self._selected then
 		self._selected = true
@@ -4698,7 +4698,7 @@ function SpecializationGuiItem:select(instant, no_sound)
 	end
 end
 
--- Lines 4317-4322
+-- Lines 4321-4326
 function SpecializationGuiItem:deselect(instant)
 	if self._selected then
 		self._selected = false
@@ -4707,7 +4707,7 @@ function SpecializationGuiItem:deselect(instant)
 	self:refresh()
 end
 
--- Lines 4324-4333
+-- Lines 4328-4337
 function SpecializationGuiItem:set_highlight(highlight, no_sound)
 	if self._highlighted ~= highlight then
 		self._highlighted = highlight
@@ -4720,7 +4720,7 @@ function SpecializationGuiItem:set_highlight(highlight, no_sound)
 	end
 end
 
--- Lines 4335-4341
+-- Lines 4339-4345
 function SpecializationGuiItem:refresh()
 	self._alpha = self._selected and 1 or self._highlighted and 0.85 or 0.7
 
@@ -4729,32 +4729,32 @@ function SpecializationGuiItem:refresh()
 	end
 end
 
--- Lines 4343-4345
+-- Lines 4347-4349
 function SpecializationGuiItem:mouse_pressed(button, x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 4347-4349
+-- Lines 4351-4353
 function SpecializationGuiItem:mouse_moved(x, y)
 	return false, "arrow"
 end
 
--- Lines 4351-4352
+-- Lines 4355-4356
 function SpecializationGuiItem:mouse_released(o, button, x, y)
 end
 
--- Lines 4354-4355
+-- Lines 4358-4359
 function SpecializationGuiItem:destroy()
 end
 
--- Lines 4357-4359
+-- Lines 4361-4363
 function SpecializationGuiItem:is_inside_scrollbar(x, y)
 	return false
 end
 
 SpecializationGuiButtonItem = SpecializationGuiButtonItem or class(SpecializationGuiItem)
 
--- Lines 4363-4393
+-- Lines 4367-4397
 function SpecializationGuiButtonItem:init(main_panel, data, x)
 	SpecializationGuiButtonItem.super.init(self, main_panel, data, 0, 0, 10, 10)
 
@@ -4799,17 +4799,17 @@ function SpecializationGuiButtonItem:init(main_panel, data, x)
 	self:set_highlight(false)
 end
 
--- Lines 4395-4397
+-- Lines 4399-4401
 function SpecializationGuiButtonItem:hide()
 	self._panel:hide()
 end
 
--- Lines 4399-4401
+-- Lines 4403-4405
 function SpecializationGuiButtonItem:show()
 	self._panel:show()
 end
 
--- Lines 4403-4409
+-- Lines 4407-4413
 function SpecializationGuiButtonItem:refresh()
 	if managers.menu:is_pc_controller() then
 		self._btn_text:set_color(self._highlighted and self._highlighted_color or self._color)
@@ -4818,22 +4818,22 @@ function SpecializationGuiButtonItem:refresh()
 	self._panel:child("select_rect"):set_visible(self._highlighted)
 end
 
--- Lines 4411-4413
+-- Lines 4415-4417
 function SpecializationGuiButtonItem:visible()
 	return self._panel:visible()
 end
 
--- Lines 4415-4417
+-- Lines 4419-4421
 function SpecializationGuiButtonItem:set_order(prio)
 	self._panel:set_y((prio - 1) * small_font_size + 10)
 end
 
--- Lines 4419-4421
+-- Lines 4423-4425
 function SpecializationGuiButtonItem:set_text_btn_prefix(prefix)
 	self._btn_prefix = prefix
 end
 
--- Lines 4423-4453
+-- Lines 4427-4457
 function SpecializationGuiButtonItem:set_text_params(params)
 	local prefix = self._btn_prefix and managers.localization:get_default_macro(self._btn_prefix) or ""
 	local btn_text = prefix
@@ -4871,12 +4871,12 @@ function SpecializationGuiButtonItem:set_text_params(params)
 	self._btn_text:set_right(self._panel:w())
 end
 
--- Lines 4455-4457
+-- Lines 4459-4461
 function SpecializationGuiButtonItem:btn_text()
 	return self._btn_text:text()
 end
 
--- Lines 4463-4483
+-- Lines 4467-4487
 function SkillTreeGui:_start_rename_skill_switch()
 	if not self._renaming_skill_switch then
 		self._enabled = false
@@ -4906,7 +4906,7 @@ function SkillTreeGui:_start_rename_skill_switch()
 	end
 end
 
--- Lines 4485-4505
+-- Lines 4489-4509
 function SkillTreeGui:_stop_rename_skill_switch()
 	if self._renaming_skill_switch then
 		self._enabled = true
@@ -4931,7 +4931,7 @@ function SkillTreeGui:_stop_rename_skill_switch()
 	end
 end
 
--- Lines 4507-4525
+-- Lines 4511-4529
 function SkillTreeGui:_cancel_rename_skill_switch()
 	if self._renaming_skill_switch then
 		self._enabled = true
@@ -4954,7 +4954,7 @@ function SkillTreeGui:_cancel_rename_skill_switch()
 	end
 end
 
--- Lines 4527-4553
+-- Lines 4531-4557
 function SkillTreeGui:_update_rename_skill_switch()
 	local skill_set_text = self._skill_tree_panel:child("skill_set_text")
 
@@ -4988,14 +4988,14 @@ function SkillTreeGui:_update_rename_skill_switch()
 	end
 end
 
--- Lines 4555-4558
+-- Lines 4559-4562
 function SkillTreeGui:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines 4560-4567
+-- Lines 4564-4571
 function SkillTreeGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -5005,7 +5005,7 @@ function SkillTreeGui.blink(o)
 	end
 end
 
--- Lines 4569-4578
+-- Lines 4573-4582
 function SkillTreeGui:enter_text(o, s)
 	if self._renaming_skill_switch then
 		local m = tweak_data:get_raw_value("gui", "rename_skill_set_max_letters") or 15
@@ -5017,7 +5017,7 @@ function SkillTreeGui:enter_text(o, s)
 	end
 end
 
--- Lines 4580-4607
+-- Lines 4584-4611
 function SkillTreeGui:update_key_down(o, k)
 	wait(0.6)
 
@@ -5051,7 +5051,7 @@ function SkillTreeGui:update_key_down(o, k)
 	end
 end
 
--- Lines 4609-4616
+-- Lines 4613-4620
 function SkillTreeGui:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -5062,7 +5062,7 @@ function SkillTreeGui:key_release(o, k)
 	end
 end
 
--- Lines 4618-4649
+-- Lines 4622-4653
 function SkillTreeGui:key_press(o, k)
 	local text = self._renaming_skill_switch
 	local n = utf8.len(text)

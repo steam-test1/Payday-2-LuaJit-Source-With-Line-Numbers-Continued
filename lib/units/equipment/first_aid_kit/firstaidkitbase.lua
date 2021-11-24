@@ -223,14 +223,27 @@ function FirstAidKitBase:take(unit)
 	self:_set_empty()
 end
 
--- Lines 212-215
+-- Lines 212-231
 function FirstAidKitBase:_set_empty()
 	self._empty = true
+	local unit = self._unit
 
-	self._unit:set_slot(0)
+	if Network:is_server() or unit:id() == -1 then
+		unit:set_slot(0)
+	else
+		unit:set_visible(false)
+
+		local int_ext = unit:interaction()
+
+		if int_ext then
+			int_ext:set_active(false)
+		end
+
+		unit:set_enabled(false)
+	end
 end
 
--- Lines 219-223
+-- Lines 235-239
 function FirstAidKitBase:save(data)
 	local state = {
 		is_dynamic = self._is_dynamic
@@ -238,7 +251,7 @@ function FirstAidKitBase:save(data)
 	data.FirstAidKitBase = state
 end
 
--- Lines 225-232
+-- Lines 241-248
 function FirstAidKitBase:load(data)
 	local state = data.FirstAidKitBase
 
@@ -249,7 +262,7 @@ function FirstAidKitBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 236-245
+-- Lines 252-261
 function FirstAidKitBase:destroy()
 	if self._min_distance then
 		FirstAidKitBase.Remove(self)

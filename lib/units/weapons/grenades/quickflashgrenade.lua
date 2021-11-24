@@ -297,12 +297,17 @@ function QuickFlashGrenade:preemptive_kill()
 	self:destroy_unit()
 end
 
--- Lines 275-277
+-- Lines 275-283
 function QuickFlashGrenade:destroy_unit()
-	self._unit:set_slot(0)
+	if Network:is_server() then
+		self._unit:set_slot(0)
+	else
+		self._unit:set_visible(false)
+		self._unit:set_enabled(false)
+	end
 end
 
--- Lines 279-284
+-- Lines 285-290
 function QuickFlashGrenade:remove_light()
 	if alive(self._light) then
 		World:delete_light(self._light)
@@ -311,13 +316,17 @@ function QuickFlashGrenade:remove_light()
 	end
 end
 
--- Lines 286-288
+-- Lines 292-294
 function QuickFlashGrenade:destroy()
 	self:remove_light()
 end
 
--- Lines 291-304
+-- Lines 297-314
 function QuickFlashGrenade:on_flashbang_destroyed(prevent_network)
+	if self._destroyed then
+		return
+	end
+
 	if not prevent_network then
 		managers.network:session():send_to_peers_synched("sync_flashbang_event", self._unit, QuickFlashGrenade.Events.DestroyedByPlayer)
 	end
@@ -330,7 +339,7 @@ function QuickFlashGrenade:on_flashbang_destroyed(prevent_network)
 	self:remove_light()
 end
 
--- Lines 307-314
+-- Lines 317-324
 function QuickFlashGrenade:on_network_event(event_id)
 	local event = QuickFlashGrenade.Events[event_id]
 

@@ -75,14 +75,31 @@ function GageAssignmentBase:assignment()
 	return self._assignment
 end
 
--- Lines 69-73
+-- Lines 69-91
 function GageAssignmentBase:delete_unit()
-	if alive(self._unit) then
-		self._unit:set_slot(0)
+	local unit = self._unit
+
+	if not alive(unit) then
+		return
+	end
+
+	if Network:is_server() or unit:id() == -1 then
+		unit:set_slot(0)
+	else
+		unit:set_visible(false)
+		self:set_active(false)
+
+		local int_ext = unit:interaction()
+
+		if int_ext then
+			int_ext:set_active(false)
+		end
+
+		unit:set_enabled(false)
 	end
 end
 
--- Lines 75-77
+-- Lines 93-95
 function GageAssignmentBase:interact_blocked()
 	return false
 end

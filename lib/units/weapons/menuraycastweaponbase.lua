@@ -35,13 +35,11 @@ function NewRaycastWeaponBase:set_charm_data(data, upd_state)
 	self._charm_upd_state = upd_state
 end
 
--- Lines 38-119
+-- Lines 38-117
 function NewRaycastWeaponBase:_chk_charm_upd_state()
 	local data = self._charm_data
 
 	if not data then
-		print("[MenuRaycastWeaponBase:_chk_charm_upd_state] No charm data")
-
 		return
 	end
 
@@ -82,7 +80,7 @@ function NewRaycastWeaponBase:_chk_charm_upd_state()
 	end
 end
 
--- Lines 122-135
+-- Lines 120-133
 function NewRaycastWeaponBase:_check_thq_align_anim()
 	if not self:is_npc() then
 		return
@@ -100,42 +98,42 @@ function NewRaycastWeaponBase:_check_thq_align_anim()
 	end
 end
 
--- Lines 137-140
+-- Lines 135-138
 function NewRaycastWeaponBase:set_factory_data(factory_id)
 	self._factory_id = factory_id
 end
 
--- Lines 142-144
+-- Lines 140-142
 function NewRaycastWeaponBase:set_texture_switches(texture_switches)
 	self._texture_switches = texture_switches
 end
 
--- Lines 150-152
+-- Lines 148-150
 function NewRaycastWeaponBase:set_npc(npc)
 	self._npc = npc
 end
 
--- Lines 154-156
+-- Lines 152-154
 function NewRaycastWeaponBase:is_npc()
 	return self._npc or false
 end
 
--- Lines 158-164
+-- Lines 156-162
 function NewRaycastWeaponBase:use_thq()
 	return true
 end
 
--- Lines 166-168
+-- Lines 164-166
 function NewRaycastWeaponBase:skip_thq_parts()
 	return tweak_data.weapon.factory[self._factory_id .. "_npc"].skip_thq_parts
 end
 
--- Lines 170-172
+-- Lines 168-170
 function NewRaycastWeaponBase:skip_queue()
 	return false
 end
 
--- Lines 174-184
+-- Lines 172-182
 function NewRaycastWeaponBase:_third_person()
 	if not self:is_npc() then
 		return false
@@ -148,7 +146,7 @@ function NewRaycastWeaponBase:_third_person()
 	return self:skip_thq_parts() and true or false
 end
 
--- Lines 186-200
+-- Lines 184-198
 function NewRaycastWeaponBase:assemble(factory_id, skip_queue)
 	local third_person = self:_third_person()
 
@@ -169,7 +167,7 @@ function NewRaycastWeaponBase:assemble(factory_id, skip_queue)
 	self:_update_stats_values()
 end
 
--- Lines 202-217
+-- Lines 200-215
 function NewRaycastWeaponBase:assemble_from_blueprint(factory_id, blueprint, skip_queue, clbk)
 	local third_person = self:_third_person()
 
@@ -190,7 +188,7 @@ function NewRaycastWeaponBase:assemble_from_blueprint(factory_id, blueprint, ski
 	self:_update_stats_values()
 end
 
--- Lines 219-240
+-- Lines 217-238
 function NewRaycastWeaponBase:_assemble_completed(clbk, parts, blueprint)
 	self._parts = parts
 	self._blueprint = blueprint
@@ -205,7 +203,7 @@ function NewRaycastWeaponBase:_assemble_completed(clbk, parts, blueprint)
 	self:_chk_has_charms(parts)
 end
 
--- Lines 242-262
+-- Lines 240-260
 function NewRaycastWeaponBase:_cosmetics_applied(clbk)
 	if not alive(self._unit) then
 		return
@@ -226,7 +224,7 @@ end
 
 local material_type_ids = Idstring("material")
 
--- Lines 266-291
+-- Lines 264-289
 function NewRaycastWeaponBase:apply_material_parameters()
 	local parts_tweak = tweak_data.weapon.factory.parts
 
@@ -256,7 +254,7 @@ function NewRaycastWeaponBase:apply_material_parameters()
 	end
 end
 
--- Lines 293-349
+-- Lines 291-347
 function NewRaycastWeaponBase:apply_texture_switches()
 	local parts_tweak = tweak_data.weapon.factory.parts
 	self._parts_texture_switches = self._parts_texture_switches or {}
@@ -316,11 +314,11 @@ function NewRaycastWeaponBase:apply_texture_switches()
 	end
 end
 
--- Lines 352-353
+-- Lines 350-351
 function NewRaycastWeaponBase:check_npc()
 end
 
--- Lines 357-367
+-- Lines 355-365
 function NewRaycastWeaponBase:change_part(part_id)
 	self._parts = managers.weapon_factory:change_part(self._unit, self._factory_id, part_id or "wpn_fps_m4_uupg_b_sd", self._parts, self._blueprint)
 
@@ -329,7 +327,7 @@ function NewRaycastWeaponBase:change_part(part_id)
 	self:_chk_has_charms(self._parts)
 end
 
--- Lines 369-377
+-- Lines 367-375
 function NewRaycastWeaponBase:remove_part(part_id)
 	self._parts = managers.weapon_factory:remove_part(self._unit, self._factory_id, part_id, self._parts, self._blueprint)
 
@@ -338,7 +336,7 @@ function NewRaycastWeaponBase:remove_part(part_id)
 	self:_chk_has_charms(self._parts)
 end
 
--- Lines 379-387
+-- Lines 377-385
 function NewRaycastWeaponBase:remove_part_by_type(type)
 	self._parts = managers.weapon_factory:remove_part_by_type(self._unit, self._factory_id, type, self._parts, self._blueprint)
 
@@ -347,7 +345,7 @@ function NewRaycastWeaponBase:remove_part_by_type(type)
 	self:_chk_has_charms(self._parts)
 end
 
--- Lines 389-398
+-- Lines 387-396
 function NewRaycastWeaponBase:change_blueprint(blueprint)
 	self._blueprint = blueprint
 	self._parts = managers.weapon_factory:change_blueprint(self._unit, self._factory_id, self._parts, blueprint)
@@ -357,19 +355,19 @@ function NewRaycastWeaponBase:change_blueprint(blueprint)
 	self:_chk_has_charms(self._parts)
 end
 
--- Lines 400-406
+-- Lines 398-404
 function NewRaycastWeaponBase:blueprint_to_string()
 	local s = managers.weapon_factory:blueprint_to_string(self._factory_id, self._blueprint)
 
 	return s
 end
 
--- Lines 409-415
+-- Lines 407-413
 function NewRaycastWeaponBase:_update_fire_object()
 	local fire = managers.weapon_factory:get_part_from_weapon_by_type("barrel_ext", self._parts) or managers.weapon_factory:get_part_from_weapon_by_type("slide", self._parts) or managers.weapon_factory:get_part_from_weapon_by_type("barrel", self._parts)
 end
 
--- Lines 417-465
+-- Lines 415-463
 function NewRaycastWeaponBase:_update_stats_values()
 	return
 
@@ -417,17 +415,17 @@ function NewRaycastWeaponBase:_update_stats_values()
 	self._spread_moving = self._current_stats.spread_moving or self._spread_moving
 end
 
--- Lines 469-472
+-- Lines 467-470
 function NewRaycastWeaponBase:stance_id()
 	return "new_m4"
 end
 
--- Lines 474-476
+-- Lines 472-474
 function NewRaycastWeaponBase:weapon_hold()
 	return self:weapon_tweak_data().weapon_hold
 end
 
--- Lines 478-493
+-- Lines 476-491
 function NewRaycastWeaponBase:stance_mod()
 	if not self._parts then
 		return nil
@@ -446,7 +444,7 @@ function NewRaycastWeaponBase:stance_mod()
 	return nil
 end
 
--- Lines 497-525
+-- Lines 495-523
 function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	local data = tweak_data.weapon.factory[self._factory_id]
 
@@ -473,7 +471,7 @@ function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	return true
 end
 
--- Lines 527-544
+-- Lines 525-542
 function NewRaycastWeaponBase:tweak_data_anim_stop(anim)
 	local data = tweak_data.weapon.factory[self._factory_id]
 
@@ -492,7 +490,7 @@ function NewRaycastWeaponBase:tweak_data_anim_stop(anim)
 	end
 end
 
--- Lines 548-556
+-- Lines 546-554
 function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 	if self._parts then
 		for part_id, data in pairs(self._parts) do
@@ -503,26 +501,26 @@ function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 	end
 end
 
--- Lines 558-565
+-- Lines 556-563
 function NewRaycastWeaponBase:on_enabled(...)
 	NewRaycastWeaponBase.super.on_enabled(self, ...)
 	self:_set_parts_enabled(true)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 567-576
+-- Lines 565-574
 function NewRaycastWeaponBase:on_disabled(...)
 	self:gadget_off()
 	self:_set_parts_enabled(false)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 580-582
+-- Lines 578-580
 function NewRaycastWeaponBase:has_gadget()
 	return managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts) and true or false
 end
 
--- Lines 584-590
+-- Lines 582-588
 function NewRaycastWeaponBase:gadget_on()
 	self._gadget_on = true
 	local gadget = managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts)
@@ -532,7 +530,7 @@ function NewRaycastWeaponBase:gadget_on()
 	end
 end
 
--- Lines 592-598
+-- Lines 590-596
 function NewRaycastWeaponBase:gadget_off()
 	self._gadget_on = false
 	local gadget = managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts)
@@ -542,7 +540,7 @@ function NewRaycastWeaponBase:gadget_off()
 	end
 end
 
--- Lines 600-606
+-- Lines 598-604
 function NewRaycastWeaponBase:toggle_gadget()
 	self._gadget_on = not self._gadget_on
 	local gadget = managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts)
@@ -552,11 +550,11 @@ function NewRaycastWeaponBase:toggle_gadget()
 	end
 end
 
--- Lines 608-609
+-- Lines 606-607
 function NewRaycastWeaponBase:toggle_firemode()
 end
 
--- Lines 612-651
+-- Lines 610-649
 function NewRaycastWeaponBase:check_stats()
 	local base_stats = self:weapon_tweak_data().stats
 
@@ -597,7 +595,7 @@ function NewRaycastWeaponBase:check_stats()
 	return stats
 end
 
--- Lines 655-678
+-- Lines 653-676
 function NewRaycastWeaponBase:destroy(unit)
 	if self._parts_texture_switches then
 		for part_id, texture_ids in pairs(self._parts_texture_switches) do
