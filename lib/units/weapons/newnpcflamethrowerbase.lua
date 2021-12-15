@@ -1,22 +1,22 @@
 NewNPCFlamethrowerBase = NewNPCFlamethrowerBase or class(NewNPCRaycastWeaponBase)
 
--- Lines 5-10
+-- Lines 285-290
 function NewNPCFlamethrowerBase:init(...)
 	NewNPCFlamethrowerBase.super.init(self, ...)
 	self:setup_default()
 end
 
--- Lines 13-19
+-- Lines 293-299
 function NewNPCFlamethrowerBase:setup_default()
 	self._use_shell_ejection_effect = false
 	self._use_trails = false
 end
 
--- Lines 22-23
+-- Lines 302-303
 function NewNPCFlamethrowerBase:_spawn_muzzle_effect(from_pos, direction)
 end
 
--- Lines 26-35
+-- Lines 306-315
 function NewNPCFlamethrowerBase:update(unit, t, dt)
 	if self._check_shooting_expired and self._check_shooting_expired.check_t < t then
 		self._check_shooting_expired = nil
@@ -27,7 +27,7 @@ function NewNPCFlamethrowerBase:update(unit, t, dt)
 	end
 end
 
--- Lines 38-48
+-- Lines 318-328
 function NewNPCFlamethrowerBase:fire_blank(direction, impact)
 	if not self._check_shooting_expired then
 		self:play_tweak_data_sound("fire")
@@ -41,12 +41,12 @@ function NewNPCFlamethrowerBase:fire_blank(direction, impact)
 	self._unit:flamethrower_effect_extension():_spawn_muzzle_effect(self._obj_fire:position(), direction)
 end
 
--- Lines 50-52
+-- Lines 330-332
 function NewNPCFlamethrowerBase:auto_fire_blank(direction, impact)
 	self:fire_blank(direction, impact)
 end
 
--- Lines 55-62
+-- Lines 335-342
 function NewNPCFlamethrowerBase:_sound_autofire_start(nr_shots)
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 
@@ -56,14 +56,14 @@ function NewNPCFlamethrowerBase:_sound_autofire_start(nr_shots)
 	sound = sound or self._sound_fire:post_event(tweak_sound.fire)
 end
 
--- Lines 64-70
+-- Lines 344-350
 function NewNPCFlamethrowerBase:_sound_autofire_end()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 	local sound = self._sound_fire:post_event(tweak_sound.stop_fire)
 	sound = sound or self._sound_fire:post_event(tweak_sound.stop_fire)
 end
 
--- Lines 73-75
+-- Lines 353-355
 function NewNPCFlamethrowerBase:third_person_important()
 	return NewFlamethrowerBase.third_person_important(self)
 end

@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-853
+-- Lines 78-857
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -146,6 +146,8 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		cybertrench = "heist_default",
 		xmas_tuxedo = "heist_default",
 		mariachi = "mariatchi",
+		rusbear = "heist_default",
+		lonorwa = "heist_default",
 		poolrepair = "heist_default",
 		traditional = "heist_default",
 		sneak_suit = "sneak",

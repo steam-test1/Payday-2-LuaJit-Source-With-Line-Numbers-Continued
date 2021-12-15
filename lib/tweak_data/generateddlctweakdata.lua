@@ -1,4 +1,4 @@
--- Lines 3-1000
+-- Lines 3-1015
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -264,6 +264,12 @@ function DLCTweakData:init_generated()
 	}
 	self.chca_bundle.content.loot_global_value = "chca"
 	self.chca_bundle.content.loot_drops = {}
+	self.copr_bundle = {
+		free = true,
+		content = {}
+	}
+	self.copr_bundle.content.loot_global_value = "copr"
+	self.copr_bundle.content.loot_drops = {}
 	self.ess_bundle = {
 		dlc = "has_ess",
 		content = {}
@@ -1226,6 +1232,83 @@ function DLCTweakData:init_generated()
 	}
 	self.sms_bundle.content.loot_global_value = "sms"
 	self.sms_bundle.content.loot_drops = {}
+	self.snow_bundle = {
+		free = true,
+		content = {}
+	}
+	self.snow_bundle.content.loot_global_value = "snow"
+	self.snow_bundle.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_choco",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_flake",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_igloo",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_snow",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_snow_01",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_snow_02",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_snow_03",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_snow_04",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "leshy",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "iceskull",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "icedeer",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "foxfurhat",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "rusbear",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "lonorwa",
+			amount = 1
+		}
+	}
 	self.srtr_bundle = {
 		dlc = "has_srtr",
 		content = {}
@@ -1839,6 +1922,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.xm21_bundle = {
+		dlc = "has_xm21",
+		content = {}
+	}
+	self.xm21_bundle.content.loot_global_value = "xm21"
+	self.xm21_bundle.content.loot_drops = {}
 	self.xmn_bundle = {
 		free = true,
 		content = {}

@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3255
+-- Lines 7-3260
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -14646,6 +14646,24 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_All_H_All_Giftgiver = {
+		texture = "guis/dlcs/trk/atlases/xm21_achievement",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_Locke_H_BreakinFeds_Bloody = {
+		texture = "guis/dlcs/trk/atlases/xm21_achievement",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
 	self.Other_H_All_ForAllYou = {
 		texture = "guis/dlcs/trk/atlases/apfo_achievement",
 		texture_rect = {
@@ -14689,7 +14707,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3258-3261
+-- Lines 3263-3266
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -14702,7 +14720,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3263-3279
+-- Lines 3268-3284
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -14728,7 +14746,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3281-3286
+-- Lines 3286-3291
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -14742,7 +14760,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3288-3294
+-- Lines 3293-3299
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -14753,7 +14771,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3296-3302
+-- Lines 3301-3307
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

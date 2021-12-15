@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1691
+-- Lines 3-1707
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5091,6 +5091,16 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_snow_01",
+		texture_path = "guis/dlcs/snow/textures/pd2/new_heists/snow_01",
+		url = "https://ovk.af/Xmas2021SLS2"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_xm21_01",
+		texture_path = "guis/dlcs/xm21/textures/pd2/new_heists/xm21_01",
+		url = "https://ovk.af/Xmas2021SLA"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_in33_02",
 		texture_path = "guis/dlcs/in33/textures/pd2/new_heists/in33_02",
 		url = "https://ovk.af/Infamy33SLW3"
@@ -5437,7 +5447,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1693-1712
+-- Lines 1709-1728
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5465,7 +5475,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1714-1782
+-- Lines 1730-1798
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5543,15 +5553,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1784-1786
+-- Lines 1800-1802
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1788-1797
+-- Lines 1804-1813
 function GuiTweakData:print_locations()
 end
 
--- Lines 1799-1833
+-- Lines 1815-1849
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5590,7 +5600,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1835-1960
+-- Lines 1851-1976
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5713,12 +5723,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 1962-1964
+-- Lines 1978-1980
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 1966-1973
+-- Lines 1982-1989
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5729,7 +5739,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 1975-1995
+-- Lines 1991-2011
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

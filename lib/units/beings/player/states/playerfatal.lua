@@ -113,7 +113,7 @@ function PlayerFatal:update(t, dt)
 	PlayerFatal.super.update(self, t, dt)
 end
 
--- Lines 113-150
+-- Lines 113-164
 function PlayerFatal:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -127,10 +127,19 @@ function PlayerFatal:_update_check_actions(t, dt)
 		self._unit:base():set_stats_screen_visible(false)
 	end
 
-	self:_check_action_interact(t, input)
+	new_action = new_action or self:_check_action_interact(t, input)
+
+	if not new_action then
+		local projectile_entry = managers.blackmarket:equipped_projectile()
+		local projectile_tweak = tweak_data.blackmarket.projectiles[projectile_entry]
+
+		if projectile_tweak.ability then
+			new_action = self:_check_action_use_ability(t, input)
+		end
+	end
 end
 
--- Lines 156-170
+-- Lines 170-187
 function PlayerFatal:_check_action_interact(t, input)
 	if input.btn_interact_press then
 		if _G.IS_VR then
@@ -142,12 +151,14 @@ function PlayerFatal:_check_action_interact(t, input)
 
 			if not PlayerArrested.call_teammate(self, "f11", t, true, true, true) then
 				PlayerBleedOut.call_civilian(self, "f11", t, false, true, self._revive_SO_data)
+
+				return true
 			end
 		end
 	end
 end
 
--- Lines 173-181
+-- Lines 190-198
 function PlayerFatal:_start_action_dead(t)
 	self:_interupt_action_running(t)
 
@@ -159,7 +170,7 @@ function PlayerFatal:_start_action_dead(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
--- Lines 185-196
+-- Lines 202-213
 function PlayerFatal:_end_action_dead(t)
 	if not self:_can_stand() then
 		return
@@ -173,14 +184,14 @@ function PlayerFatal:_end_action_dead(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines 200-204
+-- Lines 217-221
 function PlayerFatal:pre_destroy(unit)
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end
 end
 
--- Lines 208-212
+-- Lines 225-229
 function PlayerFatal:destroy()
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)

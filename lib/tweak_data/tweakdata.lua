@@ -392,7 +392,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 422-2609
+-- Lines 422-2630
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1384,6 +1384,7 @@ Play the full version soon to get your full PAYDAY!]],
 		1.3
 	}
 	self.experience_manager.limited_bonus_multiplier = 1
+	self.experience_manager.limited_xmas_bonus_multiplier = 1.15
 	self.experience_manager.level_limit = {
 		low_cap_level = -1,
 		low_cap_multiplier = 0.75,
@@ -2151,11 +2152,17 @@ Play the full version soon to get your full PAYDAY!]],
 		},
 		{
 			track = "ojos_de_esmeralda"
+		},
+		{
+			track = "today_is_payday_too"
 		}
 	}
 	self.music.soundbank_list = {
 		"soundbanks/music",
 		"soundbanks/music_alesso"
+	}
+	self.music.event_track_overrides = {
+		mainmenu = "today_is_payday_too"
 	}
 	self.blame = {
 		default = "hint_blame_missing",
@@ -2744,6 +2751,28 @@ Play the full version soon to get your full PAYDAY!]],
 	self.projectiles.underbarrel_electric_groza = deep_clone(self.projectiles.underbarrel_electric)
 	self.projectiles.underbarrel_electric_groza.sound_event = "gl_electric_explode"
 	self.projectiles.underbarrel_m203_groza = deep_clone(self.projectiles.launcher_m203)
+	self.projectiles.xmas_snowball = {
+		damage = 28,
+		curve_pow = 0.1,
+		player_damage = 1,
+		range = 100,
+		name_id = "bm_grenade_xmas_snowball",
+		launch_speed = 1000,
+		adjust_z = 0,
+		mass_look_up_modifier = 1,
+		push_at_body_index = 0,
+		bullet_class = "InstantSnowballBase",
+		remove_on_impact = true,
+		sound_event = "no_sound",
+		sounds = {}
+	}
+	self.projectiles.xmas_snowball.sounds.flyby = "jav_flyby"
+	self.projectiles.xmas_snowball.sounds.flyby_stop = "jav_flyby_stop"
+	self.projectiles.xmas_snowball.sounds.impact = "snow_impact_gen"
+	self.projectiles.xmas_snowball.effect_name = "effects/payday2/particles/impacts/snowball_impact"
+	self.projectiles.xmas_snowball.idstr_decal = Idstring("snow_explosion_std")
+	self.projectiles.xmas_snowball.idstr_effect = Idstring("")
+	self.projectiles.xmas_snowball.alert_radius = 0
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
@@ -2833,7 +2862,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2613-2629
+-- Lines 2634-2650
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -2851,7 +2880,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2634-2740
+-- Lines 2655-2761
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -2937,19 +2966,19 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 2744-2824
+-- Lines 2775-2855
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 2828-2830
+-- Lines 2859-2861
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 2834-2842
+-- Lines 2865-2873
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -2960,7 +2989,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 2846-2849
+-- Lines 2877-2880
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -2970,7 +2999,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 2853-2862
+-- Lines 2884-2893
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -2983,7 +3012,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 2866-3042
+-- Lines 2897-3073
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3172,7 +3201,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3044-3223
+-- Lines 3075-3254
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3286,7 +3315,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3225-3297
+-- Lines 3256-3328
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3359,7 +3388,7 @@ function TweakData:set_hud_values()
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
 end
 
--- Lines 3300-3304
+-- Lines 3331-3335
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3377,7 +3406,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3321-3536
+-- Lines 3352-3567
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

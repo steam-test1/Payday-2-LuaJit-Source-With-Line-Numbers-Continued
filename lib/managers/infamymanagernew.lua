@@ -265,15 +265,14 @@ function InfamyManager:get_all_join_stingers()
 	return all_stingers
 end
 
--- Lines 233-238
+-- Lines 233-236
 function InfamyManager:get_join_stinger_name_id(stinger_name)
 	local item_id = string.format("infamy_stinger_%03d", stinger_name)
-	local item_tweak = tweak_data.infamy.items[item_id]
 
-	return item_tweak and item_tweak.name_id or "menu_" .. item_id .. "_name"
+	return "menu_" .. item_id .. "_name"
 end
 
--- Lines 240-249
+-- Lines 238-247
 function InfamyManager:get_infamy_card_id_and_rect()
 	local texture_id = "guis/dlcs/infamous/textures/pd2/infamous_tree/infamy_card_display"
 	local inf_rank = math.min(managers.experience:current_rank(), tweak_data.infamy.ranks - 1) - 1
@@ -289,7 +288,7 @@ function InfamyManager:get_infamy_card_id_and_rect()
 	return texture_id, texture_rect
 end
 
--- Lines 251-256
+-- Lines 249-254
 function InfamyManager:reset_items()
 	self:_reset_points()
 
@@ -297,7 +296,7 @@ function InfamyManager:reset_items()
 	self._global.reset_message = true
 end
 
--- Lines 258-266
+-- Lines 256-264
 function InfamyManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -310,7 +309,7 @@ function InfamyManager:check_reset_message()
 	end
 end
 
--- Lines 268-279
+-- Lines 266-277
 function InfamyManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -322,7 +321,7 @@ function InfamyManager:save(data)
 	data.InfamyManager = state
 end
 
--- Lines 281-333
+-- Lines 279-331
 function InfamyManager:load(data, version)
 	local state = data.InfamyManager
 
@@ -368,7 +367,7 @@ function InfamyManager:load(data, version)
 	end
 end
 
--- Lines 335-360
+-- Lines 333-358
 function InfamyManager:_verify_loaded_data()
 	local tree_map = {}
 
@@ -401,7 +400,7 @@ function InfamyManager:_verify_loaded_data()
 	end
 end
 
--- Lines 362-365
+-- Lines 360-363
 function InfamyManager:reset()
 	Global.infamy_manager = nil
 

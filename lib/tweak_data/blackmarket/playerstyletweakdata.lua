@@ -1,4 +1,4 @@
--- Lines 1-2500
+-- Lines 1-2600
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -3074,9 +3074,147 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.elegantscarf.characters.ecp_male = elegantscarf_characters_male_fat
+	self.player_styles.rusbear = {
+		name_id = "bm_suit_rusbear",
+		desc_id = "bm_suit_rusbear_desc",
+		texture_bundle_folder = "snow",
+		global_value = "snow",
+		material_variations = {}
+	}
+	self.player_styles.rusbear.material_variations.default = {
+		name_id = "bm_suit_var_rusbear_default",
+		global_value = "snow",
+		desc_id = "bm_suit_var_rusbear_default_desc"
+	}
+	self.player_styles.rusbear.material_variations.arctic = {
+		desc_id = "bm_suit_var_rusbear_arctic_desc",
+		global_value = "snow",
+		auto_aquire = true,
+		name_id = "bm_suit_var_rusbear_arctic",
+		third_material = "units/pd2_dlc_snow/characters/snow_acc_rusbear/shared_materials/snow_acc_rusbear_arctic",
+		material = "units/pd2_dlc_snow/characters/snow_acc_rusbear/shared_materials/snow_acc_fps_rusbear_arctic"
+	}
+	self.player_styles.rusbear.material_variations.blacmor = {
+		desc_id = "bm_suit_var_rusbear_blacmor_desc",
+		global_value = "snow",
+		auto_aquire = true,
+		name_id = "bm_suit_var_rusbear_blacmor",
+		third_material = "units/pd2_dlc_snow/characters/snow_acc_rusbear/shared_materials/snow_acc_rusbear_blacmor",
+		material = "units/pd2_dlc_snow/characters/snow_acc_rusbear/shared_materials/snow_acc_fps_rusbear_blackmor"
+	}
+	self.player_styles.rusbear.material_variations.quilt = {
+		desc_id = "bm_suit_var_rusbear_quilt_desc",
+		global_value = "snow",
+		auto_aquire = true,
+		name_id = "bm_suit_var_rusbear_quilt",
+		third_material = "units/pd2_dlc_snow/characters/snow_acc_rusbear/shared_materials/snow_acc_rusbear_quilt",
+		material = "units/pd2_dlc_snow/characters/snow_acc_rusbear/shared_materials/snow_acc_fps_rusbear_quilt"
+	}
+	self.player_styles.rusbear.body_replacement = body_replacement_standard
+	self.player_styles.rusbear.third_body_replacement = body_replacement_standard
+	self.player_styles.rusbear.unit = "units/pd2_dlc_snow/characters/snow_acc_rusbear/snow_acc_fps_rusbear_male/snow_acc_fps_rusbear_male"
+	self.player_styles.rusbear.characters = {}
+	local rusbear_characters_male = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_rusbear/snow_acc_rusbear_male_average/snow_acc_rusbear_male_average"
+	}
+
+	set_characters_data("rusbear", characters_male, rusbear_characters_male)
+
+	local rusbear_characters_male_big = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_rusbear/snow_acc_rusbear_male_big/snow_acc_rusbear_male_big"
+	}
+
+	set_characters_data("rusbear", characters_male_big, rusbear_characters_male_big)
+
+	local rusbear_characters_female = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_rusbear/snow_acc_rusbear_female_average/snow_acc_rusbear_female_average"
+	}
+
+	set_characters_data("rusbear", characters_female, rusbear_characters_female)
+
+	local rusbear_characters_female_big = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_rusbear/snow_acc_rusbear_female_fat/snow_acc_rusbear_female_fat"
+	}
+
+	set_characters_data("rusbear", characters_female_big, rusbear_characters_female_big)
+
+	local rusbear_characters_male_fat = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_rusbear/snow_acc_rusbear_male_fat/snow_acc_rusbear_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.rusbear.characters.ecp_male = rusbear_characters_male_fat
+	self.player_styles.lonorwa = {
+		name_id = "bm_suit_lonorwa",
+		desc_id = "bm_suit_lonorwa_desc",
+		texture_bundle_folder = "snow",
+		global_value = "snow",
+		material_variations = {}
+	}
+	self.player_styles.lonorwa.material_variations.default = {
+		name_id = "bm_suit_var_lonorwa_default",
+		global_value = "snow",
+		desc_id = "bm_suit_var_lonorwa_default_desc"
+	}
+	self.player_styles.lonorwa.material_variations.blue = {
+		desc_id = "bm_suit_var_lonorwa_blue_desc",
+		global_value = "snow",
+		auto_aquire = true,
+		name_id = "bm_suit_var_lonorwa_blue",
+		third_material = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/shared_materials/snow_acc_lonorwa_blue",
+		material = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/shared_materials/snow_acc_fps_lonorwa_male_blue"
+	}
+	self.player_styles.lonorwa.material_variations.orange = {
+		desc_id = "bm_suit_var_lonorwa_orange_desc",
+		global_value = "snow",
+		auto_aquire = true,
+		name_id = "bm_suit_var_lonorwa_orange",
+		third_material = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/shared_materials/snow_acc_lonorwa_orange",
+		material = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/shared_materials/snow_acc_fps_lonorwa_male_orange"
+	}
+	self.player_styles.lonorwa.material_variations.white = {
+		desc_id = "bm_suit_var_lonorwa_white_desc",
+		global_value = "snow",
+		auto_aquire = true,
+		name_id = "bm_suit_var_lonorwa_white",
+		third_material = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/shared_materials/snow_acc_lonorwa_white",
+		material = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/shared_materials/snow_acc_fps_lonorwa_male_white"
+	}
+	self.player_styles.lonorwa.body_replacement = body_replacement_standard
+	self.player_styles.lonorwa.third_body_replacement = body_replacement_standard
+	self.player_styles.lonorwa.unit = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/snow_acc_fps_lonorwa_male/snow_acc_fps_lonorwa_male"
+	self.player_styles.lonorwa.characters = {}
+	local lonorwa_characters_male = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/snow_acc_lonorwa_male_average/snow_acc_lonorwa_male_average"
+	}
+
+	set_characters_data("lonorwa", characters_male, lonorwa_characters_male)
+
+	local lonorwa_characters_male_big = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/snow_acc_lonorwa_male_big/snow_acc_lonorwa_male_big"
+	}
+
+	set_characters_data("lonorwa", characters_male_big, lonorwa_characters_male_big)
+
+	local lonorwa_characters_female = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/snow_acc_lonorwa_female_average/snow_acc_lonorwa_female_average"
+	}
+
+	set_characters_data("lonorwa", characters_female, lonorwa_characters_female)
+
+	local lonorwa_characters_female_big = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/snow_acc_lonorwa_female_fat/snow_acc_lonorwa_female_fat"
+	}
+
+	set_characters_data("lonorwa", characters_female_big, lonorwa_characters_female_big)
+
+	local lonorwa_characters_male_fat = {
+		third_unit = "units/pd2_dlc_snow/characters/snow_acc_lonorwa/snow_acc_lonorwa_male_fat/snow_acc_lonorwa_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.lonorwa.characters.ecp_male = lonorwa_characters_male_fat
 end
 
--- Lines 2502-2524
+-- Lines 2602-2624
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -3101,7 +3239,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 2526-2551
+-- Lines 2626-2651
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -3129,7 +3267,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 2553-2574
+-- Lines 2653-2674
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3156,7 +3294,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 2576-2612
+-- Lines 2676-2712
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3200,7 +3338,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 2615-2644
+-- Lines 2715-2744
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -3231,7 +3369,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 2646-2652
+-- Lines 2746-2752
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -3240,7 +3378,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 2654-2669
+-- Lines 2754-2769
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -3260,11 +3398,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 2671-2707
+-- Lines 2771-2807
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 2675-2704
+	-- Lines 2775-2804
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

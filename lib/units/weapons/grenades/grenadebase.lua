@@ -102,7 +102,7 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 	self:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count)
 end
 
--- Lines 95-208
+-- Lines 95-209
 function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count)
 	local enemy_base = unit:base()
 	local unit_type = enemy_base._tweak_table
@@ -110,7 +110,7 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 	local is_cop = unit:character_damage().is_cop(unit_type)
 	local is_civilian = unit:character_damage().is_civilian(unit_type)
 	local is_crouching = alive(managers.player:player_unit()) and managers.player:player_unit():movement() and managers.player:player_unit():movement():crouching()
-	local count_pass, grenade_type_pass, kill_pass, distance_pass, enemy_pass, enemies_pass, flying_strike_pass, timer_pass, difficulty_pass, job_pass, crouching_pass, session_kill_pass, is_civilian_pass, explosive_pass, tags_all_pass, tags_any_pass, player_state_pass, all_pass, memory = nil
+	local count_pass, grenade_type_pass, kill_pass, distance_pass, enemy_pass, enemies_pass, flying_strike_pass, timer_pass, difficulty_pass, job_pass, crouching_pass, session_kill_pass, is_civilian_pass, explosive_pass, tags_all_pass, tags_any_pass, player_state_pass, all_pass, memory, grenade_is_explosive = nil
 
 	for achievement, achievement_data in pairs(tweak_data.achievement.grenade_achievements) do
 		count_pass = not achievement_data.count or achievement_data.count <= (achievement_data.kill and kill_count or hit_count)
@@ -175,7 +175,8 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 		explosive_pass = achievement_data.explosive == nil
 
 		if achievement_data.explosive ~= nil then
-			explosive_pass = tweak_data.blackmarket.projectiles[self:projectile_entry()].is_explosive == achievement_data.explosive
+			local grenade_is_explosive = not not tweak_data.blackmarket.projectiles[self:projectile_entry()].is_explosive
+			explosive_pass = grenade_is_explosive == achievement_data.explosive
 		end
 
 		all_pass = count_pass and grenade_type_pass and kill_pass and distance_pass and enemy_pass and enemies_pass and flying_strike_pass and timer_pass and difficulty_pass and job_pass and crouching_pass and session_kill_pass and is_civilian_pass and explosive_pass and tags_all_pass and tags_any_pass and player_state_pass
@@ -202,12 +203,12 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 	end
 end
 
--- Lines 212-214
+-- Lines 213-215
 function GrenadeBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines 216-220
+-- Lines 217-221
 function GrenadeBase:save(data)
 	local state = {
 		timer = self._timer
@@ -215,7 +216,7 @@ function GrenadeBase:save(data)
 	data.GrenadeBase = state
 end
 
--- Lines 224-227
+-- Lines 225-228
 function GrenadeBase:load(data)
 	local state = data.GrenadeBase
 	self._timer = state.timer

@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4763
+-- Lines 10-4793
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8409,6 +8409,30 @@ function DLCTweakData:init(tweak_data)
 			type_items = "weapon_skins",
 			item_entry = "color_sbzac2_01",
 			amount = 1
+		}
+	}
+	self.ach_dec21_01 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "dec21_01"
+	}
+	self.ach_dec21_01.content.loot_global_value = "xm21"
+	self.ach_dec21_01.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_lusse"
+		}
+	}
+	self.ach_dec21_02 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "dec21_02"
+	}
+	self.ach_dec21_02.content.loot_global_value = "xm21"
+	self.ach_dec21_02.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_ball"
 		}
 	}
 end

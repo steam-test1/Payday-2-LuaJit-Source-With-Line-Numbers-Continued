@@ -2363,6 +2363,7 @@ end
 -- Lines 2698-2861
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"snow",
 		"chca",
 		"cctp",
 		"tawp",

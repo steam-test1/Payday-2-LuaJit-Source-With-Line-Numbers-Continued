@@ -17,7 +17,7 @@ function TvGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(0, 0, gui_object, Vector3(0, 0, 0))
 end
 
--- Lines 22-38
+-- Lines 22-40
 function TvGui:setup()
 	self._video_panel = self._ws:panel():video({
 		loop = true,
@@ -26,7 +26,7 @@ function TvGui:setup()
 		video = self._video
 	})
 
-	if not _G.IS_VR then
+	if not _G.IS_VR and SystemInfo:renderer() ~= Idstring("DX11") then
 		self._video_panel:set_render_template(Idstring("gui:DIFFUSE_TEXTURE:VERTEX_COLOR:VERTEX_COLOR_ALPHA"))
 	end
 
@@ -35,7 +35,7 @@ function TvGui:setup()
 	end
 end
 
--- Lines 40-45
+-- Lines 42-47
 function TvGui:start()
 	if not self._playing then
 		self._video_panel:play()
@@ -44,7 +44,7 @@ function TvGui:start()
 	end
 end
 
--- Lines 47-52
+-- Lines 49-54
 function TvGui:pause()
 	if self._playing then
 		self._video_panel:pause()
@@ -53,7 +53,7 @@ function TvGui:pause()
 	end
 end
 
--- Lines 54-60
+-- Lines 56-62
 function TvGui:stop()
 	if self._playing then
 		self._video_panel:pause()
@@ -63,13 +63,13 @@ function TvGui:stop()
 	end
 end
 
--- Lines 62-65
+-- Lines 64-67
 function TvGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 67-73
+-- Lines 69-75
 function TvGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -79,7 +79,7 @@ function TvGui:destroy()
 	end
 end
 
--- Lines 75-80
+-- Lines 77-82
 function TvGui:save(data)
 	data.TvGui = {
 		playing = self._playing,
@@ -87,7 +87,7 @@ function TvGui:save(data)
 	}
 end
 
--- Lines 82-89
+-- Lines 84-91
 function TvGui:load(data)
 	if data.TvGui.playing then
 		self._video_panel:play()
