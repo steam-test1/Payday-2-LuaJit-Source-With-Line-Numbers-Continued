@@ -5707,7 +5707,7 @@ function PlayerManager:_is_all_in_custody(ignored_peer_id)
 	return true
 end
 
--- Lines 5241-5284
+-- Lines 5241-5288
 function PlayerManager:on_enter_custody(_player, already_dead)
 	local player = _player or self:player_unit()
 
@@ -5723,6 +5723,8 @@ function PlayerManager:on_enter_custody(_player, already_dead)
 		if equipped_grenade and tweak_data.blackmarket.projectiles[equipped_grenade] and tweak_data.blackmarket.projectiles[equipped_grenade].ability then
 			self:reset_ability_hud()
 		end
+
+		self:set_property("copr_risen_cooldown_added", nil)
 	end
 
 	managers.mission:call_global_event("player_in_custody")
@@ -5752,11 +5754,11 @@ function PlayerManager:on_enter_custody(_player, already_dead)
 	managers.hud:remove_interact()
 end
 
--- Lines 5286-5296
+-- Lines 5290-5300
 function PlayerManager:captured_hostage()
 end
 
--- Lines 5298-5313
+-- Lines 5302-5317
 function PlayerManager:init_auto_respawn_callback(position, peer_id, force)
 	self._clbk_super_syndrome_respawn = "PlayerManager"
 	local game_time = TimerManager:game():time()
@@ -5771,7 +5773,7 @@ function PlayerManager:init_auto_respawn_callback(position, peer_id, force)
 	managers.trade:pause_trade(pause_trade)
 end
 
--- Lines 5315-5326
+-- Lines 5319-5330
 function PlayerManager:clbk_super_syndrome_respawn(data)
 	local trade_manager = managers.trade
 	self._clbk_super_syndrome_respawn = nil
@@ -5787,7 +5789,7 @@ function PlayerManager:clbk_super_syndrome_respawn(data)
 	end
 end
 
--- Lines 5329-5350
+-- Lines 5333-5354
 function PlayerManager:on_hallowSPOOCed()
 	local player = self:local_player()
 	local t = Application:time()
@@ -5815,7 +5817,7 @@ function PlayerManager:on_hallowSPOOCed()
 	end
 end
 
--- Lines 5352-5384
+-- Lines 5356-5388
 function PlayerManager:attempt_ability(ability)
 	if not self:player_unit() then
 		return false
@@ -5849,7 +5851,7 @@ function PlayerManager:attempt_ability(ability)
 	return true
 end
 
--- Lines 5387-5403
+-- Lines 5391-5407
 function PlayerManager:_attempt_chico_injector()
 	if self:has_activate_temporary_upgrade("temporary", "chico_injector") then
 		return false
@@ -5861,7 +5863,7 @@ function PlayerManager:_attempt_chico_injector()
 	managers.network:session():send_to_peers("sync_ability_hud", now + duration, duration)
 	self:activate_temporary_upgrade("temporary", "chico_injector")
 
-	-- Lines 5398-5400
+	-- Lines 5402-5404
 	local function speed_up_on_kill()
 		managers.player:speed_up_grenade_cooldown(1)
 	end
@@ -5871,7 +5873,7 @@ function PlayerManager:_attempt_chico_injector()
 	return true
 end
 
--- Lines 5407-5429
+-- Lines 5411-5433
 function PlayerManager:_attempt_pocket_ecm_jammer()
 	local player_inventory = self:player_unit():inventory()
 
@@ -5887,7 +5889,7 @@ function PlayerManager:_attempt_pocket_ecm_jammer()
 
 	local base_upgrade = self:upgrade_value("player", "pocket_ecm_jammer_base")
 
-	-- Lines 5421-5423
+	-- Lines 5425-5427
 	local function speed_up_on_kill()
 		managers.player:speed_up_grenade_cooldown(base_upgrade.cooldown_drain)
 	end
@@ -5898,7 +5900,7 @@ function PlayerManager:_attempt_pocket_ecm_jammer()
 	return true
 end
 
--- Lines 5433-5474
+-- Lines 5437-5478
 function PlayerManager:_attempt_tag_team()
 	local player = managers.player:player_unit()
 	local player_eye = player:camera():position()
@@ -5940,7 +5942,7 @@ function PlayerManager:_attempt_tag_team()
 	return true
 end
 
--- Lines 5476-5483
+-- Lines 5480-5487
 function PlayerManager:sync_tag_team(tagged, owner, end_time)
 	if tagged == self:local_player() then
 		local tagged_id = managers.network:session():peer_by_unit(tagged):id()
@@ -5951,12 +5953,12 @@ function PlayerManager:sync_tag_team(tagged, owner, end_time)
 	end
 end
 
--- Lines 5485-5487
+-- Lines 5489-5491
 function PlayerManager:end_tag_team(tagged, owner)
 	self._listener_holder:call("tag_team_end", tagged, owner)
 end
 
--- Lines 5491-5541
+-- Lines 5495-5545
 function PlayerManager:_attempt_copr_ability()
 	if self:has_activate_temporary_upgrade("temporary", "copr_ability") then
 		return false
@@ -5992,7 +5994,7 @@ function PlayerManager:_attempt_copr_ability()
 	local speed_up_on_kill_time = self:upgrade_value("player", "copr_speed_up_on_kill", 0)
 
 	if speed_up_on_kill_time > 0 then
-		-- Lines 5524-5526
+		-- Lines 5528-5530
 		local function speed_up_on_kill_func()
 			managers.player:speed_up_grenade_cooldown(speed_up_on_kill_time)
 		end
@@ -6008,19 +6010,28 @@ function PlayerManager:_attempt_copr_ability()
 	managers.hud:set_copr_indicator(true, static_damage_ratio)
 
 	if is_downed then
-		self:register_message("ability_activated", "copr_ability_downed_cooldown_add", callback(self, self, "add_cooldown_copr"))
+		self:register_message("ability_activated", "copr_risen_cooldown_key", callback(self, self, "add_copr_risen_cooldown"))
 	end
 
 	return true
 end
 
--- Lines 5543-5546
-function PlayerManager:add_cooldown_copr()
-	managers.player:speed_up_grenade_cooldown(-tweak_data.upgrades.copr_risen_cooldown_add)
-	self:unregister_message("ability_activated", "copr_ability_downed_cooldown_add")
+-- Lines 5547-5551
+function PlayerManager:add_copr_risen_cooldown()
+	self:speed_up_grenade_cooldown(-tweak_data.upgrades.copr_risen_cooldown_add)
+	self:unregister_message("ability_activated", "copr_risen_cooldown_key")
+	self:set_property("copr_risen_cooldown_added", true)
 end
 
--- Lines 5548-5564
+-- Lines 5553-5558
+function PlayerManager:remove_copr_risen_cooldown()
+	if self:get_property("copr_risen_cooldown_added") then
+		self:speed_up_grenade_cooldown(tweak_data.upgrades.copr_risen_cooldown_add)
+		self:set_property("copr_risen_cooldown_added", nil)
+	end
+end
+
+-- Lines 5560-5576
 function PlayerManager:force_end_copr_ability()
 	if self:has_activate_temporary_upgrade("temporary", "copr_ability") then
 		self:deactivate_temporary_upgrade("temporary", "copr_ability")
@@ -6039,7 +6050,7 @@ function PlayerManager:force_end_copr_ability()
 	end
 end
 
--- Lines 5566-5587
+-- Lines 5578-5599
 function PlayerManager:clbk_copr_ability_ended()
 	self:deactivate_temporary_upgrade("temporary", "copr_ability")
 
@@ -6061,7 +6072,7 @@ function PlayerManager:clbk_copr_ability_ended()
 	managers.hud:set_copr_indicator(false)
 end
 
--- Lines 5590-5599
+-- Lines 5602-5611
 function PlayerManager:_update_timers(t)
 	local timers_copy = table.map_copy(self._timers)
 
@@ -6076,7 +6087,7 @@ function PlayerManager:_update_timers(t)
 	end
 end
 
--- Lines 5601-5604
+-- Lines 5613-5616
 function PlayerManager:start_timer(key, duration, callback)
 	local end_time = TimerManager:game():time() + duration
 	self._timers[key] = {
@@ -6085,7 +6096,7 @@ function PlayerManager:start_timer(key, duration, callback)
 	}
 end
 
--- Lines 5606-5610
+-- Lines 5618-5622
 function PlayerManager:get_timer(key)
 	if not key then
 		return
@@ -6096,12 +6107,12 @@ function PlayerManager:get_timer(key)
 	return timer and TimerManager:game():time() < timer.t and timer.t or nil
 end
 
--- Lines 5612-5614
+-- Lines 5624-5626
 function PlayerManager:has_active_timer(key)
 	return self:get_timer(key) ~= nil
 end
 
--- Lines 5616-5620
+-- Lines 5628-5632
 function PlayerManager:get_timer_remaining(key)
 	local time = self:get_timer(key)
 	local now = TimerManager:game():time()
@@ -6109,12 +6120,12 @@ function PlayerManager:get_timer_remaining(key)
 	return time and time - now
 end
 
--- Lines 5622-5624
+-- Lines 5634-5636
 function PlayerManager:clear_timers()
 	self._timers = {}
 end
 
--- Lines 5626-5630
+-- Lines 5638-5642
 function PlayerManager:reset_ability_hud()
 	managers.hud:set_player_grenade_cooldown(nil)
 	managers.hud:set_player_ability_radial({
@@ -6125,7 +6136,7 @@ function PlayerManager:reset_ability_hud()
 	self._should_reset_ability_hud = nil
 end
 
--- Lines 5633-5642
+-- Lines 5645-5654
 function PlayerManager:update_smoke_screens(t, dt)
 	if self._smoke_screen_effects and #self._smoke_screen_effects > 0 then
 		for i, smoke_screen_effect in dpairs(self._smoke_screen_effects) do
@@ -6138,12 +6149,12 @@ function PlayerManager:update_smoke_screens(t, dt)
 	end
 end
 
--- Lines 5644-5646
+-- Lines 5656-5658
 function PlayerManager:smoke_screens()
 	return self._smoke_screen_effects or {}
 end
 
--- Lines 5648-5657
+-- Lines 5660-5669
 function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_dodge_bonus)
 	local time = tweak_data.projectiles.smoke_screen_grenade.duration
 	self._smoke_screen_effects = self._smoke_screen_effects or {}
@@ -6157,7 +6168,7 @@ function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_do
 	self._smoke_grenade = grenade_unit
 end
 
--- Lines 5659-5665
+-- Lines 5671-5677
 function PlayerManager:_dodge_shot_gain(gain_value)
 	if gain_value then
 		self._dodge_shot_gain_value = gain_value
@@ -6166,12 +6177,12 @@ function PlayerManager:_dodge_shot_gain(gain_value)
 	end
 end
 
--- Lines 5667-5669
+-- Lines 5679-5681
 function PlayerManager:_dodge_replenish_armor()
 	self:player_unit():character_damage():_regenerate_armor()
 end
 
--- Lines 5707-5716
+-- Lines 5719-5728
 function PlayerManager:crew_add_concealment(new_value)
 	for k, v in pairs(managers.network:session():all_peers()) do
 		local unit = v:unit()
