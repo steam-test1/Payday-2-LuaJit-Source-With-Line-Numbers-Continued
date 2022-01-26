@@ -118,6 +118,11 @@ function GenericDLCManager:has_ja21()
 	return self:is_dlc_unlocked("ja21")
 end
 
+-- Lines 169-171
+function GenericDLCManager:has_ja22()
+	return self:is_dlc_unlocked("ja22")
+end
+
 -- Lines 174-176
 function GenericDLCManager:has_jun21()
 	return self:is_dlc_unlocked("jun21")
@@ -146,6 +151,11 @@ end
 -- Lines 219-221
 function GenericDLCManager:has_mmh()
 	return self:is_dlc_unlocked("mmh")
+end
+
+-- Lines 224-226
+function GenericDLCManager:has_mts()
+	return self:is_dlc_unlocked("mts")
 end
 
 -- Lines 229-231
@@ -445,6 +455,10 @@ function WINDLCManager:init_generated()
 		app_id = "218620",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.ja22 = {
+		app_id = "218620",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.jun21 = {
 		app_id = "218620",
 		no_install = true
@@ -469,6 +483,10 @@ function WINDLCManager:init_generated()
 	}
 	Global.dlc_manager.all_dlc_data.mmh = {
 		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.mts = {
+		app_id = "1872590",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.mwm = {

@@ -3,7 +3,7 @@ SentryGunDamage._HEALTH_GRANULARITY = CopDamage._HEALTH_GRANULARITY
 SentryGunDamage._ATTACK_VARIANTS = CopDamage._ATTACK_VARIANTS
 SentryGunDamage.can_be_critical = CopDamage.can_be_critical
 
--- Lines 7-60
+-- Lines 7-63
 function SentryGunDamage:init(unit)
 	self._unit = unit
 	self._parent_unit = nil
@@ -55,9 +55,11 @@ function SentryGunDamage:init(unit)
 
 	self._HEALTH_INIT_PERCENT = self._HEALTH_INIT / self._HEALTH_GRANULARITY
 	self._SHIELD_HEALTH_INIT_PERCENT = self._SHIELD_HEALTH_INIT / self._HEALTH_GRANULARITY
+	self._local_car_damage = 0
+	self._repair_counter = 0
 end
 
--- Lines 64-73
+-- Lines 67-76
 function SentryGunDamage:set_health(amount, shield_health_amount)
 	self._health = amount
 	self._HEALTH_INIT = amount
@@ -67,7 +69,7 @@ function SentryGunDamage:set_health(amount, shield_health_amount)
 	self._SHIELD_HEALTH_INIT_PERCENT = self._SHIELD_HEALTH_INIT / self._HEALTH_GRANULARITY
 end
 
--- Lines 77-82
+-- Lines 80-85
 function SentryGunDamage:sync_health(health_ratio)
 	self._health_ratio = health_ratio / self._HEALTH_GRANULARITY
 
@@ -76,12 +78,12 @@ function SentryGunDamage:sync_health(health_ratio)
 	end
 end
 
--- Lines 86-88
+-- Lines 89-91
 function SentryGunDamage:shoot_pos_mid(m_pos)
 	mvector3.set(m_pos, self._ext_movement:m_head_pos())
 end
 
--- Lines 92-98
+-- Lines 95-101
 function SentryGunDamage:on_marked_state(state)
 	if state then
 		self._marked_dmg_mul = self._marked_dmg_mul or tweak_data.upgrades.values.player.marked_enemy_damage_mul
@@ -90,7 +92,7 @@ function SentryGunDamage:on_marked_state(state)
 	end
 end
 
--- Lines 102-200
+-- Lines 105-205
 function SentryGunDamage:damage_bullet(attack_data)
 	if self._dead or self._invulnerable or Network:is_client() and self._ignore_client_damage or PlayerDamage.is_friendly_fire(self, attack_data.attacker_unit) then
 		return
@@ -145,6 +147,12 @@ function SentryGunDamage:damage_bullet(attack_data)
 	local damage_sync = self:_apply_damage(dmg_adjusted, dmg_shield, not dmg_shield, true, attack_data.attacker_unit, attack_data.variant)
 	attack_data.result = result
 
+	if self._is_car and attack_data and attack_data.attacker_unit == managers.player:player_unit() and attack_data.weapon_unit and attack_data.weapon_unit:base() and attack_data.weapon_unit:base().name_id == tweak_data.achievement.ja22_01.weapon then
+		self._local_car_damage = self._local_car_damage + dmg_adjusted
+
+		print("Ja22_DamageDealt", "Damage_Dealt: " .. math.truncate(dmg_adjusted, 1), "Total_Local_Damage_Dealt: " .. math.truncate(self._local_car_damage, 1), "Percentage Dealt: " .. math.truncate(self._local_car_damage / (self._HEALTH_INIT + self._SHIELD_HEALTH_INIT * 3) * 100, 2) .. "%")
+	end
+
 	if self._ignore_client_damage then
 		local health_percent = math.ceil(self._health / self._HEALTH_INIT_PERCENT)
 
@@ -184,21 +192,21 @@ function SentryGunDamage:damage_bullet(attack_data)
 	return result
 end
 
--- Lines 203-207
+-- Lines 208-212
 function SentryGunDamage:stun_hit(attack_data)
 	if self._dead or self._invulnerable then
 		return
 	end
 end
 
--- Lines 211-215
+-- Lines 216-220
 function SentryGunDamage:damage_tase(attack_data)
 	if self._dead or self._invulnerable then
 		return
 	end
 end
 
--- Lines 220-276
+-- Lines 225-281
 function SentryGunDamage:damage_fire(attack_data)
 	if self._dead or self._invulnerable or Network:is_client() and self._ignore_client_damage or attack_data.variant == "stun" or not tweak_data.weapon[self._unit:base():get_name_id()].FIRE_DMG_MUL then
 		return
@@ -254,7 +262,7 @@ function SentryGunDamage:damage_fire(attack_data)
 	end
 end
 
--- Lines 280-343
+-- Lines 285-348
 function SentryGunDamage:damage_explosion(attack_data)
 	if self._dead or self._invulnerable or Network:is_client() and self._ignore_client_damage or attack_data.variant == "stun" or not tweak_data.weapon[self._unit:base():get_name_id()].EXPLOSION_DMG_MUL then
 		return
@@ -324,17 +332,17 @@ function SentryGunDamage:damage_explosion(attack_data)
 	end
 end
 
--- Lines 347-349
+-- Lines 352-354
 function SentryGunDamage:dead()
 	return self._dead
 end
 
--- Lines 353-355
+-- Lines 358-360
 function SentryGunDamage:needs_repair()
 	return self._shield_health == 0
 end
 
--- Lines 359-372
+-- Lines 364-378
 function SentryGunDamage:repair_shield()
 	self._shield_health = self._SHIELD_HEALTH_INIT
 
@@ -345,28 +353,29 @@ function SentryGunDamage:repair_shield()
 	end
 
 	self._shield_smoke_level = 0
+	self._repair_counter = self._repair_counter + 1
 
 	if Network:is_server() then
 		self._unit:network():send("turret_repair_shield")
 	end
 end
 
--- Lines 376-378
+-- Lines 382-384
 function SentryGunDamage:health_ratio()
 	return self._health / self._HEALTH_INIT
 end
 
--- Lines 382-384
+-- Lines 388-390
 function SentryGunDamage:shield_health_ratio()
 	return self._shield_health / self._SHIELD_HEALTH_INIT
 end
 
--- Lines 388-390
+-- Lines 394-396
 function SentryGunDamage:focus_delay_mul()
 	return 1
 end
 
--- Lines 394-459
+-- Lines 400-470
 function SentryGunDamage:die(attacker_unit, variant, options)
 	options = options or {}
 	local sequence_death = options.sequence_death or self._death_sequence_name
@@ -382,6 +391,20 @@ function SentryGunDamage:die(attacker_unit, variant, options)
 		}
 
 		managers.statistics:killed(data)
+	end
+
+	if self._is_car then
+		local ja22_01_data = tweak_data.achievement.ja22_01
+		local total_health = self._HEALTH_INIT + self._SHIELD_HEALTH_INIT * (1 + self._repair_counter)
+
+		if ja22_01_data.percentage_dmg < self._local_car_damage / total_health then
+			print("JA22_01: Sentrygun Achievement Awarded!", "Damage: " .. math.truncate(self._local_car_damage, 1), "Percentage: " .. math.truncate(self._local_car_damage / total_health * 100, 1) .. "%")
+			managers.achievment:award(ja22_01_data.award)
+		else
+			print("JA22_01: Not enough damage", "Damage: " .. math.truncate(self._local_car_damage, 1), "Percentage: " .. math.truncate(self._local_car_damage / total_health * 100, 1) .. "%")
+		end
+	else
+		print("JA22_01: Sentrygun not a car")
 	end
 
 	self._health = 0
@@ -425,7 +448,7 @@ function SentryGunDamage:die(attacker_unit, variant, options)
 	self._unit:event_listener():call("on_death")
 end
 
--- Lines 464-471
+-- Lines 475-482
 function SentryGunDamage:disable(attacker_unit, variant)
 	self:die(attacker_unit, variant, {
 		sequence_done = "done_turret_disabled",
@@ -433,7 +456,7 @@ function SentryGunDamage:disable(attacker_unit, variant)
 	})
 end
 
--- Lines 475-495
+-- Lines 486-506
 function SentryGunDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit_offset_height, variant, death)
 	if self._dead then
 		return
@@ -457,7 +480,7 @@ function SentryGunDamage:sync_damage_bullet(attacker_unit, damage_percent, i_bod
 	end
 end
 
--- Lines 499-520
+-- Lines 510-531
 function SentryGunDamage:sync_damage_fire(attacker_unit, damage_percent, death, direction)
 	if self._dead then
 		return
@@ -478,7 +501,7 @@ function SentryGunDamage:sync_damage_fire(attacker_unit, damage_percent, death, 
 	end
 end
 
--- Lines 524-544
+-- Lines 535-555
 function SentryGunDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	if self._dead then
 		return
@@ -500,7 +523,7 @@ function SentryGunDamage:sync_damage_explosion(attacker_unit, damage_percent, i_
 	end
 end
 
--- Lines 549-644
+-- Lines 560-655
 function SentryGunDamage:_apply_damage(damage, dmg_shield, dmg_body, is_local, attacker_unit, variant)
 	self._sync_dmg_leftover = 0
 
@@ -589,7 +612,7 @@ function SentryGunDamage:_apply_damage(damage, dmg_shield, dmg_body, is_local, a
 	end
 end
 
--- Lines 648-668
+-- Lines 659-679
 function SentryGunDamage:update_shield_smoke_level(ratio, up)
 	ratio = math.clamp(ratio, 0, 1)
 	local num_shield_smoke_levels = self._num_shield_smoke_levels
@@ -612,7 +635,7 @@ function SentryGunDamage:update_shield_smoke_level(ratio, up)
 	end
 end
 
--- Lines 672-680
+-- Lines 683-691
 function SentryGunDamage:_make_shield_smoke()
 	if self._shield_smoke_level == 0 then
 		self._unit:damage():run_sequence_simple(self._shield_smoke_level_0)
@@ -621,7 +644,7 @@ function SentryGunDamage:_make_shield_smoke()
 	end
 end
 
--- Lines 684-694
+-- Lines 695-705
 function SentryGunDamage:save(save_data)
 	local my_save_data = {}
 	save_data.char_damage = my_save_data
@@ -633,7 +656,7 @@ function SentryGunDamage:save(save_data)
 	my_save_data.shield_smoke_level = self._shield_smoke_level
 end
 
--- Lines 698-723
+-- Lines 709-734
 function SentryGunDamage:load(save_data)
 	if not save_data or not save_data.char_damage then
 		return
@@ -658,24 +681,24 @@ function SentryGunDamage:load(save_data)
 	end
 end
 
--- Lines 725-727
+-- Lines 736-738
 function SentryGunDamage:melee_hit_sfx()
 	return "hit_gen"
 end
 
--- Lines 731-735
+-- Lines 742-746
 function SentryGunDamage:destroy(unit)
 	unit:brain():pre_destroy()
 	unit:movement():pre_destroy()
 	unit:base():pre_destroy()
 end
 
--- Lines 739-741
+-- Lines 750-752
 function SentryGunDamage:shield_smoke_level()
 	return self._shield_smoke_level
 end
 
--- Lines 745-747
+-- Lines 756-758
 function SentryGunDamage:set_parent_unit(unit)
 	self._parent_unit = unit
 end

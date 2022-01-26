@@ -1505,7 +1505,7 @@ function PlayerStandardVR:_start_action_reload_enter(t)
 	end
 end
 
--- Lines 1707-1765
+-- Lines 1707-1772
 function PlayerStandardVR:_start_action_reload(t)
 	local weapon = self._equipped_unit:base()
 
@@ -1571,7 +1571,7 @@ function PlayerStandardVR:_start_action_reload(t)
 	end
 end
 
--- Lines 1767-1781
+-- Lines 1774-1788
 function PlayerStandardVR:_interupt_action_reload(t)
 	if alive(self._equipped_unit) then
 		self._equipped_unit:base():check_bullet_objects()
@@ -1589,7 +1589,7 @@ function PlayerStandardVR:_interupt_action_reload(t)
 	self:send_reload_interupt()
 end
 
--- Lines 1783-1824
+-- Lines 1790-1831
 function PlayerStandardVR:_update_reload_timers(t, dt, input)
 	if not alive(self._equipped_unit) then
 		return
@@ -1630,7 +1630,7 @@ function PlayerStandardVR:_update_reload_timers(t, dt, input)
 	end
 end
 
--- Lines 1826-1836
+-- Lines 1833-1843
 function PlayerStandardVR:_current_reload_amount()
 	if self._state_data.reload_expire_t then
 		local t = TimerManager:game():time()
@@ -1644,7 +1644,7 @@ function PlayerStandardVR:_current_reload_amount()
 	end
 end
 
--- Lines 1838-1857
+-- Lines 1845-1864
 function PlayerStandardVR:grab_mag()
 	if not self:can_grab_mag() then
 		return false
@@ -1668,19 +1668,19 @@ function PlayerStandardVR:grab_mag()
 	managers.hud:set_reload_visible(false)
 end
 
--- Lines 1859-1861
+-- Lines 1866-1868
 function PlayerStandardVR:can_trigger_reload()
 	return self._can_trigger_reload
 end
 
--- Lines 1863-1868
+-- Lines 1870-1875
 function PlayerStandardVR:can_grab_mag()
 	local amount = self:_current_reload_amount()
 
 	return not managers.vr:get_setting("auto_reload") and (not self._state_data.needs_full_reload or self:can_trigger_reload()) and (not amount or amount > 0)
 end
 
--- Lines 1870-1897
+-- Lines 1877-1904
 function PlayerStandardVR:trigger_reload()
 	if not self:can_trigger_reload() then
 		return
@@ -1706,17 +1706,17 @@ function PlayerStandardVR:trigger_reload()
 	self._ext_movement:reset_next_reload_speed_multiplier()
 end
 
--- Lines 1903-1904
+-- Lines 1910-1911
 function PlayerStandardVR:_play_equip_animation()
 end
 
--- Lines 1906-1907
+-- Lines 1913-1914
 function PlayerStandardVR:_play_unequip_animation()
 end
 
 local __start_action_interact = PlayerStandard._start_action_interact
 
--- Lines 1912-1917
+-- Lines 1919-1924
 function PlayerStandardVR:_start_action_interact(t, input, timer, interact_object)
 	managers.hud:link_interaction_hud(self._unit:hand():hand_unit(self._interact_hand), interact_object)
 
@@ -1727,7 +1727,7 @@ end
 
 local __interupt_action_interact = PlayerStandard._interupt_action_interact
 
--- Lines 1920-1924
+-- Lines 1927-1931
 function PlayerStandardVR:_interupt_action_interact(t, input, complete)
 	self._state_data.interacting = false
 
@@ -1736,13 +1736,13 @@ end
 
 local __start_action_use_item = PlayerStandard._start_action_use_item
 
--- Lines 1927-1932
+-- Lines 1934-1939
 function PlayerStandardVR:_start_action_use_item(...)
 	managers.hud:link_interaction_hud(self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon"), self._unit:equipment():dummy_unit())
 	__start_action_use_item(self, ...)
 end
 
--- Lines 1935-1940
+-- Lines 1942-1947
 function PlayerStandardVR:_start_action_throw_projectile(...)
 	local hand_id = self._unit:hand():get_active_hand_id("throwable") or self._unit:hand():get_active_hand_id("weapon")
 
@@ -1753,7 +1753,7 @@ end
 
 PlayerStandardVR._start_action_throw_grenade = PlayerStandardVR._start_action_throw_projectile
 
--- Lines 1946-1960
+-- Lines 1953-1967
 function PlayerStandardVR:_on_zipline_screen_setting_changed(setting, old, new)
 	if not self:_on_zipline() then
 		return
@@ -1772,7 +1772,7 @@ function PlayerStandardVR:_on_zipline_screen_setting_changed(setting, old, new)
 	end
 end
 
--- Lines 1965-1982
+-- Lines 1972-1989
 function PlayerStandardVR:_on_menu_active_changed_vr(active)
 	if not alive(self._unit) then
 		return
@@ -1795,7 +1795,7 @@ function PlayerStandardVR:_on_menu_active_changed_vr(active)
 	end
 end
 
--- Lines 1984-1988
+-- Lines 1991-1995
 function PlayerStandardVR:set_base_rotation(rot)
 	self._ext_camera:camera_unit():base():set_base_rotation(Rotation(rot:yaw(), 0, 0))
 	self._unit:hand():set_base_rotation(self._camera_unit:base():base_rotation())

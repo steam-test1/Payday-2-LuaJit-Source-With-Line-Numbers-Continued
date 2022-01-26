@@ -224,7 +224,15 @@ function math.round(n, precision)
 	return math.floor((n + precision / 2) / precision) * precision
 end
 
--- Lines 203-209
+-- Lines 203-207
+function math.truncate(n, precision)
+	precision = precision or 0
+	local prec_mul = math.pow(10, precision)
+
+	return math.floor(n * prec_mul) / prec_mul
+end
+
+-- Lines 209-215
 function math.min_max(a, b)
 	if a < b then
 		return a, b
@@ -233,7 +241,7 @@ function math.min_max(a, b)
 	end
 end
 
--- Lines 211-218
+-- Lines 217-224
 function math.vector_min_max(a, b)
 	local min_x, max_x = math.min_max(a.x, b.x)
 	local min_y, max_y = math.min_max(a.y, b.y)
@@ -244,7 +252,7 @@ function math.vector_min_max(a, b)
 	return min_vector, max_vector
 end
 
--- Lines 220-229
+-- Lines 226-235
 function math.vector_clamp(vector, min, max)
 	if CoreClass.type_name(min) ~= "Vector3" then
 		min = Vector3(min, min, min)
@@ -257,39 +265,39 @@ function math.vector_clamp(vector, min, max)
 	return Vector3(math.clamp(vector.x, min.x, max.x), math.clamp(vector.y, min.y, max.y), math.clamp(vector.z, min.z, max.z))
 end
 
--- Lines 231-233
+-- Lines 237-239
 function math.lerp(a, b, t)
 	return a * (1 - t) + b * t
 end
 
--- Lines 235-237
+-- Lines 241-243
 function math.inverse_lerp(a, b, v)
 	return (v - a) / (b - a)
 end
 
--- Lines 239-241
+-- Lines 245-247
 function math.map_range(v, a, b, c, d)
 	return math.lerp(c, d, math.inverse_lerp(a, b, v))
 end
 
--- Lines 243-245
+-- Lines 249-251
 function math.map_range_clamped(v, a, b, c, d)
 	return math.lerp(c, d, math.clamp(math.inverse_lerp(a, b, v), 0, 1))
 end
 
--- Lines 247-250
+-- Lines 253-256
 function math.string_to_rotation(v)
 	local r = math.string_to_vector(v)
 
 	return Rotation(r.x, r.y, r.z)
 end
 
--- Lines 252-255
+-- Lines 258-261
 function math.vector_to_string(v)
 	return tostring(v.x) .. " " .. tostring(v.y) .. " " .. tostring(v.z)
 end
 
--- Lines 257-266
+-- Lines 263-272
 function math.spline(points, t)
 	local mu = t * t
 	local a0 = points[4] - points[3] - points[1] + points[2]
@@ -300,7 +308,7 @@ function math.spline(points, t)
 	return a0 * t * mu + a1 * mu + a2 * t + a3
 end
 
--- Lines 268-277
+-- Lines 274-283
 function math.spline_len(points, n)
 	local len = 0
 	local old_p = points[1]
@@ -314,7 +322,7 @@ function math.spline_len(points, n)
 	return len
 end
 
--- Lines 279-295
+-- Lines 285-301
 function math.bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -330,7 +338,7 @@ function math.bezier(points, t)
 	return a1 + a2 + a3 + a4
 end
 
--- Lines 297-302
+-- Lines 303-308
 function math.linear_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -338,7 +346,7 @@ function math.linear_bezier(points, t)
 	return p1 * (1 - t) + p2 * t
 end
 
--- Lines 304-310
+-- Lines 310-316
 function math.quadratic_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -347,7 +355,7 @@ function math.quadratic_bezier(points, t)
 	return p1 * (1 - t) * (1 - t) + p2 * 2 * t * (1 - t) + p3 * t * t
 end
 
--- Lines 313-322
+-- Lines 319-328
 function math.bezier_len(points, n)
 	local len = 0
 	local old_p = points[1]
@@ -361,7 +369,7 @@ function math.bezier_len(points, n)
 	return len
 end
 
--- Lines 326-335
+-- Lines 332-341
 function math.point_on_line(l1, l2, p)
 	local u = (p.x - l1.x) * (l2.x - l1.x) + (p.y - l1.y) * (l2.y - l1.y) + (p.z - l1.z) * (l2.z - l1.z)
 	local u = math.clamp(u / math.pow((l2 - l1):length(), 2), 0, 1)
@@ -372,14 +380,14 @@ function math.point_on_line(l1, l2, p)
 	return Vector3(x, y, z)
 end
 
--- Lines 339-342
+-- Lines 345-348
 function math.distance_to_line(l1, l2, p)
 	local closest_point = math.point_on_line(l1, l2, p)
 
 	return (closest_point - p):length(), closest_point
 end
 
--- Lines 345-352
+-- Lines 351-358
 function math.limitangle(angle)
 	local newangle = math.fmod(angle, 360)
 
@@ -390,7 +398,7 @@ function math.limitangle(angle)
 	return newangle
 end
 
--- Lines 354-362
+-- Lines 360-368
 function math.world_to_obj(obj, point)
 	if obj == nil then
 		return point
@@ -401,7 +409,7 @@ function math.world_to_obj(obj, point)
 	return vec:rotate_with(obj:rotation():inverse())
 end
 
--- Lines 364-373
+-- Lines 370-379
 function math.obj_to_world(obj, point)
 	if obj == nil then
 		return point
@@ -412,7 +420,7 @@ function math.obj_to_world(obj, point)
 	return vec + obj:position()
 end
 
--- Lines 375-377
+-- Lines 381-383
 function math.within(x, min, max)
 	return min <= x and x <= max
 end

@@ -1,11 +1,15 @@
 HuskPlayerDamage = HuskPlayerDamage or class()
 
--- Lines 5-16
+-- Lines 5-25
 function HuskPlayerDamage:init(unit)
 	self._unit = unit
 	self._spine2_obj = unit:get_object(Idstring("Spine2"))
 	self._listener_holder = EventListenerHolder:new()
 	self._mission_damage_blockers = {}
+	local revives = Global.game_settings.one_down and 2 or tweak_data.player.damage.LIVES_INIT
+	revives = managers.modifiers:modify_value("PlayerDamage:GetMaximumLives", revives)
+	self._revives = revives
+	self._revives_max = revives
 	local level_tweak = tweak_data.levels[managers.job:current_level_id()]
 
 	if level_tweak and level_tweak.is_safehouse and not level_tweak.is_safehouse_combat then
@@ -14,22 +18,22 @@ function HuskPlayerDamage:init(unit)
 	end
 end
 
--- Lines 20-22
+-- Lines 29-31
 function HuskPlayerDamage:_call_listeners(damage_info)
 	CopDamage._call_listeners(self, damage_info)
 end
 
--- Lines 26-28
+-- Lines 35-37
 function HuskPlayerDamage:add_listener(...)
 	CopDamage.add_listener(self, ...)
 end
 
--- Lines 32-34
+-- Lines 41-43
 function HuskPlayerDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
--- Lines 38-46
+-- Lines 47-55
 function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, height_offset)
 	local attack_data = {
 		attacker_unit = attacker_unit,
@@ -44,65 +48,84 @@ function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, heig
 	self:_call_listeners(attack_data)
 end
 
--- Lines 50-52
+-- Lines 59-61
 function HuskPlayerDamage:shoot_pos_mid(m_pos)
 	self._spine2_obj:m_position(m_pos)
 end
 
--- Lines 56-58
+-- Lines 65-67
 function HuskPlayerDamage:can_attach_projectiles()
 	return false
 end
 
--- Lines 62-64
+-- Lines 71-73
 function HuskPlayerDamage:set_last_down_time(down_time)
 	self._last_down_time = down_time
 end
 
--- Lines 68-70
+-- Lines 77-79
 function HuskPlayerDamage:down_time()
 	return self._last_down_time
 end
 
--- Lines 74-76
+-- Lines 83-89
+function HuskPlayerDamage:sync_set_revives(amount, is_max)
+	self._revives = amount
+
+	if is_max then
+		self._revives_max = amount
+	end
+end
+
+-- Lines 93-95
+function HuskPlayerDamage:get_revives()
+	return self._revives
+end
+
+-- Lines 97-99
+function HuskPlayerDamage:get_revives_max()
+	return self._revives_max
+end
+
+-- Lines 103-105
 function HuskPlayerDamage:arrested()
 	return self._unit:movement():current_state_name() == "arrested"
 end
 
--- Lines 80-82
+-- Lines 109-111
 function HuskPlayerDamage:incapacitated()
 	return self._unit:movement():current_state_name() == "incapacitated"
 end
 
--- Lines 86-88
+-- Lines 115-117
 function HuskPlayerDamage:set_mission_damage_blockers(type, state)
 	self._mission_damage_blockers[type] = state
 end
 
--- Lines 91-93
+-- Lines 120-122
 function HuskPlayerDamage:get_mission_blocker(type)
 	return self._mission_damage_blockers[type]
 end
 
--- Lines 97-98
+-- Lines 126-127
 function HuskPlayerDamage:dead()
 end
 
--- Lines 102-106
+-- Lines 131-135
 function HuskPlayerDamage:damage_bullet(attack_data)
 	if managers.mutators:is_mutator_active(MutatorFriendlyFire) then
 		self:_send_damage_to_owner(attack_data)
 	end
 end
 
--- Lines 108-112
+-- Lines 137-141
 function HuskPlayerDamage:damage_melee(attack_data)
 	if managers.mutators:is_mutator_active(MutatorFriendlyFire) then
 		self:_send_damage_to_owner(attack_data)
 	end
 end
 
--- Lines 114-119
+-- Lines 143-148
 function HuskPlayerDamage:damage_fire(attack_data)
 	if managers.mutators:is_mutator_active(MutatorFriendlyFire) then
 		attack_data.damage = attack_data.damage * 0.2
@@ -111,7 +134,7 @@ function HuskPlayerDamage:damage_fire(attack_data)
 	end
 end
 
--- Lines 121-134
+-- Lines 150-163
 function HuskPlayerDamage:_send_damage_to_owner(attack_data)
 	local peer_id = managers.criminals:character_peer_id_by_unit(self._unit)
 	local damage = managers.mutators:modify_value("HuskPlayerDamage:FriendlyFireDamage", attack_data.damage)

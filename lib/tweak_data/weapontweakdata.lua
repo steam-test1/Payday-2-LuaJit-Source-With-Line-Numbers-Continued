@@ -27649,7 +27649,7 @@ function WeaponTweakData:_init_x_stech(weapon_data)
 	}
 end
 
--- Lines 32242-32359
+-- Lines 32265-32382
 function WeaponTweakData:_init_holt(weapon_data)
 	self.holt = {
 		categories = {
@@ -27751,7 +27751,7 @@ function WeaponTweakData:_init_holt(weapon_data)
 	}
 end
 
--- Lines 32362-32480
+-- Lines 32385-32503
 function WeaponTweakData:_init_x_holt(weapon_data)
 	self.x_holt = {
 		categories = {
@@ -27863,7 +27863,7 @@ function WeaponTweakData:_init_x_holt(weapon_data)
 	}
 end
 
--- Lines 32482-32616
+-- Lines 32505-32639
 function WeaponTweakData:_init_m60(weapon_data)
 	self.m60 = {
 		categories = {
@@ -27986,7 +27986,7 @@ function WeaponTweakData:_init_m60(weapon_data)
 	}
 end
 
--- Lines 32618-32742
+-- Lines 32641-32765
 function WeaponTweakData:_init_r700(weapon_data)
 	self.r700 = {
 		categories = {
@@ -28105,7 +28105,7 @@ function WeaponTweakData:_init_r700(weapon_data)
 	}
 end
 
--- Lines 32753-33195
+-- Lines 32776-33218
 function WeaponTweakData:_create_table_structure()
 	self.c45_npc = {
 		usage = "is_pistol",
@@ -29555,11 +29555,11 @@ function WeaponTweakData:_create_table_structure()
 	}
 end
 
--- Lines 33199-33200
+-- Lines 33222-33223
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines 33202-33209
+-- Lines 33225-33232
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then
@@ -29568,7 +29568,7 @@ function WeaponTweakData:_precalculate_values()
 	end
 end
 
--- Lines 33212-33323
+-- Lines 33235-33346
 function WeaponTweakData:get_akimbo_mappings()
 	return {
 		glock_18c = "x_g18c",
@@ -29631,7 +29631,7 @@ function WeaponTweakData:get_akimbo_mappings()
 	}
 end
 
--- Lines 33326-33347
+-- Lines 33349-33370
 function WeaponTweakData:get_npc_mappings()
 	local npc_mappings = {
 		new_m4 = "m4_crew",

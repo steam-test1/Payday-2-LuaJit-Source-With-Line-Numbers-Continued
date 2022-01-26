@@ -1,6 +1,6 @@
 require("lib/tweak_data/blackmarket/WeaponColorTemplates")
 
--- Lines 3-38769
+-- Lines 3-38777
 function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins = {
 		serbu_woodland = {}
@@ -19971,6 +19971,14 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					pattern_pos = Vector3(-0.423086, 0.158836, 0)
 				}
 			},
+			wpn_fps_m4_upg_fg_mk12 = {
+				[Idstring("mtr_mk20_fg"):key()] = {
+					pattern = "units/payday2_cash/safes/cs3/pattern/cs3_pattern_017_b_df",
+					pattern_gradient = "units/payday2_cash/safes/cs3/pattern_gradient/gradient_cs3_017_df",
+					base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_022_df",
+					pattern_pos = Vector3(-0.23229, 0.03482, 0)
+				}
+			},
 			wpn_fps_upg_o_aimpoint_2 = {
 				[Idstring("aimpoint"):key()] = {
 					base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_022_df"
@@ -37399,7 +37407,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self:_setup_weapon_color_skins(tweak_data)
 end
 
--- Lines 38773-38867
+-- Lines 38781-38875
 function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, variation_data, weapon_id)
 	local weapon_color_skin_template = self.weapon_color_templates.color_skin
 	weapon_color_data.base_gradient = variation_data[weapon_color_skin_template.base_gradient]
@@ -37490,7 +37498,7 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 38870-38896
+-- Lines 38878-38904
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
@@ -37515,12 +37523,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 38898-38900
+-- Lines 38906-38908
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 38902-41799
+-- Lines 38910-41807
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

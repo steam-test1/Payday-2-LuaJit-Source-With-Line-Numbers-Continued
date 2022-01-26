@@ -591,7 +591,7 @@ function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 	Steam:http_request(Url, callback, headers)
 end
 
--- Lines 567-645
+-- Lines 567-656
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 	local steam_id = Steam:userid()
@@ -612,7 +612,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:QueryEntitlementAsString(0, 10, entitlement_callback)
 	end
 
-	-- Lines 590-621
+	-- Lines 590-632
 	local function check_platform_callback(success)
 		print("[AccelByte] Callback Platform Check")
 
@@ -625,22 +625,34 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			local loginusingsteam = true
 
 			if loginusingsteam then
-				Login:LoginWithSteamToken(ticket, login_callback)
+				-- Lines 604-612
+				local function login_with_steam_callback(success, reason)
+					if success then
+						print("[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
+						Login:LoginWithSteamToken(ticket, login_callback)
+					else
+						print("[AccelByte] Failed to authenticate Steam Ticket, reason : " .. reason)
+					end
+				end
+
+				Steam:bind_steam_ticket_validate_callback(steam_id, login_with_steam_callback, ticket)
 			else
 				Login:LoginWithUsernamePassword("username@email.com", "password_sample")
 			end
-		else
-			Login.has_account = false
-			Global.telemetry._has_account_checked = true
 
-			Telemetry:on_login()
-			Telemetry:on_login_screen_passed()
-			print("[AccelByte] Linked Starbreeze User for this Platform ID is not found")
-			Entitlement:SetDLCEntitlements()
+			return
 		end
+
+		Login.has_account = false
+		Global.telemetry._has_account_checked = true
+
+		Telemetry:on_login()
+		Telemetry:on_login_screen_passed()
+		print("[AccelByte] Linked Starbreeze User for this Platform ID is not found")
+		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 624-636
+	-- Lines 635-647
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(steam_id, check_platform_callback)
@@ -662,7 +674,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 647-803
+-- Lines 658-814
 function Entitlement:SerializeJsonString(document)
 	print("[AccelByte] Entitlement:SerializeJsonString")
 

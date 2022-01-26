@@ -1,4 +1,4 @@
--- Lines 2-8771
+-- Lines 2-8761
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -8558,6 +8558,21 @@ function init_auto_generated_achievement_data(tags)
 			icon_id = "C_All_H_All_Infamy_75",
 			tags = {
 				tags.progress.leveling,
+				tags.contracts.all
+			}
+		},
+		ja22_01 = {
+			need_unlock_icons = true,
+			icon_id = "C_All_H_All_Car",
+			sort_name = "C_All_H_All_Car",
+			unlock_id = true,
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.normal,
+				tags.unlock.exclusive_weapon_set,
+				tags.tactics.loud,
+				tags.tactics.killer,
+				tags.inventory.weapon,
 				tags.contracts.all
 			}
 		},

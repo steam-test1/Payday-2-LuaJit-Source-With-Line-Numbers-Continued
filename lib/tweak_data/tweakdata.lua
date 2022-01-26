@@ -704,6 +704,7 @@ function TweakData:init()
 	end
 
 	self:init_screen_colors()
+	self:init_accessibility_colors()
 
 	self.hud_icons = HudIconsTweakData:new()
 	self.weapon = WeaponTweakData:new(self)
@@ -2941,6 +2942,16 @@ function TweakData:init_screen_colors()
 	end
 end
 
+-- Lines 2764-2770
+function TweakData:init_accessibility_colors()
+	self.accessibility_colors = {
+		dot_white = Color.white,
+		dot_yellow = Color(255, 255, 201, 7) / 255,
+		dot_blue = Color(255, 77, 198, 255) / 255,
+		dot_green = Color.green
+	}
+end
+
 -- Lines 2775-2855
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
@@ -3290,7 +3301,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3256-3328
+-- Lines 3256-3336
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3361,9 +3372,15 @@ function TweakData:set_hud_values()
 	self.hud.prime_color = Color(1, 1, 0.6588235294117647, 0)
 	self.hud.suspicion_color = Color(1, 0, 0.4666666666666667, 0.6980392156862745)
 	self.hud.detected_color = Color(1, 1, 0.2, 0)
+	self.hud.revive_colors = {
+		Color(255, 223, 15, 15) / 255,
+		Color(255, 98, 35, 35) / 255,
+		Color(255, 91, 87, 87) / 255,
+		Color(255, 91, 87, 87) / 255
+	}
 end
 
--- Lines 3331-3335
+-- Lines 3339-3343
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3381,7 +3398,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3352-3567
+-- Lines 3360-3575
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false
