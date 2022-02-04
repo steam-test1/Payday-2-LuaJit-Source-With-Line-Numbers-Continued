@@ -6068,7 +6068,26 @@ function PlayerManager:clbk_copr_ability_ended()
 	managers.hud:set_copr_indicator(false)
 end
 
--- Lines 5602-5611
+-- Lines 5601-5616
+function PlayerManager:count_copr_ability_players()
+	local count = 0
+
+	if managers.network:session() then
+		local skills = nil
+
+		for _, peer in pairs(managers.network:session():all_peers()) do
+			skills = peer:unpacked_skills()
+
+			if skills and skills.specializations and tonumber(skills.specializations[1]) == tweak_data.upgrades.copr_specialization_tree_id and tonumber(skills.specializations[2]) > 0 then
+				count = count + 1
+			end
+		end
+	end
+
+	return count
+end
+
+-- Lines 5619-5628
 function PlayerManager:_update_timers(t)
 	local timers_copy = table.map_copy(self._timers)
 
@@ -6083,7 +6102,7 @@ function PlayerManager:_update_timers(t)
 	end
 end
 
--- Lines 5613-5616
+-- Lines 5630-5633
 function PlayerManager:start_timer(key, duration, callback)
 	local end_time = TimerManager:game():time() + duration
 	self._timers[key] = {
@@ -6092,7 +6111,7 @@ function PlayerManager:start_timer(key, duration, callback)
 	}
 end
 
--- Lines 5618-5622
+-- Lines 5635-5639
 function PlayerManager:get_timer(key)
 	if not key then
 		return
@@ -6103,12 +6122,12 @@ function PlayerManager:get_timer(key)
 	return timer and TimerManager:game():time() < timer.t and timer.t or nil
 end
 
--- Lines 5624-5626
+-- Lines 5641-5643
 function PlayerManager:has_active_timer(key)
 	return self:get_timer(key) ~= nil
 end
 
--- Lines 5628-5632
+-- Lines 5645-5649
 function PlayerManager:get_timer_remaining(key)
 	local time = self:get_timer(key)
 	local now = TimerManager:game():time()
@@ -6116,12 +6135,12 @@ function PlayerManager:get_timer_remaining(key)
 	return time and time - now
 end
 
--- Lines 5634-5636
+-- Lines 5651-5653
 function PlayerManager:clear_timers()
 	self._timers = {}
 end
 
--- Lines 5638-5642
+-- Lines 5655-5659
 function PlayerManager:reset_ability_hud()
 	managers.hud:set_player_grenade_cooldown(nil)
 	managers.hud:set_player_ability_radial({
@@ -6132,7 +6151,7 @@ function PlayerManager:reset_ability_hud()
 	self._should_reset_ability_hud = nil
 end
 
--- Lines 5645-5654
+-- Lines 5662-5671
 function PlayerManager:update_smoke_screens(t, dt)
 	if self._smoke_screen_effects and #self._smoke_screen_effects > 0 then
 		for i, smoke_screen_effect in dpairs(self._smoke_screen_effects) do
@@ -6145,12 +6164,12 @@ function PlayerManager:update_smoke_screens(t, dt)
 	end
 end
 
--- Lines 5656-5658
+-- Lines 5673-5675
 function PlayerManager:smoke_screens()
 	return self._smoke_screen_effects or {}
 end
 
--- Lines 5660-5669
+-- Lines 5677-5686
 function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_dodge_bonus)
 	local time = tweak_data.projectiles.smoke_screen_grenade.duration
 	self._smoke_screen_effects = self._smoke_screen_effects or {}
@@ -6164,7 +6183,7 @@ function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_do
 	self._smoke_grenade = grenade_unit
 end
 
--- Lines 5671-5677
+-- Lines 5688-5694
 function PlayerManager:_dodge_shot_gain(gain_value)
 	if gain_value then
 		self._dodge_shot_gain_value = gain_value
@@ -6173,12 +6192,12 @@ function PlayerManager:_dodge_shot_gain(gain_value)
 	end
 end
 
--- Lines 5679-5681
+-- Lines 5696-5698
 function PlayerManager:_dodge_replenish_armor()
 	self:player_unit():character_damage():_regenerate_armor()
 end
 
--- Lines 5719-5728
+-- Lines 5736-5745
 function PlayerManager:crew_add_concealment(new_value)
 	for k, v in pairs(managers.network:session():all_peers()) do
 		local unit = v:unit()

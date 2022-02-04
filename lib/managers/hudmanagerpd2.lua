@@ -2501,16 +2501,19 @@ function HUDManager:accessibility_dot_changed(name, old_value, new_value)
 	end
 end
 
--- Lines 2403-2408
+-- Lines 2403-2411
 function HUDManager:accessibility_dot_size_changed(name, old_value, new_value)
+	local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 	local dot_panel = self:script(PlayerBase.PLAYER_INFO_HUD_PD2).panel:child("accessibility_dot")
 
 	if dot_panel then
 		dot_panel:set_size(new_value, new_value)
+		dot_panel:set_center_x(hud.panel:w() / 2)
+		dot_panel:set_center_y(hud.panel:h() / 2)
 	end
 end
 
--- Lines 2413-2421
+-- Lines 2416-2424
 function HUDManager:register_ingame_workspace(name, obj)
 	self._ingame_workspaces = self._ingame_workspaces or {}
 
@@ -2523,14 +2526,14 @@ function HUDManager:register_ingame_workspace(name, obj)
 	end
 end
 
--- Lines 2423-2425
+-- Lines 2426-2428
 function HUDManager:ingame_workspace(name)
 	return self._ingame_workspaces and self._ingame_workspaces[name]
 end
 
--- Lines 2757-2774
+-- Lines 2760-2777
 function HUDManager:hide_panels(...)
-	-- Lines 2758-2763
+	-- Lines 2761-2766
 	local function fade_out(o)
 		for t, p, dt in seconds(1) do
 			o:set_alpha(1 - p)

@@ -1,4 +1,4 @@
--- Lines 3-1019
+-- Lines 3-1046
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -449,6 +449,18 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_smg_vityaz_s_short",
+			amount = 1
+		}
+	}
+	self.fcmsk_bundle = {
+		dlc = "has_fcmsk",
+		content = {}
+	}
+	self.fcmsk_bundle.content.loot_global_value = "fcmsk"
+	self.fcmsk_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "hockeynermark",
 			amount = 1
 		}
 	}
