@@ -48,16 +48,18 @@ function Dialog:focus_button()
 	return self._data.focus_button
 end
 
--- Lines 47-68
+-- Lines 47-71
 function Dialog:button_pressed(button_index)
 	cat_print("dialog_manager", "[SystemMenuManager] Button index pressed: " .. tostring(button_index))
 
 	local button_list = self._data.button_list
 
-	self:fade_out_close()
-
 	if button_list then
 		local button = button_list[button_index]
+
+		if not button.no_close then
+			self:fade_out_close()
+		end
 
 		if button and button.callback_func then
 			button.callback_func(button_index, button)
@@ -71,12 +73,12 @@ function Dialog:button_pressed(button_index)
 	end
 end
 
--- Lines 70-72
+-- Lines 73-75
 function Dialog:button_text_list()
 	return self._button_text_list
 end
 
--- Lines 74-85
+-- Lines 77-88
 function Dialog:to_string()
 	local buttons = ""
 
@@ -89,7 +91,7 @@ function Dialog:to_string()
 	return string.format("%s, Title: %s, Text: %s, Buttons: %s", tostring(BaseDialog.to_string(self)), tostring(self._data.title), tostring(self:_strip_to_string_text(self._data.text)), buttons)
 end
 
--- Lines 87-89
+-- Lines 90-92
 function Dialog:_strip_to_string_text(text)
 	return string.gsub(tostring(text), "\n", "\\n")
 end

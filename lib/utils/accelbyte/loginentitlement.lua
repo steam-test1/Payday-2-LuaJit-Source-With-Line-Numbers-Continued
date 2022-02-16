@@ -591,17 +591,17 @@ function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 	Steam:http_request(Url, callback, headers)
 end
 
--- Lines 567-656
+-- Lines 567-663
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 	local steam_id = Steam:userid()
 
-	-- Lines 573-578
+	-- Lines 579-584
 	local function entitlement_callback(success)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 580-588
+	-- Lines 586-595
 	local function login_callback(error_code, status_code, response_body)
 		print("[AccelByte] Callback login_callback ")
 
@@ -612,7 +612,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:QueryEntitlementAsString(0, 10, entitlement_callback)
 	end
 
-	-- Lines 590-632
+	-- Lines 597-639
 	local function check_platform_callback(success)
 		print("[AccelByte] Callback Platform Check")
 
@@ -625,7 +625,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			local loginusingsteam = true
 
 			if loginusingsteam then
-				-- Lines 604-612
+				-- Lines 611-619
 				local function login_with_steam_callback(success, reason)
 					if success then
 						print("[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
@@ -652,7 +652,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 635-647
+	-- Lines 642-654
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(steam_id, check_platform_callback)
@@ -674,7 +674,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 658-814
+-- Lines 665-821
 function Entitlement:SerializeJsonString(document)
 	print("[AccelByte] Entitlement:SerializeJsonString")
 

@@ -85,7 +85,7 @@ function EnemyDummyTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 61-94
+-- Lines 61-95
 function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -103,6 +103,7 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	local options = {
 		"alerted",
 		"death",
+		"fire_death",
 		"killshot",
 		"fled",
 		"spawn",

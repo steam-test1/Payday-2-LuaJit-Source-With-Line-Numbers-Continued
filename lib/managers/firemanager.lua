@@ -630,7 +630,7 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 677-737
+-- Lines 677-757
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration, sound_event_duration)
 	effect_name = effect_name or "effects/payday2/particles/explosions/molotov_grenade"
 	local effect_id = nil
@@ -698,11 +698,11 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
--- Lines 739-741
+-- Lines 759-761
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 end
 
--- Lines 744-752
+-- Lines 764-777
 function FireManager:_dispose_of_impact_sound(custom_params)
 	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
 
@@ -718,7 +718,7 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	}), TimerManager:game():time() + t - custom_params.sound_event_impact_duration)
 end
 
--- Lines 755-759
+-- Lines 780-784
 function FireManager:_fade_out_burn_loop_sound(custom_params)
 	local fade_duration = 2
 
@@ -726,7 +726,7 @@ function FireManager:_fade_out_burn_loop_sound(custom_params)
 	managers.enemy:add_delayed_clbk("MolotovFading", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", custom_params), TimerManager:game():time() + fade_duration)
 end
 
--- Lines 762-765
+-- Lines 787-790
 function FireManager:on_simulation_ended()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}

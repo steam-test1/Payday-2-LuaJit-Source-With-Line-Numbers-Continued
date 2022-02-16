@@ -8,7 +8,7 @@ GenericDialog.FADE_OUT_DURATION = 0.2
 GenericDialog.MOVE_AXIS_LIMIT = 0.4
 GenericDialog.MOVE_AXIS_DELAY = 0.4
 
--- Lines 12-78
+-- Lines 12-86
 function GenericDialog:init(manager, data, is_title_outside)
 	Dialog.init(self, manager, data)
 
@@ -33,7 +33,15 @@ function GenericDialog:init(manager, data, is_title_outside)
 		use_text_formating = data.use_text_formating,
 		text_formating_color = data.text_formating_color,
 		text_formating_color_table = data.text_formating_color_table,
-		text_blend_mode = data.text_blend_mode
+		text_blend_mode = data.text_blend_mode,
+		x = data.x,
+		y = data.y,
+		w = data.w,
+		h = data.h,
+		left_marigin = data.left_marigin,
+		right_marigin = data.right_marigin,
+		top_marigin = data.top_marigin,
+		bottom_marigin = data.bottom_marigin
 	}
 	self._ws = self._data.ws or manager:_get_ws()
 	self._panel_script = _G[self.PANEL_SCRIPT_CLASS]:new(self._ws, self._data.title or "", self._data.text or "", self._data, text_config)
@@ -56,17 +64,17 @@ function GenericDialog:init(manager, data, is_title_outside)
 	end
 end
 
--- Lines 80-82
+-- Lines 88-90
 function GenericDialog:set_text(text, no_upper)
 	self._panel_script:set_text(text, no_upper)
 end
 
--- Lines 84-86
+-- Lines 92-94
 function GenericDialog:set_title(text, no_upper)
 	self._panel_script:set_title(text, no_upper)
 end
 
--- Lines 88-105
+-- Lines 96-113
 function GenericDialog:mouse_moved(o, x, y)
 	if not self._panel_script or not alive(self._panel_script._text_box_buttons_panel) then
 		return false, "arrow"
@@ -89,7 +97,7 @@ function GenericDialog:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines 107-124
+-- Lines 115-132
 function GenericDialog:mouse_pressed(o, button, x, y)
 	if button == Idstring("0") then
 		local x, y = managers.mouse_pointer:convert_1280_mouse_pos(x, y)
@@ -112,12 +120,12 @@ function GenericDialog:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 126-128
+-- Lines 134-136
 function GenericDialog:mouse_released(o, button, x, y)
 	self._panel_script:release_scroll_bar()
 end
 
--- Lines 130-189
+-- Lines 138-197
 function GenericDialog:update(t, dt)
 	if self._fade_in_time then
 		local alpha = math.clamp((t - self._fade_in_time) / self.FADE_IN_DURATION, 0, 1)
@@ -184,7 +192,7 @@ function GenericDialog:update(t, dt)
 	end
 end
 
--- Lines 191-226
+-- Lines 199-234
 function GenericDialog:update_input(t, dt)
 	if self._data.no_buttons then
 		return
@@ -220,7 +228,7 @@ function GenericDialog:update_input(t, dt)
 	end
 end
 
--- Lines 228-265
+-- Lines 236-273
 function GenericDialog:set_input_enabled(enabled)
 	if not self._input_enabled ~= not enabled then
 		if enabled then
@@ -264,18 +272,18 @@ function GenericDialog:set_input_enabled(enabled)
 	end
 end
 
--- Lines 267-269
+-- Lines 275-277
 function GenericDialog:fade_in()
 	self._fade_in_time = TimerManager:main():time()
 end
 
--- Lines 271-275
+-- Lines 279-283
 function GenericDialog:fade_out_close()
 	managers.menu:post_event("prompt_exit")
 	self:fade_out()
 end
 
--- Lines 277-283
+-- Lines 285-291
 function GenericDialog:fade_out()
 	self._fade_out_time = TimerManager:main():time()
 
@@ -286,12 +294,12 @@ function GenericDialog:fade_out()
 	self:set_input_enabled(false)
 end
 
--- Lines 285-287
+-- Lines 293-295
 function GenericDialog:is_closing()
 	return self._fade_out_time ~= nil
 end
 
--- Lines 289-294
+-- Lines 297-302
 function GenericDialog:show()
 	managers.menu:post_event("prompt_enter")
 	self._manager:event_dialog_shown(self)
@@ -299,7 +307,7 @@ function GenericDialog:show()
 	return true
 end
 
--- Lines 296-302
+-- Lines 304-310
 function GenericDialog:hide()
 	self:set_input_enabled(false)
 
@@ -309,26 +317,26 @@ function GenericDialog:hide()
 	self._manager:event_dialog_hidden(self)
 end
 
--- Lines 304-310
+-- Lines 312-318
 function GenericDialog:_close_generic()
 	self:set_input_enabled(false)
 	self._panel_script:close()
 	managers.viewport:remove_resolution_changed_func(self._resolution_changed_callback)
 end
 
--- Lines 312-315
+-- Lines 320-323
 function GenericDialog:close()
 	self:_close_generic()
 	Dialog.close(self)
 end
 
--- Lines 317-320
+-- Lines 325-328
 function GenericDialog:force_close()
 	self:_close_generic()
 	Dialog.force_close(self)
 end
 
--- Lines 322-343
+-- Lines 330-351
 function GenericDialog:dialog_cancel_callback()
 	if SystemInfo:platform() ~= Idstring("WIN32") then
 		return
@@ -353,17 +361,45 @@ function GenericDialog:dialog_cancel_callback()
 	end
 end
 
--- Lines 345-352
+-- Lines 353-372
 function GenericDialog:button_pressed_callback()
 	if self._data.no_buttons then
 		return
 	end
 
-	self:remove_mouse()
-	self:button_pressed(self._panel_script:get_focus_button())
+	local button_index = self._panel_script:get_focus_button()
+	local button_list = self._data.button_list
+
+	if button_list then
+		local button = button_list[button_index]
+
+		if not button or not button.no_close then
+			self:remove_mouse()
+		end
+	else
+		self:remove_mouse()
+	end
+
+	self:button_pressed(button_index)
 end
 
--- Lines 354-366
+-- Lines 374-385
+function GenericDialog:button_pressed(button_index)
+	GenericDialog.super.button_pressed(self, button_index)
+
+	local toggle_state = self._panel_script:update_toggle(button_index, false)
+	local button_list = self._data.button_list
+
+	if button_list then
+		local button = button_list[button_index]
+
+		if button and button.toggle and button.toggle_callback_func then
+			button.toggle_callback_func(toggle_state)
+		end
+	end
+end
+
+-- Lines 387-399
 function GenericDialog:remove_mouse()
 	if not self._removed_mouse then
 		self._removed_mouse = true
@@ -378,6 +414,6 @@ function GenericDialog:remove_mouse()
 	end
 end
 
--- Lines 368-370
+-- Lines 401-403
 function GenericDialog:resolution_changed_callback()
 end

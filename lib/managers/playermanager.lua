@@ -737,7 +737,7 @@ function PlayerManager:need_send_player_status()
 	player:character_damage():send_set_status()
 end
 
--- Lines 662-751
+-- Lines 662-753
 function PlayerManager:_internal_load()
 	local player = self:player_unit()
 
@@ -761,6 +761,7 @@ function PlayerManager:_internal_load()
 		player:inventory():add_unit_by_factory_name(primary.factory_id, default_weapon_selection == 2, false, primary.blueprint, primary.cosmetics, texture_switches)
 	end
 
+	player:inventory():hide_equipped_unit()
 	player:inventory():set_melee_weapon(managers.blackmarket:equipped_melee_weapon())
 
 	local peer_id = managers.network:session():local_peer():id()
@@ -848,7 +849,7 @@ function PlayerManager:_internal_load()
 	end
 end
 
--- Lines 753-771
+-- Lines 755-773
 function PlayerManager:_add_level_equipment(player)
 	local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
 	id = id ~= "none" and id or nil
@@ -873,7 +874,7 @@ function PlayerManager:_add_level_equipment(player)
 	end
 end
 
--- Lines 773-821
+-- Lines 775-823
 function PlayerManager:spawn_dropin_penalty(dead, bleed_out, health, used_deployable, used_cable_ties, used_body_bags)
 	local player = self:player_unit()
 
@@ -927,17 +928,17 @@ function PlayerManager:spawn_dropin_penalty(dead, bleed_out, health, used_deploy
 	end
 end
 
--- Lines 823-825
+-- Lines 825-827
 function PlayerManager:nr_players()
 	return self._nr_players
 end
 
--- Lines 827-829
+-- Lines 829-831
 function PlayerManager:set_nr_players(nr)
 	self._nr_players = nr
 end
 
--- Lines 831-840
+-- Lines 833-842
 function PlayerManager:player_id(unit)
 	local id = self._last_id
 
@@ -950,7 +951,7 @@ function PlayerManager:player_id(unit)
 	return id
 end
 
--- Lines 842-847
+-- Lines 844-849
 function PlayerManager:viewport_config()
 	local configs = self._viewport_configs[self._last_id]
 
@@ -959,7 +960,7 @@ function PlayerManager:viewport_config()
 	end
 end
 
--- Lines 849-860
+-- Lines 851-862
 function PlayerManager:setup_viewports()
 	local configs = self._viewport_configs[self._last_id]
 
@@ -972,7 +973,7 @@ function PlayerManager:setup_viewports()
 	end
 end
 
--- Lines 863-870
+-- Lines 865-872
 function PlayerManager:player_states()
 	local ret = {}
 
@@ -985,22 +986,22 @@ function PlayerManager:player_states()
 	return ret
 end
 
--- Lines 873-875
+-- Lines 875-877
 function PlayerManager:current_state()
 	return self._current_state
 end
 
--- Lines 877-879
+-- Lines 879-881
 function PlayerManager:default_player_state()
 	return self._DEFAULT_STATE
 end
 
--- Lines 881-883
+-- Lines 883-885
 function PlayerManager:current_sync_state()
 	return self._current_sync_state
 end
 
--- Lines 885-941
+-- Lines 887-943
 function PlayerManager:set_player_state(state)
 	state = state or self._current_state
 
@@ -1047,7 +1048,7 @@ function PlayerManager:set_player_state(state)
 	self:_change_player_state()
 end
 
--- Lines 943-950
+-- Lines 945-952
 function PlayerManager:spawn_players(position, rotation, state)
 	for var = 1, self._nr_players do
 		self._last_id = var
@@ -1058,7 +1059,7 @@ function PlayerManager:spawn_players(position, rotation, state)
 	return self._players[1]
 end
 
--- Lines 952-970
+-- Lines 954-972
 function PlayerManager:spawned_player(id, unit)
 	self._players[id] = unit
 
@@ -1079,7 +1080,7 @@ function PlayerManager:spawned_player(id, unit)
 	end
 end
 
--- Lines 972-987
+-- Lines 974-989
 function PlayerManager:_change_player_state()
 	local unit = self:player_unit()
 
@@ -1097,7 +1098,7 @@ function PlayerManager:_change_player_state()
 	self:send_message("player_state_changed", nil, self._current_state)
 end
 
--- Lines 989-996
+-- Lines 991-998
 function PlayerManager:player_destroyed(id)
 	self._players[id] = nil
 	self._respawn = true
@@ -1107,29 +1108,29 @@ function PlayerManager:player_destroyed(id)
 	end
 end
 
--- Lines 998-1000
+-- Lines 1000-1002
 function PlayerManager:players()
 	return self._players
 end
 
--- Lines 1002-1004
+-- Lines 1004-1006
 function PlayerManager:player_unit_name()
 	return self._player_name
 end
 
--- Lines 1006-1009
+-- Lines 1008-1011
 function PlayerManager:player_unit(id)
 	local p_id = id or 1
 
 	return self._players[p_id]
 end
 
--- Lines 1011-1013
+-- Lines 1013-1015
 function PlayerManager:local_player()
 	return self:player_unit()
 end
 
--- Lines 1015-1025
+-- Lines 1017-1027
 function PlayerManager:num_players_with_more_health()
 	local num_players = 0
 	local count = #self._player_list
@@ -1144,12 +1145,12 @@ function PlayerManager:num_players_with_more_health()
 	return num_players
 end
 
--- Lines 1027-1029
+-- Lines 1029-1031
 function PlayerManager:num_connected_players()
 	return #self._player_list
 end
 
--- Lines 1031-1036
+-- Lines 1033-1038
 function PlayerManager:warp_to(pos, rot, id, velocity)
 	local player = self._players[id or 1]
 
@@ -1158,7 +1159,7 @@ function PlayerManager:warp_to(pos, rot, id, velocity)
 	end
 end
 
--- Lines 1038-1066
+-- Lines 1040-1068
 function PlayerManager:on_out_of_world()
 	local player_unit = managers.player:player_unit()
 
@@ -1192,7 +1193,7 @@ function PlayerManager:on_out_of_world()
 	managers.player:warp_to(pos, player_unit:rotation())
 end
 
--- Lines 1068-1079
+-- Lines 1070-1081
 function PlayerManager:aquire_weapon(upgrade, id)
 	if self._global.weapons[id] then
 		return
@@ -1206,12 +1207,12 @@ function PlayerManager:aquire_weapon(upgrade, id)
 	end
 end
 
--- Lines 1081-1083
+-- Lines 1083-1085
 function PlayerManager:unaquire_weapon(upgrade, id)
 	self._global.weapons[id] = upgrade
 end
 
--- Lines 1085-1091
+-- Lines 1087-1093
 function PlayerManager:aquire_melee_weapon(upgrade, id)
 	if not self._global.melee_weapons or self._global.melee_weapons[id] then
 		return
@@ -1220,11 +1221,11 @@ function PlayerManager:aquire_melee_weapon(upgrade, id)
 	self._global.melee_weapons[id] = upgrade
 end
 
--- Lines 1093-1095
+-- Lines 1095-1097
 function PlayerManager:unaquire_melee_weapon(upgrade, id)
 end
 
--- Lines 1097-1103
+-- Lines 1099-1105
 function PlayerManager:aquire_grenade(upgrade, id)
 	if not self._global.grenades or self._global.grenades[id] then
 		return
@@ -1233,11 +1234,11 @@ function PlayerManager:aquire_grenade(upgrade, id)
 	self._global.grenades[id] = upgrade
 end
 
--- Lines 1105-1107
+-- Lines 1107-1109
 function PlayerManager:unaquire_grenade(upgrade, id)
 end
 
--- Lines 1110-1130
+-- Lines 1112-1132
 function PlayerManager:_verify_equipment_kit(loading)
 	local max_n = table.maxn(self._global.kit.equipment_slots)
 	local equipment_slots = {}
@@ -1264,7 +1265,7 @@ function PlayerManager:_verify_equipment_kit(loading)
 	end
 end
 
--- Lines 1132-1144
+-- Lines 1134-1146
 function PlayerManager:aquire_equipment(upgrade, id, loading)
 	if self._global.equipment[id] then
 		return
@@ -1279,14 +1280,14 @@ function PlayerManager:aquire_equipment(upgrade, id, loading)
 	self:_verify_equipment_kit(loading)
 end
 
--- Lines 1146-1150
+-- Lines 1148-1152
 function PlayerManager:spawn_extra_ammo(unit)
 	if alive(unit) then
 		unit:character_damage():drop_pickup(true)
 	end
 end
 
--- Lines 1153-1305
+-- Lines 1155-1307
 function PlayerManager:on_killshot(killed_unit, variant, headshot, weapon_id)
 	local player_unit = self:player_unit()
 
@@ -1430,7 +1431,7 @@ function PlayerManager:on_killshot(killed_unit, variant, headshot, weapon_id)
 	end
 end
 
--- Lines 1309-1383
+-- Lines 1311-1385
 function PlayerManager:chk_wild_kill_counter(killed_unit, variant)
 	local player_unit = self:player_unit()
 
@@ -1500,7 +1501,7 @@ function PlayerManager:chk_wild_kill_counter(killed_unit, variant)
 	end
 end
 
--- Lines 1386-1406
+-- Lines 1388-1408
 function PlayerManager:chk_store_armor_health_kill_counter(killed_unit, variant)
 	local player_unit = self:player_unit()
 
@@ -1526,7 +1527,7 @@ function PlayerManager:chk_store_armor_health_kill_counter(killed_unit, variant)
 	end
 end
 
--- Lines 1409-1444
+-- Lines 1411-1446
 function PlayerManager:_update_damage_dealt(t, dt)
 	local local_peer_id = managers.network:session() and managers.network:session():local_peer():id()
 
@@ -1561,7 +1562,7 @@ function PlayerManager:_update_damage_dealt(t, dt)
 	end
 end
 
--- Lines 1448-1466
+-- Lines 1450-1468
 function PlayerManager:on_damage_dealt(unit, damage_info)
 	local player_unit = self:player_unit()
 
@@ -1581,7 +1582,7 @@ function PlayerManager:on_damage_dealt(unit, damage_info)
 	self._on_damage_dealt_t = t + (tweak_data.upgrades.on_damage_dealt_cooldown or 0)
 end
 
--- Lines 1469-1489
+-- Lines 1471-1491
 function PlayerManager:_check_damage_to_cops(t, unit, damage_info)
 	local player_unit = self:player_unit()
 
@@ -1605,7 +1606,7 @@ function PlayerManager:_check_damage_to_cops(t, unit, damage_info)
 	self._damage_dealt_to_cops = self._damage_dealt_to_cops + (damage_info.damage or 0)
 end
 
--- Lines 1492-1511
+-- Lines 1494-1513
 function PlayerManager:on_headshot_dealt()
 	local player_unit = self:player_unit()
 
@@ -1630,7 +1631,7 @@ function PlayerManager:on_headshot_dealt()
 	end
 end
 
--- Lines 1513-1519
+-- Lines 1515-1521
 function PlayerManager:on_lethal_headshot_dealt(attacker_unit, attack_data)
 	if not self:player_unit() or attacker_unit ~= self:player_unit() then
 		return
@@ -1639,7 +1640,7 @@ function PlayerManager:on_lethal_headshot_dealt(attacker_unit, attack_data)
 	self._message_system:notify(Message.OnLethalHeadShot, nil, attack_data)
 end
 
--- Lines 1521-1571
+-- Lines 1523-1573
 function PlayerManager:_check_damage_to_hot(t, unit, damage_info)
 	local player_unit = self:player_unit()
 
@@ -1696,7 +1697,7 @@ function PlayerManager:_check_damage_to_hot(t, unit, damage_info)
 	self._next_allowed_doh_t = t + data.stacking_cooldown
 end
 
--- Lines 1573-1588
+-- Lines 1575-1590
 function PlayerManager:unaquire_equipment(upgrade, id)
 	if not self._global.equipment[id] then
 		return
@@ -1715,7 +1716,7 @@ function PlayerManager:unaquire_equipment(upgrade, id)
 	end
 end
 
--- Lines 1590-1605
+-- Lines 1592-1607
 function PlayerManager:aquire_upgrade(upgrade)
 	self._global.upgrades[upgrade.category] = self._global.upgrades[upgrade.category] or {}
 	self._global.upgrades[upgrade.category][upgrade.upgrade] = math.max(upgrade.value, self._global.upgrades[upgrade.category][upgrade.upgrade] or 0)
@@ -1731,7 +1732,7 @@ function PlayerManager:aquire_upgrade(upgrade)
 	end
 end
 
--- Lines 1607-1624
+-- Lines 1609-1626
 function PlayerManager:unaquire_upgrade(upgrade)
 	if not self._global.upgrades[upgrade.category] then
 		Application:error("[PlayerManager:unaquire_upgrade] Can't unaquire upgrade of category", upgrade.category)
@@ -1752,7 +1753,7 @@ function PlayerManager:unaquire_upgrade(upgrade)
 	self:unaquire_incremental_upgrade(upgrade)
 end
 
--- Lines 1627-1654
+-- Lines 1629-1656
 function PlayerManager:aquire_incremental_upgrade(upgrade)
 	self._global.upgrades[upgrade.category] = self._global.upgrades[upgrade.category] or {}
 	local val = self._global.upgrades[upgrade.category][upgrade.upgrade]
@@ -1779,7 +1780,7 @@ function PlayerManager:aquire_incremental_upgrade(upgrade)
 	end
 end
 
--- Lines 1656-1683
+-- Lines 1658-1685
 function PlayerManager:unaquire_incremental_upgrade(upgrade)
 	if not self._global.upgrades[upgrade.category] then
 		Application:error("[PlayerManager:unaquire_incremental_upgrade] Can't unaquire upgrade of category", upgrade.category)
@@ -1809,12 +1810,12 @@ function PlayerManager:unaquire_incremental_upgrade(upgrade)
 	end
 end
 
--- Lines 1685-1687
+-- Lines 1687-1689
 function PlayerManager:is_upgrade_synced(category, upgrade)
 	return self._global.synced_upgrades[category] and self._global.synced_upgrades[category][upgrade]
 end
 
--- Lines 1689-1698
+-- Lines 1691-1700
 function PlayerManager:temporary_upgrade_index(category, upgrade)
 	if self._temporary_upgrade_indices and self._temporary_upgrade_indices[category .. upgrade] then
 		return self._temporary_upgrade_indices[category .. upgrade]
@@ -1827,7 +1828,7 @@ function PlayerManager:temporary_upgrade_index(category, upgrade)
 	return self._temporary_upgrade_indices[category .. upgrade]
 end
 
--- Lines 1701-1713
+-- Lines 1703-1715
 function PlayerManager:upgrade_value(category, upgrade, default)
 	if not self._global.upgrades[category] then
 		return default or 0
@@ -1843,7 +1844,7 @@ function PlayerManager:upgrade_value(category, upgrade, default)
 	return value or value ~= false and (default or 0) or false
 end
 
--- Lines 1715-1719
+-- Lines 1717-1721
 function PlayerManager:upgrade_value_nil(category, upgrade)
 	local level = self._global.upgrades[category] and self._global.upgrades[category][upgrade]
 	local value = level and tweak_data.upgrades.values[category][upgrade][level]
@@ -1851,7 +1852,7 @@ function PlayerManager:upgrade_value_nil(category, upgrade)
 	return value
 end
 
--- Lines 1722-1735
+-- Lines 1724-1737
 function PlayerManager:crew_ability_upgrade_value(upgrade, default)
 	if not self._global.upgrades.team or not self._global.upgrades.team[upgrade] then
 		return default or 0
@@ -1866,22 +1867,22 @@ function PlayerManager:crew_ability_upgrade_value(upgrade, default)
 	return value and value[ai_level] or default
 end
 
--- Lines 1737-1739
+-- Lines 1739-1741
 function PlayerManager:start_custom_cooldown(category, upgrade, cooldown)
 	self:start_timer(category .. "_" .. upgrade, cooldown)
 end
 
--- Lines 1742-1744
+-- Lines 1744-1746
 function PlayerManager:is_custom_cooldown_not_active(category, upgrade)
 	return self:has_category_upgrade(category, upgrade) and not self:has_active_timer(category .. "_" .. upgrade)
 end
 
--- Lines 1747-1749
+-- Lines 1749-1751
 function PlayerManager:get_custom_cooldown_left(category, upgrade)
 	return self:get_timer_remaining(category .. "_" .. upgrade)
 end
 
--- Lines 1751-1766
+-- Lines 1753-1768
 function PlayerManager:consumable_upgrade_value(upgrade, default)
 	if self._consumable_upgrades[upgrade] then
 		local amount = self._consumable_upgrades[upgrade].amount
@@ -1903,7 +1904,7 @@ function PlayerManager:consumable_upgrade_value(upgrade, default)
 	return default or 1
 end
 
--- Lines 1769-1771
+-- Lines 1771-1773
 function PlayerManager:add_consumable_upgrade(upgrade, amount, data)
 	self._consumable_upgrades[upgrade] = {
 		amount = amount,
@@ -1911,12 +1912,12 @@ function PlayerManager:add_consumable_upgrade(upgrade, amount, data)
 	}
 end
 
--- Lines 1775-1777
+-- Lines 1777-1779
 function PlayerManager:list_level_rewards(dlcs)
 	return managers.upgrades:list_level_rewards(dlcs)
 end
 
--- Lines 1781-1814
+-- Lines 1783-1816
 function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1935,7 +1936,7 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	end
 end
 
--- Lines 1817-1831
+-- Lines 1819-1833
 function PlayerManager:extend_temporary_upgrade(category, upgrade, time)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1948,7 +1949,7 @@ function PlayerManager:extend_temporary_upgrade(category, upgrade, time)
 	upgrade.expire_time = upgrade_expire_time + time
 end
 
--- Lines 1834-1852
+-- Lines 1836-1854
 function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, level)
 	local upgrade_level = self:upgrade_level(category, upgrade, 0) or 0
 
@@ -1970,7 +1971,7 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 	}
 end
 
--- Lines 1854-1864
+-- Lines 1856-1866
 function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1985,7 +1986,7 @@ function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
 	self._temporary_upgrades[category][upgrade] = nil
 end
 
--- Lines 1866-1881
+-- Lines 1868-1883
 function PlayerManager:has_activate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2004,7 +2005,7 @@ function PlayerManager:has_activate_temporary_upgrade(category, upgrade)
 	return Application:time() < self._temporary_upgrades[category][upgrade].expire_time
 end
 
--- Lines 1883-1898
+-- Lines 1885-1900
 function PlayerManager:has_inactivate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2023,7 +2024,7 @@ function PlayerManager:has_inactivate_temporary_upgrade(category, upgrade)
 	return self._temporary_upgrades[category][upgrade].expire_time <= Application:time()
 end
 
--- Lines 1900-1915
+-- Lines 1902-1917
 function PlayerManager:get_activate_temporary_expire_time(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2042,7 +2043,7 @@ function PlayerManager:get_activate_temporary_expire_time(category, upgrade)
 	return self._temporary_upgrades[category][upgrade].expire_time or 0
 end
 
--- Lines 1917-1940
+-- Lines 1919-1942
 function PlayerManager:temporary_upgrade_value(category, upgrade, default)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2069,12 +2070,12 @@ function PlayerManager:temporary_upgrade_value(category, upgrade, default)
 	return upgrade_value[1]
 end
 
--- Lines 1942-1944
+-- Lines 1944-1946
 function PlayerManager:equiptment_upgrade_value(category, upgrade, default)
 	return self:upgrade_value(category, upgrade, default)
 end
 
--- Lines 1948-1960
+-- Lines 1950-1962
 function PlayerManager:aquire_cooldown_upgrade(upgrade)
 	self:aquire_upgrade(upgrade)
 
@@ -2090,12 +2091,12 @@ function PlayerManager:aquire_cooldown_upgrade(upgrade)
 	}
 end
 
--- Lines 1962-1964
+-- Lines 1964-1966
 function PlayerManager:unaquire_cooldown_upgrade(upgrade)
 	self:unaquire_upgrade(upgrade)
 end
 
--- Lines 1966-1978
+-- Lines 1968-1980
 function PlayerManager:disable_cooldown_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2110,7 +2111,7 @@ function PlayerManager:disable_cooldown_upgrade(category, upgrade)
 	}
 end
 
--- Lines 1980-1995
+-- Lines 1982-1997
 function PlayerManager:has_disabled_cooldown_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2129,7 +2130,7 @@ function PlayerManager:has_disabled_cooldown_upgrade(category, upgrade)
 	return Application:time() < self._global.cooldown_upgrades[category][upgrade].cooldown_time
 end
 
--- Lines 1997-2012
+-- Lines 1999-2014
 function PlayerManager:has_enabled_cooldown_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2148,7 +2149,7 @@ function PlayerManager:has_enabled_cooldown_upgrade(category, upgrade)
 	return self._global.cooldown_upgrades[category][upgrade].cooldown_time <= Application:time()
 end
 
--- Lines 2014-2029
+-- Lines 2016-2031
 function PlayerManager:get_disabled_cooldown_time(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2167,7 +2168,7 @@ function PlayerManager:get_disabled_cooldown_time(category, upgrade)
 	return self._global.cooldown_upgrades[category][upgrade].cooldown_time or 0
 end
 
--- Lines 2031-2054
+-- Lines 2033-2056
 function PlayerManager:cooldown_upgrade_value(category, upgrade, default)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -2194,7 +2195,7 @@ function PlayerManager:cooldown_upgrade_value(category, upgrade, default)
 	return upgrade_value[1]
 end
 
--- Lines 2059-2070
+-- Lines 2061-2072
 function PlayerManager:upgrade_level(category, upgrade, default)
 	if not self._global.upgrades[category] then
 		return default or 0
@@ -2209,17 +2210,17 @@ function PlayerManager:upgrade_level(category, upgrade, default)
 	return level
 end
 
--- Lines 2072-2074
+-- Lines 2074-2076
 function PlayerManager:upgrade_level_nil(category, upgrade)
 	return self._global.upgrades[category] and self._global.upgrades[category][upgrade]
 end
 
--- Lines 2077-2079
+-- Lines 2079-2081
 function PlayerManager:upgrade_value_by_level(category, upgrade, level, default)
 	return tweak_data.upgrades.values[category][upgrade][level] or default or 0
 end
 
--- Lines 2082-2093
+-- Lines 2084-2095
 function PlayerManager:equipped_upgrade_value(equipped, category, upgrade)
 	if not self:has_category_upgrade(category, upgrade) then
 		return 0
@@ -2234,7 +2235,7 @@ function PlayerManager:equipped_upgrade_value(equipped, category, upgrade)
 	return self:upgrade_value(category, upgrade)
 end
 
--- Lines 2096-2104
+-- Lines 2098-2106
 function PlayerManager:has_category_upgrade(category, upgrade)
 	if not self._global.upgrades[category] then
 		return false
@@ -2247,14 +2248,14 @@ function PlayerManager:has_category_upgrade(category, upgrade)
 	return true
 end
 
--- Lines 2107-2110
+-- Lines 2109-2112
 function PlayerManager:body_armor_value(category, override_value, default)
 	local armor_data = tweak_data.blackmarket.armors[managers.blackmarket:equipped_armor(true, true)]
 
 	return self:upgrade_value_by_level("player", "body_armor", category, {})[override_value or armor_data.upgrade_level] or default or 0
 end
 
--- Lines 2114-2126
+-- Lines 2116-2128
 function PlayerManager:get_limited_exp_multiplier(job_id, level_id)
 	local job_data = tweak_data.narrative:job_data(job_id) or {}
 	local level_data = level_id and tweak_data.levels[level_id] or {}
@@ -2263,7 +2264,7 @@ function PlayerManager:get_limited_exp_multiplier(job_id, level_id)
 	return multiplier
 end
 
--- Lines 2128-2142
+-- Lines 2130-2144
 function PlayerManager:get_infamy_exp_multiplier()
 	local multiplier = 1
 
@@ -2278,7 +2279,7 @@ function PlayerManager:get_infamy_exp_multiplier()
 	return multiplier
 end
 
--- Lines 2144-2183
+-- Lines 2146-2185
 function PlayerManager:get_skill_exp_multiplier(whisper_mode)
 	local multiplier = 1
 	multiplier = multiplier + managers.player:upgrade_value("player", "xp_multiplier", 1) - 1
@@ -2326,7 +2327,7 @@ function PlayerManager:get_skill_exp_multiplier(whisper_mode)
 	return multiplier
 end
 
--- Lines 2185-2228
+-- Lines 2187-2230
 function PlayerManager:get_skill_money_multiplier(whisper_mode)
 	local cash_skill_mulitplier = 1
 	local bag_skill_mulitplier = 1
@@ -2378,7 +2379,7 @@ function PlayerManager:get_skill_money_multiplier(whisper_mode)
 	return cash_skill_mulitplier, bag_skill_mulitplier
 end
 
--- Lines 2232-2255
+-- Lines 2234-2257
 function PlayerManager:get_hostage_bonus_multiplier(category)
 	local hostages = managers.groupai and managers.groupai:state():hostage_count() or 0
 	local minions = self:num_local_minions() or 0
@@ -2403,7 +2404,7 @@ function PlayerManager:get_hostage_bonus_multiplier(category)
 	return 1 + multiplier * hostages
 end
 
--- Lines 2257-2280
+-- Lines 2259-2282
 function PlayerManager:get_hostage_bonus_addend(category)
 	local hostages = managers.groupai and managers.groupai:state():hostage_count() or 0
 	local minions = self:num_local_minions() or 0
@@ -2428,7 +2429,7 @@ function PlayerManager:get_hostage_bonus_addend(category)
 	return addend * hostages
 end
 
--- Lines 2284-2326
+-- Lines 2286-2328
 function PlayerManager:movement_speed_multiplier(speed_state, bonus_multiplier, upgrade_level, health_ratio)
 	local multiplier = 1
 	local armor_penalty = self:mod_movement_penalty(self:body_armor_value("movement", upgrade_level, 1))
@@ -2471,7 +2472,7 @@ function PlayerManager:movement_speed_multiplier(speed_state, bonus_multiplier, 
 	return multiplier
 end
 
--- Lines 2330-2343
+-- Lines 2332-2345
 function PlayerManager:mod_movement_penalty(movement_penalty)
 	local skill_mods = self:upgrade_value("player", "passive_armor_movement_penalty_multiplier", 1)
 	skill_mods = skill_mods * self:upgrade_value("team", "crew_reduce_speed_penalty", 1)
@@ -2485,7 +2486,7 @@ function PlayerManager:mod_movement_penalty(movement_penalty)
 	return movement_penalty
 end
 
--- Lines 2345-2362
+-- Lines 2347-2364
 function PlayerManager:body_armor_skill_multiplier(override_armor)
 	local multiplier = 1
 	multiplier = multiplier + self:upgrade_value("player", "tier_armor_multiplier", 1) - 1
@@ -2500,7 +2501,7 @@ function PlayerManager:body_armor_skill_multiplier(override_armor)
 	return multiplier
 end
 
--- Lines 2364-2383
+-- Lines 2366-2385
 function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
 	local multiplier = 1
 	multiplier = multiplier * self:upgrade_value("player", "armor_regen_timer_multiplier_tier", 1)
@@ -2522,7 +2523,7 @@ function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
 	return multiplier
 end
 
--- Lines 2385-2401
+-- Lines 2387-2403
 function PlayerManager:body_armor_skill_addend(override_armor)
 	local addend = 0
 	addend = addend + self:upgrade_value("player", tostring(override_armor or managers.blackmarket:equipped_armor(true, true)) .. "_armor_addend", 0)
@@ -2538,7 +2539,7 @@ function PlayerManager:body_armor_skill_addend(override_armor)
 	return addend
 end
 
--- Lines 2403-2442
+-- Lines 2405-2444
 function PlayerManager:skill_dodge_chance(running, crouching, on_zipline, override_armor, detection_risk)
 	local chance = self:upgrade_value("player", "passive_dodge_chance", 0)
 	local dodge_shot_gain = self:_dodge_shot_gain()
@@ -2578,7 +2579,7 @@ function PlayerManager:skill_dodge_chance(running, crouching, on_zipline, overri
 	return chance
 end
 
--- Lines 2444-2456
+-- Lines 2446-2458
 function PlayerManager:stamina_multiplier()
 	local multiplier = 1
 	multiplier = multiplier + self:upgrade_value("player", "stamina_multiplier", 1) - 1
@@ -2590,7 +2591,7 @@ function PlayerManager:stamina_multiplier()
 	return multiplier
 end
 
--- Lines 2458-2464
+-- Lines 2460-2466
 function PlayerManager:stamina_addend()
 	local addend = 0
 	addend = addend + self:upgrade_value("team", "crew_add_stamina", 0)
@@ -2598,7 +2599,7 @@ function PlayerManager:stamina_addend()
 	return addend
 end
 
--- Lines 2466-2480
+-- Lines 2468-2482
 function PlayerManager:critical_hit_chance(detection_risk)
 	local multiplier = 0
 	multiplier = multiplier + self:upgrade_value("player", "critical_hit_chance", 0)
@@ -2613,7 +2614,7 @@ function PlayerManager:critical_hit_chance(detection_risk)
 	return multiplier
 end
 
--- Lines 2482-2512
+-- Lines 2484-2514
 function PlayerManager:get_value_from_risk_upgrade(risk_upgrade, detection_risk)
 	local risk_value = 0
 
@@ -2650,7 +2651,7 @@ function PlayerManager:get_value_from_risk_upgrade(risk_upgrade, detection_risk)
 	return risk_value
 end
 
--- Lines 2514-2528
+-- Lines 2516-2530
 function PlayerManager:health_skill_multiplier()
 	local multiplier = 1
 	multiplier = multiplier + self:upgrade_value("player", "health_multiplier", 1) - 1
@@ -2666,7 +2667,7 @@ function PlayerManager:health_skill_multiplier()
 	return multiplier
 end
 
--- Lines 2530-2537
+-- Lines 2532-2539
 function PlayerManager:health_regen()
 	local health_regen = tweak_data.player.damage.HEALTH_REGEN
 	health_regen = health_regen + self:temporary_upgrade_value("temporary", "wolverine_health_regen", 0)
@@ -2676,7 +2677,7 @@ function PlayerManager:health_regen()
 	return health_regen
 end
 
--- Lines 2540-2548
+-- Lines 2542-2550
 function PlayerManager:fixed_health_regen(health_ratio)
 	local health_regen = 0
 
@@ -2687,7 +2688,7 @@ function PlayerManager:fixed_health_regen(health_ratio)
 	return health_regen
 end
 
--- Lines 2550-2556
+-- Lines 2552-2558
 function PlayerManager:max_health()
 	local base_health = PlayerDamage._HEALTH_INIT
 	local health = (base_health + self:health_skill_addend()) * self:health_skill_multiplier()
@@ -2695,7 +2696,7 @@ function PlayerManager:max_health()
 	return health
 end
 
--- Lines 2558-2596
+-- Lines 2560-2598
 function PlayerManager:damage_reduction_skill_multiplier(damage_type)
 	local multiplier = 1
 	multiplier = multiplier * self:temporary_upgrade_value("temporary", "dmg_dampener_outnumbered", 1)
@@ -2735,7 +2736,7 @@ function PlayerManager:damage_reduction_skill_multiplier(damage_type)
 	return multiplier
 end
 
--- Lines 2599-2609
+-- Lines 2601-2611
 function PlayerManager:health_skill_addend()
 	local addend = 0
 	addend = addend + self:upgrade_value("team", "crew_add_health", 0)
@@ -2747,7 +2748,7 @@ function PlayerManager:health_skill_addend()
 	return addend
 end
 
--- Lines 2612-2622
+-- Lines 2614-2624
 function PlayerManager:toolset_value()
 	if not self:has_category_upgrade("player", "toolset") then
 		return 1
@@ -2760,7 +2761,7 @@ function PlayerManager:toolset_value()
 	return self:upgrade_value("player", "toolset")
 end
 
--- Lines 2625-2633
+-- Lines 2627-2635
 function PlayerManager:inspect_current_upgrades()
 	for name, upgrades in pairs(self._global.upgrades) do
 		print("Weapon " .. name .. ":")
@@ -2773,7 +2774,7 @@ function PlayerManager:inspect_current_upgrades()
 	end
 end
 
--- Lines 2635-2641
+-- Lines 2637-2643
 function PlayerManager:spread_multiplier()
 	if not alive(self:player_unit()) then
 		return
@@ -2782,7 +2783,7 @@ function PlayerManager:spread_multiplier()
 	self:player_unit():movement()._current_state:_update_crosshair_offset()
 end
 
--- Lines 2644-2661
+-- Lines 2646-2663
 function PlayerManager:weapon_upgrade_progress(weapon_id)
 	local current = 0
 	local total = 0
@@ -2802,7 +2803,7 @@ function PlayerManager:weapon_upgrade_progress(weapon_id)
 	return current, total
 end
 
--- Lines 2664-2700
+-- Lines 2666-2702
 function PlayerManager:equipment_upgrade_progress(equipment_id)
 	local current = 0
 	local total = 0
@@ -2840,17 +2841,17 @@ function PlayerManager:equipment_upgrade_progress(equipment_id)
 	return current, total
 end
 
--- Lines 2704-2706
+-- Lines 2706-2708
 function PlayerManager:has_weapon(name)
 	return managers.player._global.weapons[name]
 end
 
--- Lines 2708-2710
+-- Lines 2710-2712
 function PlayerManager:has_aquired_equipment(name)
 	return managers.player._global.equipment[name]
 end
 
--- Lines 2712-2720
+-- Lines 2714-2722
 function PlayerManager:availible_weapons(slot)
 	local weapons = {}
 
@@ -2863,7 +2864,7 @@ function PlayerManager:availible_weapons(slot)
 	return weapons
 end
 
--- Lines 2722-2730
+-- Lines 2724-2732
 function PlayerManager:weapon_in_slot(slot)
 	local weapon = self._global.kit.weapon_slots[slot]
 
@@ -2876,7 +2877,7 @@ function PlayerManager:weapon_in_slot(slot)
 	return self._global.weapons[weapon] and weapon
 end
 
--- Lines 2732-2740
+-- Lines 2734-2742
 function PlayerManager:availible_equipment(slot)
 	local equipment = {}
 
@@ -2889,7 +2890,7 @@ function PlayerManager:availible_equipment(slot)
 	return equipment
 end
 
--- Lines 2742-2751
+-- Lines 2744-2753
 function PlayerManager:equipment_in_slot(slot)
 	local forced_deployable = managers.blackmarket:forced_deployable()
 
@@ -2900,7 +2901,7 @@ function PlayerManager:equipment_in_slot(slot)
 	return self._global.kit.equipment_slots[slot]
 end
 
--- Lines 2753-2760
+-- Lines 2755-2762
 function PlayerManager:set_equipment_in_slot(item, slot)
 	self._global.kit.equipment_slots[slot or 1] = item
 
@@ -2909,7 +2910,7 @@ function PlayerManager:set_equipment_in_slot(item, slot)
 	end
 end
 
--- Lines 2762-2771
+-- Lines 2764-2773
 function PlayerManager:equipment_slots()
 	local forced_deployable = managers.blackmarket:forced_deployable()
 
@@ -2922,7 +2923,7 @@ function PlayerManager:equipment_slots()
 	return self._global.kit.equipment_slots
 end
 
--- Lines 2773-2780
+-- Lines 2775-2782
 function PlayerManager:equipment_slot(equipment)
 	for i = 1, #self._global.kit.equipment_slots do
 		if self._global.kit.equipment_slots[i] == equipment then
@@ -2933,7 +2934,7 @@ function PlayerManager:equipment_slot(equipment)
 	return false
 end
 
--- Lines 2785-2793
+-- Lines 2787-2795
 function PlayerManager:toggle_player_rule(rule)
 	self._rules[rule] = not self._rules[rule]
 
@@ -2946,7 +2947,7 @@ function PlayerManager:toggle_player_rule(rule)
 	end
 end
 
--- Lines 2795-2804
+-- Lines 2797-2806
 function PlayerManager:set_player_rule(rule, value)
 	self._rules[rule] = self._rules[rule] + (value and 1 or -1)
 
@@ -2959,17 +2960,17 @@ function PlayerManager:set_player_rule(rule, value)
 	end
 end
 
--- Lines 2806-2808
+-- Lines 2808-2810
 function PlayerManager:get_player_rule(rule)
 	return self._rules[rule] > 0
 end
 
--- Lines 2812-2814
+-- Lines 2814-2816
 function PlayerManager:has_deployable_been_used()
 	return self._peer_used_deployable or false
 end
 
--- Lines 2817-2824
+-- Lines 2819-2826
 function PlayerManager:update_deployable_equipment_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -2981,7 +2982,7 @@ function PlayerManager:update_deployable_equipment_to_peer(peer)
 	end
 end
 
--- Lines 2826-2830
+-- Lines 2828-2832
 function PlayerManager:update_deployable_equipment_amount_to_peers(equipment, amount)
 	local peer = managers.network:session():local_peer()
 
@@ -2989,7 +2990,7 @@ function PlayerManager:update_deployable_equipment_amount_to_peers(equipment, am
 	self:set_synced_deployable_equipment(peer, equipment, amount)
 end
 
--- Lines 2832-2838
+-- Lines 2834-2840
 function PlayerManager:update_deployable_selection_to_peers()
 	local equipment = self:selected_equipment()
 
@@ -3000,7 +3001,7 @@ function PlayerManager:update_deployable_selection_to_peers()
 	end
 end
 
--- Lines 2840-2869
+-- Lines 2842-2871
 function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 	local peer_id = peer:id()
 	local only_update_amount = self._global.synced_deployables[peer_id] and self._global.synced_deployables[peer_id].deployable == deployable
@@ -3042,12 +3043,12 @@ function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 	end
 end
 
--- Lines 2871-2873
+-- Lines 2873-2875
 function PlayerManager:get_synced_deployable_equipment(peer_id)
 	return self._global.synced_deployables[peer_id]
 end
 
--- Lines 2879-2885
+-- Lines 2881-2887
 function PlayerManager:update_cable_ties_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3058,7 +3059,7 @@ function PlayerManager:update_cable_ties_to_peer(peer)
 	end
 end
 
--- Lines 2887-2891
+-- Lines 2889-2893
 function PlayerManager:update_synced_cable_ties_to_peers(amount)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3066,7 +3067,7 @@ function PlayerManager:update_synced_cable_ties_to_peers(amount)
 	self:set_synced_cable_ties(peer_id, amount)
 end
 
--- Lines 2893-2918
+-- Lines 2895-2920
 function PlayerManager:set_synced_cable_ties(peer_id, amount)
 	local only_update_amount = false
 
@@ -3095,12 +3096,12 @@ function PlayerManager:set_synced_cable_ties(peer_id, amount)
 	end
 end
 
--- Lines 2920-2922
+-- Lines 2922-2924
 function PlayerManager:get_synced_cable_ties(peer_id)
 	return self._global.synced_cable_ties[peer_id]
 end
 
--- Lines 2928-2935
+-- Lines 2930-2937
 function PlayerManager:update_ammo_info_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3111,7 +3112,7 @@ function PlayerManager:update_ammo_info_to_peer(peer)
 	end
 end
 
--- Lines 2937-2941
+-- Lines 2939-2943
 function PlayerManager:update_synced_ammo_info_to_peers(selection_index, max_clip, current_clip, current_left, max)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3119,7 +3120,7 @@ function PlayerManager:update_synced_ammo_info_to_peers(selection_index, max_cli
 	self:set_synced_ammo_info(peer_id, selection_index, max_clip, current_clip, current_left, max)
 end
 
--- Lines 2943-2953
+-- Lines 2945-2955
 function PlayerManager:set_synced_ammo_info(peer_id, selection_index, max_clip, current_clip, current_left, max)
 	self._global.synced_ammo_info[peer_id] = self._global.synced_ammo_info[peer_id] or {}
 	self._global.synced_ammo_info[peer_id][selection_index] = {
@@ -3135,12 +3136,12 @@ function PlayerManager:set_synced_ammo_info(peer_id, selection_index, max_clip, 
 	end
 end
 
--- Lines 2955-2957
+-- Lines 2957-2959
 function PlayerManager:get_synced_ammo_info(peer_id)
 	return self._global.synced_ammo_info[peer_id]
 end
 
--- Lines 2963-2973
+-- Lines 2965-2975
 function PlayerManager:update_carry_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3155,7 +3156,7 @@ function PlayerManager:update_carry_to_peer(peer)
 	end
 end
 
--- Lines 2975-2979
+-- Lines 2977-2981
 function PlayerManager:update_synced_carry_to_peers(carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
 	local peer = managers.network:session():local_peer()
 
@@ -3163,7 +3164,7 @@ function PlayerManager:update_synced_carry_to_peers(carry_id, multiplier, dye_in
 	self:set_synced_carry(peer, carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
 end
 
--- Lines 2981-3002
+-- Lines 2983-3004
 function PlayerManager:set_synced_carry(peer, carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
 	local peer_id = peer:id()
 	self._global.synced_carry[peer_id] = {
@@ -3192,12 +3193,12 @@ function PlayerManager:set_synced_carry(peer, carry_id, multiplier, dye_initiate
 	end
 end
 
--- Lines 3004-3006
+-- Lines 3006-3008
 function PlayerManager:set_carry_approved(peer)
 	self._global.synced_carry[peer:id()].approved = true
 end
 
--- Lines 3008-3012
+-- Lines 3010-3014
 function PlayerManager:update_removed_synced_carry_to_peers()
 	local peer = managers.network:session():local_peer()
 
@@ -3205,7 +3206,7 @@ function PlayerManager:update_removed_synced_carry_to_peers()
 	self:remove_synced_carry(peer)
 end
 
--- Lines 3014-3034
+-- Lines 3016-3036
 function PlayerManager:remove_synced_carry(peer)
 	local peer_id = peer:id()
 
@@ -3233,7 +3234,7 @@ function PlayerManager:remove_synced_carry(peer)
 	end
 end
 
--- Lines 3036-3042
+-- Lines 3038-3044
 function PlayerManager:get_my_carry_data()
 	if not managers.network:session() then
 		return true
@@ -3244,12 +3245,12 @@ function PlayerManager:get_my_carry_data()
 	return self._global.synced_carry[peer_id]
 end
 
--- Lines 3044-3046
+-- Lines 3046-3048
 function PlayerManager:get_synced_carry(peer_id)
 	return self._global.synced_carry[peer_id]
 end
 
--- Lines 3048-3053
+-- Lines 3050-3055
 function PlayerManager:from_server_interaction_reply(status)
 	self:player_unit():movement():set_carry_restriction(false)
 
@@ -3258,18 +3259,18 @@ function PlayerManager:from_server_interaction_reply(status)
 	end
 end
 
--- Lines 3055-3057
+-- Lines 3057-3059
 function PlayerManager:get_all_synced_carry()
 	return self._global.synced_carry
 end
 
--- Lines 3063-3066
+-- Lines 3065-3068
 function PlayerManager:aquire_team_upgrade(upgrade)
 	self._global.team_upgrades[upgrade.category] = self._global.team_upgrades[upgrade.category] or {}
 	self._global.team_upgrades[upgrade.category][upgrade.upgrade] = upgrade.value
 end
 
--- Lines 3069-3085
+-- Lines 3071-3087
 function PlayerManager:unaquire_team_upgrade(upgrade)
 	if not self._global.team_upgrades[upgrade.category] then
 		Application:error("[PlayerManager:unaquire_team_upgrade] Can't unaquire team upgrade of category", upgrade.category)
@@ -3288,7 +3289,7 @@ function PlayerManager:unaquire_team_upgrade(upgrade)
 	self._global.team_upgrades[upgrade.category][upgrade.upgrade] = val > 0 and val or nil
 end
 
--- Lines 3088-3109
+-- Lines 3090-3111
 function PlayerManager:team_upgrade_value(category, upgrade, default)
 	for peer_id, categories in pairs(self._global.synced_team_upgrades) do
 		if categories[category] and categories[category][upgrade] then
@@ -3312,7 +3313,7 @@ function PlayerManager:team_upgrade_value(category, upgrade, default)
 	return value
 end
 
--- Lines 3111-3126
+-- Lines 3113-3128
 function PlayerManager:has_team_category_upgrade(category, upgrade)
 	for peer_id, categories in pairs(self._global.synced_team_upgrades) do
 		if categories[category] and categories[category][upgrade] then
@@ -3331,7 +3332,7 @@ function PlayerManager:has_team_category_upgrade(category, upgrade)
 	return true
 end
 
--- Lines 3128-3139
+-- Lines 3130-3141
 function PlayerManager:get_contour_for_marked_enemy(enemy_type)
 	local contour_type = "mark_enemy"
 
@@ -3362,7 +3363,7 @@ function PlayerManager:get_contour_for_marked_enemy(enemy_type)
 	return contour_type
 end
 
--- Lines 3142-3149
+-- Lines 3144-3151
 function PlayerManager:update_team_upgrades_to_peers()
 	for category, upgrades in pairs(self._global.team_upgrades) do
 		for upgrade, level in pairs(upgrades) do
@@ -3371,7 +3372,7 @@ function PlayerManager:update_team_upgrades_to_peers()
 	end
 end
 
--- Lines 3152-3159
+-- Lines 3154-3161
 function PlayerManager:update_team_upgrades_to_peer(peer)
 	for category, upgrades in pairs(self._global.team_upgrades) do
 		for upgrade, level in pairs(upgrades) do
@@ -3380,14 +3381,14 @@ function PlayerManager:update_team_upgrades_to_peer(peer)
 	end
 end
 
--- Lines 3162-3167
+-- Lines 3164-3169
 function PlayerManager:add_synced_team_upgrade(peer_id, category, upgrade, level)
 	self._global.synced_team_upgrades[peer_id] = self._global.synced_team_upgrades[peer_id] or {}
 	self._global.synced_team_upgrades[peer_id][category] = self._global.synced_team_upgrades[peer_id][category] or {}
 	self._global.synced_team_upgrades[peer_id][category][upgrade] = level
 end
 
--- Lines 3174-3185
+-- Lines 3176-3187
 function PlayerManager:activate_synced_temporary_team_upgrade(peer_id, category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -3404,17 +3405,17 @@ function PlayerManager:activate_synced_temporary_team_upgrade(peer_id, category,
 	self:activate_temporary_upgrade(category, upgrade)
 end
 
--- Lines 3188-3190
+-- Lines 3190-3192
 function PlayerManager:send_activate_temporary_team_upgrade_to_peers(category, upgrade)
 	managers.network:session():send_to_peers_synched("activate_temporary_team_upgrade", category, upgrade)
 end
 
--- Lines 3193-3195
+-- Lines 3195-3197
 function PlayerManager:send_activate_temporary_team_upgrade_to_peer(peer, category, upgrade)
 	peer:send_queued_sync("activate_temporary_team_upgrade", category, upgrade)
 end
 
--- Lines 3202-3210
+-- Lines 3204-3212
 function PlayerManager:update_cocaine_stacks_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3427,7 +3428,7 @@ function PlayerManager:update_cocaine_stacks_to_peer(peer)
 	end
 end
 
--- Lines 3212-3216
+-- Lines 3214-3218
 function PlayerManager:update_synced_cocaine_stacks_to_peers(amount, upgrade_level, power_level)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3435,7 +3436,7 @@ function PlayerManager:update_synced_cocaine_stacks_to_peers(amount, upgrade_lev
 	self:set_synced_cocaine_stacks(peer_id, amount, true, upgrade_level, power_level)
 end
 
--- Lines 3218-3227
+-- Lines 3220-3229
 function PlayerManager:set_synced_cocaine_stacks(peer_id, amount, in_use, upgrade_level, power_level)
 	self._global.synced_cocaine_stacks[peer_id] = {
 		amount = amount,
@@ -3457,19 +3458,19 @@ function PlayerManager:set_synced_cocaine_stacks(peer_id, amount, in_use, upgrad
 	self:update_cocaine_hud()
 end
 
--- Lines 3229-3233
+-- Lines 3231-3235
 function PlayerManager:update_cocaine_hud()
 	if managers.hud then
 		managers.hud:set_absorb_active(HUDManager.PLAYER_PANEL, self:damage_absorption())
 	end
 end
 
--- Lines 3235-3237
+-- Lines 3237-3239
 function PlayerManager:get_synced_cocaine_stacks(peer_id)
 	return self._global.synced_cocaine_stacks[peer_id]
 end
 
--- Lines 3239-3248
+-- Lines 3241-3250
 function PlayerManager:get_cocaine_damage_absorption_from_peer_id(peer_id, multiplier_peer_id)
 	local data = self._global.synced_cocaine_stacks[peer_id] or {}
 	local absorption = self:_get_cocaine_damage_absorption_from_data(data)
@@ -3479,7 +3480,7 @@ function PlayerManager:get_cocaine_damage_absorption_from_peer_id(peer_id, multi
 	return absorption * multiplier
 end
 
--- Lines 3250-3259
+-- Lines 3252-3261
 function PlayerManager:_get_cocaine_damage_absorption_from_data(data)
 	local amount = data.amount or 0
 	local upgrade_level = data.upgrade_level or 1
@@ -3491,7 +3492,7 @@ function PlayerManager:_get_cocaine_damage_absorption_from_data(data)
 	return amount / (tweak_data.upgrades.cocaine_stacks_convert_levels and tweak_data.upgrades.cocaine_stacks_convert_levels[upgrade_level] or 20) * (tweak_data.upgrades.cocaine_stacks_dmg_absorption_value or 0.1)
 end
 
--- Lines 3261-3280
+-- Lines 3263-3282
 function PlayerManager:get_best_cocaine_damage_absorption(my_peer_id)
 	local data = self._global.synced_cocaine_stacks[my_peer_id] or {}
 	local multiplier = self:upgrade_value_by_level("player", "cocaine_stack_absorption_multiplier", data.power_level or 0, 1)
@@ -3517,7 +3518,7 @@ function PlayerManager:get_best_cocaine_damage_absorption(my_peer_id)
 	return absorption * multiplier, best_peer_id
 end
 
--- Lines 3282-3290
+-- Lines 3284-3292
 function PlayerManager:get_local_cocaine_damage_absorption_max()
 	local upgrade_tweak = tweak_data.upgrades
 	local amount = upgrade_tweak.max_total_cocaine_stacks or 2047
@@ -3531,7 +3532,7 @@ function PlayerManager:get_local_cocaine_damage_absorption_max()
 	return max_absorption * multiplier
 end
 
--- Lines 3292-3299
+-- Lines 3294-3301
 function PlayerManager:get_best_cocaine_damage_absorption_ratio()
 	local best_ratio = 0
 
@@ -3542,7 +3543,7 @@ function PlayerManager:get_best_cocaine_damage_absorption_ratio()
 	return best_ratio
 end
 
--- Lines 3301-3309
+-- Lines 3303-3311
 function PlayerManager:_get_best_max_cocaine_damage_absorption_ratio()
 	local upgrade_tweak = tweak_data.upgrades
 	local amount = upgrade_tweak.max_total_cocaine_stacks or 2047
@@ -3556,7 +3557,7 @@ function PlayerManager:_get_best_max_cocaine_damage_absorption_ratio()
 	return max_absorption
 end
 
--- Lines 3311-3320
+-- Lines 3313-3322
 function PlayerManager:get_peer_cocaine_damage_absorption_ratio(peer_id)
 	local max_absorption = self:_get_best_max_cocaine_damage_absorption_ratio()
 	local data = self._global.synced_cocaine_stacks[peer_id] or {}
@@ -3566,7 +3567,7 @@ function PlayerManager:get_peer_cocaine_damage_absorption_ratio(peer_id)
 	return math.clamp(absorption / max_absorption, 0, 1)
 end
 
--- Lines 3322-3334
+-- Lines 3324-3336
 function PlayerManager:get_peer_cocaine_damage_absorption_max_ratio(peer_id)
 	local upgrade_tweak = tweak_data.upgrades
 	local max_absorption = self:_get_best_max_cocaine_damage_absorption_ratio()
@@ -3582,21 +3583,21 @@ function PlayerManager:get_peer_cocaine_damage_absorption_max_ratio(peer_id)
 	return math.clamp(absorption / max_absorption, 0, 1)
 end
 
--- Lines 3336-3339
+-- Lines 3338-3341
 function PlayerManager:get_local_cocaine_damage_absorption_ratio()
 	local peer_id = managers.network:session():local_peer():id()
 
 	return self:get_peer_cocaine_damage_absorption_ratio(peer_id)
 end
 
--- Lines 3341-3344
+-- Lines 3343-3346
 function PlayerManager:get_local_cocaine_damage_absorption_max_ratio()
 	local peer_id = managers.network:session():local_peer():id()
 
 	return self:get_peer_cocaine_damage_absorption_max_ratio(peer_id)
 end
 
--- Lines 3350-3359
+-- Lines 3352-3361
 function PlayerManager:remove_equipment_possession(peer_id, equipment)
 	if not self._global.synced_equipment_possession[peer_id] then
 		return
@@ -3610,12 +3611,12 @@ function PlayerManager:remove_equipment_possession(peer_id, equipment)
 	end
 end
 
--- Lines 3361-3363
+-- Lines 3363-3365
 function PlayerManager:get_synced_equipment_possession(peer_id)
 	return self._global.synced_equipment_possession[peer_id]
 end
 
--- Lines 3366-3374
+-- Lines 3368-3376
 function PlayerManager:update_equipment_possession_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3626,7 +3627,7 @@ function PlayerManager:update_equipment_possession_to_peer(peer)
 	end
 end
 
--- Lines 3376-3380
+-- Lines 3378-3382
 function PlayerManager:update_equipment_possession_to_peers(equipment, amount)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -3634,7 +3635,7 @@ function PlayerManager:update_equipment_possession_to_peers(equipment, amount)
 	self:set_synced_equipment_possession(peer_id, equipment, amount)
 end
 
--- Lines 3382-3398
+-- Lines 3384-3400
 function PlayerManager:set_synced_equipment_possession(peer_id, equipment, amount)
 	local only_update_amount = self._global.synced_equipment_possession[peer_id] and self._global.synced_equipment_possession[peer_id][equipment]
 	self._global.synced_equipment_possession[peer_id] = self._global.synced_equipment_possession[peer_id] or {}
@@ -3657,7 +3658,7 @@ function PlayerManager:set_synced_equipment_possession(peer_id, equipment, amoun
 	end
 end
 
--- Lines 3402-3443
+-- Lines 3404-3445
 function PlayerManager:transfer_from_custody_special_equipment_to(target_id)
 	local local_peer = managers.network:session():local_peer()
 	local local_peer_id = local_peer:id()
@@ -3708,7 +3709,7 @@ function PlayerManager:transfer_from_custody_special_equipment_to(target_id)
 	end
 end
 
--- Lines 3445-3451
+-- Lines 3447-3453
 function PlayerManager:on_sole_criminal_respawned(peer_id)
 	if managers.groupai:state():num_alive_players() > 1 or managers.trade:is_peer_in_custody(peer_id) then
 		return
@@ -3717,7 +3718,7 @@ function PlayerManager:on_sole_criminal_respawned(peer_id)
 	self:transfer_from_custody_special_equipment_to(peer_id)
 end
 
--- Lines 3453-3536
+-- Lines 3455-3538
 function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 	if self._global.synced_equipment_possession[peer_id] then
 		local local_peer = managers.network:session():local_peer()
@@ -3807,7 +3808,7 @@ function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 	end
 end
 
--- Lines 3541-3583
+-- Lines 3543-3585
 function PlayerManager:peer_dropped_out(peer)
 	local peer_id = peer:id()
 
@@ -3855,7 +3856,7 @@ function PlayerManager:peer_dropped_out(peer)
 	managers.vehicle:remove_player_from_all_vehicles(peer_unit)
 end
 
--- Lines 3589-3600
+-- Lines 3591-3602
 function PlayerManager:add_equipment(params)
 	if tweak_data.equipments[params.equipment or params.name] then
 		self:_add_equipment(params)
@@ -3872,7 +3873,7 @@ function PlayerManager:add_equipment(params)
 	Application:error("No equipment or special equipment named", params.equipment or params.name)
 end
 
--- Lines 3602-3653
+-- Lines 3604-3655
 function PlayerManager:_add_equipment(params)
 	if self:has_equipment(params.equipment) then
 		print("Allready have equipment", params.equipment)
@@ -3929,7 +3930,7 @@ function PlayerManager:_add_equipment(params)
 	end
 end
 
--- Lines 3655-3662
+-- Lines 3657-3664
 function PlayerManager:add_equipment_amount(equipment, amount, slot)
 	local data, index = self:equipment_data_by_name(equipment)
 
@@ -3941,7 +3942,7 @@ function PlayerManager:add_equipment_amount(equipment, amount, slot)
 	end
 end
 
--- Lines 3664-3672
+-- Lines 3666-3674
 function PlayerManager:set_equipment_amount(equipment, amount, slot)
 	local data, index = self:equipment_data_by_name(equipment)
 
@@ -3953,7 +3954,7 @@ function PlayerManager:set_equipment_amount(equipment, amount, slot)
 	end
 end
 
--- Lines 3674-3681
+-- Lines 3676-3683
 function PlayerManager:equipment_data_by_name(equipment)
 	for i, equipments in ipairs(self._equipment.selections) do
 		if equipments.equipment == equipment then
@@ -3964,7 +3965,7 @@ function PlayerManager:equipment_data_by_name(equipment)
 	return nil
 end
 
--- Lines 3683-3690
+-- Lines 3685-3692
 function PlayerManager:get_equipment_amount(equipment, slot)
 	for i, equipments in ipairs(self._equipment.selections) do
 		if equipments.equipment == equipment then
@@ -3975,7 +3976,7 @@ function PlayerManager:get_equipment_amount(equipment, slot)
 	return 0
 end
 
--- Lines 3692-3699
+-- Lines 3694-3701
 function PlayerManager:has_equipment(equipment)
 	for i, equipments in ipairs(self._equipment.selections) do
 		if equipments.equipment == equipment then
@@ -3986,12 +3987,12 @@ function PlayerManager:has_equipment(equipment)
 	return false
 end
 
--- Lines 3701-3703
+-- Lines 3703-3705
 function PlayerManager:has_deployable_left(equipment, slot)
 	return self:get_equipment_amount(equipment, slot or 1) > 0
 end
 
--- Lines 3705-3724
+-- Lines 3707-3726
 function PlayerManager:select_next_item()
 	if not self._equipment.selected_index then
 		return
@@ -4012,7 +4013,7 @@ function PlayerManager:select_next_item()
 	end
 end
 
--- Lines 3726-3731
+-- Lines 3728-3733
 function PlayerManager:select_previous_item()
 	if not self._equipment.selected_index then
 		return
@@ -4021,7 +4022,7 @@ function PlayerManager:select_previous_item()
 	self._equipment.selected_index = self._equipment.selected_index - 1 >= 1 and self._equipment.selected_index - 1 or #self._equipment.selections
 end
 
--- Lines 3733-3743
+-- Lines 3735-3745
 function PlayerManager:clear_equipment()
 	for i, equipment in ipairs(self._equipment.selections) do
 		for j = 1, #equipment.amount do
@@ -4033,7 +4034,7 @@ function PlayerManager:clear_equipment()
 	end
 end
 
--- Lines 3745-3760
+-- Lines 3747-3762
 function PlayerManager:from_server_equipment_place_result(selected_index, unit, sentry_gun_unit)
 	if alive(unit) then
 		unit:equipment():from_server_sentry_gun_place_result(sentry_gun_unit:id())
@@ -4053,7 +4054,7 @@ function PlayerManager:from_server_equipment_place_result(selected_index, unit, 
 	self:update_deployable_equipment_amount_to_peers(equipment.equipment, new_amount)
 end
 
--- Lines 3762-3768
+-- Lines 3764-3770
 function PlayerManager:can_use_selected_equipment(unit)
 	local equipment = self._equipment.selections[self._equipment.selected_index]
 
@@ -4064,7 +4065,7 @@ function PlayerManager:can_use_selected_equipment(unit)
 	return true
 end
 
--- Lines 3770-3781
+-- Lines 3772-3783
 function PlayerManager:switch_equipment()
 	self:select_next_item()
 
@@ -4077,7 +4078,7 @@ function PlayerManager:switch_equipment()
 	self:update_deployable_selection_to_peers()
 end
 
--- Lines 3783-3794
+-- Lines 3785-3796
 function PlayerManager:selected_equipment()
 	local equipment = self._equipment.selections[self._equipment.selected_index]
 
@@ -4092,7 +4093,7 @@ function PlayerManager:selected_equipment()
 	return nil
 end
 
--- Lines 3796-3802
+-- Lines 3798-3804
 function PlayerManager:selected_equipment_id()
 	local equipment_data = self:selected_equipment()
 
@@ -4103,7 +4104,7 @@ function PlayerManager:selected_equipment_id()
 	return equipment_data.equipment
 end
 
--- Lines 3804-3810
+-- Lines 3806-3812
 function PlayerManager:selected_equipment_name()
 	local equipment_data = self:selected_equipment()
 
@@ -4114,7 +4115,7 @@ function PlayerManager:selected_equipment_name()
 	return managers.localization:text(tweak_data.equipments[equipment_data.equipment].text_id or "")
 end
 
--- Lines 3812-3818
+-- Lines 3814-3820
 function PlayerManager:selected_equipment_limit_movement()
 	local equipment_data = self:selected_equipment()
 
@@ -4125,7 +4126,7 @@ function PlayerManager:selected_equipment_limit_movement()
 	return tweak_data.equipments[equipment_data.equipment].limit_movement or false
 end
 
--- Lines 3820-3826
+-- Lines 3822-3828
 function PlayerManager:selected_equipment_deploying_text()
 	local equipment_data = self:selected_equipment()
 
@@ -4136,7 +4137,7 @@ function PlayerManager:selected_equipment_deploying_text()
 	return managers.localization:text(tweak_data.equipments[equipment_data.equipment].deploying_text_id)
 end
 
--- Lines 3828-3834
+-- Lines 3830-3836
 function PlayerManager:selected_equipment_sound_start()
 	local equipment_data = self:selected_equipment()
 
@@ -4147,7 +4148,7 @@ function PlayerManager:selected_equipment_sound_start()
 	return tweak_data.equipments[equipment_data.equipment].sound_start or false
 end
 
--- Lines 3836-3842
+-- Lines 3838-3844
 function PlayerManager:selected_equipment_sound_interupt()
 	local equipment_data = self:selected_equipment()
 
@@ -4158,7 +4159,7 @@ function PlayerManager:selected_equipment_sound_interupt()
 	return tweak_data.equipments[equipment_data.equipment].sound_interupt or false
 end
 
--- Lines 3844-3850
+-- Lines 3846-3852
 function PlayerManager:selected_equipment_sound_done()
 	local equipment_data = self:selected_equipment()
 
@@ -4169,7 +4170,7 @@ function PlayerManager:selected_equipment_sound_done()
 	return tweak_data.equipments[equipment_data.equipment].sound_done or false
 end
 
--- Lines 3853-3882
+-- Lines 3855-3884
 function PlayerManager:use_selected_equipment(unit)
 	local equipment = self._equipment.selections[self._equipment.selected_index]
 
@@ -4208,7 +4209,7 @@ function PlayerManager:use_selected_equipment(unit)
 	}
 end
 
--- Lines 3884-3900
+-- Lines 3886-3902
 function PlayerManager:check_equipment_placement_valid(player, equipment)
 	local equipment_data = managers.player:equipment_data_by_name(equipment)
 
@@ -4227,12 +4228,12 @@ function PlayerManager:check_equipment_placement_valid(player, equipment)
 	return player:equipment():valid_placement(tweak_data.equipments[equipment_data.equipment]) and true or false
 end
 
--- Lines 3902-3904
+-- Lines 3904-3906
 function PlayerManager:check_selected_equipment_placement_valid(player)
 	return self:check_equipment_placement_valid(player, self:selected_equipment_id())
 end
 
--- Lines 3906-3929
+-- Lines 3908-3931
 function PlayerManager:selected_equipment_deploy_timer()
 	if _G.IS_VR then
 		local deployable_hand = self:player_unit():hand():get_active_hand("deployable")
@@ -4260,7 +4261,7 @@ function PlayerManager:selected_equipment_deploy_timer()
 	return (equipment_tweak_data.deploy_time or 1) * multiplier
 end
 
--- Lines 3931-3943
+-- Lines 3933-3945
 function PlayerManager:remove_equipment(equipment_id, slot)
 	local current_equipment = self:selected_equipment()
 	local equipment, index = self:equipment_data_by_name(equipment_id)
@@ -4276,7 +4277,7 @@ function PlayerManager:remove_equipment(equipment_id, slot)
 	end
 end
 
--- Lines 3945-3972
+-- Lines 3947-3974
 function PlayerManager:verify_equipment(peer_id, equipment_id)
 	if peer_id == 0 then
 		local id = "asset_" .. tostring(equipment_id)
@@ -4306,7 +4307,7 @@ function PlayerManager:verify_equipment(peer_id, equipment_id)
 	return peer:verify_deployable(equipment_id)
 end
 
--- Lines 3974-3985
+-- Lines 3976-3987
 function PlayerManager:verify_grenade(peer_id)
 	if not managers.network:session() then
 		return true
@@ -4321,7 +4322,7 @@ function PlayerManager:verify_grenade(peer_id)
 	return peer:verify_grenade(1)
 end
 
--- Lines 3987-3998
+-- Lines 3989-4000
 function PlayerManager:register_grenade(peer_id, amount)
 	if not managers.network:session() then
 		return true
@@ -4336,7 +4337,7 @@ function PlayerManager:register_grenade(peer_id, amount)
 	return peer:verify_grenade(-(amount or 1))
 end
 
--- Lines 4000-4023
+-- Lines 4002-4025
 function PlayerManager:verify_carry(peer, carry_id)
 	if Network:is_client() or not managers.network:session() then
 		return true
@@ -4363,7 +4364,7 @@ function PlayerManager:verify_carry(peer, carry_id)
 	return peer:verify_bag(carry_id, false)
 end
 
--- Lines 4025-4035
+-- Lines 4027-4037
 function PlayerManager:register_carry(peer, carry_id)
 	if Network:is_client() or not managers.network:session() then
 		return true
@@ -4376,7 +4377,7 @@ function PlayerManager:register_carry(peer, carry_id)
 	return peer:verify_bag(carry_id, true)
 end
 
--- Lines 4038-4062
+-- Lines 4040-4064
 function PlayerManager:add_sentry_gun(num, sentry_type)
 	local equipment, index = self:equipment_data_by_name(sentry_type)
 	local new_amount = Application:digest_value(equipment.amount[1], false) + num
@@ -4402,7 +4403,7 @@ function PlayerManager:add_sentry_gun(num, sentry_type)
 	end
 end
 
--- Lines 4064-4135
+-- Lines 4066-4137
 function PlayerManager:add_special(params)
 	local name = params.equipment or params.name
 
@@ -4494,7 +4495,7 @@ function PlayerManager:add_special(params)
 	end
 end
 
--- Lines 4137-4146
+-- Lines 4139-4148
 function PlayerManager:_equipped_upgrade_value(equipment)
 	if not equipment.extra_quantity then
 		return 0
@@ -4507,7 +4508,7 @@ function PlayerManager:_equipped_upgrade_value(equipment)
 	return self:equipped_upgrade_value(equipped_upgrade, category, upgrade)
 end
 
--- Lines 4148-4157
+-- Lines 4150-4159
 function PlayerManager:get_equipped_weapon_category()
 	local current_state = self:get_current_state()
 
@@ -4522,7 +4523,7 @@ function PlayerManager:get_equipped_weapon_category()
 	return nil
 end
 
--- Lines 4159-4166
+-- Lines 4161-4168
 function PlayerManager:is_current_weapon_of_category(...)
 	local weapon_unit = self:equipped_weapon_unit()
 
@@ -4533,12 +4534,12 @@ function PlayerManager:is_current_weapon_of_category(...)
 	return false
 end
 
--- Lines 4168-4170
+-- Lines 4170-4172
 function PlayerManager:has_special_equipment(name)
 	return self._equipment.specials[name]
 end
 
--- Lines 4172-4179
+-- Lines 4174-4181
 function PlayerManager:_can_pickup_special_equipment(special_equipment, name)
 	if special_equipment.amount then
 		local equipment = tweak_data.equipments.specials[name]
@@ -4550,7 +4551,7 @@ function PlayerManager:_can_pickup_special_equipment(special_equipment, name)
 	return false
 end
 
--- Lines 4181-4200
+-- Lines 4183-4202
 function PlayerManager:can_pickup_equipment(name)
 	local special_equipment = self._equipment.specials[name]
 
@@ -4575,7 +4576,7 @@ function PlayerManager:can_pickup_equipment(name)
 	return true
 end
 
--- Lines 4202-4239
+-- Lines 4204-4241
 function PlayerManager:remove_special(name)
 	local special_equipment = self._equipment.specials[name]
 
@@ -4615,7 +4616,7 @@ function PlayerManager:remove_special(name)
 	end
 end
 
--- Lines 4241-4258
+-- Lines 4243-4260
 function PlayerManager:add_cable_ties(amount)
 	local name = "cable_tie"
 	local equipment = tweak_data.equipments.specials[name]
@@ -4645,7 +4646,7 @@ function PlayerManager:add_cable_ties(amount)
 	self:update_synced_cable_ties_to_peers(new_amount)
 end
 
--- Lines 4265-4274
+-- Lines 4267-4276
 function PlayerManager:_set_grenade(params)
 	local grenade = params.grenade
 	local tweak_data = tweak_data.blackmarket.projectiles[grenade]
@@ -4659,7 +4660,7 @@ function PlayerManager:_set_grenade(params)
 	})
 end
 
--- Lines 4276-4283
+-- Lines 4278-4285
 function PlayerManager:_on_grenade_cooldown_end()
 	local tweak = tweak_data.blackmarket.projectiles[managers.blackmarket:equipped_grenade()]
 
@@ -4670,7 +4671,7 @@ function PlayerManager:_on_grenade_cooldown_end()
 	self:add_grenade_amount(1)
 end
 
--- Lines 4285-4295
+-- Lines 4287-4297
 function PlayerManager:replenish_grenades(cooldown)
 	if self:has_active_timer("replenish_grenades") then
 		return
@@ -4683,7 +4684,7 @@ function PlayerManager:replenish_grenades(cooldown)
 	})
 end
 
--- Lines 4297-4311
+-- Lines 4299-4313
 function PlayerManager:speed_up_grenade_cooldown(time)
 	local timer = self._timers.replenish_grenades
 
@@ -4703,7 +4704,7 @@ function PlayerManager:speed_up_grenade_cooldown(time)
 	})
 end
 
--- Lines 4313-4333
+-- Lines 4315-4335
 function PlayerManager:add_grenade_amount(amount, sync)
 	local peer_id = managers.network:session():local_peer():id()
 	local grenade = self._global.synced_grenades[peer_id].grenade
@@ -4729,7 +4730,7 @@ function PlayerManager:add_grenade_amount(amount, sync)
 	self:update_grenades_amount_to_peers(grenade, amount, sync and peer_id)
 end
 
--- Lines 4335-4342
+-- Lines 4337-4344
 function PlayerManager:update_grenades_to_peer(peer)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -4741,7 +4742,7 @@ function PlayerManager:update_grenades_to_peer(peer)
 	end
 end
 
--- Lines 4344-4348
+-- Lines 4346-4350
 function PlayerManager:update_grenades_amount_to_peers(grenade, amount, register_peer_id)
 	local peer_id = managers.network:session():local_peer():id()
 
@@ -4749,7 +4750,7 @@ function PlayerManager:update_grenades_amount_to_peers(grenade, amount, register
 	self:set_synced_grenades(peer_id, grenade, amount, register_peer_id)
 end
 
--- Lines 4350-4380
+-- Lines 4352-4382
 function PlayerManager:set_synced_grenades(peer_id, grenade, amount, register_peer_id)
 	local synced_grenade = self._global.synced_grenades[peer_id]
 	local only_update_amount = false
@@ -4792,31 +4793,31 @@ function PlayerManager:set_synced_grenades(peer_id, grenade, amount, register_pe
 	end
 end
 
--- Lines 4382-4384
+-- Lines 4384-4386
 function PlayerManager:get_grenade_amount(peer_id)
 	return Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
 end
 
--- Lines 4386-4388
+-- Lines 4388-4390
 function PlayerManager:get_synced_grenades(peer_id)
 	return self._global.synced_grenades[peer_id]
 end
 
--- Lines 4390-4393
+-- Lines 4392-4395
 function PlayerManager:can_throw_grenade()
 	local peer_id = managers.network:session():local_peer():id()
 
 	return self:get_grenade_amount(peer_id) > 0
 end
 
--- Lines 4395-4398
+-- Lines 4397-4400
 function PlayerManager:get_max_grenades_by_peer_id(peer_id)
 	local peer = managers.network:session() and managers.network:session():peer(peer_id)
 
 	return peer and self:get_max_grenades(peer:grenade_id()) or 0
 end
 
--- Lines 4400-4407
+-- Lines 4402-4409
 function PlayerManager:get_max_grenades(grenade_id)
 	grenade_id = grenade_id or managers.blackmarket:equipped_grenade()
 	local max_amount = tweak_data:get_raw_value("blackmarket", "projectiles", grenade_id, "max_amount") or 0
@@ -4825,14 +4826,14 @@ function PlayerManager:get_max_grenades(grenade_id)
 	return max_amount
 end
 
--- Lines 4414-4418
+-- Lines 4416-4420
 function PlayerManager:got_max_grenades()
 	local peer_id = managers.network:session():local_peer():id()
 
 	return self:get_max_grenades_by_peer_id(peer_id) <= self:get_grenade_amount(peer_id)
 end
 
--- Lines 4420-4424
+-- Lines 4422-4426
 function PlayerManager:has_grenade(peer_id)
 	peer_id = peer_id or managers.network:session():local_peer():id()
 	local synced_grenade = self:get_synced_grenades(peer_id)
@@ -4840,7 +4841,7 @@ function PlayerManager:has_grenade(peer_id)
 	return synced_grenade and synced_grenade.grenade and true or false
 end
 
--- Lines 4426-4446
+-- Lines 4428-4448
 function PlayerManager:on_throw_grenade()
 	local should_decrement = true
 
@@ -4858,7 +4859,7 @@ function PlayerManager:on_throw_grenade()
 	managers.statistics:used_projectile(grenade_id)
 end
 
--- Lines 4464-4497
+-- Lines 4466-4499
 function PlayerManager:set_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
 	local carry_data = tweak_data.carry[carry_id]
 	local carry_type = carry_data.type
@@ -4899,7 +4900,7 @@ function PlayerManager:set_carry(carry_id, carry_multiplier, dye_initiated, has_
 	player:sound():play("Play_bag_generic_pickup", nil, false)
 end
 
--- Lines 4499-4509
+-- Lines 4501-4511
 function PlayerManager:bank_carry()
 	local carry_data = self:get_my_carry_data()
 	local peer_id = managers.network:session() and managers.network:session():local_peer():id()
@@ -4911,7 +4912,7 @@ function PlayerManager:bank_carry()
 	managers.player:set_player_state("standard")
 end
 
--- Lines 4511-4559
+-- Lines 4513-4561
 function PlayerManager:drop_carry(zipline_unit)
 	local carry_data = self:get_my_carry_data()
 
@@ -4960,7 +4961,7 @@ function PlayerManager:drop_carry(zipline_unit)
 	end
 end
 
--- Lines 4561-4577
+-- Lines 4563-4579
 function PlayerManager:server_drop_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer)
 	if not self:verify_carry(peer, carry_id) then
 		return
@@ -4979,7 +4980,7 @@ function PlayerManager:server_drop_carry(carry_id, carry_multiplier, dye_initiat
 	return unit
 end
 
--- Lines 4579-4602
+-- Lines 4581-4604
 function PlayerManager:sync_carry_data(unit, carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
 	local throw_distance_multiplier = self:upgrade_value_by_level("carry", "throw_distance_multiplier", throw_distance_multiplier_upgrade_level, 1)
 	local carry_type = tweak_data.carry[carry_id].type
@@ -5000,7 +5001,7 @@ function PlayerManager:sync_carry_data(unit, carry_id, carry_multiplier, dye_ini
 	unit:interaction():register_collision_callbacks()
 end
 
--- Lines 4605-4631
+-- Lines 4607-4633
 function PlayerManager:force_drop_carry()
 	local carry_data = self:get_my_carry_data()
 
@@ -5032,7 +5033,7 @@ function PlayerManager:force_drop_carry()
 	self:update_removed_synced_carry_to_peers()
 end
 
--- Lines 4633-4652
+-- Lines 4635-4654
 function PlayerManager:clear_carry(soft_reset)
 	local carry_data = self:get_my_carry_data()
 
@@ -5057,21 +5058,21 @@ function PlayerManager:clear_carry(soft_reset)
 	end
 end
 
--- Lines 4654-4657
+-- Lines 4656-4659
 function PlayerManager:is_berserker()
 	local player_unit = self:player_unit()
 
 	return alive(player_unit) and player_unit:character_damage() and player_unit:character_damage():is_berserker() or false
 end
 
--- Lines 4659-4663
+-- Lines 4661-4665
 function PlayerManager:get_damage_health_ratio(health_ratio, category)
 	local damage_ratio = 1 - health_ratio / math.max(0.01, self:_get_damage_health_ratio_threshold(category))
 
 	return math.max(damage_ratio, 0)
 end
 
--- Lines 4665-4673
+-- Lines 4667-4675
 function PlayerManager:_get_damage_health_ratio_threshold(category)
 	local threshold = tweak_data.upgrades.player_damage_health_ratio_threshold
 
@@ -5082,12 +5083,12 @@ function PlayerManager:_get_damage_health_ratio_threshold(category)
 	return threshold
 end
 
--- Lines 4675-4680
+-- Lines 4677-4682
 function PlayerManager:is_damage_health_ratio_active(health_ratio)
 	return self:has_category_upgrade("player", "melee_damage_health_ratio_multiplier") and self:get_damage_health_ratio(health_ratio, "melee") > 0 or self:has_category_upgrade("player", "armor_regen_damage_health_ratio_multiplier") and self:get_damage_health_ratio(health_ratio, "armor_regen") > 0 or self:has_category_upgrade("player", "damage_health_ratio_multiplier") and self:get_damage_health_ratio(health_ratio, "damage") > 0 or self:has_category_upgrade("player", "movement_speed_damage_health_ratio_multiplier") and self:get_damage_health_ratio(health_ratio, "movement_speed") > 0
 end
 
--- Lines 4683-4689
+-- Lines 4685-4691
 function PlayerManager:get_current_state()
 	local player = self:player_unit()
 
@@ -5098,29 +5099,29 @@ function PlayerManager:get_current_state()
 	return nil
 end
 
--- Lines 4692-4694
+-- Lines 4694-4696
 function PlayerManager:is_carrying()
 	return self:get_my_carry_data() and true or false
 end
 
--- Lines 4696-4699
+-- Lines 4698-4701
 function PlayerManager:current_carry_id()
 	local my_carry_data = self:get_my_carry_data()
 
 	return my_carry_data and my_carry_data.carry_id or nil
 end
 
--- Lines 4701-4703
+-- Lines 4703-4705
 function PlayerManager:carry_blocked_by_cooldown()
 	return self._carry_blocked_cooldown_t and Application:time() < self._carry_blocked_cooldown_t or false
 end
 
--- Lines 4705-4707
+-- Lines 4707-4709
 function PlayerManager:can_carry(carry_id)
 	return true
 end
 
--- Lines 4710-4732
+-- Lines 4712-4734
 function PlayerManager:check_damage_carry(attack_data)
 	local carry_data = self:get_my_carry_data()
 
@@ -5144,7 +5145,7 @@ function PlayerManager:check_damage_carry(attack_data)
 	managers.hud:set_teammate_carry_info(HUDManager.PLAYER_PANEL, carry_id, managers.loot:get_real_value(carry_id, carry_data.multiplier))
 end
 
--- Lines 4734-4756
+-- Lines 4736-4758
 function PlayerManager:dye_pack_exploded()
 	local carry_data = self:get_my_carry_data()
 
@@ -5165,7 +5166,7 @@ function PlayerManager:dye_pack_exploded()
 	managers.hud:set_teammate_carry_info(HUDManager.PLAYER_PANEL, carry_id, managers.loot:get_real_value(carry_id, carry_data.multiplier))
 end
 
--- Lines 4758-4767
+-- Lines 4760-4769
 function PlayerManager:remove_ammo_from_pool(percent)
 	local player_unit = self:player_unit()
 
@@ -5181,69 +5182,69 @@ function PlayerManager:remove_ammo_from_pool(percent)
 	managers.hud:set_ammo_amount(index, current_weapon:ammo_info())
 end
 
--- Lines 4771-4773
+-- Lines 4773-4775
 function PlayerManager:count_up_player_minions()
 	self._local_player_minions = math.min(self._local_player_minions + 1, self:upgrade_value("player", "convert_enemies_max_minions", 0))
 end
 
--- Lines 4775-4777
+-- Lines 4777-4779
 function PlayerManager:count_down_player_minions()
 	self._local_player_minions = math.max(self._local_player_minions - 1, 0)
 end
 
--- Lines 4779-4781
+-- Lines 4781-4783
 function PlayerManager:reset_minions()
 	self._local_player_minions = 0
 end
 
--- Lines 4783-4785
+-- Lines 4785-4787
 function PlayerManager:num_local_minions()
 	return self._local_player_minions
 end
 
--- Lines 4787-4789
+-- Lines 4789-4791
 function PlayerManager:chk_minion_limit_reached()
 	return self:upgrade_value("player", "convert_enemies_max_minions", 0) <= self._local_player_minions
 end
 
--- Lines 4793-4795
+-- Lines 4795-4797
 function PlayerManager:on_used_body_bag()
 	self:_set_body_bags_amount(self._local_player_body_bags - 1)
 end
 
--- Lines 4797-4799
+-- Lines 4799-4801
 function PlayerManager:reset_used_body_bag()
 	self:_set_body_bags_amount(self:total_body_bags())
 end
 
--- Lines 4801-4803
+-- Lines 4803-4805
 function PlayerManager:chk_body_bags_depleted()
 	return self._local_player_body_bags <= 0
 end
 
--- Lines 4805-4808
+-- Lines 4807-4810
 function PlayerManager:_set_body_bags_amount(body_bags_amount)
 	self._local_player_body_bags = math.clamp(body_bags_amount, 0, self:max_body_bags())
 
 	managers.hud:on_ext_inventory_changed()
 end
 
--- Lines 4810-4812
+-- Lines 4812-4814
 function PlayerManager:add_body_bags_amount(body_bags_amount)
 	self:_set_body_bags_amount(self._local_player_body_bags + body_bags_amount)
 end
 
--- Lines 4814-4816
+-- Lines 4816-4818
 function PlayerManager:get_body_bags_amount()
 	return self._local_player_body_bags
 end
 
--- Lines 4818-4820
+-- Lines 4820-4822
 function PlayerManager:has_total_body_bags()
 	return self._local_player_body_bags == self:total_body_bags()
 end
 
--- Lines 4822-4828
+-- Lines 4824-4830
 function PlayerManager:total_body_bags()
 	local bags = self:upgrade_value("player", "corpse_dispose_amount", 0)
 	bags = managers.modifiers:modify_value("PlayerManager:GetTotalBodyBags", bags)
@@ -5251,17 +5252,17 @@ function PlayerManager:total_body_bags()
 	return bags
 end
 
--- Lines 4830-4832
+-- Lines 4832-4834
 function PlayerManager:has_max_body_bags()
 	return self._local_player_body_bags == self:max_body_bags()
 end
 
--- Lines 4834-4836
+-- Lines 4836-4838
 function PlayerManager:max_body_bags()
 	return self:total_body_bags() + self:upgrade_value("player", "extra_corpse_dispose_amount", 0)
 end
 
--- Lines 4840-4846
+-- Lines 4842-4848
 function PlayerManager:change_player_look(new_look)
 	self._player_mesh_suffix = new_look
 
@@ -5270,20 +5271,20 @@ function PlayerManager:change_player_look(new_look)
 	end
 end
 
--- Lines 4850-4852
+-- Lines 4852-4854
 function PlayerManager:player_timer()
 	return self._player_timer
 end
 
--- Lines 4856-4866
+-- Lines 4858-4868
 function PlayerManager:add_weapon_ammo_gain(name_id, amount)
 end
 
--- Lines 4868-4877
+-- Lines 4870-4879
 function PlayerManager:report_weapon_ammo_gains()
 end
 
--- Lines 4882-4890
+-- Lines 4884-4892
 function PlayerManager:save(data)
 	local state = {
 		kit = self._global.kit,
@@ -5293,7 +5294,7 @@ function PlayerManager:save(data)
 	data.PlayerManager = state
 end
 
--- Lines 4893-4903
+-- Lines 4895-4905
 function PlayerManager:load(data)
 	self:aquire_default_upgrades()
 
@@ -5308,17 +5309,17 @@ function PlayerManager:load(data)
 	end
 end
 
--- Lines 4905-4907
+-- Lines 4907-4909
 function PlayerManager:set_content_update_viewed(content_update)
 	self._global.viewed_content_updates[content_update] = true
 end
 
--- Lines 4909-4911
+-- Lines 4911-4913
 function PlayerManager:get_content_update_viewed(content_update)
 	return self._global.viewed_content_updates[content_update] or false
 end
 
--- Lines 4913-4925
+-- Lines 4915-4927
 function PlayerManager:_verify_loaded_data()
 	for slot, equipment_id in ipairs(self._global.kit.equipment_slots) do
 		if not tweak_data.equipments[equipment_id] then
@@ -5333,7 +5334,7 @@ function PlayerManager:_verify_loaded_data()
 	end
 end
 
--- Lines 4930-4939
+-- Lines 4932-4941
 function PlayerManager:sync_save(data)
 	Application:trace("PlayerManager:sync_save: ", inspect(self._global.synced_bipod))
 
@@ -5345,7 +5346,7 @@ function PlayerManager:sync_save(data)
 	data.PlayerManager = state
 end
 
--- Lines 4942-4950
+-- Lines 4944-4952
 function PlayerManager:sync_load(data)
 	local state = data.PlayerManager
 
@@ -5358,12 +5359,12 @@ function PlayerManager:sync_load(data)
 	Application:trace("PlayerManager:sync_load: ", inspect(self._global.synced_bipod))
 end
 
--- Lines 4953-4955
+-- Lines 4955-4957
 function PlayerManager:on_simulation_started()
 	self._respawn = false
 end
 
--- Lines 4958-4966
+-- Lines 4960-4968
 function PlayerManager:reset()
 	if managers.hud then
 		managers.hud:clear_player_special_equipments()
@@ -5376,7 +5377,7 @@ function PlayerManager:reset()
 	self:aquire_default_upgrades()
 end
 
--- Lines 4969-4978
+-- Lines 4971-4980
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 
@@ -5393,23 +5394,23 @@ function PlayerManager:soft_reset()
 	self._throw_regen_kills = nil
 end
 
--- Lines 4981-4983
+-- Lines 4983-4985
 function PlayerManager:on_peer_synch_request(peer)
 	self:player_unit():network():synch_to_peer(peer)
 end
 
--- Lines 4986-4988
+-- Lines 4988-4990
 function PlayerManager:get_equipment_setting(equipment, key)
 	return self._global.equipment_settings[equipment] and self._global.equipment_settings[equipment][key]
 end
 
--- Lines 4990-4993
+-- Lines 4992-4995
 function PlayerManager:set_equipment_setting(equipment, key, value)
 	self._global.equipment_settings[equipment] = self._global.equipment_settings[equipment] or {}
 	self._global.equipment_settings[equipment][key] = value
 end
 
--- Lines 4995-5002
+-- Lines 4997-5004
 function PlayerManager:remove_equipment_setting(equipment, key)
 	self._global.equipment_settings[equipment] = self._global.equipment_settings[equipment] or {}
 	self._global.equipment_settings[equipment][key] = nil
@@ -5419,7 +5420,7 @@ function PlayerManager:remove_equipment_setting(equipment, key)
 	end
 end
 
--- Lines 5005-5013
+-- Lines 5007-5015
 function PlayerManager:update_husk_bipod_to_peer(peer)
 	Application:trace("PlayerManager:update_husk_bipod_to_peer")
 
@@ -5433,14 +5434,14 @@ function PlayerManager:update_husk_bipod_to_peer(peer)
 	end
 end
 
--- Lines 5015-5020
+-- Lines 5017-5022
 function PlayerManager:set_husk_bipod_data(data)
 	Application:trace("PlayerManager:set_husk_bipod_data( data ): ", inspect(data))
 
 	self._global.synced_bipod = data
 end
 
--- Lines 5022-5028
+-- Lines 5024-5030
 function PlayerManager:set_bipod_data_for_peer(data)
 	if not self._global.synced_bipod then
 		self._global.synced_bipod = {}
@@ -5452,12 +5453,12 @@ function PlayerManager:set_bipod_data_for_peer(data)
 	}
 end
 
--- Lines 5030-5032
+-- Lines 5032-5034
 function PlayerManager:get_bipod_data_for_peer(peer_id)
 	return self._global.synced_bipod[peer_id]
 end
 
--- Lines 5034-5038
+-- Lines 5036-5040
 function PlayerManager:set_synced_bipod(peer, bipod_pos, body_pos)
 	Application:trace("PlayerManager:set_synced_bipod")
 
@@ -5468,7 +5469,7 @@ function PlayerManager:set_synced_bipod(peer, bipod_pos, body_pos)
 	}
 end
 
--- Lines 5041-5056
+-- Lines 5043-5058
 function PlayerManager:enter_vehicle(vehicle, locator)
 	local peer_id = managers.network:session():local_peer():id()
 	local player = self:local_player()
@@ -5485,7 +5486,7 @@ function PlayerManager:enter_vehicle(vehicle, locator)
 	end
 end
 
--- Lines 5058-5074
+-- Lines 5060-5076
 function PlayerManager:server_enter_vehicle(vehicle, peer_id, player, seat_name)
 	local vehicle_ext = vehicle:vehicle_driving()
 	local seat = nil
@@ -5503,12 +5504,12 @@ function PlayerManager:server_enter_vehicle(vehicle, peer_id, player, seat_name)
 	end
 end
 
--- Lines 5076-5078
+-- Lines 5078-5080
 function PlayerManager:sync_enter_vehicle(vehicle, peer_id, player, seat_name)
 	self:_enter_vehicle(vehicle, peer_id, player, seat_name)
 end
 
--- Lines 5080-5105
+-- Lines 5082-5107
 function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
 	self._global.synced_vehicle_data[peer_id] = {
 		vehicle_unit = vehicle,
@@ -5537,7 +5538,7 @@ function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
 	managers.vehicle:on_player_entered_vehicle(vehicle, player)
 end
 
--- Lines 5107-5115
+-- Lines 5109-5117
 function PlayerManager:get_vehicle()
 	if managers.network:session() then
 		local peer_id = managers.network:session():local_peer():id()
@@ -5549,7 +5550,7 @@ function PlayerManager:get_vehicle()
 	end
 end
 
--- Lines 5117-5124
+-- Lines 5119-5126
 function PlayerManager:get_vehicle_for_peer(peer_id)
 	if managers.network:session() then
 		local vehicle = self._global.synced_vehicle_data[peer_id]
@@ -5560,7 +5561,7 @@ function PlayerManager:get_vehicle_for_peer(peer_id)
 	end
 end
 
--- Lines 5126-5137
+-- Lines 5128-5139
 function PlayerManager:exit_vehicle()
 	local peer_id = managers.network:session():local_peer():id()
 	local vehicle_data = self._global.synced_vehicle_data[peer_id]
@@ -5575,12 +5576,12 @@ function PlayerManager:exit_vehicle()
 	self:_exit_vehicle(peer_id, player)
 end
 
--- Lines 5139-5141
+-- Lines 5141-5143
 function PlayerManager:sync_exit_vehicle(peer_id, player)
 	self:_exit_vehicle(peer_id, player)
 end
 
--- Lines 5143-5158
+-- Lines 5145-5160
 function PlayerManager:_exit_vehicle(peer_id, player)
 	local vehicle_data = self._global.synced_vehicle_data[peer_id]
 
@@ -5600,7 +5601,7 @@ function PlayerManager:_exit_vehicle(peer_id, player)
 	managers.vehicle:on_player_exited_vehicle(vehicle_data.vehicle, player)
 end
 
--- Lines 5161-5170
+-- Lines 5163-5172
 function PlayerManager:update_player_list(unit, health)
 	for i in pairs(self._player_list) do
 		local p = self._player_list[i]
@@ -5618,7 +5619,7 @@ function PlayerManager:update_player_list(unit, health)
 	})
 end
 
--- Lines 5172-5180
+-- Lines 5174-5182
 function PlayerManager:debug_print_player_status()
 	local count = 0
 
@@ -5633,7 +5634,7 @@ function PlayerManager:debug_print_player_status()
 	print("num players: ", count)
 end
 
--- Lines 5182-5190
+-- Lines 5184-5192
 function PlayerManager:remove_from_player_list(unit)
 	for i in pairs(self._player_list) do
 		local p = self._player_list[i]
@@ -5646,7 +5647,7 @@ function PlayerManager:remove_from_player_list(unit)
 	end
 end
 
--- Lines 5192-5201
+-- Lines 5194-5203
 function PlayerManager:on_ammo_increase(ammo)
 	local equipped_unit = self:get_current_state()._equipped_unit:base()
 	local equipped_selection = self:get_current_state()._ext_inventory:equipped_selection()
@@ -5658,7 +5659,7 @@ function PlayerManager:on_ammo_increase(ammo)
 	end
 end
 
--- Lines 5203-5213
+-- Lines 5205-5215
 function PlayerManager:equipped_weapon_index()
 	local current_state = self:get_current_state()
 	local equipped_unit = current_state._equipped_unit:base()._unit
@@ -5673,7 +5674,7 @@ function PlayerManager:equipped_weapon_index()
 	return 1
 end
 
--- Lines 5215-5222
+-- Lines 5217-5224
 function PlayerManager:equipped_weapon_unit()
 	local current_state = self:get_current_state()
 
@@ -5686,7 +5687,7 @@ function PlayerManager:equipped_weapon_unit()
 	return nil
 end
 
--- Lines 5224-5238
+-- Lines 5226-5240
 function PlayerManager:_is_all_in_custody(ignored_peer_id)
 	for _, peer in pairs(managers.network:session():all_peers()) do
 		if peer and alive(peer:unit()) and peer:id() ~= ignored_peer_id then
@@ -5703,7 +5704,7 @@ function PlayerManager:_is_all_in_custody(ignored_peer_id)
 	return true
 end
 
--- Lines 5241-5288
+-- Lines 5243-5290
 function PlayerManager:on_enter_custody(_player, already_dead)
 	local player = _player or self:player_unit()
 
@@ -5750,11 +5751,11 @@ function PlayerManager:on_enter_custody(_player, already_dead)
 	managers.hud:remove_interact()
 end
 
--- Lines 5290-5300
+-- Lines 5292-5302
 function PlayerManager:captured_hostage()
 end
 
--- Lines 5302-5317
+-- Lines 5304-5319
 function PlayerManager:init_auto_respawn_callback(position, peer_id, force)
 	self._clbk_super_syndrome_respawn = "PlayerManager"
 	local game_time = TimerManager:game():time()
@@ -5769,7 +5770,7 @@ function PlayerManager:init_auto_respawn_callback(position, peer_id, force)
 	managers.trade:pause_trade(pause_trade)
 end
 
--- Lines 5319-5330
+-- Lines 5321-5332
 function PlayerManager:clbk_super_syndrome_respawn(data)
 	local trade_manager = managers.trade
 	self._clbk_super_syndrome_respawn = nil
@@ -5785,7 +5786,7 @@ function PlayerManager:clbk_super_syndrome_respawn(data)
 	end
 end
 
--- Lines 5333-5354
+-- Lines 5335-5356
 function PlayerManager:on_hallowSPOOCed()
 	local player = self:local_player()
 	local t = Application:time()
@@ -5813,7 +5814,7 @@ function PlayerManager:on_hallowSPOOCed()
 	end
 end
 
--- Lines 5356-5388
+-- Lines 5358-5390
 function PlayerManager:attempt_ability(ability)
 	if not self:player_unit() then
 		return false
@@ -5847,7 +5848,7 @@ function PlayerManager:attempt_ability(ability)
 	return true
 end
 
--- Lines 5391-5407
+-- Lines 5393-5409
 function PlayerManager:_attempt_chico_injector()
 	if self:has_activate_temporary_upgrade("temporary", "chico_injector") then
 		return false
@@ -5859,7 +5860,7 @@ function PlayerManager:_attempt_chico_injector()
 	managers.network:session():send_to_peers("sync_ability_hud", now + duration, duration)
 	self:activate_temporary_upgrade("temporary", "chico_injector")
 
-	-- Lines 5402-5404
+	-- Lines 5404-5406
 	local function speed_up_on_kill()
 		managers.player:speed_up_grenade_cooldown(1)
 	end
@@ -5869,7 +5870,7 @@ function PlayerManager:_attempt_chico_injector()
 	return true
 end
 
--- Lines 5411-5433
+-- Lines 5413-5435
 function PlayerManager:_attempt_pocket_ecm_jammer()
 	local player_inventory = self:player_unit():inventory()
 
@@ -5885,7 +5886,7 @@ function PlayerManager:_attempt_pocket_ecm_jammer()
 
 	local base_upgrade = self:upgrade_value("player", "pocket_ecm_jammer_base")
 
-	-- Lines 5425-5427
+	-- Lines 5427-5429
 	local function speed_up_on_kill()
 		managers.player:speed_up_grenade_cooldown(base_upgrade.cooldown_drain)
 	end
@@ -5896,7 +5897,7 @@ function PlayerManager:_attempt_pocket_ecm_jammer()
 	return true
 end
 
--- Lines 5437-5478
+-- Lines 5439-5480
 function PlayerManager:_attempt_tag_team()
 	local player = managers.player:player_unit()
 	local player_eye = player:camera():position()
@@ -5938,7 +5939,7 @@ function PlayerManager:_attempt_tag_team()
 	return true
 end
 
--- Lines 5480-5487
+-- Lines 5482-5489
 function PlayerManager:sync_tag_team(tagged, owner, end_time)
 	if tagged == self:local_player() then
 		local tagged_id = managers.network:session():peer_by_unit(tagged):id()
@@ -5949,12 +5950,12 @@ function PlayerManager:sync_tag_team(tagged, owner, end_time)
 	end
 end
 
--- Lines 5489-5491
+-- Lines 5491-5493
 function PlayerManager:end_tag_team(tagged, owner)
 	self._listener_holder:call("tag_team_end", tagged, owner)
 end
 
--- Lines 5495-5545
+-- Lines 5497-5547
 function PlayerManager:_attempt_copr_ability()
 	if self:has_activate_temporary_upgrade("temporary", "copr_ability") then
 		return false
@@ -5990,7 +5991,7 @@ function PlayerManager:_attempt_copr_ability()
 	local speed_up_on_kill_time = self:upgrade_value("player", "copr_speed_up_on_kill", 0)
 
 	if speed_up_on_kill_time > 0 then
-		-- Lines 5528-5530
+		-- Lines 5530-5532
 		local function speed_up_on_kill_func()
 			managers.player:speed_up_grenade_cooldown(speed_up_on_kill_time)
 		end
@@ -6012,14 +6013,14 @@ function PlayerManager:_attempt_copr_ability()
 	return true
 end
 
--- Lines 5547-5551
+-- Lines 5549-5553
 function PlayerManager:add_copr_risen_cooldown()
 	self:speed_up_grenade_cooldown(-tweak_data.upgrades.copr_risen_cooldown_add)
 	self:unregister_message("ability_activated", "copr_risen_cooldown_key")
 	self:set_property("copr_risen_cooldown_added", true)
 end
 
--- Lines 5553-5558
+-- Lines 5555-5560
 function PlayerManager:remove_copr_risen_cooldown()
 	if self:get_property("copr_risen_cooldown_added") then
 		self:speed_up_grenade_cooldown(tweak_data.upgrades.copr_risen_cooldown_add)
@@ -6027,7 +6028,7 @@ function PlayerManager:remove_copr_risen_cooldown()
 	end
 end
 
--- Lines 5560-5576
+-- Lines 5562-5578
 function PlayerManager:force_end_copr_ability()
 	if self:has_activate_temporary_upgrade("temporary", "copr_ability") then
 		self:deactivate_temporary_upgrade("temporary", "copr_ability")
@@ -6046,7 +6047,7 @@ function PlayerManager:force_end_copr_ability()
 	end
 end
 
--- Lines 5578-5599
+-- Lines 5580-5601
 function PlayerManager:clbk_copr_ability_ended()
 	self:deactivate_temporary_upgrade("temporary", "copr_ability")
 
@@ -6068,7 +6069,7 @@ function PlayerManager:clbk_copr_ability_ended()
 	managers.hud:set_copr_indicator(false)
 end
 
--- Lines 5601-5616
+-- Lines 5603-5618
 function PlayerManager:count_copr_ability_players()
 	local count = 0
 
@@ -6087,7 +6088,7 @@ function PlayerManager:count_copr_ability_players()
 	return count
 end
 
--- Lines 5619-5628
+-- Lines 5621-5630
 function PlayerManager:_update_timers(t)
 	local timers_copy = table.map_copy(self._timers)
 
@@ -6102,7 +6103,7 @@ function PlayerManager:_update_timers(t)
 	end
 end
 
--- Lines 5630-5633
+-- Lines 5632-5635
 function PlayerManager:start_timer(key, duration, callback)
 	local end_time = TimerManager:game():time() + duration
 	self._timers[key] = {
@@ -6111,7 +6112,7 @@ function PlayerManager:start_timer(key, duration, callback)
 	}
 end
 
--- Lines 5635-5639
+-- Lines 5637-5641
 function PlayerManager:get_timer(key)
 	if not key then
 		return
@@ -6122,12 +6123,12 @@ function PlayerManager:get_timer(key)
 	return timer and TimerManager:game():time() < timer.t and timer.t or nil
 end
 
--- Lines 5641-5643
+-- Lines 5643-5645
 function PlayerManager:has_active_timer(key)
 	return self:get_timer(key) ~= nil
 end
 
--- Lines 5645-5649
+-- Lines 5647-5651
 function PlayerManager:get_timer_remaining(key)
 	local time = self:get_timer(key)
 	local now = TimerManager:game():time()
@@ -6135,12 +6136,12 @@ function PlayerManager:get_timer_remaining(key)
 	return time and time - now
 end
 
--- Lines 5651-5653
+-- Lines 5653-5655
 function PlayerManager:clear_timers()
 	self._timers = {}
 end
 
--- Lines 5655-5659
+-- Lines 5657-5661
 function PlayerManager:reset_ability_hud()
 	managers.hud:set_player_grenade_cooldown(nil)
 	managers.hud:set_player_ability_radial({
@@ -6151,7 +6152,7 @@ function PlayerManager:reset_ability_hud()
 	self._should_reset_ability_hud = nil
 end
 
--- Lines 5662-5671
+-- Lines 5664-5673
 function PlayerManager:update_smoke_screens(t, dt)
 	if self._smoke_screen_effects and #self._smoke_screen_effects > 0 then
 		for i, smoke_screen_effect in dpairs(self._smoke_screen_effects) do
@@ -6164,12 +6165,12 @@ function PlayerManager:update_smoke_screens(t, dt)
 	end
 end
 
--- Lines 5673-5675
+-- Lines 5675-5677
 function PlayerManager:smoke_screens()
 	return self._smoke_screen_effects or {}
 end
 
--- Lines 5677-5686
+-- Lines 5679-5688
 function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_dodge_bonus)
 	local time = tweak_data.projectiles.smoke_screen_grenade.duration
 	self._smoke_screen_effects = self._smoke_screen_effects or {}
@@ -6183,7 +6184,7 @@ function PlayerManager:spawn_smoke_screen(position, normal, grenade_unit, has_do
 	self._smoke_grenade = grenade_unit
 end
 
--- Lines 5688-5694
+-- Lines 5690-5696
 function PlayerManager:_dodge_shot_gain(gain_value)
 	if gain_value then
 		self._dodge_shot_gain_value = gain_value
@@ -6192,12 +6193,12 @@ function PlayerManager:_dodge_shot_gain(gain_value)
 	end
 end
 
--- Lines 5696-5698
+-- Lines 5698-5700
 function PlayerManager:_dodge_replenish_armor()
 	self:player_unit():character_damage():_regenerate_armor()
 end
 
--- Lines 5736-5745
+-- Lines 5738-5747
 function PlayerManager:crew_add_concealment(new_value)
 	for k, v in pairs(managers.network:session():all_peers()) do
 		local unit = v:unit()

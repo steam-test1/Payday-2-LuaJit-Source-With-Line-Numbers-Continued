@@ -3525,7 +3525,7 @@ function CoreEditor:_source_files(dir)
 	return files
 end
 
--- Lines 3259-3286
+-- Lines 3259-3294
 function CoreEditor:add_to_world_package(params)
 	local name = params.name
 	local path = params.path
@@ -3546,6 +3546,13 @@ function CoreEditor:add_to_world_package(params)
 	end
 
 	local t = params.init and self._world_init_package_table or self._world_package_table
+
+	if name and category == "units" and continent and t == self._world_package_table then
+		t = self._continent_package_table
+		t.world = t.world or {}
+		t = t.world
+	end
+
 	t[category] = t[category] or {}
 
 	if not table.contains(t[category], name or path) then
@@ -3553,7 +3560,7 @@ function CoreEditor:add_to_world_package(params)
 	end
 end
 
--- Lines 3289-3299
+-- Lines 3297-3307
 function CoreEditor:add_to_sound_package(params)
 	local name = params.name
 	local path = params.path
@@ -3566,7 +3573,7 @@ function CoreEditor:add_to_sound_package(params)
 	end
 end
 
--- Lines 3302-3334
+-- Lines 3310-3342
 function CoreEditor:_save_packages(dir)
 	local chunk_name = managers.editor:layer("Level Settings"):get_setting("chunk_name")
 	local is_not_init_chunk = chunk_name ~= "init"
@@ -3612,7 +3619,7 @@ function CoreEditor:_save_packages(dir)
 	self:_save_package(sound_package, self._world_sound_package_table)
 end
 
--- Lines 3338-3410
+-- Lines 3346-3418
 function CoreEditor:_check_package_duplicity(params)
 	local name = params.name
 	local path = params.path
@@ -3642,14 +3649,14 @@ function CoreEditor:_check_package_duplicity(params)
 	return found
 end
 
--- Lines 3413-3479
+-- Lines 3421-3487
 function CoreEditor:_save_package(file, package_table, streaming_options)
 	file:puts("<package>")
 
 	if streaming_options then
 		local streaming_element = "\t<streaming"
 
-		-- Lines 3419-3431
+		-- Lines 3427-3439
 		local function fill_platform_streaming_params(platform)
 			if streaming_options[platform] and next(streaming_options[platform]) then
 				local platform_param = " " .. platform .. "=\""
@@ -3721,7 +3728,7 @@ function CoreEditor:_save_package(file, package_table, streaming_options)
 	SystemFS:close(file)
 end
 
--- Lines 3482-3507
+-- Lines 3490-3515
 function CoreEditor:_save_shadow_textures(dir)
 	local path = dir .. "/shadow_textures.gui"
 	local gui_file = SystemFS:open(path, "w")
@@ -3757,7 +3764,7 @@ function CoreEditor:_save_shadow_textures(dir)
 	})
 end
 
--- Lines 3509-3517
+-- Lines 3517-3525
 function CoreEditor:_shadow_texture_is_used(name_id)
 	for _, continent in pairs(self._continents) do
 		if continent._unit_ids[tonumber(name_id)] then
@@ -3768,7 +3775,7 @@ function CoreEditor:_shadow_texture_is_used(name_id)
 	return false
 end
 
--- Lines 3520-3533
+-- Lines 3528-3541
 function CoreEditor:_add_files_to_package(dir)
 	local types = {
 		"world_setting"
@@ -3787,7 +3794,7 @@ function CoreEditor:_add_files_to_package(dir)
 	end
 end
 
--- Lines 3536-3567
+-- Lines 3544-3575
 function CoreEditor:_save_continent_files(dir)
 	local layer_files = {
 		mission_scripts = "mission",
@@ -3830,7 +3837,7 @@ function CoreEditor:_save_continent_files(dir)
 	end
 end
 
--- Lines 3570-3574
+-- Lines 3578-3582
 function CoreEditor:_save_continent_mission_file(params)
 	local file = self:_open_file(params.path, params.continent, true)
 
@@ -3838,7 +3845,7 @@ function CoreEditor:_save_continent_mission_file(params)
 	SystemFS:close(file)
 end
 
--- Lines 3577-3586
+-- Lines 3585-3594
 function CoreEditor:_save_continents_file(dir)
 	local continents = {}
 
@@ -3852,7 +3859,7 @@ function CoreEditor:_save_continents_file(dir)
 	SystemFS:close(file)
 end
 
--- Lines 3589-3598
+-- Lines 3597-3606
 function CoreEditor:_save_mission_file(dir)
 	local t = {}
 
@@ -3868,7 +3875,7 @@ function CoreEditor:_save_mission_file(dir)
 	SystemFS:close(mission)
 end
 
--- Lines 3600-3605
+-- Lines 3608-3613
 function CoreEditor:_save_nav_manager_data(dir)
 	local nav_data = self:_open_file(dir .. "\\nav_manager_data.nav_data")
 	local t = managers.navigation:get_save_data()
@@ -3877,7 +3884,7 @@ function CoreEditor:_save_nav_manager_data(dir)
 	SystemFS:close(nav_data)
 end
 
--- Lines 3607-3622
+-- Lines 3615-3630
 function CoreEditor:_save_cover_ai_data(dir)
 	local all_cover_units = World:find_units_quick("all", managers.slot:get_mask("cover"))
 	local covers = {
@@ -3903,7 +3910,7 @@ function CoreEditor:_save_cover_ai_data(dir)
 	SystemFS:close(cover_ai_data)
 end
 
--- Lines 3625-3630
+-- Lines 3633-3638
 function CoreEditor:_open_file(path, continent, init, skip_package)
 	if not skip_package then
 		managers.editor:add_to_world_package({
@@ -3917,14 +3924,14 @@ function CoreEditor:_open_file(path, continent, init, skip_package)
 	return SystemFS:open(path, "w")
 end
 
--- Lines 3633-3637
+-- Lines 3641-3645
 function CoreEditor:_make_dir(dir)
 	if not SystemFS:exists(dir) then
 		SystemFS:make_dir(dir)
 	end
 end
 
--- Lines 3639-3656
+-- Lines 3647-3664
 function CoreEditor:add_save_data(values)
 	if values.continent then
 		self._continent_save_tables[values.continent] = self._continent_save_tables[values.continent] or {}
@@ -3946,7 +3953,7 @@ function CoreEditor:add_save_data(values)
 	end
 end
 
--- Lines 3762-3775
+-- Lines 3770-3783
 function CoreEditor:_save_unit_stats(dir)
 	local unit_stats = SystemFS:open(dir .. "\\unit_stats.unit_stats", "w")
 	local data, total = self:get_unit_stats()
@@ -3962,7 +3969,7 @@ function CoreEditor:_save_unit_stats(dir)
 	SystemFS:close(unit_stats)
 end
 
--- Lines 3778-3803
+-- Lines 3786-3811
 function CoreEditor:_save_bundle_info_files(dir)
 	local file = SystemFS:open(dir .. "\\cube_lights.bundle_info", "w")
 	local world_path = managers.database:entry_relative_path(dir)
@@ -3985,9 +3992,9 @@ function CoreEditor:_save_bundle_info_files(dir)
 	SystemFS:close(file)
 end
 
--- Lines 3806-3850
+-- Lines 3814-3858
 function CoreEditor:_save_blacklist(dir)
-	-- Lines 3807-3814
+	-- Lines 3815-3822
 	local function tableSetInsert(t, val)
 		for _, v in ipairs(t) do
 			if v == val then
@@ -3998,7 +4005,7 @@ function CoreEditor:_save_blacklist(dir)
 		table.insert(t, val)
 	end
 
-	-- Lines 3816-3823
+	-- Lines 3824-3831
 	local function tableSetContains(t, val)
 		for _, v in ipairs(t) do
 			if v == val then
@@ -4039,7 +4046,7 @@ function CoreEditor:_save_blacklist(dir)
 	end
 end
 
--- Lines 3853-3860
+-- Lines 3861-3868
 function CoreEditor:_get_instances_paths()
 	local all_instance_paths = {}
 
@@ -4050,7 +4057,7 @@ function CoreEditor:_get_instances_paths()
 	return all_instance_paths
 end
 
--- Lines 3862-3874
+-- Lines 3870-3882
 function CoreEditor:get_unit_stats_from_layers()
 	local units = {}
 
@@ -4067,7 +4074,7 @@ function CoreEditor:get_unit_stats_from_layers()
 	return self:get_unit_stats(units)
 end
 
--- Lines 3877-3895
+-- Lines 3885-3903
 function CoreEditor:get_unit_stats(units)
 	units = units or World:find_units_quick("all")
 	local data = {}
@@ -4092,7 +4099,7 @@ function CoreEditor:get_unit_stats(units)
 	return data, total
 end
 
--- Lines 3898-3920
+-- Lines 3906-3928
 function CoreEditor:get_unit_stat(u)
 	local t = {
 		memory = u:geometry_memory_use(),
@@ -4115,12 +4122,12 @@ function CoreEditor:get_unit_stat(u)
 	return t
 end
 
--- Lines 3922-3924
+-- Lines 3930-3932
 function CoreEditor:_unit_only_in_editor(u)
 	return u:unit_data() and u:unit_data().only_exists_in_editor
 end
 
--- Lines 3927-3938
+-- Lines 3935-3946
 function CoreEditor:vertices_per_tris(u)
 	local vertices = 0
 	local tris = 0
@@ -4137,7 +4144,7 @@ function CoreEditor:vertices_per_tris(u)
 	return string.format("%.4f", vertices / tris)
 end
 
--- Lines 3941-3949
+-- Lines 3949-3957
 function CoreEditor:model_vertices(u, prefix)
 	local vertices = 0
 
@@ -4150,7 +4157,7 @@ function CoreEditor:model_vertices(u, prefix)
 	return string.format("%.4f", vertices)
 end
 
--- Lines 3952-3959
+-- Lines 3960-3967
 function CoreEditor:_is_instanced(u)
 	for i = 0, u:nr_models() - 1 do
 		if u:is_model_instance(i) then
@@ -4161,7 +4168,7 @@ function CoreEditor:_is_instanced(u)
 	return false
 end
 
--- Lines 3962-3980
+-- Lines 3970-3988
 function CoreEditor:load_level(dir, path)
 	self:output("Open file " .. path)
 
@@ -4189,7 +4196,7 @@ function CoreEditor:load_level(dir, path)
 	self._load_progress:destroy()
 end
 
--- Lines 3983-4022
+-- Lines 3991-4030
 function CoreEditor:do_load()
 	self._loading = true
 
@@ -4234,12 +4241,12 @@ function CoreEditor:do_load()
 	self._loading = false
 end
 
--- Lines 4024-4026
+-- Lines 4032-4034
 function CoreEditor:loading()
 	return self._loading
 end
 
--- Lines 4029-4049
+-- Lines 4037-4057
 function CoreEditor:clear_all()
 	if self._reset_camera_on_new and self._camera_controller then
 		self._camera_controller:set_camera_pos(Vector3(0, 0, 0))
@@ -4265,7 +4272,7 @@ function CoreEditor:clear_all()
 	self._message_system = EditorMessageSystem:new()
 end
 
--- Lines 4052-4061
+-- Lines 4060-4069
 function CoreEditor:load_markers(world_holder, offset)
 	local markers = world_holder:create_world("world", "markers", offset)
 
@@ -4279,7 +4286,7 @@ function CoreEditor:load_markers(world_holder, offset)
 	end
 end
 
--- Lines 4063-4070
+-- Lines 4071-4078
 function CoreEditor:load_values(world_holder, offset)
 	local values = world_holder:create_world("world", "values", offset)
 
@@ -4290,7 +4297,7 @@ function CoreEditor:load_values(world_holder, offset)
 	self._values = clone(values)
 end
 
--- Lines 4072-4078
+-- Lines 4080-4086
 function CoreEditor:load_continents(world_holder, offset)
 	local continents = world_holder:create_world("world", "continents", offset)
 
@@ -4301,22 +4308,22 @@ function CoreEditor:load_continents(world_holder, offset)
 	self:set_continent("world")
 end
 
--- Lines 4081-4083
+-- Lines 4089-4091
 function CoreEditor:invert_move_shift()
 	return self._invert_move_shift
 end
 
--- Lines 4086-4088
+-- Lines 4094-4096
 function CoreEditor:always_global_select_unit()
 	return self._always_global_select_unit
 end
 
--- Lines 4091-4093
+-- Lines 4099-4101
 function CoreEditor:dialogs_stay_on_top()
 	return self._dialogs_stay_on_top
 end
 
--- Lines 4095-4100
+-- Lines 4103-4108
 function CoreEditor:add_unit_edit_page(name)
 	if not self._dialogs.edit_unit then
 		self:show_dialog("edit_unit", "EditUnitDialog")
@@ -4325,7 +4332,7 @@ function CoreEditor:add_unit_edit_page(name)
 	return self._dialogs.edit_unit:add_page(name)
 end
 
--- Lines 4102-4108
+-- Lines 4110-4116
 function CoreEditor:toggle_edit_unit_dialog()
 	if self._dialogs.edit_unit and self._dialogs.edit_unit:visible() then
 		self:hide_dialog("edit_unit")
@@ -4334,7 +4341,7 @@ function CoreEditor:toggle_edit_unit_dialog()
 	end
 end
 
--- Lines 4111-4124
+-- Lines 4119-4132
 function CoreEditor:has_editables(unit, units)
 	if self._dialogs.edit_unit then
 		self._dialogs.edit_unit:set_enabled(unit, units)
@@ -4352,17 +4359,17 @@ function CoreEditor:has_editables(unit, units)
 	self._lower_panel:layout()
 end
 
--- Lines 4125-4138
+-- Lines 4133-4146
 function CoreEditor:check_has_editables(unit, units)
 	return false
 end
 
--- Lines 4139-4141
+-- Lines 4147-4149
 function CoreEditor:is_any_editable_visible()
 	return false
 end
 
--- Lines 4143-4160
+-- Lines 4151-4168
 function CoreEditor:category_name(n)
 	n = string.gsub(n, "_", " ")
 	n = string.upper(string.sub(n, 1, 1)) .. string.sub(n, 2)
@@ -4385,21 +4392,21 @@ function CoreEditor:category_name(n)
 	return s
 end
 
--- Lines 4163-4169
+-- Lines 4171-4177
 function CoreEditor:selected_unit()
 	if self._current_layer and self._current_layer:selected_unit() then
 		return self._current_layer:selected_unit()
 	end
 end
 
--- Lines 4172-4178
+-- Lines 4180-4186
 function CoreEditor:current_selected_units()
 	if self._current_layer and self._current_layer:selected_units() then
 		return self._current_layer:selected_units()
 	end
 end
 
--- Lines 4181-4202
+-- Lines 4189-4210
 function CoreEditor:select_units(units)
 	local id = Profiler:start("select_units")
 	local layers = {}
@@ -4426,12 +4433,12 @@ function CoreEditor:select_units(units)
 	Profiler:counter_time("select_units")
 end
 
--- Lines 4205-4207
+-- Lines 4213-4215
 function CoreEditor:select_group(group)
 	self._current_layer:select_group(group)
 end
 
--- Lines 4210-4216
+-- Lines 4218-4224
 function CoreEditor:center_view_on_unit(unit)
 	if alive(unit) then
 		local rot = Rotation:look_at(managers.editor:camera_position(), unit:position(), Vector3(0, 0, 1))
@@ -4441,7 +4448,7 @@ function CoreEditor:center_view_on_unit(unit)
 	end
 end
 
--- Lines 4218-4223
+-- Lines 4226-4231
 function CoreEditor:look_towards_unit(unit)
 	if alive(unit) then
 		local rot = Rotation:look_at(managers.editor:camera_position(), unit:position(), Vector3(0, 0, 1))
@@ -4450,7 +4457,7 @@ function CoreEditor:look_towards_unit(unit)
 	end
 end
 
--- Lines 4225-4244
+-- Lines 4233-4252
 function CoreEditor:change_layer_based_on_unit(unit)
 	if not unit then
 		return
@@ -4471,7 +4478,7 @@ function CoreEditor:change_layer_based_on_unit(unit)
 	end
 end
 
--- Lines 4247-4254
+-- Lines 4255-4262
 function CoreEditor:unit_in_layer(unit)
 	for _, layer in pairs(self._layers) do
 		if layer:created_units_pairs()[unit:unit_data().unit_id] then
@@ -4480,7 +4487,7 @@ function CoreEditor:unit_in_layer(unit)
 	end
 end
 
--- Lines 4257-4264
+-- Lines 4265-4272
 function CoreEditor:unit_in_layer_name(unit)
 	for name, layer in pairs(self._layers) do
 		if table.contains(layer:created_units(), unit) then
@@ -4491,19 +4498,19 @@ function CoreEditor:unit_in_layer_name(unit)
 	return nil
 end
 
--- Lines 4267-4269
+-- Lines 4275-4277
 function CoreEditor:delete_unit(unit)
 	self:unit_in_layer(unit):delete_unit(unit)
 end
 
--- Lines 4271-4275
+-- Lines 4279-4283
 function CoreEditor:delete_selected_unit()
 	if self._current_layer then
 		self._current_layer:delete_unit(self._current_layer:selected_unit())
 	end
 end
 
--- Lines 4278-4284
+-- Lines 4286-4292
 function CoreEditor:unit_with_id(id)
 	for _, layer in pairs(self._layers) do
 		if layer:created_units_pairs()[id] then
@@ -4512,31 +4519,31 @@ function CoreEditor:unit_with_id(id)
 	end
 end
 
--- Lines 4287-4289
+-- Lines 4295-4297
 function CoreEditor:mission_element_panel()
 	return self._layers[self._mission_layer_name]:missionelement_panel()
 end
 
--- Lines 4292-4295
+-- Lines 4300-4303
 function CoreEditor:hub_element_panel()
 	Application:stack_dump_error("CoreEditor:hub_element_panel is deprecated, use CoreEditor:mission_element_panel instead.")
 
 	return self:mission_element_panel()
 end
 
--- Lines 4298-4300
+-- Lines 4306-4308
 function CoreEditor:mission_element_sizer()
 	return self._layers[self._mission_layer_name]:missionelement_sizer()
 end
 
--- Lines 4303-4306
+-- Lines 4311-4314
 function CoreEditor:hub_element_sizer()
 	Application:stack_dump_error("CoreEditor:hub_element_sizer is deprecated, use CoreEditor:mission_element_sizer instead.")
 
 	return self:mission_element_sizer()
 end
 
--- Lines 4309-4335
+-- Lines 4317-4343
 function CoreEditor:create_continent(name, values)
 	if self._continents[name] then
 		self._continents[name]:load_values(values)
@@ -4567,7 +4574,7 @@ function CoreEditor:create_continent(name, values)
 	return self._continents[name]
 end
 
--- Lines 4338-4344
+-- Lines 4346-4352
 function CoreEditor:_new_base_id()
 	local i = 100000
 
@@ -4578,7 +4585,7 @@ function CoreEditor:_new_base_id()
 	return i
 end
 
--- Lines 4347-4354
+-- Lines 4355-4362
 function CoreEditor:_base_id_availible(id)
 	for _, continent in pairs(self._continents) do
 		if continent:value("base_id") == id then
@@ -4589,7 +4596,7 @@ function CoreEditor:_base_id_availible(id)
 	return true
 end
 
--- Lines 4357-4387
+-- Lines 4365-4395
 function CoreEditor:delete_continent(name)
 	local continent = name and self._continents[name] or self._current_continent
 
@@ -4623,7 +4630,7 @@ function CoreEditor:delete_continent(name)
 	self:_recreate_dialogs()
 end
 
--- Lines 4390-4408
+-- Lines 4398-4416
 function CoreEditor:set_continent(name)
 	local changed = not self._current_continent or self._current_continent ~= self._continents[name]
 	self._current_continent = self._continents[name]
@@ -4643,38 +4650,38 @@ function CoreEditor:set_continent(name)
 	end
 end
 
--- Lines 4411-4413
+-- Lines 4419-4421
 function CoreEditor:current_continent()
 	return self._current_continent
 end
 
--- Lines 4416-4418
+-- Lines 4424-4426
 function CoreEditor:current_continent_name()
 	return self:current_continent() and self:current_continent():name()
 end
 
--- Lines 4421-4423
+-- Lines 4429-4431
 function CoreEditor:continents()
 	return self._continents
 end
 
--- Lines 4426-4428
+-- Lines 4434-4436
 function CoreEditor:continent(name)
 	return self._continents[name]
 end
 
--- Lines 4430-4432
+-- Lines 4438-4440
 function CoreEditor:add_unit_to_continent(name, unit)
 	self._continents[name]:add_unit(unit)
 end
 
--- Lines 4435-4438
+-- Lines 4443-4446
 function CoreEditor:change_continent_for_unit(unit, continent)
 	unit:unit_data().continent:remove_unit(unit)
 	continent:add_unit(unit)
 end
 
--- Lines 4441-4450
+-- Lines 4449-4458
 function CoreEditor:change_continent_by_unit()
 	local ray = self:unit_by_raycast({
 		sample = true,
@@ -4687,7 +4694,7 @@ function CoreEditor:change_continent_by_unit()
 	end
 end
 
--- Lines 4452-4457
+-- Lines 4460-4465
 function CoreEditor:change_continent_based_on_unit(unit)
 	local continent_name = unit and unit:unit_data() and unit:unit_data().continent and unit:unit_data().continent:name()
 
@@ -4696,7 +4703,7 @@ function CoreEditor:change_continent_based_on_unit(unit)
 	end
 end
 
--- Lines 4459-4468
+-- Lines 4467-4476
 function CoreEditor:change_continent_by_unit()
 	local ray = self:unit_by_raycast({
 		sample = true,
@@ -4709,12 +4716,12 @@ function CoreEditor:change_continent_by_unit()
 	end
 end
 
--- Lines 4470-4472
+-- Lines 4478-4480
 function CoreEditor:simulation_world_setting_path()
 	return self._simulation_world_setting_path
 end
 
--- Lines 4475-4484
+-- Lines 4483-4492
 function CoreEditor:set_simulation_world_setting_path(path)
 	if path and not DB:has("world_setting", path) then
 		local confirm = EWS:message_box(Global.frame_panel, "Can't set simulation world setting path to " .. path, "Continent", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -4727,7 +4734,7 @@ function CoreEditor:set_simulation_world_setting_path(path)
 	self._continents_panel:set_world_setting_path(self._simulation_world_setting_path)
 end
 
--- Lines 4487-4498
+-- Lines 4495-4506
 function CoreEditor:parse_simulation_world_setting_path(path)
 	local settings = SystemFS:parse_xml(managers.database:entry_expanded_path("world_setting", path))
 
@@ -4744,12 +4751,12 @@ function CoreEditor:parse_simulation_world_setting_path(path)
 	end
 end
 
--- Lines 4501-4503
+-- Lines 4509-4511
 function CoreEditor:values(continent)
 	return continent and self._values[continent] or self._values
 end
 
--- Lines 4506-4512
+-- Lines 4514-4520
 function CoreEditor:add_workview(name)
 	local continent = self:current_continent_name()
 	self._values[continent].workviews[name] = {
@@ -4763,17 +4770,17 @@ function CoreEditor:add_workview(name)
 	end
 end
 
--- Lines 4515-4517
+-- Lines 4523-4525
 function CoreEditor:goto_workview(view)
 	self:set_camera(view.position, view.rotation)
 end
 
--- Lines 4520-4522
+-- Lines 4528-4530
 function CoreEditor:delete_workview(continent, view_name)
 	self._values[continent].workviews[view_name] = nil
 end
 
--- Lines 4525-4551
+-- Lines 4533-4559
 function CoreEditor:set_ruler_points()
 	if not shift() then
 		return
@@ -4806,7 +4813,7 @@ function CoreEditor:set_ruler_points()
 	end
 end
 
--- Lines 4555-4562
+-- Lines 4563-4570
 function CoreEditor:add_special_unit(unit, for_layer)
 	unit:unit_data().unit_id = self._special_ids or -1
 	self._special_units[unit:key()] = {
@@ -4816,7 +4823,7 @@ function CoreEditor:add_special_unit(unit, for_layer)
 	self._special_ids = (self._special_ids or -1) - 1
 end
 
--- Lines 4564-4571
+-- Lines 4572-4579
 function CoreEditor:remove_special_unit(unit)
 	for _, data in pairs(self._special_units) do
 		if data.unit:key() == unit:key() then
@@ -4827,7 +4834,7 @@ function CoreEditor:remove_special_unit(unit)
 	end
 end
 
--- Lines 4573-4579
+-- Lines 4581-4587
 function CoreEditor:get_special_unit_with_id(id)
 	for _, data in pairs(self._special_units) do
 		if data.unit:unit_data().unit_id == id then
@@ -4836,17 +4843,17 @@ function CoreEditor:get_special_unit_with_id(id)
 	end
 end
 
--- Lines 4581-4583
+-- Lines 4589-4591
 function CoreEditor:dump_mesh(...)
 	CoreEditorUtils.dump_mesh(...)
 end
 
--- Lines 4585-4587
+-- Lines 4593-4595
 function CoreEditor:dump_all(...)
 	CoreEditorUtils.dump_all(...)
 end
 
--- Lines 4589-4607
+-- Lines 4597-4615
 function CoreEditor:destroy()
 	if self._editor_data.virtual_controller then
 		Input:destroy_virtual_controller(self._editor_data.virtual_controller)
@@ -4870,24 +4877,24 @@ function CoreEditor:destroy()
 	end
 end
 
--- Lines 4609-4611
+-- Lines 4617-4619
 function CoreEditor:use_beta_undo()
 	return self._use_beta_undo
 end
 
--- Lines 4613-4615
+-- Lines 4621-4623
 function CoreEditor:undo_history_size()
 	return self._undo_history
 end
 
--- Lines 4617-4619
+-- Lines 4625-4627
 function CoreEditor:undo_debug()
 	return self._undo_debug
 end
 
 CoreEditorContinent = CoreEditorContinent or class()
 
--- Lines 4625-4633
+-- Lines 4633-4641
 function CoreEditorContinent:init(name, values)
 	self._unit_ids = {}
 	self._name = name
@@ -4900,7 +4907,7 @@ function CoreEditorContinent:init(name, values)
 	self:load_values(values)
 end
 
--- Lines 4636-4643
+-- Lines 4644-4651
 function CoreEditorContinent:load_values(values)
 	self._values.base_id = values.base_id
 	self._values.visible = values.visible or values.visible == nil and true
@@ -4910,17 +4917,17 @@ function CoreEditorContinent:load_values(values)
 	self._values.editor_only = values.editor_only or values.editor_only == nil and false
 end
 
--- Lines 4646-4648
+-- Lines 4654-4656
 function CoreEditorContinent:values()
 	return self._values
 end
 
--- Lines 4651-4653
+-- Lines 4659-4661
 function CoreEditorContinent:base_id()
 	return self._values.base_id
 end
 
--- Lines 4656-4664
+-- Lines 4664-4672
 function CoreEditorContinent:get_unit_id(unit, start_id)
 	local i = start_id or self._values.base_id
 
@@ -4935,32 +4942,32 @@ function CoreEditorContinent:get_unit_id(unit, start_id)
 	return i
 end
 
--- Lines 4667-4669
+-- Lines 4675-4677
 function CoreEditorContinent:register_unit_id(unit)
 	self._unit_ids[unit:unit_data().unit_id] = unit
 end
 
--- Lines 4672-4674
+-- Lines 4680-4682
 function CoreEditorContinent:remove_unit_id(unit)
 	self._unit_ids[unit:unit_data().unit_id] = nil
 end
 
--- Lines 4677-4679
+-- Lines 4685-4687
 function CoreEditorContinent:name()
 	return self._name
 end
 
--- Lines 4681-4683
+-- Lines 4689-4691
 function CoreEditorContinent:set_name(name)
 	self._name = name
 end
 
--- Lines 4686-4688
+-- Lines 4694-4696
 function CoreEditorContinent:set_need_saving(need_saving)
 	self._need_saving = need_saving
 end
 
--- Lines 4691-4696
+-- Lines 4699-4704
 function CoreEditorContinent:add_unit(unit)
 	unit:unit_data().continent = self
 
@@ -4969,13 +4976,13 @@ function CoreEditorContinent:add_unit(unit)
 	self:set_need_saving(true)
 end
 
--- Lines 4699-4702
+-- Lines 4707-4710
 function CoreEditorContinent:remove_unit(unit)
 	table.delete(self._units, unit)
 	self:set_need_saving(true)
 end
 
--- Lines 4705-4710
+-- Lines 4713-4718
 function CoreEditorContinent:set_visible(visible)
 	self._values.visible = visible
 
@@ -4984,7 +4991,7 @@ function CoreEditorContinent:set_visible(visible)
 	end
 end
 
--- Lines 4713-4723
+-- Lines 4721-4731
 function CoreEditorContinent:set_simulation_state(exclude)
 	local enabled = self._values.enabled_in_simulation and not exclude
 
@@ -4997,7 +5004,7 @@ function CoreEditorContinent:set_simulation_state(exclude)
 	end
 end
 
--- Lines 4726-4735
+-- Lines 4734-4743
 function CoreEditorContinent:set_locked(locked)
 	self._values.locked = locked
 
@@ -5012,7 +5019,7 @@ function CoreEditorContinent:set_locked(locked)
 	managers.editor:reset_dialog("select_by_name")
 end
 
--- Lines 4738-4743
+-- Lines 4746-4751
 function CoreEditorContinent:set_enabled(enabled)
 	self._values.enabled = enabled
 
@@ -5021,34 +5028,34 @@ function CoreEditorContinent:set_enabled(enabled)
 	end
 end
 
--- Lines 4745-4747
+-- Lines 4753-4755
 function CoreEditorContinent:set_enabled_in_simulation(enabled_in_simulation)
 	self:set_value("enabled_in_simulation", enabled_in_simulation)
 end
 
--- Lines 4749-4751
+-- Lines 4757-4759
 function CoreEditorContinent:set_editor_only(editor_only)
 	self:set_value("editor_only", editor_only)
 end
 
--- Lines 4754-4756
+-- Lines 4762-4764
 function CoreEditorContinent:set_value(value, new_value)
 	self._values[value] = new_value
 end
 
--- Lines 4759-4761
+-- Lines 4767-4769
 function CoreEditorContinent:value(value)
 	return self._values[value]
 end
 
--- Lines 4764-4768
+-- Lines 4772-4776
 function CoreEditorContinent:delete()
 	for _, unit in ipairs(clone(self._units)) do
 		managers.editor:delete_unit(unit)
 	end
 end
 
--- Lines 4787-4824
+-- Lines 4795-4832
 function CoreEditor:_init_post_effects()
 	self._post_effects = {
 		POSTFX_bloom = {
@@ -5086,7 +5093,7 @@ function CoreEditor:_init_post_effects()
 	self:disable_all_post_effects()
 end
 
--- Lines 4827-4837
+-- Lines 4835-4845
 function CoreEditor:disable_all_post_effects(no_keep_state)
 	for id, pe in pairs(self._post_effects) do
 		pe.off()
@@ -5101,7 +5108,7 @@ function CoreEditor:disable_all_post_effects(no_keep_state)
 	end
 end
 
--- Lines 4840-4848
+-- Lines 4848-4856
 function CoreEditor:enable_all_post_effects()
 	for id, pe in pairs(self._post_effects) do
 		pe.on()
@@ -5114,7 +5121,7 @@ function CoreEditor:enable_all_post_effects()
 	end
 end
 
--- Lines 4851-4863
+-- Lines 4859-4871
 function CoreEditor:update_post_effects()
 	for id, pe in pairs(self._post_effects) do
 		if pe.enable then
@@ -5129,27 +5136,27 @@ function CoreEditor:update_post_effects()
 	end
 end
 
--- Lines 4866-4868
+-- Lines 4874-4876
 function CoreEditor:register_message(message, uid, func)
 	return self._message_system:register(message, uid, func)
 end
 
--- Lines 4870-4872
+-- Lines 4878-4880
 function CoreEditor:unregister_message(message, uid)
 	self._message_system:unregister(message, uid)
 end
 
--- Lines 4874-4876
+-- Lines 4882-4884
 function CoreEditor:send_message(message, uid, ...)
 	self._message_system:notify(message, uid, ...)
 end
 
--- Lines 4878-4880
+-- Lines 4886-4888
 function CoreEditor:send_message_now(message, uid, ...)
 	self._message_system:notify_now(message, uid, ...)
 end
 
--- Lines 4884-4905
+-- Lines 4892-4913
 function CoreEditor:undo()
 	if not ctrl() or not managers.editor:use_beta_undo() then
 		return false
@@ -5174,7 +5181,7 @@ function CoreEditor:undo()
 	end
 end
 
--- Lines 4907-4913
+-- Lines 4915-4921
 function CoreEditor:_undo()
 	if not self._undo_stack:is_empty() then
 		local command = self._undo_stack:pop()
@@ -5184,7 +5191,7 @@ function CoreEditor:_undo()
 	end
 end
 
--- Lines 4915-4921
+-- Lines 4923-4929
 function CoreEditor:_redo()
 	if not self._redo_stack:is_empty() then
 		local command = self._redo_stack:pop()
@@ -5194,7 +5201,7 @@ function CoreEditor:_redo()
 	end
 end
 
--- Lines 4923-4933
+-- Lines 4931-4941
 function CoreEditor:register_undo_command(command)
 	if managers.editor:undo_debug() then
 		print("[Undo] Register undo command ", command)
@@ -5205,7 +5212,7 @@ function CoreEditor:register_undo_command(command)
 	self._undo_block:add_command(command)
 end
 
--- Lines 4935-4951
+-- Lines 4943-4959
 function CoreEditor:_register_undo_command_block(block)
 	self._undo_stack:push(block)
 
@@ -5222,7 +5229,7 @@ function CoreEditor:_register_undo_command_block(block)
 	end
 end
 
--- Lines 4953-4958
+-- Lines 4961-4966
 function CoreEditor:clear_undo_stack()
 	self._undo_block = nil
 
@@ -5231,7 +5238,7 @@ function CoreEditor:clear_undo_stack()
 	print("[Undo] Undo/Redo stack cleared!")
 end
 
--- Lines 4960-4970
+-- Lines 4968-4978
 function CoreEditor:_print_undo_stacks()
 	print("[Undo] undo stack: ")
 

@@ -115,7 +115,7 @@ function TextBoxGui:recreate_text_box(...)
 	self._thread = self._panel:animate(self._update, self)
 end
 
--- Lines 103-387
+-- Lines 103-400
 function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._ws = ws
 	self._init_layer = self._ws:panel():layer()
@@ -151,6 +151,10 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local x = preset and preset.x or config and config.x or 0
 	local y = preset and preset.y or config and config.y or 0
 	local bottom = preset and preset.bottom or config and config.bottom
+	local left_marigin = preset and preset.left_marigin or config and config.left_marigin or 0
+	local right_marigin = preset and preset.right_marigin or config and config.right_marigin or 0
+	local top_marigin = preset and preset.top_marigin or config and config.top_marigin or 0
+	local bottom_marigin = preset and preset.bottom_marigin or config and config.bottom_marigin or 0
 	local forced_h = preset and preset.forced_h or config and config.forced_h or false
 	local title_font = preset and preset.title_font or config and config.title_font or tweak_data.menu.pd2_large_font
 	local title_font_size = preset and preset.title_font_size or config and config.title_font_size or 28
@@ -163,6 +167,16 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local text_blend_mode = preset and preset.text_blend_mode or config and config.text_blend_mode or "normal"
 	self._allow_moving = config and config.allow_moving or false
 	local preset_or_config_y = y ~= 0
+	self._toggle_button_list = {}
+
+	if button_list then
+		for index, button in ipairs(button_list) do
+			if button.toggle then
+				self._toggle_button_list[index] = button.initial_toggle_state
+			end
+		end
+	end
+
 	title = title and utf8.to_upper(title)
 
 	if text then
@@ -189,14 +203,14 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 		align = "left",
 		vertical = "top",
 		valign = "top",
-		y = 10,
 		rotation = 360,
-		x = 10,
 		layer = 1,
 		text = title or "none",
 		visible = title and true or false,
 		font = title_font,
-		font_size = title_font_size
+		font_size = title_font_size,
+		x = 10 + left_marigin,
+		y = 10 + top_marigin
 	})
 	local _, _, tw, th = title_text:text_rect()
 
@@ -271,11 +285,11 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local buttons_panel = self:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local scroll_panel = info_area:panel({
 		name = "scroll_panel",
-		x = 10,
 		layer = 1,
-		y = math.round(th + 5),
-		w = info_area:w() - 20,
-		h = info_area:h()
+		x = 10 + left_marigin,
+		y = math.round(th + 5) + top_marigin,
+		w = info_area:w() - 20 - (left_marigin + right_marigin),
+		h = info_area:h() - (top_marigin + bottom_marigin)
 	})
 	local has_stats = stats_list and #stats_list > 0
 	local stats_panel = self:_setup_stats_panel(scroll_panel, stats_list, stats_text)
@@ -533,7 +547,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	return main
 end
 
--- Lines 390-464
+-- Lines 403-477
 function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	local has_stats = stats_list and #stats_list > 0
 	local stats_panel = scroll_panel:panel({
@@ -721,7 +735,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	return stats_panel
 end
 
--- Lines 467-523
+-- Lines 480-541
 function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local has_buttons = button_list and #button_list > 0
 	local buttons_panel = info_area:panel({
@@ -763,6 +777,23 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 				})
 				button_text_config.text = utf8.to_upper(button.text or "")
 				local text = button_panel:text(button_text_config)
+
+				if button.toggle then
+					local toggle = button_panel:bitmap({
+						texture = "guis/textures/menu_tickbox",
+						name = "toggle",
+						texture_rect = {
+							button.initial_toggle_state and 24 or 0,
+							0,
+							24,
+							24
+						},
+						color = tweak_data.screen_colors.button_stage_3
+					})
+
+					toggle:set_left(button_panel:x())
+				end
+
 				local _, _, w, h = text:text_rect()
 				max_w = math.max(max_w, w)
 				max_h = math.max(max_h, h)
@@ -793,11 +824,11 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 	return buttons_panel
 end
 
--- Lines 525-527
+-- Lines 543-545
 function TextBoxGui:_create_lower_static_panel(lower_static_panel)
 end
 
--- Lines 529-537
+-- Lines 547-555
 function TextBoxGui:check_focus_button(x, y)
 	for i, panel in ipairs(self._text_box_buttons_panel:children()) do
 		if panel.child and panel:inside(x, y) then
@@ -810,7 +841,7 @@ function TextBoxGui:check_focus_button(x, y)
 	return false
 end
 
--- Lines 539-550
+-- Lines 557-568
 function TextBoxGui:set_focus_button(focus_button)
 	if focus_button ~= self._text_box_focus_button then
 		managers.menu:post_event("highlight")
@@ -825,25 +856,52 @@ function TextBoxGui:set_focus_button(focus_button)
 	end
 end
 
--- Lines 552-578
+-- Lines 570-582
+function TextBoxGui:update_toggle(index)
+	local button_panel = self._text_box_buttons_panel:child(index - 1)
+
+	if button_panel and self._toggle_button_list[index] ~= nil then
+		local new_state = not self._toggle_button_list[index]
+		self._toggle_button_list[index] = new_state
+		local toggle = button_panel:child("toggle")
+
+		toggle:set_image("guis/textures/menu_tickbox", new_state and 24 or 0, 0, 24, 24)
+
+		return new_state
+	else
+		return nil
+	end
+end
+
+-- Lines 584-617
 function TextBoxGui:_set_button_selected(index, is_selected)
 	local button_panel = self._text_box_buttons_panel:child(index - 1)
 
 	if button_panel then
 		local button_text = button_panel:child("button_text")
+		local toggle = button_panel:child("toggle")
 		local selected = self._text_box_buttons_panel:child("selected")
 
 		if is_selected then
 			button_text:set_color(tweak_data.screen_colors.button_stage_2)
+
+			if toggle then
+				toggle:set_color(tweak_data.screen_colors.button_stage_2)
+			end
+
 			selected:set_shape(button_panel:shape())
 			selected:move(2, -1)
 		else
 			button_text:set_color(tweak_data.screen_colors.button_stage_3)
+
+			if toggle then
+				toggle:set_color(tweak_data.screen_colors.button_stage_3)
+			end
 		end
 	end
 end
 
--- Lines 580-589
+-- Lines 619-628
 function TextBoxGui:change_focus_button(change)
 	local button_count = self._text_box_buttons_panel:num_children() - 1
 	local focus_button = (self._text_box_focus_button + change) % button_count
@@ -855,17 +913,17 @@ function TextBoxGui:change_focus_button(change)
 	self:set_focus_button(focus_button)
 end
 
--- Lines 591-593
+-- Lines 630-632
 function TextBoxGui:get_focus_button()
 	return self._text_box_focus_button
 end
 
--- Lines 595-597
+-- Lines 634-636
 function TextBoxGui:get_focus_button_id()
 	return self._text_box_buttons_panel:child(self._text_box_focus_button - 1):name()
 end
 
--- Lines 599-619
+-- Lines 638-658
 function TextBoxGui:_set_scroll_indicator()
 	local info_area = self._text_box:child("info_area")
 	local scroll_panel = info_area:child("scroll_panel")
@@ -887,7 +945,7 @@ function TextBoxGui:_set_scroll_indicator()
 	self._text_box:child("scroll_down_indicator_arrow"):set_visible(is_visible)
 end
 
--- Lines 621-653
+-- Lines 660-692
 function TextBoxGui:_check_scroll_indicator_states()
 	local info_area = self._text_box:child("info_area")
 	local scroll_panel = info_area:child("scroll_panel")
@@ -920,17 +978,17 @@ function TextBoxGui:_check_scroll_indicator_states()
 	scroll_bar:set_top(up_arrow:bottom() - scroll_text:top() * (scroll_panel:h() - up_arrow:h() * 2 - 16) / sh)
 end
 
--- Lines 655-657
+-- Lines 694-696
 function TextBoxGui:input_focus()
 	return false
 end
 
--- Lines 659-661
+-- Lines 698-700
 function TextBoxGui:mouse_pressed(button, x, y)
 	return false
 end
 
--- Lines 663-677
+-- Lines 702-716
 function TextBoxGui:check_close(x, y)
 	if not self:can_take_input() then
 		return false
@@ -949,7 +1007,7 @@ function TextBoxGui:check_close(x, y)
 	return false
 end
 
--- Lines 679-693
+-- Lines 718-732
 function TextBoxGui:check_minimize(x, y)
 	if not self:can_take_input() then
 		return false
@@ -968,7 +1026,7 @@ function TextBoxGui:check_minimize(x, y)
 	return false
 end
 
--- Lines 695-721
+-- Lines 734-760
 function TextBoxGui:check_grab_scroll_bar(x, y)
 	if not self:can_take_input() or not alive(self._text_box) or not self._text_box:child("scroll_bar"):visible() then
 		return false
@@ -1004,7 +1062,7 @@ function TextBoxGui:check_grab_scroll_bar(x, y)
 	return false
 end
 
--- Lines 723-735
+-- Lines 762-774
 function TextBoxGui:release_scroll_bar()
 	self._pressing_arrow_up = false
 	self._pressing_arrow_down = false
@@ -1024,7 +1082,7 @@ function TextBoxGui:release_scroll_bar()
 	return false
 end
 
--- Lines 737-825
+-- Lines 776-864
 function TextBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() or not alive(self._panel) then
 		return false, "arrow"
@@ -1084,7 +1142,7 @@ function TextBoxGui:mouse_moved(x, y)
 	return false, "arrow"
 end
 
--- Lines 827-873
+-- Lines 866-912
 function TextBoxGui:moved_scroll_bar(x, y)
 	self._x = x
 	self._y = y
@@ -1139,7 +1197,7 @@ function TextBoxGui:moved_scroll_bar(x, y)
 	return false, "hand"
 end
 
--- Lines 875-886
+-- Lines 914-925
 function TextBoxGui:mouse_wheel_up(x, y)
 	if not self._visible then
 		return false
@@ -1155,7 +1213,7 @@ function TextBoxGui:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 888-899
+-- Lines 927-938
 function TextBoxGui:mouse_wheel_down(x, y)
 	if not self._visible then
 		return false
@@ -1171,7 +1229,7 @@ function TextBoxGui:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 902-922
+-- Lines 941-961
 function TextBoxGui:scroll_up(y)
 	if not alive(self._text_box) then
 		return
@@ -1194,7 +1252,7 @@ function TextBoxGui:scroll_up(y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 925-943
+-- Lines 964-982
 function TextBoxGui:scroll_down(y)
 	if not alive(self._text_box) then
 		return
@@ -1217,7 +1275,7 @@ function TextBoxGui:scroll_down(y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 946-965
+-- Lines 985-1004
 function TextBoxGui:scroll_with_bar(target_y, current_y)
 	local arrow_size = self._text_box:child("scroll_up_indicator_arrow"):size()
 	local info_area = self._text_box:child("info_area")
@@ -1243,7 +1301,7 @@ function TextBoxGui:scroll_with_bar(target_y, current_y)
 	end
 end
 
--- Lines 967-977
+-- Lines 1006-1016
 function TextBoxGui:update_indicator(t, dt)
 	if alive(self._indicator) then
 		self._indicator:rotate(180 * dt)
@@ -1256,7 +1314,7 @@ function TextBoxGui:update_indicator(t, dt)
 	end
 end
 
--- Lines 979-990
+-- Lines 1018-1029
 function TextBoxGui:set_fade(fade)
 	self:_set_alpha(fade)
 
@@ -1269,13 +1327,13 @@ function TextBoxGui:set_fade(fade)
 	end
 end
 
--- Lines 992-996
+-- Lines 1031-1035
 function TextBoxGui:_set_alpha(alpha)
 	self._panel:set_alpha(alpha)
 	self._panel:set_visible(alpha ~= 0)
 end
 
--- Lines 998-1009
+-- Lines 1037-1048
 function TextBoxGui:_set_alpha_recursive(obj, alpha)
 	if obj.set_color then
 		local a = self._target_alpha[obj:key()] and self._target_alpha[obj:key()] * alpha or alpha
@@ -1290,7 +1348,7 @@ function TextBoxGui:_set_alpha_recursive(obj, alpha)
 	end
 end
 
--- Lines 1011-1017
+-- Lines 1050-1056
 function TextBoxGui:set_title(title)
 	local title_text = self._panel:child("title")
 
@@ -1302,29 +1360,29 @@ function TextBoxGui:set_title(title)
 	title_text:set_visible(title and true or false)
 end
 
--- Lines 1019-1023
+-- Lines 1058-1062
 function TextBoxGui:set_text(txt, no_upper)
 	local text = self._panel:child("info_area"):child("scroll_panel"):child("text")
 
 	text:set_text(no_upper and txt or utf8.to_upper(txt or ""))
 end
 
--- Lines 1025-1027
+-- Lines 1064-1066
 function TextBoxGui:set_use_minimize_legend(use)
 	self._panel:child("legend_minimize"):set_visible(use)
 end
 
--- Lines 1029-1031
+-- Lines 1068-1070
 function TextBoxGui:in_focus(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 1033-1035
+-- Lines 1072-1074
 function TextBoxGui:in_info_area_focus(x, y)
 	return self._panel:child("info_area"):inside(x, y)
 end
 
--- Lines 1037-1048
+-- Lines 1076-1087
 function TextBoxGui:_set_visible_state()
 	local visible = self._visible and self._enabled
 
@@ -1339,19 +1397,19 @@ function TextBoxGui:_set_visible_state()
 	end
 end
 
--- Lines 1050-1052
+-- Lines 1089-1091
 function TextBoxGui:can_take_input()
 	return self._visible and self._enabled
 end
 
--- Lines 1054-1058
+-- Lines 1093-1097
 function TextBoxGui:set_visible(visible)
 	self._visible = visible
 
 	self:_set_visible_state()
 end
 
--- Lines 1060-1074
+-- Lines 1099-1113
 function TextBoxGui:set_enabled(enabled)
 	if self._enabled == enabled then
 		return
@@ -1370,19 +1428,19 @@ function TextBoxGui:set_enabled(enabled)
 	end
 end
 
--- Lines 1076-1078
+-- Lines 1115-1117
 function TextBoxGui:enabled()
 	return self._enabled
 end
 
--- Lines 1080-1085
+-- Lines 1119-1124
 function TextBoxGui:_maximize(data)
 	self:set_visible(true)
 	self:set_minimized(false, nil)
 	self:_remove_minimized(data.id)
 end
 
--- Lines 1087-1093
+-- Lines 1126-1132
 function TextBoxGui:set_minimized(minimized, minimized_data)
 	self._minimized = minimized
 	self._minimized_data = minimized_data
@@ -1392,7 +1450,7 @@ function TextBoxGui:set_minimized(minimized, minimized_data)
 	end
 end
 
--- Lines 1095-1099
+-- Lines 1134-1138
 function TextBoxGui:_add_minimized()
 	self._minimized_data.callback = callback(self, self, "_maximize")
 
@@ -1401,29 +1459,29 @@ function TextBoxGui:_add_minimized()
 	self._minimized_id = managers.menu_component:add_minimized(self._minimized_data)
 end
 
--- Lines 1101-1104
+-- Lines 1140-1143
 function TextBoxGui:_remove_minimized(id)
 	self._minimized_id = nil
 
 	managers.menu_component:remove_minimized(id)
 end
 
--- Lines 1106-1108
+-- Lines 1145-1147
 function TextBoxGui:minimized()
 	return self._minimized
 end
 
--- Lines 1110-1112
+-- Lines 1149-1151
 function TextBoxGui:set_position(x, y)
 	self._panel:set_position(x, y)
 end
 
--- Lines 1114-1116
+-- Lines 1153-1155
 function TextBoxGui:position()
 	return self._panel:position()
 end
 
--- Lines 1118-1181
+-- Lines 1157-1220
 function TextBoxGui:set_size(x, y)
 	self._panel:set_size(x, y)
 
@@ -1503,50 +1561,50 @@ function TextBoxGui:set_size(x, y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 1183-1185
+-- Lines 1222-1224
 function TextBoxGui:size()
 	return self._panel:size()
 end
 
--- Lines 1187-1187
+-- Lines 1226-1226
 function TextBoxGui:open_page()
 end
 
--- Lines 1188-1188
+-- Lines 1227-1227
 function TextBoxGui:close_page()
 end
 
--- Lines 1190-1190
+-- Lines 1229-1229
 function TextBoxGui:x()
 	return self._panel:x()
 end
 
--- Lines 1191-1191
+-- Lines 1230-1230
 function TextBoxGui:y()
 	return self._panel:y()
 end
 
--- Lines 1192-1192
+-- Lines 1231-1231
 function TextBoxGui:h()
 	return self._panel:h()
 end
 
--- Lines 1193-1193
+-- Lines 1232-1232
 function TextBoxGui:w()
 	return self._panel:w()
 end
 
--- Lines 1195-1197
+-- Lines 1234-1236
 function TextBoxGui:h()
 	return self._panel:h()
 end
 
--- Lines 1199-1201
+-- Lines 1238-1240
 function TextBoxGui:visible()
 	return self._visible
 end
 
--- Lines 1203-1228
+-- Lines 1242-1267
 function TextBoxGui:close()
 	if self._minimized then
 		self:_remove_minimized(self._minimized_id)

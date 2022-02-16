@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-263
+-- Lines 9-289
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -75,13 +75,13 @@ function MenuMainState:at_enter(old_state)
 	end
 
 	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_decided then
-		-- Lines 84-87
+		-- Lines 109-112
 		local function yes_func()
 			managers.user:set_setting("use_telemetry", true, true)
 			MenuCallbackHandler:save_settings()
 		end
 
-		-- Lines 88-91
+		-- Lines 113-116
 		local function no_func()
 			managers.user:set_setting("use_telemetry", false, true)
 			MenuCallbackHandler:save_settings()
@@ -158,7 +158,7 @@ function MenuMainState:at_enter(old_state)
 		elseif (tweak_data.safehouse.level_limit <= managers.experience:current_level() or managers.experience:current_rank() > 0) and not managers.custom_safehouse:has_entered_safehouse() and Global.mission_manager.safehouse_ask_amount < 2 and not Global.skip_menu_dialogs then
 			Global.mission_manager.safehouse_ask_amount = Global.mission_manager.safehouse_ask_amount + 1
 
-			-- Lines 180-188
+			-- Lines 206-214
 			local function yes_func()
 				Global.mission_manager.safehouse_ask_amount = 2
 
@@ -206,7 +206,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 271-284
+-- Lines 297-310
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -219,11 +219,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 286-296
+-- Lines 312-322
 function MenuMainState:update(t, dt)
 end
 
--- Lines 298-303
+-- Lines 324-329
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -232,7 +232,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 305-319
+-- Lines 331-345
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -251,13 +251,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 321-327
+-- Lines 347-353
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 329-332
+-- Lines 355-358
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -265,6 +265,6 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 334-335
+-- Lines 360-361
 function MenuMainState:on_disconnected()
 end

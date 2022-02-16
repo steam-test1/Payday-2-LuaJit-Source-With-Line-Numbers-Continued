@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-2897
+-- Lines 76-2922
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -8026,6 +8026,17 @@ function AchievementsTweakData:init(tweak_data)
 		wpn_fps_upg_ak_b_ak105 = ameno_8_achievement,
 		wpn_fps_upg_charm_cloaker = tawp_1_achievement
 	}
+	self.collection_achievements = {
+		xm20_1 = {
+			award = "xm20_1",
+			collection = {
+				"present_mex",
+				"present_bex",
+				"present_pex",
+				"present_fex"
+			}
+		}
+	}
 
 	if SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1") then
 		self.weapon_part_tracker = {}
@@ -8183,7 +8194,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2916-2943
+-- Lines 2941-2968
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -8194,7 +8205,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2925-2936
+	-- Lines 2950-2961
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -8224,7 +8235,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 2945-2950
+-- Lines 2970-2975
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -8237,7 +8248,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 2952-2960
+-- Lines 2977-2985
 local function from_level(level)
 	if not level then
 		error()
@@ -8253,7 +8264,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 2962-2970
+-- Lines 2987-2995
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -8269,7 +8280,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 2972-2983
+-- Lines 2997-3008
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -8291,7 +8302,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 2988-3206
+-- Lines 3013-3231
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8450,7 +8461,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3241-3383
+-- Lines 3266-3408
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8641,7 +8652,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3361-3361
+	-- Lines 3386-3386
 	local function dummy_progress()
 		return 0
 	end
