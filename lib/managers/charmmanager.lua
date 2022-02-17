@@ -798,8 +798,12 @@ function CharmManager:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 	end
 end
 
--- Lines 1032-1044
+-- Lines 1032-1049
 function CharmManager:simulate_ingame_vr(entry, mov_data, charm_data, dt)
+	if not alive(entry.weapon_unit) or not entry.weapon_unit:parent() then
+		return
+	end
+
 	local cur_user_pos = mov_data.user_m_pos
 
 	mvec3_set(cur_user_pos, mov_data.ghost_m_pos)
@@ -813,7 +817,7 @@ function CharmManager:simulate_ingame_vr(entry, mov_data, charm_data, dt)
 	self:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 end
 
--- Lines 1048-1065
+-- Lines 1053-1070
 function CharmManager:simulate_ingame_vr_third_person(entry, mov_data, charm_data, dt)
 	local mov_ext = mov_data.user_unit:movement()
 
@@ -833,7 +837,7 @@ function CharmManager:simulate_ingame_vr_third_person(entry, mov_data, charm_dat
 	self:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 end
 
--- Lines 1070-1077
+-- Lines 1075-1082
 function CharmManager:simulate_ingame_upd_m(entry, mov_data, charm_data, dt)
 	local m_rot = mov_data.user_unit:movement():m_rot()
 
@@ -842,7 +846,7 @@ function CharmManager:simulate_ingame_upd_m(entry, mov_data, charm_data, dt)
 	self:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 end
 
--- Lines 1080-1082
+-- Lines 1085-1087
 function CharmManager:simulate_ingame_no_user(...)
 	self:simulate_menu_no_character(...)
 end
