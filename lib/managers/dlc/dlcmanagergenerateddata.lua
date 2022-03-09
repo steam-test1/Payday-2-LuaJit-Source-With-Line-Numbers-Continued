@@ -88,6 +88,11 @@ function GenericDLCManager:has_flm()
 	return self:is_dlc_unlocked("flm")
 end
 
+-- Lines 129-131
+function GenericDLCManager:has_gdtp()
+	return self:is_dlc_unlocked("gdtp")
+end
+
 -- Lines 134-136
 function GenericDLCManager:has_ghx()
 	return self:is_dlc_unlocked("ghx")
@@ -153,6 +158,11 @@ function GenericDLCManager:has_mar21()
 	return self:is_dlc_unlocked("mar21")
 end
 
+-- Lines 204-206
+function GenericDLCManager:has_mar22()
+	return self:is_dlc_unlocked("mar22")
+end
+
 -- Lines 209-211
 function GenericDLCManager:has_maw()
 	return self:is_dlc_unlocked("maw")
@@ -201,6 +211,11 @@ end
 -- Lines 259-261
 function GenericDLCManager:has_pda8()
 	return self:is_dlc_unlocked("pda8")
+end
+
+-- Lines 264-266
+function GenericDLCManager:has_pent()
+	return self:is_dlc_unlocked("pent")
 end
 
 -- Lines 269-271
@@ -451,6 +466,10 @@ function WINDLCManager:init_generated()
 		app_id = "218620",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.gdtp = {
+		app_id = "1907080",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.ghx = {
 		app_id = "218620",
 		no_install = true
@@ -503,6 +522,10 @@ function WINDLCManager:init_generated()
 		app_id = "218620",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.mar22 = {
+		app_id = "218620",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.maw = {
 		app_id = "218620",
 		no_install = true
@@ -546,6 +569,10 @@ function WINDLCManager:init_generated()
 	}
 	Global.dlc_manager.all_dlc_data.pda8 = {
 		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.pent = {
+		app_id = "1906240",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.pex = {

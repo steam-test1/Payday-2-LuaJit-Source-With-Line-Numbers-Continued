@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1735
+-- Lines 3-1751
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -2060,6 +2060,17 @@ function GuiTweakData:init(tweak_data)
 				},
 				name_id = "heist_contact_jiufeng",
 				id = "jiufeng"
+			},
+			{
+				{
+					desc_id = "heist_contact_shayu_description",
+					post_event = "sha_quote_set_a",
+					videos = {
+						"shayu1"
+					}
+				},
+				name_id = "heist_contact_shayu",
+				id = "shayu"
 			},
 			name_id = "menu_contacts",
 			id = "contacts"
@@ -5091,6 +5102,16 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_pent_01",
+		texture_path = "guis/dlcs/pent/textures/pd2/new_heists/pent_01",
+		url = "https://pd2.link/MountainMasterSLS"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_gdtp_01",
+		texture_path = "guis/dlcs/gdtp/textures/pd2/new_heists/gdtp_01",
+		url = "https://pd2.link/MountainMasterSLS2"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_lawp_01",
 		texture_path = "guis/dlcs/lawp/textures/pd2/new_heists/lawp_01",
 		url = "https://ovk.af/SmugglerPack4SLS"
@@ -5457,7 +5478,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1737-1756
+-- Lines 1753-1772
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5485,7 +5506,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1758-1826
+-- Lines 1774-1842
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5563,15 +5584,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1828-1830
+-- Lines 1844-1846
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1832-1841
+-- Lines 1848-1857
 function GuiTweakData:print_locations()
 end
 
--- Lines 1843-1877
+-- Lines 1859-1893
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5610,7 +5631,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1879-2004
+-- Lines 1895-2020
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5733,12 +5754,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2006-2008
+-- Lines 2022-2024
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2010-2017
+-- Lines 2026-2033
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5749,7 +5770,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2019-2039
+-- Lines 2035-2055
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

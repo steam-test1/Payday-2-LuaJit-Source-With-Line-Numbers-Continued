@@ -67,7 +67,7 @@ end
 
 -- Lines 68-70
 function BaseNetworkHandler._verify_character(unit)
-	return alive(unit) and not unit:character_damage():dead()
+	return alive(unit) and unit:character_damage() and not unit:character_damage():dead()
 end
 
 -- Lines 74-81

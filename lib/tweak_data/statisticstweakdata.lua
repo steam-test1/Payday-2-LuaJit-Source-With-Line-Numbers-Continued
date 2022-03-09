@@ -46,7 +46,7 @@ function StatisticsTweakData:statistics_specializations()
 	return table.size(tweak_data.skilltree.specializations)
 end
 
--- Lines 41-346
+-- Lines 41-350
 function StatisticsTweakData:statistics_table()
 	if not self._level_list then
 		self._level_list = {}
@@ -223,7 +223,9 @@ function StatisticsTweakData:statistics_table()
 		"civilian_mariachi",
 		"civilian_no_penalty",
 		"security_mex_no_pager",
-		"swat_turret"
+		"swat_turret",
+		"triad_boss",
+		"triad_boss_no_armor"
 	}
 	local armor_list = {
 		"level_1",
@@ -289,7 +291,7 @@ function StatisticsTweakData:statistics_table()
 	return self._level_list, self._job_list, self._mask_list, self._weapon_list, self._melee_list, self._grenade_list, enemy_list, armor_list, character_list, deployable_list, self._suit_list, self._weapon_color_list, self._glove_list, self._charm_list
 end
 
--- Lines 348-350
+-- Lines 352-354
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -308,7 +310,7 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines 352-354
+-- Lines 356-358
 function StatisticsTweakData:mission_statistics_table()
 	return {
 		"labrat"

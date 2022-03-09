@@ -45,7 +45,7 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile, force_skip)
 
 	cat_print("debug", "[CoreShaderLibCompiler] Compiling: " .. file.path)
 
-	local params = self:create_make_file()
+	local params = self:create_make_file(file.generate_debug_info, file.debug_info_dir, file.preprocess_debug_info)
 
 	self:run_compiler()
 
@@ -143,13 +143,28 @@ function CoreShaderLibCompiler:copy_file(from, to, properties, dest)
 	end
 end
 
--- Lines 124-141
-function CoreShaderLibCompiler:create_make_file()
+-- Lines 124-151
+function CoreShaderLibCompiler:create_make_file(generate_debug_info, debug_info_dir, preprocess)
 	local make_params = self:get_make_params()
 	local file = assert(io.open(self:base_path() .. self.TEMP_PATH .. "make.xml", "w+"))
 
 	file:write("<make>\n")
 	file:write("\t<silent_fail/>\n")
+
+	if generate_debug_info then
+		file:write("\t<debug")
+
+		if debug_info_dir and debug_info_dir ~= "" then
+			file:write(" debug_info_dir=\"" .. debug_info_dir .. "\"")
+		end
+
+		if preprocess then
+			file:write(" preprocess=\"true\"")
+		end
+
+		file:write("/>\n")
+	end
+
 	file:write("\t<rebuild/>\n")
 	file:write("\t<file_io\n")
 
@@ -163,7 +178,7 @@ function CoreShaderLibCompiler:create_make_file()
 	return make_params
 end
 
--- Lines 143-147
+-- Lines 153-157
 function CoreShaderLibCompiler:run_compiler()
 	local cmd = string.format("%saux_assets\\engine\\bin\\shaderdev\\shaderdev -m \"%s%smake.xml\"", self:root_path(), self:base_path(), self.TEMP_PATH)
 	local file = assert(io.popen(cmd, "r"), cmd)
@@ -173,7 +188,7 @@ function CoreShaderLibCompiler:run_compiler()
 	end
 end
 
--- Lines 149-223
+-- Lines 159-233
 function CoreShaderLibCompiler:get_make_params()
 	local rt = self:base_path() .. self.RT_PATH .. self.SHADER_NAME
 	local src = self:base_path() .. self.SHADER_PATH .. self.SHADER_NAME

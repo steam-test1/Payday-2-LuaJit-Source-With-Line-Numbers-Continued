@@ -37,7 +37,7 @@ function PlayerInventory:init(unit)
 	self._melee_weapon_unit_name = nil
 end
 
--- Lines 42-58
+-- Lines 42-85
 function PlayerInventory:pre_destroy(unit)
 	if self._weapon_add_clbk then
 		if managers.enemy:is_clbk_registered(self._weapon_add_clbk) then
@@ -52,9 +52,36 @@ function PlayerInventory:pre_destroy(unit)
 	self:destroy_all_items()
 	self:stop_jammer_effect()
 	self:stop_feedback_effect()
+
+	if self._ignore_units then
+		local destroy_key = self._ignore_destroy_listener_key
+
+		for _, ig_unit in pairs(self._ignore_units) do
+			if alive(ig_unit) then
+				local has_destroy_listener = nil
+				local listener_class = ig_unit:base()
+
+				if listener_class and listener_class.add_destroy_listener then
+					has_destroy_listener = true
+				else
+					listener_class = ig_unit:unit_data()
+
+					if listener_class and listener_class.add_destroy_listener then
+						has_destroy_listener = true
+					end
+				end
+
+				if has_destroy_listener then
+					listener_class:remove_destroy_listener(destroy_key)
+				end
+			end
+		end
+
+		self._ignore_units = nil
+	end
 end
 
--- Lines 62-97
+-- Lines 89-124
 function PlayerInventory:destroy_all_items()
 	for i_sel, selection_data in pairs(self._available_selections) do
 		if selection_data.unit and selection_data.unit:base() then
@@ -90,29 +117,122 @@ function PlayerInventory:destroy_all_items()
 	end
 end
 
--- Lines 101-103
+-- Lines 128-169
+function PlayerInventory:add_ignore_unit(unit)
+	local has_destroy_listener = nil
+	local listener_class = unit:base()
+
+	if listener_class and listener_class.add_destroy_listener then
+		has_destroy_listener = true
+	else
+		listener_class = unit:unit_data()
+
+		if listener_class and listener_class.add_destroy_listener then
+			has_destroy_listener = true
+		end
+	end
+
+	if not has_destroy_listener then
+		print("[PlayerInventory:add_ignore_unit] Cannot set unit for ignoring as it lacks a destroy listener.", unit)
+
+		return
+	end
+
+	self._ignore_destroy_listener_key = self._ignore_destroy_listener_key or "PlayerInventory" .. tostring(unit:key())
+
+	listener_class:add_destroy_listener(self._ignore_destroy_listener_key, callback(self, self, "clbk_remove_ignore_unit"))
+
+	self._ignore_units = self._ignore_units or {}
+
+	table.insert(self._ignore_units, unit)
+
+	local weapon_selections = self:available_selections()
+
+	if weapon_selections then
+		for i_sel, selection_data in pairs(weapon_selections) do
+			local weap_unit = selection_data.unit
+			local weap_base = weap_unit and weap_unit:base()
+
+			if weap_base and weap_base.add_ignore_unit then
+				weap_base:add_ignore_unit(unit)
+			end
+		end
+	end
+end
+
+-- Lines 173-175
+function PlayerInventory:clbk_remove_ignore_unit(unit)
+	self:remove_ignore_unit(unit, true)
+end
+
+-- Lines 177-221
+function PlayerInventory:remove_ignore_unit(unit, is_callback)
+	if not self._ignore_units then
+		return
+	end
+
+	table.delete(self._ignore_units, unit)
+
+	local weapon_selections = self:available_selections()
+
+	if weapon_selections then
+		for i_sel, selection_data in pairs(weapon_selections) do
+			local weap_unit = selection_data.unit
+			local weap_base = weap_unit and weap_unit:base()
+
+			if weap_base and weap_base.remove_ignore_unit then
+				weap_base:remove_ignore_unit(unit)
+			end
+		end
+	end
+
+	if not next(self._ignore_units) then
+		self._ignore_units = nil
+	end
+
+	if not is_callback and alive(unit) then
+		local has_destroy_listener = nil
+		local listener_class = unit:base()
+
+		if listener_class and listener_class.add_destroy_listener then
+			has_destroy_listener = true
+		else
+			listener_class = unit:unit_data()
+
+			if listener_class and listener_class.add_destroy_listener then
+				has_destroy_listener = true
+			end
+		end
+
+		if has_destroy_listener then
+			listener_class:remove_destroy_listener(self._ignore_destroy_listener_key)
+		end
+	end
+end
+
+-- Lines 225-227
 function PlayerInventory:equipped_selection()
 	return self._equipped_selection
 end
 
--- Lines 107-109
+-- Lines 231-233
 function PlayerInventory:equipped_unit()
 	return self._equipped_selection and self._available_selections[self._equipped_selection].unit
 end
 
--- Lines 113-116
+-- Lines 237-240
 function PlayerInventory:unit_by_selection(selection)
 	selection = (tonumber(selection) - 1) % 2 + 1
 
 	return self._available_selections[selection] and self._available_selections[selection].unit
 end
 
--- Lines 120-122
+-- Lines 244-246
 function PlayerInventory:is_selection_available(selection_index)
 	return self._available_selections[selection_index] and true or false
 end
 
--- Lines 126-161
+-- Lines 250-285
 function PlayerInventory:add_unit(new_unit, is_equip, equip_is_instant)
 	local new_selection = {}
 	local use_data = new_unit:base():get_use_data(self._use_data_alias)
@@ -149,7 +269,7 @@ function PlayerInventory:add_unit(new_unit, is_equip, equip_is_instant)
 	end
 end
 
--- Lines 165-178
+-- Lines 289-302
 function PlayerInventory:clbk_weapon_unit_destroyed(weap_unit)
 	local weapon_key = weap_unit:key()
 
@@ -168,7 +288,7 @@ function PlayerInventory:clbk_weapon_unit_destroyed(weap_unit)
 	end
 end
 
--- Lines 182-195
+-- Lines 306-319
 function PlayerInventory:get_latest_addition_hud_data()
 	local unit = self._available_selections[self._latest_addition].unit
 	local _, _, amount = unit:base():ammo_info()
@@ -181,7 +301,7 @@ function PlayerInventory:get_latest_addition_hud_data()
 	}
 end
 
--- Lines 199-218
+-- Lines 323-349
 function PlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	for _, selection in pairs(self._available_selections) do
 		if selection.unit:name() == new_unit_name then
@@ -192,12 +312,20 @@ function PlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	managers.dyn_resource:load(ids_unit, new_unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE, nil)
 
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
+	local ignore_units = {
+		self._unit,
+		new_unit
+	}
+
+	if self._ignore_units then
+		for idx, ig_unit in pairs(self._ignore_units) do
+			table.insert(ignore_units, ig_unit)
+		end
+	end
+
 	local setup_data = {
 		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit
-		},
+		ignore_units = ignore_units,
 		expend_ammo = true,
 		autoaim = true,
 		alert_AI = true,
@@ -208,7 +336,7 @@ function PlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	self:add_unit(new_unit, equip, instant)
 end
 
--- Lines 220-255
+-- Lines 351-394
 function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, blueprint, cosmetics, texture_switches)
 	local factory_weapon = tweak_data.weapon.factory[factory_name]
 	local ids_unit_name = Idstring(factory_weapon.unit)
@@ -227,12 +355,20 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 		new_unit:base():assemble(factory_name)
 	end
 
+	local ignore_units = {
+		self._unit,
+		new_unit
+	}
+
+	if self._ignore_units then
+		for idx, ig_unit in pairs(self._ignore_units) do
+			table.insert(ignore_units, ig_unit)
+		end
+	end
+
 	local setup_data = {
 		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit
-		},
+		ignore_units = ignore_units,
 		expend_ammo = true,
 		autoaim = true,
 		alert_AI = true,
@@ -252,7 +388,7 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 	end
 end
 
--- Lines 259-277
+-- Lines 398-416
 function PlayerInventory:remove_selection(selection_index, instant)
 	selection_index = selection_index or self._equipped_selection
 	local weap_unit = self._available_selections[selection_index].unit
@@ -272,17 +408,17 @@ function PlayerInventory:remove_selection(selection_index, instant)
 	end
 end
 
--- Lines 281-283
+-- Lines 420-422
 function PlayerInventory:equip_latest_addition(instant)
 	return self:equip_selection(self._latest_addition, instant)
 end
 
--- Lines 287-289
+-- Lines 426-428
 function PlayerInventory:equip_selected_primary(instant)
 	return self:equip_selection(self._selected_primary, instant)
 end
 
--- Lines 293-302
+-- Lines 432-441
 function PlayerInventory:get_next_selection()
 	local i = self._selected_primary
 
@@ -297,7 +433,7 @@ function PlayerInventory:get_next_selection()
 	return nil
 end
 
--- Lines 304-310
+-- Lines 443-449
 function PlayerInventory:equip_next(instant)
 	local got, selection = self:get_next_selection()
 
@@ -308,7 +444,7 @@ function PlayerInventory:equip_next(instant)
 	return false
 end
 
--- Lines 314-323
+-- Lines 453-462
 function PlayerInventory:get_previous_selection()
 	local i = self._selected_primary
 
@@ -323,7 +459,7 @@ function PlayerInventory:get_previous_selection()
 	return nil
 end
 
--- Lines 325-331
+-- Lines 464-470
 function PlayerInventory:equip_previous(instant)
 	local got, selection = self:get_previous_selection()
 
@@ -334,12 +470,12 @@ function PlayerInventory:equip_previous(instant)
 	return false
 end
 
--- Lines 335-337
+-- Lines 474-476
 function PlayerInventory:get_selected(selection_index)
 	return selection_index and selection_index ~= self._equipped_selection and self._available_selections[selection_index]
 end
 
--- Lines 339-370
+-- Lines 478-509
 function PlayerInventory:equip_selection(selection_index, instant)
 	if selection_index and selection_index ~= self._equipped_selection and self._available_selections[selection_index] then
 		if self._equipped_selection then
@@ -370,7 +506,7 @@ function PlayerInventory:equip_selection(selection_index, instant)
 	return false
 end
 
--- Lines 374-387
+-- Lines 513-526
 function PlayerInventory:_send_equipped_weapon()
 	local eq_weap_name = self:equipped_unit():base()._factory_id or self:equipped_unit():name()
 	local index = self._get_weapon_sync_index(eq_weap_name)
@@ -388,7 +524,7 @@ function PlayerInventory:_send_equipped_weapon()
 	self._unit:network():send("set_equipped_weapon", index, blueprint_string, cosmetics_string)
 end
 
--- Lines 391-403
+-- Lines 530-542
 function PlayerInventory:unequip_selection(selection_index, instant)
 	if not selection_index or selection_index == self._equipped_selection then
 		self:_call_listeners("unequip")
@@ -403,22 +539,22 @@ function PlayerInventory:unequip_selection(selection_index, instant)
 	end
 end
 
--- Lines 407-409
+-- Lines 546-548
 function PlayerInventory:is_equipped(index)
 	return index == self._equipped_selection
 end
 
--- Lines 413-415
+-- Lines 552-554
 function PlayerInventory:available_selections()
 	return self._available_selections
 end
 
--- Lines 419-421
+-- Lines 558-560
 function PlayerInventory:num_selections()
 	return table.size(self._available_selections)
 end
 
--- Lines 425-435
+-- Lines 564-574
 function PlayerInventory:_align_place(equip, unit, align_place)
 	if equip and self._primary_hand ~= nil then
 		return self._primary_hand == 0 and self._align_places.right_hand or self._align_places.left_hand, unit:base().AKIMBO and self._primary_hand == 0 and self._align_places.left_hand or self._align_places.right_hand
@@ -427,7 +563,7 @@ function PlayerInventory:_align_place(equip, unit, align_place)
 	return self._align_places[align_place]
 end
 
--- Lines 439-472
+-- Lines 578-611
 function PlayerInventory:_place_selection(selection_index, is_equip)
 	local selection = self._available_selections[selection_index]
 	local unit = selection.unit
@@ -456,7 +592,7 @@ function PlayerInventory:_place_selection(selection_index, is_equip)
 	end
 end
 
--- Lines 476-489
+-- Lines 615-628
 function PlayerInventory:_link_weapon(unit, align_place)
 	if _G.IS_VR then
 		local is_player = managers.player:player_unit() == self._unit
@@ -472,31 +608,31 @@ function PlayerInventory:_link_weapon(unit, align_place)
 	return res
 end
 
--- Lines 493-497
+-- Lines 632-636
 function PlayerInventory:_select_new_primary()
 	for index, use_data in pairs(self._available_selections) do
 		return index
 	end
 end
 
--- Lines 502-505
+-- Lines 641-644
 function PlayerInventory:add_listener(key, events, clbk)
 	events = events or self._all_event_types
 
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 509-511
+-- Lines 648-650
 function PlayerInventory:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 515-517
+-- Lines 654-656
 function PlayerInventory:_call_listeners(event)
 	self._listener_holder:call(event, self._unit, event)
 end
 
--- Lines 521-529
+-- Lines 660-668
 function PlayerInventory:on_death_exit()
 	for i, selection in pairs(self._available_selections) do
 		selection.unit:unlink()
@@ -506,7 +642,7 @@ function PlayerInventory:on_death_exit()
 	self:_stop_jammer_effect()
 end
 
--- Lines 533-547
+-- Lines 672-686
 function PlayerInventory._chk_create_w_factory_indexes()
 	if PlayerInventory._weapon_factory_indexed then
 		return
@@ -526,7 +662,7 @@ function PlayerInventory._chk_create_w_factory_indexes()
 	end)
 end
 
--- Lines 551-570
+-- Lines 690-709
 function PlayerInventory._get_weapon_sync_index(wanted_weap_name)
 	if type_name(wanted_weap_name) == "Idstring" then
 		for i, test_weap_name in ipairs(tweak_data.character.weap_unit_names) do
@@ -547,7 +683,7 @@ function PlayerInventory._get_weapon_sync_index(wanted_weap_name)
 	end
 end
 
--- Lines 574-584
+-- Lines 713-723
 function PlayerInventory._get_weapon_name_from_sync_index(w_index)
 	if w_index <= #tweak_data.character.weap_unit_names then
 		return tweak_data.character.weap_unit_names[w_index]
@@ -560,7 +696,7 @@ function PlayerInventory._get_weapon_name_from_sync_index(w_index)
 	return PlayerInventory._weapon_factory_indexed[w_index]
 end
 
--- Lines 588-600
+-- Lines 727-739
 function PlayerInventory:hide_equipped_unit()
 	local unit = self._equipped_selection and self._available_selections[self._equipped_selection].unit
 
@@ -577,7 +713,7 @@ function PlayerInventory:hide_equipped_unit()
 	end
 end
 
--- Lines 602-610
+-- Lines 741-749
 function PlayerInventory:show_equipped_unit()
 	local unit = self._equipped_selection and self._available_selections[self._equipped_selection].unit
 
@@ -590,7 +726,7 @@ function PlayerInventory:show_equipped_unit()
 	end
 end
 
--- Lines 614-656
+-- Lines 753-795
 function PlayerInventory:save(data)
 	if self._equipped_selection then
 		local eq_weap_name = self:equipped_unit():base()._factory_id or self:equipped_unit():name()
@@ -609,12 +745,12 @@ function PlayerInventory:save(data)
 		data.cosmetics_string = managers.blackmarket:outfit_string_from_cosmetics(cosmetics_data)
 	end
 
-	-- Lines 636-638
+	-- Lines 775-777
 	local function to_time_left(t)
 		return t and t - TimerManager:game():time()
 	end
 
-	-- Lines 640-652
+	-- Lines 779-791
 	local function copy_some(t, ...)
 		if not t then
 			return
@@ -642,7 +778,7 @@ function PlayerInventory:save(data)
 	}, "effect", "interval", "range")
 end
 
--- Lines 660-667
+-- Lines 799-806
 function PlayerInventory:cosmetics_string_from_peer(peer, weapon_name)
 	if peer then
 		local outfit = peer:blackmarket_outfit()
@@ -652,7 +788,7 @@ function PlayerInventory:cosmetics_string_from_peer(peer, weapon_name)
 	end
 end
 
--- Lines 671-697
+-- Lines 810-836
 function PlayerInventory:load(data)
 	if data.equipped_weapon_index then
 		self._weapon_add_clbk = "playerinventory_load" .. tostring(self._unit:key())
@@ -678,7 +814,7 @@ function PlayerInventory:load(data)
 	end
 end
 
--- Lines 699-731
+-- Lines 838-870
 function PlayerInventory:_clbk_weapon_add(data)
 	self._weapon_add_clbk = nil
 
@@ -712,16 +848,16 @@ function PlayerInventory:_clbk_weapon_add(data)
 	end
 end
 
--- Lines 736-737
+-- Lines 875-876
 function PlayerInventory:on_weapon_add()
 end
 
--- Lines 742-744
+-- Lines 881-883
 function PlayerInventory:mask_visibility()
 	return self._mask_visibility or false
 end
 
--- Lines 746-829
+-- Lines 885-968
 function PlayerInventory:set_mask_visibility(state)
 	self._mask_visibility = state
 
@@ -801,7 +937,7 @@ function PlayerInventory:set_mask_visibility(state)
 	managers.criminals:update_character_visual_state(character_name, {})
 end
 
--- Lines 831-849
+-- Lines 970-988
 function PlayerInventory:update_mask_offset(mask_data)
 	local char = nil
 
@@ -823,7 +959,7 @@ function PlayerInventory:update_mask_offset(mask_data)
 	end
 end
 
--- Lines 851-867
+-- Lines 990-1006
 function PlayerInventory:set_mask_offset(mask_unit, mask_align, position, rotation)
 	if not alive(mask_unit) then
 		return
@@ -838,7 +974,7 @@ function PlayerInventory:set_mask_offset(mask_unit, mask_align, position, rotati
 	end
 end
 
--- Lines 870-890
+-- Lines 1009-1029
 function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 	self._melee_weapon_data = managers.blackmarket:get_melee_weapon_data(melee_weapon_id)
 
@@ -855,11 +991,11 @@ function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 	end
 end
 
--- Lines 892-893
+-- Lines 1031-1032
 function PlayerInventory:set_melee_weapon_by_peer(peer)
 end
 
--- Lines 897-905
+-- Lines 1036-1044
 function PlayerInventory:set_ammo(ammo)
 	for id, weapon in pairs(self._available_selections) do
 		weapon.unit:base():set_ammo(ammo)
@@ -867,7 +1003,7 @@ function PlayerInventory:set_ammo(ammo)
 	end
 end
 
--- Lines 909-916
+-- Lines 1048-1055
 function PlayerInventory:need_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if not weapon.unit:base():ammo_full() then
@@ -878,7 +1014,7 @@ function PlayerInventory:need_ammo()
 	return false
 end
 
--- Lines 921-928
+-- Lines 1060-1067
 function PlayerInventory:all_out_of_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if not weapon.unit:base():out_of_ammo() then
@@ -889,17 +1025,17 @@ function PlayerInventory:all_out_of_ammo()
 	return true
 end
 
--- Lines 934-936
+-- Lines 1073-1075
 function PlayerInventory:anim_cbk_spawn_character_mask(unit)
 	self:set_mask_visibility(true)
 end
 
--- Lines 938-940
+-- Lines 1077-1079
 function PlayerInventory:anim_clbk_equip_exit(unit)
 	self:set_mask_visibility(true)
 end
 
--- Lines 944-952
+-- Lines 1083-1091
 function PlayerInventory:set_visibility_state(state)
 	for i, sel_data in pairs(self._available_selections) do
 		local enabled = sel_data.unit:enabled()
@@ -912,7 +1048,7 @@ function PlayerInventory:set_visibility_state(state)
 	end
 end
 
--- Lines 956-963
+-- Lines 1095-1102
 function PlayerInventory:set_weapon_enabled(state)
 	if self._equipped_selection then
 		self:equipped_unit():set_enabled(state)
@@ -923,7 +1059,7 @@ function PlayerInventory:set_weapon_enabled(state)
 	end
 end
 
--- Lines 972-988
+-- Lines 1111-1127
 function PlayerInventory:sync_net_event(event_id, peer)
 	local net_events = self._NET_EVENTS
 
@@ -942,35 +1078,35 @@ function PlayerInventory:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 990-993
+-- Lines 1129-1132
 function PlayerInventory:get_jammer_time()
 	local upgrade_value = self._unit:base():upgrade_value("player", "pocket_ecm_jammer_base")
 
 	return upgrade_value and upgrade_value.duration or 0
 end
 
--- Lines 997-999
+-- Lines 1136-1138
 function PlayerInventory:_send_net_event(event_id)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "inventory", event_id)
 end
 
--- Lines 1003-1005
+-- Lines 1142-1144
 function PlayerInventory:_send_net_event_to_host(event_id)
 	managers.network:session():send_to_host("sync_unit_event_id_16", self._unit, "inventory", event_id)
 end
 
--- Lines 1009-1011
+-- Lines 1148-1150
 function PlayerInventory:is_jammer_active()
 	return self._jammer_data and self._jammer_data.effect
 end
 
--- Lines 1013-1016
+-- Lines 1152-1155
 function PlayerInventory:start_jammer_effect(...)
 	self:_start_jammer_effect(...)
 	self:_send_net_event(self._NET_EVENTS.jammer_start)
 end
 
--- Lines 1018-1042
+-- Lines 1157-1181
 function PlayerInventory:_start_jammer_effect(end_time)
 	end_time = end_time or self:get_jammer_time() + TimerManager:game():time()
 	self._jammer_data = {
@@ -998,7 +1134,7 @@ function PlayerInventory:_start_jammer_effect(end_time)
 	end
 end
 
--- Lines 1044-1049
+-- Lines 1183-1188
 function PlayerInventory:stop_jammer_effect()
 	self:_stop_jammer_effect()
 
@@ -1007,7 +1143,7 @@ function PlayerInventory:stop_jammer_effect()
 	end
 end
 
--- Lines 1051-1066
+-- Lines 1190-1205
 function PlayerInventory:_stop_jammer_effect()
 	if not self._jammer_data or self._jammer_data.effect ~= "jamming" then
 		return
@@ -1025,7 +1161,7 @@ function PlayerInventory:_stop_jammer_effect()
 	end
 end
 
--- Lines 1070-1077
+-- Lines 1209-1216
 function PlayerInventory:start_feedback_effect(...)
 	if Network:is_server() then
 		self:_start_feedback_effect(...)
@@ -1035,7 +1171,7 @@ function PlayerInventory:start_feedback_effect(...)
 	end
 end
 
--- Lines 1079-1105
+-- Lines 1218-1244
 function PlayerInventory:_start_feedback_effect(end_time, interval, range)
 	end_time = end_time or self:get_jammer_time() + TimerManager:game():time()
 	self._jammer_data = {
@@ -1070,7 +1206,7 @@ function PlayerInventory:_start_feedback_effect(end_time, interval, range)
 	end
 end
 
--- Lines 1107-1112
+-- Lines 1246-1251
 function PlayerInventory:stop_feedback_effect()
 	self:_stop_feedback_effect()
 
@@ -1079,7 +1215,7 @@ function PlayerInventory:stop_feedback_effect()
 	end
 end
 
--- Lines 1114-1135
+-- Lines 1253-1274
 function PlayerInventory:_stop_feedback_effect()
 	if not self._jammer_data or self._jammer_data.effect ~= "feedback" then
 		return
@@ -1103,7 +1239,7 @@ function PlayerInventory:_stop_feedback_effect()
 	end
 end
 
--- Lines 1139-1151
+-- Lines 1278-1290
 function PlayerInventory:_feedback_heal_on_kill()
 	local unit = managers.player:player_unit()
 	local is_downed = game_state_machine:verify_game_state(GameStateFilters.downed)
@@ -1118,7 +1254,7 @@ function PlayerInventory:_feedback_heal_on_kill()
 	end
 end
 
--- Lines 1153-1168
+-- Lines 1292-1307
 function PlayerInventory:_jamming_kill_dodge()
 	local unit = managers.player:player_unit()
 	local data = self._jammer_data
@@ -1137,7 +1273,7 @@ function PlayerInventory:_jamming_kill_dodge()
 	end
 end
 
--- Lines 1170-1186
+-- Lines 1309-1325
 function PlayerInventory:_do_feedback()
 	local t = TimerManager:game():time()
 

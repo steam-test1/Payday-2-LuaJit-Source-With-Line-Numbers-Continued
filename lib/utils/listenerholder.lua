@@ -36,8 +36,12 @@ function ListenerHolder:call(...)
 	end
 end
 
--- Lines 47-52
+-- Lines 47-65
 function ListenerHolder:_remove(key)
+	if not self._listeners then
+		return
+	end
+
 	self._listeners[key] = nil
 
 	if not next(self._listeners) then
@@ -45,13 +49,13 @@ function ListenerHolder:_remove(key)
 	end
 end
 
--- Lines 56-59
+-- Lines 69-78
 function ListenerHolder:_add(key, clbk)
 	self._listeners = self._listeners or {}
 	self._listeners[key] = clbk
 end
 
--- Lines 63-69
+-- Lines 82-88
 function ListenerHolder:_set_trash(key)
 	self._trash = self._trash or {}
 	self._trash[key] = true
@@ -61,7 +65,7 @@ function ListenerHolder:_set_trash(key)
 	end
 end
 
--- Lines 73-79
+-- Lines 92-98
 function ListenerHolder:_set_new(key, clbk)
 	self._additions = self._additions or {}
 	self._additions[key] = clbk
@@ -71,7 +75,7 @@ function ListenerHolder:_set_new(key, clbk)
 	end
 end
 
--- Lines 83-90
+-- Lines 102-109
 function ListenerHolder:_append_new_additions()
 	if self._additions then
 		for key, clbk in pairs(self._additions) do
@@ -82,7 +86,7 @@ function ListenerHolder:_append_new_additions()
 	end
 end
 
--- Lines 94-101
+-- Lines 113-120
 function ListenerHolder:_dispose_trash()
 	if self._trash then
 		for key, _ in pairs(self._trash) do
@@ -93,12 +97,12 @@ function ListenerHolder:_dispose_trash()
 	end
 end
 
--- Lines 105-107
+-- Lines 124-126
 function ListenerHolder:_not_trash(key)
 	return not self._trash or not self._trash[key]
 end
 
--- Lines 111-113
+-- Lines 130-132
 function ListenerHolder:is_empty()
 	return not self._listeners
 end

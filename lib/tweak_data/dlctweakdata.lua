@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4804
+-- Lines 10-4824
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8462,6 +8462,30 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_m4_upg_fg_mk12"
+		}
+	}
+	self.ach_mask_pent_9 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "pent_9"
+	}
+	self.ach_mask_pent_9.content.loot_global_value = "pent"
+	self.ach_mask_pent_9.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "yufuhelmet"
+		}
+	}
+	self.ach_trd_pent_11 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "pent_11"
+	}
+	self.ach_trd_pent_11.content.loot_global_value = "pent"
+	self.ach_trd_pent_11.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "kungfumaster"
 		}
 	}
 end

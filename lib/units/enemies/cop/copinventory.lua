@@ -23,20 +23,27 @@ function CopInventory:init(unit)
 	self._listener_id = "CopInventory" .. tostring(unit:key())
 end
 
--- Lines 23-44
+-- Lines 23-52
 function CopInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 
 	managers.mutators:modify_value("CopInventory:add_unit_by_name", self)
 	self:_chk_spawn_shield(new_unit)
 
+	local ignore_units = {
+		self._unit,
+		new_unit
+	}
+
+	if self._ignore_units then
+		for idx, ig_unit in pairs(self._ignore_units) do
+			table.insert(ignore_units, ig_unit)
+		end
+	end
+
 	local setup_data = {
 		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit,
-			self._shield_unit
-		},
+		ignore_units = ignore_units,
 		expend_ammo = false,
 		hit_slotmask = managers.slot:get_mask("bullet_impact_targets"),
 		hit_player = true,
@@ -54,7 +61,7 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 	self:add_unit(new_unit, equip)
 end
 
--- Lines 48-56
+-- Lines 56-66
 function CopInventory:_chk_spawn_shield(weapon_unit)
 	if self._shield_unit_name and not alive(self._shield_unit) then
 		local align_name = self._shield_align_name or Idstring("a_weapon_left_front")
@@ -63,22 +70,23 @@ function CopInventory:_chk_spawn_shield(weapon_unit)
 
 		self._unit:link(align_name, self._shield_unit, self._shield_unit:orientation_object():name())
 		self._shield_unit:set_enabled(false)
+		self:add_ignore_unit(self._shield_unit)
 	end
 end
 
--- Lines 60-64
+-- Lines 70-74
 function CopInventory:add_unit(new_unit, equip)
 	CopInventory.super.add_unit(self, new_unit, equip)
 	new_unit:set_enabled(true)
 	new_unit:set_visible(true)
 end
 
--- Lines 68-70
+-- Lines 78-80
 function CopInventory:get_sync_data(sync_data)
 	MPPlayerInventory.get_sync_data(self, sync_data)
 end
 
--- Lines 74-78
+-- Lines 84-88
 function CopInventory:get_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -86,7 +94,7 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines 82-100
+-- Lines 92-110
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -110,7 +118,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 104-155
+-- Lines 114-137
 function CopInventory:drop_shield()
 	local shield_unit = self._shield_unit
 	self._shield_unit = nil
@@ -125,41 +133,11 @@ function CopInventory:drop_shield()
 		end
 
 		managers.enemy:register_shield(shield_unit)
-
-		local weapon_selections = self:available_selections()
-
-		if weapon_selections then
-			local t_delete = table.delete
-
-			-- Lines 129-135
-			local function remove_shield_from_ignore_units(setup_data)
-				local ignore_units = setup_data and setup_data.ignore_units
-
-				if ignore_units then
-					t_delete(ignore_units, shield_unit)
-				end
-			end
-
-			for i_sel, selection_data in pairs(weapon_selections) do
-				local weap_unit = selection_data.unit
-				local weap_base = weap_unit and weap_unit:base()
-
-				if weap_base then
-					remove_shield_from_ignore_units(weap_base._setup)
-
-					local second_weap = weap_base._second_gun
-					local second_weap_base = second_weap and second_weap:base()
-
-					if second_weap_base then
-						remove_shield_from_ignore_units(second_weap_base._setup)
-					end
-				end
-			end
-		end
+		self:remove_ignore_unit(shield_unit)
 	end
 end
 
--- Lines 159-174
+-- Lines 141-156
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -177,7 +155,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 178-184
+-- Lines 160-166
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 

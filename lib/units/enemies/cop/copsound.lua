@@ -117,8 +117,12 @@ function CopSound:stop(source_name)
 	self._unit:sound_source(source):stop()
 end
 
--- Lines 120-157
+-- Lines 120-155
 function CopSound:say(sound_name, sync, skip_prefix, important, callback)
+	if self._unit:character_damage():dead() then
+		return
+	end
+
 	if self._last_speech then
 		self._last_speech:stop()
 	end
@@ -153,7 +157,7 @@ function CopSound:say(sound_name, sync, skip_prefix, important, callback)
 	self._speak_expire_t = TimerManager:game():time() + 2
 end
 
--- Lines 161-166
+-- Lines 159-164
 function CopSound:sync_say_str(full_sound)
 	if self._last_speech then
 		self._last_speech:stop()
@@ -162,17 +166,17 @@ function CopSound:sync_say_str(full_sound)
 	self._last_speech = self:play(full_sound)
 end
 
--- Lines 170-172
+-- Lines 168-170
 function CopSound:speaking(t)
 	return t < self._speak_expire_t
 end
 
--- Lines 176-178
+-- Lines 174-176
 function CopSound:anim_clbk_play_sound(unit, queue_name)
 	self:_play(queue_name)
 end
 
--- Lines 182-189
+-- Lines 180-187
 function CopSound:anim_clbk_stop_sound(unit, source_name)
 	if source_name and source_name == Idstring("") then
 		self:stop()

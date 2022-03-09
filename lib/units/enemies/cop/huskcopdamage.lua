@@ -1,6 +1,6 @@
 HuskCopDamage = HuskCopDamage or class(CopDamage)
 
--- Lines 5-46
+-- Lines 5-43
 function HuskCopDamage:die(variant)
 	CopDamage.MAD_3_ACHIEVEMENT(variant)
 	self:_check_friend_4(variant)
@@ -9,6 +9,8 @@ function HuskCopDamage:die(variant)
 	if self._unit:inventory() then
 		self._unit:inventory():drop_shield()
 	end
+
+	self:_chk_unique_death_requirements(variant, true)
 
 	variant = variant or "bullet"
 	self._health = 0

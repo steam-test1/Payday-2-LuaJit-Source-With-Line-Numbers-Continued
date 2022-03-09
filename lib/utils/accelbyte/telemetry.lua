@@ -1033,7 +1033,7 @@ function Telemetry:on_end_objective(id)
 	Global.telemetry._objective_start_time = nil
 end
 
--- Lines 1023-1032
+-- Lines 1024-1033
 function Telemetry:send_on_player_heist_objective_start()
 	local telemetry_payload = {
 		MapName = self._map_name,
@@ -1047,7 +1047,7 @@ function Telemetry:send_on_player_heist_objective_start()
 	self:send("player_heist_objective", telemetry_payload)
 end
 
--- Lines 1034-1056
+-- Lines 1035-1057
 function Telemetry:send_on_player_heist_objective_end()
 	local job_plan = "any"
 
@@ -1074,12 +1074,12 @@ function Telemetry:send_on_player_heist_objective_end()
 	self:send("player_heist_objective", telemetry_payload)
 end
 
--- Lines 1058-1060
+-- Lines 1059-1061
 function Telemetry:append_steam_achievement(achievements_str)
 	table.insert(self._global._steam_achievement_list, achievements_str)
 end
 
--- Lines 1062-1077
+-- Lines 1063-1078
 function Telemetry:send_on_player_steam_achievements(achievements)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -1100,17 +1100,17 @@ function Telemetry:send_on_player_steam_achievements(achievements)
 	self._global._steam_achievement_list = {}
 end
 
--- Lines 1079-1081
+-- Lines 1080-1082
 function Telemetry:set_steam_stats_overdrill_true()
 	self._global._has_overdrill = true
 end
 
--- Lines 1083-1085
+-- Lines 1084-1086
 function Telemetry:set_steam_stats_pdth_true()
 	self._global._has_pdth = true
 end
 
--- Lines 1087-1097
+-- Lines 1088-1098
 function Telemetry:send_on_player_steam_stats_overdrill()
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return
@@ -1124,14 +1124,14 @@ function Telemetry:send_on_player_steam_stats_overdrill()
 	self:send("player_steam_stats_overdrill", telemetry_payload)
 end
 
--- Lines 1100-1104
+-- Lines 1101-1105
 function Telemetry:on_player_game_event_action(action, params)
 	if action == Telemetry.event_actions.balloon_popped then
 		self:send_on_player_game_event_balloon(params)
 	end
 end
 
--- Lines 1106-1115
+-- Lines 1107-1116
 function Telemetry:send_on_player_game_event_balloon(params)
 	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
 		return

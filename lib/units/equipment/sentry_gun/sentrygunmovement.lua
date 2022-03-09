@@ -561,7 +561,7 @@ function SentryGunMovement:give_recoil()
 	self:set_look_vec3(new_fwd_vec3)
 end
 
--- Lines 620-669
+-- Lines 620-674
 function SentryGunMovement:_get_target_dir(attention, dt)
 	if not attention then
 		if self._switched_off then
@@ -619,62 +619,62 @@ function SentryGunMovement:_get_target_dir(attention, dt)
 	end
 end
 
--- Lines 673-675
+-- Lines 678-680
 function SentryGunMovement:tased()
 	return false
 end
 
--- Lines 679-682
+-- Lines 684-687
 function SentryGunMovement:on_death()
 	self._unit:set_extension_update_enabled(Idstring("movement"), false)
 	self._unit:weapon():set_laser_enabled(nil, nil)
 end
 
--- Lines 686-688
+-- Lines 691-693
 function SentryGunMovement:synch_allow_fire(...)
 	self._unit:brain():synch_allow_fire(..., true)
 end
 
--- Lines 692-694
+-- Lines 697-699
 function SentryGunMovement:warming_up(t)
 	return t < self._warmup_t
 end
 
--- Lines 698-700
+-- Lines 703-705
 function SentryGunMovement:is_activating()
 	return self._state == "activating"
 end
 
--- Lines 704-706
+-- Lines 709-711
 function SentryGunMovement:is_inactivating()
 	return self._state == "inactivating"
 end
 
--- Lines 710-712
+-- Lines 715-717
 function SentryGunMovement:is_inactivated()
 	return self._state == "inactive"
 end
 
--- Lines 716-719
+-- Lines 721-724
 function SentryGunMovement:switch_off()
 	self._switched_off = true
 	self._switch_off_rot = Rotation(self._m_rot:x(), -35)
 end
 
--- Lines 723-726
+-- Lines 728-731
 function SentryGunMovement:switch_on()
 	self._switched_off = false
 
 	self:set_active(true)
 end
 
--- Lines 728-731
+-- Lines 733-736
 function SentryGunMovement:_set_state(state)
 	self._state = state
 	self._updator = callback(self, self, "_update_" .. state)
 end
 
--- Lines 735-759
+-- Lines 740-764
 function SentryGunMovement:save(save_data)
 	local my_save_data = {}
 	save_data.movement = my_save_data
@@ -700,7 +700,7 @@ function SentryGunMovement:save(save_data)
 	my_save_data.state = self._state
 end
 
--- Lines 763-789
+-- Lines 768-794
 function SentryGunMovement:load(save_data)
 	if not save_data or not save_data.movement then
 		return
@@ -728,14 +728,14 @@ function SentryGunMovement:load(save_data)
 	self._unit:weapon():update_laser()
 end
 
--- Lines 793-796
+-- Lines 798-801
 function SentryGunMovement:clbk_team_def()
 	self._team = managers.groupai:state():team_data(self._team.id)
 
 	managers.groupai:state():remove_listener("SentryGunMovement_team_def_" .. tostring(self._unit:key()))
 end
 
--- Lines 800-829
+-- Lines 805-834
 function SentryGunMovement:set_team(team_data)
 	if self._original_team then
 		self._original_team = team_data
@@ -771,27 +771,27 @@ function SentryGunMovement:set_team(team_data)
 	end
 end
 
--- Lines 833-835
+-- Lines 838-840
 function SentryGunMovement:team()
 	return self._team
 end
 
--- Lines 839-841
+-- Lines 844-846
 function SentryGunMovement:cool()
 	return managers.groupai:state():whisper_mode()
 end
 
--- Lines 844-846
+-- Lines 849-851
 function SentryGunMovement:not_cool_t()
 	return not managers.groupai:state():whisper_mode() and managers.groupai:state():whisper_mode_change_t()
 end
 
--- Lines 850-852
+-- Lines 855-857
 function SentryGunMovement:rearming()
 	return self._state == "rearming"
 end
 
--- Lines 856-871
+-- Lines 861-876
 function SentryGunMovement:rearm()
 	self:_set_state("rearming")
 
@@ -809,12 +809,12 @@ function SentryGunMovement:rearm()
 	self._unit:weapon():update_laser()
 end
 
--- Lines 875-877
+-- Lines 880-882
 function SentryGunMovement:repairing()
 	return self._state == "repairing"
 end
 
--- Lines 881-892
+-- Lines 886-897
 function SentryGunMovement:repair()
 	self:_set_state("repairing")
 
@@ -829,7 +829,7 @@ function SentryGunMovement:repair()
 	end
 end
 
--- Lines 896-912
+-- Lines 901-917
 function SentryGunMovement:pre_destroy()
 	if Network:is_server() then
 		self:set_attention()

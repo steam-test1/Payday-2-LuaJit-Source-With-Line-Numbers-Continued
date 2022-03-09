@@ -169,9 +169,15 @@ function CoreMaterialEditor:_create_make_file(rebuild)
 	return make_params, temp_params
 end
 
--- Lines 148-158
-function CoreMaterialEditor:_run_compiler()
-	local cmd = Application:nice_path(managers.database:root_path() .. "aux_assets\\engine\\bin\\shaderdev\\", true) .. "shaderdev -m \"" .. Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "make.xml", false) .. "\" > \"" .. Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "compile_log.txt", false) .. "\""
+-- Lines 148-162
+function CoreMaterialEditor:_run_compiler(platform)
+	platform = platform or ""
+
+	if platform ~= "" then
+		platform = "-p " .. platform
+	end
+
+	local cmd = Application:nice_path(managers.database:root_path() .. "aux_assets\\engine\\bin\\shaderdev\\", true) .. "shaderdev -m \"" .. Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "make.xml", false) .. "\" " .. platform .. " > \"" .. Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "compile_log.txt", false) .. "\""
 	local ret = os.execute(cmd)
 	local file = SystemFS:open(managers.database:base_path() .. self.TEMP_PATH .. "compile_log.txt", "r")
 	local log = file:read()
@@ -182,7 +188,7 @@ function CoreMaterialEditor:_run_compiler()
 	return ret == 0
 end
 
--- Lines 160-184
+-- Lines 164-188
 function CoreMaterialEditor:_get_make_params()
 	local shader = self._compilable_shaders[self._compilable_shader_combo_box:get_value()]
 	local srcpath = managers.database:base_path() .. self.SHADER_PATH .. managers.database:entry_name(shader._entry)
@@ -193,13 +199,13 @@ function CoreMaterialEditor:_get_make_params()
 	make_params.working_directory = tmppath
 	make_params.render_templates = srcpath .. ".render_template_database"
 	make_params.win32d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d9.win32.shaders"
-	make_params.win32d3d10 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d10.win32.shaders"
+	make_params.win32d3d11 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d11.win32.shaders"
 	make_params.ps3 = tmppath .. managers.database:entry_name(shader._entry) .. ".ps3.shaders"
 	make_params.x360d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".x360.shaders"
 	make_params.lrb = tmppath .. managers.database:entry_name(shader._entry) .. ".lrb.shaders"
 	temp_params.render_templates = tmppath .. managers.database:entry_name(shader._entry) .. ".render_template_database"
 	temp_params.win32d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d9.win32.shaders"
-	temp_params.win32d3d10 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d10.win32.shaders"
+	temp_params.win32d3d11 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d11.win32.shaders"
 	temp_params.ps3 = tmppath .. managers.database:entry_name(shader._entry) .. ".ps3.shaders"
 	temp_params.x360d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".x360.shaders"
 	temp_params.lrb = tmppath .. managers.database:entry_name(shader._entry) .. ".lrb.shaders"
@@ -207,7 +213,7 @@ function CoreMaterialEditor:_get_make_params()
 	return make_params, temp_params
 end
 
--- Lines 186-192
+-- Lines 190-196
 function CoreMaterialEditor:_cleanup_temp_files(temp_params)
 	for k, v in pairs(temp_params) do
 		os.remove(v)
@@ -217,18 +223,18 @@ function CoreMaterialEditor:_cleanup_temp_files(temp_params)
 	os.remove(Application:nice_path(managers.database:base_path() .. self.TEMP_PATH .. "compile_log.txt", false))
 end
 
--- Lines 194-198
+-- Lines 198-202
 function CoreMaterialEditor:_insert_libs_in_database(temp_params, make_params)
 	assert(SystemFS:copy_file(temp_params.render_templates, make_params.render_templates), string.format("Could not copy %s -> %s", temp_params.render_templates, make_params.render_templates))
 	self:_cleanup_temp_files(temp_params)
 	managers.database:recompile()
 end
 
--- Lines 200-202
+-- Lines 204-206
 function CoreMaterialEditor:_copy_to_remote_client()
 end
 
--- Lines 204-210
+-- Lines 208-214
 function CoreMaterialEditor:_find_unit_material(unit)
 	local path = unit:material_config():s()
 	local node = DB:has("material_config", path) and DB:load_node("material_config", path)
@@ -238,7 +244,7 @@ function CoreMaterialEditor:_find_unit_material(unit)
 	end
 end
 
--- Lines 212-226
+-- Lines 216-230
 function CoreMaterialEditor:_find_selected_unit()
 	if managers.editor and managers.editor:selected_unit() and managers.editor:selected_unit() ~= self._selected_unit and not self._material_lock then
 		self._selected_unit = managers.editor:selected_unit()
@@ -253,7 +259,7 @@ function CoreMaterialEditor:_find_selected_unit()
 	end
 end
 
--- Lines 228-237
+-- Lines 232-241
 function CoreMaterialEditor:_get_material()
 	local units_in_world = World:find_units_quick("all")
 
@@ -266,7 +272,7 @@ function CoreMaterialEditor:_get_material()
 	end
 end
 
--- Lines 239-246
+-- Lines 243-250
 function CoreMaterialEditor:_create_rt_name(rt)
 	table.sort(rt)
 
@@ -279,7 +285,7 @@ function CoreMaterialEditor:_create_rt_name(rt)
 	return rt_str
 end
 
--- Lines 248-256
+-- Lines 252-260
 function CoreMaterialEditor:_try_convert_parameter(mat, child, rt)
 	if child:name() == "diffuse_texture" then
 		table.insert(rt, "DIFFUSE_TEXTURE")
@@ -290,7 +296,7 @@ function CoreMaterialEditor:_try_convert_parameter(mat, child, rt)
 	end
 end
 
--- Lines 258-275
+-- Lines 262-279
 function CoreMaterialEditor:_version_error(mat)
 	local res = EWS:message_box(self._main_frame, "This material is not of the expected version! Do you want to convert it?", "Version", "YES_NO", Vector3(-1, -1, -1))
 
@@ -312,7 +318,7 @@ function CoreMaterialEditor:_version_error(mat)
 	end
 end
 
--- Lines 277-293
+-- Lines 281-297
 function CoreMaterialEditor:_update_material(param)
 	local material = self:_get_material()
 
@@ -333,7 +339,7 @@ function CoreMaterialEditor:_update_material(param)
 	end
 end
 
--- Lines 295-302
+-- Lines 299-306
 function CoreMaterialEditor:_live_update()
 	if alive(self._selected_unit) then
 		for _, param in ipairs(self._live_update_parameter_list) do
@@ -344,7 +350,7 @@ function CoreMaterialEditor:_live_update()
 	end
 end
 
--- Lines 304-314
+-- Lines 308-318
 function CoreMaterialEditor:_check_valid_xml_on_save(node)
 	local str = nil
 
@@ -359,7 +365,7 @@ function CoreMaterialEditor:_check_valid_xml_on_save(node)
 	return str == nil, str
 end
 
--- Lines 316-324
+-- Lines 320-328
 function CoreMaterialEditor:_set_channels_default_texture(node)
 	for mat in node:children() do
 		for var in mat:children() do

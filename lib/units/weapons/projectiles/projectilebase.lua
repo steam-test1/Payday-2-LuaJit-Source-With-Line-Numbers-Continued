@@ -36,49 +36,140 @@ function ProjectileBase:set_thrower_unit_by_peer_id(peer_id)
 		local thrower_unit = peer and peer:unit()
 
 		if alive(thrower_unit) then
-			self:set_thrower_unit(thrower_unit)
+			self:set_thrower_unit(thrower_unit, true)
 		end
 	end
 end
 
--- Lines 50-52
-function ProjectileBase:set_thrower_unit(unit)
+-- Lines 50-131
+function ProjectileBase:set_thrower_unit(unit, set_ignore)
+	if self._thrower_unit then
+		return
+	end
+
+	local has_destroy_listener = nil
+	local listener_class = unit:base()
+
+	if listener_class and listener_class.add_destroy_listener then
+		has_destroy_listener = true
+	else
+		listener_class = unit:unit_data()
+
+		if listener_class and listener_class.add_destroy_listener then
+			has_destroy_listener = true
+		end
+	end
+
+	if not has_destroy_listener then
+		print("[ProjectileBase:set_thrower_unit] Cannot set thrower unit as it lacks a destroy listener.", unit)
+
+		return
+	end
+
+	self._ignore_destroy_listener_key = self._ignore_destroy_listener_key or "ProjectileBase" .. tostring(self._unit:key())
+
+	listener_class:add_destroy_listener(self._ignore_destroy_listener_key, callback(self, self, "_clbk_thrower_unit_destroyed"))
+
 	self._thrower_unit = unit
+
+	if not set_ignore then
+		return
+	end
+
+	self._ignore_units = self._ignore_units or {}
+
+	table.insert(self._ignore_units, unit)
+
+	local inv_ext = unit:inventory()
+
+	if not inv_ext then
+		return
+	end
+
+	local shield_unit = inv_ext._shield_unit
+
+	if alive(shield_unit) then
+		has_destroy_listener = false
+		listener_class = shield_unit:base()
+
+		if listener_class and listener_class.add_destroy_listener then
+			has_destroy_listener = true
+		else
+			listener_class = shield_unit:unit_data()
+
+			if listener_class and listener_class.add_destroy_listener then
+				has_destroy_listener = true
+			end
+		end
+
+		if has_destroy_listener then
+			listener_class:add_destroy_listener(self._ignore_destroy_listener_key, callback(self, self, "_clbk_ignore_unit_destroyed"))
+			table.insert(self._ignore_units, shield_unit)
+		else
+			print("[ProjectileBase:set_thrower_unit] Cannot set shield unit belonging to the thrower for ignoring as it lacks a destroy listener.", shield_unit)
+		end
+	end
+
+	if inv_ext.add_ignore_unit then
+		inv_ext:add_ignore_unit(self._unit)
+	end
 end
 
--- Lines 54-56
+-- Lines 133-143
+function ProjectileBase:_clbk_thrower_unit_destroyed(unit)
+	self._thrower_unit = nil
+
+	if self._ignore_units then
+		table.delete(self._ignore_units, unit)
+
+		if not next(self._ignore_units) then
+			self._ignore_units = nil
+		end
+	end
+end
+
+-- Lines 145-151
+function ProjectileBase:_clbk_ignore_unit_destroyed(unit)
+	table.delete(self._ignore_units, unit)
+
+	if not next(self._ignore_units) then
+		self._ignore_units = nil
+	end
+end
+
+-- Lines 153-155
 function ProjectileBase:thrower_unit()
 	return alive(self._thrower_unit) and self._thrower_unit or nil
 end
 
--- Lines 60-64
+-- Lines 159-163
 function ProjectileBase:set_weapon_unit(weapon_unit)
 	self._weapon_unit = weapon_unit
 	self._weapon_id = weapon_unit and weapon_unit:base():get_name_id()
 	self._weapon_damage_mult = weapon_unit and weapon_unit:base().projectile_damage_multiplier and weapon_unit:base():projectile_damage_multiplier() or 1
 end
 
--- Lines 66-68
+-- Lines 165-167
 function ProjectileBase:weapon_unit()
 	return alive(self._weapon_unit) and self._weapon_unit or nil
 end
 
--- Lines 72-74
+-- Lines 171-173
 function ProjectileBase:set_projectile_entry(projectile_entry)
 	self._projectile_entry = projectile_entry
 end
 
--- Lines 76-78
+-- Lines 175-177
 function ProjectileBase:projectile_entry()
 	return self._projectile_entry or tweak_data.blackmarket:get_projectile_name_from_index(1)
 end
 
--- Lines 80-82
+-- Lines 179-181
 function ProjectileBase:get_name_id()
 	return alive(self._weapon_unit) and self._weapon_unit:base():get_name_id() or self._projectile_entry
 end
 
--- Lines 84-91
+-- Lines 183-190
 function ProjectileBase:is_category(...)
 	for _, cat in ipairs({
 		...
@@ -91,19 +182,19 @@ function ProjectileBase:is_category(...)
 	return false
 end
 
--- Lines 95-98
+-- Lines 194-197
 function ProjectileBase:set_active(active)
 	self._active = active
 
 	self._unit:set_extension_update_enabled(Idstring("base"), self._active)
 end
 
--- Lines 100-102
+-- Lines 199-201
 function ProjectileBase:active()
 	return self._active
 end
 
--- Lines 107-115
+-- Lines 206-214
 function ProjectileBase:create_sweep_data()
 	self._sweep_data = {
 		slot_mask = self._slot_mask
@@ -113,7 +204,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
--- Lines 119-173
+-- Lines 218-272
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -173,7 +264,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
--- Lines 177-179
+-- Lines 276-278
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	self:throw({
 		dir = dir,
@@ -181,7 +272,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
--- Lines 183-226
+-- Lines 282-326
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -200,7 +291,8 @@ function ProjectileBase:update(unit, t, dt)
 	if self._sweep_data and not self._collided then
 		self._unit:m_position(self._sweep_data.current_pos)
 
-		local col_ray = World:raycast("ray", self._sweep_data.last_pos, self._sweep_data.current_pos, "slot_mask", self._sweep_data.slot_mask)
+		local ig_units = self._ignore_units
+		local col_ray = World:raycast("ray", self._sweep_data.last_pos, self._sweep_data.current_pos, "slot_mask", self._sweep_data.slot_mask, ig_units and "ignore_unit" or nil, ig_units or nil)
 
 		if self._draw_debug_trail then
 			Draw:brush(Color(1, 0, 0, 1), nil, 3):line(self._sweep_data.last_pos, self._sweep_data.current_pos)
@@ -227,7 +319,7 @@ function ProjectileBase:update(unit, t, dt)
 	end
 end
 
--- Lines 231-259
+-- Lines 331-360
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -235,7 +327,8 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 		mvector3.multiply(mvec2, 2)
 		mvector3.add(mvec2, self._sweep_data.last_pos)
 
-		local col_ray = World:raycast("ray", self._sweep_data.last_pos, mvec2, "slot_mask", self._sweep_data.slot_mask)
+		local ig_units = self._ignore_units
+		local col_ray = World:raycast("ray", self._sweep_data.last_pos, mvec2, "slot_mask", self._sweep_data.slot_mask, ig_units and "ignore_unit" or nil, ig_units or nil)
 
 		if col_ray and col_ray.unit then
 			if self._draw_debug_impact then
@@ -256,17 +349,17 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
--- Lines 263-265
+-- Lines 364-366
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
--- Lines 269-271
+-- Lines 370-372
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
--- Lines 275-280
+-- Lines 376-381
 function ProjectileBase:save(data)
 	local state = {
 		timer = self._timer
@@ -274,18 +367,66 @@ function ProjectileBase:save(data)
 	data.ProjectileBase = state
 end
 
--- Lines 284-287
+-- Lines 385-388
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
 end
 
--- Lines 291-293
-function ProjectileBase:destroy()
+-- Lines 392-442
+function ProjectileBase:destroy(...)
+	ProjectileBase.super.destroy(self, ...)
+
+	if self._ignore_units then
+		local destroy_key = self._ignore_destroy_listener_key
+
+		for _, ig_unit in pairs(self._ignore_units) do
+			if alive(ig_unit) then
+				local has_destroy_listener = nil
+				local listener_class = ig_unit:base()
+
+				if listener_class and listener_class.add_destroy_listener then
+					has_destroy_listener = true
+				else
+					listener_class = ig_unit:unit_data()
+
+					if listener_class and listener_class.add_destroy_listener then
+						has_destroy_listener = true
+					end
+				end
+
+				if has_destroy_listener then
+					listener_class:remove_destroy_listener(destroy_key)
+				end
+			end
+		end
+
+		self._ignore_units = nil
+	elseif alive(self._thrower_unit) then
+		local has_destroy_listener = nil
+		local listener_class = self._thrower_unit:base()
+
+		if listener_class and listener_class.add_destroy_listener then
+			has_destroy_listener = true
+		else
+			listener_class = self._thrower_unit:unit_data()
+
+			if listener_class and listener_class.add_destroy_listener then
+				has_destroy_listener = true
+			end
+		end
+
+		if has_destroy_listener then
+			listener_class:remove_destroy_listener(self._ignore_destroy_listener_key)
+		end
+
+		self._thrower_unit = nil
+	end
+
 	self:remove_trail_effect()
 end
 
--- Lines 299-333
+-- Lines 448-482
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)
 	if not ProjectileBase.check_time_cheat(projectile_type, owner_peer_id) then
 		return
@@ -300,7 +441,7 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 		local thrower_unit = peer and peer:unit()
 
 		if alive(thrower_unit) then
-			unit:base():set_thrower_unit(thrower_unit)
+			unit:base():set_thrower_unit(thrower_unit, true)
 
 			if not tweak_entry.throwable and thrower_unit:movement() and thrower_unit:movement():current_state() then
 				unit:base():set_weapon_unit(thrower_unit:movement():current_state()._equipped_unit)
@@ -329,14 +470,44 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines 337-340
+-- Lines 486-509
+function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_unit)
+	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
+	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
+	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, math.UP))
+	local sync_thrower_unit = nil
+
+	if alive(thrower_unit) then
+		unit:base():set_thrower_unit(thrower_unit, true)
+
+		sync_thrower_unit = thrower_unit:id() ~= -1 and thrower_unit
+	end
+
+	unit:base():throw({
+		dir = dir,
+		projectile_entry = projectile_type
+	})
+
+	local projectile_type_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_type)
+
+	managers.network:session():send_to_peers_synched("sync_throw_projectile_npc", unit:id() ~= -1 and unit or nil, pos, dir, projectile_type_index, sync_thrower_unit or nil)
+
+	if tweak_data.blackmarket.projectiles[projectile_type].impact_detonation then
+		unit:damage():add_body_collision_callback(callback(unit:base(), unit:base(), "clbk_impact"))
+		unit:base():create_sweep_data()
+	end
+
+	return unit
+end
+
+-- Lines 513-516
 function ProjectileBase:add_trail_effect()
 	managers.game_play_central:add_projectile_trail(self._unit, self._unit:orientation_object(), self.trail_effect)
 
 	self._added_trail_effect = true
 end
 
--- Lines 342-347
+-- Lines 518-523
 function ProjectileBase:remove_trail_effect()
 	if self._added_trail_effect then
 		managers.game_play_central:remove_projectile_trail(self._unit)
@@ -345,7 +516,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines 351-368
+-- Lines 527-544
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -366,18 +537,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines 372-383
+-- Lines 548-559
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 387-388
+-- Lines 563-564
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines 390-406
+-- Lines 566-582
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -397,13 +568,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 409-412
+-- Lines 585-588
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 414-416
+-- Lines 590-592
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end
