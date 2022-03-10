@@ -557,7 +557,7 @@ function DLCTweakData:init_generated()
 		},
 		{
 			type_items = "player_styles",
-			item_entry = "boss",
+			item_entry = "boss_gdtp",
 			amount = 1
 		}
 	}
