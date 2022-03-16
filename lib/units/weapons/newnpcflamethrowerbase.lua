@@ -12,7 +12,7 @@ local mvec3_cross = mvector3.cross
 local mvec3_neg = mvector3.negate
 local mvec3_norm = mvector3.normalize
 local mvec3_lerp = mvector3.lerp
-local m_rot_y = mrotation.y
+local mrot_y = mrotation.y
 local math_up = math.UP
 
 -- Lines 22-34
@@ -154,7 +154,7 @@ local mvec_from = Vector3()
 local mrot_fire = Rotation()
 local mvec_fire_local_override = Vector3()
 
--- Lines 169-238
+-- Lines 169-234
 function NewNPCFlamethrowerBase:fire_blank(direction, impact, sub_id, override_direction)
 	local chk_shoot_expired = self._check_shooting_expired
 
@@ -168,49 +168,41 @@ function NewNPCFlamethrowerBase:fire_blank(direction, impact, sub_id, override_d
 		chk_shoot_expired.check_t = self._timer:time() + 0.3
 	end
 
+	local m_ray_from = nil
 	local weap_unit = self._unit
 	local setup_data = self._setup
 	local user_unit = setup_data and setup_data.user_unit
+	local fire_obj = self:fire_object() or weap_unit
+
+	fire_obj:m_position(mvec_from)
 
 	if override_direction then
-		local fire_obj = self:fire_object() or weap_unit
-
-		fire_obj:m_position(mvec_from)
 		fire_obj:m_rotation(mrot_fire)
-		mrot_y(mvec_fire_local_override, mrot_fire)
+		mrot_y(mrot_fire, mvec_fire_local_override)
 
 		direction = mvec_fire_local_override
-	else
-		local m_from = nil
+	elseif user_unit then
+		local mov_ext = alive(user_unit) and user_unit:movement()
 
-		if user_unit then
-			local mov_ext = alive(user_unit) and user_unit:movement()
-
-			if mov_ext then
-				m_from = mov_ext.detect_m_pos and mov_ext:detect_m_pos() or mov_ext.m_head_pos and mov_ext:m_head_pos()
-			end
-		end
-
-		if m_from then
-			mvec3_set(mvec_from, m_from)
-		else
-			local fire_obj = self:fire_object() or weap_unit
-
-			fire_obj:m_position(mvec_from)
+		if mov_ext then
+			m_ray_from = mov_ext.detect_m_pos and mov_ext:detect_m_pos() or mov_ext.m_head_pos and mov_ext:m_head_pos()
 		end
 	end
 
-	local range = self._flame_max_range or self._range
+	local range = self._flame_max_range or self._range or 1000
 
 	mvec3_set(mvec_to, direction)
 	mvec3_mul(mvec_to, range)
-	mvec3_add(mvec_to, mvec_from)
+	mvec3_add(mvec_to, m_ray_from or mvec_from)
+
+	local hit_something = nil
 
 	if impact then
 		local ignore_units = setup_data and setup_data.ignore_units
-		local col_ray = World:raycast("ray", mvec_from, mvec_to, "slot_mask", self._blank_slotmask, ignore_units and "ignore_unit" or nil, ignore_units or nil)
+		local col_ray = World:raycast("ray", m_ray_from or mvec_from, mvec_to, "slot_mask", self._blank_slotmask, ignore_units and "ignore_unit" or nil, ignore_units or nil)
 
 		if col_ray then
+			hit_something = true
 			local col_dis = col_ray.distance
 
 			if col_dis < range then
@@ -221,18 +213,21 @@ function NewNPCFlamethrowerBase:fire_blank(direction, impact, sub_id, override_d
 		end
 	end
 
-	mvec3_set(mvec_to, direction)
-	mvec3_mul(mvec_to, range)
-	mvec3_add(mvec_to, mvec_from)
+	if m_ray_from or hit_something then
+		mvec3_set(mvec_to, direction)
+		mvec3_mul(mvec_to, range)
+		mvec3_add(mvec_to, mvec_from)
+	end
+
 	self:_spawn_flame_effect(mvec_to, direction)
 end
 
--- Lines 240-242
+-- Lines 236-238
 function NewNPCFlamethrowerBase:auto_fire_blank(...)
 	self:fire_blank(...)
 end
 
--- Lines 245-252
+-- Lines 241-248
 function NewNPCFlamethrowerBase:_sound_autofire_start(nr_shots)
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 
@@ -242,14 +237,14 @@ function NewNPCFlamethrowerBase:_sound_autofire_start(nr_shots)
 	sound = sound or self._sound_fire:post_event(tweak_sound.fire)
 end
 
--- Lines 254-260
+-- Lines 250-256
 function NewNPCFlamethrowerBase:_sound_autofire_end()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 	local sound = self._sound_fire:post_event(tweak_sound.stop_fire)
 	sound = sound or self._sound_fire:post_event(tweak_sound.stop_fire)
 end
 
--- Lines 263-265
+-- Lines 259-261
 function NewNPCFlamethrowerBase:third_person_important()
 	return NewFlamethrowerBase.third_person_important(self)
 end
@@ -268,7 +263,7 @@ NPCFlamethrowerBase._sound_autofire_start = NewNPCFlamethrowerBase._sound_autofi
 NPCFlamethrowerBase._sound_autofire_end = NewNPCFlamethrowerBase._sound_autofire_end
 NPCFlamethrowerBase._on_auto_fire_stop = NewNPCFlamethrowerBase._on_auto_fire_stop
 
--- Lines 282-294
+-- Lines 278-290
 function NPCFlamethrowerBase:init(...)
 	self.flamethrower = true
 
@@ -281,13 +276,13 @@ function NPCFlamethrowerBase:init(...)
 	self:setup_default()
 end
 
--- Lines 296-300
+-- Lines 292-296
 function NPCFlamethrowerBase:destroy(...)
 	self:kill_effects()
 	NPCFlamethrowerBase.super.destroy(self, ...)
 end
 
--- Lines 302-304
+-- Lines 298-300
 function NPCFlamethrowerBase:third_person_important()
 	return false
 end
@@ -298,7 +293,7 @@ local mvec_dir = Vector3()
 local mvec_offset = Vector3()
 local mvec_offset2 = Vector3()
 
--- Lines 313-443
+-- Lines 309-439
 function NPCBossFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local result = {}
 	local ignore_units = self._setup.ignore_units
@@ -307,7 +302,7 @@ function NPCBossFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, d
 	local damage = self._damage * (dmg_mul or 1)
 	local orig_damage_range = self._flame_max_range or self._range or 1000
 
-	-- Lines 322-346
+	-- Lines 318-342
 	local function find_bodies_and_adjust_vecs()
 		local damage_range = orig_damage_range
 

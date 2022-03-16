@@ -176,6 +176,7 @@ function MenuManager:init(is_start_menu)
 	managers.user:add_setting_changed_callback("flush_gpu_command_queue", callback(self, self, "flush_gpu_command_queue_changed"), true)
 	managers.user:add_setting_changed_callback("use_thq_weapon_parts", callback(self, self, "use_thq_weapon_parts_changed"), true)
 	managers.user:add_setting_changed_callback("use_telemetry", callback(self, self, "use_telemetry_changed"), true)
+	managers.user:add_setting_changed_callback("use_gamesight", callback(self, self, "use_gamesight_changed"), true)
 	managers.user:add_active_user_state_changed_callback(callback(self, self, "on_user_changed"))
 	managers.user:add_storage_changed_callback(callback(self, self, "on_storage_changed"))
 	managers.savefile:add_active_changed_callback(callback(self, self, "safefile_manager_active_changed"))
@@ -913,6 +914,11 @@ end
 -- Lines 970-972
 function MenuManager:use_telemetry_changed(name, old_value, new_value)
 	Telemetry:enable(new_value)
+end
+
+-- Lines 975-977
+function MenuManager:use_gamesight_changed(name, old_value, new_value)
+	Telemetry:gamesight_enable(new_value)
 end
 
 -- Lines 980-982
@@ -3581,6 +3587,11 @@ end
 -- Lines 3629-3631
 function MenuCallbackHandler:toggle_telemetry(item)
 	managers.user:set_setting("use_telemetry", item:value() == "on")
+end
+
+-- Lines 3634-3636
+function MenuCallbackHandler:toggle_gamesight(item)
+	managers.user:set_setting("use_gamesight", item:value() == "on")
 end
 
 -- Lines 3639-3645
@@ -10488,6 +10499,10 @@ function MenuOptionInitiator:modify_adv_options(node)
 
 	if node:item("toggle_telemetry") then
 		node:item("toggle_telemetry"):set_value(managers.user:get_setting("use_telemetry") and "on" or "off")
+	end
+
+	if node:item("toggle_gamesight") then
+		node:item("toggle_gamesight"):set_value(managers.user:get_setting("use_gamesight") and "on" or "off")
 	end
 
 	return node

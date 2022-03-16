@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-7827
+-- Lines 3-7935
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -7158,7 +7158,7 @@ function InteractionTweakData:init(tweak_data)
 	self.pent_press_signal_operator = {
 		text_id = "hud_int_press_signal_operator",
 		action_text_id = "hud_action_signal_operator",
-		interact_distance = 150,
+		interact_distance = 100,
 		start_active = false,
 		timer = 0
 	}
@@ -7182,7 +7182,7 @@ function InteractionTweakData:init(tweak_data)
 	self.pent_hold_remove_elevator_hatch = {
 		text_id = "hud_int_hold_remove_elevator_hatch",
 		action_text_id = "hud_action_removing_elevator_hatch",
-		interact_distance = 350,
+		interact_distance = 300,
 		timer = 7,
 		equipment_consume = false,
 		sound_start = "bar_penthouse_elevator_remove_hatch",
@@ -7203,7 +7203,7 @@ function InteractionTweakData:init(tweak_data)
 	self.pent_hold_connect_wire_to_elevator = {
 		text_id = "hud_int_hold_connect_wire_to_elevator",
 		action_text_id = "hud_int_hold_connecting_wire_to_elevator",
-		interact_distance = 350,
+		interact_distance = 250,
 		start_active = false,
 		timer = 3,
 		equipment_consume = true,
@@ -7355,7 +7355,7 @@ function InteractionTweakData:init(tweak_data)
 		text_id = "debug_interact_press_open_trunk",
 		action_text_id = "hud_action_opening_trunk",
 		sound_done = "open_car_trunk",
-		interact_distance = 150,
+		interact_distance = 100,
 		start_active = true
 	}
 	self.pent_press_call_elevator = {
@@ -7382,7 +7382,7 @@ function InteractionTweakData:init(tweak_data)
 	self.pent_kitchen_elevator = {
 		text_id = "hud_int_invisible_interaction_open",
 		start_active = true,
-		interact_distance = 150,
+		interact_distance = 100,
 		sound_done = "kitchen_elevator_button_press"
 	}
 	self.hold_take_mask_pent = {

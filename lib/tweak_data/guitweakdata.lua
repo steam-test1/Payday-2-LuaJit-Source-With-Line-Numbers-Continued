@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1751
+-- Lines 3-1752
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -708,6 +708,8 @@ function GuiTweakData:init(tweak_data)
 	self.fbi_files_webpage = "https://fbi.paydaythegame.com/"
 	self.crimefest_challenges_webpage = "http://www.overkillsoftware.com/games/roadtocrimefest/"
 	self.sbz_account_webpage = "https://www.paydaythegame.com/account/register/"
+	self.privacy_webpage = "https://pd2.link/PrivacyPolicy"
+	self.license_webpage = "https://pd2.link/TermsOfService"
 	self.crime_net = {
 		controller = {}
 	}
@@ -5102,6 +5104,11 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_in33_02",
+		texture_path = "guis/dlcs/in33/textures/pd2/new_heists/in33_02",
+		url = "https://ovk.af/Infamy33SLW3"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_pent_01",
 		texture_path = "guis/dlcs/pent/textures/pd2/new_heists/pent_01",
 		url = "https://pd2.link/MountainMasterSLS"
@@ -5130,11 +5137,6 @@ function GuiTweakData:init(tweak_data)
 		name_id = "menu_nh_xm21_01",
 		texture_path = "guis/dlcs/xm21/textures/pd2/new_heists/xm21_01",
 		url = "https://ovk.af/Xmas2021SLA"
-	})
-	table.insert(self.new_heists, {
-		name_id = "menu_nh_in33_02",
-		texture_path = "guis/dlcs/in33/textures/pd2/new_heists/in33_02",
-		url = "https://ovk.af/Infamy33SLW3"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_in33_01",
@@ -5478,7 +5480,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1753-1772
+-- Lines 1754-1773
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5506,7 +5508,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1774-1842
+-- Lines 1775-1843
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5584,15 +5586,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1844-1846
+-- Lines 1845-1847
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1848-1857
+-- Lines 1849-1858
 function GuiTweakData:print_locations()
 end
 
--- Lines 1859-1893
+-- Lines 1860-1894
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5631,7 +5633,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1895-2020
+-- Lines 1896-2021
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5754,12 +5756,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2022-2024
+-- Lines 2023-2025
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2026-2033
+-- Lines 2027-2034
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5770,7 +5772,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2035-2055
+-- Lines 2036-2056
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

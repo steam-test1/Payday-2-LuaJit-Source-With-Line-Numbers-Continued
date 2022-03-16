@@ -3193,7 +3193,148 @@ function MenuManager:show_movie_theater_unlocked_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2516-2538
+-- Lines 2450-2524
+function MenuManager:show_accept_gamesight_telemetry(params)
+	local dialog_data = {
+		title = managers.localization:text("dialog_gamesight_telemetry_title"),
+		text = managers.localization:text("dialog_gamesight_telemetry_text"),
+		h = 1920,
+		w = 600,
+		top_marigin = 15,
+		left_marigin = 15,
+		right_marigin = 15,
+		type = ""
+	}
+	local privacy_button = {}
+	local license_button = {}
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		privacy_button.text = managers.localization:text("dialog_privacy")
+		privacy_button.no_close = true
+
+		-- Lines 2466-2472
+		function privacy_button.callback_func()
+			if MenuCallbackHandler:is_overlay_enabled() then
+				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
+			else
+				managers.menu:show_enable_steam_overlay()
+			end
+		end
+
+		license_button.text = managers.localization:text("dialog_license")
+		license_button.no_close = true
+
+		-- Lines 2476-2482
+		function license_button.callback_func()
+			if MenuCallbackHandler:is_overlay_enabled() then
+				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
+			else
+				managers.menu:show_enable_steam_overlay()
+			end
+		end
+	end
+
+	local telemetry_button = {
+		text = managers.localization:text("dialog_telemetry_toggle"),
+		toggle = true,
+		initial_toggle_state = true,
+		toggle_callback_func = params.telemetry_func,
+		no_close = true
+	}
+	local gamsight_button = {
+		text = managers.localization:text("dialog_gamesight_toggle"),
+		toggle = true,
+		initial_toggle_state = true,
+		toggle_callback_func = params.gamesight_func,
+		no_close = true
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok"),
+		callback_func = params.accept_func,
+		cancel_button = true
+	}
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		dialog_data.button_list = {
+			privacy_button,
+			license_button,
+			telemetry_button,
+			gamsight_button,
+			ok_button
+		}
+	else
+		dialog_data.button_list = {
+			telemetry_button,
+			gamsight_button,
+			ok_button
+		}
+	end
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2526-2579
+function MenuManager:show_policy_seen(params)
+	local dialog_data = {
+		title = managers.localization:text("dialog_gamesight_telemetry_title"),
+		text = managers.localization:text("dialog_license_policy_text"),
+		h = 1920,
+		w = 600,
+		top_marigin = 15,
+		left_marigin = 15,
+		right_marigin = 15,
+		type = ""
+	}
+	local privacy_button = {}
+	local license_button = {}
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		privacy_button.text = managers.localization:text("dialog_privacy")
+		privacy_button.no_close = true
+
+		-- Lines 2542-2548
+		function privacy_button.callback_func()
+			if MenuCallbackHandler:is_overlay_enabled() then
+				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
+			else
+				managers.menu:show_enable_steam_overlay()
+			end
+		end
+
+		license_button.text = managers.localization:text("dialog_license")
+		license_button.no_close = true
+
+		-- Lines 2552-2558
+		function license_button.callback_func()
+			if MenuCallbackHandler:is_overlay_enabled() then
+				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
+			else
+				managers.menu:show_enable_steam_overlay()
+			end
+		end
+	end
+
+	local ok_button = {
+		text = managers.localization:text("dialog_ok"),
+		cancel_button = true
+	}
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		dialog_data.button_list = {
+			privacy_button,
+			license_button,
+			ok_button
+		}
+	else
+		dialog_data.button_list = {
+			ok_button
+		}
+	end
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2582-2604
 function MenuManager:show_accept_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title"),

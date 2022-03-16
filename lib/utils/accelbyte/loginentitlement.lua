@@ -1,18 +1,3 @@
-if _G.IS_VR then
-	Entitlement = Entitlement or class()
-
-	-- Lines 4-5
-	function Entitlement:CheckAndVerifyUserEntitlement(callback)
-	end
-
-	Login = Login or class()
-	Login.player_session = {
-		platform_user_id = ""
-	}
-
-	return
-end
-
 local base64 = require("lib/utils/base64")
 local json = require("lib/utils/accelbyte/json")
 local ClientId = Utility:get_current_client_id()
@@ -591,17 +576,19 @@ function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 	Steam:http_request(Url, callback, headers)
 end
 
--- Lines 567-663
+-- Lines 567-662
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 	local steam_id = Steam:userid()
 
-	-- Lines 579-584
+	Telemetry:send_on_game_launch()
+
+	-- Lines 578-583
 	local function entitlement_callback(success)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 586-595
+	-- Lines 585-594
 	local function login_callback(error_code, status_code, response_body)
 		print("[AccelByte] Callback login_callback ")
 
@@ -612,7 +599,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:QueryEntitlementAsString(0, 10, entitlement_callback)
 	end
 
-	-- Lines 597-639
+	-- Lines 596-638
 	local function check_platform_callback(success)
 		print("[AccelByte] Callback Platform Check")
 
@@ -625,7 +612,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			local loginusingsteam = true
 
 			if loginusingsteam then
-				-- Lines 611-619
+				-- Lines 610-618
 				local function login_with_steam_callback(success, reason)
 					if success then
 						print("[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
@@ -652,7 +639,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 642-654
+	-- Lines 641-653
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(steam_id, check_platform_callback)
@@ -674,7 +661,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 665-821
+-- Lines 664-820
 function Entitlement:SerializeJsonString(document)
 	print("[AccelByte] Entitlement:SerializeJsonString")
 

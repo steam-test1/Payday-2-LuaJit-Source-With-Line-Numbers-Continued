@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-915
+-- Lines 78-957
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -122,8 +122,7 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		},
 		player_style_exclude_list = {
 			"none",
-			"slaughterhouse",
-			"waistcoat"
+			"slaughterhouse"
 		}
 	}
 	self.suit_default_gloves = {
@@ -154,11 +153,10 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		kungfumaster = "heist_default",
 		sparkle = "heist_default",
 		sneak_suit = "sneak",
-		waistcoat = "heist_default",
+		xmas_tuxedo = "heist_default",
 		classyske = "heist_default",
 		tux = "heist_default",
 		continental = "continental",
-		xmas_tuxedo = "heist_default",
 		desperado = "desperado",
 		lowinttech = "heist_default",
 		boss = "heist_default",

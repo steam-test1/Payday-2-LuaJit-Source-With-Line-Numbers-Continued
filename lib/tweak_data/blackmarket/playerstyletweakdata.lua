@@ -1,4 +1,4 @@
--- Lines 1-2930
+-- Lines 1-2841
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -3311,87 +3311,6 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.sparkle.characters.ecp_male = sparkle_characters_male_fat
-	self.player_styles.waistcoat = {
-		name_id = "bm_suit_waistcoat",
-		desc_id = "bm_suit_waistcoat_desc",
-		texture_bundle_folder = "ccmt",
-		global_value = "pd2_clan",
-		material_variations = {}
-	}
-	self.player_styles.waistcoat.material_variations.default = {
-		name_id = "bm_suit_var_waistcoat_default",
-		global_value = "pd2_clan",
-		desc_id = "bm_suit_var_waistcoat_default_desc"
-	}
-	self.player_styles.waistcoat.body_replacement = body_replacement_standard
-	self.player_styles.waistcoat.third_body_replacement = body_replacement_standard
-	self.player_styles.waistcoat.unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat"
-	self.player_styles.waistcoat.characters = {}
-	local waistcoat_characters_male = {
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_average/ccmt_acc_waistcoat_male_average"
-	}
-
-	set_characters_data("waistcoat", characters_male, waistcoat_characters_male)
-
-	local waistcoat_dragon = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_02",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_average_02/ccmt_acc_waistcoat_male_average_02"
-	}
-	self.player_styles.waistcoat.characters.dragon = waistcoat_dragon
-	local waistcoat_bodhi = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_bodhi",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_average_bodhi/ccmt_acc_waistcoat_male_average_bodhi"
-	}
-	self.player_styles.waistcoat.characters.bodhi = waistcoat_bodhi
-	local waistcoat_scarface = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_02",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_average_02/ccmt_acc_waistcoat_male_average_02"
-	}
-	self.player_styles.waistcoat.characters.chico = waistcoat_scarface
-	local waistcoat_chains = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_chains",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_average_chains/ccmt_acc_waistcoat_male_average_chains"
-	}
-	self.player_styles.waistcoat.characters.chains = waistcoat_chains
-	local waistcoat_characters_male_big = {
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_big/ccmt_acc_waistcoat_male_big"
-	}
-
-	set_characters_data("waistcoat", characters_male_big, waistcoat_characters_male_big)
-
-	local waistcoat_sangres = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_sangres",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_big_sangres/ccmt_acc_waistcoat_male_big_sangres"
-	}
-	self.player_styles.waistcoat.characters.max = waistcoat_sangres
-	local waistcoat_characters_female = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_female",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_female_average/ccmt_acc_waistcoat_female_average"
-	}
-
-	set_characters_data("waistcoat", characters_female, waistcoat_characters_female)
-
-	local waistcoat_sydney = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_female_sydney",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_female_average_sydney/ccmt_acc_waistcoat_female_average_sydney"
-	}
-	self.player_styles.waistcoat.characters.sydney = waistcoat_sydney
-	local waistcoat_joy = {
-		unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_female_joy",
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_female_average_joy/ccmt_acc_waistcoat_female_average_joy"
-	}
-	self.player_styles.waistcoat.characters.joy = waistcoat_joy
-	local waistcoat_characters_female_big = {}
-	waistcoat_characters_female.unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_fps_waistcoat/ccmt_acc_fps_waistcoat_female"
-	waistcoat_characters_female_big.third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_female_fat/ccmt_acc_waistcoat_female_fat"
-
-	set_characters_data("waistcoat", characters_female_big, waistcoat_characters_female_big)
-
-	local waistcoat_characters_male_fat = {
-		third_unit = "units/pd2_dlc_ccmt/characters/ccmt_acc_waistcoat/ccmt_acc_waistcoat_male_fat/ccmt_acc_waistcoat_male_fat",
-		sequence = "set_ehtan"
-	}
-	self.player_styles.waistcoat.characters.ecp_male = waistcoat_characters_male_fat
 	self.player_styles.kungfumaster = {
 		name_id = "bm_suit_kungfumaster",
 		desc_id = "bm_suit_kungfumaster_desc",
@@ -3612,7 +3531,7 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 	self.player_styles.boss_gdtp.characters.ecp_male = boss_gdtp_characters_male_fat
 end
 
--- Lines 2932-2954
+-- Lines 2843-2865
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -3637,7 +3556,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 2956-2981
+-- Lines 2867-2892
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -3665,7 +3584,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 2983-3004
+-- Lines 2894-2915
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3692,7 +3611,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 3006-3042
+-- Lines 2917-2953
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -3736,7 +3655,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 3045-3074
+-- Lines 2956-2985
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -3767,7 +3686,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 3076-3082
+-- Lines 2987-2993
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -3776,7 +3695,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 3084-3099
+-- Lines 2995-3010
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -3796,11 +3715,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 3101-3137
+-- Lines 3012-3048
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 3105-3134
+	-- Lines 3016-3045
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

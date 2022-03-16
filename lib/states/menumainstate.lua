@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-289
+-- Lines 9-298
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -74,25 +74,41 @@ function MenuMainState:at_enter(old_state)
 		managers.menu:check_vr_dlc()
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_decided then
-		-- Lines 109-112
-		local function yes_func()
-			managers.user:set_setting("use_telemetry", true, true)
-			MenuCallbackHandler:save_settings()
+	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_gamesight_decided then
+		local telemetry_state = true
+		local gamesight_state = true
+
+		-- Lines 86-90
+		local function telemetry_toggle_func(state)
+			managers.user:set_setting("use_telemetry", state, true)
+			_G.MenuCallbackHandler:save_settings()
+
+			telemetry_state = state
 		end
 
-		-- Lines 113-116
-		local function no_func()
-			managers.user:set_setting("use_telemetry", false, true)
-			MenuCallbackHandler:save_settings()
+		-- Lines 91-95
+		local function gamesight_toggle_func(state)
+			managers.user:set_setting("use_gamesight", state, true)
+			_G.MenuCallbackHandler:save_settings()
+
+			gamesight_state = state
 		end
 
-		Global.use_telemetry_decided = true
+		-- Lines 96-101
+		local function accept_func()
+			managers.user:set_setting("use_telemetry", telemetry_state, true)
+			managers.user:set_setting("use_gamesight", gamesight_state, true)
+			_G.MenuCallbackHandler:save_settings()
+			Telemetry:send_on_game_launch()
+		end
+
+		Global.use_telemetry_gamesight_decided = true
 
 		managers.savefile:setting_changed()
-		managers.menu:show_accept_telemetry({
-			yes_func = yes_func,
-			no_func = no_func
+		managers.menu:show_accept_gamesight_telemetry({
+			telemetry_func = telemetry_toggle_func,
+			gamesight_func = gamesight_toggle_func,
+			accept_func = accept_func
 		})
 	end
 
@@ -158,7 +174,7 @@ function MenuMainState:at_enter(old_state)
 		elseif (tweak_data.safehouse.level_limit <= managers.experience:current_level() or managers.experience:current_rank() > 0) and not managers.custom_safehouse:has_entered_safehouse() and Global.mission_manager.safehouse_ask_amount < 2 and not Global.skip_menu_dialogs then
 			Global.mission_manager.safehouse_ask_amount = Global.mission_manager.safehouse_ask_amount + 1
 
-			-- Lines 206-214
+			-- Lines 215-223
 			local function yes_func()
 				Global.mission_manager.safehouse_ask_amount = 2
 
@@ -206,7 +222,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 297-310
+-- Lines 306-319
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -219,11 +235,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 312-322
+-- Lines 321-331
 function MenuMainState:update(t, dt)
 end
 
--- Lines 324-329
+-- Lines 333-338
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -232,7 +248,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 331-345
+-- Lines 340-354
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -251,13 +267,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 347-353
+-- Lines 356-362
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 355-358
+-- Lines 364-367
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -265,6 +281,6 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 360-361
+-- Lines 369-370
 function MenuMainState:on_disconnected()
 end

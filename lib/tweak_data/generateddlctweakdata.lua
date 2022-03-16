@@ -1,4 +1,4 @@
--- Lines 3-1061
+-- Lines 3-1087
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -209,11 +209,6 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "player_styles",
 			item_entry = "sparkle",
-			amount = 1
-		},
-		{
-			type_items = "player_styles",
-			item_entry = "waistcoat",
 			amount = 1
 		}
 	}

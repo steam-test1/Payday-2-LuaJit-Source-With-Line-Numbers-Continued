@@ -903,7 +903,22 @@ function CoreEditor:on_expert_mode(data)
 	Global.frame_panel:layout()
 end
 
--- Lines 837-859
+-- Lines 834-844
+function CoreEditor:on_gather_duplicates()
+	local confirm = EWS:message_box(Global.frame_panel, "Gather duplicates and save level?", "Optimization", "YES_NO,CANCEL,ICON_QUESTION", Vector3(-1, -1, 0))
+
+	if confirm == "YES" then
+		self._gather_duplicates = true
+
+		self:on_save()
+
+		self._gather_duplicates = false
+
+		EWS:message_box(Global.frame_panel, "WARNING: It is recommended to close the editor after this optimization has been performed!", "Optimization", "OK", Vector3(-1, -1, 0))
+	end
+end
+
+-- Lines 849-871
 function CoreEditor:on_reload_unit(quick)
 	local names = {}
 
@@ -930,31 +945,31 @@ function CoreEditor:on_reload_unit(quick)
 	end
 end
 
--- Lines 863-866
+-- Lines 875-878
 function CoreEditor:on_profiler_main(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MAIN", not event_object:is_checked())
 	Application:console_command("stats main")
 end
 
--- Lines 868-871
+-- Lines 880-883
 function CoreEditor:on_profiler_mem(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MEM", not event_object:is_checked())
 	Application:console_command("stats mem")
 end
 
--- Lines 873-876
+-- Lines 885-888
 function CoreEditor:on_profiler_d3d(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_D3D", not event_object:is_checked())
 	Application:console_command("stats d3d")
 end
 
--- Lines 878-881
+-- Lines 890-893
 function CoreEditor:on_profiler_unit_profiler(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_UNIT_PROFILER", not event_object:is_checked())
 	Application:console_command("stats unit_profiler")
 end
 
--- Lines 885-895
+-- Lines 897-907
 function CoreEditor:on_add_workview()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new work view:", "Add work view", "", Vector3(-1, -1, 0), true)
 
@@ -969,12 +984,12 @@ function CoreEditor:on_add_workview()
 	end
 end
 
--- Lines 897-899
+-- Lines 909-911
 function CoreEditor:on_show_workview()
 	self:show_dialog("workview_by_name", "SelectWorkView")
 end
 
--- Lines 902-936
+-- Lines 914-948
 function CoreEditor:on_check_duality()
 	local units = {}
 	local collisions = {
@@ -1037,7 +1052,7 @@ function CoreEditor:on_check_duality()
 	self._unit_duality = UnitDuality:new(collisions, pos)
 end
 
--- Lines 938-947
+-- Lines 950-959
 function CoreEditor:on_make_screenshot()
 	local name = Application:date("%Y-%m-%d_%H.%M.%S") .. ".tga"
 
@@ -1045,19 +1060,19 @@ function CoreEditor:on_make_screenshot()
 	self:output("Screenshot created: " .. name .. ".")
 end
 
--- Lines 949-951
+-- Lines 961-963
 function CoreEditor:toggle_draw_occluders(data)
 	self._draw_occluders = data[1]:is_checked(data[2])
 end
 
--- Lines 953-955
+-- Lines 965-967
 function CoreEditor:on_show_unit_breakdown()
 	self:show_dialog("unit_breakdown", "UnitBreakdownView")
 end
 
 local leveltools_ids = Idstring("leveltools")
 
--- Lines 961-986
+-- Lines 973-998
 function CoreEditor:on_hide_helper_units(data)
 	local cache = {}
 
@@ -1090,27 +1105,27 @@ function CoreEditor:on_hide_helper_units(data)
 	cache = nil
 end
 
--- Lines 988-990
+-- Lines 1000-1002
 function CoreEditor:toggle_render_effects(data)
 	World:effect_manager():set_rendering_enabled(data[1]:is_checked(data[2]))
 end
 
--- Lines 994-997
+-- Lines 1006-1009
 function CoreEditor:toggle_show_markers(data)
 	self._marker_panel:set_visible(data[1]:is_checked(data[2]))
 	self._ews_editor_frame:layout()
 end
 
--- Lines 1001-1005
+-- Lines 1013-1017
 function CoreEditor:on_using_the_editor()
 end
 
--- Lines 1007-1009
+-- Lines 1019-1021
 function CoreEditor:on_video_tutorials()
 	os.execute("explorer " .. "\\\\dallas\\Shared\\Starbreeze_Video_Tutorials" .. "\"")
 end
 
--- Lines 1011-1013
+-- Lines 1023-1025
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
 

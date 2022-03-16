@@ -70,3 +70,42 @@ function DebugManager:test_vector(x, y, z)
 	mvec3_add(error_vec, pos)
 	print(error_vec)
 end
+
+-- Lines 77-100
+function DebugManager:test_tel_gs(...)
+	local telemetry_state = true
+	local gamesight_state = true
+
+	-- Lines 80-84
+	local function telemetry_toggle_func(state)
+		managers.user:set_setting("use_telemetry", state, true)
+		_G.MenuCallbackHandler:save_settings()
+
+		telemetry_state = state
+	end
+
+	-- Lines 85-89
+	local function gamesight_toggle_func(state)
+		managers.user:set_setting("use_gamesight", state, true)
+		_G.MenuCallbackHandler:save_settings()
+
+		gamesight_state = state
+	end
+
+	-- Lines 90-95
+	local function accept_func()
+		managers.user:set_setting("use_telemetry", telemetry_state, true)
+		managers.user:set_setting("use_gamesight", gamesight_state, true)
+		_G.MenuCallbackHandler:save_settings()
+		_G.Telemetry:send_on_game_launch()
+	end
+
+	Global.use_telemetry_gamesight_decided = true
+
+	managers.savefile:setting_changed()
+	managers.menu:show_accept_gamesight_telemetry({
+		telemetry_func = telemetry_toggle_func,
+		gamesight_func = gamesight_toggle_func,
+		accept_func = accept_func
+	})
+end
