@@ -2360,10 +2360,12 @@ function WINDLCManager:init()
 	self:_init_promoted_dlc_list()
 end
 
--- Lines 2698-2864
+-- Lines 2698-2870
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"txt1",
 		"pent",
+		"gdtp",
 		"lawp",
 		"snow",
 		"chca",
@@ -2427,12 +2429,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 2866-2868
+-- Lines 2872-2874
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 2871-2894
+-- Lines 2877-2900
 function WINDLCManager:set_entitlements(entitlements)
 	print("WINDLCManager:set_entitlements", inspect(entitlements))
 
@@ -2458,19 +2460,19 @@ function WINDLCManager:set_entitlements(entitlements)
 	end
 end
 
--- Lines 2896-2898
+-- Lines 2902-2904
 function WINDLCManager:has_entitlement(entitlement_id)
 	return table.contains(Global.dlc_manager.entitlements, entitlement_id)
 end
 
--- Lines 2900-2904
+-- Lines 2906-2910
 function WINDLCManager:save(data)
 	WINDLCManager.super.save(self, data)
 
 	data.dlc_entitlements = Global.dlc_manager.entitlements
 end
 
--- Lines 2906-2919
+-- Lines 2912-2925
 function WINDLCManager:load(data)
 	WINDLCManager.super.load(self, data)
 
@@ -2485,7 +2487,7 @@ function WINDLCManager:load(data)
 	end
 end
 
--- Lines 2921-2927
+-- Lines 2927-2933
 function WINDLCManager:init_finalize()
 	WINDLCManager.super.init_finalize(self)
 
@@ -2494,7 +2496,7 @@ function WINDLCManager:init_finalize()
 	end
 end
 
--- Lines 2930-2952
+-- Lines 2936-2958
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if dlc_data.app_id then
@@ -2515,7 +2517,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	end
 end
 
--- Lines 2954-2969
+-- Lines 2960-2975
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2524,7 +2526,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 2972-3012
+-- Lines 2978-3018
 function WINDLCManager:check_pdth(clbk)
 	if not self._check_pdth_request and clbk and Global.dlc_manager.has_pdth ~= nil then
 		clbk(Global.dlc_manager.has_pdth, Global.dlc_manager.pdth_tester)
@@ -2542,7 +2544,7 @@ function WINDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 2988-3007
+		-- Lines 2994-3013
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2577,7 +2579,7 @@ function WINDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 3016-3027
+-- Lines 3022-3033
 function WINDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2595,7 +2597,7 @@ function WINDLCManager:chk_vr_dlc()
 	return nil
 end
 
--- Lines 3030-3037
+-- Lines 3036-3043
 function WINDLCManager:chk_content_updated()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then

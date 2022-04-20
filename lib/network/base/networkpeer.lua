@@ -353,7 +353,7 @@ function NetworkPeer:_verify_content(item_type, item_id)
 		return false
 	end
 
-	if item_data.unlocked or item_data.is_a_unlockable or item_data.is_an_unlockable then
+	if item_data.unlocked or item_data.is_a_unlockable or item_data.is_an_unlockable or item_data.skip_cheat_verification then
 		return true
 	end
 
@@ -2025,7 +2025,7 @@ function NetworkPeer:sync_lobby_data(peer)
 	self:sync_is_vr(peer)
 end
 
--- Lines 2155-2193
+-- Lines 2155-2196
 function NetworkPeer:sync_data(peer)
 	print("[NetworkPeer:sync_data] to", peer:id())
 
@@ -2051,18 +2051,18 @@ function NetworkPeer:sync_data(peer)
 	end
 end
 
--- Lines 2197-2199
+-- Lines 2200-2202
 function NetworkPeer:unit()
 	return self._unit
 end
 
--- Lines 2203-2206
+-- Lines 2206-2209
 function NetworkPeer:make_waiting()
 	managers.wait:add_waiting(self._id)
 	self:send_queued_sync("set_waiting")
 end
 
--- Lines 2210-2330
+-- Lines 2213-2333
 function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	if self._unit then
 		return
@@ -2162,7 +2162,7 @@ function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	return unit
 end
 
--- Lines 2332-2356
+-- Lines 2335-2359
 function NetworkPeer:_get_old_entry()
 	local peer_ident = SystemInfo:platform() == Idstring("WIN32") and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
@@ -2187,12 +2187,12 @@ function NetworkPeer:_get_old_entry()
 	return member_downed, member_dead, health, used_deployable, used_cable_ties, used_body_bags, hostages_killed, respawn_penalty, old_plr_entry
 end
 
--- Lines 2360-2362
+-- Lines 2363-2365
 function NetworkPeer:spawn_unit_called()
 	return self._spawn_unit_called
 end
 
--- Lines 2366-2401
+-- Lines 2369-2404
 function NetworkPeer:set_unit(unit, character_name, team_id, visual_seed)
 	local is_new_unit = unit and (not self._unit or self._unit:key() ~= unit:key())
 	self._unit = unit
@@ -2233,7 +2233,7 @@ function NetworkPeer:set_unit(unit, character_name, team_id, visual_seed)
 	end
 end
 
--- Lines 2405-2437
+-- Lines 2408-2440
 function NetworkPeer:update_character_visual_state(visual_state)
 	if managers.criminals and alive(self._unit) then
 		local is_local_peer = self._id == managers.network:session():local_peer():id()
@@ -2253,7 +2253,7 @@ function NetworkPeer:update_character_visual_state(visual_state)
 	end
 end
 
--- Lines 2439-2455
+-- Lines 2442-2458
 function NetworkPeer:unit_delete()
 	if managers.criminals then
 		managers.criminals:remove_character_by_peer_id(self._id)
@@ -2275,7 +2275,7 @@ function NetworkPeer:unit_delete()
 	self._unit = nil
 end
 
--- Lines 2459-2482
+-- Lines 2462-2485
 function NetworkPeer:_update_equipped_armor()
 	if not alive(self._unit) then
 		return
@@ -2295,17 +2295,17 @@ function NetworkPeer:_update_equipped_armor()
 	end
 end
 
--- Lines 2486-2488
+-- Lines 2489-2491
 function NetworkPeer:set_is_dropin(is_dropin)
 	self._is_dropin = is_dropin
 end
 
--- Lines 2490-2492
+-- Lines 2493-2495
 function NetworkPeer:is_dropin()
 	return self._is_dropin
 end
 
--- Lines 2497-2513
+-- Lines 2500-2516
 function NetworkPeer:register_mod(id, friendly)
 	for _, mod in ipairs(self._mods) do
 		if mod.id == id then
@@ -2321,17 +2321,17 @@ function NetworkPeer:register_mod(id, friendly)
 	})
 end
 
--- Lines 2515-2517
+-- Lines 2518-2520
 function NetworkPeer:is_modded()
 	return #self._mods > 0
 end
 
--- Lines 2519-2521
+-- Lines 2522-2524
 function NetworkPeer:synced_mods()
 	return self._mods
 end
 
--- Lines 2523-2545
+-- Lines 2526-2548
 function NetworkPeer:sync_mods(to_peer)
 	local mods = nil
 	mods = MenuCallbackHandler:build_mods_list()
@@ -2345,7 +2345,7 @@ function NetworkPeer:sync_mods(to_peer)
 	end
 end
 
--- Lines 2549-2561
+-- Lines 2552-2564
 function NetworkPeer:sync_is_vr(to_peer)
 	if _G.IS_VR then
 		if self == managers.network:session():local_peer() then
@@ -2360,12 +2360,12 @@ function NetworkPeer:sync_is_vr(to_peer)
 	end
 end
 
--- Lines 2563-2565
+-- Lines 2566-2568
 function NetworkPeer:set_is_vr()
 	self._is_vr = true
 end
 
--- Lines 2567-2569
+-- Lines 2570-2572
 function NetworkPeer:is_vr()
 	return self._is_vr
 end

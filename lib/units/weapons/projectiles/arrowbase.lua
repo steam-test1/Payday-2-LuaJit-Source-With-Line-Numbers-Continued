@@ -147,7 +147,7 @@ end
 
 local tmp_vel = Vector3()
 
--- Lines 157-197
+-- Lines 163-203
 function ArrowBase:update(unit, t, dt)
 	if self._drop_in_sync_data then
 		self._drop_in_sync_data.f = self._drop_in_sync_data.f - 1
@@ -194,7 +194,7 @@ end
 
 local tmp_vec1 = Vector3()
 
--- Lines 203-228
+-- Lines 209-234
 function ArrowBase:_calculate_autohit_direction()
 	local enemies = managers.enemy:all_enemies()
 	local pos = self._unit:position()
@@ -229,7 +229,7 @@ function ArrowBase:_calculate_autohit_direction()
 	end
 end
 
--- Lines 233-240
+-- Lines 239-246
 function ArrowBase:_switch_to_pickup_delayed(dynamic)
 	self._is_pickup = true
 	self._is_pickup_dynamic = dynamic
@@ -241,14 +241,14 @@ function ArrowBase:_switch_to_pickup_delayed(dynamic)
 	managers.enemy:add_delayed_clbk(self._switch_to_pickup_clbk, callback(self, self, "_switch_to_pickup_delay_cbk", dynamic), TimerManager:game():time() + 1)
 end
 
--- Lines 242-245
+-- Lines 248-251
 function ArrowBase:_switch_to_pickup_delay_cbk(dynamic)
 	self._switch_to_pickup_clbk = nil
 
 	self:_switch_to_pickup(dynamic)
 end
 
--- Lines 247-262
+-- Lines 253-268
 function ArrowBase:_switch_to_pickup(dynamic)
 	print("ArrowBase:_switch_to_pickup dynamic", dynamic)
 
@@ -266,7 +266,7 @@ function ArrowBase:_switch_to_pickup(dynamic)
 	self:_set_body_enabled(dynamic)
 end
 
--- Lines 266-276
+-- Lines 272-282
 function ArrowBase:_check_stop_flyby_sound(skip_impact)
 	if not self._requires_stop_flyby_sound then
 		return
@@ -281,7 +281,7 @@ function ArrowBase:_check_stop_flyby_sound(skip_impact)
 	end
 end
 
--- Lines 280-482
+-- Lines 286-488
 function ArrowBase:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 	local instant_dynamic_pickup = dynamic_pickup_wanted and (is_remote or Network:is_server())
 	self._attached_to_unit = true
@@ -465,7 +465,7 @@ function ArrowBase:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 	end
 end
 
--- Lines 486-531
+-- Lines 492-537
 function ArrowBase:sync_attach_to_unit(instant_dynamic_pickup, parent_unit, parent_body, parent_obj, local_pos, dir, drop_in)
 	if parent_body then
 		parent_obj = parent_body:root_object()
@@ -499,7 +499,7 @@ function ArrowBase:sync_attach_to_unit(instant_dynamic_pickup, parent_unit, pare
 			self._col_ray.velocity = dir
 
 			if not drop_in and not self._damage_class.is_explosive_bullet and col_ray.unit:in_slot(managers.slot:get_mask("bullet_blank_impact_targets")) then
-				self._damage_class:on_collision(col_ray, self:weapon_unit(), self:thrower_unit(), self._damage, true)
+				self._damage_class:on_collision(col_ray, self:weapon_unit() or self._unit, self:thrower_unit(), self._damage, true)
 			end
 		end
 	end
@@ -507,7 +507,7 @@ function ArrowBase:sync_attach_to_unit(instant_dynamic_pickup, parent_unit, pare
 	self:_attach_to_hit_unit(true, instant_dynamic_pickup)
 end
 
--- Lines 535-567
+-- Lines 541-573
 function ArrowBase:_cbk_attached_body_disabled(unit, body)
 	if not self._attached_body_disabled_cbk_data then
 		print("Got callback but didn't have data!")
@@ -528,7 +528,7 @@ function ArrowBase:_cbk_attached_body_disabled(unit, body)
 	end
 end
 
--- Lines 569-576
+-- Lines 575-582
 function ArrowBase:_remove_attached_body_disabled_cbk()
 	if self._attached_body_disabled_cbk_data and alive(self._attached_body_disabled_cbk_data.unit) then
 		self._attached_body_disabled_cbk_data.unit:remove_body_enabled_callback(self._attached_body_disabled_cbk_data.cbk)
@@ -537,7 +537,7 @@ function ArrowBase:_remove_attached_body_disabled_cbk()
 	self._attached_body_disabled_cbk_data = nil
 end
 
--- Lines 580-587
+-- Lines 586-593
 function ArrowBase:_set_body_enabled(enabled)
 	self._unit:body("dynamic_body"):set_enabled(enabled)
 
@@ -548,7 +548,7 @@ function ArrowBase:_set_body_enabled(enabled)
 	end
 end
 
--- Lines 591-595
+-- Lines 597-601
 function ArrowBase:clbk_hit_unit_death()
 	print("ArrowBase:clbk_hit_unit_death()")
 
@@ -557,7 +557,7 @@ function ArrowBase:clbk_hit_unit_death()
 	self:_switch_to_pickup()
 end
 
--- Lines 599-605
+-- Lines 605-611
 function ArrowBase:clbk_hit_unit_destroyed()
 	print("ArrowBase:clbk_hit_unit_destroyed()")
 
@@ -572,7 +572,7 @@ ArrowBase.DEFUALT_SOUNDS = {
 	flyby = "arrow_flyby"
 }
 
--- Lines 608-613
+-- Lines 614-619
 function ArrowBase:_tweak_data_play_sound(entry)
 	local tweak_entry = tweak_data.projectiles[self._tweak_projectile_entry]
 	local event = tweak_entry.sounds and tweak_entry.sounds[entry]
@@ -581,14 +581,14 @@ function ArrowBase:_tweak_data_play_sound(entry)
 	self._unit:sound_source(Idstring("snd")):post_event(event)
 end
 
--- Lines 617-622
+-- Lines 623-628
 function ArrowBase:outside_worlds_bounding_box()
 	if Network:is_server() or self._unit:id() == -1 then
 		self._unit:set_slot(0)
 	end
 end
 
--- Lines 626-660
+-- Lines 632-666
 function ArrowBase:save(data)
 	ArrowBase.super.save(self, data)
 
@@ -626,7 +626,7 @@ function ArrowBase:save(data)
 	data.ArrowBase = state
 end
 
--- Lines 662-687
+-- Lines 668-693
 function ArrowBase:load(data)
 	ArrowBase.super.load(self, data)
 
@@ -640,7 +640,7 @@ function ArrowBase:load(data)
 		print(inspect(state.sync_attach_data))
 
 		if state.sync_attach_data then
-			-- Lines 674-679
+			-- Lines 680-685
 			local function _dropin_attach(parent_unit)
 				local parent_body = parent_unit:body(state.sync_attach_data.parent_body_index)
 				local parent_obj = parent_body:root_object()
@@ -660,7 +660,7 @@ function ArrowBase:load(data)
 	end
 end
 
--- Lines 689-716
+-- Lines 695-722
 function ArrowBase:_delay_sync_attach(peer)
 	if not managers.network:session() then
 		return
@@ -677,7 +677,7 @@ function ArrowBase:_delay_sync_attach(peer)
 	peer:send_queued_sync("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, false, self._sync_attach_data.parent_unit, nil, self._sync_attach_data.parent_obj, self._sync_attach_data.local_pos, self._sync_attach_data.dir, tweak_data.blackmarket:get_index_from_projectile_id(self._tweak_projectile_entry), managers.network:session():local_peer():id())
 end
 
--- Lines 720-726
+-- Lines 726-732
 function ArrowBase:_remove_switch_to_pickup_clbk()
 	if not self._switch_to_pickup_clbk or not managers.enemy then
 		return
@@ -688,12 +688,12 @@ function ArrowBase:_remove_switch_to_pickup_clbk()
 	self._switch_to_pickup_clbk = nil
 end
 
--- Lines 730-732
+-- Lines 736-738
 function ArrowBase:_kill_trail()
 	managers.game_play_central:remove_projectile_trail(self._unit)
 end
 
--- Lines 736-760
+-- Lines 742-766
 function ArrowBase:destroy(unit)
 	self:_check_stop_flyby_sound()
 
@@ -719,7 +719,7 @@ function ArrowBase:destroy(unit)
 	ArrowBase.super.destroy(self, unit)
 end
 
--- Lines 764-786
+-- Lines 770-792
 function ArrowBase.find_nearest_arrow(peer_id, position)
 	local closest_unit, closest_dist_sq = nil
 
@@ -746,7 +746,7 @@ function ArrowBase.find_nearest_arrow(peer_id, position)
 	return closest_unit
 end
 
--- Lines 791-800
+-- Lines 797-806
 function ArrowBase:reload_contour()
 	if self._unit:contour() then
 		if managers.user:get_setting("throwable_contour") then

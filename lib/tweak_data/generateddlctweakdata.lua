@@ -1,4 +1,4 @@
--- Lines 3-1087
+-- Lines 3-1125
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -725,6 +725,18 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_smg_fmg9_conversion",
+			amount = 1
+		}
+	}
+	self.m422_bundle = {
+		free = true,
+		content = {}
+	}
+	self.m422_bundle.content.loot_global_value = "pd2_clan"
+	self.m422_bundle.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "fighterpilot",
 			amount = 1
 		}
 	}
@@ -1829,6 +1841,78 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "masks",
 			item_entry = "daemon",
+			amount = 1
+		}
+	}
+	self.txt1_bundle = {
+		dlc = "has_txt1",
+		content = {}
+	}
+	self.txt1_bundle.content.loot_global_value = "txt1"
+	self.txt1_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "saloonshade",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "saloonstar",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "saloonlightlea",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "saloondarklea",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "hardwork",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "texriding",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "blackstar",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "workranch",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "ranchcap_texas",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "ranchcap_plain",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "ranchcap_emblem",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "bullranch",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "texvest",
 			amount = 1
 		}
 	}

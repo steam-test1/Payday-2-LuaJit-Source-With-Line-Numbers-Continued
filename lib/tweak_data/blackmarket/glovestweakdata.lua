@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-957
+-- Lines 78-967
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -122,7 +122,8 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		},
 		player_style_exclude_list = {
 			"none",
-			"slaughterhouse"
+			"slaughterhouse",
+			"texvest"
 		}
 	}
 	self.suit_default_gloves = {
@@ -158,10 +159,13 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		tux = "heist_default",
 		continental = "continental",
 		desperado = "desperado",
+		bullranch = "heist_default",
 		lowinttech = "heist_default",
+		texvest = "heist_default",
 		boss = "heist_default",
 		peacoat = "saints",
 		baron = "jesterstripe",
+		fighterpilot = "heist_default",
 		thug = "heist_default",
 		badsanta = "heist_default",
 		clown_2 = "heist_default",
@@ -648,5 +652,41 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 1,
 		unit = "units/pd2_dlc_gdtp/characters/glv_dragonscale/glv_dragonscale",
 		third_material = "units/pd2_dlc_gdtp/characters/glv_dragonscale/glv_dragonscale_third"
+	}
+	self.gloves.hardwork = {
+		name_id = "bm_gloves_hardwork",
+		desc_id = "bm_gloves_hardwork_desc",
+		texture_bundle_folder = "txt1",
+		global_value = "txt1",
+		sort_number = 1,
+		unit = "units/pd2_dlc_txt1/characters/glv_hardwork/glv_hardwork",
+		third_material = "units/pd2_dlc_txt1/characters/glv_hardwork/glv_hardwork_third"
+	}
+	self.gloves.texriding = {
+		name_id = "bm_gloves_texriding",
+		desc_id = "bm_gloves_texriding_desc",
+		texture_bundle_folder = "txt1",
+		global_value = "txt1",
+		sort_number = 1,
+		unit = "units/pd2_dlc_txt1/characters/glv_texriding/glv_texriding",
+		third_material = "units/pd2_dlc_txt1/characters/glv_texriding/glv_texriding_third"
+	}
+	self.gloves.blackstar = {
+		name_id = "bm_gloves_blackstar",
+		desc_id = "bm_gloves_blackstar_desc",
+		texture_bundle_folder = "txt1",
+		global_value = "txt1",
+		sort_number = 1,
+		unit = "units/pd2_dlc_txt1/characters/glv_blackstar/glv_blackstar",
+		third_material = "units/pd2_dlc_txt1/characters/glv_blackstar/glv_blackstar_third"
+	}
+	self.gloves.workranch = {
+		name_id = "bm_gloves_workranch",
+		desc_id = "bm_gloves_workranch_desc",
+		texture_bundle_folder = "txt1",
+		global_value = "txt1",
+		sort_number = 1,
+		unit = "units/pd2_dlc_txt1/characters/glv_workranch/glv_workranch",
+		third_material = "units/pd2_dlc_txt1/characters/glv_workranch/glv_workranch_third"
 	}
 end

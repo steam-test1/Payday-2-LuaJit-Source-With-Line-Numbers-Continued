@@ -731,7 +731,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 410-439
+-- Lines 410-456
 function TweakData:_setup_point_of_no_returns()
 	self.point_of_no_returns = {
 		noreturn = {}
@@ -773,7 +773,7 @@ function TweakData:_setup_point_of_no_returns()
 	end
 end
 
--- Lines 441-444
+-- Lines 458-461
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -786,7 +786,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 446-477
+-- Lines 463-494
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -816,7 +816,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 479-520
+-- Lines 496-537
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -880,7 +880,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 522-635
+-- Lines 539-652
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

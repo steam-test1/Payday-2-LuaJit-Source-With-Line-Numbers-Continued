@@ -1,6 +1,6 @@
 PlayerProfileGuiObject = PlayerProfileGuiObject or class()
 
--- Lines 3-393
+-- Lines 3-399
 function PlayerProfileGuiObject:init(ws)
 	local panel = ws:panel():panel()
 	local COLOR_TRANSPARENT = Color(180, 255, 255, 255) / 255
@@ -245,7 +245,7 @@ function PlayerProfileGuiObject:init(ws)
 	player_level_panel:set_center(exp_ring:center())
 
 	if skill_glow then
-		-- Lines 380-386
+		-- Lines 386-392
 		local function animate_new_skillpoints(o)
 			while true do
 				over(1, function (p)
@@ -262,7 +262,7 @@ function PlayerProfileGuiObject:init(ws)
 	self:_rec_round_object(panel)
 end
 
--- Lines 395-404
+-- Lines 401-410
 function PlayerProfileGuiObject:_rec_round_object(object)
 	local x, y, w, h = object:shape()
 
@@ -275,12 +275,12 @@ function PlayerProfileGuiObject:_rec_round_object(object)
 	end
 end
 
--- Lines 406-408
+-- Lines 412-414
 function PlayerProfileGuiObject:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines 410-415
+-- Lines 416-421
 function PlayerProfileGuiObject:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -288,7 +288,7 @@ function PlayerProfileGuiObject:_make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 417-422
+-- Lines 423-428
 function PlayerProfileGuiObject:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)

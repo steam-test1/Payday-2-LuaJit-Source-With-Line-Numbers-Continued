@@ -451,7 +451,7 @@ function InfamyTreeGui:init(ws, fullscreen_ws, node)
 	self.scroll:scroll_to_show_item_at_world(self.scroll:selected_item(), self.scroll:world_center_x())
 end
 
--- Lines 334-457
+-- Lines 334-558
 function InfamyTreeGui:_setup()
 	if alive(self._panel) then
 		self._ws:panel():remove(self._panel)
@@ -763,7 +763,7 @@ function InfamyTreeGui:_setup()
 	end
 end
 
--- Lines 459-494
+-- Lines 560-595
 function InfamyTreeGui:close()
 	if self._panel then
 		self:remove_self()
@@ -785,7 +785,7 @@ function InfamyTreeGui:close()
 	end
 end
 
--- Lines 496-637
+-- Lines 597-738
 function InfamyTreeGui:update_detail_panels()
 	local item = self.scroll:selected_item()
 
@@ -1042,7 +1042,7 @@ function InfamyTreeGui:update_detail_panels()
 	end
 end
 
--- Lines 639-646
+-- Lines 740-747
 function InfamyTreeGui:item_clicked(item)
 	if item.can_unlock and not managers.infamy:owned(item.data.tier_id) then
 		local params = {
@@ -1055,7 +1055,7 @@ function InfamyTreeGui:item_clicked(item)
 	end
 end
 
--- Lines 648-664
+-- Lines 749-765
 function InfamyTreeGui:unlock_infamy_item(item)
 	if item.can_unlock and not managers.infamy:owned(item.data.tier_id) then
 		managers.infamy:unlock_item(item.data.tier_id)
@@ -1074,7 +1074,7 @@ function InfamyTreeGui:unlock_infamy_item(item)
 	end
 end
 
--- Lines 666-697
+-- Lines 767-798
 function InfamyTreeGui:check_infamous_drop_parameter(data)
 	if data.upgrades and data.upgrades.infamous_lootdrop then
 		local stars = managers.experience:level_to_stars()
@@ -1109,7 +1109,7 @@ function InfamyTreeGui:check_infamous_drop_parameter(data)
 	end
 end
 
--- Lines 699-704
+-- Lines 800-805
 function InfamyTreeGui:input_focus()
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -1118,7 +1118,7 @@ function InfamyTreeGui:input_focus()
 	return 2
 end
 
--- Lines 706-747
+-- Lines 807-876
 function InfamyTreeGui:mouse_moved(o, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -1169,7 +1169,7 @@ function InfamyTreeGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 749-779
+-- Lines 878-923
 function InfamyTreeGui:mouse_pressed(button, x, y)
 	self.scroll:mouse_pressed(button, x, y)
 
@@ -1182,7 +1182,11 @@ function InfamyTreeGui:mouse_pressed(button, x, y)
 
 		if self._can_go_infamous and self.infamous_panel:child("go_infamous_button"):inside(x, y) and MenuCallbackHandler:can_become_infamous() and managers.money:get_infamous_cost(managers.experience:current_rank() + 1) <= managers.money:offshore() then
 			self.scroll:set_input_focus(false)
-			MenuCallbackHandler:become_infamous()
+			MenuCallbackHandler:become_infamous({
+				no_clbk = function ()
+					self.scroll:set_input_focus(true)
+				end
+			})
 
 			return
 		end
@@ -1205,22 +1209,22 @@ function InfamyTreeGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 781-783
+-- Lines 925-927
 function InfamyTreeGui:mouse_released(o, button, x, y)
 	self.scroll:mouse_released(button, x, y)
 end
 
--- Lines 785-787
+-- Lines 929-931
 function InfamyTreeGui:move_left()
 	self.scroll:move_up()
 end
 
--- Lines 789-791
+-- Lines 933-935
 function InfamyTreeGui:move_right()
 	self.scroll:move_down()
 end
 
--- Lines 793-798
+-- Lines 937-942
 function InfamyTreeGui:special_btn_pressed(button)
 	if self._can_go_infamous and button == Idstring("menu_go_infamous") then
 		MenuCallbackHandler:become_infamous()
@@ -1229,7 +1233,7 @@ function InfamyTreeGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 800-805
+-- Lines 944-949
 function InfamyTreeGui:confirm_pressed()
 	local selected_item = self.scroll:selected_item()
 
@@ -1238,9 +1242,9 @@ function InfamyTreeGui:confirm_pressed()
 	end
 end
 
--- Lines 807-843
+-- Lines 951-987
 function InfamyTreeGui:add_loading_animation(panel)
-	-- Lines 808-830
+	-- Lines 952-974
 	local function animate_loading_texture(o)
 		o:set_color(Color(0, 0, 1, 1))
 
@@ -1289,7 +1293,7 @@ function InfamyTreeGui:add_loading_animation(panel)
 	bitmap:animate(animate_loading_texture)
 end
 
--- Lines 845-862
+-- Lines 989-1006
 function InfamyTreeGui:_texture_done_clbk(params, texture_ids)
 	if alive(params.panel) then
 		params.panel:clear()
@@ -1317,13 +1321,13 @@ function InfamyTreeGui:_texture_done_clbk(params, texture_ids)
 	until not found
 end
 
--- Lines 1283-1310
+-- Lines 1427-1454
 function InfamyTreeGui:_flash_item(item)
 	local text = item.panel:child("text")
 	local image = item.panel:child("image")
 	local border = item.border
 
-	-- Lines 1288-1303
+	-- Lines 1432-1447
 	local function flash_anim()
 		local color = tweak_data.screen_colors.item_stage_1
 		local lerp_color = nil
@@ -1345,7 +1349,7 @@ function InfamyTreeGui:_flash_item(item)
 	item.panel:animate(flash_anim)
 end
 
--- Lines 1312-1482
+-- Lines 1456-1626
 function InfamyTreeGui:_update_description(name, unlocked)
 	local desc_title = self._description_panel:child("description_title")
 	local desc_text = self._description_panel:child("description_text")
@@ -1586,7 +1590,7 @@ function InfamyTreeGui:_update_description(name, unlocked)
 	end
 end
 
--- Lines 1502-1532
+-- Lines 1646-1676
 function InfamyTreeGui:_unlock_item(index)
 	if not self._tree_items[index] then
 		return
@@ -1619,7 +1623,7 @@ function InfamyTreeGui:_unlock_item(index)
 	end
 end
 
--- Lines 1534-1570
+-- Lines 1678-1714
 function InfamyTreeGui:_select_item(index)
 	if type(index) == "string" then
 		for i, name in ipairs(tweak_data.infamy.tree) do
@@ -1672,7 +1676,7 @@ function InfamyTreeGui:_select_item(index)
 	end
 end
 
--- Lines 1572-1589
+-- Lines 1716-1733
 function InfamyTreeGui:_dialog_confirm_yes(index)
 	local infamy_item = self._tree_items[index]
 	local infamy_name = tweak_data.infamy.tree[index]
@@ -1695,7 +1699,7 @@ function InfamyTreeGui:_dialog_confirm_yes(index)
 	self:reload()
 end
 
--- Lines 1591-1647
+-- Lines 1735-1791
 function InfamyTreeGui:reload()
 	local tree_rows = tweak_data.infamy.tree_rows or 3
 	local tree_cols = tweak_data.infamy.tree_cols or 3
@@ -1751,7 +1755,7 @@ function InfamyTreeGui:reload()
 	end
 end
 
--- Lines 1649-1651
+-- Lines 1793-1795
 function InfamyTreeGui:set_layer(layer)
 	self._panel:set_layer(self._init_layer + layer)
 end

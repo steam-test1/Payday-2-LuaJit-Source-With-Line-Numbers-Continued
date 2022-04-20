@@ -135,7 +135,7 @@ function ExplosionManager:explode_on_client(position, normal, user_unit, dmg, ra
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 546-566
+-- Lines 546-567
 function ExplosionManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -150,6 +150,7 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 			dir = hit_body:center_of_mass()
 			len = mvector3.direction(dir, position, dir)
 			damage = dmg * math.pow(math.clamp(1 - len / range, 0, 1), curve_pow)
+			damage = math.max(damage, math.min(dmg, 1))
 
 			self:_apply_body_damage(false, hit_body, user_unit, dir, damage)
 		end
@@ -158,13 +159,13 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines 569-573
+-- Lines 570-574
 function ExplosionManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table)
 end
 
--- Lines 575-614
+-- Lines 576-615
 function ExplosionManager:player_feedback(position, normal, range, custom_params)
 	local player = managers.player:player_unit()
 
@@ -229,7 +230,7 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 618-682
+-- Lines 619-683
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
 	local effect_id = nil
@@ -308,7 +309,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	end
 end
 
--- Lines 684-717
+-- Lines 685-718
 function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 
@@ -359,7 +360,7 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 	end
 end
 
--- Lines 721-836
+-- Lines 722-837
 function ExplosionManager:_detect_hits(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -406,7 +407,7 @@ function ExplosionManager:_detect_hits(params)
 		end
 	end
 
-	-- Lines 764-766
+	-- Lines 765-767
 	local function is_alive_character(unit)
 		return unit:character_damage() and unit:character_damage().dead and not unit:character_damage():dead()
 	end
@@ -477,7 +478,7 @@ function ExplosionManager:_detect_hits(params)
 	return results
 end
 
--- Lines 838-933
+-- Lines 839-934
 function ExplosionManager:_damage_characters(detect_results, params, variant, damage_func_name)
 	local user_unit = params.user
 	local owner = params.owner
@@ -509,7 +510,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	}
 	local criminal_names = CriminalsManager.character_names()
 
-	-- Lines 861-867
+	-- Lines 862-868
 	local function get_first_body_hit(bodies_hit)
 		for _, hit_body in ipairs(bodies_hit or {}) do
 			if alive(hit_body) then
@@ -591,7 +592,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	return results
 end
 
--- Lines 935-957
+-- Lines 936-956
 function ExplosionManager:_damage_bodies(detect_results, params)
 	local user_unit = params.user
 	local hit_pos = params.hit_pos
@@ -607,10 +608,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 				local dir = hit_body:center_of_mass()
 				local len = mvector3.direction(dir, hit_pos, dir)
 				local prop_damage = damage * math.pow(math.clamp(1 - len / range, 0, 1), curve_pow)
-
-				if 1 - len / range < -5 then
-					prop_damage = math.max(prop_damage, 1)
-				end
+				prop_damage = math.max(prop_damage, math.min(damage, 1))
 
 				self:_apply_body_damage(true, hit_body, user_unit, dir, prop_damage)
 			end
@@ -618,7 +616,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 	end
 end
 
--- Lines 959-992
+-- Lines 958-991
 function ExplosionManager:detect_and_tase(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -657,7 +655,7 @@ function ExplosionManager:detect_and_tase(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 995-1027
+-- Lines 994-1026
 function ExplosionManager:detect_and_stun(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -695,7 +693,7 @@ function ExplosionManager:detect_and_stun(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1030-1081
+-- Lines 1029-1080
 function ExplosionManager:detect_and_give_dmg(params)
 	local user_unit = params.user
 	local owner = params.owner
