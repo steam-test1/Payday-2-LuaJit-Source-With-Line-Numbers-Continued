@@ -1,7 +1,8 @@
 BlinkExt = BlinkExt or class()
 
--- Lines 3-21
+-- Lines 3-30
 function BlinkExt:init(unit)
+	self._unit = unit
 	self._object_list = {}
 
 	if self._objects then
@@ -19,11 +20,17 @@ function BlinkExt:init(unit)
 	end
 
 	if self._state then
+		self._upd_state = true
+
 		self:set_state(self._state, self._delay or 1)
+	else
+		self._upd_state = false
+
+		unit:set_extension_update_enabled(Idstring("blink"), false)
 	end
 end
 
--- Lines 23-58
+-- Lines 32-67
 function BlinkExt:update(unit, t, dt)
 	if self._delay_current and self._delay_current < t then
 		if self._state == "cycle" then
@@ -72,7 +79,7 @@ function BlinkExt:update(unit, t, dt)
 	end
 end
 
--- Lines 60-133
+-- Lines 69-150
 function BlinkExt:set_state(state, delay)
 	self._state = state
 	self._delay = delay
@@ -170,9 +177,17 @@ function BlinkExt:set_state(state, delay)
 
 		self._delay_current = nil
 	end
+
+	local upd_state = self._delay_current and true or false
+
+	if upd_state ~= self._upd_state then
+		self._upd_state = upd_state
+
+		self._unit:set_extension_update_enabled(Idstring("blink"), upd_state)
+	end
 end
 
--- Lines 135-139
+-- Lines 152-156
 function BlinkExt:save(data)
 	data.BlinkExt = {
 		state = self._state,
@@ -180,9 +195,8 @@ function BlinkExt:save(data)
 	}
 end
 
--- Lines 141-147
+-- Lines 158-162
 function BlinkExt:load(data)
-	local state = data.BlinkExt
 	self._state = data.BlinkExt.state
 	self._delay = data.BlinkExt.delay
 

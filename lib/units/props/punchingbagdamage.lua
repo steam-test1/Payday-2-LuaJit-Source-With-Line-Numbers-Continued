@@ -2,6 +2,7 @@ PunchingBagDamage = PunchingBagDamage or class()
 
 -- Lines 4-6
 function PunchingBagDamage:init(unit)
+	unit:set_extension_update_enabled(Idstring("damage"), false)
 end
 
 -- Lines 8-9

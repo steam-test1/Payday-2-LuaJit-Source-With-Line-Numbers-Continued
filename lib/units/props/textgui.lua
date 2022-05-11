@@ -348,8 +348,12 @@ function TextGui:_sequence_trigger(sequence_name)
 	end
 end
 
--- Lines 278-285
+-- Lines 278-288
 function TextGui:set_visible(visible)
+	local upd_state = visible and true or false
+
+	self._unit:set_extension_update_enabled(Idstring("text_gui"), upd_state)
+
 	self._visible = visible
 
 	if visible then
@@ -359,13 +363,13 @@ function TextGui:set_visible(visible)
 	end
 end
 
--- Lines 287-290
+-- Lines 290-293
 function TextGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 292-310
+-- Lines 295-313
 function TextGui:sync_gui_net_event(event_id, value)
 	if event_id == TextGui.GUI_EVENT_IDS.syncronize then
 		self:timer_set(value)
@@ -384,7 +388,7 @@ function TextGui:sync_gui_net_event(event_id, value)
 	end
 end
 
--- Lines 312-318
+-- Lines 315-321
 function TextGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -394,7 +398,7 @@ function TextGui:destroy()
 	end
 end
 
--- Lines 320-328
+-- Lines 323-331
 function TextGui:save(data)
 	local state = {
 		COLOR_TYPE = self.COLOR_TYPE,
@@ -404,7 +408,7 @@ function TextGui:save(data)
 	data.TextGui = state
 end
 
--- Lines 330-339
+-- Lines 333-342
 function TextGui:load(data)
 	local state = data.TextGui
 

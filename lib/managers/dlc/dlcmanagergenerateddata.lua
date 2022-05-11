@@ -233,6 +233,11 @@ function GenericDLCManager:has_pgo()
 	return self:is_dlc_unlocked("pgo")
 end
 
+-- Lines 284-286
+function GenericDLCManager:has_pxp1()
+	return self:is_dlc_unlocked("pxp1")
+end
+
 -- Lines 299-301
 function GenericDLCManager:has_saco()
 	return self:is_dlc_unlocked("saco")
@@ -398,7 +403,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 479-978
+-- Lines 484-988
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",
@@ -600,6 +605,10 @@ function WINDLCManager:init_generated()
 		app_id = "1449440",
 		no_install = true,
 		webpage = "https://ovk.af/FEXTP3YB"
+	}
+	Global.dlc_manager.all_dlc_data.pxp1 = {
+		app_id = "1945682",
+		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.saco = {
 		app_id = "1619070",

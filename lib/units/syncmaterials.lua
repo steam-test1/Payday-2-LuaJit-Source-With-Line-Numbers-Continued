@@ -1,11 +1,13 @@
 SyncMaterials = SyncMaterials or class()
 
--- Lines 5-7
+-- Lines 5-9
 function SyncMaterials:init(unit)
 	self._unit = unit
+
+	unit:set_extension_update_enabled(Idstring("sync_materials"), false)
 end
 
--- Lines 9-36
+-- Lines 11-38
 function SyncMaterials:save(data)
 	data.materials = {}
 
@@ -37,7 +39,7 @@ function SyncMaterials:save(data)
 	end
 end
 
--- Lines 38-58
+-- Lines 40-60
 function SyncMaterials:load(data)
 	for name, serialized in pairs(data.materials) do
 		local material = self._unit:material(Idstring(name))

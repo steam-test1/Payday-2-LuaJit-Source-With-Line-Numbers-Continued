@@ -8,10 +8,6 @@ function ManageSpawnedUnits:init(unit)
 	unit:set_extension_update_enabled(Idstring("spawn_manager"), false)
 end
 
--- Lines 10-24
-function ManageSpawnedUnits:update(unit, t, dt)
-end
-
 -- Lines 39-82
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))

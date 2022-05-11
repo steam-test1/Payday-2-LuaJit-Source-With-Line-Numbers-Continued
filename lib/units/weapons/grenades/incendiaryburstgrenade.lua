@@ -6,8 +6,13 @@ function IncendiaryBurstGrenade:_setup_from_tweak_data()
 	self._fire_dot_data = tweak_entry.fire_dot_data
 end
 
--- Lines 15-47
+-- Lines 15-53
 function IncendiaryBurstGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local normal = math.UP
 	local range = self._range
@@ -40,8 +45,13 @@ function IncendiaryBurstGrenade:_detonate(tag, unit, body, other_unit, other_bod
 	self._unit:set_visible(false)
 end
 
--- Lines 51-56
+-- Lines 57-68
 function IncendiaryBurstGrenade:_detonate_on_client()
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local range = self._range
 
@@ -49,7 +59,7 @@ function IncendiaryBurstGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines 59-65
+-- Lines 71-77
 function IncendiaryBurstGrenade:update(unit, t, dt)
 	FragGrenade.update(self, unit, t, dt)
 

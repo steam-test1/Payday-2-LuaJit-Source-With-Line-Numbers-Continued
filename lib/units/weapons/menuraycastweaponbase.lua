@@ -19,9 +19,11 @@ function NewRaycastWeaponBase:_chk_has_charms(parts)
 		print("[MenuRaycastWeaponBase:_chk_has_charms] wiping existing charm data")
 		Application:stack_dump()
 		managers.charm:remove_weapon(self._unit)
+		managers.belt:remove_weapon(self._unit)
 	end
 
 	managers.charm:add_weapon(self._unit, parts, nil, true, self._custom_units)
+	managers.belt:add_weapon(self._unit, parts, nil, true, self._custom_units)
 end
 
 -- Lines 35-37
@@ -62,6 +64,7 @@ function NewRaycastWeaponBase:_chk_charm_upd_state()
 		if not next(data) then
 			print("[MenuRaycastWeaponBase:_chk_charm_upd_state] All charm units are dead, wiping charm data. Possibly due to part swapping")
 			managers.charm:remove_weapon(self._unit)
+			managers.belt:remove_weapon(self._unit)
 
 			return
 		end
@@ -72,11 +75,40 @@ function NewRaycastWeaponBase:_chk_charm_upd_state()
 			self._charm_upd_state = true
 
 			managers.charm:enable_charm_upd(self._unit)
+			managers.belt:enable_charm_upd(self._unit)
 		end
 	elseif self._charm_upd_state then
 		self._charm_upd_state = false
 
 		managers.charm:disable_charm_upd(self._unit)
+		managers.belt:disable_charm_upd(self._unit)
+	end
+end
+
+-- Lines 136-159
+function NewRaycastWeaponBase:_chk_has_bullet_belt()
+	local bullet_object_parts = {
+		"magazine",
+		"ammo",
+		"underbarrel",
+		"magazine_extra"
+	}
+
+	for _, type in ipairs(bullet_object_parts) do
+		local type_part = managers.weapon_factory:get_part_from_weapon_by_type(type, self._parts)
+
+		if type_part then
+			local bullet_belt = managers.weapon_factory:get_part_data_type_from_weapon_by_type(type, "bullet_belt", self._parts)
+
+			if bullet_belt then
+				local parent_id = managers.weapon_factory:get_part_id_from_weapon_by_type(type, self._blueprint)
+				self._custom_units = self._custom_units or {}
+				self._custom_units.bullet_belt = {
+					parent = parent_id,
+					parts = bullet_belt
+				}
+			end
+		end
 	end
 end
 
@@ -200,6 +232,7 @@ function NewRaycastWeaponBase:_assemble_completed(clbk, parts, blueprint)
 	self:_update_fire_object()
 	self:_update_stats_values()
 	self:set_scope_enabled(true)
+	self:_chk_has_bullet_belt()
 	self:_chk_has_charms(parts)
 end
 
@@ -615,6 +648,7 @@ function NewRaycastWeaponBase:destroy(unit)
 
 	if self._charm_data then
 		managers.charm:remove_weapon(unit)
+		managers.belt:remove_weapon(unit)
 	end
 
 	managers.weapon_factory:disassemble(self._parts)

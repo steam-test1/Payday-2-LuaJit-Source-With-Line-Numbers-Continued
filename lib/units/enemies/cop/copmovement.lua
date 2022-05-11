@@ -3192,7 +3192,7 @@ function CopMovement:anim_clbk_show_magazine_in_hand(unit, name)
 	end
 end
 
--- Lines 3248-3344
+-- Lines 3248-3349
 function CopMovement:anim_clbk_spawn_dropped_magazine()
 	if not self:allow_dropped_magazines() then
 		return
@@ -3214,10 +3214,14 @@ function CopMovement:anim_clbk_spawn_dropped_magazine()
 			return
 		end
 
+		self:anim_clbk_show_magazine_in_hand()
+
+		if not self._magazine_data or not alive(self._magazine_data.unit) then
+			return
+		end
+
 		local attach_bone = Idstring("LeftHandMiddle2")
 		local bone_hand = self._unit:get_object(attach_bone)
-
-		self:anim_clbk_show_magazine_in_hand()
 
 		if bone_hand then
 			mvec3_set(temp_vec1, self._magazine_data.unit:position())
@@ -3280,7 +3284,7 @@ function CopMovement:anim_clbk_spawn_dropped_magazine()
 	end
 end
 
--- Lines 3346-3378
+-- Lines 3351-3383
 function CopMovement:anim_clbk_show_new_magazine_in_hand(unit, name)
 	if not self:allow_dropped_magazines() then
 		return
@@ -3309,7 +3313,7 @@ function CopMovement:anim_clbk_show_new_magazine_in_hand(unit, name)
 	end
 end
 
--- Lines 3380-3410
+-- Lines 3385-3415
 function CopMovement:anim_clbk_hide_magazine_in_hand()
 	if not self:allow_dropped_magazines() then
 		return
@@ -3336,7 +3340,7 @@ function CopMovement:anim_clbk_hide_magazine_in_hand()
 	self:destroy_magazine_in_hand()
 end
 
--- Lines 3412-3419
+-- Lines 3417-3424
 function CopMovement:destroy_magazine_in_hand()
 	if self._magazine_data then
 		if alive(self._magazine_data.unit) then
@@ -3347,7 +3351,7 @@ function CopMovement:destroy_magazine_in_hand()
 	end
 end
 
--- Lines 3421-3430
+-- Lines 3426-3435
 function CopMovement:_play_weapon_reload_animation_sfx(unit, event)
 	if self:allow_dropped_magazines() then
 		local equipped_weapon = self._unit:inventory():equipped_unit()
@@ -3361,6 +3365,6 @@ function CopMovement:_play_weapon_reload_animation_sfx(unit, event)
 	end
 end
 
--- Lines 3433-3434
+-- Lines 3438-3439
 function CopMovement:on_weapon_add()
 end

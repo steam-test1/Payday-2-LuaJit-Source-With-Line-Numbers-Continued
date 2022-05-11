@@ -42,8 +42,13 @@ function ElectricGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 64-92
+-- Lines 64-99
 function ElectricGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local normal = math.UP
 	local range = self._range
@@ -71,7 +76,7 @@ function ElectricGrenade:_detonate(tag, unit, body, other_unit, other_body, posi
 	self._unit:set_slot(0)
 end
 
--- Lines 94-109
+-- Lines 101-116
 function ElectricGrenade:_can_tase_unit(unit)
 	local unit_name = nil
 
@@ -90,8 +95,13 @@ function ElectricGrenade:_can_tase_unit(unit)
 	end
 end
 
--- Lines 113-118
+-- Lines 120-131
 function ElectricGrenade:_detonate_on_client()
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local range = self._range
 
@@ -99,7 +109,7 @@ function ElectricGrenade:_detonate_on_client()
 	self:_tase_player()
 end
 
--- Lines 120-133
+-- Lines 133-146
 function ElectricGrenade:_tase_player()
 	local player = managers.player:player_unit()
 
@@ -114,7 +124,7 @@ function ElectricGrenade:_tase_player()
 	end
 end
 
--- Lines 137-144
+-- Lines 150-157
 function ElectricGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

@@ -1,7 +1,13 @@
 ScriptUnitData = ScriptUnitData or class()
+
+-- Lines 3-5
+function ScriptUnitData:init(unit)
+	unit:set_extension_update_enabled(Idstring("unit_data"), false)
+end
+
 UnitBase = UnitBase or class()
 
--- Lines 4-9
+-- Lines 8-13
 function UnitBase:init(unit, update_enabled)
 	self._unit = unit
 
@@ -10,11 +16,11 @@ function UnitBase:init(unit, update_enabled)
 	end
 end
 
--- Lines 11-12
+-- Lines 15-16
 function UnitBase:destroy(unit)
 end
 
--- Lines 15-17
+-- Lines 19-21
 function UnitBase:pre_destroy(unit)
 	self._destroying = true
 end

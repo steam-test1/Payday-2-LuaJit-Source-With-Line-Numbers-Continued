@@ -1,11 +1,13 @@
 MaterialControl = MaterialControl or class()
 
--- Lines 3-5
+-- Lines 3-7
 function MaterialControl:init(unit)
 	self._unit = unit
+
+	unit:set_extension_update_enabled(Idstring("material_control"), false)
 end
 
--- Lines 8-20
+-- Lines 10-22
 function MaterialControl:save(save_data)
 	local data = {}
 	local materials = self._unit:get_objects_by_type(Idstring("material"))
@@ -22,7 +24,7 @@ function MaterialControl:save(save_data)
 	save_data.material_control = data
 end
 
--- Lines 23-41
+-- Lines 25-43
 function MaterialControl:load(load_data)
 	local data = load_data.material_control
 
@@ -47,7 +49,7 @@ function MaterialControl:load(load_data)
 	end
 end
 
--- Lines 44-54
+-- Lines 46-56
 function MaterialControl:play(material_name, speed)
 	local materials = self._unit:get_objects_by_type(Idstring("material"))
 	local material_id = Idstring(material_name)
@@ -60,7 +62,7 @@ function MaterialControl:play(material_name, speed)
 	end
 end
 
--- Lines 57-67
+-- Lines 59-69
 function MaterialControl:stop(material_name)
 	local materials = self._unit:get_objects_by_type(Idstring("material"))
 	local material_id = Idstring(material_name)
@@ -73,7 +75,7 @@ function MaterialControl:stop(material_name)
 	end
 end
 
--- Lines 70-80
+-- Lines 72-82
 function MaterialControl:pause(material_name)
 	local materials = self._unit:get_objects_by_type(Idstring("material"))
 	local material_id = Idstring(material_name)
@@ -86,7 +88,7 @@ function MaterialControl:pause(material_name)
 	end
 end
 
--- Lines 83-93
+-- Lines 85-95
 function MaterialControl:set_time(material_name, time)
 	local materials = self._unit:get_objects_by_type(Idstring("material"))
 	local material_id = Idstring(material_name)

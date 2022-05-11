@@ -57,8 +57,13 @@ function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 84-109
+-- Lines 84-116
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local normal = math.UP
 	local range = self._range
@@ -84,8 +89,13 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	self._unit:set_slot(0)
 end
 
--- Lines 113-118
+-- Lines 120-131
 function FragGrenade:_detonate_on_client()
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local range = self._range
 
@@ -93,7 +103,7 @@ function FragGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines 122-129
+-- Lines 135-142
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

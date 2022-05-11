@@ -1,4 +1,4 @@
--- Lines 1-408
+-- Lines 1-416
 function TweakData:_init_pd2()
 	print("TweakData:_init_pd2()")
 
@@ -716,6 +716,15 @@ function TweakData:_init_pd2()
 			32
 		}
 	}
+	self.hud_icons.poison_gas_grenade = {
+		texture = "guis/dlcs/pxp1/textures/pd2/hud_poison_gas_grenade",
+		texture_rect = {
+			64,
+			0,
+			128,
+			128
+		}
+	}
 	self.hud_icons.none_icon = {
 		texture = "guis/textures/pd2/equipment_02",
 		texture_rect = {
@@ -731,7 +740,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 410-456
+-- Lines 418-464
 function TweakData:_setup_point_of_no_returns()
 	self.point_of_no_returns = {
 		noreturn = {}
@@ -773,7 +782,7 @@ function TweakData:_setup_point_of_no_returns()
 	end
 end
 
--- Lines 458-461
+-- Lines 466-469
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -786,7 +795,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 463-494
+-- Lines 471-502
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -816,7 +825,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 496-537
+-- Lines 504-549
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -862,6 +871,10 @@ function TweakData:_setup_scene_pose_items()
 			nil,
 			"secondary"
 		},
+		husk_rifle4 = {
+			nil,
+			"secondary"
+		},
 		cvc_var1 = {},
 		cvc_var2 = {},
 		cvc_var3 = {},
@@ -880,7 +893,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 539-652
+-- Lines 551-669
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -1012,6 +1025,14 @@ function TweakData:_setup_scene_poses()
 		},
 		ultima = {
 			"husk_generic1",
+			required_pose = true
+		},
+		scout = {
+			"husk_rifle4",
+			required_pose = true
+		},
+		hk51b = {
+			"husk_rifle3",
 			required_pose = true
 		}
 	}

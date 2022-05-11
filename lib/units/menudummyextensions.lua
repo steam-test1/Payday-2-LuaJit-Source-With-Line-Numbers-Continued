@@ -1,131 +1,145 @@
 IngameUIExt = IngameUIExt or class()
 
--- Lines 4-5
+-- Lines 4-6
 function IngameUIExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("ingame_ui"), false)
 end
 
--- Lines 6-7
+-- Lines 7-8
 function IngameUIExt:set_active(unit)
 end
 
 AIAttentionObject = AIAttentionObject or class()
 
--- Lines 10-11
+-- Lines 11-13
 function AIAttentionObject:init(unit)
+	unit:set_extension_update_enabled(Idstring("attention"), false)
 end
 
--- Lines 12-13
+-- Lines 14-15
 function AIAttentionObject:set_active()
 end
 
 UseInteractionExt = UseInteractionExt or class()
 
--- Lines 16-17
+-- Lines 18-20
 function UseInteractionExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("interaction"), false)
 end
 
--- Lines 18-19
+-- Lines 21-22
 function UseInteractionExt:set_active()
 end
 
 SecurityCamera = SecurityCamera or class()
 
--- Lines 22-23
+-- Lines 25-27
 function SecurityCamera:init(unit)
+	unit:set_extension_update_enabled(Idstring("base"), false)
 end
 
 SecurityCameraInteractionExt = SecurityCameraInteractionExt or class()
 
--- Lines 26-27
+-- Lines 30-32
 function SecurityCameraInteractionExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("interaction"), false)
 end
 
--- Lines 29-30
+-- Lines 34-35
 function SecurityCameraInteractionExt:set_active()
 end
 
 ContourExt = ContourExt or class()
 
--- Lines 33-34
+-- Lines 38-40
 function ContourExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("contour"), false)
 end
 
--- Lines 35-36
+-- Lines 41-42
 function ContourExt:set_active()
 end
 
--- Lines 37-38
+-- Lines 43-44
 function ContourExt:update_materials()
 end
 
 SyncUnitData = SyncUnitData or class()
 
--- Lines 41-42
+-- Lines 47-49
 function SyncUnitData:init(unit)
+	unit:set_extension_update_enabled(Idstring("sync_unit_data"), false)
 end
 
--- Lines 43-44
+-- Lines 50-51
 function SyncUnitData:set_active()
 end
 
 AccessWeaponMenuInteractionExt = AccessWeaponMenuInteractionExt or class()
 
--- Lines 47-48
+-- Lines 54-56
 function AccessWeaponMenuInteractionExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("interaction"), false)
 end
 
--- Lines 50-51
+-- Lines 58-59
 function AccessWeaponMenuInteractionExt:set_active()
 end
 
 NetworkBaseExtension = NetworkBaseExtension or class()
 
--- Lines 54-55
+-- Lines 62-64
 function NetworkBaseExtension:init(unit)
+	unit:set_extension_update_enabled(Idstring("network"), false)
 end
 
--- Lines 56-57
+-- Lines 65-66
 function NetworkBaseExtension:set_active()
 end
 
 DrivingInteractionExt = DrivingInteractionExt or class()
 
--- Lines 60-61
+-- Lines 69-71
 function DrivingInteractionExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("interaction"), false)
 end
 
--- Lines 62-63
+-- Lines 72-73
 function DrivingInteractionExt:set_active()
 end
 
 VehicleDamage = VehicleDamage or class()
 
--- Lines 66-67
+-- Lines 76-78
 function VehicleDamage:init(unit)
+	unit:set_extension_update_enabled(Idstring("damage"), false)
 end
 
--- Lines 68-69
+-- Lines 79-80
 function VehicleDamage:set_active()
 end
 
 CarryData = CarryData or class()
 
--- Lines 72-73
+-- Lines 83-85
 function CarryData:init(unit)
+	unit:set_extension_update_enabled(Idstring("carry_data"), false)
 end
 
--- Lines 74-75
+-- Lines 86-87
 function CarryData:set_active()
 end
 
 VehicleDrivingExt = VehicleDrivingExt or class()
 
--- Lines 78-79
+-- Lines 90-92
 function VehicleDrivingExt:init(unit)
+	unit:set_extension_update_enabled(Idstring("vehicle_driving"), false)
 end
 
 VehicleCamera = VehicleCamera or class()
 
--- Lines 82-83
+-- Lines 95-97
 function VehicleCamera:init(unit)
+	unit:set_extension_update_enabled(Idstring("camera"), false)
 end

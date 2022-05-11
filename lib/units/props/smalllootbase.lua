@@ -49,5 +49,6 @@ function SmallLootBase:_set_empty()
 end
 
 -- Lines 56-58
-function SmallLootBase:destroy()
+function SmallLootBase:destroy(...)
+	SmallLootBase.super.destroy(self, ...)
 end

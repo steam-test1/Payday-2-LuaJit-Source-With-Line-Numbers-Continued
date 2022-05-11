@@ -4,13 +4,15 @@ MaskExt = MaskExt or class()
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
--- Lines 7-11
+-- Lines 7-13
 function MaskExt:init(unit)
 	self._unit = unit
 	self._textures = {}
+
+	unit:set_extension_update_enabled(Idstring("base"), false)
 end
 
--- Lines 13-101
+-- Lines 15-103
 function MaskExt:apply_blueprint(blueprint, async_clbk)
 	print("[MaskExt:apply_blueprint]", self._unit, inspect(blueprint), async_clbk)
 	Application:stack_dump()
@@ -105,7 +107,7 @@ function MaskExt:apply_blueprint(blueprint, async_clbk)
 	end
 end
 
--- Lines 103-120
+-- Lines 105-122
 function MaskExt:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -126,7 +128,7 @@ function MaskExt:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 122-137
+-- Lines 124-139
 function MaskExt:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -143,7 +145,7 @@ function MaskExt:_chk_load_complete(async_clbk)
 	async_clbk()
 end
 
--- Lines 139-146
+-- Lines 141-148
 function MaskExt:destroy(unit)
 	for tex_id, texture_data in pairs(self._textures) do
 		if not texture_data.ready then

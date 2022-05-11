@@ -1522,6 +1522,25 @@ function FPCameraPlayerBase:play_melee_sound(unit, sound_id)
 	end
 end
 
+FPCameraPlayerBase.anim_sound_condition_functions = {
+	has_part = function (self, part_id)
+		local weapon = self._parent_unit:inventory():equipped_unit()
+
+		return alive(weapon) and weapon:base() and weapon:base().has_part and weapon:base():has_part(part_id)
+	end
+}
+
+-- Lines 1772-1779
+function FPCameraPlayerBase:play_sound_with_condition(unit, event, condition, condition_param)
+	if alive(self._parent_unit) then
+		local cond_func = self.anim_sound_condition_functions[condition]
+
+		if cond_func and cond_func(self, condition_param) then
+			self._parent_unit:sound():play(event)
+		end
+	end
+end
+
 -- Lines 1784-1793
 function FPCameraPlayerBase:set_limits(spin, pitch)
 	self._limits = {}

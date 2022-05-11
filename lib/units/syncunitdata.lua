@@ -1,11 +1,13 @@
 SyncUnitData = SyncUnitData or class()
 
--- Lines 3-5
+-- Lines 3-7
 function SyncUnitData:init(unit)
 	self._unit = unit
+
+	unit:set_extension_update_enabled(Idstring("sync_unit_data"), false)
 end
 
--- Lines 7-29
+-- Lines 9-31
 function SyncUnitData:save(data)
 	local state = {
 		lights = {}
@@ -33,7 +35,7 @@ function SyncUnitData:save(data)
 	data.SyncUnitData = state
 end
 
--- Lines 31-36
+-- Lines 33-38
 function SyncUnitData:load(data)
 	local state = data.SyncUnitData
 	self._unit:unit_data().unit_id = self._unit:editor_id()

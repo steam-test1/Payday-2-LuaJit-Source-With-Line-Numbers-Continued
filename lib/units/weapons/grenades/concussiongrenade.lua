@@ -40,8 +40,13 @@ function ConcussionGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 60-84
+-- Lines 60-91
 function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local normal = math.UP
 	local range = self._range
@@ -68,7 +73,7 @@ function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, po
 	self._unit:set_slot(0)
 end
 
--- Lines 86-105
+-- Lines 93-112
 function ConcussionGrenade:_can_stun_unit(unit)
 	local can_stun = false
 	local unit_name = nil
@@ -88,8 +93,13 @@ function ConcussionGrenade:_can_stun_unit(unit)
 	end
 end
 
--- Lines 109-114
+-- Lines 116-127
 function ConcussionGrenade:_detonate_on_client()
+	if self._detonated then
+		return
+	end
+
+	self._detonated = true
 	local pos = self._unit:position()
 	local range = self._range
 
@@ -97,7 +107,7 @@ function ConcussionGrenade:_detonate_on_client()
 	self:_flash_player()
 end
 
--- Lines 116-125
+-- Lines 129-138
 function ConcussionGrenade:_flash_player()
 	local detonate_pos = self._unit:position() + math.UP * 100
 	local range = self._PLAYER_FLASH_RANGE
@@ -112,7 +122,7 @@ function ConcussionGrenade:_flash_player()
 	end
 end
 
--- Lines 129-136
+-- Lines 142-149
 function ConcussionGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

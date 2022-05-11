@@ -98,5 +98,6 @@ function SafehouseMoneyStack:update()
 end
 
 -- Lines 99-101
-function SafehouseMoneyStack:destroy()
+function SafehouseMoneyStack:destroy(...)
+	SafehouseMoneyStack.super.destroy(self, ...)
 end

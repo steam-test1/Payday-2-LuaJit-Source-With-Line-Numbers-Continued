@@ -1,6 +1,6 @@
 PlayerProfileGuiObject = PlayerProfileGuiObject or class()
 
--- Lines 3-399
+-- Lines 3-414
 function PlayerProfileGuiObject:init(ws)
 	local panel = ws:panel():panel()
 	local COLOR_TRANSPARENT = Color(180, 255, 255, 255) / 255
@@ -10,7 +10,7 @@ function PlayerProfileGuiObject:init(ws)
 	local font = tweak_data.menu.pd2_small_font
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local bg_ring = panel:bitmap({
-		texture = "guis/textures/pd2/level_ring_small",
+		texture = "guis/textures/pd2/endscreen/exp_ring",
 		y = 25,
 		alpha = 0.4,
 		x = 10,
@@ -19,7 +19,7 @@ function PlayerProfileGuiObject:init(ws)
 		color = Color.black
 	})
 	local exp_ring = panel:bitmap({
-		texture = "guis/textures/pd2/level_ring_small",
+		texture = "guis/textures/pd2/endscreen/exp_ring",
 		render_template = "VertexColorTexturedRadial",
 		blend_mode = "add",
 		y = 25,
@@ -245,7 +245,7 @@ function PlayerProfileGuiObject:init(ws)
 	player_level_panel:set_center(exp_ring:center())
 
 	if skill_glow then
-		-- Lines 386-392
+		-- Lines 401-407
 		local function animate_new_skillpoints(o)
 			while true do
 				over(1, function (p)
@@ -262,7 +262,7 @@ function PlayerProfileGuiObject:init(ws)
 	self:_rec_round_object(panel)
 end
 
--- Lines 401-410
+-- Lines 416-425
 function PlayerProfileGuiObject:_rec_round_object(object)
 	local x, y, w, h = object:shape()
 
@@ -275,12 +275,12 @@ function PlayerProfileGuiObject:_rec_round_object(object)
 	end
 end
 
--- Lines 412-414
+-- Lines 427-429
 function PlayerProfileGuiObject:get_text(text, macros)
 	return utf8.to_upper(managers.localization:text(text, macros))
 end
 
--- Lines 416-421
+-- Lines 431-436
 function PlayerProfileGuiObject:_make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -288,7 +288,7 @@ function PlayerProfileGuiObject:_make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 423-428
+-- Lines 438-443
 function PlayerProfileGuiObject:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)

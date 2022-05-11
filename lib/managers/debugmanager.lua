@@ -109,3 +109,8 @@ function DebugManager:test_tel_gs(...)
 		accept_func = accept_func
 	})
 end
+
+-- Lines 103-105
+function DebugManager:look_at_object(pos, distance)
+	_G.setup:freeflight():_set_camera(pos + Vector3(distance, distance, distance), Rotation(120, -30, 0))
+end

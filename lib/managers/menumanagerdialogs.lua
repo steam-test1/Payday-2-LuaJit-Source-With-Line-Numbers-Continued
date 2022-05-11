@@ -2804,7 +2804,7 @@ function MenuManager:show_safe_error_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2082-2137
+-- Lines 2082-2156
 function MenuManager:show_confirm_become_infamous(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_become_infamous")
@@ -2869,7 +2869,7 @@ function MenuManager:show_confirm_become_infamous(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 2139-2153
+-- Lines 2158-2172
 function MenuManager:show_specialization_xp_convert(xp_present, points_present)
 	local dialog_data = {
 		title = managers.localization:text("dialog_xp_to_specialization"),
@@ -2888,7 +2888,7 @@ function MenuManager:show_specialization_xp_convert(xp_present, points_present)
 	managers.system_menu:show_specialization_convert(dialog_data)
 end
 
--- Lines 2155-2180
+-- Lines 2174-2199
 function MenuManager:show_infamous_message(can_become_infamous)
 	local dialog_data = {
 		title = managers.localization:text("dialog_infamous_info_title")
@@ -2918,7 +2918,7 @@ function MenuManager:show_infamous_message(can_become_infamous)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2182-2214
+-- Lines 2201-2233
 function MenuManager:dialog_gage_assignment_completed(params)
 	params = {
 		player = params.player or tostring(managers.network.account:username() or managers.blackmarket:get_preferred_character_real_name()),
@@ -2952,7 +2952,7 @@ function MenuManager:dialog_gage_assignment_completed(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 2216-2237
+-- Lines 2235-2256
 function MenuManager:show_challenge_warn_choose_reward(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_challenge_warn_choose_reward_title"),
@@ -2980,7 +2980,7 @@ function MenuManager:show_challenge_warn_choose_reward(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 2239-2327
+-- Lines 2258-2346
 function MenuManager:show_challenge_reward(reward)
 	local category = reward.type_items
 	local id = reward.item_entry
@@ -3077,7 +3077,7 @@ function MenuManager:show_challenge_reward(reward)
 	managers.menu_component:disable_crimenet()
 end
 
--- Lines 2343-2351
+-- Lines 2362-2370
 function MenuManager:show_inventory_load_fail_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_inventory_load_fail_title"),
@@ -3093,7 +3093,7 @@ function MenuManager:show_inventory_load_fail_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2354-2362
+-- Lines 2373-2381
 function MenuManager:show_crime_spree_cleared_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_crime_spree_cleared_title"),
@@ -3109,7 +3109,7 @@ function MenuManager:show_crime_spree_cleared_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2366-2376
+-- Lines 2385-2395
 function MenuManager:show_vr_settings_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_vr_settings_title"),
@@ -3127,7 +3127,7 @@ function MenuManager:show_vr_settings_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2379-2387
+-- Lines 2398-2406
 function MenuManager:show_vr_procedural_animation()
 	local dialog_data = {
 		title = managers.localization:text("dialog_vr_procedural_animation_title"),
@@ -3143,7 +3143,7 @@ function MenuManager:show_vr_procedural_animation()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2390-2398
+-- Lines 2409-2417
 function MenuManager:show_heist_is_locked_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_heist_locked_title"),
@@ -3159,7 +3159,7 @@ function MenuManager:show_heist_is_locked_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2414-2422
+-- Lines 2433-2441
 function MenuManager:show_crime_spree_locked_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_crime_spree_locked_title"),
@@ -3177,7 +3177,7 @@ function MenuManager:show_crime_spree_locked_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2426-2434
+-- Lines 2445-2453
 function MenuManager:show_movie_theater_unlocked_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_ending_unlocked_title"),
@@ -3193,7 +3193,7 @@ function MenuManager:show_movie_theater_unlocked_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2450-2524
+-- Lines 2469-2543
 function MenuManager:show_accept_gamesight_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3212,7 +3212,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2466-2472
+		-- Lines 2485-2491
 		function privacy_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
@@ -3224,7 +3224,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2476-2482
+		-- Lines 2495-2501
 		function license_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
@@ -3273,7 +3273,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2526-2579
+-- Lines 2545-2598
 function MenuManager:show_policy_seen(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3292,7 +3292,7 @@ function MenuManager:show_policy_seen(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2542-2548
+		-- Lines 2561-2567
 		function privacy_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
@@ -3304,7 +3304,7 @@ function MenuManager:show_policy_seen(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2552-2558
+		-- Lines 2571-2577
 		function license_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
@@ -3334,7 +3334,7 @@ function MenuManager:show_policy_seen(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2582-2604
+-- Lines 2601-2623
 function MenuManager:show_accept_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title"),

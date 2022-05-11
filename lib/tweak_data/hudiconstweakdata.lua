@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3292
+-- Lines 7-3296
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -14826,6 +14826,15 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_All_H_Any_Plague = {
+		texture = "guis/dlcs/trk/atlases/pxp1_achievement",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -14842,7 +14851,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3295-3298
+-- Lines 3299-3302
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -14855,7 +14864,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3300-3316
+-- Lines 3304-3320
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -14881,7 +14890,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3318-3323
+-- Lines 3322-3327
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -14895,7 +14904,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3325-3331
+-- Lines 3329-3335
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -14906,7 +14915,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3333-3339
+-- Lines 3337-3343
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 
