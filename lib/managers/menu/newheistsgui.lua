@@ -372,7 +372,7 @@ function NewHeistsGui:move_right()
 	self:_move_pages(1)
 end
 
--- Lines 335-357
+-- Lines 335-364
 function NewHeistsGui:mouse_pressed(button, x, y)
 	if not self._enabled or button ~= Idstring("0") then
 		return
@@ -385,7 +385,14 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 	end
 
 	if self._internal_image_panel:inside(x, y) and self._contents[self._current_page]:inside(x, y) then
-		Steam:overlay_activate("url", tweak_data.gui.new_heists[self._current_page].url)
+		local heist_data = tweak_data.gui.new_heists[self._current_page]
+		local url = heist_data.url
+
+		if heist_data.append_steam_id and managers.user:get_setting("use_telemetry") then
+			url = url .. heist_data.append_steam_id .. Steam:userid()
+		end
+
+		Steam:overlay_activate("url", url)
 
 		return true
 	end
@@ -399,7 +406,7 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 359-381
+-- Lines 366-388
 function NewHeistsGui:mouse_moved(o, x, y)
 	if not self._enabled then
 		return
@@ -424,7 +431,7 @@ function NewHeistsGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines 383-386
+-- Lines 390-393
 function NewHeistsGui:set_enabled(enabled)
 	self._enabled = enabled
 

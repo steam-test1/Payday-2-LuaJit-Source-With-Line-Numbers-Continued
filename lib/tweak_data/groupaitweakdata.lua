@@ -191,7 +191,7 @@ function GroupAITweakData:_init_chatter_data()
 	}
 end
 
--- Lines 132-1791
+-- Lines 132-1815
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	local access_type_walk_only = {
 		walk = true
@@ -1325,7 +1325,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 	}
 end
 
--- Lines 1830-2543
+-- Lines 1854-2601
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -3238,7 +3238,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
 end
 
--- Lines 2547-3031
+-- Lines 2605-3095
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -4467,7 +4467,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3052-3058
+-- Lines 3116-3122
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4477,7 +4477,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3062-3108
+-- Lines 3126-3172
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

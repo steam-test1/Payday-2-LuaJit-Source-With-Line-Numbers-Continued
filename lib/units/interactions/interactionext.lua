@@ -214,7 +214,7 @@ function BaseInteractionExt:_btn_interact()
 end
 
 -- Lines 185-215
-function BaseInteractionExt:can_select(player)
+function BaseInteractionExt:can_select(player, locator)
 	if not self:_has_required_upgrade(alive(player) and player:movement() and player:movement().current_state_name and player:movement():current_state_name()) then
 		return false
 	end
@@ -254,7 +254,7 @@ end
 
 -- Lines 217-262
 function BaseInteractionExt:selected(player, locator, hand_id)
-	if not self:can_select(player) then
+	if not self:can_select(player, locator) then
 		return
 	end
 

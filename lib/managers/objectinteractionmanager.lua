@@ -128,7 +128,7 @@ end
 local mvec1 = Vector3()
 local index_table = {}
 
--- Lines 145-464
+-- Lines 145-516
 function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand_unit, hand_id)
 	local close_units_list = self._close_units
 
@@ -374,7 +374,7 @@ end
 
 local m_obj_pos = Vector3()
 
--- Lines 470-511
+-- Lines 522-563
 function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	if locator then
 		local obstructed = World:raycast("ray", locator:position(), camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
@@ -403,7 +403,7 @@ function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	return false
 end
 
--- Lines 513-528
+-- Lines 565-580
 function ObjectInteractionManager:_in_close_list(unit, id)
 	local close_units_list = self._close_units
 
@@ -422,7 +422,7 @@ function ObjectInteractionManager:_in_close_list(unit, id)
 	return false
 end
 
--- Lines 530-534
+-- Lines 582-586
 function ObjectInteractionManager:on_interaction_released(data)
 	if self._active_unit then
 		self._active_unit:interaction():on_interaction_released(data)

@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-2952
+-- Lines 76-2998
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -552,7 +552,14 @@ function AchievementsTweakData:init(tweak_data)
 			grenade_types = {
 				"wpn_prj_four",
 				"launcher_poison",
-				"launcher_poison_ms3gl_conversion"
+				"launcher_poison_ms3gl_conversion",
+				"launcher_poison_gre_m79",
+				"launcher_poison_m32",
+				"launcher_poison_groza",
+				"launcher_poison_china",
+				"launcher_poison_arbiter",
+				"launcher_poison_slap",
+				"launcher_poison_contraband"
 			},
 			player_style = {
 				variation = "default",
@@ -5207,6 +5214,47 @@ function AchievementsTweakData:init(tweak_data)
 			job = "pent",
 			difficulty = sm_wish_and_above
 		},
+		ranc_1 = {
+			award = "ranc_1",
+			job = "ranc",
+			difficulty = normal_and_above
+		},
+		ranc_2 = {
+			award = "ranc_2",
+			job = "ranc",
+			difficulty = hard_and_above
+		},
+		ranc_3 = {
+			award = "ranc_3",
+			job = "ranc",
+			difficulty = veryhard_and_above
+		},
+		ranc_4 = {
+			award = "ranc_4",
+			job = "ranc",
+			difficulty = overkill_and_above
+		},
+		ranc_5 = {
+			award = "ranc_5",
+			job = "ranc",
+			difficulty = easywish_and_above
+		},
+		ranc_6 = {
+			award = "ranc_6",
+			job = "ranc",
+			difficulty = deathwish_and_above
+		},
+		ranc_7 = {
+			award = "ranc_7",
+			job = "ranc",
+			difficulty = sm_wish_and_above
+		},
+		ranc_8 = {
+			award = "ranc_8",
+			one_down = true,
+			job = "ranc",
+			difficulty = sm_wish_and_above
+		},
 		uno_1 = {
 			award = "uno_1",
 			bag_loot_value = 400000,
@@ -8295,7 +8343,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 2971-2998
+-- Lines 3017-3044
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -8306,7 +8354,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 2980-2991
+	-- Lines 3026-3037
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -8336,7 +8384,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 3000-3005
+-- Lines 3046-3051
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -8349,7 +8397,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 3007-3015
+-- Lines 3053-3061
 local function from_level(level)
 	if not level then
 		error()
@@ -8365,7 +8413,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 3017-3025
+-- Lines 3063-3071
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -8381,7 +8429,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 3027-3038
+-- Lines 3073-3084
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -8403,7 +8451,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 3043-3261
+-- Lines 3089-3307
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8562,7 +8610,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3296-3438
+-- Lines 3342-3484
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -8753,7 +8801,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3416-3416
+	-- Lines 3462-3462
 	local function dummy_progress()
 		return 0
 	end

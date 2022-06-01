@@ -290,7 +290,7 @@ function PlayerHandStateItem:set_bodies_colliding(colliding)
 	end
 end
 
--- Lines 253-326
+-- Lines 253-331
 function PlayerHandStateItem:update(t, dt)
 	if self._wants_dynamic then
 		self._dynamic_t = t + 0.05
@@ -344,6 +344,11 @@ function PlayerHandStateItem:update(t, dt)
 	elseif self._item_type == "magazine" then
 		local player = managers.player:player_unit()
 		local weapon = player:inventory():equipped_unit()
+
+		if not weapon then
+			return
+		end
+
 		local mag_locator = weapon:get_object(Idstring("a_m"))
 		local offset = tweak_data.vr:get_offset_by_id("magazine", weapon:base().name_id)
 		local mag_pos = nil
@@ -366,7 +371,7 @@ function PlayerHandStateItem:update(t, dt)
 	end
 end
 
--- Lines 328-334
+-- Lines 333-339
 function PlayerHandStateItem:swipe_transition(next_state, params)
 	params.unit = alive(self._item_unit) and self._item_unit
 	params.type = self._item_type

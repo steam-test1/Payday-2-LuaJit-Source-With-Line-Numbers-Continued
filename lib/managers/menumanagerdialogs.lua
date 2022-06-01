@@ -2820,10 +2820,23 @@ function MenuManager:show_confirm_become_infamous(params)
 			text = managers.localization:text("dialog_yes"),
 			callback_func = params.yes_func
 		}
-		dialog_data.text = managers.localization:text(managers.experience:current_rank() < 5 and "menu_dialog_become_infamous_3" or "menu_dialog_become_infamous_3_above_5", {
-			level = 100,
-			cash = params.cost
-		})
+
+		if params.prestige then
+			local prestige_text = ""
+
+			if managers.experience:current_rank() < 5 then
+				prestige_text = prestige_text .. managers.localization:text("menu_dialog_become_infamous_cost_prefix") .. "\n\n"
+			end
+
+			prestige_text = prestige_text .. managers.localization:text("menu_dialog_become_infamous_prestige")
+			dialog_data.text = prestige_text
+		else
+			dialog_data.text = managers.localization:text(managers.experience:current_rank() < 5 and "menu_dialog_become_infamous_3" or "menu_dialog_become_infamous_3_above_5", {
+				level = 100,
+				cash = params.cost
+			})
+		end
+
 		dialog_data.focus_button = 2
 		dialog_data.button_list = {
 			yes_button,
@@ -2833,7 +2846,7 @@ function MenuManager:show_confirm_become_infamous(params)
 		local got_usable_secondary_weapon = managers.blackmarket:check_will_have_free_slot("secondaries")
 		local add_weapon_replace_warning = not got_usable_primary_weapon or not got_usable_secondary_weapon
 
-		if add_weapon_replace_warning then
+		if add_weapon_replace_warning and not params.prestige then
 			local primary_weapon = managers.blackmarket:get_crafted_category_slot("primaries", 1)
 			local secondary_weapon = managers.blackmarket:get_crafted_category_slot("secondaries", 1)
 			local warning_text_id = "menu_dialog_warning_infamy_replace_pri_sec"
@@ -3193,7 +3206,7 @@ function MenuManager:show_movie_theater_unlocked_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2469-2543
+-- Lines 2494-2568
 function MenuManager:show_accept_gamesight_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3212,7 +3225,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2485-2491
+		-- Lines 2510-2516
 		function privacy_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
@@ -3224,7 +3237,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2495-2501
+		-- Lines 2520-2526
 		function license_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
@@ -3273,7 +3286,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2545-2598
+-- Lines 2570-2623
 function MenuManager:show_policy_seen(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3292,7 +3305,7 @@ function MenuManager:show_policy_seen(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2561-2567
+		-- Lines 2586-2592
 		function privacy_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
@@ -3304,7 +3317,7 @@ function MenuManager:show_policy_seen(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2571-2577
+		-- Lines 2596-2602
 		function license_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
@@ -3334,7 +3347,7 @@ function MenuManager:show_policy_seen(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2601-2623
+-- Lines 2626-2648
 function MenuManager:show_accept_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title"),

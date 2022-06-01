@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2277
+-- Lines 5-2282
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1833,7 +1833,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2279-2284
+-- Lines 2284-2289
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 
