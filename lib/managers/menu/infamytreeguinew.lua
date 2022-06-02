@@ -799,9 +799,9 @@ function InfamyTreeGui:_setup()
 		name = "go_infamous_button"
 	})
 	local go_inf_text_main = go_inf_panel_main:text({
-		text = "Go Infamous:",
 		align = "center",
 		layer = 3,
+		text = managers.localization:to_upper_text("menu_infamy_go_infamous") .. ":",
 		h = FONT_SIZE,
 		font = FONT,
 		font_size = FONT_SIZE
@@ -828,7 +828,7 @@ function InfamyTreeGui:_setup()
 		name = "go_infamous_rep_text",
 		align = "right",
 		layer = 3,
-		text = managers.localization:to_upper_text("menu_infamy_go_inf_rep") .. " [Y]",
+		text = managers.localization:to_upper_text("menu_infamy_go_inf_rep"),
 		h = FONT_SIZE,
 		font = FONT,
 		font_size = FONT_SIZE,
@@ -866,7 +866,7 @@ function InfamyTreeGui:_setup()
 		name = "go_infamous_prestige_text",
 		align = "right",
 		layer = 3,
-		text = managers.localization:to_upper_text("menu_infamy_go_inf_prestige") .. " [X]",
+		text = managers.localization:to_upper_text("menu_infamy_go_inf_prestige"),
 		h = FONT_SIZE,
 		font = FONT,
 		font_size = FONT_SIZE,
@@ -1419,16 +1419,28 @@ function InfamyTreeGui:move_right()
 	self.scroll:move_down()
 end
 
--- Lines 944-949
+-- Lines 944-954
 function InfamyTreeGui:special_btn_pressed(button)
 	if self._can_go_infamous and button == Idstring("menu_go_infamous") then
-		MenuCallbackHandler:become_infamous()
+		MenuCallbackHandler:become_infamous({
+			no_clbk = function ()
+				self.scroll:set_input_focus(true)
+			end
+		})
+	end
+
+	if self._can_go_infamous_prestige and button == Idstring("menu_toggle_filters") then
+		MenuCallbackHandler:become_infamous_with_prestige({
+			no_clbk = function ()
+				self.scroll:set_input_focus(true)
+			end
+		})
 	end
 
 	return false
 end
 
--- Lines 951-956
+-- Lines 956-961
 function InfamyTreeGui:confirm_pressed()
 	local selected_item = self.scroll:selected_item()
 
@@ -1437,9 +1449,9 @@ function InfamyTreeGui:confirm_pressed()
 	end
 end
 
--- Lines 958-994
+-- Lines 963-999
 function InfamyTreeGui:add_loading_animation(panel)
-	-- Lines 959-981
+	-- Lines 964-986
 	local function animate_loading_texture(o)
 		o:set_color(Color(0, 0, 1, 1))
 
@@ -1488,7 +1500,7 @@ function InfamyTreeGui:add_loading_animation(panel)
 	bitmap:animate(animate_loading_texture)
 end
 
--- Lines 996-1013
+-- Lines 1001-1018
 function InfamyTreeGui:_texture_done_clbk(params, texture_ids)
 	if alive(params.panel) then
 		params.panel:clear()
@@ -1516,13 +1528,13 @@ function InfamyTreeGui:_texture_done_clbk(params, texture_ids)
 	until not found
 end
 
--- Lines 1434-1461
+-- Lines 1439-1466
 function InfamyTreeGui:_flash_item(item)
 	local text = item.panel:child("text")
 	local image = item.panel:child("image")
 	local border = item.border
 
-	-- Lines 1439-1454
+	-- Lines 1444-1459
 	local function flash_anim()
 		local color = tweak_data.screen_colors.item_stage_1
 		local lerp_color = nil
@@ -1544,7 +1556,7 @@ function InfamyTreeGui:_flash_item(item)
 	item.panel:animate(flash_anim)
 end
 
--- Lines 1463-1633
+-- Lines 1468-1638
 function InfamyTreeGui:_update_description(name, unlocked)
 	local desc_title = self._description_panel:child("description_title")
 	local desc_text = self._description_panel:child("description_text")
@@ -1785,7 +1797,7 @@ function InfamyTreeGui:_update_description(name, unlocked)
 	end
 end
 
--- Lines 1653-1683
+-- Lines 1658-1688
 function InfamyTreeGui:_unlock_item(index)
 	if not self._tree_items[index] then
 		return
@@ -1818,7 +1830,7 @@ function InfamyTreeGui:_unlock_item(index)
 	end
 end
 
--- Lines 1685-1721
+-- Lines 1690-1726
 function InfamyTreeGui:_select_item(index)
 	if type(index) == "string" then
 		for i, name in ipairs(tweak_data.infamy.tree) do
@@ -1871,7 +1883,7 @@ function InfamyTreeGui:_select_item(index)
 	end
 end
 
--- Lines 1723-1740
+-- Lines 1728-1745
 function InfamyTreeGui:_dialog_confirm_yes(index)
 	local infamy_item = self._tree_items[index]
 	local infamy_name = tweak_data.infamy.tree[index]
@@ -1894,7 +1906,7 @@ function InfamyTreeGui:_dialog_confirm_yes(index)
 	self:reload()
 end
 
--- Lines 1742-1798
+-- Lines 1747-1803
 function InfamyTreeGui:reload()
 	local tree_rows = tweak_data.infamy.tree_rows or 3
 	local tree_cols = tweak_data.infamy.tree_cols or 3
@@ -1950,7 +1962,7 @@ function InfamyTreeGui:reload()
 	end
 end
 
--- Lines 1800-1802
+-- Lines 1805-1807
 function InfamyTreeGui:set_layer(layer)
 	self._panel:set_layer(self._init_layer + layer)
 end

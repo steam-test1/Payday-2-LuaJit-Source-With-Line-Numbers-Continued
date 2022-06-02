@@ -104,7 +104,7 @@ end
 
 -- Lines 95-234
 function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_count, kill_count, damage_variant)
-	if not unit or not unit:base() then
+	if not alive(unit) or not unit:base() then
 		return
 	end
 
