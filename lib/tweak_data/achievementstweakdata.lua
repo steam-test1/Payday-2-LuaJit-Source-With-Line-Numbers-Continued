@@ -190,6 +190,12 @@ function AchievementsTweakData:init(tweak_data)
 		percentage_dmg = 0.05,
 		award = "ja22_01"
 	}
+	self.ranc_9 = {
+		vehicle_id = "golfcart",
+		award = "ranc_9",
+		job = "ranc",
+		difficulty = overkill_and_above
+	}
 	self.infamous = {
 		"ignominy_1",
 		"ignominy_2",
@@ -962,6 +968,16 @@ function AchievementsTweakData:init(tweak_data)
 				"wpn_fps_bow_long_m_poison",
 				"wpn_fps_bow_ecp_m_arrows_poison",
 				"wpn_fps_bow_elastic_m_poison"
+			}
+		},
+		ranc_11 = {
+			stat = "ranc_11_stat",
+			difficulty = overkill_and_above,
+			weapons = {
+				"ranc_heavy_machine_gun"
+			},
+			enemies = {
+				"marshal_marksman"
 			}
 		}
 	}
@@ -7094,6 +7110,18 @@ function AchievementsTweakData:init(tweak_data)
 			{
 				award = "pxp1_1",
 				at = 200
+			}
+		},
+		ranc_9_stat = {
+			{
+				award = "ranc_9",
+				at = 100
+			}
+		},
+		ranc_11_stat = {
+			{
+				award = "ranc_11",
+				at = 4
 			}
 		}
 	}

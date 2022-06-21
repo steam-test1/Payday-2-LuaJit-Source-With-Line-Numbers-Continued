@@ -5,7 +5,7 @@ function FeatureManager:init()
 	self:_setup()
 end
 
--- Lines 7-56
+-- Lines 7-63
 function FeatureManager:_setup()
 	self._default = {
 		announcements = {}
@@ -27,6 +27,18 @@ function FeatureManager:_setup()
 	self._default.announcements.safehouse_dailies = 1
 	self._default.announcements.tango_weapon_unlocked = 1
 	self._default.announcements.movie_theater_unlocked = 1
+	self._default.external_notifications = {
+		dialog_texas_heat_drop_name = {
+			"rat_oilbaron",
+			"rat_ranchdiesel",
+			"rat_mocow"
+		},
+		dialog_sbzacc_drop_name = {
+			"prim_primtime",
+			"prim_darkmat",
+			"prim_newhorizon"
+		}
+	}
 
 	if not Global.feature_manager then
 		self:reset()
@@ -35,17 +47,18 @@ function FeatureManager:_setup()
 	self._global = Global.feature_manager
 end
 
--- Lines 58-66
+-- Lines 65-73
 function FeatureManager:save(data)
 	Application:debug("[FeatureManager:save]")
 
 	local save_data = {
-		announcements = deep_clone(self._global.announcements)
+		announcements = deep_clone(self._global.announcements),
+		external_notifications = deep_clone(self._global.external_notifications)
 	}
 	data.feature_manager = save_data
 end
 
--- Lines 68-84
+-- Lines 75-91
 function FeatureManager:load(data, version)
 	Application:debug("[FeatureManager:load]")
 
@@ -60,9 +73,11 @@ function FeatureManager:load(data, version)
 			Global.feature_manager.announcements[announcement] = num
 		end
 	end
+
+	Global.feature_manager.external_notifications = data.feature_manager.external_notifications or {}
 end
 
--- Lines 86-115
+-- Lines 93-122
 function FeatureManager:reset()
 	Global.feature_manager = {
 		announcements = {}
@@ -80,10 +95,11 @@ function FeatureManager:reset()
 	Global.feature_manager.announcements.short_heists_available = 1
 	Global.feature_manager.announcements.new_career = 1
 	Global.feature_manager.announced = {}
+	Global.feature_manager.external_notifications = {}
 	self._global = Global.feature_manager
 end
 
--- Lines 117-134
+-- Lines 124-141
 function FeatureManager:can_announce(feature_id)
 	local announcement = self._global.announcements[feature_id]
 
@@ -108,7 +124,7 @@ function FeatureManager:can_announce(feature_id)
 	return true
 end
 
--- Lines 136-166
+-- Lines 143-173
 function FeatureManager:announce_feature(feature_id)
 	if Global.skip_menu_dialogs then
 		return
@@ -147,7 +163,7 @@ function FeatureManager:announce_feature(feature_id)
 	self._global.announced[feature_id] = true
 end
 
--- Lines 168-174
+-- Lines 175-181
 function FeatureManager:set_feature_announce_times(feature_id, num)
 	local announcement = self._global.announcements[feature_id]
 
@@ -158,7 +174,7 @@ function FeatureManager:set_feature_announce_times(feature_id, num)
 	self._global.announcements[feature_id] = num
 end
 
--- Lines 180-184
+-- Lines 187-191
 function FeatureManager:crimenet_heat()
 	print("FeatureManager:crimenet_heat()")
 	managers.menu:show_announce_crimenet_heat()
@@ -166,7 +182,7 @@ function FeatureManager:crimenet_heat()
 	return true
 end
 
--- Lines 186-190
+-- Lines 193-197
 function FeatureManager:election_changes()
 	print("FeatureManager:election_changes()")
 	managers.menu:show_new_message_dialog({
@@ -177,7 +193,7 @@ function FeatureManager:election_changes()
 	return true
 end
 
--- Lines 192-196
+-- Lines 199-203
 function FeatureManager:crimenet_welcome()
 	print("FeatureManager:crimenet_welcome()")
 	managers.menu:show_new_message_dialog({
@@ -188,7 +204,7 @@ function FeatureManager:crimenet_welcome()
 	return true
 end
 
--- Lines 198-202
+-- Lines 205-209
 function FeatureManager:dlc_gage_pack_jobs()
 	print("FeatureManager:dlc_gage_pack_jobs()")
 	managers.menu:show_new_message_dialog({
@@ -199,7 +215,7 @@ function FeatureManager:dlc_gage_pack_jobs()
 	return true
 end
 
--- Lines 204-208
+-- Lines 211-215
 function FeatureManager:blackmarket_rename()
 	print("FeatureManager:blackmarket_rename()")
 	managers.menu:show_new_message_dialog({
@@ -210,7 +226,7 @@ function FeatureManager:blackmarket_rename()
 	return true
 end
 
--- Lines 210-236
+-- Lines 217-243
 function FeatureManager:join_pd2_clan()
 	print("FeatureManager:join_pd2_clan()")
 
@@ -248,7 +264,7 @@ function FeatureManager:join_pd2_clan()
 	return true
 end
 
--- Lines 238-242
+-- Lines 245-249
 function FeatureManager:perk_deck()
 	print("FeatureManager:perk_deck()")
 	managers.menu:show_new_message_dialog({
@@ -259,7 +275,7 @@ function FeatureManager:perk_deck()
 	return true
 end
 
--- Lines 244-248
+-- Lines 251-255
 function FeatureManager:freed_old_hoxton()
 	print("FeatureManager:freed_old_hoxton()")
 	managers.menu:show_new_message_dialog({
@@ -270,7 +286,7 @@ function FeatureManager:freed_old_hoxton()
 	return true
 end
 
--- Lines 250-254
+-- Lines 257-261
 function FeatureManager:infamy_2_0()
 	print("FeatureManager:infamy_2_0()")
 	managers.menu:show_new_message_dialog({
@@ -281,7 +297,7 @@ function FeatureManager:infamy_2_0()
 	return true
 end
 
--- Lines 256-280
+-- Lines 263-287
 function FeatureManager:thq_feature()
 	print("FeatureManager:thq_feature()")
 
@@ -289,7 +305,7 @@ function FeatureManager:thq_feature()
 		return
 	end
 
-	-- Lines 262-265
+	-- Lines 269-272
 	local function yes_function()
 		managers.user:set_setting("use_thq_weapon_parts", true)
 		managers.savefile:save_setting(true)
@@ -317,7 +333,7 @@ function FeatureManager:thq_feature()
 	return true
 end
 
--- Lines 282-286
+-- Lines 289-293
 function FeatureManager:crimenet_hacked()
 	print("FeatureManager:crimenet_hacked()")
 	managers.crimenet:set_getting_hacked(42.16)
@@ -325,11 +341,11 @@ function FeatureManager:crimenet_hacked()
 	return true
 end
 
--- Lines 289-309
+-- Lines 296-316
 function FeatureManager:short_heist()
 	print("FeatureManager:short_heist()")
 
-	-- Lines 292-299
+	-- Lines 299-306
 	local function yes_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_yes")
@@ -339,7 +355,7 @@ function FeatureManager:short_heist()
 		MenuCallbackHandler:play_short_heist()
 	end
 
-	-- Lines 301-305
+	-- Lines 308-312
 	local function no_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_no")
@@ -354,7 +370,7 @@ function FeatureManager:short_heist()
 	return true
 end
 
--- Lines 311-315
+-- Lines 318-322
 function FeatureManager:short_heists_available()
 	print("FeatureManager:short_heists_available()")
 	managers.menu:show_new_message_dialog({
@@ -365,13 +381,13 @@ function FeatureManager:short_heists_available()
 	return true
 end
 
--- Lines 319-322
+-- Lines 326-329
 function FeatureManager:new_career()
 	print("FeatureManager:new_career()")
 	managers.menu:show_new_player_popup()
 end
 
--- Lines 326-330
+-- Lines 333-337
 function FeatureManager:safehouse_dailies()
 	print("FeatureManager:safehouse_dailies()")
 	managers.menu:show_new_message_dialog({
@@ -382,7 +398,7 @@ function FeatureManager:safehouse_dailies()
 	return true
 end
 
--- Lines 334-338
+-- Lines 341-345
 function FeatureManager:tango_weapon_unlocked()
 	print("FeatureManager:tango_weapon_unlocked()")
 	managers.tango:announce_tango_weapon()
@@ -390,9 +406,32 @@ function FeatureManager:tango_weapon_unlocked()
 	return true
 end
 
--- Lines 342-345
+-- Lines 349-352
 function FeatureManager:movie_theater_unlocked()
 	managers.menu:show_movie_theater_unlocked_dialog()
 
 	return true
+end
+
+-- Lines 365-382
+function FeatureManager:check_external_dlcs()
+	local announce_drops = {}
+	local show_dialog = false
+
+	for group_id, drops in pairs(self._default.external_notifications) do
+		for index, drop_id in ipairs(drops) do
+			if not self._global.external_notifications[drop_id] and managers.dlc:is_dlc_unlocked(drop_id) then
+				self._global.external_notifications[drop_id] = true
+				announce_drops[group_id] = announce_drops[group_id] or {}
+
+				table.insert(announce_drops[group_id], drop_id)
+
+				show_dialog = true
+			end
+		end
+	end
+
+	if show_dialog then
+		managers.menu:show_external_items_dialog(announce_drops)
+	end
 end

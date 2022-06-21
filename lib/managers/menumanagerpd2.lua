@@ -27,7 +27,7 @@ function MenuManager:on_view_character(user)
 	end
 end
 
--- Lines 34-68
+-- Lines 34-69
 function MenuManager:on_enter_lobby()
 	print("function MenuManager:on_enter_lobby()")
 
@@ -49,7 +49,7 @@ function MenuManager:on_enter_lobby()
 	end
 end
 
--- Lines 70-83
+-- Lines 71-84
 function MenuManager:on_leave_active_job()
 	managers.statistics:stop_session({
 		quit = true
@@ -67,12 +67,12 @@ function MenuManager:on_leave_active_job()
 	managers.menu:close_menu("menu_pause")
 end
 
--- Lines 85-87
+-- Lines 86-88
 function MenuManager:set_lobby_autoplay(autoplay)
 	self._lobby_autoplay = autoplay
 end
 
--- Lines 89-106
+-- Lines 90-107
 function MenuManager:setup_local_lobby_character()
 	local local_peer = managers.network:session():local_peer()
 	local level = managers.experience:current_level()
@@ -89,7 +89,7 @@ function MenuManager:setup_local_lobby_character()
 	managers.network:session():check_send_outfit()
 end
 
--- Lines 108-117
+-- Lines 109-118
 function MenuManager:set_cash_safe_scene_done(done, silent)
 	self._cash_safe_scene_done = done
 
@@ -102,17 +102,17 @@ function MenuManager:set_cash_safe_scene_done(done, silent)
 	end
 end
 
--- Lines 119-121
+-- Lines 120-122
 function MenuManager:cash_safe_scene_done()
 	return self._cash_safe_scene_done
 end
 
--- Lines 123-126
+-- Lines 124-127
 function MenuManager:http_test()
 	Steam:http_request("http://www.overkillsoftware.com/?feed=rss", callback(self, self, "http_test_result"))
 end
 
--- Lines 128-169
+-- Lines 129-170
 function MenuManager:http_test_result(success, body)
 	print("success", success)
 	print("body", body)
@@ -120,11 +120,11 @@ function MenuManager:http_test_result(success, body)
 	print(inspect(self:_get_text_block(body, "<link>", "</link>")))
 end
 
--- Lines 208-211
+-- Lines 209-212
 function MenuCallbackHandler:continue_to_lobby()
 end
 
--- Lines 213-222
+-- Lines 214-223
 function MenuCallbackHandler:on_view_character_focus(node, in_focus, data)
 	if not in_focus or not data then
 		managers.menu_scene:set_main_character_outfit(managers.blackmarket:outfit_string())
@@ -132,12 +132,12 @@ function MenuCallbackHandler:on_view_character_focus(node, in_focus, data)
 	end
 end
 
--- Lines 228-231
+-- Lines 229-232
 function MenuCallbackHandler:on_character_customization()
 	managers.menu_component:close_weapon_box()
 end
 
--- Lines 250-299
+-- Lines 251-300
 function MenuCallbackHandler:start_job(job_data)
 	if not managers.job:activate_job(job_data.job_id) then
 		return
@@ -176,7 +176,7 @@ function MenuCallbackHandler:start_job(job_data)
 	managers.platform:refresh_rich_presence()
 end
 
--- Lines 301-305
+-- Lines 302-306
 function MenuCallbackHandler:play_single_player_job(item)
 	self:play_single_player()
 	self:start_single_player_job({
@@ -185,7 +185,7 @@ function MenuCallbackHandler:play_single_player_job(item)
 	})
 end
 
--- Lines 307-309
+-- Lines 308-310
 function MenuCallbackHandler:play_quick_start_job(item)
 	self:start_job({
 		difficulty = "normal",
@@ -193,7 +193,7 @@ function MenuCallbackHandler:play_quick_start_job(item)
 	})
 end
 
--- Lines 311-332
+-- Lines 312-333
 function MenuCallbackHandler:start_single_player_job(job_data)
 	if not managers.job:activate_job(job_data.job_id) then
 		return
@@ -213,7 +213,7 @@ function MenuCallbackHandler:start_single_player_job(job_data)
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines 334-383
+-- Lines 335-384
 function MenuCallbackHandler:crimenet_focus_changed(node, in_focus)
 	if in_focus then
 		if node:parameters().no_servers then
@@ -229,22 +229,22 @@ function MenuCallbackHandler:crimenet_focus_changed(node, in_focus)
 	end
 end
 
--- Lines 385-387
+-- Lines 386-388
 function MenuCallbackHandler:can_buy_weapon(item)
 	return not Global.blackmarket_manager.weapons[item:parameter("weapon_id")].owned
 end
 
--- Lines 389-392
+-- Lines 390-393
 function MenuCallbackHandler:owns_weapon(item)
 	return not self:can_buy_weapon(item)
 end
 
--- Lines 394-396
+-- Lines 395-397
 function MenuCallbackHandler:open_blackmarket_node()
 	managers.menu:active_menu().logic:select_node("blackmarket")
 end
 
--- Lines 398-403
+-- Lines 399-404
 function MenuCallbackHandler:leave_blackmarket(item)
 	self:_leave_blackmarket()
 
@@ -253,7 +253,7 @@ function MenuCallbackHandler:leave_blackmarket(item)
 	end
 end
 
--- Lines 405-410
+-- Lines 406-411
 function MenuCallbackHandler:_leave_blackmarket()
 	managers.menu_component:close_weapon_box()
 	managers.menu_scene:remove_item()
@@ -261,46 +261,46 @@ function MenuCallbackHandler:_leave_blackmarket()
 	managers.blackmarket:release_preloaded_blueprints()
 end
 
--- Lines 412-414
+-- Lines 413-415
 function MenuCallbackHandler:_left_blackmarket()
 	managers.menu_scene:remove_item()
 end
 
--- Lines 416-418
+-- Lines 417-419
 function MenuCallbackHandler:blackmarket_abort_customize_mask()
 	managers.blackmarket:abort_customize_mask()
 end
 
--- Lines 420-422
+-- Lines 421-423
 function MenuCallbackHandler:got_skillpoint_to_spend()
 	return managers.skilltree and managers.skilltree:points() > 0
 end
 
--- Lines 424-426
+-- Lines 425-427
 function MenuCallbackHandler:got_new_lootdrop()
 	return managers.blackmarket and managers.blackmarket:got_any_new_drop()
 end
 
--- Lines 429-431
+-- Lines 430-432
 function MenuCallbackHandler:is_new_player_story_glow()
 	return managers.experience:current_level() <= tweak_data.story.main_menu_glow_level_limit and managers.experience:current_rank() <= 0
 end
 
--- Lines 434-437
+-- Lines 435-438
 function MenuCallbackHandler:not_completed_all_story_assignments()
 	local current = managers.story:current_mission() or {}
 
 	return not current.last_mission or not current.rewarded
 end
 
--- Lines 439-442
+-- Lines 440-443
 function MenuCallbackHandler:got_completed_story_mission()
 	local current = managers.story:current_mission() or {}
 
 	return current.completed and not current.rewarded
 end
 
--- Lines 446-467
+-- Lines 447-468
 function MenuCallbackHandler:show_side_job_menu_icon()
 	local all_challenges = {}
 
@@ -325,37 +325,37 @@ function MenuCallbackHandler:show_side_job_menu_icon()
 	end
 end
 
--- Lines 471-473
+-- Lines 472-474
 function MenuCallbackHandler:show_custom_safehouse_menu_icon()
 	return managers.custom_safehouse:is_daily_new() or managers.custom_safehouse:has_completed_daily() and not managers.custom_safehouse:has_rewarded_daily()
 end
 
--- Lines 475-477
+-- Lines 476-478
 function MenuCallbackHandler:close_custom_safehouse_menu()
 	managers.custom_safehouse:disable_in_game_menu()
 end
 
--- Lines 479-484
+-- Lines 480-485
 function MenuCallbackHandler:should_show_old_safehouse()
 	return not managers.custom_safehouse:unlocked()
 end
 
--- Lines 487-489
+-- Lines 488-490
 function MenuCallbackHandler:got_new_content_update()
 	return false
 end
 
--- Lines 491-493
+-- Lines 492-494
 function MenuCallbackHandler:got_new_fav_videos()
 	return false
 end
 
--- Lines 495-497
+-- Lines 496-498
 function MenuCallbackHandler:not_got_new_content_update()
 	return not self:got_new_content_update()
 end
 
--- Lines 499-501
+-- Lines 500-502
 function MenuCallbackHandler:do_content_lootdrop(node)
 	managers.menu:open_node("crimenet_contract_casino_lootdrop", {
 		increase_infamous = false,
@@ -363,7 +363,7 @@ function MenuCallbackHandler:do_content_lootdrop(node)
 	})
 end
 
--- Lines 503-513
+-- Lines 504-514
 function MenuCallbackHandler:test_clicked_weapon(item)
 	if not item:parameter("customize") then
 		managers.menu_scene:clicked_blackmarket_item()
@@ -373,7 +373,7 @@ function MenuCallbackHandler:test_clicked_weapon(item)
 	end
 end
 
--- Lines 515-527
+-- Lines 516-528
 function MenuCallbackHandler:buy_weapon(item)
 	local name = managers.localization:text(tweak_data.weapon[item:parameter("weapon_id")].name_id)
 	local cost = 50000
@@ -387,7 +387,7 @@ function MenuCallbackHandler:buy_weapon(item)
 	}, name, "$" .. cost)
 end
 
--- Lines 529-540
+-- Lines 530-541
 function MenuCallbackHandler:on_buy_weapon_yes(params)
 	Global.blackmarket_manager.weapons[params.item:parameter("weapon_id")].owned = true
 	params.item:parameter("parent_item"):parameters().owned = true
@@ -396,7 +396,7 @@ function MenuCallbackHandler:on_buy_weapon_yes(params)
 	params.item:parameters().parent_item:on_buy(params.item:parameters().gui_node)
 end
 
--- Lines 542-554
+-- Lines 543-555
 function MenuCallbackHandler:equip_weapon(item)
 	Global.player_manager.kit.weapon_slots[item:parameter("weapon_slot")] = item:parameter("weapon_id")
 
@@ -407,7 +407,7 @@ function MenuCallbackHandler:equip_weapon(item)
 	end
 end
 
--- Lines 556-566
+-- Lines 557-567
 function MenuCallbackHandler:repair_weapon(item)
 	if item:_at_max_condition() then
 		return
@@ -425,7 +425,7 @@ function MenuCallbackHandler:repair_weapon(item)
 	}, name, "$" .. cost)
 end
 
--- Lines 568-573
+-- Lines 569-574
 function MenuCallbackHandler:on_repair_yes(params)
 	Global.blackmarket_manager.weapons[params.item:parameters().weapon_id].condition = params.item:_max_condition()
 
@@ -433,26 +433,26 @@ function MenuCallbackHandler:on_repair_yes(params)
 	self:test_clicked_weapon(params.item:parameters().parent_item)
 end
 
--- Lines 575-578
+-- Lines 576-579
 function MenuCallbackHandler:clicked_weapon_upgrade_type(item)
 	managers.menu_scene:clicked_weapon_upgrade_type(item:parameters().name)
 end
 
--- Lines 580-583
+-- Lines 581-584
 function MenuCallbackHandler:can_buy_weapon_upgrade(item)
 	return not self:owns_weapon_upgrade(item)
 end
 
--- Lines 585-587
+-- Lines 586-588
 function MenuCallbackHandler:owns_weapon_upgrade(item)
 	return Global.blackmarket_manager.weapon_upgrades[item:parameter("weapon_id")][item:parameter("weapon_upgrade")].owned
 end
 
--- Lines 589-591
+-- Lines 590-592
 function MenuCallbackHandler:buy_weapon_upgrades(item)
 end
 
--- Lines 593-601
+-- Lines 594-602
 function MenuCallbackHandler:_on_buy_weapon_upgrade_yes(params)
 	Global.blackmarket_manager.weapon_upgrades[params.item:parameter("weapon_id")][params.item:parameter("weapon_upgrade")].owned = true
 	params.item:parameter("parent_item"):parameters().owned = true
@@ -461,7 +461,7 @@ function MenuCallbackHandler:_on_buy_weapon_upgrade_yes(params)
 	params.item:parameters().parent_item:on_buy(params.item:parameters().gui_node)
 end
 
--- Lines 604-619
+-- Lines 605-620
 function MenuCallbackHandler:clicked_customize_character_category(item)
 	local name = item:name()
 
@@ -480,7 +480,7 @@ function MenuCallbackHandler:clicked_customize_character_category(item)
 	managers.menu_scene:clicked_customize_character_category()
 end
 
--- Lines 621-628
+-- Lines 622-629
 function MenuCallbackHandler:test_clicked_mask(item)
 	if not item:parameter("customize") then
 		managers.menu_scene:clicked_blackmarket_item()
@@ -490,17 +490,17 @@ function MenuCallbackHandler:test_clicked_mask(item)
 	managers.menu_scene:spawn_mask(item:parameter("mask_id"))
 end
 
--- Lines 630-632
+-- Lines 631-633
 function MenuCallbackHandler:can_buy_mask(item)
 	return not self:owns_mask(item)
 end
 
--- Lines 634-636
+-- Lines 635-637
 function MenuCallbackHandler:owns_mask(item)
 	return Global.blackmarket_manager.masks[item:parameter("mask_id")].owned
 end
 
--- Lines 638-653
+-- Lines 639-654
 function MenuCallbackHandler:equip_mask(item)
 	local mask_id = item:parameter("mask_id")
 
@@ -509,7 +509,7 @@ function MenuCallbackHandler:equip_mask(item)
 	self:_update_outfit_information()
 end
 
--- Lines 655-692
+-- Lines 656-693
 function MenuCallbackHandler:_update_outfit_information()
 	if Global.block_update_outfit_information then
 		return
@@ -556,7 +556,7 @@ function MenuCallbackHandler:_update_outfit_information()
 	end
 end
 
--- Lines 694-700
+-- Lines 695-701
 function MenuCallbackHandler:buy_mask(item)
 	local name = managers.localization:text(tweak_data.blackmarket.masks[item:parameter("mask_id")].name_id)
 	local cost = 10000
@@ -570,7 +570,7 @@ function MenuCallbackHandler:buy_mask(item)
 	}, name, "$" .. cost)
 end
 
--- Lines 702-708
+-- Lines 703-709
 function MenuCallbackHandler:_on_buy_mask_yes(params)
 	Global.blackmarket_manager.masks[params.item:parameter("mask_id")].owned = true
 	params.item:parameter("parent_item"):parameters().owned = true
@@ -579,17 +579,17 @@ function MenuCallbackHandler:_on_buy_mask_yes(params)
 	params.item:parameters().parent_item:on_buy(params.item:parameters().gui_node)
 end
 
--- Lines 710-712
+-- Lines 711-713
 function MenuCallbackHandler:leave_character_customization()
 	self:leave_blackmarket()
 end
 
--- Lines 715-717
+-- Lines 716-718
 function MenuCallbackHandler:clicked_character(item)
 	print("MenuCallbackHandler:clicked_character", item)
 end
 
--- Lines 719-731
+-- Lines 720-732
 function MenuCallbackHandler:equip_character(item)
 	local character_id = item:parameter("character_id")
 	Global.blackmarket_manager.characters[character_id].equipped = true
@@ -605,17 +605,17 @@ function MenuCallbackHandler:equip_character(item)
 	self:_update_outfit_information()
 end
 
--- Lines 733-735
+-- Lines 734-736
 function MenuCallbackHandler:can_buy_character(item)
 	return not self:owns_character(item)
 end
 
--- Lines 737-739
+-- Lines 738-740
 function MenuCallbackHandler:owns_character(item)
 	return Global.blackmarket_manager.characters[item:parameter("character_id")].owned
 end
 
--- Lines 741-747
+-- Lines 742-748
 function MenuCallbackHandler:buy_character(item)
 	local name = managers.localization:text(tweak_data.blackmarket.characters[item:parameter("character_id")].name_id)
 	local cost = 10000
@@ -629,7 +629,7 @@ function MenuCallbackHandler:buy_character(item)
 	}, name, "$" .. cost)
 end
 
--- Lines 749-755
+-- Lines 750-756
 function MenuCallbackHandler:_on_buy_character_yes(params)
 	Global.blackmarket_manager.characters[params.item:parameter("character_id")].owned = true
 	params.item:parameter("parent_item"):parameters().owned = true
@@ -638,7 +638,7 @@ function MenuCallbackHandler:_on_buy_character_yes(params)
 	params.item:parameters().parent_item:on_buy(params.item:parameters().gui_node)
 end
 
--- Lines 758-766
+-- Lines 759-767
 function MenuCallbackHandler:test_clicked_armor(item)
 	managers.menu_component:close_weapon_box()
 
@@ -647,17 +647,17 @@ function MenuCallbackHandler:test_clicked_armor(item)
 	end
 end
 
--- Lines 768-770
+-- Lines 769-771
 function MenuCallbackHandler:can_buy_armor(item)
 	return not self:owns_armor(item)
 end
 
--- Lines 772-774
+-- Lines 773-775
 function MenuCallbackHandler:owns_armor(item)
 	return Global.blackmarket_manager.armors[item:parameter("armor_id")].owned
 end
 
--- Lines 776-782
+-- Lines 777-783
 function MenuCallbackHandler:buy_armor(item)
 	local name = managers.localization:text(tweak_data.blackmarket.armors[item:parameter("armor_id")].name_id)
 	local cost = 20000
@@ -671,7 +671,7 @@ function MenuCallbackHandler:buy_armor(item)
 	}, name, "$" .. cost)
 end
 
--- Lines 784-790
+-- Lines 785-791
 function MenuCallbackHandler:_on_buy_armor_yes(params)
 	Global.blackmarket_manager.armors[params.item:parameter("armor_id")].owned = true
 	params.item:parameter("parent_item"):parameters().owned = true
@@ -680,7 +680,7 @@ function MenuCallbackHandler:_on_buy_armor_yes(params)
 	params.item:parameters().parent_item:on_buy(params.item:parameters().gui_node)
 end
 
--- Lines 792-804
+-- Lines 793-805
 function MenuCallbackHandler:equip_armor(item)
 	local armor_id = item:parameter("armor_id")
 	Global.blackmarket_manager.armors[armor_id].equipped = true
@@ -696,7 +696,7 @@ function MenuCallbackHandler:equip_armor(item)
 	self:_update_outfit_information()
 end
 
--- Lines 806-818
+-- Lines 807-819
 function MenuCallbackHandler:repair_armor(item)
 	if item:_at_max_condition() then
 		return
@@ -715,14 +715,14 @@ function MenuCallbackHandler:repair_armor(item)
 	}, name, "$" .. cost)
 end
 
--- Lines 820-828
+-- Lines 821-829
 function MenuCallbackHandler:on_repair_armor_yes(params)
 	Global.blackmarket_manager.armors[params.item:parameters().armor_id].condition = params.item:_max_condition()
 
 	params.item:dirty()
 end
 
--- Lines 894-899
+-- Lines 895-900
 function MenuCallbackHandler:stage_success()
 	if not managers.job:has_active_job() then
 		return true
@@ -731,46 +731,46 @@ function MenuCallbackHandler:stage_success()
 	return managers.job:stage_success()
 end
 
--- Lines 901-903
+-- Lines 902-904
 function MenuCallbackHandler:stage_not_success()
 	return not self:stage_success()
 end
 
--- Lines 905-907
+-- Lines 906-908
 function MenuCallbackHandler:is_job_finished()
 	return managers.job:is_job_finished()
 end
 
--- Lines 909-911
+-- Lines 910-912
 function MenuCallbackHandler:is_job_not_finished()
 	return not self:is_job_finished()
 end
 
--- Lines 913-915
+-- Lines 914-916
 function MenuCallbackHandler:got_job()
 	return managers.job:has_active_job()
 end
 
--- Lines 917-919
+-- Lines 918-920
 function MenuCallbackHandler:got_no_job()
 	return not self:got_job()
 end
 
--- Lines 922-925
+-- Lines 923-926
 function MenuCallbackHandler:start_safe_test_overkill()
 end
 
--- Lines 927-929
+-- Lines 928-930
 function MenuCallbackHandler:start_safe_test_event_01()
 	managers.menu_scene:_test_start_open_economy_safe("event_01")
 end
 
--- Lines 931-933
+-- Lines 932-934
 function MenuCallbackHandler:start_safe_test_weapon_01()
 	managers.menu_scene:_test_start_open_economy_safe("weapon_01")
 end
 
--- Lines 935-940
+-- Lines 936-941
 function MenuCallbackHandler:start_safe_test_random()
 	local safe_names = table.map_keys(tweak_data.economy.safes)
 
@@ -781,7 +781,7 @@ function MenuCallbackHandler:start_safe_test_random()
 	managers.menu_scene:_test_start_open_economy_safe(safe_name)
 end
 
--- Lines 942-948
+-- Lines 943-949
 function MenuCallbackHandler:reset_safe_scene()
 	if not managers.menu:cash_safe_scene_done() then
 		return true
@@ -791,14 +791,14 @@ function MenuCallbackHandler:reset_safe_scene()
 	managers.menu_scene:reset_economy_safe()
 end
 
--- Lines 950-952
+-- Lines 951-953
 function MenuCallbackHandler:is_cash_safe_back_visible()
 	return managers.menu:cash_safe_scene_done()
 end
 
 MenuComponentInitiator = MenuComponentInitiator or class()
 
--- Lines 962-972
+-- Lines 963-973
 function MenuComponentInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -813,7 +813,7 @@ end
 
 MenuLoadoutInitiator = MenuLoadoutInitiator or class()
 
--- Lines 977-984
+-- Lines 978-985
 function MenuLoadoutInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 	node:parameters().menu_component_data = data
@@ -824,7 +824,7 @@ end
 
 MenuCrimeNetInitiator = MenuCrimeNetInitiator or class()
 
--- Lines 989-995
+-- Lines 990-996
 function MenuCrimeNetInitiator:modify_node(node)
 	local new_node = deep_clone(node)
 
@@ -833,7 +833,7 @@ function MenuCrimeNetInitiator:modify_node(node)
 	return new_node
 end
 
--- Lines 997-1088
+-- Lines 998-1089
 function MenuCrimeNetInitiator:refresh_node(node)
 	return node
 
@@ -927,7 +927,7 @@ function MenuCrimeNetInitiator:refresh_node(node)
 	return node
 end
 
--- Lines 1092-1103
+-- Lines 1093-1104
 function MenuManager:show_repair_weapon(params, weapon, cost)
 	local dialog_data = {
 		title = managers.localization:text("dialog_repair_weapon_title"),
@@ -951,7 +951,7 @@ function MenuManager:show_repair_weapon(params, weapon, cost)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1105-1116
+-- Lines 1106-1117
 function MenuManager:show_buy_weapon(params, weapon, cost)
 	local dialog_data = {
 		title = managers.localization:text("dialog_buy_weapon_title"),
@@ -975,31 +975,31 @@ function MenuManager:show_buy_weapon(params, weapon, cost)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1120-1124
+-- Lines 1121-1125
 function MenuCallbackHandler:on_visit_crimefest_challenges()
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		Steam:overlay_activate("url", tweak_data.gui.crimefest_challenges_webpage)
 	end
 end
 
--- Lines 1129-1131
+-- Lines 1130-1132
 function MenuCallbackHandler:got_new_steam_lootdrop(item)
 	return managers.blackmarket:has_new_tradable_items()
 end
 
--- Lines 1133-1135
+-- Lines 1134-1136
 function MenuCallbackHandler:leave_steam_inventory(item)
 	MenuCallbackHandler:_leave_blackmarket()
 end
 
--- Lines 1139-1143
+-- Lines 1140-1144
 function MenuCallbackHandler:can_toggle_chat()
 	local input = managers.menu:active_menu() and managers.menu:active_menu().input
 
 	return not input or input.can_toggle_chat and input:can_toggle_chat()
 end
 
--- Lines 1148-1156
+-- Lines 1149-1157
 function MenuCallbackHandler:on_visit_fbi_files()
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		if MenuCallbackHandler:is_overlay_enabled() then
@@ -1010,7 +1010,7 @@ function MenuCallbackHandler:on_visit_fbi_files()
 	end
 end
 
--- Lines 1158-1168
+-- Lines 1159-1169
 function MenuCallbackHandler:on_visit_fbi_files_suspect(item)
 	if item and SystemInfo:distribution() == Idstring("STEAM") then
 		if MenuCallbackHandler:is_overlay_enabled() then
@@ -1023,7 +1023,7 @@ end
 
 FbiFilesInitiator = FbiFilesInitiator or class()
 
--- Lines 1172-1234
+-- Lines 1173-1235
 function FbiFilesInitiator:modify_node(node, up)
 	node:clean_items()
 
@@ -1085,14 +1085,14 @@ function FbiFilesInitiator:modify_node(node, up)
 	return node
 end
 
--- Lines 1236-1238
+-- Lines 1237-1239
 function FbiFilesInitiator:refresh_node(node)
 	return self:modify_node(node)
 end
 
 PlayerListInitiator = PlayerListInitiator or class(MenuInitiatorBase)
 
--- Lines 1245-1266
+-- Lines 1246-1267
 function PlayerListInitiator:get_peer_name(peer)
 	if not peer then
 		return "No peer"
@@ -1116,7 +1116,7 @@ function PlayerListInitiator:get_peer_name(peer)
 	return name, color_ranges
 end
 
--- Lines 1268-1291
+-- Lines 1269-1292
 function PlayerListInitiator:add_peer_item(node, peer)
 	local rank = managers.network:session():local_peer() and managers.experience:current_rank() or peer:rank()
 	local texture, texture_rect = managers.experience:rank_icon_data(rank)
@@ -1140,7 +1140,7 @@ function PlayerListInitiator:add_peer_item(node, peer)
 	node:add_item(new_item)
 end
 
--- Lines 1293-1321
+-- Lines 1294-1322
 function PlayerListInitiator:modify_node(node, up)
 	node:clean_items()
 
@@ -1168,12 +1168,12 @@ function PlayerListInitiator:modify_node(node, up)
 	return node
 end
 
--- Lines 1323-1325
+-- Lines 1324-1326
 function PlayerListInitiator:refresh_node(node)
 	return self:modify_node(node)
 end
 
--- Lines 1327-1331
+-- Lines 1328-1332
 function MenuCallbackHandler:on_player_list_inspect_peer(item, node)
 	if item then
 		managers.menu:open_node("inspect_player", {
@@ -1184,7 +1184,7 @@ end
 
 InspectPlayerInitiator = InspectPlayerInitiator or class(MenuInitiatorBase)
 
--- Lines 1337-1465
+-- Lines 1338-1466
 function InspectPlayerInitiator:modify_node(node, inspect_peer)
 	node:clean_items()
 
@@ -1235,7 +1235,7 @@ function InspectPlayerInitiator:modify_node(node, inspect_peer)
 			node:add_item(new_item)
 		end
 
-		-- Lines 1392-1394
+		-- Lines 1393-1395
 		local function get_identifier(peer)
 			return SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
 		end
@@ -1306,12 +1306,12 @@ function InspectPlayerInitiator:modify_node(node, inspect_peer)
 	return node
 end
 
--- Lines 1467-1469
+-- Lines 1468-1470
 function InspectPlayerInitiator:refresh_node(node)
 	return self:modify_node(node)
 end
 
--- Lines 1471-1478
+-- Lines 1472-1479
 function MenuCallbackHandler:inspect_mod(item)
 	local mod_name = item:parameters().mod_id
 
@@ -1322,7 +1322,7 @@ function MenuCallbackHandler:inspect_mod(item)
 	end
 end
 
--- Lines 1481-1502
+-- Lines 1482-1503
 function MenuCallbackHandler:kick_ban_player(item)
 	local dialog_data = {
 		title = managers.localization:text("dialog_sure_to_ban_title"),
@@ -1346,7 +1346,7 @@ function MenuCallbackHandler:kick_ban_player(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1504-1515
+-- Lines 1505-1516
 function MenuCallbackHandler:_kick_ban_player_confirm(item)
 	local peer = item:parameters().peer
 
@@ -1363,7 +1363,7 @@ end
 
 MenuChooseWeaponCosmeticInitiator = MenuChooseWeaponCosmeticInitiator or class(MenuInitiatorBase)
 
--- Lines 1524-1552
+-- Lines 1525-1553
 function MenuChooseWeaponCosmeticInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -1400,7 +1400,7 @@ function MenuChooseWeaponCosmeticInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 1554-1572
+-- Lines 1555-1573
 function MenuChooseWeaponCosmeticInitiator:add_back_button(node)
 	node:delete_item("back")
 
@@ -1423,7 +1423,7 @@ end
 
 MenuOpenContainerInitiator = MenuOpenContainerInitiator or class(MenuInitiatorBase)
 
--- Lines 1579-1594
+-- Lines 1580-1595
 function MenuOpenContainerInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 	node:parameters().container_data = data.container or {}
@@ -1434,14 +1434,14 @@ function MenuOpenContainerInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 1596-1599
+-- Lines 1597-1600
 function MenuOpenContainerInitiator:refresh_node(node)
 	self:update_node(node)
 
 	return node
 end
 
--- Lines 1601-1606
+-- Lines 1602-1607
 function MenuOpenContainerInitiator:update_node(node)
 	local item = node:item("open_container")
 
@@ -1450,7 +1450,7 @@ function MenuOpenContainerInitiator:update_node(node)
 	end
 end
 
--- Lines 1609-1616
+-- Lines 1610-1617
 function MenuCallbackHandler:have_no_drills_for_container(item)
 	if not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() then
 		return false
@@ -1461,7 +1461,7 @@ function MenuCallbackHandler:have_no_drills_for_container(item)
 	return true
 end
 
--- Lines 1618-1633
+-- Lines 1619-1634
 function MenuCallbackHandler:can_buy_drill(item)
 	if not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() then
 		return false
@@ -1482,7 +1482,7 @@ function MenuCallbackHandler:can_buy_drill(item)
 	return tweak_data.economy.drills[drill].price and not not tweak_data.economy.drills[drill].def_id
 end
 
--- Lines 1635-1648
+-- Lines 1636-1649
 function MenuCallbackHandler:have_safe_and_drill_for_container(data)
 	if not data then
 		return
@@ -1497,7 +1497,7 @@ function MenuCallbackHandler:have_safe_and_drill_for_container(data)
 	return have_drill and have_safe
 end
 
--- Lines 1650-1673
+-- Lines 1651-1674
 function MenuCallbackHandler:steam_buy_drill(item, data)
 	local node = managers.menu:active_menu() and managers.menu:active_menu().logic:selected_node()
 	local quantity_item = node:item("buy_quantity")
@@ -1522,7 +1522,7 @@ function MenuCallbackHandler:steam_buy_drill(item, data)
 	end
 end
 
--- Lines 1675-1696
+-- Lines 1676-1697
 function MenuCallbackHandler:steam_buy_safe_from_community(item, data)
 	local node = managers.menu:active_menu() and managers.menu:active_menu().logic:selected_node()
 	local quantity_item = node:item("buy_quantity")
@@ -1546,7 +1546,7 @@ function MenuCallbackHandler:steam_buy_safe_from_community(item, data)
 	end
 end
 
--- Lines 1698-1725
+-- Lines 1699-1726
 function MenuCallbackHandler:steam_find_item_from_community(item, data)
 	local node = managers.menu:active_menu() and managers.menu:active_menu().logic:selected_node()
 	local quantity_item = node:item("buy_quantity")
@@ -1576,7 +1576,7 @@ function MenuCallbackHandler:steam_find_item_from_community(item, data)
 	end
 end
 
--- Lines 1727-1738
+-- Lines 1728-1739
 function MenuCallbackHandler:steam_sell_item(item)
 	local steam_id = Steam:userid()
 	local instance_id = item.instance_id
@@ -1592,7 +1592,7 @@ function MenuCallbackHandler:steam_sell_item(item)
 	end
 end
 
--- Lines 1740-1745
+-- Lines 1741-1746
 function MenuCallbackHandler:on_steam_transaction_over(canceled)
 	print("on_steam_transaction_over", canceled)
 	managers.network.account:remove_overlay_listener("steam_transaction_tradable_item")
@@ -1600,7 +1600,7 @@ function MenuCallbackHandler:on_steam_transaction_over(canceled)
 	managers.system_menu:close("buy_tradable_item")
 end
 
--- Lines 1747-1783
+-- Lines 1748-1784
 function MenuCallbackHandler:steam_open_container(item)
 	if not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() then
 		return false
@@ -1615,7 +1615,7 @@ function MenuCallbackHandler:steam_open_container(item)
 	local safe_entry = data.safe
 	local safe_tweak = tweak_data.economy.safes[safe_entry]
 
-	-- Lines 1760-1766
+	-- Lines 1761-1767
 	local function ready_clbk()
 		print("ECONOMY SAFE READY CALLBACK")
 		managers.menu:back()
@@ -1642,7 +1642,7 @@ function MenuCallbackHandler:steam_open_container(item)
 	end
 end
 
--- Lines 1785-1797
+-- Lines 1786-1798
 function MenuCallbackHandler:_safe_result_recieved(error, items_new, items_removed)
 	local active_node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -1658,7 +1658,7 @@ end
 
 MenuEconomySafeInitiator = MenuEconomySafeInitiator or class()
 
--- Lines 1800-1804
+-- Lines 1801-1805
 function MenuEconomySafeInitiator:modify_node(node, safe_entry)
 	node:parameters().safe_entry = safe_entry
 
@@ -1667,13 +1667,13 @@ end
 
 MenuBanListInitiator = MenuBanListInitiator or class(MenuInitiatorBase)
 
--- Lines 1808-1844
+-- Lines 1809-1845
 function MenuBanListInitiator:modify_node(node)
 	node:clean_items()
 
 	local added = false
 
-	-- Lines 1813-1815
+	-- Lines 1814-1816
 	local function get_identifier(peer)
 		return SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
 	end
@@ -1737,12 +1737,12 @@ function MenuBanListInitiator:modify_node(node)
 	return node
 end
 
--- Lines 1846-1848
+-- Lines 1847-1849
 function MenuBanListInitiator:refresh_node(node)
 	self:modify_node(node)
 end
 
--- Lines 1850-1872
+-- Lines 1851-1873
 function MenuCallbackHandler:ban_player(item, force)
 	if item:parameters().identifier and item:parameters().name then
 		if not force then
@@ -1778,7 +1778,7 @@ function MenuCallbackHandler:ban_player(item, force)
 	managers.menu:active_menu().renderer:active_node_gui():refresh_gui(node)
 end
 
--- Lines 1874-1896
+-- Lines 1875-1897
 function MenuCallbackHandler:unban_player(item, force)
 	if item:parameters().identifier and item:parameters().name then
 		if not force then
@@ -1814,14 +1814,14 @@ function MenuCallbackHandler:unban_player(item, force)
 	managers.menu:active_menu().renderer:active_node_gui():refresh_gui(node)
 end
 
--- Lines 1898-1900
+-- Lines 1899-1901
 function MenuCallbackHandler:start_quickplay_game(item)
 	managers.crimenet:join_quick_play_game()
 end
 
 MenuQuickplaySettingsInitiator = MenuQuickplaySettingsInitiator or class(MenuInitiatorBase)
 
--- Lines 1903-1947
+-- Lines 1904-1948
 function MenuQuickplaySettingsInitiator:modify_node(node)
 	local stealth_item = node:item("quickplay_settings_stealth")
 	local loud_item = node:item("quickplay_settings_loud")
@@ -1880,12 +1880,12 @@ function MenuQuickplaySettingsInitiator:modify_node(node)
 	return node
 end
 
--- Lines 1949-1951
+-- Lines 1950-1952
 function MenuQuickplaySettingsInitiator:refresh_node(node)
 	self:modify_node(node)
 end
 
--- Lines 1953-1960
+-- Lines 1954-1961
 function MenuCallbackHandler:quickplay_stealth_toggle(item)
 	local on = item:value() == "on"
 
@@ -1897,7 +1897,7 @@ function MenuCallbackHandler:quickplay_stealth_toggle(item)
 	end
 end
 
--- Lines 1962-1969
+-- Lines 1963-1970
 function MenuCallbackHandler:quickplay_loud_toggle(item)
 	local on = item:value() == "on"
 
@@ -1909,29 +1909,29 @@ function MenuCallbackHandler:quickplay_loud_toggle(item)
 	end
 end
 
--- Lines 1972-1975
+-- Lines 1973-1976
 function MenuCallbackHandler:quickplay_mutators_toggle(item)
 	local on = item:value() == "on"
 
 	managers.user:set_setting("quickplay_mutators", on)
 end
 
--- Lines 1978-1980
+-- Lines 1979-1981
 function MenuCallbackHandler:quickplay_level_min(item)
 	Global.crimenet.quickplay.level_diff_min = math.floor(item:value() + 0.5)
 end
 
--- Lines 1982-1984
+-- Lines 1983-1985
 function MenuCallbackHandler:quickplay_level_max(item)
 	Global.crimenet.quickplay.level_diff_max = math.floor(item:value() + 0.5)
 end
 
--- Lines 1986-1988
+-- Lines 1987-1989
 function MenuCallbackHandler:save_crimenet()
 	managers.savefile:save_progress()
 end
 
--- Lines 1990-1996
+-- Lines 1991-1997
 function MenuCallbackHandler:quickplay_difficulty(item)
 	if item:value() == "any" then
 		Global.crimenet.quickplay.difficulty = nil
@@ -1940,7 +1940,7 @@ function MenuCallbackHandler:quickplay_difficulty(item)
 	end
 end
 
--- Lines 1998-2008
+-- Lines 1999-2009
 function MenuCallbackHandler:set_default_quickplay_options()
 	local params = {
 		text = managers.localization:text("dialog_default_quickplay_options_message"),
@@ -1958,11 +1958,11 @@ end
 
 MenuMutatorsInitiator = MenuMutatorsInitiator or class(MenuInitiatorBase)
 
--- Lines 2014-2031
+-- Lines 2015-2032
 function MenuMutatorsInitiator:modify_node(node)
 	node:clean_items()
 
-	-- Lines 2018-2020
+	-- Lines 2019-2021
 	local function get_identifier(peer)
 		return SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
 	end
@@ -1983,7 +1983,7 @@ function MenuMutatorsInitiator:modify_node(node)
 	return node
 end
 
--- Lines 2033-2074
+-- Lines 2034-2075
 function MenuMutatorsInitiator:populate_mutators_list(node)
 	self:create_item(node, {
 		name = "header_active",
@@ -2022,7 +2022,7 @@ function MenuMutatorsInitiator:populate_mutators_list(node)
 	end
 end
 
--- Lines 2076-2100
+-- Lines 2077-2101
 function MenuMutatorsInitiator:_create_mutator_node(node, mutator)
 	self:create_item(node, {
 		localize = false,
@@ -2047,7 +2047,7 @@ function MenuMutatorsInitiator:_create_mutator_node(node, mutator)
 	end
 end
 
--- Lines 2102-2111
+-- Lines 2103-2112
 function MenuMutatorsInitiator:refresh_node(node)
 	for i, item in ipairs(node:items()) do
 		if item:parameters().mutator and not item:parameters().options then
@@ -2057,14 +2057,14 @@ function MenuMutatorsInitiator:refresh_node(node)
 	end
 end
 
--- Lines 2113-2115
+-- Lines 2114-2116
 function MenuCallbackHandler:_open_mutator_options(item)
 	managers.menu:open_node("mutators_options", {
 		item:parameters().mutator
 	})
 end
 
--- Lines 2117-2121
+-- Lines 2118-2122
 function MenuCallbackHandler:_update_mutator_value(item)
 	if item:parameters().update_callback then
 		item:parameters().update_callback(item)
@@ -2073,7 +2073,7 @@ end
 
 MenuSkinEditorInitiator = MenuSkinEditorInitiator or class(MenuInitiatorBase)
 
--- Lines 2127-2469
+-- Lines 2128-2470
 function MenuSkinEditorInitiator:modify_node(node, data)
 	data = data or {}
 	local name = node:parameters().name
@@ -2107,7 +2107,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 
 		local skin_exists = managers.blackmarket:skin_editor():get_current_skin() and true
 
-		-- Lines 2158-2164
+		-- Lines 2159-2165
 		local function disable_func(item)
 			if not skin_exists and item:name() ~= "new_skin" and item:name() ~= "edit_skin" then
 				item:set_enabled(false)
@@ -2779,7 +2779,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines 2473-2478
+-- Lines 2474-2479
 function MenuCallbackHandler:convert_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 	local skin = skin_editor:get_current_skin()
@@ -2788,7 +2788,7 @@ function MenuCallbackHandler:convert_skin(item)
 	item:set_enabled(false)
 end
 
--- Lines 2480-2484
+-- Lines 2481-2485
 function MenuCallbackHandler:need_convert_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 	local skin = skin_editor:get_current_skin()
@@ -2796,12 +2796,12 @@ function MenuCallbackHandler:need_convert_skin(item)
 	return skin and not skin_editor:has_texture_folders(skin)
 end
 
--- Lines 2486-2488
+-- Lines 2487-2489
 function MenuCallbackHandler:should_add_changelog(item)
 	return managers.blackmarket:skin_editor():get_current_skin():item_exists()
 end
 
--- Lines 2490-2494
+-- Lines 2491-2495
 function MenuCallbackHandler:browse_skin(item)
 	local skin = managers.blackmarket:skin_editor():get_current_skin()
 	local path = Application:nice_path(skin:path(), false)
@@ -2809,13 +2809,13 @@ function MenuCallbackHandler:browse_skin(item)
 	Application:shell_explore_to_folder(path)
 end
 
--- Lines 2496-2499
+-- Lines 2497-2500
 function MenuCallbackHandler:screenshot_chosen(item)
 	local skin = managers.blackmarket:skin_editor():get_current_skin()
 	skin:config().screenshot = item:value()
 end
 
--- Lines 2501-2507
+-- Lines 2502-2508
 function MenuCallbackHandler:wear_and_tear_changed(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 	local wear_and_tear = item:value()
@@ -2825,7 +2825,7 @@ function MenuCallbackHandler:wear_and_tear_changed(item)
 	skin_editor:apply_changes(skin_data)
 end
 
--- Lines 2509-2530
+-- Lines 2510-2531
 function MenuCallbackHandler:screenshot_color_changed(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2850,7 +2850,7 @@ function MenuCallbackHandler:screenshot_color_changed(item)
 	end
 end
 
--- Lines 2532-2539
+-- Lines 2533-2540
 function MenuCallbackHandler:leave_screenshot_menu(item)
 	managers.blackmarket:skin_editor():leave_screenshot_mode()
 	managers.blackmarket:skin_editor():reload_current_skin()
@@ -2862,7 +2862,7 @@ function MenuCallbackHandler:leave_screenshot_menu(item)
 	end
 end
 
--- Lines 2541-2582
+-- Lines 2542-2583
 function MenuCallbackHandler:on_exit_skin_editor(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -2879,13 +2879,13 @@ function MenuCallbackHandler:on_exit_skin_editor(item)
 		return false
 	end
 
-	-- Lines 2552-2555
+	-- Lines 2553-2556
 	local function on_yes()
 		managers.blackmarket:skin_editor():save_current_skin()
 		managers.menu:back(true)
 	end
 
-	-- Lines 2557-2560
+	-- Lines 2558-2561
 	local function on_no()
 		managers.blackmarket:skin_editor():set_ignore_unsaved(true)
 		managers.menu:back(true)
@@ -2918,12 +2918,12 @@ function MenuCallbackHandler:on_exit_skin_editor(item)
 	return true
 end
 
--- Lines 2584-2586
+-- Lines 2585-2587
 function MenuCallbackHandler:clear_weapon_skin()
 	managers.blackmarket:skin_editor():clear_current_skin()
 end
 
--- Lines 2588-2605
+-- Lines 2589-2606
 function MenuCallbackHandler:save_weapon_skin(item)
 	local crafted_item = managers.blackmarket:get_crafted_category_slot(managers.blackmarket:skin_editor():category_slot())
 	local name = managers.menu:active_menu().logic:selected_node():item("name_input"):input_text()
@@ -2942,7 +2942,7 @@ function MenuCallbackHandler:save_weapon_skin(item)
 	managers.blackmarket:skin_editor():save_current_skin(name, copy_data)
 end
 
--- Lines 2607-2635
+-- Lines 2608-2636
 function MenuCallbackHandler:publish_weapon_skin(item)
 	local title = managers.menu:active_menu().logic:selected_node():item("title_input"):input_text()
 	local desc = managers.menu:active_menu().logic:selected_node():item("desc_input"):input_text()
@@ -2980,13 +2980,13 @@ function MenuCallbackHandler:publish_weapon_skin(item)
 	skin_editor:publish_skin(skin, title, desc, changelog)
 end
 
--- Lines 2637-2638
+-- Lines 2638-2639
 function MenuCallbackHandler:_dialog_ok()
 end
 
--- Lines 2640-2669
+-- Lines 2641-2670
 function MenuCallbackHandler:take_screenshot_skin(item)
-	-- Lines 2641-2646
+	-- Lines 2642-2647
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
 		managers.menu:active_menu().renderer:show()
@@ -3003,7 +3003,7 @@ function MenuCallbackHandler:take_screenshot_skin(item)
 
 	item:set_enabled(false)
 
-	-- Lines 2656-2666
+	-- Lines 2657-2667
 	local function co_screenshot(o)
 		for i = 0, 5 do
 			coroutine.yield()
@@ -3015,7 +3015,7 @@ function MenuCallbackHandler:take_screenshot_skin(item)
 	managers.menu:active_menu().renderer.ws:panel():animate(co_screenshot)
 end
 
--- Lines 2671-2681
+-- Lines 2672-2682
 function MenuCallbackHandler:new_weapon_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -3030,7 +3030,7 @@ function MenuCallbackHandler:new_weapon_skin(item)
 	skin_editor:select_skin(skin_editor:create_new_skin(data))
 end
 
--- Lines 2683-2704
+-- Lines 2684-2705
 function MenuCallbackHandler:delete_weapon_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -3059,16 +3059,16 @@ function MenuCallbackHandler:delete_weapon_skin(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2706-2708
+-- Lines 2707-2709
 function MenuCallbackHandler:_dialog_delete_no()
 end
 
--- Lines 2710-2712
+-- Lines 2711-2713
 function MenuCallbackHandler:_dialog_delete_yes()
 	managers.blackmarket:skin_editor():delete_current()
 end
 
--- Lines 2714-2721
+-- Lines 2715-2722
 function MenuCallbackHandler:select_weapon_skin(item)
 	local skin_editor = managers.blackmarket:skin_editor()
 
@@ -3079,9 +3079,9 @@ function MenuCallbackHandler:select_weapon_skin(item)
 	skin_editor:select_skin(item:parameters().skin_id)
 end
 
--- Lines 2723-2802
+-- Lines 2724-2803
 function MenuCallbackHandler:cleanup_weapon_skin_data(copy_data, skip_base)
-	-- Lines 2724-2754
+	-- Lines 2725-2755
 	local function remove_empty_func(data)
 		local remove = {}
 
@@ -3175,7 +3175,7 @@ function MenuCallbackHandler:cleanup_weapon_skin_data(copy_data, skip_base)
 	end
 end
 
--- Lines 2804-2931
+-- Lines 2805-2932
 function MenuCallbackHandler:weapon_skin_changed(item)
 	local key = item:parameters().key or item:name()
 	local part_id = item:parameters().part_id
@@ -3324,27 +3324,27 @@ function MenuCallbackHandler:weapon_skin_changed(item)
 	skin_editor:apply_changes(skin:config().data)
 end
 
--- Lines 2993-2995
+-- Lines 2994-2996
 function MenuCallbackHandler:toggle_controller_hint(item)
 	managers.user:set_setting("loading_screen_show_controller", item:value() == "on")
 end
 
--- Lines 2997-2999
+-- Lines 2998-3000
 function MenuCallbackHandler:toggle_loading_hints(item)
 	managers.user:set_setting("loading_screen_show_hints", item:value() == "on")
 end
 
--- Lines 3002-3004
+-- Lines 3003-3005
 function MenuCallbackHandler:toggle_vr_descs(item)
 	managers.user:set_setting("show_vr_descs", item:value() == "on")
 end
 
--- Lines 3009-3015
+-- Lines 3010-3016
 function MenuCallbackHandler:enable_movie_theater()
 	return managers.achievment:get_info("vit_1").awarded
 end
 
--- Lines 3017-3022
+-- Lines 3018-3023
 function MenuCallbackHandler:only_one_movie()
 	if tweak_data.movies then
 		return #tweak_data.movies == 1
@@ -3353,7 +3353,7 @@ function MenuCallbackHandler:only_one_movie()
 	return false
 end
 
--- Lines 3024-3029
+-- Lines 3025-3030
 function MenuCallbackHandler:more_than_one_movie()
 	if tweak_data.movies then
 		return #tweak_data.movies > 1
@@ -3362,14 +3362,14 @@ function MenuCallbackHandler:more_than_one_movie()
 	return false
 end
 
--- Lines 3035-3038
+-- Lines 3036-3039
 local function get_weapon_color_data(node)
 	node = node or managers.menu:active_menu().logic:selected_node()
 
 	return node and node.weapon_color_data
 end
 
--- Lines 3040-3059
+-- Lines 3041-3060
 function MenuCallbackHandler:refresh_weapon_color(node)
 	local weapon_color_data = get_weapon_color_data(node)
 	local crafted = managers.blackmarket:get_crafted_category_slot(weapon_color_data.category, weapon_color_data.slot)
@@ -3393,7 +3393,7 @@ function MenuCallbackHandler:refresh_weapon_color(node)
 	end
 end
 
--- Lines 3061-3082
+-- Lines 3062-3083
 function MenuCallbackHandler:on_exit_weapon_color_customize(node)
 	local weapon_color_data = get_weapon_color_data(node)
 
@@ -3427,7 +3427,7 @@ function MenuCallbackHandler:on_exit_weapon_color_customize(node)
 	MenuCallbackHandler:refresh_weapon_color(node)
 end
 
--- Lines 3084-3111
+-- Lines 3085-3112
 function MenuCallbackHandler:can_apply_weapon_color(node)
 	local weapon_color_data = get_weapon_color_data(node)
 
@@ -3453,7 +3453,7 @@ function MenuCallbackHandler:can_apply_weapon_color(node)
 	return weapon_color_data.any_changes
 end
 
--- Lines 3113-3124
+-- Lines 3114-3125
 function MenuCallbackHandler:apply_weapon_color(item)
 	local weapon_color_data = get_weapon_color_data()
 
@@ -3468,12 +3468,12 @@ function MenuCallbackHandler:apply_weapon_color(item)
 	managers.menu:back()
 end
 
--- Lines 3126-3128
+-- Lines 3127-3129
 function MenuCallbackHandler:should_show_weapon_color_apply(item)
 	return not MenuCallbackHandler:should_show_weapon_color_buy(item)
 end
 
--- Lines 3130-3148
+-- Lines 3131-3149
 function MenuCallbackHandler:should_show_weapon_color_buy(item)
 	local weapon_color_data = get_weapon_color_data()
 
@@ -3495,7 +3495,7 @@ function MenuCallbackHandler:should_show_weapon_color_buy(item)
 	return false
 end
 
--- Lines 3151-3162
+-- Lines 3152-3163
 function MenuCallbackHandler:should_show_pattern_scale()
 	local weapon_color_data = get_weapon_color_data()
 
@@ -3510,12 +3510,12 @@ function MenuCallbackHandler:should_show_pattern_scale()
 	return color_tweak.pattern_scale == nil and color_skin_data.pattern_default and true or false
 end
 
--- Lines 3164-3166
+-- Lines 3165-3167
 function MenuCallbackHandler:should_show_pattern_divider(item)
 	return not MenuCallbackHandler:should_show_pattern_scale(item)
 end
 
--- Lines 3170-3186
+-- Lines 3171-3187
 function MenuCallbackHandler:buy_weapon_color_dlc(item)
 	if not MenuCallbackHandler:is_overlay_enabled() then
 		managers.menu:show_enable_steam_overlay()
@@ -3536,7 +3536,7 @@ function MenuCallbackHandler:buy_weapon_color_dlc(item)
 	MenuCallbackHandler:open_dlc_store_page(dlc, "weapon_colors")
 end
 
--- Lines 3188-3208
+-- Lines 3189-3209
 function MenuCallbackHandler:is_weapon_color_option_visible(item_option)
 	local id = item_option:value()
 	local color_tweak = tweak_data.blackmarket.weapon_skins[id]
@@ -3555,7 +3555,7 @@ function MenuCallbackHandler:is_weapon_color_option_visible(item_option)
 	return value == "all" or value == group_id
 end
 
--- Lines 3210-3215
+-- Lines 3211-3216
 function MenuCallbackHandler:is_weapon_color_option_unlocked(item_option)
 	local unlocked = item_option:get_parameter("unlocked")
 	local have_color = item_option:get_parameter("have_color")
@@ -3563,7 +3563,7 @@ function MenuCallbackHandler:is_weapon_color_option_unlocked(item_option)
 	return unlocked and have_color
 end
 
--- Lines 3217-3263
+-- Lines 3218-3264
 function MenuCallbackHandler:get_weapon_color_disabled_icon(item_option)
 	local id = item_option:value()
 	local color_tweak = tweak_data.blackmarket.weapon_skins[id]
@@ -3608,7 +3608,7 @@ function MenuCallbackHandler:get_weapon_color_disabled_icon(item_option)
 	return "guis/textures/pd2/skilltree/padlock"
 end
 
--- Lines 3265-3303
+-- Lines 3266-3304
 function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 	if x_option.enabled ~= y_option.enabled then
 		return x_option.enabled
@@ -3646,7 +3646,7 @@ function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 	return y_id < x_id
 end
 
--- Lines 3307-3339
+-- Lines 3308-3340
 function MenuCallbackHandler:open_dlc_store_page(dlc, context)
 	if not MenuCallbackHandler:is_overlay_enabled() then
 		managers.menu:show_enable_steam_overlay()
@@ -3680,7 +3680,7 @@ end
 
 MenuArmorSkinEditorInitiator = MenuArmorSkinEditorInitiator or class(MenuInitiatorBase)
 
--- Lines 3347-3693
+-- Lines 3348-3694
 function MenuArmorSkinEditorInitiator:modify_node(node, data)
 	data = data or {}
 	local name = node:parameters().name
@@ -3710,7 +3710,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 
 		local skin_exists = editor:get_current_skin() and true
 
-		-- Lines 3374-3380
+		-- Lines 3375-3381
 		local function disable_func(item)
 			if not skin_exists and item:name() ~= "new_skin" and item:name() ~= "edit_skin" then
 				item:set_enabled(false)
@@ -4316,7 +4316,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines 3697-3702
+-- Lines 3698-3703
 function MenuCallbackHandler:clear_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4325,7 +4325,7 @@ function MenuCallbackHandler:clear_armor_skin()
 	end
 end
 
--- Lines 3704-3710
+-- Lines 3705-3711
 function MenuCallbackHandler:new_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4336,7 +4336,7 @@ function MenuCallbackHandler:new_armor_skin()
 	end
 end
 
--- Lines 3712-3717
+-- Lines 3713-3718
 function MenuCallbackHandler:select_armor_skin(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4345,7 +4345,7 @@ function MenuCallbackHandler:select_armor_skin(item)
 	end
 end
 
--- Lines 3719-3742
+-- Lines 3720-3743
 function MenuCallbackHandler:delete_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4372,7 +4372,7 @@ function MenuCallbackHandler:delete_armor_skin()
 	end
 end
 
--- Lines 3744-3749
+-- Lines 3745-3750
 function MenuCallbackHandler:_dialog_delete_armor_skin_yes()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4381,11 +4381,11 @@ function MenuCallbackHandler:_dialog_delete_armor_skin_yes()
 	end
 end
 
--- Lines 3751-3753
+-- Lines 3752-3754
 function MenuCallbackHandler:_dialog_delete_armor_skin_no()
 end
 
--- Lines 3755-3764
+-- Lines 3756-3765
 function MenuCallbackHandler:browse_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4400,7 +4400,7 @@ function MenuCallbackHandler:browse_armor_skin()
 	end
 end
 
--- Lines 3766-3785
+-- Lines 3767-3786
 function MenuCallbackHandler:save_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4420,16 +4420,16 @@ function MenuCallbackHandler:save_armor_skin()
 	end
 end
 
--- Lines 3787-3789
+-- Lines 3788-3790
 function MenuCallbackHandler:need_convert_armor_skin(item)
 	return false
 end
 
--- Lines 3791-3793
+-- Lines 3792-3794
 function MenuCallbackHandler:convert_armor_skin()
 end
 
--- Lines 3795-3843
+-- Lines 3796-3844
 function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4451,13 +4451,13 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 		return false
 	end
 
-	-- Lines 3812-3815
+	-- Lines 3813-3816
 	local function on_yes()
 		editor:save_current_skin()
 		managers.menu:back(true)
 	end
 
-	-- Lines 3817-3820
+	-- Lines 3818-3821
 	local function on_no()
 		editor:set_ignore_unsaved(true)
 		managers.menu:back(true)
@@ -4490,7 +4490,7 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 	return true
 end
 
--- Lines 3845-3976
+-- Lines 3846-3977
 function MenuCallbackHandler:armor_skin_changed(item)
 	local key = item:parameters().key or item:name()
 	local value = item:value()
@@ -4633,7 +4633,7 @@ function MenuCallbackHandler:armor_skin_changed(item)
 	editor:apply_changes(skin:config().data)
 end
 
--- Lines 3978-3990
+-- Lines 3979-3991
 function MenuCallbackHandler:editor_get_armor_level()
 	local armor_id = nil
 
@@ -4649,7 +4649,7 @@ function MenuCallbackHandler:editor_get_armor_level()
 	return armor_level
 end
 
--- Lines 3992-4020
+-- Lines 3993-4021
 function MenuCallbackHandler:publish_armor_skin(item)
 	local title = managers.menu:active_menu().logic:selected_node():item("title_input"):input_text()
 	local desc = managers.menu:active_menu().logic:selected_node():item("desc_input"):input_text()
@@ -4687,18 +4687,18 @@ function MenuCallbackHandler:publish_armor_skin(item)
 	editor:publish_skin(skin, title, desc, changelog)
 end
 
--- Lines 4022-4024
+-- Lines 4023-4025
 function MenuCallbackHandler:should_add_changelog_armor_skin(item)
 	return managers.blackmarket:armor_skin_editor():get_current_skin():item_exists()
 end
 
--- Lines 4026-4029
+-- Lines 4027-4030
 function MenuCallbackHandler:armor_screenshot_chosen(item)
 	local skin = managers.blackmarket:armor_skin_editor():get_current_skin()
 	skin:config().screenshot = item:value()
 end
 
--- Lines 4034-4068
+-- Lines 4035-4069
 function MenuCallbackHandler:take_armor_screenshot_skin(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4706,7 +4706,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 		return
 	end
 
-	-- Lines 4041-4045
+	-- Lines 4042-4046
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
 		managers.menu:active_menu().renderer:show()
@@ -4721,7 +4721,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 
 	item:set_enabled(false)
 
-	-- Lines 4054-4064
+	-- Lines 4055-4065
 	local function co_screenshot(o)
 		for i = 0, 5 do
 			coroutine.yield()
@@ -4733,7 +4733,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 	managers.menu:active_menu().renderer.ws:panel():animate(co_screenshot)
 end
 
--- Lines 4070-4078
+-- Lines 4071-4079
 function MenuCallbackHandler:leave_armor_screenshot_menu(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4743,7 +4743,7 @@ function MenuCallbackHandler:leave_armor_screenshot_menu(item)
 	end
 end
 
--- Lines 4080-4101
+-- Lines 4081-4102
 function MenuCallbackHandler:armor_screenshot_color_changed(item)
 	local skin_editor = managers.blackmarket:armor_skin_editor()
 
@@ -4768,7 +4768,7 @@ function MenuCallbackHandler:armor_screenshot_color_changed(item)
 	end
 end
 
--- Lines 4103-4111
+-- Lines 4104-4112
 function MenuCallbackHandler:armor_screenshots_hide_weapons(item)
 	for _, data in pairs(managers.menu_scene._weapon_units) do
 		for _, u_data in pairs(data) do
@@ -4779,7 +4779,7 @@ function MenuCallbackHandler:armor_screenshots_hide_weapons(item)
 	end
 end
 
--- Lines 4113-4121
+-- Lines 4114-4122
 function MenuCallbackHandler:armor_screenshots_show_weapons(item)
 	for _, data in pairs(managers.menu_scene._weapon_units) do
 		for _, u_data in pairs(data) do
@@ -4790,7 +4790,7 @@ function MenuCallbackHandler:armor_screenshots_show_weapons(item)
 	end
 end
 
--- Lines 4124-4129
+-- Lines 4125-4130
 function MenuCallbackHandler:_armor_screenshots_set_weapon_visibility(unit, state)
 	unit:set_enabled(state)
 
@@ -4799,7 +4799,7 @@ function MenuCallbackHandler:_armor_screenshots_set_weapon_visibility(unit, stat
 	end
 end
 
--- Lines 4131-4137
+-- Lines 4132-4138
 function MenuCallbackHandler:select_armor_skin_level(item)
 	managers.menu_scene:set_character_armor(item:name())
 
@@ -4810,7 +4810,7 @@ function MenuCallbackHandler:select_armor_skin_level(item)
 	end
 end
 
--- Lines 4139-4141
+-- Lines 4140-4142
 function MenuCallbackHandler:select_armor_skin_pose(item)
 	managers.menu_scene:_set_character_unit_pose(item:name(), managers.menu_scene._character_unit)
 end

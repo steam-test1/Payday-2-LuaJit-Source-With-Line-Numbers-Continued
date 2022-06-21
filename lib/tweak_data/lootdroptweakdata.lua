@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2282
+-- Lines 5-2287
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1829,11 +1829,17 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.sbzac_wpn_fps_upg_charm_skullz = self.global_values.sbzac2
 	self.global_values.sbzac_elegantscarf = self.global_values.sbzac2
 	self.global_values.sbzac_color_sbzac2_01 = self.global_values.sbzac2
+	self.global_values.rat_oilbaron = self.global_values.rat
+	self.global_values.rat_ranchdiesel = self.global_values.rat
+	self.global_values.rat_mocow = self.global_values.rat
+	self.global_values.prim_darkmat = self.global_values.prim
+	self.global_values.prim_primtime = self.global_values.prim
+	self.global_values.prim_newhorizon = self.global_values.prim
 
 	self:_create_global_value_list_map()
 end
 
--- Lines 2284-2289
+-- Lines 2289-2294
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

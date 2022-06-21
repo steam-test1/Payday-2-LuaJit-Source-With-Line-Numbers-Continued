@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-1000
+-- Lines 78-1029
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -123,7 +123,8 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		player_style_exclude_list = {
 			"none",
 			"slaughterhouse",
-			"texvest"
+			"texvest",
+			"newhorizon"
 		}
 	}
 	self.suit_default_gloves = {
@@ -167,7 +168,9 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		baron = "jesterstripe",
 		fighterpilot = "heist_default",
 		thug = "heist_default",
+		mocow = "ranchdiesel",
 		badsanta = "heist_default",
+		newhorizon = "darkmat",
 		clown_2 = "heist_default",
 		gangstercoat = "heist_default",
 		leather = "heist_default",
@@ -688,5 +691,23 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 1,
 		unit = "units/pd2_dlc_txt1/characters/glv_workranch/glv_workranch",
 		third_material = "units/pd2_dlc_txt1/characters/glv_workranch/glv_workranch_third"
+	}
+	self.gloves.ranchdiesel = {
+		name_id = "bm_gloves_ranchdiesel",
+		desc_id = "bm_gloves_ranchdiesel_desc",
+		texture_bundle_folder = "rat",
+		global_value = "rat_ranchdiesel",
+		sort_number = 1,
+		unit = "units/pd2_dlc_rat/characters/glv_ranchdiesel/glv_ranchdiesel",
+		third_material = "units/pd2_dlc_rat/characters/glv_ranchdiesel/glv_ranchdiesel_third"
+	}
+	self.gloves.darkmat = {
+		name_id = "bm_gloves_darkmat",
+		desc_id = "bm_gloves_darkmat_desc",
+		texture_bundle_folder = "prim",
+		global_value = "prim_darkmat",
+		sort_number = 1,
+		unit = "units/pd2_dlc_prim/characters/glv_darkmat/glv_darkmat",
+		third_material = "units/pd2_dlc_prim/characters/glv_darkmat/glv_darkmat_third"
 	}
 end

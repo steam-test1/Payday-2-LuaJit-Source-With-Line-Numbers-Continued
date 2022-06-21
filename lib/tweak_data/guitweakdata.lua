@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1807
+-- Lines 3-1817
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -2076,6 +2076,17 @@ function GuiTweakData:init(tweak_data)
 				},
 				name_id = "heist_contact_shayu",
 				id = "shayu"
+			},
+			{
+				{
+					desc_id = "heist_contact_mcshay_description",
+					post_event = "gemma_quote_set_a",
+					videos = {
+						"mcshay1"
+					}
+				},
+				name_id = "heist_contact_mcshay",
+				id = "mcshay"
 			},
 			name_id = "menu_contacts",
 			id = "contacts"
@@ -5107,10 +5118,15 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_pxp1_02",
-		texture_path = "guis/dlcs/in40/textures/pd2/new_heists/in40_02",
+		name_id = "menu_nh_ranc_01",
+		texture_path = "guis/dlcs/ranc/textures/pd2/new_heists/ranc_01",
 		append_steam_id = "?playerid=",
-		url = "https://pd3.link/ShapePD3"
+		url = "https://pd2.link/MidlandRanchSLS"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_txt1_02",
+		texture_path = "guis/dlcs/txt1/textures/pd2/new_heists/txt1_02",
+		url = "https://pd2.link/MidlandBundleSLS"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_pxp1_01",
@@ -5118,14 +5134,15 @@ function GuiTweakData:init(tweak_data)
 		url = "https://pd2.link/McShayWeaponPackSLS"
 	})
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_txt1_01",
-		texture_path = "guis/dlcs/txt1/textures/pd2/new_heists/txt1_01",
-		url = "https://pd2.link/SouthboundTailorPackSLS"
+		name_id = "menu_nh_ranc_02",
+		texture_path = "guis/dlcs/ranc/textures/pd2/new_heists/ranc_02",
+		url = "http://pd2.link/Drops"
 	})
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_txt1_02",
-		texture_path = "guis/dlcs/txt1/textures/pd2/new_heists/txt1_02",
-		url = "https://pd2.link/MidlandBundleSLS"
+		name_id = "menu_nh_pxp1_02",
+		texture_path = "guis/dlcs/in40/textures/pd2/new_heists/in40_02",
+		append_steam_id = "?playerid=",
+		url = "https://pd3.link/ShapePD3"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_in33_02",
@@ -5504,7 +5521,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1809-1828
+-- Lines 1819-1838
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5532,7 +5549,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1830-1898
+-- Lines 1840-1908
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5610,15 +5627,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1900-1902
+-- Lines 1910-1912
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1904-1913
+-- Lines 1914-1923
 function GuiTweakData:print_locations()
 end
 
--- Lines 1915-1949
+-- Lines 1925-1959
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5657,7 +5674,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 1951-2076
+-- Lines 1961-2086
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5780,12 +5797,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2078-2080
+-- Lines 2088-2090
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2082-2089
+-- Lines 2092-2099
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5796,7 +5813,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2091-2111
+-- Lines 2101-2121
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

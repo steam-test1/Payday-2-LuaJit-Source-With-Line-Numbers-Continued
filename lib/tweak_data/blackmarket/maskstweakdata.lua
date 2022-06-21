@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-8641
+-- Lines 10-8708
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -8125,6 +8125,26 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 				Rotation(-0, -0, -0)
 			}
 		}
+	}
+	self.masks.oilbaron = {
+		unit = "units/pd2_dlc_rat/masks/msk_oilbaron/msk_oilbaron",
+		name_id = "bm_msk_oilbaron",
+		pcs = {},
+		value = 0,
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		dlc = "rat_oilbaron",
+		texture_bundle_folder = "rat"
+	}
+	self.masks.primtime = {
+		unit = "units/pd2_dlc_prim/masks/msk_primtime/msk_primtime",
+		name_id = "bm_msk_primtime",
+		pcs = {},
+		value = 0,
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		dlc = "prim_primtime",
+		texture_bundle_folder = "prim"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

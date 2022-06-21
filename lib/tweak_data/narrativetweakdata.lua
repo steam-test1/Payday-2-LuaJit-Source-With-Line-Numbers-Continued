@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-4586
+-- Lines 3-4589
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -409,6 +409,12 @@ function NarrativeTweakData:init(tweak_data)
 		description_id = "heist_contact_shayu_description",
 		package = "packages/contact_shayu",
 		assets_gui = Idstring("guis/dlcs/pent/guis/preload_contact_shayu")
+	}
+	self.contacts.mcshay = {
+		name_id = "heist_contact_mcshay",
+		description_id = "heist_contact_mcshay_description",
+		package = "packages/contact_mcshay",
+		assets_gui = Idstring("guis/dlcs/ranc/guis/preload_contact_mcshay")
 	}
 	self.contacts.skirmish = {
 		name_id = "heist_contact_skirmish",
@@ -6624,6 +6630,79 @@ function NarrativeTweakData:init(tweak_data)
 		3,
 		9
 	}
+	self.stages.ranc = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "ranc",
+		mission_filter = {
+			1
+		}
+	}
+	self.jobs.ranc = {
+		name_id = "heist_ranc",
+		briefing_id = "heist_ranc_crimenet",
+		contact = "mcshay",
+		region = "street",
+		jc = 30,
+		dlc = "ranc",
+		chain = {
+			self.stages.ranc
+		},
+		briefing_event = "Play_gem_ranc_cbf",
+		debrief_event = nil,
+		crimenet_callouts = {
+			"Play_gem_ranc_cnc"
+		},
+		crimenet_videos = {
+			"codex/mcshay1"
+		},
+		payout = {
+			50000,
+			125000,
+			250000,
+			550000,
+			700000,
+			700000,
+			700000
+		},
+		contract_cost = {
+			24000,
+			48000,
+			120000,
+			240000,
+			300000,
+			300000,
+			300000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.ranc.contract_visuals.min_mission_xp = {
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200,
+		14200
+	}
+	self.jobs.ranc.contract_visuals.max_mission_xp = {
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200,
+		23200
+	}
+	self.jobs.ranc.contract_visuals.preview_image = {
+		id = "ranc",
+		folder = "ranc"
+	}
+	self.jobs.ranc.date_added = {
+		2022,
+		3,
+		9
+	}
 	self.stages.lbe_lobby_end = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -7420,7 +7499,8 @@ function NarrativeTweakData:init(tweak_data)
 		"chas",
 		"sand",
 		"chca",
-		"pent"
+		"pent",
+		"ranc"
 	}
 	self.forced_jobs = {
 		firestarter = true,
@@ -7487,7 +7567,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 4590-4605
+-- Lines 4593-4608
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -7506,22 +7586,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 4607-4609
+-- Lines 4610-4612
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 4611-4613
+-- Lines 4614-4616
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 4617-4619
+-- Lines 4620-4622
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 4623-4630
+-- Lines 4626-4633
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -7532,12 +7612,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 4634-4636
+-- Lines 4637-4639
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 4640-4656
+-- Lines 4643-4659
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -7554,7 +7634,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 4658-4668
+-- Lines 4661-4671
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -7567,7 +7647,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 4672-4723
+-- Lines 4675-4726
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -7624,7 +7704,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4727-4739
+-- Lines 4730-4742
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -7641,7 +7721,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4744-4751
+-- Lines 4747-4754
 function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	if type(stars) ~= "number" then
 		return {}
@@ -7652,7 +7732,7 @@ function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	return (infamy and self.INFAMY_STARS[stars] or self.STARS[stars] or {}).jcs or {}
 end
 
--- Lines 4756-4771
+-- Lines 4759-4774
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

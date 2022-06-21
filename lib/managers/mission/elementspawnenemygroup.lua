@@ -17,16 +17,39 @@ function ElementSpawnEnemyGroup:init(...)
 	self:_finalize_values()
 end
 
--- Lines 19-24
+-- Lines 19-51
 function ElementSpawnEnemyGroup:_finalize_values()
 	local values = self._values
 
 	if values.team == "default" then
 		values.team = nil
 	end
+
+	local preferred_groups = values.preferred_spawn_groups
+
+	if not preferred_groups then
+		return
+	end
+
+	local ref_chk = nil
+	local t_ins = table.insert
+
+	for group_id, group_data in pairs(tweak_data.group_ai.enemy_spawn_groups) do
+		ref_chk = group_data.spawn_point_chk_ref
+
+		if ref_chk then
+			for _, group_type in ipairs(preferred_groups) do
+				if ref_chk[group_type] then
+					t_ins(preferred_groups, group_id)
+
+					break
+				end
+			end
+		end
+	end
 end
 
--- Lines 26-37
+-- Lines 53-64
 function ElementSpawnEnemyGroup:on_script_activated()
 	for i, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -36,7 +59,7 @@ function ElementSpawnEnemyGroup:on_script_activated()
 	end
 end
 
--- Lines 40-45
+-- Lines 67-72
 function ElementSpawnEnemyGroup:add_event_callback(name, callback)
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -45,7 +68,7 @@ function ElementSpawnEnemyGroup:add_event_callback(name, callback)
 	end
 end
 
--- Lines 48-64
+-- Lines 75-91
 function ElementSpawnEnemyGroup:_check_spawn_points()
 	self._spawn_points = {}
 
@@ -68,7 +91,7 @@ function ElementSpawnEnemyGroup:_check_spawn_points()
 	end
 end
 
--- Lines 66-96
+-- Lines 93-123
 function ElementSpawnEnemyGroup:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -105,7 +128,7 @@ function ElementSpawnEnemyGroup:on_executed(instigator)
 	ElementSpawnEnemyGroup.super.on_executed(self, instigator)
 end
 
--- Lines 98-111
+-- Lines 125-138
 function ElementSpawnEnemyGroup:_get_spawn_point(i)
 	if self._group_data.spawn_type == "ordered" then
 		return 1 + math.mod(i, #self._spawn_points)
@@ -122,7 +145,7 @@ function ElementSpawnEnemyGroup:_get_spawn_point(i)
 	return table.remove(self._unused_randoms, rand)
 end
 
--- Lines 113-122
+-- Lines 140-149
 function ElementSpawnEnemyGroup:units()
 	local all_units = {}
 
@@ -137,33 +160,33 @@ function ElementSpawnEnemyGroup:units()
 	return all_units
 end
 
--- Lines 124-128
+-- Lines 151-155
 function ElementSpawnEnemyGroup:unspawn_all_units()
 	for _, element in ipairs(self._group_data.spawn_points) do
 		element:unspawn_all_units()
 	end
 end
 
--- Lines 130-134
+-- Lines 157-161
 function ElementSpawnEnemyGroup:kill_all_units()
 	for _, element in ipairs(self._group_data.spawn_points) do
 		element:kill_all_units()
 	end
 end
 
--- Lines 136-140
+-- Lines 163-167
 function ElementSpawnEnemyGroup:execute_on_all_units(func)
 	for _, element in ipairs(self._group_data.spawn_points) do
 		element:execute_on_all_units(func)
 	end
 end
 
--- Lines 142-144
+-- Lines 169-171
 function ElementSpawnEnemyGroup:spawn_points()
 	return self._group_data.spawn_points
 end
 
--- Lines 146-148
+-- Lines 173-175
 function ElementSpawnEnemyGroup:spawn_groups()
 	return self._values.preferred_spawn_groups
 end

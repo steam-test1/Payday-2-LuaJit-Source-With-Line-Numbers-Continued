@@ -1323,9 +1323,29 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		},
 		access = access_type_walk_only
 	}
+	self.unit_categories.marshal_marksman = {
+		unit_types = {
+			america = {
+				Idstring("units/pd2_dlc_usm1/characters/ene_male_marshal_marksman_1/ene_male_marshal_marksman_1")
+			},
+			russia = {
+				Idstring("units/pd2_dlc_usm1/characters/ene_male_marshal_marksman_1/ene_male_marshal_marksman_1")
+			},
+			zombie = {
+				Idstring("units/pd2_dlc_usm1/characters/ene_male_marshal_marksman_1/ene_male_marshal_marksman_1")
+			},
+			murkywater = {
+				Idstring("units/pd2_dlc_usm1/characters/ene_male_marshal_marksman_1/ene_male_marshal_marksman_1")
+			},
+			federales = {
+				Idstring("units/pd2_dlc_usm1/characters/ene_male_marshal_marksman_1/ene_male_marshal_marksman_1")
+			}
+		},
+		access = access_type_all
+	}
 end
 
--- Lines 1854-2601
+-- Lines 1854-2600
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -1420,6 +1440,10 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"charge",
 			"shield_cover",
 			"smoke_grenade"
+		},
+		marshal_marksman = {
+			"ranged_fire",
+			"flank"
 		}
 	}
 	self.enemy_spawn_groups = {}
@@ -3236,9 +3260,35 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 		}
 	}
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
+
+	if Global.game_settings and Global.game_settings.level_id == "ranc" then
+		self.enemy_spawn_groups.marshal_squad = {
+			spawn_cooldown = 60,
+			max_nr_simultaneous_groups = 1,
+			initial_spawn_delay = 90,
+			amount = {
+				2,
+				2
+			},
+			spawn = {
+				{
+					respawn_cooldown = 30,
+					amount_min = 2,
+					rank = 1,
+					freq = 1,
+					unit = "marshal_marksman",
+					tactics = self._tactics.marshal_marksman
+				}
+			},
+			spawn_point_chk_ref = table.list_to_set({
+				"tac_swat_rifle_flank",
+				"tac_swat_rifle"
+			})
+		}
+	end
 end
 
--- Lines 2605-3095
+-- Lines 2604-3094
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -4122,6 +4172,11 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		0,
 		0
 	}
+	self.besiege.assault.groups.marshal_squad = {
+		0,
+		0,
+		0
+	}
 	self.besiege.reenforce.interval = {
 		10,
 		20,
@@ -4393,6 +4448,11 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		0,
 		0
 	}
+	self.besiege.recon.groups.marshal_squad = {
+		0,
+		0,
+		0
+	}
 	self.besiege.cloaker.groups = {
 		single_spooc = {
 			1,
@@ -4467,7 +4527,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3116-3122
+-- Lines 3115-3121
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4477,7 +4537,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3126-3172
+-- Lines 3125-3171
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

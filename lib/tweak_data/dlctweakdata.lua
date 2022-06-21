@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4872
+-- Lines 10-4892
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8519,6 +8519,72 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "player_styles",
 			item_entry = "kungfumaster"
+		}
+	}
+	self.rat_oilbaron = {
+		content = {}
+	}
+	self.rat_oilbaron.content.loot_global_value = "rat_oilbaron"
+	self.rat_oilbaron.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "oilbaron",
+			amount = 1
+		}
+	}
+	self.rat_ranchdiesel = {
+		content = {}
+	}
+	self.rat_ranchdiesel.content.loot_global_value = "rat_ranchdiesel"
+	self.rat_ranchdiesel.content.loot_drops = {
+		{
+			type_items = "gloves",
+			item_entry = "ranchdiesel",
+			amount = 1
+		}
+	}
+	self.rat_mocow = {
+		content = {}
+	}
+	self.rat_mocow.content.loot_global_value = "rat_mocow"
+	self.rat_mocow.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "mocow",
+			amount = 1
+		}
+	}
+	self.prim_primtime = {
+		content = {}
+	}
+	self.prim_primtime.content.loot_global_value = "prim_primtime"
+	self.prim_primtime.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "primtime",
+			amount = 1
+		}
+	}
+	self.prim_darkmat = {
+		content = {}
+	}
+	self.prim_darkmat.content.loot_global_value = "prim_darkmat"
+	self.prim_darkmat.content.loot_drops = {
+		{
+			type_items = "gloves",
+			item_entry = "darkmat",
+			amount = 1
+		}
+	}
+	self.prim_newhorizon = {
+		content = {}
+	}
+	self.prim_newhorizon.content.loot_global_value = "prim_newhorizon"
+	self.prim_newhorizon.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "newhorizon",
+			amount = 1
 		}
 	}
 end

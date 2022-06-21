@@ -9,6 +9,7 @@ local SteamPlatformId = "steam"
 local IamSteamPlatformUrl = string.format("%s/iam/oauth/platforms/%s/token", BaseUrl, SteamPlatformId)
 local IamServerUrl = string.format("%s/iam/oauth/token", BaseUrl)
 local LambdaUrl = Utility:get_current_lambda_url()
+local publisher_user_id = nil
 NamespaceRoles = {
 	namespace = "",
 	roleId = ""
@@ -117,7 +118,7 @@ Login = {
 	end
 }
 
--- Lines 151-179
+-- Lines 153-181
 function Login:LoginWithSteamToken(ticket, callback)
 	print("[AccelByte] Login:LoginWithSteamToken")
 
@@ -130,7 +131,7 @@ function Login:LoginWithSteamToken(ticket, callback)
 		Accept = "application/json"
 	}
 
-	-- Lines 162-177
+	-- Lines 164-179
 	local function login_callback(error_code, status_code, response_body)
 		print("[AccelByte] Callback LoginWithSteamToken : " .. IamSteamPlatformUrl)
 		print("[AccelByte] Error_code : " .. error_code)
@@ -154,7 +155,7 @@ function Login:LoginWithSteamToken(ticket, callback)
 	Steam:http_request_post(IamSteamPlatformUrl, login_callback, payload_content_type, payload, payload_size, headers)
 end
 
--- Lines 181-202
+-- Lines 183-204
 function Login:LoginWithUsernamePassword(username, password)
 	print("[AccelByte] Login:LoginWithUsernamePassword")
 
@@ -167,7 +168,7 @@ function Login:LoginWithUsernamePassword(username, password)
 		Accept = "application/json"
 	}
 
-	-- Lines 192-200
+	-- Lines 194-202
 	local function callback(error_code, status_code, response_body)
 		print("[AccelByte] Callback LoginWithUsernamePassword : " .. IamServerUrl)
 		print("[AccelByte] Error_code : " .. error_code)
@@ -177,13 +178,13 @@ function Login:LoginWithUsernamePassword(username, password)
 		local response_json = json.decode(response_body)
 
 		Login:SerializeJsonString(response_json)
-		print("[AccelByte] Display name : " .. self.player_session.display_name)
+		print("[AccelByte] Display name : " .. tostring(self.player_session.display_name))
 	end
 
 	Steam:http_request_post(IamServerUrl, callback, payload_content_type, payload, payload_size, headers)
 end
 
--- Lines 205-232
+-- Lines 207-234
 function Login:LoginWithClientCredentials(callback)
 	print("[AccelByte] Login:LoginWithClientCredentials")
 
@@ -196,7 +197,7 @@ function Login:LoginWithClientCredentials(callback)
 		Accept = "application/json"
 	}
 
-	-- Lines 216-230
+	-- Lines 218-232
 	local function callback(error_code, status_code, response_body)
 		print("[AccelByte] Callback LoginWithClientCredentials : " .. IamServerUrl)
 		print("[AccelByte] Error_code : " .. error_code)
@@ -219,7 +220,7 @@ function Login:LoginWithClientCredentials(callback)
 	Steam:http_request_post(IamServerUrl, callback, payload_content_type, payload, payload_size, headers)
 end
 
--- Lines 236-265
+-- Lines 238-269
 function Login:CheckPlatformIdForExistingAccount(platform_user_id, callback)
 	print("[AccelByte] Login:CheckPlatformIdForExistingAccount")
 
@@ -231,7 +232,7 @@ function Login:CheckPlatformIdForExistingAccount(platform_user_id, callback)
 		Accept = "application/json"
 	}
 
-	-- Lines 248-261
+	-- Lines 250-265
 	local function callback(success, response_body)
 		print("[AccelByte] Callback CheckPlatformIdForExistingAccount : " .. Url)
 
@@ -241,6 +242,7 @@ function Login:CheckPlatformIdForExistingAccount(platform_user_id, callback)
 			print("[AccelByte] Responses Body : " .. response_body)
 
 			local response_json = json.decode(response_body)
+			publisher_user_id = response_json.userId
 
 			Login:SerializeJsonString(response_json)
 		else
@@ -401,7 +403,7 @@ EntitlementPagingSlicedResult = {
 	paging = Paging
 }
 
--- Lines 435-442
+-- Lines 439-446
 function ConvertEntitlementClazzToEnum(value)
 	if value == "APP" then
 		return EntitlementClazz.APP
@@ -418,7 +420,7 @@ function ConvertEntitlementClazzToEnum(value)
 	end
 end
 
--- Lines 444-448
+-- Lines 448-452
 function ConvertEntitlementTypeToEnum(value)
 	if value == "DURABLE" then
 		return EntitlementType.DURABLE
@@ -429,7 +431,7 @@ function ConvertEntitlementTypeToEnum(value)
 	end
 end
 
--- Lines 450-457
+-- Lines 454-461
 function ConvertEntitlementStatusToEnum(value)
 	if value == "ACTIVE" then
 		return EntitlementStatus.ACTIVE
@@ -446,7 +448,7 @@ function ConvertEntitlementStatusToEnum(value)
 	end
 end
 
--- Lines 459-465
+-- Lines 463-469
 function ConvertAppTypeToEnum(value)
 	if value == "GAME" then
 		return AppType.GAME
@@ -461,7 +463,7 @@ function ConvertAppTypeToEnum(value)
 	end
 end
 
--- Lines 467-476
+-- Lines 471-480
 function ConvertSourceToEnum(value)
 	if value == "PURCHASE" then
 		return Source.PURCHASE
@@ -482,7 +484,7 @@ function ConvertSourceToEnum(value)
 	end
 end
 
--- Lines 478-482
+-- Lines 482-486
 function ConvertCurrencyTypeToEnum(value)
 	if value == "REAL" then
 		return CurrencyType.REAL
@@ -493,7 +495,7 @@ function ConvertCurrencyTypeToEnum(value)
 	end
 end
 
--- Lines 484-490
+-- Lines 488-494
 function ConvertCycleToEnum(value)
 	if value == "WEEKLY" then
 		return Cycle.WEEKLY
@@ -508,7 +510,7 @@ function ConvertCycleToEnum(value)
 	end
 end
 
--- Lines 492-500
+-- Lines 496-504
 function ConvertItemTypeToEnum(value)
 	if value == "APP" then
 		return ItemType.APP
@@ -532,7 +534,7 @@ Entitlement = {
 	result = EntitlementPagingSlicedResult
 }
 
--- Lines 513-537
+-- Lines 517-541
 function Entitlement:SetDLCEntitlements()
 	local dlc_entitlements = {}
 	local valid_namespace, valid_clazz, valid_type, valid_itemId, valid_status, valid_entitlement = nil
@@ -546,7 +548,7 @@ function Entitlement:SetDLCEntitlements()
 	end
 end
 
--- Lines 539-564
+-- Lines 543-568
 function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 	print("[AccelByte] Entitlement:QueryEntitlementAsString")
 
@@ -557,7 +559,7 @@ function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 		Authorization = "Bearer " .. Login.player_session.access_token
 	}
 
-	-- Lines 550-562
+	-- Lines 554-566
 	local function callback(success, response_body)
 		if success then
 			print("[AccelByte] Callback QueryEntitlementAsString Success: " .. Url)
@@ -576,19 +578,58 @@ function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 	Steam:http_request(Url, callback, headers)
 end
 
--- Lines 567-662
+-- Lines 576-615
+function Entitlement:UpdateStat(stat_code, stat_value, update_method, callback)
+	print("[AccelByte] Entitlement:UpdateStat")
+
+	local payload_content_type = "application/json"
+	local namespace = Namespace
+	local user_id = Login.player_session.user_id
+	local Url = string.format("%s/social/v2/public/namespaces/%s/users/%s/stats/%s/statitems/value", BaseUrl, PublisherNamespace, publisher_user_id, stat_code)
+	local payload_body = {
+		updateStrategy = update_method,
+		value = stat_value
+	}
+	local payload_json = json.encode(payload_body)
+	local payload_size = string.len(payload_json)
+	local headers = {
+		Authorization = "Bearer " .. Login.player_session.access_token
+	}
+
+	-- Lines 597-613
+	local function callback(error_code, status_code, response_body)
+		if status_code == 200 then
+			print("[AccelByte] Callback UpdateStat Success: " .. Url)
+			print("Response Body : " .. response_body)
+
+			local response_json = json.decode(response_body)
+			local current_value = response_json.currentValue
+
+			print("Stat Code =" .. stat_code .. "  Current value = " .. current_value)
+			callback(true)
+		else
+			print("[AccelByte] Callback UpdateStat Fail : " .. Url)
+			print("[AccelByte] Callback UpdateStat ErrorCode : " .. error_code)
+			callback(false)
+		end
+	end
+
+	Steam:http_request_put(Url, callback, payload_content_type, payload_json, payload_size, headers)
+end
+
+-- Lines 618-719
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 	local steam_id = Steam:userid()
 
 	Telemetry:send_on_game_launch()
 
-	-- Lines 578-583
+	-- Lines 629-634
 	local function entitlement_callback(success)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 585-594
+	-- Lines 636-651
 	local function login_callback(error_code, status_code, response_body)
 		print("[AccelByte] Callback login_callback ")
 
@@ -596,10 +637,17 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 
 		Telemetry:on_login()
 		Telemetry:on_login_screen_passed()
-		Entitlement:QueryEntitlementAsString(0, 10, entitlement_callback)
+
+		-- Lines 644-647
+		local function update_stat_callback(error_code, status_code, response_body)
+			print("[AccelByte] Callback update_stat_callback ")
+			Entitlement:QueryEntitlementAsString(0, 10, entitlement_callback)
+		end
+
+		Entitlement:UpdateStat("sync-platformupgrade", 1, "INCREMENT", update_stat_callback)
 	end
 
-	-- Lines 596-638
+	-- Lines 653-695
 	local function check_platform_callback(success)
 		print("[AccelByte] Callback Platform Check")
 
@@ -612,7 +660,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			local loginusingsteam = true
 
 			if loginusingsteam then
-				-- Lines 610-618
+				-- Lines 667-675
 				local function login_with_steam_callback(success, reason)
 					if success then
 						print("[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
@@ -639,7 +687,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 641-653
+	-- Lines 698-710
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(steam_id, check_platform_callback)
@@ -661,7 +709,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 664-820
+-- Lines 721-877
 function Entitlement:SerializeJsonString(document)
 	print("[AccelByte] Entitlement:SerializeJsonString")
 

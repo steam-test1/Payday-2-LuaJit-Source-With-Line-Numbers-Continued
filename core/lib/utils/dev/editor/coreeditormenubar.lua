@@ -1,6 +1,6 @@
 core:import("CoreEngineAccess")
 
--- Lines 3-465
+-- Lines 3-471
 function CoreEditor:build_menubar()
 	local menu_bar = EWS:MenuBar()
 	self._menu_bar = menu_bar
@@ -309,6 +309,9 @@ function CoreEditor:build_menubar()
 	view_menu:set_checked("SHOW CAMERA INFO", self._show_camera_position)
 	view_menu:append_check_item("SHOW_MARKER_BALL", "Show Marker", "Show Marker on / off")
 	view_menu:set_checked("SHOW_MARKER_BALL", self._layer_draw_marker)
+	view_menu:append_separator()
+	view_menu:append_check_item("SHOW_INTERACTION_RADII", "Interaction Radii", "Interaction Radii on / off")
+	view_menu:set_checked("SHOW_INTERACTION_RADII", self._show_interaction_radii)
 	menu_bar:append(view_menu, "View")
 	Global.frame:connect("LIGHTING", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_visualization"), "deferred_lighting")
 	Global.frame:connect("ALBEDO", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_visualization"), "albedo_visualization")
@@ -339,6 +342,10 @@ function CoreEditor:build_menubar()
 	Global.frame:connect("SHOW_MARKER_BALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_draw_marker_ball"), {
 		view_menu,
 		"SHOW_MARKER_BALL"
+	})
+	Global.frame:connect("SHOW_INTERACTION_RADII", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_interaction_radii"), {
+		view_menu,
+		"SHOW_INTERACTION_RADII"
 	})
 
 	local hide_menu = EWS:Menu("")
@@ -471,7 +478,7 @@ function CoreEditor:build_menubar()
 	Global.frame:connect("ABOUT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_about"), "")
 end
 
--- Lines 468-486
+-- Lines 474-492
 function CoreEditor:confirm_on_new()
 	if Global.running_simulation then
 		local confirm = EWS:message_box(Global.frame_panel, "Want to quit?", "Bringer of World", "YES_NO,CANCEL,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -496,7 +503,7 @@ function CoreEditor:confirm_on_new()
 	end
 end
 
--- Lines 491-503
+-- Lines 497-509
 function CoreEditor:on_new()
 	if self:confirm_on_new() then
 		return
@@ -514,7 +521,7 @@ function CoreEditor:on_new()
 	end
 end
 
--- Lines 506-522
+-- Lines 512-528
 function CoreEditor:on_open()
 	if self:confirm_on_new() then
 		return
@@ -535,7 +542,7 @@ function CoreEditor:on_open()
 	end
 end
 
--- Lines 525-538
+-- Lines 531-544
 function CoreEditor:on_save()
 	if Global.running_simulation then
 		self:output_warning("Won't save during simulation.")
@@ -558,7 +565,7 @@ function CoreEditor:on_save()
 	end
 end
 
--- Lines 540-560
+-- Lines 546-566
 function CoreEditor:create_temp_saves(type)
 	local a = string.gsub(managers.editor._lastdir, managers.database:base_path(), "")
 	local dirs = {}
@@ -586,7 +593,7 @@ function CoreEditor:create_temp_saves(type)
 	return d
 end
 
--- Lines 562-575
+-- Lines 568-581
 function CoreEditor:on_saveas()
 	if Global.running_simulation then
 		self:output_warning("Won't save during simulation.")
@@ -604,7 +611,7 @@ function CoreEditor:on_saveas()
 	end
 end
 
--- Lines 577-588
+-- Lines 583-594
 function CoreEditor:on_saveascopy()
 	if Global.running_simulation then
 		self:output_warning("Won't save during simulation.")
@@ -621,7 +628,7 @@ function CoreEditor:on_saveascopy()
 	end
 end
 
--- Lines 590-595
+-- Lines 596-601
 function CoreEditor:on_load_recent_file(index)
 	if self:confirm_on_new() then
 		return
@@ -630,7 +637,7 @@ function CoreEditor:on_load_recent_file(index)
 	self:load_level(self._recent_files[index].dir, self._recent_files[index].path)
 end
 
--- Lines 597-606
+-- Lines 603-612
 function CoreEditor:on_close(custom_data, event_object)
 	if self:confirm_on_new() then
 		return
@@ -641,7 +648,7 @@ function CoreEditor:on_close(custom_data, event_object)
 	CoreEngineAccess._quit()
 end
 
--- Lines 611-616
+-- Lines 617-622
 function CoreEditor:on_enable_all_layers()
 	for name, layer in pairs(self:layers()) do
 		layer:set_enabled(true)
@@ -649,7 +656,7 @@ function CoreEditor:on_enable_all_layers()
 	end
 end
 
--- Lines 619-626
+-- Lines 625-632
 function CoreEditor:on_disable_layers()
 	for name, layer in pairs(self:layers()) do
 		if layer ~= self._current_layer then
@@ -662,7 +669,7 @@ function CoreEditor:on_disable_layers()
 	end
 end
 
--- Lines 629-634
+-- Lines 635-640
 function CoreEditor:on_disable_layer(data)
 	local accepted = self:layer(data.name):set_enabled(not self._disable_layer_menu:is_checked(data.id))
 
@@ -671,34 +678,34 @@ function CoreEditor:on_disable_layer(data)
 	end
 end
 
--- Lines 636-638
+-- Lines 642-644
 function CoreEditor:on_hide_layer(data)
 	self:layer(data.name):hide_all()
 end
 
--- Lines 640-642
+-- Lines 646-648
 function CoreEditor:on_unhide_layer(data)
 	self:layer(data.name):unhide_all()
 end
 
--- Lines 644-646
+-- Lines 650-652
 function CoreEditor:on_change_layer(index)
 	self._notebook:set_page(index)
 end
 
--- Lines 650-654
+-- Lines 656-660
 function CoreEditor:on_break_unit_links()
 	if self._current_layer == self:layer("Mission") then
 		self:layer("Mission"):break_links()
 	end
 end
 
--- Lines 658-660
+-- Lines 664-666
 function CoreEditor:on_select_group_by_name()
 	self:show_dialog("select_group_by_name", "SelectGroupByName")
 end
 
--- Lines 662-671
+-- Lines 668-677
 function CoreEditor:group()
 	if alive(self._current_layer:selected_unit()) then
 		local name = self._groups:group_name()
@@ -712,7 +719,7 @@ function CoreEditor:group()
 	end
 end
 
--- Lines 673-681
+-- Lines 679-687
 function CoreEditor:ungroup()
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
@@ -725,7 +732,7 @@ function CoreEditor:ungroup()
 	end
 end
 
--- Lines 683-691
+-- Lines 689-697
 function CoreEditor:save_group()
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
@@ -738,12 +745,12 @@ function CoreEditor:save_group()
 	end
 end
 
--- Lines 693-695
+-- Lines 699-701
 function CoreEditor:load_group()
 	self._groups:load_group()
 end
 
--- Lines 697-703
+-- Lines 703-709
 function CoreEditor:show_group_presets()
 	if not SystemFS:exists(self._group_presets_path) then
 		SystemFS:make_dir(self._group_presets_path)
@@ -754,7 +761,7 @@ function CoreEditor:show_group_presets()
 	GroupPresetsDialog:new(files, self._group_presets_path)
 end
 
--- Lines 705-713
+-- Lines 711-719
 function CoreEditor:dump_group()
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
@@ -767,32 +774,32 @@ function CoreEditor:dump_group()
 	end
 end
 
--- Lines 717-719
+-- Lines 723-725
 function CoreEditor:on_difficulty(difficulty)
 	self._mission_difficulty = difficulty
 end
 
--- Lines 721-723
+-- Lines 727-729
 function CoreEditor:on_players(player)
 	self._mission_player = player
 end
 
--- Lines 725-727
+-- Lines 731-733
 function CoreEditor:mission_player()
 	return self._mission_player
 end
 
--- Lines 729-731
+-- Lines 735-737
 function CoreEditor:on_platform(platform)
 	self._mission_platform = platform
 end
 
--- Lines 733-735
+-- Lines 739-741
 function CoreEditor:mission_platform()
 	return self._mission_platform
 end
 
--- Lines 739-746
+-- Lines 745-752
 function CoreEditor:toggle_info(data)
 	if data[2] == "INFO OUTPUT" then
 		self._outputctrl:set_visible(data[1]:is_checked(data[2]))
@@ -803,12 +810,12 @@ function CoreEditor:toggle_info(data)
 	self._info_frame:layout()
 end
 
--- Lines 748-750
+-- Lines 754-756
 function CoreEditor:show_news()
 	self._world_editor_news:set_visible(true)
 end
 
--- Lines 752-762
+-- Lines 758-768
 function CoreEditor:change_visualization(viz)
 	if viz ~= "deferred_lighting" then
 		self:disable_all_post_effects(true)
@@ -821,7 +828,7 @@ function CoreEditor:change_visualization(viz)
 	end
 end
 
--- Lines 764-783
+-- Lines 770-789
 function CoreEditor:on_post_processor_effect(pe)
 	if pe.id == "POSTFX_none" then
 		self:disable_all_post_effects()
@@ -846,7 +853,7 @@ function CoreEditor:on_post_processor_effect(pe)
 	end
 end
 
--- Lines 785-791
+-- Lines 791-797
 function CoreEditor:toggle_lock_1280_720(data)
 	if data[1]:is_checked(data[2]) then
 		self:_set_appwin_fixed_resolution(Vector3(1280, 720, 0))
@@ -855,46 +862,52 @@ function CoreEditor:toggle_lock_1280_720(data)
 	end
 end
 
--- Lines 793-796
+-- Lines 799-802
 function CoreEditor:toggle_orthographic(data)
 	self._orthographic = data[1]:is_checked(data[2])
 
 	self._camera_controller:toggle_orthographic(self._orthographic)
 end
 
--- Lines 798-800
+-- Lines 804-806
 function CoreEditor:toggle_light(data)
 	self._light:set_enable(data[1]:is_checked(data[2]))
 end
 
--- Lines 801-803
+-- Lines 807-809
 function CoreEditor:toggle_show_center(data)
 	self._show_center = data[1]:is_checked(data[2])
 end
 
--- Lines 805-808
+-- Lines 811-814
 function CoreEditor:toggle_show_camera_info(data)
 	self._show_camera_position = data[1]:is_checked(data[2])
 
 	self:set_show_camera_info(self._show_camera_position)
 end
 
--- Lines 810-812
+-- Lines 816-818
 function CoreEditor:toggle_draw_marker_ball(data)
 	self._layer_draw_marker = data[1]:is_checked(data[2])
 end
 
--- Lines 817-819
+-- Lines 820-823
+function CoreEditor:toggle_interaction_radii(data)
+	self._show_interaction_radii = data[1]:is_checked(data[2])
+	managers.interaction._debug_all = self._show_interaction_radii
+end
+
+-- Lines 828-830
 function CoreEditor:on_configuration()
 	self._configuration:show_modal()
 end
 
--- Lines 822-824
+-- Lines 833-835
 function CoreEditor:on_controller_bindings()
 	self:show_dialog("edit_controller_bindings", "EditControllerBindings")
 end
 
--- Lines 827-832
+-- Lines 838-843
 function CoreEditor:on_expert_mode(data)
 	local expert = data[1]:is_checked(data[2])
 
@@ -903,7 +916,7 @@ function CoreEditor:on_expert_mode(data)
 	Global.frame_panel:layout()
 end
 
--- Lines 834-844
+-- Lines 845-855
 function CoreEditor:on_gather_duplicates()
 	local confirm = EWS:message_box(Global.frame_panel, "Gather duplicates and save level?", "Optimization", "YES_NO,CANCEL,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -918,7 +931,7 @@ function CoreEditor:on_gather_duplicates()
 	end
 end
 
--- Lines 849-871
+-- Lines 860-882
 function CoreEditor:on_reload_unit(quick)
 	local names = {}
 
@@ -945,31 +958,31 @@ function CoreEditor:on_reload_unit(quick)
 	end
 end
 
--- Lines 875-878
+-- Lines 886-889
 function CoreEditor:on_profiler_main(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MAIN", not event_object:is_checked())
 	Application:console_command("stats main")
 end
 
--- Lines 880-883
+-- Lines 891-894
 function CoreEditor:on_profiler_mem(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MEM", not event_object:is_checked())
 	Application:console_command("stats mem")
 end
 
--- Lines 885-888
+-- Lines 896-899
 function CoreEditor:on_profiler_d3d(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_D3D", not event_object:is_checked())
 	Application:console_command("stats d3d")
 end
 
--- Lines 890-893
+-- Lines 901-904
 function CoreEditor:on_profiler_unit_profiler(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_UNIT_PROFILER", not event_object:is_checked())
 	Application:console_command("stats unit_profiler")
 end
 
--- Lines 897-907
+-- Lines 908-918
 function CoreEditor:on_add_workview()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new work view:", "Add work view", "", Vector3(-1, -1, 0), true)
 
@@ -984,12 +997,12 @@ function CoreEditor:on_add_workview()
 	end
 end
 
--- Lines 909-911
+-- Lines 920-922
 function CoreEditor:on_show_workview()
 	self:show_dialog("workview_by_name", "SelectWorkView")
 end
 
--- Lines 914-948
+-- Lines 925-959
 function CoreEditor:on_check_duality()
 	local units = {}
 	local collisions = {
@@ -1052,7 +1065,7 @@ function CoreEditor:on_check_duality()
 	self._unit_duality = UnitDuality:new(collisions, pos)
 end
 
--- Lines 950-959
+-- Lines 961-970
 function CoreEditor:on_make_screenshot()
 	local name = Application:date("%Y-%m-%d_%H.%M.%S") .. ".tga"
 
@@ -1060,19 +1073,19 @@ function CoreEditor:on_make_screenshot()
 	self:output("Screenshot created: " .. name .. ".")
 end
 
--- Lines 961-963
+-- Lines 972-974
 function CoreEditor:toggle_draw_occluders(data)
 	self._draw_occluders = data[1]:is_checked(data[2])
 end
 
--- Lines 965-967
+-- Lines 976-978
 function CoreEditor:on_show_unit_breakdown()
 	self:show_dialog("unit_breakdown", "UnitBreakdownView")
 end
 
 local leveltools_ids = Idstring("leveltools")
 
--- Lines 973-998
+-- Lines 984-1009
 function CoreEditor:on_hide_helper_units(data)
 	local cache = {}
 
@@ -1105,27 +1118,27 @@ function CoreEditor:on_hide_helper_units(data)
 	cache = nil
 end
 
--- Lines 1000-1002
+-- Lines 1011-1013
 function CoreEditor:toggle_render_effects(data)
 	World:effect_manager():set_rendering_enabled(data[1]:is_checked(data[2]))
 end
 
--- Lines 1006-1009
+-- Lines 1017-1020
 function CoreEditor:toggle_show_markers(data)
 	self._marker_panel:set_visible(data[1]:is_checked(data[2]))
 	self._ews_editor_frame:layout()
 end
 
--- Lines 1013-1017
+-- Lines 1024-1028
 function CoreEditor:on_using_the_editor()
 end
 
--- Lines 1019-1021
+-- Lines 1030-1032
 function CoreEditor:on_video_tutorials()
 	os.execute("explorer " .. "\\\\dallas\\Shared\\Starbreeze_Video_Tutorials" .. "\"")
 end
 
--- Lines 1023-1025
+-- Lines 1034-1036
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
 
