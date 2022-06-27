@@ -505,7 +505,7 @@ local mto = Vector3()
 local mfrom = Vector3()
 local mspread = Vector3()
 
--- Lines 487-555
+-- Lines 487-557
 function PlayerTurretBase:auto_fire_blank(direction)
 	local user_unit = self._setup.user_unit
 
@@ -518,7 +518,7 @@ function PlayerTurretBase:auto_fire_blank(direction)
 	local rays = {}
 	local right = direction:cross(math.UP):normalized()
 	local up = direction:cross(right):normalized()
-	local spread_x, spread_y = self:_get_spread(user_unit)
+	local spread_x, spread_y = self:_get_spread()
 	local theta = math.random() * 360
 	local ax = math.sin(theta) * math.random() * spread_x
 	local ay = math.cos(theta) * math.random() * (spread_y or spread_x)
@@ -544,7 +544,9 @@ function PlayerTurretBase:auto_fire_blank(direction)
 	end
 
 	if col_ray then
-		InstantBulletBase:on_collision(col_ray, self._unit, user_unit, self._damage, true)
+		if alive(user_unit) then
+			InstantBulletBase:on_collision(col_ray, self._unit, user_unit, self._damage, true)
+		end
 
 		if trail then
 			World:effect_manager():set_remaining_lifetime(trail, math.clamp((col_ray.distance - 600) / 10000, 0, col_ray.distance))
@@ -565,7 +567,7 @@ function PlayerTurretBase:auto_fire_blank(direction)
 		self:tweak_data_anim_play("fire", self:fire_rate_multiplier())
 	end
 
-	if user_unit:movement() then
+	if alive(user_unit) and user_unit:movement() then
 		local anim_data = user_unit:anim_data()
 
 		if not anim_data or not anim_data.reload then
@@ -573,17 +575,17 @@ function PlayerTurretBase:auto_fire_blank(direction)
 		end
 	end
 
-	self:play_tweak_data_sound("fire_single", "fire")
+	self:play_tweak_data_sound("fire_single_npc", "fire_single")
 
 	return true
 end
 
--- Lines 559-561
-function PlayerTurretBase:_get_spread(user_unit)
+-- Lines 561-563
+function PlayerTurretBase:_get_spread()
 	return self._spread * (tweak_data.weapon[self._name_id] and tweak_data.weapon[self._name_id].spread.standing or 1)
 end
 
--- Lines 565-572
+-- Lines 567-574
 function PlayerTurretBase:update_damage()
 	local weapon_stats = tweak_data.weapon.stats
 	local damage_modifier = weapon_stats.stats_modifiers and weapon_stats.stats_modifiers.damage or 1
@@ -592,7 +594,7 @@ function PlayerTurretBase:update_damage()
 	self._damage = (base_damage + self:damage_addend()) * self:damage_multiplier()
 end
 
--- Lines 576-581
+-- Lines 578-583
 function PlayerTurretBase:damage_addend()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -600,7 +602,7 @@ function PlayerTurretBase:damage_addend()
 	return managers.blackmarket:damage_addend(self._name_id, self:weapon_tweak_data().categories, self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 583-588
+-- Lines 585-590
 function PlayerTurretBase:damage_multiplier()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -608,31 +610,32 @@ function PlayerTurretBase:damage_multiplier()
 	return managers.blackmarket:damage_multiplier(self._name_id, self:weapon_tweak_data().categories, self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 592-596
+-- Lines 594-598
 function PlayerTurretBase:pre_destroy()
 	PlayerTurretBase.super.pre_destroy(self, self._unit)
 	self:remove_dead_owner()
 end
 
--- Lines 600-607
+-- Lines 602-609
 function PlayerTurretBase:save(save_data)
 	local my_save_data = {}
 	save_data.base = my_save_data
 	my_save_data.state = self._current_state
 	my_save_data.is_shooting = self:shooting()
-	self._next_fire_allowed = math.max(self._next_fire_allowed, self._unit:timer():time())
+	my_save_data.next_fire_allowed = self._next_fire_allowed - self._unit:timer():time()
 end
 
--- Lines 611-616
+-- Lines 613-619
 function PlayerTurretBase:load(save_data)
 	local my_save_data = save_data.base
 
 	self:change_state(my_save_data.state)
 
 	self._shooting = my_save_data.is_shooting
+	self._next_fire_allowed = self._unit:timer():time() + my_save_data.next_fire_allowed
 end
 
--- Lines 620-631
+-- Lines 623-634
 function PlayerTurretBase:sync_net_event(state)
 	if state == PlayerTurretBase.SYNC_START_FIRE then
 		self._shooting = true

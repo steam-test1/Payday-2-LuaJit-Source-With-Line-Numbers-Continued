@@ -30716,7 +30716,7 @@ function WeaponTweakData:_create_table_structure()
 	}
 end
 
--- Lines 34042-34130
+-- Lines 34042-34131
 function WeaponTweakData:_init_ranc_heavy_machine_gun()
 	self.ranc_heavy_machine_gun.categories = clone(self.new_m4.categories)
 	self.ranc_heavy_machine_gun.sounds = {
@@ -30724,6 +30724,7 @@ function WeaponTweakData:_init_ranc_heavy_machine_gun()
 		fire_single = "turret_ranc_fire_single",
 		fire_auto = "turret_ranc_fire",
 		stop_fire = "turret_ranc_stop",
+		fire_single_npc = "turret_ranc_npc1a_1shot",
 		dryfire = "primary_dryfire",
 		enter_steelsight = "m4_tighten"
 	}
@@ -30802,11 +30803,11 @@ function WeaponTweakData:_init_ranc_heavy_machine_gun()
 	self.ranc_heavy_machine_gun.armor_piercing_chance = 1
 end
 
--- Lines 34135-34136
+-- Lines 34136-34137
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines 34138-34145
+-- Lines 34139-34146
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then
@@ -30815,7 +30816,7 @@ function WeaponTweakData:_precalculate_values()
 	end
 end
 
--- Lines 34148-34259
+-- Lines 34149-34260
 function WeaponTweakData:get_akimbo_mappings()
 	return {
 		shrew = "x_shrew",
@@ -30879,7 +30880,7 @@ function WeaponTweakData:get_akimbo_mappings()
 	}
 end
 
--- Lines 34262-34283
+-- Lines 34263-34284
 function WeaponTweakData:get_npc_mappings()
 	local npc_mappings = {
 		new_m4 = "m4_crew",
