@@ -43,7 +43,7 @@ end
 function BaseMutator:setup(mutator_manager)
 end
 
--- Lines 49-51
+-- Lines 59-61
 function BaseMutator:_ensure_global_values()
 	Global.mutators.mutator_values[self:id()] = Global.mutators.mutator_values[self:id()] or {
 		values = {},
@@ -51,22 +51,22 @@ function BaseMutator:_ensure_global_values()
 	}
 end
 
--- Lines 54-56
+-- Lines 64-66
 function BaseMutator:id()
 	return self._type
 end
 
--- Lines 59-61
+-- Lines 69-71
 function BaseMutator:name()
 	return managers.localization:text(self.name_id)
 end
 
--- Lines 64-66
+-- Lines 74-76
 function BaseMutator:desc()
 	return managers.localization:text(self.desc_id)
 end
 
--- Lines 69-74
+-- Lines 79-84
 function BaseMutator:longdesc()
 	if not self.longdesc_id then
 		self.longdesc_id = string.gsub(self.desc_id, "_desc", "_longdesc")
@@ -75,7 +75,7 @@ function BaseMutator:longdesc()
 	return managers.localization:text(self.longdesc_id)
 end
 
--- Lines 77-80
+-- Lines 87-90
 function BaseMutator:icon()
 	local x = self.icon_coords[1]
 	local y = self.icon_coords[2]
@@ -89,12 +89,12 @@ function BaseMutator:icon()
 	}
 end
 
--- Lines 82-84
+-- Lines 92-94
 function BaseMutator:main_category()
 	return "mutator"
 end
 
--- Lines 87-99
+-- Lines 97-109
 function BaseMutator:is_compatible_with(mutator)
 	for i, mutator_id in ipairs(self.incompatiblities) do
 		if mutator:id() == mutator_id then
@@ -111,17 +111,17 @@ function BaseMutator:is_compatible_with(mutator)
 	return true
 end
 
--- Lines 102-104
+-- Lines 112-114
 function BaseMutator:is_incompatible_with(mutator)
 	return not self:is_compatible_with(mutator) or not mutator:is_compatible_with(self)
 end
 
--- Lines 107-109
+-- Lines 117-119
 function BaseMutator:is_enabled()
 	return self._enabled
 end
 
--- Lines 112-116
+-- Lines 122-126
 function BaseMutator:set_enabled(enable)
 	self._enabled = enable
 
@@ -130,7 +130,7 @@ function BaseMutator:set_enabled(enable)
 	Global.mutators.mutator_values[self:id()].enabled = enable
 end
 
--- Lines 119-128
+-- Lines 129-138
 function BaseMutator:is_active()
 	if managers.mutators then
 		for i, active_mutator in ipairs(managers.mutators:active_mutators()) do
@@ -143,21 +143,21 @@ function BaseMutator:is_active()
 	return false
 end
 
--- Lines 131-133
+-- Lines 141-143
 function BaseMutator:get_cash_reduction()
 	return self.reductions.money
 end
 
--- Lines 136-138
+-- Lines 146-148
 function BaseMutator:get_experience_reduction()
 	return self.reductions.exp
 end
 
--- Lines 141-143
+-- Lines 151-153
 function BaseMutator:update(t, dt)
 end
 
--- Lines 147-165
+-- Lines 157-175
 function BaseMutator:_mutate_name(key)
 	if Global.game_settings.single_player then
 		return self:is_enabled() and self:value(key)
@@ -172,12 +172,12 @@ function BaseMutator:_mutate_name(key)
 	end
 end
 
--- Lines 170-172
+-- Lines 180-182
 function BaseMutator:show_options()
 	return self.has_options
 end
 
--- Lines 175-192
+-- Lines 185-202
 function BaseMutator:setup_options_gui(node)
 	local params = {
 		name = "default_item",
@@ -194,33 +194,33 @@ function BaseMutator:setup_options_gui(node)
 	return new_item
 end
 
--- Lines 195-197
+-- Lines 205-207
 function BaseMutator:reset_to_default()
 end
 
--- Lines 200-202
+-- Lines 210-212
 function BaseMutator:options_fill()
 	return 0
 end
 
--- Lines 204-206
+-- Lines 214-216
 function BaseMutator:_get_percentage_fill(min, max, current)
 	return math.clamp(((current or 0) - min) / (max - min), 0, 1)
 end
 
--- Lines 211-215
+-- Lines 221-225
 function BaseMutator:clear_values()
 	for id, data in pairs(self._values) do
 		data.current = data.default
 	end
 end
 
--- Lines 218-220
+-- Lines 228-230
 function BaseMutator:values()
 	return self._values
 end
 
--- Lines 223-245
+-- Lines 233-255
 function BaseMutator:register_value(key, default, network_key)
 	if not network_key then
 		network_key = key
@@ -242,7 +242,7 @@ function BaseMutator:register_value(key, default, network_key)
 	}
 end
 
--- Lines 248-260
+-- Lines 258-270
 function BaseMutator:set_value(id, value)
 	if not self._values[id] then
 		Application:error(string.format("Can not set a value for a key that has not been registered! %s: %s", self:id(), id))
@@ -257,7 +257,7 @@ function BaseMutator:set_value(id, value)
 	Global.mutators.mutator_values[self:id()].values[id] = value
 end
 
--- Lines 263-272
+-- Lines 273-282
 function BaseMutator:set_host_value(id, value)
 	if not self._values[id] then
 		Application:error(string.format("Can not set a value for a key that has not been registered! %s: %s", self:id(), id))
@@ -268,7 +268,7 @@ function BaseMutator:set_host_value(id, value)
 	self._values[id].host = value
 end
 
--- Lines 275-304
+-- Lines 285-314
 function BaseMutator:value(id)
 	if not self._values[id] then
 		Application:error(string.format("Can not get a value for a key that has not been registered! %s: %s", self:id(), id))
@@ -298,7 +298,7 @@ function BaseMutator:value(id)
 	return ret_value
 end
 
--- Lines 306-312
+-- Lines 316-322
 function BaseMutator:_get_value(table, id, default)
 	local value = table[id]
 
@@ -309,7 +309,7 @@ function BaseMutator:_get_value(table, id, default)
 	return value
 end
 
--- Lines 314-320
+-- Lines 324-330
 function BaseMutator:_apply_host_values(host_mutators)
 	if host_mutators and host_mutators[self:id()] then
 		for key, value in pairs(host_mutators[self:id()]) do
@@ -318,7 +318,7 @@ function BaseMutator:_apply_host_values(host_mutators)
 	end
 end
 
--- Lines 325-344
+-- Lines 335-354
 function BaseMutator:build_matchmaking_key()
 	local matchmaking_key = string.format("%s ", self:id())
 
@@ -337,7 +337,7 @@ function BaseMutator:build_matchmaking_key()
 	return matchmaking_key
 end
 
--- Lines 347-362
+-- Lines 357-372
 function BaseMutator:build_compressed_data(id)
 	local matchmaking_key = string.format("%c", string.byte("a") + id)
 
@@ -356,7 +356,7 @@ function BaseMutator:build_compressed_data(id)
 	return matchmaking_key
 end
 
--- Lines 365-393
+-- Lines 375-403
 function BaseMutator:uncompress_data(str_dat)
 	local ret = {}
 
@@ -389,7 +389,7 @@ function BaseMutator:uncompress_data(str_dat)
 	return ret, str_dat
 end
 
--- Lines 396-424
+-- Lines 406-434
 function BaseMutator:partial_uncompress_data(str_dat)
 	local ret = string.format("%s ", self:id())
 
@@ -422,7 +422,7 @@ function BaseMutator:partial_uncompress_data(str_dat)
 	return ret, str_dat
 end
 
--- Lines 427-468
+-- Lines 437-478
 function BaseMutator:get_data_from_attribute_string(string_table)
 	if #string_table > 0 and #string_table % 2 ~= 0 then
 		Application:error("Warning! Mismatched attribute string table, should have an even amount of elements!", self:id())
@@ -461,15 +461,15 @@ function BaseMutator:get_data_from_attribute_string(string_table)
 	return data
 end
 
--- Lines 473-474
+-- Lines 483-484
 function BaseMutator:modify_character_tweak_data(character_tweak)
 end
 
--- Lines 476-477
+-- Lines 486-487
 function BaseMutator:modify_tweak_data(id, value)
 end
 
--- Lines 479-481
+-- Lines 489-491
 function BaseMutator:modify_value(id, value)
 	return value
 end

@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-1029
+-- Lines 78-1045
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -124,7 +124,8 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 			"none",
 			"slaughterhouse",
 			"texvest",
-			"newhorizon"
+			"newhorizon",
+			"bikervest"
 		}
 	}
 	self.suit_default_gloves = {
@@ -160,7 +161,7 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		tux = "heist_default",
 		continental = "continental",
 		desperado = "desperado",
-		bullranch = "heist_default",
+		bikerjacket = "heist_default",
 		lowinttech = "heist_default",
 		texvest = "heist_default",
 		boss = "heist_default",
@@ -171,11 +172,13 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		mocow = "ranchdiesel",
 		badsanta = "heist_default",
 		newhorizon = "darkmat",
+		bikervest = "heist_default",
 		clown_2 = "heist_default",
 		gangstercoat = "heist_default",
 		leather = "heist_default",
 		punk = "punk",
 		cartelboss = "heist_default",
+		bullranch = "heist_default",
 		raincoat = "heist_default",
 		cable_guy = "heist_default",
 		jail_pd2_clan = "heist_default",
@@ -709,5 +712,23 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 1,
 		unit = "units/pd2_dlc_prim/characters/glv_darkmat/glv_darkmat",
 		third_material = "units/pd2_dlc_prim/characters/glv_darkmat/glv_darkmat_third"
+	}
+	self.gloves.chromecross = {
+		name_id = "bm_gloves_chromecross",
+		desc_id = "bm_gloves_chromecross_desc",
+		texture_bundle_folder = "txt2",
+		global_value = "txt2",
+		sort_number = 1,
+		unit = "units/pd2_dlc_txt2/characters/glv_chromecross/glv_chromecross",
+		third_material = "units/pd2_dlc_txt2/characters/glv_chromecross/glv_chromecross_third"
+	}
+	self.gloves.redhand = {
+		name_id = "bm_gloves_redhand",
+		desc_id = "bm_gloves_redhand_desc",
+		texture_bundle_folder = "txt2",
+		global_value = "txt2",
+		sort_number = 1,
+		unit = "units/pd2_dlc_txt2/characters/glv_redhand/glv_redhand",
+		third_material = "units/pd2_dlc_txt2/characters/glv_redhand/glv_redhand_third"
 	}
 end

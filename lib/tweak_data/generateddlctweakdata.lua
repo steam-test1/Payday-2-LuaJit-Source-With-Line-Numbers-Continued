@@ -1,4 +1,4 @@
--- Lines 3-1219
+-- Lines 3-1221
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -2069,6 +2069,63 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "player_styles",
 			item_entry = "texvest",
+			amount = 1
+		}
+	}
+	self.txt2_bundle = {
+		dlc = "has_txt2",
+		content = {}
+	}
+	self.txt2_bundle.content.loot_global_value = "txt2"
+	self.txt2_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "chrodome",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "daredev",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "funguy",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "speedfreak",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "threap",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "waytexas",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "chromecross",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "redhand",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "bikervest",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "bikerjacket",
 			amount = 1
 		}
 	}

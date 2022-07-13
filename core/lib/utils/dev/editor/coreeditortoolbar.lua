@@ -1,4 +1,4 @@
--- Lines 1-129
+-- Lines 1-131
 function CoreEditor:build_toolbar()
 	local icons_path = managers.database:base_path() .. "core\\lib\\utils\\dev\\editor\\icons\\"
 	self._toolbar = EWS:ToolBar(Global.frame, "", "TB_FLAT,TB_NODIVIDER")
@@ -140,12 +140,10 @@ function CoreEditor:build_toolbar()
 	self._toolbar:add_tool("TB_HELP", "Burt Reynolds guide to using the editor", icons_path .. "burt.bmp", s)
 	self._toolbar:connect("TB_HELP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_using_the_editor"), "")
 	self._toolbar:add_separator()
-	self._toolbar:add_tool("TB_GATHER_DUPLICATES", "Gather Duplicates", icons_path .. "duplicates.bmp", "")
-	self._toolbar:connect("TB_GATHER_DUPLICATES", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_gather_duplicates"), "")
 	self._toolbar:realize()
 end
 
--- Lines 131-142
+-- Lines 133-144
 function CoreEditor:set_widget(data, event)
 	local id = event:get_id()
 
@@ -160,7 +158,7 @@ function CoreEditor:set_widget(data, event)
 	self._current_layer:use_rotate_widget(self._use_rotate_widget)
 end
 
--- Lines 144-149
+-- Lines 146-151
 function CoreEditor:set_snap_rotation_axis(data, event)
 	local id = event:get_id()
 
@@ -170,7 +168,7 @@ function CoreEditor:set_snap_rotation_axis(data, event)
 	self._snap_rotation_axis = data.axis
 end
 
--- Lines 151-165
+-- Lines 153-167
 function CoreEditor:change_snaprot_axis(data)
 	if self._snap_rotation_axis == "x" then
 		self._snap_rotation_axis = "y"
@@ -190,22 +188,22 @@ function CoreEditor:change_snaprot_axis(data)
 	end
 end
 
--- Lines 167-169
+-- Lines 169-171
 function CoreEditor:on_move_transform_type_in()
 	self._move_transform_type_in:set_visible(true)
 end
 
--- Lines 171-173
+-- Lines 173-175
 function CoreEditor:on_rotate_transform_type_in()
 	self._rotate_transform_type_in:set_visible(true)
 end
 
--- Lines 175-177
+-- Lines 177-179
 function CoreEditor:on_camera_transform_type_in()
 	self._camera_transform_type_in:set_visible(true)
 end
 
--- Lines 179-193
+-- Lines 181-195
 function CoreEditor:build_ref_coordinate_system()
 	self._ref_coordinate_system = EWS:ComboBox(self._toolbar, "", "", "CB_DROPDOWN,CB_READONLY")
 
@@ -237,7 +235,7 @@ function CoreEditor:build_ref_coordinate_system()
 	})
 end
 
--- Lines 195-216
+-- Lines 197-218
 function CoreEditor:build_grid_sizes(icons_path)
 	local tip = "Grid Sizes (" .. self:ctrl_binding("change_grid_size") .. ")"
 	local grid_icon = EWS:BitmapButton(self._toolbar, CoreEWS.image_path("world_editor\\grid_sizes_10x16.png"), "", "NO_BORDER")
@@ -277,7 +275,7 @@ function CoreEditor:build_grid_sizes(icons_path)
 	})
 end
 
--- Lines 218-239
+-- Lines 220-241
 function CoreEditor:build_snap_rotations()
 	local tip = "Snap Rotations (" .. self:ctrl_binding("change_snaprot") .. ")"
 	local snap_icon = EWS:BitmapButton(self._toolbar, CoreEWS.image_path("world_editor\\snap_rotations_10x16.png"), "", "NO_BORDER")
@@ -317,7 +315,7 @@ function CoreEditor:build_snap_rotations()
 	})
 end
 
--- Lines 241-258
+-- Lines 243-260
 function CoreEditor:build_rotation_speed()
 	local tip = "Free rotation speed (+/-)"
 	local speed_icon = EWS:BitmapButton(self._toolbar, CoreEWS.image_path("world_editor\\rotation_speed_10x16.png"), "", "NO_BORDER")
@@ -344,19 +342,19 @@ function CoreEditor:build_rotation_speed()
 	self._toolbar:add_control(rot_speed)
 end
 
--- Lines 261-263
+-- Lines 263-265
 function CoreEditor:update_rot_speed(rotation_speed)
 	self._rotation_speed = rotation_speed:get_value()
 end
 
--- Lines 266-269
+-- Lines 268-271
 function CoreEditor:update_rot_speed_trg(data)
 	data.ctrlr:set_value(data.ctrlr:get_value() + data.value)
 
 	self._rotation_speed = data.ctrlr:get_value()
 end
 
--- Lines 271-282
+-- Lines 273-284
 function CoreEditor:change_combo_box(data)
 	if tonumber(self[data.value]) then
 		self[data.value] = tonumber(data.combobox:get_value())
@@ -375,7 +373,7 @@ function CoreEditor:change_combo_box(data)
 	end
 end
 
--- Lines 284-311
+-- Lines 286-313
 function CoreEditor:change_combo_box_trg(data)
 	local next_i = nil
 
@@ -405,7 +403,7 @@ function CoreEditor:change_combo_box_trg(data)
 	self:change_combo_box(data)
 end
 
--- Lines 313-320
+-- Lines 315-322
 function CoreEditor:set_combobox_value(data, event)
 	if data.choice then
 		data.combobox:set_value(data.choice)
@@ -416,22 +414,22 @@ function CoreEditor:set_combobox_value(data, event)
 	self:change_combo_box(data)
 end
 
--- Lines 323-325
+-- Lines 325-327
 function CoreEditor:on_select_by_name()
 	self:show_dialog("select_by_name", "SelectByName")
 end
 
--- Lines 327-329
+-- Lines 329-331
 function CoreEditor:on_unit_tree_browser()
 	self:show_dialog("unit_tree_browser", "UnitTreeBrowser")
 end
 
--- Lines 331-333
+-- Lines 333-335
 function CoreEditor:on_global_select_unit()
 	self:show_dialog("global_select_unit", "GlobalSelectUnit")
 end
 
--- Lines 335-341
+-- Lines 337-343
 function CoreEditor:on_unit_list()
 	if not self._unit_list then
 		self._unit_list = UnitList:new()
@@ -440,7 +438,7 @@ function CoreEditor:on_unit_list()
 	end
 end
 
--- Lines 343-349
+-- Lines 345-351
 function CoreEditor:on_unit_duplicate_id_list()
 	if not self._duplicate_id_list then
 		self._duplicate_id_list = UnitDuplicateIdList:new()
@@ -449,17 +447,17 @@ function CoreEditor:on_unit_duplicate_id_list()
 	end
 end
 
--- Lines 352-354
+-- Lines 354-356
 function CoreEditor:on_unhide_by_name()
 	self:show_dialog("unhide_by_name", "UnhideByName")
 end
 
--- Lines 356-358
+-- Lines 358-360
 function CoreEditor:on_hide_by_name()
 	self:show_dialog("hide_by_name", "HideByName")
 end
 
--- Lines 362-381
+-- Lines 364-383
 function CoreEditor:build_widgets_icons(panel, sizer, icons_path)
 	local select = EWSRadioBitmapButton:new(panel, icons_path .. "widget_select_checked.bmp", "", "")
 

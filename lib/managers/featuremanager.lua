@@ -413,7 +413,7 @@ function FeatureManager:movie_theater_unlocked()
 	return true
 end
 
--- Lines 365-382
+-- Lines 372-389
 function FeatureManager:check_external_dlcs()
 	local announce_drops = {}
 	local show_dialog = false

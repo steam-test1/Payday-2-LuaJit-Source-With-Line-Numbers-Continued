@@ -266,7 +266,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines 368-532
+-- Lines 368-544
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -412,14 +412,28 @@ function GameSetup:load_packages()
 		end
 	end
 
-	if Global.mutators and Global.mutators.active_on_load and table.size(Global.mutators.active_on_load) > 0 and PackageManager:package_exists(MutatorsManager.package) and not PackageManager:loaded(MutatorsManager.package) then
-		self._mutators_package = MutatorsManager.package
+	if Global.mutators and Global.mutators.active_on_load and table.size(Global.mutators.active_on_load) > 0 then
+		self._mutators_packages = {}
 
-		PackageManager:load(MutatorsManager.package)
+		if PackageManager:package_exists(MutatorsManager.package) and not PackageManager:loaded(MutatorsManager.package) then
+			table.insert(self._mutators_packages, MutatorsManager.package)
+		end
+
+		for id, data in pairs(Global.mutators.active_on_load) do
+			local package = _G[id] and _G[id].package
+
+			if package and PackageManager:package_exists(package) and not PackageManager:loaded(package) then
+				table.insert(self._mutators_packages, package)
+			end
+		end
+
+		for _, package in ipairs(self._mutators_packages) do
+			PackageManager:load(package)
+		end
 	end
 end
 
--- Lines 534-622
+-- Lines 546-638
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -492,19 +506,23 @@ function GameSetup:gather_packages_to_unload()
 		self._loaded_diff_packages = {}
 	end
 
-	if self._mutators_package and PackageManager:loaded(self._mutators_package) then
-		table.insert(self._packages_to_unload, self._mutators_package)
+	if self._mutators_packages then
+		for i, package in ipairs(self._mutators_packages) do
+			if PackageManager:loaded(package) then
+				table.insert(self._packages_to_unload, package)
+			end
+		end
 
-		self._mutators_package = nil
+		self._mutators_packages = {}
 	end
 end
 
--- Lines 624-626
+-- Lines 640-642
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 628-668
+-- Lines 644-684
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -538,7 +556,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines 670-718
+-- Lines 686-734
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -586,7 +604,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines 720-764
+-- Lines 736-786
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -629,7 +647,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 766-810
+-- Lines 788-832
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -660,7 +678,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 812-822
+-- Lines 834-844
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -672,7 +690,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 824-840
+-- Lines 846-862
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -686,13 +704,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 842-847
+-- Lines 864-869
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 849-876
+-- Lines 871-903
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -704,7 +722,6 @@ function GameSetup:save(data)
 	managers.groupai:state():save(data)
 	managers.player:sync_save(data)
 	managers.trade:save(data)
-	managers.groupai:state():save(data)
 	managers.loot:sync_save(data)
 	managers.enemy:save(data)
 	managers.gage_assignment:sync_save(data)
@@ -718,7 +735,7 @@ function GameSetup:save(data)
 	managers.skirmish:sync_save(data)
 end
 
--- Lines 878-906
+-- Lines 905-938
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -730,7 +747,6 @@ function GameSetup:load(data)
 	managers.groupai:state():load(data)
 	managers.player:sync_load(data)
 	managers.trade:load(data)
-	managers.groupai:state():load(data)
 	managers.loot:sync_load(data)
 	managers.enemy:load(data)
 	managers.gage_assignment:sync_load(data)
@@ -745,7 +761,7 @@ function GameSetup:load(data)
 	managers.skirmish:sync_load(data)
 end
 
--- Lines 909-940
+-- Lines 941-972
 function GameSetup:_update_debug_input()
 end
 

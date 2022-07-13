@@ -1,11 +1,22 @@
 EventJobsTweakData = EventJobsTweakData or class()
 
--- Lines 4-27
+-- Lines 4-70
 function EventJobsTweakData:init(tweak_data)
 	self.challenges = {}
 
 	self:_init_pda8_challenges(tweak_data)
 
+	self.event_info = {
+		pda8 = {
+			steam_stages = {
+				false,
+				"pda_stat_a",
+				"pda_stat_b",
+				"pda_stat_c",
+				"pda_stat_d"
+			}
+		}
+	}
 	self.collective_stats = {
 		pda8_collective = {
 			found = {},
@@ -24,7 +35,7 @@ function EventJobsTweakData:init(tweak_data)
 	self.pda_base = 0
 end
 
--- Lines 29-117
+-- Lines 72-159
 function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda8_2_reward",
@@ -144,7 +155,7 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 end
 
--- Lines 119-143
+-- Lines 323-347
 function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	data.collective_id = collective_id
 	local save_values = {
@@ -177,7 +188,7 @@ function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	return obj
 end
 
--- Lines 172-197
+-- Lines 376-401
 function EventJobsTweakData:_stage(stage_id, max_progress, data)
 	data.stage_id = stage_id
 	local save_values = {

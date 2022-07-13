@@ -216,7 +216,7 @@ function CrimeNetManager:_number_of_jobs(jcs, jobs_by_jc)
 	return amount
 end
 
--- Lines 216-321
+-- Lines 216-353
 function CrimeNetManager:_setup()
 	if self._presets then
 		return
@@ -295,7 +295,7 @@ function CrimeNetManager:_setup()
 	end
 end
 
--- Lines 324-341
+-- Lines 356-381
 function CrimeNetManager:update_difficulty_filter()
 	if self._presets then
 		local difficulty_filter_index = managers.user:get_setting("crimenet_filter_difficulty")
@@ -315,21 +315,22 @@ function CrimeNetManager:update_difficulty_filter()
 	end
 end
 
--- Lines 344-348
+-- Lines 384-391
 function CrimeNetManager:reset_seed()
 	if not managers.menu_component or not managers.menu_component:has_crimenet_gui() then
 		self._presets = nil
 	end
 end
 
--- Lines 350-367
+-- Lines 399-423
 function CrimeNetManager:spawn_job(name, difficulty, time_limit)
-	local count = #self._presets
+	local presets = self._presets
+	local count = #presets
 
 	for i = 1, count do
-		if self._presets[i].job_id == name then
+		if presets[i].job_id == name then
 			if difficulty then
-				if self._presets[i].difficulty == difficulty then
+				if presets[i].difficulty == difficulty then
 					self._active_jobs[i] = {
 						added = false,
 						active_timer = time_limit and self._active_job_time + math.random(5) or nil
@@ -351,14 +352,14 @@ function CrimeNetManager:spawn_job(name, difficulty, time_limit)
 	return false
 end
 
--- Lines 369-372
+-- Lines 425-428
 function CrimeNetManager:set_getting_hacked(hacked)
 	self._getting_hacked = hacked and true or false
 
 	managers.menu_component:set_crimenet_gui_getting_hacked(hacked)
 end
 
--- Lines 374-445
+-- Lines 430-508
 function CrimeNetManager:update(t, dt)
 	if not self._active then
 		return
@@ -369,6 +370,8 @@ function CrimeNetManager:update(t, dt)
 
 		return
 	end
+
+	local presets = self._presets
 
 	for id, job in pairs(self._active_jobs) do
 		if not job.added then
@@ -392,10 +395,10 @@ function CrimeNetManager:update(t, dt)
 		end
 	end
 
-	local max_active_jobs = math.min(self._MAX_ACTIVE_JOBS, #self._presets)
+	local max_active_jobs = math.min(self._MAX_ACTIVE_JOBS, #presets)
 
 	if self._debug_mass_spawning then
-		max_active_jobs = math.min(tweak_data.gui.crime_net.debug_options.mass_spawn_limit, #self._presets)
+		max_active_jobs = math.min(tweak_data.gui.crime_net.debug_options.mass_spawn_limit, #presets)
 	end
 
 	if table.size(self._active_jobs) < max_active_jobs and table.size(self._active_jobs) + table.size(self._active_server_jobs) < tweak_data.gui.crime_net.job_vars.total_active_jobs then
@@ -434,12 +437,12 @@ function CrimeNetManager:update(t, dt)
 	managers.custom_safehouse:tick_safehouse_spawn()
 end
 
--- Lines 447-449
+-- Lines 510-512
 function CrimeNetManager:start_no_servers()
 	self:start(true)
 end
 
--- Lines 451-469
+-- Lines 514-532
 function CrimeNetManager:start(skip_servers)
 	if not skip_servers and SystemInfo:platform() == Idstring("XB1") then
 		XboxLive:refresh_friends_list()
@@ -458,12 +461,12 @@ function CrimeNetManager:start(skip_servers)
 	end
 end
 
--- Lines 471-473
+-- Lines 534-536
 function CrimeNetManager:no_servers()
 	return self._skip_servers
 end
 
--- Lines 475-480
+-- Lines 538-543
 function CrimeNetManager:stop()
 	self._active = false
 
@@ -472,12 +475,12 @@ function CrimeNetManager:stop()
 	end
 end
 
--- Lines 482-484
+-- Lines 545-547
 function CrimeNetManager:deactivate()
 	self._active = false
 end
 
--- Lines 486-489
+-- Lines 549-552
 function CrimeNetManager:activate()
 	self._active = true
 	self._refresh_server_t = 0
@@ -491,19 +494,20 @@ local disabled_contacts = {
 	"skirmish"
 }
 
--- Lines 497-514
+-- Lines 560-584
 function CrimeNetManager:activate_job()
-	local i = math.random(#self._presets)
+	local presets = self._presets
+	local i = math.random(#presets)
 
 	while i ~= i - 1 do
-		local chance = self._presets[i].chance
+		local chance = presets[i].chance
 		local roll = math.rand(1)
 
 		if roll <= chance then
-			local contact = tweak_data.narrative.jobs[self._presets[i].job_id].contact
+			local contact = tweak_data.narrative.jobs[presets[i].job_id].contact
 
 			if not self._active_jobs[i] and i ~= 0 and not table.contains(disabled_contacts, contact) then
-				print("-- activate", math.round(chance * 100) .. "%", self._presets[i].job_id, roll, chance)
+				print("-- activate", math.round(chance * 100) .. "%", presets[i].job_id, roll, chance)
 
 				self._active_jobs[i] = {
 					added = false,
@@ -514,21 +518,23 @@ function CrimeNetManager:activate_job()
 			end
 		end
 
-		i = 1 + math.mod(i, #self._presets)
+		i = 1 + math.mod(i, #presets)
 	end
 end
 
--- Lines 516-518
+-- Lines 586-595
 function CrimeNetManager:preset(id)
-	return self._presets[id]
+	local presets = self._presets
+
+	return presets[id]
 end
 
--- Lines 520-522
+-- Lines 597-599
 function CrimeNetManager:find_online_games(friends_only)
 	self:_find_online_games(friends_only)
 end
 
--- Lines 524-526
+-- Lines 601-603
 function CrimeNetManager:_crimenet_gui()
 	return managers.menu_component._crimenet_gui
 end
@@ -539,7 +545,7 @@ local is_x360 = SystemInfo:platform() == Idstring("X360")
 local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 local is_ps4 = SystemInfo:platform() == Idstring("PS4")
 
--- Lines 534-548
+-- Lines 611-625
 function CrimeNetManager:_find_online_games(friends_only)
 	if is_win32 then
 		self:_find_online_games_win32(friends_only)
@@ -556,9 +562,9 @@ function CrimeNetManager:_find_online_games(friends_only)
 	end
 end
 
--- Lines 550-615
+-- Lines 627-692
 function CrimeNetManager:_find_online_games_xbox360(friends_only)
-	-- Lines 552-611
+	-- Lines 629-688
 	local function f(info)
 		local friends = managers.network.friends:get_friends_by_name()
 
@@ -646,7 +652,7 @@ function CrimeNetManager:_find_online_games_xbox360(friends_only)
 	managers.network.matchmake:search_lobby(friends_only)
 end
 
--- Lines 617-762
+-- Lines 694-839
 function CrimeNetManager:_find_online_games_xb1(friends_only)
 	print("[CrimeNetManager:_find_online_games_xb1]")
 
@@ -656,7 +662,7 @@ function CrimeNetManager:_find_online_games_xb1(friends_only)
 		return
 	end
 
-	-- Lines 624-758
+	-- Lines 701-835
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
 
@@ -767,9 +773,9 @@ function CrimeNetManager:_find_online_games_xb1(friends_only)
 	managers.network.matchmake:search_lobby(friends_only)
 end
 
--- Lines 765-899
+-- Lines 842-976
 function CrimeNetManager:_find_online_games_ps3(friends_only)
-	-- Lines 766-818
+	-- Lines 843-895
 	local function f(info_list)
 		managers.network.matchmake:search_lobby_done()
 
@@ -820,7 +826,7 @@ function CrimeNetManager:_find_online_games_ps3(friends_only)
 		return
 	end
 
-	-- Lines 825-828
+	-- Lines 902-905
 	local function done_verify_func()
 		managers.network.matchmake:register_callback("search_lobby", f)
 		managers.network.matchmake:start_search_lobbys(friends_only)
@@ -841,7 +847,7 @@ function CrimeNetManager:_find_online_games_ps3(friends_only)
 		table.insert(rooms, table.remove(rooms_original, math.random(#rooms_original)))
 	end
 
-	-- Lines 844-892
+	-- Lines 921-969
 	local function updated_session_attributes(active_info_list)
 		self._test_result = active_info_list
 
@@ -901,9 +907,9 @@ function CrimeNetManager:_find_online_games_ps3(friends_only)
 	managers.network.matchmake:update_session_attributes(rooms, updated_session_attributes)
 end
 
--- Lines 901-1067
+-- Lines 978-1144
 function CrimeNetManager:_find_online_games_ps4(friends_only)
-	-- Lines 902-983
+	-- Lines 979-1060
 	local function f(info_list)
 		managers.network.matchmake:search_lobby_done()
 
@@ -973,7 +979,7 @@ function CrimeNetManager:_find_online_games_ps4(friends_only)
 		return
 	end
 
-	-- Lines 990-993
+	-- Lines 1067-1070
 	local function done_verify_func()
 		managers.network.matchmake:register_callback("search_lobby", f)
 		managers.network.matchmake:start_search_lobbys(friends_only)
@@ -995,7 +1001,7 @@ function CrimeNetManager:_find_online_games_ps4(friends_only)
 		table.insert(rooms, table.remove(rooms_original, math.random(#rooms_original)))
 	end
 
-	-- Lines 1012-1060
+	-- Lines 1089-1137
 	local function updated_session_attributes(active_info_list)
 		self._test_result = active_info_list
 
@@ -1055,7 +1061,7 @@ function CrimeNetManager:_find_online_games_ps4(friends_only)
 	managers.network.matchmake:update_session_attributes(rooms, updated_session_attributes)
 end
 
--- Lines 1070-1084
+-- Lines 1147-1161
 function CrimeNetManager:_server_properties(attributes_numbers)
 	local level_id = tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
 	local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id
@@ -1071,9 +1077,9 @@ function CrimeNetManager:_server_properties(attributes_numbers)
 	return level_id, name_id, level_name, difficulty_id, difficulty, job_id, state_string_id, state_name, state, num_plrs
 end
 
--- Lines 1086-1259
+-- Lines 1163-1336
 function CrimeNetManager:_find_online_games_win32(friends_only)
-	-- Lines 1087-1246
+	-- Lines 1164-1323
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
 
@@ -1205,7 +1211,7 @@ function CrimeNetManager:_find_online_games_win32(friends_only)
 	managers.network.matchmake:register_callback("search_lobby", f)
 	managers.network.matchmake:search_lobby(friends_only)
 
-	-- Lines 1251-1255
+	-- Lines 1328-1332
 	local function usrs_f(success, amount)
 		if success then
 			managers.menu_component:set_crimenet_players_online(amount)
@@ -1216,12 +1222,12 @@ function CrimeNetManager:_find_online_games_win32(friends_only)
 	Steam:sa_handler():get_concurrent_users()
 end
 
--- Lines 1261-1263
+-- Lines 1338-1340
 function CrimeNetManager:save(data)
 	data.crimenet = self._global
 end
 
--- Lines 1265-1281
+-- Lines 1342-1358
 function CrimeNetManager:load(data)
 	Global.crimenet = data.crimenet or Global.crimenet
 	self._global = Global.crimenet
@@ -1235,13 +1241,13 @@ function CrimeNetManager:load(data)
 	self:_create_crimenet_broker_global()
 end
 
--- Lines 1286-1428
+-- Lines 1363-1505
 function CrimeNetManager:join_quick_play_game()
 	if SystemInfo:platform() ~= Idstring("WIN32") then
 		return
 	end
 
-	-- Lines 1292-1425
+	-- Lines 1369-1502
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
 
@@ -1377,19 +1383,19 @@ function CrimeNetManager:join_quick_play_game()
 	managers.network.matchmake:search_lobby(nil, true)
 end
 
--- Lines 1432-1434
+-- Lines 1509-1511
 function CrimeNetManager:set_sidebar_collapsed(collapsed)
 	self._global.sidebar.collapsed = collapsed
 end
 
--- Lines 1436-1438
+-- Lines 1513-1515
 function CrimeNetManager:sidebar_collapsed()
 	return self._global.sidebar.collapsed
 end
 
 CrimeNetGui = CrimeNetGui or class()
 
--- Lines 1461-1993
+-- Lines 1538-2070
 function CrimeNetGui:init(ws, fullscreeen_ws, node)
 	self._tweak_data = tweak_data.gui.crime_net
 	self._crimenet_enabled = true
@@ -1537,7 +1543,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 	bd_light:set_alpha(0)
 	bd_light:set_blend_mode("add")
 
-	-- Lines 1506-1521
+	-- Lines 1583-1598
 	local function light_flicker_animation(o)
 		local alpha = 0
 		local acceleration = 0
@@ -1918,7 +1924,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 		h = tweak_data.menu.pd2_small_font_size * 3
 	})
 
-	-- Lines 1708-1718
+	-- Lines 1785-1795
 	local function mul_to_procent_string(multiplier)
 		local pro = math.round(multiplier * 100)
 		local procent_string = nil
@@ -2007,7 +2013,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 			child:set_alpha(0)
 		end
 
-		-- Lines 1778-1800
+		-- Lines 1855-1877
 		local function global_bonuses_anim(panel)
 			local child_num = 1
 			local viewing_child = panel:children()[child_num]
@@ -2039,7 +2045,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 
 		global_bonuses_panel:animate(global_bonuses_anim)
 	elseif #global_bonuses_panel:children() == 1 then
-		-- Lines 1805-1813
+		-- Lines 1882-1890
 		local function global_bonuses_anim(panel)
 			while alive(panel) do
 				if not self._crimenet_enabled then
@@ -2268,7 +2274,7 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 	managers.challenge:fetch_challenges()
 end
 
--- Lines 2056-2063
+-- Lines 2133-2140
 function CrimeNetGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -2278,7 +2284,7 @@ function CrimeNetGui:make_fine_text(text)
 	return w, h
 end
 
--- Lines 2065-2107
+-- Lines 2142-2184
 function CrimeNetGui:make_color_text(text_object, color)
 	local text = text_object:text()
 	local text_dissected = utf8.characters(text)
@@ -2324,7 +2330,7 @@ function CrimeNetGui:make_color_text(text_object, color)
 	end
 end
 
--- Lines 2109-2200
+-- Lines 2186-2277
 function CrimeNetGui:_create_polylines()
 	if _G.IS_VR then
 		self._region_locations = {}
@@ -2451,7 +2457,7 @@ function CrimeNetGui:_create_polylines()
 	end
 end
 
--- Lines 2202-2210
+-- Lines 2279-2287
 function CrimeNetGui:set_players_online(players)
 	local players_string = managers.money:add_decimal_marks_to_string(string.format("%.3d", players))
 	local num_players_text = self._panel:child("num_players_text")
@@ -2463,7 +2469,7 @@ function CrimeNetGui:set_players_online(players)
 	self._panel:child("num_players_blur"):set_shape(num_players_text:shape())
 end
 
--- Lines 2213-2217
+-- Lines 2290-2294
 function CrimeNetGui:move_players_online(x, y)
 	local num_players_text = self._panel:child("num_players_text")
 
@@ -2471,7 +2477,7 @@ function CrimeNetGui:move_players_online(x, y)
 	self._panel:child("num_players_blur"):set_shape(num_players_text:shape())
 end
 
--- Lines 2219-2228
+-- Lines 2296-2305
 function CrimeNetGui:set_players_online_pos(x, y)
 	local num_players_text = self._panel:child("num_players_text")
 
@@ -2486,7 +2492,7 @@ function CrimeNetGui:set_players_online_pos(x, y)
 	self._panel:child("num_players_blur"):set_shape(num_players_text:shape())
 end
 
--- Lines 2230-2235
+-- Lines 2307-2312
 function CrimeNetGui:move_legend(x, y)
 	local legend = self._panel:child("legends_button")
 
@@ -2497,7 +2503,7 @@ function CrimeNetGui:move_legend(x, y)
 	legend_panel:move(x or 0, y or 0)
 end
 
--- Lines 2237-2248
+-- Lines 2314-2325
 function CrimeNetGui:set_legend_pos(x, y)
 	local legend = self._panel:child("legends_button")
 	local legend_panel = self._panel:child("legend_panel")
@@ -2513,14 +2519,14 @@ function CrimeNetGui:set_legend_pos(x, y)
 	end
 end
 
--- Lines 2251-2272
+-- Lines 2328-2349
 function CrimeNetGui:_create_locations()
 	self._locations = deep_clone(self._tweak_data.locations) or {}
 
 	self:_create_polylines()
 end
 
--- Lines 2274-2278
+-- Lines 2351-2355
 function CrimeNetGui:_add_location(contact, data)
 	return
 
@@ -2529,17 +2535,17 @@ function CrimeNetGui:_add_location(contact, data)
 	table.insert(self._locations[contact], data)
 end
 
--- Lines 2280-2287
+-- Lines 2357-2364
 function CrimeNetGui:_get_contact_locations()
 	return self._locations[1]
 end
 
--- Lines 2289-2291
+-- Lines 2366-2368
 function CrimeNetGui:_get_random_location()
 	return self._pan_panel_job_border_x + math.random(self._map_size_w - 2 * self._pan_panel_job_border_x), self._pan_panel_job_border_y + math.random(self._map_size_h - 2 * self._pan_panel_job_border_y)
 end
 
--- Lines 2293-2463
+-- Lines 2370-2540
 function CrimeNetGui:_get_job_location(data)
 	local locations = self:_get_contact_locations()
 
@@ -2579,7 +2585,7 @@ function CrimeNetGui:_get_job_location(data)
 	return self:_get_random_location()
 end
 
--- Lines 2475-2573
+-- Lines 2552-2650
 function CrimeNetGui:set_getting_hacked(hacked)
 	self._getting_hacked = hacked and true or false
 	self._getting_hacked_panel = self._getting_hacked_panel or self._fullscreen_panel:panel({
@@ -2761,7 +2767,7 @@ function CrimeNetGui:set_getting_hacked(hacked)
 	self._hacked_t = self._start_hacked_t
 end
 
--- Lines 2575-2598
+-- Lines 2652-2675
 function CrimeNetGui:add_special_contracts(no_casino, no_quickplay)
 	return
 
@@ -2782,7 +2788,7 @@ function CrimeNetGui:add_special_contracts(no_casino, no_quickplay)
 	end
 end
 
--- Lines 2600-2652
+-- Lines 2677-2729
 function CrimeNetGui:add_special_contract(special_contract, no_casino, no_quickplay)
 	local id = special_contract.id
 	local allow = id and not self._jobs[id] and (not special_contract.unlock or special_contract.unlock and tweak_data:get_value(special_contract.id, special_contract.unlock) <= managers.experience:current_level()) and (special_contract.id ~= "casino" or not no_casino) and (special_contract.id ~= "quickplay" or not no_quickplay) and (special_contract.id ~= "crime_spree" or managers.crime_spree:unlocked())
@@ -2800,7 +2806,7 @@ function CrimeNetGui:add_special_contract(special_contract, no_casino, no_quickp
 		gui_data.dlc = special_contract.dlc
 
 		if special_contract.pulse and (not special_contract.pulse_level or managers.experience:current_level() <= special_contract.pulse_level and managers.experience:current_rank() == 0) then
-			-- Lines 2620-2625
+			-- Lines 2697-2702
 			local function animate_pulse(o)
 				while true do
 					over(1, function (p)
@@ -2834,7 +2840,7 @@ function CrimeNetGui:add_special_contract(special_contract, no_casino, no_quickp
 	end
 end
 
--- Lines 2655-2661
+-- Lines 2732-2738
 function CrimeNetGui:add_preset_job(preset_id)
 	self:remove_job(preset_id, true)
 
@@ -2844,7 +2850,7 @@ function CrimeNetGui:add_preset_job(preset_id)
 	self._jobs[preset_id] = gui_data
 end
 
--- Lines 2664-2669
+-- Lines 2741-2746
 function CrimeNetGui:add_server_job(data)
 	local gui_data = self:_create_job_gui(data, "server")
 	gui_data.server = true
@@ -2852,7 +2858,7 @@ function CrimeNetGui:add_server_job(data)
 	self._jobs[data.id] = gui_data
 end
 
--- Lines 2671-3575
+-- Lines 2748-3652
 function CrimeNetGui:_create_job_gui(data, type, fixed_x, fixed_y, fixed_location)
 	local level_id = data.level_id
 	local level_data = tweak_data.levels[level_id]
@@ -2943,7 +2949,7 @@ function CrimeNetGui:_create_job_gui(data, type, fixed_x, fixed_y, fixed_locatio
 	local range_colors = {}
 	local text_string = managers.localization:to_upper_text("menu_exp_short")
 
-	-- Lines 2770-2780
+	-- Lines 2847-2857
 	local function mul_to_procent_string(multiplier)
 		local pro = math.round(multiplier * 100)
 		local procent_string = nil
@@ -3832,12 +3838,12 @@ function CrimeNetGui:_create_job_gui(data, type, fixed_x, fixed_y, fixed_locatio
 	return job
 end
 
--- Lines 3577-3579
+-- Lines 3654-3656
 function CrimeNetGui:does_job_exist(id)
 	return self._jobs and self._jobs[id] ~= nil
 end
 
--- Lines 3581-3605
+-- Lines 3658-3682
 function CrimeNetGui:remove_job(id, instant)
 	local data = self._jobs[id]
 
@@ -3871,7 +3877,7 @@ function CrimeNetGui:remove_job(id, instant)
 	return true
 end
 
--- Lines 3607-3662
+-- Lines 3684-3739
 function CrimeNetGui:_anim_remove_job_gui(o, id)
 	local data = self._deleting_jobs[id]
 	local side_alpha = data.side_panel:alpha()
@@ -3936,7 +3942,7 @@ function CrimeNetGui:_anim_remove_job_gui(o, id)
 	self:_remove_gui_job(data)
 end
 
--- Lines 3664-3687
+-- Lines 3741-3764
 function CrimeNetGui:_remove_gui_job(data)
 	self._pan_panel:remove(data.marker_panel)
 	self._pan_panel:remove(data.glow_panel)
@@ -3965,7 +3971,7 @@ function CrimeNetGui:_remove_gui_job(data)
 	end
 end
 
--- Lines 3690-3785
+-- Lines 3767-3862
 function CrimeNetGui:update_server_job(data, i)
 	local job_index = data.id or i
 	local job = self._jobs[job_index]
@@ -4060,7 +4066,7 @@ function CrimeNetGui:update_server_job(data, i)
 	end
 end
 
--- Lines 3787-3797
+-- Lines 3864-3874
 function CrimeNetGui:_update_job_variable(id, variable, value)
 	local data = self._jobs[id]
 
@@ -4074,7 +4080,7 @@ function CrimeNetGui:_update_job_variable(id, variable, value)
 	return updated
 end
 
--- Lines 3800-3818
+-- Lines 3877-3895
 function CrimeNetGui:update_job(id, t, dt)
 	local data = self._jobs[id]
 
@@ -4097,7 +4103,7 @@ function CrimeNetGui:update_job(id, t, dt)
 	data.focus:set_center(data.marker_panel:center())
 end
 
--- Lines 3820-3838
+-- Lines 3897-3915
 function CrimeNetGui:feed_timer(id, t, max_t)
 	local data = self._jobs[id]
 
@@ -4118,7 +4124,7 @@ function CrimeNetGui:feed_timer(id, t, max_t)
 	end
 end
 
--- Lines 3840-3950
+-- Lines 3917-4027
 function CrimeNetGui:update(t, dt)
 	self._rasteroverlay:set_texture_rect(0, -math.mod(Application:time() * 5, 32), 32, 640)
 
@@ -4224,7 +4230,7 @@ function CrimeNetGui:update(t, dt)
 	end
 end
 
--- Lines 3952-3968
+-- Lines 4029-4045
 function CrimeNetGui:feed_server_timer(id, t)
 	local data = self._jobs[id]
 
@@ -4244,7 +4250,7 @@ function CrimeNetGui:feed_server_timer(id, t)
 	end
 end
 
--- Lines 3970-3979
+-- Lines 4047-4056
 function CrimeNetGui:toggle_legend()
 	managers.menu_component:post_event("menu_enter")
 	self._panel:child("legend_panel"):set_visible(not self._panel:child("legend_panel"):visible())
@@ -4253,22 +4259,22 @@ function CrimeNetGui:toggle_legend()
 	}))
 end
 
--- Lines 3981-3992
+-- Lines 4058-4069
 function CrimeNetGui:mouse_button_click(button)
 	return button == Idstring("0")
 end
 
--- Lines 3994-4004
+-- Lines 4071-4081
 function CrimeNetGui:button_wheel_scroll_up(button)
 	return button == Idstring("mouse wheel up")
 end
 
--- Lines 4006-4016
+-- Lines 4083-4093
 function CrimeNetGui:button_wheel_scroll_down(button)
 	return button == Idstring("mouse wheel down")
 end
 
--- Lines 4018-4031
+-- Lines 4095-4108
 function CrimeNetGui:confirm_pressed()
 	if not self._crimenet_enabled then
 		return false
@@ -4285,7 +4291,7 @@ function CrimeNetGui:confirm_pressed()
 	return self:check_job_pressed(managers.mouse_pointer:modified_mouse_pos())
 end
 
--- Lines 4033-4081
+-- Lines 4110-4158
 function CrimeNetGui:special_btn_pressed(button)
 	if not self._crimenet_enabled then
 		return false
@@ -4318,7 +4324,7 @@ function CrimeNetGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 4083-4093
+-- Lines 4160-4170
 function CrimeNetGui:previous_page()
 	if not self._crimenet_enabled then
 		return
@@ -4333,7 +4339,7 @@ function CrimeNetGui:previous_page()
 	return true
 end
 
--- Lines 4095-4105
+-- Lines 4172-4182
 function CrimeNetGui:next_page()
 	if not self._crimenet_enabled then
 		return
@@ -4348,7 +4354,7 @@ function CrimeNetGui:next_page()
 	return true
 end
 
--- Lines 4107-4114
+-- Lines 4184-4191
 function CrimeNetGui:input_focus()
 	if managers.menu_component and managers.menu_component:crimenet_sidebar_gui() and managers.menu_component:crimenet_sidebar_gui():input_focus() then
 		return false
@@ -4357,11 +4363,11 @@ function CrimeNetGui:input_focus()
 	return self._crimenet_enabled and 1
 end
 
--- Lines 4117-4119
+-- Lines 4194-4196
 function CrimeNetGui:check_job_mouse_over(x, y)
 end
 
--- Lines 4121-4216
+-- Lines 4198-4293
 function CrimeNetGui:check_job_pressed(x, y)
 	for id, job in pairs(self._jobs) do
 		if job.mouse_over == 1 then
@@ -4443,7 +4449,7 @@ function CrimeNetGui:check_job_pressed(x, y)
 	end
 end
 
--- Lines 4218-4275
+-- Lines 4295-4352
 function CrimeNetGui:mouse_pressed(o, button, x, y)
 	if not self._crimenet_enabled then
 		return
@@ -4510,7 +4516,7 @@ function CrimeNetGui:mouse_pressed(o, button, x, y)
 	return true
 end
 
--- Lines 4277-4294
+-- Lines 4354-4371
 function CrimeNetGui:start_job()
 	for id, job in pairs(self._jobs) do
 		if job.expanded then
@@ -4529,7 +4535,7 @@ function CrimeNetGui:start_job()
 	end
 end
 
--- Lines 4296-4321
+-- Lines 4373-4398
 function CrimeNetGui:mouse_released(o, button, x, y)
 	if not self._crimenet_enabled then
 		return
@@ -4563,12 +4569,12 @@ function CrimeNetGui:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines 4323-4325
+-- Lines 4400-4402
 function CrimeNetGui:_get_pan_panel_border()
 	return self._pan_panel_border * self._zoom
 end
 
--- Lines 4327-4397
+-- Lines 4404-4474
 function CrimeNetGui:_set_map_position(mx, my)
 	local x = self._map_x + mx
 	local y = self._map_y + my
@@ -4629,7 +4635,7 @@ function CrimeNetGui:_set_map_position(mx, my)
 	line_indicator_v2:set_h(cross_indicator_h2:y() - cross_indicator_h1:y())
 end
 
--- Lines 4399-4409
+-- Lines 4476-4486
 function CrimeNetGui:goto_lobby(lobby)
 	print(lobby:id())
 
@@ -4645,14 +4651,14 @@ function CrimeNetGui:goto_lobby(lobby)
 	end
 end
 
--- Lines 4411-4415
+-- Lines 4488-4492
 function CrimeNetGui:goto_bain()
 	for _, job in pairs(self._jobs) do
 		-- Nothing
 	end
 end
 
--- Lines 4417-4425
+-- Lines 4494-4502
 function CrimeNetGui:_goto_map_position(x, y)
 	local tw = math.max(self._map_panel:child("map"):texture_width(), 1)
 	local th = math.max(self._map_panel:child("map"):texture_height(), 1)
@@ -4662,7 +4668,7 @@ function CrimeNetGui:_goto_map_position(x, y)
 	self:_set_map_position(-mx, -my)
 end
 
--- Lines 4427-4553
+-- Lines 4504-4630
 function CrimeNetGui:_set_zoom(zoom, x, y)
 	local w1, h1 = self._pan_panel:size()
 	local wx1 = (-self._fullscreen_panel:x() - self._pan_panel:x() + x) / self._pan_panel:w()
@@ -4761,12 +4767,12 @@ function CrimeNetGui:_set_zoom(zoom, x, y)
 	end
 end
 
--- Lines 4555-4765
+-- Lines 4632-4842
 function CrimeNetGui:update_job_gui(job, inside)
 	if job.mouse_over ~= inside then
 		job.mouse_over = inside
 
-		-- Lines 4559-4710
+		-- Lines 4636-4787
 		local function animate_alpha(o, objects, job, alphas, inside)
 			local wanted_alpha = alphas[1]
 			local wanted_text_alpha = alphas[2]
@@ -4856,7 +4862,7 @@ function CrimeNetGui:update_job_gui(job, inside)
 					glow_met = job.glow_panel:alpha() == (inside and 0.2 or 0)
 
 					if glow_met and inside then
-						-- Lines 4651-4655
+						-- Lines 4728-4732
 						local function animate_pulse(o)
 							while true do
 								over(1, function (p)
@@ -4970,7 +4976,7 @@ function CrimeNetGui:update_job_gui(job, inside)
 	end
 end
 
--- Lines 4767-4934
+-- Lines 4844-5011
 function CrimeNetGui:mouse_moved(o, x, y)
 	if not self._crimenet_enabled then
 		return false
@@ -5150,7 +5156,7 @@ function CrimeNetGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 4936-4942
+-- Lines 5013-5019
 function CrimeNetGui:update_all_job_guis(closest_job, inside_any_job)
 	for id, job in pairs(self._jobs) do
 		local inside = job == closest_job and 1 or inside_any_job and 2 or 3
@@ -5159,7 +5165,7 @@ function CrimeNetGui:update_all_job_guis(closest_job, inside_any_job)
 	end
 end
 
--- Lines 4944-4952
+-- Lines 5021-5029
 function CrimeNetGui:ps3_invites_callback()
 	if managers.system_menu and managers.system_menu:is_active() and not managers.system_menu:is_closing() then
 		return true
@@ -5171,12 +5177,12 @@ function CrimeNetGui:ps3_invites_callback()
 	end
 end
 
--- Lines 4954-4956
+-- Lines 5031-5033
 function CrimeNetGui:enabled()
 	return self._crimenet_enabled
 end
 
--- Lines 4958-4965
+-- Lines 5035-5042
 function CrimeNetGui:enable_crimenet()
 	self._crimenet_enabled = true
 
@@ -5187,7 +5193,7 @@ function CrimeNetGui:enable_crimenet()
 	end
 end
 
--- Lines 4967-4974
+-- Lines 5044-5051
 function CrimeNetGui:disable_crimenet()
 	self._crimenet_enabled = false
 
@@ -5198,7 +5204,7 @@ function CrimeNetGui:disable_crimenet()
 	end
 end
 
--- Lines 4977-5010
+-- Lines 5054-5087
 function CrimeNetGui:close()
 	managers.crimenet:stop()
 

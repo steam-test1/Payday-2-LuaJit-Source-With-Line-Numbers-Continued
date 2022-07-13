@@ -2654,7 +2654,7 @@ function NavigationManager:convert_nav_link_maneuverability_to_SO_access(maneuve
 	return access_filter
 end
 
--- Lines 2926-2945
+-- Lines 2926-2947
 function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 	local ai_group_filter = nil
 
@@ -2696,6 +2696,10 @@ function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 		ai_group_filter = {
 			"SO_ID2"
 		}
+	elseif ai_group_name == "unique_patrol_forbid" then
+		ai_group_filter = {
+			"security_patrol"
+		}
 	else
 		debug_pause("[NavigationManager:convert_SO_AI_group_to_access] Unknown SO AI group name", ai_group_name)
 
@@ -2707,32 +2711,32 @@ function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 	return access_filter
 end
 
--- Lines 2949-2951
+-- Lines 2951-2953
 function NavigationManager:convert_access_filter_to_number(access_filter)
 	return self._quad_field:convert_access_filter_to_number(access_filter)
 end
 
--- Lines 2955-2957
+-- Lines 2957-2959
 function NavigationManager:convert_access_filter_to_string(access_filter)
 	return self._quad_field:convert_access_filter_to_string(access_filter)
 end
 
--- Lines 2961-2963
+-- Lines 2963-2965
 function NavigationManager:convert_access_filter_to_table(access_filter)
 	return self._quad_field:convert_access_filter_to_table(access_filter)
 end
 
--- Lines 2967-2969
+-- Lines 2969-2971
 function NavigationManager:convert_access_flag(access_flag)
 	return self._quad_field:convert_nav_link_flag_to_bitmask(access_flag)
 end
 
--- Lines 2973-2975
+-- Lines 2975-2977
 function NavigationManager:check_access(access_filter, pos, neg)
 	return self._quad_field:check_access_bitmask(access_filter, pos, neg)
 end
 
--- Lines 2979-2986
+-- Lines 2981-2988
 function NavigationManager:upgrade_access_filter(access_filter_bitmask_old, version)
 	local old_translation = self.ACCESS_FLAGS_OLD[version]
 
@@ -2747,27 +2751,27 @@ function NavigationManager:upgrade_access_filter(access_filter_bitmask_old, vers
 	return access_filter_bitmask_new
 end
 
--- Lines 2990-2992
+-- Lines 2992-2994
 function NavigationManager:get_nav_seg_metadata(nav_seg_id)
 	return self._nav_segments[nav_seg_id]
 end
 
--- Lines 2996-2998
+-- Lines 2998-3000
 function NavigationManager:set_location_ID(nav_seg_id, location_id)
 	self:_set_nav_seg_metadata(nav_seg_id, "location_id", location_id)
 end
 
--- Lines 3002-3004
+-- Lines 3004-3006
 function NavigationManager:set_suspicion_multiplier(nav_seg_id, suspicion_mul)
 	self:_set_nav_seg_metadata(nav_seg_id, "suspicion_mul", suspicion_mul)
 end
 
--- Lines 3008-3010
+-- Lines 3010-3012
 function NavigationManager:set_detection_multiplier(nav_seg_id, detection_mul)
 	self:_set_nav_seg_metadata(nav_seg_id, "detection_mul", detection_mul)
 end
 
--- Lines 3014-3023
+-- Lines 3016-3025
 function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 	if self._nav_segments then
 		local nav_seg = self._nav_segments[nav_seg_id]
@@ -2780,7 +2784,7 @@ function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_v
 	self._builder:set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 end
 
--- Lines 3027-3043
+-- Lines 3029-3045
 function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name)
 	if self._debug then
 		for i, obs_data in ipairs(self._obstacles) do
@@ -2802,7 +2806,7 @@ function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name)
 	})
 end
 
--- Lines 3047-3060
+-- Lines 3049-3062
 function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
@@ -2819,7 +2823,7 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	end
 end
 
--- Lines 3064-3206
+-- Lines 3066-3208
 function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 	if event_name == "add_nav_seg_neighbours" then
 		for nav_seg_id, add_neighbours in pairs(args) do
@@ -2980,7 +2984,7 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 	end
 end
 
--- Lines 3210-3217
+-- Lines 3212-3219
 function NavigationManager:_set_quad_obstructed_by_data(quad_data, state)
 	local closest_i_room, room = self:_get_closest_room_by_com(self._builder:_calculate_room_center(quad_data, true))
 
@@ -2989,7 +2993,7 @@ function NavigationManager:_set_quad_obstructed_by_data(quad_data, state)
 	end
 end
 
--- Lines 3221-3227
+-- Lines 3223-3229
 function NavigationManager:_add_quad_by_data(quad_data)
 	quad_data.added = true
 	local nav_seg = self._nav_segments[quad_data.seg_id]
@@ -2999,7 +3003,7 @@ function NavigationManager:_add_quad_by_data(quad_data)
 	table.insert(self._rooms, quad_data)
 end
 
--- Lines 3231-3238
+-- Lines 3233-3240
 function NavigationManager:_alter_quad_by_data(quad_data)
 	local closest_i_room, room = self:_get_closest_room_by_com(quad_data.old_com)
 
@@ -3009,7 +3013,7 @@ function NavigationManager:_alter_quad_by_data(quad_data)
 	end
 end
 
--- Lines 3242-3254
+-- Lines 3244-3256
 function NavigationManager:_get_closest_room_by_com(com)
 	local closest_dis, closest_i_room = nil
 
@@ -3026,7 +3030,7 @@ function NavigationManager:_get_closest_room_by_com(com)
 	return closest_i_room, self._rooms[closest_i_room]
 end
 
--- Lines 3258-3260
+-- Lines 3260-3262
 function NavigationManager:destroy()
 	self._quad_field:clear_all()
 end

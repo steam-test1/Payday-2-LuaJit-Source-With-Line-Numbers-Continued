@@ -2,7 +2,7 @@ require("lib/utils/accelbyte/Telemetry")
 
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = tweak_data.max_players
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "payday2_v1.124.115"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "payday2_v1.125.116"
 
 -- Lines 72-81
 function NetworkMatchMakingSTEAM:init()

@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1234
+-- Lines 3-1241
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -1056,7 +1056,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines 1236-1245
+-- Lines 1243-1252
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1071,7 +1071,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1248-1256
+-- Lines 1255-1263
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

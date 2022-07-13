@@ -549,7 +549,7 @@ function SkirmishTweakData:_init_spawn_group_weights(tweak_data)
 	setmetatable(tweak_data.group_ai.skirmish.assault, skirmish_assault_meta)
 end
 
--- Lines 156-224
+-- Lines 156-223
 function SkirmishTweakData:_init_wave_modifiers()
 	self.wave_modifiers = {}
 	local health_damage_multipliers = {
@@ -661,6 +661,14 @@ function SkirmishTweakData:_init_wave_modifiers()
 			class = "ModifierSkulldozers"
 		}
 	}
+	self.wave_modifiers[5] = {
+		{
+			class = "ModifierHeavySniper",
+			data = {
+				spawn_chance = 5
+			}
+		}
+	}
 	self.wave_modifiers[7] = {
 		{
 			class = "ModifierDozerMedic"
@@ -673,7 +681,7 @@ function SkirmishTweakData:_init_wave_modifiers()
 	}
 end
 
--- Lines 226-302
+-- Lines 225-301
 function SkirmishTweakData:_init_weekly_modifiers()
 	self.weekly_modifiers = {
 		wsm01 = {
@@ -743,7 +751,7 @@ function SkirmishTweakData:_init_weekly_modifiers()
 	}
 end
 
--- Lines 304-379
+-- Lines 303-378
 function SkirmishTweakData:_init_weekly_rewards()
 	self.weekly_rewards = {
 		{
@@ -815,7 +823,7 @@ function SkirmishTweakData:_init_weekly_rewards()
 	}
 end
 
--- Lines 381-411
+-- Lines 380-410
 function SkirmishTweakData:_init_ransom_amounts()
 	self.ransom_amounts = {
 		1600000,
@@ -834,7 +842,7 @@ function SkirmishTweakData:_init_ransom_amounts()
 	end
 end
 
--- Lines 413-425
+-- Lines 412-424
 function SkirmishTweakData:_init_job_list(tweak_data)
 	self.job_list = {}
 
@@ -850,7 +858,7 @@ function SkirmishTweakData:_init_job_list(tweak_data)
 	end
 end
 
--- Lines 427-430
+-- Lines 426-429
 function SkirmishTweakData:_init_briefing()
 	self.random_skirmish = {
 		crimenet_videos = {
@@ -859,7 +867,7 @@ function SkirmishTweakData:_init_briefing()
 	}
 end
 
--- Lines 433-477
+-- Lines 432-476
 function SkirmishTweakData:_init_additional_rewards()
 	local tier1 = deep_clone(self.weekly_rewards[1])
 	local tier2 = deep_clone(self.weekly_rewards[2])

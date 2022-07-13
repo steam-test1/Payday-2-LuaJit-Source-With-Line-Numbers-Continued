@@ -42,34 +42,32 @@ function MutatorEnemyHealth:get_health_multiplier()
 	return self:value("health_multiplier")
 end
 
--- Lines 39-56
-function MutatorEnemyHealth:modify_character_tweak_data(character_tweak, multiplier)
+-- Lines 39-58
+function MutatorEnemyHealth:modify_character_tweak_data(character_tweak, multiplier, exclude_list)
 	if character_tweak then
 		multiplier = multiplier or self:get_health_multiplier()
 
 		print("[Mutators] Mutating character tweak data: ", self:id())
 
 		for i, character in ipairs(character_tweak:enemy_list()) do
-			if character_tweak[character] then
-				print("[Mutators] Mutating health:", character, character_tweak[character].HEALTH_INIT, multiplier, character_tweak[character].HEALTH_INIT * multiplier)
-
+			if character_tweak[character] and (not exclude_list or not exclude_list[character]) then
 				character_tweak[character].HEALTH_INIT = character_tweak[character].HEALTH_INIT * multiplier
 			end
 		end
 	end
 end
 
--- Lines 60-62
+-- Lines 62-64
 function MutatorEnemyHealth:_min_health()
 	return 1.01
 end
 
--- Lines 64-66
+-- Lines 66-68
 function MutatorEnemyHealth:_max_health()
 	return 10
 end
 
--- Lines 68-91
+-- Lines 70-93
 function MutatorEnemyHealth:setup_options_gui(node)
 	local params = {
 		name = "enemy_health_slider",
@@ -95,12 +93,12 @@ function MutatorEnemyHealth:setup_options_gui(node)
 	return new_item
 end
 
--- Lines 93-95
+-- Lines 95-97
 function MutatorEnemyHealth:_update_health_multiplier(item)
 	self:set_value("health_multiplier", item:value())
 end
 
--- Lines 97-108
+-- Lines 99-110
 function MutatorEnemyHealth:reset_to_default()
 	self:clear_values()
 
@@ -113,7 +111,7 @@ function MutatorEnemyHealth:reset_to_default()
 	end
 end
 
--- Lines 110-112
+-- Lines 112-114
 function MutatorEnemyHealth:options_fill()
 	return self:_get_percentage_fill(self:_min_health(), self:_max_health(), self:get_health_multiplier())
 end

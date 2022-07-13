@@ -561,13 +561,13 @@ function PlayerStandard:_update_fwd_ray()
 	end
 end
 
--- Lines 677-680
+-- Lines 683-686
 function PlayerStandard:force_input(inputs, release_inputs)
 	self._forced_inputs = inputs
 	self._forced_release_inputs = release_inputs
 end
 
--- Lines 683-695
+-- Lines 689-701
 function PlayerStandard:_create_on_controller_disabled_input()
 	local release_interact = Global.game_settings.single_player or not managers.menu:get_controller():get_input_bool("interact")
 	local input = {
@@ -584,7 +584,7 @@ end
 
 local win32 = SystemInfo:platform() == Idstring("WIN32")
 
--- Lines 698-812
+-- Lines 704-818
 function PlayerStandard:_get_input(t, dt, paused)
 	if self._state_data.controller_enabled ~= self._controller:enabled() then
 		if self._state_data.controller_enabled then
@@ -694,7 +694,7 @@ function PlayerStandard:_get_input(t, dt, paused)
 	return input
 end
 
--- Lines 816-858
+-- Lines 822-864
 function PlayerStandard:_determine_move_direction()
 	self._stick_move = self._controller:get_input_axis("move")
 
@@ -739,12 +739,12 @@ function PlayerStandard:_determine_move_direction()
 	end
 end
 
--- Lines 863-865
+-- Lines 869-871
 function PlayerStandard:update_check_actions_paused()
 	self:_update_check_actions(Application:time(), 0.1, true)
 end
 
--- Lines 868-1030
+-- Lines 874-1036
 function PlayerStandard:_update_check_actions(t, dt, paused)
 	local input = self:_get_input(t, dt, paused)
 
@@ -825,7 +825,7 @@ local mvec_pos_new = Vector3()
 local mvec_achieved_walk_vel = Vector3()
 local mvec_move_dir_normalized = Vector3()
 
--- Lines 1038-1186
+-- Lines 1044-1192
 function PlayerStandard:_update_movement(t, dt)
 	local anim_data = self._unit:anim_data()
 	local weapon_id = alive(self._equipped_unit) and self._equipped_unit:base() and self._equipped_unit:base():get_name_id()
@@ -969,7 +969,7 @@ function PlayerStandard:_update_movement(t, dt)
 	self:_update_network_position(t, dt, cur_pos, pos_new)
 end
 
--- Lines 1188-1212
+-- Lines 1194-1218
 function PlayerStandard:_update_network_position(t, dt, cur_pos, pos_new)
 	if not self._last_sent_pos_t or t - self._last_sent_pos_t > 1 / tweak_data.network.player_tick_rate then
 		local move_speed = math.clamp(mvector3.length(self._stick_move), 0, 1)
@@ -990,12 +990,12 @@ function PlayerStandard:_update_network_position(t, dt, cur_pos, pos_new)
 	end
 end
 
--- Lines 1216-1218
+-- Lines 1222-1224
 function PlayerStandard:is_network_move_allowed()
 	return not self:_on_zipline() and not self._is_jumping
 end
 
--- Lines 1222-1239
+-- Lines 1228-1245
 function PlayerStandard:_get_walk_headbob()
 	if self._state_data.using_bipod then
 		return 0
@@ -1012,7 +1012,7 @@ function PlayerStandard:_get_walk_headbob()
 	return 0.025
 end
 
--- Lines 1243-1292
+-- Lines 1249-1298
 function PlayerStandard:_update_foley(t, input)
 	if self._state_data.on_zipline then
 		return
@@ -1064,7 +1064,7 @@ function PlayerStandard:_update_foley(t, input)
 	self:_check_step(t)
 end
 
--- Lines 1296-1307
+-- Lines 1302-1313
 function PlayerStandard:_check_step(t)
 	if self._state_data.in_air then
 		return
@@ -1079,7 +1079,7 @@ function PlayerStandard:_check_step(t)
 	end
 end
 
--- Lines 1310-1351
+-- Lines 1316-1357
 function PlayerStandard:_update_crosshair_offset(t)
 	local name_id = self._equipped_unit:base():get_name_id()
 
@@ -1121,7 +1121,7 @@ function PlayerStandard:_update_crosshair_offset(t)
 	end
 end
 
--- Lines 1355-1404
+-- Lines 1361-1410
 function PlayerStandard:_stance_entered(unequipped)
 	local stance_standard = tweak_data.player.stances.default[managers.player:current_state()] or tweak_data.player.stances.default.standard
 	local head_stance = self._state_data.ducking and tweak_data.player.stances.default.crouched.head or stance_standard.head
@@ -1150,7 +1150,7 @@ function PlayerStandard:_stance_entered(unequipped)
 	managers.menu:set_mouse_sensitivity(self:in_steelsight())
 end
 
--- Lines 1407-1423
+-- Lines 1413-1429
 function PlayerStandard:update_fov_external()
 	if not alive(self._equipped_unit) then
 		return
@@ -1164,7 +1164,7 @@ function PlayerStandard:update_fov_external()
 	self._camera_unit:base():set_fov_instant(new_fov)
 end
 
--- Lines 1428-1501
+-- Lines 1434-1507
 function PlayerStandard:_get_max_walk_speed(t, force_run)
 	local speed_tweak = self._tweak_data.movement.speed
 	local movement_speed = speed_tweak.STANDARD_MAX
@@ -1227,7 +1227,7 @@ function PlayerStandard:_get_max_walk_speed(t, force_run)
 	return final_speed
 end
 
--- Lines 1505-1558
+-- Lines 1511-1564
 function PlayerStandard:_start_action_steelsight(t, gadget_state)
 	if self:_changing_weapon() or self:_is_reloading() or self:_interacting() or self:_is_meleeing() or self._use_item_expire_t or self:_is_throwing_projectile() or self:_on_zipline() then
 		self._steelsight_wanted = true
@@ -1281,7 +1281,7 @@ function PlayerStandard:_start_action_steelsight(t, gadget_state)
 	managers.job:set_memory("cac_4", true)
 end
 
--- Lines 1562-1580
+-- Lines 1568-1586
 function PlayerStandard:_end_action_steelsight(t)
 	self._state_data.in_steelsight = false
 	self._state_data.reticle_obj = nil
@@ -1305,14 +1305,14 @@ function PlayerStandard:_end_action_steelsight(t)
 	self._ext_network:send("set_stance", 3, false, false)
 end
 
--- Lines 1582-1586
+-- Lines 1588-1592
 function PlayerStandard:_need_to_play_idle_redirect()
 	if not self._camera_unit:base():anims_enabled() or self._camera_unit:base():playing_empty_state() then
 		self._ext_camera:play_redirect(self:get_animation("idle"))
 	end
 end
 
--- Lines 1590-1596
+-- Lines 1596-1602
 function PlayerStandard:_interupt_action_steelsight(t)
 	self._steelsight_wanted = false
 
@@ -1321,7 +1321,7 @@ function PlayerStandard:_interupt_action_steelsight(t)
 	end
 end
 
--- Lines 1598-1610
+-- Lines 1604-1616
 function PlayerStandard:_update_steelsight_timers(t, dt)
 	if self._state_data.steelsight_weight_target then
 		self._state_data.steelsight_weight = self._state_data.steelsight_weight or 0
@@ -1337,7 +1337,7 @@ function PlayerStandard:_update_steelsight_timers(t, dt)
 	end
 end
 
--- Lines 1614-1673
+-- Lines 1620-1679
 function PlayerStandard:_start_action_running(t)
 	if not self._move_dir then
 		self._running_wanted = true
@@ -1401,7 +1401,7 @@ function PlayerStandard:_start_action_running(t)
 	self:_interupt_action_ducking(t)
 end
 
--- Lines 1675-1690
+-- Lines 1681-1696
 function PlayerStandard:_end_action_running(t)
 	if not self._end_running_expire_t then
 		local speed_multiplier = self._equipped_unit:base():exit_run_speed_multiplier()
@@ -1414,14 +1414,14 @@ function PlayerStandard:_end_action_running(t)
 	end
 end
 
--- Lines 1692-1696
+-- Lines 1698-1702
 function PlayerStandard:_interupt_action_running(t)
 	if self._running and not self._end_running_expire_t then
 		self:_end_action_running(t)
 	end
 end
 
--- Lines 1700-1723
+-- Lines 1706-1729
 function PlayerStandard:_start_action_ducking(t)
 	if self:_interacting() or self:_on_zipline() then
 		return
@@ -1442,7 +1442,7 @@ function PlayerStandard:_start_action_ducking(t)
 	self:_upd_attention()
 end
 
--- Lines 1727-1743
+-- Lines 1733-1749
 function PlayerStandard:_end_action_ducking(t, skip_can_stand_check)
 	if not skip_can_stand_check and not self:_can_stand() then
 		return
@@ -1461,14 +1461,14 @@ function PlayerStandard:_end_action_ducking(t, skip_can_stand_check)
 	self:_upd_attention()
 end
 
--- Lines 1747-1751
+-- Lines 1753-1757
 function PlayerStandard:_interupt_action_ducking(t, skip_can_stand_check)
 	if self._state_data.ducking then
 		self:_end_action_ducking(t, skip_can_stand_check)
 	end
 end
 
--- Lines 1756-1783
+-- Lines 1762-1789
 function PlayerStandard:_can_stand(ignored_bodies)
 	local offset = 50
 	local radius = 30
@@ -1515,7 +1515,7 @@ function PlayerStandard:_can_stand(ignored_bodies)
 	return true
 end
 
--- Lines 1786-1795
+-- Lines 1792-1801
 function PlayerStandard:_can_run_directional()
 	if managers.player:has_category_upgrade("player", "can_free_run") then
 		return true
@@ -1526,7 +1526,7 @@ function PlayerStandard:_can_run_directional()
 	return mvector3.angle(self._stick_move, math.Y) <= running_angle
 end
 
--- Lines 1799-1808
+-- Lines 1805-1814
 function PlayerStandard:_start_action_equip(redirect, extra_time)
 	local tweak_data = self._equipped_unit:base():weapon_tweak_data()
 	self._equip_weapon_expire_t = managers.player:player_timer():time() + (tweak_data.timers.equip or 0.7) + (extra_time or 0)
@@ -1539,7 +1539,7 @@ function PlayerStandard:_start_action_equip(redirect, extra_time)
 	local result = self._ext_camera:play_redirect(redirect or self:get_animation("equip"))
 end
 
--- Lines 1926-1980
+-- Lines 1932-1986
 function PlayerStandard:_check_action_throw_projectile(t, input)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_tweak = tweak_data.blackmarket.projectiles[projectile_entry]
@@ -1598,7 +1598,7 @@ function PlayerStandard:_check_action_throw_projectile(t, input)
 	return true
 end
 
--- Lines 1982-2026
+-- Lines 1988-2032
 function PlayerStandard:_start_action_throw_projectile(t, input)
 	self._equipped_unit:base():tweak_data_anim_stop("fire")
 	self:_interupt_action_reload(t)
@@ -1641,7 +1641,7 @@ function PlayerStandard:_start_action_throw_projectile(t, input)
 	self._ext_camera:play_redirect(self:get_animation("projectile_enter"), nil, offset)
 end
 
--- Lines 2028-2036
+-- Lines 2034-2042
 function PlayerStandard:_is_throwing_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
@@ -1652,17 +1652,17 @@ function PlayerStandard:_is_throwing_projectile()
 	return self._state_data.throwing_projectile or self._state_data.projectile_expire_t and true
 end
 
--- Lines 2038-2040
+-- Lines 2044-2046
 function PlayerStandard:in_throw_projectile()
 	return self._state_data.throwing_projectile and true
 end
 
--- Lines 2042-2044
+-- Lines 2048-2050
 function PlayerStandard:_projectile_repeat_allowed()
 	return not self._camera_unit_anim_data.throwing and not self._state_data.throwing_projectile and not self._state_data.projectile_repeat_expire_t
 end
 
--- Lines 2047-2064
+-- Lines 2053-2070
 function PlayerStandard:_do_action_throw_projectile(t, input, drop_projectile)
 	local current_state_name = self._camera_unit:anim_state_machine():segment_state(self:get_animation("base"))
 	self._state_data.throwing_projectile = nil
@@ -1680,7 +1680,7 @@ function PlayerStandard:_do_action_throw_projectile(t, input, drop_projectile)
 	self:_stance_entered()
 end
 
--- Lines 2066-2085
+-- Lines 2072-2091
 function PlayerStandard:_interupt_action_throw_projectile(t)
 	if not self:_is_throwing_projectile() then
 		return
@@ -1700,7 +1700,7 @@ function PlayerStandard:_interupt_action_throw_projectile(t)
 	self:_stance_entered()
 end
 
--- Lines 2087-2120
+-- Lines 2093-2126
 function PlayerStandard:_update_throw_projectile_timers(t, input)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
@@ -1733,7 +1733,7 @@ function PlayerStandard:_update_throw_projectile_timers(t, input)
 	end
 end
 
--- Lines 2124-2157
+-- Lines 2130-2163
 function PlayerStandard:_check_action_throw_grenade(t, input)
 	local action_wanted = input.btn_throw_grenade_press
 
@@ -1756,7 +1756,7 @@ function PlayerStandard:_check_action_throw_grenade(t, input)
 	return action_wanted
 end
 
--- Lines 2159-2166
+-- Lines 2165-2172
 function PlayerStandard:_get_projectile_throw_offset()
 	if not self.projectile_throw_delays[self._projectile_global_value] then
 		Application:error("No projectile throw delay for ", self._projectile_global_value, "! This needs to be added to PlayerStandard!")
@@ -1769,7 +1769,7 @@ function PlayerStandard:_get_projectile_throw_offset()
 	return self.projectile_throw_delays[self._projectile_global_value]
 end
 
--- Lines 2168-2201
+-- Lines 2174-2207
 function PlayerStandard:_start_action_throw_grenade(t, input)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -1802,7 +1802,7 @@ function PlayerStandard:_start_action_throw_grenade(t, input)
 	self:_stance_entered()
 end
 
--- Lines 2232-2245
+-- Lines 2238-2251
 function PlayerStandard:_update_throw_grenade_timers(t, input)
 	if self._state_data.throw_grenade_expire_t and self._state_data.throw_grenade_expire_t <= t then
 		self._state_data.throw_grenade_expire_t = nil
@@ -1815,7 +1815,7 @@ function PlayerStandard:_update_throw_grenade_timers(t, input)
 	end
 end
 
--- Lines 2247-2257
+-- Lines 2253-2263
 function PlayerStandard:_interupt_action_throw_grenade(t, input)
 	if not self:_is_throwing_grenade() then
 		return
@@ -1830,12 +1830,12 @@ function PlayerStandard:_interupt_action_throw_grenade(t, input)
 	self:_stance_entered()
 end
 
--- Lines 2259-2261
+-- Lines 2265-2267
 function PlayerStandard:_is_throwing_grenade()
 	return (self._camera_unit_anim_data.throwing or self._state_data.throw_grenade_expire_t) and true or false
 end
 
--- Lines 2263-2288
+-- Lines 2269-2294
 function PlayerStandard:_check_action_use_ability(t, input)
 	local action_wanted = input.btn_throw_grenade_press
 
@@ -1852,7 +1852,7 @@ function PlayerStandard:_check_action_use_ability(t, input)
 	return action_wanted
 end
 
--- Lines 2292-2365
+-- Lines 2298-2371
 function PlayerStandard:_check_action_interact(t, input)
 	local keyboard = self._controller.TYPE == "pc" or managers.controller:get_default_wrapper_type() == "pc"
 	local new_action, timer, interact_object = nil
@@ -1920,14 +1920,14 @@ function PlayerStandard:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines 2367-2378
+-- Lines 2373-2384
 function PlayerStandard:_action_interact_forbidden()
 	local action_forbidden = self:chk_action_forbidden("interact") or self._unit:base():stats_screen_visible() or self:_interacting() or self._ext_movement:has_carry_restriction() or self:is_deploying() or self:_changing_weapon() or self:_is_throwing_projectile() or self:_is_meleeing() or self:_on_zipline()
 
 	return action_forbidden
 end
 
--- Lines 2380-2388
+-- Lines 2386-2394
 function PlayerStandard:_check_action_change_equipment(t, input)
 	if input.btn_change_equipment and managers.player:has_category_upgrade("player", "second_deployable") then
 		self:_switch_equipment()
@@ -1939,12 +1939,12 @@ function PlayerStandard:_check_action_change_equipment(t, input)
 	end
 end
 
--- Lines 2390-2392
+-- Lines 2396-2398
 function PlayerStandard:_switch_equipment()
 	managers.player:switch_equipment()
 end
 
--- Lines 2394-2400
+-- Lines 2400-2406
 function PlayerStandard:_play_equip_animation()
 	local tweak_data = self._equipped_unit:base():weapon_tweak_data()
 	self._equip_weapon_expire_t = managers.player:player_timer():time() + (tweak_data.timers.equip or 0.7)
@@ -1954,14 +1954,14 @@ function PlayerStandard:_play_equip_animation()
 	self._equipped_unit:base():tweak_data_anim_play("equip")
 end
 
--- Lines 2402-2406
+-- Lines 2408-2412
 function PlayerStandard:_play_unequip_animation()
 	self._ext_camera:play_redirect(self:get_animation("unequip"))
 	self._equipped_unit:base():tweak_data_anim_stop("equip")
 	self._equipped_unit:base():tweak_data_anim_play("unequip")
 end
 
--- Lines 2408-2433
+-- Lines 2414-2439
 function PlayerStandard:_start_action_interact(t, input, timer, interact_object)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -1984,7 +1984,7 @@ function PlayerStandard:_start_action_interact(t, input, timer, interact_object)
 	self._unit:network():send("sync_interaction_anim", true, self._interact_params.tweak_data)
 end
 
--- Lines 2435-2455
+-- Lines 2441-2461
 function PlayerStandard:_interupt_action_interact(t, input, complete)
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
@@ -2005,18 +2005,18 @@ function PlayerStandard:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines 2457-2460
+-- Lines 2463-2466
 function PlayerStandard:_end_action_interact()
 	self:_interupt_action_interact(nil, nil, true)
 	self._interaction:end_action_interact(self._unit)
 end
 
--- Lines 2462-2464
+-- Lines 2468-2470
 function PlayerStandard:_interacting()
 	return self._interact_expire_t
 end
 
--- Lines 2466-2472
+-- Lines 2472-2478
 function PlayerStandard:interupt_interact()
 	if self:_interacting() then
 		self:_interupt_action_interact()
@@ -2026,14 +2026,14 @@ function PlayerStandard:interupt_interact()
 	end
 end
 
--- Lines 2474-2477
+-- Lines 2480-2483
 function PlayerStandard:_get_interaction_speed()
 	local dt = managers.player:player_timer():delta_time()
 
 	return dt
 end
 
--- Lines 2479-2509
+-- Lines 2485-2515
 function PlayerStandard:_update_interaction_timers(t)
 	if self._interact_expire_t then
 		local dt = self:_get_interaction_speed()
@@ -2056,7 +2056,7 @@ function PlayerStandard:_update_interaction_timers(t)
 	end
 end
 
--- Lines 2513-2528
+-- Lines 2519-2534
 function PlayerStandard:_check_action_weapon_firemode(t, input)
 	if input.btn_weapon_firemode_press then
 		local action_forbidden = self:is_shooting_count()
@@ -2075,7 +2075,7 @@ function PlayerStandard:_check_action_weapon_firemode(t, input)
 	end
 end
 
--- Lines 2532-2553
+-- Lines 2538-2559
 function PlayerStandard:_toggle_gadget(weap_base)
 	local gadget_index = 0
 
@@ -2098,14 +2098,14 @@ function PlayerStandard:_toggle_gadget(weap_base)
 	end
 end
 
--- Lines 2555-2559
+-- Lines 2561-2565
 function PlayerStandard:_check_action_weapon_gadget(t, input)
 	if input.btn_weapon_gadget_press then
 		self:_toggle_gadget(self._equipped_unit:base())
 	end
 end
 
--- Lines 2563-2606
+-- Lines 2569-2612
 function PlayerStandard:_check_action_melee(t, input)
 	if self._state_data.melee_attack_wanted then
 		if not self._state_data.melee_attack_allowed_t then
@@ -2151,7 +2151,7 @@ function PlayerStandard:_check_action_melee(t, input)
 	return true
 end
 
--- Lines 2608-2680
+-- Lines 2614-2686
 function PlayerStandard:_start_action_melee(t, input, instant)
 	self._equipped_unit:base():tweak_data_anim_stop("fire")
 	self:_interupt_action_reload(t)
@@ -2216,27 +2216,27 @@ function PlayerStandard:_start_action_melee(t, input, instant)
 	self._ext_camera:play_redirect(self:get_animation("melee_enter"), nil, offset)
 end
 
--- Lines 2682-2684
+-- Lines 2688-2690
 function PlayerStandard:_is_meleeing()
 	return self._state_data.meleeing or self._state_data.melee_expire_t and true
 end
 
--- Lines 2686-2688
+-- Lines 2692-2694
 function PlayerStandard:in_melee()
 	return self._state_data.meleeing and true
 end
 
--- Lines 2690-2692
+-- Lines 2696-2698
 function PlayerStandard:discharge_melee()
 	self:_do_action_melee(managers.player:player_timer():time(), nil, true)
 end
 
--- Lines 2694-2696
+-- Lines 2700-2702
 function PlayerStandard:_melee_repeat_allowed()
 	return not self._state_data.meleeing and not self._state_data.melee_repeat_expire_t
 end
 
--- Lines 2699-2707
+-- Lines 2705-2713
 function PlayerStandard:_get_melee_charge_lerp_value(t, offset)
 	offset = offset or 0
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
@@ -2254,7 +2254,7 @@ local melee_vars = {
 	"player_melee_var2"
 }
 
--- Lines 2711-2787
+-- Lines 2717-2793
 function PlayerStandard:_do_action_melee(t, input, skip_damage)
 	self._state_data.meleeing = nil
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
@@ -2338,7 +2338,7 @@ function PlayerStandard:_do_action_melee(t, input, skip_damage)
 	end
 end
 
--- Lines 2790-2796
+-- Lines 2796-2802
 function PlayerStandard:_calc_melee_hit_ray(t, sphere_cast_radius)
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
 	local range = tweak_data.blackmarket.melee_weapons[melee_entry].stats.range or 175
@@ -2348,7 +2348,7 @@ function PlayerStandard:_calc_melee_hit_ray(t, sphere_cast_radius)
 	return self._unit:raycast("ray", from, to, "slot_mask", self._slotmask_bullet_impact_targets, "sphere_cast_radius", sphere_cast_radius, "ray_type", "body melee")
 end
 
--- Lines 2799-3016
+-- Lines 2805-3022
 function PlayerStandard:_do_melee_damage(t, bayonet_melee, melee_hit_ray, melee_entry, hand_id)
 	melee_entry = melee_entry or managers.blackmarket:equipped_melee_weapon()
 	local instant_hit = tweak_data.blackmarket.melee_weapons[melee_entry].instant
@@ -2574,7 +2574,7 @@ PlayerStandard.MINMAX_MELEE_SYNC = {
 	63
 }
 
--- Lines 3019-3027
+-- Lines 3025-3033
 function PlayerStandard:_perform_sync_melee_damage(hit_unit, col_ray, damage)
 	if hit_unit:damage() and col_ray.body:extension() and col_ray.body:extension().damage then
 		damage = math.clamp(damage, PlayerStandard.MINMAX_MELEE_SYNC[1], PlayerStandard.MINMAX_MELEE_SYNC[2])
@@ -2584,7 +2584,7 @@ function PlayerStandard:_perform_sync_melee_damage(hit_unit, col_ray, damage)
 	end
 end
 
--- Lines 3029-3042
+-- Lines 3035-3048
 function PlayerStandard:_check_melee_dot_damage(col_ray, defense_data, melee_entry)
 	if not defense_data or defense_data.type == "death" then
 		return
@@ -2602,7 +2602,7 @@ function PlayerStandard:_check_melee_dot_damage(col_ray, defense_data, melee_ent
 	damage_class:start_dot_damage(col_ray, nil, data, melee_entry)
 end
 
--- Lines 3044-3055
+-- Lines 3050-3061
 function PlayerStandard:_play_melee_sound(melee_entry, sound_id, variation)
 	local tweak_data = tweak_data.blackmarket.melee_weapons[melee_entry]
 
@@ -2619,7 +2619,7 @@ function PlayerStandard:_play_melee_sound(melee_entry, sound_id, variation)
 	self._unit:sound():play(post_event, nil, false)
 end
 
--- Lines 3059-3087
+-- Lines 3065-3093
 function PlayerStandard:_interupt_action_melee(t)
 	if not self:_is_meleeing() then
 		return
@@ -2650,7 +2650,7 @@ function PlayerStandard:_interupt_action_melee(t)
 	self:_stance_entered()
 end
 
--- Lines 3089-3136
+-- Lines 3095-3142
 function PlayerStandard:_update_melee_timers(t, input)
 	if self._state_data.meleeing then
 		local lerp_value = self:_get_melee_charge_lerp_value(t)
@@ -2709,7 +2709,7 @@ function PlayerStandard:_update_melee_timers(t, input)
 	end
 end
 
--- Lines 3140-3158
+-- Lines 3146-3164
 function PlayerStandard:_check_action_reload(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_reload_press
@@ -2728,7 +2728,7 @@ function PlayerStandard:_check_action_reload(t, input)
 	return new_action
 end
 
--- Lines 3160-3245
+-- Lines 3166-3251
 function PlayerStandard:_update_reload_timers(t, dt, input)
 	if self._state_data.reload_enter_expire_t and self._state_data.reload_enter_expire_t <= t then
 		self._state_data.reload_enter_expire_t = nil
@@ -2799,7 +2799,7 @@ function PlayerStandard:_update_reload_timers(t, dt, input)
 	end
 end
 
--- Lines 3249-3267
+-- Lines 3255-3273
 function PlayerStandard:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_press
@@ -2821,7 +2821,7 @@ function PlayerStandard:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines 3269-3280
+-- Lines 3275-3286
 function PlayerStandard:_update_use_item_timers(t, input)
 	if self._use_item_expire_t then
 		local valid = managers.player:check_selected_equipment_placement_valid(self._unit)
@@ -2838,17 +2838,17 @@ function PlayerStandard:_update_use_item_timers(t, input)
 	end
 end
 
--- Lines 3282-3285
+-- Lines 3288-3291
 function PlayerStandard:_does_deploying_limit_movement()
 	return self:is_deploying() and managers.player:selected_equipment_limit_movement() or false
 end
 
--- Lines 3287-3289
+-- Lines 3293-3295
 function PlayerStandard:is_deploying()
 	return self._use_item_expire_t and true or false
 end
 
--- Lines 3291-3314
+-- Lines 3297-3320
 function PlayerStandard:_start_action_use_item(t)
 	self:_interupt_action_reload(t)
 	self:_interupt_action_steelsight(t)
@@ -2880,7 +2880,7 @@ function PlayerStandard:_start_action_use_item(t)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 2, true, equipment_id, deploy_timer, false)
 end
 
--- Lines 3316-3326
+-- Lines 3322-3332
 function PlayerStandard:_end_action_use_item(valid)
 	local post_event = managers.player:selected_equipment_sound_done()
 	local result = managers.player:use_selected_equipment(self._unit)
@@ -2898,7 +2898,7 @@ function PlayerStandard:_end_action_use_item(valid)
 	end
 end
 
--- Lines 3328-3348
+-- Lines 3334-3354
 function PlayerStandard:_interupt_action_use_item(t, input, complete)
 	if self._use_item_expire_t then
 		self._use_item_expire_t = nil
@@ -2920,7 +2920,7 @@ function PlayerStandard:_interupt_action_use_item(t, input, complete)
 	end
 end
 
--- Lines 3352-3374
+-- Lines 3358-3380
 function PlayerStandard:_check_change_weapon(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_switch_weapon_press
@@ -2948,7 +2948,7 @@ function PlayerStandard:_check_change_weapon(t, input)
 	return new_action
 end
 
--- Lines 3376-3402
+-- Lines 3382-3408
 function PlayerStandard:_update_equip_weapon_timers(t, input)
 	if self._unequip_weapon_expire_t and self._unequip_weapon_expire_t <= t then
 		if self._change_weapon_data.unequip_callback and not self._change_weapon_data.unequip_callback() then
@@ -2972,12 +2972,12 @@ function PlayerStandard:_update_equip_weapon_timers(t, input)
 	end
 end
 
--- Lines 3406-3408
+-- Lines 3412-3414
 function PlayerStandard:is_equipping()
 	return self._equip_weapon_expire_t
 end
 
--- Lines 3412-3445
+-- Lines 3418-3451
 function PlayerStandard:_add_unit_to_char_table(char_table, unit, unit_type, interaction_dist, interaction_through_walls, tight_area, priority, my_head_pos, cam_fwd, ray_ignore_units, ray_types)
 	if unit:unit_data().disable_shout and not unit:brain():interaction_voice() then
 		return
@@ -3016,7 +3016,7 @@ function PlayerStandard:_add_unit_to_char_table(char_table, unit, unit_type, int
 	end
 end
 
--- Lines 3448-3497
+-- Lines 3454-3503
 function PlayerStandard:_get_interaction_target(char_table, my_head_pos, cam_fwd)
 	local prime_target = nil
 	local has_inspire = managers.player:has_enabled_cooldown_upgrade("cooldown", "long_dis_revive")
@@ -3067,7 +3067,7 @@ function PlayerStandard:_get_interaction_target(char_table, my_head_pos, cam_fwd
 	return prime_target
 end
 
--- Lines 3501-3675
+-- Lines 3507-3681
 function PlayerStandard:_get_intimidation_action(prime_target, char_table, amount, primary_only, detect_only, secondary)
 	local voice_type, new_action, plural = nil
 	local unit_type_enemy = 0
@@ -3239,7 +3239,7 @@ function PlayerStandard:_get_intimidation_action(prime_target, char_table, amoun
 	return voice_type, plural, prime_target
 end
 
--- Lines 3680-3814
+-- Lines 3686-3820
 function PlayerStandard:_get_unit_intimidation_action(intimidate_enemies, intimidate_civilians, intimidate_teammates, only_special_enemies, intimidate_escorts, intimidation_amount, primary_only, detect_only, secondary)
 	local char_table = {}
 	local unit_type_enemy = 0
@@ -3386,7 +3386,7 @@ function PlayerStandard:_get_unit_intimidation_action(intimidate_enemies, intimi
 	return self:_get_intimidation_action(prime_target, char_table, intimidation_amount, primary_only, detect_only, secondary)
 end
 
--- Lines 3818-3955
+-- Lines 3824-3961
 function PlayerStandard:_start_action_intimidate(t, secondary)
 	if not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t then
 		local skip_alert = managers.groupai:state():whisper_mode()
@@ -3512,7 +3512,7 @@ function PlayerStandard:_start_action_intimidate(t, secondary)
 	end
 end
 
--- Lines 3959-3974
+-- Lines 3965-3980
 function PlayerStandard:_do_action_intimidate(t, interact_type, sound_name, skip_alert)
 	if sound_name then
 		self._intimidate_t = t
@@ -3529,7 +3529,7 @@ function PlayerStandard:_do_action_intimidate(t, interact_type, sound_name, skip
 	end
 end
 
--- Lines 3979-3989
+-- Lines 3985-3995
 function PlayerStandard:say_line(sound_name, skip_alert)
 	self._unit:sound():say(sound_name, true, false)
 
@@ -3549,7 +3549,7 @@ function PlayerStandard:say_line(sound_name, skip_alert)
 	end
 end
 
--- Lines 3993-4014
+-- Lines 3999-4020
 function PlayerStandard:_play_distance_interact_redirect(t, variant)
 	managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, variant)
 
@@ -3574,7 +3574,7 @@ function PlayerStandard:_play_distance_interact_redirect(t, variant)
 	self._ext_camera:play_redirect(Idstring(variant))
 end
 
--- Lines 4016-4024
+-- Lines 4022-4030
 function PlayerStandard:_break_intimidate_redirect(t)
 	if self._shooting then
 		return
@@ -3585,7 +3585,7 @@ function PlayerStandard:_break_intimidate_redirect(t)
 	end
 end
 
--- Lines 4028-4043
+-- Lines 4034-4049
 function PlayerStandard:_play_interact_redirect(t)
 	if self._shooting or not self._equipped_unit:base():start_shooting_allowed() then
 		return
@@ -3604,12 +3604,12 @@ function PlayerStandard:_play_interact_redirect(t)
 	self._ext_camera:play_redirect(self:get_animation("use"))
 end
 
--- Lines 4045-4048
+-- Lines 4051-4054
 function PlayerStandard:_break_interact_redirect(t)
 	self._ext_camera:play_redirect(self:get_animation("idle"))
 end
 
--- Lines 4054-4075
+-- Lines 4060-4081
 function PlayerStandard:_check_action_equip(t, input)
 	local new_action = nil
 	local selection_wanted = input.btn_primary_choice
@@ -3632,7 +3632,7 @@ function PlayerStandard:_check_action_equip(t, input)
 	return new_action
 end
 
--- Lines 4081-4116
+-- Lines 4087-4122
 function PlayerStandard:_check_action_jump(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_jump_press
@@ -3671,7 +3671,7 @@ function PlayerStandard:_check_action_jump(t, input)
 	return new_action
 end
 
--- Lines 4120-4146
+-- Lines 4126-4152
 function PlayerStandard:_start_action_jump(t, action_start_data)
 	if self._running and not self.RUN_AND_RELOAD and not self._equipped_unit:base():run_and_shoot_allowed() then
 		self:_interupt_action_reload(t)
@@ -3696,7 +3696,7 @@ function PlayerStandard:_start_action_jump(t, action_start_data)
 	self:_perform_jump(jump_vec)
 end
 
--- Lines 4148-4202
+-- Lines 4154-4208
 function PlayerStandard:_perform_jump(jump_vec)
 	self._unit:mover():set_velocity(jump_vec)
 
@@ -3750,7 +3750,7 @@ function PlayerStandard:_perform_jump(jump_vec)
 	end
 end
 
--- Lines 4206-4227
+-- Lines 4212-4233
 function PlayerStandard:_update_network_jump(pos, is_exit)
 	local mover = self._unit:mover()
 
@@ -3777,7 +3777,7 @@ function PlayerStandard:_update_network_jump(pos, is_exit)
 	end
 end
 
--- Lines 4231-4242
+-- Lines 4237-4248
 function PlayerStandard:_check_action_zipline(t, input)
 	if self._state_data.in_air then
 		return
@@ -3792,7 +3792,7 @@ function PlayerStandard:_check_action_zipline(t, input)
 	end
 end
 
--- Lines 4244-4273
+-- Lines 4250-4279
 function PlayerStandard:_start_action_zipline(t, input, zipline_unit)
 	self:_interupt_action_running(t)
 	self:_interupt_action_ducking(t, true)
@@ -3822,7 +3822,7 @@ function PlayerStandard:_start_action_zipline(t, input, zipline_unit)
 	self._unit:kill_mover()
 end
 
--- Lines 4275-4307
+-- Lines 4281-4313
 function PlayerStandard:_update_zipline_timers(t, dt)
 	if not self._state_data.on_zipline then
 		return
@@ -3865,7 +3865,7 @@ function PlayerStandard:_update_zipline_timers(t, dt)
 	end
 end
 
--- Lines 4309-4328
+-- Lines 4315-4334
 function PlayerStandard:_end_action_zipline(t)
 	self._ext_camera:play_shaker("player_exit_zipline", 1)
 
@@ -3888,12 +3888,12 @@ function PlayerStandard:_end_action_zipline(t)
 	self:_activate_mover(PlayerStandard.MOVER_STAND)
 end
 
--- Lines 4330-4332
+-- Lines 4336-4338
 function PlayerStandard:_on_zipline()
 	return self._state_data.on_zipline
 end
 
--- Lines 4336-4363
+-- Lines 4342-4369
 function PlayerStandard:_check_action_deploy_bipod(t, input)
 	local new_action = nil
 	local action_forbidden = false
@@ -3920,7 +3920,7 @@ function PlayerStandard:_check_action_deploy_bipod(t, input)
 	return new_action
 end
 
--- Lines 4368-4375
+-- Lines 4374-4381
 function PlayerStandard:_upd_stance_switch_delay(t, dt)
 	if self._stance_switch_delay ~= nil then
 		self._stance_switch_delay = self._stance_switch_delay - dt
@@ -3931,17 +3931,17 @@ function PlayerStandard:_upd_stance_switch_delay(t, dt)
 	end
 end
 
--- Lines 4377-4379
+-- Lines 4383-4385
 function PlayerStandard:is_switching_stances()
 	return self._stance_switch_delay ~= nil
 end
 
--- Lines 4381-4383
+-- Lines 4387-4389
 function PlayerStandard:set_stance_switch_delay(delay)
 	self._stance_switch_delay = delay
 end
 
--- Lines 4389-4400
+-- Lines 4395-4406
 function PlayerStandard:_is_underbarrel_attachment_active(weapon_unit)
 	local weapon = (weapon_unit or self._equipped_unit):base()
 	local underbarrel_names = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("underbarrel", weapon._factory_id, weapon._blueprint)
@@ -3959,7 +3959,7 @@ function PlayerStandard:_is_underbarrel_attachment_active(weapon_unit)
 	return false
 end
 
--- Lines 4402-4492
+-- Lines 4408-4498
 function PlayerStandard:_check_action_deploy_underbarrel(t, input)
 	local new_action = nil
 	local action_forbidden = false
@@ -4039,7 +4039,7 @@ function PlayerStandard:_check_action_deploy_underbarrel(t, input)
 	return new_action
 end
 
--- Lines 4497-4521
+-- Lines 4503-4527
 function PlayerStandard:_check_action_cash_inspect(t, input)
 	if not input.btn_cash_inspect_press then
 		return
@@ -4055,19 +4055,19 @@ function PlayerStandard:_check_action_cash_inspect(t, input)
 	managers.player:send_message(Message.OnCashInspectWeapon)
 end
 
--- Lines 4523-4525
+-- Lines 4529-4531
 function PlayerStandard:_is_cash_inspecting(t)
 	return self._camera_unit_anim_data.cash_inspecting
 end
 
--- Lines 4527-4531
+-- Lines 4533-4537
 function PlayerStandard:_interupt_action_cash_inspect(t)
 	if self:_is_cash_inspecting() then
 		self._ext_camera:play_redirect(Idstring("idle"))
 	end
 end
 
--- Lines 4535-4577
+-- Lines 4541-4583
 function PlayerStandard:_update_omniscience(t, dt)
 	local action_forbidden = not managers.player:has_category_upgrade("player", "standstill_omniscience") or managers.player:current_state() == "civilian" or self:_interacting() or self._ext_movement:has_carry_restriction() or self:is_deploying() or self:_changing_weapon() or self:_is_throwing_projectile() or self:_is_meleeing() or self:_on_zipline() or self._moving or self:running() or self:_is_reloading() or self:in_air() or self:in_steelsight() or self:is_equipping() or self:shooting() or not managers.groupai:state():whisper_mode() or not tweak_data.player.omniscience
 
@@ -4102,7 +4102,7 @@ function PlayerStandard:_update_omniscience(t, dt)
 	end
 end
 
--- Lines 4581-4603
+-- Lines 4587-4609
 function PlayerStandard:_check_action_run(t, input)
 	if self._setting_hold_to_run and input.btn_run_release or self._running and not self._move_dir then
 		self._running_wanted = false
@@ -4129,7 +4129,7 @@ function PlayerStandard:_check_action_run(t, input)
 	end
 end
 
--- Lines 4605-4614
+-- Lines 4611-4620
 function PlayerStandard:_update_running_timers(t)
 	if self._end_running_expire_t then
 		if self._end_running_expire_t <= t then
@@ -4142,7 +4142,7 @@ function PlayerStandard:_update_running_timers(t)
 	end
 end
 
--- Lines 4616-4628
+-- Lines 4622-4634
 function PlayerStandard:set_running(running)
 	self._running = running
 
@@ -4158,7 +4158,7 @@ function PlayerStandard:set_running(running)
 	self._ext_network:send("set_stance", stance_code, false, false)
 end
 
--- Lines 4632-4660
+-- Lines 4638-4666
 function PlayerStandard:_check_action_ladder(t, input)
 	if self._state_data.on_ladder then
 		local ladder_unit = self._unit:movement():ladder_unit()
@@ -4191,7 +4191,7 @@ function PlayerStandard:_check_action_ladder(t, input)
 	end
 end
 
--- Lines 4662-4672
+-- Lines 4668-4678
 function PlayerStandard:_start_action_ladder(t, ladder_unit)
 	self._state_data.on_ladder = true
 
@@ -4202,7 +4202,7 @@ function PlayerStandard:_start_action_ladder(t, ladder_unit)
 	self._unit:movement():on_enter_ladder(ladder_unit)
 end
 
--- Lines 4674-4686
+-- Lines 4680-4692
 function PlayerStandard:_end_action_ladder(t, input)
 	if not self._state_data.on_ladder then
 		return
@@ -4217,17 +4217,17 @@ function PlayerStandard:_end_action_ladder(t, input)
 	self._unit:movement():on_exit_ladder()
 end
 
--- Lines 4688-4690
+-- Lines 4694-4696
 function PlayerStandard:_interupt_action_ladder(t, input)
 	self:_end_action_ladder()
 end
 
--- Lines 4692-4694
+-- Lines 4698-4700
 function PlayerStandard:on_ladder()
 	return self._state_data.on_ladder
 end
 
--- Lines 4698-4718
+-- Lines 4704-4724
 function PlayerStandard:_check_action_duck(t, input)
 	if self:_is_using_bipod() then
 		return
@@ -4246,7 +4246,7 @@ function PlayerStandard:_check_action_duck(t, input)
 	end
 end
 
--- Lines 4720-4762
+-- Lines 4726-4768
 function PlayerStandard:_check_action_steelsight(t, input)
 	local new_action = nil
 
@@ -4300,27 +4300,27 @@ function PlayerStandard:_check_action_steelsight(t, input)
 	return new_action
 end
 
--- Lines 4766-4768
+-- Lines 4772-4774
 function PlayerStandard:shooting()
 	return self._shooting
 end
 
--- Lines 4771-4773
+-- Lines 4777-4779
 function PlayerStandard:is_shooting_count()
 	return self._shooting and (self._equipped_unit and self._equipped_unit:base():shooting_count()) > 0
 end
 
--- Lines 4776-4778
+-- Lines 4782-4784
 function PlayerStandard:running()
 	return self._running
 end
 
--- Lines 4780-4782
+-- Lines 4786-4788
 function PlayerStandard:ducking()
 	return self._state_data and self._state_data.ducking
 end
 
--- Lines 4784-4795
+-- Lines 4790-4801
 function PlayerStandard:get_zoom_fov(stance_data)
 	local fov = stance_data and stance_data.FOV or 75
 	local fov_multiplier = managers.user:get_setting("fov_multiplier")
@@ -4333,7 +4333,7 @@ function PlayerStandard:get_zoom_fov(stance_data)
 	return fov * fov_multiplier
 end
 
--- Lines 4800-5068
+-- Lines 4806-5074
 function PlayerStandard:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_primary_attack_state or input.btn_primary_attack_release
@@ -4564,7 +4564,7 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines 5070-5089
+-- Lines 5076-5095
 function PlayerStandard:_check_stop_shooting()
 	if self._shooting then
 		self._equipped_unit:base():stop_shooting()
@@ -4587,7 +4587,7 @@ function PlayerStandard:_check_stop_shooting()
 	end
 end
 
--- Lines 5093-5108
+-- Lines 5099-5114
 function PlayerStandard:_start_action_charging_weapon(t)
 	self._state_data.charging_weapon = true
 	self._state_data.charging_weapon_data = {
@@ -4602,7 +4602,7 @@ function PlayerStandard:_start_action_charging_weapon(t)
 	self._ext_camera:play_redirect(self:get_animation("charge"), speed_multiplier)
 end
 
--- Lines 5110-5119
+-- Lines 5116-5125
 function PlayerStandard:_interupt_action_charging_weapon(t)
 	if not self._state_data.charging_weapon then
 		return
@@ -4612,7 +4612,7 @@ function PlayerStandard:_interupt_action_charging_weapon(t)
 	self:_end_action_charging_weapon(t)
 end
 
--- Lines 5121-5127
+-- Lines 5127-5133
 function PlayerStandard:_end_action_charging_weapon(t)
 	self._state_data.charging_weapon = nil
 
@@ -4620,19 +4620,19 @@ function PlayerStandard:_end_action_charging_weapon(t)
 	self._ext_camera:play_redirect(self:get_animation("idle"))
 end
 
--- Lines 5129-5131
+-- Lines 5135-5137
 function PlayerStandard:_is_charging_weapon()
 	return self._state_data.charging_weapon
 end
 
--- Lines 5133-5137
+-- Lines 5139-5143
 function PlayerStandard:_update_charging_weapon_timers(t, dt)
 	if not self._state_data.charging_weapon then
 		return
 	end
 end
 
--- Lines 5143-5167
+-- Lines 5149-5173
 function PlayerStandard:_start_action_reload_enter(t)
 	local weapon = self._equipped_unit:base()
 
@@ -4663,7 +4663,7 @@ function PlayerStandard:_start_action_reload_enter(t)
 	end
 end
 
--- Lines 5169-5206
+-- Lines 5175-5212
 function PlayerStandard:_start_action_reload(t)
 	local weapon = self._equipped_unit:base()
 
@@ -4710,7 +4710,7 @@ function PlayerStandard:_start_action_reload(t)
 	end
 end
 
--- Lines 5272-5287
+-- Lines 5278-5293
 function PlayerStandard:_interupt_action_reload(t)
 	if alive(self._equipped_unit) then
 		self._equipped_unit:base():check_bullet_objects()
@@ -4731,22 +4731,22 @@ function PlayerStandard:_interupt_action_reload(t)
 	self:send_reload_interupt()
 end
 
--- Lines 5289-5291
+-- Lines 5295-5297
 function PlayerStandard:send_reload_interupt()
 	self._ext_network:send("reload_weapon_interupt")
 end
 
--- Lines 5293-5295
+-- Lines 5299-5301
 function PlayerStandard:_is_reloading()
 	return self._state_data.reload_expire_t or self._state_data.reload_enter_expire_t or self._state_data.reload_exit_expire_t
 end
 
--- Lines 5299-5301
+-- Lines 5305-5307
 function PlayerStandard:start_deploying_bipod(bipod_deploy_duration)
 	self._deploy_bipod_expire_t = managers.player:player_timer():time() + bipod_deploy_duration
 end
 
--- Lines 5303-5310
+-- Lines 5309-5316
 function PlayerStandard:_is_deploying_bipod()
 	local deploying = false
 
@@ -4757,12 +4757,12 @@ function PlayerStandard:_is_deploying_bipod()
 	return deploying
 end
 
--- Lines 5315-5317
+-- Lines 5321-5323
 function PlayerStandard:_is_using_bipod()
 	return self._state_data.using_bipod
 end
 
--- Lines 5320-5340
+-- Lines 5326-5346
 function PlayerStandard:_get_swap_speed_multiplier()
 	local multiplier = 1
 	local weapon_tweak_data = self._equipped_unit:base():weapon_tweak_data()
@@ -4784,7 +4784,7 @@ function PlayerStandard:_get_swap_speed_multiplier()
 	return multiplier
 end
 
--- Lines 5343-5359
+-- Lines 5349-5365
 function PlayerStandard:_start_action_unequip_weapon(t, data)
 	local speed_multiplier = self:_get_swap_speed_multiplier()
 
@@ -4805,7 +4805,7 @@ function PlayerStandard:_start_action_unequip_weapon(t, data)
 	self._ext_network:send("switch_weapon", speed_multiplier, 1)
 end
 
--- Lines 5361-5408
+-- Lines 5367-5414
 function PlayerStandard:_start_action_equip_weapon(t)
 	if self._change_weapon_data.next then
 		local next_equip = self._ext_inventory:get_next_selection()
@@ -4858,12 +4858,12 @@ function PlayerStandard:_start_action_equip_weapon(t)
 	managers.upgrades:setup_current_weapon()
 end
 
--- Lines 5410-5412
+-- Lines 5416-5418
 function PlayerStandard:_changing_weapon()
 	return self._unequip_weapon_expire_t or self._equip_weapon_expire_t
 end
 
--- Lines 5416-5435
+-- Lines 5422-5441
 function PlayerStandard:_find_pickups(t)
 	local pickups = World:find_units_quick("sphere", self._unit:movement():m_pos(), self._pickup_area, self._slotmask_pickups)
 	local grenade_tweak = tweak_data.blackmarket.projectiles[managers.blackmarket:equipped_grenade()]
@@ -4886,7 +4886,7 @@ function PlayerStandard:_find_pickups(t)
 	end
 end
 
--- Lines 5439-5456
+-- Lines 5445-5462
 function PlayerStandard:_upd_attention()
 	local preset = nil
 
@@ -4927,15 +4927,15 @@ function PlayerStandard:_upd_attention()
 	self._ext_movement:set_attention_settings(preset)
 end
 
--- Lines 5462-5463
+-- Lines 5468-5469
 function PlayerStandard:get_melee_damage_result(attack_data)
 end
 
--- Lines 5469-5470
+-- Lines 5475-5476
 function PlayerStandard:get_bullet_damage_result(attack_data)
 end
 
--- Lines 5476-5483
+-- Lines 5482-5489
 function PlayerStandard:push(vel)
 	if self._unit:mover() then
 		self._last_velocity_xy = self._last_velocity_xy + vel
@@ -4946,7 +4946,7 @@ function PlayerStandard:push(vel)
 	self:_interupt_action_running(managers.player:player_timer():time())
 end
 
--- Lines 5490-5507
+-- Lines 5496-5513
 function PlayerStandard:_get_dir_str_from_vec(fwd, dir_vec)
 	local att_dir_spin = dir_vec:to_polar_with_reference(fwd, math.UP).spin
 	local abs_spin = math.abs(att_dir_spin)
@@ -4964,7 +4964,7 @@ function PlayerStandard:_get_dir_str_from_vec(fwd, dir_vec)
 	managers.network:session():send_to_peers_synched("sync_underbarrel_switch", self._equipped_unit:base():selection_index(), underbarrel_base.name_id, underbarrel_base:is_on())
 end
 
--- Lines 5510-5516
+-- Lines 5516-5522
 function PlayerStandard:get_movement_state()
 	if self._state_data.ducking then
 		return self._moving and "moving_crouching" or "crouching"
@@ -4973,7 +4973,7 @@ function PlayerStandard:get_movement_state()
 	end
 end
 
--- Lines 5521-5543
+-- Lines 5527-5549
 function PlayerStandard:set_animation_weapon_hold(name_override)
 	if self._weapon_hold then
 		self._camera_unit:anim_state_machine():set_global(self._weapon_hold, 0)
@@ -4998,7 +4998,7 @@ function PlayerStandard:set_animation_weapon_hold(name_override)
 	end
 end
 
--- Lines 5570-5595
+-- Lines 5576-5601
 function PlayerStandard:inventory_clbk_listener(unit, event)
 	if event == "equip" then
 		local weapon = self._ext_inventory:equipped_unit()
@@ -5027,7 +5027,7 @@ function PlayerStandard:inventory_clbk_listener(unit, event)
 	end
 end
 
--- Lines 5600-5620
+-- Lines 5606-5626
 function PlayerStandard:_check_action_night_vision(t, input)
 	if not input.btn_night_vision_press then
 		return
@@ -5042,7 +5042,7 @@ function PlayerStandard:_check_action_night_vision(t, input)
 	self:set_night_vision_state(not self._state_data.night_vision_active)
 end
 
--- Lines 5622-5659
+-- Lines 5628-5665
 function PlayerStandard:set_night_vision_state(state)
 	local mask_id = managers.blackmarket:equipped_mask().mask_id
 	local mask_tweak = tweak_data.blackmarket.masks[mask_id]
@@ -5056,7 +5056,7 @@ function PlayerStandard:set_night_vision_state(state)
 	local effect = nil
 
 	if state then
-		-- Lines 5635-5639
+		-- Lines 5641-5645
 		local function light_modifier(handler, feeder)
 			local base_light = feeder._target and mvector3.copy(feeder._target) or Vector3()
 			local light = night_vision.light
@@ -5085,14 +5085,14 @@ function PlayerStandard:set_night_vision_state(state)
 	self._state_data.night_vision_active = state
 end
 
--- Lines 5664-5668
+-- Lines 5670-5674
 function PlayerStandard:weapon_recharge_clbk_listener()
 	for id, weapon in pairs(self._ext_inventory:available_selections()) do
 		managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
 	end
 end
 
--- Lines 5671-5676
+-- Lines 5677-5682
 function PlayerStandard:get_equipped_weapon()
 	if self._equipped_unit then
 		return self._equipped_unit:base()
@@ -5101,7 +5101,7 @@ function PlayerStandard:get_equipped_weapon()
 	return nil
 end
 
--- Lines 5680-5686
+-- Lines 5686-5692
 function PlayerStandard:save(data)
 	if self._state_data.ducking then
 		data.pose = 2
@@ -5110,7 +5110,7 @@ function PlayerStandard:save(data)
 	end
 end
 
--- Lines 5690-5702
+-- Lines 5696-5708
 function PlayerStandard:pre_destroy()
 	if self._pos_reservation then
 		managers.navigation:unreserve_pos(self._pos_reservation)
@@ -5125,7 +5125,7 @@ function PlayerStandard:pre_destroy()
 	self:set_night_vision_state(false)
 end
 
--- Lines 5708-5717
+-- Lines 5714-5723
 function PlayerStandard:tweak_data_clbk_reload()
 	local state_name = self._ext_movement:current_state_name()
 

@@ -59,7 +59,7 @@ function BuffBalloon:on_balloon_shot()
 	end
 end
 
--- Lines 69-75
+-- Lines 71-77
 function BuffBalloon:self_destruct()
 	print("[BuffBalloon] self_destruct()")
 

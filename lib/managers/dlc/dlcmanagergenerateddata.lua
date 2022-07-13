@@ -388,6 +388,11 @@ function GenericDLCManager:has_txt1()
 	return self:is_dlc_unlocked("txt1")
 end
 
+-- Lines 479-481
+function GenericDLCManager:has_txt2()
+	return self:is_dlc_unlocked("txt2")
+end
+
 -- Lines 494-496
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
@@ -423,7 +428,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 529-1078
+-- Lines 529-1079
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",
@@ -473,7 +478,7 @@ function WINDLCManager:init_generated()
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.ess = {
-		app_id = "1303240",
+		app_id = "218620",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.faco = {
@@ -756,6 +761,11 @@ function WINDLCManager:init_generated()
 		app_id = "1945680",
 		no_install = true,
 		webpage = "https://pd2.link/SouthboundTailorPackYBS"
+	}
+	Global.dlc_manager.all_dlc_data.txt2 = {
+		app_id = "2074220",
+		no_install = true,
+		webpage = "https://pd2.link/HighOctaneTailorPackYBS"
 	}
 	Global.dlc_manager.all_dlc_data.wcc = {
 		app_id = "1347751",

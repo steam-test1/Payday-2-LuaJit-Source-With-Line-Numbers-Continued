@@ -10864,7 +10864,7 @@ function BlackMarketManager:has_unlocked_shock()
 	return managers.achievment:get_info("sah_11").awarded, "bm_menu_locked_shock"
 end
 
--- Lines 10761-10764
+-- Lines 10761-10769
 function BlackMarketManager:has_unlocked_money()
 	local is_unlocked = managers.event_jobs:has_completed_and_claimed_rewards("pda8_1")
 

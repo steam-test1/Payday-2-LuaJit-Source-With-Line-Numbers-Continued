@@ -10,7 +10,7 @@ function MenuItemCrimeNetServer:init(data_node, parameters)
 	self._type = MenuItemCrimeNetServer.TYPE
 end
 
--- Lines 13-170
+-- Lines 13-171
 function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
 	local color = Color.white
@@ -29,6 +29,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
 	local state = attributes_numbers[4]
 	local num_plrs = attributes_numbers[5]
+	local mutator_category = managers.mutators:get_enabled_active_mutator_category()
 	local mutators = false
 	local mkey = lobby:key_value("mutators")
 
@@ -70,7 +71,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 		w = 32,
 		x = 2,
 		layer = 1,
-		color = mutators and managers.mutators:get_category_color() or color
+		color = mutators and managers.mutators:get_category_color(mutator_category) or color
 	})
 	local cx, cy = nil
 
@@ -84,7 +85,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 			blend_mode = "normal",
 			layer = 2,
 			name = tostring(i),
-			color = mutators and managers.mutators:get_category_color() or color,
+			color = mutators and managers.mutators:get_category_color(mutator_category) or color,
 			visible = i <= num_plrs
 		})
 
@@ -113,7 +114,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 		text = job_string,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
-		color = mutators and managers.mutators:get_category_text_color() or color
+		color = mutators and managers.mutators:get_category_text_color(mutator_category) or color
 	})
 	local _, _, w, h = host_name:text_rect()
 
@@ -170,7 +171,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	return true
 end
 
--- Lines 173-177
+-- Lines 174-178
 function MenuItemCrimeNetServer:reload(row_item, node)
 	MenuItemCrimeNetServer.super.reload(self, row_item, node)
 	self:_set_row_item_state(node, row_item)
@@ -178,33 +179,33 @@ function MenuItemCrimeNetServer:reload(row_item, node)
 	return true
 end
 
--- Lines 180-183
+-- Lines 181-184
 function MenuItemCrimeNetServer:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 186-189
+-- Lines 187-190
 function MenuItemCrimeNetServer:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 192-196
+-- Lines 193-197
 function MenuItemCrimeNetServer:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		-- Nothing
 	end
 end
 
--- Lines 198-200
+-- Lines 199-201
 function MenuItemCrimeNetServer:menu_unselected_visible()
 	return false
 end
 
--- Lines 203-205
+-- Lines 204-206
 function MenuItemCrimeNetServer:on_delete_row_item(row_item, ...)
 	MenuItemCrimeNetServer.super.on_delete_row_item(self, row_item, ...)
 end
