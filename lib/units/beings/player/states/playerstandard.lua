@@ -561,6 +561,11 @@ function PlayerStandard:_update_fwd_ray()
 	end
 end
 
+-- Lines 675-677
+function PlayerStandard:get_fwd_ray()
+	return self._fwd_ray
+end
+
 -- Lines 683-686
 function PlayerStandard:force_input(inputs, release_inputs)
 	self._forced_inputs = inputs

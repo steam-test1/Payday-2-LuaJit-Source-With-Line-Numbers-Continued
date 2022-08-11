@@ -880,7 +880,7 @@ end
 
 -- Lines 875-881
 function GenericDLCManager:has_pda8_wpn_money()
-	return managers.event_jobs:get_event_stage("pda8") < 5
+	return true
 end
 
 -- Lines 884-886

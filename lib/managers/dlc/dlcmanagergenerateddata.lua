@@ -223,6 +223,11 @@ function GenericDLCManager:has_pda8()
 	return self:is_dlc_unlocked("pda8")
 end
 
+-- Lines 289-291
+function GenericDLCManager:has_pda9()
+	return self:is_dlc_unlocked("pda9")
+end
+
 -- Lines 294-296
 function GenericDLCManager:has_pent()
 	return self:is_dlc_unlocked("pent")
@@ -428,7 +433,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 529-1079
+-- Lines 534-1089
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",
@@ -617,6 +622,10 @@ function WINDLCManager:init_generated()
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.pda8 = {
+		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.pda9 = {
 		app_id = "218620",
 		no_install = true
 	}

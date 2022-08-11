@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1241
+-- Lines 3-1253
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -91,6 +91,7 @@ function CarryTweakData:init(tweak_data)
 		vault_loot_macka = tweak_data:get_value("money_manager", "small_loot", "vault_loot_macka"),
 		federali_medal = tweak_data:get_value("money_manager", "small_loot", "federali_medal")
 	}
+	self.types.piggy_feed = deep_clone(self.types.coke_light)
 	self.gold = {
 		type = "heavy",
 		name_id = "hud_carry_gold",
@@ -1054,9 +1055,16 @@ function CarryTweakData:init(tweak_data)
 			SO_category = "enemies"
 		}
 	}
+	self.pda9_feed = {
+		type = "piggy_feed",
+		name_id = "hud_carry_feed",
+		unit = "units/pd2_dlc_pda9/props/pda9_pickup_feed_bag/pda9_pickup_feed_bag",
+		visual_unit_name = "units/pd2_dlc_pda9/props/pda9_pickup_feed_bag/pda9_acc_feed_bag",
+		expire_t = 10
+	}
 end
 
--- Lines 1243-1252
+-- Lines 1255-1264
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1071,7 +1079,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1255-1263
+-- Lines 1267-1275
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

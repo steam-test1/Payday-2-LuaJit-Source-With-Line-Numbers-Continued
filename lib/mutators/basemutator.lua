@@ -43,6 +43,18 @@ end
 function BaseMutator:setup(mutator_manager)
 end
 
+-- Lines 48-49
+function BaseMutator:on_game_started(mutator_manager)
+end
+
+-- Lines 51-52
+function BaseMutator:sync_save(mutator_manager, sync_data)
+end
+
+-- Lines 54-55
+function BaseMutator:sync_load(mutator_manager, sync_data)
+end
+
 -- Lines 59-61
 function BaseMutator:_ensure_global_values()
 	Global.mutators.mutator_values[self:id()] = Global.mutators.mutator_values[self:id()] or {

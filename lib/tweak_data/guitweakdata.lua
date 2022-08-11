@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-1857
+-- Lines 3-1865
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -1928,6 +1928,13 @@ function GuiTweakData:init(tweak_data)
 			id = "skirmish",
 			icon = "sidebar_skirmish",
 			item_class = "CrimeNetSidebarSkirmishItem"
+		},
+		{
+			name_id = "menu_event_a10th_info",
+			callback = "clbk_pda9_event",
+			id = "event",
+			icon = "sidebar_mutators",
+			item_class = "CrimeNetSidebarEventsItem"
 		}
 	}
 	self.crime_net.codex = {
@@ -5118,6 +5125,11 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_pda9_01",
+		texture_path = "guis/dlcs/pda9/textures/pd2/new_heists/pda9_01",
+		url = "https://pd2.link/PD2NinthSLW"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_txt2_02",
 		texture_path = "guis/dlcs/txt2/textures/pd2/new_heists/txt2_02",
 		url = "https://pd2.link/LostInTransitBundleSLS"
@@ -5531,7 +5543,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 1859-1878
+-- Lines 1867-1886
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5559,7 +5571,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 1880-1948
+-- Lines 1888-1956
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5637,15 +5649,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 1950-1952
+-- Lines 1958-1960
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 1954-1963
+-- Lines 1962-1971
 function GuiTweakData:print_locations()
 end
 
--- Lines 1965-1999
+-- Lines 1973-2007
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5684,7 +5696,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2001-2126
+-- Lines 2009-2134
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5807,12 +5819,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2128-2130
+-- Lines 2136-2138
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2132-2139
+-- Lines 2140-2147
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5823,7 +5835,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2141-2161
+-- Lines 2149-2169
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

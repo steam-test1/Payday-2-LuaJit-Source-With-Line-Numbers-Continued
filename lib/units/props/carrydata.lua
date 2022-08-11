@@ -2,7 +2,8 @@ CarryData = CarryData or class()
 CarryData.EVENT_IDS = {
 	explode = 2,
 	will_explode = 1,
-	poof = 3
+	poof = 3,
+	expire = 4
 }
 
 -- Lines 10-29
@@ -20,6 +21,8 @@ function CarryData:init(unit)
 	end
 
 	self._linked_ai = {}
+
+	self:_set_expire_enabled(true)
 end
 
 -- Lines 31-33
@@ -43,6 +46,7 @@ function CarryData:update(unit, t, dt)
 		self:_update_unlink_check(unit, t, dt)
 		self:_update_throw_link(unit, t, dt)
 		self:_update_teleport(unit, t, dt)
+		self:_update_expire_t(unit, t, dt)
 	else
 		self:_update_teleport(unit, t, dt)
 	end
@@ -55,6 +59,31 @@ function CarryData:_update_explode_t(unit, t, dt)
 
 		self:_explode()
 	end
+end
+
+-- Lines 79-83
+function CarryData:_set_expire_enabled(enabled)
+	local expire_t = self._carry_id and tweak_data.carry[self._carry_id].expire_t or nil
+	self._expire_t = enabled and expire_t or nil
+	self._expire_paused = false
+end
+
+-- Lines 85-93
+function CarryData:_update_expire_t(unit, t, dt)
+	if self._expire_t and not self._expire_paused then
+		self._expire_t = self._expire_t - dt
+
+		if self._expire_t <= 0 then
+			self._expire_t = nil
+
+			self:_expire()
+		end
+	end
+end
+
+-- Lines 95-97
+function CarryData:set_expire_paused(paused)
+	self._expire_paused = paused
 end
 
 -- Lines 100-104
@@ -371,6 +400,39 @@ function CarryData:_explode()
 	self._unit:set_slot(0)
 end
 
+CarryData.EXPIRE_SETTINGS = {
+	curve_pow = 1,
+	range = 100
+}
+CarryData.EXPIRE_CUSTOM_PARAMS = {
+	sound_event = "hlp_poof_small",
+	effect = "effects/payday2/particles/explosions/burnpuff",
+	camera_shake_mul = 0
+}
+
+-- Lines 442-461
+function CarryData:_expire()
+	self:_unregister_steal_SO()
+	managers.mission:call_global_event("loot_exploded")
+
+	local pos = self._unit:position()
+	local normal = math.UP
+	local range = self.EXPIRE_SETTINGS.range
+	local effect = self.EXPIRE_CUSTOM_PARAMS.effect
+
+	if effect then
+		managers.explosion:play_sound_and_effects(pos, normal, range, self.EXPIRE_CUSTOM_PARAMS)
+	end
+
+	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "carry_data", self.EVENT_IDS.expire)
+
+	if Network:is_server() or self._unit:id() ~= -1 then
+		self._unit:set_slot(0)
+	else
+		self._unit:set_enabled(false)
+	end
+end
+
 CarryData.POOF_SETTINGS = {
 	curve_pow = 3,
 	range = 1000
@@ -422,6 +484,8 @@ function CarryData:sync_net_event(event_id)
 		self:_start_explosion()
 	elseif event_id == CarryData.EVENT_IDS.poof then
 		self:poof()
+	elseif event_id == CarryData.EVENT_IDS.expire then
+		self:_expire()
 	end
 end
 
@@ -877,6 +941,8 @@ function CarryData:link_to(parent_unit, keep_collisions)
 
 	self._linked_to = parent_unit
 
+	self:_set_expire_enabled(false)
+
 	if Network:is_server() then
 		managers.network:session():send_to_peers_synched("loot_link", self._unit, parent_unit)
 	end
@@ -911,6 +977,8 @@ function CarryData:unlink()
 
 		self._unit:interaction():register_collision_callbacks()
 	end
+
+	self:_set_expire_enabled(true)
 
 	if Network:is_server() then
 		managers.network:session():send_to_peers_synched("loot_link", self._unit, self._unit)
@@ -954,6 +1022,8 @@ end
 -- Lines 1057-1083
 function CarryData:set_zipline_unit(zipline_unit)
 	self._zipline_unit = zipline_unit
+
+	self:_set_expire_enabled(not self._zipline_unit)
 
 	if not Network:is_server() then
 		return

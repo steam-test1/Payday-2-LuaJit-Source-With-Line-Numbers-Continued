@@ -1,4 +1,4 @@
--- Lines 3-1221
+-- Lines 3-1229
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -1086,6 +1086,12 @@ function DLCTweakData:init_generated()
 	}
 	self.pda8_bundle.content.loot_global_value = "pda8"
 	self.pda8_bundle.content.loot_drops = {}
+	self.pda9_bundle = {
+		free = true,
+		content = {}
+	}
+	self.pda9_bundle.content.loot_global_value = "pda9"
+	self.pda9_bundle.content.loot_drops = {}
 	self.pent_bundle = {
 		dlc = "has_pent",
 		content = {}

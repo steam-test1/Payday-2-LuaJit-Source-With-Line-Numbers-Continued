@@ -786,6 +786,18 @@ function BlackMarketTweakData:_init_xp()
 			100
 		}
 	}
+	self.xp.xp_pda9_1 = {
+		name_id = "bm_exp_xp_pda9_1",
+		value_id = "xp_pda9_1",
+		multiplier = 1,
+		pcs = {}
+	}
+	self.xp.xp_pda9_2 = {
+		name_id = "bm_exp_xp_pda9_2",
+		value_id = "xp_pda9_2",
+		multiplier = 1,
+		pcs = {}
+	}
 end
 
 -- Lines 730-769

@@ -1,4 +1,4 @@
--- Lines 5-2111
+-- Lines 5-2131
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.a10th = {
 		name_id = "bm_global_value_a10th",
@@ -718,6 +718,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		drops = true,
 		track = true,
 		sort_number = 510,
+		category = "global_event"
+	}
+	self.global_values.pda9 = {
+		name_id = "bm_global_value_pda9",
+		desc_id = "menu_l_global_value_pda9",
+		unlock_id = "bm_global_value_pda9_unlock",
+		color = tweak_data.screen_colors.event_color,
+		dlc = true,
+		free = true,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 511,
 		category = "global_event"
 	}
 	self.global_values.pent = {
