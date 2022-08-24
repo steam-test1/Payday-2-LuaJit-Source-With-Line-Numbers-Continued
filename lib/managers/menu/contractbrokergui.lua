@@ -35,7 +35,6 @@ ContractBrokerGui.tabs = {
 }
 ContractBrokerGui.MAX_SEARCH_LENGTH = 20
 ContractBrokerGui.RELEASE_WINDOW = 7
-ContractBrokerGui.event_levels = table.map_keys(tweak_data.mutators.piggybank.level_coordinates)
 
 -- Lines 35-95
 function ContractBrokerGui:init(ws, fullscreen_ws, node)
@@ -874,21 +873,6 @@ end
 -- Lines 835-837
 function ContractBrokerGui:perform_job_filter_skirmish(job_id, contact, job_tweak, contact_tweak)
 	return self:perform_filter_skirmish(contact)
-end
-
--- Lines 841-853
-function ContractBrokerGui:perform_job_filter_event_gamemode(job_id, contact, job_tweak, contact_tweak)
-	if #job_tweak.chain == 0 then
-		return false
-	end
-
-	for _, stage in ipairs(job_tweak.chain) do
-		if not table.contains(self.event_levels, stage.level_id) then
-			return false
-		end
-	end
-
-	return contact_tweak and not contact_tweak.hidden
 end
 
 -- Lines 857-860

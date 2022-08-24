@@ -368,72 +368,72 @@ function GenericDLCManager:has_tjp()
 	return self:is_dlc_unlocked("tjp")
 end
 
--- Lines 449-451
+-- Lines 454-456
 function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
--- Lines 459-461
+-- Lines 464-466
 function GenericDLCManager:has_trd()
 	return self:is_dlc_unlocked("trd")
 end
 
--- Lines 464-466
+-- Lines 469-471
 function GenericDLCManager:has_trik()
 	return self:is_dlc_unlocked("trik")
 end
 
--- Lines 469-471
+-- Lines 474-476
 function GenericDLCManager:has_tstp()
 	return self:is_dlc_unlocked("tstp")
 end
 
--- Lines 474-476
+-- Lines 479-481
 function GenericDLCManager:has_txt1()
 	return self:is_dlc_unlocked("txt1")
 end
 
--- Lines 479-481
+-- Lines 484-486
 function GenericDLCManager:has_txt2()
 	return self:is_dlc_unlocked("txt2")
 end
 
--- Lines 494-496
+-- Lines 499-501
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
 end
 
--- Lines 499-501
+-- Lines 504-506
 function GenericDLCManager:has_wcc_s01()
 	return self:is_dlc_unlocked("wcc_s01")
 end
 
--- Lines 504-506
+-- Lines 509-511
 function GenericDLCManager:has_wcc_s02()
 	return self:is_dlc_unlocked("wcc_s02")
 end
 
--- Lines 509-511
+-- Lines 514-516
 function GenericDLCManager:has_wcs()
 	return self:is_dlc_unlocked("wcs")
 end
 
--- Lines 514-516
+-- Lines 519-521
 function GenericDLCManager:has_xm20()
 	return self:is_dlc_unlocked("xm20")
 end
 
--- Lines 519-521
+-- Lines 524-526
 function GenericDLCManager:has_xm21()
 	return self:is_dlc_unlocked("xm21")
 end
 
--- Lines 524-526
+-- Lines 529-531
 function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 534-1089
+-- Lines 539-1099
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",

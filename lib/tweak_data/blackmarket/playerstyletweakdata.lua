@@ -1,4 +1,4 @@
--- Lines 1-3412
+-- Lines 1-3416
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -4343,6 +4343,13 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		third_material = "units/pd2_dlc_pda9/characters/pda9_acc_moneysuit/shared_materials/pda9_acc_moneysuit_money",
 		material = "units/pd2_dlc_pda9/characters/pda9_acc_moneysuit/shared_materials/pda9_acc_fps_moneysuit_money"
 	}
+	self.player_styles.moneysuit.material_variations.gold = {
+		desc_id = "bm_suit_moneysuit_gold_desc",
+		global_value = "pda9",
+		name_id = "bm_suit_moneysuit_gold",
+		third_material = "units/pd2_dlc_pda9/characters/pda9_acc_moneysuit/shared_materials/pda9_acc_moneysuit_gold",
+		material = "units/pd2_dlc_pda9/characters/pda9_acc_moneysuit/shared_materials/pda9_acc_fps_moneysuit_gold"
+	}
 	self.player_styles.moneysuit.characters = {}
 	local moneysuit_characters_male = {
 		third_unit = "units/pd2_dlc_pda9/characters/pda9_acc_moneysuit/pda9_acc_moneysuit_male_average/pda9_acc_moneysuit_male_average"
@@ -4375,7 +4382,7 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 	self.player_styles.moneysuit.characters.ecp_male = moneysuit_characters_male_fat
 end
 
--- Lines 3414-3436
+-- Lines 3418-3440
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -4400,7 +4407,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 3438-3463
+-- Lines 3442-3467
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -4428,7 +4435,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 3465-3486
+-- Lines 3469-3490
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -4455,7 +4462,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 3488-3524
+-- Lines 3492-3528
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -4499,7 +4506,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 3527-3556
+-- Lines 3531-3560
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -4530,7 +4537,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 3558-3564
+-- Lines 3562-3568
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -4539,7 +4546,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 3566-3581
+-- Lines 3570-3585
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -4559,11 +4566,11 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 3583-3619
+-- Lines 3587-3623
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 3587-3616
+	-- Lines 3591-3620
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

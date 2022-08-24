@@ -1,4 +1,4 @@
--- Lines 3-1229
+-- Lines 3-1240
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -1091,7 +1091,13 @@ function DLCTweakData:init_generated()
 		content = {}
 	}
 	self.pda9_bundle.content.loot_global_value = "pda9"
-	self.pda9_bundle.content.loot_drops = {}
+	self.pda9_bundle.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_piggy_gold",
+			amount = 1
+		}
+	}
 	self.pent_bundle = {
 		dlc = "has_pent",
 		content = {}

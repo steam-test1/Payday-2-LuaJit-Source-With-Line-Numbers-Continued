@@ -61,15 +61,16 @@ function EventJobsTweakData:init(tweak_data)
 	self.pda_base = 0
 end
 
--- Lines 73-160
+-- Lines 73-166
 function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda8_2_reward",
-		locked_id = "bm_menu_locked_pda8_2",
-		id = "pda8_2",
+		global_value = "pda8",
 		name_id = "menu_pda8_2",
 		desc_id = "menu_pda8_2_desc",
 		show_progress = true,
+		locked_id = "bm_menu_locked_pda8_2",
+		id = "pda8_2",
 		objectives = {
 			self:_collective("pda8_collective", 4, {
 				name_id = "menu_pda8_2_prog_obj",
@@ -95,11 +96,12 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 	table.insert(self.challenges, {
 		reward_id = "menu_pda8_3_reward",
-		locked_id = "bm_menu_locked_pda8_3",
-		id = "pda8_3",
+		global_value = "pda8",
 		name_id = "menu_pda8_3",
 		desc_id = "menu_pda8_3_desc",
 		show_progress = true,
+		locked_id = "bm_menu_locked_pda8_3",
+		id = "pda8_3",
 		objectives = {
 			self:_collective("pda8_collective", 6, {
 				name_id = "menu_pda8_3_prog_obj",
@@ -124,11 +126,12 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 	table.insert(self.challenges, {
 		reward_id = "menu_pda8_4_reward",
-		locked_id = "bm_menu_locked_pda8_4",
-		id = "pda8_4",
+		global_value = "pda8",
 		name_id = "menu_pda8_4",
 		desc_id = "menu_pda8_4_desc",
 		show_progress = true,
+		locked_id = "bm_menu_locked_pda8_4",
+		id = "pda8_4",
 		objectives = {
 			tweak_data.safehouse:_progress("pda8_item_1", 1, {
 				name_id = "menu_pda8_item_1",
@@ -181,7 +184,7 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 end
 
--- Lines 163-321
+-- Lines 169-499
 function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_1_reward",
@@ -198,10 +201,6 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 			})
 		},
 		rewards = {
-			{
-				item_entry = "money",
-				type_items = "upgrades"
-			},
 			{
 				item_entry = "xp_pda9_1",
 				type_items = "xp"
@@ -293,25 +292,37 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	})
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_community_1_reward",
+		global_value = "pda9",
 		name_id = "menu_pda9_community_1",
-		temp_challenge = true,
 		desc_id = "menu_pda9_community_1_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_community_1",
 		id = "pda9_community_1",
 		objectives = {
-			tweak_data.safehouse:_progress("pda9_piggy_stage_1", 1, {
-				name_id = "menu_pda9_item_1",
-				desc_id = "menu_pda9_community_item_1_desc"
+			self:_choice({
+				tweak_data.safehouse:_progress("pda9_piggy_stage_1", 1, {
+					name_id = "menu_pda9_item_1",
+					desc_id = ""
+				}),
+				tweak_data.safehouse:_progress("pda9_n1", 1, {
+					name_id = "menu_pda9_item_n1",
+					desc_id = "menu_pda9_item_n1_desc"
+				})
+			}, 1, {
+				name_id = "menu_pda9_1_choice_obj",
+				choice_id = "pda9_community_1",
+				desc_id = ""
 			}),
 			self:_stage("pda9_stages", 1, {
 				name_id = "menu_pda9_1_track_obj",
-				desc_id = "",
+				desc_id = "menu_pda9_community_item_1_desc",
 				stages = {
 					2,
 					3,
 					4,
-					5
+					5,
+					6,
+					7
 				}
 			})
 		},
@@ -324,24 +335,36 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	})
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_community_2_reward",
+		global_value = "pda9",
 		name_id = "menu_pda9_community_2",
-		temp_challenge = true,
 		desc_id = "menu_pda9_community_2_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_community_2",
 		id = "pda9_community_2",
 		objectives = {
-			tweak_data.safehouse:_progress("pda9_piggy_stage_2", 1, {
-				name_id = "menu_pda9_item_2",
-				desc_id = "menu_pda9_community_item_2_desc"
+			self:_choice({
+				tweak_data.safehouse:_progress("pda9_piggy_stage_2", 1, {
+					name_id = "menu_pda9_item_2",
+					desc_id = ""
+				}),
+				tweak_data.safehouse:_progress("pda9_n2", 99, {
+					name_id = "menu_pda9_item_n2",
+					desc_id = "menu_pda9_item_n2_desc"
+				})
+			}, 1, {
+				name_id = "menu_pda9_2_choice_obj",
+				choice_id = "pda9_community_2",
+				desc_id = ""
 			}),
 			self:_stage("pda9_stages", 1, {
 				name_id = "menu_pda9_1_track_obj",
-				desc_id = "",
+				desc_id = "menu_pda9_community_item_2_desc",
 				stages = {
 					3,
 					4,
-					5
+					5,
+					6,
+					7
 				}
 			})
 		},
@@ -354,15 +377,25 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	})
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_community_3_reward",
+		global_value = "pda9",
 		name_id = "menu_pda9_community_3",
-		temp_challenge = true,
 		desc_id = "menu_pda9_community_3_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_community_3",
 		id = "pda9_community_3",
 		objectives = {
-			tweak_data.safehouse:_progress("pda9_piggy_stage_1", 6, {
-				name_id = "menu_pda9_item_1",
+			self:_choice({
+				tweak_data.safehouse:_progress("pda9_piggy_stage_1", 6, {
+					name_id = "menu_pda9_item_1",
+					desc_id = ""
+				}),
+				tweak_data.safehouse:_progress("pda9_n3", 99, {
+					name_id = "menu_pda9_item_n3",
+					desc_id = "menu_pda9_item_n3_desc"
+				})
+			}, 1, {
+				name_id = "menu_pda9_3_choice_obj",
+				choice_id = "pda9_community_3",
 				desc_id = ""
 			}),
 			self:_stage("pda9_stages", 1, {
@@ -370,7 +403,9 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 				desc_id = "menu_pda9_community_item_3_desc",
 				stages = {
 					4,
-					5
+					5,
+					6,
+					7
 				}
 			})
 		},
@@ -381,9 +416,91 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 			}
 		}
 	})
+	table.insert(self.challenges, {
+		reward_id = "menu_pda9_community_4_reward",
+		global_value = "pda9",
+		name_id = "menu_pda9_community_4",
+		desc_id = "menu_pda9_community_4_desc",
+		show_progress = true,
+		locked_id = "bm_menu_locked_pda9_community_4",
+		id = "pda9_community_4",
+		objectives = {
+			self:_choice({
+				self:_collective("pda9_collective_1", 1, {
+					name_id = "menu_pda9_community_objective_1",
+					desc_id = "menu_pda9_community_objective_1_desc"
+				}),
+				tweak_data.safehouse:_progress("pda9_n4", 99, {
+					name_id = "menu_pda9_item_n4",
+					desc_id = "menu_pda9_item_n4_desc"
+				})
+			}, 1, {
+				name_id = "menu_pda9_4_choice_obj",
+				choice_id = "pda9_community_4",
+				desc_id = ""
+			}),
+			self:_stage("pda9_stages", 1, {
+				name_id = "menu_pda9_1_track_obj",
+				desc_id = "menu_pda9_community_item_4_desc",
+				stages = {
+					5,
+					6,
+					7
+				}
+			})
+		},
+		rewards = {
+			{
+				type_items = "suit_variations",
+				item_entry = {
+					"moneysuit",
+					"gold"
+				}
+			}
+		}
+	})
+	table.insert(self.challenges, {
+		reward_id = "menu_pda9_community_5_reward",
+		global_value = "pda9",
+		name_id = "menu_pda9_community_5",
+		desc_id = "menu_pda9_community_5_desc",
+		show_progress = true,
+		locked_id = "bm_menu_locked_pda9_community_5",
+		id = "pda9_community_5",
+		objectives = {
+			self:_choice({
+				self:_collective("pda9_collective_1", 1, {
+					name_id = "menu_pda9_community_objective_1",
+					desc_id = "menu_pda9_community_objective_2_desc"
+				}),
+				tweak_data.safehouse:_progress("pda9_n5", 9, {
+					name_id = "menu_pda9_item_n5",
+					desc_id = "menu_pda9_item_n5_desc"
+				})
+			}, 1, {
+				name_id = "menu_pda9_5_choice_obj",
+				choice_id = "pda9_community_5",
+				desc_id = ""
+			}),
+			self:_stage("pda9_stages", 1, {
+				name_id = "menu_pda9_1_track_obj",
+				desc_id = "menu_pda9_community_item_5_desc",
+				stages = {
+					6,
+					7
+				}
+			})
+		},
+		rewards = {
+			{
+				item_entry = "megaskulldia",
+				type_items = "masks"
+			}
+		}
+	})
 end
 
--- Lines 324-348
+-- Lines 502-526
 function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	data.collective_id = collective_id
 	local save_values = {
@@ -416,7 +533,54 @@ function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	return obj
 end
 
--- Lines 377-402
+-- Lines 529-564
+function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
+	local save_values = {
+		"choice_id",
+		"progress_id",
+		"completed",
+		"progress",
+		"challenge_choices_saved_values"
+	}
+
+	if data.save_values then
+		for idx, value in ipairs(data.save_values) do
+			table.insert(save_values, value)
+		end
+	end
+
+	local challenge_choices_saved_values = {}
+
+	if challenge_choices then
+		for index, challenge in ipairs(challenge_choices) do
+			if challenge.save_values then
+				challenge_choices_saved_values[index] = {}
+
+				for idx, value in ipairs(challenge.save_values) do
+					challenge_choices_saved_values[index][value] = challenge[value]
+				end
+			end
+		end
+	end
+
+	local obj = {
+		progress = 0,
+		completed = false,
+		displayed = true,
+		max_progress = 1,
+		choice_id = data.choice_id,
+		name_id = data.name_id,
+		desc_id = data.desc_id,
+		challenge_choices = challenge_choices,
+		challenge_choices_saved_values = challenge_choices_saved_values,
+		verify = data.verify,
+		save_values = save_values
+	}
+
+	return obj
+end
+
+-- Lines 594-619
 function EventJobsTweakData:_stage(stage_id, max_progress, data)
 	data.stage_id = stage_id
 	local save_values = {

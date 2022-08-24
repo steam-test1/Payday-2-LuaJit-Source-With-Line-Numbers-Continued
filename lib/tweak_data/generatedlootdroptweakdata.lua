@@ -1,4 +1,4 @@
--- Lines 5-2131
+-- Lines 5-2151
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.a10th = {
 		name_id = "bm_global_value_a10th",

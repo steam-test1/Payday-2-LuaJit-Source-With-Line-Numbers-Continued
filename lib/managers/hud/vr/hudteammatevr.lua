@@ -1082,7 +1082,7 @@ function HUDTeammateVR:set_hand(hand)
 	self._ammo_flash:set_shape(self._ammo_panel:shape())
 end
 
--- Lines 850-878
+-- Lines 850-889
 function HUDTeammateVR:setup_firemode(id, weapon_selection_panel)
 	if alive(weapon_selection_panel:child("firemode_single")) then
 		weapon_selection_panel:remove(weapon_selection_panel:child("firemode_single"))
@@ -1100,6 +1100,7 @@ function HUDTeammateVR:setup_firemode(id, weapon_selection_panel)
 	local can_toggle_firemode = weapon_tweak_data.CAN_TOGGLE_FIREMODE
 	local locked_to_auto = managers.weapon_factory:has_perk("fire_mode_auto", equipped_weapon.factory_id, equipped_weapon.blueprint)
 	local locked_to_single = managers.weapon_factory:has_perk("fire_mode_single", equipped_weapon.factory_id, equipped_weapon.blueprint)
+	locked_to_auto = managers.weapon_factory:has_perk("fire_mode_burst", equipped_weapon.factory_id, equipped_weapon.blueprint)
 	local firemode_single = weapon_selection_panel:text({
 		name = "firemode_single",
 		align = "right",
@@ -1130,7 +1131,7 @@ function HUDTeammateVR:setup_firemode(id, weapon_selection_panel)
 	firemode_auto:set_visible(false)
 end
 
--- Lines 880-882
+-- Lines 891-893
 function HUDTeammateVR:set_weapon_firemode_active(firemode_gui, active)
 	firemode_gui:set_selection(0, active and 0 or utf8.len(firemode_gui:text()))
 end

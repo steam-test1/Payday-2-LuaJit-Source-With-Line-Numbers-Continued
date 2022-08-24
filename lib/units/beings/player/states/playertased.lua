@@ -212,12 +212,13 @@ function PlayerTased:_check_action_shock(t, input)
 	end
 end
 
--- Lines 226-367
+-- Lines 226-408
 function PlayerTased:_check_action_primary_attack(t, input)
 	local new_action = nil
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
 	action_forbidden = action_forbidden or self:_is_reloading() or self:_changing_weapon() or self._melee_expire_t or self._use_item_expire_t or self:_interacting() or alive(self._counter_taser_unit)
 	local action_wanted = input.btn_primary_attack_state
+	action_wanted = action_wanted or self:is_shooting_count()
 
 	if action_wanted then
 		if not action_forbidden then
@@ -244,7 +245,8 @@ function PlayerTased:_check_action_primary_attack(t, input)
 				else
 					if not self._shooting and weap_base:start_shooting_allowed() then
 						local start = fire_mode == "single" and input.btn_primary_attack_press
-						start = start or fire_mode ~= "single" and input.btn_primary_attack_state
+						start = start or fire_mode == "auto" and input.btn_primary_attack_state
+						start = start or fire_mode == "burst" and input.btn_primary_attack_press
 
 						if start then
 							weap_base:start_shooting()
@@ -296,8 +298,10 @@ function PlayerTased:_check_action_primary_attack(t, input)
 								end
 							end
 						end
+					elseif fire_mode == "burst" then
+						fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
 					elseif input.btn_primary_attack_state then
-						fired = weap_base:trigger_held(self._ext_camera:position(), self._ext_camera:forward(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+						fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
 					end
 
 					new_action = true
@@ -305,7 +309,8 @@ function PlayerTased:_check_action_primary_attack(t, input)
 					if fired then
 						local weap_tweak_data = tweak_data.weapon[weap_base:get_name_id()]
 						local recoil_multiplier = weap_base:recoil() * weap_base:recoil_multiplier() + weap_base:recoil_addend()
-						local up, down, left, right = unpack(weap_tweak_data.kick[self._state_data.in_steelsight and "steelsight" or self._state_data.ducking and "crouching" or "standing"])
+						local kick_tweak_data = weap_tweak_data.kick[fire_mode] or weap_tweak_data.kick
+						local up, down, left, right = unpack(kick_tweak_data[self._state_data.in_steelsight and "steelsight" or self._state_data.ducking and "crouching" or "standing"])
 
 						self._camera_unit:base():recoil_kick(up * recoil_multiplier, down * recoil_multiplier, left * recoil_multiplier, right * recoil_multiplier)
 
@@ -340,6 +345,8 @@ function PlayerTased:_check_action_primary_attack(t, input)
 						end
 					elseif fire_mode == "single" then
 						new_action = false
+					elseif fire_mode == "burst" and weap_base:shooting_count() == 0 then
+						new_action = false
 					end
 				end
 			end
@@ -358,7 +365,7 @@ function PlayerTased:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines 373-383
+-- Lines 414-424
 function PlayerTased:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) and not alive(self._counter_taser_unit) then
 		if _G.IS_VR then
@@ -371,7 +378,7 @@ function PlayerTased:_check_action_interact(t, input)
 	end
 end
 
--- Lines 387-412
+-- Lines 428-453
 function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, false, true, false)
 	local interact_type, queue_name = nil
@@ -399,7 +406,7 @@ function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	end
 end
 
--- Lines 416-423
+-- Lines 457-464
 function PlayerTased:_start_action_tased(t, non_lethal)
 	self:_interupt_action_running(t)
 	self:_stance_entered()
@@ -409,14 +416,14 @@ function PlayerTased:_start_action_tased(t, non_lethal)
 	managers.hint:show_hint(non_lethal and "hint_been_electrocuted" or "hint_been_tasered")
 end
 
--- Lines 427-430
+-- Lines 468-471
 function PlayerTased:_start_action_counter_tase(t, prime_target)
 	self._counter_taser_unit = prime_target.unit
 
 	self._unit:camera():play_redirect(self:get_animation("tased_counter"))
 end
 
--- Lines 434-461
+-- Lines 475-502
 function PlayerTased:_register_revive_SO()
 	if self._SO_id or not managers.navigation:is_data_ready() then
 		return
@@ -446,14 +453,14 @@ function PlayerTased:_register_revive_SO()
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
 end
 
--- Lines 465-468
+-- Lines 506-509
 function PlayerTased:clbk_exit_to_fatal()
 	self._fatal_delayed_clbk = nil
 
 	managers.player:set_player_state("incapacitated")
 end
 
--- Lines 472-480
+-- Lines 513-521
 function PlayerTased:clbk_exit_to_std()
 	self._recover_delayed_clbk = nil
 
@@ -466,7 +473,7 @@ function PlayerTased:clbk_exit_to_std()
 	end
 end
 
--- Lines 484-497
+-- Lines 525-538
 function PlayerTased:on_tase_ended()
 	self._tase_ended = true
 
@@ -487,7 +494,7 @@ function PlayerTased:on_tase_ended()
 	self._taser_unit = nil
 end
 
--- Lines 501-522
+-- Lines 542-563
 function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	if self._unit == tased_unit then
 		self._taser_unit = taser_unit
@@ -517,7 +524,7 @@ function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 
 			managers.player:add_coroutine("escape_tase", PlayerAction.EscapeTase, managers.player, managers.hud, Application:time() + target_time)
 
-			-- Lines 518-518
+			-- Lines 559-559
 			local function clbk()
 				self:give_shock_to_taser_no_damage()
 			end
@@ -527,7 +534,7 @@ function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	end
 end
 
--- Lines 526-533
+-- Lines 567-574
 function PlayerTased:give_shock_to_taser()
 	if not alive(self._counter_taser_unit) then
 		return
@@ -538,7 +545,7 @@ function PlayerTased:give_shock_to_taser()
 	self:_give_shock_to_taser(self._counter_taser_unit)
 end
 
--- Lines 535-549
+-- Lines 576-590
 function PlayerTased:_give_shock_to_taser(taser_unit)
 	return
 
@@ -557,7 +564,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	taser_unit:character_damage():damage_melee(action_data)
 end
 
--- Lines 553-571
+-- Lines 594-612
 function PlayerTased:give_shock_to_taser_no_damage()
 	if not alive(self._taser_unit) then
 		return
@@ -579,7 +586,7 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	self._unit:sound():play("tase_counter_attack")
 end
 
--- Lines 574-594
+-- Lines 615-635
 function PlayerTased:_on_malfunction_to_taser_event()
 	if not alive(self._taser_unit) then
 		return

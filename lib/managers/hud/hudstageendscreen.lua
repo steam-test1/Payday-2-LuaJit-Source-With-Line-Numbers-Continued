@@ -2410,7 +2410,7 @@ function HUDStageEndScreen:display_as_coins(amount)
 	return managers.experience:cash_string(math.floor(amount), "")
 end
 
--- Lines 1796-1951
+-- Lines 1796-1954
 function HUDStageEndScreen:stage_experience_init(t, dt)
 	local data = self._data
 
@@ -2504,9 +2504,7 @@ function HUDStageEndScreen:stage_experience_init(t, dt)
 		"bonus_extra",
 		"bonus_ghost",
 		"heat_xp",
-		"bonus_mutators",
-		"bonus_piggybank",
-		"bonus_event_double"
+		"bonus_mutators"
 	}
 	local bonuses_params = {
 		bonus_mission_xp = {
@@ -2568,14 +2566,6 @@ function HUDStageEndScreen:stage_experience_init(t, dt)
 		bonus_mutators = {
 			color = tweak_data.screen_colors.important_1,
 			title = managers.localization:to_upper_text("menu_mutators_reduction_exp")
-		},
-		bonus_piggybank = {
-			color = tweak_data.screen_colors.event_color,
-			title = managers.localization:to_upper_text("menu_piggybank_exp_bonus")
-		},
-		bonus_event_double = {
-			color = tweak_data.screen_colors.event_color,
-			title = managers.localization:to_upper_text("menu_event_double_exp_bonus")
 		}
 	}
 
@@ -2625,7 +2615,7 @@ function HUDStageEndScreen:stage_experience_init(t, dt)
 	self:step_stage_up()
 end
 
--- Lines 1953-1998
+-- Lines 1956-2001
 function HUDStageEndScreen:anim_count_experience(o, stat)
 	self._anim_exp_bonus = true
 	local dt = nil
@@ -2694,7 +2684,7 @@ function HUDStageEndScreen:anim_count_experience(o, stat)
 	o:parent():remove(o)
 end
 
--- Lines 2000-2039
+-- Lines 2003-2042
 function HUDStageEndScreen:stage_experience_count_exp(t, dt)
 	local data = self._data
 
@@ -2736,7 +2726,7 @@ function HUDStageEndScreen:stage_experience_count_exp(t, dt)
 	self:step_stage_up()
 end
 
--- Lines 2041-2108
+-- Lines 2044-2111
 function HUDStageEndScreen:stage_experience_spin_up(t, dt)
 	local data = self._data
 
@@ -2790,7 +2780,7 @@ function HUDStageEndScreen:stage_experience_spin_up(t, dt)
 	self:step_stage_up()
 end
 
--- Lines 2110-2124
+-- Lines 2113-2127
 function HUDStageEndScreen:stage_experience_show_all(t, dt)
 	local start_max_level = data.start_t.level == managers.experience:level_cap()
 
@@ -2804,7 +2794,7 @@ function HUDStageEndScreen:stage_experience_show_all(t, dt)
 	self:step_stage_up()
 end
 
--- Lines 2126-2202
+-- Lines 2129-2205
 function HUDStageEndScreen:stage_experience_spin_levels(t, dt)
 	local data = self._data
 
@@ -2887,7 +2877,7 @@ function HUDStageEndScreen:stage_experience_spin_levels(t, dt)
 	end
 end
 
--- Lines 2204-2295
+-- Lines 2207-2298
 function HUDStageEndScreen:stage_experience_spin_slowdown(t, dt)
 	local data = self._data
 	local level_cap = data.end_t.level == managers.experience:level_cap()
@@ -2973,7 +2963,7 @@ function HUDStageEndScreen:stage_experience_spin_slowdown(t, dt)
 	end
 end
 
--- Lines 2297-2327
+-- Lines 2300-2330
 function HUDStageEndScreen:stage_experience_end(t, dt)
 	local data = self._data
 	local ratio = data.end_t.current / data.end_t.total
@@ -2999,7 +2989,7 @@ function HUDStageEndScreen:stage_experience_end(t, dt)
 	self:step_stage_up()
 end
 
--- Lines 2329-2344
+-- Lines 2332-2347
 function HUDStageEndScreen:stage_done(t, dt)
 	if self._all_done then
 		return
@@ -3014,9 +3004,9 @@ function HUDStageEndScreen:stage_done(t, dt)
 	end
 end
 
--- Lines 2346-2469
+-- Lines 2349-2472
 function HUDStageEndScreen:level_up(level)
-	-- Lines 2347-2356
+	-- Lines 2350-2359
 	local function level_text_func(o, ding_scale, level)
 		local center_x, center_y = o:center()
 		local size = tweak_data.menu.pd2_massive_font_size
@@ -3027,7 +3017,7 @@ function HUDStageEndScreen:level_up(level)
 		self:give_skill_points(1)
 	end
 
-	-- Lines 2358-2376
+	-- Lines 2361-2379
 	local function text_ding_func(o)
 		local TOTAL_T = 0.4
 		local t = TOTAL_T
@@ -3048,7 +3038,7 @@ function HUDStageEndScreen:level_up(level)
 		o:parent():remove(o)
 	end
 
-	-- Lines 2378-2397
+	-- Lines 2381-2400
 	local function circle_ding_func(o)
 		wait(0.15)
 
@@ -3073,7 +3063,7 @@ function HUDStageEndScreen:level_up(level)
 		o:parent():remove(o)
 	end
 
-	-- Lines 2399-2447
+	-- Lines 2402-2450
 	local function package_func(o, data)
 		local start_alpha = o:alpha()
 
@@ -3187,30 +3177,30 @@ function HUDStageEndScreen:level_up(level)
 	return package_unlocked
 end
 
--- Lines 2471-2473
+-- Lines 2474-2476
 function HUDStageEndScreen:reset_skill_points()
 	self:give_skill_points(-self._num_skill_points_gained)
 end
 
--- Lines 2475-2478
+-- Lines 2478-2481
 function HUDStageEndScreen:give_skill_points(points)
 	self._num_skill_points_gained = self._num_skill_points_gained + points
 	self._update_skill_points = true
 end
 
--- Lines 2480-2483
+-- Lines 2483-2486
 function HUDStageEndScreen:stage_debug_loop(t, dt)
 	self:reset_stage()
 
 	self._wait_t = 3
 end
 
--- Lines 2485-2487
+-- Lines 2488-2490
 function HUDStageEndScreen:set_speed_up(multiplier)
 	self._speed_up = multiplier
 end
 
--- Lines 2491-2577
+-- Lines 2494-2580
 function HUDStageEndScreen:update(t, dt)
 	local stage = self._stage and self.stages[self._stage]
 	local ddt = dt * math.clamp(self._speed_up or 1, 1, stage and stage[2] or 5)
@@ -3228,7 +3218,7 @@ function HUDStageEndScreen:update(t, dt)
 	if self._update_skill_points then
 		self._update_skill_points = nil
 
-		-- Lines 2508-2536
+		-- Lines 2511-2539
 		local function skill_point_text_func(o, text)
 			local center_x, center_y = o:center()
 			local content_font_size = tweak_data.menu.pd2_small_font_size
@@ -3263,7 +3253,7 @@ function HUDStageEndScreen:update(t, dt)
 			end
 		end
 
-		-- Lines 2537-2543
+		-- Lines 2540-2546
 		local function animate_new_skillpoints(o)
 			while true do
 				over(1, function (p)
@@ -3313,14 +3303,14 @@ function HUDStageEndScreen:update(t, dt)
 	end
 end
 
--- Lines 2579-2582
+-- Lines 2582-2585
 function HUDStageEndScreen:set_continue_button_text(text)
 	print("HUDStageEndScreen:set_continue_button_text( text )", text)
 
 	self._button_text = text
 end
 
--- Lines 2584-2592
+-- Lines 2587-2595
 function HUDStageEndScreen:set_success(success, server_left)
 	print("HUDStageEndScreen:set_success( success, server_left )", success, server_left)
 
@@ -3332,7 +3322,7 @@ function HUDStageEndScreen:set_success(success, server_left)
 	self._background_layer_full:child("stage_text"):set_text(self._stage_name .. ": " .. stage_status)
 end
 
--- Lines 2594-2603
+-- Lines 2597-2606
 function HUDStageEndScreen:set_special_packages(params)
 	self._challenge_completed = params.challenge_completed
 	self._gage_assignment = params.gage_assignment
@@ -3342,7 +3332,7 @@ function HUDStageEndScreen:set_special_packages(params)
 	self:_check_special_packages()
 end
 
--- Lines 2605-2613
+-- Lines 2608-2616
 function HUDStageEndScreen:set_statistics(criminals_completed, success)
 	print("HUDStageEndScreen:set_statistics( criminals_completed, success )", criminals_completed, success)
 
@@ -3354,11 +3344,11 @@ function HUDStageEndScreen:set_statistics(criminals_completed, success)
 	self._background_layer_full:child("stage_text"):set_text(self._stage_name .. ": " .. stage_status)
 end
 
--- Lines 2615-2870
+-- Lines 2618-2873
 function HUDStageEndScreen:animate_level_progress(o, data)
-	-- Lines 2616-2867
+	-- Lines 2619-2870
 	local function animate_func(o, self, data)
-		-- Lines 2617-2654
+		-- Lines 2620-2657
 		local function spin_func(self, o, xp, end_xp, total_xp, current_xp, gained_xp, speed, breaks)
 			local dt = 0
 			local ratio = xp / total_xp
@@ -3395,7 +3385,7 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 			end
 		end
 
-		-- Lines 2657-2672
+		-- Lines 2660-2675
 		local function wait_func(self, o, wait_time)
 			local dt = 0
 			local time = wait_time
@@ -3418,7 +3408,7 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 
 		local base_font_size = self._lp_text:font_size()
 
-		-- Lines 2675-2688
+		-- Lines 2678-2691
 		local function ding_func(o, font_size, ding_size, level)
 			local center_x, center_y = o:center()
 			local size = font_size
@@ -3435,7 +3425,7 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 			end)
 		end
 
-		-- Lines 2690-2775
+		-- Lines 2693-2778
 		local function package_func(o, data)
 			local start_alpha = o:alpha()
 
@@ -3625,7 +3615,7 @@ function HUDStageEndScreen:animate_level_progress(o, data)
 	o:animate(animate_func, self, data)
 end
 
--- Lines 2872-2879
+-- Lines 2875-2882
 function HUDStageEndScreen:send_xp_data(data, done_clbk)
 	self._data = data
 	self._done_clbk = done_clbk
@@ -3634,7 +3624,7 @@ function HUDStageEndScreen:send_xp_data(data, done_clbk)
 	self:start_experience_gain()
 end
 
--- Lines 2882-2895
+-- Lines 2885-2898
 function HUDStageEndScreen:set_group_statistics(best_kills, best_kills_score, best_special_kills, best_special_kills_score, best_accuracy, best_accuracy_score, most_downs, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	print("HUDStageEndScreen:set_group_statistics( best_kills, best_kills_score, best_special_kills, best_special_kills_score, best_accuracy, best_accuracy_score, most_downs, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs )", best_kills, best_kills_score, best_special_kills, best_special_kills_score, best_accuracy, best_accuracy_score, most_downs, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 
@@ -3655,7 +3645,7 @@ function HUDStageEndScreen:set_group_statistics(best_kills, best_kills_score, be
 	}
 end
 
--- Lines 2897-2902
+-- Lines 2900-2905
 function HUDStageEndScreen:reload()
 	self._backdrop:close()
 

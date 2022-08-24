@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-8258
+-- Lines 3-8275
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -668,7 +668,7 @@ function InteractionTweakData:init(tweak_data)
 	self.hack_suburbia_outline = {
 		icon = "equipment_hack_ipad",
 		text_id = "debug_interact_hack_ipad",
-		interact_distance = 100,
+		interact_distance = 200,
 		timer = 5,
 		start_active = true,
 		axis = "y",

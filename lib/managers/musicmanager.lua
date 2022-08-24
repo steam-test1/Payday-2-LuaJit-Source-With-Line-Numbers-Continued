@@ -815,7 +815,7 @@ function MusicManager:jukebox_music_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 947-1000
+-- Lines 947-1003
 function MusicManager:jukebox_menu_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -842,7 +842,7 @@ function MusicManager:jukebox_menu_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 1003-1018
+-- Lines 1006-1021
 function MusicManager:jukebox_ghost_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -860,7 +860,7 @@ function MusicManager:jukebox_ghost_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 1021-1023
+-- Lines 1024-1026
 function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end

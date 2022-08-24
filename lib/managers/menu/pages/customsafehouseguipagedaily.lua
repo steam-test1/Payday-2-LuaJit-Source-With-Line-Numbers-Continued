@@ -475,7 +475,7 @@ function CustomSafehouseGuiPageDaily:is_safehouse_daily(id)
 	return managers.custom_safehouse:get_daily(id) and true or false
 end
 
--- Lines 471-805
+-- Lines 471-871
 function CustomSafehouseGuiPageDaily:_setup_challenge(id)
 	self._reward_buttons = {}
 
@@ -570,6 +570,32 @@ function CustomSafehouseGuiPageDaily:_setup_challenge(id)
 	description_text:set_h(h)
 
 	current_y = description_text:bottom()
+
+	if daily_info.global_value then
+		local global_text = scroll:canvas():text({
+			blend_mode = "add",
+			name = "GlobalText",
+			word_wrap = true,
+			wrap = true,
+			align = "left",
+			vertical = "top",
+			valign = "scale",
+			halign = "scale",
+			layer = 1,
+			font_size = small_font_size,
+			font = small_font,
+			color = tweak_data.lootdrop.global_values[daily_info.global_value] and tweak_data.lootdrop.global_values[daily_info.global_value].color or tweak_data.screen_colors.title,
+			text = managers.localization:text("menu_l_global_value_side_job_" .. daily_info.global_value)
+		})
+
+		global_text:set_top(current_y)
+
+		local _, _, _, h = global_text:text_rect()
+
+		global_text:set_h(h)
+
+		current_y = global_text:bottom()
+	end
 
 	if daily_info.objective_id or daily_info.objectives then
 		local objective_title = scroll:canvas():text({
@@ -677,15 +703,47 @@ function CustomSafehouseGuiPageDaily:_setup_challenge(id)
 		local objectives = daily_challenge.trophy and daily_challenge.trophy.objectives or daily_challenge.objectives
 
 		for idx, objective in ipairs(objectives) do
-			local item = CustomSafehouseGuiProgressItem:new(scroll:canvas(), objective)
+			if objective.challenge_choices then
+				for index, choice_objective in ipairs(objective.challenge_choices) do
+					local item = CustomSafehouseGuiProgressItem:new(scroll:canvas(), choice_objective)
 
-			table.insert(self._progress_items, item)
+					table.insert(self._progress_items, item)
 
-			local pos = current_y
+					local pos = current_y
 
-			item:set_top(pos)
+					item:set_top(pos)
 
-			current_y = item:bottom()
+					current_y = item:bottom()
+
+					if index ~= #objective.challenge_choices then
+						local or_string = scroll:canvas():text({
+							text = "Or",
+							font_size = small_font_size,
+							font = small_font
+						})
+
+						self:make_fine_text(or_string)
+
+						pos = current_y
+
+						or_string:set_top(pos)
+
+						current_y = or_string:bottom()
+					end
+				end
+
+				current_y = current_y + small_font_size
+			else
+				local item = CustomSafehouseGuiProgressItem:new(scroll:canvas(), objective)
+
+				table.insert(self._progress_items, item)
+
+				local pos = current_y
+
+				item:set_top(pos)
+
+				current_y = item:bottom()
+			end
 		end
 	end
 
@@ -827,7 +885,7 @@ function CustomSafehouseGuiPageDaily:_setup_challenge(id)
 	scroll:update_canvas_size()
 end
 
--- Lines 807-850
+-- Lines 873-932
 function CustomSafehouseGuiPageDaily:_update_daily_panel_size(new_width)
 	if not self._challenge_scroll or not alive(self._challenge_scroll:panel()) then
 		return
@@ -835,6 +893,7 @@ function CustomSafehouseGuiPageDaily:_update_daily_panel_size(new_width)
 
 	local canvas = self._challenge_scroll:canvas()
 	local desc_text = canvas:child("DescText")
+	local global_text = canvas:child("GlobalText")
 	local objective_title = canvas:child("ObjectiveHeader")
 	local objective_text = canvas:child("ObjectiveText")
 
@@ -848,8 +907,16 @@ function CustomSafehouseGuiPageDaily:_update_daily_panel_size(new_width)
 
 	desc_text:set_h(h)
 
+	if alive(global_text) then
+		global_text:set_w(new_width)
+
+		local _, _, _, h = global_text:text_rect()
+
+		global_text:set_h(h)
+	end
+
 	if alive(objective_title) then
-		objective_title:set_top(desc_text:bottom() + PANEL_PADDING * 2)
+		objective_title:set_top(global_text:bottom() + PANEL_PADDING * 2)
 	end
 
 	if alive(objective_text) then
@@ -875,7 +942,7 @@ function CustomSafehouseGuiPageDaily:_update_daily_panel_size(new_width)
 	end
 end
 
--- Lines 852-857
+-- Lines 934-939
 function CustomSafehouseGuiPageDaily:complete_panel()
 	if not alive(self._complete_panel) then
 		self._complete_panel = self:challenge_panel():panel({})
@@ -884,7 +951,7 @@ function CustomSafehouseGuiPageDaily:complete_panel()
 	return self._complete_panel
 end
 
--- Lines 860-941
+-- Lines 942-1023
 function CustomSafehouseGuiPageDaily:_setup_safehouse_daily_complete()
 	self._reward_buttons = {}
 
@@ -973,7 +1040,7 @@ function CustomSafehouseGuiPageDaily:_setup_safehouse_daily_complete()
 	scroll:update_canvas_size()
 end
 
--- Lines 943-954
+-- Lines 1025-1036
 function CustomSafehouseGuiPageDaily:_set_selected(item)
 	if self._selected_item then
 		self._selected_item:set_selected(false)
@@ -986,7 +1053,7 @@ function CustomSafehouseGuiPageDaily:_set_selected(item)
 	end
 end
 
--- Lines 956-971
+-- Lines 1038-1053
 function CustomSafehouseGuiPageDaily:_create_renew_timestamp_string_extended(timestamp)
 	local minutes = 59 - tonumber(Application:date("%M"))
 	local seconds = 59 - tonumber(Application:date("%S"))
@@ -1012,7 +1079,7 @@ function CustomSafehouseGuiPageDaily:_create_renew_timestamp_string_extended(tim
 	return expire_string
 end
 
--- Lines 975-990
+-- Lines 1057-1072
 function CustomSafehouseGuiPageDaily:update_renew_timer()
 	if alive(self._renew_timer) then
 		local challenge = managers.custom_safehouse:get_daily_challenge()
@@ -1025,7 +1092,7 @@ function CustomSafehouseGuiPageDaily:update_renew_timer()
 	end
 end
 
--- Lines 992-1022
+-- Lines 1074-1104
 function CustomSafehouseGuiPageDaily:move_button(dir)
 	local current_button = nil
 
@@ -1062,7 +1129,7 @@ function CustomSafehouseGuiPageDaily:move_button(dir)
 	self:_scroll_to_show(to_select._panel)
 end
 
--- Lines 1024-1039
+-- Lines 1106-1121
 function CustomSafehouseGuiPageDaily:_scroll_to_show(top_or_item, bottom)
 	local top = nil
 
@@ -1081,7 +1148,7 @@ function CustomSafehouseGuiPageDaily:_scroll_to_show(top_or_item, bottom)
 	end
 end
 
--- Lines 1041-1073
+-- Lines 1123-1155
 function CustomSafehouseGuiPageDaily:move_reward_button(dir)
 	if not self._reward_buttons or #self._reward_buttons == 0 then
 		return
@@ -1119,7 +1186,7 @@ function CustomSafehouseGuiPageDaily:move_reward_button(dir)
 	self._reward_buttons[next_button]:set_selected(true)
 end
 
--- Lines 1075-1085
+-- Lines 1157-1167
 function CustomSafehouseGuiPageDaily:_update_controller(t, dt)
 	if managers.system_menu and managers.system_menu:is_active() then
 		return
@@ -1132,7 +1199,7 @@ function CustomSafehouseGuiPageDaily:_update_controller(t, dt)
 	end
 end
 
--- Lines 1087-1094
+-- Lines 1169-1176
 function CustomSafehouseGuiPageDaily:confirm_pressed()
 	for _, button in ipairs(self._side_panel_buttons) do
 		if button:is_selected() then
@@ -1143,27 +1210,27 @@ function CustomSafehouseGuiPageDaily:confirm_pressed()
 	end
 end
 
--- Lines 1096-1098
+-- Lines 1178-1180
 function CustomSafehouseGuiPageDaily:move_up()
 	self:move_button(-1)
 end
 
--- Lines 1100-1102
+-- Lines 1182-1184
 function CustomSafehouseGuiPageDaily:move_down()
 	self:move_button(1)
 end
 
--- Lines 1104-1106
+-- Lines 1186-1188
 function CustomSafehouseGuiPageDaily:move_left()
 	self:move_reward_button(-1)
 end
 
--- Lines 1108-1110
+-- Lines 1190-1192
 function CustomSafehouseGuiPageDaily:move_right()
 	self:move_reward_button(1)
 end
 
--- Lines 1112-1119
+-- Lines 1194-1201
 function CustomSafehouseGuiPageDaily:claim_reward()
 	for _, button in ipairs(self._reward_buttons) do
 		if button:is_selected() then
@@ -1174,7 +1241,7 @@ function CustomSafehouseGuiPageDaily:claim_reward()
 	end
 end
 
--- Lines 1121-1186
+-- Lines 1203-1268
 function CustomSafehouseGuiPageDaily:update(t, dt)
 	if not self._active then
 		return
@@ -1229,14 +1296,14 @@ function CustomSafehouseGuiPageDaily:update(t, dt)
 	self:_update_animation(t, dt)
 end
 
--- Lines 1188-1194
+-- Lines 1270-1276
 function CustomSafehouseGuiPageDaily:_update_animation(t, dt)
 	if self._anim_state and self[self._anim_state] then
 		self[self._anim_state](self, t, dt)
 	end
 end
 
--- Lines 1196-1223
+-- Lines 1278-1305
 function CustomSafehouseGuiPageDaily:_update_hide_daily(t, dt)
 	if alive(self:daily_panel()) and alive(self:challenge_panel()) then
 		self._complete_t = (self._complete_t or 0) + dt
@@ -1269,7 +1336,7 @@ function CustomSafehouseGuiPageDaily:_update_hide_daily(t, dt)
 	end
 end
 
--- Lines 1225-1264
+-- Lines 1307-1346
 function CustomSafehouseGuiPageDaily:_update_show_complete(t, dt)
 	local title = self._challenge_scroll:canvas():child("DailyCompleteTitle")
 	local info = self._challenge_scroll:canvas():child("DailyCompleteInfo")
@@ -1309,18 +1376,18 @@ function CustomSafehouseGuiPageDaily:_update_show_complete(t, dt)
 	end
 end
 
--- Lines 1266-1268
+-- Lines 1348-1350
 function CustomSafehouseGuiPageDaily:set_animation_state(state)
 	self._anim_state = state
 end
 
--- Lines 1270-1273
+-- Lines 1352-1355
 function CustomSafehouseGuiPageDaily:finish_animation()
 	self:challenge_panel():set_h(self:daily_panel():h() - PANEL_PADDING * 2)
 	self:set_animation_state(nil)
 end
 
--- Lines 1277-1325
+-- Lines 1359-1407
 function CustomSafehouseGuiPageDaily:mouse_moved(button, x, y)
 	if not self._active then
 		return
@@ -1379,7 +1446,7 @@ function CustomSafehouseGuiPageDaily:mouse_moved(button, x, y)
 	end
 end
 
--- Lines 1327-1354
+-- Lines 1409-1436
 function CustomSafehouseGuiPageDaily:mouse_clicked(o, button, x, y)
 	if not self._active then
 		return
@@ -1410,7 +1477,7 @@ function CustomSafehouseGuiPageDaily:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 1356-1371
+-- Lines 1438-1453
 function CustomSafehouseGuiPageDaily:mouse_pressed(button, x, y)
 	if not self._active then
 		return
@@ -1429,7 +1496,7 @@ function CustomSafehouseGuiPageDaily:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 1373-1389
+-- Lines 1455-1471
 function CustomSafehouseGuiPageDaily:mouse_released(button, x, y)
 	if not self._active then
 		return
@@ -1450,7 +1517,7 @@ function CustomSafehouseGuiPageDaily:mouse_released(button, x, y)
 	end
 end
 
--- Lines 1391-1406
+-- Lines 1473-1488
 function CustomSafehouseGuiPageDaily:mouse_wheel_up(x, y)
 	if not self._active then
 		return
@@ -1469,7 +1536,7 @@ function CustomSafehouseGuiPageDaily:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 1408-1423
+-- Lines 1490-1505
 function CustomSafehouseGuiPageDaily:mouse_wheel_down(x, y)
 	if not self._active then
 		return
@@ -1488,7 +1555,7 @@ function CustomSafehouseGuiPageDaily:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 1425-1448
+-- Lines 1507-1530
 function CustomSafehouseGuiPageDaily:get_legend()
 	local legend = {}
 	local id = self._current_challenge
@@ -1518,7 +1585,7 @@ end
 
 CustomSafehouseGuiRewardItem = CustomSafehouseGuiRewardItem or class(CustomSafehouseGuiItem)
 
--- Lines 1454-1670
+-- Lines 1536-1752
 function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data, id, is_safehouse_daily)
 	self._daily_page = daily_page
 	self._reward = reward_data or {}
@@ -1696,7 +1763,7 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	end
 
 	if completed and not reward_data.rewarded then
-		-- Lines 1640-1646
+		-- Lines 1722-1728
 		local function glow_anim(o)
 			while true do
 				over(5, function (p)
@@ -1737,12 +1804,12 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	self:set_active(true)
 end
 
--- Lines 1672-1674
+-- Lines 1754-1756
 function CustomSafehouseGuiRewardItem:panel()
 	return self._panel
 end
 
--- Lines 1676-1684
+-- Lines 1758-1766
 function CustomSafehouseGuiRewardItem:refresh()
 	if managers.menu:is_pc_controller() then
 		self._text:set_visible(self._selected or self._reward.completed)
@@ -1753,12 +1820,12 @@ function CustomSafehouseGuiRewardItem:refresh()
 	end
 end
 
--- Lines 1686-1688
+-- Lines 1768-1770
 function CustomSafehouseGuiRewardItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 1690-1775
+-- Lines 1772-1857
 function CustomSafehouseGuiRewardItem:trigger()
 	if self:is_active() then
 		if self._is_safehouse_daily and managers.custom_safehouse:has_completed_daily() and not managers.custom_safehouse:has_rewarded_daily() then
@@ -1835,7 +1902,7 @@ function CustomSafehouseGuiRewardItem:trigger()
 	end
 end
 
--- Lines 1777-1789
+-- Lines 1859-1871
 function CustomSafehouseGuiRewardItem:set_selected(selected, ...)
 	CustomSafehouseGuiRewardItem.super.set_selected(self, selected, ...)
 
