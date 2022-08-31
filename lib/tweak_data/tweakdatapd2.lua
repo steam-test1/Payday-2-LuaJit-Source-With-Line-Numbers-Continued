@@ -914,7 +914,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 551-669
+-- Lines 551-673
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

@@ -4380,10 +4380,11 @@ function GroupAIStateBesiege:terminate_assaults()
 	self._police_activity_blocked = true
 end
 
--- Lines 4354-4418
+-- Lines 4354-4419
 function GroupAIStateBesiege:create_timed_groups_table()
 	local timed_groups = {}
 	local all_categories = tweak_data.group_ai.unit_categories
+	local current_unit_type = tweak_data.levels:get_ai_group_type()
 
 	for group_id, group_tweak_data in pairs(tweak_data.group_ai.enemy_spawn_groups) do
 		if group_tweak_data.spawn_cooldown and (not group_tweak_data.max_nr_simultaneous_groups or group_tweak_data.max_nr_simultaneous_groups > 0) then
@@ -4409,11 +4410,10 @@ function GroupAIStateBesiege:create_timed_groups_table()
 							cooldown = spawn_data.respawn_cooldown,
 							units_lookup = {}
 						}
+						local units = all_categories[spawn_data.unit].unit_types[current_unit_type]
 
-						for region_type, units in pairs(all_categories[spawn_data.unit].unit_types) do
-							for _, ids_unit in ipairs(units) do
-								units_to_respawn[idx].units_lookup[ids_unit:key()] = true
-							end
+						for _, ids_unit in ipairs(units) do
+							units_to_respawn[idx].units_lookup[ids_unit:key()] = all_categories[spawn_data.unit]
 						end
 					end
 				end
@@ -4445,7 +4445,7 @@ function GroupAIStateBesiege:create_timed_groups_table()
 	end
 end
 
--- Lines 4422-4467
+-- Lines 4423-4468
 function GroupAIStateBesiege:_check_spawn_timed_groups(target_area, task_data)
 	if not self._timed_groups then
 		return
@@ -4502,7 +4502,7 @@ function GroupAIStateBesiege:_check_spawn_timed_groups(target_area, task_data)
 	end
 end
 
--- Lines 4469-4511
+-- Lines 4470-4512
 function GroupAIStateBesiege:_spawn_timed_group(task_data, group_data, target_area, group_to_allow)
 	local spawn_group, spawn_group_type = self:_find_spawn_group_near_area(target_area, group_to_allow, nil, nil, nil)
 
@@ -4533,7 +4533,7 @@ function GroupAIStateBesiege:_spawn_timed_group(task_data, group_data, target_ar
 	end
 end
 
--- Lines 4513-4563
+-- Lines 4514-4563
 function GroupAIStateBesiege:_respawn_unit_for_group(task_data, group_data, target_area, respawn_data, spawn_unit_type, group_to_allow)
 	local spawn_group, spawn_group_type = self:_find_spawn_group_near_area(target_area, group_to_allow, nil, nil, nil)
 
@@ -4546,10 +4546,9 @@ function GroupAIStateBesiege:_respawn_unit_for_group(task_data, group_data, targ
 		name = respawn_data.name,
 		spawn_ai = {}
 	}
-	local spawn_points = spawn_group.spawn_pts
-	local category = tweak_data.group_ai.unit_categories[spawn_unit_type]
+	local category = respawn_data.category
 
-	for _, sp_data in ipairs(spawn_points) do
+	for _, sp_data in ipairs(spawn_group.spawn_pts) do
 		if sp_data.delay_t < self._t and (sp_data.accessibility == "any" or category.access[sp_data.accessibility]) and (not sp_data.amount or sp_data.amount > 0) and sp_data.mission_element:enabled() then
 			spawned_unit = sp_data.mission_element:produce(produce_data)
 
