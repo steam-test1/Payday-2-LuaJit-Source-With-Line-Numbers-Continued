@@ -61,7 +61,7 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 	self:add_unit(new_unit, equip)
 end
 
--- Lines 56-66
+-- Lines 79-89
 function CopInventory:_chk_spawn_shield(weapon_unit)
 	if self._shield_unit_name and not alive(self._shield_unit) then
 		local align_name = self._shield_align_name or Idstring("a_weapon_left_front")
@@ -74,19 +74,19 @@ function CopInventory:_chk_spawn_shield(weapon_unit)
 	end
 end
 
--- Lines 70-74
+-- Lines 94-98
 function CopInventory:add_unit(new_unit, equip)
 	CopInventory.super.add_unit(self, new_unit, equip)
 	new_unit:set_enabled(true)
 	new_unit:set_visible(true)
 end
 
--- Lines 78-80
+-- Lines 102-104
 function CopInventory:get_sync_data(sync_data)
 	MPPlayerInventory.get_sync_data(self, sync_data)
 end
 
--- Lines 84-88
+-- Lines 108-112
 function CopInventory:get_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -94,7 +94,7 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines 92-110
+-- Lines 116-134
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -118,7 +118,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 114-137
+-- Lines 141-164
 function CopInventory:drop_shield()
 	local shield_unit = self._shield_unit
 	self._shield_unit = nil
@@ -137,7 +137,7 @@ function CopInventory:drop_shield()
 	end
 end
 
--- Lines 141-156
+-- Lines 169-184
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -155,7 +155,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 160-166
+-- Lines 188-198
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 

@@ -2835,7 +2835,7 @@ function UnitNetworkHandler:sync_throw_projectile(unit, pos, dir, projectile_typ
 	local thrower_unit = member and member:unit()
 
 	if alive(thrower_unit) then
-		unit:base():set_thrower_unit(thrower_unit)
+		unit:base():set_thrower_unit(thrower_unit, true, false)
 
 		if not tweak_entry.throwable and thrower_unit:movement() and thrower_unit:movement():current_state() then
 			unit:base():set_weapon_unit(thrower_unit:movement():current_state()._equipped_unit)
@@ -2861,7 +2861,7 @@ function UnitNetworkHandler:sync_throw_projectile_npc(unit, pos, dir, projectile
 	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
 
 	if alive(thrower_unit) then
-		unit:base():set_thrower_unit(thrower_unit, true)
+		unit:base():set_thrower_unit(thrower_unit, true, true)
 	end
 
 	unit:base():sync_throw_projectile(dir, projectile_type)
@@ -4746,7 +4746,7 @@ function UnitNetworkHandler:shot_player_turret(turret_unit, impact, sender)
 	end
 end
 
--- Lines 4666-4680
+-- Lines 4733-4747
 function UnitNetworkHandler:sync_feed_piggybank(bag_unit, reached_next_level, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4765,7 +4765,7 @@ function UnitNetworkHandler:sync_feed_piggybank(bag_unit, reached_next_level, se
 	end
 end
 
--- Lines 4682-4696
+-- Lines 4749-4763
 function UnitNetworkHandler:sync_piggybank_dialog(sync_index, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4784,7 +4784,7 @@ function UnitNetworkHandler:sync_piggybank_dialog(sync_index, sender)
 	end
 end
 
--- Lines 4698-4712
+-- Lines 4765-4779
 function UnitNetworkHandler:sync_explode_piggybank(sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4803,7 +4803,7 @@ function UnitNetworkHandler:sync_explode_piggybank(sender)
 	end
 end
 
--- Lines 4714-4727
+-- Lines 4781-4794
 function UnitNetworkHandler:carry_interact_start(bag_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4820,7 +4820,7 @@ function UnitNetworkHandler:carry_interact_start(bag_unit, sender)
 	end
 end
 
--- Lines 4729-4742
+-- Lines 4796-4809
 function UnitNetworkHandler:carry_interact_interupt(bag_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return

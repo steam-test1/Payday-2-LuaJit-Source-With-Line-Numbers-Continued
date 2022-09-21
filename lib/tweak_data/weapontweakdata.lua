@@ -21,7 +21,7 @@ local SELECTION = {
 local FALLOFF_TEMPLATE = WeaponFalloffTemplate.setup_weapon_falloff_templates()
 WeaponTweakData = WeaponTweakData or class()
 
--- Lines 34-503
+-- Lines 34-507
 function WeaponTweakData:init(tweak_data)
 	self:_create_table_structure()
 	self:_init_data_npc_melee()
@@ -54,8 +54,8 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_m249_npc()
 	self:_init_data_contraband_npc()
 	self:_init_data_flamethrower_npc()
-	self:_init_data_dmr_npc()
 	self:_init_data_heavy_snp_npc()
+	self:_init_data_dmr_npc()
 	self:_init_data_smoke_npc()
 	self:_init_data_groza_npc()
 	self:_init_data_type54_npc()
@@ -94,6 +94,8 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_usp_crew()
 	self:_init_data_g22c_crew()
 	self:_init_data_judge_crew()
+	self:_init_data_korth_crew()
+	self:_init_data_sko12_crew()
 	self:_init_data_m45_crew()
 	self:_init_data_s552_crew()
 	self:_init_data_ppk_crew()
@@ -217,6 +219,9 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_pm9_crew()
 	self:_init_data_x_pm9_crew()
 	self:_init_data_groza_crew()
+	self:_init_data_hailstorm_crew()
+	self:_init_data_x_sko12_crew()
+	self:_init_data_x_korth_crew()
 	self:_init_data_shak12_crew()
 	self:_init_data_x_coal_crew()
 	self:_init_data_x_baka_crew()
@@ -269,11 +274,11 @@ function WeaponTweakData:init(tweak_data)
 	self:_precalculate_values()
 end
 
--- Lines 505-507
+-- Lines 509-511
 function WeaponTweakData:_set_easy()
 end
 
--- Lines 509-541
+-- Lines 513-545
 function WeaponTweakData:_set_normal()
 	self.swat_van_turret_module.HEALTH_INIT = 1500
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 40
@@ -300,7 +305,7 @@ function WeaponTweakData:_set_normal()
 	self.crate_turret_module.DAMAGE = 0.2
 end
 
--- Lines 543-572
+-- Lines 547-576
 function WeaponTweakData:_set_hard()
 	self.swat_van_turret_module.HEALTH_INIT = 3500
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 70
@@ -322,7 +327,7 @@ function WeaponTweakData:_set_hard()
 	self.smoke_npc.DAMAGE = 0.6
 end
 
--- Lines 574-594
+-- Lines 578-598
 function WeaponTweakData:_set_overkill()
 	self.swat_van_turret_module.HEALTH_INIT = 12500
 	self.swat_van_turret_module.SHIELD_HEALTH_INIT = 300
@@ -338,7 +343,7 @@ function WeaponTweakData:_set_overkill()
 	self.crate_turret_module.DAMAGE = 1.3
 end
 
--- Lines 596-618
+-- Lines 600-622
 function WeaponTweakData:_set_overkill_145()
 	self.ak47_ass_npc.DAMAGE = 2
 	self.swat_van_turret_module.HEALTH_INIT = 25000
@@ -355,7 +360,7 @@ function WeaponTweakData:_set_overkill_145()
 	self.crate_turret_module.DAMAGE = 2
 end
 
--- Lines 620-650
+-- Lines 624-654
 function WeaponTweakData:_set_easy_wish()
 	self.ak47_ass_npc.DAMAGE = 2.5
 	self.g36_npc.DAMAGE = 1
@@ -378,7 +383,7 @@ function WeaponTweakData:_set_easy_wish()
 	self.smoke_npc.DAMAGE = 1
 end
 
--- Lines 652-678
+-- Lines 656-682
 function WeaponTweakData:_set_overkill_290()
 	self.ak47_ass_npc.DAMAGE = 3
 	self.swat_van_turret_module.HEALTH_INIT = 40000
@@ -399,7 +404,7 @@ function WeaponTweakData:_set_overkill_290()
 	self.crate_turret_module.CLIP_SIZE = 800
 end
 
--- Lines 680-714
+-- Lines 684-718
 function WeaponTweakData:_set_sm_wish()
 	self.ak47_ass_npc.DAMAGE = 3
 	self.m4_npc.DAMAGE = 3
@@ -425,7 +430,7 @@ function WeaponTweakData:_set_sm_wish()
 	self.smoke_npc.DAMAGE = 5
 end
 
--- Lines 718-755
+-- Lines 722-759
 function WeaponTweakData:_init_data_npc_melee()
 	self.npc_melee = {
 		baton = {}
@@ -454,14 +459,14 @@ function WeaponTweakData:_init_data_npc_melee()
 	}
 end
 
--- Lines 757-761
+-- Lines 761-765
 function WeaponTweakData:_set_npc_weapon_damage_multiplier(mul)
 	for name, data in pairs(self.npc_melee) do
 		data.damage = data.damage * mul
 	end
 end
 
--- Lines 765-787
+-- Lines 769-791
 function WeaponTweakData:_init_data_c45_npc()
 	self.c45_npc.categories = {
 		"pistol"
@@ -482,7 +487,7 @@ function WeaponTweakData:_init_data_c45_npc()
 	self.colt_1911_primary_npc.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 791-810
+-- Lines 795-814
 function WeaponTweakData:_init_data_x_c45_npc()
 	self.x_c45_npc.categories = {
 		"akimbo",
@@ -502,7 +507,7 @@ function WeaponTweakData:_init_data_x_c45_npc()
 	self.x_c45_npc.FIRE_MODE = "single"
 end
 
--- Lines 814-833
+-- Lines 865-884
 function WeaponTweakData:_init_data_beretta92_npc()
 	self.beretta92_npc.categories = clone(self.b92fs.categories)
 	self.beretta92_npc.sounds.prefix = "beretta_npc"
@@ -519,7 +524,7 @@ function WeaponTweakData:_init_data_beretta92_npc()
 	self.beretta92_npc.FIRE_MODE = "single"
 end
 
--- Lines 835-857
+-- Lines 886-908
 function WeaponTweakData:_init_data_glock_18_npc()
 	self.glock_18_npc.categories = clone(self.glock_18c.categories)
 	self.glock_18_npc.sounds.prefix = "g18c_npc"
@@ -539,7 +544,7 @@ function WeaponTweakData:_init_data_glock_18_npc()
 	self.glock_18_npc.FIRE_MODE = "auto"
 end
 
--- Lines 860-879
+-- Lines 911-930
 function WeaponTweakData:_init_data_raging_bull_npc()
 	self.raging_bull_npc.categories = clone(self.new_raging_bull.categories)
 	self.raging_bull_npc.sounds.prefix = "rbull_npc"
@@ -556,7 +561,24 @@ function WeaponTweakData:_init_data_raging_bull_npc()
 	self.raging_bull_npc.FIRE_MODE = "single"
 end
 
--- Lines 905-932
+-- Lines 932-951
+function WeaponTweakData:_init_data_korth_npc()
+	self.korth_npc.categories = clone(self.korth.categories)
+	self.korth_npc.sounds.prefix = "korth_npc"
+	self.korth_npc.use_data.selection_index = SELECTION.SECONDARY
+	self.korth_npc.DAMAGE = 4
+	self.korth_npc.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.korth_npc.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.korth_npc.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.korth_npc.CLIP_AMMO_MAX = 8
+	self.korth_npc.NR_CLIPS_MAX = 8
+	self.korth_npc.hold = "pistol"
+	self.korth_npc.alert_size = 5000
+	self.korth_npc.suppression = 1.8
+	self.korth_npc.FIRE_MODE = "single"
+end
+
+-- Lines 956-983
 function WeaponTweakData:_init_data_m4_npc()
 	self.m4_npc.categories = clone(self.new_m4.categories)
 	self.m4_npc.sounds.prefix = "m4_npc"
@@ -574,7 +596,7 @@ function WeaponTweakData:_init_data_m4_npc()
 	self.ak47_ass_npc = deep_clone(self.m4_npc)
 end
 
--- Lines 934-957
+-- Lines 985-1008
 function WeaponTweakData:_init_data_m4_yellow_npc()
 	self.m4_yellow_npc.categories = clone(self.new_m4.categories)
 	self.m4_yellow_npc.sounds.prefix = "m4_npc"
@@ -591,7 +613,7 @@ function WeaponTweakData:_init_data_m4_yellow_npc()
 	self.m4_yellow_npc.FIRE_MODE = "auto"
 end
 
--- Lines 959-983
+-- Lines 1010-1034
 function WeaponTweakData:_init_data_ak47_npc()
 	self.ak47_npc.categories = {
 		"assault_rifle"
@@ -610,7 +632,7 @@ function WeaponTweakData:_init_data_ak47_npc()
 	self.ak47_npc.FIRE_MODE = "auto"
 end
 
--- Lines 987-1007
+-- Lines 1038-1058
 function WeaponTweakData:_init_data_m14_npc()
 	self.m14_npc.categories = clone(self.new_m14.categories)
 	self.m14_npc.sounds.prefix = "m14_npc"
@@ -627,7 +649,7 @@ function WeaponTweakData:_init_data_m14_npc()
 	self.m14_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1011-1038
+-- Lines 1062-1089
 function WeaponTweakData:_init_data_m14_sniper_npc()
 	self.m14_sniper_npc.categories = {
 		"snp"
@@ -649,7 +671,7 @@ function WeaponTweakData:_init_data_m14_sniper_npc()
 	self.svdsil_snp_npc.has_suppressor = "suppressed_a"
 end
 
--- Lines 1043-1072
+-- Lines 1094-1123
 function WeaponTweakData:_init_data_r870_npc()
 	self.r870_npc.categories = clone(self.r870.categories)
 	self.r870_npc.sounds.prefix = "remington_npc"
@@ -669,7 +691,7 @@ function WeaponTweakData:_init_data_r870_npc()
 	self.benelli_npc = deep_clone(self.r870_npc)
 end
 
--- Lines 1076-1098
+-- Lines 1127-1149
 function WeaponTweakData:_init_data_mossberg_npc()
 	self.mossberg_npc.categories = {
 		"shotgun"
@@ -690,7 +712,7 @@ function WeaponTweakData:_init_data_mossberg_npc()
 	self.mossberg_npc.spread = 3
 end
 
--- Lines 1102-1135
+-- Lines 1153-1186
 function WeaponTweakData:_init_data_mp5_npc()
 	self.mp5_npc.categories = clone(self.new_mp5.categories)
 	self.mp5_npc.sounds.prefix = "mp5_npc"
@@ -714,7 +736,7 @@ function WeaponTweakData:_init_data_mp5_npc()
 	self.asval_smg_npc.has_suppressor = "suppressed_a"
 end
 
--- Lines 1139-1160
+-- Lines 1190-1211
 function WeaponTweakData:_init_data_mac11_npc()
 	self.mac11_npc.categories = {
 		"smg"
@@ -737,7 +759,7 @@ function WeaponTweakData:_init_data_mac11_npc()
 	self.mac11_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1163-1188
+-- Lines 1214-1239
 function WeaponTweakData:_init_data_g36_npc()
 	self.g36_npc.categories = clone(self.g36.categories)
 	self.g36_npc.sounds.prefix = "g36_npc"
@@ -754,7 +776,7 @@ function WeaponTweakData:_init_data_g36_npc()
 	self.g36_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1190-1215
+-- Lines 1241-1266
 function WeaponTweakData:_init_data_smoke_npc()
 	self.smoke_npc.categories = clone(self.g36.categories)
 	self.smoke_npc.sounds.prefix = "g36_npc"
@@ -771,7 +793,7 @@ function WeaponTweakData:_init_data_smoke_npc()
 	self.smoke_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1217-1241
+-- Lines 1268-1292
 function WeaponTweakData:_init_data_mp9_npc()
 	self.mp9_npc.categories = clone(self.mp9.categories)
 	self.mp9_npc.sounds.prefix = "mp9_npc"
@@ -790,7 +812,7 @@ function WeaponTweakData:_init_data_mp9_npc()
 	self.sr2_smg_npc = deep_clone(self.mp9_npc)
 end
 
--- Lines 1243-1266
+-- Lines 1294-1317
 function WeaponTweakData:_init_data_saiga_npc()
 	self.saiga_npc.categories = clone(self.saiga.categories)
 	self.saiga_npc.sounds.prefix = "saiga_npc"
@@ -810,7 +832,27 @@ function WeaponTweakData:_init_data_saiga_npc()
 	self.saiga_npc.spread = 3
 end
 
--- Lines 1296-1345
+-- Lines 1320-1343
+function WeaponTweakData:_init_data_sko12_npc()
+	self.sko12_npc.categories = clone(self.sko12.categories)
+	self.sko12_npc.sounds.prefix = "sko12_npc"
+	self.sko12_npc.use_data.selection_index = SELECTION.PRIMARY
+	self.sko12_npc.DAMAGE = 3
+	self.sko12_npc.muzzleflash = "effects/payday2/particles/weapons/762_auto"
+	self.sko12_npc.shell_ejection = "effects/payday2/particles/weapons/shells/shell_slug"
+	self.sko12_npc.auto.fire_rate = 0.14
+	self.sko12_npc.CLIP_AMMO_MAX = 7
+	self.sko12_npc.NR_CLIPS_MAX = 10
+	self.sko12_npc.hold = "rifle"
+	self.sko12_npc.alert_size = 4500
+	self.sko12_npc.suppression = 1.8
+	self.sko12_npc.FIRE_MODE = "auto"
+	self.sko12_npc.is_shotgun = true
+	self.sko12_npc.rays = 12
+	self.sko12_npc.spread = 3
+end
+
+-- Lines 1347-1396
 function WeaponTweakData:_init_data_sentry_gun_npc()
 	self.sentry_gun.categories = {}
 	self.sentry_gun.name_id = "debug_sentry_gun"
@@ -869,7 +911,7 @@ function WeaponTweakData:_init_data_sentry_gun_npc()
 	self.sentry_gun.suppression = 0.8
 end
 
--- Lines 1399-1470
+-- Lines 1450-1521
 function WeaponTweakData:_init_data_swat_van_turret_module_npc()
 	self.swat_van_turret_module.name_id = "debug_sentry_gun"
 	self.swat_van_turret_module.DAMAGE = 3
@@ -975,7 +1017,7 @@ function WeaponTweakData:_init_data_swat_van_turret_module_npc()
 	self.swat_van_turret_module.suppression = 0.8
 end
 
--- Lines 1473-1538
+-- Lines 1524-1589
 function WeaponTweakData:_init_data_aa_turret_module_npc()
 	self.aa_turret_module.name_id = "debug_sentry_gun"
 	self.aa_turret_module.DAMAGE = 3
@@ -1069,7 +1111,7 @@ function WeaponTweakData:_init_data_aa_turret_module_npc()
 	self.aa_turret_module.suppression = 0.8
 end
 
--- Lines 1542-1607
+-- Lines 1593-1658
 function WeaponTweakData:_init_data_crate_turret_module_npc()
 	self.crate_turret_module.name_id = "debug_sentry_gun"
 	self.crate_turret_module.DAMAGE = 3
@@ -1163,7 +1205,7 @@ function WeaponTweakData:_init_data_crate_turret_module_npc()
 	self.crate_turret_module.suppression = 0.8
 end
 
--- Lines 1610-1691
+-- Lines 1661-1742
 function WeaponTweakData:_init_data_ceiling_turret_module_npc()
 	self.ceiling_turret_module.name_id = "debug_sentry_gun"
 	self.ceiling_turret_module.DAMAGE = 3
@@ -1275,7 +1317,7 @@ function WeaponTweakData:_init_data_ceiling_turret_module_npc()
 	self.ceiling_turret_module_longer_range.DETECTION_RANGE = self.ceiling_turret_module_longer_range.FIRE_RANGE
 end
 
--- Lines 1694-1715
+-- Lines 1745-1766
 function WeaponTweakData:_init_data_s552_npc()
 	self.s552_npc.categories = clone(self.s552.categories)
 	self.s552_npc.sounds.prefix = "sig552_npc"
@@ -1292,7 +1334,7 @@ function WeaponTweakData:_init_data_s552_npc()
 	self.s552_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1720-1740
+-- Lines 1771-1791
 function WeaponTweakData:_init_data_scar_npc()
 	self.scar_npc.categories = clone(self.scar.categories)
 	self.scar_npc.sounds.prefix = "scar_npc"
@@ -1309,7 +1351,7 @@ function WeaponTweakData:_init_data_scar_npc()
 	self.scar_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1744-1764
+-- Lines 1795-1815
 function WeaponTweakData:_init_data_hk21_npc()
 	self.hk21_npc.categories = clone(self.hk21.categories)
 	self.hk21_npc.sounds.prefix = "hk23e_npc"
@@ -1326,7 +1368,7 @@ function WeaponTweakData:_init_data_hk21_npc()
 	self.hk21_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1768-1794
+-- Lines 1819-1845
 function WeaponTweakData:_init_data_m249_npc()
 	self.m249_npc.categories = clone(self.m249.categories)
 	self.m249_npc.sounds.prefix = "m249_npc"
@@ -1344,7 +1386,7 @@ function WeaponTweakData:_init_data_m249_npc()
 	self.rpk_lmg_npc = deep_clone(self.m249_npc)
 end
 
--- Lines 1796-1818
+-- Lines 1847-1869
 function WeaponTweakData:_init_data_mini_npc()
 	self.mini_npc.categories = clone(self.m134.categories)
 	self.mini_npc.sounds.prefix = "minigun_npc"
@@ -1361,7 +1403,7 @@ function WeaponTweakData:_init_data_mini_npc()
 	self.mini_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1822-1864
+-- Lines 1873-1915
 function WeaponTweakData:_init_data_contraband_npc()
 	self.contraband_npc.categories = clone(self.contraband.categories)
 	self.contraband_npc.sounds.prefix = "contraband_npc"
@@ -1392,7 +1434,7 @@ function WeaponTweakData:_init_data_contraband_npc()
 	self.contraband_m203_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1867-1907
+-- Lines 1918-1958
 function WeaponTweakData:_init_data_flamethrower_npc()
 	self.flamethrower_npc.categories = {
 		"flamethrower"
@@ -1422,26 +1464,7 @@ function WeaponTweakData:_init_data_flamethrower_npc()
 	self.flamethrower_npc.FIRE_MODE = "auto"
 end
 
--- Lines 1910-1929
-function WeaponTweakData:_init_data_dmr_npc()
-	self.dmr_npc.categories = {
-		"snp"
-	}
-	self.dmr_npc.sounds.prefix = "saint_victor_npc"
-	self.dmr_npc.use_data.selection_index = SELECTION.PRIMARY
-	self.dmr_npc.DAMAGE = 1
-	self.dmr_npc.muzzleflash = "effects/payday2/particles/weapons/762_auto"
-	self.dmr_npc.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
-	self.dmr_npc.trail = "effects/particles/weapons/sniper_trail_marshal"
-	self.dmr_npc.CLIP_AMMO_MAX = 6
-	self.dmr_npc.NR_CLIPS_MAX = 8
-	self.dmr_npc.hold = "rifle"
-	self.dmr_npc.alert_size = 5000
-	self.dmr_npc.suppression = 1
-	self.dmr_npc.FIRE_MODE = "single"
-end
-
--- Lines 1932-1951
+-- Lines 1960-1979
 function WeaponTweakData:_init_data_heavy_snp_npc()
 	self.heavy_snp_npc.categories = {
 		"snp"
@@ -1460,7 +1483,26 @@ function WeaponTweakData:_init_data_heavy_snp_npc()
 	self.heavy_snp_npc.armor_piercing = true
 end
 
--- Lines 1955-1978
+-- Lines 1983-2002
+function WeaponTweakData:_init_data_dmr_npc()
+	self.dmr_npc.categories = {
+		"snp"
+	}
+	self.dmr_npc.sounds.prefix = "saint_victor_npc"
+	self.dmr_npc.use_data.selection_index = SELECTION.PRIMARY
+	self.dmr_npc.DAMAGE = 1
+	self.dmr_npc.muzzleflash = "effects/payday2/particles/weapons/762_auto"
+	self.dmr_npc.shell_ejection = "effects/payday2/particles/weapons/shells/shell_556"
+	self.dmr_npc.trail = "effects/particles/weapons/sniper_trail_marshal"
+	self.dmr_npc.CLIP_AMMO_MAX = 6
+	self.dmr_npc.NR_CLIPS_MAX = 8
+	self.dmr_npc.hold = "rifle"
+	self.dmr_npc.alert_size = 5000
+	self.dmr_npc.suppression = 1
+	self.dmr_npc.FIRE_MODE = "single"
+end
+
+-- Lines 2006-2029
 function WeaponTweakData:_init_data_c45_crew()
 	self.c45_crew.categories = {
 		"pistol"
@@ -1482,7 +1524,7 @@ function WeaponTweakData:_init_data_c45_crew()
 	self.colt_1911_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 1982-2001
+-- Lines 2033-2052
 function WeaponTweakData:_init_data_x_c45_crew()
 	self.x_c45_crew.categories = {
 		"akimbo",
@@ -1502,7 +1544,7 @@ function WeaponTweakData:_init_data_x_c45_crew()
 	self.x_c45_crew.FIRE_MODE = "single"
 end
 
--- Lines 2005-2028
+-- Lines 2056-2079
 function WeaponTweakData:_init_data_beretta92_crew()
 	self.beretta92_crew.categories = clone(self.b92fs.categories)
 	self.beretta92_crew.sounds.prefix = "beretta_npc"
@@ -1522,7 +1564,7 @@ function WeaponTweakData:_init_data_beretta92_crew()
 	self.beretta92_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 2030-2056
+-- Lines 2081-2107
 function WeaponTweakData:_init_data_glock_18_crew()
 	self.glock_18_crew.categories = clone(self.glock_18c.categories)
 	self.glock_18_crew.sounds.prefix = "g18c_npc"
@@ -1545,7 +1587,7 @@ function WeaponTweakData:_init_data_glock_18_crew()
 	self.glock_18c_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 2059-2082
+-- Lines 2110-2133
 function WeaponTweakData:_init_data_raging_bull_crew()
 	self.raging_bull_crew.categories = clone(self.new_raging_bull.categories)
 	self.raging_bull_crew.sounds.prefix = "rbull_npc"
@@ -1565,7 +1607,27 @@ function WeaponTweakData:_init_data_raging_bull_crew()
 	self.raging_bull_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 2111-2142
+-- Lines 2135-2158
+function WeaponTweakData:_init_data_korth_crew()
+	self.korth_crew.categories = clone(self.korth.categories)
+	self.korth_crew.sounds.prefix = "korth_npc"
+	self.korth_crew.use_data.selection_index = SELECTION.SECONDARY
+	self.korth_crew.DAMAGE = 4
+	self.korth_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.korth_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.korth_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.korth_crew.CLIP_AMMO_MAX = 8
+	self.korth_crew.NR_CLIPS_MAX = 8
+	self.korth_crew.hold = "pistol"
+	self.korth_crew.reload = "revolver"
+	self.korth_crew.alert_size = 5000
+	self.korth_crew.suppression = 1.8
+	self.korth_crew.FIRE_MODE = "single"
+	self.korth_primary_crew = deep_clone(self.korth_crew)
+	self.korth_primary_crew.use_data.selection_index = SELECTION.PRIMARY
+end
+
+-- Lines 2162-2193
 function WeaponTweakData:_init_data_m4_crew()
 	self.m4_crew.categories = clone(self.new_m4.categories)
 	self.m4_crew.sounds.prefix = "m4_npc"
@@ -1586,7 +1648,7 @@ function WeaponTweakData:_init_data_m4_crew()
 	self.ak47_ass_crew = deep_clone(self.m4_crew)
 end
 
--- Lines 2144-2168
+-- Lines 2195-2219
 function WeaponTweakData:_init_data_ak47_crew()
 	self.ak47_crew.categories = {
 		"assault_rifle"
@@ -1605,7 +1667,7 @@ function WeaponTweakData:_init_data_ak47_crew()
 	self.ak47_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2172-2193
+-- Lines 2223-2244
 function WeaponTweakData:_init_data_m14_crew()
 	self.m14_crew.categories = clone(self.new_m14.categories)
 	self.m14_crew.sounds.prefix = "m14_npc"
@@ -1623,7 +1685,7 @@ function WeaponTweakData:_init_data_m14_crew()
 	self.m14_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2197-2219
+-- Lines 2248-2270
 function WeaponTweakData:_init_data_r870_crew()
 	self.r870_crew.categories = clone(self.r870.categories)
 	self.r870_crew.sounds.prefix = "remington_npc"
@@ -1641,7 +1703,7 @@ function WeaponTweakData:_init_data_r870_crew()
 	self.benelli_crew = deep_clone(self.r870_crew)
 end
 
--- Lines 2223-2243
+-- Lines 2274-2294
 function WeaponTweakData:_init_data_mossberg_crew()
 	self.mossberg_crew.categories = {
 		"shotgun"
@@ -1660,7 +1722,7 @@ function WeaponTweakData:_init_data_mossberg_crew()
 	self.mossberg_crew.is_shotgun = true
 end
 
--- Lines 2247-2270
+-- Lines 2298-2321
 function WeaponTweakData:_init_data_mp5_crew()
 	self.mp5_crew.categories = clone(self.new_mp5.categories)
 	self.mp5_crew.sounds.prefix = "mp5_npc"
@@ -1679,7 +1741,7 @@ function WeaponTweakData:_init_data_mp5_crew()
 	self.mp5_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2273-2299
+-- Lines 2324-2350
 function WeaponTweakData:_init_data_g36_crew()
 	self.g36_crew.categories = clone(self.g36.categories)
 	self.g36_crew.sounds.prefix = "g36_npc"
@@ -1697,7 +1759,7 @@ function WeaponTweakData:_init_data_g36_crew()
 	self.g36_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2302-2322
+-- Lines 2353-2373
 function WeaponTweakData:_init_data_g17_crew()
 	self.g17_crew.categories = clone(self.glock_17.categories)
 	self.g17_crew.sounds.prefix = "g17_npc"
@@ -1715,7 +1777,7 @@ function WeaponTweakData:_init_data_g17_crew()
 	self.g17_crew.FIRE_MODE = "single"
 end
 
--- Lines 2324-2345
+-- Lines 2375-2396
 function WeaponTweakData:_init_data_mp9_crew()
 	self.mp9_crew.categories = clone(self.mp9.categories)
 	self.mp9_crew.sounds.prefix = "mp9_npc"
@@ -1738,7 +1800,7 @@ function WeaponTweakData:_init_data_mp9_crew()
 	self.mp9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2347-2371
+-- Lines 2398-2422
 function WeaponTweakData:_init_data_olympic_crew()
 	self.olympic_crew.categories = clone(self.olympic.categories)
 	self.olympic_crew.sounds.prefix = "m4_olympic_npc"
@@ -1759,7 +1821,7 @@ function WeaponTweakData:_init_data_olympic_crew()
 	self.olympic_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 2373-2393
+-- Lines 2424-2444
 function WeaponTweakData:_init_data_m16_crew()
 	self.m16_crew.categories = clone(self.m16.categories)
 	self.m16_crew.sounds.prefix = "m16_npc"
@@ -1777,7 +1839,7 @@ function WeaponTweakData:_init_data_m16_crew()
 	self.m16_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2395-2418
+-- Lines 2446-2469
 function WeaponTweakData:_init_data_aug_crew()
 	self.aug_crew.categories = clone(self.aug.categories)
 	self.aug_crew.sounds.prefix = "aug_npc"
@@ -1800,7 +1862,7 @@ function WeaponTweakData:_init_data_aug_crew()
 	self.aug_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 2420-2444
+-- Lines 2471-2495
 function WeaponTweakData:_init_data_ak74_crew()
 	self.ak74_crew.categories = clone(self.ak74.categories)
 	self.ak74_crew.sounds.prefix = "ak74_npc"
@@ -1820,7 +1882,7 @@ function WeaponTweakData:_init_data_ak74_crew()
 	self.ak74_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 2446-2466
+-- Lines 2497-2517
 function WeaponTweakData:_init_data_ak5_crew()
 	self.ak5_crew.categories = clone(self.ak5.categories)
 	self.ak5_crew.sounds.prefix = "ak5_npc"
@@ -1838,7 +1900,7 @@ function WeaponTweakData:_init_data_ak5_crew()
 	self.ak5_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2468-2491
+-- Lines 2519-2542
 function WeaponTweakData:_init_data_p90_crew()
 	self.p90_crew.categories = clone(self.p90.categories)
 	self.p90_crew.sounds.prefix = "p90_npc"
@@ -1861,7 +1923,7 @@ function WeaponTweakData:_init_data_p90_crew()
 	self.p90_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2494-2515
+-- Lines 2545-2566
 function WeaponTweakData:_init_data_amcar_crew()
 	self.amcar_crew.categories = clone(self.amcar.categories)
 	self.amcar_crew.sounds.prefix = "amcar_npc"
@@ -1879,7 +1941,7 @@ function WeaponTweakData:_init_data_amcar_crew()
 	self.amcar_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2517-2538
+-- Lines 2568-2589
 function WeaponTweakData:_init_data_mac10_crew()
 	self.mac10_crew.categories = clone(self.mac10.categories)
 	self.mac10_crew.sounds.prefix = "mac10_npc"
@@ -1898,7 +1960,7 @@ function WeaponTweakData:_init_data_mac10_crew()
 	self.mac10_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2540-2564
+-- Lines 2591-2615
 function WeaponTweakData:_init_data_akmsu_crew()
 	self.akmsu_crew.categories = clone(self.akmsu.categories)
 	self.akmsu_crew.sounds.prefix = "akmsu_npc"
@@ -1919,7 +1981,7 @@ function WeaponTweakData:_init_data_akmsu_crew()
 	self.akmsu_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 2566-2586
+-- Lines 2617-2637
 function WeaponTweakData:_init_data_akm_crew()
 	self.akm_crew.categories = clone(self.akm.categories)
 	self.akm_crew.sounds.prefix = "akm_npc"
@@ -1937,7 +1999,7 @@ function WeaponTweakData:_init_data_akm_crew()
 	self.akm_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2588-2608
+-- Lines 2639-2659
 function WeaponTweakData:_init_data_akm_gold_crew()
 	self.akm_gold_crew.categories = clone(self.akm_gold.categories)
 	self.akm_gold_crew.sounds.prefix = "akm_npc"
@@ -1955,7 +2017,7 @@ function WeaponTweakData:_init_data_akm_gold_crew()
 	self.akm_gold_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2610-2632
+-- Lines 2661-2683
 function WeaponTweakData:_init_data_deagle_crew()
 	self.deagle_crew.categories = clone(self.deagle.categories)
 	self.deagle_crew.sounds.prefix = "deagle_npc"
@@ -1975,7 +2037,7 @@ function WeaponTweakData:_init_data_deagle_crew()
 	self.deagle_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 2634-2653
+-- Lines 2685-2704
 function WeaponTweakData:_init_data_serbu_crew()
 	self.serbu_crew.categories = clone(self.serbu.categories)
 	self.serbu_crew.sounds.prefix = "serbu_npc"
@@ -1992,7 +2054,7 @@ function WeaponTweakData:_init_data_serbu_crew()
 	self.serbu_crew.is_shotgun = true
 end
 
--- Lines 2655-2677
+-- Lines 2706-2728
 function WeaponTweakData:_init_data_saiga_crew()
 	self.saiga_crew.categories = clone(self.saiga.categories)
 	self.saiga_crew.sounds.prefix = "saiga_npc"
@@ -2011,7 +2073,44 @@ function WeaponTweakData:_init_data_saiga_crew()
 	self.saiga_crew.is_shotgun = true
 end
 
--- Lines 2727-2747
+-- Lines 2732-2754
+function WeaponTweakData:_init_data_sko12_crew()
+	self.sko12_crew.categories = clone(self.sko12.categories)
+	self.sko12_crew.sounds.prefix = "sko12_npc"
+	self.sko12_crew.use_data.selection_index = SELECTION.PRIMARY
+	self.sko12_crew.DAMAGE = 2.7
+	self.sko12_crew.muzzleflash = "effects/payday2/particles/weapons/762_auto"
+	self.sko12_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_slug"
+	self.sko12_crew.auto.fire_rate = 0.18
+	self.sko12_crew.CLIP_AMMO_MAX = 7
+	self.sko12_crew.NR_CLIPS_MAX = 10
+	self.sko12_crew.pull_magazine_during_reload = "rifle"
+	self.sko12_crew.hold = "rifle"
+	self.sko12_crew.alert_size = 4500
+	self.sko12_crew.suppression = 1.8
+	self.sko12_crew.FIRE_MODE = "auto"
+	self.sko12_crew.is_shotgun = true
+end
+
+-- Lines 2757-2776
+function WeaponTweakData:_init_data_x_sko12_crew()
+	self.x_sko12_crew.categories = clone(self.x_sko12.categories)
+	self.x_sko12_crew.sounds.prefix = "sko12_x_npc"
+	self.x_sko12_crew.use_data.selection_index = SELECTION.PRIMARY
+	self.x_sko12_crew.DAMAGE = 1.25
+	self.x_sko12_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.x_sko12_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.x_sko12_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_9mm"
+	self.x_sko12_crew.rays = 12
+	self.x_sko12_crew.CLIP_AMMO_MAX = 60
+	self.x_sko12_crew.NR_CLIPS_MAX = 5
+	self.x_sko12_crew.hold = "akimbo_pistol"
+	self.x_sko12_crew.alert_size = 1800
+	self.x_sko12_crew.suppression = 2
+	self.x_sko12_crew.FIRE_MODE = "auto"
+end
+
+-- Lines 2800-2820
 function WeaponTweakData:_init_data_huntsman_crew()
 	self.huntsman_crew.categories = clone(self.huntsman.categories)
 	self.huntsman_crew.sounds.prefix = "huntsman_npc"
@@ -2029,7 +2128,7 @@ function WeaponTweakData:_init_data_huntsman_crew()
 	self.huntsman_crew.is_shotgun = true
 end
 
--- Lines 2749-2771
+-- Lines 2822-2844
 function WeaponTweakData:_init_data_saw_crew()
 	self.saw_crew.categories = clone(self.saw.categories)
 	self.saw_crew.sounds.prefix = "saw_npc"
@@ -2052,7 +2151,7 @@ function WeaponTweakData:_init_data_saw_crew()
 	self.saw_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 2773-2796
+-- Lines 2846-2869
 function WeaponTweakData:_init_data_usp_crew()
 	self.usp_crew.categories = clone(self.usp.categories)
 	self.usp_crew.sounds.prefix = "usp45_npc"
@@ -2071,7 +2170,7 @@ function WeaponTweakData:_init_data_usp_crew()
 	self.usp_crew.FIRE_MODE = "single"
 end
 
--- Lines 2798-2821
+-- Lines 2871-2894
 function WeaponTweakData:_init_data_g22c_crew()
 	self.g22c_crew.categories = clone(self.g22c.categories)
 	self.g22c_crew.sounds.prefix = "g22_npc"
@@ -2090,7 +2189,7 @@ function WeaponTweakData:_init_data_g22c_crew()
 	self.g22c_crew.FIRE_MODE = "single"
 end
 
--- Lines 2823-2843
+-- Lines 2896-2916
 function WeaponTweakData:_init_data_judge_crew()
 	self.judge_crew.categories = clone(self.judge.categories)
 	self.judge_crew.sounds.prefix = "judge_npc"
@@ -2108,7 +2207,7 @@ function WeaponTweakData:_init_data_judge_crew()
 	self.judge_crew.FIRE_MODE = "single"
 end
 
--- Lines 2847-2869
+-- Lines 2920-2942
 function WeaponTweakData:_init_data_m45_crew()
 	self.m45_crew.categories = clone(self.m45.categories)
 	self.m45_crew.sounds.prefix = "m45_npc"
@@ -2126,7 +2225,7 @@ function WeaponTweakData:_init_data_m45_crew()
 	self.m45_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2871-2895
+-- Lines 2944-2968
 function WeaponTweakData:_init_data_s552_crew()
 	self.s552_crew.categories = clone(self.s552.categories)
 	self.s552_crew.sounds.prefix = "sig552_npc"
@@ -2146,7 +2245,7 @@ function WeaponTweakData:_init_data_s552_crew()
 	self.s552_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 2897-2918
+-- Lines 2970-2991
 function WeaponTweakData:_init_data_ppk_crew()
 	self.ppk_crew.categories = clone(self.ppk.categories)
 	self.ppk_crew.sounds.prefix = "w_ppk_npc"
@@ -2164,7 +2263,7 @@ function WeaponTweakData:_init_data_ppk_crew()
 	self.ppk_crew.FIRE_MODE = "single"
 end
 
--- Lines 2923-2945
+-- Lines 2996-3018
 function WeaponTweakData:_init_data_mp7_crew()
 	self.mp7_crew.categories = clone(self.mp7.categories)
 	self.mp7_crew.sounds.prefix = "mp7_npc"
@@ -2187,7 +2286,7 @@ function WeaponTweakData:_init_data_mp7_crew()
 	self.mp7_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2947-2969
+-- Lines 3020-3042
 function WeaponTweakData:_init_data_scar_crew()
 	self.scar_crew.categories = clone(self.scar.categories)
 	self.scar_crew.sounds.prefix = "scar_npc"
@@ -2205,7 +2304,7 @@ function WeaponTweakData:_init_data_scar_crew()
 	self.scar_crew.FIRE_MODE = "auto"
 end
 
--- Lines 2971-2992
+-- Lines 3044-3065
 function WeaponTweakData:_init_data_p226_crew()
 	self.p226_crew.categories = clone(self.p226.categories)
 	self.p226_crew.sounds.prefix = "p226r_npc"
@@ -2223,7 +2322,7 @@ function WeaponTweakData:_init_data_p226_crew()
 	self.p226_crew.FIRE_MODE = "single"
 end
 
--- Lines 2998-3019
+-- Lines 3071-3092
 function WeaponTweakData:_init_data_hk21_crew()
 	self.hk21_crew.categories = clone(self.hk21.categories)
 	self.hk21_crew.sounds.prefix = "hk23e_npc"
@@ -2240,7 +2339,7 @@ function WeaponTweakData:_init_data_hk21_crew()
 	self.hk21_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3022-3043
+-- Lines 3095-3116
 function WeaponTweakData:_init_data_hk51b_crew()
 	self.hk51b_crew.categories = clone(self.hk51b.categories)
 	self.hk51b_crew.sounds.prefix = "hk51b_npc"
@@ -2257,7 +2356,7 @@ function WeaponTweakData:_init_data_hk51b_crew()
 	self.hk51b_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3047-3068
+-- Lines 3120-3141
 function WeaponTweakData:_init_data_m249_crew()
 	self.m249_crew.categories = clone(self.m249.categories)
 	self.m249_crew.sounds.prefix = "m249_npc"
@@ -2274,7 +2373,7 @@ function WeaponTweakData:_init_data_m249_crew()
 	self.m249_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3070-3091
+-- Lines 3143-3164
 function WeaponTweakData:_init_data_rpk_crew()
 	self.rpk_crew.categories = clone(self.rpk.categories)
 	self.rpk_crew.sounds.prefix = "rpk_npc"
@@ -2291,7 +2390,7 @@ function WeaponTweakData:_init_data_rpk_crew()
 	self.rpk_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3099-3121
+-- Lines 3172-3194
 function WeaponTweakData:_init_data_m95_crew()
 	self.m95_crew.categories = clone(self.m95.categories)
 	self.m95_crew.sounds.prefix = "barrett_npc"
@@ -2310,7 +2409,7 @@ function WeaponTweakData:_init_data_m95_crew()
 	self.m95_crew.FIRE_MODE = "single"
 end
 
--- Lines 3124-3145
+-- Lines 3197-3218
 function WeaponTweakData:_init_data_msr_crew()
 	self.msr_crew.categories = clone(self.msr.categories)
 	self.msr_crew.sounds.prefix = "msr_npc"
@@ -2328,7 +2427,7 @@ function WeaponTweakData:_init_data_msr_crew()
 	self.msr_crew.FIRE_MODE = "single"
 end
 
--- Lines 3147-3168
+-- Lines 3220-3241
 function WeaponTweakData:_init_data_r93_crew()
 	self.r93_crew.categories = clone(self.r93.categories)
 	self.r93_crew.sounds.prefix = "blazer_npc"
@@ -2346,7 +2445,7 @@ function WeaponTweakData:_init_data_r93_crew()
 	self.r93_crew.FIRE_MODE = "single"
 end
 
--- Lines 3178-3200
+-- Lines 3251-3273
 function WeaponTweakData:_init_data_fal_crew()
 	self.fal_crew.categories = clone(self.fal.categories)
 	self.fal_crew.sounds.prefix = "fn_fal_npc"
@@ -2364,7 +2463,7 @@ function WeaponTweakData:_init_data_fal_crew()
 	self.fal_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3205-3229
+-- Lines 3278-3302
 function WeaponTweakData:_init_data_ben_crew()
 	self.ben_crew.categories = {
 		"shotgun"
@@ -2386,7 +2485,7 @@ function WeaponTweakData:_init_data_ben_crew()
 	self.ben_crew.is_shotgun = true
 end
 
--- Lines 3231-3254
+-- Lines 3304-3327
 function WeaponTweakData:_init_data_striker_crew()
 	self.striker_crew.categories = clone(self.striker.categories)
 	self.striker_crew.sounds.prefix = "striker_npc"
@@ -2408,7 +2507,7 @@ function WeaponTweakData:_init_data_striker_crew()
 	self.striker_crew.is_shotgun = true
 end
 
--- Lines 3256-3277
+-- Lines 3329-3350
 function WeaponTweakData:_init_data_ksg_crew()
 	self.ksg_crew.categories = clone(self.ksg.categories)
 	self.ksg_crew.sounds.prefix = "keltec_npc"
@@ -2426,7 +2525,7 @@ function WeaponTweakData:_init_data_ksg_crew()
 	self.ksg_crew.is_shotgun = true
 end
 
--- Lines 3282-3305
+-- Lines 3355-3378
 function WeaponTweakData:_init_data_gre_m79_crew()
 	self.gre_m79_crew.categories = clone(self.gre_m79.categories)
 	self.gre_m79_crew.sounds.prefix = "gl40_npc"
@@ -2446,7 +2545,7 @@ function WeaponTweakData:_init_data_gre_m79_crew()
 	self.gre_m79_crew.FIRE_MODE = "single"
 end
 
--- Lines 3308-3330
+-- Lines 3381-3403
 function WeaponTweakData:_init_data_g3_crew()
 	self.g3_crew.categories = clone(self.g3.categories)
 	self.g3_crew.sounds.prefix = "g3_npc"
@@ -2464,7 +2563,7 @@ function WeaponTweakData:_init_data_g3_crew()
 	self.g3_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3332-3354
+-- Lines 3405-3427
 function WeaponTweakData:_init_data_galil_crew()
 	self.galil_crew.categories = clone(self.galil.categories)
 	self.galil_crew.sounds.prefix = "galil_npc"
@@ -2482,7 +2581,7 @@ function WeaponTweakData:_init_data_galil_crew()
 	self.galil_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3356-3378
+-- Lines 3429-3451
 function WeaponTweakData:_init_data_famas_crew()
 	self.famas_crew.categories = clone(self.famas.categories)
 	self.famas_crew.sounds.prefix = "famas_npc"
@@ -2503,7 +2602,7 @@ function WeaponTweakData:_init_data_famas_crew()
 	self.famas_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3382-3404
+-- Lines 3455-3477
 function WeaponTweakData:_init_data_scorpion_crew()
 	self.scorpion_crew.categories = clone(self.scorpion.categories)
 	self.scorpion_crew.sounds.prefix = "skorpion_npc"
@@ -2522,7 +2621,7 @@ function WeaponTweakData:_init_data_scorpion_crew()
 	self.scorpion_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3406-3428
+-- Lines 3479-3501
 function WeaponTweakData:_init_data_tec9_crew()
 	self.tec9_crew.categories = clone(self.tec9.categories)
 	self.tec9_crew.sounds.prefix = "tec9_npc"
@@ -2541,7 +2640,7 @@ function WeaponTweakData:_init_data_tec9_crew()
 	self.tec9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3430-3452
+-- Lines 3503-3525
 function WeaponTweakData:_init_data_uzi_crew()
 	self.uzi_crew.categories = clone(self.uzi.categories)
 	self.uzi_crew.sounds.prefix = "uzi_npc"
@@ -2564,7 +2663,7 @@ function WeaponTweakData:_init_data_uzi_crew()
 	self.uzi_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3454-3472
+-- Lines 3527-3545
 function WeaponTweakData:_init_data_jowi_crew()
 	self.jowi_crew.categories = clone(self.jowi.categories)
 	self.jowi_crew.sounds.prefix = "g17_npc"
@@ -2581,7 +2680,7 @@ function WeaponTweakData:_init_data_jowi_crew()
 	self.jowi_crew.FIRE_MODE = "single"
 end
 
--- Lines 3475-3493
+-- Lines 3548-3566
 function WeaponTweakData:_init_data_x_1911_crew()
 	self.x_1911_crew.categories = clone(self.x_1911.categories)
 	self.x_1911_crew.sounds.prefix = "c45_npc"
@@ -2598,7 +2697,7 @@ function WeaponTweakData:_init_data_x_1911_crew()
 	self.x_1911_crew.FIRE_MODE = "single"
 end
 
--- Lines 3496-3514
+-- Lines 3569-3587
 function WeaponTweakData:_init_data_x_b92fs_crew()
 	self.x_b92fs_crew.categories = clone(self.x_b92fs.categories)
 	self.x_b92fs_crew.sounds.prefix = "beretta_npc"
@@ -2615,7 +2714,7 @@ function WeaponTweakData:_init_data_x_b92fs_crew()
 	self.x_b92fs_crew.FIRE_MODE = "single"
 end
 
--- Lines 3517-3535
+-- Lines 3590-3608
 function WeaponTweakData:_init_data_x_deagle_crew()
 	self.x_deagle_crew.categories = clone(self.x_deagle.categories)
 	self.x_deagle_crew.sounds.prefix = "deagle_npc"
@@ -2632,7 +2731,7 @@ function WeaponTweakData:_init_data_x_deagle_crew()
 	self.x_deagle_crew.FIRE_MODE = "single"
 end
 
--- Lines 3537-3556
+-- Lines 3610-3629
 function WeaponTweakData:_init_data_g26_crew()
 	self.g26_crew.categories = clone(self.g26.categories)
 	self.g26_crew.sounds.prefix = "g17_npc"
@@ -2650,7 +2749,7 @@ function WeaponTweakData:_init_data_g26_crew()
 	self.g26_crew.FIRE_MODE = "single"
 end
 
--- Lines 3558-3580
+-- Lines 3631-3653
 function WeaponTweakData:_init_data_spas12_crew()
 	self.spas12_crew.categories = clone(self.spas12.categories)
 	self.spas12_crew.sounds.prefix = "spas_npc"
@@ -2668,7 +2767,7 @@ function WeaponTweakData:_init_data_spas12_crew()
 	self.spas12_crew.is_shotgun = true
 end
 
--- Lines 3582-3605
+-- Lines 3655-3678
 function WeaponTweakData:_init_data_mg42_crew()
 	self.mg42_crew.categories = clone(self.mg42.categories)
 	self.mg42_crew.sounds.prefix = "mg42_npc"
@@ -2688,7 +2787,7 @@ function WeaponTweakData:_init_data_mg42_crew()
 	self.mg42_secondary_crew.armor_piercing = true
 end
 
--- Lines 3607-3625
+-- Lines 3680-3698
 function WeaponTweakData:_init_data_c96_crew()
 	self.c96_crew.categories = clone(self.c96.categories)
 	self.c96_crew.sounds.prefix = "c96_npc"
@@ -2705,7 +2804,7 @@ function WeaponTweakData:_init_data_c96_crew()
 	self.c96_crew.FIRE_MODE = "single"
 end
 
--- Lines 3627-3648
+-- Lines 3700-3721
 function WeaponTweakData:_init_data_sterling_crew()
 	self.sterling_crew.categories = clone(self.sterling.categories)
 	self.sterling_crew.sounds.prefix = "sterling_npc"
@@ -2723,7 +2822,7 @@ function WeaponTweakData:_init_data_sterling_crew()
 	self.sterling_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3650-3672
+-- Lines 3723-3745
 function WeaponTweakData:_init_data_mosin_crew()
 	self.mosin_crew.categories = clone(self.mosin.categories)
 	self.mosin_crew.sounds.prefix = "nagant_npc"
@@ -2742,7 +2841,7 @@ function WeaponTweakData:_init_data_mosin_crew()
 	self.mosin_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 3674-3696
+-- Lines 3747-3769
 function WeaponTweakData:_init_data_m1928_crew()
 	self.m1928_crew.categories = clone(self.m1928.categories)
 	self.m1928_crew.sounds.prefix = "m1928_npc"
@@ -2761,7 +2860,7 @@ function WeaponTweakData:_init_data_m1928_crew()
 	self.m1928_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3698-3721
+-- Lines 3771-3794
 function WeaponTweakData:_init_data_l85a2_crew()
 	self.l85a2_crew.categories = clone(self.l85a2.categories)
 	self.l85a2_crew.sounds.prefix = "l85_npc"
@@ -2781,7 +2880,7 @@ function WeaponTweakData:_init_data_l85a2_crew()
 	self.l85a2_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3723-3745
+-- Lines 3796-3818
 function WeaponTweakData:_init_data_vhs_crew()
 	self.vhs_crew.categories = clone(self.vhs.categories)
 	self.vhs_crew.sounds.prefix = "vhs_npc"
@@ -2803,7 +2902,7 @@ function WeaponTweakData:_init_data_vhs_crew()
 	self.vhs_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3747-3770
+-- Lines 3820-3843
 function WeaponTweakData:_init_data_m134_crew()
 	self.m134_crew.categories = clone(self.m134.categories)
 	self.m134_crew.sounds.prefix = "minigun_npc"
@@ -2824,7 +2923,7 @@ function WeaponTweakData:_init_data_m134_crew()
 	}
 end
 
--- Lines 3772-3794
+-- Lines 3845-3867
 function WeaponTweakData:_init_data_rpg7_crew()
 	self.rpg7_crew.categories = clone(self.rpg7.categories)
 	self.rpg7_crew.sounds.prefix = "rpg_npc"
@@ -2843,7 +2942,7 @@ function WeaponTweakData:_init_data_rpg7_crew()
 	self.rpg7_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3796-3816
+-- Lines 3869-3889
 function WeaponTweakData:_init_data_hs2000_crew()
 	self.hs2000_crew.categories = clone(self.hs2000.categories)
 	self.hs2000_crew.sounds.prefix = "p226r_npc"
@@ -2861,7 +2960,7 @@ function WeaponTweakData:_init_data_hs2000_crew()
 	self.hs2000_crew.FIRE_MODE = "single"
 end
 
--- Lines 3818-3840
+-- Lines 3891-3913
 function WeaponTweakData:_init_data_cobray_crew()
 	self.cobray_crew.categories = clone(self.cobray.categories)
 	self.cobray_crew.sounds.prefix = "cobray_npc"
@@ -2884,7 +2983,7 @@ function WeaponTweakData:_init_data_cobray_crew()
 	self.cobray_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3842-3862
+-- Lines 3915-3935
 function WeaponTweakData:_init_data_b682_crew()
 	self.b682_crew.categories = clone(self.b682.categories)
 	self.b682_crew.sounds.prefix = "b682_npc"
@@ -2902,7 +3001,7 @@ function WeaponTweakData:_init_data_b682_crew()
 	self.b682_crew.is_shotgun = true
 end
 
--- Lines 3863-3881
+-- Lines 3936-3954
 function WeaponTweakData:_init_data_x_g22c_crew()
 	self.x_g22c_crew.categories = clone(self.x_g22c.categories)
 	self.x_g22c_crew.sounds.prefix = "g22_npc"
@@ -2919,7 +3018,7 @@ function WeaponTweakData:_init_data_x_g22c_crew()
 	self.x_g22c_crew.FIRE_MODE = "single"
 end
 
--- Lines 3882-3900
+-- Lines 3955-3973
 function WeaponTweakData:_init_data_x_g17_crew()
 	self.x_g17_crew.categories = clone(self.x_g17.categories)
 	self.x_g17_crew.sounds.prefix = "g17_npc"
@@ -2936,7 +3035,7 @@ function WeaponTweakData:_init_data_x_g17_crew()
 	self.x_g17_crew.FIRE_MODE = "single"
 end
 
--- Lines 3901-3919
+-- Lines 3974-3992
 function WeaponTweakData:_init_data_x_usp_crew()
 	self.x_usp_crew.categories = clone(self.x_usp.categories)
 	self.x_usp_crew.sounds.prefix = "usp45_npc"
@@ -2953,7 +3052,7 @@ function WeaponTweakData:_init_data_x_usp_crew()
 	self.x_usp_crew.FIRE_MODE = "single"
 end
 
--- Lines 3921-3950
+-- Lines 3994-4023
 function WeaponTweakData:_init_data_flamethrower_mk2_crew()
 	self.flamethrower_mk2_crew.categories = clone(self.flamethrower_mk2.categories)
 	self.flamethrower_mk2_crew.sounds.prefix = "flamethrower_npc"
@@ -2981,7 +3080,7 @@ function WeaponTweakData:_init_data_flamethrower_mk2_crew()
 	self.flamethrower_mk2_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3952-3975
+-- Lines 4025-4048
 function WeaponTweakData:_init_data_m32_crew()
 	self.m32_crew.categories = clone(self.m32.categories)
 	self.m32_crew.sounds.prefix = "mgl_npc"
@@ -3001,7 +3100,7 @@ function WeaponTweakData:_init_data_m32_crew()
 	self.m32_crew.FIRE_MODE = "auto"
 end
 
--- Lines 3977-3999
+-- Lines 4050-4072
 function WeaponTweakData:_init_data_aa12_crew()
 	self.aa12_crew.categories = clone(self.aa12.categories)
 	self.aa12_crew.sounds.prefix = "aa12_npc"
@@ -3020,7 +3119,7 @@ function WeaponTweakData:_init_data_aa12_crew()
 	self.aa12_crew.is_shotgun = true
 end
 
--- Lines 4001-4022
+-- Lines 4074-4095
 function WeaponTweakData:_init_data_peacemaker_crew()
 	self.peacemaker_crew.categories = clone(self.peacemaker.categories)
 	self.peacemaker_crew.sounds.prefix = "pmkr45_npc"
@@ -3039,7 +3138,7 @@ function WeaponTweakData:_init_data_peacemaker_crew()
 	self.peacemaker_crew.FIRE_MODE = "single"
 end
 
--- Lines 4024-4047
+-- Lines 4097-4120
 function WeaponTweakData:_init_data_winchester1874_crew()
 	self.winchester1874_crew.categories = clone(self.winchester1874.categories)
 	self.winchester1874_crew.sounds.prefix = "m1873_npc"
@@ -3059,7 +3158,7 @@ function WeaponTweakData:_init_data_winchester1874_crew()
 	self.winchester1874_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 4049-4072
+-- Lines 4122-4145
 function WeaponTweakData:_init_data_sbl_crew()
 	self.sbl_crew.categories = clone(self.sbl.categories)
 	self.sbl_crew.sounds.prefix = "sbl_npc"
@@ -3079,7 +3178,7 @@ function WeaponTweakData:_init_data_sbl_crew()
 	self.sbl_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 4074-4099
+-- Lines 4147-4172
 function WeaponTweakData:_init_data_plainsrider_crew()
 	self.plainsrider_crew.categories = clone(self.plainsrider.categories)
 	self.plainsrider_crew.sounds.prefix = "bow_npc"
@@ -3100,7 +3199,7 @@ function WeaponTweakData:_init_data_plainsrider_crew()
 	self.plainsrider_crew.FIRE_MODE = "single"
 end
 
--- Lines 4101-4121
+-- Lines 4174-4194
 function WeaponTweakData:_init_data_mateba_crew()
 	self.mateba_crew.categories = clone(self.mateba.categories)
 	self.mateba_crew.sounds.prefix = "mateba_npc"
@@ -3118,7 +3217,7 @@ function WeaponTweakData:_init_data_mateba_crew()
 	self.mateba_crew.FIRE_MODE = "single"
 end
 
--- Lines 4123-4143
+-- Lines 4196-4216
 function WeaponTweakData:_init_data_asval_crew()
 	self.asval_crew.categories = clone(self.asval.categories)
 	self.asval_crew.sounds.prefix = "val_npc"
@@ -3136,7 +3235,7 @@ function WeaponTweakData:_init_data_asval_crew()
 	self.asval_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4145-4166
+-- Lines 4218-4239
 function WeaponTweakData:_init_data_sub2000_crew()
 	self.sub2000_crew.categories = clone(self.sub2000.categories)
 	self.sub2000_crew.sounds.prefix = "sub2k_npc"
@@ -3155,7 +3254,7 @@ function WeaponTweakData:_init_data_sub2000_crew()
 	self.sub2000_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4169-4191
+-- Lines 4242-4264
 function WeaponTweakData:_init_data_wa2000_crew()
 	self.wa2000_crew.categories = clone(self.wa2000.categories)
 	self.wa2000_crew.sounds.prefix = "lakner_npc"
@@ -3177,7 +3276,7 @@ function WeaponTweakData:_init_data_wa2000_crew()
 	self.wa2000_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4194-4217
+-- Lines 4267-4290
 function WeaponTweakData:_init_data_polymer_crew()
 	self.polymer_crew.categories = clone(self.polymer.categories)
 	self.polymer_crew.sounds.prefix = "polymer_npc"
@@ -3200,7 +3299,7 @@ function WeaponTweakData:_init_data_polymer_crew()
 	self.polymer_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4219-4242
+-- Lines 4292-4315
 function WeaponTweakData:_init_data_hunter_crew()
 	self.hunter_crew.categories = clone(self.hunter.categories)
 	self.hunter_crew.sounds.prefix = "hunter_npc"
@@ -3220,7 +3319,7 @@ function WeaponTweakData:_init_data_hunter_crew()
 	self.hunter_crew.FIRE_MODE = "single"
 end
 
--- Lines 4244-4266
+-- Lines 4317-4339
 function WeaponTweakData:_init_data_baka_crew()
 	self.baka_crew.categories = clone(self.baka.categories)
 	self.baka_crew.sounds.prefix = "baka_npc"
@@ -3239,7 +3338,7 @@ function WeaponTweakData:_init_data_baka_crew()
 	self.baka_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4269-4291
+-- Lines 4342-4364
 function WeaponTweakData:_init_data_pm9_crew()
 	self.pm9_crew.categories = clone(self.pm9.categories)
 	self.pm9_crew.sounds.prefix = "pm9_npc"
@@ -3258,7 +3357,7 @@ function WeaponTweakData:_init_data_pm9_crew()
 	self.pm9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4293-4311
+-- Lines 4366-4384
 function WeaponTweakData:_init_data_x_pm9_crew()
 	self.x_pm9_crew.categories = clone(self.x_pm9.categories)
 	self.x_pm9_crew.sounds.prefix = "pm9_x_npc"
@@ -3275,7 +3374,7 @@ function WeaponTweakData:_init_data_x_pm9_crew()
 	self.x_pm9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4315-4337
+-- Lines 4388-4410
 function WeaponTweakData:_init_data_shak12_crew()
 	self.shak12_crew.categories = clone(self.shak12.categories)
 	self.shak12_crew.sounds.prefix = "shak12_npc"
@@ -3297,7 +3396,7 @@ function WeaponTweakData:_init_data_shak12_crew()
 	self.shak12_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4369-4392
+-- Lines 4442-4465
 function WeaponTweakData:_init_data_arblast_crew()
 	self.arblast_crew.categories = clone(self.arblast.categories)
 	self.arblast_crew.sounds.prefix = "arblast_npc"
@@ -3317,7 +3416,7 @@ function WeaponTweakData:_init_data_arblast_crew()
 	self.arblast_crew.FIRE_MODE = "single"
 end
 
--- Lines 4394-4417
+-- Lines 4467-4490
 function WeaponTweakData:_init_data_frankish_crew()
 	self.frankish_crew.categories = clone(self.frankish.categories)
 	self.frankish_crew.sounds.prefix = "frankish_npc"
@@ -3337,7 +3436,7 @@ function WeaponTweakData:_init_data_frankish_crew()
 	self.frankish_crew.FIRE_MODE = "single"
 end
 
--- Lines 4420-4445
+-- Lines 4493-4518
 function WeaponTweakData:_init_data_long_crew()
 	self.long_crew.categories = clone(self.long.categories)
 	self.long_crew.sounds.prefix = "bow_npc"
@@ -3358,7 +3457,7 @@ function WeaponTweakData:_init_data_long_crew()
 	self.long_crew.FIRE_MODE = "single"
 end
 
--- Lines 4448-4472
+-- Lines 4521-4545
 function WeaponTweakData:_init_data_par_crew()
 	self.par_crew.categories = clone(self.par.categories)
 	self.par_crew.sounds.prefix = "svinet_npc"
@@ -3378,7 +3477,7 @@ function WeaponTweakData:_init_data_par_crew()
 	self.par_secondary_crew.armor_piercing = true
 end
 
--- Lines 4475-4495
+-- Lines 4548-4568
 function WeaponTweakData:_init_data_sparrow_crew()
 	self.sparrow_crew.categories = clone(self.sparrow.categories)
 	self.sparrow_crew.sounds.prefix = "sparrow_npc"
@@ -3396,7 +3495,7 @@ function WeaponTweakData:_init_data_sparrow_crew()
 	self.sparrow_crew.FIRE_MODE = "single"
 end
 
--- Lines 4496-4518
+-- Lines 4569-4591
 function WeaponTweakData:_init_data_model70_crew()
 	self.model70_crew.categories = clone(self.model70.categories)
 	self.model70_crew.sounds.prefix = "model70_npc"
@@ -3415,7 +3514,7 @@ function WeaponTweakData:_init_data_model70_crew()
 	self.model70_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 4521-4543
+-- Lines 4594-4616
 function WeaponTweakData:_init_data_scout_crew()
 	self.scout_crew.categories = clone(self.scout.categories)
 	self.scout_crew.sounds.prefix = "steyr_scout_npc"
@@ -3434,7 +3533,7 @@ function WeaponTweakData:_init_data_scout_crew()
 	self.scout_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 4572-4594
+-- Lines 4645-4667
 function WeaponTweakData:_init_data_m37_crew()
 	self.m37_crew.categories = clone(self.m37.categories)
 	self.m37_crew.sounds.prefix = "m37_npc"
@@ -3453,7 +3552,7 @@ function WeaponTweakData:_init_data_m37_crew()
 	self.m37_crew.is_shotgun = true
 end
 
--- Lines 4597-4619
+-- Lines 4670-4692
 function WeaponTweakData:_init_data_m1897_crew()
 	self.m1897_crew.categories = clone(self.m1897.categories)
 	self.m1897_crew.sounds.prefix = "m1897_npc"
@@ -3472,7 +3571,7 @@ function WeaponTweakData:_init_data_m1897_crew()
 	self.m1897_crew.is_shotgun = true
 end
 
--- Lines 4622-4644
+-- Lines 4695-4717
 function WeaponTweakData:_init_data_china_crew()
 	self.china_crew.categories = clone(self.china.categories)
 	self.china_crew.sounds.prefix = "china_npc"
@@ -3492,7 +3591,7 @@ function WeaponTweakData:_init_data_china_crew()
 	self.china_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4648-4670
+-- Lines 4721-4743
 function WeaponTweakData:_init_data_sr2_crew()
 	self.sr2_crew.categories = clone(self.sr2.categories)
 	self.sr2_crew.sounds.prefix = "sr2_npc"
@@ -3515,7 +3614,7 @@ function WeaponTweakData:_init_data_sr2_crew()
 	self.sr2_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4671-4689
+-- Lines 4744-4762
 function WeaponTweakData:_init_data_x_sr2_crew()
 	self.x_sr2_crew.categories = clone(self.x_sr2.categories)
 	self.x_sr2_crew.sounds.prefix = "sr2_x_npc"
@@ -3532,7 +3631,7 @@ function WeaponTweakData:_init_data_x_sr2_crew()
 	self.x_sr2_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4692-4712
+-- Lines 4765-4785
 function WeaponTweakData:_init_data_pl14_crew()
 	self.pl14_crew.categories = clone(self.pl14.categories)
 	self.pl14_crew.sounds.prefix = "pl14_npc"
@@ -3550,7 +3649,7 @@ function WeaponTweakData:_init_data_pl14_crew()
 	self.pl14_crew.FIRE_MODE = "single"
 end
 
--- Lines 4716-4736
+-- Lines 4789-4809
 function WeaponTweakData:_init_data_m1911_crew()
 	self.m1911_crew.categories = clone(self.pl14.categories)
 	self.m1911_crew.sounds.prefix = "m1911_npc"
@@ -3568,7 +3667,7 @@ function WeaponTweakData:_init_data_m1911_crew()
 	self.m1911_crew.FIRE_MODE = "single"
 end
 
--- Lines 4738-4756
+-- Lines 4811-4829
 function WeaponTweakData:_init_data_x_m1911_crew()
 	self.x_m1911_crew.categories = clone(self.x_pl14.categories)
 	self.x_m1911_crew.sounds.prefix = "m1911_npc"
@@ -3585,7 +3684,7 @@ function WeaponTweakData:_init_data_x_m1911_crew()
 	self.x_m1911_crew.FIRE_MODE = "single"
 end
 
--- Lines 4758-4780
+-- Lines 4831-4853
 function WeaponTweakData:_init_data_m590_crew()
 	self.m590_crew.categories = clone(self.m1897.categories)
 	self.m590_crew.sounds.prefix = "m590_npc"
@@ -3604,7 +3703,7 @@ function WeaponTweakData:_init_data_m590_crew()
 	self.m590_crew.is_shotgun = true
 end
 
--- Lines 4782-4806
+-- Lines 4855-4879
 function WeaponTweakData:_init_data_vityaz_crew()
 	self.vityaz_crew.categories = clone(self.new_mp5.categories)
 	self.vityaz_crew.sounds.prefix = "vityaz_npc"
@@ -3625,7 +3724,7 @@ function WeaponTweakData:_init_data_vityaz_crew()
 	self.vityaz_primary_crew.use_data.selection_index = SELECTION.PRIMARY
 end
 
--- Lines 4808-4826
+-- Lines 4881-4899
 function WeaponTweakData:_init_data_x_vityaz_crew()
 	self.x_vityaz_crew.categories = clone(self.x_mp5.categories)
 	self.x_vityaz_crew.sounds.prefix = "vityaz_x_npc"
@@ -3642,7 +3741,7 @@ function WeaponTweakData:_init_data_x_vityaz_crew()
 	self.x_vityaz_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4830-4848
+-- Lines 4903-4921
 function WeaponTweakData:_init_data_x_mp5_crew()
 	self.x_mp5_crew.categories = clone(self.x_mp5.categories)
 	self.x_mp5_crew.sounds.prefix = "mp5_x_npc"
@@ -3659,7 +3758,7 @@ function WeaponTweakData:_init_data_x_mp5_crew()
 	self.x_mp5_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4850-4868
+-- Lines 4923-4941
 function WeaponTweakData:_init_data_x_akmsu_crew()
 	self.x_akmsu_crew.categories = clone(self.x_akmsu.categories)
 	self.x_akmsu_crew.sounds.prefix = "akmsu_x_npc"
@@ -3676,7 +3775,7 @@ function WeaponTweakData:_init_data_x_akmsu_crew()
 	self.x_akmsu_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4872-4887
+-- Lines 4945-4960
 function WeaponTweakData:_init_data_tecci_crew()
 	self.tecci_crew.categories = clone(self.tecci.categories)
 	self.tecci_crew.sounds.prefix = "tecci_npc"
@@ -3694,7 +3793,7 @@ function WeaponTweakData:_init_data_tecci_crew()
 	self.tecci_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4891-4913
+-- Lines 4964-4986
 function WeaponTweakData:_init_data_hajk_crew()
 	self.hajk_crew.categories = clone(self.hajk.categories)
 	self.hajk_crew.sounds.prefix = "hajk_npc"
@@ -3713,7 +3812,7 @@ function WeaponTweakData:_init_data_hajk_crew()
 	self.hajk_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4917-4938
+-- Lines 4990-5011
 function WeaponTweakData:_init_data_boot_crew()
 	self.boot_crew.categories = clone(self.boot.categories)
 	self.boot_crew.sounds.prefix = "boot_npc"
@@ -3731,7 +3830,7 @@ function WeaponTweakData:_init_data_boot_crew()
 	self.boot_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4942-4962
+-- Lines 5015-5035
 function WeaponTweakData:_init_data_packrat_crew()
 	self.packrat_crew.categories = clone(self.packrat.categories)
 	self.packrat_crew.sounds.prefix = "packrat_npc"
@@ -3749,7 +3848,7 @@ function WeaponTweakData:_init_data_packrat_crew()
 	self.packrat_crew.FIRE_MODE = "single"
 end
 
--- Lines 4964-4987
+-- Lines 5037-5060
 function WeaponTweakData:_init_data_schakal_crew()
 	self.schakal_crew.categories = clone(self.schakal.categories)
 	self.schakal_crew.sounds.prefix = "schakal_npc"
@@ -3772,7 +3871,7 @@ function WeaponTweakData:_init_data_schakal_crew()
 	self.schakal_crew.FIRE_MODE = "auto"
 end
 
--- Lines 4989-5013
+-- Lines 5062-5086
 function WeaponTweakData:_init_data_desertfox_crew()
 	self.desertfox_crew.categories = clone(self.desertfox.categories)
 	self.desertfox_crew.sounds.prefix = "desertfox_npc"
@@ -3793,7 +3892,7 @@ function WeaponTweakData:_init_data_desertfox_crew()
 	self.desertfox_secondary_crew.use_data.selection_index = SELECTION.SECONDARY
 end
 
--- Lines 5015-5033
+-- Lines 5088-5106
 function WeaponTweakData:_init_data_x_packrat_crew()
 	self.x_packrat_crew.categories = clone(self.x_packrat.categories)
 	self.x_packrat_crew.sounds.prefix = "packrat_npc"
@@ -3810,7 +3909,7 @@ function WeaponTweakData:_init_data_x_packrat_crew()
 	self.x_packrat_crew.FIRE_MODE = "single"
 end
 
--- Lines 5037-5058
+-- Lines 5110-5131
 function WeaponTweakData:_init_data_rota_crew()
 	self.rota_crew.categories = clone(self.rota.categories)
 	self.rota_crew.sounds.prefix = "rota_npc"
@@ -3831,7 +3930,7 @@ function WeaponTweakData:_init_data_rota_crew()
 	self.rota_crew.is_shotgun = true
 end
 
--- Lines 5062-5086
+-- Lines 5135-5159
 function WeaponTweakData:_init_data_arbiter_crew()
 	self.arbiter_crew.categories = clone(self.arbiter.categories)
 	self.arbiter_crew.sounds.prefix = "mgl_npc"
@@ -3852,7 +3951,7 @@ function WeaponTweakData:_init_data_arbiter_crew()
 	self.arbiter_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5090-5112
+-- Lines 5163-5185
 function WeaponTweakData:_init_data_ms3gl_crew()
 	self.ms3gl_crew.categories = clone(self.ms3gl.categories)
 	self.ms3gl_crew.sounds.prefix = "gl3_npc"
@@ -3875,7 +3974,7 @@ function WeaponTweakData:_init_data_ms3gl_crew()
 	self.ms3gl_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5116-5159
+-- Lines 5189-5232
 function WeaponTweakData:_init_data_contraband_crew()
 	self.contraband_crew.categories = clone(self.contraband.categories)
 	self.contraband_crew.sounds.prefix = "contraband_npc"
@@ -3913,7 +4012,7 @@ function WeaponTweakData:_init_data_contraband_crew()
 	self.contraband_m203_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5163-5193
+-- Lines 5236-5266
 function WeaponTweakData:_init_data_ray_crew()
 	self.ray_crew.categories = clone(self.ray.categories)
 	self.ray_crew.sounds.prefix = "ray_npc"
@@ -3938,7 +4037,7 @@ function WeaponTweakData:_init_data_ray_crew()
 	}
 end
 
--- Lines 5197-5219
+-- Lines 5270-5292
 function WeaponTweakData:_init_data_tti_crew()
 	self.tti_crew.categories = clone(self.tti.categories)
 	self.tti_crew.sounds.prefix = "tti_npc"
@@ -3957,7 +4056,7 @@ function WeaponTweakData:_init_data_tti_crew()
 	self.tti_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5250-5271
+-- Lines 5323-5344
 function WeaponTweakData:_init_data_siltstone_crew()
 	self.siltstone_crew.categories = clone(self.siltstone.categories)
 	self.siltstone_crew.sounds.prefix = "siltstone_npc"
@@ -3975,7 +4074,7 @@ function WeaponTweakData:_init_data_siltstone_crew()
 	self.siltstone_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5274-5294
+-- Lines 5347-5367
 function WeaponTweakData:_init_data_flint_crew()
 	self.flint_crew.categories = clone(self.flint.categories)
 	self.flint_crew.sounds.prefix = "flint_npc"
@@ -3993,7 +4092,7 @@ function WeaponTweakData:_init_data_flint_crew()
 	self.flint_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5296-5317
+-- Lines 5369-5390
 function WeaponTweakData:_init_data_coal_crew()
 	self.coal_crew.categories = clone(self.coal.categories)
 	self.coal_crew.sounds.prefix = "coal_npc"
@@ -4012,7 +4111,7 @@ function WeaponTweakData:_init_data_coal_crew()
 	self.coal_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5323-5343
+-- Lines 5396-5416
 function WeaponTweakData:_init_data_lemming_crew()
 	self.lemming_crew.categories = clone(self.lemming.categories)
 	self.lemming_crew.sounds.prefix = "lemming_npc"
@@ -4030,7 +4129,7 @@ function WeaponTweakData:_init_data_lemming_crew()
 	self.lemming_crew.FIRE_MODE = "single"
 end
 
--- Lines 5348-5388
+-- Lines 5421-5461
 function WeaponTweakData:_init_data_type54_crew()
 	self.type54_crew.categories = clone(self.type54.categories)
 	self.type54_crew.sounds.prefix = "type54_npc"
@@ -4061,7 +4160,7 @@ function WeaponTweakData:_init_data_type54_crew()
 	self.type54_underbarrel_crew.FIRE_MODE = "single"
 end
 
--- Lines 5390-5429
+-- Lines 5463-5502
 function WeaponTweakData:_init_data_type54_npc()
 	self.type54_npc.categories = clone(self.type54.categories)
 	self.type54_npc.sounds.prefix = "type54_npc"
@@ -4092,7 +4191,7 @@ function WeaponTweakData:_init_data_type54_npc()
 	self.type54_underbarrel_npc.FIRE_MODE = "single"
 end
 
--- Lines 5431-5469
+-- Lines 5504-5542
 function WeaponTweakData:_init_data_x_type54_crew()
 	self.x_type54_crew.categories = clone(self.x_type54.categories)
 	self.x_type54_crew.sounds.prefix = "type54_npc"
@@ -4124,7 +4223,7 @@ function WeaponTweakData:_init_data_x_type54_crew()
 	self.x_type54_underbarrel_crew.FIRE_MODE = "single"
 end
 
--- Lines 5471-5509
+-- Lines 5544-5582
 function WeaponTweakData:_init_data_x_type54_npc()
 	self.x_type54_npc.categories = clone(self.x_type54.categories)
 	self.x_type54_npc.sounds.prefix = "type54_npc"
@@ -4156,7 +4255,7 @@ function WeaponTweakData:_init_data_x_type54_npc()
 	self.x_type54_underbarrel_npc.FIRE_MODE = "single"
 end
 
--- Lines 5511-5531
+-- Lines 5584-5604
 function WeaponTweakData:_init_data_rsh12_crew()
 	self.rsh12_crew.categories = clone(self.rsh12.categories)
 	self.rsh12_crew.sounds.prefix = "rsh12_npc"
@@ -4174,7 +4273,7 @@ function WeaponTweakData:_init_data_rsh12_crew()
 	self.rsh12_crew.FIRE_MODE = "single"
 end
 
--- Lines 5536-5555
+-- Lines 5609-5628
 function WeaponTweakData:_init_data_chinchilla_crew()
 	self.chinchilla_crew.categories = clone(self.chinchilla.categories)
 	self.chinchilla_crew.sounds.prefix = "chinchilla_npc"
@@ -4191,7 +4290,7 @@ function WeaponTweakData:_init_data_chinchilla_crew()
 	self.chinchilla_crew.FIRE_MODE = "single"
 end
 
--- Lines 5557-5575
+-- Lines 5630-5648
 function WeaponTweakData:_init_data_x_chinchilla_crew()
 	self.x_chinchilla_crew.categories = clone(self.x_chinchilla.categories)
 	self.x_chinchilla_crew.sounds.prefix = "chinchilla_npc"
@@ -4208,7 +4307,7 @@ function WeaponTweakData:_init_data_x_chinchilla_crew()
 	self.x_chinchilla_crew.FIRE_MODE = "single"
 end
 
--- Lines 5579-5598
+-- Lines 5652-5671
 function WeaponTweakData:_init_data_model3_crew()
 	self.model3_crew.categories = clone(self.model3.categories)
 	self.model3_crew.sounds.prefix = "model3_npc"
@@ -4225,7 +4324,7 @@ function WeaponTweakData:_init_data_model3_crew()
 	self.model3_crew.FIRE_MODE = "single"
 end
 
--- Lines 5600-5618
+-- Lines 5673-5691
 function WeaponTweakData:_init_data_x_model3_crew()
 	self.x_model3_crew.categories = clone(self.x_model3.categories)
 	self.x_model3_crew.sounds.prefix = "model3_npc"
@@ -4242,7 +4341,7 @@ function WeaponTweakData:_init_data_x_model3_crew()
 	self.x_model3_crew.FIRE_MODE = "single"
 end
 
--- Lines 5621-5642
+-- Lines 5694-5715
 function WeaponTweakData:_init_data_shepheard_crew()
 	self.shepheard_crew.categories = clone(self.shepheard.categories)
 	self.shepheard_crew.sounds.prefix = "shepheard_npc"
@@ -4261,7 +4360,7 @@ function WeaponTweakData:_init_data_shepheard_crew()
 	self.shepheard_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5643-5662
+-- Lines 5716-5735
 function WeaponTweakData:_init_data_x_shepheard_crew()
 	self.x_shepheard_crew.categories = clone(self.x_shepheard.categories)
 	self.x_shepheard_crew.sounds.prefix = "shepheard_x_npc"
@@ -4279,7 +4378,7 @@ function WeaponTweakData:_init_data_x_shepheard_crew()
 	self.x_shepheard_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5665-5685
+-- Lines 5738-5758
 function WeaponTweakData:_init_data_breech_crew()
 	self.breech_crew.categories = clone(self.breech.categories)
 	self.breech_crew.sounds.prefix = "breech_npc"
@@ -4297,7 +4396,7 @@ function WeaponTweakData:_init_data_breech_crew()
 	self.breech_crew.FIRE_MODE = "single"
 end
 
--- Lines 5687-5711
+-- Lines 5760-5784
 function WeaponTweakData:_init_data_ching_crew()
 	self.ching_crew.categories = clone(self.ching.categories)
 	self.ching_crew.sounds.prefix = "ching_npc"
@@ -4317,7 +4416,7 @@ function WeaponTweakData:_init_data_ching_crew()
 	self.ching_crew.FIRE_MODE = "single"
 end
 
--- Lines 5713-5736
+-- Lines 5786-5809
 function WeaponTweakData:_init_data_erma_crew()
 	self.erma_crew.categories = clone(self.erma.categories)
 	self.erma_crew.sounds.prefix = "erma_npc"
@@ -4337,7 +4436,7 @@ function WeaponTweakData:_init_data_erma_crew()
 	self.erma_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5739-5762
+-- Lines 5812-5835
 function WeaponTweakData:_init_data_ecp_crew()
 	self.ecp_crew.categories = clone(self.ecp.categories)
 	self.ecp_crew.sounds.prefix = "ecp_npc"
@@ -4360,7 +4459,7 @@ function WeaponTweakData:_init_data_ecp_crew()
 	self.ecp_crew.FIRE_MODE = "single"
 end
 
--- Lines 5765-5785
+-- Lines 5838-5858
 function WeaponTweakData:_init_data_shrew_crew()
 	self.shrew_crew.categories = clone(self.shrew.categories)
 	self.shrew_crew.sounds.prefix = "shrew_npc"
@@ -4378,7 +4477,7 @@ function WeaponTweakData:_init_data_shrew_crew()
 	self.shrew_crew.FIRE_MODE = "single"
 end
 
--- Lines 5786-5804
+-- Lines 5859-5877
 function WeaponTweakData:_init_data_x_shrew_crew()
 	self.x_shrew_crew.categories = clone(self.x_shrew.categories)
 	self.x_shrew_crew.sounds.prefix = "shrew_npc"
@@ -4395,7 +4494,7 @@ function WeaponTweakData:_init_data_x_shrew_crew()
 	self.x_shrew_crew.FIRE_MODE = "single"
 end
 
--- Lines 5807-5829
+-- Lines 5880-5902
 function WeaponTweakData:_init_data_qbu88_crew()
 	self.qbu88_crew.categories = clone(self.qbu88.categories)
 	self.qbu88_crew.sounds.prefix = "qbu88_npc"
@@ -4417,7 +4516,7 @@ function WeaponTweakData:_init_data_qbu88_crew()
 	self.qbu88_crew.FIRE_MODE = "single"
 end
 
--- Lines 5832-5874
+-- Lines 5905-5947
 function WeaponTweakData:_init_data_groza_crew()
 	self.groza_crew.categories = clone(self.groza.categories)
 	self.groza_crew.sounds.prefix = "groza_npc"
@@ -4453,7 +4552,7 @@ function WeaponTweakData:_init_data_groza_crew()
 	self.groza_underbarrel_crew.FIRE_MODE = "auto"
 end
 
--- Lines 5876-5918
+-- Lines 5949-5991
 function WeaponTweakData:_init_data_groza_npc()
 	self.groza_npc.categories = clone(self.groza.categories)
 	self.groza_npc.sounds.prefix = "groza_npc"
@@ -4489,7 +4588,31 @@ function WeaponTweakData:_init_data_groza_npc()
 	self.groza_underbarrel_npc.FIRE_MODE = "auto"
 end
 
--- Lines 6012-6034
+-- Lines 5995-6024
+function WeaponTweakData:_init_data_hailstorm_crew()
+	self.hailstorm_crew.categories = clone(self.hailstorm.categories)
+	self.hailstorm_crew.sounds.prefix = "hailstorm_npc"
+	self.hailstorm_crew.use_data.selection_index = SELECTION.PRIMARY
+	self.hailstorm_crew.DAMAGE = 2
+	self.hailstorm_crew.muzzleflash = "effects/payday2/particles/weapons/hailstorm_effect"
+	self.hailstorm_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/hailstorm_suppressed"
+	self.hailstorm_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.hailstorm_crew.trail_effect = "effects/payday2/particles/weapons/hailstorm_streak"
+	self.hailstorm_crew.CLIP_AMMO_MAX = 30
+	self.hailstorm_crew.NR_CLIPS_MAX = 5
+	self.hailstorm_crew.reload = "looped"
+	self.hailstorm_crew.auto.fire_rate = 0.083
+	self.hailstorm_crew.hold = {
+		"bullpup",
+		"rifle"
+	}
+	self.hailstorm_crew.reload = "bullpup"
+	self.hailstorm_crew.alert_size = 5000
+	self.hailstorm_crew.suppression = 1
+	self.hailstorm_crew.FIRE_MODE = "auto"
+end
+
+-- Lines 6029-6051
 function WeaponTweakData:_init_data_basset_crew()
 	self.basset_crew.categories = clone(self.basset.categories)
 	self.basset_crew.sounds.prefix = "basset_npc"
@@ -4511,7 +4634,7 @@ function WeaponTweakData:_init_data_basset_crew()
 	self.basset_crew.is_shotgun = true
 end
 
--- Lines 6036-6058
+-- Lines 6053-6075
 function WeaponTweakData:_init_data_x_basset_crew()
 	self.x_basset_crew.categories = clone(self.x_basset.categories)
 	self.x_basset_crew.sounds.prefix = "basset_x_npc"
@@ -4529,7 +4652,7 @@ function WeaponTweakData:_init_data_x_basset_crew()
 	self.x_basset_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6061-6083
+-- Lines 6078-6100
 function WeaponTweakData:_init_data_corgi_crew()
 	self.corgi_crew.categories = clone(self.corgi.categories)
 	self.corgi_crew.sounds.prefix = "corgi_npc"
@@ -4551,7 +4674,7 @@ function WeaponTweakData:_init_data_corgi_crew()
 	self.corgi_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6087-6111
+-- Lines 6104-6128
 function WeaponTweakData:_init_data_slap_crew()
 	self.slap_crew.categories = clone(self.slap.categories)
 	self.slap_crew.sounds.prefix = "slap_npc"
@@ -4575,7 +4698,7 @@ function WeaponTweakData:_init_data_slap_crew()
 	self.slap_crew.FIRE_MODE = "single"
 end
 
--- Lines 6117-6135
+-- Lines 6134-6152
 function WeaponTweakData:_init_data_x_coal_crew()
 	self.x_coal_crew.categories = clone(self.x_coal.categories)
 	self.x_coal_crew.sounds.prefix = "coal_x_npc"
@@ -4592,7 +4715,7 @@ function WeaponTweakData:_init_data_x_coal_crew()
 	self.x_coal_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6138-6156
+-- Lines 6155-6173
 function WeaponTweakData:_init_data_x_baka_crew()
 	self.x_baka_crew.categories = clone(self.x_baka.categories)
 	self.x_baka_crew.sounds.prefix = "baka_x_npc"
@@ -4609,7 +4732,7 @@ function WeaponTweakData:_init_data_x_baka_crew()
 	self.x_baka_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6159-6177
+-- Lines 6176-6194
 function WeaponTweakData:_init_data_x_cobray_crew()
 	self.x_cobray_crew.categories = clone(self.x_cobray.categories)
 	self.x_cobray_crew.sounds.prefix = "cobray_x_npc"
@@ -4626,7 +4749,7 @@ function WeaponTweakData:_init_data_x_cobray_crew()
 	self.x_cobray_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6180-6198
+-- Lines 6197-6215
 function WeaponTweakData:_init_data_x_erma_crew()
 	self.x_erma_crew.categories = clone(self.x_erma.categories)
 	self.x_erma_crew.sounds.prefix = "erma_x_npc"
@@ -4643,7 +4766,7 @@ function WeaponTweakData:_init_data_x_erma_crew()
 	self.x_erma_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6201-6219
+-- Lines 6218-6236
 function WeaponTweakData:_init_data_x_hajk_crew()
 	self.x_hajk_crew.categories = clone(self.x_hajk.categories)
 	self.x_hajk_crew.sounds.prefix = "hajk_x_npc"
@@ -4660,7 +4783,7 @@ function WeaponTweakData:_init_data_x_hajk_crew()
 	self.x_hajk_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6222-6240
+-- Lines 6239-6257
 function WeaponTweakData:_init_data_x_m45_crew()
 	self.x_m45_crew.categories = clone(self.x_m45.categories)
 	self.x_m45_crew.sounds.prefix = "m45_x_npc"
@@ -4677,7 +4800,7 @@ function WeaponTweakData:_init_data_x_m45_crew()
 	self.x_m45_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6243-6261
+-- Lines 6260-6278
 function WeaponTweakData:_init_data_x_m1928_crew()
 	self.x_m1928_crew.categories = clone(self.x_m1928.categories)
 	self.x_m1928_crew.sounds.prefix = "m1928_x_npc"
@@ -4694,7 +4817,7 @@ function WeaponTweakData:_init_data_x_m1928_crew()
 	self.x_m1928_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6264-6282
+-- Lines 6281-6299
 function WeaponTweakData:_init_data_x_mac10_crew()
 	self.x_mac10_crew.categories = clone(self.x_mac10.categories)
 	self.x_mac10_crew.sounds.prefix = "mac10_x_npc"
@@ -4711,7 +4834,7 @@ function WeaponTweakData:_init_data_x_mac10_crew()
 	self.x_mac10_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6285-6303
+-- Lines 6302-6320
 function WeaponTweakData:_init_data_x_mp7_crew()
 	self.x_mp7_crew.categories = clone(self.x_mp7.categories)
 	self.x_mp7_crew.sounds.prefix = "mp7_x_npc"
@@ -4728,7 +4851,7 @@ function WeaponTweakData:_init_data_x_mp7_crew()
 	self.x_mp7_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6306-6324
+-- Lines 6323-6341
 function WeaponTweakData:_init_data_x_mp9_crew()
 	self.x_mp9_crew.categories = clone(self.x_mp9.categories)
 	self.x_mp9_crew.sounds.prefix = "mp9_x_npc"
@@ -4745,7 +4868,7 @@ function WeaponTweakData:_init_data_x_mp9_crew()
 	self.x_mp9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6327-6345
+-- Lines 6344-6362
 function WeaponTweakData:_init_data_x_olympic_crew()
 	self.x_olympic_crew.categories = clone(self.x_olympic.categories)
 	self.x_olympic_crew.sounds.prefix = "m4_olympic_x_npc"
@@ -4762,7 +4885,7 @@ function WeaponTweakData:_init_data_x_olympic_crew()
 	self.x_olympic_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6348-6366
+-- Lines 6365-6383
 function WeaponTweakData:_init_data_x_p90_crew()
 	self.x_p90_crew.categories = clone(self.x_p90.categories)
 	self.x_p90_crew.sounds.prefix = "p90_x_npc"
@@ -4779,7 +4902,7 @@ function WeaponTweakData:_init_data_x_p90_crew()
 	self.x_p90_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6369-6387
+-- Lines 6386-6404
 function WeaponTweakData:_init_data_x_polymer_crew()
 	self.x_polymer_crew.categories = clone(self.x_polymer.categories)
 	self.x_polymer_crew.sounds.prefix = "polymer_x_npc"
@@ -4796,7 +4919,7 @@ function WeaponTweakData:_init_data_x_polymer_crew()
 	self.x_polymer_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6390-6408
+-- Lines 6407-6425
 function WeaponTweakData:_init_data_x_schakal_crew()
 	self.x_schakal_crew.categories = clone(self.x_schakal.categories)
 	self.x_schakal_crew.sounds.prefix = "schakal_x_npc"
@@ -4813,7 +4936,7 @@ function WeaponTweakData:_init_data_x_schakal_crew()
 	self.x_schakal_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6411-6429
+-- Lines 6428-6446
 function WeaponTweakData:_init_data_x_scorpion_crew()
 	self.x_scorpion_crew.categories = clone(self.x_scorpion.categories)
 	self.x_scorpion_crew.sounds.prefix = "skorpion_x_npc"
@@ -4830,7 +4953,7 @@ function WeaponTweakData:_init_data_x_scorpion_crew()
 	self.x_scorpion_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6432-6450
+-- Lines 6449-6467
 function WeaponTweakData:_init_data_x_sterling_crew()
 	self.x_sterling_crew.categories = clone(self.x_sterling.categories)
 	self.x_sterling_crew.sounds.prefix = "sterling_x_npc"
@@ -4847,7 +4970,7 @@ function WeaponTweakData:_init_data_x_sterling_crew()
 	self.x_sterling_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6453-6471
+-- Lines 6470-6488
 function WeaponTweakData:_init_data_x_tec9_crew()
 	self.x_tec9_crew.categories = clone(self.x_tec9.categories)
 	self.x_tec9_crew.sounds.prefix = "tec9_x_npc"
@@ -4864,7 +4987,7 @@ function WeaponTweakData:_init_data_x_tec9_crew()
 	self.x_tec9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6474-6492
+-- Lines 6491-6509
 function WeaponTweakData:_init_data_x_uzi_crew()
 	self.x_uzi_crew.categories = clone(self.x_uzi.categories)
 	self.x_uzi_crew.sounds.prefix = "uzi_x_npc"
@@ -4881,7 +5004,7 @@ function WeaponTweakData:_init_data_x_uzi_crew()
 	self.x_uzi_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6496-6514
+-- Lines 6513-6531
 function WeaponTweakData:_init_data_x_2006m_crew()
 	self.x_2006m_crew.categories = clone(self.x_2006m.categories)
 	self.x_2006m_crew.sounds.prefix = "mateba_npc"
@@ -4898,7 +5021,7 @@ function WeaponTweakData:_init_data_x_2006m_crew()
 	self.x_2006m_crew.FIRE_MODE = "single"
 end
 
--- Lines 6516-6534
+-- Lines 6533-6551
 function WeaponTweakData:_init_data_x_breech_crew()
 	self.x_breech_crew.categories = clone(self.x_breech.categories)
 	self.x_breech_crew.sounds.prefix = "breech_npc"
@@ -4915,7 +5038,7 @@ function WeaponTweakData:_init_data_x_breech_crew()
 	self.x_breech_crew.FIRE_MODE = "single"
 end
 
--- Lines 6536-6554
+-- Lines 6553-6571
 function WeaponTweakData:_init_data_x_c96_crew()
 	self.x_c96_crew.categories = clone(self.x_c96.categories)
 	self.x_c96_crew.sounds.prefix = "c96_npc"
@@ -4932,7 +5055,7 @@ function WeaponTweakData:_init_data_x_c96_crew()
 	self.x_c96_crew.FIRE_MODE = "single"
 end
 
--- Lines 6556-6574
+-- Lines 6573-6591
 function WeaponTweakData:_init_data_x_g18c_crew()
 	self.x_g18c_crew.categories = clone(self.x_g18c.categories)
 	self.x_g18c_crew.sounds.prefix = "g18c_x_npc"
@@ -4949,7 +5072,7 @@ function WeaponTweakData:_init_data_x_g18c_crew()
 	self.x_g18c_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6576-6594
+-- Lines 6593-6611
 function WeaponTweakData:_init_data_x_hs2000_crew()
 	self.x_hs2000_crew.categories = clone(self.x_hs2000.categories)
 	self.x_hs2000_crew.sounds.prefix = "p226r_npc"
@@ -4966,7 +5089,7 @@ function WeaponTweakData:_init_data_x_hs2000_crew()
 	self.x_hs2000_crew.FIRE_MODE = "single"
 end
 
--- Lines 6596-6614
+-- Lines 6613-6631
 function WeaponTweakData:_init_data_x_p226_crew()
 	self.x_p226_crew.categories = clone(self.x_p226.categories)
 	self.x_p226_crew.sounds.prefix = "p226r_npc"
@@ -4983,7 +5106,7 @@ function WeaponTweakData:_init_data_x_p226_crew()
 	self.x_p226_crew.FIRE_MODE = "single"
 end
 
--- Lines 6616-6634
+-- Lines 6633-6651
 function WeaponTweakData:_init_data_x_pl14_crew()
 	self.x_pl14_crew.categories = clone(self.x_pl14.categories)
 	self.x_pl14_crew.sounds.prefix = "pl14_npc"
@@ -5000,7 +5123,7 @@ function WeaponTweakData:_init_data_x_pl14_crew()
 	self.x_pl14_crew.FIRE_MODE = "single"
 end
 
--- Lines 6636-6654
+-- Lines 6653-6671
 function WeaponTweakData:_init_data_x_ppk_crew()
 	self.x_ppk_crew.categories = clone(self.x_ppk.categories)
 	self.x_ppk_crew.sounds.prefix = "w_ppk_npc"
@@ -5017,7 +5140,7 @@ function WeaponTweakData:_init_data_x_ppk_crew()
 	self.x_ppk_crew.FIRE_MODE = "single"
 end
 
--- Lines 6657-6675
+-- Lines 6674-6692
 function WeaponTweakData:_init_data_x_rage_crew()
 	self.x_rage_crew.categories = clone(self.x_rage.categories)
 	self.x_rage_crew.sounds.prefix = "rbull_npc"
@@ -5034,7 +5157,7 @@ function WeaponTweakData:_init_data_x_rage_crew()
 	self.x_rage_crew.FIRE_MODE = "single"
 end
 
--- Lines 6677-6695
+-- Lines 6694-6712
 function WeaponTweakData:_init_data_x_sparrow_crew()
 	self.x_sparrow_crew.categories = clone(self.x_sparrow.categories)
 	self.x_sparrow_crew.sounds.prefix = "sparrow_npc"
@@ -5051,7 +5174,7 @@ function WeaponTweakData:_init_data_x_sparrow_crew()
 	self.x_sparrow_crew.FIRE_MODE = "single"
 end
 
--- Lines 6697-6716
+-- Lines 6714-6733
 function WeaponTweakData:_init_data_x_judge_crew()
 	self.x_judge_crew.categories = clone(self.x_judge.categories)
 	self.x_judge_crew.sounds.prefix = "judge_x_npc"
@@ -5069,7 +5192,7 @@ function WeaponTweakData:_init_data_x_judge_crew()
 	self.x_judge_crew.FIRE_MODE = "single"
 end
 
--- Lines 6718-6737
+-- Lines 6735-6754
 function WeaponTweakData:_init_data_x_rota_crew()
 	self.x_rota_crew.categories = clone(self.x_rota.categories)
 	self.x_rota_crew.sounds.prefix = "rota_x_npc"
@@ -5087,7 +5210,24 @@ function WeaponTweakData:_init_data_x_rota_crew()
 	self.x_rota_crew.FIRE_MODE = "single"
 end
 
--- Lines 6807-6827
+-- Lines 6802-6820
+function WeaponTweakData:_init_data_x_korth_crew()
+	self.x_korth_crew.categories = clone(self.x_korth.categories)
+	self.x_korth_crew.sounds.prefix = "korth_npc"
+	self.x_korth_crew.use_data.selection_index = SELECTION.PRIMARY
+	self.x_korth_crew.DAMAGE = 1
+	self.x_korth_crew.muzzleflash = "effects/payday2/particles/weapons/9mm_auto"
+	self.x_korth_crew.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence"
+	self.x_korth_crew.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.x_korth_crew.CLIP_AMMO_MAX = 20
+	self.x_korth_crew.NR_CLIPS_MAX = 5
+	self.x_korth_crew.hold = "akimbo_pistol"
+	self.x_korth_crew.alert_size = 2500
+	self.x_korth_crew.suppression = 1
+	self.x_korth_crew.FIRE_MODE = "single"
+end
+
+-- Lines 6824-6844
 function WeaponTweakData:_init_data_shuno_crew()
 	self.shuno_crew.categories = clone(self.shuno.categories)
 	self.shuno_crew.sounds.prefix = "shuno_npc"
@@ -5105,7 +5245,7 @@ function WeaponTweakData:_init_data_shuno_crew()
 	self.shuno_crew.has_fire_animation = true
 end
 
--- Lines 6863-6893
+-- Lines 6880-6910
 function WeaponTweakData:_init_data_system_crew()
 	self.system_crew.categories = clone(self.system.categories)
 	self.system_crew.sounds.prefix = "system_npc"
@@ -5134,7 +5274,7 @@ function WeaponTweakData:_init_data_system_crew()
 	self.system_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6897-6919
+-- Lines 6914-6936
 function WeaponTweakData:_init_data_komodo_crew()
 	self.komodo_crew.categories = clone(self.komodo.categories)
 	self.komodo_crew.sounds.prefix = "komodo_npc"
@@ -5156,7 +5296,7 @@ function WeaponTweakData:_init_data_komodo_crew()
 	self.komodo_crew.FIRE_MODE = "auto"
 end
 
--- Lines 6923-6948
+-- Lines 6940-6965
 function WeaponTweakData:_init_data_elastic_crew()
 	self.elastic_crew.categories = clone(self.elastic.categories)
 	self.elastic_crew.sounds.prefix = "elastic_npc"
@@ -5177,7 +5317,7 @@ function WeaponTweakData:_init_data_elastic_crew()
 	self.elastic_crew.FIRE_MODE = "single"
 end
 
--- Lines 6953-6973
+-- Lines 6970-6990
 function WeaponTweakData:_init_data_legacy_crew()
 	self.legacy_crew.categories = clone(self.legacy.categories)
 	self.legacy_crew.sounds.prefix = "legacy_npc"
@@ -5195,7 +5335,7 @@ function WeaponTweakData:_init_data_legacy_crew()
 	self.legacy_crew.FIRE_MODE = "single"
 end
 
--- Lines 6975-6994
+-- Lines 6992-7011
 function WeaponTweakData:_init_data_x_legacy_crew()
 	self.x_legacy_crew.categories = clone(self.x_legacy.categories)
 	self.x_legacy_crew.sounds.prefix = "legacy_npc"
@@ -5212,7 +5352,7 @@ function WeaponTweakData:_init_data_x_legacy_crew()
 	self.x_legacy_crew.FIRE_MODE = "single"
 end
 
--- Lines 6998-7018
+-- Lines 7015-7035
 function WeaponTweakData:_init_data_coach_crew()
 	self.coach_crew.categories = clone(self.coach.categories)
 	self.coach_crew.sounds.prefix = "coach_npc"
@@ -5229,7 +5369,7 @@ function WeaponTweakData:_init_data_coach_crew()
 	self.coach_crew.is_shotgun = true
 end
 
--- Lines 7022-7044
+-- Lines 7039-7061
 function WeaponTweakData:_init_data_beer_crew()
 	self.beer_crew.categories = clone(self.beer.categories)
 	self.beer_crew.sounds.prefix = "beer_npc"
@@ -5249,7 +5389,7 @@ function WeaponTweakData:_init_data_beer_crew()
 	self.beer_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7046-7065
+-- Lines 7063-7082
 function WeaponTweakData:_init_data_x_beer_crew()
 	self.x_beer_crew.categories = clone(self.x_beer.categories)
 	self.x_beer_crew.sounds.prefix = "beer_x_npc"
@@ -5266,7 +5406,7 @@ function WeaponTweakData:_init_data_x_beer_crew()
 	self.x_beer_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7066-7088
+-- Lines 7083-7105
 function WeaponTweakData:_init_data_czech_crew()
 	self.czech_crew.categories = clone(self.czech.categories)
 	self.czech_crew.sounds.prefix = "czech_npc"
@@ -5286,7 +5426,7 @@ function WeaponTweakData:_init_data_czech_crew()
 	self.czech_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7090-7109
+-- Lines 7107-7126
 function WeaponTweakData:_init_data_x_czech_crew()
 	self.x_czech_crew.categories = clone(self.x_czech.categories)
 	self.x_czech_crew.sounds.prefix = "czech_x_npc"
@@ -5303,7 +5443,7 @@ function WeaponTweakData:_init_data_x_czech_crew()
 	self.x_czech_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7110-7132
+-- Lines 7127-7149
 function WeaponTweakData:_init_data_stech_crew()
 	self.stech_crew.categories = clone(self.stech.categories)
 	self.stech_crew.sounds.prefix = "stetch_npc"
@@ -5323,7 +5463,7 @@ function WeaponTweakData:_init_data_stech_crew()
 	self.stech_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7134-7153
+-- Lines 7151-7170
 function WeaponTweakData:_init_data_x_stech_crew()
 	self.x_stech_crew.categories = clone(self.x_stech.categories)
 	self.x_stech_crew.sounds.prefix = "stetch_x_npc"
@@ -5340,7 +5480,7 @@ function WeaponTweakData:_init_data_x_stech_crew()
 	self.x_stech_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7156-7176
+-- Lines 7173-7193
 function WeaponTweakData:_init_data_maxim9_crew()
 	self.maxim9_crew.categories = clone(self.maxim9.categories)
 	self.maxim9_crew.sounds.prefix = "max9_npc"
@@ -5358,7 +5498,7 @@ function WeaponTweakData:_init_data_maxim9_crew()
 	self.maxim9_crew.FIRE_MODE = "single"
 end
 
--- Lines 7178-7197
+-- Lines 7195-7214
 function WeaponTweakData:_init_data_x_maxim9_crew()
 	self.x_maxim9_crew.categories = clone(self.x_maxim9.categories)
 	self.x_maxim9_crew.sounds.prefix = "max9_npc"
@@ -5375,7 +5515,7 @@ function WeaponTweakData:_init_data_x_maxim9_crew()
 	self.x_maxim9_crew.FIRE_MODE = "single"
 end
 
--- Lines 7199-7220
+-- Lines 7216-7237
 function WeaponTweakData:_init_data_fmg9_crew()
 	self.fmg9_crew.categories = clone(self.fmg9.categories)
 	self.fmg9_crew.sounds.prefix = "fmg9_npc"
@@ -5398,7 +5538,7 @@ function WeaponTweakData:_init_data_fmg9_crew()
 	self.fmg9_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7221-7243
+-- Lines 7238-7260
 function WeaponTweakData:_init_data_ultima_crew()
 	self.ultima_crew.categories = clone(self.ultima.categories)
 	self.ultima_crew.sounds.prefix = "ultima_npc"
@@ -5417,7 +5557,7 @@ function WeaponTweakData:_init_data_ultima_crew()
 	self.ultima_crew.is_shotgun = true
 end
 
--- Lines 7248-7268
+-- Lines 7265-7285
 function WeaponTweakData:_init_data_holt_crew()
 	self.holt_crew.categories = clone(self.holt.categories)
 	self.holt_crew.sounds.prefix = "holt_npc"
@@ -5435,7 +5575,7 @@ function WeaponTweakData:_init_data_holt_crew()
 	self.holt_crew.FIRE_MODE = "single"
 end
 
--- Lines 7270-7289
+-- Lines 7287-7306
 function WeaponTweakData:_init_data_x_holt_crew()
 	self.x_holt_crew.categories = clone(self.x_holt.categories)
 	self.x_holt_crew.sounds.prefix = "holt_npc"
@@ -5452,7 +5592,7 @@ function WeaponTweakData:_init_data_x_holt_crew()
 	self.x_holt_crew.FIRE_MODE = "single"
 end
 
--- Lines 7291-7312
+-- Lines 7308-7329
 function WeaponTweakData:_init_data_m60_crew()
 	self.m60_crew.categories = clone(self.m60.categories)
 	self.m60_crew.sounds.prefix = "m60_npc"
@@ -5469,7 +5609,7 @@ function WeaponTweakData:_init_data_m60_crew()
 	self.m60_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7314-7335
+-- Lines 7331-7352
 function WeaponTweakData:_init_data_r700_crew()
 	self.r700_crew.categories = clone(self.r700.categories)
 	self.r700_crew.sounds.prefix = "r700_npc"
@@ -5486,7 +5626,7 @@ function WeaponTweakData:_init_data_r700_crew()
 	self.r700_crew.FIRE_MODE = "auto"
 end
 
--- Lines 7339-7543
+-- Lines 7356-7560
 function WeaponTweakData:_init_data_player_weapons(tweak_data)
 	local autohit_rifle_default, autohit_pistol_default, autohit_shotgun_default, autohit_lmg_default, autohit_snp_default, autohit_smg_default, autohit_minigun_default, aim_assist_rifle_default, aim_assist_pistol_default, aim_assist_shotgun_default, aim_assist_lmg_default, aim_assist_snp_default, aim_assist_smg_default, aim_assist_minigun_default = nil
 
@@ -5679,7 +5819,7 @@ function WeaponTweakData:_init_data_player_weapons(tweak_data)
 	end
 end
 
--- Lines 7545-7633
+-- Lines 7562-7650
 function WeaponTweakData:_init_stats()
 	self.stats = {
 		alert_size = {
@@ -6116,7 +6256,7 @@ function WeaponTweakData:_init_stats()
 	end
 end
 
--- Lines 7635-7726
+-- Lines 7652-7743
 function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
 	local low, high = nil
 
@@ -6205,7 +6345,7 @@ function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
 	}
 end
 
--- Lines 7728-8059
+-- Lines 7745-8076
 function WeaponTweakData:_init_new_weapons(weapon_data)
 	weapon_data.total_damage_primary = 300
 	weapon_data.total_damage_secondary = 150
@@ -6248,6 +6388,10 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_scar(weapon_data)
 	self:_init_p226(weapon_data)
 	self:_init_hk21(weapon_data)
+	self:_init_korth(weapon_data)
+	self:_init_sko12(weapon_data)
+	self:_init_x_sko12(weapon_data)
+	self:_init_x_korth(weapon_data)
 	self:_init_m249(weapon_data)
 	self:_init_rpk(weapon_data)
 	self:_init_m95(weapon_data)
@@ -6309,6 +6453,7 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_groza(weapon_data)
 	self:_init_pm9(weapon_data)
 	self:_init_x_pm9(weapon_data)
+	self:_init_hailstorm(weapon_data)
 	self:_init_shak12(weapon_data)
 	self:_init_m37(weapon_data)
 	self:_init_china(weapon_data)
@@ -6414,7 +6559,7 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_r700(weapon_data)
 end
 
--- Lines 8061-8182
+-- Lines 8078-8199
 function WeaponTweakData:_init_new_m4(weapon_data)
 	self.new_m4 = {
 		categories = {
@@ -6525,7 +6670,7 @@ function WeaponTweakData:_init_new_m4(weapon_data)
 	}
 end
 
--- Lines 8184-8301
+-- Lines 8201-8318
 function WeaponTweakData:_init_glock_17(weapon_data)
 	self.glock_17 = {
 		categories = {
@@ -6631,7 +6776,7 @@ function WeaponTweakData:_init_glock_17(weapon_data)
 	}
 end
 
--- Lines 8303-8422
+-- Lines 8320-8439
 function WeaponTweakData:_init_mp9(weapon_data)
 	self.mp9 = {
 		categories = {
@@ -6738,7 +6883,7 @@ function WeaponTweakData:_init_mp9(weapon_data)
 	}
 end
 
--- Lines 8424-8539
+-- Lines 8441-8556
 function WeaponTweakData:_init_r870(weapon_data)
 	self.r870 = {
 		categories = {
@@ -6847,7 +6992,7 @@ function WeaponTweakData:_init_r870(weapon_data)
 	}
 end
 
--- Lines 8541-8669
+-- Lines 8558-8686
 function WeaponTweakData:_init_glock_18c(weapon_data)
 	self.glock_18c = {
 		categories = {
@@ -6964,7 +7109,7 @@ function WeaponTweakData:_init_glock_18c(weapon_data)
 	}
 end
 
--- Lines 8671-8791
+-- Lines 8688-8808
 function WeaponTweakData:_init_amcar(weapon_data)
 	self.amcar = {
 		categories = {
@@ -7069,7 +7214,7 @@ function WeaponTweakData:_init_amcar(weapon_data)
 	}
 end
 
--- Lines 8793-8913
+-- Lines 8810-8930
 function WeaponTweakData:_init_m16(weapon_data)
 	self.m16 = {
 		categories = {
@@ -7179,7 +7324,7 @@ function WeaponTweakData:_init_m16(weapon_data)
 	}
 end
 
--- Lines 8915-9035
+-- Lines 8932-9052
 function WeaponTweakData:_init_olympic(weapon_data)
 	self.olympic = {
 		categories = {
@@ -7284,7 +7429,7 @@ function WeaponTweakData:_init_olympic(weapon_data)
 	}
 end
 
--- Lines 9037-9156
+-- Lines 9054-9173
 function WeaponTweakData:_init_ak74(weapon_data)
 	self.ak74 = {
 		categories = {
@@ -7389,7 +7534,7 @@ function WeaponTweakData:_init_ak74(weapon_data)
 	}
 end
 
--- Lines 9158-9277
+-- Lines 9175-9294
 function WeaponTweakData:_init_akm(weapon_data)
 	self.akm = {
 		categories = {
@@ -7494,7 +7639,7 @@ function WeaponTweakData:_init_akm(weapon_data)
 	}
 end
 
--- Lines 9279-9400
+-- Lines 9296-9417
 function WeaponTweakData:_init_akm_gold(weapon_data)
 	self.akm_gold = {
 		categories = {
@@ -7600,7 +7745,7 @@ function WeaponTweakData:_init_akm_gold(weapon_data)
 	}
 end
 
--- Lines 9402-9521
+-- Lines 9419-9538
 function WeaponTweakData:_init_akmsu(weapon_data)
 	self.akmsu = {
 		categories = {
@@ -7705,7 +7850,7 @@ function WeaponTweakData:_init_akmsu(weapon_data)
 	}
 end
 
--- Lines 9523-9644
+-- Lines 9540-9661
 function WeaponTweakData:_init_saiga(weapon_data)
 	self.saiga = {
 		categories = {
@@ -7810,7 +7955,232 @@ function WeaponTweakData:_init_saiga(weapon_data)
 	}
 end
 
--- Lines 9900-10017
+-- Lines 9664-9789
+function WeaponTweakData:_init_sko12(weapon_data)
+	self.sko12 = {
+		categories = {
+			"shotgun"
+		},
+		has_magazine = true,
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.sko12.sounds.fire = "sko12_fire_single"
+	self.sko12.sounds.fire_single = "sko12_fire_single"
+	self.sko12.sounds.fire_auto = "sko12_fire"
+	self.sko12.sounds.dryfire = "shotgun_dryfire"
+	self.sko12.sounds.stop_fire = "sko12_stop"
+	self.sko12.sounds.enter_steelsight = "primary_steel_sight_enter"
+	self.sko12.sounds.leave_steelsight = "primary_steel_sight_exit"
+	self.sko12.timers = {
+		reload_not_empty = 3.1,
+		reload_empty = 3.6,
+		unequip = 0.6,
+		equip = 0.6
+	}
+	self.sko12.name_id = "bm_w_sko12"
+	self.sko12.desc_id = "bm_w_sko12_desc"
+	self.sko12.description_id = "des_sko12"
+	self.sko12.global_value = "pxp2"
+	self.sko12.texture_bundle_folder = "pxp2"
+	self.sko12.muzzleflash = "effects/payday2/particles/weapons/big_51b_auto_fps"
+	self.sko12.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.sko12.shell_ejection = "effects/payday2/particles/weapons/shells/shell_slug_g2"
+	self.sko12.use_data = {
+		selection_index = SELECTION.PRIMARY,
+		align_place = "right_hand"
+	}
+	self.sko12.DAMAGE = 6
+	self.sko12.damage_near = 2000
+	self.sko12.damage_far = 3000
+	self.sko12.rays = 8
+	self.sko12.damage_falloff = FALLOFF_TEMPLATE.SHOTGUN_FALL_PRIMARY_LOW
+	self.sko12.CLIP_AMMO_MAX = 28
+	self.sko12.NR_CLIPS_MAX = 2
+	self.sko12.AMMO_MAX = self.sko12.CLIP_AMMO_MAX * self.sko12.NR_CLIPS_MAX
+	self.sko12.AMMO_PICKUP = self:_pickup_chance(self.sko12.AMMO_MAX, PICKUP.SHOTGUN_HIGH_CAPACITY)
+	self.sko12.FIRE_MODE = "auto"
+	self.sko12.fire_mode_data = {
+		fire_rate = 0.22
+	}
+	self.sko12.CAN_TOGGLE_FIREMODE = true
+	self.sko12.auto = {
+		fire_rate = 0.22
+	}
+	self.sko12.spread = {
+		standing = self.r870.spread.standing,
+		crouching = self.r870.spread.crouching,
+		steelsight = self.r870.spread.steelsight,
+		moving_standing = self.r870.spread.moving_standing,
+		moving_crouching = self.r870.spread.moving_crouching,
+		moving_steelsight = self.r870.spread.moving_steelsight
+	}
+	self.sko12.kick = {
+		standing = self.r870.kick.standing
+	}
+	self.sko12.kick.crouching = self.sko12.kick.standing
+	self.sko12.kick.steelsight = self.r870.kick.steelsight
+	self.sko12.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.sko12.crosshair.standing.offset = 0.7
+	self.sko12.crosshair.standing.moving_offset = 0.7
+	self.sko12.crosshair.standing.kick_offset = 0.8
+	self.sko12.crosshair.crouching.offset = 0.65
+	self.sko12.crosshair.crouching.moving_offset = 0.65
+	self.sko12.crosshair.crouching.kick_offset = 0.75
+	self.sko12.crosshair.steelsight.hidden = true
+	self.sko12.crosshair.steelsight.offset = 0
+	self.sko12.crosshair.steelsight.moving_offset = 0
+	self.sko12.crosshair.steelsight.kick_offset = 0
+	self.sko12.shake = {
+		fire_multiplier = 2,
+		fire_steelsight_multiplier = 1.25
+	}
+	self.sko12.autohit = weapon_data.autohit_shotgun_default
+	self.sko12.aim_assist = weapon_data.aim_assist_shotgun_default
+	self.sko12.weapon_hold = "sko12"
+	self.sko12.animations = {
+		equip_id = "equip_sko12",
+		recoil_steelsight = true
+	}
+	self.sko12.panic_suppression_chance = 0.2
+	self.sko12.stats = {
+		zoom = 1,
+		total_ammo_mod = 21,
+		damage = 65,
+		alert_size = 7,
+		spread = 8,
+		spread_moving = 8,
+		recoil = 12,
+		value = 1,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 5,
+		concealment = 6
+	}
+end
+
+-- Lines 9792-9918
+function WeaponTweakData:_init_x_sko12(weapon_data)
+	self.x_sko12 = {
+		categories = {
+			"akimbo",
+			"shotgun"
+		},
+		has_magazine = true,
+		allow_akimbo_autofire = true,
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.x_sko12.sounds.fire = "sko12_x_fire_single"
+	self.x_sko12.sounds.fire_single = "sko12_x_fire_single"
+	self.x_sko12.sounds.fire_auto = "sko12_x_fire"
+	self.x_sko12.sounds.stop_fire = "sko12_x_stop"
+	self.x_sko12.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.x_sko12.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.x_sko12.sounds.dryfire = "secondary_dryfire"
+	self.x_sko12.timers = {
+		reload_not_empty = 3,
+		reload_empty = 3.5,
+		unequip = 0.5,
+		equip = 0.5
+	}
+	self.x_sko12.name_id = "bm_w_x_sko12"
+	self.x_sko12.desc_id = "bm_w_x_sko12_desc"
+	self.x_sko12.description_id = "des_x_sko12"
+	self.x_sko12.global_value = "pxp2"
+	self.x_sko12.texture_bundle_folder = "pxp2"
+	self.x_sko12.muzzleflash = "effects/payday2/particles/weapons/big_51b_auto_fps"
+	self.x_sko12.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.x_sko12.shell_ejection = "effects/payday2/particles/weapons/shells/shell_slug_g2"
+	self.x_sko12.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
+	self.x_sko12.use_shotgun_reload = false
+	self.x_sko12.CLIP_AMMO_MAX = 20
+	self.x_sko12.NR_CLIPS_MAX = 3
+	self.x_sko12.AMMO_MAX = self.x_sko12.CLIP_AMMO_MAX * self.x_sko12.NR_CLIPS_MAX
+	self.x_sko12.AMMO_PICKUP = self:_pickup_chance(self.x_sko12.AMMO_MAX, 4)
+	self.x_sko12.FIRE_MODE = "auto"
+	self.x_sko12.fire_mode_data = {}
+	self.x_sko12.DAMAGE = 4
+	self.x_sko12.damage_near = 2000
+	self.x_sko12.damage_far = 3000
+	self.x_sko12.rays = 6
+	self.x_sko12.fire_mode_data.fire_rate = 0.22
+	self.x_sko12.damage_falloff = FALLOFF_TEMPLATE.AKI_SHOTGUN_FALL_LOW
+	self.x_sko12.single = {
+		fire_rate = 0.22
+	}
+	self.x_sko12.CAN_TOGGLE_FIREMODE = true
+	self.x_sko12.spread = {
+		standing = self.r870.spread.standing,
+		crouching = self.r870.spread.crouching,
+		steelsight = self.r870.spread.steelsight,
+		moving_standing = self.r870.spread.moving_standing,
+		moving_crouching = self.r870.spread.moving_crouching,
+		moving_steelsight = self.r870.spread.moving_steelsight
+	}
+	self.x_sko12.kick = {
+		standing = {
+			1.4,
+			1.2,
+			-0.5,
+			0.5
+		}
+	}
+	self.x_sko12.kick.crouching = self.x_sko12.kick.standing
+	self.x_sko12.kick.steelsight = self.x_sko12.kick.standing
+	self.x_sko12.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.x_sko12.crosshair.standing.offset = 0.2
+	self.x_sko12.crosshair.standing.moving_offset = 0.6
+	self.x_sko12.crosshair.standing.kick_offset = 0.4
+	self.x_sko12.crosshair.crouching.offset = 0.1
+	self.x_sko12.crosshair.crouching.moving_offset = 0.6
+	self.x_sko12.crosshair.crouching.kick_offset = 0.3
+	self.x_sko12.crosshair.steelsight.hidden = true
+	self.x_sko12.crosshair.steelsight.offset = 0
+	self.x_sko12.crosshair.steelsight.moving_offset = 0
+	self.x_sko12.crosshair.steelsight.kick_offset = 0.1
+	self.x_sko12.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.x_sko12.autohit = weapon_data.autohit_smg_default
+	self.x_sko12.aim_assist = weapon_data.aim_assist_smg_default
+	self.x_sko12.weapon_hold = "x_akmsu"
+	self.x_sko12.animations = {
+		has_steelsight_stance = true,
+		recoil_steelsight = true
+	}
+	self.x_sko12.texture_bundle_folder = "pxp2"
+	self.x_sko12.panic_suppression_chance = 0.2
+	self.x_sko12.stats = {
+		zoom = 3,
+		total_ammo_mod = 21,
+		damage = 50,
+		alert_size = 7,
+		spread = 8,
+		spread_moving = 8,
+		recoil = 10,
+		value = 1,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 5,
+		concealment = 15
+	}
+end
+
+-- Lines 9922-10039
 function WeaponTweakData:_init_ak5(weapon_data)
 	self.ak5 = {
 		categories = {
@@ -7914,7 +8284,7 @@ function WeaponTweakData:_init_ak5(weapon_data)
 	}
 end
 
--- Lines 10019-10136
+-- Lines 10041-10158
 function WeaponTweakData:_init_aug(weapon_data)
 	self.aug = {
 		categories = {
@@ -8015,7 +8385,7 @@ function WeaponTweakData:_init_aug(weapon_data)
 	}
 end
 
--- Lines 10138-10252
+-- Lines 10160-10274
 function WeaponTweakData:_init_g36(weapon_data)
 	self.g36 = {
 		categories = {
@@ -8116,7 +8486,7 @@ function WeaponTweakData:_init_g36(weapon_data)
 	}
 end
 
--- Lines 10254-10369
+-- Lines 10276-10391
 function WeaponTweakData:_init_p90(weapon_data)
 	self.p90 = {
 		categories = {
@@ -8216,7 +8586,7 @@ function WeaponTweakData:_init_p90(weapon_data)
 	}
 end
 
--- Lines 10373-10488
+-- Lines 10395-10510
 function WeaponTweakData:_init_new_m14(weapon_data)
 	self.new_m14 = {
 		categories = {
@@ -8317,7 +8687,7 @@ function WeaponTweakData:_init_new_m14(weapon_data)
 	}
 end
 
--- Lines 10490-10604
+-- Lines 10512-10626
 function WeaponTweakData:_init_deagle(weapon_data)
 	self.deagle = {
 		categories = {
@@ -8415,7 +8785,7 @@ function WeaponTweakData:_init_deagle(weapon_data)
 	}
 end
 
--- Lines 10606-10722
+-- Lines 10628-10744
 function WeaponTweakData:_init_new_mp5(weapon_data)
 	self.new_mp5 = {
 		categories = {
@@ -8517,7 +8887,7 @@ function WeaponTweakData:_init_new_mp5(weapon_data)
 	}
 end
 
--- Lines 10724-10840
+-- Lines 10746-10862
 function WeaponTweakData:_init_colt_1911(weapon_data)
 	self.colt_1911 = {
 		categories = {
@@ -8617,7 +8987,7 @@ function WeaponTweakData:_init_colt_1911(weapon_data)
 	}
 end
 
--- Lines 10842-10960
+-- Lines 10864-10982
 function WeaponTweakData:_init_mac10(weapon_data)
 	self.mac10 = {
 		categories = {
@@ -8724,7 +9094,7 @@ function WeaponTweakData:_init_mac10(weapon_data)
 	}
 end
 
--- Lines 10962-11077
+-- Lines 10984-11099
 function WeaponTweakData:_init_serbu(weapon_data)
 	self.serbu = {
 		categories = {
@@ -8823,7 +9193,7 @@ function WeaponTweakData:_init_serbu(weapon_data)
 	}
 end
 
--- Lines 11079-11199
+-- Lines 11101-11221
 function WeaponTweakData:_init_huntsman(weapon_data)
 	self.huntsman = {
 		categories = {
@@ -8938,7 +9308,7 @@ function WeaponTweakData:_init_huntsman(weapon_data)
 	}
 end
 
--- Lines 11201-11317
+-- Lines 11223-11339
 function WeaponTweakData:_init_b92fs(weapon_data)
 	self.b92fs = {
 		categories = {
@@ -9038,7 +9408,7 @@ function WeaponTweakData:_init_b92fs(weapon_data)
 	}
 end
 
--- Lines 11319-11431
+-- Lines 11341-11453
 function WeaponTweakData:_init_new_raging_bull(weapon_data)
 	self.new_raging_bull = {
 		categories = {
@@ -9141,7 +9511,231 @@ function WeaponTweakData:_init_new_raging_bull(weapon_data)
 	}
 end
 
--- Lines 11668-11788
+-- Lines 11455-11573
+function WeaponTweakData:_init_korth(weapon_data)
+	self.korth = {
+		categories = {
+			"pistol",
+			"revolver"
+		},
+		upgrade_blocks = {
+			weapon = {
+				"clip_ammo_increase"
+			}
+		},
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.korth.sounds.fire = "korth_fire"
+	self.korth.sounds.dryfire = "secondary_dryfire"
+	self.korth.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.korth.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.korth.timers = {
+		reload_not_empty = 2.75,
+		reload_empty = 2.75,
+		unequip = 0.5,
+		equip = 0.45
+	}
+	self.korth.FIRE_MODE = "single"
+	self.korth.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.korth.single = {
+		fire_rate = 0.125
+	}
+	self.korth.name_id = "bm_w_korth"
+	self.korth.desc_id = "bm_w_korth_desc"
+	self.korth.description_id = "des_korth"
+	self.korth.global_value = "pxp2"
+	self.korth.texture_bundle_folder = "pxp2"
+	self.korth.muzzleflash = "effects/payday2/particles/weapons/357_effect_fps"
+	self.korth.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.korth.use_data = {
+		selection_index = SELECTION.SECONDARY
+	}
+	self.korth.DAMAGE = 2
+	self.korth.damage_falloff = FALLOFF_TEMPLATE.PISTOL_FALL_VERYHIGH
+	self.korth.CLIP_AMMO_MAX = 8
+	self.korth.NR_CLIPS_MAX = 7
+	self.korth.AMMO_MAX = self.korth.CLIP_AMMO_MAX * self.korth.NR_CLIPS_MAX
+	self.korth.AMMO_PICKUP = {
+		3,
+		2
+	}
+	self.korth.spread = {
+		standing = self.new_m4.spread.standing,
+		crouching = self.new_m4.spread.crouching,
+		steelsight = self.new_m4.spread.steelsight,
+		moving_standing = self.new_m4.spread.moving_standing,
+		moving_crouching = self.new_m4.spread.moving_crouching,
+		moving_steelsight = self.new_m4.spread.moving_steelsight
+	}
+	self.korth.kick = {
+		standing = self.glock_17.kick.standing
+	}
+	self.korth.kick.crouching = self.korth.kick.standing
+	self.korth.kick.steelsight = self.korth.kick.standing
+	self.korth.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.korth.crosshair.standing.offset = 0.2
+	self.korth.crosshair.standing.moving_offset = 0.6
+	self.korth.crosshair.standing.kick_offset = 0.4
+	self.korth.crosshair.crouching.offset = 0.1
+	self.korth.crosshair.crouching.moving_offset = 0.6
+	self.korth.crosshair.crouching.kick_offset = 0.3
+	self.korth.crosshair.steelsight.hidden = true
+	self.korth.crosshair.steelsight.offset = 0
+	self.korth.crosshair.steelsight.moving_offset = 0
+	self.korth.crosshair.steelsight.kick_offset = 0.1
+	self.korth.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.korth.autohit = weapon_data.autohit_pistol_default
+	self.korth.aim_assist = weapon_data.aim_assist_pistol_default
+	self.korth.weapon_hold = "korth"
+	self.korth.animations = {
+		equip_id = "equip_korth",
+		recoil_steelsight = true
+	}
+	self.korth.panic_suppression_chance = 0.2
+	self.korth.stats = {
+		zoom = 1,
+		total_ammo_mod = 21,
+		damage = 120,
+		alert_size = 7,
+		spread = 21,
+		spread_moving = 5,
+		recoil = 11,
+		value = 1,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 7,
+		concealment = 27
+	}
+end
+
+-- Lines 11576-11694
+function WeaponTweakData:_init_x_korth(weapon_data)
+	self.x_korth = {
+		categories = {
+			"akimbo",
+			"pistol",
+			"revolver"
+		},
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.x_korth.sounds.fire = "korth_fire"
+	self.x_korth.sounds.enter_steelsight = "pistol_steel_sight_enter"
+	self.x_korth.sounds.leave_steelsight = "pistol_steel_sight_exit"
+	self.x_korth.sounds.dryfire = "secondary_dryfire"
+	self.x_korth.sounds.magazine_empty = "wp_akimbo_pistol_slide_lock"
+	self.x_korth.timers = {
+		reload_not_empty = 3.17,
+		reload_empty = 4,
+		unequip = 0.5,
+		equip = 0.5
+	}
+	self.x_korth.name_id = "bm_w_x_korth"
+	self.x_korth.desc_id = "bm_w_x_korth_desc"
+	self.x_korth.description_id = "des_x_korth"
+	self.x_korth.global_value = "pxp2"
+	self.x_korth.texture_bundle_folder = "pxp2"
+	self.x_korth.muzzleflash = "effects/payday2/particles/weapons/357_effect_fps"
+	self.x_korth.muzzleflash_silenced = "effects/payday2/particles/weapons/9mm_auto_silence_fps"
+	self.x_korth.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.x_korth.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
+	self.x_korth.DAMAGE = 1
+	self.x_korth.damage_falloff = FALLOFF_TEMPLATE.AKI_PISTOL_FALL_VERYHIGH
+	self.x_korth.CLIP_AMMO_MAX = 16
+	self.x_korth.NR_CLIPS_MAX = 5
+	self.x_korth.AMMO_MAX = self.x_korth.CLIP_AMMO_MAX * self.x_korth.NR_CLIPS_MAX
+	self.x_korth.AMMO_PICKUP = {
+		3,
+		2
+	}
+	self.x_korth.FIRE_MODE = "single"
+	self.x_korth.fire_mode_data = {
+		fire_rate = 0.125
+	}
+	self.x_korth.single = {
+		fire_rate = 0.125
+	}
+	self.x_korth.spread = {
+		standing = self.colt_1911.spread.standing,
+		crouching = self.colt_1911.spread.crouching,
+		steelsight = self.colt_1911.spread.steelsight,
+		moving_standing = self.colt_1911.spread.moving_standing,
+		moving_crouching = self.colt_1911.spread.moving_crouching,
+		moving_steelsight = self.colt_1911.spread.moving_steelsight
+	}
+	self.x_korth.kick = {
+		standing = {
+			1.6,
+			1.3,
+			-0.3,
+			0.3
+		}
+	}
+	self.x_korth.kick.crouching = self.x_korth.kick.standing
+	self.x_korth.kick.steelsight = self.x_korth.kick.standing
+	self.x_korth.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.x_korth.crosshair.standing.offset = 0.2
+	self.x_korth.crosshair.standing.moving_offset = 0.6
+	self.x_korth.crosshair.standing.kick_offset = 0.4
+	self.x_korth.crosshair.crouching.offset = 0.1
+	self.x_korth.crosshair.crouching.moving_offset = 0.6
+	self.x_korth.crosshair.crouching.kick_offset = 0.3
+	self.x_korth.crosshair.steelsight.hidden = true
+	self.x_korth.crosshair.steelsight.offset = 0
+	self.x_korth.crosshair.steelsight.moving_offset = 0
+	self.x_korth.crosshair.steelsight.kick_offset = 0.1
+	self.x_korth.shake = {
+		fire_multiplier = 1,
+		fire_steelsight_multiplier = -1
+	}
+	self.x_korth.autohit = weapon_data.autohit_pistol_default
+	self.x_korth.aim_assist = weapon_data.aim_assist_pistol_default
+	self.x_korth.weapon_hold = "x_judge"
+	self.x_korth.animations = {
+		second_gun_versions = {
+			reload_not_empty = "reload_not_empty_left",
+			reload = "reload_left"
+		},
+		has_steelsight_stance = true,
+		recoil_steelsight = true,
+		magazine_empty = "last_recoil"
+	}
+	self.x_korth.panic_suppression_chance = 0.2
+	self.x_korth.stats = {
+		zoom = 3,
+		total_ammo_mod = 21,
+		damage = 120,
+		alert_size = 7,
+		spread = 21,
+		spread_moving = 5,
+		recoil = 11,
+		value = 1,
+		extra_ammo = 51,
+		reload = 13,
+		suppression = 7,
+		concealment = 27
+	}
+end
+
+-- Lines 11697-11817
 function WeaponTweakData:_init_saw(weapon_data)
 	self.saw = {
 		categories = {
@@ -9270,7 +9864,7 @@ function WeaponTweakData:_init_saw(weapon_data)
 	self.saw_secondary.weapon_hold = "saw"
 end
 
--- Lines 11790-11907
+-- Lines 11819-11936
 function WeaponTweakData:_init_usp(weapon_data)
 	self.usp = {
 		categories = {
@@ -9376,7 +9970,7 @@ function WeaponTweakData:_init_usp(weapon_data)
 	}
 end
 
--- Lines 11909-12027
+-- Lines 11938-12056
 function WeaponTweakData:_init_g22c(weapon_data)
 	self.g22c = {
 		categories = {
@@ -9482,7 +10076,7 @@ function WeaponTweakData:_init_g22c(weapon_data)
 	}
 end
 
--- Lines 12029-12149
+-- Lines 12058-12178
 function WeaponTweakData:_init_judge(weapon_data)
 	self.judge = {
 		categories = {
@@ -9595,7 +10189,7 @@ function WeaponTweakData:_init_judge(weapon_data)
 	}
 end
 
--- Lines 12151-12268
+-- Lines 12180-12297
 function WeaponTweakData:_init_m45(weapon_data)
 	self.m45 = {
 		categories = {
@@ -9698,7 +10292,7 @@ function WeaponTweakData:_init_m45(weapon_data)
 	}
 end
 
--- Lines 12270-12389
+-- Lines 12299-12418
 function WeaponTweakData:_init_s552(weapon_data)
 	self.s552 = {
 		categories = {
@@ -9801,7 +10395,7 @@ function WeaponTweakData:_init_s552(weapon_data)
 	}
 end
 
--- Lines 12391-12508
+-- Lines 12420-12537
 function WeaponTweakData:_init_ppk(weapon_data)
 	self.ppk = {
 		categories = {
@@ -9903,7 +10497,7 @@ function WeaponTweakData:_init_ppk(weapon_data)
 	}
 end
 
--- Lines 12510-12631
+-- Lines 12539-12660
 function WeaponTweakData:_init_mp7(weapon_data)
 	self.mp7 = {
 		categories = {
@@ -10008,7 +10602,7 @@ function WeaponTweakData:_init_mp7(weapon_data)
 	}
 end
 
--- Lines 12633-12752
+-- Lines 12662-12781
 function WeaponTweakData:_init_scar(weapon_data)
 	self.scar = {
 		categories = {
@@ -10111,7 +10705,7 @@ function WeaponTweakData:_init_scar(weapon_data)
 	}
 end
 
--- Lines 12754-12871
+-- Lines 12783-12900
 function WeaponTweakData:_init_p226(weapon_data)
 	self.p226 = {
 		categories = {
@@ -10213,7 +10807,7 @@ function WeaponTweakData:_init_p226(weapon_data)
 	}
 end
 
--- Lines 12873-13004
+-- Lines 12902-13033
 function WeaponTweakData:_init_hk21(weapon_data)
 	self.hk21 = {
 		categories = {
@@ -10333,7 +10927,7 @@ function WeaponTweakData:_init_hk21(weapon_data)
 	}
 end
 
--- Lines 13007-13138
+-- Lines 13036-13167
 function WeaponTweakData:_init_hk51b(weapon_data)
 	self.hk51b = {
 		categories = {
@@ -10458,7 +11052,7 @@ function WeaponTweakData:_init_hk51b(weapon_data)
 	}
 end
 
--- Lines 13141-13272
+-- Lines 13170-13301
 function WeaponTweakData:_init_m249(weapon_data)
 	self.m249 = {
 		categories = {
@@ -10578,7 +11172,7 @@ function WeaponTweakData:_init_m249(weapon_data)
 	}
 end
 
--- Lines 13274-13406
+-- Lines 13303-13435
 function WeaponTweakData:_init_rpk(weapon_data)
 	self.rpk = {
 		categories = {
@@ -10698,7 +11292,7 @@ function WeaponTweakData:_init_rpk(weapon_data)
 	}
 end
 
--- Lines 13408-13529
+-- Lines 13437-13558
 function WeaponTweakData:_init_m95(weapon_data)
 	self.m95 = {
 		categories = {
@@ -10818,7 +11412,7 @@ function WeaponTweakData:_init_m95(weapon_data)
 	}
 end
 
--- Lines 13531-13656
+-- Lines 13560-13685
 function WeaponTweakData:_init_msr(weapon_data)
 	self.msr = {
 		categories = {
@@ -10937,7 +11531,7 @@ function WeaponTweakData:_init_msr(weapon_data)
 	}
 end
 
--- Lines 13658-13782
+-- Lines 13687-13811
 function WeaponTweakData:_init_r93(weapon_data)
 	self.r93 = {
 		categories = {
@@ -11059,7 +11653,7 @@ function WeaponTweakData:_init_r93(weapon_data)
 	}
 end
 
--- Lines 13784-13902
+-- Lines 13813-13931
 function WeaponTweakData:_init_fal(weapon_data)
 	self.fal = {
 		categories = {
@@ -11161,7 +11755,7 @@ function WeaponTweakData:_init_fal(weapon_data)
 	}
 end
 
--- Lines 13904-14021
+-- Lines 13933-14050
 function WeaponTweakData:_init_benelli(weapon_data)
 	self.benelli = {
 		categories = {
@@ -11263,7 +11857,7 @@ function WeaponTweakData:_init_benelli(weapon_data)
 	}
 end
 
--- Lines 14023-14146
+-- Lines 14052-14175
 function WeaponTweakData:_init_striker(weapon_data)
 	self.striker = {
 		categories = {
@@ -11373,7 +11967,7 @@ function WeaponTweakData:_init_striker(weapon_data)
 	}
 end
 
--- Lines 14148-14265
+-- Lines 14177-14294
 function WeaponTweakData:_init_ksg(weapon_data)
 	self.ksg = {
 		categories = {
@@ -11484,7 +12078,7 @@ function WeaponTweakData:_init_ksg(weapon_data)
 	}
 end
 
--- Lines 14267-14392
+-- Lines 14296-14421
 function WeaponTweakData:_init_gre_m79(weapon_data)
 	self.gre_m79 = {
 		categories = {
@@ -11608,7 +12202,7 @@ function WeaponTweakData:_init_gre_m79(weapon_data)
 	}
 end
 
--- Lines 14394-14512
+-- Lines 14423-14541
 function WeaponTweakData:_init_g3(weapon_data)
 	self.g3 = {
 		categories = {
@@ -11710,7 +12304,7 @@ function WeaponTweakData:_init_g3(weapon_data)
 	}
 end
 
--- Lines 14514-14634
+-- Lines 14543-14663
 function WeaponTweakData:_init_galil(weapon_data)
 	self.galil = {
 		categories = {
@@ -11814,7 +12408,7 @@ function WeaponTweakData:_init_galil(weapon_data)
 	}
 end
 
--- Lines 14636-14753
+-- Lines 14665-14782
 function WeaponTweakData:_init_famas(weapon_data)
 	self.famas = {
 		categories = {
@@ -11916,7 +12510,7 @@ function WeaponTweakData:_init_famas(weapon_data)
 	}
 end
 
--- Lines 14755-14873
+-- Lines 14784-14902
 function WeaponTweakData:_init_scorpion(weapon_data)
 	self.scorpion = {
 		categories = {
@@ -12020,7 +12614,7 @@ function WeaponTweakData:_init_scorpion(weapon_data)
 	}
 end
 
--- Lines 14875-14993
+-- Lines 14904-15022
 function WeaponTweakData:_init_tec9(weapon_data)
 	self.tec9 = {
 		categories = {
@@ -12124,7 +12718,7 @@ function WeaponTweakData:_init_tec9(weapon_data)
 	}
 end
 
--- Lines 14995-15114
+-- Lines 15024-15143
 function WeaponTweakData:_init_uzi(weapon_data)
 	self.uzi = {
 		categories = {
@@ -12228,7 +12822,7 @@ function WeaponTweakData:_init_uzi(weapon_data)
 	}
 end
 
--- Lines 15116-15232
+-- Lines 15145-15261
 function WeaponTweakData:_init_jowi(weapon_data)
 	self.jowi = {
 		categories = {
@@ -12338,7 +12932,7 @@ function WeaponTweakData:_init_jowi(weapon_data)
 	}
 end
 
--- Lines 15234-15350
+-- Lines 15263-15379
 function WeaponTweakData:_init_x_1911(weapon_data)
 	self.x_1911 = {
 		categories = {
@@ -12448,7 +13042,7 @@ function WeaponTweakData:_init_x_1911(weapon_data)
 	}
 end
 
--- Lines 15352-15468
+-- Lines 15381-15497
 function WeaponTweakData:_init_x_b92fs(weapon_data)
 	self.x_b92fs = {
 		categories = {
@@ -12557,7 +13151,7 @@ function WeaponTweakData:_init_x_b92fs(weapon_data)
 	}
 end
 
--- Lines 15470-15586
+-- Lines 15499-15615
 function WeaponTweakData:_init_x_deagle(weapon_data)
 	self.x_deagle = {
 		categories = {
@@ -12666,7 +13260,7 @@ function WeaponTweakData:_init_x_deagle(weapon_data)
 	}
 end
 
--- Lines 15588-15704
+-- Lines 15617-15733
 function WeaponTweakData:_init_g26(weapon_data)
 	self.g26 = {
 		categories = {
@@ -12767,7 +13361,7 @@ function WeaponTweakData:_init_g26(weapon_data)
 	}
 end
 
--- Lines 15706-15822
+-- Lines 15735-15851
 function WeaponTweakData:_init_spas12(weapon_data)
 	self.spas12 = {
 		categories = {
@@ -12873,7 +13467,7 @@ function WeaponTweakData:_init_spas12(weapon_data)
 	}
 end
 
--- Lines 15824-15956
+-- Lines 15853-15985
 function WeaponTweakData:_init_mg42(weapon_data)
 	self.mg42 = {
 		categories = {
@@ -12993,7 +13587,7 @@ function WeaponTweakData:_init_mg42(weapon_data)
 	}
 end
 
--- Lines 15958-16075
+-- Lines 15987-16104
 function WeaponTweakData:_init_c96(weapon_data)
 	self.c96 = {
 		categories = {
@@ -13095,7 +13689,7 @@ function WeaponTweakData:_init_c96(weapon_data)
 	}
 end
 
--- Lines 16077-16198
+-- Lines 16106-16227
 function WeaponTweakData:_init_sterling(weapon_data)
 	self.sterling = {
 		categories = {
@@ -13200,7 +13794,7 @@ function WeaponTweakData:_init_sterling(weapon_data)
 	}
 end
 
--- Lines 16200-16324
+-- Lines 16229-16353
 function WeaponTweakData:_init_mosin(weapon_data)
 	self.mosin = {
 		categories = {
@@ -13322,7 +13916,7 @@ function WeaponTweakData:_init_mosin(weapon_data)
 	}
 end
 
--- Lines 16326-16446
+-- Lines 16355-16475
 function WeaponTweakData:_init_m1928(weapon_data)
 	self.m1928 = {
 		categories = {
@@ -13431,7 +14025,7 @@ function WeaponTweakData:_init_m1928(weapon_data)
 	}
 end
 
--- Lines 16448-16568
+-- Lines 16477-16597
 function WeaponTweakData:_init_l85a2(weapon_data)
 	self.l85a2 = {
 		categories = {
@@ -13539,7 +14133,7 @@ function WeaponTweakData:_init_l85a2(weapon_data)
 	}
 end
 
--- Lines 16570-16688
+-- Lines 16599-16717
 function WeaponTweakData:_init_vhs(weapon_data)
 	self.vhs = {
 		categories = {
@@ -13647,7 +14241,7 @@ function WeaponTweakData:_init_vhs(weapon_data)
 	}
 end
 
--- Lines 16690-16807
+-- Lines 16719-16836
 function WeaponTweakData:_init_hs2000(weapon_data)
 	self.hs2000 = {
 		categories = {
@@ -13749,7 +14343,7 @@ function WeaponTweakData:_init_hs2000(weapon_data)
 	}
 end
 
--- Lines 16809-16927
+-- Lines 16838-16956
 function WeaponTweakData:_init_m134(weapon_data)
 	self.m134 = {
 		categories = {
@@ -13859,7 +14453,7 @@ function WeaponTweakData:_init_m134(weapon_data)
 	}
 end
 
--- Lines 16929-17050
+-- Lines 16958-17079
 function WeaponTweakData:_init_rpg7(weapon_data)
 	self.rpg7 = {
 		categories = {
@@ -13978,7 +14572,7 @@ function WeaponTweakData:_init_rpg7(weapon_data)
 	}
 end
 
--- Lines 17052-17173
+-- Lines 17081-17202
 function WeaponTweakData:_init_cobray(weapon_data)
 	self.cobray = {
 		categories = {
@@ -14088,7 +14682,7 @@ function WeaponTweakData:_init_cobray(weapon_data)
 	}
 end
 
--- Lines 17175-17296
+-- Lines 17204-17325
 function WeaponTweakData:_init_b682(weapon_data)
 	self.b682 = {
 		categories = {
@@ -14205,7 +14799,7 @@ function WeaponTweakData:_init_b682(weapon_data)
 	}
 end
 
--- Lines 17298-17415
+-- Lines 17327-17444
 function WeaponTweakData:_init_x_g22c(weapon_data)
 	self.x_g22c = {
 		categories = {
@@ -14316,7 +14910,7 @@ function WeaponTweakData:_init_x_g22c(weapon_data)
 	}
 end
 
--- Lines 17417-17534
+-- Lines 17446-17563
 function WeaponTweakData:_init_x_g17(weapon_data)
 	self.x_g17 = {
 		categories = {
@@ -14427,7 +15021,7 @@ function WeaponTweakData:_init_x_g17(weapon_data)
 	}
 end
 
--- Lines 17536-17653
+-- Lines 17565-17682
 function WeaponTweakData:_init_x_usp(weapon_data)
 	self.x_usp = {
 		categories = {
@@ -14538,7 +15132,7 @@ function WeaponTweakData:_init_x_usp(weapon_data)
 	}
 end
 
--- Lines 17655-17774
+-- Lines 17684-17803
 function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 	self.flamethrower_mk2 = {
 		categories = {
@@ -14656,7 +15250,7 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
 	}
 end
 
--- Lines 17776-17904
+-- Lines 17805-17933
 function WeaponTweakData:_init_m32(weapon_data)
 	self.m32 = {
 		categories = {
@@ -14787,7 +15381,7 @@ function WeaponTweakData:_init_m32(weapon_data)
 	}
 end
 
--- Lines 17906-18029
+-- Lines 17935-18058
 function WeaponTweakData:_init_aa12(weapon_data)
 	self.aa12 = {
 		categories = {
@@ -14895,7 +15489,7 @@ function WeaponTweakData:_init_aa12(weapon_data)
 	}
 end
 
--- Lines 18031-18155
+-- Lines 18060-18184
 function WeaponTweakData:_init_peacemaker(weapon_data)
 	self.peacemaker = {
 		categories = {
@@ -15015,7 +15609,7 @@ function WeaponTweakData:_init_peacemaker(weapon_data)
 	}
 end
 
--- Lines 18157-18284
+-- Lines 18186-18313
 function WeaponTweakData:_init_winchester1874(weapon_data)
 	self.winchester1874 = {
 		categories = {
@@ -15137,7 +15731,7 @@ function WeaponTweakData:_init_winchester1874(weapon_data)
 	}
 end
 
--- Lines 18286-18413
+-- Lines 18315-18442
 function WeaponTweakData:_init_sbl(weapon_data)
 	self.sbl = {
 		categories = {
@@ -15259,7 +15853,7 @@ function WeaponTweakData:_init_sbl(weapon_data)
 	}
 end
 
--- Lines 18415-18536
+-- Lines 18444-18565
 function WeaponTweakData:_init_plainsider(weapon_data)
 	self.plainsrider = {
 		categories = {
@@ -15378,7 +15972,7 @@ function WeaponTweakData:_init_plainsider(weapon_data)
 	}
 end
 
--- Lines 18538-18654
+-- Lines 18567-18683
 function WeaponTweakData:_init_mateba(weapon_data)
 	self.mateba = {
 		categories = {
@@ -15483,7 +16077,7 @@ function WeaponTweakData:_init_mateba(weapon_data)
 	}
 end
 
--- Lines 18656-18779
+-- Lines 18685-18808
 function WeaponTweakData:_init_asval(weapon_data)
 	self.asval = {
 		categories = {
@@ -15591,7 +16185,7 @@ function WeaponTweakData:_init_asval(weapon_data)
 	}
 end
 
--- Lines 18781-18895
+-- Lines 18810-18924
 function WeaponTweakData:_init_sub2000(weapon_data)
 	self.sub2000 = {
 		categories = {
@@ -15692,7 +16286,7 @@ function WeaponTweakData:_init_sub2000(weapon_data)
 	}
 end
 
--- Lines 18897-19019
+-- Lines 18926-19048
 function WeaponTweakData:_init_wa2000(weapon_data)
 	self.wa2000 = {
 		categories = {
@@ -15810,7 +16404,7 @@ function WeaponTweakData:_init_wa2000(weapon_data)
 	}
 end
 
--- Lines 19021-19140
+-- Lines 19050-19169
 function WeaponTweakData:_init_polymer(weapon_data)
 	self.polymer = {
 		categories = {
@@ -15919,7 +16513,7 @@ function WeaponTweakData:_init_polymer(weapon_data)
 	}
 end
 
--- Lines 19142-19259
+-- Lines 19171-19288
 function WeaponTweakData:_init_hunter(weapon_data)
 	self.hunter = {
 		categories = {
@@ -16035,7 +16629,7 @@ function WeaponTweakData:_init_hunter(weapon_data)
 	}
 end
 
--- Lines 19261-19379
+-- Lines 19290-19408
 function WeaponTweakData:_init_baka(weapon_data)
 	self.baka = {
 		categories = {
@@ -16144,7 +16738,7 @@ function WeaponTweakData:_init_baka(weapon_data)
 	}
 end
 
--- Lines 19382-19501
+-- Lines 19411-19530
 function WeaponTweakData:_init_x_pm9(weapon_data)
 	self.x_pm9 = {
 		categories = {
@@ -16255,7 +16849,7 @@ function WeaponTweakData:_init_x_pm9(weapon_data)
 	}
 end
 
--- Lines 19504-19622
+-- Lines 19533-19651
 function WeaponTweakData:_init_pm9(weapon_data)
 	self.pm9 = {
 		categories = {
@@ -16364,7 +16958,7 @@ function WeaponTweakData:_init_pm9(weapon_data)
 	}
 end
 
--- Lines 19625-19868
+-- Lines 19654-19897
 function WeaponTweakData:_init_groza(weapon_data)
 	self.groza = {
 		categories = {
@@ -16596,7 +17190,160 @@ function WeaponTweakData:_init_groza(weapon_data)
 	}
 end
 
--- Lines 20033-20158
+-- Lines 19900-20059
+function WeaponTweakData:_init_hailstorm(weapon_data)
+	self.hailstorm = {
+		categories = {
+			"minigun"
+		},
+		ammo_default_sub_type = "ammo_electric",
+		damage_melee = weapon_data.damage_melee_default,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		sounds = {}
+	}
+	self.hailstorm.sounds.fire = "hailstorm_shotgun_fire_single"
+	self.hailstorm.sounds.fire_auto = "hailstorm_fire"
+	self.hailstorm.sounds.stop_fire = "hailstorm_stop"
+	self.hailstorm.sounds.dryfire = "primary_dryfire"
+	self.hailstorm.sounds.charge_release = "long_release"
+	self.hailstorm.sounds.charge_release_fail = "bow_release_fail"
+	self.hailstorm.sounds.charge = "hailstorm_shotgun_fire_charge"
+	self.hailstorm.sounds.charge_cancel = "bow_charge_cancel"
+	self.hailstorm.sounds.enter_steelsight = "primary_steel_sight_enter"
+	self.hailstorm.sounds.leave_steelsight = "primary_steel_sight_exit"
+	self.hailstorm.timers = {
+		reload_not_empty = 3.6,
+		reload_empty = 4.3,
+		unequip = 0.55,
+		equip = 0.55
+	}
+	self.hailstorm.name_id = "bm_w_hailstorm"
+	self.hailstorm.desc_id = "bm_w_hailstorm_desc"
+	self.hailstorm.description_id = "des_hailstorm"
+	self.hailstorm.global_value = "pxp2"
+	self.hailstorm.texture_bundle_folder = "pxp2"
+	self.hailstorm.muzzleflash = "effects/payday2/particles/weapons/hailstorm_effect"
+	self.hailstorm.muzzleflash_silenced = "effects/payday2/particles/weapons/hailstorm_suppressed"
+	self.hailstorm.shell_ejection = "effects/payday2/particles/weapons/shells/shell_empty"
+	self.hailstorm.trail_effect = "effects/payday2/particles/weapons/hailstorm_streak"
+	self.hailstorm.use_data = {
+		selection_index = SELECTION.PRIMARY
+	}
+	self.hailstorm.DAMAGE = 1
+	self.hailstorm.damage_falloff = FALLOFF_TEMPLATE.SPECIAL_LOW
+	self.hailstorm.CLIP_AMMO_MAX = 120
+	self.hailstorm.NR_CLIPS_MAX = 4.5
+	self.hailstorm.AMMO_MAX = self.hailstorm.CLIP_AMMO_MAX * self.hailstorm.NR_CLIPS_MAX
+	self.hailstorm.AMMO_PICKUP = self:_pickup_chance(self.hailstorm.AMMO_MAX, PICKUP.SNIPER_HIGH_DAMAGE)
+	self.hailstorm.FIRE_MODE = "auto"
+	self.hailstorm.fire_mode_data = {
+		fire_rate = 0.03,
+		volley = {}
+	}
+	self.hailstorm.fire_mode_data.volley.spread_mul = 6
+	self.hailstorm.fire_mode_data.volley.damage_mul = 2
+	self.hailstorm.fire_mode_data.volley.ammo_usage = 30
+	self.hailstorm.fire_mode_data.volley.rays = 15
+	self.hailstorm.fire_mode_data.volley.can_shoot_through_wall = false
+	self.hailstorm.fire_mode_data.volley.can_shoot_through_shield = true
+	self.hailstorm.fire_mode_data.volley.can_shoot_through_enemy = true
+	self.hailstorm.fire_mode_data.volley.muzzleflash = "effects/payday2/particles/weapons/hailstorm_volley_effect"
+	self.hailstorm.fire_mode_data.volley.muzzleflash_silenced = "effects/payday2/particles/weapons/hailstorm_suppressed_volley"
+	self.hailstorm.fire_mode_data.toggable = {
+		"volley",
+		"auto"
+	}
+	self.hailstorm.charge_data = {
+		max_t = 0.5,
+		cooldown_t = 0.3
+	}
+	self.hailstorm.auto = {
+		fire_rate = 0.03
+	}
+	self.hailstorm.spread = {
+		standing = self.new_m4.spread.standing,
+		crouching = self.new_m4.spread.crouching,
+		steelsight = self.new_m4.spread.steelsight,
+		moving_standing = self.new_m4.spread.moving_standing,
+		moving_crouching = self.new_m4.spread.moving_crouching,
+		moving_steelsight = self.new_m4.spread.moving_steelsight
+	}
+	self.hailstorm.crosshair = {
+		standing = {},
+		crouching = {},
+		steelsight = {}
+	}
+	self.hailstorm.crosshair.standing.offset = 0.016
+	self.hailstorm.crosshair.standing.moving_offset = 0.01
+	self.hailstorm.crosshair.standing.kick_offset = 0.08
+	self.hailstorm.crosshair.crouching.offset = 0.01
+	self.hailstorm.crosshair.crouching.moving_offset = 0.06
+	self.hailstorm.crosshair.crouching.kick_offset = 0.04
+	self.hailstorm.crosshair.steelsight.hidden = true
+	self.hailstorm.crosshair.steelsight.offset = 0
+	self.hailstorm.crosshair.steelsight.moving_offset = 0
+	self.hailstorm.crosshair.steelsight.kick_offset = 0.014
+	self.hailstorm.kick = {
+		standing = {
+			0.4,
+			0.5,
+			-0.7,
+			0.7
+		},
+		crouching = {
+			0.2,
+			0.3,
+			-0.5,
+			0.5
+		},
+		steelsight = {
+			0.3,
+			0.4,
+			-0.3,
+			0.3
+		},
+		volley = {}
+	}
+	self.hailstorm.kick.volley.standing = {
+		3.57,
+		3.59,
+		-0.16,
+		0.16
+	}
+	self.hailstorm.kick.volley.crouching = self.hailstorm.kick.standing
+	self.hailstorm.kick.volley.steelsight = self.hailstorm.kick.standing
+	self.hailstorm.shake = {
+		fire_multiplier = 0.1,
+		fire_steelsight_multiplier = -0.1,
+		volley = {}
+	}
+	self.hailstorm.shake.volley.fire_multiplier = 2
+	self.hailstorm.shake.volley.fire_steelsight_multiplier = -2
+	self.hailstorm.autohit = weapon_data.autohit_rifle_default
+	self.hailstorm.aim_assist = weapon_data.aim_assist_rifle_default
+	self.hailstorm.weapon_hold = "hailstorm"
+	self.hailstorm.animations = {
+		equip_id = "equip_mac11_rifle",
+		recoil_steelsight = true
+	}
+	self.hailstorm.panic_suppression_chance = 0.2
+	self.hailstorm.stats = {
+		zoom = 1,
+		total_ammo_mod = 21,
+		damage = 40,
+		alert_size = 8,
+		spread = 19,
+		spread_moving = 15,
+		recoil = 14,
+		value = 9,
+		extra_ammo = 51,
+		reload = 11,
+		suppression = 12,
+		concealment = 8
+	}
+end
+
+-- Lines 20062-20187
 function WeaponTweakData:_init_qbu88(weapon_data)
 	self.qbu88 = {
 		categories = {
@@ -16714,7 +17461,7 @@ function WeaponTweakData:_init_qbu88(weapon_data)
 	}
 end
 
--- Lines 20162-20283
+-- Lines 20191-20312
 function WeaponTweakData:_init_shak12(weapon_data)
 	self.shak12 = {
 		categories = {
@@ -16827,7 +17574,7 @@ function WeaponTweakData:_init_shak12(weapon_data)
 	}
 end
 
--- Lines 20286-20402
+-- Lines 20315-20431
 function WeaponTweakData:_init_arblast(weapon_data)
 	self.arblast = {
 		categories = {
@@ -16943,7 +17690,7 @@ function WeaponTweakData:_init_arblast(weapon_data)
 	}
 end
 
--- Lines 20404-20521
+-- Lines 20433-20550
 function WeaponTweakData:_init_frankish(weapon_data)
 	self.frankish = {
 		categories = {
@@ -17059,7 +17806,7 @@ function WeaponTweakData:_init_frankish(weapon_data)
 	}
 end
 
--- Lines 20523-20641
+-- Lines 20552-20670
 function WeaponTweakData:_init_long(weapon_data)
 	self.long = {
 		categories = {
@@ -17177,7 +17924,7 @@ function WeaponTweakData:_init_long(weapon_data)
 	}
 end
 
--- Lines 20643-20773
+-- Lines 20672-20802
 function WeaponTweakData:_init_par(weapon_data)
 	self.par = {
 		categories = {
@@ -17296,7 +18043,7 @@ function WeaponTweakData:_init_par(weapon_data)
 	}
 end
 
--- Lines 20775-20892
+-- Lines 20804-20921
 function WeaponTweakData:_init_sparrow(weapon_data)
 	self.sparrow = {
 		categories = {
@@ -17398,7 +18145,7 @@ function WeaponTweakData:_init_sparrow(weapon_data)
 	}
 end
 
--- Lines 20894-21017
+-- Lines 20923-21046
 function WeaponTweakData:_init_model70(weapon_data)
 	self.model70 = {
 		categories = {
@@ -17519,7 +18266,7 @@ function WeaponTweakData:_init_model70(weapon_data)
 	}
 end
 
--- Lines 21020-21144
+-- Lines 21049-21173
 function WeaponTweakData:_init_scout(weapon_data)
 	self.scout = {
 		categories = {
@@ -17641,7 +18388,7 @@ function WeaponTweakData:_init_scout(weapon_data)
 	}
 end
 
--- Lines 21267-21389
+-- Lines 21296-21418
 function WeaponTweakData:_init_m37(weapon_data)
 	self.m37 = {
 		categories = {
@@ -17757,7 +18504,7 @@ function WeaponTweakData:_init_m37(weapon_data)
 	}
 end
 
--- Lines 21393-21520
+-- Lines 21422-21549
 function WeaponTweakData:_init_china(weapon_data)
 	self.china = {
 		categories = {
@@ -17888,7 +18635,7 @@ function WeaponTweakData:_init_china(weapon_data)
 	}
 end
 
--- Lines 21524-21640
+-- Lines 21553-21669
 function WeaponTweakData:_init_sr2(weapon_data)
 	self.sr2 = {
 		categories = {
@@ -17995,7 +18742,7 @@ function WeaponTweakData:_init_sr2(weapon_data)
 	}
 end
 
--- Lines 21642-21760
+-- Lines 21671-21789
 function WeaponTweakData:_init_x_sr2(weapon_data)
 	self.x_sr2 = {
 		categories = {
@@ -18109,7 +18856,7 @@ function WeaponTweakData:_init_x_sr2(weapon_data)
 	}
 end
 
--- Lines 21765-21884
+-- Lines 21794-21913
 function WeaponTweakData:_init_pl14(weapon_data)
 	self.pl14 = {
 		categories = {
@@ -18210,7 +18957,7 @@ function WeaponTweakData:_init_pl14(weapon_data)
 	}
 end
 
--- Lines 21891-22008
+-- Lines 21920-22037
 function WeaponTweakData:_init_m1911(weapon_data)
 	self.m1911 = {
 		categories = {
@@ -18322,7 +19069,7 @@ function WeaponTweakData:_init_m1911(weapon_data)
 	}
 end
 
--- Lines 22011-22129
+-- Lines 22040-22158
 function WeaponTweakData:_init_x_m1911(weapon_data)
 	self.x_m1911 = {
 		categories = {
@@ -18434,7 +19181,7 @@ function WeaponTweakData:_init_x_m1911(weapon_data)
 	}
 end
 
--- Lines 22131-22251
+-- Lines 22160-22280
 function WeaponTweakData:_init_vityaz(weapon_data)
 	self.vityaz = {
 		categories = {
@@ -18551,7 +19298,7 @@ function WeaponTweakData:_init_vityaz(weapon_data)
 	}
 end
 
--- Lines 22254-22372
+-- Lines 22283-22401
 function WeaponTweakData:_init_x_vityaz(weapon_data)
 	self.x_vityaz = {
 		categories = {
@@ -18662,7 +19409,7 @@ function WeaponTweakData:_init_x_vityaz(weapon_data)
 	}
 end
 
--- Lines 22376-22498
+-- Lines 22405-22527
 function WeaponTweakData:_init_m590(weapon_data)
 	self.m590 = {
 		categories = {
@@ -18773,7 +19520,7 @@ function WeaponTweakData:_init_m590(weapon_data)
 	}
 end
 
--- Lines 22504-22621
+-- Lines 22533-22650
 function WeaponTweakData:_init_x_mp5(weapon_data)
 	self.x_mp5 = {
 		categories = {
@@ -18883,7 +19630,7 @@ function WeaponTweakData:_init_x_mp5(weapon_data)
 	}
 end
 
--- Lines 22623-22740
+-- Lines 22652-22769
 function WeaponTweakData:_init_x_akmsu(weapon_data)
 	self.x_akmsu = {
 		categories = {
@@ -18993,7 +19740,7 @@ function WeaponTweakData:_init_x_akmsu(weapon_data)
 	}
 end
 
--- Lines 22745-22863
+-- Lines 22774-22892
 function WeaponTweakData:_init_tecci(weapon_data)
 	self.tecci = {
 		categories = {
@@ -19102,7 +19849,7 @@ function WeaponTweakData:_init_tecci(weapon_data)
 	}
 end
 
--- Lines 22868-22988
+-- Lines 22897-23017
 function WeaponTweakData:_init_hajk(weapon_data)
 	self.hajk = {
 		categories = {
@@ -19211,7 +19958,7 @@ function WeaponTweakData:_init_hajk(weapon_data)
 	}
 end
 
--- Lines 22993-23115
+-- Lines 23022-23144
 function WeaponTweakData:_init_boot(weapon_data)
 	self.boot = {
 		categories = {
@@ -19327,7 +20074,7 @@ function WeaponTweakData:_init_boot(weapon_data)
 	}
 end
 
--- Lines 23121-23238
+-- Lines 23150-23267
 function WeaponTweakData:_init_packrat(weapon_data)
 	self.packrat = {
 		categories = {
@@ -19429,7 +20176,7 @@ function WeaponTweakData:_init_packrat(weapon_data)
 	}
 end
 
--- Lines 23240-23362
+-- Lines 23269-23391
 function WeaponTweakData:_init_schakal(weapon_data)
 	self.schakal = {
 		categories = {
@@ -19539,7 +20286,7 @@ function WeaponTweakData:_init_schakal(weapon_data)
 	}
 end
 
--- Lines 23364-23488
+-- Lines 23393-23517
 function WeaponTweakData:_init_desertfox(weapon_data)
 	self.desertfox = {
 		categories = {
@@ -19661,7 +20408,7 @@ function WeaponTweakData:_init_desertfox(weapon_data)
 	}
 end
 
--- Lines 23490-23608
+-- Lines 23519-23637
 function WeaponTweakData:_init_x_packrat(weapon_data)
 	self.x_packrat = {
 		categories = {
@@ -19773,7 +20520,7 @@ function WeaponTweakData:_init_x_packrat(weapon_data)
 	}
 end
 
--- Lines 23613-23733
+-- Lines 23642-23762
 function WeaponTweakData:_init_rota(weapon_data)
 	self.rota = {
 		categories = {
@@ -19878,7 +20625,7 @@ function WeaponTweakData:_init_rota(weapon_data)
 	}
 end
 
--- Lines 23737-23862
+-- Lines 23766-23891
 function WeaponTweakData:_init_arbiter(weapon_data)
 	self.arbiter = {
 		categories = {
@@ -20002,7 +20749,7 @@ function WeaponTweakData:_init_arbiter(weapon_data)
 	self.arbiter.unlock_func = "has_unlocked_arbiter"
 end
 
--- Lines 23865-23993
+-- Lines 23894-24022
 function WeaponTweakData:_init_ms3gl(weapon_data)
 	self.ms3gl = {
 		categories = {
@@ -20133,7 +20880,7 @@ function WeaponTweakData:_init_ms3gl(weapon_data)
 	}
 end
 
--- Lines 23997-24239
+-- Lines 24026-24268
 function WeaponTweakData:_init_contraband(weapon_data)
 	self.contraband = {
 		categories = {
@@ -20358,7 +21105,7 @@ function WeaponTweakData:_init_contraband(weapon_data)
 	}
 end
 
--- Lines 24243-24366
+-- Lines 24272-24395
 function WeaponTweakData:_init_ray(weapon_data)
 	self.ray = {
 		categories = {
@@ -20481,7 +21228,7 @@ function WeaponTweakData:_init_ray(weapon_data)
 	}
 end
 
--- Lines 24370-24492
+-- Lines 24399-24521
 function WeaponTweakData:_init_tti(weapon_data)
 	self.tti = {
 		categories = {
@@ -20599,7 +21346,7 @@ function WeaponTweakData:_init_tti(weapon_data)
 	}
 end
 
--- Lines 24624-24746
+-- Lines 24653-24775
 function WeaponTweakData:_init_grv(weapon_data)
 	self.siltstone = {
 		categories = {
@@ -20717,7 +21464,7 @@ function WeaponTweakData:_init_grv(weapon_data)
 	}
 end
 
--- Lines 24748-24865
+-- Lines 24777-24894
 function WeaponTweakData:_init_flint(weapon_data)
 	self.flint = {
 		categories = {
@@ -20821,7 +21568,7 @@ function WeaponTweakData:_init_flint(weapon_data)
 	}
 end
 
--- Lines 24867-24985
+-- Lines 24896-25014
 function WeaponTweakData:_init_coal(weapon_data)
 	self.coal = {
 		categories = {
@@ -20930,7 +21677,7 @@ function WeaponTweakData:_init_coal(weapon_data)
 	}
 end
 
--- Lines 24989-25112
+-- Lines 25018-25141
 function WeaponTweakData:_init_lemming(weapon_data)
 	self.lemming = {
 		categories = {
@@ -21037,7 +21784,7 @@ function WeaponTweakData:_init_lemming(weapon_data)
 	self.lemming.armor_piercing_chance = 1
 end
 
--- Lines 25116-25373
+-- Lines 25145-25402
 function WeaponTweakData:_init_type54(weapon_data)
 	self.type54 = {
 		categories = {
@@ -21260,7 +22007,7 @@ function WeaponTweakData:_init_type54(weapon_data)
 	}
 end
 
--- Lines 25375-25581
+-- Lines 25404-25610
 function WeaponTweakData:_init_x_type54(weapon_data)
 	self.x_type54 = {
 		categories = {
@@ -21457,7 +22204,7 @@ function WeaponTweakData:_init_x_type54(weapon_data)
 	}
 end
 
--- Lines 25583-25706
+-- Lines 25612-25735
 function WeaponTweakData:_init_rsh12(weapon_data)
 	self.rsh12 = {
 		categories = {
@@ -21578,7 +22325,7 @@ function WeaponTweakData:_init_rsh12(weapon_data)
 	}
 end
 
--- Lines 25710-25823
+-- Lines 25739-25852
 function WeaponTweakData:_init_chinchilla(weapon_data)
 	self.chinchilla = {
 		categories = {
@@ -21682,7 +22429,7 @@ function WeaponTweakData:_init_chinchilla(weapon_data)
 	}
 end
 
--- Lines 25825-25938
+-- Lines 25854-25967
 function WeaponTweakData:_init_x_chinchilla(weapon_data)
 	self.x_chinchilla = {
 		categories = {
@@ -21796,7 +22543,7 @@ function WeaponTweakData:_init_x_chinchilla(weapon_data)
 	}
 end
 
--- Lines 25942-26056
+-- Lines 25971-26085
 function WeaponTweakData:_init_model3(weapon_data)
 	self.model3 = {
 		categories = {
@@ -21906,7 +22653,7 @@ function WeaponTweakData:_init_model3(weapon_data)
 	}
 end
 
--- Lines 26058-26176
+-- Lines 26087-26205
 function WeaponTweakData:_init_x_model3(weapon_data)
 	self.x_model3 = {
 		categories = {
@@ -22021,7 +22768,7 @@ function WeaponTweakData:_init_x_model3(weapon_data)
 	}
 end
 
--- Lines 26177-26300
+-- Lines 26206-26329
 function WeaponTweakData:_init_m1897(weapon_data)
 	self.m1897 = {
 		categories = {
@@ -22137,7 +22884,7 @@ function WeaponTweakData:_init_m1897(weapon_data)
 	}
 end
 
--- Lines 26304-26428
+-- Lines 26333-26457
 function WeaponTweakData:_init_shepheard(weapon_data)
 	self.shepheard = {
 		categories = {
@@ -22252,7 +22999,7 @@ function WeaponTweakData:_init_shepheard(weapon_data)
 	}
 end
 
--- Lines 26430-26547
+-- Lines 26459-26576
 function WeaponTweakData:_init_x_shepheard(weapon_data)
 	self.x_shepheard = {
 		categories = {
@@ -22362,7 +23109,7 @@ function WeaponTweakData:_init_x_shepheard(weapon_data)
 	}
 end
 
--- Lines 26552-26668
+-- Lines 26581-26697
 function WeaponTweakData:_init_breech(weapon_data)
 	self.breech = {
 		categories = {
@@ -22464,7 +23211,7 @@ function WeaponTweakData:_init_breech(weapon_data)
 	self.breech.unlock_func = "has_unlocked_breech"
 end
 
--- Lines 26670-26792
+-- Lines 26699-26821
 function WeaponTweakData:_init_ching(weapon_data)
 	self.ching = {
 		categories = {
@@ -22573,7 +23320,7 @@ function WeaponTweakData:_init_ching(weapon_data)
 	self.ching.unlock_func = "has_unlocked_ching"
 end
 
--- Lines 26794-26913
+-- Lines 26823-26942
 function WeaponTweakData:_init_erma(weapon_data)
 	self.erma = {
 		categories = {
@@ -22678,7 +23425,7 @@ function WeaponTweakData:_init_erma(weapon_data)
 	self.erma.unlock_func = "has_unlocked_erma"
 end
 
--- Lines 26917-27034
+-- Lines 26946-27063
 function WeaponTweakData:_init_ecp(weapon_data)
 	self.ecp = {
 		categories = {
@@ -22794,7 +23541,7 @@ function WeaponTweakData:_init_ecp(weapon_data)
 	}
 end
 
--- Lines 27038-27158
+-- Lines 27067-27187
 function WeaponTweakData:_init_shrew(weapon_data)
 	self.shrew = {
 		categories = {
@@ -22901,7 +23648,7 @@ function WeaponTweakData:_init_shrew(weapon_data)
 	}
 end
 
--- Lines 27160-27276
+-- Lines 27189-27305
 function WeaponTweakData:_init_x_shrew(weapon_data)
 	self.x_shrew = {
 		categories = {
@@ -23012,7 +23759,7 @@ function WeaponTweakData:_init_x_shrew(weapon_data)
 	}
 end
 
--- Lines 27280-27402
+-- Lines 27309-27431
 function WeaponTweakData:_init_basset(weapon_data)
 	self.basset = {
 		categories = {
@@ -23118,7 +23865,7 @@ function WeaponTweakData:_init_basset(weapon_data)
 	}
 end
 
--- Lines 27404-27536
+-- Lines 27433-27565
 function WeaponTweakData:_init_x_basset(weapon_data)
 	self.x_basset = {
 		categories = {
@@ -23232,7 +23979,7 @@ function WeaponTweakData:_init_x_basset(weapon_data)
 	}
 end
 
--- Lines 27541-27662
+-- Lines 27570-27691
 function WeaponTweakData:_init_corgi(weapon_data)
 	self.corgi = {
 		categories = {
@@ -23335,7 +24082,7 @@ function WeaponTweakData:_init_corgi(weapon_data)
 	}
 end
 
--- Lines 27667-27795
+-- Lines 27696-27824
 function WeaponTweakData:_init_slap(weapon_data)
 	self.slap = {
 		categories = {
@@ -23462,7 +24209,7 @@ function WeaponTweakData:_init_slap(weapon_data)
 	}
 end
 
--- Lines 27802-27919
+-- Lines 27831-27948
 function WeaponTweakData:_init_x_coal(weapon_data)
 	self.x_coal = {
 		categories = {
@@ -23572,7 +24319,7 @@ function WeaponTweakData:_init_x_coal(weapon_data)
 	}
 end
 
--- Lines 27922-28040
+-- Lines 27951-28069
 function WeaponTweakData:_init_x_baka(weapon_data)
 	self.x_baka = {
 		categories = {
@@ -23682,7 +24429,7 @@ function WeaponTweakData:_init_x_baka(weapon_data)
 	}
 end
 
--- Lines 28044-28164
+-- Lines 28073-28193
 function WeaponTweakData:_init_x_cobray(weapon_data)
 	self.x_cobray = {
 		categories = {
@@ -23793,7 +24540,7 @@ function WeaponTweakData:_init_x_cobray(weapon_data)
 	}
 end
 
--- Lines 28168-28287
+-- Lines 28197-28316
 function WeaponTweakData:_init_x_erma(weapon_data)
 	self.x_erma = {
 		categories = {
@@ -23904,7 +24651,7 @@ function WeaponTweakData:_init_x_erma(weapon_data)
 	self.x_erma.unlock_func = "has_unlocked_erma"
 end
 
--- Lines 28291-28411
+-- Lines 28320-28440
 function WeaponTweakData:_init_x_hajk(weapon_data)
 	self.x_hajk = {
 		categories = {
@@ -24015,7 +24762,7 @@ function WeaponTweakData:_init_x_hajk(weapon_data)
 	}
 end
 
--- Lines 28414-28538
+-- Lines 28443-28567
 function WeaponTweakData:_init_x_m45(weapon_data)
 	self.x_m45 = {
 		categories = {
@@ -24124,7 +24871,7 @@ function WeaponTweakData:_init_x_m45(weapon_data)
 	}
 end
 
--- Lines 28541-28658
+-- Lines 28570-28687
 function WeaponTweakData:_init_x_m1928(weapon_data)
 	self.x_m1928 = {
 		categories = {
@@ -24234,7 +24981,7 @@ function WeaponTweakData:_init_x_m1928(weapon_data)
 	}
 end
 
--- Lines 28661-28778
+-- Lines 28690-28807
 function WeaponTweakData:_init_x_mac10(weapon_data)
 	self.x_mac10 = {
 		categories = {
@@ -24344,7 +25091,7 @@ function WeaponTweakData:_init_x_mac10(weapon_data)
 	}
 end
 
--- Lines 28781-28901
+-- Lines 28810-28930
 function WeaponTweakData:_init_x_mp7(weapon_data)
 	self.x_mp7 = {
 		categories = {
@@ -24455,7 +25202,7 @@ function WeaponTweakData:_init_x_mp7(weapon_data)
 	}
 end
 
--- Lines 28904-29024
+-- Lines 28933-29053
 function WeaponTweakData:_init_x_mp9(weapon_data)
 	self.x_mp9 = {
 		categories = {
@@ -24566,7 +25313,7 @@ function WeaponTweakData:_init_x_mp9(weapon_data)
 	}
 end
 
--- Lines 29027-29147
+-- Lines 29056-29176
 function WeaponTweakData:_init_x_olympic(weapon_data)
 	self.x_olympic = {
 		categories = {
@@ -24677,7 +25424,7 @@ function WeaponTweakData:_init_x_olympic(weapon_data)
 	}
 end
 
--- Lines 29150-29268
+-- Lines 29179-29297
 function WeaponTweakData:_init_x_p90(weapon_data)
 	self.x_p90 = {
 		categories = {
@@ -24787,7 +25534,7 @@ function WeaponTweakData:_init_x_p90(weapon_data)
 	}
 end
 
--- Lines 29271-29388
+-- Lines 29300-29417
 function WeaponTweakData:_init_x_polymer(weapon_data)
 	self.x_polymer = {
 		categories = {
@@ -24897,7 +25644,7 @@ function WeaponTweakData:_init_x_polymer(weapon_data)
 	}
 end
 
--- Lines 29391-29511
+-- Lines 29420-29540
 function WeaponTweakData:_init_x_schakal(weapon_data)
 	self.x_schakal = {
 		categories = {
@@ -25008,7 +25755,7 @@ function WeaponTweakData:_init_x_schakal(weapon_data)
 	}
 end
 
--- Lines 29514-29631
+-- Lines 29543-29660
 function WeaponTweakData:_init_x_scorpion(weapon_data)
 	self.x_scorpion = {
 		categories = {
@@ -25118,7 +25865,7 @@ function WeaponTweakData:_init_x_scorpion(weapon_data)
 	}
 end
 
--- Lines 29634-29754
+-- Lines 29663-29783
 function WeaponTweakData:_init_x_sterling(weapon_data)
 	self.x_sterling = {
 		categories = {
@@ -25229,7 +25976,7 @@ function WeaponTweakData:_init_x_sterling(weapon_data)
 	}
 end
 
--- Lines 29757-29874
+-- Lines 29786-29903
 function WeaponTweakData:_init_x_tec9(weapon_data)
 	self.x_tec9 = {
 		categories = {
@@ -25339,7 +26086,7 @@ function WeaponTweakData:_init_x_tec9(weapon_data)
 	}
 end
 
--- Lines 29877-29994
+-- Lines 29906-30023
 function WeaponTweakData:_init_x_uzi(weapon_data)
 	self.x_uzi = {
 		categories = {
@@ -25449,7 +26196,7 @@ function WeaponTweakData:_init_x_uzi(weapon_data)
 	}
 end
 
--- Lines 30000-30112
+-- Lines 30029-30141
 function WeaponTweakData:_init_x_2006m(weapon_data)
 	self.x_2006m = {
 		categories = {
@@ -25556,7 +26303,7 @@ function WeaponTweakData:_init_x_2006m(weapon_data)
 	}
 end
 
--- Lines 30116-30234
+-- Lines 30145-30263
 function WeaponTweakData:_init_x_breech(weapon_data)
 	self.x_breech = {
 		categories = {
@@ -25668,7 +26415,7 @@ function WeaponTweakData:_init_x_breech(weapon_data)
 	self.x_breech.unlock_func = "has_unlocked_breech"
 end
 
--- Lines 30238-30355
+-- Lines 30267-30384
 function WeaponTweakData:_init_x_c96(weapon_data)
 	self.x_c96 = {
 		categories = {
@@ -25779,7 +26526,7 @@ function WeaponTweakData:_init_x_c96(weapon_data)
 	}
 end
 
--- Lines 30357-30480
+-- Lines 30386-30509
 function WeaponTweakData:_init_x_g18c(weapon_data)
 	self.x_g18c = {
 		categories = {
@@ -25895,7 +26642,7 @@ function WeaponTweakData:_init_x_g18c(weapon_data)
 	}
 end
 
--- Lines 30482-30599
+-- Lines 30511-30628
 function WeaponTweakData:_init_x_hs2000(weapon_data)
 	self.x_hs2000 = {
 		categories = {
@@ -26006,7 +26753,7 @@ function WeaponTweakData:_init_x_hs2000(weapon_data)
 	}
 end
 
--- Lines 30603-30720
+-- Lines 30632-30749
 function WeaponTweakData:_init_x_p226(weapon_data)
 	self.x_p226 = {
 		categories = {
@@ -26117,7 +26864,7 @@ function WeaponTweakData:_init_x_p226(weapon_data)
 	}
 end
 
--- Lines 30723-30840
+-- Lines 30752-30869
 function WeaponTweakData:_init_x_pl14(weapon_data)
 	self.x_pl14 = {
 		categories = {
@@ -26228,7 +26975,7 @@ function WeaponTweakData:_init_x_pl14(weapon_data)
 	}
 end
 
--- Lines 30843-30960
+-- Lines 30872-30989
 function WeaponTweakData:_init_x_ppk(weapon_data)
 	self.x_ppk = {
 		categories = {
@@ -26339,7 +27086,7 @@ function WeaponTweakData:_init_x_ppk(weapon_data)
 	}
 end
 
--- Lines 30962-31079
+-- Lines 30991-31108
 function WeaponTweakData:_init_x_rage(weapon_data)
 	self.x_rage = {
 		categories = {
@@ -26451,7 +27198,7 @@ function WeaponTweakData:_init_x_rage(weapon_data)
 	}
 end
 
--- Lines 31081-31198
+-- Lines 31110-31227
 function WeaponTweakData:_init_x_sparrow(weapon_data)
 	self.x_sparrow = {
 		categories = {
@@ -26562,7 +27309,7 @@ function WeaponTweakData:_init_x_sparrow(weapon_data)
 	}
 end
 
--- Lines 31200-31320
+-- Lines 31229-31349
 function WeaponTweakData:_init_x_judge(weapon_data)
 	self.x_judge = {
 		categories = {
@@ -26673,7 +27420,7 @@ function WeaponTweakData:_init_x_judge(weapon_data)
 	}
 end
 
--- Lines 31323-31444
+-- Lines 31352-31473
 function WeaponTweakData:_init_x_rota(weapon_data)
 	self.x_rota = {
 		categories = {
@@ -26785,7 +27532,7 @@ function WeaponTweakData:_init_x_rota(weapon_data)
 	}
 end
 
--- Lines 31686-31803
+-- Lines 31715-31832
 function WeaponTweakData:_init_shuno(weapon_data)
 	self.shuno = {
 		categories = {
@@ -26894,7 +27641,7 @@ function WeaponTweakData:_init_shuno(weapon_data)
 	}
 end
 
--- Lines 31935-32056
+-- Lines 31964-32085
 function WeaponTweakData:_init_system(weapon_data)
 	self.system = {
 		categories = {
@@ -27011,7 +27758,7 @@ function WeaponTweakData:_init_system(weapon_data)
 	}
 end
 
--- Lines 32060-32186
+-- Lines 32089-32215
 function WeaponTweakData:_init_komodo(weapon_data)
 	self.komodo = {
 		categories = {
@@ -27124,7 +27871,7 @@ function WeaponTweakData:_init_komodo(weapon_data)
 	}
 end
 
--- Lines 32191-32310
+-- Lines 32220-32339
 function WeaponTweakData:_init_elastic(weapon_data)
 	self.elastic = {
 		categories = {
@@ -27243,7 +27990,7 @@ function WeaponTweakData:_init_elastic(weapon_data)
 	}
 end
 
--- Lines 32315-32432
+-- Lines 32344-32461
 function WeaponTweakData:_init_legacy(weapon_data)
 	self.legacy = {
 		categories = {
@@ -27345,7 +28092,7 @@ function WeaponTweakData:_init_legacy(weapon_data)
 	}
 end
 
--- Lines 32435-32553
+-- Lines 32464-32582
 function WeaponTweakData:_init_x_legacy(weapon_data)
 	self.x_legacy = {
 		categories = {
@@ -27457,7 +28204,7 @@ function WeaponTweakData:_init_x_legacy(weapon_data)
 	}
 end
 
--- Lines 32557-32686
+-- Lines 32586-32715
 function WeaponTweakData:_init_coach(weapon_data)
 	self.coach = {
 		categories = {
@@ -27577,7 +28324,7 @@ function WeaponTweakData:_init_coach(weapon_data)
 	}
 end
 
--- Lines 32692-32818
+-- Lines 32721-32847
 function WeaponTweakData:_init_beer(weapon_data)
 	self.beer = {
 		categories = {
@@ -27692,7 +28439,7 @@ function WeaponTweakData:_init_beer(weapon_data)
 	}
 end
 
--- Lines 32821-32944
+-- Lines 32850-32973
 function WeaponTweakData:_init_x_beer(weapon_data)
 	self.x_beer = {
 		categories = {
@@ -27809,7 +28556,7 @@ function WeaponTweakData:_init_x_beer(weapon_data)
 	}
 end
 
--- Lines 32947-33072
+-- Lines 32976-33101
 function WeaponTweakData:_init_czech(weapon_data)
 	self.czech = {
 		categories = {
@@ -27924,7 +28671,7 @@ function WeaponTweakData:_init_czech(weapon_data)
 	}
 end
 
--- Lines 33075-33198
+-- Lines 33104-33227
 function WeaponTweakData:_init_x_czech(weapon_data)
 	self.x_czech = {
 		categories = {
@@ -28041,7 +28788,7 @@ function WeaponTweakData:_init_x_czech(weapon_data)
 	}
 end
 
--- Lines 33201-33327
+-- Lines 33230-33356
 function WeaponTweakData:_init_stech(weapon_data)
 	self.stech = {
 		categories = {
@@ -28156,7 +28903,7 @@ function WeaponTweakData:_init_stech(weapon_data)
 	}
 end
 
--- Lines 33330-33453
+-- Lines 33359-33482
 function WeaponTweakData:_init_x_stech(weapon_data)
 	self.x_stech = {
 		categories = {
@@ -28273,7 +29020,7 @@ function WeaponTweakData:_init_x_stech(weapon_data)
 	}
 end
 
--- Lines 33457-33576
+-- Lines 33486-33605
 function WeaponTweakData:_init_maxim9(weapon_data)
 	self.maxim9 = {
 		categories = {
@@ -28377,7 +29124,7 @@ function WeaponTweakData:_init_maxim9(weapon_data)
 	}
 end
 
--- Lines 33579-33699
+-- Lines 33608-33728
 function WeaponTweakData:_init_x_maxim9(weapon_data)
 	self.x_maxim9 = {
 		categories = {
@@ -28491,7 +29238,7 @@ function WeaponTweakData:_init_x_maxim9(weapon_data)
 	}
 end
 
--- Lines 33700-33841
+-- Lines 33729-33870
 function WeaponTweakData:_init_ultima(weapon_data)
 	self.ultima = {
 		categories = {
@@ -28657,7 +29404,7 @@ function WeaponTweakData:_init_ultima(weapon_data)
 	}
 end
 
--- Lines 33842-33964
+-- Lines 33871-33993
 function WeaponTweakData:_init_fmg9(weapon_data)
 	self.fmg9 = {
 		categories = {
@@ -28767,7 +29514,7 @@ function WeaponTweakData:_init_fmg9(weapon_data)
 	}
 end
 
--- Lines 33968-34085
+-- Lines 33997-34114
 function WeaponTweakData:_init_holt(weapon_data)
 	self.holt = {
 		categories = {
@@ -28869,7 +29616,7 @@ function WeaponTweakData:_init_holt(weapon_data)
 	}
 end
 
--- Lines 34088-34206
+-- Lines 34117-34235
 function WeaponTweakData:_init_x_holt(weapon_data)
 	self.x_holt = {
 		categories = {
@@ -28981,7 +29728,7 @@ function WeaponTweakData:_init_x_holt(weapon_data)
 	}
 end
 
--- Lines 34208-34342
+-- Lines 34237-34371
 function WeaponTweakData:_init_m60(weapon_data)
 	self.m60 = {
 		categories = {
@@ -29104,7 +29851,7 @@ function WeaponTweakData:_init_m60(weapon_data)
 	}
 end
 
--- Lines 34344-34468
+-- Lines 34373-34497
 function WeaponTweakData:_init_r700(weapon_data)
 	self.r700 = {
 		categories = {
@@ -29223,7 +29970,7 @@ function WeaponTweakData:_init_r700(weapon_data)
 	}
 end
 
--- Lines 34479-34950
+-- Lines 34508-34985
 function WeaponTweakData:_create_table_structure()
 	self.c45_npc = {
 		usage = "is_pistol",
@@ -29400,12 +30147,12 @@ function WeaponTweakData:_create_table_structure()
 		use_data = {},
 		auto = {}
 	}
-	self.dmr_npc = {
+	self.heavy_snp_npc = {
 		usage = "is_rifle",
 		sounds = {},
 		use_data = {}
 	}
-	self.heavy_snp_npc = {
+	self.dmr_npc = {
 		usage = "is_rifle",
 		sounds = {},
 		use_data = {}
@@ -29418,6 +30165,35 @@ function WeaponTweakData:_create_table_structure()
 	}
 	self.groza_underbarrel_npc = {
 		usage = "is_shotgun_pump",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.hailstorm_crew = {
+		usage = "is_rifle",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.korth_crew = {
+		usage = "is_revolver",
+		sounds = {},
+		use_data = {}
+	}
+	self.x_korth_crew = {
+		usage = "akimbo_pistol",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.sko12_crew = {
+		usage = "is_shotgun_mag",
+		sounds = {},
+		use_data = {},
+		auto = {}
+	}
+	self.x_sko12_crew = {
+		usage = "akimbo_pistol",
 		sounds = {},
 		use_data = {},
 		auto = {}
@@ -30740,7 +31516,7 @@ function WeaponTweakData:_create_table_structure()
 	}
 end
 
--- Lines 34953-35042
+-- Lines 34988-35077
 function WeaponTweakData:_init_ranc_heavy_machine_gun()
 	self.ranc_heavy_machine_gun.categories = clone(self.new_m4.categories)
 	self.ranc_heavy_machine_gun.sounds = {
@@ -30827,11 +31603,11 @@ function WeaponTweakData:_init_ranc_heavy_machine_gun()
 	self.ranc_heavy_machine_gun.armor_piercing_chance = 1
 end
 
--- Lines 35047-35048
+-- Lines 35082-35083
 function WeaponTweakData:_precalculate_values_wip()
 end
 
--- Lines 35050-35057
+-- Lines 35085-35092
 function WeaponTweakData:_precalculate_values()
 	for k, v in pairs(self) do
 		if v.CLIP_AMMO_MAX and v.NR_CLIPS_MAX and not v.AMMO_MAX then
@@ -30840,7 +31616,7 @@ function WeaponTweakData:_precalculate_values()
 	end
 end
 
--- Lines 35060-35171
+-- Lines 35095-35206
 function WeaponTweakData:get_akimbo_mappings()
 	return {
 		shrew = "x_shrew",
@@ -30904,7 +31680,7 @@ function WeaponTweakData:get_akimbo_mappings()
 	}
 end
 
--- Lines 35174-35195
+-- Lines 35209-35230
 function WeaponTweakData:get_npc_mappings()
 	local npc_mappings = {
 		new_m4 = "m4_crew",

@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-5951
+-- Lines 4-6112
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -473,6 +473,12 @@ function TweakDataVR:init(tweak_data)
 			x_deagle = {
 				position = Vector3(-0.5, 1, 2)
 			},
+			x_korth = {
+				position = Vector3(-0.5, 2, 2)
+			},
+			korth = {
+				position = Vector3(-0.5, 2, 2)
+			},
 			x_rage = {
 				position = Vector3(-0.5, 3, 2)
 			},
@@ -507,6 +513,10 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(0, 2, 2)
 			},
 			p90 = {
+				grip = "weapon_2_grip",
+				position = Vector3(-0.5, 2, 1)
+			},
+			hailstorm = {
 				grip = "weapon_2_grip",
 				position = Vector3(-0.5, 2, 1)
 			},
@@ -671,6 +681,9 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(-0.5, 3, 1.2)
 			},
 			x_rota = {
+				position = Vector3(-0.1, 2, 1.2)
+			},
+			x_sko12 = {
 				position = Vector3(-0.1, 2, 1.2)
 			},
 			coach = {
@@ -971,6 +984,14 @@ function TweakDataVR:init(tweak_data)
 			position = Vector3(0, 0, 2),
 			rotation = Rotation(0, -15, 0)
 		},
+		x_korth = {
+			position = Vector3(3, 2, 2),
+			rotation = Rotation(-45, 12, -20)
+		},
+		korth = {
+			position = Vector3(3, 2, 2),
+			rotation = Rotation(-45, 12, -20)
+		},
 		r870 = {
 			position = Vector3(3, 0, 0),
 			rotation = Rotation(-223, -129, 70),
@@ -1054,6 +1075,10 @@ function TweakDataVR:init(tweak_data)
 			position = Vector3(3, 0, 1),
 			rotation = Rotation(-1, 55, -4)
 		},
+		x_sko12 = {
+			position = Vector3(3, 0, 1),
+			rotation = Rotation(-1, 55, -4)
+		},
 		coach = {
 			position = Vector3(3, 0, 0),
 			rotation = Rotation(-223, -129, 70)
@@ -1120,6 +1145,10 @@ function TweakDataVR:init(tweak_data)
 		pm9 = {
 			position = Vector3(1, 0, -5),
 			rotation = Rotation(0, -15, 0)
+		},
+		hailstorm = {
+			position = Vector3(0, 1, 7),
+			rotation = Rotation(-90, 90, 170)
 		},
 		fmg9 = {
 			grip = "idle_wpn",
@@ -1514,6 +1543,16 @@ function TweakDataVR:init(tweak_data)
 			magazine = {
 				"g_speedloader"
 			}
+		},
+		x_korth = {
+			magazine = {
+				"g_speedloader"
+			}
+		},
+		korth = {
+			magazine = {
+				"g_speedloader"
+			}
 		}
 	}
 	self.weapon_assist = {
@@ -1542,6 +1581,10 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(0, 22, -2)
 			},
 			saiga = {
+				grip = "idle_wpn",
+				position = Vector3(-2, 32, 4)
+			},
+			sko12 = {
 				grip = "idle_wpn",
 				position = Vector3(-2, 32, 4)
 			},
@@ -1743,6 +1786,9 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(0, 23, -3)
 			},
 			p90 = {
+				position = Vector3(0, 10, -5)
+			},
+			hailstorm = {
 				position = Vector3(0, 10, -5)
 			},
 			polymer = {
@@ -3314,6 +3360,61 @@ function TweakDataVR:init(tweak_data)
 			}
 		},
 		p90 = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_p90_clip_slide_out"
+				},
+				{
+					time = 0.01,
+					pos = Vector3(0, -1, 2),
+					rot = Rotation(0, -5, 0)
+				},
+				{
+					time = 0.03,
+					pos = Vector3(0, -1.2, 2.2),
+					rot = Rotation(0, -5, 0)
+				},
+				{
+					time = 0.04,
+					pos = Vector3(0, -15, 4),
+					rot = Rotation(0, 0, 0)
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(10, -15, 4),
+					rot = Rotation(1, -4, -4)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_p90_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -15, 4),
+					rot = Rotation(0, 0, 0)
+				},
+				{
+					time = 0.01,
+					pos = Vector3(0, -1.2, 2.2),
+					rot = Rotation(0, -5, 0)
+				},
+				{
+					time = 0.45,
+					pos = Vector3(0, -1, 2),
+					rot = Rotation(0, -5, 0)
+				},
+				{
+					time = 0.5,
+					sound = "wp_p90_lever_release",
+					pos = Vector3(),
+					rot = Rotation()
+				}
+			}
+		},
+		hailstorm = {
 			start = {
 				{
 					time = 0,
@@ -6973,6 +7074,132 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		x_korth = {
+			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
+			start = {
+				{
+					time = 0,
+					sound = "wp_chinchilla_cylinder_out",
+					anims = {
+						{
+							anim_group = "reload_right",
+							to = 0.5
+						},
+						{
+							anim_group = "reload_left",
+							to = 0.5
+						}
+					}
+				},
+				{
+					time = 0.02,
+					sound = "wp_chinchilla_eject_shells"
+				},
+				{
+					time = 0.25,
+					visible = false,
+					effect = {
+						object = "a_m",
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+					}
+				}
+			},
+			finish = {
+				{
+					visible = true,
+					time = 0,
+					sound = "wp_chinchilla_insert"
+				},
+				{
+					time = 0,
+					visible = {
+						visible = false,
+						parts = {
+							magazine = {
+								"g_speedloader"
+							}
+						}
+					}
+				},
+				{
+					time = 0.5,
+					sound = "wp_chinchilla_cylinder_in",
+					anims = {
+						{
+							anim_group = "reload_right",
+							from = 3.45
+						},
+						{
+							anim_group = "reload_left",
+							from = 3.45
+						}
+					}
+				}
+			}
+		},
+		korth = {
+			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
+			start = {
+				{
+					time = 0,
+					sound = "wp_chinchilla_cylinder_out",
+					anims = {
+						{
+							anim_group = "reload_right",
+							to = 0.5
+						},
+						{
+							anim_group = "reload_left",
+							to = 0.5
+						}
+					}
+				},
+				{
+					time = 0.02,
+					sound = "wp_chinchilla_eject_shells"
+				},
+				{
+					time = 0.25,
+					visible = false,
+					effect = {
+						object = "a_m",
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+					}
+				}
+			},
+			finish = {
+				{
+					visible = true,
+					time = 0,
+					sound = "wp_chinchilla_insert"
+				},
+				{
+					time = 0,
+					visible = {
+						visible = false,
+						parts = {
+							magazine = {
+								"g_speedloader"
+							}
+						}
+					}
+				},
+				{
+					time = 0.5,
+					sound = "wp_chinchilla_cylinder_in",
+					anims = {
+						{
+							anim_group = "reload_right",
+							from = 3.45
+						},
+						{
+							anim_group = "reload_left",
+							from = 3.45
+						}
+					}
+				}
+			}
+		},
 		x_beer = {
 			start = {
 				{
@@ -8205,6 +8432,46 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		x_sko12 = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_rota_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, 0, -20),
+					rot = Rotation(0, 30, 0)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_rota_slide_slide_in",
+					visible = true,
+					pos = Vector3(0, 0, -20),
+					rot = Rotation(0, 30, 0)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, 0, -4),
+					rot = Rotation(0, 10, 60)
+				},
+				{
+					time = 0.8,
+					pos = Vector3(0, 0, -3),
+					rot = Rotation(0, 10, 60)
+				},
+				{
+					time = 0.99,
+					sound = "wp_rota_rotate_mag",
+					pos = Vector3(),
+					rot = Rotation()
+				}
+			}
+		},
 		r870 = {
 			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
@@ -8226,6 +8493,46 @@ function TweakDataVR:init(tweak_data)
 			}
 		},
 		saiga = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_ak47_clip_slide_out"
+				},
+				{
+					time = 0.02,
+					pos = Vector3(0, 4, -1),
+					rot = Rotation(0, 30, 0)
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, 10, -20),
+					rot = Rotation(0, 60, 0)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_ak47_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, 0, -20),
+					rot = Rotation()
+				},
+				{
+					time = 0.3,
+					pos = Vector3(0, 4, -1),
+					rot = Rotation(0, 30, 0)
+				},
+				{
+					time = 0.5,
+					sound = "wp_ak47_lever_release",
+					pos = Vector3(),
+					rot = Rotation()
+				}
+			}
+		},
+		sko12 = {
 			start = {
 				{
 					time = 0,
@@ -10277,7 +10584,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 5957-6068
+-- Lines 6118-6229
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -10492,7 +10799,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 6072-6132
+-- Lines 6233-6293
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -10572,7 +10879,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 6135-6147
+-- Lines 6296-6308
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -10593,7 +10900,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 6149-6175
+-- Lines 6310-6336
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -10614,14 +10921,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6177-6181
+-- Lines 6338-6342
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6183-6195
+-- Lines 6344-6356
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -10639,7 +10946,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6197-6205
+-- Lines 6358-6366
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -10652,7 +10959,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6207-6211
+-- Lines 6368-6372
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -10661,7 +10968,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6213-6221
+-- Lines 6374-6382
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -10676,7 +10983,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6223-6230
+-- Lines 6384-6391
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -10689,7 +10996,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6232-6239
+-- Lines 6393-6400
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

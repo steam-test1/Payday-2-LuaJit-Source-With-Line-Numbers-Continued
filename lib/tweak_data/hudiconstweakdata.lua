@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3365
+-- Lines 7-3371
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -332,6 +332,24 @@ function HudIconsTweakData:init()
 		texture = "guis/textures/pd2/hud_fireselector",
 		texture_rect = {
 			32,
+			0,
+			8,
+			18
+		}
+	}
+	self.firemode_volley_auto = {
+		texture = "guis/dlcs/pxp2/textures/pd2/hud_fireselector_volley",
+		texture_rect = {
+			2,
+			0,
+			8,
+			18
+		}
+	}
+	self.firemode_auto_volley = {
+		texture = "guis/dlcs/pxp2/textures/pd2/hud_fireselector_volley",
+		texture_rect = {
+			12,
 			0,
 			8,
 			18
@@ -15033,6 +15051,33 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
+	self.C_All_H_All_FieldTest = {
+		texture = "guis/dlcs/trk/atlases/pxp2_achievement",
+		texture_rect = {
+			176,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_All_H_All_HeisteShothun = {
+		texture = "guis/dlcs/trk/atlases/pxp2_achievement",
+		texture_rect = {
+			89,
+			2,
+			85,
+			85
+		}
+	}
+	self.C_All_H_All_Snake = {
+		texture = "guis/dlcs/trk/atlases/pxp2_achievement",
+		texture_rect = {
+			2,
+			2,
+			85,
+			85
+		}
+	}
 
 	TextureCorrectionTweakData:new(self)
 
@@ -15049,7 +15094,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3368-3371
+-- Lines 3374-3377
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -15062,7 +15107,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3373-3389
+-- Lines 3379-3395
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -15088,7 +15133,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3391-3396
+-- Lines 3397-3402
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -15102,7 +15147,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3398-3404
+-- Lines 3404-3410
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -15113,7 +15158,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3406-3412
+-- Lines 3412-3418
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

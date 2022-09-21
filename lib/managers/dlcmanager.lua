@@ -2393,6 +2393,7 @@ end
 -- Lines 2744-2934
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"pxp2",
 		"tma1",
 		"txt2",
 		"ranc",

@@ -740,7 +740,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 418-464
+-- Lines 418-496
 function TweakData:_setup_point_of_no_returns()
 	self.point_of_no_returns = {
 		noreturn = {}
@@ -803,7 +803,7 @@ function TweakData:_setup_point_of_no_returns()
 	end
 end
 
--- Lines 466-469
+-- Lines 498-501
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -816,7 +816,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 471-502
+-- Lines 503-534
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -846,7 +846,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 504-549
+-- Lines 536-581
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -914,7 +914,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 551-673
+-- Lines 583-706
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -1054,6 +1054,14 @@ function TweakData:_setup_scene_poses()
 		},
 		hk51b = {
 			"husk_rifle3",
+			required_pose = true
+		},
+		hailstorm = {
+			"husk_rifle5",
+			required_pose = true
+		},
+		sko12 = {
+			"husk_rifle1",
 			required_pose = true
 		}
 	}

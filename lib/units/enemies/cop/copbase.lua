@@ -124,7 +124,7 @@ function CopBase:has_any_tag(tags)
 	return my_tags and table.contains_any(my_tags, tags) or false
 end
 
--- Lines 140-148
+-- Lines 170-178
 function CopBase:default_weapon_name()
 	local default_weapon_id = self._default_weapon_id
 	local weap_ids = tweak_data.character.weap_ids
@@ -136,22 +136,22 @@ function CopBase:default_weapon_name()
 	end
 end
 
--- Lines 152-154
+-- Lines 182-184
 function CopBase:visibility_state()
 	return self._visibility_state
 end
 
--- Lines 158-160
+-- Lines 188-190
 function CopBase:lod_stage()
 	return self._lod_stage
 end
 
--- Lines 164-166
+-- Lines 194-196
 function CopBase:set_allow_invisible(allow)
 	self._allow_invisible = allow
 end
 
--- Lines 170-218
+-- Lines 200-248
 function CopBase:set_visibility_state(stage)
 	local state = stage and true
 
@@ -208,17 +208,17 @@ function CopBase:set_visibility_state(stage)
 	self:chk_freeze_anims()
 end
 
--- Lines 222-224
+-- Lines 252-254
 function CopBase:set_anim_lod(stage)
 	self._unit:set_animation_lod(unpack(self._anim_lods[stage]))
 end
 
--- Lines 228-230
+-- Lines 258-260
 function CopBase:on_death_exit()
 	self._unit:set_animations_enabled(false)
 end
 
--- Lines 234-246
+-- Lines 264-276
 function CopBase:chk_freeze_anims()
 	if (not self._lod_stage or self._lod_stage > 1) and self._ext_anim.can_freeze and self._ext_anim.upper_body_empty then
 		if not self._anims_frozen then
@@ -235,7 +235,7 @@ function CopBase:chk_freeze_anims()
 	end
 end
 
--- Lines 251-259
+-- Lines 281-289
 function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	if send_to_action then
 		unit:movement():on_anim_act_clbk(anim_act)
@@ -244,7 +244,7 @@ function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	end
 end
 
--- Lines 263-276
+-- Lines 293-306
 function CopBase:save(data)
 	if self._unit:interaction() and self._unit:interaction().tweak_data == "hostage_trade" then
 		data.is_hostage_trade = true
@@ -261,7 +261,7 @@ function CopBase:save(data)
 	end
 end
 
--- Lines 280-290
+-- Lines 310-320
 function CopBase:load(data)
 	if data.is_hostage_trade then
 		CopLogicTrade.hostage_trade(self._unit, true, false)
@@ -272,7 +272,7 @@ function CopBase:load(data)
 	self._buffs = data.buffs
 end
 
--- Lines 294-308
+-- Lines 324-338
 function CopBase:swap_material_config(material_applied_clbk)
 	local new_material = self._material_translation_map[self._loading_material_key or tostring(self._unit:material_config():key())]
 
@@ -291,7 +291,7 @@ function CopBase:swap_material_config(material_applied_clbk)
 	end
 end
 
--- Lines 312-326
+-- Lines 342-356
 function CopBase:on_material_applied(material_applied_clbk)
 	if not alive(self._unit) then
 		return
@@ -308,29 +308,29 @@ function CopBase:on_material_applied(material_applied_clbk)
 	end
 end
 
--- Lines 330-332
+-- Lines 360-362
 function CopBase:is_in_original_material()
 	return self._is_in_original_material
 end
 
--- Lines 336-340
+-- Lines 366-370
 function CopBase:set_material_state(original)
 	if original and not self._is_in_original_material or not original and self._is_in_original_material then
 		self:swap_material_config()
 	end
 end
 
--- Lines 344-346
+-- Lines 374-376
 function CopBase:char_tweak()
 	return self._char_tweak
 end
 
--- Lines 350-353
+-- Lines 380-383
 function CopBase:melee_weapon()
 	return self._melee_weapon_table or self._char_tweak.melee_weapon or "weapon"
 end
 
--- Lines 357-367
+-- Lines 387-397
 function CopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)
@@ -344,7 +344,7 @@ function CopBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 372-384
+-- Lines 402-414
 function CopBase:_refresh_buff_total(name)
 	local buff_list = self._buffs[name]
 	local sum = 0
@@ -360,13 +360,13 @@ function CopBase:_refresh_buff_total(name)
 	end
 end
 
--- Lines 386-389
+-- Lines 416-419
 function CopBase:_sync_buff_total(name, total)
 	self._buffs[name] = self._buffs[name] or {}
 	self._buffs[name]._total = total * 0.001
 end
 
--- Lines 391-412
+-- Lines 421-442
 function CopBase:add_buff(name, value)
 	if not Network:is_server() then
 		return
@@ -392,7 +392,7 @@ function CopBase:add_buff(name, value)
 	return id
 end
 
--- Lines 414-428
+-- Lines 444-458
 function CopBase:remove_buff_by_id(name, id)
 	if not Network:is_server() then
 		return
@@ -409,7 +409,7 @@ function CopBase:remove_buff_by_id(name, id)
 	self:_refresh_buff_total(name)
 end
 
--- Lines 430-441
+-- Lines 460-471
 function CopBase:get_total_buff(name)
 	local buff_list = self._buffs[name]
 

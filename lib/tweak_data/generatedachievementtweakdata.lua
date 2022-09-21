@@ -1,4 +1,4 @@
--- Lines 2-8930
+-- Lines 2-9047
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -197,9 +197,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		armored_4 = {
-			sort_name = "C_Bain_H_TransportVarious_IDoWhat",
 			icon_id = "C_Bain_H_TransportVarious_IDoWhat",
 			progress = true,
+			sort_name = "C_Bain_H_TransportVarious_IDoWhat",
+			additional_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -9262,10 +9263,61 @@ function init_auto_generated_achievement_data(tags)
 				tags.contracts.all
 			}
 		},
+		pxp2_1 = {
+			need_unlock_icons = true,
+			icon_id = "C_All_H_All_FieldTest",
+			progress = true,
+			sort_name = "C_All_H_All_FieldTest",
+			additional_id = true,
+			unlock_id = true,
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.normal,
+				tags.unlock.exclusive_weapon_set,
+				tags.tactics.loud,
+				tags.tactics.killer,
+				tags.inventory.weapon,
+				tags.contracts.all
+			}
+		},
+		pxp2_2 = {
+			need_unlock_icons = true,
+			icon_id = "C_All_H_All_HeisteShothun",
+			progress = true,
+			sort_name = "C_All_H_All_HeisteShothun",
+			additional_id = true,
+			unlock_id = true,
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.normal,
+				tags.unlock.exclusive_weapon_set,
+				tags.tactics.loud,
+				tags.tactics.killer,
+				tags.inventory.weapon,
+				tags.contracts.all
+			}
+		},
+		pxp2_3 = {
+			need_unlock_icons = true,
+			icon_id = "C_All_H_All_Snake",
+			progress = true,
+			sort_name = "C_All_H_All_Snake",
+			unlock_id = true,
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.overkill,
+				tags.unlock.weapon_mod,
+				tags.tactics.loud,
+				tags.tactics.killer,
+				tags.inventory.weapon,
+				tags.contracts.all
+			}
+		},
 		ranc_1 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D0",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D0",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D0",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.normal,
@@ -9306,9 +9358,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_2 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D1",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D1",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D1",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.hard,
@@ -9318,9 +9371,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_3 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D2",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D2",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D2",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.very_hard,
@@ -9330,9 +9384,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_4 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D3",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D3",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D3",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.overkill,
@@ -9342,9 +9397,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_5 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D4",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D4",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D4",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.mayhem,
@@ -9354,9 +9410,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_6 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D5",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D5",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D5",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.death_wish,
@@ -9366,9 +9423,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_7 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D6",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_D6",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_D6",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.death_sentence,
@@ -9378,9 +9436,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		ranc_8 = {
+			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_OD_D6",
 			ladder = "H_MindlandRanch",
 			sort_name = "C_McShay_H_MindlandRanch_AllDiffs_OD_D6",
-			icon_id = "C_McShay_H_MindlandRanch_AllDiffs_OD_D6",
+			additional_id = true,
 			tags = {
 				tags.progress.completion,
 				tags.difficulty.death_sentence,

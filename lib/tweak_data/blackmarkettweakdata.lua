@@ -85,7 +85,7 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
--- Lines 207-277
+-- Lines 207-280
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	if self.weapon_skins then
 		tweak_data.weapon.factory:create_bonuses(tweak_data, self.weapon_skins)
@@ -156,7 +156,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	end
 end
 
--- Lines 281-560
+-- Lines 284-563
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {
 		locked = {}
@@ -561,7 +561,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines 564-640
+-- Lines 567-643
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -677,7 +677,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 644-726
+-- Lines 647-729
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -800,7 +800,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 730-769
+-- Lines 733-772
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -842,7 +842,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 773-805
+-- Lines 776-808
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -876,7 +876,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 807-820
+-- Lines 810-823
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -893,7 +893,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 822-833
+-- Lines 825-836
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"
