@@ -160,7 +160,7 @@ function PlayerTasedVR:_check_action_primary_attack(t, input)
 	return new_action
 end
 
--- Lines 180-345
+-- Lines 180-352
 function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_base, akimbo)
 	local action_wanted = held
 	action_wanted = action_wanted or self:is_shooting_count()
@@ -252,7 +252,9 @@ function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_b
 		elseif fire_mode == "burst" then
 			fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
 		elseif fire_mode == "volley" then
-			fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+			if self._shooting then
+				fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+			end
 		elseif held then
 			fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
 		end
@@ -304,6 +306,10 @@ function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_b
 
 				self._ext_network:send("shot_blank", impact, 0)
 			end
+
+			if fire_mode == "volley" then
+				self:_check_stop_shooting()
+			end
 		elseif fire_mode == "single" then
 			new_action = false
 		elseif fire_mode == "burst" then
@@ -318,7 +324,7 @@ function PlayerTasedVR:_check_fire_per_weapon(t, pressed, held, released, weap_b
 	return new_action
 end
 
--- Lines 347-373
+-- Lines 354-380
 function PlayerTasedVR:set_belt_and_hands_enabled(enabled)
 	if not enabled then
 		local belt_states = {
