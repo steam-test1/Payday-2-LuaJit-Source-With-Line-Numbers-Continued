@@ -1,6 +1,6 @@
 InfamyTweakData = InfamyTweakData or class()
 
--- Lines 3-873
+-- Lines 3-877
 function InfamyTweakData:init()
 	-- Lines 4-4
 	local function digest(value)
@@ -29,10 +29,16 @@ function InfamyTweakData:init()
 		table.insert(self.statistics_rank_steps, 1, i)
 	end
 
-	self.join_stingers = 35
+	self.join_stingers = 36
 	self.free_join_stingers = {
 		0,
 		18
+	}
+	self.dlc_join_stingers = {
+		{
+			join_stinger = 36,
+			dlc = "a11th_stinger"
+		}
 	}
 	self.icon_rank_step = 100
 	self.infamy_icons = {
@@ -1305,7 +1311,7 @@ function InfamyTweakData:init()
 	}
 end
 
--- Lines 875-882
+-- Lines 879-886
 function InfamyTweakData:get_infamy_item_rank_requirement(infamy_item)
 	for rank, item in pairs(self.tree) do
 		if item == infamy_item then

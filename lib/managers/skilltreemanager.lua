@@ -129,7 +129,7 @@ function SkillTreeManager:_setup_skill_switches()
 	end
 end
 
--- Lines 92-118
+-- Lines 92-121
 function SkillTreeManager:_setup_specialization()
 	self._global.specializations = {
 		points_present = self:digest_value(0, true),
@@ -162,7 +162,7 @@ function SkillTreeManager:_setup_specialization()
 	self._global.specializations.max_points = self:digest_value(max_specialization_points, true)
 end
 
--- Lines 120-126
+-- Lines 123-129
 function SkillTreeManager:all_skilltree_ids()
 	local t = {}
 
@@ -173,7 +173,7 @@ function SkillTreeManager:all_skilltree_ids()
 	return t
 end
 
--- Lines 128-130
+-- Lines 131-133
 function SkillTreeManager:_create_tree_data(tree_id)
 	self._global.trees[tree_id] = {
 		unlocked = true,
@@ -181,7 +181,7 @@ function SkillTreeManager:_create_tree_data(tree_id)
 	}
 end
 
--- Lines 132-140
+-- Lines 135-143
 function SkillTreeManager:get_skill_points(skill, index)
 	local tier = tweak_data.skilltree:get_tier_position_from_skill_name(skill)
 	local cost = tweak_data.skilltree.tier_cost[tier][index]
@@ -191,7 +191,7 @@ function SkillTreeManager:get_skill_points(skill, index)
 	return total_points, points
 end
 
--- Lines 142-153
+-- Lines 145-156
 function SkillTreeManager:unlock_tree(tree)
 	if self._global.trees[tree].unlocked then
 		Application:error("Tree", tree, "allready unlocked")
@@ -206,7 +206,7 @@ function SkillTreeManager:unlock_tree(tree)
 	self._global.trees[tree].unlocked = true
 end
 
--- Lines 156-161
+-- Lines 159-164
 function SkillTreeManager:spend_points(points)
 	local p = self:points() - points
 
@@ -216,7 +216,7 @@ function SkillTreeManager:spend_points(points)
 	return p
 end
 
--- Lines 164-169
+-- Lines 167-172
 function SkillTreeManager:refund_points(points)
 	local p = self:points() + points
 
@@ -226,7 +226,7 @@ function SkillTreeManager:refund_points(points)
 	return p
 end
 
--- Lines 171-186
+-- Lines 174-189
 function SkillTreeManager:_spend_points(tree, tier, points, points_tier, skill_id)
 	local pre_unlocked_tier = self:current_max_tier(tree)
 
@@ -243,12 +243,12 @@ function SkillTreeManager:_spend_points(tree, tier, points, points_tier, skill_i
 	self:_on_points_spent(tree, points)
 end
 
--- Lines 188-190
+-- Lines 191-193
 function SkillTreeManager:points(switch_data)
 	return Application:digest_value((switch_data or self._global).points, false)
 end
 
--- Lines 192-198
+-- Lines 195-201
 function SkillTreeManager:_set_points(value)
 	self._global.points = Application:digest_value(value, true)
 
@@ -257,12 +257,12 @@ function SkillTreeManager:_set_points(value)
 	end
 end
 
--- Lines 200-202
+-- Lines 203-205
 function SkillTreeManager:points_spent(tree, switch_data)
 	return Application:digest_value((switch_data or self._global).trees[tree].points_spent, false)
 end
 
--- Lines 204-212
+-- Lines 207-215
 function SkillTreeManager:points_spent_in_skilltree(tree_name, switch_data)
 	local points = 0
 
@@ -275,7 +275,7 @@ function SkillTreeManager:points_spent_in_skilltree(tree_name, switch_data)
 	return points
 end
 
--- Lines 214-220
+-- Lines 217-223
 function SkillTreeManager:total_points_spent(switch_data)
 	local points = 0
 
@@ -286,14 +286,14 @@ function SkillTreeManager:total_points_spent(switch_data)
 	return points
 end
 
--- Lines 222-225
+-- Lines 225-228
 function SkillTreeManager:_set_points_spent(tree, value)
 	self._global.trees[tree].points_spent = Application:digest_value(value, true)
 
 	self:_check_achievements()
 end
 
--- Lines 227-249
+-- Lines 230-252
 function SkillTreeManager:tier_cost(tree, tier)
 	local points = Application:digest_value(tweak_data.skilltree.tier_unlocks[tier], false)
 
@@ -321,7 +321,7 @@ function SkillTreeManager:tier_cost(tree, tier)
 	return points
 end
 
--- Lines 251-258
+-- Lines 254-261
 function SkillTreeManager:current_max_tier(tree)
 	for tier, point in ipairs(tweak_data.skilltree.tier_unlocks) do
 		if self:points_spent(tree) < self:tier_cost(tree, tier) then
@@ -332,27 +332,27 @@ function SkillTreeManager:current_max_tier(tree)
 	return #tweak_data.skilltree.tier_unlocks
 end
 
--- Lines 260-262
+-- Lines 263-265
 function SkillTreeManager:skill_completed(skill_id, switch_data)
 	return (switch_data or self._global).skills[skill_id].unlocked == (switch_data or self._global).skills[skill_id].total
 end
 
--- Lines 264-266
+-- Lines 267-269
 function SkillTreeManager:skill_step(skill_id)
 	return self._global.skills[skill_id].unlocked
 end
 
--- Lines 268-270
+-- Lines 271-273
 function SkillTreeManager:next_skill_step(skill_id, switch_data)
 	return (switch_data or self._global).skills[skill_id].unlocked + 1
 end
 
--- Lines 272-274
+-- Lines 275-277
 function SkillTreeManager:next_skill_step_data(skill_id)
 	return tweak_data.skilltree.skills[skill_id][self._global.skills[skill_id].unlocked]
 end
 
--- Lines 276-294
+-- Lines 279-297
 function SkillTreeManager:skill_unlocked(tree, skill_id, switch_data)
 	if not tree then
 		for tree_id, _ in pairs(tweak_data.skilltree.trees) do
@@ -373,7 +373,7 @@ function SkillTreeManager:skill_unlocked(tree, skill_id, switch_data)
 	end
 end
 
--- Lines 298-309
+-- Lines 301-312
 function SkillTreeManager:_points_spent_skill(tier, skill_id)
 	local points = 0
 	local skill_costs = get_skill_costs()
@@ -388,7 +388,7 @@ function SkillTreeManager:_points_spent_skill(tier, skill_id)
 	return points
 end
 
--- Lines 311-354
+-- Lines 314-357
 function SkillTreeManager:skill_can_be_removed(tree, tier, skill_id)
 	local skill_step = self:skill_step(skill_id)
 
@@ -430,7 +430,7 @@ function SkillTreeManager:skill_can_be_removed(tree, tier, skill_id)
 	return true
 end
 
--- Lines 356-377
+-- Lines 359-380
 function SkillTreeManager:unlock(skill_id)
 	if self._global.skills[skill_id].total <= self._global.skills[skill_id].unlocked then
 		Application:error("No more steps to unlock in skill", skill_id)
@@ -453,7 +453,7 @@ function SkillTreeManager:unlock(skill_id)
 	return true
 end
 
--- Lines 379-399
+-- Lines 382-402
 function SkillTreeManager:_get_heighst_tier_points(current_tier, tiers)
 	local prev_next_tier = current_tier + 1
 	local prev_num_unlocked_skills_above = self:get_num_unlocked_skills(tiers[prev_next_tier])
@@ -475,7 +475,7 @@ function SkillTreeManager:_get_heighst_tier_points(current_tier, tiers)
 	return prev_next_tier, prev_num_unlocked_skills_above
 end
 
--- Lines 430-439
+-- Lines 433-442
 function SkillTreeManager:does_tier_have_ace_skill(tier)
 	local skills = self._global.skills
 
@@ -490,7 +490,7 @@ function SkillTreeManager:does_tier_have_ace_skill(tier)
 	return false
 end
 
--- Lines 441-451
+-- Lines 444-454
 function SkillTreeManager:get_num_ace_skills(tier)
 	local skills = self._global.skills
 	local num = 0
@@ -506,7 +506,7 @@ function SkillTreeManager:get_num_ace_skills(tier)
 	return num
 end
 
--- Lines 453-463
+-- Lines 456-466
 function SkillTreeManager:get_num_unlocked_skills(tier)
 	local skills = self._global.skills
 	local num = 0
@@ -522,7 +522,7 @@ function SkillTreeManager:get_num_unlocked_skills(tier)
 	return num
 end
 
--- Lines 465-478
+-- Lines 468-481
 function SkillTreeManager:get_points_spent_in_tier(tier, tier_idx)
 	local skills = self._global.skills
 	local skill_costs = get_skill_costs()
@@ -541,7 +541,7 @@ function SkillTreeManager:get_points_spent_in_tier(tier, tier_idx)
 	return points
 end
 
--- Lines 480-495
+-- Lines 483-498
 function SkillTreeManager:get_points_spent_until_tier(tiers, target_tier_idx)
 	local skills = self._global.skills
 	local skill_costs = get_skill_costs()
@@ -562,7 +562,7 @@ function SkillTreeManager:get_points_spent_until_tier(tiers, target_tier_idx)
 	return points
 end
 
--- Lines 498-507
+-- Lines 501-510
 function SkillTreeManager:has_enough_skill_points(skill_id)
 	local talent = tweak_data.skilltree.skills[skill_id]
 	local to_unlock = managers.skilltree:next_skill_step(skill_id)
@@ -576,7 +576,7 @@ function SkillTreeManager:has_enough_skill_points(skill_id)
 	return false
 end
 
--- Lines 510-525
+-- Lines 513-528
 function SkillTreeManager:refund_skill(tree, tier, skill_id)
 	if not self:skill_can_be_removed(tree, tier, skill_id) then
 		return
@@ -594,18 +594,18 @@ function SkillTreeManager:refund_skill(tree, tier, skill_id)
 	return false
 end
 
--- Lines 527-529
+-- Lines 530-532
 function SkillTreeManager:_on_skill_unlocked(tree, skill_id)
 end
 
--- Lines 531-536
+-- Lines 534-539
 function SkillTreeManager:_on_points_spent(tree, points)
 	self:_check_achievements()
 	managers.menu_component:on_points_spent(tree, points)
 	MenuCallbackHandler:_update_outfit_information()
 end
 
--- Lines 538-554
+-- Lines 541-557
 function SkillTreeManager:_check_achievements()
 	if tweak_data.story.sm_2_skillpoints <= self:total_points_spent() then
 		managers.story:award("story_inv_skillpoints")
@@ -624,17 +624,17 @@ function SkillTreeManager:_check_achievements()
 	managers.achievment:award("im_a_healer_tank_damage_dealer")
 end
 
--- Lines 556-558
+-- Lines 559-561
 function SkillTreeManager:level_up()
 	self:_aquire_points(1)
 end
 
--- Lines 560-562
+-- Lines 563-565
 function SkillTreeManager:rep_upgrade(upgrade, id)
 	self:_aquire_points(upgrade and upgrade.value or 2)
 end
 
--- Lines 564-586
+-- Lines 567-589
 function SkillTreeManager:_aquire_points(points, selected_only)
 	if selected_only then
 		self._global.points = Application:digest_value(self:points() + points, true)
@@ -661,7 +661,7 @@ function SkillTreeManager:_aquire_points(points, selected_only)
 	end
 end
 
--- Lines 588-595
+-- Lines 591-598
 function SkillTreeManager:tier_unlocked(tree, tier, switch_data)
 	if not self:tree_unlocked(tree, switch_data) then
 		return false
@@ -672,12 +672,12 @@ function SkillTreeManager:tier_unlocked(tree, tier, switch_data)
 	return required_points <= self:points_spent(tree, switch_data)
 end
 
--- Lines 597-599
+-- Lines 600-602
 function SkillTreeManager:tree_unlocked(tree, switch_data)
 	return (switch_data or self._global).trees[tree].unlocked
 end
 
--- Lines 601-610
+-- Lines 604-613
 function SkillTreeManager:trees_unlocked(switch_trees)
 	local amount = 0
 
@@ -690,7 +690,7 @@ function SkillTreeManager:trees_unlocked(switch_trees)
 	return amount
 end
 
--- Lines 612-622
+-- Lines 615-625
 function SkillTreeManager:_aquire_skill(skill, skill_id, loading)
 	local upgrade_manager = managers.upgrades
 
@@ -705,7 +705,7 @@ function SkillTreeManager:_aquire_skill(skill, skill_id, loading)
 	return false
 end
 
--- Lines 625-640
+-- Lines 628-643
 function SkillTreeManager:unaquire_one_skill_level(skill_id)
 	local skills = self._global.skills
 	local skill = skills[skill_id]
@@ -727,7 +727,7 @@ function SkillTreeManager:unaquire_one_skill_level(skill_id)
 	return false
 end
 
--- Lines 643-662
+-- Lines 646-665
 function SkillTreeManager:_unaquire_skill(skill_id)
 	local progress_data = self._global.skills[skill_id]
 	local skill_data = tweak_data.skilltree.skills[skill_id]
@@ -748,7 +748,7 @@ function SkillTreeManager:_unaquire_skill(skill_id)
 	progress_data.unlocked = 0
 end
 
--- Lines 664-677
+-- Lines 667-680
 function SkillTreeManager:on_respec_tree(tree, forced_respec_multiplier)
 	if SkillTreeManager.VERSION < 5 then
 		self:_respec_tree_version4(tree, forced_respec_multiplier)
@@ -765,7 +765,7 @@ function SkillTreeManager:on_respec_tree(tree, forced_respec_multiplier)
 	end
 end
 
--- Lines 679-690
+-- Lines 682-693
 function SkillTreeManager:_respec_tree_version7(tree, forced_respec_multiplier)
 	local points_spent = self:points_spent(tree)
 	local unlocked = self:trees_unlocked()
@@ -778,7 +778,7 @@ function SkillTreeManager:_respec_tree_version7(tree, forced_respec_multiplier)
 	self:_aquire_points(points_spent, true)
 end
 
--- Lines 692-703
+-- Lines 695-706
 function SkillTreeManager:_respec_tree_version5(tree, forced_respec_multiplier)
 	local points_spent = self:points_spent(tree)
 	local unlocked = self:trees_unlocked()
@@ -791,7 +791,7 @@ function SkillTreeManager:_respec_tree_version5(tree, forced_respec_multiplier)
 	self:_aquire_points(points_spent, true)
 end
 
--- Lines 705-710
+-- Lines 708-713
 function SkillTreeManager:_respec_tree_version6(tree, forced_respec_multiplier)
 	local points_spent = self:points_spent(tree)
 
@@ -799,7 +799,7 @@ function SkillTreeManager:_respec_tree_version6(tree, forced_respec_multiplier)
 	self:_aquire_points(points_spent, true)
 end
 
--- Lines 712-718
+-- Lines 715-721
 function SkillTreeManager:_respec_tree_version4(tree, forced_respec_multiplier)
 	local points_spent = self:points_spent(tree)
 
@@ -807,7 +807,7 @@ function SkillTreeManager:_respec_tree_version4(tree, forced_respec_multiplier)
 	self:_aquire_points(points_spent, true)
 end
 
--- Lines 720-735
+-- Lines 723-738
 function SkillTreeManager:_reset_skilltree(tree, forced_respec_multiplier)
 	self:_set_points_spent(tree, 0)
 
@@ -822,7 +822,7 @@ function SkillTreeManager:_reset_skilltree(tree, forced_respec_multiplier)
 	end
 end
 
--- Lines 737-751
+-- Lines 740-754
 function SkillTreeManager:_reset_skilltree7(tree, forced_respec_multiplier)
 	self:_set_points_spent(tree, 0)
 
@@ -840,7 +840,7 @@ function SkillTreeManager:_reset_skilltree7(tree, forced_respec_multiplier)
 	self:_unaquire_skill(tree_data.skill)
 end
 
--- Lines 753-789
+-- Lines 756-792
 function SkillTreeManager:can_unlock_skill_switch(selected_skill_switch)
 	if not self._global.skill_switches[selected_skill_switch] then
 		return false, {
@@ -892,7 +892,7 @@ function SkillTreeManager:can_unlock_skill_switch(selected_skill_switch)
 	}
 end
 
--- Lines 791-801
+-- Lines 794-804
 function SkillTreeManager:on_skill_switch_unlocked(selected_skill_switch)
 	local can_unlock, reason = self:can_unlock_skill_switch(selected_skill_switch)
 
@@ -908,19 +908,19 @@ function SkillTreeManager:on_skill_switch_unlocked(selected_skill_switch)
 	self._global.skill_switches[selected_skill_switch].specialization = self._global.specializations.current_specialization
 end
 
--- Lines 803-805
+-- Lines 806-808
 function SkillTreeManager:get_selected_skill_switch()
 	return self._global.selected_skill_switch
 end
 
--- Lines 807-810
+-- Lines 810-813
 function SkillTreeManager:has_skill_switch_name(skill_switch)
 	local data = self._global.skill_switches[skill_switch]
 
 	return data and data.name and true or false
 end
 
--- Lines 812-824
+-- Lines 815-827
 function SkillTreeManager:get_skill_switch_name(skill_switch, add_quotation)
 	local data = self._global.skill_switches[skill_switch]
 	local name = data and data.name
@@ -936,12 +936,12 @@ function SkillTreeManager:get_skill_switch_name(skill_switch, add_quotation)
 	return self:get_default_skill_switch_name(skill_switch)
 end
 
--- Lines 826-828
+-- Lines 829-831
 function SkillTreeManager:get_default_skill_switch_name(skill_switch)
 	return managers.localization:text(tweak_data.skilltree.skill_switches[skill_switch] and tweak_data.skilltree.skill_switches[skill_switch].name_id or tostring(skill_switch))
 end
 
--- Lines 830-839
+-- Lines 833-842
 function SkillTreeManager:set_skill_switch_name(skill_switch, name)
 	if not self._global.skill_switches[skill_switch] then
 		return
@@ -954,7 +954,7 @@ function SkillTreeManager:set_skill_switch_name(skill_switch, name)
 	end
 end
 
--- Lines 841-910
+-- Lines 844-913
 function SkillTreeManager:switch_skills(selected_skill_switch)
 	if selected_skill_switch == self._global.selected_skill_switch then
 		return
@@ -972,7 +972,7 @@ function SkillTreeManager:switch_skills(selected_skill_switch)
 		return
 	end
 
-	-- Lines 856-870
+	-- Lines 859-873
 	local function unaquire_skill(skill_id)
 		local progress_data = self._global.skills[skill_id]
 		local skill_data = tweak_data.skilltree.skills[skill_id]
@@ -1030,12 +1030,12 @@ function SkillTreeManager:switch_skills(selected_skill_switch)
 	return true
 end
 
--- Lines 912-914
+-- Lines 915-917
 function SkillTreeManager:get_pages()
 	return self._pages
 end
 
--- Lines 916-931
+-- Lines 919-934
 function SkillTreeManager:analyze_page(page)
 	local data = {
 		aced = 0,
@@ -1058,15 +1058,15 @@ function SkillTreeManager:analyze_page(page)
 	return data
 end
 
--- Lines 933-935
+-- Lines 936-938
 function SkillTreeManager:analyze()
 end
 
--- Lines 937-939
+-- Lines 940-942
 function SkillTreeManager:tree_stats()
 end
 
--- Lines 940-957
+-- Lines 943-960
 function SkillTreeManager:switch_skills_to_next()
 	local selected_skill_switch = self._global.selected_skill_switch
 	local max_switches = #self._global.skill_switches
@@ -1089,7 +1089,7 @@ function SkillTreeManager:switch_skills_to_next()
 	end
 end
 
--- Lines 959-976
+-- Lines 962-979
 function SkillTreeManager:switch_skills_to_previous()
 	local selected_skill_switch = self._global.selected_skill_switch
 	local max_switches = #self._global.skill_switches
@@ -1112,7 +1112,7 @@ function SkillTreeManager:switch_skills_to_previous()
 	end
 end
 
--- Lines 978-995
+-- Lines 981-998
 function SkillTreeManager:next_specialization()
 	local current_specialization = managers.skilltree:get_specialization_value("current_specialization")
 	local max_specializations = #tweak_data.skilltree.specializations
@@ -1135,7 +1135,7 @@ function SkillTreeManager:next_specialization()
 	end
 end
 
--- Lines 997-1014
+-- Lines 1000-1017
 function SkillTreeManager:previous_specialization()
 	local current_specialization = managers.skilltree:get_specialization_value("current_specialization")
 	local max_specializations = #tweak_data.skilltree.specializations
@@ -1158,17 +1158,17 @@ function SkillTreeManager:previous_specialization()
 	end
 end
 
--- Lines 1015-1017
+-- Lines 1018-1020
 function SkillTreeManager:increase_times_respeced(increase)
 	self._global.times_respeced = math.clamp(self._global.times_respeced + increase, 1, #tweak_data.money_manager.skilltree.respec.profile_cost_increaser_multiplier)
 end
 
--- Lines 1019-1021
+-- Lines 1022-1024
 function SkillTreeManager:get_times_respeced()
 	return self._global.times_respeced
 end
 
--- Lines 1023-1035
+-- Lines 1026-1038
 function SkillTreeManager:version_reset_skilltrees(points_aquired_during_load)
 	self:reset_skilltrees()
 	self:_verify_loaded_data(points_aquired_during_load)
@@ -1182,7 +1182,7 @@ function SkillTreeManager:version_reset_skilltrees(points_aquired_during_load)
 	end
 end
 
--- Lines 1037-1065
+-- Lines 1040-1080
 function SkillTreeManager:reset_specializations()
 	local current_specialization = self:digest_value(self._global.specializations.current_specialization, false, 1)
 	local tree_data = self._global.specializations[current_specialization]
@@ -1212,7 +1212,7 @@ function SkillTreeManager:reset_specializations()
 	self._global.specializations.points = self:digest_value(points_to_retain, true)
 end
 
--- Lines 1067-1091
+-- Lines 1082-1106
 function SkillTreeManager:reset_skilltrees()
 	if self._global.VERSION < 5 then
 		for tree_id, tree_data in pairs(self._global.trees) do
@@ -1239,7 +1239,7 @@ function SkillTreeManager:reset_skilltrees()
 	MenuCallbackHandler:_update_outfit_information()
 end
 
--- Lines 1093-1151
+-- Lines 1108-1178
 function SkillTreeManager:infamy_reset()
 	local skill_switches = nil
 
@@ -1294,7 +1294,7 @@ function SkillTreeManager:infamy_reset()
 	end
 end
 
--- Lines 1153-1161
+-- Lines 1180-1188
 function SkillTreeManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -1307,7 +1307,7 @@ function SkillTreeManager:check_reset_message()
 	end
 end
 
--- Lines 1164-1178
+-- Lines 1191-1205
 function SkillTreeManager:get_tree_progress_2(tree_name)
 	local switch_data = self._global.skill_switches[self:get_selected_skill_switch()]
 	local num_skills = 0
@@ -1325,7 +1325,7 @@ function SkillTreeManager:get_tree_progress_2(tree_name)
 	return skill_points, skill_points
 end
 
--- Lines 1180-1210
+-- Lines 1207-1237
 function SkillTreeManager:get_tree_progress_new(tree, switch_data)
 	if type(tree) ~= "number" then
 		local string_to_number = {
@@ -1358,7 +1358,7 @@ function SkillTreeManager:get_tree_progress_new(tree, switch_data)
 	return self:points_spent(tree, switch_data), owned, aced
 end
 
--- Lines 1212-1221
+-- Lines 1239-1248
 function SkillTreeManager:get_page_progress_new(page)
 	local points = 0
 
@@ -1371,7 +1371,7 @@ function SkillTreeManager:get_page_progress_new(page)
 	return points
 end
 
--- Lines 1224-1254
+-- Lines 1251-1281
 function SkillTreeManager:get_tree_progress(tree, switch_data)
 	if type(tree) ~= "number" then
 		local string_to_number = {
@@ -1404,7 +1404,7 @@ function SkillTreeManager:get_tree_progress(tree, switch_data)
 	return progress, num_skills
 end
 
--- Lines 1256-1269
+-- Lines 1283-1296
 function SkillTreeManager:get_most_progressed_tree()
 	local max_tree = 1
 	local max_points = 0
@@ -1421,7 +1421,7 @@ function SkillTreeManager:get_most_progressed_tree()
 	return max_tree
 end
 
--- Lines 1272-1295
+-- Lines 1299-1322
 function SkillTreeManager:pack_to_string()
 	local packed_string = ""
 
@@ -1449,7 +1449,7 @@ function SkillTreeManager:pack_to_string()
 	return packed_string
 end
 
--- Lines 1297-1313
+-- Lines 1324-1340
 function SkillTreeManager:pack_to_string_from_list(list)
 	local packed_string = ""
 
@@ -1468,7 +1468,7 @@ function SkillTreeManager:pack_to_string_from_list(list)
 	return packed_string
 end
 
--- Lines 1317-1320
+-- Lines 1344-1347
 function SkillTreeManager:unpack_from_string(packed_string)
 	local t = string.split(packed_string or "", "-") or {}
 
@@ -1478,7 +1478,7 @@ function SkillTreeManager:unpack_from_string(packed_string)
 	}
 end
 
--- Lines 1324-1341
+-- Lines 1351-1368
 function SkillTreeManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -1494,7 +1494,7 @@ function SkillTreeManager:save(data)
 	data.SkillTreeManager = state
 end
 
--- Lines 1343-1414
+-- Lines 1370-1444
 function SkillTreeManager:load(data, version)
 	local state = data.SkillTreeManager
 	local points_aquired_during_load = self:points()
@@ -1564,7 +1564,7 @@ function SkillTreeManager:load(data, version)
 	end
 end
 
--- Lines 1417-1595
+-- Lines 1447-1642
 function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 	local level_points = managers.experience:current_level()
 	local assumed_points = level_points + points_aquired_during_load
@@ -1714,7 +1714,7 @@ function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 	end
 end
 
--- Lines 1597-1621
+-- Lines 1644-1668
 function SkillTreeManager:digest_value(value, digest, default)
 	if value == nil then
 		return default or 0
@@ -1739,7 +1739,7 @@ function SkillTreeManager:digest_value(value, digest, default)
 	return Application:digest_value(value, digest)
 end
 
--- Lines 1623-1635
+-- Lines 1670-1682
 function SkillTreeManager:get_specialization_value(...)
 	local value = self._global.specializations
 
@@ -1756,7 +1756,7 @@ function SkillTreeManager:get_specialization_value(...)
 	return self:digest_value(value, false) or 0
 end
 
--- Lines 1637-1643
+-- Lines 1684-1690
 function SkillTreeManager:current_specialization_tier()
 	local idx = self:digest_value(self._global.specializations.current_specialization, false)
 	local current = idx and self._global.specializations[idx]
@@ -1768,12 +1768,12 @@ function SkillTreeManager:current_specialization_tier()
 	return self:digest_value(current.tiers.current_tier)
 end
 
--- Lines 1645-1647
+-- Lines 1692-1694
 function SkillTreeManager:specialization_points()
 	return self._global.specializations.points and self:digest_value(self._global.specializations.points, false) or 0
 end
 
--- Lines 1649-1655
+-- Lines 1696-1702
 function SkillTreeManager:debug_specialization()
 	for i, d in pairs(self._global.specializations) do
 		if type(d) == "string" then
@@ -1782,7 +1782,7 @@ function SkillTreeManager:debug_specialization()
 	end
 end
 
--- Lines 1657-1669
+-- Lines 1704-1716
 function SkillTreeManager:get_specialization_present()
 	local points_present = self:digest_value(self._global.specializations.points_present, false)
 	local xp_present = self:digest_value(self._global.specializations.xp_present, false)
@@ -1798,7 +1798,7 @@ function SkillTreeManager:get_specialization_present()
 	return false, false
 end
 
--- Lines 1671-1708
+-- Lines 1718-1755
 function SkillTreeManager:give_specialization_points(xp)
 	local total_points = self:digest_value(self._global.specializations.total_points, false)
 	local max_points = self:digest_value(self._global.specializations.max_points, false)
@@ -1829,7 +1829,7 @@ function SkillTreeManager:give_specialization_points(xp)
 	self._global.specializations.xp_present = self:digest_value(xp_present, true)
 end
 
--- Lines 1710-1744
+-- Lines 1757-1791
 function SkillTreeManager:refund_specialization_points(points_to_refund, tree)
 	points_to_refund = math.round(points_to_refund)
 	local tree_data = self._global.specializations[tree]
@@ -1864,7 +1864,7 @@ function SkillTreeManager:refund_specialization_points(points_to_refund, tree)
 	self._global.specializations.points = self:digest_value(points + points_to_refund, true)
 end
 
--- Lines 1746-1816
+-- Lines 1793-1863
 function SkillTreeManager:spend_specialization_points(points_to_spend, tree)
 	points_to_spend = math.round(points_to_spend)
 
@@ -1939,7 +1939,7 @@ function SkillTreeManager:spend_specialization_points(points_to_spend, tree)
 	self._global.specializations.points = self:digest_value(self:digest_value(self._global.specializations.points, false) - points_spent, true)
 end
 
--- Lines 1818-1869
+-- Lines 1865-1926
 function SkillTreeManager:_increase_specialization_tier(tree)
 	local tree_data = self._global.specializations[tree]
 
@@ -1997,7 +1997,7 @@ function SkillTreeManager:_increase_specialization_tier(tree)
 	return true
 end
 
--- Lines 1871-1932
+-- Lines 1928-2008
 function SkillTreeManager:set_current_specialization(tree)
 	local current_specialization = self:digest_value(self._global.specializations.current_specialization, false, 1)
 
@@ -2064,7 +2064,7 @@ function SkillTreeManager:set_current_specialization(tree)
 	return true
 end
 
--- Lines 1944-1957
+-- Lines 2063-2076
 function SkillTreeManager:debug_print_specialization_data(data, times)
 	data = data or self._global.specializations
 	times = times or 0
@@ -2080,7 +2080,7 @@ function SkillTreeManager:debug_print_specialization_data(data, times)
 	end
 end
 
--- Lines 1960-2031
+-- Lines 2079-2150
 function SkillTreeManager:debug()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -2093,7 +2093,7 @@ function SkillTreeManager:debug()
 
 	local j = 1
 
-	-- Lines 1968-2015
+	-- Lines 2087-2134
 	local function add_func(skill_id)
 		local skill = tweak_data.skilltree.skills[skill_id]
 		local skill_data = self._global.skills[skill_id]
@@ -2162,7 +2162,7 @@ function SkillTreeManager:debug()
 	end
 end
 
--- Lines 2035-2042
+-- Lines 2154-2161
 function SkillTreeManager:reset()
 	Global.skilltree_manager = nil
 
@@ -2173,7 +2173,7 @@ function SkillTreeManager:reset()
 	end
 end
 
--- Lines 2046-2053
+-- Lines 2165-2172
 function SkillTreeManager:max_points_for_current_level()
 	local rep_upgrade_points = 0
 
@@ -2184,12 +2184,12 @@ function SkillTreeManager:max_points_for_current_level()
 	return managers.experience:current_level() + rep_upgrade_points
 end
 
--- Lines 2055-2057
+-- Lines 2174-2176
 function SkillTreeManager:is_skill_switch_suspended(switch_data)
 	return self:max_points_for_current_level() < self:total_points_spent(switch_data)
 end
 
--- Lines 2059-2073
+-- Lines 2178-2192
 function SkillTreeManager:unsuspend_skill_switch(switch_data)
 	if self._global.skill_switches[switch_data] == self._global.selected_skill_switch then
 		return

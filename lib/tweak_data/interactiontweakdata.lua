@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-8325
+-- Lines 3-8339
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -3074,7 +3074,7 @@ function InteractionTweakData:init(tweak_data)
 		special_equipment = "bank_manager_key",
 		equipment_consume = true,
 		start_active = true,
-		axis = "y"
+		axis = "z"
 	}
 	self.gen_prop_container_a_vault_seq = {
 		text_id = "hud_int_hold_jam_vent",

@@ -2073,27 +2073,28 @@ function HUDTeammate:set_ability_radial(data)
 	radial_ability_panel:set_visible(progress > 0)
 end
 
--- Lines 1595-1619
+-- Lines 1595-1602
+function HUDTeammate.activate_ability_radial_anim(o, anim_time, progress_start, radial_ability_panel, ability_meter, health_icon)
+	radial_ability_panel:set_visible(true)
+	over(anim_time, function (p)
+		local progress = progress_start * math.lerp(1, 0, p)
+
+		ability_meter:set_color(Color(1, progress, 1, 1))
+	end)
+	radial_ability_panel:set_visible(false)
+end
+
+-- Lines 1604-1621
 function HUDTeammate:activate_ability_radial(time_left, time_total)
 	local radial_health_panel = self._radial_health_panel
 	local radial_ability_panel = radial_health_panel:child("radial_ability")
 	local ability_meter = radial_ability_panel:child("ability_meter")
+	local health_icon = radial_health_panel:child("health_icon")
 	time_total = time_total or time_left
 	local progress_start = time_left / time_total
 
-	-- Lines 1603-1610
-	local function anim(o)
-		radial_ability_panel:set_visible(true)
-		over(time_left, function (p)
-			local progress = progress_start * math.lerp(1, 0, p)
-
-			ability_meter:set_color(Color(1, progress, 1, 1))
-		end)
-		radial_ability_panel:set_visible(false)
-	end
-
 	radial_ability_panel:stop()
-	radial_ability_panel:animate(anim)
+	radial_ability_panel:animate(HUDTeammate.activate_ability_radial_anim, time_left, progress_start, radial_ability_panel, ability_meter, health_icon)
 
 	if self._main_player then
 		local current_time = managers.game_play_central:get_heist_timer()
@@ -2103,7 +2104,7 @@ function HUDTeammate:activate_ability_radial(time_left, time_total)
 	end
 end
 
--- Lines 1622-1629
+-- Lines 1624-1631
 function HUDTeammate:set_delayed_damage(damage)
 	self._delayed_damage = damage
 
@@ -2114,7 +2115,7 @@ function HUDTeammate:set_delayed_damage(damage)
 	end
 end
 
--- Lines 1631-1660
+-- Lines 1633-1662
 function HUDTeammate:update_delayed_damage()
 	local damage = self._delayed_damage or 0
 	local health_panel = self._radial_health_panel
@@ -2141,7 +2142,7 @@ function HUDTeammate:update_delayed_damage()
 	delayed_damage_health:set_color(Color(1, health_damage_ratio, 1 - health_ratio, 0))
 end
 
--- Lines 1663-1677
+-- Lines 1665-1679
 function HUDTeammate:set_grenades_amount(data)
 	if not PlayerBase.USE_GRENADES then
 		return
@@ -2157,7 +2158,7 @@ function HUDTeammate:set_grenades_amount(data)
 	self:_set_amount_string(amount, data.amount)
 end
 
--- Lines 1679-1689
+-- Lines 1681-1691
 function HUDTeammate:set_carry_info(carry_id, value)
 	local carry_panel = self._carry_panel
 
@@ -2173,14 +2174,14 @@ function HUDTeammate:set_carry_info(carry_id, value)
 	bg:set_w(carry_panel:child("bag"):w() + w + 4)
 end
 
--- Lines 1691-1694
+-- Lines 1693-1696
 function HUDTeammate:remove_carry_info()
 	local carry_panel = self._player_panel:child("carry_panel")
 
 	carry_panel:set_visible(false)
 end
 
--- Lines 1699-1713
+-- Lines 1701-1715
 function HUDTeammate:set_revives_amount(revive_amount)
 	if revive_amount then
 		local teammate_panel = self._panel:child("player")
@@ -2198,7 +2199,7 @@ function HUDTeammate:set_revives_amount(revive_amount)
 	end
 end
 
--- Lines 1718-1797
+-- Lines 1720-1799
 function HUDTeammate:add_special_equipment(data)
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2275,7 +2276,7 @@ function HUDTeammate:add_special_equipment(data)
 	self:layout_special_equipments()
 end
 
--- Lines 1799-1811
+-- Lines 1801-1813
 function HUDTeammate:remove_special_equipment(equipment)
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2292,7 +2293,7 @@ function HUDTeammate:remove_special_equipment(equipment)
 	end
 end
 
--- Lines 1813-1830
+-- Lines 1815-1832
 function HUDTeammate:layout_special_equipments()
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2313,7 +2314,7 @@ function HUDTeammate:layout_special_equipments()
 	end
 end
 
--- Lines 1832-1844
+-- Lines 1834-1846
 function HUDTeammate:set_special_equipment_amount(equipment_id, amount)
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2329,13 +2330,13 @@ function HUDTeammate:set_special_equipment_amount(equipment_id, amount)
 	end
 end
 
--- Lines 1846-1850
+-- Lines 1848-1852
 function HUDTeammate:clear_special_equipment()
 	self:remove_panel()
 	self:add_panel()
 end
 
--- Lines 1854-1862
+-- Lines 1856-1864
 function HUDTeammate:set_condition(icon_data, text)
 	if icon_data == "mugshot_normal" then
 		self._condition_icon:set_visible(false)
@@ -2348,7 +2349,7 @@ function HUDTeammate:set_condition(icon_data, text)
 	end
 end
 
--- Lines 1866-1892
+-- Lines 1868-1894
 function HUDTeammate:teammate_progress(enabled, tweak_data_id, timer, success)
 	self._player_panel:child("radial_health_panel"):set_alpha(enabled and 0.2 or 1)
 	self._player_panel:child("interact_panel"):stop()
@@ -2384,7 +2385,7 @@ function HUDTeammate:teammate_progress(enabled, tweak_data_id, timer, success)
 	end
 end
 
--- Lines 1896-1904
+-- Lines 1898-1906
 function HUDTeammate:start_timer(time)
 	self._timer_paused = 0
 	self._timer = time
@@ -2396,7 +2397,7 @@ function HUDTeammate:start_timer(time)
 	self._panel:child("condition_timer"):animate(callback(self, self, "_animate_timer"))
 end
 
--- Lines 1906-1911
+-- Lines 1908-1913
 function HUDTeammate:set_pause_timer(pause)
 	if not self._timer_paused then
 		return
@@ -2405,7 +2406,7 @@ function HUDTeammate:set_pause_timer(pause)
 	self._timer_paused = self._timer_paused + (pause and 1 or -1)
 end
 
--- Lines 1913-1919
+-- Lines 1915-1921
 function HUDTeammate:stop_timer()
 	if not alive(self._panel) then
 		return
@@ -2415,12 +2416,12 @@ function HUDTeammate:stop_timer()
 	self._panel:child("condition_timer"):stop()
 end
 
--- Lines 1921-1923
+-- Lines 1923-1925
 function HUDTeammate:is_timer_running()
 	return self._panel:child("condition_timer"):visible()
 end
 
--- Lines 1925-1942
+-- Lines 1927-1944
 function HUDTeammate:_animate_timer()
 	local rounded_timer = math.round(self._timer)
 
@@ -2444,7 +2445,7 @@ function HUDTeammate:_animate_timer()
 	end
 end
 
--- Lines 1944-1965
+-- Lines 1946-1967
 function HUDTeammate:_animate_timer_flash()
 	local t = 0
 	local condition_timer = self._panel:child("condition_timer")
@@ -2463,7 +2464,7 @@ function HUDTeammate:_animate_timer_flash()
 	condition_timer:set_font_size(30)
 end
 
--- Lines 1970-1979
+-- Lines 1972-1981
 function HUDTeammate:set_stored_health_max(stored_health_ratio)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -2477,7 +2478,7 @@ function HUDTeammate:set_stored_health_max(stored_health_ratio)
 	end
 end
 
--- Lines 1981-2008
+-- Lines 1983-2010
 function HUDTeammate:set_stored_health(stored_health_ratio)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -2508,7 +2509,7 @@ function HUDTeammate:set_stored_health(stored_health_ratio)
 	end
 end
 
--- Lines 2011-2083
+-- Lines 2013-2085
 function HUDTeammate:_animate_update_absorb(o, radial_absorb_shield_name, radial_absorb_health_name, var_name, blink)
 	repeat
 		coroutine.yield()
@@ -2579,12 +2580,12 @@ function HUDTeammate:_animate_update_absorb(o, radial_absorb_shield_name, radial
 	end
 end
 
--- Lines 2085-2087
+-- Lines 2087-2089
 function HUDTeammate:animate_update_absorb_active(o)
 	self:_animate_update_absorb(o, "radial_absorb_shield_active", "radial_absorb_health_active", "_absorb_active_amount", true)
 end
 
--- Lines 2089-2095
+-- Lines 2091-2097
 function HUDTeammate:set_absorb_active(absorb_amount)
 	self._absorb_active_amount = absorb_amount
 
@@ -2593,7 +2594,7 @@ function HUDTeammate:set_absorb_active(absorb_amount)
 	end
 end
 
--- Lines 2097-2119
+-- Lines 2099-2121
 function HUDTeammate:set_info_meter(data)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -2621,7 +2622,7 @@ function HUDTeammate:set_info_meter(data)
 	end)
 end
 
--- Lines 2124-2184
+-- Lines 2126-2186
 function HUDTeammate:set_copr_indicator(enabled, static_damage_ratio)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel

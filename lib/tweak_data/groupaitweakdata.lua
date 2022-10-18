@@ -191,7 +191,7 @@ function GroupAITweakData:_init_chatter_data()
 	}
 end
 
--- Lines 132-1830
+-- Lines 132-1848
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	local access_type_walk_only = {
 		walk = true
@@ -1345,7 +1345,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 	}
 end
 
--- Lines 1869-2639
+-- Lines 1887-2695
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -3261,7 +3261,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	}
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
 
-	if Global.game_settings and Global.game_settings.level_id == "ranc" then
+	if Global.level_data and Global.level_data.level_id == "ranc" or Global.game_settings and Global.game_settings.level_id == "ranc" then
 		self.enemy_spawn_groups.marshal_squad = {
 			spawn_cooldown = 60,
 			max_nr_simultaneous_groups = 1,
@@ -3289,7 +3289,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 		self.enemy_spawn_groups.marshal_squad = {
 			spawn_cooldown = 60,
 			max_nr_simultaneous_groups = 1,
-			initial_spawn_delay = 600,
+			initial_spawn_delay = 480,
 			amount = {
 				2,
 				2
@@ -3312,7 +3312,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	end
 end
 
--- Lines 2643-3133
+-- Lines 2699-3239
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -4551,7 +4551,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3154-3160
+-- Lines 3260-3266
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4561,7 +4561,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3164-3210
+-- Lines 3270-3316
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

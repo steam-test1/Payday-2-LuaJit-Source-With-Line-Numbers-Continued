@@ -118,7 +118,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 141-164
+-- Lines 206-229
 function CopInventory:drop_shield()
 	local shield_unit = self._shield_unit
 	self._shield_unit = nil
@@ -137,7 +137,7 @@ function CopInventory:drop_shield()
 	end
 end
 
--- Lines 169-184
+-- Lines 234-249
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -155,7 +155,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 188-198
+-- Lines 253-263
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 

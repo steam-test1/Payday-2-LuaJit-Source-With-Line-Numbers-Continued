@@ -5,7 +5,7 @@ HuskPlayerBase.set_anim_lod = CopBase.set_anim_lod
 HuskPlayerBase.set_visibility_state = CopBase.set_visibility_state
 HuskPlayerBase._anim_lods = CopBase._anim_lods
 
--- Lines 9-18
+-- Lines 12-21
 function HuskPlayerBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -18,7 +18,7 @@ function HuskPlayerBase:init(unit)
 	self:_setup_suspicion_and_detection_data()
 end
 
--- Lines 22-36
+-- Lines 25-42
 function HuskPlayerBase:post_init()
 	self._ext_anim = self._unit:anim_data()
 
@@ -34,7 +34,7 @@ function HuskPlayerBase:post_init()
 	self._unit:movement():play_state(spawn_state)
 end
 
--- Lines 40-60
+-- Lines 46-66
 function HuskPlayerBase:load(data)
 	self._concealment_modifier = data.concealment_modifier
 
@@ -57,7 +57,7 @@ function HuskPlayerBase:load(data)
 	self._concealment_modifier = nil
 end
 
--- Lines 64-84
+-- Lines 70-90
 function HuskPlayerBase:save(data)
 	data.upgrades = {}
 	data.temporary_upgrades = {}
@@ -83,7 +83,7 @@ function HuskPlayerBase:save(data)
 	data.concealment_modifier = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
 end
 
--- Lines 88-106
+-- Lines 94-112
 function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	self._upgrades[category] = self._upgrades[category] or {}
 	self._upgrade_levels[category] = self._upgrade_levels[category] or {}
@@ -106,7 +106,7 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	end
 end
 
--- Lines 108-112
+-- Lines 114-118
 function HuskPlayerBase:update_concealment()
 	local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
 
@@ -114,7 +114,7 @@ function HuskPlayerBase:update_concealment()
 	self:set_detection_multiplier("equipment", 1 / con_mul)
 end
 
--- Lines 115-125
+-- Lines 121-131
 function HuskPlayerBase:set_temporary_upgrade_owned(category, upgrade, level, index)
 	local upgrade_values = managers.player:upgrade_value_by_level(category, upgrade, level)
 
@@ -131,12 +131,12 @@ function HuskPlayerBase:set_temporary_upgrade_owned(category, upgrade, level, in
 	}
 end
 
--- Lines 127-148
+-- Lines 133-154
 function HuskPlayerBase:activate_temporary_upgrade(index)
 	self._temporary_upgrades[index].activation_time = TimerManager:game():time()
 end
 
--- Lines 150-155
+-- Lines 156-161
 function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	local index = self._temporary_upgrades_map[category] and self._temporary_upgrades_map[category][upgrade]
 
@@ -145,7 +145,7 @@ function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	end
 end
 
--- Lines 159-169
+-- Lines 165-175
 function HuskPlayerBase:upgrade_value(category, upgrade)
 	local val = self._upgrades[category] and self._upgrades[category][upgrade]
 
@@ -164,12 +164,12 @@ function HuskPlayerBase:upgrade_value(category, upgrade)
 	return val
 end
 
--- Lines 171-173
+-- Lines 177-179
 function HuskPlayerBase:upgrade_level(category, upgrade)
 	return self._upgrade_levels[category] and self._upgrade_levels[category][upgrade]
 end
 
--- Lines 177-189
+-- Lines 183-195
 function HuskPlayerBase:pre_destroy(unit)
 	self._unit:movement():pre_destroy(unit)
 	self._unit:inventory():pre_destroy(self._unit)
@@ -186,17 +186,17 @@ function HuskPlayerBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 193-196
+-- Lines 199-202
 function HuskPlayerBase:nick_name()
 	local peer = managers.network:session():peer_by_unit(self._unit)
 
 	return peer and peer:name() or ""
 end
 
--- Lines 200-202
+-- Lines 206-208
 function HuskPlayerBase:on_death_exit()
 end
 
--- Lines 206-207
+-- Lines 212-213
 function HuskPlayerBase:chk_freeze_anims()
 end

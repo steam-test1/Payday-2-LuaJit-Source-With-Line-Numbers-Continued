@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-4930
+-- Lines 10-5044
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8643,4 +8643,41 @@ function DLCTweakData:init(tweak_data)
 			amount = 1
 		}
 	}
+	self.a11th_homburg = {
+		content = {}
+	}
+	self.a11th_homburg.content.loot_global_value = "a11th_homburg"
+	self.a11th_homburg.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "homburg",
+			amount = 1
+		}
+	}
+	self.a11th_homburg_grey = {
+		content = {}
+	}
+	self.a11th_homburg_grey.content.loot_global_value = "a11th_homburg_grey"
+	self.a11th_homburg_grey.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "homburg_grey",
+			amount = 1
+		}
+	}
+	self.a11th_corl = {
+		content = {}
+	}
+	self.a11th_corl.content.loot_global_value = "a11th_corl"
+	self.a11th_corl.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "corl",
+			amount = 1
+		}
+	}
+	self.a11th_stinger = {
+		content = {}
+	}
+	self.a11th_stinger.content.loot_global_value = "a11th_stinger"
 end

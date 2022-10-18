@@ -22,6 +22,7 @@ local math_max = math.max
 local math_clamp = math.clamp
 local math_ceil = math.ceil
 local math_floor = math.floor
+local math_lerp = math.lerp
 local temp_vec1 = Vector3()
 local temp_vec2 = Vector3()
 NavigationManager = NavigationManager or class()
@@ -71,7 +72,7 @@ NavigationManager.ACCESS_FLAGS = {
 }
 NavigationManager.ACCESS_FLAGS_OLD = {}
 
--- Lines 80-131
+-- Lines 84-135
 function NavigationManager:init()
 	self._debug = SystemInfo:platform() == Idstring("WIN32") and Application:production_build()
 	self._builder = NavFieldBuilder:new()
@@ -117,7 +118,7 @@ function NavigationManager:init()
 	self._use_fast_drawing = getmetatable(self._quad_field).set_draw_state and true
 end
 
--- Lines 135-173
+-- Lines 139-177
 function NavigationManager:_init_draw_data()
 	local data = {}
 	local duration = 10
@@ -155,7 +156,7 @@ function NavigationManager:_init_draw_data()
 	self._draw_data = data
 end
 
--- Lines 177-223
+-- Lines 181-227
 function NavigationManager:update(t, dt)
 	if self._debug then
 		self._builder:update(t, dt)
@@ -210,7 +211,7 @@ function NavigationManager:update(t, dt)
 	self:_commence_coarce_searches(t)
 end
 
--- Lines 228-256
+-- Lines 232-260
 function NavigationManager:_draw_pos_reservations(t)
 	local to_remove = {}
 
@@ -242,7 +243,7 @@ function NavigationManager:_draw_pos_reservations(t)
 	end
 end
 
--- Lines 260-349
+-- Lines 264-353
 function NavigationManager:get_save_data()
 	local save_data = {}
 
@@ -321,7 +322,7 @@ function NavigationManager:get_save_data()
 	return ScriptSerializer:to_generic_xml(save_data)
 end
 
--- Lines 353-475
+-- Lines 357-479
 function NavigationManager:set_load_data(data)
 	if data.version == NavFieldBuilder._VERSION then
 		local t_ins = table.insert
@@ -454,7 +455,7 @@ function NavigationManager:set_load_data(data)
 	end
 end
 
--- Lines 479-570
+-- Lines 483-574
 function NavigationManager:_reconstruct_geographic_segments()
 	local tab_ins = table.insert
 	local m_ceil = math.ceil
@@ -534,7 +535,7 @@ function NavigationManager:_reconstruct_geographic_segments()
 	end
 end
 
--- Lines 574-587
+-- Lines 578-591
 function NavigationManager:_calculate_geographic_segment_borders(i_seg)
 	local seg_borders = {}
 	local nr_seg_x = self._nr_geog_segments.x
@@ -552,13 +553,13 @@ function NavigationManager:_calculate_geographic_segment_borders(i_seg)
 	return seg_borders
 end
 
--- Lines 591-594
+-- Lines 595-598
 function NavigationManager:clear()
 	self._builder:clear()
 	self:_clear()
 end
 
--- Lines 598-613
+-- Lines 602-617
 function NavigationManager:_clear()
 	self:_unregister_cover_units()
 
@@ -575,12 +576,12 @@ function NavigationManager:_clear()
 	self:send_nav_field_to_engine()
 end
 
--- Lines 617-619
+-- Lines 621-623
 function NavigationManager:is_data_ready()
 	return self._nr_geog_segments and true or false
 end
 
--- Lines 623-630
+-- Lines 627-634
 function NavigationManager:build_nav_segments(build_settings, complete_clbk)
 	local draw_options = self._draw_enabled
 
@@ -592,7 +593,7 @@ function NavigationManager:build_nav_segments(build_settings, complete_clbk)
 	self._builder:build_nav_segments(build_settings, callback(self, self, "build_complete_clbk", draw_options))
 end
 
--- Lines 634-649
+-- Lines 638-653
 function NavigationManager:build_complete_clbk(draw_options)
 	self:_refresh_data_from_builder()
 
@@ -611,7 +612,7 @@ function NavigationManager:build_complete_clbk(draw_options)
 	end
 end
 
--- Lines 653-661
+-- Lines 657-665
 function NavigationManager:_refresh_data_from_builder()
 	self._rooms = self._builder._rooms
 	self._room_doors = self._builder._room_doors
@@ -622,7 +623,7 @@ function NavigationManager:_refresh_data_from_builder()
 	self._nav_segments = self._builder._nav_segments
 end
 
--- Lines 665-697
+-- Lines 669-701
 function NavigationManager:set_nav_segment_state(id, state, filter_group)
 	if not self._nav_segments[id] then
 		debug_pause("[NavigationManager:set_nav_segment_state] inexistent nav_segment", id)
@@ -659,7 +660,7 @@ function NavigationManager:set_nav_segment_state(id, state, filter_group)
 	end
 end
 
--- Lines 701-709
+-- Lines 705-713
 function NavigationManager:perform_nav_segment_meta_operation(id, operation)
 	local nav_segment = self._nav_segments[id]
 
@@ -670,7 +671,7 @@ function NavigationManager:perform_nav_segment_meta_operation(id, operation)
 	end
 end
 
--- Lines 713-730
+-- Lines 717-734
 function NavigationManager:delete_nav_segment(id)
 	local draw_options = self._draw_enabled
 
@@ -690,7 +691,7 @@ function NavigationManager:delete_nav_segment(id)
 	self:set_debug_draw_state(draw_options)
 end
 
--- Lines 734-744
+-- Lines 738-748
 function NavigationManager:build_visibility_graph(complete_clbk, all_visible, neg_filter, pos_filter, ray_dis)
 	if not next(self._nav_segments) then
 		Application:error("[NavigationManager:build_visibility_graph] ground needs to be built before visibilty graph")
@@ -707,7 +708,7 @@ function NavigationManager:build_visibility_graph(complete_clbk, all_visible, ne
 	self._builder:build_visibility_graph(callback(self, self, "build_complete_clbk", draw_options), all_visible, ray_dis, pos_filter, neg_filter)
 end
 
--- Lines 748-771
+-- Lines 752-775
 function NavigationManager:set_debug_draw_state(options)
 	if options and not self._draw_enabled then
 		self:_init_draw_data()
@@ -734,7 +735,7 @@ function NavigationManager:set_debug_draw_state(options)
 	self._draw_enabled = options
 end
 
--- Lines 773-805
+-- Lines 777-809
 function NavigationManager:_verify_blockers()
 	if self._builder._helper_blockers then
 		local blocker_units_missing_obj = {}
@@ -771,14 +772,14 @@ function NavigationManager:_verify_blockers()
 	end
 end
 
--- Lines 809-813
+-- Lines 813-817
 function NavigationManager:set_selected_segment(unit)
 	self._selected_segment = unit and unit:unit_data().unit_id
 
 	self:set_debug_draw_state(self._draw_enabled)
 end
 
--- Lines 817-848
+-- Lines 821-852
 function NavigationManager:_draw_rooms(progress)
 	local selected_seg = self._selected_segment
 	local room_mask = nil
@@ -818,7 +819,7 @@ function NavigationManager:_draw_rooms(progress)
 	end
 end
 
--- Lines 852-895
+-- Lines 856-899
 function NavigationManager:_draw_room_boundaries(progress)
 	local rooms = self._rooms
 	local nav_rooms = {}
@@ -859,7 +860,7 @@ function NavigationManager:_draw_room_boundaries(progress)
 	end
 end
 
--- Lines 897-931
+-- Lines 901-935
 function NavigationManager:_draw_room_boundary(index, nav_room_list)
 	if not nav_room_list then
 		return
@@ -892,7 +893,7 @@ function NavigationManager:_draw_room_boundary(index, nav_room_list)
 	hull_data.brush:line(hull_points[1], hull_points[#hull_points], 5)
 end
 
--- Lines 933-958
+-- Lines 937-962
 function NavigationManager:_compute_room_hull(nav_room_list)
 	local point_cloud = {}
 	local draw = self._draw_data
@@ -915,7 +916,7 @@ function NavigationManager:_compute_room_hull(nav_room_list)
 	return hull
 end
 
--- Lines 962-994
+-- Lines 966-998
 function NavigationManager:_draw_nav_blockers()
 	if self._builder._helper_blockers then
 		local mvec3_set = mvector3.set
@@ -955,7 +956,7 @@ function NavigationManager:_draw_nav_blockers()
 	end
 end
 
--- Lines 998-1133
+-- Lines 1002-1137
 function NavigationManager:_draw_room(room, instant)
 	local draw, brushes, offsets = nil
 
@@ -1092,7 +1093,7 @@ function NavigationManager:_draw_room(room, instant)
 	end
 end
 
--- Lines 1137-1166
+-- Lines 1141-1170
 function NavigationManager:_draw_doors(progress)
 	local selected_seg = self._selected_segment
 	local room_mask = nil
@@ -1132,14 +1133,14 @@ function NavigationManager:_draw_doors(progress)
 	end
 end
 
--- Lines 1170-1173
+-- Lines 1174-1177
 function NavigationManager:_draw_door(door)
 	local brush = self._draw_data.brush.door
 
 	brush:cylinder(door.pos, door.pos1, 2)
 end
 
--- Lines 1177-1191
+-- Lines 1181-1195
 function NavigationManager:_draw_anim_nav_links()
 	if not self._nav_links then
 		return
@@ -1155,7 +1156,7 @@ function NavigationManager:_draw_anim_nav_links()
 	end
 end
 
--- Lines 1195-1221
+-- Lines 1199-1225
 function NavigationManager:_draw_covers()
 	local reserved = self.COVER_RESERVED
 	local cone_height = Vector3(0, 0, 80)
@@ -1184,7 +1185,7 @@ function NavigationManager:_draw_covers()
 	end
 end
 
--- Lines 1225-1232
+-- Lines 1229-1236
 function NavigationManager:cover_info()
 	local reserved = self.COVER_RESERVED
 
@@ -1195,7 +1196,7 @@ function NavigationManager:cover_info()
 	end
 end
 
--- Lines 1236-1259
+-- Lines 1240-1263
 function NavigationManager:_draw_geographic_segments()
 	if not next(self._geog_segments) then
 		return
@@ -1221,7 +1222,7 @@ function NavigationManager:_draw_geographic_segments()
 	end
 end
 
--- Lines 1263-1309
+-- Lines 1267-1313
 function NavigationManager:_draw_visibility_groups(progress)
 	local selected_seg = self._selected_segment
 
@@ -1277,7 +1278,7 @@ function NavigationManager:_draw_visibility_groups(progress)
 	end
 end
 
--- Lines 1313-1338
+-- Lines 1317-1342
 function NavigationManager:_draw_coarse_graph()
 	local all_nav_segments = self._nav_segments
 	local all_doors = self._room_doors
@@ -1317,7 +1318,7 @@ function NavigationManager:_draw_coarse_graph()
 	end
 end
 
--- Lines 1342-1391
+-- Lines 1346-1395
 function NavigationManager:get_nav_segments_in_direction(start_nav_seg_id, fwd)
 	local mvec3_set = mvector3.set
 	local mvec3_dot = mvector3.dot
@@ -1372,12 +1373,12 @@ function NavigationManager:get_nav_segments_in_direction(start_nav_seg_id, fwd)
 	return next(found) and found
 end
 
--- Lines 1395-1397
+-- Lines 1399-1401
 function NavigationManager:find_random_position_in_segment(seg_id)
 	return self._quad_field:random_position_in_nav_segment(seg_id)
 end
 
--- Lines 1401-1462
+-- Lines 1405-1466
 function NavigationManager:register_cover_units()
 	if not self:is_data_ready() then
 		return
@@ -1389,7 +1390,7 @@ function NavigationManager:register_cover_units()
 	local t_ins = table.insert
 
 	if cover_data then
-		-- Lines 1411-1424
+		-- Lines 1415-1428
 		local function _register_cover(pos, fwd)
 			local nav_tracker = self._quad_field:create_nav_tracker(pos, true)
 			local cover = {
@@ -1460,7 +1461,7 @@ function NavigationManager:register_cover_units()
 	self._covers = covers
 end
 
--- Lines 1466-1471
+-- Lines 1470-1475
 function NavigationManager:_unregister_cover_units()
 	for i_cover, cover in ipairs(self._covers) do
 		self._quad_field:destroy_nav_tracker(cover[3])
@@ -1469,7 +1470,7 @@ function NavigationManager:_unregister_cover_units()
 	self._covers = {}
 end
 
--- Lines 1475-1481
+-- Lines 1479-1485
 function NavigationManager:_safe_remove_unit(unit)
 	if Application:editor() then
 		managers.editor:delete_unit(unit)
@@ -1478,7 +1479,7 @@ function NavigationManager:_safe_remove_unit(unit)
 	end
 end
 
--- Lines 1485-1490
+-- Lines 1489-1494
 function NavigationManager:remove_AI_blocker_units()
 	local all_units = World:find_units_quick("all", 15)
 
@@ -1487,7 +1488,7 @@ function NavigationManager:remove_AI_blocker_units()
 	end
 end
 
--- Lines 1494-1537
+-- Lines 1498-1541
 function NavigationManager:register_anim_nav_link(element)
 	if element:nav_link() then
 		if Application:editor() then
@@ -1533,7 +1534,7 @@ function NavigationManager:register_anim_nav_link(element)
 	end
 end
 
--- Lines 1541-1597
+-- Lines 1545-1601
 function NavigationManager:unregister_anim_nav_link(element)
 	local nav_link = element:nav_link()
 
@@ -1598,7 +1599,7 @@ function NavigationManager:unregister_anim_nav_link(element)
 	self._quad_field:remove_nav_link(element._id)
 end
 
--- Lines 1601-1611
+-- Lines 1605-1615
 function NavigationManager:reserve_cover(cover, filter)
 	local reserved = cover[self.COVER_RESERVED]
 
@@ -1617,7 +1618,7 @@ function NavigationManager:reserve_cover(cover, filter)
 	end
 end
 
--- Lines 1615-1623
+-- Lines 1619-1627
 function NavigationManager:release_cover(cover)
 	local reserved = cover[self.COVER_RESERVED]
 
@@ -1630,7 +1631,7 @@ function NavigationManager:release_cover(cover)
 	end
 end
 
--- Lines 1627-1637
+-- Lines 1631-1641
 function NavigationManager:find_cover_near_pos_1(near_pos, threat_pos, max_near_dis, min_threat_dis, allow_fwd)
 	local search_params = {
 		variation_z = 250,
@@ -1644,7 +1645,7 @@ function NavigationManager:find_cover_near_pos_1(near_pos, threat_pos, max_near_
 	return self._quad_field:find_cover(search_params)
 end
 
--- Lines 1641-1654
+-- Lines 1645-1658
 function NavigationManager:find_cover_away_from_pos(near_pos, threat_pos, nav_seg_id)
 	if type(nav_seg_id) == "table" then
 		nav_seg_id = self._convert_nav_seg_map_to_vec(nav_seg_id)
@@ -1661,7 +1662,7 @@ function NavigationManager:find_cover_away_from_pos(near_pos, threat_pos, nav_se
 	return self._quad_field:find_cover(search_params)
 end
 
--- Lines 1658-1664
+-- Lines 1662-1668
 function NavigationManager._convert_nav_seg_map_to_vec(nav_seg_map)
 	local nav_seg_vec = {}
 
@@ -1672,7 +1673,7 @@ function NavigationManager._convert_nav_seg_map_to_vec(nav_seg_map)
 	return nav_seg_vec
 end
 
--- Lines 1668-1681
+-- Lines 1672-1685
 function NavigationManager:find_cover_in_nav_seg_1(nav_seg_id)
 	if type(nav_seg_id) == "table" then
 		nav_seg_id = self._convert_nav_seg_map_to_vec(nav_seg_id)
@@ -1681,7 +1682,7 @@ function NavigationManager:find_cover_in_nav_seg_1(nav_seg_id)
 	return self._quad_field:find_cover_in_set(nav_seg_id)
 end
 
--- Lines 1685-1696
+-- Lines 1689-1700
 function NavigationManager:find_cover_in_nav_seg_2(nav_seg_id, defend_pos, defend_dir)
 	if type(nav_seg_id) == "table" then
 		nav_seg_id = self._convert_nav_seg_map_to_vec(nav_seg_id)
@@ -1696,7 +1697,7 @@ function NavigationManager:find_cover_in_nav_seg_2(nav_seg_id, defend_pos, defen
 	return self._quad_field:find_cover(search_params)
 end
 
--- Lines 1700-1712
+-- Lines 1704-1716
 function NavigationManager:find_cover_in_nav_seg_3(nav_seg_id, max_near_dis, near_pos, threat_pos)
 	if type(nav_seg_id) == "table" then
 		nav_seg_id = self._convert_nav_seg_map_to_vec(nav_seg_id)
@@ -1712,7 +1713,7 @@ function NavigationManager:find_cover_in_nav_seg_3(nav_seg_id, max_near_dis, nea
 	return self._quad_field:find_cover(search_params)
 end
 
--- Lines 1716-1728
+-- Lines 1720-1732
 function NavigationManager:find_cover_from_threat(nav_seg_id, optimal_threat_dis, near_pos, threat_pos)
 	if type(nav_seg_id) == "table" then
 		nav_seg_id = self._convert_nav_seg_map_to_vec(nav_seg_id)
@@ -1728,12 +1729,12 @@ function NavigationManager:find_cover_from_threat(nav_seg_id, optimal_threat_dis
 	return self._quad_field:find_cover(search_params)
 end
 
--- Lines 1732-1754
+-- Lines 1736-1758
 function NavigationManager:find_cover_in_cone_from_threat_pos_1(threat_pos, furthest_pos, near_pos, search_from_pos, angle, min_dis, nav_seg, optimal_threat_dis, rsrv_filter)
 	return self._quad_field:find_cover_in_cone(near_pos, threat_pos, angle, furthest_pos, rsrv_filter)
 end
 
--- Lines 1758-1802
+-- Lines 1762-1806
 function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec, angle, nr_rays)
 	angle = angle or 180
 	local center_pos = from_tracker:field_position()
@@ -1790,7 +1791,7 @@ function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec,
 	return #ray_results > 0 and ray_results
 end
 
--- Lines 1806-1847
+-- Lines 1810-1851
 function NavigationManager:find_segment_doors(from_seg_id, approve_clbk)
 	local all_doors = self._room_doors
 	local all_nav_segs = self._nav_segments
@@ -1810,7 +1811,7 @@ function NavigationManager:find_segment_doors(from_seg_id, approve_clbk)
 	return found_doors
 end
 
--- Lines 1891-1901
+-- Lines 1895-1905
 function NavigationManager:_commence_coarce_searches(t)
 	local search_data = self._coarse_searches[1]
 
@@ -1825,7 +1826,7 @@ function NavigationManager:_commence_coarce_searches(t)
 	search_data.results_callback(result)
 end
 
--- Lines 1905-2004
+-- Lines 1909-2008
 function NavigationManager:_execute_coarce_search(search_data)
 	local search_id = search_data.id
 	local i = 0
@@ -1930,7 +1931,7 @@ function NavigationManager:_execute_coarce_search(search_data)
 	end
 end
 
--- Lines 2008-2076
+-- Lines 2012-2080
 function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, verify_clbk, access_pos, access_neg)
 	local all_segs = self._nav_segments
 	local all_doors = self._room_doors
@@ -2021,14 +2022,14 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 	return found_segs
 end
 
--- Lines 2080-2083
+-- Lines 2084-2087
 function NavigationManager:raycast(params)
 	local res = self._quad_field:test_walkability(params)
 
 	return res
 end
 
--- Lines 2088-2098
+-- Lines 2092-2102
 function NavigationManager._is_pos_in_room(pos, borders, height)
 	if borders.x_neg <= pos.x and pos.x <= borders.x_pos and borders.y_neg <= pos.y and pos.y <= borders.y_pos then
 		local z = NavFieldBuilder._get_room_height_at_pos(height, borders, pos)
@@ -2039,14 +2040,14 @@ function NavigationManager._is_pos_in_room(pos, borders, height)
 	end
 end
 
--- Lines 2103-2108
+-- Lines 2107-2112
 function NavigationManager._is_pos_in_room_xy(pos, borders)
 	if borders.x_neg <= pos.x and pos.x <= borders.x_pos and borders.y_neg <= pos.y and pos.y <= borders.y_pos then
 		return true
 	end
 end
 
--- Lines 2114-2132
+-- Lines 2118-2136
 function NavigationManager:search_pos_to_pos(params)
 	if params.access_pos then
 		params.blocked_nav_segs = params.access_pos
@@ -2055,7 +2056,7 @@ function NavigationManager:search_pos_to_pos(params)
 	self._quad_field:detailed_search(params)
 end
 
--- Lines 2151-2209
+-- Lines 2155-2213
 function NavigationManager:search_coarse(params)
 	local pos_to, start_i_seg, end_i_seg, access_pos, access_neg = nil
 
@@ -2142,12 +2143,12 @@ function NavigationManager:search_coarse(params)
 	end
 end
 
--- Lines 2213-2221
+-- Lines 2217-2225
 function NavigationManager:cancel_pathing_search(search_id)
 	self._quad_field:abort_detailed_search(search_id)
 end
 
--- Lines 2225-2232
+-- Lines 2229-2236
 function NavigationManager:cancel_coarse_search(search_id)
 	for i, search_data in ipairs(self._coarse_searches) do
 		if search_id == search_data.id then
@@ -2158,7 +2159,7 @@ function NavigationManager:cancel_coarse_search(search_id)
 	end
 end
 
--- Lines 2319-2343
+-- Lines 2323-2347
 function NavigationManager:print_rect_info()
 	local camera = setup:freeflight()._camera_object
 	local cam_pos = camera:position()
@@ -2189,7 +2190,7 @@ function NavigationManager:print_rect_info()
 	end
 end
 
--- Lines 2347-2376
+-- Lines 2351-2380
 function NavigationManager:draw_path(path, color_link, color_node, duration)
 	if path then
 		color_node = color_node and Color(unpack(color_node)) or Color(0.2, math.random(), math.random(), math.random())
@@ -2226,45 +2227,45 @@ function NavigationManager:draw_path(path, color_link, color_node, duration)
 	end
 end
 
--- Lines 2404-2406
+-- Lines 2408-2410
 function NavigationManager:create_nav_tracker(start_pos, allow_disabled)
 	return self._quad_field:create_nav_tracker(start_pos, allow_disabled)
 end
 
--- Lines 2410-2414
+-- Lines 2414-2418
 function NavigationManager:destroy_nav_tracker(nav_tracker)
 	if alive(nav_tracker) then
 		self._quad_field:destroy_nav_tracker(nav_tracker)
 	end
 end
 
--- Lines 2418-2420
+-- Lines 2422-2424
 function NavigationManager:get_nav_seg_from_i_room(i_room)
 	return self._visibility_groups[self._rooms[i_room].vis_group].seg
 end
 
--- Lines 2424-2426
+-- Lines 2428-2430
 function NavigationManager:get_nav_seg_from_i_vis_group(i_group)
 	return self._visibility_groups[i_group].seg
 end
 
--- Lines 2430-2432
+-- Lines 2434-2436
 function NavigationManager:get_nav_seg_from_pos(pos, allow_disabled)
 	return self._quad_field:find_nav_segment(pos, allow_disabled)
 end
 
--- Lines 2436-2438
+-- Lines 2440-2442
 function NavigationManager:get_nav_seg_neighbours(seg_id)
 	return self._nav_segments[seg_id].neighbours
 end
 
--- Lines 2442-2445
+-- Lines 2446-2449
 function NavigationManager:on_game_started()
 	self:register_cover_units()
 	self:remove_AI_blocker_units()
 end
 
--- Lines 2449-2454
+-- Lines 2453-2458
 function NavigationManager:on_simulation_started()
 	if self:is_data_ready() then
 		self:register_cover_units()
@@ -2273,7 +2274,7 @@ function NavigationManager:on_simulation_started()
 	self:remove_AI_blocker_units()
 end
 
--- Lines 2567-2594
+-- Lines 2571-2598
 function NavigationManager:reserve_pos(start_t, duration, pos, step_clbk, radius, filter)
 	local entry = {
 		position = mvec3_cpy(pos),
@@ -2298,12 +2299,12 @@ function NavigationManager:reserve_pos(start_t, duration, pos, step_clbk, radius
 	until false
 end
 
--- Lines 2598-2600
+-- Lines 2602-2604
 function NavigationManager:is_pos_free(desc)
 	return self._quad_field:is_position_unreserved(desc)
 end
 
--- Lines 2604-2630
+-- Lines 2608-2634
 function NavigationManager:add_pos_reservation(desc)
 	if self._debug and not desc.filter then
 		print("[NavigationManager:add_pos_reservation] No filter added")
@@ -2330,7 +2331,7 @@ function NavigationManager:add_pos_reservation(desc)
 	end
 end
 
--- Lines 2634-2644
+-- Lines 2638-2648
 function NavigationManager:unreserve_pos(entry)
 	if self._debug then
 		self._pos_reservations[entry.id] = nil
@@ -2341,7 +2342,7 @@ function NavigationManager:unreserve_pos(entry)
 	entry.id = nil
 end
 
--- Lines 2648-2654
+-- Lines 2652-2658
 function NavigationManager:move_pos_rsrv(desc)
 	if self._debug then
 		self._pos_reservations[desc.id].position = desc.position
@@ -2350,7 +2351,7 @@ function NavigationManager:move_pos_rsrv(desc)
 	self._quad_field:move_position_reservation(desc.id, desc.position)
 end
 
--- Lines 2658-2689
+-- Lines 2662-2693
 function NavigationManager:on_simulation_ended()
 	if self._nav_links then
 		local nav_links = clone(self._nav_links)
@@ -2387,7 +2388,7 @@ function NavigationManager:on_simulation_ended()
 	end
 end
 
--- Lines 2693-2757
+-- Lines 2697-2761
 function NavigationManager:nav_field_sanity_check()
 	print("[NavigationManager:nav_field_sanity_check]")
 
@@ -2467,7 +2468,7 @@ function NavigationManager:nav_field_sanity_check()
 	print("nav_field_sanity_check complete")
 end
 
--- Lines 2761-2814
+-- Lines 2765-2818
 function NavigationManager:send_nav_field_to_engine()
 	local t_ins = table.insert
 	local send_data = {
@@ -2536,7 +2537,7 @@ function NavigationManager:send_nav_field_to_engine()
 	nav_field:set_nav_link_filter(NavigationManager.ACCESS_FLAGS)
 end
 
--- Lines 2818-2852
+-- Lines 2822-2856
 function NavigationManager:_strip_nav_field_for_gameplay()
 	local all_doors = self._room_doors
 	local all_rooms = self._rooms
@@ -2576,7 +2577,7 @@ function NavigationManager:_strip_nav_field_for_gameplay()
 	self._covers = {}
 end
 
--- Lines 2856-2861
+-- Lines 2860-2865
 function NavigationManager:_complete_nav_field_for_debug()
 	for i_door, door in ipairs(self._room_doors) do
 		door.center = Vector3()
@@ -2585,7 +2586,7 @@ function NavigationManager:_complete_nav_field_for_debug()
 	end
 end
 
--- Lines 2865-2874
+-- Lines 2869-2878
 function NavigationManager:get_pos_reservation_id()
 	local i = 1
 	local filters = self._pos_rsrv_filters
@@ -2599,12 +2600,12 @@ function NavigationManager:get_pos_reservation_id()
 	return i
 end
 
--- Lines 2878-2880
+-- Lines 2882-2884
 function NavigationManager:release_pos_reservation_id(id)
 	self._pos_rsrv_filters[id] = nil
 end
 
--- Lines 2884-2922
+-- Lines 2888-2926
 function NavigationManager:convert_nav_link_maneuverability_to_SO_access(maneuverability)
 	local t_ins = table.insert
 	local nav_link_filter = {}
@@ -2654,7 +2655,7 @@ function NavigationManager:convert_nav_link_maneuverability_to_SO_access(maneuve
 	return access_filter
 end
 
--- Lines 2926-2947
+-- Lines 2930-2951
 function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 	local ai_group_filter = nil
 
@@ -2711,32 +2712,32 @@ function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 	return access_filter
 end
 
--- Lines 2951-2953
+-- Lines 2955-2957
 function NavigationManager:convert_access_filter_to_number(access_filter)
 	return self._quad_field:convert_access_filter_to_number(access_filter)
 end
 
--- Lines 2957-2959
+-- Lines 2961-2963
 function NavigationManager:convert_access_filter_to_string(access_filter)
 	return self._quad_field:convert_access_filter_to_string(access_filter)
 end
 
--- Lines 2963-2965
+-- Lines 2967-2969
 function NavigationManager:convert_access_filter_to_table(access_filter)
 	return self._quad_field:convert_access_filter_to_table(access_filter)
 end
 
--- Lines 2969-2971
+-- Lines 2973-2975
 function NavigationManager:convert_access_flag(access_flag)
 	return self._quad_field:convert_nav_link_flag_to_bitmask(access_flag)
 end
 
--- Lines 2975-2977
+-- Lines 2979-2981
 function NavigationManager:check_access(access_filter, pos, neg)
 	return self._quad_field:check_access_bitmask(access_filter, pos, neg)
 end
 
--- Lines 2981-2988
+-- Lines 2985-2992
 function NavigationManager:upgrade_access_filter(access_filter_bitmask_old, version)
 	local old_translation = self.ACCESS_FLAGS_OLD[version]
 
@@ -2751,27 +2752,27 @@ function NavigationManager:upgrade_access_filter(access_filter_bitmask_old, vers
 	return access_filter_bitmask_new
 end
 
--- Lines 2992-2994
+-- Lines 2996-2998
 function NavigationManager:get_nav_seg_metadata(nav_seg_id)
 	return self._nav_segments[nav_seg_id]
 end
 
--- Lines 2998-3000
+-- Lines 3002-3004
 function NavigationManager:set_location_ID(nav_seg_id, location_id)
 	self:_set_nav_seg_metadata(nav_seg_id, "location_id", location_id)
 end
 
--- Lines 3004-3006
+-- Lines 3008-3010
 function NavigationManager:set_suspicion_multiplier(nav_seg_id, suspicion_mul)
 	self:_set_nav_seg_metadata(nav_seg_id, "suspicion_mul", suspicion_mul)
 end
 
--- Lines 3010-3012
+-- Lines 3014-3016
 function NavigationManager:set_detection_multiplier(nav_seg_id, detection_mul)
 	self:_set_nav_seg_metadata(nav_seg_id, "detection_mul", detection_mul)
 end
 
--- Lines 3016-3025
+-- Lines 3020-3029
 function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 	if self._nav_segments then
 		local nav_seg = self._nav_segments[nav_seg_id]
@@ -2784,7 +2785,7 @@ function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_v
 	self._builder:set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 end
 
--- Lines 3029-3045
+-- Lines 3033-3049
 function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name)
 	if self._debug then
 		for i, obs_data in ipairs(self._obstacles) do
@@ -2806,7 +2807,7 @@ function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name)
 	})
 end
 
--- Lines 3049-3062
+-- Lines 3053-3066
 function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
@@ -2823,7 +2824,7 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	end
 end
 
--- Lines 3066-3208
+-- Lines 3070-3220
 function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 	if event_name == "add_nav_seg_neighbours" then
 		for nav_seg_id, add_neighbours in pairs(args) do
@@ -2984,7 +2985,7 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 	end
 end
 
--- Lines 3212-3219
+-- Lines 3280-3287
 function NavigationManager:_set_quad_obstructed_by_data(quad_data, state)
 	local closest_i_room, room = self:_get_closest_room_by_com(self._builder:_calculate_room_center(quad_data, true))
 
@@ -2993,7 +2994,7 @@ function NavigationManager:_set_quad_obstructed_by_data(quad_data, state)
 	end
 end
 
--- Lines 3223-3229
+-- Lines 3291-3297
 function NavigationManager:_add_quad_by_data(quad_data)
 	quad_data.added = true
 	local nav_seg = self._nav_segments[quad_data.seg_id]
@@ -3003,7 +3004,7 @@ function NavigationManager:_add_quad_by_data(quad_data)
 	table.insert(self._rooms, quad_data)
 end
 
--- Lines 3233-3240
+-- Lines 3301-3308
 function NavigationManager:_alter_quad_by_data(quad_data)
 	local closest_i_room, room = self:_get_closest_room_by_com(quad_data.old_com)
 
@@ -3013,7 +3014,7 @@ function NavigationManager:_alter_quad_by_data(quad_data)
 	end
 end
 
--- Lines 3244-3256
+-- Lines 3312-3324
 function NavigationManager:_get_closest_room_by_com(com)
 	local closest_dis, closest_i_room = nil
 
@@ -3030,7 +3031,7 @@ function NavigationManager:_get_closest_room_by_com(com)
 	return closest_i_room, self._rooms[closest_i_room]
 end
 
--- Lines 3260-3262
+-- Lines 3328-3330
 function NavigationManager:destroy()
 	self._quad_field:clear_all()
 end

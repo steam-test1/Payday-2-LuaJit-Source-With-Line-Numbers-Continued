@@ -9,7 +9,7 @@ LevelsTweakData.LevelType = {
 	Federales = "federales"
 }
 
--- Lines 20-3037
+-- Lines 20-3040
 function LevelsTweakData:init()
 	local america = LevelsTweakData.LevelType.America
 	local russia = LevelsTweakData.LevelType.Russia
@@ -2750,12 +2750,12 @@ function LevelsTweakData:init()
 	}
 end
 
--- Lines 3041-3043
+-- Lines 3044-3046
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
--- Lines 3045-3050
+-- Lines 3048-3053
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -2764,12 +2764,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
--- Lines 3054-3056
+-- Lines 3057-3059
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
--- Lines 3060-3066
+-- Lines 3063-3069
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2778,7 +2778,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
--- Lines 3070-3076
+-- Lines 3073-3079
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -2787,17 +2787,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
--- Lines 3078-3080
+-- Lines 3081-3083
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
--- Lines 3082-3084
+-- Lines 3085-3087
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
--- Lines 3088-3094
+-- Lines 3091-3097
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2806,7 +2806,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 3096-3102
+-- Lines 3099-3105
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2815,7 +2815,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 3104-3110
+-- Lines 3107-3113
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -2824,12 +2824,12 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
--- Lines 3112-3114
+-- Lines 3115-3117
 function LevelsTweakData:get_music_style(level_id)
 	return self:get_music_style_from_level_data(tweak_data.levels[level_id])
 end
 
--- Lines 3116-3130
+-- Lines 3119-3133
 function LevelsTweakData:get_music_style_from_level_data(level_data)
 	local music_id = level_data and level_data.music or "default"
 
@@ -2844,7 +2844,7 @@ function LevelsTweakData:get_music_style_from_level_data(level_data)
 	return "heist"
 end
 
--- Lines 3132-3183
+-- Lines 3135-3186
 function LevelsTweakData:get_music_switches()
 	if not Global.level_data then
 		return nil
@@ -2903,7 +2903,7 @@ function LevelsTweakData:get_music_switches()
 	return switches
 end
 
--- Lines 3185-3193
+-- Lines 3188-3196
 function LevelsTweakData:get_music_event(stage)
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 
@@ -2916,7 +2916,7 @@ function LevelsTweakData:get_music_event(stage)
 	return tweak_data.music[music_id][stage]
 end
 
--- Lines 3195-3202
+-- Lines 3198-3205
 function LevelsTweakData:get_music_event_ext()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music = level_data and level_data.music_ext
@@ -2925,7 +2925,7 @@ function LevelsTweakData:get_music_event_ext()
 	return music, music_start
 end
 
--- Lines 3205-3259
+-- Lines 3208-3262
 function LevelsTweakData:get_music_event_ext_ghost()
 	if not Global.level_data then
 		return nil, nil
@@ -2985,7 +2985,7 @@ function LevelsTweakData:get_music_event_ext_ghost()
 	return table.random(ghost_music_exts), level_data.music_ext_start
 end
 
--- Lines 3263-3281
+-- Lines 3266-3284
 function LevelsTweakData:get_default_team_ID(type)
 	local lvl_tweak = self[Global.level_data.level_id]
 
@@ -3008,7 +3008,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
--- Lines 3283-3310
+-- Lines 3286-3313
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3073,7 +3073,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines 3312-3330
+-- Lines 3315-3333
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3088,7 +3088,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
--- Lines 3332-3346
+-- Lines 3335-3349
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -3108,7 +3108,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines 3348-3355
+-- Lines 3351-3358
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 
@@ -3119,7 +3119,7 @@ function LevelsTweakData:get_team_index(team_id)
 	end
 end
 
--- Lines 3357-3368
+-- Lines 3360-3371
 function LevelsTweakData:get_ai_group_type()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 
@@ -3136,7 +3136,7 @@ function LevelsTweakData:get_ai_group_type()
 	return self.ai_groups.default
 end
 
--- Lines 3371-3384
+-- Lines 3374-3387
 function LevelsTweakData:get_narrator_prefix(narrator)
 	if not narrator then
 		local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]

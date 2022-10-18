@@ -34,17 +34,17 @@ function PlayerAnimationData:foot()
 	return self._footstep
 end
 
--- Lines 48-50
+-- Lines 48-55
 function PlayerAnimationData:anim_clbk_upper_body_empty(unit)
 	unit:anim_state_machine():stop_segment(Idstring("upper_body"))
 end
 
--- Lines 54-56
+-- Lines 59-61
 function PlayerAnimationData:anim_clbk_base_empty(unit)
 	unit:anim_state_machine():stop_segment(Idstring("base"))
 end
 
--- Lines 60-66
+-- Lines 65-71
 function PlayerAnimationData:anim_clbk_death_exit(unit)
 	unit:movement():on_death_exit()
 	unit:base():on_death_exit()

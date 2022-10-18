@@ -114,7 +114,7 @@ end
 function HuskCopBrain:action_complete_clbk(action)
 end
 
--- Lines 120-134
+-- Lines 128-142
 function HuskCopBrain:on_alert(alert_data)
 	if self._unit:id() == -1 then
 		return
@@ -133,32 +133,32 @@ function HuskCopBrain:on_alert(alert_data)
 	self._last_alert_t = TimerManager:game():time()
 end
 
--- Lines 139-141
+-- Lines 147-149
 function HuskCopBrain:sync_surrender(surrendered)
 	self._surrendered = surrendered
 end
 
--- Lines 145-147
+-- Lines 153-155
 function HuskCopBrain:surrendered()
 	return self._surrendered
 end
 
--- Lines 151-153
+-- Lines 159-161
 function HuskCopBrain:sync_converted()
 	self._converted = true
 end
 
--- Lines 155-157
+-- Lines 163-165
 function HuskCopBrain:converted()
 	return self._converted
 end
 
--- Lines 161-163
+-- Lines 169-171
 function HuskCopBrain:is_hostile()
 	return not self._surrendered and not self._converted
 end
 
--- Lines 167-171
+-- Lines 175-179
 function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit, secondary)
 	secondary = secondary or false
 	amount = math.clamp(math.ceil(amount * 10), 0, 10)
@@ -166,16 +166,16 @@ function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit, secondary)
 	self._unit:network():send_to_host("long_dis_interaction", amount, aggressor_unit, secondary)
 end
 
--- Lines 174-176
+-- Lines 182-184
 function HuskCopBrain:player_ignore()
 	return false
 end
 
--- Lines 181-181
+-- Lines 189-189
 function HuskCopBrain:on_team_set(team_data)
 end
 
--- Lines 185-193
+-- Lines 193-201
 function HuskCopBrain:update(unit, t, dt)
 	if self._add_laser_t ~= nil and self._post_init_complete then
 		self._add_laser_t = self._add_laser_t - dt
@@ -188,7 +188,7 @@ function HuskCopBrain:update(unit, t, dt)
 	end
 end
 
--- Lines 195-201
+-- Lines 203-209
 function HuskCopBrain:sync_net_event(event_id)
 	if event_id == self._NET_EVENTS.weapon_laser_on then
 		self._add_laser_t = HuskCopBrain._ENABLE_LASER_TIME
@@ -197,7 +197,7 @@ function HuskCopBrain:sync_net_event(event_id)
 	end
 end
 
--- Lines 203-207
+-- Lines 211-215
 function HuskCopBrain:enable_weapon_laser()
 	self._weapon_laser_on = true
 
@@ -205,7 +205,7 @@ function HuskCopBrain:enable_weapon_laser()
 	managers.enemy:_destroy_unit_gfx_lod_data(self._unit:key())
 end
 
--- Lines 209-217
+-- Lines 217-225
 function HuskCopBrain:disable_weapon_laser()
 	self._weapon_laser_on = nil
 
@@ -218,7 +218,7 @@ function HuskCopBrain:disable_weapon_laser()
 	end
 end
 
--- Lines 221-236
+-- Lines 229-244
 function HuskCopBrain:pre_destroy()
 	if Network:is_server() then
 		self._unit:movement():set_attention()

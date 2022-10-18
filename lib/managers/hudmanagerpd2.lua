@@ -1282,7 +1282,7 @@ end
 
 -- Lines 1433-1435
 function HUDManager:get_dot_color(color_name)
-	return tweak_data.accessibility_colors[color_name] or Color.white
+	return tweak_data.accessibility_colors.dot[color_name] or tweak_data.accessibility_colors.dot.white or Color.white
 end
 
 -- Lines 1439-1442

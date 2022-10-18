@@ -1841,7 +1841,7 @@ function CopActionHurt:clbk_chk_freeze_ragdoll()
 	end
 end
 
--- Lines 1776-1783
+-- Lines 1776-1787
 function CopActionHurt:clbk_shooting_hurt()
 	self._delayed_shooting_hurt_clbk_id = nil
 
@@ -1854,7 +1854,7 @@ function CopActionHurt:clbk_shooting_hurt()
 	self._weapon_unit:base():singleshot(fire_obj:position(), fire_obj:rotation(), 1, false, nil, nil, nil, nil)
 end
 
--- Lines 1787-1797
+-- Lines 1791-1801
 function CopActionHurt:on_destroy()
 	if self._shooting_hurt then
 		self._shooting_hurt = false
