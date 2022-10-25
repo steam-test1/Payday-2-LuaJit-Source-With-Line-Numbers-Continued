@@ -105,6 +105,8 @@ logic_variants.tank_mini = logic_variants.tank
 logic_variants.heavy_swat_sniper = logic_variants.heavy_swat
 logic_variants.marshal_marksman = clone(logic_variants.heavy_swat)
 logic_variants.marshal_marksman.attack = MarshalLogicAttack
+logic_variants.marshal_shield = clone(logic_variants.shield)
+logic_variants.marshal_shield_break = logic_variants.swat
 security_variant = nil
 CopBrain._logic_variants = logic_variants
 logic_variants = nil
@@ -129,6 +131,10 @@ function CopBrain:init(unit)
 	self._SO_access = managers.navigation:convert_access_flag(tweak_data.character[unit:base()._tweak_table].access)
 	self._slotmask_enemies = managers.slot:get_mask("criminals")
 	self._reload_clbks[unit:key()] = callback(self, self, "on_reload")
+
+	if unit:base().add_tweak_data_changed_listener then
+		unit:base():add_tweak_data_changed_listener("CopBrainTweakDataChange" .. tostring(unit:key()), callback(self, self, "_clbk_tweak_data_changed"))
+	end
 end
 
 -- Lines 195-221
@@ -628,6 +634,11 @@ function CopBrain:on_detected_attention_obj_modified(modified_u_key)
 	self._current_logic.on_detected_attention_obj_modified(self._logic_data, modified_u_key)
 end
 
+-- Lines 720-722
+function CopBrain:on_detected_attention_obj_tweak_data_changed(modified_u_key, old_tweak_data, new_tweak_data)
+	self._current_logic.on_detected_attention_obj_tweak_data_changed(self._logic_data, modified_u_key, old_tweak_data, new_tweak_data)
+end
+
 -- Lines 726-728
 function CopBrain:on_criminal_neutralized(criminal_key)
 	self._current_logic.on_criminal_neutralized(self._logic_data, criminal_key)
@@ -686,6 +697,27 @@ function CopBrain:on_reload()
 	self._logics = CopBrain._logic_variants[self._unit:base()._tweak_table]
 	self._current_logic = self._logics[self._current_logic_name]
 	self._logic_data.char_tweak = tweak_data.character[self._unit:base()._tweak_table]
+end
+
+-- Lines 793-818
+function CopBrain:_clbk_tweak_data_changed(old_tweak_data, new_tweak_data)
+	local logic_data = self._logic_data
+	local current_access = logic_data.SO_access_str
+	local cur_logic = self._logics[self._current_logic_name]
+
+	self:on_reload()
+
+	local new_so_access = new_tweak_data.access
+
+	if new_so_access ~= current_access then
+		self._SO_access = managers.navigation:convert_access_flag(new_so_access)
+		logic_data.SO_access = self._SO_access
+		logic_data.SO_access_str = new_so_access
+	end
+
+	if cur_logic ~= self._current_logic then
+		self:set_logic(self._current_logic_name)
+	end
 end
 
 -- Lines 828-832

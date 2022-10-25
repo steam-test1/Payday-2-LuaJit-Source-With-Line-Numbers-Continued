@@ -70,6 +70,7 @@ function CoreEnvironmentControllerManager:init()
 	self._default_fov_value = 75
 	self._current_fov_value = 75
 	self._fov_ratio = 1
+	self._screenflash_color_value = 1
 end
 
 -- Lines 112-115
@@ -616,7 +617,11 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 		last_life = math.clamp((hurt_mod - 0.5) * 2, 0, 1)
 	end
 
-	mvector3.set_static(temp_vec_2, last_life, math.max(0, flash_2 + math.clamp(hit_some_mod * 2, 0, 1) * 0.25 + blur_zone_val * 0.15), 0)
+	if not self._screenflash_color_value_clbk_func then
+		self:set_screenflash_color_clbk()
+	end
+
+	mvector3.set_static(temp_vec_2, last_life, self._screenflash_color_value * math.max(0, flash_2 + math.clamp(hit_some_mod * 2, 0, 1) * 0.25 + blur_zone_val * 0.15), 0)
 	self._lut_modifier_material:set_variable(ids_LUT_settings_b, temp_vec_2)
 	self._lut_modifier_material:set_variable(ids_LUT_contrast, flashbang * 0.5)
 end
@@ -626,6 +631,10 @@ function CoreEnvironmentControllerManager:_update_post_effects()
 	self:set_ao_setting(managers.user:get_setting("video_ao"))
 	self:set_parallax_setting(managers.user:get_setting("parallax_mapping"))
 	self:set_aa_setting(managers.user:get_setting("video_aa"))
+
+	if not self._screenflash_color_value_clbk_func then
+		self:set_screenflash_color_clbk()
+	end
 end
 
 -- Lines 822-840
@@ -900,6 +909,27 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 			self._material:set_variable(ids_dof_far_plane, mvec)
 		end
 	end
+end
+
+-- Lines 1065-1067
+function CoreEnvironmentControllerManager:set_screenflash_color(color_name)
+	self._screenflash_color_value = tweak_data.accessibility_colors.screenflash[color_name] or tweak_data.accessibility_colors.screenflash.default or 1
+end
+
+-- Lines 1069-1076
+function CoreEnvironmentControllerManager:set_screenflash_color_clbk()
+	if not self._screenflash_color_value_clbk_func then
+		self:set_screenflash_color(managers.user:get_setting("accessibility_screenflash_color"))
+
+		self._screenflash_color_value_clbk_func = callback(self, self, "clbk_screenflash_color_changed")
+
+		managers.user:add_setting_changed_callback("accessibility_screenflash_color", self._screenflash_color_value_clbk_func)
+	end
+end
+
+-- Lines 1078-1080
+function CoreEnvironmentControllerManager:clbk_screenflash_color_changed(setting_name, old_color_name, new_color_name)
+	self:set_screenflash_color(new_color_name)
 end
 
 -- Lines 1102-1119

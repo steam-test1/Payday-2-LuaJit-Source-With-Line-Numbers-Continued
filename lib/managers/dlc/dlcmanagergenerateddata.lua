@@ -388,6 +388,11 @@ function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
+-- Lines 484-486
+function GenericDLCManager:has_trai()
+	return self:is_dlc_unlocked("trai")
+end
+
 -- Lines 489-491
 function GenericDLCManager:has_trd()
 	return self:is_dlc_unlocked("trd")
@@ -396,6 +401,11 @@ end
 -- Lines 494-496
 function GenericDLCManager:has_trik()
 	return self:is_dlc_unlocked("trik")
+end
+
+-- Lines 499-501
+function GenericDLCManager:has_trt()
+	return self:is_dlc_unlocked("trt")
 end
 
 -- Lines 504-506
@@ -784,12 +794,21 @@ function WINDLCManager:init_generated()
 		app_id = "218620",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.trai = {
+		app_id = "2074240",
+		no_install = true,
+		webpage = "https://pd2.link/LostInTransitHeistYBS"
+	}
 	Global.dlc_manager.all_dlc_data.trd = {
 		app_id = "1184410",
 		no_install = true,
 		webpage = "https://ovk.af/ingame2TailorPack"
 	}
 	Global.dlc_manager.all_dlc_data.trik = {
+		app_id = "218620",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.trt = {
 		app_id = "218620",
 		no_install = true
 	}

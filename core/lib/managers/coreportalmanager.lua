@@ -693,9 +693,13 @@ function PortalUnitGroup:_change_units_visibility_in_editor(diff)
 	end
 end
 
--- Lines 644-664
+-- Lines 644-668
 function PortalUnitGroup:_change_visibility(unit, diff)
 	if alive(unit) then
+		if not unit:unit_data()._visibility_counter then
+			managers.portal:pseudo_reset()
+		end
+
 		unit:unit_data()._visibility_counter = unit:unit_data()._visibility_counter + diff
 
 		if unit:unit_data()._visibility_counter > 0 then
@@ -707,12 +711,12 @@ function PortalUnitGroup:_change_visibility(unit, diff)
 	end
 end
 
--- Lines 666-668
+-- Lines 670-672
 function PortalUnitGroup:unit_in_group(unit)
 	return self._ids[unit:unit_data().unit_id] and true or false
 end
 
--- Lines 670-692
+-- Lines 674-696
 function PortalUnitGroup:draw(t, dt, mul, skip_shapes, skip_units)
 	local r = self._r * mul
 	local g = self._g * mul
@@ -740,14 +744,14 @@ end
 
 PortalUnitGroupShape = PortalUnitGroupShape or class(CoreShapeManager.ShapeBox)
 
--- Lines 698-701
+-- Lines 702-705
 function PortalUnitGroupShape:init(params)
 	params.type = "box"
 
 	PortalUnitGroupShape.super.init(self, params)
 end
 
--- Lines 703-708
+-- Lines 707-712
 function PortalUnitGroupShape:draw(t, dt, r, g, b)
 	PortalUnitGroupShape.super.draw(self, t, dt, r, g, b)
 

@@ -1343,9 +1343,29 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		},
 		access = access_type_all
 	}
+	self.unit_categories.marshal_shield = {
+		unit_types = {
+			america = {
+				Idstring("units/pd2_dlc_usm2/characters/ene_male_marshal_shield_1/ene_male_marshal_shield_1")
+			},
+			russia = {
+				Idstring("units/pd2_dlc_usm2/characters/ene_male_marshal_shield_1/ene_male_marshal_shield_1")
+			},
+			zombie = {
+				Idstring("units/pd2_dlc_usm2/characters/ene_male_marshal_shield_1/ene_male_marshal_shield_1")
+			},
+			murkywater = {
+				Idstring("units/pd2_dlc_usm2/characters/ene_male_marshal_shield_1/ene_male_marshal_shield_1")
+			},
+			federales = {
+				Idstring("units/pd2_dlc_usm2/characters/ene_male_marshal_shield_1/ene_male_marshal_shield_1")
+			}
+		},
+		access = access_type_walk_only
+	}
 end
 
--- Lines 1887-2695
+-- Lines 1887-2696
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -1444,6 +1464,10 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 		marshal_marksman = {
 			"ranged_fire",
 			"flank"
+		},
+		marshal_shield = {
+			"shield",
+			"ranged_fire"
 		}
 	}
 	self.enemy_spawn_groups = {}
@@ -3261,7 +3285,40 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	}
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
 
-	if Global.level_data and Global.level_data.level_id == "ranc" or Global.game_settings and Global.game_settings.level_id == "ranc" then
+	if Global.level_data and Global.level_data.level_id == "trai" or Global.game_settings and Global.game_settings.level_id == "trai" then
+		self.enemy_spawn_groups.marshal_squad = {
+			spawn_cooldown = 60,
+			max_nr_simultaneous_groups = 2,
+			initial_spawn_delay = 90,
+			amount = {
+				2,
+				2
+			},
+			spawn = {
+				{
+					respawn_cooldown = 30,
+					amount_min = 1,
+					rank = 2,
+					freq = 1,
+					unit = "marshal_shield",
+					tactics = self._tactics.marshal_shield
+				},
+				{
+					respawn_cooldown = 30,
+					amount_min = 1,
+					rank = 1,
+					freq = 1,
+					unit = "marshal_marksman",
+					tactics = self._tactics.marshal_marksman
+				}
+			},
+			spawn_point_chk_ref = table.list_to_set({
+				"tac_shield_wall",
+				"tac_shield_wall_ranged",
+				"tac_shield_wall_charge"
+			})
+		}
+	elseif Global.level_data and Global.level_data.level_id == "ranc" or Global.game_settings and Global.game_settings.level_id == "ranc" then
 		self.enemy_spawn_groups.marshal_squad = {
 			spawn_cooldown = 60,
 			max_nr_simultaneous_groups = 1,
@@ -3312,7 +3369,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	end
 end
 
--- Lines 2699-3239
+-- Lines 2700-3240
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -3359,6 +3416,41 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		self.flash_grenade.timer = 2
 	end
 
+	self.flash_shields = {
+		marshal_shield = {
+			flash_charge_stun_sound = "USM_Beep_Stop",
+			flash_charge_stun_effect = "effects/particles/explosions/explosion_flash_grenade",
+			flash_effect = "effects/payday2/particles/character/marshal_bright_light",
+			flash_charge_stun_sound_explosion = "no_sound",
+			flash_charge_timer = 3,
+			beep_effect = "effects/payday2/particles/character/marshal_red_light",
+			flash_charge_stun_range = 300,
+			beep_sound = "USM_Beep",
+			flash_range = 1200,
+			flash_charge_range = 1100,
+			flash_shape_radius = 120,
+			flash_charge_cooldown = 18,
+			flash_slotmask = "persons_no_players",
+			flash_shape = "cylinder",
+			flash_sound = "USM_Flash",
+			flash_range_min = 200,
+			flash_charge_stun_slotmask = "persons_no_players",
+			beep_speeds = {
+				0.1,
+				0.025
+			},
+			beep_light_data = {
+				type_str = "omni|specular",
+				range = 300,
+				beep_mul = 0.3,
+				falloff_exp = 0.5,
+				beep_fade_speed = 4,
+				specular_mul = 1,
+				color = Vector3(255, 0, 0)
+			}
+		}
+	}
+	self.flash_shields.default = self.flash_shields.marshal_shield
 	self.optimal_trade_distance = {
 		0,
 		0
@@ -4551,7 +4643,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3260-3266
+-- Lines 3261-3267
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4561,7 +4653,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3270-3316
+-- Lines 3271-3317
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {
