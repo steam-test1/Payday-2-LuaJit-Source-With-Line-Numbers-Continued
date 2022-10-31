@@ -61,37 +61,44 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 	self:add_unit(new_unit, equip)
 end
 
--- Lines 58-77
+-- Lines 56-86
 function CopInventory:_chk_spawn_shield(weapon_unit)
 	if self._shield_unit_name and not alive(self._shield_unit) then
+		self._shield_was_synced = nil
 		local align_name = self._shield_align_name or Idstring("a_weapon_left_front")
 		local align_obj = self._unit:get_object(align_name)
+
+		if not align_obj then
+			Application:error("[CopInventory:_chk_spawn_shield] No align object with name '" .. tostring(align_name) .. "' found in unit. Falling back to orientation object.", self._unit)
+
+			align_obj = self._unit:orientation_object()
+			align_name = align_obj:name()
+		end
+
 		local shield_unit = World:spawn_unit(Idstring(self._shield_unit_name), align_obj:position(), align_obj:rotation())
-		self._shield_unit = shield_unit
 
-		self._unit:link(align_name, shield_unit, shield_unit:orientation_object():name())
 		shield_unit:set_enabled(false)
-		self:add_ignore_unit(shield_unit)
+		self:equip_shield(shield_unit, align_name)
 
-		if shield_unit:id() ~= -1 and Network:is_server() then
+		if self._shield_unit and shield_unit:id() ~= -1 and Network:is_server() then
 			managers.network:session():send_to_peers_synched("sync_shield_unit_link", self._unit, shield_unit)
 		end
 	end
 end
 
--- Lines 94-98
+-- Lines 90-94
 function CopInventory:add_unit(new_unit, equip)
 	CopInventory.super.add_unit(self, new_unit, equip)
 	new_unit:set_enabled(true)
 	new_unit:set_visible(true)
 end
 
--- Lines 102-104
+-- Lines 98-100
 function CopInventory:get_sync_data(sync_data)
 	MPPlayerInventory.get_sync_data(self, sync_data)
 end
 
--- Lines 108-112
+-- Lines 104-108
 function CopInventory:get_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -99,7 +106,7 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines 116-134
+-- Lines 112-130
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -123,7 +130,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 139-202
+-- Lines 134-203
 function CopInventory:on_shield_break(attacker_unit)
 	if not alive(self._shield_unit) then
 		return
@@ -140,8 +147,14 @@ function CopInventory:on_shield_break(attacker_unit)
 		return
 	end
 
-	if switch_data.tweak_table_name_switch and self._unit:base() and self._unit:base().change_char_tweak then
-		self._unit:base():change_char_tweak(switch_data.tweak_table_name_switch)
+	if self._unit:base() then
+		if switch_data.tweak_table_name_switch and self._unit:base().change_char_tweak then
+			self._unit:base():change_char_tweak(switch_data.tweak_table_name_switch)
+		end
+
+		if switch_data.stats_name_switch and self._unit:base().change_stats_name then
+			self._unit:base():change_stats_name(switch_data.stats_name_switch)
+		end
 	end
 
 	if switch_data.anim_global_switch and self._unit:movement() and self._unit:movement().set_new_anim_global then
@@ -176,7 +189,7 @@ function CopInventory:on_shield_break(attacker_unit)
 	end
 end
 
--- Lines 234-249
+-- Lines 207-222
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -194,7 +207,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 253-263
+-- Lines 226-228
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 end

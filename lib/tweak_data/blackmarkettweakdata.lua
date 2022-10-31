@@ -156,7 +156,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	end
 end
 
--- Lines 284-563
+-- Lines 284-571
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {
 		locked = {}
@@ -422,6 +422,8 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 		menu_unit = "units/pd2_dlc_max/characters/npc_criminals_max/npc_criminal_max_menu",
 		texture_bundle_folder = "max",
 		sequence = "var_mtr_max",
+		face_mask_on_sequence = "face_mask_on",
+		face_mask_off_sequence = "face_mask_off",
 		material_config = {
 			{
 				fps = "units/pd2_dlc_max/characters/fps_criminals_max/mtr_max",
@@ -470,7 +472,9 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	}
 	self.characters.ai_max = {
 		npc_unit = "units/pd2_dlc_max/characters/npc_criminals_max/max/npc_criminal_max",
-		sequence = "var_mtr_max"
+		sequence = "var_mtr_max",
+		face_mask_on_sequence = "face_mask_on",
+		face_mask_off_sequence = "face_mask_off"
 	}
 	self.characters.joy = {
 		fps_unit = "units/pd2_dlc_joy/characters/npc_criminals_joy_1/fps_joy_mover",
@@ -561,7 +565,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines 567-643
+-- Lines 575-651
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -677,7 +681,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 647-729
+-- Lines 655-737
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -800,7 +804,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 733-772
+-- Lines 741-780
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -842,7 +846,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 776-808
+-- Lines 784-821
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -876,7 +880,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 810-823
+-- Lines 823-836
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -893,7 +897,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 825-836
+-- Lines 838-849
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

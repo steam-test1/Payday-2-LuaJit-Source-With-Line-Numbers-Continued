@@ -108,6 +108,11 @@ function GenericDLCManager:has_gpo()
 	return self:is_dlc_unlocked("gpo")
 end
 
+-- Lines 164-166
+function GenericDLCManager:has_h22()
+	return self:is_dlc_unlocked("h22")
+end
+
 -- Lines 169-171
 function GenericDLCManager:has_hnd()
 	return self:is_dlc_unlocked("hnd")
@@ -551,6 +556,10 @@ function WINDLCManager:init_generated()
 	}
 	Global.dlc_manager.all_dlc_data.gpo = {
 		app_id = "1449440",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.h22 = {
+		app_id = "218620",
 		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.hnd = {

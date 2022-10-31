@@ -1,4 +1,4 @@
--- Lines 3-1308
+-- Lines 3-1317
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -580,6 +580,12 @@ function DLCTweakData:init_generated()
 	}
 	self.gpo_bundle.content.loot_global_value = "gpo"
 	self.gpo_bundle.content.loot_drops = {}
+	self.h22_bundle = {
+		dlc = "has_h22",
+		content = {}
+	}
+	self.h22_bundle.content.loot_global_value = "h22"
+	self.h22_bundle.content.loot_drops = {}
 	self.hnd_bundle = {
 		free = true,
 		content = {}

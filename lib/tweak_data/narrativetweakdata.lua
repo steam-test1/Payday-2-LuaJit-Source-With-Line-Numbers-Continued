@@ -6700,8 +6700,8 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.jobs.ranc.date_added = {
 		2022,
-		3,
-		9
+		6,
+		21
 	}
 	self.stages.trai = {
 		type = "d",
@@ -6773,8 +6773,8 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.jobs.trai.date_added = {
 		2022,
-		3,
-		9
+		10,
+		25
 	}
 	self.stages.lbe_lobby_end = {
 		type = "d",

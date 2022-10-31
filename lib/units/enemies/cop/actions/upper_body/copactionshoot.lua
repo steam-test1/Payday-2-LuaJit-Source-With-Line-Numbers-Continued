@@ -38,7 +38,7 @@ CopActionShoot._ik_presets = {
 	}
 }
 
--- Lines 44-113
+-- Lines 44-126
 function CopActionShoot:init(action_desc, common_data)
 	self._common_data = common_data
 	local t = TimerManager:game():time()
@@ -68,6 +68,18 @@ function CopActionShoot:init(action_desc, common_data)
 
 	if self._glint_effect then
 		self._glint_effect:activate()
+	end
+
+	if self._ext_inventory.shield_unit then
+		self._shield_unit = self._ext_inventory:shield_unit()
+		local shield_base = self._shield_unit and self._shield_unit:base()
+		local use_data = shield_base and shield_base.get_use_data and shield_base:get_use_data()
+
+		if use_data then
+			self._shield_base = shield_base
+			self._shield_use_range = use_data.range
+			self._shield_use_cooldown = use_data.cooldown
+		end
 	end
 
 	local weap_tweak = weapon_unit:base():weapon_tweak_data()
@@ -105,8 +117,34 @@ function CopActionShoot:init(action_desc, common_data)
 	return true
 end
 
--- Lines 117-164
+-- Lines 130-204
 function CopActionShoot:on_inventory_event(event)
+	if event == "shield_equip" then
+		local shield_unit = self._ext_inventory:shield_unit()
+
+		if shield_unit then
+			self._shield_unit = shield_unit
+			self._shield_base = shield_unit:base()
+			local shield_base = self._shield_unit and self._shield_unit:base()
+			local use_data = shield_base and shield_base.get_use_data and shield_base:get_use_data()
+
+			if use_data then
+				self._shield_base = shield_base
+				self._shield_use_range = use_data.range
+				self._shield_use_cooldown = use_data.cooldown
+			end
+		end
+
+		return
+	elseif event == "shield_unequip" then
+		self._shield_unit = nil
+		self._shield_base = nil
+		self._shield_use_range = nil
+		self._shield_use_cooldown = nil
+
+		return
+	end
+
 	if self._weapon_unit then
 		if self._autofiring then
 			self._weapon_base:stop_autofire()
@@ -157,7 +195,7 @@ function CopActionShoot:on_inventory_event(event)
 	end
 end
 
--- Lines 168-240
+-- Lines 208-280
 function CopActionShoot:on_attention(attention, old_attention)
 	if self._shooting_player and old_attention and alive(old_attention.unit) then
 		old_attention.unit:movement():on_targetted_for_attack(false, self._common_data.unit)
@@ -240,13 +278,13 @@ function CopActionShoot:on_attention(attention, old_attention)
 	self._attention = attention
 end
 
--- Lines 244-247
+-- Lines 284-287
 function CopActionShoot:save(save_data)
 	save_data.type = "shoot"
 	save_data.body_part = 3
 end
 
--- Lines 251-273
+-- Lines 291-313
 function CopActionShoot:on_exit()
 	if Network:is_server() then
 		self._ext_movement:set_stance("hos")
@@ -274,7 +312,7 @@ function CopActionShoot:on_exit()
 	end
 end
 
--- Lines 277-552
+-- Lines 317-616
 function CopActionShoot:update(t)
 	local vis_state = self._ext_base:lod_stage()
 	vis_state = vis_state or 4
@@ -325,6 +363,14 @@ function CopActionShoot:update(t)
 		end
 
 		target_vec = self:_upd_ik(target_vec, fwd_dot, t)
+	end
+
+	if self._shield_use_cooldown and target_vec and self._common_data.allow_fire and self._shield_use_cooldown < t and target_dis < self._shield_use_range then
+		local new_cooldown = self._shield_base:request_use(t)
+
+		if new_cooldown then
+			self._shield_use_cooldown = new_cooldown
+		end
 	end
 
 	if not ext_anim.reload and not ext_anim.equip and not ext_anim.melee then
@@ -459,13 +505,9 @@ function CopActionShoot:update(t)
 			end
 
 			if shoot then
-				if Network:is_server() and alive(self._ext_inventory._shield_unit) and target_dis < 1100 and self._ext_inventory._shield_unit:base() and self._ext_inventory._shield_unit:base().request_start_flash and self._ext_inventory._shield_unit:base():can_request_flash(t) then
-					self._ext_inventory._shield_unit:base():request_start_flash()
-				end
-
 				local melee = nil
 
-				if autotarget and (not self._common_data.melee_countered_t or t - self._common_data.melee_countered_t > 15) and target_dis < 130 and self._w_usage_tweak.melee_speed and self._melee_timeout_t < t then
+				if autotarget and not self._shield_unit and (not self._common_data.melee_countered_t or t - self._common_data.melee_countered_t > 15) and target_dis < 130 and self._w_usage_tweak.melee_speed and self._melee_timeout_t < t then
 					melee = self:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
 				end
 
@@ -558,16 +600,16 @@ function CopActionShoot:update(t)
 	end
 end
 
--- Lines 556-557
+-- Lines 620-621
 function CopActionShoot:_upd_empty(t)
 end
 
--- Lines 561-563
+-- Lines 625-627
 function CopActionShoot:type()
 	return "shoot"
 end
 
--- Lines 567-574
+-- Lines 631-638
 function CopActionShoot:_get_shoot_falloff(target_dis, falloff)
 	for i_range, range_data in ipairs(falloff) do
 		if target_dis < range_data.r then
@@ -578,7 +620,7 @@ function CopActionShoot:_get_shoot_falloff(target_dis, falloff)
 	return falloff[#falloff], #falloff
 end
 
--- Lines 578-648
+-- Lines 642-712
 function CopActionShoot:_get_unit_shoot_pos(t, pos, dis, w_tweak, falloff, i_range, shooting_local_player)
 	local shoot_hist = self._shoot_history
 	local focus_delay, focus_prog = nil
@@ -650,7 +692,7 @@ function CopActionShoot:_get_unit_shoot_pos(t, pos, dis, w_tweak, falloff, i_ran
 	end
 end
 
--- Lines 652-667
+-- Lines 716-731
 function CopActionShoot:on_death_drop()
 	if self._weapon_dropped then
 		return
@@ -671,7 +713,7 @@ function CopActionShoot:on_death_drop()
 	end
 end
 
--- Lines 671-678
+-- Lines 735-742
 function CopActionShoot:get_husk_interrupt_desc()
 	local old_action_desc = {
 		block_type = "action",
@@ -682,12 +724,12 @@ function CopActionShoot:get_husk_interrupt_desc()
 	return old_action_desc
 end
 
--- Lines 682-684
+-- Lines 746-748
 function CopActionShoot:need_upd()
 	return true
 end
 
--- Lines 688-724
+-- Lines 752-788
 function CopActionShoot:_get_transition_target_pos(shoot_from_pos, attention, t)
 	local transition = self._aim_transition
 	local prog = (t - transition.start_t) / transition.duration
@@ -730,7 +772,7 @@ function CopActionShoot:_get_transition_target_pos(shoot_from_pos, attention, t)
 	return target_pos, target_vec, target_dis, autotarget
 end
 
--- Lines 728-750
+-- Lines 792-814
 function CopActionShoot:_get_target_pos(shoot_from_pos, attention)
 	local target_pos, target_vec, target_dis, autotarget = nil
 
@@ -760,7 +802,7 @@ function CopActionShoot:_get_target_pos(shoot_from_pos, attention)
 	return target_pos, target_vec, target_dis, autotarget
 end
 
--- Lines 754-760
+-- Lines 818-824
 function CopActionShoot:set_ik_preset(preset_name)
 	self[self._ik_preset.stop](self)
 
@@ -770,7 +812,7 @@ function CopActionShoot:set_ik_preset(preset_name)
 	self[preset_data.start](self)
 end
 
--- Lines 764-774
+-- Lines 828-838
 function CopActionShoot:_begin_ik_spine()
 	if self._modifier then
 		return
@@ -785,7 +827,7 @@ function CopActionShoot:_begin_ik_spine()
 	self._mod_enable_t = nil
 end
 
--- Lines 778-787
+-- Lines 842-851
 function CopActionShoot:_stop_ik_spine()
 	if not self._modifier then
 		return
@@ -798,7 +840,7 @@ function CopActionShoot:_stop_ik_spine()
 	self._modifier_on = nil
 end
 
--- Lines 791-810
+-- Lines 855-874
 function CopActionShoot:_upd_ik_spine(target_vec, fwd_dot, t)
 	if fwd_dot > 0.5 then
 		if not self._modifier_on then
@@ -824,12 +866,12 @@ function CopActionShoot:_upd_ik_spine(target_vec, fwd_dot, t)
 	end
 end
 
--- Lines 814-816
+-- Lines 878-880
 function CopActionShoot:_get_blend_ik_spine()
 	return self._modifier:blend()
 end
 
--- Lines 820-832
+-- Lines 884-896
 function CopActionShoot:_begin_ik_r_arm()
 	if self._head_modifier then
 		return
@@ -845,7 +887,7 @@ function CopActionShoot:_begin_ik_r_arm()
 	self:_set_ik_updator("_upd_ik_r_arm")
 end
 
--- Lines 836-847
+-- Lines 900-911
 function CopActionShoot:_stop_ik_r_arm()
 	if not self._head_modifier then
 		return
@@ -861,7 +903,7 @@ function CopActionShoot:_stop_ik_r_arm()
 	self._modifier_on = nil
 end
 
--- Lines 851-873
+-- Lines 915-937
 function CopActionShoot:_upd_ik_r_arm(target_vec, fwd_dot, t)
 	if fwd_dot > 0.5 then
 		if not self._modifier_on then
@@ -890,17 +932,17 @@ function CopActionShoot:_upd_ik_r_arm(target_vec, fwd_dot, t)
 	end
 end
 
--- Lines 877-879
+-- Lines 941-943
 function CopActionShoot:_get_blend_ik_r_arm()
 	return self._r_arm_modifier:blend()
 end
 
--- Lines 883-885
+-- Lines 947-949
 function CopActionShoot:_set_ik_updator(name)
 	self._upd_ik = self[name]
 end
 
--- Lines 889-912
+-- Lines 953-976
 function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
 	local melee_weapon = self._unit:base():melee_weapon()
 	local is_weapon = melee_weapon == "weapon"
@@ -935,7 +977,7 @@ function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, tar
 	return state and true
 end
 
--- Lines 916-984
+-- Lines 980-1048
 function CopActionShoot:anim_clbk_melee_strike()
 	if not self._attention then
 		return

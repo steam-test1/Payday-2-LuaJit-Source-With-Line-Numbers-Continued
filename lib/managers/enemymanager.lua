@@ -1599,7 +1599,7 @@ function EnemyManager:cleanup_magazines(remove_to_i)
 	self._magazines = new_mags_table
 end
 
--- Lines 1836-1848
+-- Lines 1835-1847
 function EnemyManager:_clbk_unit_tweak_data_changed(u_key, old_tweak_data, new_tweak_data)
 	local u_data = self._enemy_data.unit_data[u_key] or self._civilian_data.unit_data[u_key] or self._enemy_data.corpses[u_key]
 

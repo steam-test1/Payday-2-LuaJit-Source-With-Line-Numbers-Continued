@@ -3369,7 +3369,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	end
 end
 
--- Lines 2700-3240
+-- Lines 2700-3270
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -4643,7 +4643,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3261-3267
+-- Lines 3291-3297
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4653,7 +4653,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3271-3317
+-- Lines 3301-3347
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

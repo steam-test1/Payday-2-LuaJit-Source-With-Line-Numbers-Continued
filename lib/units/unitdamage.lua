@@ -5,7 +5,7 @@ UnitDamage.EVENTS = {
 	"on_take_damage"
 }
 
--- Lines 7-38
+-- Lines 7-37
 function UnitDamage:init(unit, ...)
 	CoreUnitDamage.init(self, unit, ...)
 
@@ -26,17 +26,17 @@ function UnitDamage:init(unit, ...)
 	end
 end
 
--- Lines 40-42
+-- Lines 39-41
 function UnitDamage:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 44-46
+-- Lines 43-45
 function UnitDamage:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 48-54
+-- Lines 47-53
 function UnitDamage:add_damage(endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
 	local result, damage = UnitDamage.super.add_damage(self, endurance_type, attack_unit, dest_body, normal, position, direction, damage, velocity)
 
@@ -47,7 +47,7 @@ function UnitDamage:add_damage(endurance_type, attack_unit, dest_body, normal, p
 	return result, damage
 end
 
--- Lines 56-63
+-- Lines 55-62
 function UnitDamage:setup_sfx_collision_body_tags()
 	for i = 0, self._unit:num_bodies() - 1 do
 		local body = self._unit:body(i)
@@ -58,7 +58,7 @@ function UnitDamage:setup_sfx_collision_body_tags()
 	end
 end
 
--- Lines 65-72
+-- Lines 64-71
 function UnitDamage:_has_body_collision_damage(body_name)
 	for name, data in pairs(self._unit_element._bodies) do
 		if Idstring(name) == body_name then
@@ -69,12 +69,12 @@ function UnitDamage:_has_body_collision_damage(body_name)
 	return false
 end
 
--- Lines 74-77
+-- Lines 73-76
 function UnitDamage:can_play_collision_sfx()
 	return self._collision_event ~= nil
 end
 
--- Lines 79-87
+-- Lines 78-86
 function UnitDamage:set_play_collision_sfx_quite_time(quite_time)
 	if self._collision_sfx_quite_time == nil ~= (quite_time == nil) and quite_time then
 		self:setup_sfx_collision_body_tags()
@@ -83,7 +83,7 @@ function UnitDamage:set_play_collision_sfx_quite_time(quite_time)
 	self._collision_sfx_quite_time = quite_time
 end
 
--- Lines 89-104
+-- Lines 88-103
 function UnitDamage:body_collision_callback(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	if self._collision_sfx_quite_time ~= nil and other_body and body then
 		local t = TimerManager:game():time()
@@ -100,7 +100,7 @@ function UnitDamage:body_collision_callback(tag, unit, body, other_unit, other_b
 	end
 end
 
--- Lines 174-178
+-- Lines 173-177
 function UnitDamage:play_collision_sfx(other_unit, position, normal, collision_velocity)
 	local ss = SoundDevice:create_source("collision")
 
@@ -108,7 +108,7 @@ function UnitDamage:play_collision_sfx(other_unit, position, normal, collision_v
 	ss:post_event(self._collision_event)
 end
 
--- Lines 180-188
+-- Lines 179-187
 function UnitDamage:set_update_callback(func_name, ...)
 	if func_name == "update_proximity_list" and not Network:is_server() and self._unit:id() ~= -1 then
 		return
@@ -117,7 +117,7 @@ function UnitDamage:set_update_callback(func_name, ...)
 	UnitDamage.super.set_update_callback(self, func_name, ...)
 end
 
--- Lines 191-225
+-- Lines 189-223
 function UnitDamage:parent_function(ext_name, func_name, ...)
 	local parent_unit = self._unit:parent()
 

@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-962
+-- Lines 29-966
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)

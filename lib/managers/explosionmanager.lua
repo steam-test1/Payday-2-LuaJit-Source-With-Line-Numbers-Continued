@@ -360,7 +360,7 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 	end
 end
 
--- Lines 722-846
+-- Lines 722-844
 function ExplosionManager:_detect_hits(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -485,7 +485,7 @@ function ExplosionManager:_detect_hits(params)
 	return results
 end
 
--- Lines 848-943
+-- Lines 846-941
 function ExplosionManager:_damage_characters(detect_results, params, variant, damage_func_name)
 	local user_unit = params.user
 	local owner = params.owner
@@ -517,7 +517,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	}
 	local criminal_names = CriminalsManager.character_names()
 
-	-- Lines 871-877
+	-- Lines 869-875
 	local function get_first_body_hit(bodies_hit)
 		for _, hit_body in ipairs(bodies_hit or {}) do
 			if alive(hit_body) then
@@ -599,7 +599,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	return results
 end
 
--- Lines 945-965
+-- Lines 943-963
 function ExplosionManager:_damage_bodies(detect_results, params)
 	local user_unit = params.user
 	local hit_pos = params.hit_pos
@@ -623,7 +623,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 	end
 end
 
--- Lines 967-1000
+-- Lines 965-998
 function ExplosionManager:detect_and_tase(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -662,7 +662,7 @@ function ExplosionManager:detect_and_tase(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1003-1035
+-- Lines 1001-1033
 function ExplosionManager:detect_and_stun(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -700,7 +700,7 @@ function ExplosionManager:detect_and_stun(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1038-1089
+-- Lines 1036-1087
 function ExplosionManager:detect_and_give_dmg(params)
 	local user_unit = params.user
 	local owner = params.owner

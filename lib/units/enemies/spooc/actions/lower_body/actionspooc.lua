@@ -1070,7 +1070,7 @@ function ActionSpooc:action_id()
 	return self._action_id
 end
 
--- Lines 1052-1196
+-- Lines 1052-1201
 function ActionSpooc:anim_act_clbk(anim_act)
 	if anim_act == "strike" then
 		local sound_string = "clk_punch_3rd_person_3p"
@@ -1198,21 +1198,7 @@ function ActionSpooc:anim_act_clbk(anim_act)
 		if self._strike_unit:base().is_local_player then
 			self:_play_strike_camera_shake()
 			mvector3.negate(target_vec)
-
-			local dot_fwd = mvector3.dot(target_vec, self._common_data.fwd)
-			local dot_r = mvector3.dot(target_vec, self._common_data.right)
-
-			if math.abs(dot_r) < math.abs(dot_fwd) then
-				if dot_fwd > 0 then
-					managers.environment_controller:hit_feedback_front()
-				else
-					managers.environment_controller:hit_feedback_back()
-				end
-			elseif dot_r > 0 then
-				managers.environment_controller:hit_feedback_right()
-			else
-				managers.environment_controller:hit_feedback_left()
-			end
+			managers.hud:on_hit_direction(target_vec, HUDHitDirection.DAMAGE_TYPES.HEALTH, 0)
 		end
 
 		if not self:is_flying_strike() then
@@ -1224,7 +1210,7 @@ function ActionSpooc:anim_act_clbk(anim_act)
 	end
 end
 
--- Lines 1200-1240
+-- Lines 1205-1245
 function ActionSpooc.chk_can_start_spooc_sprint(unit, target_unit)
 	local enemy_tracker = target_unit:movement():nav_tracker()
 	local ray_params = {
@@ -1271,7 +1257,7 @@ function ActionSpooc.chk_can_start_spooc_sprint(unit, target_unit)
 	return true
 end
 
--- Lines 1244-1300
+-- Lines 1249-1305
 function ActionSpooc.chk_can_start_flying_strike(unit, target_unit)
 	local target_pos = target_unit:movement():m_pos()
 	local my_pos = unit:movement():m_pos()
@@ -1327,7 +1313,7 @@ function ActionSpooc.chk_can_start_flying_strike(unit, target_unit)
 	return true
 end
 
--- Lines 1304-1355
+-- Lines 1309-1360
 function ActionSpooc:_upd_flying_strike_first_frame(t)
 	local target_pos = nil
 
@@ -1383,7 +1369,7 @@ function ActionSpooc:_upd_flying_strike_first_frame(t)
 	self:_set_updator("_upd_flying_strike")
 end
 
--- Lines 1359-1430
+-- Lines 1364-1435
 function ActionSpooc:_upd_flying_strike(t)
 	if self._ext_anim.act then
 		local strike_data = self._flying_strike_data
@@ -1461,7 +1447,7 @@ function ActionSpooc:_upd_flying_strike(t)
 	end
 end
 
--- Lines 1434-1437
+-- Lines 1439-1442
 function ActionSpooc:_play_strike_camera_shake()
 	local vars = {
 		"melee_hit",
@@ -1471,24 +1457,24 @@ function ActionSpooc:_play_strike_camera_shake()
 	self._strike_unit:camera():play_shaker(vars[math.random(#vars)], 1)
 end
 
--- Lines 1441-1443
+-- Lines 1446-1448
 function ActionSpooc:has_striken()
 	return self._stroke_t and true or false
 end
 
--- Lines 1447-1449
+-- Lines 1452-1454
 function ActionSpooc:is_flying_strike()
 	return self._action_desc.flying_strike
 end
 
--- Lines 1453-1456
+-- Lines 1458-1461
 function ActionSpooc:_use_christmas_sounds()
 	local tweak = managers.job:current_level_data()
 
 	return tweak and tweak.is_christmas_heist
 end
 
--- Lines 1460-1473
+-- Lines 1465-1478
 function ActionSpooc:get_sound_event(sound)
 	local sound_events = self._unit:base():char_tweak().spooc_sound_events
 	local event = sound_events[sound]
