@@ -19,7 +19,7 @@ CivilianBrain._logics = {
 	trade = CivilianLogicTrade
 }
 
--- Lines 24-39
+-- Lines 24-43
 function CivilianBrain:init(unit)
 	self._unit = unit
 	self._timer = TimerManager:game()
@@ -32,9 +32,13 @@ function CivilianBrain:init(unit)
 	self._SO_access = managers.navigation:convert_access_flag(tweak_data.character[unit:base()._tweak_table].access)
 	self._slotmask_enemies = managers.slot:get_mask("criminals")
 	CopBrain._reload_clbks[unit:key()] = callback(self, self, "on_reload")
+
+	if unit:base().add_tweak_data_changed_listener then
+		unit:base():add_tweak_data_changed_listener("CivilianBrainTweakDataChange" .. tostring(unit:key()), callback(self, self, "_clbk_tweak_data_changed"))
+	end
 end
 
--- Lines 43-53
+-- Lines 47-57
 function CivilianBrain:update(unit, t, dt)
 	local logic = self._current_logic
 
@@ -47,7 +51,7 @@ function CivilianBrain:update(unit, t, dt)
 	end
 end
 
--- Lines 57-62
+-- Lines 61-66
 function CivilianBrain:_reset_logic_data()
 	CopBrain._reset_logic_data(self)
 
@@ -56,12 +60,12 @@ function CivilianBrain:_reset_logic_data()
 	self._logic_data.objective_failed_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_civilian_objective_failed")
 end
 
--- Lines 66-68
+-- Lines 70-72
 function CivilianBrain:is_available_for_assignment(objective)
 	return self._current_logic.is_available_for_assignment(self._logic_data, objective)
 end
 
--- Lines 72-77
+-- Lines 76-81
 function CivilianBrain:cancel_trade()
 	if not self._active then
 		return
@@ -70,14 +74,14 @@ function CivilianBrain:cancel_trade()
 	self:set_logic("surrender")
 end
 
--- Lines 81-85
+-- Lines 85-89
 function CivilianBrain:on_rescue_allowed_state(state)
 	if self._current_logic.on_rescue_allowed_state then
 		self._current_logic.on_rescue_allowed_state(self._logic_data, state)
 	end
 end
 
--- Lines 89-97
+-- Lines 93-101
 function CivilianBrain:wants_rescue()
 	if self._dont_rescue then
 		return false
@@ -88,7 +92,7 @@ function CivilianBrain:wants_rescue()
 	end
 end
 
--- Lines 101-122
+-- Lines 105-126
 function CivilianBrain:on_cool_state_changed(state)
 	if self._logic_data then
 		self._logic_data.cool = state
@@ -123,7 +127,7 @@ function CivilianBrain:on_cool_state_changed(state)
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, alert_types, self._unit:movement():m_head_pos())
 end
 
--- Lines 126-233
+-- Lines 130-237
 function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 	if not self._logic_data.is_tied then
 		return
@@ -251,7 +255,7 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 	return true
 end
 
--- Lines 237-245
+-- Lines 241-249
 function CivilianBrain:on_hostage_follow_objective_failed(unit)
 	if not unit:character_damage():dead() then
 		if not self._logic_data.objective or self._logic_data.objective.is_default or self._logic_data.objective.type == "surrender" then
@@ -262,12 +266,12 @@ function CivilianBrain:on_hostage_follow_objective_failed(unit)
 	end
 end
 
--- Lines 249-251
+-- Lines 253-255
 function CivilianBrain:is_tied()
 	return self._logic_data.is_tied
 end
 
--- Lines 255-262
+-- Lines 259-266
 function CivilianBrain:save(save_data)
 	CivilianBrain.super.save(self, save_data)
 

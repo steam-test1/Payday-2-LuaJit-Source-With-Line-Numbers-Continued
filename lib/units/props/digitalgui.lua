@@ -24,7 +24,7 @@ DigitalGui.GUI_EVENT_IDS = {
 }
 DigitalGui.NUMBER_CLAMP = 99999
 
--- Lines 26-58
+-- Lines 32-68
 function DigitalGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -56,13 +56,13 @@ function DigitalGui:init(unit)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 end
 
--- Lines 60-63
+-- Lines 70-73
 function DigitalGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(self.WIDTH, self.HEIGHT, gui_object, Vector3(0, 0, 0))
 	self._panel = self._ws:panel()
 end
 
--- Lines 65-86
+-- Lines 75-96
 function DigitalGui:setup()
 	self._panel:clear()
 
@@ -101,27 +101,27 @@ function DigitalGui:setup()
 	end
 end
 
--- Lines 88-90
+-- Lines 98-100
 function DigitalGui:is_timer()
 	return self.TYPE == "timer"
 end
 
--- Lines 92-94
+-- Lines 102-104
 function DigitalGui:is_number()
 	return self.TYPE == "number"
 end
 
--- Lines 96-98
+-- Lines 106-108
 function DigitalGui:is_precision_timer()
 	return self:is_timer() and self:timer_precision() > 0
 end
 
--- Lines 100-102
+-- Lines 110-112
 function DigitalGui:timer_precision()
 	return self.TIMER_PRECISION
 end
 
--- Lines 104-129
+-- Lines 114-139
 function DigitalGui:update(unit, t, dt)
 	if self.TYPE == "timer" and not self._timer_paused then
 		if self._timer_count_up then
@@ -144,7 +144,7 @@ function DigitalGui:update(unit, t, dt)
 	end
 end
 
--- Lines 131-135
+-- Lines 141-145
 function DigitalGui:set_color_type(type)
 	self.COLOR_TYPE = type
 	self.DIGIT_COLOR = DigitalGui.COLORS[self.COLOR_TYPE]
@@ -152,7 +152,7 @@ function DigitalGui:set_color_type(type)
 	self._title_text:set_color(self.DIGIT_COLOR)
 end
 
--- Lines 137-147
+-- Lines 147-157
 function DigitalGui:set_bg_color_type(type)
 	self.BG_COLOR_TYPE = type
 	self.BG_COLOR = self.BG_COLOR_TYPE and DigitalGui.COLORS[self.BG_COLOR_TYPE] or nil
@@ -171,12 +171,12 @@ function DigitalGui:set_bg_color_type(type)
 	end
 end
 
--- Lines 150-152
+-- Lines 160-162
 function DigitalGui:_set_number(new)
 	self._number = math.clamp(new, 0, DigitalGui.NUMBER_CLAMP)
 end
 
--- Lines 154-160
+-- Lines 164-170
 function DigitalGui:number_set(number, sync)
 	self:_set_number(number)
 	self:_update_number_text()
@@ -186,19 +186,19 @@ function DigitalGui:number_set(number, sync)
 	end
 end
 
--- Lines 162-165
+-- Lines 172-175
 function DigitalGui:number_increase()
 	self:_set_number(self._number + 1)
 	self:_update_number_text()
 end
 
--- Lines 167-170
+-- Lines 177-180
 function DigitalGui:number_decrease()
 	self:_set_number(self._number - 1)
 	self:_update_number_text()
 end
 
--- Lines 172-185
+-- Lines 182-195
 function DigitalGui:_update_number_text()
 	if self._number then
 		self:_set_number(self._number < 0 and 0 or self._number)
@@ -215,7 +215,7 @@ function DigitalGui:_update_number_text()
 	end
 end
 
--- Lines 188-196
+-- Lines 198-210
 function DigitalGui:timer_start_count_up(sync)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
 
@@ -228,7 +228,7 @@ function DigitalGui:timer_start_count_up(sync)
 	end
 end
 
--- Lines 198-206
+-- Lines 212-224
 function DigitalGui:timer_start_count_down(sync)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
 
@@ -241,7 +241,7 @@ function DigitalGui:timer_start_count_down(sync)
 	end
 end
 
--- Lines 208-214
+-- Lines 226-236
 function DigitalGui:timer_pause(sync)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 
@@ -252,7 +252,7 @@ function DigitalGui:timer_pause(sync)
 	end
 end
 
--- Lines 216-222
+-- Lines 238-248
 function DigitalGui:timer_resume(sync)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
 
@@ -263,7 +263,7 @@ function DigitalGui:timer_resume(sync)
 	end
 end
 
--- Lines 224-231
+-- Lines 250-257
 function DigitalGui:timer_set(timer, sync)
 	self._timer = timer
 
@@ -276,7 +276,7 @@ function DigitalGui:timer_set(timer, sync)
 	end
 end
 
--- Lines 233-237
+-- Lines 259-267
 function DigitalGui:_timer_stop()
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 
@@ -284,7 +284,7 @@ function DigitalGui:_timer_stop()
 	self._timer_count_down = false
 end
 
--- Lines 239-246
+-- Lines 269-276
 function DigitalGui:_sequence_trigger(sequence_name)
 	if not Network:is_server() then
 		return
@@ -295,14 +295,14 @@ function DigitalGui:_sequence_trigger(sequence_name)
 	end
 end
 
--- Lines 248-251
+-- Lines 278-281
 function DigitalGui:_round(num, idp)
 	local mult = 10^(idp or 0)
 
 	return math.floor(num * mult + 0.5) / mult
 end
 
--- Lines 253-296
+-- Lines 283-326
 function DigitalGui:_update_timer_text()
 	if self:timer_precision() <= 0 and math.floor(self._timer) == self._floored_last_timer then
 		return
@@ -346,7 +346,7 @@ function DigitalGui:_update_timer_text()
 	self._title_text:set_text(text)
 end
 
--- Lines 298-305
+-- Lines 328-335
 function DigitalGui:set_visible(visible)
 	self._visible = visible
 
@@ -357,13 +357,13 @@ function DigitalGui:set_visible(visible)
 	end
 end
 
--- Lines 307-310
+-- Lines 337-340
 function DigitalGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 312-330
+-- Lines 342-360
 function DigitalGui:sync_gui_net_event(event_id, value)
 	if event_id == DigitalGui.GUI_EVENT_IDS.syncronize then
 		self:timer_set(value)
@@ -382,7 +382,7 @@ function DigitalGui:sync_gui_net_event(event_id, value)
 	end
 end
 
--- Lines 332-338
+-- Lines 362-368
 function DigitalGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -392,7 +392,7 @@ function DigitalGui:destroy()
 	end
 end
 
--- Lines 340-352
+-- Lines 370-382
 function DigitalGui:save(data)
 	local state = {
 		timer_paused = self._timer_paused,
@@ -407,7 +407,7 @@ function DigitalGui:save(data)
 	data.DigitalGui = state
 end
 
--- Lines 354-377
+-- Lines 384-411
 function DigitalGui:load(data)
 	local state = data.DigitalGui
 	self._timer_paused = state.timer_paused

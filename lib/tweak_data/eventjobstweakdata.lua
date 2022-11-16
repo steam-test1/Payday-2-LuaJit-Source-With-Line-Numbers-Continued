@@ -1,8 +1,9 @@
 EventJobsTweakData = EventJobsTweakData or class()
 
--- Lines 4-71
+-- Lines 4-81
 function EventJobsTweakData:init(tweak_data)
 	self.challenges = {}
+	self.current_event = ""
 
 	self:_init_pda8_challenges(tweak_data)
 	self:_init_pda9_challenges(tweak_data)
@@ -61,7 +62,7 @@ function EventJobsTweakData:init(tweak_data)
 	self.pda_base = 0
 end
 
--- Lines 73-166
+-- Lines 83-176
 function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda8_2_reward",
@@ -184,12 +185,12 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 end
 
--- Lines 169-499
+-- Lines 179-509
 function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_1_reward",
 		name_id = "menu_pda9_1",
-		temp_challenge = true,
+		temp_challenge = "PDA9",
 		desc_id = "menu_pda9_1_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_1",
@@ -210,7 +211,7 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_2_reward",
 		name_id = "menu_pda9_2",
-		temp_challenge = true,
+		temp_challenge = "PDA9",
 		desc_id = "menu_pda9_2_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_2",
@@ -235,7 +236,7 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_3_reward",
 		name_id = "menu_pda9_3",
-		temp_challenge = true,
+		temp_challenge = "PDA9",
 		desc_id = "menu_pda9_3_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_3",
@@ -256,7 +257,7 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_4_reward",
 		name_id = "menu_pda9_4",
-		temp_challenge = true,
+		temp_challenge = "PDA9",
 		desc_id = "menu_pda9_4_desc",
 		show_progress = true,
 		locked_id = "bm_menu_locked_pda9_4",
@@ -500,7 +501,7 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	})
 end
 
--- Lines 502-526
+-- Lines 535-559
 function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	data.collective_id = collective_id
 	local save_values = {
@@ -533,7 +534,7 @@ function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	return obj
 end
 
--- Lines 529-564
+-- Lines 562-597
 function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	local save_values = {
 		"choice_id",
@@ -580,7 +581,7 @@ function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	return obj
 end
 
--- Lines 594-619
+-- Lines 627-652
 function EventJobsTweakData:_stage(stage_id, max_progress, data)
 	data.stage_id = stage_id
 	local save_values = {

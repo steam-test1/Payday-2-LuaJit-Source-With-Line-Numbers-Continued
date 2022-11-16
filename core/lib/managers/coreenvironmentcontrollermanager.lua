@@ -4,7 +4,7 @@ local temp_vec_1 = Vector3()
 local temp_vec_2 = Vector3()
 CoreEnvironmentControllerManager = CoreEnvironmentControllerManager or class()
 
--- Lines 13-110
+-- Lines 13-113
 function CoreEnvironmentControllerManager:init()
 	self._DEFAULT_DOF_DISTANCE = 10
 	self._dof_distance = self._DEFAULT_DOF_DISTANCE
@@ -70,16 +70,19 @@ function CoreEnvironmentControllerManager:init()
 	self._default_fov_value = 75
 	self._current_fov_value = 75
 	self._fov_ratio = 1
-	self._screenflash_color_value = 1
+	self._screenflash_color_flash_override = 0.5
+	self._screenflash_color_flashbang = Color.white
+	self._screenflash_color_hit_flash = false
+	self._screenflash_color_blurzone = Color(255, 255, 201, 7) / 255
 end
 
--- Lines 112-115
+-- Lines 115-118
 function CoreEnvironmentControllerManager:update(t, dt)
 	self:_update_values(t, dt)
 	self:set_post_composite(t, dt)
 end
 
--- Lines 117-129
+-- Lines 120-132
 function CoreEnvironmentControllerManager:_update_values(t, dt)
 	if self._current_dof_distance ~= self._dof_distance then
 		self._current_dof_distance = math.lerp(self._current_dof_distance, self._dof_distance, 5 * dt)
@@ -90,11 +93,11 @@ function CoreEnvironmentControllerManager:_update_values(t, dt)
 	end
 end
 
--- Lines 132-165
+-- Lines 135-168
 function CoreEnvironmentControllerManager:_refresh_fov_ratio_params(vp)
 end
 
--- Lines 167-174
+-- Lines 170-177
 function CoreEnvironmentControllerManager:_update_fov_ratio()
 	if self._current_fov_value == 0 then
 		self._fov_ratio = 1
@@ -105,12 +108,12 @@ function CoreEnvironmentControllerManager:_update_fov_ratio()
 	self._fov_ratio = math.pow(self._default_fov_value / self._current_fov_value, 0.5)
 end
 
--- Lines 176-178
+-- Lines 179-181
 function CoreEnvironmentControllerManager:fov_ratio()
 	return self._fov_ratio
 end
 
--- Lines 180-185
+-- Lines 183-188
 function CoreEnvironmentControllerManager:set_current_fov_value(current_fov_value)
 	if self._current_fov_value ~= current_fov_value then
 		self._current_fov_value = current_fov_value
@@ -118,12 +121,12 @@ function CoreEnvironmentControllerManager:set_current_fov_value(current_fov_valu
 	end
 end
 
--- Lines 187-189
+-- Lines 190-192
 function CoreEnvironmentControllerManager:current_fov_value()
 	return self._current_fov_value
 end
 
--- Lines 191-196
+-- Lines 194-199
 function CoreEnvironmentControllerManager:set_default_fov_value(default_fov_value)
 	if self._default_fov_value ~= default_fov_value then
 		self._default_fov_value = default_fov_value
@@ -131,115 +134,127 @@ function CoreEnvironmentControllerManager:set_default_fov_value(default_fov_valu
 	end
 end
 
--- Lines 198-200
+-- Lines 201-203
 function CoreEnvironmentControllerManager:default_fov_value()
 	return self._default_fov_value
 end
 
--- Lines 203-206
+-- Lines 206-209
 function CoreEnvironmentControllerManager:set_dof_distance(distance, in_steelsight, position)
 	self._dof_distance = math.max(self._DEFAULT_DOF_DISTANCE, distance or self._DEFAULT_DOF_DISTANCE)
 	self._in_steelsight = in_steelsight
 end
 
--- Lines 208-211
+-- Lines 211-214
 function CoreEnvironmentControllerManager:set_default_color_grading(color_grading, ignore_user_setting)
 	self._default_color_grading = color_grading or self._GAME_DEFAULT_COLOR_GRADING
 	self._ignore_user_color_grading = ignore_user_setting or false
 end
 
--- Lines 213-215
+-- Lines 216-218
 function CoreEnvironmentControllerManager:game_default_color_grading()
 	return self._GAME_DEFAULT_COLOR_GRADING
 end
 
--- Lines 217-219
+-- Lines 220-222
 function CoreEnvironmentControllerManager:default_color_grading()
 	return self._default_color_grading
 end
 
--- Lines 221-223
+-- Lines 224-226
 function CoreEnvironmentControllerManager:set_hurt_value(hurt)
 	self._hurt_value = hurt
 end
 
--- Lines 225-227
+-- Lines 228-230
 function CoreEnvironmentControllerManager:set_health_effect_value(health_effect_value)
 	self._health_effect_value = health_effect_value
 end
 
--- Lines 229-231
+-- Lines 232-234
 function CoreEnvironmentControllerManager:set_downed_value(downed_value)
 	self._downed_value = downed_value
 end
 
--- Lines 233-235
+-- Lines 236-238
 function CoreEnvironmentControllerManager:set_last_life(last_life)
 	self._last_life = last_life
 end
 
--- Lines 237-239
+-- Lines 240-242
 function CoreEnvironmentControllerManager:hurt_value()
 	return self._hurt_value
 end
 
--- Lines 241-243
+-- Lines 244-246
 function CoreEnvironmentControllerManager:set_taser_value(taser)
 	self._taser_value = taser
 end
 
--- Lines 245-247
+-- Lines 248-250
 function CoreEnvironmentControllerManager:taser_value()
 	return self._taser_value
 end
 
--- Lines 249-251
+-- Lines 252-254
 function CoreEnvironmentControllerManager:set_buff_effect(buff_effect_value)
 	self._buff_effect_value = -buff_effect_value
 end
 
--- Lines 253-255
+-- Lines 256-258
 function CoreEnvironmentControllerManager:set_suppression_value(effective_value, raw_value)
 	self._suppression_value = effective_value > 0 and 1 or 0
 end
 
--- Lines 257-260
+-- Lines 260-270
 function CoreEnvironmentControllerManager:hit_feedback_front()
-	self._hit_front = math.min(self._hit_front + self._hit_amount, 1)
-	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	if self._hit_flash_overlay_effect_id then
+		self._hit_front = math.min(self._hit_front + self._hit_amount, 1)
+		self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	end
 end
 
--- Lines 262-265
+-- Lines 272-282
 function CoreEnvironmentControllerManager:hit_feedback_back()
-	self._hit_back = math.min(self._hit_back + self._hit_amount, 1)
-	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	if self._hit_flash_overlay_effect_id then
+		self._hit_back = math.min(self._hit_back + self._hit_amount, 1)
+		self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	end
 end
 
--- Lines 268-274
+-- Lines 285-297
 function CoreEnvironmentControllerManager:hit_feedback_right()
-	self._hit_right = math.min(self._hit_right + self._hit_amount, 1)
-	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	if self._hit_flash_overlay_effect_id then
+		self._hit_right = math.min(self._hit_right + self._hit_amount, 1)
+		self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	end
 end
 
--- Lines 275-281
+-- Lines 298-310
 function CoreEnvironmentControllerManager:hit_feedback_left()
-	self._hit_left = math.min(self._hit_left + self._hit_amount, 1)
-	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	if self._hit_flash_overlay_effect_id then
+		self._hit_left = math.min(self._hit_left + self._hit_amount, 1)
+		self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	end
 end
 
--- Lines 282-288
+-- Lines 311-323
 function CoreEnvironmentControllerManager:hit_feedback_up()
-	self._hit_up = math.min(self._hit_up + self._hit_amount, 1)
-	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	if self._hit_flash_overlay_effect_id then
+		self._hit_up = math.min(self._hit_up + self._hit_amount, 1)
+		self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	end
 end
 
--- Lines 289-295
+-- Lines 324-336
 function CoreEnvironmentControllerManager:hit_feedback_down()
-	self._hit_down = math.min(self._hit_down + self._hit_amount, 1)
-	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	if self._hit_flash_overlay_effect_id then
+		self._hit_down = math.min(self._hit_down + self._hit_amount, 1)
+		self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
+	end
 end
 
--- Lines 297-361
+-- Lines 338-402
 function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, height, delete_after_fadeout)
 	local blurzone = self._blurzones[id]
 
@@ -297,14 +312,14 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 	end
 end
 
--- Lines 363-367
+-- Lines 404-408
 function CoreEnvironmentControllerManager:set_all_blurzones(mode)
 	for id, blurzone in pairs(self._blurzones) do
 		self:set_blurzone(id, mode)
 	end
 end
 
--- Lines 369-387
+-- Lines 410-428
 function CoreEnvironmentControllerManager:_blurzones_update(t, dt, camera_pos)
 	local result = 0
 
@@ -323,7 +338,7 @@ function CoreEnvironmentControllerManager:_blurzones_update(t, dt, camera_pos)
 	return result
 end
 
--- Lines 389-401
+-- Lines 430-442
 function CoreEnvironmentControllerManager:blurzone_flash_in_line_of_sight(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity - dt * 0.3
 	self._HE_blinding = self:test_line_of_sight(blurzone.pos, 150, 1000, 2000)
@@ -336,7 +351,7 @@ function CoreEnvironmentControllerManager:blurzone_flash_in_line_of_sight(self, 
 	return blurzone:check(blurzone, camera_pos) * (1 + 11 * (blurzone.opacity - 1))
 end
 
--- Lines 403-414
+-- Lines 444-455
 function CoreEnvironmentControllerManager:blurzone_flash_in(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity - dt * 0.3
 
@@ -348,7 +363,7 @@ function CoreEnvironmentControllerManager:blurzone_flash_in(self, t, dt, camera_
 	return blurzone:check(blurzone, camera_pos) * (1 + 11 * (blurzone.opacity - 1))
 end
 
--- Lines 416-427
+-- Lines 457-468
 function CoreEnvironmentControllerManager:blurzone_fade_in(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity + dt
 
@@ -360,7 +375,7 @@ function CoreEnvironmentControllerManager:blurzone_fade_in(self, t, dt, camera_p
 	return blurzone:check(blurzone, camera_pos)
 end
 
--- Lines 429-439
+-- Lines 470-480
 function CoreEnvironmentControllerManager:blurzone_fade_out(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity - dt
 
@@ -373,24 +388,24 @@ function CoreEnvironmentControllerManager:blurzone_fade_out(self, t, dt, camera_
 	return blurzone:check(blurzone, camera_pos)
 end
 
--- Lines 441-445
+-- Lines 482-486
 function CoreEnvironmentControllerManager:blurzone_fade_idle_line_of_sight(self, t, dt, camera_pos, blurzone)
 	self._HE_blinding = self:test_line_of_sight(blurzone.pos, 150, 1000, 2000)
 
 	return blurzone:check(blurzone, camera_pos)
 end
 
--- Lines 447-449
+-- Lines 488-490
 function CoreEnvironmentControllerManager:blurzone_fade_idle(self, t, dt, camera_pos, blurzone)
 	return blurzone:check(blurzone, camera_pos)
 end
 
--- Lines 451-455
+-- Lines 492-496
 function CoreEnvironmentControllerManager:blurzone_fade_out_switch(self, t, dt, camera_pos, blurzone)
 	return blurzone:check(blurzone, camera_pos)
 end
 
--- Lines 457-476
+-- Lines 498-517
 function CoreEnvironmentControllerManager:blurzone_check_cylinder(blurzone, camera_pos)
 	local pos_z = blurzone.pos.z
 	local cam_z = camera_pos.z
@@ -410,7 +425,7 @@ function CoreEnvironmentControllerManager:blurzone_check_cylinder(blurzone, came
 	return (1 - result) * blurzone.opacity
 end
 
--- Lines 478-486
+-- Lines 519-527
 function CoreEnvironmentControllerManager:blurzone_check_sphere(blurzone, camera_pos)
 	local len = (blurzone.pos - camera_pos):length()
 	local result = math.min(len / blurzone.radius, 1)
@@ -443,7 +458,7 @@ local ids_LUT_settings_a = Idstring("LUT_settings_a")
 local ids_LUT_settings_b = Idstring("LUT_settings_b")
 local ids_LUT_contrast = Idstring("contrast")
 
--- Lines 519-546
+-- Lines 560-587
 function CoreEnvironmentControllerManager:refresh_render_settings(vp)
 	if not alive(self._vp) then
 		return
@@ -461,7 +476,7 @@ function CoreEnvironmentControllerManager:refresh_render_settings(vp)
 	self._vp:vp():set_post_processor_effect("World", ids_hdr_post_processor, Idstring(managers.user:get_setting("light_adaption") and "default" or "no_light_adaption"))
 end
 
--- Lines 548-800
+-- Lines 589-856
 function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -617,27 +632,24 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 		last_life = math.clamp((hurt_mod - 0.5) * 2, 0, 1)
 	end
 
-	if not self._screenflash_color_value_clbk_func then
-		self:set_screenflash_color_clbk()
+	if not self._screenflash_colors_setup then
+		self:set_screenflash_colors_clbks()
 	end
 
-	mvector3.set_static(temp_vec_2, last_life, self._screenflash_color_value * math.max(0, flash_2 + math.clamp(hit_some_mod * 2, 0, 1) * 0.25 + blur_zone_val * 0.15), 0)
+	self:_handle_screenflash(flash_2, hit_some_mod, blur_zone_val)
+	mvector3.set_static(temp_vec_2, last_life, 0, 0)
 	self._lut_modifier_material:set_variable(ids_LUT_settings_b, temp_vec_2)
 	self._lut_modifier_material:set_variable(ids_LUT_contrast, flashbang * 0.5)
 end
 
--- Lines 802-820
+-- Lines 924-936
 function CoreEnvironmentControllerManager:_update_post_effects()
 	self:set_ao_setting(managers.user:get_setting("video_ao"))
 	self:set_parallax_setting(managers.user:get_setting("parallax_mapping"))
 	self:set_aa_setting(managers.user:get_setting("video_aa"))
-
-	if not self._screenflash_color_value_clbk_func then
-		self:set_screenflash_color_clbk()
-	end
 end
 
--- Lines 822-840
+-- Lines 938-956
 function CoreEnvironmentControllerManager:_create_dof_tweak_data()
 	local new_dof_settings = {
 		none = {
@@ -660,7 +672,7 @@ function CoreEnvironmentControllerManager:_create_dof_tweak_data()
 	self._dof_tweaks = new_dof_settings
 end
 
--- Lines 842-852
+-- Lines 958-968
 function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	if not self._dof_tweaks[setting] then
 		Application:error("[CoreEnvironmentControllerManager:set_dof_setting] DOF setting do not exist!", setting)
@@ -675,7 +687,7 @@ function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	end
 end
 
--- Lines 854-873
+-- Lines 970-989
 local function set_modifier_transform(effect, id, transform)
 	local modifier = effect:modifier(Idstring(id))
 
@@ -701,14 +713,14 @@ local function set_modifier_transform(effect, id, transform)
 	end
 end
 
--- Lines 875-879
+-- Lines 991-995
 local function set_modifier_visibility(effect, id, visibility_state)
 	set_modifier_transform(effect, id, function (mod)
 		mod:set_visibility(visibility_state)
 	end)
 end
 
--- Lines 881-894
+-- Lines 997-1010
 local function set_post_material_parameter(post_id, modifier_name, parameter_id, value)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -727,12 +739,12 @@ local function set_post_material_parameter(post_id, modifier_name, parameter_id,
 	end
 end
 
--- Lines 897-899
+-- Lines 1013-1015
 function CoreEnvironmentControllerManager:get_aa_setting()
 	return self._aa_setting or "AA_off"
 end
 
--- Lines 901-908
+-- Lines 1017-1024
 function CoreEnvironmentControllerManager:set_aa_setting(setting, vp)
 	local effect = "AA_" .. setting
 	self._aa_setting = effect
@@ -743,7 +755,7 @@ function CoreEnvironmentControllerManager:set_aa_setting(setting, vp)
 	end
 end
 
--- Lines 912-917
+-- Lines 1028-1033
 function CoreEnvironmentControllerManager:set_parallax_setting(setting)
 	local global_material = Application:global_material()
 
@@ -752,7 +764,7 @@ function CoreEnvironmentControllerManager:set_parallax_setting(setting)
 	end
 end
 
--- Lines 920-935
+-- Lines 1036-1051
 function CoreEnvironmentControllerManager:bloom_blur_size(size, vp)
 	local effects = {
 		Idstring("bloom_blur_1"),
@@ -777,23 +789,23 @@ function CoreEnvironmentControllerManager:bloom_blur_size(size, vp)
 	end
 end
 
--- Lines 938-940
+-- Lines 1054-1056
 function CoreEnvironmentControllerManager:set_ssao_radius(value)
 	set_post_material_parameter(ids_ao_post_processor, "post_SSAO", Idstring("ssao_radius"), value)
 end
 
--- Lines 942-945
+-- Lines 1058-1061
 function CoreEnvironmentControllerManager:set_ssao_range(k, i)
 	set_post_material_parameter(ids_ao_post_processor, "post_SSAO", Idstring("ssao_steepness"), k)
 	set_post_material_parameter(ids_ao_post_processor, "post_SSAO", Idstring("ssao_inflexion"), i)
 end
 
--- Lines 947-949
+-- Lines 1063-1065
 function CoreEnvironmentControllerManager:get_ao_setting()
 	return self._ao_setting or "AO_off"
 end
 
--- Lines 951-967
+-- Lines 1067-1083
 function CoreEnvironmentControllerManager:set_ao_setting(setting, vp)
 	local effect = "AO_" .. setting
 	self._ao_setting = effect
@@ -816,7 +828,7 @@ function CoreEnvironmentControllerManager:set_ao_setting(setting, vp)
 	end
 end
 
--- Lines 970-985
+-- Lines 1086-1101
 function CoreEnvironmentControllerManager:remove_dof_tweak_data(remove_setting_name)
 	if not self._dof_tweaks[new_setting_name] then
 		Application:error("[CoreEnvironmentControllerManager:remove_dof_tweak_data] DOF setting do not exist!", remove_setting_name)
@@ -835,7 +847,7 @@ function CoreEnvironmentControllerManager:remove_dof_tweak_data(remove_setting_n
 	end
 end
 
--- Lines 987-994
+-- Lines 1103-1110
 function CoreEnvironmentControllerManager:add_dof_tweak_data(new_setting_name, new_setting_tweak_data)
 	if self._dof_tweaks[new_setting_name] then
 		Application:error("[CoreEnvironmentControllerManager:add_dof_tweak_data] DOF setting already exists!", new_setting_name)
@@ -846,7 +858,7 @@ function CoreEnvironmentControllerManager:add_dof_tweak_data(new_setting_name, n
 	self._dof_tweaks[new_setting_name] = new_setting_tweak_data
 end
 
--- Lines 996-1062
+-- Lines 1112-1178
 function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	local mvec_set = mvector3.set_static
 	local mvec = mvec1
@@ -911,28 +923,159 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	end
 end
 
--- Lines 1065-1067
-function CoreEnvironmentControllerManager:set_screenflash_color(color_name)
-	self._screenflash_color_value = tweak_data.accessibility_colors.screenflash[color_name] or tweak_data.accessibility_colors.screenflash.default or 1
-end
+-- Lines 1181-1204
+function CoreEnvironmentControllerManager:set_screenflash_colors_clbks()
+	self._screenflash_colors_setup = true
 
--- Lines 1069-1076
-function CoreEnvironmentControllerManager:set_screenflash_color_clbk()
-	if not self._screenflash_color_value_clbk_func then
-		self:set_screenflash_color(managers.user:get_setting("accessibility_screenflash_color"))
+	if not self._screenflash_color_clbk_func_flashbang then
+		self:set_screenflash_color_flashbang(managers.user:get_setting("accessibility_screenflash_color"))
 
-		self._screenflash_color_value_clbk_func = callback(self, self, "clbk_screenflash_color_changed")
+		self._screenflash_color_clbk_func_flashbang = callback(self, self, "clbk_screenflash_color_changed_flashbang")
 
-		managers.user:add_setting_changed_callback("accessibility_screenflash_color", self._screenflash_color_value_clbk_func)
+		managers.user:add_setting_changed_callback("accessibility_screenflash_color", self._screenflash_color_clbk_func_flashbang)
+	end
+
+	if not self._screenflash_color_clbk_func_hit_flash then
+		self:set_screenflash_color_hit_flash(managers.user:get_setting("accessibility_screenflash_color_hit_flash"))
+
+		self._screenflash_color_clbk_func_hit_flash = callback(self, self, "clbk_screenflash_color_changed_hit_flash")
+
+		managers.user:add_setting_changed_callback("accessibility_screenflash_color_hit_flash", self._screenflash_color_clbk_func_hit_flash)
+	end
+
+	if not self._screenflash_color_clbk_func_blurzone then
+		self:set_screenflash_color_blurzone(managers.user:get_setting("accessibility_screenflash_color_blurzone"))
+
+		self._screenflash_color_clbk_func_blurzone = callback(self, self, "clbk_screenflash_color_changed_blurzone")
+
+		managers.user:add_setting_changed_callback("accessibility_screenflash_color_blurzone", self._screenflash_color_clbk_func_blurzone)
 	end
 end
 
--- Lines 1078-1080
-function CoreEnvironmentControllerManager:clbk_screenflash_color_changed(setting_name, old_color_name, new_color_name)
-	self:set_screenflash_color(new_color_name)
+-- Lines 1206-1222
+function CoreEnvironmentControllerManager:set_screenflash_color_flashbang(color_name)
+	local old_color = self._screenflash_color_flashbang
+	self._screenflash_color_flashbang = tweak_data.accessibility_colors.screenflash.flashbang[color_name] or tweak_data.accessibility_colors.screenflash.flashbang.default or Color.white
+
+	if self._flashbang_overlay_effect_id then
+		if old_color ~= self._screenflash_color_flashbang then
+			managers.overlay_effect:modify_effect_color_external(self._flashbang_overlay_effect_id, self._screenflash_color_flashbang)
+		end
+	else
+		self._flashbang_overlay_effect_id = managers.overlay_effect:add_effect_external({
+			blend_mode = "normal",
+			layer = -1,
+			alpha_start = 0,
+			color = self._screenflash_color_flashbang
+		})
+	end
 end
 
--- Lines 1102-1119
+-- Lines 1224-1260
+function CoreEnvironmentControllerManager:set_screenflash_color_hit_flash(color_name)
+	local old_color = self._screenflash_color_hit_flash
+	local new_color = tweak_data.accessibility_colors.screenflash.hit_flash[color_name]
+
+	if not new_color then
+		if self._hit_flash_overlay_effect_id then
+			managers.overlay_effect:remove_effect_external(self._hit_flash_overlay_effect_id)
+
+			self._hit_flash_overlay_effect_id = nil
+		end
+
+		self._screenflash_color_hit_flash = false
+		self._hit_right = 0
+		self._hit_left = 0
+		self._hit_up = 0
+		self._hit_down = 0
+		self._hit_front = 0
+		self._hit_back = 0
+		self._hit_some = 0
+	else
+		self._screenflash_color_hit_flash = new_color
+
+		if self._hit_flash_overlay_effect_id then
+			if old_color ~= new_color then
+				managers.overlay_effect:modify_effect_color_external(self._hit_flash_overlay_effect_id, new_color)
+			end
+		else
+			self._hit_flash_overlay_effect_id = managers.overlay_effect:add_effect_external({
+				blend_mode = "normal",
+				layer = -1,
+				alpha_start = 0,
+				color = new_color
+			})
+		end
+	end
+end
+
+-- Lines 1262-1278
+function CoreEnvironmentControllerManager:set_screenflash_color_blurzone(color_name)
+	local old_color = self._screenflash_color_blurzone
+	self._screenflash_color_blurzone = tweak_data.accessibility_colors.screenflash.blurzone[color_name] or tweak_data.accessibility_colors.screenflash.blurzone.default or Color(255, 255, 201, 7) / 255
+
+	if self._blurzone_flash_overlay_effect_id then
+		if old_color ~= self._screenflash_color_blurzone then
+			managers.overlay_effect:modify_effect_color_external(self._blurzone_flash_overlay_effect_id, self._screenflash_color_blurzone)
+		end
+	else
+		self._blurzone_flash_overlay_effect_id = managers.overlay_effect:add_effect_external({
+			blend_mode = "normal",
+			layer = -1,
+			alpha_start = 0,
+			color = self._screenflash_color_blurzone
+		})
+	end
+end
+
+-- Lines 1280-1282
+function CoreEnvironmentControllerManager:clbk_screenflash_color_changed_flashbang(setting_name, old_color_name, new_color_name)
+	self:set_screenflash_color_flashbang(new_color_name)
+end
+
+-- Lines 1284-1286
+function CoreEnvironmentControllerManager:clbk_screenflash_color_changed_hit_flash(setting_name, old_color_name, new_color_name)
+	self:set_screenflash_color_hit_flash(new_color_name)
+end
+
+-- Lines 1288-1290
+function CoreEnvironmentControllerManager:clbk_screenflash_color_changed_blurzone(setting_name, old_color_name, new_color_name)
+	self:set_screenflash_color_blurzone(new_color_name)
+end
+
+-- Lines 1292-1324
+function CoreEnvironmentControllerManager:_handle_screenflash(flashbang_value, hit_flash_value, blurzone_value)
+	hit_flash_value = self._hit_flash_overlay_effect_id and math.clamp(hit_flash_value * 2, 0, 1) * 0.25 or 0
+	blurzone_value = blurzone_value * 0.15
+	local total_value = math.clamp(flashbang_value + hit_flash_value + blurzone_value, 0, 1)
+
+	if self._screenflash_color_flash_override < total_value then
+		managers.overlay_effect:progress_effect_external(self._flashbang_overlay_effect_id, 1)
+
+		if self._hit_flash_overlay_effect_id then
+			managers.overlay_effect:progress_effect_external(self._hit_flash_overlay_effect_id, 0)
+		end
+
+		managers.overlay_effect:progress_effect_external(self._blurzone_flash_overlay_effect_id, 0)
+	else
+		local value_ceiling = self._screenflash_color_flash_override
+		flashbang_value = math.lerp(0, 1, math.clamp(flashbang_value, 0, value_ceiling) / value_ceiling)
+
+		managers.overlay_effect:progress_effect_external(self._flashbang_overlay_effect_id, flashbang_value)
+
+		if self._hit_flash_overlay_effect_id then
+			hit_flash_value = math.max(0, hit_flash_value)
+
+			managers.overlay_effect:progress_effect_external(self._hit_flash_overlay_effect_id, hit_flash_value)
+		end
+
+		blurzone_value = math.lerp(0, 1, math.clamp(blurzone_value, 0, value_ceiling) / value_ceiling)
+
+		managers.overlay_effect:progress_effect_external(self._blurzone_flash_overlay_effect_id, blurzone_value)
+	end
+end
+
+-- Lines 1327-1344
 function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration, no_offset, no_effect)
 	local pos = no_offset and flashbang_pos or flashbang_pos + flashbang_test_offset
 	local flash = self:test_line_of_sight(pos, 200, 1000, 3000)
@@ -952,7 +1095,7 @@ function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_s
 	end
 end
 
--- Lines 1122-1133
+-- Lines 1347-1358
 function CoreEnvironmentControllerManager:set_concussion_grenade(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration, no_offset, no_effect)
 	local pos = no_offset and flashbang_pos or flashbang_pos + flashbang_test_offset
 	local concussion = self:test_line_of_sight(pos, 200, 1000, 3000)
@@ -963,13 +1106,13 @@ function CoreEnvironmentControllerManager:set_concussion_grenade(flashbang_pos, 
 	end
 end
 
--- Lines 1136-1140
+-- Lines 1361-1365
 function CoreEnvironmentControllerManager:set_flashbang_multiplier(multiplier)
 	self._flashbang_multiplier = multiplier ~= 0 and multiplier or 1
 	self._flashbang_multiplier = 1 + (1 - self._flashbang_multiplier) * 2
 end
 
--- Lines 1142-1200
+-- Lines 1367-1425
 function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_distance, dot_distance, max_distance)
 	local tmp_vec1 = Vector3()
 	local tmp_vec2 = Vector3()
@@ -1021,12 +1164,23 @@ function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_dista
 	return flash
 end
 
--- Lines 1202-1204
+-- Lines 1427-1430
+function CoreEnvironmentControllerManager:set_flashbang_value(flashbang, flash)
+	self._current_flashbang = flashbang
+	self._current_flashbang_flash = flash or flashbang
+end
+
+-- Lines 1433-1435
+function CoreEnvironmentControllerManager:set_concussion_value(concussion)
+	self._current_concussion = concussion
+end
+
+-- Lines 1438-1440
 function CoreEnvironmentControllerManager:set_dof_override(mode)
 	self._dof_override = mode
 end
 
--- Lines 1206-1211
+-- Lines 1442-1447
 function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad, far, far_pad)
 	self._dof_override_near = near
 	self._dof_override_near_pad = near_pad
@@ -1034,7 +1188,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad
 	self._dof_override_far_pad = far_pad
 end
 
--- Lines 1214-1231
+-- Lines 1450-1467
 function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(time, near, near_pad, far, far_pad)
 	self:set_dof_override(true)
 
@@ -1055,7 +1209,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(tim
 	}
 end
 
--- Lines 1233-1237
+-- Lines 1469-1473
 function CoreEnvironmentControllerManager:set_dome_occ_default()
 	local area = 20000
 	local occ_texture = "core/textures/dome_occ_test"
@@ -1063,7 +1217,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_default()
 	self:set_dome_occ_params(Vector3(-(area * 0.5), -(area * 0.5), 0), Vector3(area, area, 1200), occ_texture)
 end
 
--- Lines 1239-1247
+-- Lines 1475-1483
 function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size, occ_texture)
 	self._occ_dirty = true
 	self._occ_pos = occ_pos
@@ -1072,7 +1226,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size,
 	self._occ_texture = occ_texture
 end
 
--- Lines 1249-1273
+-- Lines 1485-1509
 function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	local deferred_processor = (vp or self._vp):vp():get_post_processor_effect("World", Idstring("deferred"))
 
@@ -1101,17 +1255,17 @@ function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	end
 end
 
--- Lines 1276-1278
+-- Lines 1512-1514
 function CoreEnvironmentControllerManager:set_custom_dof_settings(custom_dof_settings)
 	self._custom_dof_settings = custom_dof_settings
 end
 
--- Lines 1280-1282
+-- Lines 1516-1518
 function CoreEnvironmentControllerManager:set_base_chromatic_amount(base_chromatic_amount)
 	self._base_chromatic_amount = base_chromatic_amount
 end
 
--- Lines 1284-1298
+-- Lines 1520-1534
 function CoreEnvironmentControllerManager:set_chromatic_enabled(enabled)
 	if _G.IS_VR then
 		return
@@ -1128,34 +1282,34 @@ function CoreEnvironmentControllerManager:set_chromatic_enabled(enabled)
 	end
 end
 
--- Lines 1300-1302
+-- Lines 1536-1538
 function CoreEnvironmentControllerManager:base_chromatic_amount()
 	return self._base_chromatic_amount
 end
 
--- Lines 1304-1306
+-- Lines 1540-1542
 function CoreEnvironmentControllerManager:set_base_contrast(base_contrast)
 	self._base_contrast = base_contrast
 end
 
--- Lines 1308-1310
+-- Lines 1544-1546
 function CoreEnvironmentControllerManager:base_contrast()
 	return self._base_contrast
 end
 
 local ids_d_sun = Idstring("d_sun")
 
--- Lines 1313-1397
+-- Lines 1549-1633
 function CoreEnvironmentControllerManager:feed_params()
 end
 
--- Lines 1399-1405
+-- Lines 1635-1641
 function CoreEnvironmentControllerManager:feed_param_underlay(material_name, param_name, param_value)
 	local material = Underlay:material(Idstring(material_name))
 
 	material:set_variable(Idstring(param_name), param_value)
 end
 
--- Lines 1407-1409
+-- Lines 1643-1645
 function CoreEnvironmentControllerManager:set_global_param(param_name, param_value)
 end

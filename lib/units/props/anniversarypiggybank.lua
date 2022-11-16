@@ -23,10 +23,8 @@ end
 function AnniversaryPiggyBank:sync_explode_pig(pig_level)
 end
 
--- Lines 24-32
+-- Lines 24-31
 function AnniversaryPiggyBank:on_interacted()
-	print("SimonInteractionSuccess!")
-
 	if not Network:is_server() then
 		return
 	end
@@ -34,7 +32,7 @@ function AnniversaryPiggyBank:on_interacted()
 	self:explode_pig()
 end
 
--- Lines 36-41
+-- Lines 35-40
 function AnniversaryPiggyBank:run_sequence(sequence)
 	print("AnniversaryPiggyBank:run_sequence", sequence, self._unit)
 

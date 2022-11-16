@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines 3-1865
+-- Lines 3-1877
 function SkillTreeTweakData:init()
 	-- Lines 10-10
 	local function digest(value)
@@ -3715,7 +3715,7 @@ function SkillTreeTweakData:init()
 			deck4,
 			{
 				cost = 1000,
-				desc_id = "menu_deck8_3_desc",
+				desc_id = "menu_deck8_5_desc",
 				name_id = "menu_deck8_3",
 				upgrades = {
 					"player_damage_dampener_close_contact_2",
@@ -4827,7 +4827,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines 1867-1883
+-- Lines 1879-1895
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -4848,7 +4848,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines 1885-1894
+-- Lines 1897-1906
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -4861,16 +4861,16 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines 1896-1899
+-- Lines 1908-1911
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines 1901-1909
+-- Lines 1913-1921
 function SkillTreeTweakData:get_tier_unlocks()
-	-- Lines 1902-1902
+	-- Lines 1914-1914
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4885,7 +4885,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines 1911-1934
+-- Lines 1923-1946
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

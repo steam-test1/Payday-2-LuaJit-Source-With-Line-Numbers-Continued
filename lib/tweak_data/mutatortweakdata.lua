@@ -1,11 +1,11 @@
 MutatorTweakData = MutatorTweakData or class()
 
--- Lines 3-10
+-- Lines 3-13
 function MutatorTweakData:init(tweak_data)
 	self:init_piggybank(tweak_data)
 end
 
--- Lines 56-149
+-- Lines 59-152
 function MutatorTweakData:init_piggybank(tweak_data)
 	self.piggybank = {
 		drop_count = 10,

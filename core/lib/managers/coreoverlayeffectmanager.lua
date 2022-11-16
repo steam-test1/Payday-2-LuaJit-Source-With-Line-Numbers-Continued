@@ -3,7 +3,7 @@ core:import("CoreCode")
 
 OverlayEffectManager = OverlayEffectManager or class()
 
--- Lines 10-28
+-- Lines 10-31
 function OverlayEffectManager:init()
 	local gui = Overlay:newgui()
 	self._vp_overlay = Application:create_scene_viewport(0, 0, 1, 1)
@@ -16,6 +16,7 @@ function OverlayEffectManager:init()
 	self._ws:set_timer(TimerManager:main())
 
 	self._playing_effects = {}
+	self._playing_effects_external = {}
 	self._paused = nil
 	self._presets = {}
 
@@ -30,34 +31,34 @@ function OverlayEffectManager:init()
 	managers.viewport:add_resolution_changed_func(callback(self, self, "change_resolution"))
 end
 
--- Lines 32-34
+-- Lines 35-37
 function OverlayEffectManager:set_visible(visible)
 	self._ws:panel():set_visible(visible)
 end
 
--- Lines 36-38
+-- Lines 39-41
 function OverlayEffectManager:add_preset(name, settings)
 	self._presets[name] = settings
 end
 
--- Lines 40-42
+-- Lines 43-45
 function OverlayEffectManager:presets()
 	return self._presets
 end
 
--- Lines 44-46
+-- Lines 47-49
 function OverlayEffectManager:set_default_layer(layer)
 	self._default_layer = layer
 end
 
--- Lines 50-54
+-- Lines 53-57
 function OverlayEffectManager:update(t, dt)
 	self._vp_overlay:update()
 	self:check_pause_state()
 	self:progress_effects(t, dt)
 end
 
--- Lines 58-73
+-- Lines 61-76
 function OverlayEffectManager:destroy()
 	if CoreCode.alive(self._overlay_camera) then
 		Overlay:delete_camera(self._overlay_camera)
@@ -78,14 +79,14 @@ function OverlayEffectManager:destroy()
 	end
 end
 
--- Lines 75-79
+-- Lines 78-82
 function OverlayEffectManager:render()
 	if Global.render_debug.render_overlay then
 		Application:render("Overlay", self._vp_overlay)
 	end
 end
 
--- Lines 81-121
+-- Lines 84-124
 function OverlayEffectManager:progress_effects(t, dt, paused)
 	for key, effect in pairs(self._playing_effects) do
 		local data = effect.data
@@ -134,13 +135,13 @@ function OverlayEffectManager:progress_effects(t, dt, paused)
 	end
 end
 
--- Lines 125-128
+-- Lines 128-131
 function OverlayEffectManager:paused_update(t, dt)
 	self:check_pause_state(true)
 	self:progress_effects(t, dt, true)
 end
 
--- Lines 132-150
+-- Lines 135-153
 function OverlayEffectManager:check_pause_state(paused)
 	if self._paused then
 		if not paused then
@@ -163,7 +164,7 @@ function OverlayEffectManager:check_pause_state(paused)
 	end
 end
 
--- Lines 164-211
+-- Lines 167-214
 function OverlayEffectManager:play_effect(data)
 	if data then
 		local spawn_alpha = data.color.alpha * (data.fade_in > 0 and 0 or 1)
@@ -257,7 +258,7 @@ function OverlayEffectManager:play_effect(data)
 	end
 end
 
--- Lines 215-239
+-- Lines 218-257
 function OverlayEffectManager:stop_effect(id)
 	if id then
 		if self._playing_effects[id] then
@@ -278,13 +279,13 @@ function OverlayEffectManager:stop_effect(id)
 			if effect.video then
 				self._ws:panel():remove(effect.video)
 			end
-
-			self._playing_effects[key] = nil
 		end
+
+		self._playing_effects = {}
 	end
 end
 
--- Lines 243-260
+-- Lines 261-278
 function OverlayEffectManager:fade_out_effect(id)
 	if id then
 		local effect = self._playing_effects[id]
@@ -305,7 +306,7 @@ function OverlayEffectManager:fade_out_effect(id)
 	end
 end
 
--- Lines 264-269
+-- Lines 282-292
 function OverlayEffectManager:change_resolution()
 	local res = RenderSettings.resolution
 
@@ -314,5 +315,235 @@ function OverlayEffectManager:change_resolution()
 			w = res.x,
 			h = res.y
 		})
+	end
+
+	for _, effect in pairs(self._playing_effects_external) do
+		effect.rectangle:configure({
+			w = res.x,
+			h = res.y
+		})
+	end
+end
+
+-- Lines 297-356
+function OverlayEffectManager:add_effect_external(data)
+	if not data then
+		Application:error("[OverlayEffectManager:add_effect_external] No data passed to play effect.")
+
+		return
+	end
+
+	local spawn_alpha = data.alpha_start or 0
+	local spawn_show = spawn_alpha > 0
+	local rectangle = nil
+
+	if data.gradient_points then
+		rectangle = self._ws:panel():gradient({
+			w = RenderSettings.resolution.x,
+			h = RenderSettings.resolution.y,
+			color = data.color:with_alpha(spawn_alpha),
+			gradient_points = data.gradient_points,
+			orientation = data.orientation
+		})
+	else
+		rectangle = self._ws:panel():rect({
+			w = RenderSettings.resolution.x,
+			h = RenderSettings.resolution.y,
+			color = data.color:with_alpha(spawn_alpha)
+		})
+	end
+
+	rectangle:set_layer(data.layer or self._default_layer)
+	rectangle:set_blend_mode(data.blend_mode)
+
+	if spawn_show then
+		rectangle:show()
+	else
+		rectangle:hide()
+	end
+
+	local text_string = data.text and (data.localize and managers.localization and managers.localization:text(data.text) or data.text)
+
+	if _G.IS_VR then
+		text_string = nil
+	end
+
+	if text_string and data.text_to_upper then
+		text_string = utf8.to_upper(text_string)
+	end
+
+	local text = nil
+
+	if text_string then
+		text = self._ws:panel():text({
+			vertical = "center",
+			valign = "center",
+			align = "center",
+			halign = "center",
+			text = text_string,
+			font = data.font or "core/fonts/system_font",
+			font_size = data.font_size or 21,
+			blend_mode = data.text_blend_mode or data.blend_mode or "normal",
+			color = (data.text_color or Color.white):with_alpha(spawn_alpha * (data.text_color and data.text_color.alpha or 1)),
+			layer = self._default_layer + 1
+		})
+
+		if spawn_show then
+			text:show()
+		else
+			text:hide()
+		end
+	end
+
+	local effect = {
+		rectangle = rectangle,
+		text = text,
+		start_t = (data.timer or TimerManager:game()):time(),
+		data = {},
+		current_alpha = spawn_alpha,
+		gradient_points = data.gradient_points,
+		hidden = not spawn_show
+	}
+
+	if data.video then
+		effect.video = self._ws:panel():video({
+			valign = "center",
+			vertical = "center",
+			align = "center",
+			loop = false,
+			halign = "center",
+			video = data.video,
+			width = data.video_width,
+			height = data.video_height,
+			layer = self._default_layer + 1
+		})
+	end
+
+	for key, value in pairs(data) do
+		effect.data[key] = value
+	end
+
+	local id = 1
+
+	while self._playing_effects_external[id] do
+		id = id + 1
+	end
+
+	table.insert(self._playing_effects_external, id, effect)
+
+	return id
+end
+
+-- Lines 360-390
+function OverlayEffectManager:modify_effect_color_external(id, new_color)
+	local effect = self._playing_effects_external[id]
+
+	if not effect then
+		Application:error("[OverlayEffectManager:modify_effect_color_external] No effect found with id '" .. tostring(id) .. "'.")
+
+		return
+	end
+
+	local data = effect.data
+
+	if effect.gradient_points then
+		if CoreClass.type_name(new_color) ~= "table" then
+			Application:error("[OverlayEffectManager:modify_effect_color_external] Attempted to modify gradient points without sending a table. Type of parameter passed is '" .. CoreClass.type_name(new_color) .. "'.")
+
+			return
+		end
+
+		data.gradient_points = new_color
+		effect.gradient_points = new_color
+
+		for i = 2, #effect.gradient_points, 2 do
+			effect.gradient_points[i] = effect.gradient_points[i]:with_alpha(effect.current_alpha)
+		end
+
+		effect.rectangle:set_gradient_points(effect.gradient_points)
+	else
+		data.color = new_color
+
+		effect.rectangle:set_color(data.color:with_alpha(effect.current_alpha))
+	end
+end
+
+-- Lines 394-414
+function OverlayEffectManager:remove_effect_external(id)
+	local effect = self._playing_effects_external[id]
+
+	if not effect then
+		Application:error("[OverlayEffectManager:remove_effect_color_external] No effect found with id '" .. tostring(id) .. "'.")
+
+		return
+	end
+
+	self._ws:panel():remove(effect.rectangle)
+
+	if effect.text then
+		self._ws:panel():remove(effect.text)
+	end
+
+	if effect.video then
+		self._ws:panel():remove(effect.video)
+	end
+
+	self._playing_effects_external[id] = nil
+end
+
+-- Lines 416-469
+function OverlayEffectManager:progress_effect_external(id, new_alpha)
+	local effect = self._playing_effects_external[id]
+
+	if not effect then
+		Application:error("[OverlayEffectManager:progress_effect_external] No effect found with id '" .. tostring(id) .. "'.")
+
+		return
+	end
+
+	local data = effect.data
+	new_alpha = new_alpha * data.color.alpha
+	effect.current_alpha = new_alpha
+
+	if effect.gradient_points then
+		for i = 2, #effect.gradient_points, 2 do
+			effect.gradient_points[i] = effect.gradient_points[i]:with_alpha(new_alpha)
+		end
+
+		effect.rectangle:set_gradient_points(effect.gradient_points)
+	else
+		effect.rectangle:set_color(data.color:with_alpha(new_alpha))
+	end
+
+	if effect.text then
+		effect.text:set_color((data.text_color or Color.white):with_alpha(new_alpha * (data.text_color and data.text_color.alpha or 1)))
+	end
+
+	if new_alpha > 0 then
+		if effect.hidden then
+			effect.hidden = false
+
+			effect.rectangle:show()
+
+			if effect.text then
+				effect.text:show()
+			end
+
+			if effect.video then
+				effect.video:show()
+			end
+		end
+	elseif not effect.hidden then
+		effect.hidden = true
+
+		effect.rectangle:hide()
+
+		if effect.text then
+			effect.text:hide()
+		end
+
+		if effect.video then
+			effect.video:hide()
+		end
 	end
 end

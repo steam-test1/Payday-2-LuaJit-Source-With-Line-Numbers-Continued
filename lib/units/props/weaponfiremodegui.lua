@@ -20,7 +20,7 @@ local mvector_tr = Vector3()
 local mvector_bl = Vector3()
 local mvector_br = Vector3()
 
--- Lines 23-64
+-- Lines 27-72
 function WeaponFiremodeGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -57,13 +57,13 @@ function WeaponFiremodeGui:init(unit)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 end
 
--- Lines 66-69
+-- Lines 74-77
 function WeaponFiremodeGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(self.WIDTH, self.HEIGHT, gui_object, Vector3(0, 0, 0))
 	self._panel = self._ws:panel()
 end
 
--- Lines 71-151
+-- Lines 79-159
 function WeaponFiremodeGui:setup()
 	self._panel:clear()
 
@@ -185,7 +185,7 @@ function WeaponFiremodeGui:setup()
 	end
 end
 
--- Lines 153-161
+-- Lines 161-169
 function WeaponFiremodeGui:update(unit, t, dt)
 	if self._firemode == "volley" then
 		local ratio = math.map_range(t, self._volley_data.charge_start_t, self._volley_data.charge_start_t + self._volley_data.charge_max_t, 0, 1)
@@ -196,7 +196,7 @@ function WeaponFiremodeGui:update(unit, t, dt)
 	end
 end
 
--- Lines 163-185
+-- Lines 171-197
 function WeaponFiremodeGui:set_firemode(firemode)
 	self._firemode = firemode
 
@@ -222,7 +222,7 @@ function WeaponFiremodeGui:set_firemode(firemode)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 end
 
--- Lines 187-203
+-- Lines 199-215
 function WeaponFiremodeGui:set_ammo(ammo, color)
 	if self._firemode_panel then
 		local ammo_text = self._firemode_panel:child("ammo")
@@ -245,7 +245,7 @@ function WeaponFiremodeGui:set_ammo(ammo, color)
 	end
 end
 
--- Lines 205-214
+-- Lines 217-226
 function WeaponFiremodeGui:set_color(color, rec_panel)
 	self._color = color
 
@@ -258,7 +258,7 @@ function WeaponFiremodeGui:set_color(color, rec_panel)
 	end
 end
 
--- Lines 216-221
+-- Lines 228-237
 function WeaponFiremodeGui:start_volley_charge(charge_max_t)
 	self._volley_data.charge_start_t = managers.player:player_timer():time()
 	self._volley_data.charge_max_t = charge_max_t
@@ -266,7 +266,7 @@ function WeaponFiremodeGui:start_volley_charge(charge_max_t)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
 end
 
--- Lines 223-228
+-- Lines 239-248
 function WeaponFiremodeGui:stop_volley_charge()
 	for _, bar_obj in ipairs(self._volley_charge_bars) do
 		bar_obj:hide()
@@ -275,7 +275,7 @@ function WeaponFiremodeGui:stop_volley_charge()
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 end
 
--- Lines 230-237
+-- Lines 250-257
 function WeaponFiremodeGui:set_visible(visible)
 	self._visible = visible
 
@@ -286,13 +286,13 @@ function WeaponFiremodeGui:set_visible(visible)
 	end
 end
 
--- Lines 239-242
+-- Lines 259-262
 function WeaponFiremodeGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 244-250
+-- Lines 264-270
 function WeaponFiremodeGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)

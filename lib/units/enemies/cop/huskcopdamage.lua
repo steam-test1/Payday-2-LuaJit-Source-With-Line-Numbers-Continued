@@ -1,6 +1,6 @@
 HuskCopDamage = HuskCopDamage or class(CopDamage)
 
--- Lines 5-46
+-- Lines 5-52
 function HuskCopDamage:die(variant)
 	CopDamage.MAD_3_ACHIEVEMENT(variant)
 	self:_check_friend_4(variant)
@@ -37,4 +37,10 @@ function HuskCopDamage:die(variant)
 	end
 
 	self:_on_death()
+
+	if self._tmp_invulnerable_clbk_key then
+		managers.enemy:remove_delayed_clbk(self._tmp_invulnerable_clbk_key)
+
+		self._tmp_invulnerable_clbk_key = nil
+	end
 end

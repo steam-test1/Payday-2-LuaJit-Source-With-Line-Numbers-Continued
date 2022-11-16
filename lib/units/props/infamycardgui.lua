@@ -3,7 +3,7 @@ require("lib/managers/menu/BoxGuiObject")
 
 InfamyCardGui = InfamyCardGui or class()
 
--- Lines 6-19
+-- Lines 10-27
 function InfamyCardGui:init(unit)
 	self._unit = unit
 	self._data = nil
@@ -16,7 +16,7 @@ function InfamyCardGui:init(unit)
 	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
 end
 
--- Lines 21-41
+-- Lines 29-49
 function InfamyCardGui:add_workspace(gui_object)
 	local gui_size = 200
 	local x_size = 6
@@ -33,7 +33,7 @@ function InfamyCardGui:add_workspace(gui_object)
 	self._text_gui = ExtendedPanel:new(self._text_ws:panel())
 end
 
--- Lines 43-92
+-- Lines 51-100
 function InfamyCardGui:show_rank(rank)
 	self:clear_gui()
 
@@ -114,7 +114,7 @@ function InfamyCardGui:show_rank(rank)
 	rank_text:set_font_size(scaled_font_size)
 end
 
--- Lines 94-109
+-- Lines 102-117
 function InfamyCardGui:show_texture(texture, texture_rect)
 	self:clear_gui()
 
@@ -140,7 +140,7 @@ function InfamyCardGui:show_texture(texture, texture_rect)
 	icon:set_render_template(Idstring("VertexColorTextured"))
 end
 
--- Lines 111-113
+-- Lines 119-121
 function InfamyCardGui:show_experience_boost()
 	self:show_texture("guis/dlcs/infamous/textures/pd2/infamous_tree/infamous_tree_atlas", {
 		128,
@@ -150,12 +150,12 @@ function InfamyCardGui:show_experience_boost()
 	})
 end
 
--- Lines 115-117
+-- Lines 123-125
 function InfamyCardGui:show_join_stinger()
 	self:show_texture("guis/textures/pd2/skilltree_2/ace_symbol")
 end
 
--- Lines 119-123
+-- Lines 127-131
 function InfamyCardGui:set_visible(visible)
 	self._visible = visible
 
@@ -163,26 +163,26 @@ function InfamyCardGui:set_visible(visible)
 	self._text_gui:set_visible(visible)
 end
 
--- Lines 125-127
+-- Lines 133-135
 function InfamyCardGui:is_visible()
 	return self._visible
 end
 
--- Lines 129-130
+-- Lines 137-138
 function InfamyCardGui:update()
 end
 
--- Lines 132-134
+-- Lines 140-142
 function InfamyCardGui:hide()
 	self._ws:hide()
 end
 
--- Lines 136-138
+-- Lines 144-146
 function InfamyCardGui:show()
 	self._ws:show()
 end
 
--- Lines 140-146
+-- Lines 148-154
 function InfamyCardGui:lock_gui()
 	self._icon_ws:set_cull_distance(self._cull_distance)
 	self._icon_ws:set_frozen(true)
@@ -190,7 +190,7 @@ function InfamyCardGui:lock_gui()
 	self._text_ws:set_frozen(true)
 end
 
--- Lines 148-162
+-- Lines 156-170
 function InfamyCardGui:refresh_gui(override_data)
 	if not self._data then
 		return
@@ -207,7 +207,7 @@ function InfamyCardGui:refresh_gui(override_data)
 	end
 end
 
--- Lines 164-171
+-- Lines 172-179
 function InfamyCardGui:clear_gui()
 	if alive(self._icon_gui) then
 		self._icon_gui:clear()
@@ -218,7 +218,7 @@ function InfamyCardGui:clear_gui()
 	end
 end
 
--- Lines 173-191
+-- Lines 181-199
 function InfamyCardGui:destroy()
 	if not alive(self._new_gui) then
 		return
