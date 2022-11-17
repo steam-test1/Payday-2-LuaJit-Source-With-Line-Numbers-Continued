@@ -147,7 +147,7 @@ function PlayerBleedOut:update(t, dt)
 	end
 end
 
--- Lines 144-232
+-- Lines 144-234
 function PlayerBleedOut:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -173,8 +173,8 @@ function PlayerBleedOut:_update_check_actions(t, dt)
 	if not new_action then
 		new_action = self:_check_action_primary_attack(t, input)
 
-		if not _G.IS_VR then
-			self._shooting = new_action
+		if not _G.IS_VR and not new_action then
+			self:_check_stop_shooting()
 		end
 	end
 
@@ -188,7 +188,7 @@ function PlayerBleedOut:_update_check_actions(t, dt)
 	self:_check_use_item(t, input)
 end
 
--- Lines 235-258
+-- Lines 237-260
 function PlayerBleedOut:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_release and self._throw_time and t and t < self._throw_time
@@ -215,7 +215,7 @@ function PlayerBleedOut:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines 264-278
+-- Lines 266-280
 function PlayerBleedOut:_check_action_interact(t, input)
 	if input.btn_interact_press then
 		if _G.IS_VR then
@@ -232,7 +232,7 @@ function PlayerBleedOut:_check_action_interact(t, input)
 	end
 end
 
--- Lines 282-291
+-- Lines 284-293
 function PlayerBleedOut:_check_change_weapon(...)
 	local primary = self._unit:inventory():unit_by_selection(2)
 
@@ -247,7 +247,7 @@ function PlayerBleedOut:_check_change_weapon(...)
 	return false
 end
 
--- Lines 293-302
+-- Lines 295-304
 function PlayerBleedOut:_check_action_equip(...)
 	local primary = self._unit:inventory():unit_by_selection(2)
 
@@ -262,7 +262,7 @@ function PlayerBleedOut:_check_action_equip(...)
 	return false
 end
 
--- Lines 304-309
+-- Lines 306-311
 function PlayerBleedOut:_check_action_steelsight(...)
 	if managers.player:has_category_upgrade("player", "steelsight_when_downed") then
 		return PlayerBleedOut.super._check_action_steelsight(self, ...)
@@ -271,12 +271,12 @@ function PlayerBleedOut:_check_action_steelsight(...)
 	return false
 end
 
--- Lines 331-333
+-- Lines 333-335
 function PlayerBleedOut:_start_action_state_standard(t)
 	managers.player:set_player_state("standard")
 end
 
--- Lines 337-415
+-- Lines 339-417
 function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	if revive_SO_data.SO_id or not managers.navigation:is_data_ready() then
 		return
@@ -347,7 +347,7 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 end
 
--- Lines 419-483
+-- Lines 421-485
 function PlayerBleedOut:call_civilian(line, t, no_gesture, skip_alert, revive_SO_data)
 	if not managers.player:has_category_upgrade("player", "civilian_reviver") or revive_SO_data and revive_SO_data.sympathy_civ then
 		return
@@ -417,7 +417,7 @@ function PlayerBleedOut:call_civilian(line, t, no_gesture, skip_alert, revive_SO
 	end
 end
 
--- Lines 487-513
+-- Lines 489-515
 function PlayerBleedOut:_unregister_revive_SO()
 	if not self._revive_SO_data then
 		return
@@ -450,16 +450,16 @@ function PlayerBleedOut:_unregister_revive_SO()
 	end
 end
 
--- Lines 517-550
+-- Lines 519-552
 function PlayerBleedOut._register_deathguard_SO(my_unit)
 end
 
--- Lines 554-556
+-- Lines 556-558
 function PlayerBleedOut._unregister_deathguard_SO(so_id)
 	managers.groupai:state():remove_special_objective(so_id)
 end
 
--- Lines 560-568
+-- Lines 562-570
 function PlayerBleedOut:_start_action_bleedout(t)
 	self:_interupt_action_running(t)
 
@@ -471,7 +471,7 @@ function PlayerBleedOut:_start_action_bleedout(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
--- Lines 572-583
+-- Lines 574-585
 function PlayerBleedOut:_end_action_bleedout(t)
 	if not self:_can_stand() then
 		return
@@ -485,12 +485,12 @@ function PlayerBleedOut:_end_action_bleedout(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines 587-589
+-- Lines 589-591
 function PlayerBleedOut:_update_movement(t, dt)
 	self:_update_network_position(t, dt, self._unit:position())
 end
 
--- Lines 593-604
+-- Lines 595-606
 function PlayerBleedOut:on_rescue_SO_administered(revive_SO_data, receiver_unit)
 	if revive_SO_data.rescuer then
 		debug_pause("[PlayerBleedOut:on_rescue_SO_administered] Already had a rescuer!!!!", receiver_unit, revive_SO_data.rescuer)
@@ -504,7 +504,7 @@ function PlayerBleedOut:on_rescue_SO_administered(revive_SO_data, receiver_unit)
 	end
 end
 
--- Lines 608-613
+-- Lines 610-615
 function PlayerBleedOut:on_rescue_SO_failed(revive_SO_data, rescuer)
 	if revive_SO_data.rescuer then
 		revive_SO_data.rescuer = nil
@@ -513,7 +513,7 @@ function PlayerBleedOut:on_rescue_SO_failed(revive_SO_data, rescuer)
 	end
 end
 
--- Lines 617-633
+-- Lines 619-635
 function PlayerBleedOut:on_rescue_SO_completed(revive_SO_data, rescuer)
 	if revive_SO_data.sympathy_civ then
 		local objective = {
@@ -533,7 +533,7 @@ function PlayerBleedOut:on_rescue_SO_completed(revive_SO_data, rescuer)
 	revive_SO_data.rescuer = nil
 end
 
--- Lines 637-646
+-- Lines 639-648
 function PlayerBleedOut:on_rescue_SO_started(revive_SO_data, rescuer)
 	for c_key, criminal in pairs(managers.groupai:state():all_AI_criminals()) do
 		if c_key ~= rescuer:key() then
@@ -546,12 +546,12 @@ function PlayerBleedOut:on_rescue_SO_started(revive_SO_data, rescuer)
 	end
 end
 
--- Lines 650-652
+-- Lines 652-654
 function PlayerBleedOut.rescue_SO_verification(ignore_this, my_unit, unit)
 	return not unit:movement():cool() and not my_unit:movement():team().foes[unit:movement():team().id]
 end
 
--- Lines 656-668
+-- Lines 658-670
 function PlayerBleedOut:on_civ_revive_completed(revive_SO_data, sympathy_civ)
 	if sympathy_civ ~= revive_SO_data.sympathy_civ then
 		debug_pause_unit(sympathy_civ, "[PlayerBleedOut:on_civ_revive_completed] idiot thinks he is reviving", sympathy_civ)
@@ -572,7 +572,7 @@ function PlayerBleedOut:on_civ_revive_completed(revive_SO_data, sympathy_civ)
 	end
 end
 
--- Lines 672-690
+-- Lines 674-692
 function PlayerBleedOut:on_civ_revive_started(revive_SO_data, sympathy_civ)
 	if sympathy_civ ~= revive_SO_data.sympathy_civ then
 		debug_pause_unit(sympathy_civ, "[PlayerBleedOut:on_civ_revive_started] idiot thinks he is reviving", sympathy_civ)
@@ -596,7 +596,7 @@ function PlayerBleedOut:on_civ_revive_started(revive_SO_data, sympathy_civ)
 	end
 end
 
--- Lines 694-703
+-- Lines 696-705
 function PlayerBleedOut:on_civ_revive_failed(revive_SO_data, sympathy_civ)
 	if revive_SO_data.sympathy_civ then
 		if sympathy_civ ~= revive_SO_data.sympathy_civ then
@@ -611,19 +611,19 @@ function PlayerBleedOut:on_civ_revive_failed(revive_SO_data, sympathy_civ)
 	end
 end
 
--- Lines 707-710
+-- Lines 709-712
 function PlayerBleedOut:verif_clbk_is_unit_deathguard(enemy_unit)
 	local char_tweak = tweak_data.character[enemy_unit:base()._tweak_table]
 
 	return char_tweak.deathguard
 end
 
--- Lines 714-716
+-- Lines 716-718
 function PlayerBleedOut:clbk_deathguard_administered(unit)
 	unit:movement():set_cool(false)
 end
 
--- Lines 720-725
+-- Lines 722-727
 function PlayerBleedOut:pre_destroy(unit)
 	PlayerBleedOut.super.pre_destroy(self, unit)
 
@@ -632,7 +632,7 @@ function PlayerBleedOut:pre_destroy(unit)
 	end
 end
 
--- Lines 729-733
+-- Lines 731-735
 function PlayerBleedOut:destroy()
 	if Network:is_server() then
 		self:_unregister_revive_SO()
