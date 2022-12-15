@@ -102,7 +102,7 @@ local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 119-386
+-- Lines 119-463
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local result = nil
 	local hit_enemies = {}
@@ -117,9 +117,10 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local autoaim, dodge_enemies = self:check_autoaim(from_pos, direction, self._range)
 	local weight = 0.1
 	local enemy_died = false
+	local extra_collisions = self.extra_collisions and self:extra_collisions()
 
-	-- Lines 134-174
-	local function hit_enemy(col_ray)
+	-- Lines 137-207
+	local function hit_enemy(col_ray, ray_i)
 		if col_ray.unit:character_damage() then
 			local enemy_key = col_ray.unit:key()
 
@@ -139,8 +140,24 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				table.insert(hit_objects[col_ray.unit:key()], col_ray)
 			elseif col_ray.unit:in_slot(self.shield_mask) then
 				self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage / self._rays)
+
+				if extra_collisions and ray_i == 1 then
+					for idx, extra_col_data in ipairs(extra_collisions) do
+						if alive(col_ray.unit) then
+							extra_col_data.bullet_class:on_collision(col_ray, self._unit, user_unit, damage * (extra_col_data.dmg_mul or 1))
+						end
+					end
+				end
 			else
 				self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
+
+				if extra_collisions and ray_i == 1 then
+					for idx, extra_col_data in ipairs(extra_collisions) do
+						if alive(col_ray.unit) then
+							extra_col_data.bullet_class:on_collision(col_ray, self._unit, user_unit, damage * (extra_col_data.dmg_mul or 1))
+						end
+					end
+				end
 			end
 		end
 	end
@@ -184,7 +201,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 			if col_ray and col_ray.unit:in_slot(managers.slot:get_mask("enemies")) then
 				self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 
-				hit_enemy(col_ray)
+				hit_enemy(col_ray, i)
 
 				autoaim = false
 			else
@@ -198,20 +215,20 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 						self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 						hit_something = true
 
-						hit_enemy(autohit)
+						hit_enemy(autohit, i)
 					else
 						self._autohit_current = self._autohit_current / (1 + weight)
 					end
 				elseif col_ray then
 					hit_something = true
 
-					hit_enemy(col_ray)
+					hit_enemy(col_ray, i)
 				end
 			end
 		elseif col_ray then
 			hit_something = true
 
-			hit_enemy(col_ray)
+			hit_enemy(col_ray, i)
 		end
 	end
 
@@ -260,6 +277,14 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				my_result = ShotgunBase.super._fire_raycast(self, user_unit, from_pos, col_ray.ray, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, shoot_through_data)
 			else
 				my_result = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
+
+				if extra_collisions then
+					for idx, extra_col_data in ipairs(extra_collisions) do
+						if alive(col_ray.unit) then
+							extra_col_data.bullet_class:on_collision(col_ray, self._unit, user_unit, damage * (extra_col_data.dmg_mul or 1))
+						end
+					end
+				end
 			end
 
 			my_result = managers.mutators:modify_value("ShotgunBase:_fire_raycast", my_result)
@@ -358,7 +383,7 @@ end
 
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines 393-396
+-- Lines 470-473
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -367,7 +392,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines 406-421
+-- Lines 483-498
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {
