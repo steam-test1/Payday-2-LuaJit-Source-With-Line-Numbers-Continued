@@ -29,7 +29,7 @@ end
 function MissionEndState:set_controller_enabled(enabled)
 end
 
--- Lines 32-295
+-- Lines 32-301
 function MissionEndState:at_enter(old_state, params)
 	managers.environment_effects:stop_all()
 
@@ -196,6 +196,13 @@ function MissionEndState:at_enter(old_state, params)
 	local spending_kills, spendings = managers.money:on_spend_session_moneythrower()
 	self._moneythrower_spending_kills = spending_kills
 	self._moneythrower_spendings = spendings
+
+	if managers.mutators:is_mutator_active(MutatorCG22) then
+		local mutator = managers.mutators:get_mutator(MutatorCG22)
+
+		managers.custom_safehouse:add_coins(mutator:get_coins_collected())
+	end
+
 	self._criminals_completed = self._success and params.num_winners or 0
 
 	managers.statistics:stop_session({
@@ -281,17 +288,17 @@ function MissionEndState:at_enter(old_state, params)
 	Telemetry:on_end_heist(self._type, total_exp_gained, self._moneythrower_spending_kills)
 end
 
--- Lines 297-299
+-- Lines 303-305
 function MissionEndState:is_success()
 	return self._success
 end
 
--- Lines 303-305
+-- Lines 309-311
 function MissionEndState:_get_xp_dissected(success, num_winners, personal_win)
 	return managers.experience:get_xp_dissected(success, num_winners, personal_win)
 end
 
--- Lines 307-346
+-- Lines 313-352
 function MissionEndState:_get_contract_xp(success)
 	local has_active_job = managers.job:has_active_job()
 	local job_and_difficulty_stars = has_active_job and managers.job:current_job_and_difficulty_stars() or 1
@@ -327,14 +334,14 @@ function MissionEndState:_get_contract_xp(success)
 	return contract_xp
 end
 
--- Lines 348-352
+-- Lines 354-358
 function MissionEndState:set_continue_button_text()
 	if self._completion_bonus_done then
 		self:_set_continue_button_text()
 	end
 end
 
--- Lines 354-369
+-- Lines 360-375
 function MissionEndState:_set_continue_button_text()
 	local text_id = "failed_disconnected_continue"
 	local not_clickable = false
@@ -354,13 +361,26 @@ function MissionEndState:_set_continue_button_text()
 	managers.menu_component:set_endscreen_continue_button_text(text, not_clickable)
 end
 
--- Lines 371-388
+-- Lines 377-409
 function MissionEndState:play_finishing_sound(success)
 	if self._server_left then
 		return
 	end
 
 	if not success and managers.groupai:state():bain_state() then
+		if managers.mutators:is_mutator_active(MutatorCG22) then
+			local cg22_mutator = managers.mutators:get_mutator(MutatorCG22)
+			local failure_event = false
+
+			if cg22_mutator.get_failure_event then
+				failure_event = cg22_mutator:get_failure_event()
+			end
+
+			if failure_event then
+				managers.dialog:queue_dialog(failure_event, {})
+			end
+		end
+
 		local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 
 		if level_data and level_data.failure_event then
@@ -371,13 +391,13 @@ function MissionEndState:play_finishing_sound(success)
 	end
 end
 
--- Lines 391-394
+-- Lines 412-415
 function MissionEndState:completion_bonus_done(total_xp_bonus)
 	self._total_xp_bonus = total_xp_bonus
 	self._completion_bonus_done = false
 end
 
--- Lines 396-441
+-- Lines 417-462
 function MissionEndState:at_exit(next_state)
 	managers.briefing:stop_event(true)
 	managers.hud:hide(self.GUI_ENDSCREEN)
@@ -421,7 +441,7 @@ function MissionEndState:at_exit(next_state)
 	managers.menu:close_menu("mission_end_menu")
 end
 
--- Lines 444-449
+-- Lines 465-470
 function MissionEndState:_shut_down_network()
 	Network:set_multiplayer(false)
 	managers.network:queue_stop_network()
@@ -429,7 +449,7 @@ function MissionEndState:_shut_down_network()
 	managers.network.voice_chat:destroy_voice()
 end
 
--- Lines 452-463
+-- Lines 473-484
 function MissionEndState:_load_start_menu(next_state)
 	if next_state:name() == "disconnected" then
 		return
@@ -443,7 +463,7 @@ function MissionEndState:_load_start_menu(next_state)
 	setup:load_start_menu()
 end
 
--- Lines 465-669
+-- Lines 486-694
 function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_score, best_special_kills_peer_id, best_special_kills_score, best_accuracy_peer_id, best_accuracy_score, most_downs_peer_id, most_downs_score, total_kills, total_specials_kills, total_head_shots, group_accuracy, group_downs)
 	print("on_statistics_result begin")
 
@@ -559,6 +579,15 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 			})
 			stage_cash_summary_string = stage_cash_summary_string .. offshore_string .. "\n"
 			stage_cash_summary_string = stage_cash_summary_string .. spending_string .. "\n"
+
+			if managers.mutators:is_mutator_active(MutatorCG22) then
+				local event_string = managers.localization:text("victory_stage_cash_summary_name_event")
+				stage_cash_summary_string = stage_cash_summary_string .. "\n" .. event_string .. "\n"
+				local mutator = managers.mutators:get_mutator(MutatorCG22)
+				stage_cash_summary_string = stage_cash_summary_string .. managers.localization:text("menu_exp_short") .. ":" .. mutator:get_xp_collected() .. " "
+				stage_cash_summary_string = stage_cash_summary_string .. managers.localization:text("short_basics_cash") .. ":" .. mutator:get_money_collected() .. " "
+				stage_cash_summary_string = stage_cash_summary_string .. managers.localization:text("menu_cs_coins") .. ":" .. mutator:get_coins_collected() .. " "
+			end
 		else
 			stage_cash_summary_string = managers.localization:text("failed_summary_name")
 		end
@@ -644,7 +673,7 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 	end
 end
 
--- Lines 672-755
+-- Lines 697-780
 function MissionEndState:generate_safehouse_statistics()
 	if not managers.custom_safehouse:unlocked() then
 		return
@@ -742,7 +771,7 @@ function MissionEndState:generate_safehouse_statistics()
 	self._statistics_data.stage_safehouse_summary = stage_safehouse_summary_string
 end
 
--- Lines 757-763
+-- Lines 782-788
 function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	if self._statistics_feeded then
 		self:generate_safehouse_statistics()
@@ -750,7 +779,7 @@ function MissionEndState:_on_safehouse_trophy_unlocked(trophy_id)
 	end
 end
 
--- Lines 766-793
+-- Lines 791-818
 function MissionEndState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._mission_end_menu
 
@@ -781,12 +810,12 @@ function MissionEndState:_continue_blocked()
 	return false
 end
 
--- Lines 795-797
+-- Lines 820-822
 function MissionEndState:_continue()
 	self:continue()
 end
 
--- Lines 799-815
+-- Lines 824-840
 function MissionEndState:continue()
 	if self:_continue_blocked() then
 		return
@@ -805,7 +834,7 @@ function MissionEndState:continue()
 	end
 end
 
--- Lines 817-825
+-- Lines 842-850
 function MissionEndState:_clear_controller()
 	if not self._controller then
 		return
@@ -817,7 +846,7 @@ function MissionEndState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 827-839
+-- Lines 852-864
 function MissionEndState:debug_continue()
 	if not self._success then
 		return
@@ -835,14 +864,14 @@ function MissionEndState:debug_continue()
 	end
 end
 
--- Lines 841-844
+-- Lines 866-869
 function MissionEndState:set_completion_bonus_done(done)
 	self._completion_bonus_done = done
 
 	self:_set_continue_button_text()
 end
 
--- Lines 846-910
+-- Lines 871-935
 function MissionEndState:update(t, dt)
 	managers.hud:update_endscreen_hud(t, dt)
 
@@ -906,27 +935,27 @@ function MissionEndState:update(t, dt)
 	self._in_focus = in_focus
 end
 
--- Lines 912-914
+-- Lines 937-939
 function MissionEndState:game_ended()
 	return true
 end
 
--- Lines 916-918
+-- Lines 941-943
 function MissionEndState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 920-922
+-- Lines 945-947
 function MissionEndState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 924-926
+-- Lines 949-951
 function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines 929-1699
+-- Lines 954-1724
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()

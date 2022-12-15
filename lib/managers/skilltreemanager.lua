@@ -143,6 +143,7 @@ function SkillTreeManager:_setup_specialization()
 
 	for tree, data in ipairs(tweak_data.skilltree.specializations or {}) do
 		self._global.specializations[tree] = {
+			favorite = false,
 			points_spent = self:digest_value(0, true),
 			tiers = {
 				current_tier = self:digest_value(0, true),
@@ -151,7 +152,8 @@ function SkillTreeManager:_setup_specialization()
 					current_points = self:digest_value(0, true),
 					points = self:digest_value(data[1].cost, true)
 				}
-			}
+			},
+			choices = {}
 		}
 
 		for _, tier in ipairs(data) do
@@ -1198,8 +1200,19 @@ function SkillTreeManager:reset_specializations()
 				for _, upgrade in ipairs(specialization_tweak[i].upgrades) do
 					managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[3] .. tostring(current_specialization))
 				end
+
+				local multi_choice = specialization_tweak[i].multi_choice
+				local choice_index = tree_data.choices[i] and self:digest_value(tree_data.choices[i], false)
+
+				if multi_choice and choice_index and multi_choice[choice_index] then
+					for _, upgrade in ipairs(multi_choice[choice_index].upgrades) do
+						managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(current_specialization))
+					end
+				end
 			end
 		end
+
+		tree_data.choices = {}
 	end
 
 	local max_points = self:digest_value(self._global.specializations.max_points, false)
@@ -1239,7 +1252,7 @@ function SkillTreeManager:reset_skilltrees()
 	MenuCallbackHandler:_update_outfit_information()
 end
 
--- Lines 1108-1178
+-- Lines 1108-1175
 function SkillTreeManager:infamy_reset()
 	local skill_switches = nil
 
@@ -1287,6 +1300,15 @@ function SkillTreeManager:infamy_reset()
 		for _, upgrade in ipairs(specialization_tweak[i].upgrades) do
 			managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[3] .. tostring(current_specialization))
 		end
+
+		local multi_choice = specialization_tweak[i].multi_choice
+		local choice_index = tree_data.choices[i] and self:digest_value(tree_data.choices[i], false)
+
+		if multi_choice and choice_index and multi_choice[choice_index] then
+			for _, upgrade in ipairs(multi_choice[choice_index].upgrades) do
+				managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(current_specialization))
+			end
+		end
 	end
 
 	if SystemInfo:distribution() == Idstring("STEAM") then
@@ -1294,7 +1316,7 @@ function SkillTreeManager:infamy_reset()
 	end
 end
 
--- Lines 1180-1188
+-- Lines 1177-1185
 function SkillTreeManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
 
@@ -1307,7 +1329,7 @@ function SkillTreeManager:check_reset_message()
 	end
 end
 
--- Lines 1191-1205
+-- Lines 1188-1202
 function SkillTreeManager:get_tree_progress_2(tree_name)
 	local switch_data = self._global.skill_switches[self:get_selected_skill_switch()]
 	local num_skills = 0
@@ -1325,7 +1347,7 @@ function SkillTreeManager:get_tree_progress_2(tree_name)
 	return skill_points, skill_points
 end
 
--- Lines 1207-1237
+-- Lines 1204-1234
 function SkillTreeManager:get_tree_progress_new(tree, switch_data)
 	if type(tree) ~= "number" then
 		local string_to_number = {
@@ -1358,7 +1380,7 @@ function SkillTreeManager:get_tree_progress_new(tree, switch_data)
 	return self:points_spent(tree, switch_data), owned, aced
 end
 
--- Lines 1239-1248
+-- Lines 1236-1245
 function SkillTreeManager:get_page_progress_new(page)
 	local points = 0
 
@@ -1371,7 +1393,7 @@ function SkillTreeManager:get_page_progress_new(page)
 	return points
 end
 
--- Lines 1251-1281
+-- Lines 1248-1278
 function SkillTreeManager:get_tree_progress(tree, switch_data)
 	if type(tree) ~= "number" then
 		local string_to_number = {
@@ -1404,7 +1426,7 @@ function SkillTreeManager:get_tree_progress(tree, switch_data)
 	return progress, num_skills
 end
 
--- Lines 1283-1296
+-- Lines 1280-1293
 function SkillTreeManager:get_most_progressed_tree()
 	local max_tree = 1
 	local max_points = 0
@@ -1421,7 +1443,7 @@ function SkillTreeManager:get_most_progressed_tree()
 	return max_tree
 end
 
--- Lines 1299-1322
+-- Lines 1296-1319
 function SkillTreeManager:pack_to_string()
 	local packed_string = ""
 
@@ -1449,7 +1471,7 @@ function SkillTreeManager:pack_to_string()
 	return packed_string
 end
 
--- Lines 1324-1340
+-- Lines 1321-1337
 function SkillTreeManager:pack_to_string_from_list(list)
 	local packed_string = ""
 
@@ -1468,7 +1490,7 @@ function SkillTreeManager:pack_to_string_from_list(list)
 	return packed_string
 end
 
--- Lines 1344-1347
+-- Lines 1341-1344
 function SkillTreeManager:unpack_from_string(packed_string)
 	local t = string.split(packed_string or "", "-") or {}
 
@@ -1478,7 +1500,7 @@ function SkillTreeManager:unpack_from_string(packed_string)
 	}
 end
 
--- Lines 1351-1368
+-- Lines 1348-1365
 function SkillTreeManager:save(data)
 	local state = {
 		points = self._global.points,
@@ -1494,7 +1516,7 @@ function SkillTreeManager:save(data)
 	data.SkillTreeManager = state
 end
 
--- Lines 1370-1444
+-- Lines 1367-1441
 function SkillTreeManager:load(data, version)
 	local state = data.SkillTreeManager
 	local points_aquired_during_load = self:points()
@@ -1511,6 +1533,8 @@ function SkillTreeManager:load(data, version)
 			for tree, data in ipairs(state.specializations) do
 				if self._global.specializations[tree] then
 					self._global.specializations[tree].points_spent = data.points_spent or self._global.specializations[tree].points_spent
+					self._global.specializations[tree].favorite = data.favorite or self._global.specializations[tree].favorite
+					self._global.specializations[tree].choices = data.choices or self._global.specializations[tree].choices
 				end
 			end
 		end
@@ -1564,7 +1588,7 @@ function SkillTreeManager:load(data, version)
 	end
 end
 
--- Lines 1447-1642
+-- Lines 1444-1644
 function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 	local level_points = managers.experience:current_level()
 	local assumed_points = level_points + points_aquired_during_load
@@ -1665,10 +1689,28 @@ function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 			for tier, spec_data in ipairs(specialization_tweak[tree]) do
 				if spec_data.cost <= points_left then
 					points_left = points_left - spec_data.cost
+					local multi_choice = spec_data.multi_choice
+					local choice_index = data.choices[tier] and self:digest_value(data.choices[tier], false)
+
+					if not multi_choice or not choice_index or not multi_choice[choice_index] then
+						if multi_choice and multi_choice[1] then
+							data.choices[tier] = self:digest_value(1, true)
+							choice_index = 1
+						else
+							data.choices[tier] = nil
+							choice_index = nil
+						end
+					end
 
 					if tree == current_specialization then
 						for _, upgrade in ipairs(spec_data.upgrades) do
 							managers.upgrades:aquire(upgrade, true, UpgradesManager.AQUIRE_STRINGS[3] .. tostring(current_specialization))
+						end
+
+						if multi_choice and choice_index then
+							for _, upgrade in ipairs(multi_choice[choice_index].upgrades) do
+								managers.upgrades:aquire(upgrade, true, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(current_specialization))
+							end
 						end
 					end
 
@@ -1714,7 +1756,7 @@ function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 	end
 end
 
--- Lines 1644-1668
+-- Lines 1646-1670
 function SkillTreeManager:digest_value(value, digest, default)
 	if value == nil then
 		return default or 0
@@ -1739,7 +1781,7 @@ function SkillTreeManager:digest_value(value, digest, default)
 	return Application:digest_value(value, digest)
 end
 
--- Lines 1670-1682
+-- Lines 1672-1684
 function SkillTreeManager:get_specialization_value(...)
 	local value = self._global.specializations
 
@@ -1756,7 +1798,7 @@ function SkillTreeManager:get_specialization_value(...)
 	return self:digest_value(value, false) or 0
 end
 
--- Lines 1684-1690
+-- Lines 1686-1692
 function SkillTreeManager:current_specialization_tier()
 	local idx = self:digest_value(self._global.specializations.current_specialization, false)
 	local current = idx and self._global.specializations[idx]
@@ -1768,12 +1810,12 @@ function SkillTreeManager:current_specialization_tier()
 	return self:digest_value(current.tiers.current_tier)
 end
 
--- Lines 1692-1694
+-- Lines 1694-1696
 function SkillTreeManager:specialization_points()
 	return self._global.specializations.points and self:digest_value(self._global.specializations.points, false) or 0
 end
 
--- Lines 1696-1702
+-- Lines 1698-1704
 function SkillTreeManager:debug_specialization()
 	for i, d in pairs(self._global.specializations) do
 		if type(d) == "string" then
@@ -1782,7 +1824,7 @@ function SkillTreeManager:debug_specialization()
 	end
 end
 
--- Lines 1704-1716
+-- Lines 1706-1718
 function SkillTreeManager:get_specialization_present()
 	local points_present = self:digest_value(self._global.specializations.points_present, false)
 	local xp_present = self:digest_value(self._global.specializations.xp_present, false)
@@ -1798,7 +1840,7 @@ function SkillTreeManager:get_specialization_present()
 	return false, false
 end
 
--- Lines 1718-1755
+-- Lines 1720-1757
 function SkillTreeManager:give_specialization_points(xp)
 	local total_points = self:digest_value(self._global.specializations.total_points, false)
 	local max_points = self:digest_value(self._global.specializations.max_points, false)
@@ -1829,7 +1871,7 @@ function SkillTreeManager:give_specialization_points(xp)
 	self._global.specializations.xp_present = self:digest_value(xp_present, true)
 end
 
--- Lines 1757-1791
+-- Lines 1759-1793
 function SkillTreeManager:refund_specialization_points(points_to_refund, tree)
 	points_to_refund = math.round(points_to_refund)
 	local tree_data = self._global.specializations[tree]
@@ -1864,7 +1906,7 @@ function SkillTreeManager:refund_specialization_points(points_to_refund, tree)
 	self._global.specializations.points = self:digest_value(points + points_to_refund, true)
 end
 
--- Lines 1793-1863
+-- Lines 1795-1865
 function SkillTreeManager:spend_specialization_points(points_to_spend, tree)
 	points_to_spend = math.round(points_to_spend)
 
@@ -1939,7 +1981,7 @@ function SkillTreeManager:spend_specialization_points(points_to_spend, tree)
 	self._global.specializations.points = self:digest_value(self:digest_value(self._global.specializations.points, false) - points_spent, true)
 end
 
--- Lines 1865-1926
+-- Lines 1867-1944
 function SkillTreeManager:_increase_specialization_tier(tree)
 	local tree_data = self._global.specializations[tree]
 
@@ -1977,6 +2019,31 @@ function SkillTreeManager:_increase_specialization_tier(tree)
 		for _, upgrade in ipairs(spec_data.upgrades) do
 			managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[3] .. tostring(tree))
 		end
+
+		local multi_choice = spec_data.multi_choice
+		local choice_index = tree_data.choices[current_tier] and self:digest_value(tree_data.choices[current_tier], false)
+
+		if multi_choice and not multi_choice[choice_index] and multi_choice[1] then
+			choice_index = 1
+			tree_data.choices[current_tier] = self:digest_value(1, true)
+		end
+
+		if multi_choice and choice_index and multi_choice[choice_index] then
+			for _, upgrade in ipairs(multi_choice[choice_index].upgrades) do
+				managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(tree))
+			end
+		end
+	else
+		local spec_data = specialization_tweak[current_tier]
+
+		if spec_data then
+			local multi_choice = spec_data.multi_choice
+			local choice_index = tree_data.choices[current_tier] and self:digest_value(tree_data.choices[current_tier], false)
+
+			if multi_choice and not multi_choice[choice_index] and multi_choice[1] then
+				tree_data.choices[current_tier] = self:digest_value(1, true)
+			end
+		end
 	end
 
 	tier_data.current_tier = self:digest_value(current_tier, true)
@@ -1997,7 +2064,7 @@ function SkillTreeManager:_increase_specialization_tier(tree)
 	return true
 end
 
--- Lines 1928-2008
+-- Lines 1946-2026
 function SkillTreeManager:set_current_specialization(tree)
 	local current_specialization = self:digest_value(self._global.specializations.current_specialization, false, 1)
 
@@ -2024,6 +2091,15 @@ function SkillTreeManager:set_current_specialization(tree)
 				for _, upgrade in ipairs(specialization_tweak[i].upgrades) do
 					managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[3] .. tostring(current_specialization))
 				end
+
+				local multi_choice = specialization_tweak[i].multi_choice
+				local choice_index = tree_data.choices[i] and self:digest_value(tree_data.choices[i], false)
+
+				if multi_choice and choice_index and multi_choice[choice_index] then
+					for _, upgrade in ipairs(multi_choice[choice_index].upgrades) do
+						managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(current_specialization))
+					end
+				end
 			end
 		end
 	end
@@ -2048,6 +2124,15 @@ function SkillTreeManager:set_current_specialization(tree)
 		for _, upgrade in ipairs(specialization_tweak[i].upgrades) do
 			managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[3] .. tostring(tree))
 		end
+
+		local multi_choice = specialization_tweak[i].multi_choice
+		local choice_index = tree_data.choices[i] and self:digest_value(tree_data.choices[i], false)
+
+		if multi_choice and choice_index and multi_choice[choice_index] then
+			for _, upgrade in ipairs(multi_choice[choice_index].upgrades) do
+				managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(tree))
+			end
+		end
 	end
 
 	if self._global.skill_switches[self._global.selected_skill_switch] then
@@ -2064,7 +2149,60 @@ function SkillTreeManager:set_current_specialization(tree)
 	return true
 end
 
--- Lines 2063-2076
+-- Lines 2029-2031
+function SkillTreeManager:set_specialization_favorite(tree, state)
+	self._global.specializations[tree].favorite = state
+end
+
+-- Lines 2033-2035
+function SkillTreeManager:get_specialization_favorite(tree)
+	return self._global.specializations[tree].favorite
+end
+
+-- Lines 2039-2079
+function SkillTreeManager:set_specialization_choice(tree, tier, new_choice_index)
+	local tree_data = self._global.specializations[tree]
+
+	if not tree_data then
+		return
+	end
+
+	local tiers_data = tree_data.tiers
+
+	if not tiers_data then
+		return
+	end
+
+	local tweak_multi_choice = tweak_data:get_raw_value("skilltree", "specializations", tree, tier, "multi_choice") or {}
+	local current_choice_index = tree_data.choices[tier] and self:digest_value(tree_data.choices[tier], false)
+	local current_tier = self:digest_value(tiers_data.current_tier, false)
+
+	if tier <= current_tier then
+		tree_data.choices[tier] = new_choice_index and tweak_multi_choice[new_choice_index] and self:digest_value(new_choice_index, true) or tweak_multi_choice and tweak_multi_choice[1] and self:digest_value(1, true) or nil
+		new_choice_index = tree_data.choices[tier] and self:digest_value(tree_data.choices[tier], false) or nil
+	else
+		tree_data.choices[tier] = nil
+		new_choice_index = nil
+	end
+
+	local current_specialization = self:digest_value(self._global.specializations.current_specialization, false, 0)
+
+	if current_specialization == tree then
+		if current_choice_index and tweak_multi_choice[current_choice_index] then
+			for _, upgrade in ipairs(tweak_multi_choice[current_choice_index].upgrades) do
+				managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(current_specialization))
+			end
+		end
+
+		if new_choice_index and tweak_multi_choice[new_choice_index] then
+			for _, upgrade in ipairs(tweak_multi_choice[new_choice_index].upgrades) do
+				managers.upgrades:aquire(upgrade, false, UpgradesManager.AQUIRE_STRINGS[7] .. tostring(current_specialization))
+			end
+		end
+	end
+end
+
+-- Lines 2082-2095
 function SkillTreeManager:debug_print_specialization_data(data, times)
 	data = data or self._global.specializations
 	times = times or 0
@@ -2080,7 +2218,7 @@ function SkillTreeManager:debug_print_specialization_data(data, times)
 	end
 end
 
--- Lines 2079-2150
+-- Lines 2098-2169
 function SkillTreeManager:debug()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -2093,7 +2231,7 @@ function SkillTreeManager:debug()
 
 	local j = 1
 
-	-- Lines 2087-2134
+	-- Lines 2106-2153
 	local function add_func(skill_id)
 		local skill = tweak_data.skilltree.skills[skill_id]
 		local skill_data = self._global.skills[skill_id]
@@ -2162,7 +2300,7 @@ function SkillTreeManager:debug()
 	end
 end
 
--- Lines 2154-2161
+-- Lines 2173-2180
 function SkillTreeManager:reset()
 	Global.skilltree_manager = nil
 
@@ -2173,7 +2311,7 @@ function SkillTreeManager:reset()
 	end
 end
 
--- Lines 2165-2172
+-- Lines 2184-2191
 function SkillTreeManager:max_points_for_current_level()
 	local rep_upgrade_points = 0
 
@@ -2184,12 +2322,12 @@ function SkillTreeManager:max_points_for_current_level()
 	return managers.experience:current_level() + rep_upgrade_points
 end
 
--- Lines 2174-2176
+-- Lines 2193-2195
 function SkillTreeManager:is_skill_switch_suspended(switch_data)
 	return self:max_points_for_current_level() < self:total_points_spent(switch_data)
 end
 
--- Lines 2178-2192
+-- Lines 2197-2211
 function SkillTreeManager:unsuspend_skill_switch(switch_data)
 	if self._global.skill_switches[switch_data] == self._global.selected_skill_switch then
 		return

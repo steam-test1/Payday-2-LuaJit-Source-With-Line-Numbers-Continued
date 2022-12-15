@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-1120
+-- Lines 78-1123
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -152,8 +152,9 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		gentleman = "heist_default",
 		cargocasual = "heist_default",
 		newhorizon = "darkmat",
-		leatherfluff = "heist_default",
+		elfsuit = "heist_default",
 		puffervest = "heist_default",
+		leatherfluff = "heist_default",
 		mocow = "ranchdiesel",
 		classyske = "heist_default",
 		tux = "heist_default",

@@ -28,7 +28,7 @@ function EnvEffectTweakData:init()
 	}
 end
 
--- Lines 35-54
+-- Lines 35-55
 function EnvEffectTweakData:molotov_fire()
 	local params = {
 		sound_event = "molotov_impact",
@@ -36,13 +36,14 @@ function EnvEffectTweakData:molotov_fire()
 		curve_pow = 3,
 		damage = 1,
 		fire_alert_radius = 1500,
+		sound_event_burning_stop = "burn_loop_gen_stop_fade",
 		alert_radius = 1500,
-		sound_event_burning = "burn_loop_gen",
-		is_molotov = true,
+		sound_event_burning = "no_sound",
 		player_damage = 2,
-		sound_event_impact_duration = 4,
+		sound_event_impact_duration = 0,
 		burn_tick_period = 0.5,
 		burn_duration = 15,
+		is_molotov = true,
 		effect_name = "effects/payday2/particles/explosions/molotov_grenade",
 		fire_dot_data = {
 			dot_trigger_chance = 35,
@@ -56,7 +57,7 @@ function EnvEffectTweakData:molotov_fire()
 	return params
 end
 
--- Lines 56-74
+-- Lines 57-76
 function EnvEffectTweakData:trip_mine_fire()
 	local params = {
 		sound_event = "molotov_impact",
@@ -64,10 +65,11 @@ function EnvEffectTweakData:trip_mine_fire()
 		curve_pow = 3,
 		damage = 1,
 		fire_alert_radius = 15000,
+		sound_event_burning_stop = "burn_loop_gen_stop_fade",
 		alert_radius = 15000,
-		sound_event_burning = "burn_loop_gen",
+		sound_event_burning = "no_sound",
 		player_damage = 2,
-		sound_event_impact_duration = 4,
+		sound_event_impact_duration = 0,
 		burn_tick_period = 0.5,
 		burn_duration = 10,
 		effect_name = "effects/payday2/particles/explosions/molotov_grenade",
@@ -83,7 +85,7 @@ function EnvEffectTweakData:trip_mine_fire()
 	return params
 end
 
--- Lines 76-94
+-- Lines 78-97
 function EnvEffectTweakData:incendiary_fire()
 	local params = {
 		sound_event = "gl_explode",
@@ -91,6 +93,7 @@ function EnvEffectTweakData:incendiary_fire()
 		curve_pow = 3,
 		damage = 1,
 		fire_alert_radius = 1500,
+		sound_event_burning_stop = "burn_loop_gen_stop_fade",
 		alert_radius = 1500,
 		sound_event_burning = "burn_loop_gen",
 		player_damage = 2,
@@ -110,7 +113,7 @@ function EnvEffectTweakData:incendiary_fire()
 	return params
 end
 
--- Lines 96-114
+-- Lines 99-118
 function EnvEffectTweakData:incendiary_fire_arbiter()
 	local params = {
 		sound_event = "gl_explode",
@@ -118,6 +121,7 @@ function EnvEffectTweakData:incendiary_fire_arbiter()
 		curve_pow = 3,
 		damage = 1,
 		fire_alert_radius = 1500,
+		sound_event_burning_stop = "burn_loop_gen_stop_fade",
 		alert_radius = 1500,
 		sound_event_burning = "burn_loop_gen",
 		player_damage = 2,
@@ -137,7 +141,7 @@ function EnvEffectTweakData:incendiary_fire_arbiter()
 	return params
 end
 
--- Lines 117-137
+-- Lines 121-142
 function EnvEffectTweakData:triad_boss_aoe_fire()
 	local params = {
 		sound_event = "PENT_Boss_Molotov_Drop",
@@ -145,9 +149,10 @@ function EnvEffectTweakData:triad_boss_aoe_fire()
 		curve_pow = 1,
 		no_fire_alert = true,
 		sound_event_burning = "no_sound",
+		sound_event_burning_stop = "burn_loop_gen_stop_fade",
 		damage = 4,
 		player_damage = 4,
-		sound_event_impact_duration = 1.5,
+		sound_event_impact_duration = 0,
 		burn_tick_period = 0.2,
 		burn_duration = 1,
 		effect_name = "effects/payday2/particles/explosions/molotov_grenade_pent_boss",
@@ -158,6 +163,26 @@ function EnvEffectTweakData:triad_boss_aoe_fire()
 			dot_trigger_max_distance = 3000,
 			dot_tick_period = 0.5
 		}
+	}
+
+	return params
+end
+
+-- Lines 167-188
+function EnvEffectTweakData:snowman_boss_aoe_fire()
+	local params = {
+		sound_event = "snowmolo_impact",
+		range = 100,
+		curve_pow = 1,
+		no_fire_alert = true,
+		sound_event_burning = "no_sound",
+		sound_event_burning_stop = "snowmolo_burn_loop_stop",
+		damage = 1.3,
+		player_damage = 1.3,
+		sound_event_impact_duration = 0,
+		burn_tick_period = 0.2,
+		burn_duration = 1,
+		effect_name = "effects/payday2/particles/character/snowman_molotov"
 	}
 
 	return params

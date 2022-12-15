@@ -15,6 +15,7 @@ WeaponFiremodeGui.COLORS = {
 	light_orange = Color(0.8, 0.6, 0.4),
 	purple = Color(0.8, 0, 0.8)
 }
+WeaponFiremodeGui._EXTENSION_NAME = "digital_gui"
 local mvector_tl = Vector3()
 local mvector_tr = Vector3()
 local mvector_bl = Vector3()
@@ -54,7 +55,7 @@ function WeaponFiremodeGui:init(unit)
 
 	self:add_workspace(self._unit:get_object(Idstring(self._gui_object)))
 	self:setup()
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), false)
 end
 
 -- Lines 74-77
@@ -219,7 +220,7 @@ function WeaponFiremodeGui:set_firemode(firemode)
 		end
 	end
 
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), false)
 end
 
 -- Lines 199-215
@@ -263,7 +264,7 @@ function WeaponFiremodeGui:start_volley_charge(charge_max_t)
 	self._volley_data.charge_start_t = managers.player:player_timer():time()
 	self._volley_data.charge_max_t = charge_max_t
 
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), true)
 end
 
 -- Lines 239-248
@@ -272,7 +273,7 @@ function WeaponFiremodeGui:stop_volley_charge()
 		bar_obj:hide()
 	end
 
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), false)
 end
 
 -- Lines 250-257
@@ -301,3 +302,6 @@ function WeaponFiremodeGui:destroy()
 		self._new_gui = nil
 	end
 end
+
+WeaponFiremodeGuiUpper = WeaponFiremodeGuiUpper or class(WeaponFiremodeGui)
+WeaponFiremodeGuiUpper._EXTENSION_NAME = "digital_gui_upper"

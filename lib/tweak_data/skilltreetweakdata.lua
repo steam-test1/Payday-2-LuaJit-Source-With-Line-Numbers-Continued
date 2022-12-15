@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines 3-1877
+-- Lines 3-2383
 function SkillTreeTweakData:init()
 	-- Lines 10-10
 	local function digest(value)
@@ -3166,6 +3166,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 200,
 				desc_id = "menu_deck1_1_desc",
+				short_id = "menu_deck1_1_short",
 				name_id = "menu_deck1_1",
 				upgrades = {
 					"team_damage_reduction_1",
@@ -3180,6 +3181,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck1_3_desc",
+				short_id = "menu_deck1_3_short",
 				name_id = "menu_deck1_3",
 				upgrades = {
 					"team_passive_stamina_multiplier_1",
@@ -3195,6 +3197,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck1_5_desc",
+				short_id = "menu_deck1_5_short",
 				name_id = "menu_deck1_5",
 				upgrades = {
 					"team_passive_health_multiplier",
@@ -3209,6 +3212,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck1_7_desc",
+				short_id = "menu_deck1_7_short",
 				name_id = "menu_deck1_7",
 				upgrades = {
 					"player_tier_armor_multiplier_1",
@@ -3223,6 +3227,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck1_9_desc",
+				short_id = "menu_deck1_9_short",
 				name_id = "menu_deck1_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3235,13 +3240,15 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_1",
 			desc_id = "menu_st_spec_1_desc",
-			name_id = "menu_st_spec_1"
+			category = "supportive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck2_1_desc",
+				short_id = "menu_deck2_1_short",
 				name_id = "menu_deck2_1",
 				upgrades = {
 					"player_passive_health_multiplier_1"
@@ -3255,6 +3262,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck2_3_desc",
+				short_id = "menu_deck2_3_short",
 				name_id = "menu_deck2_3",
 				upgrades = {
 					"player_passive_health_multiplier_2",
@@ -3269,6 +3277,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck2_5_desc",
+				short_id = "menu_deck2_5_short",
 				name_id = "menu_deck2_5",
 				upgrades = {
 					"player_passive_health_multiplier_3"
@@ -3282,6 +3291,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck2_7_desc",
+				short_id = "menu_deck2_7_short",
 				name_id = "menu_deck2_7",
 				upgrades = {
 					"player_panic_suppression"
@@ -3295,6 +3305,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck2_9_desc",
+				short_id = "menu_deck2_9_short",
 				name_id = "menu_deck2_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3307,13 +3318,15 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_2",
 			desc_id = "menu_st_spec_2_desc",
-			name_id = "menu_st_spec_2"
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck3_1_desc",
+				short_id = "menu_deck3_1_short",
 				name_id = "menu_deck3_1",
 				upgrades = {
 					"player_tier_armor_multiplier_1",
@@ -3328,6 +3341,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck3_3_desc",
+				short_id = "menu_deck3_3_short",
 				name_id = "menu_deck3_3",
 				upgrades = {
 					"player_tier_armor_multiplier_3"
@@ -3341,6 +3355,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck3_5_desc",
+				short_id = "menu_deck3_5_short",
 				name_id = "menu_deck3_5",
 				upgrades = {
 					"player_tier_armor_multiplier_4"
@@ -3354,6 +3369,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck3_7_desc",
+				short_id = "menu_deck3_7_short",
 				name_id = "menu_deck3_7",
 				upgrades = {
 					"player_armor_regen_timer_multiplier_passive",
@@ -3368,6 +3384,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck3_9_desc",
+				short_id = "menu_deck3_9_short",
 				name_id = "menu_deck3_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3380,13 +3397,15 @@ function SkillTreeTweakData:init()
 					2
 				}
 			},
+			name_id = "menu_st_spec_3",
 			desc_id = "menu_st_spec_3_desc",
-			name_id = "menu_st_spec_3"
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck4_1_desc",
+				short_id = "menu_deck4_1_short",
 				name_id = "menu_deck4_1",
 				upgrades = {
 					"player_passive_dodge_chance_1"
@@ -3400,6 +3419,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck4_3_desc",
+				short_id = "menu_deck4_3_short",
 				name_id = "menu_deck4_3",
 				upgrades = {
 					"player_camouflage_multiplier"
@@ -3413,6 +3433,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck4_5_desc",
+				short_id = "menu_deck4_5_short",
 				name_id = "menu_deck4_5",
 				upgrades = {
 					"player_passive_dodge_chance_2"
@@ -3426,6 +3447,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck4_7_desc",
+				short_id = "menu_deck4_7_short",
 				name_id = "menu_deck4_7",
 				upgrades = {
 					"player_passive_dodge_chance_3"
@@ -3439,6 +3461,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck4_9_desc",
+				short_id = "menu_deck4_9_short",
 				name_id = "menu_deck4_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3450,13 +3473,15 @@ function SkillTreeTweakData:init()
 					2
 				}
 			},
+			name_id = "menu_st_spec_4",
 			desc_id = "menu_st_spec_4_desc",
-			name_id = "menu_st_spec_4"
+			category = "covert"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck5_1_desc",
+				short_id = "menu_deck5_1_short",
 				name_id = "menu_deck5_1",
 				upgrades = {
 					"player_perk_armor_regen_timer_multiplier_1"
@@ -3470,6 +3495,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck5_3_desc",
+				short_id = "menu_deck5_3_short",
 				name_id = "menu_deck5_3",
 				upgrades = {
 					"player_perk_armor_regen_timer_multiplier_2",
@@ -3485,6 +3511,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck5_5_desc",
+				short_id = "menu_deck5_5_short",
 				name_id = "menu_deck5_5",
 				upgrades = {
 					"player_perk_armor_regen_timer_multiplier_3"
@@ -3498,6 +3525,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck5_7_desc",
+				short_id = "menu_deck5_7_short",
 				name_id = "menu_deck5_7",
 				upgrades = {
 					"player_perk_armor_regen_timer_multiplier_4"
@@ -3511,6 +3539,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck5_9_desc",
+				short_id = "menu_deck5_9_short",
 				name_id = "menu_deck5_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3522,13 +3551,15 @@ function SkillTreeTweakData:init()
 					3
 				}
 			},
+			name_id = "menu_st_spec_5",
 			desc_id = "menu_st_spec_5_desc",
-			name_id = "menu_st_spec_5"
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck6_1_desc",
+				short_id = "menu_deck6_1_short",
 				name_id = "menu_deck6_1",
 				upgrades = {
 					"player_passive_dodge_chance_1"
@@ -3542,6 +3573,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck6_3_desc",
+				short_id = "menu_deck6_3_short",
 				name_id = "menu_deck6_3",
 				upgrades = {
 					"player_level_2_dodge_addend_1",
@@ -3560,6 +3592,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck6_5_desc",
+				short_id = "menu_deck6_5_short",
 				name_id = "menu_deck6_5",
 				upgrades = {
 					"player_level_2_dodge_addend_2",
@@ -3578,6 +3611,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck6_7_desc",
+				short_id = "menu_deck6_7_short",
 				name_id = "menu_deck6_7",
 				upgrades = {
 					"player_level_2_dodge_addend_3",
@@ -3596,6 +3630,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck6_9_desc",
+				short_id = "menu_deck6_9_short",
 				name_id = "menu_deck6_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3606,13 +3641,15 @@ function SkillTreeTweakData:init()
 					2
 				}
 			},
+			name_id = "menu_st_spec_6",
 			desc_id = "menu_st_spec_6_desc",
-			name_id = "menu_st_spec_6"
+			category = "covert"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck7_1_desc",
+				short_id = "menu_deck7_1_short",
 				name_id = "menu_deck7_1",
 				upgrades = {
 					"player_tier_dodge_chance_1"
@@ -3626,6 +3663,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck7_3_desc",
+				short_id = "menu_deck7_3_short",
 				name_id = "menu_deck7_3",
 				upgrades = {
 					"player_stand_still_crouch_camouflage_bonus_1",
@@ -3640,6 +3678,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck7_5_desc",
+				short_id = "menu_deck7_5_short",
 				name_id = "menu_deck7_5",
 				upgrades = {
 					"player_tier_dodge_chance_2",
@@ -3655,6 +3694,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck7_7_desc",
+				short_id = "menu_deck7_7_short",
 				name_id = "menu_deck7_7",
 				upgrades = {
 					"player_tier_dodge_chance_3",
@@ -3670,6 +3710,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck7_9_desc",
+				short_id = "menu_deck7_9_short",
 				name_id = "menu_deck7_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3683,12 +3724,17 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_7",
 			dlc = "character_pack_clover",
-			desc_id = "menu_st_spec_7_desc"
+			desc_id = "menu_st_spec_7_desc",
+			category = {
+				"covert",
+				"stealth"
+			}
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck8_7_desc",
+				short_id = "menu_deck8_7_short",
 				name_id = "menu_deck8_7",
 				upgrades = {
 					"player_damage_dampener_outnumbered_strong",
@@ -3703,6 +3749,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck8_1_desc",
+				short_id = "menu_deck8_1_short",
 				name_id = "menu_deck8_1",
 				upgrades = {
 					"player_damage_dampener_close_contact_1"
@@ -3716,6 +3763,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck8_5_desc",
+				short_id = "menu_deck8_5_short",
 				name_id = "menu_deck8_3",
 				upgrades = {
 					"player_damage_dampener_close_contact_2",
@@ -3731,6 +3779,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck8_3_desc",
+				short_id = "menu_deck8_3_short",
 				name_id = "menu_deck8_5",
 				upgrades = {
 					"player_damage_dampener_close_contact_3"
@@ -3744,6 +3793,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck8_9_desc",
+				short_id = "menu_deck8_9_short",
 				name_id = "menu_deck8_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3756,12 +3806,14 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_8",
 			dlc = "character_pack_dragan",
-			desc_id = "menu_st_spec_8_desc"
+			desc_id = "menu_st_spec_8_desc",
+			category = "defensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck9_1_desc",
+				short_id = "menu_deck9_1_short",
 				name_id = "menu_deck9_1",
 				upgrades = {
 					"player_damage_dampener_outnumbered_strong",
@@ -3776,6 +3828,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck9_3_desc",
+				short_id = "menu_deck9_3_short",
 				name_id = "menu_deck9_3",
 				upgrades = {
 					"player_killshot_regen_armor_bonus",
@@ -3791,6 +3844,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck9_5_desc",
+				short_id = "menu_deck9_5_short",
 				name_id = "menu_deck9_5",
 				upgrades = {
 					"player_melee_kill_life_leech",
@@ -3805,6 +3859,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck9_7_desc",
+				short_id = "menu_deck9_7_short",
 				name_id = "menu_deck9_7",
 				upgrades = {
 					"player_killshot_close_regen_armor_bonus",
@@ -3819,6 +3874,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck9_9_desc",
+				short_id = "menu_deck9_9_short",
 				name_id = "menu_deck9_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3831,12 +3887,14 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_9",
 			dlc = "hlm2_deluxe",
-			desc_id = "menu_st_spec_9_desc"
+			desc_id = "menu_st_spec_9_desc",
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck10_1_desc",
+				short_id = "menu_deck10_1_short",
 				name_id = "menu_deck10_1",
 				upgrades = {
 					"temporary_loose_ammo_restore_health_1",
@@ -3851,6 +3909,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck10_3_desc",
+				short_id = "menu_deck10_3_short",
 				name_id = "menu_deck10_3",
 				upgrades = {
 					"temporary_loose_ammo_give_team",
@@ -3866,6 +3925,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck10_5_desc",
+				short_id = "menu_deck10_5_short",
 				name_id = "menu_deck10_5",
 				upgrades = {
 					"player_loose_ammo_restore_health_give_team",
@@ -3880,6 +3940,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck10_7_desc",
+				short_id = "menu_deck10_7_short",
 				name_id = "menu_deck10_7",
 				upgrades = {
 					"temporary_loose_ammo_restore_health_2"
@@ -3893,6 +3954,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck10_9_desc",
+				short_id = "menu_deck10_9_short",
 				name_id = "menu_deck10_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3903,13 +3965,15 @@ function SkillTreeTweakData:init()
 					6
 				}
 			},
+			name_id = "menu_st_spec_10",
 			desc_id = "menu_st_spec_10_desc",
-			name_id = "menu_st_spec_10"
+			category = "supportive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck11_1_desc",
+				short_id = "menu_deck11_1_short",
 				name_id = "menu_deck11_1",
 				upgrades = {
 					"player_damage_to_hot_1"
@@ -3923,6 +3987,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck11_3_desc",
+				short_id = "menu_deck11_3_short",
 				name_id = "menu_deck11_3",
 				upgrades = {
 					"player_damage_to_hot_2",
@@ -3938,6 +4003,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck11_5_desc",
+				short_id = "menu_deck11_5_short",
 				name_id = "menu_deck11_5",
 				upgrades = {
 					"player_damage_to_hot_3",
@@ -3952,6 +4018,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck11_7_desc",
+				short_id = "menu_deck11_7_short",
 				name_id = "menu_deck11_7",
 				upgrades = {
 					"player_damage_to_hot_4",
@@ -3966,6 +4033,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck11_9_desc",
+				short_id = "menu_deck11_9_short",
 				name_id = "menu_deck11_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -3979,12 +4047,14 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_11",
 			dlc = "character_pack_sokol",
-			desc_id = "menu_st_spec_11_desc"
+			desc_id = "menu_st_spec_11_desc",
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck12_1_desc",
+				short_id = "menu_deck12_1_short",
 				name_id = "menu_deck12_1",
 				upgrades = {
 					"player_armor_regen_damage_health_ratio_multiplier_1"
@@ -3998,6 +4068,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck12_3_desc",
+				short_id = "menu_deck12_3_short",
 				name_id = "menu_deck12_3",
 				upgrades = {
 					"player_movement_speed_damage_health_ratio_multiplier"
@@ -4011,6 +4082,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck12_5_desc",
+				short_id = "menu_deck12_5_short",
 				name_id = "menu_deck12_5",
 				upgrades = {
 					"player_armor_regen_damage_health_ratio_multiplier_2"
@@ -4024,6 +4096,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck12_7_desc",
+				short_id = "menu_deck12_7_short",
 				name_id = "menu_deck12_7",
 				upgrades = {
 					"player_armor_regen_damage_health_ratio_multiplier_3"
@@ -4037,6 +4110,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck12_9_desc",
+				short_id = "menu_deck12_9_short",
 				name_id = "menu_deck12_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4050,12 +4124,14 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_12",
 			dlc = "dragon",
-			desc_id = "menu_st_spec_12_desc"
+			desc_id = "menu_st_spec_12_desc",
+			category = "defensive"
 		},
 		{
 			{
 				cost = 200,
 				desc_id = "menu_deck13_1_desc",
+				short_id = "menu_deck13_1_short",
 				name_id = "menu_deck13_1",
 				upgrades = {
 					"player_armor_health_store_amount_1"
@@ -4069,6 +4145,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 400,
 				desc_id = "menu_deck13_3_desc",
+				short_id = "menu_deck13_3_short",
 				name_id = "menu_deck13_3",
 				upgrades = {
 					"player_armor_health_store_amount_2",
@@ -4083,6 +4160,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 1000,
 				desc_id = "menu_deck13_5_desc",
+				short_id = "menu_deck13_5_short",
 				name_id = "menu_deck13_5",
 				upgrades = {
 					"player_armor_max_health_store_multiplier",
@@ -4098,6 +4176,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 2400,
 				desc_id = "menu_deck13_7_desc",
+				short_id = "menu_deck13_7_short",
 				name_id = "menu_deck13_7",
 				upgrades = {
 					"player_armor_health_store_amount_3",
@@ -4112,6 +4191,7 @@ function SkillTreeTweakData:init()
 			{
 				cost = 4000,
 				desc_id = "menu_deck13_9_desc",
+				short_id = "menu_deck13_9_short",
 				name_id = "menu_deck13_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4122,14 +4202,16 @@ function SkillTreeTweakData:init()
 					7
 				}
 			},
+			name_id = "menu_st_spec_13",
 			desc_id = "menu_st_spec_13_desc",
-			name_id = "menu_st_spec_13"
+			category = "defensive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "coco",
 				desc_id = "menu_deck14_1_desc",
+				short_id = "menu_deck14_1_short",
 				name_id = "menu_deck14_1",
 				upgrades = {
 					"player_cocaine_stacking_1"
@@ -4144,6 +4226,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "coco",
 				desc_id = "menu_deck14_3_desc",
+				short_id = "menu_deck14_3_short",
 				name_id = "menu_deck14_3",
 				upgrades = {
 					"player_sync_cocaine_stacks"
@@ -4158,6 +4241,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "coco",
 				desc_id = "menu_deck14_5_desc",
+				short_id = "menu_deck14_5_short",
 				name_id = "menu_deck14_5",
 				upgrades = {
 					"player_cocaine_stacks_decay_multiplier_1"
@@ -4172,6 +4256,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "coco",
 				desc_id = "menu_deck14_7_desc",
+				short_id = "menu_deck14_7_short",
 				name_id = "menu_deck14_7",
 				upgrades = {
 					"player_sync_cocaine_upgrade_level_1"
@@ -4186,6 +4271,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "coco",
 				desc_id = "menu_deck14_9_desc",
+				short_id = "menu_deck14_9_short",
 				name_id = "menu_deck14_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4196,14 +4282,16 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_14",
 			desc_id = "menu_st_spec_14_desc",
-			name_id = "menu_st_spec_14"
+			category = "supportive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "opera",
 				desc_id = "menu_deck15_1_desc",
+				short_id = "menu_deck15_1_short",
 				name_id = "menu_deck15_1",
 				upgrades = {
 					"player_armor_grinding_1",
@@ -4219,6 +4307,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "opera",
 				desc_id = "menu_deck15_3_desc",
+				short_id = "menu_deck15_3_short",
 				name_id = "menu_deck15_3",
 				upgrades = {
 					"player_health_decrease_1",
@@ -4234,6 +4323,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "opera",
 				desc_id = "menu_deck15_5_desc",
+				short_id = "menu_deck15_5_short",
 				name_id = "menu_deck15_5",
 				upgrades = {
 					"player_armor_increase_2"
@@ -4248,6 +4338,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "opera",
 				desc_id = "menu_deck15_7_desc",
+				short_id = "menu_deck15_7_short",
 				name_id = "menu_deck15_7",
 				upgrades = {
 					"player_armor_increase_3"
@@ -4262,6 +4353,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "opera",
 				desc_id = "menu_deck15_9_desc",
+				short_id = "menu_deck15_9_short",
 				name_id = "menu_deck15_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4274,13 +4366,15 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_15",
 			dlc = "opera",
-			desc_id = "menu_st_spec_15_desc"
+			desc_id = "menu_st_spec_15_desc",
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "wild",
 				desc_id = "menu_deck16_1_desc",
+				short_id = "menu_deck16_1_short",
 				name_id = "menu_deck16_1",
 				upgrades = {
 					"player_wild_health_amount_1",
@@ -4296,6 +4390,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "wild",
 				desc_id = "menu_deck16_3_desc",
+				short_id = "menu_deck16_3_short",
 				name_id = "menu_deck16_3",
 				upgrades = {
 					"player_less_health_wild_armor_1"
@@ -4310,6 +4405,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "wild",
 				desc_id = "menu_deck16_5_desc",
+				short_id = "menu_deck16_5_short",
 				name_id = "menu_deck16_5",
 				upgrades = {
 					"player_less_health_wild_cooldown_1"
@@ -4324,6 +4420,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "wild",
 				desc_id = "menu_deck16_7_desc",
+				short_id = "menu_deck16_7_short",
 				name_id = "menu_deck16_7",
 				upgrades = {
 					"player_less_armor_wild_health_1"
@@ -4338,6 +4435,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "wild",
 				desc_id = "menu_deck16_9_desc",
+				short_id = "menu_deck16_9_short",
 				name_id = "menu_deck16_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4350,13 +4448,15 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_16",
 			dlc = "wild",
-			desc_id = "menu_st_spec_16_desc"
+			desc_id = "menu_st_spec_16_desc",
+			category = "defensive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "chico",
 				desc_id = "menu_deck17_1_desc",
+				short_id = "menu_deck17_1_short",
 				name_id = "menu_deck17_1",
 				upgrades = {
 					"temporary_chico_injector_1",
@@ -4372,6 +4472,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "chico",
 				desc_id = "menu_deck17_3_desc",
+				short_id = "menu_deck17_3_short",
 				name_id = "menu_deck17_3",
 				upgrades = {
 					"player_passive_health_multiplier_1"
@@ -4386,6 +4487,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "chico",
 				desc_id = "menu_deck17_5_desc",
+				short_id = "menu_deck17_5_short",
 				name_id = "menu_deck17_5",
 				upgrades = {
 					"player_chico_preferred_target",
@@ -4401,6 +4503,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "chico",
 				desc_id = "menu_deck17_7_desc",
+				short_id = "menu_deck17_7_short",
 				name_id = "menu_deck17_7",
 				upgrades = {
 					"player_passive_health_multiplier_3",
@@ -4416,6 +4519,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "chico",
 				desc_id = "menu_deck17_9_desc",
+				short_id = "menu_deck17_9_short",
 				name_id = "menu_deck17_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4429,13 +4533,15 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_17",
 			dlc = "chico",
-			desc_id = "menu_st_spec_17_desc"
+			desc_id = "menu_st_spec_17_desc",
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "max",
 				desc_id = "menu_deck18_1_desc",
+				short_id = "menu_deck18_1_short",
 				name_id = "menu_deck18_1",
 				upgrades = {
 					"smoke_screen_grenade"
@@ -4450,6 +4556,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "max",
 				desc_id = "menu_deck18_3_desc",
+				short_id = "menu_deck18_3_short",
 				name_id = "menu_deck18_3",
 				upgrades = {
 					"player_dodge_shot_gain"
@@ -4464,6 +4571,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "max",
 				desc_id = "menu_deck18_5_desc",
+				short_id = "menu_deck18_5_short",
 				name_id = "menu_deck18_5",
 				upgrades = {
 					"player_passive_dodge_chance_1"
@@ -4478,6 +4586,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "max",
 				desc_id = "menu_deck18_7_desc",
+				short_id = "menu_deck18_7_short",
 				name_id = "menu_deck18_7",
 				upgrades = {
 					"player_dodge_replenish_armor"
@@ -4492,6 +4601,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "max",
 				desc_id = "menu_deck18_9_desc",
+				short_id = "menu_deck18_9_short",
 				name_id = "menu_deck18_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4503,14 +4613,16 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_18",
 			desc_id = "menu_st_spec_18_desc",
-			name_id = "menu_st_spec_18"
+			category = "covert"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "myh",
 				desc_id = "menu_deck19_1_desc",
+				short_id = "menu_deck19_1_short",
 				name_id = "menu_deck19_1",
 				upgrades = {
 					"damage_control",
@@ -4527,6 +4639,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "myh",
 				desc_id = "menu_deck19_3_desc",
+				short_id = "menu_deck19_3_short",
 				name_id = "menu_deck19_3",
 				upgrades = {
 					"player_armor_to_health_conversion"
@@ -4541,6 +4654,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "myh",
 				desc_id = "menu_deck19_5_desc",
+				short_id = "menu_deck19_5_short",
 				name_id = "menu_deck19_5",
 				upgrades = {
 					"player_damage_control_auto_shrug"
@@ -4555,6 +4669,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "myh",
 				desc_id = "menu_deck19_7_desc",
+				short_id = "menu_deck19_7_short",
 				name_id = "menu_deck19_7",
 				upgrades = {
 					"player_damage_control_cooldown_drain_2"
@@ -4569,6 +4684,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "myh",
 				desc_id = "menu_deck19_9_desc",
+				short_id = "menu_deck19_9_short",
 				name_id = "menu_deck19_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4579,14 +4695,16 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_19",
 			desc_id = "menu_st_spec_19_desc",
-			name_id = "menu_st_spec_19"
+			category = "offensive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "ecp",
 				desc_id = "menu_deck20_1_desc",
+				short_id = "menu_deck20_1_short",
 				name_id = "menu_deck20_1",
 				upgrades = {
 					"tag_team",
@@ -4603,6 +4721,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "ecp",
 				desc_id = "menu_deck20_3_desc",
+				short_id = "menu_deck20_3_short",
 				name_id = "menu_deck20_3",
 				upgrades = {
 					"player_passive_health_multiplier_1",
@@ -4618,6 +4737,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "ecp",
 				desc_id = "menu_deck20_5_desc",
+				short_id = "menu_deck20_5_short",
 				name_id = "menu_deck20_5",
 				upgrades = {
 					"player_tag_team_damage_absorption"
@@ -4632,6 +4752,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "ecp",
 				desc_id = "menu_deck20_7_desc",
+				short_id = "menu_deck20_7_short",
 				name_id = "menu_deck20_7",
 				upgrades = {
 					"player_passive_health_multiplier_3"
@@ -4646,6 +4767,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "ecp",
 				desc_id = "menu_deck20_9_desc",
+				short_id = "menu_deck20_9_short",
 				name_id = "menu_deck20_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4658,13 +4780,15 @@ function SkillTreeTweakData:init()
 			},
 			name_id = "menu_st_spec_20",
 			dlc = "ecp",
-			desc_id = "menu_st_spec_20_desc"
+			desc_id = "menu_st_spec_20_desc",
+			category = "supportive"
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "joy",
 				desc_id = "menu_deck21_1_desc",
+				short_id = "menu_deck21_1_short",
 				name_id = "menu_deck21_1",
 				upgrades = {
 					"pocket_ecm_jammer",
@@ -4680,6 +4804,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "joy",
 				desc_id = "menu_deck21_3_desc",
+				short_id = "menu_deck21_3_short",
 				name_id = "menu_deck21_3",
 				upgrades = {
 					"player_passive_health_multiplier_1",
@@ -4695,6 +4820,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "joy",
 				desc_id = "menu_deck21_5_desc",
+				short_id = "menu_deck21_5_short",
 				name_id = "menu_deck21_5",
 				upgrades = {
 					"player_pocket_ecm_heal_on_kill_1",
@@ -4710,6 +4836,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "joy",
 				desc_id = "menu_deck21_7_desc",
+				short_id = "menu_deck21_7_short",
 				name_id = "menu_deck21_7",
 				upgrades = {
 					"player_pocket_ecm_kill_dodge_1"
@@ -4724,6 +4851,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "joy",
 				desc_id = "menu_deck21_9_desc",
+				short_id = "menu_deck21_9_short",
 				name_id = "menu_deck21_9",
 				upgrades = {
 					"player_passive_loot_drop_multiplier",
@@ -4735,14 +4863,19 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_21",
 			desc_id = "menu_st_spec_21_desc",
-			name_id = "menu_st_spec_21"
+			category = {
+				"versatile",
+				"stealth"
+			}
 		},
 		{
 			{
 				cost = 200,
 				texture_bundle_folder = "copr",
 				desc_id = "menu_deck22_1_desc",
+				short_id = "menu_deck22_1_short",
 				name_id = "menu_deck22_1",
 				upgrades = {
 					"temporary_copr_ability_1",
@@ -4762,6 +4895,7 @@ function SkillTreeTweakData:init()
 				cost = 400,
 				texture_bundle_folder = "copr",
 				desc_id = "menu_deck22_3_desc",
+				short_id = "menu_deck22_3_short",
 				name_id = "menu_deck22_3",
 				upgrades = {
 					"player_passive_health_multiplier_1",
@@ -4778,6 +4912,7 @@ function SkillTreeTweakData:init()
 				cost = 1000,
 				texture_bundle_folder = "copr",
 				desc_id = "menu_deck22_5_desc",
+				short_id = "menu_deck22_5_short",
 				name_id = "menu_deck22_5",
 				upgrades = {
 					"temporary_copr_ability_2",
@@ -4794,6 +4929,7 @@ function SkillTreeTweakData:init()
 				cost = 2400,
 				texture_bundle_folder = "copr",
 				desc_id = "menu_deck22_7_desc",
+				short_id = "menu_deck22_7_short",
 				name_id = "menu_deck22_7",
 				upgrades = {
 					"player_passive_health_multiplier_3"
@@ -4808,6 +4944,7 @@ function SkillTreeTweakData:init()
 				cost = 4000,
 				texture_bundle_folder = "copr",
 				desc_id = "menu_deck22_9_desc",
+				short_id = "menu_deck22_9_short",
 				name_id = "menu_deck22_9",
 				upgrades = {
 					"player_activate_ability_downed",
@@ -4821,13 +4958,394 @@ function SkillTreeTweakData:init()
 					1
 				}
 			},
+			name_id = "menu_st_spec_22",
 			desc_id = "menu_st_spec_22_desc",
-			name_id = "menu_st_spec_22"
+			category = "versatile"
+		}
+	}
+	local deck1_multi_choice = {
+		{
+			desc_id = "menu_deck23_1_1_desc",
+			short_id = "menu_deck23_1_1_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_1_1",
+			upgrades = {
+				"mrwi_health_multiplier_1"
+			},
+			icon_xy = {
+				0,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_1_2_desc",
+			short_id = "menu_deck23_1_2_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_1_2",
+			upgrades = {
+				"mrwi_armor_multiplier_1"
+			},
+			icon_xy = {
+				6,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_1_3_desc",
+			short_id = "menu_deck23_1_3_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_1_3",
+			upgrades = {
+				"mrwi_dodge_chance_1"
+			},
+			icon_xy = {
+				1,
+				2
+			}
+		},
+		{
+			desc_id = "menu_deck23_1_4_desc",
+			texture_bundle_folder = "mrwi",
+			icon_atlas = "icons_atlas",
+			short_id = "menu_deck23_1_4_short",
+			name_id = "menu_deck23_bonus_speed",
+			upgrades = {
+				"mrwi_crouch_speed_multiplier_1",
+				"mrwi_carry_speed_multiplier_1"
+			},
+			icon_xy = {
+				1,
+				1
+			}
+		}
+	}
+	local deck3_multi_choice = {
+		{
+			desc_id = "menu_deck23_3_1_desc",
+			short_id = "menu_deck23_3_1_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_3_1",
+			upgrades = {
+				"mrwi_health_multiplier_2"
+			},
+			icon_xy = {
+				0,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_3_2_desc",
+			short_id = "menu_deck23_3_2_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_3_2",
+			upgrades = {
+				"mrwi_armor_multiplier_2"
+			},
+			icon_xy = {
+				6,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_3_3_desc",
+			short_id = "menu_deck23_3_3_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_3_3",
+			upgrades = {
+				"mrwi_dodge_chance_2"
+			},
+			icon_xy = {
+				1,
+				2
+			}
+		},
+		{
+			desc_id = "menu_deck23_3_4_desc",
+			texture_bundle_folder = "mrwi",
+			icon_atlas = "icons_atlas",
+			short_id = "menu_deck23_3_4_short",
+			name_id = "menu_deck23_bonus_speed",
+			upgrades = {
+				"mrwi_crouch_speed_multiplier_2",
+				"mrwi_carry_speed_multiplier_2"
+			},
+			icon_xy = {
+				1,
+				1
+			}
+		}
+	}
+	local deck5_multi_choice = {
+		{
+			desc_id = "menu_deck23_5_1_desc",
+			short_id = "menu_deck23_5_1_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_5_1",
+			upgrades = {
+				"mrwi_health_multiplier_3"
+			},
+			icon_xy = {
+				0,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_5_2_desc",
+			short_id = "menu_deck23_5_2_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_5_2",
+			upgrades = {
+				"mrwi_armor_multiplier_3"
+			},
+			icon_xy = {
+				6,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_5_3_desc",
+			short_id = "menu_deck23_5_3_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_5_3",
+			upgrades = {
+				"mrwi_dodge_chance_3"
+			},
+			icon_xy = {
+				1,
+				2
+			}
+		},
+		{
+			desc_id = "menu_deck23_5_4_desc",
+			texture_bundle_folder = "mrwi",
+			icon_atlas = "icons_atlas",
+			short_id = "menu_deck23_5_4_short",
+			name_id = "menu_deck23_bonus_speed",
+			upgrades = {
+				"mrwi_crouch_speed_multiplier_3",
+				"mrwi_carry_speed_multiplier_3"
+			},
+			icon_xy = {
+				1,
+				1
+			}
+		}
+	}
+	local deck7_multi_choice = {
+		{
+			desc_id = "menu_deck23_7_1_desc",
+			short_id = "menu_deck23_7_1_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_7_1",
+			upgrades = {
+				"mrwi_health_multiplier_4"
+			},
+			icon_xy = {
+				0,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_7_2_desc",
+			short_id = "menu_deck23_7_2_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_7_2",
+			upgrades = {
+				"mrwi_armor_multiplier_4"
+			},
+			icon_xy = {
+				6,
+				0
+			}
+		},
+		{
+			desc_id = "menu_deck23_7_3_desc",
+			short_id = "menu_deck23_7_3_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_7_3",
+			upgrades = {
+				"mrwi_dodge_chance_4"
+			},
+			icon_xy = {
+				1,
+				2
+			}
+		},
+		{
+			desc_id = "menu_deck23_7_4_desc",
+			texture_bundle_folder = "mrwi",
+			icon_atlas = "icons_atlas",
+			short_id = "menu_deck23_7_4_short",
+			name_id = "menu_deck23_bonus_speed",
+			upgrades = {
+				"mrwi_crouch_speed_multiplier_4",
+				"mrwi_carry_speed_multiplier_4"
+			},
+			icon_xy = {
+				1,
+				1
+			}
+		}
+	}
+	local deck9_multi_choice = {}
+	local deck9_options = UpgradesTweakData.mrwi_deck9_options()
+
+	for _, options in pairs(deck9_options) do
+		local data = nil
+
+		if options.tree and options.tier then
+			data = clone(self.specializations[options.tree][options.tier])
+		else
+			data = {}
+		end
+
+		data.upgrades = table.list_add(options.upgrades or {}, data.upgrades or {})
+		data.cost = options.cost or data.cost or 4000
+		data.icon_atlas = options.icon_atlas or data.icon_atlas or "icons_atlas"
+		data.icon_xy = options.icon_xy or data.icon_xy
+		data.texture_bundle_folder = options.texture_bundle_folder or data.texture_bundle_folder
+		data.name_id = options.name_id or data.name_id
+		data.desc_id = options.desc_id or data.desc_id
+		data.short_id = "menu_deck23_9_short"
+		data.skip_tier_desc = options.skip_tier_desc or data.skip_tier_desc
+		data.skip_tier_name = true
+		data.shorten_desc = options.shorten_desc or data.shorten_desc
+
+		table.insert(deck9_multi_choice, data)
+	end
+
+	local mrwi_specialization = {
+		{
+			cost = 200,
+			texture_bundle_folder = "mrwi",
+			desc_id = "menu_deck23_1_desc",
+			short_id = "menu_deck23_1_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_1",
+			upgrades = {
+				"player_primary_reload_secondary_1",
+				"player_secondary_reload_primary_1",
+				"weapon_mrwi_swap_speed_multiplier_1"
+			},
+			icon_xy = {
+				0,
+				0
+			},
+			multi_choice = deck1_multi_choice
+		},
+		deck2,
+		{
+			cost = 400,
+			texture_bundle_folder = "mrwi",
+			desc_id = "menu_deck23_3_desc",
+			short_id = "menu_deck23_3_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_3",
+			upgrades = {
+				"player_headshot_regen_health_bonus_1"
+			},
+			icon_xy = {
+				1,
+				0
+			},
+			multi_choice = deck3_multi_choice
+		},
+		deck4,
+		{
+			cost = 1000,
+			texture_bundle_folder = "mrwi",
+			desc_id = "menu_deck23_5_desc",
+			short_id = "menu_deck23_5_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_5",
+			upgrades = {
+				"player_dodge_ricochet_bullets"
+			},
+			icon_xy = {
+				2,
+				0
+			},
+			multi_choice = deck5_multi_choice
+		},
+		deck6,
+		{
+			cost = 2400,
+			texture_bundle_folder = "mrwi",
+			desc_id = "menu_deck23_7_desc",
+			short_id = "menu_deck23_7_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_7",
+			upgrades = {
+				"temporary_mrwi_health_invulnerable_1"
+			},
+			icon_xy = {
+				3,
+				0
+			},
+			multi_choice = deck7_multi_choice
+		},
+		deck8,
+		{
+			cost = 4000,
+			texture_bundle_folder = "mrwi",
+			desc_id = "menu_deck23_9_desc",
+			short_id = "menu_deck23_9_short",
+			icon_atlas = "icons_atlas",
+			name_id = "menu_deck23_9",
+			upgrades = {
+				"player_passive_loot_drop_multiplier"
+			},
+			icon_xy = {
+				0,
+				1
+			},
+			multi_choice = deck9_multi_choice
+		},
+		name_id = "menu_st_spec_23",
+		dlc = "mrwi_deck",
+		desc_id = "menu_st_spec_23_desc",
+		category = "versatile"
+	}
+
+	table.insert(self.specializations, mrwi_specialization)
+
+	self.specialization_category = {
+		{
+			name_id = "menu_st_category_all",
+			category = "all"
+		},
+		{
+			name_id = "menu_st_category_offensive",
+			category = "offensive"
+		},
+		{
+			name_id = "menu_st_category_defensive",
+			category = "defensive"
+		},
+		{
+			name_id = "menu_st_category_covert",
+			category = "covert"
+		},
+		{
+			name_id = "menu_st_category_supportive",
+			category = "supportive"
+		},
+		{
+			name_id = "menu_st_category_versatile",
+			category = "versatile"
+		},
+		{
+			name_id = "menu_st_category_stealth",
+			category = "stealth"
+		},
+		{
+			name_id = "menu_st_category_favorites",
+			category = "favorites"
 		}
 	}
 end
 
--- Lines 1879-1895
+-- Lines 2385-2401
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -4848,7 +5366,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines 1897-1906
+-- Lines 2403-2412
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -4861,16 +5379,16 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines 1908-1911
+-- Lines 2414-2417
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines 1913-1921
+-- Lines 2419-2427
 function SkillTreeTweakData:get_tier_unlocks()
-	-- Lines 1914-1914
+	-- Lines 2420-2420
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -4885,7 +5403,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines 1923-1946
+-- Lines 2429-2452
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

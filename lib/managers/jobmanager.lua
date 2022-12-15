@@ -1072,6 +1072,10 @@ end
 
 -- Lines 995-1002
 function JobManager:get_job_christmas_bonus(job_id)
+	if self:is_christmas_job(job_id) then
+		return (tweak_data:get_value("experience_manager", "limited_xmas_bonus_multiplier") or 1) - 1
+	end
+
 	return 0
 end
 
@@ -1629,10 +1633,18 @@ function JobManager:current_world_setting()
 	return self:current_stage_data().world_setting or nil
 end
 
--- Lines 1532-1550
+-- Lines 1532-1555
 function JobManager:current_briefing_dialog()
 	if not self._global.current_job then
 		return
+	end
+
+	if managers.mutators:is_mutator_active(MutatorPiggyBank) and MutatorPiggyBank.briefing_dialog then
+		return MutatorPiggyBank.briefing_dialog
+	end
+
+	if managers.mutators:is_mutator_active(MutatorCG22) and MutatorCG22.briefing_dialog then
+		return MutatorCG22.briefing_dialog
 	end
 
 	if self._global.interupt_stage then
@@ -1642,7 +1654,7 @@ function JobManager:current_briefing_dialog()
 	return managers.job:current_stage_data().briefing_dialog or managers.job:current_level_data().briefing_dialog
 end
 
--- Lines 1552-1562
+-- Lines 1557-1567
 function JobManager:current_briefing_id()
 	if not self._global.current_job then
 		return
@@ -1655,7 +1667,7 @@ function JobManager:current_briefing_id()
 	return managers.job:current_stage_data().briefing_id or managers.job:current_level_data().briefing_id
 end
 
--- Lines 1564-1570
+-- Lines 1569-1575
 function JobManager:current_mission_filter()
 	if not self._global.current_job then
 		return
@@ -1664,7 +1676,7 @@ function JobManager:current_mission_filter()
 	return self:current_stage_data().mission_filter
 end
 
--- Lines 1572-1578
+-- Lines 1577-1583
 function JobManager:current_level_data()
 	if not self._global.current_job then
 		return
@@ -1673,7 +1685,7 @@ function JobManager:current_level_data()
 	return tweak_data.levels[self:current_level_id()]
 end
 
--- Lines 1580-1586
+-- Lines 1585-1591
 function JobManager:current_contact_id()
 	if not self._global.current_job then
 		return
@@ -1682,7 +1694,7 @@ function JobManager:current_contact_id()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).contact
 end
 
--- Lines 1588-1597
+-- Lines 1593-1602
 function JobManager:current_contact_data()
 	if self._global.interupt_stage then
 		if tweak_data.levels[self._global.interupt_stage].bonus_escape then
@@ -1695,12 +1707,12 @@ function JobManager:current_contact_data()
 	return tweak_data.narrative.contacts[self:current_contact_id()]
 end
 
--- Lines 1599-1601
+-- Lines 1604-1606
 function JobManager:current_job_stars()
 	return math.ceil(tweak_data.narrative:job_data(self._global.current_job.job_id).jc / 10)
 end
 
--- Lines 1603-1609
+-- Lines 1608-1614
 function JobManager:current_job_variant()
 	if not self._global.current_job then
 		return
@@ -1709,7 +1721,7 @@ function JobManager:current_job_variant()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).variant_name
 end
 
--- Lines 1611-1615
+-- Lines 1616-1620
 function JobManager:current_difficulty_stars()
 	local difficulty = Global.game_settings.difficulty or "easy"
 	local difficulty_id = math.max(0, (tweak_data:difficulty_to_index(difficulty) or 0) - 2)
@@ -1717,7 +1729,7 @@ function JobManager:current_difficulty_stars()
 	return difficulty_id
 end
 
--- Lines 1617-1621
+-- Lines 1622-1626
 function JobManager:current_job_and_difficulty_stars()
 	local difficulty = Global.game_settings.difficulty or "easy"
 	local difficulty_id = math.max(0, (tweak_data:difficulty_to_index(difficulty) or 0) - 2)
@@ -1725,7 +1737,7 @@ function JobManager:current_job_and_difficulty_stars()
 	return math.clamp(self:current_job_stars() + difficulty_id, 1, 10)
 end
 
--- Lines 1624-1633
+-- Lines 1629-1638
 function JobManager:calculate_job_class(job_id, difficulty_id)
 	if job_id then
 		local job_jc = tweak_data.narrative:job_data(job_id).jc or 10
@@ -1739,7 +1751,7 @@ function JobManager:calculate_job_class(job_id, difficulty_id)
 	return 10
 end
 
--- Lines 1635-1655
+-- Lines 1640-1660
 function JobManager:get_min_jc_for_player()
 	local jcs = tweak_data.narrative:get_jcs_from_stars(managers.experience:level_to_stars(), managers.experience:current_rank() > 0)
 	local min_jc = 100
@@ -1751,7 +1763,7 @@ function JobManager:get_min_jc_for_player()
 	return min_jc
 end
 
--- Lines 1657-1677
+-- Lines 1662-1682
 function JobManager:get_max_jc_for_player()
 	local jcs = tweak_data.narrative:get_jcs_from_stars(managers.experience:level_to_stars(), managers.experience:current_rank() > 0)
 	local max_jc = 0
@@ -1763,14 +1775,14 @@ function JobManager:get_max_jc_for_player()
 	return max_jc
 end
 
--- Lines 1682-1685
+-- Lines 1687-1690
 function JobManager:is_forced()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 
 	return level_data and level_data.force_equipment
 end
 
--- Lines 1690-1696
+-- Lines 1695-1701
 function JobManager:is_current_job_competitive()
 	if not self._global.current_job then
 		return
@@ -1779,7 +1791,7 @@ function JobManager:is_current_job_competitive()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).competitive
 end
 
--- Lines 1698-1704
+-- Lines 1703-1709
 function JobManager:is_job_competitive_by_job_id(job_id)
 	if not job_id or not tweak_data.narrative.jobs[job_id] then
 		Application:error("[JobManager:is_job_competitive_by_job_id] no job id or no job", job_id)
@@ -1790,19 +1802,19 @@ function JobManager:is_job_competitive_by_job_id(job_id)
 	return tweak_data.narrative:job_data(job_id).competitive and true or false
 end
 
--- Lines 1708-1711
+-- Lines 1713-1716
 function JobManager:set_stage_success(success)
 	print("[JobManager:set_stage_success]", success, "on_last_stage", self:on_last_stage())
 
 	self._stage_success = success
 end
 
--- Lines 1713-1715
+-- Lines 1718-1720
 function JobManager:stage_success()
 	return self._stage_success
 end
 
--- Lines 1719-1729
+-- Lines 1724-1734
 function JobManager:check_ok_with_cooldown(job_id)
 	if not self._global.cooldown then
 		return true
@@ -1815,7 +1827,7 @@ function JobManager:check_ok_with_cooldown(job_id)
 	return self._global.cooldown[job_id] < TimerManager:wall_running():time()
 end
 
--- Lines 1731-1741
+-- Lines 1736-1746
 function JobManager:_check_add_to_cooldown()
 	if Network:is_server() and self._global.start_time then
 		local cooldown_time = self._global.start_time + tweak_data.narrative.CONTRACT_COOLDOWN_TIME - TimerManager:wall_running():time()
@@ -1827,7 +1839,7 @@ function JobManager:_check_add_to_cooldown()
 	end
 end
 
--- Lines 1744-1748
+-- Lines 1749-1753
 function JobManager:sync_save(data)
 	local state = {
 		next_interupt_stage = self._global.next_interupt_stage
@@ -1835,7 +1847,7 @@ function JobManager:sync_save(data)
 	data.JobManager = state
 end
 
--- Lines 1751-1754
+-- Lines 1756-1759
 function JobManager:sync_load(data)
 	local state = data.JobManager
 	self._global.next_interupt_stage = state.next_interupt_stage

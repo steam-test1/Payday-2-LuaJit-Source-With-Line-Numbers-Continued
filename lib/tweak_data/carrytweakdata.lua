@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1305
+-- Lines 3-1316
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -58,6 +58,18 @@ function CarryTweakData:init(tweak_data)
 		jump_modifier = 1,
 		can_run = true,
 		throw_distance_multiplier = 1
+	}
+	self.types.cg22_light = {
+		move_speed_modifier = 0.33,
+		jump_modifier = 0.33,
+		can_run = true,
+		throw_distance_multiplier = 0.4
+	}
+	self.types.cg22_heavy = {
+		move_speed_modifier = 0.5,
+		jump_modifier = 0.5,
+		can_run = true,
+		throw_distance_multiplier = 0.5
 	}
 	self.types.explosives = deep_clone(self.types.medium)
 	self.types.explosives.can_explode = true
@@ -1071,9 +1083,36 @@ function CarryTweakData:init(tweak_data)
 			SO_category = "enemies"
 		}
 	}
+	self.cg22_bag = {
+		type = "cg22_light",
+		name_id = "hud_carry_bag",
+		unit = "units/pd2_dlc_cg22/pickups/cg22_pku_bag/cg22_pku_bag",
+		visual_unit_name = "units/pd2_dlc_cg22/pickups/cg22_npc_bag/npc_cg22_bag",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
+	self.cg22_bag_green = {
+		type = "cg22_heavy",
+		name_id = "hud_carry_bag_green",
+		unit = "units/pd2_dlc_cg22/pickups/cg22_pku_bag/cg22_pku_bag_green",
+		visual_unit_name = "units/pd2_dlc_cg22/pickups/cg22_npc_bag/npc_cg22_bag_green",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
+	self.cg22_bag_yellow = {
+		type = "cg22_light",
+		name_id = "hud_carry_bag_yellow",
+		unit = "units/pd2_dlc_cg22/pickups/cg22_pku_bag/cg22_pku_bag_yellow",
+		visual_unit_name = "units/pd2_dlc_cg22/pickups/cg22_npc_bag/npc_cg22_bag_yellow",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
 end
 
--- Lines 1307-1316
+-- Lines 1318-1327
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1088,7 +1127,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1319-1327
+-- Lines 1330-1338
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

@@ -5,7 +5,8 @@ UpgradesManager.AQUIRE_STRINGS = {
 	"SpecializationTree",
 	"LevelTree",
 	"DLC",
-	"SideJob"
+	"SideJob",
+	"SpecializationChoice"
 }
 
 -- Lines 20-22

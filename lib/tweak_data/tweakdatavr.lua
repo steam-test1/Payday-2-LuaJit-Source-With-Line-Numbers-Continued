@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-6112
+-- Lines 4-6141
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -726,6 +726,9 @@ function TweakDataVR:init(tweak_data)
 			qbu88 = {
 				position = Vector3(-0.2, -1, 0)
 			},
+			victor = {
+				position = Vector3(-0.2, 1, 1)
+			},
 			gre_m79 = {
 				grip = "weapon_2_grip",
 				position = Vector3(-1.5, 1.8, 0)
@@ -1405,6 +1408,10 @@ function TweakDataVR:init(tweak_data)
 			position = Vector3(0, 3, 5),
 			rotation = Rotation(88, 100, 28)
 		},
+		victor = {
+			position = Vector3(1, 2, 0),
+			rotation = Rotation(-2, -16, 9)
+		},
 		scout = {
 			position = Vector3(0, 3, 5),
 			rotation = Rotation(88, 100, 28)
@@ -1771,6 +1778,10 @@ function TweakDataVR:init(tweak_data)
 			desertfox = {
 				grip = "idle_wpn",
 				position = Vector3(-1, 18, 2)
+			},
+			victor = {
+				grip = "idle_wpn",
+				position = Vector3(0, 26.5, 2)
 			},
 			olympic = {
 				grip = "idle_wpn",
@@ -9674,6 +9685,42 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		victor = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_victor_mag_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, 5, -20),
+					rot = Rotation(0, 30, 0)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_victor_mag_in",
+					visible = true,
+					pos = Vector3(0, 0, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, 0, -4.5)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, 0, -4)
+				},
+				{
+					time = 0.6,
+					sound = "wp_victor_release_lever",
+					pos = Vector3()
+				}
+			}
+		},
 		siltstone = {
 			start = {
 				{
@@ -10584,7 +10631,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 6118-6229
+-- Lines 6147-6258
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -10799,7 +10846,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 6233-6293
+-- Lines 6262-6322
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -10879,7 +10926,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 6296-6308
+-- Lines 6325-6337
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -10900,7 +10947,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 6310-6336
+-- Lines 6339-6365
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -10921,14 +10968,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6338-6342
+-- Lines 6367-6371
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6344-6356
+-- Lines 6373-6385
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -10946,7 +10993,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6358-6366
+-- Lines 6387-6395
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -10959,7 +11006,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6368-6372
+-- Lines 6397-6401
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -10968,7 +11015,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6374-6382
+-- Lines 6403-6411
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -10983,7 +11030,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6384-6391
+-- Lines 6413-6420
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -10996,7 +11043,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6393-6400
+-- Lines 6422-6429
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

@@ -1607,7 +1607,7 @@ end
 
 CustomSafehouseGuiRewardItem = CustomSafehouseGuiRewardItem or class(CustomSafehouseGuiItem)
 
--- Lines 1550-1766
+-- Lines 1550-1783
 function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data, id, is_safehouse_daily)
 	self._daily_page = daily_page
 	self._reward = reward_data or {}
@@ -1649,6 +1649,7 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 
 			texture_path = guis_catalog .. "textures/pd2/blackmarket/icons/player_styles/" .. player_style_id
 			texture_path = texture_path .. "_" .. suit_variation_id
+			reward_string = managers.localization:text(suit_variation_data.name_id)
 		end
 	elseif reward_data.type_items == "offshore" then
 		local td = tweak_data:get_raw_value("blackmarket", "cash", reward_data.item_entry)
@@ -1657,6 +1658,25 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 			texture_path = "guis/textures/pd2/blackmarket/cash_drop"
 			reward_string = managers.experience:cash_string(managers.money:get_loot_drop_cash_value(td.value_id))
 		end
+	elseif reward_data.type_items == "perkdeck" then
+		local td = tweak_data.skilltree.specializations[reward_data.item_entry][9]
+		local guis_catalog = "guis/"
+
+		if td.texture_bundle_folder then
+			guis_catalog = guis_catalog .. "dlcs/" .. tostring(td.texture_bundle_folder) .. "/"
+		end
+
+		local atlas_name = td.icon_atlas or "icons_atlas"
+		texture_path = guis_catalog .. "textures/pd2/specialization/" .. atlas_name
+		local texture_rect_x = td.icon_xy and td.icon_xy[1] or 0
+		local texture_rect_y = td.icon_xy and td.icon_xy[2] or 0
+		texture_rect = {
+			texture_rect_x * 64,
+			texture_rect_y * 64,
+			64,
+			64
+		}
+		reward_string = managers.localization:text(tweak_data.skilltree.specializations[reward_data.item_entry].name_id)
 	elseif reward_data.item_entry then
 		local id = reward_data.item_entry
 		local category = reward_data.type_items
@@ -1785,7 +1805,7 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	end
 
 	if completed and not reward_data.rewarded then
-		-- Lines 1736-1742
+		-- Lines 1753-1759
 		local function glow_anim(o)
 			while true do
 				over(5, function (p)
@@ -1826,12 +1846,12 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	self:set_active(true)
 end
 
--- Lines 1768-1770
+-- Lines 1785-1787
 function CustomSafehouseGuiRewardItem:panel()
 	return self._panel
 end
 
--- Lines 1772-1780
+-- Lines 1789-1797
 function CustomSafehouseGuiRewardItem:refresh()
 	if managers.menu:is_pc_controller() then
 		self._text:set_visible(self._selected or self._reward.completed)
@@ -1842,12 +1862,12 @@ function CustomSafehouseGuiRewardItem:refresh()
 	end
 end
 
--- Lines 1782-1784
+-- Lines 1799-1801
 function CustomSafehouseGuiRewardItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 1786-1871
+-- Lines 1803-1888
 function CustomSafehouseGuiRewardItem:trigger()
 	if self:is_active() then
 		if self._is_safehouse_daily and managers.custom_safehouse:has_completed_daily() and not managers.custom_safehouse:has_rewarded_daily() then
@@ -1924,7 +1944,7 @@ function CustomSafehouseGuiRewardItem:trigger()
 	end
 end
 
--- Lines 1873-1885
+-- Lines 1890-1902
 function CustomSafehouseGuiRewardItem:set_selected(selected, ...)
 	CustomSafehouseGuiRewardItem.super.set_selected(self, selected, ...)
 

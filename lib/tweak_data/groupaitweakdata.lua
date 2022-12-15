@@ -191,7 +191,7 @@ function GroupAITweakData:_init_chatter_data()
 	}
 end
 
--- Lines 132-1848
+-- Lines 132-1880
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	local access_type_walk_only = {
 		walk = true
@@ -1363,9 +1363,29 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		},
 		access = access_type_walk_only
 	}
+	self.unit_categories.snowman_boss = {
+		unit_types = {
+			america = {
+				Idstring("units/pd2_dlc_cg22/characters/ene_snowman_boss/ene_snowman_boss")
+			},
+			russia = {
+				Idstring("units/pd2_dlc_cg22/characters/ene_snowman_boss/ene_snowman_boss")
+			},
+			zombie = {
+				Idstring("units/pd2_dlc_cg22/characters/ene_snowman_boss/ene_snowman_boss")
+			},
+			murkywater = {
+				Idstring("units/pd2_dlc_cg22/characters/ene_snowman_boss/ene_snowman_boss")
+			},
+			federales = {
+				Idstring("units/pd2_dlc_cg22/characters/ene_snowman_boss/ene_snowman_boss")
+			}
+		},
+		access = access_type_all
+	}
 end
 
--- Lines 1887-2696
+-- Lines 1919-2737
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -3367,9 +3387,28 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			})
 		}
 	end
+
+	self.enemy_spawn_groups.snowman_boss = {
+		amount = {
+			1,
+			1
+		},
+		spawn = {
+			{
+				freq = 1,
+				amount_min = 1,
+				rank = 1,
+				unit = "snowman_boss",
+				tactics = self._tactics.tank_rush
+			}
+		},
+		spawn_point_chk_ref = table.list_to_set({
+			"tac_bull_rush"
+		})
+	}
 end
 
--- Lines 2700-3270
+-- Lines 2741-3317
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -4293,6 +4332,11 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		0,
 		0
 	}
+	self.besiege.assault.groups.snowman_boss = {
+		0,
+		0,
+		0
+	}
 	self.besiege.reenforce.interval = {
 		10,
 		20,
@@ -4569,6 +4613,11 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		0,
 		0
 	}
+	self.besiege.recon.groups.snowman_boss = {
+		0,
+		0,
+		0
+	}
 	self.besiege.cloaker.groups = {
 		single_spooc = {
 			1,
@@ -4643,7 +4692,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3291-3297
+-- Lines 3338-3344
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4653,7 +4702,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3301-3347
+-- Lines 3348-3394
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

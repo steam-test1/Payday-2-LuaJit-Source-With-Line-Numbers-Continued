@@ -26,17 +26,18 @@ function EnvironmentFire:get_name_id()
 	return "environment_fire"
 end
 
--- Lines 30-196
+-- Lines 30-198
 function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_multiplier)
 	local custom_params = {
 		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,
 		effect = data.effect_name,
-		sound_event = data.sound_event,
 		feedback_range = data.range * 2,
-		sound_event_burning = data.sound_event_burning,
+		sound_event = data.sound_event,
 		sound_event_impact_duration = data.sound_event_impact_duration,
-		sound_event_duration = data.burn_duration + added_time
+		sound_event_burning = data.sound_event_burning,
+		sound_event_duration = data.burn_duration + added_time,
+		sound_event_burning_stop = data.sound_event_burning_stop
 	}
 	self._data = data
 	self._normal = normal
@@ -51,7 +52,7 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_mul
 	self._curve_pow = data.curve_pow
 	self._damage = data.damage
 	self._player_damage = data.player_damage
-	self._fire_dot_data = deep_clone(data.fire_dot_data)
+	self._fire_dot_data = data.fire_dot_data and deep_clone(data.fire_dot_data)
 	self._fire_alert_radius = data.fire_alert_radius
 	self._no_fire_alert = data.no_fire_alert
 	self._is_molotov = data.is_molotov
@@ -178,7 +179,7 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, added_time, range_mul
 	self._unit:set_visible(false)
 end
 
--- Lines 198-238
+-- Lines 200-240
 function EnvironmentFire:update(unit, t, dt)
 	if self._burn_duration <= 0 then
 		if self._burn_duration_destroy <= 0 then
@@ -224,7 +225,7 @@ function EnvironmentFire:update(unit, t, dt)
 	end
 end
 
--- Lines 241-314
+-- Lines 243-316
 function EnvironmentFire:_do_damage()
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -294,14 +295,14 @@ function EnvironmentFire:_do_damage()
 	self._burn_tick_counter = 0
 end
 
--- Lines 316-320
+-- Lines 318-322
 function EnvironmentFire:destroy(unit)
 	for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 		World:effect_manager():fade_kill(damage_effect_entry.effect_id)
 	end
 end
 
--- Lines 323-345
+-- Lines 325-347
 function EnvironmentFire:save(data)
 	local state = {
 		burn_duration = self._burn_duration,
@@ -326,7 +327,7 @@ function EnvironmentFire:save(data)
 	data.EnvironmentFire = state
 end
 
--- Lines 347-369
+-- Lines 349-371
 function EnvironmentFire:load(data)
 	local state = data.EnvironmentFire
 	self._burn_duration = state.burn_duration

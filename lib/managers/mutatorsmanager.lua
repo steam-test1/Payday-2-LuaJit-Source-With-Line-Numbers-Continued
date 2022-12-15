@@ -9,6 +9,7 @@ require("lib/mutators/MutatorEnemyReplacer")
 require("lib/mutators/MutatorCloakerEffect")
 require("lib/mutators/MutatorShieldDozers")
 require("lib/mutators/MutatorPiggyBank")
+require("lib/mutators/MutatorCG22")
 
 MutatorsManager = MutatorsManager or class()
 MutatorsManager.package = "packages/toxic"
@@ -44,7 +45,8 @@ function MutatorsManager:init()
 		MutatorCloakerEffect:new(self),
 		MutatorShieldDozers:new(self),
 		MutatorTitandozers:new(self),
-		MutatorPiggyBank:new(self)
+		MutatorPiggyBank:new(self),
+		MutatorCG22:new(self)
 	}
 	self._active_mutators = {}
 	local activate = Global.mutators and Global.mutators.active_on_load
@@ -811,9 +813,31 @@ function MutatorsManager:get_category_text_color(category)
 	return tweak_data.screen_colors.mutators_color_text
 end
 
--- Lines 823-877
+-- Lines 822-830
+function MutatorsManager:get_outro_event(default_outro_event)
+	for _, active_mutator in pairs(self:active_mutators()) do
+		if active_mutator.mutator.get_outro_event then
+			return active_mutator.mutator:get_outro_event(default_outro_event)
+		end
+	end
+
+	return default_outro_event
+end
+
+-- Lines 832-839
+function MutatorsManager:get_briefing_override()
+	for _, mutator in ipairs(self._mutators) do
+		if mutator:is_enabled() or mutator:is_active() then
+			return mutator.briefing_event or nil
+		end
+	end
+
+	return nil
+end
+
+-- Lines 844-898
 function MutatorsManager:show_mutators_launch_countdown(countdown)
-	if Network:is_server() then
+	if Network:is_server() or managers.mutators:get_enabled_active_mutator_category() == "event" then
 		return
 	end
 
@@ -862,23 +886,23 @@ function MutatorsManager:show_mutators_launch_countdown(countdown)
 	end
 end
 
--- Lines 879-882
+-- Lines 900-903
 function MutatorsManager:_dialog_mutators_accept()
 	managers.network:session():send_to_host("sync_mutators_launch_ready", managers.network:session():local_peer():id(), true)
 end
 
--- Lines 884-886
+-- Lines 905-907
 function MutatorsManager:_dialog_mutators_decline()
 	MenuCallbackHandler:_dialog_leave_lobby_yes()
 end
 
--- Lines 890-893
+-- Lines 911-914
 function MutatorsManager:set_peer_notified(peer_id, is_notified)
 	Global.mutators._peers_notified = Global.mutators._peers_notified or {}
 	Global.mutators._peers_notified[peer_id] = is_notified
 end
 
--- Lines 895-900
+-- Lines 916-921
 function MutatorsManager:has_peer_been_notified(peer_id)
 	if Global.mutators._peers_notified then
 		return Global.mutators._peers_notified[peer_id] or false
@@ -887,7 +911,7 @@ function MutatorsManager:has_peer_been_notified(peer_id)
 	return false
 end
 
--- Lines 902-912
+-- Lines 923-933
 function MutatorsManager:set_peer_is_ready(peer_id, is_ready, disable_check)
 	Global.mutators._peers_ready = Global.mutators._peers_ready or {}
 	Global.mutators._peers_ready[peer_id] = is_ready
@@ -897,7 +921,7 @@ function MutatorsManager:set_peer_is_ready(peer_id, is_ready, disable_check)
 	end
 end
 
--- Lines 914-919
+-- Lines 935-940
 function MutatorsManager:is_peer_ready(peer_id)
 	if Global.mutators._peers_ready then
 		return Global.mutators._peers_ready[peer_id] or false
@@ -906,7 +930,7 @@ function MutatorsManager:is_peer_ready(peer_id)
 	return false
 end
 
--- Lines 921-926
+-- Lines 942-947
 function MutatorsManager:force_all_ready()
 	for i, peer in pairs(managers.network:session():peers()) do
 		self:set_peer_notified(peer:id(), true)
@@ -914,7 +938,7 @@ function MutatorsManager:force_all_ready()
 	end
 end
 
--- Lines 928-935
+-- Lines 949-956
 function MutatorsManager:_check_all_peers_are_ready()
 	for i, peer in pairs(managers.network:session():peers()) do
 		if not self:has_peer_been_notified(peer:id()) or not self:is_peer_ready(peer:id()) then
@@ -925,7 +949,7 @@ function MutatorsManager:_check_all_peers_are_ready()
 	return true
 end
 
--- Lines 937-953
+-- Lines 958-974
 function MutatorsManager:on_peer_added(peer, peer_id)
 	if self:are_mutators_active() or self:are_mutators_enabled() then
 		self._used_start_game_delay = nil
@@ -937,7 +961,7 @@ function MutatorsManager:on_peer_added(peer, peer_id)
 	end
 end
 
--- Lines 955-966
+-- Lines 976-987
 function MutatorsManager:on_peer_removed(peer, peer_id, reason)
 	self:set_peer_notified(peer_id, false)
 	self:set_peer_is_ready(peer_id, false)
@@ -948,13 +972,13 @@ function MutatorsManager:on_peer_removed(peer, peer_id, reason)
 	end
 end
 
--- Lines 968-971
+-- Lines 989-992
 function MutatorsManager:on_lobby_left()
 	Global.mutators._peers_notified = nil
 	Global.mutators._peers_ready = nil
 end
 
--- Lines 975-1022
+-- Lines 996-1043
 function MutatorsManager:check_achievements(achievement_data)
 	if not achievement_data.mutators then
 		return not self:are_achievements_disabled()

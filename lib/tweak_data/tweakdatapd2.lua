@@ -1,4 +1,4 @@
--- Lines 1-422
+-- Lines 1-428
 function TweakData:_init_pd2()
 	print("TweakData:_init_pd2()")
 
@@ -199,6 +199,15 @@ function TweakData:_init_pd2()
 		texture_rect = {
 			96,
 			32,
+			32,
+			32
+		}
+	}
+	self.hud_icons.equipment_grenade_crate = {
+		texture = "guis/dlcs/mxm/textures/pd2/ordnance_bag",
+		texture_rect = {
+			0,
+			0,
 			32,
 			32
 		}
@@ -725,6 +734,15 @@ function TweakData:_init_pd2()
 			128
 		}
 	}
+	self.hud_icons.sticky_grenade = {
+		texture = "guis/dlcs/mxm/textures/pd2/sticky_grenade",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
 	self.hud_icons.none_icon = {
 		texture = "guis/textures/pd2/equipment_02",
 		texture_rect = {
@@ -740,7 +758,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 424-502
+-- Lines 430-508
 function TweakData:_setup_point_of_no_returns()
 	self.point_of_no_returns = {
 		noreturn = {}
@@ -845,7 +863,7 @@ function TweakData:_setup_point_of_no_returns()
 	end
 end
 
--- Lines 504-507
+-- Lines 510-513
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -858,7 +876,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 509-540
+-- Lines 515-546
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -888,7 +906,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 542-587
+-- Lines 548-593
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -956,7 +974,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 589-712
+-- Lines 595-722
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

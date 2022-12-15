@@ -381,6 +381,7 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 	self:_update_fire_object()
 	self:_update_stats_values()
 	self:_refresh_gadget_list()
+	self:_refresh_second_sight_list()
 
 	if self._setup and self._setup.timer then
 		self:set_timer(self._setup.timer)
@@ -622,22 +623,23 @@ end
 function NewRaycastWeaponBase:check_npc()
 end
 
--- Lines 683-701
+-- Lines 662-664
 function NewRaycastWeaponBase:has_range_distance_scope()
-	if not self._scopes or not self._parts then
+	return self._assembly_complete and self._has_range_distance_scope
+end
+
+-- Lines 666-681
+function NewRaycastWeaponBase:_chk_has_range_distance_scope()
+	if not self._assembly_complete or not self._scopes or not self._parts then
 		return false
 	end
 
-	if not self._assembly_complete then
-		return false
-	end
-
-	local part = nil
+	local part, digital_gui, digital_gui_upper = nil
 
 	for i, part_id in ipairs(self._scopes) do
 		part = self._parts[part_id]
-		local digital_gui = part and part.unit:digital_gui()
-		local digital_gui_upper = part and part.unit:digital_gui_upper()
+		digital_gui = part and part.unit:digital_gui()
+		digital_gui_upper = part and part.unit:digital_gui_upper()
 
 		if digital_gui and digital_gui.number_set or digital_gui_upper and digital_gui_upper.number_set then
 			return true
@@ -668,6 +670,67 @@ function NewRaycastWeaponBase:set_scope_range_distance(distance)
 
 			if digital_gui_upper and digital_gui_upper.number_set then
 				digital_gui_upper:number_set(distance and math.round(distance) or false, false)
+			end
+		end
+	end
+end
+
+-- Lines 726-728
+function NewRaycastWeaponBase:has_unit_health_display()
+	return self._assembly_complete and self._has_unit_health_display
+end
+
+-- Lines 730-746
+function NewRaycastWeaponBase:_chk_has_unit_health_display()
+	if not self._assembly_complete or not self._unit_health_displays or not self._parts then
+		return false
+	end
+
+	local part, digital_gui_thd = nil
+
+	for i, part_id in ipairs(self._unit_health_displays) do
+		part = self._parts[part_id]
+
+		if part then
+			digital_gui_thd = part.unit:digital_gui_thd()
+
+			if digital_gui_thd and digital_gui_thd.number_set then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+-- Lines 748-778
+function NewRaycastWeaponBase:set_unit_health_display(unit)
+	if not self._assembly_complete or not self._parts or not self._unit_health_displays then
+		return
+	end
+
+	local health = false
+
+	if unit then
+		if unit:in_slot(8) and alive(unit:parent()) then
+			unit = unit:parent() or unit
+		end
+
+		local char_dmg_ext = unit:character_damage()
+		health = char_dmg_ext and char_dmg_ext.health and char_dmg_ext:health() or false
+	end
+
+	health = health and math.round(health) * 10
+	local part, digital_gui_thd = nil
+
+	for i, part_id in ipairs(self._unit_health_displays) do
+		part = self._parts[part_id]
+
+		if part then
+			digital_gui_thd = part.unit:digital_gui_thd()
+
+			if digital_gui_thd and digital_gui_thd.number_set then
+				digital_gui_thd:number_set(health or false, false)
 			end
 		end
 	end
@@ -732,6 +795,11 @@ function NewRaycastWeaponBase:check_highlight_unit(unit)
 	end
 
 	managers.game_play_central:auto_highlight_enemy(unit, true)
+end
+
+-- Lines 835-837
+function NewRaycastWeaponBase:needs_extended_fwd_ray_range(in_steelsight)
+	return in_steelsight and self._can_highlight or self._has_range_distance_scope or self._has_unit_health_display
 end
 
 -- Lines 842-856
@@ -1050,11 +1118,13 @@ function NewRaycastWeaponBase:_update_stats_values(disallow_replenish, ammo_data
 	self._reload = self._current_stats.reload or self._reload
 	self._spread_multiplier = self._current_stats.spread_multi or self._spread_multiplier
 	self._scopes = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("scope", self._factory_id, self._blueprint)
+	self._has_range_distance_scope = self:_chk_has_range_distance_scope()
+	self._unit_health_displays = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("display_unit_health", self._factory_id, self._blueprint)
+	self._has_unit_health_display = self:_chk_has_unit_health_display()
 	self._can_highlight_with_perk = managers.weapon_factory:has_perk("highlight", self._factory_id, self._blueprint)
 	self._can_highlight_with_skill = managers.player:has_category_upgrade("weapon", "steelsight_highlight_specials")
 	self._can_highlight = self._can_highlight_with_perk or self._can_highlight_with_skill
 
-	self:_check_second_sight()
 	self:_check_reticle_obj()
 
 	if not disallow_replenish then
@@ -1183,6 +1253,24 @@ end
 
 -- Lines 1335-1362
 function NewRaycastWeaponBase:zoom()
+	local second_sight = self:get_active_second_sight()
+
+	if second_sight then
+		local zoom_stats = tweak_data.weapon.factory.parts[second_sight.part_id].stats.gadget_zoom
+
+		if not zoom_stats then
+			local tweak_stats = tweak_data.weapon.factory.parts[second_sight.part_id].stats
+
+			if not tweak_stats.gadget_zoom_add then
+				debug_pause("Invalid second sight:", second_sight.part_id)
+			end
+
+			zoom_stats = math.min(NewRaycastWeaponBase.super.zoom(self) + tweak_stats.gadget_zoom_add, #tweak_data.weapon.stats.zoom)
+		end
+
+		return tweak_data.weapon.stats.zoom[zoom_stats]
+	end
+
 	if self:is_second_sight_on() and self._second_sight_data then
 		local gadget_zoom_stats = tweak_data.weapon.factory.parts[self._second_sight_data.part_id].stats.gadget_zoom
 
@@ -1200,15 +1288,6 @@ function NewRaycastWeaponBase:zoom()
 	end
 
 	return NewRaycastWeaponBase.super.zoom(self)
-end
-
--- Lines 1365-1370
-function NewRaycastWeaponBase:is_second_sight_on()
-	if not self._second_sight_data or not self._second_sight_data.unit then
-		return false
-	end
-
-	return self._second_sight_data.unit:base():is_on()
 end
 
 -- Lines 1373-1383
@@ -1339,6 +1418,9 @@ function NewRaycastWeaponBase:stance_mod()
 		return nil
 	end
 
+	local second_sight_data = self:get_active_second_sight()
+
+	return managers.weapon_factory:get_stance_mod(self._factory_id, self._blueprint, second_sight_data and second_sight_data.part_id)
 	return managers.weapon_factory:get_stance_mod(self._factory_id, self._blueprint, self:is_second_sight_on())
 end
 
@@ -2320,6 +2402,101 @@ function NewRaycastWeaponBase:gadget_update()
 	self:set_gadget_on(false, true)
 end
 
+-- Lines 2483-2500
+function NewRaycastWeaponBase:set_second_sight_on(second_sight_on, ignore_enable, second_sights, current_state)
+	if not ignore_enable and not self._enabled then
+		return
+	end
+
+	if not self._assembly_complete then
+		return
+	end
+
+	self._second_sight_on = second_sight_on or self._second_sight_on
+	local second_sight = nil
+
+	for i, data in ipairs(second_sights or self._second_sights) do
+		second_sight = data
+
+		if second_sight and alive(second_sight.unit) then
+			second_sight.unit:base():set_state(self._second_sight_on == i, self._sound_fire, current_state)
+		end
+	end
+end
+
+-- Lines 2502-2517
+function NewRaycastWeaponBase:toggle_second_sight(current_state)
+	if not self._enabled then
+		return false
+	end
+
+	local second_sight_on = self._second_sight_on or 0
+	local second_sights = self._second_sights
+
+	if second_sights then
+		second_sight_on = (second_sight_on + 1) % (#second_sights + 1)
+
+		self:set_second_sight_on(second_sight_on, false, second_sights, current_state)
+
+		return true
+	end
+
+	return false
+end
+
+-- Lines 2519-2521
+function NewRaycastWeaponBase:has_second_sight()
+	return self._second_sights and #self._second_sights > 0
+end
+
+-- Lines 2523-2525
+function NewRaycastWeaponBase:is_second_sight_on()
+	return self._second_sight_on and self._second_sight_on > 0
+end
+
+-- Lines 2527-2529
+function NewRaycastWeaponBase:current_second_sight_index()
+	return self._second_sight_on
+end
+
+-- Lines 2531-2533
+function NewRaycastWeaponBase:get_active_second_sight()
+	return self._second_sights and self._second_sights[self._second_sight_on]
+end
+
+-- Lines 2535-2537
+function NewRaycastWeaponBase:second_sight_on()
+	self:set_second_sight_on(1, true)
+end
+
+-- Lines 2539-2541
+function NewRaycastWeaponBase:was_second_sight_on()
+	return self._last_second_sight_idx and self._last_second_sight_idx > 0 or false
+end
+
+-- Lines 2543-2545
+function NewRaycastWeaponBase:second_sight_off()
+	self:set_second_sight_on(0, true, nil)
+end
+
+-- Lines 2547-2557
+function NewRaycastWeaponBase:_refresh_second_sight_list()
+	local second_sights = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("second_sight", self._factory_id, self._blueprint)
+
+	table.sort(second_sights, function (a, b)
+		return b < a
+	end)
+
+	self._second_sights = {}
+
+	for _, part_id in ipairs(second_sights) do
+		table.insert(self._second_sights, {
+			part_id = part_id,
+			unit = self._parts and self._parts[part_id] and self._parts[part_id].unit
+		})
+	end
+end
+
 -- Lines 2561-2574
 function NewRaycastWeaponBase:is_bipod_usable()
 	local retval = false
@@ -3123,6 +3300,68 @@ function NewRaycastWeaponBase:set_magazine_empty(is_empty)
 			self:set_objects_visible(part.unit, magazine_empty_objects, not is_empty)
 		end
 	end
+end
+
+-- Lines 3428-3476
+function NewRaycastWeaponBase:ammo_type_buff_add(ammo_id, ammo_buff_data)
+	if self._buffs_data and self._buffs_data[ammo_id] then
+		return
+	end
+
+	local change_data = {}
+
+	if ammo_buff_data.extra_collisions then
+		for class_name, collision_data in pairs(ammo_buff_data.extra_collisions) do
+			local bullet_class = CoreSerialize.string_to_classtable(class_name)
+
+			if bullet_class then
+				self._extra_collisions = self._extra_collisions or {}
+				self._extra_collisions[#self._extra_collisions + 1] = {
+					bullet_class = bullet_class,
+					dmg_mul = collision_data.dmg_mul,
+					fire_dot_data = collision_data.fire_dot_data
+				}
+				change_data.collisions = change_data.collisions or {}
+
+				table.insert(change_data.collisions, #self._extra_collisions)
+			end
+		end
+	end
+
+	if next(change_data) then
+		self._buffs_data = self._buffs_data or {}
+		self._buffs_data[ammo_id] = change_data
+	end
+end
+
+-- Lines 3478-3507
+function NewRaycastWeaponBase:ammo_type_buff_remove(ammo_id)
+	local buff_data = self._buffs_data and self._buffs_data[ammo_id]
+
+	if not buff_data then
+		return
+	end
+
+	self._buffs_data[ammo_id] = nil
+
+	if not next(self._buffs_data) then
+		self._buffs_data = nil
+	end
+
+	if self._extra_collisions then
+		for i, col_i in ipairs(buff_data.collisions) do
+			self._extra_collisions[col_i] = nil
+		end
+
+		if not next(self._extra_collisions) then
+			self._extra_collisions = nil
+		end
+	end
+end
+
+-- Lines 3509-3511
+function NewRaycastWeaponBase:extra_collisions()
+	return self._extra_collisions
 end
 
 if _G.IS_VR then

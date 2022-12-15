@@ -246,10 +246,16 @@ function PlayerCarry:_perform_jump(jump_vec)
 	PlayerCarry.super._perform_jump(self, jump_vec)
 end
 
--- Lines 334-360
+-- Lines 334-367
 function PlayerCarry:_get_max_walk_speed(...)
 	local multiplier = tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
-	multiplier = managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") and 1 or math.clamp(multiplier * managers.player:upgrade_value("carry", "movement_speed_multiplier", 1), 0, 1)
+
+	if managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
+		multiplier = 1
+	else
+		multiplier = math.clamp(multiplier * managers.player:upgrade_value("carry", "movement_speed_multiplier", 1), 0, 1)
+		multiplier = math.clamp(multiplier * managers.player:upgrade_value("player", "mrwi_carry_speed_multiplier", 1), 0, 1)
+	end
 
 	if managers.player:has_category_upgrade("player", "armor_carry_bonus") then
 		local base_max_armor = armor_init + managers.player:body_armor_value("armor") + managers.player:body_armor_skill_addend()
@@ -262,23 +268,28 @@ function PlayerCarry:_get_max_walk_speed(...)
 		multiplier = math.clamp(multiplier, 0, 1)
 	end
 
+	if managers.mutators:is_mutator_active(MutatorCG22) then
+		local mutator = managers.mutators:get_mutator(MutatorCG22)
+		multiplier = multiplier * mutator:get_bag_speed_increase_multiplier()
+	end
+
 	return PlayerCarry.super._get_max_walk_speed(self, ...) * multiplier
 end
 
--- Lines 362-364
+-- Lines 369-371
 function PlayerCarry:_get_walk_headbob(...)
 	return PlayerCarry.super._get_walk_headbob(self, ...) * tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 end
 
--- Lines 368-370
+-- Lines 375-377
 function PlayerCarry:pre_destroy(unit)
 end
 
--- Lines 374-376
+-- Lines 381-383
 function PlayerCarry:destroy()
 end
 
--- Lines 381-383
+-- Lines 388-390
 function PlayerCarry:_get_input(...)
 	return PlayerCarry.super._get_input(self, ...)
 end

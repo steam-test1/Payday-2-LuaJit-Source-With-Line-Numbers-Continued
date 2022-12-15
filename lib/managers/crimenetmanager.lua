@@ -106,6 +106,7 @@ function CrimeNetManager:_setup_vars()
 	self._refresh_server_t = 0
 	self._REFRESH_SERVERS_TIME = self._tweak_data.job_vars.refresh_servers_time
 	self._active_server_jobs = {}
+	self._sidebar_filter_excludes = {}
 end
 
 -- Lines 128-130
@@ -223,12 +224,15 @@ function CrimeNetManager:_setup()
 	end
 
 	self._presets = {}
+	self._event_presets = {}
 	local plvl = managers.experience:current_level()
 	local player_stars = math.clamp(math.ceil((plvl + 1) / 10), 1, 10)
 	local stars = player_stars
 	local jc = math.lerp(0, 100, stars / 10)
 	local prank = managers.experience:current_rank()
 	local jcs = tweak_data.narrative:get_jcs_from_stars(stars, prank > 0)
+	local event_levels = nil
+	event_levels = table.map_keys(tweak_data.mutators:get_cg22_tree_coordinates())
 	local no_jcs = #jcs
 	local chance_curve = tweak_data.narrative.STARS_CURVES[player_stars]
 	local start_chance = tweak_data.narrative.JC_CHANCE
@@ -270,6 +274,20 @@ function CrimeNetManager:_setup()
 
 				table.insert(self._presets, job_data)
 
+				local job_in_event = #job_tweak.chain > 0
+
+				for _, stage in ipairs(job_tweak.chain) do
+					if not table.contains(event_levels, stage.level_id) then
+						job_in_event = false
+
+						break
+					end
+				end
+
+				if job_in_event then
+					table.insert(self._event_presets, job_data)
+				end
+
 				j = j + 1
 
 				break
@@ -293,6 +311,13 @@ function CrimeNetManager:_setup()
 	while #old_presets > 0 do
 		table.insert(self._presets, table.remove(old_presets, math.random(#old_presets)))
 	end
+
+	local old_event_presets = self._event_presets
+	self._event_presets = {}
+
+	while #old_event_presets > 0 do
+		table.insert(self._event_presets, table.remove(old_event_presets, math.random(#old_event_presets)))
+	end
 end
 
 -- Lines 363-388
@@ -307,8 +332,14 @@ function CrimeNetManager:update_difficulty_filter()
 				job_data.difficulty = difficulty_name
 				job_data.difficulty_id = difficulty_filter_index
 			end
+
+			for _, job_data in ipairs(self._event_presets or {}) do
+				job_data.difficulty = difficulty_name
+				job_data.difficulty_id = difficulty_filter_index
+			end
 		else
 			self._presets = nil
+			self._event_presets = nil
 
 			self:_setup()
 		end
@@ -319,12 +350,23 @@ end
 function CrimeNetManager:reset_seed()
 	if not managers.menu_component or not managers.menu_component:has_crimenet_gui() then
 		self._presets = nil
+		self._event_presets = nil
 	end
+end
+
+-- Lines 401-403
+function CrimeNetManager:is_event_active()
+	return MenuCallbackHandler:is_event()
 end
 
 -- Lines 406-430
 function CrimeNetManager:spawn_job(name, difficulty, time_limit)
 	local presets = self._presets
+
+	if self:is_event_active() then
+		presets = self._event_presets
+	end
+
 	local count = #presets
 
 	for i = 1, count do
@@ -372,6 +414,10 @@ function CrimeNetManager:update(t, dt)
 	end
 
 	local presets = self._presets
+
+	if self:is_event_active() then
+		presets = self._event_presets
+	end
 
 	for id, job in pairs(self._active_jobs) do
 		if not job.added then
@@ -497,6 +543,11 @@ local disabled_contacts = {
 -- Lines 567-593
 function CrimeNetManager:activate_job()
 	local presets = self._presets
+
+	if self:is_event_active() then
+		presets = self._event_presets
+	end
+
 	local i = math.random(#presets)
 
 	while i ~= i - 1 do
@@ -525,6 +576,10 @@ end
 -- Lines 595-604
 function CrimeNetManager:preset(id)
 	local presets = self._presets
+
+	if self:is_event_active() then
+		presets = self._event_presets
+	end
 
 	return presets[id]
 end
@@ -1393,6 +1448,24 @@ function CrimeNetManager:sidebar_collapsed()
 	return self._global.sidebar.collapsed
 end
 
+-- Lines 1527-1529
+function CrimeNetManager:set_sidebar_exclude_filter(exclude_list)
+	self._sidebar_filter_excludes = exclude_list or {}
+end
+
+-- Lines 1532-1540
+function CrimeNetManager:get_sidebar_filtered()
+	local sidebar_filtered = {}
+
+	for i, item in ipairs(tweak_data.gui.crime_net.sidebar) do
+		if not table.contains(self._sidebar_filter_excludes, item.name_id) then
+			table.insert(sidebar_filtered, item)
+		end
+	end
+
+	return sidebar_filtered
+end
+
 CrimeNetGui = CrimeNetGui or class()
 
 -- Lines 1547-2079
@@ -1813,6 +1886,23 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 	})
 	mw = math.max(mw, self:make_fine_text(ghost_text))
 	next_y = ghost_text:bottom()
+	local holiday_icon = legend_panel:bitmap({
+		texture = "guis/textures/pd2/cn_mini_xmas",
+		x = 10,
+		y = next_y + 2,
+		color = tweak_data.screen_colors.event_color
+	})
+	local holiday_text = legend_panel:text({
+		blend_mode = "add",
+		font = tweak_data.menu.pd2_small_font,
+		font_size = tweak_data.menu.pd2_small_font_size,
+		x = host_text:left(),
+		y = next_y,
+		text = managers.localization:to_upper_text("menu_cn_legend_holiday"),
+		color = tweak_data.screen_colors.event_color
+	})
+	mw = math.max(mw, self:make_fine_text(holiday_text))
+	next_y = holiday_text:bottom()
 	local kick_none_icon = legend_panel:bitmap({
 		texture = "guis/textures/pd2/cn_kick_marker",
 		x = 10,
@@ -2006,6 +2096,23 @@ function CrimeNetGui:init(ws, fullscreeen_ws, node)
 				color = tweak_data.screen_colors.button_stage_2
 			})
 		end
+	end
+
+	local limited_bonus = (tweak_data:get_value("experience_manager", "limited_xmas_bonus_multiplier") or 1) - 1
+
+	if limited_bonus > 0 then
+		local limited_string = mul_to_procent_string(limited_bonus)
+		local limited_text = global_bonuses_panel:text({
+			blend_mode = "add",
+			align = "center",
+			font = tweak_data.menu.pd2_small_font,
+			font_size = tweak_data.menu.pd2_small_font_size,
+			text = managers.localization:to_upper_text("menu_cn_holiday_bonus", {
+				bonus = limited_string,
+				event_icon = managers.localization:get_default_macro("BTN_XMAS")
+			}),
+			color = tweak_data.screen_colors.event_color
+		})
 	end
 
 	if #global_bonuses_panel:children() > 1 then
@@ -3517,6 +3624,23 @@ function CrimeNetGui:_create_job_gui(data, type, fixed_x, fixed_y, fixed_locatio
 
 		ghost_icon:set_top(side_icons_top)
 		ghost_icon:set_right(next_icon_right)
+
+		next_icon_right = next_icon_right - 12
+	end
+
+	local christmas_icon = nil
+
+	if data.job_id and managers.job:is_christmas_job(data.job_id) then
+		christmas_icon = icon_panel:bitmap({
+			blend_mode = "add",
+			name = "christmas_icon",
+			texture = "guis/textures/pd2/cn_mini_xmas",
+			rotation = 360,
+			color = tweak_data.screen_colors.event_color
+		})
+
+		christmas_icon:set_top(side_icons_top)
+		christmas_icon:set_right(next_icon_right)
 
 		next_icon_right = next_icon_right - 12
 	end

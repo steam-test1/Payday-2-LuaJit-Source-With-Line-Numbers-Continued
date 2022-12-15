@@ -23,6 +23,7 @@ DigitalGui.GUI_EVENT_IDS = {
 	number_set = 7
 }
 DigitalGui.NUMBER_CLAMP = 99999
+DigitalGui._EXTENSION_NAME = "digital_gui"
 
 -- Lines 32-68
 function DigitalGui:init(unit)
@@ -53,7 +54,7 @@ function DigitalGui:init(unit)
 
 	self:add_workspace(self._unit:get_object(Idstring(self._gui_object)))
 	self:setup()
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), false)
 end
 
 -- Lines 70-73
@@ -217,7 +218,7 @@ end
 
 -- Lines 198-210
 function DigitalGui:timer_start_count_up(sync)
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), true)
 
 	self._timer_paused = false
 	self._timer_count_up = true
@@ -230,7 +231,7 @@ end
 
 -- Lines 212-224
 function DigitalGui:timer_start_count_down(sync)
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), true)
 
 	self._timer_paused = false
 	self._timer_count_up = false
@@ -243,7 +244,7 @@ end
 
 -- Lines 226-236
 function DigitalGui:timer_pause(sync)
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), false)
 
 	self._timer_paused = true
 
@@ -254,7 +255,7 @@ end
 
 -- Lines 238-248
 function DigitalGui:timer_resume(sync)
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), true)
 
 	self._timer_paused = false
 
@@ -278,7 +279,7 @@ end
 
 -- Lines 259-267
 function DigitalGui:_timer_stop()
-	self._unit:set_extension_update_enabled(Idstring("digital_gui"), false)
+	self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), false)
 
 	self._timer_count_up = false
 	self._timer_count_down = false
@@ -423,7 +424,7 @@ function DigitalGui:load(data)
 	end
 
 	if not self._timer_paused and (self._timer_count_up or self._timer_count_down) then
-		self._unit:set_extension_update_enabled(Idstring("digital_gui"), true)
+		self._unit:set_extension_update_enabled(Idstring(self._EXTENSION_NAME), true)
 	end
 
 	self:set_color_type(state.COLOR_TYPE)
@@ -433,3 +434,8 @@ function DigitalGui:load(data)
 		self:set_visible(state.visible)
 	end
 end
+
+DigitalGuiUpper = DigitalGuiUpper or class(DigitalGui)
+DigitalGuiUpper._EXTENSION_NAME = "digital_gui_upper"
+WeaponTargetHealthDisplayGui = WeaponTargetHealthDisplayGui or class(DigitalGui)
+WeaponTargetHealthDisplayGui._EXTENSION_NAME = "digital_gui_thd"

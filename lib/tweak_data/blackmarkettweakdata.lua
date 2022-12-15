@@ -846,7 +846,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 784-821
+-- Lines 784-822
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -876,11 +876,16 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables.bodybags_bag = {
 		name_id = "bm_equipment_bodybags_bag"
 	}
+	self.deployables.grenade_crate = {
+		name_id = "bm_equipment_grenade_crate",
+		dlc = "mxm",
+		texture_bundle_folder = "mxm"
+	}
 
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 823-836
+-- Lines 824-837
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -897,7 +902,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 838-849
+-- Lines 839-850
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

@@ -2,9 +2,10 @@ ProjectileBase = ProjectileBase or class(UnitBase)
 ProjectileBase.time_cheat = {}
 local mvec1 = Vector3()
 local mvec2 = Vector3()
+local mvec3 = Vector3()
 local mrot1 = Rotation()
 
--- Lines 10-31
+-- Lines 12-41
 function ProjectileBase:init(unit)
 	ProjectileBase.super.init(self, unit, true)
 
@@ -23,9 +24,88 @@ function ProjectileBase:init(unit)
 	end
 
 	self._variant = "projectile"
+	local projectile_entry = self._tweak_projectile_entry
+	local tweak_entry = tweak_data.projectiles[projectile_entry]
+
+	if tweak_entry then
+		local blackmarket_tweak_entry = tweak_data.blackmarket.projectiles[projectile_entry]
+
+		self:_setup_warning_fx_vfx(tweak_entry, blackmarket_tweak_entry)
+	end
 end
 
--- Lines 35-48
+-- Lines 43-120
+function ProjectileBase:_setup_warning_fx_vfx(tweak_entry, blackmarket_tweak_entry)
+	if not tweak_entry.warning_data then
+		return
+	end
+
+	local warning_fx_vfx_data = {}
+	local light_data = tweak_entry.warning_data.light_data
+
+	if light_data then
+		local light = World:create_light(light_data.type_str or "omni|specular")
+
+		if light_data.link_to_unit then
+			light:link(self._unit:orientation_object())
+		end
+
+		light:set_color(light_data.color)
+		light:set_specular_multiplier(light_data.specular_mul)
+		light:set_falloff_exponent(light_data.falloff_exp)
+		light:set_multiplier(0)
+		light:set_far_range(0)
+		light:set_enable(false)
+
+		warning_fx_vfx_data.light = {
+			light_obj = light,
+			range = light_data.range,
+			beep_mul = light_data.beep_mul,
+			fade_speed = light_data.beep_fade_speed,
+			link_to_unit = light_data.link_to_unit,
+			upd_position = light_data.update_position
+		}
+	end
+
+	if tweak_entry.warning_data.sound_data then
+		warning_fx_vfx_data.sound = {
+			needs_stop = false,
+			event = tweak_entry.warning_data.sound_data.event_name,
+			event_stop = tweak_entry.warning_data.sound_data.event_stop_name
+		}
+
+		if not self._unit:sound_source() then
+			Application:error("[ProjectileBase:_setup_warning_fx_vfx] No sound source to play sounds with unit.", self._unit)
+		end
+	end
+
+	if tweak_entry.warning_data.effect_data then
+		local effect_id = World:effect_manager():spawn({
+			effect = Idstring(tweak_entry.warning_data.effect_data.effect_name),
+			parent = tweak_entry.warning_data.effect_data.link_to_unit and self._unit:orientation_object() or nil
+		})
+
+		World:effect_manager():set_hidden(effect_id, true)
+		World:effect_manager():set_frozen(effect_id, true)
+
+		warning_fx_vfx_data.effect = {
+			effect_id = effect_id,
+			upd_position = tweak_entry.warning_data.effect_data.update_position
+		}
+	end
+
+	if next(warning_fx_vfx_data) then
+		warning_fx_vfx_data.enabled = false
+		warning_fx_vfx_data.timer = tweak_entry.detonate_timer
+		warning_fx_vfx_data.virtual_timer = tweak_entry.detonate_timer
+		warning_fx_vfx_data.after_impact = tweak_entry.warning_data.play_after_impact
+		warning_fx_vfx_data.when_attached = tweak_entry.warning_data.play_when_attached
+		warning_fx_vfx_data.beep_speeds = tweak_entry.warning_data.beep_speeds
+		self._warning_fx_vfx_data = warning_fx_vfx_data
+	end
+end
+
+-- Lines 124-137
 function ProjectileBase:set_thrower_unit_by_peer_id(peer_id)
 	if not peer_id then
 		return
@@ -41,7 +121,7 @@ function ProjectileBase:set_thrower_unit_by_peer_id(peer_id)
 	end
 end
 
--- Lines 51-170
+-- Lines 140-259
 function ProjectileBase:set_thrower_unit(unit, proj_ignore_thrower, thrower_ignore_proj)
 	if self._thrower_unit then
 		if not unit or self._thrower_unit:key() ~= unit:key() then
@@ -164,7 +244,7 @@ function ProjectileBase:set_thrower_unit(unit, proj_ignore_thrower, thrower_igno
 	end
 end
 
--- Lines 172-185
+-- Lines 261-274
 function ProjectileBase:_clbk_thrower_unit_destroyed(unit)
 	self._thrower_unit = nil
 	self._thrower_ignore_proj = nil
@@ -180,7 +260,7 @@ function ProjectileBase:_clbk_thrower_unit_destroyed(unit)
 	end
 end
 
--- Lines 187-217
+-- Lines 276-306
 function ProjectileBase:add_ignore_unit(unit)
 	local has_destroy_listener = nil
 	local listener_class = unit:base()
@@ -206,12 +286,12 @@ function ProjectileBase:add_ignore_unit(unit)
 	end
 end
 
--- Lines 219-221
+-- Lines 308-310
 function ProjectileBase:_clbk_ignore_unit_destroyed(unit)
 	self:remove_ignore_unit(unit, true)
 end
 
--- Lines 223-252
+-- Lines 312-341
 function ProjectileBase:remove_ignore_unit(unit, no_listener_chk)
 	if not self._ignore_units then
 		return
@@ -243,39 +323,39 @@ function ProjectileBase:remove_ignore_unit(unit, no_listener_chk)
 	end
 end
 
--- Lines 254-256
+-- Lines 343-345
 function ProjectileBase:thrower_unit()
 	return alive(self._thrower_unit) and self._thrower_unit or nil
 end
 
--- Lines 260-264
+-- Lines 349-353
 function ProjectileBase:set_weapon_unit(weapon_unit)
 	self._weapon_unit = weapon_unit
 	self._weapon_id = weapon_unit and weapon_unit:base():get_name_id()
 	self._weapon_damage_mult = weapon_unit and weapon_unit:base().projectile_damage_multiplier and weapon_unit:base():projectile_damage_multiplier() or 1
 end
 
--- Lines 266-268
+-- Lines 355-357
 function ProjectileBase:weapon_unit()
 	return alive(self._weapon_unit) and self._weapon_unit or nil
 end
 
--- Lines 272-274
+-- Lines 361-363
 function ProjectileBase:set_projectile_entry(projectile_entry)
 	self._projectile_entry = projectile_entry
 end
 
--- Lines 276-278
+-- Lines 365-367
 function ProjectileBase:projectile_entry()
 	return self._projectile_entry or tweak_data.blackmarket:get_projectile_name_from_index(1)
 end
 
--- Lines 280-282
+-- Lines 369-371
 function ProjectileBase:get_name_id()
 	return alive(self._weapon_unit) and self._weapon_unit:base():get_name_id() or self._projectile_entry
 end
 
--- Lines 284-291
+-- Lines 373-380
 function ProjectileBase:is_category(...)
 	for _, cat in ipairs({
 		...
@@ -288,19 +368,19 @@ function ProjectileBase:is_category(...)
 	return false
 end
 
--- Lines 295-298
+-- Lines 384-387
 function ProjectileBase:set_active(active)
 	self._active = active
 
 	self._unit:set_extension_update_enabled(Idstring("base"), self._active)
 end
 
--- Lines 300-302
+-- Lines 389-391
 function ProjectileBase:active()
 	return self._active
 end
 
--- Lines 307-315
+-- Lines 396-404
 function ProjectileBase:create_sweep_data()
 	self._sweep_data = {
 		slot_mask = self._slot_mask
@@ -310,7 +390,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
--- Lines 319-373
+-- Lines 408-462
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -370,7 +450,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
--- Lines 377-379
+-- Lines 466-468
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	self:throw({
 		dir = dir,
@@ -378,7 +458,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
--- Lines 383-443
+-- Lines 472-536
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -412,10 +492,23 @@ function ProjectileBase:update(unit, t, dt)
 			})
 		end
 
+		if self._sphere_cast_radius then
+			table.list_append(raycast_params, {
+				"sphere_cast_radius",
+				self._sphere_cast_radius,
+				"bundle",
+				4
+			})
+		end
+
 		local col_ray = World:raycast(unpack(raycast_params))
 
 		if self._draw_debug_trail then
-			Draw:brush(Color(0.25, 0, 0, 1), nil, 3):line(self._sweep_data.last_pos, self._sweep_data.current_pos)
+			if self._sphere_cast_radius then
+				Draw:brush(Color(0.25, 0, 0, 1), nil, 3):cylinder(self._sweep_data.last_pos, self._sweep_data.current_pos, self._sphere_cast_radius, 4)
+			else
+				Draw:brush(Color(0.25, 0, 0, 1), nil, 3):line(self._sweep_data.last_pos, self._sweep_data.current_pos)
+			end
 		end
 
 		if col_ray and col_ray.unit then
@@ -437,9 +530,212 @@ function ProjectileBase:update(unit, t, dt)
 
 		self._unit:m_position(self._sweep_data.last_pos)
 	end
+
+	if self._warning_fx_vfx_data then
+		self:_warning_fx_vfx_upd(unit, t, dt, self._warning_fx_vfx_data)
+	end
 end
 
--- Lines 448-477
+-- Lines 540-621
+function ProjectileBase:_warning_fx_vfx_upd(unit, t, dt, warning_data)
+	if self._detonated then
+		self:_warning_fx_vfx_remove()
+
+		self._warning_fx_vfx_data = nil
+
+		return
+	end
+
+	if warning_data.after_impact or warning_data.when_attached then
+		local can_update = warning_data.after_impact and self._collided and true or warning_data.when_attached and unit:parent() and true or false
+
+		if can_update then
+			if warning_data.timer and warning_data.beep_speeds then
+				self:_warning_fx_vfx_progress(unit, t, dt, warning_data)
+			else
+				self:_warning_fx_vfx_enable(warning_data)
+			end
+		else
+			self:_warning_fx_vfx_disable(warning_data)
+		end
+	elseif warning_data.timer and warning_data.beep_speeds then
+		self:_warning_fx_vfx_progress(unit, t, dt, warning_data)
+	else
+		self:_warning_fx_vfx_enable(warning_data)
+	end
+
+	if warning_data.enabled then
+		local updated_pos = false
+		local light_data = warning_data.light
+		local effect_data = warning_data.effect
+
+		if light_data and light_data.upd_position and alive(light_data.light_obj) and light_data.upd_position then
+			updated_pos = true
+
+			unit:m_position(mvec3)
+			light_data.light_obj:set_position(mvec3)
+		end
+
+		if effect_data and effect_data.upd_position then
+			if not updated_pos then
+				unit:m_position(mvec3)
+			end
+
+			World:effect_manager():move(effect_data.effect_id, mvec3)
+		end
+	end
+end
+
+-- Lines 623-671
+function ProjectileBase:_warning_fx_vfx_progress(unit, t, dt, warning_data)
+	if not warning_data.enabled then
+		self:_warning_fx_vfx_enable(warning_data)
+	end
+
+	warning_data.virtual_timer = warning_data.virtual_timer - dt
+	local light_data = warning_data.light
+
+	if not warning_data.beep_t then
+		warning_data.beep_t = warning_data.virtual_timer / warning_data.beep_speeds[1] * warning_data.beep_speeds[2]
+
+		if light_data and light_data.fade_speed then
+			light_data.mul = light_data.beep_mul or 1
+		end
+	else
+		warning_data.beep_t = warning_data.beep_t - dt
+
+		if warning_data.beep_t < 0 then
+			warning_data.beep_t = warning_data.virtual_timer / warning_data.beep_speeds[1] * warning_data.beep_speeds[2]
+
+			if light_data and light_data.fade_speed then
+				light_data.mul = light_data.beep_mul or 1
+			end
+
+			local sound_data = warning_data.sound
+
+			if sound_data and sound_data.event and not sound_data.needs_stop then
+				if sound_data.event_stop then
+					sound_data.needs_stop = true
+				end
+
+				if self._unit:sound_source() then
+					self._unit:sound_source():post_event(sound_data.event)
+				end
+			end
+		end
+
+		if light_data and light_data.fade_speed and alive(light_data.light_obj) then
+			light_data.mul = math.clamp(light_data.mul - dt * light_data.fade_speed, 0, 1)
+
+			light_data.light_obj:set_multiplier(light_data.mul)
+			light_data.light_obj:set_far_range(light_data.range * light_data.mul)
+		end
+	end
+end
+
+-- Lines 673-712
+function ProjectileBase:_warning_fx_vfx_enable(warning_data)
+	if warning_data.enabled then
+		return
+	end
+
+	warning_data.enabled = true
+
+	if warning_data.timer and warning_data.beep_speeds then
+		warning_data.virtual_timer = warning_data.timer
+	end
+
+	local light_data = warning_data.light
+	local effect_data = warning_data.effect
+
+	if light_data and alive(light_data.light_obj) then
+		if not light_data.fade_speed or not warning_data.timer or not warning_data.beep_speeds then
+			light_data.light_obj:set_multiplier(light_data.beep_mul or 1)
+			light_data.light_obj:set_far_range(light_data.range)
+		end
+
+		light_data.light_obj:set_enable(true)
+	end
+
+	if not warning_data.timer or not warning_data.beep_speeds then
+		local sound_data = warning_data.sound
+
+		if sound_data and sound_data.event and self._unit:sound_source() then
+			if sound_data.event_stop then
+				sound_data.needs_stop = true
+			end
+
+			self._unit:sound_source():post_event(sound_data.event)
+		end
+	end
+
+	if effect_data then
+		World:effect_manager():set_hidden(effect_data.effect_id, false)
+		World:effect_manager():set_frozen(effect_data.effect_id, false)
+	end
+end
+
+-- Lines 714-741
+function ProjectileBase:_warning_fx_vfx_disable(warning_data)
+	if not warning_data.enabled then
+		return
+	end
+
+	warning_data.beep_t = nil
+	warning_data.enabled = false
+	local light_data = warning_data.light
+	local sound_data = warning_data.sound
+	local effect_data = warning_data.effect
+
+	if light_data and alive(light_data.light_obj) then
+		light_data.light_obj:set_multiplier(0)
+		light_data.light_obj:set_far_range(0)
+		light_data.light_obj:set_enable(false)
+	end
+
+	if sound_data and sound_data.needs_stop and self._unit:sound_source() then
+		sound_data.needs_stop = false
+
+		self._unit:sound_source():post_event(sound_data.event_stop)
+	end
+
+	if effect_data then
+		World:effect_manager():set_hidden(effect_data.effect_id, true)
+		World:effect_manager():set_frozen(effect_data.effect_id, true)
+	end
+end
+
+-- Lines 743-771
+function ProjectileBase:_warning_fx_vfx_remove()
+	local warning_data = self._warning_fx_vfx_data
+
+	if not warning_data then
+		return
+	end
+
+	self._warning_fx_vfx_data = nil
+	local light_data = warning_data.light
+	local sound_data = warning_data.sound
+	local effect_data = warning_data.effect
+
+	if light_data and alive(light_data.light_obj) then
+		if light_data.link_to_unit then
+			light_data.light_obj:unlink()
+		end
+
+		World:delete_light(light_data.light_obj)
+	end
+
+	if sound_data and sound_data.needs_stop and self._unit:sound_source() then
+		self._unit:sound_source():post_event(sound_data.event_stop)
+	end
+
+	if effect_data then
+		World:effect_manager():kill(effect_data.effect_id)
+	end
+end
+
+-- Lines 776-805
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -469,17 +765,17 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
--- Lines 481-483
+-- Lines 809-811
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
--- Lines 487-489
+-- Lines 815-817
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
--- Lines 493-498
+-- Lines 821-826
 function ProjectileBase:save(data)
 	local state = {
 		timer = self._timer
@@ -487,13 +783,13 @@ function ProjectileBase:save(data)
 	data.ProjectileBase = state
 end
 
--- Lines 502-505
+-- Lines 830-833
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
 end
 
--- Lines 509-568
+-- Lines 837-897
 function ProjectileBase:destroy(...)
 	ProjectileBase.super.destroy(self, ...)
 
@@ -553,9 +849,10 @@ function ProjectileBase:destroy(...)
 	self._ignore_destroy_listener_key = nil
 
 	self:remove_trail_effect()
+	self:_warning_fx_vfx_remove()
 end
 
--- Lines 574-608
+-- Lines 903-937
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)
 	if not ProjectileBase.check_time_cheat(projectile_type, owner_peer_id) then
 		return
@@ -599,7 +896,7 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines 612-635
+-- Lines 941-964
 function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_unit)
 	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
@@ -629,14 +926,14 @@ function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_
 	return unit
 end
 
--- Lines 639-642
+-- Lines 968-971
 function ProjectileBase:add_trail_effect()
 	managers.game_play_central:add_projectile_trail(self._unit, self._unit:orientation_object(), self.trail_effect)
 
 	self._added_trail_effect = true
 end
 
--- Lines 644-649
+-- Lines 973-978
 function ProjectileBase:remove_trail_effect()
 	if self._added_trail_effect then
 		managers.game_play_central:remove_projectile_trail(self._unit)
@@ -645,7 +942,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines 653-670
+-- Lines 982-999
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -666,18 +963,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines 674-685
+-- Lines 1003-1014
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 689-690
+-- Lines 1018-1019
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines 692-708
+-- Lines 1021-1037
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -697,13 +994,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 711-714
+-- Lines 1040-1043
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 716-718
+-- Lines 1045-1047
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end
