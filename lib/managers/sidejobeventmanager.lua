@@ -12,7 +12,7 @@ function SideJobEventManager:init()
 	self:_setup()
 end
 
--- Lines 18-39
+-- Lines 18-40
 function SideJobEventManager:_setup()
 	if not Global[self.global_table_name] then
 		Global[self.global_table_name] = {}
@@ -30,6 +30,8 @@ function SideJobEventManager:_setup()
 		end
 	end
 
+	self._global.event_data = self._global.event_data or {}
+
 	if setup.IS_START_MENU then
 		self._event_data_fetched = false
 
@@ -39,7 +41,7 @@ end
 
 local json = require("lib/utils/accelbyte/json")
 
--- Lines 43-67
+-- Lines 44-68
 function SideJobEventManager:_fetch_challenges()
 	local events_url = "https://www.paydaythegame.com/ovk-media/redux/ninth-2yrgbaw/ninthstage.json"
 	local cg22_events_url = "https://www.paydaythegame.com/ovk-media/redux/hl22-u3yhfbfaud/holiday22stage.json"
@@ -63,7 +65,7 @@ function SideJobEventManager:_fetch_challenges()
 	end
 end
 
--- Lines 69-77
+-- Lines 70-78
 function SideJobEventManager:_pop_fetch_que()
 	if self._fetch_que and #self._fetch_que > 0 and not self._fetching_json then
 		self._fetching_json = true
@@ -74,7 +76,7 @@ function SideJobEventManager:_pop_fetch_que()
 	end
 end
 
--- Lines 79-98
+-- Lines 80-99
 function SideJobEventManager:_fetch_done_clbk(success, s)
 	print("[SideJobEventManager] - PDA9", success, s)
 
@@ -97,7 +99,7 @@ function SideJobEventManager:_fetch_done_clbk(success, s)
 	self:_pop_fetch_que()
 end
 
--- Lines 102-121
+-- Lines 103-122
 function SideJobEventManager:_cg22_fetch_done_clbk(success, s)
 	print("[SideJobEventManager] - CG22", success, s)
 
@@ -110,7 +112,7 @@ function SideJobEventManager:_cg22_fetch_done_clbk(success, s)
 		self._global.event_data.cg22.stage = cg22_unlock_stage
 		self._global.event_data.cg22.bags = cg22_bags
 
-		if self._global.event_stage.cg22 ~= cg22_unlock_stage then
+		if self._global.event_stage.cg22 ~= cg22_unlock_stage and self._has_loaded then
 			self:set_event_stage("cg22", cg22_unlock_stage)
 		end
 	end
@@ -120,7 +122,7 @@ function SideJobEventManager:_cg22_fetch_done_clbk(success, s)
 	self:_pop_fetch_que()
 end
 
--- Lines 124-144
+-- Lines 125-145
 function SideJobEventManager:_setup_challenges()
 	if not self._tweak_data.challenges then
 		error("Can't setup a SideJobEventManager if challenges tweak data is defined!")
@@ -145,7 +147,7 @@ function SideJobEventManager:_setup_challenges()
 	Global[self.global_table_name].event_data = {}
 end
 
--- Lines 146-161
+-- Lines 147-162
 function SideJobEventManager:reset()
 	for idx, challenge in ipairs(self._global.challenges) do
 		if challenge.completed then
@@ -165,7 +167,7 @@ function SideJobEventManager:reset()
 	self:_setup()
 end
 
--- Lines 165-219
+-- Lines 166-220
 function SideJobEventManager:save(cache)
 	local challenges = {}
 
@@ -217,7 +219,7 @@ function SideJobEventManager:save(cache)
 	cache[self.save_table_name] = save_data
 end
 
--- Lines 221-409
+-- Lines 222-429
 function SideJobEventManager:load(cache, version)
 	local state = cache[self.save_table_name]
 
@@ -231,7 +233,7 @@ function SideJobEventManager:load(cache, version)
 				if not saved_challenge.completed then
 					for _, objective in ipairs(challenge.objectives) do
 						for _, saved_objective in ipairs(saved_challenge.objectives) do
-							if objective.achievement_id ~= nil and objective.achievement_id == saved_objective.achievement_id or objective.progress_id ~= nil and objective.progress_id == saved_objective.progress_id or objective.collective_id ~= nil and objective.collective_id == saved_objective.collective_id then
+							if objective.achievement_id ~= nil and objective.achievement_id == saved_objective.achievement_id or objective.progress_id ~= nil and objective.progress_id == saved_objective.progress_id or objective.collective_id ~= nil and objective.collective_id == saved_objective.collective_id or objective.stage_id ~= nil and objective.stage_id == saved_objective.stage_id then
 								for _, save_value in ipairs(objective.save_values) do
 									objective[save_value] = saved_objective[save_value] or objective[save_value]
 								end
@@ -361,6 +363,27 @@ function SideJobEventManager:load(cache, version)
 				self:_update_challenge_collective(challenge, "collective_id", stat_id, "pda9_update", self.completed_challenge)
 			end
 		end
+
+		if self._event_data_fetched and self._global.event_data.cg22 then
+			for index, challenge in ipairs(self:challenges()) do
+				local challenge_status = challenge.completed
+
+				for idx, objective in ipairs(challenge.objectives) do
+					if objective.stage_id == "cg22_stages" and not table.contains(objective.stages, self._global.event_data.cg22.stage or 1) then
+						objective.completed = false
+						challenge_status = false
+					end
+				end
+
+				challenge.completed = challenge_status
+			end
+		end
+
+		if self._event_data_fetched and self._global.event_data.cg22 then
+			self:set_event_stage("cg22", self._global.event_data.cg22.stage or 1)
+		end
+
+		self._has_loaded = true
 	elseif state and state.version == 2 and self.save_version == 3 then
 		for idx, saved_challenge in ipairs(state.challenges or {}) do
 			local challenge = self:get_challenge(saved_challenge.id)
@@ -387,7 +410,7 @@ function SideJobEventManager:load(cache, version)
 	end
 end
 
--- Lines 411-422
+-- Lines 431-442
 function SideJobEventManager:aquire_claimed_upgrades()
 	for idx, challenge in ipairs(self._global.challenges) do
 		if challenge.completed then
@@ -402,22 +425,22 @@ function SideJobEventManager:aquire_claimed_upgrades()
 	end
 end
 
--- Lines 426-428
+-- Lines 446-448
 function SideJobEventManager:name()
 	return "Replace name"
 end
 
--- Lines 431-433
+-- Lines 451-453
 function SideJobEventManager:can_progress()
 	return true
 end
 
--- Lines 437-439
+-- Lines 457-459
 function SideJobEventManager:challenges()
 	return self._global.challenges
 end
 
--- Lines 441-447
+-- Lines 461-467
 function SideJobEventManager:get_challenge(id)
 	for idx, challenge in pairs(self._global.challenges) do
 		if challenge.id == id then
@@ -426,7 +449,7 @@ function SideJobEventManager:get_challenge(id)
 	end
 end
 
--- Lines 449-469
+-- Lines 469-489
 function SideJobEventManager:get_challenge_from_reward(type_items, item_entry)
 	local type_pass, entry_pass = nil
 
@@ -450,7 +473,7 @@ function SideJobEventManager:get_challenge_from_reward(type_items, item_entry)
 	return nil
 end
 
--- Lines 471-478
+-- Lines 491-498
 function SideJobEventManager:get_stat_from_item_id(id)
 	for stat_id, stat in pairs(self._global.collective_stats) do
 		if table.contains(stat.all, id) then
@@ -461,12 +484,12 @@ function SideJobEventManager:get_stat_from_item_id(id)
 	return false
 end
 
--- Lines 480-482
+-- Lines 500-502
 function SideJobEventManager:is_item_found(stat, item_id)
 	return self._global.collective_stats[stat] and self._global.collective_stats[stat].found[item_id]
 end
 
--- Lines 484-495
+-- Lines 504-515
 function SideJobEventManager:is_mission_complete(challenge_id)
 	if not self:can_progress() then
 		return false
@@ -481,7 +504,7 @@ function SideJobEventManager:is_mission_complete(challenge_id)
 	return false
 end
 
--- Lines 497-514
+-- Lines 517-534
 function SideJobEventManager:is_objective_complete(challenge_id, objective_id)
 	if not self:can_progress() then
 		return false
@@ -500,7 +523,7 @@ function SideJobEventManager:is_objective_complete(challenge_id, objective_id)
 	return false
 end
 
--- Lines 516-545
+-- Lines 536-565
 function SideJobEventManager:award(id)
 	if not self:can_progress() then
 		return
@@ -531,7 +554,7 @@ function SideJobEventManager:award(id)
 	end
 end
 
--- Lines 547-581
+-- Lines 567-601
 function SideJobEventManager:_update_challenge_progress(challenge, key, id, amount, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if objective[key] == id then
@@ -571,7 +594,7 @@ function SideJobEventManager:_update_challenge_progress(challenge, key, id, amou
 	end
 end
 
--- Lines 583-619
+-- Lines 603-639
 function SideJobEventManager:_update_challenge_collective(challenge, key, stat_id, item_id, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if objective[key] == stat_id then
@@ -611,7 +634,7 @@ function SideJobEventManager:_update_challenge_collective(challenge, key, stat_i
 	end
 end
 
--- Lines 621-653
+-- Lines 641-673
 function SideJobEventManager:_update_challenge_tracking(challenge, key, stat_id, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if objective[key] == stat_id then
@@ -646,7 +669,7 @@ function SideJobEventManager:_update_challenge_tracking(challenge, key, stat_id,
 	end
 end
 
--- Lines 655-687
+-- Lines 675-707
 function SideJobEventManager:_update_challenge_stages(challenge, key, stat_id, stage, complete_func)
 	for obj_idx, objective in ipairs(challenge.objectives) do
 		if objective[key] == stat_id then
@@ -681,7 +704,7 @@ function SideJobEventManager:_update_challenge_stages(challenge, key, stat_id, s
 	end
 end
 
--- Lines 690-727
+-- Lines 710-747
 function SideJobEventManager:_update_challenge_choice(challenge, objective, key, complete_func, params)
 	local choice_pass = false
 
@@ -731,7 +754,7 @@ function SideJobEventManager:_update_challenge_choice(challenge, objective, key,
 	end
 end
 
--- Lines 730-744
+-- Lines 750-764
 function SideJobEventManager:completed_challenge(challenge_or_id)
 	local challenge = type(challenge_or_id) == "table" and challenge_or_id or self:get_challenge(challenge_or_id)
 
@@ -745,7 +768,7 @@ function SideJobEventManager:completed_challenge(challenge_or_id)
 	end
 end
 
--- Lines 746-768
+-- Lines 766-788
 function SideJobEventManager:has_already_claimed_reward(challenge_id, reward_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -778,7 +801,7 @@ function SideJobEventManager:has_already_claimed_reward(challenge_id, reward_id)
 	return false
 end
 
--- Lines 770-797
+-- Lines 790-817
 function SideJobEventManager:claim_reward(challenge_id, reward_id)
 	if not self:can_progress() then
 		return
@@ -811,7 +834,7 @@ function SideJobEventManager:claim_reward(challenge_id, reward_id)
 	end
 end
 
--- Lines 799-850
+-- Lines 819-870
 function SideJobEventManager:_award_reward(reward, challenge_id)
 	if reward.item_entry then
 		local add_to_inventory = true
@@ -870,7 +893,7 @@ function SideJobEventManager:_award_reward(reward, challenge_id)
 	end
 end
 
--- Lines 852-871
+-- Lines 872-891
 function SideJobEventManager:has_completed_and_claimed_rewards(challenge_id)
 	local challenge = self:get_challenge(challenge_id)
 
@@ -893,12 +916,12 @@ function SideJobEventManager:has_completed_and_claimed_rewards(challenge_id)
 	return true
 end
 
--- Lines 874-876
+-- Lines 894-896
 function SideJobEventManager:any_challenge_completed()
 	return self._has_completed_mission
 end
 
--- Lines 878-913
+-- Lines 898-933
 function SideJobEventManager:set_event_stage(event_id, stage)
 	print("SideJobEventManager:set_event_stage", event_id, stage)
 
@@ -925,7 +948,7 @@ function SideJobEventManager:set_event_stage(event_id, stage)
 	end
 end
 
--- Lines 915-920
+-- Lines 935-940
 function SideJobEventManager:register_award_on_mission_end(id)
 	if self:get_stat_from_item_id(id) then
 		self._global.award_on_mission_end = self._global.award_on_mission_end or {}
@@ -934,7 +957,7 @@ function SideJobEventManager:register_award_on_mission_end(id)
 	end
 end
 
--- Lines 922-927
+-- Lines 942-947
 function SideJobEventManager:award_on_mission_end()
 	for _, item_id in ipairs(self._global.award_on_mission_end or {}) do
 		self:award(item_id)
@@ -943,12 +966,12 @@ function SideJobEventManager:award_on_mission_end()
 	self._global.award_on_mission_end = {}
 end
 
--- Lines 929-931
+-- Lines 949-951
 function SideJobEventManager:get_event_stage(event_id)
 	return self._global.event_stage[event_id]
 end
 
--- Lines 933-935
+-- Lines 953-955
 function SideJobEventManager:is_event_active(event_id)
 	return self._global.event_stage[event_id] < 5
 end

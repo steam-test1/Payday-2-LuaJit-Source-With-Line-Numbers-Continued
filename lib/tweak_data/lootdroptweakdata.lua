@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2352
+-- Lines 5-2353
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1760,11 +1760,12 @@ function LootDropTweakData:init(tweak_data)
 		drops = false,
 		track = true,
 		sort_number = 514,
-		category = "global_event"
+		category = "global_event",
+		unique_lock_icon = "guis/textures/pd2/lock_achievement"
 	}
 	self.global_values.victor_mods_pack_2 = deep_clone(self.global_values.victor_mods_pack_1)
 	self.global_values.victor_mods_pack_2.unlock_id = "bm_menu_locked_cg22_3"
-	self.global_values.victor_mods_pack_1.sort_number = 516
+	self.global_values.victor_mods_pack_2.sort_number = 516
 
 	if SystemInfo:platform() == Idstring("PS3") then
 		self.global_values.sweettooth = {
@@ -1890,7 +1891,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2354-2359
+-- Lines 2355-2360
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

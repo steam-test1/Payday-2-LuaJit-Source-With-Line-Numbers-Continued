@@ -911,7 +911,7 @@ end
 
 -- Lines 924-936
 function GenericDLCManager:has_mrwi_deck()
-	return managers.event_jobs:has_already_claimed_reward("cg22_community_4", 1)
+	return managers.event_jobs:has_completed_and_claimed_rewards("cg22_community_4")
 end
 
 -- Lines 941-943
