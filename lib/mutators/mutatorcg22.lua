@@ -161,7 +161,7 @@ function MutatorCG22:set_AI_enabled(state)
 	end
 end
 
--- Lines 170-217
+-- Lines 170-219
 function MutatorCG22:spawn_network_units()
 	if Network:is_server() and not self._sync_listener_key then
 		self._tree = World:spawn_unit(Idstring(MutatorCG22.tree), self._position, self._rotation)
@@ -170,7 +170,7 @@ function MutatorCG22:spawn_network_units()
 		local santa_rotation = Rotation(self._sled:rotation():yaw() + 180, self._sled:rotation():pitch(), self._sled:rotation():roll())
 		self._santa = World:spawn_unit(Idstring(MutatorCG22.santa), self._sled:position() + Vector3(math.cos(self._sled:rotation():yaw() + 90) * -115, math.sin(self._sled:rotation():yaw() + 90) * -115, 0) + Vector3(0, 0, 30), santa_rotation)
 
-		self._santa:movement():set_team(managers.groupai:state():team_data(tweak_data.levels:get_default_team_ID("player")))
+		self._santa:movement():set_team(managers.groupai:state():team_data("cg22"))
 		self._santa:movement():play_redirect("cm_so_pilot_drunk_idle")
 
 		self._shredder = World:spawn_unit(Idstring(MutatorCG22.shredder), self._shredder_position, self._shredder_rotation)
@@ -207,7 +207,7 @@ function MutatorCG22:spawn_network_units()
 	end
 end
 
--- Lines 219-238
+-- Lines 221-240
 function MutatorCG22:remove_network_units()
 	self:network_delete_unit(self._sled)
 	self:network_delete_unit(self._tree)
@@ -226,7 +226,7 @@ function MutatorCG22:remove_network_units()
 	end
 end
 
--- Lines 240-247
+-- Lines 242-249
 function MutatorCG22:network_delete_unit(unit)
 	if alive(unit) then
 		if unit:id() ~= -1 then
@@ -237,12 +237,12 @@ function MutatorCG22:network_delete_unit(unit)
 	end
 end
 
--- Lines 249-251
+-- Lines 251-253
 function MutatorCG22:on_peer_sync_complete(peer)
 	peer:send_queued_sync("sync_cg22_spawned_units", self._tree, self._sled, self._shredder, self._santa)
 end
 
--- Lines 253-268
+-- Lines 255-270
 function MutatorCG22:client_sync_spawned_units(tree_unit, sled_unit, shredder_unit, santa_unit)
 	self._tree = tree_unit
 	self._sled = sled_unit
@@ -250,7 +250,7 @@ function MutatorCG22:client_sync_spawned_units(tree_unit, sled_unit, shredder_un
 	self._santa = santa_unit
 end
 
--- Lines 270-281
+-- Lines 272-283
 function MutatorCG22:sync_save(mutator_manager, save_data)
 	local my_save_data = {}
 	save_data.cg22_mutator = my_save_data
@@ -263,7 +263,7 @@ function MutatorCG22:sync_save(mutator_manager, save_data)
 	my_save_data.zone_2_state = self._zone_2:enabled()
 end
 
--- Lines 283-297
+-- Lines 285-299
 function MutatorCG22:sync_load(mutator_manager, load_data)
 	local my_load_data = load_data.cg22_mutator
 	self._bags_collected = my_load_data.bags_collected
@@ -275,7 +275,7 @@ function MutatorCG22:sync_load(mutator_manager, load_data)
 	end
 end
 
--- Lines 299-463
+-- Lines 301-465
 function MutatorCG22:update(t, dt)
 	if not game_state_machine:verify_game_state(GameStateFilters.any_ingame_playing) then
 		return
@@ -460,7 +460,7 @@ function MutatorCG22:update(t, dt)
 	end
 end
 
--- Lines 465-481
+-- Lines 467-483
 function MutatorCG22:_on_tree_interacted()
 	print("CG22_TreeInteracted!")
 
@@ -479,7 +479,7 @@ function MutatorCG22:_on_tree_interacted()
 	managers.network:session():send_to_peers_synched("sync_tree_interacted", blue_buff, green_buff, yellow_buff)
 end
 
--- Lines 483-494
+-- Lines 485-496
 function MutatorCG22:sync_tree_interacted(blue_buff, green_buff, yellow_buff)
 	if alive(self._zone_1) and alive(self._zone_2) then
 		self._zone_1:set_enabled(true)
@@ -493,7 +493,7 @@ function MutatorCG22:sync_tree_interacted(blue_buff, green_buff, yellow_buff)
 	}
 end
 
--- Lines 496-539
+-- Lines 498-541
 function MutatorCG22:_spawn_present()
 	print("CG22__spawn_present!")
 
@@ -548,7 +548,7 @@ function MutatorCG22:_spawn_present()
 	end
 end
 
--- Lines 541-551
+-- Lines 543-553
 function MutatorCG22:sync_spawn_present(tree, sequence, bag_carry_int)
 	local bag_carry_id = MutatorCG22.bag_carry_ids[bag_carry_int]
 
@@ -563,12 +563,12 @@ function MutatorCG22:sync_spawn_present(tree, sequence, bag_carry_int)
 	self._enemy_buffs[bag_carry_id] = self._enemy_buffs[bag_carry_id] + 1
 end
 
--- Lines 553-555
+-- Lines 555-557
 function MutatorCG22:damage_on_present_spawned(unit, env)
 	managers.mutators:get_mutator(MutatorCG22):server_present_spawned(unit, env)
 end
 
--- Lines 557-565
+-- Lines 559-567
 function MutatorCG22:server_present_spawned(unit, env)
 	print("Present Spawned!", unit, env)
 
@@ -580,7 +580,7 @@ function MutatorCG22:server_present_spawned(unit, env)
 	end
 end
 
--- Lines 567-585
+-- Lines 569-587
 function MutatorCG22:_server_present_shredded(bag_unit)
 	print("CG22_PresentShredded!", bag_unit:carry_data():latest_peer_id())
 
@@ -601,7 +601,7 @@ function MutatorCG22:_server_present_shredded(bag_unit)
 	self:_server_on_present_collected(bag_unit)
 end
 
--- Lines 587-605
+-- Lines 589-607
 function MutatorCG22:sync_present_shredded(shredder_unit, bag_carry_int, next_buff_index, last_carried_player)
 	print("CG22_SYNCPresentShredded!")
 
@@ -625,7 +625,7 @@ function MutatorCG22:sync_present_shredded(shredder_unit, bag_carry_int, next_bu
 	end
 end
 
--- Lines 607-626
+-- Lines 609-628
 function MutatorCG22:_server_present_sledded(bag_unit)
 	print("CG22_ServerPresentSledded!", bag_unit:carry_data():latest_peer_id())
 
@@ -648,7 +648,7 @@ function MutatorCG22:_server_present_sledded(bag_unit)
 	self:_server_on_present_collected(bag_unit)
 end
 
--- Lines 628-642
+-- Lines 630-644
 function MutatorCG22:sync_present_sledded(sled_unit, bag_carry_int, last_carried_player)
 	print("CG22_SyncPresentSledded!")
 
@@ -667,19 +667,19 @@ function MutatorCG22:sync_present_sledded(sled_unit, bag_carry_int, last_carried
 	end
 end
 
--- Lines 644-647
+-- Lines 646-649
 function MutatorCG22:_server_on_snowman_spawned()
 	managers.network:session():send_to_peers_synched("sync_on_snowman_spawned")
 	self:sync_on_snowman_spawned()
 end
 
--- Lines 649-652
+-- Lines 651-654
 function MutatorCG22:sync_on_snowman_spawned()
 	managers.hud:add_buff("snowman_spawn", "hud_buff_snowman_warning", Color.white, 5)
 	self:announcer_say("Play_alm_xmas22_09", false)
 end
 
--- Lines 654-677
+-- Lines 656-679
 function MutatorCG22:_server_on_present_collected(bag_unit)
 	self._snowman_spawn_threshold = self._snowman_spawn_threshold - 1
 
@@ -709,7 +709,7 @@ function MutatorCG22:_server_on_present_collected(bag_unit)
 	end
 end
 
--- Lines 679-686
+-- Lines 681-688
 function MutatorCG22:get_int_from_carry_id(carry_id)
 	for index, item in ipairs(MutatorCG22.bag_carry_ids) do
 		if item == carry_id then
@@ -720,12 +720,12 @@ function MutatorCG22:get_int_from_carry_id(carry_id)
 	return -1
 end
 
--- Lines 688-690
+-- Lines 690-692
 function MutatorCG22:get_collected_bags()
 	return self._bags_collected
 end
 
--- Lines 692-697
+-- Lines 694-699
 function MutatorCG22:get_enemy_blue_multiplier(bag_unit)
 	local enemy_buffs = self._enemy_buffs
 	local buffs_td = self._tweakdata.enemy_buff_values
@@ -733,7 +733,7 @@ function MutatorCG22:get_enemy_blue_multiplier(bag_unit)
 	return 1 - math.min(enemy_buffs.cg22_bag * buffs_td.cg22_bag.scale, buffs_td.cg22_bag.max_multiplier)
 end
 
--- Lines 699-704
+-- Lines 701-706
 function MutatorCG22:get_enemy_green_multiplier(bag_unit)
 	local enemy_buffs = self._enemy_buffs
 	local buffs_td = self._tweakdata.enemy_buff_values
@@ -741,7 +741,7 @@ function MutatorCG22:get_enemy_green_multiplier(bag_unit)
 	return math.min(1 + enemy_buffs.cg22_bag_green * buffs_td.cg22_bag_green.scale, buffs_td.cg22_bag_green.max_multiplier)
 end
 
--- Lines 706-711
+-- Lines 708-713
 function MutatorCG22:get_enemy_yellow_multiplier(bag_unit)
 	local enemy_buffs = self._enemy_buffs
 	local buffs_td = self._tweakdata.enemy_buff_values
@@ -749,7 +749,7 @@ function MutatorCG22:get_enemy_yellow_multiplier(bag_unit)
 	return math.min(1 + enemy_buffs.cg22_bag_yellow * buffs_td.cg22_bag_yellow.scale, buffs_td.cg22_bag_yellow.max_multiplier)
 end
 
--- Lines 713-735
+-- Lines 715-737
 function MutatorCG22:can_enemy_be_affected_by_buff(buff_name, enemy_unit)
 	if not managers.enemy:is_enemy(enemy_unit) then
 		return false
@@ -768,49 +768,49 @@ function MutatorCG22:can_enemy_be_affected_by_buff(buff_name, enemy_unit)
 	return true
 end
 
--- Lines 737-742
+-- Lines 739-744
 function MutatorCG22:get_money_collected()
 	return self._bags_collected.sledded.cg22_bag_green * self._tweakdata.bag_value.cg22_bag_green * (self._tweakdata.diff_reward_multiplier[Global.game_settings.difficulty] or 1) * (1 + self:get_total_sledded_bags() * self._tweakdata.bag_multiplier)
 end
 
--- Lines 744-749
+-- Lines 746-751
 function MutatorCG22:get_xp_collected()
 	return self._bags_collected.sledded.cg22_bag * self._tweakdata.bag_value.cg22_bag * (self._tweakdata.diff_reward_multiplier[Global.game_settings.difficulty] or 1) * (1 + self:get_total_sledded_bags() * self._tweakdata.bag_multiplier)
 end
 
--- Lines 751-753
+-- Lines 753-755
 function MutatorCG22:get_coins_collected()
 	return self._bags_collected.sledded.cg22_bag_yellow * self._tweakdata.bag_value.cg22_bag_yellow
 end
 
--- Lines 755-758
+-- Lines 757-760
 function MutatorCG22:get_bag_speed_increase_multiplier()
 	local buff_td = self._tweakdata.buffs.cg22_bag_yellow[1]
 
 	return math.min(1 + self._perma_buffs.bag_speed_amount * buff_td.scale, buff_td.max_multiplier)
 end
 
--- Lines 760-762
+-- Lines 762-764
 function MutatorCG22:get_active_temp_buff(buff_type_id)
 	return self._temp_buffs and self._temp_buffs[buff_type_id] and next(self._temp_buffs[buff_type_id]) and self._temp_buffs[buff_type_id] or nil
 end
 
--- Lines 764-768
+-- Lines 766-770
 function MutatorCG22:get_total_sledded_bags()
 	return self._bags_collected.sledded.cg22_bag + self._bags_collected.sledded.cg22_bag_green + self._bags_collected.sledded.cg22_bag_yellow
 end
 
--- Lines 770-777
+-- Lines 772-779
 function MutatorCG22:get_total_collected_bags()
 	return self._bags_collected.sledded.cg22_bag + self._bags_collected.sledded.cg22_bag_green + self._bags_collected.sledded.cg22_bag_yellow + self._bags_collected.shredded.cg22_bag + self._bags_collected.shredded.cg22_bag_green + self._bags_collected.shredded.cg22_bag_yellow
 end
 
--- Lines 779-781
+-- Lines 781-783
 function MutatorCG22:main_category()
 	return "event"
 end
 
--- Lines 784-795
+-- Lines 786-797
 function MutatorCG22:activate_buff(buff_td)
 	print("[MutatorBirthday] activate_buff()", buff_td.func_name)
 
@@ -825,7 +825,7 @@ function MutatorCG22:activate_buff(buff_td)
 	end
 end
 
--- Lines 797-820
+-- Lines 799-822
 function MutatorCG22:add_temp_buff(buff_id, sub_buff_id, buff_data)
 	local buff_storage = self._temp_buffs and self._temp_buffs[buff_id]
 
@@ -844,17 +844,17 @@ function MutatorCG22:add_temp_buff(buff_id, sub_buff_id, buff_data)
 	self._last_temp_buffs[buff_id] = sub_buff_id
 end
 
--- Lines 822-824
+-- Lines 824-826
 function MutatorCG22:get_last_temp_buff_by_id(buff_id)
 	return self._last_temp_buffs and self._last_temp_buffs[buff_id]
 end
 
--- Lines 826-828
+-- Lines 828-830
 function MutatorCG22:get_next_buff_for_bag_id(bag_id)
 	return self._tweakdata.buffs[bag_id][self._next_player_buff[bag_id]]
 end
 
--- Lines 830-844
+-- Lines 832-846
 function MutatorCG22:get_random_buff_no_repeat(buff_selection, last_buff)
 	local buff_amount = #buff_selection
 
@@ -871,7 +871,7 @@ function MutatorCG22:get_random_buff_no_repeat(buff_selection, last_buff)
 	return selected_buff
 end
 
--- Lines 846-853
+-- Lines 848-855
 function MutatorCG22:activate_health_refresh_buff(buff_td)
 	local unit = managers.player:player_unit()
 	local unit_damage = alive(unit) and unit:character_damage() or nil
@@ -882,7 +882,7 @@ function MutatorCG22:activate_health_refresh_buff(buff_td)
 	end
 end
 
--- Lines 855-866
+-- Lines 857-868
 function MutatorCG22:activate_ammo_refresh_buff(buff_td)
 	local unit = managers.player:player_unit()
 
@@ -897,14 +897,14 @@ function MutatorCG22:activate_ammo_refresh_buff(buff_td)
 	end
 end
 
--- Lines 868-871
+-- Lines 870-873
 function MutatorCG22:activate_bag_speed_increase_buff(buff_td)
 	self._perma_buffs.bag_speed_amount = self._perma_buffs.bag_speed_amount + 1
 
 	managers.hud:add_buff("bag_speed_increase", buff_td.hud_string_id, buff_td.color, 2)
 end
 
--- Lines 873-893
+-- Lines 875-895
 function MutatorCG22:activate_ammo_types_buff(buff_td)
 	local ammo_type = self:get_random_buff_no_repeat(buff_td.ammo_types, self:get_last_temp_buff_by_id("ammo_types"))
 
@@ -924,7 +924,7 @@ function MutatorCG22:activate_ammo_types_buff(buff_td)
 	managers.hud:add_buff("ammo_types_" .. ammo_type, buff_td.hud_string_id .. "_" .. ammo_type, buff_td.color, buff_td.duration)
 end
 
--- Lines 895-907
+-- Lines 897-909
 function MutatorCG22:remove_ammo_types_buff(buff_id, ammo_type)
 	local unit = managers.player:player_unit()
 	local unit_inventory = alive(unit) and unit:inventory() or nil
@@ -934,21 +934,21 @@ function MutatorCG22:remove_ammo_types_buff(buff_id, ammo_type)
 	end
 end
 
--- Lines 909-913
+-- Lines 911-915
 function MutatorCG22:safe_run_sequence(unit, sequence)
 	if alive(unit) and unit:damage() and unit:damage():has_sequence(sequence) then
 		unit:damage():run_sequence_simple(sequence)
 	end
 end
 
--- Lines 915-919
+-- Lines 917-921
 function MutatorCG22:sync_santa_anim(unit, anim_id)
 	if alive(unit) then
 		unit:movement():play_redirect("cm_so_drunk_sit")
 	end
 end
 
--- Lines 921-926
+-- Lines 923-928
 function MutatorCG22:on_snowman_killed(unit, damage_info)
 	managers.event_jobs:award("cg22_snowman_objective")
 
@@ -959,7 +959,7 @@ function MutatorCG22:on_snowman_killed(unit, damage_info)
 	end
 end
 
--- Lines 928-933
+-- Lines 930-935
 function MutatorCG22:on_bag_pickup(carry_id)
 	if not self._has_played_first_pickup and carry_id == "cg22_bag" or carry_id == "cg22_bag_green" or carry_id == "cg22_bag_yellow" then
 		self._has_played_first_pickup = true
@@ -967,7 +967,7 @@ function MutatorCG22:on_bag_pickup(carry_id)
 	end
 end
 
--- Lines 935-941
+-- Lines 937-943
 function MutatorCG22:announcer_say(dialog, sync)
 	local success = managers.dialog:queue_dialog(dialog, {
 		on_unit = self._announcer_unit
@@ -980,22 +980,22 @@ function MutatorCG22:announcer_say(dialog, sync)
 	return success
 end
 
--- Lines 943-945
+-- Lines 945-947
 function MutatorCG22:get_intro_event(default_intro_event)
 	return "Play_alm_xmas22_01"
 end
 
--- Lines 947-949
+-- Lines 949-951
 function MutatorCG22:get_outro_event(default_outro_event)
 	return "Play_alm_xmas22_end_win"
 end
 
--- Lines 951-953
+-- Lines 953-955
 function MutatorCG22:get_failure_event()
 	return "Play_alm_xmas22_end_fail"
 end
 
--- Lines 955-959
+-- Lines 957-961
 function MutatorCG22:check_heist_end_achievements(heist_success)
 	if not heist_success then
 		return

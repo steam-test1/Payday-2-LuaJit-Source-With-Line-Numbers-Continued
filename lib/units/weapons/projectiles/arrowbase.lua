@@ -290,7 +290,7 @@ function ArrowBase:_check_stop_flyby_sound(skip_impact)
 	end
 end
 
--- Lines 289-509
+-- Lines 289-507
 function ArrowBase:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 	local instant_dynamic_pickup = dynamic_pickup_wanted and (is_remote or Network:is_server())
 	self._attached_to_unit = true
@@ -322,7 +322,9 @@ function ArrowBase:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 	elseif alive(hit_unit) then
 		local damage_ext = hit_unit:character_damage()
 
-		if damage_ext and damage_ext.get_impact_segment then
+		if damage_ext and damage_ext.can_attach_projectiles and not damage_ext:can_attach_projectiles() then
+			switch_to_dynamic_pickup = true
+		elseif damage_ext and damage_ext.get_impact_segment then
 			parent_obj, child_obj = damage_ext:get_impact_segment(self._col_ray.position)
 
 			if parent_obj then
@@ -356,8 +358,6 @@ function ArrowBase:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 			if not hit_unit:character_damage():dead() and damage_ext:can_kill() then
 				switch_to_pickup = false
 			end
-		elseif damage_ext and damage_ext.can_attach_projectiles and not damage_ext:can_attach_projectiles() then
-			switch_to_dynamic_pickup = true
 		elseif not alive(self._col_ray.body) or not self._col_ray.body:enabled() then
 			local_pos = (global_pos - hit_unit:position()):rotate_with(hit_unit:rotation():inverse())
 			switch_to_dynamic_pickup = true
@@ -486,7 +486,7 @@ function ArrowBase:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 	end
 end
 
--- Lines 513-558
+-- Lines 511-556
 function ArrowBase:sync_attach_to_unit(instant_dynamic_pickup, parent_unit, parent_body, parent_obj, local_pos, dir, drop_in)
 	if parent_body then
 		parent_obj = parent_body:root_object()
@@ -528,7 +528,7 @@ function ArrowBase:sync_attach_to_unit(instant_dynamic_pickup, parent_unit, pare
 	self:_attach_to_hit_unit(true, instant_dynamic_pickup)
 end
 
--- Lines 562-594
+-- Lines 560-592
 function ArrowBase:_cbk_attached_body_disabled(unit, body)
 	if not self._attached_body_disabled_cbk_data then
 		print("Got callback but didn't have data!")
@@ -549,7 +549,7 @@ function ArrowBase:_cbk_attached_body_disabled(unit, body)
 	end
 end
 
--- Lines 596-603
+-- Lines 594-601
 function ArrowBase:_remove_attached_body_disabled_cbk()
 	if self._attached_body_disabled_cbk_data and alive(self._attached_body_disabled_cbk_data.unit) then
 		self._attached_body_disabled_cbk_data.unit:remove_body_enabled_callback(self._attached_body_disabled_cbk_data.cbk)
@@ -558,7 +558,7 @@ function ArrowBase:_remove_attached_body_disabled_cbk()
 	self._attached_body_disabled_cbk_data = nil
 end
 
--- Lines 607-614
+-- Lines 605-612
 function ArrowBase:_set_body_enabled(enabled)
 	self._unit:body("dynamic_body"):set_enabled(enabled)
 
@@ -569,7 +569,7 @@ function ArrowBase:_set_body_enabled(enabled)
 	end
 end
 
--- Lines 618-622
+-- Lines 616-620
 function ArrowBase:clbk_hit_unit_death()
 	print("ArrowBase:clbk_hit_unit_death()")
 
@@ -578,7 +578,7 @@ function ArrowBase:clbk_hit_unit_death()
 	self:_switch_to_pickup()
 end
 
--- Lines 626-632
+-- Lines 624-630
 function ArrowBase:clbk_hit_unit_destroyed()
 	print("ArrowBase:clbk_hit_unit_destroyed()")
 
@@ -593,7 +593,7 @@ ArrowBase.DEFUALT_SOUNDS = {
 	flyby = "arrow_flyby"
 }
 
--- Lines 635-640
+-- Lines 633-638
 function ArrowBase:_tweak_data_play_sound(entry)
 	local tweak_entry = tweak_data.projectiles[self._tweak_projectile_entry]
 	local event = tweak_entry.sounds and tweak_entry.sounds[entry]
@@ -602,14 +602,14 @@ function ArrowBase:_tweak_data_play_sound(entry)
 	self._unit:sound_source(Idstring("snd")):post_event(event)
 end
 
--- Lines 644-649
+-- Lines 642-647
 function ArrowBase:outside_worlds_bounding_box()
 	if Network:is_server() or self._unit:id() == -1 then
 		self._unit:set_slot(0)
 	end
 end
 
--- Lines 653-687
+-- Lines 651-685
 function ArrowBase:save(data)
 	ArrowBase.super.save(self, data)
 
@@ -647,7 +647,7 @@ function ArrowBase:save(data)
 	data.ArrowBase = state
 end
 
--- Lines 689-714
+-- Lines 687-712
 function ArrowBase:load(data)
 	ArrowBase.super.load(self, data)
 
@@ -661,7 +661,7 @@ function ArrowBase:load(data)
 		print(inspect(state.sync_attach_data))
 
 		if state.sync_attach_data then
-			-- Lines 701-706
+			-- Lines 699-704
 			local function _dropin_attach(parent_unit)
 				local parent_body = parent_unit:body(state.sync_attach_data.parent_body_index)
 				local parent_obj = parent_body:root_object()
@@ -681,7 +681,7 @@ function ArrowBase:load(data)
 	end
 end
 
--- Lines 716-743
+-- Lines 714-741
 function ArrowBase:_delay_sync_attach(peer)
 	if not managers.network:session() then
 		return
@@ -698,7 +698,7 @@ function ArrowBase:_delay_sync_attach(peer)
 	peer:send_queued_sync("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, false, self._sync_attach_data.parent_unit, nil, self._sync_attach_data.parent_obj, self._sync_attach_data.local_pos, self._sync_attach_data.dir, tweak_data.blackmarket:get_index_from_projectile_id(self._tweak_projectile_entry), managers.network:session():local_peer():id())
 end
 
--- Lines 747-753
+-- Lines 745-751
 function ArrowBase:_remove_switch_to_pickup_clbk()
 	if not self._switch_to_pickup_clbk or not managers.enemy then
 		return
@@ -709,12 +709,12 @@ function ArrowBase:_remove_switch_to_pickup_clbk()
 	self._switch_to_pickup_clbk = nil
 end
 
--- Lines 757-759
+-- Lines 755-757
 function ArrowBase:_kill_trail()
 	managers.game_play_central:remove_projectile_trail(self._unit)
 end
 
--- Lines 763-802
+-- Lines 761-800
 function ArrowBase:destroy(unit)
 	self:_check_stop_flyby_sound(true)
 
@@ -755,7 +755,7 @@ function ArrowBase:destroy(unit)
 	ArrowBase.super.destroy(self, unit)
 end
 
--- Lines 806-828
+-- Lines 804-826
 function ArrowBase.find_nearest_arrow(peer_id, position)
 	local closest_unit, closest_dist_sq = nil
 
@@ -782,7 +782,7 @@ function ArrowBase.find_nearest_arrow(peer_id, position)
 	return closest_unit
 end
 
--- Lines 833-842
+-- Lines 831-840
 function ArrowBase:reload_contour()
 	if self._unit:contour() then
 		if managers.user:get_setting("throwable_contour") then

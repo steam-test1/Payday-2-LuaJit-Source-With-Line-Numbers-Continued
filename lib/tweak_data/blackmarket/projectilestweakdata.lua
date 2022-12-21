@@ -3,7 +3,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines 32-1013
+-- Lines 32-1022
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -416,7 +416,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		icon = "chico_injector",
 		ability = "chico_injector",
 		texture_bundle_folder = "chico",
-		dlc = "chico",
+		dlc = "chico_or_mrwi_deck",
 		base_cooldown = 30,
 		max_amount = 1,
 		sounds = {
@@ -497,7 +497,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		icon = "tag_team",
 		ability = "tag_team",
 		texture_bundle_folder = "ecp",
-		dlc = "ecp",
+		dlc = "ecp_or_mrwi_deck",
 		max_amount = 1,
 		base_cooldown = 60,
 		sounds = {
@@ -624,6 +624,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		icon = "guis/dlcs/xm21/textures/pd2/hud_snowball",
 		texture_bundle_folder = "xm21",
 		base_cooldown = 2,
+		throw_shout = true,
 		no_shouting = true,
 		impact_detonation = true,
 		client_authoritative = true,
@@ -707,7 +708,6 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		icon = "sticky_grenade",
 		texture_bundle_folder = "mxm",
 		dlc = "mxm",
-		throw_shout = true,
 		impact_detonation = true,
 		client_authoritative = true,
 		add_trail_effect = true,
@@ -809,12 +809,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1015-1017
+-- Lines 1024-1026
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1019-1026
+-- Lines 1028-1035
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -825,7 +825,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1028-1030
+-- Lines 1037-1039
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

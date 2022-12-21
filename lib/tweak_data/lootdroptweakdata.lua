@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2353
+-- Lines 5-2362
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1887,11 +1887,13 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.h22_darkprince = self.global_values.h22
 	self.global_values.h22_devilclaws = self.global_values.h22
 	self.global_values.h22_devilhorn = self.global_values.h22
+	self.global_values.chico_or_mrwi_deck = self.global_values.chico
+	self.global_values.ecp_or_mrwi_deck = self.global_values.ecp
 
 	self:_create_global_value_list_map()
 end
 
--- Lines 2355-2360
+-- Lines 2364-2369
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

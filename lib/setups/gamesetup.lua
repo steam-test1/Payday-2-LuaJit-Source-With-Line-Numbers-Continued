@@ -136,6 +136,7 @@ require("lib/units/civilians/CivilianBrain")
 require("lib/units/civilians/CivilianDamage")
 require("lib/units/civilians/HuskCivilianBase")
 require("lib/units/civilians/HuskCivilianDamage")
+require("lib/units/beings/npcs/SantaCG22")
 require("lib/units/player_team/TeamAIBase")
 require("lib/units/player_team/TeamAIBrain")
 require("lib/units/player_team/TeamAIDamage")
@@ -269,7 +270,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines 379-555
+-- Lines 383-559
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -310,7 +311,7 @@ function GameSetup:load_packages()
 
 	self._loaded_diff_packages = {}
 
-	-- Lines 423-428
+	-- Lines 427-432
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
 			table.insert(self._loaded_diff_packages, package_name)
@@ -440,7 +441,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines 557-649
+-- Lines 561-653
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -524,12 +525,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 651-653
+-- Lines 655-657
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 655-695
+-- Lines 659-699
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -563,7 +564,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines 697-745
+-- Lines 701-749
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -611,7 +612,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines 747-797
+-- Lines 751-801
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -655,7 +656,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 799-843
+-- Lines 803-847
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -686,7 +687,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 845-855
+-- Lines 849-859
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -698,7 +699,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 857-873
+-- Lines 861-877
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -712,13 +713,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 875-880
+-- Lines 879-884
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 882-914
+-- Lines 886-918
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -744,7 +745,7 @@ function GameSetup:save(data)
 	managers.mutators:sync_save(data)
 end
 
--- Lines 916-949
+-- Lines 920-953
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -771,7 +772,7 @@ function GameSetup:load(data)
 	managers.mutators:sync_load(data)
 end
 
--- Lines 952-983
+-- Lines 956-987
 function GameSetup:_update_debug_input()
 end
 
