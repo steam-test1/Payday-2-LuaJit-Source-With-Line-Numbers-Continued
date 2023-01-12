@@ -333,7 +333,7 @@ TestAPIHelper.register_API_function("delay", "internal", "time = 1", function ()
 	table.insert(Global.test_api.delayed_callbacks, delayed)
 end, "Delays queued calls by the given time (seconds).", true)
 
--- Lines 315-345
+-- Lines 315-352
 local function equip_weapon_in_game(category, slot)
 	assert(category == "primaries" or category == "secondaries", string.format("invalid category: %s", category))
 	assert(slot and slot <= #Global.blackmarket_manager.crafted_items[category], string.format("invalid slot: %d", slot))

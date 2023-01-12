@@ -4881,8 +4881,7 @@ function UpgradesTweakData:init(tweak_data)
 				"msr",
 				"corgi",
 				"clean",
-				"aziz",
-				"xmas_snowball"
+				"aziz"
 			}
 		},
 		{
@@ -12376,9 +12375,6 @@ function UpgradesTweakData:_grenades_definitions()
 	}
 	self.definitions.copr_ability = {
 		dlc = "copr",
-		category = "grenade"
-	}
-	self.definitions.xmas_snowball = {
 		category = "grenade"
 	}
 	self.definitions.poison_gas_grenade = {

@@ -579,15 +579,6 @@ function MissionEndState:on_statistics_result(best_kills_peer_id, best_kills_sco
 			})
 			stage_cash_summary_string = stage_cash_summary_string .. offshore_string .. "\n"
 			stage_cash_summary_string = stage_cash_summary_string .. spending_string .. "\n"
-
-			if managers.mutators:is_mutator_active(MutatorCG22) then
-				local event_string = managers.localization:text("victory_stage_cash_summary_name_event")
-				stage_cash_summary_string = stage_cash_summary_string .. "\n" .. event_string .. "\n"
-				local mutator = managers.mutators:get_mutator(MutatorCG22)
-				stage_cash_summary_string = stage_cash_summary_string .. managers.localization:text("menu_exp_short") .. ":" .. mutator:get_xp_collected() .. " "
-				stage_cash_summary_string = stage_cash_summary_string .. managers.localization:text("short_basics_cash") .. ":" .. mutator:get_money_collected() .. " "
-				stage_cash_summary_string = stage_cash_summary_string .. managers.localization:text("menu_cs_coins") .. ":" .. mutator:get_coins_collected() .. " "
-			end
 		else
 			stage_cash_summary_string = managers.localization:text("failed_summary_name")
 		end
@@ -955,7 +946,7 @@ function MissionEndState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end
 
--- Lines 954-1724
+-- Lines 954-1730
 function MissionEndState:chk_complete_heist_achievements()
 	local player = managers.player:player_unit()
 	local total_killed = managers.statistics:session_total_killed()
@@ -1675,6 +1666,12 @@ function MissionEndState:chk_complete_heist_achievements()
 		end
 
 		managers.event_jobs:award_on_mission_end()
+
+		local amount_secured_bags = managers.loot:get_secured_bags_amount()
+
+		if amount_secured_bags > 0 then
+			managers.event_jobs:award("cg22_post_objective_4", amount_secured_bags)
+		end
 
 		for _, mutator in ipairs(managers.mutators:active_mutators()) do
 			local active_mutator = mutator.mutator

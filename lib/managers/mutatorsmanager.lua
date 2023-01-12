@@ -837,7 +837,7 @@ end
 
 -- Lines 844-898
 function MutatorsManager:show_mutators_launch_countdown(countdown)
-	if Network:is_server() or managers.mutators:get_enabled_active_mutator_category() == "event" then
+	if Network:is_server() then
 		return
 	end
 

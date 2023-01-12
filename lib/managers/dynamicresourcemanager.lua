@@ -306,7 +306,7 @@ function DynamicResourceManager:clbk_streaming_chunk_size_changed(name, old_valu
 	self:_set_file_streamer_settings(new_value, self._streaming_settings.sleep_time)
 end
 
--- Lines 323-339
+-- Lines 323-344
 function DynamicResourceManager:preload_units()
 	print("[DynamicResourceManager:preload_units]")
 end

@@ -524,7 +524,7 @@ function SideJobEventManager:is_objective_complete(challenge_id, objective_id)
 end
 
 -- Lines 536-565
-function SideJobEventManager:award(id)
+function SideJobEventManager:award(id, value)
 	if not self:can_progress() then
 		return
 	end
@@ -550,7 +550,7 @@ function SideJobEventManager:award(id)
 			self:_update_challenge_collective(challenge, "collective_id", stat_id, item_id, self.completed_challenge)
 		end
 
-		self:_update_challenge_progress(challenge, "progress_id", id, 1, self.completed_challenge)
+		self:_update_challenge_progress(challenge, "progress_id", id, value or 1, self.completed_challenge)
 	end
 end
 

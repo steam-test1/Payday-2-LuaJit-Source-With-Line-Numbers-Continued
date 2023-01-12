@@ -1928,13 +1928,6 @@ function GuiTweakData:init(tweak_data)
 			id = "skirmish",
 			icon = "sidebar_skirmish",
 			item_class = "CrimeNetSidebarSkirmishItem"
-		},
-		{
-			name_id = "menu_event_a10th_info",
-			callback = "clbk_cg22_event",
-			id = "event",
-			icon = "sidebar_mutators",
-			item_class = "CrimeNetSidebarEventsItem"
 		}
 	}
 	self.crime_net.codex = {
@@ -5126,9 +5119,9 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_xm22_01",
-		texture_path = "guis/dlcs/xm22/textures/pd2/new_heists/xm22_01",
-		url = "https://pd2.link/Holiday2022SLW"
+		name_id = "menu_nh_txt3_02",
+		texture_path = "guis/dlcs/txt3/textures/pd2/new_heists/txt3_02",
+		url = "https://pd2.link/EnergyCrisisBundleSLS"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_mxm_01",
@@ -5136,9 +5129,9 @@ function GuiTweakData:init(tweak_data)
 		url = "https://pd2.link/McShayModPackSLS"
 	})
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_txt3_02",
-		texture_path = "guis/dlcs/txt3/textures/pd2/new_heists/txt3_02",
-		url = "https://pd2.link/EnergyCrisisBundleSLS"
+		name_id = "menu_nh_xm22_01",
+		texture_path = "guis/dlcs/xm22/textures/pd2/new_heists/xm22_01",
+		url = "https://pd2.link/Holiday2022SLW"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_txt3_01",

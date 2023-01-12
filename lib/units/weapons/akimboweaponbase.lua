@@ -25,9 +25,10 @@ function AkimboWeaponBase:update(unit, t, dt)
 	end
 end
 
--- Lines 26-83
+-- Lines 26-86
 function AkimboWeaponBase:_create_second_gun(unit_name)
 	local factory_id = self._factory_id
+	local blueprint = self._blueprint
 	local factory_weapon = tweak_data.weapon.factory[factory_id]
 	local ids_unit_name = Idstring(factory_weapon.unit)
 	local new_unit = World:spawn_unit(ids_unit_name, Vector3(), Rotation())
@@ -37,8 +38,6 @@ function AkimboWeaponBase:_create_second_gun(unit_name)
 	if self._cosmetics then
 		new_unit:base():set_cosmetics_data(self._cosmetics)
 	end
-
-	local blueprint = self._blueprint
 
 	if blueprint then
 		local charm_parts = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("charm", factory_id, blueprint)
@@ -83,7 +82,7 @@ function AkimboWeaponBase:_create_second_gun(unit_name)
 	end
 end
 
--- Lines 85-101
+-- Lines 88-104
 function AkimboWeaponBase:toggle_firemode(skip_post_event)
 	if AkimboWeaponBase.super.toggle_firemode(self, skip_post_event) then
 		if alive(self._second_gun) then
@@ -98,25 +97,25 @@ function AkimboWeaponBase:toggle_firemode(skip_post_event)
 	return false
 end
 
--- Lines 103-106
+-- Lines 106-109
 function AkimboWeaponBase:create_second_gun(create_second_gun)
 	self:_create_second_gun(create_second_gun)
 	self._setup.user_unit:camera()._camera_unit:link(Idstring("a_weapon_left"), self._second_gun, self._second_gun:orientation_object():name())
 end
 
--- Lines 109-112
+-- Lines 112-115
 function AkimboWeaponBase:start_shooting()
 	AkimboWeaponBase.super.start_shooting(self)
 
 	self._fire_second_sound = not self._fire_second_gun_next and self:fire_mode() ~= "auto"
 end
 
--- Lines 114-116
+-- Lines 117-119
 function AkimboWeaponBase:get_fire_time()
 	return 0.025 + math.rand(0.075)
 end
 
--- Lines 118-149
+-- Lines 121-152
 function AkimboWeaponBase:fire(...)
 	if not self._manual_fire_second_gun then
 		local result = AkimboWeaponBase.super.fire(self, ...)
@@ -160,7 +159,7 @@ function AkimboWeaponBase:fire(...)
 	end
 end
 
--- Lines 151-165
+-- Lines 154-168
 function AkimboWeaponBase:_fire_second(params)
 	if alive(self._second_gun) and self._setup and alive(self._setup.user_unit) then
 		local fired = self._second_gun:base().super.fire(self._second_gun:base(), unpack(params))
@@ -180,7 +179,7 @@ function AkimboWeaponBase:_fire_second(params)
 	end
 end
 
--- Lines 168-183
+-- Lines 171-186
 function AkimboWeaponBase:_do_update_bullet_objects(weapon_base, ammo_func, is_second_gun)
 	if weapon_base._bullet_objects then
 		for i, objects in pairs(weapon_base._bullet_objects) do
@@ -200,7 +199,7 @@ function AkimboWeaponBase:_do_update_bullet_objects(weapon_base, ammo_func, is_s
 	end
 end
 
--- Lines 185-190
+-- Lines 188-193
 function AkimboWeaponBase:_update_bullet_objects(ammo_func)
 	self:_do_update_bullet_objects(self, ammo_func, false)
 
@@ -209,7 +208,7 @@ function AkimboWeaponBase:_update_bullet_objects(ammo_func)
 	end
 end
 
--- Lines 192-197
+-- Lines 195-200
 function AkimboWeaponBase:_check_magazine_empty()
 	AkimboWeaponBase.super._check_magazine_empty(self)
 
@@ -218,7 +217,7 @@ function AkimboWeaponBase:_check_magazine_empty()
 	end
 end
 
--- Lines 200-205
+-- Lines 203-208
 function AkimboWeaponBase:on_enabled(...)
 	AkimboWeaponBase.super.on_enabled(self, ...)
 
@@ -227,7 +226,7 @@ function AkimboWeaponBase:on_enabled(...)
 	end
 end
 
--- Lines 207-213
+-- Lines 210-216
 function AkimboWeaponBase:on_disabled(...)
 	AkimboWeaponBase.super.on_disabled(self, ...)
 
@@ -238,7 +237,7 @@ function AkimboWeaponBase:on_disabled(...)
 	end
 end
 
--- Lines 215-220
+-- Lines 218-223
 function AkimboWeaponBase:set_visibility_state(...)
 	AkimboWeaponBase.super.set_visibility_state(self, ...)
 
@@ -247,7 +246,7 @@ function AkimboWeaponBase:set_visibility_state(...)
 	end
 end
 
--- Lines 223-228
+-- Lines 226-231
 function AkimboWeaponBase:on_equip(...)
 	AkimboWeaponBase.super.on_equip(self, ...)
 
@@ -256,7 +255,7 @@ function AkimboWeaponBase:on_equip(...)
 	end
 end
 
--- Lines 230-235
+-- Lines 233-238
 function AkimboWeaponBase:set_magazine_empty(...)
 	AkimboWeaponBase.super.set_magazine_empty(self, ...)
 
@@ -265,7 +264,7 @@ function AkimboWeaponBase:set_magazine_empty(...)
 	end
 end
 
--- Lines 238-243
+-- Lines 241-246
 function AkimboWeaponBase:set_gadget_on(...)
 	AkimboWeaponBase.super.set_gadget_on(self, ...)
 
@@ -274,7 +273,7 @@ function AkimboWeaponBase:set_gadget_on(...)
 	end
 end
 
--- Lines 245-250
+-- Lines 248-253
 function AkimboWeaponBase:_check_sound_switch(...)
 	AkimboWeaponBase.super._check_sound_switch(self, ...)
 
@@ -283,7 +282,7 @@ function AkimboWeaponBase:_check_sound_switch(...)
 	end
 end
 
--- Lines 253-258
+-- Lines 256-261
 function AkimboWeaponBase:reset_cached_gadget()
 	AkimboWeaponBase.super.reset_cached_gadget(self)
 
@@ -292,7 +291,7 @@ function AkimboWeaponBase:reset_cached_gadget()
 	end
 end
 
--- Lines 260-274
+-- Lines 263-277
 function AkimboWeaponBase:underbarrel_toggle()
 	local is_on = AkimboWeaponBase.super.underbarrel_toggle(self)
 
@@ -311,7 +310,7 @@ function AkimboWeaponBase:underbarrel_toggle()
 	return is_on
 end
 
--- Lines 278-292
+-- Lines 281-295
 function AkimboWeaponBase:set_gadget_color(...)
 	if not self._enabled then
 		return
@@ -328,7 +327,7 @@ function AkimboWeaponBase:set_gadget_color(...)
 	end
 end
 
--- Lines 295-300
+-- Lines 298-303
 function AkimboWeaponBase:_second_gun_tweak_data_anim_version(anim)
 	if not self:weapon_tweak_data().animations.second_gun_versions then
 		return anim
@@ -337,7 +336,7 @@ function AkimboWeaponBase:_second_gun_tweak_data_anim_version(anim)
 	return self:weapon_tweak_data().animations.second_gun_versions[anim] or anim
 end
 
--- Lines 302-310
+-- Lines 305-313
 function AkimboWeaponBase:tweak_data_anim_play(anim, ...)
 	if alive(self._second_gun) and anim ~= "fire" then
 		local second_gun_anim = self:_second_gun_tweak_data_anim_version(anim)
@@ -348,7 +347,7 @@ function AkimboWeaponBase:tweak_data_anim_play(anim, ...)
 	return AkimboWeaponBase.super.tweak_data_anim_play(self, anim, ...)
 end
 
--- Lines 312-318
+-- Lines 315-321
 function AkimboWeaponBase:tweak_data_anim_stop(anim, ...)
 	AkimboWeaponBase.super.tweak_data_anim_stop(self, anim, ...)
 
@@ -359,7 +358,7 @@ function AkimboWeaponBase:tweak_data_anim_stop(anim, ...)
 	end
 end
 
--- Lines 320-325
+-- Lines 323-328
 function AkimboWeaponBase:destroy(...)
 	AkimboWeaponBase.super.destroy(self, ...)
 
@@ -368,19 +367,19 @@ function AkimboWeaponBase:destroy(...)
 	end
 end
 
--- Lines 327-330
+-- Lines 330-333
 function AkimboWeaponBase:mute_firing()
 	self._firing_muted = true
 
 	self._sound_fire:stop()
 end
 
--- Lines 332-334
+-- Lines 335-337
 function AkimboWeaponBase:unmute_firing()
 	self._firing_muted = nil
 end
 
--- Lines 336-341
+-- Lines 339-344
 function AkimboWeaponBase:_sound_autofire_start(...)
 	if self._firing_muted then
 		return
@@ -389,7 +388,7 @@ function AkimboWeaponBase:_sound_autofire_start(...)
 	AkimboWeaponBase.super._sound_autofire_start(self, ...)
 end
 
--- Lines 343-348
+-- Lines 346-351
 function AkimboWeaponBase:_sound_singleshot()
 	if self._firing_muted then
 		return
@@ -401,7 +400,7 @@ end
 NPCAkimboWeaponBase = NPCAkimboWeaponBase or class(NewNPCRaycastWeaponBase)
 NPCAkimboWeaponBase.AKIMBO = true
 
--- Lines 355-362
+-- Lines 358-365
 function NPCAkimboWeaponBase:init(...)
 	NPCAkimboWeaponBase.super.init(self, ...)
 
@@ -412,7 +411,7 @@ function NPCAkimboWeaponBase:init(...)
 	self._fire_callbacks = {}
 end
 
--- Lines 364-375
+-- Lines 367-378
 function NPCAkimboWeaponBase:update(unit, t, dt)
 	for i = #self._fire_callbacks, 1, -1 do
 		local data = self._fire_callbacks[i]
@@ -425,25 +424,25 @@ function NPCAkimboWeaponBase:update(unit, t, dt)
 	end
 end
 
--- Lines 377-381
+-- Lines 380-384
 function NPCAkimboWeaponBase:link_secondary_weapon(secondary)
 	if alive(self._second_gun) then
 		self._setup.user_unit:link(secondary or Idstring("a_weapon_left_front"), self._second_gun, self._second_gun:orientation_object():name())
 	end
 end
 
--- Lines 383-386
+-- Lines 386-389
 function NPCAkimboWeaponBase:create_second_gun(create_second_gun, align_point)
 	AkimboWeaponBase._create_second_gun(self, create_second_gun)
 	self._setup.user_unit:link(align_point or Idstring("a_weapon_left_front"), self._second_gun, self._second_gun:orientation_object():name())
 end
 
--- Lines 388-390
+-- Lines 391-393
 function NPCAkimboWeaponBase:get_fire_time()
 	return AkimboWeaponBase.get_fire_time(self)
 end
 
--- Lines 392-420
+-- Lines 395-423
 function NPCAkimboWeaponBase:fire_blank(direction, impact, sub_id, override_direction)
 	if sub_id == 0 then
 		if not self._manual_fire_second_gun then
@@ -479,14 +478,14 @@ function NPCAkimboWeaponBase:fire_blank(direction, impact, sub_id, override_dire
 	end
 end
 
--- Lines 422-426
+-- Lines 425-429
 function NPCAkimboWeaponBase:_fire_blank_second(params)
 	if alive(self._second_gun) and alive(self._setup.user_unit) then
 		self._second_gun:base():fire_blank(unpack(params))
 	end
 end
 
--- Lines 428-448
+-- Lines 431-451
 function NPCAkimboWeaponBase:auto_fire_blank(direction, impact, sub_ids, override_direction)
 	if not sub_ids or sub_ids == 0 then
 		NPCAkimboWeaponBase.super.auto_fire_blank(self, direction, impact, sub_ids, override_direction)
@@ -515,14 +514,14 @@ function NPCAkimboWeaponBase:auto_fire_blank(direction, impact, sub_ids, overrid
 	return true
 end
 
--- Lines 450-454
+-- Lines 453-457
 function NPCAkimboWeaponBase:_auto_fire_blank_second(params)
 	if alive(self._second_gun) and alive(self._setup.user_unit) then
 		self._second_gun:base():auto_fire_blank(unpack(params))
 	end
 end
 
--- Lines 456-475
+-- Lines 459-478
 function NPCAkimboWeaponBase:start_autofire(nr_shots, sub_id)
 	if not sub_id or sub_id == 0 then
 		NPCAkimboWeaponBase.super.start_autofire(self, nr_shots)
@@ -546,14 +545,14 @@ function NPCAkimboWeaponBase:start_autofire(nr_shots, sub_id)
 	end
 end
 
--- Lines 477-481
+-- Lines 480-484
 function NPCAkimboWeaponBase:_start_autofire_second(nr_shots)
 	if alive(self._second_gun) and alive(self._setup.user_unit) then
 		self._second_gun:base():start_autofire(nr_shots or nil)
 	end
 end
 
--- Lines 483-497
+-- Lines 486-500
 function NPCAkimboWeaponBase:stop_autofire(sub_id)
 	if not sub_id then
 		NPCAkimboWeaponBase.super.stop_autofire(self)
@@ -571,14 +570,14 @@ function NPCAkimboWeaponBase:stop_autofire(sub_id)
 	end
 end
 
--- Lines 499-503
+-- Lines 502-506
 function NPCAkimboWeaponBase:_stop_autofire_second()
 	if alive(self._second_gun) and alive(self._setup.user_unit) then
 		self._second_gun:base():stop_autofire()
 	end
 end
 
--- Lines 505-510
+-- Lines 508-513
 function NPCAkimboWeaponBase:on_enabled(...)
 	NPCAkimboWeaponBase.super.on_enabled(self, ...)
 
@@ -587,7 +586,7 @@ function NPCAkimboWeaponBase:on_enabled(...)
 	end
 end
 
--- Lines 512-518
+-- Lines 515-521
 function NPCAkimboWeaponBase:on_disabled(...)
 	NPCAkimboWeaponBase.super.on_disabled(self, ...)
 
@@ -598,7 +597,7 @@ function NPCAkimboWeaponBase:on_disabled(...)
 	end
 end
 
--- Lines 520-528
+-- Lines 523-531
 function NPCAkimboWeaponBase:on_melee_item_shown(use_primary)
 	if use_primary then
 		NPCAkimboWeaponBase.super.on_disabled(self)
@@ -607,7 +606,7 @@ function NPCAkimboWeaponBase:on_melee_item_shown(use_primary)
 	end
 end
 
--- Lines 530-560
+-- Lines 533-563
 function NPCAkimboWeaponBase:on_melee_item_hidden(use_primary)
 	if use_primary then
 		NPCAkimboWeaponBase.super.on_enabled(self)
@@ -636,7 +635,7 @@ function NPCAkimboWeaponBase:on_melee_item_hidden(use_primary)
 	end
 end
 
--- Lines 562-567
+-- Lines 565-570
 function NPCAkimboWeaponBase:set_visibility_state(...)
 	NPCAkimboWeaponBase.super.set_visibility_state(self, ...)
 
@@ -645,7 +644,7 @@ function NPCAkimboWeaponBase:set_visibility_state(...)
 	end
 end
 
--- Lines 569-574
+-- Lines 572-577
 function NPCAkimboWeaponBase:set_gadget_on(...)
 	NPCAkimboWeaponBase.super.set_gadget_on(self, ...)
 
@@ -654,12 +653,12 @@ function NPCAkimboWeaponBase:set_gadget_on(...)
 	end
 end
 
--- Lines 577-579
+-- Lines 580-582
 function NPCAkimboWeaponBase:gadget_color()
 	return self._gadget_color
 end
 
--- Lines 581-597
+-- Lines 584-600
 function NPCAkimboWeaponBase:set_gadget_color(color)
 	if not self._enabled then
 		return
@@ -678,7 +677,7 @@ function NPCAkimboWeaponBase:set_gadget_color(color)
 	end
 end
 
--- Lines 600-605
+-- Lines 603-608
 function NPCAkimboWeaponBase:destroy(...)
 	NPCAkimboWeaponBase.super.destroy(self, ...)
 
@@ -687,17 +686,17 @@ function NPCAkimboWeaponBase:destroy(...)
 	end
 end
 
--- Lines 607-607
+-- Lines 610-610
 function NPCAkimboWeaponBase:mute_firing()
 	AkimboWeaponBase.mute_firing(self)
 end
 
--- Lines 608-608
+-- Lines 611-611
 function NPCAkimboWeaponBase:unmute_firing()
 	AkimboWeaponBase.unmute_firing(self)
 end
 
--- Lines 610-615
+-- Lines 613-618
 function NPCAkimboWeaponBase:_sound_autofire_start(...)
 	if self._firing_muted then
 		return
@@ -706,7 +705,7 @@ function NPCAkimboWeaponBase:_sound_autofire_start(...)
 	NPCAkimboWeaponBase.super._sound_autofire_start(self, ...)
 end
 
--- Lines 617-622
+-- Lines 620-625
 function NPCAkimboWeaponBase:_sound_singleshot()
 	if self._firing_muted then
 		return
@@ -718,12 +717,12 @@ end
 EnemyAkimboWeaponBase = EnemyAkimboWeaponBase or class(NPCRaycastWeaponBase)
 EnemyAkimboWeaponBase.AKIMBO = true
 
--- Lines 629-631
+-- Lines 632-634
 function EnemyAkimboWeaponBase:init(...)
 	NPCRaycastWeaponBase.init(self, ...)
 end
 
--- Lines 633-661
+-- Lines 636-664
 function EnemyAkimboWeaponBase:create_second_gun(unit_name)
 	local new_unit = World:spawn_unit(unit_name, Vector3(), Rotation())
 
@@ -756,13 +755,13 @@ function EnemyAkimboWeaponBase:create_second_gun(unit_name)
 	}
 end
 
--- Lines 663-666
+-- Lines 666-669
 function EnemyAkimboWeaponBase:_spawn_muzzle_effect(from_pos, direction)
 	World:effect_manager():spawn(self._muzzle_effect_table_second)
 	RaycastWeaponBase._spawn_muzzle_effect(self, from_pos, direction)
 end
 
--- Lines 668-675
+-- Lines 671-678
 function EnemyAkimboWeaponBase:tweak_data_anim_play(anim, ...)
 	local animations = self:weapon_tweak_data().animations
 
@@ -775,7 +774,7 @@ function EnemyAkimboWeaponBase:tweak_data_anim_play(anim, ...)
 	return RaycastWeaponBase.tweak_data_anim_play(self, anim, ...)
 end
 
--- Lines 677-684
+-- Lines 680-687
 function EnemyAkimboWeaponBase:anim_play(anim, speed_multiplier)
 	if anim then
 		local length = self._unit:anim_length(Idstring(anim))
@@ -786,7 +785,7 @@ function EnemyAkimboWeaponBase:anim_play(anim, speed_multiplier)
 	end
 end
 
--- Lines 686-693
+-- Lines 689-696
 function EnemyAkimboWeaponBase:tweak_data_anim_stop(anim, ...)
 	local animations = self:weapon_tweak_data().animations
 
@@ -799,7 +798,7 @@ function EnemyAkimboWeaponBase:tweak_data_anim_stop(anim, ...)
 	return RaycastWeaponBase.tweak_data_anim_stop(self, anim, ...)
 end
 
--- Lines 695-697
+-- Lines 698-700
 function EnemyAkimboWeaponBase:anim_stop(anim)
 	self._second_gun:anim_stop(Idstring(anim))
 end
@@ -808,17 +807,17 @@ if _G.IS_VR then
 	require("lib/units/weapons/vr/AkimboWeaponBaseVR")
 end
 
--- Lines 705-705
+-- Lines 708-708
 function EnemyAkimboWeaponBase:mute_firing()
 	AkimboWeaponBase.mute_firing(self)
 end
 
--- Lines 706-706
+-- Lines 709-709
 function EnemyAkimboWeaponBase:unmute_firing()
 	AkimboWeaponBase.unmute_firing(self)
 end
 
--- Lines 708-713
+-- Lines 711-716
 function EnemyAkimboWeaponBase:_sound_autofire_start(...)
 	if self._firing_muted then
 		return
@@ -827,7 +826,7 @@ function EnemyAkimboWeaponBase:_sound_autofire_start(...)
 	EnemyAkimboWeaponBase.super._sound_autofire_start(self, ...)
 end
 
--- Lines 715-720
+-- Lines 718-723
 function EnemyAkimboWeaponBase:_sound_singleshot()
 	if self._firing_muted then
 		return
